@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Pomoc Asa',
-  aceLabel: 'Pomoc Asa — dotknij, aby znów zobaczyć wskazówkę',
+  aceLabel: 'Pomoc Asa — dotknij, aby otworzyć moje menu',
   offer: 'Pierwszy raz tutaj? Mogę cię oprowadzać na bieżąco.',
   offerYes: 'Tak, poproszę',
   offerNo: 'Nie, dziękuję',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Pokaż znów wszystkie wskazówki',
   resetDone: 'Gotowe — każda wskazówka pojawi się ponownie.',
   turnedOff: 'Pomoc Asa jest wyłączona. W każdej chwili możesz ją ponownie włączyć z menu.',
-  nothingHere: 'Na razie nie ma tu nic do wyjaśnienia — graj dalej!',
   join: 'Dołącz',
   createRanking: 'Utwórz stół rankingowy',
   signup: 'Załóż konto',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Instaluje klienta webowego jako aplikację na tym urządzeniu.',
   hsFullscreen: 'Włącza lub wyłącza pełny ekran.',
   hsDisconnect: 'Rozłącza z serwerem i wraca do ekranu logowania.',
-  hsMenu: 'Menu: pełny ekran, odtwarzacz muzyki, opcje zaawansowane, pomoc, Pomoc Asa…',
-  hsHelp: 'Pomoc: wszystko o aplikacji, z polem wyszukiwania.',
+  hsMenu: 'Menu: pełny ekran, odtwarzacz muzyki, opcje zaawansowane, Pomoc Asa…',
   hsAdv: 'Opcje zaawansowane: wszystkie ustawienia aplikacji, z polem wyszukiwania.',
   hsMusic: 'Odtwarzacz muzyki: utwory i stacje radiowe do słuchania podczas gry.',
   hsLoginCard: 'Wybierasz, jak grasz: Internet na pokerth.net, Lokalna / trening z graczami komputerowymi albo LAN / Serwer dedykowany.',

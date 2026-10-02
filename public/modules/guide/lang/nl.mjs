@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Hulp van de Aas',
-  aceLabel: 'Hulp van de Aas — tik om de tip opnieuw te zien',
+  aceLabel: 'Hulp van de Aas — tik voor mijn menu',
   offer: 'Nieuw hier? Ik kan je gaandeweg de weg wijzen.',
   offerYes: 'Ja, graag',
   offerNo: 'Nee, bedankt',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Alle tips opnieuw tonen',
   resetDone: 'Klaar — elke tip wordt opnieuw getoond.',
   turnedOff: 'Hulp van de Aas staat uit. Je kunt hem op elk moment weer aanzetten via het menu.',
-  nothingHere: 'Hier valt nu niets uit te leggen — ga lekker door!',
   join: 'Meedoen',
   createRanking: 'Rankingtafel maken',
   signup: 'Account aanmaken',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Installeert de webclient als app op dit apparaat.',
   hsFullscreen: 'Volledig scherm aan of uit.',
   hsDisconnect: 'Verbreekt de verbinding met de server en gaat terug naar het inlogscherm.',
-  hsMenu: 'Het menu: volledig scherm, muziekspeler, geavanceerde opties, help, Hulp van de Aas…',
-  hsHelp: 'De help: alles over de app, met een zoekvak.',
+  hsMenu: 'Het menu: volledig scherm, muziekspeler, geavanceerde opties, Hulp van de Aas…',
   hsAdv: 'Geavanceerde opties: alle instellingen van de app, met een zoekvak.',
   hsMusic: 'De muziekspeler: nummers en radiozenders terwijl je speelt.',
   hsLoginCard: 'Kiest hoe je speelt: Internet op pokerth.net, Lokaal / oefenen tegen computerspelers, of LAN / toegewijde server.',

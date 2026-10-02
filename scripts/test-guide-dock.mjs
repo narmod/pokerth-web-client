@@ -94,6 +94,35 @@ for (const [dev, re] of [['iPhone 13', /Share/], ['Pixel 7', /browser menu/], ['
   await page.waitForTimeout(600);
   ok(await page.locator(bubble + ' [data-ad-btn^="ch:"], ' + bubble + ' [data-ad-btn^="sec:"], ' + bubble + ' input').count() > 0, 'tips off: « More help » opens the help in his bubble');
   ok(await page.evaluate(() => localStorage.getItem('pth_guide_on')) !== '1', 'tips stay off');
+  // audit web.276: « Close » of his menu with the tips off — he goes, the idle scenes are free again
+  await page.evaluate(() => window.guideToggle());
+  await page.waitForSelector(bubble + ' [data-ad-btn="close"]', { timeout: 4000 });
+  await page.click(bubble + ' [data-ad-btn="close"]');
+  await page.waitForTimeout(700);
+  ok(await docks(page) === 0 && await page.evaluate(() => window._guideBusy) === false, 'tips off: « Close » of his menu — he goes, scenes no longer blocked');
+  // « ? » mode, then his menu over it: the mode ends (no tap left intercepted)
+  await page.evaluate(() => window.guideAsk());
+  await page.waitForFunction(() => document.body.classList.contains('guide-ask'), null, { timeout: 4000 });
+  await page.evaluate(() => window.guideToggle());
+  await page.waitForSelector(bubble + ' [data-ad-btn="moreHelp"]', { timeout: 4000 });
+  ok(!(await page.evaluate(() => document.body.classList.contains('guide-ask'))), '« ? » mode ends when his menu replaces it');
+  await page.click(bubble + ' [data-ad-btn="close"]');
+  await page.waitForTimeout(600);
+  // « ? » on an element drawn by script with a hand cursor only: explained, not run
+  await page.evaluate(() => {
+    const d = document.createElement('div'); d.id = 'tst-hand'; d.textContent = 'Shuffle deck';
+    d.style.cssText = 'position:fixed;left:20px;top:200px;width:140px;height:40px;cursor:pointer;background:#ddd;z-index:5000';
+    d.addEventListener('click', () => { window.__tstRan = (window.__tstRan || 0) + 1; });
+    document.body.appendChild(d);
+  });
+  await page.evaluate(() => window.guideAsk());
+  await page.waitForFunction(() => document.body.classList.contains('guide-ask'), null, { timeout: 4000 });
+  await page.waitForTimeout(300);
+  await page.click('#tst-hand');
+  await page.waitForTimeout(400);
+  const ran = await page.evaluate(() => window.__tstRan || 0);
+  const said = await page.locator(bubble + ' .ad-text').innerText().catch(() => '');
+  ok(ran === 0 && /Shuffle deck/.test(said), '« ? » explains a hand-cursor element instead of running it (' + ran + ', ' + said.slice(0, 50) + ')');
   await ctx.close();
 }
 ok(!errors.length, 'no page error' + (errors.length ? ' — ' + errors.slice(0, 3).join(' | ') : ''));

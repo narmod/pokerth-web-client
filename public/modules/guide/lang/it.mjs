@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Aiuto dell’Asso',
-  aceLabel: 'Aiuto dell’Asso — tocca per rivedere il consiglio',
+  aceLabel: 'Aiuto dell’Asso — tocca per aprire il mio menu',
   offer: 'Sei nuovo qui? Posso guidarti man mano.',
   offerYes: 'Sì, grazie',
   offerNo: 'No, grazie',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Mostra di nuovo tutti i consigli',
   resetDone: 'Fatto — ogni consiglio verrà mostrato di nuovo.',
   turnedOff: 'L’Aiuto dell’Asso è disattivato. Puoi riattivarlo dal menu in qualsiasi momento.',
-  nothingHere: 'Niente da spiegare qui per ora — vai pure avanti!',
   join: 'Unisciti',
   createRanking: 'Crea un tavolo Ranking',
   signup: 'Crea un account',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Installa il web client come app su questo dispositivo.',
   hsFullscreen: 'Attiva o disattiva lo schermo intero.',
   hsDisconnect: 'Ti disconnette dal server e ti riporta alla schermata di accesso.',
-  hsMenu: 'Il menu: schermo intero, lettore musicale, opzioni avanzate, aiuto, Aiuto dell’Asso…',
-  hsHelp: 'L’aiuto: tutto sull’app, con una casella di ricerca.',
+  hsMenu: 'Il menu: schermo intero, lettore musicale, opzioni avanzate, Aiuto dell’Asso…',
   hsAdv: 'Opzioni avanzate: tutte le impostazioni dell’app, con una casella di ricerca.',
   hsMusic: 'Il lettore musicale: brani e stazioni radio mentre giochi.',
   hsLoginCard: 'Scegli come giocare: Internet su pokerth.net, Locale / allenamento contro giocatori computer, oppure LAN / server dedicato.',

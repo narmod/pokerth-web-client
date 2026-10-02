@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Cabhair an Aoin',
-  aceLabel: 'Cabhair an Aoin — tapáil chun an leid a fheiceáil arís',
+  aceLabel: 'Cabhair an Aoin — tapáil le mo roghchlár a oscailt',
   offer: 'Nua anseo? Is féidir liom tú a threorú de réir a chéile.',
   offerYes: 'Sea, le do thoil',
   offerNo: 'Níl, go raibh maith agat',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Taispeáin gach leid arís',
   resetDone: 'Déanta — taispeánfar gach leid arís.',
   turnedOff: 'Tá Cabhair an Aoin múchta. Is féidir leat é a chur ar siúl arís ón roghchlár am ar bith.',
-  nothingHere: 'Níl aon rud le míniú anseo faoi láthair — lean ort!',
   join: 'Glac páirt',
   createRanking: 'Cruthaigh bord Ranking',
   signup: 'Cruthaigh cuntas',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Suiteálann sé an cliant gréasáin mar aip ar an ngléas seo.',
   hsFullscreen: 'Lánscáileán ar siúl nó as.',
   hsDisconnect: 'Dícheanglaíonn sé ón bhfreastalaí agus filleann sé ar an scáileán logála isteach.',
-  hsMenu: 'An roghchlár: lánscáileán, seinnteoir ceoil, ardroghanna, cabhair, Cabhair an Aoin…',
-  hsHelp: 'An chabhair: gach rud faoin aip, le bosca cuardaigh.',
+  hsMenu: 'An roghchlár: lánscáileán, seinnteoir ceoil, ardroghanna, Cabhair an Aoin…',
   hsAdv: 'Ardroghanna: gach socrú den aip, le bosca cuardaigh.',
   hsMusic: 'An seinnteoir ceoil: rianta agus stáisiúin raidió fad is a imríonn tú.',
   hsLoginCard: 'Roghnaíonn tú conas a imríonn tú: Idirlíon ar pokerth.net, Áitiúil / cleachtadh in aghaidh imreoirí ríomhaire, nó LAN / freastalaí tiomnaithe.',

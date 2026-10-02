@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Ajuda do Ás',
-  aceLabel: 'Ajuda do Ás — toque para ver a dica de novo',
+  aceLabel: 'Ajuda do Ás — toque para abrir meu menu',
   offer: 'Novo por aqui? Posso te mostrar tudo enquanto você avança.',
   offerYes: 'Sim, por favor',
   offerNo: 'Não, obrigado',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Mostrar todas as dicas de novo',
   resetDone: 'Pronto — todas as dicas vão aparecer de novo.',
   turnedOff: 'A Ajuda do Ás está desativada. Você pode reativá-la pelo menu a qualquer momento.',
-  nothingHere: 'Nada para explicar aqui por enquanto — pode seguir!',
   join: 'Entrar',
   createRanking: 'Criar mesa ranqueada',
   signup: 'Criar uma conta',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Instala o cliente web como aplicativo neste dispositivo.',
   hsFullscreen: 'Liga ou desliga a tela cheia.',
   hsDisconnect: 'Desconecta do servidor e volta para a tela de login.',
-  hsMenu: 'O menu: tela cheia, reprodutor de música, opções avançadas, ajuda, Ajuda do Ás…',
-  hsHelp: 'A ajuda: tudo sobre o aplicativo, com uma caixa de pesquisa.',
+  hsMenu: 'O menu: tela cheia, reprodutor de música, opções avançadas, Ajuda do Ás…',
   hsAdv: 'Opções avançadas: todas as configurações do aplicativo, com uma caixa de pesquisa.',
   hsMusic: 'O reprodutor de música: faixas e rádios enquanto você joga.',
   hsLoginCard: 'Escolhe como você joga: Internet no pokerth.net, Local / treino contra jogadores de computador, ou LAN / servidor dedicado.',

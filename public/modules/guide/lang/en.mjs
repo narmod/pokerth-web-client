@@ -4,7 +4,7 @@
 // port refer to them (docs/GUIDE.md).
 export default {
   name: 'Ace’s Help',
-  aceLabel: 'Ace’s Help — tap to see the tip again',
+  aceLabel: 'Ace’s Help — tap for my menu',
   // first-launch offer (once, D3)
   offer: 'New here? I can show you around as you go.',
   offerYes: 'Yes, please',
@@ -21,7 +21,6 @@ export default {
   resetTips: 'Show all tips again',
   resetDone: 'Done — every tip will show again.',
   turnedOff: 'Ace’s Help is off. You can turn it back on from the menu at any time.',
-  nothingHere: 'Nothing to explain here for now — carry on!',
   // action buttons
   join: 'Join',
   createRanking: 'Create a Ranking table',
@@ -81,8 +80,7 @@ export default {
   hsInstall: 'Installs the web client as an app on this device.',
   hsFullscreen: 'Full screen on or off.',
   hsDisconnect: 'Disconnects from the server and goes back to the login screen.',
-  hsMenu: 'The menu: full screen, music player, advanced options, help, Ace’s Help…',
-  hsHelp: 'The help: everything about the app, with a search box.',
+  hsMenu: 'The menu: full screen, music player, advanced options, Ace’s Help…',
   hsAdv: 'Advanced options: every setting of the app, with a search box.',
   hsMusic: 'The music player: tracks and radio stations while you play.',
   hsLoginCard: 'Chooses how you play: Internet on pokerth.net, Local / training against computer players, or a LAN / dedicated server.',

@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Cymorth yr As',
-  aceLabel: 'Cymorth yr As — tapiwch i weld y cyngor eto',
+  aceLabel: 'Cymorth yr As — tapiwch am fy newislen',
   offer: 'Newydd yma? Gallaf eich tywys o gwmpas wrth i chi fynd.',
   offerYes: 'Ie, os gwelwch yn dda',
   offerNo: 'Dim diolch',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Dangos pob cyngor eto',
   resetDone: 'Wedi’i wneud — bydd pob cyngor yn ymddangos eto.',
   turnedOff: 'Mae Cymorth yr As i ffwrdd. Gallwch ei droi’n ôl ymlaen o’r ddewislen unrhyw bryd.',
-  nothingHere: 'Dim byd i’w esbonio yma am y tro — daliwch ati!',
   join: 'Ymuno',
   createRanking: 'Creu bwrdd Ranking',
   signup: 'Creu cyfrif',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Yn gosod y cleient gwe fel ap ar y ddyfais hon.',
   hsFullscreen: 'Sgrin lawn ymlaen neu i ffwrdd.',
   hsDisconnect: 'Yn datgysylltu o’r gweinydd ac yn mynd yn ôl i’r sgrin mewngofnodi.',
-  hsMenu: 'Y ddewislen: sgrin lawn, chwaraewr cerddoriaeth, dewisiadau uwch, cymorth, Cymorth yr As…',
-  hsHelp: 'Y cymorth: popeth am yr ap, gyda blwch chwilio.',
+  hsMenu: 'Y ddewislen: sgrin lawn, chwaraewr cerddoriaeth, dewisiadau uwch, Cymorth yr As…',
   hsAdv: 'Dewisiadau uwch: holl osodiadau’r ap, gyda blwch chwilio.',
   hsMusic: 'Y chwaraewr cerddoriaeth: traciau a gorsafoedd radio tra byddwch yn chwarae.',
   hsLoginCard: 'Dewis sut i chwarae: Rhyngrwyd ar pokerth.net, Lleol / ymarfer yn erbyn chwaraewyr cyfrifiadur, neu LAN / gweinydd pwrpasol.',

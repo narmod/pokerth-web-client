@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Usizo luka-Ace',
-  aceLabel: 'Usizo luka-Ace — thepha ukuze uphinde ubone iseluleko',
+  aceLabel: 'Usizo luka-Ace — thepha ukuze ubone imenyu yami',
   offer: 'Umusha lapha? Ngingakubonisa izinto njengoba uqhubeka.',
   offerYes: 'Yebo, ngiyacela',
   offerNo: 'Cha, ngiyabonga',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Bonisa zonke izeluleko futhi',
   resetDone: 'Kwenziwe — zonke izeluleko zizophinde ziboniswe.',
   turnedOff: 'Usizo luka-Ace luvaliwe. Ungaluvula futhi kumenyu noma nini.',
-  nothingHere: 'Akukho okufanele kuchazwe lapha okwamanje — qhubeka!',
   join: 'Joyina',
   createRanking: 'Dala itafula le-Ranking',
   signup: 'Dala i-akhawunti',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Ifaka iklayenti lewebhu njengohlelo kule divayisi.',
   hsFullscreen: 'Ivula noma ivale isikrini esigcwele.',
   hsDisconnect: 'Inqamula kuseva bese ibuyela esikrinini sokungena.',
-  hsMenu: 'Imenyu: isikrini esigcwele, isidlali somculo, izinketho ezithuthukisiwe, usizo, Usizo luka-Ace…',
-  hsHelp: 'Usizo: konke mayelana nohlelo, kanye nebhokisi lokusesha.',
+  hsMenu: 'Imenyu: isikrini esigcwele, isidlali somculo, izinketho ezithuthukisiwe, Usizo luka-Ace…',
   hsAdv: 'Izinketho ezithuthukisiwe: wonke amasethingi ohlelo, kanye nebhokisi lokusesha.',
   hsMusic: 'Isidlali somculo: amaculo neziteshi zomsakazo ngenkathi udlala.',
   hsLoginCard: 'Ikhetha ukuthi udlala kanjani: Ku-inthanethi ku-pokerth.net, Okwasendaweni / ukuziqeqesha ngokumelene nabadlali bekhompyutha, noma i-LAN / iseva ezinikele.',

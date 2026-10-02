@@ -1092,6 +1092,7 @@ export function dismiss() {
   if (!cur || cur.dead || cur.leaving) return;
   const c = cur;
   c.leaving = true;
+  if (c.home && c.arrived) { teardown(); return; }   // already given back to the dock (end of a door / puff exit): no second Ace walking home (web.276)
   if (c.home) { recallHome(c); return; }
   let x = c.x, y = c.st.yF;
   try {

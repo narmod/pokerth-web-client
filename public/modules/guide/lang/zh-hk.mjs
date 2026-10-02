@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'A 牌小幫手',
-  aceLabel: 'A 牌小幫手 — 輕按可再次查看提示',
+  aceLabel: 'A 牌小幫手 — 輕按開啟我的選單',
   offer: '第一次來？我可以一路帶你認識環境。',
   offerYes: '好，麻煩你',
   offerNo: '不用了，謝謝',
@@ -16,7 +16,6 @@ export default {
   resetTips: '重新顯示所有提示',
   resetDone: '完成 — 所有提示都會再次顯示。',
   turnedOff: 'A 牌小幫手已關閉。你隨時可以從選單重新開啟。',
-  nothingHere: '這裏暫時沒有要解釋的東西 — 繼續吧！',
   join: '加入',
   createRanking: '建立排名牌桌',
   signup: '建立帳戶',
@@ -67,8 +66,7 @@ export default {
   hsInstall: '把網頁客戶端安裝成這部裝置上的應用程式。',
   hsFullscreen: '開啟或關閉全屏。',
   hsDisconnect: '與伺服器斷開連線，並返回登入畫面。',
-  hsMenu: '選單：全屏、音樂播放器、進階選項、說明、A 牌小幫手…',
-  hsHelp: '說明：關於應用程式的一切，附搜尋欄。',
+  hsMenu: '選單：全屏、音樂播放器、進階選項、A 牌小幫手…',
   hsAdv: '進階選項：應用程式的所有設定，附搜尋欄。',
   hsMusic: '音樂播放器：玩牌時播放歌曲和電台。',
   hsLoginCard: '選擇玩法：在 pokerth.net 上網際網絡對戰、與電腦玩家進行本機 / 練習，或區域網絡 / 專用伺服器。',

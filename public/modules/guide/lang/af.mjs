@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Die Aas se Hulp',
-  aceLabel: 'Die Aas se Hulp — tik om die wenk weer te sien',
+  aceLabel: 'Die Aas se Hulp — tik vir my kieslys',
   offer: 'Nuut hier? Ek kan jou gaandeweg rondwys.',
   offerYes: 'Ja, asseblief',
   offerNo: 'Nee dankie',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Wys alle wenke weer',
   resetDone: 'Klaar — elke wenk sal weer gewys word.',
   turnedOff: 'Die Aas se Hulp is af. Jy kan dit enige tyd weer via die kieslys aanskakel.',
-  nothingHere: 'Niks om hier te verduidelik nie — gaan voort!',
   join: 'Sluit aan',
   createRanking: 'Skep ’n Ranglys-tafel',
   signup: 'Skep ’n rekening',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Installeer die webkliënt as ’n toep op hierdie toestel.',
   hsFullscreen: 'Volskerm aan of af.',
   hsDisconnect: 'Ontkoppel van die bediener en gaan terug na die aanmeldskerm.',
-  hsMenu: 'Die kieslys: volskerm, musiekspeler, gevorderde opsies, hulp, Die Aas se Hulp…',
-  hsHelp: 'Die hulp: alles oor die toep, met ’n soekkassie.',
+  hsMenu: 'Die kieslys: volskerm, musiekspeler, gevorderde opsies, Die Aas se Hulp…',
   hsAdv: 'Gevorderde opsies: al die toep se instellings, met ’n soekkassie.',
   hsMusic: 'Die musiekspeler: snitte en radiostasies terwyl jy speel.',
   hsLoginCard: 'Kies hoe jy speel: Internet op pokerth.net, Plaaslik / oefening teen rekenaarspelers, of LAN / toegewyde bediener.',

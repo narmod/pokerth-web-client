@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Helpo de la Aso',
-  aceLabel: 'Helpo de la Aso — tuŝetu por revidi la konsilon',
+  aceLabel: 'Helpo de la Aso — tuŝetu por mia menuo',
   offer: 'Ĉu nova ĉi tie? Mi povas gvidi vin dum vi progresas.',
   offerYes: 'Jes, bonvolu',
   offerNo: 'Ne, dankon',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Montri ĉiujn konsilojn denove',
   resetDone: 'Farite — ĉiu konsilo aperos denove.',
   turnedOff: 'Helpo de la Aso estas malŝaltita. Vi povas reŝalti ĝin el la menuo iam ajn.',
-  nothingHere: 'Nenio por klarigi ĉi tie nun — daŭrigu!',
   join: 'Aliĝi',
   createRanking: 'Krei Ranking-tablon',
   signup: 'Krei konton',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Instalas la retan klienton kiel aplikaĵon en ĉi tiu aparato.',
   hsFullscreen: 'Plenekrana reĝimo ŝaltita aŭ malŝaltita.',
   hsDisconnect: 'Malkonektas de la servilo kaj revenas al la ensaluta ekrano.',
-  hsMenu: 'La menuo: plenekrane, muzikludilo, altnivelaj opcioj, helpo, Helpo de la Aso…',
-  hsHelp: 'La helpo: ĉio pri la aplikaĵo, kun serĉkampo.',
+  hsMenu: 'La menuo: plenekrane, muzikludilo, altnivelaj opcioj, Helpo de la Aso…',
   hsAdv: 'Altnivelaj opcioj: ĉiuj agordoj de la aplikaĵo, kun serĉkampo.',
   hsMusic: 'La muzikludilo: kantoj kaj radiostacioj dum vi ludas.',
   hsLoginCard: 'Elektas kiel vi ludas: Interreto ĉe pokerth.net, Loka / trejnado kontraŭ komputilaj ludantoj, aŭ LAN / dediĉita servilo.',

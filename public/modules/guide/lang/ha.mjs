@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Taimakon Aas',
-  aceLabel: 'Taimakon Aas — taɓa don sake ganin shawarar',
+  aceLabel: 'Taimakon Aas — taɓa don menu na',
   offer: 'Kai sabo ne a nan? Zan iya nuna maka komai yayin da kake ci gaba.',
   offerYes: 'Eh, don Allah',
   offerNo: 'A\'a, na gode',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Sake nuna duk shawarwari',
   resetDone: 'An gama — kowace shawara za ta sake bayyana.',
   turnedOff: 'An kashe Taimakon Aas. Kana iya sake kunna shi daga menu a kowane lokaci.',
-  nothingHere: 'Babu abin da za a bayyana a nan yanzu — ci gaba!',
   join: 'Shiga',
   createRanking: 'Ƙirƙiri teburin Ranking',
   signup: 'Ƙirƙiri asusu',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Yana sanya wannan manhajar yanar gizo a matsayin manhaja a wannan na’ura.',
   hsFullscreen: 'Yana kunna ko kashe cikakken allo.',
   hsDisconnect: 'Yana yanke haɗi da sabar kuma ya koma allon shiga.',
-  hsMenu: 'Menu: cikakken allo, mai kunna kiɗa, zaɓuɓɓuka na ci gaba, taimako, Taimakon Aas…',
-  hsHelp: 'Taimako: komai game da manhajar, tare da akwatin bincike.',
+  hsMenu: 'Menu: cikakken allo, mai kunna kiɗa, zaɓuɓɓuka na ci gaba, Taimakon Aas…',
   hsAdv: 'Zaɓuɓɓuka na ci gaba: duk saitunan manhajar, tare da akwatin bincike.',
   hsMusic: 'Mai kunna kiɗa: waƙoƙi da tashoshin rediyo yayin da kake wasa.',
   hsLoginCard: 'Yana zaɓar yadda kake wasa: Intanet a pokerth.net, Na gida / horo da ’yan wasan kwamfuta, ko LAN / keɓaɓɓiyar sabar.',

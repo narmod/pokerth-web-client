@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: '에이스 도움말',
-  aceLabel: '에이스 도움말 — 탭하면 팁을 다시 볼 수 있어요',
+  aceLabel: '에이스 도움말 — 탭하면 내 메뉴가 열려요',
   offer: '처음이세요? 진행하면서 하나씩 안내해 드릴게요.',
   offerYes: '네, 좋아요',
   offerNo: '괜찮아요',
@@ -16,7 +16,6 @@ export default {
   resetTips: '모든 팁 다시 보기',
   resetDone: '완료 — 모든 팁이 다시 표시돼요.',
   turnedOff: '에이스 도움말이 꺼졌어요. 언제든 메뉴에서 다시 켤 수 있어요.',
-  nothingHere: '지금은 여기서 설명할 게 없어요 — 계속하세요!',
   join: '참가',
   createRanking: '랭킹 테이블 만들기',
   signup: '계정 만들기',
@@ -67,8 +66,7 @@ export default {
   hsInstall: '웹 클라이언트를 이 기기에 앱으로 설치해요.',
   hsFullscreen: '전체 화면을 켜거나 꺼요.',
   hsDisconnect: '서버와의 접속을 끊고 로그인 화면으로 돌아가요.',
-  hsMenu: '메뉴: 전체 화면, 음악 플레이어, 고급 옵션, 도움말, 에이스 도움말…',
-  hsHelp: '도움말: 앱에 관한 모든 것, 검색창도 있어요.',
+  hsMenu: '메뉴: 전체 화면, 음악 플레이어, 고급 옵션, 에이스 도움말…',
   hsAdv: '고급 옵션: 앱의 모든 설정, 검색창도 있어요.',
   hsMusic: '음악 플레이어: 게임하는 동안 들을 곡과 라디오 방송국이에요.',
   hsLoginCard: '플레이 방식을 골라요: pokerth.net에서 인터넷, 컴퓨터 플레이어와 로컬 / 연습, 또는 LAN / 전용 서버.',

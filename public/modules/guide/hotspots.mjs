@@ -96,8 +96,8 @@ export const HOTSPOTS = [
   ['#lobby-wait-actions .wp-fillbots', 'hsFillBots', true, 'offline:setup'],
   // ── game creation page ──
   ['#cf-gtype-btn, #cf-game-type', 'hsGameType', false, 'pthnet:ranked'],
+  ['#cf-preset-perso', 'hsPresetPerso', false, 'lobby:create'],     // before .cf-preset: it is one too (web.276)
   ['.cf-preset[data-preset]', 'hsPreset', false, (el) => (el.getAttribute('data-preset') === 'bbc' ? 'pthnet:bbc' : 'pthnet:cups')],
-  ['#cf-preset-perso', 'hsPresetPerso', false, 'lobby:create'],
   ['#cf-style-toggle', 'hsCfStyle', false, 'lobby:create'],
   ['#cf-name', 'hsGameName', false, 'lobby:create'],
   ['#cf-players', 'hsSeats', false, 'lobby:create'],
@@ -111,8 +111,8 @@ export const HOTSPOTS = [
   ['#cf-allow-spectators', 'hsSpectators', false, 'lobby:join'],
   ['.cf-step-btn', 'hsStep'],
   ['.cf-switch', 'hsCfSwitch'],
+  ['#cf-prefs-save-btn', 'hsSavePrefs', false, 'lobby:create'],     // before .btn-cf-reset: it has that class too (web.276)
   ['.btn-cf-reset', 'hsCfReset'],
-  ['#cf-prefs-save-btn', 'hsSavePrefs', false, 'lobby:create'],
   ['.cf-create-btn', 'hsCreateTable', false, 'lobby:create'],
   ['#s-create [onclick*="closeCreatePage"]', 'hsCreateBack'],
   // ── at the table (H3, web.269) ──

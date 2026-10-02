@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Tuzning yordami',
-  aceLabel: 'Tuzning yordami — maslahatni qayta koʻrish uchun bosing',
+  aceLabel: 'Tuzning yordami — mening menyum uchun bosing',
   offer: 'Bu yerda yangimisiz? Yoʻl-yoʻlakay sizga hammasini koʻrsatib boraman.',
   offerYes: 'Ha, iltimos',
   offerNo: 'Yoʻq, rahmat',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Barcha maslahatlarni qayta koʻrsatish',
   resetDone: 'Tayyor — har bir maslahat yana koʻrsatiladi.',
   turnedOff: 'Tuzning yordami oʻchirildi. Uni istalgan vaqtda menyudan qayta yoqishingiz mumkin.',
-  nothingHere: 'Hozircha bu yerda tushuntiradigan narsa yoʻq — davom eting!',
   join: 'Qoʻshilish',
   createRanking: 'Reyting stolini yaratish',
   signup: 'Hisob yaratish',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Veb-klientni ushbu qurilmaga ilova sifatida oʻrnatadi.',
   hsFullscreen: 'Toʻliq ekranni yoqadi yoki oʻchiradi.',
   hsDisconnect: 'Serverdan uziladi va kirish ekraniga qaytadi.',
-  hsMenu: 'Menyu: toʻliq ekran, musiqa pleyeri, kengaytirilgan sozlamalar, yordam, Tuzning yordami…',
-  hsHelp: 'Yordam: ilova haqida hamma narsa, qidiruv maydoni bilan.',
+  hsMenu: 'Menyu: toʻliq ekran, musiqa pleyeri, kengaytirilgan sozlamalar, Tuzning yordami…',
   hsAdv: 'Kengaytirilgan sozlamalar: ilovaning barcha sozlamalari, qidiruv maydoni bilan.',
   hsMusic: 'Musiqa pleyeri: oʻynayotganingizda qoʻshiqlar va radiostansiyalar.',
   hsLoginCard: 'Qanday oʻynashingizni tanlaydi: pokerth.net saytida Internet, kompyuter oʻyinchilariga qarshi Lokal / mashgʻulot yoki LAN / maxsus server.',

@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Hjálp ássins',
-  aceLabel: 'Hjálp ássins — ýttu til að sjá ábendinguna aftur',
+  aceLabel: 'Hjálp ássins — ýttu fyrir valmyndina mína',
   offer: 'Nýr hér? Ég get sýnt þér hvernig allt virkar jafnóðum.',
   offerYes: 'Já, takk',
   offerNo: 'Nei, takk',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Sýna allar ábendingar aftur',
   resetDone: 'Búið — allar ábendingar birtast aftur.',
   turnedOff: 'Slökkt er á Hjálp ássins. Þú getur kveikt á henni aftur í valmyndinni hvenær sem er.',
-  nothingHere: 'Ekkert að útskýra hér í bili — haltu áfram!',
   join: 'Vera með',
   createRanking: 'Búa til stigaleikjaborð',
   signup: 'Stofna aðgang',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Setur vefbiðlarann upp sem forrit á þessu tæki.',
   hsFullscreen: 'Allur skjárinn af eða á.',
   hsDisconnect: 'Aftengist netþjóninum og fer aftur á innskráningarskjáinn.',
-  hsMenu: 'Valmyndin: allur skjárinn, tónlistarspilari, ítarlegir valkostir, hjálp, Hjálp ássins…',
-  hsHelp: 'Hjálpin: allt um forritið, með leitarreit.',
+  hsMenu: 'Valmyndin: allur skjárinn, tónlistarspilari, ítarlegir valkostir, Hjálp ássins…',
   hsAdv: 'Ítarlegir valkostir: allar stillingar forritsins, með leitarreit.',
   hsMusic: 'Tónlistarspilarinn: lög og útvarpsstöðvar á meðan þú spilar.',
   hsLoginCard: 'Hér velurðu hvernig þú spilar: Internet á pokerth.net, Staðbundið / æfing gegn tölvuleikmönnum, eða LAN / sérþjónn.',

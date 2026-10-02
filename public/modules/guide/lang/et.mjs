@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Ässa abi',
-  aceLabel: 'Ässa abi — puuduta, et näpunäidet uuesti näha',
+  aceLabel: 'Ässa abi — puuduta minu menüü jaoks',
   offer: 'Oled siin uus? Võin sulle jooksvalt kõike näidata.',
   offerYes: 'Jah, palun',
   offerNo: 'Ei, aitäh',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Näita kõiki näpunäiteid uuesti',
   resetDone: 'Tehtud — iga näpunäidet näidatakse uuesti.',
   turnedOff: 'Ässa abi on väljas. Saad selle igal ajal menüüst uuesti sisse lülitada.',
-  nothingHere: 'Siin pole praegu midagi selgitada — jätka!',
   join: 'Liitu',
   createRanking: 'Loo Ranking-laud',
   signup: 'Loo konto',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Paigaldab veebikliendi selle seadme rakendusena.',
   hsFullscreen: 'Täisekraan sisse või välja.',
   hsDisconnect: 'Katkestab ühenduse serveriga ja viib tagasi sisselogimiskuvale.',
-  hsMenu: 'Menüü: täisekraan, muusikamängija, täpsemad valikud, abi, Ässa abi…',
-  hsHelp: 'Abi: kõik rakenduse kohta, otsinguväljaga.',
+  hsMenu: 'Menüü: täisekraan, muusikamängija, täpsemad valikud, Ässa abi…',
   hsAdv: 'Täpsemad valikud: kõik rakenduse seaded, otsinguväljaga.',
   hsMusic: 'Muusikamängija: lood ja raadiojaamad mängimise ajaks.',
   hsLoginCard: 'Valid, kuidas mängid: Internet pokerth.net-is, Kohalik / treening arvutimängijate vastu või LAN / pühendatud server.',

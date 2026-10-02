@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Az ász súgója',
-  aceLabel: 'Az ász súgója — koppints, és újra látod a tippet',
+  aceLabel: 'Az ász súgója — koppints a menüm megnyitásához',
   offer: 'Új vagy itt? Menet közben szívesen megmutatok mindent.',
   offerYes: 'Igen, kérlek',
   offerNo: 'Nem, köszönöm',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Az összes tipp újra',
   resetDone: 'Kész — minden tipp újra megjelenik.',
   turnedOff: 'Az ász súgója ki van kapcsolva. A menüből bármikor visszakapcsolhatod.',
-  nothingHere: 'Itt most nincs mit elmagyarázni — csak így tovább!',
   join: 'Csatlakozás',
   createRanking: 'Új ranglistás asztal',
   signup: 'Fiók létrehozása',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Alkalmazásként telepíti a webklienst erre az eszközre.',
   hsFullscreen: 'Be- vagy kikapcsolja a teljes képernyőt.',
   hsDisconnect: 'Lecsatlakozik a szerverről, és visszalép a bejelentkezési képernyőre.',
-  hsMenu: 'A menü: teljes képernyő, zenelejátszó, speciális beállítások, súgó, az ász súgója…',
-  hsHelp: 'A súgó: minden az alkalmazásról, keresőmezővel.',
+  hsMenu: 'A menü: teljes képernyő, zenelejátszó, speciális beállítások, az ász súgója…',
   hsAdv: 'Speciális beállítások: az alkalmazás összes beállítása, keresőmezővel.',
   hsMusic: 'A zenelejátszó: zeneszámok és rádióállomások játék közben.',
   hsLoginCard: 'Itt választod ki, hogyan játszol: Internet a pokerth.net-en, Helyi / gyakorlás számítógépes játékosok ellen, vagy LAN / dedikált szerver.',

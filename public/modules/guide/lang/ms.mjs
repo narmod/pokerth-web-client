@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Bantuan si Sat',
-  aceLabel: 'Bantuan si Sat — ketik untuk melihat petua sekali lagi',
+  aceLabel: 'Bantuan si Sat — ketik untuk membuka menu saya',
   offer: 'Baru di sini? Saya boleh tunjukkan selok-beloknya sambil Anda bermain.',
   offerYes: 'Ya, boleh',
   offerNo: 'Tidak, terima kasih',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Tunjukkan semua petua semula',
   resetDone: 'Selesai — setiap petua akan ditunjukkan semula.',
   turnedOff: 'Bantuan si Sat dimatikan. Anda boleh menghidupkannya semula daripada menu pada bila-bila masa.',
-  nothingHere: 'Tiada apa-apa untuk diterangkan di sini buat masa ini — teruskan!',
   join: 'Gabung',
   createRanking: 'Cipta meja Ranking',
   signup: 'Cipta akaun',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Memasang klien web sebagai aplikasi pada peranti ini.',
   hsFullscreen: 'Menghidupkan atau mematikan skrin penuh.',
   hsDisconnect: 'Memutuskan sambungan dari server dan kembali ke skrin log masuk.',
-  hsMenu: 'Menu: skrin penuh, pemutar musik, opsi lanjutan, bantuan, Bantuan si Sat…',
-  hsHelp: 'Bantuan: segala-galanya tentang aplikasi, dengan kotak carian.',
+  hsMenu: 'Menu: skrin penuh, pemutar musik, opsi lanjutan, Bantuan si Sat…',
   hsAdv: 'Opsi lanjutan: semua tetapan aplikasi, dengan kotak carian.',
   hsMusic: 'Pemutar musik: lagu dan stesen radio semasa Anda bermain.',
   hsLoginCard: 'Memilih cara Anda bermain: Internet di pokerth.net, Lokal / latihan melawan pemain komputer, atau LAN / Server khusus.',

@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Tuzun köməyi',
-  aceLabel: 'Tuzun köməyi — məsləhəti yenidən görmək üçün toxunun',
+  aceLabel: 'Tuzun köməyi — menyuma baxmaq üçün toxunun',
   offer: 'Burada yenisiniz? İrəlilədikcə sizə hər şeyi göstərə bilərəm.',
   offerYes: 'Bəli, xahiş edirəm',
   offerNo: 'Xeyr, sağ olun',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Bütün məsləhətləri yenidən göstər',
   resetDone: 'Hazırdır — bütün məsləhətlər yenidən göstəriləcək.',
   turnedOff: 'Tuzun köməyi söndürüldü. İstənilən vaxt menyudan onu yenidən aktivləşdirə bilərsiniz.',
-  nothingHere: 'Hələlik burada izah ediləcək bir şey yoxdur — davam edin!',
   join: 'Qoşul',
   createRanking: 'Ranking masası yarat',
   signup: 'Hesab yarat',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Veb klienti bu cihaza tətbiq kimi quraşdırır.',
   hsFullscreen: 'Tam ekranı açır və ya bağlayır.',
   hsDisconnect: 'Serverlə bağlantını kəsir və giriş ekranına qayıdır.',
-  hsMenu: 'Menyu: tam ekran, musiqi pleyeri, əlavə seçimlər, kömək, Tuzun köməyi…',
-  hsHelp: 'Kömək: tətbiq haqqında hər şey, axtarış xanası ilə.',
+  hsMenu: 'Menyu: tam ekran, musiqi pleyeri, əlavə seçimlər, Tuzun köməyi…',
   hsAdv: 'Əlavə seçimlər: tətbiqin bütün parametrləri, axtarış xanası ilə.',
   hsMusic: 'Musiqi pleyeri: oynayarkən mahnılar və radio stansiyaları.',
   hsLoginCard: 'Necə oynayacağınızı seçir: pokerth.net-də İnternet, kompüter oyunçularına qarşı Lokal / məşq, və ya LAN / xüsusi server.',

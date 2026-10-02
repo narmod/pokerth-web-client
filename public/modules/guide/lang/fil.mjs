@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Tulong ng Alas',
-  aceLabel: 'Tulong ng Alas — i-tap para makita ulit ang tip',
+  aceLabel: 'Tulong ng Alas — i-tap para sa aking menu',
   offer: 'Bago ka rito? Puwede kitang gabayan habang naglalaro ka.',
   offerYes: 'Oo, sige',
   offerNo: 'Huwag na, salamat',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Ipakita ulit ang lahat ng tip',
   resetDone: 'Tapos na — lalabas ulit ang bawat tip.',
   turnedOff: 'Naka-off ang Tulong ng Alas. Puwede mo itong i-on ulit mula sa menu anumang oras.',
-  nothingHere: 'Wala pang dapat ipaliwanag dito sa ngayon — tuloy lang!',
   join: 'Sumali',
   createRanking: 'Gumawa ng Ranking table',
   signup: 'Gumawa ng account',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Ini-install ang web client bilang app sa device na ito.',
   hsFullscreen: 'Ino-on o ino-off ang fullscreen.',
   hsDisconnect: 'Dinidiskonekta sa server at bumabalik sa login screen.',
-  hsMenu: 'Ang menu: fullscreen, music player, mga advanced na option, tulong, Tulong ng Alas…',
-  hsHelp: 'Ang tulong: lahat tungkol sa app, may search box.',
+  hsMenu: 'Ang menu: fullscreen, music player, mga advanced na option, Tulong ng Alas…',
   hsAdv: 'Mga advanced na option: lahat ng setting ng app, may search box.',
   hsMusic: 'Ang music player: mga kanta at istasyon ng radyo habang naglalaro ka.',
   hsLoginCard: 'Pinipili kung paano ka maglalaro: Internet sa pokerth.net, Lokal / pagsasanay laban sa mga computer player, o LAN / dedicated server.',

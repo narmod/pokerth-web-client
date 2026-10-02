@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Ndihma e Asit',
-  aceLabel: 'Ndihma e Asit — prek për ta parë sërish këshillën',
+  aceLabel: 'Ndihma e Asit — prek për menynë time',
   offer: 'Për herë të parë këtu? Mund të të udhëheq ndërsa ecën përpara.',
   offerYes: 'Po, të lutem',
   offerNo: 'Jo, faleminderit',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Shfaq sërish të gjitha këshillat',
   resetDone: 'U bë — çdo këshillë do të shfaqet sërish.',
   turnedOff: 'Ndihma e Asit është joaktive. Mund ta aktivizosh sërish nga menyja kurdo.',
-  nothingHere: 'Asgjë për të shpjeguar këtu tani për tani — vazhdo!',
   join: 'Bashkohu',
   createRanking: 'Krijo tavolinë me renditje',
   signup: 'Krijo një llogari',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Instalon klientin web si aplikacion në këtë pajisje.',
   hsFullscreen: 'Ndez ose fik ekranin e plotë.',
   hsDisconnect: 'Shkëputet nga serveri dhe kthehet te ekrani i hyrjes.',
-  hsMenu: 'Menyja: ekran i plotë, lexuesi i muzikës, opsionet e avancuara, ndihmë, Ndihma e Asit…',
-  hsHelp: 'Ndihma: gjithçka për aplikacionin, me një fushë kërkimi.',
+  hsMenu: 'Menyja: ekran i plotë, lexuesi i muzikës, opsionet e avancuara, Ndihma e Asit…',
   hsAdv: 'Opsionet e avancuara: të gjitha cilësimet e aplikacionit, me një fushë kërkimi.',
   hsMusic: 'Lexuesi i muzikës: këngë dhe stacione radioje ndërsa luan.',
   hsLoginCard: 'Zgjedh si luan: Internet në pokerth.net, Lokal / stërvitje kundër lojtarëve kompjuterikë, ose LAN / server i dedikuar.',

@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Tuzuň kömegi',
-  aceLabel: 'Tuzuň kömegi — maslahaty täzeden görmek üçin basyň',
+  aceLabel: 'Tuzuň kömegi — menýumy açmak üçin basyň',
   offer: 'Bu ýerde täzemi? Men size ýoluň ugruna hemme zady görkezip bilerin.',
   offerYes: 'Hawa, haýyş',
   offerNo: 'Ýok, sag boluň',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Ähli maslahatlary täzeden görkez',
   resetDone: 'Taýýar — her maslahat täzeden görkeziler.',
   turnedOff: 'Tuzuň kömegi öçürildi. Ony islän wagtyňyz menýudan täzeden açyp bilersiňiz.',
-  nothingHere: 'Häzirlikçe bu ýerde düşündirere zat ýok — dowam ediň!',
   join: 'Goşul',
   createRanking: 'Ranking stolunu döret',
   signup: 'Hasap döret',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Web müşderini şu enjama programma hökmünde gurnaýar.',
   hsFullscreen: 'Doly ekrany açýar ýa-da ýapýar.',
   hsDisconnect: 'Serwer bilen birikmäni kesýär we giriş ekranyna gaýdýar.',
-  hsMenu: 'Menýu: doly ekran, aýdym-saz pleýeri, giňişleýin sazlamalar, kömek, Tuzuň kömegi…',
-  hsHelp: 'Kömek: programma barada ähli zat, gözleg meýdançasy bilen.',
+  hsMenu: 'Menýu: doly ekran, aýdym-saz pleýeri, giňişleýin sazlamalar, Tuzuň kömegi…',
   hsAdv: 'Giňişleýin sazlamalar: programmanyň ähli sazlamalary, gözleg meýdançasy bilen.',
   hsMusic: 'Aýdym-saz pleýeri: oýnaýarkaňyz aýdymlar we radio stansiýalary.',
   hsLoginCard: 'Nähili oýnajakdygyňyzy saýlaýar: pokerth.net-de onlaýn, kompýuter oýunçylaryna garşy ýerli / türgenleşik ýa-da LAN / aýratyn serwer.',

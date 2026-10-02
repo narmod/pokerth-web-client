@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Tūzo pagalba',
-  aceLabel: 'Tūzo pagalba — bakstelėk, kad vėl pamatytum patarimą',
+  aceLabel: 'Tūzo pagalba — bakstelėk, kad atidarytum mano meniu',
   offer: 'Čia pirmą kartą? Galiu viską parodyti pakeliui.',
   offerYes: 'Taip, prašau',
   offerNo: 'Ne, ačiū',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Vėl rodyti visus patarimus',
   resetDone: 'Atlikta — visi patarimai vėl bus rodomi.',
   turnedOff: 'Tūzo pagalba išjungta. Bet kada gali ją vėl įjungti iš meniu.',
-  nothingHere: 'Kol kas čia nėra ką paaiškinti — žaisk toliau!',
   join: 'Prisijungti',
   createRanking: 'Sukurti reitingo stalą',
   signup: 'Sukurti paskyrą',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Įdiegia žiniatinklio klientą kaip programėlę šiame įrenginyje.',
   hsFullscreen: 'Įjungia arba išjungia visą ekraną.',
   hsDisconnect: 'Atsijungia nuo serverio ir grįžta į prisijungimo ekraną.',
-  hsMenu: 'Meniu: visas ekranas, muzikos grotuvas, išplėstinės parinktys, žinynas, Tūzo pagalba…',
-  hsHelp: 'Žinynas: viskas apie programėlę, su paieškos laukeliu.',
+  hsMenu: 'Meniu: visas ekranas, muzikos grotuvas, išplėstinės parinktys, Tūzo pagalba…',
   hsAdv: 'Išplėstinės parinktys: visi programėlės nustatymai, su paieškos laukeliu.',
   hsMusic: 'Muzikos grotuvas: dainos ir radijo stotys, kol žaidi.',
   hsLoginCard: 'Pasirenki, kaip žaisti: Internetas per pokerth.net, Vietinis / treniruotė prieš kompiuterinius žaidėjus arba LAN / Skirtasis serveris.',

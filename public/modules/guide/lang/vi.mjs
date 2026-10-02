@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Trợ giúp của quân Át',
-  aceLabel: 'Trợ giúp của quân Át — chạm để xem lại mẹo',
+  aceLabel: 'Trợ giúp của quân Át — chạm để mở menu của mình',
   offer: 'Bạn mới đến? Mình có thể hướng dẫn bạn dần dần trong lúc chơi.',
   offerYes: 'Có, cảm ơn',
   offerNo: 'Không, cảm ơn',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Hiện lại tất cả mẹo',
   resetDone: 'Xong — mọi mẹo sẽ hiện lại.',
   turnedOff: 'Trợ giúp của quân Át đã tắt. Bạn có thể bật lại từ menu bất cứ lúc nào.',
-  nothingHere: 'Hiện chưa có gì cần giải thích ở đây — cứ tiếp tục nhé!',
   join: 'Vào',
   createRanking: 'Tạo bàn xếp hạng',
   signup: 'Tạo tài khoản',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Cài web client thành một ứng dụng trên thiết bị này.',
   hsFullscreen: 'Bật hoặc tắt toàn màn hình.',
   hsDisconnect: 'Ngắt kết nối khỏi máy chủ và quay về màn hình đăng nhập.',
-  hsMenu: 'Menu: toàn màn hình, trình phát nhạc, tùy chọn nâng cao, trợ giúp, Trợ giúp của quân Át…',
-  hsHelp: 'Trợ giúp: mọi thứ về ứng dụng, kèm ô tìm kiếm.',
+  hsMenu: 'Menu: toàn màn hình, trình phát nhạc, tùy chọn nâng cao, Trợ giúp của quân Át…',
   hsAdv: 'Tùy chọn nâng cao: mọi cài đặt của ứng dụng, kèm ô tìm kiếm.',
   hsMusic: 'Trình phát nhạc: bài hát và đài phát thanh trong lúc bạn chơi.',
   hsLoginCard: 'Chọn cách chơi: Internet trên pokerth.net, Cục bộ / luyện tập với người chơi máy tính, hoặc LAN / máy chủ riêng.',

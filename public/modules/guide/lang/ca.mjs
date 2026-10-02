@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Ajuda de l’As',
-  aceLabel: 'Ajuda de l’As — toca per tornar a veure el consell',
+  aceLabel: 'Ajuda de l’As — toca per veure el meu menú',
   offer: 'Ets nou per aquí? Et puc guiar mentre avances.',
   offerYes: 'Sí, si us plau',
   offerNo: 'No, gràcies',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Torna a mostrar tots els consells',
   resetDone: 'Fet — tots els consells es tornaran a mostrar.',
   turnedOff: 'L’Ajuda de l’As està desactivada. La pots tornar a activar des del menú quan vulguis.',
-  nothingHere: 'Ara mateix no hi ha res a explicar aquí — endavant!',
   join: 'Entra',
   createRanking: 'Crea una taula Ranking',
   signup: 'Crea un compte',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Instal·la el client web com a aplicació en aquest dispositiu.',
   hsFullscreen: 'Activa o desactiva la pantalla completa.',
   hsDisconnect: 'Es desconnecta del servidor i torna a la pantalla d’inici de sessió.',
-  hsMenu: 'El menú: pantalla completa, reproductor de música, opcions avançades, ajuda, Ajuda de l’As…',
-  hsHelp: 'L’ajuda: tot sobre l’aplicació, amb un camp de cerca.',
+  hsMenu: 'El menú: pantalla completa, reproductor de música, opcions avançades, Ajuda de l’As…',
   hsAdv: 'Opcions avançades: tots els paràmetres de l’aplicació, amb un camp de cerca.',
   hsMusic: 'El reproductor de música: cançons i emissores de ràdio mentre jugues.',
   hsLoginCard: 'Tria com jugues: Internet a pokerth.net, Local / entrenament contra jugadors d’ordinador, o LAN / servidor dedicat.',

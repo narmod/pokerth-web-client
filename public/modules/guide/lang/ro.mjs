@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Ajutorul Asului',
-  aceLabel: 'Ajutorul Asului — atinge pentru a revedea sfatul',
+  aceLabel: 'Ajutorul Asului — atinge pentru meniul meu',
   offer: 'Ești nou aici? Te pot ghida pe măsură ce descoperi.',
   offerYes: 'Da, te rog',
   offerNo: 'Nu, mersi',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Arată din nou toate sfaturile',
   resetDone: 'Gata — fiecare sfat va fi afișat din nou.',
   turnedOff: 'Ajutorul Asului este dezactivat. Îl poți reactiva oricând din meniu.',
-  nothingHere: 'Nimic de explicat aici deocamdată — continuă!',
   join: 'Intră',
   createRanking: 'Creează o masă clasată',
   signup: 'Creează un cont',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Instalează clientul web ca aplicație pe acest dispozitiv.',
   hsFullscreen: 'Pornește sau oprește ecranul complet.',
   hsDisconnect: 'Te deconectează de la server și revine la ecranul de conectare.',
-  hsMenu: 'Meniul: ecran complet, player muzical, opțiuni avansate, ajutor, Ajutorul Asului…',
-  hsHelp: 'Ajutorul: totul despre aplicație, cu un câmp de căutare.',
+  hsMenu: 'Meniul: ecran complet, player muzical, opțiuni avansate, Ajutorul Asului…',
   hsAdv: 'Opțiuni avansate: toate setările aplicației, cu un câmp de căutare.',
   hsMusic: 'Playerul muzical: piese și posturi de radio cât timp joci.',
   hsLoginCard: 'Alege cum joci: Internet pe pokerth.net, Local / antrenament contra jucătorilor computer sau LAN / server dedicat.',

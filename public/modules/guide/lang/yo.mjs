@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Ìrànlọ́wọ́ Ace',
-  aceLabel: 'Ìrànlọ́wọ́ Ace — tẹ̀ láti rí ìmọ̀ràn náà lẹ́ẹ̀kan sí i',
+  aceLabel: 'Ìrànlọ́wọ́ Ace — tẹ̀ fún àkójọ-àṣàyàn mi',
   offer: 'Ṣé o jẹ́ tuntun níbí? Mo lè máa fi ọ̀nà hàn ọ́ bí o ṣe ń lọ.',
   offerYes: 'Bẹ́ẹ̀ni, jọ̀ọ́',
   offerNo: 'Rárá o ṣé',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Fi gbogbo ìmọ̀ràn hàn lẹ́ẹ̀kan sí i',
   resetDone: 'Ó ti parí — gbogbo ìmọ̀ràn yóò tún hàn.',
   turnedOff: 'Ìrànlọ́wọ́ Ace ti wà ní pípa. O lè tún tàn án láti inú àkójọ nígbàkígbà.',
-  nothingHere: 'Kò sí nǹkan láti ṣàlàyé níbí báyìí — máa bá a lọ!',
   join: 'Darapọ̀',
   createRanking: 'Ṣẹ̀dá tábìlì Ranking',
   signup: 'Ṣẹ̀dá àkáǹtì',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Ó ń fi oníbàárà wẹ́ẹ̀bù sórí ẹ̀rọ yìí gẹ́gẹ́ bí ìṣàfilọ́lẹ̀.',
   hsFullscreen: 'Ojú kíkún tàn tàbí pa.',
   hsDisconnect: 'Ó ń gé ìsopọ̀ pẹ̀lú olùpín, ó sì ń padà sí ojú-ìwé ìwọlé.',
-  hsMenu: 'Àkójọ-àṣàyàn: ojú kíkún, aṣeré orin, àṣàyàn ìlọsíwájú, ìrànlọ́wọ́, Ìrànlọ́wọ́ Ace…',
-  hsHelp: 'Ìrànlọ́wọ́: gbogbo nǹkan nípa ìṣàfilọ́lẹ̀ náà, pẹ̀lú àpótí ìwádìí.',
+  hsMenu: 'Àkójọ-àṣàyàn: ojú kíkún, aṣeré orin, àṣàyàn ìlọsíwájú, Ìrànlọ́wọ́ Ace…',
   hsAdv: 'Àṣàyàn ìlọsíwájú: gbogbo ètò ìṣàfilọ́lẹ̀ náà, pẹ̀lú àpótí ìwádìí.',
   hsMusic: 'Aṣeré orin: àwọn orin àti ilé-iṣẹ́ rédíò nígbà tí o bá ń ṣeré.',
   hsLoginCard: 'Ó ń yan bí o ṣe ń ṣeré: Ayélujára lórí pokerth.net, Agbègbè / ìdánrawò pẹ̀lú àwọn òṣèré kọ̀ǹpútà, tàbí LAN / olùpín àdáni.',

@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Cobhair an Aoin',
-  aceLabel: 'Cobhair an Aoin — thoir gnogag airson a’ mholadh fhaicinn a-rithist',
+  aceLabel: 'Cobhair an Aoin — thoir gnogag airson a’ chlàr-taice agam',
   offer: 'Ùr an seo? ’S urrainn dhomh do stiùireadh mun cuairt fhad ’s a thèid thu air adhart.',
   offerYes: 'Tha, mas e do thoil e',
   offerNo: 'Chan eil, tapadh leat',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Seall gach moladh a-rithist',
   resetDone: 'Dèanta — nochdaidh gach moladh a-rithist.',
   turnedOff: 'Tha Cobhair an Aoin dheth. ’S urrainn dhut a cur air a-rithist on chlàr-taice uair sam bith.',
-  nothingHere: 'Chan eil dad ri mhìneachadh an seo an-dràsta — lean ort!',
   join: 'Gabh pàirt',
   createRanking: 'Cruthaich bòrd rangachaidh',
   signup: 'Cruthaich cunntas',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Stàlaichidh e an cliant-lìn mar aplacaid air an uidheam seo.',
   hsFullscreen: 'Làn-sgrìn air no dheth.',
   hsDisconnect: 'Dì-cheanglaidh e on fhrithealaiche agus tillidh e gu sgrìn a’ chlàraidh a-steach.',
-  hsMenu: 'An clàr-taice: làn-sgrìn, cluicheadair ciùil, roghainnean adhartach, cobhair, Cobhair an Aoin…',
-  hsHelp: 'A’ chobhair: a h-uile càil mun aplacaid, le bogsa-luirg.',
+  hsMenu: 'An clàr-taice: làn-sgrìn, cluicheadair ciùil, roghainnean adhartach, Cobhair an Aoin…',
   hsAdv: 'Roghainnean adhartach: gach roghainn san aplacaid, le bogsa-luirg.',
   hsMusic: 'An cluicheadair ciùil: tracaichean is stèiseanan rèidio fhad ’s a bhios tu a’ cluich.',
   hsLoginCard: 'Tagh mar a chluicheas tu: Eadar-lìon air pokerth.net, Ionadail / trèanadh an aghaidh chluicheadairean coimpiutair, no LAN / frithealadair sònraichte.',

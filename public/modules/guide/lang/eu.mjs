@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Batekoaren laguntza',
-  aceLabel: 'Batekoaren laguntza — sakatu aholkua berriro ikusteko',
+  aceLabel: 'Batekoaren laguntza — sakatu nire menurako',
   offer: 'Berria zara hemen? Bidean dena erakuts diezazuket.',
   offerYes: 'Bai, mesedez',
   offerNo: 'Ez, eskerrik asko',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Erakutsi aholku guztiak berriro',
   resetDone: 'Eginda — aholku guztiak berriro agertuko dira.',
   turnedOff: 'Batekoaren laguntza desaktibatuta dago. Menutik berriro aktiba dezakezu edonoiz.',
-  nothingHere: 'Ez dago ezer azaltzeko hemen oraingoz — jarraitu!',
   join: 'Sartu',
   createRanking: 'Sortu Ranking mahai bat',
   signup: 'Sortu kontu bat',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Web bezeroa aplikazio gisa instalatzen du gailu honetan.',
   hsFullscreen: 'Pantaila osoa aktibatu edo desaktibatu.',
   hsDisconnect: 'Zerbitzaritik deskonektatu eta saio-hasierako pantailara itzultzen da.',
-  hsMenu: 'Menua: pantaila osoa, musika-erreproduzigailua, aukera aurreratuak, laguntza, Batekoaren laguntza…',
-  hsHelp: 'Laguntza: aplikazioari buruzko guztia, bilaketa-koadro batekin.',
+  hsMenu: 'Menua: pantaila osoa, musika-erreproduzigailua, aukera aurreratuak, Batekoaren laguntza…',
   hsAdv: 'Aukera aurreratuak: aplikazioaren ezarpen guztiak, bilaketa-koadro batekin.',
   hsMusic: 'Musika-erreproduzigailua: abestiak eta irrati-kateak jokatzen duzun bitartean.',
   hsLoginCard: 'Nola jokatu aukeratzen duzu: Internet pokerth.net-en, Lokala / entrenamendua ordenagailuko jokalarien aurka, edo LAN / zerbitzari dedikatua.',

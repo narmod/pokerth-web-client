@@ -103,6 +103,10 @@ function anim(node, frames, opts) {
   if (!node || typeof node.animate !== 'function') return null;
   const a = node.animate(frames, opts);
   anims.push(a);
+  // finished one-shots leave the list (a tip re-rendered at every lobby update added one each time, web.276)
+  if (!(opts && opts.iterations === Infinity) && !(opts && opts.fill === 'forwards')) {
+    a.onfinish = () => { const i = anims.indexOf(a); if (i >= 0) anims.splice(i, 1); };
+  }
   return a;
 }
 
@@ -173,6 +177,7 @@ async function doDock(o) {
   ace.addEventListener('click', (ev) => { ev.stopPropagation(); if (onTapCb) onTapCb(); });
   ace.addEventListener('keydown', (ev) => {
     if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); if (onTapCb) onTapCb(); }
+    else if (ev.key === 'Escape' && bubbleOpen()) { ev.stopPropagation(); const cb = onBtnCb; if (cb) cb('escape'); }   // web.276
   });
   bub.addEventListener('click', (ev) => {
     const b = ev.target && ev.target.closest ? ev.target.closest('[data-ad-btn]') : null;
@@ -373,7 +378,7 @@ function placeBubble() {
     const ov = (r2) => { const ix = Math.min(b.right, r2.right) - Math.max(b.left, r2.left), iy = Math.min(b.bottom, r2.bottom) - Math.max(b.top, r2.top); return ix > 0 && iy > 0 ? ix * iy : 0; };
     let c = targets.reduce((sum, t) => sum + ov(t) * t.weight, 0);
     if (av) c += ov(av) * 100;
-    if (b.top < 0 || b.bottom > vh) c += 1e9;
+    if (b.top < 0 || b.bottom > vh || b.left < 0 || b.right > vw) c += 1e9;   // never cut at an edge (web.276)
     return c;
   };
   // also under the header on the left and in the middle (a wide screen: the felt buttons sit in its corners)
@@ -391,7 +396,14 @@ function placeBubble() {
     if (best[0].left + bw > r.left && topP.top + bh > r.top - 8 && cap < bh) { bub.style.maxHeight = cap + 'px'; bub.style.overflowY = 'auto'; }
   }
 }
-window.addEventListener('resize', () => { resize(); settle(); placeBubble(); }, { passive: true });
+// A real change of size (rotation, window) re-docks him even with the bubble open: his
+// old lift could put him above the top of a landscape screen (web.276).
+let lastVw = window.innerWidth, lastVh = window.innerHeight;
+window.addEventListener('resize', () => {
+  const big = Math.abs(window.innerWidth - lastVw) > 2 || Math.abs(window.innerHeight - lastVh) > 120;
+  if (big) { lastVw = window.innerWidth; lastVh = window.innerHeight; }
+  resize(); settle(big); placeBubble();
+}, { passive: true });
 
 /**
  * Opens the bubble.
@@ -405,6 +417,12 @@ export function say(o) {
     `<button type="button" class="ad-btn${b.primary ? ' ad-primary' : ''}" data-ad-btn="${esc(b.id)}">${esc(b.label)}</button>`).join('');
   const ask = o.ask ? `<button type="button" class="ad-ask" data-ad-btn="ask" aria-label="${esc(o.ask)}" title="${esc(o.ask)}">?</button>` : '';
   const body = o.html != null ? o.html : `<p class="ad-text">${rich(o.text)}</p>`;   // html: already escaped by the caller
+  // keyboard: a new page must not drop the focus on <body> (web.276)
+  let refocus = !!o.focus;
+  try {
+    const ae = document.activeElement;
+    if (ae && (bub.contains(ae) || (ae === ace && ace.matches(':focus-visible')))) refocus = true;
+  } catch (e) {}
   bub.innerHTML = ask + body + (btns ? `<div class="ad-btns">${btns}</div>` : '');
   bub.classList.toggle('ad-wide', !!o.wide);
   bub.scrollTop = 0;
@@ -416,12 +434,13 @@ export function say(o) {
   if (!plainMode && !reduce()) {
     anim(bub, [{ opacity: 0, transform: 'translateY(8px) scale(.94)' }, { opacity: 1, transform: 'translateY(0) scale(1)' }], { duration: 220, easing: 'ease-out' });
   }
-  if (o.focus) { try { const f = bub.querySelector('.ad-primary') || bub.querySelector('button'); if (f) f.focus({ preventScroll: true }); } catch (e) {} }
+  if (refocus) { try { const f = bub.querySelector('.ad-primary') || bub.querySelector('.ad-btn') || bub.querySelector('button'); if (f) f.focus({ preventScroll: true }); } catch (e) {} }
 }
 
 /** Closes the bubble; the Ace stays docked. */
 export function hush() {
   if (!bub) return;
+  try { if (bub.contains(document.activeElement) && ace) ace.focus({ preventScroll: true }); } catch (e) {}   // the focus goes back to him
   bub.classList.remove('ad-open', 'ad-wide');
   bub.innerHTML = '';
   onBtnCb = null;

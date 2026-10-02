@@ -333,6 +333,28 @@ music.
 
 Statistics: `ask.more` counts the taps on *More about it*.
 
+## Audit (`web.276`)
+
+- **« ? » mode** has its own `asking` flag. Any other bubble (a tip, a note, his menu, *Install
+  the app*) ends it first, so no tap stays intercepted behind a bubble that is no longer
+  « ? ». `flash()` (« Just one more! ») only replaces a tip. The hand-cursor fallback of
+  `tappableFor()` reads the page's cursor with `body.guide-ask` lifted for the measure.
+- **On demand ends cleanly**: *Close* in his menu, a note or *Install the app*, and a tap on
+  the Ace over them, call `endOnDemand()` — tips off or at the table he leaves and
+  `_guideBusy` is released (it used to block the idle scenes).
+- **Tips off**, `evaluate()` keeps any on-demand bubble (`onDemand()`, his menu included)
+  where he can come, and the first-launch offer only on the login screen and in the lobby.
+- **A cancelled dock** (`leave()` during the engine download or the pop): `ensureDock()`
+  returns null and the caller stops; `evaluate()` re-checks the screen after the dock.
+- **Dock**: finished one-shot animations leave `anims`; a real resize (> 2 px wide or
+  > 120 px high) re-docks even with the bubble open; bubble spots outside the screen
+  rejected; focus kept in the bubble across pages and given back to the Ace; Escape on the
+  Ace closes the bubble. **Scenes**: a tap after `arrive` (door / puff home exits) tears the
+  actor down instead of walking it home over the dock.
+- **Hotspots**: specific entries before generic ones (`#cf-preset-perso`, `#cf-prefs-save-btn`).
+- **Texts**: `hsMenu` (no Help entry), `aceLabel` (a tap opens his menu); `hsHelp`,
+  `nothingHere` removed.
+
 ## Ace's Help, the only help entry (`web.275`)
 
 The header menus (login, lobby, create page, table, privacy page) have one help entry left,

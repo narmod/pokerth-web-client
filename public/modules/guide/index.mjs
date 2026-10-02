@@ -215,6 +215,7 @@ async function ensureDock() {
   await ready();
   if (out) await callBack();                          // out playing a scene: he comes back first
   await m.dock({ plain: motionOff(), label: gt('aceLabel'), onTap });
+  if (!m.isDocked()) return null;                     // undocked meanwhile (leave() during the engine download / pop): the caller stops (web.276)
   setBusy(true);
   return m;
 }
@@ -244,7 +245,7 @@ function leave() {
 let out = false;              // the docked Ace is out playing a scene
 let backWaiters = [];
 function sceneReady() {
-  return !!(M && M.isDocked() && !M.isPlain() && !showing && !M.bubbleOpen() && !M.hasBadge() && M.homeBox());
+  return !!(M && !out && M.isDocked() && !M.isPlain() && !showing && !M.bubbleOpen() && !M.hasBadge() && M.homeBox());
 }
 function recall() {
   if (out && typeof window._mascotRecall === 'function') { try { window._mascotRecall(); } catch (e) {} }
@@ -362,7 +363,8 @@ function closeBubble() {
 }
 
 async function showContext(ctx) {
-  await ensureDock();
+  exitAsk(true);                                       // a tip over « ? » mode ends it (web.276)
+  if (!(await ensureDock())) return;
   showing = { run: createRun(ctx), kind: 'ctx' };
   renderStep();
   // points in a Ranking game: « Well done! » once the bubble is closed (modules/mascot/index.mjs, web.266)
@@ -373,11 +375,13 @@ async function showContext(ctx) {
 }
 
 async function note(key, buttons, onButton, vars) {
+  exitAsk(true);
   const m = await ensureDock();
+  if (!m) return;
   clearTimers();
   hl.clear();
   showing = { kind: 'note' };
-  m.say({ text: gt(key, vars), buttons, onButton: onButton || (() => closeBubble()) });
+  m.say({ text: gt(key, vars), buttons, onButton: onButton || (() => endOnDemand()) });
 }
 
 async function showMenu() {
@@ -395,15 +399,15 @@ async function showMenu() {
   list.push(btn('close', true));
   await note(on ? 'menuOn' : 'menuOff', list, (id) => {
     if (id === 'moreHelp') { openMoreHelp(); return; }
-    if (id === 'turnOn') { turnOn(); return; }
+    if (id === 'turnOn') { const speak = canSpeakHere(); turnOn(); if (!speak) endOnDemand(); return; }   // at the table no welcome: the menu goes
     if (id === 'installApp') { showInstall(); return; }
     if (id === 'replayTip' && tip) { snoozed.delete(tip.id); showContext(tip); return; }
     if (id === 'askMenu' || id === 'ask') { enterAsk(); return; }
     if (id === 'turnOff') { turnOff(); return; }
     if (id === 'resetTips') { resetTips(); return; }
-    closeBubble();
+    endOnDemand();                                     // « Close »: tips off or at the table, he goes (web.276)
   });
-  showing.kind = 'menu';
+  if (showing && showing.kind === 'note') showing.kind = 'menu';
 }
 
 // ── Install the app (web.274) ──────────────────────────────────────
@@ -426,14 +430,16 @@ async function showInstall() {
   try { prompt = typeof window.pwaCanPrompt === 'function' && !!window.pwaCanPrompt(); } catch (e) {}
   const key = prompt ? 'instPrompt' : installKey(navigator.userAgent, navigator.maxTouchPoints || 0);
   const buttons = prompt ? [btn('instNow', true), btn('moreAbout'), btn('close')] : [btn('moreAbout'), btn('close', true)];
+  exitAsk(true);
   const m = await ensureDock();
+  if (!m) return;
   clearTimers();
   hl.clear();
   showing = { kind: 'note' };
   m.say({ text: gt('instWhy') + ' ' + gt(key), buttons, onButton: (id) => {
-    if (id === 'instNow') { closeBubble(); try { window.pwaInstall(); } catch (e) {} return; }
+    if (id === 'instNow') { endOnDemand(); try { window.pwaInstall(); } catch (e) {} return; }
     if (id === 'moreAbout') { openMoreHelp({ ch: 'start', sec: 'pwa' }); return; }
-    closeBubble();
+    endOnDemand();
   } });
 }
 
@@ -443,6 +449,7 @@ async function showInstall() {
 // dock is never intercepted. Ends with « Done », Escape, the help switched
 // off, or a hand starting (D8).
 let armed = null;
+let asking = false;           // « ? » mode armed (listeners, body.guide-ask) — not tied to the bubble on screen (web.276)
 let askMore = null;           // 'chapter:section' of the help about the element explained (H2)
 function askSay(key, extra, more, vars, pre) {
   if (!M) return;
@@ -459,9 +466,10 @@ function askSay(key, extra, more, vars, pre) {
     } });
 }
 async function enterAsk() {
-  await ensureDock();
+  if (!(await ensureDock())) return;
   clearTimers(); hl.clear();
   armed = null;
+  asking = true;
   showing = { kind: 'ask' };
   try { document.body.classList.add('guide-ask'); } catch (e) {}
   document.addEventListener('click', onAskClick, true);
@@ -493,16 +501,23 @@ function exitAsk(silent) {
   document.removeEventListener('pointerdown', onAskDown, true);
   document.removeEventListener('keydown', onAskKey, true);
   try { document.body.classList.remove('guide-ask'); } catch (e) {}
-  const was = showing && showing.kind === 'ask';
+  const was = asking || !!(showing && showing.kind === 'ask');
+  asking = false;
   armed = null;
   if (was) { beacon('ask', 'done'); if (!silent) { closeBubble(); if (!state.isOn() || where().screen === 'game') leave(); else schedule(); } }   // on demand: he goes
 }
 function askTarget(t) {
   if (!t || (t.closest && t.closest('#ace-dock'))) return null;
-  const hs = hotspotFor(t) || windowFor(t);   // a listed element, else the window it belongs to (H2)
-  if (hs) return hs;
-  const el = tappableFor(t);
-  return el ? { el, key: null } : null;
+  // body.guide-ask gives everything the « help » cursor: read the page's own cursor without it,
+  // or the hand-cursor fallback of tappableFor() never matches (web.276)
+  const b = document.body, on = b && b.classList.contains('guide-ask');
+  if (on) b.classList.remove('guide-ask');
+  try {
+    const hs = hotspotFor(t) || windowFor(t);   // a listed element, else the window it belongs to (H2)
+    if (hs) return hs;
+    const el = tappableFor(t);
+    return el ? { el, key: null } : null;
+  } finally { if (on) b.classList.add('guide-ask'); }
 }
 function atMyTurnAction(ev) {
   try { return myTurn() && ev.target && ev.target.closest && ev.target.closest(ACTION_ZONE); } catch (e) { return false; }
@@ -548,8 +563,10 @@ async function openMoreHelp(o = {}) {
   if (!canComeHere()) return false;
   exitAsk(true);
   const m = await ensureDock();
+  if (!m) return false;
   clearTimers(); hl.clear();
   const content = await loadHelp(helpLang());
+  if (!M || !M.isDocked()) return false;
   const w = where();
   help = { content, ch: o.ch || chapterFor(w.screen), q: '', searched: false };
   if (!content.chapters.some((c) => c.id === help.ch) && content.chapters.length) help.ch = content.chapters[0].id;
@@ -657,6 +674,7 @@ function toggleHelpEntry() {
  */
 function flash(key, ms) {
   if (!M || !M.isDocked() || out) return;
+  if (showing && showing.kind !== 'ctx') return;        // never over what the player asked for (« ? », More help, menu) (web.276)
   const back = showing && showing.kind === 'ctx' ? showing : null;
   clearTimeout(noteTimer);
   clearTimeout(stepTimer); stepTimer = 0;
@@ -677,6 +695,7 @@ function onTap() {
     if (showing && showing.kind === 'ask') { exitAsk(); return; }
     if (showing && showing.kind === 'help') { closeMoreHelp(); return; }
     if (showing && showing.kind === 'ctx') { onCtxButton('later'); return; }
+    if (onDemand()) { endOnDemand(); return; }         // his menu, a note: tips off or at the table, he goes (web.276)
     closeBubble(); return;
   }
   // a tip put off with « Later » (red badge) that still applies here: the tap shows it;
@@ -796,6 +815,7 @@ function maybeOffer() {
     const w = where();
     if (!(w.screen === 'connect' || w.screen === 'lobby') || !splashGone() || blocked() || document.hidden || bannerUp() || showing) { maybeOffer(); return; }
     const m = await ensureDock();
+    if (!m || state.isOn() || state.wasOffered()) return;
     showing = { kind: 'offer' };
     beacon('offer', 'offered');
     m.say({
@@ -825,8 +845,9 @@ async function evaluate() {
   if (!available()) { if (!(showing && (showing.kind === 'offer' || (onDemand() && canComeHere())))) leave(); return; }   // live embed: only what the player asked for
   if (!state.isOn()) {
     // tips off: only the offer, a last word, or what the player asked for (« More help », « ? » mode)
-    if (!(showing && (showing.kind === 'offer' || showing.kind === 'note' || showing.kind === 'help' || showing.kind === 'ask'))) leave();
-    else if ((showing.kind === 'help' || showing.kind === 'ask') && !canComeHere()) leave();
+    // (his menu too, web.276); the offer only on the login screen and in the lobby, never at a table (D8)
+    if (!(showing && (showing.kind === 'offer' || onDemand()))) leave();
+    else if (showing.kind === 'offer' ? !(w.screen === 'connect' || w.screen === 'lobby') : (showing.kind !== 'note' && !canComeHere())) leave();
     maybeOffer();
     return;
   }
@@ -870,6 +891,8 @@ async function evaluate() {
     return;
   }
   const m = await ensureDock();
+  if (!m) return;
+  if (where().screen !== w.screen || !state.isOn()) { schedule(); return; }   // moved on while he came (web.276)
   m.settle();                                          // the screen changed: a free spot again
   const ctx = pickContext(w, CONTEXTS, { seen: state.seen, snoozed: (id) => snoozed.has(id) });
   // over a modal / menu only a window's own explanation speaks (C5)
@@ -903,7 +926,7 @@ function onGames() {
 // A guest taps a Ranking (or registered-only) table anyway: the Ace explains
 // again instead of leaving the bare « account required » (D16).
 function onListTap(ev) {
-  if (!available() || !state.isOn()) return;
+  if (!available() || !state.isOn() || asking) return;   // « ? » mode explains the row instead
   const row = ev.target && ev.target.closest ? ev.target.closest('#g-list .game-row[data-gid]') : null;
   if (!row) return;
   const s = S();

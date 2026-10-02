@@ -72,12 +72,23 @@ ok(/window\.toggleHelp = toggleHelpEntry;/.test(idx), 'the Help entries open « 
 ok(!/help-modal|openHelp|closeHelp/.test(fs.readFileSync(path.join(root, 'public/modules/ui/keynav.mjs'), 'utf8') + fs.readFileSync(path.join(root, 'public/modules/ui/z-order.mjs'), 'utf8') + fs.readFileSync(path.join(root, 'public/sw.js'), 'utf8').replace(/help\/content/g, '')), 'no leftover of the window (Escape, z-order, precache)');
 ok(/function helpEntry\(o\) \{\s*if \(!canComeHere\(\)\) return false;/.test(idx) && /function canComeHere\(\) \{\s*if \(!avail\) return false;/.test(idx), 'the Ace answers on every screen, the table and the live embed included');
 ok(/btn\('moreHelp'\), btn\('askMenu'\)/.test(idx), '« More help » first in the Ace\'s menu');
-ok(/showing\.kind === 'help' \|\| showing\.kind === 'ask'/.test(idx) && /if \(!state\.isOn\(\) \|\| where\(\)\.screen === 'game'\) leave\(\);\s+\/\/ on demand \(tips off, the table\): he goes/.test(idx), 'tips off: he comes on demand and leaves when the bubble closes');
+ok(/showing\.kind === 'offer' \|\| onDemand\(\)/.test(idx) && /const ON_DEMAND = \['help', 'ask', 'menu', 'note'\];/.test(idx) && /if \(!state\.isOn\(\) \|\| where\(\)\.screen === 'game'\) leave\(\);\s+\/\/ on demand \(tips off, the table\): he goes/.test(idx), 'tips off: he comes on demand and leaves when the bubble closes');
 ok(!/helpWindow|window\.openHelp/.test(idx), 'no « Help window » button any more');
 const en2 = (await import(pathToFileURL(path.join(root, 'public/modules/guide/lang/en.mjs')).href)).default;
 ok(['moreHelp', 'allTopics', 'back'].every((k) => typeof en2[k] === 'string' && en2[k]) && !('helpWindow' in en2) && !('c5Help' in en2) && !('hsHelpWin' in en2), 'texts: moreHelp, allTopics, back (the window\'s texts removed)');
 ok(fs.readFileSync(path.join(root, 'public/sw.js'), 'utf8').includes("'/modules/guide/knowledge.mjs'"), 'knowledge.mjs precached (the help works offline)');
 ok(/'more-help': \['shown', 'section', 'search', 'window'\]/.test(fs.readFileSync(path.join(root, 'server/guide-stats.js'), 'utf8')), 'statistics: opened, sections read, searches, help window');
+
+// ── audit web.276 ──
+const hs = fs.readFileSync(path.join(root, 'public/modules/guide/hotspots.mjs'), 'utf8');
+ok(hs.indexOf("['#cf-preset-perso'") < hs.indexOf("['.cf-preset[data-preset]'") && hs.indexOf("['#cf-prefs-save-btn'") < hs.indexOf("['.btn-cf-reset'"), '« ? »: My prefs and Save are explained as themselves, not as a preset / reset (first match wins)');
+ok(/let asking = false;/.test(idx) && /async function showContext\(ctx\) \{\s*exitAsk\(true\);/.test(idx) && /function flash\(key, ms\) \{[^}]*\n\s*if \(showing && showing\.kind !== 'ctx'\) return;/.test(idx) && /asking\) return;/.test(idx), '« ? » mode ends when another bubble takes its place; « Just one more! » never over what the player asked for');
+ok(/if \(on\) b\.classList\.remove\('guide-ask'\);/.test(idx), '« ? » mode reads the page\'s own hand cursor (not the « help » cursor it sets)');
+ok(/if \(!m\.isDocked\(\)\) return null;/.test(idx), 'a dock cancelled by leave() stops its caller');
+ok(!('hsHelp' in en2) && !('nothingHere' in en2) && /tap for my menu/.test(en2.aceLabel) && !/help, Ace/.test(en2.hsMenu), 'texts: no Help entry in the menu text, the Ace\'s label says a tap opens his menu');
+const dockSrc = fs.readFileSync(path.join(root, 'public/modules/mascot/guide.mjs'), 'utf8');
+ok(/b\.left < 0 \|\| b\.right > vw/.test(dockSrc) && /settle\(big\)/.test(dockSrc) && /a\.onfinish = /.test(dockSrc) && /ev\.key === 'Escape' && bubbleOpen\(\)/.test(dockSrc), 'dock: bubble never cut at an edge, re-docked after a rotation, finished animations released, Escape on the Ace');
+ok(/if \(c\.home && c\.arrived\) \{ teardown\(\); return; \}/.test(fs.readFileSync(path.join(root, 'public/modules/mascot/engine.mjs'), 'utf8')), 'scenes: a tap at the very end of a door / puff exit does not bring a second Ace');
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

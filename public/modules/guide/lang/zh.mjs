@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'A 牌小助手',
-  aceLabel: 'A 牌小助手 — 点按可再次查看提示',
+  aceLabel: 'A 牌小助手 — 点按打开我的菜单',
   offer: '第一次来？我可以边走边带你熟悉一下。',
   offerYes: '好的，谢谢',
   offerNo: '不用了，谢谢',
@@ -16,7 +16,6 @@ export default {
   resetTips: '重新显示所有提示',
   resetDone: '完成 — 所有提示都会重新显示。',
   turnedOff: 'A 牌小助手已关闭。你可以随时在菜单中重新开启。',
-  nothingHere: '这里暂时没有需要说明的 — 继续吧！',
   join: '加入',
   createRanking: '创建排名牌桌',
   signup: '创建账号',
@@ -67,8 +66,7 @@ export default {
   hsInstall: '将网页客户端作为应用安装到此设备上。',
   hsFullscreen: '开启或关闭全屏。',
   hsDisconnect: '断开与服务器的连接并返回登录界面。',
-  hsMenu: '菜单：全屏、音乐播放器、高级选项、帮助、A 牌小助手……',
-  hsHelp: '帮助：关于本应用的一切，带搜索框。',
+  hsMenu: '菜单：全屏、音乐播放器、高级选项、A 牌小助手……',
   hsAdv: '高级选项：本应用的所有设置，带搜索框。',
   hsMusic: '音乐播放器：边玩边听歌曲和电台。',
   hsLoginCard: '选择游戏方式：在 pokerth.net 上的互联网对局、对战电脑玩家的本地 / 训练，或局域网 / 专用服务器。',

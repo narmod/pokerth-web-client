@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Ass-Hilfe',
-  aceLabel: 'Ass-Hilfe — tippen, um den Tipp erneut zu sehen',
+  aceLabel: 'Ass-Hilfe — tippen für mein Menü',
   offer: 'Neu hier? Ich kann dir unterwegs alles zeigen.',
   offerYes: 'Ja, gerne',
   offerNo: 'Nein, danke',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Alle Tipps erneut zeigen',
   resetDone: 'Erledigt — jeder Tipp wird wieder angezeigt.',
   turnedOff: 'Die Ass-Hilfe ist aus. Du kannst sie jederzeit über das Menü wieder einschalten.',
-  nothingHere: 'Hier gibt es gerade nichts zu erklären — mach weiter!',
   join: 'Beitreten',
   createRanking: 'Ranglistentisch erstellen',
   signup: 'Konto erstellen',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Installiert den Webclient als App auf diesem Gerät.',
   hsFullscreen: 'Vollbild ein oder aus.',
   hsDisconnect: 'Trennt die Verbindung zum Server und kehrt zum Anmeldebildschirm zurück.',
-  hsMenu: 'Das Menü: Vollbild, Musikplayer, erweiterte Optionen, Hilfe, Ass-Hilfe…',
-  hsHelp: 'Die Hilfe: alles über die App, mit Suchfeld.',
+  hsMenu: 'Das Menü: Vollbild, Musikplayer, erweiterte Optionen, Ass-Hilfe…',
   hsAdv: 'Erweiterte Optionen: alle Einstellungen der App, mit Suchfeld.',
   hsMusic: 'Der Musikplayer: Titel und Radiosender, während du spielst.',
   hsLoginCard: 'Hier wählst du, wie du spielst: Internet auf pokerth.net, Lokal / Training gegen Computerspieler oder LAN / dedizierter Server.',

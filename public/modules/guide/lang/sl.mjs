@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Pomoč asa',
-  aceLabel: 'Pomoč asa — tapni za ponoven prikaz nasveta',
+  aceLabel: 'Pomoč asa — tapni za moj meni',
   offer: 'Si nov tukaj? Lahko te sproti vodim.',
   offerYes: 'Da, prosim',
   offerNo: 'Ne, hvala',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Znova prikaži vse nasvete',
   resetDone: 'Končano — vsi nasveti bodo znova prikazani.',
   turnedOff: 'Pomoč asa je izklopljena. Kadar koli jo lahko znova vklopiš v meniju.',
-  nothingHere: 'Tukaj trenutno ni ničesar za razložiti — kar naprej!',
   join: 'Pridruži se',
   createRanking: 'Nova miza z uvrstitvijo',
   signup: 'Ustvari račun',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Namesti spletnega odjemalca kot aplikacijo na to napravo.',
   hsFullscreen: 'Vklopi ali izklopi celozaslonski način.',
   hsDisconnect: 'Prekine povezavo s strežnikom in se vrne na zaslon za prijavo.',
-  hsMenu: 'Meni: celozaslonski način, predvajalnik glasbe, napredne možnosti, pomoč, Pomoč asa…',
-  hsHelp: 'Pomoč: vse o aplikaciji, z iskalnim poljem.',
+  hsMenu: 'Meni: celozaslonski način, predvajalnik glasbe, napredne možnosti, Pomoč asa…',
   hsAdv: 'Napredne možnosti: vse nastavitve aplikacije, z iskalnim poljem.',
   hsMusic: 'Predvajalnik glasbe: skladbe in radijske postaje med igro.',
   hsLoginCard: 'Izbira načina igre: Splet na pokerth.net, Lokalno / vadba proti računalniškim igralcem ali LAN / lastni strežnik.',

@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Ässän apu',
-  aceLabel: 'Ässän apu — napauta nähdäksesi vinkin uudelleen',
+  aceLabel: 'Ässän apu — napauta avataksesi valikkoni',
   offer: 'Uusi täällä? Voin opastaa sinua matkan varrella.',
   offerYes: 'Kyllä, kiitos',
   offerNo: 'Ei kiitos',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Näytä kaikki vinkit uudelleen',
   resetDone: 'Valmis — kaikki vinkit näytetään uudelleen.',
   turnedOff: 'Ässän apu on pois päältä. Voit ottaa sen takaisin käyttöön valikosta milloin tahansa.',
-  nothingHere: 'Täällä ei ole nyt mitään selitettävää — jatka vain!',
   join: 'Liity',
   createRanking: 'Luo Ranking-pöytä',
   signup: 'Luo tili',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Asentaa verkkoasiakkaan sovellukseksi tälle laitteelle.',
   hsFullscreen: 'Koko näyttö päälle tai pois.',
   hsDisconnect: 'Katkaisee yhteyden palvelimeen ja palaa kirjautumisnäyttöön.',
-  hsMenu: 'Valikko: koko näyttö, musiikkisoitin, lisäasetukset, ohje, Ässän apu…',
-  hsHelp: 'Ohje: kaikki sovelluksesta, hakukentän kera.',
+  hsMenu: 'Valikko: koko näyttö, musiikkisoitin, lisäasetukset, Ässän apu…',
   hsAdv: 'Lisäasetukset: kaikki sovelluksen asetukset, hakukentän kera.',
   hsMusic: 'Musiikkisoitin: kappaleita ja radioasemia pelatessasi.',
   hsLoginCard: 'Tässä valitset, miten pelaat: Internet pokerth.netissä, Paikallinen / harjoittelu tietokonepelaajia vastaan tai LAN / oma palvelin.',

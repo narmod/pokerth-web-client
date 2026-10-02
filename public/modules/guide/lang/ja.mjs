@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'エースのヘルプ',
-  aceLabel: 'エースのヘルプ — タップするとヒントをもう一度表示',
+  aceLabel: 'エースのヘルプ — タップするとメニューを開く',
   offer: 'はじめてですか？ 進みながら案内できますよ。',
   offerYes: 'はい、お願いします',
   offerNo: 'いいえ、結構です',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'すべてのヒントを再表示',
   resetDone: '完了 — すべてのヒントがまた表示されます。',
   turnedOff: 'エースのヘルプはオフです。メニューからいつでもオンに戻せます。',
-  nothingHere: '今ここで説明することはありません — そのままどうぞ！',
   join: '参加',
   createRanking: 'ランキング卓を作成',
   signup: 'アカウントを作成',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'この端末に Web クライアントをアプリとしてインストールします。',
   hsFullscreen: '全画面のオン/オフ。',
   hsDisconnect: 'サーバーから切断し、ログイン画面に戻ります。',
-  hsMenu: 'メニュー：全画面、音楽プレーヤー、詳細オプション、ヘルプ、エースのヘルプ…',
-  hsHelp: 'ヘルプ：アプリのすべてを、検索ボックス付きで。',
+  hsMenu: 'メニュー：全画面、音楽プレーヤー、詳細オプション、エースのヘルプ…',
   hsAdv: '詳細オプション：アプリのすべての設定を、検索ボックス付きで。',
   hsMusic: '音楽プレーヤー：プレイ中に曲やラジオ局を流せます。',
   hsLoginCard: '遊び方を選びます：pokerth.net でのインターネット、コンピュータープレイヤー相手のローカル / 練習、または LAN / 専用サーバー。',

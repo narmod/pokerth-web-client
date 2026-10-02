@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Dūža palīdzība',
-  aceLabel: 'Dūža palīdzība — pieskaries, lai vēlreiz redzētu padomu',
+  aceLabel: 'Dūža palīdzība — pieskaries, lai atvērtu manu izvēlni',
   offer: 'Esi šeit jauns? Varu tev visu parādīt pa ceļam.',
   offerYes: 'Jā, lūdzu',
   offerNo: 'Nē, paldies',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Rādīt visus padomus vēlreiz',
   resetDone: 'Gatavs — visi padomi tiks rādīti vēlreiz.',
   turnedOff: 'Dūža palīdzība ir izslēgta. Vari to jebkurā brīdī atkal ieslēgt izvēlnē.',
-  nothingHere: 'Šeit pagaidām nav ko skaidrot — turpini!',
   join: 'Pievienoties',
   createRanking: 'Izveidot Ranking galdu',
   signup: 'Izveidot kontu',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Instalē tīmekļa klientu kā lietotni šajā ierīcē.',
   hsFullscreen: 'Pilnekrāna režīms ieslēgts vai izslēgts.',
   hsDisconnect: 'Atvienojas no servera un atgriežas pieteikšanās ekrānā.',
-  hsMenu: 'Izvēlne: pilnekrāna režīms, mūzikas atskaņotājs, papildu opcijas, palīdzība, Dūža palīdzība…',
-  hsHelp: 'Palīdzība: viss par lietotni, ar meklēšanas lauku.',
+  hsMenu: 'Izvēlne: pilnekrāna režīms, mūzikas atskaņotājs, papildu opcijas, Dūža palīdzība…',
   hsAdv: 'Papildu opcijas: visi lietotnes iestatījumi, ar meklēšanas lauku.',
   hsMusic: 'Mūzikas atskaņotājs: dziesmas un radiostacijas spēles laikā.',
   hsLoginCard: 'Izvēlies, kā spēlēsi: Internets vietnē pokerth.net, Lokāli / treniņš pret datora spēlētājiem, vai LAN / dedicētais serveris.',

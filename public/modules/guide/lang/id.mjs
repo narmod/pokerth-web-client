@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Bantuan si As',
-  aceLabel: 'Bantuan si As — ketuk untuk melihat tipnya lagi',
+  aceLabel: 'Bantuan si As — ketuk untuk membuka menuku',
   offer: 'Baru di sini? Saya bisa memandu Anda sambil jalan.',
   offerYes: 'Ya, boleh',
   offerNo: 'Tidak, terima kasih',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Tampilkan lagi semua tip',
   resetDone: 'Selesai — semua tip akan tampil lagi.',
   turnedOff: 'Bantuan si As nonaktif. Anda bisa mengaktifkannya lagi dari menu kapan saja.',
-  nothingHere: 'Belum ada yang perlu dijelaskan di sini — lanjutkan saja!',
   join: 'Gabung',
   createRanking: 'Buat meja Ranking',
   signup: 'Buat akun',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Menginstal klien web sebagai aplikasi di perangkat ini.',
   hsFullscreen: 'Menyalakan atau mematikan layar penuh.',
   hsDisconnect: 'Memutuskan koneksi dari server dan kembali ke layar masuk.',
-  hsMenu: 'Menu: layar penuh, pemutar musik, opsi lanjutan, bantuan, Bantuan si As…',
-  hsHelp: 'Bantuan: semua tentang aplikasi, dengan kotak pencarian.',
+  hsMenu: 'Menu: layar penuh, pemutar musik, opsi lanjutan, Bantuan si As…',
   hsAdv: 'Opsi lanjutan: semua pengaturan aplikasi, dengan kotak pencarian.',
   hsMusic: 'Pemutar musik: lagu dan stasiun radio selagi Anda bermain.',
   hsLoginCard: 'Memilih cara Anda bermain: Internet di pokerth.net, Lokal / latihan melawan pemain komputer, atau LAN / server khusus.',

@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Pomoc od esa',
-  aceLabel: 'Pomoc od esa — ťukni a tip sa zobrazí znova',
+  aceLabel: 'Pomoc od esa — ťukni a otvoríš moje menu',
   offer: 'Prvýkrát tu? Môžem ťa tu priebežne sprevádzať.',
   offerYes: 'Áno, prosím',
   offerNo: 'Nie, ďakujem',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Znova zobraziť všetky tipy',
   resetDone: 'Hotovo — každý tip sa zobrazí znova.',
   turnedOff: 'Pomoc od esa je vypnutá. Kedykoľvek ju môžeš znova zapnúť v menu.',
-  nothingHere: 'Tu zatiaľ nie je čo vysvetľovať — pokračuj!',
   join: 'Pripojiť sa',
   createRanking: 'Vytvoriť hodnotený stôl',
   signup: 'Vytvoriť účet',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Nainštaluje webového klienta ako aplikáciu do tohto zariadenia.',
   hsFullscreen: 'Zapne alebo vypne celú obrazovku.',
   hsDisconnect: 'Odpojí sa od servera a vráti sa na prihlasovaciu obrazovku.',
-  hsMenu: 'Menu: celá obrazovka, prehrávač hudby, pokročilé možnosti, pomocník, Pomoc od esa…',
-  hsHelp: 'Pomocník: všetko o aplikácii, s vyhľadávacím poľom.',
+  hsMenu: 'Menu: celá obrazovka, prehrávač hudby, pokročilé možnosti, Pomoc od esa…',
   hsAdv: 'Pokročilé možnosti: všetky nastavenia aplikácie, s vyhľadávacím poľom.',
   hsMusic: 'Prehrávač hudby: skladby a rádiové stanice počas hry.',
   hsLoginCard: 'Vyberáš, ako hráš: Internet na pokerth.net, Lokálne / tréning proti počítačovým hráčom alebo LAN / Vyhradený server.',

@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Msaada wa Ekaa',
-  aceLabel: 'Msaada wa Ekaa — gusa ili kuona dokezo tena',
+  aceLabel: 'Msaada wa Ekaa — gusa kwa menyu yangu',
   offer: 'Mgeni hapa? Naweza kukuonyesha mambo kadri unavyoendelea.',
   offerYes: 'Ndiyo, tafadhali',
   offerNo: 'Hapana, asante',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Onyesha madokezo yote tena',
   resetDone: 'Imekamilika — kila dokezo litaonyeshwa tena.',
   turnedOff: 'Msaada wa Ekaa umezimwa. Unaweza kuuwasha tena kutoka kwenye menyu wakati wowote.',
-  nothingHere: 'Hakuna cha kueleza hapa kwa sasa — endelea tu!',
   join: 'Jiunge',
   createRanking: 'Unda meza ya Ranking',
   signup: 'Fungua akaunti',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Husakinisha kiteja cha wavuti kama programu kwenye kifaa hiki.',
   hsFullscreen: 'Skrini nzima kuwasha au kuzima.',
   hsDisconnect: 'Hutenganisha na seva na kurudi kwenye skrini ya kuingia.',
-  hsMenu: 'Menyu: skrini nzima, kichezaji muziki, chaguo za kina, msaada, Msaada wa Ekaa…',
-  hsHelp: 'Msaada: kila kitu kuhusu programu, pamoja na kisanduku cha kutafuta.',
+  hsMenu: 'Menyu: skrini nzima, kichezaji muziki, chaguo za kina, Msaada wa Ekaa…',
   hsAdv: 'Chaguo za kina: mipangilio yote ya programu, pamoja na kisanduku cha kutafuta.',
   hsMusic: 'Kichezaji muziki: nyimbo na vituo vya redio unapocheza.',
   hsLoginCard: 'Chagua jinsi unavyocheza: Intaneti kwenye pokerth.net, Ndani / mazoezi dhidi ya wachezaji wa kompyuta, au LAN / seva maalum.',

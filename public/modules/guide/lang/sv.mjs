@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Essets hjälp',
-  aceLabel: 'Essets hjälp — tryck för att se tipset igen',
+  aceLabel: 'Essets hjälp — tryck för min meny',
   offer: 'Ny här? Jag kan visa dig runt medan du spelar.',
   offerYes: 'Ja tack',
   offerNo: 'Nej tack',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Visa alla tips igen',
   resetDone: 'Klart — alla tips visas igen.',
   turnedOff: 'Essets hjälp är avstängd. Du kan slå på den igen från menyn när som helst.',
-  nothingHere: 'Inget att förklara här just nu — kör på!',
   join: 'Gå med',
   createRanking: 'Skapa ett rankingbord',
   signup: 'Skapa ett konto',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Installerar webbklienten som en app på den här enheten.',
   hsFullscreen: 'Helskärm på eller av.',
   hsDisconnect: 'Kopplar från servern och går tillbaka till inloggningsskärmen.',
-  hsMenu: 'Menyn: helskärm, musikspelare, avancerade alternativ, hjälp, Essets hjälp…',
-  hsHelp: 'Hjälpen: allt om appen, med en sökruta.',
+  hsMenu: 'Menyn: helskärm, musikspelare, avancerade alternativ, Essets hjälp…',
   hsAdv: 'Avancerade alternativ: alla appens inställningar, med en sökruta.',
   hsMusic: 'Musikspelaren: låtar och radiostationer medan du spelar.',
   hsLoginCard: 'Väljer hur du spelar: Internet på pokerth.net, Lokal / träning mot datorspelare eller LAN / dedikerad server.',

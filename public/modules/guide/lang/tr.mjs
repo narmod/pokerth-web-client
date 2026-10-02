@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'As’ın yardımı',
-  aceLabel: 'As’ın yardımı — ipucunu yeniden görmek için dokun',
+  aceLabel: 'As’ın yardımı — menüm için dokun',
   offer: 'Burada yeni misin? İlerledikçe sana etrafı gösterebilirim.',
   offerYes: 'Evet, lütfen',
   offerNo: 'Hayır, teşekkürler',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Tüm ipuçlarını yeniden göster',
   resetDone: 'Tamam — her ipucu yeniden gösterilecek.',
   turnedOff: 'As’ın yardımı kapalı. İstediğin zaman menüden yeniden açabilirsin.',
-  nothingHere: 'Şu an burada açıklanacak bir şey yok — devam et!',
   join: 'Katıl',
   createRanking: 'Sıralama masası oluştur',
   signup: 'Hesap oluştur',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Web istemcisini bu cihaza uygulama olarak yükler.',
   hsFullscreen: 'Tam ekranı açar veya kapatır.',
   hsDisconnect: 'Sunucu bağlantısını keser ve giriş ekranına döner.',
-  hsMenu: 'Menü: tam ekran, müzik çalar, gelişmiş seçenekler, yardım, As’ın yardımı…',
-  hsHelp: 'Yardım: uygulama hakkında her şey, arama kutusuyla.',
+  hsMenu: 'Menü: tam ekran, müzik çalar, gelişmiş seçenekler, As’ın yardımı…',
   hsAdv: 'Gelişmiş seçenekler: uygulamanın tüm ayarları, arama kutusuyla.',
   hsMusic: 'Müzik çalar: oynarken parçalar ve radyo istasyonları.',
   hsLoginCard: 'Nasıl oynayacağını seç: pokerth.net üzerinde İnternet, bilgisayar oyuncularına karşı Yerel / antrenman ya da LAN / özel sunucu.',

@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   name: 'Nápověda od esa',
-  aceLabel: 'Nápověda od esa — klepni pro opětovné zobrazení tipu',
+  aceLabel: 'Nápověda od esa — klepni pro moje menu',
   offer: 'Jsi tu poprvé? Můžu tě tu průběžně provést.',
   offerYes: 'Ano, prosím',
   offerNo: 'Ne, díky',
@@ -16,7 +16,6 @@ export default {
   resetTips: 'Znovu zobrazit všechny tipy',
   resetDone: 'Hotovo — všechny tipy se znovu zobrazí.',
   turnedOff: 'Nápověda od esa je vypnutá. Kdykoli ji můžeš znovu zapnout z nabídky.',
-  nothingHere: 'Tady teď není co vysvětlovat — pokračuj!',
   join: 'Připojit se',
   createRanking: 'Vytvořit hodnocený stůl',
   signup: 'Vytvořit účet',
@@ -67,8 +66,7 @@ export default {
   hsInstall: 'Nainstaluje webového klienta jako aplikaci do tohoto zařízení.',
   hsFullscreen: 'Zapne nebo vypne celou obrazovku.',
   hsDisconnect: 'Odpojí se od serveru a vrátí se na přihlašovací obrazovku.',
-  hsMenu: 'Nabídka: celá obrazovka, přehrávač hudby, pokročilé možnosti, nápověda, Nápověda od esa…',
-  hsHelp: 'Nápověda: vše o aplikaci, s vyhledávacím polem.',
+  hsMenu: 'Nabídka: celá obrazovka, přehrávač hudby, pokročilé možnosti, Nápověda od esa…',
   hsAdv: 'Pokročilé možnosti: všechna nastavení aplikace, s vyhledávacím polem.',
   hsMusic: 'Přehrávač hudby: skladby a rádia, zatímco hraješ.',
   hsLoginCard: 'Volba způsobu hry: Internet na pokerth.net, Místní / trénink proti počítačovým hráčům, nebo LAN / vyhrazený server.',

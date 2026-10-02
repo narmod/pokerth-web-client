@@ -1,4 +1,11 @@
-2026-10-02 version 2.1.9-web.275 (current series):
+2026-10-02 version 2.1.9-web.276 (current series):
+- bugfix: Ace’s Help — « Close » in his menu with the tips off now sends him away (he stayed, and the funny scenes stopped)
+- bugfix: Ace’s Help « ? » — the mode ends when another bubble takes its place (taps were still caught); it now explains the clickable rows and cards drawn by the app instead of running them; « My prefs » and « Save my prefs » on the create page get their own explanation
+- bugfix: Ace’s Help — the first-launch offer no longer stays over the table; « Just one more! » no longer covers what you are reading; his menu no longer vanishes when you switch apps
+- bugfix: Ace’s Help — after rotating the phone he comes back into view; his bubble is never cut at the screen edge; a tap at the very end of a funny scene no longer shows two Aces
+- improvement: Ace’s Help — keyboard: the focus stays in his bubble from page to page, Escape closes it from the Ace too; screen readers announce that a tap opens his menu
+
+2026-10-02 version 2.1.9-web.275:
 - improvement: the header menus keep only « Ace’s Help » (the separate « Help » entry and its option are gone); it opens the Ace’s menu at any time, even with his tips off: More help (the whole help, with a search), « What’s this? », and « Turn on tips »
 
 2026-10-01 version 2.1.9-web.274:
