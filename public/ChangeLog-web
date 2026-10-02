@@ -1,4 +1,7 @@
-2026-10-02 version 2.1.9-web.277 (current series):
+2026-10-02 version 2.1.9-web.278 (current series):
+- bugfix: Korean rules page — typo in « big blind » (빅 블라인드)
+
+2026-10-02 version 2.1.9-web.277:
 - improvement: the FAQ, rules, how-to-play, glossary and hand-rankings pages in 82 languages now say what the English pages say: three new FAQ answers (Ranking games and seasons, watching a game, Ace’s Help), the Ranking-game rules, the « Bet » action, the minimum raise, heads-up blinds, the order of showing cards at showdown, guest play, the « Local / training » mode, installing the app and settings that follow your account
 
 2026-10-02 version 2.1.9-web.276:
