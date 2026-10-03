@@ -307,6 +307,13 @@
   }
   .envhi{border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:12px;font-size:.8rem;color:var(--cream);line-height:1.5}
   .envhi b{color:var(--gold)}
+  /* Diagnostic de « No usable language header » et variantes regionales. */
+  .envdiag{margin-top:12px;font-size:.78rem;color:var(--text)}
+  .envdiag b{color:var(--cream)}
+  .envdiag table{border-collapse:collapse;margin-top:6px;width:100%;max-width:520px}
+  .envdiag td,.envdiag th{padding:3px 8px 3px 0;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .envdiag td:first-child,.envdiag th:first-child{text-align:left;white-space:normal;word-break:break-all;color:var(--cream)}
+  .envdiag th{font-weight:600;color:var(--text);border-bottom:1px solid var(--line)}
   /* ── Light admin theme (data-admin-theme="light") ───────────── */
   :root[data-admin-theme="light"]{--panel:#ffffff;--line:rgba(28,38,58,.16);--gold:#1d222b;--cream:#1b2230;--text:#566071}
   :root[data-admin-theme="light"] body{background:radial-gradient(circle at 50% 0%,#eef1f6,#d7dde7)}
@@ -2362,7 +2369,7 @@
   // an ordered list (ranking), because the two answer different questions —
   // "is anything dominant?" versus "what exactly is in the tail?".
   var _envData={}, _envTrend=null, _envPeriod=null, _envSince=0, _envView='combo', _envKnown=false, _envPings=null, _envExpanded=false, _trafSeries=[], _retVerdict=false;
-  var _envLangs=[], _envLangsKnown=false, _envLangN=0;
+  var _envLangs=[], _envLangsKnown=false, _envLangN=0, _envLangDiagSince=0;
   var _musData={}, _musTitles={}, _musSince=0, _musKnown=false, _musPeriodDays=0;
   // Periode du tableau de bord : un seul nombre de jours pour tout l'onglet,
   // memorise dans le navigateur comme le theme. 14 par defaut : c'est la
@@ -2388,7 +2395,7 @@
   // l'estimation de bruit plus bas, et c'est presque toujours un automate.
   var ENV_TITLES={
     other:'User-Agent the table does not recognise.',
-    'lang:other':'Pings whose Accept-Language header is missing or unusable \u2014 not a language, and not an untranslated one. Almost always a bot or a script; the same condition feeds the bot-like estimate below.'
+    'lang:other':'Pings whose Accept-Language header is missing or cannot name a language (*, C, und, malformed\u2026) \u2014 not an untranslated language: a valid code always keeps its own key, translated or not. Almost always a bot or a script; what was actually received is listed below the ranking.'
   };
   function _envTitle(k){ return ENV_TITLES[_envView+':'+k]||ENV_TITLES[k]||''; }
   // Un nom de langue se lit, un code se devine : « en » et « nl » ne disent
@@ -2411,7 +2418,7 @@
     return k;
   }
   function _envLabel(k){
-    if(_envView==='lang' && k==='other') return 'No language header';
+    if(_envView==='lang' && k==='other') return 'No usable language header';
     if(ENV_LABELS[k]) return ENV_LABELS[k];
     return _envView==='lang' ? _langLabel(k) : k;
   }
@@ -2493,6 +2500,50 @@
              return '<span class="misslg" title="'+_annEsc(k)+'">'+_annEsc(_langLabel(k))+' <s>'+_envFmt(lang[k]||0)+'</s></span>';
            }).join('')+'</div>';
   }
+  // Ce que cache « No usable language header » : la valeur recue (premier
+  // tag de l'en-tete, assaini et plafonne cote proxy), nouveaux / revenus,
+  // UA d'automate ou non, et le couple OS · navigateur de ces pings. Ces
+  // valeurs viennent du client : toujours echappees.
+  var OTHER_RAW_TITLES={'(none)':'No Accept-Language header at all','(empty)':'Header present but empty','(malformed)':'Too long, or characters that cannot be in a language tag','(overflow)':'Further distinct values, past the cap'};
+  function _envOtherDiag(){
+    if(_envView!=='lang') return '';
+    var raw=_envData.otherRaw||{}, keys=Object.keys(raw);
+    if(!keys.length){
+      if(!((_envData.lang||{}).other)) return '';
+      return '<div class="envdiag muted">What is behind “No usable language header” is recorded '
+           + (_envLangDiagSince?('since '+new Date(_envLangDiagSince).toLocaleDateString()):'from proxy 2.1.9-web.299 on')+'.</div>';
+    }
+    keys.sort(function(a,b){ return (raw[b]||0)-(raw[a]||0); });
+    var nw=_envData.otherRawNew||{}, rt=_envData.otherRawRet||{}, bo=_envData.otherRawBot||{}, cl=_envData.otherRawClean||{};
+    var rows=keys.slice(0,12).map(function(k){
+      return '<tr><td title="'+_annEsc(OTHER_RAW_TITLES[k]||'Received as is')+'">'+_annEsc(k)+'</td><td>'+_envFmt(raw[k]||0)+'</td>'
+           + '<td>'+_envFmt(nw[k]||0)+' / '+_envFmt(rt[k]||0)+'</td><td>'+_envFmt(bo[k]||0)+' / '+_envFmt(cl[k]||0)+'</td></tr>';
+    }).join('');
+    var more=keys.length>12?('<div>+ '+(keys.length-12)+' more value'+(keys.length-12>1?'s':'')+' in the JSON export</div>'):'';
+    var oc=_envData.otherCombo||{}, ck=Object.keys(oc).sort(function(a,b){ return (oc[b]||0)-(oc[a]||0); }).slice(0,6);
+    var combo=ck.length?('<div style="margin-top:6px">Their device + browser: '+ck.map(function(k){ return '<span class="misslg">'+_annEsc(k)+' <s>'+_envFmt(oc[k]||0)+'</s></span>'; }).join('')+'</div>'):'';
+    return '<div class="envdiag"><b>Behind “No usable language header”</b> — the first tag received'
+         + (_envSrc.ld==='period'?'':' (running totals)')
+         + '<table><tr><th>Value</th><th>Pings</th><th>New / returning</th><th>Bot UA / other UA</th></tr>'+rows+'</table>'+more+combo+'</div>';
+  }
+  // Variantes regionales des langues les plus vues : pt → pt-BR / pt-PT.
+  // « fr » seul (pas de region envoyee) compte comme une variante a part.
+  function _envLocales(){
+    if(_envView!=='lang') return '';
+    var loc=_envData.langLocale||{}, by={};
+    Object.keys(loc).forEach(function(k){ if(k==='(overflow)') return; var b=k.split('-')[0]; (by[b]||(by[b]=[])).push(k); });
+    var bases=Object.keys(by).filter(function(b){ return by[b].length>1 || by[b][0]!==b; });
+    if(!bases.length) return '';
+    function tot(b){ var t=0; by[b].forEach(function(k){ t+=loc[k]||0; }); return t; }
+    bases.sort(function(a,b){ return tot(b)-tot(a); });
+    var lines=bases.slice(0,10).map(function(b){
+      var ks=by[b].sort(function(x,y){ return (loc[y]||0)-(loc[x]||0); });
+      return '<div><b>'+_annEsc(_langLabel(b))+'</b> '+ks.map(function(k){
+        return '<span class="misslg" title="'+_annEsc(_langLabel(k))+'">'+_annEsc(k)+' <s>'+_envFmt(loc[k]||0)+'</s></span>';
+      }).join('')+'</div>';
+    }).join('');
+    return '<div class="envdiag"><b>Regional variants</b>'+(_envSrc.ld==='period'?'':' (running totals)')+lines+'</div>';
+  }
   function _envHighlight(){
     var combo=_envData.combo||{}, pwa=_envData.pwa||{}, lang=_envData.lang||{};
     var tot=0; Object.keys(combo).forEach(function(k){ tot+=combo[k]||0; });
@@ -2509,10 +2560,15 @@
     // trop des le premier ping sans en-tete.
     var nl=Object.keys(lang).filter(function(k){ return k!=='other'; }).length;
     if(nl) bits.push('<b>'+nl+'</b> language'+(nl===1?'':'s')+' seen'+(_envLangN?(', of '+_envLangN+' translated'):''));
-    // Noise floor: pings with an automated user-agent or no usable language
-    // header. An estimate to scale the other numbers by — nothing is filtered.
+    // Noise floor: pings with an automated user-agent. An estimate to scale
+    // the other numbers by — nothing is filtered. env.bot judges the
+    // User-Agent alone (2.1.9-web.299); the older env.noise also counted every
+    // unusable language header as a bot, so it is only shown, labelled, while
+    // the new counter has nothing yet.
+    var bt=_envData.bot||{}, btT=(bt['bot-like']||0)+(bt.clean||0);
     var nz=_envData.noise||{}, nzT=(nz['bot-like']||0)+(nz.clean||0);
-    if(nzT) bits.push('~<b>'+Math.round(((nz['bot-like']||0)/nzT)*100)+'%</b> bot-like pings (noise estimate)');
+    if(btT) bits.push('~<b>'+Math.round(((bt['bot-like']||0)/btT)*100)+'%</b> pings from an automated user-agent (noise estimate)');
+    else if(nzT) bits.push('~<b>'+Math.round(((nz['bot-like']||0)/nzT)*100)+'%</b> bot-like pings (older estimate, counts every unusable language header as a bot)');
     return bits.length?('<div class="envhi">'+bits.join(' &nbsp;·&nbsp; ')+'</div>'):'';
   }
   function _envAgo(ts){
@@ -2979,7 +3035,7 @@
   // La part, pas le volume brut : un week-end charge fait monter toutes les
   // langues a la fois, ce qui ne dit rien sur laquelle progresse. Le
   // denominateur exclut les pings sans en-tete (des bots, en pratique) pour
-  // ne pas diluer les vraies langues ; la ligne "No language header" garde,
+  // ne pas diluer les vraies langues ; la ligne "No usable language header" garde,
   // elle, sa part sur le total. Une fleche n'est tracee que si l'ecart est
   // significatif (test z a deux proportions, |z| >= 1.96), sinon "stable" ;
   // et rien du tout sous dix pings ou tant que les deux fenetres ne sont pas
@@ -3024,6 +3080,12 @@
     ['os','br','combo','pwa'].forEach(function(v){ if(per.days>0){ out[v]=per[v]||{}; _envSrc[v]='period'; } });
     if(per.lgDays>0){ out.lang=per.lang||{}; _envSrc.lang='period'; }
     if(per.lgnDays>0){ out.langNew=per.langNew||{}; out.langRet=per.langRet||{}; _envSrc.langNew='period'; }
+    // Diagnostic de langue (proxy 2.1.9-web.299+) : la periode des qu'un jour
+    // le porte, sinon le cumul (qui ne commence lui aussi qu'a cette version).
+    if(per.ldDays>0){
+      ['langLocale','otherRaw','otherRawNew','otherRawRet','otherRawBot','otherRawClean','otherCombo','bot'].forEach(function(k){ out[k]=per[k]||{}; });
+      _envSrc.ld='period';
+    }
     return out;
   }
   function _envSrcLine(){
@@ -3076,7 +3138,7 @@
     if(r.rest||_envExpanded){
       more='<button id="envMoreBtn" class="use" style="margin-top:8px">'+(_envExpanded?'Show top 8':'Show all '+(r.rest+8)+' entries')+'</button>';
     }
-    box.innerHTML='<div class="envwrap">'+_envDonut(r.slices,r.total)+'<div class="envlist">'+rows+more+'</div></div>'+_envLangChart()+_envMissingLangs()+_envHighlight()+_envPingLine();
+    box.innerHTML='<div class="envwrap">'+_envDonut(r.slices,r.total)+'<div class="envlist">'+rows+more+'</div></div>'+_envLangChart()+_envMissingLangs()+_envLocales()+_envOtherDiag()+_envHighlight()+_envPingLine();
     var mb=$('envMoreBtn'); if(mb) mb.addEventListener('click',function(){ _envExpanded=!_envExpanded; renderEnv(); });
     if(_envLangLines) _chartMount($('envLangChart'),_envLangLabs,_envLangLines,150,'line');
   }
@@ -3184,7 +3246,7 @@
       // Champ absent = proxy antérieur à la fonctionnalité ; objet vide = rien
       // à compter encore. Voir renderEnv().
       _envKnown=(d.env!==undefined); _envData=_envPick(d.env||{}, d.envPeriod||null); _envTrend=d.langTrend||null; _envPeriod=d.envPeriod||null; _envColorReset(); _envSince=d.envSince||0; _envPings=d.pings||null;
-      _envLangsKnown=Array.isArray(d.langs); _envLangs=_envLangsKnown?d.langs:[]; _envLangN=d.langN||0; renderEnv();
+      _envLangsKnown=Array.isArray(d.langs); _envLangs=_envLangsKnown?d.langs:[]; _envLangN=d.langN||0; _envLangDiagSince=d.langDiagSince||0; renderEnv();
       _musKnown=(d.music!==undefined); _musPeriodDays=(d.musicPeriod&&d.musicPeriod.days)||0; _musData=_musPeriodDays?(d.musicPeriod.plays||{}):(d.music||{}); _musTitles=d.musicTitles||{}; _musSince=d.musicSince||0; renderMusic();
       _guideKnown=(d.guide!==undefined); _guidePeriodDays=(d.guidePeriod&&d.guidePeriod.days)||0; _guideData=_guidePeriodDays?(d.guidePeriod.summary||null):(d.guide||null); _guideSince=d.guideSince||0; renderGuide();
       var dbx=$('trafDb');

@@ -56,7 +56,7 @@ ok(!!badge, 'admin has _envTrendBadge');
 ok(/_envView!=='lang'/.test(badge), 'the badge only exists in the Language view');
 ok(/curDays\|\|0\)<w \|\| \(t\.prevDays\|\|0\)<w/.test(badge), 'nothing is drawn until both windows are full');
 ok(/t\.curN-oc/.test(badge) && /t\.prevN-op/.test(badge), 'real languages are measured against pings that have a usable language (bots without a header do not dilute them)');
-ok(/key==='other'\? t\.curN/.test(badge), 'the "No language header" row keeps its share of all pings');
+ok(/key==='other'\? t\.curN/.test(badge), 'the "No usable language header" row keeps its share of all pings');
 ok(/_envTrendBadge\(s\.key\)/.test(body(admin, 'renderEnv')), 'and renderEnv appends it at the end of each row');
 ok(/\.envrow \.trend\.up\{color:#5ec269\}/.test(admin) && /\.envrow \.trend\.down\{color:#e26d6d\}/.test(admin), 'up is green, down is red');
 

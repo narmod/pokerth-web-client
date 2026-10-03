@@ -6665,7 +6665,7 @@ function emptyVisitsStore() {
   return {
     days: {}, totalV: 0, totalRet: 0, allU: {}, totalLV: 0, allLU: {},
     allM: { pokerthnet: 0, lan: 0, offline: 0, live: 0 },
-    env: {}, envSince: 0, music: {}, musicSince: 0, hourSince: 0,
+    env: {}, envSince: 0, langDiagSince: 0, music: {}, musicSince: 0, hourSince: 0,
     musicVotes: {}, musicVotesSince: 0,
     guide: {}, guideSince: 0
   };
@@ -6684,6 +6684,7 @@ try {
     visitsStore.allM   = { pokerthnet: _am.pokerthnet || 0, lan: _am.lan || 0, offline: _am.offline || 0, live: _am.live || 0 };
     visitsStore.env    = (_vs.env && typeof _vs.env === 'object') ? _vs.env : {};
     visitsStore.envSince = (typeof _vs.envSince === 'number') ? _vs.envSince : 0;
+    visitsStore.langDiagSince = (typeof _vs.langDiagSince === 'number') ? _vs.langDiagSince : 0;
     visitsStore.music  = (_vs.music && typeof _vs.music === 'object') ? _vs.music : {};
     visitsStore.musicSince = (typeof _vs.musicSince === 'number') ? _vs.musicSince : 0;
     visitsStore.musicVotes = (_vs.musicVotes && typeof _vs.musicVotes === 'object') ? _vs.musicVotes : {};
@@ -6809,6 +6810,8 @@ function recordMusicPlay(id) {
 // server/guide-stats.js sont comptées : la cardinalité est bornée quoi qu'on
 // envoie. Même fichier, même rétention, même remise à zéro que la musique.
 const GUIDE_STATS = require('./server/guide-stats.js');
+// Visitor language: header parsing, alias folding, diagnostic of "other".
+const LANG_STATS = require('./server/lang-stats.js');
 function recordGuideEvent(ctx, ev) {
   if (!GUIDE_STATS.valid(ctx, ev)) return false;
   const day = visitDayKey();
@@ -7022,9 +7025,14 @@ function recordVisitEnv(ua, acceptLang, standalone, seenBefore) {
     _envBump('combo', os + ' \u00b7 ' + br);
     _envBump('pwa', standalone ? 'standalone' : 'browser');
     if (!visitsStore.envSince) visitsStore.envSince = Date.now();
-    // Premier tag de l'en-tête, tronqué à la langue de base (fr-CA → fr).
-    const lg = String(acceptLang || '').split(',')[0].trim().slice(0, 12).toLowerCase().split('-')[0];
-    const lgv = /^[a-z]{2,3}$/.test(lg) ? lg : 'other';
+    // Premier tag de l'en-tete, reduit a la langue de base (fr-CA, fr_CA →
+    // fr ; iw → he ; und, *, en-tete absent → other). La regle vit dans
+    // server/lang-stats.js, testee seule (scripts/test-lang-stats.mjs).
+    let lp = LANG_STATS.parse(acceptLang);
+    const lgv = lp.lang;
+    // Un code valide refuse par le plafond tombe dans « other » : le
+    // diagnostic le dit au lieu de le confondre avec un en-tete absent.
+    if (lgv !== 'other' && !_envRoom((visitsStore.env && visitsStore.env.lang) || {}, lgv, 'lang')) lp = { lang: 'other', locale: null, raw: lgv + ' (cap)' };
     _envBump('lang', lgv);
     // Croisement langue x new/returning : meme id hache que recordVisit (donc
     // meme notion de "deja vu"), aucune donnee de plus stockee. seenBefore est
@@ -7033,9 +7041,15 @@ function recordVisitEnv(ua, acceptLang, standalone, seenBefore) {
     if (seenBefore !== null && seenBefore !== undefined) {
       _envBump(seenBefore ? 'langRet' : 'langNew', lgv);
     }
-    // Estimation du bruit : UA d'automate OU langue inexploitable. Compté à
-    // part dans env.noise ; les compteurs de visites restent intacts.
-    _envBump('noise', (UA_BOT.test(ua) || lgv === 'other') ? 'bot-like' : 'clean');
+    // Estimation du bruit : UA d'automate SEUL, dans env.bot. L'ancien
+    // env.noise (UA d'automate OU langue inexploitable) rendait « other »
+    // bot-like par construction ; il est conserve tel quel, gele, pour ne
+    // pas melanger deux definitions dans un meme cumul.
+    // Diagnostic de langue (env.langLocale, env.otherRaw*, env.otherCombo,
+    // env.bot) : premier tag d'un en-tete deja recu, compteurs plafonnes.
+    const diagCtx = { seenBefore: (seenBefore === true || seenBefore === false) ? seenBefore : null, isBot: UA_BOT.test(ua), combo: os + ' \u00b7 ' + br };
+    if (!visitsStore.langDiagSince) visitsStore.langDiagSince = Date.now();
+    LANG_STATS.record(visitsStore.env, lp, diagCtx);
     // Série quotidienne par langue : le cumul dit lesquelles, pas quand. Un
     // petit dictionnaire par jour (même seau que les visites, même rétention,
     // même plafond de cardinalité) suffit à tracer l'évolution dans le temps.
@@ -7056,6 +7070,8 @@ function recordVisitEnv(ua, acceptLang, standalone, seenBefore) {
       if (!_envRoom(b, kv[1], kv[0])) b.other = (b.other || 0) + 1;
       else b[kv[1]] = (b[kv[1]] || 0) + 1;
     });
+    if (!bucket.ld) bucket.ld = {};
+    LANG_STATS.record(bucket.ld, lp, diagCtx);
     if (seenBefore !== null && seenBefore !== undefined) {
       const kk = seenBefore ? 'lgr' : 'lgn';
       const b = bucket[kk] || (bucket[kk] = {});
@@ -7229,7 +7245,8 @@ function visitLangTrend(win) {
       const b = visitsStore.days[visitDayKeyFromIndex(today - fromBack - i)];
       if (!b || !b.lg) continue;
       m.days++;
-      for (const k in b.lg) { out[k] = (out[k] || 0) + (b.lg[k] || 0); m.n += b.lg[k] || 0; }
+      const lg = LANG_STATS.foldLangMap(b.lg);
+      for (const k in lg) { out[k] = (out[k] || 0) + (lg[k] || 0); m.n += lg[k] || 0; }
     }
     return { by: out, n: m.n, days: m.days };
   }
@@ -7243,6 +7260,7 @@ function visitLangTrend(win) {
 function visitEnvPeriod(daysBack) {
   const out = { os: {}, br: {}, combo: {}, pwa: {}, lang: {}, langNew: {}, langRet: {}, days: 0, lgDays: 0, lgnDays: 0 };
   const today = visitDayIndex();
+  const lds = [];
   function add(dst, src) { for (const k in src) dst[k] = (dst[k] || 0) + (src[k] || 0); }
   for (let i = 0; i < daysBack; i++) {
     const b = visitsStore.days[visitDayKeyFromIndex(today - i)];
@@ -7250,7 +7268,17 @@ function visitEnvPeriod(daysBack) {
     if (b.ev) { out.days++; ['os', 'br', 'combo', 'pwa'].forEach(function (k) { if (b.ev[k]) add(out[k], b.ev[k]); }); }
     if (b.lg) { out.lgDays++; add(out.lang, b.lg); }
     if (b.lgn || b.lgr) { out.lgnDays++; if (b.lgn) add(out.langNew, b.lgn); if (b.lgr) add(out.langRet, b.lgr); }
+    if (b.ld) lds.push(b.ld);
   }
+  // Codes retires (iw, in, tl…) lus avec leur successeur : le fichier garde
+  // l'historique tel quel, seule la lecture est unifiee.
+  out.lang = LANG_STATS.foldLangMap(out.lang);
+  out.langNew = LANG_STATS.foldLangMap(out.langNew);
+  out.langRet = LANG_STATS.foldLangMap(out.langRet);
+  // Diagnostic de langue, meme periode ; ldDays = jours qui le portent.
+  const ld = LANG_STATS.period(lds);
+  out.ldDays = ld.days;
+  LANG_STATS.DIAG_KEYS.forEach(function (k) { out[k] = ld[k]; });
   return out;
 }
 function visitMusicPeriod(daysBack) {
@@ -7330,7 +7358,7 @@ function visitsSummary(periodDays) {
     d.setDate(now.getDate() - i);
     const k = visitDayKey(d);
     const b = visitsStore.days[k];
-    series.push({ date: k, v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? b.lg : undefined, mu: (b && b.mu) ? b.mu : undefined });
+    series.push({ date: k, v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined });
   }
   return {
     ok: true,
@@ -7349,8 +7377,9 @@ function visitsSummary(periodDays) {
     hourProfile: visitHourProfile(P),
     hourSince: visitsStore.hourSince || 0,
     cohorts: visitCohorts(P),
-    env: visitsStore.env || {},
+    env: Object.assign(LANG_STATS.foldEnv(visitsStore.env || {}), { noiseMeta: LANG_STATS.noiseMeta(visitsStore.langDiagSince) }),
     envSince: visitsStore.envSince || 0,
+    langDiagSince: visitsStore.langDiagSince || 0,
     langTrend: visitLangTrend(P),
     envPeriod: visitEnvPeriod(P),
     musicPeriod: visitMusicPeriod(P),

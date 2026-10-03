@@ -66,7 +66,7 @@ ok(/key === 'lang' && supportedLangs\(\)\.indexOf\(val\) >= 0/.test(room),
 ok(/_envRoom\(bucket\.lg, lgv, 'lang'\)/.test(proxy), 'the per-day series uses the same rule as the running total');
 
 // -- Two different words for two different things --------------------------
-ok(/if\(_envView==='lang' && k==='other'\) return 'No language header'/.test(admin),
+ok(/if\(_envView==='lang' && k==='other'\) return 'No usable language header'/.test(admin),
   'in the language view, other is named for what it is');
 ok(/'lang:other'/.test(admin) && /Almost always a bot or a script/.test(admin),
   'with a tooltip saying it is not a language, let alone an untranslated one');
