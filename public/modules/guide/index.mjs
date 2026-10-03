@@ -327,6 +327,24 @@ function tourTarget(ctx, step, w) {
  * that far, the bubble moves under the header instead. Instant under
  * « Reduced effects ».
  */
+/**
+ * Scrolls `el` to `top` px from the top of the screen by moving its own
+ * scrolling list only (the create page's column). Never scrollIntoView: it
+ * also scrolled the page itself (html, overflow hidden), which slid the whole
+ * screen up over a black band on iPhone and stayed so after the tour (web.290).
+ */
+function scrollUnder(el, top) {
+  const r = el.getBoundingClientRect();
+  for (let n = el.parentElement; n && n !== document.body && n !== document.documentElement; n = n.parentElement) {
+    let cs = null;
+    try { cs = getComputedStyle(n); } catch (e) { cs = null; }
+    if (!cs || !/(auto|scroll)/.test(cs.overflowY) || n.scrollHeight <= n.clientHeight + 1) continue;
+    const to = Math.max(0, Math.min(n.scrollHeight - n.clientHeight, Math.round(n.scrollTop + r.top - top)));
+    try { n.scrollTo({ top: to, behavior: motionOff() ? 'auto' : 'smooth' }); } catch (e) { n.scrollTop = to; }
+    return;
+  }
+}
+
 function bringIntoView(el) {
   clearTimeout(scrollTimer); scrollTimer = 0;
   if (!el || !M) return;
@@ -336,18 +354,17 @@ function bringIntoView(el) {
   const top = Math.round(hdr + 12);
   const r = el.getBoundingClientRect(), b0 = bub.getBoundingClientRect();
   const fits = r.top >= top && r.bottom <= b0.top - 8;     // already in sight above the bubble
-  if (!fits) {
-    const was = el.style.scrollMarginTop;
-    el.style.scrollMarginTop = top + 'px';
-    try { el.scrollIntoView({ block: 'start', inline: 'nearest', behavior: motionOff() ? 'auto' : 'smooth' }); } catch (e) { try { el.scrollIntoView(true); } catch (e2) {} }
-    el.style.scrollMarginTop = was;
-  }
+  if (!fits) scrollUnder(el, top);
   const done = () => {
     scrollTimer = 0;
     if (!M || !M.bubbleOpen() || hl.current() !== el) return;
     hl.refresh();
-    const f = el.getBoundingClientRect(), b = bub.getBoundingClientRect();
-    if (f.top < b.bottom - 4 && f.bottom > b.top + 4) M.setPos('top');   // the end of the page: the field could not go up
+    const over = (a, b) => a.top < b.bottom - 4 && a.bottom > b.top + 4 && a.left < b.right - 4 && a.right > b.left + 4;
+    const f = el.getBoundingClientRect();
+    if (over(f, bub.getBoundingClientRect())) M.setPos('top');   // the end of the page: the field could not go up
+    // the Ace standing on the field (the last buttons, at the bottom right): he steps aside, his bubble follows
+    const ace = document.querySelector('#ace-dock .ad-ace');
+    if (ace && over(f, ace.getBoundingClientRect())) M.settle(true);
   };
   if (fits || motionOff()) done(); else scrollTimer = setTimeout(done, 520);
 }

@@ -335,6 +335,8 @@ async function runDevice(browser, name, descriptor) {
         assert.ok(s.ring, 'nothing outlined at ' + s.step + ' (' + s.text.slice(0, 40) + ')');
         assert.ok(s.ring.top >= -2 && (s.ring.h > s.vh * 0.6 || s.ring.bottom <= s.vh + 2), 'outlined field off screen at ' + s.step);
         assert.ok(s.over < 0.5, 'the bubble hides the field at ' + s.step + ' (' + Math.round(s.over * 100) + '%)');
+        // only the form's own list scrolls, never the page itself (web.290: the screen slid up over a black band)
+        assert.equal(await page.evaluate(() => document.documentElement.scrollTop + document.body.scrollTop), 0, 'the page itself scrolled at ' + s.step);
         if (i === 2) {                                   // Back, then Next again
           const here = s.step;
           await click(page, btn('prev'));
