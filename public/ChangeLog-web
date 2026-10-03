@@ -1,4 +1,7 @@
-2026-10-03 version 2.1.9-web.283 (current series):
+2026-10-03 version 2.1.9-web.284 (current series):
+- improvement: « More help » — a topic now opens inside the help panel itself, whole text at once and scrollable, with the search and the chapters still there and « All topics » to go back (it used to shrink into a small bubble read page by page)
+
+2026-10-03 version 2.1.9-web.283:
 - improvement: inviting a player to your table is now offered only at invite-only tables, like the official client (no more invitations at Normal, registered-only or Ranking tables)
 
 2026-10-02 version 2.1.9-web.282:

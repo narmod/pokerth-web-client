@@ -71,7 +71,12 @@ body.guide-ask #ace-dock *{cursor:pointer!important}
 #ace-dock .ad-keys{display:grid;grid-template-columns:auto 1fr;gap:5px 10px;align-items:baseline}
 #ace-dock .ad-keys code{font:700 12px/1.3 ui-monospace,Menlo,Consolas,monospace;background:#141414;color:#fbf7ee;border-radius:5px;padding:2px 6px;white-space:nowrap}
 #ace-dock .ad-note{border-inline-start:3px solid #f5c518;padding-inline-start:8px;font-style:italic}
-[dir=rtl] #ace-dock .ad-page,[dir=rtl] #ace-dock .ad-kicker,[dir=rtl] #ace-dock .ad-list{direction:rtl;text-align:right}
+#ace-dock .ad-list.ad-article{display:block;gap:0;padding:0 2px}
+#ace-dock .ad-article .ad-backto{margin:0 0 6px;font-weight:600;font-size:12.5px;min-height:32px;padding:6px 10px}
+#ace-dock .ad-sectitle{margin:2px 0 6px;font:800 15px/1.3 system-ui,sans-serif;color:#141414}
+#ace-dock .ad-article .ad-page{font:500 13.5px/1.45 system-ui,sans-serif}
+#ace-dock .ad-article .ad-keys,#ace-dock .ad-article ul{margin:0 0 6px}
+[dir=rtl] #ace-dock .ad-page,[dir=rtl] #ace-dock .ad-kicker,[dir=rtl] #ace-dock .ad-list,[dir=rtl] #ace-dock .ad-sectitle{direction:rtl;text-align:right}
 `;
 
 let root = null;      // #ace-dock

@@ -490,15 +490,21 @@ async function runDevice(browser, name, descriptor) {
       const it = await box(page, bubble + ' .ad-item'); assert.ok(it.h >= 34, `items ${Math.round(it.h)}px tall`);
     });
     await shot(page, name, 'guide-morehelp');
-    await check(`${name}: More help — a section read page by page, then back to the topics`, async () => {
+    await check(`${name}: More help — a section opens in the same panel (whole text, search and chapters kept), then back to the topics`, async () => {
+      const before = await box(page, bubble);
       await page.locator(bubble + ' .ad-item').first().click();
       await page.waitForFunction(() => /›/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-kicker') || {}).textContent || ''), null, { timeout: 3000 });
-      let guard = 0;
-      while (await page.locator(btn('next')).count() && guard++ < 12) { await click(page, btn('next')); await page.waitForTimeout(80); }
-      assert.equal(await page.locator(btn('close')).count(), 1, 'no Close on the last page');
-      inside(await box(page, bubble), 'bubble on the last page');
+      assert.equal(await page.locator(bubble + ' .ad-list.ad-article .ad-page').count(), 1, 'the section is not in the panel');
+      assert.equal(await page.locator(bubble + ' .ad-search').count(), 1, 'the search field went away');
+      assert.ok(await page.locator(bubble + ' .ad-chap').count() >= 3, 'the chapters went away');
+      assert.equal(await page.locator(btn('next')).count(), 0, 'still read page by page');
+      assert.equal(await page.locator(btn('close')).count(), 1, 'no Close');
+      await page.waitForTimeout(450);   // the bubble's open animation (scale) has run
+      const after = await box(page, bubble);
+      assert.ok(Math.abs(after.w - before.w) <= 2, `the panel changed width (${Math.round(before.w)} → ${Math.round(after.w)})`);
+      inside(after, 'panel with a section');
       await click(page, btn('allTopics'));
-      await page.locator(bubble + ' .ad-search').waitFor({ timeout: 3000 });
+      await page.locator(bubble + ' .ad-list:not(.ad-article) .ad-item').first().waitFor({ timeout: 3000 });
     });
     await check(`${name}: More help — search and chapters`, async () => {
       await page.locator(bubble + ' .ad-search').fill('side pot');
