@@ -116,15 +116,14 @@ ok(bad.length === 0, 'all catalogues have the keys, evSignups keeps its {n}' + (
   const late = Date.parse('2026-10-04T01:00:00+02:00');    // the 01:00 game, on the Saturday evening of the BBC calendar
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   if (tz === 'Europe/Berlin' || tz === 'Europe/Paris') {
-    ok(E.evPlayerDay(at) === '2026-10-03' && E.evPlayerDay(late) === '2026-10-03', 'Berlin time: the player\u2019s days are the BBC evenings');
     ok(E.evBerlinRef(at, 'en') === null, 'Berlin time: no site line (same clock)');
   }
   if (!process.env.PTH_TZ_CHILD) {
     const { execFileSync } = await import('child_process');
     let out = '';
-    try { out = execFileSync(process.execPath, ['-e', "process.env.TZ='Asia/Tokyo';import(process.argv[1]).then(E=>{const a=Date.parse('2026-10-03T19:30:00+02:00'),b=Date.parse('2026-10-03T23:15:00+02:00'),l=Date.parse('2026-10-04T01:00:00+02:00');const r=E.evBerlinRef(a,'en-GB'),r2=E.evBerlinRef(l,'en-GB');console.log(JSON.stringify({d:E.evPlayerDay(a),d2:E.evPlayerDay(b),r,r2}))})", new URL('../public/modules/ui/forum-events.mjs', import.meta.url).href], { env: Object.assign({}, process.env, { TZ: 'Asia/Tokyo', PTH_TZ_CHILD: '1' }) }).toString(); } catch (e) { out = ''; }
+    try { out = execFileSync(process.execPath, ['-e', "process.env.TZ='Asia/Tokyo';import(process.argv[1]).then(E=>{const a=Date.parse('2026-10-03T19:30:00+02:00'),b=Date.parse('2026-10-03T23:15:00+02:00'),l=Date.parse('2026-10-04T01:00:00+02:00');const r=E.evBerlinRef(a,'en-GB'),r2=E.evBerlinRef(l,'en-GB');console.log(JSON.stringify({d:E.evGameDay(a),d2:E.evGameDay(b),r,r2}))})", new URL('../public/modules/ui/forum-events.mjs', import.meta.url).href], { env: Object.assign({}, process.env, { TZ: 'Asia/Tokyo', PTH_TZ_CHILD: '1' }) }).toString(); } catch (e) { out = ''; }
     let j = null; try { j = JSON.parse(out.trim().split('\n').pop()); } catch (e) { j = null; }
-    ok(j && j.d === '2026-10-03' && j.d2 === '2026-10-04', 'Tokyo: 19:30 Berlin = 02:30 Sunday there, still Saturday night; 23:15 Berlin = 06:15, Sunday');
+    ok(j && j.d === '2026-10-03' && j.d2 === '2026-10-03', 'Tokyo: the rows stay under the BBC calendar\u2019s evening (Saturday), whatever the player\u2019s clock');
     ok(j && j.r && /Sat/.test(j.r.day) && /3/.test(j.r.day) && j.r.time === '19:30', 'and its row says what the site shows: Sat 3 Oct · 19:30');
     ok(j && j.r2 && /Sat/.test(j.r2.day) && j.r2.time === '01:00', 'the 01:00 game: Saturday on the site, as the BBC calendar files it');
   }

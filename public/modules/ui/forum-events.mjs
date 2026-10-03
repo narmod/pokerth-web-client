@@ -129,17 +129,6 @@ export function evGameDay(ms) {
   return d.toISOString().slice(0, 10);
 }
 
-// Day header of a row since web.295: the PLAYER's own date, a game before
-// 06:00 on his clock counting for the evening before. The header and the time
-// on the row then always name the same day, wherever the player lives (a
-// 19:30 Berlin game seen from Tokyo sits under Sunday, at 02:30). For a player
-// on Berlin time this is exactly the BBC calendar's evenings (evGameDay).
-export function evPlayerDay(ms) {
-  if (typeof ms !== 'number' || !isFinite(ms)) return '';
-  const d = new Date(ms - 6 * 3600000);
-  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-}
-
 // What the community site shows for this game, when the player's clock reads
 // otherwise: the site's evening (weekday + day) and the Berlin time. The BBC
 // calendar files a 01:00 game under the evening before, so does this. '' when
@@ -672,11 +661,12 @@ function _render(data) {
     .sort(function (a, b) { return a.at - b.at; });
   const res = data.results || [];
   let html = '', rows = '';
-  // Grouped by the player's own day (web.295; the Berlin evening before, as the
-  // QML BBC tab): a header and the times below it always name the same day.
+  // Grouped by game evening under a day header (QML BBC tab), the BBC
+  // calendar's evenings (web.296: back from the player's own days of web.295,
+  // narmod's choice); each row says the site's day and time when they differ.
   let day = null;
   for (const e of up) {
-    const k = evPlayerDay(e.at);
+    const k = evGameDay(e.at);
     if (k !== day) { day = k; rows += '<div class="ev-day">' + esc(evDayLabel(k, now, loc)) + '</div>'; }
     rows += _gameRow(e, loc, stepWord);
   }
