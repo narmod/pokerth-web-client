@@ -13,6 +13,8 @@
 // API:  dock({ plain, label, onTap }) · undock() · say({ text, buttons,
 //       onButton, point, avoid, ask }) · hush() · badge(on) · react(kind) · point(on)
 //       homeBox() · away(on, pop) · hasBadge() · isPlain() · bubbleEl()
+//       say({ count, pos }) — a form tour (web.287): « 3/15 » above the text;
+//       pos 'bottom' (next to the Ace, at his base spot) / 'top' (under the header), setPos(pos)
 //       say({ html, wide }) — ready-made (escaped) markup in a wider bubble:
 //       « More help », the help pages (H1, web.267)
 //       guide({ text, buttons, onButton, point }) = dock + say
@@ -47,6 +49,7 @@ body.guide-ask *{cursor:help!important}
 body.guide-ask #ace-dock *{cursor:pointer!important}
 #ace-dock .ad-text b{font-weight:800}
 #ace-dock .ad-btns{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;margin-top:9px}
+#ace-dock .ad-bubble .ad-btns{position:sticky;bottom:-10px;margin:3px 0 -10px;padding:6px 0 10px;background:#fbf7ee}
 #ace-dock .ad-btn{appearance:none;border:1.5px solid #141414;background:transparent;color:#141414;border-radius:999px;padding:6px 14px;font:700 13px/1.2 system-ui,sans-serif;cursor:pointer;min-height:36px}
 #ace-dock .ad-btn.ad-primary{background:#141414;color:#fbf7ee}
 #ace-dock .ad-btn:focus-visible{outline:3px solid #f5c518;outline-offset:1px}
@@ -54,6 +57,7 @@ body.guide-ask #ace-dock *{cursor:pointer!important}
 #ace-dock .ad-bubble.ad-wide{width:min(420px,calc(100vw - 24px));max-width:min(420px,calc(100vw - 24px));max-height:calc(100vh - 24px);overflow:auto}
 #ace-dock .ad-bubble.ad-wide .ad-ask{right:6px;top:6px;width:28px;height:28px}
 #ace-dock .ad-kicker{margin:0 30px 6px 0;font:800 12px/1.3 system-ui,sans-serif;color:#6b5a2e}
+#ace-dock .ad-step{margin-bottom:3px;letter-spacing:.04em;font-variant-numeric:tabular-nums}
 #ace-dock .ad-count{float:right;margin-left:8px;font:700 11px/1.6 system-ui,sans-serif;opacity:.55}
 #ace-dock .ad-search{display:block;width:100%;box-sizing:border-box;border:1.5px solid #141414;border-radius:10px;padding:7px 10px;font:600 14px/1.2 system-ui,sans-serif;background:#fff;color:#141414;margin:0 0 8px;min-height:36px}
 #ace-dock .ad-list{display:flex;flex-direction:column;gap:4px;max-height:min(38vh,260px);overflow:auto;margin:0 0 8px;overscroll-behavior:contain}
@@ -364,6 +368,7 @@ export function settle(force) {   // force: the layout changed — move even wit
 }
 
 let avoidEl = null;      // the element the bubble is about (highlighted): never cover it if avoidable
+let forcedPos = null;    // a form tour decides: 'bottom' (next to the Ace, at his base spot) or 'top' (under the header)
 
 /**
  * Where the bubble goes: next to the Ace (above him on a narrow screen, on
@@ -391,6 +396,25 @@ function placeBubble() {
   if (!bub.classList.contains('ad-open')) return;
   const bw = bub.offsetWidth;
   let bh = bub.offsetHeight;
+  if (forcedPos === 'bottom') {
+    // a form tour: next to the Ace at his base spot, the field scrolled to
+    // the top of the screen (web.287); a tall bubble scrolls, buttons kept
+    const room = Math.round(vh - near.bottom - 8);
+    if (bh > room) { bub.style.maxHeight = Math.max(160, room) + 'px'; bub.style.overflowY = 'auto'; }
+    return;
+  }
+  if (forcedPos === 'top') {
+    // a form tour: under the header, at most half the screen and never over
+    // the Ace — the field it talks about is scrolled just below it (web.287)
+    let hdr0 = 0;
+    try { const h = document.querySelector('.screen.active .header'); if (h) hdr0 = Math.max(0, h.getBoundingClientRect().bottom); } catch (e) {}
+    const t0 = Math.max(hdr0, 8) + 8;
+    let cap = Math.max(160, Math.round(vh * 0.5));
+    if (r.left < vw - 12 && r.right > vw - 12 - bw && r.top > t0) cap = Math.min(cap, Math.max(160, Math.round(r.top - 8 - t0)));
+    if (bh > cap) { bub.style.maxHeight = cap + 'px'; bub.style.overflowY = 'auto'; }
+    apply({ right: 12, top: t0 }, true);
+    return;
+  }
   let hdr = 0;
   try { const h = document.querySelector('.screen.active .header') || document.querySelector('.screen.active [class*="header"]'); if (h) hdr = Math.max(0, h.getBoundingClientRect().bottom); } catch (e) {}
   const top0 = Math.max(hdr, 8) + 8;
@@ -439,7 +463,8 @@ window.addEventListener('resize', () => {
 /**
  * Opens the bubble.
  * @param {{ text: string, buttons?: {id: string, label: string, primary?: boolean}[],
- *           onButton?: (id: string) => void, point?: boolean, focus?: boolean }} o
+ *           onButton?: (id: string) => void, point?: boolean, focus?: boolean,
+ *           count?: string }} o   count: « 3/15 » above the text (a tour)
  */
 export function say(o) {
   if (!root) return;
@@ -447,7 +472,9 @@ export function say(o) {
   const btns = (o.buttons || []).map((b) =>
     `<button type="button" class="ad-btn${b.primary ? ' ad-primary' : ''}" data-ad-btn="${esc(b.id)}">${esc(b.label)}</button>`).join('');
   const ask = o.ask ? `<button type="button" class="ad-ask" data-ad-btn="ask" aria-label="${esc(o.ask)}" title="${esc(o.ask)}">?</button>` : '';
-  const body = o.html != null ? o.html : `<p class="ad-text">${rich(o.text)}</p>`;   // html: already escaped by the caller
+  // count: « 3/15 », where a tour stands (web.287)
+  const kick = o.count ? `<p class="ad-kicker ad-step">${esc(o.count)}</p>` : '';
+  const body = o.html != null ? o.html : `${kick}<p class="ad-text">${rich(o.text)}</p>`;   // html: already escaped by the caller
   // keyboard: a new page must not drop the focus on <body> (web.276)
   let refocus = !!o.focus;
   try {
@@ -459,6 +486,9 @@ export function say(o) {
   bub.classList.toggle('ad-big', !!o.big);
   bub.scrollTop = 0;
   avoidEl = o.avoid || null;
+  forcedPos = o.pos === 'top' || o.pos === 'bottom' ? o.pos : null;
+  // a form tour keeps the Ace at his base spot, bottom right: the field is at the top
+  if (forcedPos === 'bottom' && root) { root.style.setProperty('--ad-lift', '0px'); root.style.setProperty('--ad-shift', '0px'); }
   bub.classList.add('ad-open');
   placeBubble();
   badge(false);
@@ -475,6 +505,7 @@ export function hush() {
   try { if (bub.contains(document.activeElement) && ace) ace.focus({ preventScroll: true }); } catch (e) {}   // the focus goes back to him
   bub.classList.remove('ad-open', 'ad-wide', 'ad-big');
   bub.innerHTML = '';
+  forcedPos = null;
   onBtnCb = null;
   point(false);
   settle();
@@ -486,6 +517,8 @@ export function bubbleOpen() { return !!(bub && bub.classList.contains('ad-open'
 export function bubbleEl() { return bub; }
 /** Places the bubble again after its content changed (search results). */
 export function replace() { placeBubble(); }
+/** A form tour moves the bubble: 'bottom' (next to the Ace) or 'top' (under the header). */
+export function setPos(p) { forcedPos = p === 'top' || p === 'bottom' ? p : null; placeBubble(); }
 
 /** Small red « ! » on the Ace: a tip is waiting (the player said « Later »). */
 export function badge(on) { if (ace) ace.classList.toggle('ad-has-badge', !!on); }

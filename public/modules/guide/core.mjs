@@ -30,10 +30,19 @@
 //                                        (an event, e.g. the result of a game)
 //   live:     true                       re-rendered when the game list changes
 //   fold:     ms                         unanswered bubble folds into the badge
-//   steps:    [{ text: 'key', vars?, target?, buttons?: [...], auto?: ms }]
+//   steps:    [{ text: 'key', vars?, target?, buttons?: [...], auto?: ms,
+//                when?: (where) => boolean, optional?: true }]
 //             vars / target may be functions of `where`; target may list
 //             several selectors (the first one visible wins); auto = next step
-//             after that many ms (waiting-room facts)
+//             after that many ms (waiting-room facts); when = the step exists
+//             only then; optional = left out when its target is not on the page
+//   tour:     true                       a walk through a form (web.287): the page
+//                                        brings each target into view (even off
+//                                        screen), « n/N » counter, « Back » button,
+//                                        « Later » resumes at the same step
+//   row:      '.cf-row'                  tour: outline the target's closest `row`
+//   locked:   { sel, text }              tour: when the target sits in `sel`
+//                                        (a greyed-out field), `text` is added
 // }
 // Extra snapshot fields used by the Ranking contexts (L2):
 //   net (pokerth.net login), rankPick (ranking-pick.mjs choice, or null),
@@ -100,10 +109,21 @@ export function replayContext(where, contexts) {
 
 /**
  * Walks through the steps of one context.
- * run.step() → current step · run.next() → next step or null when finished.
+ * run.step() → current step · run.next() → next step or null when finished ·
+ * run.prev() → previous step (stays on the first) · run.go(i) → step i.
+ * With `where`, steps whose own `when(where)` is false are left out (a tour
+ * step that only exists for training, say); `keep(step)` can leave out more
+ * (the page decides: a step whose field is not on this screen).
  */
-export function createRun(ctx) {
-  const steps = (ctx && Array.isArray(ctx.steps)) ? ctx.steps : [];
+export function createRun(ctx, where, keep) {
+  let steps = (ctx && Array.isArray(ctx.steps)) ? ctx.steps : [];
+  if (where || keep) {
+    steps = steps.filter((s) => {
+      if (where && s && typeof s.when === 'function') { try { if (!s.when(where)) return false; } catch (e) { return false; } }
+      if (keep) { try { return !!keep(s); } catch (e) { return false; } }
+      return true;
+    });
+  }
   let i = 0;
   return {
     ctx,
@@ -112,6 +132,8 @@ export function createRun(ctx) {
     step: () => steps[i] || null,
     isLast: () => i >= steps.length - 1,
     next() { i++; return steps[i] || null; },
+    prev() { if (i > 0) i--; return steps[i] || null; },
+    go(n) { i = Math.max(0, Math.min(steps.length - 1, n | 0)); return steps[i] || null; },
   };
 }
 

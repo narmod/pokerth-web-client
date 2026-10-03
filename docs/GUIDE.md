@@ -158,9 +158,23 @@ screen registered for Escape, such as the login form, do not stop the Ace from s
 
 ## Game creation and windows (L5)
 
-`create-game` (screen `create`) explains the four game types. Any player **with an
-account** can create a Ranking table: 10 players, no password, and it starts when full.
-Cup presets are practice only. Guests and the offline training mode get their own line.
+`create-game` (screen `create`) is a guided tour of the form (web.287), one field per
+step in the order of the page: game style, name, type, password, spectators, max
+players, starting stack, first small blind, blind interval, blind raise order, time per
+action, pause between hands, bot difficulty (training only) and the buttons. The type
+step keeps the C5 rules: any player **with an account** can create a Ranking table (10
+players, no password, it starts when full); cup presets are practice only. Guests and the
+offline training mode get their own lines, and fields that are not on the page are left
+out.
+
+A tour (`tour: true` in the context) differs from other tips: each step's field is
+scrolled to the top of the screen, just under the header, and its row outlined (`row`);
+the bubble sits next to the Ace, who stays at his base spot, and moves under the header
+near the end of the page where the field cannot go up. The bubble shows « n/N », a
+**Back** button from the second step, and **Later** resumes the tour at the same step
+(this session). A field greyed out by the game type or a community template adds the
+`locked` line (`cfLocked`). Steps can depend on the situation (`when`) or on the page
+(`optional`: left out when the target is not laid out).
 
 Window contexts (`contexts/windows.mjs`, priority 50) speak the first time each window
 opens while the help is on. A window outranks the tip of the screen behind it. Over a

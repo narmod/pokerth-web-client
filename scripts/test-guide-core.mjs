@@ -63,6 +63,15 @@ ok(run.step().text === 'one' && !run.isLast(), 'run starts on the first step');
 ok(run.next().text === 'two' && run.isLast(), 'next step, last');
 ok(run.next() === null, 'past the end → null');
 ok(C.createRun(null).step() === null, 'empty run');
+// tours (web.287): Back, a given step, steps left out by `when` or by the page
+{
+  const t = C.createRun({ id: 't', steps: [{ text: 'a' }, { text: 'b', when: (w) => w.x }, { text: 'c' }, { text: 'd', target: '#d' }] }, { x: false }, (s) => s.text !== 'd');
+  ok(t.count === 2 && t.step().text === 'a' && t.next().text === 'c' && t.isLast(), 'tour: `when` false and the page leave steps out');
+  ok(t.prev().text === 'a' && t.prev().text === 'a' && t.index === 0, 'tour: Back goes to the previous step, stays on the first');
+  ok(t.go(9).text === 'c' && t.go(-3).text === 'a', 'tour: go(n) clamps to the steps');
+  const u = C.createRun({ id: 'u', steps: [{ text: 'a', when: () => { throw new Error('x'); } }, { text: 'b' }] }, {});
+  ok(u.count === 1 && u.step().text === 'b', 'tour: a `when` that throws leaves its step out');
+}
 ok(C.fill('{n}/{max} players', { n: 7, max: 10 }) === '7/10 players', 'placeholders filled');
 ok(C.fill('{n} and {x}', { n: 1 }) === '1 and {x}', 'unknown placeholder kept');
 

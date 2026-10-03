@@ -52,12 +52,14 @@ let offerTimer = 0;
 let stepTimer = 0;            // auto-advance of a step (waiting-room facts)
 let foldTimer = 0;            // unanswered bubble → badge
 let noteTimer = 0;            // transient line (« Just one more! »)
+let scrollTimer = 0;          // tour: the bubble is placed again once a field scrolled into view
 let showing = null;           // { run, kind: 'ctx' | 'offer' | 'menu' | 'note' | 'flash' | 'ask' | 'help' }
 let lastWhere = null;
 let lastWait = null;          // { gid, n } seen in the waiting room (arrivals)
 let result = null;            // { gid, place, tied } of my last Ranking game
 let tracker = null;           // { gid, hand, snap, last, done } while I play a Ranking game
 const snoozed = new Set();    // contexts put off with « Later » this session
+const resumeAt = new Map();   // tour id → the step it was left at with « Later » (this session)
 const counted = new Set();    // « shown » already counted this session (statistics, L3)
 let joinedGid = 0;            // Ranking table joined from the bubble (funnel: → started)
 
@@ -222,6 +224,7 @@ async function ensureDock() {
 }
 
 function clearTimers() {
+  clearTimeout(scrollTimer); scrollTimer = 0;
   clearTimeout(stepTimer); stepTimer = 0;
   clearTimeout(foldTimer); foldTimer = 0;
   clearTimeout(noteTimer); noteTimer = 0;
@@ -287,6 +290,63 @@ function firstVisible(sel) {
   return null;
 }
 
+/**
+ * A tour target: the first selector that is on the page (laid out, not
+ * hidden), on screen or not — the tour brings it into view. With `row`, the
+ * field's row stands for it (a switch's own checkbox is hidden by its styling).
+ */
+function firstPresent(sel, row) {
+  const list = Array.isArray(sel) ? sel : sel ? [sel] : [];
+  for (const q of list) {
+    let el = null;
+    try { el = document.querySelector(q); } catch (e) { el = null; }
+    if (!el) continue;
+    el = (row && el.closest(row)) || el;
+    if (!el.getClientRects().length) continue;
+    try { const c = getComputedStyle(el); if (c.visibility === 'hidden') continue; } catch (e) {}
+    const r = el.getBoundingClientRect();
+    if (r.width > 0 && r.height > 0) return el;
+  }
+  return null;
+}
+
+/** Tour: the element to outline for a step (its row, when the context says so). */
+function tourTarget(ctx, step, w) {
+  return firstPresent(val(step.target, w), ctx.row);
+}
+
+/**
+ * Tour: the step's field is scrolled to the top of the screen, just under the
+ * header, and outlined; the bubble sits next to the Ace, who stays at his base
+ * spot at the bottom. Near the end of the page, where the field cannot go up
+ * that far, the bubble moves under the header instead. Instant under
+ * « Reduced effects ».
+ */
+function bringIntoView(el) {
+  clearTimeout(scrollTimer); scrollTimer = 0;
+  if (!el || !M) return;
+  const bub = M.bubbleEl();
+  let hdr = 0;
+  try { const h = document.querySelector('.screen.active .header'); if (h) hdr = Math.max(0, h.getBoundingClientRect().bottom); } catch (e) {}
+  const top = Math.round(hdr + 12);
+  const r = el.getBoundingClientRect(), b0 = bub.getBoundingClientRect();
+  const fits = r.top >= top && r.bottom <= b0.top - 8;     // already in sight above the bubble
+  if (!fits) {
+    const was = el.style.scrollMarginTop;
+    el.style.scrollMarginTop = top + 'px';
+    try { el.scrollIntoView({ block: 'start', inline: 'nearest', behavior: motionOff() ? 'auto' : 'smooth' }); } catch (e) { try { el.scrollIntoView(true); } catch (e2) {} }
+    el.style.scrollMarginTop = was;
+  }
+  const done = () => {
+    scrollTimer = 0;
+    if (!M || !M.bubbleOpen() || hl.current() !== el) return;
+    hl.refresh();
+    const f = el.getBoundingClientRect(), b = bub.getBoundingClientRect();
+    if (f.top < b.bottom - 4 && f.bottom > b.top + 4) M.setPos('top');   // the end of the page: the field could not go up
+  };
+  if (fits || motionOff()) done(); else scrollTimer = setTimeout(done, 520);
+}
+
 /** Shows the current step of the context run (again, after a live update). */
 function renderStep(opts = {}) {
   const run = showing && showing.run;
@@ -294,21 +354,31 @@ function renderStep(opts = {}) {
   if (!step) { closeBubble(); return; }
   const w = where();
   const last = run.isLast();
+  const tour = !!run.ctx.tour;
   let list;
   if (Array.isArray(step.buttons)) {
     const hasAction = step.buttons.some((id) => ACTIONS.indexOf(id) >= 0);
     list = step.buttons.map((id) => btn(id, ACTIONS.indexOf(id) >= 0 || (!hasAction && (id === 'gotIt' || id === 'next'))));
   } else {
-    list = [btn('later'), last ? btn('gotIt', true) : btn('next', true)];
+    list = [btn('later')];
+    if (tour && run.index > 0) list.push(btn('prev'));
+    list.push(last ? btn('gotIt', true) : btn('next', true));
   }
   let text, vars, target;
-  try { text = val(step.text, w); vars = val(step.vars, w); target = firstVisible(val(step.target, w)); }
-  catch (e) { closeBubble(); schedule(); return; }        // the situation changed under the step
+  try {
+    text = val(step.text, w); vars = val(step.vars, w);
+    target = tour ? tourTarget(run.ctx, step, w) : firstVisible(val(step.target, w));
+  } catch (e) { closeBubble(); schedule(); return; }      // the situation changed under the step
   if (!opts.keepHighlight || (target && hl.current() !== target)) {
     hl.clear();
     if (target) hl.highlight(target);
   }
-  M.say({ text: gt(text, vars), buttons: list, point: !!hl.current(), avoid: hl.current(), ask: gt('askLabel'), onButton: onCtxButton });
+  let say = gt(text, vars);
+  const lk = tour && run.ctx.locked;
+  if (lk && target) { try { if (target.closest(lk.sel)) say += '\n' + gt(lk.text); } catch (e) {} }
+  const count = tour && run.count > 1 ? (run.index + 1) + '/' + run.count : '';
+  M.say({ text: say, count, pos: tour ? 'bottom' : null, buttons: list, point: !!hl.current(), avoid: hl.current(), ask: gt('askLabel'), onButton: onCtxButton });
+  if (tour) bringIntoView(target);
   clearTimeout(stepTimer); stepTimer = 0;
   if (step.auto && !last) stepTimer = setTimeout(() => { if (showing && showing.run === run && run.next()) renderStep(); }, step.auto);
   if (!opts.keepFold) {
@@ -334,6 +404,7 @@ function onCtxButton(id) {
   if (!run) { closeBubble(); return; }
   const cid = run.ctx.id;
   if (id === 'next') { if (run.next()) renderStep(); else { beacon(cid, 'done'); finish(cid); } return; }
+  if (id === 'prev') { run.prev(); renderStep(); return; }
   if (id === 'gotIt') { beacon(cid, 'done'); finish(cid); return; }
   if (ACTIONS.indexOf(id) >= 0) {
     const w = where();
@@ -342,8 +413,10 @@ function onCtxButton(id) {
     finish(cid); doAction(id, w); return;
   }
   // « Later », Escape, no answer: put off for this session, badge on the Ace
+  // (a tour starts again where the player left it)
   beacon(cid, 'dismissed');
   snoozed.add(cid);
+  if (run.ctx.tour) resumeAt.set(cid, run.index); else resumeAt.delete(cid);
   closeBubble();
   if (M) M.badge(true);
 }
@@ -351,6 +424,7 @@ function onCtxButton(id) {
 function finish(cid) {
   state.markSeen(cid);
   snoozed.delete(cid);
+  resumeAt.delete(cid);
   if (cid === 'ranked-result') result = null;       // told once per game
   closeBubble();
   schedule();
@@ -366,7 +440,14 @@ function closeBubble() {
 async function showContext(ctx) {
   exitAsk(true);                                       // a tip over « ? » mode ends it (web.276)
   if (!(await ensureDock())) return;
-  showing = { run: createRun(ctx), kind: 'ctx' };
+  let run;
+  if (ctx.tour) {
+    // a form tour: only the steps whose field is on this page (training has no name, type…)
+    const w = where();
+    run = createRun(ctx, w, (s) => !s.target || !s.optional || !!firstPresent(val(s.target, w), ctx.row));
+    if (resumeAt.has(ctx.id)) { run.go(resumeAt.get(ctx.id)); resumeAt.delete(ctx.id); }
+  } else run = createRun(ctx);
+  showing = { run, kind: 'ctx' };
   renderStep();
   // points in a Ranking game: « Well done! » once the bubble is closed (modules/mascot/index.mjs, web.266)
   if (ctx.id === 'ranked-result' && result && result.place && pointsFor(result.place) > 0 && typeof window.mascotCheer === 'function') window.mascotCheer('ranked');
@@ -743,6 +824,7 @@ async function turnOff() {
 function resetTips() {
   state.resetSeen();
   snoozed.clear();
+  resumeAt.clear();
   note('resetDone', [btn('close', true)], () => { closeBubble(); schedule(); });
 }
 

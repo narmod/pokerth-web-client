@@ -305,12 +305,54 @@ async function runDevice(browser, name, descriptor) {
       assert.doesNotMatch(await bubbleText(), /Every option, by section/);
       await page.evaluate(() => window.closeAdvancedOptions && window.closeAdvancedOptions());
     });
-    await check(`${name}: C5 — the game creation page: the four types, Ranking for players with an account`, async () => {
+    await check(`${name}: C5 — the game creation page: a tour of the form, « 1/N »`, async () => {
       await page.waitForTimeout(800);
       await page.evaluate(() => window.App.openCreatePage());
-      await page.waitForFunction(() => /Four game types/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 5000 });
+      await page.waitForFunction(() => /one field at a time/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 5000 });
+      assert.match(await page.locator(bubble + ' .ad-step').innerText(), /^1\/\d+$/);
+      assert.equal(await page.locator(btn('prev')).count(), 0, 'no Back on the first step');
     });
     await shot(page, name, 'guide-c5-create');
+    // every field in turn: brought into view, outlined, the bubble inside the screen and off the field
+    const tourStep = () => page.evaluate(() => {
+      const b = document.querySelector('#ace-dock .ad-bubble.ad-open');
+      const ring = document.querySelector('#ag-ring.ag-on');
+      const rr = ring && ring.getBoundingClientRect(), br = b && b.getBoundingClientRect();
+      const over = rr && br ? Math.max(0, Math.min(rr.right, br.right) - Math.max(rr.left, br.left)) * Math.max(0, Math.min(rr.bottom, br.bottom) - Math.max(rr.top, br.top)) : 0;
+      return { text: (b && b.querySelector('.ad-text') || {}).textContent || '', step: (b && b.querySelector('.ad-step') || {}).textContent || '',
+        ring: rr ? { top: rr.top, bottom: rr.bottom, h: rr.height } : null, over: rr ? over / Math.max(1, rr.width * rr.height) : 0, vh: innerHeight,
+        b: br ? { left: br.left, top: br.top, right: br.right, bottom: br.bottom, vw: innerWidth, vh: innerHeight } : null };
+    });
+    await check(`${name}: C5 — tour: each field scrolled into view and outlined, the bubble leaves it visible; Back works`, async () => {
+      const seen = [];
+      for (let i = 0; i < 20; i++) {
+        if (await page.locator(btn('next')).count() === 0) break;
+        await click(page, btn('next'));
+        await page.waitForTimeout(700);
+        const s = await tourStep();
+        seen.push(s.step + ' ' + s.text.slice(0, 24));
+        inside(s.b, 'bubble at ' + s.step);
+        assert.ok(s.ring, 'nothing outlined at ' + s.step + ' (' + s.text.slice(0, 40) + ')');
+        assert.ok(s.ring.top >= -2 && (s.ring.h > s.vh * 0.6 || s.ring.bottom <= s.vh + 2), 'outlined field off screen at ' + s.step);
+        assert.ok(s.over < 0.5, 'the bubble hides the field at ' + s.step + ' (' + Math.round(s.over * 100) + '%)');
+        if (i === 2) {                                   // Back, then Next again
+          const here = s.step;
+          await click(page, btn('prev'));
+          await page.waitForTimeout(500);
+          const back = await tourStep();
+          assert.equal(parseInt(back.step, 10), parseInt(here, 10) - 1, 'Back did not go one step back');
+          await click(page, btn('next'));
+          await page.waitForTimeout(600);
+        }
+      }
+      assert.ok(seen.some((t) => /Four game types/.test(t)), 'the game types step is part of the tour: ' + seen.join(' | '));
+      assert.ok(/Create table/.test(seen[seen.length - 1]) || /Last step/.test(seen[seen.length - 1]), 'the tour ends on the buttons: ' + seen[seen.length - 1]);
+      await page.locator(btn('gotIt')).waitFor({ timeout: 2000 });
+      await click(page, btn('gotIt'));
+      await page.waitForTimeout(400);
+      assert.equal(await page.locator(bubble).count(), 0, 'the bubble stays after « Got it »');
+    });
+    await shot(page, name, 'guide-c5-create-end');
     await ctx.close();
   }
 

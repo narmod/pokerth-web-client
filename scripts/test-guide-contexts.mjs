@@ -48,8 +48,19 @@ ok(pick({ screen: 'wait', ranked: true }, ['wait-ranking']) === null, 'facts tol
 ok(pick({ screen: 'game', ranked: true, playing: true }) === null, 'silent during a hand (D8)');
 ok(pick({ screen: 'game', ranked: true, playing: false }) === null, 'silent at the table');
 ok(pick({ screen: 'create' }) === 'create-game', 'game creation page → the types, Ranking for account holders, presets are practice');
-const cg = CONTEXTS.find((c) => c.id === 'create-game').steps[0];
-ok(cg.text(W({ screen: 'create', guest: true })) === 'c5CreateGuest' && cg.text(W({ screen: 'create', offline: true })) === 'c5CreateOffline' && cg.text(W({ screen: 'create' })) === 'c5Create', 'create page: account / guest / training lines');
+// web.287: a tour of the form, one field per step, in the order of the page
+const CG = CONTEXTS.find((c) => c.id === 'create-game');
+const tourKeys = (w) => { const r = C.createRun(CG, W(w)); const out = []; for (let s = r.step(); s; s = r.next()) out.push(typeof s.text === 'function' ? s.text(W(w)) : s.text); return out; };
+const onlineTour = tourKeys({ screen: 'create' });
+ok(CG.tour === true && CG.locked && CG.locked.text === 'cfLocked' && 'cfLocked' in EN, 'create page: a tour, greyed-out fields explained');
+ok(onlineTour.join() === 'cfIntro,cfStyle,cfName,c5Create,cfPassword,cfSpectators,cfPlayers,cfStack,cfBlind,cfInterval,cfOrder,cfTimeout,cfDelay,cfActions', 'create page (account): every field, in the order of the form — ' + onlineTour.join());
+const guestTour = tourKeys({ screen: 'create', guest: true });
+ok(guestTour.indexOf('c5CreateGuest') >= 0 && guestTour.indexOf('cfNameGuest') >= 0 && guestTour.indexOf('c5Create') < 0, 'create page (guest): guest lines for the name and the type');
+const offTour = tourKeys({ screen: 'create', offline: true });
+ok(offTour[0] === 'c5CreateOffline' && offTour.indexOf('cfSkill') >= 0 && offTour.indexOf('cfName') < 0 && offTour.indexOf('c5Create') < 0 && offTour.indexOf('cfPassword') < 0, 'create page (training): training line, bot level, no name / type / password');
+ok(CG.steps.every((s) => [].concat(typeof s.text === 'function' ? [s.text(W({ screen: 'create' })), s.text(W({ screen: 'create', guest: true })), s.text(W({ screen: 'create', offline: true }))] : [s.text]).every((k) => k in EN)), 'create page: every tour text exists in English');
+ok(CG.steps.slice(1).every((s) => s.target && s.optional), 'create page: every field step has a target and is left out when its field is not on the page');
+ok('prev' in EN, '« Back » button text');
 ok(/Any player with an account can create a Ranking table/.test(EN.c5Create) && /practice only/.test(EN.c5Create), 'D16 wording and presets = practice');
 // C5 windows
 for (const [key, id] of [['ranking', 'w-ranking'], ['events', 'w-events'], ['adv', 'w-adv'], ['theme', 'w-theme'], ['music', 'w-music'], ['avatar', 'w-avatar'], ['players', 'w-players'], ['profile', 'w-profile'], ['logs', 'w-logs']]) {
