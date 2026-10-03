@@ -409,7 +409,7 @@ function wecFinals(posts, kept, now) {
   (Array.isArray(posts) ? posts : []).forEach(function (p) {
     let e = null;
     try { e = parseWecFinalPost(p); } catch (x) { e = null; }
-    const when = Date.parse(p && p.date) || 0;
+    const when = postTime(p);   // an edited announcement replaces its earlier version (web.294)
     if (e) { e.posted = when; add(e, when); }
   });
   return Array.from(byAt.values()).map(function (v) { return v.e; }).sort(function (a, b) { return a.at - b.at; });
@@ -552,6 +552,12 @@ function parseMcPost(post) {
  * per cup (month + year), later posts winning. Kept until 8 h after the start
  * (or 40 days after the last post when the start is unknown).
  */
+// When a post was last written: its edit time when the feed gives one (web.294).
+function postTime(p) {
+  const pub = Date.parse(p && p.date) || 0, upd = Date.parse(p && p.updated) || 0;
+  return Math.max(pub, upd);
+}
+
 function monthlyCups(posts, kept, now) {
   const cups = new Map();
   const key = function (c) { return c.year + '-' + c.month; };
@@ -561,7 +567,8 @@ function monthlyCups(posts, kept, now) {
     let r = null;
     try { r = parseMcPost(p); } catch (x) { r = null; }
     if (!r) continue;
-    const when = Date.parse(p.date) || 0;
+    // order of the topic = publication; « already read » = this version (an edit is read again)
+    const when = postTime(p);
     const k = key(r);
     const c = cups.get(k) || { src: 'mc', kind: 'cup', month: r.month, year: r.year, id: 'mc:' + k, posted: 0 };
     c.seen = c.seen || {};
@@ -569,12 +576,19 @@ function monthlyCups(posts, kept, now) {
     c.seen[p.link] = when;
     if (!c.url && /^https:\/\/(www\.)?pokerth\.net\//.test(String(p.link || ''))) c.url = String(p.link);
     ['at', 'closeAt', 'admins', 'round1', 'substitutes', 'finals', 'champion', 'podium'].forEach(function (f) { if (r[f] != null) c[f] = r[f]; });
+    // an edited result post may now name another table: drop what it said before
+    if (c.results && c.from && c.from[p.link]) {
+      const was = c.from[p.link];
+      c.results = c.results.filter(function (x) { return !((was.table && x.table === was.table) || (was.tier && x.tier === was.tier)); });
+    }
     if (r.result) {
       const res = c.results || (c.results = []);
       const same = function (x) { return (r.result.table && x.table === r.result.table) || (r.result.tier && x.tier === r.result.tier); };
       const i = res.findIndex(same);
       if (i >= 0) res[i] = r.result; else res.push(r.result);
-    }
+      c.from = c.from || {};
+      c.from[p.link] = r.result.table ? { table: r.result.table } : { tier: r.result.tier };
+    } else if (c.from && c.from[p.link]) delete c.from[p.link];
     c.posted = Math.max(c.posted || 0, when);
     cups.set(k, c);
   }
@@ -585,6 +599,7 @@ function monthlyCups(posts, kept, now) {
     // the seen-links map only matters while merging; keep it small
     const links = Object.keys(c.seen || {});
     if (links.length > 40) { const s2 = {}; links.slice(-40).forEach(function (l) { s2[l] = c.seen[l]; }); c.seen = s2; }
+    if (c.from) Object.keys(c.from).forEach(function (l) { if (!c.seen[l]) delete c.from[l]; });
     return c;
   }).sort(function (a, b) { return (a.at || 0) - (b.at || 0); });
 }

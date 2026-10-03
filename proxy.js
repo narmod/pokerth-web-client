@@ -11092,6 +11092,8 @@ function forumParseAtom(xml) {
       title: title,
       author: g(/<author><name><!\[CDATA\[([\s\S]*?)\]\]>/),
       date: g(/<published>([^<]+)<\/published>/) || g(/<updated>([^<]+)<\/updated>/),
+      // last edit (web.294): an edited post is read again by the events relay
+      updated: g(/<updated>([^<]+)<\/updated>/) || g(/<published>([^<]+)<\/published>/),
       excerpt: forumExcerpt(g(/<content[^>]*><!\[CDATA\[([\s\S]*?)\]\]><\/content>/)),
       html: forumCleanHtml(g(/<content[^>]*><!\[CDATA\[([\s\S]*?)\]\]><\/content>/))
     });

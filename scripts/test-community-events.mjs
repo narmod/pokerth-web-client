@@ -184,6 +184,20 @@ ok(JSON.stringify(all).length < 5000, 'the payload stays small (' + JSON.stringi
   ok(up.length === 1 && up[0].signups === 57 && up[0].round1.length === 6 && up[0].until === up[0].at + 6 * 3600000 && up[0].topic, 'the site\u2019s cup gets the forum details and stays through its night');
   const gone = ce.mergeMonthlyCups([{ src: 'mc', kind: 'cup', month: 10, at: Date.parse('2026-10-31T20:00:00+01:00') }], later, NIGHT);
   ok(gone.length === 2 && gone[0].month === 9 && gone[0].champion === 'Loosii', 'once the site has moved on to the next cup, tonight\u2019s is still shown');
+  // edits (web.294): a post read before is read again when the feed shows a later edit
+  const t2 = posts[2];   // « Table 2 » result
+  const edited = Object.assign({}, t2, { updated: '2026-09-26T21:35:00+02:00', html: t2.html.replace('1 Borussen-Ass', '1 Blupher') });
+  const e1 = ce.monthlyCups([edited], cups, NIGHT);
+  ok(e1[0].results.find((x) => x.table === 2).top[0] === 'Blupher', 'an edited table result replaces the one read before');
+  ok(ce.monthlyCups([t2], e1, NIGHT)[0].results.find((x) => x.table === 2).top[0] === 'Blupher', 'the unedited version seen again does not undo the edit');
+  const moved = Object.assign({}, t2, { updated: '2026-09-26T21:50:00+02:00', html: t2.html.replace('Table 2', 'Table 3') });
+  const e2 = ce.monthlyCups([moved], e1, NIGHT)[0].results;
+  ok(e2.some((x) => x.table === 3) && !e2.some((x) => x.table === 2), 'a result post corrected to another table moves its result');
+  const wecPost = { title: 'Re: WEC Monthly and Yearly Grand Finals', forum: 'WEC', link: 'https://www.pokerth.net/viewtopic.php?p=7#p7', date: '2026-10-02T17:49:00+02:00',
+    html: 'The finals for September 2026 are scheduled for Sunday 04th October 2026 22:00 CEST (20:00 UTC)' };
+  const wk = ce.wecFinals([wecPost], [], NIGHT);
+  const wEdit = Object.assign({}, wecPost, { updated: '2026-10-03T10:00:00+02:00', html: wecPost.html.replace('22:00 CEST (20:00 UTC)', '21:00 CEST (19:00 UTC)') });
+  ok(ce.wecFinals([wEdit], wk, NIGHT)[0].at === Date.parse('2026-10-04T19:00:00Z'), 'an edited WEC final announcement is read again');
   ok(JSON.stringify(up).length < 6000, 'the cup stays small in the payload (' + JSON.stringify(up).length + ' bytes)');
 }
 

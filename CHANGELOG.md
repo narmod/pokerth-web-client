@@ -17,6 +17,8 @@ highlights below.
 
 ### Fixed
 
+- **Events tab: edited forum posts are read again** (`web.294`, narmod) — the WEC final and Monthly Cup readers (web.292–293) remembered a post by its publication date, so an announcement or a table result corrected by editing the post was never read again. The forum feed entries now carry their edit time (`updated`, from the Atom feed) and a post is read again whenever it is newer than the version already read; a result post corrected to another table moves its result (the relay remembers which table each post told). Edits are seen while the post is still among the forum feed's latest posts. Tests: community-events.
+
 - **Game style cards: long words wrap instead of spilling** (`web.292`, narmod) — with the style grid open by default in LAN and training (web.288), the descriptions « сбалансированный » (ru) and « հավասարակշռված » (hy) went 9 px past their card on a phone; `.cfp-d` / `.cfp-n` of the 3-column grid may now break inside the word. `test-i18n-overflow` back to 5/5.
 
 - **Ace's Help: bubbles under the header and clear of the notch in the installed app** (`web.291`, narmod) — a bubble placed « under the header » looked for `.screen.active .header` only; the create page's bar is `.cp-header`, so there the bubble went over the header, and in the installed app (iPhone PWA) up under the clock. `mascot/guide.mjs` `topEdge()` (the active screen's header bar — `.header`, `.cp-header`… — and never above `safe-area-inset-top`) is now used by every placement and by the form tour; the bottom spot keeps clear of the home indicator (`safe-area-inset-bottom`). Browser test: the tour bubble never goes over the header.
