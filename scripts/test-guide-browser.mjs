@@ -337,6 +337,9 @@ async function runDevice(browser, name, descriptor) {
         assert.ok(s.over < 0.5, 'the bubble hides the field at ' + s.step + ' (' + Math.round(s.over * 100) + '%)');
         // only the form's own list scrolls, never the page itself (web.290: the screen slid up over a black band)
         assert.equal(await page.evaluate(() => document.documentElement.scrollTop + document.body.scrollTop), 0, 'the page itself scrolled at ' + s.step);
+        // never over the screen's header bar (web.291: the create page's .cp-header was missed)
+        const hdrGap = await page.evaluate(() => { const h = document.querySelector('.screen.active .cp-header'), b = document.querySelector('#ace-dock .ad-bubble.ad-open'); return h && b ? b.getBoundingClientRect().top - h.getBoundingClientRect().bottom : 1; });
+        assert.ok(hdrGap >= 0, 'the bubble goes over the header at ' + s.step + ' (' + Math.round(hdrGap) + ' px)');
         if (i === 2) {                                   // Back, then Next again
           const here = s.step;
           await click(page, btn('prev'));

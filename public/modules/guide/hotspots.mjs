@@ -97,6 +97,11 @@ export const HOTSPOTS = [
   // ── game creation page ──
   ['#cf-gtype-btn, #cf-game-type', 'hsGameType', false, 'pthnet:ranked'],
   ['#cf-preset-perso', 'hsPresetPerso', false, 'lobby:create'],     // before .cf-preset: it is one too (web.276)
+  // the bot level pills (training): what each level does, Mixed draws them (web.291)
+  ['.cf-preset[data-skill="easy"]', 'hsBotEasy', false, 'offline:setup'],
+  ['.cf-preset[data-skill="mixed"]', 'hsBotMixed', false, 'offline:setup'],
+  ['.cf-preset[data-skill="normal"]', 'hsBotNormal', false, 'offline:setup'],
+  ['.cf-preset[data-skill="hard"]', 'hsBotHard', false, 'offline:setup'],
   ['.cf-preset[data-preset]', 'hsPreset', false, (el) => (el.getAttribute('data-preset') === 'bbc' ? 'pthnet:bbc' : 'pthnet:cups')],
   ['#cf-style-toggle', 'hsCfStyle', false, 'lobby:create'],
   ['#cf-name', 'hsGameName', false, 'lobby:create'],

@@ -349,9 +349,7 @@ function bringIntoView(el) {
   clearTimeout(scrollTimer); scrollTimer = 0;
   if (!el || !M) return;
   const bub = M.bubbleEl();
-  let hdr = 0;
-  try { const h = document.querySelector('.screen.active .header'); if (h) hdr = Math.max(0, h.getBoundingClientRect().bottom); } catch (e) {}
-  const top = Math.round(hdr + 12);
+  const top = Math.round((M.topEdge ? M.topEdge() : 0) + 12);
   const r = el.getBoundingClientRect(), b0 = bub.getBoundingClientRect();
   const fits = r.top >= top && r.bottom <= b0.top - 8;     // already in sight above the bubble
   if (!fits) scrollUnder(el, top);

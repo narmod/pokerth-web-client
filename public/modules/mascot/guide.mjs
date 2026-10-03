@@ -367,6 +367,40 @@ export function settle(force) {   // force: the layout changed — move even wit
   lift(best.up);
 }
 
+/**
+ * Where the free part of the screen starts: below the active screen's header
+ * bar (.header in the lobby, .cp-header on the create page…) and never above
+ * the iPhone status bar / notch of an installed app (safe-area-inset-top). The
+ * create page's header was missed, so in the installed app a bubble « under the
+ * header » went over it and under the clock (web.291).
+ */
+let safeProbe = null;
+function safeInset(side) {   // 'top' | 'bottom': the notch / status bar, the home indicator
+  try {
+    if (!safeProbe) {
+      safeProbe = document.createElement('div');
+      safeProbe.setAttribute('aria-hidden', 'true');
+      safeProbe.style.cssText = 'position:fixed;left:0;top:0;width:0;height:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none';
+      document.body.appendChild(safeProbe);
+    }
+    const cs = getComputedStyle(safeProbe);
+    return parseFloat(side === 'bottom' ? cs.paddingBottom : cs.paddingTop) || 0;
+  } catch (e) { return 0; }
+}
+const safeTop = () => safeInset('top');
+export function topEdge() {
+  const safe = safeTop();
+  let hdr = 0;
+  try {
+    const list = document.querySelectorAll('.screen.active .header, .screen.active .cp-header, .screen.active [class*="header"]');
+    for (const h of list) {
+      const r = h.getBoundingClientRect();
+      if (r.height > 0 && r.height < 160 && r.top <= safe + 12 && r.bottom > 0) { hdr = Math.max(hdr, r.bottom); break; }
+    }
+  } catch (e) {}
+  return Math.round(Math.max(hdr, safe));
+}
+
 let avoidEl = null;      // the element the bubble is about (highlighted): never cover it if avoidable
 let forcedPos = null;    // a form tour decides: 'bottom' (next to the Ace, at his base spot) or 'top' (under the header)
 
@@ -406,18 +440,14 @@ function placeBubble() {
   if (forcedPos === 'top') {
     // a form tour: under the header, at most half the screen and never over
     // the Ace — the field it talks about is scrolled just below it (web.287)
-    let hdr0 = 0;
-    try { const h = document.querySelector('.screen.active .header'); if (h) hdr0 = Math.max(0, h.getBoundingClientRect().bottom); } catch (e) {}
-    const t0 = Math.max(hdr0, 8) + 8;
+    const t0 = Math.max(topEdge(), 8) + 8;
     let cap = Math.max(160, Math.round(vh * 0.5));
     if (r.left < vw - 12 && r.right > vw - 12 - bw && r.top > t0) cap = Math.min(cap, Math.max(160, Math.round(r.top - 8 - t0)));
     if (bh > cap) { bub.style.maxHeight = cap + 'px'; bub.style.overflowY = 'auto'; }
     apply({ right: 12, top: t0 }, true);
     return;
   }
-  let hdr = 0;
-  try { const h = document.querySelector('.screen.active .header') || document.querySelector('.screen.active [class*="header"]'); if (h) hdr = Math.max(0, h.getBoundingClientRect().bottom); } catch (e) {}
-  const top0 = Math.max(hdr, 8) + 8;
+  const top0 = Math.max(topEdge(), 8) + 8;
   // under the header, the bubble never goes down over the Ace (a tall one scrolls instead, H3)
   if (top0 + bh > r.top - 8 && r.left < vw - 12 && r.right > vw - 12 - bw) {
     const cap = Math.max(160, Math.round(r.top - 8 - top0));
@@ -446,7 +476,7 @@ function placeBubble() {
   // and the Ace stands higher up (a tall window: the forum events tab, web.289)
   let botP = null;
   if (av) {
-    botP = { right: 12, top: Math.round(vh - 12 - bh) };
+    botP = { right: 12, top: Math.round(vh - 12 - safeInset('bottom') - bh) };
     const rectBot = { left: vw - 12 - bw, top: botP.top, right: vw - 12, bottom: botP.top + bh };
     // on the Ace: only his feet may touch its top edge
     const onAce = rectBot.left < r.right && r.left < rectBot.right && r.bottom - rectBot.top > r.height * 0.25 && r.top < rectBot.bottom;
