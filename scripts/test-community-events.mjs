@@ -155,5 +155,37 @@ ok(JSON.stringify(all).length < 5000, 'the payload stays small (' + JSON.stringi
   ok(upd.length === 1 && upd[0].at === Date.parse('2026-10-04T19:00:00Z'), 'a newer announcement of the same final replaces the old one');
 }
 
+// -- Monthly Cup night from its forum topic (web.293) ------------------------
+{
+  const fs = await import('fs');
+  const posts = JSON.parse(fs.readFileSync(new URL('./fixtures/monthly-cup-2026-09.json', import.meta.url), 'utf8'));
+  const a = ce.parseMcPost(posts[0]);
+  ok(a && a.month === 9 && a.year === 2026 && a.at === Date.parse('2026-09-26T20:00:00+02:00'), 'announcement: the cup time (« September 26th - 20:00 CEST »)');
+  ok(a.closeAt === Date.parse('2026-09-26T18:30:00+02:00') && a.admins.join(',') === 'sp0ck,Jogy,The Dude,xTriXplEx,akia,il Buono', 'registration close and the table admins');
+  const seed = ce.parseMcPost(posts[1]);
+  ok(seed.round1.length === 6 && seed.round1[0].players.length === 10 && seed.round1[0].players[0] === 'sp0ck' && seed.round1[5].players.length === 9 && seed.round1[1].players.includes('Bilnäs'), 'seeding: six tables of the 1st round, names kept as written');
+  const t = posts.slice(2, 6).map((p) => ce.parseMcPost(p).result);
+  ok(t[0].table === 2 && t[0].top.join('|') === 'Borussen-Ass|Fjohn|bikerboyrsa+1', 'a table result: « 1 Borussen-Ass » lines');
+  ok(t[1].table === 6 && t[1].top[2] === 'Einimant' && t[2].table === 4 && t[2].top[0] === 'GazO', '« Table 6: » and « 1. Ruhr-Elfe » lines, the log link skipped');
+  ok(t[3].table === 5 && t[3].top.join('|') === 'Loosii|Saxe|vanya5k', 'and « 1st - Loosii, 2nd - Saxe, and 3d - vanya5k » on one line');
+  const fin = ce.parseMcPost(posts[6]);
+  ok(fin.finals.map((f) => f.tier + f.players.length).join(',') === 'gold6,silver6,bronze6' && fin.finals[0].players[0] === 'GaryFSU', 'final tables: gold, silver, bronze — the log links below are not read as tables');
+  ok(ce.parseMcPost(posts[7]).result.tier === 'bronze' && ce.parseMcPost(posts[7]).result.top[0] === 'jake-1972', 'the bronze table result');
+  const res = ce.parseMcPost(posts[9]);
+  ok(res.champion === 'Loosii' && res.podium.join('|') === 'Loosii|Borussen-Ass|Ruhr-Elfe', 'results: the champion and the podium under the title');
+  ok(ce.parseMcPost({ title: 'Re: WEC final', forum: 'WEC', html: 'Table 1<br>1. x' }) === null, 'other forums are not read');
+  const NIGHT = Date.parse('2026-09-26T21:30:00+02:00');
+  const cups = ce.monthlyCups(posts.slice(0, 6), [], NIGHT);
+  ok(cups.length === 1 && cups[0].round1.length === 6 && cups[0].results.length === 4 && !cups[0].champion, 'mid-evening: seeding and four table results so far');
+  const later = ce.monthlyCups(posts.slice(6), cups, Date.parse('2026-09-26T23:30:00+02:00'));
+  ok(later.length === 1 && later[0].finals.length === 3 && later[0].champion === 'Loosii' && later[0].round1.length === 6 && later[0].results.length === 5, 'the rest of the night merged onto what was kept (posts gone from the feed)');
+  ok(ce.monthlyCups([], later, Date.parse('2026-09-27T06:00:00+02:00')).length === 0, 'forgotten the next morning');
+  const up = ce.mergeMonthlyCups([{ src: 'mc', kind: 'cup', month: 9, at: Date.parse('2026-09-26T20:00:00+02:00'), signups: 57, url: 'https://monthlycup.pokerth.net/registration' }], later, NIGHT);
+  ok(up.length === 1 && up[0].signups === 57 && up[0].round1.length === 6 && up[0].until === up[0].at + 6 * 3600000 && up[0].topic, 'the site\u2019s cup gets the forum details and stays through its night');
+  const gone = ce.mergeMonthlyCups([{ src: 'mc', kind: 'cup', month: 10, at: Date.parse('2026-10-31T20:00:00+01:00') }], later, NIGHT);
+  ok(gone.length === 2 && gone[0].month === 9 && gone[0].champion === 'Loosii', 'once the site has moved on to the next cup, tonight\u2019s is still shown');
+  ok(JSON.stringify(up).length < 6000, 'the cup stays small in the payload (' + JSON.stringify(up).length + ' bytes)');
+}
+
 console.log(fails ? '\n' + fails + ' FAILED' : '\nAll community-events checks passed');
 process.exit(fails ? 1 : 0);

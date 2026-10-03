@@ -9088,6 +9088,13 @@ a.ev-row { color: inherit; text-decoration: none; }
 .ev-final .ev-fl { margin: 6px 0 4px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; font-size: var(--fs-3xs); }
 .ev-chip-p { flex-shrink: 0; font-weight: 700; color: var(--text-dim); font-variant-numeric: tabular-nums; }
 .ev-chip.ev-res { opacity: 0.7; border-style: dashed; }
+/* Monthly Cup night (web.293): champion, top 3 per table, compact name chips */
+.ev-cup .ev-champ { display: flex; align-items: center; gap: 6px; margin: 2px 0 6px; font-size: var(--fs-sm); color: var(--text-hi); }
+.ev-cup .ev-champ .ev-pod-crown { color: var(--gold); }
+.ev-cup .ev-top { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 0 0 4px; font-size: var(--fs-2xs); color: var(--text-hi); font-weight: 600; }
+.ev-cup .ev-round { margin-top: 10px; padding-top: 6px; border-top: 1px solid var(--border); }
+.ev-chips.ev-chips-sm { gap: 4px; }
+.ev-chips.ev-chips-sm .ev-chip { padding: 1px 6px; font-size: var(--fs-3xs); opacity: 0.85; }
 .ev-regs-msg { font-size: var(--fs-2xs); color: var(--text); opacity: 0.7; }
 .ev-regs-msg.ev-err { color: var(--red); opacity: 1; }
 .fn-main { flex: 1; min-width: 0; }

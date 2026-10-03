@@ -109,6 +109,17 @@ for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.mjs'))) {
 }
 ok(bad.length === 0, 'all catalogues have the keys, evSignups keeps its {n}' + (bad.length ? ' — ' + bad.slice(0, 5).join(', ') : ''));
 
+// Monthly Cup night (web.293)
+{
+  const now = Date.parse('2026-09-26T21:30:00+02:00');
+  const cup = { src: 'mc', kind: 'cup', id: 'mc:2026-9', month: 9, at: Date.parse('2026-09-26T20:00:00+02:00'), until: Date.parse('2026-09-27T02:00:00+02:00'),
+    finals: [{ tier: 'gold', players: ['a'] }], results: [{ table: 2, top: ['x', 'y', 'z'] }], podium: ['P1', 'P2', 'P3'] };
+  ok(E.evStillOn(cup, now) && !E.evStillOn(Object.assign({}, cup, { until: undefined }), now), 'a cup the forum follows stays on through its night');
+  ok(E.evExpandable(cup) && !E.evExpandable({ src: 'mc', id: 'mc:x', signups: 3 }), 'it unfolds once the forum has told something');
+  ok(E.evCupTop(cup, { table: 2 }).join() === 'x,y,z' && E.evCupTop(cup, { tier: 'gold' }).join() === 'P1,P2,P3' && E.evCupTop(cup, { table: 3 }) === null, 'top 3 per table; the gold table falls back on the cup podium');
+  ok(E.evRegisterAction(Object.assign({}, cup, { closeAt: Date.now() - 1000 })).none === true, 'registration closed: the button says so');
+}
+
 // WEC finals (web.292)
 {
   const fin = { src: 'wec', kind: 'final', id: 'wecfinal:1', month: 9, year: 2026, at: Date.parse('2026-10-04T20:00:00Z'),

@@ -11256,14 +11256,31 @@ function _wecFinalsSave(list) {
   if (was === now) return;
   try { const tmp = WEC_FINALS_FILE + '.tmp'; fs.writeFileSync(tmp, now); fs.renameSync(tmp, WEC_FINALS_FILE); } catch (e) {}
 }
-function _wecFinalsFromForum(now) {
+// Monthly Cup night (web.293): the cup's forum topic tells the seeding, the
+// table results, the final tables and the champion. Same feed, same reason to
+// keep what was read (the topic's first posts leave the feed before the night).
+const MC_CUPS_FILE = process.env.MC_CUPS_FILE || path.join(__dirname, 'monthly-cups.json');
+let _mcCupsKept = null;
+function _jsonLoad(file) { try { const j = JSON.parse(fs.readFileSync(file, 'utf8')); return Array.isArray(j) ? j : []; } catch (e) { return []; } }
+function _jsonSave(file, list, was) {
+  if (JSON.stringify(was || []) === JSON.stringify(list)) return;
+  try { const tmp = file + '.tmp'; fs.writeFileSync(tmp, JSON.stringify(list)); fs.renameSync(tmp, file); } catch (e) {}
+}
+// { finals, cups } read from the forum feed, merged with what was kept.
+function _forumEvents(now) {
+  if (!_mcCupsKept) _mcCupsKept = _jsonLoad(MC_CUPS_FILE);
+  const read = function (posts) {
+    const finals = communityEvents.wecFinals(posts, _wecFinalsLoad(), now);
+    const cups = communityEvents.monthlyCups(posts, _mcCupsKept, now);
+    _wecFinalsSave(finals);
+    _jsonSave(MC_CUPS_FILE, cups, _mcCupsKept); _mcCupsKept = cups;
+    return { finals: finals, cups: cups };
+  };
   return RELAY.get('forumfeed', FORUM_TTL_MS, _forumProduce, { swr: true }).then(function (out) {
     let posts = [];
     try { const j = JSON.parse(out.body); if (j && Array.isArray(j.posts)) posts = j.posts; } catch (e) {}
-    const list = communityEvents.wecFinals(posts, _wecFinalsLoad(), now);
-    _wecFinalsSave(list);
-    return list;
-  }).catch(function () { return communityEvents.wecFinals([], _wecFinalsLoad(), now); });
+    return read(posts);
+  }).catch(function () { return read([]); });
 }
 
 // One round = the five community pages. A round where every site failed is a
@@ -11271,12 +11288,11 @@ function _wecFinalsFromForum(now) {
 // for 60 s.
 function _eventsProduce() {
   const now = Date.now();
-  return Promise.all([communityEvents.buildEvents(_eventsFetchText, now), _wecFinalsFromForum(now)]).then(function (both) {
-    const data = both[0], finals = both[1];
-    if (finals.length) {
-      data.upcoming = (data.upcoming || []).concat(finals).sort(function (a, b) { return a.at - b.at; });
-      if (!data.ok) { data.ok = true; delete data.error; }
-    }
+  return Promise.all([communityEvents.buildEvents(_eventsFetchText, now), _forumEvents(now)]).then(function (both) {
+    const data = both[0], forum = both[1];
+    const before = (data.upcoming || []).length;
+    data.upcoming = communityEvents.mergeMonthlyCups((data.upcoming || []).concat(forum.finals), forum.cups, now);
+    if (data.upcoming.length > before && !data.ok) { data.ok = true; delete data.error; }
     return { status: data.ok ? 200 : 503, body: JSON.stringify(data) };
   });
 }

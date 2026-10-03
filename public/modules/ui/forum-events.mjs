@@ -347,8 +347,26 @@ const _games = new Map();                    // id -> game of the last render
 // A BBC game with sign-ups and an id can unfold; a WEC final unfolds to its
 // table set-up and qualified players (web.292).
 export function evExpandable(e) {
+  if (e && e.src === 'mc') return !!(e.id != null && (e.round1 || e.finals || e.admins || e.champion || e.closeAt));
   if (e && e.kind === 'final') return !!(e.id != null && ((e.qualified && e.qualified.length) || e.setup));
   return !!(e && e.src === 'bbc' && e.id != null && e.signups > 0);
+}
+
+// An event stays in « Upcoming » until it starts — a Monthly Cup the forum
+// follows stays while its night lasts (`until`, web.293).
+export function evStillOn(e, now) {
+  return !!e && typeof e.at === 'number' && (e.at >= now - 5 * 60 * 1000 || (typeof e.until === 'number' && e.until > now));
+}
+
+// The top 3 of a Monthly Cup table: its posted result, or for the gold table
+// the cup podium. tableKey = { table: n } or { tier: 'gold' }.
+export function evCupTop(e, key) {
+  const res = (e && Array.isArray(e.results) ? e.results : []).find(function (r) {
+    return (key.table && r.table === key.table) || (key.tier && r.tier === key.tier);
+  });
+  if (res && Array.isArray(res.top)) return res.top;
+  if (key.tier === 'gold' && e && Array.isArray(e.podium) && e.podium.length) return e.podium.slice(0, 3);
+  return null;
 }
 
 // The WEC daily game is not shown on an evening whose final is at the same time.
@@ -403,7 +421,7 @@ function _toggle(id) {
   if (!e) return;
   _open.clear();                 // one game unfolded at a time (narmod, web.244)
   _open.add(id);
-  if (e.kind !== 'final') _loadRegs(e);   // a final carries its own players
+  if (e.src === 'bbc') _loadRegs(e);      // a WEC final / a Monthly Cup carries its own players
   evRerender();
 }
 
@@ -440,7 +458,35 @@ function _finalPanel(e) {
 
 // Unfolded part: nickname chips (BBC admins: gold outline + "Admin" tag), or
 // a loading / error line. Left bar in the step colour, as in QML.
+// Unfolded Monthly Cup (web.293): registration close, admins, champion, the
+// final tables, then the 1st round tables — each with its top 3 once posted.
+const MEDALS = ['\ud83e\udd47', '\ud83e\udd48', '\ud83e\udd49'];
+function _cupPanel(e) {
+  const loc = _locale(), now = Date.now();
+  let body = '';
+  const info = [];
+  if (typeof e.closeAt === 'number' && e.closeAt > now) info.push(_t('evMcCloses', 'Registration closes {time}', { time: evTime(e.closeAt, loc) }));
+  if (e.admins && e.admins.length) info.push(_t('evMcAdmins', 'Table admins') + ': ' + e.admins.join(', '));
+  if (info.length) body += '<div class="ev-setup">' + info.map(function (t) { return '<span class="ev-set">' + esc(t) + '</span>'; }).join('') + '</div>';
+  if (e.champion) body += '<div class="ev-champ">' + ICON_CROWN + '<span>' + esc(_t('evMcChampion', 'Champion')) + ' <b>' + esc(e.champion) + '</b></span></div>';
+  const block = function (label, players, top) {
+    let h = '<div class="ev-regs-msg ev-fl">' + esc(label) + '</div>';
+    if (top && top.some(Boolean)) h += '<div class="ev-top">' + top.map(function (n, i) { return n ? '<span class="ev-top-p">' + MEDALS[i] + ' ' + esc(n) + '</span>' : ''; }).join('') + '</div>';
+    if (players && players.length) h += '<div class="ev-chips ev-chips-sm">' + players.map(function (n) { return '<span class="ev-chip"><span class="ev-chip-n">' + esc(n) + '</span></span>'; }).join('') + '</div>';
+    return h;
+  };
+  const tierWord = { gold: _t('evMcGold', 'Gold table'), silver: _t('evMcSilver', 'Silver table'), bronze: _t('evMcBronze', 'Bronze table') };
+  (e.finals || []).forEach(function (f) { body += block(tierWord[f.tier] || f.tier, f.players, evCupTop(e, { tier: f.tier })); });
+  if (e.round1 && e.round1.length) {
+    body += '<div class="ev-regs-msg ev-fl ev-round">' + esc(_t('evMcRound1', '1st round')) + '</div>';
+    e.round1.forEach(function (t) { body += block(_t('evMcTable', 'Table {n}', { n: t.table }), t.players, evCupTop(e, { table: t.table })); });
+  }
+  if (e.substitutes && e.substitutes.length) body += block(_t('evWecReserves', 'Replacements'), e.substitutes, null);
+  return '<div class="ev-regs ev-final ev-cup">' + body + '</div>';
+}
+
 function _regsPanel(e) {
+  if (e.src === 'mc') return _cupPanel(e);
   if (e.kind === 'final') return _finalPanel(e);
   const r = _regs.get(String(e.id));
   const players = r && Array.isArray(r.players) ? r.players : [];
@@ -477,7 +523,9 @@ function _gameRow(e, loc, stepWord) {
       e.qualified && e.qualified.length ? _t('evWecQualifiedN', '{n} qualified', { n: e.qualified.length }) : ''].filter(Boolean).join(' · ')
     : e.src === 'bbc'
     ? [e.title, e.signups != null ? '(' + evPlayersText(e.signups, _t('evPlayers1', '1 player registered'), _t('evPlayersN', '{n} players registered')) + ')' : ''].filter(Boolean).join(' ')
-    : [evUpcomingTitle(e, loc, stepWord), sign].filter(Boolean).join(' · ');
+    : [evUpcomingTitle(e, loc, stepWord),
+      e.src === 'mc' && e.champion ? '\ud83c\udfc6 ' + e.champion
+        : e.src === 'mc' && e.at <= Date.now() ? _t('evMcLive', 'in progress') : sign].filter(Boolean).join(' · ');
   const inner = '<span class="ev-time">' + esc(evTime(e.at, loc)) + '</span>'
     + '<span class="fn-forum ' + evSrcClass(e.src) + '">' + esc(evSrcName(e.src)) + '</span>'
     + (step ? '<span class="' + step.cls + '">' + esc(step.text) + '</span>' : '')
@@ -513,6 +561,7 @@ export function evSelKey(e) {
 export function evRegisterAction(e) {
   if (e && e.kind === 'daily') return { none: true, key: 'evWecDaily', fallback: 'Daily game \u00b7 no registration' };
   if (e && e.kind === 'final') return { none: true, key: 'evWecFinalNoReg', fallback: 'Qualified through the monthly WEC ranking' };
+  if (e && e.src === 'mc' && typeof e.closeAt === 'number' && e.closeAt <= Date.now()) return { none: true, key: 'evMcRegClosed', fallback: 'Registration closed' };
   if (e && e.src === 'mc') return { key: 'evMcRegister', fallback: 'Register for the Monthly Cup', url: evSafeUrl(e.url) || MC_REGISTER_URL };
   return { key: 'evBbcRegister', fallback: 'Register for the BBC', url: (e && evSafeUrl(e.url)) || BBC_REGISTER_URL };
 }
@@ -578,7 +627,7 @@ function _render(data) {
   up.forEach(function (e) { if (e.src === 'bbc') { const k = evGameDay(e.at); if (k > last) last = k; } });
   up.forEach(function (e) { if (e.kind === 'final') { const k = evGameDay(e.at); if (k > last) last = k; } });
   up = evDropDailyUnderFinal(up.concat(evWecDaily(today, last)))
-    .filter(function (e) { return e.at >= now - 5 * 60 * 1000; })
+    .filter(function (e) { return evStillOn(e, now); })
     .sort(function (a, b) { return a.at - b.at; });
   const res = data.results || [];
   let html = '', rows = '';

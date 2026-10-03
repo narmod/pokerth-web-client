@@ -30,6 +30,7 @@ ENV VISITS_FILE=/data/visits.json
 ENV DB_CONFIG_FILE=/data/db-config.json
 ENV SCOPED_TOKENS_FILE=/data/scoped-tokens.json
 ENV WEC_FINALS_FILE=/data/wec-finals.json
+ENV MC_CUPS_FILE=/data/monthly-cups.json
 ENV PREFS_DIR=/data/prefs
 
 # Live directory for the optional self-updating mode (SELF_UPDATE=1): the

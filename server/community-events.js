@@ -415,6 +415,202 @@ function wecFinals(posts, kept, now) {
   return Array.from(byAt.values()).map(function (v) { return v.e; }).sort(function (a, b) { return a.at - b.at; });
 }
 
+// ── Monthly Cup night, from its forum topic (web.293) ────────────────
+// The cup site gives the date, the sign-ups and the last podium. Its forum
+// topic (« September Cup 2026 », forum « Monthly Cup ») tells the rest of the
+// evening, post by post, in a stable shape:
+//   announcement   « Scheduled cup time is September 26th - 20:00 CEST. »,
+//                  « Registration will be closed … at September 26th - 18:30 CEST »,
+//                  « Table Admins: sp0ck, Jogy, … »
+//   seeding        « … Table Seeding », then « September Cup Table 1 » + ten names …,
+//                  « Substitutes: »
+//   a table done   « Table 2 » / « Table 6: » / « Bronze Table: », then the top 3:
+//                  « 1 Borussen-Ass », « 1. Ruhr-Elfe », « 3 Einimant » or
+//                  « 1st - Loosii, 2nd - Saxe, and 3d - vanya5k »
+//   final tables   « … Final Tables », « Gold Table » + names, Silver, Bronze
+//   results        « … Results », the podium names, « Congrats Champion of
+//                  September 2026: Loosii »
+// Every post is read on its own (the feed gives posts, not topics); later posts
+// win. Anything not recognised is simply left out.
+const TIERS = ['gold', 'silver', 'bronze'];
+const MAX_TABLES = 12, MAX_SEATS = 12;
+
+function cupOfTitle(title) {
+  const m = /^\s*(?:re:\s*)?([A-Za-z]+)\s+cup\s+(\d{4})\b/i.exec(String(title || ''));
+  if (!m) return null;
+  const month = MONTHS.indexOf(m[1].toLowerCase()) + 1;
+  return month ? { month: month, year: +m[2] } : null;
+}
+
+/** « September 26th - 20:00 CEST » (no year: the cup's) -> epoch ms, or null. */
+function cupTime(str, cup) {
+  const m = /([A-Za-z]+)\s+(\d{1,2})(?:st|nd|rd|th)?\.?\s*(?:[-–,@]|at)?\s*(\d{1,2})[:.](\d{2})\s*(CEST|CET|UTC|GMT)?/i.exec(String(str || ''));
+  if (!m) return null;
+  const mon = MONTHS.indexOf(m[1].toLowerCase());
+  if (mon < 0) return null;
+  let y = cup.year;
+  if (mon + 1 < cup.month - 6) y++;                       // a December cup played in January
+  const d = +m[2], h = +m[3], mi = +m[4];
+  if (/^(UTC|GMT)$/i.test(m[5] || '')) return Date.UTC(y, mon, d, h, mi);
+  return zonedToEpoch(y + '-' + String(mon + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0') + ' ' + String(h).padStart(2, '0') + ':' + String(mi).padStart(2, '0'));
+}
+
+// A line that can be a nickname (no sentence, no link, no label).
+function nickLine(l) {
+  if (!l || l.length > 30 || /[:]\s*$/.test(l) || /https?:|gamelog|viewtopic|\.php/i.test(l)) return null;
+  if (/^(image|top|---+|[—–-]{3,}|results?|ranking|hall of fame)$/i.test(l)) return null;
+  if (/\s{2,}/.test(l) || l.split(' ').length > 3) return null;
+  return name(l);
+}
+
+// « 1st - Loosii, 2nd - Saxe, and 3d - vanya5k » or one « 1. Name » per line -> [names].
+function topThree(lines) {
+  const out = [];
+  for (const l of lines) {
+    if (/gamelog|https?:/i.test(l)) continue;
+    const inline = l.match(/\b[123](?:st|nd|rd|d|th)?\s*[-–:.)]\s*[^,]+?(?=\s*,|\s+and\s+|$)/gi);
+    if (inline && inline.length > 1) {
+      for (const part of inline) { const m = /^([123])(?:st|nd|rd|d|th)?\s*[-–:.)]\s*(.+)$/i.exec(part.trim()); if (m) out[+m[1] - 1] = name(m[2]); }
+      continue;
+    }
+    const m = /^([123])(?:st|nd|rd|d|th)?\s*[-–:.)]?\s+(.+)$/i.exec(l);
+    if (m) out[+m[1] - 1] = name(m[2]);
+  }
+  return out.filter(Boolean).length ? [out[0] || null, out[1] || null, out[2] || null] : null;
+}
+
+/** One forum post of a Monthly Cup topic -> what it tells about that cup. */
+function parseMcPost(post) {
+  const cup = cupOfTitle(post && post.title);
+  if (!cup || !/monthly\s*cup/i.test(String(post.forum || '') + ' ' + String(post.title || ''))) return null;
+  const text = postText(post.html);
+  const lines = text.split('\n');
+  const out = { month: cup.month, year: cup.year };
+  // the announcement
+  const sched = /scheduled\s+cup\s+time\s+is\s+([^\n]+)/i.exec(text);
+  if (sched) { const at = cupTime(sched[1], cup); if (at !== null) out.at = at; }
+  const close = /registration\s+will\s+be\s+closed[^\n]*?\bat\s+([^\n]+)/i.exec(text);
+  if (close) { const at = cupTime(close[1], cup); if (at !== null) out.closeAt = at; }
+  const adm = /table\s+admins?\s*:\s*([^\n]+)/i.exec(text);
+  if (adm) out.admins = adm[1].split(/\s*,\s*/).map(name).filter(Boolean).slice(0, 12);
+  // blocks: a header line, then names until a blank line or the next header
+  const header = function (l) {
+    let m = /^(?:[A-Za-z]+\s+cup\s+)?table\s+(\d{1,2})\s*:?$/i.exec(l);
+    if (m) return { table: +m[1] };
+    m = /^(gold|silver|bronze)(?:\s+table)?\s*:?$/i.exec(l);
+    if (m) return { tier: m[1].toLowerCase() };
+    if (/^substitutes?\s*:?$/i.test(l)) return { subs: true };
+    return null;
+  };
+  const blocks = [];
+  let cur = null;
+  for (const l of lines) {
+    const h = header(l);
+    if (h) { cur = { h: h, lines: [] }; blocks.push(cur); continue; }
+    if (!cur) continue;
+    if (!l) { if (cur.lines.length) cur = null; continue; }
+    cur.lines.push(l);
+  }
+  const isSeeding = /table\s+seeding/i.test(text), isFinals = /final\s+tables/i.test(text);
+  const isResults = /\bresults\b/i.test(lines.slice(0, 3).join(' ')) || /congrats\s+champion/i.test(text);
+  if (isSeeding) {
+    out.round1 = blocks.filter(function (b) { return b.h.table; }).slice(0, MAX_TABLES).map(function (b) {
+      return { table: b.h.table, players: b.lines.map(nickLine).filter(Boolean).slice(0, MAX_SEATS) };
+    }).filter(function (t) { return t.players.length; });
+    const subs = blocks.find(function (b) { return b.h.subs; });
+    if (subs) out.substitutes = subs.lines.map(nickLine).filter(Boolean).slice(0, MAX_SEATS);
+  } else if (isFinals) {
+    out.finals = blocks.filter(function (b) { return b.h.tier; }).map(function (b) {
+      return { tier: b.h.tier, players: b.lines.map(nickLine).filter(Boolean).slice(0, MAX_SEATS) };
+    }).filter(function (t) { return t.players.length; });
+  } else if (isResults) {
+    const champ = /congrats\s+champion\s+of[^:\n]*:\s*([^\n]+)/i.exec(text);
+    if (champ) out.champion = name(champ[1].replace(/[!.]+$/, ''));
+    // the podium: the names right under the « … Results » title, before the separator
+    const pod = [];
+    for (let i = 1; i < lines.length && pod.length < 3; i++) {
+      const l = lines[i];
+      if (/^[—–_=-]{3,}$/.test(l)) break;
+      const n = nickLine(l);
+      if (n) pod.push(n);
+    }
+    if (pod.length) out.podium = pod;
+  } else {
+    // one table's top 3: the header is in the first lines of the post
+    const first = lines.findIndex(function (l) { return !!l; });
+    const h = first >= 0 ? header(lines[first]) : null;
+    if (h && (h.table || h.tier)) {
+      const top = topThree(lines.slice(first + 1));
+      if (top) out.result = Object.assign({ top: top }, h);
+    }
+  }
+  return out;
+}
+
+/**
+ * Monthly Cups told by these posts and by the ones kept from before, merged
+ * per cup (month + year), later posts winning. Kept until 8 h after the start
+ * (or 40 days after the last post when the start is unknown).
+ */
+function monthlyCups(posts, kept, now) {
+  const cups = new Map();
+  const key = function (c) { return c.year + '-' + c.month; };
+  (Array.isArray(kept) ? kept : []).forEach(function (c) { if (c && c.month && c.year) cups.set(key(c), Object.assign({}, c)); });
+  const sorted = (Array.isArray(posts) ? posts : []).slice().sort(function (a, b) { return (Date.parse(a && a.date) || 0) - (Date.parse(b && b.date) || 0); });
+  for (const p of sorted) {
+    let r = null;
+    try { r = parseMcPost(p); } catch (x) { r = null; }
+    if (!r) continue;
+    const when = Date.parse(p.date) || 0;
+    const k = key(r);
+    const c = cups.get(k) || { src: 'mc', kind: 'cup', month: r.month, year: r.year, id: 'mc:' + k, posted: 0 };
+    c.seen = c.seen || {};
+    if (c.seen[p.link] && c.seen[p.link] >= when) { cups.set(k, c); continue; }
+    c.seen[p.link] = when;
+    if (!c.url && /^https:\/\/(www\.)?pokerth\.net\//.test(String(p.link || ''))) c.url = String(p.link);
+    ['at', 'closeAt', 'admins', 'round1', 'substitutes', 'finals', 'champion', 'podium'].forEach(function (f) { if (r[f] != null) c[f] = r[f]; });
+    if (r.result) {
+      const res = c.results || (c.results = []);
+      const same = function (x) { return (r.result.table && x.table === r.result.table) || (r.result.tier && x.tier === r.result.tier); };
+      const i = res.findIndex(same);
+      if (i >= 0) res[i] = r.result; else res.push(r.result);
+    }
+    c.posted = Math.max(c.posted || 0, when);
+    cups.set(k, c);
+  }
+  return Array.from(cups.values()).filter(function (c) {
+    if (typeof c.at === 'number') return c.at + 8 * 3600000 > now;
+    return (c.posted || 0) + 40 * 86400000 > now;
+  }).map(function (c) {
+    // the seen-links map only matters while merging; keep it small
+    const links = Object.keys(c.seen || {});
+    if (links.length > 40) { const s2 = {}; links.slice(-40).forEach(function (l) { s2[l] = c.seen[l]; }); c.seen = s2; }
+    return c;
+  }).sort(function (a, b) { return (a.at || 0) - (b.at || 0); });
+}
+
+/**
+ * Adds the forum's account of the cup to the site's upcoming list: the cup the
+ * site announces gets the details; a cup the site no longer lists (it starts
+ * the next one once a cup has begun) is added while its night lasts.
+ */
+function mergeMonthlyCups(upcoming, cups, now) {
+  const list = Array.isArray(upcoming) ? upcoming.slice() : [];
+  for (const c of cups || []) {
+    const pub = {};
+    ['month', 'year', 'closeAt', 'admins', 'round1', 'substitutes', 'finals', 'results', 'champion', 'podium', 'id'].forEach(function (f) { if (c[f] != null) pub[f] = c[f]; });
+    if (c.url) pub.topic = c.url;
+    const site = list.find(function (e) { return e && e.src === 'mc' && e.kind === 'cup' && e.month === c.month; });
+    if (site) {
+      Object.assign(site, pub);
+      if (typeof site.at === 'number') site.until = site.at + 6 * 3600000;
+    } else if (typeof c.at === 'number' && c.at + 6 * 3600000 > now) {
+      list.push(Object.assign({ src: 'mc', kind: 'cup', at: c.at, until: c.at + 6 * 3600000, url: LINKS.mcHome }, pub));
+    }
+  }
+  return list.sort(function (a, b) { return a.at - b.at; });
+}
+
 // ── aggregation ──────────────────────────────────────────────────────
 // fetchText(url) -> Promise<string>. One source failing never hides the
 // others: its name lands in `errors` and the rest is served.
@@ -463,5 +659,6 @@ module.exports = {
   parseBbcRanking, parseWecRanking, parseCod,
   bbcRegsUrl, parseBbcRegs,
   postText, parseWecFinalPost, wecFinals,
+  parseMcPost, monthlyCups, mergeMonthlyCups,
   buildEvents
 };
