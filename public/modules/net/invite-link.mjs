@@ -100,6 +100,12 @@ export function pickInviteTable(games, name) {
   return null;
 }
 
+// Server invitations (InvitePlayerToGame) are offered ONLY for invite-only
+// tables (type 3), exactly like QML LobbyHandler::canInviteFromCurrentGame().
+// The server relays an invitation whatever the game type, so the client is
+// the one that must not offer it on Normal / registered-only / Ranking games.
+export function canInviteToGame(type) { return type === 3; }
+
 // Why a link may not work for the friend — shown to the HOST when sharing.
 // Game types: 1 normal, 2 registered only, 3 invite only, 4 ranking.
 export function inviteWarnings(game, target) {
@@ -138,6 +144,15 @@ function _hint(txt) {
 }
 function _connected() {
   return !!(S.myId && S.ws && S.ws.readyState === 1);
+}
+
+// canInviteToGame() for the table I am currently seated at (lobby entry
+// first, join-time snapshot otherwise); false when not at a table.
+export function canInviteFromCurrentGame() {
+  if (!S.gId) return false;
+  var g = (S.games && S.games[S.gId]) || {};
+  var type = g.type || (S._gameMeta && S._gameMeta.type) || 0;
+  return canInviteToGame(type);
 }
 
 // Join (or watch) the table the pending link points at, if it is listed.
@@ -223,7 +238,8 @@ export function onInviteHashChange() {
 export const InviteLink = {
   PTHNET, inviteTarget, buildInviteUrl, parseInviteHash, normServer, sameServer,
   isLoopbackHost, namesMatch, pickInviteTable, inviteWarnings, createNotFoundWatch,
-  resolvePendingInvite, scheduleInviteResolve, armNotFoundWatch, onInviteHashChange
+  resolvePendingInvite, scheduleInviteResolve, armNotFoundWatch, onInviteHashChange,
+  canInviteToGame, canInviteFromCurrentGame
 };
 
 if (typeof window !== 'undefined') {

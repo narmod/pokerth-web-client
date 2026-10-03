@@ -1,4 +1,7 @@
-2026-10-02 version 2.1.9-web.282 (current series):
+2026-10-03 version 2.1.9-web.283 (current series):
+- improvement: inviting a player to your table is now offered only at invite-only tables, like the official client (no more invitations at Normal, registered-only or Ranking tables)
+
+2026-10-02 version 2.1.9-web.282:
 - improvement: the Ace has more dances and changes them every bar — on slow songs a slow dance with floating hearts, reggae and a waltz (besides the sway); on mid-tempo songs the robot, a moonwalk on the beat, the floss and the Charleston (besides the hip-hop)
 
 2026-10-02 version 2.1.9-web.281:

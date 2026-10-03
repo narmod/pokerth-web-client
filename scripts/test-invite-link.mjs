@@ -158,6 +158,11 @@ ok(/shareTableLink\(\) \{\s*var _il = this\._inviteLink\(\);/.test(pj), 'shareTa
 const apply = pj.slice(pj.indexOf('function _pthApplySharedLink'), pj.indexOf('function _pthDrainShare'));
 ok(apply.indexOf('S.gameId') === -1 && apply.indexOf('S.gId') !== -1, '_pthApplySharedLink: « never during a hand » guard reads S.gId');
 ok(pj.indexOf('window.InviteLink.armNotFoundWatch()') !== -1, 'landing: not-found watch armed from the connection');
+// Server invitations: invite-only tables only (parity QML canInviteFromCurrentGame).
+ok(IL.canInviteToGame(3) && !IL.canInviteToGame(1) && !IL.canInviteToGame(2) && !IL.canInviteToGame(4) && !IL.canInviteToGame(0),
+   'invite: server invitation offered only for type 3 (invite-only)');
+ok(/_plColOrder\(\) \{ return \(_plWaitingMode\(\) && _plCanInviteHere\(\)\)/.test(pj), 'player list: « Invite » column gated on invite-only tables');
+ok(/sendInvite\(pid\) \{\n\s+if \([^)]*!App\._canInviteHere\(\)\) return;/.test(pj), 'sendInvite: refused outside invite-only tables');
 const ml = fs.readFileSync('public/modules/net/msg-lobby.mjs', 'utf8');
 ok(ml.indexOf('scheduleInviteResolve(') !== -1 && ml.indexOf("from './invite-link.mjs'") !== -1, 'msg-lobby: name match goes through pickInviteTable');
 ok(fs.readFileSync('public/sw.js', 'utf8').indexOf("'/modules/net/invite-link.mjs'") !== -1, 'sw.js: module precached');

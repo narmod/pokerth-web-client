@@ -17,6 +17,7 @@
 import { S } from '../game/state.mjs';
 import { Proto } from './proto.mjs';
 import { MSG } from './messages.mjs';
+import { canInviteFromCurrentGame } from './invite-link.mjs';
 import { send, setStatus, show } from './session.mjs';
 import { t } from '../i18n.mjs';
 import { addChat } from '../ui/chat.mjs';
@@ -162,11 +163,11 @@ function onJoinGameAck(sub) {
     var asbm = document.getElementById('admin-start-mob');
     if (asbm) asbm.style.display = S.amGameAdmin ? '' : 'none';
     // Invite-players entry (menu ≡): any seated, non-spectator player
-    // online may invite others; the server arbitrates. Hidden offline
-    // and for spectators.
+    // online may invite others, on invite-only tables only (parity QML
+    // canInviteFromCurrentGame). Hidden offline and for spectators.
     var _imb = document.getElementById('invite-players-mob');
     var _ims = document.getElementById('invite-sep-mob');
-    var _canInv = !window._offlineMode && !S._amSpectator;
+    var _canInv = !window._offlineMode && !S._amSpectator && canInviteFromCurrentGame();
     if (_imb) _imb.style.display = _canInv ? '' : 'none';
     if (_ims) _ims.style.display = _canInv ? '' : 'none';
     // Ne plus basculer directement sur le feutre : tant que la partie n'a

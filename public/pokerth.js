@@ -6832,8 +6832,12 @@ const App = (() => {
     // Lists online lobby players who aren't already at this table; each
     // row sends an invite for the current gId. The recipient gets the
     // Accept/Decline banner (handled by InviteNotify on their side).
+    // Invite-only tables only (parity QML canInviteFromCurrentGame).
+    _canInviteHere() {
+      try { return !!(window.InviteLink && window.InviteLink.canInviteFromCurrentGame()); } catch (e) { return false; }
+    },
     openInviteModal() {
-      if (window._offlineMode || S._amSpectator || !S.gId) return;
+      if (window._offlineMode || S._amSpectator || !S.gId || !App._canInviteHere()) return;
       var modal = document.getElementById('invite-modal');
       var list  = document.getElementById('im-list');
       if (!modal || !list) return;
@@ -6879,7 +6883,7 @@ const App = (() => {
     },
     inviteSentTo(pid) { return !!S._invSent[pid]; },
     sendInvite(pid) {
-      if (window._offlineMode || !S.gId || pid === S.myId) return;
+      if (window._offlineMode || !S.gId || pid === S.myId || !App._canInviteHere()) return;
       try {
         if (_advGet('confirm_social', true)) {
           var _inm = S.players[pid] || ('#' + pid);
@@ -11323,7 +11327,9 @@ function _plTrack(k) { return (k === 'acts') ? _plActsTrack() : _PL_TRACK[k]; }
 var _PL_COL_ORDER   = ['av','name','star','status','flag','inv','acts'];
 var _PL_TOGGLE_COLS = ['av','status','flag','star','acts']; // 'name' et 'inv' exclus
 // Colonne « Inviter à la partie » (parité PlayerListItem QML) : présente
-// UNIQUEMENT sur la page d'attente de démarrage (s-lobby.lobby-waiting).
+// UNIQUEMENT sur la page d'attente de démarrage (s-lobby.lobby-waiting)
+// d'une partie SUR INVITATION (type 3, parité QML canInviteFromCurrentGame :
+// jamais en Normal / inscrits seulement / Ranking).
 // Réutilise la mécanique du modal d'invitation : App._inviteEligiblePids()
 // pour l'éligibilité et App.sendInvite(pid) pour l'envoi.
 // Enveloppe : ouvre la conversation privée avec ce joueur (parité QML,
@@ -11357,7 +11363,11 @@ window._plOpenPm = function(pid){
 };
 var _PL_INVITE_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M15 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 1.8c-3.5 0-6.3 1.8-6.3 4V19h12.6v-1.2c0-2.2-2.8-4-6.3-4ZM6 9V6.6H4.4V9H2v1.6h2.4V13H6v-2.4h2.4V9H6Z"/></svg>';
 function _plWaitingMode() { var s = document.getElementById('s-lobby'); return !!(s && s.classList.contains('lobby-waiting')); }
-function _plColOrder() { return _plWaitingMode() ? _PL_COL_ORDER : _PL_COL_ORDER.filter(function(k){ return k !== 'inv'; }); }
+function _plCanInviteHere() {
+  try { return !!(window.InviteLink && window.InviteLink.canInviteFromCurrentGame && window.InviteLink.canInviteFromCurrentGame()); }
+  catch (e) { return false; }
+}
+function _plColOrder() { return (_plWaitingMode() && _plCanInviteHere()) ? _PL_COL_ORDER : _PL_COL_ORDER.filter(function(k){ return k !== 'inv'; }); }
 window._plInvite = function(pid){
   try { if (typeof App !== 'undefined' && App.sendInvite) App.sendInvite(pid); } catch(e) {}
   try { renderPlayersList(); } catch(e) {}
@@ -11537,7 +11547,7 @@ function renderPlayersList() {
   var _atLobby = rows.filter(function(r) { return !r.act; });
   // Éligibilité d'invitation (page d'attente uniquement) : même source que le
   // modal (App._inviteEligiblePids) -> exclut moi et les joueurs déjà à ma table.
-  var _invMode = _plWaitingMode() && (typeof App !== 'undefined') && App._inviteEligiblePids;
+  var _invMode = _plWaitingMode() && _plCanInviteHere() && (typeof App !== 'undefined') && App._inviteEligiblePids;
   var _invElig = {};
   if (_invMode) { try { App._inviteEligiblePids().forEach(function(p){ _invElig[p] = 1; }); } catch(e) { _invMode = false; } }
   // Admin ? decide le nombre d'emplacements de la colonne d'actions ; lu une
@@ -12014,7 +12024,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.282'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.283'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
