@@ -6,6 +6,8 @@
 // (BBC / WEC / Monthly Cup podium); the leaders card is gone since web.242
 // (the rankings have their own window). WEC publishes no schedule: its daily game (22:00 server time, no
 // registration — sp0ck, 28/09/2026) is added to each evening by evWecDaily.
+// Its monthly / yearly finals come from their forum announcement (relay,
+// web.292): a row that unfolds to the table set-up and the qualified players.
 //
 // Data: GET /api/events, the relay in proxy.js (server/community-events.js)
 // that reads the three sites once per five minutes for everyone. Times come
@@ -79,9 +81,15 @@ export function evMonthName(month, locale, year) {
 }
 
 // Title of an upcoming row. `stepWord` is the translated "Step".
-export function evUpcomingTitle(e, locale, stepWord) {
+// `words` = { final: 'Monthly final · {month}', grand: 'Grand final {year}' } (WEC finals).
+export function evUpcomingTitle(e, locale, stepWord, words) {
   if (!e) return '';
   if (e.src === 'mc') return evMonthName(e.month, locale) || evSrcName('mc');
+  if (e.kind === 'final') {
+    const w = words || {};
+    if (e.grand) return String(w.grand || 'Grand final {year}').replace('{year}', e.year ? String(e.year) : '').trim();
+    return String(w.final || 'Monthly final \u00b7 {month}').replace('{month}', evMonthName(e.month, locale, e.year) || (e.year ? String(e.year) : '')).replace(/\s*\u00b7\s*$/, '');
+  }
   const parts = [];
   if (e.step != null) parts.push((stepWord || 'Step') + ' ' + e.step);
   if (e.title) parts.push(e.title);
@@ -336,9 +344,35 @@ const _open = new Set();                     // expanded game ids (strings)
 const _regs = new Map();                     // id -> { players, loading, error, at }
 const _games = new Map();                    // id -> game of the last render
 
-// A BBC game with sign-ups and an id can unfold.
+// A BBC game with sign-ups and an id can unfold; a WEC final unfolds to its
+// table set-up and qualified players (web.292).
 export function evExpandable(e) {
+  if (e && e.kind === 'final') return !!(e.id != null && ((e.qualified && e.qualified.length) || e.setup));
   return !!(e && e.src === 'bbc' && e.id != null && e.signups > 0);
+}
+
+// The WEC daily game is not shown on an evening whose final is at the same time.
+export function evDropDailyUnderFinal(list) {
+  const finals = (list || []).filter(function (e) { return e && e.kind === 'final'; });
+  if (!finals.length) return list || [];
+  return list.filter(function (e) {
+    return !(e && e.kind === 'daily' && finals.some(function (f) { return Math.abs(f.at - e.at) < 90 * 60000; }));
+  });
+}
+
+// Set-up line of a final: label → value pairs, in the order of the create form.
+// `w` = { stack, blind, timeout, delay, double } (translated labels; double has {n}).
+export function evFinalSetup(e, w, locale) {
+  const s = e && e.setup;
+  if (!s) return [];
+  const nf = function (n) { try { return Number(n).toLocaleString(locale || undefined); } catch (x) { return String(n); } };
+  const out = [];
+  if (s.stack != null) out.push([w.stack, nf(s.stack)]);
+  if (s.blind != null) out.push([w.blind, nf(s.blind)]);
+  if (s.timeout != null) out.push([w.timeout, s.timeout + ' s']);
+  if (s.delay != null) out.push([w.delay, s.delay + ' s']);
+  if (s.raiseEvery != null) out.push([String(w.double || 'Blinds double every {n} hands').replace('{n}', String(s.raiseEvery)), '']);
+  return out;
 }
 
 // Fresh = same number of players as announced, fetched less than 2 min ago.
@@ -369,13 +403,45 @@ function _toggle(id) {
   if (!e) return;
   _open.clear();                 // one game unfolded at a time (narmod, web.244)
   _open.add(id);
-  _loadRegs(e);
+  if (e.kind !== 'final') _loadRegs(e);   // a final carries its own players
   evRerender();
+}
+
+// Unfolded WEC final: table set-up, then the qualified players (place · nick,
+// games won in the month as a tooltip) and the replacements, dimmed.
+function _finalPanel(e) {
+  const loc = _locale();
+  const setup = evFinalSetup(e, {
+    stack: _t('startCash', 'Starting stack'), blind: _t('firstSmallBlind', 'First small blind'),
+    timeout: _t('actionTimeout', 'Time per action'), delay: _t('pauseBetweenHands', 'Pause between hands'),
+    double: _t('evBlindsDouble', 'Blinds double every {n} hands')
+  }, loc);
+  let body = '';
+  if (setup.length) {
+    body += '<div class="ev-setup">' + setup.map(function (p) {
+      return '<span class="ev-set">' + esc(p[0]) + (p[1] ? ' <b>' + esc(p[1]) + '</b>' : '') + '</span>';
+    }).join('') + '</div>';
+  }
+  const chip = function (p, res) {
+    const tip = p.won != null && p.games != null ? _t('evWonOf', '{won} of {games} games won', { won: p.won, games: p.games }) : '';
+    return '<span class="ev-chip' + (res ? ' ev-res' : '') + '"' + (tip ? ' title="' + esc(tip).replace(/"/g, '&quot;') + '"' : '') + '>'
+      + '<span class="ev-chip-p">' + esc(String(p.place)) + '.</span><span class="ev-chip-n">' + esc(String(p.nick || '')) + '</span></span>';
+  };
+  if (e.qualified && e.qualified.length) {
+    body += '<div class="ev-regs-msg ev-fl">' + esc(_t('evWecQualified', 'Qualified')) + '</div>'
+      + '<div class="ev-chips">' + e.qualified.map(function (p) { return chip(p, false); }).join('') + '</div>';
+  }
+  if (e.reserves && e.reserves.length) {
+    body += '<div class="ev-regs-msg ev-fl">' + esc(_t('evWecReserves', 'Replacements')) + '</div>'
+      + '<div class="ev-chips">' + e.reserves.map(function (p) { return chip(p, true); }).join('') + '</div>';
+  }
+  return '<div class="ev-regs ev-final">' + body + '</div>';
 }
 
 // Unfolded part: nickname chips (BBC admins: gold outline + "Admin" tag), or
 // a loading / error line. Left bar in the step colour, as in QML.
 function _regsPanel(e) {
+  if (e.kind === 'final') return _finalPanel(e);
   const r = _regs.get(String(e.id));
   const players = r && Array.isArray(r.players) ? r.players : [];
   const bar = e.step >= 1 && e.step <= 4 ? ' ev-step' + e.step : '';
@@ -406,6 +472,9 @@ function _gameRow(e, loc, stepWord) {
   const sign = evSignupText(e, _t('evSignups', 'Signed up: {n}'));
   const full = e.seats > 0 && e.signups >= e.seats;
   const text = e.kind === 'daily' ? _t('evWecDaily', 'Daily game · no registration')
+    : e.kind === 'final'
+    ? [evUpcomingTitle(e, loc, stepWord, { final: _t('evWecFinal', 'Monthly final · {month}'), grand: _t('evWecGrandFinal', 'Grand final {year}') }),
+      e.qualified && e.qualified.length ? _t('evWecQualifiedN', '{n} qualified', { n: e.qualified.length }) : ''].filter(Boolean).join(' · ')
     : e.src === 'bbc'
     ? [e.title, e.signups != null ? '(' + evPlayersText(e.signups, _t('evPlayers1', '1 player registered'), _t('evPlayersN', '{n} players registered')) + ')' : ''].filter(Boolean).join(' ')
     : [evUpcomingTitle(e, loc, stepWord), sign].filter(Boolean).join(' · ');
@@ -443,6 +512,7 @@ export function evSelKey(e) {
 // { none: true } when the event takes no registration (WEC daily game).
 export function evRegisterAction(e) {
   if (e && e.kind === 'daily') return { none: true, key: 'evWecDaily', fallback: 'Daily game \u00b7 no registration' };
+  if (e && e.kind === 'final') return { none: true, key: 'evWecFinalNoReg', fallback: 'Qualified through the monthly WEC ranking' };
   if (e && e.src === 'mc') return { key: 'evMcRegister', fallback: 'Register for the Monthly Cup', url: evSafeUrl(e.url) || MC_REGISTER_URL };
   return { key: 'evBbcRegister', fallback: 'Register for the BBC', url: (e && evSafeUrl(e.url)) || BBC_REGISTER_URL };
 }
@@ -506,7 +576,8 @@ function _render(data) {
   const today = evGameDay(now);
   let last = today;
   up.forEach(function (e) { if (e.src === 'bbc') { const k = evGameDay(e.at); if (k > last) last = k; } });
-  up = up.concat(evWecDaily(today, last))
+  up.forEach(function (e) { if (e.kind === 'final') { const k = evGameDay(e.at); if (k > last) last = k; } });
+  up = evDropDailyUnderFinal(up.concat(evWecDaily(today, last)))
     .filter(function (e) { return e.at >= now - 5 * 60 * 1000; })
     .sort(function (a, b) { return a.at - b.at; });
   const res = data.results || [];

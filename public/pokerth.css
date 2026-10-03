@@ -7172,7 +7172,9 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
 .cf-presets-style .cf-preset { padding: 8px 4px; gap: var(--sp-0); }
 .cf-presets-style .cf-preset .cfp-ico { font-size: var(--cf-fs-ico); }
 .cf-presets-style .cf-preset .cfp-n { font-size: var(--cf-fs-body); }
-.cf-presets-style .cf-preset .cfp-d { font-size: var(--cf-fs-xs); }
+.cf-presets-style .cf-preset .cfp-d { font-size: var(--cf-fs-xs); max-width: 100%; overflow-wrap: anywhere; hyphens: auto; }
+/* a long single word (hy « հավասարակշռված », ru « сбалансированный ») may break inside the 3-column card rather than spill (web.292: the grid is now open in LAN and training) */
+.cf-presets-style .cf-preset .cfp-n { max-width: 100%; overflow-wrap: anywhere; }
 .cf-preset.cfp-bar { flex-direction: row; align-items: center; justify-content: center; width: 100%; padding: 8px 10px; gap: var(--sp-3); margin-bottom: 16px; }
 .cf-preset.cfp-bar .cfp-ico { font-size: var(--cf-fs-ico-sm); line-height: 1; }
 .cf-preset.cfp-bar .cfp-n { font-size: var(--cf-fs-body); }
@@ -9080,6 +9082,12 @@ a.ev-row { color: inherit; text-decoration: none; }
 .ev-chip.ev-admin { --adm: 227,200,0; border-color: rgba(var(--adm), 0.6); background: rgba(var(--adm), 0.14); }
 :root[data-theme="pokerth-light"] .ev-chip.ev-admin { --adm: 176,154,0; }
 .ev-chip-a { flex-shrink: 0; font-size: var(--fs-3xs); font-weight: 700; letter-spacing: 0.04em; color: rgb(var(--adm)); }
+/* WEC final unfolded (web.292): set-up line, qualified players, replacements */
+.ev-final .ev-setup { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 0 0 6px; font-size: var(--fs-2xs); color: var(--text-dim); }
+.ev-final .ev-set b { color: var(--text-hi); font-weight: 700; }
+.ev-final .ev-fl { margin: 6px 0 4px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; font-size: var(--fs-3xs); }
+.ev-chip-p { flex-shrink: 0; font-weight: 700; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+.ev-chip.ev-res { opacity: 0.7; border-style: dashed; }
 .ev-regs-msg { font-size: var(--fs-2xs); color: var(--text); opacity: 0.7; }
 .ev-regs-msg.ev-err { color: var(--red); opacity: 1; }
 .fn-main { flex: 1; min-width: 0; }

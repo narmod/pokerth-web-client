@@ -125,5 +125,35 @@ const none = await ce.buildEvents(() => Promise.reject(new Error('offline')), NO
 ok(none.ok === false && none.error === 'no_data', 'everything down: ok=false so the tab can hide itself');
 ok(JSON.stringify(all).length < 5000, 'the payload stays small (' + JSON.stringify(all).length + ' bytes)');
 
+// -- WEC finals from their forum announcement (web.292) ---------------------
+{
+  const fs = await import('fs');
+  const html = fs.readFileSync(new URL('./fixtures/wec-final-2026-09.html', import.meta.url), 'utf8');
+  const post = { title: 'Re: WEC Monthly and Yearly Grand Finals', forum: 'WEC', link: 'https://www.pokerth.net/viewtopic.php?p=1#p1', date: '2026-10-02T17:49:00+02:00', html };
+  const f = ce.parseWecFinalPost(post);
+  ok(f && f.kind === 'final' && f.src === 'wec' && !f.grand && f.month === 9 && f.year === 2026, 'the September 2026 monthly final is recognised');
+  ok(f.at === Date.parse('2026-10-04T20:00:00Z'), 'its start is the UTC time given in brackets (Sunday 4 Oct, 20:00 UTC = 22:00 CEST)');
+  ok(f.setup && f.setup.stack === 10000 && f.setup.blind === 50 && f.setup.delay === 7 && f.setup.timeout === 15 && f.setup.raiseEvery === 25, 'table set-up: 10,000 / 50 / 7 s / 15 s / every 25 hands');
+  ok(f.qualified.length === 10 && f.qualified[0].nick === 'Blupher' && f.qualified[0].won === 7 && f.qualified[0].games === 22 && f.qualified[2].nick === 'Doc Ijiwaru' && f.qualified[7].nick === 'M4N!4C' && f.qualified[9].place === 10, 'the ten qualified players, in order, with their month');
+  ok(f.reserves.length === 2 && f.reserves[0].nick === 'DerSchlesier' && f.reserves[0].place === 11 && f.reserves[1].nick === 'MagE', 'replacements kept, the empty « 13th - » left out');
+  ok(f.url === post.link, 'it links to the announcement');
+  const quoted = ce.parseWecFinalPost(Object.assign({}, post, { html: 'Thanks!<blockquote>' + html + '</blockquote>' }));
+  ok(quoted === null, 'an announcement only quoted in a reply is not read');
+  ok(ce.parseWecFinalPost({ title: 'Re: VPNs', forum: 'General', html: 'nothing scheduled here' }) === null, 'an ordinary post gives nothing');
+  const grand = ce.parseWecFinalPost({ title: 'WEC Monthly and Yearly Grand Finals', forum: 'WEC', link: 'https://www.pokerth.net/x', date: '2026-12-20T10:00:00Z',
+    html: 'The Grand Final 2026 is scheduled for Sunday 10th January 2027 21:00 CET (20:00 UTC)<br>Starting Money: $ 20,000' });
+  ok(grand && grand.grand === true && grand.year === 2026 && grand.at === Date.parse('2027-01-10T20:00:00Z') && grand.setup.stack === 20000, 'the yearly Grand Final too');
+  const noUtc = ce.parseWecFinalPost({ title: 'WEC', forum: 'WEC', html: 'The finals for March 2027 are scheduled for Sunday 4th April 2027 22:00 CEST' });
+  ok(noUtc && noUtc.at === Date.parse('2027-04-04T22:00:00+02:00'), 'without a UTC time, the time is read in server time');
+  const NOW2 = Date.parse('2026-10-03T12:00:00+02:00');
+  const kept = ce.wecFinals([post], [], NOW2);
+  ok(kept.length === 1 && kept[0].posted === Date.parse(post.date), 'wecFinals: read from the posts');
+  ok(ce.wecFinals([], kept, NOW2).length === 1, 'and kept once the post has left the feed');
+  ok(ce.wecFinals([], kept, Date.parse('2026-10-05T12:00:00Z')).length === 0, 'dropped once played');
+  const newer = Object.assign({}, post, { date: '2026-10-03T09:00:00+02:00', html: html.replace('22:00 CEST (20:00 UTC)', '21:00 CEST (19:00 UTC)') });
+  const upd = ce.wecFinals([newer], kept, NOW2);
+  ok(upd.length === 1 && upd[0].at === Date.parse('2026-10-04T19:00:00Z'), 'a newer announcement of the same final replaces the old one');
+}
+
 console.log(fails ? '\n' + fails + ' FAILED' : '\nAll community-events checks passed');
 process.exit(fails ? 1 : 0);

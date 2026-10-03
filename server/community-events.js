@@ -277,6 +277,144 @@ function parseCod(text) {
   return { ok: true, champions: { top: top, url: LINKS.pthLeaderboard } };
 }
 
+// ── WEC finals, from their forum announcement (web.292) ──────────────
+// WEC has no public schedule, but its monthly and yearly finals are announced
+// on the pokerth.net forum (topic « WEC Monthly and Yearly Grand Finals »),
+// always in the same shape:
+//   The finals for September 2026 are scheduled for Sunday 04th October 2026
+//   22:00 CEST (20:00 UTC)
+//   Table Set-up: Starting Money: $ 10,000 · First Small Blind: $ 50 ·
+//   Delay: 7 s · time for Action: 15 s · Blind level increasing: double every 25th hand
+//   … qualified directly: one line per player, « Nick: …, won 7 of 22 games
+//   in September, 1st Place in monthly WEC ranking. »
+//   Replacement Players are: « 11th DerSchlesier », « 13th - »
+// The forum feed (proxy.js) hands the posts in; this reads them. Quoted older
+// announcements (<blockquote>) are ignored. Nothing recognised = null: the
+// Events tab simply has no final, as before.
+const MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+const MAX_FINALISTS = 12, MAX_RESERVES = 6;
+
+/** Post HTML -> plain text, one line per line of the post. */
+function postText(html) {
+  let s = String(html || '');
+  // quoted posts are someone else's (an older announcement): never read them
+  for (let i = 0; i < 4 && /<blockquote\b/i.test(s); i++) s = s.replace(/<blockquote\b[^>]*>(?:(?!<blockquote\b)[\s\S])*?<\/blockquote>/gi, '\n');
+  s = s.replace(/<(?:br|hr)\b[^>]*>/gi, '\n').replace(/<\/(?:p|div|li|h\d|tr)>/gi, '\n').replace(/<[^>]+>/g, '');
+  s = decodeHtml(s.replace(/&nbsp;/gi, ' ').replace(/&#(\d+);/g, function (m, d) { const c = +d; return c > 31 && c < 0x110000 ? String.fromCodePoint(c) : ' '; }));
+  return s.split(/\r?\n/).map(function (l) { return l.replace(/[ \t\u00a0]+/g, ' ').trim(); }).join('\n');
+}
+
+function numberIn(str) {
+  const m = /(\d[\d,.' ]*)/.exec(String(str || ''));
+  if (!m) return null;
+  return count(m[1].replace(/[,.' ]/g, ''));
+}
+
+/** « 04th October 2026 22:00 CEST (20:00 UTC) » -> epoch ms, UTC time preferred. */
+function finalDate(text) {
+  const m = /(\d{1,2})(?:st|nd|rd|th)?\.?\s+([A-Za-z]+)\s+(\d{4})\D{0,12}?(\d{1,2})[:.](\d{2})\s*([A-Z]{2,5})?(?:\s*\((\d{1,2})[:.](\d{2})\s*UTC\))?/.exec(text);
+  if (!m) return null;
+  const mon = MONTHS.indexOf(m[2].toLowerCase());
+  if (mon < 0) return null;
+  const y = +m[3], d = +m[1];
+  if (m[7] != null) {
+    // the UTC time given in brackets; the day may have rolled back (00:30 CEST = 22:30 UTC the day before)
+    let at = Date.UTC(y, mon, d, +m[7], +m[8]);
+    const local = zonedToEpoch(y + '-' + String(mon + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0') + ' ' + String(+m[4]).padStart(2, '0') + ':' + m[5]);
+    if (local !== null && Math.abs(at - local) > 12 * 3600000) at += (local > at ? 1 : -1) * 86400000;
+    return at;
+  }
+  return zonedToEpoch(y + '-' + String(mon + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0') + ' ' + String(+m[4]).padStart(2, '0') + ':' + m[5]);
+}
+
+/**
+ * One forum post -> a WEC final event, or null.
+ * post = { title, link, forum, date, html } (the relay's forum feed entry).
+ */
+function parseWecFinalPost(post) {
+  if (!post || typeof post !== 'object') return null;
+  const head = String(post.title || '') + ' ' + String(post.forum || '');
+  const text = postText(post.html);
+  // « The finals for September 2026 are scheduled for … » / « The Grand Final 2026 is scheduled for … »
+  const sm = /\b(?:the\s+)?(grand\s+finals?|finals?)\b([^\n]{0,60}?)\b(?:is|are)\s+scheduled\s+for\b([^\n]*)/i.exec(text);
+  if (!sm || !/\bwec\b|\bwecup/i.test(head + ' ' + text.slice(0, 400))) return null;
+  const at = finalDate(sm[3]);
+  if (at === null) return null;
+  const grand = /grand/i.test(sm[1]);
+  const pm = /([A-Za-z]+)\s+(\d{4})/.exec(sm[2]);
+  let month = null, year = null;
+  if (pm && MONTHS.indexOf(pm[1].toLowerCase()) >= 0) { month = MONTHS.indexOf(pm[1].toLowerCase()) + 1; year = +pm[2]; }
+  else { const yy = /(\d{4})/.exec(sm[2]); if (yy) year = +yy[1]; }
+  const ev = { src: 'wec', kind: 'final', grand: grand, month: month, year: year, at: at,
+    id: 'wecfinal:' + at, url: /^https:\/\/(www\.)?pokerth\.net\//.test(String(post.link || '')) ? String(post.link) : LINKS.wecResults };
+  // table set-up
+  const field = function (re) { const m = re.exec(text); return m ? m[1] : null; };
+  const setup = {
+    stack: numberIn(field(/starting\s+(?:money|cash|stack)\s*:\s*([^\n]+)/i)),
+    blind: numberIn(field(/first\s+small\s+blind\s*:\s*([^\n]+)/i)),
+    delay: numberIn(field(/delay\s*:\s*([^\n]+)/i)),
+    timeout: numberIn(field(/time\s+for\s+action\s*:\s*([^\n]+)/i)),
+    raiseEvery: numberIn(field(/blind\s+level\s+increas\w*\s*:[^\n]*?every\s+([^\n]+)/i))
+  };
+  if (Object.keys(setup).some(function (k) { return setup[k] !== null; })) ev.setup = setup;
+  // qualified players: the lines after « qualified directly », until the replacements
+  const lines = text.split('\n');
+  let i = lines.findIndex(function (l) { return /qualified/i.test(l); });
+  const qualified = [], reserves = [];
+  if (i >= 0) {
+    for (i++; i < lines.length && qualified.length < MAX_FINALISTS; i++) {
+      const l = lines[i];
+      if (!l) continue;
+      if (/replacement|reserve|substitute|good luck/i.test(l)) break;
+      const mm = /^([^:\n]{2,40}?)\s*:\s*(.*)$/.exec(l);
+      if (!mm) continue;
+      const nick = name(mm[1]);
+      if (!nick) continue;
+      const won = /won\s+(\d+)\s+of\s+(\d+)\s+games/i.exec(mm[2]);
+      const place = /(\d+)(?:st|nd|rd|th)\s+place/i.exec(mm[2]);
+      qualified.push({ nick: nick, place: place ? +place[1] : qualified.length + 1,
+        won: won ? +won[1] : null, games: won ? +won[2] : null });
+    }
+    const r = lines.findIndex(function (l) { return /replacement|reserve|substitute/i.test(l); });
+    if (r >= 0) {
+      for (let k = r + 1; k < lines.length && reserves.length < MAX_RESERVES; k++) {
+        const l = lines[k];
+        if (!l) continue;
+        const rm = /^(\d+)(?:st|nd|rd|th)\.?\s+(.+)$/.exec(l);
+        if (!rm) break;
+        const nick = name(rm[2]);
+        if (nick && !/^[-\u2013\u2014.?]+$/.test(nick)) reserves.push({ nick: nick, place: +rm[1] });
+      }
+    }
+  }
+  if (qualified.length) ev.qualified = qualified;
+  if (reserves.length) ev.reserves = reserves;
+  return ev;
+}
+
+/**
+ * The WEC finals announced in these posts and in the ones kept from before
+ * (`kept`, the relay's memory: the feed only holds the latest posts), newest
+ * announcement first for the same final, past ones dropped (6 h after the start).
+ */
+function wecFinals(posts, kept, now) {
+  const byAt = new Map();
+  const add = function (e, when) {
+    if (!e || typeof e.at !== 'number' || e.at < now - 6 * 3600000) return;
+    const k = e.grand ? 'g' + (e.year || '') : 'm' + (e.year || '') + '-' + (e.month || '');
+    const old = byAt.get(k);
+    if (!old || when >= old.when) byAt.set(k, { e: e, when: when });
+  };
+  (Array.isArray(kept) ? kept : []).forEach(function (e) { add(e, e && e.posted ? e.posted : 0); });
+  (Array.isArray(posts) ? posts : []).forEach(function (p) {
+    let e = null;
+    try { e = parseWecFinalPost(p); } catch (x) { e = null; }
+    const when = Date.parse(p && p.date) || 0;
+    if (e) { e.posted = when; add(e, when); }
+  });
+  return Array.from(byAt.values()).map(function (v) { return v.e; }).sort(function (a, b) { return a.at - b.at; });
+}
+
 // ── aggregation ──────────────────────────────────────────────────────
 // fetchText(url) -> Promise<string>. One source failing never hides the
 // others: its name lands in `errors` and the rest is served.
@@ -324,5 +462,6 @@ module.exports = {
   parseBbcSchedule, parseBbcResults, parseWecResults, parseMcHome,
   parseBbcRanking, parseWecRanking, parseCod,
   bbcRegsUrl, parseBbcRegs,
+  postText, parseWecFinalPost, wecFinals,
   buildEvents
 };

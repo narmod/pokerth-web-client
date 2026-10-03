@@ -11099,19 +11099,20 @@ function forumParseAtom(xml) {
   return posts;
 }
 
+function _forumProduce() {
+  return rankingFetch(FORUM_FEED_URL, { 'Accept': 'application/atom+xml, application/xml, text/xml, */*' }).then(function (r) {
+    if (!r.ok) throw new Error('upstream_' + r.status);
+    return r.text();
+  }).then(function (xml) {
+    const posts = forumParseAtom(xml);
+    if (!posts.length) throw new Error('parse_empty');
+    return { status: 200, body: JSON.stringify({ ok: true, at: Date.now(), posts: posts }) };
+  });
+}
 function handleForumFeed(req, res) {
   // Stale-while-revalidate (web.254): an expired copy goes out at once and
   // the feed is re-read behind it; a failed read keeps the previous copy.
-  RELAY.get('forumfeed', FORUM_TTL_MS, function () {
-    return rankingFetch(FORUM_FEED_URL, { 'Accept': 'application/atom+xml, application/xml, text/xml, */*' }).then(function (r) {
-      if (!r.ok) throw new Error('upstream_' + r.status);
-      return r.text();
-    }).then(function (xml) {
-      const posts = forumParseAtom(xml);
-      if (!posts.length) throw new Error('parse_empty');
-      return { status: 200, body: JSON.stringify({ ok: true, at: Date.now(), posts: posts }) };
-    });
-  }, { swr: true }).then(function (out) {
+  RELAY.get('forumfeed', FORUM_TTL_MS, _forumProduce, { swr: true }).then(function (out) {
     res.writeHead(out.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': out.note === 'hit' ? 'public, max-age=120' : 'no-store', 'X-Forum-Cache': out.note });
     res.end(out.body);
   });
@@ -11238,11 +11239,44 @@ function _eventsFetchText(u) {
   });
 }
 
+// WEC finals (web.292): WEC publishes no schedule, but its monthly and yearly
+// finals are announced on the forum. They are read from the forum feed (the
+// same relay copy as the Posts tab) and kept on disk, since the feed only holds
+// the latest posts and the announcement scrolls out of it days before the final.
+const WEC_FINALS_FILE = process.env.WEC_FINALS_FILE || path.join(__dirname, 'wec-finals.json');
+let _wecFinalsKept = null;
+function _wecFinalsLoad() {
+  if (_wecFinalsKept) return _wecFinalsKept;
+  try { const j = JSON.parse(fs.readFileSync(WEC_FINALS_FILE, 'utf8')); _wecFinalsKept = Array.isArray(j) ? j : []; } catch (e) { _wecFinalsKept = []; }
+  return _wecFinalsKept;
+}
+function _wecFinalsSave(list) {
+  const was = JSON.stringify(_wecFinalsKept || []), now = JSON.stringify(list);
+  _wecFinalsKept = list;
+  if (was === now) return;
+  try { const tmp = WEC_FINALS_FILE + '.tmp'; fs.writeFileSync(tmp, now); fs.renameSync(tmp, WEC_FINALS_FILE); } catch (e) {}
+}
+function _wecFinalsFromForum(now) {
+  return RELAY.get('forumfeed', FORUM_TTL_MS, _forumProduce, { swr: true }).then(function (out) {
+    let posts = [];
+    try { const j = JSON.parse(out.body); if (j && Array.isArray(j.posts)) posts = j.posts; } catch (e) {}
+    const list = communityEvents.wecFinals(posts, _wecFinalsLoad(), now);
+    _wecFinalsSave(list);
+    return list;
+  }).catch(function () { return communityEvents.wecFinals([], _wecFinalsLoad(), now); });
+}
+
 // One round = the five community pages. A round where every site failed is a
 // failure for RELAY: it never evicts the previous answer and is not retried
 // for 60 s.
 function _eventsProduce() {
-  return communityEvents.buildEvents(_eventsFetchText, Date.now()).then(function (data) {
+  const now = Date.now();
+  return Promise.all([communityEvents.buildEvents(_eventsFetchText, now), _wecFinalsFromForum(now)]).then(function (both) {
+    const data = both[0], finals = both[1];
+    if (finals.length) {
+      data.upcoming = (data.upcoming || []).concat(finals).sort(function (a, b) { return a.at - b.at; });
+      if (!data.ok) { data.ok = true; delete data.error; }
+    }
     return { status: data.ok ? 200 : 503, body: JSON.stringify(data) };
   });
 }

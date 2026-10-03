@@ -109,5 +109,20 @@ for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.mjs'))) {
 }
 ok(bad.length === 0, 'all catalogues have the keys, evSignups keeps its {n}' + (bad.length ? ' — ' + bad.slice(0, 5).join(', ') : ''));
 
+// WEC finals (web.292)
+{
+  const fin = { src: 'wec', kind: 'final', id: 'wecfinal:1', month: 9, year: 2026, at: Date.parse('2026-10-04T20:00:00Z'),
+    setup: { stack: 10000, blind: 50, delay: 7, timeout: 15, raiseEvery: 25 }, qualified: [{ nick: 'Blupher', place: 1, won: 7, games: 22 }] };
+  ok(E.evUpcomingTitle(fin, 'en', 'Step', { final: 'Monthly final \u00b7 {month}' }) === 'Monthly final \u00b7 September 2026', 'a monthly final is titled by its month');
+  ok(E.evUpcomingTitle(Object.assign({}, fin, { grand: true }), 'fr', 'Step', { grand: 'Grande finale {year}' }) === 'Grande finale 2026', 'a grand final by its year');
+  ok(E.evExpandable(fin) && !E.evExpandable({ src: 'wec', kind: 'final', id: 'x' }), 'a final with players or a set-up unfolds');
+  ok(E.evRegisterAction(fin).none === true && E.evRegisterAction(fin).key === 'evWecFinalNoReg', 'a final takes no sign-up: the button says how players qualify');
+  const daily = E.evWecDaily('2026-10-04', '2026-10-05');
+  const kept = E.evDropDailyUnderFinal(daily.concat([fin]));
+  ok(kept.length === daily.length && !kept.some((e) => e.kind === 'daily' && e.at === fin.at), 'the daily game of the final\u2019s evening gives way to the final');
+  const st = E.evFinalSetup(fin, { stack: 'S', blind: 'B', timeout: 'T', delay: 'D', double: 'x{n}' }, 'en');
+  ok(st.length === 5 && st[0][1] === '10,000' && st[2][1] === '15 s' && st[4][0] === 'x25', 'the set-up line, in the order of the create form');
+}
+
 console.log(fails ? '\n' + fails + ' FAILED' : '\nAll forum-events checks passed');
 process.exit(fails ? 1 : 0);
