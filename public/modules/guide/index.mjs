@@ -202,6 +202,9 @@ export function where() {
     waitMax: g ? g.maxPlayers || 10 : 10,
     result,
     windows: openWindows(),
+    // the create page (tour, web.288): the game style block open, saved preferences (⭐ pill shown)
+    styleOpen: screen === 'create' && shown('cf-style-grid'),
+    prefs: screen === 'create' && shown('cf-preset-perso'),
   };
 }
 
@@ -1139,6 +1142,9 @@ function init() {
 }
 
 window._guideApply = apply;
+// The page changed what a form tour talks about (the game style block opened
+// or folded, web.288): the step on screen is shown again.
+window._guideRefresh = () => { if (showing && showing.kind === 'ctx' && showing.run && showing.run.ctx.tour && M && M.bubbleOpen()) renderStep({ keepFold: true }); };
 window.guideToggle = toggle;
 /** « More help » (H1): the Help entries of the menus (modules/help/index.mjs). */
 window._guideMoreHelp = helpEntry;

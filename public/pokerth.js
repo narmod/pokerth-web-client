@@ -8123,8 +8123,10 @@ const App = (() => {
       // des préférences existent pour le MODE COURANT (pastille 💾 ou Options
       // avancées), avec l'ancien pth_create_prefs en repli.
       try { var _pp = document.getElementById('cf-preset-perso'); if (_pp) _pp.style.display = this.hasCreatePrefs() ? '' : 'none'; } catch (e) {}
-      // Bloc « Style de partie » : replie par defaut, etat memorise.
-      try { this.toggleStyleGrid(localStorage.getItem('pth_create_style_open') === '1'); } catch (e) {}
+      // Bloc « Style de partie » (réglages rapides) : développé par défaut en
+      // entraînement et en LAN, replié sur Internet (pokerth.net) — demande
+      // Arnaud web.288 ; l'état choisi par le joueur est mémorisé PAR MODE.
+      try { var _so = localStorage.getItem(this._styleGridKey()); this.toggleStyleGrid(_so == null ? this._styleGridMode() !== 'net' : _so === '1', true); } catch (e) {}
       // Mode entraînement : le style de partie mémorisé (« normal » par
       // défaut) est présélectionné à l'ouverture — valeurs ET surbrillance,
       // comme le niveau de bots (mixte) juste au-dessus.
@@ -8167,9 +8169,19 @@ const App = (() => {
       if (window._offlineMode) { this.disconnect(); return; }
       show('s-lobby');
     },
+    // Mode du formulaire pour le bloc « Style de partie » : 'local'
+    // (entraînement), 'lan' ou 'net' (pokerth.net, compte ou invité).
+    _styleGridMode() {
+      if (window._offlineMode) return 'local';
+      var m = S._currentLoginMode || 'lan';
+      return (m === 'guest' || m === 'auth') ? 'net' : 'lan';
+    },
+    _styleGridKey() { return 'pth_create_style_open_' + this._styleGridMode(); },
     // Développer / réduire les pastilles de style de partie (la barre « Perso »
-    // reste toujours visible). État persisté ; replié par défaut.
-    toggleStyleGrid(force) {
+    // reste toujours visible). État persisté par mode (web.288) ; par défaut
+    // développé en entraînement / LAN, replié sur Internet. `auto` : appliqué
+    // à l'ouverture de la page, pas un choix du joueur (rien n'est mémorisé).
+    toggleStyleGrid(force, auto) {
       var g = document.getElementById('cf-style-grid'), b = document.getElementById('cf-style-toggle');
       if (!g) return;
       var open = (force != null) ? !!force : (g.style.display === 'none');
@@ -8181,7 +8193,9 @@ const App = (() => {
         var ar = b.querySelector('.cfs-arr');
         if (ar) ar.textContent = open ? '\u25b4' : '\u25be';
       }
-      try { localStorage.setItem('pth_create_style_open', open ? '1' : '0'); } catch (e) {}
+      if (!auto) { try { localStorage.setItem(this._styleGridKey(), open ? '1' : '0'); } catch (e) {} }
+      // Aide de l'As : la visite du formulaire suit (texte « replié » / « développé »)
+      try { if (typeof window._guideRefresh === 'function') window._guideRefresh(); } catch (e) {}
     },
     // Stepper +/- (page « Créer une partie ») : incrémente/décrémente un champ
     // numérique selon son step/min/max. Réutilise les IDs existants.
@@ -12026,7 +12040,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.287'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.288'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

@@ -353,6 +353,21 @@ async function runDevice(browser, name, descriptor) {
       assert.equal(await page.locator(bubble).count(), 0, 'the bubble stays after « Got it »');
     });
     await shot(page, name, 'guide-c5-create-end');
+    await check(`${name}: create page — game style open by default in LAN, folded on pokerth.net, remembered per mode`, async () => {
+      const grid = () => page.evaluate(() => getComputedStyle(document.getElementById('cf-style-grid')).display !== 'none');
+      const reopen = (mode, offline) => page.evaluate(([m, o]) => { window.App.closeCreatePage(); window.PthState._currentLoginMode = m; window._offlineMode = o; window.App.openCreatePage(); }, [mode, offline]);
+      const was = await page.evaluate(() => [window.PthState._currentLoginMode, !!window._offlineMode]);
+      assert.equal(await grid(), true, 'LAN: folded by default');
+      await reopen('auth', false);
+      assert.equal(await grid(), false, 'pokerth.net: open by default');
+      await page.evaluate(() => window.App.toggleStyleGrid());          // the player opens it on pokerth.net
+      await reopen('lan', false);
+      assert.equal(await grid(), true, 'LAN after a pokerth.net choice');
+      await reopen('auth', false);
+      assert.equal(await grid(), true, 'pokerth.net: the player’s choice is not remembered');
+      await reopen(was[0], was[1]);
+      await page.evaluate(() => window.App.closeCreatePage());
+    });
     await ctx.close();
   }
 

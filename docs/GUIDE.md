@@ -159,7 +159,9 @@ screen registered for Escape, such as the login form, do not stop the Ace from s
 ## Game creation and windows (L5)
 
 `create-game` (screen `create`) is a guided tour of the form (web.287), one field per
-step in the order of the page: game style, name, type, password, spectators, max
+step in the order of the page: game style (quick settings — open by default in training
+and LAN, folded on pokerth.net; the text follows Expand / Collapse), My prefs (the ⭐ pill,
+or how to save them with 💾 — per mode), name, type, password, spectators, max
 players, starting stack, first small blind, blind interval, blind raise order, time per
 action, pause between hands, bot difficulty (training only) and the buttons. The type
 step keeps the C5 rules: any player **with an account** can create a Ranking table (10
