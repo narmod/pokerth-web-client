@@ -362,7 +362,7 @@ async function runDevice(browser, name, descriptor) {
       assert.ok((await txt()).includes(name), `the option's name « ${name} » is not said: ${await txt()}`);
       assert.equal(await row.locator('input[type="checkbox"]').isChecked(), before, 'the option changed on the first tap');
       await click(page, btn('moreAbout'));
-      await page.waitForFunction(() => /›/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-kicker') || {}).textContent || ''), null, { timeout: 3000 });
+      await page.waitForFunction(() => !!document.querySelector('#ace-dock .ad-bubble.ad-open .ad-hsec.ad-hit'), null, { timeout: 3000 });   // its chapter, at that section
       assert.match(await page.evaluate(() => document.querySelector('#ace-dock .ad-bubble.ad-open .ad-kicker').textContent), /Options & shortcuts/);
       assert.ok(!(await page.evaluate(() => document.body.classList.contains('guide-ask'))), '« ? » mode still on');
       await click(page, btn('close'));
@@ -485,26 +485,34 @@ async function runDevice(browser, name, descriptor) {
       await page.locator(bubble + ' .ad-search').waitFor({ timeout: 5000 });
       assert.equal(await helpShown(), false, 'the help window opened');
       assert.match(await kicker(), /More help · .*Lobby/);
-      assert.ok(await page.locator(bubble + ' .ad-item').count() >= 3, 'no sections listed');
+      assert.ok(await page.locator(bubble + ' .ad-hcat').count() >= 8, 'no chapter list');
+      assert.equal(await page.locator(bubble + ' .ad-hcat.ad-on[data-ad-btn="ch:lobby"]').count(), 1, 'the chapter of this screen is not selected');
+      assert.ok(await page.locator(bubble + ' .ad-hbody .ad-hsec').count() >= 3, 'the chapter is not shown in full');
+      await page.waitForTimeout(450);   // the bubble's open animation (scale) has run
       inside(await box(page, bubble), 'bubble');
-      const it = await box(page, bubble + ' .ad-item'); assert.ok(it.h >= 34, `items ${Math.round(it.h)}px tall`);
+      const it = await box(page, bubble + ' .ad-hcat'); assert.ok(it.h >= 34 && it.w >= 34, `chapter buttons ${Math.round(it.w)}×${Math.round(it.h)}px`);
+      const nav = await box(page, bubble + ' .ad-hnav'), body = await box(page, bubble + ' .ad-hbody');
+      if (nav.vw >= 600) assert.ok(nav.right <= body.left + 2, 'wide screen: the chapters are not a column on the left');
+      else assert.ok(nav.bottom <= body.top + 2, 'phone: the chapters are not a strip above the text');
     });
     await shot(page, name, 'guide-morehelp');
-    await check(`${name}: More help — a section opens in the same panel (whole text, search and chapters kept), then back to the topics`, async () => {
+    await check(`${name}: More help — laid out like the help window: a chapter in full, a result opens its section`, async () => {
       const before = await box(page, bubble);
-      await page.locator(bubble + ' .ad-item').first().click();
-      await page.waitForFunction(() => /›/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-kicker') || {}).textContent || ''), null, { timeout: 3000 });
-      assert.equal(await page.locator(bubble + ' .ad-list.ad-article .ad-page').count(), 1, 'the section is not in the panel');
-      assert.equal(await page.locator(bubble + ' .ad-search').count(), 1, 'the search field went away');
-      assert.ok(await page.locator(bubble + ' .ad-chap').count() >= 3, 'the chapters went away');
+      await page.locator(bubble + ' .ad-hcat[data-ad-btn="ch:rules"]').click();
+      await page.waitForFunction(() => /Poker rules/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-kicker') || {}).textContent || ''), null, { timeout: 3000 });
+      assert.ok(await page.locator(bubble + ' .ad-hbody .ad-hsec').count() >= 3, 'the rules chapter is not shown in full');
       assert.equal(await page.locator(btn('next')).count(), 0, 'still read page by page');
       assert.equal(await page.locator(btn('close')).count(), 1, 'no Close');
-      await page.waitForTimeout(450);   // the bubble's open animation (scale) has run
+      await page.waitForTimeout(450);
       const after = await box(page, bubble);
-      assert.ok(Math.abs(after.w - before.w) <= 2, `the panel changed width (${Math.round(before.w)} → ${Math.round(after.w)})`);
-      inside(after, 'panel with a section');
-      await click(page, btn('allTopics'));
-      await page.locator(bubble + ' .ad-list:not(.ad-article) .ad-item').first().waitFor({ timeout: 3000 });
+      assert.ok(Math.abs(after.w - before.w) <= 2 && Math.abs(after.h - before.h) <= 2, `the panel changed size (${Math.round(before.w)}×${Math.round(before.h)} → ${Math.round(after.w)}×${Math.round(after.h)})`);
+      inside(after, 'panel with a chapter');
+      await page.locator(bubble + ' .ad-search').fill('side pot');
+      await page.waitForTimeout(150);
+      await page.locator(bubble + ' .ad-item').first().click();
+      await page.waitForFunction(() => !!document.querySelector('#ace-dock .ad-hsec.ad-hit'), null, { timeout: 3000 });
+      const hit = await box(page, bubble + ' .ad-hsec.ad-hit'), b2 = await box(page, bubble + ' .ad-hbody');
+      assert.ok(hit.top >= b2.top - 2 && hit.top < b2.bottom, 'the section found is not scrolled into view');
     });
     await check(`${name}: More help — search and chapters`, async () => {
       await page.locator(bubble + ' .ad-search').fill('side pot');
@@ -515,8 +523,8 @@ async function runDevice(browser, name, descriptor) {
       await page.waitForTimeout(150);
       assert.equal(await page.locator(bubble + ' .ad-empty').count(), 1, 'no « no results »');
       await page.locator(bubble + ' .ad-search').fill('');
-      await page.locator(bubble + ' .ad-chap[data-ad-btn="ch:rules"]').click();
-      await page.waitForFunction(() => /Poker rules/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-kicker') || {}).textContent || ''), null, { timeout: 3000 });
+      await page.locator(bubble + ' .ad-hcat[data-ad-btn="ch:game"]').click();
+      await page.waitForFunction(() => /More help · .*(Game|game)/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-kicker') || {}).textContent || ''), null, { timeout: 3000 });
     });
     await check(`${name}: More help — no help window any more (H4); the Help entry again closes it; Close sends him away`, async () => {
       assert.equal(await page.locator('#help-modal').count(), 0, 'the help window is still in the page');

@@ -71,12 +71,38 @@ body.guide-ask #ace-dock *{cursor:pointer!important}
 #ace-dock .ad-keys{display:grid;grid-template-columns:auto 1fr;gap:5px 10px;align-items:baseline}
 #ace-dock .ad-keys code{font:700 12px/1.3 ui-monospace,Menlo,Consolas,monospace;background:#141414;color:#fbf7ee;border-radius:5px;padding:2px 6px;white-space:nowrap}
 #ace-dock .ad-note{border-inline-start:3px solid #f5c518;padding-inline-start:8px;font-style:italic}
-#ace-dock .ad-list.ad-article{display:block;gap:0;padding:0 2px}
-#ace-dock .ad-article .ad-backto{margin:0 0 6px;font-weight:600;font-size:12.5px;min-height:32px;padding:6px 10px}
-#ace-dock .ad-sectitle{margin:2px 0 6px;font:800 15px/1.3 system-ui,sans-serif;color:#141414}
-#ace-dock .ad-article .ad-page{font:500 13.5px/1.45 system-ui,sans-serif}
-#ace-dock .ad-article .ad-keys,#ace-dock .ad-article ul{margin:0 0 6px}
-[dir=rtl] #ace-dock .ad-page,[dir=rtl] #ace-dock .ad-kicker,[dir=rtl] #ace-dock .ad-list,[dir=rtl] #ace-dock .ad-sectitle{direction:rtl;text-align:right}
+[dir=rtl] #ace-dock .ad-page,[dir=rtl] #ace-dock .ad-kicker,[dir=rtl] #ace-dock .ad-list,[dir=rtl] #ace-dock .ad-hbody,[dir=rtl] #ace-dock .ad-hnav{direction:rtl;text-align:right}
+#ace-dock .ad-bubble.ad-big{width:min(900px,calc(100vw - 24px));max-width:min(900px,calc(100vw - 24px));height:min(640px,calc(100vh - 110px));flex-direction:column;overflow:hidden;padding:12px 14px 10px}
+#ace-dock .ad-bubble.ad-big.ad-open{display:flex}
+#ace-dock .ad-bubble.ad-big .ad-ask{right:6px;top:6px;width:28px;height:28px}
+#ace-dock .ad-big .ad-kicker{flex:none}
+#ace-dock .ad-big .ad-search{flex:none}
+#ace-dock .ad-big .ad-btns{flex:none;margin-top:8px}
+#ace-dock .ad-hwrap{flex:1;min-height:0;display:grid;grid-template-columns:minmax(150px,200px) 1fr;gap:0}
+#ace-dock .ad-hnav{display:flex;flex-direction:column;gap:3px;overflow:auto;padding:2px 10px 2px 0;overscroll-behavior:contain}
+#ace-dock .ad-hcat{appearance:none;display:flex;align-items:center;gap:8px;width:100%;text-align:start;border:0;border-radius:10px;background:transparent;color:#141414;padding:7px 10px;font:600 13px/1.25 system-ui,sans-serif;cursor:pointer;min-height:36px}
+#ace-dock .ad-hcat:hover{background:rgba(20,20,20,.07)}
+#ace-dock .ad-hcat.ad-on{background:#141414;color:#fbf7ee}
+#ace-dock .ad-hcat:focus-visible{outline:3px solid #f5c518;outline-offset:1px}
+#ace-dock .ad-hcat-ic{flex:none;width:22px;text-align:center;font-size:16px;line-height:1}
+#ace-dock .ad-hbody{position:relative;min-height:0;overflow:auto;overscroll-behavior:contain;border-inline-start:1.5px solid rgba(20,20,20,.14);padding:2px 6px 8px 14px;font:500 13.5px/1.5 system-ui,sans-serif;outline:none}
+#ace-dock .ad-hch{margin:2px 0 8px;font:800 17px/1.3 system-ui,sans-serif;color:#141414}
+#ace-dock .ad-hsec{border-radius:8px;transition:background-color .6s}
+#ace-dock .ad-hsec h3{margin:12px 0 4px;font:800 11.5px/1.3 system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#6b5a2e}
+#ace-dock .ad-hsec p{margin:0 0 7px}
+#ace-dock .ad-hsec ul{margin:0 0 7px;padding-inline-start:20px}
+#ace-dock .ad-hsec li{margin:0 0 4px}
+#ace-dock .ad-hsec .ad-keys{margin:0 0 7px}
+#ace-dock .ad-hsec.ad-hit{background:rgba(245,197,24,.28)}
+#ace-dock .ad-results{max-height:none;overflow:visible;margin:2px 0 0}
+@media (max-width:599px){
+  #ace-dock .ad-hwrap{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  #ace-dock .ad-hnav{flex-direction:row;overflow-x:auto;overflow-y:hidden;padding:0 0 6px;gap:4px;border-bottom:1.5px solid rgba(20,20,20,.14);margin-bottom:6px;scrollbar-width:none}
+  #ace-dock .ad-hcat{width:auto;flex:none;justify-content:center;padding:6px 9px;min-width:44px;min-height:40px}
+  #ace-dock .ad-hcat-ic{font-size:19px;width:auto}
+  #ace-dock .ad-hcat-lbl{display:none}
+  #ace-dock .ad-hbody{border-inline-start:0;padding:0 2px 8px}
+}
 `;
 
 let root = null;      // #ace-dock
@@ -430,6 +456,7 @@ export function say(o) {
   } catch (e) {}
   bub.innerHTML = ask + body + (btns ? `<div class="ad-btns">${btns}</div>` : '');
   bub.classList.toggle('ad-wide', !!o.wide);
+  bub.classList.toggle('ad-big', !!o.big);
   bub.scrollTop = 0;
   avoidEl = o.avoid || null;
   bub.classList.add('ad-open');
@@ -446,7 +473,7 @@ export function say(o) {
 export function hush() {
   if (!bub) return;
   try { if (bub.contains(document.activeElement) && ace) ace.focus({ preventScroll: true }); } catch (e) {}   // the focus goes back to him
-  bub.classList.remove('ad-open', 'ad-wide');
+  bub.classList.remove('ad-open', 'ad-wide', 'ad-big');
   bub.innerHTML = '';
   onBtnCb = null;
   point(false);

@@ -23,7 +23,7 @@
 // training waiting room. L5 (web.263): C5 create page and windows.
 // L6 (web.264): « ? » mode (hotspots.mjs). H1 (web.267): « More help », the
 // help window's knowledge read in his bubble (knowledge.mjs), on demand even
-// with the tips off; a section opens in the same panel since web.284.
+// with the tips off; laid out like the old help window since web.286.
 // Console: guideDebug().
 // ═══════════════════════════════════════════════════════════════════
 
@@ -549,14 +549,16 @@ function onAskKey(ev) {
 }
 
 // ── « More help » (H1, web.267) ────────────────────────────────────
-// The help window's knowledge in his bubble: the sections of the chapter
-// that fits this screen, chips for the other chapters, a search field; a
-// section opens in that same panel (web.284: whole text, scrollable, search
-// and chapters kept — it used to shrink to a small bubble read page by page
-// with « Next »). The texts are the help window's
-// own (modules/help/content/<lang>.mjs, 83 languages). Works with the tips
-// off: he comes, answers, and leaves when the bubble is closed.
-let help = null;              // { content, ch, q, sec, chObj, searched }
+// The help window's knowledge in a big panel by the Ace (web.286: laid out
+// like the help window had been before Ace's Help — search on top, the
+// chapters in a column on the left with their icon and name, the whole
+// chapter on the right, every section in a row; on a phone the chapters are
+// an icon strip above the text — in the colours of his bubble). A search
+// lists the matching sections; one tap opens its chapter at that section.
+// The texts are the help window's own (modules/help/content/<lang>.mjs, 83
+// languages). Works with the tips off: he comes, answers, and leaves when
+// the panel is closed.
+let help = null;              // { content, ch, q, searched }
 const uiT = (k) => { try { const s = window.t ? window.t(k) : k; return s && s !== k ? s : k; } catch (e) { return k; } };
 function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function helpLang() { try { return (localStorage.getItem('pth_lang') || document.documentElement.lang || 'en').toLowerCase(); } catch (e) { return 'en'; } }
@@ -580,71 +582,81 @@ async function openMoreHelp(o = {}) {
   return !!m;
 }
 
-/** The whole text of a section, for the panel (paragraphs, list, keys, notes). */
-function helpArticle() {
-  const sec = help.sec, ch = help.chObj;
+/** One section of a chapter, as the help window showed it. */
+function helpSection(sec) {
   const ns = Array.isArray(sec.note) ? sec.note : sec.note ? [sec.note] : [];
-  let body = (sec.b || []).map((x) => `<p>${esc(x)}</p>`).join('');
-  if (sec.list && sec.list.length) body += `<ul>${sec.list.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`;
-  if (sec.keys && sec.keys.length) body += `<div class="ad-keys">${sec.keys.map((r) => `<code>${esc(r[0])}</code><span>${esc(r[1])}</span>`).join('')}</div>`;
-  body += ns.map((x) => `<p class="ad-note">${esc(x)}</p>`).join('');
-  return `<button type="button" class="ad-item ad-backto" data-ad-btn="ch:${esc(ch.id)}">‹ ${esc(gt('allTopics'))}</button>`
-    + `<h3 class="ad-sectitle">${esc(sec.t)}</h3><div class="ad-page">${body}</div>`;
+  let h = `<section class="ad-hsec" id="ad-sec-${esc(sec.id)}"><h3>${esc(sec.t)}</h3>`;
+  h += (sec.b || []).map((x) => `<p>${esc(x)}</p>`).join('');
+  if (sec.list && sec.list.length) h += `<ul>${sec.list.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`;
+  if (sec.keys && sec.keys.length) h += `<div class="ad-keys">${sec.keys.map((r) => `<code>${esc(r[0])}</code><span>${esc(r[1])}</span>`).join('')}</div>`;
+  h += ns.map((x) => `<p class="ad-note">${esc(x)}</p>`).join('');
+  return h + '</section>';
 }
 
-function helpList() {
-  if (help.sec && !help.q.trim()) return helpArticle();
+/** The right-hand side: search results, or the whole chapter. */
+function helpBody() {
   const hits = help.q.trim().length >= 2 ? helpSearch(help.content, help.q) : null;
   if (hits) {
     if (!hits.length) return `<p class="ad-empty">${esc(uiT('helpNoResults'))}</p>`;
-    return hits.map((h) => `<button type="button" class="ad-item" data-ad-btn="sec:${esc(h.ch.id)}:${esc(h.sec.id)}"><small>${esc((h.ch.icon ? h.ch.icon + ' ' : '') + h.ch.title)}</small>${esc(h.sec.t)}</button>`).join('');
+    return `<div class="ad-list ad-results" role="list">${hits.map((h) => `<button type="button" class="ad-item" data-ad-btn="sec:${esc(h.ch.id)}:${esc(h.sec.id)}"><small>${esc((h.ch.icon ? h.ch.icon + ' ' : '') + h.ch.title)}</small>${esc(h.sec.t)}</button>`).join('')}</div>`;
   }
   const ch = help.content.chapters.find((c) => c.id === help.ch);
-  return ((ch && ch.sections) || []).map((s) => `<button type="button" class="ad-item" data-ad-btn="sec:${esc(ch.id)}:${esc(s.id)}">${esc(s.t)}</button>`).join('');
+  if (!ch) return '';
+  return `<h2 class="ad-hch">${ch.icon ? `<span aria-hidden="true">${esc(ch.icon)}</span> ` : ''}${esc(ch.title)}</h2>`
+    + (ch.sections || []).map(helpSection).join('');
 }
 
-/** The « More help » panel: topics, search results, or a section (help.sec). */
+/** The « More help » panel: search, chapters, and the chapter (or the results). */
 function renderTopics() {
   if (!M || !help) return;
   const ch = help.content.chapters.find((c) => c.id === help.ch);
-  const art = !!help.sec && !help.q.trim();
-  const chips = help.content.chapters.map((c) => `<button type="button" class="ad-chap${c.id === help.ch && !help.q ? ' ad-on' : ''}" data-ad-btn="ch:${esc(c.id)}" aria-pressed="${c.id === help.ch && !help.q}">${esc((c.icon ? c.icon + ' ' : '') + c.title)}</button>`).join('');
-  const html = `<p class="ad-kicker">${esc(gt('moreHelp'))}${ch ? ' · ' + esc((ch.icon ? ch.icon + ' ' : '') + ch.title) : ''}${art ? ' › ' + esc(help.sec.t) : ''}</p>`
+  const nav = help.content.chapters.map((c) => {
+    const on = c.id === help.ch && !help.q.trim();
+    return `<button type="button" class="ad-hcat${on ? ' ad-on' : ''}" data-ad-btn="ch:${esc(c.id)}" role="tab" aria-selected="${on}" title="${esc(c.title)}">`
+      + `<span class="ad-hcat-ic" aria-hidden="true">${esc(c.icon || '?')}</span><span class="ad-hcat-lbl">${esc(c.title)}</span></button>`;
+  }).join('');
+  const html = `<p class="ad-kicker">${esc(gt('moreHelp'))}${ch ? ' · ' + esc((ch.icon ? ch.icon + ' ' : '') + ch.title) : ''}</p>`
     + `<input type="search" class="ad-search" enterkeyhint="search" autocomplete="off" placeholder="${esc(uiT('helpSearchPh'))}" aria-label="${esc(uiT('helpSearchPh'))}" value="${esc(help.q)}">`
-    + `<div class="ad-list${art ? ' ad-article' : ''}" role="${art ? 'article' : 'list'}">${helpList()}</div><div class="ad-chaps">${chips}</div>`;
-  M.say({ html, wide: true, buttons: art ? [btn('allTopics'), btn('close', true)] : [btn('close', true)], ask: gt('askLabel'), onButton: onHelpButton });
+    + `<div class="ad-hwrap"><nav class="ad-hnav" role="tablist">${nav}</nav><div class="ad-hbody" tabindex="-1">${helpBody()}</div></div>`;
+  M.say({ html, big: true, buttons: [btn('close', true)], ask: gt('askLabel'), onButton: onHelpButton });
   const bub = M.bubbleEl();
   const inp = bub && bub.querySelector('.ad-search');
   if (inp) {
     inp.addEventListener('input', () => {
       help.q = inp.value;
-      if (help.sec && help.q.trim()) { help.sec = null; renderTopics(); const i2 = M.bubbleEl() && M.bubbleEl().querySelector('.ad-search'); if (i2) { i2.focus(); try { i2.setSelectionRange(i2.value.length, i2.value.length); } catch (e) {} } return; }   // typing in a section: back to the results
-      const list = bub.querySelector('.ad-list');
-      if (list) list.innerHTML = helpList();
-      bub.querySelectorAll('.ad-chap').forEach((b) => b.classList.toggle('ad-on', !help.q && b.getAttribute('data-ad-btn') === 'ch:' + help.ch));
+      const body = bub.querySelector('.ad-hbody');
+      if (body) { body.innerHTML = helpBody(); body.scrollTop = 0; }
+      bub.querySelectorAll('.ad-hcat').forEach((b) => { const on = !help.q.trim() && b.getAttribute('data-ad-btn') === 'ch:' + help.ch; b.classList.toggle('ad-on', on); b.setAttribute('aria-selected', String(on)); });
       if (!help.searched && help.q.trim().length >= 2) { help.searched = true; beacon('more-help', 'search'); }
-      M.replace();
     });
     inp.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') { ev.stopPropagation(); closeMoreHelp(); } });
   }
+  const on = bub && bub.querySelector('.ad-hcat.ad-on');
+  if (on) { try { on.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch (e) {} }
 }
 
+/** Opens a chapter at one of its sections (search result, « More about it »). */
 function openHelpSection(chId, secId) {
   const f = findSection(help.content, chId, secId);
   if (!f) { renderTopics(); return; }
-  help.ch = chId; help.chObj = f.ch; help.sec = f.sec; help.q = '';
+  help.ch = chId; help.q = '';
   beacon('more-help', 'section');
   renderTopics();
-  const list = M && M.bubbleEl() && M.bubbleEl().querySelector('.ad-list');
-  if (list) list.scrollTop = 0;
+  const bub = M && M.bubbleEl(), body = bub && bub.querySelector('.ad-hbody');
+  const el = body && body.querySelector('#ad-sec-' + (window.CSS && CSS.escape ? CSS.escape(secId) : secId));
+  if (el) {
+    body.scrollTop = Math.max(0, el.offsetTop - 4);
+    el.classList.add('ad-hit');
+    setTimeout(() => { try { el.classList.remove('ad-hit'); } catch (e) {} }, 1600);
+  }
 }
 
 function onHelpButton(id) {
   if (!help) { closeBubble(); return; }
   if (id === 'ask') { enterAsk(); return; }
   if (id === 'close' || id === 'escape') { closeMoreHelp(); return; }
-  if (id === 'allTopics' || id === 'back') { help.sec = null; renderTopics(); return; }
-  if (id.indexOf('ch:') === 0) { help.ch = id.slice(3); help.q = ''; help.sec = null; renderTopics(); return; }
+  if (id === 'allTopics' || id === 'back') { help.q = ''; renderTopics(); return; }
+  if (id.indexOf('ch:') === 0) { help.ch = id.slice(3); help.q = ''; renderTopics(); return; }
   if (id.indexOf('sec:') === 0) { const [, c, s] = id.split(':'); openHelpSection(c, s); }
 }
 

@@ -62,7 +62,8 @@ for (const [dev, re] of [['iPhone 13', /Share/], ['Pixel 7', /browser menu/], ['
   await page.click(bubble + ' [data-ad-btn="moreAbout"]');
   await page.waitForTimeout(600);
   const t2 = await page.locator(bubble).innerText();
-  ok(/Install as an app/.test(t2), `${dev}: « More about it » opens the help section`);
+  const hit = await page.locator(bubble + ' .ad-hsec.ad-hit h3').count() ? await page.locator(bubble + ' .ad-hsec.ad-hit h3').textContent() : '';
+  ok(/Install as an app/i.test(t2) && /Install as an app/.test(hit), `${dev}: « More about it » opens the help section (its chapter, at that section)`);
   ok(await docks(page) === 1, `${dev}: still one Ace`);
   await ctx.close();
 }
