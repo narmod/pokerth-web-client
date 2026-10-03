@@ -25,7 +25,10 @@ const SEL = [
   // à l'ouverture, il passe devant le chat et les fenêtres flottantes.
   '#lsb-clock-pop',
   '#g-overflow-menu', '#l-overflow-menu', '#cr-overflow-menu',
-  '#connect-overflow-menu', '#pv-overflow-menu'
+  '#connect-overflow-menu', '#pv-overflow-menu',
+  // Menu ☰ « liens PokerTH » du login : un <details>, ouvert = attribut [open]
+  // (voir _visible). Sans lui, il restait sous le classement en modale (mobile).
+  '#cl-links-connect'
 ].join(',');
 
 // Fenêtres flottantes IMBRIQUÉES : la carte porte .floating-win, mais le z-index
@@ -42,7 +45,7 @@ const HOSTS = '#ranking-modal,#tableranking-modal,#forum-modal,#pm-modal,#pp-mod
 // fenêtres imbriquées restent en mode modale (conteneur à z CSS 1200, hors
 // bande) : un menu ouvert par-dessus passait dessous. Un menu du header qui
 // passe devant se place donc aussi au-dessus de ces conteneurs modaux visibles.
-const MENUS = '#g-overflow-menu,#l-overflow-menu,#cr-overflow-menu,#connect-overflow-menu,#pv-overflow-menu';
+const MENUS = '#g-overflow-menu,#l-overflow-menu,#cr-overflow-menu,#connect-overflow-menu,#pv-overflow-menu,#cl-links-connect';
 
 const BASE = 300, TOP = 390;
 let _z = BASE;
@@ -86,6 +89,8 @@ function _release(el) {
 
 function _visible(el) {
   if (!el || el.hidden) return false;
+  // <details> (menu ☰ du login) : toujours affiché, seul [open] compte.
+  if (el.tagName === 'DETAILS' && !el.open) return false;
   let st;
   try { st = window.getComputedStyle(el); } catch (e) { return false; }
   return st.display !== 'none' && st.visibility !== 'hidden';
@@ -229,7 +234,7 @@ const _obs = new MutationObserver((muts) => {
 function _watch(el) {
   if (!el || el._zWatched) return;
   el._zWatched = true;
-  _obs.observe(el, { attributes: true, attributeFilter: ['style', 'class', 'hidden'] });
+  _obs.observe(el, { attributes: true, attributeFilter: ['style', 'class', 'hidden', 'open'] });
 }
 
 export function initZOrder() {

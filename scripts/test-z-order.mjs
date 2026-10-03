@@ -11,7 +11,7 @@ function ok(cond, label) {
 }
 
 const dom = new JSDOM(`<!doctype html><head><style>#ranking-modal{z-index:1200} .connect-header{position:absolute;z-index:20}</style></head><body>
-  <div class="header connect-header"><span><div id="connect-overflow-menu" style="display:none"></div></span></div>
+  <div class="header connect-header"><div class="hdr-left"><details class="cl-links" id="cl-links-connect"><summary>☰</summary><div class="cl-menu"></div></details></div><span><div id="connect-overflow-menu" style="display:none"></div></span></div>
   <div id="g-chat-panel" style="display:none"></div>
   <div id="g-log-panel" style="display:none"></div>
   <div id="music-panel" style="display:none"></div>
@@ -137,6 +137,13 @@ cov.style.display = 'block'; await tick();
 ok(parseInt(hdr.style.zIndex, 10) > 1200, 'login : l\'en-tête du menu passe au-dessus de la modale');
 cov.style.display = 'none'; await tick();
 ok(hdr.style.zIndex === '' && getComputedStyle(hdr).zIndex === '20', 'login : menu fermé, l\'en-tête reprend son z CSS (20)');
+// Menu ☰ du login (<details>) : même règle que ⚙ (rapport narmod 03/10).
+const cl = $('cl-links-connect');
+cl.open = true; await tick();
+ok(parseInt(hdr.style.zIndex, 10) > 1200 && z('cl-links-connect') > 1200,
+   'login : menu ☰ ouvert sur le classement en modale : passe devant (> 1200)');
+cl.open = false; await tick();
+ok(hdr.style.zIndex === '' && getComputedStyle(hdr).zIndex === '20', 'login : menu ☰ fermé, l\'en-tête reprend son z CSS (20)');
 rk.style.display = 'none'; jr.style.display = 'none'; await tick();
 ovf.style.display = 'none'; await tick();
 ovf.style.display = 'block'; await tick();

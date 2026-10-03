@@ -1,4 +1,7 @@
-2026-10-03 version 2.1.9-web.286 (current series):
+2026-10-03 version 2.1.9-web.298 (current series):
+- bugfix: on the login screen, the ☰ links menu now opens in front of an open window (ranking, forum…), like the ⚙ menu
+
+2026-10-03 version 2.1.9-web.286:
 - improvement: « More help » is laid out like the help window again, in the colours of the Ace’s bubble — search on top, the chapters in a column on the left (an icon strip on phones) and the whole chapter on the right; a search result opens its chapter at that section
 
 2026-10-03 version 2.1.9-web.285:
