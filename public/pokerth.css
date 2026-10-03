@@ -9057,6 +9057,10 @@ a.ev-row { color: inherit; text-decoration: none; }
 .ev-time { flex-shrink: 0; min-width: 3.2em; font-family: var(--ff-mono); font-size: var(--fs-md, 16px); font-weight: 700; color: var(--text-hi); font-variant-numeric: tabular-nums; }
 .ev-sub { flex: 1; min-width: 0; font-size: var(--fs-sm); color: var(--text); overflow-wrap: anywhere; }
 .ev-sub.ev-zero { opacity: 0.55; }
+/* the site's day and Berlin time under a row, for a player elsewhere (web.295) */
+.ev-ref { display: block; margin-top: 2px; font-size: var(--fs-2xs); color: var(--text); opacity: 0.75; font-variant-numeric: tabular-nums; }
+.ev-sub.ev-zero .ev-ref { opacity: 1; }
+.ev-game.ev-sel .ev-ref { opacity: 1; font-weight: 600; }
 .ev-sub.ev-full { color: rgb(80,200,120); font-weight: 700; }
 /* Registered players of a BBC game (QML BBC tab collapsible): the row unfolds
    on click; chips below, BBC admins with a gold outline and an "Admin" tag;

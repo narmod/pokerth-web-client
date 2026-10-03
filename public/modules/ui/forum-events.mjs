@@ -129,6 +129,39 @@ export function evGameDay(ms) {
   return d.toISOString().slice(0, 10);
 }
 
+// Day header of a row since web.295: the PLAYER's own date, a game before
+// 06:00 on his clock counting for the evening before. The header and the time
+// on the row then always name the same day, wherever the player lives (a
+// 19:30 Berlin game seen from Tokyo sits under Sunday, at 02:30). For a player
+// on Berlin time this is exactly the BBC calendar's evenings (evGameDay).
+export function evPlayerDay(ms) {
+  if (typeof ms !== 'number' || !isFinite(ms)) return '';
+  const d = new Date(ms - 6 * 3600000);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+// What the community site shows for this game, when the player's clock reads
+// otherwise: the site's evening (weekday + day) and the Berlin time. The BBC
+// calendar files a 01:00 game under the evening before, so does this. '' when
+// the player is on Berlin time (nothing to translate).
+export function evBerlinRef(ms, locale) {
+  if (typeof ms !== 'number' || !isFinite(ms)) return null;
+  const loc = locale || undefined;
+  let mine = '', srv = '';
+  try {
+    mine = new Date(ms).toLocaleString('en-GB', { weekday: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+    srv = new Date(ms).toLocaleString('en-GB', { timeZone: GAME_TZ, weekday: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+  } catch (e) { return null; }
+  if (mine === srv) return null;
+  const k = evGameDay(ms).split('-');
+  let day = '', time = '';
+  try {
+    day = new Date(Date.UTC(+k[0], +k[1] - 1, +k[2], 12)).toLocaleDateString(loc, { timeZone: 'UTC', weekday: 'short', day: 'numeric', month: 'short' });
+    time = new Date(ms).toLocaleTimeString(loc, { timeZone: GAME_TZ, hour: '2-digit', minute: '2-digit' });
+  } catch (e) { return null; }
+  return { day: day, time: time };
+}
+
 // Epoch ms of a GAME_TZ wall time (summer / winter time handled by Intl).
 export function evGameTimeToUtc(y, mo, d, h, mi) {
   const want = Date.UTC(y, mo - 1, d, h, mi);
@@ -526,10 +559,14 @@ function _gameRow(e, loc, stepWord) {
     : [evUpcomingTitle(e, loc, stepWord),
       e.src === 'mc' && e.champion ? '\ud83c\udfc6 ' + e.champion
         : e.src === 'mc' && e.at <= Date.now() ? _t('evMcLive', 'in progress') : sign].filter(Boolean).join(' · ');
+  // the site's own day and Berlin time, for a player elsewhere (web.295): what to look for when registering
+  const ref = evBerlinRef(e.at, loc);
+  const refTxt = ref ? _t('evBerlinRef', 'On the site: {day} · {time} (Berlin)', ref) : '';
   const inner = '<span class="ev-time">' + esc(evTime(e.at, loc)) + '</span>'
     + '<span class="fn-forum ' + evSrcClass(e.src) + '">' + esc(evSrcName(e.src)) + '</span>'
     + (step ? '<span class="' + step.cls + '">' + esc(step.text) + '</span>' : '')
-    + '<span class="ev-sub' + (full ? ' ev-full' : (e.signups === 0 ? ' ev-zero' : '')) + '">' + esc(text) + '</span>';
+    + '<span class="ev-sub' + (full ? ' ev-full' : (e.signups === 0 ? ' ev-zero' : '')) + '">' + esc(text)
+    + (refTxt ? '<span class="ev-ref">' + esc(refTxt) + '</span>' : '') + '</span>';
   // Every upcoming row can be selected (the footer button follows it); a BBC
   // row with sign-ups also unfolds. Only the ↗ icon opens the site.
   const key = evSelKey(e), sel = key === _selKey;
@@ -570,6 +607,10 @@ function _paintRegister() {
   const b = document.getElementById('fn-bbcreg');
   if (!b) return;
   const a = evRegisterAction(_selected());
+  // the game to pick on the site, in its own day and time (web.295)
+  const sel = _selected(), ref = sel && !a.none ? evBerlinRef(sel.at, _locale()) : null;
+  const tip = ref ? _t('evBerlinRef', 'On the site: {day} · {time} (Berlin)', ref) : '';
+  if (tip) b.setAttribute('title', tip); else b.removeAttribute('title');
   const sp = b.querySelector('span');
   if (sp) { sp.setAttribute('data-i18n', a.key); sp.textContent = _t(a.key, a.fallback); }
   b.disabled = !!a.none;
@@ -631,10 +672,11 @@ function _render(data) {
     .sort(function (a, b) { return a.at - b.at; });
   const res = data.results || [];
   let html = '', rows = '';
-  // Grouped by game evening under a day header (QML BBC tab).
+  // Grouped by the player's own day (web.295; the Berlin evening before, as the
+  // QML BBC tab): a header and the times below it always name the same day.
   let day = null;
   for (const e of up) {
-    const k = evGameDay(e.at);
+    const k = evPlayerDay(e.at);
     if (k !== day) { day = k; rows += '<div class="ev-day">' + esc(evDayLabel(k, now, loc)) + '</div>'; }
     rows += _gameRow(e, loc, stepWord);
   }
