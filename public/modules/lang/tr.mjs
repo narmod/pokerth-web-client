@@ -17,7 +17,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Selam!', mascotBye:'Görüşürüz!', mascotTada:'Tadaa!', mascotKing:'Masanın kralı!', mascotAnyone:'Kimse yok mu?', mascotCheese:'Peynir!', mascotTable:'Yeni bir masa!', mascotMail:'Mesajın var!', mascotBravo:'Aferin!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'As’ın yardımı', advGuide:'As’ın yardımı: As uygulamayı adım adım açıklar', advAceDance:'As, müzik çalarındaki müzikle dans eder',
+    guideBtn:'As’ın yardımı', advGuide:'As’ın yardımı: As uygulamayı adım adım açıklar', advAceScenes:'As’ın şaklabanlıkları: sahneler, danslar ve tepkiler', advAceDance:'As, müzik çalarındaki müzikle dans eder',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Notum', nvRating:'Değerlendirme', nvPlaceholder:'Her 3-bet’i öder…', nvSaved:'Kaydedildi', nvTagNone:'Etiket yok', nvTagRed:'Tehlikeli', nvTagOrange:'Agresif', nvTagYellow:'İzle', nvTagGreen:'Balık', nvTagBlue:'Sıkı', nvTagPurple:'Kurnaz', nvLabelPh:'Etiket adı', nvLabelTip:'Etiketi yeniden adlandır — bu renkteki tüm oyuncular için geçerli',
     ppMyStats:'İstatistiklerim',

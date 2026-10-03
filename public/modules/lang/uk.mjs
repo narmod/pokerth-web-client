@@ -14,7 +14,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Привіт!', mascotBye:'До зустрічі!', mascotTada:'Та-да!', mascotKing:'Король столу!', mascotAnyone:'Є тут хтось?', mascotCheese:'Скажи «сир»!', mascotTable:'Новий стіл!', mascotMail:'Вам лист!', mascotBravo:'Молодець!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Допомога туза', advGuide:'Допомога туза: туз пояснює застосунок крок за кроком', advAceDance:'Туз танцює під музику плеєра',
+    guideBtn:'Допомога туза', advGuide:'Допомога туза: туз пояснює застосунок крок за кроком', advAceScenes:'Витівки туза: сценки, танці й реакції', advAceDance:'Туз танцює під музику плеєра',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Моя нотатка', nvRating:'Оцінка', nvPlaceholder:'Колує будь-який 3-бет…', nvSaved:'Збережено', nvTagNone:'Без мітки', nvTagRed:'Небезпечний', nvTagOrange:'Агресивний', nvTagYellow:'Спостерігати', nvTagGreen:'Фіш', nvTagBlue:'Тайтовий', nvTagPurple:'Хитрий', nvLabelPh:'Назва мітки', nvLabelTip:'Перейменувати мітку — стосується всіх гравців із цим кольором',
     ppMyStats:'Моя статистика',

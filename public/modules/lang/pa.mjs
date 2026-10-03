@@ -19,7 +19,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'ਸਤ ਸ੍ਰੀ ਅਕਾਲ!', mascotBye:'ਫਿਰ ਮਿਲਾਂਗੇ!', mascotTada:'ਟਾ-ਡਾ!', mascotKing:'ਮੇਜ਼ ਦਾ ਰਾਜਾ!', mascotAnyone:'ਕੋਈ ਹੈ?', mascotCheese:'ਚੀਜ਼!', mascotTable:'ਇੱਕ ਨਵਾਂ ਮੇਜ਼!', mascotMail:'ਤੁਹਾਡਾ ਸੁਨੇਹਾ ਆਇਆ ਹੈ!', mascotBravo:'ਸ਼ਾਬਾਸ਼!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'ਯੱਕੇ ਦੀ ਮਦਦ', advGuide:'ਯੱਕੇ ਦੀ ਮਦਦ: ਯੱਕਾ ਐਪ ਨੂੰ ਕਦਮ-ਦਰ-ਕਦਮ ਸਮਝਾਉਂਦਾ ਹੈ', advAceDance:'ਯੱਕਾ ਮਿਊਜ਼ਿਕ ਪਲੇਅਰ ਦੇ ਸੰਗੀਤ ’ਤੇ ਨੱਚਦਾ ਹੈ',
+    guideBtn:'ਯੱਕੇ ਦੀ ਮਦਦ', advGuide:'ਯੱਕੇ ਦੀ ਮਦਦ: ਯੱਕਾ ਐਪ ਨੂੰ ਕਦਮ-ਦਰ-ਕਦਮ ਸਮਝਾਉਂਦਾ ਹੈ', advAceScenes:'ਯੱਕੇ ਦੀਆਂ ਸ਼ਰਾਰਤਾਂ: ਦ੍ਰਿਸ਼, ਨਾਚ ਅਤੇ ਪ੍ਰਤੀਕਿਰਿਆਵਾਂ', advAceDance:'ਯੱਕਾ ਮਿਊਜ਼ਿਕ ਪਲੇਅਰ ਦੇ ਸੰਗੀਤ ’ਤੇ ਨੱਚਦਾ ਹੈ',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'ਮੇਰਾ ਨੋਟ', nvRating:'ਰੇਟਿੰਗ', nvPlaceholder:'ਹਰ 3-ਬੈਟ ਕਾਲ ਕਰਦਾ ਹੈ…', nvSaved:'ਸੰਭਾਲਿਆ ਗਿਆ', nvTagNone:'ਕੋਈ ਲੇਬਲ ਨਹੀਂ', nvTagRed:'ਖ਼ਤਰਾ', nvTagOrange:'ਹਮਲਾਵਰ', nvTagYellow:'ਧਿਆਨ ਰੱਖੋ', nvTagGreen:'ਕਮਜ਼ੋਰ', nvTagBlue:'ਸਖ਼ਤ', nvTagPurple:'ਚਲਾਕ', nvLabelPh:'ਲੇਬਲ ਦਾ ਨਾਮ', nvLabelTip:'ਇਸ ਲੇਬਲ ਦਾ ਨਾਮ ਬਦਲੋ — ਇਸ ਰੰਗ ਵਾਲੇ ਹਰ ਖਿਡਾਰੀ ਉੱਤੇ ਲਾਗੂ ਹੁੰਦਾ ਹੈ',
     ppMyStats:'ਮੇਰੇ ਅੰਕੜੇ',

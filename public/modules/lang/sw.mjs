@@ -21,7 +21,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Habari!', mascotBye:'Tuonane!', mascotTada:'Tada!', mascotKing:'Mfalme wa meza!', mascotAnyone:'Kuna mtu?', mascotCheese:'Tabasamu!', mascotTable:'Meza mpya!', mascotMail:'Una ujumbe!', mascotBravo:'Hongera!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Msaada wa Ekaa', advGuide:'Msaada wa Ekaa: Ekaa inaeleza programu hatua kwa hatua', advAceDance:'Ekaa inacheza kwa muziki wa kicheza muziki',
+    guideBtn:'Msaada wa Ekaa', advGuide:'Msaada wa Ekaa: Ekaa inaeleza programu hatua kwa hatua', advAceScenes:'Vituko vya Ekaa: maonyesho, ngoma na miitikio', advAceDance:'Ekaa inacheza kwa muziki wa kicheza muziki',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Kumbukumbu yangu', nvRating:'Ukadiriaji', nvPlaceholder:'Hulipa kila 3-bet…', nvSaved:'Imehifadhiwa', nvTagNone:'Hakuna lebo', nvTagRed:'Hatari', nvTagOrange:'Mkali', nvTagYellow:'Mwangalie', nvTagGreen:'Samaki', nvTagBlue:'Mbanaji', nvTagPurple:'Mjanja', nvLabelPh:'Jina la lebo', nvLabelTip:'Badilisha jina la lebo — inatumika kwa kila mchezaji mwenye rangi hii',
     ppMyStats:'Takwimu zangu',

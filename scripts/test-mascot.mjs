@@ -158,10 +158,12 @@ for (const f of fs.readdirSync(LANG_DIR).filter((n) => n.endsWith('.mjs'))) {
 }
 ok(!missing.length, 'mascot keys translated in every language' + (missing.length ? ' — missing ' + missing.slice(0, 5).join(', ') : ''));
 const html = fs.readFileSync('public/pokerth-client.html', 'utf8');
-ok(html.indexOf('adv-mascot') < 0 && html.indexOf('advMascot') < 0, 'no « Animated mascot » option any more');
+ok(html.indexOf('adv-mascot') < 0 && html.indexOf('advMascot') < 0, 'no old « Animated mascot » option');
+ok(/id="adv-acescenes" onchange="setAdvOpt\('ace_scenes',this\.checked\)"/.test(html), 'option « The Ace’s antics » in Advanced options (web.285)');
 ok(html.indexOf('<script type="module" src="modules/mascot/index.mjs"></script>') >= 0, 'loader script included');
 const js = fs.readFileSync('public/pokerth.js', 'utf8');
-ok(!/sync\('adv-mascot'/.test(js), 'option no longer synced');
+ok(!/sync\('adv-mascot'/.test(js), 'old option no longer synced');
+ok(/sync\('adv-acescenes', 'ace_scenes', true\)/.test(js) && /'pth_ace_scenes',/.test(js), '« The Ace’s antics » on by default, synced with the account');
 ok(js.indexOf("window._mascotApply") >= 0, 'applyAdvOpts still re-arms the loader');
 const sw = fs.readFileSync('public/sw.js', 'utf8');
 ok(['index', 'engine', 'plan', 'panel', 'acts-extra', 'acts-props', 'acts-social', 'acts-dance', 'groove'].every((n) => sw.indexOf(`'/modules/mascot/${n}.mjs'`) >= 0), 'mascot modules precached');

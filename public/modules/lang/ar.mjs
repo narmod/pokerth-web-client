@@ -22,7 +22,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'مرحبًا!', mascotBye:'إلى اللقاء!', mascotTada:'تادا!', mascotKing:'ملك الطاولة!', mascotAnyone:'هل من أحد؟', mascotCheese:'ابتسم!', mascotTable:'طاولة جديدة!', mascotMail:'لديك رسالة!', mascotBravo:'أحسنت!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'مساعدة الآص', advGuide:'مساعدة الآص: يشرح الآص التطبيق خطوة بخطوة', advAceDance:'يرقص الآص على موسيقى المشغّل',
+    guideBtn:'مساعدة الآص', advGuide:'مساعدة الآص: يشرح الآص التطبيق خطوة بخطوة', advAceScenes:'حركات الآص: المشاهد والرقصات وردود الفعل', advAceDance:'يرقص الآص على موسيقى المشغّل',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'ملاحظتي', nvRating:'التقييم', nvPlaceholder:'يدفع أي 3-bet…', nvSaved:'تم الحفظ', nvTagNone:'بدون وسم', nvTagRed:'خطير', nvTagOrange:'عدواني', nvTagYellow:'تحت المراقبة', nvTagGreen:'سمكة', nvTagBlue:'متحفّظ', nvTagPurple:'ماكر', nvLabelPh:'اسم الوسم', nvLabelTip:'إعادة تسمية الوسم — ينطبق على كل لاعب بهذا اللون',
     ppMyStats:'إحصائياتي',

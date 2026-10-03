@@ -76,8 +76,20 @@ function musicOn() { try { return !!(window.Music && window.Music.isPlaying()); 
 /** The music plays and the option is on: he dances instead of playing a scene. */
 function wantsDance() { return enabled && danceOpt() && musicOn(); }
 
-/** Idle scenes are always on — except under automation, unless a test opts in. */
+/**
+ * Option « The Ace's antics » (web.285, Advanced options → Assistance, on by
+ * default; admin kill switch featureOff.ace_scenes): off, no idle scene, no
+ * dance, no reaction and no « Well done! » — Ace's Help (the docked Ace and
+ * his tips) is not affected.
+ */
+function scenesOpt() {
+  try { if (window._pthFeatureOff && window._pthFeatureOff.ace_scenes) return false; } catch (e) {}
+  try { return localStorage.getItem('pth_ace_scenes') !== '0'; } catch (e) { return true; }
+}
+
+/** Idle scenes are on unless the option is off — and not under automation, unless a test opts in. */
 function allowed() {
+  if (!scenesOpt()) return false;
   try { return !navigator.webdriver || localStorage.getItem('pth_mascot_webdriver') === '1'; } catch (e) { return true; }
 }
 
@@ -294,6 +306,7 @@ async function playNow(o) {
 window.mascotReact = (kind) => {
   try {
     if (running || (panel && panel.isOpen())) return;   // event-driven: Ace's Help decides, not the idle opt-out
+    if (!scenesOpt()) return;                      // the player turned his antics off
     if (['table', 'mail'].indexOf(kind) < 0) return;
     const G = window._guideScene;
     if (!G || !G.on()) return;                     // reactions belong to Ace's Help
@@ -313,6 +326,7 @@ function tryCheer() {
   if (!cheer) return;
   if (Date.now() - cheer > CHEER_TTL) { cheer = 0; return; }
   if (running || (panel && panel.isOpen())) return;   // event-driven: not tied to the automation opt-out of idle scenes
+  if (!scenesOpt()) { cheer = 0; return; }        // the player turned his antics off
   const G = window._guideScene;
   if (!G || !G.on()) return;                       // Ace's Help only (kept while it is off, until CHEER_TTL)
   if (!onMascotScreen() || !screenSince || Date.now() - screenSince < CHEER_SETTLE) return;

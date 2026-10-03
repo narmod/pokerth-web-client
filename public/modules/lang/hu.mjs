@@ -15,7 +15,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Szia!', mascotBye:'Viszlát!', mascotTada:'Tadam!', mascotKing:'Az asztal királya!', mascotAnyone:'Van itt valaki?', mascotCheese:'Csíz!', mascotTable:'Új asztal!', mascotMail:'Leveled jött!', mascotBravo:'Szép munka!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Az ász súgója', advGuide:'Az ász súgója: az ász menet közben elmagyarázza az alkalmazást', advAceDance:'Az ász táncol a lejátszó zenéjére',
+    guideBtn:'Az ász súgója', advGuide:'Az ász súgója: az ász menet közben elmagyarázza az alkalmazást', advAceScenes:'Az ász bohóckodásai: jelenetek, táncok és reakciók', advAceDance:'Az ász táncol a lejátszó zenéjére',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Jegyzetem', nvRating:'Értékelés', nvPlaceholder:'Minden 3-betet megad…', nvSaved:'Mentve', nvTagNone:'Nincs címke', nvTagRed:'Veszélyes', nvTagOrange:'Agresszív', nvTagYellow:'Figyelni', nvTagGreen:'Hal', nvTagBlue:'Szoros', nvTagPurple:'Ravasz', nvLabelPh:'Címke neve', nvLabelTip:'Címke átnevezése — minden ilyen színű játékosra érvényes',
     ppMyStats:'Statisztikáim',

@@ -22,7 +22,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'გამარჯობა!', mascotBye:'შეხვედრამდე!', mascotTada:'ტა-და!', mascotKing:'მაგიდის მეფე!', mascotAnyone:'ვინმე არის?', mascotCheese:'ყველი!', mascotTable:'ახალი მაგიდა!', mascotMail:'წერილი გაქვს!', mascotBravo:'ყოჩაღ!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'ტუზის დახმარება', advGuide:'ტუზის დახმარება: ტუზი აპს ნაბიჯ-ნაბიჯ განმარტავს', advAceDance:'ტუზი ცეკვავს პლეერის მუსიკაზე',
+    guideBtn:'ტუზის დახმარება', advGuide:'ტუზის დახმარება: ტუზი აპს ნაბიჯ-ნაბიჯ განმარტავს', advAceScenes:'ტუზის ხუმრობები: სცენები, ცეკვები და რეაქციები', advAceDance:'ტუზი ცეკვავს პლეერის მუსიკაზე',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'ჩემი ჩანაწერი', nvRating:'შეფასება', nvPlaceholder:'ნებისმიერ 3-bet-ს Call აკეთებს…', nvSaved:'შენახულია', nvTagNone:'იარლიყის გარეშე', nvTagRed:'საფრთხე', nvTagOrange:'აგრესიული', nvTagYellow:'დაკვირვება', nvTagGreen:'Fish', nvTagBlue:'Tight', nvTagPurple:'Tricky', nvLabelPh:'იარლიყის სახელი', nvLabelTip:'გადაარქვით ამ იარლიყს სახელი — ცვლილება შეეხება ამ ფერის ყველა მოთამაშეს',
     ppMyStats:'ჩემი სტატისტიკა',

@@ -19,7 +19,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'سلام!', mascotBye:'بعداً می‌بینمت!', mascotTada:'تادا!', mascotKing:'پادشاه میز!', mascotAnyone:'کسی هست؟', mascotCheese:'سیب!', mascotTable:'یک میز جدید!', mascotMail:'نامه داری!', mascotBravo:'آفرین!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'راهنمای آس', advGuide:'راهنمای آس: آس برنامه را گام‌به‌گام توضیح می‌دهد', advAceDance:'آس با موسیقی پخش‌کننده می‌رقصد',
+    guideBtn:'راهنمای آس', advGuide:'راهنمای آس: آس برنامه را گام‌به‌گام توضیح می‌دهد', advAceScenes:'شیرین‌کاری‌های آس: صحنه‌ها، رقص‌ها و واکنش‌ها', advAceDance:'آس با موسیقی پخش‌کننده می‌رقصد',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'یادداشت من', nvRating:'امتیاز', nvPlaceholder:'هر 3-bet را کال می‌کند…', nvSaved:'ذخیره شد', nvTagNone:'بدون برچسب', nvTagRed:'خطرناک', nvTagOrange:'تهاجمی', nvTagYellow:'زیر نظر', nvTagGreen:'ماهی', nvTagBlue:'محتاط', nvTagPurple:'حیله‌گر', nvLabelPh:'نام برچسب', nvLabelTip:'تغییر نام برچسب — برای همهٔ بازیکنان با این رنگ اعمال می‌شود',
     ppMyStats:'آمار من',

@@ -21,7 +21,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Salut !', mascotBye:'À plus !', mascotTada:'Tadaa !', mascotKing:'Le roi du tapis !', mascotAnyone:'Y a quelqu’un ?', mascotCheese:'Ouistiti !', mascotTable:'Une nouvelle table !', mascotMail:'Tu as du courrier !', mascotBravo:'Bravo !',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Aide de l’As', advGuide:'Aide de l’As : l’As explique l’appli au fur et à mesure', advAceDance:'L’As danse sur la musique du lecteur',
+    guideBtn:'Aide de l’As', advGuide:'Aide de l’As : l’As explique l’appli au fur et à mesure', advAceScenes:'Les facéties de l’As : scènes, danses et réactions', advAceDance:'L’As danse sur la musique du lecteur',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Ma note', nvRating:'Évaluation', nvPlaceholder:'Paie n’importe quel 3-bet…', nvSaved:'Enregistré', nvTagNone:'Aucune étiquette', nvTagRed:'Danger', nvTagOrange:'Agressif', nvTagYellow:'À surveiller', nvTagGreen:'Poisson', nvTagBlue:'Serré', nvTagPurple:'Retors', nvLabelPh:'Nom de l’étiquette', nvLabelTip:'Renommer cette étiquette — s’applique à tous les joueurs qui la portent',
     ppMyStats:'Mes statistiques',

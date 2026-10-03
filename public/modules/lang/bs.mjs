@@ -21,7 +21,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Zdravo!', mascotBye:'Vidimo se!', mascotTada:'Tadaa!', mascotKing:'Kralj stola!', mascotAnyone:'Ima li koga?', mascotCheese:'Sir!', mascotTable:'Novi sto!', mascotMail:'Imaš poruku!', mascotBravo:'Bravo!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Pomoć asa', advGuide:'Pomoć asa: as objašnjava aplikaciju korak po korak', advAceDance:'As pleše uz muziku iz plejera',
+    guideBtn:'Pomoć asa', advGuide:'Pomoć asa: as objašnjava aplikaciju korak po korak', advAceScenes:'Asove vragolije: scene, plesovi i reakcije', advAceDance:'As pleše uz muziku iz plejera',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Moja bilješka', nvRating:'Ocjena', nvPlaceholder:'Plaća svaki 3-bet…', nvSaved:'Spremljeno', nvTagNone:'Bez oznake', nvTagRed:'Opasan', nvTagOrange:'Agresivan', nvTagYellow:'Promatrati', nvTagGreen:'Riba', nvTagBlue:'Tijesan', nvTagPurple:'Lukav', nvLabelPh:'Naziv oznake', nvLabelTip:'Preimenuj oznaku — vrijedi za sve igrače s ovom bojom',
     ppMyStats:'Moja statistika',

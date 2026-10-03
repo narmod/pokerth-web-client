@@ -22,7 +22,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Sannu!', mascotBye:'Sai anjima!', mascotTada:'Tada!', mascotKing:'Sarkin tebur!', mascotAnyone:'Akwai wani?', mascotCheese:'Murmushi!', mascotTable:'Sabon tebur!', mascotMail:'Kana da saƙo!', mascotBravo:'Madalla!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Taimakon Aas', advGuide:'Taimakon Aas: Aas yana bayyana manhajar mataki-mataki', advAceDance:'Aas yana rawa da kiɗan na’urar kunna kiɗa',
+    guideBtn:'Taimakon Aas', advGuide:'Taimakon Aas: Aas yana bayyana manhajar mataki-mataki', advAceScenes:'Wasannin Aas: al’amura, rawa da martani', advAceDance:'Aas yana rawa da kiɗan na’urar kunna kiɗa',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Bayanina', nvRating:'Kimantawa', nvPlaceholder:'Yana yin call ga kowane 3-bet…', nvSaved:'An adana', nvTagNone:'Babu lakabi', nvTagRed:'Haɗari', nvTagOrange:'Mai tsauri', nvTagYellow:'Hattara', nvTagGreen:'Kifi', nvTagBlue:'Mai taka-tsantsan', nvTagPurple:'Mai wayo', nvLabelPh:'Sunan lakabin', nvLabelTip:'Sake sunan wannan lakabin — ya shafi duk \'yan wasa masu wannan launi',
     ppMyStats:'Ƙididdigana',

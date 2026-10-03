@@ -14,7 +14,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Hej!', mascotBye:'Vi ses!', mascotTada:'Tadaa!', mascotKing:'Bordets kung!', mascotAnyone:'Någon där?', mascotCheese:'Säg omelett!', mascotTable:'Ett nytt bord!', mascotMail:'Du har fått post!', mascotBravo:'Bra jobbat!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Essets hjälp', advGuide:'Essets hjälp: esset förklarar appen steg för steg', advAceDance:'Esset dansar till musiken i spelaren',
+    guideBtn:'Essets hjälp', advGuide:'Essets hjälp: esset förklarar appen steg för steg', advAceScenes:'Essets upptåg: scener, danser och reaktioner', advAceDance:'Esset dansar till musiken i spelaren',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Min anteckning', nvRating:'Betyg', nvPlaceholder:'Synar varje 3-bet…', nvSaved:'Sparat', nvTagNone:'Ingen etikett', nvTagRed:'Farlig', nvTagOrange:'Aggressiv', nvTagYellow:'Bevaka', nvTagGreen:'Fisk', nvTagBlue:'Tight', nvTagPurple:'Slug', nvLabelPh:'Etikettnamn', nvLabelTip:'Byt namn på etiketten — gäller alla spelare med den här färgen',
     ppMyStats:'Min statistik',

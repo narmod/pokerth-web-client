@@ -22,7 +22,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Сәлем!', mascotBye:'Көріскенше!', mascotTada:'Та-да!', mascotKing:'Үстел патшасы!', mascotAnyone:'Біреу бар ма?', mascotCheese:'Ірімшік!', mascotTable:'Жаңа үстел!', mascotMail:'Сізге хат бар!', mascotBravo:'Жарайсың!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Тұздың көмегі', advGuide:'Тұздың көмегі: тұз қолданбаны қадам сайын түсіндіреді', advAceDance:'Тұз ойнатқыштың музыкасына билейді',
+    guideBtn:'Тұздың көмегі', advGuide:'Тұздың көмегі: тұз қолданбаны қадам сайын түсіндіреді', advAceScenes:'Тұздың ойындары: көріністер, билер және реакциялар', advAceDance:'Тұз ойнатқыштың музыкасына билейді',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Менің жазбам', nvRating:'Баға', nvPlaceholder:'Кез келген 3-bet-ке Call жасайды…', nvSaved:'Сақталды', nvTagNone:'Белгісіз', nvTagRed:'Қауіпті', nvTagOrange:'Агрессивті', nvTagYellow:'Бақылау', nvTagGreen:'Фиш', nvTagBlue:'Тайт', nvTagPurple:'Қу', nvLabelPh:'Белгі атауы', nvLabelTip:'Бұл белгінің атауын өзгерту — осы түстегі барлық ойыншыға қолданылады',
     ppMyStats:'Менің статистикам',

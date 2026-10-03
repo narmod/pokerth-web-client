@@ -1,4 +1,7 @@
-2026-10-03 version 2.1.9-web.284 (current series):
+2026-10-03 version 2.1.9-web.285 (current series):
+- new: Advanced options → Assistance → « The Ace’s antics: scenes, dances and reactions » — untick it and the Ace no longer plays his scenes, dances to the music or reacts in the lobby (Ace’s Help and its tips stay as they are). On by default
+
+2026-10-03 version 2.1.9-web.284:
 - improvement: « More help » — a topic now opens inside the help panel itself, whole text at once and scrollable, with the search and the chapters still there and « All topics » to go back (it used to shrink into a small bubble read page by page)
 
 2026-10-03 version 2.1.9-web.283:

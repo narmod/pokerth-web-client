@@ -15,7 +15,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Γεια!', mascotBye:'Τα λέμε!', mascotTada:'Τα-ντα!', mascotKing:'Ο βασιλιάς του τραπεζιού!', mascotAnyone:'Είναι κανείς εδώ;', mascotCheese:'Τυράκι!', mascotTable:'Νέο τραπέζι!', mascotMail:'Έχεις μήνυμα!', mascotBravo:'Μπράβο!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Βοήθεια του Άσου', advGuide:'Βοήθεια του Άσου: ο Άσος εξηγεί την εφαρμογή βήμα βήμα', advAceDance:'Ο Άσος χορεύει με τη μουσική του player',
+    guideBtn:'Βοήθεια του Άσου', advGuide:'Βοήθεια του Άσου: ο Άσος εξηγεί την εφαρμογή βήμα βήμα', advAceScenes:'Τα καμώματα του Άσου: σκηνές, χοροί και αντιδράσεις', advAceDance:'Ο Άσος χορεύει με τη μουσική του player',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Η σημείωσή μου', nvRating:'Βαθμολογία', nvPlaceholder:'Πληρώνει κάθε 3-bet…', nvSaved:'Αποθηκεύτηκε', nvTagNone:'Χωρίς ετικέτα', nvTagRed:'Επικίνδυνος', nvTagOrange:'Επιθετικός', nvTagYellow:'Παρακολούθηση', nvTagGreen:'Ψάρι', nvTagBlue:'Σφιχτός', nvTagPurple:'Πονηρός', nvLabelPh:'Όνομα ετικέτας', nvLabelTip:'Μετονομασία ετικέτας — ισχύει για κάθε παίκτη με αυτό το χρώμα',
     ppMyStats:'Τα στατιστικά μου',

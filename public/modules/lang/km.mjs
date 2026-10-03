@@ -19,7 +19,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'សួស្តី!', mascotBye:'ជួបគ្នាពេលក្រោយ!', mascotTada:'តាដា!', mascotKing:'ស្ដេចនៃតុ!', mascotAnyone:'មានអ្នកណានៅទេ?', mascotCheese:'ឈីស!', mascotTable:'តុថ្មីមួយ!', mascotMail:'អ្នកមានសារ!', mascotBravo:'ល្អណាស់!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'ជំនួយរបស់អាត់', advGuide:'ជំនួយរបស់អាត់៖ អាត់ពន្យល់កម្មវិធីមួយជំហានម្ដងៗ', advAceDance:'អាត់រាំតាមតន្ត្រីរបស់កម្មវិធីចាក់',
+    guideBtn:'ជំនួយរបស់អាត់', advGuide:'ជំនួយរបស់អាត់៖ អាត់ពន្យល់កម្មវិធីមួយជំហានម្ដងៗ', advAceScenes:'ការលេងសើចរបស់អាត់៖ ឈុតឆាក ការរាំ និងប្រតិកម្ម', advAceDance:'អាត់រាំតាមតន្ត្រីរបស់កម្មវិធីចាក់',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'កំណត់ចំណាំរបស់ខ្ញុំ', nvRating:'ការវាយតម្លៃ', nvPlaceholder:'Call គ្រប់ 3-bet…', nvSaved:'បានរក្សាទុក', nvTagNone:'គ្មានស្លាក', nvTagRed:'គ្រោះថ្នាក់', nvTagOrange:'ឈ្លានពាន', nvTagYellow:'តាមដាន', nvTagGreen:'ខ្សោយ', nvTagBlue:'តឹងរ៉ឹង', nvTagPurple:'ល្បិច', nvLabelPh:'ឈ្មោះស្លាក', nvLabelTip:'ប្ដូរឈ្មោះស្លាកនេះ — អនុវត្តចំពោះអ្នកលេងគ្រប់រូបដែលមានពណ៌នេះ',
     ppMyStats:'ស្ថិតិរបស់ខ្ញុំ',

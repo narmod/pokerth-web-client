@@ -22,7 +22,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'嗨！', mascotBye:'遲啲見！', mascotTada:'噹噹！', mascotKing:'牌枱之王！', mascotAnyone:'有冇人呀？', mascotCheese:'笑一個！', mascotTable:'新牌枱！', mascotMail:'你有新訊息！', mascotBravo:'做得好！',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'A 牌小幫手', advGuide:'A 牌小幫手：使用時由 A 牌逐步講解應用程式', advAceDance:'A 牌隨播放器的音樂跳舞',
+    guideBtn:'A 牌小幫手', advGuide:'A 牌小幫手：使用時由 A 牌逐步講解應用程式', advAceScenes:'A 牌的小把戲：短劇、跳舞和反應', advAceDance:'A 牌隨播放器的音樂跳舞',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'我的筆記', nvRating:'評分', nvPlaceholder:'跟注任何 3-bet…', nvSaved:'已儲存', nvTagNone:'無標籤', nvTagRed:'危險', nvTagOrange:'激進', nvTagYellow:'關注', nvTagGreen:'魚', nvTagBlue:'緊手', nvTagPurple:'狡猾', nvLabelPh:'標籤名稱', nvLabelTip:'重新命名標籤 — 適用於所有使用此顏色的玩家',
     ppMyStats:'我的統計',

@@ -441,6 +441,7 @@ function openAdvancedOptions() {
   sync('adv-browserzoom', 'browser_zoom', false);   // zoom navigateur : bloqué par défaut sur tactile
   sync('adv-backguard', 'back_guard', true);        // bouton Retour Android = Escape (parité QML §6)
   sync('adv-guide', 'guide_on', false);             // Aide de l'As (modules/guide) — OFF tant que le joueur n'a pas dit oui
+  sync('adv-acescenes', 'ace_scenes', true);       // facéties de l'As (scènes, danses, réactions, bravo) — modules/mascot/index.mjs
   sync('adv-acedance', 'ace_dance', true);    // l'As danse sur le lecteur de musique (modules/mascot/acts-dance.mjs)
   sync('adv-lobbychat', 'lobby_chat', true);
   sync('adv-polls', 'polls', true);   // sondages produit : visible par defaut, decochable ici
@@ -1481,6 +1482,7 @@ var _CFG_WEB_SYNC_KEYS = [
   'pth_chat_translate', 'pth_chat_abbrev', 'pth_pin_actionbar', 'pth_confirm_social',
   'pth_help_btn',
   'pth_guide_on',   // Aide de l'As (modules/guide) : allumée / éteinte
+  'pth_ace_scenes',   // facéties de l'As : scènes, danses, réactions (modules/mascot)
   'pth_ace_dance',   // l'As danse sur le lecteur de musique (modules/mascot)
   // Valeurs (thème web, sièges, clavier, langue, divers)
   'pth_theme', 'pth_buttons', 'pth_pucks', 'pth_seat', 'pth_seat_layout',
@@ -12024,7 +12026,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.284'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.285'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

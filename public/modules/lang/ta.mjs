@@ -16,7 +16,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'வணக்கம்!', mascotBye:'மீண்டும் சந்திப்போம்!', mascotTada:'டா-டா!', mascotKing:'மேசையின் ராஜா!', mascotAnyone:'யாராவது இருக்கீங்களா?', mascotCheese:'சீஸ்!', mascotTable:'ஒரு புதிய மேசை!', mascotMail:'உங்களுக்குச் செய்தி வந்துள்ளது!', mascotBravo:'சபாஷ்!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'ஏஸின் உதவி', advGuide:'ஏஸின் உதவி: ஏஸ் செயலியைப் படிப்படியாக விளக்குகிறது', advAceDance:'பிளேயரின் இசைக்கு ஏஸ் நடனமாடுகிறது',
+    guideBtn:'ஏஸின் உதவி', advGuide:'ஏஸின் உதவி: ஏஸ் செயலியைப் படிப்படியாக விளக்குகிறது', advAceScenes:'ஏஸின் சேட்டைகள்: காட்சிகள், நடனங்கள், எதிர்வினைகள்', advAceDance:'பிளேயரின் இசைக்கு ஏஸ் நடனமாடுகிறது',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'என் குறிப்பு', nvRating:'மதிப்பீடு', nvPlaceholder:'எந்த 3-bet-ஐயும் கால் செய்கிறார்…', nvSaved:'சேமிக்கப்பட்டது', nvTagNone:'லேபிள் இல்லை', nvTagRed:'ஆபத்தானவர்', nvTagOrange:'தாக்குதல்காரர்', nvTagYellow:'கவனிக்க', nvTagGreen:'ஃபிஷ்', nvTagBlue:'டைட்', nvTagPurple:'தந்திரமானவர்', nvLabelPh:'லேபிள் பெயர்', nvLabelTip:'லேபிளின் பெயரை மாற்று — இந்த நிறமுள்ள எல்லா வீரர்களுக்கும் பொருந்தும்',
     ppMyStats:'என் புள்ளிவிவரங்கள்',

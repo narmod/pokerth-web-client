@@ -18,7 +18,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Hæ!', mascotBye:'Sjáumst!', mascotTada:'Tadaa!', mascotKing:'Konungur borðsins!', mascotAnyone:'Er einhver?', mascotCheese:'Sís!', mascotTable:'Nýtt borð!', mascotMail:'Þú átt póst!', mascotBravo:'Vel gert!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Hjálp ássins', advGuide:'Hjálp ássins: ásinn útskýrir forritið skref fyrir skref', advAceDance:'Ásinn dansar við tónlistina í spilaranum',
+    guideBtn:'Hjálp ássins', advGuide:'Hjálp ássins: ásinn útskýrir forritið skref fyrir skref', advAceScenes:'Uppátæki ássins: atriði, dansar og viðbrögð', advAceDance:'Ásinn dansar við tónlistina í spilaranum',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Minnispunktur', nvRating:'Einkunn', nvPlaceholder:'Segir Call við hvaða 3-bet sem er…', nvSaved:'Vistað', nvTagNone:'Enginn miði', nvTagRed:'Hætta', nvTagOrange:'Ágengur', nvTagYellow:'Varúð', nvTagGreen:'Fiskur', nvTagBlue:'Þéttur', nvTagPurple:'Slóttugur', nvLabelPh:'Heiti miða', nvLabelTip:'Endurnefna þennan miða — gildir um alla leikmenn með þennan lit',
     ppMyStats:'Tölfræðin mín',

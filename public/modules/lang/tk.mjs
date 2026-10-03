@@ -22,7 +22,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Salam!', mascotBye:'Görüşeris!', mascotTada:'Tadaa!', mascotKing:'Stoluň patyşasy!', mascotAnyone:'Kimdir barmy?', mascotCheese:'Peýnir!', mascotTable:'Täze stol!', mascotMail:'Size hat geldi!', mascotBravo:'Berekella!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Tuzuň kömegi', advGuide:'Tuzuň kömegi: Tuz programmany ädimme-ädim düşündirýär', advAceDance:'Tuz pleýeriň sazyna tans edýär',
+    guideBtn:'Tuzuň kömegi', advGuide:'Tuzuň kömegi: Tuz programmany ädimme-ädim düşündirýär', advAceScenes:'Tuzuň oýunlary: sahnalar, tanslar we reaksiýalar', advAceDance:'Tuz pleýeriň sazyna tans edýär',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Meniň belliklerim', nvRating:'Baha', nvPlaceholder:'Islendik 3-bet-e call edýär…', nvSaved:'Ýatda saklandy', nvTagNone:'Belgisiz', nvTagRed:'Howp', nvTagOrange:'Agressiw', nvTagYellow:'Seresap boluň', nvTagGreen:'Balyk', nvTagBlue:'Taýt', nvTagPurple:'Hilegär', nvLabelPh:'Belginiň ady', nvLabelTip:'Bu belginiň adyny üýtgetmek — şu reňkdäki ähli oýunçylara täsir edýär',
     ppMyStats:'Meniň statistikam',

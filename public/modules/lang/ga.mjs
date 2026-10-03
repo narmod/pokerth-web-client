@@ -22,7 +22,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Haigh!', mascotBye:'Slán go fóill!', mascotTada:'Ta-da!', mascotKing:'Rí an bhoird!', mascotAnyone:'An bhfuil aon duine ann?', mascotCheese:'Cáis!', mascotTable:'Bord nua!', mascotMail:'Tá post agat!', mascotBravo:'Maith thú!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Cabhair an Aoin', advGuide:'Cabhair an Aoin: míníonn an tAon an aip céim ar chéim', advAceDance:'Damhsaíonn an tAon le ceol an tseinnteora',
+    guideBtn:'Cabhair an Aoin', advGuide:'Cabhair an Aoin: míníonn an tAon an aip céim ar chéim', advAceScenes:'Cleasa an Aoin: radhairc, damhsaí agus imoibrithe', advAceDance:'Damhsaíonn an tAon le ceol an tseinnteora',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Mo nóta', nvRating:'Rátáil', nvPlaceholder:'Glaonn sé ar aon 3-bet…', nvSaved:'Sábháilte', nvTagNone:'Gan lipéad', nvTagRed:'Contúirt', nvTagOrange:'Ionsaitheach', nvTagYellow:'Aire', nvTagGreen:'Iasc', nvTagBlue:'Daingean', nvTagPurple:'Glic', nvLabelPh:'Ainm an lipéid', nvLabelTip:'Athainmnigh an lipéad seo — baineann sé le gach imreoir a bhfuil an dath seo air',
     ppMyStats:'Mo staitisticí',

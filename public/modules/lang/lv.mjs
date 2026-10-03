@@ -21,7 +21,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Sveiks!', mascotBye:'Uz redzēšanos!', mascotTada:'Tadā!', mascotKing:'Galda karalis!', mascotAnyone:'Vai kāds ir?', mascotCheese:'Saki sieru!', mascotTable:'Jauns galds!', mascotMail:'Tev ir vēstule!', mascotBravo:'Labi padarīts!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Dūža palīdzība', advGuide:'Dūža palīdzība: dūzis soli pa solim izskaidro lietotni', advAceDance:'Dūzis dejo pēc atskaņotāja mūzikas',
+    guideBtn:'Dūža palīdzība', advGuide:'Dūža palīdzība: dūzis soli pa solim izskaidro lietotni', advAceScenes:'Dūža joki: ainas, dejas un reakcijas', advAceDance:'Dūzis dejo pēc atskaņotāja mūzikas',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Mana piezīme', nvRating:'Vērtējums', nvPlaceholder:'Izlīdzina jebkuru 3-bet…', nvSaved:'Saglabāts', nvTagNone:'Bez etiķetes', nvTagRed:'Bīstams', nvTagOrange:'Agresīvs', nvTagYellow:'Vērot', nvTagGreen:'Zivs', nvTagBlue:'Šaurs', nvTagPurple:'Viltīgs', nvLabelPh:'Etiķetes nosaukums', nvLabelTip:'Pārdēvē šo etiķeti — tā attiecas uz visiem šīs krāsas spēlētājiem',
     ppMyStats:'Mana statistika',

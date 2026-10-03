@@ -19,7 +19,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'नमस्ते!', mascotBye:'फिर मिलेंगे!', mascotTada:'टा-डा!', mascotKing:'मेज़ का राजा!', mascotAnyone:'कोई है?', mascotCheese:'चीज़!', mascotTable:'एक नई मेज़!', mascotMail:'आपके लिए संदेश है!', mascotBravo:'शाबाश!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'इक्के की सहायता', advGuide:'इक्के की सहायता: इक्का ऐप को कदम-दर-कदम समझाता है', advAceDance:'इक्का म्यूज़िक प्लेयर के संगीत पर नाचता है',
+    guideBtn:'इक्के की सहायता', advGuide:'इक्के की सहायता: इक्का ऐप को कदम-दर-कदम समझाता है', advAceScenes:'इक्के की शरारतें: दृश्य, नृत्य और प्रतिक्रियाएँ', advAceDance:'इक्का म्यूज़िक प्लेयर के संगीत पर नाचता है',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'मेरा नोट', nvRating:'रेटिंग', nvPlaceholder:'हर 3-bet कॉल करता है…', nvSaved:'सहेजा गया', nvTagNone:'कोई लेबल नहीं', nvTagRed:'ख़तरनाक', nvTagOrange:'आक्रामक', nvTagYellow:'नज़र रखें', nvTagGreen:'फ़िश', nvTagBlue:'टाइट', nvTagPurple:'चालाक', nvLabelPh:'लेबल का नाम', nvLabelTip:'लेबल का नाम बदलें — इस रंग वाले सभी खिलाड़ियों पर लागू होगा',
     ppMyStats:'मेरे आँकड़े',

@@ -22,7 +22,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Hi!', mascotBye:'See you!', mascotTada:'Ta-da!', mascotKing:'King of the felt!', mascotAnyone:'Anyone?', mascotCheese:'Cheese!', mascotTable:'A new table!', mascotMail:'You’ve got mail!', mascotBravo:'Well done!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Ace’s Help', advGuide:'Ace’s Help: the Ace explains the app as you go', advAceDance:'The Ace dances to the music player',
+    guideBtn:'Ace’s Help', advGuide:'Ace’s Help: the Ace explains the app as you go', advAceScenes:'The Ace’s antics: scenes, dances and reactions', advAceDance:'The Ace dances to the music player',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'My note', nvRating:'Rating', nvPlaceholder:'Calls any 3-bet…', nvSaved:'Saved', nvTagNone:'No label', nvTagRed:'Danger', nvTagOrange:'Aggressive', nvTagYellow:'Watch', nvTagGreen:'Fish', nvTagBlue:'Tight', nvTagPurple:'Tricky', nvLabelPh:'Label name', nvLabelTip:'Rename this label — applies to every player with this color',
     ppMyStats:'My statistics',

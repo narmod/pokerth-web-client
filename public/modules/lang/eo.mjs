@@ -22,7 +22,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Saluton!', mascotBye:'Ĝis!', mascotTada:'Tada!', mascotKing:'Reĝo de la tablo!', mascotAnyone:'Ĉu iu estas?', mascotCheese:'Fromaĝo!', mascotTable:'Nova tablo!', mascotMail:'Vi havas poŝton!', mascotBravo:'Brave!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Helpo de la Aso', advGuide:'Helpo de la Aso: la Aso klarigas la aplikaĵon paŝon post paŝo', advAceDance:'La Aso dancas laŭ la muziko de la ludilo',
+    guideBtn:'Helpo de la Aso', advGuide:'Helpo de la Aso: la Aso klarigas la aplikaĵon paŝon post paŝo', advAceScenes:'La petoloj de la Aso: scenoj, dancoj kaj reagoj', advAceDance:'La Aso dancas laŭ la muziko de la ludilo',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Mia noto', nvRating:'Taksado', nvPlaceholder:'Vokas ĉiun ajn 3-bet…', nvSaved:'Konservita', nvTagNone:'Sen etikedo', nvTagRed:'Danĝero', nvTagOrange:'Agresema', nvTagYellow:'Atentu', nvTagGreen:'Fiŝo', nvTagBlue:'Streta', nvTagPurple:'Ruza', nvLabelPh:'Nomo de la etikedo', nvLabelTip:'Alinomi ĉi tiun etikedon — validas por ĉiuj ludantoj kun ĉi tiu koloro',
     ppMyStats:'Miaj statistikoj',

@@ -15,7 +15,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Salut!', mascotBye:'Pe curând!', mascotTada:'Tadaa!', mascotKing:'Regele mesei!', mascotAnyone:'E cineva?', mascotCheese:'Zâmbiți!', mascotTable:'O masă nouă!', mascotMail:'Ai un mesaj!', mascotBravo:'Bravo!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Ajutorul Asului', advGuide:'Ajutorul Asului: Asul explică aplicația pas cu pas', advAceDance:'Asul dansează pe muzica din player',
+    guideBtn:'Ajutorul Asului', advGuide:'Ajutorul Asului: Asul explică aplicația pas cu pas', advAceScenes:'Năzbâtiile Asului: scene, dansuri și reacții', advAceDance:'Asul dansează pe muzica din player',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Nota mea', nvRating:'Evaluare', nvPlaceholder:'Plătește orice 3-bet…', nvSaved:'Salvat', nvTagNone:'Fără etichetă', nvTagRed:'Periculos', nvTagOrange:'Agresiv', nvTagYellow:'De urmărit', nvTagGreen:'Pește', nvTagBlue:'Strâns', nvTagPurple:'Viclean', nvLabelPh:'Numele etichetei', nvLabelTip:'Redenumește eticheta — se aplică tuturor jucătorilor cu această culoare',
     ppMyStats:'Statisticile mele',

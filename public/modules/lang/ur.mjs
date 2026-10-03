@@ -19,7 +19,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'ہیلو!', mascotBye:'پھر ملیں گے!', mascotTada:'ٹا ڈا!', mascotKing:'میز کا بادشاہ!', mascotAnyone:'کوئی ہے؟', mascotCheese:'چیز!', mascotTable:'ایک نئی میز!', mascotMail:'آپ کا پیغام آیا ہے!', mascotBravo:'شاباش!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'اِکے کی مدد', advGuide:'اِکے کی مدد: اِکا ایپ کو قدم بہ قدم سمجھاتا ہے', advAceDance:'اِکا میوزک پلیئر کی موسیقی پر ناچتا ہے',
+    guideBtn:'اِکے کی مدد', advGuide:'اِکے کی مدد: اِکا ایپ کو قدم بہ قدم سمجھاتا ہے', advAceScenes:'اِکے کی شرارتیں: مناظر، رقص اور ردِعمل', advAceDance:'اِکا میوزک پلیئر کی موسیقی پر ناچتا ہے',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'میرا نوٹ', nvRating:'درجہ بندی', nvPlaceholder:'ہر 3-bet کال کرتا ہے…', nvSaved:'محفوظ ہو گیا', nvTagNone:'کوئی لیبل نہیں', nvTagRed:'خطرناک', nvTagOrange:'جارح', nvTagYellow:'نظر رکھیں', nvTagGreen:'فش', nvTagBlue:'ٹائٹ', nvTagPurple:'چالاک', nvLabelPh:'لیبل کا نام', nvLabelTip:'لیبل کا نام بدلیں — اس رنگ والے تمام کھلاڑیوں پر لاگو ہوگا',
     ppMyStats:'میرے اعداد و شمار',

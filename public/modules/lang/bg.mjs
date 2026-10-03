@@ -15,7 +15,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Здрасти!', mascotBye:'До скоро!', mascotTada:'Тадаа!', mascotKing:'Кралят на масата!', mascotAnyone:'Има ли някой?', mascotCheese:'Зеле!', mascotTable:'Нова маса!', mascotMail:'Имаш поща!', mascotBravo:'Браво!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Помощ от асото', advGuide:'Помощ от асото: асото обяснява приложението стъпка по стъпка', advAceDance:'Асото танцува на музиката от плейъра',
+    guideBtn:'Помощ от асото', advGuide:'Помощ от асото: асото обяснява приложението стъпка по стъпка', advAceScenes:'Номерата на асото: сценки, танци и реакции', advAceDance:'Асото танцува на музиката от плейъра',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Моята бележка', nvRating:'Оценка', nvPlaceholder:'Плаща всеки 3-бет…', nvSaved:'Запазено', nvTagNone:'Без етикет', nvTagRed:'Опасен', nvTagOrange:'Агресивен', nvTagYellow:'Наблюдавай', nvTagGreen:'Риба', nvTagBlue:'Стегнат', nvTagPurple:'Хитър', nvLabelPh:'Име на етикета', nvLabelTip:'Преименувай етикета — важи за всички играчи с този цвят',
     ppMyStats:'Моята статистика',

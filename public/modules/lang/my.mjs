@@ -22,7 +22,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'ဟိုင်း!', mascotBye:'နောက်မှတွေ့မယ်!', mascotTada:'တာဒါ!', mascotKing:'စားပွဲရဲ့ ဘုရင်!', mascotAnyone:'ဘယ်သူရှိလဲ?', mascotCheese:'ချိစ်!', mascotTable:'စားပွဲအသစ်!', mascotMail:'သင့်ထံ စာရောက်နေပြီ!', mascotBravo:'တော်လိုက်တာ!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'တစ်ကွက်၏ အကူအညီ', advGuide:'တစ်ကွက်၏ အကူအညီ - တစ်ကွက်က အက်ပ်ကို အဆင့်ဆင့် ရှင်းပြပေးသည်', advAceDance:'တစ်ကွက်က ဖွင့်စက်ရဲ့ ဂီတအတိုင်း ကခုန်သည်',
+    guideBtn:'တစ်ကွက်၏ အကူအညီ', advGuide:'တစ်ကွက်၏ အကူအညီ - တစ်ကွက်က အက်ပ်ကို အဆင့်ဆင့် ရှင်းပြပေးသည်', advAceScenes:'တစ်ကွက်၏ ကစားကွက်များ - ဇာတ်ကွက်၊ အက နှင့် တုံ့ပြန်မှုများ', advAceDance:'တစ်ကွက်က ဖွင့်စက်ရဲ့ ဂီတအတိုင်း ကခုန်သည်',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'ကျွန်ုပ်၏ မှတ်စု', nvRating:'အဆင့်သတ်မှတ်ချက်', nvPlaceholder:'3-bet တိုင်း လိုက်တယ်…', nvSaved:'သိမ်းပြီးပါပြီ', nvTagNone:'အညွှန်းမရှိ', nvTagRed:'အန္တရာယ်', nvTagOrange:'ကြမ်းတမ်း', nvTagYellow:'စောင့်ကြည့်ရန်', nvTagGreen:'ငါး', nvTagBlue:'တင်းကျပ်', nvTagPurple:'လှည့်စားတတ်', nvLabelPh:'အညွှန်းအမည်', nvLabelTip:'ဤအညွှန်းကို အမည်ပြောင်းပါ — ဤအရောင်ရှိသော ကစားသမားတိုင်းအတွက် သက်ရောက်သည်',
     ppMyStats:'ကျွန်ုပ်၏ စာရင်းအင်းများ',

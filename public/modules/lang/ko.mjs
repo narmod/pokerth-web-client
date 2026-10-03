@@ -18,7 +18,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'안녕!', mascotBye:'또 봐!', mascotTada:'짜잔!', mascotKing:'테이블의 왕!', mascotAnyone:'누구 없어요?', mascotCheese:'김치!', mascotTable:'새 테이블!', mascotMail:'메시지가 왔어요!', mascotBravo:'잘했어요!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'에이스 도움말', advGuide:'에이스 도움말: 에이스가 앱 사용법을 단계별로 설명', advAceDance:'플레이어 음악에 맞춰 에이스가 춤춰요',
+    guideBtn:'에이스 도움말', advGuide:'에이스 도움말: 에이스가 앱 사용법을 단계별로 설명', advAceScenes:'에이스의 장난: 장면, 춤, 리액션', advAceDance:'플레이어 음악에 맞춰 에이스가 춤춰요',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'내 메모', nvRating:'평가', nvPlaceholder:'모든 3-bet을 콜함…', nvSaved:'저장됨', nvTagNone:'라벨 없음', nvTagRed:'위험', nvTagOrange:'공격적', nvTagYellow:'주시', nvTagGreen:'피시', nvTagBlue:'타이트', nvTagPurple:'교활함', nvLabelPh:'라벨 이름', nvLabelTip:'라벨 이름 바꾸기 — 이 색의 모든 플레이어에게 적용됩니다',
     ppMyStats:'내 통계',
