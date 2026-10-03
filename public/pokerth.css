@@ -494,6 +494,11 @@ body {
    no dvh in this path (both proven broken on iOS/iPadOS 26, 2026-08-08).
    Falls back to 100dvh until the first measurement lands. */
 :root[data-pwa="1"], :root[data-pwa="1"] body { height: var(--app-h, 100dvh); }
+/* Band camouflage (web.297, script in pokerth-client.html): the canvas below
+   a short layout takes the colour of what is at the bottom of the screen.
+   Default = the flames' bottom edge (boot splash, login screen). body keeps
+   its own background, so only the strip outside the layout changes. */
+:root[data-pwa="1"] { background: var(--app-edge, #bf671f); }
 :root[data-pwa="1"] .screen { height: var(--app-h, 100dvh); }
 :root[data-pwa="1"] .connect-footer { bottom: max(10px, env(safe-area-inset-bottom)); }
 :root[data-pwa="1"] .lobby-footbar  { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
@@ -614,6 +619,7 @@ body {
   background:
     linear-gradient(rgba(8,10,14,0.10), rgba(8,10,14,0.15)),
     url("/img/pokerth-login-bg.webp") center / cover no-repeat;
+  --edge: #bf671f;   /* the flames' bottom edge, under the veil: the colour of the strip below a short layout (web.297) */
 }
 
 /* Chrome Android : les items flex de la carte login (select de mode, input

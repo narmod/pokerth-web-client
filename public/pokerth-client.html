@@ -298,6 +298,39 @@ try{var _d=document.documentElement,_p=localStorage.getItem('pth_theme'),_tb=loc
     function gesture() { setTimeout(setH, 50); if (++g >= 3) { document.removeEventListener('touchend', gesture); document.removeEventListener('click', gesture); } }
     document.addEventListener('touchend', gesture, { passive: true });
     document.addEventListener('click', gesture, { passive: true });
+    /* Band camouflage (web.297). Whatever the measurement does, iOS 26 can
+       still lay the page out short of the physical bottom — even fixed
+       full-screen layers (the boot splash) stop there — and the strip below
+       shows the canvas, i.e. the html background. Instead of fighting the
+       height again, the canvas takes the colour of what sits at the bottom of
+       the screen: the bar or panel there, or the flames' edge colour on the
+       login screen and the splash (--edge in their CSS). The band is still
+       there but reads as the continuation of the screen. Checked once a
+       second and on every re-measure; one elementFromPoint, a few styles. */
+    var lastEdge = '';
+    function opaque(c) {
+      var m = /rgba?\(([^)]+)\)/.exec(c || '');
+      if (!m) return false;
+      var p = m[1].split(',');
+      return p.length < 4 || parseFloat(p[3]) >= 0.95;
+    }
+    function edge() {
+      try {
+        var w = window.innerWidth, h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+        var c = '';
+        for (var n = document.elementFromPoint(w / 2, h - 2); n && n.nodeType === 1; n = n.parentElement) {
+          var cs = getComputedStyle(n);
+          if (opaque(cs.backgroundColor)) { c = cs.backgroundColor; break; }
+          var e = cs.getPropertyValue('--edge').trim();
+          if (e) { c = e; break; }
+        }
+        if (c && c !== lastEdge) { lastEdge = c; d.style.setProperty('--app-edge', c); }
+      } catch (e) {}
+    }
+    var setH0 = setH;
+    setH = function () { setH0(); edge(); };
+    setInterval(edge, 1000);
+    document.addEventListener('DOMContentLoaded', edge);
   } catch (e) {}
 })();
 </script>
@@ -312,7 +345,7 @@ try{var _d=document.documentElement,_p=localStorage.getItem('pth_theme'),_tb=loc
    boîte centrale col700 opacité 0.8 radius 5 avec logo 96, barre, et rangée
    terminal + message tournant. Couleurs via variables de thème (data-theme).
    Conservé en plus du QML : compteur de modules et erreur → « Réessayer ». */
-#boot-splash{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;
+#boot-splash{--edge:#bf671f;position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;
   color:var(--text-hi,#eff1f5);background:#10141c;overflow:hidden;
   opacity:1;transition:opacity .42s ease}
 #boot-splash::before{content:"";position:absolute;inset:-28px;
