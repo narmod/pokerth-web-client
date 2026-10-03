@@ -52,7 +52,8 @@ let offerTimer = 0;
 let stepTimer = 0;            // auto-advance of a step (waiting-room facts)
 let foldTimer = 0;            // unanswered bubble → badge
 let noteTimer = 0;            // transient line (« Just one more! »)
-let scrollTimer = 0;          // tour: the bubble is placed again once a field scrolled into view
+let scrollTimer = 0;
+let lastSpot = null;          // where the outlined element was at the last tick          // tour: the bubble is placed again once a field scrolled into view
 let showing = null;           // { run, kind: 'ctx' | 'offer' | 'menu' | 'note' | 'flash' | 'ask' | 'help' }
 let lastWhere = null;
 let lastWait = null;          // { gid, n } seen in the waiting room (arrivals)
@@ -109,6 +110,7 @@ const WINDOWS = [
   ['profile', () => vis('#player-info-modal')],
   ['avatar', () => vis('#avatar-popup')],
   ['events', () => vis('#forum-modal') && vis('#fn-events')],
+  ['posts', () => vis('#forum-modal') && vis('#fn-list')],
   ['ranking', () => vis('#ranking-modal')],
   ['adv', () => vis('#adv-modal')],
   ['theme', () => vis('#theme-panel')],
@@ -1093,6 +1095,14 @@ function tick() {
     const wins = openWindows().join(',');
     if (wins !== lastWins) { lastWins = wins; schedule(); }
   }
+  // the outlined element moved (a window that grew once its content arrived):
+  // the bubble is placed again, so it does not sit on it (web.289)
+  const t = M && M.bubbleOpen() && showing && showing.kind === 'ctx' ? hl.current() : null;
+  if (t) {
+    const r = t.getBoundingClientRect(), k = Math.round(r.top) + ',' + Math.round(r.left) + ',' + Math.round(r.height);
+    if (lastSpot && lastSpot.el === t && lastSpot.k !== k && !scrollTimer) M.replace();
+    lastSpot = { el: t, k };
+  } else lastSpot = null;
   // while seated at a Ranking game: follow the stacks (cheap, once a second)
   const w = lastWhere;
   if (w && (w.screen === 'game' || tracker)) {

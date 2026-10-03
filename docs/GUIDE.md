@@ -187,7 +187,8 @@ above the windows (z-index 10020 / 10019).
 |---|---|---|
 | `w-profile` | `profile` | `#player-info-modal` visible |
 | `w-avatar` | `avatar` | `#avatar-popup` |
-| `w-events` | `events` | `#forum-modal` with the `#fn-events` tab shown |
+| `w-events` | `events` | `#forum-modal` with the `#fn-events` tab shown (outlines the Events tab) |
+| `w-posts` | `posts` | `#forum-modal` with the posts list `#fn-list` shown (web.289) |
 | `w-ranking` | `ranking` | `#ranking-modal` |
 | `w-adv` | `adv` | `#adv-modal` (the search box, the *web* tag) |
 | `w-theme` | `theme` | `#theme-panel` |
@@ -420,6 +421,14 @@ Left out: the history and the PHP code.
 
 *More about it* opens this section from « Register for the BBC », from the BBC preset and
 from the BBC ranking tab. A hotspot's `more` can now be a function of the element.
+
+Since web.289 each tab of the ranking window (and of the table ranking) has its own
+answer in « ? » mode — how that ranking works and how it differs from the others:
+`hsRkPth` (official, Ranking games only, points by place, Score, seasons → `pthnet:rankhow`),
+`hsRkBbc` (steps and tickets → `pthnet:bbc`), `hsRkWec` (daily game, its scale →
+`pthnet:cups`), `hsRkLan` (this private server's leaderboard → `start:famboard`) and
+`hsRkAch` (training trophies → `offline:trophies`). `hsRkTab` stays as the fallback.
+The forum's Posts list is explained the same way: `hsFnRow`, `hsFnTag`, `hsFnGo`, `hsFnDot`.
 
 ## « ? » answers everywhere (`web.272`)
 

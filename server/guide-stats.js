@@ -35,6 +35,7 @@ const EVENTS = Object.freeze({
   'create-game': ['shown', 'done', 'dismissed'],
   'w-ranking': ['shown', 'done', 'dismissed'],
   'w-events': ['shown', 'done', 'dismissed'],
+  'w-posts': ['shown', 'done', 'dismissed'],   // web.289
   'w-help': ['shown', 'done', 'dismissed'],
   'w-adv': ['shown', 'done', 'dismissed'],
   'w-theme': ['shown', 'done', 'dismissed'],

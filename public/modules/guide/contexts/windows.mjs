@@ -6,7 +6,9 @@ const W = (id, key, text, target) => ({ id, window: key, priority: 50, steps: [{
 
 export default [
   W('w-ranking', 'ranking', 'c5Ranking', ['#ranking-modal .rk-tabs']),
-  W('w-events', 'events', 'c5Events', ['#fn-events']),
+  // the Events tab button, not the whole list (a long list overflowed the window, web.289)
+  W('w-events', 'events', 'c5Events', ['#fn-tabs .rk-tab[data-tab="events"]']),
+  W('w-posts', 'posts', 'c5Posts', ['#fn-list .fn-row', '#fn-tabs .rk-tab[data-tab="posts"]']),
   W('w-adv', 'adv', 'c5Adv', ['#adv-search-in']),
   W('w-theme', 'theme', 'c5Theme', null),
   W('w-music', 'music', 'c5Music', null),

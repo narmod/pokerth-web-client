@@ -183,6 +183,12 @@ export const HOTSPOTS = [
   ['#adv-modal .adv-row input[type="checkbox"], #adv-modal label.adv-row', 'hsAdvOption', false, 'options:sync', optionVars],
   ['#adv-modal .adv-row', 'hsAdvField', false, 'options:where', optionVars],
   // ── Ranking ──
+  // each ranking explained on its own tab: who runs it, what counts, how the score works (web.289)
+  ['#ranking-modal .rk-tab[data-src="pth"], #tableranking-modal .rk-tab[data-src="pth"]', 'hsRkPth', false, 'pthnet:rankhow'],
+  ['#ranking-modal .rk-tab[data-src="bbc"], #tableranking-modal .rk-tab[data-src="bbc"]', 'hsRkBbc', false, 'pthnet:bbc'],
+  ['#ranking-modal .rk-tab[data-src="wec"], #tableranking-modal .rk-tab[data-src="wec"]', 'hsRkWec', false, 'pthnet:cups'],
+  ['#ranking-modal .rk-tab[data-src="lan"], #tableranking-modal .rk-tab[data-src="lan"]', 'hsRkLan', false, 'start:famboard'],
+  ['#ranking-modal .rk-tab[data-src="ach"]', 'hsRkAch', false, 'offline:trophies'],
   ['#ranking-modal .rk-tab, #tableranking-modal .rk-tab', 'hsRkTab', false, (el) => (/'bbc'/.test(el.getAttribute('onclick') || '') ? 'pthnet:bbc' : 'pthnet:rankings')],
   ['#rk-season', 'hsRkSeason', false, 'pthnet:ranked'],
   ['#rk-alltime', 'hsRkAllTime', false, 'pthnet:ranked'],
@@ -191,6 +197,11 @@ export const HOTSPOTS = [
   ['.rk-back', 'hsRkBack'],
   // ── Forum ──
   ['#fn-bbcreg', 'hsBbcReg', false, 'pthnet:bbc'],
+  // the Posts list (web.289): a post, its forum tag, ↗, the read mark
+  ['#fn-list .fn-golink', 'hsFnGo', true, 'pthnet:forumnews'],
+  ['#fn-list .fn-forum', 'hsFnTag', true, 'pthnet:forumnews'],
+  ['#fn-list .fn-dot', 'hsFnDot', true, 'pthnet:forumnews'],
+  ['#fn-list .fn-row', 'hsFnRow', true, 'pthnet:forumnews'],
   ['#fn-markread', 'hsFnRead', false, 'pthnet:forumnews'],
   ['#fn-open', 'hsFnOpen', false, 'pthnet:forumnews'],
   ['#fnp-translate', 'hsFnTranslate', false, 'pthnet:forumnews'],

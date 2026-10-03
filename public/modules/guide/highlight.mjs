@@ -4,7 +4,9 @@
 // A pulsing gold outline around one element (D7: no dark overlay, nothing
 // blocks the page). The ring is a separate fixed element that never takes a
 // click; it follows its target on scroll (any scroller), resize and layout
-// changes, and hides while the target is not visible. Static outline under
+// changes (also checked 4 times a second: a window that moves when its content
+// arrives), is cut to the part really on screen, and hides while the target is
+// not visible. Static outline under
 // « Reduced effects » / prefers-reduced-motion.
 // ═══════════════════════════════════════════════════════════════════
 
@@ -21,6 +23,7 @@ let ring = null;
 let target = null;
 let raf = 0;
 let ro = null;
+let poll = 0;
 
 function styleOnce() {
   if (document.getElementById('ag-ring-css')) return;
@@ -40,11 +43,36 @@ function visible(el) {
   return r.width > 0 && r.height > 0 && r.bottom > 0 && r.right > 0 && r.top < window.innerHeight && r.left < window.innerWidth;
 }
 
+/**
+ * The part of the target really on screen: cut by every scrolling / clipping
+ * ancestor (a window's body) and the viewport — a long list inside a window
+ * no longer draws a frame past the window's edge (web.289). null: nothing shows.
+ */
+function shownRect(el) {
+  const r = el.getBoundingClientRect();
+  let l = r.left, t = r.top, rt = r.right, b = r.bottom;
+  for (let n = el.parentElement; n && n !== document.body && n !== document.documentElement; n = n.parentElement) {
+    let cs = null;
+    try { cs = getComputedStyle(n); } catch (e) { cs = null; }
+    if (!cs) continue;
+    if (cs.overflowX !== 'visible' || cs.overflowY !== 'visible') {
+      const c = n.getBoundingClientRect();
+      const top = c.top + n.clientTop, left = c.left + n.clientLeft;
+      if (cs.overflowX !== 'visible') { l = Math.max(l, left); rt = Math.min(rt, left + n.clientWidth); }
+      if (cs.overflowY !== 'visible') { t = Math.max(t, top); b = Math.min(b, top + n.clientHeight); }
+    }
+    if (cs.position === 'fixed') break;
+  }
+  l = Math.max(l, 0); t = Math.max(t, 0); rt = Math.min(rt, window.innerWidth); b = Math.min(b, window.innerHeight);
+  return rt - l > 2 && b - t > 2 ? { left: l, top: t, width: rt - l, height: b - t } : null;
+}
+
 function place() {
   raf = 0;
   if (!ring || !target) return;
-  if (!visible(target)) { ring.classList.remove('ag-on'); return; }
-  const r = target.getBoundingClientRect(), pad = 4;
+  const r = visible(target) ? shownRect(target) : null;
+  if (!r) { ring.classList.remove('ag-on'); return; }
+  const pad = 4;
   ring.style.transform = `translate(${Math.round(r.left - pad)}px,${Math.round(r.top - pad)}px)`;
   ring.style.width = Math.round(r.width + 2 * pad) + 'px';
   ring.style.height = Math.round(r.height + 2 * pad) + 'px';
@@ -52,6 +80,26 @@ function place() {
 }
 
 function schedule() { if (!raf) raf = requestAnimationFrame(place); }
+
+/**
+ * A target hidden in a scrolling list (the table the Ace points at, below the
+ * part of the game list on screen) is brought into that list's view — only the
+ * list scrolls, never the page (web.289).
+ */
+function revealInScroller(el) {
+  const r = el.getBoundingClientRect();
+  for (let n = el.parentElement; n && n !== document.body && n !== document.documentElement; n = n.parentElement) {
+    let cs = null;
+    try { cs = getComputedStyle(n); } catch (e) { cs = null; }
+    if (!cs || !/(auto|scroll)/.test(cs.overflowY) || n.scrollHeight <= n.clientHeight + 1) continue;
+    const c = n.getBoundingClientRect();
+    const top = c.top + n.clientTop, bottom = top + n.clientHeight;
+    if (r.top >= top && r.bottom <= bottom) return;                       // already shown
+    const d = r.top < top ? r.top - top - 6 : Math.min(r.bottom - bottom + 6, r.top - top - 6);
+    n.scrollTop += d;
+    return;
+  }
+}
 
 /** Outlines `el` (an element or a CSS selector). Replaces any previous highlight. */
 export function highlight(el) {
@@ -64,9 +112,13 @@ export function highlight(el) {
   ring.setAttribute('aria-hidden', 'true');
   document.body.appendChild(ring);
   target = el;
+  try { revealInScroller(el); } catch (e) {}
   window.addEventListener('scroll', schedule, { capture: true, passive: true });
   window.addEventListener('resize', schedule, { passive: true });
   try { ro = new ResizeObserver(schedule); ro.observe(el); ro.observe(document.body); } catch (e) { ro = null; }
+  // the target can move without scrolling or resizing: a window that grows once its
+  // content arrives (the forum events) re-centres itself — the frame stayed behind (web.289)
+  poll = setInterval(schedule, 250);
   place();
   return true;
 }
@@ -82,6 +134,7 @@ export function clear() {
   window.removeEventListener('scroll', schedule, { capture: true });
   window.removeEventListener('resize', schedule);
   if (ro) { try { ro.disconnect(); } catch (e) {} ro = null; }
+  if (poll) { clearInterval(poll); poll = 0; }
   if (raf) { cancelAnimationFrame(raf); raf = 0; }
   if (ring) { try { ring.remove(); } catch (e) {} }
   ring = null; target = null;

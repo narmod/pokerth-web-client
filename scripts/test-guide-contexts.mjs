@@ -68,13 +68,21 @@ ok(prefsStep.text(W({ screen: 'create', prefs: true })) === 'cfPrefs' && prefsSt
 ok(/quick settings/.test(EN.cfStyle) && /quick settings/.test(EN.cfStyleClosed) && /Table preferences/.test(EN.cfPrefs) && /Save prefs/.test(EN.cfPrefsNone), 'create page: styles = quick settings; prefs per mode, where to edit them');
 ok(/Any player with an account can create a Ranking table/.test(EN.c5Create) && /practice only/.test(EN.c5Create), 'D16 wording and presets = practice');
 // C5 windows
-for (const [key, id] of [['ranking', 'w-ranking'], ['events', 'w-events'], ['adv', 'w-adv'], ['theme', 'w-theme'], ['music', 'w-music'], ['avatar', 'w-avatar'], ['players', 'w-players'], ['profile', 'w-profile'], ['logs', 'w-logs']]) {
+for (const [key, id] of [['ranking', 'w-ranking'], ['events', 'w-events'], ['posts', 'w-posts'], ['adv', 'w-adv'], ['theme', 'w-theme'], ['music', 'w-music'], ['avatar', 'w-avatar'], ['players', 'w-players'], ['profile', 'w-profile'], ['logs', 'w-logs']]) {
   ok(pick({ windows: [key] }) === id, 'window « ' + key + ' » opened in the lobby → ' + id);
   ok(pick({ windows: [key] }, [id]) !== id, id + ' explained once');
 }
 ok(pick({ windows: ['ranking'] }, [], []) === 'w-ranking' && pick({}) === 'lobby-ranking', 'a window outranks the lobby tip behind it');
 ok(pick({ screen: 'game', playing: true, windows: ['help'] }) === null, 'never during a hand, even over a window (D8)');
 ok(pick({ screen: 'wait', ranked: true, windows: ['events'] }) === 'w-events', 'windows also in the waiting room');
+// web.289: forum posts explained; each ranking explained on its own tab in « ? » mode
+ok(/latest posts/.test(EN.c5Posts) && /Mark all as read/.test(EN.c5Posts) && /not read yet/.test(EN.hsFnDot), 'posts: list, tags, read marks, mark all as read');
+const H = (await imp('public/modules/guide/hotspots.mjs')).HOTSPOTS;
+for (const [src, key] of [['pth', 'hsRkPth'], ['bbc', 'hsRkBbc'], ['wec', 'hsRkWec'], ['lan', 'hsRkLan'], ['ach', 'hsRkAch']]) {
+  const i = H.findIndex((e) => e[0].indexOf('[data-src="' + src + '"]') >= 0), g = H.findIndex((e) => e[1] === 'hsRkTab');
+  ok(i >= 0 && H[i][1] === key && i < g && key in EN, 'ranking tab « ' + src + ' » → ' + key + ', before the generic tab entry');
+}
+ok(/15, 9, 6, 4, 3, 2, 1/.test(EN.hsRkPth) && /×1 to ×4/.test(EN.hsRkBbc) && /75 points/.test(EN.hsRkWec) && /private server/.test(EN.hsRkLan) && /training mode/.test(EN.hsRkAch), 'rankings: how each one works');
 ok(/created by the cup admins/.test(EN.c5Events) && /needs no registration/.test(EN.c5Events), 'events: cups created by admins, WEC needs no registration (D14)');
 ok(pick({ screen: 'connect', net: false, online: false, loginStep: 1 }) === 'login', 'login screen, mode cards → C3 modes + account');
 ok(pick({ screen: 'connect', net: false, online: false, loginStep: 2 }) === 'login-profile', 'login form → C3 nickname + avatar');

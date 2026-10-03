@@ -442,10 +442,20 @@ function placeBubble() {
   const rectMid = { left: midP.left, top: topP.top, right: midP.left + bw, bottom: topP.top + bh };
   const cands = [[near, false, cost(rectNear)], [topP, true, cost(rectTop) / 0.8]];
   if (vw - 24 > bw * 1.5) cands.push([leftP, true, cost(rectLeft) / 0.8 + 1], [midP, true, cost(rectMid) / 0.8 + 2]);
+  // the bottom of the screen, when the bubble talks about something near the top
+  // and the Ace stands higher up (a tall window: the forum events tab, web.289)
+  let botP = null;
+  if (av) {
+    botP = { right: 12, top: Math.round(vh - 12 - bh) };
+    const rectBot = { left: vw - 12 - bw, top: botP.top, right: vw - 12, bottom: botP.top + bh };
+    // on the Ace: only his feet may touch its top edge
+    const onAce = rectBot.left < r.right && r.left < rectBot.right && r.bottom - rectBot.top > r.height * 0.25 && r.top < rectBot.bottom;
+    cands.push([botP, true, onAce || botP.top < top0 ? Infinity : cost(rectBot) / 0.8 + 3]);
+  }
   const best = cands.reduce((a, b) => (b[2] < a[2] ? b : a));
   if (best[0] !== near) {
     apply(best[0], true);
-    if (best[0] === topP) return;
+    if (best[0] === topP || best[0] === botP) return;
     // left / middle: not over the Ace either
     const cap = Math.max(160, Math.round(r.top - 8 - topP.top));
     if (best[0].left + bw > r.left && topP.top + bh > r.top - 8 && cap < bh) { bub.style.maxHeight = cap + 'px'; bub.style.overflowY = 'auto'; }
