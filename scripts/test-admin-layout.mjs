@@ -382,11 +382,12 @@ ok(traf.indexOf('id="trafRet"') > traf.indexOf('data-ts="audience" role="tabpane
 
 // -- One section at a time ----------------------------------------------------
 // Six cards stacked on one page still read as a wall. The panel is split under
-// its own sub-tabs - Overview, Audience, Activity, Visitors, Features, Data -
+// its own sub-tabs - Overview, Audience, Activity, Visitors, Music, Ace's Help,
+// Data -
 // one on screen at a time, and the long explanations fold behind a single
 // Explanations switch. Every section stays in the DOM: loadTraffic fills them
 // all, the bar only chooses which one is visible.
-const TS = ['overview', 'audience', 'activity', 'visitors', 'features', 'data'];
+const TS = ['overview', 'audience', 'activity', 'visitors', 'music', 'ace', 'data'];
 function tsub(k) {
   const i = traf.indexOf('<div class="tsub" data-ts="' + k + '"');
   if (i < 0) return '';
@@ -395,7 +396,7 @@ function tsub(k) {
 }
 const subBar = (traf.match(/<div class="trafsub" id="trafSub" role="tablist"[^\n]*/) || [''])[0];
 ok(!!subBar, 'the traffic panel has its own sub-tab bar');
-ok(TS.every(k => subBar.includes('data-ts="' + k + '"')), 'with the six sections, in reading order');
+ok(TS.every(k => subBar.includes('data-ts="' + k + '"')), 'with the seven sections, in reading order');
 ok(TS.every((k, i) => !i || subBar.indexOf('data-ts="' + TS[i - 1] + '"') < subBar.indexOf('data-ts="' + k + '"')),
   'overview first, data last');
 ok(!/class="tab[ "]/.test(subBar), 'its buttons are not .tab: the global tab handler would take them for panels');
@@ -404,14 +405,15 @@ ok(TS.every((k, i) => !i || traf.indexOf('data-ts="' + TS[i - 1] + '" role="tabp
   'and the sections follow the bar');
 ok(/<div class="tsub" data-ts="overview" role="tabpanel" aria-label="Overview">/.test(traf),
   'the overview is the one visible before any script runs');
-ok(TS.slice(1).every(k => tsub(k).startsWith('<div class="tsub" data-ts="' + k + '" role="tabpanel" aria-label="' + k[0].toUpperCase() + k.slice(1) + '" style="display:none">')),
+ok(TS.slice(1).every(k => /^<div class="tsub" data-ts="[a-z]+" role="tabpanel" aria-label="[^"]+" style="display:none">/.test(tsub(k))),
   'and the others start hidden');
 const home = {
   overview: ['trafCards', 'trafKpis', 'trafBottom'],
   audience: ['trafChart', 'trafNew', 'trafRet'],
   activity: ['traf48', 'trafHours', 'trafModes', 'trafLive'],
   visitors: ['trafEnv'],
-  features: ['trafMusic', 'guideSec', 'trafGuide'],
+  music: ['trafMusic', 'musSince'],
+  ace: ['guideSec', 'trafGuide', 'guideSince'],
   data: ['btnNoCount', 'dbHost', 'btnTrafCsv', 'btnTrafReset'],
 };
 for (const [k, ids] of Object.entries(home)) {
@@ -419,11 +421,11 @@ for (const [k, ids] of Object.entries(home)) {
 }
 ok(tsub('overview').indexOf('id="trafKpis"') < tsub('overview').indexOf('id="trafBottom"'),
   'the overview reads the figures, then the conclusion drawn from them');
-for (const h of ['Bottom line', 'Trends', 'Retention', 'Recent activity', 'Connections', 'Who visits', 'Features', 'Data &amp; settings']) {
+for (const h of ['Bottom line', 'Trends', 'Retention', 'Recent activity', 'Connections', 'Who visits', 'Music', 'Ace’s Help', 'Data &amp; settings']) {
   ok(traf.includes('<h2>' + h + '</h2>'), 'a card is headed ' + h);
 }
 ok(/<div class="boardhead"><h2>Traffic<\/h2>/.test(traf), 'the head card keeps its title, period and refresh');
-ok(!/<h2>Coming back<\/h2>/.test(traf) && !/<h3>Recent activity/.test(traf),
+ok(!/<h2>Coming back<\/h2>/.test(traf) && !/<h3>Recent activity/.test(traf) && !/<h3>Ace’s Help/.test(traf),
   'and no card repeats the name of its own first section');
 ok(!/class="cardrow"/.test(traf), 'and no paired row survives inside it');
 ok(/\.tsec\{margin-top:20px;padding-top:16px;border-top:1px solid var\(--line\)\}/.test(admin),
@@ -447,6 +449,7 @@ ok(/function _trafSub\(k, focus\)/.test(admin) && /function _trafXpl\(on\)/.test
 ok(/localStorage\.setItem\('pth_admin_traf_sub',k\)/.test(admin) && /localStorage\.setItem\('pth_admin_traf_xpl',on\?'1':'0'\)/.test(admin),
   'the chosen section and the switch are remembered per browser, like the period');
 ok(/if\(TRAF_SUBS\.indexOf\(k\)<0\) k='overview';/.test(admin), 'an unknown remembered section falls back to the overview');
+ok(/if\(k==='features'\) k='music';/.test(admin), 'and the former Features tab lands on Music');
 ok(/e\.key==='ArrowRight'/.test(admin) && /e\.key==='ArrowLeft'/.test(admin), 'the bar is driven by the arrow keys as well');
 ok(/\.trafsub button\{[^}]*min-height:44px/.test(admin), 'and its targets are thumb-sized');
 
@@ -485,7 +488,8 @@ ok(/title="removed from the catalogue"/.test(admin), 'a title no longer in the c
 // Render it against a fixture: the pieces are lifted out and run with a
 // series shaped like the proxy's, to check the maths and not only the text.
 {
-  const need = ['_musRank','_musDays','_musContext','_musChart','_musName','_stackChart','_lineNiceMax','_annEsc','_round1'];
+  const need = ['_musRank','_musDays','_musContext','_musChart','_musName','_stackChart','_lineNiceMax','_annEsc','_round1',
+                '_musVoteCell','_musTrendWin','_musTrendBadge','_musVotedElsewhere','_langTrendStat'];
   // body() strips the header; here the whole function is needed to run it.
   const whole = n => { const h = admin.indexOf('function ' + n + '('); const b = body(admin, n); return b ? admin.slice(h, admin.indexOf(b, h) + b.length) : ''; };
   const lifted = need.map(whole).join('\n');
@@ -495,7 +499,9 @@ ok(/title="removed from the catalogue"/.test(admin), 'a title no longer in the c
     var _musTitles={t1:'Alpha',t2:'Beta',t3:'Gamma',t4:'Delta',t5:'Eps',t6:'Zeta',t7:'Eta',t8:'Th',t9:'Io',t11:'La'};
     var _musSince=new Date(2026,7,23,10,0,0).getTime();
     var _trafSeries=[{date:'2026-08-21',v:100},{date:'2026-08-22',v:100},{date:'2026-08-23',v:200,mu:{t1:20,t2:10,t6:2}},{date:'2026-08-24',v:100,mu:{t1:10,t2:10,t3:10,t12:1}}];
-    var _musLines=null,_musLabs=null;`;
+    var _musLines=null,_musLabs=null;
+    var _musVotes={t1:{up:4,down:1},r9:{up:2,down:0},t11:{up:0,down:3}}, _musVoteTitles={t1:{title:'Alpha',stream:false},r9:{title:'Jazz FM',stream:true}},
+        _musVotesSince=new Date(2026,7,23).getTime(), _musVotesKnown=true, MUS_TREND_MIN=7, _musTr=null;`;
   const fn = new Function(env + lifted + `
     var keys=Object.keys(_musData).sort(function(a,b){return _musData[b]-_musData[a];});
     var total=0; keys.forEach(function(k){ total+=_musData[k]; });
@@ -505,9 +511,10 @@ ok(/title="removed from the catalogue"/.test(admin), 'a title no longer in the c
   const r = fn();
   ok(r.days === 2, 'the window holds only the days since counting began');
   ok(/Alpha[^]*?30 \u00b7 39%/.test(r.rank), 'the top title carries its plays and share');
-  ok((r.rank.match(/class="envrow"/g) || []).length === 10, 'ten rows are shown');
+  const ranked = r.rank.split('Voted on, outside this ranking')[0];
+  ok((ranked.match(/class="envrow"/g) || []).length === 10, 'ten rows are ranked');
   ok(/2 more titles \u00b7 2 plays/.test(r.rank), 'the rest is summed on one line');
-  ok(/removed from the catalogue/.test(r.rank) && />t10</.test(r.rank) && /t11|t12/.test(r.rank) === false,
+  ok(/removed from the catalogue/.test(ranked) && />t10</.test(ranked) && /t11|t12/.test(r.rank) === false,
     'an id without a title is shown by id and flagged');
   ok(/<b>76<\/b> plays across <b>12<\/b> titles/.test(r.ctx), 'the context line states the totals');
   ok(/<b>31\.5<\/b> plays\/day over 2 days/.test(r.ctx), 'plays per day are averaged over the window only');
@@ -518,6 +525,29 @@ ok(/title="removed from the catalogue"/.test(admin), 'a title no longer in the c
   ok(r.lines.length === 6, 'five titles plus others are stacked');
   ok(/aria-label="stacked daily bars"/.test(r.svg), 'and the helper still draws them as bars');
   ok(/since 2026-08-23/.test(r.chart), 'the chart says where its window starts');
+  // Thumbs: beside each ranked title, a dash where nobody voted, and every
+  // other voted entry (radios included) listed under the ranking.
+  ok(/Alpha[^]*?class="votes"[^>]*>\u25B2 4 \u00b7 \u25BC 1</.test(ranked), 'a ranked title shows its thumbs up and down');
+  ok(/class="votes none"[^>]*>\u2014</.test(ranked), 'a title nobody voted on shows a dash, not 0 · 0');
+  ok(/Voted on, outside this ranking/.test(r.rank), 'entries voted on outside the ranking are listed under it');
+  ok(/Jazz FM <span class="muted"[^>]*>\u00b7 radio<\/span>[^]*?\u25B2 2 \u00b7 \u25BC 0/.test(r.rank), 'a radio station shows its votes, marked as a radio');
+  ok(/>La<[^]*?\u25B2 0 \u00b7 \u25BC 3/.test(r.rank), 'a title beyond the top ten keeps its votes too');
+  ok(/class="trend na" title="Not enough history: 1 full days/.test(ranked), 'two days of history give no arrow, and say why');
+  // Arrows: the share of plays, second half of the window against the first.
+  const fx = new Function(env + lifted + `
+    _musSince=new Date(2026,7,1,10,0,0).getTime(); _musVotesKnown=false;
+    var s=[]; for(var i=1;i<=17;i++){ var d='2026-08-'+String(i).padStart(2,'0'); var late=i>9;
+      s.push({date:d,v:50,mu:i===1?{a:1}:{a:late?6:2,b:late?2:6,c:1}}); }
+    _trafSeries=s;
+    _musData={a:65,b:65,c:16};
+    var keys=['a','b','c'];
+    return _musRank(keys,146);`);
+  const tr = fx();
+  ok(/class="trend up"[^>]*>\u2197 \+/.test(tr.split('</div>')[0]), 'a title gaining share of plays gets an up arrow');
+  ok(/class="trend down"[^>]*>\u2198 \u2212/.test(tr.split('</div>')[1]), 'one losing share gets a down arrow');
+  ok(/class="trend flat"[^>]*>\u2192</.test(tr.split('</div>')[2]), 'a steady one reads as stable');
+  ok(/last 8 full days vs the 8 before/.test(tr), 'the first, partial day of counting is left out of the halves');
+  ok(!/class="votes/.test(tr), 'and an older proxy without votes shows no thumbs column at all');
 }
 ok(!/tile\('Last 90 days'/.test(admin) && !/Last 180 days/.test(admin) && !/Last 365 days/.test(admin),
   'and the middle three are gone from the screen as fixed tiles (90 days remains only as a selector choice)');

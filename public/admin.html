@@ -303,6 +303,8 @@
   .envrow .pct{flex:none;min-width:78px;text-align:right;color:var(--text);font-variant-numeric:tabular-nums;font-size:.78rem}
   .envrow .trend{flex:none;width:62px;text-align:right;font-size:.74rem;font-variant-numeric:tabular-nums;white-space:nowrap;cursor:help}
   .envrow .trend.up{color:#5ec269}.envrow .trend.down{color:#e26d6d}.envrow .trend.flat{color:var(--text);opacity:.55}.envrow .trend.na{color:var(--text);opacity:.3}
+  .envrow .votes{flex:none;min-width:74px;text-align:right;color:var(--text);font-size:.74rem;font-variant-numeric:tabular-nums;white-space:nowrap;cursor:help}
+  .envrow .votes.none{opacity:.35}
   .envrow .nrbadge{flex:none;width:56px;text-align:right;color:var(--text);opacity:.7;font-size:.74rem;font-variant-numeric:tabular-nums;white-space:nowrap}
   /* Sur telephone les quatre colonnes fixes (badge, barre, compte, tendance)
      ne laissaient plus un pixel au nom, qui disparaissait. La ligne se plie en
@@ -482,7 +484,7 @@
       <div class="card trafhead">
         <div class="boardhead"><h2>Traffic</h2><span id="trafRange" class="headnote"></span><select id="trafPeriod" class="use" title="Period applied to every chart and breakdown on this tab (Today, Last 7 days and All time stay as they are)"><option value="7">Last 7 days</option><option value="14" selected>Last 14 days</option><option value="30">Last 30 days</option><option value="60">Last 60 days</option><option value="90">Last 90 days</option></select><button id="btnTrafRefresh" class="use">Refresh</button><button id="trafXpl" class="use" aria-pressed="false" title="Show or hide the explanations under each section">Explanations</button></div>
         <p class="muted xpl">Anonymous footfall — no IP is ever stored. “Visits” counts browser sessions; “Unique” counts distinct devices; “New” counts devices seen for the first time. Green or red marks a move of 10&nbsp;% or more against the previous period (today is compared with yesterday up to the same hour); gold means flat or nothing to compare. Everything on this tab reads the same anonymous ping; nothing here identifies a person.</p>
-        <div class="trafsub" id="trafSub" role="tablist" aria-label="Traffic sections"><button type="button" role="tab" data-ts="overview" aria-selected="true" class="on">Overview</button><button type="button" role="tab" data-ts="audience" aria-selected="false" tabindex="-1">Audience</button><button type="button" role="tab" data-ts="activity" aria-selected="false" tabindex="-1">Activity</button><button type="button" role="tab" data-ts="visitors" aria-selected="false" tabindex="-1">Visitors</button><button type="button" role="tab" data-ts="features" aria-selected="false" tabindex="-1">Features</button><button type="button" role="tab" data-ts="data" aria-selected="false" tabindex="-1">Data</button></div>
+        <div class="trafsub" id="trafSub" role="tablist" aria-label="Traffic sections"><button type="button" role="tab" data-ts="overview" aria-selected="true" class="on">Overview</button><button type="button" role="tab" data-ts="audience" aria-selected="false" tabindex="-1">Audience</button><button type="button" role="tab" data-ts="activity" aria-selected="false" tabindex="-1">Activity</button><button type="button" role="tab" data-ts="visitors" aria-selected="false" tabindex="-1">Visitors</button><button type="button" role="tab" data-ts="music" aria-selected="false" tabindex="-1">Music</button><button type="button" role="tab" data-ts="ace" aria-selected="false" tabindex="-1">Ace’s Help</button><button type="button" role="tab" data-ts="data" aria-selected="false" tabindex="-1">Data</button></div>
       </div>
       <div class="tsub" data-ts="overview" role="tabpanel" aria-label="Overview">
       <div class="card">
@@ -561,16 +563,21 @@
         </div>
       </div>
       </div>
-      <div class="tsub" data-ts="features" role="tabpanel" aria-label="Features" style="display:none">
+      <div class="tsub" data-ts="music" role="tabpanel" aria-label="Music" style="display:none">
       <div class="card">
-        <h2>Features</h2>
+        <h2>Music</h2>
         <div class="tsec">
   <div class="boardhead"><h3>Most played tracks</h3><span id="musSince" class="muted" style="margin:0"></span></div>
-          <p class="muted xpl">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not measured: a live stream has no track end, so “a play” would mean nothing there. The ranking follows the period selected above (all-time before per-day counting started); the bars stack the top five titles by day, with the rest grouped.</p>
+          <p class="muted xpl">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not counted as plays: a live stream has no track end, so “a play” would mean nothing there — but they can be voted on. The ranking follows the period selected above (all-time before per-day counting started); the bars stack the top five titles by day, with the rest grouped. ▲ / ▼ are the players’ thumbs on each entry, running totals since voting started (one vote per device, no per-day history). The arrow compares a title’s share of plays over the second half of the period (full days) with the first half, only when the change is statistically significant — the same test as the languages.</p>
           <div id="trafMusic"><div class="empty">Loading…</div></div>
         </div>
+      </div>
+      </div>
+      <div class="tsub" data-ts="ace" role="tabpanel" aria-label="Ace’s Help" style="display:none">
+      <div class="card">
+        <h2>Ace’s Help</h2>
         <div class="tsec" id="guideSec">
-          <div class="boardhead"><h3>Ace’s Help</h3><span id="guideSince" class="muted" style="margin:0"></span></div>
+          <div class="boardhead"><h3>Offer, tips and Ranking funnel</h3><span id="guideSince" class="muted" style="margin:0"></span></div>
           <p class="muted xpl">The contextual assistant (the Ace). Anonymous counters: no visitor id, no name, no table — only which tips are shown, done (Got it or the button) or put off (Later), whether the first-launch offer is accepted, and the Ranking funnel: a table highlighted in the lobby → joined from the bubble → that game started (a Ranking game only starts when its 10 seats are full). Guests are counted apart: they cannot play Ranking games and only get the free-account bubble. Follows the period selected above.</p>
           <div id="trafGuide"><div class="empty">Loading…</div></div>
         </div>
@@ -1999,7 +2006,7 @@
     if(t==='keys'){ loadKeys(); loadAudit(); }
     if(t==='board') loadBoard();
     if(t==='packages') api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
-    if(t==='traffic') loadTraffic();
+    if(t==='traffic'){ loadTraffic(); setTimeout(_trafSubScroll,0); }
     if(t==='servers') loadServers();
     if(t==='polls') loadPolls();
     if(t==='broadcast'){ loadBroadcasts(); if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); } }
@@ -2405,6 +2412,9 @@
   var _envData={}, _envTrend=null, _envPeriod=null, _envSince=0, _envView='combo', _envKnown=false, _envPings=null, _envExpanded=false, _trafSeries=[], _retVerdict=false;
   var _envLangs=[], _envLangsKnown=false, _envLangN=0, _envLangDiagSince=0;
   var _musData={}, _musTitles={}, _musSince=0, _musKnown=false, _musPeriodDays=0;
+  // Pouces (proxy 2.1.9-web.307+) : cumul depuis le debut du vote, radios
+  // comprises ; _musVotesKnown=false sur un proxy anterieur (pas de colonne).
+  var _musVotes={}, _musVoteTitles={}, _musVotesSince=0, _musVotesKnown=false;
   // Periode du tableau de bord : un seul nombre de jours pour tout l'onglet,
   // memorise dans le navigateur comme le theme. 14 par defaut : c'est la
   // fenetre que les graphes ont toujours eue.
@@ -2947,21 +2957,81 @@
   // section, et la seule reponse lisible a ce volume. La couleur d'une ligne
   // est celle de sa couche dans la pile (cinq titres), le reste est gris.
   var MUS_TOP=10, MUS_STACK=5;
+  // Pouces d'une entree, comme dans la bibliotheque de l'onglet Music. Rien
+  // tant que personne n'a vote (pas de « 0 · 0 » qui remplirait la liste), et
+  // pas de colonne du tout sur un proxy qui ne les envoie pas.
+  function _musVoteCell(k){
+    if(!_musVotesKnown) return '';
+    var v=_musVotes[k]||{}, up=v.up||0, dn=v.down||0;
+    var since=_musVotesSince?(' since '+new Date(_musVotesSince).toLocaleDateString()):'';
+    return '<span class="votes'+(up||dn?'':' none')+'" title="Thumbs up / down from players'+since+', one vote per device (running totals)">'
+      +(up||dn? '\u25B2 '+up+' \u00b7 \u25BC '+dn : '\u2014')+'</span>';
+  }
+  // Tendance d'un titre : sa PART des lectures, seconde moitie de la periode
+  // contre la premiere (jours pleins : ni aujourd'hui ni le jour ou le
+  // comptage a commence). La part et non le volume, pour la meme raison que
+  // les langues : un soir charge fait monter tous les titres a la fois. Meme
+  // test (_langTrendStat : z a deux proportions, |z|>=1.96, dix lectures au
+  // moins) ; sous sept jours par moitie, pas de fleche.
+  var MUS_TREND_MIN=7, _musTr=null;
+  function _musTrendWin(){
+    var s=_musDays(), today=s.length?s[s.length-1].date:'';
+    var d=new Date(), tk=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    if(today===tk) s=s.slice(0,-1);
+    if(_musSince && s.length){
+      var f=new Date(_musSince), fk=f.getFullYear()+'-'+String(f.getMonth()+1).padStart(2,'0')+'-'+String(f.getDate()).padStart(2,'0');
+      if(s[0].date===fk) s=s.slice(1);
+    }
+    var w=Math.floor(s.length/2);
+    if(w<MUS_TREND_MIN) return {w:w,full:s.length,ok:false};
+    var cur={}, prev={}, cN=0, pN=0;
+    function add(arr,into){ var t=0; arr.forEach(function(x){ var mu=x.mu||{}; for(var k in mu){ into[k]=(into[k]||0)+(mu[k]||0); t+=mu[k]||0; } }); return t; }
+    pN=add(s.slice(s.length-2*w,s.length-w),prev); cN=add(s.slice(s.length-w),cur);
+    return {w:w,full:s.length,ok:true,cur:cur,prev:prev,curN:cN,prevN:pN};
+  }
+  function _musTrendBadge(k){
+    var t=_musTr; if(!t) return '';
+    if(!t.ok) return '<span class="trend na" title="Not enough history: '+t.full+' full days counted in this period, '+(2*MUS_TREND_MIN)+' needed (pick a longer period)">\u00b7</span>';
+    var a=t.cur[k]||0, b=t.prev[k]||0;
+    var st=_langTrendStat(a,t.curN,b,t.prevN);
+    if(!st) return '<span class="trend na" title="Too few plays to tell ('+(a+b)+' over '+(2*t.w)+' days)">\u00b7</span>';
+    var pc=function(p){ return (p*100).toFixed(p<0.01?2:1)+'%'; };
+    var rel=isFinite(st.rel)? (st.rel>=0?'+':'\u2212')+Math.round(Math.abs(st.rel)*100)+'%' : 'new';
+    var arrow=st.dir==='up'?'\u2197':st.dir==='down'?'\u2198':'\u2192';
+    var tip='Share of plays: '+pc(st.p2)+' \u2192 '+pc(st.p1)+' ('+b+' \u2192 '+a+' plays), last '+t.w+' full days vs the '+t.w+' before'
+          +(st.dir==='flat'?' \u2014 within noise ('+st.z.toFixed(1)+'\u03c3)':' \u2014 significant ('+st.z.toFixed(1)+'\u03c3)');
+    return '<span class="trend '+st.dir+'" title="'+tip+'">'+arrow+(st.dir==='flat'?'':' '+rel)+'</span>';
+  }
   function _musRank(keys,total){
+    _musTr=_musTrendWin();
     var rows=keys.slice(0,MUS_TOP).map(function(k,i){
       var n=_musData[k]||0, pc=total? n*100/total : 0;
       var c=i<MUS_STACK?ENV_COLORS[i]:ENV_COLORS[9], gone=!_musTitles[k];
       return '<div class="envrow"><span class="dot" style="background:'+c+'"></span>'
         + '<span class="nmx"'+(gone?' style="opacity:.6;font-style:italic" title="removed from the catalogue"':'')+'>'+_annEsc(_musName(k))+'</span>'
         + '<span class="barx"><i style="width:'+Math.max(2,pc).toFixed(1)+'%;background:'+c+'"></i></span>'
-        + '<span class="pct">'+n+' \u00b7 '+(pc<1?pc.toFixed(1):Math.round(pc))+'%</span></div>';
+        + '<span class="pct">'+n+' \u00b7 '+(pc<1?pc.toFixed(1):Math.round(pc))+'%</span>'
+        + _musVoteCell(k) + _musTrendBadge(k) + '</div>';
     }).join('');
     var rest=keys.length-MUS_TOP;
     if(rest>0){
       var rn=0; keys.slice(MUS_TOP).forEach(function(k){ rn+=_musData[k]||0; });
       rows+='<div class="muted" style="margin-top:6px">'+rest+' more title'+(rest>1?'s':'')+' \u00b7 '+rn+' play'+(rn>1?'s':'')+' \u00b7 '+(total?Math.round(rn*100/total):0)+'%</div>';
     }
-    return rows;
+    return rows+_musVotedElsewhere(keys.slice(0,MUS_TOP));
+  }
+  function _musVotedElsewhere(shown){
+    if(!_musVotesKnown) return '';
+    var ids=Object.keys(_musVotes).filter(function(k){ var v=_musVotes[k]||{}; return (v.up||v.down) && shown.indexOf(k)<0; });
+    if(!ids.length) return '';
+    ids.sort(function(a,b){ var x=_musVotes[a], y=_musVotes[b]; return ((y.up||0)+(y.down||0))-((x.up||0)+(x.down||0)); });
+    var h='<div class="muted" style="margin:14px 0 4px">Voted on, outside this ranking</div>';
+    ids.forEach(function(k){
+      var m=_musVoteTitles[k]||null, nm=m?m.title:_musName(k);
+      h+='<div class="envrow"><span class="nmx"'+(m?'':' style="opacity:.6;font-style:italic" title="removed from the catalogue"')+'>'+_annEsc(nm)
+        +(m&&m.stream?' <span class="muted" style="font-size:.72rem">\u00b7 radio</span>':'')+'</span>'+_musVoteCell(k)+'</div>';
+    });
+    return h;
   }
   // La fenetre commence au jour du premier comptage : des jours vides avant
   // ne disent rien sur la musique, seulement sur l'age de la fonction.
@@ -3290,7 +3360,7 @@
       // à compter encore. Voir renderEnv().
       _envKnown=(d.env!==undefined); _envData=_envPick(d.env||{}, d.envPeriod||null); _envTrend=d.langTrend||null; _envPeriod=d.envPeriod||null; _envColorReset(); _envSince=d.envSince||0; _envPings=d.pings||null;
       _envLangsKnown=Array.isArray(d.langs); _envLangs=_envLangsKnown?d.langs:[]; _envLangN=d.langN||0; _envLangDiagSince=d.langDiagSince||0; renderEnv();
-      _musKnown=(d.music!==undefined); _musPeriodDays=(d.musicPeriod&&d.musicPeriod.days)||0; _musData=_musPeriodDays?(d.musicPeriod.plays||{}):(d.music||{}); _musTitles=d.musicTitles||{}; _musSince=d.musicSince||0; renderMusic();
+      _musKnown=(d.music!==undefined); _musPeriodDays=(d.musicPeriod&&d.musicPeriod.days)||0; _musData=_musPeriodDays?(d.musicPeriod.plays||{}):(d.music||{}); _musTitles=d.musicTitles||{}; _musSince=d.musicSince||0; _musVotesKnown=(d.musicVotes!==undefined); _musVotes=d.musicVotes||{}; _musVoteTitles=d.musicVoteTitles||{}; _musVotesSince=d.musicVotesSince||0; renderMusic();
       _guideKnown=(d.guide!==undefined); _guidePeriodDays=(d.guidePeriod&&d.guidePeriod.days)||0; _guideData=_guidePeriodDays?(d.guidePeriod.summary||null):(d.guide||null); _guideSince=d.guideSince||0; renderGuide();
       var dbx=$('trafDb');
       if(dbx){
@@ -4821,8 +4891,9 @@
   // filling all of them (charts are viewBox SVG, they need no width), so the
   // bar only chooses which one is on screen. Choice and the Explanations
   // switch are remembered per browser, like the period.
-  var TRAF_SUBS=['overview','audience','activity','visitors','features','data'];
+  var TRAF_SUBS=['overview','audience','activity','visitors','music','ace','data'];
   function _trafSub(k, focus){
+    if(k==='features') k='music';   // remembered before Music and Ace’s Help were split
     if(TRAF_SUBS.indexOf(k)<0) k='overview';
     document.querySelectorAll('#trafSub [data-ts]').forEach(function(b){
       var on=b.dataset.ts===k;
@@ -4831,6 +4902,14 @@
     });
     document.querySelectorAll('#panel-traffic .tsub').forEach(function(p){ p.style.display = p.dataset.ts===k ? '' : 'none'; });
     try{ localStorage.setItem('pth_admin_traf_sub',k); }catch(e){}
+    _trafSubScroll();
+  }
+  // Sur telephone la barre defile : la section choisie (memorisee, ou atteinte
+  // au clavier) doit y etre visible, centree, sans faire defiler la page.
+  function _trafSubScroll(){
+    var bar=$('trafSub'), b=bar&&bar.querySelector('.on');
+    if(!b || bar.scrollWidth<=bar.clientWidth) return;
+    bar.scrollLeft=Math.max(0, (b.offsetLeft-bar.offsetLeft)-(bar.clientWidth-b.offsetWidth)/2);
   }
   function _trafXpl(on){
     var pn=$('panel-traffic'), xb=$('trafXpl');

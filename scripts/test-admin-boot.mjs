@@ -114,7 +114,7 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   const shown = () => subs.filter((p) => p.style.display !== 'none').map((p) => p.dataset.ts);
   const panels = () => [...doc.querySelectorAll('[id^="panel-"]')].map((p) => p.id + ':' + p.style.display).join();
   const before = panels();
-  ok(subs.length === 6 && shown().join() === 'overview', 'the traffic panel opens on its overview alone');
+  ok(subs.length === 7 && shown().join() === 'overview', 'the traffic panel opens on its overview alone');
   doc.querySelector('#trafSub [data-ts="activity"]').click();
   ok(shown().join() === 'activity', 'a sub-tab shows its section and hides the others');
   ok(doc.querySelector('#trafSub [data-ts="activity"]').getAttribute('aria-selected') === 'true'
@@ -124,6 +124,8 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   ok(doc.querySelector('.tab.on') && doc.querySelector('.tab.on').dataset.t !== undefined, 'the admin tab bar is untouched by it');
   doc.querySelector('#trafSub [data-ts="activity"]').dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
   ok(shown().join() === 'visitors', 'the arrow keys move to the next section');
+  doc.querySelector('#trafSub [data-ts="ace"]').click();
+  ok(shown().join() === 'ace' && $('trafGuide') && $('trafGuide').offsetParent !== undefined, 'Ace’s Help has a section of its own');
   doc.querySelector('#trafSub [data-ts="visitors"]').dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
   ok(shown().join() === 'overview', 'and Home goes back to the overview');
   const xb = $('trafXpl'), pn = $('panel-traffic');

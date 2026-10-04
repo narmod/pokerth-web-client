@@ -155,5 +155,16 @@ ok(/<option value="0">Off \(blind\)<\/option>/.test(admin), 'blind is the defaul
 ok(/\/admin\/music-votes-public/.test(admin), 'Save posts the setting');
 ok(/\.music-vbtn/.test(css) && /\.music-vote-n/.test(css), 'the thumbs have their own style');
 
+// The traffic tab shows the thumbs beside the ranking: /admin/visits carries
+// the totals (never the voters) and titles for every voted entry, radios too.
+{
+  const summ = body(proxy, 'visitsSummary');
+  ok(/musicVotes: musicVoteTotals\(\)/.test(summ), '/admin/visits carries the vote totals');
+  ok(/musicVotesSince: visitsStore\.musicVotesSince \|\| 0/.test(summ), 'and when voting started');
+  ok(/musicVoteTitles: musicVoteTitles\(\)/.test(summ), 'and the titles of the voted entries');
+  const vt = body(proxy, 'musicVoteTitles');
+  ok(/stream: !!t\.stream/.test(vt) && !/!t\.stream\)/.test(vt), 'radio stations keep their title there');
+  ok(!/voters/.test(vt) && !/voters/.test(body(proxy, 'musicVoteTotals')), 'no voter hash leaves the store');
+}
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);

@@ -6914,6 +6914,16 @@ function musicVoteTotals() {
   return out;
 }
 
+// Titres des entrées votées, radios comprises (musicPlayTitles les écarte :
+// elles n'ont pas d'écoutes). Une entrée retirée du catalogue n'y figure pas ;
+// le tableau de bord retombe alors sur son identifiant.
+function musicVoteTitles() {
+  const out = {}, v = visitsStore.musicVotes || {};
+  try {
+    musicListForClient().forEach(function (t) { if (t && t.id && v[t.id]) out[t.id] = { title: t.title || t.id, stream: !!t.stream }; });
+  } catch (e) {}
+  return out;
+}
 // Titres à afficher en face des identifiants dans le tableau de bord. Une
 // piste retirée du catalogue garde ses écoutes mais perd son titre : on
 // retombe alors sur l'identifiant, jamais sur une ligne vide.
@@ -7388,6 +7398,11 @@ function visitsSummary(periodDays) {
     music: visitsStore.music || {},
     musicTitles: musicPlayTitles(),
     musicSince: visitsStore.musicSince || 0,
+    // Pouces haut / bas : cumul depuis le debut du vote (pas d'historique par
+    // jour), radios comprises. Les totaux seulement, jamais les votants.
+    musicVotes: musicVoteTotals(),
+    musicVotesSince: visitsStore.musicVotesSince || 0,
+    musicVoteTitles: musicVoteTitles(),
     // Aide de l'As : totaux depuis le début, et sur la période choisie (jours comptés)
     guide: GUIDE_STATS.summary(visitsStore.guide || {}),
     guidePeriod: (function () { const p = visitGuidePeriod(P); return { days: p.days, summary: GUIDE_STATS.summary(p.guide) }; })(),
