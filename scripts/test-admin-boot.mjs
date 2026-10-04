@@ -107,5 +107,33 @@ const tg = $('trafGuide');
 ok(tg && /Ranking funnel/.test(tg.textContent) && /40% of highlighted/.test(tg.textContent) && /2 of 5 offered/.test(tg.textContent),
   'the Ace’s Help card renders acceptance and the Ranking funnel');
 ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
+
+// ── Traffic sub-tabs: one section on screen, explanations folded ─────────
+{
+  const subs = [...doc.querySelectorAll('#panel-traffic .tsub')];
+  const shown = () => subs.filter((p) => p.style.display !== 'none').map((p) => p.dataset.ts);
+  const panels = () => [...doc.querySelectorAll('[id^="panel-"]')].map((p) => p.id + ':' + p.style.display).join();
+  const before = panels();
+  ok(subs.length === 6 && shown().join() === 'overview', 'the traffic panel opens on its overview alone');
+  doc.querySelector('#trafSub [data-ts="activity"]').click();
+  ok(shown().join() === 'activity', 'a sub-tab shows its section and hides the others');
+  ok(doc.querySelector('#trafSub [data-ts="activity"]').getAttribute('aria-selected') === 'true'
+    && doc.querySelector('#trafSub [data-ts="overview"]').getAttribute('aria-selected') === 'false', 'and says which one is selected');
+  ok(window.localStorage.getItem('pth_admin_traf_sub') === 'activity', 'the choice is remembered');
+  ok(panels() === before, 'the sub-tab never switches an admin panel itself');
+  ok(doc.querySelector('.tab.on') && doc.querySelector('.tab.on').dataset.t !== undefined, 'the admin tab bar is untouched by it');
+  doc.querySelector('#trafSub [data-ts="activity"]').dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+  ok(shown().join() === 'visitors', 'the arrow keys move to the next section');
+  doc.querySelector('#trafSub [data-ts="visitors"]').dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+  ok(shown().join() === 'overview', 'and Home goes back to the overview');
+  const xb = $('trafXpl'), pn = $('panel-traffic');
+  ok(xb.getAttribute('aria-pressed') === 'false' && !pn.classList.contains('xpl-on'), 'explanations start folded');
+  xb.click();
+  ok(xb.getAttribute('aria-pressed') === 'true' && pn.classList.contains('xpl-on')
+    && window.localStorage.getItem('pth_admin_traf_xpl') === '1', 'one click unfolds them all, and it is remembered');
+  xb.click();
+  ok(!pn.classList.contains('xpl-on'), 'and a second folds them again');
+  ok(errors.length === 0, 'switching threw nothing' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
+}
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);

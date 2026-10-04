@@ -196,6 +196,16 @@
   .tsec .boardhead>h3{font-size:.9rem;color:var(--gold);font-weight:700;margin:0;white-space:nowrap}
   /* Une section qui suit immediatement le titre de la carte n'a rien a separer. */
   .card>h2+.tsec{border-top:0;margin-top:10px;padding-top:0}
+  /* Traffic: one section at a time under its own sub-tabs; the long
+     explanations fold behind the Explanations switch (off by default). */
+  .card.trafhead{padding-bottom:0}
+  .trafsub{display:flex;gap:2px;overflow-x:auto;margin:12px -14px 0;padding:0 8px;border-top:1px solid var(--line);scrollbar-width:none}
+  .trafsub::-webkit-scrollbar{display:none}
+  .trafsub button{flex:0 0 auto;white-space:nowrap;background:transparent;border:0;border-bottom:2px solid transparent;color:var(--text);padding:11px 12px 9px;font:inherit;font-size:.85rem;cursor:pointer;min-height:44px}
+  .trafsub button:hover{color:var(--cream)}
+  .trafsub button.on{color:var(--gold);border-bottom-color:var(--gold);font-weight:700}
+  #panel-traffic:not(.xpl-on) .xpl{display:none}
+  #trafXpl[aria-pressed="true"]{border-color:var(--gold);background:rgba(160,172,196,.14)}
   .botline{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:13px}
   .botline p{margin:0 0 9px;font-size:.85rem;line-height:1.55;color:var(--text)}
   .botline p:last-child{margin:0}
@@ -469,26 +479,23 @@
     </div>
 
     <div id="panel-traffic" style="display:none">
+      <div class="card trafhead">
+        <div class="boardhead"><h2>Traffic</h2><span id="trafRange" class="headnote"></span><select id="trafPeriod" class="use" title="Period applied to every chart and breakdown on this tab (Today, Last 7 days and All time stay as they are)"><option value="7">Last 7 days</option><option value="14" selected>Last 14 days</option><option value="30">Last 30 days</option><option value="60">Last 60 days</option><option value="90">Last 90 days</option></select><button id="btnTrafRefresh" class="use">Refresh</button><button id="trafXpl" class="use" aria-pressed="false" title="Show or hide the explanations under each section">Explanations</button></div>
+        <p class="muted xpl">Anonymous footfall — no IP is ever stored. “Visits” counts browser sessions; “Unique” counts distinct devices; “New” counts devices seen for the first time. Green or red marks a move of 10&nbsp;% or more against the previous period (today is compared with yesterday up to the same hour); gold means flat or nothing to compare. Everything on this tab reads the same anonymous ping; nothing here identifies a person.</p>
+        <div class="trafsub" id="trafSub" role="tablist" aria-label="Traffic sections"><button type="button" role="tab" data-ts="overview" aria-selected="true" class="on">Overview</button><button type="button" role="tab" data-ts="audience" aria-selected="false" tabindex="-1">Audience</button><button type="button" role="tab" data-ts="activity" aria-selected="false" tabindex="-1">Activity</button><button type="button" role="tab" data-ts="visitors" aria-selected="false" tabindex="-1">Visitors</button><button type="button" role="tab" data-ts="features" aria-selected="false" tabindex="-1">Features</button><button type="button" role="tab" data-ts="data" aria-selected="false" tabindex="-1">Data</button></div>
+      </div>
+      <div class="tsub" data-ts="overview" role="tabpanel" aria-label="Overview">
       <div class="card">
-        <div class="boardhead"><h2>Traffic</h2><span id="trafRange" class="headnote"></span><select id="trafPeriod" class="use" title="Period applied to every chart and breakdown on this tab (Today, Last 7 days and All time stay as they are)"><option value="7">Last 7 days</option><option value="14" selected>Last 14 days</option><option value="30">Last 30 days</option><option value="60">Last 60 days</option><option value="90">Last 90 days</option></select><button id="btnTrafRefresh" class="use">Refresh</button></div>
-        <p class="muted">Anonymous footfall — no IP is ever stored. “Visits” counts browser sessions; “Unique” counts distinct devices; “New” counts devices seen for the first time. Green or red marks a move of 10&nbsp;% or more against the previous period (today is compared with yesterday up to the same hour); gold means flat or nothing to compare. Everything on this tab reads the same anonymous ping; nothing here identifies a person.</p>
         <div class="trafgrid" id="trafCards"><div class="empty">Loading…</div></div>
         <div class="kpirow" id="trafKpis"><div class="empty">Loading…</div></div>
-        <div class="tsec">
-          <div class="boardhead"><h3>Recent activity (last 48 h)</h3><span id="traf48Note" class="headnote"></span></div>
-          <div id="traf48" class="barchart"><div class="empty">Loading…</div></div>
-        </div>
-        <div class="tsec">
-          <h3>Where sessions open</h3>
-          <p class="muted">Counts a session once per entry mode, when its connection opens, whatever the transport (a page loaded but never connected is a visit, not a session): Internet games routed through this proxy still count as pokerth.net. Offline = training vs bots. <b>/live</b> = spectator sessions from the embedded view, counted apart from the web client (since 2.1.8-web.100; earlier ones sit under pokerth.net).</p>
-          <div id="trafModes"><div class="empty">Loading…</div></div>
-        </div>
-        <div class="tsec">
-          <h3>/live spectator view</h3>
-          <p class="muted">Visits to the spectator view embedded on pokerth.net, kept out of every other traffic figure and of “Who visits” (since 2.1.8-web.101; earlier ones are mixed in with the web client). Visits = browser sessions that loaded the view; unique = distinct devices; connected = those whose connection opened (the /live row of “Where sessions open”). The gap is pages closed before connecting, a refused connection, or crawlers that render pokerth.net with its embedded view but never open a WebSocket. /live keeps its own device id, so a device using both is counted once on each side.</p>
-          <div id="trafLive"><div class="empty">Loading…</div></div>
-        </div>
       </div>
+      <div class="card">
+        <h2>Bottom line</h2>
+        <p class="muted xpl">What the figures in the other sections add up to, stated in plain words. Each line is derived, not written by hand — a claim disappears when the measurement behind it is missing.</p>
+        <div id="trafBottom" class="botline"><div class="empty">Loading…</div></div>
+      </div>
+      </div>
+      <div class="tsub" data-ts="audience" role="tabpanel" aria-label="Audience" style="display:none">
       <div class="card">
         <h2>Trends</h2>
         <div class="tsec">
@@ -497,7 +504,7 @@
         </div>
         <div class="tsec">
           <div class="boardhead"><h3>New devices per day</h3><span id="trafNewNote" class="headnote"></span></div>
-          <p class="muted">A device is counted once, the first time it is ever seen. The horizontal marks are the average over each half of the window — the comparison acquisition is actually judged on.</p>
+          <p class="muted xpl">A device is counted once, the first time it is ever seen. The horizontal marks are the average over each half of the window — the comparison acquisition is actually judged on.</p>
           <div id="trafNew" class="barchart"><div class="empty">Loading…</div></div>
         </div>
       </div>
@@ -505,20 +512,44 @@
         <h2>Retention</h2>
         <div class="tsec">
           <div class="boardhead"><h3>Coming back</h3><span id="trafRetNote" class="headnote"></span></div>
-          <p class="muted">Of the devices seen for the very first time in the <span class="perN">last 14 days</span>, how many returned afterwards — and on how many separate days they showed up. A cohort only counts once it has had the time to come back, so the three rates are measured against different totals, and that is deliberate. Devices already known before this build carry no first-seen date; they are left out of the rates and serve as the established-base comparison instead.</p>
+          <p class="muted xpl">Of the devices seen for the very first time in the <span class="perN">last 14 days</span>, how many returned afterwards — and on how many separate days they showed up. A cohort only counts once it has had the time to come back, so the three rates are measured against different totals, and that is deliberate. Devices already known before this build carry no first-seen date; they are left out of the rates and serve as the established-base comparison instead.</p>
           <div id="trafRet" class="hourduo"><div class="empty">Loading…</div></div>
+        </div>
+      </div>
+      </div>
+      <div class="tsub" data-ts="activity" role="tabpanel" aria-label="Activity" style="display:none">
+      <div class="card">
+        <h2>Recent activity</h2>
+        <div class="tsec">
+          <div class="boardhead"><h3>Last 48 h</h3><span id="traf48Note" class="headnote"></span></div>
+          <div id="traf48" class="barchart"><div class="empty">Loading…</div></div>
         </div>
         <div class="tsec">
           <div class="boardhead"><h3>Time of day</h3><span id="trafHoursNote" class="headnote"></span></div>
-          <p class="muted">An average day, hour by hour, over the <span class="perN">last 14 days</span> — server local time. On the left, when people come; on the right, whether the ones arriving at that hour are new out of proportion with the traffic (1.0 = exactly in proportion). A quiet hour is ordinary; a quiet hour that still draws first-time visitors is where they find an empty lobby.</p>
+          <p class="muted xpl">An average day, hour by hour, over the <span class="perN">last 14 days</span> — server local time. On the left, when people come; on the right, whether the ones arriving at that hour are new out of proportion with the traffic (1.0 = exactly in proportion). A quiet hour is ordinary; a quiet hour that still draws first-time visitors is where they find an empty lobby.</p>
           <div id="trafHours" class="hourduo"><div class="empty">Loading…</div></div>
         </div>
       </div>
       <div class="card">
+        <h2>Connections</h2>
+        <div class="tsec">
+          <h3>Where sessions open</h3>
+          <p class="muted xpl">Counts a session once per entry mode, when its connection opens, whatever the transport (a page loaded but never connected is a visit, not a session): Internet games routed through this proxy still count as pokerth.net. Offline = training vs bots. <b>/live</b> = spectator sessions from the embedded view, counted apart from the web client (since 2.1.8-web.100; earlier ones sit under pokerth.net).</p>
+          <div id="trafModes"><div class="empty">Loading…</div></div>
+        </div>
+        <div class="tsec">
+          <h3>/live spectator view</h3>
+          <p class="muted xpl">Visits to the spectator view embedded on pokerth.net, kept out of every other traffic figure and of “Who visits” (since 2.1.8-web.101; earlier ones are mixed in with the web client). Visits = browser sessions that loaded the view; unique = distinct devices; connected = those whose connection opened (the /live row of “Where sessions open”). The gap is pages closed before connecting, a refused connection, or crawlers that render pokerth.net with its embedded view but never open a WebSocket. /live keeps its own device id, so a device using both is counted once on each side.</p>
+          <div id="trafLive"><div class="empty">Loading…</div></div>
+        </div>
+      </div>
+      </div>
+      <div class="tsub" data-ts="visitors" role="tabpanel" aria-label="Visitors" style="display:none">
+      <div class="card">
         <h2>Who visits</h2>
         <div class="tsec">
   <div class="boardhead"><h3>What visitors run</h3><span id="envSince" class="muted" style="margin:0"></span></div>
-          <p class="muted">From the same anonymous ping as the visit counter: system and browser read from the User-Agent, language from the request header, installed app vs browser tab reported by the client. Sliced by the period selected above where a per-day history exists, running totals otherwise — what to test on, and which of the interface languages are actually used. In the language view the arrow compares a language’s share over the <span class="perN">last 14 days</span> (full days) with the same span before, only when the change is statistically significant.</p>
+          <p class="muted xpl">From the same anonymous ping as the visit counter: system and browser read from the User-Agent, language from the request header, installed app vs browser tab reported by the client. Sliced by the period selected above where a per-day history exists, running totals otherwise — what to test on, and which of the interface languages are actually used. In the language view the arrow compares a language’s share over the <span class="perN">last 14 days</span> (full days) with the same span before, only when the change is statistically significant.</p>
           <div class="seg" id="envSeg" style="flex-wrap:wrap">
             <button class="on" data-k="combo">Device + browser</button>
             <button data-k="os">System</button>
@@ -528,22 +559,24 @@
           </div>
           <div id="trafEnv" style="margin-top:14px"><div class="empty">Loading…</div></div>
         </div>
+      </div>
+      </div>
+      <div class="tsub" data-ts="features" role="tabpanel" aria-label="Features" style="display:none">
+      <div class="card">
+        <h2>Features</h2>
         <div class="tsec">
   <div class="boardhead"><h3>Most played tracks</h3><span id="musSince" class="muted" style="margin:0"></span></div>
-          <p class="muted">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not measured: a live stream has no track end, so “a play” would mean nothing there. The ranking follows the period selected above (all-time before per-day counting started); the bars stack the top five titles by day, with the rest grouped.</p>
+          <p class="muted xpl">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not measured: a live stream has no track end, so “a play” would mean nothing there. The ranking follows the period selected above (all-time before per-day counting started); the bars stack the top five titles by day, with the rest grouped.</p>
           <div id="trafMusic"><div class="empty">Loading…</div></div>
         </div>
         <div class="tsec" id="guideSec">
           <div class="boardhead"><h3>Ace’s Help</h3><span id="guideSince" class="muted" style="margin:0"></span></div>
-          <p class="muted">The contextual assistant (the Ace). Anonymous counters: no visitor id, no name, no table — only which tips are shown, done (Got it or the button) or put off (Later), whether the first-launch offer is accepted, and the Ranking funnel: a table highlighted in the lobby → joined from the bubble → that game started (a Ranking game only starts when its 10 seats are full). Guests are counted apart: they cannot play Ranking games and only get the free-account bubble. Follows the period selected above.</p>
+          <p class="muted xpl">The contextual assistant (the Ace). Anonymous counters: no visitor id, no name, no table — only which tips are shown, done (Got it or the button) or put off (Later), whether the first-launch offer is accepted, and the Ranking funnel: a table highlighted in the lobby → joined from the bubble → that game started (a Ranking game only starts when its 10 seats are full). Guests are counted apart: they cannot play Ranking games and only get the free-account bubble. Follows the period selected above.</p>
           <div id="trafGuide"><div class="empty">Loading…</div></div>
         </div>
       </div>
-      <div class="card">
-        <h2>Bottom line</h2>
-        <p class="muted">What the figures above add up to, stated in plain words. Each line is derived, not written by hand — a claim disappears when the measurement behind it is missing.</p>
-        <div id="trafBottom" class="botline"><div class="empty">Loading…</div></div>
       </div>
+      <div class="tsub" data-ts="data" role="tabpanel" aria-label="Data" style="display:none">
       <div class="card">
         <h2>Data &amp; settings</h2>
         <div class="tsec">
@@ -576,6 +609,7 @@
           <button id="btnTrafReset" class="use danger">Reset all traffic stats</button>
           <div id="trafMsg" class="msg"></div>
         </div>
+      </div>
       </div>
     </div>
 
@@ -4782,6 +4816,46 @@
   if($('plNew')) $('plNew').addEventListener('click',plResetForm);
   if($('plRefresh')) $('plRefresh').addEventListener('click',loadPolls);
   plResetForm();
+
+  // Traffic sub-tabs. Every section stays in the DOM and loadTraffic keeps
+  // filling all of them (charts are viewBox SVG, they need no width), so the
+  // bar only chooses which one is on screen. Choice and the Explanations
+  // switch are remembered per browser, like the period.
+  var TRAF_SUBS=['overview','audience','activity','visitors','features','data'];
+  function _trafSub(k, focus){
+    if(TRAF_SUBS.indexOf(k)<0) k='overview';
+    document.querySelectorAll('#trafSub [data-ts]').forEach(function(b){
+      var on=b.dataset.ts===k;
+      b.classList.toggle('on',on); b.setAttribute('aria-selected',on?'true':'false'); b.tabIndex=on?0:-1;
+      if(on && focus){ try{ b.focus(); b.scrollIntoView({block:'nearest',inline:'nearest'}); }catch(e){} }
+    });
+    document.querySelectorAll('#panel-traffic .tsub').forEach(function(p){ p.style.display = p.dataset.ts===k ? '' : 'none'; });
+    try{ localStorage.setItem('pth_admin_traf_sub',k); }catch(e){}
+  }
+  function _trafXpl(on){
+    var pn=$('panel-traffic'), xb=$('trafXpl');
+    if(pn) pn.classList.toggle('xpl-on',!!on);
+    if(xb) xb.setAttribute('aria-pressed',on?'true':'false');
+    try{ localStorage.setItem('pth_admin_traf_xpl',on?'1':'0'); }catch(e){}
+  }
+  (function(){
+    var bar=$('trafSub'); if(!bar) return;
+    bar.addEventListener('click',function(e){
+      var b=e.target.closest?e.target.closest('[data-ts]'):null;
+      if(b && bar.contains(b)) _trafSub(b.dataset.ts);
+    });
+    bar.addEventListener('keydown',function(e){
+      var i=TRAF_SUBS.indexOf((bar.querySelector('.on')||{}).dataset ? bar.querySelector('.on').dataset.ts : ''), n=TRAF_SUBS.length;
+      if(e.key==='ArrowRight') i=(i+1)%n; else if(e.key==='ArrowLeft') i=(i-1+n)%n;
+      else if(e.key==='Home') i=0; else if(e.key==='End') i=n-1; else return;
+      e.preventDefault(); _trafSub(TRAF_SUBS[i], true);
+    });
+    var k='overview', x=false;
+    try{ k=localStorage.getItem('pth_admin_traf_sub')||'overview'; x=localStorage.getItem('pth_admin_traf_xpl')==='1'; }catch(e){}
+    _trafSub(k); _trafXpl(x);
+    var xb=$('trafXpl');
+    if(xb) xb.addEventListener('click',function(){ _trafXpl(xb.getAttribute('aria-pressed')!=='true'); });
+  })();
 
   // Collapsible cards: any card whose first child is its <h2> becomes foldable —
   // click (or Enter/Space) the title to fold/unfold. We wrap the body once so the

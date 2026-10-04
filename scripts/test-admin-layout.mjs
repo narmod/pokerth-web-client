@@ -375,20 +375,54 @@ ok(/\(_retVerdict\? '\.' :/.test(body(admin, '_trafInsights')),
   'and the volume-based guess steps aside exactly then, so the panel never states two');
 ok(/pc\(d7\.back,d7\.n\)<40\?'retention':'acquisition'/.test(admin), 'the verdict reads the return rate');
 for (const id of ['trafRet', 'trafRetNote']) ok(traf.includes('id="' + id + '"'), id + ' has a home in the panel');
-ok(traf.indexOf('id="trafRet"') < traf.indexOf('id="trafBottom"'),
-  'the cohorts sit before the conclusion they feed');
+ok(traf.indexOf('id="trafRet"') > traf.indexOf('data-ts="audience" role="tabpanel"'),
+  'the cohorts sit with the audience; the conclusion they feed is read on the overview');
 
-// -- Six cards, not fifteen and not one ------------------------------------
-// Fifteen stacked frames read as fifteen unrelated things; one card holding
-// all of it is a wall. Six, each on a subject and each about a screenful, is
-// the middle: counters, trends, retention, who visits, the conclusion, the
-// controls. The order still carries the argument.
-const trafCards = (traf.match(/<div class="card"/g) || []).length;
-ok(trafCards === 6, 'the traffic panel is six cards, not ' + trafCards);
-for (const h of ['Traffic', 'Trends', 'Retention', 'Who visits', 'Bottom line', 'Data &amp; settings']) {
+// -- One section at a time ----------------------------------------------------
+// Six cards stacked on one page still read as a wall. The panel is split under
+// its own sub-tabs - Overview, Audience, Activity, Visitors, Features, Data -
+// one on screen at a time, and the long explanations fold behind a single
+// Explanations switch. Every section stays in the DOM: loadTraffic fills them
+// all, the bar only chooses which one is visible.
+const TS = ['overview', 'audience', 'activity', 'visitors', 'features', 'data'];
+function tsub(k) {
+  const i = traf.indexOf('<div class="tsub" data-ts="' + k + '"');
+  if (i < 0) return '';
+  const j = traf.indexOf('<div class="tsub" data-ts="', i + 10);
+  return traf.slice(i, j < 0 ? undefined : j);
+}
+const subBar = (traf.match(/<div class="trafsub" id="trafSub" role="tablist"[^\n]*/) || [''])[0];
+ok(!!subBar, 'the traffic panel has its own sub-tab bar');
+ok(TS.every(k => subBar.includes('data-ts="' + k + '"')), 'with the six sections, in reading order');
+ok(TS.every((k, i) => !i || subBar.indexOf('data-ts="' + TS[i - 1] + '"') < subBar.indexOf('data-ts="' + k + '"')),
+  'overview first, data last');
+ok(!/class="tab[ "]/.test(subBar), 'its buttons are not .tab: the global tab handler would take them for panels');
+ok(TS.every(k => tsub(k)), 'each sub-tab has its section');
+ok(TS.every((k, i) => !i || traf.indexOf('data-ts="' + TS[i - 1] + '" role="tabpanel"') < traf.indexOf('data-ts="' + k + '" role="tabpanel"')),
+  'and the sections follow the bar');
+ok(/<div class="tsub" data-ts="overview" role="tabpanel" aria-label="Overview">/.test(traf),
+  'the overview is the one visible before any script runs');
+ok(TS.slice(1).every(k => tsub(k).startsWith('<div class="tsub" data-ts="' + k + '" role="tabpanel" aria-label="' + k[0].toUpperCase() + k.slice(1) + '" style="display:none">')),
+  'and the others start hidden');
+const home = {
+  overview: ['trafCards', 'trafKpis', 'trafBottom'],
+  audience: ['trafChart', 'trafNew', 'trafRet'],
+  activity: ['traf48', 'trafHours', 'trafModes', 'trafLive'],
+  visitors: ['trafEnv'],
+  features: ['trafMusic', 'guideSec', 'trafGuide'],
+  data: ['btnNoCount', 'dbHost', 'btnTrafCsv', 'btnTrafReset'],
+};
+for (const [k, ids] of Object.entries(home)) {
+  for (const id of ids) ok(tsub(k).includes('id="' + id + '"'), id + ' lives under ' + k);
+}
+ok(tsub('overview').indexOf('id="trafKpis"') < tsub('overview').indexOf('id="trafBottom"'),
+  'the overview reads the figures, then the conclusion drawn from them');
+for (const h of ['Bottom line', 'Trends', 'Retention', 'Recent activity', 'Connections', 'Who visits', 'Features', 'Data &amp; settings']) {
   ok(traf.includes('<h2>' + h + '</h2>'), 'a card is headed ' + h);
 }
-ok(!/<h2>Coming back<\/h2>/.test(traf), 'and no card repeats the name of its own first section');
+ok(/<div class="boardhead"><h2>Traffic<\/h2>/.test(traf), 'the head card keeps its title, period and refresh');
+ok(!/<h2>Coming back<\/h2>/.test(traf) && !/<h3>Recent activity/.test(traf),
+  'and no card repeats the name of its own first section');
 ok(!/class="cardrow"/.test(traf), 'and no paired row survives inside it');
 ok(/\.tsec\{margin-top:20px;padding-top:16px;border-top:1px solid var\(--line\)\}/.test(admin),
   'a section is separated by a rule and some air, not by another frame');
@@ -397,16 +431,22 @@ ok(/\.card>h2\+\.tsec\{border-top:0/.test(admin),
 ok(/\.tsec \.boardhead>h3\{[^}]*white-space:nowrap/.test(admin),
   'a section title does not break, so its note can take the slack');
 ok((traf.match(/<div class="tsec">/g) || []).length === 13, 'thirteen sections spread across them (the /live spectator view has its own)');
-ok(traf.indexOf('<h2>Data &amp; settings</h2>') > traf.indexOf('<h2>Bottom line</h2>'),
-  'the controls come last, after everything that is read');
 for (const id of ['btnNoCount', 'dbHost', 'btnTrafCsv', 'btnTrafReset', 'trafModes', 'trafEnv', 'trafMusic']) {
-  ok(traf.includes('id="' + id + '"'), id + ' survived the merge');
+  ok(traf.includes('id="' + id + '"'), id + ' survived the split');
 }
-ok(traf.indexOf('id="trafEnv"') < traf.indexOf('id="trafBottom"'),
-  'what visitors run is read before the conclusion, not after it');
-ok(traf.indexOf('id="trafMusic"') < traf.indexOf('id="trafBottom"'), 'and so are the play counts');
-ok(traf.indexOf('id="trafBottom"') < traf.indexOf('Data &amp; settings'),
-  'the conclusion closes the reading, and the controls follow it');
+// Explanations: folded by default, one switch, remembered. The settings keep
+// their warnings in view - a reset that hides its own warning is not tidier.
+ok(/<button id="trafXpl" class="use" aria-pressed="false"/.test(traf), 'one Explanations switch, off by default');
+ok(/#panel-traffic:not\(\.xpl-on\) \.xpl\{display:none\}/.test(admin), 'it folds every explanation of the panel at once');
+ok((traf.match(/class="muted xpl"/g) || []).length >= 10, 'the reading sections tag their explanations');
+ok(!/xpl/.test(tsub('data')), 'the data and settings section keeps its warnings visible');
+ok(/permanently deletes ALL visit data/.test(tsub('data')), 'starting with the reset one');
+ok(/function _trafSub\(k, focus\)/.test(admin) && /function _trafXpl\(on\)/.test(admin), 'switching lives in two small functions');
+ok(/localStorage\.setItem\('pth_admin_traf_sub',k\)/.test(admin) && /localStorage\.setItem\('pth_admin_traf_xpl',on\?'1':'0'\)/.test(admin),
+  'the chosen section and the switch are remembered per browser, like the period');
+ok(/if\(TRAF_SUBS\.indexOf\(k\)<0\) k='overview';/.test(admin), 'an unknown remembered section falls back to the overview');
+ok(/e\.key==='ArrowRight'/.test(admin) && /e\.key==='ArrowLeft'/.test(admin), 'the bar is driven by the arrow keys as well');
+ok(/\.trafsub button\{[^}]*min-height:44px/.test(admin), 'and its targets are thumb-sized');
 
 // -- Four windows, not seven -----------------------------------------------
 // 90, 180 and 365 days repeat "All time" to the unit until the site has a year
