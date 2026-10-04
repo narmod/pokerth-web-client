@@ -1,4 +1,7 @@
-2026-10-04 version 2.1.9-web.301 (current series):
+2026-10-04 version 2.1.9-web.306 (current series):
+- bugfix: pokerth.net admins now see the « Global notice » button in the lobby chat
+
+2026-10-04 version 2.1.9-web.301:
 - bugfix: in Large and Extra Large interface size, a long nickname no longer runs under your own stack — it is shortened with « … » and the amount always shows in full
 
 2026-10-04 version 2.1.9-web.300:

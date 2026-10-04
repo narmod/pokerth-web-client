@@ -10031,6 +10031,9 @@ function resetChatSize(panel, msgs) {
 function _syncGlobalNoticeBtn() {
   var b = document.getElementById('l-gn-btn');
   if (!b) return;
+  // HORS de l'IIFE App : `S` n'existe pas ici (ReferenceError avalée par
+  // msg-lobby, le bouton ne s'affichait jamais) — passer par le pont.
+  var S = window.PthState || {};
   var mine = (S._playerRights && S.myId) ? (S._playerRights[S.myId] || 0) : 0;
   b.style.display = (mine === 3) ? '' : 'none';
 }
@@ -12075,7 +12078,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.305'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.306'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

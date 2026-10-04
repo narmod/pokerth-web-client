@@ -63,6 +63,26 @@ ok(/gnSent/.test(lobby) && /gnRejected/.test(lobby), 'both ack outcomes are repo
 const html = readFileSync(join(here, '..', 'public', 'pokerth-client.html'), 'utf8');
 ok(/id="l-gn-btn"[^>]*display:none/.test(html), 'the notice button starts hidden');
 ok(/_syncGlobalNoticeBtn/.test(app), 'the button visibility follows the admin right');
+// It lives OUTSIDE the App IIFE, where `S` does not exist: run it alone, with
+// only the window.PthState bridge, as the page does. A bare `S` there threw a
+// ReferenceError that msg-lobby swallowed, so the button never showed.
+{
+  const src = (app.match(/function _syncGlobalNoticeBtn\(\) \{[\s\S]*?\n\}/) || [''])[0];
+  ok(!!src, 'the sync function can be lifted');
+  const run = (state) => {
+    const b = { style: { display: 'none' } };
+    const win = { PthState: state };
+    const doc = { getElementById: (id) => (id === 'l-gn-btn' ? b : null) };
+    new Function('window', 'document', src + '\n_syncGlobalNoticeBtn();')(win, doc);
+    return b.style.display;
+  };
+  let shown = null, err = null;
+  try { shown = run({ myId: 7, _playerRights: { 7: 3 } }); } catch (e) { err = e; }
+  ok(!err, 'it runs without the App scope' + (err ? ': ' + err.message : ''));
+  ok(shown === '', 'an admin (rights 3) sees the button');
+  ok(run({ myId: 7, _playerRights: { 7: 2 } }) === 'none', 'a registered player does not');
+  ok(run({}) === 'none', 'nor does anyone before login');
+}
 
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);
