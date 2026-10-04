@@ -4122,7 +4122,15 @@ document.addEventListener("DOMContentLoaded", function() {
       fetch('/app-config', { cache: 'no-store' })
         .then(function (r) { return r.json(); })
         .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; window._pthLiveTransport = (c.liveTransport === 'proxy' || c.liveTransport === 'direct') ? c.liveTransport : 'inherit'; window._pthLiveDefaults = c.liveDefaults || null; } if (c && c.modes) applyModes(c.modes); if (c) _applyMusicFlag(c.musicEnabled !== false); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); window._guestNoticeCfg = (c && c.guestNotice) || null; window._authNoticeCfg = (c && c.authNotice) || null; window._lanNoticeCfg = (c && c.lanNotice) || null; if (typeof window._pollSetConfig === 'function') window._pollSetConfig(c && c.poll); if (c) { var _lvT = (window.LIVE_MODE && c.liveDefaults && c.liveDefaults.theme) ? c.liveDefaults.theme : null; if (_lvT) _applyDefaultTheme(_lvT); else if (typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); } if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); if (c && Array.isArray(c.featureOff)) _applyFeatureOff(c.featureOff); _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
-        .catch(function () {});
+        .catch(function () {})
+        // Settled, answered or not: release a connect() held by the config
+        // gate (App.connect). The transport choice (_pthNetTransport) only
+        // exists from here on.
+        .then(function () {
+          window._appConfigSettled = true;
+          var q = window._appConfigWaiters || []; window._appConfigWaiters = [];
+          q.forEach(function (f) { try { f(); } catch (e) {} });
+        });
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
   })();
@@ -6135,6 +6143,33 @@ const App = (() => {
         setStatus('⏳ ' + (t('initializing') || 'Initialisation…'));
         navigator.serviceWorker.ready.then(go);
         setTimeout(go, 1500);   // safety timeout
+        return;
+      }
+
+      // ── /app-config gate ──
+      // The admin's Internet transport (« Via proxy » / « Direct ») arrives
+      // with /app-config. Before it does, _pthNetTransport is undefined and
+      // the choice below read that as « direct »: an invite link (auto-
+      // connect 350 ms after load) or a quick click on a slow network went
+      // straight to pokerth.net on an instance set to « Via proxy » (seen in
+      // the admin as a pokerth.net notice channel). Wait for the answer —
+      // bounded, so an unreachable /app-config never holds the player; then
+      // the historical default applies, which is also the only route left
+      // when the site serving the proxy cannot be reached. Training does
+      // not depend on it and never waits.
+      var _gateSm = $('server-mode') ? $('server-mode').value : '';
+      if (!window._appConfigSettled && !window._offlineMode && _gateSm !== 'offline') {
+        var selfCfg = this, firedCfg = false;
+        var goCfg = function () {
+          if (firedCfg) return; firedCfg = true;
+          S._connectingNow = false;
+          window._appConfigSettled = true;   // one bounded wait per page, never two
+          selfCfg.connect(opts);
+        };
+        S._connectingNow = true;             // a second click while waiting is ignored
+        setStatus('⏳ ' + (t('initializing') || 'Initialisation…'));
+        (window._appConfigWaiters || (window._appConfigWaiters = [])).push(goCfg);
+        setTimeout(goCfg, 5000);
         return;
       }
 
@@ -12040,7 +12075,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.301'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.302'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
