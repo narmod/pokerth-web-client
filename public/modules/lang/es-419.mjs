@@ -694,7 +694,7 @@ export const strings = {
     tableCount: 'mesa(s)',
     handsHelpTooltip: 'Jerarquía de manos de póker',
     soundTooltip: 'Silenciar / activar',
-    logTooltip: 'Registro',
+    logTooltip: 'Historial y probabilidades',
     chatTooltip: 'Chat',
     moreTooltip: 'Más',
     closeTooltip: 'Cerrar',
