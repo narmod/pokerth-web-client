@@ -78,7 +78,9 @@ const popup = R('public/modules/ui/player-popup.mjs');
 check('the card is read-only in live mode', /const _readOnly = !!window\.LIVE_MODE;/.test(popup));
 check('no notes block', /if \(!_readOnly && typeof window\._nvBlockHtml/.test(popup));
 check('no ignore button', /if \(!_readOnly\) html \+= '<button type="button" class="pim-ignore-btn/.test(popup));
-check('no avatar report', /if \(!_readOnly && !window\.isBot\(pid\) && pid !== S\.myId && S\._pthAvatarHashes/.test(popup));
+// The guard grew a guest condition (guests cannot report); what matters is
+// that the condition opening the report button starts with !_readOnly.
+check('no avatar report', /if \(!_readOnly && [^\n]*S\._pthAvatarHashes\[pid\][^\n]*\{\s*\n\s*html \+= '<button type="button" class="pim-report-avatar-btn/.test(popup));
 check('no kickban', /if \(!_readOnly && !window\.isBot\(pid\) && pid !== S\.myId && \(S\._playerRights/.test(popup));
 
 // Appearance dresses a table, so it has no place in the lobby.
