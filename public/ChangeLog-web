@@ -1,4 +1,7 @@
-2026-10-04 version 2.1.9-web.300 (current series):
+2026-10-04 version 2.1.9-web.301 (current series):
+- bugfix: in Large and Extra Large interface size, a long nickname no longer runs under your own stack — it is shortened with « … » and the amount always shows in full
+
+2026-10-04 version 2.1.9-web.300:
 - bugfix: switching to Large or Extra Large interface size before the flop no longer leaves the community cards as blank white rectangles
 
 2026-10-03 version 2.1.9-web.298:

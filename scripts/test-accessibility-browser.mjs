@@ -1314,6 +1314,35 @@ try {
     }
     await chooseInterfaceSize(page, 'game', 'standard');
   });
+  await check('desktop own seat keeps a long nickname clear of the stack at enlarged Interface sizes', async () => {
+    for (const value of ['large', 'extra-large']) {
+      await startActiveHand(page, 6, { interfaceSize: value });
+      const widths = [];
+      for (const nick of ['OutcomeTester', 'AVeryLongNickname12']) {
+        await page.evaluate((name) => { window.PthState.myName = name; window.renderSeats(); }, nick);
+        await page.waitForTimeout(150);
+        const seat = await page.evaluate(() => {
+          const me = document.querySelector('#g-seats .seat.me');
+          const name = me.querySelector('.seat-name');
+          const money = me.querySelector('.seat-money');
+          const range = document.createRange();
+          range.selectNodeContents(name);
+          const textRight = range.getBoundingClientRect().right;
+          const boxRight = name.getBoundingClientRect().right;
+          return {
+            nameRight: getComputedStyle(name).overflow === 'visible' ? textRight : Math.min(textRight, boxRight),
+            moneyLeft: money.getBoundingClientRect().left,
+            moneyClipped: money.scrollWidth > money.clientWidth + 1,
+            plateWidth: me.querySelector('.seat-plate').getBoundingClientRect().width,
+          };
+        });
+        assert.ok(seat.nameRight <= seat.moneyLeft + 1, `${value} own nickname ${nick} runs under the stack: ${JSON.stringify(seat)}`);
+        assert.equal(seat.moneyClipped, false, `${value} own stack is clipped with nickname ${nick}`);
+        widths.push(seat.plateWidth);
+      }
+      assert.ok(Math.abs(widths[0] - widths[1]) <= 1, `${value} own seat width follows the nickname length: ${widths.join(' -> ')}`);
+    }
+  });
   await check('desktop two-seat and ten-seat hands keep critical play reachable and operable', async () => {
     const actionSelectors = ['#g-actions .btn-fold', '#g-actions .act-buttons-row .btn-action:nth-child(2)', '#g-actions .raise-btn'];
     for (const seatCount of [2, 10]) {

@@ -12622,6 +12622,19 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     justify-content: space-between;
     gap: var(--sp-2);
   }
+  /* Own seat, one line: the stack always shows in full and the nickname is
+     elided inside its box, like in Standard and the QML client (it used to run
+     under the stack). The box keeps its width whatever the nickname length. */
+  :root[data-interface-size]:not([data-interface-size="standard"]) #s-game .seat.me .seat-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  :root[data-interface-size]:not([data-interface-size="standard"]) #s-game .seat.me .seat-info-row2 {
+    flex: 0 0 auto;
+  }
 
   :root[data-interface-size]:not([data-interface-size="standard"]) #s-game .seat.me .seat-timeout-bar {
     width: calc(var(--active-timer-self-width-base) * var(--active-play-scale));
