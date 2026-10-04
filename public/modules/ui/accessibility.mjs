@@ -104,9 +104,17 @@ function cacheRenderedStandardMetrics(game, root, viewport) {
   if (!communityScale) return false;
   game.style.setProperty('--active-standard-comm-scale', communityScale);
   const pot = document.getElementById('g-potbar');
-  const communityCard = document.querySelector('#g-comm .pk');
-  if (pot) game.style.setProperty('--active-pot-font-base', window.getComputedStyle(pot).fontSize);
-  if (communityCard) game.style.setProperty('--active-community-font-base', window.getComputedStyle(communityCard).fontSize);
+  // Empty board slots (.comm-slot) render at font-size 0, so only a dealt face
+  // carries the real community font. Pre-flop there is none: drop any inline
+  // value and let the Standard token formula in CSS apply. Caching the slot's
+  // 0px left every later community card blank (issue #4).
+  const communityCard = document.querySelector('#g-comm .pk:not(.comm-slot):not(.back)');
+  const potFont = pot ? window.getComputedStyle(pot).fontSize : '';
+  const communityFont = communityCard ? window.getComputedStyle(communityCard).fontSize : '';
+  if (parseFloat(potFont) > 0) game.style.setProperty('--active-pot-font-base', potFont);
+  else game.style.removeProperty('--active-pot-font-base');
+  if (parseFloat(communityFont) > 0) game.style.setProperty('--active-community-font-base', communityFont);
+  else game.style.removeProperty('--active-community-font-base');
   standardMetricsViewport = viewport;
   return true;
 }

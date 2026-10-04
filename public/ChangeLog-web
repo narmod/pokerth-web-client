@@ -1,4 +1,7 @@
-2026-10-03 version 2.1.9-web.298 (current series):
+2026-10-04 version 2.1.9-web.300 (current series):
+- bugfix: switching to Large or Extra Large interface size before the flop no longer leaves the community cards as blank white rectangles
+
+2026-10-03 version 2.1.9-web.298:
 - bugfix: on the login screen, the ☰ links menu now opens in front of an open window (ranking, forum…), like the ⚙ menu
 
 2026-10-03 version 2.1.9-web.286:

@@ -234,7 +234,7 @@ async function populateLobby(page) {
 }
 
 async function startActiveHand(page, seatCount, options = {}) {
-  const { interfaceSize = 'standard', viewport = { width: 1440, height: 900 } } = options;
+  const { interfaceSize = 'standard', viewport = { width: 1440, height: 900 }, dealFlop = true } = options;
   await page.setViewportSize(viewport);
   await page.evaluate((size) => {
     localStorage.removeItem('pth_resume');
@@ -248,7 +248,7 @@ async function startActiveHand(page, seatCount, options = {}) {
   await page.locator('#nick').fill('OutcomeTester');
   await connectFixtureSocket(page);
   await page.waitForTimeout(300);
-  await page.evaluate(async (count) => {
+  await page.evaluate(async ({ count, dealFlop }) => {
     const { Proto } = await import('/modules/net/proto.mjs');
     const { MSG } = await import('/modules/net/messages.mjs');
     const socket = window.WebSocket.instance;
@@ -283,9 +283,9 @@ async function startActiveHand(page, seatCount, options = {}) {
     socket.receive(envelope(MSG.T.PlayersActionDone, 45, [
       [1, 0, 303], [2, 0, 42], [3, 0, 0], [4, 0, 0], [5, 0, 10], [6, 0, 2990], [7, 0, 20], [8, 0, 20],
     ]));
-    socket.receive(envelope(MSG.T.DealFlop, 46, [[1, 0, 303], [2, 0, 10], [3, 0, 22], [4, 0, 35]]));
-    socket.receive(envelope(MSG.T.PlayersTurn, 42, [[1, 0, 303], [2, 0, 42], [3, 0, 1]]));
-  }, seatCount);
+    if (dealFlop) socket.receive(envelope(MSG.T.DealFlop, 46, [[1, 0, 303], [2, 0, 10], [3, 0, 22], [4, 0, 35]]));
+    socket.receive(envelope(MSG.T.PlayersTurn, 42, [[1, 0, 303], [2, 0, 42], [3, 0, dealFlop ? 1 : 0]]));
+  }, { count: seatCount, dealFlop });
   await page.locator('#s-game.active .act-buttons-row .btn-action').first().waitFor();
   await page.locator(`#g-seats .seat[data-pid="42"]`).waitFor();
   await page.waitForFunction((count) => document.querySelectorAll('#g-seats .seat').length === count, seatCount);
@@ -1294,6 +1294,25 @@ try {
     assert.deepEqual(await outboundSizeChangeTraffic(page, sentBefore), [], 'restoring Standard sent network traffic');
     assert.equal(extraLargeCue.visible, true, 'Extra Large lost the visible current-turn indication');
     assert.ok(extraLargeCue.distinctFromInactive, 'the current-turn cue is not visually distinct from inactive seats');
+  });
+  await check('desktop Interface size chosen before the flop keeps later community cards readable', async () => {
+    await startActiveHand(page, 2, { dealFlop: false });
+    await chooseInterfaceSize(page, 'game', 'large');
+    await page.evaluate(async () => {
+      const { Proto } = await import('/modules/net/proto.mjs');
+      const { MSG } = await import('/modules/net/messages.mjs');
+      const envelope = (type, field, inner) => Proto.encode([[1, 0, type], [field, 2, Proto.encode(inner)]]);
+      window.WebSocket.instance.receive(envelope(MSG.T.DealFlop, 46, [[1, 0, 303], [2, 0, 10], [3, 0, 22], [4, 0, 35]]));
+    });
+    await page.waitForFunction(() => document.querySelectorAll('#g-comm .pk:not(.back):not(.comm-slot)').length === 3);
+    await page.waitForTimeout(700);
+    const fonts = await page.evaluate(() => [...document.querySelectorAll('#g-comm .pk:not(.back):not(.comm-slot)')]
+      .map((card) => ({ card: parseFloat(getComputedStyle(card).fontSize), rank: card.querySelector('.c-rank').getBoundingClientRect().height })));
+    assert.equal(fonts.length, 3, 'the flop did not render three community faces');
+    for (const [index, font] of fonts.entries()) {
+      assert.ok(font.card > 0 && font.rank > 0, `pre-flop Large left community card ${index + 1} blank: ${JSON.stringify(font)}`);
+    }
+    await chooseInterfaceSize(page, 'game', 'standard');
   });
   await check('desktop two-seat and ten-seat hands keep critical play reachable and operable', async () => {
     const actionSelectors = ['#g-actions .btn-fold', '#g-actions .act-buttons-row .btn-action:nth-child(2)', '#g-actions .raise-btn'];
