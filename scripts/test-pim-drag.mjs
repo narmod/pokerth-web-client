@@ -83,20 +83,24 @@ const srcPim = readFileSync('public/modules/ui/player-popup.mjs', 'utf8');
 ok(/key:\s*'pth-pim-win2'/.test(srcPim),
    'cle de geometrie changee (une geometrie etroite memorisee ecraserait defW)');
 // Geometrie calculee : centree horizontalement et verticalement.
-const geomSrc = (srcPim.match(/function _pimGeom\(\) \{[\s\S]*?\n\}/) || [''])[0];
-ok(!!geomSrc, 'geometrie d ouverture calculee');
+// _pimGeom lit la constante de module PIM_WIN_W : on la reprend avec elle.
+const winWSrc = (srcPim.match(/const PIM_WIN_W = (\d+);/) || ['', ''])[0];
+const PIM_W = Number((winWSrc.match(/\d+/) || [0])[0]);
+const geomSrc = winWSrc + '\n' + (srcPim.match(/function _pimGeom\(\) \{[\s\S]*?\n\}/) || [''])[0];
+ok(PIM_W > 0 && /function _pimGeom/.test(geomSrc), 'geometrie d ouverture calculee');
 const geom = new Function('window', geomSrc + '\nreturn _pimGeom;')({ innerWidth: 1600, innerHeight: 900 })();
 ok(geom.left === Math.round((1600 - geom.w) / 2), 'ouverture centree horizontalement (left=' + geom.left + ')');
 ok(geom.top === Math.round((900 - geom.h) / 2), 'ouverture centree verticalement (top=' + geom.top + ')');
-ok(geom.w >= 560, 'ouverture large sur 1600px (' + geom.w + 'px)');
+// Largeur FIXE depuis que les coupes de saison ont leur propre fenetre : la
+// carte reste a la largeur de la modale quelle que soit la fenetre.
+ok(geom.w === PIM_W, 'largeur fixe sur 1600px (' + geom.w + 'px = PIM_WIN_W ' + PIM_W + ')');
 const small = new Function('window', geomSrc + '\nreturn _pimGeom;')({ innerWidth: 420, innerHeight: 700 })();
 ok(small.w <= 420 && small.left >= 8, 'reste dans l ecran sur petite fenetre (' + small.w + 'px @' + small.left + ')');
 
-// Le plafond d'agrandissement doit laisser de la place au bloc coupes.
-const src = readFileSync('public/modules/ui/player-popup.mjs', 'utf8');
-const mw = (src.match(/maxW = Math\.min\((\d+)/) || [])[1];
-ok(Number(mw) >= 1200, 'plafond d agrandissement large (' + mw + 'px)');
-ok(geom.w >= Math.round(1600 * 0.55), 'ouverture assez large (' + geom.w + 'px sur 1600)');
+// Seule la hauteur se redimensionne : plancher et plafond de largeur egaux.
+ok(geom.maxW === geom.w, 'pas d elargissement possible (maxW = largeur)');
+const enterSrc = (srcPim.match(/function _pimEnterWindowMode\(\) \{[\s\S]*?\n\}/) || [''])[0];
+ok(/maxW: g\.w/.test(enterSrc) && /minW: g\.w/.test(enterSrc), 'fenetre ouverte avec minW == maxW (largeur figee)');
 
 // ── Hauteur ajustee au CONTENU ──
 // Le mode fenetre doit etre active APRES le remplissage de la carte : active
@@ -181,10 +185,12 @@ const l5win = (cssAll.match(/\.rk-l5\.win \{[^}]*\}/) || [''])[0];
 ok(!/var\(--gold\)/.test(l5win),
    '5 dernieres : la 1re place n utilise pas --gold (quasi-noir en theme clair)');
 ok(/#56e289/.test(l5win), '5 dernieres : vert de la 1re place, comme la legende');
-// Sur un grand ecran, le plafond doit vraiment suivre la largeur disponible.
+// Sur un grand ecran, la largeur reste celle de la carte : seule la hauteur
+// suit l'espace disponible.
 const big = new Function('window', geomSrc + '\nreturn _pimGeom;')({ innerWidth: 2560, innerHeight: 1440 })();
-ok(big.maxW >= 1400, 'agrandissement possible jusqu a ' + big.maxW + 'px sur un 2560px');
-ok(/handle:\s*document\.getElementById\('pim-grip'\)/.test(src), 'poignee = le bandeau, pas le nom du joueur');
+ok(big.w === PIM_W && big.maxW === PIM_W, 'largeur figee aussi sur un 2560px (' + big.maxW + 'px)');
+ok(big.maxH > geom.maxH, 'mais la hauteur profite du grand ecran (' + big.maxH + 'px)');
+ok(/handle:\s*document\.getElementById\('pim-grip'\)/.test(srcPim), 'poignee = le bandeau, pas le nom du joueur');
 
 console.log(fail ? `\n${fail}/${n} \u00c9CHECS` : `\n${n}/${n} OK`);
 process.exit(fail ? 1 : 0);
