@@ -73,7 +73,13 @@ ok(/lv: visitsStore\.totalLV \|\| 0, lu: Object\.keys\(visitsStore\.allLU \|\| \
 ok(/conn_live,live_visits,live_unique_visitors'\];/.test(proxy), 'CSV gains the /live visit columns, last');
 ok(/ADD COLUMN IF NOT EXISTS live_visits/.test(proxy) && /ADD COLUMN IF NOT EXISTS live_unique_visitors/.test(proxy), 'and so does an existing DB mirror');
 ok(/JSON\.stringify\(window\.LIVE_MODE \? \{ vid: vid, live: true \} : \{ vid: vid, pwa: pwa \}\)/.test(client), 'the /live visit beacon says live');
-ok(/id="trafLive"/.test(admin) && /fmt\(o\.lv\)\+' visits · '\+fmt\(o\.lu\)\+' unique/.test(admin), 'the traffic card shows /live visits and uniques');
+ok(/id="trafLive"/.test(admin) && /fmt\(lv\)\+' visits · '\+fmt\(o\.lu\)\+' unique · '/.test(admin), 'the traffic card shows /live visits and uniques');
+// Visits (page load) and sessions (connection opened) are two events: the
+// /live card shows both for the same window, so 21 visits next to 16
+// sessions no longer reads as a contradiction between two cards.
+ok(/cn=\(o\.m&&o\.m\.live\)\|\|0/.test(admin) && /fmt\(cn\)\+' connected'\+pc/.test(admin), 'and, for the same window, how many of them connected (the /live sessions)');
+ok(/Math\.round\(cn\*100\/lv\)/.test(admin) && /var pc=lv\?/.test(admin), 'with their share of the visits, never divided by zero');
+ok(/when its connection opens/.test(admin) && /a page loaded but never connected is a visit, not a session/.test(admin), '« Where sessions open » says what a session is');
 
 // -- 1b. Client beacon ------------------------------------------------------
 const cc = client.slice(client.indexOf('window._pthCountConnect = function'));
