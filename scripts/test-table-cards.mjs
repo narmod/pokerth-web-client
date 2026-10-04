@@ -5,7 +5,11 @@ globalThis.window = globalThis;
 const store = {};
 globalThis.localStorage = { getItem: (k) => (k in store ? store[k] : null),
   setItem(k, v) { store[k] = String(v); }, removeItem(k) { delete store[k]; } };
-function makeEl() { return { style: {}, children: [], textContent: '', innerHTML: '',
+// style mimics CSSStyleDeclaration enough for custom properties (odds-panel
+// sets --hs-col on #gip-assist since the Segments hand-strength style).
+function makeStyle() { return { setProperty(k, v) { this[k] = String(v); }, removeProperty(k) { delete this[k]; },
+  getPropertyValue(k) { return this[k] || ''; } }; }
+function makeEl() { return { style: makeStyle(), children: [], textContent: '', innerHTML: '',
   className: '', dataset: {}, _cls: new Set(), _handlers: {},
   classList: { add() {}, remove() {}, toggle(c, on) { on ? this._s.add(c) : this._s.delete(c); }, _s: null },
   appendChild(c) { this.children.push(c); }, remove() {},
