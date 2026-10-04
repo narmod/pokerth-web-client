@@ -155,7 +155,9 @@ function panel(id) {
 }
 const PANELS = {
   'panel-server': 2, 'panel-proxy': 1, 'panel-deploy': 3, 'panel-access': 2,
-  'panel-clients': 3, 'panel-defaults': 6, 'panel-identity': 5,
+  // panel-clients: App modes, Feature kill switches, Live server figures,
+  // Community events (the fourth since web.254).
+  'panel-clients': 4, 'panel-defaults': 6, 'panel-identity': 5,
 };
 for (const [id, count] of Object.entries(PANELS)) {
   const seg = panel(id);
