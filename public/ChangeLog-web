@@ -1,4 +1,7 @@
-2026-10-05 version 2.1.9-web.311 (current series):
+2026-10-05 version 2.1.9-web.312 (current series):
+- bugfix: in « More help », the chat and diagnostic command lists fit the window again — on a phone the descriptions were pushed out of sight by a long command
+
+2026-10-05 version 2.1.9-web.311:
 - bugfix: browsing the chapters of « More help » no longer makes the window flicker as if it closed and reopened
 
 2026-10-05 version 2.1.9-web.310:

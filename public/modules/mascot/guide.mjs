@@ -72,8 +72,8 @@ body.guide-ask #ace-dock *{cursor:pointer!important}
 #ace-dock .ad-page p{margin:0 0 6px}
 #ace-dock .ad-page ul{margin:0;padding-inline-start:18px}
 #ace-dock .ad-page li{margin:0 0 4px}
-#ace-dock .ad-keys{display:grid;grid-template-columns:auto 1fr;gap:5px 10px;align-items:baseline}
-#ace-dock .ad-keys code{font:700 12px/1.3 ui-monospace,Menlo,Consolas,monospace;background:#141414;color:#fbf7ee;border-radius:5px;padding:2px 6px;white-space:nowrap}
+#ace-dock .ad-keys{display:grid;grid-template-columns:fit-content(42%) minmax(0,1fr);gap:5px 10px;align-items:baseline}
+#ace-dock .ad-keys code{font:700 12px/1.3 ui-monospace,Menlo,Consolas,monospace;background:#141414;color:#fbf7ee;border-radius:5px;padding:2px 6px;white-space:normal;overflow-wrap:anywhere;justify-self:start;max-width:100%;box-sizing:border-box}
 #ace-dock .ad-note{border-inline-start:3px solid #f5c518;padding-inline-start:8px;font-style:italic}
 [dir=rtl] #ace-dock .ad-page,[dir=rtl] #ace-dock .ad-kicker,[dir=rtl] #ace-dock .ad-list,[dir=rtl] #ace-dock .ad-hbody,[dir=rtl] #ace-dock .ad-hnav{direction:rtl;text-align:right}
 #ace-dock .ad-bubble.ad-big{width:min(900px,calc(100vw - 24px));max-width:min(900px,calc(100vw - 24px));height:min(640px,calc(100vh - 110px));flex-direction:column;overflow:hidden;padding:12px 14px 10px}
@@ -118,6 +118,8 @@ body.guide-ask #ace-dock *{cursor:pointer!important}
   #ace-dock .ad-hcat-ic{font-size:19px;width:auto}
   #ace-dock .ad-hcat-lbl{display:none}
   #ace-dock .ad-hbody{border-inline-start:0;padding:0 2px 8px}
+  #ace-dock .ad-keys{grid-template-columns:minmax(0,1fr);gap:2px}
+  #ace-dock .ad-keys span{margin:0 0 6px;padding-inline-start:10px}
 }
 `;
 

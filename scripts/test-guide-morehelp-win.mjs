@@ -4,7 +4,7 @@
 //     a corner, stays inside the screen, keeps its box after a chapter change
 //     and after closing / reopening, and the header's reset forgets it;
 //   · a chapter change updates the panel in place, without a new entrance (web.311);
-//   · phone: no handles, the panel stays docked next to the Ace.
+//   · phone: no handles, the panel stays docked next to the Ace; command lists fit it (web.312).
 // Run: node scripts/test-guide-morehelp-win.mjs
 import { chromium, devices } from 'playwright';
 import { startServer, openTable } from './lib/mobile-harness.mjs';
@@ -97,6 +97,11 @@ async function drag(page, sel, dx, dy) {
   await page.waitForTimeout(1200);
   await openMore(page);
   ok(await page.locator(B + '.ad-float').count() === 0 && await page.locator(B + ' .win-rsz:visible').count() === 0, 'phone: docked panel, no handles');
+  // a long command (« /carddbg · /msglog · … ») used to widen the key column and push the descriptions off the panel (web.312)
+  await page.click(B + ' [data-ad-btn="ch:chat"]');
+  await page.waitForTimeout(400);
+  const ov = await page.evaluate((b) => { const h = document.querySelector(b + ' .ad-hbody'); return [h.scrollWidth, h.clientWidth, [...h.querySelectorAll('.ad-keys span')].every((x) => x.getBoundingClientRect().width > 80)]; }, B);
+  ok(ov[0] <= ov[1] + 1 && ov[2], `phone: the command lists fit the panel (${ov[0]} ≤ ${ov[1]}), every description readable`);
   await ctx.close();
 }
 ok(!errors.length, 'no page error' + (errors.length ? ': ' + errors[0] : ''));
