@@ -3,6 +3,7 @@
 //   · desktop: the panel moves by its title line and resizes from an edge and
 //     a corner, stays inside the screen, keeps its box after a chapter change
 //     and after closing / reopening, and the header's reset forgets it;
+//   · a chapter change updates the panel in place, without a new entrance (web.311);
 //   · phone: no handles, the panel stays docked next to the Ace.
 // Run: node scripts/test-guide-morehelp-win.mjs
 import { chromium, devices } from 'playwright';
@@ -61,8 +62,11 @@ async function drag(page, sel, dx, dy) {
   await drag(page, B + ' .ad-kicker', -3000, -3000);
   const b4 = await box(page);
   ok(b4.l >= 6 && b4.t >= 6, `kept inside the screen (${b4.l},${b4.t})`);
+  await page.evaluate((b) => { window.__mhNav = document.querySelector(b + ' .ad-hnav'); window.__mhAnims = 0; const el = document.querySelector(b); const o = el.animate.bind(el); el.animate = (...x) => { window.__mhAnims++; return o(...x); }; }, B);
   await page.click(B + ' .ad-hcat:nth-child(3)');
   await page.waitForTimeout(450);
+  ok(await page.evaluate((b) => document.querySelector(b + ' .ad-hnav') === window.__mhNav && window.__mhAnims === 0 && /ad-on/.test(document.querySelector(b + ' .ad-hcat:nth-child(3)').className), B),
+    'a chapter change updates the panel in place (no close / reopen flicker)');
   const b5 = await box(page);
   ok(b5.l === b4.l && b5.t === b4.t && b5.w === b4.w && b5.h === b4.h, 'a chapter change keeps the box');
   const tail = await page.evaluate((s) => getComputedStyle(document.querySelector(s), '::after').display, B);

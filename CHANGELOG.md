@@ -28,7 +28,7 @@ highlights below.
 
 ### Changed
 - **Forum news window** — Events tab first, one card look for both tabs, post view and in-place translation, only ↗ opens a site; shared relay cache, fewer upstream requests (`web.172`, `242`–`254`).
-- **« More help » is a window on desktop** — moved by its title line, resized from its edges, its box kept and cleared by the reset-windows button (`web.310`).
+- **« More help » is a window on desktop** — moved by its title line, resized from its edges, its box kept and cleared by the reset-windows button; a chapter change updates it in place, no more flicker (`web.310`–`311`).
 - **Game style presets** open in training and LAN, folded on pokerth.net (`web.288`); **WeCup renamed We Cup (WeC)** everywhere (`web.308`).
 - **Tab names as in the QML client**, 28 languages (`web.279`–`280`).
 - **Reports reserved for registered players** (`web.251`); **language catalogues load on demand** (`web.62`).

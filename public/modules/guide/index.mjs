@@ -711,6 +711,7 @@ function helpBody() {
 function renderTopics() {
   if (!M || !help) return;
   const ch = help.content.chapters.find((c) => c.id === help.ch);
+  if (refreshTopics(ch)) return;
   const nav = help.content.chapters.map((c) => {
     const on = c.id === help.ch && !help.q.trim();
     return `<button type="button" class="ad-hcat${on ? ' ad-on' : ''}" data-ad-btn="ch:${esc(c.id)}" role="tab" aria-selected="${on}" title="${esc(c.title)}">`
@@ -734,6 +735,29 @@ function renderTopics() {
   }
   const on = bub && bub.querySelector('.ad-hcat.ad-on');
   if (on) { try { on.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch (e) {} }
+}
+
+/**
+ * The panel already open: only its kicker, its tabs and its body change — a
+ * new bubble each time closed and reopened it, a flicker (web.311).
+ */
+function refreshTopics(ch) {
+  const bub = M.bubbleOpen && M.bubbleOpen() ? M.bubbleEl() : null;
+  const body = bub && bub.querySelector('.ad-hwrap .ad-hbody');
+  if (!body) return false;
+  const kick = bub.querySelector('.ad-kicker');
+  if (kick) kick.textContent = gt('moreHelp') + (ch ? ' · ' + (ch.icon ? ch.icon + ' ' : '') + ch.title : '');
+  const inp = bub.querySelector('.ad-search');
+  if (inp && inp.value !== help.q) inp.value = help.q;
+  bub.querySelectorAll('.ad-hcat').forEach((b) => {
+    const on = !help.q.trim() && b.getAttribute('data-ad-btn') === 'ch:' + help.ch;
+    b.classList.toggle('ad-on', on); b.setAttribute('aria-selected', String(on));
+  });
+  body.innerHTML = helpBody();
+  body.scrollTop = 0;
+  const on = bub.querySelector('.ad-hcat.ad-on');
+  if (on) { try { on.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch (e) {} }
+  return true;
 }
 
 /** Opens a chapter at one of its sections (search result, « More about it »). */

@@ -1,4 +1,7 @@
-2026-10-05 version 2.1.9-web.310 (current series):
+2026-10-05 version 2.1.9-web.311 (current series):
+- bugfix: browsing the chapters of « More help » no longer makes the window flicker as if it closed and reopened
+
+2026-10-05 version 2.1.9-web.310:
 - improvement: on a computer, the « More help » window can be moved by its title and resized from its edges like the other windows; it reopens where you left it, and the reset-windows button puts it back
 
 2026-10-05 version 2.1.9-web.309:
