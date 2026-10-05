@@ -11,7 +11,7 @@
 //    the static page, scripts/test-guide-ask.mjs skips it when checking;
 //  · more = 'chapter:section' of the help (modules/help/content): the Ace
 //    offers « More about it », which opens that section in his bubble (H2);
-//    or more(el) → 'chapter:section' (the BBC preset / ranking tab → the BBC section);
+//    or more(el) → 'chapter:section' (the BBC / We Cup preset → its own section);
 //  · vars(el) = the text's {placeholders} (an option's own label).
 // A label pointing at a control (label[for]) is explained as that control.
 // WINDOWS: what an unlisted control inside a window is about (H2).
@@ -102,7 +102,7 @@ export const HOTSPOTS = [
   ['.cf-preset[data-skill="mixed"]', 'hsBotMixed', false, 'offline:setup'],
   ['.cf-preset[data-skill="normal"]', 'hsBotNormal', false, 'offline:setup'],
   ['.cf-preset[data-skill="hard"]', 'hsBotHard', false, 'offline:setup'],
-  ['.cf-preset[data-preset]', 'hsPreset', false, (el) => (el.getAttribute('data-preset') === 'bbc' ? 'pthnet:bbc' : 'pthnet:cups')],
+  ['.cf-preset[data-preset]', 'hsPreset', false, (el) => ({ bbc: 'pthnet:bbc', wecup: 'pthnet:wec' }[el.getAttribute('data-preset')] || 'pthnet:cups')],
   ['#cf-style-toggle', 'hsCfStyle', false, 'lobby:create'],
   ['#cf-name', 'hsGameName', false, 'lobby:create'],
   ['#cf-players', 'hsSeats', false, 'lobby:create'],
@@ -191,7 +191,8 @@ export const HOTSPOTS = [
   // each ranking explained on its own tab: who runs it, what counts, how the score works (web.289)
   ['#ranking-modal .rk-tab[data-src="pth"], #tableranking-modal .rk-tab[data-src="pth"]', 'hsRkPth', false, 'pthnet:rankhow'],
   ['#ranking-modal .rk-tab[data-src="bbc"], #tableranking-modal .rk-tab[data-src="bbc"]', 'hsRkBbc', false, 'pthnet:bbc'],
-  ['#ranking-modal .rk-tab[data-src="wec"], #tableranking-modal .rk-tab[data-src="wec"]', 'hsRkWec', false, 'pthnet:cups'],
+  // also a WeC game or result in the forum's Events tab (web.308): what the We Cup is, and its section
+  ['#ranking-modal .rk-tab[data-src="wec"], #tableranking-modal .rk-tab[data-src="wec"], #fn-events .ev-row[data-src="wec"]', 'hsRkWec', false, 'pthnet:wec'],
   ['#ranking-modal .rk-tab[data-src="lan"], #tableranking-modal .rk-tab[data-src="lan"]', 'hsRkLan', false, 'start:famboard'],
   ['#ranking-modal .rk-tab[data-src="ach"]', 'hsRkAch', false, 'offline:trophies'],
   ['#ranking-modal .rk-tab, #tableranking-modal .rk-tab', 'hsRkTab', false, (el) => (/'bbc'/.test(el.getAttribute('onclick') || '') ? 'pthnet:bbc' : 'pthnet:rankings')],

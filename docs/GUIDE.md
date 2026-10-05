@@ -402,6 +402,14 @@ one is appended. `npm run test:guide-dock` delays `engine.mjs` by 3 s, fires Hel
 this? » during the first dock, and checks one Ace; it also walks the install entry on an
 iPhone, a Pixel and a desktop, and its absence in the installed app.
 
+## The We Cup section (`web.308`)
+
+`pthnet:wec` « The We Cup (WeC) » follows `bbc` in the 83 corpora (es-419 derived), written from
+the WeC forum thread: requirements, veterans rule, one account, conduct, Monthly Finals and the
+Grand Final with their table settings. *More about it* opens it from the WEC ranking tab, the
+We Cup preset (`data-preset="wecup"`) and a WeC row of the forum's Events tab
+(`#fn-events .ev-row[data-src="wec"]`, same text as the ranking tab: `hsRkWec`).
+
 ## The BBC section (`web.273`)
 
 A new help section, `pthnet:bbc` « The BBC (Best Brainies Cup) », sits after `cups` in the

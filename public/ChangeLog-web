@@ -1,4 +1,8 @@
-2026-10-04 version 2.1.9-web.306 (current series):
+2026-10-05 version 2.1.9-web.308 (current series):
+- new: the help has a section on the We Cup (WeC) — who can take part, the veterans rule, conduct, the Monthly Finals and the yearly Grand Final; the Ace opens it from the WEC ranking tab, the We Cup preset and the WeC games in the Events tab
+- improvement: the WeCup is now called by its name, We Cup (WeC), everywhere in the client
+
+2026-10-04 version 2.1.9-web.306:
 - bugfix: pokerth.net admins now see the « Global notice » button in the lobby chat
 
 2026-10-04 version 2.1.9-web.301:

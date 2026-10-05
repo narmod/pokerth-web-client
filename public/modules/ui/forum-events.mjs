@@ -347,7 +347,7 @@ function _goLink(url) {
 }
 
 function _row(src, url, title, meta, winner) {
-  return '<div class="fn-row ev-row ev-static">'
+  return '<div class="fn-row ev-row ev-static" data-src="' + esc(String(src || '')) + '">'
     + '<span class="fn-forum ' + evSrcClass(src) + '">' + esc(evSrcName(src)) + '</span>'
     + '<div class="fn-main"><div class="fn-t' + (winner ? ' ev-win' : '') + '">' + (winner ? ICON_CUP : '') + esc(title) + '</div>'
     + (meta ? '<div class="fn-meta">' + esc(meta) + '</div>' : '') + '</div>'
@@ -562,12 +562,12 @@ function _gameRow(e, loc, stepWord) {
   _rowsByKey.set(key, e);
   const cls = 'fn-row ev-row ev-game' + (sel ? ' ev-sel' : '');
   if (!evExpandable(e)) {
-    return '<div class="' + cls + '" role="button" tabindex="0" aria-pressed="' + sel + '" data-sel="' + esc(key) + '">'
+    return '<div class="' + cls + '" role="button" tabindex="0" aria-pressed="' + sel + '" data-sel="' + esc(key) + '" data-src="' + esc(String(e.src || '')) + '">'
       + inner + _goLink(e.url) + '</div>';
   }
   const id = String(e.id), on = _open.has(id);
   _games.set(id, e);
-  return '<div class="' + cls + ' ev-exp' + (on ? ' ev-open' : '') + '" role="button" tabindex="0" aria-expanded="' + on + '" data-sel="' + esc(key) + '" data-gid="' + esc(id) + '">'
+  return '<div class="' + cls + ' ev-exp' + (on ? ' ev-open' : '') + '" role="button" tabindex="0" aria-expanded="' + on + '" data-sel="' + esc(key) + '" data-src="' + esc(String(e.src || '')) + '" data-gid="' + esc(id) + '">'
     + inner + '<span class="ev-chev" aria-hidden="true">' + ICON_CHEV + '</span>'
     + _goLink(e.url) + '</div>'
     + (on ? _regsPanel(e) : '');
