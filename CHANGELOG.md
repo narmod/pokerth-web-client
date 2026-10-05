@@ -8,6 +8,33 @@ web counter (`2.1.5` → `2.1.5-web.0`). Granular, per-build tags are published 
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 this file captures what matters to players and operators.
 
+## 2.1.10-web line (2026)
+
+Opened with `v2.1.10-web.0` (2026-10-05), following the upstream **2.1.10**
+release. Per-build detail is on the
+[GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
+highlights below.
+
+### Changed
+- **The client follows PokerTH 2.1.10** — the build ID sent to the server and the
+  build-ID fallbacks in `net/messages.mjs` and `proto/index.mjs` move to 2.1.10 (`web.0`).
+
+### Upstream 2.1.10 parity
+Every client-side item of the upstream 2.1.10 release was already in the 2.1.9-web line:
+- **Ace's Help** — the QML port of the web client's assistant (upstream `42127b5`, `7dadfa8`; web since `web.259`).
+- **BBC game dates** in the forum news (upstream `43382ba`, `c0fdc89`, `f0ea7de`; Events tab, `web.237`, `241`).
+- **Lobby footer server time** (upstream `f01d1db`, `735a793`; `web.167`–`168`).
+- **Reports reserved for registered players** (upstream `04f5839`; `web.251`).
+- **Mobile zoom follows a redistributed seat ring** (upstream `a6d4f05`; `web.65`).
+- **Big blind never posted twice in a row** (upstream `b6f5f7c`, issue #541; offline engine, `web.64`).
+- **A short-stack call is an all-in** (upstream `660eaed`; offline engine, `web.309`).
+- **Spelling and grammar pass** (upstream `449c34b`, `2dea699`): none of the corrected strings exist in the web client.
+
+Not applicable: the audio-device crash (native audio stack), the widget invitation crash and the
+widget discontinuation, Android and Windows builds, and server-only changes (shadow mute,
+ProtonVPN block, game report after disconnects, avatar cache). The server keeps accepting
+the web client at any version (`MIN_BUILD_ID_WEB` = 0.0.0).
+
 ## 2.1.9-web line (2026)
 
 Opened with `v2.1.9-web.0` (2026-09-12), following the upstream **2.1.9**
