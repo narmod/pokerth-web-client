@@ -43,7 +43,7 @@ highlights below.
 - **Menus and panels in front of open windows** — header menus, server time panel, login ☰ menu (`web.252`, `255`, `298`).
 - **Translations and SEO** — keys left in English, private-message backlog, Traditional Chinese browsers, `pt` / `es-419` hreflang, translated pages synced, es-419 derivation (`web.80`–`108`, `169`–`170`, `277`, `305`).
 - **`/live`** — sticky tab bar, folded seats, duplicate players, invite banner shown to spectators, stale online count (`web.15`–`27`, `216`).
-- **Offline mode** — boot with no network, big blind posted twice in a row (`web.57`, `64`).
+- **Offline mode** — boot with no network, big blind posted twice in a row, a call for the whole stack shown as « Call » instead of « All-In » (`web.57`, `64`, `309`, upstream `660eaed`).
 - **Avatars** — silent upload failures (`web.1`, upstream `665d80a`), red X on folded players (`web.58`, reported by sp0ck).
 - **Miscellaneous** — SVG table-style buttons on reload, double boot splash after an update, invite links to a table, lobby player search autofill, « Via proxy » mode on slow loads, server invitations only at invite-only tables (`web.3`, `171`, `175`, `257`, `283`, `302`).
 

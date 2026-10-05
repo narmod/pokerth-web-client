@@ -250,7 +250,12 @@ export class OfflineTable {
     let kind=action, paid=0;
     if (action===ACT.FOLD){ this.h.folded[p.id]=true; this.h.needsToAct.delete(p.id); }
     else if (action===ACT.CHECK || (action===ACT.CALL && toCall===0)){ kind=ACT.CHECK; this.h.needsToAct.delete(p.id); }
-    else if (action===ACT.CALL){ paid=Math.min(toCall,p.stack); this._put(p,paid); this.h.needsToAct.delete(p.id); }
+    else if (action===ACT.CALL){
+      paid=Math.min(toCall,p.stack); this._put(p,paid); this.h.needsToAct.delete(p.id);
+      // A call that commits the whole remaining stack is an all-in, as the
+      // server reports it since upstream 660eaed (acts-1631, PokerTH 2.1.10).
+      if (this.h.allin[p.id]) kind=ACT.ALLIN;
+    }
     else { // bet/raise/allin -> amountTo is target streetCommit
       let target = amountTo;
       const maxTo = this.h.streetCommit[p.id]+p.stack;
