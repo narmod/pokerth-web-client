@@ -9955,6 +9955,7 @@ function resetWindows(){
   var rg=document.querySelector('#range-modal .range-card');
   if(rg) _disableFloating(rg);
   try{ if (typeof window.closeThemePanel==='function') window.closeThemePanel(); }catch(e){}
+  try{ if (typeof window.pthAceResetWin==='function') window.pthAceResetWin(); }catch(e){}   // « More help » (web.310)
 }
 function makeChatResizable(panel, msgs, onResize) {
   if (!panel || !msgs) return;
@@ -12078,7 +12079,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.309'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.310'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

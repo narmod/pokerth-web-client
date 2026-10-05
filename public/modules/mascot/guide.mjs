@@ -78,6 +78,18 @@ body.guide-ask #ace-dock *{cursor:pointer!important}
 [dir=rtl] #ace-dock .ad-page,[dir=rtl] #ace-dock .ad-kicker,[dir=rtl] #ace-dock .ad-list,[dir=rtl] #ace-dock .ad-hbody,[dir=rtl] #ace-dock .ad-hnav{direction:rtl;text-align:right}
 #ace-dock .ad-bubble.ad-big{width:min(900px,calc(100vw - 24px));max-width:min(900px,calc(100vw - 24px));height:min(640px,calc(100vh - 110px));flex-direction:column;overflow:hidden;padding:12px 14px 10px}
 #ace-dock .ad-bubble.ad-big.ad-open{display:flex}
+#ace-dock .ad-bubble .win-rsz{display:none;position:absolute;z-index:6;touch-action:none}
+#ace-dock .ad-bubble.ad-float .win-rsz{display:block}
+#ace-dock .ad-bubble.ad-float{z-index:3}
+#ace-dock .win-rsz-n,#ace-dock .win-rsz-s{left:12px;right:12px;height:7px;cursor:ns-resize}
+#ace-dock .win-rsz-n{top:0}#ace-dock .win-rsz-s{bottom:0}
+#ace-dock .win-rsz-e,#ace-dock .win-rsz-w{top:12px;bottom:12px;width:7px;cursor:ew-resize}
+#ace-dock .win-rsz-e{right:0}#ace-dock .win-rsz-w{left:0}
+#ace-dock .win-rsz-ne,#ace-dock .win-rsz-nw,#ace-dock .win-rsz-se,#ace-dock .win-rsz-sw{width:14px;height:14px}
+#ace-dock .win-rsz-ne{top:0;right:0;cursor:nesw-resize}#ace-dock .win-rsz-sw{bottom:0;left:0;cursor:nesw-resize}
+#ace-dock .win-rsz-nw{top:0;left:0;cursor:nwse-resize}#ace-dock .win-rsz-se{bottom:0;right:0;cursor:nwse-resize}
+#ace-dock .ad-bubble.ad-float .ad-kicker{cursor:move;touch-action:none;user-select:none;-webkit-user-select:none;margin-inline-end:34px;padding:2px 0}
+#ace-dock .ad-bubble.ad-moving{user-select:none;-webkit-user-select:none}
 #ace-dock .ad-bubble.ad-big .ad-ask{right:6px;top:6px;width:28px;height:28px}
 #ace-dock .ad-big .ad-kicker{flex:none}
 #ace-dock .ad-big .ad-search{flex:none}
@@ -209,6 +221,10 @@ async function doDock(o) {
   root.appendChild(bub);
   root.appendChild(ace);
   document.body.appendChild(root);
+  bub.addEventListener('pointerdown', bigDown);
+  bub.addEventListener('pointermove', bigMove);
+  bub.addEventListener('pointerup', bigUp);
+  bub.addEventListener('pointercancel', bigUp);
   ace.addEventListener('click', (ev) => { ev.stopPropagation(); if (onTapCb) onTapCb(); });
   ace.addEventListener('keydown', (ev) => {
     if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); if (onTapCb) onTapCb(); }
@@ -411,6 +427,10 @@ let forcedPos = null;    // a form tour decides: 'bottom' (next to the Ace, at h
  */
 function placeBubble() {
   if (!bub || !ace) return;
+  const fl = bigFloat();
+  bub.classList.toggle('ad-float', fl);
+  if (fl && bigBox && bub.classList.contains('ad-open')) { applyBig(clampBox(bigBox)); return; }
+  clearBig();
   const vw = window.innerWidth, vh = window.innerHeight;
   const r = ace.getBoundingClientRect();
   const side = vw >= 560;                       // wide screen: bubble on the Ace's left
@@ -491,6 +511,84 @@ function placeBubble() {
     if (best[0].left + bw > r.left && topP.top + bh > r.top - 8 && cap < bh) { bub.style.maxHeight = cap + 'px'; bub.style.overflowY = 'auto'; }
   }
 }
+// ── « More help » as a window (web.310) ────────────────────────────────
+// On a desktop-size screen (the other windows' gate, ≥ 900×600) the big
+// bubble moves by its title line and resizes from its edges and corners,
+// like the other windows. Its box is kept (pth_win_morehelp) until the
+// header's « reset windows » button forgets it; a phone keeps the docked panel.
+const BIG_KEY = 'pth_win_morehelp', BIG_MIN_W = 420, BIG_MIN_H = 320;
+const RSZ = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'];
+let bigBox = null;
+try {
+  const d = JSON.parse(localStorage.getItem(BIG_KEY) || 'null');
+  if (d && [d.left, d.top, d.width, d.height].every((v) => typeof v === 'number' && isFinite(v))) bigBox = d;
+} catch (e) { bigBox = null; }
+function bigGate() {
+  try { return typeof window._winGate === 'function' ? !!window._winGate() : window.matchMedia('(min-width:900px) and (min-height:600px)').matches; } catch (e) { return false; }
+}
+function bigFloat() { return !!(bub && bub.classList.contains('ad-big') && bigGate()); }
+/** A box kept inside the screen (viewport coordinates). */
+function clampBox(b) {
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const width = Math.round(Math.max(Math.min(BIG_MIN_W, vw - 12), Math.min(b.width, vw - 12)));
+  const height = Math.round(Math.max(Math.min(BIG_MIN_H, vh - 12), Math.min(b.height, vh - 12)));
+  const left = Math.round(Math.max(6, Math.min(b.left, vw - width - 6)));
+  const top = Math.round(Math.max(6, Math.min(b.top, vh - height - 6)));
+  return { left, top, width, height };
+}
+function applyBig(b) {
+  const o = root ? root.getBoundingClientRect() : { left: 0, top: 0 };
+  bub.classList.remove('ad-side');
+  bub.classList.add('ad-top');                  // no tail: a window
+  const st = bub.style;
+  st.left = Math.round(b.left - o.left) + 'px'; st.top = Math.round(b.top - o.top) + 'px';
+  st.right = 'auto'; st.bottom = 'auto';
+  st.width = b.width + 'px'; st.height = b.height + 'px'; st.maxWidth = 'none'; st.maxHeight = 'none';
+}
+function clearBig() { if (bub) { bub.style.width = ''; bub.style.height = ''; bub.style.maxWidth = ''; } }
+function saveBig() { try { localStorage.setItem(BIG_KEY, JSON.stringify(bigBox)); } catch (e) {} }
+/** The header's « reset windows »: « More help » goes back to its spot next to the Ace. */
+export function resetBigWindow() {
+  bigBox = null;
+  try { localStorage.removeItem(BIG_KEY); } catch (e) {}
+  if (bub && bub.classList.contains('ad-big')) placeBubble();
+}
+try { window.pthAceResetWin = resetBigWindow; } catch (e) {}
+let bigDrag = null;    // { dir: 'move' | 'n' | 'se' …, x, y, box, id, el }
+function bigDown(ev) {
+  if (!bigFloat() || ev.button > 0) return;
+  const h = ev.target.closest && ev.target.closest('.win-rsz, .ad-kicker');
+  if (!h || !bub.contains(h)) return;
+  const r = bub.getBoundingClientRect();
+  bigDrag = { dir: h.classList.contains('win-rsz') ? h.getAttribute('data-rsz') : 'move', x: ev.clientX, y: ev.clientY,
+    box: { left: r.left, top: r.top, width: r.width, height: r.height }, id: ev.pointerId, el: h };
+  bub.classList.add('ad-moving');
+  try { h.setPointerCapture(ev.pointerId); } catch (e) {}
+  ev.preventDefault(); ev.stopPropagation();
+}
+function bigMove(ev) {
+  if (!bigDrag || ev.pointerId !== bigDrag.id) return;
+  const d = bigDrag, dx = ev.clientX - d.x, dy = ev.clientY - d.y, b = d.box;
+  let { left, top, width, height } = b;
+  if (d.dir === 'move') { left += dx; top += dy; }
+  else {
+    const vw = window.innerWidth, vh = window.innerHeight;
+    if (d.dir.includes('e')) width = Math.min(b.width + dx, vw - b.left - 6);
+    if (d.dir.includes('s')) height = Math.min(b.height + dy, vh - b.top - 6);
+    if (d.dir.includes('w')) { width = Math.max(BIG_MIN_W, Math.min(b.width - dx, b.left + b.width - 6)); left = b.left + b.width - width; }
+    if (d.dir.includes('n')) { height = Math.max(BIG_MIN_H, Math.min(b.height - dy, b.top + b.height - 6)); top = b.top + b.height - height; }
+  }
+  bigBox = clampBox({ left, top, width, height });
+  applyBig(bigBox);
+}
+function bigUp(ev) {
+  if (!bigDrag || ev.pointerId !== bigDrag.id) return;
+  try { bigDrag.el.releasePointerCapture(ev.pointerId); } catch (e) {}
+  bigDrag = null;
+  bub.classList.remove('ad-moving');
+  if (bigBox) saveBig();
+}
+
 // A real change of size (rotation, window) re-docks him even with the bubble open: his
 // old lift could put him above the top of a landscape screen (web.276).
 let lastVw = window.innerWidth, lastVh = window.innerHeight;
@@ -521,7 +619,8 @@ export function say(o) {
     const ae = document.activeElement;
     if (ae && (bub.contains(ae) || (ae === ace && ace.matches(':focus-visible')))) refocus = true;
   } catch (e) {}
-  bub.innerHTML = ask + body + (btns ? `<div class="ad-btns">${btns}</div>` : '');
+  const rsz = o.big ? RSZ.map((d) => `<div class="win-rsz win-rsz-${d}" data-rsz="${d}" aria-hidden="true"></div>`).join('') : '';   // web.310
+  bub.innerHTML = ask + body + (btns ? `<div class="ad-btns">${btns}</div>` : '') + rsz;
   bub.classList.toggle('ad-wide', !!o.wide);
   bub.classList.toggle('ad-big', !!o.big);
   bub.scrollTop = 0;
@@ -543,7 +642,9 @@ export function say(o) {
 export function hush() {
   if (!bub) return;
   try { if (bub.contains(document.activeElement) && ace) ace.focus({ preventScroll: true }); } catch (e) {}   // the focus goes back to him
-  bub.classList.remove('ad-open', 'ad-wide', 'ad-big');
+  bub.classList.remove('ad-open', 'ad-wide', 'ad-big', 'ad-float', 'ad-moving');
+  clearBig();
+  bigDrag = null;
   bub.innerHTML = '';
   forcedPos = null;
   onBtnCb = null;
