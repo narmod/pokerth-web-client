@@ -1,6 +1,6 @@
 {
   "name": "pokerth-web-client",
-  "version": "2.1.9-web.312",
+  "version": "2.1.9-web.313",
   "description": "Experimental modern web client for PokerTH using a WebSocket-to-TCP proxy.",
   "main": "proxy.js",
   "private": false,
@@ -36,6 +36,7 @@
     "test:guide-help": "node scripts/test-guide-help.mjs",
     "test:guide-dock": "node scripts/test-guide-dock.mjs",
     "test:guide-morehelp-win": "node scripts/test-guide-morehelp-win.mjs",
+    "test:guide-lang-first": "node scripts/test-guide-lang-first.mjs",
     "test:guide-coverage": "node scripts/test-guide-coverage.mjs",
     "test:guide-browser": "node scripts/test-guide-browser.mjs",
     "test:seats": "node scripts/test-seats.mjs",

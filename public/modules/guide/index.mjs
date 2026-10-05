@@ -278,7 +278,9 @@ window._guideScene = {
   back: sceneBack,
 };
 
-function btn(id, primary) { return { id, label: gt(id), primary: !!primary }; }
+// label read when the bubble is drawn, not when the list is built: a list made before the
+// language catalogue had loaded showed English buttons under a translated text (web.313)
+function btn(id, primary) { return { id, get label() { return gt(id); }, primary: !!primary }; }
 const val = (v, w) => (typeof v === 'function' ? v(w) : v);
 /** A step target: one selector or several, the first one visible on screen wins. */
 function firstVisible(sel) {

@@ -46,6 +46,7 @@ highlights below.
 - **`/live`** — sticky tab bar, folded seats, duplicate players, invite banner shown to spectators, stale online count (`web.15`–`27`, `216`).
 - **Offline mode** — boot with no network, big blind posted twice in a row, a call for the whole stack shown as « Call » instead of « All-In » (`web.57`, `64`, `309`, upstream `660eaed`).
 - **Avatars** — silent upload failures (`web.1`, upstream `665d80a`), red X on folded players (`web.58`, reported by sp0ck).
+- **Ace's Help: first bubble's buttons in English** until it was reopened — labels now read when drawn, catalogue loaded with the help (`web.313`).
 - **Miscellaneous** — SVG table-style buttons on reload, double boot splash after an update, invite links to a table, lobby player search autofill, « Via proxy » mode on slow loads, server invitations only at invite-only tables (`web.3`, `171`, `175`, `257`, `283`, `302`).
 
 ## 2.1.8-web line (2026)

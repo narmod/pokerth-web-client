@@ -1,4 +1,7 @@
-2026-10-05 version 2.1.9-web.312 (current series):
+2026-10-05 version 2.1.9-web.313 (current series):
+- bugfix: the Ace's first bubble after loading the page now has its buttons in your language straight away, not in English until it is reopened
+
+2026-10-05 version 2.1.9-web.312:
 - bugfix: in « More help », the chat and diagnostic command lists fit the window again — on a phone the descriptions were pushed out of sight by a long command
 
 2026-10-05 version 2.1.9-web.311:

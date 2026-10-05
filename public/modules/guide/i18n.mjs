@@ -47,3 +47,4 @@ export function gt(key, vars) {
 }
 
 try { onLangChange(() => { ready(); }); } catch (e) {}
+try { ready().catch(() => {}); } catch (e) {}   // as soon as the help loads: the first bubble is already in the player's language (web.313)
