@@ -1,3 +1,6 @@
+2026-10-07 version 2.1.10-web.2:
+- improvement: the web client changelog in « About » is now the short summary per release line instead of this build-by-build list
+
 2026-10-07 version 2.1.10-web.1:
 - bugfix: on older iPhones and iPads (iOS 16.3 and earlier) the Ace's Help loads again — it stopped with an error before showing anything
 

@@ -11860,14 +11860,21 @@ function renderPlayersList() {
     var one = function(liveUrl, localUrl){
       return fetchTxt(liveUrl).then(function(t){ return t != null ? t : fetchTxt(localUrl); });
     };
+    // Client web : CHANGELOG.md du dépôt (narmod 07/10/2026 — la liste build par build de
+    // ChangeLog-web était trop longue), rendu markdown par modules/ui/changelog-md.mjs ;
+    // repli local /CHANGELOG.md (lien symbolique public/ → racine, précaché).
+    var tr = function(k, fb){ var v = (typeof window.t === 'function') ? window.t(k) : k; return (v && v !== k) ? v : fb; };
     Promise.all([
-      one('https://raw.githubusercontent.com/narmod/pokerth-web-client/main/public/ChangeLog-web', '/ChangeLog-web'),
+      one('https://raw.githubusercontent.com/narmod/pokerth-web-client/main/CHANGELOG.md', '/CHANGELOG.md'),
       one('https://raw.githubusercontent.com/pokerth/pokerth/stable/ChangeLog', '/ChangeLog')
     ]).then(function(res){
       var web = res[0], up = res[1];
       if (web == null && up == null) throw new Error('none');
-      if (web != null) cw.innerHTML = _abClRender(web); else cw.textContent = errTxt();
       if (up != null)  cu.innerHTML = _abClRender(up);  else cu.textContent = errTxt();
+      if (web == null) { cw.textContent = errTxt(); return; }
+      return import('/modules/ui/changelog-md.mjs').then(function(m){
+        cw.innerHTML = m.renderChangelogMd(web, tr);
+      }, function(){ cw.textContent = web; });
     }).catch(function(){
       _abClLoaded = false; // réessai possible au prochain clic
       var t = errTxt();
@@ -12079,7 +12086,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.1'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.2'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

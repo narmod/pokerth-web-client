@@ -18,6 +18,8 @@ highlights below.
 ### Changed
 - **The client follows PokerTH 2.1.10** — the build ID sent to the server and the
   build-ID fallbacks in `net/messages.mjs` and `proto/index.mjs` move to 2.1.10 (`web.0`).
+- **A shorter changelog in « About »** — the « Web client » tab now shows this file, one
+  summary per release line, instead of the build-by-build `ChangeLog-web` list (`web.2`).
 
 ### Fixed
 - **Ace's Help on iOS 16.3 and older** — `guide/knowledge.mjs` used a regex lookbehind, a parse

@@ -10284,6 +10284,11 @@ html.reduce-fx .seat-action-badge {
 .ab-cl-grp { color: var(--text-dim, #9aa3b2); font-weight: 600; font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: .06em; margin: 10px 0 2px; }
 .ab-cl-item { padding-left: 12px; }
 .ab-cl-item::before { content: '\2013\00a0'; color: var(--text-dim, #9aa3b2); margin-left: -12px; }
+/* Rendu markdown de CHANGELOG.md (onglet Client web) */
+.ab-cl-p { margin: 2px 0 6px; color: var(--text-dim, #9aa3b2); }
+.ab-cl-note { margin: 6px 0; padding-left: 10px; border-left: 3px solid var(--text-dim, #9aa3b2); color: var(--text-dim, #9aa3b2); }
+.ab-cl code { font-family: var(--ff-mono, monospace); font-size: .92em; padding: 0 3px; border-radius: 3px; background: var(--inset); }
+.ab-cl a { color: var(--gold, #d4af37); }
 .ab-copy { color:var(--text); font-size:var(--fs-base); margin-top:10px; }
 .ab-net { text-align:right; margin-top:16px; }
 .ab-pane a { color:var(--info,#2a6fb0); }
