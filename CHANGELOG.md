@@ -19,6 +19,12 @@ highlights below.
 - **The client follows PokerTH 2.1.10** — the build ID sent to the server and the
   build-ID fallbacks in `net/messages.mjs` and `proto/index.mjs` move to 2.1.10 (`web.0`).
 
+### Fixed
+- **Ace's Help on iOS 16.3 and older** — `guide/knowledge.mjs` used a regex lookbehind, a parse
+  error on Safari < 16.4 that kept the whole assistant from loading (seen in the client error
+  reports); the sentence splitter is rewritten without it (fuzz-checked identical output), and
+  `scripts/test-no-lookbehind.mjs` keeps lookbehinds out of served code (`web.1`).
+
 ### Upstream 2.1.10 parity
 Every client-side item of the upstream 2.1.10 release was already in the 2.1.9-web line:
 - **Ace's Help** — the QML port of the web client's assistant (upstream `42127b5`, `7dadfa8`; web since `web.259`).

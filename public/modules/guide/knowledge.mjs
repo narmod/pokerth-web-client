@@ -65,7 +65,16 @@ export function splitText(text, maxChars = 420) {
   if (s.length <= maxChars) return s ? [s] : [];
   // a sentence ends with . ! ? (and the Indic । ॥, the Burmese ။, the Urdu ۔ and Arabic ؟) followed by a space — not
   // « pokerth.net » or « 2.5 » —, or with the CJK 。！？
-  const parts = s.split(/(?<=[.!?…।॥။۔؟][)»”’"]*)\s+|(?<=[。！？])/).filter(Boolean);
+  // no regex lookbehind: Safari < 16.4 refuses it at parse time and the whole module would fail to load
+  const parts = [];
+  const re = /[.!?…।॥။۔؟][)»”’"]*(\s+)|[。！？]/g;
+  let last = 0, m;
+  while ((m = re.exec(s))) {
+    parts.push(s.slice(last, m.index + m[0].length - (m[1] ? m[1].length : 0)));
+    last = m.index + m[0].length;
+  }
+  parts.push(s.slice(last));
+  for (let i = parts.length - 1; i >= 0; i--) if (!parts[i]) parts.splice(i, 1);
   const out = [];
   let cur = '';
   for (const p of parts) {

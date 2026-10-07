@@ -1,3 +1,6 @@
+2026-10-07 version 2.1.10-web.1:
+- bugfix: on older iPhones and iPads (iOS 16.3 and earlier) the Ace's Help loads again — it stopped with an error before showing anything
+
 2026-10-05 version 2.1.10-web.0 (current series):
 - improvement: the web client now follows PokerTH 2.1.10 and introduces itself to the server as version 2.1.10
 
