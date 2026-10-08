@@ -156,6 +156,7 @@ function _maybeReconnectOnResume() {
   var inSession = (sg && sg.classList.contains('active'))
                || (sl && sl.classList.contains('active'));
   if (!inSession) return;
+  try { console.log('[net] reconnecting on return to the page (socket not open)'); } catch (eL) {}
   _armRejoin();
   // Annuler tout backoff déjà programmé par un onclose.
   clearTimeout(window._reconnectTimer);
@@ -191,7 +192,7 @@ window.addEventListener('focus', _maybeReconnectOnResume);
 // ne suffit pas (il fait confiance à OPEN). Ici on FORCE : on démonte le
 // socket quel que soit son état, puis on relance une connexion propre
 // (même chemin que la reconnexion auto → même re-join de table).
-function _forceReconnect() {
+function _forceReconnect(why) {
   if (S._intentionalDisconnect || !S._lastConnectParams) return;
   // Entraînement (offline) : il n'y a AUCUN réseau — le FakeServer vit dans la
   // page. « Reconnecter » ici détruit la partie en cours et rejoue Init/InitAck
@@ -207,6 +208,8 @@ function _forceReconnect() {
   var sg = document.getElementById('s-game');
   var sl = document.getElementById('s-lobby');
   if (!((sg && sg.classList.contains('active')) || (sl && sl.classList.contains('active')))) return;
+  // 'online' passes its Event; the watchdog and _sendJoin pass a string.
+  try { console.log('[net] forced reconnect — ' + ((why && why.type === 'online') ? 'network back online' : (why || 'unknown'))); } catch (eL) {}
   _armRejoin();
   clearTimeout(window._reconnectTimer);
   clearInterval(window._reconnectCountdown);

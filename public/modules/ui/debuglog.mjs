@@ -109,6 +109,72 @@ window.addEventListener('error', function (e) {
 window.addEventListener('unhandledrejection', function (e) {
   push('REJECTION', [(e && e.reason) || 'unknown']);
 });
+// ── Page lifecycle: why did the page (re)start? ─────────────────────
+// A player dropped from a running game cannot tell whether the tab was
+// reloaded, crashed or discarded by the browser, and the server only sees
+// the TCP close (server log, game 784, 2026-10-08). These lines answer it
+// from the player's own log: how this page was opened, whether the browser
+// had discarded the tab, how the previous page ended, and every switch to
+// background / foreground / offline with its timing. The last lifecycle
+// state is kept in localStorage: still "visible" at the next start = the
+// page died in the foreground (crash or forced stop); "hidden" = it died in
+// the background (killed or discarded); "closed" = a normal unload. Open
+// tabs share that key, so with several tabs the verdict is approximate.
+// Lifecycle lines are flushed at once: the page may not live 2 s more.
+const LIFE_KEY = 'pth_dbg_life';
+let _prevLife = null;
+try { _prevLife = localStorage.getItem(LIFE_KEY); } catch (e) {}
+function _life(state) { try { localStorage.setItem(LIFE_KEY, state + ' ' + Date.now()); } catch (e) {} }
+_life(document.visibilityState === 'hidden' ? 'hidden' : 'visible');
+
+function _ago(ms) {
+  const s = Math.max(0, Math.round(ms / 1000));
+  return s < 120 ? s + ' s' : (s < 7200 ? Math.round(s / 60) + ' min' : Math.round(s / 3600) + ' h');
+}
+function _lifePush(msg, flush) {
+  push('INFO', ['[page] ' + msg]);
+  if (flush) { if (_saveT != null) clearTimeout(_saveT); _save(); }
+}
+function _startContext() {
+  const bits = [];
+  try {
+    const n = performance.getEntriesByType('navigation')[0];
+    if (n && n.type) bits.push('opened by ' + n.type);
+  } catch (e) {}
+  try { if (document.wasDiscarded) bits.push('the browser had discarded this tab'); } catch (e) {}
+  if (_prevLife) {
+    const sp = _prevLife.split(' ');
+    const how = sp[0] === 'closed' ? 'closed normally'
+              : sp[0] === 'hidden' ? 'ended in the background without closing (killed or discarded)'
+              : 'ended in the foreground without closing (crash or forced stop)';
+    bits.push('previous page ' + how + ', last change ' + _ago(Date.now() - (+sp[1] || 0)) + ' ago');
+  }
+  return bits.join(' · ');
+}
+
+let _hiddenAt = 0;
+document.addEventListener('visibilitychange', function () {
+  if (document.visibilityState === 'hidden') {
+    _hiddenAt = Date.now(); _life('hidden');
+    _lifePush('hidden (background)', true);
+  } else {
+    _life('visible');
+    _lifePush('visible again' + (_hiddenAt ? ' after ' + _ago(Date.now() - _hiddenAt) : ''), false);
+    _hiddenAt = 0;
+  }
+});
+window.addEventListener('pagehide', function (e) {
+  _life('closed');
+  _lifePush('unloading' + (e && e.persisted ? ' (kept in the back/forward cache)' : ''), true);
+});
+window.addEventListener('pageshow', function (e) {
+  if (e && e.persisted) { _life('visible'); _lifePush('restored from the back/forward cache', false); }
+});
+document.addEventListener('freeze', function () { _lifePush('frozen by the browser', true); });
+document.addEventListener('resume', function () { _lifePush('resumed after a browser freeze', false); });
+window.addEventListener('offline', function () { _lifePush('network offline', true); });
+window.addEventListener('online', function () { _lifePush('network back online', false); });
+
 // Header de session : BUILD_VERSION est défini en fin de pokerth.js, APRÈS
 // l'évaluation des modules importés. Un setTimeout(0) perdait la course si
 // pokerth.js arrivait lentement du réseau (forum : « build ? ») → on ATTEND
@@ -128,6 +194,13 @@ window.addEventListener('unhandledrejection', function (e) {
                        (window.BUILD_VERSION || '?') + ' — ' + navigator.userAgent);
     LINES.push(line);
     chars += line.length + 1;
+    let ctx = '';
+    try { ctx = _startContext(); } catch (e) {}
+    if (ctx) {
+      const l2 = _mask(startedAt + ' [INFO] [page] ' + ctx);
+      LINES.push(l2);
+      chars += l2.length + 1;
+    }
     _scheduleSave();
   }
 })();

@@ -21,6 +21,15 @@ highlights below.
 - **A shorter changelog in « About »** — the « Web client » tab now shows this file, one
   summary per release line, instead of the build-by-build `ChangeLog-web` list (`web.2`).
 
+### Added
+- **Page lifecycle and disconnect reasons in the debug log** — each page start now records how it
+  was opened (`navigate` / `reload` / `back_forward`), whether the browser had discarded the tab,
+  and how the previous page ended (normal unload, killed in the background, or died in the
+  foreground), from a lifecycle marker kept in `localStorage` (`pth_dbg_life`). Background /
+  foreground switches, browser freeze, offline / online, the WebSocket close code and every
+  automatic reconnect with its trigger are logged too, flushed to disk immediately — so a player
+  dropped from a game can hand over the cause, which the server only sees as a TCP close (`web.4`).
+
 ### Fixed
 - **Seat recovery after a reload in a long game** — the `pth_resume` marker that replays
   `myLastSessionId` after a full page reload was only stamped at `JoinGameAck`, so its 5-minute

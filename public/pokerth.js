@@ -4759,7 +4759,7 @@ const App = (() => {
       if (S._hbCount < 2 || !S._hbInterval) return;
       _thr = Math.max(S._HB_WATCHDOG_MIN_MS, Math.round(S._hbInterval * 2.5));
     }
-    if (Date.now() - S._lastRxTime > _thr) _forceReconnect();
+    if (Date.now() - S._lastRxTime > _thr) _forceReconnect('no data from the server');
   }, 5000);
 
   // ── User diagnostics: type pthDiag() in the console ─────────────────────
@@ -5333,7 +5333,7 @@ const App = (() => {
   function _sendJoin(data) {
     if (!send(data)) {
       setStatus('⚠ ' + (t('errConnLost') || 'Connection lost.'), 'err');
-      try { _forceReconnect(); } catch (e) {}
+      try { _forceReconnect('send failed while joining'); } catch (e) {}
       return false;
     }
     if (S._joinWd) clearTimeout(S._joinWd);
@@ -6540,6 +6540,9 @@ const App = (() => {
         onRawData(e.data);
       };
       S.ws.onclose = function(e) {
+        // Debug log (ui/debuglog.mjs): why the link to the proxy ended.
+        try { console.log('[net] connection closed — code ' + (e && e.code) + (e && e.reason ? ' (' + e.reason + ')' : '') +
+          (S.gId ? ' — at table ' + S.gId : '') + (S._intentionalDisconnect ? ' — intentional' : '')); } catch (eL) {}
         _endConnecting();   // free the connect button on any close
         // Une alerte de timeout appartient a la session qui vient de mourir :
         // laisser un compte a rebours mort a l'ecran serait pire que le silence
@@ -12086,7 +12089,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.3'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.4'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
