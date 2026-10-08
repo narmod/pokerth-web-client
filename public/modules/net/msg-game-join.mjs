@@ -475,6 +475,36 @@ function onPlayerIdChanged(sub) {
     return;
 }
 
+// ── Keep the resume marker fresh while seated ─────────────────────────
+// pth_resume.t gates the seat recovery after a full reload (onInit in
+// msg-lobby.mjs: marker + myLastSessionId only replayed when t < 5 min).
+// It used to be written once, at JoinGameAck, so in any game older than
+// 5 min a reloaded / crashed / discarded tab sent Init WITHOUT
+// myLastSessionId: no rejoinGameId from the server, no local fallback,
+// player dropped to the lobby while the game was still running (sp0ck's
+// server log, game 784, 2026-10-08). Refreshing t on every hand and when
+// the page is hidden or unloaded makes the 5 min count from the drop, like
+// the server's SERVER_OFFLINE_RECONNECT_TIMEOUT_SEC = 300. Only an existing
+// marker for the CURRENT game and nick is touched: every path that clears
+// it (leave, close, removal, failed rejoin) still wins.
+function touchResume() {
+  try {
+    if (window._offlineMode || !S.gId) return;
+    var r = JSON.parse(localStorage.getItem('pth_resume') || 'null');
+    if (!r || r.g !== S.gId || r.n !== S.myName) return;
+    r.t = Date.now();
+    localStorage.setItem('pth_resume', JSON.stringify(r));
+  } catch (e) {}
+}
+try {
+  window.addEventListener('pagehide', touchResume);
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') touchResume();
+  });
+} catch (e) {}
+window._resumeTouch = touchResume;
+
+export { touchResume };
 export { onGameSpectatorJoined, onGameSpectatorLeft, onJoinGameAck, onJoinGameFailed, onGamePlayerJoined, onGamePlayerLeft, onRemovedFromGame, onStartEvent, onGameAdminChanged, onPlayerIdChanged };
 
 for (const [k, v] of Object.entries({ onGameSpectatorJoined, onGameSpectatorLeft, onJoinGameAck, onJoinGameFailed, onGamePlayerJoined, onGamePlayerLeft, onRemovedFromGame, onStartEvent, onGameAdminChanged, onPlayerIdChanged }))

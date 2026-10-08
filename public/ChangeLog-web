@@ -1,3 +1,6 @@
+2026-10-08 version 2.1.10-web.3:
+- bugfix: after reloading the page or a browser tab crash during a game running for more than 5 minutes, reconnecting puts you back at your table again instead of the lobby
+
 2026-10-07 version 2.1.10-web.2:
 - improvement: the web client changelog in « About » is now the short summary per release line instead of this build-by-build list
 

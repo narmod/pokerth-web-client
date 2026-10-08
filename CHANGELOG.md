@@ -22,6 +22,12 @@ highlights below.
   summary per release line, instead of the build-by-build `ChangeLog-web` list (`web.2`).
 
 ### Fixed
+- **Seat recovery after a reload in a long game** — the `pth_resume` marker that replays
+  `myLastSessionId` after a full page reload was only stamped at `JoinGameAck`, so its 5-minute
+  window had always expired in a game older than 5 minutes: the reloaded tab logged in without
+  the previous session GUID and landed in the lobby while its game was still running (server
+  log, 2026-10-08). The timestamp is now refreshed on every hand and when the page is hidden or
+  unloaded, so the window counts from the drop, like the server's 300 s (`web.3`).
 - **Ace's Help on iOS 16.3 and older** — `guide/knowledge.mjs` used a regex lookbehind, a parse
   error on Safari < 16.4 that kept the whole assistant from loading (seen in the client error
   reports); the sentence splitter is rewritten without it (fuzz-checked identical output), and

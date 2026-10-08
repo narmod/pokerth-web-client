@@ -278,6 +278,8 @@ function onGameStartRejoin(sub) {
 function onHandStart(sub) {
     // HandStartMessage: gameId=1, plainCards=2 {card1:1, card2:2}, smallBlind=4, seatStates=5, dealerPlayerId=6
     S.handNum++;
+    // Resume marker kept fresh while seated (see touchResume, msg-game-join.mjs).
+    try { window._resumeTouch && window._resumeTouch(); } catch (e) {}
     // Mode de jeu PERSISTANT entre les mains (comme le client officiel) :
     // pas de reset par main. Le joueur le change via le dropdown ou un
     // clic manuel sur une action.
