@@ -561,6 +561,11 @@
           </div>
           <div id="trafEnv" style="margin-top:14px"><div class="empty">Loading…</div></div>
         </div>
+        <div class="tsec" id="srcSec">
+          <div class="boardhead"><h3>Where visitors come from</h3><span id="srcSince" class="muted" style="margin:0"></span></div>
+          <p class="muted xpl">One source per visit, read from the landing page before the address bar is cleaned: a <b>utm_source</b> tag if the link had one, else the <b>domain</b> of the referring site (never its path), else a table <b>invite link</b>, else one of this site’s own pages, else a <b>?lang=</b> link, else <b>direct</b> — typed, bookmark, installed app, or a referrer withheld by the browser or the app the link was opened in (chat apps usually withhold it). Bar = visits; “new” = first visits, with their top languages: where a burst of new visitors comes from. Follows the period selected above.</p>
+          <div id="trafSrc"><div class="empty">Loading…</div></div>
+        </div>
       </div>
       </div>
       <div class="tsub" data-ts="music" role="tabpanel" aria-label="Music" style="display:none">
@@ -3111,6 +3116,41 @@
     h+='<div class="muted" style="margin-top:6px">Guests: free-account bubble shown '+g.guests.shown+' · « Create an account » tapped '+g.guests.redirect+'.</div>';
     box.innerHTML=h;
   }
+  // ── Where visitors come from (server/ref-stats.js) ──
+  var _srcKnown=false, _srcData=null, _srcSince=0, _srcExpanded=false;
+  function _srcLabel(k){
+    if(k==='(direct)') return 'Direct / no referrer';
+    if(k==='(invite)') return 'Table invite link';
+    if(k==='(lang link)') return '?lang= link, no referrer';
+    if(k==='(overflow)') return 'Other (past the daily cap or unreadable)';
+    if(k.indexOf('utm:')===0) return 'Campaign · '+_annEsc(k.slice(4));
+    if(k.indexOf('site:')===0) return 'This site · '+_annEsc(k.slice(5));
+    return _annEsc(k);
+  }
+  function renderSrc(){
+    var box=$('trafSrc'); if(!box) return;
+    var since=$('srcSince'), p=_srcData;
+    if(since) since.textContent=(p&&p.days)?(_perLabel(_trafPeriod)+(p.days<_trafPeriod?(' \u2014 '+p.days+' days counted'):'')):'';
+    var all=(p&&p.all)||{}, keys=Object.keys(all).sort(function(a,b){ return (all[b]||0)-(all[a]||0); });
+    var total=0; keys.forEach(function(k){ total+=all[k]||0; });
+    if(!total){
+      box.innerHTML='<div class="empty">'+(!_srcKnown
+        ? 'This proxy is not recording it yet \u2014 the running process predates the feature. Restart it (pm2 restart pokerth-web, or restart the container); a static update alone swaps the served files, not the process.'
+        : 'Nothing recorded yet \u2014 sources are counted from the first visit after the update.')+'</div>';
+      return;
+    }
+    var nw=p.nw||{}, lg=p.lang||{}, max=all[keys[0]]||1, h='';
+    var shown=_srcExpanded?keys:keys.slice(0,12);
+    h+='<div class="envrow" style="opacity:.75;font-size:.76rem"><span class="nmx">Source</span><span class="pct">visits \u00b7 share \u00b7 new (top languages)</span></div>';
+    shown.forEach(function(k){
+      var n=all[k]||0, nn=nw[k]||0, lm=lg[k]||{};
+      var top=Object.keys(lm).sort(function(a,b){ return lm[b]-lm[a]; }).slice(0,3).map(function(c){ return _annEsc(c)+' '+lm[c]; }).join(', ');
+      h+=_gBar(_srcLabel(k),n,max,Math.round(n*100/total)+'% \u00b7 '+nn+' new'+(top?' ('+top+')':''),k==='(direct)'?'#7a8494':'#4f8fe6');
+    });
+    if(keys.length>12) h+='<button id="srcMoreBtn" class="use" style="margin-top:8px">'+(_srcExpanded?'Show top 12':'Show all '+keys.length+' sources')+'</button>';
+    box.innerHTML=h;
+    var mb=$('srcMoreBtn'); if(mb) mb.onclick=function(){ _srcExpanded=!_srcExpanded; renderSrc(); };
+  }
   function renderMusic(){
     var box=$('trafMusic'); if(!box) return;
     var since=$('musSince');
@@ -3362,6 +3402,7 @@
       _envLangsKnown=Array.isArray(d.langs); _envLangs=_envLangsKnown?d.langs:[]; _envLangN=d.langN||0; _envLangDiagSince=d.langDiagSince||0; renderEnv();
       _musKnown=(d.music!==undefined); _musPeriodDays=(d.musicPeriod&&d.musicPeriod.days)||0; _musData=_musPeriodDays?(d.musicPeriod.plays||{}):(d.music||{}); _musTitles=d.musicTitles||{}; _musSince=d.musicSince||0; _musVotesKnown=(d.musicVotes!==undefined); _musVotes=d.musicVotes||{}; _musVoteTitles=d.musicVoteTitles||{}; _musVotesSince=d.musicVotesSince||0; renderMusic();
       _guideKnown=(d.guide!==undefined); _guidePeriodDays=(d.guidePeriod&&d.guidePeriod.days)||0; _guideData=_guidePeriodDays?(d.guidePeriod.summary||null):(d.guide||null); _guideSince=d.guideSince||0; renderGuide();
+      _srcKnown=(d.srcPeriod!==undefined); _srcData=d.srcPeriod||null; _srcSince=d.refSince||0; renderSrc();
       var dbx=$('trafDb');
       if(dbx){
         var db=d.db||{};

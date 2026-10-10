@@ -72,7 +72,7 @@ ok(proxy.indexOf('recordLiveVisit(d.vid)') < proxy.indexOf('recordVisit(d && d.v
 ok(/lv: visitsStore\.totalLV \|\| 0, lu: Object\.keys\(visitsStore\.allLU \|\| \{\}\)\.length/.test(proxy), 'the summary returns /live all-time visits and uniques');
 ok(/conn_live,live_visits,live_unique_visitors'\];/.test(proxy), 'CSV gains the /live visit columns, last');
 ok(/ADD COLUMN IF NOT EXISTS live_visits/.test(proxy) && /ADD COLUMN IF NOT EXISTS live_unique_visitors/.test(proxy), 'and so does an existing DB mirror');
-ok(/JSON\.stringify\(window\.LIVE_MODE \? \{ vid: vid, live: true \} : \{ vid: vid, pwa: pwa \}\)/.test(client), 'the /live visit beacon says live');
+ok(/var msg = window\.LIVE_MODE \? \{ vid: vid, live: true \} : \{ vid: vid, pwa: pwa \};/.test(client) && /var body = JSON\.stringify\(msg\);/.test(client), 'the /live visit beacon says live');
 ok(/id="trafLive"/.test(admin) && /fmt\(lv\)\+' visits · '\+fmt\(o\.lu\)\+' unique · '/.test(admin), 'the traffic card shows /live visits and uniques');
 // Visits (page load) and sessions (connection opened) are two events: the
 // /live card shows both for the same window, so 21 visits next to 16

@@ -1,3 +1,6 @@
+2026-10-10 version 2.1.10-web.5:
+- improvement: the anonymous visit statistics now also count which website a visit comes from, by its domain name only — the privacy page is updated
+
 2026-10-08 version 2.1.10-web.4:
 - improvement: the debug log now notes when the page goes to the background, comes back, reloads, loses the network or was stopped by the browser, and why the connection to the server ended — copy it into your report if you get disconnected
 

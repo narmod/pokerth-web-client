@@ -29,6 +29,13 @@ highlights below.
   foreground switches, browser freeze, offline / online, the WebSocket close code and every
   automatic reconnect with its trigger are logged too, flushed to disk immediately — so a player
   dropped from a game can hand over the cause, which the server only sees as a TCP close (`web.4`).
+- **Where visitors come from, in the admin traffic stats** — the visit ping now carries the
+  landing source, read in the page head before share and invite links are cleaned from the
+  address bar: the `utm_source` tag, else the referring site's host name (never its path or
+  query), else a table invite link, else one of the site's own pages, else a `?lang=` link, else
+  direct. One key per visit, counted per day for all visits, for new visitors, and for new
+  visitors by language (`server/ref-stats.js`, capped per day); shown in « Who visits » for the
+  selected period and included in the JSON export. The privacy page says so (`web.5`).
 
 ### Fixed
 - **Seat recovery after a reload in a long game** — the `pth_resume` marker that replays

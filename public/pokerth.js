@@ -12089,7 +12089,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.4'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.5'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
@@ -12167,7 +12167,21 @@ window.BUILD_VERSION='2.1.10-web.4'; try{ var b=document.getElementById('cf-buil
       try { pwa = !!(window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true; } catch (e) {}
       // live: /live visits are counted apart from the web client's (proxy.js
       // recordLiveVisit), so the embedded view never inflates its footfall.
-      var body = JSON.stringify(window.LIVE_MODE ? { vid: vid, live: true } : { vid: vid, pwa: pwa });
+      // Landing source (read early by pokerth-client.html, see
+      // server/ref-stats.js): referring host, own page, utm_source, invite
+      // and ?lang= flags. Only fields that are set are sent.
+      var msg = window.LIVE_MODE ? { vid: vid, live: true } : { vid: vid, pwa: pwa };
+      if (!window.LIVE_MODE) {
+        try {
+          var L = window.__pthLanding || {};
+          if (L.ref) msg.ref = String(L.ref);
+          else if (L.self) msg.self = String(L.self);
+          if (L.src) msg.src = String(L.src);
+          if (L.inv) msg.inv = true;
+          if (L.lang) msg.lang = true;
+        } catch (e) {}
+      }
+      var body = JSON.stringify(msg);
       if (navigator.sendBeacon) {
         navigator.sendBeacon('/__visit', new Blob([body], { type: 'application/json' }));
       } else {

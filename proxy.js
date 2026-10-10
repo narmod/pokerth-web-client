@@ -6667,7 +6667,8 @@ function emptyVisitsStore() {
     allM: { pokerthnet: 0, lan: 0, offline: 0, live: 0 },
     env: {}, envSince: 0, langDiagSince: 0, music: {}, musicSince: 0, hourSince: 0,
     musicVotes: {}, musicVotesSince: 0,
-    guide: {}, guideSince: 0
+    guide: {}, guideSince: 0,
+    refSince: 0
   };
 }
 let visitsStore = emptyVisitsStore();
@@ -6692,6 +6693,7 @@ try {
     visitsStore.hourSince = (typeof _vs.hourSince === 'number') ? _vs.hourSince : 0;
     visitsStore.guide = (_vs.guide && typeof _vs.guide === 'object') ? _vs.guide : {};
     visitsStore.guideSince = (typeof _vs.guideSince === 'number') ? _vs.guideSince : 0;
+    visitsStore.refSince = (typeof _vs.refSince === 'number') ? _vs.refSince : 0;
   }
 } catch (e) { /* first run — start empty */ }
 let _visitsSaveTimer = null;
@@ -6812,6 +6814,8 @@ function recordMusicPlay(id) {
 const GUIDE_STATS = require('./server/guide-stats.js');
 // Visitor language: header parsing, alias folding, diagnostic of "other".
 const LANG_STATS = require('./server/lang-stats.js');
+// Where visitors come from: referring domain, campaign tag, invite link.
+const REF_STATS = require('./server/ref-stats.js');
 function recordGuideEvent(ctx, ev) {
   if (!GUIDE_STATS.valid(ctx, ev)) return false;
   const day = visitDayKey();
@@ -6820,6 +6824,23 @@ function recordGuideEvent(ctx, ev) {
   GUIDE_STATS.record(visitsStore, bucket, ctx, ev, Date.now());
   saveVisitsSoon();
   return true;
+}
+// One key per visit ping (server/ref-stats.js), in today's bucket: sources
+// for every visit, and for new visitors the source and the source x
+// language. Same id, same new/returning verdict as recordVisit.
+function recordVisitSource(d, acceptLang, seenBefore) {
+  try {
+    const day = visitDayKey();
+    let bucket = visitsStore.days[day];
+    if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
+    const isNew = (seenBefore === true || seenBefore === false) ? !seenBefore : null;
+    REF_STATS.record(visitsStore, bucket, REF_STATS.classify(d), isNew, LANG_STATS.parse(acceptLang).lang, Date.now());
+    saveVisitsSoon();
+  } catch (e) {}
+}
+function visitSourcePeriod(daysBack) {
+  const today = visitDayIndex();
+  return REF_STATS.period(daysBack, function (i) { return visitsStore.days[visitDayKeyFromIndex(today - i)] || null; });
 }
 function visitGuidePeriod(daysBack) {
   const today = visitDayIndex();
@@ -7393,6 +7414,10 @@ function visitsSummary(periodDays) {
     langTrend: visitLangTrend(P),
     envPeriod: visitEnvPeriod(P),
     musicPeriod: visitMusicPeriod(P),
+    // Where visitors come from, over the period (no all-time total: the
+    // series starts with the feature, refSince says when).
+    srcPeriod: visitSourcePeriod(P),
+    refSince: visitsStore.refSince || 0,
     langs: supportedLangs(),
     langN: supportedLangCount(),
     music: visitsStore.music || {},
@@ -11864,6 +11889,7 @@ const httpServer = http.createServer((req, res) => {
           recordVisitEnv(req.headers && req.headers['user-agent'],
                          req.headers && req.headers['accept-language'],
                          !!(d && d.pwa), _seenBefore);
+          recordVisitSource(d, req.headers && req.headers['accept-language'], _seenBefore);
         }
       } catch (e) { /* ignore a bad ping */ }
       res.writeHead(204, { 'Cache-Control': 'no-store' });
