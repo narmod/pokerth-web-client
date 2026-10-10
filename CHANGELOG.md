@@ -27,6 +27,11 @@ highlights below.
   per device too (`offer.first`), next to the rate among those who answered (`web.6`).
 
 ### Added
+- **Sessions per hour by entry mode, in the admin traffic stats** — a stacked 48-hour bar chart at
+  the top of the « Connections » card (Activity tab): Internet (pokerth.net), Training (bots), LAN /
+  dedicated and /live, hour by hour, with a toggleable legend and a tap/hover readout. The proxy now
+  keeps an hourly bucket per mode next to the daily one (`hm`, `modeHourSince`); hours before the
+  restart are empty, not quiet (`web.7`).
 - **Page lifecycle and disconnect reasons in the debug log** — each page start now records how it
   was opened (`navigate` / `reload` / `back_forward`), whether the browser had discarded the tab,
   and how the previous page ended (normal unload, killed in the background, or died in the

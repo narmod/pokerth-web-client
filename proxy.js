@@ -6665,7 +6665,7 @@ function emptyVisitsStore() {
   return {
     days: {}, totalV: 0, totalRet: 0, allU: {}, totalLV: 0, allLU: {},
     allM: { pokerthnet: 0, lan: 0, offline: 0, live: 0 },
-    env: {}, envSince: 0, langDiagSince: 0, music: {}, musicSince: 0, hourSince: 0,
+    env: {}, envSince: 0, langDiagSince: 0, music: {}, musicSince: 0, hourSince: 0, modeHourSince: 0,
     musicVotes: {}, musicVotesSince: 0,
     guide: {}, guideSince: 0,
     refSince: 0
@@ -6691,6 +6691,7 @@ try {
     visitsStore.musicVotes = (_vs.musicVotes && typeof _vs.musicVotes === 'object') ? _vs.musicVotes : {};
     visitsStore.musicVotesSince = (typeof _vs.musicVotesSince === 'number') ? _vs.musicVotesSince : 0;
     visitsStore.hourSince = (typeof _vs.hourSince === 'number') ? _vs.hourSince : 0;
+    visitsStore.modeHourSince = (typeof _vs.modeHourSince === 'number') ? _vs.modeHourSince : 0;
     visitsStore.guide = (_vs.guide && typeof _vs.guide === 'object') ? _vs.guide : {};
     visitsStore.guideSince = (typeof _vs.guideSince === 'number') ? _vs.guideSince : 0;
     visitsStore.refSince = (typeof _vs.refSince === 'number') ? _vs.refSince : 0;
@@ -6770,6 +6771,14 @@ function recordModeConnect(mode) {
   if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
   if (!bucket.m) bucket.m = {};
   bucket.m[mode] = (bucket.m[mode] || 0) + 1;
+  // Une case par heure et par mode, comme `h` pour les visites : le graphique
+  // « Last 48 h by entry mode » de la page admin en est tire. Seul le total de
+  // la case est garde, jamais l'instant d'une session.
+  const hr = new Date().getHours();
+  if (!bucket.hm) bucket.hm = {};
+  if (!bucket.hm[mode]) bucket.hm[mode] = {};
+  bucket.hm[mode][hr] = (bucket.hm[mode][hr] || 0) + 1;
+  if (!visitsStore.modeHourSince) visitsStore.modeHourSince = Date.now();
   if (!visitsStore.allM) visitsStore.allM = {};
   visitsStore.allM[mode] = (visitsStore.allM[mode] || 0) + 1;
   saveVisitsSoon();
@@ -7225,7 +7234,10 @@ function visitHourSeries(nHours) {
     const d = new Date(now.getTime() - i * 3600000);
     const b = visitsStore.days[visitDayKey(d)];
     const hh = d.getHours();
-    out.push({ t: visitDayKey(d) + 'T' + String(hh).padStart(2, '0'), v: (b && b.h) ? (b.h[hh] || 0) : 0, nw: (b && b.hn) ? (b.hn[hh] || 0) : 0 });
+    const hm = (b && b.hm) || {};
+    const m = {};
+    for (const mk of ['pokerthnet', 'lan', 'offline', 'live']) m[mk] = (hm[mk] && hm[mk][hh]) || 0;
+    out.push({ t: visitDayKey(d) + 'T' + String(hh).padStart(2, '0'), v: (b && b.h) ? (b.h[hh] || 0) : 0, nw: (b && b.hn) ? (b.hn[hh] || 0) : 0, m: m });
   }
   return out;
 }
@@ -7407,6 +7419,7 @@ function visitsSummary(periodDays) {
     hours48: visitHourSeries(48),
     hourProfile: visitHourProfile(P),
     hourSince: visitsStore.hourSince || 0,
+    modeHourSince: visitsStore.modeHourSince || 0,
     cohorts: visitCohorts(P),
     env: Object.assign(LANG_STATS.foldEnv(visitsStore.env || {}), { noiseMeta: LANG_STATS.noiseMeta(visitsStore.langDiagSince) }),
     envSince: visitsStore.envSince || 0,

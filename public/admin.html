@@ -535,6 +535,11 @@
       <div class="card">
         <h2>Connections</h2>
         <div class="tsec">
+          <div class="boardhead"><h3>Last 48 h by entry mode</h3><span id="trafModes48Note" class="headnote"></span></div>
+          <p class="muted xpl">Sessions opened per hour over the last 48 hours (server local time), stacked by entry mode — the same count as “Where sessions open” below, spread hour by hour. Tap a legend entry to hide a mode and rescale the others; tap a bar to read it. The last bar is the hour in progress. Hourly counting by mode started with 2.1.10-web.7: hours before that are empty, not quiet.</p>
+          <div id="trafModes48"><div class="empty">Loading…</div></div>
+        </div>
+        <div class="tsec">
           <h3>Where sessions open</h3>
           <p class="muted xpl">Counts a session once per entry mode, when its connection opens, whatever the transport (a page loaded but never connected is a visit, not a session): Internet games routed through this proxy still count as pokerth.net. Offline = training vs bots. <b>/live</b> = spectator sessions from the embedded view, counted apart from the web client (since 2.1.8-web.100; earlier ones sit under pokerth.net).</p>
           <div id="trafModes"><div class="empty">Loading…</div></div>
@@ -3426,6 +3431,40 @@
   // jour, direction, part de recurrents, et une conclusion en clair. Tout est
   // derive de la meme reponse /admin/visits — aucune mesure supplementaire
   // n'est collectee, seulement lue autrement.
+  // -- Les 48 dernieres heures par mode d'entree ------------------------------
+  // Meme compte que « Where sessions open » (une session a l'ouverture de sa
+  // connexion), reparti heure par heure et empile par mode. Un proxy anterieur
+  // n'envoie pas modeHourSince : le manque est dit, pas dessine comme un vide.
+  // Internet en bas de pile : c'est la plus grosse couche, les autres se lisent
+  // mieux posees dessus.
+  var MODE48=[
+    {k:'pokerthnet',n:'Internet (pokerth.net)',s:'Internet',c:'#4080d8'},
+    {k:'offline',n:'Training (bots)',s:'Training',c:'#e0b050'},
+    {k:'lan',n:'LAN / dedicated',s:'LAN',c:'#7fd17f'},
+    {k:'live',n:'/live (spectators)',s:'/live',c:'#c08ae0'}
+  ];
+  function _trafModes48(d){
+    var box=$('trafModes48'), nt=$('trafModes48Note');
+    if(!box) return;
+    if(d.modeHourSince===undefined){
+      box.innerHTML='<div class="empty">Sessions by hour need a proxy restart \u2014 this build counts them, the running one does not.</div>';
+      if(nt) nt.textContent='';
+      return;
+    }
+    var h48=d.hours48||[], tot={}, all=0;
+    MODE48.forEach(function(md){ tot[md.k]=0; });
+    h48.forEach(function(x){ var m=x.m||{}; MODE48.forEach(function(md){ var v=m[md.k]||0; tot[md.k]+=v; all+=v; }); });
+    if(!all){
+      box.innerHTML='<div class="empty">Nothing recorded yet'+(d.modeHourSince?(' \u2014 hourly counting started '+new Date(d.modeHourSince).toLocaleString()):'')+'.</div>';
+      if(nt) nt.textContent='';
+      return;
+    }
+    var labs=h48.map(function(x){ return x.t.slice(8,10)+'.'+x.t.slice(5,7)+' '+x.t.slice(11)+'h'; });
+    var lines=MODE48.map(function(md){ return {k:md.k,n:md.n,c:md.c,vals:h48.map(function(x){ return (x.m&&x.m[md.k])||0; })}; });
+    _chartMount(box,labs,lines,150,'stack');
+    if(nt) nt.textContent=all.toLocaleString()+' sessions \u00b7 '+MODE48.filter(function(md){ return tot[md.k]; })
+      .map(function(md){ return md.s+' '+Math.round(tot[md.k]*100/all)+'%'; }).join(' \u00b7 ');
+  }
   // -- L'heure du jour -------------------------------------------------------
   // Deux seaux horaires cotes serveur, rien de plus : combien de visites par
   // heure, et combien d'entre elles sont une premiere venue. Un proxy anterieur
@@ -3559,6 +3598,7 @@
     // Les vues horaires ne dependent pas de la serie quotidienne : elles sont
     // rendues meme si celle-ci est vide, sinon elles resteraient sur « Loading ».
     var hourLine=_trafHours(d);
+    _trafModes48(d);
     var retLine=_trafCohorts(d);
     if(!n) return;
     var vv=s.map(function(x){ return x.v||0; });

@@ -35,6 +35,9 @@ ok(src.indexOf('bucket.hn[hr]') > src.indexOf('bucket.nw = (bucket.nw || 0) + 1;
 ok(/hours48: visitHourSeries\(48\)/.test(src), 'the summary carries the last 48 hours');
 ok(/hourProfile: visitHourProfile\(P\)/.test(src), 'and an average day over the dashboard period');
 ok(/hourSince: visitsStore\.hourSince/.test(src), 'and says since when any of it was collected');
+ok(/bucket\.hm\[mode\]\[hr\] = \(bucket\.hm\[mode\]\[hr\] \|\| 0\) \+ 1;/.test(src), 'every session opening lands in an hour bucket for its mode');
+ok(/modeHourSince: visitsStore\.modeHourSince \|\| 0/.test(src), 'and the summary says since when sessions are counted by hour');
+ok(/visitsStore\.modeHourSince = \(typeof _vs\.modeHourSince === 'number'\)/.test(src), 'which survives a restart too');
 ok(/visitsStore\.hourSince = \(typeof _vs\.hourSince === 'number'\)/.test(src),
   'which survives a restart instead of resetting to now');
 
@@ -70,6 +73,16 @@ ok(s48[47].t === visitDayKey(now) + 'T' + String(now.getHours()).padStart(2, '0'
 ok(new Date(s48[0].t.slice(0, 10)) <= now, 'and starts two days back, not in the future');
 ok(s48.every(x => typeof x.v === 'number' && typeof x.nw === 'number'),
   'each hour carries both a visit count and a first-time count');
+ok(s48.every(x => x.m && ['pokerthnet', 'lan', 'offline', 'live'].every(k => x.m[k] === 0)),
+  'each hour carries a per-mode count, zero where none was recorded');
+{
+  const kNow = visitDayKey(now), hh = now.getHours();
+  visitsStore.days[kNow].hm = { offline: { [hh]: 3 }, pokerthnet: { [hh]: 5 } };
+  const last = visitHourSeries(48)[47].m;
+  ok(last.offline === 3 && last.pokerthnet === 5 && last.lan === 0 && last.live === 0,
+    'and reads the mode buckets of the hour it stands for');
+  delete visitsStore.days[kNow].hm;
+}
 const gap = new Date(now); gap.setDate(now.getDate() - 6);
 ok(visitHourSeries(48).length === 48 && !visitsStore.days[visitDayKey(gap)].h,
   'a day with no hour bucket does not break the series');
