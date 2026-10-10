@@ -952,15 +952,19 @@ function automated() {
 }
 function maybeOffer() {
   clearTimeout(offerTimer);
-  if (!available() || state.isOn() || state.wasOffered() || automated()) return;
+  if (!available() || state.isOn() || state.wasOffered() || state.offerTired() || automated()) return;
   offerTimer = setTimeout(async () => {
-    if (!available() || state.isOn() || state.wasOffered()) return;
+    if (!available() || state.isOn() || state.wasOffered() || state.offerTired()) return;
     const w = where();
     if (!(w.screen === 'connect' || w.screen === 'lobby') || !splashGone() || blocked() || document.hidden || bannerUp() || showing) { maybeOffer(); return; }
     const m = await ensureDock();
-    if (!m || state.isOn() || state.wasOffered()) return;
+    if (!m || state.isOn() || state.wasOffered() || state.offerTired()) return;
     showing = { kind: 'offer' };
+    // offered = every showing; first = once per device (web.6), the
+    // denominator of the per-device acceptance in the admin
+    const nShow = state.countOfferShow();
     beacon('offer', 'offered');
+    if (nShow === 1) beacon('offer', 'first');
     m.say({
       text: gt('offer'),
       buttons: [btn('offerNo'), btn('offerYes', true)],

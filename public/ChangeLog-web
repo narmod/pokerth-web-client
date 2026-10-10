@@ -1,3 +1,6 @@
+2026-10-10 version 2.1.10-web.6:
+- improvement: the Ace no longer offers his help again and again — if you do not answer, he asks at most 3 times on this device; you can still turn his help on from the login screen or Advanced options
+
 2026-10-10 version 2.1.10-web.5:
 - improvement: the anonymous visit statistics now also count which website a visit comes from, by its domain name only — the privacy page is updated
 

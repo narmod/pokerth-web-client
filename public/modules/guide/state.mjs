@@ -1,11 +1,16 @@
 // ═══════════════════════════════════════════════════════════════════
 // Ace's Help — saved progress (web extension, narmod 2026-09-30).
 //
-// Three localStorage keys:
+// Four localStorage keys:
 //   pth_guide_on       '1' / '0'  the help is on (option, synced like any
 //                                 other web option through _CFG_WEB_SYNC_KEYS)
 //   pth_guide_offered  '1'        the first-launch offer was answered
 //   pth_guide_seen     JSON       { r: resetMs, s: { <context id>: seenMs } }
+//   pth_guide_offer_n  '1'…'3'    how many times the offer was shown on this
+//                                 device without an answer (web.6): after
+//                                 OFFER_MAX_SHOWS it is not proposed again
+//                                 here — the help stays one tap away (login
+//                                 button, Advanced options). Local only.
 //
 // pth_guide_offered and pth_guide_seen travel with the pokerth.net account
 // on the /prefs-web channel (pokerth.js, _GUIDE_SYNC_KEYS) and are MERGED,
@@ -21,6 +26,9 @@
 export const KEY_ON = 'pth_guide_on';
 export const KEY_OFFERED = 'pth_guide_offered';
 export const KEY_SEEN = 'pth_guide_seen';
+export const KEY_OFFER_N = 'pth_guide_offer_n';
+/** Offer shown this many times with no answer: it stops coming back on this device. */
+export const OFFER_MAX_SHOWS = 3;
 /** Keys merged on the account channel (pokerth.js _GUIDE_SYNC_KEYS). */
 export const SYNC_KEYS = [KEY_OFFERED, KEY_SEEN];
 
@@ -115,6 +123,16 @@ export function createState(storage, onChange, now = () => Date.now()) {
     setOn(on) { set(KEY_ON, on ? '1' : '0'); },
     wasOffered: () => get(KEY_OFFERED) === '1',
     markOffered() { if (get(KEY_OFFERED) !== '1') set(KEY_OFFERED, '1'); },
+    /** Times the offer was shown on this device (not synced, no onChange). */
+    offerShows() { const n = parseInt(get(KEY_OFFER_N) || '0', 10); return Number.isFinite(n) && n > 0 ? Math.min(n, 999) : 0; },
+    /** One more showing; returns the new count (1 = first time on this device). */
+    countOfferShow() {
+      const n = this.offerShows() + 1;
+      try { storage.setItem(KEY_OFFER_N, String(n)); } catch (e) {}
+      return n;
+    },
+    /** Shown OFFER_MAX_SHOWS times and never answered: not proposed again here. */
+    offerTired() { return this.offerShows() >= OFFER_MAX_SHOWS; },
     seen: (id) => !!parseSeen(get(KEY_SEEN)).s[id],
     markSeen(id) {
       if (!ID_RE.test(id)) return;

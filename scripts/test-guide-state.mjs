@@ -38,6 +38,17 @@ const S = G.createState(st, (k) => marks.push(k), () => t);
 ok(!S.isOn() && !S.wasOffered(), 'fresh: off, never offered (D3)');
 S.markOffered(); S.markOffered();
 ok(S.wasOffered() && marks.filter((k) => k === G.KEY_OFFERED).length === 1, 'offer marked once, one sync mark');
+// ── the offer left unanswered (web.6) ──
+{
+  const s2 = mem(); const m2 = [];
+  const O = G.createState(s2, (k) => m2.push(k), () => t);
+  ok(O.offerShows() === 0 && !O.offerTired(), 'fresh: never shown, not tired');
+  ok(O.countOfferShow() === 1 && O.countOfferShow() === 2 && !O.offerTired(), 'two showings: proposed again');
+  ok(O.countOfferShow() === G.OFFER_MAX_SHOWS && O.offerTired(), 'after ' + G.OFFER_MAX_SHOWS + ' showings with no answer: not proposed again on this device');
+  ok(m2.length === 0 && !G.SYNC_KEYS.includes(G.KEY_OFFER_N), 'the counter is local: no sync mark, not an account key');
+  s2.setItem(G.KEY_OFFER_N, 'junk');
+  ok(O.offerShows() === 0, 'a malformed counter reads as never shown');
+}
 S.setOn(true);
 ok(S.isOn() && st.getItem(G.KEY_ON) === '1', 'on → pth_guide_on = 1');
 S.markSeen('lobby-ranking'); t = 2000; S.markSeen('wait-ranking'); S.markSeen('lobby-ranking');

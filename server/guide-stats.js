@@ -20,7 +20,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 const EVENTS = Object.freeze({
-  offer: ['offered', 'accepted', 'dismissed'],
+  offer: ['offered', 'accepted', 'dismissed', 'first'],   // first: once per device (web.6)
   welcome: ['shown', 'done'],
   'lobby-ranking': ['shown', 'done', 'dismissed', 'join', 'started'],
   'lobby-ranking-create': ['shown', 'done', 'dismissed', 'create'],
@@ -107,7 +107,10 @@ function summary(g) {
   }
   const highlighted = n('lobby-ranking', 'shown'), joined = n('lobby-ranking', 'join'), started = n('lobby-ranking', 'started');
   return {
-    acceptance: { offered, accepted, declined: n('offer', 'dismissed'), rate: rate(accepted, offered) },
+    acceptance: { offered, accepted, declined: n('offer', 'dismissed'), rate: rate(accepted, offered),
+      // devices = first showing on a device (web.6); answered = yes or no
+      devices: n('offer', 'first'), deviceRate: rate(accepted, n('offer', 'first')),
+      answerRate: rate(accepted, accepted + n('offer', 'dismissed')) },
     contexts,
     funnel: { highlighted, joined, started, joinRate: rate(joined, highlighted), startRate: rate(started, joined) },
     create: { shown: n('lobby-ranking-create', 'shown'), created: n('lobby-ranking-create', 'create') },

@@ -45,6 +45,12 @@ rec(2, 'lobby-guest', 'shown'); rec(2, 'lobby-guest', 'guest_redirect');
 ok(store.guide.offer.offered === 2 && store.guideSince === 1000, 'all-time totals and first date');
 const S = G.summary(store.guide);
 ok(S.acceptance.offered === 2 && S.acceptance.accepted === 1 && S.acceptance.declined === 1 && S.acceptance.rate === 0.5, 'acceptance 1 of 2 (50 %)');
+ok(S.acceptance.devices === 0 && S.acceptance.deviceRate === null && S.acceptance.answerRate === 0.5, 'no first showing yet: no per-device rate; 1 yes of 2 answers');
+{
+  const g2 = {}; G.record(g2, null, 'offer', 'first', 1); G.record(g2, null, 'offer', 'first', 1); G.record(g2, null, 'offer', 'offered', 1); G.record(g2, null, 'offer', 'offered', 1); G.record(g2, null, 'offer', 'offered', 1); G.record(g2, null, 'offer', 'accepted', 1);
+  const A = G.summary(g2.guide).acceptance;
+  ok(G.valid('offer', 'first') && A.devices === 2 && A.deviceRate === 0.5 && A.offered === 3, 'offer.first counts devices: 1 yes of 2 devices, 3 showings');
+}
 ok(S.funnel.highlighted === 10 && S.funnel.joined === 4 && S.funnel.started === 2, 'funnel highlighted → joined → started');
 ok(S.funnel.joinRate === 0.4 && S.funnel.startRate === 0.5, 'funnel rates');
 ok(S.guests.shown === 1 && S.guests.redirect === 1, 'guests counted apart');

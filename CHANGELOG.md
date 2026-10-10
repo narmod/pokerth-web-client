@@ -20,6 +20,11 @@ highlights below.
   build-ID fallbacks in `net/messages.mjs` and `proto/index.mjs` move to 2.1.10 (`web.0`).
 - **A shorter changelog in « About »** — the « Web client » tab now shows this file, one
   summary per release line, instead of the build-by-build `ChangeLog-web` list (`web.2`).
+- **The Ace's first-launch offer no longer comes back forever** — left unanswered, it reappeared
+  at every visit and every return to the lobby (4 270 showings for 1 270 answers in six days). It
+  is now shown at most 3 times per device (`pth_guide_offer_n`, local, not synced); Ace's Help
+  stays one tap away from the login button and Advanced options. The admin card counts the offer
+  per device too (`offer.first`), next to the rate among those who answered (`web.6`).
 
 ### Added
 - **Page lifecycle and disconnect reasons in the debug log** — each page start now records how it

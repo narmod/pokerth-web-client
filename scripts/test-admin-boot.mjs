@@ -104,7 +104,7 @@ ok($('auList') && $('auList').children.length > 0, 'the audit log rendered its e
 // ── Ace's Help card (traffic tab, L3) ────────────────────────────────────
 await new Promise((r) => setTimeout(r, 300));
 const tg = $('trafGuide');
-ok(tg && /Ranking funnel/.test(tg.textContent) && /40% of highlighted/.test(tg.textContent) && /2 of 5 offered/.test(tg.textContent),
+ok(tg && /Ranking funnel/.test(tg.textContent) && /40% of highlighted/.test(tg.textContent) && /2 of 5 showings/.test(tg.textContent) && /Of those who answered/.test(tg.textContent),
   'the Ace’s Help card renders acceptance and the Ranking funnel');
 ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
 

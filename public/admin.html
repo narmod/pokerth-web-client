@@ -3100,7 +3100,10 @@
     }
     var a=g.acceptance, f=g.funnel, h='';
     h+='<h4 style="margin:10px 0 4px">Offer on first launch</h4>';
-    h+='<div class="srow"><span>Accepted</span><b>'+a.accepted+' of '+a.offered+' offered · '+_gPct(a.rate)+(a.declined?' · '+a.declined+' said no':'')+'</b></div>';
+    h+='<div class="srow"><span>Accepted</span><b>'+a.accepted+' of '+a.offered+' showings · '+_gPct(a.rate)+(a.declined?' · '+a.declined+' said no':'')+'</b></div>';
+    if(a.devices) h+='<div class="srow"><span>Per device</span><b>'+a.devices+' devices offered · '+_gPct(a.deviceRate)+' said yes</b></div>';
+    if(a.accepted||a.declined) h+='<div class="srow"><span>Of those who answered</span><b>'+_gPct(a.answerRate)+' yes</b></div>';
+    h+='<div class="muted" style="margin-top:4px">A showing left unanswered comes back at the next visit or return to the lobby, at most 3 times per device (since 2.1.10-web.6; « devices » counts from then). The help stays one tap away: login button, Advanced options.</div>';
     h+='<h4 style="margin:14px 0 4px">Ranking funnel</h4>';
     var fmax=Math.max(f.highlighted,f.joined,f.started,1);
     h+=_gBar('Table highlighted in the lobby',f.highlighted,fmax,'','#d4a017');
