@@ -31,7 +31,9 @@ highlights below.
   the top of the « Connections » card (Activity tab): Internet (pokerth.net), Training (bots), LAN /
   dedicated and /live, hour by hour, with a toggleable legend and a tap/hover readout. The proxy now
   keeps an hourly bucket per mode next to the daily one (`hm`, `modeHourSince`); hours before the
-  restart are empty, not quiet (`web.7`).
+  restart are empty, not quiet (`web.7`). Every other bar chart of the traffic tabs (last 48 h
+  visits, time of day, active days, new devices per day) now answers a tap on mobile too, with the
+  same readout as the line and stacked charts, instead of a mouse-only tooltip (`web.8`).
 - **Page lifecycle and disconnect reasons in the debug log** — each page start now records how it
   was opened (`navigate` / `reload` / `back_forward`), whether the browser had discarded the tab,
   and how the previous page ended (normal unload, killed in the background, or died in the

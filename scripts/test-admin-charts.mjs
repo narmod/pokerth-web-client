@@ -64,7 +64,7 @@ ok(/_annEsc\(l\.n\|\|l\.k\)/.test(leg), 'labels are escaped — some of them are
 // -- Run it -----------------------------------------------------------------
 const need = ['_chartSig', '_chartMount', '_chartVisible', '_chartLegend', '_chartDraw',
   '_chartIndex', '_chartCentre', '_chartHide', '_chartRead',
-  '_lineChart', '_stackChart', '_lineNiceMax', '_annEsc', '_round1'];
+  '_lineChart', '_stackChart', '_barChart', '_mean', '_lineNiceMax', '_annEsc', '_round1'];
 ok(!need.some(x => !whole(x)), 'every chart helper is liftable');
 const env = grab(/var CHART_W=700;/) + grab(/var CHART_GEO=\{[^;]*;/) + 'var _chartUid=0,_charts={};';
 
@@ -131,6 +131,33 @@ const stk = { labels: ['a', 'b', 'c', 'd'], kind: 'stack' };
 const gs = w.eval('CHART_GEO.stack');
 ok(w._chartIndex(stk, (gs.l + 1) / W) === 0 && w._chartIndex(stk, (W - gs.r - 1) / W) === 3,
   'bars are indexed by slot, not by vertex');
+
+
+// -- Single-series bars ----------------------------------------------------
+// The hourly and daily bar charts of the traffic tabs used to be frozen SVG:
+// a <title> per bar, so a hover tooltip with a mouse and nothing at all under
+// a finger. They now go through the same mount as every other chart.
+ok(/kind==='bar'/.test(body(admin, '_chartDraw')), 'the mount knows a single-series bar kind');
+ok(/_chartMount\(b48,/.test(admin), 'the last-48-hours visits chart is mounted');
+ok(/_chartMount\(\$\('trafHoursV'\)/.test(admin) && /_chartMount\(\$\('trafHoursN'\)/.test(admin),
+  'and both time-of-day charts');
+ok(/_chartMount\(\$\('trafRetAct'\)/.test(admin) && /_chartMount\(nb,/.test(admin),
+  'and the active-days and new-devices charts');
+ok((admin.match(/_barChart\(/g) || []).length === 2, 'no bar chart is left as a static picture (the helper is only called by the mount)');
+const bh = w.document.createElement('div'); bh.id = 'barhost'; w.document.body.appendChild(bh);
+w._chartMount(bh, ['00:00', '01:00', '02:00'], [{ k: 'v', n: 'Visits', c: '#4080d8', vals: [3, 0, 7] }], 150, 'bar',
+  { c: '#4080d8', xl: ['00', '01', '02'], colFn: (v, i) => i === 2 ? '#2c5896' : '#4080d8' });
+ok(!bh.querySelector('.lgi'), 'one series needs no legend');
+ok(bh.querySelector('.chartro') && bh.querySelector('.chartgd') && bh.classList.contains('chartbox'),
+  'but it gets the readout and the guide line');
+ok(bh.querySelectorAll('svg rect').length === 3, 'one bar per slot, a zero included');
+ok([...bh.querySelectorAll('svg text')].some(t => t.textContent === '02') &&
+   ![...bh.querySelectorAll('svg text')].some(t => t.textContent === '02:00'),
+  'the axis keeps the short labels, the readout gets the long ones');
+const gb = w.eval('CHART_GEO.bar');
+const bst = { labels: ['a', 'b', 'c'], kind: 'bar' };
+ok(w._chartIndex(bst, (gb.l + 1) / W) === 0 && w._chartIndex(bst, (W - gb.r - 1) / W) === 2,
+  'and the pointer is matched to the bar under it, by slot');
 
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);
