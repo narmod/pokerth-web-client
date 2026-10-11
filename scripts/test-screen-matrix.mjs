@@ -135,7 +135,8 @@ async function tableProblems(page, seats, spectator) {
     if (z.left < -1 || z.top < -1 || z.right > W + 1 || z.bottom > H + 1) out.push(`table zone leaves the window (${Math.round(z.left)},${Math.round(z.top)} - ${Math.round(z.right)},${Math.round(z.bottom)} / ${W}x${H})`);
     if (z.width < 120 || z.height < 120) out.push(`table zone collapsed to ${Math.round(z.width)}x${Math.round(z.height)}`);
     [...document.querySelectorAll('.act-buttons-row .btn-action')].filter(vis).forEach((b) => { const r = b.getBoundingClientRect();
-      if (r.left < -1 || r.top < -1 || r.right > W + 1 || r.bottom > H + 1) out.push(`action button "${b.textContent.trim().slice(0, 20)}" is cut by the window edge`); });
+      if (r.left < -1 || r.top < -1 || r.right > W + 1 || r.bottom > H + 1) { const m = document.querySelector('.my-zone'), mr = m && m.getBoundingClientRect();
+        out.push(`action button "${b.textContent.trim().slice(0, 20)}" is cut by the window edge (${Math.round(r.left)},${Math.round(r.top)} - ${Math.round(r.right)},${Math.round(r.bottom)} / ${W}x${H}; action bar ${mr ? Math.round(mr.top) + '-' + Math.round(mr.bottom) + ' ' + getComputedStyle(m).position : '-'})`); } });
     const overY = document.documentElement.scrollHeight - H;
     if (overY > 1 && getComputedStyle(document.documentElement).overflowY !== 'hidden') out.push(`page scrolls vertically by ${overY}px on the table`);
     return out;
@@ -252,6 +253,19 @@ async function runDevice(browser, name, descriptor, engine) {
         if (out.some((l) => l.startsWith(`${w}x${h}`))) await shot(page, shotName, `resize-table-${w}x${h}`);
       }
       diffSig(before, await signature(page)).forEach((d) => out.push('back at 1440x900, the table moved: ' + d));
+      return out;
+    });
+    // TEMPORARY diagnostic (to be removed): same sizes with header-title-fit.mjs blocked.
+    if (engine === 'webkit') await step('[diagnostic] table at 899x700 / 900x599 without header-title-fit', browser, descriptor, shotName, 'diag-no-fit', async (page) => {
+      await page.route('**/header-title-fit.mjs', (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
+      await openTable(page, base, { seats: 6, board: 'river', turn: 'first', stopAt: 'lobby' }); await dismissBanner(page);
+      await enterTable(page, { seats: 6, board: 'river', turn: 'first' });
+      await bigBetMyTurn(page);
+      const out = [];
+      for (const [w, h] of [[1024, 768], [899, 700], [900, 599]]) {
+        await page.setViewportSize({ width: w, height: h }); await page.waitForTimeout(250); await settleAll(page);
+        (await tableProblems(page, 6, false)).forEach((l) => out.push(`${w}x${h} - ${l}`));
+      }
       return out;
     });
   }
