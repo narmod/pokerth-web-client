@@ -84,6 +84,16 @@ async function dismissBanner(page) {
   const later = page.locator('#bak-restore-banner button').last();
   try { if (await later.isVisible()) await later.click({ timeout: 2000 }); } catch (_e) {}
 }
+// The lobby settles after the players list is drawn (it sets the minimum
+// width of its column): audit only once the list is there and two frames
+// have passed - the first version measured before that and missed a clipped
+// Create button.
+async function lobbySettled(page) {
+  await page.locator('#s-lobby.active').waitFor({ timeout: 8000 });
+  await page.waitForFunction(() => document.querySelectorAll('#players-list-body .pl-row').length > 0, null, { timeout: 5000 }).catch(() => {});
+  await page.waitForTimeout(600);
+  await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+}
 async function bigBetMyTurn(page) {
   await page.evaluate(({ ME, GAME }) => { const f = window.__fx, opp = f.ids[2] || f.ids[1];
     f.socket.receive(f.envelope(f.MSG.T.PlayersActionDone, 45, [[1, 0, GAME], [2, 0, opp], [3, 0, 1], [4, 0, 4], [5, 0, 1500], [6, 0, 1500], [7, 0, 1500], [8, 0, 1500]]));
@@ -182,7 +192,7 @@ async function runDevice(browser, name, descriptor, engine) {
     });
     await step('lobby + create table', browser, descriptor, shotName, 'lobby', async (page) => {
       await openTable(page, base, { seats: 6, stopAt: 'lobby' }); await dismissBanner(page);
-      await page.locator('#s-lobby.active').waitFor({ timeout: 8000 }); await page.waitForTimeout(300);
+      await lobbySettled(page);
       const out = (await uiAudit(page, '#s-lobby')).map((l) => 'lobby - ' + l);
       await shot(page, shotName, 'lobby-list');
       await page.evaluate(() => window.App.openCreatePage()); await page.locator('#s-create.active #create-form').waitFor({ timeout: 5000 }); await page.waitForTimeout(400);
@@ -204,10 +214,10 @@ async function runDevice(browser, name, descriptor, engine) {
     const sizes = RESIZE.map(([w, h]) => `${w}x${h}`).join(' > ');
     await step(`lobby resized ${sizes}`, browser, descriptor, shotName, 'resize-lobby', async (page) => {
       await openTable(page, base, { seats: 6, stopAt: 'lobby' }); await dismissBanner(page);
-      await page.locator('#s-lobby.active').waitFor({ timeout: 8000 }); await page.waitForTimeout(300);
+      await lobbySettled(page);
       const before = await signature(page), out = [];
       for (const [w, h] of RESIZE) {
-        await page.setViewportSize({ width: w, height: h }); await page.waitForTimeout(350);
+        await page.setViewportSize({ width: w, height: h }); await page.waitForTimeout(600);
         (await uiAudit(page, '#s-lobby')).forEach((l) => out.push(`${w}x${h} - ${l}`));
       }
       diffSig(before, await signature(page)).forEach((d) => out.push('back at 1440x900, the lobby moved: ' + d));

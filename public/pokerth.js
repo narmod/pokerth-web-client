@@ -11526,6 +11526,19 @@ function renderPlayersList() {
   var _headHtml = '<div class="pl-colhead" style="grid-template-columns:' + _headTmpl + '">'
                 + _plColHeadHtml() + '</div>';
   try { body.style.setProperty('--pl-cols', _visCols.map(_plTrack).join(' ')); } catch (e) {}
+  // Largeur mini de la colonne Joueurs (lobby large >=900) : pistes fixes
+  // visibles + gaps + padding/bordure du panneau + 60px pour le pseudo. Sans
+  // ce plancher, au défaut 240px les pistes fixes (228px) mangeaient toute la
+  // ligne et la colonne Nom tombait à 0px (aucun pseudo visible). Recalculé à
+  // chaque rendu : colonnes masquées / admin / Inviter / barre de défilement.
+  try {
+    var _gap = parseFloat(getComputedStyle(body).getPropertyValue('--sp-3')) || 8;
+    var _fixed = _visCols.filter(function (k) { return k !== 'name'; })
+      .reduce(function (sum, k) { return sum + (parseFloat(_plTrack(k)) || 0); }, 0);
+    var _sb = Math.max(0, body.offsetWidth - body.clientWidth);
+    var _lg = document.querySelector('#s-lobby .lobby-grid');
+    if (_lg) _lg.style.setProperty('--pl-min', Math.ceil(_fixed + (_visCols.length - 1) * _gap + 26 + _sb + 60) + 'px');
+  } catch (e) {}
   // Build the list of {pid, name} from _lobbyPids (defined inside
   // the IIFE; we read it via window-level references).
   var pids = window._readLobbyPids ? window._readLobbyPids() : [];
@@ -12089,7 +12102,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.13'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.14'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
@@ -12290,7 +12303,7 @@ window.BUILD_VERSION='2.1.10-web.13'; try{ var b=document.getElementById('cf-bui
   }
 
   /* ── Poignées de redimensionnement (wide) ── */
-  var MINC=280, MINL=160, MINR=200, MININFO=120, HW=12;
+  var MINC=334, MINL=160, MINR=200, MININFO=120, HW=12;
   function ensureHandles(){
     var g=grid(); if(!g) return;
     ['l','r','v'].forEach(function(k){

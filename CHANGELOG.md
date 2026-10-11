@@ -56,6 +56,13 @@ highlights below.
   selected period and included in the JSON export. The privacy page says so (`web.5`).
 
 ### Fixed
+- **Player names are back in the lobby's « Players online » list on wide screens** — from 900 px
+  wide, the fixed columns (avatar, star, in game, country, actions: 228 px) filled the whole row
+  of the 240 px default column, so the name column was 0 px and no nickname showed, on every
+  desktop and in all three engines. The column now never gets narrower than its visible columns
+  plus 60 px for the name (recomputed for hidden columns, the admin hammer, the Invite column and
+  a classic scroll bar); the centre column keeps 334 px so the « Create a table » button still
+  fits at 900 px. A column the player widened by hand is unchanged (`web.14`).
 - **The admin error list scrolls** — past 15 errors the list keeps the height of its first 15
   lines and scrolls vertically inside the card, instead of stretching the page; a Dismiss keeps
   the scroll position (`web.13`).

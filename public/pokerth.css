@@ -10593,8 +10593,8 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   #s-lobby .lobby-grid {
     position:relative; flex:1 1 auto; min-height:0; gap:0; display:grid;
     grid-template-columns:
-      minmax(160px, min(var(--lc-l,240px), 30%)) 12px
-      minmax(280px, 1fr) 12px
+      minmax(max(160px, var(--pl-min, 0px)), min(var(--lc-l,240px), 30%)) 12px
+      minmax(334px, 1fr) 12px
       minmax(200px, min(var(--lc-r,300px), 30%));
     grid-template-rows: minmax(120px, min(var(--lc-info,220px), 60%)) 12px minmax(120px,1fr) auto;
     grid-template-areas:
