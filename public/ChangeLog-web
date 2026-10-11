@@ -1,3 +1,6 @@
+2026-10-11 version 2.1.10-web.16:
+- bugfix: on a tablet held upright, a long table name no longer runs under the buttons at the top of the table (it ends with "…"; tap it for the details)
+
 2026-10-11 version 2.1.10-web.15:
 - bugfix: on a computer or a tablet with a short screen, the login card no longer covers the Discord, pokerth.net and GitHub links
 

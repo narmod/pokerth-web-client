@@ -56,6 +56,11 @@ highlights below.
   selected period and included in the JSON export. The privacy page says so (`web.5`).
 
 ### Fixed
+- **The table name no longer runs under the header buttons** — the name is centred on the bar
+  with a maximum of 72 % of the screen, whatever the buttons on its right; on a portrait tablet
+  (iPad Mini, 768 px) a long name went under the sound button. New `ui/header-title-fit.mjs`
+  measures the room the visible buttons leave (admin buttons included, re-measured on resize) and
+  the name ends in « … » there (`web.16`).
 - **The login card no longer hides the Discord / pokerth.net / GitHub links on short screens** —
   on a desktop or tablet 600 to 900 px tall (1280x720, 1366x768, a tablet in landscape) the
   Internet login card was taller than the room above the footer and, stacked above it on

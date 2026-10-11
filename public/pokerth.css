@@ -875,7 +875,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  max-width: min(72vw, 560px);
+  max-width: min(72vw, 560px, var(--hdr-title-fit, 100vw));   /* --hdr-title-fit: room left by the buttons (modules/ui/header-title-fit.mjs) */
   justify-content: center;
   pointer-events: none;   /* les zones vides laissent passer les clics aux boutons */
   z-index: 1;
@@ -938,7 +938,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 }
 /* Petits écrans : on resserre pour ne pas mordre sur les boutons du header. */
 @media (max-width: 599.98px) {
-  .header-brand--game { max-width: 82vw; }
+  .header-brand--game { max-width: min(82vw, var(--hdr-title-fit, 100vw)); }
   /* Emoji seul (le libelle deborde sur petit ecran). */
   .header-brand--game .gsb-label { display: none; }
   .g-status-badge { padding: 1px 5px; }
