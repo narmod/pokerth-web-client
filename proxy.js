@@ -11819,8 +11819,6 @@ const httpServer = http.createServer((req, res) => {
   // clair. Réponse toujours 204 : le client n'a rien à en faire.
   if (reqPathOnly === '/clienterr') {
     if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
-    // Robot d'indexation : 204 sans rien lire ni enregistrer (voir ERR_BOT_UA).
-    if (_errIsBot(req.headers && req.headers['user-agent'])) { res.writeHead(204, { 'Cache-Control': 'no-store' }); res.end(); return; }
     const eip = clientIp(req);
     if (!_errRateOk(eip)) { res.writeHead(429, { 'Cache-Control': 'no-store' }); res.end(); return; }
     readRawBody(req, 8 * 1024, function (buf) {
@@ -12377,16 +12375,6 @@ const _errGroups = new Map();            // signature → groupe
 // trafiqué ou le script qui viendrait marteler l'endpoint, ouvert à tous.
 const ERR_RATE_MAX = 30, ERR_RATE_WINDOW = 3600000;
 const _errRate = new Map();              // ip → { n, reset }
-// Robots d'indexation exclus de la remontée d'erreurs. Le rendu de Googlebot
-// garde nos .js/.mjs en cache plusieurs jours en ignorant les en-têtes HTTP :
-// il exécute alors un module récent avec un voisin périmé (« does not provide
-// an export named … ») et noyait le tableau sous des erreurs qu'aucun joueur
-// ne voit. Volontairement plus étroit que UA_BOT (une mesure, pas un filtre) :
-// « bot » seul attrape aussi des téléphones Android de marque CUBOT, qui sont
-// de vrais joueurs. Un robot s'annonce par « xxxbot/ », « xxxbot; » ou une URL
-// de contact « +http… » ; HeadlessChrome et Lighthouse sont des automates.
-const ERR_BOT_UA = /bot\/|bot;|spider|crawl|slurp|HeadlessChrome|Lighthouse|\+https?:\/\//i;
-function _errIsBot(ua) { return ERR_BOT_UA.test(String(ua || '')); }
 function _errRateOk(ip) {
   const now = Date.now();
   let r = _errRate.get(ip);

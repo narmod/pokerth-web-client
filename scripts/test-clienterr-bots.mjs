@@ -1,36 +1,38 @@
 #!/usr/bin/env node
-// Deterministic tests for the crawler filter of /clienterr (proxy.js).
+// Deterministic tests for the crawler tag of the admin error list (admin.html).
 // Run: node scripts/test-clienterr-bots.mjs
 //
 // Googlebot's renderer caches our scripts for days regardless of HTTP headers
 // and then runs a fresh module next to a stale one, which floods the admin
-// error list with errors no player ever sees. /clienterr drops reports whose
-// User-Agent declares a crawler. The filter must never drop a real player:
-// a plain /bot/i would match Android phones of the CUBOT brand.
+// error list with errors no player ever sees. Those errors are still recorded
+// (/clienterr keeps everything) but the admin labels a crawler User-Agent
+// « Bot (name) ». The tag must never land on a real player: a plain /bot/i
+// would match Android phones of the CUBOT brand.
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const src = fs.readFileSync(path.join(root, 'proxy.js'), 'utf8');
+const html = fs.readFileSync(path.join(root, 'public', 'admin.html'), 'utf8');
+const proxy = fs.readFileSync(path.join(root, 'proxy.js'), 'utf8');
 
 let fails = 0;
 function ok(cond, label) {
-  console.log((cond ? '  ✓ ' : '  ✗ ') + label);
+  console.log((cond ? '  \u2713 ' : '  \u2717 ') + label);
   if (!cond) fails++;
 }
 
-const m = src.match(/^const ERR_BOT_UA = (\/.*\/[a-z]*);$/m);
-ok(!!m, 'ERR_BOT_UA is still declared in proxy.js');
-if (!m) { console.log('\nFAIL 1'); process.exit(1); }
-const RE = (0, eval)(m[1]);
+const m = html.match(/^ *var ERR_BOT_UA = (\/.*\/[a-z]*);$/m);
+const fIs = html.match(/^ *function _seIsBot\(ua\)\{.*\}$/m);
+const iDev = html.indexOf('function _seDev(ua){');
+const iDevEnd = html.indexOf('\n  }\n', iDev);
+ok(!!m && !!fIs && iDev > 0 && iDevEnd > iDev, 'ERR_BOT_UA, _seIsBot and _seDev are still in admin.html');
+if (!m || !fIs || iDev < 0) { console.log('\nFAIL ' + fails); process.exit(1); }
+const api = new Function(m[0] + '\n' + fIs[0] + '\n' + html.slice(iDev, iDevEnd + 4) +
+  '\nreturn { isBot: _seIsBot, dev: _seDev };')();
 
-ok(/if \(_errIsBot\(req\.headers && req\.headers\['user-agent'\]\)\)/.test(src),
-  '/clienterr checks the User-Agent before recording');
-const iEnd = src.indexOf("reqPathOnly === '/clienterr'");
-const iBot = src.indexOf('_errIsBot(req.headers', iEnd);
-const iRec = src.indexOf('_errRecord(meta', iEnd);
-ok(iEnd > 0 && iBot > iEnd && iRec > iBot, 'the crawler check runs before _errRecord');
+ok(!/ERR_BOT_UA|_errIsBot/.test(proxy), '/clienterr still records every report (no crawler drop in proxy.js)');
+ok(/var nBot=\(e\.uas\|\|\[\]\)\.filter\(_seIsBot\)/.test(html), 'each error line counts its crawler UAs');
 
 const BOTS = {
   'Googlebot desktop': 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Chrome/129.0.6668.89 Safari/537.36',
@@ -52,8 +54,10 @@ const PLAYERS = {
   'Samsung Internet': 'Mozilla/5.0 (Linux; Android 14; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/26.0 Chrome/122.0.0.0 Mobile Safari/537.36',
   'Empty UA': '',
 };
-for (const [k, ua] of Object.entries(BOTS)) ok(RE.test(ua), 'crawler dropped: ' + k);
-for (const [k, ua] of Object.entries(PLAYERS)) ok(!RE.test(ua), 'player kept: ' + k);
+for (const [k, ua] of Object.entries(BOTS)) ok(api.isBot(ua) && /^Bot/.test(api.dev(ua)), 'crawler tagged: ' + k + ' \u2192 ' + api.dev(ua));
+for (const [k, ua] of Object.entries(PLAYERS)) ok(!api.isBot(ua) && !/Bot/.test(api.dev(ua)), 'player not tagged: ' + k + (ua ? ' \u2192 ' + api.dev(ua) : ''));
+ok(api.dev(BOTS['Googlebot desktop']) === 'Bot (Googlebot)', 'Googlebot desktop reads « Bot (Googlebot) »');
+ok(api.dev(PLAYERS['Android CUBOT']) === 'Android \u00b7 Chrome', 'CUBOT phone reads « Android \u00b7 Chrome »');
 
 console.log(fails ? '\nFAIL ' + fails : '\nOK');
 process.exit(fails ? 1 : 0);
