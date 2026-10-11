@@ -32,7 +32,7 @@
 // Safari on a real iPhone: audio, the collapsing toolbar, the notch safe area
 // and the on-screen keyboard still need a real device before a release.
 import assert from 'node:assert/strict';
-import { startServer, createReporter, shot, overlap, settle, openTable, turnTo, acted, dealTurn, runPlan, ME } from './lib/mobile-harness.mjs';
+import { startServer, createReporter, shot, overlap, settle, openTable, turnTo, acted, dealTurn, runPlan, ME, viewportReport } from './lib/mobile-harness.mjs';
 
 const SEATS = 10;
 const { server, base } = await startServer();
@@ -123,7 +123,9 @@ async function runDevice(browser, name, descriptor) {
     });
     await check('table: action buttons reachable and finger-sized', async () => {
       assert.ok(base0.actions.length >= 2, 'fewer than two action buttons');
-      base0.actions.forEach((a, i) => { assert.ok(a.left >= -1 && a.right <= base0.viewport.width + 1 && a.bottom <= base0.viewport.height + 1, `action ${i + 1} is off-screen`);
+      const off = base0.actions.findIndex((a) => !(a.left >= -1 && a.right <= base0.viewport.width + 1 && a.bottom <= base0.viewport.height + 1));
+      if (off >= 0) { const a = base0.actions[off]; assert.fail(`action ${off + 1} is off-screen (${Math.round(a.left)},${Math.round(a.top)} - ${Math.round(a.right)},${Math.round(a.bottom)}) - ${await viewportReport(page)}`); }
+      base0.actions.forEach((a, i) => {
         const min = base0.viewport.height < 600 && base0.viewport.width > base0.viewport.height ? 28 : 36;   // landscapeCompact: flattened row
         assert.ok(a.height >= min, `action ${i + 1} is only ${a.height.toFixed(0)}px high (min ${min})`); });
     });
@@ -151,7 +153,7 @@ async function runDevice(browser, name, descriptor) {
           zone: R('#g-table-zone'), amt: document.getElementById('kp-amt').textContent.replace(/\D/g, '') }; });
       await shot(page, name, '1b-bet-keypad');
       for (const [n, r] of [['keypad', kp.pad], ['OK', kp.ok], ['Cancel', kp.cancel]])
-        assert.ok(r.left >= -1 && r.right <= kp.vw + 1 && r.top >= 0 && r.bottom <= kp.vh + 1, `${n} leaves the screen: ${JSON.stringify(r)} / ${kp.vw}x${kp.vh}`);
+        if (!(r.left >= -1 && r.right <= kp.vw + 1 && r.top >= 0 && r.bottom <= kp.vh + 1)) assert.fail(`${n} leaves the screen: ${JSON.stringify(r)} / ${kp.vw}x${kp.vh} - ${await viewportReport(page)}`);
       assert.ok(kp.key.height >= 28, `keys are only ${Math.round(kp.key.height)}px high`);
       assert.ok(kp.me.bottom <= kp.panel.top + 2, `my own box is under the keypad (box bottom ${Math.round(kp.me.bottom)}, panel top ${Math.round(kp.panel.top)})`);
       assert.ok(kp.zone.height >= 150, `the table is squeezed to ${Math.round(kp.zone.height)}px`);

@@ -79,6 +79,18 @@ export async function shot(page, device, step) {
   try { mkdirSync(SHOT_DIR, { recursive: true }); await page.screenshot({ path: join(SHOT_DIR, `${slug(device)}-${slug(step)}.png`) }); } catch (_e) {}
 }
 
+// One line describing every viewport the page can be measured against - for
+// failure messages: WebKit with an iPhone profile does not always lay out
+// fixed / vh-sized elements against innerHeight (Safari's collapsing toolbar),
+// and the fix depends on WHICH reference is off.
+export const viewportReport = (page) => page.evaluate(() => {
+  const probe = (h) => { const d = document.createElement('div'); d.style.cssText = 'position:fixed;left:0;top:0;width:1px;visibility:hidden;height:' + h; document.body.appendChild(d); const v = d.getBoundingClientRect().height; d.remove(); return Math.round(v); };
+  const rect = (q) => { const e = document.querySelector(q); if (!e) return '-'; const r = e.getBoundingClientRect(); return Math.round(r.top) + '-' + Math.round(r.bottom) + (getComputedStyle(e).position === 'fixed' ? ' fixed' : ''); };
+  const vv = window.visualViewport;
+  return `inner ${innerWidth}x${innerHeight}, visualViewport ${vv ? Math.round(vv.width) + 'x' + Math.round(vv.height) + '@' + Math.round(vv.offsetTop) : '-'}, clientHeight ${document.documentElement.clientHeight}, `
+    + `100vh=${probe('100vh')} 100dvh=${probe('100dvh')} 100svh=${probe('100svh')} 100lvh=${probe('100lvh')}, body ${rect('body')}, #s-game ${rect('#s-game')}, .game-area ${rect('.game-area')}, .my-zone ${rect('.my-zone')}`;
+});
+
 export const overlap = (a, b, tol = 1) => !!a && !!b && a.left < b.right - tol && b.left < a.right - tol && a.top < b.bottom - tol && b.top < a.bottom - tol;
 
 // Wait until the table geometry stops moving (renders are rAF-batched, the
