@@ -142,6 +142,23 @@ async function tableProblems(page, seats, spectator) {
   });
   return auditTable(g, seats, spectator).concat(extra);
 }
+// After a resize: settle() watches the seats and the board; the action bar
+// and the header are re-laid out on their own schedule (WebKit can be a few
+// frames later) - wait until they stop moving too, so a transient position
+// is not reported as a layout bug.
+async function settleAll(page) {
+  await settle(page);
+  await page.evaluate(() => new Promise((resolve) => {
+    let prior = '', since = performance.now(); const started = since;
+    const tick = (now) => {
+      const cur = JSON.stringify([...document.querySelectorAll('.my-zone, .act-buttons-row .btn-action, #g-table-zone, .header')].map((e) => {
+        const r = e.getBoundingClientRect(); return [Math.round(r.left), Math.round(r.top), Math.round(r.width), Math.round(r.height)]; }));
+      if (cur !== prior) { prior = cur; since = now; }
+      if (now - since >= 400 || now - started >= 5000) resolve(); else requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }));
+}
 // Snapshot of the layout, to compare before / after a round trip of resizes.
 const signature = (page) => page.evaluate(() => [...document.querySelectorAll('#g-table-zone, #g-seats .seat, #g-comm .pk, .my-zone, .act-buttons-row .btn-action, #s-lobby .game-row, .header')]
   .filter((e) => e.getClientRects().length).map((e) => { const r = e.getBoundingClientRect(); return [e.id || e.className.split(' ')[0], Math.round(r.left), Math.round(r.top), Math.round(r.width), Math.round(r.height)].join(':'); }));
@@ -229,7 +246,7 @@ async function runDevice(browser, name, descriptor, engine) {
       await bigBetMyTurn(page);
       const before = await signature(page), out = [];
       for (const [w, h] of RESIZE) {
-        await page.setViewportSize({ width: w, height: h }); await page.waitForTimeout(250); await settle(page);
+        await page.setViewportSize({ width: w, height: h }); await page.waitForTimeout(250); await settleAll(page);
         (await tableProblems(page, 6, false)).forEach((l) => out.push(`${w}x${h} - ${l}`));
         (await uiAudit(page, '#s-game')).forEach((l) => out.push(`${w}x${h} - text - ${l}`));
         if (out.some((l) => l.startsWith(`${w}x${h}`))) await shot(page, shotName, `resize-table-${w}x${h}`);
