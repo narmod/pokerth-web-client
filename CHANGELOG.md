@@ -56,6 +56,11 @@ highlights below.
   selected period and included in the JSON export. The privacy page says so (`web.5`).
 
 ### Fixed
+- **The top seat stays inside the table in a short desktop window** — under 600 px tall without a
+  touch screen, the top box went 2 to 4 px under the info bar: the QML geometry puts it against the
+  zone top for a box of the QML base height, and the web box is a few pixels taller on desktop.
+  New `game/seat-top-clamp.mjs` moves a seat whose plate starts above the zone down by exactly
+  that amount after the layout; the QML geometry is unchanged, phones are untouched (`web.17`).
 - **The table name no longer runs under the header buttons** — the name is centred on the bar
   with a maximum of 72 % of the screen, whatever the buttons on its right; on a portrait tablet
   (iPad Mini, 768 px) a long name went under the sound button. New `ui/header-title-fit.mjs`

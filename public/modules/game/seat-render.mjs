@@ -21,6 +21,7 @@ import { chipSvg, dealerChipSvg, cardHtml } from '../ui/deck.mjs';
 import { autoScaleTable } from './seats.mjs';
 import { _officialSeatPix, _applyQmlBgCenter } from './layout.mjs';
 import { dodgePucks } from './puck-dodge.mjs';
+import { clampSeatsTop } from './seat-top-clamp.mjs';
 import { _timerRectSvg } from './turn-timer.mjs';
 import { _ccToFlag, _pthAvatarFor, _myAvChoice, _myAvImg, openPlayerInfoPopup } from '../ui/player-popup.mjs';
 import { openSeatMenu, closeSeatMenu, initSeatMenu } from '../ui/seat-menu.mjs';
@@ -1642,6 +1643,10 @@ function renderSeatsImmediate() {
   // Pucks / side bet chips off the neighbouring boxes (web adjustment, see
   // puck-dodge.mjs). Last DOM step: the seats, the self-box clamp and the
   // community row are final here (seat editing returns long before this).
+  // Top seats kept inside the zone (web box a few px taller than the QML
+  // base, see seat-top-clamp.mjs) - before the pucks, which dodge the boxes
+  // at their final place.
+  try { var _tc = clampSeatsTop(el, zone); if (window._seatDbg) window._seatDbg.topClamp = _tc; } catch (e) {}
   try { var _pd = dodgePucks(el, zone); if (window._seatDbg) window._seatDbg.puckDodge = _pd; } catch (e) {}
   S._lastPixPos = pixPos;
   // Pids alignés 1:1 sur pixPos (rotation + filtre « retirer les partis ») —

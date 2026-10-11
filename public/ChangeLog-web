@@ -1,3 +1,6 @@
+2026-10-11 version 2.1.10-web.17:
+- bugfix: in a short window on a computer, the player at the top of the table no longer slides under the bar of game information
+
 2026-10-11 version 2.1.10-web.16:
 - bugfix: on a tablet held upright, a long table name no longer runs under the buttons at the top of the table (it ends with "…"; tap it for the details)
 
