@@ -56,6 +56,11 @@ highlights below.
   selected period and included in the JSON export. The privacy page says so (`web.5`).
 
 ### Fixed
+- **The create-table buttons are no longer cut in long languages** — from 600 px wide the
+  Reset / Cancel / Create buttons share one line; on a landscape phone « Create » was cut in
+  Greek, Hungarian, Armenian, Kyrgyz and Malayalam, « Cancel » in Armenian, Kyrgyz and Tajik.
+  A button is now never narrower than its label and « Create » wraps to its own line when the
+  three do not fit, as on portrait phones; where everything fits nothing moves (`web.18`).
 - **The top seat stays inside the table in a short desktop window** — under 600 px tall without a
   touch screen, the top box went 2 to 4 px under the info bar: the QML geometry puts it against the
   zone top for a box of the QML base height, and the web box is a few pixels taller on desktop.

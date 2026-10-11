@@ -1,3 +1,6 @@
+2026-10-11 version 2.1.10-web.18:
+- bugfix: the buttons at the bottom of "Create a table" are no longer cut off in some languages (Greek, Hungarian, Armenian, Kyrgyz, Malayalam, Tajik) on a phone held sideways
+
 2026-10-11 version 2.1.10-web.17:
 - bugfix: in a short window on a computer, the player at the top of the table no longer slides under the bar of game information
 

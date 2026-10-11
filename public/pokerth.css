@@ -7477,6 +7477,17 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
   .cf-actions { flex-wrap: wrap; }
   .cf-actions .cf-create-btn { flex: 1 0 100%; }
 }
+/* Wider screens (web.18): a label never ends in « … » - found by
+   scripts/test-i18n-overflow.mjs on a landscape phone (734 px), where the three
+   buttons share one line and « ＋ Δημιουργία τραπεζιού » (el, also hu, hy, ky,
+   ml) or « Жокко чыгаруу » (hy, ky, tg) were cut. A button is never narrower
+   than its label; when the three no longer fit on one line, « Créer » (last)
+   wraps to its own full-width line, as on phones. Where everything fits the
+   widths are exactly the old ones (flex-basis 0, same grow factors). */
+@media (min-width: 600px) {
+  .cf-actions { flex-wrap: wrap; }
+  .cf-actions > button { min-width: max-content; }
+}
 
 /* ── Reusable toast (showToast in pokerth.js) ──
    Styled to match the header ••• overflow menu: dark panel, gold-hi hairline
