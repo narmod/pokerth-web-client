@@ -410,7 +410,7 @@ ok(TS.slice(1).every(k => /^<div class="tsub" data-ts="[a-z]+" role="tabpanel" a
 const home = {
   overview: ['trafCards', 'trafKpis', 'trafBottom'],
   audience: ['trafChart', 'trafNew', 'trafRet'],
-  activity: ['traf48', 'trafHours', 'trafModes48', 'trafModes', 'trafLive'],
+  activity: ['traf48', 'trafHours', 'trafModes48', 'trafPth', 'trafModes', 'trafLive'],
   visitors: ['trafEnv'],
   music: ['trafMusic', 'musSince'],
   ace: ['guideSec', 'trafGuide', 'guideSince'],
@@ -434,7 +434,7 @@ ok(/\.card>h2\+\.tsec\{border-top:0/.test(admin),
   'except the first one, which has nothing above it to separate from');
 ok(/\.tsec \.boardhead>h3\{[^}]*white-space:nowrap/.test(admin),
   'a section title does not break, so its note can take the slack');
-ok((traf.match(/<div class="tsec">/g) || []).length === 14, 'fourteen sections spread across them (the /live spectator view and the 48 h by-mode chart have their own)');
+ok((traf.match(/<div class="tsec">/g) || []).length === 15, 'fifteen sections spread across them (the /live spectator view, the 48 h by-mode chart and pokerth.net vs web client have their own)');
 for (const id of ['btnNoCount', 'dbHost', 'btnTrafCsv', 'btnTrafReset', 'trafModes', 'trafEnv', 'trafMusic']) {
   ok(traf.includes('id="' + id + '"'), id + ' survived the split');
 }

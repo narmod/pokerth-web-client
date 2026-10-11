@@ -27,6 +27,12 @@ highlights below.
   per device too (`offer.first`), next to the rate among those who answered (`web.6`).
 
 ### Added
+- **pokerth.net vs web client, in the admin traffic stats** — every 5 minutes the proxy records the
+  official live counters (online, tables, waiting, today; same cached read as the login card) and
+  the web client players signed in to pokerth.net at that instant (proxy bridges + direct players'
+  notify channels; /live apart), folded hourly into the daily bucket (`ps`, `pthSince`). The
+  « Connections » card charts players online vs web client over 48 h, the web client share per
+  hour, and the daily share (mean, at peak, /live) over the selected period (`web.9`).
 - **Sessions per hour by entry mode, in the admin traffic stats** — a stacked 48-hour bar chart at
   the top of the « Connections » card (Activity tab): Internet (pokerth.net), Training (bots), LAN /
   dedicated and /live, hour by hour, with a toggleable legend and a tap/hover readout. The proxy now

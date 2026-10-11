@@ -540,6 +540,11 @@
           <div id="trafModes48"><div class="empty">Loading…</div></div>
         </div>
         <div class="tsec">
+          <div class="boardhead"><h3>pokerth.net vs web client</h3><span id="trafPthNote" class="headnote"></span></div>
+          <p class="muted xpl">Every 5 minutes the proxy reads the official counters of pokerth.net (the same figures as the Internet card of the login screen: online, tables, waiting, today) and counts, at that same instant, the web client players signed in to pokerth.net — through this proxy or connected straight to it. <b>Share</b> = web client players ÷ players online on pokerth.net, from hourly means (48 h) or daily means (period). /live spectators are shown apart, not in the share. Recording started with 2.1.10-web.9 and needs the live figures switched on (Settings): hours before that are empty, not quiet.</p>
+          <div id="trafPth"><div class="empty">Loading…</div></div>
+        </div>
+        <div class="tsec">
           <h3>Where sessions open</h3>
           <p class="muted xpl">Counts a session once per entry mode, when its connection opens, whatever the transport (a page loaded but never connected is a visit, not a session): Internet games routed through this proxy still count as pokerth.net. Offline = training vs bots. <b>/live</b> = spectator sessions from the embedded view, counted apart from the web client (since 2.1.8-web.100; earlier ones sit under pokerth.net).</p>
           <div id="trafModes"><div class="empty">Loading…</div></div>
@@ -3473,6 +3478,46 @@
     if(nt) nt.textContent=all.toLocaleString()+' sessions \u00b7 '+MODE48.filter(function(md){ return tot[md.k]; })
       .map(function(md){ return md.s+' '+Math.round(tot[md.k]*100/all)+'%'; }).join(' \u00b7 ');
   }
+  // -- pokerth.net contre le web client ---------------------------------------
+  // Echantillons du proxy toutes les 5 min, moyennes par heure (48 h) et par
+  // jour (periode). La part se calcule sur les moyennes, pas en moyennant des
+  // pourcentages : une heure a 2 joueurs ne pese pas autant qu'une a 40.
+  function _pthPct(wb,on){ return on? Math.round((wb/on)*1000)/10 : 0; }
+  function _trafPth(d){
+    var box=$('trafPth'), nt=$('trafPthNote');
+    if(!box) return;
+    if(d.pth===undefined){
+      box.innerHTML='<div class="empty">This comparison needs a proxy restart \u2014 this build records it, the running one does not.</div>';
+      if(nt) nt.textContent='';
+      return;
+    }
+    var p=d.pth||{}, h48=p.h48||[], days=p.days||[], nw=p.now;
+    if(nt) nt.textContent = nw ? ('now '+nw.online+' online \u00b7 '+(nw.tables||0)+' tables \u00b7 '+(nw.waiting||0)+' waiting \u00b7 '+(nw.today||0)+' today \u00b7 web client '+nw.wb+' ('+_pthPct(nw.wb,nw.online)+'%)'+(nw.lv?(' \u00b7 /live '+nw.lv):'')) : '';
+    var got=h48.some(function(x){ return x.n; }) || days.some(function(x){ return x.n; });
+    if(!got){
+      box.innerHTML='<div class="empty">'+(p.on===false?'The live figures are switched off in Settings \u2014 nothing to compare against.':'Nothing recorded yet \u2014 the first sample lands within 5 minutes of a restart.')+'</div>';
+      return;
+    }
+    box.innerHTML='<h3>Players online \u2014 last 48 h (hourly mean)</h3><div id="trafPth48"></div>'
+      +'<h3>Web client share \u2014 last 48 h</h3><div id="trafPthShare"></div>'
+      +'<h3>Web client share by day</h3><div id="trafPthDays"></div>';
+    var labs=h48.map(function(x){ return x.t.slice(8,10)+'.'+x.t.slice(5,7)+' '+x.t.slice(11)+'h'; });
+    _chartMount($('trafPth48'),labs,[
+      {k:'on',n:'pokerth.net online',c:'#9aa7bd',vals:h48.map(function(x){ return x.on; })},
+      {k:'wb',n:'Web client',c:'#4080d8',vals:h48.map(function(x){ return x.wb; })},
+      {k:'lv',n:'/live (spectators)',c:'#c08ae0',vals:h48.map(function(x){ return x.lv; })}
+    ],160,'line');
+    var pf=function(v){ return v? v+'%' : '\u2014'; };
+    _chartMount($('trafPthShare'),labs,[{k:'share',n:'Web client share',c:'#4080d8',fmt:pf,
+      vals:h48.map(function(x){ return _pthPct(x.wb,x.on); })}],150,'bar',
+      { c:'#4080d8', colFn:function(v,i){ return i===h48.length-1 ? '#2c5896' : '#4080d8'; } });
+    var dl=days.map(function(x){ return x.date; });
+    _chartMount($('trafPthDays'),dl,[
+      {k:'share',n:'Web client share',c:'#4080d8',fmt:pf,vals:days.map(function(x){ return _pthPct(x.wb,x.on); })},
+      {k:'peak',n:'Share at peak',c:'#e0b050',fmt:pf,vals:days.map(function(x){ return _pthPct(x.wbX,x.onX); })},
+      {k:'lv',n:'/live share',c:'#c08ae0',fmt:pf,vals:days.map(function(x){ return _pthPct(x.lv,x.on); })}
+    ],160,'line');
+  }
   // -- L'heure du jour -------------------------------------------------------
   // Deux seaux horaires cotes serveur, rien de plus : combien de visites par
   // heure, et combien d'entre elles sont une premiere venue. Un proxy anterieur
@@ -3612,6 +3657,7 @@
     // rendues meme si celle-ci est vide, sinon elles resteraient sur « Loading ».
     var hourLine=_trafHours(d);
     _trafModes48(d);
+    _trafPth(d);
     var retLine=_trafCohorts(d);
     if(!n) return;
     var vv=s.map(function(x){ return x.v||0; });

@@ -6665,7 +6665,7 @@ function emptyVisitsStore() {
   return {
     days: {}, totalV: 0, totalRet: 0, allU: {}, totalLV: 0, allLU: {},
     allM: { pokerthnet: 0, lan: 0, offline: 0, live: 0 },
-    env: {}, envSince: 0, langDiagSince: 0, music: {}, musicSince: 0, hourSince: 0, modeHourSince: 0,
+    env: {}, envSince: 0, langDiagSince: 0, music: {}, musicSince: 0, hourSince: 0, modeHourSince: 0, pthSince: 0,
     musicVotes: {}, musicVotesSince: 0,
     guide: {}, guideSince: 0,
     refSince: 0
@@ -6692,6 +6692,7 @@ try {
     visitsStore.musicVotesSince = (typeof _vs.musicVotesSince === 'number') ? _vs.musicVotesSince : 0;
     visitsStore.hourSince = (typeof _vs.hourSince === 'number') ? _vs.hourSince : 0;
     visitsStore.modeHourSince = (typeof _vs.modeHourSince === 'number') ? _vs.modeHourSince : 0;
+    visitsStore.pthSince = (typeof _vs.pthSince === 'number') ? _vs.pthSince : 0;
     visitsStore.guide = (_vs.guide && typeof _vs.guide === 'object') ? _vs.guide : {};
     visitsStore.guideSince = (typeof _vs.guideSince === 'number') ? _vs.guideSince : 0;
     visitsStore.refSince = (typeof _vs.refSince === 'number') ? _vs.refSince : 0;
@@ -7420,6 +7421,7 @@ function visitsSummary(periodDays) {
     hourProfile: visitHourProfile(P),
     hourSince: visitsStore.hourSince || 0,
     modeHourSince: visitsStore.modeHourSince || 0,
+    pth: pthShareSummary(P),
     cohorts: visitCohorts(P),
     env: Object.assign(LANG_STATS.foldEnv(visitsStore.env || {}), { noiseMeta: LANG_STATS.noiseMeta(visitsStore.langDiagSince) }),
     envSince: visitsStore.envSince || 0,
@@ -11264,10 +11266,13 @@ function handleLiveStats(req, res) {
     res.end(typeof obj === 'string' ? obj : JSON.stringify(obj));
   };
   if (!cfg.on) { send({ ok: false, error: 'disabled', sec: cfg.sec }, 'off'); return; }
-  // One read per interval for the whole server, shared by every open login
-  // screen even when they all poll at the same second; an expired copy is
-  // served while the next one is read (RELAY, web.254).
-  RELAY.get('livestats\u0000' + cfg.url, cfg.sec * 1000, function () {
+  _liveRead(cfg).then(function (out) { send(out.body, out.note); });
+}
+// One read per interval for the whole server, shared by every open login
+// screen even when they all poll at the same second, and by the share sampler
+// below; an expired copy is served while the next one is read (RELAY, web.254).
+function _liveRead(cfg) {
+  return RELAY.get('livestats\u0000' + cfg.url, cfg.sec * 1000, function () {
     return rankingFetch(cfg.url).then(function (r) {
       if (!r.ok) throw new Error('upstream_' + r.status);
       return r.json();
@@ -11277,7 +11282,101 @@ function handleLiveStats(req, res) {
     // Never surface a 5xx here: the login screen must stay usable when the
     // upstream is unreachable (offline LAN install, blocked egress).
     failBody: function (err) { return JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err), sec: cfg.sec }); }
-  }).then(function (out) { send(out.body, out.note); });
+  });
+}
+
+// ── pokerth.net vs web client (admin traffic stats) ──────────────────────
+// Every PTH_SAMPLE_MS the proxy reads the official counters (same cached read
+// as the login card) and counts, at that same instant, the web client players
+// signed in to pokerth.net: game bridges in 'pthnet' mode whose upstream is up,
+// plus the notify channels of players connected straight to pokerth.net.
+// /live spectators are counted apart. Samples are folded into the daily
+// bucket, one slot per hour: sample count, sums for the means, maxima. No
+// nickname, no id -- only how many.
+const PTH_SAMPLE_MS = 5 * 60 * 1000;
+let _pthLast = null;
+function pthWebOnlineNow() {
+  let wb = 0, lv = 0;
+  try {
+    _liveSessions.forEach(function (S) {
+      const m = (S.ws && S.ws._bcMode) || S.bcMode || '';
+      if (m !== 'pthnet' || !S.connected) return;
+      if (S.live) lv++; else wb++;
+    });
+  } catch (e) {}
+  try {
+    wss.clients.forEach(function (c) {
+      if (!c._notify || c.readyState !== 1 || c._bcMode !== 'pthnet') return;
+      if (c._live) lv++; else wb++;
+    });
+  } catch (e) {}
+  return { wb: wb, lv: lv };
+}
+function recordPthSample(L, W, when) {
+  if (!L || !L.ok || typeof L.online !== 'number') return false;
+  const d = when || new Date();
+  const k = visitDayKey(d), hr = d.getHours();
+  let b = visitsStore.days[k];
+  if (!b) { b = visitsStore.days[k] = { v: 0, ids: {} }; pruneVisitDays(); }
+  if (!b.ps) b.ps = {};
+  const c = b.ps[hr] || (b.ps[hr] = { n: 0, on: 0, wb: 0, lv: 0, tb: 0, wt: 0, onX: 0, wbX: 0, td: 0 });
+  const wb = (W && W.wb) || 0, lv = (W && W.lv) || 0;
+  c.n++;
+  c.on += L.online; c.wb += wb; c.lv += lv;
+  c.tb += L.tables || 0; c.wt += L.waiting || 0;
+  if (L.online > c.onX) c.onX = L.online;
+  if (wb > c.wbX) c.wbX = wb;
+  if (typeof L.today === 'number') c.td = L.today;
+  if (!visitsStore.pthSince) visitsStore.pthSince = d.getTime();
+  return true;
+}
+function _pthSampleTick() {
+  const cfg = _liveStatsCfg();
+  if (!cfg.on) return;
+  _liveRead(cfg).then(function (out) {
+    let L = null;
+    try { L = JSON.parse(out.body); } catch (e) { return; }
+    if (!L || !L.ok) return;
+    const W = pthWebOnlineNow();
+    if (recordPthSample(L, W)) {
+      _pthLast = { at: Date.now(), online: L.online, tables: L.tables, waiting: L.waiting, today: L.today, wb: W.wb, lv: W.lv };
+      saveVisitsSoon();
+    }
+  }).catch(function () {});
+}
+setTimeout(_pthSampleTick, 20 * 1000).unref();
+setInterval(_pthSampleTick, PTH_SAMPLE_MS).unref();
+function _pthMean(c, f) { return (c && c.n) ? Math.round((c[f] / c.n) * 10) / 10 : 0; }
+// Last 48 hours (hourly means) and the dashboard period (daily means). A day
+// mean is weighted by samples, so a half-sampled day is not dragged to zero.
+function pthShareSummary(periodDays) {
+  const now = new Date();
+  const h48 = [];
+  const top = new Date(now); top.setMinutes(0, 0, 0);
+  for (let i = 47; i >= 0; i--) {
+    const d = new Date(top.getTime() - i * 3600000);
+    const b = visitsStore.days[visitDayKey(d)], hh = d.getHours();
+    const c = (b && b.ps) ? b.ps[hh] : null;
+    h48.push({ t: visitDayKey(d) + 'T' + String(hh).padStart(2, '0'), n: (c && c.n) || 0,
+               on: _pthMean(c, 'on'), wb: _pthMean(c, 'wb'), lv: _pthMean(c, 'lv'),
+               tb: _pthMean(c, 'tb'), wt: _pthMean(c, 'wt'), onX: (c && c.onX) || 0, wbX: (c && c.wbX) || 0 });
+  }
+  const days = [];
+  const P = periodDays || 14;
+  for (let i = P - 1; i >= 0; i--) {
+    const d = new Date(now); d.setDate(now.getDate() - i);
+    const k = visitDayKey(d), b = visitsStore.days[k];
+    const a = { n: 0, on: 0, wb: 0, lv: 0, onX: 0, wbX: 0, td: 0 };
+    if (b && b.ps) for (const hh in b.ps) {
+      const c = b.ps[hh];
+      a.n += c.n || 0; a.on += c.on || 0; a.wb += c.wb || 0; a.lv += c.lv || 0;
+      if ((c.onX || 0) > a.onX) a.onX = c.onX;
+      if ((c.wbX || 0) > a.wbX) a.wbX = c.wbX;
+      if ((c.td || 0) > a.td) a.td = c.td;
+    }
+    days.push({ date: k, n: a.n, on: _pthMean(a, 'on'), wb: _pthMean(a, 'wb'), lv: _pthMean(a, 'lv'), onX: a.onX, wbX: a.wbX, td: a.td });
+  }
+  return { since: visitsStore.pthSince || 0, sampleSec: PTH_SAMPLE_MS / 1000, on: _liveStatsCfg().on, now: _pthLast, h48: h48, days: days };
 }
 
 // Dashboard "Test" button: read a candidate URL once, bypassing the cache and
