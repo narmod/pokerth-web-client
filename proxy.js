@@ -7711,6 +7711,27 @@ function statCached(p) {
   return st;
 }
 
+// Read stream → response that can never take the process down. A ReadStream
+// 'error' with no listener is thrown as an uncaught exception, and proxy.js has
+// no uncaughtException handler: a file that vanishes between statCached() (up
+// to 5 s stale) and the open — git replacing or deleting it during a deploy, a
+// disk hiccup — would crash the proxy, drop every game in progress and leave
+// pages half-loaded while PM2 restarts it. Headers (Content-Length included)
+// are already sent at this point, so the only honest outcome is to abort the
+// response: the browser sees a failed load (the page collector retries it)
+// instead of a body silently shorter than announced. Closing the source when
+// the client goes away also frees the descriptor of an aborted download
+// (audio range requests are cancelled all the time); pipe() does not do it.
+function _pipeFile(res, filePath, opts) {
+  const rs = fs.createReadStream(filePath, opts);
+  rs.on('error', function (err) {
+    console.error('[static] read failed: ' + filePath + ' (' + ((err && err.code) || err) + ')');
+    try { res.destroy(); } catch (_) {}
+  });
+  res.on('close', function () { try { rs.destroy(); } catch (_) {} });
+  rs.pipe(res);
+}
+
 function sendFile(req, res, filePath, type, cacheCtl, st, useEtag) {
   const headers = Object.assign({ 'Content-Type': type, 'Cache-Control': cacheCtl }, SECURITY_HEADERS);
   // Validators for CSS/JS/MJS: 'no-cache' means "revalidate before reuse", but
@@ -7770,13 +7791,13 @@ function sendFile(req, res, filePath, type, cacheCtl, st, useEtag) {
       headers['Content-Length'] = end - start + 1;
       res.writeHead(206, headers);
       if (req.method === 'HEAD') { res.end(); return; }
-      fs.createReadStream(filePath, { start: start, end: end }).pipe(res);
+      _pipeFile(res, filePath, { start: start, end: end });
       return;
     }
     headers['Content-Length'] = fst.size;
     res.writeHead(200, headers);
     if (req.method === 'HEAD') { res.end(); return; }
-    fs.createReadStream(filePath).pipe(res);
+    _pipeFile(res, filePath);
     return;
   }
   st = st || statCached(filePath);

@@ -56,6 +56,13 @@ highlights below.
   selected period and included in the JSON export. The privacy page says so (`web.5`).
 
 ### Fixed
+- **A file vanishing mid-request can no longer crash the proxy** — static files that are not
+  compressed (fonts, images, audio, wasm) were streamed with no error listener, so a file removed
+  or replaced between the 5-second stat cache and the open (a deploy, a disk hiccup) raised an
+  uncaught exception: proxy down, every game dropped, pages half-loaded during the PM2 restart.
+  The response is now aborted cleanly (the page's load-failure retry takes over) and logged, and
+  the read stream is closed when the client disconnects, which also stops aborted audio range
+  requests from holding a file descriptor (`web.12`).
 - **Search-engine crawlers are marked in the admin error list** — Googlebot's renderer keeps
   our scripts cached for days regardless of HTTP headers, then runs a fresh module next to a
   stale one (« does not provide an export named … »): 76 reports in one evening, none from a
