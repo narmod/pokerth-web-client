@@ -91,9 +91,21 @@ async function runDevice(browser, name, descriptor) {
       const flat = await measure();
       assert.ok(Math.abs(flat.above - flat.below) <= 3, `card not centred: ${Math.round(flat.above)}px above, ${Math.round(flat.below)}px below`);
       assert.ok(flat.underFooter >= 8 && flat.underFooter <= 14, `footer is ${Math.round(flat.underFooter)}px above the bottom edge`);
+      // Safe areas only exist where the page gets the WHOLE screen (installed
+      // app, standalone): in a Safari tab the toolbar covers the home
+      // indicator and the bottom inset is 0. So the notch case is measured at
+      // the profile's full screen size, and only on phones that have a notch
+      // (no 'screen' in the profile = home-button iPhone SE, Galaxy S24 tab
+      // profile: skipped). The first version applied the 47 / 34 px insets of
+      // the standalone app to the 659 px of a Safari tab - a combination no
+      // iPhone has - and reported the scroll that follows as a bug.
+      const full = descriptor.screen && descriptor.screen.height >= 800 ? descriptor.screen : null;
+      if (!full) return;
+      await page.setViewportSize({ width: full.width, height: full.height }); await page.waitForTimeout(300);
       await page.evaluate(() => { const s = document.getElementById('s-connect'); s.style.setProperty('--pth-sat', '47px'); s.style.setProperty('--pth-sab', '34px'); document.querySelector('#s-connect .connect-header').style.paddingTop = '47px'; });
       const notch = await measure();
       await page.evaluate(() => { const s = document.getElementById('s-connect'); s.style.removeProperty('--pth-sat'); s.style.removeProperty('--pth-sab'); document.querySelector('#s-connect .connect-header').style.paddingTop = ''; });
+      await page.setViewportSize(descriptor.viewport); await page.waitForTimeout(300);
       assert.ok(notch.above > 8 && Math.abs(notch.above - notch.below) <= 3, `with safe areas the card is not centred: ${Math.round(notch.above)}px above, ${Math.round(notch.below)}px below`);
       assert.ok(Math.abs(notch.underFooter - 34) <= 3, `with safe areas the footer is ${Math.round(notch.underFooter)}px above the bottom edge (home indicator needs 34)`);
     });
