@@ -56,6 +56,9 @@ highlights below.
   selected period and included in the JSON export. The privacy page says so (`web.5`).
 
 ### Fixed
+- **The admin error list scrolls** — past 15 errors the list keeps the height of its first 15
+  lines and scrolls vertically inside the card, instead of stretching the page; a Dismiss keeps
+  the scroll position (`web.13`).
 - **A file vanishing mid-request can no longer crash the proxy** — static files that are not
   compressed (fonts, images, audio, wasm) were streamed with no error listener, so a file removed
   or replaced between the 5-second stat cache and the open (a deploy, a disk hiccup) raised an

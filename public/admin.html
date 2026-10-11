@@ -4597,15 +4597,38 @@
     if(n<86400000) return Math.floor(n/3600000)+' h ago';
     return d.toLocaleString();
   }
+  // Liste bornée à 15 erreurs visibles, défilement vertical au-delà. Les lignes
+  // n'ont pas une hauteur fixe (message sur une à trois lignes, pile dépliable) :
+  // on mesure le bas de la 15e ligne plutôt qu'un max-height fixe en em. Le
+  // panneau est souvent caché (display:none) quand la liste se charge, où tout
+  // mesure 0 : un ResizeObserver refait le calcul quand il devient visible, ou
+  // quand la largeur change (lignes qui se replient autrement).
+  var ER_VISIBLE=15, _erRO=null;
+  function _erFit(list){
+    if(!list) return;
+    var rows=list.children;
+    if(rows.length<=ER_VISIBLE){ list.style.maxHeight=''; list.style.overflowY=''; return; }
+    var h=rows[ER_VISIBLE-1].getBoundingClientRect().bottom-rows[0].getBoundingClientRect().top;
+    if(!(h>0)) return;                                   // caché : le ResizeObserver repassera
+    var px=Math.ceil(h)+'px';
+    if(list.style.maxHeight!==px) list.style.maxHeight=px;
+    list.style.overflowY='auto'; list.style.overscrollBehavior='contain';
+  }
+  function _erWatch(list){
+    if(_erRO||!list||typeof ResizeObserver!=='function') return;
+    try{ _erRO=new ResizeObserver(function(){ _erFit(list); }); _erRO.observe(list); }catch(_){}
+  }
   function loadErrors(){
     return api('/admin/errors').then(function(r){return r.json();}).then(function(d){
       var sum=$('erSum'), list=$('erList');
+      // Un Dismiss recharge la liste : on garde la position de défilement.
+      var keepTop=list?list.scrollTop:0;
       if(!d||!d.ok){ if(list) list.innerHTML='<div class="empty">Could not load errors.</div>'; return; }
       var g=d.groups||[], tot=0; g.forEach(function(x){ tot+=x.count; });
       if(sum) sum.textContent=g.length+' distinct error'+(g.length===1?'':'s')+' \u00b7 '+tot+' occurrence'+(tot===1?'':'s');
       if(!list) return;
       list.innerHTML='';
-      if(!g.length){ list.innerHTML='<div class="empty">No error reported. Enjoy it while it lasts.</div>'; return; }
+      if(!g.length){ list.innerHTML='<div class="empty">No error reported. Enjoy it while it lasts.</div>'; _erFit(list); return; }
       g.forEach(function(e){
         var row=document.createElement('div'); row.className='row'; row.style.alignItems='flex-start';
         var nm=document.createElement('div'); nm.className='nm';
@@ -4642,6 +4665,8 @@
         });
         row.appendChild(nm); row.appendChild(del); list.appendChild(row);
       });
+      _erFit(list); _erWatch(list);
+      if(keepTop) list.scrollTop=keepTop;
     }).catch(function(){ var l=$('erList'); if(l) l.innerHTML='<div class="empty">Network error.</div>'; });
   }
   (function(){
