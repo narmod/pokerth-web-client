@@ -56,6 +56,13 @@ highlights below.
   selected period and included in the JSON export. The privacy page says so (`web.5`).
 
 ### Fixed
+- **Search-engine crawlers no longer flood the admin error list** — Googlebot's renderer keeps
+  our scripts cached for days regardless of HTTP headers, then runs a fresh module next to a
+  stale one (« does not provide an export named … »): 76 reports in one evening, none from a
+  player. `/clienterr` now answers 204 without recording anything when the User-Agent declares a
+  crawler (`xxxbot/`, `xxxbot;`, a `+http` contact URL, spider/crawl/slurp, HeadlessChrome,
+  Lighthouse) — deliberately narrower than the bot *measure* `UA_BOT`, which would also drop
+  real players on CUBOT phones (`web.10`).
 - **Seat recovery after a reload in a long game** — the `pth_resume` marker that replays
   `myLastSessionId` after a full page reload was only stamped at `JoinGameAck`, so its 5-minute
   window had always expired in a game older than 5 minutes: the reloaded tab logged in without
