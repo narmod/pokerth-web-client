@@ -6,7 +6,7 @@
 import { createServer } from 'node:http';
 import { mkdirSync, readFileSync, statSync } from 'node:fs';
 import { extname, join, normalize } from 'node:path';
-import { chromium, webkit, devices } from 'playwright';
+import { chromium, firefox, webkit, devices } from 'playwright';
 
 export { devices };
 export const MATRIX = [
@@ -18,6 +18,7 @@ export const MATRIX = [
   { name: 'Galaxy A55 landscape', family: 'android' },
 ];
 const ENGINES = { ios: ['webkit', webkit], android: ['chromium', chromium] };
+const BY_NAME = { chromium, firefox, webkit };
 export const SHOTS = process.env.PTH_SHOTS !== '0';
 const SHOT_DIR = join(process.cwd(), 'test-artifacts', 'mobile');
 export const ME = 42, GAME = 303;
@@ -201,8 +202,14 @@ export const acted = (page, pid) => page.evaluate((p) => { const f = window.__fx
 export const dealTurn = (page, card) => page.evaluate((c) => { const f = window.__fx;
   f.socket.receive(f.envelope(f.MSG.T.DealTurn, 47, [[1, 0, f.GAME], [2, 0, c]])); }, card);
 
-// ── Plan: PTH_MOBILE / PTH_DEVICES / PTH_ENGINE, engines launched per family,
-// a missing engine is skipped with a notice. runDevice(browser, name, descriptor)
+// ── Plan: PTH_MOBILE / PTH_DEVICES / PTH_ENGINE / PTH_ENGINES, engines
+// launched one after the other, a missing engine is skipped with a notice.
+// runDevice(browser, name, descriptor, engineName)
+// A matrix entry is { name, family } (a Playwright device, engine chosen by
+// family: ios = WebKit, android = Chromium) or, for screens Playwright has no
+// profile for, { name, family, engine, descriptor } (test-screen-matrix: the
+// same desktop size run in Chromium, Firefox AND WebKit). Firefox does not
+// take isMobile: it is dropped from the descriptor.
 export async function runPlan(title, reporter, runDevice, matrix = MATRIX, hardTimeoutMin = 40) {
   // Watchdog: a browser that wedges (seen with WebKit after an internal error)
   // must not hold a CI job until its own timeout. Exit code 3 = hung.
@@ -211,31 +218,37 @@ export async function runPlan(title, reporter, runDevice, matrix = MATRIX, hardT
   watchdog.unref();
   const family = (process.env.PTH_MOBILE || 'all').toLowerCase();
   const only = (process.env.PTH_DEVICES || '').split(',').map((s) => s.trim()).filter(Boolean);
+  const engines = (process.env.PTH_ENGINES || '').toLowerCase().split(',').map((s) => s.trim()).filter(Boolean);
+  const forced = (process.env.PTH_ENGINE || '').toLowerCase();
   const plan = matrix.filter((d) => (family === 'all' || d.family === family) && (!only.length || only.includes(d.name)));
   only.filter((n) => !matrix.some((d) => d.name === n) && devices[n]).forEach((n) => plan.push({ name: n, family: /iphone|ipad/i.test(n) ? 'ios' : 'android' }));
-  console.log(title + ' - ' + plan.map((d) => d.name).join(', '));
+  const engineOf = (d) => (BY_NAME[forced] ? forced : d.engine || ENGINES[d.family][0]);
+  const runnable = plan.filter((d) => !engines.length || engines.includes(engineOf(d)));
+  console.log(title + ' - ' + runnable.map((d) => d.name + (d.engine ? ' [' + d.engine + ']' : '')).join(', '));
   let enginesRun = 0; const skipped = [];
-  for (const fam of ['ios', 'android']) {
-    const list = plan.filter((d) => d.family === fam); if (!list.length) continue;
-    const forced = (process.env.PTH_ENGINE || '').toLowerCase();
-    const [engineName, engine] = forced === 'chromium' ? ['chromium', chromium] : forced === 'webkit' ? ['webkit', webkit] : ENGINES[fam];
+  // Same order as before for the phone matrices (iOS profiles first), then Firefox.
+  for (const engineName of ['webkit', 'chromium', 'firefox']) {
+    const list = runnable.filter((d) => engineOf(d) === engineName); if (!list.length) continue;
     let browser;
-    try { browser = await engine.launch({ headless: true }); }
-    catch (_error) { skipped.push(`${engineName} (${fam}): not installed - run "npx playwright install ${engineName}"`); continue; }
+    try { browser = await BY_NAME[engineName].launch({ headless: true }); }
+    catch (_error) { skipped.push(`${engineName}: not installed - run "npx playwright install ${engineName}"`); continue; }
     enginesRun++;
-    console.log(`\n== ${fam === 'ios' ? 'iOS profiles' : 'Android profiles'} - ${engineName} ${browser.version()} ==`);
+    const fams = [...new Set(list.map((d) => d.family))];
+    console.log(`\n== ${fams.map((f) => (f === 'ios' ? 'iOS profiles' : f === 'android' ? 'Android profiles' : f + ' profiles')).join(' + ')} - ${engineName} ${browser.version()} ==`);
     try {
       for (const d of list) {
         // PTH_VIEWPORT=734x400 overrides the viewport of every profile (keeps
         // DPR / touch / user agent): try an odd phone size, or find from which
         // height a layout problem appears.
         const m = /^(\d+)x(\d+)$/.exec(process.env.PTH_VIEWPORT || '');
-        const descriptor = m ? { ...devices[d.name], viewport: { width: Number(m[1]), height: Number(m[2]) } } : devices[d.name];
+        let descriptor = { ...(d.descriptor || devices[d.name]) };
+        if (m) descriptor.viewport = { width: Number(m[1]), height: Number(m[2]) };
+        if (engineName === 'firefox') delete descriptor.isMobile;
         const label = m ? `${d.name} @${m[1]}x${m[2]}` : d.name;
         reporter.device = `${label} (${engineName})`;
         const vp = descriptor.viewport;
-        console.log(`\n${label} - ${vp.width}x${vp.height} @${descriptor.deviceScaleFactor}x`);
-        await runDevice(browser, label, descriptor);
+        console.log(`\n${label} - ${vp.width}x${vp.height} @${descriptor.deviceScaleFactor || 1}x`);
+        await runDevice(browser, label, descriptor, engineName);
         reporter.flush();
       }
     } finally { await browser.close(); }

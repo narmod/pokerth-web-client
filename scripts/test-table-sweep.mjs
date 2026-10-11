@@ -19,7 +19,8 @@
 //        PTH_SEATS="2,6,10"  PTH_MODES="seated,spectator"  to narrow the sweep.
 // Shots: test-artifacts/mobile/<device>-sweep-<mode>-<n>.png
 import assert from 'node:assert/strict';
-import { startServer, createReporter, shot, overlap, openTable, runPlan } from './lib/mobile-harness.mjs';
+import { startServer, createReporter, shot, openTable, runPlan } from './lib/mobile-harness.mjs';
+import { measureTable as measure, auditTable as audit } from './lib/layout-audit.mjs';
 
 // Portrait + landscape of each family is enough here: the sweep multiplies by
 // 18 configurations, the per-device detail lives in test-mobile-browser.
@@ -35,62 +36,6 @@ const MODES = (process.env.PTH_MODES || 'seated,spectator').split(',').map((s) =
 
 const { server, base } = await startServer();
 const reporter = createReporter();
-
-const measure = (page) => page.evaluate(() => {
-  const rect = (e) => { const r = e.getBoundingClientRect(); return { left: r.left, top: r.top, right: r.right, bottom: r.bottom, width: r.width, height: r.height }; };
-  const vis = (e) => { if (!e) return false; const c = getComputedStyle(e), r = e.getBoundingClientRect();
-    return c.display !== 'none' && c.visibility !== 'hidden' && parseFloat(c.opacity) > 0.05 && r.width > 1 && r.height > 1; };
-  const seats = [...document.querySelectorAll('#g-seats .seat:not(.seat-ghost)')];
-  const me = document.querySelector('#g-seats .seat.me');
-  return {
-    viewport: { width: innerWidth, height: innerHeight },
-    overflowX: document.documentElement.scrollWidth - innerWidth,
-    zone: rect(document.getElementById('g-table-zone')),
-    plates: seats.map((s) => ({ name: (s.querySelector('.seat-name') || {}).textContent || s.getAttribute('data-pid'), me: s.classList.contains('me'), ...rect(s.querySelector('.seat-plate') || s) })),
-    me: me ? rect(me.querySelector('.seat-plate') || me) : null,
-    slots: [...document.querySelectorAll('#g-comm .pk')].filter(vis).map(rect),
-    pot: vis(document.getElementById('g-potbar')) ? rect(document.getElementById('g-potbar')) : null,
-    pucks: [...document.querySelectorAll('#g-seats .seat-pucks > *, #g-seats .seat-bet')].filter(vis).map((e) => ({ owner: seats.indexOf(e.closest('.seat')), kind: e.classList.contains('seat-bet') ? 'bet chip' : 'puck', ...rect(e) })),
-    floating: ['chat-toggle-btn', 'react-toggle-btn', 'hands-toggle-btn', 'log-toggle-btn', 'g-zoom-toggle'].map((id) => document.getElementById(id)).filter(vis).map((e) => ({ id: e.id, ...rect(e) })),
-    actionBar: vis(document.querySelector('.my-zone')) ? rect(document.querySelector('.my-zone')) : null,
-    actions: [...document.querySelectorAll('.act-buttons-row .btn-action')].filter(vis).length,
-    dbg: (function () { const d = window._seatDbg || {}, m = d.dims || {}; return `zone ${d.zone} - box ${m.w}x${m.h} self ${m.sh} - scale ${d.boxScale} - comm ${d.commScale && d.commScale.toFixed ? d.commScale.toFixed(2) : d.commScale}` + ['.my-zone .bet-row', '.my-zone .mid-row', '.my-zone .act-buttons-row'].map((q) => { const e = document.querySelector(q); if (!e) return ''; const r = e.getBoundingClientRect(); return ` - ${q.split(' .')[1]} ${Math.round(r.width)}x${Math.round(r.height)}@${Math.round(r.left)},${Math.round(r.top)}`; }).join(''); })(),
-  };
-});
-
-function audit(g, n, spectator) {
-  const problems = [];
-  const inZone = (r, pad = 2) => r.left >= g.zone.left - pad && r.right <= g.zone.right + pad && r.top >= g.zone.top - pad && r.bottom <= g.zone.bottom + pad;
-  const who = (p) => (p.me ? 'self box' : p.name);
-  if (g.plates.length !== n) problems.push(`${g.plates.length} seats drawn instead of ${n}`);
-  if (g.overflowX > 1) problems.push(`page overflows horizontally by ${g.overflowX}px`);
-  g.plates.forEach((p) => { if (!inZone(p)) problems.push(`${who(p)} leaves the table zone (${Math.round(p.left)},${Math.round(p.top)} - ${Math.round(p.right)},${Math.round(p.bottom)} / zone ${Math.round(g.zone.left)},${Math.round(g.zone.top)} - ${Math.round(g.zone.right)},${Math.round(g.zone.bottom)})`); });
-  for (let i = 0; i < g.plates.length; i++) for (let j = i + 1; j < g.plates.length; j++)
-    if (overlap(g.plates[i], g.plates[j], 2)) problems.push(`${who(g.plates[i])} overlaps ${who(g.plates[j])}`);
-  if (g.slots.length !== 5) problems.push(`${g.slots.length} community slots visible instead of 5`);
-  g.slots.forEach((c, i) => { if (!inZone(c, 1)) problems.push(`community card ${i + 1} leaves the zone`);
-    g.plates.forEach((p) => { if (overlap(c, p, 2)) problems.push(`${who(p)} covers community card ${i + 1}`); }); });
-  if (g.pot) g.plates.forEach((p) => { if (overlap(g.pot, p, 2)) problems.push(`${who(p)} covers the pot badge`); });
-  g.floating.forEach((f) => g.plates.forEach((p) => { if (overlap(f, p, 3)) problems.push(`${who(p)} sits under the ${f.id} button`); }));
-  g.pucks.forEach((k) => {
-    const owner = g.plates[k.owner] ? who(g.plates[k.owner]) : '?';
-    if (!inZone(k, 3)) problems.push(`the ${k.kind} of ${owner} leaves the zone`);
-    g.plates.forEach((p, i) => { if (i !== k.owner && overlap(k, p, 4)) problems.push(`the ${k.kind} of ${owner} covers ${who(p)}`); });
-    g.slots.forEach((c, i) => { if (overlap(k, c, 4)) problems.push(`the ${k.kind} of ${owner} covers community card ${i + 1}`); });
-  });
-  if (spectator) {
-    if (g.me) problems.push('a self box is drawn in spectator mode');
-    if (g.actions) problems.push('action buttons are shown to a spectator');
-  } else {
-    if (!g.me) problems.push('no self box');
-    else {
-      const mid = (g.me.left + g.me.right) / 2, cx = g.zone.left + g.zone.width / 2;
-      if (Math.abs(mid - cx) > 2) problems.push(`self box not centred (${mid.toFixed(1)} vs ${cx.toFixed(1)})`);
-      if (g.actionBar && overlap(g.me, g.actionBar, 1)) problems.push('self box is covered by the action bar');
-    }
-  }
-  return [...new Set(problems)];
-}
 
 async function runDevice(browser, name, descriptor) {
   for (const mode of MODES) {

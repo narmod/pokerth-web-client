@@ -20,6 +20,7 @@
 //       (PTH_MOBILE, PTH_DEVICES, PTH_ENGINE, PTH_VIEWPORT, PTH_SHOTS).
 // Shots: one per failing language x screen: test-artifacts/mobile/<device>-i18n-<screen>-<lang>.png
 import { startServer, createReporter, shot, openTable, enterTable, settle, runPlan, ME, GAME } from './lib/mobile-harness.mjs';
+import { UI_AUDIT as AUDIT } from './lib/layout-audit.mjs';
 
 const PHONES = [
   { name: 'iPhone SE (3rd gen)', family: 'ios' },       // 375 px: narrowest iPhone still sold
@@ -30,70 +31,6 @@ const ONLY_LANGS = (process.env.PTH_LANGS || '').split(',').map((s) => s.trim())
 const ONLY_SCREENS = (process.env.PTH_SCREENS || '').split(',').map((s) => s.trim()).filter(Boolean);
 const { server, base } = await startServer();
 const reporter = createReporter();
-
-// In-page audit of the visible part of `rootSel` (+ the app header).
-const AUDIT = (rootSel) => {
-  const root = document.querySelector(rootSel) || document.body;
-  const vw = window.innerWidth, out = [];
-  const vis = (e) => { const c = getComputedStyle(e), r = e.getBoundingClientRect();
-    // closed <details> (header menus) keep their boxes but paint nothing
-    const d = e.closest('details:not([open])'); if (d && !e.closest('summary')) return false;
-    if (typeof e.checkVisibility === 'function' && !e.checkVisibility({ contentVisibilityAuto: true, opacityProperty: true, visibilityProperty: true })) return false;
-    return c.display !== 'none' && c.visibility !== 'hidden' && parseFloat(c.opacity) > 0.05 && r.width > 1 && r.height > 1 && r.bottom > 0 && r.top < innerHeight && r.right > 2 && r.left < vw - 2; };   // panes of the mobile lobby pager sit fully off-screen on purpose
-  const hiddenUp = (e) => { for (let p = e; p && p !== document.body; p = p.parentElement) { const c = getComputedStyle(p); if (c.display === 'none' || c.visibility === 'hidden') return true; } return false; };
-  const scrollsX = (e) => { for (let p = e.parentElement; p && p !== document.body; p = p.parentElement) { const o = getComputedStyle(p).overflowX; if ((o === 'auto' || o === 'scroll') && p.scrollWidth > p.clientWidth + 1) return true; } return false; };
-  const ownText = (e) => [...e.childNodes].filter((n) => n.nodeType === 3).map((n) => n.textContent).join('').replace(/\s+/g, ' ').trim();
-  const name = (e) => (e.id ? '#' + e.id : e.tagName.toLowerCase() + (e.classList.length ? '.' + [...e.classList].slice(0, 2).join('.') : '')) + (e.getAttribute('data-i18n') ? '[' + e.getAttribute('data-i18n') + ']' : '');
-  const NOT_I18N = '.seat-name, .seat-money, .pb-name, .game-name, .gname, .player-name, .chat-line, .chat-msg, #g-title, .wc-name, input, textarea, .log-line, .notice-body';
-  const STRICT = 'button, .btn-action, [role="tab"], .tab, h1, h2, h3, .login-card, .lc-t, .mode-seg-btn, .screen-title, select';
-  const scope = [...root.querySelectorAll('*'), ...document.querySelectorAll('.header *')];
-  const seen = new Set(), texts = [];
-  // Rectangles of the PAINTED text, one per line (a wrapped inline link is two small boxes, not one big
-  // one covering its neighbours), each cut by every box that clips it (an ellipsised name reports its
-  // full unclipped width otherwise).
-  const clipBy = (e, q) => { const r = { left: q.left, top: q.top, right: q.right, bottom: q.bottom };
-    for (let p = e; p && p !== document.body; p = p.parentElement) { const c = getComputedStyle(p); if (c.overflowX === 'visible' && c.overflowY === 'visible') continue; const b = p.getBoundingClientRect();
-      if (c.overflowX !== 'visible') { r.left = Math.max(r.left, b.left); r.right = Math.min(r.right, b.right); } if (c.overflowY !== 'visible') { r.top = Math.max(r.top, b.top); r.bottom = Math.min(r.bottom, b.bottom); } }
-    return r; };
-  const textRects = (e) => { const rg = document.createRange(); rg.selectNodeContents(e); let q = [...rg.getClientRects()].filter((r) => r.width > 1 && r.height > 1); if (!q.length) q = [e.getBoundingClientRect()]; return q.map((r) => clipBy(e, r)); };
-  const boxRects = (e) => (getComputedStyle(e).display === 'inline' ? [...e.getClientRects()] : [e.getBoundingClientRect()]).map((r) => clipBy(e.parentElement || e, r));
-  const cross = (A, B) => { let best = null; for (const a of A) for (const b of B) { const w = Math.min(a.right, b.right) - Math.max(a.left, b.left), h = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top); if (w > 3 && h > 3 && (!best || w * h > best[0] * best[1])) best = [w, h]; } return best; };
-  for (const e of scope) {
-    if (seen.has(e)) continue; seen.add(e);
-    if (e.closest(NOT_I18N) || !vis(e) || hiddenUp(e)) continue;
-    const txt = ownText(e); if (txt.length < 2) continue;
-    const c = getComputedStyle(e), r = e.getBoundingClientRect();
-    texts.push({ e, r: textRects(e), txt });
-    const dx = e.scrollWidth - e.clientWidth, dy = e.scrollHeight - e.clientHeight;
-    const cutX = dx > 1 && c.overflowX !== 'visible', cutY = dy > 2 && c.overflowY !== 'visible' && c.overflowY !== 'auto' && c.overflowY !== 'scroll';
-    // An ellipsis is fine on a secondary description (.lc-d), never on a button, a tab or a title.
-    const strict = !e.matches('.lc-d') && (e.matches(STRICT) || !!e.closest('button, .btn-action, [role="tab"], .lc-t'));
-    if (cutX && (c.textOverflow !== 'ellipsis' || strict)) out.push({ kind: 'clipped', el: name(e), text: txt.slice(0, 40), by: Math.round(dx) + 'px' + (c.textOverflow === 'ellipsis' ? ' (…)' : '') });
-    else if (cutY) out.push({ kind: 'clipped', el: name(e), text: txt.slice(0, 40), by: Math.round(dy) + 'px tall' });
-    // text spilling OUT of a button-like box whose overflow is visible
-    const box = e.closest('button, .btn-action, .login-card, .mode-seg-btn, [role="tab"]');
-    if (box && box !== e) { const b = box.getBoundingClientRect(); if (r.right > b.right + 2 || r.left < b.left - 2) out.push({ kind: 'spills', el: name(e) + ' out of ' + name(box), text: txt.slice(0, 40), by: Math.round(Math.max(r.right - b.right, b.left - r.left)) + 'px' }); }
-    if ((r.right > vw + 1 || r.left < -1) && !scrollsX(e)) out.push({ kind: 'off-screen', el: name(e), text: txt.slice(0, 40), by: Math.round(Math.max(r.right - vw, -r.left)) + 'px' });
-  }
-  // overlaps between controls / titles of the same screen
-  const ctl = [...root.querySelectorAll('button, select, input, a[href], .login-card, h1, h2, h3, .screen-title'), ...document.querySelectorAll('.header button, .header h1, .header .title, #g-title')]
-    .filter((e, i, a) => a.indexOf(e) === i && vis(e) && !hiddenUp(e));
-
-  for (let i = 0; i < ctl.length; i++) for (let j = i + 1; j < ctl.length; j++) {
-    const a = ctl[i], b = ctl[j]; if (a.contains(b) || b.contains(a)) continue;
-    const x = cross(boxRects(a), boxRects(b));
-    if (x) out.push({ kind: 'overlap', el: name(a) + ' x ' + name(b), text: (ownText(a) || ownText(b)).slice(0, 30), by: Math.round(x[0]) + 'x' + Math.round(x[1]) + 'px' });
-  }
-  // a label lying over (or under) a control it does not belong to - e.g. a screen title across the header icons
-  for (const t of texts) for (const k of ctl) {
-    if (k === t.e || k.contains(t.e) || t.e.contains(k)) continue;
-    const x = cross(t.r, boxRects(k));
-    if (x) out.push({ kind: 'overlap', el: name(t.e) + ' x ' + name(k), text: t.txt.slice(0, 30), by: Math.round(x[0]) + 'x' + Math.round(x[1]) + 'px' });
-  }
-  const over = document.documentElement.scrollWidth - vw;
-  if (over > 1) out.push({ kind: 'page', el: 'document', text: '', by: over + 'px wider than the screen' });
-  return out;
-};
 
 async function setLang(page, code) {
   await page.evaluate((c) => window.setLang(c), code);

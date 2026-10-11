@@ -88,6 +88,7 @@
     "test:accessibility-browser": "node scripts/test-accessibility-browser.mjs",
     "test:mobile": "node scripts/test-mobile-browser.mjs",
     "test:table-sweep": "node scripts/test-table-sweep.mjs",
+    "test:screen-matrix": "node scripts/test-screen-matrix.mjs",
     "test:showdown-browser": "node scripts/test-showdown-browser.mjs",
     "test:i18n-overflow": "node scripts/test-i18n-overflow.mjs",
     "test:pwa-browser": "node scripts/test-pwa-browser.mjs",

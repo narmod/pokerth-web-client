@@ -77,7 +77,7 @@ PTH_DEVICES="Pixel 7" PTH_SEATS="4,6" PTH_MODES=seated npm run test:table-sweep
 
 Screenshots: `test-artifacts/mobile/<device>-sweep-<mode>-<nn>.png`. Both tests
 share `scripts/lib/mobile-harness.mjs` (server, phone profiles, fixture hand,
-reporter, screenshots).
+reporter, screenshots) and `scripts/lib/layout-audit.mjs` (the table audit).
 
 ## End of hand: showdown, all-in, side pot, next hand
 
@@ -193,6 +193,56 @@ real insets through those two custom properties). Per notice: entirely inside
 the usable screen (below the status bar, above the home indicator), close
 control fully visible, on top, at least 32 x 32 px, and it closes; two notices
 at once do not overlap; a window keeps its button on screen whatever the length.
+
+## Screen matrix: desktop, tablets, foldables, three engines
+
+`npm run test:screen-matrix` (`scripts/test-screen-matrix.mjs`) covers what the
+phone tests do not: desktop monitors, tablets and foldables, in the **three**
+engines - Chromium (Chrome, Edge, Opera), **Firefox** (Gecko, run by no other
+browser test) and WebKit (Safari, and every browser on an iPad).
+
+| Family | Profiles | Engines |
+|---|---|---|
+| Desktop | 1280x720, 1366x768, 1440x900 @2x, 1536x864 @1.25x, 1920x1080, 2560x1440, 3440x1440 ultrawide, 3840x2160 (4K at 100 %) | Chromium, Firefox, WebKit |
+| iPad | iPad Mini, iPad (gen 11), iPad Pro 11 - portrait and landscape | WebKit |
+| Android tablet | Galaxy Tab S9 portrait and landscape | Chromium, Firefox |
+| Foldable | open 904x1100 (Chromium, Firefox), open landscape 1100x904, cover 344x882 (Chromium) | as listed |
+| Resize | a 1440x900 window dragged through every breakpoint and back | Chromium, Firefox, WebKit |
+
+Per profile and engine:
+
+- **mode picker, login form, lobby, create-table form** (scrolled screenful by
+  screenful): the text audit of the language test (clipped, spilling out of its
+  button, off-screen, overlaps, sideways scroll), in English; plus **player and
+  table names that must stay readable** - a name cell squeezed to nothing by
+  the fixed tracks of its row is reported;
+- **table on my turn facing a big bet, 2 / 6 / 10 players seated, 10 as a
+  spectator**: the table-sweep geometry, the table zone inside the window,
+  every action button fully on screen, no vertical page scroll, and the same
+  text audit;
+- **resize** (`Resize 1440x900`): 1440x900 > 1180x820 > 1024x768 > 899x700 >
+  820x1180 > 740x900 > 739x900 > 600x900 > 599x900 > 390x844 > 844x390 >
+  900x599 > 960x499 > 1440x900 - every width / height threshold of
+  `pokerth.css` and `pokerth.js`, a phone in both orientations, and back. Lobby
+  and table are audited at each size; back at 1440x900 the layout must be
+  exactly the one it started with (nothing left over from the phone layout).
+
+On GitHub it runs as one job per engine (`screen-matrix (chromium)`,
+`(firefox)`, `(webkit)`), about 15 minutes each; screenshots in the
+`screen-matrix-<engine>` artifact. Narrow it:
+
+```sh
+PTH_ENGINES=firefox npm run test:screen-matrix
+PTH_DEVICES="Desktop 1366x768,iPad Mini" PTH_STEPS=ui npm run test:screen-matrix
+PTH_MOBILE=resize PTH_ENGINES=webkit npm run test:screen-matrix
+```
+
+`PTH_STEPS` = `ui`, `table`, `resize` (comma list). Screenshots:
+`test-artifacts/mobile/<profile>-<engine>-<step>.png`. The audits are shared
+with the language test and the table sweep (`scripts/lib/layout-audit.mjs`).
+
+Not covered: the browser's own zoom (Ctrl +), a real Windows / macOS font
+renderer, OS-level scaling other than the DPR of the profile.
 
 ## Limits - what still needs a real phone
 

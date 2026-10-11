@@ -22,14 +22,18 @@ on:
       - 'scripts/test-pwa-browser.mjs'
       - 'scripts/test-reconnect-browser.mjs'
       - 'scripts/test-notices-browser.mjs'
+      - 'scripts/test-screen-matrix.mjs'
       - 'scripts/lib/mobile-harness.mjs'
+      - 'scripts/lib/layout-audit.mjs'
       - '.github/workflows/mobile-verification.yml'
   pull_request:
     paths:
       - 'public/**'
       - 'scripts/test-mobile-browser.mjs'
       - 'scripts/test-table-sweep.mjs'
+      - 'scripts/test-screen-matrix.mjs'
       - 'scripts/lib/mobile-harness.mjs'
+      - 'scripts/lib/layout-audit.mjs'
   workflow_dispatch:
 
 permissions:
@@ -149,6 +153,46 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: i18n-overflow-screenshots
+          path: test-artifacts/mobile/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  # Desktop monitors (1280x720 to 4K / ultrawide), tablets and foldables, and a
+  # window dragged through every layout breakpoint and back - one job per
+  # engine: Chromium (Chrome / Edge), Firefox (Gecko - not run anywhere else)
+  # and WebKit (Safari, every iPad browser).
+  screen-matrix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, firefox, webkit]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Playwright (pinned version)
+        run: |
+          PW="$(node -p "require('./package.json').devDependencies.playwright")"
+          npm install --no-save --no-package-lock "playwright@${PW}"
+          npx playwright install --with-deps ${{ matrix.engine }}
+
+      - name: Screen matrix (${{ matrix.engine }})
+        env:
+          PTH_ENGINES: ${{ matrix.engine }}
+        run: npm run test:screen-matrix
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screen-matrix-${{ matrix.engine }}
           path: test-artifacts/mobile/
           if-no-files-found: ignore
           retention-days: 14
