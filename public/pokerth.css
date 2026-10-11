@@ -13210,6 +13210,23 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   #s-connect > .card { margin-top: auto; margin-bottom: auto; flex: 0 0 auto; }
   #s-connect > .connect-footer { position: static; flex: 0 0 auto; margin-top: 14px; padding-bottom: 0; }
 }
+/* Same layout on short desktops and tablets (web.15). Found by
+   scripts/test-screen-matrix.mjs: at 1280x720, 1366x768 or a 1024x640 tablet
+   the Internet login card is taller than the room above the footer, so it
+   covered the Discord / pokerth.net / GitHub icons (the card is stacked above
+   the footer on purpose) and "Not registered yet?" sat on top of them, in
+   Chromium, Firefox and WebKit. Under 600px tall the footer is hidden; from
+   900px tall the card fits and nothing changes. */
+@media (min-width: 560.02px) and (min-height: 600px) and (max-height: 900px) {
+  #s-connect {
+    --pth-sat: env(safe-area-inset-top, 0px); --pth-sab: env(safe-area-inset-bottom, 0px);
+    justify-content: flex-start;
+    padding-top: calc(34px + max(4px, var(--pth-sat)) + 14px);
+    padding-bottom: max(10px, var(--pth-sab));
+  }
+  #s-connect > .card { margin-top: auto; margin-bottom: auto; flex: 0 0 auto; }
+  #s-connect > .connect-footer { position: static; flex: 0 0 auto; margin-top: 14px; padding-bottom: 0; }
+}
 
 /* ── Connection lost: the action bar is greyed out and inert (web.101) ─────
    body.conn-lost is set by _showBanner (reconnection notice) and cleared by

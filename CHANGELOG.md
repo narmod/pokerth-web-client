@@ -56,6 +56,12 @@ highlights below.
   selected period and included in the JSON export. The privacy page says so (`web.5`).
 
 ### Fixed
+- **The login card no longer hides the Discord / pokerth.net / GitHub links on short screens** —
+  on a desktop or tablet 600 to 900 px tall (1280x720, 1366x768, a tablet in landscape) the
+  Internet login card was taller than the room above the footer and, stacked above it on
+  purpose, covered the three links, with « Not registered yet? » on top of them. The footer now
+  follows the card there, as on phones since `web.97`; the screen scrolls when both do not fit
+  (`web.15`).
 - **Player names are back in the lobby's « Players online » list on wide screens** — from 900 px
   wide, the fixed columns (avatar, star, in game, country, actions: 228 px) filled the whole row
   of the 240 px default column, so the name column was 0 px and no nickname showed, on every

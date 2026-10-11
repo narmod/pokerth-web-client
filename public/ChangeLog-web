@@ -1,3 +1,6 @@
+2026-10-11 version 2.1.10-web.15:
+- bugfix: on a computer or a tablet with a short screen, the login card no longer covers the Discord, pokerth.net and GitHub links
+
 2026-10-11 version 2.1.10-web.14:
 - bugfix: on a computer or a large tablet, the "Players online" list of the lobby shows the players' names again (only their initial and icons were visible)
 
