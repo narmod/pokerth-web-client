@@ -120,7 +120,8 @@ export async function openTable(page, base, options = {}) {
   // player would, with its last button ("Later").
   await page.waitForTimeout(600);
   const later = page.locator('#bak-restore-banner button').last();
-  if (await later.count()) { try { await later.tap({ timeout: 2000 }); } catch (_e) {} }
+  // A profile without touch (desktop, test-screen-matrix) cannot tap: click it.
+  if (await later.count()) { try { await later.tap({ timeout: 2000 }); } catch (_e) { try { await later.click({ timeout: 2000 }); } catch (_e2) {} } }
   if (stopAt === 'login') return [];
   await page.locator('.login-card').nth(2).click();
   await page.locator('#nick').fill('MobileTester');
