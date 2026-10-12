@@ -662,6 +662,7 @@ export const strings = {
     "bakBannerCreate": "إنشاء نسخة احتياطية",
     "bakBannerRestore": "استعادة نسخة احتياطية",
     "bakBannerLater": "لاحقًا",
+    "bakLaterHint": "لا مشكلة. متى أردت ذلك: {path}، ثم «{btn}».",
     "bakBannerCreated": "تم إنشاء النسخة الاحتياطية.",
     "bakBannerExists": "يوجد بالفعل ملف نسخة احتياطية في هذا المجلد — استخدم الاستعادة.",
     "bakRestoreQ": "تبدو إعداداتك فارغة. هل تريد استعادتها من مجلد النسخ الاحتياطي؟",

@@ -659,6 +659,7 @@ export const strings = {
     "bakBannerCreate": "צור גיבוי",
     "bakBannerRestore": "שחזר גיבוי",
     "bakBannerLater": "מאוחר יותר",
+    "bakLaterHint": "אין בעיה. מתי שתרצה: {path}, ואז \"{btn}\".",
     "bakBannerCreated": "הגיבוי נוצר.",
     "bakBannerExists": "כבר קיים קובץ גיבוי בתיקייה הזו — השתמש בשחזור.",
     "bakRestoreQ": "ההגדרות שלך נראות ריקות. לשחזר אותן מתיקיית הגיבוי?",

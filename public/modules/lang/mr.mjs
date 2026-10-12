@@ -660,6 +660,7 @@ export const strings = {
     "bakBannerCreate": 'बॅकअप तयार करा',
     "bakBannerRestore": 'बॅकअप पूर्ववत करा',
     "bakBannerLater": 'नंतर',
+    "bakLaterHint": "काही हरकत नाही. तुम्हाला हवे तेव्हा: {path}, नंतर “{btn}”.",
     "bakBannerCreated": 'बॅकअप तयार झाला.',
     "bakBannerExists": 'या फोल्डरमध्ये आधीच बॅकअप फाइल आहे — पूर्ववत करा वापरा.',
     "bakRestoreQ": 'तुमची सेटिंग्ज रिकामी दिसत आहेत. बॅकअप फोल्डरमधून पूर्ववत करायची?',

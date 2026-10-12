@@ -661,6 +661,7 @@ export const strings = {
     "bakBannerCreate": "Buat cadangan",
     "bakBannerRestore": "Pulihkan cadangan",
     "bakBannerLater": "Nanti",
+    "bakLaterHint": "Tak apa. Bila-bila masa sahaja: {path}, kemudian “{btn}”.",
     "bakBannerCreated": "Cadangan dibuat.",
     "bakBannerExists": "Sudah ada berkas cadangan di folder ini — gunakan Pulihkan.",
     "bakRestoreQ": "Tetapan Anda tampak kosong. Pulihkan dari folder cadangan Anda?",

@@ -1031,6 +1031,7 @@ export const strings = {
     "bakBannerCreate": "バックアップを作成",
     "bakBannerRestore": "バックアップを復元",
     "bakBannerLater": "後で",
+    "bakLaterHint": "問題ありません。必要なときは {path} で「{btn}」を選んでください。",
     "bakBannerCreated": "バックアップを作成しました。",
     "bakBannerExists": "このフォルダーには既にバックアップファイルがあります — 復元を使ってください。",
     "bakRestoreQ": "設定が空のようです。バックアップフォルダーから復元しますか？",

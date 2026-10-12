@@ -1035,6 +1035,7 @@ export const strings = {
     "bakBannerCreate": "Vytvoriť zálohu",
     "bakBannerRestore": "Obnoviť zálohu",
     "bakBannerLater": "Neskôr",
+    "bakLaterHint": "Žiadny problém. Keď to budeš chcieť urobiť: {path}, potom „{btn}“.",
     "bakBannerCreated": "Záloha vytvorená.",
     "bakBannerExists": "V tomto priečinku už je súbor zálohy — použi Obnoviť.",
     "bakRestoreQ": "Vaše nastavenia vyzerajú prázdne. Obnoviť ich z priečinka so zálohou?",

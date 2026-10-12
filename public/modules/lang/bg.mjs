@@ -1035,6 +1035,7 @@ export const strings = {
     "bakBannerCreate": "Създай копие",
     "bakBannerRestore": "Възстанови копие",
     "bakBannerLater": "По-късно",
+    "bakLaterHint": "Няма проблем. Когато решиш: {path}, после „{btn}“.",
     "bakBannerCreated": "Копието е създадено.",
     "bakBannerExists": "В тази папка вече има файл с резервно копие — използвай Възстанови.",
     "bakRestoreQ": "Настройките ви изглеждат празни. Да ги възстановим ли от папката с резервното копие?",

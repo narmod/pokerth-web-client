@@ -660,6 +660,7 @@ export const strings = {
     "bakBannerCreate": "ምትኬ ፍጠር",
     "bakBannerRestore": "ምትኬ መልስ",
     "bakBannerLater": "በኋላ",
+    "bakLaterHint": "ችግር የለም። በፈለጉ ጊዜ፦ {path}፣ ከዚያም «{btn}»።",
     "bakBannerCreated": "ምትኬ ተፈጥሯል።",
     "bakBannerExists": "በዚህ አቃፊ ውስጥ አስቀድሞ የምትኬ ፋይል አለ — መልስን ይጠቀሙ።",
     "bakRestoreQ": "ቅንብሮችዎ ባዶ ይመስላሉ። ከምትኬ አቃፊዎ ይመለሱ?",

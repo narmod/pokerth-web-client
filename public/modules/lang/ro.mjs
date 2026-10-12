@@ -1035,6 +1035,7 @@ export const strings = {
     "bakBannerCreate": "Creează o copie",
     "bakBannerRestore": "Restaurează o copie",
     "bakBannerLater": "Mai târziu",
+    "bakLaterHint": "Nicio problemă. Când vrei să o faci: {path}, apoi „{btn}”.",
     "bakBannerCreated": "Copie creată.",
     "bakBannerExists": "Există deja un fișier de copie în acest dosar — folosește Restaurează.",
     "bakRestoreQ": "Setările tale par goale. Le restaurezi din dosarul de copii de rezervă?",

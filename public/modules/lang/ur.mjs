@@ -659,6 +659,7 @@ export const strings = {
     "bakBannerCreate": "بیک اپ بنائیں",
     "bakBannerRestore": "بیک اپ بحال کریں",
     "bakBannerLater": "بعد میں",
+    "bakLaterHint": "کوئی بات نہیں۔ جب بھی آپ چاہیں: {path}، پھر “{btn}”۔",
     "bakBannerCreated": "بیک اپ بن گیا۔",
     "bakBannerExists": "اس فولڈر میں پہلے سے بیک اپ فائل موجود ہے — بحال کریں استعمال کریں۔",
     "bakRestoreQ": "آپ کی ترتیبات خالی لگ رہی ہیں۔ انہیں بیک اپ فولڈر سے بحال کریں؟",

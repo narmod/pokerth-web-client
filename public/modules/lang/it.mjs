@@ -1039,6 +1039,7 @@ export const strings = {
     "bakBannerCreate": "Crea un backup",
     "bakBannerRestore": "Ripristina un backup",
     "bakBannerLater": "Più tardi",
+    "bakLaterHint": "Nessun problema. Quando vuoi: {path}, poi «{btn}».",
     "bakBannerCreated": "Backup creato.",
     "bakBannerExists": "In questa cartella esiste già un file di backup — usa Ripristina.",
     "bakRestoreQ": "Le tue impostazioni sembrano vuote. Ripristinarle dalla cartella di backup?",

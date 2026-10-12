@@ -663,6 +663,7 @@ export const strings = {
     "bakBannerCreate": 'Ṣẹ̀dá àfipamọ́',
     "bakBannerRestore": 'Dá àfipamọ́ padà',
     "bakBannerLater": 'Nígbà mìíràn',
+    "bakLaterHint": "Kò sí wàhálà. Nígbàkígbà tí o bá fẹ́: {path}, lẹ́yìn náà “{btn}”.",
     "bakBannerCreated": 'A ti ṣẹ̀dá àfipamọ́.',
     "bakBannerExists": 'Fódà yìí ti ní fáìlì àfipamọ́ — lo Dá a padà.',
     "bakRestoreQ": 'Ó dà bí ẹni pé ètò rẹ ṣófo. Dá wọn padà láti fódà àfipamọ́ rẹ?',

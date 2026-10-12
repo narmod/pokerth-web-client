@@ -660,6 +660,7 @@ export const strings = {
     "bakBannerCreate": 'ಬ್ಯಾಕಪ್ ರಚಿಸಿ',
     "bakBannerRestore": 'ಬ್ಯಾಕಪ್ ಮರುಸ್ಥಾಪಿಸಿ',
     "bakBannerLater": 'ನಂತರ',
+    "bakLaterHint": "ಪರವಾಗಿಲ್ಲ. ನಿಮಗೆ ಬೇಕಾದಾಗ: {path}, ನಂತರ “{btn}”.",
     "bakBannerCreated": 'ಬ್ಯಾಕಪ್ ರಚಿಸಲಾಗಿದೆ.',
     "bakBannerExists": 'ಈ ಫೋಲ್ಡರ್‌ನಲ್ಲಿ ಈಗಾಗಲೇ ಬ್ಯಾಕಪ್ ಫೈಲ್ ಇದೆ — ಮರುಸ್ಥಾಪಿಸಿ ಬಳಸಿ.',
     "bakRestoreQ": 'ನಿಮ್ಮ ಸೆಟ್ಟಿಂಗ್‌ಗಳು ಖಾಲಿಯಾಗಿ ಕಾಣುತ್ತಿವೆ. ಬ್ಯಾಕಪ್ ಫೋಲ್ಡರ್‌ನಿಂದ ಮರುಸ್ಥಾಪಿಸಬೇಕೇ?',

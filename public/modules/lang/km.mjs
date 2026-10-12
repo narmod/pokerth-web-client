@@ -660,6 +660,7 @@ export const strings = {
     "bakBannerCreate": "បង្កើតការបម្រុងទុក",
     "bakBannerRestore": "ស្ដារការបម្រុងទុក",
     "bakBannerLater": "ពេលក្រោយ",
+    "bakLaterHint": "មិនអីទេ។ ពេលណាអ្នកចង់ធ្វើ៖ {path} រួច «{btn}»។",
     "bakBannerCreated": "បានបង្កើតការបម្រុងទុក។",
     "bakBannerExists": "មានឯកសារបម្រុងទុករួចហើយក្នុងថតនេះ — ប្រើស្ដារ។",
     "bakRestoreQ": "ការកំណត់របស់អ្នកមើលទៅទទេ។ ស្ដារវាពីថតបម្រុងទុករបស់អ្នកឬ?",

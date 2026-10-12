@@ -1033,6 +1033,7 @@ export const strings = {
     "bakBannerCreate": "Opprett sikkerhetskopi",
     "bakBannerRestore": "Gjenopprett sikkerhetskopi",
     "bakBannerLater": "Senere",
+    "bakLaterHint": "Helt i orden. Når du vil gjøre det: {path}, deretter «{btn}».",
     "bakBannerCreated": "Sikkerhetskopi opprettet.",
     "bakBannerExists": "Det finnes allerede en sikkerhetskopifil i denne mappen — bruk Gjenopprett.",
     "bakRestoreQ": "Innstillingene dine ser tomme ut. Gjenopprette dem fra sikkerhetskopimappen?",

@@ -662,6 +662,7 @@ export const strings = {
     "bakBannerCreate": "Izveidot rezerves kopiju",
     "bakBannerRestore": "Atjaunot no rezerves kopijas",
     "bakBannerLater": "Vēlāk",
+    "bakLaterHint": "Nekādu problēmu. Kad gribēsi to izdarīt: {path}, tad „{btn}”.",
     "bakBannerCreated": "Rezerves kopija izveidota.",
     "bakBannerExists": "Šajā mapē jau ir rezerves kopijas fails — izmanto “Atjaunot”.",
     "bakRestoreQ": "Tavi iestatījumi izskatās tukši. Vai atjaunot tos no rezerves kopijas mapes?",

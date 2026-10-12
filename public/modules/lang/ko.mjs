@@ -839,6 +839,7 @@ export const strings = {
     "bakBannerCreate": "백업 만들기",
     "bakBannerRestore": "백업 복원",
     "bakBannerLater": "나중에",
+    "bakLaterHint": "괜찮습니다. 원하실 때 언제든 {path}에서 “{btn}” 버튼을 누르세요.",
     "bakBannerCreated": "백업을 만들었습니다.",
     "bakBannerExists": "이 폴더에 이미 백업 파일이 있습니다 — 복원을 사용하세요.",
     "bakRestoreQ": "설정이 비어 있는 것 같습니다. 백업 폴더에서 복원할까요?",

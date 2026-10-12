@@ -1031,6 +1031,7 @@ export const strings = {
     "bakBannerCreate": "创建备份",
     "bakBannerRestore": "恢复备份",
     "bakBannerLater": "稍后",
+    "bakLaterHint": "没问题。之后想设置时：{path}，再点击“{btn}”。",
     "bakBannerCreated": "备份已创建。",
     "bakBannerExists": "此文件夹中已有备份文件 — 请使用恢复。",
     "bakRestoreQ": "你的设置看起来是空的。要从备份文件夹恢复吗？",

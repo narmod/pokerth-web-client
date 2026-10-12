@@ -659,6 +659,7 @@ export const strings = {
     "bakBannerCreate": 'Búa til afrit',
     "bakBannerRestore": 'Endurheimta afrit',
     "bakBannerLater": 'Seinna',
+    "bakLaterHint": "Ekkert mál. Hvenær sem þú vilt: {path}, síðan „{btn}“.",
     "bakBannerCreated": 'Afrit búið til.',
     "bakBannerExists": 'Þessi mappa inniheldur þegar afritsskrá — notaðu Endurheimta.',
     "bakRestoreQ": 'Stillingarnar þínar virðast tómar. Endurheimta úr afritsmöppunni?',

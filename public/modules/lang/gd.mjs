@@ -1038,6 +1038,7 @@ export const strings = {
     "bakBannerCreate": "Cruthaich lethbhreac-glèidhidh",
     "bakBannerRestore": "Aisig lethbhreac-glèidhidh",
     "bakBannerLater": "An dèidh làimh",
+    "bakLaterHint": "Na gabh dragh. Nuair a thogras tu: {path}, an uair sin “{btn}”.",
     "bakBannerCreated": "Chaidh an lethbhreac-glèidhidh a chruthachadh.",
     "bakBannerExists": "Tha faidhle lethbhreac-glèidhidh sa phasgan seo mu thràth — cleachd Aisig.",
     "bakRestoreQ": "Tha coltas falamh air na roghainnean agad. An aisig sinn iad on phasgan lethbhreac-glèidhidh agad?",

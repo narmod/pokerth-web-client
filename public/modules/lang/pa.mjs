@@ -660,6 +660,7 @@ export const strings = {
     "bakBannerCreate": "ਬੈਕਅੱਪ ਬਣਾਓ",
     "bakBannerRestore": "ਬੈਕਅੱਪ ਮੁੜ-ਸਥਾਪਿਤ ਕਰੋ",
     "bakBannerLater": "ਬਾਅਦ ਵਿੱਚ",
+    "bakLaterHint": "ਕੋਈ ਗੱਲ ਨਹੀਂ। ਜਦੋਂ ਵੀ ਤੁਸੀਂ ਚਾਹੋ: {path}, ਫਿਰ “{btn}”।",
     "bakBannerCreated": "ਬੈਕਅੱਪ ਬਣਾਇਆ ਗਿਆ।",
     "bakBannerExists": "ਇਸ ਫੋਲਡਰ ਵਿੱਚ ਪਹਿਲਾਂ ਹੀ ਇੱਕ ਬੈਕਅੱਪ ਫਾਈਲ ਮੌਜੂਦ ਹੈ — ਮੁੜ-ਸਥਾਪਿਤ ਕਰੋ ਵਰਤੋ।",
     "bakRestoreQ": "ਤੁਹਾਡੀਆਂ ਸੈਟਿੰਗਾਂ ਖਾਲੀ ਲੱਗਦੀਆਂ ਹਨ। ਕੀ ਇਹਨਾਂ ਨੂੰ ਤੁਹਾਡੇ ਬੈਕਅੱਪ ਫੋਲਡਰ ਤੋਂ ਮੁੜ-ਸਥਾਪਿਤ ਕੀਤਾ ਜਾਵੇ?",

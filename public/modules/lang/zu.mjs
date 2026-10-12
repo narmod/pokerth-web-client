@@ -663,6 +663,7 @@ export const strings = {
     "bakBannerCreate": 'Dala isipele',
     "bakBannerRestore": 'Buyisela isipele',
     "bakBannerLater": 'Kamuva',
+    "bakLaterHint": "Akukho nkinga. Noma nini uma ufuna ukukwenza: {path}, bese uchofoza “{btn}”.",
     "bakBannerCreated": 'Isipele sidaliwe.',
     "bakBannerExists": 'Le folda isivele inefayela lesipele — sebenzisa Buyisela.',
     "bakRestoreQ": 'Kubonakala sengathi izilungiselelo zakho azinalutho. Uzibuyisele kufolda yakho yesipele?',

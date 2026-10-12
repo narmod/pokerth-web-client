@@ -663,6 +663,7 @@ export const strings = {
     "bakBannerCreate": 'Ätiýaçlyk nusga döret',
     "bakBannerRestore": 'Ätiýaçlyk nusgany dikelt',
     "bakBannerLater": 'Soňra',
+    "bakLaterHint": "Hiç zyýany ýok. Isleýän wagtyňyz: {path}, soňra “{btn}”.",
     "bakBannerCreated": 'Ätiýaçlyk nusga döredildi.',
     "bakBannerExists": 'Bu bukjada eýýäm ätiýaçlyk faýly bar — «Dikelt» ulanyň.',
     "bakRestoreQ": 'Sazlamalaryňyz boş ýaly görünýär. Olary ätiýaçlyk bukjaňyzdan dikeldeliňmi?',

@@ -45,6 +45,7 @@ w._bakOffer = {
   texts: tx,
   path: () => 'pokerth / pokerth-web-backup.json',
   why: (c) => 'WHY:' + c,
+  hint: (bold) => { const b = (s) => (bold ? '**' + s + '**' : s); return T('bakLaterHint').replace('{path}', b([T('advTitle'), T('advCatReset'), T('advBakAutoSec')].join(' → '))).replace('{btn}', b(T('advPdbAutoPick'))); },
   create: () => { calls.push('create'); return Promise.resolve(next); },
   restore: () => { calls.push('restore'); return Promise.resolve(next); },
   done: (later) => { calls.push('done:' + !!later); pending = false; },
@@ -70,12 +71,18 @@ ok(calls.includes('restore'), 'Restore runs the module\'s restore in the click')
 ok(await until(() => bub() && bub().querySelector('.ad-bak-err')), 'a failure is told in the bubble');
 ok(/WHY:nofile/.test(bub().textContent) && bub().querySelectorAll('[data-ad-btn]').length === 3, 'with the reason, buttons back');
 // language change under the bubble: the texts follow
-const realT = w.t; w.t = (k) => (k === 'bakBannerTitle' ? 'Local backup' : realT(k));
+const realT = w.t; w.t = (k, p) => (k === 'bakBannerTitle' ? 'Local backup' : realT(k, p));
 w.document.dispatchEvent(new w.CustomEvent('pth:langchange', { detail: { lang: 'en' } }));
 ok(/Local backup/.test(bub().textContent), 'a language change redraws it');
-// Later: done(true), he leaves (tips off)
+// Later: done(true), then where to find it later, then he leaves (tips off)
+w.t = realT;
 bub().querySelector('[data-ad-btn="bakLater"]').click();
 ok(calls.includes('done:true'), 'Later closes the offer (writing resumes)');
+const hb = bub();
+ok(hb && /Options avancées → Sauvegarde et réinitialisation → Sauvegarde automatique/.test(hb.textContent) && /Choisir le dossier/.test(hb.textContent)
+  && hb.querySelectorAll('b').length === 2, 'Later: he says where to find it (path and button in bold, in French)');
+ok(hb && [...hb.querySelectorAll('[data-ad-btn]')].map((x) => x.getAttribute('data-ad-btn')).join(',') === 'gotIt', 'one button: Got it');
+hb.querySelector('[data-ad-btn="gotIt"]').click();
 ok(await until(() => !w.document.getElementById('ace-dock')), 'tips off: he leaves');
 
 // wiring of the module side
@@ -84,6 +91,7 @@ ok(/window\._bakOffer = \{/.test(bk) && /dispatchEvent\(new CustomEvent\('pth:ba
 ok(/if \(_automated\(\)\) \{ _offerFallback\(\); return; \}/.test(bk), 'automated browsers keep the banner (the browser tests close it)');
 ok(/_later\(\(\) => \{ if \(_offer && !_offer\.claimed\) _offerFallback\(\); \}, CLAIM_MS\)/.test(bk) && /!_offer\.shown\) _offerFallback\(\); \}, WATCH_MS\)/.test(bk), 'the banner as a safety net: not claimed, or not shown in time');
 ok(/addEventListener\('pth:langchange', relabel\)/.test(bk), 'the banner follows the language too');
+ok(/_toast\(_offerHint\(false\), \{ icon: '', duration: 7000 \}\)/.test(bk), 'the banner\'s Later / ✕ tell where to find it too (toast)');
 const idx = fs.readFileSync('public/modules/guide/index.mjs', 'utf8');
 ok(/function bannerUp\(\) \{\s*if \(bakPending\(\)\) return true;/.test(idx), 'the first-launch offer waits for it');
 

@@ -661,6 +661,7 @@ export const strings = {
     "bakBannerCreate": "Gumawa ng backup",
     "bakBannerRestore": "Ibalik ang backup",
     "bakBannerLater": "Mamaya",
+    "bakLaterHint": "Walang problema. Kapag gusto mo na: {path}, pagkatapos ay “{btn}”.",
     "bakBannerCreated": "Nagawa ang backup.",
     "bakBannerExists": "May backup file na sa folder na ito — gamitin ang Ibalik.",
     "bakRestoreQ": "Mukhang walang laman ang mga setting mo. I-restore mula sa iyong backup folder?",

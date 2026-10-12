@@ -1034,6 +1034,7 @@ export const strings = {
     "bakBannerCreate": "Opret sikkerhedskopi",
     "bakBannerRestore": "Gendan sikkerhedskopi",
     "bakBannerLater": "Senere",
+    "bakLaterHint": "Intet problem. Når du vil: {path} og så »{btn}«.",
     "bakBannerCreated": "Sikkerhedskopi oprettet.",
     "bakBannerExists": "Der er allerede en sikkerhedskopifil i denne mappe — brug Gendan.",
     "bakRestoreQ": "Dine indstillinger ser tomme ud. Gendan dem fra din sikkerhedskopimappe?",

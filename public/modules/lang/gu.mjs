@@ -660,6 +660,7 @@ export const strings = {
     "bakBannerCreate": 'બેકઅપ બનાવો',
     "bakBannerRestore": 'બેકઅપ પુનઃસ્થાપિત કરો',
     "bakBannerLater": 'પછી',
+    "bakLaterHint": "કોઈ વાંધો નહીં. જ્યારે પણ તમે ઇચ્છો: {path}, પછી “{btn}”.",
     "bakBannerCreated": 'બેકઅપ બન્યો.',
     "bakBannerExists": 'આ ફોલ્ડરમાં પહેલેથી બેકઅપ ફાઇલ છે — પુનઃસ્થાપિત કરો વાપરો.',
     "bakRestoreQ": 'તમારી સેટિંગ્સ ખાલી દેખાય છે. બેકઅપ ફોલ્ડરમાંથી પુનઃસ્થાપિત કરવી છે?',

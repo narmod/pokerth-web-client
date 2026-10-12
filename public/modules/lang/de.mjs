@@ -1038,6 +1038,7 @@ export const strings = {
     "bakBannerCreate": "Sicherung erstellen",
     "bakBannerRestore": "Sicherung wiederherstellen",
     "bakBannerLater": "Später",
+    "bakLaterHint": "Kein Problem. Wann immer du willst: {path}, dann „{btn}“.",
     "bakBannerCreated": "Sicherung erstellt.",
     "bakBannerExists": "In diesem Ordner liegt bereits eine Sicherungsdatei — nutze Wiederherstellen.",
     "bakRestoreQ": "Deine Einstellungen scheinen leer zu sein. Aus dem Sicherungsordner wiederherstellen?",

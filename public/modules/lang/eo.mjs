@@ -663,6 +663,7 @@ export const strings = {
     "bakBannerCreate": 'Krei savkopion',
     "bakBannerRestore": 'Restarigi savkopion',
     "bakBannerLater": 'Poste',
+    "bakLaterHint": "Neniu problemo. Kiam ajn vi volos: {path}, poste “{btn}”.",
     "bakBannerCreated": 'Savkopio kreita.',
     "bakBannerExists": 'Ĉi tiu dosierujo jam enhavas savkopian dosieron — uzu Restarigi.',
     "bakRestoreQ": 'Viaj agordoj ŝajnas malplenaj. Ĉu restarigi ilin el via savkopia dosierujo?',

@@ -1034,6 +1034,7 @@ export const strings = {
     "bakBannerCreate": "Luo varmuuskopio",
     "bakBannerRestore": "Palauta varmuuskopio",
     "bakBannerLater": "Myöhemmin",
+    "bakLaterHint": "Ei hätää. Kun haluat: {path} ja sitten ”{btn}”.",
     "bakBannerCreated": "Varmuuskopio luotu.",
     "bakBannerExists": "Tässä kansiossa on jo varmuuskopiotiedosto — käytä Palauta-toimintoa.",
     "bakRestoreQ": "Asetuksesi näyttävät tyhjiltä. Palautetaanko ne varmuuskopiokansiosta?",

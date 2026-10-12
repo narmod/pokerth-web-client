@@ -842,6 +842,7 @@ export const strings = {
     "bakBannerCreate": "बैकअप बनाएँ",
     "bakBannerRestore": "बैकअप बहाल करें",
     "bakBannerLater": "बाद में",
+    "bakLaterHint": "कोई बात नहीं। जब भी आप चाहें: {path}, फिर “{btn}”।",
     "bakBannerCreated": "बैकअप बन गया।",
     "bakBannerExists": "इस फ़ोल्डर में पहले से बैकअप फ़ाइल है — बहाल करें का उपयोग करें।",
     "bakRestoreQ": "आपकी सेटिंग्स खाली लग रही हैं। उन्हें बैकअप फ़ोल्डर से बहाल करें?",

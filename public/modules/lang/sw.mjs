@@ -661,6 +661,7 @@ export const strings = {
     "bakBannerCreate": "Unda nakala",
     "bakBannerRestore": "Rejesha nakala",
     "bakBannerLater": "Baadaye",
+    "bakLaterHint": "Hakuna shida. Wakati wowote utakapotaka: {path}, kisha “{btn}”.",
     "bakBannerCreated": "Nakala imeundwa.",
     "bakBannerExists": "Tayari kuna faili la nakala kwenye folda hii — tumia Rejesha.",
     "bakRestoreQ": "Mipangilio yako inaonekana tupu. Urejeshe kutoka folda yako ya hifadhi?",

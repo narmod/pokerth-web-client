@@ -661,6 +661,7 @@ export const strings = {
     "bakBannerCreate": "ব্যাকআপ তৈরি করুন",
     "bakBannerRestore": "ব্যাকআপ পুনরুদ্ধার করুন",
     "bakBannerLater": "পরে",
+    "bakLaterHint": "কোনো সমস্যা নেই। যখন চাইবেন: {path}, তারপর “{btn}”।",
     "bakBannerCreated": "ব্যাকআপ তৈরি হয়েছে।",
     "bakBannerExists": "এই ফোল্ডারে ইতিমধ্যে একটি ব্যাকআপ ফাইল আছে — পুনরুদ্ধার ব্যবহার করুন।",
     "bakRestoreQ": "আপনার সেটিংস খালি মনে হচ্ছে। ব্যাকআপ ফোল্ডার থেকে পুনরুদ্ধার করবেন?",

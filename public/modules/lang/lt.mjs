@@ -1035,6 +1035,7 @@ export const strings = {
     "bakBannerCreate": "Sukurti kopiją",
     "bakBannerRestore": "Atkurti kopiją",
     "bakBannerLater": "Vėliau",
+    "bakLaterHint": "Jokių problemų. Kai norėsi tai padaryti: {path}, tada „{btn}“.",
     "bakBannerCreated": "Atsarginė kopija sukurta.",
     "bakBannerExists": "Šiame aplanke jau yra atsarginės kopijos failas — naudok Atkurti.",
     "bakRestoreQ": "Jūsų nustatymai atrodo tušti. Atkurti juos iš atsarginių kopijų aplanko?",

@@ -664,6 +664,7 @@ export const strings = {
     "bakBannerCreate": "Créer une sauvegarde",
     "bakBannerRestore": "Restaurer une sauvegarde",
     "bakBannerLater": "Plus tard",
+    "bakLaterHint": "Pas de souci. Quand tu voudras le faire : {path}, puis « {btn} ».",
     "bakBannerCreated": "Sauvegarde créée.",
     "bakBannerExists": "Un fichier de sauvegarde existe déjà dans ce dossier — utilise Restaurer.",
     "bakRestoreQ": "Tes réglages semblent vides. Les restaurer depuis ton dossier de sauvegarde ?",

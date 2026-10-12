@@ -424,6 +424,23 @@ function _offerTexts() {
     busy: _t('bakRestoreBusy', 'Restoring…'),
   };
 }
+// « Later »: where the player finds it again — Advanced options → Backup &
+// reset → Automatic backup, then « Choose folder… ». Built from the labels the
+// options panel itself shows, so the path always matches the screen.
+// bold=true marks the path and the button for the Ace's bubble (**…**).
+function _offerHint(bold) {
+  const b = (s) => (bold ? '**' + s + '**' : s);
+  const path = [_t('advTitle', 'Advanced options'), _t('advCatReset', 'Backup & reset'), _t('advBakAutoSec', 'Automatic backup')].join(' → ');
+  const btn = _t('advPdbAutoPick', 'Choose folder…');
+  let s = null;
+  try {
+    if (typeof window.t === 'function') {
+      const v = window.t('bakLaterHint', { path: b(path), btn: b(btn) });
+      if (v && v !== 'bakLaterHint') s = v;
+    }
+  } catch (_e) {}
+  return s || ('No problem. Whenever you want to do it: ' + b(path) + ', then “' + b(btn) + '”.');
+}
 function _offerWhy(code) {
   const k = _WHY[code] || _WHY.bad;
   return _t(k[0], k[1]);
@@ -542,7 +559,11 @@ function _showRestoreBanner() {
     }));
     // Explicit dismissal: the player starts fresh, automatic writing may
     // resume.
-    function dismiss() { _offerDone(true); try { el.remove(); } catch (_e) {} }
+    function dismiss() {
+      _offerDone(true);
+      try { el.remove(); } catch (_e) {}
+      _toast(_offerHint(false), { icon: '', duration: 7000 });
+    }
     bLater.addEventListener('click', dismiss);
     no.addEventListener('click', dismiss);
 
@@ -651,6 +672,7 @@ if (typeof window !== 'undefined') {
     texts: _offerTexts,
     path: _offerPath,
     why: _offerWhy,
+    hint: _offerHint,
     create: () => _pickForCreate(),
     restore: _offerRestore,
     done: _offerDone,

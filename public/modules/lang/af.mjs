@@ -1035,6 +1035,7 @@ export const strings = {
     "bakBannerCreate": "Skep 'n rugsteun",
     "bakBannerRestore": "Herstel 'n rugsteun",
     "bakBannerLater": "Later",
+    "bakLaterHint": "Geen probleem nie. Wanneer jy wil: {path}, dan “{btn}”.",
     "bakBannerCreated": "Rugsteun geskep.",
     "bakBannerExists": "Daar is reeds 'n rugsteunlêer in hierdie gids — gebruik Herstel.",
     "bakRestoreQ": "Jou instellings lyk leeg. Herstel hulle uit jou rugsteungids?",

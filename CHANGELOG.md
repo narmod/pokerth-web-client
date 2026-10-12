@@ -32,6 +32,10 @@ highlights below.
   `window._bakOffer` / `pth:bakoffer`; its banner stays as the safety net when the Ace does not
   claim it within 3 s or show it within 30 s, and under automation. The Ace's first-launch offer
   waits for it. New help section `options:backup` in the 83 languages; `test-guide-backup` (`web.20`).
+  Answering « Later » (or Escape) now tells where to find it again — Advanced options → Backup &
+  reset → Automatic backup, then « Choose folder… », built from the panel's own labels, path and
+  button in bold — before he leaves; the banner's Later / ✕ say it in a toast. New key
+  `bakLaterHint` in the 83 catalogues (`web.21`).
 
 ### Added
 - **pokerth.net vs web client, in the admin traffic stats** — every 5 minutes the proxy records the

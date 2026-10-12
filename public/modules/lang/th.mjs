@@ -661,6 +661,7 @@ export const strings = {
     "bakBannerCreate": "สร้างข้อมูลสำรอง",
     "bakBannerRestore": "กู้คืนข้อมูลสำรอง",
     "bakBannerLater": "ภายหลัง",
+    "bakLaterHint": "ไม่เป็นไร เมื่อใดที่คุณต้องการ: {path} แล้วกด “{btn}”",
     "bakBannerCreated": "สร้างข้อมูลสำรองแล้ว",
     "bakBannerExists": "มีไฟล์ข้อมูลสำรองอยู่ในโฟลเดอร์นี้แล้ว — ใช้กู้คืน",
     "bakRestoreQ": "การตั้งค่าของคุณดูว่างเปล่า กู้คืนจากโฟลเดอร์สำรองของคุณ?",

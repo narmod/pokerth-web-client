@@ -1035,6 +1035,7 @@ export const strings = {
     "bakBannerCreate": "Mentés létrehozása",
     "bakBannerRestore": "Mentés visszaállítása",
     "bakBannerLater": "Később",
+    "bakLaterHint": "Semmi gond. Amikor csak szeretnéd: {path}, majd „{btn}”.",
     "bakBannerCreated": "Mentés létrehozva.",
     "bakBannerExists": "Ebben a mappában már van mentésfájl — használd a Visszaállítást.",
     "bakRestoreQ": "A beállításaid üresnek tűnnek. Visszaállítod őket a biztonsági mentés mappából?",

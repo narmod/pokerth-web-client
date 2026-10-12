@@ -662,6 +662,7 @@ export const strings = {
     "bakBannerCreate": "Krijo një kopje rezervë",
     "bakBannerRestore": "Rivendos një kopje rezervë",
     "bakBannerLater": "Më vonë",
+    "bakLaterHint": "S’ka problem. Kur të duash ta bësh: {path}, pastaj «{btn}».",
     "bakBannerCreated": "Kopja rezervë u krijua.",
     "bakBannerExists": "Ekziston tashmë një skedar kopjeje rezervë në këtë dosje — përdor Rivendos.",
     "bakRestoreQ": "Cilësimet e tua duken bosh. Të rivendosen nga dosja jote e kopjes rezervë?",

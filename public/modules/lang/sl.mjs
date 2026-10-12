@@ -662,6 +662,7 @@ export const strings = {
     "bakBannerCreate": "Ustvari varnostno kopijo",
     "bakBannerRestore": "Obnovi varnostno kopijo",
     "bakBannerLater": "Kasneje",
+    "bakLaterHint": "Ni težav. Ko ti bo ustrezalo: {path}, nato „{btn}“.",
     "bakBannerCreated": "Varnostna kopija ustvarjena.",
     "bakBannerExists": "V tej mapi že obstaja datoteka varnostne kopije — uporabi Obnovi.",
     "bakRestoreQ": "Tvoje nastavitve so videti prazne. Jih obnovim iz mape varnostne kopije?",

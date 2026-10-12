@@ -1036,6 +1036,7 @@ export const strings = {
     "bakBannerCreate": "Yedek oluştur",
     "bakBannerRestore": "Yedeği geri yükle",
     "bakBannerLater": "Daha sonra",
+    "bakLaterHint": "Sorun değil. İstediğin zaman: {path}, ardından “{btn}”.",
     "bakBannerCreated": "Yedek oluşturuldu.",
     "bakBannerExists": "Bu klasörde zaten bir yedek dosyası var — Geri yükle'yi kullan.",
     "bakRestoreQ": "Ayarlarınız boş görünüyor. Yedek klasörünüzden geri yüklensin mi?",

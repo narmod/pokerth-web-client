@@ -663,6 +663,7 @@ export const strings = {
     "bakBannerCreate": 'Creu copi wrth gefn',
     "bakBannerRestore": 'Adfer copi wrth gefn',
     "bakBannerLater": 'Yn nes ymlaen',
+    "bakLaterHint": "Dim problem. Pryd bynnag y dymunwch: {path}, yna “{btn}”.",
     "bakBannerCreated": 'Copi wrth gefn wedi\'i greu.',
     "bakBannerExists": 'Mae ffeil copi wrth gefn yn y ffolder hwn eisoes — defnyddiwch Adfer.',
     "bakRestoreQ": 'Mae\'n ymddangos bod eich gosodiadau\'n wag. Eu hadfer o\'ch ffolder copïau wrth gefn?',

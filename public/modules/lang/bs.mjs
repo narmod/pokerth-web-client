@@ -1040,6 +1040,7 @@ export const strings = {
     "bakBannerCreate": "Stvori kopiju",
     "bakBannerRestore": "Vrati kopiju",
     "bakBannerLater": "Kasnije",
+    "bakLaterHint": "Nema problema. Kad god želiš: {path}, zatim „{btn}”.",
     "bakBannerCreated": "Kopija stvorena.",
     "bakBannerExists": "U ovoj mapi već postoji datoteka sigurnosne kopije — koristi Vrati.",
     "bakRestoreQ": "Vaše postavke izgledaju prazne. Vratiti ih iz mape sigurnosnih kopija?",

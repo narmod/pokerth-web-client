@@ -1036,6 +1036,7 @@ export const strings = {
     "bakBannerCreate": "Crear unha copia",
     "bakBannerRestore": "Restaurar unha copia",
     "bakBannerLater": "Máis tarde",
+    "bakLaterHint": "Non hai problema. Cando queiras: {path} e despois «{btn}».",
     "bakBannerCreated": "Copia creada.",
     "bakBannerExists": "Xa hai un ficheiro de copia neste cartafol — usa Restaurar.",
     "bakRestoreQ": "A túa configuración parece baleira. Restaurala desde o cartafol de copias de seguranza?",

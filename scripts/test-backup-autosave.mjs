@@ -140,6 +140,17 @@ check('state: no error recorded', mod._state.err === null);
 // pickFolder() above released the hold, so writes are allowed again.
 check('hold: released once a folder was picked', mod._holdState() === false);
 
+// ── « Later »: where to find it again ──────────────────────────────────────
+// Built from the labels of the options panel (English fallback here: no
+// window.t in the tests); bold marks for the Ace's bubble only.
+{
+  const h = globalThis._bakOffer && globalThis._bakOffer.hint(false);
+  const hb = globalThis._bakOffer && globalThis._bakOffer.hint(true);
+  check('later hint: path to the option and its button',
+    typeof h === 'string' && h.includes('Advanced options → Backup & reset → Automatic backup') && h.includes('Choose folder…') && !h.includes('**'));
+  check('later hint: bold marks for the bubble', typeof hb === 'string' && hb.split('**').length === 5);
+}
+
 // ── Restoring from the banner ──────────────────────────────────────────────
 // Every failure must surface an explicit CODE: the banner uses it to tell the
 // player what is in the way (a toast would be hidden behind the banner).

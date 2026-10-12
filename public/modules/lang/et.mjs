@@ -653,6 +653,7 @@ export const strings = {
     "bakBannerCreate": "Loo varukoopia",
     "bakBannerRestore": "Taasta varukoopia",
     "bakBannerLater": "Hiljem",
+    "bakLaterHint": "Pole probleemi. Kui soovid: {path}, siis „{btn}“.",
     "bakBannerCreated": "Varukoopia loodud.",
     "bakBannerExists": "Selles kaustas on juba varukoopiafail — kasuta taastamist.",
     "bakRestoreQ": "Sinu seaded tunduvad tühjad. Kas taastada need varukoopia kaustast?",

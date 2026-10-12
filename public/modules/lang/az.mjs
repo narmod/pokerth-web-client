@@ -663,6 +663,7 @@ export const strings = {
     "bakBannerCreate": 'Ehtiyat nüsxə yarat',
     "bakBannerRestore": 'Ehtiyat nüsxəni bərpa et',
     "bakBannerLater": 'Sonra',
+    "bakLaterHint": "Problem deyil. İstədiyiniz vaxt: {path}, sonra «{btn}».",
     "bakBannerCreated": 'Ehtiyat nüsxə yaradıldı.',
     "bakBannerExists": 'Bu qovluqda artıq ehtiyat nüsxə faylı var — Bərpa et istifadə edin.',
     "bakRestoreQ": 'Parametrləriniz boş görünür. Onlar ehtiyat nüsxə qovluğunuzdan bərpa edilsin?',

@@ -1038,6 +1038,7 @@ export const strings = {
     "bakBannerCreate": "Back-up maken",
     "bakBannerRestore": "Back-up herstellen",
     "bakBannerLater": "Later",
+    "bakLaterHint": "Geen probleem. Wanneer je wilt: {path}, en dan “{btn}”.",
     "bakBannerCreated": "Back-up gemaakt.",
     "bakBannerExists": "In deze map staat al een back-upbestand — gebruik Herstellen.",
     "bakRestoreQ": "Je instellingen lijken leeg. Herstellen vanuit je back-upmap?",

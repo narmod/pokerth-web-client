@@ -663,6 +663,7 @@ export const strings = {
     "bakBannerCreate": 'სარეზერვო ასლის შექმნა',
     "bakBannerRestore": 'სარეზერვო ასლის აღდგენა',
     "bakBannerLater": 'მოგვიანებით',
+    "bakLaterHint": "არა უშავს. როცა მოისურვებთ: {path}, შემდეგ „{btn}“.",
     "bakBannerCreated": 'სარეზერვო ასლი შექმნილია.',
     "bakBannerExists": 'ამ საქაღალდეში სარეზერვო ფაილი უკვე არსებობს — გამოიყენეთ Restore.',
     "bakRestoreQ": 'თქვენი პარამეტრები ცარიელია. აღდგეს ისინი სარეზერვო საქაღალდიდან?',

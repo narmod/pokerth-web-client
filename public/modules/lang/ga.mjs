@@ -663,6 +663,7 @@ export const strings = {
     "bakBannerCreate": 'Cruthaigh cúltaca',
     "bakBannerRestore": 'Athbhunaigh cúltaca',
     "bakBannerLater": 'Níos déanaí',
+    "bakLaterHint": "Fadhb ar bith. Aon uair is mian leat: {path}, ansin “{btn}”.",
     "bakBannerCreated": 'Cruthaíodh an cúltaca.',
     "bakBannerExists": 'Tá comhad cúltaca san fhillteán seo cheana — úsáid Athbhunaigh.',
     "bakRestoreQ": 'Is cosúil go bhfuil do shocruithe folamh. Iad a athbhunú ó d\'fhillteán cúltaca?',

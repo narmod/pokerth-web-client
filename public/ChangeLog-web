@@ -1,3 +1,6 @@
+2026-10-12 version 2.1.10-web.21:
+- improvement: when you answer "Later" to the local backup offer, the Ace tells you where to find it in the advanced options
+
 2026-10-12 version 2.1.10-web.20:
 - improvement: the offer to save your settings in a folder, or to restore them, now comes from the Ace in his bubble — even with his tips turned off
 - bugfix: the local backup offer now shows in your language instead of English

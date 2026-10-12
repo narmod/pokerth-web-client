@@ -663,6 +663,7 @@ export const strings = {
     "bakBannerCreate": '建立備份',
     "bakBannerRestore": '還原備份',
     "bakBannerLater": '稍後',
+    "bakLaterHint": "沒問題。之後想設定時：{path}，再按「{btn}」。",
     "bakBannerCreated": '備份已建立。',
     "bakBannerExists": '此資料夾中已有備份檔案 — 請使用還原。',
     "bakRestoreQ": '你的設定看起來是空的。要從備份資料夾還原嗎？',

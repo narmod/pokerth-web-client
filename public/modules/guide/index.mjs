@@ -957,6 +957,7 @@ function apply() {
 let bakTimer = 0;
 let bakBusy = false;
 let bakMsg = null;            // { text, err } under the path line
+let bakHint = false;          // « Later » answered: where to find it again is on screen
 function bak() { const o = window._bakOffer; return o && typeof o.pending === 'function' ? o : null; }
 function bakPending() { const o = bak(); try { return !!(o && o.pending()); } catch (e) { return false; } }
 function claimBak() {
@@ -994,6 +995,11 @@ function maybeBak() {
 function renderBak(focus) {
   const o = bak();
   if (!M || !o || !(showing && showing.kind === 'bak')) return;
+  if (bakHint) {
+    // after « Later »: where to do it later, then he goes
+    M.say({ text: o.hint(true), buttons: [btn('gotIt', true)], onButton: () => endBak(), focus: !!focus });
+    return;
+  }
   const tx = o.texts();
   const msg = bakMsg ? `<p class="ad-bak-msg${bakMsg.err ? ' ad-bak-err' : ''}" role="status">${esc(bakMsg.text)}</p>` : '';
   const html = `<p class="ad-text"><b>${esc(tx.title)}</b></p><p class="ad-text ad-bak-body">${esc(tx.body)}</p>`
@@ -1008,6 +1014,7 @@ function renderBak(focus) {
 function endBak() {
   bakMsg = null;
   bakBusy = false;
+  bakHint = false;
   if (!(showing && showing.kind === 'bak')) return;
   closeBubble();
   if (!state.isOn()) leave(); else schedule();
@@ -1016,7 +1023,13 @@ function endBak() {
 function onBakButton(id) {
   const o = bak();
   if (!o || bakBusy) return;
-  if (id === 'bakLater' || id === 'escape') { try { o.done(true); } catch (e) {} endBak(); return; }
+  if (id === 'bakLater' || id === 'escape') {
+    try { o.done(true); } catch (e) {}
+    if (typeof o.hint !== 'function') { endBak(); return; }
+    bakHint = true;                                    // tell where to find it later (web.21)
+    renderBak(true);
+    return;
+  }
   const create = id === 'bakCreate';
   if (!create && id !== 'bakRestore') return;
   // called in the click's own tick: the folder picker and the permission prompt need it

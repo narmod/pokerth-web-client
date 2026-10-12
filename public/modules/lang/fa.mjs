@@ -659,6 +659,7 @@ export const strings = {
     "bakBannerCreate": "ایجاد پشتیبان",
     "bakBannerRestore": "بازیابی پشتیبان",
     "bakBannerLater": "بعداً",
+    "bakLaterHint": "مشکلی نیست. هر وقت خواستید: {path}، سپس «{btn}».",
     "bakBannerCreated": "پشتیبان ایجاد شد.",
     "bakBannerExists": "در این پوشه از قبل یک فایل پشتیبان وجود دارد — از بازیابی استفاده کنید.",
     "bakRestoreQ": "تنظیمات شما خالی به نظر می‌رسد. آن‌ها را از پوشه پشتیبان بازیابی کنیم؟",

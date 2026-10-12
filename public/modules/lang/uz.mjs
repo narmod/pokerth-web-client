@@ -663,6 +663,7 @@ export const strings = {
     "bakBannerCreate": 'Zaxira nusxa yaratish',
     "bakBannerRestore": 'Zaxira nusxani tiklash',
     "bakBannerLater": 'Keyinroq',
+    "bakLaterHint": "Muammo yo‘q. Xohlagan vaqtingizda: {path}, so‘ng “{btn}”.",
     "bakBannerCreated": 'Zaxira nusxa yaratildi.',
     "bakBannerExists": 'Bu jildda zaxira fayli allaqachon bor — «Tiklash» dan foydalaning.',
     "bakRestoreQ": 'Sozlamalaringiz boʻsh koʻrinyapti. Ular zaxira jildingizdan tiklansinmi?',

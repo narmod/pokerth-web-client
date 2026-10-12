@@ -663,6 +663,7 @@ export const strings = {
     "bakBannerCreate": "Create a backup",
     "bakBannerRestore": "Restore a backup",
     "bakBannerLater": "Later",
+    "bakLaterHint": "No problem. Whenever you want to do it: {path}, then “{btn}”.",
     "bakBannerCreated": "Backup created.",
     "bakBannerExists": "A backup file already exists in this folder — use Restore.",
     "bakRestoreQ": "Your settings look empty. Restore them from your backup folder?",

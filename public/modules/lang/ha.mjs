@@ -663,6 +663,7 @@ export const strings = {
     "bakBannerCreate": 'Ƙirƙiri ajiya',
     "bakBannerRestore": 'Maido da ajiya',
     "bakBannerLater": 'Daga baya',
+    "bakLaterHint": "Ba matsala. Duk lokacin da kake so: {path}, sannan “{btn}”.",
     "bakBannerCreated": 'An ƙirƙiri ajiya.',
     "bakBannerExists": 'Wannan babban fayil ɗin yana da fayil ɗin ajiya tuni — yi amfani da Maido.',
     "bakRestoreQ": 'Saitunanka kamar babu komai. A maido da su daga babban fayil ɗin ajiyarka?',

@@ -663,6 +663,7 @@ export const strings = {
     "bakBannerCreate": 'Нөөц хуулбар үүсгэх',
     "bakBannerRestore": 'Нөөц хуулбараас сэргээх',
     "bakBannerLater": 'Дараа',
+    "bakLaterHint": "Зүгээр ээ. Хүссэн үедээ: {path}, дараа нь «{btn}».",
     "bakBannerCreated": 'Нөөц хуулбар үүслээ.',
     "bakBannerExists": 'Энэ хавтаст нөөц файл аль хэдийн байна — «Сэргээх»-ийг ашиглана уу.',
     "bakRestoreQ": 'Таны тохиргоо хоосон бололтой. Нөөц хавтаснаасаа сэргээх үү?',

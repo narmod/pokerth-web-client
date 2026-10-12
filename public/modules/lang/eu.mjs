@@ -663,6 +663,7 @@ export const strings = {
     "bakBannerCreate": 'Sortu babeskopia',
     "bakBannerRestore": 'Leheneratu babeskopia',
     "bakBannerLater": 'Geroago',
+    "bakLaterHint": "Ez dago arazorik. Nahi duzunean: {path}, eta gero «{btn}».",
     "bakBannerCreated": 'Babeskopia sortu da.',
     "bakBannerExists": 'Karpeta honek badu dagoeneko babeskopia-fitxategi bat — erabili Leheneratu.',
     "bakRestoreQ": 'Zure ezarpenak hutsik daudela dirudi. Leheneratu babeskopien karpetatik?',

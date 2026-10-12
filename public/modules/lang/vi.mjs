@@ -1035,6 +1035,7 @@ export const strings = {
     "bakBannerCreate": "Tạo bản sao lưu",
     "bakBannerRestore": "Khôi phục bản sao lưu",
     "bakBannerLater": "Để sau",
+    "bakLaterHint": "Không sao cả. Khi nào bạn muốn: {path}, rồi chọn “{btn}”.",
     "bakBannerCreated": "Đã tạo bản sao lưu.",
     "bakBannerExists": "Đã có tệp sao lưu trong thư mục này — hãy dùng Khôi phục.",
     "bakRestoreQ": "Cài đặt của bạn có vẻ trống. Khôi phục từ thư mục sao lưu?",
