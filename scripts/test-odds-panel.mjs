@@ -122,7 +122,13 @@ ok(els['g-odds-body']._built === undefined, 'renderOddsMonitor : onglet log → 
 store['pth_gip_tab'] = 'odds';
 S.myCards = [12, 11]; S.commCards = [10, 9, 8, null, null]; // royal flush au flop
 window._oddsSeq = 0;
-await new Promise((res) => { O.renderOddsMonitor(); setTimeout(res, 400); });
+// The odds are computed in async chunks (setTimeout 0): wait for the render
+// itself, not a fixed delay — 400 ms was too short on a loaded machine (the
+// test failed only when run in parallel with others).
+O.renderOddsMonitor();
+for (const t0 = Date.now(); !els['g-odds-body'].innerHTML.includes('odds-row') && Date.now() - t0 < 15000;) {
+  await new Promise((res) => setTimeout(res, 20));
+}
 ok(els['g-odds-body'].innerHTML.includes('odds-row'), 'renderOddsMonitor : 10 catégories rendues');
 ok(els['g-odds-body'].innerHTML.includes('/img/hands/royalflush.svg'), 'renderOddsMonitor : icônes SVG officielles');
 
