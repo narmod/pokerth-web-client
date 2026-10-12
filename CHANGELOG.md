@@ -58,6 +58,18 @@ highlights below.
   button does not open (`web.24`).
 
 ### Added
+- **A world map in the admin traffic stats (Traffic › World)** — visits and sessions by country,
+  as a choropleth (log scale) with a filter by entry mode (all visits, Internet, Training, LAN,
+  /live), region views (World, Europe, Americas, Asia, Africa), a country card (sessions per mode,
+  new devices, installed app, phone or tablet) and the ranked list of countries, all following the
+  common period selector. The country comes from the browser time zone sent with the anonymous
+  `/__visit` ping (`tz`), mapped by a closed table (`server/geo-stats.js`; unknown zones → `ZZ`):
+  no IP address is read and no GeoIP database is shipped. Only per-country totals are kept — per
+  day in the visit bucket (`geo`), and per hour for yesterday and today (`geoH`), for a sliding
+  24 h view (`/admin/geo?hours=24`). Pings without `tz` (older clients) are left out of the map.
+  The map is a pre-projected SVG path set (`public/vendor/world-110m.json`, Natural Earth 1:110m
+  via world-atlas, ISC), not precached: admin only. The privacy notice says it, in every language
+  (`pvSrv1`, `privacy.html`) (`web.28`).
 - **pokerth.net vs web client, in the admin traffic stats** — every 5 minutes the proxy records the
   official live counters (online, tables, waiting, today; same cached read as the login card) and
   the web client players signed in to pokerth.net at that instant (proxy bridges + direct players'

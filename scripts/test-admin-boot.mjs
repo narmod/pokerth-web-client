@@ -114,7 +114,7 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   const shown = () => subs.filter((p) => p.style.display !== 'none').map((p) => p.dataset.ts);
   const panels = () => [...doc.querySelectorAll('[id^="panel-"]')].map((p) => p.id + ':' + p.style.display).join();
   const before = panels();
-  ok(subs.length === 7 && shown().join() === 'overview', 'the traffic panel opens on its overview alone');
+  ok(subs.length === 8 && shown().join() === 'overview', 'the traffic panel opens on its overview alone');
   doc.querySelector('#trafSub [data-ts="activity"]').click();
   ok(shown().join() === 'activity', 'a sub-tab shows its section and hides the others');
   ok(doc.querySelector('#trafSub [data-ts="activity"]').getAttribute('aria-selected') === 'true'

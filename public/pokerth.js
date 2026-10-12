@@ -12102,7 +12102,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.27'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.28'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
@@ -12156,6 +12156,13 @@ window.BUILD_VERSION='2.1.10-web.27'; try{ var b=document.getElementById('cf-bui
 })();
 
 
+
+// Fuseau horaire IANA du navigateur, pour la carte du monde de l'admin
+// (pings /__visit). Chaîne vide si le navigateur ne le dit pas.
+window._pthTimeZone = function () {
+  try { var z = Intl.DateTimeFormat().resolvedOptions().timeZone; return (typeof z === 'string' && z.length <= 64) ? z : ''; }
+  catch (e) { return ''; }
+};
 ;(function(){
   // ── Anonymous visit ping (traffic counter) ──
   // Fires once per browser session: total visits = sessions, unique visitors =
@@ -12175,7 +12182,9 @@ window.BUILD_VERSION='2.1.10-web.27'; try{ var b=document.getElementById('cf-bui
       }
       // pwa : seul champ que le serveur ne peut pas déduire de l'en-tête (l'UA
       // est identique en onglet et en app installée). OS, navigateur et langue
-      // sont dérivés côté serveur — on n'envoie rien de plus.
+      // sont dérivés côté serveur. tz : le fuseau du navigateur (« Europe/Paris »),
+      // que le proxy ramène à un pays pour la carte de l'admin (server/geo-stats.js)
+      // — aucune IP n'est lue pour cela.
       var pwa = false;
       try { pwa = !!(window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true; } catch (e) {}
       // live: /live visits are counted apart from the web client's (proxy.js
@@ -12185,6 +12194,7 @@ window.BUILD_VERSION='2.1.10-web.27'; try{ var b=document.getElementById('cf-bui
       // and ?lang= flags. Only fields that are set are sent.
       var msg = window.LIVE_MODE ? { vid: vid, live: true } : { vid: vid, pwa: pwa };
       if (!window.LIVE_MODE) {
+        try { var tz = window._pthTimeZone(); if (tz) msg.tz = tz; } catch (e) {}
         try {
           var L = window.__pthLanding || {};
           if (L.ref) msg.ref = String(L.ref);
@@ -12238,7 +12248,9 @@ window.BUILD_VERSION='2.1.10-web.27'; try{ var b=document.getElementById('cf-bui
     try {
       var vid = '';
       try { vid = localStorage.getItem('pth_vid') || ''; } catch (e) {}
-      var body = JSON.stringify({ mode: mode, vid: vid });
+      var cm = { mode: mode, vid: vid };
+      try { var tz = window._pthTimeZone(); if (tz) cm.tz = tz; } catch (e) {}
+      var body = JSON.stringify(cm);
       if (navigator.sendBeacon) navigator.sendBeacon('/__visit', new Blob([body], { type: 'application/json' }));
       else fetch('/__visit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true }).catch(function () {});
     } catch (e) {}

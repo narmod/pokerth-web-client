@@ -6668,7 +6668,7 @@ function emptyVisitsStore() {
     env: {}, envSince: 0, langDiagSince: 0, music: {}, musicSince: 0, hourSince: 0, modeHourSince: 0, pthSince: 0,
     musicVotes: {}, musicVotesSince: 0,
     guide: {}, guideSince: 0,
-    refSince: 0
+    refSince: 0, geoSince: 0
   };
 }
 let visitsStore = emptyVisitsStore();
@@ -6696,6 +6696,7 @@ try {
     visitsStore.guide = (_vs.guide && typeof _vs.guide === 'object') ? _vs.guide : {};
     visitsStore.guideSince = (typeof _vs.guideSince === 'number') ? _vs.guideSince : 0;
     visitsStore.refSince = (typeof _vs.refSince === 'number') ? _vs.refSince : 0;
+    visitsStore.geoSince = (typeof _vs.geoSince === 'number') ? _vs.geoSince : 0;
   }
 } catch (e) { /* first run — start empty */ }
 let _visitsSaveTimer = null;
@@ -6826,6 +6827,63 @@ const GUIDE_STATS = require('./server/guide-stats.js');
 const LANG_STATS = require('./server/lang-stats.js');
 // Where visitors come from: referring domain, campaign tag, invite link.
 const REF_STATS = require('./server/ref-stats.js');
+// Country of a visit, from the browser time zone (admin Traffic › World).
+const GEO_STATS = require('./server/geo-stats.js');
+// Carte du monde. Le ping /__visit porte le fuseau du navigateur (tz) ;
+// GEO_STATS le ramene a un code pays (ZZ = inconnu) et l'on ne garde que des
+// totaux par pays : `geo` dans le seau du jour (meme retention que le reste),
+// et `geoH[heure]` pour le filtre « 24 h », que l'on ne garde que pour hier et
+// aujourd'hui. Un ping SANS tz (client anterieur a 2.1.10-web.28) n'est pas
+// compte ici, pour ne pas gonfler « inconnu » pendant le deploiement.
+function recordGeo(tz, visit, mode) {
+  const cc = GEO_STATS.countryOfTz(tz);
+  const now = new Date();
+  const day = visitDayKey(now);
+  let bucket = visitsStore.days[day];
+  if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
+  if (!bucket.geo) { bucket.geo = {}; pruneGeoHours(day); }
+  const hr = now.getHours();
+  if (!bucket.geoH) bucket.geoH = {};
+  if (!bucket.geoH[hr]) bucket.geoH[hr] = {};
+  if (visit) { GEO_STATS.addVisit(bucket.geo, cc, visit); GEO_STATS.addVisit(bucket.geoH[hr], cc, visit); }
+  if (mode) { GEO_STATS.addMode(bucket.geo, cc, mode); GEO_STATS.addMode(bucket.geoH[hr], cc, mode); }
+  if (!visitsStore.geoSince) visitsStore.geoSince = Date.now();
+  saveVisitsSoon();
+}
+function pruneGeoHours(today) {
+  const y = new Date(); y.setDate(y.getDate() - 1);
+  const keep = { [today]: 1, [visitDayKey(y)]: 1 };
+  for (const k in visitsStore.days) {
+    const b = visitsStore.days[k];
+    if (b && b.geoH && !keep[k]) delete b.geoH;
+  }
+}
+// Resume pour /admin/geo : soit les P derniers jours (seaux `geo`), soit les
+// 24 dernieres heures glissantes (cases `geoH`, heure en cours comprise).
+// `counted` dit combien de jours / d'heures avaient vraiment des donnees.
+function visitGeoSummary(query) {
+  const h24 = String((query && query.hours) || '') === '24';
+  const P = visitPeriodDays(query && query.days);
+  const g = {};
+  let counted = 0;
+  const now = new Date();
+  if (h24) {
+    const base = new Date(now); base.setMinutes(0, 0, 0);
+    for (let i = 23; i >= 0; i--) {
+      const d = new Date(base.getTime() - i * 3600000);
+      const b = visitsStore.days[visitDayKey(d)];
+      const c = b && b.geoH && b.geoH[d.getHours()];
+      if (c) { GEO_STATS.merge(g, c); counted++; }
+    }
+  } else {
+    for (let i = 0; i < P; i++) {
+      const d = new Date(now); d.setDate(now.getDate() - i);
+      const b = visitsStore.days[visitDayKey(d)];
+      if (b && b.geo) { GEO_STATS.merge(g, b.geo); counted++; }
+    }
+  }
+  return { ok: true, h24: h24, periodDays: h24 ? 0 : P, counted: counted, countries: g, since: visitsStore.geoSince || 0, modes: GEO_STATS.MODES, unknown: GEO_STATS.UNKNOWN };
+}
 function recordGuideEvent(ctx, ev) {
   if (!GUIDE_STATS.valid(ctx, ev)) return false;
   const day = visitDayKey();
@@ -8985,6 +9043,10 @@ function handleAdmin(req, res, reqPathOnly, query) {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'Content-Disposition': 'attachment; filename="pokerth-traffic.json"' });
     res.end(JSON.stringify(out, null, 2));
     return;
+  }
+  if (reqPathOnly === '/admin/geo') {
+    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    return adminJson(res, 200, visitGeoSummary(query));
   }
   if (reqPathOnly === '/admin/visits') {
     if (req.method === 'GET') {
@@ -12014,7 +12076,10 @@ const httpServer = http.createServer((req, res) => {
     readJsonBody(req, function (d) {
       try {
         _pingStats.last = Date.now();
-        if (d && d.mode) { _pingStats.nMode++; recordModeConnect(d.mode); }
+        if (d && d.mode) {
+          _pingStats.nMode++; recordModeConnect(d.mode);
+          if (typeof d.tz === 'string' && VISIT_MODES.indexOf(d.mode) >= 0) recordGeo(d.tz, null, d.mode);
+        }
         else if (d && d.live === true) { _pingStats.nLive++; recordLiveVisit(d.vid); }
         else {
           _pingStats.n++;
@@ -12023,6 +12088,10 @@ const httpServer = http.createServer((req, res) => {
                          req.headers && req.headers['accept-language'],
                          !!(d && d.pwa), _seenBefore);
           recordVisitSource(d, req.headers && req.headers['accept-language'], _seenBefore);
+          if (d && typeof d.tz === 'string') {
+            const _os = _uaPick(UA_OS, String((req.headers && req.headers['user-agent']) || ''));
+            recordGeo(d.tz, { nw: _seenBefore === false, pwa: !!d.pwa, mob: _os === 'iPhone' || _os === 'iPad' || _os === 'Android' }, null);
+          }
         }
       } catch (e) { /* ignore a bad ping */ }
       res.writeHead(204, { 'Cache-Control': 'no-store' });
