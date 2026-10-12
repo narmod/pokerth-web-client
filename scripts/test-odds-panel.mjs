@@ -126,6 +126,45 @@ await new Promise((res) => { O.renderOddsMonitor(); setTimeout(res, 400); });
 ok(els['g-odds-body'].innerHTML.includes('odds-row'), 'renderOddsMonitor : 10 catégories rendues');
 ok(els['g-odds-body'].innerHTML.includes('/img/hands/royalflush.svg'), 'renderOddsMonitor : icônes SVG officielles');
 
+// Égalités : part du pot 1/(n+1) (EquityCalculator upstream), pas un demi-pot
+// fixe. Board = quinte flush royale ♦ (10..A, cartes 8..12) : personne ne peut
+// la battre, chaque tirage est un partage entre tous les joueurs encore en main.
+S.myCards = [13, 27]; S.commCards = [8, 9, 10, 11, 12];
+S.myId = 1; S.seats = [1, 2, 3];
+S.seatData = { 1: { folded: false }, 2: { folded: false }, 3: { folded: false } };
+ok(O.calcWinProb() === 33, 'calcWinProb : board royal partagé à 3 → 33 %');
+S.seats = [1, 2, 3, 4]; S.seatData[4] = { folded: false };
+ok(O.calcWinProb() === 25, 'calcWinProb : board royal partagé à 4 → 25 %');
+const pAsync = await new Promise((res) => O.calcWinProbAsync(res, () => false));
+ok(pAsync === 25, 'calcWinProbAsync : board royal partagé à 4 → 25 % (' + pAsync + ')');
+S.seats = [1, 2]; delete S.seatData[3]; delete S.seatData[4];
+ok(O.calcWinProb() === 50, 'calcWinProb : board royal partagé à 2 → 50 %');
+
+// Tables Ranking (type 4) : pas d'assistance, note à la place du bandeau.
+S._assistOn = true; window._offlineMode = false;
+S.myCards = [12, 11]; S.commCards = [10, 2, 30, null, null];
+S.gId = 7; S.games = { 7: { type: 4 } };
+els['gip-assist']._cls = {};
+O.renderHandStrength();
+ok(O._assistRankingBlocked() === true, 'Ranking : assistance bloquée');
+ok(els['gip-assist'].classList.contains('hs-rk-off'), 'Ranking : classe hs-rk-off posée');
+ok(txtEl.textContent === 'assistRankingOff' || /Ranking/.test(txtEl.textContent),
+   'Ranking : note affichée à la place du % (' + txtEl.textContent + ')');
+S.myCards = [12, 11]; S.commCards = [null, null, null, null, null];
+O.renderPreFlopStrength();
+ok(els['gip-assist'].classList.contains('hs-rk-off'), 'Ranking : préflop bloqué aussi');
+delete S.games[7];
+ok(O._assistRankingBlocked() === true, 'Ranking : type mémorisé si l\'entrée disparaît');
+S._assistOn = true;
+ok(S._assistOn === true, 'Ranking : préférence du joueur intacte');
+S.gId = 8; S.games = { 8: { type: 1 } };
+O.renderPreFlopStrength();
+ok(O._assistRankingBlocked() === false && !els['gip-assist'].classList.contains('hs-rk-off'),
+   'Table normale : assistance de retour');
+window._offlineMode = true; S.gId = 7; S.games = { 7: { type: 4 } };
+ok(O._assistRankingBlocked() === false, 'Hors ligne : jamais bloquée');
+window._offlineMode = false; S.gId = 0; S.games = {};
+
 // Ponts window + alias
 ok(window.renderHandStrength === O.renderHandStrength &&
    window.renderOddsMonitor === O.renderOddsMonitor &&

@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Ó ti pa ní àwọn tábìlì ipò: gbogbo ènìyàn ń ṣeré pẹ̀lú ìsọfúnni kan náà.",
     waitingHintRanked: "Eré yóò bẹ̀rẹ̀ fúnra rẹ̀ ní kété tí tábìlì bá kún",
     rankWaitFull: "Eré ipò — ń dúró de àwọn olùṣeré {max} ({n}/{max}). Eré yóò bẹ̀rẹ̀ nígbà tí tábìlì bá kún.",
     // Mascotte animée (modules/mascot, extra web)

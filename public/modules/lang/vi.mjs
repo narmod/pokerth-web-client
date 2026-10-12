@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Tắt ở bàn xếp hạng: mọi người chơi với cùng thông tin.",
     waitingHintRanked: "Ván sẽ tự động bắt đầu ngay khi bàn đủ người",
     rankWaitFull: "Ván xếp hạng — đang chờ {max} người chơi ({n}/{max}). Ván sẽ bắt đầu khi bàn đủ người.",
     // Mascotte animée (modules/mascot, extra web)

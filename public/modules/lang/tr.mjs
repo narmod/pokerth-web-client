@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Sıralama masalarında kapalı: herkes aynı bilgiyle oynar.",
     waitingHintRanked: "Masa dolar dolmaz oyun otomatik olarak başlayacak",
     rankWaitFull: "Sıralama oyunu — {max} oyuncu bekleniyor ({n}/{max}). Masa dolduğunda oyun başlayacak.",
     // Mascotte animée (modules/mascot, extra web)

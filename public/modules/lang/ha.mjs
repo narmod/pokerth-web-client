@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "A kashe a teburan matsayi: kowa yana wasa da bayani iri ɗaya.",
     waitingHintRanked: "Wasan zai fara kai tsaye da zarar tebur ya cika",
     rankWaitFull: "Wasan matsayi — ana jiran 'yan wasa {max} ({n}/{max}). Wasan zai fara idan tebur ya cika.",
     // Mascotte animée (modules/mascot, extra web)

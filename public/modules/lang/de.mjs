@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "An Ranglisten-Tischen ausgeschaltet: Alle spielen mit denselben Informationen.",
     waitingHintRanked: "Das Spiel startet automatisch, sobald der Tisch voll ist",
     rankWaitFull: "Ranglistenspiel — warte auf {max} Spieler ({n}/{max}). Das Spiel startet, sobald der Tisch voll ist.",
     // Mascotte animée (modules/mascot, extra web)

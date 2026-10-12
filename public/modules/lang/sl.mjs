@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Izklopljeno za mizami z uvrstitvijo: vsi igrajo z enakimi informacijami.",
     waitingHintRanked: "Igra se bo samodejno začela, ko bo miza polna",
     rankWaitFull: "Igra z uvrstitvijo — čakamo na {max} igralcev ({n}/{max}). Igra se bo začela, ko bo miza polna.",
     // Mascotte animée (modules/mascot, extra web)

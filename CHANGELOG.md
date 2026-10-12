@@ -39,6 +39,13 @@ highlights below.
   Advanced options on Backup & reset, scrolls to Automatic backup and flashes the « Choose folder… »
   row like an options-search hit (`window._bakOffer.show`, key `bakShowMe` in the 83 guide
   catalogues) (`web.22`).
+- **No Assistance at Ranking tables** — the hand-strength banner and its win % are a web extra:
+  the QML client shows no such thing (its Chancen tab only lists hand categories). At a Ranking
+  table (game type 4, online) the banner is replaced by a short note and nothing is computed, so
+  every seat plays with the same information; the player's own setting (`pth_assist`) is left
+  untouched and the banner comes back at other tables. The Odds tab (QML parity) stays. Key
+  `assistRankingOff` in the 83 catalogues, help « Assistance » updated in the 56 that carry it
+  (`web.23`).
 
 ### Added
 - **pokerth.net vs web client, in the admin traffic stats** — every 5 minutes the proxy records the
@@ -70,6 +77,11 @@ highlights below.
   selected period and included in the JSON export. The privacy page says so (`web.5`).
 
 ### Fixed
+- **Split pots in the win % estimate** — a tie always counted as half a pot, whatever the number
+  of players sharing it (a board royal flush at four seats gave 50 % instead of 25 %). The sync
+  and async estimates now credit `1/(n+1)` for `n` tied opponents, the formula of upstream's
+  `EquityCalculator`; `scripts/test-odds-panel.mjs` covers 2, 3 and 4-way splits. Reported in
+  issue #5 (`web.23`).
 - **The local backup offer speaks the player's language** — it was drawn at boot, before the
   language catalogue had loaded, and kept the English fallback; the Ace's bubble and the banner now
   follow `pth:langchange` (`web.20`).

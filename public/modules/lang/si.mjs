@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "ශ්‍රේණිගත මේසවල අක්‍රියයි: සියලු දෙනා එකම තොරතුරු සමඟ ක්‍රීඩා කරයි.",
     waitingHintRanked: "මේසය පිරුණු වහාම ක්‍රීඩාව ස්වයංක්‍රීයව ආරම්භ වේ",
     rankWaitFull: "ශ්‍රේණිගත ක්‍රීඩාව — ක්‍රීඩකයින් {max} දෙනෙකු එනතුරු රැඳී සිටී ({n}/{max}). මේසය පිරුණු විට ක්‍රීඩාව ආරම්භ වේ.",
     // Mascotte animée (modules/mascot, extra web)

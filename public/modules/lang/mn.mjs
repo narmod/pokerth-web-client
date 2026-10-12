@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Эрэмбийн ширээнд унтраалттай: бүгд ижил мэдээлэлтэй тоглоно.",
     waitingHintRanked: "Ширээ дүүрмэгц тоглолт автоматаар эхэлнэ",
     rankWaitFull: "Эрэмбийн тоглолт — {max} тоглогч хүлээж байна ({n}/{max}). Ширээ дүүрэхэд тоглолт эхэлнэ.",
     // Mascotte animée (modules/mascot, extra web)

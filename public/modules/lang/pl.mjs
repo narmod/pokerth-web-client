@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Wyłączona przy stołach rankingowych: wszyscy grają z tymi samymi informacjami.",
     waitingHintRanked: "Gra rozpocznie się automatycznie, gdy tylko stół będzie pełny",
     rankWaitFull: "Gra rankingowa — oczekiwanie na {max} graczy ({n}/{max}). Gra rozpocznie się, gdy stół będzie pełny.",
     // Mascotte animée (modules/mascot, extra web)

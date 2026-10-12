@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Дар мизҳои рейтингӣ хомӯш аст: ҳама бо маълумоти якхела бозӣ мекунанд.",
     waitingHintRanked: "Ҳамин ки миз пур шавад, бозӣ худкор оғоз мешавад",
     rankWaitFull: "Бозии рейтингӣ — интизори {max} бозингар ({n}/{max}). Бозӣ вақте оғоз мешавад, ки миз пур шавад.",
     // Mascotte animée (modules/mascot, extra web)

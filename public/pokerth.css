@@ -9898,6 +9898,10 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #gip-assist .hs-segs i{flex:1;height:9px;border-radius:2px;background:rgba(var(--gold-rgb),.14);transition:background .18s ease}
 #gip-assist .hs-segs i.on{background:var(--hs-col, var(--gold))}
 :root[data-assist-style="segs"] #gip-assist .hs-segs{display:flex}
+/* Table Ranking : l'assistance laisse place a une note, sans jauge (ni piste
+   ni segments). La classe est posee par _hsRankingOff (odds-panel.mjs). */
+#gip-assist.hs-rk-off .hs-track,#gip-assist.hs-rk-off .hs-segs{display:none !important}
+#gip-assist.hs-rk-off .hs-txt{font-style:italic;opacity:.75;white-space:normal}
 /* On masque la PISTE, pas #hand-strength : ce dernier recoit un display
    INLINE depuis le JS (_hsHide / renderPreFlopStrength), qui l'emporte sur
    toute regle CSS — d'ou la double barre constatee en web.30. La piste, elle,

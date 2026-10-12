@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Reýting stollarynda öçürilen: hemmeler birmeňzeş maglumat bilen oýnaýar.",
     waitingHintRanked: "Stol dolan badyna oýun awtomatik başlar",
     rankWaitFull: "Reýting oýny — {max} oýunçy garaşylýar ({n}/{max}). Stol dolanda oýun başlar.",
     // Mascotte animée (modules/mascot, extra web)

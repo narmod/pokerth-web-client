@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Desactivada nas mesas de clasificación: todos xogan coa mesma información.",
     waitingHintRanked: "A partida comezará automaticamente en canto a mesa estea chea",
     rankWaitFull: "Partida de clasificación — agardando por {max} xogadores ({n}/{max}). A partida comezará cando a mesa estea chea.",
     // Mascotte animée (modules/mascot, extra web)

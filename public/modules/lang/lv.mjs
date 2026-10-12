@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Izslēgta pie reitinga galdiem: visi spēlē ar vienādu informāciju.",
     waitingHintRanked: "Spēle sāksies automātiski, tiklīdz galds būs pilns",
     rankWaitFull: "Reitinga spēle — gaidām {max} spēlētājus ({n}/{max}). Spēle sāksies, kad galds būs pilns.",
     // Mascotte animée (modules/mascot, extra web)

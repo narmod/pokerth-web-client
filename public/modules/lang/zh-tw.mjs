@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "排名牌桌上關閉：所有人掌握相同的資訊。",
     waitingHintRanked: "牌桌坐滿後遊戲將自動開始",
     rankWaitFull: "排名遊戲 — 等待 {max} 名玩家（{n}/{max}）。牌桌坐滿後遊戲將開始。",
     // Mascotte animée (modules/mascot, extra web)

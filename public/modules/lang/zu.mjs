@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Kuvaliwe ematafuleni ezinga: wonke umuntu udlala ngolwazi olufanayo.",
     waitingHintRanked: "Umdlalo uzoqala ngokuzenzakalela uma itafula seligcwele",
     rankWaitFull: "Umdlalo wezinga — kulindwe abadlali abangu-{max} ({n}/{max}). Umdlalo uzoqala uma itafula seligcwele.",
     // Mascotte animée (modules/mascot, extra web)

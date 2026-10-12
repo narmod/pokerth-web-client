@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Рейтингтік үстелдерде өшірулі: барлығы бірдей ақпаратпен ойнайды.",
     waitingHintRanked: "Үстел толған бойда ойын автоматты түрде басталады",
     rankWaitFull: "Рейтингтік ойын — {max} ойыншы күтілуде ({n}/{max}). Үстел толғанда ойын басталады.",
     // Mascotte animée (modules/mascot, extra web)

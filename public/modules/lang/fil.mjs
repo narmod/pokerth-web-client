@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Naka-off sa mga Ranked na mesa: pare-pareho ang impormasyon ng lahat.",
     waitingHintRanked: "Awtomatikong magsisimula ang laro kapag puno na ang mesa",
     rankWaitFull: "Ranking game — naghihintay ng {max} manlalaro ({n}/{max}). Magsisimula ang laro kapag puno na ang mesa.",
     // Mascotte animée (modules/mascot, extra web)

@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Desaktibatuta sailkapeneko mahaietan: denek informazio bera dute.",
     waitingHintRanked: "Partida automatikoki hasiko da mahaia betetzen den bezain laster",
     rankWaitFull: "Sailkapeneko partida — {max} jokalariren zain ({n}/{max}). Partida mahaia betetzen denean hasiko da.",
     // Mascotte animée (modules/mascot, extra web)

@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Адключана за рэйтынгавымі сталамі: ва ўсіх гульцоў аднолькавая інфармацыя.",
     waitingHintRanked: "Гульня пачнецца аўтаматычна, як толькі стол запоўніцца",
     rankWaitFull: "Рэйтынгавая гульня — чакаем {max} гульцоў ({n}/{max}). Гульня пачнецца, калі стол запоўніцца.",
     // Mascotte animée (modules/mascot, extra web)

@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Искључено за столовима ранг-листе: сви играју са истим информацијама.",
     waitingHintRanked: "Igra počinje automatski čim se sto popuni",
     rankWaitFull: "Rangirana igra — čeka se {max} igrača ({n}/{max}). Igra počinje kada se sto popuni.",
     // Mascotte animée (modules/mascot, extra web)

@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Slökkt við stigaleikjaborð: allir spila með sömu upplýsingar.",
     waitingHintRanked: "Leikurinn hefst sjálfkrafa um leið og borðið er fullt",
     rankWaitFull: "Stigaleikur — beðið eftir {max} leikmönnum ({n}/{max}). Leikurinn hefst þegar borðið er fullt.",
     // Mascotte animée (modules/mascot, extra web)

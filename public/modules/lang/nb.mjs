@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Slått av ved rangeringsbord: alle spiller med den samme informasjonen.",
     waitingHintRanked: "Spillet starter automatisk så snart bordet er fullt",
     rankWaitFull: "Rangeringsspill — venter på {max} spillere ({n}/{max}). Spillet starter når bordet er fullt.",
     // Mascotte animée (modules/mascot, extra web)

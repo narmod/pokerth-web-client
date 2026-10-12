@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "தரவரிசை மேசைகளில் முடக்கப்பட்டுள்ளது: அனைவரும் ஒரே தகவலுடன் விளையாடுகிறார்கள்.",
     waitingHintRanked: "மேசை நிரம்பியதும் ஆட்டம் தானாகவே தொடங்கும்",
     rankWaitFull: "தரவரிசை ஆட்டம் — {max} வீரர்களுக்காகக் காத்திருக்கிறது ({n}/{max}). மேசை நிரம்பியதும் ஆட்டம் தொடங்கும்.",
     // Mascotte animée (modules/mascot, extra web)

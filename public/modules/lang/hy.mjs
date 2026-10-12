@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Անջատված է վարկանիշային սեղաններում. բոլորը խաղում են նույն տեղեկություններով։",
     waitingHintRanked: "Խաղն ինքնաբերաբար կսկսվի, հենց սեղանը լրանա",
     rankWaitFull: "Վարկանիշային խաղ — սպասում ենք {max} խաղացողի ({n}/{max}). Խաղը կսկսվի, երբ սեղանը լրանա։",
     // Mascotte animée (modules/mascot, extra web)

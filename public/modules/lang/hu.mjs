@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Ranglistás asztaloknál kikapcsolva: mindenki ugyanazokkal az információkkal játszik.",
     waitingHintRanked: "A játék automatikusan elindul, amint megtelik az asztal",
     rankWaitFull: "Ranglistás játék — {max} játékosra várunk ({n}/{max}). A játék akkor indul, amikor megtelik az asztal.",
     // Mascotte animée (modules/mascot, extra web)

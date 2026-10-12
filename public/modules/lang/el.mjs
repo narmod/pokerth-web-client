@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Απενεργοποιημένη στα τραπέζια κατάταξης: όλοι παίζουν με τις ίδιες πληροφορίες.",
     waitingHintRanked: "Το παιχνίδι θα ξεκινήσει αυτόματα μόλις γεμίσει το τραπέζι",
     rankWaitFull: "Παιχνίδι κατάταξης — αναμονή για {max} παίκτες ({n}/{max}). Το παιχνίδι θα ξεκινήσει όταν γεμίσει το τραπέζι.",
     // Mascotte animée (modules/mascot, extra web)

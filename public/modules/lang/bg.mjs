@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Изключена на масите за класиране: всички играят с една и съща информация.",
     waitingHintRanked: "Играта ще започне автоматично, щом масата се запълни",
     rankWaitFull: "Класирана игра — изчакване на {max} играчи ({n}/{max}). Играта ще започне, когато масата се запълни.",
     // Mascotte animée (modules/mascot, extra web)

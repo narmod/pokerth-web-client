@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Múchta ag táblaí rangaithe: imríonn gach duine leis an eolas céanna.",
     waitingHintRanked: "Tosóidh an cluiche go huathoibríoch a luaithe a bheidh an bord lán",
     rankWaitFull: "Cluiche rangaithe — ag fanacht le {max} imreoir ({n}/{max}). Tosóidh an cluiche nuair a bheidh an bord lán.",
     // Mascotte animée (modules/mascot, extra web)

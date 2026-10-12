@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Reytinq masalarında söndürülüb: hamı eyni məlumatla oynayır.",
     waitingHintRanked: "Masa dolan kimi oyun avtomatik başlayacaq",
     rankWaitFull: "Reytinq oyunu — {max} oyunçu gözlənilir ({n}/{max}). Masa dolduqda oyun başlayacaq.",
     // Mascotte animée (modules/mascot, extra web)

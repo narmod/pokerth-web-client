@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Исклучено на масите со рангирање: сите играат со истите информации.",
     waitingHintRanked: "Играта ќе започне автоматски штом масата ќе се пополни",
     rankWaitFull: "Игра со рангирање — се чекаат {max} играчи ({n}/{max}). Играта ќе започне кога масата ќе се пополни.",
     // Mascotte animée (modules/mascot, extra web)

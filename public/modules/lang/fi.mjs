@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Pois päältä sijoituslistapöydissä: kaikilla on samat tiedot.",
     waitingHintRanked: "Peli alkaa automaattisesti heti, kun pöytä on täynnä",
     rankWaitFull: "Ranking-peli — odotetaan {max} pelaajaa ({n}/{max}). Peli alkaa, kun pöytä on täynnä.",
     // Mascotte animée (modules/mascot, extra web)

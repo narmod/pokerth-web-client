@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Vypnuto u žebříčkových stolů: všichni hrají se stejnými informacemi.",
     waitingHintRanked: "Hra začne automaticky, jakmile bude stůl plný",
     rankWaitFull: "Hodnocená hra — čeká se na {max} hráčů ({n}/{max}). Hra začne, až bude stůl plný.",
     // Mascotte animée (modules/mascot, extra web)

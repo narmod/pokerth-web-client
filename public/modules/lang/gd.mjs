@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Dheth aig bùird rangachaidh: tha an aon fhiosrachadh aig a h-uile duine.",
     waitingHintRanked: "Tòisichidh an geama leis fhèin cho luath 's a bhios am bòrd làn",
     rankWaitFull: "Geama rangachaidh — a' feitheamh ri {max} cluicheadairean ({n}/{max}). Tòisichidh an geama nuair a bhios am bòrd làn.",
     // Mascotte animée (modules/mascot, extra web)

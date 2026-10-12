@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "랭킹 테이블에서는 꺼짐: 모두가 같은 정보로 플레이합니다.",
     waitingHintRanked: "테이블이 가득 차면 게임이 자동으로 시작됩니다",
     rankWaitFull: "랭킹 게임 — {max}명의 플레이어를 기다리는 중 ({n}/{max}). 테이블이 가득 차면 게임이 시작됩니다.",
     // Mascotte animée (modules/mascot, extra web)

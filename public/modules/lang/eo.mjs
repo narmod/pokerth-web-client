@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Malŝaltita ĉe rangigaj tabloj: ĉiuj ludas kun la samaj informoj.",
     waitingHintRanked: "La ludo aŭtomate komenciĝos tuj kiam la tablo estos plena",
     rankWaitFull: "Rangiga ludo — atendante {max} ludantojn ({n}/{max}). La ludo komenciĝos kiam la tablo estos plena.",
     // Mascotte animée (modules/mascot, extra web)

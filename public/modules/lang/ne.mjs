@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "र्‍याङ्किङ टेबलहरूमा बन्द: सबैले उही जानकारीसँग खेल्छन्।",
     waitingHintRanked: "टेबल भरिनेबित्तिकै खेल आफैं सुरु हुनेछ",
     rankWaitFull: "र्‍याङ्किङ खेल — {max} खेलाडीको प्रतीक्षा ({n}/{max})। टेबल भरिएपछि खेल सुरु हुनेछ।",
     // Mascotte animée (modules/mascot, extra web)

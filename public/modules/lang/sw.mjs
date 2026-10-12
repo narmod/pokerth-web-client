@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Imezimwa kwenye meza za viwango: kila mtu anacheza na taarifa sawa.",
     waitingHintRanked: "Mchezo utaanza wenyewe mara meza itakapojaa",
     rankWaitFull: "Mchezo wa viwango — inasubiri wachezaji {max} ({n}/{max}). Mchezo utaanza meza ikijaa.",
     // Mascotte animée (modules/mascot, extra web)

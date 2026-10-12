@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "درجہ بند میزوں پر بند ہے: سب ایک جیسی معلومات کے ساتھ کھیلتے ہیں۔",
     waitingHintRanked: "میز بھرتے ہی گیم خودبخود شروع ہو جائے گا",
     rankWaitFull: "درجہ بندی گیم — {max} کھلاڑیوں کا انتظار ({n}/{max})۔ میز بھرنے پر گیم شروع ہو گا۔",
     // Mascotte animée (modules/mascot, extra web)

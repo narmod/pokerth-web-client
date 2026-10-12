@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Reyting stollarida o‘chirilgan: hamma bir xil ma’lumot bilan o‘ynaydi.",
     waitingHintRanked: "Stol toʻlishi bilan oʻyin avtomatik boshlanadi",
     rankWaitFull: "Reyting oʻyini — {max} oʻyinchi kutilmoqda ({n}/{max}). Stol toʻlganda oʻyin boshlanadi.",
     // Mascotte animée (modules/mascot, extra web)

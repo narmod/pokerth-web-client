@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "റാങ്ക്ഡ് ടേബിളുകളിൽ ഓഫ്: എല്ലാവരും ഒരേ വിവരങ്ങളോടെ കളിക്കുന്നു.",
     waitingHintRanked: "ടേബിൾ നിറഞ്ഞാലുടൻ ഗെയിം സ്വയമേവ ആരംഭിക്കും",
     rankWaitFull: "റാങ്കിംഗ് ഗെയിം — {max} കളിക്കാരെ കാത്തിരിക്കുന്നു ({n}/{max}). ടേബിൾ നിറയുമ്പോൾ ഗെയിം ആരംഭിക്കും.",
     // Mascotte animée (modules/mascot, extra web)

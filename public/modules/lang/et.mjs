@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Edetabeliga laudades välja lülitatud: kõigil on sama teave.",
     waitingHintRanked: "Mäng algab automaatselt kohe, kui laud on täis",
     rankWaitFull: "Edetabelimäng — ootame {max} mängijat ({n}/{max}). Mäng algab, kui laud on täis.",
     // Mascotte animée (modules/mascot, extra web)

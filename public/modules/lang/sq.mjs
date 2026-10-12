@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "E çaktivizuar në tavolinat me renditje: të gjithë luajnë me të njëjtin informacion.",
     waitingHintRanked: "Loja do të fillojë automatikisht sapo tavolina të mbushet",
     rankWaitFull: "Lojë me renditje — në pritje të {max} lojtarëve ({n}/{max}). Loja do të fillojë kur tavolina të mbushet.",
     // Mascotte animée (modules/mascot, extra web)

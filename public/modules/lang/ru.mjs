@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Отключена за рейтинговыми столами: у всех игроков одинаковая информация.",
     waitingHintRanked: "Игра начнётся автоматически, как только стол заполнится",
     rankWaitFull: "Рейтинговая игра — ожидание {max} игроков ({n}/{max}). Игра начнётся, когда стол заполнится.",
     // Mascotte animée (modules/mascot, extra web)

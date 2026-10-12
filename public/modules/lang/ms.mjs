@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Dimatikan di meja berperingkat: semua bermain dengan maklumat yang sama.",
     waitingHintRanked: "Permainan akan bermula secara automatik sebaik sahaja meja penuh",
     rankWaitFull: "Permainan berperingkat — menunggu {max} pemain ({n}/{max}). Permainan akan bermula apabila meja penuh.",
     // Mascotte animée (modules/mascot, extra web)

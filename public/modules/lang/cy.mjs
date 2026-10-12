@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Wedi’i diffodd wrth fyrddau safle: mae pawb yn chwarae gyda’r un wybodaeth.",
     waitingHintRanked: "Bydd y gêm yn dechrau'n awtomatig cyn gynted ag y bydd y bwrdd yn llawn",
     rankWaitFull: "Gêm gyda safle — yn aros am {max} chwaraewr ({n}/{max}). Bydd y gêm yn dechrau pan fydd y bwrdd yn llawn.",
     // Mascotte animée (modules/mascot, extra web)

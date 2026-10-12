@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "در میزهای رتبه‌بندی خاموش است: همه با اطلاعات یکسان بازی می‌کنند.",
     waitingHintRanked: "بازی به‌محض پر شدن میز به‌طور خودکار شروع می‌شود",
     rankWaitFull: "بازی رتبه‌بندی — در انتظار {max} بازیکن ({n}/{max}). بازی وقتی میز پر شود شروع می‌شود.",
     // Mascotte animée (modules/mascot, extra web)

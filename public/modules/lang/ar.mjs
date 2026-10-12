@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "معطّلة على الطاولات المصنّفة: الجميع يلعب بالمعلومات نفسها.",
     waitingHintRanked: "ستبدأ اللعبة تلقائيًا بمجرد اكتمال الطاولة",
     rankWaitFull: "لعبة تصنيف — في انتظار {max} لاعبين ({n}/{max}). ستبدأ اللعبة عندما تكتمل الطاولة.",
     // Mascotte animée (modules/mascot, extra web)

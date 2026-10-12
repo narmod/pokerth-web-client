@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "အဆင့်သတ်မှတ် စားပွဲများတွင် ပိတ်ထားသည်- လူတိုင်း တူညီသော အချက်အလက်ဖြင့် ကစားသည်။",
     waitingHintRanked: "စားပွဲပြည့်သည်နှင့် ဂိမ်းအလိုအလျောက် စတင်ပါမည်",
     rankWaitFull: "အဆင့်သတ်မှတ်ဂိမ်း — ကစားသမား {max} ဦးကို စောင့်နေသည် ({n}/{max})။ စားပွဲပြည့်သောအခါ ဂိမ်းစတင်ပါမည်။",
     // Mascotte animée (modules/mascot, extra web)

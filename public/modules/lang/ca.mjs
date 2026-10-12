@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Desactivada a les taules de classificació: tothom juga amb la mateixa informació.",
     waitingHintRanked: "La partida començarà automàticament quan la taula estigui plena",
     rankWaitFull: "Partida de classificació — esperant {max} jugadors ({n}/{max}). La partida començarà quan la taula estigui plena.",
     // Mascotte animée (modules/mascot, extra web)

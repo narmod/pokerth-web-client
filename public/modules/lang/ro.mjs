@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Dezactivată la mesele de clasament: toți joacă cu aceleași informații.",
     waitingHintRanked: "Jocul va începe automat imediat ce masa este completă",
     rankWaitFull: "Joc clasat — se așteaptă {max} jucători ({n}/{max}). Jocul va începe când masa este completă.",
     // Mascotte animée (modules/mascot, extra web)

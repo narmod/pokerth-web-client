@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Off at Ranking tables: everyone plays with the same information.",
     waitingHintRanked: "The game will start automatically as soon as the table is full",
     rankWaitFull: "Ranking game — waiting for {max} players ({n}/{max}). The game will start when the table is full.",
     // Mascotte animée (modules/mascot, extra web)

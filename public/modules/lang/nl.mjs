@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Uit aan ranglijsttafels: iedereen speelt met dezelfde informatie.",
     waitingHintRanked: "Het spel start automatisch zodra de tafel vol is",
     rankWaitFull: "Rankingspel — wachten op {max} spelers ({n}/{max}). Het spel start zodra de tafel vol is.",
     // Mascotte animée (modules/mascot, extra web)

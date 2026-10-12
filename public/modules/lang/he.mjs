@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "כבויה בשולחנות מדורגים: כולם משחקים עם אותו מידע.",
     waitingHintRanked: "המשחק יתחיל אוטומטית ברגע שהשולחן יתמלא",
     rankWaitFull: "משחק דירוג — ממתינים ל־{max} שחקנים ({n}/{max}). המשחק יתחיל כשהשולחן יתמלא.",
     // Mascotte animée (modules/mascot, extra web)

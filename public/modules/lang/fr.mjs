@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Désactivée aux tables classées : tout le monde joue avec les mêmes informations.",
     waitingHintRanked: "La partie démarrera automatiquement dès que la table sera complète",
     rankWaitFull: "Partie classée — en attente de {max} joueurs ({n}/{max}). La partie démarrera quand la table sera complète.",
     // Mascotte animée (modules/mascot, extra web)

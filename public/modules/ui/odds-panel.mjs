@@ -49,7 +49,7 @@ function calcWinProb() {
     var myScore = evaluateBestHand(myNorm, fullComm);
     // Évaluer les adversaires (cartes piochées dans le deck comm)
     var myBest = true;   // je bats strictement tout le monde jusqu'ici
-    var tied   = false;  // au moins une égalité (split) avec le meilleur adversaire
+    var nTie   = 0;      // adversaires à égalité avec moi (pot partagé)
     for (var o = 0; o < nOpp; o++) {
       var oc1 = d[pos++], oc2 = d[pos++];
       if (oc1 === undefined || oc2 === undefined) break;
@@ -58,9 +58,11 @@ function calcWinProb() {
       // Départage complet sur la meilleure main à 5 cartes (catégorie + kickers)
       var cmp = _cmpHand(myScore, oppScore);
       if (cmp < 0) { myBest = false; break; } // un adversaire me bat → perdu
-      if (cmp === 0) tied = true;             // égalité → split potentiel
+      if (cmp === 0) nTie++;                  // égalité → pot partagé
     }
-    if (myBest) wins += tied ? 0.5 : 1;       // split compté pour un demi-pot
+    // Part du pot : 1/(n+1) avec n ex-aequo, comme EquityCalculator upstream
+    // (engine/local_engine/equitycalculator.cpp) — et non un demi-pot fixe.
+    if (myBest) wins += 1 / (nTie + 1);
   }
   return Math.round(wins / total * 100);
 }
@@ -100,7 +102,7 @@ function calcWinProbAsync(onDone, isStale) {
         var tmp = d[i2]; d[i2] = d[j]; d[j] = tmp;
       }
       var fullComm = comm.concat(d.slice(0, needed));
-      var pos = needed, myBest = true, tied = false;
+      var pos = needed, myBest = true, nTie = 0;
       if (usePhe) {
         var myS = _pheStrength(myNorm.concat(fullComm));
         for (var o = 0; o < nOpp; o++) {
@@ -108,7 +110,7 @@ function calcWinProbAsync(onDone, isStale) {
           if (a === undefined || b === undefined) break;
           var os = _pheStrength([a, b].concat(fullComm));
           if (os < myS) { myBest = false; break; }   // phe : plus petit = plus fort
-          if (os === myS) tied = true;
+          if (os === myS) nTie++;
         }
       } else {
         var myScore = evaluateBestHand(myNorm, fullComm);
@@ -117,10 +119,10 @@ function calcWinProbAsync(onDone, isStale) {
           if (oc1 === undefined || oc2 === undefined) break;
           var cmp = _cmpHand(myScore, evaluateBestHand([oc1, oc2], fullComm));
           if (cmp < 0) { myBest = false; break; }
-          if (cmp === 0) tied = true;
+          if (cmp === 0) nTie++;
         }
       }
-      if (myBest) wins += tied ? 0.5 : 1;
+      if (myBest) wins += 1 / (nTie + 1);       // part du pot à n+1 ex-aequo
       tr++;
       if ((tr & 15) === 0 && (now() - start) > 8) break; // rendre la main
     }
@@ -172,6 +174,7 @@ function _hsSet(el, text, pct, col) {
   // ce qui s'affiche — le calcul reste unique quel que soit le rendu.
   var gip = document.getElementById('gip-assist');
   if (gip) {
+    if (gip.classList) gip.classList.remove('hs-rk-off');
     if (col) gip.style.setProperty('--hs-col', col);
     var segs = gip.querySelectorAll('.hs-segs i');
     var lit = Math.round(p / 10);
@@ -187,6 +190,8 @@ function _hsSet(el, text, pct, col) {
 }
 function _hsHide(el) {
   if (el) el.style.display = 'none';
+  var gip = document.getElementById('gip-assist');
+  if (gip && gip.classList) gip.classList.remove('hs-rk-off');
   var lbl = document.getElementById('hs-lbl');
   if (lbl) { lbl.style.display = 'none'; var txt = lbl.querySelector('.hs-txt'); if (txt) txt.textContent = ''; }
   _gipAssistSync();
@@ -222,10 +227,35 @@ function _gipAssistSync() {
   try { if (typeof window._assistPaneSync === 'function') window._assistPaneSync(); } catch (e) {}
 }
 
+// ── Tables Ranking (type 4) : pas d'assistance ──
+// Équité entre joueurs et alignement sur le client QML, qui n'affiche aucune
+// force de main ni % de victoire. Le choix du joueur (S._assistOn) n'est pas
+// touché : l'assistance revient d'elle-même aux autres tables. L'onglet
+// Chances (catégories de main, parité QML) reste disponible. Le type est
+// mémorisé par gameId, au cas où l'entrée de la liste disparaîtrait en cours
+// de partie.
+var _rkGid = 0;
+function _assistRankingBlocked() {
+  if (window._offlineMode || !S.gId) return false;
+  var g = S.games && S.games[S.gId];
+  if (g && g.type === 4) { _rkGid = S.gId; return true; }
+  return _rkGid === S.gId;
+}
+// Remplace le bandeau par une note courte : ni jauge, ni calcul.
+function _hsRankingOff(el) {
+  if (el) el.style.display = 'none';
+  var gip = document.getElementById('gip-assist');
+  if (gip && gip.classList) gip.classList.add('hs-rk-off');
+  var lbl = document.getElementById('hs-lbl');
+  if (lbl) { var txt = lbl.querySelector('.hs-txt') || lbl; txt.textContent = t('assistRankingOff'); txt.style.color = ''; lbl.style.display = ''; }
+  _gipAssistSync();
+}
+
 function renderPreFlopStrength() {
   var el = document.getElementById('hand-strength');
   if (!el) return;
   if (!S._assistOn) { _hsHide(el); return; } // assistance désactivée
+  if (_assistRankingBlocked()) { _hsRankingOff(el); return; } // table Ranking
   if (S.commCards.filter(function(c){ return c!=null; }).length > 0) return;
   if (S.myCards[0] == null || S.myCards[1] == null) { _hsHide(el); return; }
   // Préchauffe phe dès le préflop (assistance active) pour que le flop de la
@@ -249,6 +279,7 @@ function renderHandStrength() {
   var el = document.getElementById('hand-strength');
   if (!el) return;
   if (!S._assistOn) { _hsHide(el); return; } // assistance désactivée
+  if (_assistRankingBlocked()) { _hsRankingOff(el); return; } // table Ranking
   var validComm = S.commCards.filter(function(c){ return c != null; });
   if (S.myCards[0] == null || S.myCards[1] == null || validComm.length === 0) { _hsHide(el); return; }
   // Normaliser les hole cards (1-indexed) vers l'encodage canonique (0-indexed)
@@ -336,7 +367,7 @@ function renderOddsMonitor() {
   }, function () { return seq !== window._oddsSeq; });
 }
 
-export { calcWinProb, calcWinProbAsync, _hsPanelIsLight, _hsContrastCol, _hsSet, _hsHide,
+export { calcWinProb, calcWinProbAsync, _assistRankingBlocked, _hsPanelIsLight, _hsContrastCol, _hsSet, _hsHide,
          _gipAssistSync, renderPreFlopStrength, renderHandStrength,
          renderOddsMonitor };
 

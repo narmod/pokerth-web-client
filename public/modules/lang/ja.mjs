@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "ランキング卓ではオフ：全員が同じ情報でプレイします。",
     waitingHintRanked: "テーブルが満席になると自動的にゲームが始まります",
     rankWaitFull: "ランキングゲーム — {max}人のプレイヤーを待っています（{n}/{max}）。テーブルが満席になるとゲームが始まります。",
     // Mascotte animée (modules/mascot, extra web)

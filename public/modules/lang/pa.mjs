@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "ਰੈਂਕਡ ਟੇਬਲਾਂ ਉੱਤੇ ਬੰਦ: ਸਾਰੇ ਇੱਕੋ ਜਾਣਕਾਰੀ ਨਾਲ ਖੇਡਦੇ ਹਨ।",
     waitingHintRanked: "ਟੇਬਲ ਭਰਦੇ ਹੀ ਖੇਡ ਆਪਣੇ-ਆਪ ਸ਼ੁਰੂ ਹੋ ਜਾਵੇਗੀ",
     rankWaitFull: "ਰੈਂਕਿੰਗ ਖੇਡ — {max} ਖਿਡਾਰੀਆਂ ਦੀ ਉਡੀਕ ({n}/{max})। ਟੇਬਲ ਭਰਨ 'ਤੇ ਖੇਡ ਸ਼ੁਰੂ ਹੋਵੇਗੀ।",
     // Mascotte animée (modules/mascot, extra web)

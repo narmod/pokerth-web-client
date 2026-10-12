@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Išjungta prie reitingo stalų: visi žaidžia su ta pačia informacija.",
     waitingHintRanked: "Žaidimas prasidės automatiškai, kai tik stalas bus pilnas",
     rankWaitFull: "Reitinguojamas žaidimas — laukiama {max} žaidėjų ({n}/{max}). Žaidimas prasidės, kai stalas bus pilnas.",
     // Mascotte animée (modules/mascot, extra web)

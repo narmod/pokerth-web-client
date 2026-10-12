@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    assistRankingOff: "Disattivata ai tavoli di classifica: tutti giocano con le stesse informazioni.",
     waitingHintRanked: "La partita inizierà automaticamente appena il tavolo sarà completo",
     rankWaitFull: "Partita valida per la classifica — in attesa di {max} giocatori ({n}/{max}). La partita inizierà quando il tavolo sarà completo.",
     // Mascotte animée (modules/mascot, extra web)
