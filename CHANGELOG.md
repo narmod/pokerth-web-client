@@ -58,6 +58,16 @@ highlights below.
   button does not open (`web.24`).
 
 ### Added
+- **« Last 24 hours » in the admin traffic period selector** — true sliding 24 hours on every
+  view of the Traffic tab, not the calendar day: the proxy now also keeps an hourly cell per hour
+  in the day bucket (`hc[h]`, same fields as the day: visits, hashed ids, new / returning,
+  sessions per mode, /live, systems, browsers, languages, sources, music plays, Ace's Help, world
+  map), kept three days (the previous 24 hours are the comparison) then pruned. `/admin/visits
+  ?hours=24` builds the usual summary from those cells: 24 hourly points, the tile against the
+  previous 24 hours, « Who visits », sources, music, Ace's Help, language trend (last 24 h vs the
+  24 before), time of day and the pokerth.net share by hour. Cohorts, measured in whole days, are
+  not shown at 24 hours; no view falls back to all-time totals there. Hour-by-hour figures are
+  complete one day after the proxy restarts (`web.29`).
 - **A world map in the admin traffic stats (Traffic › World)** — visits and sessions by country,
   as a choropleth (log scale) with a filter by entry mode (all visits, Internet, Training, LAN,
   /live), region views (World, Europe, Americas, Asia, Africa), a country card (sessions per mode,
@@ -65,8 +75,8 @@ highlights below.
   common period selector. The country comes from the browser time zone sent with the anonymous
   `/__visit` ping (`tz`), mapped by a closed table (`server/geo-stats.js`; unknown zones → `ZZ`):
   no IP address is read and no GeoIP database is shipped. Only per-country totals are kept — per
-  day in the visit bucket (`geo`), and per hour for yesterday and today (`geoH`), for a sliding
-  24 h view (`/admin/geo?hours=24`). Pings without `tz` (older clients) are left out of the map.
+  day in the visit bucket (`geo`), and per hour for a sliding 24 h view (`/admin/geo?hours=24`;
+  in the hourly cells `hc[h].geo` since `web.29`). Pings without `tz` (older clients) are left out of the map.
   The map is a pre-projected SVG path set (`public/vendor/world-110m.json`, Natural Earth 1:110m
   via world-atlas, ISC), not precached: admin only. The privacy notice says it, in every language
   (`pvSrv1`, `privacy.html`) (`web.28`).

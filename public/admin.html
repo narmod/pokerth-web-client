@@ -507,7 +507,7 @@
 
     <div id="panel-traffic" style="display:none">
       <div class="card trafhead">
-        <div class="boardhead"><h2>Traffic</h2><span id="trafRange" class="headnote"></span><select id="trafPeriod" class="use" title="Period applied to every chart and breakdown on this tab (Today, Last 7 days and All time stay as they are)"><option value="7">Last 7 days</option><option value="14" selected>Last 14 days</option><option value="30">Last 30 days</option><option value="60">Last 60 days</option><option value="90">Last 90 days</option></select><button id="btnTrafRefresh" class="use">Refresh</button><button id="trafXpl" class="use" aria-pressed="false" title="Show or hide the explanations under each section">Explanations</button></div>
+        <div class="boardhead"><h2>Traffic</h2><span id="trafRange" class="headnote"></span><select id="trafPeriod" class="use" title="Period applied to every chart and breakdown on this tab (Today, Last 7 days and All time stay as they are)"><option value="1">Last 24 hours</option><option value="7">Last 7 days</option><option value="14" selected>Last 14 days</option><option value="30">Last 30 days</option><option value="60">Last 60 days</option><option value="90">Last 90 days</option></select><button id="btnTrafRefresh" class="use">Refresh</button><button id="trafXpl" class="use" aria-pressed="false" title="Show or hide the explanations under each section">Explanations</button></div>
         <p class="muted xpl">Anonymous footfall — no IP is ever stored. “Visits” counts browser sessions; “Unique” counts distinct devices; “New” counts devices seen for the first time. Green or red marks a move of 10&nbsp;% or more against the previous period (today is compared with yesterday up to the same hour); gold means flat or nothing to compare. Everything on this tab reads the same anonymous ping; nothing here identifies a person.</p>
         <div class="trafsub" id="trafSub" role="tablist" aria-label="Traffic sections"><button type="button" role="tab" data-ts="overview" aria-selected="true" class="on">Overview</button><button type="button" role="tab" data-ts="audience" aria-selected="false" tabindex="-1">Audience</button><button type="button" role="tab" data-ts="activity" aria-selected="false" tabindex="-1">Activity</button><button type="button" role="tab" data-ts="visitors" aria-selected="false" tabindex="-1">Visitors</button><button type="button" role="tab" data-ts="music" aria-selected="false" tabindex="-1">Music</button><button type="button" role="tab" data-ts="ace" aria-selected="false" tabindex="-1">Ace’s Help</button><button type="button" role="tab" data-ts="world" aria-selected="false" tabindex="-1">World</button><button type="button" role="tab" data-ts="data" aria-selected="false" tabindex="-1">Data</button></div>
       </div>
@@ -2474,9 +2474,17 @@
   // Periode du tableau de bord : un seul nombre de jours pour tout l'onglet,
   // memorise dans le navigateur comme le theme. 14 par defaut : c'est la
   // fenetre que les graphes ont toujours eue.
-  var TRAF_PERIODS=[7,14,30,60,90], _trafPeriod=14;
+  var TRAF_PERIODS=[1,7,14,30,60,90], _trafPeriod=14;
   try{ var _pp=parseInt(localStorage.getItem('pth_admin_period')||'',10); if(TRAF_PERIODS.indexOf(_pp)>=0) _trafPeriod=_pp; }catch(e){}
-  function _perLabel(n){ return 'last '+n+' days'; }
+  function _perLabel(n){ return n===1 ? 'last 24 hours' : 'last '+n+' days'; }
+  // « Last 24 hours » (valeur 1) : le proxy rend 24 cases horaires glissantes
+  // au lieu de jours (/admin/visits?hours=24) ; l'unite de chaque libelle suit.
+  function _perU(){ return _trafPeriod===1 ? {one:'hour',many:'hours',full:24} : {one:'day',many:'days',full:_trafPeriod}; }
+  function _perCounted(n){ var u=_perU(); return n<u.full ? (' \u2014 '+n+' '+(n===1?u.one:u.many)+' counted') : ''; }
+  function _perQuery(){ return _trafPeriod===1 ? 'hours=24' : 'days='+_trafPeriod; }
+  // Etiquette courte d'un point de serie : « MM-JJ » pour un jour, « HHh » pour une heure.
+  function _sLab(x){ var t=(x&&x.date)||''; return t.length>10 ? t.slice(11)+'h' : t.slice(5); }
+  function _sFull(x){ var t=(x&&x.date)||''; return t.length>10 ? t.slice(0,10)+' '+t.slice(11)+':00' : t; }
   function _paintPeriod(){
     var sel=$('trafPeriod'); if(sel) sel.value=String(_trafPeriod);
     document.querySelectorAll('.perN').forEach(function(el){ el.textContent=_perLabel(_trafPeriod); });
@@ -2991,7 +2999,7 @@
     var top=keys.slice(0,6), restK=keys.slice(6);
     var max=1;
     s.forEach(function(x){ var t=0; if(x.lg) for(var k in x.lg) t+=x.lg[k]||0; if(t>max) max=t; });
-    var llabs=s.map(function(x){ return (x.date||'').slice(5); });
+    var llabs=s.map(_sLab);
     var lls=top.map(function(k){
       return {key:k,k:_envLabel(k),c:_envColorOf('lang',k),vals:s.map(function(x){ return (x.lg&&x.lg[k])||0; })};
     });
@@ -3015,7 +3023,7 @@
       })});
     }
     _envLangLines=lls; _envLangLabs=llabs;
-    return '<div class="muted" style="margin:14px 0 4px">Languages per day \u2014 '+_perLabel(_trafPeriod)+'</div>'
+    return '<div class="muted" style="margin:14px 0 4px">Languages per '+_perU().one+' \u2014 '+_perLabel(_trafPeriod)+'</div>'
          + '<div class="linechart" id="envLangChart"></div>';
   }
   // Un titre retiré du catalogue garde ses lectures : on retombe alors sur son
@@ -3043,6 +3051,7 @@
   // moins) ; sous sept jours par moitie, pas de fleche.
   var MUS_TREND_MIN=7, _musTr=null;
   function _musTrendWin(){
+    if(_trafPeriod===1) return {w:0,full:0,ok:false,h24:true};
     var s=_musDays(), today=s.length?s[s.length-1].date:'';
     var d=new Date(), tk=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
     if(today===tk) s=s.slice(0,-1);
@@ -3059,7 +3068,7 @@
   }
   function _musTrendBadge(k){
     var t=_musTr; if(!t) return '';
-    if(!t.ok) return '<span class="trend na" title="Not enough history: '+t.full+' full days counted in this period, '+(2*MUS_TREND_MIN)+' needed (pick a longer period)">\u00b7</span>';
+    if(!t.ok) return '<span class="trend na" title="'+(t.h24?'Trends compare whole days \u2014 pick a period of 14 days or more':'Not enough history: '+t.full+' full days counted in this period, '+(2*MUS_TREND_MIN)+' needed (pick a longer period)')+'">\u00b7</span>';
     var a=t.cur[k]||0, b=t.prev[k]||0;
     var st=_langTrendStat(a,t.curN,b,t.prevN);
     if(!st) return '<span class="trend na" title="Too few plays to tell ('+(a+b)+' over '+(2*t.w)+' days)">\u00b7</span>';
@@ -3117,7 +3126,7 @@
     days.forEach(function(x){ var mu=x.mu||{}; for(var k in mu) pl+=mu[k]||0; vis+=x.v||0; });
     var per=vis? pl*100/vis : 0;
     return '<div class="envhi"><b>'+total+'</b> play'+(total>1?'s':'')+' across <b>'+keys.length+'</b> title'+(keys.length>1?'s':'')
-      +' \u2014 <b>'+_round1(pl/days.length)+'</b> plays/day over '+days.length+' day'+(days.length>1?'s':'')
+      +' \u2014 <b>'+_round1(pl/days.length)+'</b> plays/'+_perU().one+' over '+days.length+' '+(days.length>1?_perU().many:_perU().one)
       +(vis?', <b>'+(per<10?per.toFixed(1):Math.round(per))+'</b> plays per 100 visits':'')+'.</div>';
   }
   function _musChart(keys){
@@ -3126,7 +3135,7 @@
     s.forEach(function(x){ if(x.mu&&Object.keys(x.mu).length) has=true; });
     if(!has) return '<div class="muted" style="margin-top:12px">Per-day history starts with this proxy version \u2014 the chart fills in as days pass.</div>';
     var top=keys.slice(0,MUS_STACK), restK=keys.slice(MUS_STACK);
-    var labs=s.map(function(x){ return (x.date||'').slice(5); });
+    var labs=s.map(_sLab);
     var lls=top.map(function(k,i){
       return {k:_musName(k),c:ENV_COLORS[i],vals:s.map(function(x){ return (x.mu&&x.mu[k])||0; })};
     });
@@ -3152,7 +3161,7 @@
   function renderGuide(){
     var box=$('trafGuide'); if(!box) return;
     var since=$('guideSince');
-    if(since) since.textContent=_guidePeriodDays?(_perLabel(_trafPeriod)+(_guidePeriodDays<_trafPeriod?(' \u2014 '+_guidePeriodDays+' days counted'):'')):(_guideSince?('all time since '+new Date(_guideSince).toLocaleDateString()):'');
+    if(since) since.textContent=(_guidePeriodDays||_trafPeriod===1)?(_perLabel(_trafPeriod)+_perCounted(_guidePeriodDays)):(_guideSince?('all time since '+new Date(_guideSince).toLocaleDateString()):'');
     var g=_guideData;
     var any=g&&(g.acceptance.offered||g.acceptance.accepted||g.funnel.highlighted||Object.keys(g.contexts||{}).some(function(k){ var c=g.contexts[k]; return c.shown||c.done||c.dismissed||c.banner; }));
     if(!any){
@@ -3204,7 +3213,7 @@
   function renderSrc(){
     var box=$('trafSrc'); if(!box) return;
     var since=$('srcSince'), p=_srcData;
-    if(since) since.textContent=(p&&p.days)?(_perLabel(_trafPeriod)+(p.days<_trafPeriod?(' \u2014 '+p.days+' days counted'):'')):'';
+    if(since) since.textContent=(p&&(p.days||_trafPeriod===1))?(_perLabel(_trafPeriod)+_perCounted(p.days)):'';
     var all=(p&&p.all)||{}, keys=Object.keys(all).sort(function(a,b){ return (all[b]||0)-(all[a]||0); });
     var total=0; keys.forEach(function(k){ total+=all[k]||0; });
     if(!total){
@@ -3228,7 +3237,7 @@
   function renderMusic(){
     var box=$('trafMusic'); if(!box) return;
     var since=$('musSince');
-    if(since) since.textContent=_musPeriodDays?(_perLabel(_trafPeriod)+(_musPeriodDays<_trafPeriod?(' \u2014 '+_musPeriodDays+' days counted'):'')):(_musSince?('all time since '+new Date(_musSince).toLocaleDateString()):'');
+    if(since) since.textContent=(_musPeriodDays||_trafPeriod===1)?(_perLabel(_trafPeriod)+_perCounted(_musPeriodDays)):(_musSince?('all time since '+new Date(_musSince).toLocaleDateString()):'');
     var keys=Object.keys(_musData).sort(function(a,b){ return (_musData[b]||0)-(_musData[a]||0); });
     var total=0; keys.forEach(function(k){ total+=_musData[k]||0; });
     if(!total){
@@ -3268,19 +3277,19 @@
   }
   function _envTrendBadge(key){
     if(_envView!=='lang' || !key || !_envTrend) return '';
-    var t=_envTrend, w=t.win||14;
+    var t=_envTrend, w=t.win||14, wu=t.h24?'hours':'full days';
     if((t.curDays||0)<w || (t.prevDays||0)<w){
-      return '<span class="trend na" title="Not enough history yet: '+((t.curDays||0)+(t.prevDays||0))+' of '+(2*w)+' full days recorded">\u00b7</span>';
+      return '<span class="trend na" title="Not enough history yet: '+((t.curDays||0)+(t.prevDays||0))+' of '+(2*w)+' '+wu+' recorded">\u00b7</span>';
     }
     var a=(t.cur&&t.cur[key])||0, b=(t.prev&&t.prev[key])||0;
     var oc=(t.cur&&t.cur.other)||0, op=(t.prev&&t.prev.other)||0;
     var T1=key==='other'? t.curN : t.curN-oc, T2=key==='other'? t.prevN : t.prevN-op;
     var s=_langTrendStat(a,T1,b,T2);
-    if(!s) return '<span class="trend na" title="Too few pings to tell ('+(a+b)+' over '+(2*w)+' days)">\u00b7</span>';
+    if(!s) return '<span class="trend na" title="Too few pings to tell ('+(a+b)+' over '+(2*w)+' '+(t.h24?'hours':'days')+')">\u00b7</span>';
     var pc=function(p){ return (p*100).toFixed(p<0.01?2:1)+'%'; };
     var rel=isFinite(s.rel)? (s.rel>=0?'+':'\u2212')+Math.round(Math.abs(s.rel)*100)+'%' : 'new';
     var arrow=s.dir==='up'?'\u2197':s.dir==='down'?'\u2198':'\u2192';
-    var tip='Share of pings: '+pc(s.p2)+' \u2192 '+pc(s.p1)+' ('+b+' \u2192 '+a+' pings), last '+w+' full days vs the '+w+' before'
+    var tip='Share of pings: '+pc(s.p2)+' \u2192 '+pc(s.p1)+' ('+b+' \u2192 '+a+' pings), last '+w+' '+wu+' vs the '+w+' before'
           +(s.dir==='flat'?' \u2014 within noise ('+s.z.toFixed(1)+'\u03c3)':' \u2014 significant ('+s.z.toFixed(1)+'\u03c3)');
     return '<span class="trend '+s.dir+'" title="'+tip+'">'+arrow+(s.dir==='flat'?'':' '+rel)+'</span>';
   }
@@ -3295,12 +3304,15 @@
     for(k in all) out[k]=all[k];
     _envSrc={};
     if(!per) return out;
-    ['os','br','combo','pwa'].forEach(function(v){ if(per.days>0){ out[v]=per[v]||{}; _envSrc[v]='period'; } });
-    if(per.lgDays>0){ out.lang=per.lang||{}; _envSrc.lang='period'; }
-    if(per.lgnDays>0){ out.langNew=per.langNew||{}; out.langRet=per.langRet||{}; _envSrc.langNew='period'; }
+    // « Last 24 hours » : jamais de repli sur le cumul depuis toujours, qui se
+    // lirait comme les 24 dernieres heures ; une fenetre vide reste vide.
+    var h=(_trafPeriod===1);
+    ['os','br','combo','pwa'].forEach(function(v){ if(per.days>0||h){ out[v]=per[v]||{}; _envSrc[v]='period'; } });
+    if(per.lgDays>0||h){ out.lang=per.lang||{}; _envSrc.lang='period'; }
+    if(per.lgnDays>0||h){ out.langNew=per.langNew||{}; out.langRet=per.langRet||{}; _envSrc.langNew='period'; }
     // Diagnostic de langue (proxy 2.1.9-web.299+) : la periode des qu'un jour
     // le porte, sinon le cumul (qui ne commence lui aussi qu'a cette version).
-    if(per.ldDays>0){
+    if(per.ldDays>0||h){
       ['langLocale','otherRaw','otherRawNew','otherRawRet','otherRawBot','otherRawClean','otherCombo','bot'].forEach(function(k){ out[k]=per[k]||{}; });
       _envSrc.ld='period';
     }
@@ -3310,8 +3322,8 @@
     var v=_envView, P=_trafPeriod;
     if(!_envPeriod) return _envSince?('since '+new Date(_envSince).toLocaleDateString()):'';
     if(_envSrc[v]!=='period') return 'running totals'+(_envSince?(' since '+new Date(_envSince).toLocaleDateString()):'')+' \u2014 per-day history for this view starts with this proxy version';
-    var have=v==='lang'?_envPeriod.lgDays:_envPeriod.days;
-    return _perLabel(P)+(have<P?(' \u2014 per-day history covers '+have+' of '+P+' days'):'');
+    var have=v==='lang'?_envPeriod.lgDays:_envPeriod.days, U=_perU();
+    return _perLabel(P)+(have<U.full?(' \u2014 per-'+U.one+' history covers '+have+' of '+U.full+' '+U.many):'');
   }
   function _envNewRetBadge(key){
     if(_envView!=='lang' || !key) return '';
@@ -3389,7 +3401,7 @@
     _paintNoCount();
     loadDbConfig();
     loadGeo();
-    api('/admin/visits?days='+_trafPeriod).then(function(r){return r.json();}).then(function(d){
+    api('/admin/visits?'+_perQuery()).then(function(r){return r.json();}).then(function(d){
       var g=$('trafCards');
       if(!d || !d.ok){ if(g) g.innerHTML='<div class="empty err">'+((d&&d.error)||'error')+'</div>'; return; }
       function fmt(n){ try{return Number(n||0).toLocaleString();}catch(e){return String(n||0);} }
@@ -3418,15 +3430,16 @@
       // avec « Last 7 days », on y met alors les 30 jours d'avant.
       var P=d.periodDays||_trafPeriod, per=d.period, perPrev=pv.period;
       if(P===7||!per){ P=30; per=d.month; perPrev=pv.month; }
+      var pLbl=(d.h24&&P===1)?'Last 24 hours':'Last '+P+' days', pRef=(d.h24&&P===1)?'previous 24 hours':'previous '+P+' days';
       if(g) g.innerHTML = tile('Today',d.today,pv.todayToHour,'yesterday at this hour')
         +tile('Last 7 days',d.week,pv.week,'previous 7 days')
-        +tile('Last '+P+' days',per,perPrev,'previous '+P+' days')
+        +tile(pLbl,per,perPrev,pRef)
         +tile('All time',d.allTime);
       var c=$('trafChart'), s=(d.series||[]), max=1;
       _trafSeries=s;
       s.forEach(function(x){ if((x.v||0)>max) max=x.v; });
       if(c){
-        var labs=s.map(function(x){ return (x.date||'').slice(5); });
+        var labs=s.map(_sLab);
         // Quatre courbes sur la meme fenetre : le detail nouveaux/recurrents se
         // lit contre le total, au lieu de vivre dans un second graphe. Le champ
         // nw manque si le proxy tourne encore sur une version anterieure.
@@ -3452,7 +3465,7 @@
       var lvx=$('trafLive');
       if(lvx){
         var lrows=[['Today',d.today],['Last 7 days',d.week],['Last 30 days',d.month]];
-        if(d.period && d.periodDays && d.periodDays!==7 && d.periodDays!==30) lrows.push(['Last '+d.periodDays+' days',d.period]);
+        if(d.period && d.periodDays && d.periodDays!==7 && d.periodDays!==30) lrows.push([d.h24?'Last 24 hours':'Last '+d.periodDays+' days',d.period]);
         lrows.push(['All time',d.allTime]);
         // « connected » = the /live sessions of « Where sessions open » (o.m.live,
         // counted on ws.onopen), beside the visits (counted on page load) of
@@ -3475,8 +3488,8 @@
       // à compter encore. Voir renderEnv().
       _envKnown=(d.env!==undefined); _envData=_envPick(d.env||{}, d.envPeriod||null); _envTrend=d.langTrend||null; _envPeriod=d.envPeriod||null; _envColorReset(); _envSince=d.envSince||0; _envPings=d.pings||null;
       _envLangsKnown=Array.isArray(d.langs); _envLangs=_envLangsKnown?d.langs:[]; _envLangN=d.langN||0; _envLangDiagSince=d.langDiagSince||0; renderEnv();
-      _musKnown=(d.music!==undefined); _musPeriodDays=(d.musicPeriod&&d.musicPeriod.days)||0; _musData=_musPeriodDays?(d.musicPeriod.plays||{}):(d.music||{}); _musTitles=d.musicTitles||{}; _musSince=d.musicSince||0; _musVotesKnown=(d.musicVotes!==undefined); _musVotes=d.musicVotes||{}; _musVoteTitles=d.musicVoteTitles||{}; _musVotesSince=d.musicVotesSince||0; renderMusic();
-      _guideKnown=(d.guide!==undefined); _guidePeriodDays=(d.guidePeriod&&d.guidePeriod.days)||0; _guideData=_guidePeriodDays?(d.guidePeriod.summary||null):(d.guide||null); _guideSince=d.guideSince||0; renderGuide();
+      _musKnown=(d.music!==undefined); _musPeriodDays=(d.musicPeriod&&d.musicPeriod.days)||0; _musData=(_musPeriodDays||(d.h24&&d.musicPeriod))?(d.musicPeriod.plays||{}):(d.music||{}); _musTitles=d.musicTitles||{}; _musSince=d.musicSince||0; _musVotesKnown=(d.musicVotes!==undefined); _musVotes=d.musicVotes||{}; _musVoteTitles=d.musicVoteTitles||{}; _musVotesSince=d.musicVotesSince||0; renderMusic();
+      _guideKnown=(d.guide!==undefined); _guidePeriodDays=(d.guidePeriod&&d.guidePeriod.days)||0; _guideData=(_guidePeriodDays||(d.h24&&d.guidePeriod))?(d.guidePeriod.summary||null):(d.guide||null); _guideSince=d.guideSince||0; renderGuide();
       _srcKnown=(d.srcPeriod!==undefined); _srcData=d.srcPeriod||null; _srcSince=d.refSince||0; renderSrc();
       var dbx=$('trafDb');
       if(dbx){
@@ -3554,7 +3567,7 @@
     }
     box.innerHTML='<h3>Players online \u2014 last 48 h (hourly mean)</h3><div id="trafPth48"></div>'
       +'<h3>Web client share \u2014 last 48 h</h3><div id="trafPthShare"></div>'
-      +'<h3>Web client share by day</h3><div id="trafPthDays"></div>';
+      +'<h3>Web client share by '+(p.h24?'hour \u2014 last 24 h':'day')+'</h3><div id="trafPthDays"></div>';
     var labs=h48.map(function(x){ return x.t.slice(8,10)+'.'+x.t.slice(5,7)+' '+x.t.slice(11)+'h'; });
     _chartMount($('trafPth48'),labs,[
       {k:'on',n:'pokerth.net online',c:'#9aa7bd',vals:h48.map(function(x){ return x.on; })},
@@ -3565,7 +3578,7 @@
     _chartMount($('trafPthShare'),labs,[{k:'share',n:'Web client share',c:'#4080d8',fmt:pf,
       vals:h48.map(function(x){ return _pthPct(x.wb,x.on); })}],150,'bar',
       { c:'#4080d8', colFn:function(v,i){ return i===h48.length-1 ? '#2c5896' : '#4080d8'; } });
-    var dl=days.map(function(x){ return x.date; });
+    var dl=days.map(function(x){ return p.h24 ? _sLab(x) : x.date; });
     _chartMount($('trafPthDays'),dl,[
       {k:'share',n:'Web client share',c:'#4080d8',fmt:pf,vals:days.map(function(x){ return _pthPct(x.wb,x.on); })},
       {k:'peak',n:'Share at peak',c:'#e0b050',fmt:pf,vals:days.map(function(x){ return _pthPct(x.wbX,x.onX); })},
@@ -3627,7 +3640,7 @@
     var idx=prof.v.map(function(v,i){ return (v && N && V) ? Math.round(((prof.nw[i]/N)/(v/V))*100)/100 : 0; });
     var wrapHi=(lowAt+4<=24)? {from:lowAt,to:lowAt+3} : null;
     box.innerHTML=
-      '<div><h3>Visits per hour (daily mean)</h3><div id="trafHoursV"></div></div>'
+      '<div><h3>Visits per hour '+(d.h24?'(last 24 hours)':'(daily mean)')+'</h3><div id="trafHoursV"></div></div>'
       +'<div><h3>New-device share vs traffic (1.0 = proportional)</h3><div id="trafHoursN"></div></div>';
     var hlabs=labs.map(function(h){ return h+':00'; });
     _chartMount($('trafHoursV'),hlabs,[{k:'perh',n:'Visits / day',c:'#4080d8',vals:perH}],150,'bar',
@@ -3641,7 +3654,7 @@
     var lowIdx=(lowIdxV && N && V)? ((lowIdxN/N)/(lowIdxV/V)) : 0;
     if(nh) nh.textContent='quietest stretch '+lowLbl+' \u2014 '+lowShare+'% of all visits'
       +(lowIdx?(', first-time share '+(Math.round(lowIdx*100)/100)+'x proportional'):'')
-      +' \u00b7 '+_round1(days)+' days of data';
+      +' \u00b7 '+(d.h24?'last 24 hours':_round1(days)+' days of data');
     if(lowIdx>1.15) return 'The quietest stretch is <b>'+lowLbl+'</b> \u2014 only <span class="nu">'+lowShare
       +'%</span> of visits land there, yet first-time devices arrive <span class="nu">'+(Math.round(lowIdx*100)/100)
       +'x</span> more often than the traffic would suggest: newcomers meeting an empty lobby.';
@@ -3658,6 +3671,11 @@
     var box=$('trafRet'), nt=$('trafRetNote');
     _retVerdict=false;
     if(!box) return '';
+    if(d.h24){
+      box.innerHTML='<div class="empty">Return rates are measured over whole days \u2014 pick a period of 7 days or more to see them.</div>';
+      if(nt) nt.textContent='';
+      return '';
+    }
     if(d.cohorts===undefined){
       box.innerHTML='<div class="empty">Return rates need a proxy restart \u2014 this build records when a device is first seen, the running one does not.</div>';
       if(nt) nt.textContent='';
@@ -3706,7 +3724,7 @@
     function pct(a,b){ return b? Math.round((a/b)*100) : 0; }
     var n=s.length;
     var rg=$('trafRange');
-    if(rg) rg.textContent = n ? (s[0].date+' \u2192 '+s[n-1].date+' \u00b7 '+fmt(d.allTime&&d.allTime.v)+' visits all time') : '';
+    if(rg) rg.textContent = n ? (_sFull(s[0])+' \u2192 '+_sFull(s[n-1])+' \u00b7 '+fmt(d.allTime&&d.allTime.v)+' visits all time') : '';
     // Les vues horaires ne dependent pas de la serie quotidienne : elles sont
     // rendues meme si celle-ci est vide, sinon elles resteraient sur « Loading ».
     var hourLine=_trafHours(d);
@@ -3717,7 +3735,9 @@
     var vv=s.map(function(x){ return x.v||0; });
     var nwv=s.map(function(x){ return x.nw||0; });
     var rtv=s.map(function(x){ return x.rt||0; });
-    var reg=_linreg(vv), week=reg.a*7;
+    // Serie horaire (« Last 24 hours ») : moyennes par heure, pente par heure.
+    var U=d.h24?{one:'hour',many:'hours',slope:1,per:'/hour',noise:'hour-to-hour'}:{one:'day',many:'days',slope:7,per:'/week',noise:'day-to-day'};
+    var reg=_linreg(vv), week=reg.a*U.slope;
     var half=Math.floor(n/2);
     var firstH=_mean(vv.slice(0,half)), lastH=_mean(vv.slice(half));
     var month=d.month||{}, all=d.allTime||{};
@@ -3735,20 +3755,20 @@
       var rtT = !(rtF>0) ? '' : (rtL/rtF>=1.10?'up':(rtL/rtF<=0.90?'dn':''));
       var trendTxt = dir==='flat'
         ? 'no clear direction (r='+(Math.round(Math.abs(reg.r)*100)/100)+')'
-        : (week>0?'+':'\u2212')+_round1(Math.abs(week))+'/week (r='+(Math.round(Math.abs(reg.r)*100)/100)+')';
+        : (week>0?'+':'\u2212')+_round1(Math.abs(week))+U.per+' (r='+(Math.round(Math.abs(reg.r)*100)/100)+')';
       k.innerHTML =
-        tile('Visits / day', _round1(_mean(vv)), 'mean over '+n+' days \u00b7 '+trendTxt, dir==='flat'?'':dir)
+        tile('Visits / '+U.one, _round1(_mean(vv)), 'mean over '+n+' '+U.many+' \u00b7 '+trendTxt, dir==='flat'?'':dir)
        +tile('Unique devices / 30 d', fmt(month.u), (all.u? pct(month.u,all.u):0)+'% of the '+fmt(all.u)+' ever seen')
        +tile('New share / 30 d', (idSess? pct(month.nw,idSess):0)+'%', fmt(month.nw)+' new of '+fmt(idSess)+' identified sessions')
-       +tile('Returning / day', _round1(_mean(rtv)), 'first half '+_round1(rtF)+' \u2192 second half '+_round1(rtL), rtT);
+       +tile('Returning / '+U.one, _round1(_mean(rtv)), 'first half '+_round1(rtF)+' \u2192 second half '+_round1(rtL), rtT);
     }
     var tn=$('trafTrendNote');
     if(tn) tn.textContent = (dir==='flat'?'flat':(dir==='up'?'rising':'falling'))
-      +' \u2014 r='+(Math.round(Math.abs(reg.r)*100)/100)+' against day-to-day noise (sd '+_round1(reg.sd)+')';
+      +' \u2014 r='+(Math.round(Math.abs(reg.r)*100)/100)+' against '+U.noise+' noise (sd '+_round1(reg.sd)+')';
     var nb=$('trafNew');
     if(nb){
       _chartMount(nb,s.map(function(x){ return x.date||''; }),[{k:'new',n:'New devices',c:'#e0a03a',vals:nwv}],170,'bar',
-        { c:'#e0a03a', xl:s.map(function(x){ return (x.date||'').slice(5); }), segs:[{from:0,to:half-1},{from:half,to:n-1}] });
+        { c:'#e0a03a', xl:s.map(_sLab), segs:[{from:0,to:half-1},{from:half,to:n-1}] });
     }
     var nn=$('trafNewNote');
     if(nn){
@@ -3761,8 +3781,8 @@
       var m=(all.m)||{}, tot=(m.pokerthnet||0)+(m.lan||0)+(m.offline||0);
       var lines=[];
       lines.push('Footfall is <b>'+(dir==='flat'?'holding steady':(dir==='up'?'rising':'slipping'))+'</b> \u2014 '
-        +'<span class="nu">'+_round1(firstH)+'</span> \u2192 <span class="nu">'+_round1(lastH)+'</span> visits/day between the two halves of the window'
-        +(solid?'':', though the day-to-day spread (sd '+_round1(reg.sd)+') is wide enough that the slope may be noise')+'.');
+        +'<span class="nu">'+_round1(firstH)+'</span> \u2192 <span class="nu">'+_round1(lastH)+'</span> visits/'+U.one+' between the two halves of the window'
+        +(solid?'':', though the '+U.noise+' spread (sd '+_round1(reg.sd)+') is wide enough that the slope may be noise')+'.');
       // Le verdict « acquisition ou retention » n'est enonce ici que faute de
       // mieux : un rapport de volumes recurrents/nouveaux le suggere, une vraie
       // mesure de retour le sait. Des que les cohortes existent, la phrase leur
@@ -5143,7 +5163,7 @@
   function _geoFmt(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
   function _geoPct(a,b){ return b?Math.round(100*a/b):0; }
   function loadGeo(){
-    var seq=++_geoSeq, q=(_trafPeriod===1)?'hours=24':('days='+_trafPeriod);
+    var seq=++_geoSeq, q=_perQuery();
     var mp=_geoMap?Promise.resolve(_geoMap):fetch('/vendor/world-110m.json').then(function(r){ return r.json(); }).then(function(j){ _geoMap=j; return j; });
     Promise.all([mp, api('/admin/geo?'+q).then(function(r){ return r.json(); })]).then(function(a){
       if(seq!==_geoSeq) return;

@@ -94,7 +94,7 @@ try {
   await new Promise((r) => setTimeout(r, 2200));   // saveVisitsSoon (1.5 s)
   const v = JSON.parse(fs.readFileSync(VISITS, 'utf8'));
   const day = Object.values(v.days || {})[0] || {};
-  ok(day.geo && day.geo.FR?.v === 3 && day.geoH && Object.keys(day.geoH).length === 1, 'stored per day and per hour in visits.json');
+  ok(day.geo && day.geo.FR?.v === 3 && day.hc && Object.keys(day.hc).length === 1 && Object.values(day.hc)[0].geo?.FR?.v === 3 && !day.geoH, 'stored per day and in the hourly cell (hc[h].geo) in visits.json');
   ok(v.geoSince > 0 && day.v === 6, 'traffic counter unchanged: the tz-less ping still counts as a visit');
 } finally {
   proxy.kill('SIGTERM');

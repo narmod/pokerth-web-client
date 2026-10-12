@@ -39,7 +39,7 @@ ok(/m !== 'pthnet' \|\| !S\.connected/.test(census), 'a bridge counts only on po
 ok(/!c\._notify \|\| c\.readyState !== 1 \|\| c\._bcMode !== 'pthnet'/.test(census), 'a direct player counts through its notify channel, training excluded');
 ok(/if \(S\.live\) lv\+\+; else wb\+\+;/.test(census) && /if \(c\._live\) lv\+\+; else wb\+\+;/.test(census),
   '/live spectators are counted apart on both paths');
-ok(/pth: pthShareSummary\(P\)/.test(src), 'the admin summary carries it, over the dashboard period');
+ok(/pth: pthShareSummary\(P, h24\)/.test(src), 'the admin summary carries it, over the dashboard period (hour by hour for the last 24 hours)');
 ok(/visitsStore\.pthSince = \(typeof _vs\.pthSince === 'number'\)/.test(src), 'its start date survives a restart');
 ok(/pthSince: 0,/.test(fn('emptyVisitsStore')), 'and a full reset clears it');
 ok(!/chatNick|nick/.test(fn('recordPthSample')), 'no nickname is stored, only counts');

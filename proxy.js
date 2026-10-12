@@ -6762,6 +6762,56 @@ function pruneVisitIds() {
   for (const h in allL) if (!seenLive[h]) { delete allL[h]; n++; }
   return n;
 }
+// ── Cases horaires : le filtre « Last 24 hours » de l'admin ──────────────
+// Une case par heure dans le seau du jour, `hc[heure]` : un mini-seau aux MEMES
+// champs que le seau quotidien (v, ids, nw, rt, m, lv, lids, lg, ev, ld, lgn,
+// lgr, mu, gd, sr, srn, srl, geo). Les constructeurs de periode les lisent donc
+// comme des jours, et « 24 h » veut dire 24 vraies heures glissantes partout.
+// Gardees trois jours seulement (aujourd'hui, hier, avant-hier : les 24 heures
+// PRECEDENTES en ont besoin pour la comparaison), puis retirees du seau — les
+// identifiants haches n'y vivent donc jamais plus longtemps que dans le jour.
+const VISIT_CELL_DAYS = 3;
+function visitCell(now) {
+  now = now || new Date();
+  const day = visitDayKey(now);
+  let bucket = visitsStore.days[day];
+  if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
+  if (!bucket.hc) { bucket.hc = {}; pruneVisitCells(now); }
+  const hr = now.getHours();
+  return bucket.hc[hr] || (bucket.hc[hr] = {});
+}
+function pruneVisitCells(now) {
+  const keep = {};
+  for (let i = 0; i < VISIT_CELL_DAYS; i++) { const d = new Date(now || Date.now()); d.setDate(d.getDate() - i); keep[visitDayKey(d)] = 1; }
+  for (const k in visitsStore.days) {
+    const b = visitsStore.days[k];
+    if (b && b.hc && !keep[k]) delete b.hc;
+    if (b && b.geoH) delete b.geoH;   // 2.1.10-web.28 only, replaced by hc[h].geo
+  }
+}
+// Les seaux d'une fenetre, du plus recent au plus ancien : `n` jours (seaux
+// quotidiens), ou `n` heures (cases horaires, heure en cours comprise) quand
+// h24 est vrai. `offset` decale vers le passe d'autant d'unites. Un trou vaut
+// null, comme un jour sans seau.
+function visitList(h24, n, offset) {
+  const out = [];
+  offset = offset || 0;
+  const now = new Date();
+  if (h24) {
+    const top = new Date(now); top.setMinutes(0, 0, 0);
+    for (let i = offset; i < offset + n; i++) {
+      const d = new Date(top.getTime() - i * 3600000);
+      const b = visitsStore.days[visitDayKey(d)];
+      out.push((b && b.hc && b.hc[d.getHours()]) || null);
+    }
+  } else {
+    for (let i = offset; i < offset + n; i++) {
+      const d = new Date(now); d.setDate(now.getDate() - i);
+      out.push(visitsStore.days[visitDayKey(d)] || null);
+    }
+  }
+  return out;
+}
 // 'live' = a /live spectator session (embedded on pokerth.net). Counted apart
 // from 'pokerthnet' so spectators never inflate the players' share; sessions
 // opened before 2.1.8-web.100 stay under 'pokerthnet', they cannot be told apart.
@@ -6781,6 +6831,9 @@ function recordModeConnect(mode) {
   if (!bucket.hm[mode]) bucket.hm[mode] = {};
   bucket.hm[mode][hr] = (bucket.hm[mode][hr] || 0) + 1;
   if (!visitsStore.modeHourSince) visitsStore.modeHourSince = Date.now();
+  const cell = visitCell();
+  if (!cell.m) cell.m = {};
+  cell.m[mode] = (cell.m[mode] || 0) + 1;
   if (!visitsStore.allM) visitsStore.allM = {};
   visitsStore.allM[mode] = (visitsStore.allM[mode] || 0) + 1;
   saveVisitsSoon();
@@ -6815,6 +6868,9 @@ function recordMusicPlay(id) {
   if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
   if (!bucket.mu) bucket.mu = {};
   bucket.mu[id] = (bucket.mu[id] || 0) + 1;
+  const cell = visitCell();
+  if (!cell.mu) cell.mu = {};
+  cell.mu[id] = (cell.mu[id] || 0) + 1;
   saveVisitsSoon();
 }
 // ── Aide de l'As (modules/guide) : compteurs anonymes ─────────────────────
@@ -6832,8 +6888,7 @@ const GEO_STATS = require('./server/geo-stats.js');
 // Carte du monde. Le ping /__visit porte le fuseau du navigateur (tz) ;
 // GEO_STATS le ramene a un code pays (ZZ = inconnu) et l'on ne garde que des
 // totaux par pays : `geo` dans le seau du jour (meme retention que le reste),
-// et `geoH[heure]` pour le filtre « 24 h », que l'on ne garde que pour hier et
-// aujourd'hui. Un ping SANS tz (client anterieur a 2.1.10-web.28) n'est pas
+// et dans la case horaire (`hc[heure].geo`, filtre « 24 h »). Un ping SANS tz (client anterieur a 2.1.10-web.28) n'est pas
 // compte ici, pour ne pas gonfler « inconnu » pendant le deploiement.
 function recordGeo(tz, visit, mode) {
   const cc = GEO_STATS.countryOfTz(tz);
@@ -6841,47 +6896,25 @@ function recordGeo(tz, visit, mode) {
   const day = visitDayKey(now);
   let bucket = visitsStore.days[day];
   if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
-  if (!bucket.geo) { bucket.geo = {}; pruneGeoHours(day); }
-  const hr = now.getHours();
-  if (!bucket.geoH) bucket.geoH = {};
-  if (!bucket.geoH[hr]) bucket.geoH[hr] = {};
-  if (visit) { GEO_STATS.addVisit(bucket.geo, cc, visit); GEO_STATS.addVisit(bucket.geoH[hr], cc, visit); }
-  if (mode) { GEO_STATS.addMode(bucket.geo, cc, mode); GEO_STATS.addMode(bucket.geoH[hr], cc, mode); }
+  if (!bucket.geo) bucket.geo = {};
+  const cell = visitCell(now);
+  if (!cell.geo) cell.geo = {};
+  if (visit) { GEO_STATS.addVisit(bucket.geo, cc, visit); GEO_STATS.addVisit(cell.geo, cc, visit); }
+  if (mode) { GEO_STATS.addMode(bucket.geo, cc, mode); GEO_STATS.addMode(cell.geo, cc, mode); }
   if (!visitsStore.geoSince) visitsStore.geoSince = Date.now();
   saveVisitsSoon();
 }
-function pruneGeoHours(today) {
-  const y = new Date(); y.setDate(y.getDate() - 1);
-  const keep = { [today]: 1, [visitDayKey(y)]: 1 };
-  for (const k in visitsStore.days) {
-    const b = visitsStore.days[k];
-    if (b && b.geoH && !keep[k]) delete b.geoH;
-  }
-}
-// Resume pour /admin/geo : soit les P derniers jours (seaux `geo`), soit les
-// 24 dernieres heures glissantes (cases `geoH`, heure en cours comprise).
+// Resume pour /admin/geo : soit les P derniers jours (seaux), soit les 24
+// dernieres heures glissantes (cases horaires, heure en cours comprise).
 // `counted` dit combien de jours / d'heures avaient vraiment des donnees.
 function visitGeoSummary(query) {
   const h24 = String((query && query.hours) || '') === '24';
   const P = visitPeriodDays(query && query.days);
   const g = {};
   let counted = 0;
-  const now = new Date();
-  if (h24) {
-    const base = new Date(now); base.setMinutes(0, 0, 0);
-    for (let i = 23; i >= 0; i--) {
-      const d = new Date(base.getTime() - i * 3600000);
-      const b = visitsStore.days[visitDayKey(d)];
-      const c = b && b.geoH && b.geoH[d.getHours()];
-      if (c) { GEO_STATS.merge(g, c); counted++; }
-    }
-  } else {
-    for (let i = 0; i < P; i++) {
-      const d = new Date(now); d.setDate(now.getDate() - i);
-      const b = visitsStore.days[visitDayKey(d)];
-      if (b && b.geo) { GEO_STATS.merge(g, b.geo); counted++; }
-    }
-  }
+  visitList(h24, h24 ? 24 : P).forEach(function (b) {
+    if (b && b.geo) { GEO_STATS.merge(g, b.geo); counted++; }
+  });
   return { ok: true, h24: h24, periodDays: h24 ? 0 : P, counted: counted, countries: g, since: visitsStore.geoSince || 0, modes: GEO_STATS.MODES, unknown: GEO_STATS.UNKNOWN };
 }
 function recordGuideEvent(ctx, ev) {
@@ -6890,6 +6923,7 @@ function recordGuideEvent(ctx, ev) {
   let bucket = visitsStore.days[day];
   if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
   GUIDE_STATS.record(visitsStore, bucket, ctx, ev, Date.now());
+  GUIDE_STATS.record({}, visitCell(), ctx, ev, Date.now());   // case horaire seule : le cumul est deja compte
   saveVisitsSoon();
   return true;
 }
@@ -6902,17 +6936,20 @@ function recordVisitSource(d, acceptLang, seenBefore) {
     let bucket = visitsStore.days[day];
     if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
     const isNew = (seenBefore === true || seenBefore === false) ? !seenBefore : null;
-    REF_STATS.record(visitsStore, bucket, REF_STATS.classify(d), isNew, LANG_STATS.parse(acceptLang).lang, Date.now());
+    const key = REF_STATS.classify(d), lg = LANG_STATS.parse(acceptLang).lang;
+    REF_STATS.record(visitsStore, bucket, key, isNew, lg, Date.now());
+    REF_STATS.record(null, visitCell(), key, isNew, lg, Date.now());
     saveVisitsSoon();
   } catch (e) {}
 }
-function visitSourcePeriod(daysBack) {
-  const today = visitDayIndex();
-  return REF_STATS.period(daysBack, function (i) { return visitsStore.days[visitDayKeyFromIndex(today - i)] || null; });
+// `list` : seaux de la fenetre (visitList) ; sans liste, les `daysBack` derniers jours.
+function visitSourcePeriod(daysBack, list) {
+  list = list || visitList(false, daysBack);
+  return REF_STATS.period(list.length, function (i) { return list[i]; });
 }
-function visitGuidePeriod(daysBack) {
-  const today = visitDayIndex();
-  return GUIDE_STATS.period(daysBack, function (i) { return visitsStore.days[visitDayKeyFromIndex(today - i)] || null; });
+function visitGuidePeriod(daysBack, list) {
+  list = list || visitList(false, daysBack);
+  return GUIDE_STATS.period(list.length, function (i) { return list[i]; });
 }
 // ── Pouces haut / bas sur la musique ──────────────────────────────────────
 // Le lecteur montre deux pouces sur la piste EN COURS uniquement. Un clic poste
@@ -7153,30 +7190,33 @@ function recordVisitEnv(ua, acceptLang, standalone, seenBefore) {
     // petit dictionnaire par jour (même seau que les visites, même rétention,
     // même plafond de cardinalité) suffit à tracer l'évolution dans le temps.
     const day = visitDayKey();
-    let bucket = visitsStore.days[day];
-    if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
-    if (!bucket.lg) bucket.lg = {};
-    if (!_envRoom(bucket.lg, lgv, 'lang')) bucket.lg.other = (bucket.lg.other || 0) + 1;
-    else bucket.lg[lgv] = (bucket.lg[lgv] || 0) + 1;
-    // Même chose pour le reste de l'environnement (OS, navigateur, croisement,
-    // installé) et pour le croisement langue × nouveau/revenu : un dictionnaire
-    // par jour, même seau, même rétention, même plafond. C'est ce qui permet
-    // au sélecteur de période de la page admin de découper « Who visits »
-    // comme le reste, au lieu d'un cumul depuis toujours.
-    if (!bucket.ev) bucket.ev = {};
-    [['os', os], ['br', br], ['combo', os + ' \u00b7 ' + br], ['pwa', standalone ? 'standalone' : 'browser']].forEach(function (kv) {
-      const b = bucket.ev[kv[0]] || (bucket.ev[kv[0]] = {});
-      if (!_envRoom(b, kv[1], kv[0])) b.other = (b.other || 0) + 1;
-      else b[kv[1]] = (b[kv[1]] || 0) + 1;
+    let bucket0 = visitsStore.days[day];
+    if (!bucket0) { bucket0 = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
+    // Le seau du jour, puis la case de l'heure (filtre « 24 h ») : memes champs.
+    [bucket0, visitCell()].forEach(function (bucket) {
+      if (!bucket.lg) bucket.lg = {};
+      if (!_envRoom(bucket.lg, lgv, 'lang')) bucket.lg.other = (bucket.lg.other || 0) + 1;
+      else bucket.lg[lgv] = (bucket.lg[lgv] || 0) + 1;
+      // Même chose pour le reste de l'environnement (OS, navigateur, croisement,
+      // installé) et pour le croisement langue × nouveau/revenu : un dictionnaire
+      // par jour, même seau, même rétention, même plafond. C'est ce qui permet
+      // au sélecteur de période de la page admin de découper « Who visits »
+      // comme le reste, au lieu d'un cumul depuis toujours.
+      if (!bucket.ev) bucket.ev = {};
+      [['os', os], ['br', br], ['combo', os + ' \u00b7 ' + br], ['pwa', standalone ? 'standalone' : 'browser']].forEach(function (kv) {
+        const b = bucket.ev[kv[0]] || (bucket.ev[kv[0]] = {});
+        if (!_envRoom(b, kv[1], kv[0])) b.other = (b.other || 0) + 1;
+        else b[kv[1]] = (b[kv[1]] || 0) + 1;
+      });
+      if (!bucket.ld) bucket.ld = {};
+      LANG_STATS.record(bucket.ld, lp, diagCtx);
+      if (seenBefore !== null && seenBefore !== undefined) {
+        const kk = seenBefore ? 'lgr' : 'lgn';
+        const b = bucket[kk] || (bucket[kk] = {});
+        if (!_envRoom(b, lgv, 'lang')) b.other = (b.other || 0) + 1;
+        else b[lgv] = (b[lgv] || 0) + 1;
+      }
     });
-    if (!bucket.ld) bucket.ld = {};
-    LANG_STATS.record(bucket.ld, lp, diagCtx);
-    if (seenBefore !== null && seenBefore !== undefined) {
-      const kk = seenBefore ? 'lgr' : 'lgn';
-      const b = bucket[kk] || (bucket[kk] = {});
-      if (!_envRoom(b, lgv, 'lang')) b.other = (b.other || 0) + 1;
-      else b[lgv] = (b[lgv] || 0) + 1;
-    }
     saveVisitsSoon();
   } catch (e) {}
 }
@@ -7192,10 +7232,14 @@ function recordLiveVisit(rawId) {
   if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
   bucket.lv = (bucket.lv || 0) + 1;
   visitsStore.totalLV = (visitsStore.totalLV || 0) + 1;
+  const cell = visitCell();
+  cell.lv = (cell.lv || 0) + 1;
   if (rawId) {
     const h = crypto.createHash('sha256').update(String(rawId)).digest('hex').slice(0, 16);
     if (!bucket.lids) bucket.lids = {};
     bucket.lids[h] = 1;
+    if (!cell.lids) cell.lids = {};
+    cell.lids[h] = 1;
     if (!visitsStore.allLU) visitsStore.allLU = {};
     visitsStore.allLU[h] = 1;
   }
@@ -7207,6 +7251,8 @@ function recordVisit(rawId) {
   if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
   bucket.v++;
   visitsStore.totalV = (visitsStore.totalV || 0) + 1;
+  const cell = visitCell();
+  cell.v = (cell.v || 0) + 1;
   // Valeur de retour : true = revenu, false = nouveau, null = pas d'id (rien
   // a en dire). Sert au croisement langue x new/returning dans recordVisitEnv,
   // appelee juste apres avec le meme ping — sans id ici, il n'y a pas non plus
@@ -7228,14 +7274,17 @@ function recordVisit(rawId) {
     seenBeforeOut = seenBefore;
     if (!bucket.ids) bucket.ids = {};
     bucket.ids[h] = 1;
+    if (!cell.ids) cell.ids = {};
+    cell.ids[h] = 1;
     // La valeur porte desormais le jour de la premiere venue, ce qui suffit a
     // reconstituer une cohorte: les seaux journaliers disent qui est revenu et
     // quand. Un appareil deja inscrit garde sa valeur — la reecrire ferait
     // passer un habitue pour un nouveau venu du jour.
     if (!seenBefore) visitsStore.allU[h] = visitDayIndex();
-    if (seenBefore) { bucket.rt = (bucket.rt || 0) + 1; visitsStore.totalRet = (visitsStore.totalRet || 0) + 1; }
+    if (seenBefore) { bucket.rt = (bucket.rt || 0) + 1; visitsStore.totalRet = (visitsStore.totalRet || 0) + 1; cell.rt = (cell.rt || 0) + 1; }
     else {
       bucket.nw = (bucket.nw || 0) + 1;
+      cell.nw = (cell.nw || 0) + 1;
       if (!bucket.hn) bucket.hn = {};
       bucket.hn[hr] = (bucket.hn[hr] || 0) + 1;
     }
@@ -7248,15 +7297,15 @@ function recordVisit(rawId) {
 // tuiles de l'admin, qui n'ont ainsi pas a reconstituer une union d'appareils
 // a partir de la serie journaliere.
 function visitWindow(daysBack, offset) {
-  const now = new Date();
-  offset = offset || 0;
+  return visitWindowList(visitList(false, daysBack, offset));
+}
+// Meme somme sur une liste de seaux (jours ou cases horaires, cf. visitList).
+function visitWindowList(list) {
   let v = 0, nw = 0, rt = 0, lv = 0;
   const u = {}, lu = {};
   const m = { pokerthnet: 0, lan: 0, offline: 0, live: 0 };
-  for (let i = offset; i < offset + daysBack; i++) {
-    const d = new Date(now);
-    d.setDate(now.getDate() - i);
-    const b = visitsStore.days[visitDayKey(d)];
+  for (let i = 0; i < list.length; i++) {
+    const b = list[i];
     if (!b) continue;
     v += b.v || 0;
     nw += b.nw || 0;
@@ -7322,6 +7371,24 @@ function visitHourProfile(daysBack) {
   }
   return { v: v, nw: nw, days: Math.round(days * 100) / 100 };
 }
+// Meme profil sur les 24 dernieres heures glissantes : chaque heure du jour y
+// figure une fois, lue dans les cases `h`/`hn` ; days vaut 1 des qu'il y a des
+// donnees (diviser par une couverture partielle gonflerait chaque barre).
+function visitHourProfile24() {
+  const v = new Array(24).fill(0), nw = new Array(24).fill(0);
+  const now = new Date(), top = new Date(now); top.setMinutes(0, 0, 0);
+  let days = 0;
+  for (let i = 0; i < 24; i++) {
+    const d = new Date(top.getTime() - i * 3600000);
+    const b = visitsStore.days[visitDayKey(d)];
+    if (!b || !b.h) continue;
+    days = 1;   // chaque heure du jour y figure une fois : la « moyenne » est la valeur meme
+    const hh = d.getHours();
+    v[hh] += b.h[hh] || 0;
+    if (b.hn) nw[hh] += b.hn[hh] || 0;
+  }
+  return { v: v, nw: nw, days: days };
+}
 // ── Cohortes : qui revient, et combien de jours ───────────────────────────
 // Le compteur nouveaux/recurrents dit qu'un appareil est deja venu, jamais
 // s'il est revenu APRES sa premiere fois — ce qui est la seule question qui
@@ -7338,13 +7405,17 @@ function visitHourProfile(daysBack) {
 // de jours de chaque fenêtre qui ont réellement une série `lg` : la page admin
 // décide alors elle-même de ne rien afficher tant que l'historique est trop
 // court, plutôt que de tracer une flèche sur une demi-fenêtre.
-function visitLangTrend(win) {
+function visitLangTrend(win, h24) {
   win = win || 14;
+  // « 24 h » : les 24 dernieres heures (heure en cours comprise) contre les 24
+  // precedentes, au lieu de jours complets.
+  if (h24) win = 24;
   const today = visitDayIndex();
   function sumWin(fromBack) {
     const out = {}, m = { n: 0, days: 0 };
+    const list = h24 ? visitList(true, 24, fromBack - 1) : null;
     for (let i = 0; i < win; i++) {
-      const b = visitsStore.days[visitDayKeyFromIndex(today - fromBack - i)];
+      const b = h24 ? list[i] : visitsStore.days[visitDayKeyFromIndex(today - fromBack - i)];
       if (!b || !b.lg) continue;
       m.days++;
       const lg = LANG_STATS.foldLangMap(b.lg);
@@ -7353,19 +7424,19 @@ function visitLangTrend(win) {
     return { by: out, n: m.n, days: m.days };
   }
   const cur = sumWin(1), prev = sumWin(1 + win);
-  return { win: win, cur: cur.by, prev: prev.by, curN: cur.n, prevN: prev.n, curDays: cur.days, prevDays: prev.days };
+  return { win: win, h24: !!h24, cur: cur.by, prev: prev.by, curN: cur.n, prevN: prev.n, curDays: cur.days, prevDays: prev.days };
 }
 // « Who visits » sur une période : somme des dictionnaires quotidiens (jour
 // courant inclus). `days` compte les jours qui portent réellement `ev`,
 // `lgDays` ceux qui portent `lg` (plus ancien) : la page retombe sur le cumul
 // pour une vue dont la série n'existe pas encore, et le dit.
-function visitEnvPeriod(daysBack) {
+function visitEnvPeriod(daysBack, list) {
   const out = { os: {}, br: {}, combo: {}, pwa: {}, lang: {}, langNew: {}, langRet: {}, days: 0, lgDays: 0, lgnDays: 0 };
-  const today = visitDayIndex();
+  list = list || visitList(false, daysBack);
   const lds = [];
   function add(dst, src) { for (const k in src) dst[k] = (dst[k] || 0) + (src[k] || 0); }
-  for (let i = 0; i < daysBack; i++) {
-    const b = visitsStore.days[visitDayKeyFromIndex(today - i)];
+  for (let i = 0; i < list.length; i++) {
+    const b = list[i];
     if (!b) continue;
     if (b.ev) { out.days++; ['os', 'br', 'combo', 'pwa'].forEach(function (k) { if (b.ev[k]) add(out[k], b.ev[k]); }); }
     if (b.lg) { out.lgDays++; add(out.lang, b.lg); }
@@ -7383,11 +7454,11 @@ function visitEnvPeriod(daysBack) {
   LANG_STATS.DIAG_KEYS.forEach(function (k) { out[k] = ld[k]; });
   return out;
 }
-function visitMusicPeriod(daysBack) {
+function visitMusicPeriod(daysBack, list) {
   const out = { plays: {}, days: 0 };
-  const today = visitDayIndex();
-  for (let i = 0; i < daysBack; i++) {
-    const b = visitsStore.days[visitDayKeyFromIndex(today - i)];
+  list = list || visitList(false, daysBack);
+  for (let i = 0; i < list.length; i++) {
+    const b = list[i];
     if (!b || !b.mu) continue;
     out.days++;
     for (const k in b.mu) out.plays[k] = (out.plays[k] || 0) + (b.mu[k] || 0);
@@ -7451,17 +7522,30 @@ function visitPeriodDays(q) {
   if (!(n >= VISIT_PERIOD_MIN)) return VISIT_PERIOD_DEFAULT;
   return Math.min(VISIT_PERIOD_MAX, n);
 }
-function visitsSummary(periodDays) {
-  const P = visitPeriodDays(periodDays);
+// `h24` (?hours=24) : la periode devient les 24 dernieres heures glissantes,
+// lues dans les cases horaires (visitCell) ; la serie compte alors 24 points
+// horaires (date = « AAAA-MM-JJTHH »), la reference est les 24 heures d'avant,
+// et les cohortes (mesurees en jours entiers) ne sont pas calculees.
+function visitsSummary(periodDays, h24) {
+  const P = h24 ? 1 : visitPeriodDays(periodDays);
   const now = new Date();
   const series = [];
-  for (let i = P - 1; i >= 0; i--) {
+  if (h24) {
+    const top = new Date(now); top.setMinutes(0, 0, 0);
+    for (let i = 23; i >= 0; i--) {
+      const d = new Date(top.getTime() - i * 3600000);
+      const day = visitsStore.days[visitDayKey(d)];
+      const b = (day && day.hc && day.hc[d.getHours()]) || null;
+      series.push({ date: visitDayKey(d) + 'T' + String(d.getHours()).padStart(2, '0'), v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined });
+    }
+  } else for (let i = P - 1; i >= 0; i--) {
     const d = new Date(now);
     d.setDate(now.getDate() - i);
     const k = visitDayKey(d);
     const b = visitsStore.days[k];
     series.push({ date: k, v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined });
   }
+  const L = h24 ? visitList(true, 24) : null;
   return {
     ok: true,
     today: visitWindow(1),
@@ -7470,26 +7554,29 @@ function visitsSummary(periodDays) {
     quarter: visitWindow(90),
     semester: visitWindow(180),
     year: visitWindow(365),
-    period: visitWindow(P),
+    period: h24 ? visitWindowList(L) : visitWindow(P),
     periodDays: P,
-    prev: { todayToHour: visitYesterdayToHour(), yesterday: visitWindow(1, 1), week: visitWindow(7, 7), month: visitWindow(30, 30), period: visitWindow(P, P) },
+    h24: !!h24,
+    // Heures de la fenetre qui ont une case : 24 un jour apres le deploiement.
+    periodHours: h24 ? L.filter(function (b) { return !!b; }).length : undefined,
+    prev: { todayToHour: visitYesterdayToHour(), yesterday: visitWindow(1, 1), week: visitWindow(7, 7), month: visitWindow(30, 30), period: h24 ? visitWindowList(visitList(true, 24, 24)) : visitWindow(P, P) },
     allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length, nw: Object.keys(visitsStore.allU).length, rt: visitsStore.totalRet || 0, lv: visitsStore.totalLV || 0, lu: Object.keys(visitsStore.allLU || {}).length, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0, live: am.live || 0 }; })() },
     series: series,
     hours48: visitHourSeries(48),
-    hourProfile: visitHourProfile(P),
+    hourProfile: h24 ? visitHourProfile24() : visitHourProfile(P),
     hourSince: visitsStore.hourSince || 0,
     modeHourSince: visitsStore.modeHourSince || 0,
-    pth: pthShareSummary(P),
-    cohorts: visitCohorts(P),
+    pth: pthShareSummary(P, h24),
+    cohorts: h24 ? null : visitCohorts(P),
     env: Object.assign(LANG_STATS.foldEnv(visitsStore.env || {}), { noiseMeta: LANG_STATS.noiseMeta(visitsStore.langDiagSince) }),
     envSince: visitsStore.envSince || 0,
     langDiagSince: visitsStore.langDiagSince || 0,
-    langTrend: visitLangTrend(P),
-    envPeriod: visitEnvPeriod(P),
-    musicPeriod: visitMusicPeriod(P),
+    langTrend: visitLangTrend(P, h24),
+    envPeriod: visitEnvPeriod(P, L),
+    musicPeriod: visitMusicPeriod(P, L),
     // Where visitors come from, over the period (no all-time total: the
     // series starts with the feature, refSince says when).
-    srcPeriod: visitSourcePeriod(P),
+    srcPeriod: visitSourcePeriod(P, L),
     refSince: visitsStore.refSince || 0,
     langs: supportedLangs(),
     langN: supportedLangCount(),
@@ -7503,7 +7590,7 @@ function visitsSummary(periodDays) {
     musicVoteTitles: musicVoteTitles(),
     // Aide de l'As : totaux depuis le début, et sur la période choisie (jours comptés)
     guide: GUIDE_STATS.summary(visitsStore.guide || {}),
-    guidePeriod: (function () { const p = visitGuidePeriod(P); return { days: p.days, summary: GUIDE_STATS.summary(p.guide) }; })(),
+    guidePeriod: (function () { const p = visitGuidePeriod(P, L); return { days: p.days, summary: GUIDE_STATS.summary(p.guide) }; })(),
     guideSince: visitsStore.guideSince || 0,
     pings: { boot: _pingStats.boot, visits: _pingStats.n, modes: _pingStats.nMode, live: _pingStats.nLive, music: _pingStats.nMusic, guide: _pingStats.nGuide, last: _pingStats.last },
     db: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error, lastWrite: _dbStatus.lastWrite, source: _dbStatus.source }
@@ -9051,7 +9138,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/visits') {
     if (req.method === 'GET') {
       if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      return adminJson(res, 200, visitsSummary(query.days));
+      return adminJson(res, 200, visitsSummary(query.days, String(query.hours || '') === '24'));
     }
     if (req.method === 'POST') {
       return readJsonBody(req, function (d) {
@@ -11432,7 +11519,7 @@ setInterval(_pthSampleTick, PTH_SAMPLE_MS).unref();
 function _pthMean(c, f) { return (c && c.n) ? Math.round((c[f] / c.n) * 10) / 10 : 0; }
 // Last 48 hours (hourly means) and the dashboard period (daily means). A day
 // mean is weighted by samples, so a half-sampled day is not dragged to zero.
-function pthShareSummary(periodDays) {
+function pthShareSummary(periodDays, h24) {
   const now = new Date();
   const h48 = [];
   const top = new Date(now); top.setMinutes(0, 0, 0);
@@ -11446,7 +11533,13 @@ function pthShareSummary(periodDays) {
   }
   const days = [];
   const P = periodDays || 14;
-  for (let i = P - 1; i >= 0; i--) {
+  // « 24 h » : une ligne par heure (les 24 dernieres de h48), au lieu d'une par jour.
+  if (h24) {
+    h48.slice(-24).forEach(function (x) {
+      const k = x.t.slice(0, 10), b = visitsStore.days[k], c = (b && b.ps) ? b.ps[parseInt(x.t.slice(11), 10)] : null;
+      days.push({ date: x.t, n: x.n, on: x.on, wb: x.wb, lv: x.lv, onX: x.onX, wbX: x.wbX, td: (c && c.td) || 0 });
+    });
+  } else for (let i = P - 1; i >= 0; i--) {
     const d = new Date(now); d.setDate(now.getDate() - i);
     const k = visitDayKey(d), b = visitsStore.days[k];
     const a = { n: 0, on: 0, wb: 0, lv: 0, onX: 0, wbX: 0, td: 0 };
@@ -11459,7 +11552,7 @@ function pthShareSummary(periodDays) {
     }
     days.push({ date: k, n: a.n, on: _pthMean(a, 'on'), wb: _pthMean(a, 'wb'), lv: _pthMean(a, 'lv'), onX: a.onX, wbX: a.wbX, td: a.td });
   }
-  return { since: visitsStore.pthSince || 0, sampleSec: PTH_SAMPLE_MS / 1000, on: _liveStatsCfg().on, now: _pthLast, h48: h48, days: days };
+  return { since: visitsStore.pthSince || 0, sampleSec: PTH_SAMPLE_MS / 1000, on: _liveStatsCfg().on, now: _pthLast, h48: h48, days: days, h24: !!h24 };
 }
 
 // Dashboard "Test" button: read a candidate URL once, bypassing the cache and

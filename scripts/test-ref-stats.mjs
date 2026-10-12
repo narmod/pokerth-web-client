@@ -81,7 +81,7 @@ ok(R.classify({ src: 'a'.repeat(100) }) === 'utm:' + 'a'.repeat(32), 'utm tag cu
 // -- Wiring ------------------------------------------------------------------
 ok(/require\('\.\/server\/ref-stats\.js'\)/.test(proxy), 'proxy loads server/ref-stats.js');
 ok(/recordVisitSource\(d, req\.headers && req\.headers\['accept-language'\], _seenBefore\)/.test(proxy), 'the /__visit handler records the source with the same new/returning verdict');
-ok(/srcPeriod: visitSourcePeriod\(P\)/.test(proxy), 'the summary slices sources by the selected period');
+ok(/srcPeriod: visitSourcePeriod\(P, L\)/.test(proxy), 'the summary slices sources by the selected period');
 ok(/refSince: 0/.test(proxy.slice(proxy.indexOf('function emptyVisitsStore'), proxy.indexOf('function emptyVisitsStore') + 600)), 'a full reset clears refSince too');
 const cap = html.indexOf('window.__pthLanding = L'), pal = html.indexOf('Palette : appliquer le th');
 ok(cap > 0 && cap < pal && html.indexOf('window.__pthErrQ') < cap, 'the landing is read in the head, right after the error collector, before any module');

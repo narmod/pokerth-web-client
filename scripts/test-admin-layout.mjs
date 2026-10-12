@@ -456,8 +456,9 @@ ok(/\.trafsub button\{[^}]*min-height:44px/.test(admin), 'and its targets are th
 // -- Four windows, not seven -----------------------------------------------
 // 90, 180 and 365 days repeat "All time" to the unit until the site has a year
 // behind it. They stay in the export; they no longer take the space.
-ok(/tile\('Today',d\.today,pv\.todayToHour,'yesterday at this hour'\)\s*\+tile\('Last 7 days',d\.week,pv\.week,'previous 7 days'\)\s*\+tile\('Last '\+P\+' days',per,perPrev,'previous '\+P\+' days'\)\s*\+tile\('All time',d\.allTime\)/.test(admin),
-  'four windows are shown, the first three against their previous period; the third follows the period selector');
+ok(/tile\('Today',d\.today,pv\.todayToHour,'yesterday at this hour'\)\s*\+tile\('Last 7 days',d\.week,pv\.week,'previous 7 days'\)\s*\+tile\(pLbl,per,perPrev,pRef\)\s*\+tile\('All time',d\.allTime\)/.test(admin)
+  && /var pLbl=\(d\.h24&&P===1\)\?'Last 24 hours':'Last '\+P\+' days', pRef=\(d\.h24&&P===1\)\?'previous 24 hours':'previous '\+P\+' days';/.test(admin),
+  'four windows are shown, the first three against their previous period; the third follows the period selector (24 hours included)');
 // -- Read at a glance --------------------------------------------------------
 // New devices under the unique count; green / red only past a 10 % move, and
 // only where a reference exists. All time has none, so it takes no colour.
@@ -467,9 +468,9 @@ ok(/\(ref&&ref>0\)\? \(cur-ref\)\/ref : null/.test(admin), 'and no reference mea
 ok(/var pv=d\.prev\|\|\{\};/.test(admin), 'an older proxy without prev leaves every tile neutral');
 ok(/\.tstat \.big\.up,\.kpi \.big\.up\{color:#7fd17f\}/.test(admin) && /\.tstat \.big\.dn,\.kpi \.big\.dn\{color:#e8735c\}/.test(admin),
   'the main figure carries the colour on both kinds of tile');
-ok(/prev: \{ todayToHour: visitYesterdayToHour\(\), yesterday: visitWindow\(1, 1\), week: visitWindow\(7, 7\), month: visitWindow\(30, 30\), period: visitWindow\(P, P\) \}/.test(proxy),
+ok(/prev: \{ todayToHour: visitYesterdayToHour\(\), yesterday: visitWindow\(1, 1\), week: visitWindow\(7, 7\), month: visitWindow\(30, 30\), period: h24 \? visitWindowList\(visitList\(true, 24, 24\)\) : visitWindow\(P, P\) \}/.test(proxy),
   'the proxy serves the previous windows the tiles compare against');
-ok(/for \(let i = offset; i < offset \+ daysBack; i\+\+\)/.test(proxy), 'visitWindow shifts by an offset instead of duplicating the loop');
+ok(/for \(let i = offset; i < offset \+ n; i\+\+\)/.test(proxy) && /return visitWindowList\(visitList\(false, daysBack, offset\)\);/.test(proxy), 'visitWindow shifts by an offset instead of duplicating the loop');
 ok(/if \(!b \|\| !b\.h\) return null;/.test(proxy), 'yesterday without hour buckets yields no reference for today');
 // -- Most played tracks: a ranking first ----------------------------------
 // The title asks which tracks are played most; the answer is a list, and the
@@ -488,13 +489,13 @@ ok(/title="removed from the catalogue"/.test(admin), 'a title no longer in the c
 // Render it against a fixture: the pieces are lifted out and run with a
 // series shaped like the proxy's, to check the maths and not only the text.
 {
-  const need = ['_musRank','_musDays','_musContext','_musChart','_musName','_stackChart','_lineNiceMax','_annEsc','_round1',
+  const need = ['_musRank','_musDays','_musContext','_musChart','_musName','_stackChart','_lineNiceMax','_annEsc','_round1','_sLab','_perU',
                 '_musVoteCell','_musTrendWin','_musTrendBadge','_musVotedElsewhere','_langTrendStat'];
   // body() strips the header; here the whole function is needed to run it.
   const whole = n => { const h = admin.indexOf('function ' + n + '('); const b = body(admin, n); return b ? admin.slice(h, admin.indexOf(b, h) + b.length) : ''; };
   const lifted = need.map(whole).join('\n');
   ok(!need.some(n => !whole(n)), 'every music helper is liftable');
-  const env = `var ENV_COLORS=['#a','#b','#c','#d','#e','#f','#g','#h','#i','#z'];var MUS_TOP=10,MUS_STACK=5;
+  const env = `var ENV_COLORS=['#a','#b','#c','#d','#e','#f','#g','#h','#i','#z'];var MUS_TOP=10,MUS_STACK=5,_trafPeriod=14;
     var _musData={t1:30,t2:20,t3:10,t4:5,t5:3,t6:2,t7:1,t8:1,t9:1,t10:1,t11:1,t12:1};
     var _musTitles={t1:'Alpha',t2:'Beta',t3:'Gamma',t4:'Delta',t5:'Eps',t6:'Zeta',t7:'Eta',t8:'Th',t9:'Io',t11:'La'};
     var _musSince=new Date(2026,7,23,10,0,0).getTime();

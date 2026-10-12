@@ -33,7 +33,7 @@ ok(/bucket\.hn\[hr\] = \(bucket\.hn\[hr\] \|\| 0\) \+ 1;/.test(src), 'and a firs
 ok(src.indexOf('bucket.hn[hr]') > src.indexOf('bucket.nw = (bucket.nw || 0) + 1;'),
   'the first-time bucket is filled on the new-device branch only');
 ok(/hours48: visitHourSeries\(48\)/.test(src), 'the summary carries the last 48 hours');
-ok(/hourProfile: visitHourProfile\(P\)/.test(src), 'and an average day over the dashboard period');
+ok(/hourProfile: h24 \? visitHourProfile24\(\) : visitHourProfile\(P\)/.test(src), 'and an average day over the dashboard period (or the sliding 24 hours)');
 ok(/hourSince: visitsStore\.hourSince/.test(src), 'and says since when any of it was collected');
 ok(/bucket\.hm\[mode\]\[hr\] = \(bucket\.hm\[mode\]\[hr\] \|\| 0\) \+ 1;/.test(src), 'every session opening lands in an hour bucket for its mode');
 ok(/modeHourSince: visitsStore\.modeHourSince \|\| 0/.test(src), 'and the summary says since when sessions are counted by hour');
@@ -114,7 +114,7 @@ ok(/const VISIT_FIRST_UNKNOWN = 1000;/.test(src), 'a pre-measurement device is t
 ok(/if \(!seenBefore\) visitsStore\.allU\[h\] = visitDayIndex\(\);/.test(src),
   'a first visit records its day');
 ok(!/visitsStore\.allU\[h\] = 1;/.test(src), 'and a return no longer overwrites it');
-ok(/cohorts: visitCohorts\(P\)/.test(src), 'the summary carries the cohorts, over the dashboard period');
+ok(/cohorts: h24 \? null : visitCohorts\(P\)/.test(src), 'the summary carries the cohorts, over the dashboard period (none over 24 hours)');
 ok(/Math\.floor\(Date\.UTC\(d\.getFullYear\(\), d\.getMonth\(\), d\.getDate\(\)\) \/ 86400000\)/.test(src),
   'the day index is built from local parts in UTC arithmetic, so a DST shift adds no day');
 

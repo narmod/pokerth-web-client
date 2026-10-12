@@ -37,10 +37,10 @@ ok(f(undefined) === 14 && f('abc') === 14 && f('') === 14, 'no or unusable ?days
 ok(f('7') === 7 && f('90') === 90, 'the ends of the range pass through');
 ok(f('3') === 14, 'below the minimum falls back to the default rather than a 3-day "trend"');
 ok(f('500') === 90, 'above the maximum is clamped, so the previous trend window still fits the 400-day retention');
-ok(/visitsSummary\(query\.days\)/.test(proxy), 'GET /admin/visits reads ?days=');
+ok(/visitsSummary\(query\.days, String\(query\.hours \|\| ''\) === '24'\)/.test(proxy), 'GET /admin/visits reads ?days= (and ?hours=24)');
 ok(/for \(let i = P - 1; i >= 0; i--\)/.test(body(proxy, 'visitsSummary')), 'the daily series is P days long');
-ok(/period: visitWindow\(P\)/.test(proxy) && /period: visitWindow\(P, P\)/.test(proxy), 'the period tile has a previous-period reference');
-ok(/envPeriod: visitEnvPeriod\(P\)/.test(proxy) && /musicPeriod: visitMusicPeriod\(P\)/.test(proxy), 'environment and music are sliced by the same period');
+ok(/period: h24 \? visitWindowList\(L\) : visitWindow\(P\)/.test(proxy) && /period: h24 \? visitWindowList\(visitList\(true, 24, 24\)\) : visitWindow\(P, P\)/.test(proxy), 'the period tile has a previous-period reference');
+ok(/envPeriod: visitEnvPeriod\(P, L\)/.test(proxy) && /musicPeriod: visitMusicPeriod\(P, L\)/.test(proxy), 'environment and music are sliced by the same period');
 
 const rec = body(proxy, 'recordVisitEnv');
 ok(/bucket\.ev\b/.test(rec) && /\['os', os\], \['br', br\], \['combo'/.test(rec), 'each ping also lands in a per-day environment dictionary');
@@ -52,7 +52,7 @@ ok(/days: 0, lgDays: 0, lgnDays: 0/.test(ep), 'the period summary reports how ma
 // -- Admin -----------------------------------------------------------------
 ok(/<select id="trafPeriod"/.test(admin), 'the tab has a period selector');
 ok(/<option value="14" selected>/.test(admin), 'defaulting to 14 days');
-ok(/api\('\/admin\/visits\?days='\+_trafPeriod\)/.test(admin), 'which is sent with every load');
+ok(/api\('\/admin\/visits\?'\+_perQuery\(\)\)/.test(admin) && /'days='\+_trafPeriod/.test(admin), 'which is sent with every load');
 ok(/localStorage\.setItem\('pth_admin_period'/.test(admin), 'and remembered like the theme');
 ok(/if\(P===7\|\|!per\)\{ P=30; per=d\.month; perPrev=pv\.month; \}/.test(admin), 'at 7 days the third tile shows 30 days instead of repeating "Last 7 days"');
 const pick = body(admin, '_envPick');
@@ -60,7 +60,7 @@ ok(!!pick, 'admin has _envPick');
 ok(/per\.days>0/.test(pick) && /per\.lgDays>0/.test(pick), 'a view uses the period only where its own per-day history exists — the running totals otherwise');
 const line = body(admin, '_envSrcLine');
 ok(/per-day history for this view starts with this proxy version/.test(line), 'and the header says when it fell back');
-ok(/per-day history covers/.test(line), 'or when the history is shorter than the period');
+ok(/per-'\+U\.one\+' history covers/.test(line), 'or when the history is shorter than the period');
 ok(/document\.querySelectorAll\('\.perN'\)/.test(body(admin, '_paintPeriod')), 'the section texts quote the selected period instead of a hard-coded 30');
 ok(!/over the last 30 days/.test(admin) && !/in the last 30 days, how many/.test(admin), 'no stale "last 30 days" left in the retention/hours texts');
 

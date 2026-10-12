@@ -31,7 +31,7 @@ const lt = body(proxy, 'visitLangTrend');
 ok(!!lt, 'proxy exposes visitLangTrend');
 ok(/sumWin\(1\)/.test(lt) && /sumWin\(1 \+ win\)/.test(lt), 'current window ends yesterday (today is partial), previous window sits right before it');
 ok(/curDays/.test(lt) && /prevDays/.test(lt), 'it reports how many days of each window actually carry a language series');
-ok(/langTrend: visitLangTrend\(P\)/.test(proxy), 'and the traffic payload carries it as langTrend over the dashboard period');
+ok(/langTrend: visitLangTrend\(P, h24\)/.test(proxy), 'and the traffic payload carries it as langTrend over the dashboard period (or the last 24 hours)');
 
 // -- Admin: the statistic itself -------------------------------------------
 const statSrc = body(admin, '_langTrendStat');

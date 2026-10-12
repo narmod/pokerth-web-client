@@ -37,6 +37,8 @@ ok(/'live'/.test(modesLine), "VISIT_MODES accepts 'live'");
 const run = new Function(
   modesLine + '\n' + fn(proxy, 'emptyVisitsStore') + '\n' + fn(proxy, 'visitDayKey') + '\n' +
   'let visitsStore = emptyVisitsStore();\nfunction pruneVisitDays() {}\nfunction saveVisitsSoon() {}\n' +
+  fn(proxy, 'visitCell') + '\n' + fn(proxy, 'pruneVisitCells') + '\n' + 'const VISIT_CELL_DAYS = 3;\n' +
+  fn(proxy, 'visitList') + '\n' + fn(proxy, 'visitWindowList') + '\n' +
   fn(proxy, 'recordModeConnect') + '\n' + fn(proxy, 'visitWindow') + '\n' +
   "recordModeConnect('pokerthnet'); recordModeConnect('live'); recordModeConnect('live'); recordModeConnect('bogus');\n" +
   'return { store: visitsStore, today: visitWindow(1) };');
@@ -54,6 +56,8 @@ ok(/conn_live=VALUES\(conn_live\)/.test(proxy), 'and is written to');
 const runV = new Function('crypto',
   fn(proxy, 'emptyVisitsStore') + '\n' + fn(proxy, 'visitDayKey') + '\n' + fn(proxy, 'visitDayIndex') + '\n' +
   'let visitsStore = emptyVisitsStore();\nfunction pruneVisitDays() {}\nfunction saveVisitsSoon() {}\n' +
+  fn(proxy, 'visitCell') + '\n' + fn(proxy, 'pruneVisitCells') + '\n' + 'const VISIT_CELL_DAYS = 3;\n' +
+  fn(proxy, 'visitList') + '\n' + fn(proxy, 'visitWindowList') + '\n' +
   fn(proxy, 'recordVisit') + '\n' + fn(proxy, 'recordLiveVisit') + '\n' + fn(proxy, 'visitWindow') + '\n' +
   "recordVisit('web-a'); recordLiveVisit('live-a'); recordLiveVisit('live-a'); recordLiveVisit('live-b');\n" +
   'return { store: visitsStore, today: visitWindow(1) };');
