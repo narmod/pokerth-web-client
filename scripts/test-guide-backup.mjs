@@ -107,6 +107,32 @@ ok(opened.join(',') === 'open,cat:reset', 'show(): opens Advanced options on Bac
 const row = w.document.getElementById('adv-bakauto-pick').closest('.adv-row');
 ok(await until(() => row.classList.contains('adv-hit'), 1000), 'show(): the « Choose folder… » row is flashed');
 
+// ── Firefox (web.31): no folder — the Ace offers to protect the settings ──
+const pcalls = [];
+let ppending = true;
+w._bakOffer = {
+  pending: () => ppending, claim: () => ppending, shown: () => pcalls.push('shown'), fallback: () => pcalls.push('fallback'),
+  kind: () => 'persist',
+  texts: () => ({ title: T('bakPersistTitle'), body: T('bakPersistBody'), persist: T('bakPersistBtn'), later: T('bakBannerLater'), ok: T('bakPersistOk'), no: T('bakPersistNo') }),
+  path: () => '', why: (c) => 'WHY:' + c, hint: () => 'hint', show: () => pcalls.push('show'),
+  persist: () => { pcalls.push('persist'); return Promise.resolve('no'); },
+  done: (later) => { pcalls.push('done:' + !!later); ppending = false; },
+};
+w.document.dispatchEvent(new w.CustomEvent('pth:bakoffer'));
+ok(await until(() => bub() && /Mets tes réglages à l’abri/.test(bub().textContent)), 'Firefox: the Ace offers to protect the settings (French)');
+const pb = bub();
+ok(pb && /Firefox/.test(pb.textContent) && !pb.querySelector('.ad-bak-path'), 'Firefox: the explanation, no folder path');
+ok(pb && [...pb.querySelectorAll('[data-ad-btn]')].map((x) => x.getAttribute('data-ad-btn')).join(',') === 'bakLater,bakPersist'
+  && /Protéger mes réglages/.test(pb.querySelector('.ad-primary').textContent), 'Firefox: Later / Protect my settings (primary)');
+pb.querySelector('[data-ad-btn="bakPersist"]').click();
+ok(pcalls[pcalls.indexOf('shown') + 1] === 'persist', 'Firefox: the request runs in the click');
+ok(await until(() => bub() && /Firefox ne l’a pas autorisé/.test(bub().textContent)), 'Firefox refused: he says so, and where to change it');
+bub().querySelector('[data-ad-btn="gotIt"]').click();
+ok(await until(() => !w.document.getElementById('ace-dock')) && pcalls.includes('done:false'), 'then he leaves, the offer closed');
+await wait(100);
+const q2 = (() => { try { return JSON.parse(w.localStorage.getItem('pth_guide_q') || '[]'); } catch (e) { return []; } })().filter((e) => e[0] === 'backup').map((e) => e[1]);
+ok(q2.includes('persist') && q2.includes('persist_no'), 'Firefox: counted (tapped, refused)');
+
 // wiring of the module side
 const bk = fs.readFileSync('public/modules/backup-autosave.mjs', 'utf8');
 ok(/window\._bakOffer = \{/.test(bk) && /dispatchEvent\(new CustomEvent\('pth:bakoffer'\)\)/.test(bk), 'backup-autosave hands the offer over (window._bakOffer, pth:bakoffer)');
@@ -116,6 +142,12 @@ ok(/addEventListener\('pth:langchange', relabel\)/.test(bk), 'the banner follows
 ok(/_toast\(_offerHint\(false\), \{ icon: '', duration: 7000 \}\)/.test(bk), 'the banner\'s Later / ✕ tell where to find it too (toast)');
 const idx = fs.readFileSync('public/modules/guide/index.mjs', 'utf8');
 ok(/function bannerUp\(\) \{\s*if \(bakPending\(\)\) return true;/.test(idx), 'the first-launch offer waits for it');
+// Firefox (web.31): module + boot
+ok(/if \(!_supported\(\)\) \{ _maybeOfferPersist\(\); return; \}/.test(bk) && /function _maybeOfferPersist\(\) \{\s*if \(window\.LIVE_MODE \|\| !_isFirefox\(\) \|\| !_persistApi\(\) \|\| !_enabled\(\) \|\| _automated\(\)\) return;/.test(bk), 'Firefox only, never /live nor automated');
+ok(/if \(_persistN\(\) >= PERSIST_MAX\) return;/.test(bk) && /const PERSIST_MAX = 3;/.test(bk) && /if \(already\) return;/.test(bk), 'at most 3 showings per device, never once protected');
+ok(/_persistSetN\(PERSIST_MAX\);\s*_ui\(\);\s*return 'no';/.test(bk), 'a refusal is final (Firefox remembers it): no more offers');
+ok(/id="adv-persist-btn" onclick="if\(window\._bakPersist\)window\._bakPersist\(\)"/.test(fs.readFileSync('public/pokerth-client.html', 'utf8')) && /window\._bakPersist = _persistClick;/.test(bk), 'the same button in Advanced options → Backup & reset');
+ok(/!\/Firefox\\\/\/\.test\(navigator\.userAgent \|\| ''\)\) \{\s*navigator\.storage\.persist\(\)/.test(fs.readFileSync('public/pokerth.js', 'utf8')), 'no cold request on load in Firefox (the others keep the silent one)');
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

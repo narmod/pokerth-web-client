@@ -3163,7 +3163,7 @@
     var since=$('guideSince');
     if(since) since.textContent=(_guidePeriodDays||_trafPeriod===1)?(_perLabel(_trafPeriod)+_perCounted(_guidePeriodDays)):(_guideSince?('all time since '+new Date(_guideSince).toLocaleDateString()):'');
     var g=_guideData;
-    var any=g&&(g.acceptance.offered||g.acceptance.accepted||g.funnel.highlighted||Object.keys(g.contexts||{}).some(function(k){ var c=g.contexts[k]; return c.shown||c.done||c.dismissed||c.banner; }));
+    var any=g&&(g.acceptance.offered||g.acceptance.accepted||g.funnel.highlighted||Object.keys(g.contexts||{}).some(function(k){ var c=g.contexts[k]; return c.shown||c.done||c.dismissed||c.banner||c.persist_shown; }));
     if(!any){
       box.innerHTML='<div class="empty">'+(!_guideKnown
         ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (pm2 restart pokerth-web, or restart the container); a static update alone swaps the served files, not the process.'
@@ -3196,7 +3196,8 @@
     h+='<div class="srow"><span>Create a backup</span><b>'+bkN('create')+' tapped · '+bkN('created')+' created</b></div>';
     h+='<div class="srow"><span>Restore a backup</span><b>'+bkN('restore')+' tapped · '+bkN('restored')+' restored</b></div>';
     h+='<div class="srow"><span>Later</span><b>'+bkN('dismissed')+' · then « Show me » '+bkN('showme')+'</b></div>';
-    h+='<div class="muted" style="margin-top:4px">Shown on a browser whose storage comes up blank (desktop Chrome, Edge, Opera), even with the tips off. Counted since 2.1.10-web.27; « Offered » once per page load.</div>';
+    h+='<div class="srow"><span>Firefox — protect my settings</span><b>'+bkN('persist_shown')+' offered · '+bkN('persist')+' tapped · '+bkN('persisted')+' granted · '+bkN('persist_no')+' refused · '+bkN('persist_later')+' later</b></div>';
+    h+='<div class="muted" style="margin-top:4px">Shown on a browser whose storage comes up blank (desktop Chrome, Edge, Opera), even with the tips off. Counted since 2.1.10-web.27; « Offered » once per page load. Firefox cannot write to a folder: the Ace offers there to protect the settings (persistent storage, since web.31), at most 3 times per device; « tapped » includes the button of Advanced options, « Show me » counts both offers.</div>';
     box.innerHTML=h;
   }
   // ── Where visitors come from (server/ref-stats.js) ──

@@ -417,7 +417,8 @@ export const help = {
           t: "Ajiyar saitunanka ta gida",
           b: [
             "Ana iya share ma'ajiyar burauza tsakanin ziyara (tsaftacewa, bincike na sirri, ƙarancin sarari a faifai). A Chrome, Edge da Opera na kwamfuta, manhajar za ta iya ci gaba da sabunta fayil ɗin ajiya, pokerth-web-backup.json, a cikin babban fayil da ka zaɓa: zaɓuɓɓukan yanar gizo, jigogi, katunan wasa, hoton avatar, kofuna da ƙididdiga. Ba a taɓa saka kalmar sirrinka ko zamanka a ciki ba.",
-            "Idan wannan burauza ta fara da saituna babu komai, Aas yana gabatar da wannan a cikin kumfarsa, ko da shawarwarinsa a kashe suke: “Ƙirƙiri ajiya” yana zaɓar babban fayil kuma ya rubuta fayil na farko, “Maido da ajiya” yana dawo da komai daga fayil da ke akwai, kuma “Daga baya” yana barin ka ka fara sabo. A Zaɓuɓɓuka na ci gaba → Ajiya da sake saiti za ka iya zaɓar wani babban fayil, kashe rubutu kai tsaye, ko fitarwa da shigo da ajiyar da hannu a kowace burauza."] },
+            "Idan wannan burauza ta fara da saituna babu komai, Aas yana gabatar da wannan a cikin kumfarsa, ko da shawarwarinsa a kashe suke: “Ƙirƙiri ajiya” yana zaɓar babban fayil kuma ya rubuta fayil na farko, “Maido da ajiya” yana dawo da komai daga fayil da ke akwai, kuma “Daga baya” yana barin ka ka fara sabo. A Zaɓuɓɓuka na ci gaba → Ajiya da sake saiti za ka iya zaɓar wani babban fayil, kashe rubutu kai tsaye, ko fitarwa da shigo da ajiyar da hannu a kowace burauza.",
+            "Firefox ba zai iya rubutu a babban fayil ba, don haka Aas yana gabatar da kare saitunanka a maimakon haka: da zarar ka karɓi buƙatar Firefox, ba zai taɓa share bayanan wannan shafin da kansa ba (kai kanka za ka iya share su har yanzu). Wannan maɓallin, “Kare saitunana”, yana nan kuma a cikin Zaɓuɓɓuka na ci gaba → Ajiya da sake saiti."] },
         { id: "updates",
           t: "Kasancewa sabunta",
           b: [

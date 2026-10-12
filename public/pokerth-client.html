@@ -3625,6 +3625,10 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
               <button type="button" class="btn-sm adv-export-btn" id="adv-bakauto-pick" onclick="if(window._bakAutoPick)window._bakAutoPick()"><span data-i18n="advPdbAutoPick">Choose folder…</span></button>
             </div>
             <div class="adv-link-desc" id="adv-bakauto-status"></div>
+            <div class="adv-row adv-export-row" id="adv-persist-row" style="display:none">
+              <button type="button" class="btn-sm adv-export-btn" id="adv-persist-btn" onclick="if(window._bakPersist)window._bakPersist()"><span data-i18n="bakPersistBtn">Protect my settings</span></button>
+            </div>
+            <div class="adv-link-desc" id="adv-persist-status" style="display:none"></div>
           </div>
         </section>
         <div class="help-body adv-results" id="adv-results" style="display:none"></div>

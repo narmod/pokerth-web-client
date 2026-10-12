@@ -42,6 +42,14 @@ highlights below.
   `server/guide-stats.js`: shown by the Ace or by the fallback banner, Create / Restore tapped and
   done, « Later », « Show me »), with its own block « Local backup offer » on the admin card; the
   privacy page says so. Needs a proxy restart to be recorded (`web.27`).
+- **Firefox: the Ace offers to protect the settings** — Firefox has no folder access, so instead
+  of the backup file the Ace offers « Protect my settings »: `navigator.storage.persist()` asked on
+  the player's click after an explanation (Firefox shows its own prompt; granted, it never evicts
+  the site's data on its own). At most 3 showings per device (`pth_persist_n`), never once granted,
+  a refusal is final; a « Protect my settings » row in Advanced options → Backup & reset shows the
+  state. The cold request on load in `pokerth.js` is skipped on Firefox (other browsers keep the
+  silent one). Counted as `backup.persist_*`; third paragraph in help `options:backup`; 5 new keys
+  in the 83 catalogues; `test-backup-persist`, Firefox scenario in `test-guide-backup` (`web.31`).
 - **No Assistance at Ranking tables** — the hand-strength banner and its win % are a web extra:
   the QML client shows no such thing (its Chancen tab only lists hand categories). At a Ranking
   table (game type 4, online) the banner is replaced by a short note and nothing is computed, so

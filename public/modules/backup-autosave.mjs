@@ -10,7 +10,12 @@
 // remembered, a banner offers to restore everything in one click.
 //
 // Support: desktop Chrome / Edge / Opera. Everywhere else the module stays
-// inert and the manual export/import (advanced options) remains the only path.
+// inert and the manual export/import (advanced options) remains the only path
+// — except Firefox (web.31): there the Ace offers to PROTECT the settings
+// instead (navigator.storage.persist(), asked on the player's click, after an
+// explanation; Firefox then never evicts the site's data on its own). Same
+// window._bakOffer hand-over, kind 'persist'; a button in Advanced options →
+// Backup & reset does the same.
 //
 // File contents: exactly what the manual export produces — built by
 // window._webBackupRecord (pokerth.js); restoring goes through
@@ -408,8 +413,10 @@ function _count(ev) {
   try { import('./guide/beacons.mjs').then((m) => { try { m.beacon('backup', ev); } catch (_e) {} }).catch(() => {}); } catch (_e) {}
 }
 function _offerPending() { return !!(_offer && !_offer.done && !_offer.banner); }
+function _offerKind() { return (_offer && _offer.kind) || 'folder'; }
 function _offerFallback() {
   if (!_offerPending()) return;
+  if (_offerKind() === 'persist') { _offer.done = true; return; }   // no banner for this one: nothing to restore
   _offer.banner = true;
   _showRestoreBanner();
   _count('banner');
@@ -422,6 +429,16 @@ function _offerDone(later) {
 }
 function _offerPath() { return (_state.dirName ? _state.dirName + ' / ' : '') + FILE_NAME; }
 function _offerTexts() {
+  if (_offerKind() === 'persist') {
+    return {
+      title: _t('bakPersistTitle', 'Keep your settings safe'),
+      body: _t('bakPersistBody', 'Firefox may erase this site\'s data to free up disk space — your options, themes, avatar and trophies with it. I can ask Firefox to keep them; it will ask you to confirm.'),
+      persist: _t('bakPersistBtn', 'Protect my settings'),
+      later: _t('bakBannerLater', 'Later'),
+      ok: _t('bakPersistOk', 'Done: Firefox will keep your settings.'),
+      no: _t('bakPersistNo', 'Firefox did not allow it. You can change it later in the site\'s permissions (padlock in the address bar).'),
+    };
+  }
   return {
     title: _t('bakBannerTitle', 'Local backup of your settings'),
     body: _t('bakBannerBody', 'This browser can save your settings to a folder of your choice, or restore them from an existing backup.'),
@@ -440,7 +457,7 @@ function _offerTexts() {
 function _offerHint(bold) {
   const b = (s) => (bold ? '**' + s + '**' : s);
   const path = [_t('advTitle', 'Advanced options'), _t('advCatReset', 'Backup & reset'), _t('advBakAutoSec', 'Automatic backup')].join(' → ');
-  const btn = _t('advPdbAutoPick', 'Choose folder…');
+  const btn = _offerKind() === 'persist' ? _t('bakPersistBtn', 'Protect my settings') : _t('advPdbAutoPick', 'Choose folder…');
   let s = null;
   try {
     if (typeof window.t === 'function') {
@@ -458,7 +475,7 @@ function _offerShow() {
   try { if (typeof window.advSelectCat === 'function') window.advSelectCat('reset'); } catch (_e) {}
   setTimeout(() => {
     try {
-      const pick = document.getElementById('adv-bakauto-pick');
+      const pick = document.getElementById(_offerKind() === 'persist' ? 'adv-persist-btn' : 'adv-bakauto-pick');
       const row = pick && pick.closest ? pick.closest('.adv-row') : null;
       const sec = document.querySelector('#adv-panel-reset .adv-sec[data-i18n="advBakAutoSec"]');
       const to = sec || row;
@@ -636,9 +653,78 @@ function _maybeOfferRestore() {
   _later(() => { if (_offer && !_offer.shown) _offerFallback(); }, WATCH_MS);
 }
 
+// ── Firefox: protect the settings (persistent storage, web.31) ─────────────
+// Firefox asks the player before granting persistent storage. Asked on load,
+// without a word, that prompt comes out of nowhere and is often refused for
+// good (Firefox remembers): pokerth.js no longer asks there on Firefox, the
+// Ace explains first and the request runs on the player's click. Granted,
+// Firefox never evicts the site's data on its own (disk cleanup, idle purge);
+// the player can still delete it himself.
+const PERSIST_N_KEY = 'pth_persist_n';   // showings of the offer on this device (local, not synced)
+const PERSIST_MAX = 3;
+function _isFirefox() {
+  try { return /Firefox\//.test(navigator.userAgent || ''); } catch (_e) { return false; }
+}
+function _persistApi() {
+  try {
+    return typeof navigator !== 'undefined' && !!navigator.storage
+      && typeof navigator.storage.persist === 'function' && typeof navigator.storage.persisted === 'function';
+  } catch (_e) { return false; }
+}
+function _persistN() { try { return parseInt(localStorage.getItem(PERSIST_N_KEY) || '0', 10) || 0; } catch (_e) { return 0; } }
+function _persistSetN(n) { try { localStorage.setItem(PERSIST_N_KEY, String(n)); } catch (_e) {} }
+// 'ok' granted · 'no' refused (Firefox remembers it: no more offers) · 'bad' error.
+// Call it in the click's own tick: Firefox ties its prompt to the gesture.
+function _persistAsk() {
+  let p;
+  try { p = navigator.storage.persist(); } catch (e) { p = Promise.reject(e); }
+  return Promise.resolve(p).then((granted) => {
+    if (granted) { _persistSetN(PERSIST_MAX); _ui(); return 'ok'; }
+    _persistSetN(PERSIST_MAX);
+    _ui();
+    return 'no';
+  }).catch(() => 'bad');
+}
+function _maybeOfferPersist() {
+  if (window.LIVE_MODE || !_isFirefox() || !_persistApi() || !_enabled() || _automated()) return;
+  if (_persistN() >= PERSIST_MAX) return;
+  let p;
+  try { p = navigator.storage.persisted(); } catch (_e) { return; }
+  Promise.resolve(p).then((already) => {
+    if (already) return;
+    _offer = { kind: 'persist', claimed: false, shown: false, banner: false, done: false };
+    try { document.dispatchEvent(new CustomEvent('pth:bakoffer')); } catch (_e) {}
+  }).catch(() => {});
+}
+// Advanced options → Backup & reset → « Protect my settings » (the Ace's
+// « Later » points here).
+function _persistClick() {
+  _count('persist');
+  _persistAsk().then((r) => {
+    if (r === 'ok') { _count('persisted'); _toast(_t('bakPersistOk', 'Done: Firefox will keep your settings.')); }
+    else if (r === 'no') { _count('persist_no'); _toast(_t('bakPersistNo', 'Firefox did not allow it.'), { icon: '', duration: 7000 }); }
+  });
+}
+function _persistUi() {
+  try {
+    const row = document.getElementById('adv-persist-row');
+    const st = document.getElementById('adv-persist-status');
+    if (!row && !st) return;
+    const on = !window.LIVE_MODE && _isFirefox() && _persistApi();
+    if (row) row.style.display = 'none';
+    if (st) st.style.display = 'none';
+    if (!on) return;
+    Promise.resolve(navigator.storage.persisted()).then((already) => {
+      if (row) row.style.display = already ? 'none' : '';
+      if (st) { st.textContent = already ? _t('bakPersistOk', 'Done: Firefox will keep your settings.') : ''; st.style.display = already ? '' : 'none'; }
+    }).catch(() => {});
+  } catch (_e) {}
+}
+
 // ── UI (advanced-options panel) ────────────────────────────────────────────
 
 function _ui() {
+  _persistUi();
   try {
     const btn = document.getElementById('adv-bakauto-pick');
     const st = document.getElementById('adv-bakauto-status');
@@ -670,7 +756,7 @@ function _ui() {
 const TICK_MS = 60000;
 
 function _ready() {
-  if (!_supported()) return;
+  if (!_supported()) { _maybeOfferPersist(); return; }   // Firefox: protect instead (web.31)
   _getHandle().then(() => { _ui(); _maybeOfferRestore(); }).catch(() => {});
   try { setInterval(() => save('tick'), TICK_MS); } catch (_e) {}
   // First write shortly after load: covers changes made server-side while the
@@ -699,7 +785,11 @@ if (typeof window !== 'undefined') {
   window._bakOffer = {
     pending: _offerPending,
     claim() { if (!_offerPending()) return false; _offer.claimed = true; return true; },
-    shown() { if (_offer) _offer.shown = true; },
+    shown() {
+      if (!_offer) return;
+      if (!_offer.shown && _offer.kind === 'persist') _persistSetN(_persistN() + 1);   // at most PERSIST_MAX showings per device
+      _offer.shown = true;
+    },
     fallback: _offerFallback,
     texts: _offerTexts,
     path: _offerPath,
@@ -709,7 +799,10 @@ if (typeof window !== 'undefined') {
     create: () => _pickForCreate(),
     restore: _offerRestore,
     done: _offerDone,
+    kind: _offerKind,          // 'folder' (backup file) or 'persist' (Firefox, web.31)
+    persist: _persistAsk,      // kind 'persist': in the click's own tick
   };
+  window._bakPersist = _persistClick;   // Advanced options button
   if (typeof document !== 'undefined' && document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => { _ready(); });
   } else {

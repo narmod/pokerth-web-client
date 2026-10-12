@@ -961,6 +961,10 @@ let bakHint = false;          // « Later » answered: where to find it again is
 let bakCounted = false;       // statistics: the offer counted once per page, however often it comes back
 function bak() { const o = window._bakOffer; return o && typeof o.pending === 'function' ? o : null; }
 function bakPending() { const o = bak(); try { return !!(o && o.pending()); } catch (e) { return false; } }
+/** 'folder' (the backup file) or 'persist' (Firefox: protect the settings, web.31). */
+function bakKind() { const o = bak(); try { return o && typeof o.kind === 'function' ? o.kind() : 'folder'; } catch (e) { return 'folder'; } }
+/** Statistics: the Firefox offer has its own events (persist_*), the rest is shared. */
+function bakEv(ev) { return bakKind() === 'persist' ? (ev === 'shown' ? 'persist_shown' : ev === 'dismissed' ? 'persist_later' : ev) : ev; }
 function claimBak() {
   if (!available() || automated()) return;
   const o = bak();
@@ -991,7 +995,7 @@ function maybeBak() {
     showing = { kind: 'bak' };
     renderBak();
     try { bak().shown(); } catch (e) {}
-    if (!bakCounted) { bakCounted = true; beacon('backup', 'shown'); }
+    if (!bakCounted) { bakCounted = true; beacon('backup', bakEv('shown')); }
   }, 600);
 }
 function renderBak(focus) {
@@ -1003,13 +1007,20 @@ function renderBak(focus) {
     M.say({
       text: o.hint(true),
       buttons: show ? [btn('bakShowMe'), btn('gotIt', true)] : [btn('gotIt', true)],
-      onButton: (id) => { endBak(); if (id === 'bakShowMe' && show) { beacon('backup', 'showme'); try { o.show(); } catch (e) {} } },
+      onButton: (id) => { const ev = bakEv('showme'); endBak(); if (id === 'bakShowMe' && show) { beacon('backup', ev); try { o.show(); } catch (e) {} } },
       focus: !!focus,
     });
     return;
   }
   const tx = o.texts();
   const msg = bakMsg ? `<p class="ad-bak-msg${bakMsg.err ? ' ad-bak-err' : ''}" role="status">${esc(bakMsg.text)}</p>` : '';
+  if (bakKind() === 'persist') {
+    // Firefox: no folder — protect the settings (persistent storage), asked on the click
+    const htmlP = `<p class="ad-text"><b>${esc(tx.title)}</b></p><p class="ad-text ad-bak-body">${esc(tx.body)}</p>${msg}`;
+    const buttonsP = bakBusy ? [] : [{ id: 'bakLater', label: tx.later }, { id: 'bakPersist', label: tx.persist, primary: true }];
+    M.say({ html: htmlP, buttons: buttonsP, onButton: onBakButton, focus: !!focus });
+    return;
+  }
   const html = `<p class="ad-text"><b>${esc(tx.title)}</b></p><p class="ad-text ad-bak-body">${esc(tx.body)}</p>`
     + `<p class="ad-bak-path">${esc(o.path())}</p>${msg}`;
   const buttons = bakBusy ? [] : [
@@ -1033,10 +1044,36 @@ function onBakButton(id) {
   if (!o || bakBusy) return;
   if (id === 'bakLater' || id === 'escape') {
     try { o.done(true); } catch (e) {}
-    beacon('backup', 'dismissed');
+    beacon('backup', bakEv('dismissed'));
     if (typeof o.hint !== 'function') { endBak(); return; }
     bakHint = true;                                    // tell where to find it later (web.21)
     renderBak(true);
+    return;
+  }
+  if (id === 'bakPersist') {
+    // in the click's own tick: Firefox ties its permission prompt to the gesture
+    let pp;
+    try { pp = o.persist(); } catch (e) { pp = Promise.reject(e); }
+    beacon('backup', 'persist');
+    bakBusy = true;
+    bakMsg = null;
+    renderBak();
+    Promise.resolve(pp).then((r) => {
+      bakBusy = false;
+      try { o.done(false); } catch (e) {}
+      if (r === 'ok' || r === 'no') beacon('backup', r === 'ok' ? 'persisted' : 'persist_no');
+      if (!(showing && showing.kind === 'bak') || !M) return;
+      const tx = o.texts();
+      if (r === 'ok') {
+        M.say({ text: tx.ok, buttons: [] });
+        clearTimeout(noteTimer);
+        noteTimer = setTimeout(() => { noteTimer = 0; endBak(); }, 2600);
+      } else if (r === 'no') {
+        M.say({ text: tx.no, buttons: [btn('gotIt', true)], onButton: () => endBak(), focus: true });
+      } else {
+        M.say({ text: o.why('bad'), buttons: [btn('gotIt', true)], onButton: () => endBak(), focus: true });
+      }
+    }).catch(() => { bakBusy = false; endBak(); });
     return;
   }
   const create = id === 'bakCreate';

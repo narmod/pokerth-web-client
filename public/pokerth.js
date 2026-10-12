@@ -1149,8 +1149,13 @@ window.importWebBackupPick = importWebBackupPick;
 // automatique (nettoyage d'espace disque, purge d'inactivité) ne peut alors
 // plus vider localStorage/IndexedDB sans action explicite du joueur. Sans
 // effet là où l'API n'existe pas ; un refus est silencieux et sans conséquence.
+// Firefox excepté (web.31) : il AFFICHE une demande d'autorisation, qui
+// surgissait ici au chargement sans explication et était souvent refusée pour
+// de bon. Là, l'As explique d'abord et la demande part au clic du joueur
+// (modules/backup-autosave.mjs, « Protéger mes réglages »).
 try {
-  if (navigator.storage && typeof navigator.storage.persist === 'function') {
+  if (navigator.storage && typeof navigator.storage.persist === 'function'
+      && !/Firefox\//.test(navigator.userAgent || '')) {
     navigator.storage.persist().catch(function () {});
   }
 } catch (e) {}
@@ -12102,7 +12107,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.30'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.31'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

@@ -417,7 +417,8 @@ export const help = {
           t: "Copi wrth gefn lleol o'ch gosodiadau",
           b: [
             "Gall storfa'r porwr gael ei chlirio rhwng ymweliadau (glanhau, pori preifat, lle disg yn brin). Ar Chrome, Edge ac Opera ar gyfrifiadur, gall y cleient gadw ffeil copi wrth gefn, pokerth-web-backup.json, yn gyfredol mewn ffolder o'ch dewis: dewisiadau gwe, themâu, pecynnau cardiau, delwedd afatar, tlysau ac ystadegau. Ni chaiff eich cyfrinair a'ch sesiwn byth eu cynnwys.",
-            "Pan fydd y porwr hwn yn cychwyn gyda gosodiadau gwag, mae'r As yn ei gynnig yn ei swigen, hyd yn oed gyda'i gyngor wedi'i ddiffodd: mae “Creu copi wrth gefn” yn dewis y ffolder ac yn ysgrifennu'r ffeil gyntaf, mae “Adfer copi wrth gefn” yn dod â phopeth yn ôl o ffeil sy'n bodoli, ac mae “Yn nes ymlaen” yn gadael i chi ddechrau o'r newydd. Yn Dewisiadau uwch → Copi wrth gefn ac ailosod gallwch ddewis ffolder arall, diffodd ysgrifennu awtomatig, neu allforio a mewnforio'r copi wrth gefn â llaw mewn unrhyw borwr."] },
+            "Pan fydd y porwr hwn yn cychwyn gyda gosodiadau gwag, mae'r As yn ei gynnig yn ei swigen, hyd yn oed gyda'i gyngor wedi'i ddiffodd: mae “Creu copi wrth gefn” yn dewis y ffolder ac yn ysgrifennu'r ffeil gyntaf, mae “Adfer copi wrth gefn” yn dod â phopeth yn ôl o ffeil sy'n bodoli, ac mae “Yn nes ymlaen” yn gadael i chi ddechrau o'r newydd. Yn Dewisiadau uwch → Copi wrth gefn ac ailosod gallwch ddewis ffolder arall, diffodd ysgrifennu awtomatig, neu allforio a mewnforio'r copi wrth gefn â llaw mewn unrhyw borwr.",
+            "Ni all Firefox ysgrifennu i ffolder, felly mae'r As yn cynnig diogelu eich gosodiadau yn lle hynny: unwaith y byddwch yn derbyn cais Firefox, ni fydd byth yn dileu data'r wefan hon ohono'i hun (gallwch chi ei ddileu eich hun o hyd). Mae'r un botwm, “Diogelu fy ngosodiadau”, yn Dewisiadau uwch → Copi wrth gefn ac ailosod."] },
         { id: "updates",
           t: "Cadw'n gyfredol",
           b: [

@@ -417,7 +417,8 @@ export const help = {
           t: "Àfipamọ́ ètò rẹ lórí ẹ̀rọ",
           b: [
             "Ibi ìpamọ́ aṣàwákiri lè di píparẹ́ láàárín ìbẹ̀wò kan sí òmíràn (ìmọ́tótó, ìwákiri àdáni, àyè díẹ̀ lórí díìsìkì). Lórí Chrome, Edge àti Opera fún kọ̀ǹpútà, oníbàárà lè máa ṣe ìmúdójúìwọ̀n fáìlì àfipamọ́ kan, pokerth-web-backup.json, nínú fódà tí o bá yàn: àṣàyàn wẹ́ẹ̀bù, àkòrí, àwọn káàdì, àwòrán afàtá, ife ẹ̀yẹ àti ìṣirò. Ọ̀rọ̀ aṣínà rẹ àti ìgbà ìwọlé rẹ kò ní sí nínú rẹ̀ rárá.",
-            "Nígbà tí aṣàwákiri yìí bá bẹ̀rẹ̀ pẹ̀lú ètò òfìfo, Ace yóò fi èyí lọ̀ ọ́ nínú àfọ́fọ́ ọ̀rọ̀ rẹ̀, kódà nígbà tí àwọn ìmọ̀ràn rẹ̀ bá wà ní pípa: “Ṣẹ̀dá àfipamọ́” ń yan fódà, ó sì ń kọ fáìlì àkọ́kọ́, “Dá àfipamọ́ padà” ń mú ohun gbogbo padà láti inú fáìlì tó ti wà, “Nígbà mìíràn” sì ń jẹ́ kí o bẹ̀rẹ̀ láti ìbẹ̀rẹ̀. Nínú Àṣàyàn ìlọsíwájú → Àfipamọ́ àti àtúntò, o lè yan fódà mìíràn, pa kíkọ aládàáṣiṣẹ́, tàbí kó àfipamọ́ jáde kí o sì kó o wọlé fúnra rẹ nínú aṣàwákiri èyíkéyìí."] },
+            "Nígbà tí aṣàwákiri yìí bá bẹ̀rẹ̀ pẹ̀lú ètò òfìfo, Ace yóò fi èyí lọ̀ ọ́ nínú àfọ́fọ́ ọ̀rọ̀ rẹ̀, kódà nígbà tí àwọn ìmọ̀ràn rẹ̀ bá wà ní pípa: “Ṣẹ̀dá àfipamọ́” ń yan fódà, ó sì ń kọ fáìlì àkọ́kọ́, “Dá àfipamọ́ padà” ń mú ohun gbogbo padà láti inú fáìlì tó ti wà, “Nígbà mìíràn” sì ń jẹ́ kí o bẹ̀rẹ̀ láti ìbẹ̀rẹ̀. Nínú Àṣàyàn ìlọsíwájú → Àfipamọ́ àti àtúntò, o lè yan fódà mìíràn, pa kíkọ aládàáṣiṣẹ́, tàbí kó àfipamọ́ jáde kí o sì kó o wọlé fúnra rẹ nínú aṣàwákiri èyíkéyìí.",
+            "Firefox kò lè kọ sínú fódà, nítorí náà Ace ń fi ọ̀nà mìíràn lọ̀ ọ́: láti dáàbò bo ètò rẹ. Ní kété tí o bá gba ìbéèrè Firefox, kò ní pa dátà ojú-òpó yìí rẹ́ fúnra rẹ̀ láé (ìwọ fúnra rẹ ṣì lè pa á rẹ́). Bọ́tìnnì kan náà, “Dáàbò bo ètò mi”, wà nínú Àṣàyàn ìlọsíwájú → Àfipamọ́ àti àtúntò."] },
         { id: "updates",
           t: "Wíwà ní ìmúdójúìwọ̀n",
           b: [

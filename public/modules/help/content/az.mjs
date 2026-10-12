@@ -417,7 +417,8 @@ export const help = {
           t: "Parametrlərinizin lokal ehtiyat nüsxəsi",
           b: [
             "Brauzer yaddaşı ziyarətlər arasında silinə bilər (təmizləmə, gizli rejim, diskdə az yer). Chrome, Edge və Opera brauzerlərinin masaüstü versiyalarında klient seçdiyiniz qovluqda pokerth-web-backup.json ehtiyat nüsxə faylını aktual saxlaya bilər: veb seçimləri, mövzular, kart dəstləri, avatar şəkli, kuboklar və statistika. Parolunuz və sessiyanız heç vaxt daxil edilmir.",
-            "Bu brauzer boş parametrlərlə açılanda Tuz, məsləhətləri söndürülü olsa belə, bunu öz balonunda təklif edir: “Ehtiyat nüsxə yarat” qovluğu seçir və ilk faylı yazır, “Ehtiyat nüsxəni bərpa et” hər şeyi mövcud fayldan geri qaytarır, “Sonra” isə sıfırdan başlamağa imkan verir. Əlavə seçimlər → Ehtiyat nüsxə və sıfırlama bölməsində başqa qovluq seçə, avtomatik yazmanı söndürə və ya ehtiyat nüsxəni istənilən brauzerdə əl ilə ixrac və idxal edə bilərsiniz."] },
+            "Bu brauzer boş parametrlərlə açılanda Tuz, məsləhətləri söndürülü olsa belə, bunu öz balonunda təklif edir: “Ehtiyat nüsxə yarat” qovluğu seçir və ilk faylı yazır, “Ehtiyat nüsxəni bərpa et” hər şeyi mövcud fayldan geri qaytarır, “Sonra” isə sıfırdan başlamağa imkan verir. Əlavə seçimlər → Ehtiyat nüsxə və sıfırlama bölməsində başqa qovluq seçə, avtomatik yazmanı söndürə və ya ehtiyat nüsxəni istənilən brauzerdə əl ilə ixrac və idxal edə bilərsiniz.",
+            "Firefox qovluğa yaza bilmir, ona görə də Tuz bunun əvəzinə parametrlərinizi qorumağı təklif edir: Firefox-un sorğusunu qəbul etdikdən sonra o, bu saytın məlumatlarını heç vaxt öz-özünə silmir (siz isə yenə də onları özünüz silə bilərsiniz). Eyni düymə, “Parametrlərimi qoru”, Əlavə seçimlər → Ehtiyat nüsxə və sıfırlama bölməsində də var."] },
         { id: "updates",
           t: "Aktual qalmaq",
           b: [

@@ -20,6 +20,9 @@
 //  · the local backup offer (web.27): said by the Ace (shown) or, when he
 //    cannot, by the fallback banner (banner); Create / Restore tapped and
 //    done, « Later », « Show me ». Both carriers count in the same context.
+//    On Firefox (web.31) the offer is to protect the settings instead
+//    (persistent storage): persist_shown, persist (tapped), persisted
+//    (granted), persist_no (refused in Firefox's prompt), persist_later.
 // ═══════════════════════════════════════════════════════════════════
 
 const EVENTS = Object.freeze({
@@ -52,7 +55,8 @@ const EVENTS = Object.freeze({
   // H1 — « More help »: opened, a section read, a search typed, the help window opened from it
   'more-help': ['shown', 'section', 'search', 'window'],
   // web.27 — the local backup offer on a blank browser storage (backup-autosave.mjs)
-  backup: ['shown', 'banner', 'create', 'created', 'restore', 'restored', 'dismissed', 'showme'],
+  backup: ['shown', 'banner', 'create', 'created', 'restore', 'restored', 'dismissed', 'showme',
+    'persist_shown', 'persist', 'persisted', 'persist_no', 'persist_later'],   // Firefox (web.31)
 });
 
 /** Is this (context, event) pair one we count? */

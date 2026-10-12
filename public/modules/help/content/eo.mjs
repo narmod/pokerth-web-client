@@ -417,7 +417,8 @@ export const help = {
           t: "Loka savkopio de viaj agordoj",
           b: [
             "La konservejo de la retumilo povas esti viŝita inter du vizitoj (purigado, privata retumado, malmulte da diska spaco). En Chrome, Edge kaj Opera por komputilo, la kliento povas teni ĝisdata savkopian dosieron, pokerth-web-backup.json, en dosierujo de via elekto: retaj opcioj, etosoj, kartaroj, avatara bildo, trofeoj kaj statistikoj. Via pasvorto kaj via seanco neniam estas inkluzivitaj.",
-            "Kiam ĉi tiu retumilo startas kun malplenaj agordoj, la Aso proponas ĝin en sia veziko, eĉ se liaj konsiloj estas malŝaltitaj: “Krei savkopion” elektas la dosierujon kaj skribas la unuan dosieron, “Restarigi savkopion” rehavigas ĉion el ekzistanta dosiero, kaj “Poste” lasas vin rekomenci de nulo. En Altnivelaj opcioj → Savkopio kaj restarigo vi povas elekti alian dosierujon, malŝalti la aŭtomatan skribadon, aŭ permane eksporti kaj importi la savkopion en iu ajn retumilo."] },
+            "Kiam ĉi tiu retumilo startas kun malplenaj agordoj, la Aso proponas ĝin en sia veziko, eĉ se liaj konsiloj estas malŝaltitaj: “Krei savkopion” elektas la dosierujon kaj skribas la unuan dosieron, “Restarigi savkopion” rehavigas ĉion el ekzistanta dosiero, kaj “Poste” lasas vin rekomenci de nulo. En Altnivelaj opcioj → Savkopio kaj restarigo vi povas elekti alian dosierujon, malŝalti la aŭtomatan skribadon, aŭ permane eksporti kaj importi la savkopion en iu ajn retumilo.",
+            "Firefox ne povas skribi en dosierujon, do la Aso anstataŭe proponas protekti viajn agordojn: post kiam vi akceptas la peton de Firefox, ĝi neniam plu memvole forviŝas la datumojn de ĉi tiu retejo (vi mem ankoraŭ povas forviŝi ilin). La sama butono, “Protekti miajn agordojn”, troviĝas en Altnivelaj opcioj → Savkopio kaj restarigo."] },
         { id: "updates",
           t: "Resti ĝisdata",
           b: [
