@@ -1,3 +1,6 @@
+2026-10-12 version 2.1.10-web.30:
+- bugfix: on a phone, "More help" opened from the create-table page now uses the full screen height instead of showing only its title and search box
+
 2026-10-12 version 2.1.10-web.28:
 - improvement: the privacy notice now says that your browser's time zone is sent with the anonymous visit counter, to count visits by country (totals per country only, no IP address)
 

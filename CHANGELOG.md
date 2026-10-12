@@ -109,6 +109,10 @@ highlights below.
   selected period and included in the JSON export. The privacy page says so (`web.5`).
 
 ### Fixed
+- **« More help » usable on a phone from the create page** — the Ace stands at mid-screen there,
+  and the panel was capped to the room above him: only its title, search box and tabs showed. When
+  that room is too short the panel now opens under the header with the full screen height, over
+  the Ace (`mascot/guide.mjs`, `web.30`).
 - **Admin chart readouts line up on mobile** — the value of each row floated right after its label;
   in a bubble measured narrow (near the right edge of a phone screen) it dropped onto the next row,
   so values read against the wrong series and the first row showed none. Rows are now one flex line

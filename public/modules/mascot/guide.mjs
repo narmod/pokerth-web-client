@@ -82,6 +82,7 @@ body.guide-ask #ace-dock *{cursor:pointer!important}
 [dir=rtl] #ace-dock .ad-page,[dir=rtl] #ace-dock .ad-kicker,[dir=rtl] #ace-dock .ad-list,[dir=rtl] #ace-dock .ad-hbody,[dir=rtl] #ace-dock .ad-hnav{direction:rtl;text-align:right}
 #ace-dock .ad-bubble.ad-big{width:min(900px,calc(100vw - 24px));max-width:min(900px,calc(100vw - 24px));height:min(640px,calc(100vh - 110px));flex-direction:column;overflow:hidden;padding:12px 14px 10px}
 #ace-dock .ad-bubble.ad-big.ad-open{display:flex}
+#ace-dock .ad-bubble.ad-big{z-index:2}
 #ace-dock .ad-bubble .win-rsz{display:none;position:absolute;z-index:6;touch-action:none}
 #ace-dock .ad-bubble.ad-float .win-rsz{display:block}
 #ace-dock .ad-bubble.ad-float{z-index:3}
@@ -474,6 +475,16 @@ function placeBubble() {
     return;
   }
   const top0 = Math.max(topEdge(), 8) + 8;
+  // « More help » on a phone: when the Ace stands high (the create page lifts
+  // him to mid-screen) the room above him squeezed the panel to its title and
+  // search box; it goes under the header with the screen's full height instead,
+  // over the Ace (web.30)
+  if (bub.classList.contains('ad-big') && Math.round(r.top - 8 - top0) < Math.min(bh, 420)) {
+    const room = Math.max(240, Math.round(vh - top0 - 8 - safeInset('bottom')));
+    if (bh > room) bub.style.maxHeight = room + 'px';
+    apply({ right: 12, top: top0 }, true);
+    return;
+  }
   // under the header, the bubble never goes down over the Ace (a tall one scrolls instead, H3)
   if (top0 + bh > r.top - 8 && r.left < vw - 12 && r.right > vw - 12 - bw) {
     const cap = Math.max(160, Math.round(r.top - 8 - top0));
