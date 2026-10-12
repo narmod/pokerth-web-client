@@ -159,5 +159,17 @@ const bst = { labels: ['a', 'b', 'c'], kind: 'bar' };
 ok(w._chartIndex(bst, (gb.l + 1) / W) === 0 && w._chartIndex(bst, (W - gb.r - 1) / W) === 2,
   'and the pointer is matched to the bar under it, by slot');
 
+
+// -- Readout rows ------------------------------------------------------------
+// The value used to float right after the bare label: in a bubble measured
+// narrow (near the right edge, on a phone), the float dropped to the next row
+// and every value read against the wrong series.
+ok(!/\.chartro s\{[^}]*float/.test(admin), 'a readout value is not floated');
+ok(/\.chartro span\{display:flex/.test(admin), 'each readout row is one flex line: swatch, label, value');
+ok(/\.chartro i\{[^}]*min-width:0[^}]*text-overflow:ellipsis/.test(admin), 'a long label shortens itself instead of pushing the value away');
+ok(/ro\.style\.left='0px';\s*ro\.style\.display='block';/.test(body(admin, '_chartRead')),
+  'the bubble is measured at full width before it is placed');
+ok(/<i>'\+_annEsc\(l\.n\|\|l\.k\)\+'<\/i>/.test(body(admin, '_chartRead')), 'the label sits in its own element, value beside it');
+
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);

@@ -162,11 +162,12 @@
   .chartbox{position:relative}
   .chartbox svg{touch-action:pan-y}
   .chartgd{position:absolute;width:1px;background:rgba(160,172,196,.55);pointer-events:none;display:none}
-  .chartro{position:absolute;z-index:6;display:none;pointer-events:none;padding:6px 9px;border:1px solid var(--line);border-radius:8px;background:var(--panel);box-shadow:0 6px 18px rgba(0,0,0,.4);font-size:.72rem;line-height:1.6;white-space:nowrap}
+  .chartro{position:absolute;z-index:6;display:none;pointer-events:none;padding:6px 9px;border:1px solid var(--line);border-radius:8px;background:var(--panel);box-shadow:0 6px 18px rgba(0,0,0,.4);font-size:.72rem;line-height:1.6;white-space:nowrap;max-width:100%;box-sizing:border-box}
   .chartro b{display:block;color:var(--gold);font-size:.7rem;margin-bottom:2px}
-  .chartro span{display:block}
-  .chartro em{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;font-style:normal}
-  .chartro s{float:right;margin-left:16px;text-decoration:none;color:var(--cream);font-variant-numeric:tabular-nums}
+  .chartro span{display:flex;align-items:center}
+  .chartro em{flex:none;display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;font-style:normal}
+  .chartro i{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;font-style:normal}
+  .chartro s{flex:none;margin-left:16px;text-decoration:none;color:var(--cream);font-variant-numeric:tabular-nums}
   .traflegend .nw em{background:#3fae6a}
   .traflegend .rt em{background:#4080d8}
   /* Traffic read as trends, not just totals. Same frame as .tstat so the two
@@ -2843,7 +2844,7 @@
     var ro=host.querySelector('.chartro'), gd=host.querySelector('.chartgd');
     if(!ro||!gd) return;
     ro.innerHTML='<b>'+_annEsc(st.labels[i]||'')+'</b>'+vis.map(function(l){
-      return '<span><em style="background:'+l.c+'"></em>'+_annEsc(l.n||l.k)
+      return '<span><em style="background:'+l.c+'"></em><i>'+_annEsc(l.n||l.k)+'</i>'
            + '<s>'+(l.fmt?l.fmt(l.vals[i]||0):_round1(l.vals[i]||0))+'</s></span>';
     }).join('');
     var geo=CHART_GEO[st.kind]||CHART_GEO.line;
@@ -2853,6 +2854,10 @@
     gd.style.top=(rc.top-hb.top+geo.t*rc.height/st.H).toFixed(1)+'px';
     gd.style.height=((st.H-geo.t-geo.b)*rc.height/st.H).toFixed(1)+'px';
     gd.style.display='block';
+    // Mesuree a gauche, ou elle a toute la largeur de la carte : laissee a
+    // sa place precedente pres du bord droit, la bulle se mesurait etroite et
+    // la valeur d'une ligne glissait sur la suivante (mobile).
+    ro.style.left='0px';
     ro.style.display='block';
     // Colle au bord plutot que de deborder de la carte, et bascule au-dessus
     // du pointeur quand il n'y a plus la place en dessous.

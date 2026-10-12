@@ -84,6 +84,11 @@ highlights below.
   selected period and included in the JSON export. The privacy page says so (`web.5`).
 
 ### Fixed
+- **Admin chart readouts line up on mobile** — the value of each row floated right after its label;
+  in a bubble measured narrow (near the right edge of a phone screen) it dropped onto the next row,
+  so values read against the wrong series and the first row showed none. Rows are now one flex line
+  (swatch, label shortened with an ellipsis if needed, value), and the bubble is measured at full
+  width before it is placed (`web.26`).
 - **Split pots in the win % estimate** — a tie always counted as half a pot, whatever the number
   of players sharing it (a board royal flush at four seats gave 50 % instead of 25 %). The sync
   and async estimates now credit `1/(n+1)` for `n` tied opponents, the formula of upstream's
