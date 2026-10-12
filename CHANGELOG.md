@@ -38,7 +38,10 @@ highlights below.
   `bakLaterHint` in the 83 catalogues (`web.21`). A « Show me » button next to « Got it » opens
   Advanced options on Backup & reset, scrolls to Automatic backup and flashes the « Choose folder… »
   row like an options-search hit (`window._bakOffer.show`, key `bakShowMe` in the 83 guide
-  catalogues) (`web.22`).
+  catalogues) (`web.22`). The offer is counted in the Ace's Help statistics (context `backup` of
+  `server/guide-stats.js`: shown by the Ace or by the fallback banner, Create / Restore tapped and
+  done, « Later », « Show me »), with its own block « Local backup offer » on the admin card; the
+  privacy page says so. Needs a proxy restart to be recorded (`web.27`).
 - **No Assistance at Ranking tables** — the hand-strength banner and its win % are a web extra:
   the QML client shows no such thing (its Chancen tab only lists hand categories). At a Ranking
   table (game type 4, online) the banner is replaced by a short note and nothing is computed, so

@@ -958,6 +958,7 @@ let bakTimer = 0;
 let bakBusy = false;
 let bakMsg = null;            // { text, err } under the path line
 let bakHint = false;          // « Later » answered: where to find it again is on screen
+let bakCounted = false;       // statistics: the offer counted once per page, however often it comes back
 function bak() { const o = window._bakOffer; return o && typeof o.pending === 'function' ? o : null; }
 function bakPending() { const o = bak(); try { return !!(o && o.pending()); } catch (e) { return false; } }
 function claimBak() {
@@ -990,6 +991,7 @@ function maybeBak() {
     showing = { kind: 'bak' };
     renderBak();
     try { bak().shown(); } catch (e) {}
+    if (!bakCounted) { bakCounted = true; beacon('backup', 'shown'); }
   }, 600);
 }
 function renderBak(focus) {
@@ -1001,7 +1003,7 @@ function renderBak(focus) {
     M.say({
       text: o.hint(true),
       buttons: show ? [btn('bakShowMe'), btn('gotIt', true)] : [btn('gotIt', true)],
-      onButton: (id) => { endBak(); if (id === 'bakShowMe' && show) { try { o.show(); } catch (e) {} } },
+      onButton: (id) => { endBak(); if (id === 'bakShowMe' && show) { beacon('backup', 'showme'); try { o.show(); } catch (e) {} } },
       focus: !!focus,
     });
     return;
@@ -1031,6 +1033,7 @@ function onBakButton(id) {
   if (!o || bakBusy) return;
   if (id === 'bakLater' || id === 'escape') {
     try { o.done(true); } catch (e) {}
+    beacon('backup', 'dismissed');
     if (typeof o.hint !== 'function') { endBak(); return; }
     bakHint = true;                                    // tell where to find it later (web.21)
     renderBak(true);
@@ -1041,6 +1044,7 @@ function onBakButton(id) {
   // called in the click's own tick: the folder picker and the permission prompt need it
   let p;
   try { p = create ? o.create() : o.restore(); } catch (e) { p = Promise.reject(e); }
+  beacon('backup', create ? 'create' : 'restore');     // after the call: the picker keeps the click's activation
   bakBusy = true;
   bakMsg = create ? null : { text: o.texts().busy, err: false };
   renderBak();
@@ -1048,6 +1052,7 @@ function onBakButton(id) {
     bakBusy = false;
     if (why === 'ok') {
       try { o.done(false); } catch (e) {}
+      beacon('backup', create ? 'created' : 'restored');
       if (!(showing && showing.kind === 'bak') || !M) return;
       const tx = o.texts();
       M.say({ text: create ? tx.created : tx.imported, buttons: [] });   // a restore reloads the page right after

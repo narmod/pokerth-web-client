@@ -399,11 +399,20 @@ function _later(fn, ms) {
   try { if (id && typeof id.unref === 'function') id.unref(); } catch (_e) {}   // node tests: never hold the process
   return id;
 }
+// Statistics (Ace's Help card of the admin, context « backup »): the banner
+// counts where the Ace cannot. Loaded on demand; nothing under automation
+// (the browser tests close the banner) — beacons.mjs itself skips /live and
+// « Do not count my visits ».
+function _count(ev) {
+  if (_automated()) return;
+  try { import('./guide/beacons.mjs').then((m) => { try { m.beacon('backup', ev); } catch (_e) {} }).catch(() => {}); } catch (_e) {}
+}
 function _offerPending() { return !!(_offer && !_offer.done && !_offer.banner); }
 function _offerFallback() {
   if (!_offerPending()) return;
   _offer.banner = true;
   _showRestoreBanner();
+  _count('banner');
 }
 // later=true: the player put it off (« Later », dismissed) — he starts fresh,
 // automatic writing may resume.
@@ -569,17 +578,20 @@ function _showRestoreBanner() {
 
     const doRestore = _offerRestore;   // remembered folder first, then the picker
 
-    bCreate.addEventListener('click', () => run(_pickForCreate, '', () => {
+    bCreate.addEventListener('click', () => { _count('create'); run(_pickForCreate, '', () => {
+      _count('created');
       _offerDone(false);
       _toast(_t('bakBannerCreated', 'Backup created.'));
       try { el.remove(); } catch (_e) {}
-    }));
-    bRestore.addEventListener('click', () => run(doRestore, _t('bakRestoreBusy', 'Restoring…'), () => {
+    }); });
+    bRestore.addEventListener('click', () => { _count('restore'); run(doRestore, _t('bakRestoreBusy', 'Restoring…'), () => {
+      _count('restored');
       setMsg(_t('backupImported', 'Backup imported'), false);
-    }));
+    }); });
     // Explicit dismissal: the player starts fresh, automatic writing may
     // resume.
     function dismiss() {
+      _count('dismissed');
       _offerDone(true);
       try { el.remove(); } catch (_e) {}
       _toast(_offerHint(false), { icon: '', duration: 7000 });

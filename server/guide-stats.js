@@ -16,7 +16,10 @@
 //    highlighted in the lobby → the player joined it from the bubble → that
 //    game started (a Ranking game only starts when its 10 seats are full);
 //  · guests apart: they cannot play Ranking games, they are only shown the
-//    free-account bubble (guest_redirect = they tapped « Create an account »).
+//    free-account bubble (guest_redirect = they tapped « Create an account »);
+//  · the local backup offer (web.27): said by the Ace (shown) or, when he
+//    cannot, by the fallback banner (banner); Create / Restore tapped and
+//    done, « Later », « Show me ». Both carriers count in the same context.
 // ═══════════════════════════════════════════════════════════════════
 
 const EVENTS = Object.freeze({
@@ -48,6 +51,8 @@ const EVENTS = Object.freeze({
   ask: ['shown', 'explained', 'done', 'more'],   // more (H2): « More about it » → the help section
   // H1 — « More help »: opened, a section read, a search typed, the help window opened from it
   'more-help': ['shown', 'section', 'search', 'window'],
+  // web.27 — the local backup offer on a blank browser storage (backup-autosave.mjs)
+  backup: ['shown', 'banner', 'create', 'created', 'restore', 'restored', 'dismissed', 'showme'],
 });
 
 /** Is this (context, event) pair one we count? */

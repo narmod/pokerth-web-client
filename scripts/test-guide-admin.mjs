@@ -29,7 +29,7 @@ ok(!G.valid('nope', 'shown') && !G.valid('lobby-ranking', 'nope'), 'unknown cont
 ok(!G.valid('__proto__', 'shown') && !G.valid('constructor', 'shown') && !G.valid('toString', 'shown'), 'prototype keys refused');
 ok(!G.valid(null, 'shown') && !G.valid('offer', 7) && !G.valid(['offer'], 'offered'), 'non-strings refused');
 const pairs = Object.keys(G.EVENTS).reduce((n, k) => n + G.EVENTS[k].length, 0);
-ok(pairs <= 80, 'bounded key set (' + pairs + ' pairs)');
+ok(pairs <= 96, 'bounded key set (' + pairs + ' pairs)');   // 80 → 96 with the backup offer (web.27)
 const contexts = (await import(path.join(root, 'public/modules/guide/contexts/index.mjs'))).CONTEXTS.map((c) => c.id);
 ok(contexts.every((id) => G.EVENTS[id]), 'every shipped context can be counted');
 
@@ -118,6 +118,14 @@ ok(!/clientIp|x-forwarded-for|remoteAddress/.test(route), 'the route never reads
 const admin = fs.readFileSync(path.join(root, 'public/admin.html'), 'utf8');
 ok(/id="trafGuide"/.test(admin) && /function renderGuide\(\)/.test(admin), 'admin card present');
 ok(/Ranking funnel/.test(admin) && /Game started \(10\/10\)/.test(admin), 'the funnel is shown');
+// web.27 — the local backup offer: counted on both carriers, shown on the card
+ok(['shown', 'banner', 'create', 'created', 'restore', 'restored', 'dismissed', 'showme'].every((e) => G.valid('backup', e)) && !G.valid('backup', 'nope'), 'backup offer: its events accepted, others refused');
+{ const st = {}, d = {}; G.record(st, d, 'backup', 'banner', 1); G.record(st, d, 'backup', 'created', 1);
+  const sb = G.summary(st.guide).contexts.backup; ok(sb && sb.banner === 1 && sb.created === 1 && d.gd['backup.banner'] === 1, 'backup offer: all-time, per-day and summary'); }
+for (const e of ['shown', 'create', 'created', 'restore', 'restored', 'dismissed', 'showme']) ok(idx.includes(e === 'shown' ? "beacon('backup', 'shown')" : e === 'showme' ? "beacon('backup', 'showme')" : e === 'dismissed' ? "beacon('backup', 'dismissed')" : (e === 'create' || e === 'restore') ? "beacon('backup', create ? 'create' : 'restore')" : "beacon('backup', create ? 'created' : 'restored')"), 'Ace\'s bubble sends backup.' + e);
+const bkSrc = fs.readFileSync(path.join(root, 'public/modules/backup-autosave.mjs'), 'utf8');
+ok(['banner', 'create', 'created', 'restore', 'restored', 'dismissed'].every((e) => bkSrc.includes("_count('" + e + "')")) && /import\('\.\/guide\/beacons\.mjs'\)/.test(bkSrc) && /function _count\(ev\) \{\s*if \(_automated\(\)\) return;/.test(bkSrc), 'the fallback banner counts too (never under automation)');
+ok(/Local backup offer/.test(admin) && /by the fallback banner/.test(admin), 'the card shows the backup offer');
 ok(/predates the feature/.test(admin.slice(admin.indexOf('function renderGuide'))), 'an old proxy says so instead of showing zeros');
 ok(fs.readFileSync(path.join(root, 'public/sw.js'), 'utf8').includes("'/modules/guide/beacons.mjs'"), 'beacons precached (offline queue works offline)');
 

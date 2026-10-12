@@ -89,6 +89,13 @@ hb.querySelector('[data-ad-btn="bakShowMe"]').click();
 ok(calls.includes('show'), '« Show me » opens the place');
 ok(await until(() => !w.document.getElementById('ace-dock')), 'tips off: he leaves');
 
+// statistics (admin, Ace's Help card): no server here, so the events wait in the offline queue
+await wait(100);
+const q = (() => { try { return JSON.parse(w.localStorage.getItem('pth_guide_q') || '[]'); } catch (e) { return []; } })()
+  .filter((e) => e[0] === 'backup').map((e) => e[1]);
+ok(['shown', 'restore', 'dismissed', 'showme'].every((e) => q.includes(e)) && q.filter((e) => e === 'shown').length === 1,
+  'counted: shown (once), restore tapped, Later, Show me — ' + q.join(','));
+
 // the module side of « Show me », on the real page: Advanced options, Backup & reset tab, the row flashed
 const opened = [];
 w.openAdvancedOptions = () => opened.push('open');
