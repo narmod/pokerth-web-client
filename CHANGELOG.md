@@ -68,6 +68,8 @@ highlights below.
   tables and waiting players muted (icon + figure); hold-tip and the games-today removal stay.
   In `web.34` the tables and waiting icons take a gold and a red (casino-chip trio with the
   green), figures in the plain text colour; local `--lcs-gold` / `--lcs-red` per theme.
+  `web.35`: players online lose their wording on the card too (icon + figure, still green), so
+  the line fits on a phone; the wording stays in the tooltip.
 
 ### Added
 - **« Last 24 hours » in the admin traffic period selector** — true sliding 24 hours on every

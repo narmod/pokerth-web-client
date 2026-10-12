@@ -7,8 +7,8 @@
 // The figures sit on the "Internet" card of step 1: the mode they describe
 // is pokerth.net for everyone, including a self-hosted web client, so they
 // are meaningful whoever runs the front-end. There the row sits under the
-// card's subtitle: players online leads, in green with its wording, then
-// tables and waiting players as muted icon + figure; games today is left to
+// card's subtitle: players online leads in green, then tables (gold icon)
+// and waiting players (red icon), each icon + figure; games today is left to
 // /live. Each figure's wording shows in a tooltip — hover, or a long-press
 // on a touch screen (ui/hold-tip.mjs).
 //

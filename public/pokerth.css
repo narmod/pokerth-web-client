@@ -1593,8 +1593,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .lc-live .lcl-g { font-size: 13px; line-height: 1; flex: 0 0 auto; }
 .lc-live .lcl b { font-weight: 700; }
 /* On the Internet card the row stays in the flow, under the subtitle:
-   players online leads, in green and with its wording ("41 players
-   online"); tables running and players waiting follow as icon + figure,
+   players online leads, in green, icon + figure like the others; tables running and players waiting follow as icon + figure,
    the icon in its own colour (gold for tables, red for the queue — the
    casino-chip trio with the green) and the figure in the plain text colour.
    The gold and red are local: --gold is white or black in some themes and
@@ -1605,7 +1604,6 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .login-card .lc-live .lcl { cursor: help;
   -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
 .login-card .lc-live .lcl-online { color: var(--green); }
-.login-card .lc-live .lcl-online .lcl-x { display: inline; font-weight: 400; }
 .login-card .lc-live { --lcs-gold: #e0b84a; --lcs-red: #f07a6e; }
 :root[data-theme="pokerth-light"] .login-card .lc-live { --lcs-gold: #8a6a10; --lcs-red: #b8322a; }
 :root[data-high-contrast="true"] .login-card .lc-live { --lcs-gold: var(--gold-hi); --lcs-red: var(--red); }
