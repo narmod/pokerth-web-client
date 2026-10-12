@@ -7,6 +7,7 @@ export default {
   offerYes: 'Тийм, тэгье',
   offerNo: 'Үгүй, баярлалаа',
   gotIt: 'Ойлголоо',
+  bakShowMe: 'Харуулах',
   later: 'Дараа',
   next: 'Дараах',
   prev: 'Буцах',

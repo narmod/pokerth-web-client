@@ -7,6 +7,7 @@ export default {
   offerYes: 'Ie, os gwelwch yn dda',
   offerNo: 'Dim diolch',
   gotIt: 'Wedi deall',
+  bakShowMe: 'Dangos i mi',
   later: 'Nes ymlaen',
   next: 'Nesaf',
   prev: 'Yn ôl',

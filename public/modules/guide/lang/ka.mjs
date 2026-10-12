@@ -7,6 +7,7 @@ export default {
   offerYes: 'დიახ, გთხოვთ',
   offerNo: 'არა, გმადლობთ',
   gotIt: 'გასაგებია',
+  bakShowMe: 'მაჩვენე',
   later: 'მოგვიანებით',
   next: 'შემდეგი',
   prev: 'წინა',

@@ -7,6 +7,7 @@ export default {
   offerYes: 'Bẹ́ẹ̀ni, jọ̀ọ́',
   offerNo: 'Rárá o ṣé',
   gotIt: 'Ó yé mi',
+  bakShowMe: 'Fi hàn mí',
   later: 'Nígbà míì',
   next: 'Èyí tó kàn',
   prev: 'Padà',

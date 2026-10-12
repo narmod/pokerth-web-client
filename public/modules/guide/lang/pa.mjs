@@ -7,6 +7,7 @@ export default {
   offerYes: 'ਹਾਂ ਜੀ, ਜ਼ਰੂਰ',
   offerNo: 'ਨਹੀਂ, ਧੰਨਵਾਦ',
   gotIt: 'ਸਮਝ ਆ ਗਈ',
+  bakShowMe: 'ਮੈਨੂੰ ਦਿਖਾਓ',
   later: 'ਬਾਅਦ ਵਿੱਚ',
   next: 'ਅੱਗੇ',
   prev: 'ਪਿੱਛੇ',

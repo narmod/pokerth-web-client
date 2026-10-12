@@ -7,6 +7,7 @@ export default {
   offerYes: 'Po, të lutem',
   offerNo: 'Jo, faleminderit',
   gotIt: 'E kuptova',
+  bakShowMe: 'Më trego',
   later: 'Më vonë',
   next: 'Tjetra',
   prev: 'Mbrapa',

@@ -7,6 +7,7 @@ export default {
   offerYes: 'Ndiyo, tafadhali',
   offerNo: 'Hapana, asante',
   gotIt: 'Nimeelewa',
+  bakShowMe: 'Nionyeshe',
   later: 'Baadaye',
   next: 'Endelea',
   prev: 'Rudi',

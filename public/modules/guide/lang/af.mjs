@@ -7,6 +7,7 @@ export default {
   offerYes: 'Ja, asseblief',
   offerNo: 'Nee dankie',
   gotIt: 'Verstaan',
+  bakShowMe: 'Wys my',
   later: 'Later',
   next: 'Volgende',
   prev: 'Terug',

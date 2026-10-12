@@ -35,7 +35,10 @@ highlights below.
   Answering « Later » (or Escape) now tells where to find it again — Advanced options → Backup &
   reset → Automatic backup, then « Choose folder… », built from the panel's own labels, path and
   button in bold — before he leaves; the banner's Later / ✕ say it in a toast. New key
-  `bakLaterHint` in the 83 catalogues (`web.21`).
+  `bakLaterHint` in the 83 catalogues (`web.21`). A « Show me » button next to « Got it » opens
+  Advanced options on Backup & reset, scrolls to Automatic backup and flashes the « Choose folder… »
+  row like an options-search hit (`window._bakOffer.show`, key `bakShowMe` in the 83 guide
+  catalogues) (`web.22`).
 
 ### Added
 - **pokerth.net vs web client, in the admin traffic stats** — every 5 minutes the proxy records the

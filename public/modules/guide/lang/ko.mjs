@@ -7,6 +7,7 @@ export default {
   offerYes: '네, 좋아요',
   offerNo: '괜찮아요',
   gotIt: '알겠어요',
+  bakShowMe: '보여 주세요',
   later: '나중에',
   next: '다음',
   prev: '이전',

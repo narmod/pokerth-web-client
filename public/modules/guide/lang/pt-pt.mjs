@@ -7,6 +7,7 @@ export default {
   offerYes: 'Sim, por favor',
   offerNo: 'Não, obrigado',
   gotIt: 'Percebi',
+  bakShowMe: 'Mostrar-me',
   later: 'Mais tarde',
   next: 'Seguinte',
   prev: 'Anterior',

@@ -7,6 +7,7 @@ export default {
   offerYes: 'Ооба, сураныч',
   offerNo: 'Жок, рахмат',
   gotIt: 'Түшүндүм',
+  bakShowMe: 'Көрсөтүү',
   later: 'Кийинчерээк',
   next: 'Кийинки',
   prev: 'Артка',

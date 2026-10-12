@@ -441,6 +441,26 @@ function _offerHint(bold) {
   } catch (_e) {}
   return s || ('No problem. Whenever you want to do it: ' + b(path) + ', then “' + b(btn) + '”.');
 }
+// « Show me »: opens Advanced options on Backup & reset and brings the
+// automatic backup into view, its « Choose folder… » row flashed the way the
+// options search marks a hit (.adv-hit).
+function _offerShow() {
+  try { if (typeof window.openAdvancedOptions === 'function') window.openAdvancedOptions(); } catch (_e) {}
+  try { if (typeof window.advSelectCat === 'function') window.advSelectCat('reset'); } catch (_e) {}
+  setTimeout(() => {
+    try {
+      const pick = document.getElementById('adv-bakauto-pick');
+      const row = pick && pick.closest ? pick.closest('.adv-row') : null;
+      const sec = document.querySelector('#adv-panel-reset .adv-sec[data-i18n="advBakAutoSec"]');
+      const to = sec || row;
+      if (to) { try { to.scrollIntoView({ block: 'start' }); } catch (_e) { try { to.scrollIntoView(); } catch (_e2) {} } }   // the flash below happens either way
+      if (row) {
+        row.classList.add('adv-hit');
+        setTimeout(() => { try { row.classList.remove('adv-hit'); } catch (_e) {} }, 1600);
+      }
+    } catch (_e) {}
+  }, 60);
+}
 function _offerWhy(code) {
   const k = _WHY[code] || _WHY.bad;
   return _t(k[0], k[1]);
@@ -673,6 +693,7 @@ if (typeof window !== 'undefined') {
     path: _offerPath,
     why: _offerWhy,
     hint: _offerHint,
+    show: _offerShow,
     create: () => _pickForCreate(),
     restore: _offerRestore,
     done: _offerDone,

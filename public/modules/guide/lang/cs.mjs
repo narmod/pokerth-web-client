@@ -7,6 +7,7 @@ export default {
   offerYes: 'Ano, prosím',
   offerNo: 'Ne, díky',
   gotIt: 'Rozumím',
+  bakShowMe: 'Ukázat',
   later: 'Později',
   next: 'Další',
   prev: 'Zpět',

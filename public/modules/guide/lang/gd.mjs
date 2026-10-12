@@ -7,6 +7,7 @@ export default {
   offerYes: 'Tha, mas e do thoil e',
   offerNo: 'Chan eil, tapadh leat',
   gotIt: 'Tha mi ga thuigsinn',
+  bakShowMe: 'Seall dhomh',
   later: 'Nas anmoiche',
   next: 'Air adhart',
   prev: 'Air ais',

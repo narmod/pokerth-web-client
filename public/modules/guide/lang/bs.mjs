@@ -7,6 +7,7 @@ export default {
   offerYes: 'Da, molim',
   offerNo: 'Ne, hvala',
   gotIt: 'Razumijem',
+  bakShowMe: 'Pokaži mi',
   later: 'Kasnije',
   next: 'Dalje',
   prev: 'Natrag',

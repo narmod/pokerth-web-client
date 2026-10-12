@@ -7,6 +7,7 @@ export default {
   offerYes: 'Eh, don Allah',
   offerNo: 'A\'a, na gode',
   gotIt: 'Na gane',
+  bakShowMe: 'Nuna mini',
   later: 'Anjima',
   next: 'Na gaba',
   prev: 'Baya',

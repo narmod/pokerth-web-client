@@ -7,6 +7,7 @@ export default {
   offerYes: 'Sea, le do thoil',
   offerNo: 'Níl, go raibh maith agat',
   gotIt: 'Tuigim',
+  bakShowMe: 'Taispeáin dom',
   later: 'Níos déanaí',
   next: 'Ar aghaidh',
   prev: 'Siar',

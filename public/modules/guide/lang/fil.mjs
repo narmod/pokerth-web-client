@@ -7,6 +7,7 @@ export default {
   offerYes: 'Oo, sige',
   offerNo: 'Huwag na, salamat',
   gotIt: 'Naintindihan ko',
+  bakShowMe: 'Ipakita sa akin',
   later: 'Mamaya',
   next: 'Susunod',
   prev: 'Bumalik',

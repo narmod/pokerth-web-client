@@ -7,6 +7,7 @@ export default {
   offerYes: 'Ya, boleh',
   offerNo: 'Tidak, terima kasih',
   gotIt: 'Mengerti',
+  bakShowMe: 'Tunjukkan',
   later: 'Nanti',
   next: 'Berikutnya',
   prev: 'Sebelumnya',

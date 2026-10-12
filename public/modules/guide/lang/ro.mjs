@@ -7,6 +7,7 @@ export default {
   offerYes: 'Da, te rog',
   offerNo: 'Nu, mersi',
   gotIt: 'Am înțeles',
+  bakShowMe: 'Arată-mi',
   later: 'Mai târziu',
   next: 'Următorul',
   prev: 'Înapoi',

@@ -7,6 +7,7 @@ export default {
   offerYes: 'Jā, lūdzu',
   offerNo: 'Nē, paldies',
   gotIt: 'Sapratu',
+  bakShowMe: 'Parādīt',
   later: 'Vēlāk',
   next: 'Tālāk',
   prev: 'Atpakaļ',

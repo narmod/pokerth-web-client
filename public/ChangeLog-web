@@ -1,3 +1,6 @@
+2026-10-12 version 2.1.10-web.22:
+- improvement: after "Later", a "Show me" button next to "Got it" opens the advanced options right on Backup & reset, with the backup folder button highlighted
+
 2026-10-12 version 2.1.10-web.21:
 - improvement: when you answer "Later" to the local backup offer, the Ace tells you where to find it in the advanced options
 

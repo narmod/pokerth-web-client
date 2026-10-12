@@ -7,6 +7,7 @@ export default {
   offerYes: 'بله، لطفاً',
   offerNo: 'نه، ممنون',
   gotIt: 'فهمیدم',
+  bakShowMe: 'نشانم بده',
   later: 'بعداً',
   next: 'بعدی',
   prev: 'قبلی',

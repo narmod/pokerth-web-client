@@ -7,6 +7,7 @@ export default {
   offerYes: 'Ha, iltimos',
   offerNo: 'Yoʻq, rahmat',
   gotIt: 'Tushundim',
+  bakShowMe: 'Koʻrsatish',
   later: 'Keyinroq',
   next: 'Keyingi',
   prev: 'Orqaga',

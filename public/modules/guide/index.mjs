@@ -996,8 +996,14 @@ function renderBak(focus) {
   const o = bak();
   if (!M || !o || !(showing && showing.kind === 'bak')) return;
   if (bakHint) {
-    // after « Later »: where to do it later, then he goes
-    M.say({ text: o.hint(true), buttons: [btn('gotIt', true)], onButton: () => endBak(), focus: !!focus });
+    // after « Later »: where to do it later — « Show me » opens it (web.22) — then he goes
+    const show = typeof o.show === 'function';
+    M.say({
+      text: o.hint(true),
+      buttons: show ? [btn('bakShowMe'), btn('gotIt', true)] : [btn('gotIt', true)],
+      onButton: (id) => { endBak(); if (id === 'bakShowMe' && show) { try { o.show(); } catch (e) {} } },
+      focus: !!focus,
+    });
     return;
   }
   const tx = o.texts();

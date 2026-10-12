@@ -7,6 +7,7 @@ export default {
   offerYes: 'Ναι, παρακαλώ',
   offerNo: 'Όχι, ευχαριστώ',
   gotIt: 'Κατάλαβα',
+  bakShowMe: 'Δείξε μου',
   later: 'Αργότερα',
   next: 'Επόμενο',
   prev: 'Προηγούμενο',

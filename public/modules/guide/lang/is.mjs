@@ -7,6 +7,7 @@ export default {
   offerYes: 'Já, takk',
   offerNo: 'Nei, takk',
   gotIt: 'Ég skil',
+  bakShowMe: 'Sýna mér',
   later: 'Seinna',
   next: 'Næsta',
   prev: 'Til baka',

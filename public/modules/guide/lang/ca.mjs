@@ -7,6 +7,7 @@ export default {
   offerYes: 'Sí, si us plau',
   offerNo: 'No, gràcies',
   gotIt: 'Entesos',
+  bakShowMe: 'Mostra-m\'ho',
   later: 'Més tard',
   next: 'Següent',
   prev: 'Anterior',

@@ -7,6 +7,7 @@ export default {
   offerYes: 'Có, cảm ơn',
   offerNo: 'Không, cảm ơn',
   gotIt: 'Đã hiểu',
+  bakShowMe: 'Cho tôi xem',
   later: 'Để sau',
   next: 'Tiếp',
   prev: 'Quay lại',

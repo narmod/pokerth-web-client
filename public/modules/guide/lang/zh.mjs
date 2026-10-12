@@ -7,6 +7,7 @@ export default {
   offerYes: '好的，谢谢',
   offerNo: '不用了，谢谢',
   gotIt: '知道了',
+  bakShowMe: '带我去看',
   later: '稍后',
   next: '下一步',
   prev: '上一步',

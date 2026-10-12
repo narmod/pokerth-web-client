@@ -7,6 +7,7 @@ export default {
   offerYes: 'はい、お願いします',
   offerNo: 'いいえ、結構です',
   gotIt: 'わかりました',
+  bakShowMe: '表示する',
   later: 'あとで',
   next: '次へ',
   prev: '戻る',

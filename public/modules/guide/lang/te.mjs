@@ -7,6 +7,7 @@ export default {
   offerYes: 'అవును, దయచేసి',
   offerNo: 'వద్దు, ధన్యవాదాలు',
   gotIt: 'అర్థమైంది',
+  bakShowMe: 'నాకు చూపించు',
   later: 'తర్వాత',
   next: 'తదుపరి',
   prev: 'వెనుకకు',

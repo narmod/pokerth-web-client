@@ -7,6 +7,7 @@ export default {
   offerYes: 'አዎ፣ እባክዎ',
   offerNo: 'አይ፣ አመሰግናለሁ',
   gotIt: 'ገባኝ',
+  bakShowMe: 'አሳየኝ',
   later: 'በኋላ',
   next: 'ቀጣይ',
   prev: 'ቀዳሚ',

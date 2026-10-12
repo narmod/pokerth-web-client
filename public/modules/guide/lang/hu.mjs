@@ -7,6 +7,7 @@ export default {
   offerYes: 'Igen, kérlek',
   offerNo: 'Nem, köszönöm',
   gotIt: 'Értem',
+  bakShowMe: 'Mutasd meg',
   later: 'Később',
   next: 'Tovább',
   prev: 'Vissza',

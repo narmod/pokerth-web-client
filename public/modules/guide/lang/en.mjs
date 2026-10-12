@@ -11,6 +11,7 @@ export default {
   offerNo: 'No thanks',
   // buttons shared by every tip (D7)
   gotIt: 'Got it',
+  bakShowMe: 'Show me',
   later: 'Later',
   next: 'Next',
   prev: 'Back',

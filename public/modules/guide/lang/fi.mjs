@@ -7,6 +7,7 @@ export default {
   offerYes: 'Kyllä, kiitos',
   offerNo: 'Ei kiitos',
   gotIt: 'Selvä',
+  bakShowMe: 'Näytä',
   later: 'Myöhemmin',
   next: 'Seuraava',
   prev: 'Edellinen',

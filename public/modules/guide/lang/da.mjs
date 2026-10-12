@@ -7,6 +7,7 @@ export default {
   offerYes: 'Ja tak',
   offerNo: 'Nej tak',
   gotIt: 'Forstået',
+  bakShowMe: 'Vis mig',
   later: 'Senere',
   next: 'Næste',
   prev: 'Tilbage',

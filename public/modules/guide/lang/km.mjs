@@ -7,6 +7,7 @@ export default {
   offerYes: 'បាទ/ចាស សូម',
   offerNo: 'ទេ អរគុណ',
   gotIt: 'យល់ហើយ',
+  bakShowMe: 'បង្ហាញខ្ញុំ',
   later: 'ពេលក្រោយ',
   next: 'បន្ទាប់',
   prev: 'ថយក្រោយ',

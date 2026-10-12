@@ -7,6 +7,7 @@ export default {
   offerYes: 'כן, בבקשה',
   offerNo: 'לא, תודה',
   gotIt: 'הבנתי',
+  bakShowMe: 'הראו לי',
   later: 'אחר כך',
   next: 'הבא',
   prev: 'הקודם',

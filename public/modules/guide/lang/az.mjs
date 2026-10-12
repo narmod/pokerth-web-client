@@ -7,6 +7,7 @@ export default {
   offerYes: 'Bəli, xahiş edirəm',
   offerNo: 'Xeyr, sağ olun',
   gotIt: 'Başa düşdüm',
+  bakShowMe: 'Mənə göstər',
   later: 'Sonra',
   next: 'Növbəti',
   prev: 'Geri',

@@ -7,6 +7,7 @@ export default {
   offerYes: 'Hawa, haýyş',
   offerNo: 'Ýok, sag boluň',
   gotIt: 'Düşündim',
+  bakShowMe: 'Görkez',
   later: 'Soňrak',
   next: 'Indiki',
   prev: 'Yza',

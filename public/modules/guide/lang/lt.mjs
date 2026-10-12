@@ -7,6 +7,7 @@ export default {
   offerYes: 'Taip, prašau',
   offerNo: 'Ne, ačiū',
   gotIt: 'Supratau',
+  bakShowMe: 'Parodyti',
   later: 'Vėliau',
   next: 'Toliau',
   prev: 'Atgal',

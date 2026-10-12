@@ -7,6 +7,7 @@ export default {
   offerYes: 'Jes, bonvolu',
   offerNo: 'Ne, dankon',
   gotIt: 'Komprenite',
+  bakShowMe: 'Montri al mi',
   later: 'Poste',
   next: 'Sekva',
   prev: 'Antaŭa',

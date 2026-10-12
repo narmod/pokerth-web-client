@@ -7,6 +7,7 @@ export default {
   offerYes: 'Бале, лутфан',
   offerNo: 'Не, ташаккур',
   gotIt: 'Фаҳмидам',
+  bakShowMe: 'Нишон додан',
   later: 'Баъдтар',
   next: 'Навбатӣ',
   prev: 'Бозгашт',

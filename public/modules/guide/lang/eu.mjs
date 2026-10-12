@@ -7,6 +7,7 @@ export default {
   offerYes: 'Bai, mesedez',
   offerNo: 'Ez, eskerrik asko',
   gotIt: 'Ulertuta',
+  bakShowMe: 'Erakutsi',
   later: 'Geroago',
   next: 'Hurrengoa',
   prev: 'Aurrekoa',

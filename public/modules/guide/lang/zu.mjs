@@ -7,6 +7,7 @@ export default {
   offerYes: 'Yebo, ngiyacela',
   offerNo: 'Cha, ngiyabonga',
   gotIt: 'Ngiyaqonda',
+  bakShowMe: 'Ngikhombise',
   later: 'Kamuva',
   next: 'Okulandelayo',
   prev: 'Emuva',

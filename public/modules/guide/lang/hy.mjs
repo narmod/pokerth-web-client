@@ -7,6 +7,7 @@ export default {
   offerYes: 'Այո, խնդրում եմ',
   offerNo: 'Ոչ, շնորհակալություն',
   gotIt: 'Հասկացա',
+  bakShowMe: 'Ցույց տալ',
   later: 'Ավելի ուշ',
   next: 'Հաջորդը',
   prev: 'Նախորդը',

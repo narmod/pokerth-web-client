@@ -45,6 +45,7 @@ w._bakOffer = {
   texts: tx,
   path: () => 'pokerth / pokerth-web-backup.json',
   why: (c) => 'WHY:' + c,
+  show: () => calls.push('show'),
   hint: (bold) => { const b = (s) => (bold ? '**' + s + '**' : s); return T('bakLaterHint').replace('{path}', b([T('advTitle'), T('advCatReset'), T('advBakAutoSec')].join(' → '))).replace('{btn}', b(T('advPdbAutoPick'))); },
   create: () => { calls.push('create'); return Promise.resolve(next); },
   restore: () => { calls.push('restore'); return Promise.resolve(next); },
@@ -81,9 +82,23 @@ ok(calls.includes('done:true'), 'Later closes the offer (writing resumes)');
 const hb = bub();
 ok(hb && /Options avancées → Sauvegarde et réinitialisation → Sauvegarde automatique/.test(hb.textContent) && /Choisir le dossier/.test(hb.textContent)
   && hb.querySelectorAll('b').length === 2, 'Later: he says where to find it (path and button in bold, in French)');
-ok(hb && [...hb.querySelectorAll('[data-ad-btn]')].map((x) => x.getAttribute('data-ad-btn')).join(',') === 'gotIt', 'one button: Got it');
-hb.querySelector('[data-ad-btn="gotIt"]').click();
+ok(hb && [...hb.querySelectorAll('[data-ad-btn]')].map((x) => x.getAttribute('data-ad-btn')).join(',') === 'bakShowMe,gotIt'
+  && hb.querySelector('.ad-primary').getAttribute('data-ad-btn') === 'gotIt', 'two buttons: Show me, then Got it');
+ok(hb && /Me montrer/.test(hb.querySelector('[data-ad-btn="bakShowMe"]').textContent), '« Show me » in the player\'s language');
+hb.querySelector('[data-ad-btn="bakShowMe"]').click();
+ok(calls.includes('show'), '« Show me » opens the place');
 ok(await until(() => !w.document.getElementById('ace-dock')), 'tips off: he leaves');
+
+// the module side of « Show me », on the real page: Advanced options, Backup & reset tab, the row flashed
+const opened = [];
+w.openAdvancedOptions = () => opened.push('open');
+w.advSelectCat = (c) => opened.push('cat:' + c);
+globalThis.openAdvancedOptions = w.openAdvancedOptions; globalThis.advSelectCat = w.advSelectCat;
+await import(pathToFileURL(path.resolve('public/modules/backup-autosave.mjs')).href);
+w._bakOffer.show();
+ok(opened.join(',') === 'open,cat:reset', 'show(): opens Advanced options on Backup & reset');
+const row = w.document.getElementById('adv-bakauto-pick').closest('.adv-row');
+ok(await until(() => row.classList.contains('adv-hit'), 1000), 'show(): the « Choose folder… » row is flashed');
 
 // wiring of the module side
 const bk = fs.readFileSync('public/modules/backup-autosave.mjs', 'utf8');

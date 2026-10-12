@@ -7,6 +7,7 @@ export default {
   offerYes: 'Jah, palun',
   offerNo: 'Ei, aitäh',
   gotIt: 'Selge',
+  bakShowMe: 'Näita mulle',
   later: 'Hiljem',
   next: 'Edasi',
   prev: 'Tagasi',
