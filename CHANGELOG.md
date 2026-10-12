@@ -66,6 +66,8 @@ highlights below.
   button does not open (`web.24`). The badges are dropped again in `web.33`: the figures go back
   on the card's own line under the subtitle, players online first in green with its wording,
   tables and waiting players muted (icon + figure); hold-tip and the games-today removal stay.
+  In `web.34` the tables and waiting icons take a gold and a red (casino-chip trio with the
+  green), figures in the plain text colour; local `--lcs-gold` / `--lcs-red` per theme.
 
 ### Added
 - **« Last 24 hours » in the admin traffic period selector** — true sliding 24 hours on every

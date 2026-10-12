@@ -1,3 +1,6 @@
+2026-10-12 version 2.1.10-web.34:
+- improvement: on the "Internet" button, the tables and waiting players figures get a gold and a red icon, next to the players online in green
+
 2026-10-12 version 2.1.10-web.33:
 - improvement: the pokerth.net figures are back on a line under the "Internet" button's text: players online first, in green, then tables running and players waiting; press and hold (or hover) a figure to see what it means
 

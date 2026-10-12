@@ -1594,8 +1594,11 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .lc-live .lcl b { font-weight: 700; }
 /* On the Internet card the row stays in the flow, under the subtitle:
    players online leads, in green and with its wording ("41 players
-   online"); tables running and players waiting follow in the muted text
-   colour, icon and figure only. Games today is left to /live, where the
+   online"); tables running and players waiting follow as icon + figure,
+   the icon in its own colour (gold for tables, red for the queue — the
+   casino-chip trio with the green) and the figure in the plain text colour.
+   The gold and red are local: --gold is white or black in some themes and
+   --red is too dark for an icon on the dark cards. Games today is left to /live, where the
    figures have a card of their own. Scoped to .login-card, so /live (which
    moves #lc-live into .live-stats-host) keeps its own layout. Each figure's
    full wording is the hold-tip bubble (hover / long-press on touch). */
@@ -1603,10 +1606,13 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
 .login-card .lc-live .lcl-online { color: var(--green); }
 .login-card .lc-live .lcl-online .lcl-x { display: inline; font-weight: 400; }
-.login-card .lc-live .lcl-tables,
-.login-card .lc-live .lcl-waiting { color: var(--text); }
+.login-card .lc-live { --lcs-gold: #e0b84a; --lcs-red: #f07a6e; }
+:root[data-theme="pokerth-light"] .login-card .lc-live { --lcs-gold: #8a6a10; --lcs-red: #b8322a; }
+:root[data-high-contrast="true"] .login-card .lc-live { --lcs-gold: var(--gold-hi); --lcs-red: var(--red); }
+.login-card .lc-live .lcl-tables  { color: var(--lcs-gold); }
+.login-card .lc-live .lcl-waiting { color: var(--lcs-red); }
 .login-card .lc-live .lcl-tables b,
-.login-card .lc-live .lcl-waiting b { font-weight: 600; }
+.login-card .lc-live .lcl-waiting b { color: var(--text-hi); font-weight: 600; }
 .login-card .lc-live .lcl-today { display: none !important; }
 /* Tooltip bubble (modules/ui/hold-tip.mjs). */
 .hold-tip { max-width: 240px; padding: 5px 9px; border-radius: 7px;
