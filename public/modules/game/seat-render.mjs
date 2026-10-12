@@ -1129,6 +1129,53 @@ function renderSeatsImmediate() {
       try { if (window._seatDbg) { window._seatDbg.fitShave = window._seatFitShave || 1; window._seatDbg.fitBad = _badFit; } } catch (e) {}
     }
   } catch (e) {}
+  // Self-box pin (moved into a function, web.19): run BEFORE the continuous
+  // communityScale below, which measures the self box - it measured the box
+  // where the PREVIOUS render had pinned it, so commScale alternated
+  // 1.684 / 1.699 at 1440x900 on every render (the board and the action bar
+  // breathed 2 px at each player action, and a window resize left the table
+  // 2 px off; found by scripts/test-screen-matrix.mjs). Idempotent: it is run
+  // again at its historical place, after the community row is laid out.
+  function _pinSelfBox() {
+    var _meEl = el.querySelector('.seat.me');
+    if (_meEl && _meEl.dataset.baseTop) {
+      // Coordonnees LOCALES (offsetHeight n'est pas affecte par les transforms
+      // de zoom, contrairement a getBoundingClientRect) -> clamp stable a tout zoom.
+      var _bh2 = _meEl.offsetHeight * _seatBoxScale * SELF_BOX_MUL;
+      var _bt2 = parseFloat(_meEl.dataset.baseTop) || 0;
+      // Marge basse : QML = wide ? 12 : 4 ; DÉROGATION WEB (narmod 17/07
+      // paysage, 19/07 portrait) : 24 px dans les DEUX orientations pour
+      // décoller la self du panneau d'action flottant (plus haut que la
+      // barre QML affleurante). Une self placée à la main (custom) garde la
+      // simple garde anti-débordement QML à 4 px. La réserve interne des
+      // bisections reste à -4 (identique au QML), comme en paysage.
+      // AJUSTEMENT WEB (narmod 22/07) — PAYSAGE MOBILE UNIQUEMENT (fenetre
+      // paysage ET hauteur < 600, = landscapeCompact mobile bible §2) : la
+      // zone de table est minuscule et le panneau d'action flotte juste
+      // dessous ; les 24 px laissaient un trou visible entre la self-box et
+      // la barre d'action. On descend a 8 px DANS CETTE VUE SEULEMENT.
+      // Portrait, tablette, desktop et self custom gardent 24 / 4 a l'identique.
+      var _lsCompactSelf = (typeof window !== 'undefined')
+        && window.innerWidth > window.innerHeight && window.innerHeight < 600;
+      var _fm2 = _selfHasCustom ? 4 : (_lsCompactSelf ? 8 : 24);
+      var _floor2 = zone.clientHeight - _fm2 - _bh2 / 2;
+      // Portrait : la self est ANCRÉE bas-centre comme le QML (pas seulement
+      // une garde anti-débordement) — pour TOUS les styles de sièges, plus
+      // seulement les packs pokerth (demande narmod 19/07 ; la player-bar
+      // étant toujours masquée, aucun conflit). Custom respecté.
+      var _selfPinPortrait = _forceSeatPortrait && !_selfHasCustom;
+      // Mode "perle" (paysage officiel, pas de player-bar) : on ÉPINGLE la
+      // self au sol de la zone par MESURE réelle à chaque rendu — garantit le
+      // point bas de l'ellipse quels que soient le boxScale et le style.
+      // Sinon : simple garde anti-débordement (remonte si le bas dépasse).
+      if (_selfAtPearl || _selfPinPortrait || _bt2 > _floor2) {
+        _meEl.dataset.baseTop = _floor2.toFixed(1);
+        _meEl.style.top = _floor2.toFixed(1) + 'px';
+        if (pixPos[0]) pixPos[0].top = _floor2;
+      }
+    }
+  }
+  try { _pinSelfBox(); } catch (e) {}
   // ── communityScale continu (voir bloc _commScalePending) ──
   try {
     if (window._loupeK > 1) {
@@ -1509,43 +1556,7 @@ function renderSeatsImmediate() {
   // ecran avec le boxScale de l'ellipse). Mesure reelle -> valable pour
   // tous les styles et tous les niveaux de zoom des cartes.
   try {
-    var _meEl = el.querySelector('.seat.me');
-    if (_meEl && _meEl.dataset.baseTop) {
-      // Coordonnees LOCALES (offsetHeight n'est pas affecte par les transforms
-      // de zoom, contrairement a getBoundingClientRect) -> clamp stable a tout zoom.
-      var _bh2 = _meEl.offsetHeight * _seatBoxScale * SELF_BOX_MUL;
-      var _bt2 = parseFloat(_meEl.dataset.baseTop) || 0;
-      // Marge basse : QML = wide ? 12 : 4 ; DÉROGATION WEB (narmod 17/07
-      // paysage, 19/07 portrait) : 24 px dans les DEUX orientations pour
-      // décoller la self du panneau d'action flottant (plus haut que la
-      // barre QML affleurante). Une self placée à la main (custom) garde la
-      // simple garde anti-débordement QML à 4 px. La réserve interne des
-      // bisections reste à -4 (identique au QML), comme en paysage.
-      // AJUSTEMENT WEB (narmod 22/07) — PAYSAGE MOBILE UNIQUEMENT (fenetre
-      // paysage ET hauteur < 600, = landscapeCompact mobile bible §2) : la
-      // zone de table est minuscule et le panneau d'action flotte juste
-      // dessous ; les 24 px laissaient un trou visible entre la self-box et
-      // la barre d'action. On descend a 8 px DANS CETTE VUE SEULEMENT.
-      // Portrait, tablette, desktop et self custom gardent 24 / 4 a l'identique.
-      var _lsCompactSelf = (typeof window !== 'undefined')
-        && window.innerWidth > window.innerHeight && window.innerHeight < 600;
-      var _fm2 = _selfHasCustom ? 4 : (_lsCompactSelf ? 8 : 24);
-      var _floor2 = zone.clientHeight - _fm2 - _bh2 / 2;
-      // Portrait : la self est ANCRÉE bas-centre comme le QML (pas seulement
-      // une garde anti-débordement) — pour TOUS les styles de sièges, plus
-      // seulement les packs pokerth (demande narmod 19/07 ; la player-bar
-      // étant toujours masquée, aucun conflit). Custom respecté.
-      var _selfPinPortrait = _forceSeatPortrait && !_selfHasCustom;
-      // Mode "perle" (paysage officiel, pas de player-bar) : on ÉPINGLE la
-      // self au sol de la zone par MESURE réelle à chaque rendu — garantit le
-      // point bas de l'ellipse quels que soient le boxScale et le style.
-      // Sinon : simple garde anti-débordement (remonte si le bas dépasse).
-      if (_selfAtPearl || _selfPinPortrait || _bt2 > _floor2) {
-        _meEl.dataset.baseTop = _floor2.toFixed(1);
-        _meEl.style.top = _floor2.toFixed(1) + 'px';
-        if (pixPos[0]) pixPos[0].top = _floor2;
-      }
-    }
+    _pinSelfBox();
     if (typeof window._applySelfZoomCounter === 'function') window._applySelfZoomCounter();
   } catch (e) {}
   // Mesure des tailles REELLES de boxes pour le layout ellipse (voir

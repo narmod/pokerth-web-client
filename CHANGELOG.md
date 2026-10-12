@@ -56,6 +56,12 @@ highlights below.
   selected period and included in the JSON export. The privacy page says so (`web.5`).
 
 ### Fixed
+- **The board no longer changes size at every action** — the size of the community cards (and the
+  width of the action bar, which follows it) was computed from the position of my own box before
+  that box was pinned to the bottom of the table, so each render measured where the previous one
+  had left it: the size alternated between two values at every player action (1.684 / 1.699 at
+  1440x900, 0.551 / 0.605 on an iPhone in landscape - the cards changed by 10 %), and a window
+  resize left the table 2 px off. The box is now pinned before the measure (`web.19`).
 - **The create-table buttons are no longer cut in long languages** — from 600 px wide the
   Reset / Cancel / Create buttons share one line; on a landscape phone « Create » was cut in
   Greek, Hungarian, Armenian, Kyrgyz and Malayalam, « Cancel » in Armenian, Kyrgyz and Tajik.

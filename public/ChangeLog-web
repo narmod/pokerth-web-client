@@ -1,3 +1,6 @@
+2026-10-12 version 2.1.10-web.19:
+- bugfix: the cards in the middle of the table no longer grow and shrink a little each time a player acts (very visible on a phone held sideways)
+
 2026-10-11 version 2.1.10-web.18:
 - bugfix: the buttons at the bottom of "Create a table" are no longer cut off in some languages (Greek, Hungarian, Armenian, Kyrgyz, Malayalam, Tajik) on a phone held sideways
 
