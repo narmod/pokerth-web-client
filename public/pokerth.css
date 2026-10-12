@@ -1592,36 +1592,21 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .lc-live .lcl svg { width: 13px; height: 13px; flex: 0 0 auto; }
 .lc-live .lcl-g { font-size: 13px; line-height: 1; flex: 0 0 auto; }
 .lc-live .lcl b { font-weight: 700; }
-/* On the Internet card itself the row becomes a badge cluster pinned to the
-   card's top-right corner: players online as the main (green) badge, tables
-   running and players waiting as smaller neutral ones beside it. Games today
-   is left to /live, where the figures have a card of their own. Scoped to
-   .login-card, so /live (which moves #lc-live into .live-stats-host) keeps
-   its own layout. The !important beats the inline floor set by the module.
-   The wording of each figure is the hold-tip bubble (hover / long-press). */
-.login-card { position: relative; }
-.login-card .lc-live {
-  --lcb-bg: #424b5a; --lcb-fg: #f3f5f8; --lcb-ring: rgba(255,255,255,0.28);
-  position: absolute; top: -11px; right: 12px; z-index: 1; margin: 0;
-  display: flex; flex-wrap: nowrap !important; align-items: center; gap: 4px;
-  color: var(--lcb-fg); font-size: 12px; line-height: 1.2; }
-:root[data-theme="pokerth-light"] .login-card .lc-live {
-  --lcb-bg: #e6e9ee; --lcb-fg: #3a4250; --lcb-ring: rgba(0,0,0,0.12); }
-:root[data-high-contrast="true"] .login-card .lc-live {
-  --lcb-bg: var(--hc-surface); --lcb-fg: var(--hc-text); }
-.login-card .lc-live .lcl {
-  margin-right: 0 !important; gap: 3px !important;
-  padding: 2px 7px; border-radius: 10px; background: var(--lcb-bg);
-  box-shadow: 0 0 0 1px var(--lcb-ring); cursor: help;
+/* On the Internet card the row stays in the flow, under the subtitle:
+   players online leads, in green and with its wording ("41 players
+   online"); tables running and players waiting follow in the muted text
+   colour, icon and figure only. Games today is left to /live, where the
+   figures have a card of their own. Scoped to .login-card, so /live (which
+   moves #lc-live into .live-stats-host) keeps its own layout. Each figure's
+   full wording is the hold-tip bubble (hover / long-press on touch). */
+.login-card .lc-live .lcl { cursor: help;
   -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
-.login-card .lc-live .lcl svg { width: 12px; height: 12px; }
-.login-card .lc-live .lcl b { font-weight: 600; }
-.login-card .lc-live .lcl-tables  { order: 1; }
-.login-card .lc-live .lcl-waiting { order: 2; }
-.login-card .lc-live .lcl-online  { order: 3; padding: 3px 9px; font-size: 12.5px;
-  background: var(--green); color: #0d2a17; }
-.login-card .lc-live .lcl-online svg { width: 13px; height: 13px; }
-.login-card .lc-live .lcl-online b { font-weight: 800; }
+.login-card .lc-live .lcl-online { color: var(--green); }
+.login-card .lc-live .lcl-online .lcl-x { display: inline; font-weight: 400; }
+.login-card .lc-live .lcl-tables,
+.login-card .lc-live .lcl-waiting { color: var(--text); }
+.login-card .lc-live .lcl-tables b,
+.login-card .lc-live .lcl-waiting b { font-weight: 600; }
 .login-card .lc-live .lcl-today { display: none !important; }
 /* Tooltip bubble (modules/ui/hold-tip.mjs). */
 .hold-tip { max-width: 240px; padding: 5px 9px; border-radius: 7px;

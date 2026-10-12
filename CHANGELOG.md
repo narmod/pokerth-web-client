@@ -63,7 +63,9 @@ highlights below.
   button (still on `/live`, whose layout is untouched — the badge rules are scoped to
   `.login-card`). Each figure's wording moves from `title` to a new `ui/hold-tip.mjs` bubble shown
   on hover and on touch long-press; the click that follows a long-press is swallowed so the
-  button does not open (`web.24`).
+  button does not open (`web.24`). The badges are dropped again in `web.33`: the figures go back
+  on the card's own line under the subtitle, players online first in green with its wording,
+  tables and waiting players muted (icon + figure); hold-tip and the games-today removal stay.
 
 ### Added
 - **« Last 24 hours » in the admin traffic period selector** — true sliding 24 hours on every

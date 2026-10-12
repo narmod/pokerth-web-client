@@ -6,11 +6,11 @@
 //
 // The figures sit on the "Internet" card of step 1: the mode they describe
 // is pokerth.net for everyone, including a self-hosted web client, so they
-// are meaningful whoever runs the front-end. There the stylesheet turns the
-// row into a badge cluster on the card's top-right corner (players online
-// as the main badge, tables and waiting players beside it; games today is
-// left to /live). Each figure's wording shows in a tooltip — hover, or a
-// long-press on a touch screen (ui/hold-tip.mjs).
+// are meaningful whoever runs the front-end. There the row sits under the
+// card's subtitle: players online leads, in green with its wording, then
+// tables and waiting players as muted icon + figure; games today is left to
+// /live. Each figure's wording shows in a tooltip — hover, or a long-press
+// on a touch screen (ui/hold-tip.mjs).
 //
 // It is purely additive: when the relay says no (admin kill switch
 // `live_stats`, stale counters, pokerth.net unreachable) the line stays

@@ -1,3 +1,6 @@
+2026-10-12 version 2.1.10-web.33:
+- improvement: the pokerth.net figures are back on a line under the "Internet" button's text: players online first, in green, then tables running and players waiting; press and hold (or hover) a figure to see what it means
+
 2026-10-12 version 2.1.10-web.32:
 - new: in the lobby, just start typing to write in the chat — no need to click the message field first (can be turned off in Advanced options → Chat)
 
