@@ -88,7 +88,10 @@ export const viewportReport = (page) => page.evaluate(() => {
   const rect = (q) => { const e = document.querySelector(q); if (!e) return '-'; const r = e.getBoundingClientRect(); return Math.round(r.top) + '-' + Math.round(r.bottom) + (getComputedStyle(e).position === 'fixed' ? ' fixed' : ''); };
   const vv = window.visualViewport;
   return `inner ${innerWidth}x${innerHeight}, visualViewport ${vv ? Math.round(vv.width) + 'x' + Math.round(vv.height) + '@' + Math.round(vv.offsetTop) : '-'}, clientHeight ${document.documentElement.clientHeight}, `
-    + `100vh=${probe('100vh')} 100dvh=${probe('100dvh')} 100svh=${probe('100svh')} 100lvh=${probe('100lvh')}, body ${rect('body')}, #s-game ${rect('#s-game')}, .game-area ${rect('.game-area')}, .my-zone ${rect('.my-zone')}`;
+    + `100vh=${probe('100vh')} 100dvh=${probe('100dvh')} 100svh=${probe('100svh')} 100lvh=${probe('100lvh')}, body ${rect('body')}, #s-game ${rect('#s-game')}, .game-area ${rect('.game-area')}, .my-zone ${rect('.my-zone')}`
+    // The column the action bar sits in: which child refuses to shrink.
+    + ' | flex: ' + ['#g-table-zone', '#g-zoom-layer', '#g-table-scaler', '.felt-oval', '.my-zone', '.action-grid'].map((q) => { const e = document.querySelector(q); if (!e) return q + ' -'; const c = getComputedStyle(e), r = e.getBoundingClientRect();
+      return `${q} h${Math.round(r.height)} flex(${c.flex}) min-h ${c.minHeight} ${c.position}${e.style.height ? ' inline-h ' + e.style.height : ''}`; }).join(', ');
 });
 
 export const overlap = (a, b, tol = 1) => !!a && !!b && a.left < b.right - tol && b.left < a.right - tol && a.top < b.bottom - tol && b.top < a.bottom - tol;

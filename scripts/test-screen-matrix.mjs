@@ -160,6 +160,13 @@ async function settleAll(page) {
     requestAnimationFrame(tick);
   }));
 }
+// Playwright's WebKit can keep 100dvh / 100vh at the previous window height
+// after setViewportSize (seen on the login screen: 659 px tall in an 852 px
+// window). The screens are sized in dvh, so at such a size the app is laid out
+// for a window it is not in: nothing to audit. Reported as an engine limit.
+const dvhStale = (page) => page.evaluate(() => { const d = document.createElement('div'); d.style.cssText = 'position:fixed;left:0;top:0;width:1px;visibility:hidden;height:100dvh'; document.body.appendChild(d);
+  const h = d.getBoundingClientRect().height; d.remove(); return Math.abs(h - innerHeight) > 1 ? Math.round(h) : 0; });
+const staleSizes = [];
 // Snapshot of the layout, to compare before / after a round trip of resizes.
 const signature = (page) => page.evaluate(() => [...document.querySelectorAll('#g-table-zone, #g-seats .seat, #g-comm .pk, .my-zone, .act-buttons-row .btn-action, #s-lobby .game-row, .header')]
   .filter((e) => e.getClientRects().length).map((e) => { const r = e.getBoundingClientRect(); return [e.id || e.className.split(' ')[0], Math.round(r.left), Math.round(r.top), Math.round(r.width), Math.round(r.height)].join(':'); }));
@@ -236,6 +243,7 @@ async function runDevice(browser, name, descriptor, engine) {
       const before = await signature(page), out = [];
       for (const [w, h] of RESIZE) {
         await page.setViewportSize({ width: w, height: h }); await page.waitForTimeout(600);
+        { const st = await dvhStale(page); if (st) { staleSizes.push(`${engine} lobby ${w}x${h} (100dvh = ${st})`); continue; } }
         (await uiAudit(page, '#s-lobby')).forEach((l) => out.push(`${w}x${h} - ${l}`));
       }
       diffSig(before, await signature(page)).forEach((d) => out.push('back at 1440x900, the lobby moved: ' + d));
@@ -248,6 +256,7 @@ async function runDevice(browser, name, descriptor, engine) {
       const before = await signature(page), out = [];
       for (const [w, h] of RESIZE) {
         await page.setViewportSize({ width: w, height: h }); await page.waitForTimeout(250); await settleAll(page);
+        { const st = await dvhStale(page); if (st) { staleSizes.push(`${engine} table ${w}x${h} (100dvh = ${st})`); continue; } }
         (await tableProblems(page, 6, false)).forEach((l) => out.push(`${w}x${h} - ${l}`));
         (await uiAudit(page, '#s-game')).forEach((l) => out.push(`${w}x${h} - text - ${l}`));
         if (out.some((l) => l.startsWith(`${w}x${h}`))) await shot(page, shotName, `resize-table-${w}x${h}`);
@@ -259,5 +268,10 @@ async function runDevice(browser, name, descriptor, engine) {
 }
 
 const code = await runPlan('test-screen-matrix', reporter, runDevice, SCREENS, 90);
+if (staleSizes.length) {
+  const msg = 'resize sizes not audited, the engine kept the old 100dvh: ' + staleSizes.join(', ');
+  console.log('\nNOTE ' + msg);
+  if (process.env.GITHUB_ACTIONS) console.log('::notice title=Engine limit::' + msg);
+}
 server.close();
 process.exit(code);

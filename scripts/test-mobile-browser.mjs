@@ -99,13 +99,21 @@ async function runDevice(browser, name, descriptor) {
       // profile: skipped). The first version applied the 47 / 34 px insets of
       // the standalone app to the 659 px of a Safari tab - a combination no
       // iPhone has - and reported the scroll that follows as a bug.
+      // A NEW page at the screen size, not setViewportSize: Playwright's WebKit
+      // keeps 100dvh at the old height after a resize (the login screen stayed
+      // 659 px tall in an 852 px window and the footer was reported 203 px up).
       const full = descriptor.screen && descriptor.screen.height >= 800 ? descriptor.screen : null;
       if (!full) return;
-      await page.setViewportSize({ width: full.width, height: full.height }); await page.waitForTimeout(300);
-      await page.evaluate(() => { const s = document.getElementById('s-connect'); s.style.setProperty('--pth-sat', '47px'); s.style.setProperty('--pth-sab', '34px'); document.querySelector('#s-connect .connect-header').style.paddingTop = '47px'; });
-      const notch = await measure();
-      await page.evaluate(() => { const s = document.getElementById('s-connect'); s.style.removeProperty('--pth-sat'); s.style.removeProperty('--pth-sab'); document.querySelector('#s-connect .connect-header').style.paddingTop = ''; });
-      await page.setViewportSize(descriptor.viewport); await page.waitForTimeout(300);
+      const fctx = await browser.newContext({ ...descriptor, viewport: { width: full.width, height: full.height }, serviceWorkers: 'block' });
+      let notch;
+      try {
+        const fp = await fctx.newPage(); fp.on('dialog', (d) => d.dismiss().catch(() => {}));
+        await openTable(fp, base, { stopAt: 'login' });
+        await fp.evaluate(() => { const s = document.getElementById('s-connect'); s.style.setProperty('--pth-sat', '47px'); s.style.setProperty('--pth-sab', '34px'); document.querySelector('#s-connect .connect-header').style.paddingTop = '47px'; });
+        notch = await fp.evaluate(() => { const R = (q) => document.querySelector(q).getBoundingClientRect();
+          const h = R('#s-connect .connect-header'), c = R('#s-connect > .card'), f = R('#s-connect > .connect-footer');
+          return { above: c.top - h.bottom, below: f.top - c.bottom, underFooter: innerHeight - f.bottom }; });
+      } finally { await fctx.close(); }
       assert.ok(notch.above > 8 && Math.abs(notch.above - notch.below) <= 3, `with safe areas the card is not centred: ${Math.round(notch.above)}px above, ${Math.round(notch.below)}px below`);
       assert.ok(Math.abs(notch.underFooter - 34) <= 3, `with safe areas the footer is ${Math.round(notch.underFooter)}px above the bottom edge (home indicator needs 34)`);
     });
