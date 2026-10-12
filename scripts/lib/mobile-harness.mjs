@@ -91,7 +91,12 @@ export const viewportReport = (page) => page.evaluate(() => {
     + `100vh=${probe('100vh')} 100dvh=${probe('100dvh')} 100svh=${probe('100svh')} 100lvh=${probe('100lvh')}, body ${rect('body')}, #s-game ${rect('#s-game')}, .game-area ${rect('.game-area')}, .my-zone ${rect('.my-zone')}`
     // The column the action bar sits in: which child refuses to shrink.
     + ' | flex: ' + ['#g-table-zone', '#g-zoom-layer', '#g-table-scaler', '.felt-oval', '.my-zone', '.action-grid'].map((q) => { const e = document.querySelector(q); if (!e) return q + ' -'; const c = getComputedStyle(e), r = e.getBoundingClientRect();
-      return `${q} h${Math.round(r.height)} flex(${c.flex}) min-h ${c.minHeight} ${c.position}${e.style.height ? ' inline-h ' + e.style.height : ''}`; }).join(', ');
+      return `${q} h${Math.round(r.height)} flex(${c.flex}) min-h ${c.minHeight} ${c.position}${e.style.height ? ' inline-h ' + e.style.height : ''}`; }).join(', ')
+    // Every box of .game-area in its flow, in visual order: what sits between
+    // the table and the action bar, or pushes the bar down.
+    + ' | game-area: ' + (() => { const ga = document.querySelector('.game-area'); if (!ga) return '-'; const gc = getComputedStyle(ga);
+      return `pad ${gc.paddingTop}/${gc.paddingBottom} gap ${gc.rowGap} ` + [...ga.children].filter((k) => getComputedStyle(k).display !== 'none').map((k) => { const c = getComputedStyle(k), r = k.getBoundingClientRect();
+        return `${k.id ? '#' + k.id : '.' + (k.classList[0] || k.tagName.toLowerCase())}[o${c.order} ${c.position} ${Math.round(r.top)}+${Math.round(r.height)} m${c.marginTop}/${c.marginBottom} t${c.top} b${c.bottom}${c.transform !== 'none' ? ' tf ' + c.transform : ''}]`; }).join(' '); })();
 });
 
 export const overlap = (a, b, tol = 1) => !!a && !!b && a.left < b.right - tol && b.left < a.right - tol && a.top < b.bottom - tol && b.top < a.bottom - tol;
