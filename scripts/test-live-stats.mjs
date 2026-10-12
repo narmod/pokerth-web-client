@@ -41,7 +41,8 @@ const dom = new JSDOM('<span id="lc-live" style="display:none"></span>');
 global.document = dom.window.document;
 global.window = dom.window;
 
-let mod = src.replace(/^import .*$/m, "const t = (k, p) => k + ':' + (p && p.n);");
+let mod = src.replace(/^import .*$/gm, '')
+  .replace(/^/, "const t = (k, p) => k + ':' + (p && p.n); const onLangChange = () => {}; const attachHoldTip = () => {};\n");
 mod = mod.split('if (document.readyState')[0] + '\nexport { _render as R, _hide as H };';
 const m = await import('data:text/javascript;base64,' + Buffer.from(mod).toString('base64'));
 
@@ -54,8 +55,13 @@ ok([...el().children].every(c => c.style.display === 'inline-flex'),
   'each counter lays itself out inline too');
 ok([...el().children].every(c => c.getAttribute('aria-label')),
   'each counter carries its wording for screen readers');
-ok([...el().children].every(c => c.title), 'and as a tooltip on hover');
-ok(/liveOnline/.test(el().children[0].title) && /liveToday/.test(el().children[3].title),
+ok([...el().children].every(c => c.getAttribute('data-tip')),
+  'and as a hold-tip bubble (hover, or long-press on touch)');
+ok([...el().children].every(c => !c.title),
+  'no native title, so the bubble is not doubled by the browser tooltip');
+ok(['online', 'tables', 'waiting', 'today'].every((k, i) => el().children[i].classList.contains('lcl-' + k)),
+  'each counter carries its lcl-<kind> class for the badge layout');
+ok(/liveOnline/.test(el().children[0].getAttribute('data-tip')) && /liveToday/.test(el().children[3].getAttribute('data-tip')),
   'the counters keep the website order: online, tables, waiting, today');
 
 m.R({ ok: true, online: 2, tables: null, waiting: null, today: 6 });
@@ -82,6 +88,12 @@ ok(/class="lc-live"/.test(html), 'and its class');
 ok(/style="display:none"/.test(html.slice(html.indexOf('id="lc-live"') - 120, html.indexOf('id="lc-live"') + 60)),
   'the anchor starts hidden, so nothing shows before the relay answers');
 ok(/live-stats\.mjs/.test(html), 'the page loads the module');
+ok(/from '\.\/hold-tip\.mjs'/.test(src) && fs.existsSync(path.join(root, 'public', 'modules', 'ui', 'hold-tip.mjs')),
+  'the tooltip module is imported and shipped');
+ok(/\.login-card \.lc-live \.lcl-today\s*\{\s*display:\s*none/.test(css),
+  'games today stays off the Internet card badge');
+ok(!/:root\[data-live="1"\][^{]*\.lcl-today\s*\{\s*display:\s*none/.test(css),
+  'and is still shown on /live');
 ok(/\.lc-live\b/.test(css), 'the stylesheet still styles the row');
 
 console.log(fails ? ('FAIL ' + fails) : 'ALL OK');

@@ -46,6 +46,13 @@ highlights below.
   untouched and the banner comes back at other tables. The Odds tab (QML parity) stays. Key
   `assistRankingOff` in the 83 catalogues, help « Assistance » updated in the 56 that carry it
   (`web.23`).
+- **pokerth.net figures as badges on the « Internet » button** — the counters row under the
+  button's subtitle becomes a badge cluster pinned to its top-right corner: players online as the
+  main green badge, tables running and players waiting beside it. Games today is dropped from the
+  button (still on `/live`, whose layout is untouched — the badge rules are scoped to
+  `.login-card`). Each figure's wording moves from `title` to a new `ui/hold-tip.mjs` bubble shown
+  on hover and on touch long-press; the click that follows a long-press is swallowed so the
+  button does not open (`web.24`).
 
 ### Added
 - **pokerth.net vs web client, in the admin traffic stats** — every 5 minutes the proxy records the

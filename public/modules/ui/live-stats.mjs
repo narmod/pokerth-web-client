@@ -4,15 +4,20 @@
 // proxy reads them once per interval (GET /api/live) and every client is
 // served from that single cache.
 //
-// The line sits inside the "Internet" card of step 1: the mode it describes
-// is pokerth.net for everyone, including a self-hosted web client, so the
-// figures are meaningful whoever runs the front-end.
+// The figures sit on the "Internet" card of step 1: the mode they describe
+// is pokerth.net for everyone, including a self-hosted web client, so they
+// are meaningful whoever runs the front-end. There the stylesheet turns the
+// row into a badge cluster on the card's top-right corner (players online
+// as the main badge, tables and waiting players beside it; games today is
+// left to /live). Each figure's wording shows in a tooltip — hover, or a
+// long-press on a touch screen (ui/hold-tip.mjs).
 //
 // It is purely additive: when the relay says no (admin kill switch
 // `live_stats`, stale counters, pokerth.net unreachable) the line stays
 // hidden and the card looks exactly as it did before.
 // ═══════════════════════════════════════════════════════════════════
 import { t, onLangChange } from '../i18n.mjs';
+import { attachHoldTip } from './hold-tip.mjs';
 
 const EL_ID = 'lc-live';
 const FALLBACK_SEC = 60;
@@ -55,18 +60,20 @@ const ICONS = {
   today:   null
 };
 
-// One counter: icon, then the figure. The wording goes on title/aria-label
-// only, so a narrow card can never cut a sentence in half.
+// One counter: icon, then the figure. The wording goes on data-tip (the
+// hold-tip bubble, which unlike title= also works by long-press on touch)
+// and aria-label only, so a narrow card can never cut a sentence in half.
+// The lcl-<kind> class lets the stylesheet place and rank each figure.
 function _item(kind, key, n) {
   const sp = document.createElement('span');
-  sp.className = 'lcl';
+  sp.className = 'lcl lcl-' + kind;
   sp.style.display = 'inline-flex';
   sp.style.alignItems = 'center';
   sp.style.gap = '4px';
   sp.style.marginRight = '12px';
   sp.style.whiteSpace = 'nowrap';
   const label = t(key, { n: _fmt(n) });
-  sp.title = label;
+  sp.setAttribute('data-tip', label);
   sp.setAttribute('aria-label', label);
   if (ICONS[kind]) {
     sp.insertAdjacentHTML('beforeend', ICONS[kind]);
@@ -82,7 +89,7 @@ function _item(kind, key, n) {
   const b = document.createElement('b');
   b.textContent = _fmt(n);
   sp.appendChild(b);
-  // The same wording as the title, as visible text. Hidden by default so the
+  // The same wording as the tooltip, as visible text. Hidden by default so the
   // one-line layout of the Internet card is unchanged; /live shows it, where
   // there is room for the full sentence and no room for a mystery number.
   const tx = document.createElement('span');
@@ -147,6 +154,9 @@ function _arm() {
 
 function _start() {
   if (!_el()) return;
+  // Listeners live on the node itself, so they follow it when /live moves
+  // it into its own card.
+  try { attachHoldTip(_el(), '.lcl'); } catch (e) {}
   _arm();
   _poll();
   // Coming back to a backgrounded tab: the figures on screen may be minutes

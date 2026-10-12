@@ -1,3 +1,7 @@
+2026-10-12 version 2.1.10-web.24:
+- improvement: on the "Internet" button, the pokerth.net figures are now small badges on its top-right corner: players online, tables running and players waiting (games today stays on the /live page)
+- improvement: hover a figure, or press and hold it on a touch screen, to see what it means
+
 2026-10-12 version 2.1.10-web.23:
 - improvement: the Assistance banner (hand strength and win %) is turned off at Ranking tables, so every player has the same information, as in the desktop client; the Odds tab stays available
 - bugfix: the estimated win % now counts a split pot between three or more players correctly (a third, a quarter…) instead of always half
