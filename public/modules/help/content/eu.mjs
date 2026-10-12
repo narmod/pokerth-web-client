@@ -448,7 +448,8 @@ export const help = {
             ["1 / 2 / 3", "Apustua 1/3 · 1/2 · Potea   ⟦1 / 2 / 3⟧"],
             ["Alt+T", "Estatistiken panela   ⟦Alt+T⟧"],
             ["Esc", "Itxi goiko leihoa (baita Android-en Atzera botoia ere)   ⟦Esc⟧"],
-            ["↑ ↓ · ↵", "Egongelako mahai-zerrenda (iritsi Tab-ekin): aukeratu mahaia · sartu   ⟦↑ ↓ · ↵⟧"]],
+            ["↑ ↓ · ↵", "Egongelako mahai-zerrenda (iritsi Tab-ekin): aukeratu mahaia · sartu   ⟦↑ ↓ · ↵⟧"],
+            ["A–Z · 0–9", "Egongela: testu-eremutik kanpo idazteak zuzenean txatean idazten du   ⟦A–Z · 0–9⟧"]],
           note: "Android-en, sistemaren Atzera botoiak/keinuak leihoak ixten ditu Escape bezala, partidatik irten beharrean (aukeretan doi daiteke). iOS-ek ez du sistema-botoi baliokiderik — erabili leiho bakoitzaren ✕." }
       ]
     }

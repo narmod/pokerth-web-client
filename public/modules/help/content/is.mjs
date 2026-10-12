@@ -447,7 +447,8 @@ export const help = {
             ["1 / 2 / 3", "Bet 1/3 · 1/2 · pottur"],
             ["Alt+T", "Tölfræðispjald"],
             ["Esc", "Loka efsta glugganum (líka Til baka-hnappur Android)"],
-            ["↑ ↓ · ↵", "Borðalisti anddyris (náðu í hann með Tab): velja borð · setjast"]],
+            ["↑ ↓ · ↵", "Borðalisti anddyris (náðu í hann með Tab): velja borð · setjast"],
+            ["A–Z · 0–9", "Anddyri: innsláttur utan textareits skrifast beint í spjallið"]],
           note: "Á Android lokar Til baka-hnappur/bending kerfisins gluggum eins og Escape, í stað þess að yfirgefa leikinn (stillanlegt í valkostunum). iOS hefur engan sambærilegan kerfishnapp — notaðu ✕ á hverjum glugga." },
       ]
     },

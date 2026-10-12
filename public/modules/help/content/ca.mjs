@@ -306,7 +306,8 @@ export const help = {
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Plafó d’estadístiques'],
             ['Esc', 'Tanca la finestra del davant (també el botó Enrere d\u2019Android)'],
-            ['\u2191 \u2193 \u00b7 \u21b5', 'Llista de taules del vestíbul (s\u2019hi arriba amb Tab): tria una taula · uneix-t\u2019hi']],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Llista de taules del vestíbul (s\u2019hi arriba amb Tab): tria una taula · uneix-t\u2019hi'],
+            ['A–Z · 0–9', 'Vestíbul: escriure fora d’un camp de text escriu directament al xat']],
           note: 'A Android, el botó/gest Enrere del sistema tanca les finestres com Esc, en comptes de sortir de la partida (configurable a les opcions). L\u2019iOS no té cap botó de sistema equivalent — fes servir la \u2715 de cada finestra.' }
       ]
     }

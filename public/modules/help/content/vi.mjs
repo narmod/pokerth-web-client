@@ -306,7 +306,8 @@ export const help = {
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Bảng thống kê'],
             ['Esc', 'Đóng cửa sổ trên cùng (nút Quay lại của Android cũng vậy)'],
-            ['\u2191 \u2193 \u00b7 \u21b5', 'Danh sách bàn ở sảnh (dùng Tab để tới): chọn bàn \u00b7 tham gia']],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Danh sách bàn ở sảnh (dùng Tab để tới): chọn bàn \u00b7 tham gia'],
+            ['A–Z · 0–9', 'Sảnh: gõ phím bên ngoài ô nhập văn bản sẽ viết thẳng vào trò chuyện']],
           note: 'Trên Android, nút/cử chỉ Quay lại của hệ thống đóng cửa sổ như Esc thay vì rời ván đấu (có thể chỉnh trong tùy chọn). iOS không có nút hệ thống tương đương — hãy dùng dấu \u2715 của từng cửa sổ.' }
       ]
     }

@@ -306,7 +306,8 @@ export const help = {
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Panel statystyk'],
             ['Esc', 'Zamknij wierzchnie okno (także przycisk Wstecz Androida)'],
-            ['\u2191 \u2193 \u00b7 \u21b5', 'Lista stołów w lobby (przejdź klawiszem Tab): wybór stołu \u00b7 dołączenie']],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Lista stołów w lobby (przejdź klawiszem Tab): wybór stołu \u00b7 dołączenie'],
+            ['A–Z · 0–9', 'Poczekalnia: pisanie poza polem tekstowym trafia od razu do czatu']],
           note: 'Na Androidzie systemowy przycisk/gest Wstecz zamyka okna jak Esc, zamiast opuszczać grę (konfigurowalne w opcjach). iOS nie ma odpowiednika — użyj \u2715 każdego okna.' }
       ]
     }

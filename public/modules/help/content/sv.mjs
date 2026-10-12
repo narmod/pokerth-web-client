@@ -306,7 +306,8 @@ export const help = {
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Statistikpanel'],
             ['Esc', 'Stäng det främsta fönstret (även Androids Bakåt-knapp)'],
-            ['\u2191 \u2193 \u00b7 \u21b5', 'Bordslistan i lobbyn (nås med Tab): välj ett bord \u00b7 gå med']],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Bordslistan i lobbyn (nås med Tab): välj ett bord \u00b7 gå med'],
+            ['A–Z · 0–9', 'Lobby: att skriva utanför ett textfält skriver direkt i chatten']],
           note: 'På Android stänger systemets Bakåt-knapp/gest fönster som Esc i stället för att lämna spelet (kan ställas in). iOS har ingen motsvarande systemknapp — använd \u2715 i varje fönster.' }
       ]
     }

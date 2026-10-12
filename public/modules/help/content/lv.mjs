@@ -312,7 +312,8 @@ export const help = {
             ['1 / 2 / 3', 'Likme 1/3 · 1/2 · Banka'],
             ['Alt+T', 'Statistikas panelis'],
             ['Esc', 'Aizvērt augšējo logu (arī Android poga “Atpakaļ”)'],
-            ['↑ ↓ · ↵', 'Vestibila galdu saraksts (nokļūsti tur ar Tab): izvēlies galdu · pievienojies tam']],
+            ['↑ ↓ · ↵', 'Vestibila galdu saraksts (nokļūsti tur ar Tab): izvēlies galdu · pievienojies tam'],
+            ['A–Z · 0–9', 'Vestibils: rakstīšana ārpus teksta lauka raksta tieši tērzēšanā']],
           note: 'Android ierīcēs sistēmas poga vai žests “Atpakaļ” aizver logus tāpat kā Escape, nevis pamet spēli (konfigurējams opcijās). iOS līdzvērtīgas sistēmas pogas nav — izmanto katra loga ✕.' }
       ]
     }

@@ -306,7 +306,8 @@ export const help = {
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Panail nan staitistig'],
             ['Esc', 'Dùin an uinneag aghaidh (agus putan Air ais Android)'],
-            ['\u2191 \u2193 \u00b7 \u21b5', 'Liosta nam bòrd san lobaidh (le Tab): tagh bòrd \u00b7 gabh pàirt']],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Liosta nam bòrd san lobaidh (le Tab): tagh bòrd \u00b7 gabh pàirt'],
+            ['A–Z · 0–9', 'Lobaidh: sgrìobhaidh clò-sgrìobhadh taobh a-muigh raon teacsa dìreach sa chabadaich']],
           note: 'Air Android, dùinidh putan/gluasad Air ais an t-siostaim uinneagan mar Esc, seach a bhith a\u2019 fàgail a\u2019 gheama (gabhaidh a rèiteachadh sna roghainnean). Chan eil putan siostaim co-ionann aig iOS — cleachd an \u2715 aig gach uinneig.' }
       ]
     }

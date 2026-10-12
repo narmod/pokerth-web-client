@@ -448,7 +448,8 @@ export const help = {
             ["1 / 2 / 3", "Bheja 1/3 · 1/2 · Pot   ⟦1 / 2 / 3⟧"],
             ["Alt+T", "Iphaneli yezibalo   ⟦Alt+T⟧"],
             ["Esc", "Vala iwindi eliphezulu (nenkinobho ethi Emuva ye-Android)   ⟦Esc⟧"],
-            ["↑ ↓ · ↵", "Uhlu lwamatafula elobhi (lifinyelele nge-Tab): khetha itafula · joyina   ⟦↑ ↓ · ↵⟧"]],
+            ["↑ ↓ · ↵", "Uhlu lwamatafula elobhi (lifinyelele nge-Tab): khetha itafula · joyina   ⟦↑ ↓ · ↵⟧"],
+            ["A–Z · 0–9", "Ilobhi: ukuthayipha ngaphandle kwenkundla yombhalo kubhala ngqo engxoxweni   ⟦A–Z · 0–9⟧"]],
           note: "Ku-Android, inkinobho/ukunyakaza kohlelo okuthi Emuva kuvala amawindi njenge-Escape esikhundleni sokushiya umdlalo (kuyahleleka ezinketho). I-iOS ayinayo inkinobho yohlelo efanayo — sebenzisa u-✕ wewindi ngalinye." }
       ]
     }

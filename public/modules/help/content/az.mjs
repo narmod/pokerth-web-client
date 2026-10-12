@@ -448,7 +448,8 @@ export const help = {
             ["1 / 2 / 3", "Mərc 1/3 · 1/2 · Bank   ⟦1 / 2 / 3⟧"],
             ["Alt+T", "Statistika paneli   ⟦Alt+T⟧"],
             ["Esc", "Ən üstdəki pəncərəni bağla (həmçinin Android Geri düyməsi)   ⟦Esc⟧"],
-            ["↑ ↓ · ↵", "Lobbinin masa siyahısı (Tab ilə çatın): masa seçin · ona qoşulun   ⟦↑ ↓ · ↵⟧"]],
+            ["↑ ↓ · ↵", "Lobbinin masa siyahısı (Tab ilə çatın): masa seçin · ona qoşulun   ⟦↑ ↓ · ↵⟧"],
+            ["A–Z · 0–9", "Lobbi: mətn sahəsindən kənarda yazmaq birbaşa çata yazır   ⟦A–Z · 0–9⟧"]],
           note: "Android-də sistemin Geri düyməsi/jesti oyundan çıxmaq əvəzinə Escape kimi pəncərələri bağlayır (seçimlərdə tənzimlənir). iOS-da ekvivalent sistem düyməsi yoxdur — hər pəncərənin ✕ düyməsindən istifadə edin." }
       ]
     }

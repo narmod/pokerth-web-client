@@ -308,7 +308,8 @@ export const help = {
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Statistics panel'],
             ['Esc', 'Isara ang pinakaitaas na window (pati ang Android Back button)'],
-            ['\u2191 \u2193 \u00b7 \u21b5', 'Listahan ng mesa sa lobby (gamitin ang Tab): pumili ng mesa \u00b7 sumali']],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Listahan ng mesa sa lobby (gamitin ang Tab): pumili ng mesa \u00b7 sumali'],
+            ['A–Z · 0–9', 'Lobby: ang pag-type sa labas ng text field ay direktang isinusulat sa chat']],
           note: 'Sa Android, ang system Back button/gesture ay nagsasara ng mga window tulad ng Escape sa halip na umalis sa laro (naco-configure sa mga option). Walang katumbas na system button ang iOS \u2014 gamitin ang \u2715 ng bawat window.' }
       ]
     }

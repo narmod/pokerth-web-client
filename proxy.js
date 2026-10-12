@@ -327,6 +327,7 @@ const FEATURE_SWITCHES = [
   { key: 'community_suggest', label: 'Suggest players in community games' },
   { key: 'lobby_chat', label: 'Lobby chat' },
   { key: 'lobby_clock', label: 'Server clock in the lobby' },
+  { key: 'lobby_type_chat', label: 'Typing in the lobby goes to the chat' },
   { key: 'keynav', label: 'Esc / Enter navigation outside the table' },
   { key: 'back_guard', label: 'Android back button guard' },
   { key: 'splash', label: 'Splash screen on startup' },

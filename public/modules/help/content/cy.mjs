@@ -448,7 +448,8 @@ export const help = {
             ["1 / 2 / 3", "Bet 1/3 · 1/2 · Pot   ⟦1 / 2 / 3⟧"],
             ["Alt+T", "Panel ystadegau   ⟦Alt+T⟧"],
             ["Esc", "Cau'r ffenestr uchaf (hefyd botwm Yn ôl Android)   ⟦Esc⟧"],
-            ["↑ ↓ · ↵", "Rhestr byrddau'r lobi (cyrraedd gyda Tab): dewis bwrdd · ymuno ag ef   ⟦↑ ↓ · ↵⟧"]],
+            ["↑ ↓ · ↵", "Rhestr byrddau'r lobi (cyrraedd gyda Tab): dewis bwrdd · ymuno ag ef   ⟦↑ ↓ · ↵⟧"],
+            ["A–Z · 0–9", "Lobi: mae teipio y tu allan i faes testun yn ysgrifennu’n syth yn y sgwrs   ⟦A–Z · 0–9⟧"]],
           note: "Ar Android, mae botwm/ystum Yn ôl y system yn cau ffenestri fel Escape yn lle gadael y gêm (gellir ei addasu yn y dewisiadau). Nid oes botwm system cyfatebol gan iOS — defnyddiwch ✕ pob ffenestr." }
       ]
     }

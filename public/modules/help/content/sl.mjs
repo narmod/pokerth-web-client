@@ -308,7 +308,8 @@ export const help = {
             ['1 / 2 / 3', 'Bet 1/3 · 1/2 · Pot'],
             ['Alt+T', 'Plošča s statistiko'],
             ['Esc', 'Zapre najvišje okno (tudi gumb Nazaj na Androidu)'],
-            ['↑ ↓ · ↵', 'Seznam miz predverja (dosežeš ga s Tab): izberi mizo · pridruži se']],
+            ['↑ ↓ · ↵', 'Seznam miz predverja (dosežeš ga s Tab): izberi mizo · pridruži se'],
+            ['A–Z · 0–9', 'Predverje: tipkanje zunaj besedilnega polja piše neposredno v klepet']],
           note: 'Na Androidu sistemski gumb/gesta Nazaj zapira okna kot Esc, namesto da bi zapustil igro (nastavljivo v možnostih). iOS nima ustreznega sistemskega gumba — uporabi ✕ vsakega okna.' }
       ]
     }

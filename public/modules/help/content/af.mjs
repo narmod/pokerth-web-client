@@ -306,7 +306,8 @@ export const help = {
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Statistiekpaneel'],
             ['Esc', 'Maak die voorste venster toe (ook Android se Terug-knoppie)'],
-            ['\u2191 \u2193 \u00b7 \u21b5', 'Tafellys in die voorportaal (bereik dit met Tab): kies \u2019n tafel \u00b7 sluit daarby aan']],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Tafellys in die voorportaal (bereik dit met Tab): kies \u2019n tafel \u00b7 sluit daarby aan'],
+            ['A–Z · 0–9', 'Voorportaal: tik buite ’n teksveld skryf direk in die geselsie']],
           note: 'Op Android maak die stelsel se Terug-knoppie/gebaar vensters toe soos Esc, eerder as om die spel te verlaat (in die opsies instelbaar). iOS het geen ekwivalente stelselknoppie nie — gebruik elke venster se \u2715.' }
       ]
     }

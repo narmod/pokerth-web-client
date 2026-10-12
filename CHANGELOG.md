@@ -115,6 +115,13 @@ highlights below.
   direct. One key per visit, counted per day for all visits, for new visitors, and for new
   visitors by language (`server/ref-stats.js`, capped per day); shown in « Who visits » for the
   selected period and included in the JSON export. The privacy page says so (`web.5`).
+- **Type anywhere in the lobby to chat** — a printable key pressed while no text field has the
+  focus goes into the lobby chat input (forum request). Lobby only: at the table single keys are
+  actions (Fold/Call/Raise/All-In letters, Space, 1/2/3). Modifier shortcuts, IME composition,
+  open windows and Space on a focused control are left alone; AltGr characters and dead keys
+  work. New module `ui/lobby-typechat.mjs`, option `lobby_type_chat` (Chat, on by default, admin
+  kill switch), key `advLobbyTypeChat` and a help row in the 83 languages,
+  `test-lobby-typechat` (`web.32`).
 
 ### Fixed
 - **« More help » usable on a phone from the create page** — the Ace stands at mid-screen there,

@@ -448,7 +448,8 @@ export const help = {
             ["1 / 2 / 3", "Stawka 1/3 · 1/2 · Pot   ⟦1 / 2 / 3⟧"],
             ["Alt+T", "Statistika paneli   ⟦Alt+T⟧"],
             ["Esc", "Iň ýokarky penjiräni ýap (Android-iň «Yza» düwmesi hem)   ⟦Esc⟧"],
-            ["↑ ↓ · ↵", "Lobbidäki stollaryň sanawy (oňa Tab bilen ýetiň): stol saýla · goşul   ⟦↑ ↓ · ↵⟧"]],
+            ["↑ ↓ · ↵", "Lobbidäki stollaryň sanawy (oňa Tab bilen ýetiň): stol saýla · goşul   ⟦↑ ↓ · ↵⟧"],
+            ["A–Z · 0–9", "Lobbi: tekst meýdançasyndan daşarda ýazmak gönüden-göni çata ýazýar   ⟦A–Z · 0–9⟧"]],
           note: "Android-de ulgamyň «Yza» düwmesi/hereketi oýundan çykmagyň deregine penjireleri Escape ýaly ýapýar (opsiýalarda sazlap bolýar). iOS-da beýle ulgam düwmesi ýok — her penjiräniň ✕ belgisini ulanyň." }
       ]
     }

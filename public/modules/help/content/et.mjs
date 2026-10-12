@@ -308,7 +308,8 @@ export const help = {
             ['1 / 2 / 3', 'Panus 1/3 \u00b7 1/2 \u00b7 pott'],
             ['Alt+T', 'Statistikapaneel'],
             ['Esc', 'Sulge pealmine aken (ka Androidi tagasi-nupp)'],
-            ['\u2191 \u2193 \u00b7 \u21b5', 'Fuajee laudade loend (jõuad sinna Tab-klahviga): vali laud \u00b7 liitu sellega']],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Fuajee laudade loend (jõuad sinna Tab-klahviga): vali laud \u00b7 liitu sellega'],
+            ['A–Z · 0–9', 'Fuajee: tekstiväljast väljas trükkimine kirjutab otse vestlusesse']],
           note: 'Androidis sulgeb süsteemi tagasi-nupp/-liigutus aknad nagu Escape, selle asemel et mängust lahkuda (valikutes seadistatav). iOS-is vastavat süsteeminuppu ei ole \u2014 kasuta iga akna nuppu \u2715.' }
       ]
     }

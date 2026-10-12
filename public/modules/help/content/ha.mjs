@@ -448,7 +448,8 @@ export const help = {
             ["1 / 2 / 3", "Caca 1/3 · 1/2 · Pot   ⟦1 / 2 / 3⟧"],
             ["Alt+T", "Fanel na ƙididdiga   ⟦Alt+T⟧"],
             ["Esc", "Rufe taga mafi sama (har da maɓallin Baya na Android)   ⟦Esc⟧"],
-            ["↑ ↓ · ↵", "Jerin teburan zaure (kai ta Tab): zaɓi tebur · shiga   ⟦↑ ↓ · ↵⟧"]],
+            ["↑ ↓ · ↵", "Jerin teburan zaure (kai ta Tab): zaɓi tebur · shiga   ⟦↑ ↓ · ↵⟧"],
+            ["A–Z · 0–9", "Zaure: rubutu a wajen filin rubutu yana rubutawa kai tsaye cikin hira   ⟦A–Z · 0–9⟧"]],
           note: "A Android, maɓallin/motsin Baya na tsarin yana rufe tagogi kamar Escape maimakon barin wasa (ana iya daidaitawa a cikin zaɓuɓɓuka). iOS ba ta da maɓallin tsarin da ya yi daidai — yi amfani da ✕ na kowace taga." }
       ]
     }

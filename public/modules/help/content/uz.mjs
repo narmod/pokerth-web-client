@@ -447,7 +447,8 @@ export const help = {
             ["1 / 2 / 3", "Bet 1/3 · 1/2 · Pot"],
             ["Alt+T", "Statistika paneli"],
             ["Esc", "Eng ustki oynani yopish (Android’dagi «Orqaga» tugmasi ham)"],
-            ["↑ ↓ · ↵", "Lobbidagi stollar roʻyxati (unga Tab bilan oʻting): stol tanlash · unga qoʻshilish"]],
+            ["↑ ↓ · ↵", "Lobbidagi stollar roʻyxati (unga Tab bilan oʻting): stol tanlash · unga qoʻshilish"],
+            ["A–Z · 0–9", "Lobbi: matn maydonidan tashqarida yozish to‘g‘ridan-to‘g‘ri chatga yoziladi"]],
           note: "Android’da tizimning «Orqaga» tugmasi/imo-ishorasi oʻyindan chiqish oʻrniga Escape kabi oynalarni yopadi (sozlamalarda sozlanadi). iOS’da bunga teng tizim tugmasi yoʻq — har bir oynaning ✕ belgisidan foydalaning." }
       ]
     }

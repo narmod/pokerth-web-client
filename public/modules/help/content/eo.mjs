@@ -448,7 +448,8 @@ export const help = {
             ["1 / 2 / 3", "Veto 1/3 · 1/2 · Poto   ⟦1 / 2 / 3⟧"],
             ["Alt+T", "Statistika panelo   ⟦Alt+T⟧"],
             ["Esc", "Fermi la plej supran fenestron (ankaŭ la butono Reen de Android)   ⟦Esc⟧"],
-            ["↑ ↓ · ↵", "Tabla listo de la halo (atingu per Tab): elekti tablon · aliĝi   ⟦↑ ↓ · ↵⟧"]],
+            ["↑ ↓ · ↵", "Tabla listo de la halo (atingu per Tab): elekti tablon · aliĝi   ⟦↑ ↓ · ↵⟧"],
+            ["A–Z · 0–9", "Halo: tajpado ekster tekstokampo skribas rekte en la babilejon   ⟦A–Z · 0–9⟧"]],
           note: "Ĉe Android, la sistema butono/gesto Reen fermas fenestrojn kiel Escape anstataŭ forlasi la ludon (agordebla en la opcioj). iOS ne havas ekvivalentan sisteman butonon — uzu la ✕ de ĉiu fenestro." }
       ]
     }

@@ -308,7 +308,8 @@ export const help = {
             ['1 / 2 / 3', 'Bet 1/3 · 1/2 · Pot'],
             ['Alt+T', 'Paneli i statistikave'],
             ['Esc', 'Mbyll dritaren më të sipërme (edhe butoni Prapa i Android-it)'],
-            ['↑ ↓ · ↵', 'Lista e tavolinave në lobi (arrihet me Tab): zgjidh një tavolinë · bashkohu']],
+            ['↑ ↓ · ↵', 'Lista e tavolinave në lobi (arrihet me Tab): zgjidh një tavolinë · bashkohu'],
+            ['A–Z · 0–9', 'Lobi: shkrimi jashtë një fushe teksti shkon drejt e në bisedë']],
           note: 'Në Android, butoni/gjesti i sistemit Prapa mbyll dritaret si Escape, në vend që të lërë lojën (i konfigurueshëm te opsionet). iOS s\u2019ka një buton ekuivalent sistemi — përdor ✕ e çdo dritareje.' }
       ]
     }

@@ -306,7 +306,8 @@ export const help = {
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Statistik-Panel'],
             ['Esc', 'Das oberste Fenster schließen (auch die Android-Zurück-Taste)'],
-            ['\u2191 \u2193 \u00b7 \u21b5', 'Tischliste in der Lobby (mit Tab erreichbar): Tisch wählen · beitreten']],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Tischliste in der Lobby (mit Tab erreichbar): Tisch wählen · beitreten'],
+            ['A–Z · 0–9', 'Lobby: Tippen außerhalb eines Textfelds schreibt direkt in den Chat']],
           note: 'Auf Android schließt die System-Zurück-Taste/-Geste Fenster wie Escape, statt das Spiel zu verlassen (in den Optionen einstellbar). iOS hat keine vergleichbare Systemtaste — nutze das \u2715 jedes Fensters.' }
       ]
     }

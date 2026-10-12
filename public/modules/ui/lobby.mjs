@@ -19,6 +19,7 @@ import { Proto } from '../net/proto.mjs';
 import { MSG } from '../net/messages.mjs';
 import { _ccToFlag, _avatarChipHtml } from './player-popup.mjs';
 import { bindLobbyKeynav } from './lobby-keynav.mjs';
+import { bindLobbyTypeChat } from './lobby-typechat.mjs';
 
 // ──────────────────────────────────────────────────────────────
 // Game info modal -- snapshot of the current table's settings +
@@ -544,3 +545,6 @@ try {
   bindLobbyKeynav({ listId: 'g-list', current: function () { return S._selectedGame; },
                     select: _kbSelectGame, activate: _kbActivateGame });
 } catch (e) {}
+// Lobby: a key typed outside a text field goes into the chat (web addition,
+// option lobby_type_chat — cf. lobby-typechat.mjs).
+try { bindLobbyTypeChat({ lobbyId: 's-lobby', inputId: 'chat-in' }); } catch (e) {}

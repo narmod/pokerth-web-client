@@ -306,7 +306,8 @@ export const help = {
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Panel štatistík'],
             ['Esc', 'Zavrieť vrchné okno (aj tlačidlo Späť na Androide)'],
-            ['\u2191 \u2193 \u00b7 \u21b5', 'Zoznam stolov v lobby (prejdete naň Tabom): výber stola \u00b7 pripojenie']],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Zoznam stolov v lobby (prejdete naň Tabom): výber stola \u00b7 pripojenie'],
+            ['A–Z · 0–9', 'Lobby: písanie mimo textového poľa píše rovno do chatu']],
           note: 'Na Androide systémové tlačidlo/gesto Späť zatvára okná ako Esc, namiesto toho, aby opustilo hru (nastaviteľné v možnostiach). iOS obdobné systémové tlačidlo nemá — použi \u2715 každého okna.' }
       ]
     }

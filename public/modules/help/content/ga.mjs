@@ -448,7 +448,8 @@ export const help = {
             ["1 / 2 / 3", "Geall 1/3 · 1/2 · Pota   ⟦1 / 2 / 3⟧"],
             ["Alt+T", "Painéal na staitisticí   ⟦Alt+T⟧"],
             ["Esc", "Dún an fhuinneog is airde (cnaipe Siar Android freisin)   ⟦Esc⟧"],
-            ["↑ ↓ · ↵", "Liosta boird an fhorhalla (sroich le Tab): roghnaigh bord · glac páirt ann   ⟦↑ ↓ · ↵⟧"]],
+            ["↑ ↓ · ↵", "Liosta boird an fhorhalla (sroich le Tab): roghnaigh bord · glac páirt ann   ⟦↑ ↓ · ↵⟧"],
+            ["A–Z · 0–9", "Forhalla: scríobhann clóscríobh lasmuigh de réimse téacs díreach sa chomhrá   ⟦A–Z · 0–9⟧"]],
           note: "Ar Android, dúnann cnaipe/gotha Siar an chórais fuinneoga mar a dhéanann Escape in áit an cluiche a fhágáil (is féidir é a choigeartú sna roghanna). Níl cnaipe córais comhionann ag iOS — úsáid ✕ gach fuinneoige." }
       ]
     }

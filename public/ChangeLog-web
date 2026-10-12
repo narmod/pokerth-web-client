@@ -1,3 +1,6 @@
+2026-10-12 version 2.1.10-web.32:
+- new: in the lobby, just start typing to write in the chat — no need to click the message field first (can be turned off in Advanced options → Chat)
+
 2026-10-12 version 2.1.10-web.31:
 - new: in Firefox, the Ace offers to protect your settings so that Firefox never erases them on its own to free up space (the same button is in Advanced options → Backup & reset)
 - improvement: Firefox no longer asks for this permission out of the blue when the page loads

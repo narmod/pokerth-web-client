@@ -306,7 +306,8 @@ export const help = {
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Statistikpanel'],
             ['Esc', 'Luk det forreste vindue (også Androids Tilbage-knap)'],
-            ['\u2191 \u2193 \u00b7 \u21b5', 'Bordlisten i lobbyen (nås med Tab): vælg et bord · deltag']],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Bordlisten i lobbyen (nås med Tab): vælg et bord · deltag'],
+            ['A–Z · 0–9', 'Lobby: tastning uden for et tekstfelt skriver direkte i chatten']],
           note: 'På Android lukker systemets Tilbage-knap/-bevægelse vinduer som Esc i stedet for at forlade spillet (kan indstilles). iOS har ingen tilsvarende systemknap — brug \u2715 i hvert vindue.' }
       ]
     }

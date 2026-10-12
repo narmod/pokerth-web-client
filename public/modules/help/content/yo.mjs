@@ -448,7 +448,8 @@ export const help = {
             ["1 / 2 / 3", "Tẹ́tẹ́ 1/3 · 1/2 · Pot   ⟦1 / 2 / 3⟧"],
             ["Alt+T", "Pánẹ́lì ìṣirò   ⟦Alt+T⟧"],
             ["Esc", "Pa fèrèsé tó wà lókè jù dé (bọ́tìnì Padà Android náà)   ⟦Esc⟧"],
-            ["↑ ↓ · ↵", "Àkójọ tábìlì gbọ̀ngàn (dé ọ̀dọ̀ rẹ̀ pẹ̀lú Tab): yan tábìlì · darapọ̀   ⟦↑ ↓ · ↵⟧"]],
+            ["↑ ↓ · ↵", "Àkójọ tábìlì gbọ̀ngàn (dé ọ̀dọ̀ rẹ̀ pẹ̀lú Tab): yan tábìlì · darapọ̀   ⟦↑ ↓ · ↵⟧"],
+            ["A–Z · 0–9", "Gbọ̀ngàn: títẹ̀ ní ìta àpótí ọ̀rọ̀ máa ń kọ tààrà sínú ìjíròrò   ⟦A–Z · 0–9⟧"]],
           note: "Lórí Android, bọ́tìnì/ìfaraṣàpèjúwe Padà ti ètò ń pa fèrèsé dé bí Escape dípò kí ó kúrò nínú eré (a lè ṣètò rẹ̀ nínú àṣàyàn). iOS kò ní bọ́tìnì ètò tí ó jọ ọ́ — lo ✕ fèrèsé kọ̀ọ̀kan." }
       ]
     }
