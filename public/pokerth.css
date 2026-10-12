@@ -1601,10 +1601,10 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    The wording of each figure is the hold-tip bubble (hover / long-press). */
 .login-card { position: relative; }
 .login-card .lc-live {
-  --lcb-bg: #2a313b; --lcb-fg: var(--text-hi); --lcb-ring: rgba(0,0,0,0.35);
+  --lcb-bg: #424b5a; --lcb-fg: #f3f5f8; --lcb-ring: rgba(255,255,255,0.28);
   position: absolute; top: -11px; right: 12px; z-index: 1; margin: 0;
   display: flex; flex-wrap: nowrap !important; align-items: center; gap: 4px;
-  color: var(--lcb-fg); font-size: 11px; line-height: 1.2; }
+  color: var(--lcb-fg); font-size: 12px; line-height: 1.2; }
 :root[data-theme="pokerth-light"] .login-card .lc-live {
   --lcb-bg: #e6e9ee; --lcb-fg: #3a4250; --lcb-ring: rgba(0,0,0,0.12); }
 :root[data-high-contrast="true"] .login-card .lc-live {
@@ -1614,7 +1614,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   padding: 2px 7px; border-radius: 10px; background: var(--lcb-bg);
   box-shadow: 0 0 0 1px var(--lcb-ring); cursor: help;
   -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
-.login-card .lc-live .lcl svg { width: 11px; height: 11px; }
+.login-card .lc-live .lcl svg { width: 12px; height: 12px; }
 .login-card .lc-live .lcl b { font-weight: 600; }
 .login-card .lc-live .lcl-tables  { order: 1; }
 .login-card .lc-live .lcl-waiting { order: 2; }
