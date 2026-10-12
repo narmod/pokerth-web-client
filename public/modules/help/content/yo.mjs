@@ -413,6 +413,11 @@ export const help = {
           t: "Ètò tí ń tẹ̀lé ọ",
           b: [
             "Nígbà tí o bá ń ṣeré pẹ̀lú àkáǹtì, a ń múṣọ̀kan àṣàyàn rẹ, àkòrí, ọ̀nà àbùjá kọ́kọ́rọ́, èdè àti ife ẹ̀yẹ ìdánrawò: yí nǹkan kan padà lórí ẹ̀rọ kan, ẹ̀rọ tó kàn tí o bá wọlé láti ọ̀dọ̀ rẹ̀ yóò sì gbà á. A ń dapọ̀ ìlọsíwájú ife ẹ̀yẹ, a kì í kọ ọ́ lé e lórí rárá, nítorí náà ṣíṣeré lórí ẹ̀rọ méjì máa ń tọ́jú èyí tó dára jù nínú méjèèjì."] },
+        { id: "backup",
+          t: "Àfipamọ́ ètò rẹ lórí ẹ̀rọ",
+          b: [
+            "Ibi ìpamọ́ aṣàwákiri lè di píparẹ́ láàárín ìbẹ̀wò kan sí òmíràn (ìmọ́tótó, ìwákiri àdáni, àyè díẹ̀ lórí díìsìkì). Lórí Chrome, Edge àti Opera fún kọ̀ǹpútà, oníbàárà lè máa ṣe ìmúdójúìwọ̀n fáìlì àfipamọ́ kan, pokerth-web-backup.json, nínú fódà tí o bá yàn: àṣàyàn wẹ́ẹ̀bù, àkòrí, àwọn káàdì, àwòrán afàtá, ife ẹ̀yẹ àti ìṣirò. Ọ̀rọ̀ aṣínà rẹ àti ìgbà ìwọlé rẹ kò ní sí nínú rẹ̀ rárá.",
+            "Nígbà tí aṣàwákiri yìí bá bẹ̀rẹ̀ pẹ̀lú ètò òfìfo, Ace yóò fi èyí lọ̀ ọ́ nínú àfọ́fọ́ ọ̀rọ̀ rẹ̀, kódà nígbà tí àwọn ìmọ̀ràn rẹ̀ bá wà ní pípa: “Ṣẹ̀dá àfipamọ́” ń yan fódà, ó sì ń kọ fáìlì àkọ́kọ́, “Dá àfipamọ́ padà” ń mú ohun gbogbo padà láti inú fáìlì tó ti wà, “Nígbà mìíràn” sì ń jẹ́ kí o bẹ̀rẹ̀ láti ìbẹ̀rẹ̀. Nínú Àṣàyàn ìlọsíwájú → Àfipamọ́ àti àtúntò, o lè yan fódà mìíràn, pa kíkọ aládàáṣiṣẹ́, tàbí kó àfipamọ́ jáde kí o sì kó o wọlé fúnra rẹ nínú aṣàwákiri èyíkéyìí."] },
         { id: "updates",
           t: "Wíwà ní ìmúdójúìwọ̀n",
           b: [

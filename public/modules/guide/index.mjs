@@ -54,7 +54,7 @@ let foldTimer = 0;            // unanswered bubble → badge
 let noteTimer = 0;            // transient line (« Just one more! »)
 let scrollTimer = 0;
 let lastSpot = null;          // where the outlined element was at the last tick          // tour: the bubble is placed again once a field scrolled into view
-let showing = null;           // { run, kind: 'ctx' | 'offer' | 'menu' | 'note' | 'flash' | 'ask' | 'help' }
+let showing = null;           // { run, kind: 'ctx' | 'offer' | 'bak' | 'menu' | 'note' | 'flash' | 'ask' | 'help' }
 let lastWhere = null;
 let lastWait = null;          // { gid, n } seen in the waiting room (arrivals)
 let result = null;            // { gid, place, tied } of my last Ranking game
@@ -137,8 +137,10 @@ function blocked() {
   } catch (e) { return false; }
 }
 
-/** First-run banners at the bottom of the screen (local backup…): the offer waits for them. */
+/** First-run banners at the bottom of the screen (local backup…): the offer waits for them —
+ *  and for the local backup offer the Ace says himself (web.20). */
 function bannerUp() {
+  if (bakPending()) return true;
   const b = document.getElementById('bak-restore-banner');
   return !!(b && b.getBoundingClientRect().height > 0);
 }
@@ -833,7 +835,7 @@ function flash(key, ms) {
 /** Tap on the Ace: closes the bubble, or shows a tip put off with « Later », or opens his menu. */
 function onTap() {
   if (M && M.bubbleOpen()) {
-    if (showing && showing.kind === 'offer') return;
+    if (showing && (showing.kind === 'offer' || showing.kind === 'bak')) return;
     if (showing && showing.kind === 'ask') { exitAsk(); return; }
     if (showing && showing.kind === 'help') { closeMoreHelp(); return; }
     if (showing && showing.kind === 'ctx') { onCtxButton('later'); return; }
@@ -943,6 +945,107 @@ function apply() {
   schedule();
 }
 
+// ── Local backup offer (web.20) ────────────────────────────────────
+// On a browser whose storage comes up blank, modules/backup-autosave.mjs
+// offers to create the local backup file or restore it. The Ace says it in
+// his bubble — even with his tips off: the one exception to D3, once per
+// blank storage. He claims the offer through window._bakOffer; the module's
+// banner only shows when he cannot (not claimed, not shown in time, or the
+// mascot failed to load). Create / Restore / Later run the module's own
+// actions; a failure is told in the bubble. Login screen and lobby only, never
+// at a table; the first-launch offer below waits for it.
+let bakTimer = 0;
+let bakBusy = false;
+let bakMsg = null;            // { text, err } under the path line
+function bak() { const o = window._bakOffer; return o && typeof o.pending === 'function' ? o : null; }
+function bakPending() { const o = bak(); try { return !!(o && o.pending()); } catch (e) { return false; } }
+function claimBak() {
+  if (!available() || automated()) return;
+  const o = bak();
+  try { if (!o || !o.claim()) return; } catch (e) { return; }
+  bakMsg = null;
+  maybeBak();
+}
+function maybeBak() {
+  clearTimeout(bakTimer);
+  if (!bakPending() || (showing && showing.kind === 'bak')) return;
+  bakTimer = setTimeout(async () => {
+    bakTimer = 0;
+    if (!bakPending() || (showing && showing.kind === 'bak')) return;
+    const w = where();
+    // a screen tip gives way; anything else the player opened (his menu, « ? » mode…) is waited for
+    if (!(w.screen === 'connect' || w.screen === 'lobby') || !splashGone() || blocked() || document.hidden
+      || (showing && showing.kind !== 'ctx')) { maybeBak(); return; }
+    let m = null;
+    try { m = await ensureDock(); } catch (e) { m = null; }
+    if (!m) {
+      if (!M) { const o = bak(); try { if (o) o.fallback(); } catch (e) {} return; }   // the mascot could not load: the banner
+      maybeBak(); return;
+    }
+    if (!bakPending() || (showing && showing.kind !== 'ctx')) { if (!showing && !state.isOn()) leave(); maybeBak(); return; }
+    exitAsk(true);
+    clearTimers();
+    hl.clear();
+    showing = { kind: 'bak' };
+    renderBak();
+    try { bak().shown(); } catch (e) {}
+  }, 600);
+}
+function renderBak(focus) {
+  const o = bak();
+  if (!M || !o || !(showing && showing.kind === 'bak')) return;
+  const tx = o.texts();
+  const msg = bakMsg ? `<p class="ad-bak-msg${bakMsg.err ? ' ad-bak-err' : ''}" role="status">${esc(bakMsg.text)}</p>` : '';
+  const html = `<p class="ad-text"><b>${esc(tx.title)}</b></p><p class="ad-text ad-bak-body">${esc(tx.body)}</p>`
+    + `<p class="ad-bak-path">${esc(o.path())}</p>${msg}`;
+  const buttons = bakBusy ? [] : [
+    { id: 'bakLater', label: tx.later },
+    { id: 'bakRestore', label: tx.restore },
+    { id: 'bakCreate', label: tx.create, primary: true },
+  ];
+  M.say({ html, buttons, onButton: onBakButton, focus: !!focus });
+}
+function endBak() {
+  bakMsg = null;
+  bakBusy = false;
+  if (!(showing && showing.kind === 'bak')) return;
+  closeBubble();
+  if (!state.isOn()) leave(); else schedule();
+  maybeOffer();                                        // the first-launch offer waited for this one
+}
+function onBakButton(id) {
+  const o = bak();
+  if (!o || bakBusy) return;
+  if (id === 'bakLater' || id === 'escape') { try { o.done(true); } catch (e) {} endBak(); return; }
+  const create = id === 'bakCreate';
+  if (!create && id !== 'bakRestore') return;
+  // called in the click's own tick: the folder picker and the permission prompt need it
+  let p;
+  try { p = create ? o.create() : o.restore(); } catch (e) { p = Promise.reject(e); }
+  bakBusy = true;
+  bakMsg = create ? null : { text: o.texts().busy, err: false };
+  renderBak();
+  Promise.resolve(p).then((why) => {
+    bakBusy = false;
+    if (why === 'ok') {
+      try { o.done(false); } catch (e) {}
+      if (!(showing && showing.kind === 'bak') || !M) return;
+      const tx = o.texts();
+      M.say({ text: create ? tx.created : tx.imported, buttons: [] });   // a restore reloads the page right after
+      clearTimeout(noteTimer);
+      noteTimer = setTimeout(() => { noteTimer = 0; endBak(); }, 2200);
+      return;
+    }
+    bakMsg = why === 'abort' ? null : { text: o.why(why), err: true };
+    renderBak(true);
+  }).catch((e) => {
+    bakBusy = false;
+    const d = e && (e.name || e.message) ? String(e.name || e.message) : '';
+    bakMsg = { text: o.why('bad') + (d ? ' — ' + d : ''), err: true };
+    renderBak(true);
+  });
+}
+
 // ── First-launch offer (D3) ────────────────────────────────────────
 // Not under automation (navigator.webdriver): the other browser tests and
 // their canonical screenshots must not get a bubble 2.5 s after loading.
@@ -993,8 +1096,10 @@ async function evaluate() {
   if (!state.isOn()) {
     // tips off: only the offer, a last word, or what the player asked for (« More help », « ? » mode)
     // (his menu too, web.276); the offer only on the login screen and in the lobby, never at a table (D8)
-    if (!(showing && (showing.kind === 'offer' || onDemand()))) leave();
-    else if (showing.kind === 'offer' ? !(w.screen === 'connect' || w.screen === 'lobby') : (showing.kind !== 'note' && !canComeHere())) leave();
+    const offerish = showing && (showing.kind === 'offer' || showing.kind === 'bak');
+    if (!(offerish || (showing && onDemand()))) leave();
+    else if (offerish ? !(w.screen === 'connect' || w.screen === 'lobby') : (showing.kind !== 'note' && !canComeHere())) leave();
+    maybeBak();
     maybeOffer();
     return;
   }
@@ -1020,6 +1125,8 @@ async function evaluate() {
     if (!(showing && showing.kind === 'luck')) leave();   // silent during a hand (D8)
     return;
   }
+  maybeBak();                                          // the local backup offer (web.20) goes before the tips
+  if (showing && showing.kind === 'bak') return;
   if (showing && showing.kind === 'ask') { armed = armed && armed.isConnected ? armed : null; return; }   // « ? » mode: the player leads
   if (showing && showing.kind === 'help') return;                                                      // « More help »: the player reads
   const moved = !prev || prev.screen !== w.screen;
@@ -1040,6 +1147,7 @@ async function evaluate() {
   const m = await ensureDock();
   if (!m) return;
   if (where().screen !== w.screen || !state.isOn()) { schedule(); return; }   // moved on while he came (web.276)
+  if (showing && showing.kind === 'bak') return;       // the backup offer came up meanwhile
   m.settle();                                          // the screen changed: a free spot again
   const ctx = pickContext(w, CONTEXTS, { seen: state.seen, snoozed: (id) => snoozed.has(id) });
   // over a modal / menu only a window's own explanation speaks (C5)
@@ -1192,6 +1300,11 @@ function init() {
   window.addEventListener('offline', schedule);
   window.addEventListener('pth:games', onGames);
   document.addEventListener('click', onListTap, true);
+  // the local backup offer (web.20): claimed now if already made, or when it is
+  document.addEventListener('pth:bakoffer', claimBak);
+  claimBak();
+  // its texts come from the main catalogue, which may change under the bubble
+  document.addEventListener('pth:langchange', () => { if (showing && showing.kind === 'bak' && !bakBusy) renderBak(); });
   if (!tickTimer) tickTimer = setInterval(tick, 1000);
   schedule();
 }

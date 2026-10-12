@@ -413,6 +413,11 @@ export const help = {
           t: "Sizi izləyən parametrlər",
           b: [
             "Hesabla oynadığınız zaman seçimləriniz, temanız, düymə təyinatlarınız, diliniz və məşq kuboklarınız sinxronlaşdırılır: bir cihazda nəyisə dəyişin, daxil olduğunuz növbəti cihaz onu götürür. Kubok irəliləyişi birləşdirilir, heç vaxt üzərinə yazılmır, beləliklə iki cihazda oynamaq həmişə hər ikisinin ən yaxşısını saxlayır."] },
+        { id: "backup",
+          t: "Parametrlərinizin lokal ehtiyat nüsxəsi",
+          b: [
+            "Brauzer yaddaşı ziyarətlər arasında silinə bilər (təmizləmə, gizli rejim, diskdə az yer). Chrome, Edge və Opera brauzerlərinin masaüstü versiyalarında klient seçdiyiniz qovluqda pokerth-web-backup.json ehtiyat nüsxə faylını aktual saxlaya bilər: veb seçimləri, mövzular, kart dəstləri, avatar şəkli, kuboklar və statistika. Parolunuz və sessiyanız heç vaxt daxil edilmir.",
+            "Bu brauzer boş parametrlərlə açılanda Tuz, məsləhətləri söndürülü olsa belə, bunu öz balonunda təklif edir: “Ehtiyat nüsxə yarat” qovluğu seçir və ilk faylı yazır, “Ehtiyat nüsxəni bərpa et” hər şeyi mövcud fayldan geri qaytarır, “Sonra” isə sıfırdan başlamağa imkan verir. Əlavə seçimlər → Ehtiyat nüsxə və sıfırlama bölməsində başqa qovluq seçə, avtomatik yazmanı söndürə və ya ehtiyat nüsxəni istənilən brauzerdə əl ilə ixrac və idxal edə bilərsiniz."] },
         { id: "updates",
           t: "Aktual qalmaq",
           b: [

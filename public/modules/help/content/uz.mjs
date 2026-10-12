@@ -412,6 +412,11 @@ export const help = {
           t: "Sizga ergashadigan sozlamalar",
           b: [
             "Hisob bilan oʻynaganingizda sozlamalaringiz, mavzu, tugma biriktirishlari, til va mashgʻulot sovrinlari sinxronlanadi: bir qurilmada biror narsani oʻzgartirsangiz, keyingi kirgan qurilmangiz uni qabul qiladi. Sovrinlardagi taraqqiyot birlashtiriladi, hech qachon ustidan yozilmaydi, shuning uchun ikki qurilmada oʻynash har doim ikkalasining eng yaxshisini saqlaydi."] },
+        { id: "backup",
+          t: "Sozlamalaringizning lokal zaxira nusxasi",
+          b: [
+            "Brauzer xotirasi tashriflar orasida tozalanishi mumkin (tozalash, maxfiy rejim, diskda joy kamligi). Kompyuterdagi Chrome, Edge va Opera brauzerlarida mijoz siz tanlagan jilddagi pokerth-web-backup.json zaxira faylini doim yangilab turishi mumkin: veb-sozlamalar, mavzular, kolodalar, avatar rasmi, sovrinlar va statistika. Parolingiz va seansingiz hech qachon kiritilmaydi.",
+            "Bu brauzer boʻsh sozlamalar bilan ishga tushganda, Tuz buni oʻz pufakchasida taklif qiladi, hatto uning maslahatlari oʻchiq boʻlsa ham: «Zaxira nusxa yaratish» jildni tanlaydi va birinchi faylni yozadi, «Zaxira nusxani tiklash» mavjud fayldan hammasini qaytaradi, «Keyinroq» esa sizga noldan boshlash imkonini beradi. Kengaytirilgan sozlamalar → Zaxira va tiklash boʻlimida boshqa jildni tanlashingiz, avtomatik yozishni oʻchirishingiz yoki istalgan brauzerda zaxira nusxani qoʻlda eksport va import qilishingiz mumkin."] },
         { id: "updates",
           t: "Yangilanib turish",
           b: [

@@ -365,6 +365,70 @@ const _WHY = {
   bad:      ['backupImportErr', 'Import failed'],
 };
 
+// Restore tries the remembered folder first; after a folder-shaped failure
+// (gone, denied, no file) the next click opens the picker. Shared by the Ace's
+// bubble and the banner. Called in the click's own tick: no await before the
+// picker / permission prompt.
+let _pickNext = true;
+function _offerRestore() {
+  let p;
+  try { p = _pickNext ? pickForRestore() : _restoreFromFolder(); } catch (e) { p = Promise.reject(e); }
+  return Promise.resolve(p).then((why) => {
+    if (why === 'nofolder' || why === 'noperm' || why === 'nofile') _pickNext = true;
+    return why;
+  });
+}
+
+// ── The startup offer: carried by the Ace, the banner as a safety net ──────
+// Since 2.1.10-web.20 the offer (Create / Restore / Later) is said by the Ace
+// (modules/guide) in his bubble, even with his tips off: he claims it through
+// window._bakOffer. The banner below only shows when he cannot: he did not
+// claim it within CLAIM_MS (module not loaded, live embed…), or claimed it but
+// could not show it within WATCH_MS, or he reports a failure (fallback()).
+// Under automation the banner shows at once, as before: the browser tests
+// close it like a player (same opt-in key as the guide's first-launch offer).
+const CLAIM_MS = 3000;
+const WATCH_MS = 30000;
+let _offer = null;   // { claimed, shown, banner, done }
+
+function _automated() {
+  try { return !!navigator.webdriver && localStorage.getItem('pth_guide_webdriver') !== '1'; } catch (_e) { return false; }
+}
+function _later(fn, ms) {
+  const id = setTimeout(fn, ms);
+  try { if (id && typeof id.unref === 'function') id.unref(); } catch (_e) {}   // node tests: never hold the process
+  return id;
+}
+function _offerPending() { return !!(_offer && !_offer.done && !_offer.banner); }
+function _offerFallback() {
+  if (!_offerPending()) return;
+  _offer.banner = true;
+  _showRestoreBanner();
+}
+// later=true: the player put it off (« Later », dismissed) — he starts fresh,
+// automatic writing may resume.
+function _offerDone(later) {
+  if (_offer) _offer.done = true;
+  if (later) _hold = false;
+}
+function _offerPath() { return (_state.dirName ? _state.dirName + ' / ' : '') + FILE_NAME; }
+function _offerTexts() {
+  return {
+    title: _t('bakBannerTitle', 'Local backup of your settings'),
+    body: _t('bakBannerBody', 'This browser can save your settings to a folder of your choice, or restore them from an existing backup.'),
+    create: _t('bakBannerCreate', 'Create a backup'),
+    restore: _t('bakBannerRestore', 'Restore a backup'),
+    later: _t('bakBannerLater', 'Later'),
+    created: _t('bakBannerCreated', 'Backup created.'),
+    imported: _t('backupImported', 'Backup imported'),
+    busy: _t('bakRestoreBusy', 'Restoring…'),
+  };
+}
+function _offerWhy(code) {
+  const k = _WHY[code] || _WHY.bad;
+  return _t(k[0], k[1]);
+}
+
 function _showRestoreBanner() {
   try {
     if (document.getElementById('bak-restore-banner')) return;
@@ -466,16 +530,10 @@ function _showRestoreBanner() {
       });
     }
 
-    // Restore tries the remembered folder first; after a folder-shaped
-    // failure (gone, denied, no file) the next click opens the picker.
-    let pickNext = !_state.dirName;   // no folder remembered: picker first
-    async function doRestore() {
-      const why = await (pickNext ? pickForRestore() : _restoreFromFolder());
-      if (why === 'nofolder' || why === 'noperm' || why === 'nofile') pickNext = true;
-      return why;
-    }
+    const doRestore = _offerRestore;   // remembered folder first, then the picker
 
     bCreate.addEventListener('click', () => run(_pickForCreate, '', () => {
+      _offerDone(false);
       _toast(_t('bakBannerCreated', 'Backup created.'));
       try { el.remove(); } catch (_e) {}
     }));
@@ -484,12 +542,26 @@ function _showRestoreBanner() {
     }));
     // Explicit dismissal: the player starts fresh, automatic writing may
     // resume.
-    function dismiss() { _hold = false; try { el.remove(); } catch (_e) {} }
+    function dismiss() { _offerDone(true); try { el.remove(); } catch (_e) {} }
     bLater.addEventListener('click', dismiss);
     no.addEventListener('click', dismiss);
 
     el.appendChild(head); el.appendChild(row);
     document.body.appendChild(el);
+
+    // The language catalogue loads after boot: the banner was drawn with the
+    // English fallback and never caught up. Its texts follow the language now.
+    function relabel() {
+      if (!el.isConnected) { document.removeEventListener('pth:langchange', relabel); return; }
+      const tx = _offerTexts();
+      txt.textContent = tx.title;
+      body.textContent = tx.body;
+      bCreate.textContent = tx.create;
+      bRestore.textContent = tx.restore;
+      bLater.textContent = tx.later;
+    }
+    document.addEventListener('pth:langchange', relabel);
+    relabel();
   } catch (_e) {}
 }
 
@@ -498,12 +570,17 @@ function _holdState() { return _hold; }
 
 function _maybeOfferRestore() {
   if (!_supported() || !_enabled() || !_FRESH_AT_BOOT) { _hold = false; return; }
-  // Since 2.1.8-web.10 the banner also shows when NO folder is remembered
+  // Since 2.1.8-web.10 the offer also shows when NO folder is remembered
   // (brand-new browser): the player learns a local backup exists. Create
-  // picks a folder; Restore goes straight to the picker (pickNext starts
+  // picks a folder; Restore goes straight to the picker (_pickNext starts
   // true without a folder). _getHandle() already ran at _ready(), so
-  // _state.dirName is populated before the banner renders.
-  _showRestoreBanner();
+  // _state.dirName is populated before the offer is made.
+  _pickNext = !_state.dirName;
+  _offer = { claimed: false, shown: false, banner: false, done: false };
+  if (_automated()) { _offerFallback(); return; }
+  try { document.dispatchEvent(new CustomEvent('pth:bakoffer')); } catch (_e) {}
+  _later(() => { if (_offer && !_offer.claimed) _offerFallback(); }, CLAIM_MS);
+  _later(() => { if (_offer && !_offer.shown) _offerFallback(); }, WATCH_MS);
 }
 
 // ── UI (advanced-options panel) ────────────────────────────────────────────
@@ -564,6 +641,20 @@ if (typeof window !== 'undefined') {
   window._bakAutoSave = save;         // on-demand write (optional)
   window._bakAutoPick = pickFolder;   // "Choose folder…" button
   window._bakAutoUi = _ui;            // refresh when the panel is opened
+  // The startup offer, for the Ace (modules/guide/index.mjs). create() and
+  // restore() must be called in the click's own tick (folder picker).
+  window._bakOffer = {
+    pending: _offerPending,
+    claim() { if (!_offerPending()) return false; _offer.claimed = true; return true; },
+    shown() { if (_offer) _offer.shown = true; },
+    fallback: _offerFallback,
+    texts: _offerTexts,
+    path: _offerPath,
+    why: _offerWhy,
+    create: () => _pickForCreate(),
+    restore: _offerRestore,
+    done: _offerDone,
+  };
   if (typeof document !== 'undefined' && document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => { _ready(); });
   } else {

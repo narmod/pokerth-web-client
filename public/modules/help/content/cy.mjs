@@ -413,6 +413,11 @@ export const help = {
           t: "Gosodiadau sy'n eich dilyn",
           b: [
             "Pan fyddwch yn chwarae gyda chyfrif, mae eich dewisiadau, thema, aseiniadau bysellau, iaith a thlysau ymarfer yn cael eu cysoni: newidiwch rywbeth ar un ddyfais a bydd y ddyfais nesaf y byddwch yn mewngofnodi arni'n ei godi. Mae cynnydd tlysau'n cael ei uno, byth yn cael ei drosysgrifo, felly mae chwarae ar ddwy ddyfais bob amser yn cadw'r gorau o'r ddwy."] },
+        { id: "backup",
+          t: "Copi wrth gefn lleol o'ch gosodiadau",
+          b: [
+            "Gall storfa'r porwr gael ei chlirio rhwng ymweliadau (glanhau, pori preifat, lle disg yn brin). Ar Chrome, Edge ac Opera ar gyfrifiadur, gall y cleient gadw ffeil copi wrth gefn, pokerth-web-backup.json, yn gyfredol mewn ffolder o'ch dewis: dewisiadau gwe, themâu, pecynnau cardiau, delwedd afatar, tlysau ac ystadegau. Ni chaiff eich cyfrinair a'ch sesiwn byth eu cynnwys.",
+            "Pan fydd y porwr hwn yn cychwyn gyda gosodiadau gwag, mae'r As yn ei gynnig yn ei swigen, hyd yn oed gyda'i gyngor wedi'i ddiffodd: mae “Creu copi wrth gefn” yn dewis y ffolder ac yn ysgrifennu'r ffeil gyntaf, mae “Adfer copi wrth gefn” yn dod â phopeth yn ôl o ffeil sy'n bodoli, ac mae “Yn nes ymlaen” yn gadael i chi ddechrau o'r newydd. Yn Dewisiadau uwch → Copi wrth gefn ac ailosod gallwch ddewis ffolder arall, diffodd ysgrifennu awtomatig, neu allforio a mewnforio'r copi wrth gefn â llaw mewn unrhyw borwr."] },
         { id: "updates",
           t: "Cadw'n gyfredol",
           b: [

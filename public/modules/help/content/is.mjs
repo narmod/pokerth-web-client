@@ -412,6 +412,11 @@ export const help = {
           t: "Stillingar sem fylgja þér",
           b: [
             "Þegar þú spilar með aðgangi samstillast valkostir þínir, þema, lyklabindingar, tungumál og æfingaverðlaun: breyttu einhverju á einu tæki og næsta tæki sem þú skráir þig inn á tekur við því. Verðlaunaframvinda er sameinuð, aldrei yfirskrifuð, svo ef þú spilar á tveimur tækjum helst það besta úr báðum."] },
+        { id: "backup",
+          t: "Staðbundið afrit af stillingunum þínum",
+          b: [
+            "Geymsla vafrans getur þurrkast út á milli heimsókna (hreinsun, huliðsvöfrun, lítið pláss á diski). Í Chrome, Edge og Opera á borðtölvu getur biðlarinn haldið afritsskrá, pokerth-web-backup.json, uppfærðri í möppu að eigin vali, með vefvalkostum, þemum, spilastokkum, prófílmynd, verðlaunum og tölfræði. Lykilorðið þitt og setan eru aldrei með.",
+            "Þegar þessi vafri ræsist með tómar stillingar býður ásinn þetta í talbólunni sinni, jafnvel þótt slökkt sé á ábendingum hans: „Búa til afrit“ velur möppuna og skrifar fyrstu skrána, „Endurheimta afrit“ sækir allt aftur úr fyrirliggjandi skrá og „Seinna“ leyfir þér að byrja upp á nýtt. Undir Ítarlegir valkostir → Afrit og endurstilling geturðu valið aðra möppu, slökkt á sjálfvirkri skrifun eða flutt afritið út og inn handvirkt í hvaða vafra sem er."] },
         { id: "updates",
           t: "Að vera með nýjustu útgáfu",
           b: [

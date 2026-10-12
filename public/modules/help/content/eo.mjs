@@ -413,6 +413,11 @@ export const help = {
           t: "Agordoj, kiuj sekvas vin",
           b: [
             "Kiam vi ludas kun konto, viaj opcioj, etoso, klavasignoj, lingvo kaj trejnaj trofeoj estas sinkronigataj: ŝanĝu ion en unu aparato kaj la sekva aparato, en kiu vi ensalutas, prenos ĝin. Trofea progreso estas kunfandata, neniam anstataŭigata, do ludi en du aparatoj ĉiam konservas la plej bonan el ambaŭ."] },
+        { id: "backup",
+          t: "Loka savkopio de viaj agordoj",
+          b: [
+            "La konservejo de la retumilo povas esti viŝita inter du vizitoj (purigado, privata retumado, malmulte da diska spaco). En Chrome, Edge kaj Opera por komputilo, la kliento povas teni ĝisdata savkopian dosieron, pokerth-web-backup.json, en dosierujo de via elekto: retaj opcioj, etosoj, kartaroj, avatara bildo, trofeoj kaj statistikoj. Via pasvorto kaj via seanco neniam estas inkluzivitaj.",
+            "Kiam ĉi tiu retumilo startas kun malplenaj agordoj, la Aso proponas ĝin en sia veziko, eĉ se liaj konsiloj estas malŝaltitaj: “Krei savkopion” elektas la dosierujon kaj skribas la unuan dosieron, “Restarigi savkopion” rehavigas ĉion el ekzistanta dosiero, kaj “Poste” lasas vin rekomenci de nulo. En Altnivelaj opcioj → Savkopio kaj restarigo vi povas elekti alian dosierujon, malŝalti la aŭtomatan skribadon, aŭ permane eksporti kaj importi la savkopion en iu ajn retumilo."] },
         { id: "updates",
           t: "Resti ĝisdata",
           b: [

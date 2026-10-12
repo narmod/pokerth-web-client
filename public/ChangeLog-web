@@ -1,3 +1,8 @@
+2026-10-12 version 2.1.10-web.20:
+- improvement: the offer to save your settings in a folder, or to restore them, now comes from the Ace in his bubble — even with his tips turned off
+- bugfix: the local backup offer now shows in your language instead of English
+- improvement: new help section "Local backup of your settings" (Options & shortcuts)
+
 2026-10-12 version 2.1.10-web.19:
 - bugfix: the cards in the middle of the table no longer grow and shrink a little each time a player acts (very visible on a phone held sideways)
 

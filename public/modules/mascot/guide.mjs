@@ -58,6 +58,10 @@ body.guide-ask #ace-dock *{cursor:pointer!important}
 #ace-dock .ad-bubble.ad-wide .ad-ask{right:6px;top:6px;width:28px;height:28px}
 #ace-dock .ad-kicker{margin:0 30px 6px 0;font:800 12px/1.3 system-ui,sans-serif;color:#6b5a2e}
 #ace-dock .ad-step{margin-bottom:3px;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+#ace-dock .ad-bak-body{margin-top:2px;font-weight:500}
+#ace-dock .ad-bak-path{margin:4px 0 0;font:500 12px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#5c5446;overflow-wrap:anywhere}
+#ace-dock .ad-bak-msg{margin:5px 0 0;font-size:13px;font-weight:600;color:#5c5446}
+#ace-dock .ad-bak-err{color:#b3261e}
 #ace-dock .ad-count{float:right;margin-left:8px;font:700 11px/1.6 system-ui,sans-serif;opacity:.55}
 #ace-dock .ad-search{display:block;width:100%;box-sizing:border-box;border:1.5px solid #141414;border-radius:10px;padding:7px 10px;font:600 14px/1.2 system-ui,sans-serif;background:#fff;color:#141414;margin:0 0 8px;min-height:36px}
 #ace-dock .ad-list{display:flex;flex-direction:column;gap:4px;max-height:min(38vh,260px);overflow:auto;margin:0 0 8px;overscroll-behavior:contain}

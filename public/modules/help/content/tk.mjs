@@ -413,6 +413,11 @@ export const help = {
           t: "Sizi yzarlaýan sazlamalar",
           b: [
             "Hasap bilen oýnanyňyzda opsiýalaryňyz, temaňyz, klawiatura gysga ýollaryňyz, diliňiz we türgenleşik baýraklaryňyz sinhronlanýar: bir enjamda bir zady üýtgediň, indiki giren enjamyňyz ony kabul eder. Baýraklardaky öňegidişlik birleşdirilýär, hiç haçan üstünden ýazylmaýar, şonuň üçin iki enjamda oýnamak hemişe ikisiniň iň gowusyny saklaýar."] },
+        { id: "backup",
+          t: "Sazlamalaryňyzyň bu enjamdaky ätiýaçlyk nusgasy",
+          b: [
+            "Brauzeriň ammary iki girişiň arasynda arassalanyp bilner (arassalamak, şahsy brauzing, diskde ýeriň azlygy). Kompýuterdäki Chrome, Edge we Opera brauzerlerinde müşderi siziň saýlan bukjaňyzda pokerth-web-backup.json ätiýaçlyk faýlyny hemişe täzelenen ýagdaýda saklap biler: web opsiýalary, temalar, kart desteleri, awatar suraty, baýraklar we statistika. Parolyňyz we sessiýaňyz hiç haçan goşulmaýar.",
+            "Bu brauzer boş sazlamalar bilen açylanda, Tuz muny öz köpürjiginde hödürleýär, onuň maslahatlary öçük bolsa-da: «Ätiýaçlyk nusga döret» bukjany saýlaýar we ilkinji faýly ýazýar, «Ätiýaçlyk nusgany dikelt» bar bolan faýldan hemme zady yzyna getirýär, «Soňra» bolsa täzeden başlamaga mümkinçilik berýär. Giňişleýin sazlamalar → Ätiýaçlyk nusga we dikeltmek bölüminde başga bukja saýlap, awtomatik ýazmagy öçürip ýa-da islendik brauzerde ätiýaçlyk nusgany el bilen eksport we import edip bilersiňiz."] },
         { id: "updates",
           t: "Täzelenip durmak",
           b: [

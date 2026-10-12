@@ -413,6 +413,11 @@ export const help = {
           t: "Socruithe a leanann thú",
           b: [
             "Nuair a imríonn tú le cuntas, sioncronaítear do roghanna, do théama, do shannadh eochracha, do theanga agus do thrófaithe cleachtaidh: athraigh rud éigin ar ghléas amháin agus tógfaidh an chéad ghléas eile a logálann tú isteach air é. Cumasctar dul chun cinn na dtrófaithe, ní fhorscríobhtar riamh é, mar sin coinníonn imirt ar dhá ghléas an chuid is fearr den dá cheann i gcónaí."] },
+        { id: "backup",
+          t: "Cúltaca áitiúil de do shocruithe",
+          b: [
+            "Is féidir stóras an bhrabhsálaí a ghlanadh idir cuairteanna (glantachán, brabhsáil phríobháideach, easpa spáis ar an diosca). Ar Chrome, Edge agus Opera ar ríomhaire, is féidir leis an gcliant comhad cúltaca, pokerth-web-backup.json, a choinneáil cothrom le dáta i bhfillteán de do rogha féin: roghanna gréasáin, téamaí, paca cártaí, íomhá abhatáir, trófaithe agus staitisticí. Ní chuirtear do phasfhocal ná do sheisiún san áireamh riamh.",
+            "Nuair a thosaíonn an brabhsálaí seo le socruithe folmha, tairgeann an tAon é ina bholgán, fiú má tá a leideanna múchta: roghnaíonn “Cruthaigh cúltaca” an fillteán agus scríobhann sé an chéad chomhad, tugann “Athbhunaigh cúltaca” gach rud ar ais ó chomhad atá ann cheana, agus ligeann “Níos déanaí” duit tosú as an nua. In Ardroghanna → Cúltaca agus athshocrú, is féidir leat fillteán eile a roghnú, an scríobh uathoibríoch a mhúchadh, nó an cúltaca a easpórtáil agus a iompórtáil de láimh in aon bhrabhsálaí."] },
         { id: "updates",
           t: "Fanacht cothrom le dáta",
           b: [

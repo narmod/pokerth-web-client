@@ -413,6 +413,11 @@ export const help = {
           t: "Izilungiselelo ezikulandelayo",
           b: [
             "Lapho udlala nge-akhawunti, izinketho zakho, itimu, izinqamuleli zekhibhodi, ulimi nezindondo zokuziqeqesha kuyavumelaniswa: shintsha okuthile kudivayisi eyodwa futhi idivayisi elandelayo ongena ngayo iyakuthatha. Inqubekelaphambili yezindondo iyahlanganiswa, ayibhalwa phezu kwayo neze, ngakho ukudlala kumadivayisi amabili kuhlala kugcina okungcono kakhulu kokubili."] },
+        { id: "backup",
+          t: "Isipele sezilungiselelo zakho kule divayisi",
+          b: [
+            "Isitoreji sesiphequluli singasulwa phakathi kokuvakasha (ukuhlanza, ukuphequlula ngasese, isikhala esincane kudiski). Ku-Chrome, Edge kanye ne-Opera kukhompyutha, iklayenti lingagcina libuyekeziwe ifayela lesipele, pokerth-web-backup.json, kufolda oyikhethayo: izinketho zewebhu, amatimu, amakhadi, isithombe se-avatar, izindondo nezibalo. Iphasiwedi yakho neseshini yakho akufakwa neze.",
+            "Lapho lesi siphequluli siqala nezilungiselelo ezingenalutho, i-Ace ikunikeza lokhu ebhamuzini layo, ngisho noma izeluleko zayo zivaliwe: “Dala isipele” ikhetha ifolda futhi ibhale ifayela lokuqala, “Buyisela isipele” ibuyisa konke kusukela efayeleni elikhona, kanti “Kamuva” ikuvumela uqale kabusha. Ku-Izinketho ezithuthukisiwe → Isipele nokusetha kabusha ungakhetha enye ifolda, uvale ukubhala okuzenzakalelayo, noma uthumele ngaphandle futhi ungenise isipele ngesandla kunoma isiphi isiphequluli."] },
         { id: "updates",
           t: "Ukuhlala ubuyekeziwe",
           b: [

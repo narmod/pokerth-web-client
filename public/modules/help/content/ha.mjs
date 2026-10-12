@@ -413,6 +413,11 @@ export const help = {
           t: "Saitunan da ke bin ka",
           b: [
             "Idan kana wasa da asusu, ana daidaita zaɓuɓɓukanka, jigo, maɓallan da ka saita, harshe da kofunan horo: canja wani abu a na'ura ɗaya kuma na'urar da za ka shiga ta gaba za ta ɗauke shi. Ana haɗa ci gaban kofuna, ba a taɓa maye gurbinsa ba, don haka wasa a na'urori biyu koyaushe yana riƙe mafi kyau daga duka biyun."] },
+        { id: "backup",
+          t: "Ajiyar saitunanka ta gida",
+          b: [
+            "Ana iya share ma'ajiyar burauza tsakanin ziyara (tsaftacewa, bincike na sirri, ƙarancin sarari a faifai). A Chrome, Edge da Opera na kwamfuta, manhajar za ta iya ci gaba da sabunta fayil ɗin ajiya, pokerth-web-backup.json, a cikin babban fayil da ka zaɓa: zaɓuɓɓukan yanar gizo, jigogi, katunan wasa, hoton avatar, kofuna da ƙididdiga. Ba a taɓa saka kalmar sirrinka ko zamanka a ciki ba.",
+            "Idan wannan burauza ta fara da saituna babu komai, Aas yana gabatar da wannan a cikin kumfarsa, ko da shawarwarinsa a kashe suke: “Ƙirƙiri ajiya” yana zaɓar babban fayil kuma ya rubuta fayil na farko, “Maido da ajiya” yana dawo da komai daga fayil da ke akwai, kuma “Daga baya” yana barin ka ka fara sabo. A Zaɓuɓɓuka na ci gaba → Ajiya da sake saiti za ka iya zaɓar wani babban fayil, kashe rubutu kai tsaye, ko fitarwa da shigo da ajiyar da hannu a kowace burauza."] },
         { id: "updates",
           t: "Kasancewa sabunta",
           b: [

@@ -25,6 +25,13 @@ highlights below.
   is now shown at most 3 times per device (`pth_guide_offer_n`, local, not synced); Ace's Help
   stays one tap away from the login button and Advanced options. The admin card counts the offer
   per device too (`offer.first`), next to the rate among those who answered (`web.6`).
+- **The local backup offer is the Ace's** — on a browser whose storage comes up blank, the offer to
+  create the backup file or restore it (Create / Restore / Later, with the folder and file path) is
+  now said by the Ace in his bubble, tips off included: the one exception to his « silent until
+  asked » rule, once per blank storage. `backup-autosave.mjs` hands it over through
+  `window._bakOffer` / `pth:bakoffer`; its banner stays as the safety net when the Ace does not
+  claim it within 3 s or show it within 30 s, and under automation. The Ace's first-launch offer
+  waits for it. New help section `options:backup` in the 83 languages; `test-guide-backup` (`web.20`).
 
 ### Added
 - **pokerth.net vs web client, in the admin traffic stats** — every 5 minutes the proxy records the
@@ -56,6 +63,9 @@ highlights below.
   selected period and included in the JSON export. The privacy page says so (`web.5`).
 
 ### Fixed
+- **The local backup offer speaks the player's language** — it was drawn at boot, before the
+  language catalogue had loaded, and kept the English fallback; the Ace's bubble and the banner now
+  follow `pth:langchange` (`web.20`).
 - **The board no longer changes size at every action** — the size of the community cards (and the
   width of the action bar, which follows it) was computed from the position of my own box before
   that box was pinned to the bottom of the table, so each render measured where the previous one

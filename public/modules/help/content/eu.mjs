@@ -413,6 +413,11 @@ export const help = {
           t: "Zurekin doazen ezarpenak",
           b: [
             "Kontu batekin jokatzen duzunean, zure aukerak, gaia, tekla-esleipenak, hizkuntza eta entrenamenduko garaikurrak sinkronizatzen dira: aldatu zerbait gailu batean, eta saioa hasten duzun hurrengo gailuak jasoko du. Garaikurren aurrerapena batu egiten da, inoiz ez gainidatzi, beraz bi gailutan jokatzeak bietako onena gordetzen du beti."] },
+        { id: "backup",
+          t: "Zure ezarpenen tokiko babeskopia",
+          b: [
+            "Nabigatzailearen biltegia ezaba daiteke bisita batetik bestera (garbiketa, nabigatze pribatua, diskoan leku gutxi). Ordenagailurako Chrome, Edge eta Opera nabigatzaileetan, bezeroak babeskopia-fitxategi bat, pokerth-web-backup.json, eguneratuta gorde dezake zuk aukeratutako karpeta batean: web aukerak, gaiak, karta-sortak, avatarraren irudia, garaikurrak eta estatistikak. Zure pasahitza eta saioa ez dira inoiz sartzen.",
+            "Nabigatzaile hau ezarpen hutsekin abiarazten denean, Batekoak bere burbuilan eskaintzen dizu, bere aholkuak desaktibatuta egon arren: «Sortu babeskopia» botoiak karpeta aukeratu eta lehen fitxategia idazten du, «Leheneratu babeskopia» botoiak dena berreskuratzen du lehendik dagoen fitxategi batetik, eta «Geroago» botoiak hutsetik hasten uzten dizu. Aukera aurreratuak → Babeskopia eta berrezarpena atalean beste karpeta bat aukera dezakezu, idazketa automatikoa desaktibatu, edo babeskopia eskuz esportatu eta inportatu edozein nabigatzailetan."] },
         { id: "updates",
           t: "Eguneratuta egotea",
           b: [
