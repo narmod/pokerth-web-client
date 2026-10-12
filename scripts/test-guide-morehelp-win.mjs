@@ -20,7 +20,9 @@ const errors = [];
 async function openMore(page) {
   for (let i = 0; i < 12; i++) {
     if (await page.locator(B + ' [data-ad-btn="moreHelp"]').count()) break;
-    const id = await page.evaluate(() => { const b = document.querySelector('#ace-dock .ad-bubble.ad-open [data-ad-btn="gotIt"], #ace-dock .ad-bubble.ad-open [data-ad-btn="next"]'); if (b) { b.click(); return 1; } return 0; });
+    // A blank test profile gets the Ace's local backup offer first (web.20):
+    // « Later » puts it off, then its hint closes with « Got it ».
+    const id = await page.evaluate(() => { const b = document.querySelector('#ace-dock .ad-bubble.ad-open [data-ad-btn="gotIt"], #ace-dock .ad-bubble.ad-open [data-ad-btn="next"], #ace-dock .ad-bubble.ad-open [data-ad-btn="bakLater"]'); if (b) { b.click(); return 1; } return 0; });
     if (!id) await page.evaluate(() => document.querySelector('#ace-dock .ad-ace').click());
     await page.waitForTimeout(600);
   }
