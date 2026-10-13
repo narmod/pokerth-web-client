@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "រក្សាទុក ឬចែករំលែក", avmSave: "រក្សាទុករូបភាព", avmShare: "ចែករំលែក…", avmCopy: "ចម្លងរូបភាព", avmCopied: "បានចម្លងរូបភាព", avmExportFail: "មិនអាចរៀបចំរូបភាពបានទេ",
     assistRankingOff: "បិទនៅតុចំណាត់ថ្នាក់៖ អ្នកលេងទាំងអស់មានព័ត៌មានដូចគ្នា។",
     waitingHintRanked: "ហ្គេមនឹងចាប់ផ្ដើមដោយស្វ័យប្រវត្តិ ពេលតុពេញ",
     rankWaitFull: "ហ្គេមចំណាត់ថ្នាក់ — កំពុងរង់ចាំអ្នកលេង {max} នាក់ ({n}/{max})។ ហ្គេមនឹងចាប់ផ្ដើមនៅពេលតុពេញ។",

@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "محفوظ کریں یا شیئر کریں", avmSave: "تصویر محفوظ کریں", avmShare: "شیئر کریں…", avmCopy: "تصویر کاپی کریں", avmCopied: "تصویر کاپی ہو گئی", avmExportFail: "تصویر تیار نہیں ہو سکی",
     assistRankingOff: "درجہ بند میزوں پر بند ہے: سب ایک جیسی معلومات کے ساتھ کھیلتے ہیں۔",
     waitingHintRanked: "میز بھرتے ہی گیم خودبخود شروع ہو جائے گا",
     rankWaitFull: "درجہ بندی گیم — {max} کھلاڑیوں کا انتظار ({n}/{max})۔ میز بھرنے پر گیم شروع ہو گا۔",

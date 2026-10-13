@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Ruaj ose ndaj", avmSave: "Ruaj imazhin", avmShare: "Ndaj…", avmCopy: "Kopjo imazhin", avmCopied: "Imazhi u kopjua", avmExportFail: "Imazhi nuk mund të përgatitej",
     assistRankingOff: "E çaktivizuar në tavolinat me renditje: të gjithë luajnë me të njëjtin informacion.",
     waitingHintRanked: "Loja do të fillojë automatikisht sapo tavolina të mbushet",
     rankWaitFull: "Lojë me renditje — në pritje të {max} lojtarëve ({n}/{max}). Loja do të fillojë kur tavolina të mbushet.",

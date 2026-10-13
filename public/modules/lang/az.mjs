@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Saxla və ya paylaş", avmSave: "Şəkli saxla", avmShare: "Paylaş…", avmCopy: "Şəkli kopyala", avmCopied: "Şəkil kopyalandı", avmExportFail: "Şəkil hazırlana bilmədi",
     assistRankingOff: "Reytinq masalarında söndürülüb: hamı eyni məlumatla oynayır.",
     waitingHintRanked: "Masa dolan kimi oyun avtomatik başlayacaq",
     rankWaitFull: "Reytinq oyunu — {max} oyunçu gözlənilir ({n}/{max}). Masa dolduqda oyun başlayacaq.",

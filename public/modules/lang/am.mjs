@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "አስቀምጥ ወይም አጋራ", avmSave: "ምስሉን አስቀምጥ", avmShare: "አጋራ…", avmCopy: "ምስሉን ቅዳ", avmCopied: "ምስሉ ተቀድቷል", avmExportFail: "ምስሉን ማዘጋጀት አልተቻለም",
     assistRankingOff: "በደረጃ ጠረጴዛዎች ላይ ጠፍቷል፦ ሁሉም በተመሳሳይ መረጃ ይጫወታሉ።",
     waitingHintRanked: "ጠረጴዛው እንደሞላ ጨዋታው በራሱ ይጀምራል",
     rankWaitFull: "የደረጃ ጨዋታ — {max} ተጫዋቾችን በመጠበቅ ላይ ({n}/{max})። ጠረጴዛው ሲሞላ ጨዋታው ይጀምራል።",

@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Хадгалах эсвэл хуваалцах", avmSave: "Зургийг хадгалах", avmShare: "Хуваалцах…", avmCopy: "Зургийг хуулах", avmCopied: "Зураг хуулагдлаа", avmExportFail: "Зургийг бэлтгэж чадсангүй",
     assistRankingOff: "Эрэмбийн ширээнд унтраалттай: бүгд ижил мэдээлэлтэй тоглоно.",
     waitingHintRanked: "Ширээ дүүрмэгц тоглолт автоматаар эхэлнэ",
     rankWaitFull: "Эрэмбийн тоглолт — {max} тоглогч хүлээж байна ({n}/{max}). Ширээ дүүрэхэд тоглолт эхэлнэ.",

@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "حفظ أو مشاركة", avmSave: "حفظ الصورة", avmShare: "مشاركة…", avmCopy: "نسخ الصورة", avmCopied: "تم نسخ الصورة", avmExportFail: "تعذّر تجهيز الصورة",
     assistRankingOff: "معطّلة على الطاولات المصنّفة: الجميع يلعب بالمعلومات نفسها.",
     waitingHintRanked: "ستبدأ اللعبة تلقائيًا بمجرد اكتمال الطاولة",
     rankWaitFull: "لعبة تصنيف — في انتظار {max} لاعبين ({n}/{max}). ستبدأ اللعبة عندما تكتمل الطاولة.",

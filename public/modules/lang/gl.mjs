@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Gardar ou compartir", avmSave: "Gardar a imaxe", avmShare: "Compartir…", avmCopy: "Copiar a imaxe", avmCopied: "Imaxe copiada", avmExportFail: "Non se puido preparar a imaxe",
     assistRankingOff: "Desactivada nas mesas de clasificación: todos xogan coa mesma información.",
     waitingHintRanked: "A partida comezará automaticamente en canto a mesa estea chea",
     rankWaitFull: "Partida de clasificación — agardando por {max} xogadores ({n}/{max}). A partida comezará cando a mesa estea chea.",

@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Kaydet veya paylaş", avmSave: "Resmi kaydet", avmShare: "Paylaş…", avmCopy: "Resmi kopyala", avmCopied: "Resim kopyalandı", avmExportFail: "Resim hazırlanamadı",
     assistRankingOff: "Sıralama masalarında kapalı: herkes aynı bilgiyle oynar.",
     waitingHintRanked: "Masa dolar dolmaz oyun otomatik olarak başlayacak",
     rankWaitFull: "Sıralama oyunu — {max} oyuncu bekleniyor ({n}/{max}). Masa dolduğunda oyun başlayacak.",

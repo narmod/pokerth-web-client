@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Hifadhi au shiriki", avmSave: "Hifadhi picha", avmShare: "Shiriki…", avmCopy: "Nakili picha", avmCopied: "Picha imenakiliwa", avmExportFail: "Imeshindwa kuandaa picha",
     assistRankingOff: "Imezimwa kwenye meza za viwango: kila mtu anacheza na taarifa sawa.",
     waitingHintRanked: "Mchezo utaanza wenyewe mara meza itakapojaa",
     rankWaitFull: "Mchezo wa viwango — inasubiri wachezaji {max} ({n}/{max}). Mchezo utaanza meza ikijaa.",

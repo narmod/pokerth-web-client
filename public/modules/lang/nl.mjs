@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Opslaan of delen", avmSave: "Afbeelding opslaan", avmShare: "Delen…", avmCopy: "Afbeelding kopiëren", avmCopied: "Afbeelding gekopieerd", avmExportFail: "Kon de afbeelding niet voorbereiden",
     assistRankingOff: "Uit aan ranglijsttafels: iedereen speelt met dezelfde informatie.",
     waitingHintRanked: "Het spel start automatisch zodra de tafel vol is",
     rankWaitFull: "Rankingspel — wachten op {max} spelers ({n}/{max}). Het spel start zodra de tafel vol is.",

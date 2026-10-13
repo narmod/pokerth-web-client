@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Lưu hoặc chia sẻ", avmSave: "Lưu hình ảnh", avmShare: "Chia sẻ…", avmCopy: "Sao chép hình ảnh", avmCopied: "Đã sao chép hình ảnh", avmExportFail: "Không thể chuẩn bị hình ảnh",
     assistRankingOff: "Tắt ở bàn xếp hạng: mọi người chơi với cùng thông tin.",
     waitingHintRanked: "Ván sẽ tự động bắt đầu ngay khi bàn đủ người",
     rankWaitFull: "Ván xếp hạng — đang chờ {max} người chơi ({n}/{max}). Ván sẽ bắt đầu khi bàn đủ người.",

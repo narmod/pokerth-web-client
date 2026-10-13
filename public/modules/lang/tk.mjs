@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Ýatda sakla ýa-da paýlaş", avmSave: "Suraty ýatda sakla", avmShare: "Paýlaş…", avmCopy: "Suraty göçür", avmCopied: "Surat göçürildi", avmExportFail: "Suraty taýýarlap bolmady",
     assistRankingOff: "Reýting stollarynda öçürilen: hemmeler birmeňzeş maglumat bilen oýnaýar.",
     waitingHintRanked: "Stol dolan badyna oýun awtomatik başlar",
     rankWaitFull: "Reýting oýny — {max} oýunçy garaşylýar ({n}/{max}). Stol dolanda oýun başlar.",

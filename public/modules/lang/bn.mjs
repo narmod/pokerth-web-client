@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "সংরক্ষণ বা শেয়ার", avmSave: "ছবি সংরক্ষণ করুন", avmShare: "শেয়ার করুন…", avmCopy: "ছবি কপি করুন", avmCopied: "ছবি কপি হয়েছে", avmExportFail: "ছবি তৈরি করা যায়নি",
     assistRankingOff: "র‍্যাংকড টেবিলে বন্ধ: সবাই একই তথ্য নিয়ে খেলে।",
     waitingHintRanked: "টেবিল পূর্ণ হলেই খেলা স্বয়ংক্রিয়ভাবে শুরু হবে",
     rankWaitFull: "র‍্যাংকিং গেম — {max} জন খেলোয়াড়ের অপেক্ষায় ({n}/{max})। টেবিল পূর্ণ হলে খেলা শুরু হবে।",

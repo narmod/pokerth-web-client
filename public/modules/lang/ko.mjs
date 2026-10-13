@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "저장 또는 공유", avmSave: "이미지 저장", avmShare: "공유…", avmCopy: "이미지 복사", avmCopied: "이미지를 복사했습니다", avmExportFail: "이미지를 준비하지 못했습니다",
     assistRankingOff: "랭킹 테이블에서는 꺼짐: 모두가 같은 정보로 플레이합니다.",
     waitingHintRanked: "테이블이 가득 차면 게임이 자동으로 시작됩니다",
     rankWaitFull: "랭킹 게임 — {max}명의 플레이어를 기다리는 중 ({n}/{max}). 테이블이 가득 차면 게임이 시작됩니다.",

@@ -72,6 +72,11 @@ highlights below.
   the line fits on a phone; the wording stays in the tooltip.
 
 ### Added
+- **Save, share or copy a studio portrait** — a ⋯ button on the « Create » preview (also a long
+  press or right click on it) opens a small menu: save as `pokerth-avatar.png`, share (Web Share,
+  when the browser can share files) or copy to the clipboard. The portrait is re-rendered from its
+  recipe as a 512 px PNG, prepared when the menu opens so Share / Copy keep the tap's user
+  activation (`ui/avatar-studio.mjs`, 6 new keys in every language, `web.38`).
 - **« Hide bots » in the admin traffic stats** — visits from detected automation are counted
   apart and left out of every Traffic view by default (toggle in the Traffic header, remembered
   per browser; off = everything, `?bots=1`). A ping is automated when its User-Agent is a robot's

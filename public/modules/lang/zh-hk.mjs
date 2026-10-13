@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "儲存或分享", avmSave: "儲存圖片", avmShare: "分享…", avmCopy: "複製圖片", avmCopied: "已複製圖片", avmExportFail: "無法準備圖片",
     assistRankingOff: "排名牌枱上關閉：所有人掌握相同的資訊。",
     waitingHintRanked: "枱坐滿後遊戲將自動開始",
     rankWaitFull: "排名遊戲 — 等待 {max} 名玩家（{n}/{max}）。枱坐滿後遊戲將開始。",

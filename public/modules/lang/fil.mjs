@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "I-save o ibahagi", avmSave: "I-save ang larawan", avmShare: "Ibahagi…", avmCopy: "Kopyahin ang larawan", avmCopied: "Nakopya ang larawan", avmExportFail: "Hindi maihanda ang larawan",
     assistRankingOff: "Naka-off sa mga Ranked na mesa: pare-pareho ang impormasyon ng lahat.",
     waitingHintRanked: "Awtomatikong magsisimula ang laro kapag puno na ang mesa",
     rankWaitFull: "Ranking game — naghihintay ng {max} manlalaro ({n}/{max}). Magsisimula ang laro kapag puno na ang mesa.",

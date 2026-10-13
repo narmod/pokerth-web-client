@@ -91,7 +91,15 @@ function _avmRender() {
     pane.innerHTML =
       '<div class="avm-sticky">' +
       '<div class="avm-head">' +
+      '<div class="avm-preview-wrap">' +
       '<div class="avm-preview" id="avm-preview"></div>' +
+      '<button type="button" class="avm-more" id="avm-more" aria-haspopup="menu" aria-expanded="false">\u22EF</button>' +
+      '<div class="avm-menu" id="avm-menu" role="menu" hidden>' +
+      '<button type="button" role="menuitem" data-act="save">\uD83D\uDCBE <span></span></button>' +
+      '<button type="button" role="menuitem" data-act="share">\uD83D\uDCE4 <span></span></button>' +
+      '<button type="button" role="menuitem" data-act="copy">\uD83D\uDCCB <span></span></button>' +
+      '</div>' +
+      '</div>' +
       '<div class="avm-head-btns">' +
       '<button type="button" class="avm-btn" id="avm-dice">\uD83C\uDFB2 <span></span></button>' +
       '<button type="button" class="avm-btn" id="avm-reset">\u21ba</button>' +
@@ -120,6 +128,7 @@ function _avmRender() {
       _avmState = avNormalize(AV_DEFAULT); _avmSanitize(); _avmPersist(); _avmRender();
     });
     document.getElementById('avm-use').addEventListener('click', _avmApply);
+    _avmMenuWire();
     document.getElementById('avm-photo').addEventListener('click', function () {
       avCaptureOpen({ mode: 'camera', sex: _avmState.sex, onResult: _avmFromCapture });
     });
@@ -137,6 +146,7 @@ function _avmRender() {
   _rst.title = t('avmReset');
   _rst.setAttribute('aria-label', t('avmReset'));
   document.getElementById('avm-use').textContent = t('avmUse');
+  _avmMenuLabels();
 
   document.getElementById('avm-preview').innerHTML = avSvg(_avmState, 120);
 
@@ -307,6 +317,147 @@ function _avmApply() {
     } catch (e) {}
   };
   img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+
+// ── Save / share / copy the portrait (narmod 2026-10-13, option B) ──────
+// A ⋯ button on the preview (or a long press / right click on it) opens a
+// small menu. The portrait is re-rendered from the recipe as a 512 px PNG
+// (the seat copy is a 96 px JPEG). The PNG is prepared as soon as the menu
+// opens, so Share and Copy run inside the tap's user activation (Safari
+// rejects navigator.share / clipboard writes after an async gap).
+var AVM_EXPORT_SZ = 512, AVM_EXPORT_NAME = 'pokerth-avatar.png';
+var _avmPng = null; // { key, promise, blob }
+var _avmMenuAt = 0; // opening time: the tap that ends a long press must not close it
+
+function _avmPngPrepare() {
+  var key = JSON.stringify(_avmState);
+  if (_avmPng && _avmPng.key === key) return _avmPng.promise;
+  var entry = { key: key, blob: null, promise: null };
+  entry.promise = new Promise(function (resolve, reject) {
+    var img = new Image();
+    img.onload = function () {
+      try {
+        var cv = document.createElement('canvas');
+        cv.width = AVM_EXPORT_SZ; cv.height = AVM_EXPORT_SZ;
+        cv.getContext('2d').drawImage(img, 0, 0, AVM_EXPORT_SZ, AVM_EXPORT_SZ);
+        cv.toBlob(function (b) {
+          if (!b) { reject(new Error('toBlob')); return; }
+          entry.blob = b; resolve(b);
+        }, 'image/png');
+      } catch (e) { reject(e); }
+    };
+    img.onerror = function () { reject(new Error('svg')); };
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(avSvg(_avmState, AVM_EXPORT_SZ));
+  });
+  entry.promise.catch(function () { if (_avmPng === entry) _avmPng = null; });
+  _avmPng = entry;
+  return entry.promise;
+}
+
+function _avmCanShare() {
+  try {
+    return !!(navigator.share && navigator.canShare && typeof File === 'function' &&
+      navigator.canShare({ files: [new File([''], AVM_EXPORT_NAME, { type: 'image/png' })] }));
+  } catch (e) { return false; }
+}
+function _avmCanCopy() {
+  return !!(window.ClipboardItem && navigator.clipboard && typeof navigator.clipboard.write === 'function');
+}
+
+function _avmMenuLabels() {
+  var more = document.getElementById('avm-more');
+  if (!more) return;
+  more.title = t('avmMore');
+  more.setAttribute('aria-label', t('avmMore'));
+  var m = document.getElementById('avm-menu');
+  [['save', 'avmSave'], ['share', 'avmShare'], ['copy', 'avmCopy']].forEach(function (a) {
+    var b = m.querySelector('[data-act="' + a[0] + '"] span');
+    if (b) b.textContent = t(a[1]);
+  });
+}
+
+function _avmMenuOpen() {
+  var m = document.getElementById('avm-menu'), more = document.getElementById('avm-more');
+  if (!m || !m.hidden) return;
+  m.querySelector('[data-act="share"]').hidden = !_avmCanShare();
+  m.querySelector('[data-act="copy"]').hidden = !_avmCanCopy();
+  _avmPngPrepare();
+  m.hidden = false;
+  _avmMenuAt = Date.now();
+  more.setAttribute('aria-expanded', 'true');
+}
+function _avmMenuClose() {
+  var m = document.getElementById('avm-menu'), more = document.getElementById('avm-more');
+  if (!m || m.hidden) return;
+  m.hidden = true;
+  if (more) more.setAttribute('aria-expanded', 'false');
+}
+
+function _avmExportFail(e) {
+  // A dismissed share sheet is not an error.
+  if (e && e.name === 'AbortError') return;
+  try { if (typeof window.showToast === 'function') window.showToast(t('avmExportFail'), { icon: '\u26A0\uFE0F', duration: 3000 }); } catch (e2) {}
+}
+
+function _avmSave(blob) {
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = AVM_EXPORT_NAME; a.rel = 'noopener';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 30000);
+}
+
+function _avmMenuAct(act) {
+  _avmMenuClose();
+  var p = _avmPngPrepare();
+  var ready = _avmPng && _avmPng.blob;
+  if (act === 'copy') {
+    // A Promise in ClipboardItem keeps Safari's user activation.
+    try {
+      navigator.clipboard.write([new ClipboardItem({ 'image/png': ready ? Promise.resolve(ready) : p })]).then(function () {
+        try { if (typeof window.showToast === 'function') window.showToast(t('avmCopied'), { icon: '\uD83D\uDCCB', duration: 2500 }); } catch (e) {}
+      }, _avmExportFail);
+    } catch (e) { _avmExportFail(e); }
+    return;
+  }
+  var run = function (blob) {
+    if (act === 'share') {
+      return navigator.share({ files: [new File([blob], AVM_EXPORT_NAME, { type: 'image/png' })] });
+    }
+    _avmSave(blob);
+  };
+  try {
+    if (ready) Promise.resolve(run(ready)).catch(_avmExportFail);
+    else p.then(run).catch(_avmExportFail);
+  } catch (e) { _avmExportFail(e); }
+}
+
+function _avmMenuWire() {
+  var more = document.getElementById('avm-more'), m = document.getElementById('avm-menu');
+  var prev = document.getElementById('avm-preview');
+  more.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (m.hidden) _avmMenuOpen(); else _avmMenuClose();
+  });
+  m.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-act]');
+    if (!b) return;
+    e.stopPropagation();
+    _avmMenuAct(b.getAttribute('data-act'));
+  });
+  // Right click (desktop) / long press (Android fires contextmenu)
+  prev.addEventListener('contextmenu', function (e) { e.preventDefault(); _avmMenuOpen(); });
+  // Long press on iOS (no contextmenu event on touch)
+  var lp = null;
+  var lpStop = function () { if (lp) { clearTimeout(lp); lp = null; } };
+  prev.addEventListener('touchstart', function () { lpStop(); lp = setTimeout(function () { lp = null; _avmMenuOpen(); }, 550); }, { passive: true });
+  prev.addEventListener('touchend', lpStop);
+  prev.addEventListener('touchmove', lpStop, { passive: true });
+  prev.addEventListener('touchcancel', lpStop);
+  document.addEventListener('click', function (e) {
+    if (!m.hidden && !m.contains(e.target) && e.target !== more && Date.now() - _avmMenuAt > 400) _avmMenuClose();
+  }, true);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') _avmMenuClose(); });
 }
 
 // ── Import pane ──────────────────────────────────────────────────────────

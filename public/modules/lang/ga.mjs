@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Sábháil nó comhroinn", avmSave: "Sábháil an íomhá", avmShare: "Comhroinn…", avmCopy: "Cóipeáil an íomhá", avmCopied: "Íomhá cóipeáilte", avmExportFail: "Níorbh fhéidir an íomhá a ullmhú",
     assistRankingOff: "Múchta ag táblaí rangaithe: imríonn gach duine leis an eolas céanna.",
     waitingHintRanked: "Tosóidh an cluiche go huathoibríoch a luaithe a bheidh an bord lán",
     rankWaitFull: "Cluiche rangaithe — ag fanacht le {max} imreoir ({n}/{max}). Tosóidh an cluiche nuair a bheidh an bord lán.",

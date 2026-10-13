@@ -11725,6 +11725,32 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
   display: flex; align-items: center; justify-content: center;
 }
 .avm-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Save / share / copy menu on the Create preview (⋯ or long press) */
+.avm-preview-wrap { position: relative; flex: 0 0 auto; }
+.avm-preview-wrap .avm-preview { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+.avm-more {
+  position: absolute; top: 4px; right: 4px; z-index: 3;
+  width: 28px; height: 28px; padding: 0; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.35);
+  color: #fff; font-size: 1.1rem; line-height: 1; cursor: pointer;
+}
+.avm-more:hover, .avm-more[aria-expanded="true"] { border-color: var(--sel,var(--gold)); color: var(--sel,var(--gold)); }
+.avm-menu {
+  position: absolute; top: calc(100% + 6px); left: 0; z-index: 5;
+  min-width: 190px; display: flex; flex-direction: column;
+  background: var(--modal-bg, var(--panel)); border: 1px solid var(--border);
+  border-radius: var(--r-sm); overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+}
+.avm-menu[hidden], .avm-menu > [hidden] { display: none; }
+.avm-menu > button {
+  display: flex; align-items: center; gap: 8px; text-align: left;
+  background: none; border: 0;
+  color: var(--text-hi); font-size: var(--fs-sm); padding: 10px 12px; cursor: pointer;
+}
+.avm-menu > button + button { border-top: 1px solid var(--border); }
+.avm-menu > button:hover { background: rgba(var(--gold-rgb), 0.1); }
 .avm-missing { font-size: 2rem; opacity: 0.45; }
 .avm-rows { display: flex; flex-direction: column; gap: var(--sp-4); }
 .avm-axis-label {

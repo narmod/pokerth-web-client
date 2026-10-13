@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Gorde edo partekatu", avmSave: "Gorde irudia", avmShare: "Partekatu…", avmCopy: "Kopiatu irudia", avmCopied: "Irudia kopiatu da", avmExportFail: "Ezin izan da irudia prestatu",
     assistRankingOff: "Desaktibatuta sailkapeneko mahaietan: denek informazio bera dute.",
     waitingHintRanked: "Partida automatikoki hasiko da mahaia betetzen den bezain laster",
     rankWaitFull: "Sailkapeneko partida — {max} jokalariren zain ({n}/{max}). Partida mahaia betetzen denean hasiko da.",

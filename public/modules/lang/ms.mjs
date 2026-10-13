@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Simpan atau kongsi", avmSave: "Simpan imej", avmShare: "Kongsi…", avmCopy: "Salin imej", avmCopied: "Imej disalin", avmExportFail: "Imej tidak dapat disediakan",
     assistRankingOff: "Dimatikan di meja berperingkat: semua bermain dengan maklumat yang sama.",
     waitingHintRanked: "Permainan akan bermula secara automatik sebaik sahaja meja penuh",
     rankWaitFull: "Permainan berperingkat — menunggu {max} pemain ({n}/{max}). Permainan akan bermula apabila meja penuh.",

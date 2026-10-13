@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "ਸੰਭਾਲੋ ਜਾਂ ਸਾਂਝਾ ਕਰੋ", avmSave: "ਤਸਵੀਰ ਸੰਭਾਲੋ", avmShare: "ਸਾਂਝਾ ਕਰੋ…", avmCopy: "ਤਸਵੀਰ ਕਾਪੀ ਕਰੋ", avmCopied: "ਤਸਵੀਰ ਕਾਪੀ ਹੋਈ", avmExportFail: "ਤਸਵੀਰ ਤਿਆਰ ਨਹੀਂ ਹੋ ਸਕੀ",
     assistRankingOff: "ਰੈਂਕਡ ਟੇਬਲਾਂ ਉੱਤੇ ਬੰਦ: ਸਾਰੇ ਇੱਕੋ ਜਾਣਕਾਰੀ ਨਾਲ ਖੇਡਦੇ ਹਨ।",
     waitingHintRanked: "ਟੇਬਲ ਭਰਦੇ ਹੀ ਖੇਡ ਆਪਣੇ-ਆਪ ਸ਼ੁਰੂ ਹੋ ਜਾਵੇਗੀ",
     rankWaitFull: "ਰੈਂਕਿੰਗ ਖੇਡ — {max} ਖਿਡਾਰੀਆਂ ਦੀ ਉਡੀਕ ({n}/{max})। ਟੇਬਲ ਭਰਨ 'ਤੇ ਖੇਡ ਸ਼ੁਰੂ ਹੋਵੇਗੀ।",

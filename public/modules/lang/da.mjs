@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Gem eller del", avmSave: "Gem billede", avmShare: "Del…", avmCopy: "Kopiér billede", avmCopied: "Billede kopieret", avmExportFail: "Billedet kunne ikke klargøres",
     assistRankingOff: "Slået fra ved ranglisteborde: alle spiller med de samme oplysninger.",
     waitingHintRanked: "Spillet starter automatisk, så snart bordet er fuldt",
     rankWaitFull: "Ranglistespil — venter på {max} spillere ({n}/{max}). Spillet starter, når bordet er fuldt.",

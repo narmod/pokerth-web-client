@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Uložiť alebo zdieľať", avmSave: "Uložiť obrázok", avmShare: "Zdieľať…", avmCopy: "Kopírovať obrázok", avmCopied: "Obrázok skopírovaný", avmExportFail: "Obrázok sa nepodarilo pripraviť",
     assistRankingOff: "Vypnuté pri rebríčkových stoloch: všetci hrajú s rovnakými informáciami.",
     waitingHintRanked: "Hra sa začne automaticky, len čo bude stôl plný",
     rankWaitFull: "Hodnotená hra — čaká sa na {max} hráčov ({n}/{max}). Hra sa začne, keď bude stôl plný.",

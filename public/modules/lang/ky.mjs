@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Сактоо же бөлүшүү", avmSave: "Сүрөттү сактоо", avmShare: "Бөлүшүү…", avmCopy: "Сүрөттү көчүрүү", avmCopied: "Сүрөт көчүрүлдү", avmExportFail: "Сүрөттү даярдоо мүмкүн болбоду",
     assistRankingOff: "Рейтингдик столдордо өчүрүлгөн: баары бирдей маалымат менен ойнойт.",
     waitingHintRanked: "Стол толоору менен оюн автоматтык түрдө башталат",
     rankWaitFull: "Рейтингдик оюн — {max} оюнчу күтүлүүдө ({n}/{max}). Стол толгондо оюн башталат.",

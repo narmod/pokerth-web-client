@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Tallenna tai jaa", avmSave: "Tallenna kuva", avmShare: "Jaa…", avmCopy: "Kopioi kuva", avmCopied: "Kuva kopioitu", avmExportFail: "Kuvaa ei voitu valmistella",
     assistRankingOff: "Pois päältä sijoituslistapöydissä: kaikilla on samat tiedot.",
     waitingHintRanked: "Peli alkaa automaattisesti heti, kun pöytä on täynnä",
     rankWaitFull: "Ranking-peli — odotetaan {max} pelaajaa ({n}/{max}). Peli alkaa, kun pöytä on täynnä.",

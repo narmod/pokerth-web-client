@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "保存或分享", avmSave: "保存图片", avmShare: "分享…", avmCopy: "复制图片", avmCopied: "已复制图片", avmExportFail: "无法准备图片",
     assistRankingOff: "排名牌桌上关闭：所有人掌握相同的信息。",
     waitingHintRanked: "桌子坐满后游戏将自动开始",
     rankWaitFull: "排名游戏 — 等待 {max} 名玩家（{n}/{max}）。桌子坐满后游戏将开始。",

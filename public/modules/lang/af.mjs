@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Stoor of deel", avmSave: "Stoor prent", avmShare: "Deel…", avmCopy: "Kopieer prent", avmCopied: "Prent gekopieer", avmExportFail: "Kon nie die prent voorberei nie",
     assistRankingOff: "Af by ranglystafels: almal speel met dieselfde inligting.",
     waitingHintRanked: "Die spel begin outomaties sodra die tafel vol is",
     rankWaitFull: "Ranglysspel — wag vir {max} spelers ({n}/{max}). Die spel begin wanneer die tafel vol is.",

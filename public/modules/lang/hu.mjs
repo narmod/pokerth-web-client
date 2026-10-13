@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Mentés vagy megosztás", avmSave: "Kép mentése", avmShare: "Megosztás…", avmCopy: "Kép másolása", avmCopied: "Kép másolva", avmExportFail: "Nem sikerült előkészíteni a képet",
     assistRankingOff: "Ranglistás asztaloknál kikapcsolva: mindenki ugyanazokkal az információkkal játszik.",
     waitingHintRanked: "A játék automatikusan elindul, amint megtelik az asztal",
     rankWaitFull: "Ranglistás játék — {max} játékosra várunk ({n}/{max}). A játék akkor indul, amikor megtelik az asztal.",

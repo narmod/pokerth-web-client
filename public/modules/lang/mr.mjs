@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "जतन करा किंवा शेअर करा", avmSave: "प्रतिमा जतन करा", avmShare: "शेअर करा…", avmCopy: "प्रतिमा कॉपी करा", avmCopied: "प्रतिमा कॉपी झाली", avmExportFail: "प्रतिमा तयार करता आली नाही",
     assistRankingOff: "रँक्ड टेबलवर बंद: सगळे एकाच माहितीसह खेळतात.",
     waitingHintRanked: "टेबल भरताच गेम आपोआप सुरू होईल",
     rankWaitFull: "रँकिंग गेम — {max} खेळाडूंची प्रतीक्षा ({n}/{max}). टेबल भरल्यावर गेम सुरू होईल.",

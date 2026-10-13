@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Išsaugoti arba bendrinti", avmSave: "Išsaugoti paveikslėlį", avmShare: "Bendrinti…", avmCopy: "Kopijuoti paveikslėlį", avmCopied: "Paveikslėlis nukopijuotas", avmExportFail: "Nepavyko paruošti paveikslėlio",
     assistRankingOff: "Išjungta prie reitingo stalų: visi žaidžia su ta pačia informacija.",
     waitingHintRanked: "Žaidimas prasidės automatiškai, kai tik stalas bus pilnas",
     rankWaitFull: "Reitinguojamas žaidimas — laukiama {max} žaidėjų ({n}/{max}). Žaidimas prasidės, kai stalas bus pilnas.",

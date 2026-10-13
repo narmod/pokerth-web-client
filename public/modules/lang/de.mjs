@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Speichern oder teilen", avmSave: "Bild speichern", avmShare: "Teilen…", avmCopy: "Bild kopieren", avmCopied: "Bild kopiert", avmExportFail: "Bild konnte nicht vorbereitet werden",
     assistRankingOff: "An Ranglisten-Tischen ausgeschaltet: Alle spielen mit denselben Informationen.",
     waitingHintRanked: "Das Spiel startet automatisch, sobald der Tisch voll ist",
     rankWaitFull: "Ranglistenspiel — warte auf {max} Spieler ({n}/{max}). Das Spiel startet, sobald der Tisch voll ist.",

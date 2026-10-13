@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Salvesta või jaga", avmSave: "Salvesta pilt", avmShare: "Jaga…", avmCopy: "Kopeeri pilt", avmCopied: "Pilt kopeeritud", avmExportFail: "Pilti ei õnnestunud ette valmistada",
     assistRankingOff: "Edetabeliga laudades välja lülitatud: kõigil on sama teave.",
     waitingHintRanked: "Mäng algab automaatselt kohe, kui laud on täis",
     rankWaitFull: "Edetabelimäng — ootame {max} mängijat ({n}/{max}). Mäng algab, kui laud on täis.",

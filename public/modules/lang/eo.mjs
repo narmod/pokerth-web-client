@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Konservi aŭ kunhavigi", avmSave: "Konservi bildon", avmShare: "Kunhavigi…", avmCopy: "Kopii bildon", avmCopied: "Bildo kopiita", avmExportFail: "Ne eblis prepari la bildon",
     assistRankingOff: "Malŝaltita ĉe rangigaj tabloj: ĉiuj ludas kun la samaj informoj.",
     waitingHintRanked: "La ludo aŭtomate komenciĝos tuj kiam la tablo estos plena",
     rankWaitFull: "Rangiga ludo — atendante {max} ludantojn ({n}/{max}). La ludo komenciĝos kiam la tablo estos plena.",

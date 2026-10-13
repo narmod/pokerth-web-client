@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "સાચવો અથવા શેર કરો", avmSave: "છબી સાચવો", avmShare: "શેર કરો…", avmCopy: "છબી કૉપિ કરો", avmCopied: "છબી કૉપિ થઈ", avmExportFail: "છબી તૈયાર કરી શકાઈ નહીં",
     assistRankingOff: "રેન્ક્ડ ટેબલ પર બંધ: બધા એક જ માહિતી સાથે રમે છે.",
     waitingHintRanked: "ટેબલ ભરાતાં જ ગેમ આપમેળે શરૂ થશે",
     rankWaitFull: "રેન્કિંગ ગેમ — {max} ખેલાડીઓની રાહ ({n}/{max}). ટેબલ ભરાય ત્યારે ગેમ શરૂ થશે.",

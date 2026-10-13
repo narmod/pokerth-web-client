@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "保存または共有", avmSave: "画像を保存", avmShare: "共有…", avmCopy: "画像をコピー", avmCopied: "画像をコピーしました", avmExportFail: "画像を準備できませんでした",
     assistRankingOff: "ランキング卓ではオフ：全員が同じ情報でプレイします。",
     waitingHintRanked: "テーブルが満席になると自動的にゲームが始まります",
     rankWaitFull: "ランキングゲーム — {max}人のプレイヤーを待っています（{n}/{max}）。テーブルが満席になるとゲームが始まります。",

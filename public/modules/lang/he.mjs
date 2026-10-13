@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "שמירה או שיתוף", avmSave: "שמירת התמונה", avmShare: "שיתוף…", avmCopy: "העתקת התמונה", avmCopied: "התמונה הועתקה", avmExportFail: "לא ניתן היה להכין את התמונה",
     assistRankingOff: "כבויה בשולחנות מדורגים: כולם משחקים עם אותו מידע.",
     waitingHintRanked: "המשחק יתחיל אוטומטית ברגע שהשולחן יתמלא",
     rankWaitFull: "משחק דירוג — ממתינים ל־{max} שחקנים ({n}/{max}). המשחק יתחיל כשהשולחן יתמלא.",

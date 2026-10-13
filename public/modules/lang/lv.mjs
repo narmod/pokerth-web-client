@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Saglabāt vai kopīgot", avmSave: "Saglabāt attēlu", avmShare: "Kopīgot…", avmCopy: "Kopēt attēlu", avmCopied: "Attēls nokopēts", avmExportFail: "Neizdevās sagatavot attēlu",
     assistRankingOff: "Izslēgta pie reitinga galdiem: visi spēlē ar vienādu informāciju.",
     waitingHintRanked: "Spēle sāksies automātiski, tiklīdz galds būs pilns",
     rankWaitFull: "Reitinga spēle — gaidām {max} spēlētājus ({n}/{max}). Spēle sāksies, kad galds būs pilns.",

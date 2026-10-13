@@ -1,3 +1,6 @@
+2026-10-13 version 2.1.10-web.38:
+- new: in the avatar window's « Create » tab, the ⋯ button on the portrait (or a long press on it) lets you save it as an image, share it or copy it
+
 2026-10-13 version 2.1.10-web.37:
 - bugfix: an avatar made in the avatar studio (or imported from a photo) fills its square frame at the table, like the other avatars, instead of showing as a circle
 

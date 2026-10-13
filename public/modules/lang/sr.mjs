@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Сачувај или подели", avmSave: "Сачувај слику", avmShare: "Подели…", avmCopy: "Копирај слику", avmCopied: "Слика копирана", avmExportFail: "Слика није могла да се припреми",
     assistRankingOff: "Искључено за столовима ранг-листе: сви играју са истим информацијама.",
     waitingHintRanked: "Igra počinje automatski čim se sto popuni",
     rankWaitFull: "Rangirana igra — čeka se {max} igrača ({n}/{max}). Igra počinje kada se sto popuni.",

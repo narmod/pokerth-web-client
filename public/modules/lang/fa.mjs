@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "ذخیره یا اشتراک‌گذاری", avmSave: "ذخیرهٔ تصویر", avmShare: "اشتراک‌گذاری…", avmCopy: "کپی تصویر", avmCopied: "تصویر کپی شد", avmExportFail: "آماده‌سازی تصویر ممکن نشد",
     assistRankingOff: "در میزهای رتبه‌بندی خاموش است: همه با اطلاعات یکسان بازی می‌کنند.",
     waitingHintRanked: "بازی به‌محض پر شدن میز به‌طور خودکار شروع می‌شود",
     rankWaitFull: "بازی رتبه‌بندی — در انتظار {max} بازیکن ({n}/{max}). بازی وقتی میز پر شود شروع می‌شود.",

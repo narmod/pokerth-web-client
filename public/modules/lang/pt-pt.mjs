@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    avmMore: "Guardar ou partilhar", avmSave: "Guardar imagem", avmShare: "Partilhar…", avmCopy: "Copiar imagem", avmCopied: "Imagem copiada", avmExportFail: "Não foi possível preparar a imagem",
     assistRankingOff: "Desativada nas mesas de classificação: todos jogam com a mesma informação.",
     waitingHintRanked: "O jogo começa automaticamente assim que a mesa estiver completa",
     rankWaitFull: "Jogo de classificação — a aguardar {max} jogadores ({n}/{max}). O jogo começa quando a mesa estiver completa.",
