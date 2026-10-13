@@ -81,7 +81,8 @@ ok(keys.every((k) => { const z = Array.isArray(M.tz[k]) ? M.tz[k][0] : M.tz[k]; 
 ok((Array.isArray(M.tz.US) ? M.tz.US[0] : M.tz.US) === 'America/New_York' && M.tz.FR === 'Europe/Paris', 'multi-zone countries use their main zone (US → New York, FR → Paris)');
 
 // ── admin wiring ──
-ok(/<button id="geoNightBtn" class="use" type="button" aria-pressed="true"[^>]*>Day \/ night<\/button>/.test(admin), 'the World card has the « Day / night » button, on by default');
+ok(/<button id="geoNightBtn" class="use geoswitch" type="button" role="switch" aria-checked="true"[^>]*><span class="swt" aria-hidden="true"><i><\/i><\/span>Day \/ night <b class="swv">On<\/b><\/button>/.test(admin), 'the World card has a « Day / night » switch, on by default');
+ok(/b\.setAttribute\('aria-checked',_geoNight\?'true':'false'\);/.test(admin) && /v\.textContent=_geoNight\?'On':'Off';/.test(admin), 'the switch shows its state (On / Off)');
 ok(/_geoNight=localStorage\.getItem\('pth_admin_geo_night'\)!=='0'/.test(admin) && /localStorage\.setItem\('pth_admin_geo_night'/.test(admin), 'remembered per browser');
 ok(/\+\(_geoNight&&M\.proj\?_geoSphere\(M\):''\)\+paths\.join\(''\)\+_geoNightSvg\(M\)\+'<\/svg>'/.test(admin), 'drawn over the countries, under nothing clickable');
 ok(/setInterval\(function\(\)\{ var m=\$\('geoMap'\); if\(_geoNight && _geoData && m && m\.offsetParent\) renderGeo\(\); \},60000\);/.test(admin), 'moves on every minute, only while the map is on screen');

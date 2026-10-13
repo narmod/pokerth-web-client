@@ -235,7 +235,13 @@
   .geonight{fill:#0b1433;pointer-events:none}
   .geosphere{fill:rgba(160,172,196,.07);stroke:var(--line);stroke-width:1px;vector-effect:non-scaling-stroke;pointer-events:none}
   .geosun{fill:#EF9F27;stroke:#fff;stroke-width:1.5px;vector-effect:non-scaling-stroke;pointer-events:none}
-  #geoNightBtn[aria-pressed="true"]{border-color:var(--gold);background:rgba(160,172,196,.14)}
+  .geoswitch{display:inline-flex;align-items:center;gap:8px}
+  .geoswitch .swt{position:relative;width:30px;height:17px;border-radius:9px;background:var(--line);transition:background .15s;flex:none}
+  .geoswitch .swt i{position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:var(--text);transition:left .15s}
+  .geoswitch[aria-checked="true"]{border-color:var(--gold)}
+  .geoswitch[aria-checked="true"] .swt{background:#EF9F27}
+  .geoswitch[aria-checked="true"] .swt i{left:15px;background:#fff}
+  .geoswitch .swv{font-weight:700;min-width:2em;text-align:left}
   .geotw{display:inline-block;width:12px;height:9px;border-radius:2px;background:#0b1433;vertical-align:-1px;margin-right:4px;box-shadow:inset 0 0 0 1px var(--line)}
   .geowarn{margin:8px 0 0;padding:8px 10px;border-radius:8px;border:1px solid #e0a03a;color:var(--cream);font-size:.8rem}
   .botline{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:13px}
@@ -632,7 +638,7 @@
       </div>
       <div class="tsub" data-ts="world" role="tabpanel" aria-label="World" style="display:none">
       <div class="card">
-        <div class="boardhead"><h2>World</h2><span id="geoNote" class="headnote"></span><button id="geoNightBtn" class="use" type="button" aria-pressed="true" title="Show or hide where it is night right now, with the twilights, from the real position of the sun">Day / night</button></div>
+        <div class="boardhead"><h2>World</h2><span id="geoNote" class="headnote"></span><button id="geoNightBtn" class="use geoswitch" type="button" role="switch" aria-checked="true" title="Show or hide where it is night right now, with the twilights, from the real position of the sun"><span class="swt" aria-hidden="true"><i></i></span>Day / night <b class="swv">On</b></button></div>
         <p class="muted xpl">Where visits come from, by country, over the <span class="perN">last 14 days</span>. The country is read from the browser’s time zone (Europe/Paris → France), sent with the same anonymous visit ping — no IP address is looked up. It is an approximation: a VPN does not change it, a traveller’s device does, and zones the table does not know (UTC, Etc/GMT…) count as Unknown. “All visits” counts browser sessions; an entry mode counts the sessions that opened it, as in Activity › Where sessions open — a grey bar in the list means visits that never opened a game. Detected bots are left out while “Bots hidden” is on; a country that still looks automated (only new devices, no game) is tagged “bot?”. “Day / night” shades where it is night right now, with the civil, nautical and astronomical twilights, from the real position of the sun — season and hemisphere included; the country card then adds its local time (legal time, summer time included; the main zone for a country on several) and its sunset, at the centre of the country. Counted since 2.1.10-web.28: older clients send no time zone and are left out, so totals here can be below the Overview’s.</p>
         <div class="seg" id="geoModes" role="group" aria-label="What to count" style="flex-wrap:wrap"></div>
         <div class="seg" id="geoViews" role="group" aria-label="Region" style="flex-wrap:wrap;margin-top:0"></div>
@@ -5374,7 +5380,11 @@
   }
   (function(){
     var b=$('geoNightBtn');
-    function paint(){ if(b) b.setAttribute('aria-pressed',_geoNight?'true':'false'); }
+    function paint(){
+      if(!b) return;
+      b.setAttribute('aria-checked',_geoNight?'true':'false');
+      var v=b.querySelector('.swv'); if(v) v.textContent=_geoNight?'On':'Off';
+    }
     paint();
     if(b) b.addEventListener('click',function(){
       _geoNight=!_geoNight; try{ localStorage.setItem('pth_admin_geo_night',_geoNight?'1':'0'); }catch(e){}

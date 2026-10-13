@@ -81,7 +81,7 @@ highlights below.
   for a country on several) and the sunset at the centre of the country. Everything is computed in
   the admin page and redrawn every minute while the map is on screen; the map asset gains the
   projection parameters, a centroid and a main zone per country (`public/vendor/world-110m.json`).
-  No proxy change (`web.39`).
+  No proxy change (`web.39`). The button is an On / Off switch that shows its state (`web.40`).
 - **Save, share or copy a studio portrait** — a ⋯ button on the « Create » preview (also a long
   press or right click on it) opens a small menu: save as `pokerth-avatar.png`, share (Web Share,
   when the browser can share files) or copy to the clipboard. The portrait is re-rendered from its
