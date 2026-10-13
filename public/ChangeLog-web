@@ -1,3 +1,6 @@
+2026-10-13 version 2.1.10-web.37:
+- bugfix: an avatar made in the avatar studio (or imported from a photo) fills its square frame at the table, like the other avatars, instead of showing as a circle
+
 2026-10-12 version 2.1.10-web.35:
 - improvement: on the "Internet" button, the players online show as a figure only, like the tables and waiting players, so the line no longer wraps on a phone
 

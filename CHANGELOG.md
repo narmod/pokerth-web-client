@@ -142,6 +142,9 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Studio / photo avatars fill a square seat frame** — the avatar image kept a forced
+  circle (`border-radius: 50%`) even in the QML seat structure, whose frame is square: it now
+  inherits the frame's shape, round in classic seats, square in QML seats (`pokerth.css`, `web.37`).
 - **« More help » usable on a phone from the create page** — the Ace stands at mid-screen there,
   and the panel was capped to the room above him: only its title, search box and tabs showed. When
   that room is too short the panel now opens under the header with the full screen height, over

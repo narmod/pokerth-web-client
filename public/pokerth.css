@@ -4428,8 +4428,11 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   height: 100%;
   object-fit: cover;
   /* border-radius on a replaced element (<img>) clips the image content
-     itself -- no overflow:hidden on the parent needed. */
-  border-radius: 50%;
+     itself -- no overflow:hidden on the parent needed. Inherit the frame's
+     shape: round in classic seats, square (radius 2) in the QML seat
+     structure, whatever a seat pack sets -- so an uploaded / studio avatar
+     fills its frame like the emoji avatars do. */
+  border-radius: inherit;
   /* Image must not block pointer events on overlapping chips/badges. */
   pointer-events: none;
   /* Stay BELOW the overlays. Badges/timer have explicit z-index >= 3. */
