@@ -72,6 +72,16 @@ highlights below.
   the line fits on a phone; the wording stays in the tooltip.
 
 ### Added
+- **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
+  default, remembered per browser) shades where it is night right now, in four steps: below the
+  horizon, then the end of the civil, nautical and astronomical twilights, with the point where the
+  sun stands overhead. The sun is placed with the NOAA formulas (declination and equation of
+  time), so the night leans with the season and the hemisphere (midnight sun, polar night). The
+  country card adds the local time (legal time through `Intl`, summer time included; the main zone
+  for a country on several) and the sunset at the centre of the country. Everything is computed in
+  the admin page and redrawn every minute while the map is on screen; the map asset gains the
+  projection parameters, a centroid and a main zone per country (`public/vendor/world-110m.json`).
+  No proxy change (`web.39`).
 - **Save, share or copy a studio portrait** — a ⋯ button on the « Create » preview (also a long
   press or right click on it) opens a small menu: save as `pokerth-avatar.png`, share (Web Share,
   when the browser can share files) or copy to the clipboard. The portrait is re-rendered from its

@@ -232,6 +232,11 @@
   @media (max-width:480px){ .georow .stk{width:56px} .georow .pc{display:none} .geobar .gl{width:70px} #geoModes,#geoViews{gap:6px} #geoModes button,#geoViews button{padding:6px 7px;font-size:.78rem} }
   #trafXpl[aria-pressed="true"],#trafBots[aria-pressed="true"]{border-color:var(--gold);background:rgba(160,172,196,.14)}
   .geobot{display:inline-block;margin-left:6px;padding:0 6px;border-radius:6px;font-size:.68rem;line-height:1.5;vertical-align:1px;border:1px solid #e0a03a;color:#e0a03a}
+  .geonight{fill:#0b1433;pointer-events:none}
+  .geosphere{fill:rgba(160,172,196,.07);stroke:var(--line);stroke-width:1px;vector-effect:non-scaling-stroke;pointer-events:none}
+  .geosun{fill:#EF9F27;stroke:#fff;stroke-width:1.5px;vector-effect:non-scaling-stroke;pointer-events:none}
+  #geoNightBtn[aria-pressed="true"]{border-color:var(--gold);background:rgba(160,172,196,.14)}
+  .geotw{display:inline-block;width:12px;height:9px;border-radius:2px;background:#0b1433;vertical-align:-1px;margin-right:4px;box-shadow:inset 0 0 0 1px var(--line)}
   .geowarn{margin:8px 0 0;padding:8px 10px;border-radius:8px;border:1px solid #e0a03a;color:var(--cream);font-size:.8rem}
   .botline{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:13px}
   .botline p{margin:0 0 9px;font-size:.85rem;line-height:1.55;color:var(--text)}
@@ -627,8 +632,8 @@
       </div>
       <div class="tsub" data-ts="world" role="tabpanel" aria-label="World" style="display:none">
       <div class="card">
-        <div class="boardhead"><h2>World</h2><span id="geoNote" class="headnote"></span></div>
-        <p class="muted xpl">Where visits come from, by country, over the <span class="perN">last 14 days</span>. The country is read from the browser’s time zone (Europe/Paris → France), sent with the same anonymous visit ping — no IP address is looked up. It is an approximation: a VPN does not change it, a traveller’s device does, and zones the table does not know (UTC, Etc/GMT…) count as Unknown. “All visits” counts browser sessions; an entry mode counts the sessions that opened it, as in Activity › Where sessions open — a grey bar in the list means visits that never opened a game. Detected bots are left out while “Bots hidden” is on; a country that still looks automated (only new devices, no game) is tagged “bot?”. Counted since 2.1.10-web.28: older clients send no time zone and are left out, so totals here can be below the Overview’s.</p>
+        <div class="boardhead"><h2>World</h2><span id="geoNote" class="headnote"></span><button id="geoNightBtn" class="use" type="button" aria-pressed="true" title="Show or hide where it is night right now, with the twilights, from the real position of the sun">Day / night</button></div>
+        <p class="muted xpl">Where visits come from, by country, over the <span class="perN">last 14 days</span>. The country is read from the browser’s time zone (Europe/Paris → France), sent with the same anonymous visit ping — no IP address is looked up. It is an approximation: a VPN does not change it, a traveller’s device does, and zones the table does not know (UTC, Etc/GMT…) count as Unknown. “All visits” counts browser sessions; an entry mode counts the sessions that opened it, as in Activity › Where sessions open — a grey bar in the list means visits that never opened a game. Detected bots are left out while “Bots hidden” is on; a country that still looks automated (only new devices, no game) is tagged “bot?”. “Day / night” shades where it is night right now, with the civil, nautical and astronomical twilights, from the real position of the sun — season and hemisphere included; the country card then adds its local time (legal time, summer time included; the main zone for a country on several) and its sunset, at the centre of the country. Counted since 2.1.10-web.28: older clients send no time zone and are left out, so totals here can be below the Overview’s.</p>
         <div class="seg" id="geoModes" role="group" aria-label="What to count" style="flex-wrap:wrap"></div>
         <div class="seg" id="geoViews" role="group" aria-label="Region" style="flex-wrap:wrap;margin-top:0"></div>
         <div id="geoMap" class="geomap"><div class="empty">Loading…</div></div>
@@ -5236,11 +5241,12 @@
     });
     // Le pays choisi en dernier : son contour passe au-dessus des voisins.
     paths.sort(function(a,b){ return (a.indexOf(' sel"')>=0)-(b.indexOf(' sel"')>=0); });
-    box.innerHTML='<svg viewBox="'+vb.join(' ')+'" role="img" aria-label="Choropleth map of '+_annEsc(_geoMode==='all'?'visits':(_geoModeOf(_geoMode).n+' sessions'))+' by country">'+paths.join('')+'</svg>'
+    box.innerHTML='<svg viewBox="'+vb.join(' ')+'" role="img" aria-label="Choropleth map of '+_annEsc(_geoMode==='all'?'visits':(_geoModeOf(_geoMode).n+' sessions'))+' by country">'+(_geoNight&&M.proj?_geoSphere(M):'')+paths.join('')+_geoNightSvg(M)+'</svg>'
       +(ranked.length?'':'<div class="empty" style="margin-top:8px">Nothing counted for this selection yet'+(d.since?'':' — counting starts with the first visit from a 2.1.10-web.28 client')+'.</div>');
     var unk=_geoVal(C.ZZ);
     if(lg) lg.innerHTML='<span>fewer</span><span class="rmp" style="background:linear-gradient(90deg,color-mix(in srgb,'+col+' 18%,transparent),'+col+')"></span><span>'+_geoFmt(max)+'</span>'
-      +(unk?'<span style="flex-basis:100%">Unknown time zone: '+_geoFmt(unk)+' ('+_geoPct(unk,tot)+' %)</span>':'');
+      +(unk?'<span style="flex-basis:100%">Unknown time zone: '+_geoFmt(unk)+' ('+_geoPct(unk,tot)+' %)</span>':'')
+      +_geoNightLegend();
     _geoDetail();
     if(ls){
       if(!ranked.length){ ls.innerHTML='<div class="empty">No country yet for this selection.</div>'; return; }
@@ -5255,6 +5261,128 @@
       +'<div class="geolegend">'+MODE48.map(function(x){ return '<span><span aria-hidden="true" style="display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;background:'+x.c+'"></span>'+_annEsc(x.s)+'</span>'; }).join('')+'</div>';
     }
   }
+  // ── Jour / nuit (bouton « Day / night ») ───────────────────────────────
+  // Position reelle du soleil (formules NOAA : declinaison + equation du temps),
+  // donc la nuit penche selon la saison et l'hemisphere. Quatre couches : sous
+  // l'horizon (-0.833°, refraction comprise), puis fin des crepuscules civil
+  // (-6°), nautique (-12°) et astronomique (-18°). Dessinee en bandes de 1° de
+  // longitude dans la projection de la carte (Natural Earth I, parametres dans
+  // world-110m.json : proj) : sur un meridien, la zone sous un seuil est un seul
+  // intervalle de latitude. Tout est calcule ici ; le proxy n'y est pour rien.
+  var _geoNight=true; try{ _geoNight=localStorage.getItem('pth_admin_geo_night')!=='0'; }catch(e){}
+  var _RAD=Math.PI/180, _geoTzFmt={};
+  function _sunPos(t){
+    var d=new Date(t), y=d.getUTCFullYear();
+    var doy=(Date.UTC(y,d.getUTCMonth(),d.getUTCDate())-Date.UTC(y,0,1))/864e5+1;
+    var h=d.getUTCHours()+d.getUTCMinutes()/60+d.getUTCSeconds()/3600;
+    var g=2*Math.PI/365*(doy-1+(h-12)/24);
+    var eq=229.18*(0.000075+0.001868*Math.cos(g)-0.032077*Math.sin(g)-0.014615*Math.cos(2*g)-0.040849*Math.sin(2*g));
+    var dec=0.006918-0.399912*Math.cos(g)+0.070257*Math.sin(g)-0.006758*Math.cos(2*g)+0.000907*Math.sin(2*g)-0.002697*Math.cos(3*g)+0.00148*Math.sin(3*g);
+    var lon=-15*(h-12+eq/60); lon=((lon+540)%360)-180;
+    return {lon:lon, dec:dec/_RAD};
+  }
+  function _sunAlt(lat,lon,s){
+    var H=(lon-s.lon)*_RAD;
+    return Math.asin(Math.sin(lat*_RAD)*Math.sin(s.dec*_RAD)+Math.cos(lat*_RAD)*Math.cos(s.dec*_RAD)*Math.cos(H))/_RAD;
+  }
+  function _neProj(M,lon,lat){
+    var l=lon*_RAD, p=lat*_RAD, p2=p*p, p4=p2*p2;
+    var x=l*(0.8707-0.131979*p2+p4*(-0.013791+p4*(0.003971*p2-0.001529*p4)));
+    var y=p*(1.007226+p2*(0.015085+p4*(-0.044475+0.028874*p2-0.005916*p4)));
+    return [x*M.proj.k+M.proj.tx, M.proj.ty-y*M.proj.k];
+  }
+  // Bord bas / haut de la zone sous le seuil sur un meridien, au 1/20e de degre
+  // (balayage au degre, puis dichotomie sur chaque bord).
+  function _geoNightSpan(lon,s,th){
+    var a=null, b=null, la, lo, hi, k;
+    for(la=-90;la<=90;la++){ if(_sunAlt(la,lon,s)<th){ if(a===null) a=la; b=la; } }
+    if(a===null) return null;
+    if(a>-90){ lo=a-1; hi=a; for(k=0;k<6;k++){ var m=(lo+hi)/2; if(_sunAlt(m,lon,s)<th) hi=m; else lo=m; } a=hi; }
+    if(b<90){ lo=b; hi=b+1; for(k=0;k<6;k++){ var m2=(lo+hi)/2; if(_sunAlt(m2,lon,s)<th) lo=m2; else hi=m2; } b=lo; }
+    return [a,b];
+  }
+  // Une forme d'un seul tenant par suite de meridiens touches (deux au plus,
+  // quand la nuit chevauche l'antimeridien) : bord haut d'ouest en est, bord
+  // bas d'est en ouest. Pas de bandes juxtaposees, donc pas de liseres.
+  function _geoNightPath(M,s,th){
+    var d='', run=[];
+    function flush(){
+      if(!run.length) return;
+      var top=[], bot=[];
+      run.forEach(function(r){ top.push(_neProj(M,r.lon,r.sp[1])); bot.push(_neProj(M,r.lon,r.sp[0])); });
+      var pts=top.concat(bot.reverse());
+      d+='M'+pts.map(function(p){ return p[0].toFixed(1)+','+p[1].toFixed(1); }).join('L')+'Z';
+      run=[];
+    }
+    for(var lo=-180;lo<=180;lo+=1){
+      var sp=_geoNightSpan(lo,s,th);
+      if(sp) run.push({lon:lo,sp:sp}); else flush();
+    }
+    flush();
+    return d;
+  }
+  // Contour du globe (fond tres leger) : la nuit se lit aussi sur les oceans.
+  function _geoSphere(M){
+    var pts=[], q;
+    for(q=-90;q<=90;q+=5) pts.push(_neProj(M,-180,q));
+    for(q=90;q>=-90;q-=5) pts.push(_neProj(M,180,q));
+    return '<path class="geosphere" d="M'+pts.map(function(p){ return p[0].toFixed(1)+','+p[1].toFixed(1); }).join('L')+'Z"/>';
+  }
+  function _geoNightSvg(M){
+    if(!_geoNight || !M || !M.proj) return '';
+    var s=_sunPos(Date.now()), out='';
+    [[-0.833,.16],[-6,.14],[-12,.12],[-18,.12]].forEach(function(L){ var d=_geoNightPath(M,s,L[0]); if(d) out+='<path class="geonight" d="'+d+'" style="fill-opacity:'+L[1]+'"/>'; });
+    var sp=_neProj(M,s.lon,s.dec);
+    return out+'<circle class="geosun" cx="'+sp[0].toFixed(1)+'" cy="'+sp[1].toFixed(1)+'" r="6"><title>Sun overhead</title></circle>';
+  }
+  function _geoNightLegend(){
+    if(!_geoNight || !_geoMap || !_geoMap.proj) return '';
+    var s=_sunPos(Date.now()), n=new Date();
+    return '<span style="flex-basis:100%"><span class="geotw" style="opacity:.25"></span>civil <span class="geotw" style="opacity:.45"></span>nautical <span class="geotw" style="opacity:.6"></span>astronomical twilight'
+      +' · sun overhead at '+Math.abs(s.dec).toFixed(1)+'° '+(s.dec>=0?'N':'S')
+      +' · now, '+String(n.getUTCHours()).padStart(2,'0')+':'+String(n.getUTCMinutes()).padStart(2,'0')+' UTC</span>';
+  }
+  function _geoLegalTime(t,z){
+    try{ var f=_geoTzFmt[z]||(_geoTzFmt[z]=new Intl.DateTimeFormat('en-GB',{timeZone:z,hour:'2-digit',minute:'2-digit',hourCycle:'h23'})); return f.format(new Date(t)); }
+    catch(e){ return ''; }
+  }
+  // Coucher du soleil au centre du pays : le dernier passage sous -0.833° avant
+  // maintenant (16 h en arriere au plus), sinon le prochain ; aucun sur 28 h =
+  // jour ou nuit polaire.
+  function _geoSunset(t,lat,lon){
+    var prev=null, best=null;
+    for(var k=-16*12;k<=12*12;k++){
+      var tt=t+k*3e5, a=_sunAlt(lat,lon,_sunPos(tt));
+      if(prev!==null && prev>=-0.833 && a<-0.833){ if(tt<=t+3e5 || best===null) best=tt; }
+      prev=a;
+    }
+    if(best===null) return null;
+    // Affinage a la seconde pres entre les deux pas de 5 min qui encadrent le coucher.
+    var lo=best-3e5, hi=best;
+    for(var i=0;i<9;i++){ var mid=(lo+hi)/2; if(_sunAlt(lat,lon,_sunPos(mid))<-0.833) hi=mid; else lo=mid; }
+    return hi;
+  }
+  function _geoNightCard(cc){
+    var M=_geoMap; if(!_geoNight || !M || !M.ct || !M.ct[cc] || !M.tz || !M.tz[cc]) return '';
+    var t=Date.now(), c=M.ct[cc], z=M.tz[cc], zn=1;
+    if(Array.isArray(z)){ zn=z[1]; z=z[0]; }
+    var s=_sunPos(t), a=_sunAlt(c[1],c[0],s), H=((c[0]-s.lon)%360+540)%360-180;
+    var st=a>-0.833?'day':(a>-6?(H>0?'dusk':'dawn'):'night');
+    var ss=_geoSunset(t,c[1],c[0]);
+    var sst=ss===null?(a>-0.833?'no sunset (polar day)':'no sunrise (polar night)'):('sunset '+_geoLegalTime(ss,z));
+    return '<p class="muted note">Local time '+_geoLegalTime(t,z)+(zn>1?' (main zone of '+zn+')':'')+' · '+sst+' · '+st+'</p>';
+  }
+  (function(){
+    var b=$('geoNightBtn');
+    function paint(){ if(b) b.setAttribute('aria-pressed',_geoNight?'true':'false'); }
+    paint();
+    if(b) b.addEventListener('click',function(){
+      _geoNight=!_geoNight; try{ localStorage.setItem('pth_admin_geo_night',_geoNight?'1':'0'); }catch(e){}
+      paint(); if(_geoData) renderGeo();
+    });
+    // La nuit avance : redessin chaque minute, seulement si la carte est a l'ecran.
+    setInterval(function(){ var m=$('geoMap'); if(_geoNight && _geoData && m && m.offsetParent) renderGeo(); },60000);
+  })();
   function _geoDetail(){
     var el=$('geoDetail'), d=_geoData; if(!el) return;
     var C=(d&&d.countries)||{}, c=C[_geoSel];
@@ -5272,6 +5400,7 @@
     if(!d.bots && bv) h+='<p class="muted note">'+_geoFmt(bv)+' bot visit'+(bv>1?'s':'')+' from this country hidden by “Bots hidden”.</p>';
     if(_geoLooksBot(c)) h+='<div class="geowarn" role="note">Looks automated: all '+_geoFmt(v)+' visits come from new devices and none opened a game. “Bots hidden” keeps them: it only takes out what announces itself as a robot.</div>';
     else if(v && !mt) h+='<p class="muted note">No game opened from these visits: people (or programs) who looked at the page and left.</p>';
+    h+=_geoNightCard(_geoSel);
     el.innerHTML=h;
   }
   function _geoPick(cc, scroll){
