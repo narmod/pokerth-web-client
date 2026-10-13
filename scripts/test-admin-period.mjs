@@ -37,8 +37,8 @@ ok(f(undefined) === 14 && f('abc') === 14 && f('') === 14, 'no or unusable ?days
 ok(f('7') === 7 && f('90') === 90, 'the ends of the range pass through');
 ok(f('3') === 14, 'below the minimum falls back to the default rather than a 3-day "trend"');
 ok(f('500') === 90, 'above the maximum is clamped, so the previous trend window still fits the 400-day retention');
-ok(/visitsSummary\(query\.days, String\(query\.hours \|\| ''\) === '24'\)/.test(proxy), 'GET /admin/visits reads ?days= (and ?hours=24)');
-ok(/for \(let i = P - 1; i >= 0; i--\)/.test(body(proxy, 'visitsSummary')), 'the daily series is P days long');
+ok(/visitsSummary\(query\.days, String\(query\.hours \|\| ''\) === '24', String\(query\.bots \|\| ''\) === '1'\)/.test(proxy), 'GET /admin/visits reads ?days= (and ?hours=24, ?bots=1)');
+ok(/for \(let i = P - 1; i >= 0; i--\)/.test(body(proxy, 'visitsSummaryRead')), 'the daily series is P days long');
 ok(/period: h24 \? visitWindowList\(L\) : visitWindow\(P\)/.test(proxy) && /period: h24 \? visitWindowList\(visitList\(true, 24, 24\)\) : visitWindow\(P, P\)/.test(proxy), 'the period tile has a previous-period reference');
 ok(/envPeriod: visitEnvPeriod\(P, L\)/.test(proxy) && /musicPeriod: visitMusicPeriod\(P, L\)/.test(proxy), 'environment and music are sliced by the same period');
 

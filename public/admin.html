@@ -230,7 +230,9 @@
   .georow .pc{width:44px;flex:none;text-align:right;color:var(--text)}
   #geoModes button,#geoViews button{flex:1 1 auto;padding:7px 10px}
   @media (max-width:480px){ .georow .stk{width:56px} .georow .pc{display:none} .geobar .gl{width:70px} #geoModes,#geoViews{gap:6px} #geoModes button,#geoViews button{padding:6px 7px;font-size:.78rem} }
-  #trafXpl[aria-pressed="true"]{border-color:var(--gold);background:rgba(160,172,196,.14)}
+  #trafXpl[aria-pressed="true"],#trafBots[aria-pressed="true"]{border-color:var(--gold);background:rgba(160,172,196,.14)}
+  .geobot{display:inline-block;margin-left:6px;padding:0 6px;border-radius:6px;font-size:.68rem;line-height:1.5;vertical-align:1px;border:1px solid #e0a03a;color:#e0a03a}
+  .geowarn{margin:8px 0 0;padding:8px 10px;border-radius:8px;border:1px solid #e0a03a;color:var(--cream);font-size:.8rem}
   .botline{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:13px}
   .botline p{margin:0 0 9px;font-size:.85rem;line-height:1.55;color:var(--text)}
   .botline p:last-child{margin:0}
@@ -507,7 +509,7 @@
 
     <div id="panel-traffic" style="display:none">
       <div class="card trafhead">
-        <div class="boardhead"><h2>Traffic</h2><span id="trafRange" class="headnote"></span><select id="trafPeriod" class="use" title="Period applied to every chart and breakdown on this tab (Today, Last 7 days and All time stay as they are)"><option value="1">Last 24 hours</option><option value="7">Last 7 days</option><option value="14" selected>Last 14 days</option><option value="30">Last 30 days</option><option value="60">Last 60 days</option><option value="90">Last 90 days</option></select><button id="btnTrafRefresh" class="use">Refresh</button><button id="trafXpl" class="use" aria-pressed="false" title="Show or hide the explanations under each section">Explanations</button></div>
+        <div class="boardhead"><h2>Traffic</h2><span id="trafRange" class="headnote"></span><select id="trafPeriod" class="use" title="Period applied to every chart and breakdown on this tab (Today, Last 7 days and All time stay as they are)"><option value="1">Last 24 hours</option><option value="7">Last 7 days</option><option value="14" selected>Last 14 days</option><option value="30">Last 30 days</option><option value="60">Last 60 days</option><option value="90">Last 90 days</option></select><button id="btnTrafRefresh" class="use">Refresh</button><button id="trafBots" class="use" aria-pressed="true" title="Leave out the visits of detected automation (robot user-agents, browsers driven by a program) on every section of this tab. Counted apart, never deleted: switch off to see everything.">Hide bots</button><button id="trafXpl" class="use" aria-pressed="false" title="Show or hide the explanations under each section">Explanations</button></div>
         <p class="muted xpl">Anonymous footfall — no IP is ever stored. “Visits” counts browser sessions; “Unique” counts distinct devices; “New” counts devices seen for the first time. Green or red marks a move of 10&nbsp;% or more against the previous period (today is compared with yesterday up to the same hour); gold means flat or nothing to compare. Everything on this tab reads the same anonymous ping; nothing here identifies a person.</p>
         <div class="trafsub" id="trafSub" role="tablist" aria-label="Traffic sections"><button type="button" role="tab" data-ts="overview" aria-selected="true" class="on">Overview</button><button type="button" role="tab" data-ts="audience" aria-selected="false" tabindex="-1">Audience</button><button type="button" role="tab" data-ts="activity" aria-selected="false" tabindex="-1">Activity</button><button type="button" role="tab" data-ts="visitors" aria-selected="false" tabindex="-1">Visitors</button><button type="button" role="tab" data-ts="music" aria-selected="false" tabindex="-1">Music</button><button type="button" role="tab" data-ts="ace" aria-selected="false" tabindex="-1">Ace’s Help</button><button type="button" role="tab" data-ts="world" aria-selected="false" tabindex="-1">World</button><button type="button" role="tab" data-ts="data" aria-selected="false" tabindex="-1">Data</button></div>
       </div>
@@ -626,7 +628,7 @@
       <div class="tsub" data-ts="world" role="tabpanel" aria-label="World" style="display:none">
       <div class="card">
         <div class="boardhead"><h2>World</h2><span id="geoNote" class="headnote"></span></div>
-        <p class="muted xpl">Where visits come from, by country, over the <span class="perN">last 14 days</span>. The country is read from the browser’s time zone (Europe/Paris → France), sent with the same anonymous visit ping — no IP address is looked up. It is an approximation: a VPN does not change it, a traveller’s device does, and zones the table does not know (UTC, Etc/GMT…) count as Unknown. “All visits” counts browser sessions; an entry mode counts the sessions that opened it, as in Activity › Where sessions open. Counted since 2.1.10-web.28: older clients send no time zone and are left out, so totals here can be below the Overview’s.</p>
+        <p class="muted xpl">Where visits come from, by country, over the <span class="perN">last 14 days</span>. The country is read from the browser’s time zone (Europe/Paris → France), sent with the same anonymous visit ping — no IP address is looked up. It is an approximation: a VPN does not change it, a traveller’s device does, and zones the table does not know (UTC, Etc/GMT…) count as Unknown. “All visits” counts browser sessions; an entry mode counts the sessions that opened it, as in Activity › Where sessions open — a grey bar in the list means visits that never opened a game. Detected bots are left out while “Bots hidden” is on; a country that still looks automated (only new devices, no game) is tagged “bot?”. Counted since 2.1.10-web.28: older clients send no time zone and are left out, so totals here can be below the Overview’s.</p>
         <div class="seg" id="geoModes" role="group" aria-label="What to count" style="flex-wrap:wrap"></div>
         <div class="seg" id="geoViews" role="group" aria-label="Region" style="flex-wrap:wrap;margin-top:0"></div>
         <div id="geoMap" class="geomap"><div class="empty">Loading…</div></div>
@@ -2481,7 +2483,17 @@
   // au lieu de jours (/admin/visits?hours=24) ; l'unite de chaque libelle suit.
   function _perU(){ return _trafPeriod===1 ? {one:'hour',many:'hours',full:24} : {one:'day',many:'days',full:_trafPeriod}; }
   function _perCounted(n){ var u=_perU(); return n<u.full ? (' \u2014 '+n+' '+(n===1?u.one:u.many)+' counted') : ''; }
-  function _perQuery(){ return _trafPeriod===1 ? 'hours=24' : 'days='+_trafPeriod; }
+  // Filtre « Hide bots » (actif par defaut, memorise par navigateur) : sans
+  // bots=1, le proxy ne rend que les humains (cf. proxy.js visitIsBot).
+  var _trafBots=false, _trafBotInfo=null;
+  try{ _trafBots=localStorage.getItem('pth_admin_bots')==='1'; }catch(e){}
+  function _perQuery(){ return (_trafPeriod===1 ? 'hours=24' : 'days='+_trafPeriod)+(_trafBots?'&bots=1':''); }
+  function _paintBots(){
+    var b=$('trafBots'); if(!b) return;
+    b.setAttribute('aria-pressed',_trafBots?'false':'true');
+    var n=_trafBotInfo&&_trafBotInfo.period?(_trafBotInfo.period.v||0)+(_trafBotInfo.period.lv||0):0;
+    b.textContent=_trafBots?'Bots shown':('Bots hidden'+(n?' \u00b7 '+n.toLocaleString():''));
+  }
   // Etiquette courte d'un point de serie : « MM-JJ » pour un jour, « HHh » pour une heure.
   function _sLab(x){ var t=(x&&x.date)||''; return t.length>10 ? t.slice(11)+'h' : t.slice(5); }
   function _sFull(x){ var t=(x&&x.date)||''; return t.length>10 ? t.slice(0,10)+' '+t.slice(11)+':00' : t; }
@@ -2675,7 +2687,9 @@
     // the new counter has nothing yet.
     var bt=_envData.bot||{}, btT=(bt['bot-like']||0)+(bt.clean||0);
     var nz=_envData.noise||{}, nzT=(nz['bot-like']||0)+(nz.clean||0);
-    if(btT) bits.push('~<b>'+Math.round(((bt['bot-like']||0)/btT)*100)+'%</b> pings from an automated user-agent (noise estimate)');
+    var hid=(_trafBotInfo&&!_trafBotInfo.shown&&_trafBotInfo.period)?(_trafBotInfo.period.v||0):0;
+    if(hid) bits.push('<b>'+hid.toLocaleString()+'</b> bot visit'+(hid>1?'s':'')+' hidden (switch \u201cBots hidden\u201d off to include them)');
+    else if(btT) bits.push('~<b>'+Math.round(((bt['bot-like']||0)/btT)*100)+'%</b> pings from an automated user-agent (noise estimate)');
     else if(nzT) bits.push('~<b>'+Math.round(((nz['bot-like']||0)/nzT)*100)+'%</b> bot-like pings (older estimate, counts every unusable language header as a bot)');
     return bits.length?('<div class="envhi">'+bits.join(' &nbsp;·&nbsp; ')+'</div>'):'';
   }
@@ -3392,6 +3406,10 @@
       var dt=$('dbTestBtn'); if(dt) dt.addEventListener('click', dbTest);
       var ds=$('dbSaveBtn'); if(ds) ds.addEventListener('click', dbSave);
       var nc=$('btnNoCount'); if(nc) nc.addEventListener('click', toggleNoCount);
+      var bb=$('trafBots'); if(bb) bb.addEventListener('click', function(){
+        _trafBots=!_trafBots; try{ localStorage.setItem('pth_admin_bots',_trafBots?'1':'0'); }catch(e){}
+        _paintBots(); loadTraffic();
+      });
       var ps=$('trafPeriod'); if(ps) ps.addEventListener('change', function(){
         var v=parseInt(ps.value,10); if(TRAF_PERIODS.indexOf(v)<0) return;
         _trafPeriod=v; try{ localStorage.setItem('pth_admin_period',String(v)); }catch(e){}
@@ -3399,12 +3417,14 @@
       });
     }
     _paintPeriod();
+    _paintBots();
     _paintNoCount();
     loadDbConfig();
     loadGeo();
     api('/admin/visits?'+_perQuery()).then(function(r){return r.json();}).then(function(d){
       var g=$('trafCards');
       if(!d || !d.ok){ if(g) g.innerHTML='<div class="empty err">'+((d&&d.error)||'error')+'</div>'; return; }
+      _trafBotInfo=d.bots||null; _paintBots();
       function fmt(n){ try{return Number(n||0).toLocaleString();}catch(e){return String(n||0);} }
       // Sous 10 % d'ecart on ne colore pas : sur une journee a 50 visites,
       // c'est cinq personnes, pas un mouvement. Reference absente (proxy
@@ -3725,7 +3745,9 @@
     function pct(a,b){ return b? Math.round((a/b)*100) : 0; }
     var n=s.length;
     var rg=$('trafRange');
-    if(rg) rg.textContent = n ? (_sFull(s[0])+' \u2192 '+_sFull(s[n-1])+' \u00b7 '+fmt(d.allTime&&d.allTime.v)+' visits all time') : '';
+    var bp=(d.bots&&d.bots.period)||null, bn=bp?(bp.v||0)+(bp.lv||0):0;
+    if(rg) rg.textContent = n ? (_sFull(s[0])+' \u2192 '+_sFull(s[n-1])+' \u00b7 '+fmt(d.allTime&&d.allTime.v)+' visits all time'
+      +(d.bots&&!d.bots.shown&&bn?' \u00b7 '+fmt(bn)+' bot visit'+(bn>1?'s':'')+' hidden':'')) : '';
     // Les vues horaires ne dependent pas de la serie quotidienne : elles sont
     // rendues meme si celle-ci est vide, sinon elles resteraient sur « Loading ».
     var hourLine=_trafHours(d);
@@ -5163,6 +5185,12 @@
   function _geoCol(){ var m=_geoModeOf(_geoMode); return m?m.c:'var(--gold)'; }
   function _geoFmt(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
   function _geoPct(a,b){ return b?Math.round(100*a/b):0; }
+  // Sessions ouvertes (tous modes) d'un pays.
+  function _geoSess(c){ var m=(c&&c.m)||{}, t=0; MODE48.forEach(function(x){ t+=m[x.k]||0; }); return t; }
+  // Allure d'automate que le filtre n'a pas pu reconnaitre (vrai navigateur,
+  // webdriver masque) : au moins 5 visites, toutes d'appareils neufs, et pas
+  // une seule partie ouverte. Signale, jamais retire.
+  function _geoLooksBot(c){ var v=(c&&c.v)||0; return v>=5 && (c.nw||0)===v && !_geoSess(c); }
   function loadGeo(){
     var seq=++_geoSeq, q=_perQuery();
     var mp=_geoMap?Promise.resolve(_geoMap):fetch('/vendor/world-110m.json').then(function(r){ return r.json(); }).then(function(j){ _geoMap=j; return j; });
@@ -5221,7 +5249,7 @@
         var c=C[cc], m=c.m||{}, mt=0; MODE48.forEach(function(x){ mt+=m[x.k]||0; });
         var stk=MODE48.map(function(x){ var n=m[x.k]||0; return n?'<i style="display:block;width:'+(100*n/mt).toFixed(1)+'%;background:'+x.c+'"></i>':''; }).join('');
         return '<div class="georow'+(cc===_geoSel?' on':'')+'" data-cc="'+cc+'" role="button" tabindex="0"><span class="rk">'+(i+1)+'</span>'+_geoFlag(cc)
-          +'<span class="nm">'+_annEsc(_geoName(cc))+'</span><span class="stk" title="Sessions by entry mode">'+stk+'</span>'
+          +'<span class="nm">'+_annEsc(_geoName(cc))+(_geoLooksBot(c)?'<span class="geobot" title="Every visit is a new device and none opened a game: looks automated">bot?</span>':'')+'</span><span class="stk" title="'+(mt?'Sessions by entry mode':'No game opened: page views only')+'">'+stk+'</span>'
           +'<span class="ct">'+_geoFmt(_geoVal(c))+'</span><span class="pc">'+_geoPct(_geoVal(c),tot)+' %</span></div>';
       }).join('')+(ranked.length>25?'<div class="seg"><button type="button" id="geoMore">'+(_geoAll?'Show the top 25':'Show all '+ranked.length)+'</button></div>':'')
       +'<div class="geolegend">'+MODE48.map(function(x){ return '<span><span aria-hidden="true" style="display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;background:'+x.c+'"></span>'+_annEsc(x.s)+'</span>'; }).join('')+'</div>';
@@ -5239,7 +5267,11 @@
       return '<div class="geobar" style="opacity:'+(_geoMode==='all'||_geoMode===x.k?1:.45)+'"><span class="gl">'+_annEsc(x.s)+'</span><span class="tr"><i style="width:'+(mt?(100*n/mt).toFixed(1):0)+'%;background:'+x.c+'"></i></span><span class="gn">'+_geoFmt(n)+(mt?' · '+_geoPct(n,mt)+' %':'')+'</span></div>';
     }).join('');
     var v=c.v||0;
-    h+='<p class="muted note">'+(v?('Visits '+_geoFmt(v)+' · new devices '+_geoPct(c.nw||0,v)+' % · installed app '+_geoPct(c.pwa||0,v)+' % · phone or tablet '+_geoPct(c.mob||0,v)+' %'):'No visit ping with a time zone from this country in the period; the bars count sessions only.')+'</p>';
+    h+='<p class="muted note">'+(v?('Visits '+_geoFmt(v)+' · sessions per 100 visits '+Math.round(100*mt/v)+' · new devices '+_geoPct(c.nw||0,v)+' % · installed app '+_geoPct(c.pwa||0,v)+' % · phone or tablet '+_geoPct(c.mob||0,v)+' %'):'No visit ping with a time zone from this country in the period; the bars count sessions only.')+'</p>';
+    var bc=(d.botCountries||{})[_geoSel], bv=bc?(bc.v||0):0;
+    if(!d.bots && bv) h+='<p class="muted note">'+_geoFmt(bv)+' bot visit'+(bv>1?'s':'')+' from this country hidden by “Bots hidden”.</p>';
+    if(_geoLooksBot(c)) h+='<div class="geowarn" role="note">Looks automated: all '+_geoFmt(v)+' visits come from new devices and none opened a game. “Bots hidden” keeps them: it only takes out what announces itself as a robot.</div>';
+    else if(v && !mt) h+='<p class="muted note">No game opened from these visits: people (or programs) who looked at the page and left.</p>';
     el.innerHTML=h;
   }
   function _geoPick(cc, scroll){

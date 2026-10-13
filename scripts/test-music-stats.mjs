@@ -55,7 +55,7 @@ ok(/musicListForClient\(\)/.test(countable) && /!list\[i\]\.stream/.test(countab
 const record = body(proxy, 'recordMusicPlay');
 ok(/if \(!musicCountable\(id\)\) return;/.test(record), 'recording goes through the validation');
 ok(/bucket\.mu\[id\]/.test(record), 'the per-day series is kept in the visits bucket');
-ok(/pruneVisitDays\(\)/.test(record), 'the per-day series inherits the visit retention');
+ok(/visitTarget\(bot\)/.test(record) && /pruneVisitDays\(\)/.test(body(proxy, 'visitDayBucket')), 'the per-day series inherits the visit retention');
 ok(/saveVisitsSoon\(\)/.test(record), 'writes are debounced like every other visit counter');
 
 ok(/reqPathOnly === '\/__music'/.test(proxy), 'the /__music route exists');

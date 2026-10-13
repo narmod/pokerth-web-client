@@ -78,7 +78,7 @@ try {
 // ── admin wiring ──
 const admin = fs.readFileSync(path.join(root, 'public/admin.html'), 'utf8');
 ok(/<option value="1">Last 24 hours<\/option><option value="7">Last 7 days<\/option>/.test(admin) && /TRAF_PERIODS=\[1,7,14,30,60,90\]/.test(admin), 'the period selector offers Last 24 hours');
-ok(/function _perQuery\(\)\{ return _trafPeriod===1 \? 'hours=24' : 'days='\+_trafPeriod; \}/.test(admin) && /api\('\/admin\/visits\?'\+_perQuery\(\)\)/.test(admin) && /q=_perQuery\(\)/.test(admin), 'Traffic and World ask for hours=24');
+ok(/function _perQuery\(\)\{ return \(_trafPeriod===1 \? 'hours=24' : 'days='\+_trafPeriod\)\+\(_trafBots\?'&bots=1':''\); \}/.test(admin) && /api\('\/admin\/visits\?'\+_perQuery\(\)\)/.test(admin) && /q=_perQuery\(\)/.test(admin), 'Traffic and World ask for hours=24');
 ok(/function _sLab\(x\)\{[^}]*t\.slice\(11\)\+'h'/.test(admin) && !/\(x\.date\|\|''\)\.slice\(5\)/.test(admin), 'every series label goes through _sLab (hours shown as HHh)');
 ok(/var h=\(_trafPeriod===1\);/.test(admin) && /\(_musPeriodDays\|\|\(d\.h24&&d\.musicPeriod\)\)/.test(admin) && /\(_guidePeriodDays\|\|\(d\.h24&&d\.guidePeriod\)\)/.test(admin), 'no fallback to all-time totals under 24 hours');
 ok(/if\(d\.h24\)\{\s*box\.innerHTML='<div class="empty">Return rates are measured over whole days/.test(admin), 'cohorts say why they are hidden');

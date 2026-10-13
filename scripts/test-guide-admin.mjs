@@ -100,7 +100,7 @@ try {
 
 // ── client + admin wiring ──
 const beacons = fs.readFileSync(path.join(root, 'public/modules/guide/beacons.mjs'), 'utf8');
-ok(/fetch\('\/__guide'/.test(beacons) && /JSON\.stringify\(\{ ctx, ev \}\)/.test(beacons), 'the client posts { ctx, ev } only');
+ok(/fetch\('\/__guide'/.test(beacons) && /JSON\.stringify\(wd \? \{ ctx, ev, wd: true \} : \{ ctx, ev \}\)/.test(beacons), 'the client posts { ctx, ev } only (plus wd when the browser is driven by a program)');
 ok(!/vid|sessionId|myName|myId|gId/.test(beacons), 'no visitor id, name or table travels');
 ok(/pth_no_count/.test(beacons), '« Do not count my visits » respected');
 ok(/MAX_QUEUE = 50/.test(beacons) && /addEventListener\('online'/.test(beacons), 'bounded offline queue, flushed when back online');

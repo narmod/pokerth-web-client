@@ -654,7 +654,9 @@ function _voteClick(v) {
 function _countPlay(t) {
   if (!t || _isStream(t)) return;
   try {
-    var body = JSON.stringify({ id: t.id });
+    var m = { id: t.id };
+    try { if (navigator.webdriver === true) m.wd = true; } catch (e) {}   // automate : mis de cote par l'admin
+    var body = JSON.stringify(m);
     if (navigator.sendBeacon) {
       navigator.sendBeacon('/__music', new Blob([body], { type: 'application/json' }));
       return;

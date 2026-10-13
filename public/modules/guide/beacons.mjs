@@ -27,9 +27,12 @@ function writeQ(q) {
 function online() { return typeof navigator === 'undefined' || navigator.onLine !== false; }
 
 function post(ctx, ev) {
+  // wd : navigateur pilote par un programme, mis de cote par l'admin (proxy.js visitIsBot).
+  let wd = false;
+  try { wd = typeof navigator !== 'undefined' && navigator.webdriver === true; } catch (e) {}
   return fetch('/__guide', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ctx, ev }), keepalive: true, cache: 'no-store',
+    body: JSON.stringify(wd ? { ctx, ev, wd: true } : { ctx, ev }), keepalive: true, cache: 'no-store',
   }).then((r) => r.status < 500);        // 204 counted, 400 refused for good: either way, done
 }
 

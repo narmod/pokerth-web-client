@@ -39,6 +39,8 @@ const run = new Function(
   'let visitsStore = emptyVisitsStore();\nfunction pruneVisitDays() {}\nfunction saveVisitsSoon() {}\n' +
   fn(proxy, 'visitCell') + '\n' + fn(proxy, 'pruneVisitCells') + '\n' + 'const VISIT_CELL_DAYS = 3;\n' +
   fn(proxy, 'visitList') + '\n' + fn(proxy, 'visitWindowList') + '\n' +
+  fn(proxy, 'visitDayBucket') + '\n' + fn(proxy, 'visitBotAll') + '\n' + fn(proxy, 'visitTarget') + '\n' +
+  'let _visitBots = false, _visitMerged = null;\n' + fn(proxy, '_visitAdd') + '\n' + fn(proxy, 'visitWithBots') + '\n' + fn(proxy, 'visitDay') + '\n' + fn(proxy, 'visitHour') + '\n' +
   fn(proxy, 'recordModeConnect') + '\n' + fn(proxy, 'visitWindow') + '\n' +
   "recordModeConnect('pokerthnet'); recordModeConnect('live'); recordModeConnect('live'); recordModeConnect('bogus');\n" +
   'return { store: visitsStore, today: visitWindow(1) };');
@@ -58,6 +60,8 @@ const runV = new Function('crypto',
   'let visitsStore = emptyVisitsStore();\nfunction pruneVisitDays() {}\nfunction saveVisitsSoon() {}\n' +
   fn(proxy, 'visitCell') + '\n' + fn(proxy, 'pruneVisitCells') + '\n' + 'const VISIT_CELL_DAYS = 3;\n' +
   fn(proxy, 'visitList') + '\n' + fn(proxy, 'visitWindowList') + '\n' +
+  fn(proxy, 'visitDayBucket') + '\n' + fn(proxy, 'visitBotAll') + '\n' + fn(proxy, 'visitTarget') + '\n' +
+  'let _visitBots = false, _visitMerged = null;\n' + fn(proxy, '_visitAdd') + '\n' + fn(proxy, 'visitWithBots') + '\n' + fn(proxy, 'visitDay') + '\n' + fn(proxy, 'visitHour') + '\n' +
   fn(proxy, 'recordVisit') + '\n' + fn(proxy, 'recordLiveVisit') + '\n' + fn(proxy, 'visitWindow') + '\n' +
   "recordVisit('web-a'); recordLiveVisit('live-a'); recordLiveVisit('live-a'); recordLiveVisit('live-b');\n" +
   'return { store: visitsStore, today: visitWindow(1) };');
@@ -71,10 +75,10 @@ ok(!rv.store.days[Object.keys(rv.store.days)[0]].h || rv.store.days[Object.keys(
 const wiped = new Function(fn(proxy, 'emptyVisitsStore') + '\nreturn emptyVisitsStore();')();
 ok(wiped.totalLV === 0 && wiped.allLU && Object.keys(wiped.allLU).length === 0, 'a reset clears the /live visit counters too');
 ok(/visitsStore\.allLU  = \(_vs\.allLU && typeof _vs\.allLU === 'object'\)/.test(proxy), 'which survive a restart');
-ok(/else if \(d && d\.live === true\) \{ _pingStats\.nLive\+\+; recordLiveVisit\(d\.vid\); \}/.test(proxy), '/__visit routes a live ping away from recordVisit and recordVisitEnv');
-ok(proxy.indexOf('recordLiveVisit(d.vid)') < proxy.indexOf('recordVisit(d && d.vid)'), 'before the web-client branch');
+ok(/else if \(d && d\.live === true\) \{ _pingStats\.nLive\+\+; recordLiveVisit\(d\.vid, _bot\); \}/.test(proxy), '/__visit routes a live ping away from recordVisit and recordVisitEnv');
+ok(proxy.indexOf('recordLiveVisit(d.vid, _bot)') > 0 && proxy.indexOf('recordLiveVisit(d.vid, _bot)') < proxy.indexOf('recordVisit(d && d.vid, _bot)'), 'before the web-client branch');
 ok(/lv: visitsStore\.totalLV \|\| 0, lu: Object\.keys\(visitsStore\.allLU \|\| \{\}\)\.length/.test(proxy), 'the summary returns /live all-time visits and uniques');
-ok(/conn_live,live_visits,live_unique_visitors'\];/.test(proxy), 'CSV gains the /live visit columns, last');
+ok(/conn_live,live_visits,live_unique_visitors,bot_visits'\];/.test(proxy), 'CSV gains the /live visit columns after the older ones (bot_visits follows them)');
 ok(/ADD COLUMN IF NOT EXISTS live_visits/.test(proxy) && /ADD COLUMN IF NOT EXISTS live_unique_visitors/.test(proxy), 'and so does an existing DB mirror');
 ok(/var msg = window\.LIVE_MODE \? \{ vid: vid, live: true \} : \{ vid: vid, pwa: pwa \};/.test(client) && /var body = JSON\.stringify\(msg\);/.test(client), 'the /live visit beacon says live');
 ok(/id="trafLive"/.test(admin) && /fmt\(lv\)\+' visits · '\+fmt\(o\.lu\)\+' unique · '/.test(admin), 'the traffic card shows /live visits and uniques');

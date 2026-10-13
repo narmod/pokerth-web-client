@@ -208,14 +208,15 @@ ok(/_annEsc\(k\)/.test(admin.slice(admin.indexOf('function _envOtherDiag('), adm
     ok(e.otherRawRet['*'] === 1 && e.otherRawNew['(none)'] === 1, 'split by new / returning (a3 came back)');
     ok(e.otherCombo['other · Chrome'] === 1, 'the crawler shape is visible: Chrome with no OS');
     ok(e.langLocale['he-IL'] === 1 && e.langLocale['pt-BR'] === 1, 'langLocale keeps the region');
-    ok(b.ld && b.ld.otherRaw['(none)'] === 2 && b.ld.langLocale['pt-BR'] === 1, 'and the same maps are kept per day');
+    ok(b.ld && b.ld.otherRaw['(none)'] === 1 && b.ld.langLocale['pt-BR'] === 1, 'and the same maps are kept per day');
+    ok(b.bt && b.bt.ld && b.bt.ld.otherRaw['(none)'] === 1 && b.bt.v === 1, 'the Googlebot ping is kept apart, in the day\'s bot share (bt)');
     ok(v.langDiagSince > 1000, 'the diagnostic records when it started');
     const ex = await fetch('http://127.0.0.1:' + PORT + '/admin/visits/export?fmt=json&token=' + TOKEN).then((r) => r.json());
     const S = ex.summary || {};
     ok(ex.schema === 'pokerth-traffic/1' && ex.store.env.lang.iw === 3, 'the export keeps its schema and the raw store');
     ok(S.env.lang.he === 6 && !('iw' in S.env.lang) && S.env.lang.other === 4 + 1 + 4, 'summary.env folds: he 3+3, iw gone, und joins other');
     ok(S.envPeriod.lang.he === 3 + 2 + 1 && !('iw' in S.envPeriod.lang) && S.envPeriod.langNew.he >= 1, 'envPeriod folds the per-day series as well');
-    ok(S.envPeriod.ldDays === 1 && S.envPeriod.otherRaw['(none)'] === 2 && S.envPeriod.langLocale['pt-BR'] === 1, 'envPeriod carries the diagnostic of the period');
+    ok(S.envPeriod.ldDays === 1 && S.envPeriod.otherRaw['(none)'] === 1 && S.envPeriod.langLocale['pt-BR'] === 1, 'envPeriod carries the diagnostic of the period (humans only by default)');
     const ser = S.series.find((x) => x.date === today);
     ok(ser && ser.lg.he === 6 && !('iw' in ser.lg), 'the daily series of the chart is folded too: no break between iw and he');
     ok(S.langTrend && !('iw' in S.langTrend.cur) && !('iw' in S.langTrend.prev), 'and so is the trend');

@@ -72,6 +72,18 @@ highlights below.
   the line fits on a phone; the wording stays in the tooltip.
 
 ### Added
+- **« Hide bots » in the admin traffic stats** — visits from detected automation are counted
+  apart and left out of every Traffic view by default (toggle in the Traffic header, remembered
+  per browser; off = everything, `?bots=1`). A ping is automated when its User-Agent is a robot's
+  (the existing `UA_BOT` list: Googlebot, HeadlessChrome, curl…) or when the browser says it is
+  driven by a program: the client now sends `navigator.webdriver` as `wd` with the visit, mode,
+  Ace's Help and music pings. Such pings go to `bt` — in the day bucket, the hourly cell and the
+  all-time store (`visitsStore.bt`: own device sets, so cohorts never see a bot) — and are never
+  deleted; the header and « Who visits » say how many were hidden. The World country card adds
+  sessions per 100 visits, the bot visits hidden for that country, and flags a country that still
+  looks automated (5+ visits, all new devices, no game opened) with a « bot? » tag: a well
+  disguised robot passes the filter, it is shown, not removed. Applies to pings counted from this
+  version on (`web.36`).
 - **« Last 24 hours » in the admin traffic period selector** — true sliding 24 hours on every
   view of the Traffic tab, not the calendar day: the proxy now also keeps an hourly cell per hour
   in the day bucket (`hc[h]`, same fields as the day: visits, hashed ids, new / returning,

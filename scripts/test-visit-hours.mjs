@@ -46,7 +46,7 @@ const visitsStore = { days: {} };
 // The lifted functions call visitDayKey by name, so they are evaluated together
 // in one scope where all three are visible.
 const scope = new Function('visitsStore',
-  fn('visitDayKey') + '\n' + fn('visitHourSeries') + '\n' + fn('visitHourProfile') +
+  'let _visitBots = false, _visitMerged = null;\n' + fn('_visitAdd') + '\n' + fn('visitWithBots') + '\n' + fn('visitDay') + '\n' + fn('visitDayKey') + '\n' + fn('visitHourSeries') + '\n' + fn('visitHourProfile') +
   '\nreturn { visitDayKey, visitHourSeries, visitHourProfile };')(visitsStore);
 const { visitDayKey, visitHourSeries, visitHourProfile } = scope;
 
@@ -101,7 +101,7 @@ ok(idx(19) < 1, 'and under-represented at peak, where the regulars are');
 
 // Nothing recorded at all: no NaN, no division by zero, just zeros.
 const empty = new Function('visitsStore',
-  fn('visitDayKey') + '\n' + fn('visitHourProfile') + '\nreturn visitHourProfile;')({ days: {} })(30);
+  'let _visitBots = false, _visitMerged = null;\n' + fn('_visitAdd') + '\n' + fn('visitWithBots') + '\n' + fn('visitDay') + '\n' + fn('visitDayKey') + '\n' + fn('visitHourProfile') + '\nreturn visitHourProfile;')({ days: {} })(30);
 ok(empty.days === 0 && empty.v.every(x => x === 0),
   'an empty store answers with zeros rather than NaN');
 
@@ -111,9 +111,9 @@ ok(empty.days === 0 && empty.v.every(x => x === 0),
 // against the daily buckets. The three rates are measured on three different
 // totals on purpose: yesterday's newcomers cannot appear in a seven-day rate.
 ok(/const VISIT_FIRST_UNKNOWN = 1000;/.test(src), 'a pre-measurement device is told apart by a sentinel');
-ok(/if \(!seenBefore\) visitsStore\.allU\[h\] = visitDayIndex\(\);/.test(src),
-  'a first visit records its day');
-ok(!/visitsStore\.allU\[h\] = 1;/.test(src), 'and a return no longer overwrites it');
+ok(/if \(!seenBefore\) A\.allU\[h\] = visitDayIndex\(\);/.test(src) && /const bucket = T\.day, A = T\.all;/.test(src),
+  'a first visit records its day (in the humans\' or the bots\' set, cf. visitTarget)');
+ok(!/allU\[h\] = 1;/.test(src), 'and a return no longer overwrites it');
 ok(/cohorts: h24 \? null : visitCohorts\(P\)/.test(src), 'the summary carries the cohorts, over the dashboard period (none over 24 hours)');
 ok(/Math\.floor\(Date\.UTC\(d\.getFullYear\(\), d\.getMonth\(\), d\.getDate\(\)\) \/ 86400000\)/.test(src),
   'the day index is built from local parts in UTC arithmetic, so a DST shift adds no day');

@@ -158,7 +158,7 @@ ok(/\.music-vbtn/.test(css) && /\.music-vote-n/.test(css), 'the thumbs have thei
 // The traffic tab shows the thumbs beside the ranking: /admin/visits carries
 // the totals (never the voters) and titles for every voted entry, radios too.
 {
-  const summ = body(proxy, 'visitsSummary');
+  const summ = body(proxy, 'visitsSummaryRead');
   ok(/musicVotes: musicVoteTotals\(\)/.test(summ), '/admin/visits carries the vote totals');
   ok(/musicVotesSince: visitsStore\.musicVotesSince \|\| 0/.test(summ), 'and when voting started');
   ok(/musicVoteTitles: musicVoteTitles\(\)/.test(summ), 'and the titles of the voted entries');

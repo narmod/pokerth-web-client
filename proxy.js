@@ -6698,6 +6698,7 @@ try {
     visitsStore.guideSince = (typeof _vs.guideSince === 'number') ? _vs.guideSince : 0;
     visitsStore.refSince = (typeof _vs.refSince === 'number') ? _vs.refSince : 0;
     visitsStore.geoSince = (typeof _vs.geoSince === 'number') ? _vs.geoSince : 0;
+    if (_vs.bt && typeof _vs.bt === 'object') visitsStore.bt = _vs.bt;   // cumuls des automates (visitIsBot)
   }
 } catch (e) { /* first run — start empty */ }
 let _visitsSaveTimer = null;
@@ -6748,19 +6749,24 @@ function pruneVisitDays() {
 // new/returning figures within the window are unaffected, since every id they
 // look at is, by construction, in a retained bucket.
 function pruneVisitIds() {
-  const seen = {}, seenLive = {};
+  const seen = {}, seenLive = {}, seenB = {}, seenBL = {};
   const days = visitsStore.days || {};
   for (const k in days) {
     const b = days[k];
     if (!b) continue;
     if (b.ids) for (const h in b.ids) seen[h] = 1;
     if (b.lids) for (const h in b.lids) seenLive[h] = 1;
+    if (b.bt && b.bt.ids) for (const h in b.bt.ids) seenB[h] = 1;
+    if (b.bt && b.bt.lids) for (const h in b.bt.lids) seenBL[h] = 1;
   }
   let n = 0;
   const all = visitsStore.allU || {};
   for (const h in all) if (!seen[h]) { delete all[h]; n++; }
   const allL = visitsStore.allLU || {};
   for (const h in allL) if (!seenLive[h]) { delete allL[h]; n++; }
+  const B = visitsStore.bt || {};
+  for (const h in (B.allU || {})) if (!seenB[h]) { delete B.allU[h]; n++; }
+  for (const h in (B.allLU || {})) if (!seenBL[h]) { delete B.allLU[h]; n++; }
   return n;
 }
 // ── Cases horaires : le filtre « Last 24 hours » de l'admin ──────────────
@@ -6802,26 +6808,102 @@ function visitList(h24, n, offset) {
     const top = new Date(now); top.setMinutes(0, 0, 0);
     for (let i = offset; i < offset + n; i++) {
       const d = new Date(top.getTime() - i * 3600000);
-      const b = visitsStore.days[visitDayKey(d)];
-      out.push((b && b.hc && b.hc[d.getHours()]) || null);
+      out.push(visitHour(d));
     }
   } else {
     for (let i = offset; i < offset + n; i++) {
       const d = new Date(now); d.setDate(now.getDate() - i);
-      out.push(visitsStore.days[visitDayKey(d)] || null);
+      out.push(visitDay(visitDayKey(d)));
     }
   }
   return out;
+}
+// ── Robots detectes : le filtre « Hide bots » de l'admin ─────────────────
+// Un ping est « automate » quand son User-Agent est celui d'un robot (UA_BOT :
+// Googlebot, HeadlessChrome, curl…) ou quand le navigateur se dit pilote par un
+// programme (navigator.webdriver, envoye par le client sous `wd`). Il est
+// compte A PART, jamais jete : `bt` dans le seau du jour et dans la case
+// horaire (memes champs qu'eux), `visitsStore.bt` pour les cumuls (allU, allM,
+// totalV…). Les resumes lisent les humains seuls, ou les deux additionnes
+// (?bots=1). Un robot bien camoufle (vrai navigateur, webdriver masque) passe :
+// la fiche pays de l'onglet World signale encore ce qui en a l'allure.
+function visitIsBot(req, d) {
+  const ua = String((req && req.headers && req.headers['user-agent']) || '');
+  return UA_BOT.test(ua) || !!(d && d.wd === true);
+}
+function visitDayBucket(now) {
+  const day = visitDayKey(now || new Date());
+  let bucket = visitsStore.days[day];
+  if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
+  return bucket;
+}
+function visitBotAll() {
+  const b = visitsStore.bt || (visitsStore.bt = {});
+  if (!b.allU) b.allU = {};
+  if (!b.allLU) b.allLU = {};
+  if (!b.allM) b.allM = {};
+  if (!b.since) b.since = Date.now();
+  return b;
+}
+// Ou ecrire : le seau du jour, la case de l'heure et les cumuls des humains,
+// ou leurs doubles `bt` pour un automate.
+function visitTarget(bot, now) {
+  now = now || new Date();
+  const day = visitDayBucket(now), cell = visitCell(now);
+  if (!bot) return { day: day, cell: cell, all: visitsStore };
+  return { day: day.bt || (day.bt = { v: 0, ids: {} }), cell: cell.bt || (cell.bt = {}), all: visitBotAll() };
+}
+// Lecture : pendant un resume demande avec les robots (withVisitBots), chaque
+// seau ou case est lu additionne de son `bt` — une copie, l'original n'est
+// jamais touche. Hors de withVisitBots, les humains seuls.
+let _visitBots = false, _visitMerged = null;
+function _visitAdd(a, b) {
+  if (typeof b === 'number') return (typeof a === 'number' ? a : 0) + b;
+  if (!b || typeof b !== 'object') return a;
+  const out = (a && typeof a === 'object') ? Object.assign({}, a) : {};
+  for (const k in b) out[k] = _visitAdd(out[k], b[k]);
+  return out;
+}
+function visitWithBots(b) {
+  if (!b) return null;
+  if (!_visitBots || !b.bt) return b;
+  const hit = _visitMerged && _visitMerged.get(b);
+  if (hit) return hit;
+  const out = Object.assign({}, b);
+  for (const k in b.bt) out[k] = _visitAdd(out[k], b.bt[k]);
+  if (_visitMerged) _visitMerged.set(b, out);
+  return out;
+}
+function visitDay(key) { return visitWithBots(visitsStore.days[key] || null); }
+function visitHour(d) {
+  const b = visitsStore.days[visitDayKey(d)];
+  return visitWithBots((b && b.hc && b.hc[d.getHours()]) || null);
+}
+function withVisitBots(bots, fn) {
+  _visitBots = !!bots; _visitMerged = new Map();
+  try { return fn(); } finally { _visitBots = false; _visitMerged = null; }
+}
+// Ce que le filtre a retire sur la fenetre (toujours compte, filtre ou non).
+function visitBotWindow(h24, n) {
+  const list = [];
+  const now = new Date(), top = new Date(now); top.setMinutes(0, 0, 0);
+  for (let i = 0; i < n; i++) {
+    let b;
+    if (h24) { const d = new Date(top.getTime() - i * 3600000), day = visitsStore.days[visitDayKey(d)]; b = day && day.hc && day.hc[d.getHours()]; }
+    else { const d = new Date(now); d.setDate(now.getDate() - i); b = visitsStore.days[visitDayKey(d)]; }
+    list.push((b && b.bt) || null);
+  }
+  const w = visitWindowList(list);
+  return { v: w.v, u: w.u, lv: w.lv, m: w.m, since: (visitsStore.bt && visitsStore.bt.since) || 0 };
 }
 // 'live' = a /live spectator session (embedded on pokerth.net). Counted apart
 // from 'pokerthnet' so spectators never inflate the players' share; sessions
 // opened before 2.1.8-web.100 stay under 'pokerthnet', they cannot be told apart.
 const VISIT_MODES = ['pokerthnet', 'lan', 'offline', 'live'];
-function recordModeConnect(mode) {
+function recordModeConnect(mode, bot) {
   if (VISIT_MODES.indexOf(mode) < 0) return;
-  const day = visitDayKey();
-  let bucket = visitsStore.days[day];
-  if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
+  const T = visitTarget(bot);
+  const bucket = T.day;
   if (!bucket.m) bucket.m = {};
   bucket.m[mode] = (bucket.m[mode] || 0) + 1;
   // Une case par heure et par mode, comme `h` pour les visites : le graphique
@@ -6832,11 +6914,11 @@ function recordModeConnect(mode) {
   if (!bucket.hm[mode]) bucket.hm[mode] = {};
   bucket.hm[mode][hr] = (bucket.hm[mode][hr] || 0) + 1;
   if (!visitsStore.modeHourSince) visitsStore.modeHourSince = Date.now();
-  const cell = visitCell();
+  const cell = T.cell;
   if (!cell.m) cell.m = {};
   cell.m[mode] = (cell.m[mode] || 0) + 1;
-  if (!visitsStore.allM) visitsStore.allM = {};
-  visitsStore.allM[mode] = (visitsStore.allM[mode] || 0) + 1;
+  if (!T.all.allM) T.all.allM = {};
+  T.all.allM[mode] = (T.all.allM[mode] || 0) + 1;
   saveVisitsSoon();
 }
 // ── Lectures de musique ───────────────────────────────────────────────────
@@ -6857,19 +6939,18 @@ function musicCountable(id) {
   } catch (e) {}
   return false;
 }
-function recordMusicPlay(id) {
+function recordMusicPlay(id, bot) {
   if (!musicCountable(id)) return;
-  if (!visitsStore.music) visitsStore.music = {};
-  visitsStore.music[id] = (visitsStore.music[id] || 0) + 1;
+  const T = visitTarget(bot);
+  if (!T.all.music) T.all.music = {};
+  T.all.music[id] = (T.all.music[id] || 0) + 1;
   if (!visitsStore.musicSince) visitsStore.musicSince = Date.now();
   // Série quotidienne, dans le même seau que les visites : même rétention,
   // même purge, un seul fichier à écrire.
-  const day = visitDayKey();
-  let bucket = visitsStore.days[day];
-  if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
+  const bucket = T.day;
   if (!bucket.mu) bucket.mu = {};
   bucket.mu[id] = (bucket.mu[id] || 0) + 1;
-  const cell = visitCell();
+  const cell = T.cell;
   if (!cell.mu) cell.mu = {};
   cell.mu[id] = (cell.mu[id] || 0) + 1;
   saveVisitsSoon();
@@ -6891,14 +6972,13 @@ const GEO_STATS = require('./server/geo-stats.js');
 // totaux par pays : `geo` dans le seau du jour (meme retention que le reste),
 // et dans la case horaire (`hc[heure].geo`, filtre « 24 h »). Un ping SANS tz (client anterieur a 2.1.10-web.28) n'est pas
 // compte ici, pour ne pas gonfler « inconnu » pendant le deploiement.
-function recordGeo(tz, visit, mode) {
+function recordGeo(tz, visit, mode, bot) {
   const cc = GEO_STATS.countryOfTz(tz);
   const now = new Date();
-  const day = visitDayKey(now);
-  let bucket = visitsStore.days[day];
-  if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
+  const T = visitTarget(bot, now);
+  const bucket = T.day;
   if (!bucket.geo) bucket.geo = {};
-  const cell = visitCell(now);
+  const cell = T.cell;
   if (!cell.geo) cell.geo = {};
   if (visit) { GEO_STATS.addVisit(bucket.geo, cc, visit); GEO_STATS.addVisit(cell.geo, cc, visit); }
   if (mode) { GEO_STATS.addMode(bucket.geo, cc, mode); GEO_STATS.addMode(cell.geo, cc, mode); }
@@ -6910,36 +6990,39 @@ function recordGeo(tz, visit, mode) {
 // `counted` dit combien de jours / d'heures avaient vraiment des donnees.
 function visitGeoSummary(query) {
   const h24 = String((query && query.hours) || '') === '24';
+  const bots = String((query && query.bots) || '') === '1';
   const P = visitPeriodDays(query && query.days);
-  const g = {};
+  const g = {}, gb = {};
   let counted = 0;
-  visitList(h24, h24 ? 24 : P).forEach(function (b) {
-    if (b && b.geo) { GEO_STATS.merge(g, b.geo); counted++; }
+  withVisitBots(bots, function () {
+    visitList(h24, h24 ? 24 : P).forEach(function (b) {
+      if (b && b.geo) { GEO_STATS.merge(g, b.geo); counted++; }
+    });
   });
-  return { ok: true, h24: h24, periodDays: h24 ? 0 : P, counted: counted, countries: g, since: visitsStore.geoSince || 0, modes: GEO_STATS.MODES, unknown: GEO_STATS.UNKNOWN };
+  // Ce que le filtre retire, par pays (pour la fiche pays), filtre ou non.
+  withVisitBots(false, function () {
+    visitList(h24, h24 ? 24 : P).forEach(function (b) { if (b && b.bt && b.bt.geo) GEO_STATS.merge(gb, b.bt.geo); });
+  });
+  return { ok: true, h24: h24, bots: bots, periodDays: h24 ? 0 : P, counted: counted, countries: g, botCountries: gb, since: visitsStore.geoSince || 0, modes: GEO_STATS.MODES, unknown: GEO_STATS.UNKNOWN };
 }
-function recordGuideEvent(ctx, ev) {
+function recordGuideEvent(ctx, ev, bot) {
   if (!GUIDE_STATS.valid(ctx, ev)) return false;
-  const day = visitDayKey();
-  let bucket = visitsStore.days[day];
-  if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
-  GUIDE_STATS.record(visitsStore, bucket, ctx, ev, Date.now());
-  GUIDE_STATS.record({}, visitCell(), ctx, ev, Date.now());   // case horaire seule : le cumul est deja compte
+  const T = visitTarget(bot);
+  GUIDE_STATS.record(T.all, T.day, ctx, ev, Date.now());
+  GUIDE_STATS.record({}, T.cell, ctx, ev, Date.now());   // case horaire seule : le cumul est deja compte
   saveVisitsSoon();
   return true;
 }
 // One key per visit ping (server/ref-stats.js), in today's bucket: sources
 // for every visit, and for new visitors the source and the source x
 // language. Same id, same new/returning verdict as recordVisit.
-function recordVisitSource(d, acceptLang, seenBefore) {
+function recordVisitSource(d, acceptLang, seenBefore, bot) {
   try {
-    const day = visitDayKey();
-    let bucket = visitsStore.days[day];
-    if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
+    const T = visitTarget(bot);
     const isNew = (seenBefore === true || seenBefore === false) ? !seenBefore : null;
     const key = REF_STATS.classify(d), lg = LANG_STATS.parse(acceptLang).lang;
-    REF_STATS.record(visitsStore, bucket, key, isNew, lg, Date.now());
-    REF_STATS.record(null, visitCell(), key, isNew, lg, Date.now());
+    REF_STATS.record(visitsStore, T.day, key, isNew, lg, Date.now());
+    REF_STATS.record(null, T.cell, key, isNew, lg, Date.now());
     saveVisitsSoon();
   } catch (e) {}
 }
@@ -7150,7 +7233,7 @@ function supportedLangs() {
   } catch (e) { _langsCache = _langsCache || []; }
   return _langsCache;
 }
-function recordVisitEnv(ua, acceptLang, standalone, seenBefore) {
+function recordVisitEnv(ua, acceptLang, standalone, seenBefore, bot) {
   try {
     ua = String(ua || '');
     const os = _uaPick(UA_OS, ua), br = _uaPick(UA_BROWSER, ua);
@@ -7191,10 +7274,9 @@ function recordVisitEnv(ua, acceptLang, standalone, seenBefore) {
     // petit dictionnaire par jour (même seau que les visites, même rétention,
     // même plafond de cardinalité) suffit à tracer l'évolution dans le temps.
     const day = visitDayKey();
-    let bucket0 = visitsStore.days[day];
-    if (!bucket0) { bucket0 = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
+    const T = visitTarget(bot);
     // Le seau du jour, puis la case de l'heure (filtre « 24 h ») : memes champs.
-    [bucket0, visitCell()].forEach(function (bucket) {
+    [T.day, T.cell].forEach(function (bucket) {
       if (!bucket.lg) bucket.lg = {};
       if (!_envRoom(bucket.lg, lgv, 'lang')) bucket.lg.other = (bucket.lg.other || 0) + 1;
       else bucket.lg[lgv] = (bucket.lg[lgv] || 0) + 1;
@@ -7227,13 +7309,12 @@ function recordVisitEnv(ua, acceptLang, standalone, seenBefore) {
 // `lids` (hashed ids, same hash as recordVisit), all time `totalLV` and `allLU`.
 // /live keeps its own storage, so its id is not the web client's: a device
 // that uses both is one unique on each side, never merged.
-function recordLiveVisit(rawId) {
-  const day = visitDayKey();
-  let bucket = visitsStore.days[day];
-  if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
+function recordLiveVisit(rawId, bot) {
+  const T = visitTarget(bot);
+  const bucket = T.day, A = T.all;
   bucket.lv = (bucket.lv || 0) + 1;
-  visitsStore.totalLV = (visitsStore.totalLV || 0) + 1;
-  const cell = visitCell();
+  A.totalLV = (A.totalLV || 0) + 1;
+  const cell = T.cell;
   cell.lv = (cell.lv || 0) + 1;
   if (rawId) {
     const h = crypto.createHash('sha256').update(String(rawId)).digest('hex').slice(0, 16);
@@ -7241,18 +7322,17 @@ function recordLiveVisit(rawId) {
     bucket.lids[h] = 1;
     if (!cell.lids) cell.lids = {};
     cell.lids[h] = 1;
-    if (!visitsStore.allLU) visitsStore.allLU = {};
-    visitsStore.allLU[h] = 1;
+    if (!A.allLU) A.allLU = {};
+    A.allLU[h] = 1;
   }
   saveVisitsSoon();
 }
-function recordVisit(rawId) {
-  const day = visitDayKey();
-  let bucket = visitsStore.days[day];
-  if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
-  bucket.v++;
-  visitsStore.totalV = (visitsStore.totalV || 0) + 1;
-  const cell = visitCell();
+function recordVisit(rawId, bot) {
+  const T = visitTarget(bot);
+  const bucket = T.day, A = T.all;
+  bucket.v = (bucket.v || 0) + 1;
+  A.totalV = (A.totalV || 0) + 1;
+  const cell = T.cell;
   cell.v = (cell.v || 0) + 1;
   // Valeur de retour : true = revenu, false = nouveau, null = pas d'id (rien
   // a en dire). Sert au croisement langue x new/returning dans recordVisitEnv,
@@ -7271,7 +7351,7 @@ function recordVisit(rawId) {
   if (!visitsStore.hourSince) visitsStore.hourSince = Date.now();
   if (rawId) {
     const h = crypto.createHash('sha256').update(String(rawId)).digest('hex').slice(0, 16);
-    const seenBefore = visitsStore.allU[h] !== undefined; // returning device, or brand new?
+    const seenBefore = A.allU[h] !== undefined; // returning device, or brand new?
     seenBeforeOut = seenBefore;
     if (!bucket.ids) bucket.ids = {};
     bucket.ids[h] = 1;
@@ -7281,8 +7361,8 @@ function recordVisit(rawId) {
     // reconstituer une cohorte: les seaux journaliers disent qui est revenu et
     // quand. Un appareil deja inscrit garde sa valeur — la reecrire ferait
     // passer un habitue pour un nouveau venu du jour.
-    if (!seenBefore) visitsStore.allU[h] = visitDayIndex();
-    if (seenBefore) { bucket.rt = (bucket.rt || 0) + 1; visitsStore.totalRet = (visitsStore.totalRet || 0) + 1; cell.rt = (cell.rt || 0) + 1; }
+    if (!seenBefore) A.allU[h] = visitDayIndex();
+    if (seenBefore) { bucket.rt = (bucket.rt || 0) + 1; A.totalRet = (A.totalRet || 0) + 1; cell.rt = (cell.rt || 0) + 1; }
     else {
       bucket.nw = (bucket.nw || 0) + 1;
       cell.nw = (cell.nw || 0) + 1;
@@ -7325,7 +7405,7 @@ function visitWindowList(list) {
 function visitYesterdayToHour() {
   const now = new Date();
   const d = new Date(now); d.setDate(now.getDate() - 1);
-  const b = visitsStore.days[visitDayKey(d)];
+  const b = visitDay(visitDayKey(d));
   if (!b || !b.h) return null;
   const hh = now.getHours();
   let v = 0, nw = 0;
@@ -7341,7 +7421,7 @@ function visitHourSeries(nHours) {
   now.setMinutes(0, 0, 0);
   for (let i = nHours - 1; i >= 0; i--) {
     const d = new Date(now.getTime() - i * 3600000);
-    const b = visitsStore.days[visitDayKey(d)];
+    const b = visitDay(visitDayKey(d));
     const hh = d.getHours();
     const hm = (b && b.hm) || {};
     const m = {};
@@ -7362,7 +7442,7 @@ function visitHourProfile(daysBack) {
   for (let i = 0; i < daysBack; i++) {
     const d = new Date(now);
     d.setDate(now.getDate() - i);
-    const b = visitsStore.days[visitDayKey(d)];
+    const b = visitDay(visitDayKey(d));
     if (!b || !b.h) continue;
     days += (i === 0) ? (now.getHours() + 1) / 24 : 1;
     for (let k = 0; k < 24; k++) {
@@ -7381,7 +7461,7 @@ function visitHourProfile24() {
   let days = 0;
   for (let i = 0; i < 24; i++) {
     const d = new Date(top.getTime() - i * 3600000);
-    const b = visitsStore.days[visitDayKey(d)];
+    const b = visitDay(visitDayKey(d));
     if (!b || !b.h) continue;
     days = 1;   // chaque heure du jour y figure une fois : la « moyenne » est la valeur meme
     const hh = d.getHours();
@@ -7416,7 +7496,7 @@ function visitLangTrend(win, h24) {
     const out = {}, m = { n: 0, days: 0 };
     const list = h24 ? visitList(true, 24, fromBack - 1) : null;
     for (let i = 0; i < win; i++) {
-      const b = h24 ? list[i] : visitsStore.days[visitDayKeyFromIndex(today - fromBack - i)];
+      const b = h24 ? list[i] : visitDay(visitDayKeyFromIndex(today - fromBack - i));
       if (!b || !b.lg) continue;
       m.days++;
       const lg = LANG_STATS.foldLangMap(b.lg);
@@ -7527,7 +7607,25 @@ function visitPeriodDays(q) {
 // lues dans les cases horaires (visitCell) ; la serie compte alors 24 points
 // horaires (date = « AAAA-MM-JJTHH »), la reference est les 24 heures d'avant,
 // et les cohortes (mesurees en jours entiers) ne sont pas calculees.
-function visitsSummary(periodDays, h24) {
+// `bots` (?bots=1) : les automates detectes (visitIsBot) sont lus avec les
+// humains ; sans lui, les humains seuls. `bots` dit ce qui a ete retire.
+function visitsSummary(periodDays, h24, bots) {
+  return withVisitBots(bots, function () {
+    const out = visitsSummaryRead(periodDays, h24);
+    const P = out.periodDays, B = visitsStore.bt || null;
+    out.bots = { shown: !!bots, since: (B && B.since) || 0, period: visitBotWindow(h24, h24 ? 24 : P), today: visitBotWindow(false, 1) };
+    if (bots && B) {
+      const a = out.allTime;
+      a.v += B.totalV || 0; a.rt += B.totalRet || 0; a.lv += B.totalLV || 0;
+      a.u += Object.keys(B.allU || {}).length; a.nw = a.u; a.lu += Object.keys(B.allLU || {}).length;
+      for (const k in (B.allM || {})) a.m[k] = (a.m[k] || 0) + (B.allM[k] || 0);
+      if (B.music) out.music = _visitAdd(out.music, B.music);
+      if (B.guide) out.guide = GUIDE_STATS.summary(_visitAdd(visitsStore.guide || {}, B.guide));
+    }
+    return out;
+  });
+}
+function visitsSummaryRead(periodDays, h24) {
   const P = h24 ? 1 : visitPeriodDays(periodDays);
   const now = new Date();
   const series = [];
@@ -7535,15 +7633,14 @@ function visitsSummary(periodDays, h24) {
     const top = new Date(now); top.setMinutes(0, 0, 0);
     for (let i = 23; i >= 0; i--) {
       const d = new Date(top.getTime() - i * 3600000);
-      const day = visitsStore.days[visitDayKey(d)];
-      const b = (day && day.hc && day.hc[d.getHours()]) || null;
+      const b = visitHour(d);
       series.push({ date: visitDayKey(d) + 'T' + String(d.getHours()).padStart(2, '0'), v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined });
     }
   } else for (let i = P - 1; i >= 0; i--) {
     const d = new Date(now);
     d.setDate(now.getDate() - i);
     const k = visitDayKey(d);
-    const b = visitsStore.days[k];
+    const b = visitDay(k);
     series.push({ date: k, v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined });
   }
   const L = h24 ? visitList(true, 24) : null;
@@ -7593,7 +7690,7 @@ function visitsSummary(periodDays, h24) {
     guide: GUIDE_STATS.summary(visitsStore.guide || {}),
     guidePeriod: (function () { const p = visitGuidePeriod(P, L); return { days: p.days, summary: GUIDE_STATS.summary(p.guide) }; })(),
     guideSince: visitsStore.guideSince || 0,
-    pings: { boot: _pingStats.boot, visits: _pingStats.n, modes: _pingStats.nMode, live: _pingStats.nLive, music: _pingStats.nMusic, guide: _pingStats.nGuide, last: _pingStats.last },
+    pings: { boot: _pingStats.boot, visits: _pingStats.n, bots: _pingStats.nBot || 0, modes: _pingStats.nMode, live: _pingStats.nLive, music: _pingStats.nMusic, guide: _pingStats.nGuide, last: _pingStats.last },
     db: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error, lastWrite: _dbStatus.lastWrite, source: _dbStatus.source }
   };
 }
@@ -9114,12 +9211,13 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     const fmt = (query.format === 'csv') ? 'csv' : 'json';
     if (fmt === 'csv') {
-      const lines = ['date,visits,unique_visitors,new_visitors,returning_visitors,conn_pokerthnet,conn_lan,conn_offline,conn_live,live_visits,live_unique_visitors'];
+      // bot_visits : visites d'automates detectes, comptees a part (visitIsBot) ; les autres colonnes sont les humains.
+      const lines = ['date,visits,unique_visitors,new_visitors,returning_visitors,conn_pokerthnet,conn_lan,conn_offline,conn_live,live_visits,live_unique_visitors,bot_visits'];
       Object.keys(visitsStore.days).sort().forEach(function (d) {
         const b = visitsStore.days[d] || {};
         const u = b.ids ? Object.keys(b.ids).length : 0;
         const m = b.m || {};
-        lines.push([d, b.v || 0, u, b.nw || 0, b.rt || 0, m.pokerthnet || 0, m.lan || 0, m.offline || 0, m.live || 0, b.lv || 0, b.lids ? Object.keys(b.lids).length : 0].join(','));
+        lines.push([d, b.v || 0, u, b.nw || 0, b.rt || 0, m.pokerthnet || 0, m.lan || 0, m.offline || 0, m.live || 0, b.lv || 0, b.lids ? Object.keys(b.lids).length : 0, (b.bt && b.bt.v) || 0].join(','));
       });
       res.writeHead(200, { 'Content-Type': 'text/csv; charset=utf-8', 'Cache-Control': 'no-store', 'Content-Disposition': 'attachment; filename="pokerth-traffic.csv"' });
       res.end(lines.join('\n') + '\n');
@@ -9139,7 +9237,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/visits') {
     if (req.method === 'GET') {
       if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      return adminJson(res, 200, visitsSummary(query.days, String(query.hours || '') === '24'));
+      return adminJson(res, 200, visitsSummary(query.days, String(query.hours || '') === '24', String(query.bots || '') === '1'));
     }
     if (req.method === 'POST') {
       return readJsonBody(req, function (d) {
@@ -12170,21 +12268,24 @@ const httpServer = http.createServer((req, res) => {
     readJsonBody(req, function (d) {
       try {
         _pingStats.last = Date.now();
+        // Automate (robot UA ou navigator.webdriver) : compte a part, cf. visitIsBot.
+        const _bot = visitIsBot(req, d);
         if (d && d.mode) {
-          _pingStats.nMode++; recordModeConnect(d.mode);
-          if (typeof d.tz === 'string' && VISIT_MODES.indexOf(d.mode) >= 0) recordGeo(d.tz, null, d.mode);
+          _pingStats.nMode++; recordModeConnect(d.mode, _bot);
+          if (typeof d.tz === 'string' && VISIT_MODES.indexOf(d.mode) >= 0) recordGeo(d.tz, null, d.mode, _bot);
         }
-        else if (d && d.live === true) { _pingStats.nLive++; recordLiveVisit(d.vid); }
+        else if (d && d.live === true) { _pingStats.nLive++; recordLiveVisit(d.vid, _bot); }
         else {
           _pingStats.n++;
-          const _seenBefore = recordVisit(d && d.vid);
+          if (_bot) _pingStats.nBot = (_pingStats.nBot || 0) + 1;
+          const _seenBefore = recordVisit(d && d.vid, _bot);
           recordVisitEnv(req.headers && req.headers['user-agent'],
                          req.headers && req.headers['accept-language'],
-                         !!(d && d.pwa), _seenBefore);
-          recordVisitSource(d, req.headers && req.headers['accept-language'], _seenBefore);
+                         !!(d && d.pwa), _seenBefore, _bot);
+          recordVisitSource(d, req.headers && req.headers['accept-language'], _seenBefore, _bot);
           if (d && typeof d.tz === 'string') {
             const _os = _uaPick(UA_OS, String((req.headers && req.headers['user-agent']) || ''));
-            recordGeo(d.tz, { nw: _seenBefore === false, pwa: !!d.pwa, mob: _os === 'iPhone' || _os === 'iPad' || _os === 'Android' }, null);
+            recordGeo(d.tz, { nw: _seenBefore === false, pwa: !!d.pwa, mob: _os === 'iPhone' || _os === 'iPad' || _os === 'Android' }, null, _bot);
           }
         }
       } catch (e) { /* ignore a bad ping */ }
@@ -12202,7 +12303,7 @@ const httpServer = http.createServer((req, res) => {
     if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
     readJsonBody(req, function (d) {
       try {
-        if (musicEnabled() && d && d.id) { _pingStats.nMusic++; _pingStats.last = Date.now(); recordMusicPlay(d.id); }
+        if (musicEnabled() && d && d.id) { _pingStats.nMusic++; _pingStats.last = Date.now(); recordMusicPlay(d.id, visitIsBot(req, d)); }
       } catch (e) { /* ignore a bad ping */ }
       res.writeHead(204, { 'Cache-Control': 'no-store' });
       res.end();
@@ -12219,7 +12320,7 @@ const httpServer = http.createServer((req, res) => {
     if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
     readJsonBody(req, function (d) {
       let okEv = false;
-      try { okEv = !!(d && recordGuideEvent(d.ctx, d.ev)); } catch (e) { okEv = false; }
+      try { okEv = !!(d && recordGuideEvent(d.ctx, d.ev, visitIsBot(req, d))); } catch (e) { okEv = false; }
       if (okEv) { _pingStats.nGuide++; _pingStats.last = Date.now(); }
       res.writeHead(okEv ? 204 : 400, { 'Cache-Control': 'no-store' });
       res.end();

@@ -12108,7 +12108,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.35'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.36'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
@@ -12165,6 +12165,12 @@ window.BUILD_VERSION='2.1.10-web.35'; try{ var b=document.getElementById('cf-bui
 
 // Fuseau horaire IANA du navigateur, pour la carte du monde de l'admin
 // (pings /__visit). Chaîne vide si le navigateur ne le dit pas.
+// navigator.webdriver : vrai quand le navigateur est pilote par un programme
+// (Playwright, Puppeteer, Selenium…). Envoye sous `wd` avec les pings anonymes
+// pour que l'admin puisse mettre ces visites de cote (proxy.js visitIsBot).
+window._pthAutomated = function () {
+  try { return navigator.webdriver === true; } catch (e) { return false; }
+};
 window._pthTimeZone = function () {
   try { var z = Intl.DateTimeFormat().resolvedOptions().timeZone; return (typeof z === 'string' && z.length <= 64) ? z : ''; }
   catch (e) { return ''; }
@@ -12199,6 +12205,7 @@ window._pthTimeZone = function () {
       // server/ref-stats.js): referring host, own page, utm_source, invite
       // and ?lang= flags. Only fields that are set are sent.
       var msg = window.LIVE_MODE ? { vid: vid, live: true } : { vid: vid, pwa: pwa };
+      try { if (window._pthAutomated()) msg.wd = true; } catch (e) {}
       if (!window.LIVE_MODE) {
         try { var tz = window._pthTimeZone(); if (tz) msg.tz = tz; } catch (e) {}
         try {
@@ -12256,6 +12263,7 @@ window._pthTimeZone = function () {
       try { vid = localStorage.getItem('pth_vid') || ''; } catch (e) {}
       var cm = { mode: mode, vid: vid };
       try { var tz = window._pthTimeZone(); if (tz) cm.tz = tz; } catch (e) {}
+      try { if (window._pthAutomated()) cm.wd = true; } catch (e) {}
       var body = JSON.stringify(cm);
       if (navigator.sendBeacon) navigator.sendBeacon('/__visit', new Blob([body], { type: 'application/json' }));
       else fetch('/__visit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true }).catch(function () {});
