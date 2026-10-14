@@ -70,6 +70,12 @@ highlights below.
   green), figures in the plain text colour; local `--lcs-gold` / `--lcs-red` per theme.
   `web.35`: players online lose their wording on the card too (icon + figure, still green), so
   the line fits on a phone; the wording stays in the tooltip.
+- **The Ace on a tap in the game list: « watch it » for running games, no more nagging** — tapping a
+  game already being played makes the Ace explain that it can be watched as a spectator (select it,
+  then **Spectate**) and offer **Watch**, for everyone, guests included (`lobby-watch`, manual
+  context, counted as `lobby-watch.watch`). The guest free-account bubble now only answers taps on
+  *open* Ranking / registered-only tables. Both come at most once per table and per session, and
+  « Later » silences them for the session — the bubble used to come back at every tap (`web.64`).
 
 ### Added
 - **LAN server directory, server side** — players will be able to propose their own PokerTH

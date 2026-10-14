@@ -115,7 +115,8 @@ pokerth.net (login as an account holder or as a guest), never in LAN or offline 
 |---|---|---|
 | `lobby-ranking` | lobby, account holder, an open Ranking table exists | highlights the picked table's row. Bubble: *"A ranked game is waiting for you: 7/10 players…"* with the buttons Later, Got it and **Join**. It updates live when the list changes. With no answer after 25 s it folds into the badge |
 | `lobby-ranking-create` | lobby, account holder, no open Ranking table | *"No ranked game open right now. Create one — any player with an account can!"* **Create a Ranking table** opens game creation with the Ranking type and the Ranking preset (5/5) selected |
-| `lobby-guest` | lobby, guest | a single bubble: Ranking games need a (free) pokerth.net account, and guests play Normal games. **Create an account** is offered, with no highlight and no Join. If the guest taps a Ranking or registered-only table anyway, the bubble comes back |
+| `lobby-guest` | lobby, guest | a single bubble: Ranking games need a (free) pokerth.net account, and guests play Normal games. **Create an account** is offered, with no highlight and no Join. If the guest taps an open Ranking or registered-only table anyway, the bubble comes back — once per table and per session, and not after **Later** (web.64) |
+| `lobby-watch` | lobby, anyone (guests included), not seated, only when the player taps a game that is already being played (manual) | highlights the **Spectate** button. The first time: *"This game is already being played: you can no longer take a seat, but you can watch it as a spectator. Select a running game, then tap Spectate below the list…"*; once answered, a short *"This game is in progress — want to watch it?"*. Buttons Later, Got it and **Watch** (spectates that game). Once per table and per session, silent for the session after **Later**, folds after 25 s (web.64) |
 | `wait-ranking` | seated at a Ranking table that has not started | highlights *x/10*: the notice in the game info panel, or on a phone the row of the table. It then gives one fact every ~20 s: the point scale 15/9/6/4/3/2/1 (40 per table), the Score (an average tempered by regularity), quarterly seasons, why 5/5 (5 s to act, 5 s between hands, 10,000 chips, blinds ×2 every 11 hands, fast and the same for everyone), and where to see the ranking (the trophy button and the podium at the table). Each arrival makes him hop, and at 9/10 he says *"Just one more player!"*. When the game starts he says *"Good luck!"* and leaves |
 | `ranked-result` | back in the lobby after a Ranking game (repeats after every game) | *"Game over — you finished in place 4: +4 points. See your ranking?"* If two players went out in the same hand, he gives no place or points and points to the ranking page |
 
@@ -242,6 +243,7 @@ series in the visit buckets (`gd`), and share the visit counter's retention and 
 | `lobby-ranking` | `shown`, `done`, `dismissed`, `join`, `started` |
 | `lobby-ranking-create` | `shown`, `done`, `dismissed`, `create` |
 | `lobby-guest` | `shown`, `done`, `dismissed`, `guest_redirect` |
+| `lobby-watch` | `shown`, `done`, `dismissed`, `watch` |
 | `wait-ranking` | `shown`, `done`, `dismissed`, `started` |
 | `ranked-result` | `shown`, `done`, `dismissed` |
 | `login` | `shown`, `done`, `dismissed`, `signup` |

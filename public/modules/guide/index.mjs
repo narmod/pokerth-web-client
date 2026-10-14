@@ -43,7 +43,7 @@ const OFFER_DELAY_MS = 2500;
 const EVAL_DEBOUNCE_MS = 350;
 const SIGNUP_URL = 'https://www.pokerth.net/ucp.php?mode=register';
 /** Buttons that do something (primary), besides later / next / gotIt. */
-const ACTIONS = ['join', 'createRanking', 'signup', 'seeRanking'];
+const ACTIONS = ['join', 'createRanking', 'signup', 'seeRanking', 'watch'];
 
 let M = null;                 // modules/mascot/guide.mjs once loaded
 let wasOn = false;
@@ -63,6 +63,8 @@ const snoozed = new Set();    // contexts put off with « Later » this session
 const resumeAt = new Map();   // tour id → the step it was left at with « Later » (this session)
 const counted = new Set();    // « shown » already counted this session (statistics, L3)
 let joinedGid = 0;            // Ranking table joined from the bubble (funnel: → started)
+let watchGid = 0;             // running game tapped in the list (« Watch it? », web.64)
+const tapTold = new Set();    // tables a tap already explained this session ('w:gid' watch, 'g:gid' guest)
 
 const state = createState(
   (() => { try { return window.localStorage; } catch (e) { return null; } })() || { getItem: () => null, setItem() {} },
@@ -207,6 +209,8 @@ export function where() {
     waitCount: s.gId ? presentCount(s) : 0,
     waitMax: g ? g.maxPlayers || 10 : 10,
     result,
+    watchGid,
+    watchKnown: state.seen('lobby-watch'),
     windows: openWindows(),
     // the create page (tour, web.288): the game style block open, saved preferences (⭐ pill shown)
     styleOpen: screen === 'create' && shown('cf-style-grid'),
@@ -413,7 +417,7 @@ function renderStep(opts = {}) {
   }
 }
 
-const ACTION_EV = { join: 'join', createRanking: 'create', signup: 'signup' };
+const ACTION_EV = { join: 'join', createRanking: 'create', signup: 'signup', watch: 'watch' };
 function doAction(id, w) {
   try {
     if (id === 'join' && w.rankPick) joinedGid = w.rankPick.id;
@@ -421,6 +425,10 @@ function doAction(id, w) {
     else if (id === 'createRanking' && window.App && window.App.openCreatePage) window.App.openCreatePage({ ranking: true });
     else if (id === 'signup') window.open(SIGNUP_URL, '_blank', 'noopener');
     else if (id === 'seeRanking' && typeof window.toggleRankingModal === 'function') window.toggleRankingModal();
+    else if (id === 'watch' && watchGid && window.App && window.App.spectateGame) {
+      const s = S(), g = s.games ? s.games[watchGid] : null;
+      if (g && g.mode === 2 && !s.gId && !s.amInGame) window.App.spectateGame(watchGid);
+    }
   } catch (e) {}
 }
 
@@ -1241,18 +1249,36 @@ function onGames() {
   if (!(M && M.bubbleOpen())) schedule();
 }
 
-// A guest taps a Ranking (or registered-only) table anyway: the Ace explains
-// again instead of leaving the bare « account required » (D16).
+// A tap on a table of the list (web.64). A game already being played: the Ace
+// says it can be watched as a spectator and offers to (lobby-watch) — for
+// everyone, guests included. A guest tapping an open Ranking (or
+// registered-only) table: the free-account bubble again (D16). Each at most
+// once per table and per session, and not again this session after « Later »
+// (it used to come back at every tap, whatever the table).
 function onListTap(ev) {
   if (!available() || !state.isOn() || asking) return;   // « ? » mode explains the row instead
-  const row = ev.target && ev.target.closest ? ev.target.closest('#g-list .game-row[data-gid]') : null;
+  const t = ev.target;
+  if (!t || !t.closest || t.closest('button, a')) return;   // Join / Spectate act by themselves
+  const row = t.closest('#g-list .game-row[data-gid]');
   if (!row) return;
   const s = S();
-  if (!isGuest(s)) return;
-  const g = s.games ? s.games[row.getAttribute('data-gid')] : null;
-  if (!g || g.type === 1) return;
+  const gid = row.getAttribute('data-gid');
+  const g = s.games ? s.games[gid] : null;
+  if (!g || s.gId || s.amInGame || window._offlineMode) return;
+  if (!canSpeak(where())) return;
+  if (g.mode === 2) {
+    if (snoozed.has('lobby-watch') || tapTold.has('w:' + gid)) return;
+    const ctx = CONTEXTS.find((c) => c.id === 'lobby-watch');
+    if (!ctx) return;
+    tapTold.add('w:' + gid);
+    watchGid = Number(gid) || 0;
+    showContext(ctx);
+    return;
+  }
+  if (g.mode !== 1 || !isGuest(s) || g.type === 1) return;
+  if (snoozed.has('lobby-guest') || tapTold.has('g:' + gid)) return;
   const ctx = CONTEXTS.find((c) => c.id === 'lobby-guest');
-  if (ctx && canSpeak(where())) { snoozed.delete(ctx.id); showContext(ctx); }
+  if (ctx) { tapTold.add('g:' + gid); showContext(ctx); }
 }
 
 // ── My place in a Ranking game (C2.4) ──────────────────────────────

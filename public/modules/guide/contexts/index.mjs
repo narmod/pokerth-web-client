@@ -4,6 +4,7 @@ import welcome from './welcome.mjs';
 import lobbyRanking from './lobby-ranking.mjs';
 import lobbyRankingCreate from './lobby-ranking-create.mjs';
 import lobbyGuest from './lobby-guest.mjs';
+import lobbyWatch from './lobby-watch.mjs';
 import waitRanking from './wait-ranking.mjs';
 import rankedResult from './ranked-result.mjs';
 import login from './login.mjs';
@@ -13,4 +14,4 @@ import waitNormal from './wait-normal.mjs';
 import createGame from './create.mjs';
 import windows from './windows.mjs';
 
-export const CONTEXTS = [...windows, rankedResult, createGame, lobbyRanking, lobbyRankingCreate, lobbyGuest, waitRanking, waitNormal, login, loginProfile, loginLan, welcome];
+export const CONTEXTS = [...windows, rankedResult, createGame, lobbyRanking, lobbyRankingCreate, lobbyGuest, lobbyWatch, waitRanking, waitNormal, login, loginProfile, loginLan, welcome];

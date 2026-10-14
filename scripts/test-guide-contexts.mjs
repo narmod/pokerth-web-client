@@ -108,7 +108,7 @@ ok([].concat(wn.target(W({ host: true })))[0].includes('wp-btn-start') && [].con
 // ── texts, buttons, targets ──
 const samples = [W({ screen: 'connect', loginStep: 1 }), W({ screen: 'connect', loginStep: 2 }), W({ screen: 'wait', host: true }), W({ screen: 'wait' }), W({ screen: 'wait', offline: true }), W({}), W({ rankPick: null }), W({ guest: true }), W({ screen: 'wait', ranked: true }), W({ result: { place: 4 } }), W({ result: { place: null, tied: true } })];
 const vars = (s) => (String(s).match(/\{\w+\}/g) || []).map((x) => x.slice(1, -1));
-const BTN = new Set(['later', 'gotIt', 'next', 'join', 'createRanking', 'signup', 'seeRanking']);
+const BTN = new Set(['later', 'gotIt', 'next', 'join', 'createRanking', 'signup', 'seeRanking', 'watch']);
 for (const c of CONTEXTS) {
   for (const w of samples.filter((x) => C.applies(c, x) || c.manual)) {
     c.steps.forEach((s, i) => {
@@ -135,6 +135,16 @@ ok(CONTEXTS.find((c) => c.id === 'wait-ranking').steps.length === 6, 'C2: the x/
 ok(/15, 9, 6, 4, 3, 2, 1/.test(EN.c2Points) && /40/.test(EN.c2Points), 'point scale quoted as in the rankhow help');
 ok(/5 seconds to act/.test(EN.c2Why55) && /11 hands/.test(EN.c2Why55) && /10,000/.test(EN.c2Why55), '5/5 explained from the Ranking preset');
 ok(/with an account/.test(EN.c1None), '« any player with an account » (D16)');
+// web.64: a tap on a running game → « watch it as a spectator »
+const LW = CONTEXTS.find((c) => c.id === 'lobby-watch');
+ok(LW && LW.manual === true, 'lobby-watch: only on a tap (manual), never picked by itself');
+ok(pick({ watchGid: 7 }) !== 'lobby-watch' && pick({ guest: true, watchGid: 7 }) !== 'lobby-watch', 'lobby-watch never picked by the engine');
+ok(C.applies(LW, W({ watchGid: 7, gid: 0 })) && C.applies(LW, W({ watchGid: 7, gid: 0, guest: true })), 'applies in the lobby, guests included');
+ok(!C.applies(LW, W({ watchGid: 7, offline: true })) && !C.applies(LW, W({ watchGid: 0, gid: 0 })) && !C.applies(LW, W({ watchGid: 7, screen: 'wait' })), 'not offline, not without a tapped game, not in a waiting room');
+ok(LW.steps[0].text(W({ watchGid: 7 })) === 'c1Watch' && LW.steps[0].text(W({ watchGid: 7, watchKnown: true })) === 'c1WatchAgain', 'explained the first time, then a short « watch it? »');
+ok([].concat(LW.steps[0].target(W({ watchGid: 7 }))).some((x) => x.includes('lobby-foot-spec')) && [].concat(LW.steps[0].target(W({ watchGid: 7 }))).some((x) => x.includes('data-gid="7"')), 'points at the Spectate button (footer, or the row’s own)');
+ok(/\{spec\}/.test(EN.c1Watch) && LW.steps[0].vars(W({})).spec === 'Spectate', 'the Spectate button named as the UI names it');
+ok(LW.steps[0].buttons.join() === 'later,gotIt,watch', 'Later · Got it · Watch');
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
