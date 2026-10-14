@@ -79,6 +79,8 @@ export function normalizeConfig(c) {
       id: String(s.id || host + ':' + port), name: String(s.name || host).slice(0, 40), host, port,
       tls: !!s.tls, country: String(s.country || ''), lang: String(s.lang || ''), desc: String(s.desc || '').slice(0, 140),
       resetPeriod: String(s.resetPeriod || ''),
+      link: /^https?:\/\//i.test(String(s.link || '')) ? String(s.link).slice(0, 200) : '',
+      until: (Number(s.until) > 0) ? Number(s.until) : 0,
       online: (s.online === true || s.online === false) ? s.online : null,
       players: Number.isInteger(s.players) ? s.players : null
     });
@@ -223,11 +225,38 @@ function _renderDetail(cfg, id) {
     rl.appendChild(document.createTextNode(_t('lanPropReset', null, 'Leaderboard reset') + ' — ' + resetLabel(s.resetPeriod)));
     box.appendChild(rl);
   }
+  // Event server: its last day, same plain-line style.
+  if (!s.local && s.until) {
+    const el = document.createElement('div');
+    el.className = 'lan-dir-line lan-dir-until';
+    const ic = document.createElement('span');
+    ic.className = 'lan-dir-ic'; ic.setAttribute('aria-hidden', 'true'); ic.textContent = '📅';
+    el.appendChild(ic);
+    let ds = '';
+    try { ds = new Date(s.until).toLocaleDateString(_lang(), { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { ds = new Date(s.until).toDateString(); }
+    el.appendChild(document.createTextNode(_t('lanDirUntil', { date: ds }, 'Event — until ' + ds)));
+    box.appendChild(el);
+  }
   if (s.desc) {
     const d = document.createElement('div');
     d.className = 'lan-dir-desc';
     d.textContent = s.desc;
     box.appendChild(d);
+  }
+  // Community link (http/https only, checked by the proxy and normalizeConfig).
+  if (!s.local && s.link) {
+    const l = document.createElement('div');
+    l.className = 'lan-dir-line lan-dir-link';
+    const ic = document.createElement('span');
+    ic.className = 'lan-dir-ic'; ic.setAttribute('aria-hidden', 'true'); ic.textContent = '🔗';
+    l.appendChild(ic);
+    const a = document.createElement('a');
+    a.href = s.link; a.target = '_blank'; a.rel = 'noopener noreferrer nofollow';
+    let shown = s.link;
+    try { const u = new URL(s.link); shown = u.host + (u.pathname !== '/' ? u.pathname : ''); } catch (e) {}
+    a.textContent = shown.length > 48 ? shown.slice(0, 47) + '…' : shown;
+    l.appendChild(a);
+    box.appendChild(l);
   }
 }
 
@@ -306,8 +335,31 @@ function _values() {
     lang: (_field('lan-prop-lang').value || ''),
     desc: (_field('lan-prop-desc').value || '').trim(),
     resetPeriod: (_field('lan-prop-reset') && _field('lan-prop-reset').value) || 'monthly',
-    maxPerIp: parseInt((_field('lan-prop-ipcap') && _field('lan-prop-ipcap').value) || '3', 10) || 3
+    maxPerIp: parseInt((_field('lan-prop-ipcap') && _field('lan-prop-ipcap').value) || '3', 10) || 3,
+    link: ((_field('lan-prop-link') && _field('lan-prop-link').value) || '').trim(),
+    kind: (_field('lan-prop-kind') && _field('lan-prop-kind').value) === 'event' ? 'event' : 'permanent',
+    until: (_field('lan-prop-until') && _field('lan-prop-until').value) || '',
+    // For the admins only (never listed): see server/lan-directory.js.
+    nick: ((_field('lan-prop-nick') && _field('lan-prop-nick').value) || '').trim(),
+    note: ((_field('lan-prop-anote') && _field('lan-prop-anote').value) || '').trim(),
+    contact: ((_field('lan-prop-contact') && _field('lan-prop-contact').value) || '').trim(),
+    owner: !!(_field('lan-prop-owner') && _field('lan-prop-owner').checked),
+    uiLang: _lang()
   };
+}
+// Event end date: from today to one year ahead (the proxy checks again).
+function _untilOk(v) {
+  if (v.kind !== 'event') return true;
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v.until || '');
+  if (!m) return false;
+  const end = new Date(+m[1], +m[2] - 1, +m[3], 23, 59, 59).getTime(), t = Date.now();
+  return end > t && end <= t + 366 * 86400000;
+}
+function _syncKind() {
+  const ev = (_field('lan-prop-kind') && _field('lan-prop-kind').value) === 'event';
+  const f = $('lan-prop-until-f'), hnt = $('lan-prop-until-hint');
+  if (f) f.style.display = ev ? '' : 'none';
+  if (hnt) hnt.style.display = ev ? '' : 'none';
 }
 function _sig(v) { return [v.host.toLowerCase(), v.port, v.tls ? 1 : 0].join('|'); }
 function _status(text, kind) {
@@ -319,14 +371,15 @@ function _status(text, kind) {
 }
 /** Message for an error code of /api/lan-directory/* (translated). */
 export function errorText(code) {
-  const known = ['closed', 'host', 'port', 'dns', 'private', 'unreachable', 'notpokerth', 'listed', 'pending', 'full', 'limit', 'invalid', 'network'];
+  const known = ['closed', 'host', 'port', 'dns', 'private', 'unreachable', 'notpokerth', 'listed', 'pending', 'full', 'limit', 'invalid', 'network', 'owner', 'link', 'until'];
   const c = known.indexOf(code) >= 0 ? code : 'unreachable';
   return _t('lanErr_' + c);
 }
 function _updateSend() {
   const b = /** @type {HTMLButtonElement|null} */ ($('lan-prop-send'));
   const v = _values();
-  if (b) b.disabled = !(_tested && _tested === _sig(v));
+  // Send needs a passing test AND the owner box ticked.
+  if (b) b.disabled = !(_tested && _tested === _sig(v) && v.owner);
 }
 function _fillSelects() {
   const cs = /** @type {HTMLSelectElement|null} */ ($('lan-prop-country'));
@@ -355,6 +408,10 @@ export function openPropose() {
   if (sent) sent.style.display = 'none';
   _tested = '';
   _status('', '');
+  // The nickname for the admins starts as the login nickname (editable).
+  try { const nk = _field('lan-prop-nick'), ln = _field('nick'); if (nk && !nk.value && ln && ln.value) nk.value = ln.value.trim().slice(0, 32); } catch (e) {}
+  try { const u = _field('lan-prop-until'); if (u) { const d = new Date(), d2 = new Date(Date.now() + 365 * 86400000); const f = (x) => x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0'); u.min = f(d); u.max = f(d2); } } catch (e) {}
+  _syncKind();
   _updateSend();
   dlg.style.display = '';
   try { _field('lan-prop-name').focus(); } catch (e) {}
@@ -392,6 +449,8 @@ export function testPropose() {
 export function sendPropose() {
   const v = _values();
   if (!(_tested && _tested === _sig(v))) { _updateSend(); return Promise.resolve(); }
+  if (!v.owner) { _status(errorText('owner'), 'err'); return Promise.resolve(); }
+  if (!_untilOk(v)) { _status(errorText('until'), 'err'); return Promise.resolve(); }
   const b = /** @type {HTMLButtonElement|null} */ ($('lan-prop-send'));
   if (b) b.disabled = true;
   _status(_t('lanPropSending', null, 'Sending…'), '');
@@ -402,7 +461,8 @@ export function sendPropose() {
       if (form) form.style.display = 'none';
       if (sent) sent.style.display = '';
       _tested = '';
-      ['lan-prop-name', 'lan-prop-host', 'lan-prop-desc'].forEach((id) => { try { _field(id).value = ''; } catch (e) {} });
+      ['lan-prop-name', 'lan-prop-host', 'lan-prop-desc', 'lan-prop-link', 'lan-prop-until', 'lan-prop-anote', 'lan-prop-contact'].forEach((id) => { try { _field(id).value = ''; } catch (e) {} });
+      try { _field('lan-prop-owner').checked = false; _field('lan-prop-kind').value = 'permanent'; _syncKind(); } catch (e) {}
       return;
     }
     _status(errorText(d && d.error), 'err');
@@ -426,6 +486,10 @@ function _wire() {
     tlsBox.addEventListener('change', () => { touched = true; });
     port.addEventListener('input', () => { if (!touched) tlsBox.checked = (parseInt(/** @type {HTMLInputElement} */ (port).value, 10) === 7236); });
   }
+  const kind = $('lan-prop-kind');
+  if (kind) kind.addEventListener('change', _syncKind);
+  const own = $('lan-prop-owner');
+  if (own) own.addEventListener('change', _updateSend);
   const dlg = $('lan-prop-dialog');
   if (dlg) dlg.addEventListener('keydown', (e) => { if (e.key === 'Escape') { e.stopPropagation(); closePropose(); } });
   try { if (typeof window._onLangChange === 'function') window._onLangChange(() => { const cs = $('lan-prop-country'); if (cs) while (cs.options.length > 1) cs.remove(1); sync(); }); } catch (e) {}

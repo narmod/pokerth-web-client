@@ -2850,6 +2850,15 @@ function _processAvatarFile(file) {
         <div class="f"><label for="lan-prop-lang" data-i18n="lanPropLang">Language</label><div class="sel-wrap"><select id="lan-prop-lang"><option value="">—</option></select><span class="sel-arr">▾</span></div></div>
       </div>
       <div class="f"><label for="lan-prop-desc" data-i18n="lanPropDesc">Description (optional)</label><input id="lan-prop-desc" maxlength="140" autocomplete="off"></div>
+      <div class="f"><label for="lan-prop-link" data-i18n="lanPropLink">Community link (optional)</label><input id="lan-prop-link" type="url" maxlength="200" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="url" placeholder="https://"></div>
+      <div class="row2 lan-prop-two">
+        <div class="f"><label for="lan-prop-kind" data-i18n="lanPropKind">Kind of server</label><div class="sel-wrap"><select id="lan-prop-kind">
+          <option value="permanent" data-i18n="lanKindPermanent" selected>Permanent</option>
+          <option value="event" data-i18n="lanKindEvent">Event with an end date</option>
+        </select><span class="sel-arr">▾</span></div></div>
+        <div class="f" id="lan-prop-until-f" style="display:none"><label for="lan-prop-until" data-i18n="lanPropUntil">Last day</label><input id="lan-prop-until" type="date"></div>
+      </div>
+      <div class="lan-prop-hint" id="lan-prop-until-hint" style="display:none" data-i18n="lanPropUntilHint">After this day the server leaves the list by itself.</div>
       <div class="f"><label for="lan-prop-ipcap" data-i18n="lanPropIpCap">Players per IP address</label><div class="sel-wrap"><select id="lan-prop-ipcap">
         <option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option>
       </select><span class="sel-arr">▾</span></div><div class="lan-prop-hint" data-i18n="lanPropIpCapHint">How many players may connect at the same time from one address (a home, an office). Only the admins can change it afterwards, and above 5.</div></div>
@@ -2860,6 +2869,14 @@ function _processAvatarFile(file) {
         <option value="monthly" data-i18n="lanResetMonthly" selected>Every month</option>
         <option value="yearly" data-i18n="lanResetYearly">Every year</option>
       </select><span class="sel-arr">▾</span></div><div class="lan-prop-hint" data-i18n="lanPropResetHint">Each listed server has its own leaderboard. Only the admins can change this afterwards.</div></div>
+      <fieldset class="lan-prop-private">
+        <legend data-i18n="lanPropPrivate">For the admins only</legend>
+        <div class="lan-prop-hint" data-i18n="lanPropPrivateHint">Never shown to other players.</div>
+        <div class="f"><label for="lan-prop-nick" data-i18n="lanPropNick">Your nickname</label><input id="lan-prop-nick" maxlength="32" autocomplete="off"></div>
+        <div class="f"><label for="lan-prop-anote" data-i18n="lanPropAdminNote">Note to the admins</label><textarea id="lan-prop-anote" rows="3" maxlength="500"></textarea><div class="lan-prop-hint" data-i18n="lanPropAdminNoteHint">Who you are, your community, why this server.</div></div>
+        <div class="f"><label for="lan-prop-contact" data-i18n="lanPropContact">Contact (optional)</label><input id="lan-prop-contact" maxlength="120" autocomplete="off" autocapitalize="off" spellcheck="false"><div class="lan-prop-hint" data-i18n="lanPropContactHint">E-mail or Discord, in case the admins have a question. Erased as soon as they decide.</div></div>
+        <label class="lan-prop-owner"><input type="checkbox" id="lan-prop-owner" style="accent-color:var(--gold);flex-shrink:0"><span data-i18n="lanPropOwner">I run this server, or its owner agrees to this request.</span></label>
+      </fieldset>
       <button type="button" id="lan-prop-test" class="ld-btn lan-prop-test" onclick="LanDirUI.testPropose()" data-i18n="lanPropTest">Test the connection</button>
       <div id="lan-prop-status" class="lan-prop-status" role="status" style="display:none"></div>
       <button type="button" id="lan-prop-send" class="btn-primary lan-prop-send" onclick="LanDirUI.sendPropose()" disabled data-i18n="lanPropSend">Send the request</button>

@@ -54,6 +54,8 @@ export const HOTSPOTS = [
   ['#lan-dir-propose', 'hsLanPropose', false, 'start:lan'],
   ['#lan-prop-test', 'hsLanPropTest', false, 'start:lan'],
   ['#lan-prop-tls, .lan-prop-chk', 'hsLanPropTls', false, 'start:lan'],
+  ['#lan-prop-kind, #lan-prop-until', 'hsLanPropKind', false, 'start:lan'],
+  ['.lan-prop-private legend, #lan-prop-anote, #lan-prop-contact, #lan-prop-owner', 'hsLanPropPrivate', false, 'start:lan'],
   ['#guest-mode-row', 'hsGuestMode', false, 'pthnet:account'],
   ['#register-link-row a', 'hsRegister', false, 'pthnet:account'],
   ['.login-back', 'hsLoginBack'],

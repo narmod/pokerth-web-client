@@ -42,12 +42,15 @@ const CANNED = {
     settings: { acceptRequests: true, checkMinutes: 5, autoHideDays: 7, maxPerIpDay: 3, showOffline: true, refusePrivate: true, manualEntry: true, localEntry: true },
     pending: [
       { id: 'lan_aaaaaa01', name: 'Club <Lyon>', host: 'lyon.example.org', port: 7236, tls: true, country: 'FR', lang: 'fr', desc: 'Thursdays', submittedAt: Date.now() - 7200000,
+        nick: 'Bob<x>', note: 'We are a club\nsince 2010', contact: 'bob@example.org', owner: true, uiLang: 'fr', sameSource: 3, link: 'https://club.example.org', until: Date.now() + 3 * 864e5,
         probe: { reachable: true, pokerth: true, players: 12, ver: '6.1', ms: 42, certUntrusted: true, error: '', at: Date.now() - 60000 } },
       { id: 'lan_aaaaaa02', name: 'Gone', host: 'gone.example.org', port: 7234, tls: false, country: '', lang: '', desc: '', submittedAt: Date.now() - 86400000,
         probe: { reachable: false, pokerth: false, players: null, ver: '', ms: 0, certUntrusted: false, error: 'ECONNREFUSED', at: Date.now() - 60000 } }
     ],
+    refused: [{ name: 'Spam', host: 'spam.example.org', port: 7234, nick: 'Eve', reason: 'Not a real server', at: Date.now() - 3600000 }],
+    limits: { note: 500, adminNote: 1000, reason: 200, sourceDays: 30, eventMaxDays: 366 },
     entries: [
-      { id: 'lan_bbbbbb01', name: 'Berlin', host: 'berlin.example.org', port: 7234, tls: false, country: 'DE', lang: 'de', desc: '', visible: true, noverify: false, sni: '', resetPeriod: 'weekly',
+      { id: 'lan_bbbbbb01', name: 'Berlin', host: 'berlin.example.org', port: 7234, tls: false, country: 'DE', lang: 'de', desc: '', visible: true, noverify: false, sni: '', resetPeriod: 'weekly', adminNote: 'From Ann:\nGood club', link: 'https://berlin.example.org/club',
         addedAt: Date.now() - 864e5, lastSeen: Date.now(), status: { online: true, players: 6, games: null, at: Date.now() }, autoHidden: false },
       { id: 'lan_bbbbbb02', name: 'Old club', host: 'old.example.org', port: 7234, tls: true, country: 'NL', lang: 'nl', desc: '', visible: true, noverify: true, sni: '',
         addedAt: Date.now() - 30 * 864e5, lastSeen: Date.now() - 9 * 864e5, status: { online: false, players: null, error: 'ETIMEDOUT', at: Date.now() }, autoHidden: true }
@@ -172,6 +175,23 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   ok(/Skip cert check/.test(reqs[0].textContent), 'a self-signed certificate is flagged');
   ok(!reqs[0].querySelector('.ldOk').disabled && reqs[1].querySelector('.ldOk').disabled, 'Approve is only offered for a server that answered');
   ok(/Nothing is listening/.test(reqs[1].textContent), 'an unreachable server gets the plain-language advice');
+  const pv0 = reqs[0].querySelector('.ldpriv');
+  ok(pv0 && /Bob<x>/.test(pv0.textContent) && !pv0.innerHTML.includes('<x>') && /interface in fr/.test(pv0.textContent) && /runs the server/.test(pv0.textContent), 'the private part: nickname (escaped), interface language, ownership');
+  ok(/3 requests from this address in the last 30 days/.test(pv0.textContent) && pv0.querySelector('.warn'), 'several requests from one address are flagged');
+  ok(/bob@example.org/.test(pv0.textContent) && /erased when you decide/.test(pv0.textContent) && pv0.querySelector('.ldnote').textContent === 'We are a club\nsince 2010', 'contact (with its fate) and the note, line breaks kept');
+  ok(pv0.querySelector('a[href="https://club.example.org"][rel~="noopener"]') && /event until/.test(reqs[0].textContent), 'link and event end shown');
+  ok(/ownership not confirmed/.test(reqs[1].querySelector('.ldpriv').textContent) && /No note/.test(reqs[1].textContent), 'a request without the private part says so');
+  ok(/Refused requests/.test($('ldRefusedBox').textContent) && /Not a real server/.test($('ldRefused').textContent) && /from Eve/.test($('ldRefused').textContent), 'the refused list shows the reason');
+  window.prompt = () => 'Looks fake';
+  reqs[1].querySelector('.ldRej').click();
+  await new Promise((r) => setTimeout(r, 50));
+  const rjp = posts.filter((p) => p.url.startsWith('/admin/lan-directory')).pop();
+  ok(rjp && rjp.body.action === 'reject' && rjp.body.reason === 'Looks fake', 'Reject asks for a reason and posts it');
+  window.prompt = () => null;
+  const nPosts = posts.length;
+  reqs[1].querySelector('.ldRej').click();
+  await new Promise((r) => setTimeout(r, 50));
+  ok(posts.length === nPosts, 'cancelling the reason prompt rejects nothing');
   reqs[0].querySelector('.ldOk').click();
   await new Promise((r) => setTimeout(r, 100));
   const ap = posts.filter((p) => p.url.startsWith('/admin/lan-directory')).pop();
@@ -188,6 +208,10 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   doc.querySelector('#ldEntries .ldEd').click();
   const ed = doc.querySelector('#ldEntries .ldedit');
   ok(ed && ed.querySelector('.ldH').value === 'berlin.example.org' && ed.querySelector('.ldNV'), 'Edit opens the editor with the TLS override');
+  ok(ed.querySelector('.ldA').value === 'From Ann:\nGood club' && ed.querySelector('.ldK').value === 'https://berlin.example.org/club' && ed.querySelector('.ldU').value === '', 'the editor holds the internal note, the link and the (empty) event end');
+  ok(/📝 note/.test(rows[0].textContent) && rows[0].querySelector('a[href="https://berlin.example.org/club"]'), 'the table marks the internal note and shows the link');
+  ed.querySelector('.ldA').value = 'Trusted';
+  ed.querySelector('.ldU').value = '2027-05-01';
   ed.querySelector('.ldN').value = 'Berlin club';
   ed.querySelector('.ldSave').click();
   await new Promise((r) => setTimeout(r, 50));
@@ -195,6 +219,7 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   ok(up && up.body.action === 'update' && up.body.entry.name === 'Berlin club' && up.body.entry.host === 'berlin.example.org', 'Save posts the edited entry');
   ok(up && up.body.entry.resetPeriod === 'weekly', 'the editor carries the board reset period');
   ok(up && up.body.entry.maxPerIp === 3, 'and the players per IP');
+  ok(up && up.body.entry.adminNote === 'Trusted' && up.body.entry.until === '2027-05-01' && up.body.entry.link === 'https://berlin.example.org/club', 'and the internal note, event end and link');
   ok(/3 \/ IP/.test(doc.querySelector('#ldEntries tr[data-id]').textContent), 'the table shows players per IP');
   ok(/at most 20 connections per IP/.test($('ldGlobalCap').textContent), 'the settings state the proxy-wide guard');
   ok(/board: weekly/.test(doc.querySelector('#ldEntries tr[data-id]').textContent), 'the table shows each server’s board period');

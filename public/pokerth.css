@@ -13494,6 +13494,19 @@ body.lan-dir-locked #tls-row { display: none !important; }
 .lan-prop-status { font-size: var(--fs-sm); line-height: 1.35; padding: 8px 10px; border-radius: var(--r-md); border: 1px solid var(--border); color: var(--cream); }
 .lan-prop-status.ok { border-color: rgba(63,191,90,0.6); background: rgba(63,191,90,0.12); }
 .lan-prop-status.err { border-color: rgba(220,90,80,0.6); background: rgba(220,90,80,0.12); }
+.lan-prop-card textarea {
+  width: 100%; box-sizing: border-box; resize: vertical; min-height: 72px;
+  background: var(--field-bg); border: 1px solid var(--border); border-radius: 2px;
+  padding: 9px 11px; color: var(--cream); font-family: var(--ff-mono); font-size: var(--fs-md); line-height: 1.4;
+  outline: none; transition: border-color 0.2s, background 0.2s;
+}
+.lan-prop-card textarea:focus { border-color: var(--gold); }
+.lan-prop-private { margin: 0; padding: 10px 12px 12px; border: 1px dashed rgba(var(--gold-rgb), 0.45); border-radius: var(--r-md);
+  display: flex; flex-direction: column; gap: var(--sp-3); min-width: 0; }
+.lan-prop-private legend { padding: 0 6px; font-size: var(--fs-sm); font-weight: 700; color: var(--gold); }
+.lan-prop-owner { display: flex; align-items: flex-start; gap: 8px; font-size: var(--fs-sm); color: var(--cream); cursor: pointer; line-height: 1.35; }
+.lan-prop-owner input { margin-top: 2px; }
+.lan-dir-link a { color: var(--gold); text-decoration: underline; overflow-wrap: anywhere; }
 .lan-prop-sent-title { font-family: var(--ff-display); font-weight: 700; color: var(--text-hi); }
 @media (max-width: 599.98px) {
   .lan-prop-two { flex-direction: column; }

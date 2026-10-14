@@ -1,3 +1,8 @@
+2026-10-14 version 2.1.10-web.55:
+- new: « Propose my server »: a section for the admins only (your nickname, a note, a contact if you want — erased once they decide) and a box to confirm the server is yours or that its owner agrees
+- new: a proposed server can carry a community link (site or Discord) shown under its description
+- new: event servers: give a last day and the server leaves the LAN list by itself afterwards
+
 2026-10-14 version 2.1.10-web.53:
 - bugfix: « Propose my server » form: in the app installed on iPhone, its title no longer slides under the clock and the Send button stays reachable
 

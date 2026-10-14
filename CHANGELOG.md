@@ -153,6 +153,18 @@ highlights below.
   server) is no longer always allowed — LAN servers now come from the directory. Installs that
   still dial it add it under Proxy › Extra allowed hosts (or `ALLOWED_HOSTS`). The admin Proxy
   text, README and `.env.example` now list the real core hosts (incl. `pthsrv.pokerth.net`).
+  Richer proposals (`web.55`). Form: community link (public, http/https only), kind of server
+  (permanent / event with a last day — after it the server leaves the list, still dialable and
+  still listed for the admin), and a « For the admins only » block: nickname (pre-filled from
+  the login), note (500 chars, line breaks kept), optional contact, and a required « I run this
+  server or its owner agrees » box (`owner`; Send stays disabled until it is ticked). New error
+  codes `owner`, `link`, `until`. Admin: each request shows that block plus the interface
+  language and how many requests came from the same address over 30 days (salted SHA-256 of
+  the IP, per-install salt; only the count leaves the server); approving turns « From nick:
+  note » into the entry's internal note (editable, never public) and drops the contact;
+  rejecting asks for a reason kept in a « Refused requests » list (180 days, 50 max, no
+  contact/note). Editor: link, event end, internal note. Privacy page updated. 18 UI keys and
+  2 new Ace's Help hotspots (+ the dialog text) in the 83 languages, help paragraph updated.
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the

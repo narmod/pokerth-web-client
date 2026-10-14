@@ -83,7 +83,8 @@ const cfgFile = path.join(tmp, 'admin-config.json');
 fs.writeFileSync(cfgFile, JSON.stringify({ lanDirectory: {
   settings: { refusePrivate: false, manualEntry: true, localEntry: false, checkMinutes: 1 },
   entries: [
-    { id: 'lan_aaaaaa01', name: 'Club local', host: '127.0.0.1', port: FAKE, tls: false, country: 'FR', lang: 'fr', desc: 'Thursday nights', visible: true, addedAt: 1, lastSeen: 0 },
+    { id: 'lan_aaaaaa01', name: 'Club local', host: '127.0.0.1', port: FAKE, tls: false, country: 'FR', lang: 'fr', desc: 'Thursday nights', visible: true, addedAt: 1, lastSeen: 0,
+      link: 'https://club.example.org/night', until: Date.now() + 5 * 86400000, adminNote: 'SECRET-ADMIN-NOTE' },
     { id: 'lan_aaaaaa02', name: 'Gone club', host: 'gone.invalid', port: FAKE, tls: false, visible: true, addedAt: 1, lastSeen: Date.now() - 3600000 }
   ] } }));
 const PORT = 18000 + Math.floor(Math.random() * 900);
@@ -142,7 +143,12 @@ try {
   await page.selectOption('#lan-dir-sel', 'lan_aaaaaa01');
   ok(await page.evaluate(() => document.body.classList.contains('lan-dir-locked')), 'picking a server locks them again');
 
+  ok(await page.evaluate(() => { const a = document.querySelector('#lan-dir-detail .lan-dir-link a'); return !!a && a.href === 'https://club.example.org/night' && /noopener/.test(a.rel) && a.target === '_blank'; }), 'the community link opens in a new tab (noopener)');
+  ok(/Event — until/.test(await page.textContent('#lan-dir-detail .lan-dir-until')), 'an event server shows its last day');
+  ok(!/SECRET-ADMIN-NOTE/.test(await page.content()), 'the internal admin note never reaches the page');
+
   console.log('Propose my server');
+  await page.fill('#nick', 'Narmod');
   await page.click('#lan-dir-propose');
   await sleep(300);
   ok(await page.isVisible('#lan-prop-dialog'), 'the dialog opens');
@@ -158,7 +164,18 @@ try {
   await page.click('#lan-prop-test');
   await page.waitForSelector('#lan-prop-status.ok', { timeout: 8000 }).catch(() => {});
   ok(/PokerTH server reachable/.test(await page.textContent('#lan-prop-status')), 'the test finds the PokerTH server');
-  ok(!(await page.isDisabled('#lan-prop-send')), 'Send is enabled after a passing test');
+  ok(await page.isDisabled('#lan-prop-send'), 'a passing test is not enough: the ownership box is still unticked');
+  ok(await page.inputValue('#lan-prop-nick') === 'Narmod', 'the nickname for the admins starts as the login nickname');
+  ok(!(await page.isVisible('#lan-prop-until')), 'no end date for a permanent server');
+  await page.selectOption('#lan-prop-kind', 'event');
+  ok(await page.isVisible('#lan-prop-until'), 'an event asks for its last day');
+  const inTwoDays = await page.evaluate(() => { const d = new Date(Date.now() + 2 * 86400000); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); });
+  await page.fill('#lan-prop-until', inTwoDays);
+  await page.fill('#lan-prop-link', 'discord.gg/myclub');
+  await page.fill('#lan-prop-anote', 'Friends from work\nFriday nights');
+  await page.fill('#lan-prop-contact', 'me@example.org');
+  await page.check('#lan-prop-owner');
+  ok(!(await page.isDisabled('#lan-prop-send')), 'Send is enabled after a passing test and the ownership box');
   await page.fill('#lan-prop-port', '7234');
   ok(await page.isDisabled('#lan-prop-send'), 'changing the port disables Send again');
   await page.fill('#lan-prop-port', String(FAKE));
@@ -172,6 +189,8 @@ try {
   ok(adm.pending && adm.pending.length === 1 && adm.pending[0].name === 'My home club' && adm.pending[0].host === 'localhost', 'the request is in the admin queue');
   ok(adm.pending[0].resetPeriod === 'weekly', 'with the leaderboard reset period chosen in the form');
   ok(adm.pending[0].maxPerIp === 4, 'and the players per IP chosen in the form');
+  ok(adm.pending[0].nick === 'Narmod' && adm.pending[0].note === 'Friends from work\nFriday nights' && adm.pending[0].contact === 'me@example.org' && adm.pending[0].owner === true && adm.pending[0].uiLang === 'en', 'the admins get the private part (nickname, note, contact, ownership, language)');
+  ok(adm.pending[0].link === 'https://discord.gg/myclub' && adm.pending[0].until > Date.now() && adm.pending[0].sameSource === 1, 'with the link, the last day and the per-address count');
   const keys = await page.evaluate(() => Object.keys(localStorage).concat(Object.keys(sessionStorage)).filter((k) => /prop|lan[-_]?dir/i.test(k)));
   ok(keys.length === 0, 'nothing about the request is stored on the device' + (keys.length ? ' (' + keys.join(', ') + ')' : ''));
   await page.click('#lan-prop-sent .ld-btn');

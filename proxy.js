@@ -12327,10 +12327,12 @@ const httpServer = http.createServer((req, res) => {
   // ── LAN server directory (public side) — see server/lan-directory.js ──
   //   GET  /api/lan-directory           the list for the LAN drop-down
   //   POST /api/lan-directory/test      { host, port, tls } submit-time check
-  //   POST /api/lan-directory/propose   { name, host, port, tls, country, lang, desc }
+  //   POST /api/lan-directory/propose   { name, host, port, tls, country, lang, desc,
+  //        link, kind, until, maxPerIp, resetPeriod, nick, note, contact, owner, uiLang }
   // Errors come back as short codes (closed, host, port, dns, private,
-  // unreachable, notpokerth, listed, pending, full, limit) the client
-  // translates. Nothing about the sender is stored.
+  // unreachable, notpokerth, listed, pending, full, limit, owner, link, until)
+  // the client translates. The sender's IP is never stored (only a salted
+  // hash, to count requests per address -- server/lan-directory.js).
   if (reqPathOnly === '/api/lan-directory' || reqPathOnly === '/api/lan-directory/test' || reqPathOnly === '/api/lan-directory/propose') {
     var _lanJson = function (code, obj) {
       res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
@@ -12350,7 +12352,7 @@ const httpServer = http.createServer((req, res) => {
         if (r && r.ok) console.log('[lan-dir] new server proposal waiting for approval');
         _lanJson(200, r);
       });
-    }, 4096);
+    }, 8192);
   }
   if (reqPathOnly === '/api/events') {
     handleCommunityEvents(req, res);

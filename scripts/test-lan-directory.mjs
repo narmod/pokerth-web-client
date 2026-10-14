@@ -47,6 +47,10 @@ const ns = LD.normSettings({ checkMinutes: 0, autoHideDays: 'x', maxPerIpDay: 99
 ok(ns.checkMinutes === 5 && ns.autoHideDays === 7 && ns.maxPerIpDay === 3 && ns.manualEntry === false && ns.acceptRequests === true, 'settings: bad values fall back, booleans kept');
 ok(LD.normSettings(null).manualEntry === false && LD.normSettings(null).localEntry === true && LD.normSettings(null).refusePrivate === true, 'defaults: manual entry off, local server listed, private addresses refused');
 ok(LD.normSettings({ localEntry: false }).localEntry === false, 'the local server can be turned off (pokerth.net)');
+ok(LD.cleanLink('discord.gg/abc') === 'https://discord.gg/abc' && LD.cleanLink('http://club.example.org/x') === 'http://club.example.org/x', 'links: https added when missing, http kept');
+ok(LD.cleanLink('javascript:alert(1)') === '' && LD.cleanLink('https://u:p@example.org') === '' && LD.cleanLink('ftp://example.org') === '' && LD.cleanLink('https://x'.padEnd(260, 'y')) === '', 'links: other schemes, credentials and long links refused');
+ok(LD.cleanNote('Hi <b>\r\n\n\n\nthere\u0000', 500) === 'Hi b\n\nthere', 'notes keep line breaks (two at most), drop markup and control characters');
+ok(LD.cleanUntil('2026-02-30') === 0 && LD.cleanUntil('') === 0 && new Date(LD.cleanUntil('2026-12-31')).getHours() === 23, 'event end: invalid dates refused, a day ends at 23:59');
 
 console.log('Directory flow');
 let T = Date.parse('2026-10-14T10:00:00Z');
@@ -54,7 +58,8 @@ const cfg = {};
 let saves = 0;
 const DNS = { 'club.example.org': ['93.184.216.34'], 'home.example.org': ['192.168.1.20'], 'dual.example.org': ['93.184.216.35', '10.0.0.5'],
   'self.example.org': ['93.184.216.36'], 'off.example.org': ['93.184.216.37'], 'web.example.org': ['93.184.216.38'],
-  'a.example.org': ['93.184.216.40'], 'b.example.org': ['93.184.216.41'], 'c.example.org': ['93.184.216.42'], 'd.example.org': ['93.184.216.43'], 'e.example.org': ['93.184.216.44'] };
+  'a.example.org': ['93.184.216.40'], 'b.example.org': ['93.184.216.41'], 'c.example.org': ['93.184.216.42'], 'd.example.org': ['93.184.216.43'], 'e.example.org': ['93.184.216.44'],
+  'f.example.org': ['93.184.216.45'], 'g.example.org': ['93.184.216.46'], 'h.example.org': ['93.184.216.47'] };
 const probes = [];
 const PROBE = {
   'self.example.org': (t) => t.noverify ? { reachable: true, pokerth: true, players: 2, ver: '6.1' } : { reachable: true, certError: true, error: 'DEPTH_ZERO_SELF_SIGNED_CERT' },
@@ -72,7 +77,7 @@ const dir = LD.createLanDirectory({
   globalIpCap: () => 20
 });
 const IP = '198.51.100.7';
-const prop = (o, ip = IP) => call(dir.propose, Object.assign({ name: 'Club', port: 7234, tls: false }, o), ip);
+const prop = (o, ip = IP) => call(dir.propose, Object.assign({ name: 'Club', port: 7234, tls: false, owner: true }, o), ip);
 
 let r = await call(dir.test, { host: 'club.example.org', port: 7234 }, IP);
 ok(r.ok && r.reachable && r.pokerth && r.players === 12, 'test: a PokerTH server answers');
@@ -160,6 +165,49 @@ r = await call(dir.admin, { action: 'remove', id: dId });
 ok(r.ok && !dir.hostAllowed('d.example.org'), 'remove takes the server out of the allowlist');
 r = await call(dir.admin, { action: 'nope' });
 ok(!r.ok, 'unknown action refused');
+
+console.log('Requester fields (web.55)');
+r = await prop({ host: 'f.example.org', owner: false }, '198.51.100.20');
+ok(!r.ok && r.error === 'owner', 'the ownership box is required');
+r = await prop({ host: 'f.example.org', link: 'javascript:alert(1)' }, '198.51.100.20');
+ok(!r.ok && r.error === 'link', 'an invalid community link is refused');
+r = await prop({ host: 'f.example.org', kind: 'event', until: '2020-01-01' }, '198.51.100.20');
+ok(!r.ok && r.error === 'until', 'an event that already ended is refused');
+r = await prop({ host: 'f.example.org', kind: 'event', until: '2028-01-01' }, '198.51.100.20');
+ok(!r.ok && r.error === 'until', 'an event more than a year ahead is refused');
+const tomorrow = new Date(T + 86400000), iso = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+r = await prop({ host: 'f.example.org', kind: 'event', until: iso(tomorrow), link: 'discord.gg/club', nick: 'Bob', note: 'We play\nevery Friday', contact: 'bob@example.org', uiLang: 'fr' }, '198.51.100.20');
+ok(r.ok, 'a full request is accepted');
+r = await prop({ host: 'g.example.org', kind: 'permanent', until: iso(tomorrow) }, '198.51.100.20');
+ok(r.ok, 'a second request from the same address');
+av = dir.adminView();
+const fReq = av.pending.find((x) => x.host === 'f.example.org'), gReq = av.pending.find((x) => x.host === 'g.example.org');
+ok(fReq.nick === 'Bob' && fReq.note === 'We play\nevery Friday' && fReq.contact === 'bob@example.org' && fReq.owner === true && fReq.uiLang === 'fr', 'the admin sees nickname, note, contact, ownership and interface language');
+ok(fReq.link === 'https://discord.gg/club' && fReq.until > T && gReq.until === 0, 'link kept; an end date only for an event');
+ok(fReq.sameSource === 2 && gReq.sameSource === 2 && !('src' in fReq), 'the admin sees how many requests came from that address, never the hash');
+ok(!JSON.stringify(cfg).includes('198.51.100.20'), 'the address itself is still not stored');
+ok(!JSON.stringify(dir.publicView()).match(/Bob|bob@|Friday/), 'nothing private reaches the public list');
+r = await call(dir.admin, { action: 'approve', id: fReq.id });
+const fEnt = r.entries.find((x) => x.host === 'f.example.org');
+ok(fEnt && fEnt.adminNote === 'From Bob:\nWe play\nevery Friday' && !('contact' in fEnt) && !('nick' in fEnt), 'approve: the note becomes the internal note, the contact is dropped');
+ok(!JSON.stringify(cfg).includes('bob@example.org'), 'the contact is erased from the stored config');
+const fPub = dir.publicView().servers.find((x) => x.host === 'f.example.org');
+ok(fPub && fPub.link === 'https://discord.gg/club' && fPub.until === fEnt.until && !('adminNote' in fPub), 'the list carries link and end date, never the internal note');
+r = await call(dir.admin, { action: 'update', id: fEnt.id, entry: { adminNote: 'Trusted club' } });
+ok(r.entries.find((x) => x.id === fEnt.id).adminNote === 'Trusted club', 'the admin edits the internal note');
+T += 3 * 86400000;
+ok(!dir.publicView().servers.some((x) => x.host === 'f.example.org') && dir.adminView().entries.find((x) => x.id === fEnt.id).ended === true && dir.hostAllowed('f.example.org'), 'after its last day an event server leaves the list (still listed for the admin, still dialable)');
+r = await call(dir.admin, { action: 'update', id: fEnt.id, entry: { until: '' } });
+ok(dir.publicView().servers.some((x) => x.host === 'f.example.org'), 'the admin can make it permanent again');
+r = await call(dir.admin, { action: 'reject', id: gReq.id, reason: 'Not a <real> server' });
+ok(r.ok && r.refused.length >= 1 && r.refused[0].host === 'g.example.org' && r.refused[0].reason === 'Not a real server', 'reject keeps a reason for the admins');
+ok(!('contact' in r.refused[0]) && !('note' in r.refused[0]) && !('src' in r.refused[0]), 'the refused list keeps no contact, note or source');
+r = await call(dir.admin, { action: 'clearRefused' });
+ok(r.ok && r.refused.length === 0, 'the admin can clear the refused list');
+T += 31 * 86400000;
+r = await prop({ host: 'h.example.org' }, '198.51.100.20');
+ok(r.ok && dir.adminView().pending.find((x) => x.host === 'h.example.org').sameSource === 1, 'the per-address count forgets after 30 days');
+cfg.lanDirectory.entries.find((x) => x.id === clubId).lastSeen = T;   // the club was seen « now » (this block moved the clock)
 
 console.log('Visibility');
 dir._status.set(clubId, { online: false, players: null, at: T });
@@ -275,7 +323,9 @@ try {
   await new Promise((r2) => setTimeout(r2, 300));   // proto bundle loads asynchronously
   h = await http('/api/lan-directory/test', { host: '127.0.0.1', port: FAKE });
   ok(h.json && h.json.ok && h.json.pokerth && h.json.players === 7, 'POST test: the fake server answers as PokerTH (7 players)');
-  h = await http('/api/lan-directory/propose', { name: 'Fake club', host: '127.0.0.1', port: FAKE, country: 'FR', lang: 'fr', resetPeriod: 'bogus' });
+  h = await http('/api/lan-directory/propose', { name: 'Fake club', host: '127.0.0.1', port: FAKE, country: 'FR', lang: 'fr', resetPeriod: 'bogus', owner: false });
+  ok(h.json && !h.json.ok && h.json.error === 'owner', 'POST propose: the ownership box is required');
+  h = await http('/api/lan-directory/propose', { name: 'Fake club', host: '127.0.0.1', port: FAKE, country: 'FR', lang: 'fr', resetPeriod: 'bogus', owner: true, nick: 'Ann', note: 'n'.repeat(500), contact: 'ann@example.org' });
   ok(h.json && h.json.ok, 'POST propose: accepted');
   h = await http('/admin/lan-directory?token=' + TOKEN);
   ok(h.json && h.json.pending.length === 1 && h.json.pending[0].name === 'Fake club', 'admin sees the pending request');
@@ -289,7 +339,7 @@ try {
   ok(h.json && h.json.lanDirectory.servers.length === 1 && h.json.lanDirectory.servers[0].name === 'Fake club', '/app-config lists the approved server');
   const saved = JSON.parse(fs.readFileSync(path.join(tmp, 'admin-config.json'), 'utf8'));
   ok(saved.lanDirectory && saved.lanDirectory.entries.length === 1 && !JSON.stringify(saved).includes('127.0.0.1"' + ',"ip'), 'directory persisted in admin-config.json');
-  h = await http('/api/lan-directory/propose', { host: '127.0.0.1', port: FAKE });
+  h = await http('/api/lan-directory/propose', { host: '127.0.0.1', port: FAKE, owner: true });
   ok(h.json && !h.json.ok && h.json.error === 'listed', 'proposing a listed server is refused');
   h = await http('/api/lan-directory', { x: 1 });
   ok(h.status === 405, 'GET-only list route');

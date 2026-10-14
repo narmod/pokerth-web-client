@@ -329,6 +329,14 @@
   .ldchip.warn{border-color:rgba(240,168,58,.6);color:#f0c27a}
   .ldline{font-size:.8rem;color:var(--text);margin-top:4px;overflow-wrap:anywhere}
   .ldline.ok{color:#7fd17f}.ldline.err{color:#e98a8a}.ldline.warn{color:#f0c27a}
+  .ldpriv{margin-top:8px;padding:8px 10px;border:1px dashed var(--line);border-radius:8px;font-size:.8rem}
+  .ldpriv .ldpk{color:var(--text);margin-right:4px}
+  .ldpriv a,.ldtbl .ldline a{color:#8fb8ff;overflow-wrap:anywhere}
+  [data-admin-theme="light"] .ldpriv a,[data-admin-theme="light"] .ldtbl .ldline a{color:#1d5fc4}
+  .ldpriv .ldnote{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0 0;color:var(--text-hi,inherit)}
+  .ldpriv .warn{color:#f0c27a}.ldpriv .ok{color:#7fd17f}.ldpriv .err{color:#e98a8a}
+  .ldedit textarea{width:100%;box-sizing:border-box;min-height:70px;resize:vertical;font:inherit}
+  .ldref{font-size:.8rem;border-top:1px solid var(--line);padding:6px 0;overflow-wrap:anywhere}
   .ldtblw{overflow-x:auto;margin:0 -4px}
   .ldtbl{width:100%;min-width:760px;border-collapse:collapse;font-size:.82rem}
   .ldtbl th{text-align:left;font-weight:600;color:var(--text);font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;padding:6px;border-bottom:1px solid var(--line);white-space:nowrap}
@@ -1361,9 +1369,14 @@
       <div class="card">
         <div class="boardhead"><h2>Pending requests <span class="muted" id="ldPendN" style="font-weight:400"></span></h2>
           <label class="muted" style="margin:0;display:flex;align-items:center;gap:6px;font-size:.8rem"><input type="checkbox" id="ldAccept"> Accept new requests</label></div>
-        <p class="muted">Sent from the login page (LAN › Propose my server). Approving adds the server to the LAN list of every player and to the dial allowlist; the game-server registry is not touched. Nothing about the sender is kept, and the player gets no answer: the server appearing in the list is the answer.</p>
+        <p class="muted">Sent from the login page (LAN › Propose my server). Approving adds the server to the LAN list of every player and to the dial allowlist; the game-server registry is not touched. What the requester wrote for the admins (nickname, note, contact) is never shown to players; the contact is erased as soon as you approve or reject, the note becomes the server’s internal note. No IP is kept (only a salted hash, to count requests from one address over 30 days). The player gets no answer: the server appearing in the list is the answer.</p>
         <div id="ldPending"><div class="empty">Loading…</div></div>
         <div id="ldPendState" class="msg"></div>
+        <details id="ldRefusedBox" style="margin-top:10px"><summary class="muted">Refused requests <span id="ldRefN"></span></summary>
+          <p class="muted">Kept 180 days (50 at most) so you remember why: name, address, nickname and your reason — no contact, no note.</p>
+          <div id="ldRefused"></div>
+          <div class="periodrow" style="margin-top:6px"><button id="ldRefClear" class="ghost" type="button">Clear this list</button></div>
+        </details>
       </div>
       <div class="card">
         <div class="boardhead"><h2>Published directory <span class="muted" id="ldDirN" style="font-weight:400"></span></h2><button id="ldAddBtn" class="use" type="button">+ Add manually</button></div>
@@ -1637,6 +1650,24 @@
   var LD_RESET={off:'never',daily:'daily',weekly:'weekly',monthly:'monthly',yearly:'yearly'};
   function ldIpChip(n){ return '<span class="ldchip" title="Players per IP address on this server (simultaneous connections through this proxy)">'+(parseInt(n,10)||3)+' / IP</span>'; }
   function ldResetChip(p){ return '<span class="ldchip" title="Leaderboard reset of this server">board: '+srvEsc(LD_RESET[p]||'monthly')+'</span>'; }
+  function ldDay(ms){ try{ return new Date(ms).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'}); }catch(e){ return new Date(ms).toDateString(); } }
+  function ldIso(ms){ if(!ms) return ''; var d=new Date(ms); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  function ldEventChip(x){ if(!x.until) return ''; return '<span class="ldchip'+(x.ended||x.until<Date.now()?' warn':'')+'" title="Event server: leaves the list after its last day">'+((x.ended||x.until<Date.now())?'event ended ':'event until ')+srvEsc(ldDay(x.until))+'</span>'; }
+  function ldLinkHtml(u){ if(!u||!/^https?:\/\//i.test(u)) return ''; return '<a href="'+srvEsc(u)+'" target="_blank" rel="noopener noreferrer nofollow">'+srvEsc(u.length>60?u.slice(0,59)+'…':u)+'</a>'; }
+  // What the requester wrote for the admins only, plus what the proxy noticed.
+  function ldPrivate(p){
+    var rows=[];
+    rows.push('<div><span class="ldpk">From</span>'+(p.nick?'<b>'+srvEsc(p.nick)+'</b>':'<span class="muted">no nickname</span>')
+      +(p.uiLang?' · interface in <b>'+srvEsc(p.uiLang)+'</b>':'')
+      +' · '+(p.owner?'<span class="ok">✓ runs the server or has the owner’s agreement</span>':'<span class="err">✗ ownership not confirmed</span>')+'</div>');
+    var n=p.sameSource||0;
+    rows.push('<div class="'+(n>1?'warn':'')+'"><span class="ldpk">Address</span>'+(n?ldPlural(n,'request')+' from this address in the last '+(((_ld&&_ld.limits&&_ld.limits.sourceDays)||30))+' days':'no count (sent before this was recorded)')+'</div>');
+    if(p.contact) rows.push('<div><span class="ldpk">Contact</span>'+srvEsc(p.contact)+' <span class="muted">(erased when you decide)</span></div>');
+    if(p.link) rows.push('<div><span class="ldpk">Link</span>'+ldLinkHtml(p.link)+' <span class="muted">(public)</span></div>');
+    if(p.until) rows.push('<div><span class="ldpk">Event</span>last day '+srvEsc(ldDay(p.until))+'</div>');
+    rows.push(p.note?'<div><span class="ldpk">Note to the admins</span><div class="ldnote">'+srvEsc(p.note)+'</div></div>':'<div class="muted">No note.</div>');
+    return '<div class="ldpriv">'+rows.join('')+'</div>';
+  }
   function ldSay(id,t,cls){ var e=$(id); if(e){ e.textContent=t||''; e.className='msg'+(cls?' '+cls:''); } }
   function ldBadge(){
     var b=$('ldBadge'), n=(_ld&&_ld.pending)?_ld.pending.length:0;
@@ -1686,7 +1717,11 @@
       +'<label class="f">Players per IP (1–'+(((_ld&&_ld.ipCap&&_ld.ipCap.max)||50))+')<input type="number" class="ldI" min="1" max="'+(((_ld&&_ld.ipCap&&_ld.ipCap.max)||50))+'" value="'+(parseInt(x.maxPerIp,10)||3)+'"></label>'
       +'<label class="f">Leaderboard reset<select class="ldR">'+['off','daily','weekly','monthly','yearly'].map(function(k){ return '<option value="'+k+'"'+((x.resetPeriod||'monthly')===k?' selected':'')+'>'+(k==='off'?'Never':k.charAt(0).toUpperCase()+k.slice(1))+'</option>'; }).join('')+'</select></label>'
       +(full?'<label class="f">TLS name<input type="text" class="ldS" maxlength="253" value="'+srvEsc(x.sni||'')+'" placeholder="leave empty to use Host" autocomplete="off"></label>':'')
-      +'</div><div class="ldchk">'
+      +'<label class="f">Community link (public)<input type="url" class="ldK" maxlength="200" value="'+srvEsc(x.link||'')+'" placeholder="https://" autocomplete="off"></label>'
+      +'<label class="f">Event — last day <span class="muted" style="margin:0">(empty = permanent)</span><input type="date" class="ldU" value="'+srvEsc(ldIso(x.until))+'"></label>'
+      +'</div>'
+      +(full?'<label class="f" style="display:block;margin-top:8px">Internal note <span class="muted" style="margin:0">(admins only, never shown to players)</span><textarea class="ldA" maxlength="'+(((_ld&&_ld.limits&&_ld.limits.adminNote)||1000))+'">'+srvEsc(x.adminNote||'')+'</textarea></label>':'')
+      +'<div class="ldchk">'
       +'<label><input type="checkbox" class="ldT" '+(x.tls?'checked':'')+'> TLS</label>'
       +(full?'<label title="Accept a self-signed or expired certificate for THIS server only"><input type="checkbox" class="ldNV" '+(x.noverify?'checked':'')+'> Skip cert check</label>'
             +'<label><input type="checkbox" class="ldV" '+(x.visible!==false?'checked':'')+'> Visible in the list</label>':'')
@@ -1697,7 +1732,9 @@
     var q=function(c){ return box.querySelector(c); };
     var e={ name:q('.ldN').value.trim(), host:q('.ldH').value.trim(), port:parseInt(q('.ldP').value,10)||0,
             country:q('.ldC').value.trim(), lang:q('.ldL').value.trim(), desc:q('.ldD').value.trim(), tls:!!q('.ldT').checked,
-            resetPeriod:q('.ldR').value, maxPerIp:parseInt(q('.ldI').value,10)||3 };
+            resetPeriod:q('.ldR').value, maxPerIp:parseInt(q('.ldI').value,10)||3,
+            link:q('.ldK').value.trim(), until:q('.ldU').value||0 };
+    if(q('.ldA')) e.adminNote=q('.ldA').value;
     if(q('.ldS')) e.sni=q('.ldS').value.trim();
     if(q('.ldNV')) e.noverify=!!q('.ldNV').checked;
     if(q('.ldV')) e.visible=!!q('.ldV').checked;
@@ -1723,9 +1760,10 @@
       var chk=_ldChecks[p.id]||p.probe, can=!!(chk&&(chk.pokerth||chk.reachable));
       return '<div class="ldreq" data-id="'+srvEsc(p.id)+'"><div class="ldmain">'
         +'<span class="ldname">'+srvEsc(p.name||p.host)+'</span><span class="ldaddr">'+srvEsc(p.host)+':'+p.port+'</span>'
-        +(p.tls?'<span class="ldchip">TLS</span>':'')+(ldPlace(p)?'<span class="ldchip">'+srvEsc(ldPlace(p))+'</span>':'')+ldResetChip(p.resetPeriod)+ldIpChip(p.maxPerIp)
+        +(p.tls?'<span class="ldchip">TLS</span>':'')+(ldPlace(p)?'<span class="ldchip">'+srvEsc(ldPlace(p))+'</span>':'')+ldResetChip(p.resetPeriod)+ldIpChip(p.maxPerIp)+ldEventChip(p)
         +'<div class="ldline">'+(p.desc?'“'+srvEsc(p.desc)+'” · ':'')+'submitted '+ldAgo(p.submittedAt)+'</div>'
         +ldProbeLine(chk,p.tls)
+        +ldPrivate(p)
         +'</div><div class="ldbtns">'
         +'<button class="use ldChk" type="button">Check</button>'
         +'<button class="use ldEd" type="button">Edit</button>'
@@ -1739,8 +1777,9 @@
       row.querySelector('.ldEd').addEventListener('click',function(){ _ldEdit={kind:'p',id:id}; renderLanDir(); });
       row.querySelector('.ldChk').addEventListener('click',function(){ ldCheck(id,'ldPendState'); });
       row.querySelector('.ldRej').addEventListener('click',function(){
-        if(!confirm('Reject “'+(p.name||p.host)+'”? The request is deleted; the player is not told.')) return;
-        ldPost({action:'reject',id:id},'ldPendState','Rejected');
+        var why=prompt('Reject “'+(p.name||p.host)+'”? The request and its contact are deleted; the player is not told.\n\nReason (kept for the admins, optional):','');
+        if(why===null) return;
+        ldPost({action:'reject',id:id,reason:why},'ldPendState','Rejected');
       });
       row.querySelector('.ldOk').addEventListener('click',function(){ ldPost({action:'approve',id:id},'ldPendState','Approved — now in the LAN list'); });
     });
@@ -1770,10 +1809,13 @@
         var cls=!st?'unk':(st.online?'on':'off'), lab=!st?'Unknown':(st.online?'Online':'Offline');
         var games=(chk&&chk.games!=null)?chk.games:(st&&st.games!=null?st.games:null);
         var act=(st&&st.online)?((st.players!=null?ldPlural(st.players,'player'):'')+(games!=null?' · '+ldPlural(games,'table'):'')):'—';
-        var seen=ldAgo(e.lastSeen)+(e.autoHidden?' · auto-hidden':'');
-        return '<tr data-id="'+srvEsc(e.id)+'"'+((!e.visible||e.autoHidden)?' class="ldhid"':'')+'>'
+        var seen=ldAgo(e.lastSeen)+(e.autoHidden?' · auto-hidden':'')+(e.ended?' · event ended':'');
+        return '<tr data-id="'+srvEsc(e.id)+'"'+((!e.visible||e.autoHidden||e.ended)?' class="ldhid"':'')+'>'
           +'<td><span class="ldst '+cls+'" title="'+srvEsc(st&&st.error||'')+'"><i></i>'+lab+'</span></td>'
-          +'<td><b>'+srvEsc(e.name||e.host)+'</b> '+ldResetChip(e.resetPeriod)+ldIpChip(e.maxPerIp)+(e.desc?'<div class="ldline" style="margin:0">'+srvEsc(e.desc)+'</div>':'')+'</td>'
+          +'<td><b>'+srvEsc(e.name||e.host)+'</b> '+ldResetChip(e.resetPeriod)+ldIpChip(e.maxPerIp)+ldEventChip(e)
+            +(e.adminNote?'<span class="ldchip" title="'+srvEsc(e.adminNote)+'">📝 note</span>':'')
+            +(e.desc?'<div class="ldline" style="margin:0">'+srvEsc(e.desc)+'</div>':'')
+            +(e.link?'<div class="ldline" style="margin:0">'+ldLinkHtml(e.link)+'</div>':'')+'</td>'
           +'<td><span class="ldaddr">'+srvEsc(e.host)+':'+e.port+'</span>'+(e.tls?'<span class="ldchip">TLS</span>':'')+(e.tls&&e.noverify?'<span class="ldchip warn">cert not checked</span>':'')+'</td>'
           +'<td>'+srvEsc(ldPlace(e))+'</td>'
           +'<td>'+srvEsc(act)+'</td>'
@@ -1807,7 +1849,19 @@
     var gc=$('ldGlobalCap'), ic=_ld.ipCap||{};
     if(gc) gc.textContent='Players per IP: each server sets how many players may connect at the same time from one address (default '+(ic.def||3)+', 1 to '+(ic.playerMax||5)+' in the request form, up to '+(ic.max||50)+' here). Global guard: '+(ic.global>0?('at most '+ic.global+' connections per IP to this whole proxy'):'the proxy-wide per-IP cap is off')+' (PROXY_MAX_WS_PER_IP, server setting) — no server can go above it.';
   }
-  function renderLanDir(){ if(!_ld) return; ldBadge(); renderLdPending(); renderLdEntries(); renderLdSettings(); }
+  function renderLdRefused(){
+    var box=$('ldRefused'); if(!box) return;
+    var list=_ld.refused||[];
+    if($('ldRefN')) $('ldRefN').textContent=list.length?'· '+list.length:'';
+    if($('ldRefClear')) $('ldRefClear').style.display=list.length?'':'none';
+    box.innerHTML=list.length?list.map(function(r){
+      return '<div class="ldref"><b>'+srvEsc(r.name||r.host)+'</b> <span class="ldaddr">'+srvEsc(r.host)+':'+r.port+'</span>'
+        +(r.nick?' · from '+srvEsc(r.nick):'')+' · refused '+ldAgo(r.at)
+        +'<div class="ldline" style="margin:2px 0 0">'+(r.reason?'Reason: '+srvEsc(r.reason):'<span class="muted">No reason given.</span>')+'</div></div>';
+    }).join(''):'<div class="empty">None.</div>';
+  }
+  function renderLanDir(){ if(!_ld) return; ldBadge(); renderLdPending(); renderLdEntries(); renderLdRefused(); renderLdSettings(); }
+  if($('ldRefClear')) $('ldRefClear').addEventListener('click',function(){ if(!confirm('Clear the list of refused requests?')) return; ldPost({action:'clearRefused'},'ldPendState','Cleared'); });
   if($('ldAddBtn')) $('ldAddBtn').addEventListener('click',function(){ _ldEdit={kind:'new'}; renderLanDir(); });
   if($('ldAccept')) $('ldAccept').addEventListener('change',function(ev){
     ldPost({action:'settings',settings:{acceptRequests:!!ev.target.checked}},'ldPendState',ev.target.checked?'Requests open':'Requests closed');

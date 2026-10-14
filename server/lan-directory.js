@@ -17,10 +17,14 @@
 // is the operator's own infrastructure (Internet mode, TLS pins, SNI); this
 // one holds third-party community servers.
 //
-// Privacy: no IP, nickname or device token is ever stored. The per-IP
-// submission limit lives in memory only and forgets itself every day. The
-// player gets no follow-up on a proposal ("N1", decided 2026-10-14): the
-// answer is the server appearing in the list.
+// Privacy: no IP or device token is ever stored. The per-IP submission limit
+// lives in memory only and forgets itself every day. The player gets no
+// follow-up on a proposal ("N1", decided 2026-10-14): the answer is the server
+// appearing in the list. What the requester types for the admins only (web.55)
+// -- nickname, note, contact -- stays out of every public view; the contact is
+// erased as soon as the admin approves or rejects. To tell the admin how many
+// requests came from one address, a request carries a salted hash of the IP
+// (`src`, per-install salt), kept 30 days, never shown -- only the count is.
 //
 // Anti-abuse: the submit-time check makes this proxy open a TCP connection
 // to a host chosen by an anonymous visitor. So the port must already be an
@@ -73,7 +77,9 @@ function cleanIpCap(v, max) {
   return Math.max(1, Math.min(max, n));
 }
 function cleanReset(p) { var v = String(p || '').trim().toLowerCase(); return RESET_PERIODS.indexOf(v) >= 0 ? v : DEFAULT_RESET; }
-const LIMITS = Object.freeze({ pending: 100, entries: 200, name: 40, desc: 140, testsPerIpHour: 20 });
+const LIMITS = Object.freeze({ pending: 100, entries: 200, name: 40, desc: 140, testsPerIpHour: 20,
+  note: 500, adminNote: 1000, nick: 32, contact: 120, link: 200, reason: 200, refused: 50, sources: 1000 });
+const SOURCE_DAYS = 30, REFUSED_DAYS = 180, EVENT_MAX_DAYS = 366;
 
 // ── Sanitizers ─────────────────────────────────────────────────────
 function cleanText(s, max) {
@@ -95,6 +101,40 @@ function cleanHost(h) {
     if (!l || l.length > 63 || l.charAt(0) === '-' || l.charAt(l.length - 1) === '-') return '';
   }
   return s;
+}
+// Multi-line free text (notes): control characters and angle brackets out,
+// at most two consecutive line breaks.
+function cleanNote(s, max) {
+  return String(s == null ? '' : s)
+    .replace(/\r\n?/g, '\n')
+    .replace(/[\u0000-\u0009\u000b-\u001f\u007f-\u009f<>]/g, ' ')
+    .replace(/[ \t]+/g, ' ')
+    .replace(/ *\n */g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+    .slice(0, max);
+}
+// A community link shown to every player: http(s) only, no credentials.
+function cleanLink(s) {
+  var v = String(s == null ? '' : s).trim();
+  if (!v || v.length > LIMITS.link) return '';
+  if (/^[a-z][a-z0-9+.-]*:\/\//i.test(v) && !/^https?:\/\//i.test(v)) return '';   // ftp://, file://…
+  if (!/^https?:\/\//i.test(v)) v = 'https://' + v;
+  try {
+    var u = new URL(v);
+    if ((u.protocol !== 'https:' && u.protocol !== 'http:') || u.username || u.password || !cleanHost(u.hostname)) return '';
+    var out = u.href;
+    return out.length <= LIMITS.link ? out : '';
+  } catch (e) { return ''; }
+}
+// End of an event server (ms, 0 = permanent): « YYYY-MM-DD » is the last day,
+// up to 23:59:59 server time; a number is taken as is.
+function cleanUntil(v) {
+  if (v == null || v === '' || v === 0 || v === '0') return 0;
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(v).trim());
+  if (m) { var d = new Date(+m[1], +m[2] - 1, +m[3], 23, 59, 59, 0); return (d.getMonth() === +m[2] - 1) ? d.getTime() : 0; }
+  var n = Number(v);
+  return (Number.isFinite(n) && n > 0 && n < 8.64e15) ? Math.floor(n) : 0;
 }
 function cleanPort(p) { var n = parseInt(p, 10); return (Number.isInteger(n) && n >= 1 && n <= 65535) ? n : 0; }
 function cleanCountry(c) { var s = String(c || '').trim().toUpperCase(); return /^[A-Z]{2}$/.test(s) ? s : ''; }
@@ -131,15 +171,30 @@ function cleanFields(raw, admin, ipMax) {
     lang: cleanLang(raw.lang),
     desc: cleanText(raw.desc, LIMITS.desc),
     resetPeriod: cleanReset(raw.resetPeriod),
-    maxPerIp: cleanIpCap(raw.maxPerIp, ipMax || IP_PLAYER_MAX)
+    maxPerIp: cleanIpCap(raw.maxPerIp, ipMax || IP_PLAYER_MAX),
+    link: cleanLink(raw.link),
+    until: cleanUntil(raw.until)
   };
   if (admin) {
     out.noverify = !!raw.noverify;
     out.sni = cleanSni(raw.sni);
     out.visible = raw.visible !== false;
+    out.adminNote = cleanNote(raw.adminNote, LIMITS.adminNote);
   }
   return out;
 }
+// What the requester writes for the admins only (never in a public view).
+function cleanPrivate(raw) {
+  raw = (raw && typeof raw === 'object') ? raw : {};
+  return {
+    nick: cleanText(raw.nick, LIMITS.nick),
+    note: cleanNote(raw.note, LIMITS.note),
+    contact: cleanText(raw.contact, LIMITS.contact),
+    owner: raw.owner === true,
+    uiLang: cleanLang(raw.uiLang)
+  };
+}
+function cleanSrc(s) { var v = String(s || ''); return /^[a-f0-9]{16}$/.test(v) ? v : ''; }
 function normProbe(p) {
   if (!p || typeof p !== 'object') return null;
   return {
@@ -155,7 +210,14 @@ function normPending(r) {
   var f = cleanFields(r, false, IP_HARD_MAX);
   var id = cleanId(r.id);
   if (!id || !f.host || !f.port) return null;
-  return Object.assign({ id: id }, f, { submittedAt: num(r.submittedAt, 0, 8.64e15, 0), probe: normProbe(r.probe) });
+  return Object.assign({ id: id }, f, cleanPrivate(r), { src: cleanSrc(r.src), submittedAt: num(r.submittedAt, 0, 8.64e15, 0), probe: normProbe(r.probe) });
+}
+function normRefused(r) {
+  if (!r || typeof r !== 'object') return null;
+  var host = cleanHost(r.host), port = cleanPort(r.port);
+  if (!host || !port) return null;
+  return { name: cleanText(r.name, LIMITS.name) || host, host: host, port: port, nick: cleanText(r.nick, LIMITS.nick),
+           reason: cleanText(r.reason, LIMITS.reason), at: num(r.at, 0, 8.64e15, 0), submittedAt: num(r.submittedAt, 0, 8.64e15, 0) };
 }
 function normEntry(r) {
   if (!r || typeof r !== 'object') return null;
@@ -284,13 +346,31 @@ function createLanDirectory(deps) {
   function settings() { return normSettings(store().settings); }
   function pending() { var a = store().pending; return Array.isArray(a) ? a.map(normPending).filter(Boolean) : []; }
   function entries() { var a = store().entries; return Array.isArray(a) ? a.map(normEntry).filter(Boolean) : []; }
+  function refused() {
+    var a = store().refused, t = now();
+    return Array.isArray(a) ? a.map(normRefused).filter(function (x) { return x && t - x.at < REFUSED_DAYS * 86400000; }) : [];
+  }
+  // Salted hashes of the addresses requests came from (see the privacy note).
+  function sources() {
+    var a = store().sources, t = now();
+    return Array.isArray(a) ? a.filter(function (x) { return x && cleanSrc(x.s) && Number(x.at) > 0 && t - x.at < SOURCE_DAYS * 86400000; })
+                                 .map(function (x) { return { s: x.s, at: Number(x.at) }; }) : [];
+  }
+  function srcOf(ip) {
+    var s = store();
+    if (!/^[a-f0-9]{32}$/.test(String(s.salt || ''))) { s.salt = crypto.randomBytes(16).toString('hex'); }
+    return crypto.createHash('sha256').update(s.salt + '|' + String(ip || '')).digest('hex').slice(0, 16);
+  }
   function write(next) {
     var s = store();
     if ('settings' in next) s.settings = next.settings;
     if ('pending' in next) s.pending = next.pending;
     if ('entries' in next) s.entries = next.entries;
+    if ('refused' in next) s.refused = next.refused;
+    if ('sources' in next) s.sources = next.sources;
     if (deps.save) deps.save();
   }
+  function ended(e) { return !!(e.until && now() > e.until); }
   function findByAddr(list, host, port) {
     for (var i = 0; i < list.length; i++) if (list[i].host === host && list[i].port === port) return list[i];
     return null;
@@ -333,13 +413,14 @@ function createLanDirectory(deps) {
     var cfg = settings();
     var list = [];
     entries().forEach(function (e) {
-      if (!e.visible) return;
+      if (!e.visible || ended(e)) return;   // an event server leaves the list after its last day
       var st = status.get(e.id) || null;
       if (isAutoHidden(e, st, cfg)) return;
       if (!cfg.showOffline && st && st.online === false) return;
       list.push({
         id: e.id, name: e.name, host: e.host, port: e.port, tls: e.tls,
         country: e.country, lang: e.lang, desc: e.desc, resetPeriod: e.resetPeriod,
+        link: e.link || '', until: e.until || 0,
         online: st ? st.online : null,
         players: (st && st.online && Number.isInteger(st.players)) ? st.players : null
       });
@@ -353,16 +434,22 @@ function createLanDirectory(deps) {
     return { acceptRequests: cfg.acceptRequests, manualEntry: cfg.manualEntry, localEntry: cfg.localEntry, servers: list };
   }
   function adminView() {
-    var cfg = settings();
+    var cfg = settings(), srcList = sources();
     return {
       ok: true,
       ipCap: { def: IP_DEFAULT, playerMax: IP_PLAYER_MAX, max: ipCapMax(), global: deps.globalIpCap ? deps.globalIpCap() : 0 },
       settings: cfg,
-      pending: pending().sort(function (a, b) { return b.submittedAt - a.submittedAt; }),
+      // `src` never leaves the server: only how many requests share it.
+      pending: pending().sort(function (a, b) { return b.submittedAt - a.submittedAt; }).map(function (r) {
+        var n = r.src ? srcList.filter(function (x) { return x.s === r.src; }).length : 0;
+        var o = Object.assign({}, r, { sameSource: n }); delete o.src; return o;
+      }),
       entries: entries().map(function (e) {
         var st = status.get(e.id) || null;
-        return Object.assign({}, e, { status: st, autoHidden: isAutoHidden(e, st, cfg) });
-      })
+        return Object.assign({}, e, { status: st, autoHidden: isAutoHidden(e, st, cfg), ended: ended(e) });
+      }),
+      refused: refused().sort(function (a, b) { return b.at - a.at; }),
+      limits: { note: LIMITS.note, adminNote: LIMITS.adminNote, reason: LIMITS.reason, sourceDays: SOURCE_DAYS, eventMaxDays: EVENT_MAX_DAYS }
     };
   }
 
@@ -426,13 +513,21 @@ function createLanDirectory(deps) {
     });
   }
 
-  // POST /api/lan-directory/propose  { name, host, port, tls, country, lang, desc }
+  // POST /api/lan-directory/propose  { name, host, port, tls, country, lang, desc,
+  //   link, kind, until, maxPerIp, resetPeriod,  nick, note, contact, owner, uiLang }
   function propose(body, ip, cb) {
     var cfg = settings();
     if (!cfg.acceptRequests) return cb({ ok: false, error: 'closed' });
+    body = (body && typeof body === 'object') ? body : {};
     var f = cleanFields(body, false);
+    var priv = cleanPrivate(body);
     if (!f.host) return cb({ ok: false, error: 'host' });
     if (!f.port) return cb({ ok: false, error: 'port' });
+    if (!priv.owner) return cb({ ok: false, error: 'owner' });
+    if (String(body.link || '').trim() && !f.link) return cb({ ok: false, error: 'link' });
+    if (body.kind === 'event') {
+      if (!f.until || f.until <= now() || f.until > now() + EVENT_MAX_DAYS * 86400000) return cb({ ok: false, error: 'until' });
+    } else f.until = 0;
     if (findByAddr(entries(), f.host, f.port)) return cb({ ok: false, error: 'listed' });
     if (findByAddr(pending(), f.host, f.port)) return cb({ ok: false, error: 'pending' });
     if (pending().length >= LIMITS.pending) return cb({ ok: false, error: 'full' });
@@ -447,9 +542,11 @@ function createLanDirectory(deps) {
       if (findByAddr(p, f.host, f.port)) return cb({ ok: false, error: 'pending' });
       if (p.length >= LIMITS.pending) return cb({ ok: false, error: 'full' });
       ipCountProposal(key);
-      var t = shapeTest(r);
-      p.push(Object.assign({ id: newId() }, f, { submittedAt: now(), probe: Object.assign(t, { at: now() }) }));
-      write({ pending: p });
+      var t = shapeTest(r), src = srcOf(key);
+      var srcs = sources(); srcs.push({ s: src, at: now() });
+      if (srcs.length > LIMITS.sources) srcs = srcs.slice(-LIMITS.sources);
+      p.push(Object.assign({ id: newId() }, f, priv, { src: src, submittedAt: now(), probe: Object.assign(t, { at: now() }) }));
+      write({ pending: p, sources: srcs });
       cb({ ok: true });
     });
   }
@@ -472,7 +569,10 @@ function createLanDirectory(deps) {
       if (pi < 0) return cb({ ok: false, error: 'unknown request' });
       if (e.length >= LIMITS.entries) return cb({ ok: false, error: 'directory full' });
       var req = p[pi];
-      var f = cleanFields(Object.assign({}, req, { noverify: req.probe && req.probe.certUntrusted }, d.entry || {}), true, ipCapMax());
+      // The requester's note becomes the entry's internal admin note; the
+      // contact is not carried over (erased with the request).
+      var carried = (req.nick ? 'From ' + req.nick + (req.note ? ':\n' : '') : '') + (req.note || '');
+      var f = cleanFields(Object.assign({}, req, { noverify: req.probe && req.probe.certUntrusted, adminNote: carried }, d.entry || {}), true, ipCapMax());
       if (!f.host || !f.port) return cb({ ok: false, error: 'host and port required' });
       if (findByAddr(e, f.host, f.port)) return cb({ ok: false, error: 'already listed' });
       var seen = (req.probe && req.probe.pokerth && req.probe.at) || 0;
@@ -485,8 +585,17 @@ function createLanDirectory(deps) {
     }
     if (action === 'reject') {
       if (pi < 0) return cb({ ok: false, error: 'unknown request' });
+      // Kept for the admins (why it was refused); no contact, no note, no source.
+      var rj = p[pi], rl = refused();
+      rl.push({ name: rj.name, host: rj.host, port: rj.port, nick: rj.nick || '', reason: cleanText(d.reason, LIMITS.reason),
+                at: now(), submittedAt: rj.submittedAt || 0 });
+      if (rl.length > LIMITS.refused) rl = rl.slice(-LIMITS.refused);
       p.splice(pi, 1);
-      write({ pending: p });
+      write({ pending: p, refused: rl });
+      return cb(adminView());
+    }
+    if (action === 'clearRefused') {
+      write({ refused: [] });
       return cb(adminView());
     }
     if (action === 'add') {
@@ -625,6 +734,9 @@ module.exports = {
   isPrivateAddress: isPrivateAddress,
   cleanHost: cleanHost,
   cleanText: cleanText,
+  cleanLink: cleanLink,
+  cleanUntil: cleanUntil,
+  cleanNote: cleanNote,
   normSettings: normSettings,
   DEFAULT_SETTINGS: DEFAULT_SETTINGS,
   RESET_PERIODS: RESET_PERIODS,

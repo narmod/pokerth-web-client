@@ -9,7 +9,9 @@ export default {
   hsLanPropose: "Sends your own PokerTH server to the admins of this site. Once approved, it appears in this list for every player.",
   hsLanPropTest: "Checks that a PokerTH server answers at this address and port. You can send the request only after a successful test.",
   hsLanPropTls: "Tick it if your server listens on its encrypted port (usually 7236).",
-  hsLanPropWin: "The form to propose your server: its name, address and port, then a connection test before sending. Nothing about you is kept.",
+  hsLanPropWin: "The form to propose your server: its name, address and port, a connection test, then a few words for the admins only — never shown to players.",
+  hsLanPropKind: "Permanent, or an event with a last day: after that day the server leaves the list by itself.",
+  hsLanPropPrivate: "Only the admins read this part: your nickname, a note explaining the request, and a contact if you want one (erased once they decide). Tick the box to confirm the server is yours or that its owner agrees.",
   name: 'Ace’s Help',
   aceLabel: 'Ace’s Help — tap for my menu',
   // first-launch offer (once, D3)
