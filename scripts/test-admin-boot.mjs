@@ -32,6 +32,10 @@ const CANNED = {
     guide: { acceptance: { offered: 5, accepted: 2, declined: 1, rate: 0.4 }, contexts: { 'lobby-ranking': { shown: 10, done: 2, dismissed: 3 } },
       funnel: { highlighted: 10, joined: 4, started: 2, joinRate: 0.4, startRate: 0.5 }, create: { shown: 1, created: 0 }, guests: { shown: 2, redirect: 1 }, rankedStarts: 3 },
     guidePeriod: { days: 0, summary: null }, guideSince: 1700000000000 },
+  '/admin/broadcasts': { ok: true, serverNow: Date.now(), tz: 'Europe/Paris',
+    jobs: [{ id: 'bc_1', message: 'Club night', icon: '', target: 'lan:lan_bbbbbb01', schedule: { type: 'daily', time: '20:00' }, enabled: true, runCount: 0 },
+           { id: 'bc_2', message: 'Gone', icon: '', target: 'lan:lan_cccccc01', schedule: { type: 'daily', time: '21:00' }, enabled: true, runCount: 0 }],
+    lanTargets: [{ id: 'lan:lan_bbbbbb01', name: 'Berlin', visible: true }, { id: 'lan:lan_bbbbbb02', name: 'Old club', visible: false }] },
   '/admin/lan-boards': { ok: true, resetPeriod: 'monthly', defaultPlayers: 4, boards: [
     { id: 'lan_bbbbbb01', name: 'Berlin', host: 'berlin.example.org', port: 7234, visible: true, resetPeriod: 'weekly', players: 6 }] },
   '/admin/lan-directory': { ok: true, ipCap: { def: 3, playerMax: 5, max: 20, global: 20 },
@@ -200,6 +204,20 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   const sp = posts.filter((p) => p.url.startsWith('/admin/lan-directory')).pop();
   ok(sp && sp.body.action === 'settings' && sp.body.settings.manualEntry === false && sp.body.settings.localEntry === true && sp.body.settings.checkMinutes === 5, 'Save settings posts manual entry off, local server kept');
   ok(errors.length === 0, 'the LAN directory tab threw nothing' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
+}
+// ── Broadcasts: one LAN server as a target ───────────────────────────────
+{
+  doc.querySelector('.tab[data-t="broadcast"]').click();
+  await new Promise((r) => setTimeout(r, 200));
+  const opts = (id) => [...$(id).querySelectorAll('option')].map((o) => o.value);
+  ok(['bcTarget', 'bcNowTarget'].every((id) => { const o = opts(id); return o.indexOf('lan') >= 0 && o.indexOf('lan:lan_bbbbbb01') > o.indexOf('lan') && o.indexOf('lan:lan_bbbbbb01') < o.indexOf('offline'); }), 'both target pickers keep « all LAN » and add each listed LAN server');
+  ok(/Old club \(hidden\)/.test($('bcTarget').textContent), 'a hidden server is marked');
+  ok(/LAN: Berlin/.test($('bcList').textContent) && /LAN: removed server/.test($('bcList').textContent), 'the list names the targeted server (or says it was removed)');
+  $('bcNowTarget').value = 'lan:lan_bbbbbb01'; $('bcNowMsg').value = 'hello club'; $('bcNowSend').click();
+  await new Promise((r) => setTimeout(r, 50));
+  const bp = posts.filter((p) => p.url === '/admin/broadcast-now').pop();
+  ok(bp && bp.body.target === 'lan:lan_bbbbbb01', 'Send now posts the chosen LAN server');
+  ok(errors.length === 0, 'the broadcast tab threw nothing' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
 }
 // ── Leaderboard tab: one board per listed LAN server ─────────────────────
 {

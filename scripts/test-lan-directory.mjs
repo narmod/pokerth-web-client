@@ -325,6 +325,34 @@ try {
   const w2 = await openWs('capsid-2');
   ok(w2.code() === 4430, 'a second one is refused with 4430 (got ' + w2.code() + ')');
   w1.w.terminate(); w2.w.terminate();
+  // ── broadcasts to one LAN server ('lan:<id>') or to all of them ('lan') ──
+  await http('/admin/lan-directory', { token: TOKEN, action: 'update', id, entry: { maxPerIp: 5 } });   // the two sockets above are still in their grace period
+  const got = [];
+  const w3 = new WebSocket(wsUrl('bcsid-1'));
+  w3.on('message', (m, bin) => { if (!bin) got.push(String(m)); });
+  w3.on('error', () => {});
+  await new Promise((r2) => setTimeout(r2, 900));
+  h = await http('/admin/broadcasts?token=' + TOKEN);
+  ok(h.json && h.json.ok && h.json.lanTargets.length === 1 && h.json.lanTargets[0].id === 'lan:' + id && h.json.lanTargets[0].name === 'Fake club', 'broadcast admin: the listed LAN servers are offered as targets');
+  const bnow = async (target, message) => (await http('/admin/broadcast-now', { token: TOKEN, target, message })).json;
+  let r = await bnow('lan:' + id, 'to-this-server');
+  ok(r && r.ok && r.notified === 1, 'a broadcast to that LAN server reaches its player (' + (r && r.notified) + ')');
+  r = await bnow('lan:lan_000000000000', 'to-another-server');
+  ok(r && r.ok && r.notified === 0, 'a broadcast to another (or removed) LAN server reaches nobody here');
+  r = await bnow('lan', 'to-all-lan');
+  ok(r && r.ok && r.notified === 1, 'a broadcast to all LAN servers still reaches them');
+  r = await bnow('pthnet', 'to-pthnet');
+  ok(r && r.ok && r.notified === 0, 'a pokerth.net broadcast does not reach LAN players');
+  await new Promise((r2) => setTimeout(r2, 200));
+  ok(got.some((m) => /to-this-server/.test(m)) && got.some((m) => /to-all-lan/.test(m)) && !got.some((m) => /to-another-server|to-pthnet/.test(m)), 'the player received exactly the two messages meant for him');
+  h = await http('/admin/broadcasts', { token: TOKEN, message: 'weekly club night', target: 'lan:' + id, schedule: { type: 'daily', time: '20:00' } });
+  ok(h.json && h.json.ok, 'a scheduled broadcast can target one LAN server');
+  h = await http('/admin/broadcasts?token=' + TOKEN);
+  ok(h.json && h.json.jobs.length === 1 && h.json.jobs[0].target === 'lan:' + id, 'and keeps that target');
+  h = await http('/admin/broadcasts', { token: TOKEN, message: 'x', target: 'lan:../etc', schedule: { type: 'daily', time: '20:00' } });
+  h = await http('/admin/broadcasts?token=' + TOKEN);
+  ok(h.json && h.json.jobs[1] && h.json.jobs[1].target === 'all', 'a malformed target falls back to all modes');
+  w3.terminate();
   h = await http('/admin/lan-directory', { token: TOKEN, action: 'remove', id });
   await new Promise((r2) => setTimeout(r2, 100));
   const lb = JSON.parse(fs.readFileSync(path.join(tmp, 'lan-boards.json'), 'utf8'));

@@ -137,6 +137,12 @@ highlights below.
   list is the only place it is shown (`web.49`). The options now carry the server name only
   (players and the local address moved to the status line), and the reset period is a plain
   line styled like the status line instead of a pill (`web.50`).
+  Broadcasts to one LAN server (`web.51`): besides « LAN (all servers) », both target pickers
+  of the Broadcasts tab list each directory server (target `lan:<id>`, resolved to its
+  host:port at send time — an edited address is followed, a removed server reaches nobody and
+  its scheduled messages say « removed server »). The list comes with `GET /admin/broadcasts`
+  (`lanTargets`, names only), so a broadcast-scope token can use it. MySQL mirror:
+  `broadcasts.target` widened to VARCHAR(48).
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the

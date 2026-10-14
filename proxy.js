@@ -7796,10 +7796,11 @@ async function initDb() {
       'id VARCHAR(64) PRIMARY KEY, message TEXT, icon VARCHAR(32) DEFAULT NULL, schedule_json TEXT, ' +
       'enabled TINYINT(1) NOT NULL DEFAULT 0, start_at BIGINT DEFAULT NULL, end_at BIGINT DEFAULT NULL, countdown_at BIGINT DEFAULT NULL, max_runs INT DEFAULT NULL, ' +
       'created_at BIGINT DEFAULT NULL, last_run BIGINT DEFAULT NULL, run_count INT NOT NULL DEFAULT 0, ' +
-      "target VARCHAR(16) NOT NULL DEFAULT 'all', " +
+      "target VARCHAR(48) NOT NULL DEFAULT 'all', " +
       'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
     // Migration douce pour les tables existantes (MariaDB ; sans IF NOT EXISTS on ignore l'erreur "duplicate column").
     try { await _dbPool.query("ALTER TABLE broadcasts ADD COLUMN IF NOT EXISTS target VARCHAR(16) NOT NULL DEFAULT 'all'"); } catch (e) {}
+    try { await _dbPool.query("ALTER TABLE broadcasts MODIFY COLUMN target VARCHAR(48) NOT NULL DEFAULT 'all'"); } catch (e) {}  // 'lan:<id>' targets
     try { await _dbPool.query('ALTER TABLE broadcasts ADD COLUMN IF NOT EXISTS start_at BIGINT DEFAULT NULL'); } catch (e) {}
     try { await _dbPool.query('ALTER TABLE broadcasts ADD COLUMN IF NOT EXISTS countdown_at BIGINT DEFAULT NULL'); } catch (e) {}
     try { await _dbPool.query('ALTER TABLE traffic_daily ADD COLUMN IF NOT EXISTS conn_live INT NOT NULL DEFAULT 0'); } catch (e) {}
@@ -8375,9 +8376,21 @@ function restartOnlyCmd() {
 function broadcastNotice(text, target) {
   // target absent ou 'all' = tout le monde ; sinon seuls les clients dont le
   // mode (ws._bcMode : 'pthnet' | 'lan' | 'offline') correspond.
+  // 'lan:<id>' = one server of the LAN directory: LAN players whose socket is
+  // bridged to that entry's host:port (resolved at send time, so an address
+  // edited in the directory is followed; a removed server reaches nobody).
   const tgt = (target && target !== 'all') ? target : null;
+  let lanKey = null;
+  if (tgt && tgt.indexOf('lan:') === 0) {
+    const e = LAN_DIR.entries().filter(function (x) { return x.id === tgt.slice(4); })[0];
+    if (!e) return 0;
+    lanKey = (String(e.host) + ':' + e.port).toLowerCase();
+  }
   let n = 0;
-  try { wss.clients.forEach(function (c) { if (c.readyState === 1 && (!tgt || c._bcMode === tgt) && c.bufferedAmount <= MAX_WS_SEND_QUEUE) { try { c.send(text); n++; } catch (e) {} } }); } catch (e) {}
+  try { wss.clients.forEach(function (c) {
+    const hit = !tgt || (lanKey ? (c._bcMode === 'lan' && String(c._relayKey || '').toLowerCase() === lanKey) : c._bcMode === tgt);
+    if (c.readyState === 1 && hit && c.bufferedAmount <= MAX_WS_SEND_QUEUE) { try { c.send(text); n++; } catch (e) {} }
+  }); } catch (e) {}
   return n;
 }
 function clearScheduledRestart() {
@@ -8526,8 +8539,11 @@ const _BC_MAXT = 2000000000; // ~23 days, under setTimeout's 32-bit ceiling → 
 function _bcIcon(x) { return _BC_ICONS.indexOf(x) >= 0 ? x : ''; }
 // Cible d'une diffusion : tous les modes ou un seul (pokerth.net direct /
 // LAN via proxy / entraînement offline). Voir ws._bcMode.
+// 'lan:<directory id>' targets one listed LAN server (see broadcastNotice).
 const _BC_TARGETS = ['all', 'pthnet', 'lan', 'offline'];
-function _bcTarget(x) { return _BC_TARGETS.indexOf(x) >= 0 ? x : 'all'; }
+function _bcTarget(x) { return (_BC_TARGETS.indexOf(x) >= 0 || /^lan:lan_[0-9a-f]{12}$/.test(String(x))) ? x : 'all'; }
+// LAN servers an admin with the broadcast scope may target (names only).
+function _bcLanTargets() { return LAN_DIR.entries().map(function (e) { return { id: 'lan:' + e.id, name: e.name || e.host, visible: e.visible !== false }; }); }
 // Trame d'une diffusion : INFO: classique, ou INFOCD:<échéance>: avec compte à
 // rebours affiché en direct côté client (inscriptions de tournoi, etc.).
 function _bcFrame(icon, message, cdAt) {
@@ -10537,7 +10553,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       return { id: j.id, message: j.message, icon: j.icon || '', target: j.target || 'all', schedule: j.schedule, enabled: !!j.enabled, lastRun: j.lastRun || null, runCount: j.runCount || 0, startAt: j.startAt || null, endAt: j.endAt || null, countdownAt: j.countdownAt || null, maxRuns: j.maxRuns || null, createdAt: j.createdAt || null, nextRun: (j.enabled ? computeNextRun(j, now) : null) };
     });
     let tz = ''; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
-    return adminJson(res, 200, { ok: true, jobs: jobs, serverNow: now, tz: tz });
+    return adminJson(res, 200, { ok: true, jobs: jobs, serverNow: now, tz: tz, lanTargets: _bcLanTargets() });
   }
   if (reqPathOnly === '/admin/broadcast-now' && req.method === 'POST') {
     return readJsonBody(req, function (d) {

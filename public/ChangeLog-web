@@ -1,3 +1,6 @@
+2026-10-14 version 2.1.10-web.51:
+- new: server announcements can be sent to the players of one LAN server only, or to all LAN servers as before
+
 2026-10-14 version 2.1.10-web.50:
 - improvement: « LAN server » list: only the server names are listed; players and the leaderboard reset period are on plain lines under the list
 
