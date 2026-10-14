@@ -45,13 +45,24 @@ ok(p.show && !p.list && p.propose && !p.locked, 'empty directory, requests open:
 p = M.plan({ cfg: M.normalizeConfig({ servers: [], manualEntry: false, acceptRequests: true }), isLan: true });
 ok(p.show && p.empty && p.locked, 'empty directory, manual entry off: « no server listed yet », fields hidden');
 p = M.plan({ cfg: cfg(), isLan: true, host: 'b.example.org', port: '7236', remembered: true });
-ok(p.select === 'b' && p.locked && !p.apply, 'the remembered address selects its entry');
+ok(p.select === 'b' && p.locked && p.apply && p.apply.id === 'b' && p.apply.tls === true, 'the remembered address selects its entry, which also sets TLS (hidden checkbox)');
 p = M.plan({ cfg: cfg(), isLan: true, host: 'mybox', port: '7234', remembered: true });
 ok(p.select === '__manual__' && !p.locked, 'a remembered address outside the list keeps manual entry');
 p = M.plan({ cfg: cfg(), isLan: true, host: 'localhost', port: '7234', remembered: false });
 ok(p.select === 'a' && p.apply && p.apply.id === 'a' && p.locked, 'first visit: the first (online) server is picked');
 p = M.plan({ cfg: cfg({ manualEntry: false }), isLan: true, host: 'mybox', port: '7234', remembered: true });
 ok(p.select === 'a' && p.locked && !p.manual, 'manual entry off: a stray address falls back to the list');
+// Invite links (#join=…&s=host:port): never swapped onto another server
+let I = M.withInvite(cfg({ manualEntry: false }), { host: 'Hidden.Example.org', port: '7240', tls: null });
+ok(I.servers[0].id === 'invite' && I.servers[0].host === 'hidden.example.org' && I.servers[0].port === 7240 && I.servers[0].tls === false && I.servers.length === 3, 'an invite to a server not in the list gets its own entry, first');
+p = M.plan({ cfg: I, isLan: true, host: 'hidden.example.org', port: '7240', remembered: true });
+ok(p.select === 'invite' && p.locked && p.apply.host === 'hidden.example.org', 'manual entry off: the invite target is kept, not replaced by the first server');
+ok(M.withInvite(cfg(), { host: 'b.example.org', port: '7236', tls: null }).servers.length === 2, 'an invite to a listed server uses its entry');
+p = M.plan({ cfg: M.withInvite(cfg(), { host: 'b.example.org', port: '7236', tls: null }), isLan: true, host: 'b.example.org', port: '7236', remembered: true });
+ok(p.select === 'b' && p.apply.tls === true, 'and the entry sets TLS even when the link does not say it');
+ok(M.withInvite(cfg(), { host: 'x.example.org', port: '7236', tls: '1' }).servers[0].tls === true, 'tls=1 in the link is kept for an unlisted server');
+const C0 = cfg();
+ok(M.withInvite(C0, null) === C0 && M.withInvite(C0, { host: '' }) === C0, 'no invite: list unchanged');
 // « Local server » (web.44)
 const LOC = { host: 'MyBox.lan', port: '7234', tls: false };
 let L = M.withLocal(cfg({ localEntry: true }), LOC, 'Local server');
@@ -85,7 +96,8 @@ fs.writeFileSync(cfgFile, JSON.stringify({ lanDirectory: {
   entries: [
     { id: 'lan_aaaaaa01', name: 'Club local', host: '127.0.0.1', port: FAKE, tls: false, country: 'FR', lang: 'fr', desc: 'Thursday nights', visible: true, addedAt: 1, lastSeen: 0,
       link: 'https://club.example.org/night', until: Date.now() + 5 * 86400000, adminNote: 'SECRET-ADMIN-NOTE' },
-    { id: 'lan_aaaaaa02', name: 'Gone club', host: 'gone.invalid', port: FAKE, tls: false, visible: true, addedAt: 1, lastSeen: Date.now() - 3600000 }
+    { id: 'lan_aaaaaa02', name: 'Gone club', host: 'gone.invalid', port: FAKE, tls: false, visible: true, addedAt: 1, lastSeen: Date.now() - 3600000 },
+    { id: 'lan_aaaaaa03', name: 'Hidden club', host: 'hidden.invalid', port: FAKE, tls: false, visible: false, addedAt: 1, lastSeen: 0 }
   ] } }));
 const PORT = 18000 + Math.floor(Math.random() * 900);
 const TOKEN = 'ui-' + Math.random().toString(36).slice(2);
@@ -228,6 +240,33 @@ try {
   ok(loc.val === 'local' && loc.host === '127.0.0.1' && loc.port === '7234' && loc.locked, 'and is pre-selected: the page host on 7234, fields hidden');
   ok(/Local server · 127\.0\.0\.1:7234/.test(loc.detail), 'its status line names it with its address');
   await page.screenshot({ path: path.join(tmp, 'local.png') });
+
+  console.log('Invite links route to the inviter’s server');
+  // Manual entry off, local server on (the state left above): the cases where
+  // the list could swap the invitee onto another server.
+  const land = async (target, stale) => {
+    const pg = await ctx.newPage();
+    pg.on('pageerror', (e) => errors.push(String(e)));
+    await pg.goto(base + '/');
+    await pg.evaluate((st) => { try { localStorage.setItem('pth_lan_tls', st.tls); localStorage.setItem('pth_lan_host', st.host); localStorage.setItem('pth_lan_port', st.port); } catch (e) {} }, stale);
+    await pg.goto(base + '/?inv=' + Math.random().toString(36).slice(2) + '#join=Friday%20game&s=' + encodeURIComponent(target));
+    await sleep(1800);
+    const r = await pg.evaluate(() => ({
+      val: document.getElementById('lan-dir-sel').value, host: document.getElementById('host').value, port: document.getElementById('port').value,
+      tls: document.getElementById('use-tls').checked, locked: document.body.classList.contains('lan-dir-locked'),
+      opt0: (document.querySelector('#lan-dir-sel option') || {}).textContent || '',
+      banner: getComputedStyle(document.getElementById('invite-banner')).display !== 'none' && document.getElementById('invite-banner-name').textContent }));
+    await pg.close();
+    return r;
+  };
+  const stale = { tls: '1', host: 'gone.invalid', port: String(FAKE) };
+  let iv = await land('127.0.0.1:' + FAKE, stale);
+  ok(iv.val === 'lan_aaaaaa01' && iv.host === '127.0.0.1' && iv.port === String(FAKE) && iv.locked && iv.banner === 'Friday game', 'a link to a listed server selects that server, not the one this device used last');
+  ok(iv.tls === false, 'and its TLS setting replaces this device’s stale one (hidden checkbox)');
+  iv = await land('hidden.invalid:' + FAKE, stale);
+  ok(iv.val === 'invite' && iv.host === 'hidden.invalid' && iv.port === String(FAKE) && iv.locked && /^✉ hidden\.invalid:/.test(iv.opt0), 'a link to an unlisted server keeps that server (its own entry), even with manual entry off');
+  iv = await land('127.0.0.1:7234', stale);
+  ok(iv.val === 'local' && iv.host === '127.0.0.1' && iv.port === '7234', 'a link to this install’s own server selects « Local server »');
   ok(errors.length === 0, 'no page error' + (errors.length ? ': ' + errors[0] : ''));
   if (process.env.LAN_SHOTS) { for (const f of ['list.png', 'propose.png', 'local.png']) fs.copyFileSync(path.join(tmp, f), path.join(process.env.LAN_SHOTS, f)); }
 } finally {

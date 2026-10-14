@@ -101,10 +101,28 @@ export function withLocal(cfg, local, name) {
   const entry = { id: 'local', name: name || 'Local server', host, port, tls: !!local.tls, country: '', lang: '', desc: '', online: null, players: null, local: true };
   return Object.assign({}, cfg, { servers: [entry].concat(cfg.servers) });
 }
+/**
+ * An invite link (#join=…&s=host:port) whose server is not in the list as
+ * shown — unlisted by the admin, auto-hidden, an event past its last day, or
+ * a server outside the directory that this proxy still allows: it gets its
+ * own entry, first and selected, so the list never swaps the invitee onto
+ * another server. The proxy stays the judge (4403 if not allowed).
+ * `target` = window._shareLanTarget ({ host, port, tls: '1' | '0' | null }).
+ */
+export function withInvite(cfg, target) {
+  if (!cfg || !target || !target.host) return cfg;
+  const host = String(target.host).trim().toLowerCase(), port = parseInt(target.port, 10) || 7234;
+  if (!host || matchEntry(cfg.servers, host, port)) return cfg;
+  const entry = { id: 'invite', name: host + (port !== 7234 ? ':' + port : ''), host, port, tls: target.tls === '1' || target.tls === true,
+                  country: '', lang: '', desc: '', online: null, players: null, invite: true };
+  return Object.assign({}, cfg, { servers: [entry].concat(cfg.servers) });
+}
 function _eff() {
   let d = null;
   try { d = window._pthLanDefaults ? window._pthLanDefaults() : null; } catch (e) {}
-  return withLocal(_cfg, d, _t('lanDirLocal', null, 'Local server'));
+  let st = null;
+  try { st = window._shareLanTarget || null; } catch (e) {}
+  return withInvite(withLocal(_cfg, d, _t('lanDirLocal', null, 'Local server')), st);
 }
 
 /**
@@ -147,7 +165,10 @@ export function plan(input) {
   out.empty = !servers.length && !cfg.manualEntry;
   if (!servers.length) { out.locked = !cfg.manualEntry; return out; }
   const hit = matchEntry(servers, input.host, input.port);
-  if (hit) { out.select = hit.id; out.locked = true; return out; }
+  // The entry is the truth for its address: TLS included (the checkbox is
+  // hidden while a listed server is selected, and may still hold the state
+  // of the last server this device used).
+  if (hit) { out.select = hit.id; out.locked = true; out.apply = hit; return out; }
   if (cfg.manualEntry && input.remembered) { out.select = MANUAL; return out; }
   // First visit (or manual entry off): the first server of the list, which the
   // proxy sorts online first.
@@ -181,7 +202,7 @@ function _renderSelect(cfg, plan) {
   const frag = document.createDocumentFragment();
   cfg.servers.forEach((s) => {
     const o = document.createElement('option');
-    o.value = s.id; o.textContent = (s.local ? '★ ' : s.online === true ? '● ' : s.online === false ? '○ ' : '◌ ') + _optionLabel(s);
+    o.value = s.id; o.textContent = (s.invite ? '✉ ' : s.local ? '★ ' : s.online === true ? '● ' : s.online === false ? '○ ' : '◌ ') + _optionLabel(s);
     frag.appendChild(o);
   });
   if (plan.manual) {
@@ -206,7 +227,7 @@ function _renderDetail(cfg, id) {
   dot.className = 'lan-dir-dot ' + (s.local ? 'local' : s.online === true ? 'on' : s.online === false ? 'off' : 'unk');
   dot.setAttribute('aria-hidden', 'true');
   line.appendChild(dot);
-  const bits = s.local ? [s.name, s.host + ':' + s.port] : [s.online === true ? _t('lanDirOnline', null, 'Online') : s.online === false ? _t('lanDirOfflineSt', null, 'Offline') : _t('lanDirUnknown', null, 'Status unknown')];
+  const bits = s.invite ? [s.host + ':' + s.port] : s.local ? [s.name, s.host + ':' + s.port] : [s.online === true ? _t('lanDirOnline', null, 'Online') : s.online === false ? _t('lanDirOfflineSt', null, 'Offline') : _t('lanDirUnknown', null, 'Status unknown')];
   if (s.country) bits.push(_country(s.country));
   if (s.lang) bits.push(_langLabel(s.lang));
   if (s.online && s.players != null) bits.push(_t('lanDirPlayers', { n: s.players }, 'Players: ' + s.players));
@@ -318,6 +339,9 @@ function onSelect() {
   }
   const s = eff.servers.filter((x) => x.id === sel.value)[0];
   if (!s) return;
+  // Picking another server releases the invite target (like editing the
+  // address fields does, see parseShareLink in pokerth.js).
+  if (!s.invite) { try { window._shareLanTarget = null; } catch (e) {} }
   _applyEntry(s);
   try { document.body.classList.add('lan-dir-locked'); } catch (e) {}
   _renderDetail(eff, s.id);
@@ -495,7 +519,7 @@ function _wire() {
   try { if (typeof window._onLangChange === 'function') window._onLangChange(() => { const cs = $('lan-prop-country'); if (cs) while (cs.options.length > 1) cs.remove(1); sync(); }); } catch (e) {}
 }
 
-const LanDirUI = { setConfig, refresh, sync, openPropose, closePropose, testPropose, sendPropose, boardFor, boardInfo };
+const LanDirUI = { setConfig, refresh, sync, openPropose, closePropose, testPropose, sendPropose, boardFor, boardInfo, withInvite };
 try {
   /** @type {any} */ (window).LanDirUI = LanDirUI;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _wire);

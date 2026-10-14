@@ -165,6 +165,13 @@ highlights below.
   rejecting asks for a reason kept in a « Refused requests » list (180 days, 50 max, no
   contact/note). Editor: link, event end, internal note. Privacy page updated. 18 UI keys and
   2 new Ace's Help hotspots (+ the dialog text) in the 83 languages, help paragraph updated.
+  Invite links and the LAN list (`web.56`): an invite to a server missing from the list as
+  shown (unlisted, auto-hidden, event ended, or allowlisted outside the directory) was replaced
+  by the first listed server when manual entry is off — the invitee landed on the wrong server.
+  `withInvite()` now gives the link target its own « ✉ host:port » entry, first and selected
+  (released when the player picks another server). A selected entry also sets the TLS box
+  (hidden while locked) instead of keeping this device's last state. Browser tests land on
+  listed / unlisted / local targets with a stale saved server.
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the
