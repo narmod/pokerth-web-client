@@ -51,6 +51,7 @@ export default {
   c1Flag: "No flag next to your name? Flags come from the pokerth.net account. To show your own flag: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. It appears at your next login.",
   c1Open: "**{name}** is not a ranked game: it does not count for the ranking. A seat is free — shall we join it?",
   c1OpenGuest: "**{name}** is a Normal game, open to guests: it does not count for the ranking. A seat is free — shall we join it?",
+  c1OpenRanked: "**{name}** is a ranked game: it counts for the ranking, with points by your final place. It starts by itself once every seat is taken (**{n}/{max}** now). Shall we join it?",
   // C2 — ranked waiting room (one fact every ~20 s)
   c2Wait: 'Ranked game: **{n}/{max}** players. It starts by itself as soon as the table is full — meanwhile, here is how the ranking works.',
   c2Points: 'Each ranked game hands out points by finishing place: **15, 9, 6, 4, 3, 2, 1** from 1st to 7th, nothing from 8th to 10th — 40 points per table.',

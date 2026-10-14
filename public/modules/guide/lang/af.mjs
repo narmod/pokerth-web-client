@@ -44,6 +44,7 @@ export default {
   c1Flag: "Geen vlag langs jou naam nie? Dit kom van jou pokerth.net-rekening. Om jou eie vlag te wys: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Dit verskyn by jou volgende aanmelding.",
   c1Open: "**{name}** is nie ’n rangspel nie: dit tel nie vir die ranglys nie. Daar is ’n oop plek — sluit ons aan?",
   c1OpenGuest: "**{name}** is ’n normale spel, oop vir gaste: dit tel nie vir die ranglys nie. Daar is ’n oop plek — sluit ons aan?",
+  c1OpenRanked: "**{name}** is ’n rangspel: dit tel vir die ranglys, met punte volgens jou eindplek. Dit begin vanself sodra al die plekke gevul is (nou **{n}/{max}**). Sluit ons aan?",
   c2Wait: 'Ranglysspel: **{n}/{max}** spelers. Dit begin vanself sodra die tafel vol is — intussen, só werk die ranglys.',
   c2Points: 'Elke ranglysspel deel punte uit volgens eindplek: **15, 9, 6, 4, 3, 2, 1** van 1ste tot 7de, niks van 8ste tot 10de nie — 40 punte per tafel.',
   c2Score: 'Jou **Score** is nie die som van jou punte nie, maar jou gemiddeld per spel, getemper deur hoeveel spelle jy gespeel het: gereeld speel tel.',

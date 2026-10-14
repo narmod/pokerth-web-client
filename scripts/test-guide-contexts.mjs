@@ -171,6 +171,8 @@ ok(LO && LO.manual === true && pick({ openGid: 9 }) !== 'lobby-open', 'lobby-ope
 ok(C.applies(LO, W({ openGid: 9, gid: 0 })) && C.applies(LO, W({ openGid: 9, gid: 0, guest: true })) && !C.applies(LO, W({ openGid: 0 })) && !C.applies(LO, W({ openGid: 9, gid: 405 })) && !C.applies(LO, W({ openGid: 9, gid: 0, offline: true })), 'lobby-open: in the lobby, not seated, not offline');
 ok(LO.steps[0].text(W({ openGid: 9 })) === 'c1Open' && LO.steps[0].text(W({ openGid: 9, guest: true })) === 'c1OpenGuest' && LO.steps[0].vars(W({ openName: 'Guest37866' })).name === 'Guest37866', 'says the name; guests are told it is a game open to them');
 ok(LO.steps[0].buttons.join() === 'later,gotIt,join' && [].concat(LO.steps[0].target(W({ openGid: 9 }))).some((x) => x.includes('lobby-foot-join')), 'Later · Got it · Join, the Join button outlined');
+ok(LO.steps[0].text(W({ openGid: 4, openRanked: true })) === 'c1OpenRanked' && LO.steps[0].vars(W({ openName: 'kuh poker', openN: 3, openMax: 10 })).n === 3 && LO.steps[0].vars(W({ openN: 3, openMax: 10 })).max === 10, 'an open Ranking table (account holder): « it counts, starts once full (3/10) — join it? » (web.68)');
+ok(/counts for the ranking/.test(EN.c1OpenRanked) && /\{n\}\/\{max\}/.test(EN.c1OpenRanked), 'says plainly it is ranked, and how full');
 ok(/not count for the ranking/.test(EN.c1Open) && /not count for the ranking/.test(EN.c1OpenGuest) && /open to guests/.test(EN.c1OpenGuest), 'says plainly it is not ranked');
 const { tableName } = await imp('public/modules/guide/cup.mjs');
 ok(tableName({ name: 'a**b\u0001c' }) === 'a b c' && tableName(null) === '', 'table name cleaned for the bubble');

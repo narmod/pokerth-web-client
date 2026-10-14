@@ -44,6 +44,7 @@ export default {
   c1Flag: "Ez dago banderarik zure izenaren ondoan? Zure pokerth.net kontutik dator. Zure bandera erakusteko: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Hurrengo saio-hasieran agertuko da.",
   c1Open: "**{name}** ez da sailkapen-partida bat: ez du sailkapenean zenbatzen. Eserleku bat libre dago — sartuko gara?",
   c1OpenGuest: "**{name}** partida arrunta da, gonbidatuentzat irekia: ez du sailkapenean zenbatzen. Eserleku bat libre dago — sartuko gara?",
+  c1OpenRanked: "**{name}** sailkapen-partida bat da: sailkapenean zenbatzen du, azken postuaren araberako puntuekin. Eserleku guztiak beteta daudenean bere kabuz hasten da (orain **{n}/{max}**). Sartuko gara?",
   c2Wait: 'Sailkapeneko partida: **{n}/{max}** jokalari. Bere kabuz hasiko da mahaia bete bezain laster — bitartean, hona nola dabilen sailkapena.',
   c2Points: 'Sailkapeneko partida bakoitzak puntuak banatzen ditu amaierako postuaren arabera: **15, 9, 6, 4, 3, 2, 1** 1.etik 7.era, ezer ez 8.etik 10.era — 40 puntu mahaiko.',
   c2Score: 'Zure **Puntuazioa** ez da zure puntuen batura, partida bakoitzeko zure batez bestekoa baizik, jokatutako partida kopuruaren arabera leundua: erregulartasunez jokatzea garrantzitsua da.',

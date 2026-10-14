@@ -44,6 +44,7 @@ export default {
   c1Flag: "Intet flag ved dit navn? Det kommer fra din pokerth.net-konto. Sådan viser du dit eget flag: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Det vises ved dit næste login.",
   c1Open: "**{name}** er ikke et rangeret spil: det tæller ikke med i ranglisten. Der er en ledig plads — skal vi deltage?",
   c1OpenGuest: "**{name}** er et normalt spil, åbent for gæster: det tæller ikke med i ranglisten. Der er en ledig plads — skal vi deltage?",
+  c1OpenRanked: "**{name}** er et rangeret spil: det tæller med i ranglisten, med point efter din slutplacering. Det starter af sig selv, når alle pladser er taget (nu **{n}/{max}**). Skal vi deltage?",
   c2Wait: 'Ranglistespil: **{n}/{max}** spillere. Det starter af sig selv, så snart bordet er fuldt — imens kan du se her, hvordan ranglisten fungerer.',
   c2Points: 'Hvert ranglistespil uddeler point efter slutplacering: **15, 9, 6, 4, 3, 2, 1** fra 1. til 7. plads, intet fra 8. til 10. — 40 point pr. bord.',
   c2Score: 'Din **Score** er ikke summen af dine point, men dit gennemsnit pr. spil, dæmpet af hvor mange spil du har spillet: det betyder noget at spille regelmæssigt.',

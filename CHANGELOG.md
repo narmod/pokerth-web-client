@@ -91,7 +91,9 @@ highlights below.
   for an account holder) with a free seat and no password, not a cup game: the Ace says it does not
   count for the ranking (guests: a game open to them) and offers **Join**, which joins that table
   (`lobby-open`, counted as `lobby-open.join`; once per table and per session, silent after « Later »,
-  `web.67`).
+  `web.67`). An account holder tapping an open Ranking table hears that it counts for the ranking and
+  starts by itself once full (**n/max**), with the same **Join** (`c1OpenRanked`; not counted in the
+  `lobby-ranking` funnel, `web.68`).
 
 ### Added
 - **LAN server directory, server side** — players will be able to propose their own PokerTH

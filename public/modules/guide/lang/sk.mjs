@@ -44,6 +44,7 @@ export default {
   c1Flag: "Pri tvojom mene nie je vlajka? Berie sa z tvojho účtu pokerth.net. Ako zobraziť vlastnú vlajku: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Objaví sa pri ďalšom prihlásení.",
   c1Open: "**{name}** nie je hodnotená hra: nepočíta sa do rebríčka. Jedno miesto je voľné — pridáme sa?",
   c1OpenGuest: "**{name}** je normálna hra, otvorená hosťom: nepočíta sa do rebríčka. Jedno miesto je voľné — pridáme sa?",
+  c1OpenRanked: "**{name}** je hodnotená hra: počíta sa do rebríčka, body podľa tvojho konečného umiestnenia. Začne sama, keď sú obsadené všetky miesta (teraz **{n}/{max}**). Pridáme sa?",
   c2Wait: 'Hodnotená hra: **{n}/{max}** hráčov. Spustí sa sama, len čo sa stôl zaplní — medzitým ti vysvetlím, ako funguje rebríček.',
   c2Points: 'Každá hodnotená hra rozdáva body podľa konečného umiestnenia: **15, 9, 6, 4, 3, 2, 1** od 1. po 7. miesto, od 8. po 10. nič — 40 bodov na stôl.',
   c2Score: 'Tvoje **Score** nie je súčet tvojich bodov, ale tvoj priemer na hru, zmiernený počtom odohraných hier: záleží na pravidelnom hraní.',

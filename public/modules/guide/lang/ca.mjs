@@ -44,6 +44,7 @@ export default {
   c1Flag: "No hi ha bandera al costat del teu nom? Ve del teu compte de pokerth.net. Per mostrar la teva bandera: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Apareix al teu proper inici de sessió.",
   c1Open: "**{name}** no és una partida classificada: no compta per a la classificació. Hi ha un seient lliure — hi entrem?",
   c1OpenGuest: "**{name}** és una partida normal, oberta als convidats: no compta per a la classificació. Hi ha un seient lliure — hi entrem?",
+  c1OpenRanked: "**{name}** és una partida classificada: compta per a la classificació, amb punts segons la teva posició final. Comença sola quan s’ocupen tots els seients (**{n}/{max}** ara). Hi entrem?",
   c2Wait: 'Partida de classificació: **{n}/{max}** jugadors. Comença sola tan bon punt la taula és plena — mentrestant, t’explico com funciona la classificació.',
   c2Points: 'Cada partida de classificació reparteix punts segons el lloc final: **15, 9, 6, 4, 3, 2, 1** del 1r al 7è, res del 8è al 10è — 40 punts per taula.',
   c2Score: 'La teva **Score** no és la suma dels teus punts, sinó la teva mitjana per partida, atenuada segons el nombre de partides jugades: jugar amb regularitat compta.',

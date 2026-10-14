@@ -44,6 +44,7 @@ export default {
   c1Flag: "¿No hay bandera junto a tu nombre? Viene de tu cuenta de pokerth.net. Para mostrar tu propia bandera: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Aparece en tu próximo inicio de sesión.",
   c1Open: "**{name}** no es una partida clasificada: no cuenta para la clasificación. Hay un asiento libre — ¿nos unimos?",
   c1OpenGuest: "**{name}** es una partida normal, abierta a invitados: no cuenta para la clasificación. Hay un asiento libre — ¿nos unimos?",
+  c1OpenRanked: "**{name}** es una partida clasificada: cuenta para la clasificación, con puntos según tu puesto final. Empieza sola en cuanto se ocupan todos los asientos (**{n}/{max}** ahora). ¿Nos unimos?",
   c2Wait: 'Partida clasificada: **{n}/{max}** jugadores. Empieza sola en cuanto la mesa se llena — mientras tanto, así funciona la clasificación.',
   c2Points: 'Cada partida clasificada reparte puntos según el puesto final: **15, 9, 6, 4, 3, 2, 1** del 1.º al 7.º, nada del 8.º al 10.º — 40 puntos por mesa.',
   c2Score: 'Tu **Score** no es la suma de tus puntos, sino tu media por partida, atenuada según cuántas partidas has jugado: jugar con regularidad cuenta.',

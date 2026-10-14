@@ -44,6 +44,7 @@ export default {
   c1Flag: "Pie tava vārda nav karoga? Tas nāk no tava pokerth.net konta. Lai rādītu savu karogu: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Tas parādīsies nākamajā pieteikšanās reizē.",
   c1Open: "**{name}** nav reitinga spēle: tā netiek ieskaitīta reitingā. Ir brīva vieta — pievienojamies?",
   c1OpenGuest: "**{name}** ir parasta spēle, atvērta viesiem: tā netiek ieskaitīta reitingā. Ir brīva vieta — pievienojamies?",
+  c1OpenRanked: "**{name}** ir reitinga spēle: tā tiek ieskaitīta reitingā, punkti pēc tavas beigu vietas. Tā sākas pati, kad visas vietas aizņemtas (tagad **{n}/{max}**). Pievienojamies?",
   c2Wait: 'Reitinga spēle: **{n}/{max}** spēlētāji. Tā sāksies pati, tiklīdz galds būs pilns — pa to laiku, lūk, kā darbojas reitings.',
   c2Points: 'Katra reitinga spēle piešķir punktus pēc beigu vietas: **15, 9, 6, 4, 3, 2, 1** no 1. līdz 7. vietai, no 8. līdz 10. vietai nekas — 40 punkti uz galdu.',
   c2Score: 'Tavs **rezultāts** nav punktu summa, bet gan tavs vidējais par spēli, ko mēreno nospēlēto spēļu skaits: svarīgi ir spēlēt regulāri.',

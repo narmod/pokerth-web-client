@@ -44,6 +44,7 @@ export default {
   c1Flag: "Níl bratach in aice le d’ainm? Tagann sí ó do chuntas pokerth.net. Chun do bhratach féin a thaispeáint: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Feicfear í an chéad uair eile a logálann tú isteach.",
   c1Open: "Ní cluiche rangaithe é **{name}**: ní áirítear sa rangú é. Tá suíochán saor — an rachaimid isteach?",
   c1OpenGuest: "Is gnáthchluiche é **{name}**, oscailte d’aíonna: ní áirítear sa rangú é. Tá suíochán saor — an rachaimid isteach?",
+  c1OpenRanked: "Is cluiche rangaithe é **{name}**: áirítear sa rangú é, le pointí de réir d’áite deiridh. Tosaíonn sé leis féin nuair a bhíonn gach suíochán líonta (anois **{n}/{max}**). An rachaimid isteach?",
   c2Wait: 'Cluiche rangaithe: **{n}/{max}** imreoir. Tosaíonn sé leis féin a luaithe a bhíonn an bord lán — idir an dá linn, seo mar a oibríonn an rangú.',
   c2Points: 'Tugann gach cluiche rangaithe pointí de réir na háite ina gcríochnaíonn tú: **15, 9, 6, 4, 3, 2, 1** ón 1ú go dtí an 7ú háit, faic ón 8ú go dtí an 10ú — 40 pointe in aghaidh an bhoird.',
   c2Score: 'Ní hé suim do phointí do **Scór**, ach do mheán in aghaidh an chluiche, maolaithe ag líon na gcluichí a d\'imir tú: is tábhachtach imirt go rialta.',

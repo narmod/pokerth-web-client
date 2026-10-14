@@ -44,6 +44,7 @@ export default {
   c1Flag: "Nema zastave uz tvoje ime? Dolazi iz tvog pokerth.net računa. Za prikaz vlastite zastave: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Pojavit će se pri sljedećoj prijavi.",
   c1Open: "**{name}** nije rangirana igra: ne računa se za ljestvicu. Jedno mjesto je slobodno — pridružujemo se?",
   c1OpenGuest: "**{name}** je obična igra, otvorena gostima: ne računa se za ljestvicu. Jedno mjesto je slobodno — pridružujemo se?",
+  c1OpenRanked: "**{name}** je rangirana igra: računa se za ljestvicu, s bodovima prema konačnom mjestu. Počinje sama čim se popune sva mjesta (sad **{n}/{max}**). Pridružujemo se?",
   c2Wait: 'Rangirana partija: **{n}/{max}** igrača. Pokreće se sama čim se stol popuni — u međuvremenu, evo kako funkcionira poredak.',
   c2Points: 'Svaka rangirana partija dijeli bodove prema završnom mjestu: **15, 9, 6, 4, 3, 2, 1** od 1. do 7. mjesta, ništa od 8. do 10. — 40 bodova po stolu.',
   c2Score: 'Tvoj **Score** nije zbroj tvojih bodova, nego tvoj prosjek po partiji, ublažen brojem odigranih partija: redovita igra je važna.',

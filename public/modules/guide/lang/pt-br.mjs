@@ -44,6 +44,7 @@ export default {
   c1Flag: "Sem bandeira ao lado do seu nome? Ela vem da sua conta no pokerth.net. Para mostrar sua própria bandeira: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Ela aparece no seu próximo login.",
   c1Open: "**{name}** não é uma partida ranqueada: não conta para o ranking. Há um lugar livre — vamos entrar?",
   c1OpenGuest: "**{name}** é uma partida normal, aberta a convidados: não conta para o ranking. Há um lugar livre — vamos entrar?",
+  c1OpenRanked: "**{name}** é uma partida ranqueada: conta para o ranking, com pontos pela sua colocação final. Ela começa sozinha quando todos os lugares estão ocupados (**{n}/{max}** agora). Vamos entrar?",
   c2Wait: 'Partida ranqueada: **{n}/{max}** jogadores. Ela começa sozinha assim que a mesa ficar cheia — enquanto isso, veja como funciona o ranking.',
   c2Points: 'Cada partida ranqueada distribui pontos pela colocação final: **15, 9, 6, 4, 3, 2, 1** do 1º ao 7º, nada do 8º ao 10º — 40 pontos por mesa.',
   c2Score: 'Seu **Score** não é a soma dos seus pontos, mas sua média por partida, amortecida pelo número de partidas jogadas: jogar com regularidade faz diferença.',

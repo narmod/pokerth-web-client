@@ -44,6 +44,7 @@ export default {
   c1Flag: "Sinu nime kõrval pole lippu? See tuleb sinu pokerth.net-i kontolt. Oma lipu kuvamiseks: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. See ilmub järgmisel sisselogimisel.",
   c1Open: "**{name}** pole edetabelimäng: see ei lähe edetabelisse arvesse. Üks koht on vaba — kas liitume?",
   c1OpenGuest: "**{name}** on tavaline mäng, avatud külalistele: see ei lähe edetabelisse arvesse. Üks koht on vaba — kas liitume?",
+  c1OpenRanked: "**{name}** on edetabelimäng: see läheb edetabelisse arvesse, punktid sinu lõppkoha järgi. See algab ise, kui kõik kohad on täis (praegu **{n}/{max}**). Kas liitume?",
   c2Wait: 'Edetabelimäng: **{n}/{max}** mängijat. See algab ise kohe, kui laud on täis — seniks selgitan, kuidas edetabel töötab.',
   c2Points: 'Iga edetabelimäng jagab punkte lõppkoha järgi: **15, 9, 6, 4, 3, 2, 1** 1. kuni 7. kohani, 8. kuni 10. koht ei saa midagi — 40 punkti laua kohta.',
   c2Score: 'Sinu **skoor** ei ole punktide summa, vaid sinu keskmine mängu kohta, mida tasakaalustab mängitud mängude arv: regulaarne mängimine loeb.',

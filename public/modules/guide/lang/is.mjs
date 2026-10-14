@@ -44,6 +44,7 @@ export default {
   c1Flag: "Enginn fáni við nafnið þitt? Hann kemur af pokerth.net-aðganginum þínum. Til að sýna þinn eigin fána: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Hann birtist við næstu innskráningu.",
   c1Open: "**{name}** er ekki stigaleikur: hann telur ekki á stigalistanum. Sæti er laust — eigum við að taka þátt?",
   c1OpenGuest: "**{name}** er venjulegur leikur, opinn gestum: hann telur ekki á stigalistanum. Sæti er laust — eigum við að taka þátt?",
+  c1OpenRanked: "**{name}** er stigaleikur: hann telur á stigalistanum, með stigum eftir lokasæti þínu. Hann hefst sjálfkrafa þegar öll sæti eru setin (núna **{n}/{max}**). Eigum við að taka þátt?",
   c2Wait: 'Stigaleikur: **{n}/{max}** leikmenn. Hann fer sjálfkrafa af stað um leið og borðið er fullt — á meðan er hér útskýrt hvernig stigataflan virkar.',
   c2Points: 'Hver stigaleikur gefur stig eftir lokasæti: **15, 9, 6, 4, 3, 2, 1** frá 1. til 7. sætis, ekkert frá 8. til 10. sætis — 40 stig á hvert borð.',
   c2Score: '**Skorið** þitt er ekki summa stiganna heldur meðaltalið þitt á leik, leiðrétt eftir fjölda spilaðra leikja: það skiptir máli að spila reglulega.',

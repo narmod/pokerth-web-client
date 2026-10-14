@@ -69,6 +69,7 @@ let watchGid = 0;             // running game tapped in the list (« Watch it? �
 let tapCup = '';              // name of the cup game tapped in the list, '' for any other table (web.65)
 let openGid = 0;              // open non-ranked table tapped in the list (« Join it? », web.67)
 let openName = '';
+let openRanked = false;       // …and it is a Ranking table (account holders, web.68)
 const tapTold = new Set();    // tables a tap already explained this session ('w:gid' watch, 'c:gid' cup, 'o:gid' open, 'g:gid' guest)
 
 const state = createState(
@@ -218,6 +219,9 @@ export function where() {
     cupName: tapCup,
     openGid,
     openName,
+    openRanked,
+    openN: openGid && s.games && s.games[openGid] ? s.games[openGid].players | 0 : 0,
+    openMax: openGid && s.games && s.games[openGid] ? s.games[openGid].maxPlayers || 10 : 10,
     // my own player info came back without a country (pokerth.net account): no flag next to my name (web.66)
     noFlag: net && !guest && !!s._myInfoLoaded && !!s.myId && !(s._playerCountries && s._playerCountries[s.myId]),
     watchKnown: state.seen('lobby-watch'),
@@ -432,7 +436,9 @@ function doAction(id, w, cid) {
   try {
     if (id === 'join' && cid === 'lobby-open') {      // the table the player tapped (web.67)
       const s = S(), g = s.games ? s.games[openGid] : null;
-      if (g && g.mode === 1 && !s.gId && !s.amInGame && window.App && window.App.joinGame) window.App.joinGame(openGid);
+      if (g && g.mode === 1 && !s.gId && !s.amInGame && window.App && window.App.joinGame) {
+        window.App.joinGame(openGid);
+      }
       return;
     }
     if (id === 'join' && w.rankPick) joinedGid = w.rankPick.id;
@@ -1302,14 +1308,16 @@ function onListTap(ev) {
     if (cx) { tapTold.add('c:' + gid); showContext(cx); }
     return;
   }
-  // an open table he can sit at, not ranked, not a cup game: « it does not count for the ranking — join it? » (web.67)
+  // an open table he can sit at, not a cup game: « it does not count for the ranking — join it? » (web.67);
+  // a Ranking table for an account holder: « it counts for the ranking, starts once full — join it? » (web.68)
   const guest = isGuest(s);
-  if (g.mode === 1 && !g.priv && (g.type === 1 || (g.type === 2 && !guest)) && (g.players | 0) < (g.maxPlayers || 10)) {
+  const ranked = g.type === RANKED_TYPE && !guest;
+  if (g.mode === 1 && !g.priv && (g.type === 1 || (g.type === 2 && !guest) || ranked) && (g.players | 0) < (g.maxPlayers || 10)) {
     if (snoozed.has('lobby-open') || tapTold.has('o:' + gid)) return;
     const co = CONTEXTS.find((c) => c.id === 'lobby-open');
     if (!co) return;
     tapTold.add('o:' + gid);
-    openGid = Number(gid) || 0; openName = tableName(g);
+    openGid = Number(gid) || 0; openName = tableName(g); openRanked = ranked;
     showContext(co);
     return;
   }

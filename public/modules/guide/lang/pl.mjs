@@ -44,6 +44,7 @@ export default {
   c1Flag: "Brak flagi przy twoim nicku? Pochodzi z twojego konta pokerth.net. Aby pokazać własną flagę: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Pojawi się przy następnym logowaniu.",
   c1Open: "**{name}** nie jest grą rankingową: nie liczy się do rankingu. Jest wolne miejsce — dołączamy?",
   c1OpenGuest: "**{name}** to zwykła gra, otwarta dla gości: nie liczy się do rankingu. Jest wolne miejsce — dołączamy?",
+  c1OpenRanked: "**{name}** to gra rankingowa: liczy się do rankingu, punkty zależą od twojego końcowego miejsca. Rusza sama, gdy wszystkie miejsca są zajęte (teraz **{n}/{max}**). Dołączamy?",
   c2Wait: 'Gra rankingowa: **{n}/{max}** graczy. Wystartuje sama, gdy tylko stół się zapełni — a tymczasem wyjaśnię, jak działa ranking.',
   c2Points: 'Każda gra rankingowa przyznaje punkty według zajętego miejsca: **15, 9, 6, 4, 3, 2, 1** od 1. do 7. miejsca, nic od 8. do 10. — 40 punktów na stół.',
   c2Score: 'Twój **Score** to nie suma twoich punktów, tylko twoja średnia na grę, złagodzona liczbą rozegranych gier: liczy się regularna gra.',

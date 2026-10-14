@@ -44,6 +44,7 @@ export default {
   c1Flag: "Pas de drapeau à côté de ton nom ? Il vient de ton compte pokerth.net. Pour afficher ton propre drapeau : www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Il apparaît à ta prochaine connexion.",
   c1Open: "**{name}** n’est pas une partie classée : elle ne compte pas pour le classement. Une place est libre — on la rejoint ?",
   c1OpenGuest: "**{name}** est une partie normale, ouverte aux invités : elle ne compte pas pour le classement. Une place est libre — on la rejoint ?",
+  c1OpenRanked: "**{name}** est une partie classée : elle compte pour le classement, avec des points selon ta place finale. Elle démarre toute seule dès que toutes les places sont prises (**{n}/{max}** pour l’instant). On la rejoint ?",
   c2Wait: 'Partie classée : **{n}/{max}** joueurs. Elle démarre toute seule dès que la table est complète — en attendant, voici comment fonctionne le classement.',
   c2Points: 'Chaque partie classée attribue des points selon la place finale : **15, 9, 6, 4, 3, 2, 1** de la 1re à la 7e place, rien de la 8e à la 10e — 40 points par table.',
   c2Score: 'Ton **Score** n’est pas la somme de tes points mais ta moyenne par partie, tempérée par le nombre de parties jouées : jouer régulièrement compte.',

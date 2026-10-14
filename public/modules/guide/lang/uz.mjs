@@ -44,6 +44,7 @@ export default {
   c1Flag: "Isming yonida bayroq yo‘qmi? U pokerth.net hisobingdan olinadi. O‘z bayrog‘ingni ko‘rsatish uchun: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. U keyingi kirishingda paydo bo‘ladi.",
   c1Open: "**{name}** reyting o‘yini emas: reytingga hisoblanmaydi. Bitta joy bo‘sh — qo‘shilamizmi?",
   c1OpenGuest: "**{name}** mehmonlar uchun ochiq oddiy o‘yin: reytingga hisoblanmaydi. Bitta joy bo‘sh — qo‘shilamizmi?",
+  c1OpenRanked: "**{name}** reyting o‘yini: reytingga hisoblanadi, ochkolar yakuniy o‘rningga qarab. Barcha joylar band bo‘lgach o‘zi boshlanadi (hozir **{n}/{max}**). Qo‘shilamizmi?",
   c2Wait: 'Reyting oʻyini: **{n}/{max}** oʻyinchi. Stol toʻlishi bilanoq oʻzi boshlanadi — bu orada reyting qanday ishlashini aytib beraman.',
   c2Points: 'Har bir reyting oʻyini egallangan oʻringa qarab ochko tarqatadi: 1-oʻrindan 7-oʻringacha **15, 9, 6, 4, 3, 2, 1**, 8-oʻrindan 10-oʻringacha hech narsa — har bir stolga 40 ochko.',
   c2Score: '**Hisobingiz** ochkolaringiz yigʻindisi emas, balki bir oʻyinga toʻgʻri keladigan oʻrtacha koʻrsatkichingiz boʻlib, u oʻynagan oʻyinlaringiz soniga qarab muvozanatlanadi: muntazam oʻynash muhim.',

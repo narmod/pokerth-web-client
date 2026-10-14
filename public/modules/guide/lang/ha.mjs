@@ -44,6 +44,7 @@ export default {
   c1Flag: "Babu tuta kusa da sunanka? Tana fitowa daga asusunka na pokerth.net. Don nuna tutarka: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Za ta bayyana idan ka sake shiga.",
   c1Open: "**{name}** ba wasan matsayi ba ne: ba a ƙirga shi a matsayi. Akwai kujera fanko — mu shiga?",
   c1OpenGuest: "**{name}** wasa ne na yau da kullum, buɗe ga baƙi: ba a ƙirga shi a matsayi. Akwai kujera fanko — mu shiga?",
+  c1OpenRanked: "**{name}** wasan matsayi ne: ana ƙirga shi a matsayi, maki gwargwadon matsayinka na ƙarshe. Yana farawa da kansa da zarar duk kujeru sun cika (yanzu **{n}/{max}**). Mu shiga?",
   c2Wait: 'Wasan matsayi: \'yan wasa **{n}/{max}**. Zai fara da kansa da zarar teburin ya cika — kafin nan, ga yadda matsayi ke aiki.',
   c2Points: 'Kowane wasan matsayi yana raba maki bisa matsayin gamawa: **15, 9, 6, 4, 3, 2, 1** daga na 1 zuwa na 7, babu komai daga na 8 zuwa na 10 — maki 40 kowane tebur.',
   c2Score: '**Makinka** ba jimlar makin da ka samu ba ne, amma matsakaicinka ne na kowane wasa, wanda aka tausasa bisa yawan wasannin da ka buga: yin wasa akai-akai yana da muhimmanci.',

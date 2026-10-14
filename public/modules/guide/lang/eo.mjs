@@ -44,6 +44,7 @@ export default {
   c1Flag: "Neniu flago apud via nomo? Ĝi venas el via konto ĉe pokerth.net. Por montri vian propran flagon: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Ĝi aperos ĉe via venonta ensaluto.",
   c1Open: "**{name}** ne estas rangiga ludo: ĝi ne kalkuliĝas por la rangolisto. Unu sidloko estas libera — ĉu ni aliĝu?",
   c1OpenGuest: "**{name}** estas normala ludo, malfermita al gastoj: ĝi ne kalkuliĝas por la rangolisto. Unu sidloko estas libera — ĉu ni aliĝu?",
+  c1OpenRanked: "**{name}** estas rangiga ludo: ĝi kalkuliĝas por la rangolisto, kun poentoj laŭ via fina loko. Ĝi komenciĝas mem kiam ĉiuj sidlokoj estas okupitaj (nun **{n}/{max}**). Ĉu ni aliĝu?",
   c2Wait: 'Rangiga ludo: **{n}/{max}** ludantoj. Ĝi ekas memstare tuj kiam la tablo pleniĝas — intertempe, jen kiel funkcias la rangigo.',
   c2Points: 'Ĉiu rangiga ludo disdonas poentojn laŭ la fina loko: **15, 9, 6, 4, 3, 2, 1** de la 1-a ĝis la 7-a, nenion de la 8-a ĝis la 10-a — 40 poentoj po tablo.',
   c2Score: 'Via **Poentaro** ne estas la sumo de viaj poentoj, sed via mezumo por ludo, moderigita laŭ la nombro de luditaj ludoj: regule ludi gravas.',

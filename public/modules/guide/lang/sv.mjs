@@ -44,6 +44,7 @@ export default {
   c1Flag: "Ingen flagga vid ditt namn? Den kommer från ditt pokerth.net-konto. Så visar du din egen flagga: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Den syns vid nästa inloggning.",
   c1Open: "**{name}** är inget rankat spel: det räknas inte till rankingen. En plats är ledig — ska vi gå med?",
   c1OpenGuest: "**{name}** är ett vanligt spel, öppet för gäster: det räknas inte till rankingen. En plats är ledig — ska vi gå med?",
+  c1OpenRanked: "**{name}** är ett rankat spel: det räknas till rankingen, med poäng efter din slutplacering. Det startar av sig självt när alla platser är tagna (nu **{n}/{max}**). Ska vi gå med?",
   c2Wait: 'Rankingspel: **{n}/{max}** spelare. Det startar av sig självt så fort bordet är fullt — under tiden får du veta hur rankingen fungerar.',
   c2Points: 'Varje rankingspel delar ut poäng efter slutplacering: **15, 9, 6, 4, 3, 2, 1** från 1:a till 7:e plats, inget från 8:e till 10:e — 40 poäng per bord.',
   c2Score: 'Din **Score** är inte summan av dina poäng utan ditt snitt per spel, dämpat av hur många spel du har spelat: det lönar sig att spela regelbundet.',

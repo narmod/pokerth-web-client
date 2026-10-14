@@ -44,6 +44,7 @@ export default {
   c1Flag: "Dim baner wrth dy enw? Mae’n dod o dy gyfrif pokerth.net. I ddangos dy faner dy hun: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Bydd yn ymddangos y tro nesaf y byddi’n mewngofnodi.",
   c1Open: "Nid gêm restr yw **{name}**: nid yw’n cyfrif tuag at y rhestr. Mae sedd yn rhydd — ymuno?",
   c1OpenGuest: "Gêm arferol yw **{name}**, ar agor i westeion: nid yw’n cyfrif tuag at y rhestr. Mae sedd yn rhydd — ymuno?",
+  c1OpenRanked: "Gêm restr yw **{name}**: mae’n cyfrif tuag at y rhestr, gyda phwyntiau yn ôl dy safle terfynol. Mae’n dechrau ohoni’i hun pan fydd pob sedd wedi’i llenwi (nawr **{n}/{max}**). Ymuno?",
   c2Wait: 'Gêm gyda safle: **{n}/{max}** chwaraewr. Mae’n dechrau ar ei phen ei hun cyn gynted ag y bydd y bwrdd yn llawn — yn y cyfamser, dyma sut mae’r safleoedd yn gweithio.',
   c2Points: 'Mae pob gêm gyda safle yn rhoi pwyntiau yn ôl y lle gorffen: **15, 9, 6, 4, 3, 2, 1** o’r 1af i’r 7fed, dim o’r 8fed i’r 10fed — 40 pwynt i bob bwrdd.',
   c2Score: 'Nid swm eich pwyntiau yw eich **Sgôr** ond eich cyfartaledd fesul gêm, wedi’i leddfu yn ôl faint o gemau rydych wedi’u chwarae: mae chwarae’n rheolaidd yn bwysig.',

@@ -44,6 +44,7 @@ export default {
   c1Flag: "Adyňyň ýanynda baýdak ýokmy? Ol pokerth.net hasabyňdan gelýär. Öz baýdagyňy görkezmek üçin: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Ol indiki girişiňde peýda bolar.",
   c1Open: "**{name}** reýting oýny däl: reýtinge hasaplanmaýar. Bir orun boş — goşulalymy?",
   c1OpenGuest: "**{name}** myhmanlara açyk adaty oýun: reýtinge hasaplanmaýar. Bir orun boş — goşulalymy?",
+  c1OpenRanked: "**{name}** reýting oýny: reýtinge hasaplanýar, utuklar soňky ornuňa görä. Ähli orunlar dolanda özi başlaýar (häzir **{n}/{max}**). Goşulalymy?",
   c2Wait: 'Reýting oýny: **{n}/{max}** oýunçy. Stol dolan badyna özi başlar — şol aralykda reýtingiň nähili işleýändigini düşündireýin.',
   c2Points: 'Her reýting oýny soňky orna görä utuk paýlaýar: 1-nji orundan 7-nji orna çenli **15, 9, 6, 4, 3, 2, 1**, 8-nji orundan 10-njy orna çenli hiç zat — her stola 40 utuk.',
   c2Score: 'Siziň **utugyňyz** (Score) utuklaryňyzyň jemi däl-de, oýnan oýunlaryňyzyň sany bilen ýumşadylan bir oýna düşýän ortaça görkezijiňizdir: yzygiderli oýnamak möhüm.',

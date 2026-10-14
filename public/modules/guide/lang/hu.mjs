@@ -44,6 +44,7 @@ export default {
   c1Flag: "Nincs zászló a neved mellett? A pokerth.net-fiókodból jön. Így jelenik meg a saját zászlód: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. A következő bejelentkezéskor látszik.",
   c1Open: "A(z) **{name}** nem ranglistás játék: nem számít bele a ranglistába. Van egy szabad hely — beszállunk?",
   c1OpenGuest: "A(z) **{name}** normál játék, vendégeknek is nyitott: nem számít bele a ranglistába. Van egy szabad hely — beszállunk?",
+  c1OpenRanked: "A(z) **{name}** ranglistás játék: beleszámít a ranglistába, a végső helyezésed szerinti pontokkal. Magától indul, amint minden hely betelt (most **{n}/{max}**). Beszállunk?",
   c2Wait: 'Ranglistás játék: **{n}/{max}** játékos. Magától indul, amint megtelik az asztal — addig is, így működik a ranglista.',
   c2Points: 'Minden ranglistás játék a helyezés szerint oszt pontot: **15, 9, 6, 4, 3, 2, 1** az 1. helytől a 7.-ig, a 8.-tól a 10.-ig semmi — asztalonként 40 pont.',
   c2Score: 'A **Score**-od nem a pontjaid összege, hanem a játékonkénti átlagod, a lejátszott játékok számával tompítva: számít, hogy rendszeresen játszol.',

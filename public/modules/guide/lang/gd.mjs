@@ -44,6 +44,7 @@ export default {
   c1Flag: "Chan eil bratach ri taobh d’ ainm? Thig i on chunntas pokerth.net agad. Gus do bhratach fhèin a shealltainn: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Nochdaidh i an ath thuras a chlàraicheas tu a-steach.",
   c1Open: "Chan e geama rangachaidh a th’ ann an **{name}**: chan eil e a’ cunntadh airson an rangachaidh. Tha suidheachan saor — an tèid sinn a-steach?",
   c1OpenGuest: "’S e geama àbhaisteach a th’ ann an **{name}**, fosgailte do dh’aoighean: chan eil e a’ cunntadh airson an rangachaidh. Tha suidheachan saor — an tèid sinn a-steach?",
+  c1OpenRanked: "’S e geama rangachaidh a th’ ann an **{name}**: tha e a’ cunntadh airson an rangachaidh, le puingean a-rèir d’ àite mu dheireadh. Tòisichidh e leis fhèin nuair a bhios gach suidheachan làn (an-dràsta **{n}/{max}**). An tèid sinn a-steach?",
   c2Wait: 'Geama rangachaidh: **{n}/{max}** cluicheadairean. Tòisichidh e leis fhèin cho luath ’s a bhios am bòrd làn — san eadar-àm, seo mar a dh’obraicheas an rangachadh.',
   c2Points: 'Bheir gach geama rangachaidh seachad puingean a rèir an àite aig an deireadh: **15, 9, 6, 4, 3, 2, 1** on 1d chun an 7mh, dad on 8mh chun an 10mh — 40 puing gach bòrd.',
   c2Score: 'Chan e suim nam puingean agad a th’ anns an **Score** agad ach a’ chuibheasachd agad gach geama, air a mhaothachadh a rèir co mheud geama a chluich thu: tha e cudromach cluich gu cunbhalach.',

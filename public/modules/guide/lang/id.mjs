@@ -44,6 +44,7 @@ export default {
   c1Flag: "Tidak ada bendera di samping namamu? Bendera berasal dari akun pokerth.net-mu. Untuk menampilkan benderamu sendiri: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Bendera muncul saat kamu masuk berikutnya.",
   c1Open: "**{name}** bukan permainan peringkat: tidak dihitung untuk peringkat. Ada kursi kosong — ikut?",
   c1OpenGuest: "**{name}** adalah permainan normal, terbuka untuk tamu: tidak dihitung untuk peringkat. Ada kursi kosong — ikut?",
+  c1OpenRanked: "**{name}** adalah permainan peringkat: dihitung untuk peringkat, poin menurut posisi akhirmu. Mulai sendiri begitu semua kursi terisi (sekarang **{n}/{max}**). Ikut?",
   c2Wait: 'Permainan berperingkat: **{n}/{max}** pemain. Dimulai sendiri begitu meja penuh — sementara itu, begini cara kerja peringkatnya.',
   c2Points: 'Setiap permainan berperingkat membagikan poin menurut posisi akhir: **15, 9, 6, 4, 3, 2, 1** dari ke-1 sampai ke-7, tidak ada dari ke-8 sampai ke-10 — 40 poin per meja.',
   c2Score: '**Score** Anda bukan jumlah poin Anda, melainkan rata-rata per permainan, diredam menurut banyaknya permainan yang sudah Anda mainkan: bermain secara teratur itu penting.',

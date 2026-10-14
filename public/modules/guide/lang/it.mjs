@@ -44,6 +44,7 @@ export default {
   c1Flag: "Nessuna bandiera accanto al tuo nome? Viene dal tuo account pokerth.net. Per mostrare la tua bandiera: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Appare al tuo prossimo accesso.",
   c1Open: "**{name}** non è una partita classificata: non conta per la classifica. C’è un posto libero — ci uniamo?",
   c1OpenGuest: "**{name}** è una partita normale, aperta agli ospiti: non conta per la classifica. C’è un posto libero — ci uniamo?",
+  c1OpenRanked: "**{name}** è una partita classificata: conta per la classifica, con punti in base alla tua posizione finale. Parte da sola appena tutti i posti sono occupati (**{n}/{max}** ora). Ci uniamo?",
   c2Wait: 'Partita classificata: **{n}/{max}** giocatori. Parte da sola appena il tavolo è pieno — intanto, ecco come funziona la classifica.',
   c2Points: 'Ogni partita classificata assegna punti in base al piazzamento finale: **15, 9, 6, 4, 3, 2, 1** dal 1° al 7°, niente dall’8° al 10° — 40 punti per tavolo.',
   c2Score: 'Il tuo **Score** non è la somma dei tuoi punti ma la tua media a partita, smorzata dal numero di partite giocate: giocare con regolarità conta.',

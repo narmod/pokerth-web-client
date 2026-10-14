@@ -3,6 +3,9 @@
 // Normal game — or registered-only for an account holder — that is not a
 // Ranking game and not a cup game. The Ace says plainly that it does not count for the ranking
 // (a guest is told it is the kind of game open to guests) and offers Join.
+// An open Ranking table tapped by an account holder (web.68): the Ace says it
+// counts for the ranking, that it starts by itself once full (n/max), and
+// offers Join too.
 // Shown by modules/guide/index.mjs::onListTap once per table and per
 // session, not again this session after « Later ».
 export default {
@@ -12,8 +15,8 @@ export default {
   when: (w) => !w.offline && !w.gid && !!w.openGid,
   fold: 25000,
   steps: [{
-    text: (w) => (w.guest ? 'c1OpenGuest' : 'c1Open'),
-    vars: (w) => ({ name: (w && w.openName) || '' }),
+    text: (w) => (w.openRanked ? 'c1OpenRanked' : w.guest ? 'c1OpenGuest' : 'c1Open'),
+    vars: (w) => ({ name: (w && w.openName) || '', n: (w && w.openN) | 0, max: (w && w.openMax) || 10 }),
     target: (w) => ['#lobby-foot-join', '#g-list .game-row[data-gid="' + w.openGid + '"] .btn-join'],
     buttons: ['later', 'gotIt', 'join'],
   }],

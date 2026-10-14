@@ -44,6 +44,7 @@ export default {
   c1Flag: "Niciun steag lângă numele tău? Vine din contul tău pokerth.net. Ca să-ți afișezi steagul: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Apare la următoarea conectare.",
   c1Open: "**{name}** nu este un joc clasat: nu contează pentru clasament. Un loc e liber — intrăm?",
   c1OpenGuest: "**{name}** este un joc normal, deschis invitaților: nu contează pentru clasament. Un loc e liber — intrăm?",
+  c1OpenRanked: "**{name}** este un joc clasat: contează pentru clasament, cu puncte după locul final. Pornește singur când toate locurile sunt ocupate (acum **{n}/{max}**). Intrăm?",
   c2Wait: 'Partidă clasată: **{n}/{max}** jucători. Pornește singură de îndată ce masa e plină — între timp, iată cum funcționează clasamentul.',
   c2Points: 'Fiecare partidă clasată acordă puncte după locul final: **15, 9, 6, 4, 3, 2, 1** de pe locul 1 până pe 7, nimic de pe 8 până pe 10 — 40 de puncte pe masă.',
   c2Score: '**Scorul** tău nu este suma punctelor, ci media ta pe partidă, temperată de numărul de partide jucate: contează să joci regulat.',
