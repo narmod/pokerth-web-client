@@ -80,6 +80,10 @@ ok(M.proj && M.proj.k > 0 && keys.every((k) => Array.isArray(M.ct[k]) && M.tz[k]
 ok(keys.every((k) => { const z = Array.isArray(M.tz[k]) ? M.tz[k][0] : M.tz[k]; try { new Intl.DateTimeFormat('en', { timeZone: z }); return true; } catch (e) { return false; } }), 'every zone is a valid IANA name');
 ok((Array.isArray(M.tz.US) ? M.tz.US[0] : M.tz.US) === 'America/New_York' && M.tz.FR === 'Europe/Paris', 'multi-zone countries use their main zone (US → New York, FR → Paris)');
 
+// ── cache: the page asks for this revision of the map ──
+ok(M.rev === 2 && new RegExp('var GEO_MAP_REV=' + M.rev + ';').test(admin), 'GEO_MAP_REV in admin.html matches the asset revision (' + M.rev + ')');
+ok(/fetch\('\/vendor\/world-110m\.json\?rev='\+GEO_MAP_REV,\{cache:'no-cache'\}\)/.test(admin), 'the map is fetched by revision, past the HTTP and service-worker caches (an old copy has no projection: no night)');
+
 // ── admin wiring ──
 ok(/<button id="geoNightBtn" class="use geoswitch" type="button" role="switch" aria-checked="true"[^>]*><span class="swt" aria-hidden="true"><i><\/i><\/span>Day \/ night <b class="swv">On<\/b><\/button>/.test(admin), 'the World card has a « Day / night » switch, on by default');
 ok(/b\.setAttribute\('aria-checked',_geoNight\?'true':'false'\);/.test(admin) && /v\.textContent=_geoNight\?'On':'Off';/.test(admin), 'the switch shows its state (On / Off)');

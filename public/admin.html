@@ -5464,7 +5464,11 @@
   function _geoLooksBot(c){ var v=(c&&c.v)||0; return v>=5 && (c.nw||0)===v && !_geoSess(c); }
   function loadGeo(){
     var seq=++_geoSeq, q=_perQuery();
-    var mp=_geoMap?Promise.resolve(_geoMap):fetch('/vendor/world-110m.json').then(function(r){ return r.json(); }).then(function(j){ _geoMap=j; return j; });
+    // L'adresse porte la revision du fond de carte : le cache HTTP (24 h) et
+    // celui du service worker (PWA) gardaient l'ancien fichier, sans projection
+    // ni fuseaux, et la nuit ne s'affichait pas. Changer GEO_MAP_REV a chaque
+    // changement de world-110m.json (le test le verifie contre son champ rev).
+    var mp=_geoMap?Promise.resolve(_geoMap):fetch('/vendor/world-110m.json?rev='+GEO_MAP_REV,{cache:'no-cache'}).then(function(r){ return r.json(); }).then(function(j){ _geoMap=j; return j; });
     Promise.all([mp, api('/admin/geo?'+q).then(function(r){ return r.json(); })]).then(function(a){
       if(seq!==_geoSeq) return;
       _geoData=a[1]; renderGeo();
@@ -5535,6 +5539,7 @@
   // longitude dans la projection de la carte (Natural Earth I, parametres dans
   // world-110m.json : proj) : sur un meridien, la zone sous un seuil est un seul
   // intervalle de latitude. Tout est calcule ici ; le proxy n'y est pour rien.
+  var GEO_MAP_REV=2;
   var _geoNight=true; try{ _geoNight=localStorage.getItem('pth_admin_geo_night')!=='0'; }catch(e){}
   var _RAD=Math.PI/180, _geoTzFmt={};
   function _sunPos(t){

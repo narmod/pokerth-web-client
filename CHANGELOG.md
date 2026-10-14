@@ -122,6 +122,9 @@ highlights below.
   the admin page and redrawn every minute while the map is on screen; the map asset gains the
   projection parameters, a centroid and a main zone per country (`public/vendor/world-110m.json`).
   No proxy change (`web.39`). The button is an On / Off switch that shows its state (`web.40`).
+  The map is fetched by revision (`world-110m.json?rev=2`, `GEO_MAP_REV`): an installed app or a
+  browser could keep the previous file for a day (HTTP cache, service worker), with no projection
+  or zones, and showed the switch On with no night drawn (`web.45`).
 - **Save, share or copy a studio portrait** — a ⋯ button on the « Create » preview (also a long
   press or right click on it) opens a small menu: save as `pokerth-avatar.png`, share (Web Share,
   when the browser can share files) or copy to the clipboard. The portrait is re-rendered from its
