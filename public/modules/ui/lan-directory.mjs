@@ -166,16 +166,13 @@ function _applyEntry(s) {
   if (tl) tl.checked = !!s.tls;
 }
 // Leaderboard reset period of a listed server (server/lan-boards.js): shown
-// once, in the pill under the list (not in the option labels, where it
-// repeated the pill).
+// once, on its own line under the status line (the option labels carry the
+// server name only).
 const RESET_KEYS = { daily: 'lanResetDaily', weekly: 'lanResetWeekly', monthly: 'lanResetMonthly', yearly: 'lanResetYearly', off: 'lanResetOff' };
 export function resetLabel(p) { const k = RESET_KEYS[p]; return k ? _t(k) : ''; }
-function _optionLabel(s) {
-  if (s.local) return s.name + ' — ' + s.host + (s.port !== 7234 ? ':' + s.port : '');
-  if (s.online === false) return s.name + ' — ' + _t('lanDirOffline', null, 'offline');
-  if (s.online && s.players != null) return s.name + ' — ' + _t('lanDirPlayers', { n: s.players }, 'Players: ' + s.players);
-  return s.name;
-}
+// Option label = the server name only; the status symbol in front keeps the
+// online / offline / local hint, the details are in the lines under the list.
+function _optionLabel(s) { return s.name || s.host; }
 function _renderSelect(cfg, plan) {
   const sel = /** @type {HTMLSelectElement|null} */ ($('lan-dir-sel'));
   if (!sel) return;
@@ -214,12 +211,17 @@ function _renderDetail(cfg, id) {
   if (s.tls) bits.push('TLS');
   line.appendChild(document.createTextNode(bits.join(' · ')));
   box.appendChild(line);
-  // The board's reset period as a pill (a native <select> cannot draw one).
+  // The board's reset period, a plain line styled like the status line.
   if (!s.local && s.resetPeriod) {
-    const pill = document.createElement('div');
-    pill.className = 'lan-dir-pill';
-    pill.textContent = '🏆 ' + _t('lanPropReset', null, 'Leaderboard reset') + ' — ' + resetLabel(s.resetPeriod);
-    box.appendChild(pill);
+    const rl = document.createElement('div');
+    rl.className = 'lan-dir-line lan-dir-reset';
+    const ic = document.createElement('span');
+    ic.className = 'lan-dir-ic';
+    ic.setAttribute('aria-hidden', 'true');
+    ic.textContent = '🏆';
+    rl.appendChild(ic);
+    rl.appendChild(document.createTextNode(_t('lanPropReset', null, 'Leaderboard reset') + ' — ' + resetLabel(s.resetPeriod)));
+    box.appendChild(rl);
   }
   if (s.desc) {
     const d = document.createElement('div');

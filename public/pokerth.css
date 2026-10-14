@@ -13454,11 +13454,8 @@ html[data-abar-short="1"] #s-game#s-game .my-zone { zoom: var(--abar-kp, 1); }
 .lan-dir-dot.off { border: 2px solid var(--text); }
 .lan-dir-dot.unk { border: 2px dashed var(--text); }
 .lan-dir-desc { color: var(--text); margin-top: 2px; overflow-wrap: anywhere; }
-.lan-dir-pill {
-  display: inline-block; margin-top: 5px; padding: 2px 9px; border-radius: 999px;
-  font-size: var(--fs-xs); line-height: 1.5; color: var(--text-hi);
-  background: rgba(var(--gold-rgb), 0.12); border: 1px solid rgba(var(--gold-rgb), 0.45);
-}
+.lan-dir-reset { margin-top: 2px; }
+.lan-dir-ic { width: 9px; flex: none; display: inline-flex; justify-content: center; font-size: 11px; line-height: 1; }
 .lan-dir-empty { font-size: var(--fs-sm); color: var(--text); }
 .lan-dir-propose {
   align-self: stretch; min-height: 40px; padding: 8px 12px;

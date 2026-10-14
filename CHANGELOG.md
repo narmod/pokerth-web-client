@@ -134,7 +134,9 @@ highlights below.
   4430 (`lan-ip-cap:N`): the client goes back to the login form with a translated message and
   no automatic retry. 3 new keys in the 83 languages.
   The reset period is no longer repeated in the drop-down option labels; the pill under the
-  list is the only place it is shown (`web.49`).
+  list is the only place it is shown (`web.49`). The options now carry the server name only
+  (players and the local address moved to the status line), and the reset period is a plain
+  line styled like the status line instead of a pill (`web.50`).
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the

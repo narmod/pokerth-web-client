@@ -1,3 +1,6 @@
+2026-10-14 version 2.1.10-web.50:
+- improvement: « LAN server » list: only the server names are listed; players and the leaderboard reset period are on plain lines under the list
+
 2026-10-14 version 2.1.10-web.49:
 - improvement: « LAN server » list: the leaderboard reset period is no longer repeated in each server name; it is shown once, under the list
 
