@@ -1,3 +1,6 @@
+2026-10-14 version 2.1.10-web.49:
+- improvement: « LAN server » list: the leaderboard reset period is no longer repeated in each server name; it is shown once, under the list
+
 2026-10-14 version 2.1.10-web.48:
 - new: each server of the « LAN server » list sets how many players may connect at the same time from one address (3 by default, chosen when it is proposed; only the admins can change it)
 

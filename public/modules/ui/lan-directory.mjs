@@ -165,17 +165,16 @@ function _applyEntry(s) {
   if (p) /** @type {HTMLInputElement} */ (p).value = String(s.port);
   if (tl) tl.checked = !!s.tls;
 }
-// Leaderboard reset period of a listed server (server/lan-boards.js), shown
-// next to its name: 🏆 + « Every month »… Nothing for « Never » (a 🏆 Never
-// would read as « no leaderboard ») — the status line says it in full.
+// Leaderboard reset period of a listed server (server/lan-boards.js): shown
+// once, in the pill under the list (not in the option labels, where it
+// repeated the pill).
 const RESET_KEYS = { daily: 'lanResetDaily', weekly: 'lanResetWeekly', monthly: 'lanResetMonthly', yearly: 'lanResetYearly', off: 'lanResetOff' };
 export function resetLabel(p) { const k = RESET_KEYS[p]; return k ? _t(k) : ''; }
 function _optionLabel(s) {
   if (s.local) return s.name + ' — ' + s.host + (s.port !== 7234 ? ':' + s.port : '');
-  const per = (s.resetPeriod && s.resetPeriod !== 'off') ? ' · 🏆 ' + resetLabel(s.resetPeriod) : '';
-  if (s.online === false) return s.name + per + ' — ' + _t('lanDirOffline', null, 'offline');
-  if (s.online && s.players != null) return s.name + per + ' — ' + _t('lanDirPlayers', { n: s.players }, 'Players: ' + s.players);
-  return s.name + per;
+  if (s.online === false) return s.name + ' — ' + _t('lanDirOffline', null, 'offline');
+  if (s.online && s.players != null) return s.name + ' — ' + _t('lanDirPlayers', { n: s.players }, 'Players: ' + s.players);
+  return s.name;
 }
 function _renderSelect(cfg, plan) {
   const sel = /** @type {HTMLSelectElement|null} */ ($('lan-dir-sel'));
