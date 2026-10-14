@@ -197,6 +197,8 @@ highlights below.
   list's last line (`__propose__`: opens the dialog, the selection stays); the button remains
   only when there is no list. Label « Server » (was « Choose a server »); Ace's Help, help
   paragraph and hotspots follow, 83 languages.
+  The selected server's details (status, board reset, event end, description, link) are centred
+  like the `.status` sentence under « Connect » (`web.61`).
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the

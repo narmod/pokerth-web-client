@@ -1,3 +1,6 @@
+2026-10-14 version 2.1.10-web.61:
+- improvement: LAN login: the details of the selected server are centred, like the sentence under « Connect »
+
 2026-10-14 version 2.1.10-web.60:
 - improvement: LAN login: the server list is labelled « Server » and opens right under the field, with a coloured dot per server, on every device (it used the phone's own picker before)
 - improvement: « Propose my server » is now the last line of the server list instead of a button under it

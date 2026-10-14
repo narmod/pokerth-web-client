@@ -13446,8 +13446,9 @@ html[data-abar-short="1"] #s-game#s-game .my-zone { zoom: var(--abar-kp, 1); }
    body.lan-dir-locked = a listed server is selected (or manual entry is off):
    the address fields of the ⚙ block are driven by the list, so they hide. */
 .lan-dir { display: flex; flex-direction: column; gap: var(--sp-3); }
-.lan-dir-detail { font-size: var(--fs-sm); color: var(--cream); line-height: 1.35; margin-top: 2px; }
-.lan-dir-line { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.lan-dir-detail { font-size: var(--fs-sm); color: var(--cream); line-height: 1.35; margin-top: 4px; text-align: center; }
+/* Centred, like the status sentence under « Connect » (.status). */
+.lan-dir-line { display: flex; align-items: center; justify-content: center; gap: 7px; flex-wrap: wrap; }
 .lan-dir-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; box-sizing: border-box; }
 .lan-dir-dot.on { background: #3fbf5a; }
 .lan-dir-dot.local { background: var(--gold); }
