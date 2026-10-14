@@ -1,3 +1,8 @@
+2026-10-14 version 2.1.10-web.63:
+- improvement: login: the advanced options (gear) now slide open and closed smoothly, like the logo
+- improvement: the avatar window fades in and out; the LAN server list unfolds softly
+- improvement: these animations are skipped when you turn animations down on your device or in the app
+
 2026-10-14 version 2.1.10-web.62:
 - improvement: login: once a mode is chosen, the big logo folds away to give the form more room; a small chip stays next to the mode name, and the logo comes back on the mode choice
 

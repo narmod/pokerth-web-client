@@ -76,6 +76,7 @@ function _enabled() {
 function _visible(el) {
   if (!el) return false;
   if (el.hidden) return false;
+  if (el._pthClosing) return false;   // already fading out (pthMotion): Escape goes to what is under it
   var st;
   try { st = window.getComputedStyle(el); } catch (e) { return false; }
   if (st.display === 'none' || st.visibility === 'hidden' || parseFloat(st.opacity) === 0) return false;

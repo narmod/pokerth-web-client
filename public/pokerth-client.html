@@ -418,6 +418,67 @@ function toggleStats() {
   if (typeof window._toggleStats === "function") window._toggleStats();
 }
 
+// ── Mouvements d'interface (web.63) ───────────────────────────────────
+// Même geste que le repli de l'en-tête du login (web.62), réutilisable :
+//  · pthMotion.slide(el, show, guard) : bloc DANS le flux (roue crantée…) —
+//    hauteur + opacité, et l'écart flex du parent absorbé par une marge
+//    négative, pour que rien ne saute à la fin ;
+//  · pthMotion.pop(el, show, parts, done) : fenêtre en surimpression (fenêtre
+//    d'avatar…) — le voile en fondu, la carte (parts) qui monte légèrement.
+// Rien n'anime si l'utilisateur a réduit les animations (système, ou
+// html.reduce-fx) ou si le navigateur n'a pas element.animate : le résultat
+// final est alors appliqué tout de suite. guard() (facultatif) est relu à la
+// fin d'une fermeture : faux = quelqu'un a rouvert entre-temps, on laisse.
+var pthMotion = (function () {
+  function off() {
+    try { if (document.documentElement.classList.contains("reduce-fx")) return true; } catch (e) {}
+    try { if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return true; } catch (e) {}
+    return false;
+  }
+  function stop(el) {
+    var a = el && el._pthAnims; if (!a) return;
+    el._pthAnims = null;
+    a.forEach(function (x) { try { x.onfinish = null; x.cancel(); } catch (e) {} });
+  }
+  function gapOf(el) {
+    try { var g = parseFloat(getComputedStyle(el.parentNode).rowGap); return isFinite(g) ? g : 0; } catch (e) { return 0; }
+  }
+  function slide(el, show, guard) {
+    if (!el) return;
+    stop(el);
+    if (show) el.style.display = "";
+    if (off() || typeof el.animate !== "function") { if (!show) el.style.display = "none"; return; }
+    var h = el.scrollHeight, g = gapOf(el);
+    if (!h) { if (!show) el.style.display = "none"; return; }
+    var closed = { height: "0px", opacity: 0, marginTop: (-g) + "px", overflow: "hidden" };
+    var open = { height: h + "px", opacity: 1, marginTop: "0px", overflow: "hidden" };
+    var a = el.animate(show ? [closed, open] : [open, closed], { duration: show ? 300 : 240, easing: "ease" });
+    el._pthAnims = [a];
+    a.onfinish = function () { el._pthAnims = null; if (!show && (!guard || guard())) el.style.display = "none"; };
+  }
+  function pop(el, show, parts, done) {
+    if (!el) return;
+    stop(el);
+    var kids = [];
+    try { kids = parts ? Array.prototype.slice.call(el.querySelectorAll(parts)) : []; } catch (e) {}
+    if (off() || typeof el.animate !== "function") { if (done) done(); return; }
+    var dur = show ? 220 : 160;
+    var fade = [{ opacity: 0 }, { opacity: 1 }];
+    var rise = [{ opacity: 0, transform: "translateY(14px) scale(0.98)" }, { opacity: 1, transform: "none" }];
+    var anims = [el.animate(show ? fade : fade.slice().reverse(), { duration: dur, easing: "ease", fill: "forwards" })];
+    kids.forEach(function (k) { anims.push(k.animate(show ? rise : rise.slice().reverse(), { duration: dur, easing: show ? "cubic-bezier(.2,.8,.2,1)" : "ease-in", fill: "forwards" })); });
+    el._pthAnims = anims;
+    anims[0].onfinish = function () {
+      el._pthAnims = null;
+      if (done) done();
+      // fill:forwards ne doit pas figer l'élément une fois fini.
+      anims.forEach(function (x) { try { x.cancel(); } catch (e) {} });
+    };
+  }
+  return { off: off, slide: slide, pop: pop, stop: stop };
+})();
+window.pthMotion = pthMotion;
+
 // Replie/déplie les champs de connexion avancés (proxy / serveur / port) via la
 // roue crantée. L'état est suivi par la classe .open sur le bouton (sans
 // ambiguïté), ce qui corrige le repliage. Le bloc est masqué via display:none
@@ -437,28 +498,23 @@ function toggleConnAdvanced() {
     : ((window.t && window.t("moreOptions")) || "More options");
   btn.setAttribute("title", label);
   btn.setAttribute("aria-label", label);
-  if (open) {
-    wrap.style.display = "";          // revient au display:flex défini en CSS
-    wrap.classList.remove("anim");
-    void wrap.offsetWidth;            // reflow pour rejouer l'animation
-    wrap.classList.add("anim");
-  } else {
-    wrap.style.display = "none";
-    wrap.classList.remove("anim");
-  }
+  // Dépli/repli animé (pthMotion.slide), comme l'en-tête du login. La garde
+  // laisse un bloc affiché si la roue a été rouverte pendant le repli.
+  var stillClosed = function () { return !btn.classList.contains("open"); };
+  pthMotion.slide(wrap, open, stillClosed);
   // Options avancées suivant la roue crantée : le TLS dans TOUS les modes ; le
   // mot de passe utilisateur uniquement en LAN / serveur dédié.
   var tlsRow = document.getElementById("tls-row");
-  if (tlsRow) tlsRow.style.display = open ? "" : "none";
+  if (tlsRow) pthMotion.slide(tlsRow, open, stillClosed);
   var lm = document.getElementById("login-mode");
   var mode = lm ? lm.value : "";
   if (mode === "lan" || mode === "unauth") {
     var userRow = document.getElementById("f-user-pass");
-    if (userRow) userRow.style.display = open ? "" : "none";
+    if (userRow) pthMotion.slide(userRow, open, stillClosed);
     // En LAN, la case « Mode invité » est une option avancée : elle suit
     // l'état de la roue crantée (comme TLS et le mot de passe utilisateur).
     var guestRow = document.getElementById("guest-mode-row");
-    if (guestRow) guestRow.style.display = open ? "" : "none";
+    if (guestRow) pthMotion.slide(guestRow, open, stillClosed);
   }
 }
 

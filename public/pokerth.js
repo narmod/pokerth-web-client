@@ -3299,7 +3299,8 @@ window.toggleAvatarPopup = function() {
   try { if (typeof window.avStudioReset === 'function') window.avStudioReset(); } catch (e) {}
   var popup = document.getElementById('avatar-popup');
   if (!popup) return;
-  var isOpen = popup.style.display && popup.style.display !== 'none';
+  // A window fading out (pthMotion) counts as closed: tapping again reopens it.
+  var isOpen = popup.style.display && popup.style.display !== 'none' && !popup._pthClosing;
   if (isOpen) {
     // Fermeture propre : retire la classe modale + réattache le popup à sa
     // place d'origine dans le formulaire (no-op si jamais ouvert en modale).
@@ -12157,7 +12158,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.62'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.63'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

@@ -76,6 +76,36 @@ let ok = 0, checks = 0, fails = 0;
 const acts = { 'pokerthnet': ['pokerthnet', 'pokerthnet:guest'], 'offline': ['offline'], 'lan-dedi': ['lan-dedi', 'lan-dedi:plain'] };
 const ref = {};
 for (const m of modes) { const { ctx, pg } = await fresh(); await pick(pg, m); ref[m] = await snap(pg); await ctx.close(); }
+// Motion (web.63): the gear block and the avatar window open and close with an
+// animation, and always end in the right state, even when toggled quickly.
+{
+  const { ctx, pg } = await fresh();
+  await pick(pg, 'lan-dedi');
+  const vis = (ids) => pg.evaluate((a) => a.map((id) => { const e = document.getElementById(id); return !!e && getComputedStyle(e).display !== 'none'; }), ids);
+  const rows = ['conn-advanced', 'f-user-pass', 'guest-mode-row'];
+  const step = async (label, okf) => { checks++; const r = await okf(); if (r === true) { ok++; console.log('  ✓ ' + label); } else { fails++; console.log('  ✗ ' + label + ' ' + JSON.stringify(r)); } };
+  await click(pg, '#conn-adv-btn'); await sleep(80);
+  const mid = await pg.evaluate(() => { const e = document.getElementById('conn-advanced'); return e.getAnimations ? e.getAnimations().length : 0; });
+  await sleep(400);
+  await step('gear: the advanced block slides open' + (mid ? ' (animated)' : ''), async () => { const v = await vis(rows); return v.every(Boolean) || v; });
+  await click(pg, '#conn-adv-btn'); await sleep(100);
+  await step('gear: still visible while folding', async () => (await vis(['conn-advanced']))[0] || 'hidden at once');
+  await sleep(400);
+  await step('gear: folded away at the end', async () => { const v = await vis(rows); return v.every((x) => !x) || v; });
+  await click(pg, '#conn-adv-btn'); await sleep(60); await click(pg, '#conn-adv-btn'); await sleep(60); await click(pg, '#conn-adv-btn'); await sleep(500);
+  await step('gear: open, close, open quickly ends open', async () => { const v = await vis(rows); return v.every(Boolean) || v; });
+  await click(pg, '#av-trigger'); await sleep(400);
+  await step('avatar window opens', async () => (await pg.evaluate(() => getComputedStyle(document.getElementById('avatar-popup')).display !== 'none')) || 'not shown');
+  await pg.keyboard.press('Escape'); await sleep(60);
+  const fading = await pg.evaluate(() => getComputedStyle(document.getElementById('avatar-popup')).display !== 'none');
+  await sleep(400);
+  await step('avatar window fades out' + (fading ? '' : ' (no fade seen)') + ' and closes', async () => (await pg.evaluate(() => document.getElementById('avatar-popup').style.display === 'none' && !document.getElementById('avatar-popup').classList.contains('avatar-popup-as-modal'))) || 'still open');
+  await click(pg, '#av-trigger'); await sleep(400); await pg.keyboard.press('Escape'); await sleep(30); await pg.keyboard.press('Escape'); await sleep(500);
+  await step('avatar window: a second Escape while it fades does not reopen it', async () => (await pg.evaluate(() => document.getElementById('avatar-popup').style.display === 'none')) || 'reopened');
+  await click(pg, '#av-trigger'); await sleep(60); await pg.keyboard.press('Escape'); await sleep(40); await click(pg, '#av-trigger'); await sleep(500);
+  await step('avatar window: close then reopen quickly ends open', async () => (await pg.evaluate(() => getComputedStyle(document.getElementById('avatar-popup')).display !== 'none')) || 'closed');
+  await ctx.close();
+}
 const seqs = [];
 for (const a of modes) for (const c of modes) if (a !== c) for (const x of acts[a]) seqs.push([[a, x], [c, null]]);
 for (const a of modes) for (const b2 of modes) for (const c of modes) if (a !== b2 && b2 !== c) for (const x of acts[a]) seqs.push([[a, x], [b2, acts[b2][0]], [c, null]]);

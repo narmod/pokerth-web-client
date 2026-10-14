@@ -780,8 +780,11 @@ function openAvatarPickerFromLobby(opts) {
   if (picker.parentNode !== document.body) {
     document.body.appendChild(picker);
   }
+  // A close still fading out (pthMotion.pop) finishes now, before reopening.
+  try { if (picker._pthClosing) picker._pthClosing(); } catch (e) {}
   picker.classList.add('avatar-popup-as-modal');
   picker.style.display = 'block';
+  try { if (window.pthMotion) window.pthMotion.pop(picker, true, '.avp-header, .avp-cats, .avp-grid'); } catch (e) {}
   // Apply the default/saved emoji category so the grid is filtered
   // (otherwise every category's emojis would show at once on first
   // open from the lobby). avpApplyDefaultCat is defined in the HTML
@@ -824,6 +827,19 @@ function openAvatarPickerFromLobby(opts) {
 function closeAvatarPickerFromLobby() {
   var picker = document.getElementById('avatar-popup');
   if (!picker) return;
+  // Fade out first (pthMotion.pop), then the usual close. A picker already
+  // hidden (an avatar was just picked: selectAvatarPopup hid it) closes at once.
+  var visible = picker.style.display !== 'none' && picker.classList.contains('avatar-popup-as-modal');
+  if (visible && window.pthMotion && !picker._pthClosing && !window.pthMotion.off()) {
+    var finish = function () { if (picker._pthClosing !== finish) return; picker._pthClosing = null; try { window.pthMotion.stop(picker); } catch (e) {} _closeAvatarPickerNow(picker); };
+    picker._pthClosing = finish;
+    window.pthMotion.pop(picker, false, '.avp-header, .avp-cats, .avp-grid', finish);
+    return;
+  }
+  if (picker._pthClosing) { var f = picker._pthClosing; f(); return; }
+  _closeAvatarPickerNow(picker);
+}
+function _closeAvatarPickerNow(picker) {
   picker.classList.remove('avatar-popup-as-modal');
   picker.style.display = 'none';
   // Detach our backdrop handler. The btn handler is once:true, but it is

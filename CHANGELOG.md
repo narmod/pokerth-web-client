@@ -204,6 +204,14 @@ highlights below.
   `aria-hidden`; a 28 px chip (`.lb-chip`) fades in at the end of the « ‹ mode » bar; back on
   step 1 the logo returns. Driven by `loginHeaderFold()` from `loginPickMode` /
   `loginBackToStep1`. About 175 px freed on a phone.
+  Shared motion (`web.63`): `pthMotion` (inline in the client head) — `slide(el, show,
+  guard)` for in-flow blocks (height + opacity, the parent's flex gap absorbed by a negative
+  margin) and `pop(el, show, parts, done)` for overlays (veil fade, card rise); both skip to the
+  end state with reduced motion (system or `html.reduce-fx`) or without `element.animate`. Used
+  by the gear (`#conn-advanced` and the rows it drives, with a guard so a quick reopen wins), the
+  avatar window (fade-out before the usual close; a fading window counts as closed for its toggle
+  and for Escape/keynav) and the LAN server list (CSS entry animation). Motion checks added to
+  `test-login-modes-browser`.
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the
