@@ -31,6 +31,7 @@ import { createState, mergeIn, KEY_ON } from './state.mjs';
 import { canSpeak, pickContext, replayContext, applies, createRun } from './core.mjs';
 import { pickRankingTable, finishPlace, RANKED_TYPE, pointsFor } from './ranking-pick.mjs';
 import { CONTEXTS } from './contexts/index.mjs';
+import { cupName } from './cup.mjs';
 import { gt, ready } from './i18n.mjs';
 import * as hl from './highlight.mjs';
 import { beacon } from './beacons.mjs';
@@ -43,7 +44,7 @@ const OFFER_DELAY_MS = 2500;
 const EVAL_DEBOUNCE_MS = 350;
 const SIGNUP_URL = 'https://www.pokerth.net/ucp.php?mode=register';
 /** Buttons that do something (primary), besides later / next / gotIt. */
-const ACTIONS = ['join', 'createRanking', 'signup', 'seeRanking', 'watch'];
+const ACTIONS = ['join', 'createRanking', 'signup', 'seeRanking', 'watch', 'seeEvents'];
 
 let M = null;                 // modules/mascot/guide.mjs once loaded
 let wasOn = false;
@@ -64,7 +65,8 @@ const resumeAt = new Map();   // tour id → the step it was left at with « Lat
 const counted = new Set();    // « shown » already counted this session (statistics, L3)
 let joinedGid = 0;            // Ranking table joined from the bubble (funnel: → started)
 let watchGid = 0;             // running game tapped in the list (« Watch it? », web.64)
-const tapTold = new Set();    // tables a tap already explained this session ('w:gid' watch, 'g:gid' guest)
+let tapCup = '';              // name of the cup game tapped in the list, '' for any other table (web.65)
+const tapTold = new Set();    // tables a tap already explained this session ('w:gid' watch, 'c:gid' cup, 'g:gid' guest)
 
 const state = createState(
   (() => { try { return window.localStorage; } catch (e) { return null; } })() || { getItem: () => null, setItem() {} },
@@ -210,6 +212,7 @@ export function where() {
     waitMax: g ? g.maxPlayers || 10 : 10,
     result,
     watchGid,
+    cupName: tapCup,
     watchKnown: state.seen('lobby-watch'),
     windows: openWindows(),
     // the create page (tour, web.288): the game style block open, saved preferences (⭐ pill shown)
@@ -417,7 +420,7 @@ function renderStep(opts = {}) {
   }
 }
 
-const ACTION_EV = { join: 'join', createRanking: 'create', signup: 'signup', watch: 'watch' };
+const ACTION_EV = { join: 'join', createRanking: 'create', signup: 'signup', watch: 'watch', seeEvents: 'events' };
 function doAction(id, w) {
   try {
     if (id === 'join' && w.rankPick) joinedGid = w.rankPick.id;
@@ -425,6 +428,7 @@ function doAction(id, w) {
     else if (id === 'createRanking' && window.App && window.App.openCreatePage) window.App.openCreatePage({ ranking: true });
     else if (id === 'signup') window.open(SIGNUP_URL, '_blank', 'noopener');
     else if (id === 'seeRanking' && typeof window.toggleRankingModal === 'function') window.toggleRankingModal();
+    else if (id === 'seeEvents' && typeof window.openForumModal === 'function') window.openForumModal();
     else if (id === 'watch' && watchGid && window.App && window.App.spectateGame) {
       const s = S(), g = s.games ? s.games[watchGid] : null;
       if (g && g.mode === 2 && !s.gId && !s.amInGame) window.App.spectateGame(watchGid);
@@ -1252,7 +1256,10 @@ function onGames() {
 // A tap on a table of the list (web.64). A game already being played: the Ace
 // says it can be watched as a spectator and offers to (lobby-watch) — for
 // everyone, guests included. A guest tapping an open Ranking (or
-// registered-only) table: the free-account bubble again (D16). Each at most
+// registered-only) table: the free-account bubble again (D16). A cup game
+// (BBC, WEC, Monthly Cup…, cup.mjs): its own text — running, the cup admins
+// invite the players but anyone can watch; not started, it cannot be joined
+// by a tap, the Events window says how to register (web.65). Each at most
 // once per table and per session, and not again this session after « Later »
 // (it used to come back at every tap, whatever the table).
 function onListTap(ev) {
@@ -1266,6 +1273,7 @@ function onListTap(ev) {
   const g = s.games ? s.games[gid] : null;
   if (!g || s.gId || s.amInGame || window._offlineMode) return;
   if (!canSpeak(where())) return;
+  tapCup = cupName(g);
   if (g.mode === 2) {
     if (snoozed.has('lobby-watch') || tapTold.has('w:' + gid)) return;
     const ctx = CONTEXTS.find((c) => c.id === 'lobby-watch');
@@ -1273,6 +1281,12 @@ function onListTap(ev) {
     tapTold.add('w:' + gid);
     watchGid = Number(gid) || 0;
     showContext(ctx);
+    return;
+  }
+  if (g.mode === 1 && tapCup) {
+    if (snoozed.has('lobby-cup') || tapTold.has('c:' + gid)) return;
+    const cx = CONTEXTS.find((c) => c.id === 'lobby-cup');
+    if (cx) { tapTold.add('c:' + gid); showContext(cx); }
     return;
   }
   if (g.mode !== 1 || !isGuest(s) || g.type === 1) return;

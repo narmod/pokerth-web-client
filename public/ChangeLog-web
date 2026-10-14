@@ -1,3 +1,6 @@
+2026-10-14 version 2.1.10-web.65:
+- improvement: Ace's Help: cup games (BBC, WEC, Monthly Cup…) get their own explanation — the cup admins open these tables and invite the players; a running one can be watched as a spectator, and for one not started yet the Ace points to the events to find out how to take part
+
 2026-10-14 version 2.1.10-web.64:
 - improvement: Ace's Help: tap a game that is already being played and the Ace explains you can watch it as a spectator (select it, then « Spectate »), and offers to take you there
 - improvement: Ace's Help: tapping tables no longer brings back the same bubble again and again — each tip comes once per table, and « Later » keeps it quiet until your next visit

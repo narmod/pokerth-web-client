@@ -38,12 +38,15 @@ export default {
   signup: 'Create an account',
   seeRanking: 'See the ranking',
   watch: "Watch",
+  seeEvents: "See the events",
   // C1 — pokerth.net lobby
   c1Join: 'A ranked game is waiting for you: **{n}/{max}** players. It starts as soon as it’s full!',
   c1None: 'No ranked game open right now. Create one — any player with an account can! It starts by itself as soon as 10 players have joined.',
   c1Guest: 'Ranked games need a (free) pokerth.net account. As a guest you can play Normal games.',
   c1Watch: "This game is already being played: you can no longer take a seat, but you can watch it as a **spectator**. Select a running game, then tap **{spec}** below the list. Shall we watch this one?",
   c1WatchAgain: "This game is in progress — want to watch it?",
+  c1WatchCup: "A cup game: **{name}**. Only the cup admins open these tables and invite the players. It is already being played, but anyone can watch it as a **spectator**: tap **{spec}** below the list. Shall we watch it?",
+  c1Cup: "A cup game: **{name}**. You cannot join it with a tap: the cup admins invite the players registered for it. The next cup games, and how to take part, are in the events.",
   // C2 — ranked waiting room (one fact every ~20 s)
   c2Wait: 'Ranked game: **{n}/{max}** players. It starts by itself as soon as the table is full — meanwhile, here is how the ranking works.',
   c2Points: 'Each ranked game hands out points by finishing place: **15, 9, 6, 4, 3, 2, 1** from 1st to 7th, nothing from 8th to 10th — 40 points per table.',

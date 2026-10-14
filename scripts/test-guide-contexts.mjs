@@ -108,7 +108,7 @@ ok([].concat(wn.target(W({ host: true })))[0].includes('wp-btn-start') && [].con
 // ── texts, buttons, targets ──
 const samples = [W({ screen: 'connect', loginStep: 1 }), W({ screen: 'connect', loginStep: 2 }), W({ screen: 'wait', host: true }), W({ screen: 'wait' }), W({ screen: 'wait', offline: true }), W({}), W({ rankPick: null }), W({ guest: true }), W({ screen: 'wait', ranked: true }), W({ result: { place: 4 } }), W({ result: { place: null, tied: true } })];
 const vars = (s) => (String(s).match(/\{\w+\}/g) || []).map((x) => x.slice(1, -1));
-const BTN = new Set(['later', 'gotIt', 'next', 'join', 'createRanking', 'signup', 'seeRanking', 'watch']);
+const BTN = new Set(['later', 'gotIt', 'next', 'join', 'createRanking', 'signup', 'seeRanking', 'watch', 'seeEvents']);
 for (const c of CONTEXTS) {
   for (const w of samples.filter((x) => C.applies(c, x) || c.manual)) {
     c.steps.forEach((s, i) => {
@@ -145,6 +145,17 @@ ok(LW.steps[0].text(W({ watchGid: 7 })) === 'c1Watch' && LW.steps[0].text(W({ wa
 ok([].concat(LW.steps[0].target(W({ watchGid: 7 }))).some((x) => x.includes('lobby-foot-spec')) && [].concat(LW.steps[0].target(W({ watchGid: 7 }))).some((x) => x.includes('data-gid="7"')), 'points at the Spectate button (footer, or the row’s own)');
 ok(/\{spec\}/.test(EN.c1Watch) && LW.steps[0].vars(W({})).spec === 'Spectate', 'the Spectate button named as the UI names it');
 ok(LW.steps[0].buttons.join() === 'later,gotIt,watch', 'Later · Got it · Watch');
+// web.65: cup games (BBC, WEC, Monthly Cup…) get their own explanation
+const { cupName } = await imp('public/modules/guide/cup.mjs');
+ok(cupName({ type: 3, name: 'WEC 22:00' }) === 'WEC 22:00' && cupName({ type: 3, name: 'BBC Step 2 21:30' }) === 'BBC Step 2 21:30' && cupName({ priv: true, type: 1, name: 'Monthly Cup Gold' }) === 'Monthly Cup Gold', 'cup games recognised: WEC, BBC, Monthly Cup (invite-only or password)');
+ok(cupName({ type: 1, name: 'BBC training' }) === '' && cupName({ type: 4, name: 'WEC practice' }) === '' && cupName({ type: 3, name: 'Friends only' }) === '' && cupName({ type: 3, name: 'Cupcake night' }) === '' && cupName(null) === '', 'not a cup: open tables, other invite-only tables, « Cupcake »');
+ok(cupName({ type: 3, name: '**BBC**\u0007 Step 1' }) === 'BBC Step 1' && cupName({ type: 3, name: 'WEC ' + 'x'.repeat(60) }).length === 40, 'cup name cleaned for the bubble (no ** or control characters, 40 characters max)');
+ok(LW.steps[0].text(W({ watchGid: 7, cupName: 'WEC 22:00' })) === 'c1WatchCup' && LW.steps[0].text(W({ watchGid: 7, cupName: 'WEC 22:00', watchKnown: true })) === 'c1WatchCup' && LW.steps[0].vars(W({ cupName: 'WEC 22:00' })).name === 'WEC 22:00', 'running cup game: its own « watch it » text, with its name');
+const LC = CONTEXTS.find((c) => c.id === 'lobby-cup');
+ok(LC && LC.manual === true && pick({ cupName: 'WEC 22:00' }) !== 'lobby-cup', 'lobby-cup: only on a tap (manual)');
+ok(C.applies(LC, W({ cupName: 'BBC Step 1', gid: 0 })) && C.applies(LC, W({ cupName: 'BBC Step 1', gid: 0, guest: true })) && !C.applies(LC, W({ cupName: '' })) && !C.applies(LC, W({ cupName: 'BBC', offline: true })), 'lobby-cup: a tapped cup game in the lobby, guests included');
+ok(LC.steps[0].text === 'c1Cup' && LC.steps[0].buttons.join() === 'later,gotIt,seeEvents' && LC.steps[0].vars(W({ cupName: 'BBC Step 1' })).name === 'BBC Step 1', 'not started: invited by the cup admins, Events offered');
+ok(/\{name\}/.test(EN.c1Cup) && /\{name\}/.test(EN.c1WatchCup) && /\{spec\}/.test(EN.c1WatchCup), 'cup texts name the table (and the Spectate button)');
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

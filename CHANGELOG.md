@@ -76,6 +76,10 @@ highlights below.
   context, counted as `lobby-watch.watch`). The guest free-account bubble now only answers taps on
   *open* Ranking / registered-only tables. Both come at most once per table and per session, and
   « Later » silences them for the session — the bubble used to come back at every tap (`web.64`).
+  Cup games (BBC, WEC, Monthly Cup…: an invite-only or password table whose name names a cup,
+  `guide/cup.mjs`) get their own text: running, the cup admins invite the players but anyone can
+  watch; not started, it cannot be joined by a tap and **See the events** opens the Events window
+  (`lobby-cup`, counted as `lobby-cup.events`; it replaces the guest bubble on such tables, `web.65`).
 
 ### Added
 - **LAN server directory, server side** — players will be able to propose their own PokerTH
