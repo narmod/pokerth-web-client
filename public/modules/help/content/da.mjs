@@ -238,7 +238,7 @@ export const help = {
               'Fanen “Begivenheder” viser de kommende BBC-spil, det daglige WEC-spil og den næste Monthly Cup med antallet af tilmeldte spillere samt de seneste vindere af BBC, WEC og Monthly Cup. Tiderne er i din lokale tid; kun ↗-ikonet åbner fællesskabets side. Indstillingen “Vis fællesskabsindhold (BBC / WEC)” skjuler denne fane.',
               'Kommende spil er grupperet efter aften. Tryk på en begivenhed for at vælge den: knappen nederst følger den (tilmelding til BBC eller Monthly Cup; det daglige WEC-spil kl. 22:00 servertid kræver ingen). Et BBC-spil med tilmeldinger folder sig også ud og viser, hvem der er tilmeldt, BBC-administratorer i guld.'] },
         { id: 'avatars', t: 'Avatarer og flag',
-          b: ['På pokerth.net distribueres din avatar til andre spillere via avatarserveren, og et lille landeflag kan vises på spillerboksene. Begge dele er valgfrie og kan indstilles i indstillingerne.'] }
+          b: ['På pokerth.net distribueres din avatar til andre spillere via avatarserveren, og et lille landeflag kan vises på spillerboksene. Begge dele er valgfrie og kan indstilles i indstillingerne.', "Sådan viser du dit eget flag: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Det vises ved dit næste login. Gæster har intet flag."] }
       ]
     },
     {

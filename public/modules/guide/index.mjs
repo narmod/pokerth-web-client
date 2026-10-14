@@ -43,8 +43,9 @@ const PUBLIC = true;
 const OFFER_DELAY_MS = 2500;
 const EVAL_DEBOUNCE_MS = 350;
 const SIGNUP_URL = 'https://www.pokerth.net/ucp.php?mode=register';
+const PROFILE_URL = 'https://www.pokerth.net/ucp.php?i=ucp_profile&mode=profile_info';   // Edit profile → Country (web.66)
 /** Buttons that do something (primary), besides later / next / gotIt. */
-const ACTIONS = ['join', 'createRanking', 'signup', 'seeRanking', 'watch', 'seeEvents'];
+const ACTIONS = ['join', 'createRanking', 'signup', 'seeRanking', 'watch', 'seeEvents', 'editProfile'];
 
 let M = null;                 // modules/mascot/guide.mjs once loaded
 let wasOn = false;
@@ -213,6 +214,8 @@ export function where() {
     result,
     watchGid,
     cupName: tapCup,
+    // my own player info came back without a country (pokerth.net account): no flag next to my name (web.66)
+    noFlag: net && !guest && !!s._myInfoLoaded && !!s.myId && !(s._playerCountries && s._playerCountries[s.myId]),
     watchKnown: state.seen('lobby-watch'),
     windows: openWindows(),
     // the create page (tour, web.288): the game style block open, saved preferences (⭐ pill shown)
@@ -420,7 +423,7 @@ function renderStep(opts = {}) {
   }
 }
 
-const ACTION_EV = { join: 'join', createRanking: 'create', signup: 'signup', watch: 'watch', seeEvents: 'events' };
+const ACTION_EV = { join: 'join', createRanking: 'create', signup: 'signup', watch: 'watch', seeEvents: 'events', editProfile: 'profile' };
 function doAction(id, w) {
   try {
     if (id === 'join' && w.rankPick) joinedGid = w.rankPick.id;
@@ -429,6 +432,7 @@ function doAction(id, w) {
     else if (id === 'signup') window.open(SIGNUP_URL, '_blank', 'noopener');
     else if (id === 'seeRanking' && typeof window.toggleRankingModal === 'function') window.toggleRankingModal();
     else if (id === 'seeEvents' && typeof window.openForumModal === 'function') window.openForumModal();
+    else if (id === 'editProfile') window.open(PROFILE_URL, '_blank', 'noopener');
     else if (id === 'watch' && watchGid && window.App && window.App.spectateGame) {
       const s = S(), g = s.games ? s.games[watchGid] : null;
       if (g && g.mode === 2 && !s.gId && !s.amInGame) window.App.spectateGame(watchGid);

@@ -238,7 +238,7 @@ export const help = {
               'Skirtukas „Renginiai“ rodo artėjančius BBC žaidimus, kasdienį WEC žaidimą ir kitą Monthly Cup su užsiregistravusių žaidėjų skaičiumi, taip pat naujausius BBC, WEC ir Monthly Cup nugalėtojus. Laikas rodomas jūsų vietos laiku; bendruomenės svetainę atveria tik piktograma ↗. Parinktis „Rodyti bendruomenės turinį (BBC / WEC)“ paslepia šį skirtuką.',
               'Artėjantys žaidimai sugrupuoti pagal vakarus. Bakstelėkite įvykį, kad jį pasirinktumėte: apačioje esantis mygtukas jį seka (registracija į BBC arba Monthly Cup; kasdieniam WEC žaidimui 22:00 serverio laiku registracijos nereikia). BBC žaidimas su registracijomis taip pat išsiskleidžia ir parodo, kas užsiregistravo, BBC administratoriai auksine spalva.'] },
         { id: 'avatars', t: 'Avatarai ir vėliavos',
-          b: ['pokerth.net svetainėje tavo avataras platinamas kitiems žaidėjams per avatarų serverį, o ant žaidėjų dėžučių gali būti rodoma maža šalies vėliava. Abu dalykai pasirenkami ir nustatomi parinktyse.'] }
+          b: ['pokerth.net svetainėje tavo avataras platinamas kitiems žaidėjams per avatarų serverį, o ant žaidėjų dėžučių gali būti rodoma maža šalies vėliava. Abu dalykai pasirenkami ir nustatomi parinktyse.', "Kad būtų rodoma tavo vėliava: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Ji atsiras kitą kartą prisijungus. Svečiai vėliavos neturi."] }
       ]
     },
     {

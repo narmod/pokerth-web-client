@@ -238,7 +238,7 @@ export const help = {
               'Thẻ “Sự kiện” hiển thị các ván BBC sắp tới, ván WEC hằng ngày và Monthly Cup tiếp theo cùng số người chơi đã đăng ký, cũng như những người thắng gần nhất của BBC, WEC và Monthly Cup. Giờ được hiển thị theo giờ địa phương của bạn; chỉ biểu tượng ↗ mới mở trang cộng đồng. Tùy chọn “Hiển thị nội dung cộng đồng (BBC / WEC)” sẽ ẩn thẻ này.',
               'Các ván sắp tới được nhóm theo buổi tối. Chạm vào một sự kiện để chọn: nút ở dưới sẽ theo sự kiện đó (đăng ký BBC hoặc Monthly Cup; ván WEC hằng ngày lúc 22:00 giờ máy chủ không cần đăng ký). Một ván BBC có người đăng ký cũng mở ra để hiện ai đã đăng ký, quản trị viên BBC màu vàng kim.'] },
         { id: 'avatars', t: 'Ảnh đại diện và cờ',
-          b: ['Trên pokerth.net, ảnh đại diện của bạn được phân phối tới người chơi khác qua máy chủ ảnh đại diện, và một lá cờ quốc gia nhỏ có thể hiện trên ô người chơi. Cả hai đều tùy chọn và cấu hình được trong tùy chọn.'] }
+          b: ['Trên pokerth.net, ảnh đại diện của bạn được phân phối tới người chơi khác qua máy chủ ảnh đại diện, và một lá cờ quốc gia nhỏ có thể hiện trên ô người chơi. Cả hai đều tùy chọn và cấu hình được trong tùy chọn.', "Để hiển thị cờ của bạn: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Cờ sẽ xuất hiện ở lần đăng nhập tiếp theo. Khách không có cờ."] }
       ]
     },
     {

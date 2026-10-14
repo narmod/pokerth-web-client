@@ -344,7 +344,7 @@ export const help = {
         { id: "avatars",
           t: "Afàtá àti àsíá",
           b: [
-            "Lórí pokerth.net, a ń pín afàtá rẹ fún àwọn òṣèré mìíràn nípasẹ̀ olùpín afàtá, a sì lè fi àsíá orílẹ̀-èdè kékeré hàn lórí àpótí òṣèré. Àwọn méjèèjì jẹ́ àṣàyàn, a sì lè ṣètò wọn nínú àṣàyàn."] }
+            "Lórí pokerth.net, a ń pín afàtá rẹ fún àwọn òṣèré mìíràn nípasẹ̀ olùpín afàtá, a sì lè fi àsíá orílẹ̀-èdè kékeré hàn lórí àpótí òṣèré. Àwọn méjèèjì jẹ́ àṣàyàn, a sì lè ṣètò wọn nínú àṣàyàn.", "Láti fi àsíá rẹ hàn: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Yóò farahàn nígbà tí o bá wọlé lẹ́ẹ̀kan sí i. Àwọn àlejò kò ní àsíá."] }
       ]
     },
     {

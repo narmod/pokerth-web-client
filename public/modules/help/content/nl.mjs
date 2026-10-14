@@ -238,7 +238,7 @@ export const help = {
               'Het tabblad “Evenementen” toont de komende BBC-spellen, het dagelijkse WEC-spel en de volgende Monthly Cup met het aantal ingeschreven spelers, en de laatste winnaars van BBC, WEC en Monthly Cup. De tijden staan in je lokale tijd; alleen het ↗-pictogram opent de community-site. De optie “Community-inhoud tonen (BBC / WEC)” verbergt dit tabblad.',
               'Komende spellen zijn per avond gegroepeerd. Tik op een evenement om het te selecteren: de knop onderaan volgt het (inschrijving voor de BBC of de Monthly Cup; het dagelijkse WEC-spel om 22:00 servertijd heeft er geen nodig). Een BBC-spel met inschrijvingen klapt ook open en toont wie er ingeschreven is, BBC-admins in goud.'] },
         { id: 'avatars', t: 'Avatars en vlaggen',
-          b: ['Op pokerth.net wordt je avatar via de avatarserver naar andere spelers verspreid, en kan een kleine landvlag op de spelersvakken verschijnen. Beide zijn optioneel en instelbaar in de opties.'] }
+          b: ['Op pokerth.net wordt je avatar via de avatarserver naar andere spelers verspreid, en kan een kleine landvlag op de spelersvakken verschijnen. Beide zijn optioneel en instelbaar in de opties.', "Je eigen vlag tonen: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Hij verschijnt bij je volgende aanmelding. Gasten hebben geen vlag."] }
       ]
     },
     {

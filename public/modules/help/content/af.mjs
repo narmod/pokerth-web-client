@@ -238,7 +238,7 @@ export const help = {
               'Die “Geleenthede”-oortjie wys die komende BBC-spele, die daaglikse WEC-spel en die volgende Monthly Cup met die aantal ingeskrewe spelers, asook die jongste BBC-, WEC- en Monthly Cup-wenners. Tye is in jou plaaslike tyd; slegs die ↗-ikoon maak die gemeenskapswebwerf oop. Die opsie “Wys gemeenskapsinhoud (BBC / WEC)” versteek hierdie oortjie.',
               'Komende spele word per aand gegroepeer. Tik op ’n geleentheid om dit te kies: die knoppie onderaan volg dit (inskrywing vir die BBC of die Monthly Cup; die daaglikse WEC-spel om 22:00 bedienertyd het geen nodig nie). ’n BBC-spel met inskrywings vou ook oop om te wys wie ingeskryf is, BBC-admins in goud.'] },
         { id: 'avatars', t: 'Avatars en vlae',
-          b: ['Op pokerth.net word jou avatar deur die avatarbediener aan ander spelers versprei, en \u2019n klein landsvlag kan op die spelerblokkies verskyn. Albei is opsioneel en in die opsies instelbaar.'] }
+          b: ['Op pokerth.net word jou avatar deur die avatarbediener aan ander spelers versprei, en \u2019n klein landsvlag kan op die spelerblokkies verskyn. Albei is opsioneel en in die opsies instelbaar.', "Om jou eie vlag te wys: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Dit verskyn by jou volgende aanmelding. Gaste het geen vlag nie."] }
       ]
     },
     {

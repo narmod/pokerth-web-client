@@ -240,7 +240,7 @@ export const help = {
               'Ipinapakita ng tab na “Mga kaganapan” ang mga paparating na laro ng BBC, ang pang-araw-araw na laro ng WEC at ang susunod na Monthly Cup kasama ang bilang ng mga nagparehistrong manlalaro, pati na ang mga pinakahuling nanalo sa BBC, WEC at Monthly Cup. Nasa lokal mong oras ang mga oras; ang icon na ↗ lang ang nagbubukas ng site ng komunidad. Itinatago ng opsyong “Ipakita ang nilalaman ng komunidad (BBC / WEC)” ang tab na ito.',
               'Ang mga paparating na laro ay nakapangkat ayon sa gabi. I-tap ang isang event para piliin ito: sinusundan ito ng button sa ibaba (rehistrasyon sa BBC o sa Monthly Cup; walang kailangan ang pang-araw-araw na laro ng WEC sa 22:00 oras ng server). Bumubukas din ang isang laro ng BBC na may mga nagparehistro para ipakita kung sino sila, ginto ang mga admin ng BBC.'] },
         { id: 'avatars', t: 'Mga avatar at bandila',
-          b: ['Sa pokerth.net, ang avatar mo ay ipinapamahagi sa ibang manlalaro sa pamamagitan ng avatar server, at maaaring ipakita ang maliit na bandila ng bansa sa mga player box. Parehong opsyonal at maaaring i-configure sa mga option.'] }
+          b: ['Sa pokerth.net, ang avatar mo ay ipinapamahagi sa ibang manlalaro sa pamamagitan ng avatar server, at maaaring ipakita ang maliit na bandila ng bansa sa mga player box. Parehong opsyonal at maaaring i-configure sa mga option.', "Para ipakita ang sarili mong watawat: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Lalabas ito sa susunod mong pag-login. Walang watawat ang mga guest."] }
       ]
     },
     {

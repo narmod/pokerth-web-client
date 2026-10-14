@@ -237,7 +237,7 @@ export const help = {
               '“活动”标签页显示即将进行的 BBC 比赛、每日 WEC 比赛和下一届 Monthly Cup 及报名人数，以及 BBC、WEC 和 Monthly Cup 的最新获胜者。时间以你的当地时间显示；只有 ↗ 图标会打开社区网站。“显示社区内容（BBC / WEC）”选项可隐藏此选项卡。',
               '即将进行的比赛按晚上分组。点按活动即可选中：底部按钮会随之变化（报名 BBC 或 Monthly Cup；服务器时间 22:00 的每日 WEC 比赛无需报名）。有人报名的 BBC 比赛也会展开显示报名者 — BBC 管理员以金色显示。'] },
         { id: 'avatars', t: '头像与国旗',
-          b: ['在 pokerth.net 上，你的头像通过头像服务器分发给其他玩家，玩家框上可显示一面小国旗。两者都是可选的，可在选项中配置。'] }
+          b: ['在 pokerth.net 上，你的头像通过头像服务器分发给其他玩家，玩家框上可显示一面小国旗。两者都是可选的，可在选项中配置。', "要显示你自己的国旗：www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit。下次登录时就会出现。游客没有国旗。"] }
       ]
     },
     {

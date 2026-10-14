@@ -240,7 +240,7 @@ export const help = {
               'Vahekaart „Sündmused“ näitab tulevasi BBC mänge, igapäevast WEC-i mängu ja järgmist Monthly Cupi koos registreerunud mängijate arvuga ning viimaseid BBC, WEC-i ja Monthly Cupi võitjaid. Ajad on sinu kohaliku aja järgi; kogukonna saidi avab ainult ikoon ↗. Valik „Näita kogukonna sisu (BBC / WEC)“ peidab selle vahekaardi.',
               'Tulevased mängud on rühmitatud õhtute kaupa. Puuduta sündmust, et see valida: all olev nupp järgib seda (registreerumine BBC-sse või Monthly Cupi; igapäevane WEC-i mäng kell 22:00 serveri aja järgi registreerumist ei vaja). Registreerumistega BBC mäng avaneb ka ja näitab, kes on kirjas, BBC administraatorid kullaga.'] },
         { id: 'avatars', t: 'Avatarid ja lipud',
-          b: ['pokerth.net-is jagatakse sinu avatari teistele mängijatele avatariserveri kaudu ning mängijakastidel saab kuvada väikest riigilippu. Mõlemad on valikulised ja valikutes seadistatavad.'] }
+          b: ['pokerth.net-is jagatakse sinu avatari teistele mängijatele avatariserveri kaudu ning mängijakastidel saab kuvada väikest riigilippu. Mõlemad on valikulised ja valikutes seadistatavad.', "Oma lipu kuvamiseks: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. See ilmub järgmisel sisselogimisel. Külalistel lippu pole."] }
       ]
     },
     {

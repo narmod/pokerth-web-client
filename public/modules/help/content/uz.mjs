@@ -344,7 +344,7 @@ export const help = {
         { id: "avatars",
           t: "Avatarlar va bayroqlar",
           b: [
-            "pokerth.net’da avataringiz boshqa oʻyinchilarga avatar serveri orqali tarqatiladi, oʻyinchi qutilarida esa kichik mamlakat bayrogʻi koʻrsatilishi mumkin. Ikkalasi ham ixtiyoriy va sozlamalarda sozlanadi."] }
+            "pokerth.net’da avataringiz boshqa oʻyinchilarga avatar serveri orqali tarqatiladi, oʻyinchi qutilarida esa kichik mamlakat bayrogʻi koʻrsatilishi mumkin. Ikkalasi ham ixtiyoriy va sozlamalarda sozlanadi.", "O‘z bayrog‘ingni ko‘rsatish uchun: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. U keyingi kirishingda paydo bo‘ladi. Mehmonlarda bayroq bo‘lmaydi."] }
       ]
     },
     {

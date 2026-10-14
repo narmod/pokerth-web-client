@@ -238,7 +238,7 @@ export const help = {
               'Karta „Udalosti“ zobrazuje nadchádzajúce hry BBC, dennú hru WEC a ďalší Monthly Cup s počtom prihlásených hráčov, ako aj posledných víťazov BBC, WEC a Monthly Cup. Časy sú vo vašom miestnom čase; stránku komunity otvára len ikona ↗. Voľba „Zobrazovať obsah komunity (BBC / WEC)“ túto kartu skryje.',
               'Nadchádzajúce hry sú zoskupené podľa večerov. Ťuknutím udalosť vyberiete: tlačidlo dole sa jej prispôsobí (registrácia do BBC alebo Monthly Cup; denná hra WEC o 22:00 serverového času registráciu nevyžaduje). Hra BBC s prihláškami sa navyše rozbalí a ukáže, kto je registrovaný, správcovia BBC zlatou.'] },
         { id: 'avatars', t: 'Avatary a vlajky',
-          b: ['Na pokerth.net sa tvoj avatar rozosiela ostatným hráčom cez avatarový server a na hráčskych boxoch sa môže zobrazovať malá vlajka krajiny. Oboje je voliteľné a nastaviteľné v možnostiach.'] }
+          b: ['Na pokerth.net sa tvoj avatar rozosiela ostatným hráčom cez avatarový server a na hráčskych boxoch sa môže zobrazovať malá vlajka krajiny. Oboje je voliteľné a nastaviteľné v možnostiach.', "Ako zobraziť vlastnú vlajku: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Objaví sa pri ďalšom prihlásení. Hostia vlajku nemajú."] }
       ]
     },
     {

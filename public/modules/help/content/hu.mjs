@@ -238,7 +238,7 @@ export const help = {
               'A(z) „Események” fül a közelgő BBC-játékokat, a napi WEC-játékot és a következő Monthly Cupot mutatja a jelentkezett játékosok számával, valamint a BBC, a WEC és a Monthly Cup legutóbbi győzteseit. Az időpontok a helyi idődben jelennek meg; a közösségi oldalt csak a ↗ ikon nyitja meg. A(z) „Közösségi tartalom megjelenítése (BBC / WEC)” beállítás elrejti ezt a fület.',
               'A közelgő játékok estékre csoportosítva jelennek meg. Koppints egy eseményre a kiválasztásához: az alsó gomb követi (jelentkezés a BBC-re vagy a Monthly Cupra; a szerveridő szerint 22:00-kor kezdődő napi WEC-játékhoz nem kell jelentkezni). A jelentkezőkkel rendelkező BBC-játék ki is nyílik, és megmutatja, kik jelentkeztek, a BBC adminok aranyszínűek.'] },
         { id: 'avatars', t: 'Avatárok és zászlók',
-          b: ['A pokerth.net oldalon az avatárodat az avatárszerver juttatja el a többi játékoshoz, és a játékosdobozokon egy kis országzászló jelenhet meg. Mindkettő választható, és a beállításokban konfigurálható.'] }
+          b: ['A pokerth.net oldalon az avatárodat az avatárszerver juttatja el a többi játékoshoz, és a játékosdobozokon egy kis országzászló jelenhet meg. Mindkettő választható, és a beállításokban konfigurálható.', "Így jelenik meg a saját zászlód: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. A következő bejelentkezéskor látszik. A vendégeknek nincs zászlójuk."] }
       ]
     },
     {

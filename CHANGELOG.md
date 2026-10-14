@@ -80,6 +80,13 @@ highlights below.
   `guide/cup.mjs`) get their own text: running, the cup admins invite the players but anyone can
   watch; not started, it cannot be joined by a tap and **See the events** opens the Events window
   (`lobby-cup`, counted as `lobby-cup.events`; it replaces the guest bubble on such tables, `web.65`).
+- **Country flags explained** — a player's flag is the Country of their pokerth.net account (User
+  Control Panel → Profile → Edit profile → Country → Submit, shown from the next login; guests have
+  none). Said in the help (pokerth.net → Avatars and flags, all languages), by the Ace in « ? » mode
+  on any flag (`hsFlag`), and once in the lobby to an account holder whose own player info came
+  back without a country (`lobby-flag`, after the Ranking tips; **Edit my profile** opens that page,
+  counted as `lobby-flag.profile`; `S._myInfoLoaded` set by `onPlayerInfoReply`). The guide modules
+  added in `web.64`–`web.65` join the service-worker precache list (`web.66`).
 
 ### Added
 - **LAN server directory, server side** — players will be able to propose their own PokerTH

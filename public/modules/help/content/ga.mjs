@@ -344,7 +344,7 @@ export const help = {
         { id: "avatars",
           t: "Abhatáir agus bratacha",
           b: [
-            "Ar pokerth.net dáiltear d'abhatár ar imreoirí eile trí fhreastalaí na n-abhatár, agus is féidir bratach bheag tíre a thaispeáint ar bhoscaí na n-imreoirí. Tá an dá cheann roghnach agus socraítear iad sna roghanna."] }
+            "Ar pokerth.net dáiltear d'abhatár ar imreoirí eile trí fhreastalaí na n-abhatár, agus is féidir bratach bheag tíre a thaispeáint ar bhoscaí na n-imreoirí. Tá an dá cheann roghnach agus socraítear iad sna roghanna.", "Chun do bhratach féin a thaispeáint: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Feicfear í an chéad uair eile a logálann tú isteach. Níl bratach ag aíonna."] }
       ]
     },
     {

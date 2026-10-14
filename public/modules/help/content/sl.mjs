@@ -240,7 +240,7 @@ export const help = {
               'Zavihek »Dogodki« prikazuje prihajajoče igre BBC, dnevno igro WEC in naslednji Monthly Cup s številom prijavljenih igralcev ter zadnje zmagovalce BBC, WEC in Monthly Cup. Časi so v vašem lokalnem času; stran skupnosti odpre le ikona ↗. Možnost „Prikaži vsebino skupnosti (BBC / WEC)“ skrije ta zavihek.',
               'Prihajajoče igre so združene po večerih. Tapnite dogodek, da ga izberete: gumb spodaj mu sledi (prijava na BBC ali Monthly Cup; dnevna igra WEC ob 22:00 po strežniškem času prijave ne potrebuje). Igra BBC s prijavami se tudi razpre in pokaže, kdo je prijavljen, skrbniki BBC v zlati barvi.'] },
         { id: 'avatars', t: 'Avatarji in zastave',
-          b: ['Na pokerth.net je tvoj avatar drugim igralcem posredovan prek strežnika za avatarje, na poljih igralcev pa se lahko prikaže majhna zastava države. Oboje je neobvezno in nastavljivo v možnostih.'] }
+          b: ['Na pokerth.net je tvoj avatar drugim igralcem posredovan prek strežnika za avatarje, na poljih igralcev pa se lahko prikaže majhna zastava države. Oboje je neobvezno in nastavljivo v možnostih.', "Da prikažeš svojo zastavo: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Prikaže se ob naslednji prijavi. Gostje nimajo zastave."] }
       ]
     },
     {

@@ -238,7 +238,7 @@ export const help = {
               'Der Reiter „Termine“ zeigt die kommenden BBC-Spiele, das tägliche WEC-Spiel und den nächsten Monthly Cup mit der Zahl der angemeldeten Spieler sowie die letzten Sieger von BBC, WEC und Monthly Cup. Die Zeiten sind in deiner Ortszeit; nur das ↗-Symbol öffnet die Community-Seite. Die Option „Community-Inhalte anzeigen (BBC / WEC)“ blendet diesen Reiter aus.',
               'Kommende Spiele sind nach Abenden gruppiert. Tippe auf ein Ereignis, um es auszuwählen: Die Schaltfläche unten folgt ihm (Anmeldung für den BBC oder den Monthly Cup; das tägliche WEC-Spiel um 22:00 Serverzeit braucht keine). Ein BBC-Spiel mit Anmeldungen klappt außerdem auf und zeigt, wer angemeldet ist, BBC-Admins in Gold.'] },
         { id: 'avatars', t: 'Avatare und Flaggen',
-          b: ['Auf pokerth.net wird dein Avatar über den Avatar-Server an andere Spieler verteilt, und eine kleine Landesflagge kann auf den Spielerboxen erscheinen. Beides ist optional und in den Optionen einstellbar.'] }
+          b: ['Auf pokerth.net wird dein Avatar über den Avatar-Server an andere Spieler verteilt, und eine kleine Landesflagge kann auf den Spielerboxen erscheinen. Beides ist optional und in den Optionen einstellbar.', "So zeigst du deine eigene Flagge: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Sie erscheint bei deiner nächsten Anmeldung. Gäste haben keine Flagge."] }
       ]
     },
     {

@@ -240,7 +240,7 @@ export const help = {
               'Skeda “Ngjarje” shfaq lojërat e ardhshme BBC, lojën e përditshme WEC dhe Monthly Cup-in e radhës me numrin e lojtarëve të regjistruar, si dhe fituesit më të fundit të BBC, WEC dhe Monthly Cup. Oraret janë në orën tënde lokale; vetëm ikona ↗ hap faqen e komunitetit. Opsioni “Trego përmbajtjen e komunitetit (BBC / WEC)” e fsheh këtë skedë.',
               'Lojërat e ardhshme grupohen sipas mbrëmjeve. Prek një ngjarje për ta zgjedhur: butoni poshtë e ndjek (regjistrim në BBC ose Monthly Cup; loja e përditshme WEC në 22:00 sipas orës së serverit nuk ka nevojë). Një lojë BBC me regjistrime hapet gjithashtu për të treguar kush është regjistruar, adminët e BBC në ngjyrë ari.'] },
         { id: 'avatars', t: 'Avatarët dhe flamujt',
-          b: ['Në pokerth.net, avatari yt shpërndahet te lojtarët e tjerë përmes serverit të avatarëve, dhe një flamur i vogël vendi mund të shfaqet te kutitë e lojtarëve. Të dyja janë opsionale dhe të konfigurueshme te opsionet.'] }
+          b: ['Në pokerth.net, avatari yt shpërndahet te lojtarët e tjerë përmes serverit të avatarëve, dhe një flamur i vogël vendi mund të shfaqet te kutitë e lojtarëve. Të dyja janë opsionale dhe të konfigurueshme te opsionet.', "Për të shfaqur flamurin tënd: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Shfaqet në hyrjen e ardhshme. Mysafirët nuk kanë flamur."] }
       ]
     },
     {

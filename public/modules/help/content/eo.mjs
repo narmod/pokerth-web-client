@@ -344,7 +344,7 @@ export const help = {
         { id: "avatars",
           t: "Avataroj kaj flagoj",
           b: [
-            "Ĉe pokerth.net via avataro estas disdonata al aliaj ludantoj tra la avatara servilo, kaj eta landa flago povas esti montrata sur la ludantaj skatoloj. Ambaŭ estas nedevigaj kaj agordeblaj en la opcioj."] }
+            "Ĉe pokerth.net via avataro estas disdonata al aliaj ludantoj tra la avatara servilo, kaj eta landa flago povas esti montrata sur la ludantaj skatoloj. Ambaŭ estas nedevigaj kaj agordeblaj en la opcioj.", "Por montri vian propran flagon: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Ĝi aperos ĉe via venonta ensaluto. Gastoj ne havas flagon."] }
       ]
     },
     {

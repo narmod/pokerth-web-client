@@ -344,7 +344,7 @@ export const help = {
         { id: "avatars",
           t: "Abatarrak eta banderak",
           b: [
-            "pokerth.net-en zure abatarra beste jokalariei banatzen zaie abatar-zerbitzariaren bidez, eta herrialde-bandera txiki bat erakuts daiteke jokalarien koadroetan. Biak aukerakoak dira eta aukeretan doitzen dira."] }
+            "pokerth.net-en zure abatarra beste jokalariei banatzen zaie abatar-zerbitzariaren bidez, eta herrialde-bandera txiki bat erakuts daiteke jokalarien koadroetan. Biak aukerakoak dira eta aukeretan doitzen dira.", "Zure bandera erakusteko: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Hurrengo saio-hasieran agertuko da. Gonbidatuek ez dute banderarik."] }
       ]
     },
     {

@@ -240,7 +240,7 @@ export const help = {
               'Kichupo cha “Matukio” kinaonyesha michezo ijayo ya BBC, mchezo wa kila siku wa WEC na Monthly Cup ijayo pamoja na idadi ya wachezaji waliojisajili, pamoja na washindi wa hivi karibuni wa BBC, WEC na Monthly Cup. Nyakati ziko kwa saa yako ya eneo; aikoni ↗ pekee ndiyo hufungua tovuti ya jumuiya. Chaguo la “Onyesha maudhui ya jumuiya (BBC / WEC)” huficha kichupo hiki.',
               'Michezo ijayo imepangwa kwa jioni. Gusa tukio ili kulichagua: kitufe kilicho chini hulifuata (usajili kwa BBC au Monthly Cup; mchezo wa kila siku wa WEC saa 22:00 kwa saa ya seva hauhitaji usajili). Mchezo wa BBC wenye usajili pia hufunguka kuonyesha waliojisajili, wasimamizi wa BBC kwa rangi ya dhahabu.'] },
         { id: 'avatars', t: 'Avatari na bendera',
-          b: ['Kwenye pokerth.net, avatari yako husambazwa kwa wachezaji wengine kupitia seva ya avatari, na bendera ndogo ya nchi inaweza kuonyeshwa kwenye visanduku vya wachezaji. Zote ni za hiari na zinaweza kusanidiwa kwenye chaguo.'] }
+          b: ['Kwenye pokerth.net, avatari yako husambazwa kwa wachezaji wengine kupitia seva ya avatari, na bendera ndogo ya nchi inaweza kuonyeshwa kwenye visanduku vya wachezaji. Zote ni za hiari na zinaweza kusanidiwa kwenye chaguo.', "Ili kuonyesha bendera yako: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Itaonekana utakapoingia tena. Wageni hawana bendera."] }
       ]
     },
     {

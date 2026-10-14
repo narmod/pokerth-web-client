@@ -238,7 +238,7 @@ export const help = {
               'Seallaidh an taba “Tachartasan” na geamannan BBC ri thighinn, geama làitheil WEC agus an ath Monthly Cup le àireamh nan cluicheadairean clàraichte, cho math ris na buannaichean as ùire aig BBC, WEC agus Monthly Cup. Tha na h-amannan ann an ùine ionadail agad; chan fhosgail ach an ìomhaigheag ↗ làrach na coimhearsnachd. Falaichidh an roghainn “Seall susbaint na coimhearsnachd (BBC / WEC)” an taba seo.',
               'Tha na geamannan ri thighinn air am buidhneachadh a-rèir oidhche. Thoir gnogag air tachartas airson a thaghadh: leanaidh am putan gu h-ìosal e (clàradh airson a’ BBC no a’ Monthly Cup; chan eil feum air clàradh airson geama làitheil WEC aig 22:00 a-rèir àm an fhrithealaiche). Fosglaidh geama BBC le clàraidhean cuideachd gus sealltainn cò a chlàraich, rianairean a’ BBC ann an òr.'] },
         { id: 'avatars', t: 'Avataran agus brataichean',
-          b: ['Air pokerth.net thèid an t-avatar agad a sgaoileadh gu cluicheadairean eile tron fhrithealaiche avatar, agus faodaidh bratach bheag dùthcha nochdadh air bogsaichean nan cluicheadairean. Tha an dà chuid roghainneil agus gan rèiteachadh sna roghainnean.'] }
+          b: ['Air pokerth.net thèid an t-avatar agad a sgaoileadh gu cluicheadairean eile tron fhrithealaiche avatar, agus faodaidh bratach bheag dùthcha nochdadh air bogsaichean nan cluicheadairean. Tha an dà chuid roghainneil agus gan rèiteachadh sna roghainnean.', "Gus do bhratach fhèin a shealltainn: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Nochdaidh i an ath thuras a chlàraicheas tu a-steach. Chan eil bratach aig aoighean."] }
       ]
     },
     {

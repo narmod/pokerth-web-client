@@ -344,7 +344,7 @@ export const help = {
         { id: "avatars",
           t: "Avatar da tutoci",
           b: [
-            "A pokerth.net ana rarraba avatar ɗinka ga sauran 'yan wasa ta sabar avatar, kuma ana iya nuna ƙaramar tutar ƙasa a akwatunan 'yan wasa. Duka biyun na zaɓi ne kuma ana daidaita su a cikin zaɓuɓɓuka."] }
+            "A pokerth.net ana rarraba avatar ɗinka ga sauran 'yan wasa ta sabar avatar, kuma ana iya nuna ƙaramar tutar ƙasa a akwatunan 'yan wasa. Duka biyun na zaɓi ne kuma ana daidaita su a cikin zaɓuɓɓuka.", "Don nuna tutarka: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Za ta bayyana idan ka sake shiga. Baƙi ba su da tuta."] }
       ]
     },
     {

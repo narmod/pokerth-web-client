@@ -344,7 +344,7 @@ export const help = {
         { id: "avatars",
           t: "Awatarlar we baýdaklar",
           b: [
-            "pokerth.net-de awataryňyz beýleki oýunçylara awatar serweri arkaly ýaýradylýar, oýunçy gutularynda bolsa kiçijik ýurt baýdagy görkezilip bilner. Ikisi hem hökmany däl we opsiýalarda sazlanýar."] }
+            "pokerth.net-de awataryňyz beýleki oýunçylara awatar serweri arkaly ýaýradylýar, oýunçy gutularynda bolsa kiçijik ýurt baýdagy görkezilip bilner. Ikisi hem hökmany däl we opsiýalarda sazlanýar.", "Öz baýdagyňy görkezmek üçin: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Ol indiki girişiňde peýda bolar. Myhmanlaryň baýdagy ýok."] }
       ]
     },
     {

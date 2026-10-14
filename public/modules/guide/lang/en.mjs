@@ -39,6 +39,7 @@ export default {
   seeRanking: 'See the ranking',
   watch: "Watch",
   seeEvents: "See the events",
+  editProfile: "Edit my profile",
   // C1 — pokerth.net lobby
   c1Join: 'A ranked game is waiting for you: **{n}/{max}** players. It starts as soon as it’s full!',
   c1None: 'No ranked game open right now. Create one — any player with an account can! It starts by itself as soon as 10 players have joined.',
@@ -47,6 +48,7 @@ export default {
   c1WatchAgain: "This game is in progress — want to watch it?",
   c1WatchCup: "A cup game: **{name}**. Only the cup admins open these tables and invite the players. It is already being played, but anyone can watch it as a **spectator**: tap **{spec}** below the list. Shall we watch it?",
   c1Cup: "A cup game: **{name}**. You cannot join it with a tap: the cup admins invite the players registered for it. The next cup games, and how to take part, are in the events.",
+  c1Flag: "No flag next to your name? Flags come from the pokerth.net account. To show your own flag: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. It appears at your next login.",
   // C2 — ranked waiting room (one fact every ~20 s)
   c2Wait: 'Ranked game: **{n}/{max}** players. It starts by itself as soon as the table is full — meanwhile, here is how the ranking works.',
   c2Points: 'Each ranked game hands out points by finishing place: **15, 9, 6, 4, 3, 2, 1** from 1st to 7th, nothing from 8th to 10th — 40 points per table.',
@@ -175,6 +177,7 @@ export default {
   hsPlStats: 'This player’s statistics and ranking seasons.',
   hsPlPm: 'Writes a private message to this player.',
   hsPlName: 'Opens this player’s card: avatar, country, the table they play at.',
+  hsFlag: "The player's country, as set in their pokerth.net account. To show your own flag: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. It appears at your next login. Guests have no flag.",
   hsMyProfile: 'Your own card: your avatar, your nickname and your statistics.',
   hsChatSend: 'Sends your message.',
   hsCfStyle: 'Shows every game style, or only the main ones.',

@@ -344,7 +344,7 @@ export const help = {
         { id: "avatars",
           t: "頭像與國旗",
           b: [
-            "在 pokerth.net 上，你的頭像透過頭像伺服器分發給其他玩家，玩家框上可顯示一面小國旗。兩者都是可選的，可在選項中設定。"] }
+            "在 pokerth.net 上，你的頭像透過頭像伺服器分發給其他玩家，玩家框上可顯示一面小國旗。兩者都是可選的，可在選項中設定。", "想顯示你自己嘅國旗：www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit。下次登入就會出現。訪客冇國旗。"] }
       ]
     },
     {

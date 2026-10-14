@@ -574,6 +574,9 @@ function onPlayerInfoReply(sub) {
     // Code pays (champ 4, optionnel) — présent surtout sur pokerth.net.
     var cc = Proto.str(info, 4);
     if (cc) S._playerCountries[pid] = cc.toUpperCase();
+    // Ma propre fiche est arrivée (avec ou sans pays) : l'Aide de l'As peut dire
+    // comment obtenir un drapeau s'il manque (guide lobby-flag, web.66).
+    if (pid === S.myId) S._myInfoLoaded = true;
     // Panneau « Infos de partie » : rafraîchir si ce joueur appartient à la
     // partie sélectionnée (nom/drapeau qui arrivent en asynchrone).
     if ((name || cc) && S._selectedGame != null) {

@@ -108,7 +108,7 @@ ok([].concat(wn.target(W({ host: true })))[0].includes('wp-btn-start') && [].con
 // ── texts, buttons, targets ──
 const samples = [W({ screen: 'connect', loginStep: 1 }), W({ screen: 'connect', loginStep: 2 }), W({ screen: 'wait', host: true }), W({ screen: 'wait' }), W({ screen: 'wait', offline: true }), W({}), W({ rankPick: null }), W({ guest: true }), W({ screen: 'wait', ranked: true }), W({ result: { place: 4 } }), W({ result: { place: null, tied: true } })];
 const vars = (s) => (String(s).match(/\{\w+\}/g) || []).map((x) => x.slice(1, -1));
-const BTN = new Set(['later', 'gotIt', 'next', 'join', 'createRanking', 'signup', 'seeRanking', 'watch', 'seeEvents']);
+const BTN = new Set(['later', 'gotIt', 'next', 'join', 'createRanking', 'signup', 'seeRanking', 'watch', 'seeEvents', 'editProfile']);
 for (const c of CONTEXTS) {
   for (const w of samples.filter((x) => C.applies(c, x) || c.manual)) {
     c.steps.forEach((s, i) => {
@@ -156,6 +156,16 @@ ok(LC && LC.manual === true && pick({ cupName: 'WEC 22:00' }) !== 'lobby-cup', '
 ok(C.applies(LC, W({ cupName: 'BBC Step 1', gid: 0 })) && C.applies(LC, W({ cupName: 'BBC Step 1', gid: 0, guest: true })) && !C.applies(LC, W({ cupName: '' })) && !C.applies(LC, W({ cupName: 'BBC', offline: true })), 'lobby-cup: a tapped cup game in the lobby, guests included');
 ok(LC.steps[0].text === 'c1Cup' && LC.steps[0].buttons.join() === 'later,gotIt,seeEvents' && LC.steps[0].vars(W({ cupName: 'BBC Step 1' })).name === 'BBC Step 1', 'not started: invited by the cup admins, Events offered');
 ok(/\{name\}/.test(EN.c1Cup) && /\{name\}/.test(EN.c1WatchCup) && /\{spec\}/.test(EN.c1WatchCup), 'cup texts name the table (and the Spectate button)');
+// web.66: no flag next to my name → how to set the Country in the pokerth.net profile
+ok(pick({ noFlag: true }, ['lobby-ranking', 'lobby-ranking-create']) === 'lobby-flag', 'account holder without a flag → « set your Country » (after the Ranking tips)');
+ok(pick({ noFlag: true }) === 'lobby-ranking', 'the Ranking tip still comes first');
+ok(pick({ noFlag: true, guest: true }, ['lobby-guest']) === null && pick({ noFlag: true, net: false, rankPick: null }) === null, 'not for guests, not in LAN / offline');
+ok(pick({ noFlag: true }, ['lobby-ranking', 'lobby-ranking-create', 'lobby-flag']) === null, 'said once');
+ok(pick({ noFlag: true, gamesLoaded: false }, ['lobby-ranking', 'lobby-ranking-create']) === null, 'waits for the lobby to be loaded');
+ok(/User Control Panel → Profile → Edit profile → \*\*Country\*\* → \*\*Submit\*\*/.test(EN.c1Flag) && /next login/.test(EN.c1Flag) && /User Control Panel/.test(EN.hsFlag) && /Guests have no flag/.test(EN.hsFlag), 'where to set the Country, when it shows');
+const HS = (await imp('public/modules/guide/hotspots.mjs')).HOTSPOTS;
+const fi = HS.findIndex((e) => e[1] === 'hsFlag'), li = HS.findIndex((e) => e[1] === 'hsLgiPlayer');
+ok(fi >= 0 && fi < li && /\.pl-flag/.test(HS[fi][0]) && /\.seat-flag/.test(HS[fi][0]) && HS[fi][3] === 'pthnet:avatars', '« ? » on a flag explains it (before the player row), More → Avatars and flags');
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

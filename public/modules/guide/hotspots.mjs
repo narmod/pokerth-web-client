@@ -77,6 +77,8 @@ export const HOTSPOTS = [
   ['#g-list', 'hsGameList', false, 'lobby:list'],
   ['#h-players, .fbar-players', 'hsPlayersPill', false, 'chat:social'],
   ['.lgi-report', 'hsReport', true],
+  // a country flag (players list, game info panel, seats, player card): where it comes from, how to get yours (web.66)
+  ['.pl-flag, .gp-flag, .seat-flag, #pim-flag, .cc-flag', 'hsFlag', true, 'pthnet:avatars'],
   ['#lobby-gameinfo .lgi-prow', 'hsLgiPlayer', true, 'chat:social'],
   ['.pl-act-inv', 'hsPlInvite', true, 'lobby:invites'],
   ['#players-search-in', 'hsPlayerSearch', false, 'chat:social'],

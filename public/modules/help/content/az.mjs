@@ -344,7 +344,7 @@ export const help = {
         { id: "avatars",
           t: "Avatarlar və bayraqlar",
           b: [
-            "pokerth.net-də avatarınız avatar serveri vasitəsilə digər oyunçulara paylanır və oyunçu qutularında kiçik ölkə bayrağı göstərilə bilər. Hər ikisi istəyə bağlıdır və seçimlərdə tənzimlənir."] }
+            "pokerth.net-də avatarınız avatar serveri vasitəsilə digər oyunçulara paylanır və oyunçu qutularında kiçik ölkə bayrağı göstərilə bilər. Hər ikisi istəyə bağlıdır və seçimlərdə tənzimlənir.", "Öz bayrağını göstərmək üçün: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Növbəti girişində görünəcək. Qonaqların bayrağı yoxdur."] }
       ]
     },
     {

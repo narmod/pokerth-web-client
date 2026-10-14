@@ -344,7 +344,7 @@ export const help = {
         { id: "avatars",
           t: "Afatarau a baneri",
           b: [
-            "Ar pokerth.net mae eich afatar yn cael ei ddosbarthu i chwaraewyr eraill drwy'r gweinydd afatarau, a gellir dangos baner gwlad fach ar flychau'r chwaraewyr. Mae'r ddau'n ddewisol ac yn cael eu haddasu yn y dewisiadau."] }
+            "Ar pokerth.net mae eich afatar yn cael ei ddosbarthu i chwaraewyr eraill drwy'r gweinydd afatarau, a gellir dangos baner gwlad fach ar flychau'r chwaraewyr. Mae'r ddau'n ddewisol ac yn cael eu haddasu yn y dewisiadau.", "I ddangos dy faner dy hun: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Bydd yn ymddangos y tro nesaf y byddi’n mewngofnodi. Nid oes gan westeion faner."] }
       ]
     },
     {

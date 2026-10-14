@@ -238,7 +238,7 @@ export const help = {
               'Fliken ”Evenemang” visar kommande BBC-spel, det dagliga WEC-spelet och nästa Monthly Cup med antalet anmälda spelare, samt de senaste vinnarna i BBC, WEC och Monthly Cup. Tiderna är i din lokala tid; bara ↗-ikonen öppnar communityns webbplats. Alternativet ”Visa community-innehåll (BBC / WEC)” döljer den här fliken.',
               'Kommande spel är grupperade per kväll. Tryck på en händelse för att välja den: knappen längst ned följer den (anmälan till BBC eller Monthly Cup; det dagliga WEC-spelet kl. 22:00 servertid kräver ingen). Ett BBC-spel med anmälningar fälls också ut och visar vilka som är anmälda, BBC-administratörer i guld.'] },
         { id: 'avatars', t: 'Avatarer och flaggor',
-          b: ['På pokerth.net distribueras din avatar till andra spelare via avatarservern, och en liten landsflagga kan visas på spelarrutorna. Båda är valfria och kan ställas in i inställningarna.'] }
+          b: ['På pokerth.net distribueras din avatar till andra spelare via avatarservern, och en liten landsflagga kan visas på spelarrutorna. Båda är valfria och kan ställas in i inställningarna.', "Så visar du din egen flagga: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Den syns vid nästa inloggning. Gäster har ingen flagga."] }
       ]
     },
     {

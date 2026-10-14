@@ -238,7 +238,7 @@ export const help = {
               'Fila „Evenimente” arată jocurile BBC viitoare, jocul zilnic WEC și următoarea Monthly Cup cu numărul de jucători înscriși, precum și cei mai recenți câștigători BBC, WEC și Monthly Cup. Orele sunt în ora ta locală; doar pictograma ↗ deschide site-ul comunității. Opțiunea „Arată conținutul comunității (BBC / WEC)” ascunde această filă.',
               'Jocurile viitoare sunt grupate pe seri. Atinge un eveniment pentru a-l selecta: butonul de jos îl urmează (înscriere la BBC sau la Monthly Cup; jocul zilnic WEC la 22:00 ora serverului nu necesită înscriere). Un joc BBC cu înscrieri se și desfășoară pentru a arăta cine s-a înscris, adminii BBC în auriu.'] },
         { id: 'avatars', t: 'Avataruri și steaguri',
-          b: ['Pe pokerth.net, avatarul tău este distribuit celorlalți jucători prin serverul de avataruri, iar un mic steag de țară poate apărea pe casetele jucătorilor. Ambele sunt opționale și configurabile din opțiuni.'] }
+          b: ['Pe pokerth.net, avatarul tău este distribuit celorlalți jucători prin serverul de avataruri, iar un mic steag de țară poate apărea pe casetele jucătorilor. Ambele sunt opționale și configurabile din opțiuni.', "Ca să-ți afișezi steagul: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Apare la următoarea conectare. Invitații nu au steag."] }
       ]
     },
     {

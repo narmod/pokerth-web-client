@@ -238,7 +238,7 @@ export const help = {
               'O separador «Eventos» mostra as próximas partidas da BBC, a partida diária da WEC e a próxima Monthly Cup com o número de jogadores inscritos, bem como os últimos vencedores da BBC, da WEC e da Monthly Cup. As horas estão na sua hora local; só o ícone ↗ abre o site da comunidade. A opção “Mostrar conteúdo da comunidade (BBC / WEC)” oculta este separador.',
               'As próximas partidas são agrupadas por noite. Toque num evento para o selecionar: o botão em baixo acompanha-o (inscrição na BBC ou na Monthly Cup; a partida diária da WEC às 22:00 hora do servidor não precisa). Uma partida da BBC com inscritos também se abre para mostrar quem se inscreveu, os administradores da BBC a dourado.'] },
         { id: 'avatars', t: 'Avatares e bandeiras',
-          b: ['Em pokerth.net, o teu avatar é distribuído aos outros jogadores através do servidor de avatares, e uma pequena bandeira do país pode aparecer nas caixas de jogadores. Ambos são opcionais e configuráveis nas opções.'] }
+          b: ['Em pokerth.net, o teu avatar é distribuído aos outros jogadores através do servidor de avatares, e uma pequena bandeira do país pode aparecer nas caixas de jogadores. Ambos são opcionais e configuráveis nas opções.', "Para mostrar a tua própria bandeira: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Aparece no teu próximo início de sessão. Os convidados não têm bandeira."] }
       ]
     },
     {

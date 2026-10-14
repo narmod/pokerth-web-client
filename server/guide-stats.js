@@ -33,6 +33,7 @@ const EVENTS = Object.freeze({
   'lobby-guest': ['shown', 'done', 'dismissed', 'guest_redirect'],
   'lobby-watch': ['shown', 'done', 'dismissed', 'watch'],   // tap on a running game (web.64)
   'lobby-cup': ['shown', 'done', 'dismissed', 'events'],    // tap on a cup game not started yet (web.65)
+  'lobby-flag': ['shown', 'done', 'dismissed', 'profile'],  // no flag next to my name (web.66)
   'wait-ranking': ['shown', 'done', 'dismissed', 'started'],
   'ranked-result': ['shown', 'done', 'dismissed'],
   // L4

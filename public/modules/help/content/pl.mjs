@@ -238,7 +238,7 @@ export const help = {
               'Karta „Wydarzenia” pokazuje nadchodzące gry BBC, codzienną grę WEC i następny Monthly Cup wraz z liczbą zapisanych graczy, a także ostatnich zwycięzców BBC, WEC i Monthly Cup. Godziny są podane w twoim czasie lokalnym; stronę społeczności otwiera tylko ikona ↗. Opcja „Pokaż treści społeczności (BBC / WEC)” ukrywa tę kartę.',
               'Nadchodzące gry są pogrupowane według wieczorów. Stuknij wydarzenie, aby je wybrać: przycisk na dole za nim podąża (zapisy do BBC lub Monthly Cup; codzienna gra WEC o 22:00 czasu serwera nie wymaga zapisów). Gra BBC z zapisami rozwija się też i pokazuje, kto się zapisał, administratorzy BBC na złoto.'] },
         { id: 'avatars', t: 'Awatary i flagi',
-          b: ['Na pokerth.net twój awatar jest rozprowadzany do innych graczy przez serwer awatarów, a mała flaga kraju może pojawiać się na polach graczy. Oba elementy są opcjonalne i konfigurowalne w opcjach.'] }
+          b: ['Na pokerth.net twój awatar jest rozprowadzany do innych graczy przez serwer awatarów, a mała flaga kraju może pojawiać się na polach graczy. Oba elementy są opcjonalne i konfigurowalne w opcjach.', "Aby pokazać własną flagę: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Pojawi się przy następnym logowaniu. Goście nie mają flagi."] }
       ]
     },
     {

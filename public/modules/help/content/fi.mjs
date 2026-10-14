@@ -238,7 +238,7 @@ export const help = {
               'Välilehti ”Tapahtumat” näyttää tulevat BBC-pelit, päivittäisen WEC-pelin ja seuraavan Monthly Cupin ilmoittautuneiden pelaajien määrän kanssa sekä viimeisimmät BBC:n, WEC:n ja Monthly Cupin voittajat. Ajat ovat paikallista aikaasi; vain ↗-kuvake avaa yhteisön sivuston. Asetus ”Näytä yhteisösisältö (BBC / WEC)” piilottaa tämän välilehden.',
               'Tulevat pelit on ryhmitelty illoittain. Napauta tapahtumaa valitaksesi sen: alareunan painike seuraa sitä (ilmoittautuminen BBC:hen tai Monthly Cupiin; päivittäinen WEC-peli klo 22:00 palvelimen aikaa ei vaadi ilmoittautumista). BBC-peli, jossa on ilmoittautuneita, myös avautuu näyttämään keitä ne ovat, BBC:n ylläpitäjät kullalla.'] },
         { id: 'avatars', t: 'Avatarit ja liput',
-          b: ['pokerth.netissä avatarisi jaetaan muille pelaajille avatar-palvelimen kautta, ja pelaajalaatikoissa voi näkyä pieni maan lippu. Molemmat ovat valinnaisia ja säädettävissä asetuksista.'] }
+          b: ['pokerth.netissä avatarisi jaetaan muille pelaajille avatar-palvelimen kautta, ja pelaajalaatikoissa voi näkyä pieni maan lippu. Molemmat ovat valinnaisia ja säädettävissä asetuksista.', "Näin saat oman lippusi näkyviin: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Se näkyy seuraavalla kirjautumisella. Vierailla ei ole lippua."] }
       ]
     },
     {

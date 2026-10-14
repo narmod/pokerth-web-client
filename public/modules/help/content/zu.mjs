@@ -344,7 +344,7 @@ export const help = {
         { id: "avatars",
           t: "Ama-avatar namafulegi",
           b: [
-            "Ku-pokerth.net i-avatar yakho isatshalaliswa kwabanye abadlali ngeseva yama-avatar, futhi ifulegi elincane lezwe lingaboniswa emabhokisini abadlali. Kokubili kungokuzikhethela futhi kuyahleleka ezinketho."] }
+            "Ku-pokerth.net i-avatar yakho isatshalaliswa kwabanye abadlali ngeseva yama-avatar, futhi ifulegi elincane lezwe lingaboniswa emabhokisini abadlali. Kokubili kungokuzikhethela futhi kuyahleleka ezinketho.", "Ukuze ubonise ifulegi lakho: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Lizovela uma ungena ngemva kwalokhu. Izivakashi azinalo ifulegi."] }
       ]
     },
     {

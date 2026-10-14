@@ -242,7 +242,7 @@ export const help = {
               'The “Events” tab shows the upcoming BBC games, the WEC daily game and the next Monthly Cup with the number of players signed up, and the latest BBC, WEC and Monthly Cup winners. Times are in your local time; only the ↗ icon opens the community site. The option “Show community content (BBC / WEC)” hides this tab.',
               'Upcoming games are grouped by evening. Tap an event to select it: the button at the bottom follows it (registration for the BBC or the Monthly Cup; the WEC daily game at 22:00 server time needs none). A BBC game with sign-ups also unfolds to show who is registered, BBC admins in gold.'] },
         { id: 'avatars', t: 'Avatars and flags',
-          b: ['On pokerth.net your avatar is distributed to other players through the avatar server, and a small country flag can be shown on player boxes. Both are optional and configurable in the options.'] }
+          b: ['On pokerth.net your avatar is distributed to other players through the avatar server, and a small country flag can be shown on player boxes. Both are optional and configurable in the options.', "To show your own flag: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. It appears at your next login. Guests have no flag."] }
       ]
     },
     {

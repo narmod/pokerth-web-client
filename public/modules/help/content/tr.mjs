@@ -238,7 +238,7 @@ export const help = {
               '“Etkinlikler” sekmesi yaklaşan BBC oyunlarını, günlük WEC oyununu ve bir sonraki Monthly Cup’ı kayıtlı oyuncu sayısıyla birlikte, ayrıca BBC, WEC ve Monthly Cup’ın son kazananlarını gösterir. Saatler yerel saatinizledir; topluluk sitesini yalnızca ↗ simgesi açar. “Topluluk içeriğini göster (BBC / WEC)” seçeneği bu sekmeyi gizler.',
               'Yaklaşan oyunlar akşamlara göre gruplanır. Bir etkinliği seçmek için ona dokunun: alttaki düğme onu izler (BBC’ye veya Monthly Cup’a kayıt; sunucu saatiyle 22:00’deki günlük WEC oyunu kayıt gerektirmez). Kaydı olan bir BBC oyunu, kimlerin kayıtlı olduğunu göstermek için de açılır; BBC yöneticileri altın renginde.'] },
         { id: 'avatars', t: 'Avatarlar ve bayraklar',
-          b: ['pokerth.net\u2019te avatarın, avatar sunucusu üzerinden diğer oyunculara dağıtılır ve oyuncu kutularında küçük bir ülke bayrağı gösterilebilir. İkisi de isteğe bağlıdır ve seçeneklerden yapılandırılır.'] }
+          b: ['pokerth.net\u2019te avatarın, avatar sunucusu üzerinden diğer oyunculara dağıtılır ve oyuncu kutularında küçük bir ülke bayrağı gösterilebilir. İkisi de isteğe bağlıdır ve seçeneklerden yapılandırılır.', "Kendi bayrağını göstermek için: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Bir sonraki girişinde görünür. Misafirlerin bayrağı yoktur."] }
       ]
     },
     {

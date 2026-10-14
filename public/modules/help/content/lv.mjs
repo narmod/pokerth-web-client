@@ -244,7 +244,7 @@ export const help = {
               'Cilne “Pasākumi” rāda gaidāmās BBC spēles, ikdienas WEC spēli un nākamo Monthly Cup ar pieteikušos spēlētāju skaitu, kā arī jaunākos BBC, WEC un Monthly Cup uzvarētājus. Laiki ir jūsu vietējā laikā; kopienas vietni atver tikai ikona ↗. Opcija “Rādīt kopienas saturu (BBC / WEC)” paslēpj šo cilni.',
               'Gaidāmās spēles ir sagrupētas pa vakariem. Pieskarieties notikumam, lai to atlasītu: poga apakšā tam seko (reģistrācija BBC vai Monthly Cup; ikdienas WEC spēlei plkst. 22:00 pēc servera laika reģistrācija nav vajadzīga). BBC spēle ar reģistrācijām arī izvēršas un parāda, kas pieteicies, BBC administratori zeltā.'] },
         { id: 'avatars', t: 'Avatari un karogi',
-          b: ['pokerth.net serverī tavs avatars tiek izplatīts citiem spēlētājiem caur avataru serveri, un uz spēlētāju lodziņiem var rādīt mazu valsts karogu. Abas iespējas ir brīvi izvēlamas un konfigurējamas opcijās.'] }
+          b: ['pokerth.net serverī tavs avatars tiek izplatīts citiem spēlētājiem caur avataru serveri, un uz spēlētāju lodziņiem var rādīt mazu valsts karogu. Abas iespējas ir brīvi izvēlamas un konfigurējamas opcijās.', "Lai rādītu savu karogu: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Tas parādīsies nākamajā pieteikšanās reizē. Viesiem nav karoga."] }
       ]
     },
     {

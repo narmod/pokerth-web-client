@@ -240,7 +240,7 @@ export const help = {
               'Tab “Acara” menunjukkan permainan BBC akan datang, permainan harian WEC dan Monthly Cup seterusnya bersama bilangan pemain berdaftar, serta pemenang terkini BBC, WEC dan Monthly Cup. Waktu dipaparkan dalam waktu tempatan anda; hanya ikon ↗ yang membuka laman komuniti. Pilihan “Tampilkan konten komunitas (BBC / WEC)” menyembunyikan tab ini.',
               'Permainan akan datang dikumpulkan mengikut malam. Ketik acara untuk memilihnya: butang di bawah mengikutinya (pendaftaran untuk BBC atau Monthly Cup; permainan harian WEC pada 22:00 waktu pelayan tidak memerlukannya). Permainan BBC yang ada pendaftaran juga dibuka untuk menunjukkan siapa yang berdaftar, admin BBC berwarna emas.'] },
         { id: 'avatars', t: 'Avatar dan bendera',
-          b: ['Di pokerth.net, avatar Anda didistribusikan ke pemain lain lewat server avatar, dan bendera negara kecil dapat ditampilkan di kotak pemain. Keduanya opsional dan dapat dikonfigurasi di opsi.'] }
+          b: ['Di pokerth.net, avatar Anda didistribusikan ke pemain lain lewat server avatar, dan bendera negara kecil dapat ditampilkan di kotak pemain. Keduanya opsional dan dapat dikonfigurasi di opsi.', "Untuk memaparkan bendera anda sendiri: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Ia muncul pada log masuk seterusnya. Tetamu tiada bendera."] }
       ]
     },
     {

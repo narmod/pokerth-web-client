@@ -344,7 +344,7 @@ export const help = {
         { id: "avatars",
           t: "Avatarar og fánar",
           b: [
-            "Á pokerth.net er avatarnum þínum dreift til annarra leikmanna í gegnum avatarþjóninn, og hægt er að sýna lítinn þjóðfána á reitum leikmanna. Hvort tveggja er valfrjálst og stillanlegt í valkostunum."] },
+            "Á pokerth.net er avatarnum þínum dreift til annarra leikmanna í gegnum avatarþjóninn, og hægt er að sýna lítinn þjóðfána á reitum leikmanna. Hvort tveggja er valfrjálst og stillanlegt í valkostunum.", "Til að sýna þinn eigin fána: www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit. Hann birtist við næstu innskráningu. Gestir hafa engan fána."] },
       ]
     },
     {
