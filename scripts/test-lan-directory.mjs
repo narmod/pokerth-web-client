@@ -315,6 +315,9 @@ try {
   ok(h.json && h.json.entries[0].resetPeriod === 'weekly', 'the admin changes the board period');
   h = await http('/stats', { board: id, _resetAll: true, token: TOKEN });
   ok(h.json && h.json.reset && !(await http('/stats?board=' + id)).json.bob, 'the admin resets that board only');
+  await http('/stats', { name: 'kim', board: id, handsPlayed: 4 });
+  h = await http('/stats', { _resetAll: true, token: TOKEN });
+  ok(h.json && h.json.reset && (await http('/stats?board=' + id)).json.kim && !(await http('/stats')).json.zed, 'resetting the default board leaves the LAN server boards alone');
   // ── players per IP on a listed server (close 4430) ──
   h = await http('/admin/lan-directory', { token: TOKEN, action: 'update', id, entry: { maxPerIp: 1 } });
   ok(h.json && h.json.entries[0].maxPerIp === 1, 'the admin sets one player per IP on that server');

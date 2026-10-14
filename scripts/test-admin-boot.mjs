@@ -225,13 +225,20 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   await new Promise((r) => setTimeout(r, 200));
   const sel = $('boardSel');
   ok(sel && $('boardPickRow').style.display !== 'none' && sel.options.length === 2 && /Berlin/.test(sel.options[1].textContent), 'the board picker lists the default board and each LAN server');
+  ok($('resetBtn').textContent === 'Reset this board', 'the reset button says it only resets the board picked above');
+  let asked = '';
+  window.confirm = (m) => { asked = m; return true; };
+  $('resetBtn').click();
+  await new Promise((r) => setTimeout(r, 100));
+  let rd = posts.filter((p) => p.url === '/stats').pop();
+  ok(/default board .* only\? The LAN server boards are not touched/.test(asked) && rd && rd.body._resetAll && !rd.body.board, 'on the default board: confirm says LAN boards are spared, no board sent');
   sel.value = 'lan_bbbbbb01'; sel.dispatchEvent(new window.Event('change'));
   await new Promise((r) => setTimeout(r, 100));
   ok(/weekly/.test($('boardNote').textContent), 'a LAN board says its own reset period');
   $('resetBtn').click();
   await new Promise((r) => setTimeout(r, 100));
   const rp = posts.filter((p) => p.url === '/stats').pop();
-  ok(rp && rp.body._resetAll && rp.body.board === 'lan_bbbbbb01', 'Reset targets the selected board only');
+  ok(rp && rp.body._resetAll && rp.body.board === 'lan_bbbbbb01' && /“Berlin” only\?/.test(asked), 'Reset targets the selected board only, and the confirm names it');
   ok(errors.length === 0, 'the board picker threw nothing' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
 }
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);

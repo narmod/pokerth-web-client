@@ -143,6 +143,10 @@ highlights below.
   its scheduled messages say « removed server »). The list comes with `GET /admin/broadcasts`
   (`lanTargets`, names only), so a broadcast-scope token can use it. MySQL mirror:
   `broadcasts.target` widened to VARCHAR(48).
+  Admin Leaderboard tab (`web.52`): the board picker and its reset note now sit above the
+  reset button, which reads « Reset this board » once LAN boards exist; the confirmation names
+  the board and says the other boards are not touched (the reset already only wiped the board
+  picked — now tested both ways).
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the

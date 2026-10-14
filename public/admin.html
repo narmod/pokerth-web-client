@@ -835,9 +835,9 @@
 
     <div id="panel-board" style="display:none">
       <div class="card">
-        <div class="boardhead"><span id="boardcount" class="muted"></span><button id="resetBtn" class="del">Reset leaderboard</button></div>
         <div class="periodrow" id="boardPickRow" style="display:none;margin:0 0 8px"><label for="boardSel" style="margin:0;flex:none">Board</label><select id="boardSel" style="flex:1 1 auto;min-width:0;width:100%;max-width:100%;text-overflow:ellipsis"></select></div>
         <div id="boardNote" class="muted" style="margin:0 0 8px"></div>
+        <div class="boardhead"><span id="boardcount" class="muted"></span><button id="resetBtn" class="del">Reset leaderboard</button></div>
         <input id="boardFilter" class="filter" type="search" placeholder="Filter players…" autocomplete="off">
         <div id="players"></div>
         <div id="boardmsg" class="msg"></div>
@@ -2679,6 +2679,7 @@
       if(_boardId && !_boards.some(function(b){return b.id===_boardId;})) _boardId='';
       sel.value=_boardId;
       boardNote(d.resetPeriod);
+      resetLabel();
     }).catch(function(){});
   }
   function boardNote(defPeriod){
@@ -2687,7 +2688,9 @@
     var b=_boards.filter(function(x){return x.id===_boardId;})[0];
     n.textContent=b?('Reset: '+(b.resetPeriod==='off'?'never':(b.resetPeriod||'monthly'))+' — chosen when the server was proposed; change it in Server › LAN directory › Edit.'):'';
   }
-  if($('boardSel')) $('boardSel').addEventListener('change',function(e){ _boardId=e.target.value; boardNote(); loadBoard(); });
+  // The reset button only ever wipes the board picked above: say so.
+  function resetLabel(){ var b=$('resetBtn'); if(b) b.textContent=_boards.length?'Reset this board':'Reset leaderboard'; }
+  if($('boardSel')) $('boardSel').addEventListener('change',function(e){ _boardId=e.target.value; boardNote(); resetLabel(); loadBoard(); });
   function loadBoard(){
     loadBoardList();
     fetch('/stats'+boardQS()).then(function(r){return r.json();}).then(function(s){
@@ -2721,7 +2724,7 @@
   function removePlayer(n){ if(!confirm('Remove player \u201c'+n+'\u201d from the leaderboard?'))return;
     fetch('/stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,_delete:true,token:tok(),board:_boardId||undefined})})
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ loadBoard(); } else { bmsg('Remove failed: '+((d&&d.error)||'forbidden'),'err'); } }).catch(function(){ bmsg('Could not remove player \u2014 network error.','err'); }); }
-  $('resetBtn').addEventListener('click',function(){ var _bn=_boardId?((_boards.filter(function(x){return x.id===_boardId;})[0]||{}).name||'this server'):''; if(!confirm(_boardId?('Reset the leaderboard of \u201c'+_bn+'\u201d? This cannot be undone.'):'Reset the WHOLE leaderboard? This cannot be undone.'))return;
+  $('resetBtn').addEventListener('click',function(){ var _bn=_boardId?((_boards.filter(function(x){return x.id===_boardId;})[0]||{}).name||'this server'):''; if(!confirm(_boardId?('Reset the leaderboard of \u201c'+_bn+'\u201d only? The other boards are not touched. This cannot be undone.'):(_boards.length?'Reset the default board (local server & typed addresses) only? The LAN server boards are not touched. This cannot be undone.':'Reset the WHOLE leaderboard? This cannot be undone.')))return;
     fetch('/stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_resetAll:true,token:tok(),board:_boardId||undefined})})
       .then(function(r){return r.json();}).then(function(d){ if(d.ok){ bmsg('Leaderboard reset.','ok'); loadBoard(); } else bmsg('Reset failed: '+(d.error||'forbidden'),'err'); })
       .catch(function(){ bmsg('Network error.','err'); }); });
