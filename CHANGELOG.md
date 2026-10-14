@@ -87,6 +87,11 @@ highlights below.
   back without a country (`lobby-flag`, after the Ranking tips; **Edit my profile** opens that page,
   counted as `lobby-flag.profile`; `S._myInfoLoaded` set by `onPlayerInfoReply`). The guide modules
   added in `web.64`–`web.65` join the service-worker precache list (`web.66`).
+- **The Ace on a tap on an open, non-ranked table: « join it »** — a Normal table (or registered-only
+  for an account holder) with a free seat and no password, not a cup game: the Ace says it does not
+  count for the ranking (guests: a game open to them) and offers **Join**, which joins that table
+  (`lobby-open`, counted as `lobby-open.join`; once per table and per session, silent after « Later »,
+  `web.67`).
 
 ### Added
 - **LAN server directory, server side** — players will be able to propose their own PokerTH

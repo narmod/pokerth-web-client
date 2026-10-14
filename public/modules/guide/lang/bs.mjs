@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Kup-igra: **{name}**. Samo administratori kupa otvaraju ove stolove i pozivaju igrače. Već traje, ali svako je može gledati kao **gledalac**: dodirni **{spec}** ispod liste. Gledamo je?",
   c1Cup: "Kup-igra: **{name}**. Ne možeš se pridružiti dodirom: administratori kupa pozivaju prijavljene igrače. Sljedeće kup-igre i kako učestvovati nalaze se u događajima.",
   c1Flag: "Nema zastave uz tvoje ime? Dolazi iz tvog pokerth.net računa. Za prikaz vlastite zastave: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Pojavit će se pri sljedećoj prijavi.",
+  c1Open: "**{name}** nije rangirana igra: ne računa se za rang-listu. Jedno mjesto je slobodno — pridružujemo se?",
+  c1OpenGuest: "**{name}** je obična igra, otvorena gostima: ne računa se za rang-listu. Jedno mjesto je slobodno — pridružujemo se?",
   c2Wait: 'Rangirana igra: **{n}/{max}** igrača. Pokreće se sama čim se stol popuni — u međuvremenu, evo kako funkcioniše poredak.',
   c2Points: 'Svaka rangirana igra dijeli bodove prema završnom mjestu: **15, 9, 6, 4, 3, 2, 1** od 1. do 7. mjesta, ništa od 8. do 10. — 40 bodova po stolu.',
   c2Score: 'Tvoj **Score** nije zbir tvojih bodova, nego tvoj prosjek po igri, ublažen brojem odigranih igara: bitno je igrati redovno.',

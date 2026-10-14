@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Geama cupa: **{name}**. Chan fhosgail ach rianairean a’ chupa na bùird seo agus bheir iad cuireadh dha na cluicheadairean. Tha e a’ dol mu thràth, ach faodaidh duine sam bith a choimhead mar **neach-amhairc**: thoir gnogag air **{spec}** fon liosta. An coimhead sinn air?",
   c1Cup: "Geama cupa: **{name}**. Chan urrainn dhut a dhol a-steach le aon ghnogag: bheir rianairean a’ chupa cuireadh dha na cluicheadairean clàraichte. Tha na geamannan cupa ri thighinn, agus mar a ghabhas tu pàirt, anns na tachartasan.",
   c1Flag: "Chan eil bratach ri taobh d’ ainm? Thig i on chunntas pokerth.net agad. Gus do bhratach fhèin a shealltainn: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Nochdaidh i an ath thuras a chlàraicheas tu a-steach.",
+  c1Open: "Chan e geama rangachaidh a th’ ann an **{name}**: chan eil e a’ cunntadh airson an rangachaidh. Tha suidheachan saor — an tèid sinn a-steach?",
+  c1OpenGuest: "’S e geama àbhaisteach a th’ ann an **{name}**, fosgailte do dh’aoighean: chan eil e a’ cunntadh airson an rangachaidh. Tha suidheachan saor — an tèid sinn a-steach?",
   c2Wait: 'Geama rangachaidh: **{n}/{max}** cluicheadairean. Tòisichidh e leis fhèin cho luath ’s a bhios am bòrd làn — san eadar-àm, seo mar a dh’obraicheas an rangachadh.',
   c2Points: 'Bheir gach geama rangachaidh seachad puingean a rèir an àite aig an deireadh: **15, 9, 6, 4, 3, 2, 1** on 1d chun an 7mh, dad on 8mh chun an 10mh — 40 puing gach bòrd.',
   c2Score: 'Chan e suim nam puingean agad a th’ anns an **Score** agad ach a’ chuibheasachd agad gach geama, air a mhaothachadh a rèir co mheud geama a chluich thu: tha e cudromach cluich gu cunbhalach.',

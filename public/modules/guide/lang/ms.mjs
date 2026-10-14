@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Permainan piala: **{name}**. Hanya admin piala yang membuka meja ini dan menjemput pemain. Permainan sudah berlangsung, tetapi sesiapa boleh menontonnya sebagai **penonton**: ketik **{spec}** di bawah senarai. Kita tonton?",
   c1Cup: "Permainan piala: **{name}**. Anda tidak boleh menyertai dengan satu ketikan: admin piala menjemput pemain yang berdaftar. Permainan piala seterusnya, dan cara menyertai, ada dalam acara.",
   c1Flag: "Tiada bendera di sebelah nama anda? Ia datang daripada akaun pokerth.net anda. Untuk memaparkan bendera anda sendiri: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Ia muncul pada log masuk seterusnya.",
+  c1Open: "**{name}** bukan permainan berperingkat: ia tidak dikira untuk kedudukan. Ada tempat kosong — sertai?",
+  c1OpenGuest: "**{name}** ialah permainan biasa, terbuka kepada tetamu: ia tidak dikira untuk kedudukan. Ada tempat kosong — sertai?",
   c2Wait: 'Permainan berperingkat: **{n}/{max}** pemain. Ia bermula sendiri sebaik sahaja meja penuh — sementara itu, inilah cara peringkat berfungsi.',
   c2Points: 'Setiap permainan berperingkat memberikan mata mengikut kedudukan akhir: **15, 9, 6, 4, 3, 2, 1** dari tempat ke-1 hingga ke-7, tiada apa-apa dari ke-8 hingga ke-10 — 40 mata bagi setiap meja.',
   c2Score: '**Score** Anda bukan jumlah mata Anda tetapi purata Anda bagi setiap permainan, disederhanakan mengikut bilangan permainan yang telah Anda main: bermain secara tetap itu penting.',

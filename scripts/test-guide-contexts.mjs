@@ -165,6 +165,15 @@ ok(pick({ noFlag: true, gamesLoaded: false }, ['lobby-ranking', 'lobby-ranking-c
 ok(/User Control Panel → Profile → Edit profile → \*\*Country\*\* → \*\*Submit\*\*/.test(EN.c1Flag) && /next login/.test(EN.c1Flag) && /User Control Panel/.test(EN.hsFlag) && /Guests have no flag/.test(EN.hsFlag), 'where to set the Country, when it shows');
 const HS = (await imp('public/modules/guide/hotspots.mjs')).HOTSPOTS;
 const fi = HS.findIndex((e) => e[1] === 'hsFlag'), li = HS.findIndex((e) => e[1] === 'hsLgiPlayer');
+// web.67: a tap on an open non-ranked table → « it does not count for the ranking — join it? »
+const LO = CONTEXTS.find((c) => c.id === 'lobby-open');
+ok(LO && LO.manual === true && pick({ openGid: 9 }) !== 'lobby-open', 'lobby-open: only on a tap (manual)');
+ok(C.applies(LO, W({ openGid: 9, gid: 0 })) && C.applies(LO, W({ openGid: 9, gid: 0, guest: true })) && !C.applies(LO, W({ openGid: 0 })) && !C.applies(LO, W({ openGid: 9, gid: 405 })) && !C.applies(LO, W({ openGid: 9, gid: 0, offline: true })), 'lobby-open: in the lobby, not seated, not offline');
+ok(LO.steps[0].text(W({ openGid: 9 })) === 'c1Open' && LO.steps[0].text(W({ openGid: 9, guest: true })) === 'c1OpenGuest' && LO.steps[0].vars(W({ openName: 'Guest37866' })).name === 'Guest37866', 'says the name; guests are told it is a game open to them');
+ok(LO.steps[0].buttons.join() === 'later,gotIt,join' && [].concat(LO.steps[0].target(W({ openGid: 9 }))).some((x) => x.includes('lobby-foot-join')), 'Later · Got it · Join, the Join button outlined');
+ok(/not count for the ranking/.test(EN.c1Open) && /not count for the ranking/.test(EN.c1OpenGuest) && /open to guests/.test(EN.c1OpenGuest), 'says plainly it is not ranked');
+const { tableName } = await imp('public/modules/guide/cup.mjs');
+ok(tableName({ name: 'a**b\u0001c' }) === 'a b c' && tableName(null) === '', 'table name cleaned for the bubble');
 ok(fi >= 0 && fi < li && /\.pl-flag/.test(HS[fi][0]) && /\.seat-flag/.test(HS[fi][0]) && HS[fi][3] === 'pthnet:avatars', '« ? » on a flag explains it (before the player row), More → Avatars and flags');
 
 console.log(`\n${pass} passed, ${fail} failed`);

@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Mchezo wa kombe: **{name}**. Wasimamizi wa kombe pekee ndio hufungua meza hizi na kuwaalika wachezaji. Unaendelea tayari, lakini yeyote anaweza kuutazama kama **mtazamaji**: gusa **{spec}** chini ya orodha. Tuutazame?",
   c1Cup: "Mchezo wa kombe: **{name}**. Huwezi kujiunga kwa kugusa mara moja: wasimamizi wa kombe huwaalika wachezaji waliojiandikisha. Michezo ijayo ya kombe, na jinsi ya kushiriki, iko kwenye matukio.",
   c1Flag: "Hakuna bendera karibu na jina lako? Inatoka kwenye akaunti yako ya pokerth.net. Ili kuonyesha bendera yako: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Itaonekana utakapoingia tena.",
+  c1Open: "**{name}** si mchezo wa viwango: hauhesabiwi kwenye viwango. Kuna kiti kilicho wazi — tujiunge?",
+  c1OpenGuest: "**{name}** ni mchezo wa kawaida, wazi kwa wageni: hauhesabiwi kwenye viwango. Kuna kiti kilicho wazi — tujiunge?",
   c2Wait: 'Mchezo wa viwango: wachezaji **{n}/{max}**. Huanza wenyewe mara tu meza inapojaa — wakati huo huo, hivi ndivyo viwango vinavyofanya kazi.',
   c2Points: 'Kila mchezo wa viwango hutoa pointi kulingana na nafasi ya mwisho: **15, 9, 6, 4, 3, 2, 1** kuanzia wa 1 hadi wa 7, hakuna kitu kwa wa 8 hadi wa 10 — pointi 40 kwa kila meza.',
   c2Score: '**Alama** yako si jumla ya pointi zako bali wastani wako kwa kila mchezo, uliorekebishwa kulingana na idadi ya michezo uliyocheza: kucheza mara kwa mara ni muhimu.',

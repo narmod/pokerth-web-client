@@ -49,6 +49,8 @@ export default {
   c1WatchCup: "A cup game: **{name}**. Only the cup admins open these tables and invite the players. It is already being played, but anyone can watch it as a **spectator**: tap **{spec}** below the list. Shall we watch it?",
   c1Cup: "A cup game: **{name}**. You cannot join it with a tap: the cup admins invite the players registered for it. The next cup games, and how to take part, are in the events.",
   c1Flag: "No flag next to your name? Flags come from the pokerth.net account. To show your own flag: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. It appears at your next login.",
+  c1Open: "**{name}** is not a ranked game: it does not count for the ranking. A seat is free — shall we join it?",
+  c1OpenGuest: "**{name}** is a Normal game, open to guests: it does not count for the ranking. A seat is free — shall we join it?",
   // C2 — ranked waiting room (one fact every ~20 s)
   c2Wait: 'Ranked game: **{n}/{max}** players. It starts by itself as soon as the table is full — meanwhile, here is how the ranking works.',
   c2Points: 'Each ranked game hands out points by finishing place: **15, 9, 6, 4, 3, 2, 1** from 1st to 7th, nothing from 8th to 10th — 40 points per table.',

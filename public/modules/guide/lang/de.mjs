@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Ein Cup-Spiel: **{name}**. Nur die Cup-Admins eröffnen diese Tische und laden die Spieler ein. Es läuft bereits, aber jeder kann als **Zuschauer** zusehen: tippe unter der Liste auf **{spec}**. Sollen wir zuschauen?",
   c1Cup: "Ein Cup-Spiel: **{name}**. Du kannst nicht per Tippen beitreten: Die Cup-Admins laden die angemeldeten Spieler ein. Die nächsten Cup-Spiele und wie man teilnimmt, findest du bei den Events.",
   c1Flag: "Keine Flagge neben deinem Namen? Sie kommt aus deinem pokerth.net-Konto. So zeigst du deine eigene Flagge: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Sie erscheint bei deiner nächsten Anmeldung.",
+  c1Open: "**{name}** ist kein Ranglistenspiel: Es zählt nicht für die Rangliste. Ein Platz ist frei — sollen wir beitreten?",
+  c1OpenGuest: "**{name}** ist ein normales Spiel, offen für Gäste: Es zählt nicht für die Rangliste. Ein Platz ist frei — sollen wir beitreten?",
   c2Wait: 'Ranglistenspiel: **{n}/{max}** Spieler. Es startet von selbst, sobald der Tisch voll ist — inzwischen erkläre ich dir, wie die Rangliste funktioniert.',
   c2Points: 'Jedes Ranglistenspiel vergibt Punkte nach Platzierung: **15, 9, 6, 4, 3, 2, 1** vom 1. bis zum 7. Platz, nichts vom 8. bis zum 10. — 40 Punkte pro Tisch.',
   c2Score: 'Dein **Score** ist nicht die Summe deiner Punkte, sondern dein Durchschnitt pro Spiel, gedämpft durch die Zahl deiner gespielten Spiele: Regelmäßig spielen zählt.',

@@ -31,7 +31,7 @@ import { createState, mergeIn, KEY_ON } from './state.mjs';
 import { canSpeak, pickContext, replayContext, applies, createRun } from './core.mjs';
 import { pickRankingTable, finishPlace, RANKED_TYPE, pointsFor } from './ranking-pick.mjs';
 import { CONTEXTS } from './contexts/index.mjs';
-import { cupName } from './cup.mjs';
+import { cupName, tableName } from './cup.mjs';
 import { gt, ready } from './i18n.mjs';
 import * as hl from './highlight.mjs';
 import { beacon } from './beacons.mjs';
@@ -67,7 +67,9 @@ const counted = new Set();    // « shown » already counted this session (stati
 let joinedGid = 0;            // Ranking table joined from the bubble (funnel: → started)
 let watchGid = 0;             // running game tapped in the list (« Watch it? », web.64)
 let tapCup = '';              // name of the cup game tapped in the list, '' for any other table (web.65)
-const tapTold = new Set();    // tables a tap already explained this session ('w:gid' watch, 'c:gid' cup, 'g:gid' guest)
+let openGid = 0;              // open non-ranked table tapped in the list (« Join it? », web.67)
+let openName = '';
+const tapTold = new Set();    // tables a tap already explained this session ('w:gid' watch, 'c:gid' cup, 'o:gid' open, 'g:gid' guest)
 
 const state = createState(
   (() => { try { return window.localStorage; } catch (e) { return null; } })() || { getItem: () => null, setItem() {} },
@@ -214,6 +216,8 @@ export function where() {
     result,
     watchGid,
     cupName: tapCup,
+    openGid,
+    openName,
     // my own player info came back without a country (pokerth.net account): no flag next to my name (web.66)
     noFlag: net && !guest && !!s._myInfoLoaded && !!s.myId && !(s._playerCountries && s._playerCountries[s.myId]),
     watchKnown: state.seen('lobby-watch'),
@@ -424,8 +428,13 @@ function renderStep(opts = {}) {
 }
 
 const ACTION_EV = { join: 'join', createRanking: 'create', signup: 'signup', watch: 'watch', seeEvents: 'events', editProfile: 'profile' };
-function doAction(id, w) {
+function doAction(id, w, cid) {
   try {
+    if (id === 'join' && cid === 'lobby-open') {      // the table the player tapped (web.67)
+      const s = S(), g = s.games ? s.games[openGid] : null;
+      if (g && g.mode === 1 && !s.gId && !s.amInGame && window.App && window.App.joinGame) window.App.joinGame(openGid);
+      return;
+    }
     if (id === 'join' && w.rankPick) joinedGid = w.rankPick.id;
     if (id === 'join' && w.rankPick && window.App && window.App.joinGame) window.App.joinGame(w.rankPick.id);
     else if (id === 'createRanking' && window.App && window.App.openCreatePage) window.App.openCreatePage({ ranking: true });
@@ -452,7 +461,7 @@ function onCtxButton(id) {
     const w = where();
     beacon(cid, 'done');
     if (ACTION_EV[id]) beacon(cid, id === 'signup' && cid === 'lobby-guest' ? 'guest_redirect' : ACTION_EV[id]);
-    finish(cid); doAction(id, w); return;
+    finish(cid); doAction(id, w, cid); return;
   }
   // « Later », Escape, no answer: put off for this session, badge on the Ace
   // (a tour starts again where the player left it)
@@ -1293,7 +1302,18 @@ function onListTap(ev) {
     if (cx) { tapTold.add('c:' + gid); showContext(cx); }
     return;
   }
-  if (g.mode !== 1 || !isGuest(s) || g.type === 1) return;
+  // an open table he can sit at, not ranked, not a cup game: « it does not count for the ranking — join it? » (web.67)
+  const guest = isGuest(s);
+  if (g.mode === 1 && !g.priv && (g.type === 1 || (g.type === 2 && !guest)) && (g.players | 0) < (g.maxPlayers || 10)) {
+    if (snoozed.has('lobby-open') || tapTold.has('o:' + gid)) return;
+    const co = CONTEXTS.find((c) => c.id === 'lobby-open');
+    if (!co) return;
+    tapTold.add('o:' + gid);
+    openGid = Number(gid) || 0; openName = tableName(g);
+    showContext(co);
+    return;
+  }
+  if (g.mode !== 1 || !guest || g.type === 1) return;
   if (snoozed.has('lobby-guest') || tapTold.has('g:' + gid)) return;
   const ctx = CONTEXTS.find((c) => c.id === 'lobby-guest');
   if (ctx) { tapTold.add('g:' + gid); showContext(ctx); }

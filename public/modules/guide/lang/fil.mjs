@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Laro ng cup: **{name}**. Ang mga admin lang ng cup ang nagbubukas ng mga mesang ito at nag-iimbita ng mga manlalaro. Nagaganap na ito, pero kahit sino ay puwedeng manood bilang **manonood**: i-tap ang **{spec}** sa ilalim ng listahan. Panoorin natin?",
   c1Cup: "Laro ng cup: **{name}**. Hindi ka makakasali sa isang tap: iniimbita ng mga admin ng cup ang mga rehistradong manlalaro. Nasa mga event ang mga susunod na laro ng cup at kung paano sumali.",
   c1Flag: "Walang watawat sa tabi ng pangalan mo? Galing ito sa iyong pokerth.net account. Para ipakita ang sarili mong watawat: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Lalabas ito sa susunod mong pag-login.",
+  c1Open: "Hindi ranked na laro ang **{name}**: hindi ito bilang sa ranking. May bakanteng upuan — sumali tayo?",
+  c1OpenGuest: "Normal na laro ang **{name}**, bukas sa mga guest: hindi ito bilang sa ranking. May bakanteng upuan — sumali tayo?",
   c2Wait: 'Ranking game: **{n}/{max}** na manlalaro. Kusa itong magsisimula kapag napuno na ang mesa — samantala, ganito gumagana ang ranking.',
   c2Points: 'Bawat ranking game ay namimigay ng puntos ayon sa huling pwesto: **15, 9, 6, 4, 3, 2, 1** mula ika-1 hanggang ika-7, wala mula ika-8 hanggang ika-10 — 40 puntos bawat mesa.',
   c2Score: 'Ang **Score** mo ay hindi ang kabuuan ng mga puntos mo kundi ang average mo bawat laro, pinapabanayad ayon sa dami ng mga larong nilaro mo: mahalaga ang regular na paglalaro.',

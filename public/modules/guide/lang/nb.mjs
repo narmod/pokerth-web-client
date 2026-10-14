@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Et cupspill: **{name}**. Bare cup-administratorene åpner disse bordene og inviterer spillerne. Det er allerede i gang, men alle kan se på som **tilskuer**: trykk på **{spec}** under listen. Skal vi se det?",
   c1Cup: "Et cupspill: **{name}**. Du kan ikke bli med med et trykk: cup-administratorene inviterer de påmeldte spillerne. De neste cupspillene, og hvordan du deltar, finner du under arrangementene.",
   c1Flag: "Ikke noe flagg ved navnet ditt? Det kommer fra pokerth.net-kontoen din. Slik viser du ditt eget flagg: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Det vises ved neste innlogging.",
+  c1Open: "**{name}** er ikke et rangert spill: det teller ikke på rankingen. En plass er ledig — skal vi bli med?",
+  c1OpenGuest: "**{name}** er et vanlig spill, åpent for gjester: det teller ikke på rankingen. En plass er ledig — skal vi bli med?",
   c2Wait: 'Rangert spill: **{n}/{max}** spillere. Det starter av seg selv så snart bordet er fullt — i mellomtiden, slik fungerer rangeringen.',
   c2Points: 'Hvert rangert spill deler ut poeng etter plassering: **15, 9, 6, 4, 3, 2, 1** fra 1. til 7. plass, ingenting fra 8. til 10. — 40 poeng per bord.',
   c2Score: '**Scoren** din er ikke summen av poengene dine, men snittet ditt per spill, dempet etter hvor mange spill du har spilt: det lønner seg å spille jevnlig.',

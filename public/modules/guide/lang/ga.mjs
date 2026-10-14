@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Cluiche corn: **{name}**. Ní osclaíonn ach riarthóirí an chorn na boird seo agus tugann siad cuireadh do na himreoirí. Tá sé ar siúl cheana, ach is féidir le duine ar bith féachaint air mar **lucht féachana**: tapáil **{spec}** faoin liosta. An bhféachfaimid air?",
   c1Cup: "Cluiche corn: **{name}**. Ní féidir leat dul isteach le tapáil amháin: tugann riarthóirí an chorn cuireadh do na himreoirí cláraithe. Tá na chéad chluichí corn eile, agus conas páirt a ghlacadh, sna himeachtaí.",
   c1Flag: "Níl bratach in aice le d’ainm? Tagann sí ó do chuntas pokerth.net. Chun do bhratach féin a thaispeáint: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Feicfear í an chéad uair eile a logálann tú isteach.",
+  c1Open: "Ní cluiche rangaithe é **{name}**: ní áirítear sa rangú é. Tá suíochán saor — an rachaimid isteach?",
+  c1OpenGuest: "Is gnáthchluiche é **{name}**, oscailte d’aíonna: ní áirítear sa rangú é. Tá suíochán saor — an rachaimid isteach?",
   c2Wait: 'Cluiche rangaithe: **{n}/{max}** imreoir. Tosaíonn sé leis féin a luaithe a bhíonn an bord lán — idir an dá linn, seo mar a oibríonn an rangú.',
   c2Points: 'Tugann gach cluiche rangaithe pointí de réir na háite ina gcríochnaíonn tú: **15, 9, 6, 4, 3, 2, 1** ón 1ú go dtí an 7ú háit, faic ón 8ú go dtí an 10ú — 40 pointe in aghaidh an bhoird.',
   c2Score: 'Ní hé suim do phointí do **Scór**, ach do mheán in aghaidh an chluiche, maolaithe ag líon na gcluichí a d\'imir tú: is tábhachtach imirt go rialta.',

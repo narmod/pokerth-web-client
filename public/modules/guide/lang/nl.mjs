@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Een cupspel: **{name}**. Alleen de cupbeheerders openen deze tafels en nodigen de spelers uit. Het is al bezig, maar iedereen kan als **toeschouwer** meekijken: tik op **{spec}** onder de lijst. Zullen we kijken?",
   c1Cup: "Een cupspel: **{name}**. Je kunt niet met een tik meedoen: de cupbeheerders nodigen de ingeschreven spelers uit. De volgende cupspellen, en hoe je meedoet, staan bij de evenementen.",
   c1Flag: "Geen vlag naast je naam? Die komt uit je pokerth.net-account. Je eigen vlag tonen: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Hij verschijnt bij je volgende aanmelding.",
+  c1Open: "**{name}** is geen rankingspel: het telt niet mee voor de ranglijst. Er is een plek vrij — zullen we meedoen?",
+  c1OpenGuest: "**{name}** is een normaal spel, open voor gasten: het telt niet mee voor de ranglijst. Er is een plek vrij — zullen we meedoen?",
   c2Wait: 'Rankingspel: **{n}/{max}** spelers. Het start vanzelf zodra de tafel vol is — ondertussen leg ik uit hoe de ranglijst werkt.',
   c2Points: 'Elk rankingspel deelt punten uit op basis van de eindplaats: **15, 9, 6, 4, 3, 2, 1** van de 1e tot de 7e, niets van de 8e tot de 10e — 40 punten per tafel.',
   c2Score: 'Je **Score** is niet de som van je punten, maar je gemiddelde per spel, getemperd door het aantal gespeelde spellen: regelmatig spelen telt.',

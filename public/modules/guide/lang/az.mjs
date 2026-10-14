@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Kubok oyunu: **{name}**. Bu masaları yalnız kubokun adminləri açır və oyunçuları dəvət edir. Oyun artıq gedir, amma hər kəs onu **tamaşaçı** kimi izləyə bilər: siyahının altındakı **{spec}** düyməsinə toxun. İzləyək?",
   c1Cup: "Kubok oyunu: **{name}**. Toxunmaqla qoşula bilməzsən: kubokun adminləri qeydiyyatdan keçmiş oyunçuları dəvət edir. Növbəti kubok oyunları və necə qatılmaq tədbirlərdədir.",
   c1Flag: "Adının yanında bayraq yoxdur? O, pokerth.net hesabından gəlir. Öz bayrağını göstərmək üçün: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Növbəti girişində görünəcək.",
+  c1Open: "**{name}** reytinq oyunu deyil: reytinqə sayılmır. Bir yer boşdur — qoşulaq?",
+  c1OpenGuest: "**{name}** qonaqlara açıq adi oyundur: reytinqə sayılmır. Bir yer boşdur — qoşulaq?",
   c2Wait: 'Reytinq oyunu: **{n}/{max}** oyunçu. Masa dolan kimi özü başlayır — bu arada reytinqin necə işlədiyini izah edim.',
   c2Points: 'Hər reytinq oyunu tutulan yerə görə xal paylayır: 1-cidən 7-ciyə qədər **15, 9, 6, 4, 3, 2, 1**, 8-cidən 10-cuya qədər heç nə — masa başına 40 xal.',
   c2Score: '**Nəticəniz** xallarınızın cəmi deyil, oyun başına ortanızdır və oynadığınız oyunların sayı ilə yumşaldılır: müntəzəm oynamaq vacibdir.',

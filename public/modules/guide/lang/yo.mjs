@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Ìdíje ife ẹ̀yẹ: **{name}**. Àwọn alábòójútó ife ẹ̀yẹ nìkan ló ń ṣí àwọn tábìlì yìí tí wọ́n sì ń pe àwọn agbábọ́ọ̀lù. Ó ti ń lọ lọ́wọ́, ṣùgbọ́n ẹnikẹ́ni lè wò ó gẹ́gẹ́ bí **olùwòran**: tẹ **{spec}** nísàlẹ̀ àkójọ. Ṣé ká wò ó?",
   c1Cup: "Ìdíje ife ẹ̀yẹ: **{name}**. O kò lè darapọ̀ pẹ̀lú ìtẹ̀ kan: àwọn alábòójútó ife ẹ̀yẹ ń pe àwọn tó forúkọ sílẹ̀. Àwọn ìdíje ife ẹ̀yẹ tó ń bọ̀ àti bí o ṣe lè kópa wà nínú àwọn ìṣẹ̀lẹ̀.",
   c1Flag: "Kò sí àsíá lẹ́gbẹ̀ẹ́ orúkọ rẹ? Ó ń wá láti àkọọ́lẹ̀ pokerth.net rẹ. Láti fi àsíá rẹ hàn: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Yóò farahàn nígbà tí o bá wọlé lẹ́ẹ̀kan sí i.",
+  c1Open: "**{name}** kì í ṣe ìdíje ipò: kò ní í kà sí ipò. Ìjókòó kan ṣófo — ṣé ká darapọ̀?",
+  c1OpenGuest: "**{name}** jẹ́ ìdíje lásán tó ṣí sílẹ̀ fún àwọn àlejò: kò ní í kà sí ipò. Ìjókòó kan ṣófo — ṣé ká darapọ̀?",
   c2Wait: 'Eré ipò: òṣèré **{n}/{max}**. Yóò bẹ̀rẹ̀ fúnra rẹ̀ ní kété tí tábìlì bá kún — ní báyìí ná, bí ipò ṣe ń ṣiṣẹ́ nìyí.',
   c2Points: 'Eré ipò kọ̀ọ̀kan ń pín àmì gẹ́gẹ́ bí ipò tí o parí sí: **15, 9, 6, 4, 3, 2, 1** láti ipò 1 dé ipò 7, kò sí nǹkan láti ipò 8 dé ipò 10 — àmì 40 fún tábìlì kọ̀ọ̀kan.',
   c2Score: '**Àmì** (Score) rẹ kì í ṣe àròpọ̀ àwọn àmì rẹ ṣùgbọ́n àròpín rẹ fún eré kọ̀ọ̀kan, tí iye eré tí o ti ṣe ń ṣàtúnṣe: ṣíṣeré déédéé ṣe pàtàkì.',

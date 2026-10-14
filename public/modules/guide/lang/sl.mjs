@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Pokalna igra: **{name}**. Te mize odpirajo in igralce vabijo samo skrbniki pokala. Igra že poteka, a vsak jo lahko spremlja kot **gledalec**: tapni **{spec}** pod seznamom. Jo gledava?",
   c1Cup: "Pokalna igra: **{name}**. Pridružiti se ne moreš s tapom: skrbniki pokala povabijo prijavljene igralce. Naslednje pokalne igre in kako sodelovati so med dogodki.",
   c1Flag: "Ob tvojem imenu ni zastave? Prihaja iz tvojega računa pokerth.net. Da prikažeš svojo zastavo: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Prikaže se ob naslednji prijavi.",
+  c1Open: "**{name}** ni rangirana igra: ne šteje za lestvico. Eno mesto je prosto — se pridruživa?",
+  c1OpenGuest: "**{name}** je običajna igra, odprta za goste: ne šteje za lestvico. Eno mesto je prosto — se pridruživa?",
   c2Wait: 'Igra z uvrstitvijo: **{n}/{max}** igralcev. Samodejno se začne, takoj ko se miza napolni — medtem ti razložim, kako deluje uvrstitev.',
   c2Points: 'Vsaka igra z uvrstitvijo podeli točke glede na končno mesto: **15, 9, 6, 4, 3, 2, 1** od 1. do 7. mesta, od 8. do 10. nič — 40 točk na mizo.',
   c2Score: 'Tvoj **Rezultat** ni vsota tvojih točk, temveč tvoje povprečje na igro, omiljeno glede na število odigranih iger: redno igranje šteje.',

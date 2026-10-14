@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Kupajáték: **{name}**. Ezeket az asztalokat csak a kupa adminjai nyitják meg és ők hívják meg a játékosokat. Már folyik, de bárki nézheti **nézőként**: koppints a lista alatti **{spec}** gombra. Megnézzük?",
   c1Cup: "Kupajáték: **{name}**. Koppintással nem tudsz beszállni: a kupa adminjai hívják meg a jelentkezett játékosokat. A következő kupajátékok és a részvétel módja az eseményeknél található.",
   c1Flag: "Nincs zászló a neved mellett? A pokerth.net-fiókodból jön. Így jelenik meg a saját zászlód: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. A következő bejelentkezéskor látszik.",
+  c1Open: "A(z) **{name}** nem ranglistás játék: nem számít bele a ranglistába. Van egy szabad hely — beszállunk?",
+  c1OpenGuest: "A(z) **{name}** normál játék, vendégeknek is nyitott: nem számít bele a ranglistába. Van egy szabad hely — beszállunk?",
   c2Wait: 'Ranglistás játék: **{n}/{max}** játékos. Magától indul, amint megtelik az asztal — addig is, így működik a ranglista.',
   c2Points: 'Minden ranglistás játék a helyezés szerint oszt pontot: **15, 9, 6, 4, 3, 2, 1** az 1. helytől a 7.-ig, a 8.-tól a 10.-ig semmi — asztalonként 40 pont.',
   c2Score: 'A **Score**-od nem a pontjaid összege, hanem a játékonkénti átlagod, a lejátszott játékok számával tompítva: számít, hogy rendszeresen játszol.',

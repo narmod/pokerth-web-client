@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Cup-peli: **{name}**. Vain cupin ylläpitäjät avaavat nämä pöydät ja kutsuvat pelaajat. Peli on jo käynnissä, mutta kuka tahansa voi katsoa sitä **katsojana**: napauta **{spec}** listan alla. Katsotaanko?",
   c1Cup: "Cup-peli: **{name}**. Et voi liittyä napautuksella: cupin ylläpitäjät kutsuvat ilmoittautuneet pelaajat. Seuraavat cup-pelit ja osallistumisohjeet löytyvät tapahtumista.",
   c1Flag: "Ei lippua nimesi vieressä? Se tulee pokerth.net-tililtäsi. Näin saat oman lippusi näkyviin: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Se näkyy seuraavalla kirjautumisella.",
+  c1Open: "**{name}** ei ole rankingpeli: se ei vaikuta rankingiin. Paikka on vapaana — liitytäänkö?",
+  c1OpenGuest: "**{name}** on tavallinen peli, avoin vieraille: se ei vaikuta rankingiin. Paikka on vapaana — liitytäänkö?",
   c2Wait: 'Ranking-peli: **{n}/{max}** pelaajaa. Se alkaa itsestään heti, kun pöytä on täynnä — sillä välin kerron, miten sijoituslista toimii.',
   c2Points: 'Jokainen Ranking-peli jakaa pisteitä loppusijoituksen mukaan: **15, 9, 6, 4, 3, 2, 1** sijoille 1.–7., sijoille 8.–10. ei mitään — 40 pistettä pöytää kohden.',
   c2Score: '**Score** ei ole pisteidesi summa vaan keskiarvosi peliä kohti, jota pelattujen pelien määrä tasoittaa: säännöllinen pelaaminen ratkaisee.',

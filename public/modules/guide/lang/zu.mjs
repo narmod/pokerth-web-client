@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Umdlalo wendebe: **{name}**. Abaphathi bendebe kuphela abavula lawa matafula futhi bamema abadlali. Usuqhubeka, kodwa noma ubani angawubuka **njengesibukeli**: thepha **{spec}** ngaphansi kohlu. Siwubuke?",
   c1Cup: "Umdlalo wendebe: **{name}**. Awukwazi ukujoyina ngokuthepha nje: abaphathi bendebe bamema abadlali ababhalisile. Imidlalo yendebe elandelayo, nendlela yokubamba iqhaza, kusemicimbini.",
   c1Flag: "Alikho ifulegi eduze kwegama lakho? Livela ku-akhawunti yakho ye-pokerth.net. Ukuze ubonise ifulegi lakho: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Lizovela uma ungena ngemva kwalokhu.",
+  c1Open: "**{name}** akuwona umdlalo wezinga: awubalwa ezingeni. Kunesihlalo esingenalutho — sijoyine?",
+  c1OpenGuest: "**{name}** umdlalo ojwayelekile, uvulelekile kuzivakashi: awubalwa ezingeni. Kunesihlalo esingenalutho — sijoyine?",
   c2Wait: 'Umdlalo wezinga: abadlali **{n}/{max}**. Uziqalela ngokwawo ngokushesha nje uma itafula seligcwele — okwamanje, nansi indlela izinga elisebenza ngayo.',
   c2Points: 'Umdlalo wezinga ngamunye unikeza amaphuzu ngokwendawo oqeda kuyo: **15, 9, 6, 4, 3, 2, 1** kusukela kowe-1 kuya kowe-7, lutho kusukela kowe-8 kuya kowe-10 — amaphuzu angu-40 etafuleni ngalinye.',
   c2Score: '**Amaphuzu** akho awasona isamba samaphuzu owatholile kodwa isilinganiso sakho ngomdlalo ngamunye, silungiswa ngokuya ngenani lemidlalo oyidlalile: ukudlala njalo kubalulekile.',

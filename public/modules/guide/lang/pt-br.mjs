@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Uma partida de copa: **{name}**. Só os administradores da copa abrem essas mesas e convidam os jogadores. Ela já está em andamento, mas qualquer um pode assistir como **espectador**: toque em **{spec}** abaixo da lista. Vamos assistir?",
   c1Cup: "Uma partida de copa: **{name}**. Você não entra com um toque: os administradores da copa convidam os jogadores inscritos. As próximas partidas de copa, e como participar, estão nos eventos.",
   c1Flag: "Sem bandeira ao lado do seu nome? Ela vem da sua conta no pokerth.net. Para mostrar sua própria bandeira: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Ela aparece no seu próximo login.",
+  c1Open: "**{name}** não é uma partida ranqueada: não conta para o ranking. Há um lugar livre — vamos entrar?",
+  c1OpenGuest: "**{name}** é uma partida normal, aberta a convidados: não conta para o ranking. Há um lugar livre — vamos entrar?",
   c2Wait: 'Partida ranqueada: **{n}/{max}** jogadores. Ela começa sozinha assim que a mesa ficar cheia — enquanto isso, veja como funciona o ranking.',
   c2Points: 'Cada partida ranqueada distribui pontos pela colocação final: **15, 9, 6, 4, 3, 2, 1** do 1º ao 7º, nada do 8º ao 10º — 40 pontos por mesa.',
   c2Score: 'Seu **Score** não é a soma dos seus pontos, mas sua média por partida, amortecida pelo número de partidas jogadas: jogar com regularidade faz diferença.',

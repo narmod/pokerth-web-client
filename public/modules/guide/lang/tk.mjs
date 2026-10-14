@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Kubok oýny: **{name}**. Bu stollary diňe kubogyň adminleri açýar we oýunçylary çagyrýar. Oýun eýýäm barýar, ýöne islendik adam ony **tomaşaçy** hökmünde görüp biler: sanawyň aşagyndaky **{spec}** düwmesine bas. Göreliňmi?",
   c1Cup: "Kubok oýny: **{name}**. Basmak bilen goşulyp bilmersiň: kubogyň adminleri ýazylan oýunçylary çagyrýar. Indiki kubok oýunlary we nädip gatnaşmalydygy çärelerde.",
   c1Flag: "Adyňyň ýanynda baýdak ýokmy? Ol pokerth.net hasabyňdan gelýär. Öz baýdagyňy görkezmek üçin: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Ol indiki girişiňde peýda bolar.",
+  c1Open: "**{name}** reýting oýny däl: reýtinge hasaplanmaýar. Bir orun boş — goşulalymy?",
+  c1OpenGuest: "**{name}** myhmanlara açyk adaty oýun: reýtinge hasaplanmaýar. Bir orun boş — goşulalymy?",
   c2Wait: 'Reýting oýny: **{n}/{max}** oýunçy. Stol dolan badyna özi başlar — şol aralykda reýtingiň nähili işleýändigini düşündireýin.',
   c2Points: 'Her reýting oýny soňky orna görä utuk paýlaýar: 1-nji orundan 7-nji orna çenli **15, 9, 6, 4, 3, 2, 1**, 8-nji orundan 10-njy orna çenli hiç zat — her stola 40 utuk.',
   c2Score: 'Siziň **utugyňyz** (Score) utuklaryňyzyň jemi däl-de, oýnan oýunlaryňyzyň sany bilen ýumşadylan bir oýna düşýän ortaça görkezijiňizdir: yzygiderli oýnamak möhüm.',

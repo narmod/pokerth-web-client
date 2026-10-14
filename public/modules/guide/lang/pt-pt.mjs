@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Um jogo de taça: **{name}**. Só os administradores da taça abrem estas mesas e convidam os jogadores. Já está a decorrer, mas qualquer pessoa o pode ver como **espectador**: toca em **{spec}** por baixo da lista. Vemos?",
   c1Cup: "Um jogo de taça: **{name}**. Não entras com um toque: os administradores da taça convidam os jogadores inscritos. Os próximos jogos de taça, e como participar, estão nos eventos.",
   c1Flag: "Sem bandeira junto ao teu nome? Vem da tua conta pokerth.net. Para mostrar a tua própria bandeira: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Aparece no teu próximo início de sessão.",
+  c1Open: "**{name}** não é um jogo classificado: não conta para a classificação. Há um lugar livre — entramos?",
+  c1OpenGuest: "**{name}** é um jogo normal, aberto a convidados: não conta para a classificação. Há um lugar livre — entramos?",
   c2Wait: 'Partida classificada: **{n}/{max}** jogadores. Começa sozinha assim que a mesa ficar cheia — entretanto, eis como funciona a classificação.',
   c2Points: 'Cada partida classificada distribui pontos consoante a posição final: **15, 9, 6, 4, 3, 2, 1** do 1.º ao 7.º, nada do 8.º ao 10.º — 40 pontos por mesa.',
   c2Score: 'A tua **Score** não é a soma dos teus pontos, mas a tua média por partida, atenuada consoante o número de partidas que jogaste: jogar com regularidade conta.',

@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Bir kupa oyunu: **{name}**. Bu masaları yalnızca kupa yöneticileri açar ve oyuncuları davet eder. Oyun zaten oynanıyor ama herkes **izleyici** olarak izleyebilir: listenin altındaki **{spec}** düğmesine dokun. İzleyelim mi?",
   c1Cup: "Bir kupa oyunu: **{name}**. Dokunarak katılamazsın: kupa yöneticileri kayıtlı oyuncuları davet eder. Sonraki kupa oyunları ve nasıl katılacağın etkinliklerde.",
   c1Flag: "Adının yanında bayrak yok mu? Bayrak pokerth.net hesabından gelir. Kendi bayrağını göstermek için: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Bir sonraki girişinde görünür.",
+  c1Open: "**{name}** sıralamalı bir oyun değil: sıralamaya sayılmaz. Bir koltuk boş — katılalım mı?",
+  c1OpenGuest: "**{name}** misafirlere açık normal bir oyun: sıralamaya sayılmaz. Bir koltuk boş — katılalım mı?",
   c2Wait: 'Sıralama oyunu: **{n}/{max}** oyuncu. Masa dolar dolmaz kendiliğinden başlar — bu arada, sıralamanın nasıl işlediğini anlatayım.',
   c2Points: 'Her sıralama oyunu bitiriş sırasına göre puan dağıtır: birinciden yedinciye **15, 9, 6, 4, 3, 2, 1**, sekizinciden onuncuya hiçbir şey — masa başına 40 puan.',
   c2Score: '**Score** değerin puanlarının toplamı değil, oyun başına ortalaman; oynadığın oyun sayısıyla yumuşatılır: düzenli oynamak önemlidir.',

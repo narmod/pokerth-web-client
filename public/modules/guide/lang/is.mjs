@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Bikarleikur: **{name}**. Aðeins stjórnendur bikarsins opna þessi borð og bjóða leikmönnum. Hann er þegar hafinn, en allir geta horft á sem **áhorfandi**: ýttu á **{spec}** undir listanum. Eigum við að horfa?",
   c1Cup: "Bikarleikur: **{name}**. Þú getur ekki gengið inn með einu snerti: stjórnendur bikarsins bjóða skráðum leikmönnum. Næstu bikarleikir, og hvernig á að taka þátt, eru undir viðburðum.",
   c1Flag: "Enginn fáni við nafnið þitt? Hann kemur af pokerth.net-aðganginum þínum. Til að sýna þinn eigin fána: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Hann birtist við næstu innskráningu.",
+  c1Open: "**{name}** er ekki stigaleikur: hann telur ekki á stigalistanum. Sæti er laust — eigum við að taka þátt?",
+  c1OpenGuest: "**{name}** er venjulegur leikur, opinn gestum: hann telur ekki á stigalistanum. Sæti er laust — eigum við að taka þátt?",
   c2Wait: 'Stigaleikur: **{n}/{max}** leikmenn. Hann fer sjálfkrafa af stað um leið og borðið er fullt — á meðan er hér útskýrt hvernig stigataflan virkar.',
   c2Points: 'Hver stigaleikur gefur stig eftir lokasæti: **15, 9, 6, 4, 3, 2, 1** frá 1. til 7. sætis, ekkert frá 8. til 10. sætis — 40 stig á hvert borð.',
   c2Score: '**Skorið** þitt er ekki summa stiganna heldur meðaltalið þitt á leik, leiðrétt eftir fjölda spilaðra leikja: það skiptir máli að spila reglulega.',

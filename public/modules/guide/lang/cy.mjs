@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Gêm gwpan: **{name}**. Dim ond gweinyddwyr y gwpan sy’n agor y byrddau hyn ac yn gwahodd y chwaraewyr. Mae hi eisoes ar waith, ond gall unrhyw un ei gwylio fel **gwyliwr**: tapia **{spec}** o dan y rhestr. Ei gwylio?",
   c1Cup: "Gêm gwpan: **{name}**. Ni elli ymuno ag un tap: mae gweinyddwyr y gwpan yn gwahodd y chwaraewyr sydd wedi cofrestru. Mae’r gemau cwpan nesaf, a sut i gymryd rhan, yn y digwyddiadau.",
   c1Flag: "Dim baner wrth dy enw? Mae’n dod o dy gyfrif pokerth.net. I ddangos dy faner dy hun: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Bydd yn ymddangos y tro nesaf y byddi’n mewngofnodi.",
+  c1Open: "Nid gêm restr yw **{name}**: nid yw’n cyfrif tuag at y rhestr. Mae sedd yn rhydd — ymuno?",
+  c1OpenGuest: "Gêm arferol yw **{name}**, ar agor i westeion: nid yw’n cyfrif tuag at y rhestr. Mae sedd yn rhydd — ymuno?",
   c2Wait: 'Gêm gyda safle: **{n}/{max}** chwaraewr. Mae’n dechrau ar ei phen ei hun cyn gynted ag y bydd y bwrdd yn llawn — yn y cyfamser, dyma sut mae’r safleoedd yn gweithio.',
   c2Points: 'Mae pob gêm gyda safle yn rhoi pwyntiau yn ôl y lle gorffen: **15, 9, 6, 4, 3, 2, 1** o’r 1af i’r 7fed, dim o’r 8fed i’r 10fed — 40 pwynt i bob bwrdd.',
   c2Score: 'Nid swm eich pwyntiau yw eich **Sgôr** ond eich cyfartaledd fesul gêm, wedi’i leddfu yn ôl faint o gemau rydych wedi’u chwarae: mae chwarae’n rheolaidd yn bwysig.',

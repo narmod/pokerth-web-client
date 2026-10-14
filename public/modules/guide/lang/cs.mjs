@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Pohárová hra: **{name}**. Tyto stoly otevírají a hráče zvou jen správci poháru. Hra už probíhá, ale kdokoli ji může sledovat jako **divák**: klepni na **{spec}** pod seznamem. Budeme ji sledovat?",
   c1Cup: "Pohárová hra: **{name}**. Klepnutím se do ní nepřipojíš: správci poháru zvou přihlášené hráče. Další pohárové hry a jak se zúčastnit najdeš v událostech.",
   c1Flag: "U tvého jména není vlajka? Bere se z tvého účtu pokerth.net. Jak zobrazit vlastní vlajku: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Objeví se při dalším přihlášení.",
+  c1Open: "**{name}** není hodnocená hra: nepočítá se do žebříčku. Jedno místo je volné — přidáme se?",
+  c1OpenGuest: "**{name}** je normální hra, otevřená hostům: nepočítá se do žebříčku. Jedno místo je volné — přidáme se?",
   c2Wait: 'Hodnocená hra: **{n}/{max}** hráčů. Spustí se sama, jakmile se stůl zaplní — mezitím ti vysvětlím, jak funguje žebříček.',
   c2Points: 'Každá hodnocená hra rozdává body podle umístění: **15, 9, 6, 4, 3, 2, 1** od 1. do 7. místa, od 8. do 10. nic — 40 bodů na stůl.',
   c2Score: 'Tvoje **Skóre** není součet tvých bodů, ale tvůj průměr na hru, ztlumený podle počtu odehraných her: záleží na pravidelném hraní.',

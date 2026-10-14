@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Lojë kupe: **{name}**. Vetëm administratorët e kupës i hapin këto tavolina dhe ftojnë lojtarët. Po luhet tashmë, por kushdo mund ta shikojë si **spektator**: prek **{spec}** poshtë listës. A e shohim?",
   c1Cup: "Lojë kupe: **{name}**. Nuk mund të hysh me një prekje: administratorët e kupës ftojnë lojtarët e regjistruar. Lojërat e ardhshme të kupës dhe si të marrësh pjesë janë te ngjarjet.",
   c1Flag: "Nuk ka flamur pranë emrit tënd? Vjen nga llogaria jote në pokerth.net. Për të shfaqur flamurin tënd: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Shfaqet në hyrjen e ardhshme.",
+  c1Open: "**{name}** nuk është lojë e renditur: nuk llogaritet në renditje. Ka një vend të lirë — hyjmë?",
+  c1OpenGuest: "**{name}** është lojë e zakonshme, e hapur për mysafirët: nuk llogaritet në renditje. Ka një vend të lirë — hyjmë?",
   c2Wait: 'Lojë me renditje: **{n}/{max}** lojtarë. Nis vetë sapo tavolina të mbushet — ndërkohë, ja si funksionon renditja.',
   c2Points: 'Çdo lojë me renditje shpërndan pikë sipas vendit përfundimtar: **15, 9, 6, 4, 3, 2, 1** nga i 1-ri te i 7-ti, asgjë nga i 8-ti te i 10-ti — 40 pikë për tavolinë.',
   c2Score: '**Rezultati** yt nuk është shuma e pikëve të tua, por mesatarja jote për lojë, e zbutur sipas numrit të lojërave që ke luajtur: rëndësi ka të luash rregullisht.',

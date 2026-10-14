@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Taurės žaidimas: **{name}**. Tik taurės administratoriai atidaro šiuos stalus ir pakviečia žaidėjus. Jis jau vyksta, bet bet kas gali jį stebėti kaip **žiūrovas**: bakstelėk **{spec}** po sąrašu. Žiūrime?",
   c1Cup: "Taurės žaidimas: **{name}**. Prisijungti bakstelėjimu negalima: taurės administratoriai pakviečia užsiregistravusius žaidėjus. Kiti taurės žaidimai ir kaip dalyvauti – renginiuose.",
   c1Flag: "Prie tavo vardo nėra vėliavos? Ji ateina iš tavo pokerth.net paskyros. Kad būtų rodoma tavo vėliava: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Ji atsiras kitą kartą prisijungus.",
+  c1Open: "**{name}** nėra reitinginis žaidimas: jis neįskaičiuojamas į reitingą. Yra laisva vieta — prisijungiam?",
+  c1OpenGuest: "**{name}** yra įprastas žaidimas, atviras svečiams: jis neįskaičiuojamas į reitingą. Yra laisva vieta — prisijungiam?",
   c2Wait: 'Reitinguojamas žaidimas: **{n}/{max}** žaidėjų. Jis prasidės savaime, vos tik stalas užsipildys — o kol kas štai kaip veikia reitingas.',
   c2Points: 'Kiekvienas reitinguojamas žaidimas dalija taškus pagal užimtą vietą: **15, 9, 6, 4, 3, 2, 1** nuo 1-os iki 7-os vietos, nuo 8-os iki 10-os nieko — 40 taškų vienam stalui.',
   c2Score: 'Tavo **Score** — ne tavo taškų suma, o tavo vidurkis vienam žaidimui, sušvelnintas pagal sužaistų žaidimų skaičių: svarbu žaisti reguliariai.',

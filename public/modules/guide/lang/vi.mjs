@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Một ván cúp: **{name}**. Chỉ quản trị viên của cúp mở các bàn này và mời người chơi. Ván đã bắt đầu, nhưng ai cũng có thể xem với tư cách **khán giả**: chạm **{spec}** bên dưới danh sách. Xem nhé?",
   c1Cup: "Một ván cúp: **{name}**. Bạn không thể vào chỉ bằng một chạm: quản trị viên của cúp mời những người chơi đã đăng ký. Các ván cúp sắp tới và cách tham gia có trong mục sự kiện.",
   c1Flag: "Không có cờ cạnh tên bạn? Cờ lấy từ tài khoản pokerth.net của bạn. Để hiển thị cờ của bạn: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Cờ sẽ xuất hiện ở lần đăng nhập tiếp theo.",
+  c1Open: "**{name}** không phải ván xếp hạng: không tính vào bảng xếp hạng. Còn một chỗ trống — vào nhé?",
+  c1OpenGuest: "**{name}** là ván thường, mở cho khách: không tính vào bảng xếp hạng. Còn một chỗ trống — vào nhé?",
   c2Wait: 'Ván xếp hạng: **{n}/{max}** người chơi. Ván tự bắt đầu ngay khi bàn đủ người — trong lúc chờ, đây là cách bảng xếp hạng hoạt động.',
   c2Points: 'Mỗi ván xếp hạng trao điểm theo thứ hạng cuối: **15, 9, 6, 4, 3, 2, 1** từ hạng 1 đến hạng 7, không có gì từ hạng 8 đến hạng 10 — 40 điểm mỗi bàn.',
   c2Score: '**Score** của bạn không phải tổng số điểm mà là trung bình mỗi ván, được điều chỉnh theo số ván bạn đã chơi: chơi đều đặn mới quan trọng.',

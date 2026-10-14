@@ -1,3 +1,6 @@
+2026-10-14 version 2.1.10-web.67:
+- improvement: Ace's Help: tap an open table that is not ranked and the Ace says so plainly — it does not count for the ranking — and offers to join it (guests are told it is a game open to them)
+
 2026-10-14 version 2.1.10-web.66:
 - improvement: country flags: the Ace and the help now explain where they come from — your flag is the Country of your pokerth.net account (www.pokerth.net → User Control Panel → Profile → Edit profile → Country → Submit), shown from your next login
 - improvement: Ace's Help: an account holder with no flag is told once how to set it, with a button to the profile page; in « ? » mode, tapping any flag explains it

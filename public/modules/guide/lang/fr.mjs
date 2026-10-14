@@ -42,6 +42,8 @@ export default {
   c1WatchCup: "Partie de coupe : **{name}**. Seuls les admins de la coupe ouvrent ces tables et y invitent les joueurs. Elle est déjà en cours, mais tout le monde peut la regarder en **spectateur** : touche **{spec}** sous la liste. On la regarde ?",
   c1Cup: "Partie de coupe : **{name}**. On ne la rejoint pas d’un simple clic : les admins de la coupe invitent les joueurs inscrits. Les prochaines parties de coupe, et comment y participer, sont dans les événements.",
   c1Flag: "Pas de drapeau à côté de ton nom ? Il vient de ton compte pokerth.net. Pour afficher ton propre drapeau : www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. Il apparaît à ta prochaine connexion.",
+  c1Open: "**{name}** n’est pas une partie classée : elle ne compte pas pour le classement. Une place est libre — on la rejoint ?",
+  c1OpenGuest: "**{name}** est une partie normale, ouverte aux invités : elle ne compte pas pour le classement. Une place est libre — on la rejoint ?",
   c2Wait: 'Partie classée : **{n}/{max}** joueurs. Elle démarre toute seule dès que la table est complète — en attendant, voici comment fonctionne le classement.',
   c2Points: 'Chaque partie classée attribue des points selon la place finale : **15, 9, 6, 4, 3, 2, 1** de la 1re à la 7e place, rien de la 8e à la 10e — 40 points par table.',
   c2Score: 'Ton **Score** n’est pas la somme de tes points mais ta moyenne par partie, tempérée par le nombre de parties jouées : jouer régulièrement compte.',
