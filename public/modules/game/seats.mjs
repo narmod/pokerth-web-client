@@ -188,10 +188,19 @@ function autoScaleTable() {
   var sc = document.getElementById('g-table-scaler');
   if (!tz || !sc) return;
   sc.style.transform = 'scale(1)';
+  // web.70 : mesure à --comm-scale = 1 — la taille de la rangée community
+  // (fixée APRÈS, d'après l'autofit) ne doit pas entrer dans l'autofit, sinon
+  // une rangée plus large que le feutre ferait baisser l'autofit, qui la
+  // regonflerait (oscillation). Valeur inline restaurée juste après.
+  var _csSt = sc.style, _csOk = _csSt && typeof _csSt.getPropertyValue === 'function'
+    && typeof _csSt.setProperty === 'function' && typeof _csSt.removeProperty === 'function';
+  var _csPrev = _csOk ? _csSt.getPropertyValue('--comm-scale') : '';
+  if (_csOk) _csSt.setProperty('--comm-scale', '1');
   // Forcer un reflow avant de lire les dimensions
   void sc.offsetWidth;
   var tzW = tz.clientWidth, tzH = tz.clientHeight;
   var scW = sc.scrollWidth, scH = sc.scrollHeight;
+  if (_csOk) { if (_csPrev) _csSt.setProperty('--comm-scale', _csPrev); else _csSt.removeProperty('--comm-scale'); }
   var ov = document.querySelector('.felt-oval');
   var ga = document.querySelector('.game-area');
   if (!tzW || !scW || !tzH || !scH) {

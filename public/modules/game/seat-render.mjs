@@ -1188,6 +1188,7 @@ function renderSeatsImmediate() {
       var _commSkip3 = false; // garde : 0 plate adverse mesurée (voir plus bas)
       var _commTargetY = null; // centre Y cible (px zone) — parité anchors QML
       var _commEffL = 1;       // paysage : échelle effective du scaler (autofit), compensée à l'écriture
+      var _csLocP3 = null;     // portrait : échelle LOCALE libre du scaler (web.70)
       if (_forceSeatPortrait) {
         // 06db9866 (portrait MOBILE) : la bande centrale n'est plus le ruban
         // fixe 0.305·H — c'est exactement le reste entre groupe haut et
@@ -1226,14 +1227,24 @@ function renderSeatsImmediate() {
         // On divise donc par le seul autofit : la taille A L'ECRAN redevient
         // celle du QML. Le zoom loupe reste au-dessus (il est applique a part,
         // cf. autoScaleTable/_applyZoomTransforms) et n'entre pas ici.
+        // web.70 : borne ÉCRAN du QML ((largeur − 16)/264) reposée APRÈS le
+        // ×1.17 — la rangée ne sort jamais de la zone.
+        _csComm = Math.min(_csComm, Math.max(0.55, Math.max(0, _zW3 - 16) / 264));
         try {
           var _fit3 = window._tableAutofit;
           if (typeof _fit3 === 'number' && _fit3 > 0.05 && _fit3 < 1) {
             _csComm = _csComm / _fit3;
-            // Garde-fou : la rangee (264x64 en px LOCAUX) doit rester dans le
-            // feutre. Sans cela un debordement gonflerait scrollWidth/Height,
-            // donc ferait baisser l'autofit au rendu suivant, qui regonflerait
-            // l'echelle -> oscillation.
+            // web.70 : la rangée n'est PLUS bridée par la largeur du feutre
+            // (constaté narmod 14/10 : en portrait téléphone c'était CE plafond
+            // qui fixait la taille — 1.03–1.08 quel que soit le nombre de
+            // joueurs, jusqu'à −35 % vs QML, la bande centrale restant vide).
+            // Le risque d'oscillation qu'il couvrait (rangée > feutre →
+            // scrollWidth ↑ → autofit ↓ → rangée ↑) est levé à la source :
+            // autoScaleTable mesure désormais le scaler avec --comm-scale = 1.
+            // La valeur bridée reste celle de la RACINE (cartes self « grandes »,
+            // mini-board : inchangés) ; seul #g-table-scaler reçoit la valeur
+            // libre (rangée, badge du pot, badge de main gagnante).
+            _csLocP3 = _csComm;
             var _fEl4 = document.querySelector('.felt-oval');
             if (_fEl4 && _fEl4.offsetWidth > 0) {
               var _capIn4 = Math.min((_fEl4.offsetWidth - 12) / 264, (_fEl4.offsetHeight - 12) / 64);
@@ -1500,6 +1511,8 @@ function renderSeatsImmediate() {
             }
           } catch (eF5) {}
           _scEl.style.setProperty('--comm-scale', _csLoc.toFixed(3));
+        } else if (_forceSeatPortrait && _csLocP3 !== null && Math.abs(_csLocP3 - _csComm) > 0.0005) {
+          _scEl.style.setProperty('--comm-scale', _csLocP3.toFixed(3));
         } else {
           _scEl.style.removeProperty('--comm-scale');
         }

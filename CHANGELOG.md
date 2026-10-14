@@ -332,6 +332,14 @@ highlights below.
   landscape now takes `topOpponentBottomY`, `selfVisualTopY` and `communityCenterY` from the seat
   model (same bisection as `seatlayout.js`); the web guards measured on the real plates (side corridor,
   pot-badge clearance) still apply. Compact landscape, spectator and portrait unchanged (`web.69`).
+- **Community cards fill the free band in portrait** — on a phone held upright the row was capped by the
+  width of the felt image, which the autofit shrinks to ~74 %: the cards stayed at 1.03–1.08 whatever
+  the room (35–38 px wide, up to −45 % vs the band). `#g-table-scaler` now gets the uncapped value
+  (band formula of `GamePage.qml`, the empirical ×1.17 of 15/09 kept, screen cap (width − 16)/264
+  re-applied after it); the root keeps the capped value, so large own cards and the mini-board are
+  unchanged. `autoScaleTable` measures the scaler at `--comm-scale: 1`, so the row size can no longer
+  feed back into the autofit. Known trade-off: on some 4-player layouts the dealer/blind pucks touch the
+  pot badge or the last card (`web.70`).
 - **Studio / photo avatars fill a square seat frame** — the avatar image kept a forced
   circle (`border-radius: 50%`) even in the QML seat structure, whose frame is square: it now
   inherits the frame's shape, round in classic seats, square in QML seats (`pokerth.css`, `web.37`).
