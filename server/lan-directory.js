@@ -62,6 +62,16 @@ const DEFAULT_SETTINGS = Object.freeze({
 // whoever proposes the server, changeable afterwards by the admin only.
 const RESET_PERIODS = Object.freeze(['off', 'daily', 'weekly', 'monthly', 'yearly']);
 const DEFAULT_RESET = 'monthly';
+// Players per IP address on a listed server (simultaneous connections through
+// this proxy, from one address, to that server — option « A », 2026-10-14):
+// 3 by default, 1 to 5 in the proposal form; more only through the admin, and
+// never above the proxy-wide cap (PROXY_MAX_WS_PER_IP, see ipCapMax).
+const IP_DEFAULT = 3, IP_PLAYER_MAX = 5, IP_HARD_MAX = 50;
+function cleanIpCap(v, max) {
+  var n = parseInt(v, 10);
+  if (!Number.isInteger(n)) return Math.min(IP_DEFAULT, max);
+  return Math.max(1, Math.min(max, n));
+}
 function cleanReset(p) { var v = String(p || '').trim().toLowerCase(); return RESET_PERIODS.indexOf(v) >= 0 ? v : DEFAULT_RESET; }
 const LIMITS = Object.freeze({ pending: 100, entries: 200, name: 40, desc: 140, testsPerIpHour: 20 });
 
@@ -109,7 +119,7 @@ function normSettings(s) {
   };
 }
 // The fields a player may set. `admin` adds the TLS overrides and visibility.
-function cleanFields(raw, admin) {
+function cleanFields(raw, admin, ipMax) {
   raw = (raw && typeof raw === 'object') ? raw : {};
   var host = cleanHost(raw.host);
   var out = {
@@ -120,7 +130,8 @@ function cleanFields(raw, admin) {
     country: cleanCountry(raw.country),
     lang: cleanLang(raw.lang),
     desc: cleanText(raw.desc, LIMITS.desc),
-    resetPeriod: cleanReset(raw.resetPeriod)
+    resetPeriod: cleanReset(raw.resetPeriod),
+    maxPerIp: cleanIpCap(raw.maxPerIp, ipMax || IP_PLAYER_MAX)
   };
   if (admin) {
     out.noverify = !!raw.noverify;
@@ -141,14 +152,14 @@ function normProbe(p) {
 }
 function normPending(r) {
   if (!r || typeof r !== 'object') return null;
-  var f = cleanFields(r, false);
+  var f = cleanFields(r, false, IP_HARD_MAX);
   var id = cleanId(r.id);
   if (!id || !f.host || !f.port) return null;
   return Object.assign({ id: id }, f, { submittedAt: num(r.submittedAt, 0, 8.64e15, 0), probe: normProbe(r.probe) });
 }
 function normEntry(r) {
   if (!r || typeof r !== 'object') return null;
-  var f = cleanFields(r, true);
+  var f = cleanFields(r, true, IP_HARD_MAX);
   var id = cleanId(r.id);
   if (!id || !f.host || !f.port) return null;
   return Object.assign({ id: id }, f, { addedAt: num(r.addedAt, 0, 8.64e15, 0), lastSeen: num(r.lastSeen, 0, 8.64e15, 0) });
@@ -295,6 +306,17 @@ function createLanDirectory(deps) {
     var n = parseInt(p, 10);
     return entries().some(function (e) { return e.port === n; });
   }
+  // Highest « players per IP » the admin may set on one server: the proxy-wide
+  // per-IP cap (deps.globalIpCap = PROXY_MAX_WS_PER_IP, 0 = off → 50).
+  function ipCapMax() {
+    var g = deps.globalIpCap ? parseInt(deps.globalIpCap(), 10) : 0;
+    return (g > 0) ? Math.min(g, IP_HARD_MAX) : IP_HARD_MAX;
+  }
+  /** Players per IP allowed on the listed server at host:port (0 = not listed). */
+  function ipCapFor(host, port) {
+    var e = findByAddr(entries(), String(host || '').trim().toLowerCase(), parseInt(port, 10));
+    return e ? Math.min(e.maxPerIp || IP_DEFAULT, ipCapMax()) : 0;
+  }
   function tlsOpts(host, port) {
     var e = findByAddr(entries(), String(host || '').trim().toLowerCase(), parseInt(port, 10));
     return e ? { sni: e.sni || '', noverify: !!e.noverify } : null;
@@ -334,6 +356,7 @@ function createLanDirectory(deps) {
     var cfg = settings();
     return {
       ok: true,
+      ipCap: { def: IP_DEFAULT, playerMax: IP_PLAYER_MAX, max: ipCapMax(), global: deps.globalIpCap ? deps.globalIpCap() : 0 },
       settings: cfg,
       pending: pending().sort(function (a, b) { return b.submittedAt - a.submittedAt; }),
       entries: entries().map(function (e) {
@@ -449,7 +472,7 @@ function createLanDirectory(deps) {
       if (pi < 0) return cb({ ok: false, error: 'unknown request' });
       if (e.length >= LIMITS.entries) return cb({ ok: false, error: 'directory full' });
       var req = p[pi];
-      var f = cleanFields(Object.assign({}, req, { noverify: req.probe && req.probe.certUntrusted }, d.entry || {}), true);
+      var f = cleanFields(Object.assign({}, req, { noverify: req.probe && req.probe.certUntrusted }, d.entry || {}), true, ipCapMax());
       if (!f.host || !f.port) return cb({ ok: false, error: 'host and port required' });
       if (findByAddr(e, f.host, f.port)) return cb({ ok: false, error: 'already listed' });
       var seen = (req.probe && req.probe.pokerth && req.probe.at) || 0;
@@ -468,7 +491,7 @@ function createLanDirectory(deps) {
     }
     if (action === 'add') {
       if (e.length >= LIMITS.entries) return cb({ ok: false, error: 'directory full' });
-      var fa = cleanFields(d.entry, true);
+      var fa = cleanFields(d.entry, true, ipCapMax());
       if (!fa.host || !fa.port) return cb({ ok: false, error: 'host and port required' });
       if (findByAddr(e, fa.host, fa.port)) return cb({ ok: false, error: 'already listed' });
       var nid = newId();
@@ -482,7 +505,7 @@ function createLanDirectory(deps) {
     }
     if (action === 'update') {
       if (ei >= 0) {
-        var fu = cleanFields(Object.assign({}, e[ei], d.entry || {}), true);
+        var fu = cleanFields(Object.assign({}, e[ei], d.entry || {}), true, ipCapMax());
         if (!fu.host || !fu.port) return cb({ ok: false, error: 'host and port required' });
         var clash = e.some(function (x, i) { return i !== ei && x.host === fu.host && x.port === fu.port; });
         if (clash) return cb({ ok: false, error: 'already listed' });
@@ -493,7 +516,7 @@ function createLanDirectory(deps) {
         return cb(adminView());
       }
       if (pi >= 0) {
-        var fp = cleanFields(Object.assign({}, p[pi], d.entry || {}), false);
+        var fp = cleanFields(Object.assign({}, p[pi], d.entry || {}), false, ipCapMax());
         if (!fp.host || !fp.port) return cb({ ok: false, error: 'host and port required' });
         p[pi] = Object.assign({}, p[pi], fp);
         write({ pending: p });
@@ -589,7 +612,7 @@ function createLanDirectory(deps) {
 
   return {
     settings: settings, publicView: publicView, adminView: adminView, entries: entries,
-    hostAllowed: hostAllowed, portAllowed: portAllowed, tlsOpts: tlsOpts,
+    hostAllowed: hostAllowed, portAllowed: portAllowed, tlsOpts: tlsOpts, ipCapFor: ipCapFor, ipCapMax: ipCapMax,
     test: test, propose: propose, admin: admin,
     tick: tick, checkEntry: checkEntry, start: start, stop: stop,
     _status: status
@@ -605,5 +628,6 @@ module.exports = {
   normSettings: normSettings,
   DEFAULT_SETTINGS: DEFAULT_SETTINGS,
   RESET_PERIODS: RESET_PERIODS,
+  IP_DEFAULT: IP_DEFAULT, IP_PLAYER_MAX: IP_PLAYER_MAX,
   LIMITS: LIMITS
 };

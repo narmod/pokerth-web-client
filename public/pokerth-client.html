@@ -2850,6 +2850,9 @@ function _processAvatarFile(file) {
         <div class="f"><label for="lan-prop-lang" data-i18n="lanPropLang">Language</label><div class="sel-wrap"><select id="lan-prop-lang"><option value="">—</option></select><span class="sel-arr">▾</span></div></div>
       </div>
       <div class="f"><label for="lan-prop-desc" data-i18n="lanPropDesc">Description (optional)</label><input id="lan-prop-desc" maxlength="140" autocomplete="off"></div>
+      <div class="f"><label for="lan-prop-ipcap" data-i18n="lanPropIpCap">Players per IP address</label><div class="sel-wrap"><select id="lan-prop-ipcap">
+        <option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option>
+      </select><span class="sel-arr">▾</span></div><div class="lan-prop-hint" data-i18n="lanPropIpCapHint">How many players may connect at the same time from one address (a home, an office). Only the admins can change it afterwards, and above 5.</div></div>
       <div class="f"><label for="lan-prop-reset" data-i18n="lanPropReset">Leaderboard reset</label><div class="sel-wrap"><select id="lan-prop-reset">
         <option value="off" data-i18n="lanResetOff">Never</option>
         <option value="daily" data-i18n="lanResetDaily">Every day</option>

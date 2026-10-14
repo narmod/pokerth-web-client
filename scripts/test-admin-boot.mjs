@@ -34,7 +34,7 @@ const CANNED = {
     guidePeriod: { days: 0, summary: null }, guideSince: 1700000000000 },
   '/admin/lan-boards': { ok: true, resetPeriod: 'monthly', defaultPlayers: 4, boards: [
     { id: 'lan_bbbbbb01', name: 'Berlin', host: 'berlin.example.org', port: 7234, visible: true, resetPeriod: 'weekly', players: 6 }] },
-  '/admin/lan-directory': { ok: true,
+  '/admin/lan-directory': { ok: true, ipCap: { def: 3, playerMax: 5, max: 20, global: 20 },
     settings: { acceptRequests: true, checkMinutes: 5, autoHideDays: 7, maxPerIpDay: 3, showOffline: true, refusePrivate: true, manualEntry: true, localEntry: true },
     pending: [
       { id: 'lan_aaaaaa01', name: 'Club <Lyon>', host: 'lyon.example.org', port: 7236, tls: true, country: 'FR', lang: 'fr', desc: 'Thursdays', submittedAt: Date.now() - 7200000,
@@ -190,6 +190,9 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   const up = posts.filter((p) => p.url.startsWith('/admin/lan-directory')).pop();
   ok(up && up.body.action === 'update' && up.body.entry.name === 'Berlin club' && up.body.entry.host === 'berlin.example.org', 'Save posts the edited entry');
   ok(up && up.body.entry.resetPeriod === 'weekly', 'the editor carries the board reset period');
+  ok(up && up.body.entry.maxPerIp === 3, 'and the players per IP');
+  ok(/3 \/ IP/.test(doc.querySelector('#ldEntries tr[data-id]').textContent), 'the table shows players per IP');
+  ok(/at most 20 connections per IP/.test($('ldGlobalCap').textContent), 'the settings state the proxy-wide guard');
   ok(/board: weekly/.test(doc.querySelector('#ldEntries tr[data-id]').textContent), 'the table shows each server’s board period');
   ok($('ldSetManual') && $('ldSetManual').checked === true && $('ldSetLocal').checked === true && $('ldSetCheck').value === '5', 'settings are filled in');
   $('ldSetManual').checked = false; $('ldSetSave').click();

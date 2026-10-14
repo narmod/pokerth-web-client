@@ -359,7 +359,8 @@ const LAN_DIR = require('./server/lan-directory.js').createLanDirectory({
   isPortAllowed: function (p) { return isPortAllowed(p); },
   insecureTls: INSECURE_TLS,
   lobbyProbe: function (host, port, useTls, cb, tlsOverride) { return lobbyProbe(host, port, useTls, cb, tlsOverride); },
-  onRemove: function (id) { LAN_BOARDS.drop(id); }
+  onRemove: function (id) { LAN_BOARDS.drop(id); },
+  globalIpCap: function () { return MAX_WS_PER_IP; }
 });
 LAN_DIR.start();
 // One leaderboard per listed LAN server, each with its own reset period
@@ -13271,6 +13272,25 @@ wss.on('connection', (ws, req) => {
     console.warn('[!] Plafond de connexions atteint (' + _allClients.size + '/' + _cap + ') — refus de ' + host + ':' + port);
     try { ws.close(4503, 'Server at capacity'); } catch (_) {}
     return;
+  }
+
+  // ── Joueurs par IP sur un serveur de l'annuaire LAN (option « A ») ──
+  // Chaque serveur listé fixe combien de connexions simultanées une même
+  // adresse peut ouvrir vers lui via ce proxy (3 par défaut, 1 à 5 à la
+  // demande, davantage par l'admin seulement). Les sessions en grâce comptent
+  // (elles tiennent encore une place sur le serveur) ; un rebranchement (même
+  // sid) est traité plus haut et n'arrive jamais ici. Le plafond global par
+  // IP (MAX_WS_PER_IP, à l'upgrade) reste le garde-fou de tout le proxy.
+  const _lanIpCap = LAN_DIR.ipCapFor(host, port);
+  if (_lanIpCap > 0 && ws._ip && ws._ip !== 'unknown') {
+    let _same = 0;
+    const _h = String(host).toLowerCase(), _p = parseInt(port, 10);
+    _liveSessions.forEach(function (x) { if (x.ip === ws._ip && String(x.host).toLowerCase() === _h && parseInt(x.port, 10) === _p) _same++; });
+    if (_same >= _lanIpCap) {
+      console.warn('[!] LAN per-IP cap ' + _same + '/' + _lanIpCap + ' on ' + host + ':' + port + ' — ' + _maskIp(ws._ip));
+      try { ws.close(4430, 'lan-ip-cap:' + _lanIpCap); } catch (_) {}
+      return;
+    }
   }
 
   // ── Nouvelle connexion amont ──

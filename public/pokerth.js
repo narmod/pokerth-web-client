@@ -6566,6 +6566,20 @@ const App = (() => {
         clearTimeout(window._reconnectStableTimer);
         _hideBanner();
 
+        // Annuaire LAN : ce serveur limite le nombre de joueurs par adresse IP
+        // (proxy, code 4430 « lan-ip-cap:N »). Pas de reconnexion automatique —
+        // elle buterait sur la même limite.
+        if (e && e.code === 4430) {
+          var _capN = parseInt(String(e.reason || '').split(':')[1], 10) || 0;
+          var _capMsg = t('lanErr_ipCap', { n: _capN });
+          S._intentionalDisconnect = true;
+          _closeNotifyWS();
+          try { show('s-connect'); } catch (e4) {}
+          setStatus(_capMsg, 'err');
+          try { window._connLostShow && window._connLostShow(_capMsg); } catch (e4) {}
+          return;
+        }
+
         // User asked to leave (clicked ✕ / disconnect): do NOT auto-reconnect.
         // Without this guard, ws.close() from disconnect() falls through to the
         // reconnect scheduler below and drops the user back into the lobby a few
@@ -12114,7 +12128,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.47'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.48'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

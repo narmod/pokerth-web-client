@@ -151,6 +151,8 @@ try {
   await page.fill('#lan-prop-name', 'My home club');
   ok(await page.inputValue('#lan-prop-reset') === 'monthly', 'leaderboard reset defaults to every month');
   await page.selectOption('#lan-prop-reset', 'weekly');
+  ok(await page.inputValue('#lan-prop-ipcap') === '3' && (await page.$$eval('#lan-prop-ipcap option', (o) => o.map((x) => x.value).join())) === '1,2,3,4,5', 'players per IP: 3 by default, 1 to 5 in the form');
+  await page.selectOption('#lan-prop-ipcap', '4');
   await page.fill('#lan-prop-host', 'localhost');
   await page.fill('#lan-prop-port', String(FAKE));
   await page.click('#lan-prop-test');
@@ -169,6 +171,7 @@ try {
   const adm = await (await fetch(base + '/admin/lan-directory', { headers: { Authorization: 'Bearer ' + TOKEN } })).json();
   ok(adm.pending && adm.pending.length === 1 && adm.pending[0].name === 'My home club' && adm.pending[0].host === 'localhost', 'the request is in the admin queue');
   ok(adm.pending[0].resetPeriod === 'weekly', 'with the leaderboard reset period chosen in the form');
+  ok(adm.pending[0].maxPerIp === 4, 'and the players per IP chosen in the form');
   const keys = await page.evaluate(() => Object.keys(localStorage).concat(Object.keys(sessionStorage)).filter((k) => /prop|lan[-_]?dir/i.test(k)));
   ok(keys.length === 0, 'nothing about the request is stored on the device' + (keys.length ? ' (' + keys.join(', ') + ')' : ''));
   await page.click('#lan-prop-sent .ld-btn');

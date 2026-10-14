@@ -304,7 +304,8 @@ function _values() {
     country: (_field('lan-prop-country').value || ''),
     lang: (_field('lan-prop-lang').value || ''),
     desc: (_field('lan-prop-desc').value || '').trim(),
-    resetPeriod: (_field('lan-prop-reset') && _field('lan-prop-reset').value) || 'monthly'
+    resetPeriod: (_field('lan-prop-reset') && _field('lan-prop-reset').value) || 'monthly',
+    maxPerIp: parseInt((_field('lan-prop-ipcap') && _field('lan-prop-ipcap').value) || '3', 10) || 3
   };
 }
 function _sig(v) { return [v.host.toLowerCase(), v.port, v.tls ? 1 : 0].join('|'); }

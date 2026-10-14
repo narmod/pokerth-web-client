@@ -126,6 +126,13 @@ highlights below.
   `test-lan-boards`. The LAN drop-down shows each server's reset period next to its name
   (« · 🏆 Every month », nothing for « Never ») and a pill on the status line; the admin board
   picker no longer overflows on a phone (`web.47`).
+  Players per IP on each listed server (`web.48`): how many players may be connected at the same
+  time from one IP address to that server through the proxy — 3 by default, 1 to 5 in the
+  proposal form, more only by the admin (LAN directory › Edit), never above the proxy-wide
+  per-IP cap (`PROXY_MAX_WS_PER_IP`, 20 by default), which the admin settings now state. Grace
+  sessions count; a reconnection on the same session does not. Refused connections close with
+  4430 (`lan-ip-cap:N`): the client goes back to the login form with a translated message and
+  no automatic retry. 3 new keys in the 83 languages.
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the

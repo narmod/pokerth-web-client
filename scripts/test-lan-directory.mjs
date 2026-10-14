@@ -16,6 +16,7 @@ import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
 import * as P from '../public/proto/index.mjs';
+import WebSocket from 'ws';
 
 const require = createRequire(import.meta.url);
 const LD = require('../server/lan-directory.js');
@@ -67,7 +68,8 @@ const dir = LD.createLanDirectory({
   now: () => T,
   lookup: (h, cb) => DNS[h] ? cb(null, DNS[h]) : cb(new Error('ENOTFOUND')),
   probe: (t, cb) => { probes.push(t); const f = PROBE[t.host]; setImmediate(() => cb(f ? f(t) : { reachable: true, pokerth: true, players: 12, ver: '6.1' })); },
-  lobbyProbe: (h, p, tls, cb) => setImmediate(() => cb({ ok: true, reachable: true, players: 12, games: 3, running: 1, ver: '6.1', ms: 40 }))
+  lobbyProbe: (h, p, tls, cb) => setImmediate(() => cb({ ok: true, reachable: true, players: 12, games: 3, running: 1, ver: '6.1', ms: 40 })),
+  globalIpCap: () => 20
 });
 const IP = '198.51.100.7';
 const prop = (o, ip = IP) => call(dir.propose, Object.assign({ name: 'Club', port: 7234, tls: false }, o), ip);
@@ -89,6 +91,7 @@ r = await prop({ name: 'Club <Lyon>', host: 'Club.Example.org', country: 'fr', l
 ok(r.ok === true, 'propose: accepted');
 let av = dir.adminView();
 ok(av.pending[0].resetPeriod === 'weekly', 'the leaderboard reset period chosen in the request is kept');
+ok(av.pending[0].maxPerIp === 3, 'players per IP: 3 by default');
 ok(LD.RESET_PERIODS.join() === 'off,daily,weekly,monthly,yearly', 'five reset periods');
 ok(av.pending.length === 1 && av.pending[0].name === 'Club Lyon' && av.pending[0].host === 'club.example.org' && av.pending[0].country === 'FR', 'pending request sanitized (name, host, country)');
 ok(av.pending[0].probe && av.pending[0].probe.pokerth && av.pending[0].probe.players === 12, 'the submit check result is kept for the admin');
@@ -115,14 +118,21 @@ ok(!r.ok && r.error === 'limit', 'propose: per-IP daily limit (3 accepted, then 
 r = await prop({ host: 'b.example.org' }, '198.51.100.8');
 ok(r.ok, 'another IP is not affected');
 T += 86400000;
-r = await prop({ host: 'e.example.org' });
+r = await prop({ host: 'e.example.org', maxPerIp: 9 });
 ok(r.ok, 'the limit resets the next day');
+ok(dir.adminView().pending.find((x) => x.host === 'e.example.org').maxPerIp === 5, 'a request cannot ask for more than 5 players per IP');
 
 console.log('Admin actions');
 const clubId = dir.adminView().pending.find((x) => x.host === 'club.example.org').id;
 r = await call(dir.admin, { action: 'approve', id: clubId });
 ok(r.ok && r.entries.length === 1 && r.pending.every((x) => x.id !== clubId), 'approve moves the request to the directory');
 ok(dir.hostAllowed('club.example.org') && dir.portAllowed(7234), 'approved server joins the dial allowlist');
+ok(dir.ipCapFor('club.example.org', 7234) === 3 && dir.ipCapFor('nope.example.org', 7234) === 0, 'per-server players-per-IP cap (0 = not a listed server)');
+r = await call(dir.admin, { action: 'update', id: clubId, entry: { maxPerIp: 12 } });
+ok(r.ok && dir.ipCapFor('club.example.org', 7234) === 12, 'the admin can go above 5');
+r = await call(dir.admin, { action: 'update', id: clubId, entry: { maxPerIp: 99 } });
+ok(dir.ipCapFor('club.example.org', 7234) === 20 && r.ipCap.max === 20 && r.ipCap.global === 20, 'never above the proxy-wide per-IP cap');
+await call(dir.admin, { action: 'update', id: clubId, entry: { maxPerIp: 3 } });
 let pv = dir.publicView();
 ok(pv.servers.length === 1 && pv.servers[0].name === 'Club Lyon' && pv.servers[0].online === null, 'listed, status unknown until the first check');
 ok(pv.manualEntry === false && pv.localEntry === true && pv.acceptRequests === true, 'public view carries the three client switches');
@@ -305,6 +315,16 @@ try {
   ok(h.json && h.json.entries[0].resetPeriod === 'weekly', 'the admin changes the board period');
   h = await http('/stats', { board: id, _resetAll: true, token: TOKEN });
   ok(h.json && h.json.reset && !(await http('/stats?board=' + id)).json.bob, 'the admin resets that board only');
+  // ── players per IP on a listed server (close 4430) ──
+  h = await http('/admin/lan-directory', { token: TOKEN, action: 'update', id, entry: { maxPerIp: 1 } });
+  ok(h.json && h.json.entries[0].maxPerIp === 1, 'the admin sets one player per IP on that server');
+  const wsUrl = (sid) => 'ws://127.0.0.1:' + PROXY_PORT + '/?host=127.0.0.1&port=' + FAKE + '&tls=0&sid=' + sid + '&mode=lan&fresh=1&v=test';
+  const openWs = (sid) => new Promise((res) => { const w = new WebSocket(wsUrl(sid)); let code = null; w.on('close', (c) => { code = c; }); w.on('error', () => {}); setTimeout(() => res({ w, code: () => code }), 900); });
+  const w1 = await openWs('capsid-1');
+  ok(w1.code() === null, 'first connection from this address goes through');
+  const w2 = await openWs('capsid-2');
+  ok(w2.code() === 4430, 'a second one is refused with 4430 (got ' + w2.code() + ')');
+  w1.w.terminate(); w2.w.terminate();
   h = await http('/admin/lan-directory', { token: TOKEN, action: 'remove', id });
   await new Promise((r2) => setTimeout(r2, 100));
   const lb = JSON.parse(fs.readFileSync(path.join(tmp, 'lan-boards.json'), 'utf8'));
