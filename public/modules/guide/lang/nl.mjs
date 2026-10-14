@@ -1,6 +1,13 @@
 // Ace's Help — nl texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Kies een server in de lijst **LAN-server**: een groene stip betekent dat hij online is, met het aantal spelers dat er nu op zit. Staat je eigen server er niet bij? **Mijn server voorstellen** stuurt hem naar de beheerders van deze site, en na goedkeuring verschijnt hij in de lijst.",
+  hsLanDir: "De LAN-servers die de beheerders van deze site hebben gecontroleerd: kies er een om erop te spelen. Een groene stip betekent online, met de spelers die er nu op zitten.",
+  hsLanPropose: "Stuurt je eigen PokerTH-server naar de beheerders van deze site. Na goedkeuring verschijnt hij in deze lijst voor elke speler.",
+  hsLanPropTest: "Controleert of er een PokerTH-server antwoordt op dit adres en deze poort. Je kunt het verzoek pas versturen na een geslaagde test.",
+  hsLanPropTls: "Vink dit aan als je server luistert op zijn versleutelde poort (meestal 7236).",
+  hsLanPropWin: "Het formulier om je server voor te stellen: naam, adres en poort, en daarna een verbindingstest vóór het versturen. Er wordt niets over jou bewaard.",
   name: 'Hulp van de Aas',
   aceLabel: 'Hulp van de Aas — tik voor mijn menu',
   offer: 'Nieuw hier? Ik kan je gaandeweg de weg wijzen.',

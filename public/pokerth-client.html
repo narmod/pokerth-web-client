@@ -955,6 +955,7 @@ function _processAvatarFile(file) {
     '/modules/ui/z-order.mjs',
     '/modules/ui/seat-menu.mjs',
     '/modules/ui/invite.mjs',
+    '/modules/ui/lan-directory.mjs',
     '/modules/ui/table-cards.mjs',
     '/modules/ui/action-bar.mjs',
     '/modules/ui/bet-keypad.mjs',
@@ -1230,13 +1231,26 @@ function _processAvatarFile(file) {
       </div>
     </div>
 
+    <!-- Annuaire LAN (modules/ui/lan-directory.mjs) : serveurs proposés par
+         les joueurs et validés par l'admin. Mode LAN seulement ; le choix
+         remplit #host / #port / #use-tls, qui restent la source de vérité. -->
+    <div id="lan-dir" class="lan-dir" style="display:none">
+      <div class="f" id="lan-dir-sel-wrap">
+        <label for="lan-dir-sel" data-i18n="lanDirLabel">LAN server</label>
+        <div class="sel-wrap"><select id="lan-dir-sel" autocomplete="off"></select><span class="sel-arr">▾</span></div>
+        <div id="lan-dir-detail" class="lan-dir-detail" aria-live="polite" style="display:none"></div>
+      </div>
+      <div id="lan-dir-empty" class="lan-dir-empty" style="display:none" data-i18n="lanDirEmpty">No server is listed yet.</div>
+      <button type="button" id="lan-dir-propose" class="lan-dir-propose" onclick="LanDirUI.openPropose()" style="display:none"><span aria-hidden="true">+</span> <span data-i18n="lanDirPropose">Propose my server</span></button>
+    </div>
+
     <div id="conn-advanced" style="display:none">
       <div class="f" id="f-proxy">
         <label data-i18n="urlProxy">WebSocket Proxy URL</label>
         <input id="proxy" value="ws://localhost:8080" placeholder="ws://localhost:8080">
       </div>
 
-      <div class="row2">
+      <div class="row2" id="f-hostport">
         <div class="f">
           <label data-i18n="pokerServer">PokerTH Server</label>
           <input id="host" value="pokerth.net">
@@ -2788,6 +2802,7 @@ function _processAvatarFile(file) {
 <script type="module" src="modules/ui/back-guard.mjs"></script>
 <script type="module" src="modules/ui/z-order.mjs"></script>
 <script type="module" src="modules/ui/invite.mjs"></script>
+<script type="module" src="modules/ui/lan-directory.mjs"></script>
 <script type="module" src="modules/ui/mini-board.mjs"></script>
 <!-- Quit-game confirmation dialog: 2 buttons (Quit / Cancel).
      Shown when the user clicks the ✕ button in the header from inside
@@ -2816,6 +2831,38 @@ function _processAvatarFile(file) {
      modules/ui/invite.mjs. QR code + copy button + messenger shortcuts
      + native share sheet (phones). Same ld-card family as the other
      dialogs. The password is never part of the link. -->
+<!-- « Propose my server » (modules/ui/lan-directory.mjs, LAN directory). The
+     connection test must pass for the values on screen before Send is enabled;
+     nothing about the request is kept on the device. -->
+<div id="lan-prop-dialog" style="display:none" onclick="if(event.target===this)LanDirUI.closePropose()" role="dialog" aria-modal="true" aria-labelledby="lan-prop-title">
+  <div class="ld-card lan-prop-card">
+    <div class="ld-title inv-title"><span id="lan-prop-title" data-i18n="lanPropTitle">Propose a server</span><button type="button" class="inv-close" onclick="LanDirUI.closePropose()" aria-label="Close" data-i18n-title="closeTooltip" title="Close">✕</button></div>
+    <div id="lan-prop-form">
+      <p class="lan-prop-intro" data-i18n="lanPropIntro">Your server will appear in the LAN list of every player once the admins have approved it.</p>
+      <div class="f"><label for="lan-prop-name" data-i18n="lanPropName">Display name</label><input id="lan-prop-name" maxlength="40" autocomplete="off"></div>
+      <div class="row2">
+        <div class="f"><label for="lan-prop-host" data-i18n="lanPropHost">Address</label><input id="lan-prop-host" maxlength="253" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="url" placeholder="poker.example.org"></div>
+        <div class="f f-sm"><label for="lan-prop-port" data-i18n="port">Port</label><input id="lan-prop-port" type="number" min="1" max="65535" value="7234" inputmode="numeric"></div>
+      </div>
+      <label class="tls-row lan-prop-chk"><input type="checkbox" id="lan-prop-tls" style="accent-color:var(--gold);flex-shrink:0"><span data-i18n="lanPropTls">Encrypted connection (TLS)</span></label>
+      <div class="row2 lan-prop-two">
+        <div class="f"><label for="lan-prop-country" data-i18n="lanPropCountry">Country</label><div class="sel-wrap"><select id="lan-prop-country"><option value="">—</option></select><span class="sel-arr">▾</span></div></div>
+        <div class="f"><label for="lan-prop-lang" data-i18n="lanPropLang">Language</label><div class="sel-wrap"><select id="lan-prop-lang"><option value="">—</option></select><span class="sel-arr">▾</span></div></div>
+      </div>
+      <div class="f"><label for="lan-prop-desc" data-i18n="lanPropDesc">Description (optional)</label><input id="lan-prop-desc" maxlength="140" autocomplete="off"></div>
+      <button type="button" id="lan-prop-test" class="ld-btn lan-prop-test" onclick="LanDirUI.testPropose()" data-i18n="lanPropTest">Test the connection</button>
+      <div id="lan-prop-status" class="lan-prop-status" role="status" style="display:none"></div>
+      <button type="button" id="lan-prop-send" class="btn-primary lan-prop-send" onclick="LanDirUI.sendPropose()" disabled data-i18n="lanPropSend">Send the request</button>
+      <p class="lan-prop-note" data-i18n="lanPropNote">The server must stay reachable from the Internet. Test the connection first.</p>
+    </div>
+    <div id="lan-prop-sent" style="display:none">
+      <div class="lan-prop-sent-title" data-i18n="lanPropSentTitle">Request sent</div>
+      <p id="lan-prop-sent-msg" class="ld-body"></p>
+      <p class="lan-prop-note" data-i18n="lanPropSentPrivacy">Nothing about this request is kept on this device.</p>
+      <div class="ld-buttons"><button type="button" class="ld-btn ld-cancel" onclick="LanDirUI.closePropose()" data-i18n="closeTooltip">Close</button></div>
+    </div>
+  </div>
+</div>
 <div id="invite-dialog" style="display:none" onclick="if(event.target===this)InviteUI.close()">
   <div class="ld-card inv-card">
     <div class="ld-title inv-title"><span data-i18n="wpInvite">Invite friends</span><button type="button" class="inv-close" onclick="InviteUI.close()" aria-label="Close" data-i18n-title="closeTooltip" title="Close">✕</button></div>

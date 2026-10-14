@@ -36,6 +36,7 @@ const EVENTS = Object.freeze({
   // L4
   login: ['shown', 'done', 'dismissed', 'signup'],
   'login-profile': ['shown', 'done', 'dismissed'],
+  'login-lan': ['shown', 'done', 'dismissed'],   // LAN directory (web.43)
   'wait-normal': ['shown', 'done', 'dismissed'],
   // L5 — game creation page and windows (first opening)
   'create-game': ['shown', 'done', 'dismissed'],

@@ -1,6 +1,13 @@
 // Ace's Help — ja texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "**LANサーバー**の一覧からサーバーを選びましょう。緑の点はオンラインの印で、いま参加しているプレイヤー数も表示されます。自分のサーバーが見当たらない？**自分のサーバーを申請**でこのサイトの管理者に送ると、承認後に一覧に表示されます。",
+  hsLanDir: "このサイトの管理者が確認したLANサーバーです。1つ選んでそこで遊びましょう。緑の点はオンラインの印で、いまのプレイヤー数も表示されます。",
+  hsLanPropose: "あなたのPokerTHサーバーをこのサイトの管理者に送ります。承認されると、すべてのプレイヤーのこの一覧に表示されます。",
+  hsLanPropTest: "このアドレスとポートでPokerTHサーバーが応答するか確認します。申請はテストに成功してから送信できます。",
+  hsLanPropTls: "サーバーが暗号化ポート（通常は7236）で待ち受けている場合はチェックを入れてください。",
+  hsLanPropWin: "サーバーを申請するフォームです。名前、アドレス、ポートを入力し、送信前に接続テストを行います。あなたに関する情報は何も保存されません。",
   name: 'エースのヘルプ',
   aceLabel: 'エースのヘルプ — タップするとメニューを開く',
   offer: 'はじめてですか？ 進みながら案内できますよ。',

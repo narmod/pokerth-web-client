@@ -1,6 +1,13 @@
 // Ace's Help — eu texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Aukeratu zerbitzari bat **LAN zerbitzaria** zerrendan: puntu berde batek linean dagoela esan nahi du, une honetan bertan dauden jokalarien kopuruarekin. Zure zerbitzaria ez dago han? **Proposatu nire zerbitzaria** botoiak gune honetako administratzaileei bidaltzen die, eta onartu ondoren zerrendan agertzen da.",
+  hsLanDir: "Gune honetako administratzaileek egiaztatutako LAN zerbitzariak: aukeratu bat bertan jokatzeko. Puntu berdeak linean esan nahi du, une honetako jokalariekin.",
+  hsLanPropose: "Zure PokerTH zerbitzaria gune honetako administratzaileei bidaltzen die. Onartu ondoren, zerrenda honetan agertzen da jokalari guztientzat.",
+  hsLanPropTest: "PokerTH zerbitzari batek helbide eta ataka honetan erantzuten duela egiaztatzen du. Proba arrakastatsu baten ondoren soilik bidal dezakezu eskaera.",
+  hsLanPropTls: "Markatu zure zerbitzariak bere ataka zifratuan entzuten badu (normalean 7236).",
+  hsLanPropWin: "Zure zerbitzaria proposatzeko formularioa: bere izena, helbidea eta ataka, eta bidali aurretik konexio-proba bat. Zuri buruzko ezer ez da gordetzen.",
   name: 'Batekoaren laguntza',
   aceLabel: 'Batekoaren laguntza — sakatu nire menurako',
   offer: 'Berria zara hemen? Bidean dena erakuts diezazuket.',

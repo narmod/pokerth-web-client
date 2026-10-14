@@ -1,3 +1,8 @@
+2026-10-14 version 2.1.10-web.43:
+- new: in LAN mode, a « LAN server » list shows the servers approved by the admins, with whether they are online and how many players are on them; pick one instead of typing an address
+- new: « Propose my server » sends your own PokerTH server to the admins after a connection test; once approved it appears in the list for everyone
+- new: Ace's Help explains the LAN server list and the proposal form
+
 2026-10-13 version 2.1.10-web.38:
 - new: in the avatar window's « Create » tab, the ⋯ button on the portrait (or a long press on it) lets you save it as an image, share it or copy it
 

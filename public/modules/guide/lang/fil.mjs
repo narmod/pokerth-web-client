@@ -1,6 +1,13 @@
 // Ace's Help — fil texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Pumili ng server sa listahang **LAN server**: ang berdeng tuldok ay nangangahulugang online ito, kasama ang bilang ng mga manlalarong naroon ngayon. Wala roon ang sarili mong server? Ipinapadala ito ng **Imungkahi ang server ko** sa mga admin ng site na ito, at lalabas ito sa listahan kapag naaprubahan.",
+  hsLanDir: "Ang mga LAN server na sinuri ng mga admin ng site na ito: pumili ng isa para maglaro roon. Ang berdeng tuldok ay nangangahulugang online, kasama ang mga manlalaro nito ngayon.",
+  hsLanPropose: "Ipinapadala ang sarili mong PokerTH server sa mga admin ng site na ito. Kapag naaprubahan, lalabas ito sa listahang ito para sa bawat manlalaro.",
+  hsLanPropTest: "Sinusuri kung may PokerTH server na sumasagot sa address at port na ito. Maipapadala mo lang ang kahilingan pagkatapos ng matagumpay na test.",
+  hsLanPropTls: "I-tick ito kung nakikinig ang server mo sa encrypted na port nito (karaniwang 7236).",
+  hsLanPropWin: "Ang form para imungkahi ang server mo: ang pangalan, address at port nito, saka isang test ng koneksyon bago ipadala. Walang itinatagong anuman tungkol sa iyo.",
   name: 'Tulong ng Alas',
   aceLabel: 'Tulong ng Alas — i-tap para sa aking menu',
   offer: 'Bago ka rito? Puwede kitang gabayan habang naglalaro ka.',

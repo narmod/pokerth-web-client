@@ -1,6 +1,13 @@
 // Ace's Help — af texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Kies ’n bediener in die lys **LAN-bediener**: ’n groen kolletjie beteken dit is aanlyn, met die aantal spelers wat nou daarop is. Is jou eie bediener nie daar nie? **Stel my bediener voor** stuur dit na die admins van hierdie werf, en dit verskyn in die lys sodra dit goedgekeur is.",
+  hsLanDir: "Die LAN-bedieners wat deur die admins van hierdie werf nagegaan is: kies een om daarop te speel. ’n Groen kolletjie beteken aanlyn, met sy spelers op die oomblik.",
+  hsLanPropose: "Stuur jou eie PokerTH-bediener na die admins van hierdie werf. Sodra dit goedgekeur is, verskyn dit vir elke speler in hierdie lys.",
+  hsLanPropTest: "Kontroleer dat ’n PokerTH-bediener by hierdie adres en poort antwoord. Jy kan die versoek eers ná ’n suksesvolle toets stuur.",
+  hsLanPropTls: "Merk dit as jou bediener op sy geënkripteerde poort luister (gewoonlik 7236).",
+  hsLanPropWin: "Die vorm om jou bediener voor te stel: sy naam, adres en poort, dan ’n verbindingstoets voor dit gestuur word. Niks oor jou word gehou nie.",
   name: 'Die Aas se Hulp',
   aceLabel: 'Die Aas se Hulp — tik vir my kieslys',
   offer: 'Nuut hier? Ek kan jou gaandeweg rondwys.',

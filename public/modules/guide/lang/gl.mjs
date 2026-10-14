@@ -1,6 +1,13 @@
 // Ace's Help — gl texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Escolle un servidor na lista **Servidor LAN**: un punto verde indica que está en liña, co número de xogadores que hai nel agora mesmo. O teu propio servidor non aparece? **Propoñer o meu servidor** envíao aos administradores deste sitio, e aparece na lista unha vez aprobado.",
+  hsLanDir: "Os servidores LAN revisados polos administradores deste sitio: escolle un para xogar nel. Un punto verde significa en liña, cos seus xogadores de agora mesmo.",
+  hsLanPropose: "Envía o teu propio servidor PokerTH aos administradores deste sitio. Unha vez aprobado, aparece nesta lista para todos os xogadores.",
+  hsLanPropTest: "Comproba que un servidor PokerTH responde neste enderezo e porto. Só podes enviar a solicitude tras unha proba correcta.",
+  hsLanPropTls: "Márcaa se o teu servidor escoita no seu porto cifrado (normalmente o 7236).",
+  hsLanPropWin: "O formulario para propoñer o teu servidor: o seu nome, enderezo e porto, e despois unha proba de conexión antes de envialo. Non se garda nada sobre ti.",
   name: 'Axuda do Ás',
   aceLabel: 'Axuda do Ás — toca para o meu menú',
   offer: 'Primeira vez por aquí? Podo ensinarche todo sobre a marcha.',

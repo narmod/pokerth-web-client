@@ -1,6 +1,13 @@
 // Ace's Help — eo texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Elektu servilon en la listo **LAN-servilo**: verda punkto signifas, ke ĝi estas enreta, kun la nombro de ludantoj nun sur ĝi. Via propra servilo ne estas tie? **Proponi mian servilon** sendas ĝin al la administrantoj de ĉi tiu retejo, kaj ĝi aperas en la listo post aprobo.",
+  hsLanDir: "La LAN-serviloj kontrolitaj de la administrantoj de ĉi tiu retejo: elektu unu por ludi sur ĝi. Verda punkto signifas enreta, kun ĝiaj nunaj ludantoj.",
+  hsLanPropose: "Sendas vian propran PokerTH-servilon al la administrantoj de ĉi tiu retejo. Post aprobo, ĝi aperas en ĉi tiu listo por ĉiu ludanto.",
+  hsLanPropTest: "Kontrolas, ke PokerTH-servilo respondas ĉe ĉi tiu adreso kaj pordo. Vi povas sendi la peton nur post sukcesa testo.",
+  hsLanPropTls: "Marku ĝin, se via servilo aŭskultas ĉe sia ĉifrita pordo (kutime 7236).",
+  hsLanPropWin: "La formularo por proponi vian servilon: ĝia nomo, adreso kaj pordo, poste konekta testo antaŭ la sendo. Nenio pri vi estas konservata.",
   name: 'Helpo de la Aso',
   aceLabel: 'Helpo de la Aso — tuŝetu por mia menuo',
   offer: 'Ĉu nova ĉi tie? Mi povas gvidi vin dum vi progresas.',

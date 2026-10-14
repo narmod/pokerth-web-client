@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    lanDirLabel: "局域网服务器", lanDirManual: "输入地址…", lanDirOffline: "离线", lanDirPlayers: "玩家：{n}", lanDirOnline: "在线", lanDirOfflineSt: "离线", lanDirUnknown: "状态未知", lanDirEmpty: "目前还没有列出任何服务器。", lanDirPropose: "提交我的服务器", lanPropTitle: "提交服务器", lanPropIntro: "管理员批准后，你的服务器将出现在每位玩家的局域网列表中。", lanPropName: "显示名称", lanPropHost: "地址", lanPropTls: "加密连接（TLS）", lanPropCountry: "国家/地区", lanPropLang: "语言", lanPropDesc: "描述（可选）", lanPropTest: "测试连接", lanPropTesting: "正在测试…", lanPropSending: "正在发送…", lanPropOk: "PokerTH 服务器可以访问（{ms} 毫秒）。", lanPropCertWarn: "其证书为自签名证书：管理员会进行核查。", lanPropSend: "发送申请", lanPropNote: "服务器必须始终可从互联网访问。请先测试连接。", lanPropSentTitle: "申请已发送", lanPropSentBody: "谢谢！管理员批准后，“{name}”将出现在局域网列表中。", lanPropSentPrivacy: "本设备不会保留有关此申请的任何信息。", lanErr_closed: "目前暂不接受新的提交。", lanErr_host: "此地址无效。", lanErr_port: "请使用 PokerTH 端口：7234，或使用 TLS 时为 7236。", lanErr_dns: "找不到此地址。", lanErr_private: "这是私有网络地址：服务器必须可从互联网访问。", lanErr_unreachable: "此服务器没有响应 — 请检查地址、端口和防火墙。", lanErr_notpokerth: "此地址有服务响应，但它不是 PokerTH 服务器。", lanErr_listed: "此服务器已在列表中。", lanErr_pending: "此服务器已在等待审批。", lanErr_full: "等待处理的申请过多 — 请稍后再试。", lanErr_limit: "尝试次数过多 — 请稍后再试。", lanErr_invalid: "无法读取该申请 — 请重试。", lanErr_network: "网络错误 — 请重试。",
     avmMore: "保存或分享", avmSave: "保存图片", avmShare: "分享…", avmCopy: "复制图片", avmCopied: "已复制图片", avmExportFail: "无法准备图片",
     assistRankingOff: "排名牌桌上关闭：所有人掌握相同的信息。",
     waitingHintRanked: "桌子坐满后游戏将自动开始",

@@ -1,6 +1,13 @@
 // Ace's Help — ro texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Alege un server din lista **Server LAN**: un punct verde înseamnă că este online, cu numărul de jucători conectați chiar acum. Serverul tău nu e acolo? **Propune serverul meu** îl trimite administratorilor acestui site și apare în listă după aprobare.",
+  hsLanDir: "Serverele LAN verificate de administratorii acestui site: alege unul ca să joci pe el. Un punct verde înseamnă online, cu jucătorii lui de acum.",
+  hsLanPropose: "Trimite propriul tău server PokerTH administratorilor acestui site. După aprobare, apare în această listă pentru fiecare jucător.",
+  hsLanPropTest: "Verifică dacă un server PokerTH răspunde la această adresă și la acest port. Poți trimite cererea doar după un test reușit.",
+  hsLanPropTls: "Bifează dacă serverul tău ascultă pe portul său criptat (de obicei 7236).",
+  hsLanPropWin: "Formularul pentru a-ți propune serverul: numele, adresa și portul, apoi un test de conexiune înainte de trimitere. Nimic despre tine nu este păstrat.",
   name: 'Ajutorul Asului',
   aceLabel: 'Ajutorul Asului — atinge pentru meniul meu',
   offer: 'Ești nou aici? Te pot ghida pe măsură ce descoperi.',

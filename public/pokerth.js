@@ -4127,7 +4127,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function go() {
       fetch('/app-config', { cache: 'no-store' })
         .then(function (r) { return r.json(); })
-        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; window._pthLiveTransport = (c.liveTransport === 'proxy' || c.liveTransport === 'direct') ? c.liveTransport : 'inherit'; window._pthLiveDefaults = c.liveDefaults || null; } if (c && c.modes) applyModes(c.modes); if (c) _applyMusicFlag(c.musicEnabled !== false); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); window._guestNoticeCfg = (c && c.guestNotice) || null; window._authNoticeCfg = (c && c.authNotice) || null; window._lanNoticeCfg = (c && c.lanNotice) || null; if (typeof window._pollSetConfig === 'function') window._pollSetConfig(c && c.poll); if (c) { var _lvT = (window.LIVE_MODE && c.liveDefaults && c.liveDefaults.theme) ? c.liveDefaults.theme : null; if (_lvT) _applyDefaultTheme(_lvT); else if (typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); } if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); if (c && Array.isArray(c.featureOff)) _applyFeatureOff(c.featureOff); _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
+        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; window._pthLiveTransport = (c.liveTransport === 'proxy' || c.liveTransport === 'direct') ? c.liveTransport : 'inherit'; window._pthLiveDefaults = c.liveDefaults || null; } if (c && c.modes) applyModes(c.modes); if (c) _applyMusicFlag(c.musicEnabled !== false); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); window._guestNoticeCfg = (c && c.guestNotice) || null; window._authNoticeCfg = (c && c.authNotice) || null; window._lanNoticeCfg = (c && c.lanNotice) || null; if (typeof window._pollSetConfig === 'function') window._pollSetConfig(c && c.poll); if (c) { var _lvT = (window.LIVE_MODE && c.liveDefaults && c.liveDefaults.theme) ? c.liveDefaults.theme : null; if (_lvT) _applyDefaultTheme(_lvT); else if (typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); } if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); if (c && Array.isArray(c.featureOff)) _applyFeatureOff(c.featureOff); window._lanDirCfg = (c && c.lanDirectory) || null; try { if (window.LanDirUI) window.LanDirUI.setConfig(window._lanDirCfg); } catch (e) {} _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
         .catch(function () {})
         // Settled, answered or not: release a connect() held by the config
         // gate (App.connect). The transport choice (_pthNetTransport) only
@@ -6026,6 +6026,9 @@ const App = (() => {
         }
       } catch (e) {}
       try { if (window._setSrvSourceTag) window._setSrvSourceTag(mode === 'guest' || mode === 'auth'); } catch (e) {}
+      // Annuaire LAN (modules/ui/lan-directory.mjs) : liste déroulante des
+      // serveurs validés, recalculée d'après les champs qu'on vient de remplir.
+      try { if (window.LanDirUI) window.LanDirUI.sync(); } catch (e) {}
     },
 
     // Mappe (serveur visible × case « Mode invité ») vers l'un des 4 modes
@@ -12108,7 +12111,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.42'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.43'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

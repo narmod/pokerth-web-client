@@ -1,6 +1,13 @@
 // Ace's Help — id texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Pilih server di daftar **Server LAN**: titik hijau berarti server sedang online, dengan jumlah pemain di dalamnya saat ini. Server Anda sendiri tidak ada? **Usulkan server saya** mengirimkannya ke admin situs ini, dan server itu muncul di daftar setelah disetujui.",
+  hsLanDir: "Server LAN yang diperiksa oleh admin situs ini: pilih salah satu untuk bermain di sana. Titik hijau berarti online, dengan pemainnya saat ini.",
+  hsLanPropose: "Mengirim server PokerTH Anda sendiri ke admin situs ini. Setelah disetujui, server itu muncul di daftar ini untuk setiap pemain.",
+  hsLanPropTest: "Memeriksa apakah server PokerTH menjawab di alamat dan port ini. Anda hanya dapat mengirim permintaan setelah uji berhasil.",
+  hsLanPropTls: "Centang jika server Anda mendengarkan di port terenkripsinya (biasanya 7236).",
+  hsLanPropWin: "Formulir untuk mengusulkan server Anda: nama, alamat, dan port-nya, lalu uji koneksi sebelum mengirim. Tidak ada data tentang Anda yang disimpan.",
   name: 'Bantuan si As',
   aceLabel: 'Bantuan si As — ketuk untuk membuka menuku',
   offer: 'Baru di sini? Saya bisa memandu Anda sambil jalan.',

@@ -1,6 +1,13 @@
 // Ace's Help — ha texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Zaɓi sabar a jerin **Sabar LAN**: koren digo yana nufin tana kan layi, tare da adadin ’yan wasan da ke cikinta a yanzu. Sabarka ba ta nan? **Gabatar da sabata** tana aika ta ga masu gudanar da wannan shafi, kuma za ta bayyana a jerin da zarar an amince.",
+  hsLanDir: "Sabobin LAN da masu gudanar da wannan shafi suka duba: zaɓi ɗaya don yin wasa a cikinta. Koren digo yana nufin a kan layi, tare da ’yan wasanta na yanzu.",
+  hsLanPropose: "Tana aika sabar PokerTH ɗinka ga masu gudanar da wannan shafi. Da zarar an amince, za ta bayyana a wannan jerin ga kowane ɗan wasa.",
+  hsLanPropTest: "Tana duba cewa sabar PokerTH tana amsawa a wannan adireshi da tashar haɗi. Za ka iya aika buƙatar ne kawai bayan gwaji ya yi nasara.",
+  hsLanPropTls: "Yi alama idan sabarka tana saurare a tashar haɗinta da aka ɓoye (yawanci 7236).",
+  hsLanPropWin: "Fom ɗin gabatar da sabarka: sunanta, adireshinta da tashar haɗinta, sannan gwajin haɗi kafin aikawa. Ba a ajiye komai game da kai.",
   name: 'Taimakon Aas',
   aceLabel: 'Taimakon Aas — taɓa don menu na',
   offer: 'Kai sabo ne a nan? Zan iya nuna maka komai yayin da kake ci gaba.',

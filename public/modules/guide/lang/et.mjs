@@ -1,6 +1,13 @@
 // Ace's Help — et texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Vali server loendist **LAN-server**: roheline täpp tähendab, et see on võrgus, ja näed ka seal praegu olevate mängijate arvu. Sinu enda serverit pole seal? **Paku minu serverit** saadab selle selle saidi administraatoritele ning pärast heakskiitu ilmub see loendisse.",
+  hsLanDir: "Selle saidi administraatorite kontrollitud LAN-serverid: vali üks, et seal mängida. Roheline täpp tähendab võrgus, koos selle praeguste mängijatega.",
+  hsLanPropose: "Saadab sinu enda PokerTH serveri selle saidi administraatoritele. Pärast heakskiitu ilmub see kõigile mängijatele sellesse loendisse.",
+  hsLanPropTest: "Kontrollib, kas sellel aadressil ja pordil vastab PokerTH server. Taotluse saad saata alles pärast edukat testi.",
+  hsLanPropTls: "Märgi see, kui sinu server kuulab oma krüpteeritud pordil (tavaliselt 7236).",
+  hsLanPropWin: "Vorm oma serveri pakkumiseks: selle nimi, aadress ja port, seejärel enne saatmist ühenduse test. Sinu kohta ei säilitata midagi.",
   name: 'Ässa abi',
   aceLabel: 'Ässa abi — puuduta minu menüü jaoks',
   offer: 'Oled siin uus? Võin sulle jooksvalt kõike näidata.',

@@ -1,6 +1,13 @@
 // Ace's Help — bs texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Izaberi server na listi **LAN server**: zelena tačka znači da je na mreži, uz broj igrača koji su trenutno na njemu. Tvog servera nema? **Predloži moj server** šalje ga adminima ove stranice, a on se pojavljuje na listi čim bude odobren.",
+  hsLanDir: "LAN serveri koje su provjerili admini ove stranice: izaberi jedan da igraš na njemu. Zelena tačka znači na mreži, uz njegove trenutne igrače.",
+  hsLanPropose: "Šalje tvoj vlastiti PokerTH server adminima ove stranice. Kad bude odobren, pojavljuje se na ovoj listi za svakog igrača.",
+  hsLanPropTest: "Provjerava odgovara li PokerTH server na ovoj adresi i portu. Zahtjev možeš poslati tek nakon uspješnog testa.",
+  hsLanPropTls: "Označi ako tvoj server sluša na svom šifriranom portu (obično 7236).",
+  hsLanPropWin: "Obrazac za prijedlog tvog servera: njegovo ime, adresa i port, zatim test veze prije slanja. Ništa o tebi se ne čuva.",
   name: 'Pomoć asa',
   aceLabel: 'Pomoć asa — dodirni za moj meni',
   offer: 'Prvi put ovdje? Mogu te usput provesti kroz sve.',

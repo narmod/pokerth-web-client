@@ -50,6 +50,10 @@ export const HOTSPOTS = [
   ['#pass', 'hsPass', false, 'pthnet:account'],
   ['#forgot-pw-link', 'hsForgotPw', false, 'pthnet:account'],
   ['#conn-adv-btn', 'hsConnAdv', false, 'start:lan'],
+  ['#lan-dir-sel, #lan-dir-sel-wrap label', 'hsLanDir', false, 'start:lan'],
+  ['#lan-dir-propose', 'hsLanPropose', false, 'start:lan'],
+  ['#lan-prop-test', 'hsLanPropTest', false, 'start:lan'],
+  ['#lan-prop-tls, .lan-prop-chk', 'hsLanPropTls', false, 'start:lan'],
   ['#guest-mode-row', 'hsGuestMode', false, 'pthnet:account'],
   ['#register-link-row a', 'hsRegister', false, 'pthnet:account'],
   ['.login-back', 'hsLoginBack'],
@@ -257,6 +261,7 @@ export const HOTSPOTS = [
  */
 export const WINDOWS = [
   ['#adv-modal', 'hsAdvWin', 'options:where'],
+  ['#lan-prop-dialog', 'hsLanPropWin', 'start:lan'],
   ['#theme-panel', 'hsThemeWin', 'style:tablelook'],
   ['#music-panel', 'hsMusicWin', 'style:music'],
   ['#ranking-modal', 'hsRankingWin', 'pthnet:rankings'],

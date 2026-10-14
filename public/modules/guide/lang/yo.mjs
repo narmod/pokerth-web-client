@@ -1,6 +1,13 @@
 // Ace's Help — yo texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Yan olùpín kan nínú àkójọ **Olùpín LAN**: àmì aláwọ̀ ewé túmọ̀ sí pé ó wà lórí ayélujára, pẹ̀lú iye òṣèré tó wà lórí rẹ̀ báyìí. Olùpín tìrẹ kò sí níbẹ̀? **Dábàá olùpín mi** ń fi ránṣẹ́ sí àwọn alábòójútó ojú-òpó yìí, yóò sì hàn nínú àkójọ ní kété tí wọ́n bá fọwọ́ sí i.",
+  hsLanDir: "Àwọn olùpín LAN tí àwọn alábòójútó ojú-òpó yìí ti ṣàyẹ̀wò: yan ọ̀kan láti ṣeré lórí rẹ̀. Àmì aláwọ̀ ewé túmọ̀ sí lórí ayélujára, pẹ̀lú àwọn òṣèré rẹ̀ báyìí.",
+  hsLanPropose: "Ń fi olùpín PokerTH tìrẹ ránṣẹ́ sí àwọn alábòójútó ojú-òpó yìí. Ní kété tí wọ́n bá fọwọ́ sí i, yóò hàn nínú àkójọ yìí fún gbogbo òṣèré.",
+  hsLanPropTest: "Ń ṣàyẹ̀wò pé olùpín PokerTH kan ń dáhùn ní àdírẹ́sì àti pọ́ọ̀tì yìí. O lè fi ìbéèrè ránṣẹ́ lẹ́yìn àyẹ̀wò tó yọrí sí rere nìkan.",
+  hsLanPropTls: "Sàmì sí i bí olùpín rẹ bá ń gbọ́ lórí pọ́ọ̀tì rẹ̀ tí a pa àṣírí mọ́ (ní ọ̀pọ̀ ìgbà 7236).",
+  hsLanPropWin: "Fọ́ọ̀mù láti dábàá olùpín rẹ: orúkọ rẹ̀, àdírẹ́sì àti pọ́ọ̀tì rẹ̀, lẹ́yìn náà àyẹ̀wò ìsopọ̀ kí o tó fi ránṣẹ́. A kò tọ́jú nǹkan kan nípa rẹ.",
   name: 'Ìrànlọ́wọ́ Ace',
   aceLabel: 'Ìrànlọ́wọ́ Ace — tẹ̀ fún àkójọ-àṣàyàn mi',
   offer: 'Ṣé o jẹ́ tuntun níbí? Mo lè máa fi ọ̀nà hàn ọ́ bí o ṣe ń lọ.',

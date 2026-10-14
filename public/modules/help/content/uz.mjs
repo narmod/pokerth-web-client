@@ -24,7 +24,7 @@ export const help = {
         { id: "lan",
           t: "LAN / maxsus server",
           b: [
-            "Uchinchi rejim siz yoki doʻstingiz ishga tushirgan istalgan PokerTH serveriga ulanadi — uy tarmogʻida, xususiy VPS’da, qayerda boʻlsa ham. Server manzili va portini kiriting, agar server shifrlangan portdan foydalansa TLS’ni belgilang va taxallus bilan kiring (server ruxsat bersa, mehmon sifatida kirish ham ishlaydi). Shundan soʻng stoldagi hamma narsa rasmiy serverdagidek ishlaydi."] },
+            "Uchinchi rejim siz yoki doʻstingiz ishga tushirgan istalgan PokerTH serveriga ulanadi — uy tarmogʻida, xususiy VPS’da, qayerda boʻlsa ham. Server manzili va portini kiriting, agar server shifrlangan portdan foydalansa TLS’ni belgilang va taxallus bilan kiring (server ruxsat bersa, mehmon sifatida kirish ham ishlaydi). Shundan soʻng stoldagi hamma narsa rasmiy serverdagidek ishlaydi.", "Bu sayt LAN serverlar roʻyxatini koʻrsatganda, manzil yozish oʻrniga LAN server roʻyxatidan birini tanlang: yashil nuqta uning onlayn ekanini va undagi oʻyinchilar sonini koʻrsatadi. Oʻz serveringizni roʻyxatga kiritish uchun Serverimni taklif qilish tugmasini bosing, uning manzili va portini kiriting, ulanishni tekshiring, soʻng soʻrovni yuboring; adminlar tasdiqlagach, u hamma uchun roʻyxatda paydo boʻladi. Serverga Internetdan ulanish mumkin boʻlishi kerak va soʻrov bilan birga siz haqingizda hech narsa saqlanmaydi."] },
         { id: "famboard",
           t: "Oilaviy reyting jadvali",
           b: [

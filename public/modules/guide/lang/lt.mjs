@@ -1,6 +1,13 @@
 // Ace's Help — lt texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Pasirink serverį sąraše **LAN serveris**: žalias taškas reiškia, kad jis prisijungęs, o šalia matyti, kiek žaidėjų jame yra dabar. Tavo serverio ten nėra? **Pasiūlyti savo serverį** nusiunčia jį šios svetainės administratoriams, o patvirtintas jis atsiranda sąraše.",
+  hsLanDir: "Šios svetainės administratorių patikrinti LAN serveriai: pasirink vieną ir žaisk jame. Žalias taškas reiškia, kad serveris prisijungęs, šalia — jo žaidėjai dabar.",
+  hsLanPropose: "Nusiunčia tavo PokerTH serverį šios svetainės administratoriams. Patvirtintas jis atsiras šiame sąraše kiekvienam žaidėjui.",
+  hsLanPropTest: "Patikrina, ar šiuo adresu ir prievadu atsako PokerTH serveris. Prašymą galėsi išsiųsti tik po sėkmingo patikrinimo.",
+  hsLanPropTls: "Pažymėk, jei tavo serveris klausosi savo šifruotu prievadu (dažniausiai 7236).",
+  hsLanPropWin: "Forma tavo serveriui pasiūlyti: pavadinimas, adresas ir prievadas, tada ryšio patikrinimas prieš siunčiant. Apie tave nieko neišsaugoma.",
   name: 'Tūzo pagalba',
   aceLabel: 'Tūzo pagalba — bakstelėk, kad atidarytum mano meniu',
   offer: 'Čia pirmą kartą? Galiu viską parodyti pakeliui.',

@@ -1,6 +1,13 @@
 // Ace's Help — zu texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Khetha iseva ohlwini oluthi **Iseva ye-LAN**: ichashazi eliluhlaza lisho ukuthi ikhona ku-inthanethi, kanye nenani labadlali abakuyo njengamanje. Iseva yakho ayikho lapho? Inkinobho ethi **Phakamisa iseva yami** iyithumela kubalawuli bale sayithi, futhi izovela ohlwini uma isivunyiwe.",
+  hsLanDir: "Amaseva e-LAN ahlolwe abalawuli bale sayithi: khetha eyodwa ukuze udlale kuyo. Ichashazi eliluhlaza lisho ukuthi ikhona ku-inthanethi, kanye nabadlali bayo njengamanje.",
+  hsLanPropose: "Ithumela iseva yakho ye-PokerTH kubalawuli bale sayithi. Uma isivunyiwe, izovela kulolu hlu kuwo wonke umdlali.",
+  hsLanPropTest: "Ihlola ukuthi iseva ye-PokerTH iyaphendula yini kuleli kheli nale port. Ungathumela isicelo kuphela emva kokuhlolwa okuphumelelayo.",
+  hsLanPropTls: "Yimake uma iseva yakho ilalele kwi-port yayo ebethelwe (imvamisa 7236).",
+  hsLanPropWin: "Ifomu lokuphakamisa iseva yakho: igama layo, ikheli ne-port, bese kuhlolwa uxhumano ngaphambi kokuthumela. Akukho lutho ngawe olugcinwayo.",
   name: 'Usizo luka-Ace',
   aceLabel: 'Usizo luka-Ace — thepha ukuze ubone imenyu yami',
   offer: 'Umusha lapha? Ngingakubonisa izinto njengoba uqhubeka.',

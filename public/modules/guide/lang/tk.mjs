@@ -1,6 +1,13 @@
 // Ace's Help — tk texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "**LAN serweri** sanawyndan bir serwer saýlaň: ýaşyl nokat onuň onlaýndygyny we häzir onda näçe oýunçynyň bardygyny görkezýär. Öz serweriňiz ol ýerde ýokmy? **Serwerimi teklip et** ony bu saýtyň administratorlaryna iberýär we tassyklanandan soň ol sanawda peýda bolýar.",
+  hsLanDir: "Bu saýtyň administratorlary tarapyndan barlanan LAN serwerleri: oýnamak üçin birini saýlaň. Ýaşyl nokat onlaýndygyny aňladýar, ýanynda bolsa häzirki oýunçylary.",
+  hsLanPropose: "Öz PokerTH serweriňizi bu saýtyň administratorlaryna iberýär. Tassyklanandan soň, ol her oýunçy üçin bu sanawda peýda bolýar.",
+  hsLanPropTest: "Bu salgyda we portda PokerTH serweriniň jogap berýändigini barlaýar. Haýyşy diňe üstünlikli barlagdan soň iberip bilersiňiz.",
+  hsLanPropTls: "Serweriňiz şifrlenen portunda (adatça 7236) diňleýän bolsa, belläň.",
+  hsLanPropWin: "Serweriňizi teklip etmek üçin forma: ady, salgysy we porty, soňra ibermezden öň birikme barlagy. Siz barada hiç zat saklanmaýar.",
   name: 'Tuzuň kömegi',
   aceLabel: 'Tuzuň kömegi — menýumy açmak üçin basyň',
   offer: 'Bu ýerde täzemi? Men size ýoluň ugruna hemme zady görkezip bilerin.',

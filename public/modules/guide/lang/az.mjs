@@ -1,6 +1,13 @@
 // Ace's Help — az texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "**LAN serveri** siyahısından server seçin: yaşıl nöqtə onun onlayn olduğunu, yanında da hazırda orada olan oyunçuların sayını göstərir. Öz serveriniz orada yoxdur? **Serverimi təklif et** onu bu saytın adminlərinə göndərir və təsdiqləndikdən sonra o, siyahıda görünür.",
+  hsLanDir: "Bu saytın adminlərinin yoxladığı LAN serverləri: birində oynamaq üçün onu seçin. Yaşıl nöqtə onlayn deməkdir, yanında da hazırkı oyunçuları.",
+  hsLanPropose: "Öz PokerTH serverinizi bu saytın adminlərinə göndərir. Təsdiqləndikdən sonra o, hər oyunçu üçün bu siyahıda görünür.",
+  hsLanPropTest: "Bu ünvan və portda PokerTH serverinin cavab verdiyini yoxlayır. Sorğunu yalnız uğurlu yoxlamadan sonra göndərə bilərsiniz.",
+  hsLanPropTls: "Serveriniz şifrəli portunda (adətən 7236) dinləyirsə, bunu işarələyin.",
+  hsLanPropWin: "Serverinizi təklif etmək üçün forma: onun adı, ünvanı və portu, sonra göndərməzdən əvvəl bağlantı yoxlaması. Sizinlə bağlı heç nə saxlanılmır.",
   name: 'Tuzun köməyi',
   aceLabel: 'Tuzun köməyi — menyuma baxmaq üçün toxunun',
   offer: 'Burada yenisiniz? İrəlilədikcə sizə hər şeyi göstərə bilərəm.',

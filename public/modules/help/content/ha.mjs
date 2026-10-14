@@ -24,7 +24,7 @@ export const help = {
         { id: "lan",
           t: "LAN / keɓaɓɓiyar sabar",
           b: [
-            "Yanayi na uku yana haɗawa da kowace sabar PokerTH da kai ko aboki ke gudanarwa — a hanyar sadarwar gida, a VPS na sirri, a ko'ina. Shigar da adireshi da tashar haɗin sabar, yi alama a TLS idan sabar tana amfani da tashar da aka ɓoye, kuma shiga da laƙabi (shiga a matsayin baƙo yana aiki idan sabar ta yarda). Daga nan komai a tebur yana aiki kamar a sabar hukuma."] },
+            "Yanayi na uku yana haɗawa da kowace sabar PokerTH da kai ko aboki ke gudanarwa — a hanyar sadarwar gida, a VPS na sirri, a ko'ina. Shigar da adireshi da tashar haɗin sabar, yi alama a TLS idan sabar tana amfani da tashar da aka ɓoye, kuma shiga da laƙabi (shiga a matsayin baƙo yana aiki idan sabar ta yarda). Daga nan komai a tebur yana aiki kamar a sabar hukuma.", "Idan wannan shafi yana jera sabobin LAN, zaɓi ɗaya a jerin Sabar LAN maimakon rubuta adireshi: koren digo yana nuna tana kan layi, tare da adadin ’yan wasan da ke cikinta. Don a jera sabarka, taɓa Gabatar da sabata, shigar da adireshinta da tashar haɗinta, gwada haɗin, sannan aika buƙatar; da zarar masu gudanarwa sun amince da ita, za ta bayyana a jerin ga kowa. Dole ne a iya isa sabar daga Intanet, kuma ba a ajiye komai game da kai tare da buƙatar."] },
         { id: "famboard",
           t: "Jerin manyan 'yan wasan iyali",
           b: [

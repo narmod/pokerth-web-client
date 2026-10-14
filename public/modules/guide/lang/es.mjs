@@ -1,6 +1,13 @@
 // Ace's Help — es texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Elige un servidor en la lista **Servidor LAN**: un punto verde indica que está en línea, con el número de jugadores que hay en él ahora mismo. ¿Tu propio servidor no aparece? **Proponer mi servidor** lo envía a los administradores de este sitio, y aparece en la lista una vez aprobado.",
+  hsLanDir: "Los servidores LAN revisados por los administradores de este sitio: elige uno para jugar en él. Un punto verde significa en línea, con sus jugadores de ahora mismo.",
+  hsLanPropose: "Envía tu propio servidor PokerTH a los administradores de este sitio. Una vez aprobado, aparece en esta lista para todos los jugadores.",
+  hsLanPropTest: "Comprueba que un servidor PokerTH responde en esta dirección y puerto. Solo puedes enviar la solicitud tras una prueba correcta.",
+  hsLanPropTls: "Márcala si tu servidor escucha en su puerto cifrado (normalmente el 7236).",
+  hsLanPropWin: "El formulario para proponer tu servidor: su nombre, dirección y puerto, y después una prueba de conexión antes de enviarlo. No se guarda nada sobre ti.",
   name: 'Ayuda del As',
   aceLabel: 'Ayuda del As — toca para abrir mi menú',
   offer: '¿Eres nuevo? Puedo enseñarte todo sobre la marcha.',

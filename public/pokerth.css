@@ -13438,3 +13438,53 @@ html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .act-buttons
    réduite d'un bloc, polices comprises (--abar-kp = h/380, plancher 0.75,
    posé par updateBottomLayout) pour ne jamais sortir de l'écran (web.227). */
 html[data-abar-short="1"] #s-game#s-game .my-zone { zoom: var(--abar-kp, 1); }
+
+/* ══ LAN DIRECTORY (modules/ui/lan-directory.mjs) ══
+   Login form, LAN mode: the « LAN server » drop-down of the servers approved
+   by the admin, its status line, « Propose my server », and the proposal
+   dialog (#lan-prop-dialog, same .ld-card family as #invite-dialog).
+   body.lan-dir-locked = a listed server is selected (or manual entry is off):
+   the address fields of the ⚙ block are driven by the list, so they hide. */
+.lan-dir { display: flex; flex-direction: column; gap: var(--sp-3); }
+.lan-dir-detail { font-size: var(--fs-sm); color: var(--cream); line-height: 1.35; margin-top: 2px; }
+.lan-dir-line { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.lan-dir-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; box-sizing: border-box; }
+.lan-dir-dot.on { background: #3fbf5a; }
+.lan-dir-dot.off { border: 2px solid var(--text); }
+.lan-dir-dot.unk { border: 2px dashed var(--text); }
+.lan-dir-desc { color: var(--text); margin-top: 2px; overflow-wrap: anywhere; }
+.lan-dir-empty { font-size: var(--fs-sm); color: var(--text); }
+.lan-dir-propose {
+  align-self: stretch; min-height: 40px; padding: 8px 12px;
+  background: transparent; color: var(--gold);
+  border: 1px dashed rgba(var(--gold-rgb), 0.55); border-radius: var(--r-md);
+  font-size: var(--fs-sm); font-weight: 600; cursor: pointer;
+}
+.lan-dir-propose:hover { background: rgba(var(--gold-rgb), 0.08); }
+body.lan-dir-locked #f-hostport,
+body.lan-dir-locked #tls-row { display: none !important; }
+
+#lan-prop-dialog {
+  position: fixed; inset: 0; z-index: 1300;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+  animation: ldFade 0.25s ease-out;
+  overflow-y: auto; padding: 12px 0;
+}
+.lan-prop-card { max-width: 420px; margin: auto; }
+#lan-prop-form, #lan-prop-sent { display: flex; flex-direction: column; gap: var(--sp-4); }
+.lan-prop-intro, .lan-prop-note { margin: 0; font-size: var(--fs-sm); color: var(--text); line-height: 1.4; }
+.lan-prop-card .f input { width: 100%; box-sizing: border-box; }
+.lan-prop-two .f { flex: 1 1 0; min-width: 0; }
+.lan-prop-chk { display: flex !important; align-items: center; gap: 8px; font-size: var(--fs-sm); color: var(--cream); cursor: pointer; }
+.lan-prop-test { flex: none; }
+.lan-prop-send { flex: none; }
+.lan-prop-send:disabled { opacity: 0.4; cursor: default; box-shadow: none; }
+.lan-prop-status { font-size: var(--fs-sm); line-height: 1.35; padding: 8px 10px; border-radius: var(--r-md); border: 1px solid var(--border); color: var(--cream); }
+.lan-prop-status.ok { border-color: rgba(63,191,90,0.6); background: rgba(63,191,90,0.12); }
+.lan-prop-status.err { border-color: rgba(220,90,80,0.6); background: rgba(220,90,80,0.12); }
+.lan-prop-sent-title { font-family: var(--ff-display); font-weight: 700; color: var(--text-hi); }
+@media (max-width: 599.98px) {
+  .lan-prop-two { flex-direction: column; }
+}

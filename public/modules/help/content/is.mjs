@@ -24,7 +24,7 @@ export const help = {
         { id: "lan",
           t: "LAN / sérþjónn",
           b: [
-            "Þriðji hamurinn tengist hvaða PokerTH þjóni sem þú eða vinur rekur — á heimaneti, einka-VPS, hvar sem er. Sláðu inn vistfang og gátt þjónsins, hakaðu við TLS ef þjónninn notar dulkóðuðu gáttina og skráðu þig inn með gælunafni (gestaaðgangur virkar ef þjónninn leyfir). Eftir það virkar allt við borðið nákvæmlega eins og á opinbera þjóninum."] },
+            "Þriðji hamurinn tengist hvaða PokerTH þjóni sem þú eða vinur rekur — á heimaneti, einka-VPS, hvar sem er. Sláðu inn vistfang og gátt þjónsins, hakaðu við TLS ef þjónninn notar dulkóðuðu gáttina og skráðu þig inn með gælunafni (gestaaðgangur virkar ef þjónninn leyfir). Eftir það virkar allt við borðið nákvæmlega eins og á opinbera þjóninum.", "Þegar þessi síða birtir LAN-þjóna skaltu velja einn á listanum LAN-þjónn í stað þess að slá inn vistfang: grænn punktur sýnir að hann er tengdur, ásamt fjölda leikmanna á honum. Til að fá þinn eigin þjón á listann skaltu ýta á Leggja til þjóninn minn, slá inn vistfang hans og gátt, prófa tenginguna og senda síðan beiðnina; þegar stjórnendur samþykkja hann birtist hann á listanum fyrir alla. Þjónninn verður að vera aðgengilegur af internetinu og ekkert um þig er geymt með beiðninni."] },
         { id: "famboard",
           t: "Fjölskyldustigatafla",
           b: [

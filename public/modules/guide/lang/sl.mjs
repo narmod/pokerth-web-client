@@ -1,6 +1,13 @@
 // Ace's Help — sl texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Izberi strežnik na seznamu **Strežnik LAN**: zelena pika pomeni, da je dosegljiv, poleg pa je število igralcev, ki so trenutno na njem. Tvojega strežnika ni tam? **Predlagaj moj strežnik** ga pošlje administratorjem tega spletnega mesta in po odobritvi se prikaže na seznamu.",
+  hsLanDir: "Strežniki LAN, ki so jih preverili administratorji tega spletnega mesta: izberi enega in igraj na njem. Zelena pika pomeni dosegljiv, poleg so njegovi trenutni igralci.",
+  hsLanPropose: "Pošlje tvoj lastni strežnik PokerTH administratorjem tega spletnega mesta. Po odobritvi se prikaže na tem seznamu za vse igralce.",
+  hsLanPropTest: "Preveri, ali se na tem naslovu in vratih odziva strežnik PokerTH. Zahtevo lahko pošlješ šele po uspešnem preizkusu.",
+  hsLanPropTls: "Obkljukaj, če tvoj strežnik posluša na svojih šifriranih vratih (običajno 7236).",
+  hsLanPropWin: "Obrazec za predlog tvojega strežnika: njegovo ime, naslov in vrata, nato preizkus povezave pred pošiljanjem. O tebi se ne hrani nič.",
   name: 'Pomoč asa',
   aceLabel: 'Pomoč asa — tapni za moj meni',
   offer: 'Si nov tukaj? Lahko te sproti vodim.',

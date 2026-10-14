@@ -1,6 +1,13 @@
 // Ace's Help — ga texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Roghnaigh freastalaí sa liosta **Freastalaí LAN**: ciallaíonn ponc glas go bhfuil sé ar líne, le líon na n-imreoirí atá air faoi láthair. Níl do fhreastalaí féin ann? Seolann **Mol mo fhreastalaí** é chuig riarthóirí an tsuímh seo, agus beidh sé le feiceáil sa liosta nuair a cheadaítear é.",
+  hsLanDir: "Na freastalaithe LAN a sheiceáil riarthóirí an tsuímh seo: roghnaigh ceann chun imirt air. Ciallaíonn ponc glas ar líne, lena imreoirí faoi láthair.",
+  hsLanPropose: "Seolann sé do fhreastalaí PokerTH féin chuig riarthóirí an tsuímh seo. Nuair a cheadaítear é, beidh sé le feiceáil sa liosta seo do gach imreoir.",
+  hsLanPropTest: "Seiceálann sé go bhfuil freastalaí PokerTH ag freagairt ag an seoladh agus ag an bport seo. Ní féidir leat an t-iarratas a sheoladh ach amháin tar éis tástála rathúla.",
+  hsLanPropTls: "Cuir tic leis má éisteann do fhreastalaí ar a phort criptithe (7236 de ghnáth).",
+  hsLanPropWin: "An fhoirm chun do fhreastalaí a mholadh: a ainm, a sheoladh agus a phort, agus tástáil cheangail ansin roimh sheoladh. Ní choinnítear aon rud fút.",
   name: 'Cabhair an Aoin',
   aceLabel: 'Cabhair an Aoin — tapáil le mo roghchlár a oscailt',
   offer: 'Nua anseo? Is féidir liom tú a threorú de réir a chéile.',

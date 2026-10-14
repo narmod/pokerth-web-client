@@ -273,8 +273,10 @@ use too. Items are grouped by status rather than fixed phases.
 
 - **LAN server directory** — players propose their PokerTH server from the LAN login screen,
   the admin approves it, and approved servers fill a drop-down for everyone. Server side
-  (`server/lan-directory.js`, `web.41`) and admin tab Server › LAN directory (`web.42`) done;
-  the login drop-down with the proposal form and Ace's Help comes next.
+  (`server/lan-directory.js`, `web.41`), admin tab Server › LAN directory (`web.42`) and the
+  login drop-down with the proposal form and Ace's Help (`web.43`) done. Left: deploy, then
+  untick « manual address entry » on pokerth.net once servers are listed; serverlist XML export
+  for the QML client to discuss with sp0ck.
 
 ## ⏭️ Next
 

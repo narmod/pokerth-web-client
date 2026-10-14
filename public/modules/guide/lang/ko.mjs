@@ -1,6 +1,13 @@
 // Ace's Help — ko texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "**LAN 서버** 목록에서 서버를 고르세요. 초록 점은 온라인이라는 뜻이고, 지금 접속 중인 플레이어 수도 함께 보여요. 내 서버가 없나요? **내 서버 제안하기**를 누르면 이 사이트 관리자에게 보내지고, 승인되면 목록에 나타나요.",
+  hsLanDir: "이 사이트 관리자가 확인한 LAN 서버예요. 하나를 골라 거기서 플레이하세요. 초록 점은 온라인이라는 뜻이고, 지금 접속 중인 플레이어도 보여요.",
+  hsLanPropose: "내 PokerTH 서버를 이 사이트 관리자에게 보내요. 승인되면 모든 플레이어의 이 목록에 나타나요.",
+  hsLanPropTest: "이 주소와 포트에서 PokerTH 서버가 응답하는지 확인해요. 테스트에 성공해야만 요청을 보낼 수 있어요.",
+  hsLanPropTls: "서버가 암호화 포트(보통 7236)에서 대기 중이면 체크하세요.",
+  hsLanPropWin: "내 서버를 제안하는 양식이에요. 이름, 주소, 포트를 입력하고 보내기 전에 연결을 테스트해요. 사용자에 관한 정보는 아무것도 남지 않아요.",
   name: '에이스 도움말',
   aceLabel: '에이스 도움말 — 탭하면 내 메뉴가 열려요',
   offer: '처음이세요? 진행하면서 하나씩 안내해 드릴게요.',

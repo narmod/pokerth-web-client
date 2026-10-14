@@ -1,6 +1,13 @@
 // Ace's Help — sv texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Välj en server i listan **LAN-server**: en grön prick betyder att den är online, med antalet spelare som är där just nu. Finns inte din egen server där? **Föreslå min server** skickar den till administratörerna för den här webbplatsen, och den visas i listan när den har godkänts.",
+  hsLanDir: "LAN-servrarna som administratörerna för den här webbplatsen har kontrollerat: välj en för att spela på den. En grön prick betyder online, med dess spelare just nu.",
+  hsLanPropose: "Skickar din egen PokerTH-server till administratörerna för den här webbplatsen. När den har godkänts visas den i listan för alla spelare.",
+  hsLanPropTest: "Kontrollerar att en PokerTH-server svarar på den här adressen och porten. Du kan skicka förfrågan först efter ett lyckat test.",
+  hsLanPropTls: "Kryssa i om din server lyssnar på sin krypterade port (oftast 7236).",
+  hsLanPropWin: "Formuläret för att föreslå din server: namn, adress och port, sedan ett anslutningstest innan du skickar. Ingenting om dig sparas.",
   name: 'Essets hjälp',
   aceLabel: 'Essets hjälp — tryck för min meny',
   offer: 'Ny här? Jag kan visa dig runt medan du spelar.',

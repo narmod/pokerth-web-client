@@ -1,6 +1,13 @@
 // Ace's Help — uz texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "**LAN server** roʻyxatidan serverni tanlang: yashil nuqta uning onlayn ekanini va hozir unda nechta oʻyinchi borligini bildiradi. Oʻz serveringiz u yerda yoʻqmi? **Serverimni taklif qilish** uni shu sayt adminlariga yuboradi, tasdiqlangach esa u roʻyxatda paydo boʻladi.",
+  hsLanDir: "Shu sayt adminlari tekshirgan LAN serverlar: oʻynash uchun birini tanlang. Yashil nuqta onlayn degani, yonida esa hozirgi oʻyinchilari.",
+  hsLanPropose: "Oʻz PokerTH serveringizni shu sayt adminlariga yuboradi. Tasdiqlangach, u har bir oʻyinchi uchun shu roʻyxatda paydo boʻladi.",
+  hsLanPropTest: "Shu manzil va portda PokerTH serveri javob berishini tekshiradi. Soʻrovni faqat muvaffaqiyatli tekshiruvdan soʻng yubora olasiz.",
+  hsLanPropTls: "Serveringiz shifrlangan portida (odatda 7236) tinglayotgan boʻlsa, belgilang.",
+  hsLanPropWin: "Serveringizni taklif qilish shakli: uning nomi, manzili va porti, soʻng yuborishdan oldin ulanish tekshiruvi. Siz haqingizda hech narsa saqlanmaydi.",
   name: 'Tuzning yordami',
   aceLabel: 'Tuzning yordami — mening menyum uchun bosing',
   offer: 'Bu yerda yangimisiz? Yoʻl-yoʻlakay sizga hammasini koʻrsatib boraman.',

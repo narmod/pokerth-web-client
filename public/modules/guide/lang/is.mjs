@@ -1,6 +1,13 @@
 // Ace's Help — is texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Veldu þjón á listanum **LAN-þjónn**: grænn punktur þýðir að hann er tengdur, ásamt fjölda leikmanna á honum núna. Er þinn eigin þjónn ekki þar? **Leggja til þjóninn minn** sendir hann til stjórnenda þessarar síðu og hann birtist á listanum þegar hann hefur verið samþykktur.",
+  hsLanDir: "LAN-þjónarnir sem stjórnendur þessarar síðu hafa yfirfarið: veldu einn til að spila á honum. Grænn punktur þýðir tengdur, ásamt leikmönnum hans núna.",
+  hsLanPropose: "Sendir þinn eigin PokerTH þjón til stjórnenda þessarar síðu. Þegar hann hefur verið samþykktur birtist hann á þessum lista fyrir alla leikmenn.",
+  hsLanPropTest: "Athugar hvort PokerTH þjónn svarar á þessu vistfangi og gátt. Þú getur aðeins sent beiðnina eftir vel heppnaða prófun.",
+  hsLanPropTls: "Hakaðu við ef þjónninn þinn hlustar á dulkóðuðu gáttinni sinni (yfirleitt 7236).",
+  hsLanPropWin: "Eyðublaðið til að leggja til þjóninn þinn: nafn hans, vistfang og gátt, síðan tengingarprófun áður en sent er. Ekkert um þig er geymt.",
   name: 'Hjálp ássins',
   aceLabel: 'Hjálp ássins — ýttu fyrir valmyndina mína',
   offer: 'Nýr hér? Ég get sýnt þér hvernig allt virkar jafnóðum.',

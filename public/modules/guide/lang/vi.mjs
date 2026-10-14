@@ -1,6 +1,13 @@
 // Ace's Help — vi texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Chọn một máy chủ trong danh sách **Máy chủ LAN**: chấm xanh lá nghĩa là máy chủ đang trực tuyến, kèm số người chơi trên đó lúc này. Máy chủ của bạn không có ở đó? **Đề xuất máy chủ của tôi** sẽ gửi nó tới quản trị viên của trang này, và nó sẽ xuất hiện trong danh sách sau khi được phê duyệt.",
+  hsLanDir: "Các máy chủ LAN đã được quản trị viên của trang này kiểm tra: chọn một máy chủ để chơi trên đó. Chấm xanh lá nghĩa là trực tuyến, kèm số người chơi hiện tại.",
+  hsLanPropose: "Gửi máy chủ PokerTH của riêng bạn tới quản trị viên của trang này. Sau khi được phê duyệt, nó sẽ xuất hiện trong danh sách này cho mọi người chơi.",
+  hsLanPropTest: "Kiểm tra xem có máy chủ PokerTH phản hồi tại địa chỉ và cổng này không. Bạn chỉ có thể gửi yêu cầu sau khi kiểm tra thành công.",
+  hsLanPropTls: "Đánh dấu nếu máy chủ của bạn lắng nghe trên cổng mã hóa của nó (thường là 7236).",
+  hsLanPropWin: "Biểu mẫu đề xuất máy chủ của bạn: tên, địa chỉ và cổng, rồi kiểm tra kết nối trước khi gửi. Không có gì về bạn được lưu lại.",
   name: 'Trợ giúp của quân Át',
   aceLabel: 'Trợ giúp của quân Át — chạm để mở menu của mình',
   offer: 'Bạn mới đến? Mình có thể hướng dẫn bạn dần dần trong lúc chơi.',

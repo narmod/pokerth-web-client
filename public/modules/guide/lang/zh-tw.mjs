@@ -1,6 +1,13 @@
 // Ace's Help — zh-tw texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "在**區域網路伺服器**清單中選一台伺服器：綠點表示它在線上，旁邊是目前在上面的玩家人數。你自己的伺服器不在裡面？**提交我的伺服器**會把它傳送給本站管理員，核准後就會出現在清單中。",
+  hsLanDir: "經本站管理員審核的區域網路伺服器：選一台就能在上面遊玩。綠點表示在線上，旁邊是它目前的玩家。",
+  hsLanPropose: "把你自己的 PokerTH 伺服器傳送給本站管理員。核准後，它會出現在每位玩家的這份清單中。",
+  hsLanPropTest: "檢查此位址和連接埠上是否有 PokerTH 伺服器回應。測試成功後才能送出申請。",
+  hsLanPropTls: "如果你的伺服器監聽的是其加密連接埠（通常為 7236），請勾選此項。",
+  hsLanPropWin: "提交伺服器的表單：填寫名稱、位址和連接埠，送出前先測試連線。不會保留任何關於你的資訊。",
   name: 'A 牌小幫手',
   aceLabel: 'A 牌小幫手 — 點一下開啟我的選單',
   offer: '第一次來嗎？我可以一路帶你認識環境。',

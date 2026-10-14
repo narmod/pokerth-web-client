@@ -93,7 +93,19 @@ highlights below.
   Remove, plus « Add manually »; and the settings (health-check period, auto-hide, per-IP limit,
   offline servers, private addresses, manual address entry). A badge on the tab counts the
   requests waiting. The Game servers allowlist card now lists the approved LAN servers too
-  (`web.42`). The login drop-down comes next.
+  (`web.42`).
+  On the player side (`web.43`, new module `ui/lan-directory.mjs`), the LAN login form shows a
+  « LAN server » drop-down of the approved servers (online first, with their players; offline ones
+  marked), and a status line under it (online, country, language, players, description). Picking a
+  server fills the usual address fields, which then hide; « Enter an address… » at the end of the
+  list brings them back when the admin allows manual entry. « Propose my server » opens a form
+  (name, address, port, TLS, country, language, description): Send stays disabled until the
+  connection test passes for the values on screen, the request goes to the admin queue, and
+  nothing about it is kept on the device. An instance with no listed server, manual entry on and
+  requests closed shows the form exactly as before. Ace's Help: a new tip `login-lan` and four
+  « ? » explanations (list, Propose, Test, TLS) plus the form window; a paragraph in the LAN help
+  section. 40 UI keys, 6 Ace keys and the help paragraph in the 83 languages (`es-419` derived);
+  `test-lan-directory-browser` (real proxy, fake PokerTH server, Chromium).
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the

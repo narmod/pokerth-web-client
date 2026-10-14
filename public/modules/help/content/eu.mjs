@@ -24,7 +24,7 @@ export const help = {
         { id: "lan",
           t: "LAN / zerbitzari dedikatua",
           b: [
-            "Hirugarren moduak zuk edo lagun batek martxan duen edozein PokerTH zerbitzarira konektatzen du — etxeko sarean, VPS pribatu batean, edonon. Idatzi zerbitzariaren helbidea eta ataka, markatu TLS zerbitzariak ataka enkriptatua erabiltzen badu, eta hasi saioa ezizen batekin (gonbidatu-sarbideak funtzionatzen du zerbitzariak baimentzen badu). Hortik aurrera, mahaian dena zerbitzari ofizialean bezala dabil."] },
+            "Hirugarren moduak zuk edo lagun batek martxan duen edozein PokerTH zerbitzarira konektatzen du — etxeko sarean, VPS pribatu batean, edonon. Idatzi zerbitzariaren helbidea eta ataka, markatu TLS zerbitzariak ataka enkriptatua erabiltzen badu, eta hasi saioa ezizen batekin (gonbidatu-sarbideak funtzionatzen du zerbitzariak baimentzen badu). Hortik aurrera, mahaian dena zerbitzari ofizialean bezala dabil.", "Gune honek LAN zerbitzarien zerrenda eskaintzen duenean, aukeratu bat LAN zerbitzaria zerrendan helbide bat idatzi beharrean: puntu berde batek linean dagoela adierazten du, bertako jokalarien kopuruarekin. Zure zerbitzaria zerrendan agertzeko, sakatu Proposatu nire zerbitzaria, idatzi bere helbidea eta ataka, probatu konexioa eta bidali eskaera; administratzaileek onartzen dutenean, zerrendan agertuko da guztientzat. Zerbitzariak Internetetik eskuragarri egon behar du, eta zuri buruzko ezer ez da gordetzen eskaerarekin."] },
         { id: "famboard",
           t: "Familiako sailkapen-taula",
           b: [

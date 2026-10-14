@@ -86,6 +86,9 @@ ok(/15, 9, 6, 4, 3, 2, 1/.test(EN.hsRkPth) && /×1 to ×4/.test(EN.hsRkBbc) && /
 ok(/created by the cup admins/.test(EN.c5Events) && /needs no registration/.test(EN.c5Events), 'events: cups created by admins, WEC needs no registration (D14)');
 ok(pick({ screen: 'connect', net: false, online: false, loginStep: 1 }) === 'login', 'login screen, mode cards → C3 modes + account');
 ok(pick({ screen: 'connect', net: false, online: false, loginStep: 2 }) === 'login-profile', 'login form → C3 nickname + avatar');
+ok(pick({ screen: 'connect', net: false, online: false, loginStep: 2, lanDir: true }) === 'login-profile', 'LAN list shown: the nickname tip still comes first');
+ok(pick({ screen: 'connect', net: false, online: false, loginStep: 2, lanDir: true }, ['login-profile']) === 'login-lan', 'then the LAN directory tip');
+ok(pick({ screen: 'connect', net: false, online: false, loginStep: 2 }, ['login-profile']) === null, 'no LAN list: no LAN directory tip');
 ok(pick({ screen: 'connect', net: false, online: false, loginStep: 1 }, ['login']) === null, 'C3 told once');
 ok(pick({ screen: 'connect', loginStep: 1, helpOn: false }) === null, 'help off: silent on the login screen');
 

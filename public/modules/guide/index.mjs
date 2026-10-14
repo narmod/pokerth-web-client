@@ -200,6 +200,8 @@ export function where() {
     host: !!(s.gId && s.amGameAdmin && !s._amSpectator),
     offline: !!window._offlineMode,
     loginStep: screen === 'connect' ? (shown('login-step2') ? 2 : 1) : 0,
+    // the LAN directory block of the login form (modules/ui/lan-directory.mjs)
+    lanDir: screen === 'connect' && shown('lan-dir'),
     gamesLoaded: !!s.loaded,
     rankPick: net && online && !guest && !s.gId ? pickRankingTable(games) : null,
     waitCount: s.gId ? presentCount(s) : 0,

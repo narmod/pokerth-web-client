@@ -1,6 +1,13 @@
 // Ace's Help — sk texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Vyber si server v zozname **LAN server**: zelená bodka znamená, že je online, spolu s počtom hráčov, ktorí sú na ňom práve teraz. Tvoj vlastný server tam nie je? **Navrhnúť môj server** ho pošle správcom tejto stránky a po schválení sa objaví v zozname.",
+  hsLanDir: "LAN servery overené správcami tejto stránky: vyber si jeden a hraj na ňom. Zelená bodka znamená online, spolu s jeho aktuálnymi hráčmi.",
+  hsLanPropose: "Pošle tvoj vlastný server PokerTH správcom tejto stránky. Po schválení sa objaví v tomto zozname pre každého hráča.",
+  hsLanPropTest: "Overí, či na tejto adrese a porte odpovedá server PokerTH. Žiadosť môžeš odoslať až po úspešnom teste.",
+  hsLanPropTls: "Zaškrtni, ak tvoj server počúva na svojom šifrovanom porte (zvyčajne 7236).",
+  hsLanPropWin: "Formulár na navrhnutie tvojho servera: jeho názov, adresa a port, potom test pripojenia pred odoslaním. Nič o tebe sa neuchováva.",
   name: 'Pomoc od esa',
   aceLabel: 'Pomoc od esa — ťukni a otvoríš moje menu',
   offer: 'Prvýkrát tu? Môžem ťa tu priebežne sprevádzať.',

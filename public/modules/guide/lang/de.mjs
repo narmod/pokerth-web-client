@@ -1,6 +1,13 @@
 // Ace's Help — de texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Wähle einen Server in der Liste **LAN-Server**: Ein grüner Punkt bedeutet, dass er online ist, dazu die Zahl der Spieler, die gerade darauf sind. Dein eigener Server ist nicht dabei? **Meinen Server vorschlagen** schickt ihn an die Admins dieser Website, und nach der Freigabe erscheint er in der Liste.",
+  hsLanDir: "Die von den Admins dieser Website geprüften LAN-Server: Wähle einen, um darauf zu spielen. Ein grüner Punkt bedeutet online, dazu seine aktuellen Spieler.",
+  hsLanPropose: "Schickt deinen eigenen PokerTH-Server an die Admins dieser Website. Nach der Freigabe erscheint er in dieser Liste für alle Spieler.",
+  hsLanPropTest: "Prüft, ob unter dieser Adresse und diesem Port ein PokerTH-Server antwortet. Die Anfrage kannst du erst nach einem erfolgreichen Test senden.",
+  hsLanPropTls: "Hake es an, wenn dein Server auf seinem verschlüsselten Port lauscht (meist 7236).",
+  hsLanPropWin: "Das Formular, um deinen Server vorzuschlagen: Name, Adresse und Port, dann ein Verbindungstest vor dem Senden. Über dich wird nichts gespeichert.",
   name: 'Ass-Hilfe',
   aceLabel: 'Ass-Hilfe — tippen für mein Menü',
   offer: 'Neu hier? Ich kann dir unterwegs alles zeigen.',

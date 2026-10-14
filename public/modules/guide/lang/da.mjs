@@ -1,6 +1,13 @@
 // Ace's Help — da texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Vælg en server på listen **LAN-server**: en grøn prik betyder, at den er online, med antallet af spillere på den lige nu. Er din egen server der ikke? **Foreslå min server** sender den til admins på dette site, og den vises på listen, når den er godkendt.",
+  hsLanDir: "De LAN-servere, som admins på dette site har kontrolleret: vælg en for at spille på den. En grøn prik betyder online, med dens spillere lige nu.",
+  hsLanPropose: "Sender din egen PokerTH-server til admins på dette site. Når den er godkendt, vises den på denne liste for alle spillere.",
+  hsLanPropTest: "Kontrollerer, at en PokerTH-server svarer på denne adresse og port. Du kan først sende anmodningen efter en vellykket test.",
+  hsLanPropTls: "Sæt kryds, hvis din server lytter på sin krypterede port (normalt 7236).",
+  hsLanPropWin: "Formularen til at foreslå din server: dens navn, adresse og port, derefter en forbindelsestest før afsendelse. Intet om dig gemmes.",
   name: 'Essets hjælp',
   aceLabel: 'Essets hjælp — tryk for min menu',
   offer: 'Ny her? Jeg kan vise dig rundt undervejs.',

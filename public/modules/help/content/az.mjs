@@ -24,7 +24,7 @@ export const help = {
         { id: "lan",
           t: "LAN / xüsusi server",
           b: [
-            "Üçüncü rejim sizin və ya dostunuzun işlətdiyi istənilən PokerTH serverinə qoşulur — ev şəbəkəsində, şəxsi VPS-də, istənilən yerdə. Serverin ünvanını və portunu daxil edin, server şifrələnmiş port istifadə edirsə TLS-i işarələyin və ləqəblə daxil olun (server icazə verirsə qonaq girişi işləyir). Bundan sonra masada hər şey rəsmi serverdəki kimi işləyir."] },
+            "Üçüncü rejim sizin və ya dostunuzun işlətdiyi istənilən PokerTH serverinə qoşulur — ev şəbəkəsində, şəxsi VPS-də, istənilən yerdə. Serverin ünvanını və portunu daxil edin, server şifrələnmiş port istifadə edirsə TLS-i işarələyin və ləqəblə daxil olun (server icazə verirsə qonaq girişi işləyir). Bundan sonra masada hər şey rəsmi serverdəki kimi işləyir.", "Bu sayt LAN serverlərini siyahıya aldıqda, ünvan yazmaq əvəzinə LAN serveri siyahısından birini seçin: yaşıl nöqtə onun onlayn olduğunu, yanında da oradakı oyunçuların sayını göstərir. Öz serverinizi siyahıya saldırmaq üçün Serverimi təklif et düyməsinə toxunun, onun ünvanını və portunu daxil edin, bağlantını yoxlayın, sonra sorğunu göndərin; adminlər onu təsdiqlədikdən sonra o, hamı üçün siyahıda görünür. Server İnternetdən əlçatan olmalıdır və sorğu ilə birlikdə sizinlə bağlı heç nə saxlanılmır."] },
         { id: "famboard",
           t: "Ailə reytinq cədvəli",
           b: [

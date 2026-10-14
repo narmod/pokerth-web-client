@@ -150,6 +150,7 @@ other tests' screenshots stay unchanged. `test-guide-browser` opts in with
 |---|---|---|
 | `login` | login screen, the mode cards (step 1) | two steps. First the three ways to play: Internet (pokerth.net, official rankings), Local / training (bots, even offline), LAN / Dedicated server. Then account versus guest: guests play Normal games only, with no ranked games and no chat. It offers **Create an account** |
 | `login-profile` | login screen, the form of the chosen mode (step 2) | the nickname and the avatar: Gallery, Create (which can start from a photo), Import. The avatar is highlighted |
+| `login-lan` | login screen, LAN mode, when the site lists LAN servers (the LAN directory) | pick a server in the **LAN server** list (green dot = online, with its players), or **Propose my server** to the admins. The list is highlighted. Speaks after `login-profile` |
 | `wait-normal` | seated at a Normal or training table that has not started, not as a spectator | one bubble that depends on the player's role. **Host**: Start Game, or fill up with computer players, and Invite friends. **Other players**: the host starts the game, and Invite friends. **Training**: Start Game, and the empty seats get bots. It highlights Start (host, training) or Invite |
 
 The bubble normally sits next to the Ace. It moves to the top right, under the header,

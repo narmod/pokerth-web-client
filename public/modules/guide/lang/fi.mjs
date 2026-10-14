@@ -1,6 +1,13 @@
 // Ace's Help — fi texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // LAN directory (login, LAN mode; web.43)
+  c3LanDir: "Valitse palvelin listalta **LAN-palvelin**: vihreä piste tarkoittaa, että se on verkossa, ja näet myös siellä juuri nyt olevien pelaajien määrän. Eikö oma palvelimesi ole siellä? **Ehdota palvelintani** lähettää sen tämän sivuston ylläpitäjille, ja se ilmestyy listalle hyväksynnän jälkeen.",
+  hsLanDir: "Tämän sivuston ylläpitäjien tarkistamat LAN-palvelimet: valitse yksi pelataksesi siellä. Vihreä piste tarkoittaa verkossa, ja näet sen tämänhetkiset pelaajat.",
+  hsLanPropose: "Lähettää oman PokerTH-palvelimesi tämän sivuston ylläpitäjille. Hyväksynnän jälkeen se näkyy tällä listalla kaikille pelaajille.",
+  hsLanPropTest: "Tarkistaa, että tässä osoitteessa ja portissa vastaa PokerTH-palvelin. Voit lähettää pyynnön vasta onnistuneen testin jälkeen.",
+  hsLanPropTls: "Rastita tämä, jos palvelimesi kuuntelee salatussa portissaan (yleensä 7236).",
+  hsLanPropWin: "Lomake palvelimesi ehdottamiseen: sen nimi, osoite ja portti, ja ennen lähettämistä yhteystesti. Sinusta ei säilytetä mitään.",
   name: 'Ässän apu',
   aceLabel: 'Ässän apu — napauta avataksesi valikkoni',
   offer: 'Uusi täällä? Voin opastaa sinua matkan varrella.',
