@@ -29,7 +29,7 @@ export const help = {
           t: "Familiako sailkapen-taula",
           b: [
             "Zerbitzari pribatuetan eta LAN partidetan soilik, bezeroak ezizen bakoitzeko estatistika orokorrak gordetzen ditu — jokatutako eta irabazitako eskuak eta partidak, irabazirik handiena, boladarik onena — eta zerbitzariaren bidez partekatzen ditu, mahaiaren inguruko gailu guztiek sailkapen-taula bera ikus dezaten. pokerth.net-eko partidei ez zaie inoiz horrela jarraitzen, eta entrenamendu-moduko estatistikak guztiz bereiz gordetzen dira.",
-            "Partida horietan, garaikur-botoiak sailkapen-leihoa irekitzen du bere LAN fitxan: jokalari guztiak, hainbat irizpideren arabera ordenagarriak."] },
+            "Partida horietan, garaikur-botoiak sailkapen-leihoa irekitzen du bere LAN fitxan: jokalari guztiak, hainbat irizpideren arabera ordenagarriak.", "LAN zerbitzarien zerrendako zerbitzari bakoitzak bere sailkapen-taula du, zerbitzaria proposatzean aukeratutako maiztasunaren arabera berrezartzen dena (administratzaileek bakarrik alda dezakete). Zerbitzari lokalak eta eskuz idatzitako helbideek gunearen sailkapen-taula nagusia partekatzen dute."] },
         { id: "language",
           t: "Hizkuntza",
           b: [

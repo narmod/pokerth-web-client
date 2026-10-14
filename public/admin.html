@@ -343,6 +343,7 @@
   .ldedit .ldgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px 14px}
   .ldedit label.f{display:flex;flex-direction:column;gap:3px;font-size:.72rem;color:var(--text);min-width:0}
   .ldedit input[type=text],.ldedit input[type=number]{width:100%;box-sizing:border-box}
+  .ldedit select{padding:7px 9px;border-radius:7px;font-size:.85rem;width:100%;box-sizing:border-box}
   .ldedit input[type=text],.ldedit input[type=number],.ldset input[type=number]{padding:7px 9px;border-radius:7px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream);font-size:.85rem;margin:0}
   .ldedit .ldchk{display:flex;flex-wrap:wrap;gap:14px;margin:8px 0 0;font-size:.8rem;color:var(--text)}
   .ldset{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px 24px;font-size:.82rem;color:var(--text)}
@@ -835,12 +836,15 @@
     <div id="panel-board" style="display:none">
       <div class="card">
         <div class="boardhead"><span id="boardcount" class="muted"></span><button id="resetBtn" class="del">Reset leaderboard</button></div>
+        <div class="periodrow" id="boardPickRow" style="display:none;margin:0 0 8px"><label for="boardSel" style="margin:0">Board</label><select id="boardSel"></select></div>
+        <div id="boardNote" class="muted" style="margin:0 0 8px"></div>
         <input id="boardFilter" class="filter" type="search" placeholder="Filter players…" autocomplete="off">
         <div id="players"></div>
         <div id="boardmsg" class="msg"></div>
       </div>
       <div class="card" data-master="1">
         <h2>Leaderboard reset</h2>
+        <p class="muted">For the default board (the local server and typed addresses). Each listed LAN server has its own period, set in Server › LAN directory.</p>
         <label for="period">Automatic reset period</label>
         <div class="periodrow">
           <select id="period"><option value="off">Off</option><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select>
@@ -1629,6 +1633,8 @@
   function ldCountry(cc){ if(!cc) return ''; try{ return new Intl.DisplayNames(['en'],{type:'region'}).of(cc)||cc; }catch(e){ return cc; } }
   function ldPlace(x){ var a=[]; if(x.country) a.push(ldCountry(x.country)); if(x.lang) a.push(x.lang); return a.join(' · '); }
   function ldPlural(n,w){ return n+' '+w+(n===1?'':'s'); }
+  var LD_RESET={off:'never',daily:'daily',weekly:'weekly',monthly:'monthly',yearly:'yearly'};
+  function ldResetChip(p){ return '<span class="ldchip" title="Leaderboard reset of this server">board: '+srvEsc(LD_RESET[p]||'monthly')+'</span>'; }
   function ldSay(id,t,cls){ var e=$(id); if(e){ e.textContent=t||''; e.className='msg'+(cls?' '+cls:''); } }
   function ldBadge(){
     var b=$('ldBadge'), n=(_ld&&_ld.pending)?_ld.pending.length:0;
@@ -1675,6 +1681,7 @@
       +'<label class="f">Country (2 letters)<input type="text" class="ldC" maxlength="2" value="'+srvEsc(x.country||'')+'" placeholder="FR"></label>'
       +'<label class="f">Language<input type="text" class="ldL" maxlength="10" value="'+srvEsc(x.lang||'')+'" placeholder="fr"></label>'
       +'<label class="f">Description<input type="text" class="ldD" maxlength="140" value="'+srvEsc(x.desc||'')+'"></label>'
+      +'<label class="f">Leaderboard reset<select class="ldR">'+['off','daily','weekly','monthly','yearly'].map(function(k){ return '<option value="'+k+'"'+((x.resetPeriod||'monthly')===k?' selected':'')+'>'+(k==='off'?'Never':k.charAt(0).toUpperCase()+k.slice(1))+'</option>'; }).join('')+'</select></label>'
       +(full?'<label class="f">TLS name<input type="text" class="ldS" maxlength="253" value="'+srvEsc(x.sni||'')+'" placeholder="leave empty to use Host" autocomplete="off"></label>':'')
       +'</div><div class="ldchk">'
       +'<label><input type="checkbox" class="ldT" '+(x.tls?'checked':'')+'> TLS</label>'
@@ -1686,7 +1693,8 @@
   function ldReadEditor(box){
     var q=function(c){ return box.querySelector(c); };
     var e={ name:q('.ldN').value.trim(), host:q('.ldH').value.trim(), port:parseInt(q('.ldP').value,10)||0,
-            country:q('.ldC').value.trim(), lang:q('.ldL').value.trim(), desc:q('.ldD').value.trim(), tls:!!q('.ldT').checked };
+            country:q('.ldC').value.trim(), lang:q('.ldL').value.trim(), desc:q('.ldD').value.trim(), tls:!!q('.ldT').checked,
+            resetPeriod:q('.ldR').value };
     if(q('.ldS')) e.sni=q('.ldS').value.trim();
     if(q('.ldNV')) e.noverify=!!q('.ldNV').checked;
     if(q('.ldV')) e.visible=!!q('.ldV').checked;
@@ -1712,7 +1720,7 @@
       var chk=_ldChecks[p.id]||p.probe, can=!!(chk&&(chk.pokerth||chk.reachable));
       return '<div class="ldreq" data-id="'+srvEsc(p.id)+'"><div class="ldmain">'
         +'<span class="ldname">'+srvEsc(p.name||p.host)+'</span><span class="ldaddr">'+srvEsc(p.host)+':'+p.port+'</span>'
-        +(p.tls?'<span class="ldchip">TLS</span>':'')+(ldPlace(p)?'<span class="ldchip">'+srvEsc(ldPlace(p))+'</span>':'')
+        +(p.tls?'<span class="ldchip">TLS</span>':'')+(ldPlace(p)?'<span class="ldchip">'+srvEsc(ldPlace(p))+'</span>':'')+ldResetChip(p.resetPeriod)
         +'<div class="ldline">'+(p.desc?'“'+srvEsc(p.desc)+'” · ':'')+'submitted '+ldAgo(p.submittedAt)+'</div>'
         +ldProbeLine(chk,p.tls)
         +'</div><div class="ldbtns">'
@@ -1762,7 +1770,7 @@
         var seen=ldAgo(e.lastSeen)+(e.autoHidden?' · auto-hidden':'');
         return '<tr data-id="'+srvEsc(e.id)+'"'+((!e.visible||e.autoHidden)?' class="ldhid"':'')+'>'
           +'<td><span class="ldst '+cls+'" title="'+srvEsc(st&&st.error||'')+'"><i></i>'+lab+'</span></td>'
-          +'<td><b>'+srvEsc(e.name||e.host)+'</b>'+(e.desc?'<div class="ldline" style="margin:0">'+srvEsc(e.desc)+'</div>':'')+'</td>'
+          +'<td><b>'+srvEsc(e.name||e.host)+'</b> '+ldResetChip(e.resetPeriod)+(e.desc?'<div class="ldline" style="margin:0">'+srvEsc(e.desc)+'</div>':'')+'</td>'
           +'<td><span class="ldaddr">'+srvEsc(e.host)+':'+e.port+'</span>'+(e.tls?'<span class="ldchip">TLS</span>':'')+(e.tls&&e.noverify?'<span class="ldchip warn">cert not checked</span>':'')+'</td>'
           +'<td>'+srvEsc(ldPlace(e))+'</td>'
           +'<td>'+srvEsc(act)+'</td>'
@@ -2650,9 +2658,34 @@
 
   function bmsg(t,cls){ $('boardmsg').textContent=t; $('boardmsg').className='msg '+(cls||''); }
   function fmtSigned(n){ n=Math.round(Number(n)||0); return (n>0?'+':'')+n.toLocaleString(); }
-  var lastBoard=[];
+  var lastBoard=[], _boardId='', _boards=[];
+  function boardQS(){ return _boardId ? '?board='+encodeURIComponent(_boardId) : ''; }
+  // One leaderboard per listed LAN server (server/lan-boards.js) beside the
+  // historical one (local server, typed addresses): pick which one to show.
+  function loadBoardList(){
+    return api('/admin/lan-boards').then(function(r){return r.json();}).then(function(d){
+      if(!d||!d.ok) return;
+      _boards=d.boards||[];
+      var sel=$('boardSel'), row=$('boardPickRow'); if(!sel||!row) return;
+      row.style.display=_boards.length?'':'none';
+      sel.innerHTML='<option value="">Default — local server &amp; typed addresses ('+(d.defaultPlayers||0)+')</option>'+_boards.map(function(b){
+        return '<option value="'+srvEsc(b.id)+'">'+srvEsc(b.name)+' — '+srvEsc(b.host)+':'+b.port+' ('+b.players+')'+(b.visible?'':' · unlisted')+'</option>';
+      }).join('');
+      if(_boardId && !_boards.some(function(b){return b.id===_boardId;})) _boardId='';
+      sel.value=_boardId;
+      boardNote(d.resetPeriod);
+    }).catch(function(){});
+  }
+  function boardNote(defPeriod){
+    var n=$('boardNote'); if(!n) return;
+    if(!_boardId){ n.textContent=_boards.length?'Reset: '+(defPeriod||'monthly')+' (the setting below). Each listed LAN server has its own board and period.':''; return; }
+    var b=_boards.filter(function(x){return x.id===_boardId;})[0];
+    n.textContent=b?('Reset: '+(b.resetPeriod==='off'?'never':(b.resetPeriod||'monthly'))+' — chosen when the server was proposed; change it in Server › LAN directory › Edit.'):'';
+  }
+  if($('boardSel')) $('boardSel').addEventListener('change',function(e){ _boardId=e.target.value; boardNote(); loadBoard(); });
   function loadBoard(){
-    fetch('/stats').then(function(r){return r.json();}).then(function(s){
+    loadBoardList();
+    fetch('/stats'+boardQS()).then(function(r){return r.json();}).then(function(s){
       s=s||{};
       lastBoard=Object.keys(s).map(function(n){ var v=s[n]||{}; return { name:n, net:Number(v.net)||0, gw:Number(v.gamesWon)||0, gp:Number(v.gamesPlayed)||0, hw:Number(v.handsWon)||0, hp:Number(v.handsPlayed)||0, streak:Number(v.bestStreak)||0 }; })
         .sort(function(a,b){ return (b.net-a.net) || (b.gw-a.gw) || (b.hw-a.hw) || a.name.localeCompare(b.name); });
@@ -2681,10 +2714,10 @@
   }
   if($('boardFilter')) $('boardFilter').addEventListener('input', drawBoard);
   function removePlayer(n){ if(!confirm('Remove player \u201c'+n+'\u201d from the leaderboard?'))return;
-    fetch('/stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,_delete:true,token:tok()})})
+    fetch('/stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,_delete:true,token:tok(),board:_boardId||undefined})})
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ loadBoard(); } else { bmsg('Remove failed: '+((d&&d.error)||'forbidden'),'err'); } }).catch(function(){ bmsg('Could not remove player \u2014 network error.','err'); }); }
-  $('resetBtn').addEventListener('click',function(){ if(!confirm('Reset the WHOLE leaderboard? This cannot be undone.'))return;
-    fetch('/stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_resetAll:true,token:tok()})})
+  $('resetBtn').addEventListener('click',function(){ var _bn=_boardId?((_boards.filter(function(x){return x.id===_boardId;})[0]||{}).name||'this server'):''; if(!confirm(_boardId?('Reset the leaderboard of \u201c'+_bn+'\u201d? This cannot be undone.'):'Reset the WHOLE leaderboard? This cannot be undone.'))return;
+    fetch('/stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_resetAll:true,token:tok(),board:_boardId||undefined})})
       .then(function(r){return r.json();}).then(function(d){ if(d.ok){ bmsg('Leaderboard reset.','ok'); loadBoard(); } else bmsg('Reset failed: '+(d.error||'forbidden'),'err'); })
       .catch(function(){ bmsg('Network error.','err'); }); });
 

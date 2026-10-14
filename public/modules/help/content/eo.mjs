@@ -29,7 +29,7 @@ export const help = {
           t: "Familia rangolisto",
           b: [
             "Nur ĉe privataj serviloj kaj en LAN-ludoj, la kliento tenas tutvivajn statistikojn por ĉiu kaŝnomo — luditaj kaj gajnitaj manoj kaj ludoj, plej granda gajno, plej bona serio — kaj kunhavigas ilin tra la servilo, por ke ĉiu aparato ĉirkaŭ la tablo vidu la saman rangoliston. Ludoj ĉe pokerth.net neniam estas spurataj tiel, kaj la statistikoj de la trejna reĝimo estas konservataj tute aparte.",
-            "En tiuj ludoj, la trofea butono malfermas la rangigan fenestron ĉe ĝia LAN-langeto: ĉiuj ludantoj, ordigeblaj laŭ pluraj kriterioj."] },
+            "En tiuj ludoj, la trofea butono malfermas la rangigan fenestron ĉe ĝia LAN-langeto: ĉiuj ludantoj, ordigeblaj laŭ pluraj kriterioj.", "Ĉiu servilo en la listo de LAN-serviloj havas sian propran rangoliston, nuligatan laŭ la periodo elektita kiam la servilo estis proponita (nur la administrantoj povas ŝanĝi ĝin). La loka servilo kaj mane tajpitaj adresoj kunhavas la ĉefan rangoliston de la retejo."] },
         { id: "language",
           t: "Lingvo",
           b: [

@@ -29,7 +29,7 @@ export const help = {
           t: "Àkójọ olùborí ẹbí",
           b: [
             "Lórí olùpín àṣírí àti eré LAN nìkan, oníbàárà ń tọ́jú ìṣirò gbogbo ìgbà fún orúkọ ìnagijẹ kọ̀ọ̀kan — àwọn ọwọ́ àti eré tí a ṣe àti tí a borí, èrè tó pọ̀ jù, ìtẹ̀léra ìborí tó dára jù — ó sì ń pín wọn nípasẹ̀ olùpín kí gbogbo ẹ̀rọ tí ó yí tábìlì ká lè rí àkójọ kan náà. A kì í tọpinpin eré pokerth.net lọ́nà yìí rárá, a sì ń tọ́jú ìṣirò ọ̀nà ìdánrawò lọ́tọ̀ pátápátá.",
-            "Nínú àwọn eré wọ̀nyí, bọ́tìnì ife ẹ̀yẹ ń ṣí fèrèsé ipò lórí ojú-ewé LAN rẹ̀: gbogbo àwọn òṣèré, tí a lè tò gẹ́gẹ́ bí ọ̀pọ̀ òṣùwọ̀n."] },
+            "Nínú àwọn eré wọ̀nyí, bọ́tìnì ife ẹ̀yẹ ń ṣí fèrèsé ipò lórí ojú-ewé LAN rẹ̀: gbogbo àwọn òṣèré, tí a lè tò gẹ́gẹ́ bí ọ̀pọ̀ òṣùwọ̀n.", "Olùpín kọ̀ọ̀kan nínú àkójọ Olùpín LAN ní àkójọ olùborí tirẹ̀, tí a ń tún tò gẹ́gẹ́ bí àkókò tí a yàn nígbà tí a dábàá olùpín náà (àwọn alábòójútó nìkan ló lè yí i padà). Olùpín agbègbè àti àwọn àdírẹ́sì tí a tẹ̀ pẹ̀lú ọwọ́ ń pín àkójọ olùborí pàtàkì ojú-òpó náà."] },
         { id: "language",
           t: "Èdè",
           b: [

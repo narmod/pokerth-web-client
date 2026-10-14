@@ -57,6 +57,10 @@ const LOC = { host: 'MyBox.lan', port: '7234', tls: false };
 let L = M.withLocal(cfg({ localEntry: true }), LOC, 'Local server');
 ok(L.servers[0].id === 'local' && L.servers[0].host === 'mybox.lan' && L.servers.length === 3, 'local server listed first, before the directory');
 ok(M.withLocal(cfg(), LOC, 'x').servers.length === 2, 'not listed when the admin turned it off');
+M.setConfig({ acceptRequests: true, manualEntry: false, localEntry: true, servers: [Object.assign({}, A, { id: 'lan_abcdef01', resetPeriod: 'weekly' })] });
+ok(M.boardFor('a.example.org', '7234') === 'lan_abcdef01' && M.boardFor('mybox.lan', 7234) === '' , 'a listed server has its own board, the local / typed ones use the main board');
+ok(M.boardInfo('lan_abcdef01').resetPeriod === 'weekly' && M.boardInfo('nope') === null, 'board info carries the reset period');
+M.setConfig(null);
 ok(M.normalizeConfig({ servers: [] }).localEntry === false, 'a proxy that does not send the switch gets no local entry');
 ok(M.withLocal(cfg({ localEntry: true }), { host: 'a.example.org', port: 7234 }, 'x').servers.length === 2, 'no duplicate when a listed server has the same address');
 p = M.plan({ cfg: L, isLan: true, host: 'mybox.lan', port: '7234', remembered: false });
@@ -144,6 +148,8 @@ try {
   ok(await page.isDisabled('#lan-prop-send'), 'Send is disabled before any test');
   ok(await page.evaluate(() => document.querySelectorAll('#lan-prop-country option').length > 150 && document.querySelectorAll('#lan-prop-lang option').length > 50), 'country and language lists are filled');
   await page.fill('#lan-prop-name', 'My home club');
+  ok(await page.inputValue('#lan-prop-reset') === 'monthly', 'leaderboard reset defaults to every month');
+  await page.selectOption('#lan-prop-reset', 'weekly');
   await page.fill('#lan-prop-host', 'localhost');
   await page.fill('#lan-prop-port', String(FAKE));
   await page.click('#lan-prop-test');
@@ -161,6 +167,7 @@ try {
   ok(/My home club/.test(await page.textContent('#lan-prop-sent-msg')), 'the dialog thanks the player, naming the server');
   const adm = await (await fetch(base + '/admin/lan-directory', { headers: { Authorization: 'Bearer ' + TOKEN } })).json();
   ok(adm.pending && adm.pending.length === 1 && adm.pending[0].name === 'My home club' && adm.pending[0].host === 'localhost', 'the request is in the admin queue');
+  ok(adm.pending[0].resetPeriod === 'weekly', 'with the leaderboard reset period chosen in the form');
   const keys = await page.evaluate(() => Object.keys(localStorage).concat(Object.keys(sessionStorage)).filter((k) => /prop|lan[-_]?dir/i.test(k)));
   ok(keys.length === 0, 'nothing about the request is stored on the device' + (keys.length ? ' (' + keys.join(', ') + ')' : ''));
   await page.click('#lan-prop-sent .ld-btn');

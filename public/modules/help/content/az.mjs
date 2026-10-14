@@ -29,7 +29,7 @@ export const help = {
           t: "Ailə reytinq cədvəli",
           b: [
             "Yalnız şəxsi serverlərdə və LAN oyunlarında klient hər ləqəb üçün ümumi statistikanı saxlayır — oynanılan və qazanılan əllər və oyunlar, ən böyük qazanc, ən yaxşı seriya — və onu server vasitəsilə paylaşır ki, masa ətrafındakı hər cihaz eyni reytinq cədvəlini görsün. pokerth.net oyunları heç vaxt bu şəkildə izlənilmir, məşq rejiminin statistikası isə tamamilə ayrı saxlanılır.",
-            "Bu oyunlarda kubok düyməsi reytinq pəncərəsini LAN vərəqində açır: bütün oyunçular, bir neçə meyara görə sıralana bilər."] },
+            "Bu oyunlarda kubok düyməsi reytinq pəncərəsini LAN vərəqində açır: bütün oyunçular, bir neçə meyara görə sıralana bilər.", "LAN serveri siyahısındakı hər serverin öz reytinq cədvəli var; o, server təklif edilərkən seçilmiş qrafikə uyğun olaraq sıfırlanır (bunu yalnız adminlər dəyişə bilər). Yerli server və əl ilə yazılmış ünvanlar saytın əsas reytinq cədvəlini paylaşır."] },
         { id: "language",
           t: "Dil",
           b: [

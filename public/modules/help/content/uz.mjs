@@ -29,7 +29,7 @@ export const help = {
           t: "Oilaviy reyting jadvali",
           b: [
             "Faqat xususiy serverlar va LAN oʻyinlarida mijoz har bir taxallus boʻyicha butun davr statistikasini yuritadi — oʻynalgan va yutilgan qoʻllar hamda oʻyinlar, eng katta yutuq, eng uzun seriya — va ularni server orqali ulashadi, shunda stol atrofidagi har bir qurilma bir xil reyting jadvalini koʻradi. pokerth.net oʻyinlari hech qachon bu tarzda hisobga olinmaydi, mashgʻulot rejimi statistikasi esa butunlay alohida saqlanadi.",
-            "Bu oʻyinlarda sovrin tugmasi reyting oynasini LAN yorligʻida ochadi: barcha oʻyinchilar, bir nechta mezon boʻyicha saralash mumkin."] },
+            "Bu oʻyinlarda sovrin tugmasi reyting oynasini LAN yorligʻida ochadi: barcha oʻyinchilar, bir nechta mezon boʻyicha saralash mumkin.", "LAN server roʻyxatidagi har bir serverning oʻz reyting jadvali bor; u server taklif qilinganda tanlangan davriylik boʻyicha tozalanadi (uni faqat adminlar oʻzgartira oladi). Mahalliy server va qoʻlda yozilgan manzillar saytning asosiy reyting jadvalidan birgalikda foydalanadi."] },
         { id: "language",
           t: "Til",
           b: [

@@ -29,7 +29,7 @@ export const help = {
           t: "Clár ceannairí an teaghlaigh",
           b: [
             "Ar fhreastalaithe príobháideacha agus i gcluichí LAN amháin, coinníonn an cliant staitisticí iomlána do gach leasainm — lámha agus cluichí imeartha agus buaite, an bua is mó, an tsraith is fearr — agus roinneann sé iad tríd an bhfreastalaí ionas go bhfeiceann gach gléas timpeall an bhoird an clár ceannairí céanna. Ní rianaítear cluichí pokerth.net mar seo riamh, agus coinnítear staitisticí an mhóid cleachtaidh go hiomlán ar leith.",
-            "Sna cluichí seo, osclaíonn an cnaipe trófaí fuinneog an rangaithe ar a cluaisín LAN: gach imreoir, inshórtáilte de réir roinnt critéar."] },
+            "Sna cluichí seo, osclaíonn an cnaipe trófaí fuinneog an rangaithe ar a cluaisín LAN: gach imreoir, inshórtáilte de réir roinnt critéar.", "Tá a chlár ceannairí féin ag gach freastalaí ar liosta na bhfreastalaithe LAN, a athshocraítear de réir na sceidile a roghnaíodh nuair a moladh an freastalaí (ní féidir ach leis na riarthóirí é a athrú). Roinneann an freastalaí áitiúil agus seoltaí a chlóscríobhtar de láimh príomhchlár ceannairí an tsuímh."] },
         { id: "language",
           t: "Teanga",
           b: [

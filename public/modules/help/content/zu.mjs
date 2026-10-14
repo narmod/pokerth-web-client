@@ -29,7 +29,7 @@ export const help = {
           t: "Uhlu lwabanqobi lomndeni",
           b: [
             "Kumaseva angasese nasemidlalweni ye-LAN kuphela, iklayenti ligcina izibalo zesikhathi sonke zesiteketiso ngasinye — izandla nemidlalo edlaliwe newiniwe, ukuwina okukhulu, uchungechunge lokuwina olungcono kakhulu — futhi lizabelana ngazo ngeseva ukuze yonke idivayisi ezungeze itafula ibone uhlu olufanayo. Imidlalo ye-pokerth.net ayilandelelwa neze ngale ndlela, futhi izibalo zemodi yokuziqeqesha zigcinwa zihlukene ngokuphelele.",
-            "Kule midlalo, inkinobho yendondo ivula iwindi lezinga ekhasini layo le-LAN: bonke abadlali, abangahlelwa ngezilinganiso eziningana."] },
+            "Kule midlalo, inkinobho yendondo ivula iwindi lezinga ekhasini layo le-LAN: bonke abadlali, abangahlelwa ngezilinganiso eziningana.", "Iseva ngayinye ohlwini oluthi Iseva ye-LAN inohlu lwayo lwabanqobi, olusethwa kabusha ngokohlelo olukhethwe lapho iseva iphakanyiswa (abalawuli kuphela abangalushintsha). Iseva yasendaweni namakheli athayiphwe ngesandla kwabelana ngohlu oluyinhloko lwabanqobi lwesayithi."] },
         { id: "language",
           t: "Ulimi",
           b: [

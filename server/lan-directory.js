@@ -58,6 +58,11 @@ const DEFAULT_SETTINGS = Object.freeze({
   // installs; pokerth.net turns it off.
   localEntry: true
 });
+// Leaderboard reset period of a listed server (server/lan-boards.js): chosen by
+// whoever proposes the server, changeable afterwards by the admin only.
+const RESET_PERIODS = Object.freeze(['off', 'daily', 'weekly', 'monthly', 'yearly']);
+const DEFAULT_RESET = 'monthly';
+function cleanReset(p) { var v = String(p || '').trim().toLowerCase(); return RESET_PERIODS.indexOf(v) >= 0 ? v : DEFAULT_RESET; }
 const LIMITS = Object.freeze({ pending: 100, entries: 200, name: 40, desc: 140, testsPerIpHour: 20 });
 
 // ── Sanitizers ─────────────────────────────────────────────────────
@@ -114,7 +119,8 @@ function cleanFields(raw, admin) {
     tls: !!raw.tls,
     country: cleanCountry(raw.country),
     lang: cleanLang(raw.lang),
-    desc: cleanText(raw.desc, LIMITS.desc)
+    desc: cleanText(raw.desc, LIMITS.desc),
+    resetPeriod: cleanReset(raw.resetPeriod)
   };
   if (admin) {
     out.noverify = !!raw.noverify;
@@ -311,7 +317,7 @@ function createLanDirectory(deps) {
       if (!cfg.showOffline && st && st.online === false) return;
       list.push({
         id: e.id, name: e.name, host: e.host, port: e.port, tls: e.tls,
-        country: e.country, lang: e.lang, desc: e.desc,
+        country: e.country, lang: e.lang, desc: e.desc, resetPeriod: e.resetPeriod,
         online: st ? st.online : null,
         players: (st && st.online && Number.isInteger(st.players)) ? st.players : null
       });
@@ -500,6 +506,7 @@ function createLanDirectory(deps) {
       e.splice(ei, 1);
       write({ entries: e });
       status.delete(id);
+      if (deps.onRemove) { try { deps.onRemove(id); } catch (x) {} }
       return cb(adminView());
     }
     if (action === 'check') {
@@ -581,7 +588,7 @@ function createLanDirectory(deps) {
   function stop() { if (timer) { clearInterval(timer); timer = null; } }
 
   return {
-    settings: settings, publicView: publicView, adminView: adminView,
+    settings: settings, publicView: publicView, adminView: adminView, entries: entries,
     hostAllowed: hostAllowed, portAllowed: portAllowed, tlsOpts: tlsOpts,
     test: test, propose: propose, admin: admin,
     tick: tick, checkEntry: checkEntry, start: start, stop: stop,
@@ -597,5 +604,6 @@ module.exports = {
   cleanText: cleanText,
   normSettings: normSettings,
   DEFAULT_SETTINGS: DEFAULT_SETTINGS,
+  RESET_PERIODS: RESET_PERIODS,
   LIMITS: LIMITS
 };

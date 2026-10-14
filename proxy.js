@@ -358,9 +358,23 @@ const LAN_DIR = require('./server/lan-directory.js').createLanDirectory({
   getDecode: function () { return PROTO ? PROTO.decode : null; },
   isPortAllowed: function (p) { return isPortAllowed(p); },
   insecureTls: INSECURE_TLS,
-  lobbyProbe: function (host, port, useTls, cb, tlsOverride) { return lobbyProbe(host, port, useTls, cb, tlsOverride); }
+  lobbyProbe: function (host, port, useTls, cb, tlsOverride) { return lobbyProbe(host, port, useTls, cb, tlsOverride); },
+  onRemove: function (id) { LAN_BOARDS.drop(id); }
 });
 LAN_DIR.start();
+// One leaderboard per listed LAN server, each with its own reset period
+// (server/lan-boards.js). The historical board (statsStore) stays the board of
+// the local server and of addresses typed by hand.
+const LAN_BOARDS_FILE = process.env.LAN_BOARDS_FILE || path.join(path.dirname(STATS_FILE), 'lan-boards.json');
+const LAN_BOARDS = require('./server/lan-boards.js').createLanBoards({
+  file: LAN_BOARDS_FILE,
+  sanitize: function (d) { return sanitizeSnapshot(d); },
+  merge: function (a, b) { return mergeSnapshot(a, b); },
+  periodKey: function (period, when) { return statsPeriodKeyFor(period, when); },
+  entries: function () { return LAN_DIR.entries(); }
+});
+setTimeout(function () { LAN_BOARDS.rotate(); }, 5000).unref();
+setInterval(function () { LAN_BOARDS.rotate(); }, 60 * 60 * 1000).unref();
 
 // ── Verbosité des logs (quiet | normal | verbose) ──────────────────────────
 // Par défaut le proxy loggue CHAQUE message relayé ([S→C]/[C→S] + dump hex),
@@ -6644,15 +6658,17 @@ function isoWeekKey(when) {
   const week = 1 + Math.round((t - week1Monday) / 604800000);
   return isoYear + '-W' + String(week).padStart(2, '0');
 }
-function statsPeriodKey() {
-  const d = new Date();
+function statsPeriodKey() { return statsPeriodKeyFor(STATS_RESET_PERIOD, new Date()); }
+// Same marker for any period — also used by the per-server LAN boards.
+function statsPeriodKeyFor(period, d) {
+  d = d || new Date();
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
-  if (STATS_RESET_PERIOD === 'daily')   return y + '-' + m + '-' + day;
-  if (STATS_RESET_PERIOD === 'weekly')  return isoWeekKey(d);
-  if (STATS_RESET_PERIOD === 'monthly') return y + '-' + m;
-  if (STATS_RESET_PERIOD === 'yearly')  return String(y);
+  if (period === 'daily')   return y + '-' + m + '-' + day;
+  if (period === 'weekly')  return isoWeekKey(d);
+  if (period === 'monthly') return y + '-' + m;
+  if (period === 'yearly')  return String(y);
   return null; // 'off' or unknown → no scheduled reset
 }
 function wipeLeaderboard(reason) {
@@ -9698,6 +9714,12 @@ function handleAdmin(req, res, reqPathOnly, query) {
       LAN_DIR.admin(d, function (r) { adminJson(res, (r && r.ok) ? 200 : 400, r); });
     });
   }
+  // Leaderboards of the listed LAN servers, for the admin Leaderboard tab
+  // (board picker). Scope 'leaderboard', like the board itself.
+  if (reqPathOnly === '/admin/lan-boards') {
+    if (!hasScope('leaderboard', query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, defaultPlayers: Object.keys(statsStore).length, boards: LAN_BOARDS.summary() });
+  }
   if (reqPathOnly === '/admin/servers/serverlist' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -12507,13 +12529,35 @@ const httpServer = http.createServer((req, res) => {
   // GET  /stats        → the full {name: snapshot} map (rendered as the board)
   // POST /stats {name,…}→ upsert one player's snapshot ({_delete:true} removes)
   if (reqPathOnly === '/stats') {
+    // ?board=<directory entry id> (or "board" in a POST body): the board of
+    // that LAN server (server/lan-boards.js). Absent: the historical board.
+    var _board = String((query && query.board) || '').trim();
     if (req.method === 'GET') {
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-      res.end(JSON.stringify(statsStore));
+      res.end(JSON.stringify(_board ? LAN_BOARDS.get(_board) : statsStore));
       return;
     }
     if (req.method === 'POST') {
       readJsonBody(req, function (d) {
+        var _b = (d && typeof d.board === 'string') ? d.board.trim() : _board;
+        if (_b) {
+          // A listed LAN server's own board. Same rules as below; unknown
+          // boards are refused (never created on demand).
+          var _j = function (code, obj) { res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(obj)); };
+          if (!LAN_BOARDS.exists(_b)) return _j(404, { ok: false, error: 'unknown board' });
+          if (d && d._resetAll) {
+            if (!hasScope('leaderboard', query, d && d.token)) return _j(403, { ok: false, error: 'forbidden' });
+            LAN_BOARDS.reset(_b, 'manual endpoint');
+            return _j(200, { ok: true, reset: true });
+          }
+          if (!d || typeof d.name !== 'string' || !d.name.trim()) return _j(400, { ok: false });
+          var _n = d.name.trim().slice(0, 32);
+          if (d._delete) {
+            if (!hasScope('leaderboard', query, d && d.token)) return _j(403, { ok: false, error: 'forbidden' });
+            LAN_BOARDS.remove(_b, _n);
+          } else if (!LAN_BOARDS.upsert(_b, _n, d)) return _j(409, { ok: false, error: 'board full' });
+          return _j(200, { ok: true });
+        }
         // Admin: wipe the whole leaderboard at once. Disabled unless
         // STATS_ADMIN_TOKEN is set; the request must echo the same token.
         if (d && d._resetAll) {

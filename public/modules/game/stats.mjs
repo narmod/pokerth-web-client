@@ -16,7 +16,14 @@ import { esc } from '../ui/misc.mjs';
 // connections (set true at connect) — pokerth.net modes are never tracked.
 // Training (vs bots) keeps its OWN persistent lifetime store, isolated from the
 // real private-server / LAN stats — they must never mix nor leak to the board.
-function _lifeKey()       { return S._statsOffline ? 'pth_life_offline' : 'pth_life'; }
+// LAN: one lifetime store per leaderboard — the historical 'pth_life' for the
+// local server / typed addresses, 'pth_life@<entry id>' for a listed LAN server
+// (each has its own board on the proxy, server/lan-boards.js). Pushing one
+// server's totals into another's board would mix them.
+function _lifeLanKey()    { return 'pth_life' + (S._lanBoard ? '@' + S._lanBoard : ''); }
+window._lifeLanKey = _lifeLanKey;
+function _boardQS()       { return S._lanBoard ? '?board=' + encodeURIComponent(S._lanBoard) : ''; }
+function _lifeKey()       { return S._statsOffline ? 'pth_life_offline' : _lifeLanKey(); }
 function _lifeAllFor(key) { try { return JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch(e) { return {}; } }
 function _lifeAll()       { return _lifeAllFor(_lifeKey()); }
 function _lifeSaveAll(o)  { try { localStorage.setItem(_lifeKey(), JSON.stringify(o)); } catch(e) {} }
@@ -34,7 +41,7 @@ function _pushStats() {
     var av = ''; try { av = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
     if (av === '__pth__' || av === '__img__') av = ''; // ne pas envoyer le sentinelle
     fetch('/stats', { method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ name:S.myName, avatar:av,
+      body: JSON.stringify({ name:S.myName, avatar:av, board:S._lanBoard || undefined,
         handsPlayed:s.handsPlayed, handsWon:s.handsWon, net:s.net, bigWin:s.bigWin,
         bigLoss:s.bigLoss, gamesPlayed:s.gamesPlayed, gamesWon:s.gamesWon, bestStreak:s.bestStreak })
     }).catch(function(){});
@@ -69,7 +76,7 @@ function _lifeResetKey(key, pushDelete) {
   try { localStorage.setItem(key, JSON.stringify(a)); } catch(e) {}
   if (pushDelete) {
     try { fetch('/stats', { method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ name:S.myName, _delete:true }) }).catch(function(){}); } catch(e) {}
+      body: JSON.stringify({ name:S.myName, _delete:true, board:S._lanBoard || undefined }) }).catch(function(){}); } catch(e) {}
   }
 }
 // Repli ambiant (mode de connexion courant) : inchange, utilise par l'overlay
@@ -99,7 +106,7 @@ function _lifeMerge(loc, srv) {
 // display on the new device. Runs once per connect when eligible.
 function _lifeSeedFromServer() {
   if (!S._boardEligible || !S.myName) return;
-  fetch('/stats', { cache:'no-store' })
+  fetch('/stats' + _boardQS(), { cache:'no-store' })
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(data){
       if (!data || !data[S.myName]) return;
@@ -262,7 +269,7 @@ window._statsResetLocal = _statsResetLocal;
 // suppression), disponible depuis n'importe quel mode (demande narmod 11/09).
 function _statsResetLan() {
   if (!confirm(t('statResetConfirm'))) return;
-  _lifeResetKey('pth_life', true);
+  _lifeResetKey(_lifeLanKey(), true);
   if (typeof window._pimRenderLanStats === 'function' && S._pimLanStatsBox) {
     try { window._pimRenderLanStats(S._pimLanStatsBox); } catch (e) {}
   }
@@ -310,9 +317,18 @@ function _boardFold(s) { return String(s == null ? '' : s).toLowerCase().normali
 // familial a ces joueurs (utilise par l'onglet LAN de "Classement de la
 // table" : memes donnees /stats, vue limitee aux joueurs assis a la table
 // courante).
+// Which LAN server this board belongs to, and when it resets (a listed
+// server's own board only; nothing for the historical board).
+function _boardCaption() {
+  if (!S._lanBoard || !window.LanDirUI || !window.LanDirUI.boardInfo) return '';
+  var b = window.LanDirUI.boardInfo(S._lanBoard);
+  if (!b) return '';
+  var per = { off: 'lanResetOff', daily: 'lanResetDaily', weekly: 'lanResetWeekly', monthly: 'lanResetMonthly', yearly: 'lanResetYearly' }[b.resetPeriod] || '';
+  return '<div class="board-caption"><b>' + esc(b.name) + '</b>' + (per ? ' · ' + esc(t('lanPropReset')) + ' — ' + esc(t(per)) : '') + '</div>';
+}
 function renderBoard(targetId, filterNames) {
   var boxId = targetId || 'stats-board-body';
-  fetch('/stats', { cache:'no-store' })
+  fetch('/stats' + _boardQS(), { cache:'no-store' })
     .then(function(r){ return r.ok ? r.json() : {}; })
     .then(function(data){
       var box = document.getElementById(boxId);
@@ -333,7 +349,7 @@ function renderBoard(targetId, filterNames) {
         + opt('games', t('statGamesWon'))
         + opt('streak', t('statStreak'))
         + '</select></div>';
-      if (!arr.length) { box.innerHTML = sortUI + '<div class="stat-empty">'+t('boardEmpty')+'</div>'; return; }
+      if (!arr.length) { box.innerHTML = _boardCaption() + sortUI + '<div class="stat-empty">'+t('boardEmpty')+'</div>'; return; }
       // My rank under the current criterion — shown even if far down the list.
       var myIdx = -1;
       for (var k=0;k<arr.length;k++){ if (arr[k].name===S.myName){ myIdx=k; break; } }
@@ -361,7 +377,7 @@ function renderBoard(targetId, filterNames) {
           + '<span class="board-sub">'+sub+'</span>'
           + '</div>';
       }).join('');
-      box.innerHTML = sortUI + rankLine + '<div class="board-list">'+rows+'</div>';
+      box.innerHTML = _boardCaption() + sortUI + rankLine + '<div class="board-list">'+rows+'</div>';
     })
     .catch(function(){
       var box = document.getElementById(boxId);

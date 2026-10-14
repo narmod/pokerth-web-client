@@ -85,9 +85,11 @@ ok(!r.ok && r.error === 'private', 'test: refused when ANY resolved address is p
 r = await call(dir.test, { host: 'nowhere.example.org', port: 7234 }, IP);
 ok(!r.ok && r.error === 'dns', 'test: unknown host');
 
-r = await prop({ name: 'Club <Lyon>', host: 'Club.Example.org', country: 'fr', lang: 'fr', desc: 'Thursdays' });
+r = await prop({ name: 'Club <Lyon>', host: 'Club.Example.org', country: 'fr', lang: 'fr', desc: 'Thursdays', resetPeriod: 'weekly' });
 ok(r.ok === true, 'propose: accepted');
 let av = dir.adminView();
+ok(av.pending[0].resetPeriod === 'weekly', 'the leaderboard reset period chosen in the request is kept');
+ok(LD.RESET_PERIODS.join() === 'off,daily,weekly,monthly,yearly', 'five reset periods');
 ok(av.pending.length === 1 && av.pending[0].name === 'Club Lyon' && av.pending[0].host === 'club.example.org' && av.pending[0].country === 'FR', 'pending request sanitized (name, host, country)');
 ok(av.pending[0].probe && av.pending[0].probe.pokerth && av.pending[0].probe.players === 12, 'the submit check result is kept for the admin');
 ok(!JSON.stringify(cfg).includes(IP), 'the sender IP is not stored anywhere');
@@ -263,10 +265,11 @@ try {
   await new Promise((r2) => setTimeout(r2, 300));   // proto bundle loads asynchronously
   h = await http('/api/lan-directory/test', { host: '127.0.0.1', port: FAKE });
   ok(h.json && h.json.ok && h.json.pokerth && h.json.players === 7, 'POST test: the fake server answers as PokerTH (7 players)');
-  h = await http('/api/lan-directory/propose', { name: 'Fake club', host: '127.0.0.1', port: FAKE, country: 'FR', lang: 'fr' });
+  h = await http('/api/lan-directory/propose', { name: 'Fake club', host: '127.0.0.1', port: FAKE, country: 'FR', lang: 'fr', resetPeriod: 'bogus' });
   ok(h.json && h.json.ok, 'POST propose: accepted');
   h = await http('/admin/lan-directory?token=' + TOKEN);
   ok(h.json && h.json.pending.length === 1 && h.json.pending[0].name === 'Fake club', 'admin sees the pending request');
+  ok(h.json.pending[0].resetPeriod === 'monthly', 'an invalid reset period falls back to monthly');
   const id = h.json.pending[0].id;
   h = await http('/app-config');
   ok(h.json && h.json.lanDirectory && h.json.lanDirectory.servers.length === 0, '/app-config: nothing listed before approval');
@@ -280,6 +283,32 @@ try {
   ok(h.json && !h.json.ok && h.json.error === 'listed', 'proposing a listed server is refused');
   h = await http('/api/lan-directory', { x: 1 });
   ok(h.status === 405, 'GET-only list route');
+
+  // ── per-server leaderboards (server/lan-boards.js) ──
+  ok(h && (await http('/app-config')).json.lanDirectory.servers[0].resetPeriod === 'monthly', 'the public list carries the board period');
+  h = await http('/stats', { name: 'bob', board: id, handsPlayed: 12, handsWon: 3, net: 40 });
+  ok(h.status === 200 && h.json.ok, 'a player is recorded on the listed server board');
+  h = await http('/stats?board=' + id);
+  ok(h.json && h.json.bob && h.json.bob.handsPlayed === 12, 'GET /stats?board= returns that board');
+  h = await http('/stats');
+  ok(h.json && !h.json.bob, 'the historical board is untouched');
+  h = await http('/stats', { name: 'zed', handsPlayed: 2 });
+  h = await http('/stats?board=' + id);
+  ok(h.json && !h.json.zed, 'and the historical board does not leak into it');
+  h = await http('/stats', { name: 'bob', board: 'lan_ffffff99', handsPlayed: 1 });
+  ok(h.status === 404, 'an unknown board is refused, never created');
+  h = await http('/stats', { board: id, _resetAll: true });
+  ok(h.status === 403, 'resetting a board needs the admin key');
+  h = await http('/admin/lan-boards?token=' + TOKEN);
+  ok(h.json && h.json.ok && h.json.boards.length === 1 && h.json.boards[0].players === 1 && h.json.defaultPlayers === 1, 'admin: board list with player counts');
+  h = await http('/admin/lan-directory', { token: TOKEN, action: 'update', id, entry: { resetPeriod: 'weekly' } });
+  ok(h.json && h.json.entries[0].resetPeriod === 'weekly', 'the admin changes the board period');
+  h = await http('/stats', { board: id, _resetAll: true, token: TOKEN });
+  ok(h.json && h.json.reset && !(await http('/stats?board=' + id)).json.bob, 'the admin resets that board only');
+  h = await http('/admin/lan-directory', { token: TOKEN, action: 'remove', id });
+  await new Promise((r2) => setTimeout(r2, 100));
+  const lb = JSON.parse(fs.readFileSync(path.join(tmp, 'lan-boards.json'), 'utf8'));
+  ok(!(id in lb), 'removing the server drops its board');
 } finally {
   proxy.kill('SIGTERM');
   fake.close(); junk.close();

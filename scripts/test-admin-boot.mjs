@@ -32,6 +32,8 @@ const CANNED = {
     guide: { acceptance: { offered: 5, accepted: 2, declined: 1, rate: 0.4 }, contexts: { 'lobby-ranking': { shown: 10, done: 2, dismissed: 3 } },
       funnel: { highlighted: 10, joined: 4, started: 2, joinRate: 0.4, startRate: 0.5 }, create: { shown: 1, created: 0 }, guests: { shown: 2, redirect: 1 }, rankedStarts: 3 },
     guidePeriod: { days: 0, summary: null }, guideSince: 1700000000000 },
+  '/admin/lan-boards': { ok: true, resetPeriod: 'monthly', defaultPlayers: 4, boards: [
+    { id: 'lan_bbbbbb01', name: 'Berlin', host: 'berlin.example.org', port: 7234, visible: true, resetPeriod: 'weekly', players: 6 }] },
   '/admin/lan-directory': { ok: true,
     settings: { acceptRequests: true, checkMinutes: 5, autoHideDays: 7, maxPerIpDay: 3, showOffline: true, refusePrivate: true, manualEntry: true, localEntry: true },
     pending: [
@@ -41,7 +43,7 @@ const CANNED = {
         probe: { reachable: false, pokerth: false, players: null, ver: '', ms: 0, certUntrusted: false, error: 'ECONNREFUSED', at: Date.now() - 60000 } }
     ],
     entries: [
-      { id: 'lan_bbbbbb01', name: 'Berlin', host: 'berlin.example.org', port: 7234, tls: false, country: 'DE', lang: 'de', desc: '', visible: true, noverify: false, sni: '',
+      { id: 'lan_bbbbbb01', name: 'Berlin', host: 'berlin.example.org', port: 7234, tls: false, country: 'DE', lang: 'de', desc: '', visible: true, noverify: false, sni: '', resetPeriod: 'weekly',
         addedAt: Date.now() - 864e5, lastSeen: Date.now(), status: { online: true, players: 6, games: null, at: Date.now() }, autoHidden: false },
       { id: 'lan_bbbbbb02', name: 'Old club', host: 'old.example.org', port: 7234, tls: true, country: 'NL', lang: 'nl', desc: '', visible: true, noverify: true, sni: '',
         addedAt: Date.now() - 30 * 864e5, lastSeen: Date.now() - 9 * 864e5, status: { online: false, players: null, error: 'ETIMEDOUT', at: Date.now() }, autoHidden: true }
@@ -187,12 +189,29 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   await new Promise((r) => setTimeout(r, 50));
   const up = posts.filter((p) => p.url.startsWith('/admin/lan-directory')).pop();
   ok(up && up.body.action === 'update' && up.body.entry.name === 'Berlin club' && up.body.entry.host === 'berlin.example.org', 'Save posts the edited entry');
+  ok(up && up.body.entry.resetPeriod === 'weekly', 'the editor carries the board reset period');
+  ok(/board: weekly/.test(doc.querySelector('#ldEntries tr[data-id]').textContent), 'the table shows each server’s board period');
   ok($('ldSetManual') && $('ldSetManual').checked === true && $('ldSetLocal').checked === true && $('ldSetCheck').value === '5', 'settings are filled in');
   $('ldSetManual').checked = false; $('ldSetSave').click();
   await new Promise((r) => setTimeout(r, 50));
   const sp = posts.filter((p) => p.url.startsWith('/admin/lan-directory')).pop();
   ok(sp && sp.body.action === 'settings' && sp.body.settings.manualEntry === false && sp.body.settings.localEntry === true && sp.body.settings.checkMinutes === 5, 'Save settings posts manual entry off, local server kept');
   ok(errors.length === 0, 'the LAN directory tab threw nothing' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
+}
+// ── Leaderboard tab: one board per listed LAN server ─────────────────────
+{
+  doc.querySelector('.tab[data-t="board"]').click();
+  await new Promise((r) => setTimeout(r, 200));
+  const sel = $('boardSel');
+  ok(sel && $('boardPickRow').style.display !== 'none' && sel.options.length === 2 && /Berlin/.test(sel.options[1].textContent), 'the board picker lists the default board and each LAN server');
+  sel.value = 'lan_bbbbbb01'; sel.dispatchEvent(new window.Event('change'));
+  await new Promise((r) => setTimeout(r, 100));
+  ok(/weekly/.test($('boardNote').textContent), 'a LAN board says its own reset period');
+  $('resetBtn').click();
+  await new Promise((r) => setTimeout(r, 100));
+  const rp = posts.filter((p) => p.url === '/stats').pop();
+  ok(rp && rp.body._resetAll && rp.body.board === 'lan_bbbbbb01', 'Reset targets the selected board only');
+  ok(errors.length === 0, 'the board picker threw nothing' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
 }
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);

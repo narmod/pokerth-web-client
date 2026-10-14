@@ -29,7 +29,7 @@ export const help = {
           t: "Jerin manyan 'yan wasan iyali",
           b: [
             "A sabar sirri da wasannin LAN kawai, abokin ciniki yana riƙe ƙididdigar gaba ɗaya ga kowane laƙabi — hannaye da wasannin da aka buga da aka ci, mafi girman nasara, mafi kyawun jerin nasara — kuma yana raba su ta sabar don kowace na'ura a kusa da tebur ta ga jeri ɗaya. Ba a taɓa bibiyar wasannin pokerth.net haka ba, kuma ana adana ƙididdigar yanayin horo daban gaba ɗaya.",
-            "A cikin waɗannan wasanni, maɓallin kofi yana buɗe tagar matsayi a shafin LAN: duk 'yan wasa, ana iya jera su bisa ma'auni da yawa."] },
+            "A cikin waɗannan wasanni, maɓallin kofi yana buɗe tagar matsayi a shafin LAN: duk 'yan wasa, ana iya jera su bisa ma'auni da yawa.", "Kowace sabar a jerin sabar LAN tana da nata jerin manyan 'yan wasa, wanda ake sake saitawa bisa jadawalin da aka zaɓa lokacin da aka gabatar da sabar (masu gudanarwa ne kawai za su iya canza shi). Sabar na gida da adireshin da aka rubuta da hannu suna raba babban jerin manyan 'yan wasa na shafin."] },
         { id: "language",
           t: "Harshe",
           b: [

@@ -6316,6 +6316,9 @@ const App = (() => {
       const effProxyUrl = (_smVal === 'pokerthnet' || _smVal === 'offline') ? _sameOriginWs : proxyUrl;
       const host      = $('host').value.trim();
       const port      = $('port').value.trim() || '7234';
+      // Classement LAN du serveur visé : celui de son entrée d'annuaire
+      // (server/lan-boards.js), sinon le classement historique ('').
+      try { S._lanBoard = (window.LanDirUI && window.LanDirUI.boardFor) ? window.LanDirUI.boardFor(host, port) : ''; } catch (e) { S._lanBoard = ''; }
       const loginMode = $('login-mode') ? $('login-mode').value : 'guest';
       const _off = !!($('server-mode') && $('server-mode').value === 'offline');
       S.myName          = $('nick').value.trim();
@@ -12111,7 +12114,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.45'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.46'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

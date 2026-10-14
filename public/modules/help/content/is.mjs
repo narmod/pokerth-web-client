@@ -29,7 +29,7 @@ export const help = {
           t: "Fjölskyldustigatafla",
           b: [
             "Aðeins á einkaþjónum og í LAN-leikjum heldur biðlarinn ævitölfræði fyrir hvert gælunafn — spilaðar og unnar hendur og leiki, stærsta vinning, bestu sigurrunu — og deilir henni í gegnum þjóninn, þannig að öll tæki við borðið sjá sömu stigatöflu. Leikir á pokerth.net eru aldrei skráðir á þennan hátt og tölfræði æfingahams er geymd alveg sér.",
-            "Í þessum leikjum opnar bikarhnappurinn stigatöflugluggann á LAN-flipanum: allir leikmenn, hægt að raða eftir nokkrum viðmiðum."] },
+            "Í þessum leikjum opnar bikarhnappurinn stigatöflugluggann á LAN-flipanum: allir leikmenn, hægt að raða eftir nokkrum viðmiðum.", "Hver þjónn á listanum LAN-þjónn hefur sína eigin stigatöflu, sem er endurstillt með þeirri tíðni sem valin var þegar þjónninn var lagður til (aðeins stjórnendur geta breytt henni). Staðbundni þjónninn og handslegin vistföng deila aðalstigatöflu síðunnar."] },
         { id: "language",
           t: "Tungumál",
           b: [

@@ -2850,6 +2850,13 @@ function _processAvatarFile(file) {
         <div class="f"><label for="lan-prop-lang" data-i18n="lanPropLang">Language</label><div class="sel-wrap"><select id="lan-prop-lang"><option value="">—</option></select><span class="sel-arr">▾</span></div></div>
       </div>
       <div class="f"><label for="lan-prop-desc" data-i18n="lanPropDesc">Description (optional)</label><input id="lan-prop-desc" maxlength="140" autocomplete="off"></div>
+      <div class="f"><label for="lan-prop-reset" data-i18n="lanPropReset">Leaderboard reset</label><div class="sel-wrap"><select id="lan-prop-reset">
+        <option value="off" data-i18n="lanResetOff">Never</option>
+        <option value="daily" data-i18n="lanResetDaily">Every day</option>
+        <option value="weekly" data-i18n="lanResetWeekly">Every week</option>
+        <option value="monthly" data-i18n="lanResetMonthly" selected>Every month</option>
+        <option value="yearly" data-i18n="lanResetYearly">Every year</option>
+      </select><span class="sel-arr">▾</span></div><div class="lan-prop-hint" data-i18n="lanPropResetHint">Each listed server has its own leaderboard. Only the admins can change this afterwards.</div></div>
       <button type="button" id="lan-prop-test" class="ld-btn lan-prop-test" onclick="LanDirUI.testPropose()" data-i18n="lanPropTest">Test the connection</button>
       <div id="lan-prop-status" class="lan-prop-status" role="status" style="display:none"></div>
       <button type="button" id="lan-prop-send" class="btn-primary lan-prop-send" onclick="LanDirUI.sendPropose()" disabled data-i18n="lanPropSend">Send the request</button>

@@ -21,7 +21,9 @@ function body(name) {
 }
 
 // Pull both functions out and drive them with a period of our choosing.
-const src = body('isoWeekKey') + '\n' + body('statsPeriodKey') + '\n';
+// statsPeriodKey delegates to statsPeriodKeyFor (shared with the per-server
+// LAN boards, server/lan-boards.js, web.46).
+const src = body('isoWeekKey') + '\n' + body('statsPeriodKeyFor') + '\n' + body('statsPeriodKey') + '\n';
 function keyOn(period, date) {
   const f = new Function('STATS_RESET_PERIOD', 'FIXED', src +
     'const _R = Date; Date = function(...a){ return a.length ? new _R(...a) : new _R(FIXED); };' +

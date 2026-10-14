@@ -29,7 +29,7 @@ export const help = {
           t: "Bwrdd arweinwyr y teulu",
           b: [
             "Ar weinyddion preifat a gemau LAN yn unig, mae'r cleient yn cadw ystadegau oes ar gyfer pob llysenw — dwylo a gemau a chwaraewyd ac a enillwyd, yr enillion mwyaf, y rhediad gorau — ac yn eu rhannu drwy'r gweinydd fel bod pob dyfais o amgylch y bwrdd yn gweld yr un bwrdd arweinwyr. Nid yw gemau pokerth.net byth yn cael eu holrhain fel hyn, ac mae ystadegau'r modd ymarfer yn cael eu cadw'n gwbl ar wahân.",
-            "Yn y gemau hyn, mae'r botwm tlws yn agor y ffenestr safleoedd ar ei thab LAN: pob chwaraewr, y gellir eu trefnu yn ôl sawl maen prawf."] },
+            "Yn y gemau hyn, mae'r botwm tlws yn agor y ffenestr safleoedd ar ei thab LAN: pob chwaraewr, y gellir eu trefnu yn ôl sawl maen prawf.", "Mae gan bob gweinydd yn rhestr y gweinyddion LAN ei fwrdd arweinwyr ei hun, sy'n cael ei ailosod ar yr amserlen a ddewiswyd pan gynigiwyd y gweinydd (dim ond y gweinyddwyr all ei newid). Mae'r gweinydd lleol a chyfeiriadau a deipiwyd â llaw yn rhannu prif fwrdd arweinwyr y wefan."] },
         { id: "language",
           t: "Iaith",
           b: [

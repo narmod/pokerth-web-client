@@ -112,6 +112,18 @@ highlights below.
   address on the status line. New setting `localEntry` (on by default; to turn off on
   pokerth.net) in admin › LAN directory; new key `lanDirLocal` in the 83 languages. Manual address
   entry is now off by default (`manualEntry`), the admin can turn it back on.
+  One leaderboard per LAN server (`web.46`, new module `server/lan-boards.js`, file
+  `lan-boards.json` next to `stats.json`): each listed server has its own family leaderboard with
+  its own reset period (never / daily / weekly / monthly / yearly), chosen in the « Propose my
+  server » form (monthly by default) and changeable afterwards by the admin only (LAN directory ›
+  Edit; a period change restarts the count without wiping). `/stats?board=<id>` (GET and POST
+  `board`), unknown boards refused; removing a server drops its board. The historical board stays
+  the board of the local server and of typed addresses (file, MySQL mirror and reset setting
+  unchanged). Client: the LAN lifetime store follows the board (`pth_life@<id>`, `pth_life` for
+  the main board), the leaderboard names its server and period. Admin › Leaderboard gains a
+  board picker (`/admin/lan-boards`, scope leaderboard) for viewing, removing players and
+  resetting one board. 7 new keys and a help sentence (famboard) in the 83 languages;
+  `test-lan-boards`.
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the

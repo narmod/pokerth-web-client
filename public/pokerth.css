@@ -13476,6 +13476,7 @@ body.lan-dir-locked #tls-row { display: none !important; }
 .lan-prop-card { max-width: 420px; margin: auto; }
 #lan-prop-form, #lan-prop-sent { display: flex; flex-direction: column; gap: var(--sp-4); }
 .lan-prop-intro, .lan-prop-note { margin: 0; font-size: var(--fs-sm); color: var(--text); line-height: 1.4; }
+.lan-prop-hint { font-size: var(--fs-xs); color: var(--text); line-height: 1.35; }
 .lan-prop-card .f input { width: 100%; box-sizing: border-box; }
 .lan-prop-two .f { flex: 1 1 0; min-width: 0; }
 .lan-prop-chk { display: flex !important; align-items: center; gap: 8px; font-size: var(--fs-sm); color: var(--cream); cursor: pointer; }
@@ -13489,3 +13490,7 @@ body.lan-dir-locked #tls-row { display: none !important; }
 @media (max-width: 599.98px) {
   .lan-prop-two { flex-direction: column; }
 }
+
+/* Per-server LAN leaderboard (server/lan-boards.js): which server, when it resets. */
+.board-caption { font-size: var(--fs-sm); color: var(--text); margin: 0 0 6px; line-height: 1.35; }
+.board-caption b { color: var(--text-hi); }

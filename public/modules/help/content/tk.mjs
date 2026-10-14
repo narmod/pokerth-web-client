@@ -29,7 +29,7 @@ export const help = {
           t: "Maşgala ýeňijiler sanawy",
           b: [
             "Diňe hususy serwerlerde we LAN oýunlarynda müşderi her lakam üçin ähli döwürleriň statistikasyny saklaýar — oýnalan we utulan eller hem oýunlar, iň uly utuş, iň gowy ýeňiş yzygiderliligi — we stoluň töweregindäki her enjam birmeňzeş sanawy görer ýaly, olary serwer arkaly paýlaşýar. pokerth.net oýunlary hiç haçan beýle hasaba alynmaýar, türgenleşik režiminiň statistikasy bolsa düýbünden aýratyn saklanýar.",
-            "Bu oýunlarda kubok düwmesi reýting penjiresini onuň LAN goýmasynda açýar: ähli oýunçylar, birnäçe görkeziji boýunça tertipläp bolýar."] },
+            "Bu oýunlarda kubok düwmesi reýting penjiresini onuň LAN goýmasynda açýar: ähli oýunçylar, birnäçe görkeziji boýunça tertipläp bolýar.", "LAN serweri sanawyndaky her serweriň öz reýtingi bar, ol serwer teklip edilende saýlanan möhlete görä arassalanýar (ony diňe administratorlar üýtgedip biler). Ýerli serwer we el bilen ýazylan salgylar saýtyň esasy reýtingini paýlaşýar."] },
         { id: "language",
           t: "Dil",
           b: [

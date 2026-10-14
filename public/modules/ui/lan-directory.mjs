@@ -51,7 +51,7 @@ let _tested = '';          // signature of the form values the last passing test
 function _t(k, p, fb) {
   try { const s = window.t ? window.t(k, p) : null; return (s && s !== k) ? s : (fb || k); } catch (e) { return fb || k; }
 }
-function $(id) { return document.getElementById(id); }
+function $(id) { return typeof document === 'undefined' ? null : document.getElementById(id); }
 function _ls(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 function _lang() { try { return (window.I18N && window.I18N.getLang && window.I18N.getLang()) || window._lang || 'en'; } catch (e) { return 'en'; } }
 function _country(cc) {
@@ -78,6 +78,7 @@ export function normalizeConfig(c) {
     servers.push({
       id: String(s.id || host + ':' + port), name: String(s.name || host).slice(0, 40), host, port,
       tls: !!s.tls, country: String(s.country || ''), lang: String(s.lang || ''), desc: String(s.desc || '').slice(0, 140),
+      resetPeriod: String(s.resetPeriod || ''),
       online: (s.online === true || s.online === false) ? s.online : null,
       players: Number.isInteger(s.players) ? s.players : null
     });
@@ -102,6 +103,21 @@ function _eff() {
   let d = null;
   try { d = window._pthLanDefaults ? window._pthLanDefaults() : null; } catch (e) {}
   return withLocal(_cfg, d, _t('lanDirLocal', null, 'Local server'));
+}
+
+/**
+ * Leaderboard of the server at host:port: its directory entry id when it is a
+ * listed server (its own board, server/lan-boards.js), else '' (the proxy's
+ * historical board: local server, typed address).
+ */
+export function boardFor(host, port) {
+  const s = _cfg ? matchEntry(_cfg.servers, host, port) : null;
+  return s && /^lan_[a-f0-9]{6,32}$/.test(s.id) ? s.id : '';
+}
+/** { name, resetPeriod } of a listed server's board (or null). */
+export function boardInfo(id) {
+  const s = _cfg ? _cfg.servers.filter((x) => x.id === id)[0] : null;
+  return s ? { name: s.name, resetPeriod: s.resetPeriod } : null;
 }
 
 /** Which entry the current #host / #port point at (or null). */
@@ -274,7 +290,8 @@ function _values() {
     tls: !!_field('lan-prop-tls').checked,
     country: (_field('lan-prop-country').value || ''),
     lang: (_field('lan-prop-lang').value || ''),
-    desc: (_field('lan-prop-desc').value || '').trim()
+    desc: (_field('lan-prop-desc').value || '').trim(),
+    resetPeriod: (_field('lan-prop-reset') && _field('lan-prop-reset').value) || 'monthly'
   };
 }
 function _sig(v) { return [v.host.toLowerCase(), v.port, v.tls ? 1 : 0].join('|'); }
@@ -399,7 +416,7 @@ function _wire() {
   try { if (typeof window._onLangChange === 'function') window._onLangChange(() => { const cs = $('lan-prop-country'); if (cs) while (cs.options.length > 1) cs.remove(1); sync(); }); } catch (e) {}
 }
 
-const LanDirUI = { setConfig, refresh, sync, openPropose, closePropose, testPropose, sendPropose };
+const LanDirUI = { setConfig, refresh, sync, openPropose, closePropose, testPropose, sendPropose, boardFor, boardInfo };
 try {
   /** @type {any} */ (window).LanDirUI = LanDirUI;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _wire);

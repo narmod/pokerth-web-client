@@ -641,7 +641,7 @@ function _renderLanProfileStats(boxId) {
   }
   var tabs = '<div class="stats-tabs">'+tb('session',t('statTabSession'))+tb('life',t('statTabLife'))+tb('board',t('statTabBoard'))+'</div>';
   var body;
-  if (S._pimLanTab === 'life')       body = window._statsBodyLife('pth_life');
+  if (S._pimLanTab === 'life')       body = window._statsBodyLife(window._lifeLanKey ? window._lifeLanKey() : 'pth_life');
   else if (S._pimLanTab === 'board') body = '<div id="pp-lan-board-body" class="stats-body"><div class="stat-empty">…</div></div>';
   else                              body = window._statsBodySession();
   box.innerHTML = tabs + body;
