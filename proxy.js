@@ -112,6 +112,8 @@ function isHostAllowed(h) {
   for (var j = 0; j < regs.length; j++) { if (regs[j] && String(regs[j].host).toLowerCase() === h) return true; }
   var _auto = (typeof _serverlistCache !== 'undefined') && _serverlistCache.server;
   if (_auto && String(_auto.host).toLowerCase() === h) return true;
+  // Servers approved in the LAN directory (admin › Server › LAN directory).
+  if (LAN_DIR.hostAllowed(h)) return true;
   return false;
 }
 
@@ -140,6 +142,8 @@ function isPortAllowed(p) {
   for (var j = 0; j < regs.length; j++) { if (regs[j] && parseInt(regs[j].port, 10) === p) return true; }
   var _auto = (typeof _serverlistCache !== 'undefined') && _serverlistCache.server;
   if (_auto && parseInt(_auto.port, 10) === p) return true;
+  // Ports of servers approved in the LAN directory.
+  if (LAN_DIR.portAllowed(p)) return true;
   return false;
 }
 
@@ -338,6 +342,25 @@ function featureOffList() {
   return a.filter(function (k) { return FEATURE_SWITCHES.some(function (f) { return f.key === k; }); });
 }
 function saveAdminConfig() { try { fs.writeFileSync(ADMIN_CONFIG_FILE, JSON.stringify(_adminConfig)); } catch (e) { console.error('[admin] config write failed:', e.message); } }
+
+// ── LAN server directory (players propose, admin approves) ──────────────────
+// See server/lan-directory.js. Approved servers join the dial allowlist
+// (isHostAllowed / isPortAllowed), carry their own TLS settings
+// (_serverTlsOpts) and are listed in /app-config for the LAN drop-down.
+// Stored in _adminConfig.lanDirectory, read through getStore() on every call
+// because an admin config import replaces the whole object.
+const LAN_DIR = require('./server/lan-directory.js').createLanDirectory({
+  getStore: function () {
+    if (!_adminConfig.lanDirectory || typeof _adminConfig.lanDirectory !== 'object') _adminConfig.lanDirectory = {};
+    return _adminConfig.lanDirectory;
+  },
+  save: function () { saveAdminConfig(); },
+  getDecode: function () { return PROTO ? PROTO.decode : null; },
+  isPortAllowed: function (p) { return isPortAllowed(p); },
+  insecureTls: INSECURE_TLS,
+  lobbyProbe: function (host, port, useTls, cb, tlsOverride) { return lobbyProbe(host, port, useTls, cb, tlsOverride); }
+});
+LAN_DIR.start();
 
 // ── Verbosité des logs (quiet | normal | verbose) ──────────────────────────
 // Par défaut le proxy loggue CHAQUE message relayé ([S→C]/[C→S] + dump hex),
@@ -554,6 +577,10 @@ function _serverTlsOpts(host, port) {
     if (e && String(e.host).toLowerCase() === h && parseInt(e.port, 10) === pt)
       return { sni: String(e.sni || ''), noverify: !!e.noverify };
   }
+  // A LAN directory entry carries the same two settings (admin › LAN directory,
+  // "Skip cert check" when the submit-time check found a self-signed cert).
+  var lanTls = LAN_DIR.tlsOpts(h, pt);
+  if (lanTls) return lanTls;
   return { sni: '', noverify: false };
 }
 
@@ -9657,6 +9684,19 @@ function handleAdmin(req, res, reqPathOnly, query) {
       return adminJson(res, 200, { ok: true, servers: out, activeServerId: (_adminConfig.activeServerId || ''), source: _pokerthnetSource(), transport: _internetTransport(), liveTransport: _liveTransport(), proxyProtocol: _proxyProtocolOn(), serverlistUrl: _serverlistUrl() });
     });
   }
+  // ── LAN server directory (admin › Server › LAN directory). Master-only. ──
+  //   GET  → { settings, pending, entries (with live status) }
+  //   POST { action: settings|approve|reject|add|update|remove|check, id?, entry?, settings? }
+  if (reqPathOnly === '/admin/lan-directory') {
+    if (req.method !== 'POST') {
+      if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      return adminJson(res, 200, LAN_DIR.adminView());
+    }
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      LAN_DIR.admin(d, function (r) { adminJson(res, (r && r.ok) ? 200 : 400, r); });
+    });
+  }
   if (reqPathOnly === '/admin/servers/serverlist' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -10300,7 +10340,8 @@ function handleAdmin(req, res, reqPathOnly, query) {
                        'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
                        'musicEnabled', 'musicHidden', 'musicOrder',
                        'seo', 'servers', 'activeServerId', 'pokerthnetSource',
-                       'internetTransport', 'liveTransport', 'proxyProtocol', 'serverlistUrl', 'autoUpdate'];
+                       'internetTransport', 'liveTransport', 'proxyProtocol', 'serverlistUrl', 'autoUpdate',
+                       'lanDirectory'];
       const next = {}, taken = [], skipped = [];
       Object.keys(src).forEach(function (k) {
         if (ALLOWED.indexOf(k) >= 0) { next[k] = src[k]; taken.push(k); } else skipped.push(k);
@@ -12242,6 +12283,34 @@ const httpServer = http.createServer((req, res) => {
     handleLiveStats(req, res);
     return;
   }
+  // ── LAN server directory (public side) — see server/lan-directory.js ──
+  //   GET  /api/lan-directory           the list for the LAN drop-down
+  //   POST /api/lan-directory/test      { host, port, tls } submit-time check
+  //   POST /api/lan-directory/propose   { name, host, port, tls, country, lang, desc }
+  // Errors come back as short codes (closed, host, port, dns, private,
+  // unreachable, notpokerth, listed, pending, full, limit) the client
+  // translates. Nothing about the sender is stored.
+  if (reqPathOnly === '/api/lan-directory' || reqPathOnly === '/api/lan-directory/test' || reqPathOnly === '/api/lan-directory/propose') {
+    var _lanJson = function (code, obj) {
+      res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+      res.end(JSON.stringify(obj));
+    };
+    if (reqPathOnly === '/api/lan-directory') {
+      if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405); res.end('Method not allowed'); return; }
+      return _lanJson(200, Object.assign({ ok: true }, LAN_DIR.publicView()));
+    }
+    if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
+    if (!appModes().lan) return _lanJson(200, { ok: false, error: 'closed' });
+    return readJsonBody(req, function (d) {
+      if (!d || typeof d !== 'object') return _lanJson(400, { ok: false, error: 'invalid' });
+      var _ip = clientIp(req);
+      if (reqPathOnly === '/api/lan-directory/test') return LAN_DIR.test(d, _ip, function (r) { _lanJson(200, r); });
+      return LAN_DIR.propose(d, _ip, function (r) {
+        if (r && r.ok) console.log('[lan-dir] new server proposal waiting for approval');
+        _lanJson(200, r);
+      });
+    }, 4096);
+  }
   if (reqPathOnly === '/api/events') {
     handleCommunityEvents(req, res);
     return;
@@ -12395,7 +12464,7 @@ const httpServer = http.createServer((req, res) => {
 
   if (reqPathOnly === '/app-config') {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), guestNotice: _guestNoticePublic(), authNotice: _authNoticePublic(), lanNotice: _lanNoticePublic(), poll: _pollPublic(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(true), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', featureOff: featureOffList(), pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport(), liveTransport: _liveTransport(), liveDefaults: _liveDefaults(), musicEnabled: musicEnabled(), musicVotesPublic: musicVotesPublic() }));
+    res.end(JSON.stringify({ ok: true, modes: appModes(), lanDirectory: LAN_DIR.publicView(), welcome: _welcomePublic(), guestNotice: _guestNoticePublic(), authNotice: _authNoticePublic(), lanNotice: _lanNoticePublic(), poll: _pollPublic(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(true), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', featureOff: featureOffList(), pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport(), liveTransport: _liveTransport(), liveDefaults: _liveDefaults(), musicEnabled: musicEnabled(), musicVotesPublic: musicVotesPublic() }));
     return;
   }
 

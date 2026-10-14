@@ -271,6 +271,11 @@ use too. Items are grouped by status rather than fixed phases.
   complete, and what it covered is listed release by release in `CHANGELOG.md`. The
   Code-health work below is up next.
 
+- **LAN server directory** — players propose their PokerTH server from the LAN login screen,
+  the admin approves it, and approved servers fill a drop-down for everyone. Server side done
+  (`server/lan-directory.js`, `web.41`); the admin tab, then the login drop-down with the
+  proposal form and Ace's Help, come next.
+
 ## ⏭️ Next
 
 - **Translating `/faq`** — `/rules` and `/faq` are done in all 83 languages

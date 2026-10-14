@@ -72,6 +72,21 @@ highlights below.
   the line fits on a phone; the wording stays in the tooltip.
 
 ### Added
+- **LAN server directory, server side** — players will be able to propose their own PokerTH
+  server from the LAN login screen; an admin approves or rejects each request, and approved
+  servers are listed for everyone. This first step is the proxy part (new module
+  `server/lan-directory.js`): `GET /api/lan-directory`, `POST /api/lan-directory/test` and
+  `/propose` for players, `GET`/`POST /admin/lan-directory` for the master key, and a
+  `lanDirectory` block in `/app-config`. An approved server joins the dial allowlist and carries
+  its own TLS settings (« skip cert check » is pre-set when the submit check found a self-signed
+  certificate); « visible » off keeps it dialable but unlisted, and a server offline for more than
+  7 days drops off the list on its own. The submit check only reads the server's greeting (no
+  login), refuses ports outside the PokerTH ports and hosts resolving to a private address, dials
+  the address it checked, and is rate-limited per IP; nothing about the sender is stored and
+  there is no follow-up on a request. Approved servers are re-checked every 5 minutes. Setting
+  `manualEntry` (on by default, so existing installs keep the free address field) will let
+  pokerth.net hide that field. The admin tab and the login drop-down follow;
+  `test-lan-directory` (`web.41`).
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the
