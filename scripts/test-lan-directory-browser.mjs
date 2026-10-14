@@ -176,6 +176,9 @@ try {
   ok(keys.length === 0, 'nothing about the request is stored on the device' + (keys.length ? ' (' + keys.join(', ') + ')' : ''));
   await page.click('#lan-prop-sent .ld-btn');
   ok(!(await page.isVisible('#lan-prop-dialog')), 'Close shuts the dialog');
+  ok(await page.evaluate(() => { for (const sh of document.styleSheets) { let rs; try { rs = sh.cssRules; } catch (e) { continue; }
+      for (const r of rs) if (r.selectorText === '#lan-prop-dialog' && /padding[^;]*safe-area-inset-top[^;]*safe-area-inset-bottom/.test(r.cssText)) return true; } return false; }),
+    'the dialog keeps its content inside the safe areas (installed iPhone app)');
 
   console.log('Language');
   await page.evaluate(() => window.setLang && window.setLang('fr'));

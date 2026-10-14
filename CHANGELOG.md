@@ -147,6 +147,8 @@ highlights below.
   reset button, which reads « Reset this board » once LAN boards exist; the confirmation names
   the board and says the other boards are not touched (the reset already only wiped the board
   picked — now tested both ways).
+  « Propose my server » dialog (`web.53`): padded by the safe areas, so in the installed iOS
+  app its title no longer sits under the status bar and the Send button clears the home bar.
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the

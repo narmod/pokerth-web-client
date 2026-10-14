@@ -13473,7 +13473,13 @@ body.lan-dir-locked #tls-row { display: none !important; }
   background: rgba(0,0,0,0.7);
   backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
   animation: ldFade 0.25s ease-out;
-  overflow-y: auto; padding: 12px 0;
+  overflow-y: auto;
+  /* Installed PWA (iOS standalone, status bar over the page): the form is
+     taller than the screen, so its top would slide under the clock and its
+     Send button under the home bar — keep both inside the safe areas. */
+  padding: max(12px, env(safe-area-inset-top, 0px)) env(safe-area-inset-right, 0px)
+           max(12px, env(safe-area-inset-bottom, 0px)) env(safe-area-inset-left, 0px);
+  overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
 }
 .lan-prop-card { max-width: 420px; margin: auto; }
 #lan-prop-form, #lan-prop-sent { display: flex; flex-direction: column; gap: var(--sp-4); }

@@ -1,3 +1,6 @@
+2026-10-14 version 2.1.10-web.53:
+- bugfix: « Propose my server » form: in the app installed on iPhone, its title no longer slides under the clock and the Send button stays reachable
+
 2026-10-14 version 2.1.10-web.51:
 - new: server announcements can be sent to the players of one LAN server only, or to all LAN servers as before
 
