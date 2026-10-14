@@ -1376,9 +1376,10 @@
           <label>Max <input type="number" id="ldSetMax" min="1" max="50"> requests per IP per day</label>
           <label class="ck"><input type="checkbox" id="ldSetOffline"> Show offline servers (greyed out)</label>
           <label class="ck"><input type="checkbox" id="ldSetPrivate"> Refuse private addresses at submit</label>
+          <label class="ck"><input type="checkbox" id="ldSetLocal"> <span>List this install’s own game server first, pre-selected <span class="muted" style="margin:0;white-space:nowrap">(“Local server”)</span></span></label>
           <label class="ck"><input type="checkbox" id="ldSetManual"> <span>Allow manual address entry on the login page <span class="muted" style="margin:0;white-space:nowrap">(allowlisted hosts only)</span></span></label>
         </div>
-        <p class="muted" style="margin-top:10px">Turn “Refuse private addresses” off only when this proxy runs on the same network as the servers (a self-hosted LAN install). Manual entry lets a player type an address instead of picking one; addresses outside the allowlist are still refused.</p>
+        <p class="muted" style="margin-top:10px">Turn “Refuse private addresses” off only when this proxy runs on the same network as the servers (a self-hosted LAN install). “Local server” is the address the LAN form used before the directory (the default login form, else this page’s host on port 7234): keep it on a self-hosted install, turn it off on pokerth.net. Manual entry lets a player type an address instead of picking one; addresses outside the allowlist are still refused.</p>
         <div class="periodrow" style="margin-top:6px"><button id="ldSetSave" class="use" type="button">Save settings</button></div>
         <div id="ldSetState" class="msg"></div>
       </div>
@@ -1791,6 +1792,7 @@
     if($('ldSetOffline')) $('ldSetOffline').checked=!!s.showOffline;
     if($('ldSetPrivate')) $('ldSetPrivate').checked=!!s.refusePrivate;
     if($('ldSetManual')) $('ldSetManual').checked=!!s.manualEntry;
+    if($('ldSetLocal')) $('ldSetLocal').checked=!!s.localEntry;
   }
   function renderLanDir(){ if(!_ld) return; ldBadge(); renderLdPending(); renderLdEntries(); renderLdSettings(); }
   if($('ldAddBtn')) $('ldAddBtn').addEventListener('click',function(){ _ldEdit={kind:'new'}; renderLanDir(); });
@@ -1801,7 +1803,7 @@
     ldPost({action:'settings',settings:{
       checkMinutes:parseInt($('ldSetCheck').value,10), autoHideDays:parseInt($('ldSetHide').value,10),
       maxPerIpDay:parseInt($('ldSetMax').value,10), showOffline:!!$('ldSetOffline').checked,
-      refusePrivate:!!$('ldSetPrivate').checked, manualEntry:!!$('ldSetManual').checked
+      refusePrivate:!!$('ldSetPrivate').checked, manualEntry:!!$('ldSetManual').checked, localEntry:!!$('ldSetLocal').checked
     }},'ldSetState','Saved');
   });
 

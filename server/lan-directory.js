@@ -49,9 +49,14 @@ const DEFAULT_SETTINGS = Object.freeze({
   showOffline: true,      // offline servers stay listed (greyed out client-side)
   refusePrivate: true,    // refuse hosts resolving to private / loopback addresses
   // "Saisie manuelle" (S3, 2026-10-14): whether the login page still lets a
-  // player type any address. On by default so an existing self-hosted
-  // install keeps its current behavior; pokerth.net turns it off.
-  manualEntry: true
+  // player type any address (allowlisted hosts only). Off by default since
+  // web.44 (narmod): the list, with the local server below, is the way in.
+  manualEntry: false,
+  // The install's own game server listed first and pre-selected on the login
+  // page ("Local server", web.44): the instance's default LAN address, built
+  // client-side from the login defaults. On by default for self-hosted
+  // installs; pokerth.net turns it off.
+  localEntry: true
 });
 const LIMITS = Object.freeze({ pending: 100, entries: 200, name: 40, desc: 140, testsPerIpHour: 20 });
 
@@ -94,7 +99,8 @@ function normSettings(s) {
     maxPerIpDay: num(s.maxPerIpDay, 1, 50, d.maxPerIpDay),
     showOffline: typeof s.showOffline === 'boolean' ? s.showOffline : d.showOffline,
     refusePrivate: typeof s.refusePrivate === 'boolean' ? s.refusePrivate : d.refusePrivate,
-    manualEntry: typeof s.manualEntry === 'boolean' ? s.manualEntry : d.manualEntry
+    manualEntry: typeof s.manualEntry === 'boolean' ? s.manualEntry : d.manualEntry,
+    localEntry: typeof s.localEntry === 'boolean' ? s.localEntry : d.localEntry
   };
 }
 // The fields a player may set. `admin` adds the TLS overrides and visibility.
@@ -316,7 +322,7 @@ function createLanDirectory(deps) {
       var rb = b.online === true ? 0 : (b.online === null ? 1 : 2);
       return ra - rb || a.name.localeCompare(b.name);
     });
-    return { acceptRequests: cfg.acceptRequests, manualEntry: cfg.manualEntry, servers: list };
+    return { acceptRequests: cfg.acceptRequests, manualEntry: cfg.manualEntry, localEntry: cfg.localEntry, servers: list };
   }
   function adminView() {
     var cfg = settings();

@@ -52,6 +52,17 @@ p = M.plan({ cfg: cfg(), isLan: true, host: 'localhost', port: '7234', remembere
 ok(p.select === 'a' && p.apply && p.apply.id === 'a' && p.locked, 'first visit: the first (online) server is picked');
 p = M.plan({ cfg: cfg({ manualEntry: false }), isLan: true, host: 'mybox', port: '7234', remembered: true });
 ok(p.select === 'a' && p.locked && !p.manual, 'manual entry off: a stray address falls back to the list');
+// « Local server » (web.44)
+const LOC = { host: 'MyBox.lan', port: '7234', tls: false };
+let L = M.withLocal(cfg({ localEntry: true }), LOC, 'Local server');
+ok(L.servers[0].id === 'local' && L.servers[0].host === 'mybox.lan' && L.servers.length === 3, 'local server listed first, before the directory');
+ok(M.withLocal(cfg(), LOC, 'x').servers.length === 2, 'not listed when the admin turned it off');
+ok(M.normalizeConfig({ servers: [] }).localEntry === false, 'a proxy that does not send the switch gets no local entry');
+ok(M.withLocal(cfg({ localEntry: true }), { host: 'a.example.org', port: 7234 }, 'x').servers.length === 2, 'no duplicate when a listed server has the same address');
+p = M.plan({ cfg: L, isLan: true, host: 'mybox.lan', port: '7234', remembered: false });
+ok(p.select === 'local' && p.locked, 'first visit on a self-hosted install: the local server is pre-selected');
+p = M.plan({ cfg: M.withLocal(M.normalizeConfig({ servers: [], localEntry: true, manualEntry: false, acceptRequests: false }), LOC, 'x'), isLan: true, host: 'mybox.lan', port: '7234' });
+ok(p.show && p.list && !p.empty && p.select === 'local', 'empty directory: the list still offers the local server');
 
 // ── real proxy + fake PokerTH server ───────────────────────────────
 function frame(buf) { const b = Buffer.alloc(4 + buf.length); b.writeUInt32BE(buf.length, 0); Buffer.from(buf).copy(b, 4); return b; }
@@ -66,7 +77,7 @@ const FAKE = fake.address().port;
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'lan-ui-'));
 const cfgFile = path.join(tmp, 'admin-config.json');
 fs.writeFileSync(cfgFile, JSON.stringify({ lanDirectory: {
-  settings: { refusePrivate: false, manualEntry: true, checkMinutes: 1 },
+  settings: { refusePrivate: false, manualEntry: true, localEntry: false, checkMinutes: 1 },
   entries: [
     { id: 'lan_aaaaaa01', name: 'Club local', host: '127.0.0.1', port: FAKE, tls: false, country: 'FR', lang: 'fr', desc: 'Thursday nights', visible: true, addedAt: 1, lastSeen: 0 },
     { id: 'lan_aaaaaa02', name: 'Gone club', host: 'gone.invalid', port: FAKE, tls: false, visible: true, addedAt: 1, lastSeen: Date.now() - 3600000 }
@@ -169,8 +180,23 @@ try {
   await sleep(800);
   const off = await page.evaluate(() => ({ opts: [...document.querySelectorAll('#lan-dir-sel option')].map((o) => o.value), locked: document.body.classList.contains('lan-dir-locked') }));
   ok(off.opts.indexOf('__manual__') < 0 && off.locked, 'no « Enter an address… » and the fields stay hidden');
+
+  console.log('Local server');
+  await fetch(base + '/admin/lan-directory', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + TOKEN }, body: JSON.stringify({ action: 'settings', settings: { localEntry: true } }) });
+  await page.reload();
+  await page.waitForSelector('.login-card');
+  await page.click('.login-card[onclick*="lan-dedi"]');
+  await sleep(800);
+  const loc = await page.evaluate(() => ({
+    opts: [...document.querySelectorAll('#lan-dir-sel option')].map((o) => o.value + '=' + o.textContent),
+    val: document.getElementById('lan-dir-sel').value, host: document.getElementById('host').value, port: document.getElementById('port').value,
+    locked: document.body.classList.contains('lan-dir-locked'), detail: document.getElementById('lan-dir-detail').textContent }));
+  ok(/^local=★ Local server — 127\.0\.0\.1$/.test(loc.opts[0]) && loc.opts.length === 3, 'the local server comes first (' + loc.opts[0] + ')');
+  ok(loc.val === 'local' && loc.host === '127.0.0.1' && loc.port === '7234' && loc.locked, 'and is pre-selected: the page host on 7234, fields hidden');
+  ok(/Local server · 127\.0\.0\.1:7234/.test(loc.detail), 'its status line names it with its address');
+  await page.screenshot({ path: path.join(tmp, 'local.png') });
   ok(errors.length === 0, 'no page error' + (errors.length ? ': ' + errors[0] : ''));
-  if (process.env.LAN_SHOTS) { for (const f of ['list.png', 'propose.png']) fs.copyFileSync(path.join(tmp, f), path.join(process.env.LAN_SHOTS, f)); }
+  if (process.env.LAN_SHOTS) { for (const f of ['list.png', 'propose.png', 'local.png']) fs.copyFileSync(path.join(tmp, f), path.join(process.env.LAN_SHOTS, f)); }
 } finally {
   await browser.close();
   proxy.kill('SIGTERM');

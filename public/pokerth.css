@@ -13450,6 +13450,7 @@ html[data-abar-short="1"] #s-game#s-game .my-zone { zoom: var(--abar-kp, 1); }
 .lan-dir-line { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
 .lan-dir-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; box-sizing: border-box; }
 .lan-dir-dot.on { background: #3fbf5a; }
+.lan-dir-dot.local { background: var(--gold); }
 .lan-dir-dot.off { border: 2px solid var(--text); }
 .lan-dir-dot.unk { border: 2px dashed var(--text); }
 .lan-dir-desc { color: var(--text); margin-top: 2px; overflow-wrap: anywhere; }

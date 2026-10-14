@@ -33,7 +33,7 @@ const CANNED = {
       funnel: { highlighted: 10, joined: 4, started: 2, joinRate: 0.4, startRate: 0.5 }, create: { shown: 1, created: 0 }, guests: { shown: 2, redirect: 1 }, rankedStarts: 3 },
     guidePeriod: { days: 0, summary: null }, guideSince: 1700000000000 },
   '/admin/lan-directory': { ok: true,
-    settings: { acceptRequests: true, checkMinutes: 5, autoHideDays: 7, maxPerIpDay: 3, showOffline: true, refusePrivate: true, manualEntry: true },
+    settings: { acceptRequests: true, checkMinutes: 5, autoHideDays: 7, maxPerIpDay: 3, showOffline: true, refusePrivate: true, manualEntry: true, localEntry: true },
     pending: [
       { id: 'lan_aaaaaa01', name: 'Club <Lyon>', host: 'lyon.example.org', port: 7236, tls: true, country: 'FR', lang: 'fr', desc: 'Thursdays', submittedAt: Date.now() - 7200000,
         probe: { reachable: true, pokerth: true, players: 12, ver: '6.1', ms: 42, certUntrusted: true, error: '', at: Date.now() - 60000 } },
@@ -187,11 +187,11 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   await new Promise((r) => setTimeout(r, 50));
   const up = posts.filter((p) => p.url.startsWith('/admin/lan-directory')).pop();
   ok(up && up.body.action === 'update' && up.body.entry.name === 'Berlin club' && up.body.entry.host === 'berlin.example.org', 'Save posts the edited entry');
-  ok($('ldSetManual') && $('ldSetManual').checked === true && $('ldSetCheck').value === '5', 'settings are filled in');
+  ok($('ldSetManual') && $('ldSetManual').checked === true && $('ldSetLocal').checked === true && $('ldSetCheck').value === '5', 'settings are filled in');
   $('ldSetManual').checked = false; $('ldSetSave').click();
   await new Promise((r) => setTimeout(r, 50));
   const sp = posts.filter((p) => p.url.startsWith('/admin/lan-directory')).pop();
-  ok(sp && sp.body.action === 'settings' && sp.body.settings.manualEntry === false && sp.body.settings.checkMinutes === 5, 'Save settings posts manual entry off');
+  ok(sp && sp.body.action === 'settings' && sp.body.settings.manualEntry === false && sp.body.settings.localEntry === true && sp.body.settings.checkMinutes === 5, 'Save settings posts manual entry off, local server kept');
   ok(errors.length === 0, 'the LAN directory tab threw nothing' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
 }
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);

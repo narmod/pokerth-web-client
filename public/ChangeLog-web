@@ -1,3 +1,6 @@
+2026-10-14 version 2.1.10-web.44:
+- improvement: on a self-hosted install, the « LAN server » list starts with this site's own server (« Local server »), already selected
+
 2026-10-14 version 2.1.10-web.43:
 - new: in LAN mode, a « LAN server » list shows the servers approved by the admins, with whether they are online and how many players are on them; pick one instead of typing an address
 - new: « Propose my server » sends your own PokerTH server to the admins after a connection test; once approved it appears in the list for everyone

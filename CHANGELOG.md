@@ -106,6 +106,12 @@ highlights below.
   « ? » explanations (list, Propose, Test, TLS) plus the form window; a paragraph in the LAN help
   section. 40 UI keys, 6 Ace keys and the help paragraph in the 83 languages (`es-419` derived);
   `test-lan-directory-browser` (real proxy, fake PokerTH server, Chromium).
+  « Local server » (`web.44`): a self-hosted install lists its own game server first in the
+  drop-down and pre-selects it — the address the LAN form used before the directory (the forced
+  address of the default login form, else the page's host on 7234), with a gold dot and its
+  address on the status line. New setting `localEntry` (on by default; to turn off on
+  pokerth.net) in admin › LAN directory; new key `lanDirLocal` in the 83 languages. Manual address
+  entry is now off by default (`manualEntry`), the admin can turn it back on.
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the

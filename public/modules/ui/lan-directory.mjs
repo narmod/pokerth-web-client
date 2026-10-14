@@ -13,8 +13,13 @@
 //     stay the single source of truth for App.connect() and for the player's
 //     LAN memory (_pthLanRemember). Nothing new is stored: the selection is
 //     derived from those fields on every pass.
+//   · « Local server » first and pre-selected (setting `localEntry`, on by
+//     default — a self-hosted install lists its own game server; pokerth.net
+//     turns it off): the instance's default LAN address, the one the form
+//     used before the directory existed (window._pthLanDefaults: the admin's
+//     forced address, else the page's own host on 7234).
 //   · « Enter an address… » at the end of the list when the admin allows
-//     manual entry (setting `manualEntry`, decided 2026-10-14 « S3 »): it
+//     manual entry (setting `manualEntry`, off by default since web.44): it
 //     unlocks the address fields of the ⚙ block. Without it the address
 //     fields are hidden (body.lan-dir-locked) whenever the list is shown.
 //   · « Propose my server »: the #lan-prop-dialog form. The connection test
@@ -77,7 +82,26 @@ export function normalizeConfig(c) {
       players: Number.isInteger(s.players) ? s.players : null
     });
   });
-  return { acceptRequests: c.acceptRequests !== false, manualEntry: c.manualEntry !== false, servers };
+  return { acceptRequests: c.acceptRequests !== false, manualEntry: c.manualEntry !== false, localEntry: c.localEntry === true, servers };
+}
+
+/**
+ * The list as shown: the « Local server » entry first when the admin keeps it
+ * (and when no listed server already has that address), then the directory.
+ * `local` = { host, port, tls } (window._pthLanDefaults()).
+ */
+export function withLocal(cfg, local, name) {
+  if (!cfg) return null;
+  if (!cfg.localEntry || !local || !local.host) return cfg;
+  const host = String(local.host).trim().toLowerCase(), port = parseInt(local.port, 10) || 7234;
+  if (matchEntry(cfg.servers, host, port)) return cfg;
+  const entry = { id: 'local', name: name || 'Local server', host, port, tls: !!local.tls, country: '', lang: '', desc: '', online: null, players: null, local: true };
+  return Object.assign({}, cfg, { servers: [entry].concat(cfg.servers) });
+}
+function _eff() {
+  let d = null;
+  try { d = window._pthLanDefaults ? window._pthLanDefaults() : null; } catch (e) {}
+  return withLocal(_cfg, d, _t('lanDirLocal', null, 'Local server'));
 }
 
 /** Which entry the current #host / #port point at (or null). */
@@ -126,6 +150,7 @@ function _applyEntry(s) {
   if (tl) tl.checked = !!s.tls;
 }
 function _optionLabel(s) {
+  if (s.local) return s.name + ' — ' + s.host + (s.port !== 7234 ? ':' + s.port : '');
   if (s.online === false) return s.name + ' — ' + _t('lanDirOffline', null, 'offline');
   if (s.online && s.players != null) return s.name + ' — ' + _t('lanDirPlayers', { n: s.players }, 'Players: ' + s.players);
   return s.name;
@@ -136,7 +161,7 @@ function _renderSelect(cfg, plan) {
   const frag = document.createDocumentFragment();
   cfg.servers.forEach((s) => {
     const o = document.createElement('option');
-    o.value = s.id; o.textContent = (s.online === true ? '● ' : s.online === false ? '○ ' : '◌ ') + _optionLabel(s);
+    o.value = s.id; o.textContent = (s.local ? '★ ' : s.online === true ? '● ' : s.online === false ? '○ ' : '◌ ') + _optionLabel(s);
     frag.appendChild(o);
   });
   if (plan.manual) {
@@ -158,10 +183,10 @@ function _renderDetail(cfg, id) {
   const line = document.createElement('div');
   line.className = 'lan-dir-line';
   const dot = document.createElement('span');
-  dot.className = 'lan-dir-dot ' + (s.online === true ? 'on' : s.online === false ? 'off' : 'unk');
+  dot.className = 'lan-dir-dot ' + (s.local ? 'local' : s.online === true ? 'on' : s.online === false ? 'off' : 'unk');
   dot.setAttribute('aria-hidden', 'true');
   line.appendChild(dot);
-  const bits = [s.online === true ? _t('lanDirOnline', null, 'Online') : s.online === false ? _t('lanDirOfflineSt', null, 'Offline') : _t('lanDirUnknown', null, 'Status unknown')];
+  const bits = s.local ? [s.name, s.host + ':' + s.port] : [s.online === true ? _t('lanDirOnline', null, 'Online') : s.online === false ? _t('lanDirOfflineSt', null, 'Offline') : _t('lanDirUnknown', null, 'Status unknown')];
   if (s.country) bits.push(_country(s.country));
   if (s.lang) bits.push(_langLabel(s.lang));
   if (s.online && s.players != null) bits.push(_t('lanDirPlayers', { n: s.players }, 'Players: ' + s.players));
@@ -183,18 +208,19 @@ export function sync() {
   const isLan = _isLan();
   const h = /** @type {HTMLInputElement|null} */ ($('host')), p = /** @type {HTMLInputElement|null} */ ($('port'));
   const remembered = !!(_ls('pth_lan_host') || window._shareLanTarget);
-  const pl = plan({ cfg: _cfg, isLan, host: h ? h.value : '', port: p ? p.value : '', remembered });
+  const eff = _eff();
+  const pl = plan({ cfg: eff, isLan, host: h ? h.value : '', port: p ? p.value : '', remembered });
   wrap.style.display = pl.show ? '' : 'none';
   const lw = $('lan-dir-sel-wrap'), em = $('lan-dir-empty'), pr = $('lan-dir-propose');
   if (lw) lw.style.display = (pl.list && !pl.empty) ? '' : 'none';
   if (em) em.style.display = pl.empty ? '' : 'none';
   if (pr) pr.style.display = pl.propose ? '' : 'none';
   try { document.body.classList.toggle('lan-dir-locked', !!(pl.show && pl.locked)); } catch (e) {}
-  if (!pl.show || !_cfg) return;
+  if (!pl.show || !eff) return;
   if (pl.apply) _applyEntry(pl.apply);
-  if (_cfg.servers.length) {
-    _renderSelect(_cfg, pl);
-    _renderDetail(_cfg, pl.select);
+  if (eff.servers.length) {
+    _renderSelect(eff, pl);
+    _renderDetail(eff, pl.select);
   }
   if (isLan && Date.now() - _cfgAt > REFRESH_MS) refresh();
 }
@@ -220,21 +246,22 @@ export function refresh() {
 
 function onSelect() {
   const sel = /** @type {HTMLSelectElement|null} */ ($('lan-dir-sel'));
-  if (!sel || !_cfg) return;
+  const eff = _eff();
+  if (!sel || !eff) return;
   if (sel.value === MANUAL) {
     try { document.body.classList.remove('lan-dir-locked'); } catch (e) {}
-    _renderDetail(_cfg, '');
+    _renderDetail(eff, '');
     // Open the ⚙ block where the address fields live.
     const btn = $('conn-adv-btn');
     if (btn && !btn.classList.contains('open') && typeof window.toggleConnAdvanced === 'function') window.toggleConnAdvanced();
     try { const hi = $('host'); if (hi) hi.focus(); } catch (e) {}
     return;
   }
-  const s = _cfg.servers.filter((x) => x.id === sel.value)[0];
+  const s = eff.servers.filter((x) => x.id === sel.value)[0];
   if (!s) return;
   _applyEntry(s);
   try { document.body.classList.add('lan-dir-locked'); } catch (e) {}
-  _renderDetail(_cfg, s.id);
+  _renderDetail(eff, s.id);
 }
 
 // ── Propose dialog ──────────────────────────────────────────────────────

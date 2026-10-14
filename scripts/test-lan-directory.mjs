@@ -44,7 +44,8 @@ ok(LD.cleanText('  <b>Club</b>\u0000 Lyon  ', 40) === 'b Club /b Lyon', 'angle b
 ok(LD.cleanText('x'.repeat(99), 40).length === 40, 'text is capped');
 const ns = LD.normSettings({ checkMinutes: 0, autoHideDays: 'x', maxPerIpDay: 999, manualEntry: false });
 ok(ns.checkMinutes === 5 && ns.autoHideDays === 7 && ns.maxPerIpDay === 3 && ns.manualEntry === false && ns.acceptRequests === true, 'settings: bad values fall back, booleans kept');
-ok(LD.normSettings(null).manualEntry === true && LD.normSettings(null).refusePrivate === true, 'defaults: manual entry on (existing installs unchanged), private addresses refused');
+ok(LD.normSettings(null).manualEntry === false && LD.normSettings(null).localEntry === true && LD.normSettings(null).refusePrivate === true, 'defaults: manual entry off, local server listed, private addresses refused');
+ok(LD.normSettings({ localEntry: false }).localEntry === false, 'the local server can be turned off (pokerth.net)');
 
 console.log('Directory flow');
 let T = Date.parse('2026-10-14T10:00:00Z');
@@ -122,7 +123,7 @@ ok(r.ok && r.entries.length === 1 && r.pending.every((x) => x.id !== clubId), 'a
 ok(dir.hostAllowed('club.example.org') && dir.portAllowed(7234), 'approved server joins the dial allowlist');
 let pv = dir.publicView();
 ok(pv.servers.length === 1 && pv.servers[0].name === 'Club Lyon' && pv.servers[0].online === null, 'listed, status unknown until the first check');
-ok(pv.manualEntry === true && pv.acceptRequests === true, 'public view carries the two client switches');
+ok(pv.manualEntry === false && pv.localEntry === true && pv.acceptRequests === true, 'public view carries the three client switches');
 await new Promise((res) => dir.checkEntry(clubId, res));
 pv = dir.publicView();
 ok(pv.servers[0].online === true && pv.servers[0].players === 12, 'health check: online with its player count');
@@ -252,7 +253,7 @@ async function http(p, body, method) {
 }
 try {
   let h = await http('/api/lan-directory');
-  ok(h.status === 200 && h.json.ok && Array.isArray(h.json.servers) && h.json.servers.length === 0 && h.json.manualEntry === true, 'GET /api/lan-directory: empty list, manual entry on by default');
+  ok(h.status === 200 && h.json.ok && Array.isArray(h.json.servers) && h.json.servers.length === 0 && h.json.manualEntry === false && h.json.localEntry === true, 'GET /api/lan-directory: empty list, manual entry off and local server on by default');
   h = await http('/api/lan-directory/test', { host: '127.0.0.1', port: FAKE });
   ok(h.json && !h.json.ok && h.json.error === 'private', 'loopback refused while "refuse private addresses" is on');
   h = await http('/admin/lan-directory?token=wrong');
