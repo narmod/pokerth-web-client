@@ -1,3 +1,6 @@
+2026-10-14 version 2.1.10-web.62:
+- improvement: login: once a mode is chosen, the big logo folds away to give the form more room; a small chip stays next to the mode name, and the logo comes back on the mode choice
+
 2026-10-14 version 2.1.10-web.61:
 - improvement: LAN login: the details of the selected server are centred, like the sentence under « Connect »
 

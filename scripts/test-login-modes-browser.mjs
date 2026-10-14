@@ -57,10 +57,25 @@ const act = {
   'offline': async () => {}
 };
 const modes = ['pokerthnet', 'offline', 'lan-dedi'];
+let ok = 0, checks = 0, fails = 0;
+// Header fold (web.62): the big logo folds away in a mode, a mini chip stays in
+// the « ‹ mode » bar; back on the mode choice, the logo returns.
+{
+  const { ctx, pg } = await fresh();
+  const hdr = () => pg.evaluate(() => ({ h: document.querySelector('.card-logo').getBoundingClientRect().height,
+    chip: +getComputedStyle(document.querySelector('.lb-chip')).opacity, aria: document.querySelector('.card-logo').getAttribute('aria-hidden') }));
+  let h0 = await hdr();
+  for (const m of modes) {
+    await pick(pg, m); const h1 = await hdr();
+    checks++; if (h1.h <= 1 && h1.chip === 1 && h1.aria === 'true' && h0.h > 50 && h0.chip === 0) { ok++; console.log('  ✓ header folds in ' + m + ' (' + Math.round(h0.h) + ' px → chip)'); }
+    else { fails++; console.log('  ✗ header fold in ' + m + ' ' + JSON.stringify([h0, h1])); }
+    await pg.evaluate(() => loginBackToStep1()); await sleep(600); h0 = await hdr();
+  }
+  await ctx.close();
+}
 const acts = { 'pokerthnet': ['pokerthnet', 'pokerthnet:guest'], 'offline': ['offline'], 'lan-dedi': ['lan-dedi', 'lan-dedi:plain'] };
 const ref = {};
 for (const m of modes) { const { ctx, pg } = await fresh(); await pick(pg, m); ref[m] = await snap(pg); await ctx.close(); }
-let ok = 0, checks = 0, fails = 0;
 const seqs = [];
 for (const a of modes) for (const c of modes) if (a !== c) for (const x of acts[a]) seqs.push([[a, x], [c, null]]);
 for (const a of modes) for (const b2 of modes) for (const c of modes) if (a !== b2 && b2 !== c) for (const x of acts[a]) seqs.push([[a, x], [b2, acts[b2][0]], [c, null]]);

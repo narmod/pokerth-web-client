@@ -199,6 +199,11 @@ highlights below.
   paragraph and hotspots follow, 83 languages.
   The selected server's details (status, board reset, event end, description, link) are centred
   like the `.status` sentence under « Connect » (`web.61`).
+  Login header fold (`web.62`, variant « C » of the mock-up): in a mode (step 2) the
+  `.card-logo` block folds (max-height / opacity, 0.38 s, none with reduced motion) and gets
+  `aria-hidden`; a 28 px chip (`.lb-chip`) fades in at the end of the « ‹ mode » bar; back on
+  step 1 the logo returns. Driven by `loginHeaderFold()` from `loginPickMode` /
+  `loginBackToStep1`. About 175 px freed on a phone.
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the

@@ -656,6 +656,20 @@ body {
   text-align: center;
   padding-bottom: 12px;
   border-bottom: 1px solid var(--border);
+  /* Folds away once a mode is picked (.login-in-mode, loginPickMode). */
+  max-height: 480px; overflow: hidden;
+  transition: max-height 0.38s ease, opacity 0.25s ease, padding 0.38s ease, margin 0.38s ease, border-color 0.25s ease;
+}
+.card.login-in-mode .card-logo {
+  max-height: 0; opacity: 0; padding: 0 !important; border-bottom-color: transparent;
+  margin-bottom: calc(-1 * var(--sp-3, 12px)); pointer-events: none; visibility: hidden;
+  transition: max-height 0.38s ease, opacity 0.2s ease, padding 0.38s ease, margin 0.38s ease, border-color 0.2s ease, visibility 0s linear 0.38s;
+}
+/* The identity stays as a small chip at the end of the « ‹ mode » bar. */
+.lb-chip { width: 28px; height: 28px; margin-left: auto; flex: none; opacity: 0; transform: scale(0.6); transition: opacity 0.3s ease 0.15s, transform 0.3s ease 0.15s; }
+.card.login-in-mode .lb-chip { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .card-logo, .card.login-in-mode .card-logo, .lb-chip { transition: none; }
 }
 .card-suits-row { font-size: var(--fs-lg); letter-spacing: 0.2em; opacity: 0.7; margin-bottom: 4px; }
 .card-suits-row .r { color: var(--red); }
