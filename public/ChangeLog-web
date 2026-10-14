@@ -1,3 +1,6 @@
+2026-10-14 version 2.1.10-web.58:
+- improvement: the LAN server list is now labelled « Choose a server »
+
 2026-10-14 version 2.1.10-web.57:
 - bugfix: on a LAN server that is not shown in the list (unlisted by the admins, hidden, or an event that has ended), your results now go to that server's own leaderboard instead of the general one
 

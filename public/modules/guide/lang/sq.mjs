@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Zgjidh një server te lista **Server LAN**: një pikë e gjelbër do të thotë që është në linjë, me numrin e lojtarëve që janë aty tani. Serveri yt nuk është aty? **Propozo serverin tim** ua dërgon administratorëve të këtij sajti dhe shfaqet në listë pasi miratohet.",
+  c3LanDir: "Te **Zgjidh një server**, përzgjidh një server: një pikë e gjelbër do të thotë që është në linjë, me numrin e lojtarëve që janë aty tani. Serveri yt nuk është aty? **Propozo serverin tim** ua dërgon administratorëve të këtij sajti dhe shfaqet në listë pasi miratohet.",
   hsLanDir: "Serverët LAN të kontrolluar nga administratorët e këtij sajti: zgjidh një për të luajtur në të. Një pikë e gjelbër do të thotë në linjë, me lojtarët e tij tani.",
   hsLanPropose: "Ua dërgon serverin tënd PokerTH administratorëve të këtij sajti. Pasi miratohet, shfaqet në këtë listë për çdo lojtar.",
   hsLanPropTest: "Kontrollon nëse një server PokerTH përgjigjet në këtë adresë dhe portë. Mund ta dërgosh kërkesën vetëm pas një testi të suksesshëm.",

@@ -178,6 +178,9 @@ highlights below.
   resetPeriod }`, `board: ''` outside the directory) resolves it by address at connect;
   `_lifeSeedFromServer` waits for that answer. Nothing new is listed publicly: the answer only
   goes to whoever already has the address.
+  The LAN drop-down label reads « Choose a server » instead of « LAN server », which repeated
+  the screen title (`web.58`); Ace's Help (`c3LanDir`) and the help paragraph that cite it
+  follow, in the 83 languages.
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the

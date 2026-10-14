@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Escolle un servidor na lista **Servidor LAN**: un punto verde indica que está en liña, co número de xogadores que hai nel agora mesmo. O teu propio servidor non aparece? **Propoñer o meu servidor** envíao aos administradores deste sitio, e aparece na lista unha vez aprobado.",
+  c3LanDir: "En **Escolle un servidor**, escolle un da lista: un punto verde indica que está en liña, co número de xogadores que hai nel agora mesmo. O teu propio servidor non aparece? **Propoñer o meu servidor** envíao aos administradores deste sitio, e aparece na lista unha vez aprobado.",
   hsLanDir: "Os servidores LAN revisados polos administradores deste sitio: escolle un para xogar nel. Un punto verde significa en liña, cos seus xogadores de agora mesmo.",
   hsLanPropose: "Envía o teu propio servidor PokerTH aos administradores deste sitio. Unha vez aprobado, aparece nesta lista para todos os xogadores.",
   hsLanPropTest: "Comproba que un servidor PokerTH responde neste enderezo e porto. Só podes enviar a solicitude tras unha proba correcta.",

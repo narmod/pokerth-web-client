@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Izberi strežnik na seznamu **Strežnik LAN**: zelena pika pomeni, da je dosegljiv, poleg pa je število igralcev, ki so trenutno na njem. Tvojega strežnika ni tam? **Predlagaj moj strežnik** ga pošlje administratorjem tega spletnega mesta in po odobritvi se prikaže na seznamu.",
+  c3LanDir: "V razdelku **Izberi strežnik** izberi enega: zelena pika pomeni, da je dosegljiv, poleg pa je število igralcev, ki so trenutno na njem. Tvojega strežnika ni tam? **Predlagaj moj strežnik** ga pošlje administratorjem tega spletnega mesta in po odobritvi se prikaže na seznamu.",
   hsLanDir: "Strežniki LAN, ki so jih preverili administratorji tega spletnega mesta: izberi enega in igraj na njem. Zelena pika pomeni dosegljiv, poleg so njegovi trenutni igralci.",
   hsLanPropose: "Pošlje tvoj lastni strežnik PokerTH administratorjem tega spletnega mesta. Po odobritvi se prikaže na tem seznamu za vse igralce.",
   hsLanPropTest: "Preveri, ali se na tem naslovu in vratih odziva strežnik PokerTH. Zahtevo lahko pošlješ šele po uspešnem preizkusu.",

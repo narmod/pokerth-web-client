@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Valitse palvelin listalta **LAN-palvelin**: vihreä piste tarkoittaa, että se on verkossa, ja näet myös siellä juuri nyt olevien pelaajien määrän. Eikö oma palvelimesi ole siellä? **Ehdota palvelintani** lähettää sen tämän sivuston ylläpitäjille, ja se ilmestyy listalle hyväksynnän jälkeen.",
+  c3LanDir: "Kohdassa **Valitse palvelin** valitse palvelin listalta: vihreä piste tarkoittaa, että se on verkossa, ja näet myös siellä juuri nyt olevien pelaajien määrän. Eikö oma palvelimesi ole siellä? **Ehdota palvelintani** lähettää sen tämän sivuston ylläpitäjille, ja se ilmestyy listalle hyväksynnän jälkeen.",
   hsLanDir: "Tämän sivuston ylläpitäjien tarkistamat LAN-palvelimet: valitse yksi pelataksesi siellä. Vihreä piste tarkoittaa verkossa, ja näet sen tämänhetkiset pelaajat.",
   hsLanPropose: "Lähettää oman PokerTH-palvelimesi tämän sivuston ylläpitäjille. Hyväksynnän jälkeen se näkyy tällä listalla kaikille pelaajille.",
   hsLanPropTest: "Tarkistaa, että tässä osoitteessa ja portissa vastaa PokerTH-palvelin. Voit lähettää pyynnön vasta onnistuneen testin jälkeen.",

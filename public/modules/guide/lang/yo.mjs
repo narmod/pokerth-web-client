@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Yan olùpín kan nínú àkójọ **Olùpín LAN**: àmì aláwọ̀ ewé túmọ̀ sí pé ó wà lórí ayélujára, pẹ̀lú iye òṣèré tó wà lórí rẹ̀ báyìí. Olùpín tìrẹ kò sí níbẹ̀? **Dábàá olùpín mi** ń fi ránṣẹ́ sí àwọn alábòójútó ojú-òpó yìí, yóò sì hàn nínú àkójọ ní kété tí wọ́n bá fọwọ́ sí i.",
+  c3LanDir: "Lábẹ́ **Yan olùpín kan**, yan olùpín kan: àmì aláwọ̀ ewé túmọ̀ sí pé ó wà lórí ayélujára, pẹ̀lú iye òṣèré tó wà lórí rẹ̀ báyìí. Olùpín tìrẹ kò sí níbẹ̀? **Dábàá olùpín mi** ń fi ránṣẹ́ sí àwọn alábòójútó ojú-òpó yìí, yóò sì hàn nínú àkójọ ní kété tí wọ́n bá fọwọ́ sí i.",
   hsLanDir: "Àwọn olùpín LAN tí àwọn alábòójútó ojú-òpó yìí ti ṣàyẹ̀wò: yan ọ̀kan láti ṣeré lórí rẹ̀. Àmì aláwọ̀ ewé túmọ̀ sí lórí ayélujára, pẹ̀lú àwọn òṣèré rẹ̀ báyìí.",
   hsLanPropose: "Ń fi olùpín PokerTH tìrẹ ránṣẹ́ sí àwọn alábòójútó ojú-òpó yìí. Ní kété tí wọ́n bá fọwọ́ sí i, yóò hàn nínú àkójọ yìí fún gbogbo òṣèré.",
   hsLanPropTest: "Ń ṣàyẹ̀wò pé olùpín PokerTH kan ń dáhùn ní àdírẹ́sì àti pọ́ọ̀tì yìí. O lè fi ìbéèrè ránṣẹ́ lẹ́yìn àyẹ̀wò tó yọrí sí rere nìkan.",

@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "**LAN serveri** siyahısından server seçin: yaşıl nöqtə onun onlayn olduğunu, yanında da hazırda orada olan oyunçuların sayını göstərir. Öz serveriniz orada yoxdur? **Serverimi təklif et** onu bu saytın adminlərinə göndərir və təsdiqləndikdən sonra o, siyahıda görünür.",
+  c3LanDir: "**Server seçin** bölməsində server seçin: yaşıl nöqtə onun onlayn olduğunu, yanında da hazırda orada olan oyunçuların sayını göstərir. Öz serveriniz orada yoxdur? **Serverimi təklif et** onu bu saytın adminlərinə göndərir və təsdiqləndikdən sonra o, siyahıda görünür.",
   hsLanDir: "Bu saytın adminlərinin yoxladığı LAN serverləri: birində oynamaq üçün onu seçin. Yaşıl nöqtə onlayn deməkdir, yanında da hazırkı oyunçuları.",
   hsLanPropose: "Öz PokerTH serverinizi bu saytın adminlərinə göndərir. Təsdiqləndikdən sonra o, hər oyunçu üçün bu siyahıda görünür.",
   hsLanPropTest: "Bu ünvan və portda PokerTH serverinin cavab verdiyini yoxlayır. Sorğunu yalnız uğurlu yoxlamadan sonra göndərə bilərsiniz.",

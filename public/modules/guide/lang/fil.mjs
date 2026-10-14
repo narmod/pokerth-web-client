@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Pumili ng server sa listahang **LAN server**: ang berdeng tuldok ay nangangahulugang online ito, kasama ang bilang ng mga manlalarong naroon ngayon. Wala roon ang sarili mong server? Ipinapadala ito ng **Imungkahi ang server ko** sa mga admin ng site na ito, at lalabas ito sa listahan kapag naaprubahan.",
+  c3LanDir: "Sa **Pumili ng server**, pumili ng isa sa listahan: ang berdeng tuldok ay nangangahulugang online ito, kasama ang bilang ng mga manlalarong naroon ngayon. Wala roon ang sarili mong server? Ipinapadala ito ng **Imungkahi ang server ko** sa mga admin ng site na ito, at lalabas ito sa listahan kapag naaprubahan.",
   hsLanDir: "Ang mga LAN server na sinuri ng mga admin ng site na ito: pumili ng isa para maglaro roon. Ang berdeng tuldok ay nangangahulugang online, kasama ang mga manlalaro nito ngayon.",
   hsLanPropose: "Ipinapadala ang sarili mong PokerTH server sa mga admin ng site na ito. Kapag naaprubahan, lalabas ito sa listahang ito para sa bawat manlalaro.",
   hsLanPropTest: "Sinusuri kung may PokerTH server na sumasagot sa address at port na ito. Maipapadala mo lang ang kahilingan pagkatapos ng matagumpay na test.",

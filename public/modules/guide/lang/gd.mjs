@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Tagh frithealaiche air an liosta **Frithealaiche LAN**: tha dotag uaine a’ ciallachadh gu bheil e air loidhne, le àireamh nan cluicheadairean a th’ air an-dràsta fhèin. Nach eil am frithealaiche agad fhèin ann? Cuiridh **Mol am frithealaiche agam** e gu rianairean na làraich seo, agus nochdaidh e air an liosta nuair a thèid aontachadh ris.",
+  c3LanDir: "Fo **Tagh frithealaiche**, tagh fear air an liosta: tha dotag uaine a’ ciallachadh gu bheil e air loidhne, le àireamh nan cluicheadairean a th’ air an-dràsta fhèin. Nach eil am frithealaiche agad fhèin ann? Cuiridh **Mol am frithealaiche agam** e gu rianairean na làraich seo, agus nochdaidh e air an liosta nuair a thèid aontachadh ris.",
   hsLanDir: "Na frithealaichean LAN a chaidh na rianairean aig an làrach seo thairis orra: tagh fear airson cluich air. Tha dotag uaine a’ ciallachadh air loidhne, leis na cluicheadairean a th’ air an-dràsta.",
   hsLanPropose: "Cuiridh e am frithealaiche PokerTH agad fhèin gu rianairean na làraich seo. Nuair a thèid aontachadh ris, nochdaidh e air an liosta seo airson gach cluicheadair.",
   hsLanPropTest: "Dearbhaidh e gu bheil frithealaiche PokerTH a’ freagairt aig an t-seòladh is am port seo. Chan urrainn dhut an t-iarrtas a chur ach às dèidh deuchainn shoirbheachail.",

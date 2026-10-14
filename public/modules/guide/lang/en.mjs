@@ -4,7 +4,7 @@
 // port refer to them (docs/GUIDE.md).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Pick a server in the **LAN server** list: a green dot means it is online, with the number of players on it right now. Your own server is not there? **Propose my server** sends it to the admins of this site, and it appears in the list once approved.",
+  c3LanDir: "Under **Choose a server**, pick a server: a green dot means it is online, with the number of players on it right now. Your own server is not there? **Propose my server** sends it to the admins of this site, and it appears in the list once approved.",
   hsLanDir: "The LAN servers checked by the admins of this site: pick one to play on it. A green dot means online, with its players right now.",
   hsLanPropose: "Sends your own PokerTH server to the admins of this site. Once approved, it appears in this list for every player.",
   hsLanPropTest: "Checks that a PokerTH server answers at this address and port. You can send the request only after a successful test.",

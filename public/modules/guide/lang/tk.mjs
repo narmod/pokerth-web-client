@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "**LAN serweri** sanawyndan bir serwer saýlaň: ýaşyl nokat onuň onlaýndygyny we häzir onda näçe oýunçynyň bardygyny görkezýär. Öz serweriňiz ol ýerde ýokmy? **Serwerimi teklip et** ony bu saýtyň administratorlaryna iberýär we tassyklanandan soň ol sanawda peýda bolýar.",
+  c3LanDir: "**Serwer saýlaň** bölüminden bir serwer saýlaň: ýaşyl nokat onuň onlaýndygyny we häzir onda näçe oýunçynyň bardygyny görkezýär. Öz serweriňiz ol ýerde ýokmy? **Serwerimi teklip et** ony bu saýtyň administratorlaryna iberýär we tassyklanandan soň ol sanawda peýda bolýar.",
   hsLanDir: "Bu saýtyň administratorlary tarapyndan barlanan LAN serwerleri: oýnamak üçin birini saýlaň. Ýaşyl nokat onlaýndygyny aňladýar, ýanynda bolsa häzirki oýunçylary.",
   hsLanPropose: "Öz PokerTH serweriňizi bu saýtyň administratorlaryna iberýär. Tassyklanandan soň, ol her oýunçy üçin bu sanawda peýda bolýar.",
   hsLanPropTest: "Bu salgyda we portda PokerTH serweriniň jogap berýändigini barlaýar. Haýyşy diňe üstünlikli barlagdan soň iberip bilersiňiz.",

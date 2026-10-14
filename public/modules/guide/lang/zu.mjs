@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Khetha iseva ohlwini oluthi **Iseva ye-LAN**: ichashazi eliluhlaza lisho ukuthi ikhona ku-inthanethi, kanye nenani labadlali abakuyo njengamanje. Iseva yakho ayikho lapho? Inkinobho ethi **Phakamisa iseva yami** iyithumela kubalawuli bale sayithi, futhi izovela ohlwini uma isivunyiwe.",
+  c3LanDir: "Ngaphansi kokuthi **Khetha iseva**, khetha iseva: ichashazi eliluhlaza lisho ukuthi ikhona ku-inthanethi, kanye nenani labadlali abakuyo njengamanje. Iseva yakho ayikho lapho? Inkinobho ethi **Phakamisa iseva yami** iyithumela kubalawuli bale sayithi, futhi izovela ohlwini uma isivunyiwe.",
   hsLanDir: "Amaseva e-LAN ahlolwe abalawuli bale sayithi: khetha eyodwa ukuze udlale kuyo. Ichashazi eliluhlaza lisho ukuthi ikhona ku-inthanethi, kanye nabadlali bayo njengamanje.",
   hsLanPropose: "Ithumela iseva yakho ye-PokerTH kubalawuli bale sayithi. Uma isivunyiwe, izovela kulolu hlu kuwo wonke umdlali.",
   hsLanPropTest: "Ihlola ukuthi iseva ye-PokerTH iyaphendula yini kuleli kheli nale port. Ungathumela isicelo kuphela emva kokuhlolwa okuphumelelayo.",

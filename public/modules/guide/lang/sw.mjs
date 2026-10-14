@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Chagua seva kwenye orodha ya **Seva ya LAN**: kitone cha kijani kinamaanisha iko mtandaoni, pamoja na idadi ya wachezaji walio humo sasa hivi. Seva yako mwenyewe haipo? **Pendekeza seva yangu** inaituma kwa wasimamizi wa tovuti hii, na inaonekana kwenye orodha baada ya kuidhinishwa.",
+  c3LanDir: "Chini ya **Chagua seva**, teua seva: kitone cha kijani kinamaanisha iko mtandaoni, pamoja na idadi ya wachezaji walio humo sasa hivi. Seva yako mwenyewe haipo? **Pendekeza seva yangu** inaituma kwa wasimamizi wa tovuti hii, na inaonekana kwenye orodha baada ya kuidhinishwa.",
   hsLanDir: "Seva za LAN zilizokaguliwa na wasimamizi wa tovuti hii: chagua moja ili uchezee humo. Kitone cha kijani kinamaanisha mtandaoni, pamoja na wachezaji wake kwa sasa.",
   hsLanPropose: "Inatuma seva yako mwenyewe ya PokerTH kwa wasimamizi wa tovuti hii. Ikishaidhinishwa, inaonekana kwenye orodha hii kwa kila mchezaji.",
   hsLanPropTest: "Inakagua kama seva ya PokerTH inajibu kwenye anwani na mlango huu. Unaweza kutuma ombi tu baada ya jaribio kufaulu.",

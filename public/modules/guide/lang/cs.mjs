@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Vyber si server v seznamu **LAN server**: zelená tečka znamená, že je online, spolu s počtem hráčů, kteří na něm právě jsou. Tvůj vlastní server tam není? **Navrhnout můj server** ho pošle adminům tohoto webu a po schválení se v seznamu objeví.",
+  c3LanDir: "V poli **Vyber si server** si vyber server: zelená tečka znamená, že je online, spolu s počtem hráčů, kteří na něm právě jsou. Tvůj vlastní server tam není? **Navrhnout můj server** ho pošle adminům tohoto webu a po schválení se v seznamu objeví.",
   hsLanDir: "LAN servery ověřené admini tohoto webu: vyber si jeden a hraj na něm. Zelená tečka znamená online, spolu s jeho aktuálními hráči.",
   hsLanPropose: "Pošle tvůj vlastní server PokerTH adminům tohoto webu. Po schválení se objeví v tomto seznamu pro každého hráče.",
   hsLanPropTest: "Ověří, že na této adrese a portu odpovídá server PokerTH. Žádost můžeš odeslat až po úspěšném testu.",

@@ -215,7 +215,7 @@ try {
   await page.evaluate(() => window.setLang && window.setLang('fr'));
   await sleep(1200);
   const fr = await page.evaluate(() => ({ lab: document.querySelector('#lan-dir-sel-wrap label').textContent, prop: document.querySelector('#lan-dir-propose').textContent, opt0: document.querySelector('#lan-dir-sel option').textContent, detail: document.getElementById('lan-dir-detail').textContent, pill: (document.querySelector('#lan-dir-detail .lan-dir-reset') || {}).textContent || '' }));
-  ok(/Serveur LAN/i.test(fr.lab) && /Proposer mon serveur/.test(fr.prop) && !/Chaque mois/.test(fr.opt0) && /Chaque mois/.test(fr.pill) && !/Joueurs/.test(fr.opt0) && /Joueurs : 5/.test(fr.detail || ''), 'the block follows the language (' + fr.opt0 + ')');
+  ok(/^Choisis un serveur$/.test(fr.lab.trim()) && /Proposer mon serveur/.test(fr.prop) && !/Chaque mois/.test(fr.opt0) && /Chaque mois/.test(fr.pill) && !/Joueurs/.test(fr.opt0) && /Joueurs : 5/.test(fr.detail || ''), 'the block follows the language (' + fr.opt0 + ')');
 
   console.log('Manual entry off');
   await fetch(base + '/admin/lan-directory', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + TOKEN }, body: JSON.stringify({ action: 'settings', settings: { manualEntry: false } }) });
