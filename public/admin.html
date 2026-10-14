@@ -318,6 +318,38 @@
   .btnrow{display:flex;gap:8px;flex-wrap:wrap}
   .use.danger{background:rgba(184,52,52,.16);border-color:rgba(184,52,52,.5);color:#e98a8a}
   .use:disabled{opacity:.5;cursor:default}
+  /* LAN directory (Server › LAN directory) */
+  .tbadge{display:inline-block;min-width:18px;padding:0 5px;margin-left:6px;border-radius:999px;background:#f0a83a;color:#1a1205;font-size:.7rem;font-weight:700;line-height:18px;text-align:center;vertical-align:1px}
+  .ldreq{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:0 0 8px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .ldreq .ldmain{flex:999 1 380px;min-width:0}
+  .ldreq .ldbtns{display:flex;flex-wrap:wrap;gap:6px}
+  .ldname{font-weight:700;color:var(--cream);margin-right:6px}
+  .ldaddr{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem;color:var(--text);margin-right:6px;overflow-wrap:anywhere}
+  .ldchip{display:inline-block;font-size:.68rem;padding:1px 7px;border-radius:999px;border:1px solid var(--line);color:var(--text);margin:2px 4px 2px 0;white-space:nowrap}
+  .ldchip.warn{border-color:rgba(240,168,58,.6);color:#f0c27a}
+  .ldline{font-size:.8rem;color:var(--text);margin-top:4px;overflow-wrap:anywhere}
+  .ldline.ok{color:#7fd17f}.ldline.err{color:#e98a8a}.ldline.warn{color:#f0c27a}
+  .ldtblw{overflow-x:auto;margin:0 -4px}
+  .ldtbl{width:100%;min-width:760px;border-collapse:collapse;font-size:.82rem}
+  .ldtbl th{text-align:left;font-weight:600;color:var(--text);font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;padding:6px;border-bottom:1px solid var(--line);white-space:nowrap}
+  .ldtbl td{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+  .ldtbl tr.ldhid td:not(.ldact){opacity:.6}
+  .ldtbl td.ldact{white-space:nowrap;text-align:right}
+  .ldst{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .ldst i{width:9px;height:9px;border-radius:50%;display:inline-block;box-sizing:border-box}
+  .ldst.on{color:#7fd17f}.ldst.on i{background:#3fbf5a}
+  .ldst.off,.ldst.unk{color:var(--text)}.ldst.off i{border:2px solid var(--text)}.ldst.unk i{border:2px dashed var(--text)}
+  .ldedit{border:1px solid var(--gold);border-radius:10px;padding:10px 12px;margin:0 0 8px}
+  .ldedit .ldgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px 14px}
+  .ldedit label.f{display:flex;flex-direction:column;gap:3px;font-size:.72rem;color:var(--text);min-width:0}
+  .ldedit input[type=text],.ldedit input[type=number]{width:100%;box-sizing:border-box}
+  .ldedit input[type=text],.ldedit input[type=number],.ldset input[type=number]{padding:7px 9px;border-radius:7px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream);font-size:.85rem;margin:0}
+  .ldedit .ldchk{display:flex;flex-wrap:wrap;gap:14px;margin:8px 0 0;font-size:.8rem;color:var(--text)}
+  .ldset{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px 24px;font-size:.82rem;color:var(--text)}
+  .ldset label{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px 8px;min-width:0;margin:0;font-size:.82rem}
+  .ldset label input[type=checkbox]{margin:2px 0 0;flex:none}
+  .ldset label.ck{flex-wrap:nowrap;align-items:flex-start}
+  .ldset input[type=number]{width:70px}
   .rank{flex:none;width:30px;text-align:center;font-weight:700;color:var(--gold);font-size:.82rem}
   .net{flex:none;text-align:right;font-weight:700;font-size:.86rem;min-width:70px}
   .net.pos{color:#7fd17f}.net.neg{color:#e98a8a}
@@ -369,7 +401,10 @@
   :root[data-admin-theme="light"] body{background:radial-gradient(circle at 50% 0%,#eef1f6,#d7dde7)}
   :root[data-admin-theme="light"] input[type=password],
   :root[data-admin-theme="light"] select,
-  :root[data-admin-theme="light"] .filter{background:rgba(255,255,255,.75)}
+  :root[data-admin-theme="light"] .filter,
+  :root[data-admin-theme="light"] .ldedit input[type=text],
+  :root[data-admin-theme="light"] .ldedit input[type=number],
+  :root[data-admin-theme="light"] .ldset input[type=number]{background:rgba(255,255,255,.75)}
   :root[data-admin-theme="light"] .primary,
   :root[data-admin-theme="light"] .seg button.on{color:#f4f6fb}
   :root[data-admin-theme="light"] .seg button.on{background:var(--gold)}
@@ -501,6 +536,7 @@
       <button class="tab" data-t="access"><span class="ti" aria-hidden="true">🔐</span>Access &amp; backup</button>
       <button class="tab" data-t="identity"><span class="ti" aria-hidden="true">🪪</span>Identity &amp; reach</button>
       <button class="tab" data-t="servers"><span class="ti" aria-hidden="true">🗄️</span>Game servers</button>
+      <button class="tab" data-t="landir"><span class="ti" aria-hidden="true">📇</span>LAN directory<span class="tbadge" id="ldBadge" style="display:none" title="Requests waiting for approval"></span></button>
       <button class="tab" data-t="keys"><span class="ti" aria-hidden="true">🔑</span>Keys</button>
     </div>
     <div class="tabs subtabs" data-g="client" style="display:none">
@@ -1313,8 +1349,38 @@
       </div>
       <div class="card">
         <h2>Effective dial allowlist</h2>
-        <p class="muted">Hosts &amp; ports the proxy currently accepts to dial (built-in defaults + env + the servers above). Anti-relay guard — shown for reference.</p>
+        <p class="muted">Hosts &amp; ports the proxy currently accepts to dial (built-in defaults + env + the servers above + the approved servers of the LAN directory). Anti-relay guard — shown for reference.</p>
         <div id="srvAllow" class="muted" style="font-size:.82rem"><div class="empty">Loading…</div></div>
+      </div>
+    </div>
+    <div id="panel-landir" style="display:none">
+      <div class="card">
+        <div class="boardhead"><h2>Pending requests <span class="muted" id="ldPendN" style="font-weight:400"></span></h2>
+          <label class="muted" style="margin:0;display:flex;align-items:center;gap:6px;font-size:.8rem"><input type="checkbox" id="ldAccept"> Accept new requests</label></div>
+        <p class="muted">Sent from the login page (LAN › Propose my server). Approving adds the server to the LAN list of every player and to the dial allowlist; the game-server registry is not touched. Nothing about the sender is kept, and the player gets no answer: the server appearing in the list is the answer.</p>
+        <div id="ldPending"><div class="empty">Loading…</div></div>
+        <div id="ldPendState" class="msg"></div>
+      </div>
+      <div class="card">
+        <div class="boardhead"><h2>Published directory <span class="muted" id="ldDirN" style="font-weight:400"></span></h2><button id="ldAddBtn" class="use" type="button">+ Add manually</button></div>
+        <p class="muted">Re-checked automatically (the greeting only: player count, no login). “Check” runs a full lobby probe, tables included. Unticking “Visible” keeps a server dialable by address but takes it off the list.</p>
+        <div id="ldNew"></div>
+        <div id="ldEntries"><div class="empty">Loading…</div></div>
+        <div id="ldDirState" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2>Settings</h2>
+        <div class="ldset">
+          <label>Health check every <input type="number" id="ldSetCheck" min="1" max="1440"> min</label>
+          <label>Auto-hide after <input type="number" id="ldSetHide" min="0" max="365"> days offline <span class="muted" style="margin:0;white-space:nowrap">(0 = never)</span></label>
+          <label>Max <input type="number" id="ldSetMax" min="1" max="50"> requests per IP per day</label>
+          <label class="ck"><input type="checkbox" id="ldSetOffline"> Show offline servers (greyed out)</label>
+          <label class="ck"><input type="checkbox" id="ldSetPrivate"> Refuse private addresses at submit</label>
+          <label class="ck"><input type="checkbox" id="ldSetManual"> <span>Allow manual address entry on the login page <span class="muted" style="margin:0;white-space:nowrap">(allowlisted hosts only)</span></span></label>
+        </div>
+        <p class="muted" style="margin-top:10px">Turn “Refuse private addresses” off only when this proxy runs on the same network as the servers (a self-hosted LAN install). Manual entry lets a player type an address instead of picking one; addresses outside the allowlist are still refused.</p>
+        <div class="periodrow" style="margin-top:6px"><button id="ldSetSave" class="use" type="button">Save settings</button></div>
+        <div id="ldSetState" class="msg"></div>
       </div>
     </div>
   </div>
@@ -1548,6 +1614,197 @@
   }
   _bindSource();
 
+  // ── LAN directory (players propose, admin approves) — master-only ──
+  // Server side: server/lan-directory.js via /admin/lan-directory. One GET
+  // returns everything; every POST action answers with the same full view,
+  // so the panel re-renders from what the proxy really stored.
+  var _ld = null, _ldEdit = null, _ldChecks = {};
+  function ldAgo(ts){
+    if(!ts) return 'never';
+    var s=Math.max(0,(Date.now()-ts)/1000);
+    if(s<60) return 'just now'; if(s<3600) return Math.round(s/60)+' min ago';
+    if(s<86400) return Math.round(s/3600)+' h ago'; return Math.round(s/86400)+' d ago';
+  }
+  function ldCountry(cc){ if(!cc) return ''; try{ return new Intl.DisplayNames(['en'],{type:'region'}).of(cc)||cc; }catch(e){ return cc; } }
+  function ldPlace(x){ var a=[]; if(x.country) a.push(ldCountry(x.country)); if(x.lang) a.push(x.lang); return a.join(' · '); }
+  function ldPlural(n,w){ return n+' '+w+(n===1?'':'s'); }
+  function ldSay(id,t,cls){ var e=$(id); if(e){ e.textContent=t||''; e.className='msg'+(cls?' '+cls:''); } }
+  function ldBadge(){
+    var b=$('ldBadge'), n=(_ld&&_ld.pending)?_ld.pending.length:0;
+    if(b){ b.textContent=String(n); b.style.display=n?'':'none'; }
+  }
+  function loadLanDir(){
+    api('/admin/lan-directory').then(function(r){return r.json();}).then(function(d){
+      if(!d||!d.ok||!Array.isArray(d.pending)){ var m=srvEsc((d&&d.error)||'Error'); if($('ldPending')) $('ldPending').innerHTML='<div class="empty">'+m+'</div>'; if($('ldEntries')) $('ldEntries').innerHTML=''; return; }
+      _ld=d; renderLanDir();
+    }).catch(function(){ if($('ldPending')) $('ldPending').innerHTML='<div class="empty">Network error</div>'; });
+  }
+  function ldPost(body,stateId,okText){
+    ldSay(stateId,'Saving…');
+    return api('/admin/lan-directory',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(r){return r.json();}).then(function(d){
+        if(!d||!d.ok){ ldSay(stateId,'✗ '+((d&&d.error)||'error'),'err'); return null; }
+        if(Array.isArray(d.pending)){ _ld=d; renderLanDir(); }
+        ldSay(stateId,okText?'✓ '+okText:'','ok'); return d;
+      }).catch(function(){ ldSay(stateId,'✗ Network error','err'); return null; });
+  }
+  // The submit-time check (pending) or the last admin Check, as one line.
+  function ldProbeLine(p,isTls){
+    if(!p) return '<div class="ldline">Not checked yet.</div>';
+    if(p.pokerth||p.reachable&&p.players!=null){
+      var parts=['✓ PokerTH server'+(p.ver?' · protocol '+srvEsc(p.ver):'')];
+      if(p.players!=null) parts.push(ldPlural(p.players,'player'));
+      if(p.games!=null) parts.push(ldPlural(p.games,'table')+(p.running?' · '+p.running+' running':''));
+      if(p.ms) parts.push(p.ms+' ms');
+      var h='<div class="ldline ok">'+parts.join(' · ')+(p.at?' <span class="muted">(checked '+ldAgo(p.at)+')</span>':'')+'</div>';
+      if(p.certUntrusted&&isTls) h+='<div class="ldline warn">⚠ Self-signed or mismatched certificate — “Skip cert check” is set on approval.</div>';
+      return h;
+    }
+    var a=srvAdvice(p.error);
+    return '<div class="ldline err">✗ '+srvEsc(p.error||'unreachable')+(p.at?' <span class="muted">(checked '+ldAgo(p.at)+')</span>':'')+'</div>'+(a?'<div class="srvhint">'+srvEsc(a)+'</div>':'');
+  }
+  // One editor for the three cases: a pending request, a published entry, a new entry.
+  function ldEditor(kind,x){
+    x=x||{port:7234};
+    var full=(kind!=='p');
+    return '<div class="ldedit" data-kind="'+kind+'" data-id="'+srvEsc(x.id||'')+'"><div class="ldgrid">'
+      +'<label class="f">Name<input type="text" class="ldN" maxlength="40" value="'+srvEsc(x.name||'')+'"></label>'
+      +'<label class="f">Host<input type="text" class="ldH" maxlength="253" value="'+srvEsc(x.host||'')+'" autocomplete="off"></label>'
+      +'<label class="f">Port<input type="number" class="ldP" min="1" max="65535" value="'+(parseInt(x.port,10)||7234)+'"></label>'
+      +'<label class="f">Country (2 letters)<input type="text" class="ldC" maxlength="2" value="'+srvEsc(x.country||'')+'" placeholder="FR"></label>'
+      +'<label class="f">Language<input type="text" class="ldL" maxlength="10" value="'+srvEsc(x.lang||'')+'" placeholder="fr"></label>'
+      +'<label class="f">Description<input type="text" class="ldD" maxlength="140" value="'+srvEsc(x.desc||'')+'"></label>'
+      +(full?'<label class="f">TLS name<input type="text" class="ldS" maxlength="253" value="'+srvEsc(x.sni||'')+'" placeholder="leave empty to use Host" autocomplete="off"></label>':'')
+      +'</div><div class="ldchk">'
+      +'<label><input type="checkbox" class="ldT" '+(x.tls?'checked':'')+'> TLS</label>'
+      +(full?'<label title="Accept a self-signed or expired certificate for THIS server only"><input type="checkbox" class="ldNV" '+(x.noverify?'checked':'')+'> Skip cert check</label>'
+            +'<label><input type="checkbox" class="ldV" '+(x.visible!==false?'checked':'')+'> Visible in the list</label>':'')
+      +'</div><div class="srowline" style="display:flex;gap:8px;margin-top:10px">'
+      +'<button class="use ldSave" type="button">'+(kind==='new'?'Add':'Save')+'</button><button class="ghost ldCancel" type="button">Cancel</button></div></div>';
+  }
+  function ldReadEditor(box){
+    var q=function(c){ return box.querySelector(c); };
+    var e={ name:q('.ldN').value.trim(), host:q('.ldH').value.trim(), port:parseInt(q('.ldP').value,10)||0,
+            country:q('.ldC').value.trim(), lang:q('.ldL').value.trim(), desc:q('.ldD').value.trim(), tls:!!q('.ldT').checked };
+    if(q('.ldS')) e.sni=q('.ldS').value.trim();
+    if(q('.ldNV')) e.noverify=!!q('.ldNV').checked;
+    if(q('.ldV')) e.visible=!!q('.ldV').checked;
+    return e;
+  }
+  function ldBindEditor(box,stateId){
+    if(!box) return;
+    box.querySelector('.ldCancel').addEventListener('click',function(){ _ldEdit=null; renderLanDir(); });
+    box.querySelector('.ldSave').addEventListener('click',function(){
+      var kind=box.getAttribute('data-kind'), id=box.getAttribute('data-id'), e=ldReadEditor(box);
+      if(!e.host||!e.port){ ldSay(stateId,'✗ Host and port are required','err'); return; }
+      var body=(kind==='new')?{action:'add',entry:e}:{action:'update',id:id,entry:e};
+      ldPost(body,stateId,kind==='new'?'Added':'Saved').then(function(d){ if(d){ _ldEdit=null; renderLanDir(); } });
+    });
+  }
+  function renderLdPending(){
+    var box=$('ldPending'); if(!box) return;
+    var list=_ld.pending||[];
+    if($('ldPendN')) $('ldPendN').textContent=list.length?'· '+list.length:'';
+    if(!list.length){ box.innerHTML='<div class="empty">No request waiting.</div>'; return; }
+    box.innerHTML=list.map(function(p){
+      if(_ldEdit&&_ldEdit.kind==='p'&&_ldEdit.id===p.id) return ldEditor('p',p);
+      var chk=_ldChecks[p.id]||p.probe, can=!!(chk&&(chk.pokerth||chk.reachable));
+      return '<div class="ldreq" data-id="'+srvEsc(p.id)+'"><div class="ldmain">'
+        +'<span class="ldname">'+srvEsc(p.name||p.host)+'</span><span class="ldaddr">'+srvEsc(p.host)+':'+p.port+'</span>'
+        +(p.tls?'<span class="ldchip">TLS</span>':'')+(ldPlace(p)?'<span class="ldchip">'+srvEsc(ldPlace(p))+'</span>':'')
+        +'<div class="ldline">'+(p.desc?'“'+srvEsc(p.desc)+'” · ':'')+'submitted '+ldAgo(p.submittedAt)+'</div>'
+        +ldProbeLine(chk,p.tls)
+        +'</div><div class="ldbtns">'
+        +'<button class="use ldChk" type="button">Check</button>'
+        +'<button class="use ldEd" type="button">Edit</button>'
+        +'<button class="use danger ldRej" type="button">Reject</button>'
+        +'<button class="use ldOk" type="button" style="border-color:var(--gold);color:var(--gold);font-weight:700" '+(can?'':'disabled title="Not reachable at the last check — run Check first"')+'>Approve</button>'
+        +'</div></div>';
+    }).join('');
+    ldBindEditor(box.querySelector('.ldedit'),'ldPendState');
+    [].slice.call(box.querySelectorAll('.ldreq')).forEach(function(row){
+      var id=row.getAttribute('data-id'), p=list.filter(function(x){return x.id===id;})[0]; if(!p) return;
+      row.querySelector('.ldEd').addEventListener('click',function(){ _ldEdit={kind:'p',id:id}; renderLanDir(); });
+      row.querySelector('.ldChk').addEventListener('click',function(){ ldCheck(id,'ldPendState'); });
+      row.querySelector('.ldRej').addEventListener('click',function(){
+        if(!confirm('Reject “'+(p.name||p.host)+'”? The request is deleted; the player is not told.')) return;
+        ldPost({action:'reject',id:id},'ldPendState','Rejected');
+      });
+      row.querySelector('.ldOk').addEventListener('click',function(){ ldPost({action:'approve',id:id},'ldPendState','Approved — now in the LAN list'); });
+    });
+  }
+  function ldCheck(id,stateId){
+    ldSay(stateId,'Checking…');
+    api('/admin/lan-directory',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'check',id:id})})
+      .then(function(r){return r.json();}).then(function(d){
+        if(!d||!d.ok){ ldSay(stateId,'✗ '+((d&&d.error)||'error'),'err'); return; }
+        var c=d.check||{};
+        _ldChecks[id]={reachable:!!c.reachable,pokerth:!!c.reachable,players:c.players,games:c.games,running:c.running,ver:c.ver,ms:c.ms,error:c.error,at:Date.now()};
+        if(Array.isArray(d.pending)){ _ld=d; renderLanDir(); }
+        ldSay(stateId,c.reachable?'✓ Reachable':'✗ '+(c.error||'unreachable'),c.reachable?'ok':'err');
+      }).catch(function(){ ldSay(stateId,'✗ Network error','err'); });
+  }
+  function renderLdEntries(){
+    var box=$('ldEntries'); if(!box) return;
+    var list=_ld.entries||[];
+    if($('ldDirN')) $('ldDirN').textContent=list.length?'· '+list.length:'';
+    var nb=$('ldNew'); if(nb){ nb.innerHTML=(_ldEdit&&_ldEdit.kind==='new')?ldEditor('new',null):''; ldBindEditor(nb.querySelector('.ldedit'),'ldDirState'); }
+    if(!list.length){ box.innerHTML='<div class="empty">No server published yet.</div>'; return; }
+    var editing=(_ldEdit&&_ldEdit.kind==='e')?_ldEdit.id:'';
+    box.innerHTML=(editing?ldEditor('e',list.filter(function(x){return x.id===editing;})[0]):'')
+      +'<div class="ldtblw"><table class="ldtbl"><thead><tr><th>Status</th><th>Name</th><th>Address</th><th>Country</th><th>Activity</th><th>Last seen</th><th>Visible</th><th></th></tr></thead><tbody>'
+      +list.map(function(e){
+        var st=e.status, chk=_ldChecks[e.id];
+        var cls=!st?'unk':(st.online?'on':'off'), lab=!st?'Unknown':(st.online?'Online':'Offline');
+        var games=(chk&&chk.games!=null)?chk.games:(st&&st.games!=null?st.games:null);
+        var act=(st&&st.online)?((st.players!=null?ldPlural(st.players,'player'):'')+(games!=null?' · '+ldPlural(games,'table'):'')):'—';
+        var seen=ldAgo(e.lastSeen)+(e.autoHidden?' · auto-hidden':'');
+        return '<tr data-id="'+srvEsc(e.id)+'"'+((!e.visible||e.autoHidden)?' class="ldhid"':'')+'>'
+          +'<td><span class="ldst '+cls+'" title="'+srvEsc(st&&st.error||'')+'"><i></i>'+lab+'</span></td>'
+          +'<td><b>'+srvEsc(e.name||e.host)+'</b>'+(e.desc?'<div class="ldline" style="margin:0">'+srvEsc(e.desc)+'</div>':'')+'</td>'
+          +'<td><span class="ldaddr">'+srvEsc(e.host)+':'+e.port+'</span>'+(e.tls?'<span class="ldchip">TLS</span>':'')+(e.tls&&e.noverify?'<span class="ldchip warn">cert not checked</span>':'')+'</td>'
+          +'<td>'+srvEsc(ldPlace(e))+'</td>'
+          +'<td>'+srvEsc(act)+'</td>'
+          +'<td'+(e.autoHidden?' style="color:#e98a8a"':'')+'>'+srvEsc(seen)+'</td>'
+          +'<td><input type="checkbox" class="ldVis" aria-label="Visible: '+srvEsc(e.name||e.host)+'" '+(e.visible?'checked':'')+'></td>'
+          +'<td class="ldact"><button class="use ldChk" type="button">Check</button> <button class="use ldEd" type="button">Edit</button> <button class="use danger ldDel" type="button">Remove</button></td>'
+          +'</tr>';
+      }).join('')+'</tbody></table></div>';
+    ldBindEditor(box.querySelector('.ldedit'),'ldDirState');
+    [].slice.call(box.querySelectorAll('tr[data-id]')).forEach(function(row){
+      var id=row.getAttribute('data-id'), e=list.filter(function(x){return x.id===id;})[0]; if(!e) return;
+      row.querySelector('.ldVis').addEventListener('change',function(ev){ ldPost({action:'update',id:id,entry:{visible:!!ev.target.checked}},'ldDirState',ev.target.checked?'Listed':'Unlisted'); });
+      row.querySelector('.ldEd').addEventListener('click',function(){ _ldEdit={kind:'e',id:id}; renderLanDir(); });
+      row.querySelector('.ldChk').addEventListener('click',function(){ ldCheck(id,'ldDirState'); });
+      row.querySelector('.ldDel').addEventListener('click',function(){
+        if(!confirm('Remove “'+(e.name||e.host)+'” from the directory? It leaves the LAN list and the dial allowlist.')) return;
+        ldPost({action:'remove',id:id},'ldDirState','Removed');
+      });
+    });
+  }
+  function renderLdSettings(){
+    var s=_ld.settings||{};
+    if($('ldAccept')) $('ldAccept').checked=!!s.acceptRequests;
+    if($('ldSetCheck')) $('ldSetCheck').value=s.checkMinutes;
+    if($('ldSetHide')) $('ldSetHide').value=s.autoHideDays;
+    if($('ldSetMax')) $('ldSetMax').value=s.maxPerIpDay;
+    if($('ldSetOffline')) $('ldSetOffline').checked=!!s.showOffline;
+    if($('ldSetPrivate')) $('ldSetPrivate').checked=!!s.refusePrivate;
+    if($('ldSetManual')) $('ldSetManual').checked=!!s.manualEntry;
+  }
+  function renderLanDir(){ if(!_ld) return; ldBadge(); renderLdPending(); renderLdEntries(); renderLdSettings(); }
+  if($('ldAddBtn')) $('ldAddBtn').addEventListener('click',function(){ _ldEdit={kind:'new'}; renderLanDir(); });
+  if($('ldAccept')) $('ldAccept').addEventListener('change',function(ev){
+    ldPost({action:'settings',settings:{acceptRequests:!!ev.target.checked}},'ldPendState',ev.target.checked?'Requests open':'Requests closed');
+  });
+  if($('ldSetSave')) $('ldSetSave').addEventListener('click',function(){
+    ldPost({action:'settings',settings:{
+      checkMinutes:parseInt($('ldSetCheck').value,10), autoHideDays:parseInt($('ldSetHide').value,10),
+      maxPerIpDay:parseInt($('ldSetMax').value,10), showOffline:!!$('ldSetOffline').checked,
+      refusePrivate:!!$('ldSetPrivate').checked, manualEntry:!!$('ldSetManual').checked
+    }},'ldSetState','Saved');
+  });
+
   $('loginBtn').addEventListener('click', doLogin);
   $('ltok').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
   function doLogin(){ localStorage.setItem(TOKK, $('ltok').value.trim()); enter(); }
@@ -1604,7 +1861,7 @@
       clkStart(); liveStart();
       if(_isMaster){
         api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
-        loadServer(); loadDeploys(); loadBlocked(); loadThemes(); loadFeatureSwitches(); srvStart();
+        loadServer(); loadDeploys(); loadBlocked(); loadThemes(); loadFeatureSwitches(); srvStart(); loadLanDir();
       } else {
         srvStop();
         var first=[].slice.call(document.querySelectorAll('.tab')).find(function(b){ return b.style.display!=='none'; });
@@ -2077,6 +2334,7 @@
     if(t==='packages') api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
     if(t==='traffic'){ loadTraffic(); setTimeout(_trafSubScroll,0); }
     if(t==='servers') loadServers();
+    if(t==='landir') loadLanDir();
     if(t==='polls') loadPolls();
     if(t==='broadcast'){ loadBroadcasts(); if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); } }
     if(t==='clients'){ loadStatus(true); loadThemes(); loadFeatureSwitches(); }

@@ -85,8 +85,15 @@ highlights below.
   the address it checked, and is rate-limited per IP; nothing about the sender is stored and
   there is no follow-up on a request. Approved servers are re-checked every 5 minutes. Setting
   `manualEntry` (on by default, so existing installs keep the free address field) will let
-  pokerth.net hide that field. The admin tab and the login drop-down follow;
-  `test-lan-directory` (`web.41`).
+  pokerth.net hide that field. `test-lan-directory` (`web.41`).
+  The admin side is the new tab Server › LAN directory: pending requests with the result of the
+  submit check (self-signed certificates flagged, plain-language advice when a server did not
+  answer), Approve only for a server that answered, Reject, Edit and a full lobby Check; the
+  published directory with status, players, last seen, a « Visible » switch, Edit, Check and
+  Remove, plus « Add manually »; and the settings (health-check period, auto-hide, per-IP limit,
+  offline servers, private addresses, manual address entry). A badge on the tab counts the
+  requests waiting. The Game servers allowlist card now lists the approved LAN servers too
+  (`web.42`). The login drop-down comes next.
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the

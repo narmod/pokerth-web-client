@@ -32,7 +32,22 @@ const CANNED = {
     guide: { acceptance: { offered: 5, accepted: 2, declined: 1, rate: 0.4 }, contexts: { 'lobby-ranking': { shown: 10, done: 2, dismissed: 3 } },
       funnel: { highlighted: 10, joined: 4, started: 2, joinRate: 0.4, startRate: 0.5 }, create: { shown: 1, created: 0 }, guests: { shown: 2, redirect: 1 }, rankedStarts: 3 },
     guidePeriod: { days: 0, summary: null }, guideSince: 1700000000000 },
+  '/admin/lan-directory': { ok: true,
+    settings: { acceptRequests: true, checkMinutes: 5, autoHideDays: 7, maxPerIpDay: 3, showOffline: true, refusePrivate: true, manualEntry: true },
+    pending: [
+      { id: 'lan_aaaaaa01', name: 'Club <Lyon>', host: 'lyon.example.org', port: 7236, tls: true, country: 'FR', lang: 'fr', desc: 'Thursdays', submittedAt: Date.now() - 7200000,
+        probe: { reachable: true, pokerth: true, players: 12, ver: '6.1', ms: 42, certUntrusted: true, error: '', at: Date.now() - 60000 } },
+      { id: 'lan_aaaaaa02', name: 'Gone', host: 'gone.example.org', port: 7234, tls: false, country: '', lang: '', desc: '', submittedAt: Date.now() - 86400000,
+        probe: { reachable: false, pokerth: false, players: null, ver: '', ms: 0, certUntrusted: false, error: 'ECONNREFUSED', at: Date.now() - 60000 } }
+    ],
+    entries: [
+      { id: 'lan_bbbbbb01', name: 'Berlin', host: 'berlin.example.org', port: 7234, tls: false, country: 'DE', lang: 'de', desc: '', visible: true, noverify: false, sni: '',
+        addedAt: Date.now() - 864e5, lastSeen: Date.now(), status: { online: true, players: 6, games: null, at: Date.now() }, autoHidden: false },
+      { id: 'lan_bbbbbb02', name: 'Old club', host: 'old.example.org', port: 7234, tls: true, country: 'NL', lang: 'nl', desc: '', visible: true, noverify: true, sni: '',
+        addedAt: Date.now() - 30 * 864e5, lastSeen: Date.now() - 9 * 864e5, status: { online: false, players: null, error: 'ETIMEDOUT', at: Date.now() }, autoHidden: true }
+    ] },
 };
+const posts = [];
 function canned(url) {
   const path = String(url).split('?')[0];
   return CANNED[path] || { ok: true };
@@ -44,11 +59,12 @@ const dom = new JSDOM(html, {
   virtualConsole: vc,
   pretendToBeVisual: true,
   beforeParse(w) {
-    w.fetch = (url) => Promise.resolve({
+    w.fetch = (url, opts) => { if (opts && opts.method === 'POST') { try { posts.push({ url: String(url), body: JSON.parse(opts.body) }); } catch (e) {} } return Promise.resolve({
       ok: true, status: 200,
       json: () => Promise.resolve(canned(url)),
       text: () => Promise.resolve(''),
-    });
+    }); };
+    w.confirm = () => true;
     w.localStorage.setItem('pth_admin_token', 'test-token');
     w.scrollTo = () => {};
     w.HTMLElement.prototype.scrollIntoView = () => {};
@@ -65,12 +81,12 @@ ok(errors.length === 0, 'the page loads without throwing' + (errors.length ? ': 
 // ── Tabs and panels ───────────────────────────────────────────────────────
 const panels = [...doc.querySelectorAll('[id^="panel-"]')];
 const visible = () => panels.filter((p) => p.style.display !== 'none');
-ok(panels.length === 17, 'all 17 panels are in the document, found ' + panels.length);
+ok(panels.length === 18, 'all 18 panels are in the document, found ' + panels.length);
 ok(visible().length === 1, 'exactly one panel is open at load, not ' + visible().length);
 ok(visible()[0] && visible()[0].id === 'panel-server', 'and it is panel-server');
 
 const tabs = [...doc.querySelectorAll('.tab')];
-ok(tabs.length === 17, 'every section has a tab, found ' + tabs.length);
+ok(tabs.length === 18, 'every section has a tab, found ' + tabs.length);
 for (const t of tabs) {
   const id = 'panel-' + t.dataset.t;
   t.click();
@@ -136,6 +152,47 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   xb.click();
   ok(!pn.classList.contains('xpl-on'), 'and a second folds them again');
   ok(errors.length === 0, 'switching threw nothing' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
+}
+// ── LAN directory (Server › LAN directory) ───────────────────────────────
+{
+  doc.querySelector('.tab[data-t="landir"]').click();
+  await new Promise((r) => setTimeout(r, 200));
+  const badge = $('ldBadge');
+  ok(badge && badge.textContent === '2' && badge.style.display !== 'none', 'the tab shows 2 requests waiting');
+  const reqs = [...doc.querySelectorAll('#ldPending .ldreq')];
+  ok(reqs.length === 2, 'both pending requests are listed');
+  ok(/Club <Lyon>/.test(reqs[0].textContent) && !reqs[0].innerHTML.includes('<Lyon>'), 'names are escaped, not injected');
+  ok(/12 players/.test(reqs[0].textContent) && /France · fr/.test(reqs[0].textContent), 'the submit check and the place are shown');
+  ok(/Skip cert check/.test(reqs[0].textContent), 'a self-signed certificate is flagged');
+  ok(!reqs[0].querySelector('.ldOk').disabled && reqs[1].querySelector('.ldOk').disabled, 'Approve is only offered for a server that answered');
+  ok(/Nothing is listening/.test(reqs[1].textContent), 'an unreachable server gets the plain-language advice');
+  reqs[0].querySelector('.ldOk').click();
+  await new Promise((r) => setTimeout(r, 100));
+  const ap = posts.filter((p) => p.url.startsWith('/admin/lan-directory')).pop();
+  ok(ap && ap.body.action === 'approve' && ap.body.id === 'lan_aaaaaa01', 'Approve posts the right action and id');
+  const rows = [...doc.querySelectorAll('#ldEntries tr[data-id]')];
+  ok(rows.length === 2, 'the published directory lists both servers');
+  ok(/Online/.test(rows[0].textContent) && /6 players/.test(rows[0].textContent), 'an online server shows its players');
+  ok(/auto-hidden/.test(rows[1].textContent) && rows[1].classList.contains('ldhid') && /cert not checked/.test(rows[1].textContent), 'an auto-hidden one is greyed, its TLS override shown');
+  rows[0].querySelector('.ldVis').checked = false;
+  rows[0].querySelector('.ldVis').dispatchEvent(new window.Event('change'));
+  await new Promise((r) => setTimeout(r, 50));
+  const vp = posts.filter((p) => p.url.startsWith('/admin/lan-directory')).pop();
+  ok(vp && vp.body.action === 'update' && vp.body.entry.visible === false, 'unticking Visible posts an update');
+  doc.querySelector('#ldEntries .ldEd').click();
+  const ed = doc.querySelector('#ldEntries .ldedit');
+  ok(ed && ed.querySelector('.ldH').value === 'berlin.example.org' && ed.querySelector('.ldNV'), 'Edit opens the editor with the TLS override');
+  ed.querySelector('.ldN').value = 'Berlin club';
+  ed.querySelector('.ldSave').click();
+  await new Promise((r) => setTimeout(r, 50));
+  const up = posts.filter((p) => p.url.startsWith('/admin/lan-directory')).pop();
+  ok(up && up.body.action === 'update' && up.body.entry.name === 'Berlin club' && up.body.entry.host === 'berlin.example.org', 'Save posts the edited entry');
+  ok($('ldSetManual') && $('ldSetManual').checked === true && $('ldSetCheck').value === '5', 'settings are filled in');
+  $('ldSetManual').checked = false; $('ldSetSave').click();
+  await new Promise((r) => setTimeout(r, 50));
+  const sp = posts.filter((p) => p.url.startsWith('/admin/lan-directory')).pop();
+  ok(sp && sp.body.action === 'settings' && sp.body.settings.manualEntry === false && sp.body.settings.checkMinutes === 5, 'Save settings posts manual entry off');
+  ok(errors.length === 0, 'the LAN directory tab threw nothing' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
 }
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);
