@@ -5834,7 +5834,10 @@ const App = (() => {
       // d'autant que guest/auth passent par une connexion wss directe).
       if (tlsRow) {
         var advBtn = document.getElementById('conn-adv-btn');
-        tlsRow.style.display = (advBtn && advBtn.classList.contains('open')) ? '' : 'none';
+        // LAN / dédié seulement : en Internet la roue est masquée (et refermée
+        // plus bas) — la lire ici laissait la case TLS visible en arrivant de
+        // LAN avec la roue ouverte.
+        tlsRow.style.display = ((mode === 'lan' || mode === 'unauth') && advBtn && advBtn.classList.contains('open')) ? '' : 'none';
       }
 
       // Champ mot de passe SERVEUR : seuls les serveurs auto-hébergés
@@ -6079,6 +6082,13 @@ const App = (() => {
         var _onl = $('nick-label'); if (_onl) _onl.textContent = t('enterNickFree');
         if (typeof _stopIpBlockCountdown === 'function') _stopIpBlockCountdown();
         setStatus(t('offlineHint'), '', 'offlineHint');
+        // LAN server list: this early return skips onLoginModeChange(), whose
+        // tail re-derives it — coming from LAN, the list (and its lock on the
+        // address fields) stayed on the training screen. sync() hides it
+        // (_isLan() is false offline); the explicit hide covers a module
+        // that is not loaded yet.
+        try { if (window.LanDirUI && window.LanDirUI.sync) window.LanDirUI.sync(); } catch (e) {}
+        try { var _ld = $('lan-dir'); if (_ld) _ld.style.display = 'none'; document.body.classList.remove('lan-dir-locked'); } catch (e) {}
         import('/modules/offline/index.mjs').catch(function(){});
         return;
       }
@@ -6100,7 +6110,14 @@ const App = (() => {
           // changement de serveur (offline compris) → tick du nouveau mode
           var _sv = null; try { _sv = localStorage.getItem(_gk); } catch (e) {}
           if (_sv !== null) gcEl.checked = (_sv === '1');
-          else { try { localStorage.setItem(_gk, gcEl.checked ? '1' : '0'); } catch (e) {} }
+          else {
+            // 1re visite de ce mode : son réglage par défaut (décoché), pas
+            // celui du mode quitté — seul le pseudo passe d'un mode à l'autre
+            // (narmod 2026-10-14). Avant, cocher « invité » en Internet
+            // basculait aussi le LAN en invité à la 1re bascule.
+            gcEl.checked = false;
+            try { localStorage.setItem(_gk, '0'); } catch (e) {}
+          }
         } else {
           // même serveur (ou 1re visite) → le déclencheur est la case
           try { localStorage.setItem(_gk, gcEl.checked ? '1' : '0'); } catch (e) {}
@@ -12140,7 +12157,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.58'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.59'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

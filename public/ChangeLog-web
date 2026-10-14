@@ -1,3 +1,8 @@
+2026-10-14 version 2.1.10-web.59:
+- bugfix: login screen: coming back from « LAN / Dedicated server » to « Local / training », the LAN server list no longer stays on screen
+- bugfix: login screen: the « Encrypted connection (TLS) » box no longer shows up in « Internet / PokerTH.net » after opening the LAN advanced options
+- bugfix: login screen: ticking « Guest mode » in one mode no longer ticks it in another the first time you switch — only your nickname follows you from one mode to another
+
 2026-10-14 version 2.1.10-web.58:
 - improvement: the LAN server list is now labelled « Choose a server »
 

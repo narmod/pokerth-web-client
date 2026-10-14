@@ -181,6 +181,14 @@ highlights below.
   The LAN drop-down label reads « Choose a server » instead of « LAN server », which repeated
   the screen title (`web.58`); Ace's Help (`c3LanDir`) and the help paragraph that cite it
   follow, in the 83 languages.
+  Login modes leak nothing but the nickname (`web.59`). Training: the early return in
+  `onServerOrGuestChange()` skipped the LAN list re-derive, so the list (and its lock on the
+  address fields) stayed after LAN → training; it now calls `LanDirUI.sync()` and hides it.
+  Internet: the TLS row read the gear state before the gear was closed for that mode, so it
+  showed after LAN with the gear open. Guest tick: the first visit of a mode inherited the tick
+  of the mode left; it now starts unticked (each mode then keeps its own). New
+  `scripts/test-login-modes-browser.mjs` walks the 30 two- and three-step paths and compares
+  each final screen with a fresh visit (10 of them failed before).
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the
