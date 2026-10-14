@@ -12333,11 +12333,20 @@ const httpServer = http.createServer((req, res) => {
   // unreachable, notpokerth, listed, pending, full, limit, owner, link, until)
   // the client translates. The sender's IP is never stored (only a salted
   // hash, to count requests per address -- server/lan-directory.js).
-  if (reqPathOnly === '/api/lan-directory' || reqPathOnly === '/api/lan-directory/test' || reqPathOnly === '/api/lan-directory/propose') {
+  if (reqPathOnly === '/api/lan-directory' || reqPathOnly === '/api/lan-directory/test' || reqPathOnly === '/api/lan-directory/propose' || reqPathOnly === '/api/lan-directory/board') {
     var _lanJson = function (code, obj) {
       res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
       res.end(JSON.stringify(obj));
     };
+    // GET /api/lan-directory/board?host=&port= -> { ok, board }
+    // The leaderboard of the server a player connects to, for a directory
+    // server the client cannot see in the public list (unlisted, auto-hidden,
+    // event ended -- typically reached through an invite link). Only the id
+    // comes back, and only to someone who already knows the address.
+    if (reqPathOnly === '/api/lan-directory/board') {
+      if (req.method !== 'GET') { res.writeHead(405); res.end('Method not allowed'); return; }
+      return _lanJson(200, Object.assign({ ok: true }, LAN_DIR.boardInfoForAddr(String(query.host || '').slice(0, 253), String(query.port || '').slice(0, 5))));
+    }
     if (reqPathOnly === '/api/lan-directory') {
       if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405); res.end('Method not allowed'); return; }
       return _lanJson(200, Object.assign({ ok: true }, LAN_DIR.publicView()));

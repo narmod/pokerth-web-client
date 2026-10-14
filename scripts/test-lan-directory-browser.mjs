@@ -265,6 +265,17 @@ try {
   ok(iv.tls === false, 'and its TLS setting replaces this device’s stale one (hidden checkbox)');
   iv = await land('hidden.invalid:' + FAKE, stale);
   ok(iv.val === 'invite' && iv.host === 'hidden.invalid' && iv.port === String(FAKE) && iv.locked && /^✉ hidden\.invalid:/.test(iv.opt0), 'a link to an unlisted server keeps that server (its own entry), even with manual entry off');
+  {
+    const pg = await ctx.newPage();
+    await pg.goto(base + '/?inv=board#join=Club%20night&s=' + encodeURIComponent('hidden.invalid:' + FAKE));
+    await sleep(1500);
+    await pg.fill('#nick', 'Visitor');
+    await pg.evaluate(() => { const b = document.querySelector('#login-step2 .btn-primary[data-i18n="connect"]'); if (b) b.click(); });
+    await sleep(1500);
+    const bd = await pg.evaluate(() => ({ board: window.PthState && window.PthState._lanBoard, info: window.LanDirUI.boardInfo('lan_aaaaaa03') }));
+    ok(bd.board === 'lan_aaaaaa03' && bd.info && bd.info.name === 'Hidden club', 'connecting to the unlisted server uses ITS leaderboard (looked up by address)');
+    await pg.close();
+  }
   iv = await land('127.0.0.1:7234', stale);
   ok(iv.val === 'local' && iv.host === '127.0.0.1' && iv.port === '7234', 'a link to this install’s own server selects « Local server »');
   ok(errors.length === 0, 'no page error' + (errors.length ? ': ' + errors[0] : ''));

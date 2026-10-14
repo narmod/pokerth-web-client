@@ -1,3 +1,6 @@
+2026-10-14 version 2.1.10-web.57:
+- bugfix: on a LAN server that is not shown in the list (unlisted by the admins, hidden, or an event that has ended), your results now go to that server's own leaderboard instead of the general one
+
 2026-10-14 version 2.1.10-web.56:
 - bugfix: an invitation to a LAN table now always leads to the inviter's server, even when that server is not shown in the LAN list (unlisted by the admins, or an event that has ended); it gets its own ✉ entry in the list
 

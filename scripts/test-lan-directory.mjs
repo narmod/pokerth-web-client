@@ -151,6 +151,7 @@ ok(r.ok && dir.tlsOpts('self.example.org', 7236).noverify === true, 'approving a
 ok(dir.tlsOpts('club.example.org', 7234).noverify === false && dir.tlsOpts('x.example.org', 7234) === null, 'other hosts keep certificate checks');
 r = await call(dir.admin, { action: 'update', id: selfId, entry: { visible: false } });
 ok(r.ok && !dir.publicView().servers.some((s) => s.host === 'self.example.org') && dir.hostAllowed('self.example.org'), 'unlisted: hidden from the list but still dialable');
+ok(dir.boardForAddr('SELF.example.org', '7236') === selfId && dir.boardInfoForAddr('self.example.org', 7236).name === 'Self TLS' && dir.boardForAddr('self.example.org', 7234) === '' && dir.boardInfoForAddr('x.example.org', 7234).board === '', 'an unlisted server keeps its own board, found by address');
 const aId = dir.adminView().pending.find((x) => x.host === 'a.example.org').id;
 r = await call(dir.admin, { action: 'reject', id: aId });
 ok(r.ok && !r.pending.some((x) => x.id === aId) && !dir.hostAllowed('a.example.org'), 'reject drops the request');
@@ -361,6 +362,14 @@ try {
   ok(h.status === 403, 'resetting a board needs the admin key');
   h = await http('/admin/lan-boards?token=' + TOKEN);
   ok(h.json && h.json.ok && h.json.boards.length === 1 && h.json.boards[0].players === 1 && h.json.defaultPlayers === 1, 'admin: board list with player counts');
+  h = await http('/api/lan-directory/board?host=127.0.0.1&port=' + FAKE);
+  ok(h.json && h.json.ok && h.json.board === id && h.json.name === 'Fake club', 'GET board by address: the server’s own board');
+  await http('/admin/lan-directory', { token: TOKEN, action: 'update', id, entry: { visible: false } });
+  h = await http('/api/lan-directory/board?host=127.0.0.1&port=' + FAKE);
+  ok(h.json && h.json.board === id && !(await http('/api/lan-directory')).json.servers.length, 'still found once unlisted (invite links), while the public list hides it');
+  await http('/admin/lan-directory', { token: TOKEN, action: 'update', id, entry: { visible: true } });
+  h = await http('/api/lan-directory/board?host=nope.example.org&port=7234');
+  ok(h.json && h.json.ok && h.json.board === '', 'an address outside the directory: the historical board');
   h = await http('/admin/lan-directory', { token: TOKEN, action: 'update', id, entry: { resetPeriod: 'weekly' } });
   ok(h.json && h.json.entries[0].resetPeriod === 'weekly', 'the admin changes the board period');
   h = await http('/stats', { board: id, _resetAll: true, token: TOKEN });

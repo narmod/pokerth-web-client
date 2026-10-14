@@ -6319,6 +6319,18 @@ const App = (() => {
       // Classement LAN du serveur visé : celui de son entrée d'annuaire
       // (server/lan-boards.js), sinon le classement historique ('').
       try { S._lanBoard = (window.LanDirUI && window.LanDirUI.boardFor) ? window.LanDirUI.boardFor(host, port) : ''; } catch (e) { S._lanBoard = ''; }
+      // Serveur d'annuaire absent de la liste publique (non listé, masqué,
+      // événement terminé — atteint par un lien d'invitation) : le proxy donne
+      // son classement d'après l'adresse. _lifeSeedFromServer attend la réponse.
+      S._lanBoardReady = null;
+      try {
+        if (!S._lanBoard && $('server-mode') && $('server-mode').value === 'lan-dedi' && window.LanDirUI && window.LanDirUI.resolveBoard) {
+          const _bHost = host, _bPort = port;
+          S._lanBoardReady = window.LanDirUI.resolveBoard(_bHost, _bPort).then(function (id) {
+            if (id && $('host') && $('host').value.trim() === _bHost) S._lanBoard = id;
+          });
+        }
+      } catch (e) { S._lanBoardReady = null; }
       const loginMode = $('login-mode') ? $('login-mode').value : 'guest';
       const _off = !!($('server-mode') && $('server-mode').value === 'offline');
       S.myName          = $('nick').value.trim();
@@ -12128,7 +12140,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.56'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.57'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

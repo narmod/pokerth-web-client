@@ -106,7 +106,9 @@ function _lifeMerge(loc, srv) {
 // display on the new device. Runs once per connect when eligible.
 function _lifeSeedFromServer() {
   if (!S._boardEligible || !S.myName) return;
-  fetch('/stats' + _boardQS(), { cache:'no-store' })
+  // A LAN board looked up by address (connect() in pokerth.js) must be known
+  // first, or the seed would read the historical board.
+  Promise.resolve(S._lanBoardReady).then(function(){ return fetch('/stats' + _boardQS(), { cache:'no-store' }); })
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(data){
       if (!data || !data[S.myName]) return;

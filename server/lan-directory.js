@@ -397,6 +397,17 @@ function createLanDirectory(deps) {
     var e = findByAddr(entries(), String(host || '').trim().toLowerCase(), parseInt(port, 10));
     return e ? Math.min(e.maxPerIp || IP_DEFAULT, ipCapMax()) : 0;
   }
+  /** Leaderboard of the server at host:port: its entry id, listed or not
+   *  (unlisted, auto-hidden, ended event), '' when it is not in the directory. */
+  function boardForAddr(host, port) {
+    var e = findByAddr(entries(), String(host || '').trim().toLowerCase(), parseInt(port, 10));
+    return e ? e.id : '';
+  }
+  /** { board, name, resetPeriod } for that address ({ board: '' } if none). */
+  function boardInfoForAddr(host, port) {
+    var e = findByAddr(entries(), String(host || '').trim().toLowerCase(), parseInt(port, 10));
+    return e ? { board: e.id, name: e.name, resetPeriod: e.resetPeriod } : { board: '' };
+  }
   function tlsOpts(host, port) {
     var e = findByAddr(entries(), String(host || '').trim().toLowerCase(), parseInt(port, 10));
     return e ? { sni: e.sni || '', noverify: !!e.noverify } : null;
@@ -721,7 +732,7 @@ function createLanDirectory(deps) {
 
   return {
     settings: settings, publicView: publicView, adminView: adminView, entries: entries,
-    hostAllowed: hostAllowed, portAllowed: portAllowed, tlsOpts: tlsOpts, ipCapFor: ipCapFor, ipCapMax: ipCapMax,
+    hostAllowed: hostAllowed, portAllowed: portAllowed, tlsOpts: tlsOpts, ipCapFor: ipCapFor, ipCapMax: ipCapMax, boardForAddr: boardForAddr, boardInfoForAddr: boardInfoForAddr,
     test: test, propose: propose, admin: admin,
     tick: tick, checkEntry: checkEntry, start: start, stop: stop,
     _status: status

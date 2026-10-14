@@ -134,10 +134,27 @@ export function boardFor(host, port) {
   const s = _cfg ? matchEntry(_cfg.servers, host, port) : null;
   return s && /^lan_[a-f0-9]{6,32}$/.test(s.id) ? s.id : '';
 }
+/**
+ * The board of a directory server the public list does not show (unlisted,
+ * auto-hidden, ended event — reached through an invite link): asked to the
+ * proxy by address. Resolves to its id, or '' (the historical board).
+ */
+export function resolveBoard(host, port) {
+  const qs = '?host=' + encodeURIComponent(String(host || '').trim()) + '&port=' + encodeURIComponent(String(port || '7234'));
+  return fetch('/api/lan-directory/board' + qs, { cache: 'no-store' })
+    .then((r) => r.ok ? r.json() : null)
+    .then((d) => {
+      if (!(d && d.ok && /^lan_[a-f0-9]{6,32}$/.test(String(d.board || '')))) return '';
+      _boardExtra[d.board] = { name: String(d.name || '').slice(0, 40), resetPeriod: String(d.resetPeriod || '') };
+      return d.board;
+    })
+    .catch(() => '');
+}
+const _boardExtra = {};   // boards resolved by address (not in the public list)
 /** { name, resetPeriod } of a listed server's board (or null). */
 export function boardInfo(id) {
   const s = _cfg ? _cfg.servers.filter((x) => x.id === id)[0] : null;
-  return s ? { name: s.name, resetPeriod: s.resetPeriod } : null;
+  return s ? { name: s.name, resetPeriod: s.resetPeriod } : (_boardExtra[id] || null);
 }
 
 /** Which entry the current #host / #port point at (or null). */
@@ -519,7 +536,7 @@ function _wire() {
   try { if (typeof window._onLangChange === 'function') window._onLangChange(() => { const cs = $('lan-prop-country'); if (cs) while (cs.options.length > 1) cs.remove(1); sync(); }); } catch (e) {}
 }
 
-const LanDirUI = { setConfig, refresh, sync, openPropose, closePropose, testPropose, sendPropose, boardFor, boardInfo, withInvite };
+const LanDirUI = { setConfig, refresh, sync, openPropose, closePropose, testPropose, sendPropose, boardFor, boardInfo, withInvite, resolveBoard };
 try {
   /** @type {any} */ (window).LanDirUI = LanDirUI;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _wire);

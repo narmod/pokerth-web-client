@@ -172,6 +172,12 @@ highlights below.
   (released when the player picks another server). A selected entry also sets the TLS box
   (hidden while locked) instead of keeping this device's last state. Browser tests land on
   listed / unlisted / local targets with a stale saved server.
+  Leaderboard of an unlisted server (`web.57`): the client only knew the board ids of the
+  servers in the public list, so a game on an unlisted / auto-hidden / ended-event server fed
+  the historical board. `GET /api/lan-directory/board?host=&port=` (→ `{ board, name,
+  resetPeriod }`, `board: ''` outside the directory) resolves it by address at connect;
+  `_lifeSeedFromServer` waits for that answer. Nothing new is listed publicly: the answer only
+  goes to whoever already has the address.
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the
