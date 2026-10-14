@@ -453,6 +453,7 @@ function _qmlLandscapeLayout(oppCnt, zW, zH, compact, zoomMul, spectating, opts)
     }
   }
   return { s: sFin, slots: slots, raw: raw, seat0: seat0,
+           oppBaseH: oppBaseH, selfBaseH: selfBaseH,
            // Ancre de la selfBox : QML = anchors.bottomMargin 12 en paysage
            // (wide) ; ajustement WEB (demande narmod 2026-07-17) : marge
            // visuelle 24 pour décoller la self de la barre d'action flottante
@@ -760,6 +761,10 @@ function _officialSeatPix(n, isPortrait, zW, zH, oCX, oCY, oRect, boxScale, zoom
   // (appliquée par l'appelant quand la player-bar est masquée). out[0] reste
   // null pour ne pas perturber le cas spectateur.
   out._self = { top: lay.selfY, left: lay.selfX };
+  // Bases QML (socle inclus) : consommées par la communityScale paysage
+  // (topOpponentBottomY / selfVisualTopY du GamePage, calculés sur le modèle).
+  out._oppBaseH = lay.oppBaseH;
+  out._selfBaseH = lay.selfBaseH;
   return out;
 }
 

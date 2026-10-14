@@ -324,6 +324,14 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Community cards sized like the QML client with few players (wide tables)** — the landscape
+  `communityScale` measured the painted plates: it ignored the QML floor that never counts the top of
+  the ring below 0.13 × the zone height (`topOpponentBottomY`), and dropped the bet strip that the QML
+  boxes always include, so the cards came out 12–25 % smaller than upstream at 2–4 players (at 3, the
+  two side boxes were taken for the top box and the row fell to its floor). Seated, non-compact
+  landscape now takes `topOpponentBottomY`, `selfVisualTopY` and `communityCenterY` from the seat
+  model (same bisection as `seatlayout.js`); the web guards measured on the real plates (side corridor,
+  pot-badge clearance) still apply. Compact landscape, spectator and portrait unchanged (`web.69`).
 - **Studio / photo avatars fill a square seat frame** — the avatar image kept a forced
   circle (`border-radius: 50%`) even in the QML seat structure, whose frame is square: it now
   inherits the frame's shape, round in classic seats, square in QML seats (`pokerth.css`, `web.37`).

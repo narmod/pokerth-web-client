@@ -1,3 +1,6 @@
+2026-10-14 version 2.1.10-web.69:
+- improvement: on a computer, the community cards no longer shrink when only a few players are left at the table: they now take the same room as in the official client (up to a quarter larger with 2 to 4 players)
+
 2026-10-14 version 2.1.10-web.68:
 - improvement: Ace's Help: with an account, tap an open ranked table and the Ace says it counts for the ranking, that it starts by itself once full (with how many seats are taken), and offers to join it
 

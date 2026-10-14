@@ -1354,7 +1354,34 @@ function renderSeatsImmediate() {
         // motivée venait en fait de l'autofit non compensé en paysage (voir
         // _commEffL plus bas) ; le chevauchement badge/box du haut est traité
         // par une mesure réelle (cap « dégagement du badge » ci-dessous).
-        var _topB3 = (_minB3 < Infinity ? _minB3 : 0) + (_isCmp3 ? 39 : 26) * _seatBoxScale;
+        // ── PARITÉ QML (web.69, constaté narmod 14/10 : « cartes trop petites
+        // quand il reste peu de joueurs ») : en paysage assis non compact, le
+        // GamePage calcule topOpponentBottomY, selfVisualTopY et
+        // communityCenterY sur les SLOTS (boîtes pleines, socle inclus), et
+        // le haut de l'anneau n'est jamais compté plus bas que 0,13·hauteur.
+        // Les mesures DOM ci-dessus ignoraient ce plancher (à 3 joueurs les
+        // deux boîtes latérales passaient pour « la boîte du haut » → échelle
+        // au plancher) et retiraient le socle (centre ~20 px trop haut) :
+        // −18 à −25 % vs QML à 2-4 joueurs. On reprend donc les valeurs du
+        // modèle (même bisection que le QML) ; les gardes web mesurées sur
+        // les vraies plates (corridor latéral, dégagement du badge du pot)
+        // restent appliquées plus bas. Compact et spectateur : inchangés.
+        var _cmTopOpp = null;
+        if (myIdx >= 0 && !_isCmp3 && _selfAtPearl && _offPos && _offPos._oppBaseH && _offPos._self) {
+          var _mS3 = _offPos._boxScale, _mTopC3 = 0.13 * _zH3, _mSum3 = _offPos._self.top, _mN3 = 1;
+          for (var _mi3 = 1; _mi3 < _offPos.length; _mi3++) {
+            var _mp3 = _offPos[_mi3];
+            if (!_mp3) continue;
+            if (_mp3.top < _mTopC3) _mTopC3 = _mp3.top;
+            _mSum3 += _mp3.top; _mN3++;
+          }
+          if (_mN3 > 1 && _mS3 > 0) {
+            _cmTopOpp = _mTopC3 + _offPos._oppBaseH * _mS3 / 2;
+            _selfTop3 = _offPos._self.top - _offPos._selfBaseH * _mS3 / 2;
+            _commC3 = _mSum3 / _mN3;
+          }
+        }
+        var _topB3 = (_cmTopOpp !== null ? _cmTopOpp : (_minB3 < Infinity ? _minB3 : 0)) + (_isCmp3 ? 39 : 26) * _seatBoxScale;
         var _avail3 = Math.min(_commC3 - _topB3 - 6, _selfTop3 - _commC3 - 6);
         var _gapF3 = _avail3 > 0 ? _avail3 / (_isCmp3 ? 66 : 84) : 0;
         var _cap3 = Math.min(_isCmp3 ? 2.6 : 1.8, _seatBoxScale * 2.0, (0.70 * _zW3) / 264);
