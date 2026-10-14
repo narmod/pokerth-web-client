@@ -123,7 +123,9 @@ highlights below.
   the main board), the leaderboard names its server and period. Admin › Leaderboard gains a
   board picker (`/admin/lan-boards`, scope leaderboard) for viewing, removing players and
   resetting one board. 7 new keys and a help sentence (famboard) in the 83 languages;
-  `test-lan-boards`.
+  `test-lan-boards`. The LAN drop-down shows each server's reset period next to its name
+  (« · 🏆 Every month », nothing for « Never ») and a pill on the status line; the admin board
+  picker no longer overflows on a phone (`web.47`).
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the

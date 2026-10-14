@@ -1,3 +1,6 @@
+2026-10-14 version 2.1.10-web.47:
+- improvement: the « LAN server » list shows when each server's leaderboard is reset, next to its name and as a pill under the list
+
 2026-10-14 version 2.1.10-web.46:
 - new: each server of the « LAN server » list has its own leaderboard, reset on the schedule chosen when it was proposed (only the admins can change it)
 

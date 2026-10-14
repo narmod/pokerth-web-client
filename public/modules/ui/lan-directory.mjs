@@ -165,11 +165,17 @@ function _applyEntry(s) {
   if (p) /** @type {HTMLInputElement} */ (p).value = String(s.port);
   if (tl) tl.checked = !!s.tls;
 }
+// Leaderboard reset period of a listed server (server/lan-boards.js), shown
+// next to its name: 🏆 + « Every month »… Nothing for « Never » (a 🏆 Never
+// would read as « no leaderboard ») — the status line says it in full.
+const RESET_KEYS = { daily: 'lanResetDaily', weekly: 'lanResetWeekly', monthly: 'lanResetMonthly', yearly: 'lanResetYearly', off: 'lanResetOff' };
+export function resetLabel(p) { const k = RESET_KEYS[p]; return k ? _t(k) : ''; }
 function _optionLabel(s) {
   if (s.local) return s.name + ' — ' + s.host + (s.port !== 7234 ? ':' + s.port : '');
-  if (s.online === false) return s.name + ' — ' + _t('lanDirOffline', null, 'offline');
-  if (s.online && s.players != null) return s.name + ' — ' + _t('lanDirPlayers', { n: s.players }, 'Players: ' + s.players);
-  return s.name;
+  const per = (s.resetPeriod && s.resetPeriod !== 'off') ? ' · 🏆 ' + resetLabel(s.resetPeriod) : '';
+  if (s.online === false) return s.name + per + ' — ' + _t('lanDirOffline', null, 'offline');
+  if (s.online && s.players != null) return s.name + per + ' — ' + _t('lanDirPlayers', { n: s.players }, 'Players: ' + s.players);
+  return s.name + per;
 }
 function _renderSelect(cfg, plan) {
   const sel = /** @type {HTMLSelectElement|null} */ ($('lan-dir-sel'));
@@ -209,6 +215,13 @@ function _renderDetail(cfg, id) {
   if (s.tls) bits.push('TLS');
   line.appendChild(document.createTextNode(bits.join(' · ')));
   box.appendChild(line);
+  // The board's reset period as a pill (a native <select> cannot draw one).
+  if (!s.local && s.resetPeriod) {
+    const pill = document.createElement('div');
+    pill.className = 'lan-dir-pill';
+    pill.textContent = '🏆 ' + _t('lanPropReset', null, 'Leaderboard reset') + ' — ' + resetLabel(s.resetPeriod);
+    box.appendChild(pill);
+  }
   if (s.desc) {
     const d = document.createElement('div');
     d.className = 'lan-dir-desc';
