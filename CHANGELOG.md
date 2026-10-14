@@ -149,6 +149,10 @@ highlights below.
   picked — now tested both ways).
   « Propose my server » dialog (`web.53`): padded by the safe areas, so in the installed iOS
   app its title no longer sits under the status bar and the Send button clears the home bar.
+  Core allowlist (`web.54`): `pokerth.ddns.net` (former demo server, used as the default LAN
+  server) is no longer always allowed — LAN servers now come from the directory. Installs that
+  still dial it add it under Proxy › Extra allowed hosts (or `ALLOWED_HOSTS`). The admin Proxy
+  text, README and `.env.example` now list the real core hosts (incl. `pthsrv.pokerth.net`).
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the

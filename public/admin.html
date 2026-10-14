@@ -1078,7 +1078,7 @@
     <div id="panel-proxy" style="display:none">
       <div class="card">
         <h2>Proxy</h2>
-        <p class="muted">Server-side bridge settings. Always-allowed hosts: pokerth.net, www.pokerth.net, pokerth.ddns.net, localhost, 127.0.0.1, ::1. Changes apply live (no restart).</p>
+        <p class="muted">Server-side bridge settings. Always-allowed hosts: pokerth.net, www.pokerth.net, pthsrv.pokerth.net, localhost, 127.0.0.1, ::1 (plus the servers approved in the LAN directory). Changes apply live (no restart).</p>
         <div style="margin:5px 0"><div style="margin-bottom:3px">Extra allowed hosts <span class="muted">(one per line — required before a default-login host can connect)</span></div><textarea id="pxHosts" rows="3" placeholder="game.example.com&#10;192.168.1.50" autocomplete="off" style="width:100%;box-sizing:border-box;resize:vertical"></textarea></div>
         <div style="margin:5px 0"><div style="margin-bottom:3px">Extra allowed ports <span class="muted">(one per line — 1–65535; 7234 is always allowed)</span></div><textarea id="pxPorts" rows="2" placeholder="7234" autocomplete="off" style="width:100%;box-sizing:border-box;resize:vertical"></textarea></div>
         <div class="defrow fld"><span>Session grace <span class="muted">(seconds, 10–900)</span></span><input id="pxGrace" type="number" min="10" max="900" placeholder="120"></div>

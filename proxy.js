@@ -82,7 +82,8 @@ const DEFAULT_ALLOWED_HOSTS = [
   // officielle. Sans lui ici, le mode « Internet / PokerTH.net » via proxy est
   // refusé d'office sur toute installation neuve.
   'pthsrv.pokerth.net',
-  'pokerth.ddns.net',
+  // (pokerth.ddns.net, the former demo server, left the core list in
+  // 2.1.10-web.54: listed LAN servers now come from the LAN directory.)
   'localhost',
   '127.0.0.1',
   '::1'
@@ -90,7 +91,7 @@ const DEFAULT_ALLOWED_HOSTS = [
 // Les hôtes « cœur » (DEFAULT_ALLOWED_HOSTS : loopback + serveurs PokerTH
 // officiels/démo) sont TOUJOURS autorisés. ALLOWED_HOSTS ne fait qu'AJOUTER des
 // hôtes — il ne REMPLACE plus les défauts. Avant, dès qu'un .env fixait
-// ALLOWED_HOSTS (ex. .env.example), localhost / 127.0.0.1 / ::1 / pokerth.ddns.net
+// ALLOWED_HOSTS (ex. .env.example), localhost / 127.0.0.1 / ::1
 // disparaissaient de l'allowlist → LAN et serveur de démo cassés, alors que
 // /admin affiche « Always-allowed hosts: … » (désormais exact). Le port reste
 // borné (ALLOWED_PORTS, 7234) : always-allow loopback ne rouvre pas de SSRF.
