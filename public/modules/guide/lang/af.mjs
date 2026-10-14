@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Onder **Kies ’n bediener** kies jy ’n bediener: ’n groen kolletjie beteken dit is aanlyn, met die aantal spelers wat nou daarop is. Is jou eie bediener nie daar nie? **Stel my bediener voor** stuur dit na die admins van hierdie werf, en dit verskyn in die lys sodra dit goedgekeur is.",
+  c3LanDir: "Kies ’n bediener in die **Bediener**-lys: ’n groen kolletjie beteken dit is aanlyn, met die aantal spelers wat nou daarop is. Is jou eie bediener nie daar nie? **Stel my bediener voor**, onderaan die lys, stuur dit na die admins van hierdie werf, en dit verskyn in die lys sodra dit goedgekeur is.",
   hsLanDir: "Die LAN-bedieners wat deur die admins van hierdie werf nagegaan is: kies een om daarop te speel. ’n Groen kolletjie beteken aanlyn, met sy spelers op die oomblik.",
   hsLanPropose: "Stuur jou eie PokerTH-bediener na die admins van hierdie werf. Sodra dit goedgekeur is, verskyn dit vir elke speler in hierdie lys.",
   hsLanPropTest: "Kontroleer dat ’n PokerTH-bediener by hierdie adres en poort antwoord. Jy kan die versoek eers ná ’n suksesvolle toets stuur.",

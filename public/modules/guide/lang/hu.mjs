@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "A **Válassz szervert** résznél válassz egy szervert: a zöld pötty azt jelenti, hogy online, mellette a rajta éppen játszók száma. Nincs ott a saját szervered? A **Saját szerver ajánlása** elküldi az oldal adminisztrátorainak, és jóváhagyás után megjelenik a listán.",
+  c3LanDir: "Válassz egy szervert a **Szerver** listában: a zöld pötty azt jelenti, hogy online, mellette a rajta éppen játszók száma. Nincs ott a saját szervered? A lista alján található **Saját szerver ajánlása** elküldi az oldal adminisztrátorainak, és jóváhagyás után megjelenik a listán.",
   hsLanDir: "Az oldal adminisztrátorai által ellenőrzött LAN-szerverek: válassz egyet, hogy azon játssz. A zöld pötty azt jelenti: online, mellette a jelenlegi játékosai.",
   hsLanPropose: "Elküldi a saját PokerTH-szerveredet az oldal adminisztrátorainak. Jóváhagyás után minden játékos számára megjelenik ebben a listában.",
   hsLanPropTest: "Ellenőrzi, hogy ezen a címen és porton válaszol-e egy PokerTH-szerver. A kérést csak sikeres teszt után küldheted el.",

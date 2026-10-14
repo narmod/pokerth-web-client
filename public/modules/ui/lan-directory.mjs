@@ -38,6 +38,10 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 const MANUAL = '__manual__';
+// « Propose my server » is the last line of the list (web.60), not a button
+// under it; picking it opens the dialog and keeps the current server.
+const PROPOSE = '__propose__';
+let _lastSel = '';
 const REFRESH_MS = 60000;
 // ISO 3166 codes offered in the « Country » list (the flags the client ships),
 // named in the player's language through Intl.DisplayNames.
@@ -227,9 +231,113 @@ function _renderSelect(cfg, plan) {
     o.value = MANUAL; o.textContent = _t('lanDirManual', null, 'Enter an address…');
     frag.appendChild(o);
   }
+  if (plan.propose) {
+    const o = document.createElement('option');
+    o.value = PROPOSE; o.textContent = '+ ' + _t('lanDirPropose', null, 'Propose my server');
+    frag.appendChild(o);
+  }
+  const keep = sel.value;
   sel.textContent = '';
   sel.appendChild(frag);
   if (plan.select) sel.value = plan.select;
+  else if (keep && keep !== PROPOSE) sel.value = keep;
+  if (sel.value === PROPOSE) sel.value = _lastSel || (cfg.servers[0] ? cfg.servers[0].id : '');
+  _lastSel = sel.value;
+  _renderCombo(cfg);
+}
+
+// ── Custom drop-down over the native <select> ──
+function _dotClass(s) {
+  if (!s) return '';
+  return 'lan-dir-dot ' + (s.invite ? 'invite' : s.local ? 'local' : s.online === true ? 'on' : s.online === false ? 'off' : 'unk');
+}
+function _comboItems(cfg) {
+  const sel = /** @type {HTMLSelectElement|null} */ ($('lan-dir-sel'));
+  if (!sel) return [];
+  return [...sel.options].map((o) => {
+    const s = cfg ? cfg.servers.filter((x) => x.id === o.value)[0] : null;
+    return { val: o.value, server: s,
+             label: s ? _optionLabel(s) : o.value === MANUAL ? _t('lanDirManual', null, 'Enter an address…') : _t('lanDirPropose', null, 'Propose my server') };
+  });
+}
+function _renderCombo(cfg) {
+  const sel = /** @type {HTMLSelectElement|null} */ ($('lan-dir-sel'));
+  const lbl = $('lan-dir-btn-lbl'), dot = $('lan-dir-btn-dot'), list = $('lan-dir-list');
+  if (!sel || !lbl || !list) return;
+  const items = _comboItems(cfg);
+  const cur = items.filter((x) => x.val === sel.value)[0];
+  lbl.textContent = cur ? cur.label : '';
+  if (dot) dot.className = cur && cur.server ? _dotClass(cur.server) : 'lan-dir-dot';
+  list.textContent = '';
+  items.forEach((it, i) => {
+    const d = document.createElement('div');
+    d.className = 'gt-dd-item lan-dd-item' + (it.val === MANUAL ? ' manual' : it.val === PROPOSE ? ' propose' : '') + (it.val === sel.value ? ' sel' : '');
+    d.id = 'lan-dir-opt-' + i;
+    d.setAttribute('role', 'option');
+    d.setAttribute('tabindex', '-1');
+    d.setAttribute('aria-selected', it.val === sel.value ? 'true' : 'false');
+    d.dataset.val = it.val;
+    const ic = document.createElement('span');
+    ic.setAttribute('aria-hidden', 'true');
+    if (it.server) ic.className = _dotClass(it.server);
+    else { ic.className = 'lan-dd-plus'; ic.textContent = it.val === PROPOSE ? '+' : '…'; }
+    d.appendChild(ic);
+    const nm = document.createElement('span');
+    nm.className = 'lan-dd-name';
+    nm.textContent = it.label;
+    d.appendChild(nm);
+    list.appendChild(d);
+  });
+}
+function _comboOpen(focusSel) {
+  const btn = $('lan-dir-btn'), list = $('lan-dir-list');
+  if (!btn || !list) return;
+  _renderCombo(_eff());
+  list.hidden = false;
+  btn.setAttribute('aria-expanded', 'true');
+  const cur = /** @type {HTMLElement|null} */ (list.querySelector('.lan-dd-item.sel') || list.firstElementChild);
+  if (cur) { try { cur.scrollIntoView({ block: 'nearest' }); } catch (e) {} if (focusSel) cur.focus(); }
+}
+function _comboClose(refocus) {
+  const btn = $('lan-dir-btn'), list = $('lan-dir-list');
+  if (!list || list.hidden) return;
+  list.hidden = true;
+  if (btn) { btn.setAttribute('aria-expanded', 'false'); if (refocus) btn.focus(); }
+}
+function _comboPick(val) {
+  const sel = /** @type {HTMLSelectElement|null} */ ($('lan-dir-sel'));
+  if (!sel) return;
+  _comboClose(val !== PROPOSE);
+  if (sel.value === val && val !== PROPOSE) return;
+  sel.value = val;
+  sel.dispatchEvent(new Event('change', { bubbles: true }));
+}
+function _wireCombo() {
+  const btn = $('lan-dir-btn'), list = $('lan-dir-list');
+  if (!btn || !list) return;
+  btn.addEventListener('click', (e) => { e.stopPropagation(); if (list.hidden) _comboOpen(false); else _comboClose(false); });
+  btn.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !list.hidden) { e.preventDefault(); e.stopPropagation(); _comboClose(true); return; }
+    if (e.key === 'Tab') { _comboClose(false); return; }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || ((e.key === 'Enter' || e.key === ' ') && list.hidden)) { e.preventDefault(); _comboOpen(true); }
+    else if ((e.key === 'Enter' || e.key === ' ') && !list.hidden) { e.preventDefault(); _comboClose(false); }
+  });
+  list.addEventListener('click', (e) => {
+    const it = /** @type {HTMLElement|null} */ (/** @type {HTMLElement} */ (e.target).closest('.lan-dd-item'));
+    if (it) { e.stopPropagation(); _comboPick(it.dataset.val || ''); }
+  });
+  list.addEventListener('keydown', (e) => {
+    const items = /** @type {HTMLElement[]} */ ([...list.querySelectorAll('.lan-dd-item')]);
+    const i = items.indexOf(/** @type {HTMLElement} */ (document.activeElement));
+    if (e.key === 'ArrowDown') { e.preventDefault(); (items[Math.min(items.length - 1, i + 1)] || items[0]).focus(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); (items[Math.max(0, i - 1)] || items[0]).focus(); }
+    else if (e.key === 'Home') { e.preventDefault(); items[0] && items[0].focus(); }
+    else if (e.key === 'End') { e.preventDefault(); items[items.length - 1] && items[items.length - 1].focus(); }
+    else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (i >= 0) _comboPick(items[i].dataset.val || ''); }
+    else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); _comboClose(true); }
+    else if (e.key === 'Tab') _comboClose(false);
+  });
+  document.addEventListener('click', (e) => { if (!list.hidden && !/** @type {HTMLElement} */ (e.target).closest('#lan-dd')) _comboClose(false); });
 }
 function _renderDetail(cfg, id) {
   const box = $('lan-dir-detail');
@@ -311,7 +419,9 @@ export function sync() {
   const lw = $('lan-dir-sel-wrap'), em = $('lan-dir-empty'), pr = $('lan-dir-propose');
   if (lw) lw.style.display = (pl.list && !pl.empty) ? '' : 'none';
   if (em) em.style.display = pl.empty ? '' : 'none';
-  if (pr) pr.style.display = pl.propose ? '' : 'none';
+  // With a list on screen, « Propose my server » is its last line; the
+  // button only remains when there is no list (empty directory).
+  if (pr) pr.style.display = (pl.propose && !(pl.list && !pl.empty && eff && eff.servers.length)) ? '' : 'none';
   try { document.body.classList.toggle('lan-dir-locked', !!(pl.show && pl.locked)); } catch (e) {}
   if (!pl.show || !eff) return;
   if (pl.apply) _applyEntry(pl.apply);
@@ -345,6 +455,14 @@ function onSelect() {
   const sel = /** @type {HTMLSelectElement|null} */ ($('lan-dir-sel'));
   const eff = _eff();
   if (!sel || !eff) return;
+  if (sel.value === PROPOSE) {
+    sel.value = _lastSel;
+    _renderCombo(eff);
+    openPropose();
+    return;
+  }
+  _lastSel = sel.value;
+  _renderCombo(eff);
   if (sel.value === MANUAL) {
     try { document.body.classList.remove('lan-dir-locked'); } catch (e) {}
     _renderDetail(eff, '');
@@ -514,6 +632,7 @@ export function sendPropose() {
 function _wire() {
   const sel = $('lan-dir-sel');
   if (sel) sel.addEventListener('change', onSelect);
+  _wireCombo();
   ['lan-prop-host', 'lan-prop-port', 'lan-prop-tls'].forEach((id) => {
     const el = $(id);
     if (!el) return;
@@ -536,7 +655,8 @@ function _wire() {
   try { if (typeof window._onLangChange === 'function') window._onLangChange(() => { const cs = $('lan-prop-country'); if (cs) while (cs.options.length > 1) cs.remove(1); sync(); }); } catch (e) {}
 }
 
-const LanDirUI = { setConfig, refresh, sync, openPropose, closePropose, testPropose, sendPropose, boardFor, boardInfo, withInvite, resolveBoard };
+function closeList() { _comboClose(true); }
+const LanDirUI = { setConfig, refresh, sync, openPropose, closePropose, testPropose, sendPropose, boardFor, boardInfo, withInvite, resolveBoard, closeList };
 try {
   /** @type {any} */ (window).LanDirUI = LanDirUI;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _wire);

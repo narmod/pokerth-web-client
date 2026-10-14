@@ -123,7 +123,7 @@ try {
   await page.goto(base + '/');
   await page.waitForSelector('.login-card');
   await page.click('.login-card[onclick*="lan-dedi"]');
-  await page.waitForSelector('#lan-dir-sel', { state: 'visible', timeout: 5000 }).catch(() => {});
+  await page.waitForSelector('#lan-dir-btn', { state: 'visible', timeout: 5000 }).catch(() => {});
   await sleep(500);
 
   console.log('LAN drop-down');
@@ -136,8 +136,38 @@ try {
     detail: document.getElementById('lan-dir-detail').textContent
   }));
   ok(st.shown, 'the LAN form shows the server list');
-  ok(st.opts.length === 3 && /^lan_aaaaaa01=● Club local$/.test(st.opts[0]) && /=○ Gone club$/.test(st.opts[1]) && /^__manual__=Enter an address/.test(st.opts[2]),
-    'online server first, offline one marked, names only, manual entry last (' + st.opts.join(' | ') + ')');
+  ok(st.opts.length === 4 && /^lan_aaaaaa01=● Club local$/.test(st.opts[0]) && /=○ Gone club$/.test(st.opts[1]) && /^__manual__=Enter an address/.test(st.opts[2]) && /^__propose__=\+ Propose my server$/.test(st.opts[3]),
+    'online server first, offline one marked, names only, then manual entry and « Propose my server » (' + st.opts.join(' | ') + ')');
+  ok(!(await page.isVisible('#lan-dir-propose')), 'no separate « Propose my server » button under a list');
+
+  console.log('Custom drop-down');
+  const cb = await page.evaluate(() => ({ lab: document.getElementById('lan-dir-lbl').textContent.trim(), btn: document.getElementById('lan-dir-btn-lbl').textContent,
+    dot: document.getElementById('lan-dir-btn-dot').className, open: !document.getElementById('lan-dir-list').hidden, exp: document.getElementById('lan-dir-btn').getAttribute('aria-expanded') }));
+  ok(cb.lab === 'Server' && cb.btn === 'Club local' && /\bon\b/.test(cb.dot) && !cb.open && cb.exp === 'false', 'the field: « Server », the selected name with its green dot, list closed');
+  await page.click('#lan-dir-btn');
+  await sleep(150);
+  const geo = await page.evaluate(() => { const b = document.getElementById('lan-dir-btn').getBoundingClientRect(), l = document.getElementById('lan-dir-list').getBoundingClientRect();
+    return { open: !document.getElementById('lan-dir-list').hidden, gap: l.top - b.bottom, left: Math.abs(l.left - b.left), width: Math.abs(l.width - b.width),
+             items: [...document.querySelectorAll('#lan-dir-list .lan-dd-item')].map((x) => x.dataset.val + ':' + x.textContent), sel: (document.querySelector('#lan-dir-list .sel') || {}).dataset.val }; });
+  ok(geo.open && Math.abs(geo.gap) <= 2 && geo.left <= 1 && geo.width <= 2, 'the list opens right under the field, same width (gap ' + geo.gap + ')');
+  ok(geo.items.length === 4 && /^__propose__:\+Propose my server$/.test(geo.items[3]) && geo.sel === 'lan_aaaaaa01', 'its lines mirror the servers, the current one marked, « Propose my server » last');
+  await page.click('#lan-dir-list .lan-dd-item[data-val="lan_aaaaaa02"]');
+  await sleep(200);
+  ok(await page.evaluate(() => document.getElementById('lan-dir-sel').value === 'lan_aaaaaa02' && document.getElementById('host').value === 'gone.invalid' && document.getElementById('lan-dir-list').hidden && /Gone club/.test(document.getElementById('lan-dir-btn-lbl').textContent)), 'a click on a line picks that server and closes the list');
+  await page.focus('#lan-dir-btn');
+  await page.keyboard.press('ArrowDown');
+  await sleep(100);
+  ok(await page.evaluate(() => !document.getElementById('lan-dir-list').hidden && document.activeElement.dataset.val === 'lan_aaaaaa02'), 'keyboard: ↓ opens the list on the current server');
+  await page.keyboard.press('ArrowUp');
+  await page.keyboard.press('Enter');
+  await sleep(200);
+  ok(await page.evaluate(() => document.getElementById('lan-dir-sel').value === 'lan_aaaaaa01' && document.activeElement.id === 'lan-dir-btn'), 'keyboard: ↑ then Enter picks, focus back on the field');
+  await page.click('#lan-dir-btn');
+  await page.keyboard.press('Escape');
+  ok(await page.evaluate(() => document.getElementById('lan-dir-list').hidden && document.getElementById('login-step2').style.display !== 'none' && document.activeElement.id === 'lan-dir-btn'), 'Escape closes the list (and only the list: the LAN form stays)');
+  await page.click('#lan-dir-btn');
+  await page.mouse.click(5, 5);
+  ok(await page.evaluate(() => document.getElementById('lan-dir-list').hidden), 'a click elsewhere closes it');
   ok(st.val === 'lan_aaaaaa01' && st.host === '127.0.0.1' && st.port === String(FAKE), 'the first server fills the address fields');
   ok(st.locked, 'and the address fields are locked (hidden)');
   ok(/Online · France · Français · Players: 5/.test(st.detail) && /Thursday nights/.test(st.detail), 'status line: online, country, language, players, description');
@@ -161,9 +191,11 @@ try {
 
   console.log('Propose my server');
   await page.fill('#nick', 'Narmod');
-  await page.click('#lan-dir-propose');
+  await page.click('#lan-dir-btn');
+  await page.click('#lan-dir-list .lan-dd-item.propose');
   await sleep(300);
-  ok(await page.isVisible('#lan-prop-dialog'), 'the dialog opens');
+  ok(await page.isVisible('#lan-prop-dialog'), 'the « Propose my server » line opens the dialog');
+  ok(await page.evaluate(() => document.getElementById('lan-dir-sel').value === 'lan_aaaaaa01' && /Club local/.test(document.getElementById('lan-dir-btn-lbl').textContent)), 'and the selected server stays selected');
   ok(await page.isDisabled('#lan-prop-send'), 'Send is disabled before any test');
   ok(await page.evaluate(() => document.querySelectorAll('#lan-prop-country option').length > 150 && document.querySelectorAll('#lan-prop-lang option').length > 50), 'country and language lists are filled');
   await page.fill('#lan-prop-name', 'My home club');
@@ -214,8 +246,8 @@ try {
   console.log('Language');
   await page.evaluate(() => window.setLang && window.setLang('fr'));
   await sleep(1200);
-  const fr = await page.evaluate(() => ({ lab: document.querySelector('#lan-dir-sel-wrap label').textContent, prop: document.querySelector('#lan-dir-propose').textContent, opt0: document.querySelector('#lan-dir-sel option').textContent, detail: document.getElementById('lan-dir-detail').textContent, pill: (document.querySelector('#lan-dir-detail .lan-dir-reset') || {}).textContent || '' }));
-  ok(/^Choisis un serveur$/.test(fr.lab.trim()) && /Proposer mon serveur/.test(fr.prop) && !/Chaque mois/.test(fr.opt0) && /Chaque mois/.test(fr.pill) && !/Joueurs/.test(fr.opt0) && /Joueurs : 5/.test(fr.detail || ''), 'the block follows the language (' + fr.opt0 + ')');
+  const fr = await page.evaluate(() => ({ lab: document.querySelector('#lan-dir-sel-wrap label').textContent, prop: document.querySelector('#lan-dir-list .lan-dd-item.propose').textContent, opt0: document.querySelector('#lan-dir-sel option').textContent, detail: document.getElementById('lan-dir-detail').textContent, pill: (document.querySelector('#lan-dir-detail .lan-dir-reset') || {}).textContent || '' }));
+  ok(/^Serveur$/.test(fr.lab.trim()) && /Proposer mon serveur/.test(fr.prop) && !/Chaque mois/.test(fr.opt0) && /Chaque mois/.test(fr.pill) && !/Joueurs/.test(fr.opt0) && /Joueurs : 5/.test(fr.detail || ''), 'the block follows the language (' + fr.opt0 + ')');
 
   console.log('Manual entry off');
   await fetch(base + '/admin/lan-directory', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + TOKEN }, body: JSON.stringify({ action: 'settings', settings: { manualEntry: false } }) });
@@ -236,7 +268,7 @@ try {
     opts: [...document.querySelectorAll('#lan-dir-sel option')].map((o) => o.value + '=' + o.textContent),
     val: document.getElementById('lan-dir-sel').value, host: document.getElementById('host').value, port: document.getElementById('port').value,
     locked: document.body.classList.contains('lan-dir-locked'), detail: document.getElementById('lan-dir-detail').textContent }));
-  ok(/^local=★ Local server$/.test(loc.opts[0]) && loc.opts.length === 3, 'the local server comes first (' + loc.opts[0] + ')');
+  ok(/^local=★ Local server$/.test(loc.opts[0]) && loc.opts.length === 4, 'the local server comes first (' + loc.opts[0] + ')');
   ok(loc.val === 'local' && loc.host === '127.0.0.1' && loc.port === '7234' && loc.locked, 'and is pre-selected: the page host on 7234, fields hidden');
   ok(/Local server · 127\.0\.0\.1:7234/.test(loc.detail), 'its status line names it with its address');
   await page.screenshot({ path: path.join(tmp, 'local.png') });

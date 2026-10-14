@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Selecteer onder **Kies een server** een server: een groene stip betekent dat hij online is, met het aantal spelers dat er nu op zit. Staat je eigen server er niet bij? **Mijn server voorstellen** stuurt hem naar de beheerders van deze site, en na goedkeuring verschijnt hij in de lijst.",
+  c3LanDir: "Selecteer in de lijst **Server** een server: een groene stip betekent dat hij online is, met het aantal spelers dat er nu op zit. Staat je eigen server er niet bij? **Mijn server voorstellen**, onderaan de lijst, stuurt hem naar de beheerders van deze site, en na goedkeuring verschijnt hij in de lijst.",
   hsLanDir: "De LAN-servers die de beheerders van deze site hebben gecontroleerd: kies er een om erop te spelen. Een groene stip betekent online, met de spelers die er nu op zitten.",
   hsLanPropose: "Stuurt je eigen PokerTH-server naar de beheerders van deze site. Na goedkeuring verschijnt hij in deze lijst voor elke speler.",
   hsLanPropTest: "Controleert of er een PokerTH-server antwoordt op dit adres en deze poort. Je kunt het verzoek pas versturen na een geslaagde test.",

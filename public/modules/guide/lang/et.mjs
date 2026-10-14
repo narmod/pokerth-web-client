@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Jaotises **Vali server** vali loendist server: roheline täpp tähendab, et see on võrgus, ja näed ka seal praegu olevate mängijate arvu. Sinu enda serverit pole seal? **Paku minu serverit** saadab selle selle saidi administraatoritele ning pärast heakskiitu ilmub see loendisse.",
+  c3LanDir: "Vali server loendist **Server**: roheline täpp tähendab, et see on võrgus, ja näed ka seal praegu olevate mängijate arvu. Sinu enda serverit pole seal? **Paku minu serverit**, mis on loendi lõpus, saadab selle selle saidi administraatoritele ning pärast heakskiitu ilmub see loendisse.",
   hsLanDir: "Selle saidi administraatorite kontrollitud LAN-serverid: vali üks, et seal mängida. Roheline täpp tähendab võrgus, koos selle praeguste mängijatega.",
   hsLanPropose: "Saadab sinu enda PokerTH serveri selle saidi administraatoritele. Pärast heakskiitu ilmub see kõigile mängijatele sellesse loendisse.",
   hsLanPropTest: "Kontrollib, kas sellel aadressil ja pordil vastab PokerTH server. Taotluse saad saata alles pärast edukat testi.",

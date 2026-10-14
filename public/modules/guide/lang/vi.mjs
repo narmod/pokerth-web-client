@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Chọn một máy chủ trong mục **Chọn máy chủ**: chấm xanh lá nghĩa là máy chủ đang trực tuyến, kèm số người chơi trên đó lúc này. Máy chủ của bạn không có ở đó? **Đề xuất máy chủ của tôi** sẽ gửi nó tới quản trị viên của trang này, và nó sẽ xuất hiện trong danh sách sau khi được phê duyệt.",
+  c3LanDir: "Chọn một máy chủ trong danh sách **Máy chủ**: chấm xanh lá nghĩa là máy chủ đang trực tuyến, kèm số người chơi trên đó lúc này. Máy chủ của bạn không có ở đó? **Đề xuất máy chủ của tôi** ở cuối danh sách sẽ gửi nó tới quản trị viên của trang này, và nó sẽ xuất hiện trong danh sách sau khi được phê duyệt.",
   hsLanDir: "Các máy chủ LAN đã được quản trị viên của trang này kiểm tra: chọn một máy chủ để chơi trên đó. Chấm xanh lá nghĩa là trực tuyến, kèm số người chơi hiện tại.",
   hsLanPropose: "Gửi máy chủ PokerTH của riêng bạn tới quản trị viên của trang này. Sau khi được phê duyệt, nó sẽ xuất hiện trong danh sách này cho mọi người chơi.",
   hsLanPropTest: "Kiểm tra xem có máy chủ PokerTH phản hồi tại địa chỉ và cổng này không. Bạn chỉ có thể gửi yêu cầu sau khi kiểm tra thành công.",

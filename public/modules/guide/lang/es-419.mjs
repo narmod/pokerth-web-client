@@ -2,7 +2,7 @@
 // (like the UI catalogue and the help corpus).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "En **Elige un servidor**, elige uno de la lista: un punto verde indica que está en línea, con el número de jugadores que hay en él ahora mismo. ¿Tu propio servidor no aparece? **Proponer mi servidor** lo envía a los administradores de este sitio, y aparece en la lista una vez aprobado.",
+  c3LanDir: "Elige un servidor en la lista **Servidor**: un punto verde indica que está en línea, con el número de jugadores que hay en él ahora mismo. ¿Tu propio servidor no aparece? **Proponer mi servidor**, al final de la lista, lo envía a los administradores de este sitio, y aparece en la lista una vez aprobado.",
   hsLanDir: "Los servidores LAN revisados por los administradores de este sitio: elige uno para jugar en él. Un punto verde significa en línea, con sus jugadores de ahora mismo.",
   hsLanPropose: "Envía tu propio servidor PokerTH a los administradores de este sitio. Una vez aprobado, aparece en esta lista para todos los jugadores.",
   hsLanPropTest: "Comprueba que un servidor PokerTH responde en esta dirección y puerto. Solo puedes enviar la solicitud tras una prueba correcta.",

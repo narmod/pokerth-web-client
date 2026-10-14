@@ -1236,8 +1236,18 @@ function _processAvatarFile(file) {
          remplit #host / #port / #use-tls, qui restent la source de vérité. -->
     <div id="lan-dir" class="lan-dir" style="display:none">
       <div class="f" id="lan-dir-sel-wrap">
-        <label for="lan-dir-sel" data-i18n="lanDirLabel">Choose a server</label>
-        <div class="sel-wrap"><select id="lan-dir-sel" autocomplete="off"></select><span class="sel-arr">▾</span></div>
+        <label id="lan-dir-lbl" for="lan-dir-btn" data-i18n="lanDirLabel">Server</label>
+        <!-- Liste déroulante maison (comme « Type de partie », .gt-dd) : le
+             <select> natif reste la source de vérité (caché) ; la liste
+             s'ouvre JUSTE SOUS le champ au lieu de la roue/popover du
+             système (iOS). modules/ui/lan-directory.mjs. -->
+        <div class="sel-wrap lan-dd" id="lan-dd">
+          <select id="lan-dir-sel" class="gt-dd-native" tabindex="-1" aria-hidden="true" autocomplete="off"></select>
+          <button type="button" class="gt-dd-btn lan-dd-btn" id="lan-dir-btn" aria-haspopup="listbox" aria-expanded="false" aria-controls="lan-dir-list" aria-labelledby="lan-dir-lbl lan-dir-btn-lbl">
+            <span class="lan-dir-dot" id="lan-dir-btn-dot" aria-hidden="true"></span><span class="gt-dd-lbl" id="lan-dir-btn-lbl"></span><span class="sel-arr" aria-hidden="true">▾</span>
+          </button>
+          <div class="gt-dd-list lan-dd-list" id="lan-dir-list" role="listbox" aria-labelledby="lan-dir-lbl" hidden></div>
+        </div>
         <div id="lan-dir-detail" class="lan-dir-detail" aria-live="polite" style="display:none"></div>
       </div>
       <div id="lan-dir-empty" class="lan-dir-empty" style="display:none" data-i18n="lanDirEmpty">No server is listed yet.</div>

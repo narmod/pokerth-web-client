@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "**Server tanlang** boʻlimidan serverni tanlang: yashil nuqta uning onlayn ekanini va hozir unda nechta oʻyinchi borligini bildiradi. Oʻz serveringiz u yerda yoʻqmi? **Serverimni taklif qilish** uni shu sayt adminlariga yuboradi, tasdiqlangach esa u roʻyxatda paydo boʻladi.",
+  c3LanDir: "**Server** roʻyxatidan serverni tanlang: yashil nuqta uning onlayn ekanini va hozir unda nechta oʻyinchi borligini bildiradi. Oʻz serveringiz u yerda yoʻqmi? Roʻyxat oxiridagi **Serverimni taklif qilish** uni shu sayt adminlariga yuboradi, tasdiqlangach esa u roʻyxatda paydo boʻladi.",
   hsLanDir: "Shu sayt adminlari tekshirgan LAN serverlar: oʻynash uchun birini tanlang. Yashil nuqta onlayn degani, yonida esa hozirgi oʻyinchilari.",
   hsLanPropose: "Oʻz PokerTH serveringizni shu sayt adminlariga yuboradi. Tasdiqlangach, u har bir oʻyinchi uchun shu roʻyxatda paydo boʻladi.",
   hsLanPropTest: "Shu manzil va portda PokerTH serveri javob berishini tekshiradi. Soʻrovni faqat muvaffaqiyatli tekshiruvdan soʻng yubora olasiz.",

@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "O dan **Dewiswch weinydd**, dewiswch weinydd: mae dot gwyrdd yn golygu ei fod ar-lein, gyda nifer y chwaraewyr arno ar hyn o bryd. Dydy’ch gweinydd eich hun ddim yno? Mae **Cynnig fy ngweinydd** yn ei anfon at weinyddwyr y wefan hon, ac mae’n ymddangos yn y rhestr unwaith y caiff ei gymeradwyo.",
+  c3LanDir: "Dewiswch weinydd yn y rhestr **Gweinydd**: mae dot gwyrdd yn golygu ei fod ar-lein, gyda nifer y chwaraewyr arno ar hyn o bryd. Dydy’ch gweinydd eich hun ddim yno? Mae **Cynnig fy ngweinydd**, ar waelod y rhestr, yn ei anfon at weinyddwyr y wefan hon, ac mae’n ymddangos yn y rhestr unwaith y caiff ei gymeradwyo.",
   hsLanDir: "Y gweinyddion LAN a wiriwyd gan weinyddwyr y wefan hon: dewiswch un i chwarae arno. Mae dot gwyrdd yn golygu ar-lein, gyda’i chwaraewyr ar hyn o bryd.",
   hsLanPropose: "Yn anfon eich gweinydd PokerTH eich hun at weinyddwyr y wefan hon. Unwaith y caiff ei gymeradwyo, mae’n ymddangos yn y rhestr hon i bob chwaraewr.",
   hsLanPropTest: "Yn gwirio bod gweinydd PokerTH yn ateb yn y cyfeiriad a’r porth hwn. Dim ond ar ôl prawf llwyddiannus y gallwch anfon y cais.",

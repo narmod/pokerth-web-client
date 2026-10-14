@@ -189,6 +189,14 @@ highlights below.
   of the mode left; it now starts unticked (each mode then keeps its own). New
   `scripts/test-login-modes-browser.mjs` walks the 30 two- and three-step paths and compares
   each final screen with a fresh visit (10 of them failed before).
+  LAN list as a custom drop-down (`web.60`): same family as « Game type » (`.gt-dd`): the
+  native `#lan-dir-sel` stays the source of truth (hidden), a button + `role=listbox` list
+  opens right under the field instead of the system picker (iOS wheel / popover), with real
+  status dots; keyboard (↑ ↓ Home End Enter Space Esc Tab), outside click, and a keynav
+  surface so Escape closes the list without leaving the LAN form. « Propose my server » is the
+  list's last line (`__propose__`: opens the dialog, the selection stays); the button remains
+  only when there is no list. Label « Server » (was « Choose a server »); Ace's Help, help
+  paragraph and hotspots follow, 83 languages.
 - **Day and night on the admin world map** — a « Day / night » button on Traffic › World (on by
   default, remembered per browser) shades where it is night right now, in four steps: below the
   horizon, then the end of the civil, nautical and astronomical twilights, with the point where the

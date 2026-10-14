@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Sadaļā **Izvēlies serveri** atlasi serveri: zaļš punkts nozīmē, ka tas ir tiešsaistē, un blakus redzams, cik spēlētāju tajā ir pašlaik. Tava servera tur nav? **Piedāvāt savu serveri** nosūta to šīs vietnes administratoriem, un pēc apstiprināšanas tas parādās sarakstā.",
+  c3LanDir: "Sarakstā **Serveris** atlasi serveri: zaļš punkts nozīmē, ka tas ir tiešsaistē, un blakus redzams, cik spēlētāju tajā ir pašlaik. Tava servera tur nav? **Piedāvāt savu serveri**, saraksta apakšā, nosūta to šīs vietnes administratoriem, un pēc apstiprināšanas tas parādās sarakstā.",
   hsLanDir: "Šīs vietnes administratoru pārbaudītie LAN serveri: izvēlies vienu, lai tajā spēlētu. Zaļš punkts nozīmē tiešsaistē, blakus — tā spēlētāji pašlaik.",
   hsLanPropose: "Nosūta tavu PokerTH serveri šīs vietnes administratoriem. Pēc apstiprināšanas tas parādās šajā sarakstā katram spēlētājam.",
   hsLanPropTest: "Pārbauda, vai šajā adresē un portā atbild PokerTH serveris. Pieprasījumu var nosūtīt tikai pēc veiksmīgas pārbaudes.",

@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "V časti **Vyber si server** zvoľ server: zelená bodka znamená, že je online, spolu s počtom hráčov, ktorí sú na ňom práve teraz. Tvoj vlastný server tam nie je? **Navrhnúť môj server** ho pošle správcom tejto stránky a po schválení sa objaví v zozname.",
+  c3LanDir: "Zvoľ server v zozname **Server**: zelená bodka znamená, že je online, spolu s počtom hráčov, ktorí sú na ňom práve teraz. Tvoj vlastný server tam nie je? **Navrhnúť môj server** na konci zoznamu ho pošle správcom tejto stránky a po schválení sa objaví v zozname.",
   hsLanDir: "LAN servery overené správcami tejto stránky: vyber si jeden a hraj na ňom. Zelená bodka znamená online, spolu s jeho aktuálnymi hráčmi.",
   hsLanPropose: "Pošle tvoj vlastný server PokerTH správcom tejto stránky. Po schválení sa objaví v tomto zozname pre každého hráča.",
   hsLanPropTest: "Overí, či na tejto adrese a porte odpovedá server PokerTH. Žiadosť môžeš odoslať až po úspešnom teste.",

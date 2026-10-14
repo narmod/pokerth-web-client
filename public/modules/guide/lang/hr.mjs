@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Pod **Odaberite poslužitelj** odaberi poslužitelj: zelena točka znači da je na mreži, uz broj igrača koji su trenutačno na njemu. Tvog poslužitelja nema? **Predloži moj poslužitelj** šalje ga administratorima ove stranice i on se pojavljuje na popisu nakon odobrenja.",
+  c3LanDir: "Odaberi poslužitelj na popisu **Poslužitelj**: zelena točka znači da je na mreži, uz broj igrača koji su trenutačno na njemu. Tvog poslužitelja nema? **Predloži moj poslužitelj**, na dnu popisa, šalje ga administratorima ove stranice i on se pojavljuje na popisu nakon odobrenja.",
   hsLanDir: "LAN poslužitelji koje su provjerili administratori ove stranice: odaberi jedan za igru na njemu. Zelena točka znači na mreži, uz njegove trenutačne igrače.",
   hsLanPropose: "Šalje tvoj PokerTH poslužitelj administratorima ove stranice. Nakon odobrenja pojavljuje se na ovom popisu za svakog igrača.",
   hsLanPropTest: "Provjerava odgovara li PokerTH poslužitelj na ovoj adresi i portu. Zahtjev možeš poslati tek nakon uspješnog testa.",

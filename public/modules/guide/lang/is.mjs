@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Undir **Veldu þjón** skaltu velja þjón: grænn punktur þýðir að hann er tengdur, ásamt fjölda leikmanna á honum núna. Er þinn eigin þjónn ekki þar? **Leggja til þjóninn minn** sendir hann til stjórnenda þessarar síðu og hann birtist á listanum þegar hann hefur verið samþykktur.",
+  c3LanDir: "Í listanum **Þjónn** skaltu velja þjón: grænn punktur þýðir að hann er tengdur, ásamt fjölda leikmanna á honum núna. Er þinn eigin þjónn ekki þar? **Leggja til þjóninn minn**, neðst á listanum, sendir hann til stjórnenda þessarar síðu og hann birtist á listanum þegar hann hefur verið samþykktur.",
   hsLanDir: "LAN-þjónarnir sem stjórnendur þessarar síðu hafa yfirfarið: veldu einn til að spila á honum. Grænn punktur þýðir tengdur, ásamt leikmönnum hans núna.",
   hsLanPropose: "Sendir þinn eigin PokerTH þjón til stjórnenda þessarar síðu. Þegar hann hefur verið samþykktur birtist hann á þessum lista fyrir alla leikmenn.",
   hsLanPropTest: "Athugar hvort PokerTH þjónn svarar á þessu vistfangi og gátt. Þú getur aðeins sent beiðnina eftir vel heppnaða prófun.",

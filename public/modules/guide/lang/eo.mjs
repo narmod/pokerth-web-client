@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Sub **Elektu servilon**, elektu unu el la listo: verda punkto signifas, ke ĝi estas enreta, kun la nombro de ludantoj nun sur ĝi. Via propra servilo ne estas tie? **Proponi mian servilon** sendas ĝin al la administrantoj de ĉi tiu retejo, kaj ĝi aperas en la listo post aprobo.",
+  c3LanDir: "Elektu servilon en la listo **Servilo**: verda punkto signifas, ke ĝi estas enreta, kun la nombro de ludantoj nun sur ĝi. Via propra servilo ne estas tie? **Proponi mian servilon**, ĉe la fino de la listo, sendas ĝin al la administrantoj de ĉi tiu retejo, kaj ĝi aperas en la listo post aprobo.",
   hsLanDir: "La LAN-serviloj kontrolitaj de la administrantoj de ĉi tiu retejo: elektu unu por ludi sur ĝi. Verda punkto signifas enreta, kun ĝiaj nunaj ludantoj.",
   hsLanPropose: "Sendas vian propran PokerTH-servilon al la administrantoj de ĉi tiu retejo. Post aprobo, ĝi aperas en ĉi tiu listo por ĉiu ludanto.",
   hsLanPropTest: "Kontrolas, ke PokerTH-servilo respondas ĉe ĉi tiu adreso kaj pordo. Vi povas sendi la peton nur post sukcesa testo.",

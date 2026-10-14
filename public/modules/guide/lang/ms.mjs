@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Di bawah **Pilih server**, pilih satu server dalam senarai: titik hijau bermaksud ia dalam talian, bersama bilangan pemain di dalamnya sekarang. Server Anda sendiri tiada di situ? **Cadangkan server saya** menghantarnya kepada admin laman ini, dan ia muncul dalam senarai sebaik sahaja diluluskan.",
+  c3LanDir: "Pilih satu server dalam senarai **Server**: titik hijau bermaksud ia dalam talian, bersama bilangan pemain di dalamnya sekarang. Server Anda sendiri tiada di situ? **Cadangkan server saya**, di bahagian bawah senarai, menghantarnya kepada admin laman ini, dan ia muncul dalam senarai sebaik sahaja diluluskan.",
   hsLanDir: "Server LAN yang disemak oleh admin laman ini: pilih satu untuk bermain di dalamnya. Titik hijau bermaksud dalam talian, bersama pemainnya sekarang.",
   hsLanPropose: "Menghantar server PokerTH Anda sendiri kepada admin laman ini. Sebaik sahaja diluluskan, ia muncul dalam senarai ini untuk setiap pemain.",
   hsLanPropTest: "Menyemak sama ada server PokerTH menjawab di alamat dan port ini. Anda hanya boleh menghantar permintaan selepas ujian berjaya.",

@@ -30,6 +30,9 @@ const SURFACES = [
   ['cr-overflow-menu',     'closeCreateOverflow'],
   ['connect-overflow-menu', 'closeConnectOverflow'],
   ['pv-overflow-menu',     'closePrivacyOverflow'],
+  // Liste des serveurs LAN ouverte (login) : Escape la referme, sans
+  // ramener au choix du mode (login-step2, plus bas).
+  ['lan-dir-list',         'LanDirUI.closeList'],
   // — modales —
   ['accessibility-modal',  'closeAccessibility'],
   ['invite-modal',         'App.closeInviteModal'],

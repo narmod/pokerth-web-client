@@ -2,7 +2,7 @@
 // checked by scripts/test-guide-lang.mjs).
 export default {
   // LAN directory (login, LAN mode; web.43)
-  c3LanDir: "Under **Velg en server** velger du en server: en grønn prikk betyr at den er online, med antall spillere på den akkurat nå. Er ikke din egen server der? **Foreslå serveren min** sender den til administratorene av dette nettstedet, og den vises i listen når den er godkjent.",
+  c3LanDir: "I **Server**-listen velger du en server: en grønn prikk betyr at den er online, med antall spillere på den akkurat nå. Er ikke din egen server der? **Foreslå serveren min**, nederst i listen, sender den til administratorene av dette nettstedet, og den vises i listen når den er godkjent.",
   hsLanDir: "LAN-serverne som administratorene av dette nettstedet har sjekket: velg én for å spille på den. En grønn prikk betyr online, med spillerne der akkurat nå.",
   hsLanPropose: "Sender din egen PokerTH-server til administratorene av dette nettstedet. Når den er godkjent, vises den i denne listen for alle spillere.",
   hsLanPropTest: "Sjekker at en PokerTH-server svarer på denne adressen og porten. Du kan bare sende forespørselen etter en vellykket test.",

@@ -13453,6 +13453,27 @@ html[data-abar-short="1"] #s-game#s-game .my-zone { zoom: var(--abar-kp, 1); }
 .lan-dir-dot.local { background: var(--gold); }
 .lan-dir-dot.off { border: 2px solid var(--text); }
 .lan-dir-dot.unk { border: 2px dashed var(--text); }
+.lan-dir-dot.invite { border: 2px solid var(--gold); }
+/* LAN server list: custom drop-down (same family as .gt-dd « Game type ») with
+   the look of the other login fields, opening right under the field. */
+.lan-dd-btn {
+  border-radius: 2px; color: var(--cream); font-family: var(--ff-mono); font-size: var(--fs-base);
+  padding: 9px 32px 9px 11px; gap: 8px;
+}
+.lan-dd-btn:focus-visible, .lan-dd-btn[aria-expanded="true"] { border-color: var(--gold); }
+.lan-dd-btn[aria-expanded="true"] { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.lan-dd-btn .lan-dir-dot:empty:not([class*=" "]) { display: none; }
+.lan-dd-list {
+  top: 100%; margin-top: -1px; border-color: var(--gold); border-radius: 0 0 2px 2px;
+  max-height: min(50vh, 320px); overflow-y: auto; overscroll-behavior: contain;
+}
+.lan-dd-item { font-family: var(--ff-mono); font-size: var(--fs-base); color: var(--cream); gap: 8px; outline: none; }
+.lan-dd-item:focus-visible { background: rgba(var(--gold-rgb), 0.14); }
+.lan-dd-item .lan-dd-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lan-dd-item.sel .lan-dd-name { font-weight: 700; }
+.lan-dd-item.manual { color: var(--text); }
+.lan-dd-item.propose { color: var(--gold); font-weight: 600; border-top: 1px dashed rgba(var(--gold-rgb), 0.45); }
+.lan-dd-item .lan-dd-plus { width: 9px; flex: none; text-align: center; font-weight: 700; }
 .lan-dir-desc { color: var(--text); margin-top: 2px; overflow-wrap: anywhere; }
 .lan-dir-reset { margin-top: 2px; }
 .lan-dir-ic { width: 9px; flex: none; display: inline-flex; justify-content: center; font-size: 11px; line-height: 1; }
