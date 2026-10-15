@@ -19,7 +19,7 @@ import { esc } from '../ui/misc.mjs';
 import { fmtChips } from '../ui/fmt.mjs';
 import { chipSvg, dealerChipSvg, cardHtml } from '../ui/deck.mjs';
 import { autoScaleTable } from './seats.mjs';
-import { _officialSeatPix, _applyQmlBgCenter } from './layout.mjs';
+import { _officialSeatPix, _applyQmlBgCenter, _qmlLandscapeCommScale } from './layout.mjs';
 import { dodgePucks } from './puck-dodge.mjs';
 import { clampSeatsTop } from './seat-top-clamp.mjs';
 import { _timerRectSvg } from './turn-timer.mjs';
@@ -1394,6 +1394,39 @@ function renderSeatsImmediate() {
         var _cap3 = Math.min(_isCmp3 ? 2.6 : 1.8, _seatBoxScale * 2.0, (0.70 * _zW3) / 264);
         var _floor3 = _seatBoxScale * (_isCmp3 ? 1.1 : 0.72);
         _csComm = Math.max(0.55, Math.min(_cap3, Math.max(_floor3, _gapF3)));
+        // ── AJUSTEMENT WEB (web.80, narmod 15/10 : « sur PC, moins il y a de
+        // joueurs, plus les cartes sont petites ») : le QML a le même creux —
+        // de 3 à 6 joueurs les boîtes grossissent (1.75 contre 1.2-1.3 à 10)
+        // et mangent la bande centrale (1912×729 : 1.32-1.58 contre 1.76 à 10).
+        // Règle : jamais plus petit que la table PLEINE (9 adversaires) dans la
+        // même fenêtre, par la même formule QML sur le modèle. Le gain reste
+        // borné par la place RÉELLE : au-dessus, le bas de la boîte la plus
+        // haute (socle inclus ; + 26·s en style classique, mise sous la boîte)
+        // jusqu'au haut du badge du pot (centre − 69·cs) ; en dessous, le haut
+        // de la self jusqu'au bas du badge de main gagnante (centre + 62·cs).
+        // Les gardes mesurées plus bas (corridor latéral, dégagement du badge)
+        // s'appliquent ensuite comme avant.
+        if (_cmTopOpp !== null) {
+          try {
+            var _cmpL3 = window.innerHeight < 600 || (window.innerWidth / Math.max(window.innerHeight, 1) > 2.1 && window.innerHeight < 800);
+            var _refFull3 = _qmlLandscapeCommScale(9, _zW3, _zH3, _cmpL3, _activeLayoutOpts);
+            if (_refFull3 && _refFull3 > _csComm) {
+              var _inset3 = document.documentElement.getAttribute('data-bet') === 'inset';
+              var _topEdge3 = _cmTopOpp + (_inset3 ? 0 : 26 * _seatBoxScale);
+              // Hauteur totale disponible entre la boîte du haut et la self :
+              // le bloc pot + cartes + badge gagnant mesure 131·cs (69 + 62).
+              var _csFull3 = Math.min(_refFull3, _cap3, (_selfTop3 - _topEdge3 - 12) / 131);
+              if (_csFull3 > _csComm) {
+                _csComm = _csFull3;
+                // Le barycentre QML peut tomber trop près de la self (flancs
+                // bas à 4-5 joueurs) : on garde le centre s'il convient, sinon
+                // on le décale juste assez dans l'espace libre.
+                _commC3 = Math.max(_topEdge3 + 6 + 69 * _csComm, Math.min(_commC3, _selfTop3 - 6 - 62 * _csComm));
+              }
+              try { window._seatDbg.commFullRef = +_refFull3.toFixed(3); } catch (eDf) {}
+            }
+          } catch (eFull3) {}
+        }
         // ── AJUSTEMENT WEB (narmod 2026-07-19) : CAP HORIZONTAL de la
         // rangée community. Le QML ne borne la communityScale que par la
         // hauteur libre et 0.70·largeur de ZONE — jamais par la largeur

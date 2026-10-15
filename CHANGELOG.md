@@ -392,6 +392,15 @@ highlights below.
   1.2 and the row at 70 % of the zone width (upstream's own landscape bound) on portrait phones: on a
   393 px wide phone the cards are 44–48 px at every table size, seats 1.11–1.2. Desktop portrait and
   landscape unchanged (`web.73`).
+- **Desktop: the board never shrinks when players leave (web adjustment)** — upstream has the same dip:
+  from 3 to 6 players the boxes grow (box scale ~1.75 vs ~1.2–1.3 at 10) and eat the middle band, so the
+  board came out smaller than at a full table (1912×729: 1.24–1.55 vs 1.80; 1366×573: 0.98–1.17 vs 1.63).
+  Seated, non-compact landscape now never goes below the QML `communityScale` of a full table (9
+  opponents) in the same window (`_qmlLandscapeCommScale`, `layout.mjs`), bounded by the real room
+  between the top box (bet strip included; + 26·s in classic style) and the self box (pot badge 69·cs
+  above the centre, winning-hand badge 62·cs below); when the QML barycentre sits too close to the self
+  box, the row moves up just enough. The measured guards (side corridor, pot-badge clearance) still
+  apply. Constant board size on 1280×720 → 2560×1300, 2–10 players; overlap audit clean (`web.80`).
 - **Studio / photo avatars fill a square seat frame** — the avatar image kept a forced
   circle (`border-radius: 50%`) even in the QML seat structure, whose frame is square: it now
   inherits the frame's shape, round in classic seats, square in QML seats (`pokerth.css`, `web.37`).

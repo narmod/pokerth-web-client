@@ -889,7 +889,32 @@ function _applyQmlBgCenter(zRect, cY) {
 }
 
 // ─── Exports ES + alias legacy ───────────────────────────────────────────
-export { _qmlLandscapeLayout, _qmlPortraitScale, _qmlPortraitLayout, _officialSeatPix, _applyQmlBgCenter, _bgDynKeep };
+// ── QML communityScale (wide, non-compact, seated) for M opponents, from the
+// seat MODEL — same formula as GamePage.qml (topOpponentBottomY with the 0.13
+// floor, barycentre, /84, cap min(1.8, 2·s, 0.70·w/264), floor 0.72·s).
+// web.80 : seat-render uses it with M = 9 as the « full table » reference, so
+// the board never gets smaller when players leave. Pure (Node-testable).
+function _qmlLandscapeCommScale(M, zW, zH, compact, opts) {
+  if (!(M >= 1) || !(zW > 0) || !(zH > 0)) return null;
+  var lay = _qmlLandscapeLayout(M, zW, zH, !!compact, 1, false, opts);
+  if (!lay || !(lay.s > 0) || !lay.slots || !lay.slots.length) return null;
+  var s = lay.s, top = 0.13 * zH, sum = lay.selfY, n = 1;
+  for (var i = 0; i < lay.slots.length; i++) {
+    var y = lay.slots[i].y;
+    if (y < top) top = y;
+    sum += y; n++;
+  }
+  var topOpp = top + lay.oppBaseH * s / 2;
+  var selfTop = lay.selfY - lay.selfBaseH * s / 2;
+  var cc = sum / n;
+  var avail = Math.min(cc - (topOpp + 26 * s) - 6, selfTop - cc - 6);
+  var gap = avail > 0 ? avail / 84 : 0;
+  var cap = Math.min(1.8, s * 2.0, (0.70 * zW) / 264);
+  return Math.max(0.55, Math.min(cap, Math.max(s * 0.72, gap)));
+}
+if (typeof window !== 'undefined') window._qmlLandscapeCommScale = _qmlLandscapeCommScale;
+
+export { _qmlLandscapeLayout, _qmlPortraitScale, _qmlPortraitLayout, _officialSeatPix, _applyQmlBgCenter, _bgDynKeep, _qmlLandscapeCommScale };
 if (typeof window !== 'undefined') {
   // _qmlLandscapeLayout / _qmlPortraitScale déjà attachés par le bloc (verbatim).
   window._officialSeatPix = _officialSeatPix;
