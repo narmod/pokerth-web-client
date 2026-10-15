@@ -342,6 +342,12 @@ highlights below.
   strictly `GamePage.qml`'s `max(0.55, min(1.8, band/62, (width − 16)/264))` — with 2–3 players the row
   spans the screen width like upstream, and it no longer runs ~12 % larger than upstream at 4–6 players
   (where the pucks touched the pot badge) (`web.71`).
+- **Dealer / blind pucks off the pot in portrait (4 players)** — with TL · TC · TR the side boxes leave
+  ~45 px for a 40 px puck: at its 8 px gap the left puck hit the right box, `puck-dodge.mjs` moved it
+  below the box, and the pot badge was not an obstacle, so it landed on the pot. The pot badge and the
+  winning-hand badge are now obstacles; a side puck that does not fit is first squeezed into the gap
+  (centred, `--seat-bet-gap-r/l` on the seat, at most half over its own box) before changing side; with
+  no free side, the least-overlap placement wins (pot and cards weigh 3×, off-zone excluded) (`web.72`).
 - **Studio / photo avatars fill a square seat frame** — the avatar image kept a forced
   circle (`border-radius: 50%`) even in the QML seat structure, whose frame is square: it now
   inherits the frame's shape, round in classic seats, square in QML seats (`pokerth.css`, `web.37`).

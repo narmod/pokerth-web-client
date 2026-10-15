@@ -1,3 +1,6 @@
+2026-10-15 version 2.1.10-web.72:
+- bugfix: on a phone held upright with 4 players, the dealer / blind button of the left player no longer lands on the pot: it now fits between the two side players
+
 2026-10-15 version 2.1.10-web.71:
 - improvement: on a phone held upright, the community cards now have exactly the size of the official client (slightly smaller than in the previous version with 4 players or more)
 

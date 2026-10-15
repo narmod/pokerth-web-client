@@ -81,5 +81,60 @@ function table(seats, slots = []) {
   table([me, ghost, tr])();
   ok(me.side() === 'b' && ghost.side() === 'r' && !me.dataset.bs0 && !ghost.dataset.bs0, 'self box and ghost seats are never touched');
 }
+// 6) web.72 (narmod 15/10, 4 players portrait): the gap is just wide enough
+//    for the puck - it is squeezed into it instead of falling onto the pot.
+//    Fake seat with a style API: the gap var moves the puck like the CSS does
+//    (seat scale 1, so local px = screen px).
+function mkSeatS(name, plate, side) {
+  const seat = mkSeat(name, plate, side);
+  const vars = {};
+  seat.style = { setProperty: (k, v) => { vars[k] = v; }, removeProperty: (k) => { delete vars[k]; } };
+  const plateEl = { offsetWidth: plate.width, getBoundingClientRect: () => plate };
+  seat.querySelector = (sel) => (sel === '.seat-plate' ? plateEl : null);
+  const puck = seat.querySelectorAll()[0];
+  puck.getBoundingClientRect = () => {
+    const cur = seat.side();
+    const g = (k) => (vars[k] != null ? parseFloat(vars[k]) : 8);
+    if (cur === 'r') return R(plate.right + g('--seat-bet-gap-r'), plate.top + plate.height / 2 - PUCK / 2, PUCK, PUCK);
+    if (cur === 'l') return R(plate.left - g('--seat-bet-gap-l') - PUCK, plate.top + plate.height / 2 - PUCK / 2, PUCK, PUCK);
+    if (cur === 't') return R(plate.right - 6 - PUCK, plate.top - 1 - PUCK, PUCK, PUCK);
+    return R(plate.right - 6 - PUCK, plate.bottom + 1, PUCK, PUCK);
+  };
+  seat.querySelectorAll = () => [puck];
+  seat.vars = vars;
+  return seat;
+}
+{
+  // TL/TR 44 px apart, TC above them, the pot badge right under TL's corner.
+  const tc = mkSeat('TC', R(116, 10, 180, 150), 'b', false);
+  const tl = mkSeatS('TL', R(0, 170, 184, 90), 'r'), tr = mkSeat('TR', R(228, 170, 184, 90), 'l', false);
+  const pot = R(150, 262, 110, 30);
+  const run = table([tc, tl, tr], [pot]);
+  run();
+  const p = tl.querySelectorAll()[0].getBoundingClientRect();
+  ok(tl.side() === 'r' && tl.dataset.pg === '1', 'tight gap: the puck stays beside its box, squeezed');
+  ok(p.left >= 184 && p.right <= 228, 'squeezed puck sits inside the gap (no box covered)');
+  ok(Math.abs((p.left - 184) - (228 - p.right)) < 0.5, 'squeezed puck is centred in the gap');
+  run();
+  ok(tl.side() === 'r' && tl.dataset.pg === '1' && tl.querySelectorAll()[0].getBoundingClientRect().left === p.left, 'idempotent with the squeeze');
+}
+{
+  // Gap too narrow even half over the own box, below = pot, above = TC: the
+  // least-overlap placement wins - never the pot.
+  const tc = mkSeat('TC', R(116, 10, 180, 158), 'b', false);
+  const tl = mkSeatS('TL', R(0, 170, 210, 90), 'r'), tr = mkSeat('TR', R(214, 170, 198, 90), 'l', false);
+  const pot = R(150, 262, 110, 30);
+  table([tc, tl, tr], [pot])();
+  const p = tl.querySelectorAll()[0].getBoundingClientRect();
+  const onPot = p.left < pot.right && pot.left < p.right && p.top < pot.bottom && pot.top < p.bottom;
+  ok(!onPot, 'no free side: the puck is not put on the pot badge');
+}
+{
+  // Room again: the squeeze is undone.
+  const tl = mkSeatS('TL', R(0, 170, 120, 90), 'r'), tr = mkSeat('TR', R(290, 170, 120, 90), 'l', false);
+  tl.dataset.pg = '1'; tl.vars['--seat-bet-gap-r'] = '-10px';
+  table([tl, tr])();
+  ok(tl.side() === 'r' && !tl.dataset.pg && tl.vars['--seat-bet-gap-r'] == null, 'room again: the squeeze is removed');
+}
 console.log(fails ? `\n${fails} FAILED` : '\nAll puck-dodge tests passed.');
 process.exit(fails ? 1 : 0);
