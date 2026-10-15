@@ -1,3 +1,6 @@
+2026-10-15 version 2.1.10-web.71:
+- improvement: on a phone held upright, the community cards now have exactly the size of the official client (slightly smaller than in the previous version with 4 players or more)
+
 2026-10-15 version 2.1.10-web.70:
 - improvement: on a phone held upright, the community cards now use the free room in the middle of the table: they were stuck at the same small size whatever the number of players (up to almost twice as large with 2 to 4 players)
 

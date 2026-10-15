@@ -338,8 +338,10 @@ highlights below.
   (band formula of `GamePage.qml`, the empirical ×1.17 of 15/09 kept, screen cap (width − 16)/264
   re-applied after it); the root keeps the capped value, so large own cards and the mini-board are
   unchanged. `autoScaleTable` measures the scaler at `--comm-scale: 1`, so the row size can no longer
-  feed back into the autofit. Known trade-off: on some 4-player layouts the dealer/blind pucks touch the
-  pot badge or the last card (`web.70`).
+  feed back into the autofit (`web.70`). The empirical ×1.17 is then dropped: the portrait scale is now
+  strictly `GamePage.qml`'s `max(0.55, min(1.8, band/62, (width − 16)/264))` — with 2–3 players the row
+  spans the screen width like upstream, and it no longer runs ~12 % larger than upstream at 4–6 players
+  (where the pucks touched the pot badge) (`web.71`).
 - **Studio / photo avatars fill a square seat frame** — the avatar image kept a forced
   circle (`border-radius: 50%`) even in the QML seat structure, whose frame is square: it now
   inherits the frame's shape, round in classic seats, square in QML seats (`pokerth.css`, `web.37`).
