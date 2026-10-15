@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Navigation: vorheriges / nächstes Fenster (Tisch, offene Panels, das Ass)"],
             ["LT / RT", "Navigation: vorheriger / nächster Reiter"],
             ["RS", "Scrollen"]],
-          note: "Die Buchstaben folgen dem Xbox-Layout: Auf einem PlayStation-Controller ist ✕ = A, ○ = B, □ = X, △ = Y, und die Aktionstasten zeigen die Symbole deines eigenen Controllers. Ein echtes Fenster (Einstellungen, eine Bestätigung, das Gamepad-Menü) schaltet immer auf Navigation, solange es offen ist. Zum Schreiben öffnet A auf einem Textfeld die Gamepad-Tastatur: Schnellsätze für den Chat, Buchstaben mit Steuerkreuz und A, X löscht, Y fügt ein Leerzeichen ein, LB schaltet Großbuchstaben um, RB Zahlen und Symbole, Start sendet, B schließt. Einstellungen: Erweiterte Optionen → Benutzeroberfläche → Gamepad." }
+          note: "Die Buchstaben folgen dem Xbox-Layout: Auf einem PlayStation-Controller ist ✕ = A, ○ = B, □ = X, △ = Y, und die Aktionstasten zeigen die Symbole deines eigenen Controllers. Ein echtes Fenster (Einstellungen, eine Bestätigung, das Gamepad-Menü) schaltet immer auf Navigation, solange es offen ist. Zum Schreiben öffnet A auf einem Textfeld die Gamepad-Tastatur: Schnellsätze für den Chat, Buchstaben mit Steuerkreuz und A, X löscht, Y fügt ein Leerzeichen ein, LB schaltet Großbuchstaben um, RB Zahlen und Symbole, Start sendet, B schließt. Einstellungen: Erweiterte Optionen → Benutzeroberfläche → Gamepad." },
+        { id: 'remote', t: "TV-Fernbedienung (Android TV)",
+          b: ["Auf Android TV und Google TV steuert die Fernbedienung den Client wie ein Gamepad, mit denselben zwei Modi. Im Spielmodus bleibt der Ring auf den Aktionstasten: bewege ihn mit den Pfeiltasten und drücke OK. Im Navigationsmodus kommt er überallhin. Auf einem Fernseher ist sie automatisch aktiv und kann unter Erweiterte Optionen → Benutzeroberfläche → Gamepad erzwungen werden."],
+          keys: [
+            ["↑ ↓ ← →", "Spiel: über die Aktionstasten bewegen (← → auf dem Schieberegler ändern den Betrag) · Navigation: bewegen"],
+            ["OK", "Die Taste mit dem Ring drücken / auswählen"],
+            ["OK ⏱", "Menü: Spiel / Navigation, Chat, Verlauf, Ass-Hilfe, Einstellungen…"],
+            ["↩", "Zurück (wie Esc); macht nie Fold"],
+            ["⏯", "Zwischen Spiel und Navigation wechseln"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (auf Fernbedienungen, die sie haben)"]],
+          note: "Wenn du dran bist, kehrt der Client mit dem Ring auf Check/Call zu Spiel zurück. Zum Schreiben öffnet OK auf einem Textfeld die Bildschirmtastatur: mit den Pfeiltasten bewegen, OK tippt, die Taste ↵ sendet." }
       ]
     }
   ]

@@ -466,7 +466,17 @@ export const help = {
             ["LB / RB", "Llywio: ffenestr flaenorol / nesaf (bwrdd, paneli agored, yr As)"],
             ["LT / RT", "Llywio: tab blaenorol / nesaf"],
             ["RS", "Sgrolio"]],
-          note: "Mae'r llythrennau'n dilyn cynllun Xbox: ar bad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, ac mae'r botymau gweithredu'n dangos symbolau eich pad chi. Mae ffenestr go iawn (gosodiadau, cadarnhad, dewislen y pad gêm) bob amser yn newid i Llywio tra bydd ar agor. I ysgrifennu, mae A ar faes testun yn agor bysellfwrdd y pad gêm: ymadroddion cyflym i'r sgwrs, llythrennau gyda'r D-pad ac A, mae X yn dileu, Y yn ychwanegu bwlch, LB yn newid priflythrennau, RB rhifau a symbolau, Start yn anfon, B yn cau. Gosodiadau: Dewisiadau uwch → Rhyngwyneb defnyddiwr → Pad gêm." }
+          note: "Mae'r llythrennau'n dilyn cynllun Xbox: ar bad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, ac mae'r botymau gweithredu'n dangos symbolau eich pad chi. Mae ffenestr go iawn (gosodiadau, cadarnhad, dewislen y pad gêm) bob amser yn newid i Llywio tra bydd ar agor. I ysgrifennu, mae A ar faes testun yn agor bysellfwrdd y pad gêm: ymadroddion cyflym i'r sgwrs, llythrennau gyda'r D-pad ac A, mae X yn dileu, Y yn ychwanegu bwlch, LB yn newid priflythrennau, RB rhifau a symbolau, Start yn anfon, B yn cau. Gosodiadau: Dewisiadau uwch → Rhyngwyneb defnyddiwr → Pad gêm." },
+        { id: 'remote', t: "Teclyn rheoli o bell y teledu (Android TV)",
+          b: ["Ar Android TV a Google TV, mae'r teclyn rheoli o bell yn rheoli'r cleient fel pad gêm, gyda'r un ddau fodd. Yn y modd Gêm mae'r fodrwy'n aros ar y botymau gweithredu: symudwch hi gyda'r saethau a phwyswch OK. Yn y modd Llywio mae'n mynd i bobman. Mae'n troi ymlaen ar ei ben ei hun ar deledu a gellir ei orfodi yn Dewisiadau uwch → Rhyngwyneb defnyddiwr → Pad gêm."],
+          keys: [
+            ["↑ ↓ ← →", "Gêm: symud dros y botymau gweithredu (mae ← → ar y llithrydd yn newid y swm) · Llywio: symud"],
+            ["OK", "Pwyso'r botwm gyda'r fodrwy / dewis"],
+            ["OK ⏱", "Dewislen: Gêm / Llywio, sgwrs, log, Cymorth yr As, gosodiadau…"],
+            ["↩", "Yn ôl (fel Esc); byth yn gwneud Fold"],
+            ["⏯", "Newid rhwng Gêm a Llywio"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (ar declynnau sydd â nhw)"]],
+          note: "Pan ddaw eich tro, mae'r cleient yn mynd yn ôl i Gêm gyda'r fodrwy ar Check/Call. I ysgrifennu, mae OK ar faes testun yn agor y bysellfwrdd ar y sgrin: symudwch gyda'r saethau, mae OK yn teipio, mae'r fysell ↵ yn anfon." }
       ]
     }
   ]

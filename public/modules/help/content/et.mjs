@@ -326,7 +326,17 @@ export const help = {
             ["LB / RB", "Navigeerimine: eelmine / järgmine aken (laud, avatud paneelid, äss)"],
             ["LT / RT", "Navigeerimine: eelmine / järgmine vahekaart"],
             ["RS", "Keri"]],
-          note: "Tähed järgivad Xboxi paigutust: PlayStationi puldil ✕ = A, ○ = B, □ = X, △ = Y ning tegevusnupud näitavad sinu enda puldi sümboleid. Päris aken (seaded, kinnitus, mängupuldi menüü) lülitab alati Navigeerimisele, kuni see on avatud. Kirjutamiseks avab A tekstiväljal mängupuldi klaviatuuri: kiirfraasid vestluseks, tähed D-padi ja A-ga, X kustutab, Y lisab tühiku, LB lülitab suurtähti, RB numbrid ja sümbolid, Start saadab, B sulgeb. Seaded: Täpsemad valikud → Kasutajaliides → Mängupult." }
+          note: "Tähed järgivad Xboxi paigutust: PlayStationi puldil ✕ = A, ○ = B, □ = X, △ = Y ning tegevusnupud näitavad sinu enda puldi sümboleid. Päris aken (seaded, kinnitus, mängupuldi menüü) lülitab alati Navigeerimisele, kuni see on avatud. Kirjutamiseks avab A tekstiväljal mängupuldi klaviatuuri: kiirfraasid vestluseks, tähed D-padi ja A-ga, X kustutab, Y lisab tühiku, LB lülitab suurtähti, RB numbrid ja sümbolid, Start saadab, B sulgeb. Seaded: Täpsemad valikud → Kasutajaliides → Mängupult." },
+        { id: 'remote', t: "Teleri kaugjuhtimispult (Android TV)",
+          b: ["Android TV-s ja Google TV-s juhib kaugjuhtimispult klienti nagu mängupult, samade kahe režiimiga. Režiimis Mäng jääb rõngas tegevusnuppudele: liiguta seda nooltega ja vajuta OK. Režiimis Navigeerimine pääseb see igale poole. Teleris lülitub see ise sisse ja selle saab sundida sisse lülituma menüüs Täpsemad valikud → Kasutajaliides → Mängupult."],
+          keys: [
+            ["↑ ↓ ← →", "Mäng: liigu tegevusnuppudel (← → liuguril muudavad summat) · Navigeerimine: liigu"],
+            ["OK", "Vajuta rõngaga nuppu / vali"],
+            ["OK ⏱", "Menüü: Mäng / Navigeerimine, vestlus, logi, Ässa abi, seaded…"],
+            ["↩", "Tagasi (nagu Esc); ei tee kunagi Fold"],
+            ["⏯", "Lülita Mängu ja Navigeerimise vahel"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (pultidel, millel need on)"]],
+          note: "Kui tuleb sinu kord, naaseb klient režiimi Mäng, rõngas Check/Call peal. Kirjutamiseks avab OK tekstiväljal ekraaniklaviatuuri: liigu nooltega, OK sisestab tähe, klahv ↵ saadab." }
       ]
     }
   ]

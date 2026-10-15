@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Navegación: ventana anterior / siguiente (mesa, paneles abiertos, el As)"],
             ["LT / RT", "Navegación: pestaña anterior / siguiente"],
             ["RS", "Desplazar"]],
-          note: "Las letras siguen la disposición Xbox: en un mando PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, y los botones de acción muestran los símbolos de tu propio mando. Una ventana de verdad (ajustes, una confirmación, el menú del mando) siempre pasa al modo Navegación mientras está abierta. Para escribir, A sobre un campo de texto abre el teclado del mando: frases rápidas para el chat, letras con la cruceta y A, X borra, Y añade un espacio, LB cambia a mayúsculas, RB a números y símbolos, Start envía, B cierra. Ajustes: Opciones avanzadas → Interfaz de usuario → Mando." }
+          note: "Las letras siguen la disposición Xbox: en un mando PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, y los botones de acción muestran los símbolos de tu propio mando. Una ventana de verdad (ajustes, una confirmación, el menú del mando) siempre pasa al modo Navegación mientras está abierta. Para escribir, A sobre un campo de texto abre el teclado del mando: frases rápidas para el chat, letras con la cruceta y A, X borra, Y añade un espacio, LB cambia a mayúsculas, RB a números y símbolos, Start envía, B cierra. Ajustes: Opciones avanzadas → Interfaz de usuario → Mando." },
+        { id: 'remote', t: "Mando a distancia de la TV (Android TV)",
+          b: ["En Android TV y Google TV, el mando a distancia controla el cliente como un mando de juego, con los mismos dos modos. En modo Juego, el anillo se queda sobre los botones de acción: muévelo con las flechas y pulsa OK. En modo Navegación, va a todas partes. Se activa solo en una TV y se puede forzar en Opciones avanzadas → Interfaz de usuario → Mando."],
+          keys: [
+            ["↑ ↓ ← →", "Juego: moverse por los botones de acción (← → sobre el control deslizante cambian el importe) · Navegación: moverse"],
+            ["OK", "Pulsar el botón rodeado por el anillo / elegir"],
+            ["OK ⏱", "Menú: Juego / Navegación, chat, historial, Ayuda del As, ajustes…"],
+            ["↩", "Volver (como Esc); nunca hace Fold"],
+            ["⏯", "Alternar entre Juego y Navegación"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (en los mandos que los tienen)"]],
+          note: "Cuando te toca, el cliente vuelve al modo Juego con el anillo sobre Check/Call. Para escribir, OK sobre un campo de texto abre el teclado en pantalla: muévete con las flechas, OK escribe la letra, la tecla ↵ envía." }
       ]
     }
   ]

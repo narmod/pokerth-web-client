@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Navegação: janela anterior / seguinte (mesa, painéis abertos, o Ás)"],
             ["LT / RT", "Navegação: separador anterior / seguinte"],
             ["RS", "Deslocar"]],
-          note: "As letras seguem a disposição Xbox: num comando PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, e os botões de ação mostram os símbolos do teu próprio comando. Uma janela verdadeira (definições, uma confirmação, o menu do comando) passa sempre para Navegação enquanto estiver aberta. Para escrever, A num campo de texto abre o teclado do comando: frases rápidas para o chat, letras com o direcional e A, X apaga, Y acrescenta um espaço, LB alterna maiúsculas, RB números e símbolos, Start envia, B fecha. Definições: Opções avançadas → Interface → Comando." }
+          note: "As letras seguem a disposição Xbox: num comando PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, e os botões de ação mostram os símbolos do teu próprio comando. Uma janela verdadeira (definições, uma confirmação, o menu do comando) passa sempre para Navegação enquanto estiver aberta. Para escrever, A num campo de texto abre o teclado do comando: frases rápidas para o chat, letras com o direcional e A, X apaga, Y acrescenta um espaço, LB alterna maiúsculas, RB números e símbolos, Start envia, B fecha. Definições: Opções avançadas → Interface → Comando." },
+        { id: 'remote', t: "Comando da TV (Android TV)",
+          b: ["No Android TV e no Google TV, o comando da TV controla o cliente como um comando de jogo, com os mesmos dois modos. No modo Jogo, o anel fica nos botões de ação: move-o com as setas e carrega em OK. No modo Navegação, vai a todo o lado. Liga-se sozinho numa TV e pode ser forçado em Opções avançadas → Interface → Comando."],
+          keys: [
+            ["↑ ↓ ← →", "Jogo: mover pelos botões de ação (← → no cursor deslizante mudam o montante) · Navegação: mover"],
+            ["OK", "Carregar no botão com o anel / escolher"],
+            ["OK ⏱", "Menu: Jogo / Navegação, chat, histórico, Ajuda do Ás, definições…"],
+            ["↩", "Voltar (como Esc); nunca faz Fold"],
+            ["⏯", "Alternar entre Jogo e Navegação"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (nos comandos da TV que os têm)"]],
+          note: "Quando chega a tua vez, o cliente regressa ao modo Jogo com o anel em Check/Call. Para escrever, OK num campo de texto abre o teclado no ecrã: desloca-te com as setas, OK escreve a letra, a tecla ↵ envia." }
       ]
     }
   ]

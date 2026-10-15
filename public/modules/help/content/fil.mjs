@@ -326,7 +326,17 @@ export const help = {
             ["LB / RB", "Navigation: nakaraan / susunod na window (mesa, mga bukas na panel, ang Alas)"],
             ["LT / RT", "Navigation: nakaraan / susunod na tab"],
             ["RS", "Mag-scroll"]],
-          note: "Sinusunod ng mga letra ang Xbox layout: sa PlayStation pad, ✕ = A, ○ = B, □ = X, △ = Y, at ipinapakita ng mga action button ang mga simbolo ng sarili mong pad. Ang tunay na window (mga setting, kumpirmasyon, menu ng gamepad) ay laging lumilipat sa Navigation habang bukas ito. Para magsulat, binubuksan ng A sa text field ang keyboard ng gamepad: mga mabilisang mensahe para sa chat, mga letra gamit ang D-pad at A, nagbubura ang X, nagdadagdag ng space ang Y, nagpapalit ng malaking titik ang LB, mga numero at simbolo ang RB, nagpapadala ang Start, nagsasara ang B. Mga setting: Mga advanced na option → User interface → Gamepad." }
+          note: "Sinusunod ng mga letra ang Xbox layout: sa PlayStation pad, ✕ = A, ○ = B, □ = X, △ = Y, at ipinapakita ng mga action button ang mga simbolo ng sarili mong pad. Ang tunay na window (mga setting, kumpirmasyon, menu ng gamepad) ay laging lumilipat sa Navigation habang bukas ito. Para magsulat, binubuksan ng A sa text field ang keyboard ng gamepad: mga mabilisang mensahe para sa chat, mga letra gamit ang D-pad at A, nagbubura ang X, nagdadagdag ng space ang Y, nagpapalit ng malaking titik ang LB, mga numero at simbolo ang RB, nagpapadala ang Start, nagsasara ang B. Mga setting: Mga advanced na option → User interface → Gamepad." },
+        { id: 'remote', t: "Remote ng TV (Android TV)",
+          b: ["Sa Android TV at Google TV, kinokontrol ng remote ang client tulad ng gamepad, gamit ang parehong dalawang mode. Sa Laro mode, nananatili ang ring sa mga action button: igalaw ito gamit ang mga arrow at pindutin ang OK. Sa Navigation mode, napupunta ito kahit saan. Kusa itong naka-on sa TV at maaaring pilitin sa Mga advanced na option → User interface → Gamepad."],
+          keys: [
+            ["↑ ↓ ← →", "Laro: gumalaw sa mga action button (binabago ng ← → sa slider ang halaga) · Navigation: gumalaw"],
+            ["OK", "Pindutin ang button na may ring / pumili"],
+            ["OK ⏱", "Menu: Laro / Navigation, chat, log, Tulong ng Alas, mga setting…"],
+            ["↩", "Bumalik (tulad ng Esc); hindi kailanman nagfo-Fold"],
+            ["⏯", "Magpalit sa pagitan ng Laro at Navigation"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (sa mga remote na mayroon nito)"]],
+          note: "Kapag turn mo na, babalik ang client sa Laro na nasa Check/Call ang ring. Para magsulat, binubuksan ng OK sa text field ang on-screen keyboard: gumalaw gamit ang mga arrow, nagta-type ang OK, nagpapadala ang key na ↵." }
       ]
     }
   ]

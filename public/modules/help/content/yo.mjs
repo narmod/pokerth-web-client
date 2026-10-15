@@ -466,7 +466,17 @@ export const help = {
             ["LB / RB", "Ìrìnkiri: fèrèsé tó ṣáájú / tó kàn (tábìlì, àwọn pánẹ́lì tó ṣí, Ace)"],
             ["LT / RT", "Ìrìnkiri: ojú-ewé tó ṣáájú / tó kàn"],
             ["RS", "Yí lọ"]],
-          note: "Àwọn lẹ́tà tẹ̀lé ìfilélẹ̀ Xbox: lórí ẹ̀rọ ìdarí PlayStation ✕ = A, ○ = B, □ = X, △ = Y, àwọn bọ́tìnì ìgbésẹ̀ sì ń fi àmì ẹ̀rọ ìdarí tìrẹ hàn. Fèrèsé gidi (ètò, ìjẹ́rìísí, mẹ́nù ẹ̀rọ ìdarí) máa ń yí sí ipò Ìrìnkiri nígbà gbogbo tí ó bá ṣí sílẹ̀. Láti kọ̀wé, A lórí pápá ọ̀rọ̀ ń ṣí kọ́bọ́ọ̀dù ẹ̀rọ ìdarí: gbólóhùn kíákíá fún ìjíròrò, lẹ́tà pẹ̀lú D-pad àti A, X ń pa rẹ́, Y ń fi àlàfo kún, LB ń yí lẹ́tà ńlá, RB nọ́ńbà àti àmì, Start ń fi ránṣẹ́, B ń pa á dé. Ètò: Àṣàyàn ìlọsíwájú → Ojú olùlò → Ẹ̀rọ ìdarí eré." }
+          note: "Àwọn lẹ́tà tẹ̀lé ìfilélẹ̀ Xbox: lórí ẹ̀rọ ìdarí PlayStation ✕ = A, ○ = B, □ = X, △ = Y, àwọn bọ́tìnì ìgbésẹ̀ sì ń fi àmì ẹ̀rọ ìdarí tìrẹ hàn. Fèrèsé gidi (ètò, ìjẹ́rìísí, mẹ́nù ẹ̀rọ ìdarí) máa ń yí sí ipò Ìrìnkiri nígbà gbogbo tí ó bá ṣí sílẹ̀. Láti kọ̀wé, A lórí pápá ọ̀rọ̀ ń ṣí kọ́bọ́ọ̀dù ẹ̀rọ ìdarí: gbólóhùn kíákíá fún ìjíròrò, lẹ́tà pẹ̀lú D-pad àti A, X ń pa rẹ́, Y ń fi àlàfo kún, LB ń yí lẹ́tà ńlá, RB nọ́ńbà àti àmì, Start ń fi ránṣẹ́, B ń pa á dé. Ètò: Àṣàyàn ìlọsíwájú → Ojú olùlò → Ẹ̀rọ ìdarí eré." },
+        { id: 'remote', t: "Rìmóòtù TV (Android TV)",
+          b: ["Lórí Android TV àti Google TV, rìmóòtù ń darí ètò náà bí ẹ̀rọ ìdarí eré, pẹ̀lú ipò méjì kan náà. Ní ipò Eré, òrùka náà máa ń wà lórí àwọn bọ́tìnì ìgbésẹ̀: gbé e kiri pẹ̀lú àwọn ọfà kí o sì tẹ OK. Ní ipò Ìrìnkiri, ó ń lọ sí ibi gbogbo. Ó máa ń tan fúnra rẹ̀ lórí TV, a sì lè fipá tàn án nínú Àṣàyàn ìlọsíwájú → Ojú olùlò → Ẹ̀rọ ìdarí eré."],
+          keys: [
+            ["↑ ↓ ← →", "Eré: gbé kiri lórí àwọn bọ́tìnì ìgbésẹ̀ (← → lórí atẹ̀lé ń yí iye padà) · Ìrìnkiri: gbé kiri"],
+            ["OK", "Tẹ bọ́tìnì tí òrùka wà lórí rẹ̀ / yàn"],
+            ["OK ⏱", "Mẹ́nù: Eré / Ìrìnkiri, ìjíròrò, ìwé-àkọsílẹ̀, Ìrànlọ́wọ́ Ace, ètò…"],
+            ["↩", "Padà (bí Esc); kì í ṣe Fold láéláé"],
+            ["⏯", "Yí láàárín Eré àti Ìrìnkiri"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (lórí rìmóòtù tó ní wọn)"]],
+          note: "Nígbà tí ó bá kàn ọ́, ètò náà yóò padà sí ipò Eré pẹ̀lú òrùka lórí Check/Call. Láti kọ̀wé, OK lórí pápá ọ̀rọ̀ ń ṣí kọ́bọ́ọ̀dù orí-ìbòjú: gbé kiri pẹ̀lú àwọn ọfà, OK ń tẹ lẹ́tà, bọ́tìnì ↵ ń fi ránṣẹ́." }
       ]
     }
   ]

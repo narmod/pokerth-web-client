@@ -465,7 +465,17 @@ export const help = {
             ["LB / RB", "Navigatsiya: oldingi / keyingi oyna (stol, ochiq panellar, Tuz)"],
             ["LT / RT", "Navigatsiya: oldingi / keyingi yorliq"],
             ["RS", "Aylantirish"]],
-          note: "Harflar Xbox joylashuviga mos: PlayStation geympadida ✕ = A, ○ = B, □ = X, △ = Y, harakat tugmalari esa oʻz geympadingiz belgilarini koʻrsatadi. Haqiqiy oyna (sozlamalar, tasdiqlash, geympad menyusi) ochiq turgan paytda doim Navigatsiya rejimiga oʻtadi. Yozish uchun matn maydonida A geympad klaviaturasini ochadi: chat uchun tezkor iboralar, D-pad va A bilan harflar, X oʻchiradi, Y boʻshliq qoʻshadi, LB bosh harflarni almashtiradi, RB raqamlar va belgilar, Start yuboradi, B yopadi. Sozlamalar: Kengaytirilgan sozlamalar → Foydalanuvchi interfeysi → Geympad." }
+          note: "Harflar Xbox joylashuviga mos: PlayStation geympadida ✕ = A, ○ = B, □ = X, △ = Y, harakat tugmalari esa oʻz geympadingiz belgilarini koʻrsatadi. Haqiqiy oyna (sozlamalar, tasdiqlash, geympad menyusi) ochiq turgan paytda doim Navigatsiya rejimiga oʻtadi. Yozish uchun matn maydonida A geympad klaviaturasini ochadi: chat uchun tezkor iboralar, D-pad va A bilan harflar, X oʻchiradi, Y boʻshliq qoʻshadi, LB bosh harflarni almashtiradi, RB raqamlar va belgilar, Start yuboradi, B yopadi. Sozlamalar: Kengaytirilgan sozlamalar → Foydalanuvchi interfeysi → Geympad." },
+        { id: 'remote', t: "Televizor pulti (Android TV)",
+          b: ["Android TV va Google TV da pult klientni geympad kabi, oʻsha ikki rejim bilan boshqaradi. Oʻyin rejimida halqa harakat tugmalari ustida qoladi: uni strelkalar bilan siljiting va OK ni bosing. Navigatsiya rejimida u hamma joyga boradi. Televizorda oʻzi yoqiladi va uni Kengaytirilgan sozlamalar → Foydalanuvchi interfeysi → Geympad boʻlimida majburan yoqish mumkin."],
+          keys: [
+            ["↑ ↓ ← →", "Oʻyin: harakat tugmalari ustida harakatlanish (slayderda ← → miqdorni oʻzgartiradi) · Navigatsiya: harakatlanish"],
+            ["OK", "Halqali tugmani bosish / tanlash"],
+            ["OK ⏱", "Menyu: Oʻyin / Navigatsiya, chat, jurnal, Tuzning yordami, sozlamalar…"],
+            ["↩", "Orqaga (Esc kabi); hech qachon Fold qilmaydi"],
+            ["⏯", "Oʻyin va Navigatsiya orasida almashtirish"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (ular bor pultlarda)"]],
+          note: "Navbatingiz kelganda klient halqani Check/Call ustiga qoʻyib, Oʻyin rejimiga qaytadi. Yozish uchun matn maydonida OK ekran klaviaturasini ochadi: strelkalar bilan harakatlaning, OK harfni yozadi, ↵ tugmasi yuboradi." }
       ]
     }
   ]

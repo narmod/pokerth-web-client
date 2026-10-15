@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Navigácia: predchádzajúce / ďalšie okno (stôl, otvorené panely, eso)"],
             ["LT / RT", "Navigácia: predchádzajúca / ďalšia karta"],
             ["RS", "Posúvanie"]],
-          note: "Písmená zodpovedajú rozloženiu Xbox: na ovládači PlayStation ✕ = A, ○ = B, □ = X, △ = Y a akčné tlačidlá zobrazujú symboly tvojho ovládača. Skutočné okno (nastavenia, potvrdenie, ponuka gamepadu) vždy prepne na Navigáciu, kým je otvorené. Ak chceš písať, A na textovom poli otvorí klávesnicu gamepadu: rýchle frázy do chatu, písmená cez D-pad a A, X maže, Y pridá medzeru, LB prepína veľké písmená, RB čísla a symboly, Start odošle, B zatvorí. Nastavenia: Pokročilé možnosti → Používateľské rozhranie → Gamepad." }
+          note: "Písmená zodpovedajú rozloženiu Xbox: na ovládači PlayStation ✕ = A, ○ = B, □ = X, △ = Y a akčné tlačidlá zobrazujú symboly tvojho ovládača. Skutočné okno (nastavenia, potvrdenie, ponuka gamepadu) vždy prepne na Navigáciu, kým je otvorené. Ak chceš písať, A na textovom poli otvorí klávesnicu gamepadu: rýchle frázy do chatu, písmená cez D-pad a A, X maže, Y pridá medzeru, LB prepína veľké písmená, RB čísla a symboly, Start odošle, B zatvorí. Nastavenia: Pokročilé možnosti → Používateľské rozhranie → Gamepad." },
+        { id: 'remote', t: "Diaľkový ovládač TV (Android TV)",
+          b: ["Na Android TV a Google TV ovláda diaľkový ovládač klienta ako gamepad, s tými istými dvoma režimami. V režime Hra zostáva krúžok na akčných tlačidlách: posúvaj ho šípkami a stlač OK. V režime Navigácia ide všade. Na televízore sa zapne sám a dá sa vynútiť v Pokročilé možnosti → Používateľské rozhranie → Gamepad."],
+          keys: [
+            ["↑ ↓ ← →", "Hra: pohyb po akčných tlačidlách (← → na posuvníku menia sumu) · Navigácia: pohyb"],
+            ["OK", "Stlačiť tlačidlo s krúžkom / vybrať"],
+            ["OK ⏱", "Ponuka: Hra / Navigácia, chat, história, Pomoc od esa, nastavenia…"],
+            ["↩", "Späť (ako Esc); nikdy nerobí Fold"],
+            ["⏯", "Prepínanie medzi Hrou a Navigáciou"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (na ovládačoch, ktoré ich majú)"]],
+          note: "Keď prídeš na ťah, klient sa vráti do režimu Hra s krúžkom na Check/Call. Ak chceš písať, OK na textovom poli otvorí klávesnicu na obrazovke: pohybuj sa šípkami, OK napíše písmeno, kláves ↵ odošle." }
       ]
     }
   ]

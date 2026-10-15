@@ -326,7 +326,17 @@ export const help = {
             ["LB / RB", "Navigimi: dritarja e mëparshme / e radhës (tavolina, panelet e hapura, Asi)"],
             ["LT / RT", "Navigimi: skeda e mëparshme / e radhës"],
             ["RS", "Rrotullo faqen"]],
-          note: "Shkronjat ndjekin paraqitjen Xbox: në një kontroller PlayStation ✕ = A, ○ = B, □ = X, △ = Y, dhe butonat e veprimit shfaqin simbolet e kontrollerit tënd. Një dritare e vërtetë (cilësimet, një konfirmim, menuja e kontrollerit) kalon gjithmonë në Navigim sa kohë që është e hapur. Për të shkruar, A mbi një fushë teksti hap tastierën e kontrollerit: fraza të shpejta për bisedën, shkronja me kryqin dhe A, X fshin, Y shton një hapësirë, LB ndërron shkronjat e mëdha, RB numrat dhe simbolet, Start dërgon, B mbyll. Cilësimet: Opsionet e avancuara → Ndërfaqja e përdoruesit → Kontrolleri i lojës." }
+          note: "Shkronjat ndjekin paraqitjen Xbox: në një kontroller PlayStation ✕ = A, ○ = B, □ = X, △ = Y, dhe butonat e veprimit shfaqin simbolet e kontrollerit tënd. Një dritare e vërtetë (cilësimet, një konfirmim, menuja e kontrollerit) kalon gjithmonë në Navigim sa kohë që është e hapur. Për të shkruar, A mbi një fushë teksti hap tastierën e kontrollerit: fraza të shpejta për bisedën, shkronja me kryqin dhe A, X fshin, Y shton një hapësirë, LB ndërron shkronjat e mëdha, RB numrat dhe simbolet, Start dërgon, B mbyll. Cilësimet: Opsionet e avancuara → Ndërfaqja e përdoruesit → Kontrolleri i lojës." },
+        { id: 'remote', t: "Telekomanda e TV-së (Android TV)",
+          b: ["Në Android TV dhe Google TV, telekomanda drejton klientin si një kontroller loje, me të njëjtat dy mënyra. Në mënyrën Loja unaza qëndron mbi butonat e veprimit: lëvize me shigjetat dhe shtyp OK. Në mënyrën Navigimi ajo shkon kudo. Aktivizohet vetë në një TV dhe mund të detyrohet te Opsionet e avancuara → Ndërfaqja e përdoruesit → Kontrolleri i lojës."],
+          keys: [
+            ["↑ ↓ ← →", "Loja: lëviz mbi butonat e veprimit (← → mbi rrëshqitësin ndryshojnë shumën) · Navigimi: lëviz"],
+            ["OK", "Shtyp butonin me unazë / zgjidh"],
+            ["OK ⏱", "Menuja: Loja / Navigimi, biseda, regjistri, Ndihma e Asit, cilësimet…"],
+            ["↩", "Mbrapa (si Esc); nuk bën kurrë Fold"],
+            ["⏯", "Ndërro mes Lojës dhe Navigimit"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (në telekomandat që i kanë)"]],
+          note: "Kur vjen radha jote, klienti kthehet te mënyra Loja me unazën mbi Check/Call. Për të shkruar, OK mbi një fushë teksti hap tastierën në ekran: lëviz me shigjetat, OK shkruan, tasti ↵ dërgon." }
       ]
     }
   ]

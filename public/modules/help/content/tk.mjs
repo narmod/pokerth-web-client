@@ -466,7 +466,17 @@ export const help = {
             ["LB / RB", "Nawigasiýa: öňki / indiki penjire (stol, açyk paneller, Tuz)"],
             ["LT / RT", "Nawigasiýa: öňki / indiki goýma"],
             ["RS", "Aýlamak"]],
-          note: "Harplar Xbox ýerleşişine laýyk gelýär: PlayStation geýmpadynda ✕ = A, ○ = B, □ = X, △ = Y, hereket düwmeleri bolsa öz geýmpadyňyzyň nyşanlaryny görkezýär. Hakyky penjire (sazlamalar, tassyklama, geýmpad menýusy) açyk durka hemişe Nawigasiýa tertibine geçýär. Ýazmak üçin tekst meýdançasynda A geýmpadyň klawiaturasyny açýar: çat üçin çalt sözlemler, D-pad we A bilen harplar, X öçürýär, Y boşluk goşýar, LB baş harplary çalyşýar, RB sanlary we nyşanlary, Start iberýär, B ýapýar. Sazlamalar: Giňişleýin sazlamalar → Ulanyjy interfeýsi → Geýmpad." }
+          note: "Harplar Xbox ýerleşişine laýyk gelýär: PlayStation geýmpadynda ✕ = A, ○ = B, □ = X, △ = Y, hereket düwmeleri bolsa öz geýmpadyňyzyň nyşanlaryny görkezýär. Hakyky penjire (sazlamalar, tassyklama, geýmpad menýusy) açyk durka hemişe Nawigasiýa tertibine geçýär. Ýazmak üçin tekst meýdançasynda A geýmpadyň klawiaturasyny açýar: çat üçin çalt sözlemler, D-pad we A bilen harplar, X öçürýär, Y boşluk goşýar, LB baş harplary çalyşýar, RB sanlary we nyşanlary, Start iberýär, B ýapýar. Sazlamalar: Giňişleýin sazlamalar → Ulanyjy interfeýsi → Geýmpad." },
+        { id: 'remote', t: "Telewizor pulty (Android TV)",
+          b: ["Android TV we Google TV-de pult klienti geýmpad ýaly, şol bir iki tertip bilen dolandyrýar. Oýun tertibinde halka hereket düwmeleriniň üstünde galýar: ony oklar bilen süýşüriň we OK basyň. Nawigasiýa tertibinde ol hemme ýere gidýär. Telewizorda özbaşdak işleýär we ony Giňişleýin sazlamalar → Ulanyjy interfeýsi → Geýmpad bölüminde mejbury açyp bolýar."],
+          keys: [
+            ["↑ ↓ ← →", "Oýun: hereket düwmeleriniň üstünde hereket (süýşgüçde ← → mukdary üýtgedýär) · Nawigasiýa: hereket"],
+            ["OK", "Halkaly düwmä basmak / saýlamak"],
+            ["OK ⏱", "Menýu: Oýun / Nawigasiýa, çat, žurnal, Tuzuň kömegi, sazlamalar…"],
+            ["↩", "Yza (Esc ýaly); hiç haçan Fold etmeýär"],
+            ["⏯", "Oýun bilen Nawigasiýanyň arasynda çalyşmak"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (olary bolan pultlarda)"]],
+          note: "Nobatyňyz gelende klient halkany Check/Call üstünde goýup, Oýun tertibine dolanýar. Ýazmak üçin tekst meýdançasynda OK ekran klawiaturasyny açýar: oklar bilen hereket ediň, OK harpy ýazýar, ↵ düwmesi iberýär." }
       ]
     }
   ]

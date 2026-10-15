@@ -330,7 +330,17 @@ export const help = {
             ["LB / RB", "Navigācija: iepriekšējais / nākamais logs (galds, atvērtie paneļi, Dūzis)"],
             ["LT / RT", "Navigācija: iepriekšējā / nākamā cilne"],
             ["RS", "Ritināt"]],
-          note: "Burti atbilst Xbox izkārtojumam: PlayStation pultī ✕ = A, ○ = B, □ = X, △ = Y, un darbību pogas rāda tavas pults simbolus. Īsts logs (iestatījumi, apstiprinājums, spēļu pults izvēlne) vienmēr pārslēdzas uz Navigāciju, kamēr tas ir atvērts. Lai rakstītu, A uz teksta lauka atver pults tastatūru: ātrās frāzes tērzēšanai, burti ar D-pad un A, X dzēš, Y pievieno atstarpi, LB pārslēdz lielos burtus, RB — ciparus un simbolus, Start nosūta, B aizver. Iestatījumi: Papildu opcijas → Lietotāja saskarne → Spēļu pults." }
+          note: "Burti atbilst Xbox izkārtojumam: PlayStation pultī ✕ = A, ○ = B, □ = X, △ = Y, un darbību pogas rāda tavas pults simbolus. Īsts logs (iestatījumi, apstiprinājums, spēļu pults izvēlne) vienmēr pārslēdzas uz Navigāciju, kamēr tas ir atvērts. Lai rakstītu, A uz teksta lauka atver pults tastatūru: ātrās frāzes tērzēšanai, burti ar D-pad un A, X dzēš, Y pievieno atstarpi, LB pārslēdz lielos burtus, RB — ciparus un simbolus, Start nosūta, B aizver. Iestatījumi: Papildu opcijas → Lietotāja saskarne → Spēļu pults." },
+        { id: 'remote', t: "TV pults (Android TV)",
+          b: ["Android TV un Google TV pults vada klientu kā spēļu pults, ar tiem pašiem diviem režīmiem. Spēles režīmā gredzens paliek uz darbību pogām: pārvieto to ar bultiņām un nospied OK. Navigācijas režīmā tas iet visur. Televizorā tā ieslēdzas pati, un to var ieslēgt piespiedu kārtā sadaļā Papildu opcijas → Lietotāja saskarne → Spēļu pults."],
+          keys: [
+            ["↑ ↓ ← →", "Spēle: pārvietoties pa darbību pogām (← → uz slīdņa maina summu) · Navigācija: pārvietoties"],
+            ["OK", "Nospiest pogu ar gredzenu / izvēlēties"],
+            ["OK ⏱", "Izvēlne: Spēle / Navigācija, tērzēšana, žurnāls, Dūža palīdzība, iestatījumi…"],
+            ["↩", "Atpakaļ (kā Esc); nekad neveic Fold"],
+            ["⏯", "Pārslēgties starp Spēli un Navigāciju"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (pultīm, kurām tās ir)"]],
+          note: "Kad pienāk tavs gājiens, klients atgriežas Spēles režīmā ar gredzenu uz Check/Call. Lai rakstītu, OK uz teksta lauka atver ekrāna tastatūru: pārvietojies ar bultiņām, OK ieraksta burtu, taustiņš ↵ nosūta." }
       ]
     }
   ]

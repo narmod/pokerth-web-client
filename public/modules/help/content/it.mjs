@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Navigazione: finestra precedente / successiva (tavolo, pannelli aperti, l’Asso)"],
             ["LT / RT", "Navigazione: scheda precedente / successiva"],
             ["RS", "Scorrere"]],
-          note: "Le lettere seguono il layout Xbox: su un controller PlayStation ✕ = A, ○ = B, □ = X, △ = Y, e i pulsanti di azione mostrano i simboli del tuo controller. Una vera finestra (impostazioni, una conferma, il menu controller) passa sempre in Navigazione finché è aperta. Per scrivere, A su un campo di testo apre la tastiera del controller: frasi rapide per la chat, lettere con la croce direzionale e A, X cancella, Y aggiunge uno spazio, LB passa alle maiuscole, RB a numeri e simboli, Start invia, B chiude. Impostazioni: Opzioni avanzate → Interfaccia utente → Controller." }
+          note: "Le lettere seguono il layout Xbox: su un controller PlayStation ✕ = A, ○ = B, □ = X, △ = Y, e i pulsanti di azione mostrano i simboli del tuo controller. Una vera finestra (impostazioni, una conferma, il menu controller) passa sempre in Navigazione finché è aperta. Per scrivere, A su un campo di testo apre la tastiera del controller: frasi rapide per la chat, lettere con la croce direzionale e A, X cancella, Y aggiunge uno spazio, LB passa alle maiuscole, RB a numeri e simboli, Start invia, B chiude. Impostazioni: Opzioni avanzate → Interfaccia utente → Controller." },
+        { id: 'remote', t: "Telecomando TV (Android TV)",
+          b: ["Su Android TV e Google TV, il telecomando comanda il client come un controller, con le stesse due modalità. In modalità Gioco l’anello resta sui pulsanti di azione: spostalo con le frecce e premi OK. In modalità Navigazione va dappertutto. Si attiva da solo su una TV e si può forzare in Opzioni avanzate → Interfaccia utente → Controller."],
+          keys: [
+            ["↑ ↓ ← →", "Gioco: spostarsi sui pulsanti di azione (← → sul cursore cambiano l’importo) · Navigazione: spostarsi"],
+            ["OK", "Premere il pulsante con l’anello / scegliere"],
+            ["OK ⏱", "Menu: Gioco / Navigazione, chat, cronologia, Aiuto dell’Asso, impostazioni…"],
+            ["↩", "Indietro (come Esc); non fa mai Fold"],
+            ["⏯", "Passare tra Gioco e Navigazione"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (sui telecomandi che li hanno)"]],
+          note: "Quando arriva il tuo turno, il client torna in modalità Gioco con l’anello su Check/Call. Per scrivere, OK su un campo di testo apre la tastiera su schermo: spostati con le frecce, OK digita, il tasto ↵ invia." }
       ]
     }
   ]

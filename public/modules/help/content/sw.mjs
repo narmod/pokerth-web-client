@@ -326,7 +326,17 @@ export const help = {
             ["LB / RB", "Uelekezaji: dirisha lililotangulia / linalofuata (meza, paneli zilizo wazi, Ekaa)"],
             ["LT / RT", "Uelekezaji: kichupo kilichotangulia / kinachofuata"],
             ["RS", "Sogeza ukurasa"]],
-          note: "Herufi hufuata mpangilio wa Xbox: kwenye kidhibiti cha PlayStation ✕ = A, ○ = B, □ = X, △ = Y, na vitufe vya hatua huonyesha alama za kidhibiti chako. Dirisha halisi (mipangilio, uthibitisho, menyu ya kidhibiti) huhamia Uelekezaji kila wakati likiwa wazi. Kuandika, A kwenye sehemu ya maandishi hufungua kibodi ya kidhibiti: misemo ya haraka kwa chati, herufi kwa D-pad na A, X hufuta, Y huongeza nafasi, LB hubadilisha herufi kubwa, RB nambari na alama, Start hutuma, B hufunga. Mipangilio: Chaguo za kina → Kiolesura cha mtumiaji → Kidhibiti cha mchezo." }
+          note: "Herufi hufuata mpangilio wa Xbox: kwenye kidhibiti cha PlayStation ✕ = A, ○ = B, □ = X, △ = Y, na vitufe vya hatua huonyesha alama za kidhibiti chako. Dirisha halisi (mipangilio, uthibitisho, menyu ya kidhibiti) huhamia Uelekezaji kila wakati likiwa wazi. Kuandika, A kwenye sehemu ya maandishi hufungua kibodi ya kidhibiti: misemo ya haraka kwa chati, herufi kwa D-pad na A, X hufuta, Y huongeza nafasi, LB hubadilisha herufi kubwa, RB nambari na alama, Start hutuma, B hufunga. Mipangilio: Chaguo za kina → Kiolesura cha mtumiaji → Kidhibiti cha mchezo." },
+        { id: 'remote', t: "Rimoti ya TV (Android TV)",
+          b: ["Kwenye Android TV na Google TV, rimoti huendesha programu kama kidhibiti cha mchezo, kwa hali zile zile mbili. Katika hali ya Mchezo pete hubaki juu ya vitufe vya hatua: isogeze kwa mishale kisha bonyeza OK. Katika hali ya Uelekezaji huenda kila mahali. Huwashwa yenyewe kwenye TV na inaweza kulazimishwa katika Chaguo za kina → Kiolesura cha mtumiaji → Kidhibiti cha mchezo."],
+          keys: [
+            ["↑ ↓ ← →", "Mchezo: sogea juu ya vitufe vya hatua (← → kwenye kitelezi hubadilisha kiasi) · Uelekezaji: sogea"],
+            ["OK", "Bonyeza kitufe chenye pete / chagua"],
+            ["OK ⏱", "Menyu: Mchezo / Uelekezaji, chati, kumbukumbu, Msaada wa Ekaa, mipangilio…"],
+            ["↩", "Rudi (kama Esc); haifanyi Fold kamwe"],
+            ["⏯", "Badilisha kati ya Mchezo na Uelekezaji"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (kwenye rimoti zilizo navyo)"]],
+          note: "Zamu yako ikifika, programu hurudi kwenye hali ya Mchezo pete ikiwa juu ya Check/Call. Kuandika, OK kwenye sehemu ya maandishi hufungua kibodi ya skrini: sogea kwa mishale, OK huandika, kitufe ↵ hutuma." }
       ]
     }
   ]

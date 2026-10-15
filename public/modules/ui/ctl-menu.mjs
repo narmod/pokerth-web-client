@@ -32,9 +32,12 @@ function inGame() {
 }
 
 // Tiles of the current context. run(ctl) happens after the menu closed.
-function tiles() {
+function tiles(ctl) {
   var out = [{ id: 'resume', ic: '▶', label: t('padMenuResume'), run: function () {} }];
   if (inGame()) {
+    // Game ⇄ Navigation (Select on a gamepad; the only way on a plain remote).
+    var nav = !!ctl && ctl.mode() === 'game';
+    out.push({ id: 'mode', ic: nav ? '🧭' : '🎮', label: t(nav ? 'padModeNav' : 'padModeGame'), run: function (c) { c.setMode(nav ? 'nav' : 'game'); } });
     out.push(
       { id: 'chat', ic: '💬', label: t('chatTooltip'), run: function (ctl) { ctl.do('chat'); } },
       { id: 'log', ic: '📜', label: t('gipTabLog'), run: function (ctl) { call('gipOpenTab')('log'); ctl.focusZone('g-log-panel'); } },
@@ -89,7 +92,7 @@ export function openMenu(ctl) {
   var grid = el.querySelector('.ctl-menu-grid');
   grid.textContent = '';
   el.querySelector('.ctl-menu-keys').hidden = true;
-  tiles().forEach(function (tile, i) {
+  tiles(ctl).forEach(function (tile, i) {
     var b = document.createElement('button');
     b.type = 'button';
     b.className = 'ctl-tile';

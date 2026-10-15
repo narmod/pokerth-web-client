@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Navigasie: vorige / volgende venster (tafel, oop panele, die Aas)"],
             ["LT / RT", "Navigasie: vorige / volgende oortjie"],
             ["RS", "Rol"]],
-          note: "Die letters volg die Xbox-uitleg: op ’n PlayStation-beheerder is ✕ = A, ○ = B, □ = X, △ = Y, en die aksieknoppies wys die simbole van jou eie beheerder. ’n Regte venster (instellings, ’n bevestiging, die spelbeheerder-kieslys) skakel altyd oor na Navigasie solank dit oop is. Om te skryf, maak A op ’n teksveld die spelbeheerder-sleutelbord oop: vinnige frases vir die klets, letters met die D-pad en A, X vee uit, Y voeg ’n spasie by, LB wissel hoofletters, RB syfers en simbole, Start stuur, B maak toe. Instellings: Gevorderde opsies → Gebruikerskoppelvlak → Spelbeheerder." }
+          note: "Die letters volg die Xbox-uitleg: op ’n PlayStation-beheerder is ✕ = A, ○ = B, □ = X, △ = Y, en die aksieknoppies wys die simbole van jou eie beheerder. ’n Regte venster (instellings, ’n bevestiging, die spelbeheerder-kieslys) skakel altyd oor na Navigasie solank dit oop is. Om te skryf, maak A op ’n teksveld die spelbeheerder-sleutelbord oop: vinnige frases vir die klets, letters met die D-pad en A, X vee uit, Y voeg ’n spasie by, LB wissel hoofletters, RB syfers en simbole, Start stuur, B maak toe. Instellings: Gevorderde opsies → Gebruikerskoppelvlak → Spelbeheerder." },
+        { id: 'remote', t: "TV-afstandbeheer (Android TV)",
+          b: ["Op Android TV en Google TV beheer die afstandbeheer die toep soos ’n spelbeheerder, met dieselfde twee modusse. In Spel bly die ring op die aksieknoppies: beweeg dit met die pyltjies en druk OK. In Navigasie gaan dit oral heen. Dit skakel self aan op ’n TV en kan afgedwing word in Gevorderde opsies → Gebruikerskoppelvlak → Spelbeheerder."],
+          keys: [
+            ["↑ ↓ ← →", "Spel: beweeg oor die aksieknoppies (← → op die skuifbalk verander die bedrag) · Navigasie: beweeg"],
+            ["OK", "Druk die knoppie met die ring / kies"],
+            ["OK ⏱", "Kieslys: Spel / Navigasie, klets, geskiedenis, Die Aas se Hulp, instellings…"],
+            ["↩", "Terug (soos Esc); doen nooit Fold nie"],
+            ["⏯", "Wissel tussen Spel en Navigasie"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (op afstandbeheerders wat dit het)"]],
+          note: "Wanneer dit jou beurt is, keer die toep terug na Spel met die ring op Check/Call. Om te skryf, maak OK op ’n teksveld die skermsleutelbord oop: beweeg met die pyltjies, OK tik, die ↵-sleutel stuur." }
       ]
     }
   ]

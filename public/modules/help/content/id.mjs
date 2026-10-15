@@ -326,7 +326,17 @@ export const help = {
             ["LB / RB", "Navigasi: jendela sebelumnya / berikutnya (meja, panel terbuka, si As)"],
             ["LT / RT", "Navigasi: tab sebelumnya / berikutnya"],
             ["RS", "Gulir"]],
-          note: "Huruf mengikuti tata letak Xbox: pada pad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, dan tombol aksi menampilkan simbol pad Anda sendiri. Jendela sungguhan (pengaturan, konfirmasi, menu gamepad) selalu beralih ke Navigasi selama terbuka. Untuk menulis, A pada kolom teks membuka keyboard gamepad: frasa cepat untuk obrolan, huruf dengan D-pad dan A, X menghapus, Y menambah spasi, LB beralih ke huruf besar, RB ke angka dan simbol, Start mengirim, B menutup. Pengaturan: Opsi lanjutan → Antarmuka pengguna → Gamepad." }
+          note: "Huruf mengikuti tata letak Xbox: pada pad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, dan tombol aksi menampilkan simbol pad Anda sendiri. Jendela sungguhan (pengaturan, konfirmasi, menu gamepad) selalu beralih ke Navigasi selama terbuka. Untuk menulis, A pada kolom teks membuka keyboard gamepad: frasa cepat untuk obrolan, huruf dengan D-pad dan A, X menghapus, Y menambah spasi, LB beralih ke huruf besar, RB ke angka dan simbol, Start mengirim, B menutup. Pengaturan: Opsi lanjutan → Antarmuka pengguna → Gamepad." },
+        { id: 'remote', t: "Remote TV (Android TV)",
+          b: ["Di Android TV dan Google TV, remote mengendalikan klien seperti gamepad, dengan dua mode yang sama. Di mode Permainan, cincin tetap di tombol aksi: gerakkan dengan panah lalu tekan OK. Di mode Navigasi, cincin bisa ke mana saja. Remote aktif sendiri di TV dan dapat dipaksa aktif di Opsi lanjutan → Antarmuka pengguna → Gamepad."],
+          keys: [
+            ["↑ ↓ ← →", "Permainan: bergerak di tombol aksi (← → pada penggeser mengubah jumlah) · Navigasi: bergerak"],
+            ["OK", "Tekan tombol yang bercincin / pilih"],
+            ["OK ⏱", "Menu: Permainan / Navigasi, obrolan, log, Bantuan si As, pengaturan…"],
+            ["↩", "Kembali (seperti Esc); tidak pernah Fold"],
+            ["⏯", "Beralih antara Permainan dan Navigasi"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (pada remote yang memilikinya)"]],
+          note: "Saat giliran Anda tiba, klien kembali ke mode Permainan dengan cincin di Check/Call. Untuk menulis, OK pada kolom teks membuka keyboard layar: bergerak dengan panah, OK mengetik, tombol ↵ mengirim." }
       ]
     }
   ]

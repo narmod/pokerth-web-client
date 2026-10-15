@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Điều hướng: cửa sổ trước / sau (bàn chơi, các bảng đang mở, quân Át)"],
             ["LT / RT", "Điều hướng: thẻ trước / sau"],
             ["RS", "Cuộn"]],
-          note: "Các chữ cái theo bố cục Xbox: trên tay cầm PlayStation ✕ = A, ○ = B, □ = X, △ = Y, và các nút hành động hiển thị ký hiệu của chính tay cầm bạn dùng. Một cửa sổ thật (cài đặt, xác nhận, menu tay cầm) luôn chuyển sang chế độ Điều hướng khi đang mở. Để gõ chữ, bấm A trên ô văn bản sẽ mở bàn phím tay cầm: câu nhanh cho trò chuyện, chữ cái bằng D-pad và A, X xóa, Y thêm dấu cách, LB bật chữ hoa, RB số và ký hiệu, Start gửi, B đóng. Cài đặt: Tùy chọn nâng cao → Giao diện người dùng → Tay cầm." }
+          note: "Các chữ cái theo bố cục Xbox: trên tay cầm PlayStation ✕ = A, ○ = B, □ = X, △ = Y, và các nút hành động hiển thị ký hiệu của chính tay cầm bạn dùng. Một cửa sổ thật (cài đặt, xác nhận, menu tay cầm) luôn chuyển sang chế độ Điều hướng khi đang mở. Để gõ chữ, bấm A trên ô văn bản sẽ mở bàn phím tay cầm: câu nhanh cho trò chuyện, chữ cái bằng D-pad và A, X xóa, Y thêm dấu cách, LB bật chữ hoa, RB số và ký hiệu, Start gửi, B đóng. Cài đặt: Tùy chọn nâng cao → Giao diện người dùng → Tay cầm." },
+        { id: 'remote', t: "Điều khiển TV (Android TV)",
+          b: ["Trên Android TV và Google TV, điều khiển từ xa điều khiển ứng dụng giống như tay cầm, với cùng hai chế độ. Ở chế độ Chơi, vòng sáng nằm trên các nút hành động: di chuyển nó bằng các phím mũi tên và bấm OK. Ở chế độ Điều hướng, nó đi đến mọi nơi. Tính năng tự bật trên TV và có thể bật bắt buộc trong Tùy chọn nâng cao → Giao diện người dùng → Tay cầm."],
+          keys: [
+            ["↑ ↓ ← →", "Chơi: di chuyển trên các nút hành động (← → trên thanh trượt đổi mức cược) · Điều hướng: di chuyển"],
+            ["OK", "Bấm nút có vòng sáng / chọn"],
+            ["OK ⏱", "Menu: Chơi / Điều hướng, trò chuyện, lịch sử, Trợ giúp của quân Át, cài đặt…"],
+            ["↩", "Quay lại (như Esc); không bao giờ Fold"],
+            ["⏯", "Chuyển giữa Chơi và Điều hướng"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (trên điều khiển có các nút này)"]],
+          note: "Khi đến lượt bạn, ứng dụng quay về chế độ Chơi với vòng sáng trên Check/Call. Để gõ chữ, bấm OK trên ô văn bản sẽ mở bàn phím ảo: di chuyển bằng các phím mũi tên, OK gõ chữ, phím ↵ gửi." }
       ]
     }
   ]

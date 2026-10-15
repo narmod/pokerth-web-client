@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Navegació: finestra anterior / següent (taula, plafons oberts, l’As)"],
             ["LT / RT", "Navegació: pestanya anterior / següent"],
             ["RS", "Desplaçar"]],
-          note: "Les lletres segueixen la disposició Xbox: en un comandament PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, i els botons d’acció mostren els símbols del teu comandament. Una finestra de veritat (configuració, una confirmació, el menú del comandament) sempre passa al mode Navegació mentre està oberta. Per escriure, A sobre un camp de text obre el teclat del comandament: frases ràpides per al xat, lletres amb la creueta i A, X esborra, Y afegeix un espai, LB canvia a majúscules, RB a xifres i símbols, Start envia, B tanca. Configuració: Opcions avançades → Interfície d'usuari → Comandament." }
+          note: "Les lletres segueixen la disposició Xbox: en un comandament PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, i els botons d’acció mostren els símbols del teu comandament. Una finestra de veritat (configuració, una confirmació, el menú del comandament) sempre passa al mode Navegació mentre està oberta. Per escriure, A sobre un camp de text obre el teclat del comandament: frases ràpides per al xat, lletres amb la creueta i A, X esborra, Y afegeix un espai, LB canvia a majúscules, RB a xifres i símbols, Start envia, B tanca. Configuració: Opcions avançades → Interfície d'usuari → Comandament." },
+        { id: 'remote', t: "Comandament a distància de la TV (Android TV)",
+          b: ["A Android TV i Google TV, el comandament a distància controla el client com un comandament de joc, amb els mateixos dos modes. En mode Joc, l’anella es queda sobre els botons d’acció: mou-la amb les fletxes i prem OK. En mode Navegació, va a tot arreu. S’activa sol en una TV i es pot forçar a Opcions avançades → Interfície d'usuari → Comandament."],
+          keys: [
+            ["↑ ↓ ← →", "Joc: moure’s pels botons d’acció (← → sobre el control lliscant canvien l’import) · Navegació: moure’s"],
+            ["OK", "Prémer el botó envoltat per l’anella / triar"],
+            ["OK ⏱", "Menú: Joc / Navegació, xat, historial, Ajuda de l’As, configuració…"],
+            ["↩", "Enrere (com Esc); mai fa Fold"],
+            ["⏯", "Alternar entre Joc i Navegació"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (als comandaments que en tenen)"]],
+          note: "Quan et toca, el client torna al mode Joc amb l’anella sobre Check/Call. Per escriure, OK sobre un camp de text obre el teclat en pantalla: mou-te amb les fletxes, OK escriu la lletra, la tecla ↵ envia." }
       ]
     }
   ]

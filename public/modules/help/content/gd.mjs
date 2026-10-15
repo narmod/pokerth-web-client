@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Seòladaireachd: an uinneag roimhe / an ath uinneag (bòrd, panailean fosgailte, an t-Aon)"],
             ["LT / RT", "Seòladaireachd: an taba roimhe / an ath thaba"],
             ["RS", "Sgrolaich"]],
-          note: "Leanaidh na litrichean co-dhealbhachd Xbox: air pad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, agus seallaidh na putanan gnìomha samhlaidhean a’ phad agad fhèin. Thèid fìor uinneag (roghainnean, dearbhadh, clàr-taice a’ phad geama) gu Seòladaireachd an-còmhnaidh fhad ’s a bhios i fosgailte. Airson sgrìobhadh, fosglaidh A air raon teacsa meur-chlàr a’ phad geama: abairtean luath dhan chabadaich, litrichean leis an D-pad agus A, sguabaidh X às, cuiridh Y beàrn ris, atharraichidh LB gu litrichean mòra, RB gu àireamhan is samhlaidhean, cuiridh Start e, dùinidh B e. Roghainnean: Roghainnean adhartach → Eadar-aghaidh a’ chleachdaiche → Pad geama." }
+          note: "Leanaidh na litrichean co-dhealbhachd Xbox: air pad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, agus seallaidh na putanan gnìomha samhlaidhean a’ phad agad fhèin. Thèid fìor uinneag (roghainnean, dearbhadh, clàr-taice a’ phad geama) gu Seòladaireachd an-còmhnaidh fhad ’s a bhios i fosgailte. Airson sgrìobhadh, fosglaidh A air raon teacsa meur-chlàr a’ phad geama: abairtean luath dhan chabadaich, litrichean leis an D-pad agus A, sguabaidh X às, cuiridh Y beàrn ris, atharraichidh LB gu litrichean mòra, RB gu àireamhan is samhlaidhean, cuiridh Start e, dùinidh B e. Roghainnean: Roghainnean adhartach → Eadar-aghaidh a’ chleachdaiche → Pad geama." },
+        { id: 'remote', t: "Smachd-iomallach TBh (Android TV)",
+          b: ["Air Android TV agus Google TV, stiùiridh an smachd-iomallach an cliant mar phad geama, leis an dà mhodh cheudna. Ann am modh Geama, fanaidh am fàinne air na putanan gnìomha: gluais e leis na saighdean agus brùth OK. Ann am modh Seòladaireachd, thèid e àite sam bith. Thèid e air leis fhèin air TBh agus gabhaidh a sparradh ann an Roghainnean adhartach → Eadar-aghaidh a’ chleachdaiche → Pad geama."],
+          keys: [
+            ["↑ ↓ ← →", "Geama: gluais thar nam putanan gnìomha (atharraichidh ← → air an sleamhnan an t-suim) · Seòladaireachd: gluais"],
+            ["OK", "Brùth am putan leis an fhàinne / tagh"],
+            ["OK ⏱", "Clàr-taice: Geama / Seòladaireachd, cabadaich, eachdraidh, Cobhair an Aoin, roghainnean…"],
+            ["↩", "Air ais (mar Esc); cha dèan e Fold a-chaoidh"],
+            ["⏯", "Atharraich eadar Geama agus Seòladaireachd"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (air smachdan-iomallach aig a bheil iad)"]],
+          note: "Nuair a thig do thuras, tillidh an cliant gu Geama leis an fhàinne air Check/Call. Airson sgrìobhadh, fosglaidh OK air raon teacsa am meur-chlàr air an sgrìn: gluais leis na saighdean, sgrìobhaidh OK, cuiridh an iuchair ↵ e." }
       ]
     }
   ]

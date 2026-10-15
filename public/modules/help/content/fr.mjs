@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Navigation : fenêtre précédente / suivante (table, panneaux ouverts, l’As)"],
             ["LT / RT", "Navigation : onglet précédent / suivant"],
             ["RS", "Faire défiler"]],
-          note: "Les lettres suivent la disposition Xbox : sur une manette PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, et les boutons d’action affichent les symboles de ta manette. Une vraie fenêtre (réglages, confirmation, menu manette) passe toujours en mode Navigation tant qu’elle est ouverte. Pour écrire, A sur un champ de texte ouvre le clavier de la manette : phrases rapides pour le chat, lettres avec la croix et A, X efface, Y ajoute un espace, LB passe en majuscules, RB aux chiffres et symboles, Start envoie, B ferme. Réglages : Options avancées → Interface utilisateur → Manette." }
+          note: "Les lettres suivent la disposition Xbox : sur une manette PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, et les boutons d’action affichent les symboles de ta manette. Une vraie fenêtre (réglages, confirmation, menu manette) passe toujours en mode Navigation tant qu’elle est ouverte. Pour écrire, A sur un champ de texte ouvre le clavier de la manette : phrases rapides pour le chat, lettres avec la croix et A, X efface, Y ajoute un espace, LB passe en majuscules, RB aux chiffres et symboles, Start envoie, B ferme. Réglages : Options avancées → Interface utilisateur → Manette." },
+        { id: 'remote', t: "Télécommande TV (Android TV)",
+          b: ["Sur Android TV et Google TV, la télécommande pilote le client comme une manette, avec les deux mêmes modes. En mode Jeu, l’anneau reste sur les boutons d’action : déplace-le avec les flèches et appuie sur OK. En mode Navigation, il va partout. Elle s’active seule sur une TV et peut être forcée dans Options avancées → Interface utilisateur → Manette."],
+          keys: [
+            ["↑ ↓ ← →", "Jeu : se déplacer sur les boutons d’action (← → sur le curseur changent le montant) · Navigation : se déplacer"],
+            ["OK", "Appuyer sur le bouton entouré / choisir"],
+            ["OK ⏱", "Menu : Jeu / Navigation, chat, historique, Aide de l’As, réglages…"],
+            ["↩", "Retour (comme Échap) ; ne fait jamais Fold"],
+            ["⏯", "Basculer entre Jeu et Navigation"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (sur les télécommandes qui en ont)"]],
+          note: "Quand ton tour arrive, le client repasse en mode Jeu avec l’anneau sur Check/Call. Pour écrire, OK sur un champ de texte ouvre le clavier à l’écran : déplace-toi avec les flèches, OK tape la lettre, la touche ↵ envoie." }
       ]
     }
   ]

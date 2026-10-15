@@ -466,7 +466,17 @@ export const help = {
             ["LB / RB", "Navigado: antaŭa / sekva fenestro (tablo, malfermitaj paneloj, la Aso)"],
             ["LT / RT", "Navigado: antaŭa / sekva langeto"],
             ["RS", "Rulumi"]],
-          note: "La literoj sekvas la Xbox-aranĝon: sur PlayStation-regilo ✕ = A, ○ = B, □ = X, △ = Y, kaj la agbutonoj montras la simbolojn de via propra regilo. Vera fenestro (agordoj, konfirmo, menuo de la ludregilo) ĉiam ŝaltas al Navigado dum ĝi estas malfermita. Por skribi, A sur tekstokampo malfermas la klavaron de la ludregilo: rapidaj frazoj por la babilado, literoj per la direktokruco kaj A, X forviŝas, Y aldonas spaceton, LB ŝaltas majusklojn, RB ciferojn kaj simbolojn, Start sendas, B fermas. Agordoj: Altnivelaj opcioj → Uzantinterfaco → Ludregilo." }
+          note: "La literoj sekvas la Xbox-aranĝon: sur PlayStation-regilo ✕ = A, ○ = B, □ = X, △ = Y, kaj la agbutonoj montras la simbolojn de via propra regilo. Vera fenestro (agordoj, konfirmo, menuo de la ludregilo) ĉiam ŝaltas al Navigado dum ĝi estas malfermita. Por skribi, A sur tekstokampo malfermas la klavaron de la ludregilo: rapidaj frazoj por la babilado, literoj per la direktokruco kaj A, X forviŝas, Y aldonas spaceton, LB ŝaltas majusklojn, RB ciferojn kaj simbolojn, Start sendas, B fermas. Agordoj: Altnivelaj opcioj → Uzantinterfaco → Ludregilo." },
+        { id: 'remote', t: "Televida teleregilo (Android TV)",
+          b: ["Sur Android TV kaj Google TV, la teleregilo stiras la klienton kiel ludregilo, kun la samaj du reĝimoj. En reĝimo Ludo la ringo restas sur la agbutonoj: movu ĝin per la sagoj kaj premu OK. En reĝimo Navigado ĝi iras ĉien. Ĝi aktiviĝas per si mem sur televidilo kaj povas esti devigita en Altnivelaj opcioj → Uzantinterfaco → Ludregilo."],
+          keys: [
+            ["↑ ↓ ← →", "Ludo: movi tra la agbutonoj (← → sur la ŝovilo ŝanĝas la sumon) · Navigado: movi"],
+            ["OK", "Premi la butonon kun la ringo / elekti"],
+            ["OK ⏱", "Menuo: Ludo / Navigado, babilado, protokolo, Helpo de la Aso, agordoj…"],
+            ["↩", "Reen (kiel Esc); neniam faras Fold"],
+            ["⏯", "Ŝalti inter Ludo kaj Navigado"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (sur teleregiloj, kiuj havas ilin)"]],
+          note: "Kiam venas via vico, la kliento revenas al Ludo kun la ringo sur Check/Call. Por skribi, OK sur tekstokampo malfermas la surekranan klavaron: movu per la sagoj, OK tajpas, la klavo ↵ sendas." }
       ]
     }
   ]

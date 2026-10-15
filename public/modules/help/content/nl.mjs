@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Navigatie: vorig / volgend venster (tafel, open panelen, de Aas)"],
             ["LT / RT", "Navigatie: vorig / volgend tabblad"],
             ["RS", "Scrollen"]],
-          note: "De letters volgen de Xbox-indeling: op een PlayStation-controller is ✕ = A, ○ = B, □ = X, △ = Y, en de actieknoppen tonen de symbolen van je eigen controller. Een echt venster (instellingen, een bevestiging, het gamepadmenu) schakelt altijd naar Navigatie zolang het open is. Om te schrijven opent A op een tekstveld het gamepadtoetsenbord: snelle zinnen voor de chat, letters met de D-pad en A, X wist, Y voegt een spatie toe, LB schakelt naar hoofdletters, RB naar cijfers en symbolen, Start verstuurt, B sluit. Instellingen: Geavanceerde opties → Gebruikersinterface → Gamepad." }
+          note: "De letters volgen de Xbox-indeling: op een PlayStation-controller is ✕ = A, ○ = B, □ = X, △ = Y, en de actieknoppen tonen de symbolen van je eigen controller. Een echt venster (instellingen, een bevestiging, het gamepadmenu) schakelt altijd naar Navigatie zolang het open is. Om te schrijven opent A op een tekstveld het gamepadtoetsenbord: snelle zinnen voor de chat, letters met de D-pad en A, X wist, Y voegt een spatie toe, LB schakelt naar hoofdletters, RB naar cijfers en symbolen, Start verstuurt, B sluit. Instellingen: Geavanceerde opties → Gebruikersinterface → Gamepad." },
+        { id: 'remote', t: "Tv-afstandsbediening (Android TV)",
+          b: ["Op Android TV en Google TV bedient de afstandsbediening de client zoals een gamepad, met dezelfde twee modi. In Spel-modus blijft de ring op de actieknoppen: verplaats hem met de pijlen en druk op OK. In Navigatie-modus gaat hij overal heen. Hij gaat vanzelf aan op een tv en kan worden afgedwongen in Geavanceerde opties → Gebruikersinterface → Gamepad."],
+          keys: [
+            ["↑ ↓ ← →", "Spel: verplaatsen over de actieknoppen (← → op de schuifregelaar wijzigen het bedrag) · Navigatie: verplaatsen"],
+            ["OK", "De knop met de ring indrukken / kiezen"],
+            ["OK ⏱", "Menu: Spel / Navigatie, chat, verloop, Hulp van de Aas, instellingen…"],
+            ["↩", "Terug (zoals Esc); doet nooit Fold"],
+            ["⏯", "Wisselen tussen Spel en Navigatie"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (op afstandsbedieningen die ze hebben)"]],
+          note: "Als je aan de beurt bent, gaat de client terug naar Spel met de ring op Check/Call. Om te schrijven opent OK op een tekstveld het schermtoetsenbord: verplaats je met de pijlen, OK typt, de ↵-toets verstuurt." }
       ]
     }
   ]

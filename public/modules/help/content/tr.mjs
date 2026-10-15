@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Gezinme: önceki / sonraki pencere (masa, açık paneller, As)"],
             ["LT / RT", "Gezinme: önceki / sonraki sekme"],
             ["RS", "Kaydır"]],
-          note: "Harfler Xbox düzenini izler: PlayStation kumandasında ✕ = A, ○ = B, □ = X, △ = Y; eylem düğmeleri de kendi kumandanın sembollerini gösterir. Gerçek bir pencere (ayarlar, onay, kumanda menüsü) açık olduğu sürece her zaman Gezinme moduna geçer. Yazmak için bir metin alanında A, kumanda klavyesini açar: sohbet için hızlı ifadeler, D-pad ve A ile harfler, X siler, Y boşluk ekler, LB büyük harfe geçirir, RB rakam ve sembollere, Start gönderir, B kapatır. Ayarlar: Gelişmiş seçenekler → Kullanıcı arayüzü → Oyun kumandası." }
+          note: "Harfler Xbox düzenini izler: PlayStation kumandasında ✕ = A, ○ = B, □ = X, △ = Y; eylem düğmeleri de kendi kumandanın sembollerini gösterir. Gerçek bir pencere (ayarlar, onay, kumanda menüsü) açık olduğu sürece her zaman Gezinme moduna geçer. Yazmak için bir metin alanında A, kumanda klavyesini açar: sohbet için hızlı ifadeler, D-pad ve A ile harfler, X siler, Y boşluk ekler, LB büyük harfe geçirir, RB rakam ve sembollere, Start gönderir, B kapatır. Ayarlar: Gelişmiş seçenekler → Kullanıcı arayüzü → Oyun kumandası." },
+        { id: 'remote', t: "TV kumandası (Android TV)",
+          b: ["Android TV ve Google TV’de kumanda, istemciyi aynı iki modla bir oyun kumandası gibi yönetir. Oyun modunda halka eylem düğmelerinde kalır: oklarla hareket ettir ve OK’a bas. Gezinme modunda her yere gider. TV’de kendiliğinden açılır ve Gelişmiş seçenekler → Kullanıcı arayüzü → Oyun kumandası bölümünden zorla açılabilir."],
+          keys: [
+            ["↑ ↓ ← →", "Oyun: eylem düğmeleri üzerinde hareket (kaydırıcıda ← → tutarı değiştirir) · Gezinme: hareket"],
+            ["OK", "Halkalı düğmeye bas / seç"],
+            ["OK ⏱", "Menü: Oyun / Gezinme, sohbet, geçmiş, As’ın yardımı, ayarlar…"],
+            ["↩", "Geri (Esc gibi); asla Fold yapmaz"],
+            ["⏯", "Oyun ile Gezinme arasında geçiş"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (bu düğmelere sahip kumandalarda)"]],
+          note: "Sıra sana geldiğinde istemci, halka Check/Call üzerinde olacak şekilde Oyun moduna döner. Yazmak için bir metin alanında OK ekran klavyesini açar: oklarla hareket et, OK harfi yazar, ↵ tuşu gönderir." }
       ]
     }
   ]

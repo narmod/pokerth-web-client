@@ -466,7 +466,17 @@ export const help = {
             ["LB / RB", "Nabigazioa: aurreko / hurrengo leihoa (mahaia, panel irekiak, batekoa)"],
             ["LT / RT", "Nabigazioa: aurreko / hurrengo fitxa"],
             ["RS", "Korritu"]],
-          note: "Letrek Xbox diseinua jarraitzen dute: PlayStation kontrolagailu batean ✕ = A, ○ = B, □ = X, △ = Y, eta ekintza-botoiek zure kontrolagailuaren ikurrak erakusten dituzte. Benetako leiho batek (ezarpenak, berrespen bat, kontrolagailuaren menua) beti Nabigaziora aldatzen du irekita dagoen bitartean. Idazteko, testu-eremu batean A sakatuta kontrolagailuaren teklatua irekitzen da: esaldi azkarrak txaterako, letrak D-pad-arekin eta A-rekin, X-k ezabatzen du, Y-k zuriune bat gehitzen du, LB-k maiuskulak aldatzen ditu, RB zenbakiak eta ikurrak, Start-ek bidaltzen du, B-k ixten du. Ezarpenak: Aukera aurreratuak → Erabiltzaile-interfazea → Kontrolagailua." }
+          note: "Letrek Xbox diseinua jarraitzen dute: PlayStation kontrolagailu batean ✕ = A, ○ = B, □ = X, △ = Y, eta ekintza-botoiek zure kontrolagailuaren ikurrak erakusten dituzte. Benetako leiho batek (ezarpenak, berrespen bat, kontrolagailuaren menua) beti Nabigaziora aldatzen du irekita dagoen bitartean. Idazteko, testu-eremu batean A sakatuta kontrolagailuaren teklatua irekitzen da: esaldi azkarrak txaterako, letrak D-pad-arekin eta A-rekin, X-k ezabatzen du, Y-k zuriune bat gehitzen du, LB-k maiuskulak aldatzen ditu, RB zenbakiak eta ikurrak, Start-ek bidaltzen du, B-k ixten du. Ezarpenak: Aukera aurreratuak → Erabiltzaile-interfazea → Kontrolagailua." },
+        { id: 'remote', t: "Telebistaren urruneko agintea (Android TV)",
+          b: ["Android TV eta Google TV-n, urruneko agintea bezeroa kontrolagailu bat bezala gidatzen du, bi modu berberekin. Joko moduan eraztuna ekintza-botoien gainean geratzen da: mugitu geziekin eta sakatu OK. Nabigazio moduan edonora doa. Telebista batean bere kabuz aktibatzen da, eta behartu daiteke Aukera aurreratuak → Erabiltzaile-interfazea → Kontrolagailua atalean."],
+          keys: [
+            ["↑ ↓ ← →", "Jokoa: mugitu ekintza-botoien gainean (graduatzailean ← → kopurua aldatzen dute) · Nabigazioa: mugitu"],
+            ["OK", "Sakatu eraztuna duen botoia / aukeratu"],
+            ["OK ⏱", "Menua: Jokoa / Nabigazioa, txata, egunkaria, Batekoaren laguntza, ezarpenak…"],
+            ["↩", "Atzera (Esc bezala); ez du inoiz Fold egiten"],
+            ["⏯", "Txandakatu Jokoa eta Nabigazioa"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (botoi horiek dituzten urruneko aginteetan)"]],
+          note: "Zure txanda iristen denean, bezeroa Jokora itzultzen da eraztuna Check/Call gainean duela. Idazteko, testu-eremu batean OK sakatuta pantailako teklatua irekitzen da: mugitu geziekin, OK-k letra idazten du, ↵ teklak bidaltzen du." }
       ]
     }
   ]

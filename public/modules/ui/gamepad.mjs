@@ -158,6 +158,7 @@ export function padTick(now) {
 
   var any = s.pressed.some(Boolean) || s.axes.some(function (v) { return Math.abs(v) > STICK_ON; }) ||
     (s.val[LT] || 0) > TRIGGER_ON || (s.val[RT] || 0) > TRIGGER_ON;
+  if (any) ctl.source('gamepad');
   if (any && document.body && !document.body.classList.contains('pad-active')) setActive(true);
   ctl.tick();
 

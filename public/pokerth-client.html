@@ -2878,6 +2878,7 @@ function _processAvatarFile(file) {
 <script type="module" src="modules/ui/keynav.mjs"></script>
 <script type="module" src="modules/ui/back-guard.mjs"></script>
 <script type="module" src="modules/ui/gamepad.mjs"></script>
+<script type="module" src="modules/ui/remote.mjs"></script>
 <script type="module" src="modules/ui/z-order.mjs"></script>
 <script type="module" src="modules/ui/invite.mjs"></script>
 <script type="module" src="modules/ui/lan-directory.mjs"></script>
@@ -3614,9 +3615,11 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       <label class="adv-row"><input type="checkbox" id="adv-padrumble" onchange="setAdvOpt('pad_rumble',this.checked)"><span data-i18n="advPadRumble">Vibrate the gamepad when it is my turn</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-padnin" onchange="setAdvOpt('pad_nintendo',this.checked)"><span data-i18n="advPadNintendo">Nintendo layout: confirm with the right-hand button (A/B swapped)</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-padkb" onchange="setAdvOpt('pad_kb',this.checked)"><span data-i18n="advPadKeyboard">Type with the gamepad's on-screen keyboard (otherwise the device's own keyboard)</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-remoteon" onchange="setAdvOpt('remote_on',this.checked)"><span data-i18n="advRemoteOn">TV remote (Android TV): arrows, OK and Back drive the client — on by itself on a TV</span><em class="adv-webtag">web</em></label>
       <div class="adv-keys">
         <div class="adv-keyhint"><span data-i18n="padHintTable">Game mode (at the table): A = Check/Call · X = Fold · Y = Bet/Raise, hold Y = All-In · LT/RT = bet amount · LB/RB = 1/3, 1/2, Pot · D-pad ←/→ = playing mode · B = close a panel · Select = navigation mode · Start = gamepad menu.</span></div>
         <div class="adv-keyhint"><span data-i18n="padHintNav">Navigation mode: D-pad or left stick = move · A = select · B = back (never folds) · X = chat · Y = Ace's Help · LB/RB = previous / next window · LT/RT = tabs · right stick = scroll · Select = game mode. On the keyboard: X erase · Y space · LB capitals · RB 123 · Start send.</span></div>
+        <div class="adv-keyhint"><span data-i18n="padHintRemote">TV remote: arrows = move (at the table, over the action buttons) · OK = press · hold OK = menu · Back = back · ⏯ = Game / Navigation · red, green, yellow, blue = Fold, Check/Call, Bet/Raise, All-In.</span></div>
       </div>
       </details>
       </div>

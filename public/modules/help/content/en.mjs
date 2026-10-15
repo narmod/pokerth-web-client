@@ -328,7 +328,17 @@ export const help = {
             ["LB / RB", "Navigation: previous / next window (table, open panels, the Ace)"],
             ["LT / RT", "Navigation: previous / next tab"],
             ["RS", "Scroll"]],
-          note: "Letters follow the Xbox layout: on a PlayStation pad ✕ = A, ○ = B, □ = X, △ = Y, and the action buttons show the symbols of your own pad. A real window (settings, a confirmation, the gamepad menu) always switches to Navigation while it is open. To write, A on a text field opens the gamepad keyboard: quick phrases for the chat, letters with the D-pad and A, X erases, Y adds a space, LB switches capitals, RB numbers and symbols, Start sends, B closes. Settings: Advanced options → User interface → Gamepad." }
+          note: "Letters follow the Xbox layout: on a PlayStation pad ✕ = A, ○ = B, □ = X, △ = Y, and the action buttons show the symbols of your own pad. A real window (settings, a confirmation, the gamepad menu) always switches to Navigation while it is open. To write, A on a text field opens the gamepad keyboard: quick phrases for the chat, letters with the D-pad and A, X erases, Y adds a space, LB switches capitals, RB numbers and symbols, Start sends, B closes. Settings: Advanced options → User interface → Gamepad." },
+        { id: 'remote', t: "TV remote (Android TV)",
+          b: ["On Android TV and Google TV, the remote drives the client like a gamepad, with the same two modes. In Game mode the ring stays on the action buttons: move it with the arrows and press OK. In Navigation mode it goes everywhere. It turns on by itself on a TV and can be forced in Advanced options → User interface → Gamepad."],
+          keys: [
+            ["↑ ↓ ← →", "Game: move over the action buttons (← → on the slider change the amount) · Navigation: move"],
+            ["OK", "Press the button with the ring / select"],
+            ["OK ⏱", "Menu: Game / Navigation, chat, history, Ace's Help, settings…"],
+            ["↩", "Back (like Esc); never folds"],
+            ["⏯", "Switch between Game and Navigation"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (on remotes that have them)"]],
+          note: "When your turn comes, the client goes back to Game with the ring on Check/Call. To write, OK on a text field opens the on-screen keyboard: move with the arrows, OK types, the ↵ key sends." }
       ]
     }
   ]

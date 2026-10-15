@@ -1,3 +1,7 @@
+2026-10-15 version 2.1.10-web.82:
+- new: play with an Android TV / Google TV remote: the arrows move a ring (at the table, over the action buttons), OK presses, holding OK opens the menu, Back goes back, Play/Pause switches between Game and Navigation, and the red, green, yellow and blue keys are Fold, Check/Call, Bet/Raise and All-In; it turns on by itself on a TV
+- improvement: the gamepad menu now has a tile to switch between Game and Navigation
+
 2026-10-15 version 2.1.10-web.81:
 - improvement: gamepad: Select now switches between Game mode (play at the table, even with the chat, history or reactions open) and Navigation mode (move around the screen and its windows), shown by a badge; when your turn comes the gamepad goes back to Game mode by itself
 - new: gamepad: Start opens a gamepad menu (chat, history, odds, statistics, reactions, poker hands, Ace's Help, settings, fullscreen, buttons, quit)

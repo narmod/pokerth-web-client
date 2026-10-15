@@ -326,7 +326,17 @@ export const help = {
             ["LB / RB", "Navigasi: jendela sebelum / seterusnya (meja, panel terbuka, si Sat)"],
             ["LT / RT", "Navigasi: tab sebelum / seterusnya"],
             ["RS", "Tatal"]],
-          note: "Huruf mengikut susun atur Xbox: pada pad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, dan butang tindakan memaparkan simbol pad anda sendiri. Jendela sebenar (tetapan, pengesahan, menu gamepad) sentiasa bertukar ke Navigasi selagi ia terbuka. Untuk menulis, A pada medan teks membuka papan kekunci gamepad: frasa pantas untuk sembang, huruf dengan D-pad dan A, X memadam, Y menambah ruang, LB menukar huruf besar, RB ke nombor dan simbol, Start menghantar, B menutup. Tetapan: Opsi lanjutan → Antarmuka pengguna → Gamepad." }
+          note: "Huruf mengikut susun atur Xbox: pada pad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, dan butang tindakan memaparkan simbol pad anda sendiri. Jendela sebenar (tetapan, pengesahan, menu gamepad) sentiasa bertukar ke Navigasi selagi ia terbuka. Untuk menulis, A pada medan teks membuka papan kekunci gamepad: frasa pantas untuk sembang, huruf dengan D-pad dan A, X memadam, Y menambah ruang, LB menukar huruf besar, RB ke nombor dan simbol, Start menghantar, B menutup. Tetapan: Opsi lanjutan → Antarmuka pengguna → Gamepad." },
+        { id: 'remote', t: "Alat kawalan jauh TV (Android TV)",
+          b: ["Pada Android TV dan Google TV, alat kawalan jauh mengawal klien seperti gamepad, dengan dua mod yang sama. Dalam mod Permainan, gelang kekal pada butang tindakan: gerakkannya dengan anak panah dan tekan OK. Dalam mod Navigasi, ia pergi ke mana-mana. Ia aktif sendiri pada TV dan boleh dipaksa dalam Opsi lanjutan → Antarmuka pengguna → Gamepad."],
+          keys: [
+            ["↑ ↓ ← →", "Permainan: bergerak pada butang tindakan (← → pada peluncur menukar jumlah) · Navigasi: bergerak"],
+            ["OK", "Tekan butang bergelang / pilih"],
+            ["OK ⏱", "Menu: Permainan / Navigasi, sembang, log, Bantuan si Sat, tetapan…"],
+            ["↩", "Kembali (seperti Esc); tidak pernah Fold"],
+            ["⏯", "Tukar antara Permainan dan Navigasi"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (pada alat kawalan jauh yang memilikinya)"]],
+          note: "Apabila tiba giliran anda, klien kembali ke Permainan dengan gelang pada Check/Call. Untuk menulis, OK pada medan teks membuka papan kekunci pada skrin: bergerak dengan anak panah, OK menaip huruf, kekunci ↵ menghantar." }
       ]
     }
   ]

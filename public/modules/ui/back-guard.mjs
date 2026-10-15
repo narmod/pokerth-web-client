@@ -49,6 +49,9 @@ function _onPop() {
   var closed = false;
   try { closed = closeTop(); } catch (e) { closed = false; }
   if (closed) { _push(); return; }
+  // Controller in use (gamepad, TV remote — ui/ctl-nav.mjs): Back leaves a
+  // text field or Navigation mode before anything else.
+  try { if (window.CtlNav && window.CtlNav.backFallback()) { _push(); return; } } catch (e) {}
 
   // 3. Hors session (écran de connexion) : on laisse sortir.
   if (!_inSession()) { _armed = false; return; }

@@ -466,7 +466,17 @@ export const help = {
             ["LB / RB", "Kewayawa: taga ta baya / ta gaba (tebur, faifan da ke buɗe, Aas)"],
             ["LT / RT", "Kewayawa: shafin baya / na gaba"],
             ["RS", "Gungura"]],
-          note: "Haruffan suna bin tsarin Xbox: a gamepad na PlayStation ✕ = A, ○ = B, □ = X, △ = Y, kuma maɓallan aiki suna nuna alamomin gamepad ɗinka. Taga ta gaske (saituna, tabbatarwa, menu na gamepad) koyaushe tana komawa Kewayawa muddin tana buɗe. Don rubutu, A a filin rubutu yana buɗe madannin gamepad: gajerun jimloli don hira, haruffa da D-pad da A, X yana gogewa, Y yana ƙara sarari, LB yana sauyawa zuwa manyan haruffa, RB zuwa lambobi da alamomi, Start yana aikawa, B yana rufewa. Saituna: Zaɓuɓɓuka na ci gaba → Fuskar mai amfani → Gamepad." }
+          note: "Haruffan suna bin tsarin Xbox: a gamepad na PlayStation ✕ = A, ○ = B, □ = X, △ = Y, kuma maɓallan aiki suna nuna alamomin gamepad ɗinka. Taga ta gaske (saituna, tabbatarwa, menu na gamepad) koyaushe tana komawa Kewayawa muddin tana buɗe. Don rubutu, A a filin rubutu yana buɗe madannin gamepad: gajerun jimloli don hira, haruffa da D-pad da A, X yana gogewa, Y yana ƙara sarari, LB yana sauyawa zuwa manyan haruffa, RB zuwa lambobi da alamomi, Start yana aikawa, B yana rufewa. Saituna: Zaɓuɓɓuka na ci gaba → Fuskar mai amfani → Gamepad." },
+        { id: 'remote', t: "Rimot na TV (Android TV)",
+          b: ["A Android TV da Google TV, rimot yana sarrafa manhajar kamar gamepad, da yanayi biyu iri ɗaya. A yanayin Wasa, zoben yana zama a kan maɓallan aiki: motsa shi da kibiyoyi ka danna OK. A yanayin Kewayawa, yana zuwa ko'ina. Yana kunnawa da kansa a TV kuma ana iya tilasta shi a Zaɓuɓɓuka na ci gaba → Fuskar mai amfani → Gamepad."],
+          keys: [
+            ["↑ ↓ ← →", "Wasa: motsa kan maɓallan aiki (← → a kan mai zamewa suna canza adadin) · Kewayawa: motsa"],
+            ["OK", "Danna maɓallin da ke da zobe / zaɓa"],
+            ["OK ⏱", "Menu: Wasa / Kewayawa, hira, log, Taimakon Aas, saituna…"],
+            ["↩", "Baya (kamar Esc); ba ya taɓa yin Fold"],
+            ["⏯", "Sauya tsakanin Wasa da Kewayawa"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (a rimot da ke da su)"]],
+          note: "Idan lokacinka ya yi, manhajar tana komawa Wasa da zoben a kan Check/Call. Don rubutu, OK a filin rubutu yana buɗe madannin kan allo: motsa da kibiyoyi, OK yana rubuta harafi, maɓallin ↵ yana aikawa." }
       ]
     }
   ]

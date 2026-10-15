@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Navigering: föregående / nästa fönster (bordet, öppna paneler, Esset)"],
             ["LT / RT", "Navigering: föregående / nästa flik"],
             ["RS", "Rulla"]],
-          note: "Bokstäverna följer Xbox-layouten: på en PlayStation-kontroll är ✕ = A, ○ = B, □ = X, △ = Y, och åtgärdsknapparna visar symbolerna på din egen kontroll. Ett riktigt fönster (inställningar, en bekräftelse, handkontrollmenyn) växlar alltid till Navigering så länge det är öppet. För att skriva öppnar A på ett textfält handkontrollens tangentbord: snabbfraser för chatten, bokstäver med styrkorset och A, X raderar, Y lägger till ett mellanslag, LB växlar versaler, RB siffror och symboler, Start skickar, B stänger. Inställningar: Avancerade alternativ → Användargränssnitt → Handkontroll." }
+          note: "Bokstäverna följer Xbox-layouten: på en PlayStation-kontroll är ✕ = A, ○ = B, □ = X, △ = Y, och åtgärdsknapparna visar symbolerna på din egen kontroll. Ett riktigt fönster (inställningar, en bekräftelse, handkontrollmenyn) växlar alltid till Navigering så länge det är öppet. För att skriva öppnar A på ett textfält handkontrollens tangentbord: snabbfraser för chatten, bokstäver med styrkorset och A, X raderar, Y lägger till ett mellanslag, LB växlar versaler, RB siffror och symboler, Start skickar, B stänger. Inställningar: Avancerade alternativ → Användargränssnitt → Handkontroll." },
+        { id: 'remote', t: "TV-fjärrkontroll (Android TV)",
+          b: ["På Android TV och Google TV styr fjärrkontrollen klienten som en handkontroll, med samma två lägen. I spelläget stannar ringen på åtgärdsknapparna: flytta den med pilarna och tryck på OK. I navigeringsläget går den överallt. Den slås på av sig själv på en TV och kan tvingas på i Avancerade alternativ → Användargränssnitt → Handkontroll."],
+          keys: [
+            ["↑ ↓ ← →", "Spel: flytta över åtgärdsknapparna (← → på reglaget ändrar beloppet) · Navigering: flytta"],
+            ["OK", "Tryck på knappen med ringen / välj"],
+            ["OK ⏱", "Meny: Spel / Navigering, chatt, historik, Essets hjälp, inställningar…"],
+            ["↩", "Tillbaka (som Esc); gör aldrig Fold"],
+            ["⏯", "Växla mellan Spel och Navigering"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (på fjärrkontroller som har dem)"]],
+          note: "När det blir din tur går klienten tillbaka till Spel med ringen på Check/Call. För att skriva öppnar OK på ett textfält skärmtangentbordet: flytta med pilarna, OK skriver, tangenten ↵ skickar." }
       ]
     }
   ]

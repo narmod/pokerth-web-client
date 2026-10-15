@@ -466,6 +466,16 @@ export const help = {
             ["LT / RT", "Leiðsögn: fyrri / næsti flipi"],
             ["RS", "Fletta"]],
           note: "Stafirnir fylgja Xbox-uppsetningu: á PlayStation-pinna ✕ = A, ○ = B, □ = X, △ = Y, og aðgerðahnapparnir sýna tákn þíns eigin pinna. Raunverulegur gluggi (stillingar, staðfesting, valmynd stýripinna) skiptir alltaf yfir í Leiðsögn meðan hann er opinn. Til að skrifa opnar A á textareit lyklaborð stýripinnans: snöggar setningar fyrir spjallið, stafir með stefnuhnappnum og A, X eyðir, Y bætir við bili, LB skiptir í hástafi, RB í tölur og tákn, Start sendir, B lokar. Stillingar: Ítarlegir valkostir → Notendaviðmót → Leikjastýripinni." },
+        { id: 'remote', t: "Sjónvarpsfjarstýring (Android TV)",
+          b: ["Á Android TV og Google TV stjórnar fjarstýringin biðlaranum eins og stýripinni, með sömu tveimur hömunum. Í Leik helst hringurinn á aðgerðahnöppunum: færðu hann með örvunum og ýttu á OK. Í Leiðsögn fer hann hvert sem er. Hún kveikist sjálfkrafa á sjónvarpi og hægt er að þvinga hana í Ítarlegir valkostir → Notendaviðmót → Leikjastýripinni."],
+          keys: [
+            ["↑ ↓ ← →", "Leikur: færa á milli aðgerðahnappanna (← → á sleðanum breyta upphæðinni) · Leiðsögn: færa"],
+            ["OK", "Ýta á hnappinn með hringnum / velja"],
+            ["OK ⏱", "Valmynd: Leikur / Leiðsögn, spjall, skrá, Hjálp ássins, stillingar…"],
+            ["↩", "Til baka (eins og Esc); gerir aldrei Fold"],
+            ["⏯", "Skipta á milli Leiks og Leiðsagnar"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (á fjarstýringum sem hafa þá)"]],
+          note: "Þegar þú átt leik fer biðlarinn aftur í Leik með hringinn á Check/Call. Til að skrifa opnar OK á textareit skjályklaborðið: færðu þig með örvunum, OK skrifar, ↵ lykillinn sendir." },
       ]
     },
   ]

@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Navigare: fereastra anterioară / următoare (masa, panourile deschise, Asul)"],
             ["LT / RT", "Navigare: fila anterioară / următoare"],
             ["RS", "Derulare"]],
-          note: "Literele urmează aranjamentul Xbox: pe un gamepad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, iar butoanele de acțiune afișează simbolurile gamepadului tău. O fereastră propriu-zisă (setări, o confirmare, meniul gamepadului) trece mereu în Navigare cât timp e deschisă. Ca să scrii, A pe un câmp de text deschide tastatura gamepadului: fraze rapide pentru chat, litere cu D-pad și A, X șterge, Y adaugă un spațiu, LB comută majusculele, RB cifrele și simbolurile, Start trimite, B închide. Setări: Opțiuni avansate → Interfața utilizatorului → Gamepad." }
+          note: "Literele urmează aranjamentul Xbox: pe un gamepad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, iar butoanele de acțiune afișează simbolurile gamepadului tău. O fereastră propriu-zisă (setări, o confirmare, meniul gamepadului) trece mereu în Navigare cât timp e deschisă. Ca să scrii, A pe un câmp de text deschide tastatura gamepadului: fraze rapide pentru chat, litere cu D-pad și A, X șterge, Y adaugă un spațiu, LB comută majusculele, RB cifrele și simbolurile, Start trimite, B închide. Setări: Opțiuni avansate → Interfața utilizatorului → Gamepad." },
+        { id: 'remote', t: "Telecomandă TV (Android TV)",
+          b: ["Pe Android TV și Google TV, telecomanda controlează clientul ca un gamepad, cu aceleași două moduri. În modul Joc, inelul rămâne pe butoanele de acțiune: mută-l cu săgețile și apasă OK. În modul Navigare, merge peste tot. Se activează singură pe un televizor și poate fi forțată din Opțiuni avansate → Interfața utilizatorului → Gamepad."],
+          keys: [
+            ["↑ ↓ ← →", "Joc: deplasare pe butoanele de acțiune (← → pe glisor schimbă suma) · Navigare: deplasare"],
+            ["OK", "Apasă butonul cu inelul / alege"],
+            ["OK ⏱", "Meniu: Joc / Navigare, chat, jurnal, Ajutorul Asului, setări…"],
+            ["↩", "Înapoi (ca Esc); nu face niciodată Fold"],
+            ["⏯", "Comută între Joc și Navigare"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (pe telecomenzile care le au)"]],
+          note: "Când vine rândul tău, clientul revine în modul Joc cu inelul pe Check/Call. Ca să scrii, OK pe un câmp de text deschide tastatura de pe ecran: deplasează-te cu săgețile, OK tastează litera, tasta ↵ trimite." }
       ]
     }
   ]

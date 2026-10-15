@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Navigáció: előző / következő ablak (asztal, nyitott panelek, az Ász)"],
             ["LT / RT", "Navigáció: előző / következő lap"],
             ["RS", "Görgetés"]],
-          note: "A betűk az Xbox-kiosztást követik: PlayStation-kontrolleren ✕ = A, ○ = B, □ = X, △ = Y, és az akciógombok a saját kontrollered szimbólumait mutatják. Egy valódi ablak (beállítások, megerősítés, kontroller menü) mindig Navigáció módba vált, amíg nyitva van. Íráshoz az A egy szövegmezőn megnyitja a kontroller billentyűzetét: gyors üzenetek a csevegéshez, betűk a D-paddel és az A-val, az X töröl, az Y szóközt ad, az LB nagybetűre, az RB számokra és szimbólumokra vált, a Start elküldi, a B bezárja. Beállítások: Speciális beállítások → Felhasználói felület → Kontroller." }
+          note: "A betűk az Xbox-kiosztást követik: PlayStation-kontrolleren ✕ = A, ○ = B, □ = X, △ = Y, és az akciógombok a saját kontrollered szimbólumait mutatják. Egy valódi ablak (beállítások, megerősítés, kontroller menü) mindig Navigáció módba vált, amíg nyitva van. Íráshoz az A egy szövegmezőn megnyitja a kontroller billentyűzetét: gyors üzenetek a csevegéshez, betűk a D-paddel és az A-val, az X töröl, az Y szóközt ad, az LB nagybetűre, az RB számokra és szimbólumokra vált, a Start elküldi, a B bezárja. Beállítások: Speciális beállítások → Felhasználói felület → Kontroller." },
+        { id: 'remote', t: "TV-távirányító (Android TV)",
+          b: ["Android TV-n és Google TV-n a távirányító úgy vezérli a klienst, mint egy kontroller, ugyanazzal a két móddal. Játék módban a gyűrű az akciógombokon marad: mozgasd a nyilakkal, és nyomd meg az OK-t. Navigáció módban mindenhová eljut. Tévén magától bekapcsol, és kényszeríthető itt: Speciális beállítások → Felhasználói felület → Kontroller."],
+          keys: [
+            ["↑ ↓ ← →", "Játék: mozgás az akciógombokon (a csúszkán a ← → az összeget módosítja) · Navigáció: mozgás"],
+            ["OK", "A gyűrűvel jelölt gomb megnyomása / kiválasztás"],
+            ["OK ⏱", "Menü: Játék / Navigáció, csevegés, előzmények, Az ász súgója, beállítások…"],
+            ["↩", "Vissza (mint az Esc); soha nem Fold"],
+            ["⏯", "Váltás Játék és Navigáció között"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (azokon a távirányítókon, amelyeken vannak ilyenek)"]],
+          note: "Amikor te következel, a kliens visszavált Játék módba, a gyűrű a Check/Call gombon. Íráshoz az OK egy szövegmezőn megnyitja a képernyő-billentyűzetet: mozogj a nyilakkal, az OK beírja a betűt, a ↵ gomb elküldi." }
       ]
     }
   ]

@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Navegação: janela anterior / seguinte (mesa, painéis abertos, o Ás)"],
             ["LT / RT", "Navegação: aba anterior / seguinte"],
             ["RS", "Rolar"]],
-          note: "As letras seguem o layout Xbox: num controle PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, e os botões de ação mostram os símbolos do seu próprio controle. Uma janela de verdade (configurações, uma confirmação, o menu do controle) sempre passa para Navegação enquanto estiver aberta. Para escrever, A num campo de texto abre o teclado do controle: frases rápidas para o chat, letras com o direcional e A, X apaga, Y adiciona um espaço, LB alterna maiúsculas, RB números e símbolos, Start envia, B fecha. Configurações: Opções avançadas → Interface do usuário → Controle." }
+          note: "As letras seguem o layout Xbox: num controle PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, e os botões de ação mostram os símbolos do seu próprio controle. Uma janela de verdade (configurações, uma confirmação, o menu do controle) sempre passa para Navegação enquanto estiver aberta. Para escrever, A num campo de texto abre o teclado do controle: frases rápidas para o chat, letras com o direcional e A, X apaga, Y adiciona um espaço, LB alterna maiúsculas, RB números e símbolos, Start envia, B fecha. Configurações: Opções avançadas → Interface do usuário → Controle." },
+        { id: 'remote', t: "Controle remoto da TV (Android TV)",
+          b: ["No Android TV e no Google TV, o controle remoto comanda o cliente como um controle de jogo, com os mesmos dois modos. No modo Jogo, o anel fica nos botões de ação: mova-o com as setas e aperte OK. No modo Navegação, ele vai a qualquer lugar. Ele liga sozinho numa TV e pode ser forçado em Opções avançadas → Interface do usuário → Controle."],
+          keys: [
+            ["↑ ↓ ← →", "Jogo: mover pelos botões de ação (← → no controle deslizante mudam o valor) · Navegação: mover"],
+            ["OK", "Apertar o botão com o anel / escolher"],
+            ["OK ⏱", "Menu: Jogo / Navegação, chat, histórico, Ajuda do Ás, configurações…"],
+            ["↩", "Voltar (como Esc); nunca dá Fold"],
+            ["⏯", "Alternar entre Jogo e Navegação"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (nos controles remotos que têm esses botões)"]],
+          note: "Quando chega a sua vez, o cliente volta para o modo Jogo com o anel em Check/Call. Para escrever, OK num campo de texto abre o teclado na tela: mova-se com as setas, OK digita, a tecla ↵ envia." }
       ]
     }
   ]

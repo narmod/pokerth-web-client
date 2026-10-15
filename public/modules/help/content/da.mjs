@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Navigation: forrige / næste vindue (bord, åbne paneler, esset)"],
             ["LT / RT", "Navigation: forrige / næste fane"],
             ["RS", "Rul"]],
-          note: "Bogstaverne følger Xbox-layoutet: på en PlayStation-controller er ✕ = A, ○ = B, □ = X, △ = Y, og handlingsknapperne viser symbolerne fra din egen controller. Et rigtigt vindue (indstillinger, en bekræftelse, gamepad-menuen) skifter altid til Navigation, så længe det er åbent. For at skrive åbner A på et tekstfelt gamepaddens tastatur: hurtige sætninger til chatten, bogstaver med D-pad og A, X sletter, Y tilføjer et mellemrum, LB skifter til store bogstaver, RB til tal og symboler, Start sender, B lukker. Indstillinger: Avancerede indstillinger → Brugergrænseflade → Gamepad." }
+          note: "Bogstaverne følger Xbox-layoutet: på en PlayStation-controller er ✕ = A, ○ = B, □ = X, △ = Y, og handlingsknapperne viser symbolerne fra din egen controller. Et rigtigt vindue (indstillinger, en bekræftelse, gamepad-menuen) skifter altid til Navigation, så længe det er åbent. For at skrive åbner A på et tekstfelt gamepaddens tastatur: hurtige sætninger til chatten, bogstaver med D-pad og A, X sletter, Y tilføjer et mellemrum, LB skifter til store bogstaver, RB til tal og symboler, Start sender, B lukker. Indstillinger: Avancerede indstillinger → Brugergrænseflade → Gamepad." },
+        { id: 'remote', t: "TV-fjernbetjening (Android TV)",
+          b: ["På Android TV og Google TV styrer fjernbetjeningen klienten som en gamepad, med de samme to tilstande. I Spil bliver ringen på handlingsknapperne: flyt den med pilene og tryk OK. I Navigation kommer den overalt. Den slår sig selv til på et TV og kan gennemtvinges under Avancerede indstillinger → Brugergrænseflade → Gamepad."],
+          keys: [
+            ["↑ ↓ ← →", "Spil: flyt hen over handlingsknapperne (← → på skyderen ændrer beløbet) · Navigation: flyt"],
+            ["OK", "Tryk på knappen med ringen / vælg"],
+            ["OK ⏱", "Menu: Spil / Navigation, chat, historik, Essets hjælp, indstillinger…"],
+            ["↩", "Tilbage (som Esc); laver aldrig Fold"],
+            ["⏯", "Skift mellem Spil og Navigation"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (på fjernbetjeninger, der har dem)"]],
+          note: "Når det bliver din tur, går klienten tilbage til Spil med ringen på Check/Call. For at skrive åbner OK på et tekstfelt skærmtastaturet: flyt med pilene, OK skriver, tasten ↵ sender." }
       ]
     }
   ]

@@ -326,7 +326,17 @@ export const help = {
             ["LB / RB", "Navigacija: prejšnje / naslednje okno (miza, odprte plošče, as)"],
             ["LT / RT", "Navigacija: prejšnji / naslednji zavihek"],
             ["RS", "Drsenje"]],
-          note: "Črke sledijo postavitvi Xbox: na ploščku PlayStation je ✕ = A, ○ = B, □ = X, △ = Y, gumbi za poteze pa kažejo simbole tvojega ploščka. Pravo okno (nastavitve, potrditev, meni ploščka) vedno preklopi v način Navigacija, dokler je odprto. Za pisanje A na besedilnem polju odpre tipkovnico ploščka: hitri stavki za klepet, črke s smernimi gumbi in A, X briše, Y doda presledek, LB preklopi velike črke, RB številke in simbole, Start pošlje, B zapre. Nastavitve: Napredne možnosti → Uporabniški vmesnik → Igralni plošček." }
+          note: "Črke sledijo postavitvi Xbox: na ploščku PlayStation je ✕ = A, ○ = B, □ = X, △ = Y, gumbi za poteze pa kažejo simbole tvojega ploščka. Pravo okno (nastavitve, potrditev, meni ploščka) vedno preklopi v način Navigacija, dokler je odprto. Za pisanje A na besedilnem polju odpre tipkovnico ploščka: hitri stavki za klepet, črke s smernimi gumbi in A, X briše, Y doda presledek, LB preklopi velike črke, RB številke in simbole, Start pošlje, B zapre. Nastavitve: Napredne možnosti → Uporabniški vmesnik → Igralni plošček." },
+        { id: 'remote', t: "Daljinski upravljalnik TV (Android TV)",
+          b: ["Na Android TV in Google TV daljinski upravljalnik upravlja odjemalca kot igralni plošček, z istima dvema načinoma. V načinu Igra obroč ostane na gumbih za poteze: premikaj ga s puščicami in pritisni OK. V načinu Navigacija gre povsod. Na TV se vklopi sam, vsiliš pa ga lahko v Napredne možnosti → Uporabniški vmesnik → Igralni plošček."],
+          keys: [
+            ["↑ ↓ ← →", "Igra: premik po gumbih za poteze (← → na drsniku spremenita znesek) · Navigacija: premik"],
+            ["OK", "Pritisni gumb z obročem / izberi"],
+            ["OK ⏱", "Meni: Igra / Navigacija, klepet, dnevnik, Pomoč asa, nastavitve…"],
+            ["↩", "Nazaj (kot Esc); nikoli ne naredi Fold"],
+            ["⏯", "Preklop med načinoma Igra in Navigacija"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (na upravljalnikih, ki jih imajo)"]],
+          note: "Ko pride tvoja poteza, se odjemalec vrne v način Igra z obročem na Check/Call. Za pisanje OK na besedilnem polju odpre zaslonsko tipkovnico: premikaj se s puščicami, OK vnese znak, tipka ↵ pošlje." }
       ]
     }
   ]

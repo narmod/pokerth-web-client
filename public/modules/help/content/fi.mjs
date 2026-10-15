@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Navigointi: edellinen / seuraava ikkuna (pöytä, avoimet paneelit, ässä)"],
             ["LT / RT", "Navigointi: edellinen / seuraava välilehti"],
             ["RS", "Vieritä"]],
-          note: "Kirjaimet noudattavat Xbox-asettelua: PlayStation-ohjaimessa ✕ = A, ○ = B, □ = X, △ = Y, ja toimintopainikkeet näyttävät oman ohjaimesi symbolit. Oikea ikkuna (asetukset, vahvistus, peliohjaimen valikko) vaihtaa aina Navigointiin niin kauan kuin se on auki. Kirjoittaaksesi paina A tekstikentässä, jolloin peliohjaimen näppäimistö avautuu: pikaviestit chattiin, kirjaimet ristiohjaimella ja A:lla, X poistaa, Y lisää välilyönnin, LB vaihtaa isot kirjaimet, RB numerot ja symbolit, Start lähettää, B sulkee. Asetukset: Lisäasetukset → Käyttöliittymä → Peliohjain." }
+          note: "Kirjaimet noudattavat Xbox-asettelua: PlayStation-ohjaimessa ✕ = A, ○ = B, □ = X, △ = Y, ja toimintopainikkeet näyttävät oman ohjaimesi symbolit. Oikea ikkuna (asetukset, vahvistus, peliohjaimen valikko) vaihtaa aina Navigointiin niin kauan kuin se on auki. Kirjoittaaksesi paina A tekstikentässä, jolloin peliohjaimen näppäimistö avautuu: pikaviestit chattiin, kirjaimet ristiohjaimella ja A:lla, X poistaa, Y lisää välilyönnin, LB vaihtaa isot kirjaimet, RB numerot ja symbolit, Start lähettää, B sulkee. Asetukset: Lisäasetukset → Käyttöliittymä → Peliohjain." },
+        { id: 'remote', t: "TV:n kaukosäädin (Android TV)",
+          b: ["Android TV:ssä ja Google TV:ssä kaukosäädin ohjaa asiakasta kuin peliohjain, samoilla kahdella tilalla. Peli-tilassa rengas pysyy toimintopainikkeissa: siirrä sitä nuolilla ja paina OK. Navigointi-tilassa se kulkee kaikkialle. Televisiossa se kytkeytyy päälle itsestään, ja sen voi pakottaa päälle kohdassa Lisäasetukset → Käyttöliittymä → Peliohjain."],
+          keys: [
+            ["↑ ↓ ← →", "Peli: liiku toimintopainikkeiden yllä (← → liukusäätimessä muuttavat summaa) · Navigointi: liiku"],
+            ["OK", "Paina rengastettua painiketta / valitse"],
+            ["OK ⏱", "Valikko: Peli / Navigointi, chat, historia, Ässän apu, asetukset…"],
+            ["↩", "Takaisin (kuten Esc); ei koskaan tee Foldia"],
+            ["⏯", "Vaihda Pelin ja Navigoinnin välillä"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (kaukosäätimissä, joissa ne ovat)"]],
+          note: "Kun on sinun vuorosi, asiakas palaa Peli-tilaan rengas Check/Callin kohdalla. Kirjoittaaksesi paina OK tekstikentässä, jolloin näyttönäppäimistö avautuu: liiku nuolilla, OK kirjoittaa, ↵-näppäin lähettää." }
       ]
     }
   ]

@@ -59,6 +59,7 @@ var st = {
   holdFill: null,
   pctIdx: -1, grid: null,
   wasTurn: false,
+  source: 'gamepad',
   glyph: function (role) { return role; },
   kbLegend: function () { return ''; },
   kbReturn: null,
@@ -83,19 +84,21 @@ const CAND = 'a[href], button, input:not([type="hidden"]), select, textarea, sum
 const NATIVE = /^(A|BUTTON|INPUT|SELECT|TEXTAREA|SUMMARY)$/;
 const KEEP = '.game-row';   // clickable rows that also hold buttons stay reachable
 
-function usable(el) {
+// ignorePE: the off-turn action bar is pointer-events:none, yet its buttons
+// arm pre-actions when clicked — the remote reaches them.
+function usable(el, ignorePE) {
   if (el.disabled || el.getAttribute('aria-disabled') === 'true') return false;
   if (el.closest && el.closest('[inert]')) return false;
   if (!visible(el)) return false;
   var r = el.getBoundingClientRect();
   if (!(r.width > 0 && r.height > 0)) return false;
-  try { if (window.getComputedStyle(el).pointerEvents === 'none') return false; } catch (e) {}
+  if (!ignorePE) { try { if (window.getComputedStyle(el).pointerEvents === 'none') return false; } catch (e) {} }
   return true;
 }
 
 // Every reachable element of scope, in document order, minus the ones inside
 // `skip` (other zones nested in it: the chat panel inside the game screen).
-export function candidates(scope, skip) {
+export function candidates(scope, skip, ignorePE) {
   var raw = scope.querySelectorAll(CAND), out = [], seen = new Set();
   var sk = (skip || []).filter(function (z) { return z && z !== scope && scope.contains(z); });
   for (var i = 0; i < raw.length; i++) {
@@ -105,7 +108,7 @@ export function candidates(scope, skip) {
     for (var s = 0; s < sk.length; s++) if (sk[s].contains(el)) { inSkip = true; break; }
     if (inSkip) continue;
     var tg = el;
-    if (!usable(el)) {
+    if (!usable(el, ignorePE)) {
       // Visually hidden checkbox of a styled switch: its label takes the ring.
       var ty = (el.type || '').toLowerCase();
       var lab = (ty === 'checkbox' || ty === 'radio') && !el.disabled && el.closest ? el.closest('label') : null;
@@ -334,7 +337,7 @@ function typeInto(el) {
   if (opt('pad_kb', true) && (el.type || '').toLowerCase() !== 'number' && !el.isContentEditable) {
     // Back to this field and zone once the keyboard closes (tick).
     st.kbReturn = { zone: st.zone, el: el };
-    openKeyboard(el, st.kbLegend());
+    openKeyboard(el, st.source === 'gamepad' ? st.kbLegend() : '');
     // The ring goes straight into the keyboard (quick phrases first).
     clearRing();
     var kb = modal();
@@ -555,14 +558,55 @@ function watchTurn() {
   }).observe(ga, { childList: true });
 }
 function onTurn() {
-  if (!document.body || !document.body.classList.contains('has-gamepad')) return;
+  var b = document.body;
+  if (!b || !(b.classList.contains('has-gamepad') || b.classList.contains('has-remote'))) return;
   if (!modal() && st.mode !== 'game') {
     var ed = editing();
     if (ed) { try { ed.blur(); } catch (e) {} }
     setMode('game', true);
     hint(t('padYourTurn'));
   }
+  // Remote: the ring waits on Check/Call, the safe default.
+  if (!modal() && st.source === 'remote') { clearRing(); var ga = barScope(); if (ga) barRing(ga, true); }
   if (typeof st.onTurnHook === 'function') { try { st.onTurnHook(); } catch (e) {} }
+}
+
+// ── Action bar ring (game mode, inputs without action buttons: TV remote) ──
+// The arrows move a ring over the action bar (Fold, Check/Call, Raise,
+// All-In, 1/3 · 1/2 · Pot, amount, playing mode) and OK presses the ringed
+// button — exactly a click, pre-actions off-turn included. A re-rendered bar
+// (new turn) only shows the ring again: never an action on a guess.
+function barScope() {
+  var ga = document.getElementById('g-actions');
+  if (!ga || !visible(ga)) return null;
+  if (ga.querySelector(':scope > .actions-preview.no-action')) return null;   // locked
+  return ga;
+}
+function barRing(ga, toCall) {
+  var list = candidates(ga, [], true);
+  if (!toCall && st.cur && st.cur.isConnected && list.indexOf(st.cur) >= 0) {
+    if (st.ringEl && !st.ringEl.classList.contains('pad-cur')) st.ringEl.classList.add('pad-cur');
+    return true;
+  }
+  var first = null;
+  if (!toCall && st.cur && !st.cur.isConnected && st.curScope === ga) first = relocate(list);
+  if (!first) {
+    first = ga.querySelector('.btn-check:not([disabled]), .btn-call:not([disabled])');
+    if (!first || list.indexOf(first) < 0) first = list[0] || null;
+  }
+  if (!first) { clearRing(); return false; }
+  setCur(first, ga);
+  return false;
+}
+function barDo(action) {
+  var ga = barScope();
+  if (!ga) return;
+  if (action === 'ok') { if (barRing(ga)) activate(st.cur); return; }
+  if (!barRing(ga)) return;
+  if ((action === 'left' || action === 'right') && isAdjustable(st.cur)) { adjust(st.cur, action === 'right' ? 1 : -1); return; }
+  var list = candidates(ga, [], true).filter(function (el) { return el !== st.cur; });
+  var k = pickNext(box(st.ringEl || st.cur), list.map(box), action);
+  if (k >= 0) setCur(list[k], ga);
 }
 
 // ── Public API ─────────────────────────────────────────────────────────────
@@ -576,6 +620,19 @@ export const ctl = {
   mode: getMode,
   setMode: function (m) { setMode(m); },
   clearRing: clearRing,
+  // The input in use ('gamepad' | 'remote'): the remote keeps a ring on the
+  // action bar in game mode.
+  source: function (name) { st.source = name; },
+  // Android Back reaches the page as a history step (ui/back-guard.mjs):
+  // when no window was closed, leave a text field or Navigation first.
+  backFallback: function () {
+    var b = document.body;
+    if (!b || !b.classList.contains('pad-active')) return false;
+    var ed = editing();
+    if (ed) { try { ed.blur(); } catch (e) {} return true; }
+    if (inGame() && st.mode === 'nav' && !modal()) { setMode('game'); return true; }
+    return false;
+  },
   holdStart: holdStart,
   holdEnd: holdEnd,
   // Called every frame by the adapter while a device is connected.
@@ -588,7 +645,10 @@ export const ctl = {
       if (kr.zone && visible(kr.zone) && kr.el && usable(kr.el)) { st.zone = kr.zone; clearRing(); setCur(kr.el, kr.zone); }
     }
     updateBadge();
-    if (effective().mode === 'game' && st.cur) clearRing();
+    if (effective().mode === 'game' && st.cur) {
+      var ga = document.getElementById('g-actions');
+      if (!(st.source === 'remote' && ga && ga.contains(st.cur))) clearRing();
+    }
     // The ringed element was hidden (its panel closed): drop the ring.
     else if (st.cur && st.cur.isConnected && !usable(st.cur)) clearRing();
   },
@@ -636,6 +696,7 @@ export const ctl = {
         case 'bet': stepBet(arg > 0 ? 1 : -1, Math.abs(arg) || 1); return;
         case 'quickBet': quickBet(arg); return;
         case 'playMode': cycleMode(arg); return;
+        case 'ok': case 'up': case 'down': case 'left': case 'right': barDo(action); return;
       }
       return;
     }

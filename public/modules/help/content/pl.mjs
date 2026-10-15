@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Nawigacja: poprzednie / następne okno (stół, otwarte panele, As)"],
             ["LT / RT", "Nawigacja: poprzednia / następna zakładka"],
             ["RS", "Przewijanie"]],
-          note: "Litery odpowiadają układowi Xbox: na padzie PlayStation ✕ = A, ○ = B, □ = X, △ = Y, a przyciski akcji pokazują symbole twojego pada. Prawdziwe okno (ustawienia, potwierdzenie, menu pada) zawsze przełącza na Nawigację, dopóki jest otwarte. Aby pisać, A na polu tekstowym otwiera klawiaturę pada: szybkie zwroty do czatu, litery krzyżakiem i A, X kasuje, Y dodaje spację, LB przełącza wielkie litery, RB cyfry i symbole, Start wysyła, B zamyka. Ustawienia: Opcje zaawansowane → Interfejs użytkownika → Pad." }
+          note: "Litery odpowiadają układowi Xbox: na padzie PlayStation ✕ = A, ○ = B, □ = X, △ = Y, a przyciski akcji pokazują symbole twojego pada. Prawdziwe okno (ustawienia, potwierdzenie, menu pada) zawsze przełącza na Nawigację, dopóki jest otwarte. Aby pisać, A na polu tekstowym otwiera klawiaturę pada: szybkie zwroty do czatu, litery krzyżakiem i A, X kasuje, Y dodaje spację, LB przełącza wielkie litery, RB cyfry i symbole, Start wysyła, B zamyka. Ustawienia: Opcje zaawansowane → Interfejs użytkownika → Pad." },
+        { id: 'remote', t: "Pilot TV (Android TV)",
+          b: ["Na Android TV i Google TV pilot steruje klientem jak pad, w tych samych dwóch trybach. W trybie Gra pierścień zostaje na przyciskach akcji: przesuwaj go strzałkami i naciśnij OK. W trybie Nawigacja przechodzi wszędzie. Na telewizorze włącza się sam, a można go wymusić w Opcje zaawansowane → Interfejs użytkownika → Pad."],
+          keys: [
+            ["↑ ↓ ← →", "Gra: ruch po przyciskach akcji (← → na suwaku zmieniają kwotę) · Nawigacja: ruch"],
+            ["OK", "Naciśnij przycisk z pierścieniem / wybierz"],
+            ["OK ⏱", "Menu: Gra / Nawigacja, czat, historia, Pomoc Asa, ustawienia…"],
+            ["↩", "Wstecz (jak Esc); nigdy nie robi Fold"],
+            ["⏯", "Przełączanie między trybem Gra a Nawigacja"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (na pilotach, które je mają)"]],
+          note: "Gdy nadejdzie twoja kolej, klient wraca do trybu Gra z pierścieniem na Check/Call. Aby pisać, OK na polu tekstowym otwiera klawiaturę ekranową: poruszaj się strzałkami, OK wpisuje znak, klawisz ↵ wysyła." }
       ]
     }
   ]

@@ -466,7 +466,17 @@ export const help = {
             ["LB / RB", "Naviqasiya: əvvəlki / növbəti pəncərə (masa, açıq panellər, Tuz)"],
             ["LT / RT", "Naviqasiya: əvvəlki / növbəti vərəq"],
             ["RS", "Sürüşdürmək"]],
-          note: "Hərflər Xbox düzülüşünə uyğundur: PlayStation pultunda ✕ = A, ○ = B, □ = X, △ = Y olur və hərəkət düymələri öz pultunuzun simvollarını göstərir. Əsl pəncərə (parametrlər, təsdiq, oyun pultu menyusu) açıq qaldıqca həmişə Naviqasiya rejiminə keçir. Yazmaq üçün mətn sahəsində A oyun pultu klaviaturasını açır: çat üçün sürətli ifadələr, D-pad və A ilə hərflər, X silir, Y boşluq əlavə edir, LB böyük hərfləri dəyişir, RB rəqəm və simvollar, Start göndərir, B bağlayır. Parametrlər: Əlavə seçimlər → İstifadəçi interfeysi → Oyun pultu." }
+          note: "Hərflər Xbox düzülüşünə uyğundur: PlayStation pultunda ✕ = A, ○ = B, □ = X, △ = Y olur və hərəkət düymələri öz pultunuzun simvollarını göstərir. Əsl pəncərə (parametrlər, təsdiq, oyun pultu menyusu) açıq qaldıqca həmişə Naviqasiya rejiminə keçir. Yazmaq üçün mətn sahəsində A oyun pultu klaviaturasını açır: çat üçün sürətli ifadələr, D-pad və A ilə hərflər, X silir, Y boşluq əlavə edir, LB böyük hərfləri dəyişir, RB rəqəm və simvollar, Start göndərir, B bağlayır. Parametrlər: Əlavə seçimlər → İstifadəçi interfeysi → Oyun pultu." },
+        { id: 'remote', t: "Televizor pultu (Android TV)",
+          b: ["Android TV və Google TV-də televizor pultu klienti oyun pultu kimi idarə edir, eyni iki rejimlə. Oyun rejimində halqa hərəkət düymələrinin üzərində qalır: onu oxlarla hərəkət etdirin və OK basın. Naviqasiya rejimində hər yerə gedir. Televizorda özü aktivləşir və Əlavə seçimlər → İstifadəçi interfeysi → Oyun pultu bölməsində məcburi yandırıla bilər."],
+          keys: [
+            ["↑ ↓ ← →", "Oyun: hərəkət düymələri üzərində hərəkət (sürgüdə ← → məbləği dəyişir) · Naviqasiya: hərəkət"],
+            ["OK", "Halqalı düyməni basmaq / seçmək"],
+            ["OK ⏱", "Menyu: Oyun / Naviqasiya, çat, jurnal, Tuzun köməyi, parametrlər…"],
+            ["↩", "Geri (Esc kimi); heç vaxt Fold etmir"],
+            ["⏯", "Oyun və Naviqasiya arasında keçid"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (bu düymələri olan pultlarda)"]],
+          note: "Növbəniz gələndə klient halqa Check/Call üzərində olmaqla Oyun rejiminə qayıdır. Yazmaq üçün mətn sahəsində OK ekran klaviaturasını açır: oxlarla hərəkət edin, OK hərfi yazır, ↵ düyməsi göndərir." }
       ]
     }
   ]

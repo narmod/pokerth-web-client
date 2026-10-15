@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Navegación: xanela anterior / seguinte (mesa, paneis abertos, o Ás)"],
             ["LT / RT", "Navegación: lapela anterior / seguinte"],
             ["RS", "Desprazar"]],
-          note: "As letras seguen a disposición Xbox: nun mando PlayStation ✕ = A, ○ = B, □ = X, △ = Y, e os botóns de acción amosan os símbolos do teu propio mando. Unha xanela de verdade (configuración, unha confirmación, o menú do mando) pasa sempre a Navegación mentres está aberta. Para escribir, A nun campo de texto abre o teclado do mando: frases rápidas para o chat, letras coa cruceta e A, X borra, Y engade un espazo, LB cambia a maiúsculas, RB a números e símbolos, Start envía, B pecha. Configuración: Opcións avanzadas → Interface de usuario → Mando." }
+          note: "As letras seguen a disposición Xbox: nun mando PlayStation ✕ = A, ○ = B, □ = X, △ = Y, e os botóns de acción amosan os símbolos do teu propio mando. Unha xanela de verdade (configuración, unha confirmación, o menú do mando) pasa sempre a Navegación mentres está aberta. Para escribir, A nun campo de texto abre o teclado do mando: frases rápidas para o chat, letras coa cruceta e A, X borra, Y engade un espazo, LB cambia a maiúsculas, RB a números e símbolos, Start envía, B pecha. Configuración: Opcións avanzadas → Interface de usuario → Mando." },
+        { id: 'remote', t: "Mando a distancia da TV (Android TV)",
+          b: ["En Android TV e Google TV, o mando a distancia manexa o cliente coma un mando de xogos, cos mesmos dous modos. No modo Xogo, o anel queda nos botóns de acción: móveo coas frechas e preme OK. No modo Navegación, vai a todas partes. Actívase só nunha TV e pode forzarse en Opcións avanzadas → Interface de usuario → Mando."],
+          keys: [
+            ["↑ ↓ ← →", "Xogo: moverse polos botóns de acción (← → no control deslizante cambian a cantidade) · Navegación: moverse"],
+            ["OK", "Premer o botón co anel / escoller"],
+            ["OK ⏱", "Menú: Xogo / Navegación, chat, historial, Axuda do Ás, configuración…"],
+            ["↩", "Atrás (coma Esc); nunca fai Fold"],
+            ["⏯", "Alternar entre Xogo e Navegación"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (nos mandos que os teñen)"]],
+          note: "Cando chega a túa quenda, o cliente volve ao modo Xogo co anel en Check/Call. Para escribir, OK nun campo de texto abre o teclado en pantalla: móvete coas frechas, OK escribe, a tecla ↵ envía." }
       ]
     }
   ]

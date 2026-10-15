@@ -466,7 +466,17 @@ export const help = {
             ["LB / RB", "Nascleanúint: an fhuinneog roimhe seo / an chéad cheann eile (bord, painéil oscailte, an tAon)"],
             ["LT / RT", "Nascleanúint: an cluaisín roimhe seo / an chéad cheann eile"],
             ["RS", "Scrollaigh"]],
-          note: "Leanann na litreacha leagan amach Xbox: ar rialaitheoir PlayStation ✕ = A, ○ = B, □ = X, △ = Y, agus taispeánann na cnaipí gnímh siombailí do rialaitheora féin. Aistríonn fíorfhuinneog (socruithe, deimhniú, roghchlár an rialaitheora) go Nascleanúint i gcónaí fad is atá sí oscailte. Le scríobh, osclaíonn A ar réimse téacs méarchlár an rialaitheora: frásaí gasta don chomhrá, litreacha leis an D-pad agus A, scriosann X, cuireann Y spás leis, athraíonn LB go ceannlitreacha, RB go huimhreacha agus siombailí, seolann Start, dúnann B. Socruithe: Ardroghanna → Comhéadan úsáideora → Rialaitheoir cluichí." }
+          note: "Leanann na litreacha leagan amach Xbox: ar rialaitheoir PlayStation ✕ = A, ○ = B, □ = X, △ = Y, agus taispeánann na cnaipí gnímh siombailí do rialaitheora féin. Aistríonn fíorfhuinneog (socruithe, deimhniú, roghchlár an rialaitheora) go Nascleanúint i gcónaí fad is atá sí oscailte. Le scríobh, osclaíonn A ar réimse téacs méarchlár an rialaitheora: frásaí gasta don chomhrá, litreacha leis an D-pad agus A, scriosann X, cuireann Y spás leis, athraíonn LB go ceannlitreacha, RB go huimhreacha agus siombailí, seolann Start, dúnann B. Socruithe: Ardroghanna → Comhéadan úsáideora → Rialaitheoir cluichí." },
+        { id: 'remote', t: "Cianrialtán teilifíse (Android TV)",
+          b: ["Ar Android TV agus Google TV, stiúrann an cianrialtán an cliant cosúil le rialaitheoir cluichí, leis an dá mhód céanna. I mód Cluiche fanann an fáinne ar na cnaipí gnímh: bog é leis na saigheada agus brúigh OK. I mód Nascleanúna téann sé áit ar bith. Casann sé air leis féin ar theilifís agus is féidir é a bhrú i bhfeidhm in Ardroghanna → Comhéadan úsáideora → Rialaitheoir cluichí."],
+          keys: [
+            ["↑ ↓ ← →", "Cluiche: bog thar na cnaipí gnímh (athraíonn ← → ar an sleamhnán an méid) · Nascleanúint: bog"],
+            ["OK", "Brúigh an cnaipe leis an bhfáinne / roghnaigh"],
+            ["OK ⏱", "Roghchlár: Cluiche / Nascleanúint, comhrá, loga, Cabhair an Aoin, socruithe…"],
+            ["↩", "Siar (cosúil le Esc); ní dhéanann Fold riamh"],
+            ["⏯", "Athraigh idir Cluiche agus Nascleanúint"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (ar chianrialtáin a bhfuil siad acu)"]],
+          note: "Nuair a thagann do shealsa, filleann an cliant ar Cluiche agus an fáinne ar Check/Call. Le scríobh, osclaíonn OK ar réimse téacs an méarchlár ar an scáileán: bog leis na saigheada, clóscríobhann OK, seolann an eochair ↵." }
       ]
     }
   ]

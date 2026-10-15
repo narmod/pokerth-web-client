@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Navigacija: prethodni / sljedeći prozor (stol, otvorene ploče, As)"],
             ["LT / RT", "Navigacija: prethodna / sljedeća kartica"],
             ["RS", "Pomicanje"]],
-          note: "Slova slijede Xbox raspored: na PlayStation kontroleru ✕ = A, ○ = B, □ = X, △ = Y, a gumbi akcija prikazuju simbole tvog kontrolera. Pravi prozor (postavke, potvrda, izbornik kontrolera) uvijek prelazi u Navigaciju dok je otvoren. Za pisanje, A na tekstnom polju otvara tipkovnicu kontrolera: brze poruke za chat, slova D-padom i A, X briše, Y dodaje razmak, LB prebacuje na velika slova, RB na brojeve i simbole, Start šalje, B zatvara. Postavke: Napredne opcije → Korisničko sučelje → Kontroler." }
+          note: "Slova slijede Xbox raspored: na PlayStation kontroleru ✕ = A, ○ = B, □ = X, △ = Y, a gumbi akcija prikazuju simbole tvog kontrolera. Pravi prozor (postavke, potvrda, izbornik kontrolera) uvijek prelazi u Navigaciju dok je otvoren. Za pisanje, A na tekstnom polju otvara tipkovnicu kontrolera: brze poruke za chat, slova D-padom i A, X briše, Y dodaje razmak, LB prebacuje na velika slova, RB na brojeve i simbole, Start šalje, B zatvara. Postavke: Napredne opcije → Korisničko sučelje → Kontroler." },
+        { id: 'remote', t: "TV daljinski upravljač (Android TV)",
+          b: ["Na Android TV-u i Google TV-u daljinski upravlja klijentom kao kontroler, s ista dva načina. U načinu Igra prsten ostaje na gumbima akcija: pomiči ga strelicama i pritisni OK. U načinu Navigacija ide posvuda. Na TV-u se uključuje sam, a može se prisilno uključiti u Napredne opcije → Korisničko sučelje → Kontroler."],
+          keys: [
+            ["↑ ↓ ← →", "Igra: kretanje po gumbima akcija (← → na klizaču mijenjaju iznos) · Navigacija: kretanje"],
+            ["OK", "Pritisni gumb s prstenom / odaberi"],
+            ["OK ⏱", "Izbornik: Igra / Navigacija, chat, zapisnik, Pomoć asa, postavke…"],
+            ["↩", "Natrag (kao Esc); nikad ne radi Fold"],
+            ["⏯", "Prebacivanje između Igre i Navigacije"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (na daljinskim upravljačima koji ih imaju)"]],
+          note: "Kad dođeš na potez, klijent se vraća u način Igra s prstenom na Check/Call. Za pisanje, OK na tekstnom polju otvara zaslonsku tipkovnicu: kreći se strelicama, OK upisuje, tipka ↵ šalje." }
       ]
     }
   ]

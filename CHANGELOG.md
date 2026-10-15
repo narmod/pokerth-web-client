@@ -105,6 +105,16 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **TV remote (Android TV / Google TV)** — `ui/remote.mjs`, a second adapter of the controller core
+  `ui/ctl-nav.mjs`: arrows (also DPAD keyCodes 19–22), OK (Enter / DPAD_CENTER 23), Back (Escape,
+  GoBack, keyCode 4, and the history step handled by `back-guard.mjs`, which now asks
+  `CtlNav.backFallback()` first), Play/Pause = Game ⇄ Navigation, Menu and OK held 600 ms = controller
+  menu, colour keys 403–406 = Fold · Check/Call · Bet/Raise · All-In. A remote has no action buttons,
+  so in Game mode the core keeps a ring on the action bar (`barDo`: Check/Call first, ←/→ adjust the
+  slider and the amount, pre-actions reachable off-turn; a re-rendered bar only shows the ring again,
+  and each new turn puts it back on Check/Call). On by itself on a TV (Android TV user agent or
+  `any-pointer: none`), option `remote_on`. The controller menu gains a Game / Navigation tile. Help
+  section « TV remote » and the option in the 83 languages; `test-remote-browser` (`web.82`).
 - **Gamepad, second iteration: modes, menu, keyboard** — the gamepad logic is split into a
   device-agnostic core, `ui/ctl-nav.mjs` (modes, focus ring, zones, table actions, abstract actions
   sent by an adapter), and the gamepad adapter `ui/gamepad.mjs`; a TV-remote adapter can reuse the

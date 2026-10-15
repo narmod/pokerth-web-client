@@ -466,7 +466,17 @@ export const help = {
             ["LB / RB", "Ukuzulazula: iwindi elidlule / elilandelayo (itafula, amaphaneli avuliwe, u-Ace)"],
             ["LT / RT", "Ukuzulazula: ithebhu edlule / elandelayo"],
             ["RS", "Skrola"]],
-          note: "Izinhlamvu zilandela ukuhlelwa kwe-Xbox: esilawulini se-PlayStation ✕ = A, ○ = B, □ = X, △ = Y, futhi izinkinobho zesenzo zibonisa izimpawu zesilawuli sakho. Iwindi langempela (izilungiselelo, isiqinisekiso, imenyu yesilawuli) lihlala lishintshela kuKuzulazula uma nje livuliwe. Ukuze ubhale, u-A enkundleni yombhalo uvula ikhibhodi yesilawuli: imisho esheshayo yengxoxo, izinhlamvu nge-D-pad no-A, u-X uyasula, u-Y wengeza isikhala, i-LB ishintsha osonhlamvu abakhulu, i-RB izinombolo nezimpawu, i-Start iyathumela, u-B uyavala. Izilungiselelo: Izinketho ezithuthukisiwe → Isixhumi esibonakalayo → Isilawuli somdlalo." }
+          note: "Izinhlamvu zilandela ukuhlelwa kwe-Xbox: esilawulini se-PlayStation ✕ = A, ○ = B, □ = X, △ = Y, futhi izinkinobho zesenzo zibonisa izimpawu zesilawuli sakho. Iwindi langempela (izilungiselelo, isiqinisekiso, imenyu yesilawuli) lihlala lishintshela kuKuzulazula uma nje livuliwe. Ukuze ubhale, u-A enkundleni yombhalo uvula ikhibhodi yesilawuli: imisho esheshayo yengxoxo, izinhlamvu nge-D-pad no-A, u-X uyasula, u-Y wengeza isikhala, i-LB ishintsha osonhlamvu abakhulu, i-RB izinombolo nezimpawu, i-Start iyathumela, u-B uyavala. Izilungiselelo: Izinketho ezithuthukisiwe → Isixhumi esibonakalayo → Isilawuli somdlalo." },
+        { id: 'remote', t: "Irimothi ye-TV (Android TV)",
+          b: ["Ku-Android TV naku-Google TV, irimothi ilawula iklayenti njengesilawuli somdlalo, ngamamodi amabili afanayo. Kumodi yoMdlalo indingilizi ihlala phezu kwezinkinobho zesenzo: yihambise ngemicibisholo bese ucindezela i-OK. Kumodi yoKuzulazula iya yonke indawo. Izivulela yona ku-TV futhi ingaphoqelelwa ku-Izinketho ezithuthukisiwe → Isixhumi esibonakalayo → Isilawuli somdlalo."],
+          keys: [
+            ["↑ ↓ ← →", "Umdlalo: hamba phezu kwezinkinobho zesenzo (← → kusilayida kushintsha inani) · Ukuzulazula: hamba"],
+            ["OK", "Cindezela inkinobho enendingilizi / khetha"],
+            ["OK ⏱", "Imenyu: Umdlalo / Ukuzulazula, ingxoxo, ilogi, Usizo luka-Ace, izilungiselelo…"],
+            ["↩", "Emuva (njenge-Esc); ayilokothi yenze Fold"],
+            ["⏯", "Shintsha phakathi koMdlalo noKuzulazula"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (kumarimothi anazo)"]],
+          note: "Uma sekuyithuba lakho, iklayenti libuyela kumodi yoMdlalo indingilizi iphezu kwe-Check/Call. Ukuze ubhale, i-OK enkundleni yombhalo ivula ikhibhodi yesikrini: hamba ngemicibisholo, i-OK ibhala uhlamvu, inkinobho ↵ iyathumela." }
       ]
     }
   ]

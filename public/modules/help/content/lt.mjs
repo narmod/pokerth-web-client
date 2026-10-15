@@ -324,7 +324,17 @@ export const help = {
             ["LB / RB", "Naršymas: ankstesnis / kitas langas (stalas, atidaryti skydeliai, Tūzas)"],
             ["LT / RT", "Naršymas: ankstesnė / kita kortelė"],
             ["RS", "Slinkti"]],
-          note: "Raidės atitinka Xbox išdėstymą: PlayStation pultelyje ✕ = A, ○ = B, □ = X, △ = Y, o veiksmų mygtukai rodo tavo pultelio simbolius. Tikras langas (nustatymai, patvirtinimas, pultelio meniu) visada persijungia į Naršymo režimą, kol yra atidarytas. Norėdamas rašyti, teksto lauke paspausk A — atsidarys pultelio klaviatūra: greitosios frazės pokalbiams, raidės su D-pad ir A, X trina, Y prideda tarpą, LB perjungia didžiąsias raides, RB — skaičius ir simbolius, Start siunčia, B uždaro. Nustatymai: Išplėstinės parinktys → Naudotojo sąsaja → Žaidimų pultelis." }
+          note: "Raidės atitinka Xbox išdėstymą: PlayStation pultelyje ✕ = A, ○ = B, □ = X, △ = Y, o veiksmų mygtukai rodo tavo pultelio simbolius. Tikras langas (nustatymai, patvirtinimas, pultelio meniu) visada persijungia į Naršymo režimą, kol yra atidarytas. Norėdamas rašyti, teksto lauke paspausk A — atsidarys pultelio klaviatūra: greitosios frazės pokalbiams, raidės su D-pad ir A, X trina, Y prideda tarpą, LB perjungia didžiąsias raides, RB — skaičius ir simbolius, Start siunčia, B uždaro. Nustatymai: Išplėstinės parinktys → Naudotojo sąsaja → Žaidimų pultelis." },
+        { id: 'remote', t: "TV pultas (Android TV)",
+          b: ["Android TV ir Google TV pultas valdo klientą kaip žaidimų pultelis, su tais pačiais dviem režimais. Žaidimo režime žiedas lieka ant veiksmų mygtukų: judink jį rodyklėmis ir spausk OK. Naršymo režime jis keliauja visur. Televizoriuje jis įsijungia pats, o priverstinai įjungti galima Išplėstinės parinktys → Naudotojo sąsaja → Žaidimų pultelis."],
+          keys: [
+            ["↑ ↓ ← →", "Žaidimas: judėti per veiksmų mygtukus (← → ant slankiklio keičia sumą) · Naršymas: judėti"],
+            ["OK", "Paspausti mygtuką su žiedu / pasirinkti"],
+            ["OK ⏱", "Meniu: Žaidimas / Naršymas, pokalbiai, istorija, Tūzo pagalba, nustatymai…"],
+            ["↩", "Atgal (kaip Esc); niekada nedaro Fold"],
+            ["⏯", "Perjungti Žaidimo ir Naršymo režimus"],
+            ["🔴 🟢 🟡 🔵", "Fold · Check/Call · Bet/Raise · All-In (pultuose, kurie jų turi)"]],
+          note: "Kai ateina tavo eilė, klientas grįžta į Žaidimo režimą, o žiedas atsiduria ant Check/Call. Norėdamas rašyti, teksto lauke paspausk OK — atsidarys ekraninė klaviatūra: judėk rodyklėmis, OK įveda raidę, klavišas ↵ siunčia." }
       ]
     }
   ]
