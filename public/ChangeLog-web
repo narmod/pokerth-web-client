@@ -1,3 +1,8 @@
+2026-10-15 version 2.1.10-web.74:
+- improvement: help: « Three ways to play » now says it plainly — no account is needed on pokerth.net (guest login, Normal games), and a LAN or dedicated server only asks for a nickname; it also mentions the demo server and « Propose my server »
+- improvement: FAQ pages (83 languages): new answers on playing with friends, what an invitation link does, the demo server, community servers, the BBC / WeCup / Monthly Cup competitions (with their calendars, results and rankings) and how active PokerTH is
+- improvement: the FAQ, rules and guide pages now show their menu and « Play » button in the page language
+
 2026-10-15 version 2.1.10-web.73:
 - improvement: on a phone held upright, seats and community cards keep about the same size whatever the number of players: no more oversized seats with 4 players, nor a row of cards across the whole screen with 2 or 3 players
 

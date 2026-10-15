@@ -1,7 +1,7 @@
 {
   "name": "PokerTH Web Client",
   "short_name": "PokerTH",
-  "description": "Web client for PokerTH servers \u2014 Texas Hold'em poker",
+  "description": "Free, open-source Texas Hold'em poker in your browser \u2014 play as a guest, invite friends with a link, no download, no ads, no real money.",
   "start_url": "/",
   "id": "/",
   "scope": "/",

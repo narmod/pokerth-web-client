@@ -1079,8 +1079,8 @@ function _seoAttr(v) {
 function _seoAdmin() { var s = _seoCfg(); return { enabled: s.enabled === true, publicUrl: String(s.publicUrl || ''), googleVerification: String(s.googleVerification || ''), bingVerification: String(s.bingVerification || ''), yandexVerification: String(s.yandexVerification || ''), siteName: String(s.siteName || ''), title: String(s.title || ''), description: String(s.description || ''), image: String(s.image || ''), aiCrawlers: s.aiCrawlers !== false, indexNowKey: String(s.indexNowKey || ''), indexNow: (function () { var i = _indexNowStat || {}; return { at: i.at || 0, status: i.status || 0, count: i.count || 0, error: i.error || '' }; })() }; }
 
 var SEO_TITLE = 'PokerTH Web Client \u2014 Play Free Texas Hold\u2019em Poker in Your Browser';
-var SEO_DESC = 'Play Texas Hold\u2019em poker free in your browser with PokerTH, the open-source poker game. ' +
-  'No download, no ads, no registration \u2014 practice offline against bots, play on LAN or join pokerth.net. 83 languages, installable as an app (PWA).';
+var SEO_DESC = 'Free, open-source Texas Hold\u2019em poker in your browser: no download, no ads, no real money. ' +
+  'Play as a guest on pokerth.net, invite friends with a link, or practice offline \u2014 on iPhone, Android and PC.';
 
 
 // ── hreflang — localized <title> + description for every UI language ─────
@@ -1655,10 +1655,22 @@ function seoHeadBlock(base, lang) {
   out.push('<meta name="twitter:title" content="' + ti + '">');
   out.push('<meta name="twitter:description" content="' + de + '">');
   if (img) out.push('<meta name="twitter:image" content="' + _seoAttr(img) + '">');
+  // One entity, two types: Google reads it as a WebApplication (price, OS,
+  // category) and as a VideoGame (genre, play mode, players, platforms) —
+  // the questions people actually ask about a poker game. Only verifiable
+  // facts here: no rating, no download count, nothing we cannot show.
   var ld = {
     '@context': 'https://schema.org',
-    '@type': 'WebApplication',
+    '@type': ['WebApplication', 'VideoGame'],
     name: seoTitleOverride() || 'PokerTH Web Client',
+    alternateName: 'PokerTH',
+    genre: ['Poker', 'Texas Hold\u2019em', 'Card game'],
+    playMode: ['MultiPlayer', 'SinglePlayer'],
+    numberOfPlayers: { '@type': 'QuantitativeValue', minValue: 2, maxValue: 10 },
+    gamePlatform: ['Web browser', 'iOS', 'Android', 'Windows', 'macOS', 'Linux'],
+    applicationSubCategory: 'Card game',
+    license: 'https://www.gnu.org/licenses/agpl-3.0.html',
+    author: { '@type': 'Organization', name: 'PokerTH Development Team', url: 'https://www.pokerth.net/' },
     description: seoDescOverride() || loc.d,
     applicationCategory: 'GameApplication',
     operatingSystem: 'Any',
@@ -1666,8 +1678,17 @@ function seoHeadBlock(base, lang) {
     inLanguage: lang || 'en',
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
     isAccessibleForFree: true,
-    sameAs: ['https://github.com/narmod/pokerth-web-client', 'https://www.pokerth.net/']
+    sameAs: ['https://github.com/narmod/pokerth-web-client', 'https://github.com/pokerth/pokerth', 'https://www.pokerth.net/']
   };
+  // featureList is English prose: only on the English page, so a localized
+  // variant never carries a block of text in another language.
+  if (!lang) ld.featureList = ['Play as a guest on pokerth.net, no registration',
+    'LAN and dedicated servers with just a nickname, no account',
+    'Invitation links that seat friends at your table automatically',
+    'Offline training against computer opponents',
+    'Community competitions: BBC, WeCup, Monthly Cup',
+    'No ads, no in-app purchases, play money only',
+    'Installable on iPhone, Android and desktop (PWA)'];
   // The running version, not the one on disk: after a static update the two
   // can differ, and announcing a version we are not serving would be a lie.
   if (BOOT_VERSION) ld.softwareVersion = BOOT_VERSION;
@@ -1699,7 +1720,7 @@ function seoBodyBlock(lang) {
     '<a href="' + _seoLangHref('/hand-rankings', SEO_HANDS_I18N, lang) + '">' + _seoPageLabel(SEO_HANDS_I18N, lang, 'Poker hand rankings') + '</a> \u2014 ' +
     '<a href="' + _seoLangHref('/how-to-play', SEO_HOWTO_I18N, lang) + '">' + _seoPageLabel(SEO_HOWTO_I18N, lang, 'How to play') + '</a> \u2014 ' +
     '<a href="' + _seoLangHref('/glossary', SEO_GLOSSARY_I18N, lang) + '">' + _seoPageLabel(SEO_GLOSSARY_I18N, lang, 'Glossary') + '</a> \u2014 ' +
-    '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">FAQ</a> \u2014 ' +
+    '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">' + _seoNavLabel(lang, 'faq') + '</a> \u2014 ' +
     '<a href="/privacy">' + b.pv + '</a></p>' +
     '</div>';
 }
@@ -1730,7 +1751,7 @@ function seoFooterBlock(lang) {
     : 'Free open-source Texas Hold\u2019em poker in your browser \u2014 no download, no ads, no signup';
   return '<div class="connect-footer-line" id="cf-seo" style="opacity:0.75">' +
     lead + ' \u00b7 <a href="' + _seoLangHref('/rules', SEO_RULES_I18N, lang) + '">' + b.r + '</a>' +
-    ' \u00b7 <a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">FAQ</a></div>';
+    ' \u00b7 <a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">' + _seoNavLabel(lang, 'faq') + '</a></div>';
 }
 
 // ── Freshness signals — <lastmod> and deploy detection ─────────────────
@@ -1777,24 +1798,52 @@ function seoLastModSelf() {
 
 function seoLlmsTxt(base) {
   var u = base || '';
+  var nLang = supportedLangCount() || 83;
+  var lm = seoLastModApp();
   return '# PokerTH Web Client\n\n' +
     '> ' + SEO_DESC + '\n\n' +
-    'PokerTH Web Client is the official browser version of PokerTH, the open-source\n' +
-    'Texas Hold\u2019em poker game. It is a Progressive Web App: nothing to install, no\n' +
-    'account needed for training or guest games, playable on desktop and mobile.\n\n' +
+    'PokerTH Web Client is the official browser version of PokerTH, the free and\n' +
+    'open-source Texas Hold’em poker game developed since 2006. It is a Progressive\n' +
+    'Web App: nothing to download, playable on iPhone, iPad, Android, Windows, macOS\n' +
+    'and Linux, installable on the home screen. Play money only.\n\n' +
+    '## Quick answers\n\n' +
+    '- Free: yes — no ads, no in-app purchases, no real-money gambling.\n' +
+    '- Account: not required. Guest login on pokerth.net (Normal games); only a\n' +
+    '  nickname on LAN and dedicated servers; offline training needs nothing. A free\n' +
+    '  pokerth.net account adds Ranking games, registered-only tables and the chat.\n' +
+    '- Privacy: no tracking, no advertising; guest and LAN play ask for no email address.\n' +
+    '- Open source: the web client (AGPL-3.0) and PokerTH itself (GPL).\n' +
+    '- Still active: yes' + (BOOT_VERSION ? ' — web client version ' + BOOT_VERSION : '') +
+      (lm ? ', last updated ' + lm : '') + '.\n\n' +
     '## Game modes\n\n' +
-    '- Local / training: offline practice against computer opponents (bots)\n' +
-    '- LAN / private dedicated PokerTH servers\n' +
-    '- The official pokerth.net network: Normal games as a guest, Ranking games and seasonal rankings with a free account\n\n' +
+    '- Internet: the official pokerth.net network — as a guest or with a free account\n' +
+    '- LAN / Dedicated server: any PokerTH server, with just a nickname\n' +
+    '- Local / training: offline against computer opponents (bots)\n\n' +
+    '## Play with friends\n\n' +
+    '- Create a table (on pokerth.net or any LAN / dedicated server) and press\n' +
+    '  « Invite friends » in the waiting room: the web client builds a link.\n' +
+    '- A friend who opens the link logs in (guest, account or nickname) and is seated\n' +
+    '  at that table automatically, without searching the lobby. A password, if any,\n' +
+    '  is asked for and never travels in the link.\n\n' +
+    '## Servers\n\n' +
+    '- Public demo server: LAN / Dedicated server → Server list → any nickname.\n' +
+    '- Community servers: « Propose my server » in the same list; listed after\n' +
+    '  approval by the admins.\n\n' +
+    '## Competitions (free, all year)\n\n' +
+    '- BBC: https://bbc.pokerth.net/registration (calendar), https://bbc.pokerth.net/results\n' +
+    '- WeCup (WEC): https://wec.pokerth.net/results, https://wec.pokerth.net/results/ranking\n' +
+    '- Monthly Cup: https://monthlycup.pokerth.net/\n' +
+    '- Ranking games and seasonal rankings on pokerth.net\n\n' +
     '## Key facts\n\n' +
-    '- Free and open source (based on PokerTH by the PokerTH Development Team)\n' +
-    '- ' + (supportedLangCount() || 83) + ' interface languages; poker terms (Fold/Check/Call/Raise/All-In) stay in English\n' +
+    '- ' + nLang + ' interface languages; poker terms (Fold/Check/Call/Raise/All-In) stay in English\n' +
+    '- Up to 10 players per table; spectators can watch running games\n' +
     '- Feature parity with the official PokerTH desktop client\n' +
-    (u ? '\n## Links\n\n- Play: ' + u + '/\n- Texas Hold\u2019em rules: ' + u + '/rules\n' +
-         '- Poker hand rankings: ' + u + '/hand-rankings\n- How to play, step by step: ' + u + '/how-to-play\n' +
-         '- Poker glossary: ' + u + '/glossary\n- FAQ: ' + u + '/faq\n' : '\n## Links\n\n') +
+    (u ? '\n## Links\n\n- Play: ' + u + '/\n- FAQ: ' + u + '/faq\n- How to play, step by step: ' + u + '/how-to-play\n' +
+         '- Texas Hold’em rules: ' + u + '/rules\n- Poker hand rankings: ' + u + '/hand-rankings\n' +
+         '- Poker glossary: ' + u + '/glossary\n' : '\n## Links\n\n') +
     '- Source code: https://github.com/narmod/pokerth-web-client\n' +
-    '- PokerTH project: https://www.pokerth.net/\n';
+    '- PokerTH desktop client and server: https://github.com/pokerth/pokerth\n' +
+    '- PokerTH project and forum: https://www.pokerth.net/\n';
 }
 
 // ── SEO content pages — /rules and /faq, rendered server-side ──────────────
@@ -1849,17 +1898,29 @@ function _seoLangHref(relPath, table, lang) {
   return (lang && SEO_I18N[lang] && table && table[lang]) ? relPath + '?lang=' + lang : relPath;
 }
 
+// Nav and call-to-action labels. A /faq?lang=fr page whose menu read
+// "Play now · Rules · Glossary" in English was a page in two languages. The
+// translations live in seo-i18n/nav.js; English is the fallback per label.
+var SEO_NAV_EN = { play: '\u25b6 Play now', rules: 'Rules', hands: 'Hand rankings', howto: 'How to play',
+  gloss: 'Glossary', faq: 'FAQ', privacy: 'Privacy', src: 'Source',
+  cta: 'Play PokerTH in your browser \u2014 free, no download' };
+var SEO_NAV_I18N = {};
+function _seoNavLabel(lang, k) {
+  var e = (lang && SEO_I18N[lang] && SEO_NAV_I18N[lang]) || null;
+  return _seoAttr((e && e[k]) || SEO_NAV_EN[k]);
+}
+
 function _seoPageNav(lang) {
   lang = lang || '';
-  return '<nav><a href="' + _seoLangHref('/', SEO_I18N, lang) + '">\u25b6 Play now</a>' +
-    '<a href="' + _seoLangHref('/rules', SEO_RULES_I18N, lang) + '">Rules</a>' +
-    '<a href="' + _seoLangHref('/hand-rankings', SEO_HANDS_I18N, lang) + '">Hand rankings</a>' +
-    '<a href="' + _seoLangHref('/how-to-play', SEO_HOWTO_I18N, lang) + '">How to play</a>' +
-    '<a href="' + _seoLangHref('/glossary', SEO_GLOSSARY_I18N, lang) + '">Glossary</a>' +
-    '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">FAQ</a>' +
+  return '<nav><a href="' + _seoLangHref('/', SEO_I18N, lang) + '">' + _seoNavLabel(lang, 'play') + '</a>' +
+    '<a href="' + _seoLangHref('/rules', SEO_RULES_I18N, lang) + '">' + _seoNavLabel(lang, 'rules') + '</a>' +
+    '<a href="' + _seoLangHref('/hand-rankings', SEO_HANDS_I18N, lang) + '">' + _seoNavLabel(lang, 'hands') + '</a>' +
+    '<a href="' + _seoLangHref('/how-to-play', SEO_HOWTO_I18N, lang) + '">' + _seoNavLabel(lang, 'howto') + '</a>' +
+    '<a href="' + _seoLangHref('/glossary', SEO_GLOSSARY_I18N, lang) + '">' + _seoNavLabel(lang, 'gloss') + '</a>' +
+    '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">' + _seoNavLabel(lang, 'faq') + '</a>' +
     // /privacy is a static English-only page: it has no ?lang= variant.
-    '<a href="/privacy">Privacy</a>' +
-    '<a href="https://github.com/narmod/pokerth-web-client" rel="noopener">Source</a></nav>';
+    '<a href="/privacy">' + _seoNavLabel(lang, 'privacy') + '</a>' +
+    '<a href="https://github.com/narmod/pokerth-web-client" rel="noopener">' + _seoNavLabel(lang, 'src') + '</a></nav>';
 }
 
 // Translations for the standalone /rules and /faq pages. Only the languages
@@ -2405,7 +2466,7 @@ var SEO_RULES_I18N = {
 var SEO_FAQ_I18N = {
   fr: {
     title: "FAQ \u2014 Client web PokerTH",
-    desc: "Questions fr\u00e9quentes sur le client web PokerTH : poker gratuit sans publicit\u00e9, jouer au Texas Hold\u2019em dans le navigateur sans rien installer, comptes, mobile, mode hors ligne, langues et vie priv\u00e9e.",
+    desc: "Questions fréquentes sur le client web PokerTH : poker gratuit sans publicité ni téléchargement, jeu en invité ou sans compte, invitation d’amis par lien, tournois, mobile, hors ligne, langues et vie privée.",
     h1: "Client web PokerTH \u2014 Questions fr\u00e9quentes",
     qa: [
       ["PokerTH est-il gratuit ?",
@@ -2417,7 +2478,13 @@ var SEO_FAQ_I18N = {
       ["Puis-je jouer au Texas Hold’em contre d’autres personnes dans mon navigateur ?",
        "Oui. Rejoignez le réseau officiel pokerth.net pour affronter des joueurs du monde entier, ou envoyez un lien d’invitation pour que vos amis arrivent directement à votre table — le tout dans le navigateur."],
       ["Faut-il un compte pour jouer ?",
-       "Non. Le mode Local / entraînement n’a pas besoin de compte et fonctionne hors ligne. Sur le réseau officiel pokerth.net, vous pouvez jouer aux parties de type Normale en invité ; un compte pokerth.net gratuit est nécessaire pour les parties classées, les tables réservées aux inscrits et le chat."],
+       "Non. Le mode Local / entraînement n’a pas besoin de compte et fonctionne hors ligne. Sur le réseau officiel pokerth.net, connectez-vous en invité : le serveur vous attribue un pseudo d’invité et vous pouvez jouer tout de suite aux parties de type Normale. En LAN ou sur un serveur dédié, il n’y a aucun compte — vous choisissez simplement un pseudo. Aucune de ces options ne demande d’adresse e-mail. Un compte pokerth.net gratuit n’est nécessaire que pour les parties classées, les tables réservées aux inscrits et le chat."],
+      ["Comment jouer au poker en ligne avec des amis ?",
+       "Créez une table dans le lobby — sur pokerth.net ou sur n’importe quel serveur LAN ou dédié — puis appuyez sur « Inviter des amis » dans le salon d’attente. Le client web crée un lien d’invitation à envoyer par n’importe quelle messagerie. Vos amis l’ouvrent dans leur navigateur, sur iPhone, Android ou ordinateur, sans rien télécharger. Pour garder la table privée, définissez un mot de passe : il ne figure jamais dans le lien."],
+      ["Que se passe-t-il quand un ami ouvre mon lien d’invitation ?",
+       "Le lien indique la table et le serveur. Votre ami se connecte — en invité ou avec un compte sur pokerth.net, avec un simple pseudo sur un serveur LAN ou dédié — puis le client web rejoint automatiquement la table, sans qu’il ait à la chercher dans le lobby. Une table protégée demande son mot de passe ; une partie déjà commencée s’ouvre en mode spectateur. Les liens d’invitation sont une fonction du client web et fonctionnent sur tous les serveurs auxquels il peut se connecter."],
+      ["Existe-t-il un serveur de démonstration pour essayer PokerTH sans inscription ?",
+       "Oui. Sur l’écran de connexion, choisissez LAN / Serveur dédié et sélectionnez le serveur de démonstration public dans la liste des serveurs : tapez n’importe quel pseudo et vous voilà dans son lobby — sans inscription ni adresse e-mail. Un point vert indique quels serveurs de la liste sont en ligne et combien de joueurs s’y trouvent."],
       ["Est-ce que ça marche sur mobile ?",
        "Oui. Le client web est une Progressive Web App : il fonctionne dans tout navigateur moderne sur ordinateur, tablette ou téléphone, et peut s’installer comme une application native — sur iPhone et iPad avec Partager → Sur l’écran d’accueil, ailleurs depuis le menu du navigateur ou le bouton d’installation. L’Aide de l’As montre les étapes pour votre appareil."],
       ["Puis-je jouer contre l’ordinateur ?",
@@ -2433,18 +2500,22 @@ var SEO_FAQ_I18N = {
       ["Quelles données le client web collecte-t-il ?",
        "Le moins possible : vos réglages restent dans votre navigateur, et il n’y a ni pistage ni publicité. Quand vous vous connectez avec un compte pokerth.net, vos options et vos trophées d’entraînement y sont synchronisés pour vous suivre sur vos autres appareils. La page de confidentialité donne le détail."],
       ["Puis-je héberger mon propre serveur ?",
-       "Oui. Le serveur dédié PokerTH et ce client web sont tous deux libres : vous pouvez faire tourner votre propre serveur de poker privé, sur un réseau local ou sur Internet."],
+       "Oui. Le serveur dédié PokerTH et ce client web sont tous deux libres : vous pouvez faire tourner votre propre serveur de poker privé, sur un réseau local ou sur Internet. Pour qu’il figure dans la liste de tous les joueurs, choisissez LAN / Serveur dédié, puis « Proposer mon serveur » en bas de la liste des serveurs : il y apparaît dès que les admins l’ont approuvé. Le serveur doit être joignable depuis Internet."],
       ["Comment fonctionnent les parties classées et les saisons ?",
        "Les parties classées sur pokerth.net réunissent 10 joueurs et démarrent dès que la table est pleine : 10 000 jetons chacun, une petite blinde de 50 qui double toutes les 11 mains, et 5 secondes pour agir. Les places 1 à 7 rapportent 15, 9, 6, 4, 3, 2 et 1 points ; votre Score est votre moyenne par partie, pondérée par le nombre de parties jouées, et le classement repart de zéro chaque trimestre. Un compte pokerth.net gratuit est nécessaire."],
+      ["Y a-t-il des tournois et des compétitions de poker gratuits ?",
+       "Oui, toute l’année, et tous gratuits. Chaque partie PokerTH est un tournoi, et la communauté pokerth.net organise aussi des compétitions régulières, chacune avec son propre classement : la BBC, des parties dont les blindes augmentent à quelques minutes d’intervalle (<a href=\"https://bbc.pokerth.net/registration\">calendrier</a>, <a href=\"https://bbc.pokerth.net/results\">résultats</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">classement</a>) ; la WeCup (WEC), des tournois au rythme plus calme et équilibré (<a href=\"https://wec.pokerth.net/results\">résultats</a>, <a href=\"https://wec.pokerth.net/results/ranking\">classement</a>) ; et la Monthly Cup, disputée chaque mois (<a href=\"https://monthlycup.pokerth.net/\">prochaine coupe et derniers vainqueurs</a>, <a href=\"https://monthlycup.pokerth.net/registration\">inscription</a>). Les dates et les règles sont annoncées sur chaque site et sur le forum <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Pour participer, il faut un compte pokerth.net gratuit."],
       ["Peut-on regarder une partie sans jouer ?",
        "Oui. Les parties en cours qui autorisent les spectateurs peuvent être suivies en direct depuis le lobby : vous voyez la table et le chat, mais les cartes fermées restent cachées et vous ne pouvez pas agir. Un lien d’invitation vers une table déjà commencée l’ouvre en mode spectateur."],
       ["Y a-t-il une aide dans l’application ?",
-       "Oui. L’Aide de l’As : l’As, la mascotte du client web, explique chaque écran au fil de votre progression si vous le souhaitez. Son menu contient toute l’aide avec une recherche, ainsi que « C’est quoi ? » : touchez n’importe quoi à l’écran et il dit à quoi ça sert."]
+       "Oui. L’Aide de l’As : l’As, la mascotte du client web, explique chaque écran au fil de votre progression si vous le souhaitez. Son menu contient toute l’aide avec une recherche, ainsi que « C’est quoi ? » : touchez n’importe quoi à l’écran et il dit à quoi ça sert."],
+      ["PokerTH est-il toujours développé ?",
+       "Oui. PokerTH est développé comme logiciel libre depuis 2006 et reste maintenu : le client de bureau et le serveur sont sur <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, ce client web est mis à jour en continu (<a href=\"https://github.com/narmod/pokerth-web-client\">code source et journal des modifications</a>), et des parties se jouent chaque jour sur le réseau officiel pokerth.net."]
     ]
   },
   ga: {
     title: "Ceisteanna coitianta — cliant gréasáin PokerTH",
-    desc: "Ceisteanna coitianta faoi chliant gréasáin PokerTH: pócar saor in aisce gan fógraí, Texas Hold’em a imirt sa bhrabhsálaí gan aon rud a shuiteáil, cuntais, fóin phóca, mód as líne, teangacha agus príobháideacht.",
+    desc: "Ceisteanna coitianta faoi chliant gréasáin PokerTH: pócar saor in aisce gan fógraí ná íoslódáil, imirt mar aoi nó gan chuntas, cuireadh do chairde le nasc, comórtais, fóin, mód as líne, teangacha agus príobháideacht.",
     h1: "Cliant gréasáin PokerTH — Ceisteanna coitianta",
     qa: [
       ["An bhfuil PokerTH saor in aisce?",
@@ -2456,7 +2527,13 @@ var SEO_FAQ_I18N = {
       ["An féidir liom Texas Hold’em a imirt in aghaidh daoine eile i mo bhrabhsálaí?",
        "Is féidir. Glac páirt i líonra oifigiúil pokerth.net chun Texas Hold’em beo a imirt in aghaidh imreoirí ar fud an domhain, nó seol nasc cuiridh ionas go dtiocfaidh cairde díreach chuig do bhord — gach rud laistigh den bhrabhsálaí."],
       ["An bhfuil cuntas ag teastáil chun imirt?",
-       "Níl. Níl cuntas ag teastáil don mhód Áitiúil / cleachtadh agus oibríonn sé as líne. Ar líonra oifigiúil pokerth.net is féidir leat cluichí Gnáth a imirt mar aoi; tá cuntas pokerth.net saor in aisce ag teastáil do chluichí rangaithe, do bhoird d’imreoirí cláraithe amháin agus don chomhrá."],
+       "Níl. Níl cuntas ag teastáil don mhód Áitiúil / cleachtadh agus oibríonn sé as líne. Ar líonra oifigiúil pokerth.net, logáil isteach mar aoi: tugann an freastalaí leasainm aoi duit agus is féidir leat cluichí Gnáth a imirt láithreach. Ar LAN nó ar fhreastalaí tiomnaithe níl aon chuntas ann ar chor ar bith — ní roghnaíonn tú ach leasainm. Ní iarrann ceann ar bith díobh seo seoladh ríomhphoist. Níl cuntas pokerth.net saor in aisce ag teastáil ach do chluichí rangaithe, do bhoird d’imreoirí cláraithe amháin agus don chomhrá."],
+      ["Conas a imrím pócar ar líne le cairde?",
+       "Cruthaigh bord san fhorhalla — ar pokerth.net nó ar aon fhreastalaí LAN nó tiomnaithe — agus brúigh “Tabhair cuireadh do chairde” sa seomra feithimh. Cruthaíonn an cliant gréasáin nasc cuiridh is féidir leat a sheoladh trí aon aip teachtaireachtaí. Osclaíonn do chairde é ina mbrabhsálaí, ar iPhone, ar Android nó ar ríomhaire, gan aon rud a íoslódáil. Socraigh pasfhocal más mian leat an bord a choinneáil príobháideach: ní bhíonn an pasfhocal riamh mar chuid den nasc."],
+      ["Cad a tharlaíonn nuair a osclaíonn cara mo nasc cuiridh?",
+       "Iompraíonn an nasc an bord agus an freastalaí. Logálann do chara isteach — mar aoi nó le cuntas ar pokerth.net, le leasainm amháin ar LAN nó ar fhreastalaí tiomnaithe — agus ansin téann an cliant gréasáin isteach ag an mbord go huathoibríoch, gan gá é a chuardach san fhorhalla. Iarrann bord atá cosanta le pasfhocal a phasfhocal; osclaítear cluiche atá tosaithe cheana le féachaint air. Is gné den chliant gréasáin iad naisc chuiridh agus oibríonn siad ar gach freastalaí ar féidir leis ceangal leis."],
+      ["An bhfuil freastalaí taispeána ann chun PokerTH a thriail gan clárú?",
+       "Tá. Ar an scáileán logála isteach roghnaigh LAN / Freastalaí tiomnaithe agus pioc an freastalaí taispeána poiblí sa Liosta freastalaithe: clóscríobh leasainm ar bith agus tá tú ina fhorhalla — gan chlárú, gan seoladh ríomhphoist. Taispeánann ponc glas cé na freastalaithe liostaithe atá ar líne agus cé mhéad imreoir atá orthu."],
       ["An oibríonn sé ar fhón póca?",
        "Oibríonn. Is Progressive Web App an cliant gréasáin: ritheann sé in aon bhrabhsálaí nua-aimseartha ar ríomhaire, táibléad nó fón agus is féidir é a shuiteáil mar aip dhúchasach — ar iPhone agus iPad le Comhroinn → Cuir leis an Scáileán Baile, in áiteanna eile ó roghchlár an bhrabhsálaí nó ón gcnaipe suiteála. Taispeánann Cabhair an Aoin na céimeanna do do ghléas."],
       ["An féidir liom imirt in aghaidh an ríomhaire?",
@@ -2472,18 +2549,22 @@ var SEO_FAQ_I18N = {
       ["Cad iad na sonraí a bhailíonn an cliant gréasáin?",
        "Chomh beag agus is féidir: fanann na socruithe i do bhrabhsálaí, agus ní úsáidtear aon rianú ná fógraí. Nuair a logálann tú isteach le cuntas pokerth.net, déantar do roghanna agus do thrófaithe oiliúna a shioncronú leis ionas go leanfaidh siad thú chuig do ghléasanna eile. Féach an leathanach príobháideachta le haghaidh sonraí."],
       ["An féidir liom mo fhreastalaí féin a óstáil?",
-       "Is féidir. Is foinse oscailte freastalaí tiomnaithe PokerTH agus an cliant gréasáin seo araon, mar sin is féidir leat do fhreastalaí pócair príobháideach féin a rith ar LAN nó ar an idirlíon."],
+       "Is féidir. Is foinse oscailte freastalaí tiomnaithe PokerTH agus an cliant gréasáin seo araon, mar sin is féidir leat do fhreastalaí pócair príobháideach féin a rith ar LAN nó ar an idirlíon. Chun go mbeidh sé liostaithe do chách, roghnaigh LAN / Freastalaí tiomnaithe, ansin “Mol mo fhreastalaí” ag bun an Liosta freastalaithe: a luaithe a fhaomhann na riarthóirí é, beidh sé le feiceáil sa liosta. Caithfidh an freastalaí a bheith inrochtana ón idirlíon."],
       ["Conas a oibríonn cluichí rangaithe agus séasúir?",
        "Suíonn 10 n-imreoir ag cluichí rangaithe ar pokerth.net agus tosaíonn siad a luaithe a bhíonn an bord lán: 10,000 sceallóg an duine, blind beag de 50 a dhúbláiltear gach 11 lámh, agus 5 shoicind le gníomhú. Tuilleann áiteanna 1 go 7 na pointí seo: 15, 9, 6, 4, 3, 2 agus 1; is é do Scór an meán in aghaidh an chluiche, ualaithe de réir líon na gcluichí a d’imir tú, agus tosaíonn an rangú arís gach ráithe. Tá cuntas pokerth.net saor in aisce ag teastáil."],
+      ["An bhfuil comórtais phócair saor in aisce ann?",
+       "Tá, i rith na bliana, agus iad ar fad saor in aisce. Is comórtas é gach cluiche PokerTH, agus reáchtálann pobal pokerth.net comórtais rialta freisin lena rangú féin: an BBC, cluichí ina n-ardaíonn na blinds gach cúpla nóiméad (<a href=\"https://bbc.pokerth.net/registration\">féilire</a>, <a href=\"https://bbc.pokerth.net/results\">torthaí</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">rangú</a>); an WeCup (WEC), comórtais ar luas níos suaimhní agus cothrom (<a href=\"https://wec.pokerth.net/results\">torthaí</a>, <a href=\"https://wec.pokerth.net/results/ranking\">rangú</a>); agus an Monthly Cup, a reáchtáiltear gach mí (<a href=\"https://monthlycup.pokerth.net/\">an chéad chorn eile agus na buaiteoirí is déanaí</a>, <a href=\"https://monthlycup.pokerth.net/registration\">clárú</a>). Fógraítear dátaí agus rialacha ar gach suíomh agus ar fhóram <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Chun páirt a ghlacadh, tá cuntas pokerth.net saor in aisce ag teastáil."],
       ["An féidir liom cluiche a fhéachaint gan imirt?",
        "Is féidir. Is féidir cluichí atá ar siúl a cheadaíonn lucht féachana a fhéachaint beo ón bhforhalla: feiceann tú an bord agus an comhrá, ach fanann na cártaí póca i bhfolach agus ní féidir leat gníomhú. Osclaíonn nasc cuiridh chuig bord atá tosaithe cheana é le féachaint air."],
       ["An bhfuil cabhair ar fáil laistigh den aip?",
-       "Tá. Cabhair an Aoin: míníonn an tAon, mascot an chliaint gréasáin, gach scáileán de réir mar a théann tú ar aghaidh más mian leat. Tá an chabhair ar fad ina roghchlár, le cuardach, agus “Cad é seo?”: tapáil rud ar bith ar an scáileán agus insíonn sé duit cad a dhéanann sé."]
+       "Tá. Cabhair an Aoin: míníonn an tAon, mascot an chliaint gréasáin, gach scáileán de réir mar a théann tú ar aghaidh más mian leat. Tá an chabhair ar fad ina roghchlár, le cuardach, agus “Cad é seo?”: tapáil rud ar bith ar an scáileán agus insíonn sé duit cad a dhéanann sé."],
+      ["An bhfuil PokerTH fós á fhorbairt go gníomhach?",
+       "Tá. Tá PokerTH á fhorbairt mar bhogearraí saora ó 2006 agus tá sé á chothabháil fós: tá an cliant deisce agus an freastalaí ar <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, nuashonraítear an cliant gréasáin seo go leanúnach (<a href=\"https://github.com/narmod/pokerth-web-client\">cód foinse agus loga athruithe</a>), agus imrítear cluichí gach lá ar líonra oifigiúil pokerth.net."]
     ],
   },
   es: {
     title: "Preguntas frecuentes \u2014 Cliente web de PokerTH",
-    desc: "Preguntas frecuentes sobre el cliente web de PokerTH: p\u00f3quer gratis y sin anuncios, jugar al Texas Hold\u2019em en el navegador sin descargar nada, cuentas, m\u00f3vil, modo sin conexi\u00f3n, idiomas y privacidad.",
+    desc: "Preguntas frecuentes sobre el cliente web de PokerTH: póquer gratis sin anuncios ni descargas, jugar como invitado o sin cuenta, invitar amigos con un enlace, torneos, móvil, sin conexión, idiomas y privacidad.",
     h1: "Cliente web de PokerTH \u2014 Preguntas frecuentes",
     qa: [
       ["¿PokerTH es gratis?",
@@ -2495,7 +2576,13 @@ var SEO_FAQ_I18N = {
       ["¿Puedo jugar al Texas Hold’em contra otras personas desde el navegador?",
        "Sí. Únete a la red oficial pokerth.net para jugar contra jugadores de todo el mundo, o envía un enlace de invitación para que tus amigos lleguen directamente a tu mesa, todo dentro del navegador."],
       ["¿Hace falta una cuenta para jugar?",
-       "No. El modo Local / entrenamiento no necesita cuenta y funciona sin conexión. En la red oficial pokerth.net puedes jugar partidas Normal como invitado; hace falta una cuenta gratuita de pokerth.net para las partidas de clasificación, las mesas solo para registrados y el chat."],
+       "No. El modo Local / entrenamiento no necesita cuenta y funciona sin conexión. En la red oficial pokerth.net, inicia sesión como invitado: el servidor te asigna un apodo de invitado y puedes jugar partidas Normal al momento. En una LAN o en un servidor dedicado no hay cuentas: solo eliges un apodo. Ninguna de estas opciones pide una dirección de correo electrónico. Solo necesitas una cuenta gratuita de pokerth.net para las partidas de clasificación, las mesas solo para registrados y el chat."],
+      ["¿Cómo jugar al póquer online con amigos?",
+       "Crea una mesa en el lobby — en pokerth.net o en cualquier servidor LAN o dedicado — y pulsa «Invitar amigos» en la sala de espera. El cliente web genera un enlace de invitación que puedes enviar por cualquier app de mensajería. Tus amigos lo abren en su navegador, en iPhone, Android o ordenador, sin descargar nada. Si quieres que la mesa sea privada, ponle una contraseña: la contraseña nunca forma parte del enlace."],
+      ["¿Qué pasa cuando un amigo abre mi enlace de invitación?",
+       "El enlace incluye la mesa y el servidor. Tu amigo inicia sesión — como invitado o con una cuenta en pokerth.net, o solo con un apodo en un servidor LAN o dedicado — y el cliente web lo lleva automáticamente a la mesa, sin tener que buscarla en el lobby. Si la mesa está protegida con contraseña, se la pide; si la partida ya ha empezado, se abre en modo espectador. Los enlaces de invitación son una función del cliente web y funcionan en todos los servidores a los que puede conectarse."],
+      ["¿Hay un servidor de demostración para probar PokerTH sin registrarse?",
+       "Sí. En la pantalla de inicio de sesión, elige LAN / Servidor dedicado y selecciona el servidor de demostración público en la lista de servidores: escribe cualquier apodo y ya estás en su lobby, sin registro ni correo electrónico. Un punto verde indica qué servidores de la lista están en línea y cuántos jugadores hay en cada uno."],
       ["¿Funciona en el móvil?",
        "Sí. El cliente web es una Progressive Web App: funciona en cualquier navegador moderno en ordenador, tableta o teléfono, y puede instalarse como una aplicación nativa — en iPhone y iPad con Compartir → Añadir a pantalla de inicio, en el resto desde el menú del navegador o el botón de instalación. La Ayuda del As muestra los pasos para tu dispositivo."],
       ["¿Puedo jugar contra el ordenador?",
@@ -2511,18 +2598,22 @@ var SEO_FAQ_I18N = {
       ["¿Qué datos recopila el cliente web?",
        "Los mínimos posibles: tus ajustes se quedan en tu navegador y no se usa ningún sistema de seguimiento ni publicidad. Cuando inicias sesión con una cuenta de pokerth.net, tus opciones y tus trofeos de entrenamiento se sincronizan con ella para que te sigan en tus otros dispositivos. La página de privacidad lo detalla."],
       ["¿Puedo alojar mi propio servidor?",
-       "Sí. Tanto el servidor dedicado de PokerTH como este cliente web son de código abierto, así que puedes montar tu propio servidor privado de póquer, en una red local o en internet."],
+       "Sí. Tanto el servidor dedicado de PokerTH como este cliente web son de código abierto, así que puedes montar tu propio servidor privado de póquer, en una red local o en internet. Para que aparezca para todos, elige LAN / Servidor dedicado y luego «Proponer mi servidor» al final de la lista de servidores: en cuanto los administradores lo aprueben, aparecerá en la lista. El servidor debe ser accesible desde internet."],
       ["¿Cómo funcionan las partidas de clasificación y las temporadas?",
        "Las partidas de clasificación de pokerth.net reúnen a 10 jugadores y empiezan en cuanto la mesa se llena: 10 000 fichas cada uno, una ciega pequeña de 50 que se duplica cada 11 manos y 5 segundos para actuar. Los puestos 1 a 7 puntúan 15, 9, 6, 4, 3, 2 y 1 puntos; tu Score es tu media por partida, ponderada por el número de partidas que has jugado, y la clasificación se reinicia cada trimestre. Hace falta una cuenta gratuita de pokerth.net."],
+      ["¿Hay torneos y competiciones de póquer gratis?",
+       "Sí, todo el año y todos gratis. Cada partida de PokerTH es un torneo, y la comunidad de pokerth.net organiza además competiciones periódicas con sus propias clasificaciones: la BBC, partidas en las que las ciegas suben cada pocos minutos (<a href=\"https://bbc.pokerth.net/registration\">calendario</a>, <a href=\"https://bbc.pokerth.net/results\">resultados</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">clasificación</a>); la WeCup (WEC), torneos a un ritmo más tranquilo y equilibrado (<a href=\"https://wec.pokerth.net/results\">resultados</a>, <a href=\"https://wec.pokerth.net/results/ranking\">clasificación</a>); y la Monthly Cup, que se celebra cada mes (<a href=\"https://monthlycup.pokerth.net/\">próxima copa y últimos ganadores</a>, <a href=\"https://monthlycup.pokerth.net/registration\">inscripción</a>). Las fechas y las reglas se anuncian en cada sitio y en el foro de <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Para participar necesitas una cuenta gratuita de pokerth.net."],
       ["¿Puedo ver una partida sin jugar?",
        "Sí. Las partidas en curso que permiten espectadores pueden verse en directo desde el lobby: ves la mesa y el chat, pero las cartas propias siguen ocultas y no puedes actuar. Un enlace de invitación a una mesa que ya ha empezado la abre para verla."],
       ["¿Hay ayuda dentro de la aplicación?",
-       "Sí. La Ayuda del As: el As, la mascota del cliente web, explica cada pantalla a medida que avanzas, si quieres. Su menú contiene toda la ayuda con un buscador, y «¿Qué es esto?»: toca cualquier cosa de la pantalla y te dice para qué sirve."]
+       "Sí. La Ayuda del As: el As, la mascota del cliente web, explica cada pantalla a medida que avanzas, si quieres. Su menú contiene toda la ayuda con un buscador, y «¿Qué es esto?»: toca cualquier cosa de la pantalla y te dice para qué sirve."],
+      ["¿PokerTH sigue en desarrollo activo?",
+       "Sí. PokerTH se desarrolla como software libre desde 2006 y sigue con mantenimiento: el cliente de escritorio y el servidor están en <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, este cliente web se actualiza continuamente (<a href=\"https://github.com/narmod/pokerth-web-client\">código fuente y registro de cambios</a>), y cada día se juegan partidas en la red oficial pokerth.net."]
     ]
   },
   'es-419': {
     title: "Preguntas frecuentes — Cliente web de PokerTH",
-    desc: "Preguntas frecuentes sobre el cliente web de PokerTH: póquer gratis y sin anuncios, jugar al Texas Hold’em en el navegador sin descargar nada, cuentas, celular, modo sin conexión, idiomas y privacidad.",
+    desc: "Preguntas frecuentes sobre el cliente web de PokerTH: póquer gratis sin anuncios ni descargas, jugar como invitado o sin cuenta, invitar amigos con un enlace, torneos, celular, sin conexión, idiomas y privacidad.",
     h1: "Cliente web de PokerTH — Preguntas frecuentes",
     qa: [
       ["¿PokerTH es gratis?",
@@ -2534,7 +2625,13 @@ var SEO_FAQ_I18N = {
       ["¿Puedo jugar al Texas Hold’em contra otras personas desde el navegador?",
        "Sí. Únete a la red oficial pokerth.net para jugar contra jugadores de todo el mundo, o envía un enlace de invitación para que tus amigos lleguen directamente a tu mesa, todo dentro del navegador."],
       ["¿Hace falta una cuenta para jugar?",
-       "No. El modo Local / entrenamiento no necesita cuenta y funciona sin conexión. En la red oficial pokerth.net puedes jugar partidas Normal como invitado; hace falta una cuenta gratuita de pokerth.net para las partidas de clasificación, las mesas solo para registrados y el chat."],
+       "No. El modo Local / entrenamiento no necesita cuenta y funciona sin conexión. En la red oficial pokerth.net, inicia sesión como invitado: el servidor te asigna un apodo de invitado y puedes jugar partidas Normal de inmediato. En una LAN o en un servidor dedicado no hay cuentas: solo eliges un apodo. Ninguna de estas opciones pide una dirección de correo electrónico. Solo necesitas una cuenta gratuita de pokerth.net para las partidas de clasificación, las mesas solo para registrados y el chat."],
+      ["¿Cómo jugar al póquer online con amigos?",
+       "Crea una mesa en el lobby — en pokerth.net o en cualquier servidor LAN o dedicado — y presiona «Invitar amigos» en la sala de espera. El cliente web genera un enlace de invitación que puedes enviar por cualquier app de mensajería. Tus amigos lo abren en su navegador, en iPhone, Android o computadora, sin descargar nada. Si quieres que la mesa sea privada, ponle una contraseña: la contraseña nunca forma parte del enlace."],
+      ["¿Qué pasa cuando un amigo abre mi enlace de invitación?",
+       "El enlace incluye la mesa y el servidor. Tu amigo inicia sesión — como invitado o con una cuenta en pokerth.net, o solo con un apodo en un servidor LAN o dedicado — y el cliente web lo lleva automáticamente a la mesa, sin tener que buscarla en el lobby. Si la mesa está protegida con contraseña, se la pide; si la partida ya empezó, se abre en modo espectador. Los enlaces de invitación son una función del cliente web y funcionan en todos los servidores a los que puede conectarse."],
+      ["¿Hay un servidor de demostración para probar PokerTH sin registrarse?",
+       "Sí. En la pantalla de inicio de sesión, elige LAN / Servidor dedicado y selecciona el servidor de demostración público en la lista de servidores: escribe cualquier apodo y ya estás en su lobby, sin registro ni correo electrónico. Un punto verde indica qué servidores de la lista están en línea y cuántos jugadores hay en cada uno."],
       ["¿Funciona en el celular?",
        "Sí. El cliente web es una Progressive Web App: funciona en cualquier navegador moderno en computadora, tableta o teléfono, y puede instalarse como una aplicación nativa — en iPhone y iPad con Compartir → Añadir a pantalla de inicio, en el resto desde el menú del navegador o el botón de instalación. La Ayuda del As muestra los pasos para tu dispositivo."],
       ["¿Puedo jugar contra la computadora?",
@@ -2550,18 +2647,22 @@ var SEO_FAQ_I18N = {
       ["¿Qué datos recopila el cliente web?",
        "Los mínimos posibles: tus ajustes se quedan en tu navegador y no se usa ningún sistema de seguimiento ni publicidad. Cuando inicias sesión con una cuenta de pokerth.net, tus opciones y tus trofeos de entrenamiento se sincronizan con ella para que te sigan en tus otros dispositivos. La página de privacidad lo detalla."],
       ["¿Puedo alojar mi propio servidor?",
-       "Sí. Tanto el servidor dedicado de PokerTH como este cliente web son de código abierto, así que puedes montar tu propio servidor privado de póquer, en una red local o en internet."],
+       "Sí. Tanto el servidor dedicado de PokerTH como este cliente web son de código abierto, así que puedes montar tu propio servidor privado de póquer, en una red local o en internet. Para que aparezca para todos, elige LAN / Servidor dedicado y luego «Proponer mi servidor» al final de la lista de servidores: en cuanto los administradores lo aprueben, aparecerá en la lista. El servidor debe ser accesible desde internet."],
       ["¿Cómo funcionan las partidas de clasificación y las temporadas?",
        "Las partidas de clasificación de pokerth.net reúnen a 10 jugadores y empiezan en cuanto la mesa se llena: 10 000 fichas cada uno, una ciega pequeña de 50 que se duplica cada 11 manos y 5 segundos para actuar. Los puestos 1 a 7 puntúan 15, 9, 6, 4, 3, 2 y 1 puntos; tu Score es tu media por partida, ponderada por el número de partidas que has jugado, y la clasificación se reinicia cada trimestre. Hace falta una cuenta gratuita de pokerth.net."],
+      ["¿Hay torneos y competencias de póquer gratis?",
+       "Sí, todo el año y todos gratis. Cada partida de PokerTH es un torneo, y la comunidad de pokerth.net organiza además competencias periódicas con sus propias clasificaciones: la BBC, partidas en las que las ciegas suben cada pocos minutos (<a href=\"https://bbc.pokerth.net/registration\">calendario</a>, <a href=\"https://bbc.pokerth.net/results\">resultados</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">clasificación</a>); la WeCup (WEC), torneos a un ritmo más tranquilo y equilibrado (<a href=\"https://wec.pokerth.net/results\">resultados</a>, <a href=\"https://wec.pokerth.net/results/ranking\">clasificación</a>); y la Monthly Cup, que se juega cada mes (<a href=\"https://monthlycup.pokerth.net/\">próxima copa y últimos ganadores</a>, <a href=\"https://monthlycup.pokerth.net/registration\">inscripción</a>). Las fechas y las reglas se anuncian en cada sitio y en el foro de <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Para participar necesitas una cuenta gratuita de pokerth.net."],
       ["¿Puedo ver una partida sin jugar?",
        "Sí. Las partidas en curso que permiten espectadores pueden verse en directo desde el lobby: ves la mesa y el chat, pero las cartas propias siguen ocultas y no puedes actuar. Un enlace de invitación a una mesa que ya ha empezado la abre para verla."],
       ["¿Hay ayuda dentro de la aplicación?",
-       "Sí. La Ayuda del As: el As, la mascota del cliente web, explica cada pantalla a medida que avanzas, si quieres. Su menú contiene toda la ayuda con un buscador, y «¿Qué es esto?»: toca cualquier cosa de la pantalla y te dice para qué sirve."]
+       "Sí. La Ayuda del As: el As, la mascota del cliente web, explica cada pantalla a medida que avanzas, si quieres. Su menú contiene toda la ayuda con un buscador, y «¿Qué es esto?»: toca cualquier cosa de la pantalla y te dice para qué sirve."],
+      ["¿PokerTH sigue en desarrollo activo?",
+       "Sí. PokerTH se desarrolla como software libre desde 2006 y sigue con mantenimiento: el cliente de escritorio y el servidor están en <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, este cliente web se actualiza continuamente (<a href=\"https://github.com/narmod/pokerth-web-client\">código fuente y registro de cambios</a>), y cada día se juegan partidas en la red oficial pokerth.net."]
     ]
   },
   de: {
     title: "FAQ \u2014 PokerTH Web-Client",
-    desc: "H\u00e4ufige Fragen zum PokerTH Web-Client: kostenloses Poker ohne Werbung, Texas Hold\u2019em im Browser spielen ohne Download, Konten, Mobilger\u00e4te, Offline-Modus, Sprachen und Datenschutz.",
+    desc: "Häufige Fragen zum PokerTH Web-Client: kostenloses Poker ohne Werbung und Download, als Gast oder ohne Konto spielen, Freunde per Link einladen, Turniere, Mobilgeräte, Offline-Modus, Sprachen und Datenschutz.",
     h1: "PokerTH Web-Client \u2014 H\u00e4ufige Fragen",
     qa: [
       ["Ist PokerTH kostenlos?",
@@ -2573,7 +2674,13 @@ var SEO_FAQ_I18N = {
       ["Kann ich im Browser Texas Hold’em gegen andere Menschen spielen?",
        "Ja. Tritt dem offiziellen Netzwerk pokerth.net bei, um gegen Spieler aus aller Welt anzutreten, oder verschicke einen Einladungslink, mit dem Freunde direkt an deinem Tisch landen — alles im Browser."],
       ["Brauche ich ein Konto zum Spielen?",
-       "Nein. Der Modus Lokal / Training braucht kein Konto und funktioniert offline. Im offiziellen Netzwerk pokerth.net kannst du Normal-Spiele als Gast spielen; ein kostenloses pokerth.net-Konto brauchst du für Ranglistenspiele, Tische nur für registrierte Spieler und den Chat."],
+       "Nein. Der Modus Lokal / Training braucht kein Konto und funktioniert offline. Im offiziellen Netzwerk pokerth.net meldest du dich als Gast an: Der Server gibt dir einen Gast-Spitznamen, und du kannst sofort Normal-Spiele spielen. Im LAN oder auf einem dedizierten Server gibt es überhaupt kein Konto — du wählst nur einen Spitznamen. Nirgends wird eine E-Mail-Adresse verlangt. Ein kostenloses pokerth.net-Konto brauchst du nur für Ranglistenspiele, Tische nur für registrierte Spieler und den Chat."],
+      ["Wie spiele ich online Poker mit Freunden?",
+       "Erstelle in der Lobby einen Tisch — auf pokerth.net oder auf einem beliebigen LAN- oder dedizierten Server — und wähle im Warteraum „Freunde einladen“. Der Web-Client erstellt einen Einladungslink, den du über jeden Messenger verschicken kannst. Deine Freunde öffnen ihn in ihrem Browser, auf iPhone, Android oder Computer, ohne etwas herunterzuladen. Soll der Tisch privat bleiben, lege ein Passwort fest: Das Passwort ist nie Teil des Links."],
+      ["Was passiert, wenn ein Freund meinen Einladungslink öffnet?",
+       "Der Link enthält den Tisch und den Server. Dein Freund meldet sich an — als Gast oder mit einem Konto auf pokerth.net, im LAN oder auf einem dedizierten Server nur mit einem Spitznamen —, und der Web-Client bringt ihn dann automatisch an den Tisch, ohne dass er ihn in der Lobby suchen muss. Bei einem passwortgeschützten Tisch wird das Passwort abgefragt; ein bereits laufendes Spiel öffnet sich zum Zuschauen. Einladungslinks sind eine Funktion des Web-Clients und funktionieren auf jedem Server, mit dem er sich verbinden kann."],
+      ["Gibt es einen Demo-Server, um PokerTH ohne Anmeldung auszuprobieren?",
+       "Ja. Wähle auf dem Anmeldebildschirm LAN / Dedizierter Server und in der Serverliste den öffentlichen Demo-Server: Gib einen beliebigen Spitznamen ein, und schon bist du in seiner Lobby — ohne Registrierung, ohne E-Mail-Adresse. Ein grüner Punkt zeigt, welche gelisteten Server online sind und wie viele Spieler gerade darauf spielen."],
       ["Läuft es auf dem Handy?",
        "Ja. Der Web-Client ist eine Progressive Web App: Er läuft in jedem modernen Browser auf Computer, Tablet oder Telefon und lässt sich wie eine native App installieren — auf iPhone und iPad mit Teilen → Zum Home-Bildschirm, sonst über das Browsermenü oder die Installationsschaltfläche. Die Ass-Hilfe zeigt dir die Schritte für dein Gerät."],
       ["Kann ich gegen den Computer spielen?",
@@ -2589,18 +2696,22 @@ var SEO_FAQ_I18N = {
       ["Welche Daten erhebt der Web-Client?",
        "So wenige wie möglich: Einstellungen bleiben in deinem Browser, und es gibt weder Tracking noch Werbung. Wenn du dich mit einem pokerth.net-Konto anmeldest, werden deine Optionen und Trainingstrophäen damit synchronisiert, damit sie dir auf deine anderen Geräte folgen. Einzelheiten stehen auf der Datenschutzseite."],
       ["Kann ich einen eigenen Server betreiben?",
-       "Ja. Der dedizierte PokerTH-Server und dieser Web-Client sind beide quelloffen — du kannst also deinen eigenen privaten Pokerserver im LAN oder im Internet betreiben."],
+       "Ja. Der dedizierte PokerTH-Server und dieser Web-Client sind beide quelloffen — du kannst also deinen eigenen privaten Pokerserver im LAN oder im Internet betreiben. Damit er für alle gelistet wird, wähle LAN / Dedizierter Server und dann „Meinen Server vorschlagen“ unten in der Serverliste: Sobald die Admins ihn freigegeben haben, erscheint er in der Liste. Der Server muss aus dem Internet erreichbar sein."],
       ["Wie funktionieren Ranglistenspiele und Saisons?",
        "Ranglistenspiele auf pokerth.net haben 10 Spieler und starten, sobald der Tisch voll ist: je 10.000 Chips, ein Small Blind von 50, der sich alle 11 Hände verdoppelt, und 5 Sekunden Zeit zum Handeln. Die Plätze 1 bis 7 erhalten 15, 9, 6, 4, 3, 2 und 1 Punkte; dein Score ist dein Durchschnitt pro Spiel, gewichtet nach der Zahl deiner gespielten Spiele, und die Rangliste beginnt jedes Quartal neu. Ein kostenloses pokerth.net-Konto ist nötig."],
+      ["Gibt es kostenlose Pokerturniere und Wettbewerbe?",
+       "Ja, das ganze Jahr über und alle kostenlos. Jedes PokerTH-Spiel ist ein Turnier, und die pokerth.net-Community veranstaltet außerdem regelmäßige Wettbewerbe mit eigenen Ranglisten: den BBC, Spiele, deren Blinds alle paar Minuten steigen (<a href=\"https://bbc.pokerth.net/registration\">Kalender</a>, <a href=\"https://bbc.pokerth.net/results\">Ergebnisse</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">Rangliste</a>); den WeCup (WEC), Turniere in ruhigerem, ausgewogenem Tempo (<a href=\"https://wec.pokerth.net/results\">Ergebnisse</a>, <a href=\"https://wec.pokerth.net/results/ranking\">Rangliste</a>); und den Monthly Cup, der jeden Monat stattfindet (<a href=\"https://monthlycup.pokerth.net/\">nächster Cup und letzte Gewinner</a>, <a href=\"https://monthlycup.pokerth.net/registration\">Anmeldung</a>). Termine und Regeln werden auf der jeweiligen Website und im Forum von <a href=\"https://www.pokerth.net/\">pokerth.net</a> bekanntgegeben. Für die Teilnahme brauchst du ein kostenloses pokerth.net-Konto."],
       ["Kann ich einem Spiel zusehen, ohne mitzuspielen?",
        "Ja. Laufende Spiele, die Zuschauer erlauben, kannst du live aus der Lobby ansehen: Du siehst den Tisch und den Chat, die Hole Cards bleiben aber verdeckt, und du kannst nicht handeln. Ein Einladungslink zu einem bereits gestarteten Tisch öffnet ihn zum Zuschauen."],
       ["Gibt es Hilfe in der App?",
-       "Ja. Die Ass-Hilfe: Das Ass, das Maskottchen des Web-Clients, erklärt dir jeden Bildschirm, während du spielst, wenn du das möchtest. Sein Menü enthält die gesamte Hilfe mit Suche und „Was ist das?”: Tippe auf irgendetwas auf dem Bildschirm, und er sagt dir, wozu es dient."]
+       "Ja. Die Ass-Hilfe: Das Ass, das Maskottchen des Web-Clients, erklärt dir jeden Bildschirm, während du spielst, wenn du das möchtest. Sein Menü enthält die gesamte Hilfe mit Suche und „Was ist das?”: Tippe auf irgendetwas auf dem Bildschirm, und er sagt dir, wozu es dient."],
+      ["Wird PokerTH noch aktiv weiterentwickelt?",
+       "Ja. PokerTH wird seit 2006 als freie Software entwickelt und weiterhin gepflegt: Der Desktop-Client und der Server liegen auf <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, dieser Web-Client wird laufend aktualisiert (<a href=\"https://github.com/narmod/pokerth-web-client\">Quellcode und Changelog</a>), und im offiziellen Netzwerk pokerth.net wird jeden Tag gespielt."]
     ]
   },
   it: {
     title: "FAQ \u2014 Client web PokerTH",
-    desc: "Domande frequenti sul client web di PokerTH: poker gratuito e senza pubblicit\u00e0, giocare a Texas Hold\u2019em nel browser senza scaricare nulla, account, mobile, modalit\u00e0 offline, lingue e privacy.",
+    desc: "Domande frequenti sul client web di PokerTH: poker gratuito senza pubblicità né download, giocare come ospite o senza account, inviti con un link, tornei, mobile, modalità offline, lingue e privacy.",
     h1: "Client web PokerTH \u2014 Domande frequenti",
     qa: [
       ["PokerTH è gratuito?",
@@ -2612,7 +2723,13 @@ var SEO_FAQ_I18N = {
       ["Posso giocare a Texas Hold’em contro altre persone dal browser?",
        "Sì. Entra nella rete ufficiale pokerth.net per sfidare giocatori di tutto il mondo, oppure invia un link d’invito perché gli amici arrivino direttamente al tuo tavolo: tutto dentro il browser."],
       ["Serve un account per giocare?",
-       "No. La modalità Locale / allenamento non richiede un account e funziona offline. Sulla rete ufficiale pokerth.net puoi giocare partite di tipo «Normale» come ospite; serve un account pokerth.net gratuito per le partite «Valida per la classifica», i tavoli riservati agli utenti registrati e la chat."],
+       "No. La modalità Locale / allenamento non richiede un account e funziona offline. Sulla rete ufficiale pokerth.net accedi come ospite: il server ti assegna un nickname da ospite e puoi giocare subito partite di tipo «Normale». Su una LAN o su un server dedicato non esiste alcun account: scegli solo un nickname. Nessuna di queste modalità chiede un indirizzo email. Un account pokerth.net gratuito serve solo per le partite «Valida per la classifica», i tavoli riservati agli utenti registrati e la chat."],
+      ["Come si gioca a poker online con gli amici?",
+       "Crea un tavolo nella lobby — su pokerth.net o su qualsiasi LAN o server dedicato — e premi «Invita amici» nella sala d’attesa. Il client web crea un link d’invito che puoi mandare con qualsiasi app di messaggistica. I tuoi amici lo aprono nel browser, su iPhone, Android o computer, senza scaricare nulla. Imposta una password se il tavolo deve restare privato: la password non fa mai parte del link."],
+      ["Cosa succede quando un amico apre il mio link d’invito?",
+       "Il link contiene il tavolo e il server. Il tuo amico accede — come ospite o con un account su pokerth.net, solo con un nickname su una LAN o un server dedicato — e poi il client web lo porta automaticamente al tavolo, senza bisogno di cercarlo nella lobby. Un tavolo protetto da password chiede la password; una partita già iniziata si apre in sola visione. I link d’invito sono una funzione del client web e funzionano su tutti i server a cui riesce a connettersi."],
+      ["Esiste un server demo per provare PokerTH senza registrarsi?",
+       "Sì. Nella schermata di accesso scegli LAN / Server dedicato e seleziona il server demo pubblico nell’elenco dei server: digita un nickname qualsiasi e sei nella sua lobby, senza registrazione né indirizzo email. Un pallino verde indica quali server dell’elenco sono online e quanti giocatori ci sono."],
       ["Funziona su smartphone?",
        "Sì. Il client web è una Progressive Web App: funziona in qualsiasi browser moderno su computer, tablet o telefono e può essere installato come un’app nativa — su iPhone e iPad con Condividi → Aggiungi a Home, altrove dal menu del browser o con il pulsante di installazione. L’Aiuto dell’Asso mostra i passaggi per il tuo dispositivo."],
       ["Posso giocare contro il computer?",
@@ -2628,18 +2745,22 @@ var SEO_FAQ_I18N = {
       ["Quali dati raccoglie il client web?",
        "Il minimo possibile: le impostazioni restano nel tuo browser e non viene usato alcun tracciamento né pubblicità. Quando accedi con un account pokerth.net, le tue opzioni e i trofei dell’allenamento vengono sincronizzati con esso, così ti seguono sugli altri dispositivi. La pagina sulla privacy spiega i dettagli."],
       ["Posso ospitare un mio server?",
-       "Sì. Il server dedicato PokerTH e questo client web sono entrambi open source: puoi far girare il tuo server di poker privato, su una rete locale o su internet."],
+       "Sì. Il server dedicato PokerTH e questo client web sono entrambi open source: puoi far girare il tuo server di poker privato, su una rete locale o su internet. Per renderlo visibile a tutti, scegli LAN / Server dedicato, poi «Proponi il mio server» in fondo all’elenco dei server: una volta approvato dagli amministratori, compare nell’elenco. Il server deve essere raggiungibile da internet."],
       ["Come funzionano le partite valide per la classifica e le stagioni?",
        "Le partite valide per la classifica su pokerth.net sono da 10 giocatori e iniziano appena il tavolo è pieno: 10.000 fiche a testa, un piccolo buio di 50 che raddoppia ogni 11 mani e 5 secondi per agire. I posti dal 1° al 7° ottengono 15, 9, 6, 4, 3, 2 e 1 punti; il tuo punteggio è la media per partita, ponderata in base al numero di partite giocate, e la classifica riparte ogni trimestre. Serve un account pokerth.net gratuito."],
+      ["Ci sono tornei e competizioni di poker gratuiti?",
+       "Sì, tutto l’anno, e tutti gratuiti. Ogni partita di PokerTH è un torneo, e la comunità di pokerth.net organizza anche competizioni regolari con classifiche proprie: il BBC, partite con i bui che salgono ogni pochi minuti (<a href=\"https://bbc.pokerth.net/registration\">calendario</a>, <a href=\"https://bbc.pokerth.net/results\">risultati</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">classifica</a>); la WeCup (WEC), tornei dal ritmo più tranquillo ed equilibrato (<a href=\"https://wec.pokerth.net/results\">risultati</a>, <a href=\"https://wec.pokerth.net/results/ranking\">classifica</a>); e la Monthly Cup, che si tiene ogni mese (<a href=\"https://monthlycup.pokerth.net/\">prossima coppa e ultimi vincitori</a>, <a href=\"https://monthlycup.pokerth.net/registration\">iscrizione</a>). Date e regole vengono annunciate su ciascun sito e sul forum di <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Per partecipare serve un account pokerth.net gratuito."],
       ["Posso guardare una partita senza giocare?",
        "Sì. Le partite in corso che ammettono spettatori si possono guardare dal vivo dalla lobby: vedi il tavolo e la chat, ma le carte private restano nascoste e non puoi agire. Un link d’invito a un tavolo già iniziato lo apre in sola visione."],
       ["C’è un aiuto dentro l’app?",
-       "Sì. L’Aiuto dell’Asso: l’Asso, la mascotte del client web, ti spiega ogni schermata man mano che procedi, se vuoi. Il suo menu contiene tutto l’aiuto con una ricerca, e «Cos’è?»: tocca qualsiasi cosa sullo schermo e ti dice a cosa serve."]
+       "Sì. L’Aiuto dell’Asso: l’Asso, la mascotte del client web, ti spiega ogni schermata man mano che procedi, se vuoi. Il suo menu contiene tutto l’aiuto con una ricerca, e «Cos’è?»: tocca qualsiasi cosa sullo schermo e ti dice a cosa serve."],
+      ["PokerTH è ancora in sviluppo?",
+       "Sì. PokerTH è sviluppato come software libero dal 2006 ed è tuttora mantenuto: il client desktop e il server sono su <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, questo client web viene aggiornato di continuo (<a href=\"https://github.com/narmod/pokerth-web-client\">codice sorgente e registro delle modifiche</a>), e si gioca ogni giorno sulla rete ufficiale pokerth.net."]
     ]
   },
   'pt-BR': {
     title: "Perguntas frequentes \u2014 Cliente web do PokerTH",
-    desc: "Perguntas frequentes sobre o cliente web do PokerTH: p\u00f4quer gr\u00e1tis e sem an\u00fancios, jogar Texas Hold\u2019em no navegador sem baixar nada, contas, celular, modo offline, idiomas e privacidade.",
+    desc: "Perguntas frequentes sobre o cliente web do PokerTH: pôquer grátis sem anúncios nem download, jogar sem conta ou como convidado, convites por link, torneios, celular, modo offline, idiomas e privacidade.",
     h1: "Cliente web do PokerTH \u2014 Perguntas frequentes",
     qa: [
       ["O PokerTH é gratuito?",
@@ -2651,7 +2772,13 @@ var SEO_FAQ_I18N = {
       ["Posso jogar Texas Hold’em contra outras pessoas pelo navegador?",
        "Sim. Entre na rede oficial pokerth.net para enfrentar jogadores do mundo todo, ou envie um link de convite para que seus amigos caiam direto na sua mesa — tudo dentro do navegador."],
       ["Preciso de uma conta para jogar?",
-       "Não. O modo Local / treino não precisa de conta e funciona offline. Na rede oficial pokerth.net você pode jogar partidas Normal como convidado; uma conta pokerth.net gratuita é necessária para os jogos ranqueados, as mesas só para jogadores registrados e o chat."],
+       "Não. O modo Local / treino não precisa de conta e funciona offline. Na rede oficial pokerth.net, entre como convidado: o servidor dá a você um apelido de convidado e você já pode jogar partidas Normal. Numa LAN ou num servidor dedicado não existe conta nenhuma — você só escolhe um apelido. Nenhum desses modos pede endereço de e-mail. Uma conta pokerth.net gratuita só é necessária para os jogos ranqueados, as mesas só para jogadores registrados e o chat."],
+      ["Como jogar pôquer online com amigos?",
+       "Crie uma mesa no lobby — no pokerth.net ou em qualquer LAN ou servidor dedicado — e toque em « Convidar amigos » na sala de espera. O cliente web gera um link de convite que você pode enviar por qualquer aplicativo de mensagens. Seus amigos o abrem no navegador, no iPhone, no Android ou no computador, sem baixar nada. Defina uma senha se a mesa tiver de ser privada: a senha nunca faz parte do link."],
+      ["O que acontece quando um amigo abre meu link de convite?",
+       "O link leva a mesa e o servidor. Seu amigo entra — como convidado ou com uma conta no pokerth.net, só com um apelido numa LAN ou num servidor dedicado — e o cliente web o coloca na mesa automaticamente, sem precisar procurá-la no lobby. Uma mesa protegida por senha pede a senha; um jogo que já começou abre para assistir. Os links de convite são um recurso do cliente web e funcionam em todos os servidores aos quais ele consegue se conectar."],
+      ["Existe um servidor de demonstração para experimentar o PokerTH sem se cadastrar?",
+       "Sim. Na tela de login, escolha LAN / Servidor dedicado e selecione o servidor de demonstração público na lista de servidores: digite qualquer apelido e você já está no lobby dele — sem cadastro, sem endereço de e-mail. Um ponto verde mostra quais servidores da lista estão online e quantos jogadores há em cada um."],
       ["Funciona no celular?",
        "Sim. O cliente web é um Progressive Web App: funciona em qualquer navegador moderno no computador, tablet ou celular, e pode ser instalado como um aplicativo nativo — no iPhone e no iPad com Compartilhar → Adicionar à Tela de Início, nos demais casos pelo menu do navegador ou pelo botão de instalação. A Ajuda do Ás mostra os passos para o seu aparelho."],
       ["Posso jogar contra o computador?",
@@ -2667,18 +2794,22 @@ var SEO_FAQ_I18N = {
       ["Quais dados o cliente web coleta?",
        "O mínimo possível: suas configurações ficam no seu navegador, e não há rastreamento nem publicidade. Quando você entra com uma conta pokerth.net, suas opções e seus troféus de treino são sincronizados com ela para acompanhá-lo nos seus outros aparelhos. A página de privacidade traz os detalhes."],
       ["Posso hospedar meu próprio servidor?",
-       "Sim. O servidor dedicado do PokerTH e este cliente web são ambos de código aberto, então você pode rodar seu próprio servidor de pôquer privado, numa rede local ou na internet."],
+       "Sim. O servidor dedicado do PokerTH e este cliente web são ambos de código aberto, então você pode rodar seu próprio servidor de pôquer privado, numa rede local ou na internet. Para que ele apareça para todos, escolha LAN / Servidor dedicado e depois « Propor meu servidor » no fim da lista de servidores: assim que os administradores o aprovarem, ele aparece na lista. O servidor precisa estar acessível pela internet."],
       ["Como funcionam os jogos ranqueados e as temporadas?",
        "Os jogos ranqueados do pokerth.net reúnem 10 jogadores e começam assim que a mesa enche: 10.000 fichas para cada um, um small blind de 50 que dobra a cada 11 mãos e 5 segundos para agir. Os lugares de 1 a 7 marcam 15, 9, 6, 4, 3, 2 e 1 ponto; sua Pontuação é a sua média por jogo, ponderada pelo número de jogos que você disputou, e o ranking recomeça a cada trimestre. É preciso uma conta pokerth.net gratuita."],
+      ["Há torneios e competições de pôquer gratuitos?",
+       "Sim, o ano todo, e todos gratuitos. Toda partida do PokerTH é um torneio, e a comunidade pokerth.net também organiza competições regulares com rankings próprios: o BBC, jogos cujos blinds sobem a cada poucos minutos (<a href=\"https://bbc.pokerth.net/registration\">calendário</a>, <a href=\"https://bbc.pokerth.net/results\">resultados</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">ranking</a>); a WeCup (WEC), torneios num ritmo mais tranquilo e equilibrado (<a href=\"https://wec.pokerth.net/results\">resultados</a>, <a href=\"https://wec.pokerth.net/results/ranking\">ranking</a>); e a Monthly Cup, disputada todo mês (<a href=\"https://monthlycup.pokerth.net/\">próxima copa e últimos vencedores</a>, <a href=\"https://monthlycup.pokerth.net/registration\">inscrição</a>). Datas e regras são anunciadas em cada site e no fórum do <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Para participar, é preciso uma conta pokerth.net gratuita."],
       ["Posso assistir a um jogo sem jogar?",
        "Sim. Os jogos em andamento que permitem espectadores podem ser assistidos ao vivo a partir do lobby: você vê a mesa e o chat, mas as cartas fechadas continuam ocultas e você não pode agir. Um link de convite para uma mesa que já começou a abre para assistir."],
       ["Há ajuda dentro do aplicativo?",
-       "Sim. A Ajuda do Ás: o Ás, o mascote do cliente web, explica cada tela conforme você avança, se você quiser. O menu dele reúne toda a ajuda com uma busca, e « O que é isto? »: toque em qualquer coisa na tela e ele diz o que ela faz."]
+       "Sim. A Ajuda do Ás: o Ás, o mascote do cliente web, explica cada tela conforme você avança, se você quiser. O menu dele reúne toda a ajuda com uma busca, e « O que é isto? »: toque em qualquer coisa na tela e ele diz o que ela faz."],
+      ["O PokerTH ainda está em desenvolvimento?",
+       "Sim. O PokerTH é desenvolvido como software livre desde 2006 e continua sendo mantido: o cliente para computador e o servidor estão no <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, este cliente web é atualizado continuamente (<a href=\"https://github.com/narmod/pokerth-web-client\">código-fonte e histórico de alterações</a>) e há partidas todos os dias na rede oficial pokerth.net."]
     ]
   },
   'pt-PT': {
     title: "Perguntas frequentes \u2014 Cliente web do PokerTH",
-    desc: "Perguntas frequentes sobre o cliente web do PokerTH: p\u00f3quer gratuito e sem publicidade, jogar Texas Hold\u2019em no navegador sem transferir nada, contas, telem\u00f3vel, modo offline, idiomas e privacidade.",
+    desc: "Perguntas frequentes sobre o cliente web do PokerTH: póquer grátis sem publicidade nem transferências, jogar sem conta, convites por ligação, torneios, telemóvel, modo offline, idiomas e privacidade.",
     h1: "Cliente web do PokerTH \u2014 Perguntas frequentes",
     qa: [
       ["O PokerTH é gratuito?",
@@ -2690,7 +2821,13 @@ var SEO_FAQ_I18N = {
       ["Posso jogar Texas Hold’em contra outras pessoas no navegador?",
        "Sim. Junte-se à rede oficial pokerth.net para defrontar jogadores de todo o mundo, ou envie uma ligação de convite para que os seus amigos cheguem diretamente à sua mesa — tudo dentro do navegador."],
       ["É preciso ter conta para jogar?",
-       "Não. O modo Local / treino não precisa de conta e funciona offline. Na rede oficial pokerth.net pode jogar partidas Normal como convidado; é necessária uma conta pokerth.net gratuita para os jogos de classificação, as mesas só para jogadores registados e o chat."],
+       "Não. O modo Local / treino não precisa de conta e funciona offline. Na rede oficial pokerth.net, inicie sessão como convidado: o servidor atribui-lhe uma alcunha de convidado e pode jogar partidas Normal de imediato. Numa LAN ou num servidor dedicado não há qualquer conta — basta escolher uma alcunha. Nenhum destes modos pede um endereço de e-mail. Só é necessária uma conta pokerth.net gratuita para os jogos de classificação, as mesas só para jogadores registados e o chat."],
+      ["Como jogar póquer online com amigos?",
+       "Crie uma mesa no lobby — no pokerth.net ou em qualquer LAN ou servidor dedicado — e prima « Convidar amigos » na sala de espera. O cliente web gera uma ligação de convite que pode enviar por qualquer aplicação de mensagens. Os seus amigos abrem-na no navegador, no iPhone, no Android ou num computador, sem transferir nada. Defina uma palavra-passe se a mesa tiver de ficar privada: a palavra-passe nunca faz parte da ligação."],
+      ["O que acontece quando um amigo abre a minha ligação de convite?",
+       "A ligação contém a mesa e o servidor. O seu amigo inicia sessão — como convidado ou com uma conta no pokerth.net, apenas com uma alcunha numa LAN ou num servidor dedicado — e o cliente web entra depois na mesa automaticamente, sem ser preciso procurá-la no lobby. Uma mesa protegida por palavra-passe pede a respetiva palavra-passe; um jogo que já começou abre-se para ver. As ligações de convite são uma funcionalidade do cliente web e funcionam em todos os servidores a que este se consegue ligar."],
+      ["Há um servidor de demonstração para experimentar o PokerTH sem registo?",
+       "Sim. No ecrã de início de sessão, escolha LAN / Servidor dedicado e selecione o servidor de demonstração público na lista de servidores: escreva uma alcunha qualquer e entra no respetivo lobby — sem registo, sem endereço de e-mail. Um ponto verde indica quais os servidores da lista que estão online e quantos jogadores têm."],
       ["Funciona no telemóvel?",
        "Sim. O cliente web é uma Progressive Web App: funciona em qualquer navegador moderno em computador, tablet ou telemóvel, e pode ser instalado como uma aplicação nativa — no iPhone e no iPad com Partilhar → Adicionar ao ecrã principal, nos restantes casos a partir do menu do navegador ou do botão de instalação. A Ajuda do Ás mostra os passos para o seu aparelho."],
       ["Posso jogar contra o computador?",
@@ -2706,18 +2843,22 @@ var SEO_FAQ_I18N = {
       ["Que dados recolhe o cliente web?",
        "O mínimo possível: as suas definições ficam no seu navegador e não há qualquer rastreio ou publicidade. Quando inicia sessão com uma conta pokerth.net, as suas opções e os troféus de treino são sincronizados com ela para o acompanharem nos seus outros aparelhos. A página de privacidade explica os detalhes."],
       ["Posso alojar o meu próprio servidor?",
-       "Sim. O servidor dedicado do PokerTH e este cliente web são ambos de código aberto, pelo que pode manter o seu próprio servidor de póquer privado, numa rede local ou na Internet."],
+       "Sim. O servidor dedicado do PokerTH e este cliente web são ambos de código aberto, pelo que pode manter o seu próprio servidor de póquer privado, numa rede local ou na Internet. Para que fique visível para todos, escolha LAN / Servidor dedicado e depois « Propor o meu servidor » no fundo da lista de servidores: assim que os administradores o aprovarem, passa a aparecer na lista. O servidor tem de estar acessível a partir da Internet."],
       ["Como funcionam os jogos de classificação e as temporadas?",
        "Os jogos de classificação no pokerth.net reúnem 10 jogadores e começam assim que a mesa enche: 10 000 fichas para cada um, um small blind de 50 que duplica a cada 11 mãos e 5 segundos para jogar. Os lugares 1 a 7 marcam 15, 9, 6, 4, 3, 2 e 1 pontos; a sua Pontuação é a sua média por jogo, ponderada pelo número de jogos que disputou, e a classificação recomeça a cada trimestre. É necessária uma conta pokerth.net gratuita."],
+      ["Há torneios e competições de póquer gratuitos?",
+       "Sim, durante todo o ano, e todos gratuitos. Cada jogo do PokerTH é um torneio, e a comunidade pokerth.net organiza ainda competições regulares com classificações próprias: o BBC, jogos cujos blinds sobem a cada poucos minutos (<a href=\"https://bbc.pokerth.net/registration\">calendário</a>, <a href=\"https://bbc.pokerth.net/results\">resultados</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">classificação</a>); a WeCup (WEC), torneios a um ritmo mais calmo e equilibrado (<a href=\"https://wec.pokerth.net/results\">resultados</a>, <a href=\"https://wec.pokerth.net/results/ranking\">classificação</a>); e a Monthly Cup, disputada todos os meses (<a href=\"https://monthlycup.pokerth.net/\">próxima taça e últimos vencedores</a>, <a href=\"https://monthlycup.pokerth.net/registration\">inscrição</a>). As datas e as regras são anunciadas em cada site e no fórum do <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Para participar é necessária uma conta pokerth.net gratuita."],
       ["Posso ver um jogo sem jogar?",
        "Sim. Os jogos a decorrer que permitem espetadores podem ser vistos ao vivo a partir do lobby: vê a mesa e o chat, mas as cartas fechadas continuam ocultas e não pode agir. Uma ligação de convite para uma mesa que já começou abre-a para ver."],
       ["Há ajuda dentro da aplicação?",
-       "Sim. A Ajuda do Ás: o Ás, a mascote do cliente web, explica cada ecrã à medida que avança, se quiser. O menu dele reúne toda a ajuda com uma pesquisa, e « O que é isto? »: toque em qualquer coisa no ecrã e ele diz para que serve."]
+       "Sim. A Ajuda do Ás: o Ás, a mascote do cliente web, explica cada ecrã à medida que avança, se quiser. O menu dele reúne toda a ajuda com uma pesquisa, e « O que é isto? »: toque em qualquer coisa no ecrã e ele diz para que serve."],
+      ["O PokerTH continua a ser desenvolvido?",
+       "Sim. O PokerTH é desenvolvido como software livre desde 2006 e continua a ser mantido: o cliente para computador e o servidor estão no <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, este cliente web é atualizado continuamente (<a href=\"https://github.com/narmod/pokerth-web-client\">código-fonte e registo de alterações</a>), e joga-se todos os dias na rede oficial pokerth.net."]
     ]
   },
   nl: {
     title: "Veelgestelde vragen \u2014 PokerTH webclient",
-    desc: "Veelgestelde vragen over de PokerTH webclient: gratis poker zonder reclame, Texas Hold\u2019em spelen in je browser zonder iets te downloaden, accounts, mobiel, offlinemodus, talen en privacy.",
+    desc: "Veelgestelde vragen over de PokerTH webclient: gratis poker zonder reclame of download, spelen als gast of zonder account, uitnodigen via een link, toernooien, mobiel, offlinemodus, talen en privacy.",
     h1: "PokerTH webclient \u2014 Veelgestelde vragen",
     qa: [
       ["Is PokerTH gratis?",
@@ -2729,7 +2870,13 @@ var SEO_FAQ_I18N = {
       ["Kan ik in mijn browser Texas Hold’em tegen andere mensen spelen?",
        "Ja. Sluit je aan bij het officiële netwerk pokerth.net om het tegen spelers wereldwijd op te nemen, of stuur een uitnodigingslink zodat vrienden meteen aan jouw tafel belanden — allemaal in de browser."],
       ["Heb ik een account nodig om te spelen?",
-       "Nee. De modus Lokaal / oefenen heeft geen account nodig en werkt offline. Op het officiële netwerk pokerth.net kun je als gast Normale spellen spelen; een gratis pokerth.net-account is nodig voor Rankingspellen, tafels alleen voor geregistreerde spelers en de chat."],
+       "Nee. De modus Lokaal / oefenen heeft geen account nodig en werkt offline. Op het officiële netwerk pokerth.net log je in als gast: de server geeft je een gastnaam en je kunt meteen spellen van het type Normaal spelen. Op een LAN of een dedicated server bestaat er helemaal geen account — je kiest alleen een bijnaam. Nergens wordt om een e-mailadres gevraagd. Een gratis pokerth.net-account is alleen nodig voor Rankingspellen, tafels alleen voor geregistreerde spelers en de chat."],
+      ["Hoe speel ik online poker met vrienden?",
+       "Maak een tafel aan in de lobby — op pokerth.net of op een LAN- of dedicated server naar keuze — en druk in de wachtruimte op „Vrienden uitnodigen”. De webclient maakt een uitnodigingslink die je via elke messenger kunt versturen. Je vrienden openen hem in hun browser, op iPhone, Android of een computer, zonder iets te downloaden. Stel een wachtwoord in als de tafel privé moet blijven: het wachtwoord zit nooit in de link."],
+      ["Wat gebeurt er als een vriend mijn uitnodigingslink opent?",
+       "De link bevat de tafel en de server. Je vriend logt in — als gast of met een account op pokerth.net, met alleen een bijnaam op een LAN- of dedicated server — en de webclient neemt daarna automatisch plaats aan de tafel, zonder dat die in de lobby gezocht hoeft te worden. Een tafel met wachtwoord vraagt om dat wachtwoord; een spel dat al is begonnen, opent om mee te kijken. Uitnodigingslinks zijn een functie van de webclient en werken op elke server waarmee hij verbinding kan maken."],
+      ["Is er een demoserver om PokerTH uit te proberen zonder je te registreren?",
+       "Ja. Kies op het inlogscherm LAN / Toegewijde server en selecteer de openbare demoserver in de serverlijst: typ een willekeurige bijnaam en je zit in de lobby — geen registratie, geen e-mailadres. Een groene stip laat zien welke servers in de lijst online zijn en hoeveel spelers erop zitten."],
       ["Werkt het op mobiel?",
        "Ja. De webclient is een Progressive Web App: hij werkt in elke moderne browser op computer, tablet of telefoon en is te installeren als een native app — op iPhone en iPad met Deel → Zet op beginscherm, elders via het browsermenu of de installatieknop. Hulp van de Aas toont de stappen voor jouw apparaat."],
       ["Kan ik tegen de computer spelen?",
@@ -2745,18 +2892,22 @@ var SEO_FAQ_I18N = {
       ["Welke gegevens verzamelt de webclient?",
        "Zo weinig mogelijk: je instellingen blijven in je browser, en er wordt niet gevolgd of geadverteerd. Als je inlogt met een pokerth.net-account, worden je opties en oefentrofeeën ermee gesynchroniseerd, zodat ze met je meekomen naar je andere apparaten. De privacypagina legt het in detail uit."],
       ["Kan ik zelf een server draaien?",
-       "Ja. Zowel de speciale PokerTH-server als deze webclient zijn opensource, dus je kunt je eigen privé-pokerserver draaien, op een lokaal netwerk of op internet."],
+       "Ja. Zowel de speciale PokerTH-server als deze webclient zijn opensource, dus je kunt je eigen privé-pokerserver draaien, op een lokaal netwerk of op internet. Wil je dat iedereen hem ziet, kies dan LAN / Toegewijde server en daarna „Mijn server voorstellen” onderaan de serverlijst: zodra de beheerders hem goedkeuren, verschijnt hij in de lijst. De server moet vanaf internet bereikbaar zijn."],
       ["Hoe werken Rankingspellen en seizoenen?",
        "Rankingspellen op pokerth.net hebben 10 spelers en beginnen zodra de tafel vol is: elk 10.000 fiches, een small blind van 50 die om de 11 handen verdubbelt, en 5 seconden om te handelen. De plaatsen 1 tot en met 7 scoren 15, 9, 6, 4, 3, 2 en 1 punt; je score is je gemiddelde per spel, gewogen naar het aantal gespeelde spellen, en het klassement begint elk kwartaal opnieuw. Een gratis pokerth.net-account is nodig."],
+      ["Zijn er gratis pokertoernooien en competities?",
+       "Ja, het hele jaar door, en allemaal gratis. Elk PokerTH-spel is een toernooi, en de pokerth.net-community organiseert ook vaste competities met eigen ranglijsten: de BBC, spellen waarbij de blinds om de paar minuten stijgen (<a href=\"https://bbc.pokerth.net/registration\">kalender</a>, <a href=\"https://bbc.pokerth.net/results\">uitslagen</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">ranglijst</a>); de WeCup (WEC), toernooien in een rustiger, evenwichtig tempo (<a href=\"https://wec.pokerth.net/results\">uitslagen</a>, <a href=\"https://wec.pokerth.net/results/ranking\">ranglijst</a>); en de Monthly Cup, die elke maand wordt gehouden (<a href=\"https://monthlycup.pokerth.net/\">volgende cup en laatste winnaars</a>, <a href=\"https://monthlycup.pokerth.net/registration\">inschrijving</a>). Data en regels worden aangekondigd op elke site en op het forum van <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Om mee te doen heb je een gratis pokerth.net-account nodig."],
       ["Kan ik een spel bekijken zonder mee te spelen?",
        "Ja. Lopende spellen die toeschouwers toestaan, kun je live volgen vanuit de lobby: je ziet de tafel en de chat, maar de hole cards blijven verborgen en je kunt niet handelen. Een uitnodigingslink naar een tafel die al is begonnen, opent die om mee te kijken."],
       ["Is er hulp in de app?",
-       "Ja. Hulp van de Aas: de Aas, de mascotte van de webclient, legt elk scherm uit terwijl je speelt, als je dat wilt. Zijn menu bevat alle hulp met zoekfunctie, en „Wat is dit?”: tik op iets op het scherm en hij zegt wat het doet."]
+       "Ja. Hulp van de Aas: de Aas, de mascotte van de webclient, legt elk scherm uit terwijl je speelt, als je dat wilt. Zijn menu bevat alle hulp met zoekfunctie, en „Wat is dit?”: tik op iets op het scherm en hij zegt wat het doet."],
+      ["Wordt PokerTH nog actief ontwikkeld?",
+       "Ja. PokerTH wordt sinds 2006 als vrije software ontwikkeld en nog steeds onderhouden: de desktopclient en de server staan op <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, deze webclient wordt voortdurend bijgewerkt (<a href=\"https://github.com/narmod/pokerth-web-client\">broncode en wijzigingslog</a>), en er wordt elke dag gespeeld op het officiële netwerk pokerth.net."]
     ]
   },
   pl: {
     title: "FAQ \u2014 Klient webowy PokerTH",
-    desc: "Najcz\u0119\u015bciej zadawane pytania o klienta webowego PokerTH: darmowy poker bez reklam, gra w Texas Hold\u2019em w przegl\u0105darce bez pobierania, konta, telefon, tryb offline, j\u0119zyki i prywatno\u015b\u0107.",
+    desc: "Najczęściej zadawane pytania o klienta webowego PokerTH: darmowy poker bez reklam i pobierania, gra jako gość lub bez konta, zaproszenia dla znajomych, turnieje, telefon, tryb offline, języki i prywatność.",
     h1: "Klient webowy PokerTH \u2014 Najcz\u0119stsze pytania",
     qa: [
       ["Czy PokerTH jest darmowy?",
@@ -2768,7 +2919,13 @@ var SEO_FAQ_I18N = {
       ["Czy mogę grać w Texas Hold’em z innymi ludźmi w przeglądarce?",
        "Tak. Dołącz do oficjalnej sieci pokerth.net, aby grać z graczami z całego świata, albo wyślij link z zaproszeniem, dzięki któremu znajomi trafią prosto do twojego stołu — wszystko w przeglądarce."],
       ["Czy potrzebuję konta, żeby grać?",
-       "Nie. Tryb Lokalna / trening nie wymaga konta i działa offline. W oficjalnej sieci pokerth.net możesz grać jako gość w grach Normalna; bezpłatne konto pokerth.net jest potrzebne do gier rankingowych, stołów tylko dla zarejestrowanych graczy i czatu."],
+       "Nie. Tryb Lokalna / trening nie wymaga konta i działa offline. W oficjalnej sieci pokerth.net zaloguj się jako gość: serwer nada ci nick gościa i od razu możesz grać w gry Normalna. W sieci LAN lub na serwerze dedykowanym konta w ogóle nie ma — wybierasz tylko nick. Żadna z tych opcji nie wymaga adresu e-mail. Bezpłatne konto pokerth.net jest potrzebne tylko do gier rankingowych, stołów tylko dla zarejestrowanych graczy i czatu."],
+      ["Jak grać w pokera online ze znajomymi?",
+       "Utwórz stół w lobby — na pokerth.net albo na dowolnym serwerze LAN lub dedykowanym — i w poczekalni naciśnij „Zaproś znajomych”. Klient webowy utworzy link z zaproszeniem, który możesz wysłać dowolnym komunikatorem. Znajomi otwierają go w przeglądarce, na iPhonie, Androidzie lub komputerze, bez pobierania czegokolwiek. Jeśli stół ma pozostać prywatny, ustaw hasło: hasło nigdy nie jest częścią linku."],
+      ["Co się dzieje, gdy znajomy otworzy mój link z zaproszeniem?",
+       "Link zawiera stół i serwer. Twój znajomy loguje się — jako gość lub kontem na pokerth.net, a w sieci LAN lub na serwerze dedykowanym samym nickiem — po czym klient webowy automatycznie dołącza do stołu, bez szukania go w lobby. Stół chroniony hasłem poprosi o hasło; gra, która już się rozpoczęła, otworzy się do oglądania. Linki z zaproszeniem to funkcja klienta webowego i działają na każdym serwerze, z którym potrafi się on połączyć."],
+      ["Czy jest serwer demo, na którym można wypróbować PokerTH bez rejestracji?",
+       "Tak. Na ekranie logowania wybierz LAN / Serwer dedykowany i na liście serwerów wskaż publiczny serwer demo: wpisz dowolny nick i jesteś w jego lobby — bez rejestracji, bez adresu e-mail. Zielona kropka pokazuje, które serwery z listy są online i ilu jest na nich graczy."],
       ["Czy działa na telefonie?",
        "Tak. Klient webowy to Progressive Web App: działa w każdej nowoczesnej przeglądarce na komputerze, tablecie i telefonie, a można go zainstalować jak aplikację natywną — na iPhonie i iPadzie przez Udostępnij → Dodaj do ekranu początkowego, w innych przypadkach z menu przeglądarki lub przyciskiem instalacji. Pomoc Asa pokazuje kroki dla twojego urządzenia."],
       ["Czy mogę grać przeciwko komputerowi?",
@@ -2784,18 +2941,22 @@ var SEO_FAQ_I18N = {
       ["Jakie dane zbiera klient webowy?",
        "Jak najmniej: ustawienia pozostają w twojej przeglądarce, nie ma śledzenia ani reklam. Gdy logujesz się kontem pokerth.net, twoje opcje i trofea treningowe są z nim synchronizowane, żeby podążały za tobą na inne urządzenia. Szczegóły znajdziesz na stronie prywatności."],
       ["Czy mogę postawić własny serwer?",
-       "Tak. Dedykowany serwer PokerTH i ten klient webowy są otwartym oprogramowaniem, więc możesz prowadzić własny prywatny serwer pokerowy — w sieci lokalnej albo w internecie."],
+       "Tak. Dedykowany serwer PokerTH i ten klient webowy są otwartym oprogramowaniem, więc możesz prowadzić własny prywatny serwer pokerowy w sieci lokalnej albo w internecie. Aby był widoczny dla wszystkich, wybierz LAN / Serwer dedykowany, a następnie „Zaproponuj mój serwer” na dole listy serwerów: gdy administratorzy go zatwierdzą, pojawi się na liście. Serwer musi być dostępny z internetu."],
       ["Jak działają gry rankingowe i sezony?",
        "Gry rankingowe w pokerth.net sadzają przy stole 10 graczy i startują, gdy tylko stół się zapełni: po 10 000 żetonów, mała ciemna 50, która podwaja się co 11 rozdań, i 5 sekund na ruch. Miejsca od 1 do 7 dostają 15, 9, 6, 4, 3, 2 i 1 punkt; twój Wynik to twoja średnia z gry, ważona liczbą rozegranych przez ciebie gier, a ranking zaczyna się od nowa co kwartał. Potrzebne jest bezpłatne konto pokerth.net."],
+      ["Czy są darmowe turnieje i zawody pokerowe?",
+       "Tak, przez cały rok i wszystkie za darmo. Każda gra w PokerTH jest turniejem, a społeczność pokerth.net organizuje też regularne zawody z własnymi rankingami: BBC, gry, w których ciemne rosną co kilka minut (<a href=\"https://bbc.pokerth.net/registration\">kalendarz</a>, <a href=\"https://bbc.pokerth.net/results\">wyniki</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">ranking</a>); WeCup (WEC), turnieje w spokojniejszym, wyważonym tempie (<a href=\"https://wec.pokerth.net/results\">wyniki</a>, <a href=\"https://wec.pokerth.net/results/ranking\">ranking</a>); oraz Monthly Cup, rozgrywany co miesiąc (<a href=\"https://monthlycup.pokerth.net/\">najbliższy puchar i ostatni zwycięzcy</a>, <a href=\"https://monthlycup.pokerth.net/registration\">zapisy</a>). Terminy i zasady są ogłaszane na każdej z tych stron oraz na forum <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Udział wymaga bezpłatnego konta pokerth.net."],
       ["Czy mogę oglądać grę, nie grając?",
        "Tak. Trwające gry, które dopuszczają obserwatorów, można oglądać na żywo z lobby: widzisz stół i czat, ale karty własne pozostają ukryte i nie możesz wykonywać akcji. Link z zaproszeniem do stołu, który już wystartował, otwiera go do oglądania."],
       ["Czy w aplikacji jest pomoc?",
-       "Tak. Pomoc Asa: As, maskotka klienta webowego, jeśli chcesz, objaśnia każdy ekran w trakcie gry. W jego menu jest cała pomoc z wyszukiwarką oraz « Co to jest? »: dotknij czegokolwiek na ekranie, a powie, do czego to służy."]
+       "Tak. Pomoc Asa: As, maskotka klienta webowego, jeśli chcesz, objaśnia każdy ekran w trakcie gry. W jego menu jest cała pomoc z wyszukiwarką oraz « Co to jest? »: dotknij czegokolwiek na ekranie, a powie, do czego to służy."],
+      ["Czy PokerTH jest wciąż rozwijany?",
+       "Tak. PokerTH jest rozwijany jako wolne oprogramowanie od 2006 roku i nadal jest utrzymywany: klient desktopowy i serwer są na <a href=\"https://github.com/pokerth/pokerth\">GitHubie</a>, ten klient webowy jest stale aktualizowany (<a href=\"https://github.com/narmod/pokerth-web-client\">kod źródłowy i lista zmian</a>), a w oficjalnej sieci pokerth.net gra się codziennie."]
     ]
   },
   ru: {
     title: "\u0427\u0430\u0441\u0442\u044b\u0435 \u0432\u043e\u043f\u0440\u043e\u0441\u044b \u2014 \u0432\u0435\u0431-\u043a\u043b\u0438\u0435\u043d\u0442 PokerTH",
-    desc: "\u0427\u0430\u0441\u0442\u044b\u0435 \u0432\u043e\u043f\u0440\u043e\u0441\u044b \u043e \u0432\u0435\u0431-\u043a\u043b\u0438\u0435\u043d\u0442\u0435 PokerTH: \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u044b\u0439 \u043f\u043e\u043a\u0435\u0440 \u0431\u0435\u0437 \u0440\u0435\u043a\u043b\u0430\u043c\u044b, \u0438\u0433\u0440\u0430 \u0432 Texas Hold\u2019em \u0432 \u0431\u0440\u0430\u0443\u0437\u0435\u0440\u0435 \u0431\u0435\u0437 \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u044f, \u0443\u0447\u0451\u0442\u043d\u044b\u0435 \u0437\u0430\u043f\u0438\u0441\u0438, \u0442\u0435\u043b\u0435\u0444\u043e\u043d, \u043e\u0444\u043b\u0430\u0439\u043d-\u0440\u0435\u0436\u0438\u043c, \u044f\u0437\u044b\u043a\u0438 \u0438 \u043f\u0440\u0438\u0432\u0430\u0442\u043d\u043e\u0441\u0442\u044c.",
+    desc: "Частые вопросы о веб-клиенте PokerTH: бесплатный покер без рекламы и скачивания, игра гостем или без аккаунта, приглашение друзей по ссылке, турниры, телефон, офлайн-режим, языки и приватность.",
     h1: "\u0412\u0435\u0431-\u043a\u043b\u0438\u0435\u043d\u0442 PokerTH \u2014 \u0447\u0430\u0441\u0442\u044b\u0435 \u0432\u043e\u043f\u0440\u043e\u0441\u044b",
     qa: [
       ["PokerTH бесплатен?",
@@ -2807,7 +2968,13 @@ var SEO_FAQ_I18N = {
       ["Можно ли играть в Texas Hold’em с другими людьми в браузере?",
        "Да. Подключайтесь к официальной сети pokerth.net, чтобы играть с людьми со всего мира, или отправьте ссылку-приглашение, чтобы друзья сразу попали за ваш стол — всё внутри браузера."],
       ["Нужна ли учётная запись?",
-       "Нет. Режим «Локальная / тренировка» не требует аккаунта и работает офлайн. В официальной сети pokerth.net можно играть гостем в игры типа «Обычная»; бесплатный аккаунт pokerth.net нужен для рейтинговых игр, столов только для зарегистрированных игроков и чата."],
+       "Нет. Режим «Локальная / тренировка» не требует аккаунта и работает офлайн. В официальной сети pokerth.net войдите как гость: сервер выдаст вам гостевой ник, и вы сразу сможете играть в игры типа «Обычная». В сети LAN или на выделенном сервере аккаунтов нет вовсе — вы просто выбираете ник. Ни один из этих вариантов не требует адреса электронной почты. Бесплатный аккаунт pokerth.net нужен только для рейтинговых игр, столов только для зарегистрированных игроков и чата."],
+      ["Как играть в покер онлайн с друзьями?",
+       "Создайте стол в лобби — на pokerth.net или на любом LAN- или выделенном сервере — и нажмите «Пригласить друзей» в зале ожидания. Веб-клиент создаст ссылку-приглашение, которую можно отправить через любой мессенджер. Друзья открывают её в браузере — на iPhone, Android или компьютере, ничего не скачивая. Если стол должен остаться закрытым, задайте пароль: пароль никогда не включается в ссылку."],
+      ["Что происходит, когда друг открывает мою ссылку-приглашение?",
+       "Ссылка содержит стол и сервер. Ваш друг входит — гостем или с аккаунтом на pokerth.net, просто с ником на LAN- или выделенном сервере, — и веб-клиент сам присоединяется к столу, искать его в лобби не нужно. Стол, защищённый паролем, запросит пароль; уже начавшаяся игра откроется для просмотра. Ссылки-приглашения — функция веб-клиента, и они работают на любом сервере, к которому он может подключиться."],
+      ["Есть ли демо-сервер, чтобы попробовать PokerTH без регистрации?",
+       "Да. На экране входа выберите «LAN / Выделенный сервер» и укажите публичный демо-сервер в списке серверов: введите любой ник — и вы в его лобби, без регистрации и без адреса электронной почты. Зелёная точка показывает, какие серверы из списка сейчас онлайн и сколько на них игроков."],
       ["Работает ли на телефоне?",
        "Да. Веб-клиент — это Progressive Web App: он работает в любом современном браузере на компьютере, планшете или телефоне и устанавливается как обычное приложение — на iPhone и iPad через «Поделиться» → «На экран «Домой»», в остальных случаях из меню браузера или кнопкой установки. «Помощь туза» показывает шаги для вашего устройства."],
       ["Можно ли играть против компьютера?",
@@ -2823,18 +2990,22 @@ var SEO_FAQ_I18N = {
       ["Какие данные собирает веб-клиент?",
        "Как можно меньше: настройки остаются в вашем браузере, отслеживания и рекламы нет. Когда вы входите с аккаунтом pokerth.net, ваши параметры и тренировочные трофеи синхронизируются с ним, чтобы следовать за вами на других устройствах. Подробности — на странице о конфиденциальности."],
       ["Могу ли я запустить свой сервер?",
-       "Да. Выделенный сервер PokerTH и этот веб-клиент — открытое программное обеспечение, так что вы можете держать собственный частный покерный сервер — в локальной сети или в интернете."],
+       "Да. Выделенный сервер PokerTH и этот веб-клиент — открытое программное обеспечение, так что вы можете держать собственный частный покерный сервер — в локальной сети или в интернете. Чтобы он появился в списке для всех, выберите «LAN / Выделенный сервер», затем «Предложить свой сервер» внизу списка серверов: после одобрения администраторами он появится в списке. Сервер должен быть доступен из интернета."],
       ["Как работают рейтинговые игры и сезоны?",
        "Рейтинговые игры на pokerth.net собирают за столом 10 игроков и начинаются, как только стол заполнен: у каждого 10 000 фишек, малый блайнд 50, который удваивается каждые 11 раздач, и 5 секунд на ход. Места с 1-го по 7-е получают соответственно 15, 9, 6, 4, 3, 2 и 1 очко; ваш Счёт — это ваше среднее за игру, взвешенное по числу сыгранных вами игр, а рейтинг начинается заново каждый квартал. Нужен бесплатный аккаунт pokerth.net."],
+      ["Есть ли бесплатные покерные турниры и соревнования?",
+       "Да, круглый год и все бесплатно. Каждая игра PokerTH — это турнир, а сообщество pokerth.net ещё и регулярно проводит соревнования со своими рейтингами: BBC — игры, в которых блайнды растут каждые несколько минут (<a href=\"https://bbc.pokerth.net/registration\">календарь</a>, <a href=\"https://bbc.pokerth.net/results\">результаты</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">рейтинг</a>); WeCup (WEC) — турниры в более спокойном, сбалансированном темпе (<a href=\"https://wec.pokerth.net/results\">результаты</a>, <a href=\"https://wec.pokerth.net/results/ranking\">рейтинг</a>); и Monthly Cup, который проходит каждый месяц (<a href=\"https://monthlycup.pokerth.net/\">ближайший кубок и последние победители</a>, <a href=\"https://monthlycup.pokerth.net/registration\">регистрация</a>). Даты и правила объявляются на сайте каждого соревнования и на форуме <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Для участия нужен бесплатный аккаунт pokerth.net."],
       ["Можно ли смотреть игру, не играя?",
        "Да. Идущие игры, допускающие зрителей, можно смотреть в прямом эфире из лобби: вы видите стол и чат, но закрытые карты остаются скрытыми, и действовать вы не можете. Ссылка-приглашение на уже начавшийся стол открывает его для просмотра."],
       ["Есть ли справка в приложении?",
-       "Да. «Помощь туза»: Туз, талисман веб-клиента, по желанию объясняет каждый экран по ходу дела. В его меню — вся справка с поиском и пункт «Что это?»: коснитесь чего угодно на экране, и он скажет, для чего это."]
+       "Да. «Помощь туза»: Туз, талисман веб-клиента, по желанию объясняет каждый экран по ходу дела. В его меню — вся справка с поиском и пункт «Что это?»: коснитесь чего угодно на экране, и он скажет, для чего это."],
+      ["PokerTH всё ещё активно развивается?",
+       "Да. PokerTH разрабатывается как свободное программное обеспечение с 2006 года и по-прежнему поддерживается: настольный клиент и сервер находятся на <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, этот веб-клиент постоянно обновляется (<a href=\"https://github.com/narmod/pokerth-web-client\">исходный код и список изменений</a>), а в официальной сети pokerth.net игры идут каждый день."]
     ]
   },
   uk: {
     title: "\u0427\u0430\u0441\u0442\u0456 \u0437\u0430\u043f\u0438\u0442\u0430\u043d\u043d\u044f \u2014 \u0432\u0435\u0431\u043a\u043b\u0456\u0454\u043d\u0442 PokerTH",
-    desc: "\u0427\u0430\u0441\u0442\u0456 \u0437\u0430\u043f\u0438\u0442\u0430\u043d\u043d\u044f \u043f\u0440\u043e \u0432\u0435\u0431\u043a\u043b\u0456\u0454\u043d\u0442 PokerTH: \u0431\u0435\u0437\u043a\u043e\u0448\u0442\u043e\u0432\u043d\u0438\u0439 \u043f\u043e\u043a\u0435\u0440 \u0431\u0435\u0437 \u0440\u0435\u043a\u043b\u0430\u043c\u0438, \u0433\u0440\u0430 \u0432 Texas Hold\u2019em \u0443 \u0431\u0440\u0430\u0443\u0437\u0435\u0440\u0456 \u0431\u0435\u0437 \u0437\u0430\u0432\u0430\u043d\u0442\u0430\u0436\u0435\u043d\u043d\u044f, \u043e\u0431\u043b\u0456\u043a\u043e\u0432\u0456 \u0437\u0430\u043f\u0438\u0441\u0438, \u0442\u0435\u043b\u0435\u0444\u043e\u043d, \u043e\u0444\u043b\u0430\u0439\u043d-\u0440\u0435\u0436\u0438\u043c, \u043c\u043e\u0432\u0438 \u0442\u0430 \u043f\u0440\u0438\u0432\u0430\u0442\u043d\u0456\u0441\u0442\u044c.",
+    desc: "Часті запитання про вебклієнт PokerTH: безкоштовний покер без реклами й завантаження, гра гостем або без акаунта, запрошення друзів за посиланням, турніри, телефон, офлайн-режим, мови та приватність.",
     h1: "\u0412\u0435\u0431\u043a\u043b\u0456\u0454\u043d\u0442 PokerTH \u2014 \u0447\u0430\u0441\u0442\u0456 \u0437\u0430\u043f\u0438\u0442\u0430\u043d\u043d\u044f",
     qa: [
       ["Чи є PokerTH безкоштовним?",
@@ -2846,7 +3017,13 @@ var SEO_FAQ_I18N = {
       ["Чи можна грати в Texas Hold’em з іншими людьми в браузері?",
        "Так. Долучайтеся до офіційної мережі pokerth.net, щоб грати з гравцями з усього світу, або надішліть посилання-запрошення, щоб друзі потрапили прямо за ваш стіл — усе в браузері."],
       ["Чи потрібен обліковий запис?",
-       "Ні. Режим «Локальна / тренування» не потребує облікового запису й працює офлайн. У офіційній мережі pokerth.net можна грати «Звичайні» ігри гостем; безкоштовний акаунт pokerth.net потрібен для рейтингових ігор, столів лише для зареєстрованих і чату."],
+       "Ні. Режим «Локальна / тренування» не потребує облікового запису й працює офлайн. В офіційній мережі pokerth.net увійдіть як гість: сервер дасть вам гостьовий нік, і ви одразу зможете грати «Звичайні» ігри. У мережі LAN чи на виділеному сервері облікових записів немає взагалі — ви лише обираєте нік. Жоден із цих варіантів не вимагає адреси електронної пошти. Безкоштовний акаунт pokerth.net потрібен лише для рейтингових ігор, столів лише для зареєстрованих і чату."],
+      ["Як грати в покер онлайн із друзями?",
+       "Створіть стіл у лобі — на pokerth.net або на будь-якому LAN- чи виділеному сервері — і натисніть «Запросити друзів» у залі очікування. Вебклієнт створить посилання-запрошення, яке можна надіслати будь-яким месенджером. Друзі відкривають його у своєму браузері — на iPhone, Android чи комп’ютері, нічого не завантажуючи. Якщо стіл має лишатися приватним, задайте пароль: пароль ніколи не входить до посилання."],
+      ["Що відбувається, коли друг відкриває моє посилання-запрошення?",
+       "Посилання містить стіл і сервер. Ваш друг входить — гостем або з акаунтом на pokerth.net, лише з ніком на LAN- чи виділеному сервері, — і вебклієнт автоматично приєднується до столу, шукати його в лобі не потрібно. Стіл, захищений паролем, попросить пароль; гра, яка вже почалася, відкриється для перегляду. Посилання-запрошення — це функція вебклієнта, і вони працюють на кожному сервері, до якого він може під’єднатися."],
+      ["Чи є демосервер, щоб спробувати PokerTH без реєстрації?",
+       "Так. На екрані входу оберіть «LAN / Виділений сервер» і виберіть публічний демосервер у списку серверів: введіть будь-який нік — і ви в його лобі, без реєстрації та без адреси електронної пошти. Зелена крапка показує, які сервери зі списку зараз онлайн і скільки на них гравців."],
       ["Чи працює на телефоні?",
        "Так. Вебклієнт — це Progressive Web App: він працює в будь-якому сучасному браузері на комп’ютері, планшеті чи телефоні й встановлюється як звичайний застосунок — на iPhone та iPad через Поділитися → Додати на екран «Початок», в інших випадках із меню браузера чи кнопкою встановлення. Допомога туза покаже кроки для вашого пристрою."],
       ["Чи можна грати проти комп’ютера?",
@@ -2862,18 +3039,22 @@ var SEO_FAQ_I18N = {
       ["Які дані збирає вебклієнт?",
        "Якнайменше: налаштування залишаються у вашому браузері, відстеження та реклами немає. Коли ви входите з акаунтом pokerth.net, ваші параметри й тренувальні трофеї синхронізуються з ним, тож вони йдуть за вами на інші пристрої. Подробиці — на сторінці приватності."],
       ["Чи можу я розгорнути власний сервер?",
-       "Так. Виділений сервер PokerTH і цей вебклієнт мають відкритий код, тож ви можете тримати власний приватний покерний сервер — у локальній мережі або в інтернеті."],
+       "Так. Виділений сервер PokerTH і цей вебклієнт мають відкритий код, тож ви можете тримати власний приватний покерний сервер — у локальній мережі або в інтернеті. Щоб він з’явився у списку для всіх, оберіть «LAN / Виділений сервер», потім «Запропонувати свій сервер» унизу списку серверів: щойно адміністратори його схвалять, він з’явиться у списку. Сервер має бути доступний з інтернету."],
       ["Як працюють рейтингові ігри та сезони?",
        "Рейтингові ігри на pokerth.net розраховані на 10 гравців і стартують, щойно стіл заповнено: по 10 000 фішок кожному, малий блайнд 50, що подвоюється кожні 11 роздач, і 5 секунд на хід. Місця з 1-го по 7-ме приносять 15, 9, 6, 4, 3, 2 та 1 очко; ваш Рахунок — це середнє за гру, зважене на кількість зіграних вами ігор, а рейтинг починається знову щокварталу. Потрібен безкоштовний акаунт pokerth.net."],
+      ["Чи є безкоштовні покерні турніри та змагання?",
+       "Так, цілий рік, і всі безкоштовні. Кожна гра PokerTH — це турнір, а спільнота pokerth.net ще й регулярно проводить змагання з власними рейтингами: BBC — ігри, у яких блайнди зростають кожні кілька хвилин (<a href=\"https://bbc.pokerth.net/registration\">календар</a>, <a href=\"https://bbc.pokerth.net/results\">результати</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">рейтинг</a>); WeCup (WEC) — турніри в спокійнішому, збалансованому темпі (<a href=\"https://wec.pokerth.net/results\">результати</a>, <a href=\"https://wec.pokerth.net/results/ranking\">рейтинг</a>); і Monthly Cup, що проходить щомісяця (<a href=\"https://monthlycup.pokerth.net/\">найближчий кубок і останні переможці</a>, <a href=\"https://monthlycup.pokerth.net/registration\">реєстрація</a>). Дати й правила оголошують на сайті кожного змагання та на форумі <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Для участі потрібен безкоштовний акаунт pokerth.net."],
       ["Чи можна спостерігати за грою, не граючи?",
        "Так. За іграми, що тривають і дозволяють глядачів, можна стежити наживо з лобі: ви бачите стіл і чат, але кишенькові карти лишаються прихованими, і діяти ви не можете. Посилання-запрошення на стіл, який уже почався, відкриває його для спостереження."],
       ["Чи є довідка в застосунку?",
-       "Так. Допомога туза: Туз, талісман вебклієнта, пояснює кожен екран по ходу гри, якщо ви цього хочете. У його меню — уся довідка з пошуком і «Що це?»: торкніться будь-чого на екрані, і він скаже, що це робить."]
+       "Так. Допомога туза: Туз, талісман вебклієнта, пояснює кожен екран по ходу гри, якщо ви цього хочете. У його меню — уся довідка з пошуком і «Що це?»: торкніться будь-чого на екрані, і він скаже, що це робить."],
+      ["Чи PokerTH досі активно розвивається?",
+       "Так. PokerTH розробляється як вільне програмне забезпечення з 2006 року й досі підтримується: настільний клієнт і сервер — на <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, цей вебклієнт постійно оновлюється (<a href=\"https://github.com/narmod/pokerth-web-client\">вихідний код і журнал змін</a>), а в офіційній мережі pokerth.net грають щодня."]
     ]
   },
   cs: {
     title: "\u010cast\u00e9 dotazy \u2014 webov\u00fd klient PokerTH",
-    desc: "\u010cast\u00e9 dotazy k webov\u00e9mu klientovi PokerTH: poker zdarma bez reklam, hran\u00ed Texas Hold\u2019em v prohl\u00ed\u017ee\u010di bez stahov\u00e1n\u00ed, \u00fa\u010dty, mobil, re\u017eim offline, jazyky a soukrom\u00ed.",
+    desc: "Časté dotazy k webovému klientovi PokerTH: poker zdarma bez reklam a bez stahování, hraní jako host i bez účtu, pozvánky pro přátele, turnaje, mobil, režim offline, jazyky a soukromí.",
     h1: "Webov\u00fd klient PokerTH \u2014 \u010dast\u00e9 dotazy",
     qa: [
       ["Je PokerTH zdarma?",
@@ -2885,7 +3066,13 @@ var SEO_FAQ_I18N = {
       ["Mohu hrát Texas Hold’em proti jiným lidem v prohlížeči?",
        "Ano. Připojte se k oficiální síti pokerth.net a hrajte proti hráčům z celého světa, nebo pošlete pozvánku, která kamarády dovede rovnou k vašemu stolu — vše v prohlížeči."],
       ["Potřebuji ke hraní účet?",
-       "Ne. Režim Místní / trénink žádný účet nepotřebuje a funguje offline. V oficiální síti pokerth.net můžete hrát normální hry jako host; bezplatný účet pokerth.net je potřeba pro hodnocené hry, stoly jen pro registrované hráče a chat."],
+       "Ne. Režim Místní / trénink žádný účet nepotřebuje a funguje offline. V oficiální síti pokerth.net se přihlaste jako host: server vám přidělí přezdívku hosta a hry typu Normální můžete hrát hned. V síti LAN nebo na vyhrazeném serveru žádný účet není — zvolíte si jen přezdívku. Nic z toho nevyžaduje e-mailovou adresu. Bezplatný účet pokerth.net je potřeba jen pro hodnocené hry, stoly jen pro registrované hráče a chat."],
+      ["Jak hrát poker online s přáteli?",
+       "Vytvořte stůl v lobby — na pokerth.net nebo na jakémkoli LAN či vyhrazeném serveru — a v čekárně stiskněte „Pozvat přátele“. Webový klient vytvoří odkaz s pozvánkou, který můžete poslat libovolnou chatovací aplikací. Přátelé ho otevřou v prohlížeči na iPhonu, Androidu nebo počítači, aniž by cokoli stahovali. Má-li stůl zůstat soukromý, nastavte heslo: heslo nikdy není součástí odkazu."],
+      ["Co se stane, když přítel otevře můj odkaz s pozvánkou?",
+       "Odkaz nese stůl i server. Váš přítel se přihlásí — jako host nebo účtem na pokerth.net, v síti LAN či na vyhrazeném serveru jen přezdívkou — a webový klient se pak ke stolu připojí automaticky, bez hledání v lobby. Stůl chráněný heslem si heslo vyžádá; hra, která už začala, se otevře ke sledování. Odkazy s pozvánkou jsou funkcí webového klienta a fungují na každém serveru, ke kterému se umí připojit."],
+      ["Existuje demo server, na kterém lze PokerTH vyzkoušet bez registrace?",
+       "Ano. Na přihlašovací obrazovce zvolte LAN / Vyhrazený server a v seznamu serverů vyberte veřejný demo server: zadejte libovolnou přezdívku a jste v jeho lobby — bez registrace, bez e-mailové adresy. Zelená tečka ukazuje, které servery ze seznamu jsou online a kolik je na nich hráčů."],
       ["Funguje to na mobilu?",
        "Ano. Webový klient je Progressive Web App: běží v každém moderním prohlížeči na počítači, tabletu i telefonu a lze jej nainstalovat jako nativní aplikaci — na iPhonu a iPadu přes Sdílet → Přidat na plochu, jinde z nabídky prohlížeče nebo tlačítkem instalace. Nápověda od esa ukáže postup pro vaše zařízení."],
       ["Mohu hrát proti počítači?",
@@ -2901,18 +3088,22 @@ var SEO_FAQ_I18N = {
       ["Jaká data webový klient sbírá?",
        "Co nejméně: nastavení zůstává ve vašem prohlížeči a nepoužívá se žádné sledování ani reklama. Když se přihlásíte účtem pokerth.net, vaše volby a tréninkové trofeje se s ním synchronizují, aby vás následovaly na další zařízení. Podrobnosti najdete na stránce o soukromí."],
       ["Mohu si provozovat vlastní server?",
-       "Ano. Dedikovaný server PokerTH i tento webový klient jsou otevřený software, takže si můžete provozovat vlastní soukromý pokerový server — v místní síti nebo na internetu."],
+       "Ano. Dedikovaný server PokerTH i tento webový klient jsou otevřený software, takže si můžete provozovat vlastní soukromý pokerový server v místní síti nebo na internetu. Aby se zobrazoval všem, zvolte LAN / Vyhrazený server a poté „Navrhnout můj server“ dole v seznamu serverů: jakmile ho správci schválí, objeví se v seznamu. Server musí být dostupný z internetu."],
       ["Jak fungují hodnocené hry a sezóny?",
        "Hodnocené hry na pokerth.net usazují 10 hráčů a začínají, jakmile je stůl plný: každý dostane 10 000 žetonů, malý blind 50 se zdvojnásobuje každých 11 rozdání a na tah je 5 sekund. Místa 1 až 7 získávají 15, 9, 6, 4, 3, 2 a 1 bod; vaše skóre je průměr za hru vážený počtem odehraných her a žebříček začíná znovu každé čtvrtletí. Je potřeba bezplatný účet pokerth.net."],
+      ["Existují bezplatné pokerové turnaje a soutěže?",
+       "Ano, po celý rok a všechny zdarma. Každá hra v PokerTH je turnaj a komunita pokerth.net navíc pořádá pravidelné soutěže s vlastními žebříčky: BBC, hry, v nichž blindy rostou každých pár minut (<a href=\"https://bbc.pokerth.net/registration\">kalendář</a>, <a href=\"https://bbc.pokerth.net/results\">výsledky</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">žebříček</a>); WeCup (WEC), turnaje v klidnějším, vyváženém tempu (<a href=\"https://wec.pokerth.net/results\">výsledky</a>, <a href=\"https://wec.pokerth.net/results/ranking\">žebříček</a>); a Monthly Cup, který se koná každý měsíc (<a href=\"https://monthlycup.pokerth.net/\">příští pohár a poslední vítězové</a>, <a href=\"https://monthlycup.pokerth.net/registration\">registrace</a>). Termíny a pravidla se oznamují na jednotlivých webech a na fóru <a href=\"https://www.pokerth.net/\">pokerth.net</a>. K účasti je potřeba bezplatný účet pokerth.net."],
       ["Mohu sledovat hru, aniž bych hrál?",
        "Ano. Probíhající hry, které připouštějí diváky, lze sledovat živě z lobby: vidíte stůl a chat, ale vlastní karty zůstávají skryté a nemůžete jednat. Odkaz s pozvánkou ke stolu, který už začal, jej otevře ke sledování."],
       ["Je v aplikaci nápověda?",
-       "Ano. Nápověda od esa: Eso, maskot webového klienta, vám na přání vysvětlí každou obrazovku průběžně. Jeho nabídka obsahuje celou nápovědu s vyhledáváním a „Co je to?”: klepněte na cokoli na obrazovce a řekne vám, k čemu to je."]
+       "Ano. Nápověda od esa: Eso, maskot webového klienta, vám na přání vysvětlí každou obrazovku průběžně. Jeho nabídka obsahuje celou nápovědu s vyhledáváním a „Co je to?”: klepněte na cokoli na obrazovce a řekne vám, k čemu to je."],
+      ["Vyvíjí se PokerTH stále?",
+       "Ano. PokerTH se jako svobodný software vyvíjí od roku 2006 a je stále udržován: desktopový klient a server jsou na <a href=\"https://github.com/pokerth/pokerth\">GitHubu</a>, tento webový klient se průběžně aktualizuje (<a href=\"https://github.com/narmod/pokerth-web-client\">zdrojový kód a seznam změn</a>) a v oficiální síti pokerth.net se hraje každý den."]
     ]
   },
   cy: {
     title: "Cwestiynau cyffredin — cleient gwe PokerTH",
-    desc: "Cwestiynau cyffredin am gleient gwe PokerTH: pocer am ddim heb hysbysebion, chwarae Texas Hold’em yn y porwr heb osod dim, cyfrifon, ffonau symudol, modd all-lein, ieithoedd a phreifatrwydd.",
+    desc: "Cwestiynau cyffredin am gleient gwe PokerTH: pocer am ddim heb hysbysebion na lawrlwytho, chwarae fel gwestai neu heb gyfrif, gwahodd ffrindiau gyda dolen, twrnameintiau, ffonau symudol, ieithoedd a phreifatrwydd.",
     h1: "Cleient gwe PokerTH — Cwestiynau cyffredin",
     qa: [
       ["Ydy PokerTH am ddim?",
@@ -2924,7 +3115,13 @@ var SEO_FAQ_I18N = {
       ["Alla i chwarae Texas Hold’em yn erbyn pobl eraill yn fy mhorwr?",
        "Gallwch. Ymunwch â rhwydwaith swyddogol pokerth.net i chwarae Texas Hold’em byw yn erbyn chwaraewyr o bob cwr o'r byd, neu anfonwch ddolen wahodd fel bod ffrindiau'n glanio'n syth wrth eich bwrdd — y cyfan y tu mewn i'r porwr."],
       ["Oes angen cyfrif arna i i chwarae?",
-       "Nac oes. Nid oes angen cyfrif ar y modd Lleol / ymarfer ac mae'n gweithio all-lein. Ar rwydwaith swyddogol pokerth.net gallwch chwarae gemau arferol fel gwestai; mae angen cyfrif pokerth.net am ddim ar gyfer gemau gyda safle, byrddau i chwaraewyr cofrestredig yn unig a'r sgwrs."],
+       "Nac oes. Nid oes angen cyfrif ar y modd Lleol / ymarfer ac mae'n gweithio all-lein. Ar rwydwaith swyddogol pokerth.net, mewngofnodwch fel gwestai: mae'r gweinydd yn rhoi llysenw gwestai i chi a gallwch chwarae gemau arferol ar unwaith. Ar LAN neu ar weinydd pwrpasol does dim cyfrif o gwbl — dim ond dewis llysenw. Nid oes yr un o'r rhain yn gofyn am gyfeiriad e-bost. Dim ond ar gyfer gemau gyda safle, byrddau i chwaraewyr cofrestredig yn unig a'r sgwrs y mae angen cyfrif pokerth.net am ddim."],
+      ["Sut ydw i'n chwarae pocer ar-lein gyda ffrindiau?",
+       "Crëwch fwrdd yn y lobi — ar pokerth.net neu ar unrhyw weinydd LAN neu bwrpasol — a phwyswch “Gwahodd ffrindiau” yn yr ystafell aros. Mae'r cleient gwe yn creu dolen wahodd y gallwch ei hanfon drwy unrhyw ap negeseua. Mae eich ffrindiau'n ei hagor yn eu porwr, ar iPhone, Android neu gyfrifiadur, heb lawrlwytho dim. Gosodwch gyfrinair os dylai'r bwrdd aros yn breifat: nid yw'r cyfrinair byth yn rhan o'r ddolen."],
+      ["Beth sy'n digwydd pan fydd ffrind yn agor fy nolen wahodd?",
+       "Mae'r ddolen yn cario'r bwrdd a'r gweinydd. Mae eich ffrind yn mewngofnodi — fel gwestai neu gyda chyfrif ar pokerth.net, gyda llysenw yn unig ar LAN neu weinydd pwrpasol — ac yna mae'r cleient gwe yn ymuno â'r bwrdd yn awtomatig, heb fod angen chwilio amdano yn y lobi. Mae bwrdd wedi'i ddiogelu â chyfrinair yn gofyn am ei gyfrinair; mae gêm sydd eisoes wedi dechrau yn agor i'w gwylio. Nodwedd o'r cleient gwe yw dolenni gwahodd, ac maen nhw'n gweithio ar bob gweinydd y gall gysylltu ag ef."],
+      ["Oes gweinydd arddangos i roi cynnig ar PokerTH heb gofrestru?",
+       "Oes. Ar y sgrin mewngofnodi dewiswch LAN / Gweinydd pwrpasol a dewiswch y gweinydd arddangos cyhoeddus yn y Rhestr gweinyddion: teipiwch unrhyw lysenw ac rydych chi yn ei lobi — dim cofrestru, dim cyfeiriad e-bost. Mae dot gwyrdd yn dangos pa weinyddion ar y rhestr sydd ar-lein a faint o chwaraewyr sydd arnyn nhw."],
       ["Ydy e'n gweithio ar ffôn symudol?",
        "Ydy. Progressive Web App yw'r cleient gwe: mae'n rhedeg mewn unrhyw borwr modern ar gyfrifiadur, llechen neu ffôn a gellir ei osod fel ap brodorol — ar iPhone ac iPad gyda Rhannu → Ychwanegu at y Sgrin Gartref, mewn mannau eraill o ddewislen y porwr neu'r botwm gosod. Mae Cymorth yr As yn dangos y camau ar gyfer eich dyfais."],
       ["Alla i chwarae yn erbyn y cyfrifiadur?",
@@ -2940,18 +3137,22 @@ var SEO_FAQ_I18N = {
       ["Pa ddata mae'r cleient gwe yn ei gasglu?",
        "Cyn lleied â phosibl: mae'r gosodiadau'n aros yn eich porwr, ac nid oes unrhyw olrhain na hysbysebion yn cael eu defnyddio. Pan fyddwch yn mewngofnodi gyda chyfrif pokerth.net, mae eich opsiynau a'ch tlysau ymarfer yn cael eu cysoni ag ef fel eu bod yn eich dilyn i'ch dyfeisiau eraill. Gweler y dudalen breifatrwydd am fanylion."],
       ["Alla i gynnal fy ngweinydd fy hun?",
-       "Gallwch. Mae gweinydd pwrpasol PokerTH a'r cleient gwe hwn ill dau'n god agored, felly gallwch redeg eich gweinydd pocer preifat eich hun ar LAN neu ar y rhyngrwyd."],
+       "Gallwch. Mae gweinydd pwrpasol PokerTH a'r cleient gwe hwn ill dau'n god agored, felly gallwch redeg eich gweinydd pocer preifat eich hun ar LAN neu ar y rhyngrwyd. I'w gael ar y rhestr i bawb, dewiswch LAN / Gweinydd pwrpasol, yna “Cynnig fy ngweinydd” ar waelod y Rhestr gweinyddion: unwaith y bydd y gweinyddwyr yn ei gymeradwyo, bydd yn ymddangos yn y rhestr. Rhaid i'r gweinydd fod yn hygyrch o'r rhyngrwyd."],
       ["Sut mae gemau gyda safle a thymhorau'n gweithio?",
        "Mae gemau gyda safle ar pokerth.net yn rhoi 10 chwaraewr wrth y bwrdd ac yn dechrau cyn gynted ag y bydd y bwrdd yn llawn: 10,000 o sglodion yr un, blind bach o 50 sy'n dyblu bob 11 llaw, a 5 eiliad i weithredu. Mae'r safleoedd 1 i 7 yn sgorio 15, 9, 6, 4, 3, 2 ac 1 pwynt; eich sgôr chi yw eich cyfartaledd fesul gêm, wedi'i bwysoli yn ôl nifer y gemau rydych chi wedi'u chwarae, ac mae'r safle'n dechrau o'r newydd bob chwarter. Mae angen cyfrif pokerth.net am ddim."],
+      ["Oes twrnameintiau a chystadlaethau pocer am ddim?",
+       "Oes, drwy gydol y flwyddyn, a'r cyfan am ddim. Mae pob gêm PokerTH yn dwrnamaint, ac mae cymuned pokerth.net hefyd yn cynnal cystadlaethau rheolaidd gyda'u safleoedd eu hunain: y BBC, gemau lle mae'r blinds yn codi bob ychydig funudau (<a href=\"https://bbc.pokerth.net/registration\">calendr</a>, <a href=\"https://bbc.pokerth.net/results\">canlyniadau</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">safleoedd</a>); y WeCup (WEC), twrnameintiau ar gyflymder tawelach a chytbwys (<a href=\"https://wec.pokerth.net/results\">canlyniadau</a>, <a href=\"https://wec.pokerth.net/results/ranking\">safleoedd</a>); a'r Monthly Cup, a gynhelir bob mis (<a href=\"https://monthlycup.pokerth.net/\">y cwpan nesaf a'r enillwyr diweddaraf</a>, <a href=\"https://monthlycup.pokerth.net/registration\">cofrestru</a>). Cyhoeddir dyddiadau a rheolau ar bob gwefan ac ar fforwm <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Mae angen cyfrif pokerth.net am ddim i gymryd rhan."],
       ["Alla i wylio gêm heb chwarae?",
        "Gallwch. Gellir gwylio gemau sy'n rhedeg ac sy'n caniatáu gwylwyr yn fyw o'r lobi: rydych chi'n gweld y bwrdd a'r sgwrs, ond mae'r cardiau poced yn aros yn guddiedig ac ni allwch weithredu. Mae dolen wahodd i fwrdd sydd eisoes wedi dechrau yn ei agor i'w wylio."],
       ["Oes cymorth y tu mewn i'r ap?",
-       "Oes. Cymorth yr As: mae'r As, mascot y cleient gwe, yn esbonio pob sgrin wrth i chi fynd ymlaen os ydych chi eisiau. Mae ei ddewislen yn cynnwys yr holl gymorth gyda chwiliad, a “Beth yw hwn?”: tapiwch unrhyw beth ar y sgrin ac mae'n dweud wrthych beth mae'n ei wneud."]
+       "Oes. Cymorth yr As: mae'r As, mascot y cleient gwe, yn esbonio pob sgrin wrth i chi fynd ymlaen os ydych chi eisiau. Mae ei ddewislen yn cynnwys yr holl gymorth gyda chwiliad, a “Beth yw hwn?”: tapiwch unrhyw beth ar y sgrin ac mae'n dweud wrthych beth mae'n ei wneud."],
+      ["Ydy PokerTH yn dal i gael ei ddatblygu'n weithredol?",
+       "Ydy. Mae PokerTH wedi'i ddatblygu fel meddalwedd rydd ers 2006 ac mae'n dal i gael ei gynnal: mae'r cleient bwrdd gwaith a'r gweinydd ar <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, mae'r cleient gwe hwn yn cael ei ddiweddaru'n barhaus (<a href=\"https://github.com/narmod/pokerth-web-client\">cod ffynhonnell a log newidiadau</a>), a chaiff gemau eu chwarae bob dydd ar rwydwaith swyddogol pokerth.net."]
     ],
   },
   sk: {
     title: "\u010cast\u00e9 ot\u00e1zky \u2014 webov\u00fd klient PokerTH",
-    desc: "\u010cast\u00e9 ot\u00e1zky o webovom klientovi PokerTH: poker zadarmo bez rekl\u00e1m, hranie Texas Hold\u2019em v prehliada\u010di bez s\u0165ahovania, \u00fa\u010dty, mobil, offline re\u017eim, jazyky a s\u00fakromie.",
+    desc: "Časté otázky o webovom klientovi PokerTH: poker zadarmo bez reklám a bez sťahovania, hranie ako hosť aj bez účtu, pozvánky pre priateľov, turnaje, mobil, offline režim, jazyky a súkromie.",
     h1: "Webov\u00fd klient PokerTH \u2014 \u010dast\u00e9 ot\u00e1zky",
     qa: [
       ["Je PokerTH zadarmo?",
@@ -2963,7 +3164,13 @@ var SEO_FAQ_I18N = {
       ["Môžem hrať Texas Hold’em proti iným ľuďom v prehliadači?",
        "Áno. Pripojte sa k oficiálnej sieti pokerth.net a hrajte proti hráčom z celého sveta, alebo pošlite pozvánku, ktorá priateľov dovedie rovno k vášmu stolu — všetko v prehliadači."],
       ["Potrebujem na hranie účet?",
-       "Nie. Režim Lokálne / tréning nepotrebuje účet a funguje offline. V oficiálnej sieti pokerth.net môžete hrať hry typu Normálna ako hosť; bezplatný účet pokerth.net je potrebný pre hodnotené hry, stoly iba pre registrovaných hráčov a chat."],
+       "Nie. Režim Lokálne / tréning nepotrebuje účet a funguje offline. V oficiálnej sieti pokerth.net sa prihláste ako hosť: server vám pridelí prezývku hosťa a hry typu Normálna môžete hrať hneď. V sieti LAN alebo na vyhradenom serveri žiadny účet nie je — zvolíte si len prezývku. Nič z toho nevyžaduje e-mailovú adresu. Bezplatný účet pokerth.net je potrebný iba pre hodnotené hry, stoly iba pre registrovaných hráčov a chat."],
+      ["Ako hrať poker online s priateľmi?",
+       "Vytvorte stôl v lobby — na pokerth.net alebo na akomkoľvek LAN či vyhradenom serveri — a v čakárni stlačte „Pozvať priateľov“. Webový klient vytvorí odkaz s pozvánkou, ktorý môžete poslať ľubovoľnou chatovacou aplikáciou. Priatelia ho otvoria v prehliadači na iPhone, Androide alebo počítači bez toho, aby čokoľvek sťahovali. Ak má stôl zostať súkromný, nastavte heslo: heslo nikdy nie je súčasťou odkazu."],
+      ["Čo sa stane, keď priateľ otvorí môj odkaz s pozvánkou?",
+       "Odkaz nesie stôl aj server. Váš priateľ sa prihlási — ako hosť alebo účtom na pokerth.net, v sieti LAN či na vyhradenom serveri len prezývkou — a webový klient sa potom k stolu pripojí automaticky, bez hľadania v lobby. Stôl chránený heslom si heslo vyžiada; hra, ktorá už začala, sa otvorí na sledovanie. Odkazy s pozvánkou sú funkciou webového klienta a fungujú na každom serveri, ku ktorému sa vie pripojiť."],
+      ["Existuje demo server, na ktorom sa dá PokerTH vyskúšať bez registrácie?",
+       "Áno. Na prihlasovacej obrazovke zvoľte LAN / Vyhradený server a v zozname serverov vyberte verejný demo server: zadajte ľubovoľnú prezývku a ste v jeho lobby — bez registrácie, bez e-mailovej adresy. Zelená bodka ukazuje, ktoré servery zo zoznamu sú online a koľko je na nich hráčov."],
       ["Funguje to na mobile?",
        "Áno. Webový klient je Progressive Web App: beží v každom modernom prehliadači na počítači, tablete aj telefóne a dá sa nainštalovať ako natívna aplikácia — na iPhone a iPade cez Zdieľať → Pridať na plochu, inde z ponuky prehliadača alebo tlačidlom inštalácie. Pomoc od esa ukáže kroky pre vaše zariadenie."],
       ["Môžem hrať proti počítaču?",
@@ -2979,18 +3186,22 @@ var SEO_FAQ_I18N = {
       ["Aké údaje webový klient zbiera?",
        "Čo najmenej: nastavenia zostávajú vo vašom prehliadači a nepoužíva sa žiadne sledovanie ani reklama. Keď sa prihlásite účtom pokerth.net, vaše možnosti a tréningové trofeje sa s ním synchronizujú, aby vás nasledovali na vašich ďalších zariadeniach. Podrobnosti nájdete na stránke o súkromí."],
       ["Môžem prevádzkovať vlastný server?",
-       "Áno. Dedikovaný server PokerTH aj tento webový klient sú otvorený softvér, takže si môžete prevádzkovať vlastný súkromný pokerový server — v miestnej sieti alebo na internete."],
+       "Áno. Dedikovaný server PokerTH aj tento webový klient sú otvorený softvér, takže si môžete prevádzkovať vlastný súkromný pokerový server v miestnej sieti alebo na internete. Aby sa zobrazoval všetkým, zvoľte LAN / Vyhradený server a potom „Navrhnúť môj server“ dolu v zozname serverov: keď ho správcovia schvália, objaví sa v zozname. Server musí byť dostupný z internetu."],
       ["Ako fungujú hodnotené hry a sezóny?",
        "Hodnotené hry na pokerth.net posadia k stolu 10 hráčov a začnú, len čo je stôl plný: každý má 10 000 žetónov, malý blind 50, ktorý sa zdvojnásobí každých 11 rozdaní, a 5 sekúnd na ťah. Miesta 1 až 7 dostanú 15, 9, 6, 4, 3, 2 a 1 bod; vaše Skóre je váš priemer na hru, vážený počtom odohraných hier, a rebríček sa každý štvrťrok začína odznova. Potrebný je bezplatný účet pokerth.net."],
+      ["Existujú bezplatné pokerové turnaje a súťaže?",
+       "Áno, po celý rok a všetky zadarmo. Každá hra v PokerTH je turnaj a komunita pokerth.net navyše organizuje pravidelné súťaže s vlastnými rebríčkami: BBC, hry, v ktorých blindy rastú každých pár minút (<a href=\"https://bbc.pokerth.net/registration\">kalendár</a>, <a href=\"https://bbc.pokerth.net/results\">výsledky</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">rebríček</a>); WeCup (WEC), turnaje v pokojnejšom, vyváženom tempe (<a href=\"https://wec.pokerth.net/results\">výsledky</a>, <a href=\"https://wec.pokerth.net/results/ranking\">rebríček</a>); a Monthly Cup, ktorý sa koná každý mesiac (<a href=\"https://monthlycup.pokerth.net/\">najbližší pohár a poslední víťazi</a>, <a href=\"https://monthlycup.pokerth.net/registration\">registrácia</a>). Termíny a pravidlá sa oznamujú na jednotlivých weboch a na fóre <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Na účasť je potrebný bezplatný účet pokerth.net."],
       ["Môžem sledovať hru bez hrania?",
        "Áno. Bežiace hry, ktoré povoľujú divákov, si môžete pozerať naživo z lobby: vidíte stôl a chat, no vlastné karty zostávajú skryté a nemôžete konať. Odkaz s pozvánkou na stôl, ktorý už začal, ho otvorí na sledovanie."],
       ["Je v aplikácii pomoc?",
-       "Áno. Pomoc od esa: Eso, maskot webového klienta, vám na požiadanie vysvetľuje každú obrazovku. Jeho ponuka obsahuje celú pomoc s vyhľadávaním a položku « Čo je to? »: klepnite na čokoľvek na obrazovke a povie, na čo to je."]
+       "Áno. Pomoc od esa: Eso, maskot webového klienta, vám na požiadanie vysvetľuje každú obrazovku. Jeho ponuka obsahuje celú pomoc s vyhľadávaním a položku « Čo je to? »: klepnite na čokoľvek na obrazovke a povie, na čo to je."],
+      ["Vyvíja sa PokerTH stále?",
+       "Áno. PokerTH sa ako slobodný softvér vyvíja od roku 2006 a stále sa udržiava: desktopový klient a server sú na <a href=\"https://github.com/pokerth/pokerth\">GitHube</a>, tento webový klient sa priebežne aktualizuje (<a href=\"https://github.com/narmod/pokerth-web-client\">zdrojový kód a zoznam zmien</a>) a v oficiálnej sieti pokerth.net sa hrá každý deň."]
     ]
   },
   tr: {
     title: "SSS \u2014 PokerTH web istemcisi",
-    desc: "PokerTH web istemcisi hakk\u0131nda s\u0131k sorulan sorular: reklams\u0131z \u00fccretsiz poker, hi\u00e7bir \u015fey indirmeden taray\u0131c\u0131da Texas Hold\u2019em oynamak, hesaplar, mobil, \u00e7evrimd\u0131\u015f\u0131 mod, diller ve gizlilik.",
+    desc: "PokerTH web istemcisi hakkında sık sorulan sorular: reklamsız ve indirmesiz ücretsiz poker, misafir olarak veya hesapsız oynamak, arkadaşları bağlantıyla davet etmek, turnuvalar, mobil, çevrimdışı mod, diller ve gizlilik.",
     h1: "PokerTH web istemcisi \u2014 S\u0131k sorulan sorular",
     qa: [
       ["PokerTH ücretsiz mi?",
@@ -3002,7 +3213,13 @@ var SEO_FAQ_I18N = {
       ["Tarayıcımda başka insanlara karşı Texas Hold’em oynayabilir miyim?",
        "Evet. Dünyanın dört bir yanından oyuncularla oynamak için resmî pokerth.net ağına katılın ya da bir davet bağlantısı gönderin; arkadaşlarınız doğrudan masanıza düşer — hepsi tarayıcı içinde."],
       ["Oynamak için hesap gerekir mi?",
-       "Hayır. Yerel / antrenman modu hesap gerektirmez ve çevrimdışı çalışır. Resmî pokerth.net ağında Normal oyunları misafir olarak oynayabilirsiniz; Sıralama oyunları, yalnızca kayıtlılara açık masalar ve sohbet için ücretsiz bir pokerth.net hesabı gerekir."],
+       "Hayır. Yerel / antrenman modu hesap gerektirmez ve çevrimdışı çalışır. Resmî pokerth.net ağında misafir olarak giriş yapın: sunucu size bir misafir takma adı verir ve Normal oyunları hemen oynayabilirsiniz. LAN’da veya özel bir sunucuda hiç hesap yoktur — yalnızca bir takma ad seçersiniz. Bunların hiçbiri e-posta adresi istemez. Ücretsiz bir pokerth.net hesabı yalnızca Sıralama oyunları, kayıtlı oyunculara açık masalar ve sohbet için gerekir."],
+      ["Arkadaşlarımla nasıl çevrimiçi poker oynarım?",
+       "Lobide bir masa oluşturun — pokerth.net’te ya da herhangi bir LAN veya özel sunucuda — ve bekleme odasında “Arkadaşlarını davet et” düğmesine basın. Web istemcisi, herhangi bir mesajlaşma uygulamasıyla gönderebileceğiniz bir davet bağlantısı oluşturur. Arkadaşlarınız bağlantıyı tarayıcılarında açar — iPhone’da, Android’de ya da bilgisayarda, hiçbir şey indirmeden. Masanın özel kalmasını istiyorsanız bir şifre belirleyin: şifre asla bağlantıya eklenmez."],
+      ["Bir arkadaşım davet bağlantımı açınca ne olur?",
+       "Bağlantı masayı ve sunucuyu içerir. Arkadaşınız giriş yapar — pokerth.net’te misafir olarak ya da bir hesapla, LAN’da veya özel sunucuda yalnızca bir takma adla — ve web istemcisi masaya otomatik olarak katılır; lobide aramaya gerek kalmaz. Şifre korumalı bir masa şifresini sorar; başlamış bir oyun izleme için açılır. Davet bağlantıları web istemcisinin bir özelliğidir ve bağlanabildiği her sunucuda çalışır."],
+      ["PokerTH’yi kaydolmadan denemek için bir demo sunucusu var mı?",
+       "Evet. Giriş ekranında LAN / Özel sunucu’yu seçin ve Sunucu listesinden herkese açık demo sunucusuna tıklayın: herhangi bir takma ad yazın, lobisindesiniz — kayıt yok, e-posta adresi yok. Yeşil bir nokta, listedeki sunuculardan hangilerinin çevrimiçi olduğunu ve üzerlerinde kaç oyuncu bulunduğunu gösterir."],
       ["Mobilde çalışıyor mu?",
        "Evet. Web istemcisi bir Progressive Web App’tir: bilgisayarda, tablette veya telefonda her modern tarayıcıda çalışır ve yerel bir uygulama gibi kurulabilir — iPhone ve iPad’de Paylaş → Ana Ekrana Ekle ile, diğer cihazlarda tarayıcı menüsünden ya da kur düğmesinden. As’ın yardımı cihazınız için adımları gösterir."],
       ["Bilgisayara karşı oynayabilir miyim?",
@@ -3018,18 +3235,22 @@ var SEO_FAQ_I18N = {
       ["Web istemcisi hangi verileri topluyor?",
        "Mümkün olan en azını: ayarlarınız tarayıcınızda kalır, izleme ya da reklam kullanılmaz. Bir pokerth.net hesabıyla giriş yaptığınızda seçenekleriniz ve antrenman kupalarınız hesapla eşitlenir, böylece diğer cihazlarınıza da sizinle gelir. Ayrıntılar için gizlilik sayfasına bakın."],
       ["Kendi sunucumu çalıştırabilir miyim?",
-       "Evet. PokerTH adanmış sunucusu da bu web istemcisi de açık kaynaklıdır; böylece yerel ağda veya internette kendi özel poker sunucunuzu çalıştırabilirsiniz."],
+       "Evet. PokerTH adanmış sunucusu da bu web istemcisi de açık kaynaklıdır; böylece yerel ağda veya internette kendi özel poker sunucunuzu çalıştırabilirsiniz. Herkesin görebileceği şekilde listelenmesi için LAN / Özel sunucu’yu seçin, ardından Sunucu listesinin altındaki “Sunucumu öner” düğmesine basın: yöneticiler onayladığında listede görünür. Sunucunun internetten erişilebilir olması gerekir."],
       ["Sıralama oyunları ve sezonlar nasıl işler?",
        "pokerth.net’teki Sıralama oyunlarında 10 oyuncu oturur ve masa dolar dolmaz başlar: herkese 10.000 fiş, her 11 elde bir ikiye katlanan 50’lik küçük kör ve hamle için 5 saniye. 1. ile 7. sıralar sırasıyla 15, 9, 6, 4, 3, 2 ve 1 puan alır; Skorunuz oyun başına ortalamanızdır ve oynadığınız oyun sayısıyla ağırlıklandırılır, sıralama her çeyrekte yeniden başlar. Ücretsiz bir pokerth.net hesabı gerekir."],
+      ["Ücretsiz poker turnuvaları ve yarışmaları var mı?",
+       "Evet, yıl boyunca ve hepsi ücretsiz. Her PokerTH oyunu bir turnuvadır; pokerth.net topluluğu ayrıca kendi sıralamaları olan düzenli yarışmalar düzenler: BBC, körlerin birkaç dakikada bir yükseldiği oyunlar (<a href=\"https://bbc.pokerth.net/registration\">takvim</a>, <a href=\"https://bbc.pokerth.net/results\">sonuçlar</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">sıralama</a>); WeCup (WEC), daha sakin ve dengeli tempolu turnuvalar (<a href=\"https://wec.pokerth.net/results\">sonuçlar</a>, <a href=\"https://wec.pokerth.net/results/ranking\">sıralama</a>); ve her ay düzenlenen Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">sonraki kupa ve son kazananlar</a>, <a href=\"https://monthlycup.pokerth.net/registration\">kayıt</a>). Tarihler ve kurallar her sitede ve <a href=\"https://www.pokerth.net/\">pokerth.net</a> forumunda duyurulur. Katılmak için ücretsiz bir pokerth.net hesabı gerekir."],
       ["Oynamadan bir oyunu izleyebilir miyim?",
        "Evet. İzleyicilere izin veren devam eden oyunlar lobiden canlı izlenebilir: masayı ve sohbeti görürsünüz, ancak el kartları gizli kalır ve hamle yapamazsınız. Başlamış bir masaya ait davet bağlantısı masayı izleme için açar."],
       ["Uygulamanın içinde yardım var mı?",
-       "Evet. As’ın yardımı: web istemcisinin maskotu As, isterseniz siz ilerledikçe her ekranı açıklar. Menüsünde aramalı tüm yardım ve “Bu ne?” var: ekranda herhangi bir şeye dokunun, ne işe yaradığını söyler."]
+       "Evet. As’ın yardımı: web istemcisinin maskotu As, isterseniz siz ilerledikçe her ekranı açıklar. Menüsünde aramalı tüm yardım ve “Bu ne?” var: ekranda herhangi bir şeye dokunun, ne işe yaradığını söyler."],
+      ["PokerTH hâlâ aktif olarak geliştiriliyor mu?",
+       "Evet. PokerTH 2006’dan beri özgür yazılım olarak geliştiriliyor ve bakımı sürüyor: masaüstü istemci ve sunucu <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>’da, bu web istemcisi sürekli güncelleniyor (<a href=\"https://github.com/narmod/pokerth-web-client\">kaynak kodu ve değişiklik günlüğü</a>) ve resmî pokerth.net ağında her gün oyunlar oynanıyor."]
     ]
   },
   el: {
     title: "\u03a3\u03c5\u03c7\u03bd\u03ad\u03c2 \u03b5\u03c1\u03c9\u03c4\u03ae\u03c3\u03b5\u03b9\u03c2 \u2014 \u03b4\u03b9\u03b1\u03b4\u03b9\u03ba\u03c4\u03c5\u03b1\u03ba\u03cc\u03c2 \u03c0\u03b5\u03bb\u03ac\u03c4\u03b7\u03c2 PokerTH",
-    desc: "\u03a3\u03c5\u03c7\u03bd\u03ad\u03c2 \u03b5\u03c1\u03c9\u03c4\u03ae\u03c3\u03b5\u03b9\u03c2 \u03b3\u03b9\u03b1 \u03c4\u03bf\u03bd \u03b4\u03b9\u03b1\u03b4\u03b9\u03ba\u03c4\u03c5\u03b1\u03ba\u03cc \u03c0\u03b5\u03bb\u03ac\u03c4\u03b7 PokerTH: \u03b4\u03c9\u03c1\u03b5\u03ac\u03bd \u03c0\u03cc\u03ba\u03b5\u03c1 \u03c7\u03c9\u03c1\u03af\u03c2 \u03b4\u03b9\u03b1\u03c6\u03b7\u03bc\u03af\u03c3\u03b5\u03b9\u03c2, \u03c0\u03b1\u03b9\u03c7\u03bd\u03af\u03b4\u03b9 Texas Hold\u2019em \u03c3\u03c4\u03bf\u03bd \u03c6\u03c5\u03bb\u03bb\u03bf\u03bc\u03b5\u03c4\u03c1\u03b7\u03c4\u03ae \u03c7\u03c9\u03c1\u03af\u03c2 \u03bb\u03ae\u03c8\u03b7, \u03bb\u03bf\u03b3\u03b1\u03c1\u03b9\u03b1\u03c3\u03bc\u03bf\u03af, \u03ba\u03b9\u03bd\u03b7\u03c4\u03ac, \u03bb\u03b5\u03b9\u03c4\u03bf\u03c5\u03c1\u03b3\u03af\u03b1 \u03c7\u03c9\u03c1\u03af\u03c2 \u03c3\u03cd\u03bd\u03b4\u03b5\u03c3\u03b7, \u03b3\u03bb\u03ce\u03c3\u03c3\u03b5\u03c2 \u03ba\u03b1\u03b9 \u03b9\u03b4\u03b9\u03c9\u03c4\u03b9\u03ba\u03cc\u03c4\u03b7\u03c4\u03b1.",
+    desc: "Συχνές ερωτήσεις για τον διαδικτυακό πελάτη PokerTH: δωρεάν πόκερ χωρίς διαφημίσεις και λήψη, παιχνίδι ως επισκέπτης, πρόσκληση φίλων με σύνδεσμο, τουρνουά, κινητά, εκτός σύνδεσης, γλώσσες και ιδιωτικότητα.",
     h1: "\u0394\u03b9\u03b1\u03b4\u03b9\u03ba\u03c4\u03c5\u03b1\u03ba\u03cc\u03c2 \u03c0\u03b5\u03bb\u03ac\u03c4\u03b7\u03c2 PokerTH \u2014 \u03a3\u03c5\u03c7\u03bd\u03ad\u03c2 \u03b5\u03c1\u03c9\u03c4\u03ae\u03c3\u03b5\u03b9\u03c2",
     qa: [
       ["Είναι το PokerTH δωρεάν;",
@@ -3041,7 +3262,13 @@ var SEO_FAQ_I18N = {
       ["Μπορώ να παίξω Texas Hold’em με άλλους ανθρώπους μέσα από τον φυλλομετρητή;",
        "Ναι. Συνδεθείτε στο επίσημο δίκτυο pokerth.net για να παίξετε με παίκτες από όλο τον κόσμο, ή στείλτε έναν σύνδεσμο πρόσκλησης ώστε οι φίλοι σας να βρεθούν κατευθείαν στο τραπέζι σας — όλα μέσα στον φυλλομετρητή."],
       ["Χρειάζομαι λογαριασμό για να παίξω;",
-       "Όχι. Η λειτουργία Τοπικό / εξάσκηση δεν χρειάζεται λογαριασμό και λειτουργεί χωρίς σύνδεση. Στο επίσημο δίκτυο pokerth.net μπορείτε να παίξετε κανονικά παιχνίδια ως επισκέπτης· ένας δωρεάν λογαριασμός pokerth.net χρειάζεται για τα παιχνίδια κατάταξης, τα τραπέζια μόνο για εγγεγραμμένους και το chat."],
+       "Όχι. Η λειτουργία Τοπικό / εξάσκηση δεν χρειάζεται λογαριασμό και λειτουργεί χωρίς σύνδεση. Στο επίσημο δίκτυο pokerth.net συνδεθείτε ως επισκέπτης: ο διακομιστής σάς δίνει ένα ψευδώνυμο επισκέπτη και μπορείτε να παίξετε αμέσως κανονικά παιχνίδια. Σε LAN ή σε αποκλειστικό διακομιστή δεν υπάρχει καθόλου λογαριασμός — απλώς επιλέγετε ψευδώνυμο. Καμία από αυτές τις επιλογές δεν ζητά διεύθυνση email. Δωρεάν λογαριασμός pokerth.net χρειάζεται μόνο για τα παιχνίδια κατάταξης, τα τραπέζια μόνο για εγγεγραμμένους και το chat."],
+      ["Πώς παίζω πόκερ online με φίλους;",
+       "Δημιουργήστε ένα τραπέζι στο λόμπι — στο pokerth.net ή σε οποιονδήποτε διακομιστή LAN ή αποκλειστικό διακομιστή — και πατήστε «Πρόσκληση φίλων» στην αίθουσα αναμονής. Ο διαδικτυακός πελάτης δημιουργεί έναν σύνδεσμο πρόσκλησης που μπορείτε να στείλετε με οποιαδήποτε εφαρμογή μηνυμάτων. Οι φίλοι σας τον ανοίγουν στον φυλλομετρητή τους, σε iPhone, Android ή υπολογιστή, χωρίς να κατεβάσουν τίποτα. Ορίστε κωδικό αν θέλετε το τραπέζι να μείνει ιδιωτικό: ο κωδικός δεν περιλαμβάνεται ποτέ στον σύνδεσμο."],
+      ["Τι γίνεται όταν ένας φίλος ανοίγει τον σύνδεσμο πρόσκλησής μου;",
+       "Ο σύνδεσμος περιέχει το τραπέζι και τον διακομιστή. Ο φίλος σας συνδέεται — ως επισκέπτης ή με λογαριασμό στο pokerth.net, μόνο με ψευδώνυμο σε LAN ή αποκλειστικό διακομιστή — και στη συνέχεια ο διαδικτυακός πελάτης τον βάζει αυτόματα στο τραπέζι, χωρίς να χρειάζεται να το ψάξει στο λόμπι. Ένα τραπέζι με κωδικό ζητά τον κωδικό του· ένα παιχνίδι που έχει ήδη ξεκινήσει ανοίγει για παρακολούθηση. Οι σύνδεσμοι πρόσκλησης είναι λειτουργία του διαδικτυακού πελάτη και δουλεύουν σε κάθε διακομιστή στον οποίο μπορεί να συνδεθεί."],
+      ["Υπάρχει διακομιστής επίδειξης για να δοκιμάσω το PokerTH χωρίς εγγραφή;",
+       "Ναι. Στην οθόνη σύνδεσης επιλέξτε LAN / Αποκλειστικός διακομιστής και διαλέξτε τον δημόσιο διακομιστή επίδειξης από τη λίστα διακομιστών: πληκτρολογήστε οποιοδήποτε ψευδώνυμο και βρίσκεστε στο λόμπι του — χωρίς εγγραφή, χωρίς διεύθυνση email. Μια πράσινη κουκκίδα δείχνει ποιοι διακομιστές της λίστας είναι online και πόσοι παίκτες βρίσκονται σε αυτούς."],
       ["Λειτουργεί σε κινητό;",
        "Ναι. Ο διαδικτυακός πελάτης είναι Progressive Web App: λειτουργεί σε κάθε σύγχρονο φυλλομετρητή σε υπολογιστή, τάμπλετ ή τηλέφωνο και μπορεί να εγκατασταθεί σαν κανονική εφαρμογή — σε iPhone και iPad με Κοινή χρήση → Προσθήκη στην αρχική οθόνη, αλλού από το μενού του φυλλομετρητή ή το κουμπί εγκατάστασης. Η Βοήθεια του Άσου δείχνει τα βήματα για τη συσκευή σας."],
       ["Μπορώ να παίξω εναντίον του υπολογιστή;",
@@ -3057,18 +3284,22 @@ var SEO_FAQ_I18N = {
       ["Τι δεδομένα συλλέγει ο διαδικτυακός πελάτης;",
        "Όσο το δυνατόν λιγότερα: οι ρυθμίσεις σας παραμένουν στον φυλλομετρητή σας και δεν χρησιμοποιείται καμία παρακολούθηση ή διαφήμιση. Όταν συνδέεστε με λογαριασμό pokerth.net, οι επιλογές και τα τρόπαια εξάσκησής σας συγχρονίζονται με αυτόν, ώστε να σας ακολουθούν στις άλλες συσκευές σας. Δείτε τη σελίδα απορρήτου για λεπτομέρειες."],
       ["Μπορώ να στήσω δικό μου διακομιστή;",
-       "Ναι. Τόσο ο αποκλειστικός διακομιστής PokerTH όσο και αυτός ο διαδικτυακός πελάτης είναι ανοικτού κώδικα, οπότε μπορείτε να λειτουργείτε δικό σας ιδιωτικό διακομιστή πόκερ, σε τοπικό δίκτυο ή στο διαδίκτυο."],
+       "Ναι. Τόσο ο αποκλειστικός διακομιστής PokerTH όσο και αυτός ο διαδικτυακός πελάτης είναι ανοικτού κώδικα, οπότε μπορείτε να λειτουργείτε δικό σας ιδιωτικό διακομιστή πόκερ, σε τοπικό δίκτυο ή στο διαδίκτυο. Για να εμφανίζεται σε όλους, επιλέξτε LAN / Αποκλειστικός διακομιστής και μετά «Πρότεινε τον διακομιστή μου» στο κάτω μέρος της λίστας διακομιστών: μόλις τον εγκρίνουν οι διαχειριστές, εμφανίζεται στη λίστα. Ο διακομιστής πρέπει να είναι προσβάσιμος από το διαδίκτυο."],
       ["Πώς λειτουργούν τα παιχνίδια κατάταξης και οι σεζόν;",
        "Τα παιχνίδια κατάταξης στο pokerth.net έχουν 10 παίκτες και ξεκινούν μόλις γεμίσει το τραπέζι: 10.000 μάρκες ο καθένας, μικρό τυφλό 50 που διπλασιάζεται κάθε 11 χέρια και 5 δευτερόλεπτα για να παίξετε. Οι θέσεις 1 έως 7 παίρνουν 15, 9, 6, 4, 3, 2 και 1 βαθμούς· το Score σας είναι ο μέσος όρος ανά παιχνίδι, σταθμισμένος με τον αριθμό των παιχνιδιών που έχετε παίξει, και η κατάταξη ξεκινά ξανά κάθε τρίμηνο. Χρειάζεται δωρεάν λογαριασμός pokerth.net."],
+      ["Υπάρχουν δωρεάν τουρνουά και διοργανώσεις πόκερ;",
+       "Ναι, όλο τον χρόνο, και όλα δωρεάν. Κάθε παιχνίδι PokerTH είναι τουρνουά, και η κοινότητα του pokerth.net διοργανώνει επίσης τακτικούς αγώνες με δικές τους κατατάξεις: το BBC, παιχνίδια όπου τα τυφλά ανεβαίνουν κάθε λίγα λεπτά (<a href=\"https://bbc.pokerth.net/registration\">ημερολόγιο</a>, <a href=\"https://bbc.pokerth.net/results\">αποτελέσματα</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">κατάταξη</a>)· το WeCup (WEC), τουρνουά με πιο ήρεμο, ισορροπημένο ρυθμό (<a href=\"https://wec.pokerth.net/results\">αποτελέσματα</a>, <a href=\"https://wec.pokerth.net/results/ranking\">κατάταξη</a>)· και το Monthly Cup, που διεξάγεται κάθε μήνα (<a href=\"https://monthlycup.pokerth.net/\">επόμενο κύπελλο και πρόσφατοι νικητές</a>, <a href=\"https://monthlycup.pokerth.net/registration\">εγγραφή</a>). Οι ημερομηνίες και οι κανόνες ανακοινώνονται σε κάθε ιστότοπο και στο φόρουμ του <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Για να συμμετάσχετε χρειάζεστε δωρεάν λογαριασμό pokerth.net."],
       ["Μπορώ να παρακολουθήσω ένα παιχνίδι χωρίς να παίζω;",
        "Ναι. Τα παιχνίδια που τρέχουν και επιτρέπουν θεατές μπορείτε να τα παρακολουθείτε ζωντανά από το λόμπι: βλέπετε το τραπέζι και το chat, αλλά τα προσωπικά φύλλα παραμένουν κρυφά και δεν μπορείτε να παίξετε. Ένας σύνδεσμος πρόσκλησης σε τραπέζι που έχει ήδη ξεκινήσει το ανοίγει για παρακολούθηση."],
       ["Υπάρχει βοήθεια μέσα στην εφαρμογή;",
-       "Ναι. Η Βοήθεια του Άσου: ο Άσος, η μασκότ του διαδικτυακού πελάτη, εξηγεί κάθε οθόνη όσο προχωράτε, αν το θέλετε. Το μενού του περιέχει ολόκληρη τη βοήθεια με αναζήτηση, και το «Τι είναι αυτό;»: αγγίξτε οτιδήποτε στην οθόνη και σας λέει τι κάνει."]
+       "Ναι. Η Βοήθεια του Άσου: ο Άσος, η μασκότ του διαδικτυακού πελάτη, εξηγεί κάθε οθόνη όσο προχωράτε, αν το θέλετε. Το μενού του περιέχει ολόκληρη τη βοήθεια με αναζήτηση, και το «Τι είναι αυτό;»: αγγίξτε οτιδήποτε στην οθόνη και σας λέει τι κάνει."],
+      ["Αναπτύσσεται ακόμη ενεργά το PokerTH;",
+       "Ναι. Το PokerTH αναπτύσσεται ως ελεύθερο λογισμικό από το 2006 και συντηρείται ακόμη: ο πελάτης υπολογιστή και ο διακομιστής βρίσκονται στο <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, αυτός ο διαδικτυακός πελάτης ενημερώνεται συνεχώς (<a href=\"https://github.com/narmod/pokerth-web-client\">πηγαίος κώδικας και ιστορικό αλλαγών</a>) και κάθε μέρα παίζονται παιχνίδια στο επίσημο δίκτυο pokerth.net."]
     ]
   },
   eo: {
     title: "Oftaj demandoj — retkliento de PokerTH",
-    desc: "Oftaj demandoj pri la retkliento de PokerTH: senpaga pokero sen reklamoj, ludi Texas Hold’em en la retumilo sen instali ion ajn, kontoj, poŝtelefonoj, senkonekta reĝimo, lingvoj kaj privateco.",
+    desc: "Oftaj demandoj pri la retkliento de PokerTH: senpaga pokero sen reklamoj kaj sen elŝuto, ludi kiel gasto, inviti amikojn per ligilo, turniroj, poŝtelefonoj, senkonekta reĝimo, lingvoj kaj privateco.",
     h1: "Retkliento de PokerTH — Oftaj demandoj",
     qa: [
       ["Ĉu PokerTH estas senpaga?",
@@ -3080,7 +3311,13 @@ var SEO_FAQ_I18N = {
       ["Ĉu mi povas ludi Texas Hold’em kontraŭ aliaj homoj en mia retumilo?",
        "Jes. Aliĝu al la oficiala reto pokerth.net por ludi vivan Texas Hold’em kontraŭ ludantoj el la tuta mondo, aŭ sendu invitan ligilon por ke amikoj alvenu rekte ĉe via tablo — ĉio ene de la retumilo."],
       ["Ĉu mi bezonas konton por ludi?",
-       "Ne. La reĝimo Loka / trejnado ne bezonas konton kaj funkcias senkonekte. En la oficiala reto pokerth.net vi povas ludi Normalajn ludojn kiel gasto; senpaga konto ĉe pokerth.net necesas por Rangigaj ludoj, tabloj nur por registritaj ludantoj kaj la babilo."],
+       "Ne. La reĝimo Loka / trejnado ne bezonas konton kaj funkcias senkonekte. En la oficiala reto pokerth.net, ensalutu kiel gasto: la servilo donas al vi gastan kromnomon kaj vi tuj povas ludi Normalajn ludojn. En LAN aŭ ĉe dediĉita servilo tute ne ekzistas konto — vi nur elektas kromnomon. Neniu el tiuj petas retpoŝtadreson. Senpaga konto ĉe pokerth.net necesas nur por Rangigaj ludoj, tabloj nur por registritaj ludantoj kaj la babilo."],
+      ["Kiel mi ludu pokeron rete kun amikoj?",
+       "Kreu tablon en la halo — ĉe pokerth.net aŭ ĉe ajna LAN- aŭ dediĉita servilo — kaj premu “Inviti amikojn” en la atendejo. La retkliento kreas invitan ligilon, kiun vi povas sendi per ajna mesaĝilo. Viaj amikoj malfermas ĝin en sia retumilo, sur iPhone, Android aŭ komputilo, sen elŝuti ion ajn. Agordu pasvorton se la tablo restu privata: la pasvorto neniam estas parto de la ligilo."],
+      ["Kio okazas kiam amiko malfermas mian invitan ligilon?",
+       "La ligilo enhavas la tablon kaj la servilon. Via amiko ensalutas — kiel gasto aŭ per konto ĉe pokerth.net, nur per kromnomo ĉe LAN- aŭ dediĉita servilo — kaj la retkliento poste aŭtomate aliĝas al la tablo, sen bezono serĉi ĝin en la halo. Pasvorte protektita tablo petas sian pasvorton; jam komenciĝinta ludo malfermiĝas por spektado. Invitaj ligiloj estas funkcio de la retkliento kaj funkcias ĉe ĉiu servilo al kiu ĝi povas konektiĝi."],
+      ["Ĉu ekzistas demonstra servilo por provi PokerTH sen registriĝo?",
+       "Jes. En la ensaluta ekrano elektu LAN / Dediĉita servilo kaj elektu la publikan demonstran servilon en la servila listo: tajpu ajnan kromnomon kaj vi estas en ĝia halo — sen registriĝo, sen retpoŝtadreso. Verda punkto montras, kiuj listigitaj serviloj estas enretaj kaj kiom da ludantoj estas ĉe ili."],
       ["Ĉu ĝi funkcias sur poŝtelefono?",
        "Jes. La retkliento estas Progressive Web App: ĝi funkcias en ajna moderna retumilo sur komputilo, tabulkomputilo aŭ telefono kaj estas instalebla kiel denaska aplikaĵo — sur iPhone kaj iPad per Kunhavigi → Aldoni al hejmekrano, aliloke per la menuo de la retumilo aŭ la instala butono. La Helpo de la Aso montras la paŝojn por via aparato."],
       ["Ĉu mi povas ludi kontraŭ la komputilo?",
@@ -3096,18 +3333,22 @@ var SEO_FAQ_I18N = {
       ["Kiujn datumojn la retkliento kolektas?",
        "Kiel eble plej malmulte: la agordoj restas en via retumilo, kaj neniu spurado aŭ reklamoj estas uzataj. Kiam vi ensalutas per konto ĉe pokerth.net, viaj opcioj kaj trejnadaj trofeoj sinkroniĝas kun ĝi, por ke ili sekvu vin al viaj aliaj aparatoj. Vidu la privatecan paĝon por detaloj."],
       ["Ĉu mi povas gastigi mian propran servilon?",
-       "Jes. La dediĉita servilo de PokerTH kaj ĉi tiu retkliento ambaŭ estas malfermitkodaj, do vi povas funkciigi vian propran privatan pokerservilon en LAN aŭ en la interreto."],
+       "Jes. La dediĉita servilo de PokerTH kaj ĉi tiu retkliento ambaŭ estas malfermitkodaj, do vi povas funkciigi vian propran privatan pokerservilon en LAN aŭ en la interreto. Por ke ĉiuj vidu ĝin en la listo, elektu LAN / Dediĉita servilo, poste “Proponi mian servilon” sube de la servila listo: kiam la administrantoj aprobas ĝin, ĝi aperas en la listo. La servilo devas esti atingebla el la interreto."],
       ["Kiel funkcias Rangigaj ludoj kaj sezonoj?",
        "Rangigaj ludoj ĉe pokerth.net sidigas 10 ludantojn kaj komenciĝas tuj kiam la tablo pleniĝas: po 10 000 ĵetonoj, malgranda blindo de 50 kiu duobliĝas ĉiujn 11 manojn, kaj 5 sekundoj por agi. La lokoj 1 ĝis 7 gajnas 15, 9, 6, 4, 3, 2 kaj 1 poentojn; via Score estas via meznombro por ludo, pezigita laŭ la nombro da ludoj kiujn vi ludis, kaj la rangigo rekomenciĝas ĉiu trimonate. Senpaga konto ĉe pokerth.net necesas."],
+      ["Ĉu ekzistas senpagaj pokerturniroj kaj konkursoj?",
+       "Jes, la tutan jaron, kaj ĉiuj senpagaj. Ĉiu PokerTH-ludo estas turniro, kaj la komunumo de pokerth.net ankaŭ organizas regulajn konkursojn kun propraj rangigoj: la BBC, ludoj kies blindoj altiĝas ĉiujn kelkajn minutojn (<a href=\"https://bbc.pokerth.net/registration\">kalendaro</a>, <a href=\"https://bbc.pokerth.net/results\">rezultoj</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">rangigo</a>); la WeCup (WEC), turniroj je pli trankvila, ekvilibra ritmo (<a href=\"https://wec.pokerth.net/results\">rezultoj</a>, <a href=\"https://wec.pokerth.net/results/ranking\">rangigo</a>); kaj la Monthly Cup, okazanta ĉiumonate (<a href=\"https://monthlycup.pokerth.net/\">venonta pokalo kaj lastaj gajnintoj</a>, <a href=\"https://monthlycup.pokerth.net/registration\">aliĝo</a>). Datoj kaj reguloj estas anoncataj en ĉiu retejo kaj en la forumo de <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Por partopreni necesas senpaga konto ĉe pokerth.net."],
       ["Ĉu mi povas spekti ludon sen ludi?",
        "Jes. Kurantaj ludoj, kiuj permesas spektantojn, povas esti spektataj rekte el la halo: vi vidas la tablon kaj la babilon, sed la poŝkartoj restas kaŝitaj kaj vi ne povas agi. Invita ligilo al tablo, kiu jam komenciĝis, malfermas ĝin por spektado."],
       ["Ĉu ekzistas helpo en la aplikaĵo?",
-       "Jes. La Helpo de la Aso: la Aso, la maskoto de la retkliento, klarigas ĉiun ekranon dum vi iras, se vi volas. Lia menuo enhavas la tutan helpon kun serĉo, kaj “Kio estas tio?”: tuŝu ion ajn sur la ekrano kaj li diras kion ĝi faras."]
+       "Jes. La Helpo de la Aso: la Aso, la maskoto de la retkliento, klarigas ĉiun ekranon dum vi iras, se vi volas. Lia menuo enhavas la tutan helpon kun serĉo, kaj “Kio estas tio?”: tuŝu ion ajn sur la ekrano kaj li diras kion ĝi faras."],
+      ["Ĉu PokerTH ankoraŭ estas aktive evoluigata?",
+       "Jes. PokerTH estas evoluigata kiel libera programaro ekde 2006 kaj daŭre prizorgata: la labortabla kliento kaj la servilo troviĝas ĉe <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, ĉi tiu retkliento estas daŭre ĝisdatigata (<a href=\"https://github.com/narmod/pokerth-web-client\">fontkodo kaj ŝanĝprotokolo</a>), kaj ludoj okazas ĉiutage en la oficiala reto pokerth.net."]
     ],
   },
   ja: {
     title: "\u3088\u304f\u3042\u308b\u8cea\u554f \u2014 PokerTH \u30a6\u30a7\u30d6\u30af\u30e9\u30a4\u30a2\u30f3\u30c8",
-    desc: "PokerTH \u30a6\u30a7\u30d6\u30af\u30e9\u30a4\u30a2\u30f3\u30c8\u306e\u3088\u304f\u3042\u308b\u8cea\u554f\uff1a\u5e83\u544a\u306a\u3057\u306e\u7121\u6599\u30dd\u30fc\u30ab\u30fc\u3001\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u4e0d\u8981\u3067\u30d6\u30e9\u30a6\u30b6\u4e0a\u3067\u30c6\u30ad\u30b5\u30b9\u30db\u30fc\u30eb\u30c7\u30e0\u3092\u904a\u3076\u65b9\u6cd5\u3001\u30a2\u30ab\u30a6\u30f3\u30c8\u3001\u30b9\u30de\u30fc\u30c8\u30d5\u30a9\u30f3\u3001\u30aa\u30d5\u30e9\u30a4\u30f3\u30e2\u30fc\u30c9\u3001\u5bfe\u5fdc\u8a00\u8a9e\u3001\u30d7\u30e9\u30a4\u30d0\u30b7\u30fc\u3002",
+    desc: "PokerTH ウェブクライアントのよくある質問：広告なし・ダウンロード不要の無料ポーカー、ゲストやアカウントなしでのプレイ、リンクでの友達招待、トーナメント、スマートフォン、オフラインモード、対応言語、プライバシー。",
     h1: "PokerTH \u30a6\u30a7\u30d6\u30af\u30e9\u30a4\u30a2\u30f3\u30c8 \u2014 \u3088\u304f\u3042\u308b\u8cea\u554f",
     qa: [
       ["PokerTH は無料ですか？",
@@ -3119,7 +3360,13 @@ var SEO_FAQ_I18N = {
       ["ブラウザで他の人とテキサスホールデムを遊べますか？",
        "はい。公式ネットワーク pokerth.net に参加すれば世界中のプレイヤーと対戦できます。招待リンクを送れば、友人はそのままあなたのテーブルに着席します。すべてブラウザの中で完結します。"],
       ["遊ぶのにアカウントは必要ですか？",
-       "いいえ。「ローカル / 練習」モードはアカウント不要で、オフラインで動作します。公式ネットワーク pokerth.net では、「通常」ゲームならゲストとして遊べます。「ランキングゲーム」、登録プレイヤー限定のテーブル、チャットには無料の pokerth.net アカウントが必要です。"],
+       "いいえ。「ローカル / 練習」モードはアカウント不要で、オフラインで動作します。公式ネットワーク pokerth.net ではゲストとしてログインできます。サーバーがゲスト用のニックネームを割り当て、すぐに「通常」ゲームを遊べます。LAN や専用サーバーにはアカウント自体がなく、ニックネームを決めるだけです。いずれの場合もメールアドレスは求められません。無料の pokerth.net アカウントが必要なのは、「ランキングゲーム」、登録プレイヤー限定のテーブル、チャットだけです。"],
+      ["友達とオンラインでポーカーを遊ぶには？",
+       "pokerth.net でも、任意の LAN や専用サーバーでも、ロビーでテーブルを作成し、待機室で「友達を招待」を押します。ウェブクライアントが招待リンクを作成するので、好きなメッセージアプリで送ってください。友達は iPhone、Android、パソコンのブラウザでそれを開くだけで、何もダウンロードする必要はありません。テーブルを非公開にしたい場合はパスワードを設定してください。パスワードがリンクに含まれることはありません。"],
+      ["友達が招待リンクを開くとどうなりますか？",
+       "リンクにはテーブルとサーバーの情報が含まれています。友達がログインすると（pokerth.net ではゲストまたはアカウントで、LAN や専用サーバーではニックネームだけで）、ウェブクライアントが自動的にそのテーブルに参加するので、ロビーで探す必要はありません。パスワード付きのテーブルではパスワードの入力を求められ、すでに始まっているゲームは観戦用として開きます。招待リンクはウェブクライアントの機能で、接続できるすべてのサーバーで使えます。"],
+      ["登録せずに PokerTH を試せるデモサーバーはありますか？",
+       "はい。ログイン画面で「LAN / 専用サーバー」を選び、サーバー一覧から公開デモサーバーを選んでください。好きなニックネームを入力すればそのロビーに入れます。登録もメールアドレスも不要です。緑の点は、一覧のどのサーバーがオンラインか、そして何人のプレイヤーがいるかを示します。"],
       ["スマートフォンでも動きますか？",
        "はい。ウェブクライアントはプログレッシブウェブアプリです。パソコン、タブレット、スマートフォンの最新ブラウザで動作し、ネイティブアプリのようにインストールできます。iPhone と iPad では「共有」→「ホーム画面に追加」、それ以外ではブラウザのメニューかインストールボタンから行います。エースのヘルプが、お使いの端末での手順を表示します。"],
       ["コンピューターと対戦できますか？",
@@ -3135,18 +3382,22 @@ var SEO_FAQ_I18N = {
       ["ウェブクライアントはどんなデータを集めますか？",
        "できる限り少なくしています。設定はブラウザ内に残り、追跡も広告もありません。pokerth.net アカウントでログインすると、オプションと練習のトロフィーがそのアカウントと同期され、他の端末にも引き継がれます。詳しくはプライバシーのページをご覧ください。"],
       ["自分でサーバーを立てられますか？",
-       "はい。PokerTH の専用サーバーもこのウェブクライアントもオープンソースなので、LAN 上でもインターネット上でも、自分専用のポーカーサーバーを運用できます。"],
+       "はい。PokerTH の専用サーバーもこのウェブクライアントもオープンソースなので、LAN 上でもインターネット上でも、自分専用のポーカーサーバーを運用できます。誰でも見られる一覧に載せたい場合は、「LAN / 専用サーバー」を選び、サーバー一覧の下にある「自分のサーバーを申請」を押してください。管理者が承認すると一覧に表示されます。サーバーはインターネットから接続できる必要があります。"],
       ["ランキングゲームとシーズンはどのような仕組みですか？",
        "pokerth.net のランキングゲームは10人で行い、テーブルが埋まり次第すぐに始まります。全員が10,000チップで開始し、スモールブラインドは50から11ハンドごとに倍になり、行動の持ち時間は5秒です。1位から7位まで順に15、9、6、4、3、2、1ポイントが入り、スコアは参加したゲーム数で重み付けした1ゲームあたりの平均で、ランキングは四半期ごとにリセットされます。無料の pokerth.net アカウントが必要です。"],
+      ["無料のポーカートーナメントや大会はありますか？",
+       "はい。一年中開催されていて、すべて無料です。PokerTH のゲームはどれもトーナメント形式で、さらに pokerth.net コミュニティが独自のランキング付きの大会を定期的に開いています。数分ごとにブラインドが上がる BBC（<a href=\"https://bbc.pokerth.net/registration\">日程</a>、<a href=\"https://bbc.pokerth.net/results\">結果</a>、<a href=\"https://bbc.pokerth.net/results/ranking\">ランキング</a>）、落ち着いたバランスのよいペースで進む WeCup（WEC）（<a href=\"https://wec.pokerth.net/results\">結果</a>、<a href=\"https://wec.pokerth.net/results/ranking\">ランキング</a>）、そして毎月開催される Monthly Cup（<a href=\"https://monthlycup.pokerth.net/\">次回の大会と最近の優勝者</a>、<a href=\"https://monthlycup.pokerth.net/registration\">参加登録</a>）です。日程とルールは各サイトと <a href=\"https://www.pokerth.net/\">pokerth.net</a> のフォーラムで告知されます。参加には無料の pokerth.net アカウントが必要です。"],
       ["プレイせずにゲームを観戦できますか？",
        "はい。観戦を許可している進行中のゲームは、ロビーからリアルタイムで観戦できます。テーブルとチャットは見られますが、ホールカードは見えず、アクションはできません。すでに始まっているテーブルへの招待リンクは、観戦用として開きます。"],
       ["アプリ内にヘルプはありますか？",
-       "はい。エースのヘルプです。ウェブクライアントのマスコットであるエースが、希望すれば画面ごとに説明してくれます。そのメニューには検索付きのヘルプ全体と「これは何？」があり、画面上の好きな場所をタップすると、それが何をするものかを教えてくれます。"]
+       "はい。エースのヘルプです。ウェブクライアントのマスコットであるエースが、希望すれば画面ごとに説明してくれます。そのメニューには検索付きのヘルプ全体と「これは何？」があり、画面上の好きな場所をタップすると、それが何をするものかを教えてくれます。"],
+      ["PokerTH は今も活発に開発されていますか？",
+       "はい。PokerTH は 2006 年からフリーソフトウェアとして開発され、現在もメンテナンスが続いています。デスクトップクライアントとサーバーは <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> で公開されており、このウェブクライアントも継続的に更新されています（<a href=\"https://github.com/narmod/pokerth-web-client\">ソースコードと変更履歴</a>）。公式ネットワーク pokerth.net では毎日ゲームが行われています。"]
     ]
   },
   ko: {
     title: "\uc790\uc8fc \ubb3b\ub294 \uc9c8\ubb38 \u2014 PokerTH \uc6f9 \ud074\ub77c\uc774\uc5b8\ud2b8",
-    desc: "PokerTH \uc6f9 \ud074\ub77c\uc774\uc5b8\ud2b8\uc5d0 \ub300\ud55c \uc790\uc8fc \ubb3b\ub294 \uc9c8\ubb38: \uad11\uace0 \uc5c6\ub294 \ubb34\ub8cc \ud3ec\ucee4, \ub0b4\ub824\ubc1b\uae30 \uc5c6\uc774 \ube0c\ub77c\uc6b0\uc800\uc5d0\uc11c \ud14d\uc0ac\uc2a4 \ud640\ub364 \uc990\uae30\uae30, \uacc4\uc815, \ubaa8\ubc14\uc77c, \uc624\ud504\ub77c\uc778 \ubaa8\ub4dc, \uc9c0\uc6d0 \uc5b8\uc5b4\uc640 \uac1c\uc778\uc815\ubcf4.",
+    desc: "PokerTH 웹 클라이언트에 대한 자주 묻는 질문: 광고 없고 내려받기 필요 없는 무료 포커, 게스트로 또는 계정 없이 플레이, 링크로 친구 초대, 토너먼트, 모바일, 오프라인 모드, 지원 언어와 개인정보.",
     h1: "PokerTH \uc6f9 \ud074\ub77c\uc774\uc5b8\ud2b8 \u2014 \uc790\uc8fc \ubb3b\ub294 \uc9c8\ubb38",
     qa: [
       ["PokerTH는 무료인가요?",
@@ -3158,7 +3409,13 @@ var SEO_FAQ_I18N = {
       ["브라우저에서 다른 사람과 텍사스 홀덤을 할 수 있나요?",
        "네. 공식 네트워크 pokerth.net에 접속하면 전 세계 플레이어와 겨룰 수 있고, 초대 링크를 보내면 친구가 곧바로 당신의 테이블에 도착합니다. 모두 브라우저 안에서 이루어집니다."],
       ["게임을 하려면 계정이 필요한가요?",
-       "아니요. 「로컬 / 연습」 모드는 계정이 필요 없고 오프라인에서도 작동합니다. 공식 네트워크 pokerth.net에서는 「일반」 게임을 게스트로 할 수 있으며, 「랭킹 게임」, 등록 플레이어 전용 테이블, 채팅에는 무료 pokerth.net 계정이 필요합니다."],
+       "아니요. 「로컬 / 연습」 모드는 계정이 필요 없고 오프라인에서도 작동합니다. 공식 네트워크 pokerth.net에서는 게스트로 로그인하면 됩니다. 서버가 게스트 닉네임을 정해 주고, 곧바로 「일반」 게임을 할 수 있습니다. LAN이나 전용 서버에는 계정이라는 것이 아예 없으며, 닉네임만 정하면 됩니다. 어느 경우에도 이메일 주소를 묻지 않습니다. 무료 pokerth.net 계정은 「랭킹 게임」, 등록 플레이어 전용 테이블, 채팅에만 필요합니다."],
+      ["친구와 온라인으로 포커를 하려면 어떻게 하나요?",
+       "pokerth.net이든 어떤 LAN이나 전용 서버든 로비에서 테이블을 만들고, 대기실에서 「친구 초대」를 누르세요. 웹 클라이언트가 초대 링크를 만들어 주며, 아무 메신저로나 보낼 수 있습니다. 친구는 iPhone, Android, 컴퓨터의 브라우저에서 링크를 열기만 하면 되고, 아무것도 내려받을 필요가 없습니다. 테이블을 비공개로 하려면 비밀번호를 설정하세요. 비밀번호는 절대 링크에 포함되지 않습니다."],
+      ["친구가 내 초대 링크를 열면 어떻게 되나요?",
+       "링크에는 테이블과 서버 정보가 담겨 있습니다. 친구가 로그인하면(pokerth.net에서는 게스트나 계정으로, LAN이나 전용 서버에서는 닉네임만으로) 웹 클라이언트가 자동으로 그 테이블에 참가하므로 로비에서 찾을 필요가 없습니다. 비밀번호가 걸린 테이블은 비밀번호를 묻고, 이미 시작된 게임은 관전용으로 열립니다. 초대 링크는 웹 클라이언트의 기능으로, 웹 클라이언트가 접속할 수 있는 모든 서버에서 작동합니다."],
+      ["가입하지 않고 PokerTH를 체험할 수 있는 데모 서버가 있나요?",
+       "네. 로그인 화면에서 「LAN / 전용 서버」를 선택하고 서버 목록에서 공개 데모 서버를 고르세요. 아무 닉네임이나 입력하면 바로 그 서버의 로비에 들어갑니다. 가입도, 이메일 주소도 필요 없습니다. 초록색 점은 목록의 어떤 서버가 온라인인지, 그리고 각 서버에 플레이어가 몇 명 있는지 보여 줍니다."],
       ["휴대전화에서도 되나요?",
        "네. 웹 클라이언트는 프로그레시브 웹 앱입니다. 데스크톱, 태블릿, 휴대전화의 최신 브라우저에서 실행되며 네이티브 앱처럼 설치할 수 있습니다. iPhone과 iPad에서는 공유 → 「홈 화면에 추가」로, 그 밖의 기기에서는 브라우저 메뉴나 설치 버튼으로 설치합니다. 에이스 도움말이 기기에 맞는 단계를 보여 줍니다."],
       ["컴퓨터와 대결할 수 있나요?",
@@ -3174,18 +3431,22 @@ var SEO_FAQ_I18N = {
       ["웹 클라이언트는 어떤 데이터를 수집하나요?",
        "가능한 한 적게 수집합니다. 설정은 브라우저에 남고 추적이나 광고는 사용하지 않습니다. pokerth.net 계정으로 로그인하면 옵션과 연습 트로피가 해당 계정과 동기화되어 다른 기기에서도 이어집니다. 자세한 내용은 개인정보 페이지를 보세요."],
       ["직접 서버를 운영할 수 있나요?",
-       "네. PokerTH 전용 서버와 이 웹 클라이언트 모두 오픈소스이므로, 근거리 통신망이든 인터넷이든 자신만의 비공개 포커 서버를 운영할 수 있습니다."],
+       "네. PokerTH 전용 서버와 이 웹 클라이언트 모두 오픈소스이므로, 근거리 통신망이든 인터넷이든 자신만의 비공개 포커 서버를 운영할 수 있습니다. 모두가 볼 수 있는 목록에 올리고 싶다면 「LAN / 전용 서버」를 선택한 뒤, 서버 목록 맨 아래의 「내 서버 제안하기」를 누르세요. 관리자가 승인하면 목록에 표시됩니다. 서버는 인터넷에서 접속할 수 있어야 합니다."],
       ["랭킹 게임과 시즌은 어떻게 진행되나요?",
        "pokerth.net의 랭킹 게임은 10명이 앉으며 테이블이 차는 즉시 시작됩니다. 각자 10,000칩으로 시작하고, 스몰 블라인드는 50에서 11핸드마다 두 배가 되며, 행동 제한 시간은 5초입니다. 1위부터 7위까지 15, 9, 6, 4, 3, 2, 1점을 받으며, 점수는 참가한 게임 수로 가중한 게임당 평균이고 랭킹은 분기마다 다시 시작됩니다. 무료 pokerth.net 계정이 필요합니다."],
+      ["무료 포커 토너먼트와 대회가 있나요?",
+       "네. 일 년 내내 열리며 모두 무료입니다. PokerTH의 모든 게임은 토너먼트이고, pokerth.net 커뮤니티는 자체 랭킹이 있는 대회도 정기적으로 엽니다. 몇 분마다 블라인드가 오르는 BBC(<a href=\"https://bbc.pokerth.net/registration\">일정</a>, <a href=\"https://bbc.pokerth.net/results\">결과</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">랭킹</a>), 차분하고 균형 잡힌 속도로 진행되는 토너먼트 WeCup(WEC)(<a href=\"https://wec.pokerth.net/results\">결과</a>, <a href=\"https://wec.pokerth.net/results/ranking\">랭킹</a>), 그리고 매달 열리는 Monthly Cup(<a href=\"https://monthlycup.pokerth.net/\">다음 대회와 최근 우승자</a>, <a href=\"https://monthlycup.pokerth.net/registration\">참가 신청</a>)이 있습니다. 일정과 규칙은 각 사이트와 <a href=\"https://www.pokerth.net/\">pokerth.net</a> 포럼에 공지됩니다. 참가하려면 무료 pokerth.net 계정이 필요합니다."],
       ["플레이하지 않고 게임을 관전할 수 있나요?",
        "네. 관전을 허용하는 진행 중인 게임은 로비에서 실시간으로 볼 수 있습니다. 테이블과 채팅은 보이지만 홀 카드는 가려져 있고 액션은 할 수 없습니다. 이미 시작된 테이블의 초대 링크는 관전용으로 열립니다."],
       ["앱 안에 도움말이 있나요?",
-       "네. 에이스 도움말입니다. 웹 클라이언트의 마스코트인 에이스가 원하면 화면마다 진행에 맞춰 설명해 줍니다. 에이스의 메뉴에는 검색이 되는 전체 도움말과 「이게 뭐예요?」가 있어, 화면의 아무 곳이나 누르면 그것이 무슨 기능인지 알려 줍니다."]
+       "네. 에이스 도움말입니다. 웹 클라이언트의 마스코트인 에이스가 원하면 화면마다 진행에 맞춰 설명해 줍니다. 에이스의 메뉴에는 검색이 되는 전체 도움말과 「이게 뭐예요?」가 있어, 화면의 아무 곳이나 누르면 그것이 무슨 기능인지 알려 줍니다."],
+      ["PokerTH는 지금도 활발히 개발되고 있나요?",
+       "네. PokerTH는 2006년부터 자유 소프트웨어로 개발되어 지금도 유지 관리되고 있습니다. 데스크톱 클라이언트와 서버는 <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>에 있고, 이 웹 클라이언트도 꾸준히 업데이트되고 있으며(<a href=\"https://github.com/narmod/pokerth-web-client\">소스 코드와 변경 내역</a>), 공식 네트워크 pokerth.net에서는 매일 게임이 열립니다."]
     ]
   },
   zh: {
     title: "\u5e38\u89c1\u95ee\u9898 \u2014 PokerTH \u7f51\u9875\u7248",
-    desc: "\u5173\u4e8e PokerTH \u7f51\u9875\u7248\u7684\u5e38\u89c1\u95ee\u9898\uff1a\u514d\u8d39\u65e0\u5e7f\u544a\u7684\u6251\u514b\uff0c\u65e0\u9700\u4e0b\u8f7d\u5373\u53ef\u5728\u6d4f\u89c8\u5668\u91cc\u73a9\u5fb7\u5dde\u6251\u514b\uff0c\u8d26\u53f7\u3001\u624b\u673a\u3001\u79bb\u7ebf\u6a21\u5f0f\u3001\u8bed\u8a00\u4e0e\u9690\u79c1\u3002",
+    desc: "关于 PokerTH 网页版的常见问题：免费无广告的扑克，无需下载，以访客身份或完全不用账号即可游戏，用链接邀请好友，锦标赛，手机，离线模式，语言与隐私。",
     h1: "PokerTH \u7f51\u9875\u7248 \u2014 \u5e38\u89c1\u95ee\u9898",
     qa: [
       ["PokerTH 是免费的吗？",
@@ -3197,7 +3458,13 @@ var SEO_FAQ_I18N = {
       ["能在浏览器里和别人一起玩德州扑克吗？",
        "可以。加入官方网络 pokerth.net 就能与世界各地的玩家对战，或者发送邀请链接，朋友会直接落座到你的牌桌——全部在浏览器里完成。"],
       ["玩游戏需要账号吗？",
-       "不需要。「本地 / 训练」模式无需账号，并且可以离线使用。在官方网络 pokerth.net 上，你可以以访客身份玩「普通」游戏；「排名游戏」、仅限注册玩家的牌桌和聊天则需要一个免费的 pokerth.net 账号。"],
+       "不需要。「本地 / 训练」模式无需账号，并且可以离线使用。在官方网络 pokerth.net 上，以访客身份登录即可：服务器会给你分配一个访客昵称，你可以立即开始玩「普通」游戏。在局域网或专用服务器上则完全没有账号，你只需选择一个昵称。以上方式都不会要求你提供电子邮件地址。只有「排名游戏」、仅限注册玩家的牌桌和聊天才需要一个免费的 pokerth.net 账号。"],
+      ["如何和好友一起在线玩扑克？",
+       "在大厅里创建一张牌桌——无论是在 pokerth.net 上，还是在任何局域网或专用服务器上——然后在等候室中点按「邀请好友」。网页版会生成一个邀请链接，你可以通过任何聊天软件发送。好友在浏览器中打开它即可，无论是 iPhone、Android 还是电脑，都无需下载任何东西。如果牌桌需要保持私密，请设置密码：密码永远不会包含在链接里。"],
+      ["好友打开我的邀请链接后会发生什么？",
+       "链接中包含了牌桌和服务器的信息。你的好友登录后——在 pokerth.net 上以访客身份或使用账号，在局域网或专用服务器上只需一个昵称——网页版就会自动加入这张牌桌，无需在大厅里寻找。有密码保护的牌桌会要求输入密码；已经开始的牌局会以旁观方式打开。邀请链接是网页版的功能，在它能连接的所有服务器上都可以使用。"],
+      ["有没有无需注册就能试玩 PokerTH 的演示服务器？",
+       "有。在登录界面选择「局域网 / 专用服务器」，然后在服务器列表中选择公共演示服务器：输入任意昵称就能进入它的大厅——无需注册，也无需电子邮件地址。绿点会显示列表中哪些服务器在线，以及每台服务器上有多少玩家。"],
       ["手机上能用吗？",
        "可以。网页版是渐进式网页应用：它能在电脑、平板和手机上的任何现代浏览器中运行，也能像原生应用一样安装——在 iPhone 和 iPad 上通过 分享 → 添加到主屏幕，其他设备则通过浏览器菜单或安装按钮。A 牌小助手会显示适合你设备的步骤。"],
       ["能和电脑对战吗？",
@@ -3213,18 +3480,22 @@ var SEO_FAQ_I18N = {
       ["网页版会收集哪些数据？",
        "尽可能少：设置保存在你自己的浏览器里，不做任何追踪，也没有广告。使用 pokerth.net 账号登录后，你的选项和训练奖杯会与账号同步，从而在你的其他设备上也能延续。详情见隐私页面。"],
       ["我可以自己架设服务器吗？",
-       "可以。PokerTH 专用服务器和这个网页版都是开源的，因此你可以在局域网或互联网上运行属于自己的私人扑克服务器。"],
+       "可以。PokerTH 专用服务器和这个网页版都是开源的，因此你可以在局域网或互联网上运行属于自己的私人扑克服务器。如果想让所有人都能在列表中看到它，请选择「局域网 / 专用服务器」，然后点按服务器列表底部的「提交我的服务器」：管理员批准后，它就会出现在列表中。该服务器必须能从互联网访问。"],
       ["排名游戏和赛季是怎么运作的？",
        "pokerth.net 上的排名游戏坐 10 位玩家，牌桌坐满即开始：每人 10,000 筹码，小盲注 50、每 11 手牌翻倍，每次行动限时 5 秒。第 1 至第 7 名分别得 15、9、6、4、3、2 和 1 分；你的分数是每局平均分，并按你玩过的局数加权，排名每个季度重新开始。需要一个免费的 pokerth.net 账号。"],
+      ["有免费的扑克锦标赛和比赛吗？",
+       "有，全年都有，而且全部免费。每一局 PokerTH 游戏都是一场锦标赛，pokerth.net 社区还定期举办拥有独立排名的比赛：BBC，盲注每隔几分钟就上涨的牌局（<a href=\"https://bbc.pokerth.net/registration\">日程</a>、<a href=\"https://bbc.pokerth.net/results\">结果</a>、<a href=\"https://bbc.pokerth.net/results/ranking\">排名</a>）；WeCup（WEC），节奏更平缓、更均衡的锦标赛（<a href=\"https://wec.pokerth.net/results\">结果</a>、<a href=\"https://wec.pokerth.net/results/ranking\">排名</a>）；以及每月举办一次的 Monthly Cup（<a href=\"https://monthlycup.pokerth.net/\">下一届比赛与最近的冠军</a>、<a href=\"https://monthlycup.pokerth.net/registration\">报名</a>）。日期和规则会在各自的网站以及 <a href=\"https://www.pokerth.net/\">pokerth.net</a> 论坛上公布。参赛需要一个免费的 pokerth.net 账号。"],
       ["不参与游戏可以旁观吗？",
        "可以。允许旁观的进行中牌局可以从大厅实时观看：你能看到牌桌和聊天，但底牌保持隐藏，也无法行动。已开始牌桌的邀请链接会以旁观方式打开它。"],
       ["应用内有帮助吗？",
-       "有。A 牌小助手：A 牌是网页版的吉祥物，如果你愿意，它会在你使用时逐屏讲解。它的菜单包含带搜索的完整帮助，以及「这是什么？」：点按屏幕上的任何东西，它就会告诉你那是做什么的。"]
+       "有。A 牌小助手：A 牌是网页版的吉祥物，如果你愿意，它会在你使用时逐屏讲解。它的菜单包含带搜索的完整帮助，以及「这是什么？」：点按屏幕上的任何东西，它就会告诉你那是做什么的。"],
+      ["PokerTH 仍在积极开发吗？",
+       "是的。PokerTH 自 2006 年起作为自由软件开发，至今仍在维护：桌面客户端和服务器托管在 <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> 上，这个网页版也在持续更新（<a href=\"https://github.com/narmod/pokerth-web-client\">源代码与更新日志</a>），官方网络 pokerth.net 上每天都有人在玩。"]
     ]
   },
   'zh-TW': {
     title: "\u5e38\u898b\u554f\u984c \u2014 PokerTH \u7db2\u9801\u7248",
-    desc: "\u95dc\u65bc PokerTH \u7db2\u9801\u7248\u7684\u5e38\u898b\u554f\u984c\uff1a\u514d\u8cbb\u7121\u5ee3\u544a\u7684\u64b2\u514b\u3001\u7121\u9808\u4e0b\u8f09\u5373\u53ef\u5728\u700f\u89bd\u5668\u88e1\u73a9\u5fb7\u5dde\u64b2\u514b\u3001\u5e33\u865f\u3001\u624b\u6a5f\u3001\u96e2\u7dda\u6a21\u5f0f\u3001\u8a9e\u8a00\u8207\u96b1\u79c1\u3002",
+    desc: "關於 PokerTH 網頁版的常見問題：免費無廣告的撲克、無須下載、以訪客身分或完全不用帳號即可遊戲、用連結邀請好友、錦標賽、手機、離線模式、語言與隱私。",
     h1: "PokerTH \u7db2\u9801\u7248 \u2014 \u5e38\u898b\u554f\u984c",
     qa: [
       ["PokerTH 是免費的嗎？",
@@ -3236,7 +3507,13 @@ var SEO_FAQ_I18N = {
       ["能在瀏覽器裡和其他人玩德州撲克嗎？",
        "可以。加入官方網路 pokerth.net 就能與世界各地的玩家對戰，或是傳送邀請連結，朋友會直接坐到你的牌桌——全部在瀏覽器裡完成。"],
       ["玩遊戲需要帳號嗎？",
-       "不需要。「本機 / 練習」模式不需要帳號，而且可以離線使用。在官方網路 pokerth.net 上，你可以以訪客身分玩「一般」遊戲；「排名遊戲」、僅限註冊玩家的牌桌和聊天則需要一個免費的 pokerth.net 帳號。"],
+       "不需要。「本機 / 練習」模式不需要帳號，而且可以離線使用。在官方網路 pokerth.net 上，以訪客身分登入即可：伺服器會給你一個訪客暱稱，你可以馬上開始玩「一般」遊戲。在區域網路或專用伺服器上則完全沒有帳號，你只要選一個暱稱。以上方式都不會要求你提供電子郵件地址。只有「排名遊戲」、僅限註冊玩家的牌桌和聊天，才需要一個免費的 pokerth.net 帳號。"],
+      ["要怎麼和好友一起線上玩撲克？",
+       "在大廳建立一張牌桌——不論是在 pokerth.net，還是在任何區域網路或專用伺服器上——然後在等候室點一下「邀請好友」。網頁版會產生一個邀請連結，你可以透過任何通訊軟體傳送。好友用瀏覽器打開它就行，不論是 iPhone、Android 還是電腦，都不必下載任何東西。如果牌桌要保持私密，請設定密碼：密碼絕不會包含在連結裡。"],
+      ["好友打開我的邀請連結後會發生什麼事？",
+       "連結裡帶有牌桌和伺服器的資訊。你的好友登入後——在 pokerth.net 上以訪客身分或使用帳號，在區域網路或專用伺服器上只要一個暱稱——網頁版就會自動加入這張牌桌，不必在大廳裡尋找。有密碼保護的牌桌會要求輸入密碼；已經開始的牌局會以旁觀方式開啟。邀請連結是網頁版的功能，在它能連線的所有伺服器上都能使用。"],
+      ["有沒有不用註冊就能試玩 PokerTH 的展示伺服器？",
+       "有。在登入畫面選擇「區域網路 / 專用伺服器」，然後在伺服器清單中選擇公開展示伺服器：輸入任何暱稱就能進入它的大廳——不必註冊，也不需要電子郵件地址。綠點會顯示清單中哪些伺服器在線上，以及每台伺服器上有多少玩家。"],
       ["手機上能用嗎？",
        "可以。網頁版是漸進式網頁應用程式：它能在電腦、平板與手機的任何現代瀏覽器中執行，也能像原生應用程式一樣安裝——在 iPhone 和 iPad 上透過 分享 → 加入主畫面，其他裝置則透過瀏覽器選單或安裝按鈕。A 牌小幫手會顯示適合你裝置的步驟。"],
       ["能和電腦對戰嗎？",
@@ -3252,18 +3529,22 @@ var SEO_FAQ_I18N = {
       ["網頁版會收集哪些資料？",
        "盡可能少：設定留在你自己的瀏覽器裡，不做任何追蹤，也沒有廣告。使用 pokerth.net 帳號登入後，你的選項和練習獎盃會與帳號同步，讓它們在你的其他裝置上也能延續。詳情請見隱私頁面。"],
       ["我可以自己架設伺服器嗎？",
-       "可以。PokerTH 專用伺服器與這個網頁版都是開源的，因此你可以在區域網路或網際網路上執行屬於自己的私人撲克伺服器。"],
+       "可以。PokerTH 專用伺服器與這個網頁版都是開源的，因此你可以在區域網路或網際網路上執行屬於自己的私人撲克伺服器。如果想讓所有人都能在清單中看到它，請選擇「區域網路 / 專用伺服器」，再點一下伺服器清單底部的「提交我的伺服器」：管理員核准後，它就會出現在清單中。該伺服器必須能從網際網路連線。"],
       ["排名遊戲和賽季是怎麼運作的？",
        "pokerth.net 上的排名遊戲坐 10 位玩家，牌桌坐滿即開始：每人 10,000 籌碼，小盲注 50、每 11 手牌翻倍，每次行動限時 5 秒。第 1 至第 7 名分別得 15、9、6、4、3、2 和 1 分；你的分數是每局平均分，並依你玩過的局數加權，排名每一季重新開始。需要一個免費的 pokerth.net 帳號。"],
+      ["有免費的撲克錦標賽和比賽嗎？",
+       "有，整年都有，而且全部免費。每一局 PokerTH 遊戲都是一場錦標賽，pokerth.net 社群還定期舉辦擁有獨立排名的比賽：BBC，盲注每隔幾分鐘就上漲的牌局（<a href=\"https://bbc.pokerth.net/registration\">賽程</a>、<a href=\"https://bbc.pokerth.net/results\">成績</a>、<a href=\"https://bbc.pokerth.net/results/ranking\">排名</a>）；WeCup（WEC），節奏較平緩、較均衡的錦標賽（<a href=\"https://wec.pokerth.net/results\">成績</a>、<a href=\"https://wec.pokerth.net/results/ranking\">排名</a>）；以及每個月舉辦一次的 Monthly Cup（<a href=\"https://monthlycup.pokerth.net/\">下一屆比賽與最近的冠軍</a>、<a href=\"https://monthlycup.pokerth.net/registration\">報名</a>）。日期和規則會在各自的網站以及 <a href=\"https://www.pokerth.net/\">pokerth.net</a> 論壇上公布。參賽需要一個免費的 pokerth.net 帳號。"],
       ["不參與遊戲可以旁觀嗎？",
        "可以。允許旁觀的進行中牌局可以從大廳即時觀看：你能看到牌桌和聊天，但底牌保持隱藏，也無法行動。已開始牌桌的邀請連結會以旁觀方式開啟它。"],
       ["應用程式內有說明嗎？",
-       "有。A 牌小幫手：A 牌是網頁版的吉祥物，如果你願意，它會在你使用時逐畫面講解。它的選單包含附搜尋的完整說明，以及「這是什麼？」：點一下畫面上的任何東西，它就會告訴你那是做什麼的。"]
+       "有。A 牌小幫手：A 牌是網頁版的吉祥物，如果你願意，它會在你使用時逐畫面講解。它的選單包含附搜尋的完整說明，以及「這是什麼？」：點一下畫面上的任何東西，它就會告訴你那是做什麼的。"],
+      ["PokerTH 還在積極開發嗎？",
+       "是的。PokerTH 自 2006 年起以自由軟體的形式開發，至今仍持續維護：桌面用戶端與伺服器放在 <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> 上，這個網頁版也不斷更新（<a href=\"https://github.com/narmod/pokerth-web-client\">原始碼與更新紀錄</a>），官方網路 pokerth.net 上每天都有人在玩。"]
     ]
   },
   'zh-HK': {
     title: "常見問題 — PokerTH 網頁版",
-    desc: "關於 PokerTH 網頁版的常見問題：免費無廣告的撲克、無須下載即可在瀏覽器裡玩德州撲克、帳戶、手機、離線模式、語言與隱私。",
+    desc: "關於 PokerTH 網頁版的常見問題：免費無廣告的撲克、無須下載、以訪客身分或完全不用帳戶即可遊戲、用連結邀請朋友、錦標賽、手機、離線模式、語言與隱私。",
     h1: "PokerTH 網頁版 — 常見問題",
     qa: [
       ["PokerTH 是免費的嗎？",
@@ -3275,7 +3556,13 @@ var SEO_FAQ_I18N = {
       ["能在瀏覽器裡和其他人玩德州撲克嗎？",
        "可以。加入官方網絡 pokerth.net 就能與世界各地的玩家對戰，或是傳送邀請連結，朋友會直接坐到你的牌桌——全部在瀏覽器裡完成。"],
       ["玩遊戲需要帳戶嗎？",
-       "不需要。「本機 / 練習」模式不需要帳戶，而且可以離線使用。在官方網絡 pokerth.net 上，你可以以訪客身分玩「一般」遊戲；「排名遊戲」、僅限註冊玩家的牌桌和聊天則需要一個免費的 pokerth.net 帳戶。"],
+       "不需要。「本機 / 練習」模式不需要帳戶，而且可以離線使用。在官方網絡 pokerth.net 上，以訪客身分登入即可：伺服器會給你一個訪客暱稱，你可以立即開始玩「一般」遊戲。在區域網絡或專用伺服器上則完全沒有帳戶，你只需選一個暱稱。以上方式都不會要求你提供電郵地址。只有「排名遊戲」、僅限註冊玩家的牌桌和聊天，才需要一個免費的 pokerth.net 帳戶。"],
+      ["怎樣和朋友一起在網上玩撲克？",
+       "在大堂建立一張牌桌——無論是在 pokerth.net，還是在任何區域網絡或專用伺服器上——然後在等候室按「邀請好友」。網頁版會產生一條邀請連結，你可以透過任何通訊軟件傳送。朋友用瀏覽器打開它就可以，無論是 iPhone、Android 還是電腦，都不用下載任何東西。如果牌桌要保持私密，請設定密碼：密碼絕不會包含在連結裡。"],
+      ["朋友打開我的邀請連結後會發生甚麼事？",
+       "連結裡帶有牌桌和伺服器的資料。你的朋友登入後——在 pokerth.net 上以訪客身分或使用帳戶，在區域網絡或專用伺服器上只需一個暱稱——網頁版就會自動加入這張牌桌，不用在大堂裡尋找。有密碼保護的牌桌會要求輸入密碼；已經開始的牌局會以旁觀方式開啟。邀請連結是網頁版的功能，在它能連線的所有伺服器上都能使用。"],
+      ["有沒有不用註冊就能試玩 PokerTH 的示範伺服器？",
+       "有。在登入畫面選擇「區域網絡 / 專用伺服器」，然後在伺服器列表中選擇公開示範伺服器：輸入任何暱稱就能進入它的大堂——不用註冊，也不需要電郵地址。綠點會顯示列表中哪些伺服器在線，以及每部伺服器上有多少玩家。"],
       ["手機上能用嗎？",
        "可以。網頁版是漸進式網頁應用程式：它能在電腦、平板與手機的任何現代瀏覽器中執行，也能像原生應用程式一樣安裝——在 iPhone 和 iPad 上透過 分享 → 加入主畫面，其他裝置則透過瀏覽器選單或安裝按鈕。A 牌小幫手會顯示適合你裝置的步驟。"],
       ["能和電腦對戰嗎？",
@@ -3291,18 +3578,22 @@ var SEO_FAQ_I18N = {
       ["網頁版會收集哪些資料？",
        "盡可能少：設定留在你自己的瀏覽器裡，不做任何追蹤，也沒有廣告。使用 pokerth.net 帳戶登入後，你的選項和練習獎盃會與帳戶同步，讓它們在你的其他裝置上也能延續。詳情請見隱私頁面。"],
       ["我可以自己架設伺服器嗎？",
-       "可以。PokerTH 專用伺服器與這個網頁版都是開源的，因此你可以在區域網絡或網際網絡上執行屬於自己的私人撲克伺服器。"],
+       "可以。PokerTH 專用伺服器與這個網頁版都是開源的，因此你可以在區域網絡或網際網絡上執行屬於自己的私人撲克伺服器。如果想讓所有人都能在列表中看到它，請選擇「區域網絡 / 專用伺服器」，再按伺服器列表底部的「提交我的伺服器」：管理員批准後，它就會出現在列表中。該伺服器必須能從網際網絡連線。"],
       ["排名遊戲和賽季是怎麼運作的？",
        "pokerth.net 上的排名遊戲坐 10 位玩家，牌桌坐滿即開始：每人 10,000 籌碼，小盲注 50、每 11 手牌翻倍，每次行動限時 5 秒。第 1 至第 7 名分別得 15、9、6、4、3、2 和 1 分；你的分數是每局平均分，並依你玩過的局數加權，排名每一季重新開始。需要一個免費的 pokerth.net 帳戶。"],
+      ["有免費的撲克錦標賽和比賽嗎？",
+       "有，全年都有，而且全部免費。每一局 PokerTH 遊戲都是一場錦標賽，pokerth.net 社群還定期舉辦設有獨立排名的比賽：BBC，盲注每隔幾分鐘就上升的牌局（<a href=\"https://bbc.pokerth.net/registration\">賽程</a>、<a href=\"https://bbc.pokerth.net/results\">成績</a>、<a href=\"https://bbc.pokerth.net/results/ranking\">排名</a>）；WeCup（WEC），節奏較平穩、較均衡的錦標賽（<a href=\"https://wec.pokerth.net/results\">成績</a>、<a href=\"https://wec.pokerth.net/results/ranking\">排名</a>）；以及每月舉行一次的 Monthly Cup（<a href=\"https://monthlycup.pokerth.net/\">下一屆比賽與最近的冠軍</a>、<a href=\"https://monthlycup.pokerth.net/registration\">報名</a>）。日期和規則會在各自的網站以及 <a href=\"https://www.pokerth.net/\">pokerth.net</a> 論壇上公布。參賽需要一個免費的 pokerth.net 帳戶。"],
       ["不參與遊戲可以旁觀嗎？",
        "可以。允許旁觀的進行中牌局可以從大廳即時觀看：你能看到牌桌和聊天，但底牌保持隱藏，也無法行動。已開始牌桌的邀請連結會以旁觀方式開啟它。"],
       ["應用程式內有說明嗎？",
-       "有。A 牌小幫手：A 牌是網頁版的吉祥物，如果你願意，它會在你使用時逐畫面講解。它的選單包含附搜尋的完整說明，以及「這是甚麼？」：點一下畫面上的任何東西，它就會告訴你那是做什麼的。"]
+       "有。A 牌小幫手：A 牌是網頁版的吉祥物，如果你願意，它會在你使用時逐畫面講解。它的選單包含附搜尋的完整說明，以及「這是甚麼？」：點一下畫面上的任何東西，它就會告訴你那是做什麼的。"],
+      ["PokerTH 仍在積極開發嗎？",
+       "是的。PokerTH 自 2006 年起以自由軟件的形式開發，至今仍持續維護：桌面客戶端與伺服器放在 <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> 上，這個網頁版也不斷更新（<a href=\"https://github.com/narmod/pokerth-web-client\">原始碼與更新記錄</a>），官方網絡 pokerth.net 上每天都有人在玩。"]
     ],
   },
   vi: {
     title: "C\u00e2u h\u1ecfi th\u01b0\u1eddng g\u1eb7p \u2014 \u1ee8ng d\u1ee5ng web PokerTH",
-    desc: "C\u00e2u h\u1ecfi th\u01b0\u1eddng g\u1eb7p v\u1ec1 \u1ee9ng d\u1ee5ng web PokerTH: ch\u01a1i poker mi\u1ec5n ph\u00ed kh\u00f4ng qu\u1ea3ng c\u00e1o, ch\u01a1i Texas Hold\u2019em ngay tr\u00ean tr\u00ecnh duy\u1ec7t m\u00e0 kh\u00f4ng c\u1ea7n t\u1ea3i, t\u00e0i kho\u1ea3n, \u0111i\u1ec7n tho\u1ea1i, ch\u1ebf \u0111\u1ed9 ngo\u1ea1i tuy\u1ebfn, ng\u00f4n ng\u1eef v\u00e0 quy\u1ec1n ri\u00eang t\u01b0.",
+    desc: "Câu hỏi thường gặp về ứng dụng web PokerTH: poker miễn phí không quảng cáo, không cần tải, chơi với tư cách khách hoặc không cần tài khoản, mời bạn bè bằng liên kết, giải đấu, điện thoại, chế độ ngoại tuyến, ngôn ngữ và quyền riêng tư.",
     h1: "\u1ee8ng d\u1ee5ng web PokerTH \u2014 C\u00e2u h\u1ecfi th\u01b0\u1eddng g\u1eb7p",
     qa: [
       ["PokerTH có miễn phí không?",
@@ -3314,7 +3605,13 @@ var SEO_FAQ_I18N = {
       ["Tôi có thể chơi Texas Hold’em với người khác trên trình duyệt không?",
        "Có. Hãy tham gia mạng chính thức pokerth.net để chơi với người chơi khắp thế giới, hoặc gửi liên kết mời để bạn bè vào thẳng bàn của bạn — tất cả đều trong trình duyệt."],
       ["Tôi có cần tài khoản để chơi không?",
-       "Không. Chế độ Cục bộ / luyện tập không cần tài khoản và chạy ngoại tuyến. Trên mạng chính thức pokerth.net, bạn có thể chơi ván “Thường” với tư cách khách; cần một tài khoản pokerth.net miễn phí cho ván xếp hạng, các bàn chỉ dành cho người đã đăng ký và phần trò chuyện."],
+       "Không. Chế độ Cục bộ / luyện tập không cần tài khoản và chạy ngoại tuyến. Trên mạng chính thức pokerth.net, hãy đăng nhập với tư cách khách: máy chủ sẽ cấp cho bạn một biệt danh khách và bạn có thể chơi ván “Thường” ngay lập tức. Trên mạng LAN hay máy chủ riêng thì hoàn toàn không có tài khoản — bạn chỉ cần chọn một biệt danh. Không cách nào trong số đó yêu cầu địa chỉ email. Tài khoản pokerth.net miễn phí chỉ cần cho ván xếp hạng, các bàn chỉ dành cho người đã đăng ký và phần trò chuyện."],
+      ["Làm sao để chơi poker trực tuyến với bạn bè?",
+       "Hãy tạo một bàn trong sảnh — trên pokerth.net hoặc trên bất kỳ máy chủ LAN hay máy chủ riêng nào — rồi nhấn “Mời bạn bè” trong phòng chờ. Ứng dụng web sẽ tạo một liên kết mời mà bạn có thể gửi qua bất kỳ ứng dụng nhắn tin nào. Bạn bè mở liên kết trong trình duyệt, trên iPhone, Android hay máy tính, không cần tải gì về. Hãy đặt mật khẩu nếu bàn cần giữ riêng tư: mật khẩu không bao giờ nằm trong liên kết."],
+      ["Điều gì xảy ra khi bạn tôi mở liên kết mời của tôi?",
+       "Liên kết mang theo thông tin về bàn và máy chủ. Bạn của bạn đăng nhập — với tư cách khách hoặc bằng tài khoản trên pokerth.net, chỉ với một biệt danh trên LAN hay máy chủ riêng — rồi ứng dụng web tự động vào bàn, không cần tìm trong sảnh. Bàn có mật khẩu sẽ hỏi mật khẩu; ván đã bắt đầu sẽ được mở để xem. Liên kết mời là một tính năng của ứng dụng web và hoạt động trên mọi máy chủ mà nó kết nối được."],
+      ["Có máy chủ thử nghiệm để chơi thử PokerTH mà không cần đăng ký không?",
+       "Có. Trên màn hình đăng nhập, chọn LAN / Máy chủ riêng rồi chọn máy chủ thử nghiệm công khai trong danh sách máy chủ: nhập một biệt danh bất kỳ là bạn đã vào sảnh của nó — không đăng ký, không cần địa chỉ email. Chấm xanh lá cho biết máy chủ nào trong danh sách đang trực tuyến và có bao nhiêu người chơi trên đó."],
       ["Có chạy trên điện thoại không?",
        "Có. Ứng dụng web là một Progressive Web App: nó chạy trên mọi trình duyệt hiện đại ở máy tính, máy tính bảng hay điện thoại, và có thể cài đặt như ứng dụng gốc — trên iPhone và iPad bằng Chia sẻ → Thêm vào màn hình chính, ở nơi khác từ menu trình duyệt hoặc nút cài đặt. Trợ giúp của quân Át hiển thị các bước cho thiết bị của bạn."],
       ["Tôi có thể chơi với máy tính không?",
@@ -3330,18 +3627,22 @@ var SEO_FAQ_I18N = {
       ["Ứng dụng web thu thập dữ liệu gì?",
        "Càng ít càng tốt: các thiết lập nằm lại trong trình duyệt của bạn, không theo dõi và không quảng cáo. Khi bạn đăng nhập bằng tài khoản pokerth.net, tùy chọn và các cúp luyện tập của bạn được đồng bộ với tài khoản đó để đi cùng bạn sang các thiết bị khác. Xem trang quyền riêng tư để biết chi tiết."],
       ["Tôi có thể tự dựng máy chủ không?",
-       "Có. Máy chủ chuyên dụng của PokerTH và ứng dụng web này đều là nguồn mở, nên bạn có thể vận hành máy chủ poker riêng của mình, trong mạng nội bộ hay trên internet."],
+       "Có. Máy chủ chuyên dụng của PokerTH và ứng dụng web này đều là nguồn mở, nên bạn có thể vận hành máy chủ poker riêng của mình trong mạng LAN hay trên internet. Để máy chủ của bạn hiện ra cho mọi người, hãy chọn LAN / Máy chủ riêng, rồi nhấn “Đề xuất máy chủ của tôi” ở cuối danh sách máy chủ: khi quản trị viên duyệt, máy chủ sẽ xuất hiện trong danh sách. Máy chủ phải truy cập được từ internet."],
       ["Ván xếp hạng và mùa giải hoạt động thế nào?",
        "Ván xếp hạng trên pokerth.net có 10 người chơi và bắt đầu ngay khi bàn đầy: mỗi người 10.000 chip, tiền cược mù nhỏ 50 tăng gấp đôi sau mỗi 11 ván bài và 5 giây để hành động. Hạng 1 đến 7 được 15, 9, 6, 4, 3, 2 và 1 điểm; Điểm số của bạn là mức trung bình mỗi ván, có trọng số theo số ván bạn đã chơi, và bảng xếp hạng bắt đầu lại mỗi quý. Cần một tài khoản pokerth.net miễn phí."],
+      ["Có giải đấu và cuộc thi poker miễn phí không?",
+       "Có, quanh năm và hoàn toàn miễn phí. Mỗi ván PokerTH đều là một giải đấu, và cộng đồng pokerth.net còn tổ chức các cuộc thi định kỳ với bảng xếp hạng riêng: BBC, các ván có tiền cược mù tăng sau mỗi vài phút (<a href=\"https://bbc.pokerth.net/registration\">lịch thi đấu</a>, <a href=\"https://bbc.pokerth.net/results\">kết quả</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">bảng xếp hạng</a>); WeCup (WEC), các giải đấu với nhịp độ thong thả, cân bằng hơn (<a href=\"https://wec.pokerth.net/results\">kết quả</a>, <a href=\"https://wec.pokerth.net/results/ranking\">bảng xếp hạng</a>); và Monthly Cup, tổ chức hằng tháng (<a href=\"https://monthlycup.pokerth.net/\">giải tiếp theo và những người thắng gần nhất</a>, <a href=\"https://monthlycup.pokerth.net/registration\">đăng ký</a>). Ngày thi đấu và luật lệ được công bố trên từng trang và trên diễn đàn <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Để tham gia cần một tài khoản pokerth.net miễn phí."],
       ["Tôi có thể xem một ván mà không chơi không?",
        "Có. Các ván đang diễn ra cho phép khán giả có thể xem trực tiếp từ sảnh: bạn thấy bàn và khung trò chuyện, nhưng bài riêng vẫn bị ẩn và bạn không thể hành động. Liên kết mời tới một bàn đã bắt đầu sẽ mở bàn đó để xem."],
       ["Trong ứng dụng có phần trợ giúp không?",
-       "Có. Trợ giúp của quân Át: quân Át, linh vật của ứng dụng web, giải thích từng màn hình khi bạn chơi nếu bạn muốn. Menu của nó chứa toàn bộ phần trợ giúp kèm tìm kiếm, và “Đây là gì?”: chạm vào bất cứ thứ gì trên màn hình và nó sẽ cho biết thứ đó làm gì."]
+       "Có. Trợ giúp của quân Át: quân Át, linh vật của ứng dụng web, giải thích từng màn hình khi bạn chơi nếu bạn muốn. Menu của nó chứa toàn bộ phần trợ giúp kèm tìm kiếm, và “Đây là gì?”: chạm vào bất cứ thứ gì trên màn hình và nó sẽ cho biết thứ đó làm gì."],
+      ["PokerTH có còn được phát triển tích cực không?",
+       "Có. PokerTH được phát triển dưới dạng phần mềm tự do từ năm 2006 và vẫn đang được duy trì: ứng dụng máy tính để bàn và máy chủ có trên <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, ứng dụng web này được cập nhật liên tục (<a href=\"https://github.com/narmod/pokerth-web-client\">mã nguồn và nhật ký thay đổi</a>), và các ván đấu diễn ra mỗi ngày trên mạng chính thức pokerth.net."]
     ]
   },
   yo: {
     title: "Àwọn ìbéèrè tí a máa ń béèrè — oníbàárà wẹ́ẹ̀bù PokerTH",
-    desc: "Àwọn ìbéèrè tí a máa ń béèrè nípa oníbàárà wẹ́ẹ̀bù PokerTH: poker ọ̀fẹ́ láìsí ìpolówó, ṣíṣe Texas Hold’em nínú aṣàwákiri láìfi nǹkan sórí ẹ̀rọ, àkáǹtì, fóònù, ọ̀nà àìsí-ayélujára, èdè àti àṣírí.",
+    desc: "Àwọn ìbéèrè tí a máa ń béèrè nípa oníbàárà wẹ́ẹ̀bù PokerTH: poker ọ̀fẹ́ láìsí ìpolówó àti gbígbàsílẹ̀, ṣíṣeré gẹ́gẹ́ bí àlejò tàbí láìsí àkáǹtì, pípe àwọn ọ̀rẹ́ pẹ̀lú ìjápọ̀, ìdíje, fóònù, ọ̀nà àìsí-ayélujára, èdè àti àṣírí.",
     h1: "Oníbàárà wẹ́ẹ̀bù PokerTH — Àwọn ìbéèrè tí a máa ń béèrè",
     qa: [
       ["Ṣé PokerTH jẹ́ ọ̀fẹ́?",
@@ -3353,7 +3654,13 @@ var SEO_FAQ_I18N = {
       ["Ṣé mo lè ṣe Texas Hold’em pẹ̀lú àwọn ènìyàn mìíràn nínú aṣàwákiri mi?",
        "Bẹ́ẹ̀ ni. Darapọ̀ mọ́ nẹ́tíwọ̀ọ̀kì ìjọba pokerth.net láti ṣe Texas Hold’em lójú ẹsẹ̀ pẹ̀lú àwọn òṣèré láti gbogbo àgbáyé, tàbí fi ìjápọ̀ ìpè ránṣẹ́ kí àwọn ọ̀rẹ́ lè dé tábìlì rẹ tààrà — gbogbo rẹ̀ nínú aṣàwákiri."],
       ["Ṣé mo nílò àkáǹtì láti ṣeré?",
-       "Rárá. Ọ̀nà Agbègbè / ìdánrawò kò nílò àkáǹtì, ó sì ń ṣiṣẹ́ láìsí ayélujára. Lórí nẹ́tíwọ̀ọ̀kì ìjọba pokerth.net o lè ṣe eré Déédéé gẹ́gẹ́ bí àlejò; àkáǹtì pokerth.net ọ̀fẹ́ ni a nílò fún eré ipò, àwọn tábìlì fún àwọn tí a forúkọ sílẹ̀ nìkan àti chat."],
+       "Rárá. Ọ̀nà Agbègbè / ìdánrawò kò nílò àkáǹtì, ó sì ń ṣiṣẹ́ láìsí ayélujára. Lórí nẹ́tíwọ̀ọ̀kì ìjọba pokerth.net, wọlé gẹ́gẹ́ bí àlejò: olùpín yóò fún ọ ní orúkọ àlejò, o sì lè ṣe eré Déédéé lẹ́sẹ̀kẹsẹ̀. Lórí LAN tàbí olùpín àdáni kò sí àkáǹtì rárá — orúkọ ìnagijẹ nìkan ni o máa yàn. Kò sí ọ̀kankan nínú wọn tí ó ń béèrè àdírẹ́sì ímeèlì. Àkáǹtì pokerth.net ọ̀fẹ́ ni a nílò fún eré ipò, àwọn tábìlì fún àwọn tí a forúkọ sílẹ̀ nìkan àti chat nìkan."],
+      ["Báwo ni mo ṣe lè ṣe poker lórí ayélujára pẹ̀lú àwọn ọ̀rẹ́?",
+       "Ṣẹ̀dá tábìlì nínú gbọ̀ngàn — lórí pokerth.net tàbí lórí olùpín LAN tàbí olùpín àdáni èyíkéyìí — kí o sì tẹ “Pe àwọn ọ̀rẹ́” nínú yàrá ìdúró. Oníbàárà wẹ́ẹ̀bù yóò ṣe ìjápọ̀ ìpè tí o lè fi ránṣẹ́ nípasẹ̀ ìṣàfilọ́lẹ̀ ìfiránṣẹ́ èyíkéyìí. Àwọn ọ̀rẹ́ rẹ yóò ṣí i nínú aṣàwákiri wọn, lórí iPhone, Android tàbí kọ̀ǹpútà, láìgba nǹkan kan sílẹ̀. Fi ọ̀rọ̀ aṣínà sí i bí tábìlì bá gbọ́dọ̀ wà ní àṣírí: ọ̀rọ̀ aṣínà kì í jẹ́ apá kan ìjápọ̀ náà láé."],
+      ["Kí ló ń ṣẹlẹ̀ nígbà tí ọ̀rẹ́ kan bá ṣí ìjápọ̀ ìpè mi?",
+       "Ìjápọ̀ náà gbé tábìlì àti olùpín. Ọ̀rẹ́ rẹ yóò wọlé — gẹ́gẹ́ bí àlejò tàbí pẹ̀lú àkáǹtì lórí pokerth.net, pẹ̀lú orúkọ ìnagijẹ nìkan lórí LAN tàbí olùpín àdáni — oníbàárà wẹ́ẹ̀bù yóò sì darapọ̀ mọ́ tábìlì náà fúnra rẹ̀, láìsí àìní láti wá a nínú gbọ̀ngàn. Tábìlì tí ọ̀rọ̀ aṣínà ń dáàbò bò yóò béèrè ọ̀rọ̀ aṣínà rẹ̀; eré tí ó ti bẹ̀rẹ̀ yóò ṣí fún wíwò. Ìjápọ̀ ìpè jẹ́ ẹ̀yà oníbàárà wẹ́ẹ̀bù, ó sì ń ṣiṣẹ́ lórí gbogbo olùpín tí ó lè sopọ̀ mọ́."],
+      ["Ṣé olùpín àfihàn wà láti dán PokerTH wò láìforúkọ sílẹ̀?",
+       "Bẹ́ẹ̀ ni. Lójú ìwọlé, yan LAN / Olùpín àdáni kí o sì mú olùpín àfihàn gbangba nínú Àkójọ olùpín: tẹ orúkọ ìnagijẹ èyíkéyìí, o sì ti wà nínú gbọ̀ngàn rẹ̀ — kò sí ìforúkọsílẹ̀, kò sí àdírẹ́sì ímeèlì. Àmì aláwọ̀ ewé ń fi hàn àwọn olùpín inú àkójọ tí ó wà lórí ayélujára àti iye òṣèré tí ó wà lórí wọn."],
       ["Ṣé ó ń ṣiṣẹ́ lórí fóònù?",
        "Bẹ́ẹ̀ ni. Oníbàárà wẹ́ẹ̀bù jẹ́ Progressive Web App: ó ń ṣiṣẹ́ nínú aṣàwákiri òde-òní èyíkéyìí lórí kọ̀ǹpútà, tábìlẹ́ẹ̀tì tàbí fóònù, a sì lè fi í sórí ẹ̀rọ bí ìṣàfilọ́lẹ̀ àbínibí — lórí iPhone àti iPad pẹ̀lú Pín → Fi kún Ojú Ilé, níbòmíràn láti inú àkójọ aṣàwákiri tàbí bọ́tìnì ìfisórí. Ìrànlọ́wọ́ Ace ń fi àwọn ìgbésẹ̀ fún ẹ̀rọ rẹ hàn."],
       ["Ṣé mo lè ṣeré pẹ̀lú kọ̀ǹpútà?",
@@ -3369,18 +3676,22 @@ var SEO_FAQ_I18N = {
       ["Dátà wo ni oníbàárà wẹ́ẹ̀bù ń kó jọ?",
        "Díẹ̀ bí ó ti ṣeé ṣe: ètò ń wà nínú aṣàwákiri rẹ, a kò sì lo ìtọpinpin tàbí ìpolówó. Nígbà tí o bá wọlé pẹ̀lú àkáǹtì pokerth.net, àwọn àṣàyàn rẹ àti àwọn ife-ẹ̀yẹ ìdánrawò rẹ ń bá a ṣiṣẹ́ pọ̀, kí wọ́n lè tẹ̀lé ọ lọ sórí àwọn ẹ̀rọ rẹ mìíràn. Wo ojú-ewé àṣírí fún àlàyé."],
       ["Ṣé mo lè gbé olùpín tèmi?",
-       "Bẹ́ẹ̀ ni. Olùpín àdáni PokerTH àti oníbàárà wẹ́ẹ̀bù yìí jẹ́ orísun ṣíṣí méjèèjì, nítorí náà o lè ṣiṣẹ́ olùpín poker àṣírí lórí LAN tàbí lórí ayélujára."],
+       "Bẹ́ẹ̀ ni. Olùpín àdáni PokerTH àti oníbàárà wẹ́ẹ̀bù yìí jẹ́ orísun ṣíṣí méjèèjì, nítorí náà o lè ṣiṣẹ́ olùpín poker àṣírí tìrẹ lórí LAN tàbí lórí ayélujára. Kí ó lè hàn nínú àkójọ fún gbogbo ènìyàn, yan LAN / Olùpín àdáni, lẹ́yìn náà “Dábàá olùpín mi” ní ìsàlẹ̀ Àkójọ olùpín: ní kété tí àwọn alábòójútó bá fọwọ́ sí i, yóò hàn nínú àkójọ náà. Olùpín náà gbọ́dọ̀ ṣeé dé láti orí ayélujára."],
       ["Báwo ni eré ipò àti sáà ṣe ń ṣiṣẹ́?",
        "Àwọn eré ipò lórí pokerth.net ń gba òṣèré 10, wọ́n sì ń bẹ̀rẹ̀ ní kété tí tábìlì bá kún: chips 10,000 fún ẹnìkọ̀ọ̀kan, blind kékeré 50 tí ó ń di ìlọ́po méjì ní ọwọ́ 11 kọ̀ọ̀kan, àti ìṣẹ́jú-àáyá 5 láti ṣe ìgbésẹ̀. Àwọn ipò 1 sí 7 ń gba àmì 15, 9, 6, 4, 3, 2 àti 1; Àmì rẹ ni ìpíndọ́gba rẹ fún eré kọ̀ọ̀kan, tí iye eré tí o ti ṣe ń wọ̀n, ipò náà sì ń bẹ̀rẹ̀ padà ní oṣù mẹ́ta kọ̀ọ̀kan. A nílò àkáǹtì pokerth.net ọ̀fẹ́."],
+      ["Ṣé ìdíje poker ọ̀fẹ́ wà?",
+       "Bẹ́ẹ̀ ni, ní gbogbo ọdún, gbogbo rẹ̀ sì jẹ́ ọ̀fẹ́. Gbogbo eré PokerTH jẹ́ ìdíje, àwùjọ pokerth.net sì tún ń ṣe àwọn ìdíje déédéé pẹ̀lú ipò tiwọn: BBC, àwọn eré tí blinds wọn ń gòkè ní ìṣẹ́jú díẹ̀ díẹ̀ (<a href=\"https://bbc.pokerth.net/registration\">kàlẹ́ńdà</a>, <a href=\"https://bbc.pokerth.net/results\">àbájáde</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">ipò</a>); WeCup (WEC), àwọn ìdíje ní ìyára tí ó rọlẹ̀ tí ó sì dọ́gba (<a href=\"https://wec.pokerth.net/results\">àbájáde</a>, <a href=\"https://wec.pokerth.net/results/ranking\">ipò</a>); àti Monthly Cup, tí a ń ṣe ní oṣù kọ̀ọ̀kan (<a href=\"https://monthlycup.pokerth.net/\">ife tí ń bọ̀ àti àwọn aṣẹ́gun tuntun</a>, <a href=\"https://monthlycup.pokerth.net/registration\">ìforúkọsílẹ̀</a>). A ń kéde ọjọ́ àti òfin lórí ojúlé kọ̀ọ̀kan àti lórí àpéjọ <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Láti kópa, o nílò àkáǹtì pokerth.net ọ̀fẹ́."],
       ["Ṣé mo lè wo eré láìṣeré?",
        "Bẹ́ẹ̀ ni. A lè wo àwọn eré tí ń lọ lọ́wọ́ tí wọ́n gba àwọn olùwòran láàyè ní tààrà láti gbọ̀ngàn: o rí tábìlì àti chat, ṣùgbọ́n káàdì àpò wà ní ìpamọ́, o kò sì lè ṣe ìgbésẹ̀. Ìjápọ̀ ìpè sí tábìlì tí ó ti bẹ̀rẹ̀ ń ṣí i fún wíwò."],
       ["Ṣé ìrànlọ́wọ́ wà nínú ìṣàfilọ́lẹ̀?",
-       "Bẹ́ẹ̀ ni. Ìrànlọ́wọ́ Ace: Ace, mascot oníbàárà wẹ́ẹ̀bù, ń ṣàlàyé ojú-ewé kọ̀ọ̀kan bí o ṣe ń lọ bí o bá fẹ́. Àkójọ rẹ̀ ní gbogbo ìrànlọ́wọ́ pẹ̀lú àwárí, àti “Kí ni èyí?”: fọwọ́ kan ohunkóhun lórí ojú ẹ̀rọ, yóò sì sọ ohun tí ó ń ṣe."]
+       "Bẹ́ẹ̀ ni. Ìrànlọ́wọ́ Ace: Ace, mascot oníbàárà wẹ́ẹ̀bù, ń ṣàlàyé ojú-ewé kọ̀ọ̀kan bí o ṣe ń lọ bí o bá fẹ́. Àkójọ rẹ̀ ní gbogbo ìrànlọ́wọ́ pẹ̀lú àwárí, àti “Kí ni èyí?”: fọwọ́ kan ohunkóhun lórí ojú ẹ̀rọ, yóò sì sọ ohun tí ó ń ṣe."],
+      ["Ṣé wọ́n ṣì ń ṣe ìdàgbàsókè PokerTH lọ́wọ́?",
+       "Bẹ́ẹ̀ ni. A ti ń ṣe PokerTH gẹ́gẹ́ bí sọ́fítíwía ọ̀fẹ́ láti ọdún 2006, a sì ṣì ń tọ́jú rẹ̀: ìṣàfilọ́lẹ̀ kọ̀ǹpútà àti olùpín wà lórí <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, a ń ṣe àtúnṣe oníbàárà wẹ́ẹ̀bù yìí nígbà gbogbo (<a href=\"https://github.com/narmod/pokerth-web-client\">kóòdù orísun àti àkọsílẹ̀ àyípadà</a>), a sì ń ṣe eré lójoojúmọ́ lórí nẹ́tíwọ̀ọ̀kì ìjọba pokerth.net."]
     ],
   },
   zu: {
     title: "Imibuzo evame ukubuzwa — iklayenti lewebhu le-PokerTH",
-    desc: "Imibuzo evame ukubuzwa mayelana neklayenti lewebhu le-PokerTH: i-poker yamahhala ngaphandle kwezikhangiso, ukudlala i-Texas Hold’em esipheqululini ngaphandle kokufaka lutho, ama-akhawunti, amafoni, imodi engaxhunyiwe, izilimi nobumfihlo.",
+    desc: "Imibuzo evame ukubuzwa ngeklayenti lewebhu le-PokerTH: i-poker yamahhala ngaphandle kwezikhangiso nokulanda, ukudlala njengesivakashi, ukumema abangani ngesixhumanisi, imiqhudelwano, amafoni, izilimi nobumfihlo.",
     h1: "Iklayenti lewebhu le-PokerTH — Imibuzo evame ukubuzwa",
     qa: [
       ["Ingabe i-PokerTH imahhala?",
@@ -3392,7 +3703,13 @@ var SEO_FAQ_I18N = {
       ["Ngingadlala i-Texas Hold’em nabanye abantu esipheqululini sami?",
        "Yebo. Joyina inethiwekhi esemthethweni ye-pokerth.net ukuze udlale i-Texas Hold’em bukhoma nabadlali abavela emhlabeni wonke, noma uthumele isixhumanisi sesimemo ukuze abangani bafike ngqo etafuleni lakho — konke esipheqululini."],
       ["Ngidinga i-akhawunti ukuze ngidlale?",
-       "Cha. Imodi Okwasendaweni / ukuziqeqesha ayidingi i-akhawunti futhi isebenza ungaxhunyiwe. Kunethiwekhi esemthethweni ye-pokerth.net ungadlala imidlalo ethi “Okujwayelekile” njengesivakashi; kudingeka i-akhawunti ye-pokerth.net yamahhala emidlalweni yezinga, ematafuleni abhalisiwe kuphela nakwi-chat."],
+       "Cha. Imodi Okwasendaweni / ukuziqeqesha ayidingi i-akhawunti futhi isebenza ungaxhunyiwe. Kunethiwekhi esemthethweni ye-pokerth.net, ngena njengesivakashi: iseva ikunika igama lesivakashi futhi ungadlala imidlalo ethi “Okujwayelekile” ngokushesha. Ku-LAN noma kuseva ezinikele ayikho nhlobo i-akhawunti — ukhetha igama lokudlala kuphela. Akukho kulokhu okucela ikheli le-imeyili. I-akhawunti ye-pokerth.net yamahhala idingeka kuphela emidlalweni yezinga, ematafuleni abhalisiwe kuphela nakwi-chat."],
+      ["Ngidlala kanjani i-poker ku-inthanethi nabangani?",
+       "Dala itafula elobhini — ku-pokerth.net noma kunoma iyiphi iseva ye-LAN noma ezinikele — bese ucindezela u-“Mema abangani” egumbini lokulinda. Iklayenti lewebhu lakha isixhumanisi sesimemo ongasithumela nganoma yiluphi uhlelo lokuthumela imilayezo. Abangani bakho basivula esipheqululini sabo, ku-iPhone, ku-Android noma kukhompyutha, ngaphandle kokulanda lutho. Setha iphasiwedi uma itafula kufanele lihlale liyimfihlo: iphasiwedi ayilokothi ibe yingxenye yesixhumanisi."],
+      ["Kwenzekani uma umngane evula isixhumanisi sami sesimemo?",
+       "Isixhumanisi siphethe itafula neseva. Umngane wakho uyangena — njengesivakashi noma nge-akhawunti ku-pokerth.net, ngegama lokudlala kuphela ku-LAN noma kuseva ezinikele — bese iklayenti lewebhu lijoyina itafula ngokuzenzakalelayo, ngaphandle kokulifuna elobhini. Itafula elivikelwe ngephasiwedi licela iphasiwedi yalo; umdlalo osuqalile uvuleka ukuze ubukwe. Izixhumanisi zesimemo ziyisici seklayenti lewebhu futhi zisebenza kuyo yonke iseva elingaxhumana nayo."],
+      ["Ingabe ikhona iseva yokubonisa ukuze ngizame i-PokerTH ngaphandle kokubhalisa?",
+       "Yebo. Esikrinini sokungena khetha LAN / Iseva ezinikele bese ukhetha iseva yokubonisa yomphakathi ohlwini lwamaseva: thayipha noma yiliphi igama lokudlala futhi ususelobhini layo — akukho ukubhalisa, alikho ikheli le-imeyili. Ichashazi eliluhlaza libonisa ukuthi yimaphi amaseva asohlwini axhunyiwe nokuthi bangaki abadlali abakuwo."],
       ["Ingabe isebenza kufoni?",
        "Yebo. Iklayenti lewebhu liyi-Progressive Web App: lisebenza kunoma yisiphi isiphequluli sesimanje kudeskithophu, kuthebhulethi noma kufoni futhi lingafakwa njengohlelo lwendabuko — ku-iPhone ne-iPad ngokuthi Yabelana → Engeza Esikrinini Sasekhaya, kwenye indawo kusukela kumenyu yesiphequluli noma inkinobho yokufaka. Usizo luka-Ace lukubonisa izinyathelo zedivayisi yakho."],
       ["Ngingadlala nekhompyutha?",
@@ -3408,18 +3725,22 @@ var SEO_FAQ_I18N = {
       ["Iyiphi idatha eqoqwa yiklayenti lewebhu?",
        "Encane ngangokunokwenzeka: izilungiselelo zihlala esipheqululini sakho, futhi akukho kulandelela noma izikhangiso ezisetshenziswayo. Uma ungena nge-akhawunti ye-pokerth.net, izilungiselelo zakho nezindebe zakho zokuziqeqesha ziyavumelaniswa nayo ukuze zikulandele ezinye izidivayisi zakho. Bheka ikhasi lobumfihlo ukuze uthole imininingwane."],
       ["Ngingasingatha iseva yami?",
-       "Yebo. Iseva ezinikele ye-PokerTH naleli klayenti lewebhu kokubili kungumthombo ovulekile, ngakho ungaqhuba iseva ye-poker yangasese ku-LAN noma ku-inthanethi."],
+       "Yebo. Iseva ezinikele ye-PokerTH naleli klayenti lewebhu kokubili kungumthombo ovulekile, ngakho ungaqhuba iseva yakho ye-poker yangasese ku-LAN noma ku-inthanethi. Ukuze ifakwe ohlwini lwawo wonke umuntu, khetha LAN / Iseva ezinikele, bese uthi “Phakamisa iseva yami” ngezansi kohlu lwamaseva: uma abaphathi beyamukela, izovela ohlwini. Iseva kumele ifinyeleleke ku-inthanethi."],
       ["Imidlalo yezinga namasizini isebenza kanjani?",
        "Imidlalo yezinga ku-pokerth.net ihlalisa abadlali abangu-10 futhi iqala ngokushesha lapho itafula ligcwala: ama-chip ayi-10,000 ngamunye, i-blind encane engu-50 ephinda kabili ngezandla ezingu-11 ngasinye, nemizuzwana engu-5 yokwenza isinyathelo. Izindawo 1 kuya ku-7 zithola amaphuzu angu-15, 9, 6, 4, 3, 2 no-1; amaphuzu akho angumyinge wakho womdlalo ngamunye, kukalwa ngenani lemidlalo oyidlalile, futhi izinga liqala kabusha njalo ngekota. Kudingeka i-akhawunti ye-pokerth.net yamahhala."],
+      ["Ingabe ikhona imiqhudelwano nemincintiswano ye-poker yamahhala?",
+       "Yebo, unyaka wonke, futhi konke kumahhala. Wonke umdlalo we-PokerTH ungumqhudelwano, futhi umphakathi we-pokerth.net uphinde uqhube imincintiswano evamile enezinga layo: i-BBC, imidlalo lapho ama-blind enyuka njalo emva kwemizuzu embalwa (<a href=\"https://bbc.pokerth.net/registration\">ikhalenda</a>, <a href=\"https://bbc.pokerth.net/results\">imiphumela</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">izinga</a>); i-WeCup (WEC), imiqhudelwano enejubane elizolile nelilinganiselayo (<a href=\"https://wec.pokerth.net/results\">imiphumela</a>, <a href=\"https://wec.pokerth.net/results/ranking\">izinga</a>); kanye ne-Monthly Cup, ebanjwa njalo ngenyanga (<a href=\"https://monthlycup.pokerth.net/\">indebe elandelayo nabanqobi bakamuva</a>, <a href=\"https://monthlycup.pokerth.net/registration\">ukubhalisa</a>). Izinsuku nemithetho kumenyezelwa kuwebhusayithi ngayinye nakwinkundla yezingxoxo ye-<a href=\"https://www.pokerth.net/\">pokerth.net</a>. Ukuze ubambe iqhaza udinga i-akhawunti ye-pokerth.net yamahhala."],
       ["Ngingabuka umdlalo ngingadlali?",
        "Yebo. Imidlalo eqhubekayo evumela ababukeli ingabukwa bukhoma elobhini: ubona itafula ne-chat, kodwa amakhadi ephakethe ahlala efihlekile futhi awukwazi ukwenza isinyathelo. Isixhumanisi sesimemo setafula esele liqalile siliveza ukuze libukwe."],
       ["Ingabe usizo lukhona ngaphakathi kohlelo?",
-       "Yebo. Usizo luka-Ace: i-Ace, i-mascot yeklayenti lewebhu, ichaza isikrini ngasinye njengoba uqhubeka uma uthanda. Imenyu yayo iqukethe lonke usizo ngokusesha, no-“Kuyini lokhu?”: thepha noma yini esikrinini futhi iyakutshela ukuthi yenzani."]
+       "Yebo. Usizo luka-Ace: i-Ace, i-mascot yeklayenti lewebhu, ichaza isikrini ngasinye njengoba uqhubeka uma uthanda. Imenyu yayo iqukethe lonke usizo ngokusesha, no-“Kuyini lokhu?”: thepha noma yini esikrinini futhi iyakutshela ukuthi yenzani."],
+      ["Ingabe i-PokerTH isathuthukiswa ngenkuthalo?",
+       "Yebo. I-PokerTH ibithuthukiswa njengesofthiwe yamahhala kusukela ngo-2006 futhi isanakekelwa: uhlelo lwedeskithophu neseva kuku-<a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, leli klayenti lewebhu libuyekezwa njalo (<a href=\"https://github.com/narmod/pokerth-web-client\">ikhodi yomthombo nohlu lwezinguquko</a>), futhi imidlalo idlalwa nsuku zonke kunethiwekhi esemthethweni ye-pokerth.net."]
     ],
   },
   th: {
     title: "\u0e04\u0e33\u0e16\u0e32\u0e21\u0e17\u0e35\u0e48\u0e1e\u0e1a\u0e1a\u0e48\u0e2d\u0e22 \u2014 PokerTH \u0e40\u0e27\u0e47\u0e1a\u0e44\u0e04\u0e25\u0e40\u0e2d\u0e19\u0e15\u0e4c",
-    desc: "\u0e04\u0e33\u0e16\u0e32\u0e21\u0e17\u0e35\u0e48\u0e1e\u0e1a\u0e1a\u0e48\u0e2d\u0e22\u0e40\u0e01\u0e35\u0e48\u0e22\u0e27\u0e01\u0e31\u0e1a PokerTH \u0e40\u0e27\u0e47\u0e1a\u0e44\u0e04\u0e25\u0e40\u0e2d\u0e19\u0e15\u0e4c: \u0e42\u0e1b\u0e4a\u0e01\u0e40\u0e01\u0e2d\u0e23\u0e4c\u0e1f\u0e23\u0e35\u0e44\u0e21\u0e48\u0e21\u0e35\u0e42\u0e06\u0e29\u0e13\u0e32 \u0e40\u0e25\u0e48\u0e19\u0e40\u0e17\u0e47\u0e01\u0e0b\u0e31\u0e2a\u0e42\u0e2e\u0e25\u0e40\u0e14\u0e47\u0e21\u0e43\u0e19\u0e40\u0e1a\u0e23\u0e32\u0e27\u0e4c\u0e40\u0e0b\u0e2d\u0e23\u0e4c\u0e42\u0e14\u0e22\u0e44\u0e21\u0e48\u0e15\u0e49\u0e2d\u0e07\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14 \u0e1a\u0e31\u0e0d\u0e0a\u0e35\u0e1c\u0e39\u0e49\u0e43\u0e0a\u0e49 \u0e21\u0e37\u0e2d\u0e16\u0e37\u0e2d \u0e42\u0e2b\u0e21\u0e14\u0e2d\u0e2d\u0e1f\u0e44\u0e25\u0e19\u0e4c \u0e20\u0e32\u0e29\u0e32 \u0e41\u0e25\u0e30\u0e04\u0e27\u0e32\u0e21\u0e40\u0e1b\u0e47\u0e19\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27",
+    desc: "คำถามที่พบบ่อยเกี่ยวกับ PokerTH เว็บไคลเอนต์: โป๊กเกอร์ฟรีไม่มีโฆษณาและไม่ต้องดาวน์โหลด เล่นในฐานะแขกหรือไม่ต้องมีบัญชี ชวนเพื่อนด้วยลิงก์ ทัวร์นาเมนต์ มือถือ โหมดออฟไลน์ ภาษา และความเป็นส่วนตัว",
     h1: "PokerTH \u0e40\u0e27\u0e47\u0e1a\u0e44\u0e04\u0e25\u0e40\u0e2d\u0e19\u0e15\u0e4c \u2014 \u0e04\u0e33\u0e16\u0e32\u0e21\u0e17\u0e35\u0e48\u0e1e\u0e1a\u0e1a\u0e48\u0e2d\u0e22",
     qa: [
       ["PokerTH ฟรีหรือไม่",
@@ -3431,7 +3752,13 @@ var SEO_FAQ_I18N = {
       ["เล่นเท็กซัสโฮลเด็มกับคนอื่นในเบราว์เซอร์ได้ไหม",
        "ได้ เข้าร่วมเครือข่ายทางการ pokerth.net เพื่อเล่นกับผู้เล่นทั่วโลก หรือส่งลิงก์เชิญให้เพื่อนเข้ามาที่โต๊ะของคุณโดยตรง ทุกอย่างอยู่ในเบราว์เซอร์"],
       ["ต้องมีบัญชีผู้ใช้ถึงจะเล่นได้ไหม",
-       "ไม่ต้อง โหมดในเครื่อง / ฝึกซ้อมไม่ต้องใช้บัญชีและเล่นออฟไลน์ได้ ส่วนบนเครือข่ายทางการ pokerth.net คุณเล่นเกมปกติในฐานะแขกได้ ต้องมีบัญชี pokerth.net ซึ่งสมัครฟรีสำหรับเกมจัดอันดับ โต๊ะเฉพาะผู้ลงทะเบียน และแชท"],
+       "ไม่ต้อง โหมดในเครื่อง / ฝึกซ้อมไม่ต้องใช้บัญชีและเล่นออฟไลน์ได้ บนเครือข่ายทางการ pokerth.net ให้เข้าสู่ระบบในฐานะแขก เซิร์ฟเวอร์จะตั้งชื่อเล่นแขกให้ และคุณเล่นเกมปกติได้ทันที บน LAN หรือเซิร์ฟเวอร์เฉพาะไม่มีบัญชีเลย คุณแค่เลือกชื่อเล่น ไม่มีวิธีใดเลยที่ขออีเมล บัญชี pokerth.net ซึ่งสมัครฟรีจำเป็นเฉพาะสำหรับเกมจัดอันดับ โต๊ะเฉพาะผู้ลงทะเบียน และแชท"],
+      ["เล่นโป๊กเกอร์ออนไลน์กับเพื่อนได้อย่างไร",
+       "สร้างโต๊ะในล็อบบี้ บน pokerth.net หรือบน LAN หรือเซิร์ฟเวอร์เฉพาะใดก็ได้ แล้วกด “เชิญเพื่อน” ในห้องรอ เว็บไคลเอนต์จะสร้างลิงก์เชิญที่คุณส่งผ่านแอปแชทใดก็ได้ เพื่อนของคุณเปิดลิงก์ในเบราว์เซอร์ บน iPhone, Android หรือคอมพิวเตอร์ โดยไม่ต้องดาวน์โหลดอะไร ตั้งรหัสผ่านหากต้องการให้โต๊ะเป็นส่วนตัว รหัสผ่านจะไม่อยู่ในลิงก์เด็ดขาด"],
+      ["จะเกิดอะไรขึ้นเมื่อเพื่อนเปิดลิงก์เชิญของฉัน",
+       "ลิงก์นี้มีข้อมูลโต๊ะและเซิร์ฟเวอร์ เพื่อนของคุณเข้าสู่ระบบ ในฐานะแขกหรือด้วยบัญชีบน pokerth.net หรือใช้แค่ชื่อเล่นบน LAN หรือเซิร์ฟเวอร์เฉพาะ จากนั้นเว็บไคลเอนต์จะพาเข้าโต๊ะโดยอัตโนมัติ ไม่ต้องค้นหาในล็อบบี้ โต๊ะที่ตั้งรหัสผ่านไว้จะถามรหัสผ่าน ส่วนเกมที่เริ่มไปแล้วจะเปิดให้รับชม ลิงก์เชิญเป็นฟีเจอร์ของเว็บไคลเอนต์และใช้ได้กับทุกเซิร์ฟเวอร์ที่เว็บไคลเอนต์เชื่อมต่อได้"],
+      ["มีเซิร์ฟเวอร์ทดลองให้ลองเล่น PokerTH โดยไม่ต้องสมัครไหม",
+       "มี ที่หน้าจอเข้าสู่ระบบ เลือก LAN / เซิร์ฟเวอร์เฉพาะ แล้วเลือกเซิร์ฟเวอร์ทดลองสาธารณะในรายการเซิร์ฟเวอร์ พิมพ์ชื่อเล่นอะไรก็ได้แล้วคุณจะเข้าสู่ล็อบบี้ทันที ไม่ต้องลงทะเบียน ไม่ต้องใช้อีเมล จุดสีเขียวบอกว่าเซิร์ฟเวอร์ใดในรายการออนไลน์อยู่และมีผู้เล่นอยู่กี่คน"],
       ["ใช้งานบนมือถือได้ไหม",
        "ได้ เว็บไคลเอนต์เป็น Progressive Web App ทำงานได้ในเบราว์เซอร์สมัยใหม่ทุกตัวบนคอมพิวเตอร์ แท็บเล็ต หรือโทรศัพท์ และติดตั้งได้เหมือนแอปทั่วไป — บน iPhone และ iPad ใช้ แชร์ → เพิ่มไปยังหน้าจอโฮม ส่วนที่อื่นใช้เมนูของเบราว์เซอร์หรือปุ่มติดตั้ง ตัวช่วยไพ่เอซจะแสดงขั้นตอนสำหรับอุปกรณ์ของคุณ"],
       ["เล่นกับคอมพิวเตอร์ได้ไหม",
@@ -3447,18 +3774,22 @@ var SEO_FAQ_I18N = {
       ["เว็บไคลเอนต์เก็บข้อมูลอะไรบ้าง",
        "น้อยที่สุดเท่าที่จะทำได้ การตั้งค่าอยู่ในเบราว์เซอร์ของคุณ ไม่มีการติดตามและไม่มีโฆษณา เมื่อคุณเข้าสู่ระบบด้วยบัญชี pokerth.net ตัวเลือกและถ้วยจากโหมดฝึกซ้อมของคุณจะซิงก์กับบัญชีนั้น เพื่อให้ตามคุณไปยังอุปกรณ์เครื่องอื่น ดูรายละเอียดได้ที่หน้าความเป็นส่วนตัว"],
       ["ตั้งเซิร์ฟเวอร์ของตัวเองได้ไหม",
-       "ได้ ทั้งเซิร์ฟเวอร์เฉพาะของ PokerTH และเว็บไคลเอนต์นี้เป็นโอเพนซอร์ส คุณจึงเปิดเซิร์ฟเวอร์โป๊กเกอร์ส่วนตัวของคุณเองได้ ทั้งในเครือข่ายภายในและบนอินเทอร์เน็ต"],
+       "ได้ ทั้งเซิร์ฟเวอร์เฉพาะของ PokerTH และเว็บไคลเอนต์นี้เป็นโอเพนซอร์ส คุณจึงเปิดเซิร์ฟเวอร์โป๊กเกอร์ส่วนตัวของคุณเองได้ ทั้งบน LAN และบนอินเทอร์เน็ต หากต้องการให้ทุกคนเห็นในรายการ ให้เลือก LAN / เซิร์ฟเวอร์เฉพาะ แล้วกด “เสนอเซิร์ฟเวอร์ของฉัน” ที่ด้านล่างของรายการเซิร์ฟเวอร์ เมื่อผู้ดูแลอนุมัติ เซิร์ฟเวอร์จะปรากฏในรายการ เซิร์ฟเวอร์ต้องเข้าถึงได้จากอินเทอร์เน็ต"],
       ["เกมจัดอันดับและฤดูกาลทำงานอย่างไร",
        "เกมจัดอันดับบน pokerth.net มีผู้เล่น 10 คนและเริ่มทันทีที่โต๊ะเต็ม ทุกคนเริ่มด้วยชิป 10,000 เงินบังคับเล็กเริ่มที่ 50 และเพิ่มเป็นสองเท่าทุก 11 ตา และมีเวลาลงมือ 5 วินาที อันดับ 1 ถึง 7 ได้ 15, 9, 6, 4, 3, 2 และ 1 คะแนนตามลำดับ คะแนน (Score) ของคุณคือค่าเฉลี่ยต่อเกม ถ่วงน้ำหนักด้วยจำนวนเกมที่คุณเล่น และอันดับจะเริ่มใหม่ทุกไตรมาส ต้องมีบัญชี pokerth.net ซึ่งสมัครฟรี"],
+      ["มีทัวร์นาเมนต์และการแข่งขันโป๊กเกอร์ฟรีไหม",
+       "มี ตลอดทั้งปี และฟรีทั้งหมด ทุกเกมของ PokerTH คือทัวร์นาเมนต์ และชุมชน pokerth.net ยังจัดการแข่งขันเป็นประจำพร้อมอันดับของตัวเอง ได้แก่ BBC เกมที่เงินบังคับเพิ่มขึ้นทุกไม่กี่นาที (<a href=\"https://bbc.pokerth.net/registration\">ปฏิทิน</a>, <a href=\"https://bbc.pokerth.net/results\">ผลการแข่งขัน</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">อันดับ</a>) WeCup (WEC) ทัวร์นาเมนต์ที่จังหวะสบายกว่าและสมดุล (<a href=\"https://wec.pokerth.net/results\">ผลการแข่งขัน</a>, <a href=\"https://wec.pokerth.net/results/ranking\">อันดับ</a>) และ Monthly Cup ที่จัดทุกเดือน (<a href=\"https://monthlycup.pokerth.net/\">รายการถัดไปและผู้ชนะล่าสุด</a>, <a href=\"https://monthlycup.pokerth.net/registration\">ลงทะเบียน</a>) วันแข่งและกติกาประกาศไว้บนแต่ละเว็บไซต์และในฟอรัม <a href=\"https://www.pokerth.net/\">pokerth.net</a> การเข้าร่วมต้องมีบัญชี pokerth.net ซึ่งสมัครฟรี"],
       ["ดูเกมโดยไม่เล่นได้ไหม",
        "ได้ เกมที่กำลังเล่นอยู่และอนุญาตให้ผู้ชมดูสามารถรับชมสดได้จากล็อบบี้ คุณจะเห็นโต๊ะและแชท แต่ไพ่ในมือยังคงถูกซ่อนและคุณไม่สามารถลงมือได้ ลิงก์เชิญไปยังโต๊ะที่เริ่มเล่นแล้วจะเปิดโต๊ะนั้นสำหรับการรับชม"],
       ["มีความช่วยเหลือในแอปไหม",
-       "มี ตัวช่วยไพ่เอซ: เอซ มาสคอตของเว็บไคลเอนต์ จะอธิบายแต่ละหน้าจอไปตามที่คุณใช้ ถ้าคุณต้องการ เมนูของเขามีวิธีใช้ทั้งหมดพร้อมช่องค้นหา และ “นี่คืออะไร?” แตะสิ่งใดก็ได้บนหน้าจอแล้วเขาจะบอกว่ามันทำอะไร"]
+       "มี ตัวช่วยไพ่เอซ: เอซ มาสคอตของเว็บไคลเอนต์ จะอธิบายแต่ละหน้าจอไปตามที่คุณใช้ ถ้าคุณต้องการ เมนูของเขามีวิธีใช้ทั้งหมดพร้อมช่องค้นหา และ “นี่คืออะไร?” แตะสิ่งใดก็ได้บนหน้าจอแล้วเขาจะบอกว่ามันทำอะไร"],
+      ["PokerTH ยังพัฒนาอยู่อย่างต่อเนื่องไหม",
+       "ใช่ PokerTH พัฒนาเป็นซอฟต์แวร์เสรีมาตั้งแต่ปี 2006 และยังได้รับการดูแลอยู่ ไคลเอนต์เดสก์ท็อปและเซิร์ฟเวอร์อยู่บน <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> เว็บไคลเอนต์นี้ได้รับการอัปเดตอย่างต่อเนื่อง (<a href=\"https://github.com/narmod/pokerth-web-client\">ซอร์สโค้ดและบันทึกการเปลี่ยนแปลง</a>) และมีการเล่นเกมทุกวันบนเครือข่ายทางการ pokerth.net"]
     ]
   },
   tk: {
     title: "Ýygy berilýän soraglar — PokerTH web müşderisi",
-    desc: "PokerTH web müşderisi barada ýygy berilýän soraglar: mahabatsyz mugt poker, hiç zat gurnaman brauzerde Texas Hold’em oýnamak, hasaplar, telefonlar, oflaýn režim, diller we gizlinlik.",
+    desc: "PokerTH web müşderisi barada ýygy berilýän soraglar: mahabatsyz we ýüklemesiz mugt poker, myhman hökmünde ýa-da hasapsyz oýnamak, dostlary salga arkaly çagyrmak, turnirler, telefonlar, oflaýn režim, diller we gizlinlik.",
     h1: "PokerTH web müşderisi — Ýygy berilýän soraglar",
     qa: [
       ["PokerTH mugtmy?",
@@ -3470,7 +3801,13 @@ var SEO_FAQ_I18N = {
       ["Brauzerimde beýleki adamlar bilen Texas Hold’em oýnap bilýärinmi?",
        "Hawa. Dünýäniň dürli künjeklerinden oýunçylar bilen göni Texas Hold’em oýnamak üçin resmi pokerth.net toruna goşulyň ýa-da dostlaryňyz göni stoluňyza gelmegi üçin çakylyk salgysyny ugradyň — hemmesi brauzerde."],
       ["Oýnamak üçin hasap gerekmi?",
-       "Ýok. Ýerli / türgenleşik režimi hasap talap etmeýär we oflaýn işleýär. Resmi pokerth.net torunda Adaty oýunlary myhman hökmünde oýnap bilersiňiz; Reýting oýunlary, diňe hasaba alnan oýunçylar üçin stollar we çat üçin mugt pokerth.net hasaby gerek."],
+       "Ýok. Ýerli / türgenleşik režimi hasap talap etmeýär we oflaýn işleýär. Resmi pokerth.net torunda myhman hökmünde giriň: serwer size myhman lakamyny berýär we Adaty oýunlary derrew oýnap bilersiňiz. LAN-da ýa-da aýratyn serwerde asla hasap ýok — diňe lakam saýlaýarsyňyz. Bularyň hiç biri e-poçta salgysyny soramaýar. Mugt pokerth.net hasaby diňe Reýting oýunlary, hasaba alnan oýunçylar üçin stollar we çat üçin gerek."],
+      ["Dostlar bilen onlaýn poker nädip oýnamaly?",
+       "Lobbide stol dörediň — pokerth.net-de ýa-da islendik LAN ýa-da aýratyn serwerde — we garaşylýan otagda «Dostlary çagyr» düwmesine basyň. Web müşderi islendik messenjer arkaly iberip boljak çakylyk salgysyny döredýär. Dostlaryňyz ony brauzerde açýarlar — iPhone-da, Android-de ýa-da kompýuterde, hiç zat ýüklemän. Stol ýapyk galmaly bolsa, parol goýuň: parol hiç haçan salga goşulmaýar."],
+      ["Dostum çakylyk salgymy açanda näme bolýar?",
+       "Salgy stoly we serweri öz içinde saklaýar. Dostuňyz girýär — pokerth.net-de myhman hökmünde ýa-da hasap bilen, LAN-da ýa-da aýratyn serwerde diňe lakam bilen — soňra web müşderi stola awtomatik goşulýar, ony lobbide gözlemek gerek däl. Parol bilen goralan stol parolyny soraýar; eýýäm başlanan oýun synlamak üçin açylýar. Çakylyk salgylary web müşderiniň aýratynlygy bolup, ol birigip bilýän her bir serwerde işleýär."],
+      ["PokerTH-i hasaba durman synap görmek üçin demo serwer barmy?",
+       "Hawa. Giriş ekranynda LAN / Aýratyn serwer bölümini saýlaň we Serwer sanawyndan açyk demo serweri saýlaň: islendik lakamy ýazyň — we siz onuň lobbisinde, hasaba durmak hem, e-poçta salgysy hem gerek däl. Ýaşyl nokat sanawdaky haýsy serwerleriň onlaýndygyny we olarda näçe oýunçynyň bardygyny görkezýär."],
       ["Telefonda işleýärmi?",
        "Hawa. Web müşderi Progressive Web App: ol kompýuterde, planşetde ýa-da telefonda islendik döwrebap brauzerde işleýär we adaty programma ýaly gurnalyp bilner — iPhone-da we iPad-da Paýlaş → Baş ekrana goş arkaly, başga ýerlerde brauzer menýusyndan ýa-da gurnama düwmesinden. Tuzuň kömegi enjamyňyz üçin ädimleri görkezýär."],
       ["Kompýutere garşy oýnap bilýärinmi?",
@@ -3486,18 +3823,22 @@ var SEO_FAQ_I18N = {
       ["Web müşderi haýsy maglumatlary ýygnaýar?",
        "Mümkin boldugyça az: sazlamalar brauzeriňizde galýar, yzarlamak ýa-da mahabat ulanylmaýar. pokerth.net hasaby bilen girseňiz, sazlamalaryňyz we türgenleşik kuboklaryňyz onuň bilen sinhronlaşdyrylýar, şeýdip olar beýleki enjamlaryňyza hem eýerýär. Jikme-jiklikler üçin gizlinlik sahypasyna serediň."],
       ["Öz serwerimi ýerleşdirip bilýärinmi?",
-       "Hawa. PokerTH aýratyn serweri hem, bu web müşderi hem açyk çeşmeli, şonuň üçin LAN-da ýa-da internetde hususy poker serwerini işledip bilersiňiz."],
+       "Hawa. PokerTH aýratyn serweri hem, bu web müşderi hem açyk çeşmeli, şonuň üçin LAN-da ýa-da internetde hususy poker serwerini işledip bilersiňiz. Ony hemmeler üçin sanawda görkezmek üçin LAN / Aýratyn serwer bölümini saýlaň, soňra Serwer sanawynyň aşagyndaky «Serwerimi teklip et» düwmesine basyň: administratorlar tassyklandan soň ol sanawda peýda bolýar. Serwer internetden elýeterli bolmaly."],
       ["Reýting oýunlary we möwsümler nähili işleýär?",
        "pokerth.net-däki Reýting oýunlarynda 10 oýunçy oturýar we stol dolan badyna başlaýar: her kime 10 000 çip, her 11 elde iki esse artýan 50 kiçi blaýnd we hereket etmek üçin 5 sekunt. Orunlar 1-den 7-ä çenli degişlilikde 15, 9, 6, 4, 3, 2 we 1 bal alýar; Utugyňyz her oýun üçin ortaça bahaňyz bolup, oýnan oýunlaryňyzyň sanyna görä agramlandyrylýar, reýting bolsa her çärýekde täzeden başlaýar. Mugt pokerth.net hasaby gerek."],
+      ["Mugt poker turnirleri we ýaryşlar barmy?",
+       "Hawa, ýylboýy we hemmesi mugt. Her bir PokerTH oýny — turnir, pokerth.net jemgyýeti bolsa öz reýtingleri bolan yzygiderli ýaryşlary hem geçirýär: BBC — blaýndlaryň her birnäçe minutdan ýokarlanýan oýunlary (<a href=\"https://bbc.pokerth.net/registration\">senenama</a>, <a href=\"https://bbc.pokerth.net/results\">netijeler</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">reýting</a>); WeCup (WEC) — has rahat, deňagramly depginli turnirler (<a href=\"https://wec.pokerth.net/results\">netijeler</a>, <a href=\"https://wec.pokerth.net/results/ranking\">reýting</a>); we her aý geçirilýän Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">indiki kubok we soňky ýeňijiler</a>, <a href=\"https://monthlycup.pokerth.net/registration\">hasaba alyş</a>). Seneler we düzgünler her saýtda we <a href=\"https://www.pokerth.net/\">pokerth.net</a> forumynda yglan edilýär. Gatnaşmak üçin mugt pokerth.net hasaby gerek."],
       ["Oýnamazdan oýuna syn edip bolýarmy?",
        "Hawa. Synçylara rugsat berýän dowam edýän oýunlara lobbiden göni synlamak bolýar: stoly we çaty görýärsiňiz, ýöne şahsy kartlar gizlin galýar we hereket edip bilmeýärsiňiz. Eýýäm başlanan stola çakylyk salgysy ony synlamak üçin açýar."],
       ["Programmanyň içinde kömek barmy?",
-       "Hawa. Tuzuň kömegi: web müşderiniň maskoty Tuz, isleseňiz her ekrany ýolda düşündirýär. Onuň menýusynda gözleg bilen doly kömek bar, şeýle hem «Bu näme?»: ekranda islendik zada basyň, ol onuň näme edýändigini aýdar."]
+       "Hawa. Tuzuň kömegi: web müşderiniň maskoty Tuz, isleseňiz her ekrany ýolda düşündirýär. Onuň menýusynda gözleg bilen doly kömek bar, şeýle hem «Bu näme?»: ekranda islendik zada basyň, ol onuň näme edýändigini aýdar."],
+      ["PokerTH henizem işjeň ösdürilýärmi?",
+       "Hawa. PokerTH 2006-njy ýyldan bäri erkin programma üpjünçiligi hökmünde işlenip düzülýär we häzirem goldanylýar: iş stoly programmasy we serwer <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>-da, bu web müşderi yzygiderli täzelenýär (<a href=\"https://github.com/narmod/pokerth-web-client\">çeşme kody we üýtgeşmeler sanawy</a>), resmi pokerth.net torunda bolsa her gün oýunlar oýnalýar."]
     ],
   },
   id: {
     title: "Pertanyaan umum \u2014 Klien web PokerTH",
-    desc: "Pertanyaan umum tentang klien web PokerTH: poker gratis tanpa iklan, bermain Texas Hold\u2019em di peramban tanpa mengunduh apa pun, akun, ponsel, mode luring, bahasa, dan privasi.",
+    desc: "Pertanyaan umum tentang klien web PokerTH: poker gratis tanpa iklan dan tanpa unduhan, bermain sebagai tamu atau tanpa akun, mengundang teman lewat tautan, turnamen, ponsel, mode luring, bahasa, dan privasi.",
     h1: "Klien web PokerTH \u2014 Pertanyaan umum",
     qa: [
       ["Apakah PokerTH gratis?",
@@ -3509,7 +3850,13 @@ var SEO_FAQ_I18N = {
       ["Bisakah saya bermain Texas Hold’em melawan orang lain lewat peramban?",
        "Bisa. Gabunglah ke jaringan resmi pokerth.net untuk bermain melawan pemain dari seluruh dunia, atau kirim tautan undangan agar teman langsung mendarat di meja Anda — semuanya di dalam peramban."],
       ["Apakah saya perlu akun untuk bermain?",
-       "Tidak. Mode Lokal / latihan tidak memerlukan akun dan berjalan luring. Di jaringan resmi pokerth.net Anda dapat memainkan permainan Normal sebagai tamu; akun pokerth.net yang gratis diperlukan untuk permainan berperingkat, meja khusus pemain terdaftar, dan obrolan."],
+       "Tidak. Mode Lokal / latihan tidak memerlukan akun dan berjalan luring. Di jaringan resmi pokerth.net, masuklah sebagai tamu: server memberi Anda nama panggilan tamu dan Anda bisa langsung memainkan permainan Normal. Di LAN atau server khusus sama sekali tidak ada akun — Anda cukup memilih nama panggilan. Tidak satu pun dari cara ini meminta alamat email. Akun pokerth.net yang gratis hanya diperlukan untuk permainan berperingkat, meja khusus pemain terdaftar, dan obrolan."],
+      ["Bagaimana cara bermain poker daring bersama teman?",
+       "Buat meja di lobi — di pokerth.net atau di LAN maupun server khusus mana pun — lalu tekan “Undang teman” di ruang tunggu. Klien web membuat tautan undangan yang bisa Anda kirim lewat aplikasi pesan apa pun. Teman Anda membukanya di peramban, di iPhone, Android, atau komputer, tanpa mengunduh apa pun. Pasang kata sandi jika meja harus tetap privat: kata sandi tidak pernah menjadi bagian dari tautan."],
+      ["Apa yang terjadi saat teman membuka tautan undangan saya?",
+       "Tautan itu memuat meja dan servernya. Teman Anda masuk — sebagai tamu atau dengan akun di pokerth.net, cukup dengan nama panggilan di LAN atau server khusus — lalu klien web otomatis bergabung ke meja, tanpa perlu mencarinya di lobi. Meja berkata sandi akan meminta kata sandinya; permainan yang sudah dimulai dibuka untuk ditonton. Tautan undangan adalah fitur klien web dan berfungsi di setiap server yang dapat dihubunginya."],
+      ["Apakah ada server demo untuk mencoba PokerTH tanpa mendaftar?",
+       "Ada. Di layar masuk, pilih LAN / Server khusus lalu pilih server demo publik di daftar server: ketik nama panggilan apa saja dan Anda langsung berada di lobinya — tanpa pendaftaran, tanpa alamat email. Titik hijau menunjukkan server mana dalam daftar yang sedang daring dan berapa banyak pemain di sana."],
       ["Apakah berjalan di ponsel?",
        "Ya. Klien web ini adalah Progressive Web App: berjalan di peramban modern mana pun pada komputer, tablet, atau ponsel, dan dapat dipasang seperti aplikasi asli — di iPhone dan iPad dengan Bagikan → Tambah ke Layar Utama, di perangkat lain lewat menu peramban atau tombol pasang. Bantuan si As menampilkan langkah-langkahnya untuk perangkat Anda."],
       ["Bisakah saya bermain melawan komputer?",
@@ -3525,18 +3872,22 @@ var SEO_FAQ_I18N = {
       ["Data apa yang dikumpulkan klien web ini?",
        "Sesedikit mungkin: pengaturan Anda tetap di peramban Anda, dan tidak ada pelacakan maupun iklan. Saat Anda masuk dengan akun pokerth.net, opsi dan piala latihan Anda disinkronkan dengannya agar ikut ke perangkat Anda yang lain. Lihat halaman privasi untuk rinciannya."],
       ["Bisakah saya menjalankan server sendiri?",
-       "Bisa. Server khusus PokerTH dan klien web ini sama-sama sumber terbuka, jadi Anda dapat menjalankan server poker pribadi sendiri, di jaringan lokal maupun di internet."],
+       "Bisa. Server khusus PokerTH dan klien web ini sama-sama sumber terbuka, jadi Anda dapat menjalankan server poker pribadi sendiri, di LAN maupun di internet. Agar server Anda tercantum untuk semua orang, pilih LAN / Server khusus, lalu “Usulkan server saya” di bagian bawah daftar server: setelah disetujui admin, server Anda muncul di daftar. Server harus dapat dijangkau dari internet."],
       ["Bagaimana cara kerja permainan berperingkat dan musimnya?",
        "Permainan berperingkat di pokerth.net diikuti 10 pemain dan dimulai begitu meja penuh: masing-masing 10.000 cip, small blind 50 yang berlipat dua setiap 11 ronde, dan 5 detik untuk bertindak. Posisi 1 sampai 7 mendapat 15, 9, 6, 4, 3, 2, dan 1 poin; Skor Anda adalah rata-rata per permainan, dibobot menurut jumlah permainan yang Anda mainkan, dan peringkat dimulai lagi setiap kuartal. Diperlukan akun pokerth.net yang gratis."],
+      ["Apakah ada turnamen dan kompetisi poker gratis?",
+       "Ada, sepanjang tahun, dan semuanya gratis. Setiap permainan PokerTH adalah turnamen, dan komunitas pokerth.net juga rutin menggelar kompetisi dengan peringkatnya sendiri: BBC, permainan dengan blind yang naik setiap beberapa menit (<a href=\"https://bbc.pokerth.net/registration\">kalender</a>, <a href=\"https://bbc.pokerth.net/results\">hasil</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">peringkat</a>); WeCup (WEC), turnamen dengan tempo yang lebih tenang dan seimbang (<a href=\"https://wec.pokerth.net/results\">hasil</a>, <a href=\"https://wec.pokerth.net/results/ranking\">peringkat</a>); dan Monthly Cup, yang diadakan setiap bulan (<a href=\"https://monthlycup.pokerth.net/\">piala berikutnya dan pemenang terbaru</a>, <a href=\"https://monthlycup.pokerth.net/registration\">pendaftaran</a>). Jadwal dan aturan diumumkan di masing-masing situs dan di forum <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Untuk ikut serta diperlukan akun pokerth.net yang gratis."],
       ["Bisakah saya menonton permainan tanpa ikut bermain?",
        "Bisa. Permainan yang sedang berjalan dan mengizinkan penonton dapat ditonton langsung dari lobi: Anda melihat meja dan obrolan, tetapi kartu sendiri tetap tersembunyi dan Anda tidak dapat bertindak. Tautan undangan ke meja yang sudah dimulai akan membukanya untuk ditonton."],
       ["Apakah ada bantuan di dalam aplikasi?",
-       "Ada. Bantuan si As: si As, maskot klien web, menjelaskan setiap layar sambil Anda bermain, jika Anda mau. Menunya berisi seluruh bantuan dengan pencarian, dan “Apa ini?”: sentuh apa saja di layar dan ia menjelaskan fungsinya."]
+       "Ada. Bantuan si As: si As, maskot klien web, menjelaskan setiap layar sambil Anda bermain, jika Anda mau. Menunya berisi seluruh bantuan dengan pencarian, dan “Apa ini?”: sentuh apa saja di layar dan ia menjelaskan fungsinya."],
+      ["Apakah PokerTH masih aktif dikembangkan?",
+       "Ya. PokerTH dikembangkan sebagai perangkat lunak bebas sejak 2006 dan masih terus dipelihara: klien desktop dan servernya ada di <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, klien web ini diperbarui terus-menerus (<a href=\"https://github.com/narmod/pokerth-web-client\">kode sumber dan catatan perubahan</a>), dan permainan berlangsung setiap hari di jaringan resmi pokerth.net."]
     ]
   },
   sv: {
     title: "Vanliga fr\u00e5gor \u2014 PokerTH webbklient",
-    desc: "Vanliga fr\u00e5gor om PokerTH webbklient: gratis poker utan reklam, spela Texas Hold\u2019em i webbl\u00e4saren utan att ladda ner n\u00e5got, konton, mobil, offlinel\u00e4ge, spr\u00e5k och integritet.",
+    desc: "Vanliga frågor om PokerTH webbklient: gratis poker utan reklam och utan nedladdning, spela som gäst eller helt utan konto, bjud in vänner med en länk, turneringar, mobil, offlineläge, språk och integritet.",
     h1: "PokerTH webbklient \u2014 Vanliga fr\u00e5gor",
     qa: [
       ["Är PokerTH gratis?",
@@ -3548,7 +3899,13 @@ var SEO_FAQ_I18N = {
       ["Kan jag spela Texas Hold’em mot andra människor i webbläsaren?",
        "Ja. Anslut till det officiella nätverket pokerth.net för att spela mot spelare världen över, eller skicka en inbjudningslänk så hamnar vännerna direkt vid ditt bord — allt inne i webbläsaren."],
       ["Behöver jag ett konto för att spela?",
-       "Nej. Läget Lokal / träning kräver inget konto och fungerar offline. På det officiella nätverket pokerth.net kan du spela Normal-spel som gäst; ett kostnadsfritt pokerth.net-konto krävs för Rankingspel, bord endast för registrerade och chatten."],
+       "Nej. Läget Lokal / träning kräver inget konto och fungerar offline. På det officiella nätverket pokerth.net loggar du in som gäst: servern ger dig ett gästnamn och du kan spela Normal-spel direkt. På ett LAN eller en dedikerad server finns inga konton alls — du väljer bara ett smeknamn. Inget av dem ber om en e-postadress. Ett kostnadsfritt pokerth.net-konto behövs bara för Rankingspel, bord endast för registrerade och chatten."],
+      ["Hur spelar jag poker online med vänner?",
+       "Skapa ett bord i lobbyn — på pokerth.net eller på valfri LAN- eller dedikerad server — och tryck på ”Bjud in vänner” i väntrummet. Webbklienten skapar en inbjudningslänk som du kan skicka via vilken meddelandeapp som helst. Dina vänner öppnar den i webbläsaren, på iPhone, Android eller dator, utan att ladda ner något. Sätt ett lösenord om bordet ska förbli privat: lösenordet ingår aldrig i länken."],
+      ["Vad händer när en vän öppnar min inbjudningslänk?",
+       "Länken innehåller bordet och servern. Din vän loggar in — som gäst eller med ett konto på pokerth.net, med bara ett smeknamn på ett LAN eller en dedikerad server — och webbklienten ansluter sedan automatiskt till bordet, utan att man behöver leta efter det i lobbyn. Ett lösenordsskyddat bord ber om sitt lösenord; ett spel som redan har startat öppnas för åskådning. Inbjudningslänkar är en funktion i webbklienten och fungerar på alla servrar den kan ansluta till."],
+      ["Finns det en demoserver där man kan prova PokerTH utan att registrera sig?",
+       "Ja. Välj LAN / Dedikerad server på inloggningsskärmen och välj den publika demoservern i serverlistan: skriv valfritt smeknamn så är du i dess lobby — ingen registrering, ingen e-postadress. En grön prick visar vilka servrar i listan som är online och hur många spelare som finns på dem."],
       ["Fungerar det på mobilen?",
        "Ja. Webbklienten är en progressiv webbapp: den fungerar i alla moderna webbläsare på dator, surfplatta och telefon och kan installeras som en vanlig app — på iPhone och iPad med Dela → Lägg till på hemskärmen, annars från webbläsarmenyn eller med installationsknappen. Essets hjälp visar stegen för din enhet."],
       ["Kan jag spela mot datorn?",
@@ -3564,18 +3921,22 @@ var SEO_FAQ_I18N = {
       ["Vilka uppgifter samlar webbklienten in?",
        "Så få som möjligt: dina inställningar stannar i din webbläsare, och ingen spårning eller annonsering förekommer. När du loggar in med ett pokerth.net-konto synkroniseras dina alternativ och träningspokaler med det, så att de följer med till dina andra enheter. Integritetssidan går igenom detaljerna."],
       ["Kan jag driva en egen server?",
-       "Ja. Både den dedikerade PokerTH-servern och den här webbklienten är öppen källkod, så du kan driva din egen privata pokerserver, i ett lokalt nätverk eller på internet."],
+       "Ja. Både den dedikerade PokerTH-servern och den här webbklienten är öppen källkod, så du kan driva din egen privata pokerserver i ett lokalt nätverk eller på internet. Vill du att den ska listas för alla väljer du LAN / Dedikerad server och sedan ”Föreslå min server” längst ner i serverlistan: när administratörerna har godkänt den visas den i listan. Servern måste vara nåbar från internet."],
       ["Hur fungerar Rankingspel och säsonger?",
        "Rankingspel på pokerth.net har 10 spelare och startar så snart bordet är fullt: 10 000 marker var, en liten mörk på 50 som dubbleras var 11:e giv och 5 sekunder att agera. Plats 1 till 7 ger 15, 9, 6, 4, 3, 2 och 1 poäng; din Score är ditt snitt per spel, viktat efter antalet spel du har spelat, och rankingen startar om varje kvartal. Ett kostnadsfritt pokerth.net-konto krävs."],
+      ["Finns det gratis pokerturneringar och tävlingar?",
+       "Ja, året runt, och alla är gratis. Varje PokerTH-spel är en turnering, och pokerth.net-gemenskapen anordnar dessutom regelbundna tävlingar med egna rankningar: BBC, spel där blindarna höjs med några minuters mellanrum (<a href=\"https://bbc.pokerth.net/registration\">kalender</a>, <a href=\"https://bbc.pokerth.net/results\">resultat</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">ranking</a>); WeCup (WEC), turneringar i ett lugnare, balanserat tempo (<a href=\"https://wec.pokerth.net/results\">resultat</a>, <a href=\"https://wec.pokerth.net/results/ranking\">ranking</a>); och Monthly Cup, som hålls varje månad (<a href=\"https://monthlycup.pokerth.net/\">nästa cup och senaste vinnarna</a>, <a href=\"https://monthlycup.pokerth.net/registration\">anmälan</a>). Datum och regler meddelas på respektive webbplats och i forumet på <a href=\"https://www.pokerth.net/\">pokerth.net</a>. För att delta krävs ett kostnadsfritt pokerth.net-konto."],
       ["Kan jag titta på ett spel utan att spela?",
        "Ja. Pågående spel som tillåter åskådare kan ses live från lobbyn: du ser bordet och chatten, men hålkorten förblir dolda och du kan inte agera. En inbjudningslänk till ett bord som redan har startat öppnar det för åskådning."],
       ["Finns det hjälp i appen?",
-       "Ja. Essets hjälp: Esset, webbklientens maskot, förklarar varje skärm allteftersom om du vill. Hans meny rymmer hela hjälpen med sökning, och ”Vad är det här?”: tryck på vad som helst på skärmen så säger han vad det gör."]
+       "Ja. Essets hjälp: Esset, webbklientens maskot, förklarar varje skärm allteftersom om du vill. Hans meny rymmer hela hjälpen med sökning, och ”Vad är det här?”: tryck på vad som helst på skärmen så säger han vad det gör."],
+      ["Utvecklas PokerTH fortfarande aktivt?",
+       "Ja. PokerTH har utvecklats som fri programvara sedan 2006 och underhålls fortfarande: skrivbordsklienten och servern finns på <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, den här webbklienten uppdateras löpande (<a href=\"https://github.com/narmod/pokerth-web-client\">källkod och ändringslogg</a>), och det spelas varje dag på det officiella nätverket pokerth.net."]
     ]
   },
   da: {
     title: "Ofte stillede sp\u00f8rgsm\u00e5l \u2014 PokerTH webklient",
-    desc: "Ofte stillede sp\u00f8rgsm\u00e5l om PokerTH webklienten: gratis poker uden reklamer, spil Texas Hold\u2019em i browseren uden at hente noget, konti, mobil, offlinetilstand, sprog og privatliv.",
+    desc: "Ofte stillede spørgsmål om PokerTH webklienten: gratis poker uden reklamer og download, spil som gæst eller uden konto, inviter venner med et link, turneringer, mobil, offlinetilstand, sprog og privatliv.",
     h1: "PokerTH webklient \u2014 Ofte stillede sp\u00f8rgsm\u00e5l",
     qa: [
       ["Er PokerTH gratis?",
@@ -3587,7 +3948,13 @@ var SEO_FAQ_I18N = {
       ["Kan jeg spille Texas Hold’em mod andre mennesker i browseren?",
        "Ja. Slut dig til det officielle netværk pokerth.net og spil mod spillere fra hele verden, eller send et invitationslink, så lander vennerne direkte ved dit bord — det hele inde i browseren."],
       ["Skal jeg have en konto for at spille?",
-       "Nej. Tilstanden Lokal / træning kræver ingen konto og virker offline. På det officielle netværk pokerth.net kan du spille Normal-spil som gæst; en gratis pokerth.net-konto kræves til Ranglistespil, borde kun for registrerede og chatten."],
+       "Nej. Tilstanden Lokal / træning kræver ingen konto og virker offline. På det officielle netværk pokerth.net logger du ind som gæst: serveren giver dig et gæstenavn, og du kan spille Normal-spil med det samme. På et LAN eller en dedikeret server er der slet ingen konti — du vælger bare et kaldenavn. Ingen af dem beder om en e-mailadresse. En gratis pokerth.net-konto kræves kun til Ranglistespil, borde kun for registrerede og chatten."],
+      ["Hvordan spiller jeg poker online med venner?",
+       "Opret et bord i lobbyen — på pokerth.net eller på en hvilken som helst LAN- eller dedikeret server — og tryk på „Inviter venner” i venteværelset. Webklienten laver et invitationslink, som du kan sende via en hvilken som helst beskedtjeneste. Dine venner åbner det i deres browser, på iPhone, Android eller en computer, uden at hente noget. Sæt en adgangskode, hvis bordet skal forblive privat: adgangskoden er aldrig en del af linket."],
+      ["Hvad sker der, når en ven åbner mit invitationslink?",
+       "Linket indeholder bordet og serveren. Din ven logger ind — som gæst eller med en konto på pokerth.net, med blot et kaldenavn på et LAN eller en dedikeret server — og webklienten sætter sig derefter automatisk ved bordet, uden at man skal lede efter det i lobbyen. Et adgangskodebeskyttet bord beder om sin adgangskode; et spil, der allerede er startet, åbnes til tilskuelse. Invitationslinks er en funktion i webklienten og virker på alle servere, den kan forbinde til."],
+      ["Findes der en demoserver, hvor man kan prøve PokerTH uden at oprette sig?",
+       "Ja. Vælg LAN / Dedikeret server på login-skærmen, og vælg den offentlige demoserver i serverlisten: skriv et hvilket som helst kaldenavn, så er du i dens lobby — ingen registrering, ingen e-mailadresse. En grøn prik viser, hvilke servere på listen der er online, og hvor mange spillere der er på dem."],
       ["Virker det på mobilen?",
        "Ja. Webklienten er en progressiv webapp: den kører i enhver moderne browser på computer, tablet eller telefon og kan installeres som en almindelig app — på iPhone og iPad med Del → Føj til hjemmeskærm, andre steder fra browsermenuen eller installationsknappen. Essets hjælp viser trinnene for din enhed."],
       ["Kan jeg spille mod computeren?",
@@ -3603,18 +3970,22 @@ var SEO_FAQ_I18N = {
       ["Hvilke data indsamler webklienten?",
        "Så få som muligt: dine indstillinger bliver i din browser, og der bruges hverken sporing eller reklamer. Når du logger ind med en pokerth.net-konto, synkroniseres dine indstillinger og træningstrofæer med den, så de følger dig til dine andre enheder. Se privatlivssiden for detaljerne."],
       ["Kan jeg køre min egen server?",
-       "Ja. Både den dedikerede PokerTH-server og denne webklient er open source, så du kan køre din egen private pokerserver, på et lokalt netværk eller på internettet."],
+       "Ja. Både den dedikerede PokerTH-server og denne webklient er open source, så du kan køre din egen private pokerserver på et lokalt netværk eller på internettet. Vil du have den vist for alle, så vælg LAN / Dedikeret server og derefter „Foreslå min server” nederst i serverlisten: når administratorerne har godkendt den, vises den på listen. Serveren skal kunne nås fra internettet."],
       ["Hvordan fungerer Ranglistespil og sæsoner?",
        "Ranglistespil på pokerth.net har 10 spillere og starter, så snart bordet er fuldt: 10.000 jetoner hver, en lille blind på 50, der fordobles hver 11. hånd, og 5 sekunder til at handle. Plads 1 til 7 giver 15, 9, 6, 4, 3, 2 og 1 point; din Score er dit gennemsnit pr. spil, vægtet efter antallet af spil, du har spillet, og ranglisten starter forfra hvert kvartal. Der kræves en gratis pokerth.net-konto."],
+      ["Findes der gratis pokerturneringer og konkurrencer?",
+       "Ja, hele året rundt, og alle er gratis. Hvert PokerTH-spil er en turnering, og pokerth.net-fællesskabet afholder desuden faste konkurrencer med deres egne ranglister: BBC, spil hvor blindene stiger med få minutters mellemrum (<a href=\"https://bbc.pokerth.net/registration\">kalender</a>, <a href=\"https://bbc.pokerth.net/results\">resultater</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">rangliste</a>); WeCup (WEC), turneringer i et roligere, afbalanceret tempo (<a href=\"https://wec.pokerth.net/results\">resultater</a>, <a href=\"https://wec.pokerth.net/results/ranking\">rangliste</a>); og Monthly Cup, der afholdes hver måned (<a href=\"https://monthlycup.pokerth.net/\">næste cup og seneste vindere</a>, <a href=\"https://monthlycup.pokerth.net/registration\">tilmelding</a>). Datoer og regler annonceres på hvert websted og i forummet på <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Deltagelse kræver en gratis pokerth.net-konto."],
       ["Kan jeg se et spil uden at spille med?",
        "Ja. Igangværende spil, der tillader tilskuere, kan ses live fra lobbyen: du ser bordet og chatten, men hulkortene forbliver skjult, og du kan ikke handle. Et invitationslink til et bord, der allerede er startet, åbner det til tilskuelse."],
       ["Er der hjælp inde i appen?",
-       "Ja. Essets hjælp: Esset, webklientens maskot, forklarer hver skærm, efterhånden som du går, hvis du ønsker det. Hans menu rummer hele hjælpen med en søgning, og „Hvad er det?”: tryk på hvad som helst på skærmen, og han siger, hvad det gør."]
+       "Ja. Essets hjælp: Esset, webklientens maskot, forklarer hver skærm, efterhånden som du går, hvis du ønsker det. Hans menu rummer hele hjælpen med en søgning, og „Hvad er det?”: tryk på hvad som helst på skærmen, og han siger, hvad det gør."],
+      ["Bliver PokerTH stadig udviklet aktivt?",
+       "Ja. PokerTH er blevet udviklet som fri software siden 2006 og vedligeholdes stadig: desktopklienten og serveren ligger på <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, denne webklient opdateres løbende (<a href=\"https://github.com/narmod/pokerth-web-client\">kildekode og ændringslog</a>), og der spilles hver dag på det officielle netværk pokerth.net."]
     ]
   },
   nb: {
     title: "Ofte stilte sp\u00f8rsm\u00e5l \u2014 PokerTH-nettklient",
-    desc: "Ofte stilte sp\u00f8rsm\u00e5l om PokerTH-nettklienten: gratis poker uten reklame, spill Texas Hold\u2019em i nettleseren uten \u00e5 laste ned noe, kontoer, mobil, frakoblet modus, spr\u00e5k og personvern.",
+    desc: "Ofte stilte spørsmål om PokerTH-nettklienten: gratis poker uten reklame og nedlasting, spill som gjest eller uten konto, inviter venner med en lenke, turneringer, mobil, frakoblet modus, språk og personvern.",
     h1: "PokerTH-nettklient \u2014 Ofte stilte sp\u00f8rsm\u00e5l",
     qa: [
       ["Er PokerTH gratis?",
@@ -3626,7 +3997,13 @@ var SEO_FAQ_I18N = {
       ["Kan jeg spille Texas Hold’em mot andre mennesker i nettleseren?",
        "Ja. Koble deg til det offisielle nettverket pokerth.net for å spille mot spillere over hele verden, eller send en invitasjonslenke slik at vennene havner rett ved bordet ditt — alt inne i nettleseren."],
       ["Trenger jeg en konto for å spille?",
-       "Nei. Modusen Lokal / trening trenger ingen konto og virker uten nett. I det offisielle nettverket pokerth.net kan du spille Normal-spill som gjest; en gratis pokerth.net-konto trengs for Rangeringsspill, bord kun for registrerte og chatten."],
+       "Nei. Modusen Lokal / trening trenger ingen konto og virker uten nett. I det offisielle nettverket pokerth.net logger du inn som gjest: serveren gir deg et gjestekallenavn, og du kan spille Normal-spill med en gang. På et LAN eller en dedikert server finnes det ingen kontoer i det hele tatt — du velger bare et kallenavn. Ingen av disse ber om e-postadresse. En gratis pokerth.net-konto trengs bare for Rangeringsspill, bord kun for registrerte og chatten."],
+      ["Hvordan spiller jeg poker på nett med venner?",
+       "Opprett et bord i lobbyen — på pokerth.net eller på en hvilken som helst LAN- eller dedikert server — og trykk på «Inviter venner» i venterommet. Nettklienten lager en invitasjonslenke som du kan sende via hvilken som helst meldingsapp. Vennene dine åpner den i nettleseren, på iPhone, Android eller datamaskin, uten å laste ned noe. Sett et passord hvis bordet skal forbli privat: passordet er aldri en del av lenken."],
+      ["Hva skjer når en venn åpner invitasjonslenken min?",
+       "Lenken inneholder bordet og serveren. Vennen din logger inn — som gjest eller med en konto på pokerth.net, med bare et kallenavn på et LAN eller en dedikert server — og nettklienten blir deretter automatisk med ved bordet, uten at man trenger å lete etter det i lobbyen. Et passordbeskyttet bord ber om passordet sitt; et spill som allerede har startet, åpnes for visning. Invitasjonslenker er en funksjon i nettklienten og virker på alle servere den kan koble til."],
+      ["Finnes det en demoserver for å prøve PokerTH uten å registrere seg?",
+       "Ja. Velg LAN / Dedikert server på innloggingsskjermen og velg den offentlige demoserveren i serverlisten: skriv inn et hvilket som helst kallenavn, så er du i lobbyen der — ingen registrering, ingen e-postadresse. En grønn prikk viser hvilke servere i listen som er på nett, og hvor mange spillere som er der."],
       ["Fungerer det på mobil?",
        "Ja. Nettklienten er en progressiv nettapp: den kjører i enhver moderne nettleser på datamaskin, nettbrett eller telefon, og kan installeres som en vanlig app — på iPhone og iPad med Del → Legg til på Hjem-skjerm, ellers fra nettlesermenyen eller installeringsknappen. Essets hjelp viser trinnene for din enhet."],
       ["Kan jeg spille mot datamaskinen?",
@@ -3642,18 +4019,22 @@ var SEO_FAQ_I18N = {
       ["Hvilke data samler nettklienten inn?",
        "Så få som mulig: innstillingene dine blir værende i nettleseren din, og det brukes verken sporing eller reklame. Når du logger inn med en pokerth.net-konto, synkroniseres innstillingene og treningstrofeene dine med den, så de følger deg til de andre enhetene dine. Personvernsiden går gjennom detaljene."],
       ["Kan jeg drive min egen tjener?",
-       "Ja. Både den dedikerte PokerTH-tjeneren og denne nettklienten har åpen kildekode, så du kan drive din egen private pokertjener, på et lokalnett eller på internett."],
+       "Ja. Både den dedikerte PokerTH-serveren og denne nettklienten har åpen kildekode, så du kan drive din egen private pokerserver på et lokalnett eller på internett. For å få den oppført for alle velger du LAN / Dedikert server og deretter «Foreslå serveren min» nederst i serverlisten: når administratorene har godkjent den, vises den i listen. Serveren må være tilgjengelig fra internett."],
       ["Hvordan fungerer Rangeringsspill og sesonger?",
        "Rangeringsspill på pokerth.net har plass til 10 spillere og starter så snart bordet er fullt: 10 000 sjetonger hver, en liten blind på 50 som dobles hver 11. hånd, og 5 sekunder på å handle. Plassene 1 til 7 gir 15, 9, 6, 4, 3, 2 og 1 poeng; poengsummen din er snittet per spill, vektet etter antall spill du har spilt, og rangeringen starter på nytt hvert kvartal. En gratis pokerth.net-konto trengs."],
+      ["Finnes det gratis pokerturneringer og konkurranser?",
+       "Ja, hele året, og alle er gratis. Hvert PokerTH-spill er en turnering, og pokerth.net-fellesskapet arrangerer i tillegg faste konkurranser med egne rangeringer: BBC, spill der blindene øker med noen minutters mellomrom (<a href=\"https://bbc.pokerth.net/registration\">kalender</a>, <a href=\"https://bbc.pokerth.net/results\">resultater</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">rangering</a>); WeCup (WEC), turneringer i et roligere, balansert tempo (<a href=\"https://wec.pokerth.net/results\">resultater</a>, <a href=\"https://wec.pokerth.net/results/ranking\">rangering</a>); og Monthly Cup, som holdes hver måned (<a href=\"https://monthlycup.pokerth.net/\">neste cup og siste vinnere</a>, <a href=\"https://monthlycup.pokerth.net/registration\">påmelding</a>). Datoer og regler kunngjøres på hvert nettsted og i forumet på <a href=\"https://www.pokerth.net/\">pokerth.net</a>. For å delta trengs en gratis pokerth.net-konto."],
       ["Kan jeg se på et spill uten å spille?",
        "Ja. Pågående spill som tillater tilskuere, kan følges direkte fra lobbyen: du ser bordet og chatten, men hullkortene forblir skjult, og du kan ikke handle. En invitasjonslenke til et bord som allerede har startet, åpner det for visning."],
       ["Finnes det hjelp i appen?",
-       "Ja. Essets hjelp: Esset, nettklientens maskot, forklarer hver skjerm underveis hvis du vil. Menyen hans har hele hjelpen med søk, og «Hva er dette?»: trykk på hva som helst på skjermen, så sier han hva det gjør."]
+       "Ja. Essets hjelp: Esset, nettklientens maskot, forklarer hver skjerm underveis hvis du vil. Menyen hans har hele hjelpen med søk, og «Hva er dette?»: trykk på hva som helst på skjermen, så sier han hva det gjør."],
+      ["Utvikles PokerTH fortsatt aktivt?",
+       "Ja. PokerTH har vært utviklet som fri programvare siden 2006 og vedlikeholdes fortsatt: skrivebordsklienten og serveren ligger på <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, denne nettklienten oppdateres fortløpende (<a href=\"https://github.com/narmod/pokerth-web-client\">kildekode og endringslogg</a>), og det spilles hver dag på det offisielle nettverket pokerth.net."]
     ]
   },
   ne: {
     title: "FAQ — PokerTH वेब क्लाइन्ट",
-    desc: "PokerTH वेब क्लाइन्टबारे बारम्बार सोधिने प्रश्न: विज्ञापनबिनाको निःशुल्क पोकर, केही इन्स्टल नगरी ब्राउजरमा Texas Hold’em, खाता, मोबाइल, अफलाइन मोड, भाषा र गोपनीयता।",
+    desc: "PokerTH वेब क्लाइन्टबारे बारम्बार सोधिने प्रश्न: विज्ञापन र डाउनलोडबिनाको निःशुल्क पोकर, अतिथि भएर वा खाताबिना खेल्ने, लिङ्कबाट साथीहरूलाई निम्तो, प्रतियोगिता, मोबाइल, अफलाइन मोड, भाषा र गोपनीयता।",
     h1: "PokerTH वेब क्लाइन्ट — बारम्बार सोधिने प्रश्न",
     qa: [
       ["के PokerTH निःशुल्क छ?",
@@ -3665,7 +4046,13 @@ var SEO_FAQ_I18N = {
       ["के म आफ्नो ब्राउजरमा अरू मानिसहरूसँग Texas Hold’em खेल्न सक्छु?",
        "सक्नुहुन्छ। संसारभरका खेलाडीसँग प्रत्यक्ष Texas Hold’em खेल्न आधिकारिक pokerth.net नेटवर्कमा सामेल हुनुहोस्, वा साथीहरू सीधै तपाईंको टेबलमा आऊन् भनी निम्तो लिङ्क पठाउनुहोस् — सबै ब्राउजरभित्रै।"],
       ["खेल्न खाता चाहिन्छ?",
-       "चाहिँदैन। स्थानीय / अभ्यास मोडलाई खाता चाहिँदैन र यो अफलाइन चल्छ। आधिकारिक pokerth.net नेटवर्कमा तपाईं अतिथिको रूपमा सामान्य खेल खेल्न सक्नुहुन्छ; र्‍याङ्किङ खेल, दर्ता भएकालाई मात्र खुला टेबल र च्याटका लागि निःशुल्क pokerth.net खाता चाहिन्छ।"],
+       "चाहिँदैन। स्थानीय / अभ्यास मोडलाई खाता चाहिँदैन र यो अफलाइन चल्छ। आधिकारिक pokerth.net नेटवर्कमा अतिथिको रूपमा लगइन गर्नुहोस्: सर्भरले तपाईंलाई एउटा अतिथि उपनाम दिन्छ र तपाईं तुरुन्तै सामान्य खेल खेल्न सक्नुहुन्छ। LAN वा समर्पित सर्भरमा खाता नै हुँदैन — एउटा उपनाम मात्र छान्नुहोस्। यीमध्ये कतै पनि इमेल ठेगाना माग्दैन। निःशुल्क pokerth.net खाता र्‍याङ्किङ खेल, दर्ता भएकालाई मात्र खुला टेबल र च्याटका लागि मात्र चाहिन्छ।"],
+      ["साथीहरूसँग अनलाइन पोकर कसरी खेल्ने?",
+       "लबीमा एउटा टेबल बनाउनुहोस् — pokerth.net मा वा कुनै पनि LAN वा समर्पित सर्भरमा — र प्रतीक्षा कोठामा “साथीहरूलाई निम्तो दिनुहोस्” थिच्नुहोस्। वेब क्लाइन्टले एउटा निम्तो लिङ्क बनाउँछ, जुन तपाईं कुनै पनि मेसेन्जरबाट पठाउन सक्नुहुन्छ। तपाईंका साथीहरूले त्यसलाई आफ्नो ब्राउजरमा — iPhone, Android वा कम्प्युटरमा — खोल्छन्, केही डाउनलोड गर्नु पर्दैन। टेबल निजी राख्नुपर्छ भने पासवर्ड राख्नुहोस्: पासवर्ड कहिल्यै लिङ्कको भाग हुँदैन।"],
+      ["साथीले मेरो निम्तो लिङ्क खोल्दा के हुन्छ?",
+       "लिङ्कमा टेबल र सर्भरको जानकारी हुन्छ। तपाईंको साथी लगइन गर्छ — pokerth.net मा अतिथि भएर वा खाताबाट, LAN वा समर्पित सर्भरमा उपनाम मात्रै राखेर — अनि लबीमा खोज्नु नपर्ने गरी वेब क्लाइन्ट आफैँ त्यो टेबलमा सामेल हुन्छ। पासवर्डले सुरक्षित टेबलले आफ्नो पासवर्ड माग्छ; पहिल्यै सुरु भइसकेको खेल हेर्नका लागि खुल्छ। निम्तो लिङ्कहरू वेब क्लाइन्टको सुविधा हुन् र यसले जडान गर्न सक्ने हरेक सर्भरमा चल्छन्।"],
+      ["दर्ता नगरी PokerTH चलाएर हेर्न कुनै डेमो सर्भर छ?",
+       "छ। लगइन स्क्रिनमा LAN / समर्पित सर्भर छान्नुहोस् र सर्भर सूचीबाट सार्वजनिक डेमो सर्भर रोज्नुहोस्: कुनै पनि उपनाम टाइप गर्नुहोस्, अनि तपाईं त्यसको लबीमा पुग्नुहुन्छ — न दर्ता, न इमेल ठेगाना। सूचीका कुन सर्भर अनलाइन छन् र तिनमा कति खेलाडी छन् भनी हरियो थोप्लाले देखाउँछ।"],
       ["के यो मोबाइलमा चल्छ?",
        "चल्छ। वेब क्लाइन्ट Progressive Web App हो: डेस्कटप, ट्याब्लेट वा फोनको जुनसुकै आधुनिक ब्राउजरमा चल्छ, र मूल एपजस्तै इन्स्टल गर्न सकिन्छ — iPhone र iPad मा साझा गर्नुहोस् → होम स्क्रिनमा थप्नुहोस् बाट, अन्यत्र ब्राउजर मेनु वा इन्स्टल बटनबाट। एक्काको मद्दतले तपाईंको उपकरणका चरण देखाउँछ।"],
       ["के कम्प्युटरसँग खेल्न सकिन्छ?",
@@ -3681,18 +4068,22 @@ var SEO_FAQ_I18N = {
       ["वेब क्लाइन्टले कस्तो डेटा सङ्कलन गर्छ?",
        "सकेसम्म कम: सेटिङ तपाईंको ब्राउजरमै रहन्छन्, र कुनै ट्र्याकिङ वा विज्ञापन प्रयोग हुँदैन। pokerth.net खाताबाट लग इन गर्दा तपाईंका सेटिङ र अभ्यासका ट्रफी त्यससँग सिङ्क हुन्छन्, ताकि ती तपाईंका अन्य उपकरणमा पनि पछ्याउँछन्। विस्तृत जानकारीका लागि गोपनीयता पेज हेर्नुहोस्।"],
       ["के म आफ्नै सर्भर चलाउन सक्छु?",
-       "सक्नुहुन्छ। PokerTH समर्पित सर्भर र यो वेब क्लाइन्ट दुवै खुला स्रोत हुन्, त्यसैले तपाईं LAN वा इन्टरनेटमा आफ्नै निजी पोकर सर्भर चलाउन सक्नुहुन्छ।"],
+       "सक्नुहुन्छ। PokerTH समर्पित सर्भर र यो वेब क्लाइन्ट दुवै खुला स्रोत हुन्, त्यसैले तपाईं LAN वा इन्टरनेटमा आफ्नै निजी पोकर सर्भर चलाउन सक्नुहुन्छ। यसलाई सबैले देख्ने गरी सूचीमा राख्न LAN / समर्पित सर्भर छान्नुहोस्, अनि सर्भर सूचीको तल रहेको “मेरो सर्भर प्रस्ताव गर्नुहोस्” थिच्नुहोस्: प्रशासकहरूले स्वीकृत गरेपछि यो सूचीमा देखिन्छ। सर्भर इन्टरनेटबाट पहुँचयोग्य हुनुपर्छ।"],
       ["र्‍याङ्किङ खेल र सिजन कसरी चल्छन्?",
        "pokerth.net का र्‍याङ्किङ खेलमा 10 खेलाडी बस्छन् र टेबल भरिनेबित्तिकै सुरु हुन्छ: प्रत्येकलाई 10,000 चिप्स, हरेक 11 ह्यान्डमा दोब्बर हुने 50 को सानो ब्लाइन्ड, र चाल चल्न 5 सेकेन्ड। 1 देखि 7 सम्मका स्थानले 15, 9, 6, 4, 3, 2 र 1 अङ्क पाउँछन्; तपाईंको स्कोर हरेक खेलको औसत हो, तपाईंले खेलेका खेलको सङ्ख्याअनुसार भारित गरिएको, र र्‍याङ्किङ हरेक त्रैमासिकमा फेरि सुरु हुन्छ। निःशुल्क pokerth.net खाता चाहिन्छ।"],
+      ["निःशुल्क पोकर टुर्नामेन्ट र प्रतियोगिता छन्?",
+       "छन्, वर्षभरि, र सबै निःशुल्क। PokerTH को हरेक खेल आफैँमा एउटा टुर्नामेन्ट हो, र pokerth.net समुदायले आफ्नै र्‍याङ्किङसहित नियमित प्रतियोगिता पनि चलाउँछ: BBC, हरेक केही मिनेटमा ब्लाइन्ड बढ्ने खेलहरू (<a href=\"https://bbc.pokerth.net/registration\">पात्रो</a>, <a href=\"https://bbc.pokerth.net/results\">नतिजा</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">र्‍याङ्किङ</a>); WeCup (WEC), शान्त र सन्तुलित गतिका टुर्नामेन्ट (<a href=\"https://wec.pokerth.net/results\">नतिजा</a>, <a href=\"https://wec.pokerth.net/results/ranking\">र्‍याङ्किङ</a>); र हरेक महिना हुने Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">अर्को कप र पछिल्ला विजेता</a>, <a href=\"https://monthlycup.pokerth.net/registration\">दर्ता</a>)। मिति र नियम हरेक साइटमा र <a href=\"https://www.pokerth.net/\">pokerth.net</a> फोरममा घोषणा गरिन्छन्। भाग लिन निःशुल्क pokerth.net खाता चाहिन्छ।"],
       ["नखेली खेल हेर्न सकिन्छ?",
        "सकिन्छ। दर्शकलाई अनुमति दिने चलिरहेका खेल लबीबाट प्रत्यक्ष हेर्न सकिन्छ: तपाईंले टेबल र च्याट देख्नुहुन्छ, तर पकेट कार्ड लुकेकै रहन्छन् र तपाईं चाल चल्न सक्नुहुन्न। पहिल्यै सुरु भइसकेको टेबलको निम्तो लिङ्कले त्यसलाई हेर्नका लागि खोल्छ।"],
       ["के एपभित्र मद्दत छ?",
-       "छ। एक्काको मद्दत: एक्का, वेब क्लाइन्टको शुभङ्कर, तपाईंले चाहे खेल्दाखेल्दै हरेक स्क्रिन बुझाउँछ। उसको मेनुमा खोजसहितको पूरा मद्दत र “यो के हो?” छ: स्क्रिनमा जुनसुकै कुरा छुनुहोस्, र उसले त्यसले के गर्छ भन्छ।"]
+       "छ। एक्काको मद्दत: एक्का, वेब क्लाइन्टको शुभङ्कर, तपाईंले चाहे खेल्दाखेल्दै हरेक स्क्रिन बुझाउँछ। उसको मेनुमा खोजसहितको पूरा मद्दत र “यो के हो?” छ: स्क्रिनमा जुनसुकै कुरा छुनुहोस्, र उसले त्यसले के गर्छ भन्छ।"],
+      ["के PokerTH अझै सक्रिय रूपमा विकास भइरहेको छ?",
+       "छ। PokerTH सन् 2006 देखि निःशुल्क र खुला स्रोत सफ्टवेयरका रूपमा विकास हुँदै आएको छ र अझै पनि मर्मत गरिन्छ: डेस्कटप क्लाइन्ट र सर्भर <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> मा छन्, यो वेब क्लाइन्ट निरन्तर अद्यावधिक हुन्छ (<a href=\"https://github.com/narmod/pokerth-web-client\">स्रोत कोड र परिवर्तन विवरण</a>), र आधिकारिक pokerth.net नेटवर्कमा हरेक दिन खेलहरू खेलिन्छन्।"]
     ],
   },
   fi: {
     title: "Usein kysytty\u00e4 \u2014 PokerTH-verkkoasiakas",
-    desc: "Usein kysytty\u00e4 PokerTH-verkkoasiakkaasta: ilmainen pokeri ilman mainoksia, Texas Hold\u2019emin pelaaminen selaimessa ilman latauksia, tilit, puhelin, offline-tila, kielet ja yksityisyys.",
+    desc: "Usein kysyttyä PokerTH-verkkoasiakkaasta: ilmainen pokeri ilman mainoksia ja latauksia, pelaaminen vieraana tai ilman tiliä, ystävien kutsuminen linkillä, turnaukset, puhelin, offline-tila, kielet ja yksityisyys.",
     h1: "PokerTH-verkkoasiakas \u2014 Usein kysytty\u00e4",
     qa: [
       ["Onko PokerTH ilmainen?",
@@ -3704,7 +4095,13 @@ var SEO_FAQ_I18N = {
       ["Voinko pelata Texas Hold’emia muita ihmisiä vastaan selaimessa?",
        "Kyllä. Liity viralliseen pokerth.net-verkkoon ja pelaa pelaajia vastaan ympäri maailman, tai lähetä kutsulinkki, jolloin ystävät päätyvät suoraan pöytääsi — kaikki selaimen sisällä."],
       ["Tarvitsenko tilin pelatakseni?",
-       "Ei. Paikallinen / harjoittelu -tila ei vaadi tiliä ja toimii offline-tilassa. Virallisessa pokerth.net-verkossa voit pelata Normaali-pelejä vieraana; maksuton pokerth.net-tili tarvitaan Ranking-peleihin, vain rekisteröityneille tarkoitettuihin pöytiin ja chattiin."],
+       "Ei. Paikallinen / harjoittelu -tila ei vaadi tiliä ja toimii offline-tilassa. Virallisessa pokerth.net-verkossa kirjaudut sisään vieraana: palvelin antaa sinulle vierasnimimerkin, ja voit pelata Normaali-pelejä heti. LAN-verkossa tai omalla palvelimella tilejä ei ole lainkaan — valitset vain nimimerkin. Mikään näistä ei kysy sähköpostiosoitetta. Maksutonta pokerth.net-tiliä tarvitaan vain Ranking-peleihin, vain rekisteröityneille tarkoitettuihin pöytiin ja chattiin."],
+      ["Miten pelaan pokeria verkossa ystävien kanssa?",
+       "Luo pöytä aulassa — pokerth.netissä tai millä tahansa LAN- tai omalla palvelimella — ja paina odotushuoneessa ”Kutsu ystäviä”. Verkkoasiakas luo kutsulinkin, jonka voit lähettää millä tahansa viestisovelluksella. Ystäväsi avaavat sen selaimessaan iPhonella, Androidilla tai tietokoneella, eikä mitään tarvitse ladata. Aseta salasana, jos pöydän on määrä pysyä yksityisenä: salasana ei koskaan sisälly linkkiin."],
+      ["Mitä tapahtuu, kun ystävä avaa kutsulinkkini?",
+       "Linkki sisältää pöydän ja palvelimen. Ystäväsi kirjautuu sisään — pokerth.netissä vieraana tai tilillä, LAN- tai omalla palvelimella pelkällä nimimerkillä — ja verkkoasiakas liittyy sen jälkeen pöytään automaattisesti, eikä sitä tarvitse etsiä aulasta. Salasanalla suojattu pöytä kysyy salasanaansa; jo alkanut peli avautuu katsottavaksi. Kutsulinkit ovat verkkoasiakkaan ominaisuus ja toimivat jokaisella palvelimella, johon se pystyy yhdistämään."],
+      ["Onko olemassa demopalvelinta, jolla PokerTH:ta voi kokeilla rekisteröitymättä?",
+       "Kyllä. Valitse kirjautumisnäkymässä LAN / Oma palvelin ja valitse palvelinluettelosta julkinen demopalvelin: kirjoita mikä tahansa nimimerkki, niin olet sen aulassa — ei rekisteröitymistä, ei sähköpostiosoitetta. Vihreä pallo näyttää, mitkä luettelon palvelimista ovat verkossa ja kuinka monta pelaajaa niillä on."],
       ["Toimiiko se puhelimessa?",
        "Kyllä. Verkkoasiakas on progressiivinen verkkosovellus: se toimii kaikissa nykyaikaisissa selaimissa tietokoneella, tabletilla ja puhelimella, ja sen voi asentaa kuin tavallisen sovelluksen — iPhonessa ja iPadissa Jaa → Lisää Koti-valikkoon, muualla selaimen valikosta tai asennuspainikkeesta. Ässän apu näyttää vaiheet laitteellesi."],
       ["Voinko pelata tietokonetta vastaan?",
@@ -3720,18 +4117,22 @@ var SEO_FAQ_I18N = {
       ["Mitä tietoja verkkoasiakas kerää?",
        "Mahdollisimman vähän: asetuksesi pysyvät omassa selaimessasi, eikä seurantaa tai mainontaa käytetä. Kun kirjaudut sisään pokerth.net-tilillä, asetuksesi ja harjoittelutrofeesi synkronoidaan sen kanssa, jotta ne seuraavat sinua muille laitteillesi. Yksityisyyssivu kertoo yksityiskohdat."],
       ["Voinko ylläpitää omaa palvelinta?",
-       "Kyllä. Sekä PokerTH:n oma palvelin että tämä verkkoasiakas ovat avointa lähdekoodia, joten voit pyörittää omaa yksityistä pokeripalvelintasi lähiverkossa tai internetissä."],
+       "Kyllä. Sekä PokerTH:n oma palvelin että tämä verkkoasiakas ovat avointa lähdekoodia, joten voit pyörittää omaa yksityistä pokeripalvelintasi lähiverkossa tai internetissä. Jos haluat sen näkyvän kaikille, valitse LAN / Oma palvelin ja sitten ”Ehdota palvelintani” palvelinluettelon alareunasta: kun ylläpitäjät ovat hyväksyneet sen, se näkyy luettelossa. Palvelimen on oltava tavoitettavissa internetistä."],
       ["Miten Ranking-pelit ja kaudet toimivat?",
        "Ranking-peleissä pokerth.net-verkossa on 10 pelaajaa, ja ne alkavat heti kun pöytä on täynnä: jokaisella 10 000 pelimerkkiä, pieni blindi 50, joka kaksinkertaistuu 11 jaon välein, ja 5 sekuntia toimia. Sijat 1–7 saavat 15, 9, 6, 4, 3, 2 ja 1 pistettä; Score on pisteesi keskiarvo pelattua peliä kohti, painotettuna pelattujen pelien määrällä, ja sijoitukset alkavat alusta joka neljännes. Tarvitaan maksuton pokerth.net-tili."],
+      ["Onko ilmaisia pokeriturnauksia ja kilpailuja?",
+       "Kyllä, ympäri vuoden, ja kaikki ilmaisia. Jokainen PokerTH-peli on turnaus, ja pokerth.net-yhteisö järjestää lisäksi säännöllisiä kilpailuja omine sijoituslistoineen: BBC, pelit, joissa blindit nousevat muutaman minuutin välein (<a href=\"https://bbc.pokerth.net/registration\">kalenteri</a>, <a href=\"https://bbc.pokerth.net/results\">tulokset</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">sijoitukset</a>); WeCup (WEC), rauhallisemman ja tasapainoisen tahdin turnaukset (<a href=\"https://wec.pokerth.net/results\">tulokset</a>, <a href=\"https://wec.pokerth.net/results/ranking\">sijoitukset</a>); sekä joka kuukausi pelattava Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">seuraava cup ja viimeisimmät voittajat</a>, <a href=\"https://monthlycup.pokerth.net/registration\">ilmoittautuminen</a>). Päivämäärät ja säännöt ilmoitetaan kunkin kilpailun sivustolla ja <a href=\"https://www.pokerth.net/\">pokerth.net</a>-foorumilla. Osallistuminen vaatii maksuttoman pokerth.net-tilin."],
       ["Voinko katsoa peliä pelaamatta?",
        "Kyllä. Käynnissä olevia pelejä, jotka sallivat katsojat, voi seurata livenä aulasta: näet pöydän ja chatin, mutta taskukortit pysyvät piilossa etkä voi toimia. Kutsulinkki jo alkaneeseen pöytään avaa sen katsottavaksi."],
       ["Onko sovelluksessa ohjetta?",
-       "Kyllä. Ässän apu: Ässä, verkkoasiakkaan maskotti, selittää jokaisen näkymän sitä mukaa kuin etenet, jos haluat. Hänen valikkonsa sisältää koko ohjeen hakuineen, ja ”Mikä tämä on?”: napauta mitä tahansa ruudulla, niin hän kertoo mitä se tekee."]
+       "Kyllä. Ässän apu: Ässä, verkkoasiakkaan maskotti, selittää jokaisen näkymän sitä mukaa kuin etenet, jos haluat. Hänen valikkonsa sisältää koko ohjeen hakuineen, ja ”Mikä tämä on?”: napauta mitä tahansa ruudulla, niin hän kertoo mitä se tekee."],
+      ["Kehitetäänkö PokerTH:ta yhä aktiivisesti?",
+       "Kyllä. PokerTH:ta on kehitetty vapaana ohjelmistona vuodesta 2006, ja sitä ylläpidetään edelleen: työpöytäasiakas ja palvelin ovat <a href=\"https://github.com/pokerth/pokerth\">GitHubissa</a>, tätä verkkoasiakasta päivitetään jatkuvasti (<a href=\"https://github.com/narmod/pokerth-web-client\">lähdekoodi ja muutosloki</a>), ja virallisessa pokerth.net-verkossa pelataan joka päivä."]
     ]
   },
   hu: {
     title: "Gyakori k\u00e9rd\u00e9sek \u2014 PokerTH webkliens",
-    desc: "Gyakori k\u00e9rd\u00e9sek a PokerTH webkliensr\u0151l: ingyenes p\u00f3ker rekl\u00e1mok n\u00e9lk\u00fcl, Texas Hold\u2019em a b\u00f6ng\u00e9sz\u0151ben let\u00f6lt\u00e9s n\u00e9lk\u00fcl, fi\u00f3kok, mobil, offline m\u00f3d, nyelvek \u00e9s adatv\u00e9delem.",
+    desc: "Gyakori kérdések a PokerTH webkliensről: ingyenes póker reklámok és letöltés nélkül, játék vendégként vagy fiók nélkül, barátok meghívása linkkel, versenyek, mobil, offline mód, nyelvek és adatvédelem.",
     h1: "PokerTH webkliens \u2014 Gyakori k\u00e9rd\u00e9sek",
     qa: [
       ["Ingyenes a PokerTH?",
@@ -3743,7 +4144,13 @@ var SEO_FAQ_I18N = {
       ["Játszhatok Texas Hold’emet más emberekkel a böngészőben?",
        "Igen. Csatlakozz a hivatalos pokerth.net hálózathoz, és játssz a világ bármely pontjáról érkező játékosokkal, vagy küldj meghívólinket, hogy a barátaid egyenesen az asztalodnál kössenek ki — mindez a böngészőn belül."],
       ["Kell fiók a játékhoz?",
-       "Nem. A Helyi / gyakorlás módhoz nem kell fiók, és offline is működik. A hivatalos pokerth.net hálózaton vendégként játszhatsz Normál játékokat; ingyenes pokerth.net-fiók a Ranglistás játékokhoz, a csak regisztráltaknak szóló asztalokhoz és a csevegéshez kell."],
+       "Nem. A Helyi / gyakorlás módhoz nem kell fiók, és offline is működik. A hivatalos pokerth.net hálózaton jelentkezz be vendégként: a szerver ad egy vendég becenevet, és azonnal játszhatsz Normál játékokat. LAN-on vagy dedikált szerveren egyáltalán nincs fiók — csak egy becenevet választasz. Egyik sem kér e-mail-címet. Ingyenes pokerth.net-fiók csak a Ranglistás játékokhoz, a csak regisztráltaknak szóló asztalokhoz és a csevegéshez kell."],
+      ["Hogyan pókerezhetek online a barátaimmal?",
+       "Hozz létre egy asztalt a lobbiban — a pokerth.net-en vagy bármely LAN- vagy dedikált szerveren —, és nyomd meg a „Barátok meghívása” gombot a várószobában. A webkliens készít egy meghívólinket, amelyet bármilyen üzenetküldőn elküldhetsz. A barátaid a böngészőjükben nyitják meg, iPhone-on, Androidon vagy számítógépen, letöltés nélkül. Állíts be jelszót, ha az asztalnak privátnak kell maradnia: a jelszó soha nem része a linknek."],
+      ["Mi történik, amikor egy barátom megnyitja a meghívólinkemet?",
+       "A link tartalmazza az asztalt és a szervert. A barátod bejelentkezik — vendégként vagy pokerth.net-fiókkal, LAN- vagy dedikált szerveren pedig csak egy becenévvel —, a webkliens pedig automatikusan csatlakozik az asztalhoz, nem kell a lobbiban keresgélnie. A jelszóval védett asztal elkéri a jelszót; a már elindult játék nézőként nyílik meg. A meghívólinkek a webkliens funkciói, és minden olyan szerveren működnek, amelyhez csatlakozni tud."],
+      ["Van demószerver, amelyen regisztráció nélkül kipróbálhatom a PokerTH-t?",
+       "Igen. A bejelentkezési képernyőn válaszd a LAN / Dedikált szerver lehetőséget, és a szerverlistából válaszd ki a nyilvános demószervert: írj be bármilyen becenevet, és már a lobbijában is vagy — regisztráció és e-mail-cím nélkül. Egy zöld pötty mutatja, hogy a listázott szerverek közül melyik érhető el, és hány játékos van rajta."],
       ["Működik mobilon?",
        "Igen. A webkliens egy progresszív webalkalmazás: bármely modern böngészőben fut asztali gépen, táblagépen és telefonon, és natív alkalmazásként telepíthető — iPhone-on és iPaden a Megosztás → Főképernyőhöz adás lehetőséggel, máshol a böngészőmenüből vagy a telepítés gombbal. Az Ász súgója megmutatja a lépéseket a te eszközödre."],
       ["Játszhatok a gép ellen?",
@@ -3759,18 +4166,22 @@ var SEO_FAQ_I18N = {
       ["Milyen adatokat gyűjt a webkliens?",
        "Amennyit csak lehet, annyit nem: a beállításaid a böngésződben maradnak, és semmilyen nyomkövetés vagy hirdetés nincs. Ha pokerth.net-fiókkal jelentkezel be, a beállításaid és a gyakorlásban szerzett trófeáid szinkronizálódnak vele, így követnek a többi eszközödre is. A részletek az adatvédelmi oldalon olvashatók."],
       ["Üzemeltethetek saját szervert?",
-       "Igen. A dedikált PokerTH-szerver és ez a webkliens is nyílt forráskódú, így saját privát pókerszervert üzemeltethetsz helyi hálózaton vagy az interneten."],
+       "Igen. A dedikált PokerTH-szerver és ez a webkliens is nyílt forráskódú, így saját privát pókerszervert üzemeltethetsz helyi hálózaton vagy az interneten. Ha azt szeretnéd, hogy mindenki lássa, válaszd a LAN / Dedikált szerver lehetőséget, majd a szerverlista alján a „Saját szerver ajánlása” gombot: amint az adminisztrátorok jóváhagyják, megjelenik a listában. A szervernek elérhetőnek kell lennie az internetről."],
       ["Hogyan működnek a Ranglistás játékok és a szezonok?",
        "A pokerth.net Ranglistás játékai 10 játékost ültetnek le, és amint megtelik az asztal, elindulnak: fejenként 10 000 zseton, 50-es kisvak, amely 11 leosztásonként megduplázódik, és 5 másodperc a lépésre. Az 1–7. helyezett rendre 15, 9, 6, 4, 3, 2 és 1 pontot kap; a Score-od a játékonkénti átlagod, a lejátszott játékok számával súlyozva, a ranglista pedig negyedévente újraindul. Ingyenes pokerth.net-fiók szükséges."],
+      ["Vannak ingyenes pókerversenyek és bajnokságok?",
+       "Igen, egész évben, és mind ingyenes. Minden PokerTH-játék egy verseny, a pokerth.net közössége pedig rendszeres bajnokságokat is szervez saját ranglistával: a BBC, amelynek játékaiban a vakok néhány percenként emelkednek (<a href=\"https://bbc.pokerth.net/registration\">naptár</a>, <a href=\"https://bbc.pokerth.net/results\">eredmények</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">ranglista</a>); a WeCup (WEC), nyugodtabb, kiegyensúlyozott tempójú versenyek (<a href=\"https://wec.pokerth.net/results\">eredmények</a>, <a href=\"https://wec.pokerth.net/results/ranking\">ranglista</a>); és a Monthly Cup, amelyet minden hónapban megrendeznek (<a href=\"https://monthlycup.pokerth.net/\">következő kupa és legutóbbi győztesek</a>, <a href=\"https://monthlycup.pokerth.net/registration\">nevezés</a>). Az időpontokat és a szabályokat az egyes oldalakon és a <a href=\"https://www.pokerth.net/\">pokerth.net</a> fórumán teszik közzé. A részvételhez ingyenes pokerth.net-fiók kell."],
       ["Nézhetek játékot anélkül, hogy játszanék?",
        "Igen. A nézőket engedélyező folyamatban lévő játékok élőben nézhetők a lobbiból: látod az asztalt és a csevegést, de a saját lapok rejtve maradnak, és nem tudsz lépni. Egy már elindult asztalra szóló meghívólink megnézésre nyitja meg."],
       ["Van súgó az alkalmazáson belül?",
-       "Igen. Az Ász súgója: az Ász, a webkliens kabalafigurája, ha akarod, végigmagyarázza az egyes képernyőket. A menüjében ott a teljes súgó kereséssel, és a „Mi ez?”: koppints bármire a képernyőn, és megmondja, mire való."]
+       "Igen. Az Ász súgója: az Ász, a webkliens kabalafigurája, ha akarod, végigmagyarázza az egyes képernyőket. A menüjében ott a teljes súgó kereséssel, és a „Mi ez?”: koppints bármire a képernyőn, és megmondja, mire való."],
+      ["Fejlesztik még aktívan a PokerTH-t?",
+       "Igen. A PokerTH-t 2006 óta fejlesztik szabad szoftverként, és ma is karbantartják: az asztali kliens és a szerver a <a href=\"https://github.com/pokerth/pokerth\">GitHubon</a> található, ez a webkliens folyamatosan frissül (<a href=\"https://github.com/narmod/pokerth-web-client\">forráskód és változásnapló</a>), a hivatalos pokerth.net hálózaton pedig minden nap folynak játékok."]
     ]
   },
   hy: {
     title: "FAQ — PokerTH վեբ կլիենտ",
-    desc: "Հաճախ տրվող հարցեր PokerTH վեբ կլիենտի մասին՝ անվճար պոկեր առանց գովազդի, Texas Hold’em խաղալ դիտարկիչում՝ առանց որևէ բան տեղադրելու, հաշիվներ, բջջային, անցանց ռեժիմ, լեզուներ և գաղտնիություն։",
+    desc: "Հաճախ տրվող հարցեր PokerTH վեբ կլիենտի մասին՝ անվճար պոկեր առանց գովազդի և ներբեռնման, խաղ որպես հյուր, ընկերներին հրավիրել հղումով, մրցաշարեր, բջջային, անցանց ռեժիմ, լեզուներ և գաղտնիություն։",
     h1: "PokerTH վեբ կլիենտ — Հաճախ տրվող հարցեր",
     qa: [
       ["PokerTH-ն անվճա՞ր է։",
@@ -3782,7 +4193,13 @@ var SEO_FAQ_I18N = {
       ["Կարո՞ղ եմ իմ դիտարկիչում Texas Hold’em խաղալ այլ մարդկանց դեմ։",
        "Այո։ Միացեք պաշտոնական pokerth.net ցանցին՝ ամբողջ աշխարհի խաղացողների դեմ ուղիղ Texas Hold’em խաղալու համար, կամ ուղարկեք հրավերի հղում, որպեսզի ընկերները հայտնվեն անմիջապես ձեր սեղանի մոտ — ամեն ինչ դիտարկիչի ներսում։"],
       ["Խաղալու համար հաշիվ պե՞տք է։",
-       "Ոչ։ Տեղային / մարզում ռեժիմը հաշիվ չի պահանջում և աշխատում է անցանց։ Պաշտոնական pokerth.net ցանցում կարող եք Սովորական խաղեր խաղալ որպես հյուր. անվճար pokerth.net հաշիվ պետք է Վարկանիշային խաղերի, միայն գրանցվածների սեղանների և չատի համար։"],
+       "Ոչ։ Տեղային / մարզում ռեժիմը հաշիվ չի պահանջում և աշխատում է անցանց։ Պաշտոնական pokerth.net ցանցում մուտք գործեք որպես հյուր. սերվերը ձեզ տալիս է հյուրի մականուն, և դուք կարող եք անմիջապես Սովորական խաղեր խաղալ։ LAN-ում կամ հատուկ սերվերում հաշիվ ընդհանրապես չկա — պարզապես մականուն եք ընտրում։ Դրանցից ոչ մեկը էլ. փոստի հասցե չի պահանջում։ Անվճար pokerth.net հաշիվ պետք է միայն Վարկանիշային խաղերի, միայն գրանցվածների սեղանների և չատի համար։"],
+      ["Ինչպե՞ս խաղալ պոկեր առցանց ընկերների հետ։",
+       "Լոբբիում սեղան ստեղծեք — pokerth.net-ում կամ ցանկացած LAN կամ հատուկ սերվերում — և սպասասրահում սեղմեք «Հրավիրել ընկերներին»։ Վեբ կլիենտը ստեղծում է հրավերի հղում, որը կարող եք ուղարկել ցանկացած մեսենջերով։ Ձեր ընկերները այն բացում են իրենց դիտարկիչում՝ iPhone-ում, Android-ում կամ համակարգչում, առանց որևէ բան ներբեռնելու։ Սահմանեք գաղտնաբառ, եթե սեղանը պետք է մասնավոր մնա. գաղտնաբառը երբեք հղման մաս չի կազմում։"],
+      ["Ի՞նչ է տեղի ունենում, երբ ընկերը բացում է իմ հրավերի հղումը։",
+       "Հղումը պարունակում է սեղանը և սերվերը։ Ձեր ընկերը մուտք է գործում — որպես հյուր կամ pokerth.net-ի հաշվով, LAN կամ հատուկ սերվերում՝ միայն մականունով, — և վեբ կլիենտն այնուհետև ավտոմատ միանում է սեղանին՝ առանց այն լոբբիում փնտրելու անհրաժեշտության։ Գաղտնաբառով պաշտպանված սեղանը պահանջում է իր գաղտնաբառը, իսկ արդեն սկսված խաղը բացվում է դիտելու համար։ Հրավերի հղումները վեբ կլիենտի հնարավորություն են և աշխատում են ցանկացած սերվերում, որին այն կարող է միանալ։"],
+      ["Կա՞ ցուցադրական սերվեր՝ PokerTH-ը առանց գրանցվելու փորձելու համար։",
+       "Այո։ Մուտքի էկրանին ընտրեք LAN / Հատուկ սերվեր և սերվերների ցանկից ընտրեք հանրային ցուցադրական սերվերը. մուտքագրեք ցանկացած մականուն, և դուք նրա լոբբիում եք — առանց գրանցման, առանց էլ. փոստի հասցեի։ Կանաչ կետը ցույց է տալիս, թե ցանկի որ սերվերներն են առցանց և քանի խաղացող կա դրանցում։"],
       ["Աշխատո՞ւմ է բջջայինում։",
        "Այո։ Վեբ կլիենտը Progressive Web App է. այն աշխատում է ցանկացած ժամանակակից դիտարկիչում համակարգչում, պլանշետում կամ հեռախոսում և կարող է տեղադրվել բնիկ հավելվածի պես՝ iPhone-ում և iPad-ում Կիսվել → Ավելացնել գլխավոր էկրանին, այլուր՝ դիտարկիչի ընտրացանկից կամ տեղադրման կոճակից։ Տուզի օգնությունը ցույց է տալիս քայլերը ձեր սարքի համար։"],
       ["Կարո՞ղ եմ խաղալ համակարգչի դեմ։",
@@ -3798,18 +4215,22 @@ var SEO_FAQ_I18N = {
       ["Ի՞նչ տվյալներ է հավաքում վեբ կլիենտը։",
        "Հնարավորինս քիչ՝ կարգավորումները մնում են ձեր դիտարկիչում, և ոչ մի հետևում կամ գովազդ չի օգտագործվում։ Երբ մուտք եք գործում pokerth.net հաշվով, ձեր ընտրանքներն ու մարզման գավաթները համաժամեցվում են դրա հետ, որպեսզի հետևեն ձեզ ձեր մյուս սարքերում։ Մանրամասների համար տեսեք գաղտնիության էջը։"],
       ["Կարո՞ղ եմ տեղակայել իմ սեփական սերվերը։",
-       "Այո։ PokerTH հատուկ սերվերը և այս վեբ կլիենտը երկուսն էլ բաց կոդով են, այնպես որ կարող եք գործարկել ձեր սեփական մասնավոր պոկերի սերվերը LAN-ում կամ ինտերնետում։"],
+       "Այո։ PokerTH հատուկ սերվերը և այս վեբ կլիենտը երկուսն էլ բաց կոդով են, այնպես որ կարող եք գործարկել ձեր սեփական մասնավոր պոկերի սերվերը LAN-ում կամ ինտերնետում։ Որպեսզի այն բոլորին տեսանելի լինի, ընտրեք LAN / Հատուկ սերվեր, ապա սերվերների ցանկի ներքևում՝ «Առաջարկել իմ սերվերը». ադմինիստրատորների հաստատումից հետո այն հայտնվում է ցանկում։ Սերվերը պետք է հասանելի լինի ինտերնետից։"],
       ["Ինչպե՞ս են աշխատում Վարկանիշային խաղերն ու մրցաշրջանները։",
        "pokerth.net-ի Վարկանիշային խաղերը նստեցնում են 10 խաղացողի և սկսվում են հենց սեղանը լցվելուն պես. յուրաքանչյուրին 10,000 ֆիշկա, 50 փոքր բլայնդ, որը կրկնապատկվում է յուրաքանչյուր 11 ձեռքը մեկ, և գործելու համար 5 վայրկյան։ 1-ից 7-րդ տեղերը ստանում են համապատասխանաբար 15, 9, 6, 4, 3, 2 և 1 միավոր. ձեր Score-ը ձեր միջինն է մեկ խաղի համար՝ կշռված խաղացած խաղերի քանակով, իսկ վարկանիշը նորից սկսվում է յուրաքանչյուր եռամսյակ։ Պետք է անվճար pokerth.net հաշիվ։"],
+      ["Կա՞ն անվճար պոկերի մրցաշարեր և մրցույթներ։",
+       "Այո, ամբողջ տարին, և բոլորն անվճար։ PokerTH-ի յուրաքանչյուր խաղ մրցաշար է, իսկ pokerth.net համայնքը նաև կանոնավոր մրցույթներ է անցկացնում՝ սեփական վարկանիշներով. BBC-ն՝ խաղեր, որոնցում բլայնդերը բարձրանում են մի քանի րոպեն մեկ (<a href=\"https://bbc.pokerth.net/registration\">օրացույց</a>, <a href=\"https://bbc.pokerth.net/results\">արդյունքներ</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">վարկանիշ</a>), WeCup-ը (WEC)՝ ավելի հանգիստ, հավասարակշռված տեմպով մրցաշարեր (<a href=\"https://wec.pokerth.net/results\">արդյունքներ</a>, <a href=\"https://wec.pokerth.net/results/ranking\">վարկանիշ</a>), և Monthly Cup-ը, որն անցկացվում է ամեն ամիս (<a href=\"https://monthlycup.pokerth.net/\">հաջորդ գավաթը և վերջին հաղթողները</a>, <a href=\"https://monthlycup.pokerth.net/registration\">գրանցում</a>)։ Ամսաթվերը և կանոնները հայտարարվում են յուրաքանչյուր կայքում և <a href=\"https://www.pokerth.net/\">pokerth.net</a>-ի ֆորումում։ Մասնակցելու համար պետք է անվճար pokerth.net հաշիվ։"],
       ["Կարո՞ղ եմ խաղ դիտել առանց խաղալու։",
        "Այո։ Ընթացիկ խաղերը, որոնք թույլ են տալիս դիտորդներ, կարելի է ուղիղ դիտել լոբբիից. տեսնում եք սեղանը և չատը, բայց գրպանի խաղաթղթերը մնում են թաքնված, և դուք չեք կարող գործել։ Արդեն սկսված սեղանի հրավերի հղումը այն բացում է դիտելու համար։"],
       ["Կա՞ օգնություն հավելվածի ներսում։",
-       "Այո։ Տուզի օգնությունը. Տուզը՝ վեբ կլիենտի մասկոտը, ցանկության դեպքում բացատրում է յուրաքանչյուր էկրանը, երբ առաջ եք գնում։ Նրա ընտրացանկը պարունակում է ողջ օգնությունը որոնմամբ, և «Ի՞նչ է սա». հպեք էկրանին ցանկացած բանի, և նա կասի, թե ինչ է այն անում։"]
+       "Այո։ Տուզի օգնությունը. Տուզը՝ վեբ կլիենտի մասկոտը, ցանկության դեպքում բացատրում է յուրաքանչյուր էկրանը, երբ առաջ եք գնում։ Նրա ընտրացանկը պարունակում է ողջ օգնությունը որոնմամբ, և «Ի՞նչ է սա». հպեք էկրանին ցանկացած բանի, և նա կասի, թե ինչ է այն անում։"],
+      ["PokerTH-ը դեռ ակտիվորեն մշակվո՞ւմ է։",
+       "Այո։ PokerTH-ը մշակվում է որպես ազատ ծրագրակազմ 2006 թվականից և մինչ օրս սպասարկվում է. համակարգչային կլիենտը և սերվերը գտնվում են <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>-ում, այս վեբ կլիենտը շարունակաբար թարմացվում է (<a href=\"https://github.com/narmod/pokerth-web-client\">ելակետային կոդ և փոփոխությունների մատյան</a>), իսկ պաշտոնական pokerth.net ցանցում խաղեր են ընթանում ամեն օր։"]
     ],
   },
   ro: {
     title: "\u00centreb\u0103ri frecvente \u2014 Clientul web PokerTH",
-    desc: "\u00centreb\u0103ri frecvente despre clientul web PokerTH: poker gratuit f\u0103r\u0103 reclame, Texas Hold\u2019em \u00een browser f\u0103r\u0103 s\u0103 descarci nimic, conturi, telefon, mod offline, limbi \u0219i confiden\u021bialitate.",
+    desc: "Întrebări frecvente despre clientul web PokerTH: poker gratuit fără reclame și fără descărcare, joc ca invitat, invitarea prietenilor printr-un link, turnee, telefon, mod offline, limbi și confidențialitate.",
     h1: "Clientul web PokerTH \u2014 \u00centreb\u0103ri frecvente",
     qa: [
       ["PokerTH este gratuit?",
@@ -3821,7 +4242,13 @@ var SEO_FAQ_I18N = {
       ["Pot juca Texas Hold’em cu alți oameni din browser?",
        "Da. Conectează-te la rețeaua oficială pokerth.net ca să joci cu jucători din toată lumea sau trimite un link de invitație, iar prietenii ajung direct la masa ta — totul în browser."],
       ["Am nevoie de cont ca să joc?",
-       "Nu. Modul Local / antrenament nu are nevoie de cont și funcționează offline. În rețeaua oficială pokerth.net poți juca jocuri Normal ca invitat; un cont pokerth.net gratuit este necesar pentru jocurile clasate, mesele doar pentru jucători înregistrați și chat."],
+       "Nu. Modul Local / antrenament nu are nevoie de cont și funcționează offline. În rețeaua oficială pokerth.net, conectează-te ca invitat: serverul îți dă un pseudonim de invitat și poți juca imediat jocuri Normal. Într-o rețea LAN sau pe un server dedicat nu există deloc cont — doar îți alegi un pseudonim. Niciuna dintre aceste variante nu cere o adresă de e-mail. Un cont pokerth.net gratuit este necesar doar pentru jocurile clasate, mesele doar pentru jucători înregistrați și chat."],
+      ["Cum joc poker online cu prietenii?",
+       "Creează o masă în lobby — pe pokerth.net sau pe orice server LAN ori dedicat — și apasă „Invită prieteni” în sala de așteptare. Clientul web generează un link de invitație pe care îl poți trimite prin orice aplicație de mesagerie. Prietenii tăi îl deschid în browser, pe iPhone, Android sau calculator, fără să descarce nimic. Setează o parolă dacă masa trebuie să rămână privată: parola nu face niciodată parte din link."],
+      ["Ce se întâmplă când un prieten deschide linkul meu de invitație?",
+       "Linkul conține masa și serverul. Prietenul tău se conectează — ca invitat sau cu un cont pe pokerth.net, doar cu un pseudonim pe un server LAN sau dedicat — iar clientul web intră apoi automat la masă, fără să mai fie nevoie s-o caute în lobby. O masă protejată cu parolă cere parola; un joc deja început se deschide pentru urmărit. Linkurile de invitație sunt o funcție a clientului web și funcționează pe orice server la care se poate conecta."],
+      ["Există un server demo pentru a încerca PokerTH fără înregistrare?",
+       "Da. Pe ecranul de conectare alege LAN / Server dedicat și selectează serverul demo public din lista de servere: scrie orice pseudonim și ești în lobby-ul lui — fără înregistrare, fără adresă de e-mail. Un punct verde arată care dintre serverele din listă sunt online și câți jucători sunt pe ele."],
       ["Funcționează pe telefon?",
        "Da. Clientul web este o aplicație web progresivă: rulează în orice browser modern pe calculator, tabletă sau telefon și poate fi instalat ca o aplicație nativă — pe iPhone și iPad cu Partajare → Adaugă la ecranul principal, în rest din meniul browserului sau cu butonul de instalare. Ajutorul Asului îți arată pașii pentru dispozitivul tău."],
       ["Pot juca împotriva calculatorului?",
@@ -3837,18 +4264,22 @@ var SEO_FAQ_I18N = {
       ["Ce date colectează clientul web?",
        "Cât mai puține: setările rămân în browserul tău și nu se folosește nicio urmărire sau publicitate. Când te conectezi cu un cont pokerth.net, opțiunile tale și trofeele de antrenament sunt sincronizate cu acesta, ca să te urmeze pe celelalte dispozitive. Detaliile sunt pe pagina de confidențialitate."],
       ["Pot găzdui propriul server?",
-       "Da. Atât serverul dedicat PokerTH, cât și acest client web sunt cu sursă deschisă, așa că poți rula propriul server privat de poker, într-o rețea locală sau pe internet."],
+       "Da. Atât serverul dedicat PokerTH, cât și acest client web sunt cu sursă deschisă, așa că poți rula propriul server privat de poker, într-o rețea locală sau pe internet. Ca să apară pentru toată lumea, alege LAN / Server dedicat, apoi „Propune serverul meu” din partea de jos a listei de servere: după ce administratorii îl aprobă, apare în listă. Serverul trebuie să fie accesibil de pe internet."],
       ["Cum funcționează jocurile clasate și sezoanele?",
        "Jocurile clasate de pe pokerth.net așază 10 jucători și încep imediat ce masa se umple: câte 10.000 de jetoane fiecare, un blind mic de 50 care se dublează la fiecare 11 mâini și 5 secunde pentru a acționa. Locurile 1–7 primesc, în ordine, 15, 9, 6, 4, 3, 2 și 1 puncte; Scorul tău este media ta pe joc, ponderată cu numărul de jocuri jucate, iar clasamentul o ia de la capăt în fiecare trimestru. Este nevoie de un cont pokerth.net gratuit."],
+      ["Există turnee și competiții de poker gratuite?",
+       "Da, tot anul, și toate gratuite. Fiecare joc PokerTH este un turneu, iar comunitatea pokerth.net organizează și competiții regulate, cu propriile clasamente: BBC, jocuri în care blindurile cresc la fiecare câteva minute (<a href=\"https://bbc.pokerth.net/registration\">calendar</a>, <a href=\"https://bbc.pokerth.net/results\">rezultate</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">clasament</a>); WeCup (WEC), turnee într-un ritm mai calm și echilibrat (<a href=\"https://wec.pokerth.net/results\">rezultate</a>, <a href=\"https://wec.pokerth.net/results/ranking\">clasament</a>); și Monthly Cup, care are loc în fiecare lună (<a href=\"https://monthlycup.pokerth.net/\">următoarea cupă și ultimii câștigători</a>, <a href=\"https://monthlycup.pokerth.net/registration\">înscriere</a>). Datele și regulile sunt anunțate pe fiecare site și pe forumul <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Pentru a participa ai nevoie de un cont pokerth.net gratuit."],
       ["Pot urmări un joc fără să joc?",
        "Da. Jocurile în desfășurare care permit spectatori pot fi urmărite în direct din lobby: vezi masa și chatul, dar cărțile proprii rămân ascunse și nu poți acționa. Un link de invitație către o masă care a început deja o deschide pentru urmărit."],
       ["Există ajutor în aplicație?",
-       "Da. Ajutorul Asului: Asul, mascota clientului web, îți explică fiecare ecran pe parcurs, dacă vrei. Meniul lui conține tot ajutorul, cu căutare, și « Ce e asta? »: atinge orice de pe ecran și îți spune ce face."]
+       "Da. Ajutorul Asului: Asul, mascota clientului web, îți explică fiecare ecran pe parcurs, dacă vrei. Meniul lui conține tot ajutorul, cu căutare, și « Ce e asta? »: atinge orice de pe ecran și îți spune ce face."],
+      ["PokerTH mai este dezvoltat activ?",
+       "Da. PokerTH este dezvoltat ca software liber din 2006 și este în continuare întreținut: clientul de desktop și serverul sunt pe <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, acest client web este actualizat continuu (<a href=\"https://github.com/narmod/pokerth-web-client\">cod sursă și jurnal de modificări</a>), iar în rețeaua oficială pokerth.net se joacă în fiecare zi."]
     ]
   },
   bg: {
     title: "\u0427\u0435\u0441\u0442\u043e \u0437\u0430\u0434\u0430\u0432\u0430\u043d\u0438 \u0432\u044a\u043f\u0440\u043e\u0441\u0438 \u2014 \u0443\u0435\u0431 \u043a\u043b\u0438\u0435\u043d\u0442 \u043d\u0430 PokerTH",
-    desc: "\u0427\u0435\u0441\u0442\u043e \u0437\u0430\u0434\u0430\u0432\u0430\u043d\u0438 \u0432\u044a\u043f\u0440\u043e\u0441\u0438 \u0437\u0430 \u0443\u0435\u0431 \u043a\u043b\u0438\u0435\u043d\u0442\u0430 \u043d\u0430 PokerTH: \u0431\u0435\u0437\u043f\u043b\u0430\u0442\u0435\u043d \u043f\u043e\u043a\u0435\u0440 \u0431\u0435\u0437 \u0440\u0435\u043a\u043b\u0430\u043c\u0438, \u0438\u0433\u0440\u0430 \u043d\u0430 \u0422\u0435\u043a\u0441\u0430\u0441 \u0425\u043e\u043b\u0434\u0435\u043c \u0432 \u0431\u0440\u0430\u0443\u0437\u044a\u0440\u0430 \u0431\u0435\u0437 \u0438\u0437\u0442\u0435\u0433\u043b\u044f\u043d\u0435, \u043f\u0440\u043e\u0444\u0438\u043b\u0438, \u0442\u0435\u043b\u0435\u0444\u043e\u043d, \u043e\u0444\u043b\u0430\u0439\u043d \u0440\u0435\u0436\u0438\u043c, \u0435\u0437\u0438\u0446\u0438 \u0438 \u043f\u043e\u0432\u0435\u0440\u0438\u0442\u0435\u043b\u043d\u043e\u0441\u0442.",
+    desc: "Често задавани въпроси за уеб клиента на PokerTH: безплатен покер без реклами и изтегляне, игра като гост или без профил, покани с връзка, турнири, телефон, офлайн режим, езици и поверителност.",
     h1: "\u0423\u0435\u0431 \u043a\u043b\u0438\u0435\u043d\u0442 \u043d\u0430 PokerTH \u2014 \u0447\u0435\u0441\u0442\u043e \u0437\u0430\u0434\u0430\u0432\u0430\u043d\u0438 \u0432\u044a\u043f\u0440\u043e\u0441\u0438",
     qa: [
       ["Безплатен ли е PokerTH?",
@@ -3860,7 +4291,13 @@ var SEO_FAQ_I18N = {
       ["Мога ли да играя Тексас Холдем срещу други хора в браузъра?",
        "Да. Присъединете се към официалната мрежа pokerth.net, за да играете срещу играчи от целия свят, или изпратете покана-връзка, за да попаднат приятелите ви направо на вашата маса — всичко в браузъра."],
       ["Нужен ли ми е профил, за да играя?",
-       "Не. Режимът „Локална / тренировка” не изисква профил и работи офлайн. В официалната мрежа pokerth.net можете да играете нормални игри като гост; безплатен профил в pokerth.net е необходим за класирани игри, маси само за регистрирани играчи и за чата."],
+       "Не. Режимът „Локална / тренировка” не изисква профил и работи офлайн. В официалната мрежа pokerth.net влезте като гост: сървърът ви дава псевдоним на гост и можете веднага да играете игри от тип „Нормална”. В LAN или на специализиран сървър изобщо няма профили — само избирате псевдоним. Нито един от тези варианти не изисква имейл адрес. Безплатен профил в pokerth.net е нужен само за класирани игри, маси само за регистрирани играчи и за чата."],
+      ["Как да играя покер онлайн с приятели?",
+       "Създайте маса в лобито — в pokerth.net или на произволен LAN или специализиран сървър — и натиснете „Покани приятели” в чакалнята. Уеб клиентът създава връзка-покана, която можете да изпратите през всеки месинджър. Приятелите ви я отварят в браузъра си — на iPhone, Android или компютър, без да изтеглят нищо. Задайте парола, ако масата трябва да остане частна: паролата никога не е част от връзката."],
+      ["Какво става, когато приятел отвори моята връзка-покана?",
+       "Връзката съдържа масата и сървъра. Приятелят ви влиза — като гост или с профил в pokerth.net, само с псевдоним на LAN или специализиран сървър — и уеб клиентът автоматично се присъединява към масата, без да е нужно тя да се търси в лобито. Маса, защитена с парола, ще поиска паролата си; вече започнала игра се отваря за гледане. Връзките-покани са функция на уеб клиента и работят на всеки сървър, към който той може да се свърже."],
+      ["Има ли демо сървър, за да пробвам PokerTH без регистрация?",
+       "Да. На екрана за вход изберете „LAN / Отделен сървър” и посочете публичния демо сървър в списъка със сървъри: въведете какъвто и да е псевдоним и сте в лобито му — без регистрация, без имейл адрес. Зелена точка показва кои сървъри от списъка са онлайн и колко играчи има на тях."],
       ["Работи ли на телефон?",
        "Да. Уеб клиентът е прогресивно уеб приложение: работи във всеки съвременен браузър на компютър, таблет или телефон и може да се инсталира като обикновено приложение — на iPhone и iPad чрез Споделяне → „Добави към началния екран”, на другите устройства от менюто на браузъра или с бутона за инсталиране. „Помощ от асото” показва стъпките за вашето устройство."],
       ["Мога ли да играя срещу компютъра?",
@@ -3876,18 +4313,22 @@ var SEO_FAQ_I18N = {
       ["Какви данни събира уеб клиентът?",
        "Възможно най-малко: настройките ви остават във вашия браузър и не се използва проследяване или реклама. Когато влезете с профил в pokerth.net, опциите и тренировъчните ви трофеи се синхронизират с него, за да ви следват и на другите ви устройства. Подробностите са на страницата за поверителност."],
       ["Мога ли да поддържам собствен сървър?",
-       "Да. И специализираният сървър на PokerTH, и този уеб клиент са с отворен код, така че можете да поддържате собствен частен покер сървър — в локална мрежа или в интернет."],
+       "Да. И специализираният сървър на PokerTH, и този уеб клиент са с отворен код, така че можете да поддържате собствен частен покер сървър — в локална мрежа или в интернет. За да се показва в списъка за всички, изберете „LAN / Отделен сървър”, след това „Предложи моя сървър” в долната част на списъка със сървъри: след като администраторите го одобрят, той се появява в списъка. Сървърът трябва да е достъпен от интернет."],
       ["Как работят класираните игри и сезоните?",
        "Класираните игри в pokerth.net събират 10 играчи и започват веднага щом масата се запълни: по 10 000 чипа на играч, малък блайнд 50, който се удвоява на всеки 11 ръце, и 5 секунди за действие. Местата от 1 до 7 получават 15, 9, 6, 4, 3, 2 и 1 точки; вашият резултат е средното ви за игра, претеглено по броя изиграни от вас игри, а класирането започва отначало всяко тримесечие. Необходим е безплатен профил в pokerth.net."],
+      ["Има ли безплатни покер турнири и състезания?",
+       "Да, през цялата година, и всички са безплатни. Всяка игра в PokerTH е турнир, а общността на pokerth.net провежда и редовни състезания със собствени класирания: BBC — игри, в които блайндовете растат на всеки няколко минути (<a href=\"https://bbc.pokerth.net/registration\">календар</a>, <a href=\"https://bbc.pokerth.net/results\">резултати</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">класиране</a>); WeCup (WEC) — турнири с по-спокойно, балансирано темпо (<a href=\"https://wec.pokerth.net/results\">резултати</a>, <a href=\"https://wec.pokerth.net/results/ranking\">класиране</a>); и Monthly Cup, който се провежда всеки месец (<a href=\"https://monthlycup.pokerth.net/\">следващата купа и последните победители</a>, <a href=\"https://monthlycup.pokerth.net/registration\">регистрация</a>). Датите и правилата се обявяват на сайта на всяко състезание и във форума на <a href=\"https://www.pokerth.net/\">pokerth.net</a>. За участие е нужен безплатен профил в pokerth.net."],
       ["Мога ли да гледам игра, без да играя?",
        "Да. Текущите игри, които допускат зрители, могат да се гледат на живо от лобито: виждате масата и чата, но собствените карти остават скрити и не можете да действате. Връзката-покана към вече започнала маса я отваря за гледане."],
       ["Има ли помощ в самото приложение?",
-       "Да. „Помощ от асото”: Асото, талисманът на уеб клиента, обяснява всеки екран в движение, ако искате. Менюто му съдържа цялата помощ с търсене, както и „Какво е това?”: докоснете каквото и да е на екрана и то казва какво прави."]
+       "Да. „Помощ от асото”: Асото, талисманът на уеб клиента, обяснява всеки екран в движение, ако искате. Менюто му съдържа цялата помощ с търсене, както и „Какво е това?”: докоснете каквото и да е на екрана и то казва какво прави."],
+      ["Все още ли се разработва активно PokerTH?",
+       "Да. PokerTH се разработва като свободен софтуер от 2006 г. и продължава да се поддържа: настолният клиент и сървърът са в <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, този уеб клиент се обновява непрекъснато (<a href=\"https://github.com/narmod/pokerth-web-client\">изходен код и списък с промени</a>), а в официалната мрежа pokerth.net се играе всеки ден."]
     ]
   },
   ar: {
     title: "\u0627\u0644\u0623\u0633\u0626\u0644\u0629 \u0627\u0644\u0634\u0627\u0626\u0639\u0629 \u2014 \u0639\u0645\u064a\u0644 PokerTH \u0639\u0644\u0649 \u0627\u0644\u0648\u064a\u0628",
-    desc: "\u0623\u0633\u0626\u0644\u0629 \u0634\u0627\u0626\u0639\u0629 \u0639\u0646 \u0639\u0645\u064a\u0644 PokerTH \u0639\u0644\u0649 \u0627\u0644\u0648\u064a\u0628: \u0628\u0648\u0643\u0631 \u0645\u062c\u0627\u0646\u064a \u0628\u0644\u0627 \u0625\u0639\u0644\u0627\u0646\u0627\u062a\u060c \u0648\u0644\u0639\u0628 \u062a\u0643\u0633\u0627\u0633 \u0647\u0648\u0644\u062f\u0645 \u0641\u064a \u0627\u0644\u0645\u062a\u0635\u0641\u062d \u062f\u0648\u0646 \u0623\u064a \u062a\u0646\u0632\u064a\u0644\u060c \u0648\u0627\u0644\u062d\u0633\u0627\u0628\u0627\u062a\u060c \u0648\u0627\u0644\u0647\u0627\u062a\u0641\u060c \u0648\u0627\u0644\u0648\u0636\u0639 \u062f\u0648\u0646 \u0627\u062a\u0635\u0627\u0644\u060c \u0648\u0627\u0644\u0644\u063a\u0627\u062a \u0648\u0627\u0644\u062e\u0635\u0648\u0635\u064a\u0629.",
+    desc: "أسئلة شائعة عن عميل PokerTH على الويب: بوكر مجاني بلا إعلانات ودون أي تنزيل، واللعب كضيف أو بلا أي حساب، ودعوة الأصدقاء برابط، والبطولات، والهاتف، والوضع دون اتصال، واللغات والخصوصية.",
     h1: "\u0639\u0645\u064a\u0644 PokerTH \u0639\u0644\u0649 \u0627\u0644\u0648\u064a\u0628 \u2014 \u0627\u0644\u0623\u0633\u0626\u0644\u0629 \u0627\u0644\u0634\u0627\u0626\u0639\u0629",
     qa: [
       ["هل PokerTH مجاني؟",
@@ -3899,7 +4340,13 @@ var SEO_FAQ_I18N = {
       ["هل يمكنني لعب تكساس هولدم ضد أشخاص آخرين في المتصفح؟",
        "نعم. انضم إلى شبكة pokerth.net الرسمية لتلعب ضد لاعبين من كل أنحاء العالم، أو أرسل رابط دعوة ليصل أصدقاؤك مباشرة إلى طاولتك — وكل ذلك داخل المتصفح."],
       ["هل أحتاج إلى حساب للعب؟",
-       "لا. وضع «محلي / تدريب» لا يحتاج إلى حساب ويعمل دون اتصال. وعلى شبكة pokerth.net الرسمية يمكنك لعب الألعاب العادية كضيف؛ أما ألعاب التصنيف والطاولات المخصصة للمسجّلين فقط والدردشة فتتطلب حساب pokerth.net مجاني."],
+       "لا. وضع «محلي / تدريب» لا يحتاج إلى حساب ويعمل دون اتصال. وعلى شبكة pokerth.net الرسمية سجّل الدخول كضيف: يمنحك الخادم اسمًا مستعارًا للضيوف وتستطيع لعب الألعاب العادية فورًا. أما على شبكة LAN أو خادم مخصّص فلا حساب على الإطلاق — تختار اسمًا مستعارًا فحسب. ولا يطلب منك أيٌّ منها عنوان بريد إلكتروني. ولا يلزم حساب pokerth.net مجاني إلا لألعاب التصنيف والطاولات المخصصة للمسجّلين فقط والدردشة."],
+      ["كيف ألعب البوكر عبر الإنترنت مع أصدقائي؟",
+       "أنشئ طاولة في الردهة — على pokerth.net أو على أي شبكة LAN أو خادم مخصّص — واضغط «دعوة الأصدقاء» في غرفة الانتظار. يُنشئ عميل الويب رابط دعوة يمكنك إرساله عبر أي تطبيق مراسلة. يفتحه أصدقاؤك في متصفحهم، على iPhone أو Android أو الحاسوب، دون تنزيل أي شيء. وإن أردت أن تبقى الطاولة خاصة فعيّن لها كلمة مرور: فكلمة المرور لا تكون أبدًا جزءًا من الرابط."],
+      ["ماذا يحدث عندما يفتح صديقي رابط الدعوة الذي أرسلته؟",
+       "يحمل الرابط الطاولة والخادم معًا. يسجّل صديقك الدخول — كضيف أو بحساب على pokerth.net، أو باسم مستعار فقط على شبكة LAN أو خادم مخصّص — ثم ينضم عميل الويب إلى الطاولة تلقائيًا، دون حاجة إلى البحث عنها في الردهة. الطاولة المحمية بكلمة مرور تطلب كلمة مرورها، واللعبة التي بدأت بالفعل تُفتح للمشاهدة. روابط الدعوة ميزة من ميزات عميل الويب، وتعمل على كل خادم يستطيع الاتصال به."],
+      ["هل يوجد خادم تجريبي لتجربة PokerTH دون تسجيل؟",
+       "نعم. في شاشة تسجيل الدخول اختر «LAN / خادم مخصّص» ثم الخادم التجريبي العام في قائمة الخوادم: اكتب أي اسم مستعار فتجد نفسك في ردهته — بلا تسجيل وبلا عنوان بريد إلكتروني. وتُظهر نقطة خضراء أيّ الخوادم المدرجة متصل الآن وكم لاعبًا عليه."],
       ["هل يعمل على الهاتف؟",
        "نعم. عميل الويب تطبيق ويب تقدمي: يعمل في أي متصفح حديث على الحاسوب أو اللوحي أو الهاتف، ويمكن تثبيته كأي تطبيق أصلي — على iPhone وiPad عبر مشاركة ← إضافة إلى الشاشة الرئيسية، وفي غيرهما من قائمة المتصفح أو من زر التثبيت. تعرض «مساعدة الآص» الخطوات الخاصة بجهازك."],
       ["هل يمكنني اللعب ضد الحاسوب؟",
@@ -3915,18 +4362,22 @@ var SEO_FAQ_I18N = {
       ["ما البيانات التي يجمعها عميل الويب؟",
        "أقل ما يمكن: تبقى إعداداتك في متصفحك، ولا يُستخدم أي تتبع أو إعلان. وعند تسجيل الدخول بحساب pokerth.net تُزامَن خياراتك وكؤوس التدريب معه لتنتقل معك إلى أجهزتك الأخرى. راجع صفحة الخصوصية للتفاصيل."],
       ["هل يمكنني تشغيل خادم خاص بي؟",
-       "نعم. خادم PokerTH المخصص وهذا العميل كلاهما مفتوح المصدر، فبإمكانك تشغيل خادم بوكر خاص بك، على شبكة محلية أو على الإنترنت."],
+       "نعم. خادم PokerTH المخصص وهذا العميل كلاهما مفتوح المصدر، فبإمكانك تشغيل خادم بوكر خاص بك، على شبكة محلية أو على الإنترنت. ولكي يظهر في القائمة للجميع، اختر «LAN / خادم مخصّص» ثم «اقترح خادمي» أسفل قائمة الخوادم: وما إن يوافق عليه المشرفون حتى يظهر في القائمة. ويجب أن يكون الخادم قابلًا للوصول من الإنترنت."],
       ["كيف تعمل ألعاب التصنيف والمواسم؟",
        "تجمع ألعاب التصنيف على pokerth.net 10 لاعبين وتبدأ فور امتلاء الطاولة: 10,000 رقاقة لكل لاعب، ورهان أعمى صغير قدره 50 يتضاعف كل 11 يدًا، و5 ثوانٍ للتصرف. تنال المراكز من 1 إلى 7 النقاط 15 و9 و6 و4 و3 و2 و1؛ ونقاطك هي متوسطك في اللعبة الواحدة، موزونًا بعدد الألعاب التي لعبتها، ويبدأ التصنيف من جديد كل ربع سنة. يلزم حساب pokerth.net مجاني."],
+      ["هل توجد بطولات ومسابقات بوكر مجانية؟",
+       "نعم، على مدار السنة، وكلها مجانية. كل لعبة في PokerTH بطولة بحد ذاتها، كما ينظّم مجتمع pokerth.net مسابقات منتظمة لكل منها تصنيفه الخاص: BBC، وهي ألعاب ترتفع فيها الرهانات العمياء كل بضع دقائق (<a href=\"https://bbc.pokerth.net/registration\">التقويم</a>، <a href=\"https://bbc.pokerth.net/results\">النتائج</a>، <a href=\"https://bbc.pokerth.net/results/ranking\">التصنيف</a>)؛ وWeCup (WEC)، وهي بطولات بإيقاع أهدأ ومتوازن (<a href=\"https://wec.pokerth.net/results\">النتائج</a>، <a href=\"https://wec.pokerth.net/results/ranking\">التصنيف</a>)؛ وMonthly Cup التي تُقام كل شهر (<a href=\"https://monthlycup.pokerth.net/\">الكأس القادمة وآخر الفائزين</a>، <a href=\"https://monthlycup.pokerth.net/registration\">التسجيل</a>). تُعلَن المواعيد والقواعد على كل موقع وفي منتدى <a href=\"https://www.pokerth.net/\">pokerth.net</a>. وتتطلب المشاركة حساب pokerth.net مجانيًا."],
       ["هل يمكنني مشاهدة لعبة دون أن ألعب؟",
        "نعم. يمكن مشاهدة الألعاب الجارية التي تسمح بالمتفرجين مباشرةً من الردهة: ترى الطاولة والدردشة، لكن الأوراق الخاصة تبقى مخفية ولا يمكنك التصرف. ورابط الدعوة إلى طاولة بدأت بالفعل يفتحها للمشاهدة."],
       ["هل توجد مساعدة داخل التطبيق؟",
-       "نعم. «مساعدة الآص»: الآص، تميمة عميل الويب، يشرح لك كل شاشة أثناء تقدّمك إن أردت ذلك. وتضم قائمته المساعدة كاملة مع بحث، و«ما هذا؟»: المس أي شيء على الشاشة فيخبرك بما يفعله."]
+       "نعم. «مساعدة الآص»: الآص، تميمة عميل الويب، يشرح لك كل شاشة أثناء تقدّمك إن أردت ذلك. وتضم قائمته المساعدة كاملة مع بحث، و«ما هذا؟»: المس أي شيء على الشاشة فيخبرك بما يفعله."],
+      ["هل ما زال PokerTH قيد التطوير النشط؟",
+       "نعم. يُطوَّر PokerTH برنامجًا حرًا منذ عام 2006 وما زال يُصان: عميل سطح المكتب والخادم موجودان على <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>، وعميل الويب هذا يُحدَّث باستمرار (<a href=\"https://github.com/narmod/pokerth-web-client\">الشيفرة المصدرية وسجل التغييرات</a>)، وتُلعب المباريات كل يوم على شبكة pokerth.net الرسمية."]
     ]
   },
   he: {
     title: "\u05e9\u05d0\u05dc\u05d5\u05ea \u05e0\u05e4\u05d5\u05e6\u05d5\u05ea \u2014 \u05dc\u05e7\u05d5\u05d7 \u05d4\u05e8\u05e9\u05ea \u05e9\u05dc PokerTH",
-    desc: "\u05e9\u05d0\u05dc\u05d5\u05ea \u05e0\u05e4\u05d5\u05e6\u05d5\u05ea \u05e2\u05dc \u05dc\u05e7\u05d5\u05d7 \u05d4\u05e8\u05e9\u05ea \u05e9\u05dc PokerTH: \u05e4\u05d5\u05e7\u05e8 \u05d7\u05d9\u05e0\u05dd \u05dc\u05dc\u05d0 \u05e4\u05e8\u05e1\u05d5\u05de\u05d5\u05ea, \u05de\u05e9\u05d7\u05e7 \u05d8\u05e7\u05e1\u05e1 \u05d4\u05d5\u05dc\u05d3\u05dd \u05d1\u05d3\u05e4\u05d3\u05e4\u05df \u05d1\u05dc\u05d9 \u05dc\u05d4\u05d5\u05e8\u05d9\u05d3 \u05d3\u05d1\u05e8, \u05d7\u05e9\u05d1\u05d5\u05e0\u05d5\u05ea, \u05d8\u05dc\u05e4\u05d5\u05df, \u05de\u05e6\u05d1 \u05dc\u05d0 \u05de\u05e7\u05d5\u05d5\u05df, \u05e9\u05e4\u05d5\u05ea \u05d5\u05e4\u05e8\u05d8\u05d9\u05d5\u05ea.",
+    desc: "שאלות נפוצות על לקוח הרשת של PokerTH: פוקר חינם ללא פרסומות ובלי הורדה, משחק כאורח או בלי שום חשבון, הזמנת חברים בקישור, טורנירים, טלפון, מצב לא מקוון, שפות ופרטיות.",
     h1: "\u05dc\u05e7\u05d5\u05d7 \u05d4\u05e8\u05e9\u05ea \u05e9\u05dc PokerTH \u2014 \u05e9\u05d0\u05dc\u05d5\u05ea \u05e0\u05e4\u05d5\u05e6\u05d5\u05ea",
     qa: [
       ["האם PokerTH חינמי?",
@@ -3938,7 +4389,13 @@ var SEO_FAQ_I18N = {
       ["אפשר לשחק טקסס הולדם מול אנשים אחרים בדפדפן?",
        "כן. הצטרפו לרשת הרשמית pokerth.net כדי לשחק מול שחקנים מכל העולם, או שלחו קישור הזמנה כדי שחברים יגיעו ישר לשולחן שלכם — הכול בתוך הדפדפן."],
       ["צריך חשבון כדי לשחק?",
-       "לא. מצב מקומי / אימון אינו דורש חשבון ועובד ללא חיבור. ברשת הרשמית pokerth.net אפשר לשחק משחקים רגילים כאורח; חשבון pokerth.net חינמי דרוש למשחקי דירוג, לשולחנות לרשומים בלבד ולצ׳אט."],
+       "לא. מצב מקומי / אימון אינו דורש חשבון ועובד ללא חיבור. ברשת הרשמית pokerth.net נכנסים כאורח: השרת נותן לכם כינוי אורח ואפשר לשחק משחקים רגילים מיד. ב-LAN או בשרת ייעודי אין חשבון בכלל — רק בוחרים כינוי. אף אחת מהאפשרויות האלה לא מבקשת כתובת דוא״ל. חשבון pokerth.net חינמי דרוש רק למשחקי דירוג, לשולחנות לרשומים בלבד ולצ׳אט."],
+      ["איך משחקים פוקר אונליין עם חברים?",
+       "צרו שולחן בלובי — ב-pokerth.net או בכל LAN או שרת ייעודי — ולחצו על “הזמנת חברים” בחדר ההמתנה. לקוח הרשת יוצר קישור הזמנה שאפשר לשלוח בכל אפליקציית מסרים. החברים פותחים אותו בדפדפן, ב-iPhone, ב-Android או במחשב, בלי להוריד שום דבר. אם השולחן צריך להישאר פרטי, הגדירו סיסמה: הסיסמה אף פעם אינה חלק מהקישור."],
+      ["מה קורה כשחבר פותח את קישור ההזמנה שלי?",
+       "הקישור נושא את השולחן ואת השרת. החבר נכנס — כאורח או עם חשבון ב-pokerth.net, או רק עם כינוי ב-LAN או בשרת ייעודי — ולקוח הרשת מצטרף לשולחן אוטומטית, בלי צורך לחפש אותו בלובי. שולחן מוגן בסיסמה יבקש את הסיסמה; משחק שכבר התחיל ייפתח לצפייה. קישורי הזמנה הם תכונה של לקוח הרשת, והם עובדים בכל שרת שהוא יכול להתחבר אליו."],
+      ["יש שרת הדגמה לנסות את PokerTH בלי להירשם?",
+       "כן. במסך הכניסה בחרו “LAN / שרת ייעודי” ובחרו את שרת ההדגמה הציבורי ברשימת השרתים: הקלידו כינוי כלשהו ואתם כבר בלובי שלו — בלי הרשמה ובלי כתובת דוא״ל. נקודה ירוקה מראה אילו מהשרתים ברשימה מקוונים וכמה שחקנים יש בהם."],
       ["זה עובד בטלפון?",
        "כן. לקוח הרשת הוא יישום רשת מתקדם: הוא פועל בכל דפדפן מודרני במחשב, בטאבלט ובטלפון, וניתן להתקין אותו כמו יישום רגיל — באייפון ובאייפד דרך שיתוף ← הוספה למסך הבית, ובמכשירים אחרים מתפריט הדפדפן או מכפתור ההתקנה. עזרת האס מציגה את השלבים למכשיר שלכם."],
       ["אפשר לשחק מול המחשב?",
@@ -3954,18 +4411,22 @@ var SEO_FAQ_I18N = {
       ["אילו נתונים אוסף לקוח הרשת?",
        "כמה שפחות: ההגדרות נשארות בדפדפן שלכם, ואין שום מעקב או פרסום. כשנכנסים עם חשבון pokerth.net, האפשרויות והגביעים שלכם מהאימון מסונכרנים איתו וממשיכים איתכם למכשירים האחרים. פרטים בעמוד הפרטיות."],
       ["אפשר להפעיל שרת משלי?",
-       "כן. גם השרת הייעודי של PokerTH וגם לקוח הרשת הזה הם קוד פתוח, כך שתוכלו להפעיל שרת פוקר פרטי משלכם, ברשת מקומית או באינטרנט."],
+       "כן. גם השרת הייעודי של PokerTH וגם לקוח הרשת הזה הם קוד פתוח, כך שתוכלו להפעיל שרת פוקר פרטי משלכם, ברשת מקומית או באינטרנט. כדי שיופיע ברשימה לכולם, בחרו “LAN / שרת ייעודי” ואז “הצעת השרת שלי” בתחתית רשימת השרתים: אחרי שהמנהלים יאשרו אותו, הוא יופיע ברשימה. השרת חייב להיות נגיש מהאינטרנט."],
       ["איך עובדים משחקי דירוג ועונות?",
        "משחקי דירוג ב-pokerth.net מושיבים 10 שחקנים ומתחילים ברגע שהשולחן מתמלא: 10,000 ז׳יטונים לכל אחד, עיוור קטן של 50 שמוכפל כל 11 ידיים, ו-5 שניות לפעולה. המקומות 1 עד 7 מקבלים 15, 9, 6, 4, 3, 2 ו-1 נקודות; הציון שלכם הוא הממוצע שלכם למשחק, משוקלל במספר המשחקים ששיחקתם, והדירוג מתחיל מחדש בכל רבעון. נדרש חשבון pokerth.net חינמי."],
+      ["יש טורנירים ותחרויות פוקר בחינם?",
+       "כן, כל השנה, והכול בחינם. כל משחק PokerTH הוא טורניר, וקהילת pokerth.net מקיימת גם תחרויות קבועות עם דירוגים משלהן: ה-BBC, משחקים שבהם העיוורים עולים כל כמה דקות (<a href=\"https://bbc.pokerth.net/registration\">לוח מועדים</a>, <a href=\"https://bbc.pokerth.net/results\">תוצאות</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">דירוג</a>); ה-WeCup (WEC), טורנירים בקצב רגוע ומאוזן יותר (<a href=\"https://wec.pokerth.net/results\">תוצאות</a>, <a href=\"https://wec.pokerth.net/results/ranking\">דירוג</a>); וה-Monthly Cup, שנערך בכל חודש (<a href=\"https://monthlycup.pokerth.net/\">הגביע הבא והזוכים האחרונים</a>, <a href=\"https://monthlycup.pokerth.net/registration\">הרשמה</a>). התאריכים והחוקים מתפרסמים בכל אתר ובפורום של <a href=\"https://www.pokerth.net/\">pokerth.net</a>. ההשתתפות דורשת חשבון pokerth.net חינמי."],
       ["אפשר לצפות במשחק בלי לשחק?",
        "כן. משחקים פעילים שמאפשרים צופים אפשר לראות בשידור חי מהלובי: רואים את השולחן ואת הצ׳אט, אבל קלפי היד נשארים מוסתרים ואי אפשר לפעול. קישור הזמנה לשולחן שכבר התחיל פותח אותו לצפייה."],
       ["יש עזרה בתוך היישום?",
-       "כן. עזרת האס: האס, הקמע של לקוח הרשת, מסביר כל מסך תוך כדי תנועה אם רוצים. התפריט שלו מכיל את כל העזרה עם חיפוש, ואת “מה זה?”: נוגעים בכל דבר במסך והוא אומר מה הוא עושה."]
+       "כן. עזרת האס: האס, הקמע של לקוח הרשת, מסביר כל מסך תוך כדי תנועה אם רוצים. התפריט שלו מכיל את כל העזרה עם חיפוש, ואת “מה זה?”: נוגעים בכל דבר במסך והוא אומר מה הוא עושה."],
+      ["האם PokerTH עדיין בפיתוח פעיל?",
+       "כן. PokerTH מפותח כתוכנה חופשית מאז 2006 ועדיין מתוחזק: לקוח שולחן העבודה והשרת נמצאים ב-<a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, לקוח הרשת הזה מתעדכן ללא הפסקה (<a href=\"https://github.com/narmod/pokerth-web-client\">קוד מקור ויומן שינויים</a>), ובכל יום משוחקים משחקים ברשת הרשמית pokerth.net."]
     ]
   },
   fa: {
     title: "\u067e\u0631\u0633\u0634\u200c\u0647\u0627\u06cc \u0645\u062a\u062f\u0627\u0648\u0644 \u2014 \u06a9\u0627\u0631\u062e\u0648\u0627\u0647 \u0648\u0628 PokerTH",
-    desc: "\u067e\u0631\u0633\u0634\u200c\u0647\u0627\u06cc \u0645\u062a\u062f\u0627\u0648\u0644 \u062f\u0631\u0628\u0627\u0631\u0647\u0654 \u06a9\u0627\u0631\u062e\u0648\u0627\u0647 \u0648\u0628 PokerTH: \u067e\u0648\u06a9\u0631 \u0631\u0627\u06cc\u06af\u0627\u0646 \u0628\u062f\u0648\u0646 \u062a\u0628\u0644\u06cc\u063a\u0627\u062a\u060c \u0628\u0627\u0632\u06cc \u062a\u06af\u0632\u0627\u0633 \u0647\u0648\u0644\u062f\u0645 \u062f\u0631 \u0645\u0631\u0648\u0631\u06af\u0631 \u0628\u062f\u0648\u0646 \u0647\u06cc\u0686 \u0628\u0627\u0631\u06af\u06cc\u0631\u06cc\u060c \u062d\u0633\u0627\u0628\u200c\u0647\u0627\u060c \u062a\u0644\u0641\u0646 \u0647\u0645\u0631\u0627\u0647\u060c \u062d\u0627\u0644\u062a \u0628\u0631\u0648\u0646\u200c\u062e\u0637\u060c \u0632\u0628\u0627\u0646\u200c\u0647\u0627 \u0648 \u062d\u0631\u06cc\u0645 \u062e\u0635\u0648\u0635\u06cc.",
+    desc: "پرسش‌های متداول دربارهٔ کارخواه وب PokerTH: پوکر رایگان بدون تبلیغات و بدون بارگیری، بازی به‌عنوان مهمان یا بی‌هیچ حسابی، دعوت دوستان با پیوند، تورنمنت‌ها، تلفن همراه، حالت برون‌خط، زبان‌ها و حریم خصوصی.",
     h1: "\u06a9\u0627\u0631\u062e\u0648\u0627\u0647 \u0648\u0628 PokerTH \u2014 \u067e\u0631\u0633\u0634\u200c\u0647\u0627\u06cc \u0645\u062a\u062f\u0627\u0648\u0644",
     qa: [
       ["آیا PokerTH رایگان است؟",
@@ -3977,7 +4438,13 @@ var SEO_FAQ_I18N = {
       ["می‌توانم در مرورگر با دیگران تگزاس هولدم بازی کنم؟",
        "بله. به شبکهٔ رسمی pokerth.net بپیوندید تا با بازیکنانی از سراسر جهان بازی کنید، یا پیوند دعوت بفرستید تا دوستانتان مستقیم سر میز شما بنشینند — همه در دل مرورگر."],
       ["برای بازی به حساب کاربری نیاز دارم؟",
-       "نه. حالت «محلی / تمرین» به حساب کاربری نیاز ندارد و برون‌خط کار می‌کند. در شبکهٔ رسمی pokerth.net می‌توانید بازی‌های «معمولی» را به‌عنوان مهمان انجام دهید؛ برای بازی‌های رتبه‌بندی، میزهای ویژهٔ ثبت‌نام‌شدگان و گپ، یک حساب رایگان pokerth.net لازم است."],
+       "نه. حالت «محلی / تمرین» به حساب کاربری نیاز ندارد و برون‌خط کار می‌کند. در شبکهٔ رسمی pokerth.net به‌عنوان مهمان وارد شوید: کارساز یک نام مستعار مهمان به شما می‌دهد و می‌توانید بی‌درنگ بازی‌های «معمولی» را انجام دهید. در LAN یا روی کارساز اختصاصی اصلاً حسابی در کار نیست — فقط یک نام مستعار برمی‌گزینید. هیچ‌یک از این‌ها نشانی ایمیل نمی‌خواهد. حساب رایگان pokerth.net تنها برای بازی‌های رتبه‌بندی، میزهای ویژهٔ ثبت‌نام‌شدگان و گپ لازم است."],
+      ["چگونه با دوستانم به‌صورت برخط پوکر بازی کنم؟",
+       "در لابی یک میز بسازید — در pokerth.net یا روی هر LAN یا کارساز اختصاصی — و در اتاق انتظار «دعوت از دوستان» را بزنید. کارخواه وب یک پیوند دعوت می‌سازد که می‌توانید با هر پیام‌رسانی بفرستید. دوستانتان آن را در مرورگر خود باز می‌کنند، روی iPhone، Android یا رایانه، بی‌آن‌که چیزی بارگیری کنند. اگر می‌خواهید میز خصوصی بماند گذرواژه بگذارید: گذرواژه هرگز بخشی از پیوند نیست."],
+      ["وقتی دوستی پیوند دعوت مرا باز می‌کند چه پیش می‌آید؟",
+       "پیوند، میز و کارساز را با خود دارد. دوستتان وارد می‌شود — به‌عنوان مهمان یا با حساب pokerth.net، یا تنها با یک نام مستعار روی LAN یا کارساز اختصاصی — و سپس کارخواه وب خودکار به میز می‌پیوندد، بی‌آن‌که نیازی به جست‌وجوی آن در لابی باشد. میزی که گذرواژه دارد گذرواژه‌اش را می‌پرسد؛ بازی‌ای که آغاز شده است برای تماشا باز می‌شود. پیوندهای دعوت از قابلیت‌های کارخواه وب‌اند و روی هر کارسازی که این کارخواه بتواند به آن وصل شود کار می‌کنند."],
+      ["آیا کارساز نمایشی‌ای هست که بتوانم بدون ثبت‌نام PokerTH را امتحان کنم؟",
+       "بله. در صفحهٔ ورود «LAN / سرور اختصاصی» را برگزینید و کارساز نمایشی عمومی را از فهرست کارسازها انتخاب کنید: هر نام مستعاری بنویسید و وارد لابی آن شده‌اید — بدون ثبت‌نام، بدون نشانی ایمیل. یک نقطهٔ سبز نشان می‌دهد کدام کارسازهای فهرست برخط‌اند و چند بازیکن روی آن‌ها هستند."],
       ["روی تلفن همراه کار می‌کند؟",
        "بله. کارخواه وب یک برنامهٔ وب پیش‌رونده است: در هر مرورگر امروزی روی رایانه، رایانک یا تلفن اجرا می‌شود و می‌توان آن را مانند یک برنامهٔ بومی نصب کرد — روی iPhone و iPad با اشتراک ← افزودن به صفحهٔ اصلی، در جاهای دیگر از منوی مرورگر یا دکمهٔ نصب. «راهنمای آس» مراحل را برای دستگاه شما نشان می‌دهد."],
       ["می‌توانم با رایانه بازی کنم؟",
@@ -3993,18 +4460,22 @@ var SEO_FAQ_I18N = {
       ["کارخواه وب چه داده‌هایی گرد می‌آورد؟",
        "تا جای ممکن اندک: تنظیمات شما در مرورگر خودتان می‌ماند و هیچ ردیابی یا تبلیغی در کار نیست. هنگامی که با حساب pokerth.net وارد می‌شوید، گزینه‌ها و جام‌های تمرین شما با آن همگام می‌شود تا به دستگاه‌های دیگرتان هم بیاید. جزئیات در صفحهٔ حریم خصوصی آمده است."],
       ["می‌توانم کارساز خودم را راه بیندازم؟",
-       "بله. هم کارساز اختصاصی PokerTH و هم این کارخواه وب متن‌باز هستند، پس می‌توانید کارساز پوکر خصوصی خودتان را روی شبکهٔ محلی یا روی اینترنت راه بیندازید."],
+       "بله. هم کارساز اختصاصی PokerTH و هم این کارخواه وب متن‌باز هستند، پس می‌توانید کارساز پوکر خصوصی خودتان را روی شبکهٔ محلی یا روی اینترنت راه بیندازید. برای آن‌که کارسازتان برای همه فهرست شود، «LAN / سرور اختصاصی» را برگزینید و سپس «پیشنهاد سرور من» را در پایین فهرست کارسازها بزنید: پس از تأیید مدیران، در فهرست نمایان می‌شود. کارساز باید از اینترنت در دسترس باشد."],
       ["بازی‌های رتبه‌بندی و فصل‌ها چگونه کار می‌کنند؟",
        "بازی‌های رتبه‌بندی در pokerth.net ۱۰ بازیکن را دور یک میز می‌نشاند و به‌محض پر شدن میز آغاز می‌شود: هر کس ۱۰٬۰۰۰ ژتون، یک بلایند کوچک ۵۰ که هر ۱۱ دست دو برابر می‌شود، و ۵ ثانیه برای حرکت. جایگاه‌های ۱ تا ۷ به‌ترتیب ۱۵، ۹، ۶، ۴، ۳، ۲ و ۱ امتیاز می‌گیرند؛ امتیاز (Score) شما میانگین هر بازی است، وزن‌دار بر پایهٔ شمار بازی‌هایی که انجام داده‌اید، و رتبه‌بندی هر سه ماه از نو آغاز می‌شود. یک حساب رایگان pokerth.net لازم است."],
+      ["آیا تورنمنت‌ها و مسابقه‌های رایگان پوکر وجود دارد؟",
+       "بله، در تمام سال و همه رایگان. هر بازی PokerTH یک تورنمنت است و جامعهٔ pokerth.net افزون بر آن مسابقه‌های منظمی با رتبه‌بندی‌های ویژهٔ خود برگزار می‌کند: BBC، بازی‌هایی که بلایندها در آن‌ها هر چند دقیقه بالا می‌روند (<a href=\"https://bbc.pokerth.net/registration\">تقویم</a>، <a href=\"https://bbc.pokerth.net/results\">نتایج</a>، <a href=\"https://bbc.pokerth.net/results/ranking\">رتبه‌بندی</a>)؛ WeCup (WEC)، تورنمنت‌هایی با آهنگی آرام‌تر و متعادل (<a href=\"https://wec.pokerth.net/results\">نتایج</a>، <a href=\"https://wec.pokerth.net/results/ranking\">رتبه‌بندی</a>)؛ و Monthly Cup که هر ماه برگزار می‌شود (<a href=\"https://monthlycup.pokerth.net/\">جام بعدی و برندگان اخیر</a>، <a href=\"https://monthlycup.pokerth.net/registration\">ثبت‌نام</a>). تاریخ‌ها و قواعد در هر سایت و در انجمن <a href=\"https://www.pokerth.net/\">pokerth.net</a> اعلام می‌شوند. برای شرکت، یک حساب رایگان pokerth.net لازم است."],
       ["بدون بازی کردن می‌توانم بازی را تماشا کنم؟",
        "بله. بازی‌های در جریان که تماشاگر را می‌پذیرند از لابی به‌صورت زنده قابل تماشا هستند: میز و گپ را می‌بینید، اما کارت‌های شخصی پنهان می‌مانند و نمی‌توانید حرکتی انجام دهید. پیوند دعوت به میزی که آغاز شده است آن را برای تماشا باز می‌کند."],
       ["در برنامه راهنما هم هست؟",
-       "بله. «راهنمای آس»: آس، نمادِ کارخواه وب، اگر بخواهید هر صفحه را همان‌طور که پیش می‌روید توضیح می‌دهد. منوی او کل راهنما را همراه با جست‌وجو در بر دارد، و «این چیست؟»: روی هر چیز صفحه بزنید تا بگوید چه کاری می‌کند."]
+       "بله. «راهنمای آس»: آس، نمادِ کارخواه وب، اگر بخواهید هر صفحه را همان‌طور که پیش می‌روید توضیح می‌دهد. منوی او کل راهنما را همراه با جست‌وجو در بر دارد، و «این چیست؟»: روی هر چیز صفحه بزنید تا بگوید چه کاری می‌کند."],
+      ["آیا PokerTH هنوز به‌طور فعال توسعه می‌یابد؟",
+       "بله. PokerTH از سال ۲۰۰۶ به‌صورت نرم‌افزار آزاد توسعه یافته و هنوز نگهداری می‌شود: کارخواه رومیزی و کارساز روی <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> هستند، این کارخواه وب پیوسته به‌روز می‌شود (<a href=\"https://github.com/narmod/pokerth-web-client\">کد منبع و تاریخچهٔ تغییرات</a>)، و هر روز در شبکهٔ رسمی pokerth.net بازی‌ها برگزار می‌شوند."]
     ]
   },
   ur: {
     title: "\u0627\u06a9\u062b\u0631 \u067e\u0648\u0686\u06be\u06d2 \u062c\u0627\u0646\u06d2 \u0648\u0627\u0644\u06d2 \u0633\u0648\u0627\u0644\u0627\u062a \u2014 PokerTH \u0648\u06cc\u0628 \u06a9\u0644\u0627\u0626\u0646\u0679",
-    desc: "PokerTH \u0648\u06cc\u0628 \u06a9\u0644\u0627\u0626\u0646\u0679 \u06a9\u06d2 \u0628\u0627\u0631\u06d2 \u0645\u06cc\u06ba \u0639\u0627\u0645 \u0633\u0648\u0627\u0644\u0627\u062a: \u0627\u0634\u062a\u06c1\u0627\u0631\u0627\u062a \u06a9\u06d2 \u0628\u063a\u06cc\u0631 \u0645\u0641\u062a \u067e\u0648\u06a9\u0631\u060c \u06a9\u0686\u06be \u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u06a9\u06cc\u06d2 \u0628\u063a\u06cc\u0631 \u0628\u0631\u0627\u0624\u0632\u0631 \u0645\u06cc\u06ba \u0679\u06cc\u06a9\u0633\u0627\u0633 \u06c1\u0648\u0644\u0688\u0645 \u06a9\u06be\u06cc\u0644\u0646\u0627\u060c \u0627\u06a9\u0627\u0624\u0646\u0679\u060c \u0645\u0648\u0628\u0627\u0626\u0644\u060c \u0622\u0641 \u0644\u0627\u0626\u0646 \u0645\u0648\u0688\u060c \u0632\u0628\u0627\u0646\u06cc\u06ba \u0627\u0648\u0631 \u0631\u0627\u0632\u062f\u0627\u0631\u06cc\u06d4",
+    desc: "PokerTH ویب کلائنٹ کے بارے میں عام سوالات: اشتہارات اور ڈاؤن لوڈ کے بغیر مفت پوکر، مہمان کے طور پر یا بغیر کسی اکاؤنٹ کے کھیلنا، لنک سے دوستوں کو دعوت، ٹورنامنٹ، موبائل، آف لائن موڈ، زبانیں اور رازداری۔",
     h1: "PokerTH \u0648\u06cc\u0628 \u06a9\u0644\u0627\u0626\u0646\u0679 \u2014 \u0627\u06a9\u062b\u0631 \u067e\u0648\u0686\u06be\u06d2 \u062c\u0627\u0646\u06d2 \u0648\u0627\u0644\u06d2 \u0633\u0648\u0627\u0644\u0627\u062a",
     qa: [
       ["کیا PokerTH مفت ہے؟",
@@ -4016,7 +4487,13 @@ var SEO_FAQ_I18N = {
       ["کیا میں براؤزر میں دوسروں کے ساتھ ٹیکساس ہولڈم کھیل سکتا ہوں؟",
        "جی ہاں۔ دنیا بھر کے کھلاڑیوں سے کھیلنے کے لیے سرکاری نیٹ ورک pokerth.net میں شامل ہوں، یا دعوتی لنک بھیجیں تاکہ دوست سیدھے آپ کی میز پر پہنچ جائیں — سب کچھ براؤزر کے اندر۔"],
       ["کھیلنے کے لیے اکاؤنٹ چاہیے؟",
-       "نہیں۔ مقامی / مشق موڈ کے لیے اکاؤنٹ نہیں چاہیے اور یہ آف لائن چلتا ہے۔ سرکاری نیٹ ورک pokerth.net پر آپ «عام» گیمز مہمان کے طور پر کھیل سکتے ہیں؛ درجہ بندی گیمز، صرف رجسٹرڈ کھلاڑیوں کی میزوں اور چیٹ کے لیے ایک مفت pokerth.net اکاؤنٹ درکار ہے۔"],
+       "نہیں۔ مقامی / مشق موڈ کے لیے اکاؤنٹ نہیں چاہیے اور یہ آف لائن چلتا ہے۔ سرکاری نیٹ ورک pokerth.net پر مہمان کے طور پر لاگ اِن کریں: سرور آپ کو ایک مہمان عرفی نام دیتا ہے اور آپ فوراً «عام» گیمز کھیل سکتے ہیں۔ LAN یا مخصوص سرور پر کوئی اکاؤنٹ ہوتا ہی نہیں — آپ بس ایک عرفی نام چنتے ہیں۔ ان میں سے کوئی بھی ای میل پتا نہیں مانگتا۔ مفت pokerth.net اکاؤنٹ صرف درجہ بندی گیمز، صرف رجسٹرڈ کھلاڑیوں کی میزوں اور چیٹ کے لیے درکار ہے۔"],
+      ["دوستوں کے ساتھ آن لائن پوکر کیسے کھیلوں؟",
+       "لابی میں ایک میز بنائیں — pokerth.net پر یا کسی بھی LAN یا مخصوص سرور پر — اور انتظار گاہ میں «دوستوں کو مدعو کریں» دبائیں۔ ویب کلائنٹ ایک دعوتی لنک بناتا ہے جو آپ کسی بھی میسنجر سے بھیج سکتے ہیں۔ آپ کے دوست اسے اپنے براؤزر میں کھولتے ہیں، iPhone، Android یا کمپیوٹر پر، کچھ ڈاؤن لوڈ کیے بغیر۔ اگر میز نجی رکھنی ہو تو پاس ورڈ لگائیں: پاس ورڈ کبھی لنک کا حصہ نہیں ہوتا۔"],
+      ["جب کوئی دوست میرا دعوتی لنک کھولتا ہے تو کیا ہوتا ہے؟",
+       "لنک میں میز اور سرور دونوں شامل ہوتے ہیں۔ آپ کا دوست لاگ اِن کرتا ہے — مہمان کے طور پر یا pokerth.net اکاؤنٹ سے، اور LAN یا مخصوص سرور پر صرف عرفی نام سے — اور پھر ویب کلائنٹ خود بخود میز میں شامل ہو جاتا ہے، لابی میں اسے ڈھونڈنے کی ضرورت نہیں پڑتی۔ پاس ورڈ سے محفوظ میز اپنا پاس ورڈ مانگتی ہے؛ جو گیم پہلے سے شروع ہو چکا ہو وہ دیکھنے کے لیے کھلتا ہے۔ دعوتی لنک ویب کلائنٹ کی ایک خصوصیت ہیں اور ہر اس سرور پر کام کرتے ہیں جس سے یہ جڑ سکتا ہے۔"],
+      ["کیا سائن اپ کیے بغیر PokerTH آزمانے کے لیے کوئی ڈیمو سرور ہے؟",
+       "جی ہاں۔ لاگ اِن اسکرین پر «LAN / مخصوص سرور» منتخب کریں اور سرور کی فہرست سے عوامی ڈیمو سرور چنیں: کوئی بھی عرفی نام لکھیں اور آپ اس کی لابی میں ہیں — نہ رجسٹریشن، نہ ای میل پتا۔ ایک سبز نقطہ بتاتا ہے کہ فہرست کے کون سے سرور آن لائن ہیں اور ان پر کتنے کھلاڑی ہیں۔"],
       ["کیا یہ موبائل پر چلتا ہے؟",
        "جی ہاں۔ ویب کلائنٹ ایک پروگریسو ویب ایپ ہے: یہ کمپیوٹر، ٹیبلٹ اور فون کے ہر جدید براؤزر میں چلتا ہے اور عام ایپ کی طرح نصب ہو سکتا ہے — iPhone اور iPad پر شیئر ← ہوم اسکرین میں شامل کریں کے ذریعے، دوسری جگہ براؤزر کے مینو یا انسٹال بٹن سے۔ اِکا کی مدد آپ کے آلے کے لیے مراحل دکھاتی ہے۔"],
       ["کیا میں کمپیوٹر کے خلاف کھیل سکتا ہوں؟",
@@ -4032,18 +4509,22 @@ var SEO_FAQ_I18N = {
       ["ویب کلائنٹ کون سا ڈیٹا جمع کرتا ہے؟",
        "جتنا کم ممکن ہو: آپ کی ترتیبات آپ ہی کے براؤزر میں رہتی ہیں، اور کوئی ٹریکنگ یا اشتہار بازی نہیں۔ جب آپ pokerth.net اکاؤنٹ سے لاگ اِن کرتے ہیں تو آپ کے اختیارات اور تربیتی ٹرافیاں اسی کے ساتھ ہم آہنگ ہو جاتی ہیں، تاکہ وہ آپ کے دوسرے آلات پر بھی آپ کے ساتھ رہیں۔ تفصیل کے لیے رازداری کا صفحہ دیکھیے۔"],
       ["کیا میں اپنا سرور چلا سکتا ہوں؟",
-       "جی ہاں۔ PokerTH کا مخصوص سرور اور یہ ویب کلائنٹ دونوں اوپن سورس ہیں، لہٰذا آپ اپنا نجی پوکر سرور چلا سکتے ہیں — مقامی نیٹ ورک پر یا انٹرنیٹ پر۔"],
+       "جی ہاں۔ PokerTH کا مخصوص سرور اور یہ ویب کلائنٹ دونوں اوپن سورس ہیں، لہٰذا آپ اپنا نجی پوکر سرور چلا سکتے ہیں — مقامی نیٹ ورک پر یا انٹرنیٹ پر۔ اسے سب کے لیے فہرست میں شامل کروانے کے لیے «LAN / مخصوص سرور» منتخب کریں، پھر سرور کی فہرست کے نیچے «میرا سرور تجویز کریں» دبائیں: منتظمین کی منظوری کے بعد یہ فہرست میں ظاہر ہو جاتا ہے۔ سرور کا انٹرنیٹ سے قابلِ رسائی ہونا ضروری ہے۔"],
       ["درجہ بندی گیمز اور سیزن کیسے کام کرتے ہیں؟",
        "pokerth.net پر درجہ بندی گیمز میں 10 کھلاڑی بیٹھتے ہیں اور میز بھرتے ہی شروع ہو جاتے ہیں: ہر ایک کو 10,000 چپس، 50 کا چھوٹا بلائنڈ جو ہر 11 ہاتھ بعد دگنا ہو جاتا ہے، اور چال چلنے کے لیے 5 سیکنڈ۔ پہلی سے ساتویں پوزیشن کو بالترتیب 15، 9، 6، 4، 3، 2 اور 1 پوائنٹ ملتے ہیں؛ آپ کا اسکور فی گیم اوسط ہے، جسے آپ کے کھیلے ہوئے گیمز کی تعداد کے لحاظ سے وزن دیا جاتا ہے، اور درجہ بندی ہر سہ ماہی دوبارہ شروع ہوتی ہے۔ ایک مفت pokerth.net اکاؤنٹ درکار ہے۔"],
+      ["کیا مفت پوکر ٹورنامنٹ اور مقابلے ہوتے ہیں؟",
+       "جی ہاں، سارا سال، اور سب مفت۔ PokerTH کا ہر گیم ایک ٹورنامنٹ ہے، اور pokerth.net کی کمیونٹی اپنی اپنی درجہ بندی کے ساتھ باقاعدہ مقابلے بھی کرواتی ہے: BBC، ایسے گیمز جن میں بلائنڈز ہر چند منٹ بعد بڑھتے ہیں (<a href=\"https://bbc.pokerth.net/registration\">کیلنڈر</a>، <a href=\"https://bbc.pokerth.net/results\">نتائج</a>، <a href=\"https://bbc.pokerth.net/results/ranking\">درجہ بندی</a>)؛ WeCup (WEC)، نسبتاً پُرسکون اور متوازن رفتار والے ٹورنامنٹ (<a href=\"https://wec.pokerth.net/results\">نتائج</a>، <a href=\"https://wec.pokerth.net/results/ranking\">درجہ بندی</a>)؛ اور Monthly Cup، جو ہر مہینے ہوتا ہے (<a href=\"https://monthlycup.pokerth.net/\">اگلا کپ اور تازہ ترین فاتحین</a>، <a href=\"https://monthlycup.pokerth.net/registration\">رجسٹریشن</a>)۔ تاریخوں اور قواعد کا اعلان ہر سائٹ پر اور <a href=\"https://www.pokerth.net/\">pokerth.net</a> فورم پر کیا جاتا ہے۔ حصہ لینے کے لیے مفت pokerth.net اکاؤنٹ درکار ہے۔"],
       ["کیا میں کھیلے بغیر کوئی گیم دیکھ سکتا ہوں؟",
        "جی ہاں۔ جاری گیمز جن میں تماشائیوں کی اجازت ہو، لابی سے لائیو دیکھے جا سکتے ہیں: آپ میز اور چیٹ دیکھتے ہیں، لیکن ذاتی پتے چھپے رہتے ہیں اور آپ کوئی چال نہیں چل سکتے۔ شروع ہو چکی میز کا دعوتی لنک اسے دیکھنے کے لیے کھولتا ہے۔"],
       ["کیا ایپ کے اندر مدد موجود ہے؟",
-       "جی ہاں۔ اِکا کی مدد: اِکا، ویب کلائنٹ کا ماسکوٹ، چاہیں تو آپ کے ساتھ ساتھ ہر اسکرین سمجھاتا ہے۔ اس کے مینو میں تلاش کے ساتھ پوری مدد اور «یہ کیا ہے؟» موجود ہے: اسکرین پر کسی بھی چیز کو ٹچ کریں اور وہ بتاتا ہے کہ وہ کیا کرتی ہے۔"]
+       "جی ہاں۔ اِکا کی مدد: اِکا، ویب کلائنٹ کا ماسکوٹ، چاہیں تو آپ کے ساتھ ساتھ ہر اسکرین سمجھاتا ہے۔ اس کے مینو میں تلاش کے ساتھ پوری مدد اور «یہ کیا ہے؟» موجود ہے: اسکرین پر کسی بھی چیز کو ٹچ کریں اور وہ بتاتا ہے کہ وہ کیا کرتی ہے۔"],
+      ["کیا PokerTH پر اب بھی فعال طور پر کام ہو رہا ہے؟",
+       "جی ہاں۔ PokerTH ۲۰۰۶ سے آزاد سافٹ ویئر کے طور پر تیار ہو رہا ہے اور اب بھی اس کی دیکھ بھال جاری ہے: ڈیسک ٹاپ کلائنٹ اور سرور <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> پر ہیں، یہ ویب کلائنٹ مسلسل اپ ڈیٹ ہوتا ہے (<a href=\"https://github.com/narmod/pokerth-web-client\">سورس کوڈ اور تبدیلیوں کا ریکارڈ</a>)، اور سرکاری نیٹ ورک pokerth.net پر ہر روز گیمز کھیلے جاتے ہیں۔"]
     ]
   },
   hi: {
     title: "\u0905\u0915\u094d\u0938\u0930 \u092a\u0942\u091b\u0947 \u091c\u093e\u0928\u0947 \u0935\u093e\u0932\u0947 \u092a\u094d\u0930\u0936\u094d\u0928 \u2014 PokerTH \u0935\u0947\u092c \u0915\u094d\u0932\u093e\u0907\u0902\u091f",
-    desc: "PokerTH \u0935\u0947\u092c \u0915\u094d\u0932\u093e\u0907\u0902\u091f \u0915\u0947 \u092c\u093e\u0930\u0947 \u092e\u0947\u0902 \u0938\u093e\u092e\u093e\u0928\u094d\u092f \u092a\u094d\u0930\u0936\u094d\u0928: \u092c\u093f\u0928\u093e \u0935\u093f\u091c\u094d\u091e\u093e\u092a\u0928 \u0915\u0947 \u092e\u0941\u092b\u093c\u094d\u0924 \u092a\u094b\u0915\u0930, \u0915\u0941\u091b \u092d\u0940 \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u093f\u090f \u092c\u093f\u0928\u093e \u092c\u094d\u0930\u093e\u0909\u091c\u093c\u0930 \u092e\u0947\u0902 \u091f\u0947\u0915\u094d\u0938\u0938 \u0939\u094b\u0932\u094d\u0921\u092e \u0916\u0947\u0932\u0928\u093e, \u0916\u093e\u0924\u0947, \u092e\u094b\u092c\u093e\u0907\u0932, \u0911\u092b\u093c\u0932\u093e\u0907\u0928 \u092e\u094b\u0921, \u092d\u093e\u0937\u093e\u090f\u0901 \u0914\u0930 \u0928\u093f\u091c\u0924\u093e\u0964",
+    desc: "PokerTH वेब क्लाइंट पर सामान्य प्रश्न: बिना विज्ञापन व डाउनलोड के मुफ़्त पोकर, अतिथि के रूप में या बिना खाते के खेलना, लिंक से दोस्तों को न्योता, टूर्नामेंट, मोबाइल, ऑफ़लाइन मोड, भाषाएँ और निजता।",
     h1: "PokerTH \u0935\u0947\u092c \u0915\u094d\u0932\u093e\u0907\u0902\u091f \u2014 \u0905\u0915\u094d\u0938\u0930 \u092a\u0942\u091b\u0947 \u091c\u093e\u0928\u0947 \u0935\u093e\u0932\u0947 \u092a\u094d\u0930\u0936\u094d\u0928",
     qa: [
       ["क्या PokerTH मुफ़्त है?",
@@ -4055,7 +4536,13 @@ var SEO_FAQ_I18N = {
       ["क्या मैं ब्राउज़र में दूसरों के साथ टेक्सस होल्डम खेल सकता हूँ?",
        "हाँ। दुनिया भर के खिलाड़ियों से खेलने के लिए आधिकारिक नेटवर्क pokerth.net से जुड़ें, या आमंत्रण लिंक भेजें ताकि दोस्त सीधे आपकी मेज़ पर पहुँचें — सब कुछ ब्राउज़र के भीतर।"],
       ["खेलने के लिए क्या खाता चाहिए?",
-       "नहीं। लोकल / अभ्यास मोड को खाते की ज़रूरत नहीं और वह ऑफ़लाइन चलता है। आधिकारिक नेटवर्क pokerth.net पर आप सामान्य खेल अतिथि के रूप में खेल सकते हैं; रैंकिंग गेम, सिर्फ़ पंजीकृत खिलाड़ियों की मेज़ों और चैट के लिए एक मुफ़्त pokerth.net खाता चाहिए।"],
+       "नहीं। लोकल / अभ्यास मोड को खाते की ज़रूरत नहीं और वह ऑफ़लाइन चलता है। आधिकारिक नेटवर्क pokerth.net पर अतिथि के रूप में लॉग इन करें: सर्वर आपको एक अतिथि उपनाम देता है और आप तुरंत सामान्य खेल खेल सकते हैं। LAN या समर्पित सर्वर पर कोई खाता होता ही नहीं — आप बस एक उपनाम चुनते हैं। इनमें से कोई भी ईमेल पता नहीं माँगता। मुफ़्त pokerth.net खाता केवल रैंकिंग गेम, सिर्फ़ पंजीकृत खिलाड़ियों की मेज़ों और चैट के लिए चाहिए।"],
+      ["दोस्तों के साथ ऑनलाइन पोकर कैसे खेलें?",
+       "लॉबी में एक मेज़ बनाइए — pokerth.net पर या किसी भी LAN या समर्पित सर्वर पर — और प्रतीक्षा कक्ष में “दोस्तों को आमंत्रित करें” दबाइए। वेब क्लाइंट एक आमंत्रण लिंक बनाता है जिसे आप किसी भी मैसेंजर से भेज सकते हैं। आपके दोस्त उसे अपने ब्राउज़र में खोलते हैं — iPhone, Android या कंप्यूटर पर — कुछ भी डाउनलोड किए बिना। अगर मेज़ निजी रखनी हो तो पासवर्ड लगाइए: पासवर्ड कभी लिंक का हिस्सा नहीं होता।"],
+      ["जब कोई दोस्त मेरा आमंत्रण लिंक खोलता है तो क्या होता है?",
+       "लिंक में मेज़ और सर्वर दोनों की जानकारी होती है। आपका दोस्त लॉग इन करता है — अतिथि के रूप में या pokerth.net खाते से, और LAN या समर्पित सर्वर पर सिर्फ़ उपनाम से — और फिर वेब क्लाइंट अपने-आप मेज़ से जुड़ जाता है, लॉबी में उसे ढूँढ़ने की ज़रूरत नहीं पड़ती। पासवर्ड से सुरक्षित मेज़ अपना पासवर्ड माँगती है; जो खेल पहले ही शुरू हो चुका हो, वह देखने के लिए खुलता है। आमंत्रण लिंक वेब क्लाइंट की एक सुविधा हैं और हर उस सर्वर पर काम करते हैं जिससे वह जुड़ सकता है।"],
+      ["क्या साइन अप किए बिना PokerTH आज़माने के लिए कोई डेमो सर्वर है?",
+       "हाँ। लॉगिन स्क्रीन पर “LAN / समर्पित सर्वर” चुनें और सर्वर सूची में सार्वजनिक डेमो सर्वर चुनें: कोई भी उपनाम लिखें और आप उसकी लॉबी में हैं — न पंजीकरण, न ईमेल पता। एक हरा बिंदु दिखाता है कि सूची के कौन-से सर्वर ऑनलाइन हैं और उन पर कितने खिलाड़ी हैं।"],
       ["क्या यह मोबाइल पर चलता है?",
        "हाँ। वेब क्लाइंट एक प्रोग्रेसिव वेब ऐप है: यह कंप्यूटर, टैबलेट और फ़ोन के हर आधुनिक ब्राउज़र में चलता है और सामान्य ऐप की तरह इंस्टॉल हो सकता है — iPhone और iPad पर शेयर → होम स्क्रीन में जोड़ें से, बाकी जगह ब्राउज़र के मेन्यू या इंस्टॉल बटन से। इक्के की सहायता आपके डिवाइस के चरण दिखाती है।"],
       ["क्या मैं कंप्यूटर के विरुद्ध खेल सकता हूँ?",
@@ -4071,18 +4558,22 @@ var SEO_FAQ_I18N = {
       ["वेब क्लाइंट कौन सा डेटा इकट्ठा करता है?",
        "जितना कम संभव हो: आपकी सेटिंग्स आपके ही ब्राउज़र में रहती हैं, और कोई ट्रैकिंग या विज्ञापन नहीं है। pokerth.net खाते से लॉग इन करने पर आपके विकल्प और अभ्यास की ट्रॉफ़ियाँ उससे सिंक हो जाती हैं, ताकि वे आपके दूसरे डिवाइसों पर भी आपके साथ रहें। विवरण निजता पृष्ठ पर देखें।"],
       ["क्या मैं अपना सर्वर चला सकता हूँ?",
-       "हाँ। PokerTH का समर्पित सर्वर और यह वेब क्लाइंट दोनों ओपन सोर्स हैं, इसलिए आप अपना निजी पोकर सर्वर चला सकते हैं — लोकल नेटवर्क पर या इंटरनेट पर।"],
+       "हाँ। PokerTH का समर्पित सर्वर और यह वेब क्लाइंट दोनों ओपन सोर्स हैं, इसलिए आप अपना निजी पोकर सर्वर चला सकते हैं — लोकल नेटवर्क पर या इंटरनेट पर। उसे सबके लिए सूची में दिखाने के लिए “LAN / समर्पित सर्वर” चुनें, फिर सर्वर सूची के नीचे “मेरा सर्वर प्रस्तावित करें” दबाएँ: व्यवस्थापकों की स्वीकृति के बाद वह सूची में दिखने लगता है। सर्वर का इंटरनेट से पहुँच योग्य होना ज़रूरी है।"],
       ["रैंकिंग गेम और सीज़न कैसे काम करते हैं?",
        "pokerth.net के रैंकिंग गेम में 10 खिलाड़ी बैठते हैं और मेज़ भरते ही शुरू हो जाते हैं: हर किसी को 10,000 चिप्स, 50 का छोटा ब्लाइंड जो हर 11 हाथ में दोगुना होता है, और खेलने के लिए 5 सेकंड। स्थान 1 से 7 को क्रम से 15, 9, 6, 4, 3, 2 और 1 अंक मिलते हैं; आपका स्कोर प्रति खेल आपका औसत है, जिसे आपके खेले हुए खेलों की संख्या से भारित किया जाता है, और रैंकिंग हर तिमाही फिर से शुरू होती है। एक मुफ़्त pokerth.net खाता चाहिए।"],
+      ["क्या मुफ़्त पोकर टूर्नामेंट और प्रतियोगिताएँ होती हैं?",
+       "हाँ, साल भर, और सब मुफ़्त। PokerTH का हर खेल एक टूर्नामेंट है, और pokerth.net समुदाय अपनी-अपनी रैंकिंग वाली नियमित प्रतियोगिताएँ भी चलाता है: BBC, ऐसे खेल जिनमें ब्लाइंड हर कुछ मिनट में बढ़ते हैं (<a href=\"https://bbc.pokerth.net/registration\">कैलेंडर</a>, <a href=\"https://bbc.pokerth.net/results\">परिणाम</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">रैंकिंग</a>); WeCup (WEC), शांत और संतुलित गति वाले टूर्नामेंट (<a href=\"https://wec.pokerth.net/results\">परिणाम</a>, <a href=\"https://wec.pokerth.net/results/ranking\">रैंकिंग</a>); और Monthly Cup, जो हर महीने होता है (<a href=\"https://monthlycup.pokerth.net/\">अगला कप और हाल के विजेता</a>, <a href=\"https://monthlycup.pokerth.net/registration\">पंजीकरण</a>)। तारीख़ें और नियम हर साइट पर और <a href=\"https://www.pokerth.net/\">pokerth.net</a> फ़ोरम पर घोषित किए जाते हैं। भाग लेने के लिए मुफ़्त pokerth.net खाता चाहिए।"],
       ["क्या खेले बिना कोई खेल देखा जा सकता है?",
        "हाँ। दर्शकों को अनुमति देने वाले चल रहे खेल लॉबी से लाइव देखे जा सकते हैं: आपको मेज़ और चैट दिखते हैं, लेकिन निजी पत्ते छिपे रहते हैं और आप कोई क्रिया नहीं कर सकते। शुरू हो चुकी मेज़ का आमंत्रण लिंक उसे देखने के लिए खोलता है।"],
       ["क्या ऐप के भीतर सहायता है?",
-       "हाँ। इक्के की सहायता: इक्का, वेब क्लाइंट का शुभंकर, चाहें तो हर स्क्रीन को आगे बढ़ते हुए समझाता है। उसके मेन्यू में खोज के साथ पूरी सहायता है, और “यह क्या है?”: स्क्रीन पर किसी भी चीज़ को टैप कीजिए और वह बताता है कि वह क्या करती है।"]
+       "हाँ। इक्के की सहायता: इक्का, वेब क्लाइंट का शुभंकर, चाहें तो हर स्क्रीन को आगे बढ़ते हुए समझाता है। उसके मेन्यू में खोज के साथ पूरी सहायता है, और “यह क्या है?”: स्क्रीन पर किसी भी चीज़ को टैप कीजिए और वह बताता है कि वह क्या करती है।"],
+      ["क्या PokerTH का विकास अब भी सक्रिय है?",
+       "हाँ। PokerTH 2006 से मुक्त सॉफ़्टवेयर के रूप में विकसित हो रहा है और आज भी इसका रखरखाव होता है: डेस्कटॉप क्लाइंट और सर्वर <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> पर हैं, यह वेब क्लाइंट लगातार अपडेट होता है (<a href=\"https://github.com/narmod/pokerth-web-client\">सोर्स कोड और बदलावों का ब्योरा</a>), और आधिकारिक pokerth.net नेटवर्क पर हर दिन खेल खेले जाते हैं।"]
     ]
   },
   bn: {
     title: "\u09b8\u09be\u09a7\u09be\u09b0\u09a3 \u09aa\u09cd\u09b0\u09b6\u09cd\u09a8 \u2014 PokerTH \u0993\u09af\u09bc\u09c7\u09ac \u0995\u09cd\u09b2\u09be\u09af\u09bc\u09c7\u09a8\u09cd\u099f",
-    desc: "PokerTH \u0993\u09af\u09bc\u09c7\u09ac \u0995\u09cd\u09b2\u09be\u09af\u09bc\u09c7\u09a8\u09cd\u099f \u09b8\u09ae\u09cd\u09aa\u09b0\u09cd\u0995\u09c7 \u09b8\u09be\u09a7\u09be\u09b0\u09a3 \u09aa\u09cd\u09b0\u09b6\u09cd\u09a8: \u09ac\u09bf\u099c\u09cd\u099e\u09be\u09aa\u09a8\u09b9\u09c0\u09a8 \u09ac\u09bf\u09a8\u09be\u09ae\u09c2\u09b2\u09cd\u09af\u09c7\u09b0 \u09aa\u09cb\u0995\u09be\u09b0, \u0995\u09bf\u099b\u09c1 \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1 \u09a8\u09be \u0995\u09b0\u09c7\u0987 \u09ac\u09cd\u09b0\u09be\u0989\u099c\u09be\u09b0\u09c7 \u099f\u09c7\u0995\u09cd\u09b8\u09be\u09b8 \u09b9\u09cb\u09b2\u09cd\u09a1\u09c7\u09ae \u0996\u09c7\u09b2\u09be, \u0985\u09cd\u09af\u09be\u0995\u09be\u0989\u09a8\u09cd\u099f, \u09ae\u09cb\u09ac\u09be\u0987\u09b2, \u0985\u09ab\u09b2\u09be\u0987\u09a8 \u09ae\u09cb\u09a1, \u09ad\u09be\u09b7\u09be \u0993 \u0997\u09cb\u09aa\u09a8\u09c0\u09af\u09bc\u09a4\u09be\u0964",
+    desc: "PokerTH ওয়েব ক্লায়েন্ট নিয়ে সাধারণ প্রশ্ন: বিজ্ঞাপন ও ডাউনলোড ছাড়া বিনামূল্যের পোকার, অতিথি হিসেবে বা অ্যাকাউন্ট ছাড়াই খেলা, লিংকে বন্ধুদের আমন্ত্রণ, টুর্নামেন্ট, মোবাইল, অফলাইন মোড, ভাষা ও গোপনীয়তা।",
     h1: "PokerTH \u0993\u09af\u09bc\u09c7\u09ac \u0995\u09cd\u09b2\u09be\u09af\u09bc\u09c7\u09a8\u09cd\u099f \u2014 \u09b8\u09be\u09a7\u09be\u09b0\u09a3 \u09aa\u09cd\u09b0\u09b6\u09cd\u09a8",
     qa: [
       ["PokerTH কি বিনামূল্যের?",
@@ -4094,7 +4585,13 @@ var SEO_FAQ_I18N = {
       ["ব্রাউজারে কি অন্যদের সঙ্গে টেক্সাস হোল্ডেম খেলা যায়?",
        "হ্যাঁ। সারা বিশ্বের খেলোয়াড়দের সঙ্গে খেলতে সরকারি নেটওয়ার্ক pokerth.net-এ যোগ দিন, অথবা আমন্ত্রণ লিংক পাঠান যাতে বন্ধুরা সরাসরি আপনার টেবিলে পৌঁছায় — সবই ব্রাউজারের ভেতরে।"],
       ["খেলতে কি অ্যাকাউন্ট লাগে?",
-       "না। স্থানীয় / অনুশীলন মোডে কোনো অ্যাকাউন্ট লাগে না এবং এটি অফলাইনে চলে। সরকারি নেটওয়ার্ক pokerth.net-এ আপনি অতিথি হিসেবে সাধারণ গেম খেলতে পারেন; র‍্যাংকিং গেম, শুধু নিবন্ধিতদের টেবিল এবং চ্যাটের জন্য একটি বিনামূল্যের pokerth.net অ্যাকাউন্ট প্রয়োজন।"],
+       "না। স্থানীয় / অনুশীলন মোডে কোনো অ্যাকাউন্ট লাগে না এবং এটি অফলাইনে চলে। সরকারি নেটওয়ার্ক pokerth.net-এ অতিথি হিসেবে লগ ইন করুন: সার্ভার আপনাকে একটি অতিথি ডাকনাম দেয় এবং আপনি সঙ্গে সঙ্গে সাধারণ গেম খেলতে পারেন। LAN বা ডেডিকেটেড সার্ভারে কোনো অ্যাকাউন্টই নেই — আপনি শুধু একটি ডাকনাম বেছে নেন। এগুলোর কোনোটিই ইমেল ঠিকানা চায় না। বিনামূল্যের pokerth.net অ্যাকাউন্ট কেবল র‍্যাংকিং গেম, শুধু নিবন্ধিতদের টেবিল এবং চ্যাটের জন্য প্রয়োজন।"],
+      ["বন্ধুদের সঙ্গে অনলাইনে পোকার খেলব কীভাবে?",
+       "লবিতে একটি টেবিল তৈরি করুন — pokerth.net-এ বা যেকোনো LAN বা ডেডিকেটেড সার্ভারে — এবং অপেক্ষা কক্ষে “বন্ধুদের আমন্ত্রণ জানান” চাপুন। ওয়েব ক্লায়েন্ট একটি আমন্ত্রণ লিংক তৈরি করে, যা আপনি যেকোনো মেসেঞ্জারে পাঠাতে পারেন। আপনার বন্ধুরা সেটি তাঁদের ব্রাউজারে খোলেন — iPhone, Android বা কম্পিউটারে — কিছু ডাউনলোড না করেই। টেবিল ব্যক্তিগত রাখতে চাইলে পাসওয়ার্ড দিন: পাসওয়ার্ড কখনো লিংকের অংশ হয় না।"],
+      ["বন্ধু আমার আমন্ত্রণ লিংক খুললে কী হয়?",
+       "লিংকে টেবিল ও সার্ভার দুটোরই তথ্য থাকে। আপনার বন্ধু লগ ইন করেন — অতিথি হিসেবে বা pokerth.net অ্যাকাউন্ট দিয়ে, আর LAN বা ডেডিকেটেড সার্ভারে শুধু একটি ডাকনাম দিয়ে — তারপর ওয়েব ক্লায়েন্ট নিজে থেকেই টেবিলে যোগ দেয়, লবিতে খুঁজতে হয় না। পাসওয়ার্ড-সুরক্ষিত টেবিল তার পাসওয়ার্ড চায়; যে গেম আগেই শুরু হয়ে গেছে সেটি দেখার জন্য খোলে। আমন্ত্রণ লিংক ওয়েব ক্লায়েন্টের একটি বৈশিষ্ট্য, এবং এটি যেসব সার্ভারে সংযোগ করতে পারে তার প্রতিটিতেই কাজ করে।"],
+      ["সাইন আপ না করে PokerTH চেষ্টা করার জন্য কোনো ডেমো সার্ভার আছে কি?",
+       "হ্যাঁ। লগইন স্ক্রিনে “LAN / ডেডিকেটেড সার্ভার” বেছে নিন এবং সার্ভার তালিকা থেকে সর্বজনীন ডেমো সার্ভারটি নির্বাচন করুন: যেকোনো ডাকনাম লিখুন, আর আপনি তার লবিতে — নিবন্ধন নেই, ইমেল ঠিকানা নেই। একটি সবুজ বিন্দু দেখায় তালিকার কোন সার্ভারগুলো অনলাইনে আছে এবং সেগুলোতে কতজন খেলোয়াড় আছেন।"],
       ["এটি কি মোবাইলে চলে?",
        "হ্যাঁ। ওয়েব ক্লায়েন্টটি একটি প্রোগ্রেসিভ ওয়েব অ্যাপ: এটি কম্পিউটার, ট্যাবলেট ও ফোনের যেকোনো আধুনিক ব্রাউজারে চলে এবং সাধারণ অ্যাপের মতো ইনস্টল করা যায় — iPhone ও iPad-এ শেয়ার → Add to Home Screen দিয়ে, অন্য ডিভাইসে ব্রাউজার মেনু বা ইনস্টল বোতাম থেকে। টেক্কার সহায়তা আপনার ডিভাইসের ধাপগুলো দেখায়।"],
       ["কম্পিউটারের বিরুদ্ধে কি খেলা যায়?",
@@ -4110,18 +4607,22 @@ var SEO_FAQ_I18N = {
       ["ওয়েব ক্লায়েন্ট কী কী তথ্য সংগ্রহ করে?",
        "যতটা সম্ভব কম: আপনার সেটিংস আপনার ব্রাউজারেই থাকে, কোনো ট্র্যাকিং বা বিজ্ঞাপন নেই। pokerth.net অ্যাকাউন্টে লগ ইন করলে আপনার অপশন ও অনুশীলনের ট্রফি এর সঙ্গে সিঙ্ক হয়, ফলে সেগুলো আপনার অন্য ডিভাইসেও আপনার সঙ্গে থাকে। বিস্তারিত গোপনীয়তা পাতায় দেখুন।"],
       ["আমি কি নিজের সার্ভার চালাতে পারি?",
-       "হ্যাঁ। PokerTH-এর নিবেদিত সার্ভার এবং এই ওয়েব ক্লায়েন্ট দুটোই মুক্ত সোর্স, তাই আপনি নিজের ব্যক্তিগত পোকার সার্ভার চালাতে পারেন — লোকাল নেটওয়ার্কে বা ইন্টারনেটে।"],
+       "হ্যাঁ। PokerTH-এর ডেডিকেটেড সার্ভার এবং এই ওয়েব ক্লায়েন্ট দুটোই মুক্ত সোর্স, তাই আপনি নিজের ব্যক্তিগত পোকার সার্ভার চালাতে পারেন — লোকাল নেটওয়ার্কে বা ইন্টারনেটে। সবার জন্য তালিকায় দেখাতে চাইলে “LAN / ডেডিকেটেড সার্ভার” বেছে নিন, তারপর সার্ভার তালিকার নিচে “আমার সার্ভার প্রস্তাব করুন” চাপুন: অ্যাডমিনরা অনুমোদন দিলেই এটি তালিকায় দেখা যাবে। সার্ভারটিকে অবশ্যই ইন্টারনেট থেকে পৌঁছানো যায় এমন হতে হবে।"],
       ["র‍্যাংকিং গেম আর মৌসুম কীভাবে কাজ করে?",
        "pokerth.net-এর র‍্যাংকিং গেমে ১০ জন খেলোয়াড় বসেন এবং টেবিল ভরে গেলেই খেলা শুরু হয়: প্রত্যেকের ১০,০০০ চিপ, ৫০-এর ছোট ব্লাইন্ড যা প্রতি ১১ হাতে দ্বিগুণ হয়, আর চাল দিতে ৫ সেকেন্ড। ১ থেকে ৭ নম্বর স্থান যথাক্রমে ১৫, ৯, ৬, ৪, ৩, ২ ও ১ পয়েন্ট পায়; আপনার স্কোর হলো প্রতি গেমে আপনার গড়, যা আপনার খেলা গেমের সংখ্যা দিয়ে ভারিত, এবং র‍্যাঙ্কিং প্রতি তিন মাসে নতুন করে শুরু হয়। একটি বিনামূল্যের pokerth.net অ্যাকাউন্ট প্রয়োজন।"],
+      ["বিনামূল্যের পোকার টুর্নামেন্ট ও প্রতিযোগিতা আছে কি?",
+       "হ্যাঁ, সারা বছর, এবং সবই বিনামূল্যে। PokerTH-এর প্রতিটি গেমই একটি টুর্নামেন্ট, আর pokerth.net সম্প্রদায় নিজস্ব র‍্যাংকিংসহ নিয়মিত প্রতিযোগিতাও আয়োজন করে: BBC, এমন গেম যেখানে প্রতি কয়েক মিনিটে ব্লাইন্ড বাড়ে (<a href=\"https://bbc.pokerth.net/registration\">ক্যালেন্ডার</a>, <a href=\"https://bbc.pokerth.net/results\">ফলাফল</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">র‍্যাংকিং</a>); WeCup (WEC), তুলনামূলক শান্ত ও ভারসাম্যপূর্ণ গতির টুর্নামেন্ট (<a href=\"https://wec.pokerth.net/results\">ফলাফল</a>, <a href=\"https://wec.pokerth.net/results/ranking\">র‍্যাংকিং</a>); এবং Monthly Cup, যা প্রতি মাসে হয় (<a href=\"https://monthlycup.pokerth.net/\">পরবর্তী কাপ ও সাম্প্রতিক বিজয়ীরা</a>, <a href=\"https://monthlycup.pokerth.net/registration\">নিবন্ধন</a>)। তারিখ ও নিয়ম প্রতিটি সাইটে এবং <a href=\"https://www.pokerth.net/\">pokerth.net</a> ফোরামে ঘোষণা করা হয়। অংশ নিতে একটি বিনামূল্যের pokerth.net অ্যাকাউন্ট প্রয়োজন।"],
       ["না খেলে কি কোনো গেম দেখা যায়?",
        "হ্যাঁ। দর্শক-অনুমোদিত চলমান গেম লবি থেকে সরাসরি দেখা যায়: আপনি টেবিল ও চ্যাট দেখেন, কিন্তু নিজের তাস লুকোনো থাকে এবং আপনি কোনো পদক্ষেপ নিতে পারেন না। যে টেবিল আগেই শুরু হয়ে গেছে তার আমন্ত্রণ লিঙ্ক সেটিকে দেখার জন্য খুলে দেয়।"],
       ["অ্যাপের ভেতরে কি সহায়তা আছে?",
-       "হ্যাঁ। টেক্কার সহায়তা: টেক্কা, ওয়েব ক্লায়েন্টের মাসকট, আপনি চাইলে চলার পথে প্রতিটি পর্দা ব্যাখ্যা করে। তার মেনুতে সার্চসহ পুরো সহায়তা আছে, আর “এটা কী?”: পর্দার যেকোনো কিছুতে ছোঁয়া দিন, সে বলে দেয় সেটি কী করে।"]
+       "হ্যাঁ। টেক্কার সহায়তা: টেক্কা, ওয়েব ক্লায়েন্টের মাসকট, আপনি চাইলে চলার পথে প্রতিটি পর্দা ব্যাখ্যা করে। তার মেনুতে সার্চসহ পুরো সহায়তা আছে, আর “এটা কী?”: পর্দার যেকোনো কিছুতে ছোঁয়া দিন, সে বলে দেয় সেটি কী করে।"],
+      ["PokerTH কি এখনো সক্রিয়ভাবে উন্নয়ন করা হচ্ছে?",
+       "হ্যাঁ। PokerTH ২০০৬ সাল থেকে মুক্ত সফটওয়্যার হিসেবে তৈরি হয়ে আসছে এবং এখনো রক্ষণাবেক্ষণ করা হয়: ডেস্কটপ ক্লায়েন্ট ও সার্ভার <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>-এ আছে, এই ওয়েব ক্লায়েন্ট নিয়মিত হালনাগাদ হয় (<a href=\"https://github.com/narmod/pokerth-web-client\">সোর্স কোড ও পরিবর্তনের তালিকা</a>), আর সরকারি pokerth.net নেটওয়ার্কে প্রতিদিন খেলা হয়।"]
     ]
   },
   ta: {
     title: "\u0b85\u0b9f\u0bbf\u0b95\u0bcd\u0b95\u0b9f\u0bbf \u0b95\u0bc7\u0b9f\u0bcd\u0b95\u0baa\u0bcd\u0baa\u0b9f\u0bc1\u0bae\u0bcd \u0b95\u0bc7\u0bb3\u0bcd\u0bb5\u0bbf\u0b95\u0bb3\u0bcd \u2014 PokerTH \u0bb5\u0bb2\u0bc8 \u0b95\u0bbf\u0bb3\u0bc8\u0baf\u0ba9\u0bcd\u0b9f\u0bcd",
-    desc: "PokerTH \u0bb5\u0bb2\u0bc8 \u0b95\u0bbf\u0bb3\u0bc8\u0baf\u0ba9\u0bcd\u0b9f\u0bcd \u0baa\u0bb1\u0bcd\u0bb1\u0bbf\u0baf \u0baa\u0bca\u0ba4\u0bc1\u0bb5\u0bbe\u0ba9 \u0b95\u0bc7\u0bb3\u0bcd\u0bb5\u0bbf\u0b95\u0bb3\u0bcd: \u0bb5\u0bbf\u0bb3\u0bae\u0bcd\u0baa\u0bb0\u0bae\u0bbf\u0bb2\u0bcd\u0bb2\u0bbe\u0ba4 \u0b87\u0bb2\u0bb5\u0b9a \u0baa\u0bcb\u0b95\u0bcd\u0b95\u0bb0\u0bcd, \u0b8e\u0ba4\u0bc8\u0baf\u0bc1\u0bae\u0bcd \u0baa\u0ba4\u0bbf\u0bb5\u0bbf\u0bb1\u0b95\u0bcd\u0b95\u0bbe\u0bae\u0bb2\u0bcd \u0b89\u0bb2\u0bbe\u0bb5\u0bbf\u0baf\u0bbf\u0bb2\u0bcd \u0b9f\u0bc6\u0b95\u0bcd\u0b9a\u0bbe\u0bb8\u0bcd \u0bb9\u0bcb\u0bb2\u0bcd\u0b9f\u0bc6\u0bae\u0bcd \u0bb5\u0bbf\u0bb3\u0bc8\u0baf\u0bbe\u0b9f\u0bc1\u0bb5\u0ba4\u0bc1, \u0b95\u0ba3\u0b95\u0bcd\u0b95\u0bc1\u0b95\u0bb3\u0bcd, \u0b95\u0bc8\u0baa\u0bc7\u0b9a\u0bbf, \u0b87\u0ba3\u0bc8\u0baf\u0bae\u0bbf\u0bb2\u0bcd\u0bb2\u0bbe \u0bae\u0bc1\u0bb1\u0bc8, \u0bae\u0bca\u0bb4\u0bbf\u0b95\u0bb3\u0bcd \u0bae\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bcd \u0ba4\u0ba9\u0bbf\u0baf\u0bc1\u0bb0\u0bbf\u0bae\u0bc8.",
+    desc: "PokerTH வலை கிளையன்ட் பற்றிய பொதுவான கேள்விகள்: விளம்பரமும் பதிவிறக்கமும் இல்லாத இலவச போக்கர், விருந்தினராகவோ கணக்கின்றியோ விளையாடுவது, சுட்டி மூலம் நண்பர்களை அழைப்பது, போட்டிகள், கைபேசி, இணையமில்லா முறை, மொழிகள் மற்றும் தனியுரிமை.",
     h1: "PokerTH \u0bb5\u0bb2\u0bc8 \u0b95\u0bbf\u0bb3\u0bc8\u0baf\u0ba9\u0bcd\u0b9f\u0bcd \u2014 \u0b85\u0b9f\u0bbf\u0b95\u0bcd\u0b95\u0b9f\u0bbf \u0b95\u0bc7\u0b9f\u0bcd\u0b95\u0baa\u0bcd\u0baa\u0b9f\u0bc1\u0bae\u0bcd \u0b95\u0bc7\u0bb3\u0bcd\u0bb5\u0bbf\u0b95\u0bb3\u0bcd",
     qa: [
       ["PokerTH இலவசமா?",
@@ -4133,7 +4634,13 @@ var SEO_FAQ_I18N = {
       ["உலாவியில் மற்றவர்களுடன் டெக்சாஸ் ஹோல்டெம் விளையாட முடியுமா?",
        "முடியும். உலகெங்கிலும் உள்ள வீரர்களுடன் விளையாட அதிகாரப்பூர்வ pokerth.net வலையமைப்பில் இணையுங்கள், அல்லது அழைப்புச் சுட்டியை அனுப்பினால் நண்பர்கள் நேராக உங்கள் மேசைக்கே வந்துவிடுவார்கள் — அனைத்தும் உலாவிக்குள்ளேயே."],
       ["விளையாட கணக்கு தேவையா?",
-       "இல்லை. உள்ளூர் / பயிற்சி முறைக்குக் கணக்கு தேவையில்லை; அது இணையமில்லாமலும் இயங்கும். அதிகாரப்பூர்வ pokerth.net வலையமைப்பில் சாதாரண ஆட்டங்களை விருந்தினராக விளையாடலாம்; தரவரிசை ஆட்டங்கள், பதிவு செய்த வீரர்களுக்கான மேசைகள், அரட்டை ஆகியவற்றுக்கு இலவச pokerth.net கணக்கு தேவை."],
+       "இல்லை. உள்ளூர் / பயிற்சி முறைக்குக் கணக்கு தேவையில்லை; அது இணையமில்லாமலும் இயங்கும். அதிகாரப்பூர்வ pokerth.net வலையமைப்பில் விருந்தினராக உள்நுழையுங்கள்: சேவையகம் உங்களுக்கு ஒரு விருந்தினர் புனைப்பெயரை வழங்கும், நீங்கள் உடனே சாதாரண ஆட்டங்களை விளையாடலாம். LAN அல்லது பிரத்யேக சேவையகத்தில் கணக்கே இல்லை — ஒரு புனைப்பெயரைத் தேர்ந்தெடுத்தால் போதும். இவற்றில் எதுவும் மின்னஞ்சல் முகவரியைக் கேட்பதில்லை. தரவரிசை ஆட்டங்கள், பதிவு செய்த வீரர்களுக்கான மேசைகள், அரட்டை ஆகியவற்றுக்கு மட்டுமே இலவச pokerth.net கணக்கு தேவை."],
+      ["நண்பர்களுடன் இணையத்தில் போக்கர் விளையாடுவது எப்படி?",
+       "நுழைவறையில் ஒரு மேசையை உருவாக்குங்கள் — pokerth.net-இலோ, ஏதேனும் LAN அல்லது பிரத்யேக சேவையகத்திலோ — பிறகு காத்திருப்பு அறையில் “நண்பர்களை அழை” என்பதை அழுத்துங்கள். வலை கிளையன்ட் ஒரு அழைப்புச் சுட்டியை உருவாக்கும்; அதை எந்தச் செய்தியிடல் செயலி மூலமும் அனுப்பலாம். உங்கள் நண்பர்கள் அதைத் தங்கள் உலாவியில் — iPhone, Android அல்லது கணினியில் — திறக்கிறார்கள்; எதையும் பதிவிறக்க வேண்டியதில்லை. மேசை தனிப்பட்டதாக இருக்க வேண்டுமெனில் கடவுச்சொல்லை அமையுங்கள்: கடவுச்சொல் ஒருபோதும் சுட்டியில் சேர்க்கப்படுவதில்லை."],
+      ["என் அழைப்புச் சுட்டியை ஒரு நண்பர் திறக்கும்போது என்ன நடக்கும்?",
+       "சுட்டியில் மேசையும் சேவையகமும் அடங்கியுள்ளன. உங்கள் நண்பர் உள்நுழைகிறார் — pokerth.net-இல் விருந்தினராகவோ கணக்குடனோ, LAN அல்லது பிரத்யேக சேவையகத்தில் புனைப்பெயருடன் மட்டுமே — பிறகு நுழைவறையில் தேட வேண்டிய அவசியமின்றி வலை கிளையன்ட் தானாகவே அந்த மேசையில் சேர்கிறது. கடவுச்சொல் பாதுகாப்புள்ள மேசை அதன் கடவுச்சொல்லைக் கேட்கும்; ஏற்கெனவே தொடங்கிய ஆட்டம் பார்வைக்காகத் திறக்கும். அழைப்புச் சுட்டிகள் வலை கிளையன்டின் வசதி; அது இணைக்கக்கூடிய எல்லாச் சேவையகங்களிலும் இவை இயங்கும்."],
+      ["பதிவு செய்யாமல் PokerTH-ஐ முயன்று பார்க்க டெமோ சேவையகம் உள்ளதா?",
+       "ஆம். உள்நுழைவுத் திரையில் LAN / பிரத்யேக சேவையகம் என்பதைத் தேர்ந்தெடுத்து, சேவையகப் பட்டியலில் உள்ள பொது டெமோ சேவையகத்தைத் தேர்வு செய்யுங்கள்: ஏதேனும் ஒரு புனைப்பெயரைத் தட்டச்சு செய்தால் அதன் நுழைவறைக்குள் வந்துவிடுவீர்கள் — பதிவும் இல்லை, மின்னஞ்சல் முகவரியும் இல்லை. பட்டியலில் உள்ள எந்தச் சேவையகங்கள் இயங்குகின்றன, அவற்றில் எத்தனை வீரர்கள் உள்ளனர் என்பதை ஒரு பச்சைப் புள்ளி காட்டும்."],
       ["கைபேசியில் இயங்குமா?",
        "ஆம். வலை கிளையன்ட் ஒரு முற்போக்கு வலைச் செயலி: கணினி, டேப்லெட், கைபேசி என எந்த நவீன உலாவியிலும் இயங்கும்; வழக்கமான செயலியைப் போல நிறுவவும் முடியும் — iPhone, iPad-இல் பகிர் → முகப்புத் திரையில் சேர் மூலம், மற்றவற்றில் உலாவி பட்டியலிலிருந்து அல்லது நிறுவு பொத்தானிலிருந்து. உங்கள் சாதனத்துக்கான படிகளை ஏஸின் உதவி காட்டும்."],
       ["கணினிக்கு எதிராக விளையாட முடியுமா?",
@@ -4149,18 +4656,22 @@ var SEO_FAQ_I18N = {
       ["வலை கிளையன்ட் என்ன தரவுகளைச் சேகரிக்கிறது?",
        "முடிந்தவரை குறைவாகவே: உங்கள் அமைப்புகள் உங்கள் உலாவியிலேயே இருக்கும்; கண்காணிப்போ விளம்பரமோ இல்லை. pokerth.net கணக்குடன் உள்நுழையும்போது, உங்கள் விருப்பங்களும் பயிற்சிக் கோப்பைகளும் அதனுடன் ஒத்திசைக்கப்பட்டு, உங்கள் மற்ற சாதனங்களிலும் தொடரும். விவரங்களுக்குத் தனியுரிமைப் பக்கத்தைப் பாருங்கள்."],
       ["என் சொந்த வழங்கியை இயக்க முடியுமா?",
-       "முடியும். PokerTH-இன் தனி வழங்கியும் இந்த வலை கிளையன்டும் திறந்த மூலமானவை; எனவே உள்ளக வலையமைப்பிலோ இணையத்திலோ உங்கள் சொந்தத் தனிப்பட்ட போக்கர் வழங்கியை இயக்கலாம்."],
+       "முடியும். PokerTH-இன் தனிச் சேவையகமும் இந்த வலை கிளையன்டும் திறந்த மூலமானவை; எனவே உள்ளக வலையமைப்பிலோ (LAN) இணையத்திலோ உங்கள் சொந்தத் தனிப்பட்ட போக்கர் சேவையகத்தை இயக்கலாம். அதை அனைவருக்கும் தெரியும்படி பட்டியலிட, LAN / பிரத்யேக சேவையகம் என்பதைத் தேர்ந்தெடுத்து, சேவையகப் பட்டியலின் கீழே உள்ள “என் சேவையகத்தைப் பரிந்துரை” என்பதை அழுத்துங்கள்: நிர்வாகிகள் ஒப்புதல் அளித்ததும் அது பட்டியலில் தோன்றும். உங்கள் சேவையகம் இணையத்திலிருந்து அணுகக்கூடியதாக இருக்க வேண்டும்."],
       ["தரவரிசை ஆட்டங்களும் பருவங்களும் எப்படி செயல்படுகின்றன?",
        "pokerth.net-இல் ஒரு தரவரிசை ஆட்டத்தில் 10 வீரர்கள் அமர்வார்கள்; மேசை நிரம்பியதும் உடனே தொடங்கும்: ஒவ்வொருவருக்கும் 10,000 சில்லுகள், ஒவ்வொரு 11 கைகளுக்கும் இரட்டிப்பாகும் 50 சிறிய பிளைண்ட், செயல்பட 5 வினாடிகள். 1 முதல் 7 வரையிலான இடங்கள் முறையே 15, 9, 6, 4, 3, 2, 1 புள்ளிகள் பெறும்; உங்கள் மதிப்பெண் என்பது ஒரு ஆட்டத்துக்கான சராசரி, நீங்கள் விளையாடிய ஆட்டங்களின் எண்ணிக்கையால் எடையிடப்படுகிறது; தரவரிசை ஒவ்வொரு காலாண்டிலும் மீண்டும் தொடங்கும். இலவச pokerth.net கணக்கு தேவை."],
+      ["இலவச போக்கர் டோர்னமென்ட்களும் போட்டிகளும் உள்ளனவா?",
+       "ஆம், ஆண்டு முழுவதும், அனைத்தும் இலவசம். ஒவ்வொரு PokerTH ஆட்டமும் ஒரு டோர்னமென்ட்தான்; மேலும் pokerth.net சமூகம் தனித் தரவரிசைகளுடன் வழக்கமான போட்டிகளையும் நடத்துகிறது: BBC — சில நிமிடங்களுக்கு ஒருமுறை பிளைண்டுகள் உயரும் ஆட்டங்கள் (<a href=\"https://bbc.pokerth.net/registration\">நாட்காட்டி</a>, <a href=\"https://bbc.pokerth.net/results\">முடிவுகள்</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">தரவரிசை</a>); WeCup (WEC) — நிதானமான, சமநிலையான வேகத்திலான போட்டிகள் (<a href=\"https://wec.pokerth.net/results\">முடிவுகள்</a>, <a href=\"https://wec.pokerth.net/results/ranking\">தரவரிசை</a>); ஒவ்வொரு மாதமும் நடைபெறும் Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">அடுத்த கோப்பையும் சமீபத்திய வெற்றியாளர்களும்</a>, <a href=\"https://monthlycup.pokerth.net/registration\">பதிவு</a>). தேதிகளும் விதிகளும் ஒவ்வொரு தளத்திலும் <a href=\"https://www.pokerth.net/\">pokerth.net</a> மன்றத்திலும் அறிவிக்கப்படுகின்றன. பங்கேற்க இலவச pokerth.net கணக்கு தேவை."],
       ["விளையாடாமல் ஆட்டத்தைப் பார்க்க முடியுமா?",
        "முடியும். பார்வையாளர்களை அனுமதிக்கும் நடப்பு ஆட்டங்களை நுழைவறையிலிருந்து நேரலையில் பார்க்கலாம்: மேசையையும் அரட்டையையும் காணலாம், ஆனால் சொந்த சீட்டுகள் மறைந்தே இருக்கும்; நீங்கள் எந்த நகர்வும் செய்ய முடியாது. ஏற்கெனவே தொடங்கிய மேசைக்கான அழைப்புச் சுட்டி அதைப் பார்வைக்காகத் திறக்கும்."],
       ["செயலிக்குள் உதவி உள்ளதா?",
-       "ஆம். ஏஸின் உதவி: வலை கிளையன்டின் சின்னமான ஏஸ், நீங்கள் விரும்பினால் ஒவ்வொரு திரையையும் செல்லும் இடத்திலேயே விளக்குகிறார். அவரது பட்டியில் தேடலுடன் முழு உதவியும், „இது என்ன?” வசதியும் உள்ளன: திரையில் எதைத் தொட்டாலும் அது என்ன செய்கிறது என்று அவர் சொல்வார்."]
+       "ஆம். ஏஸின் உதவி: வலை கிளையன்டின் சின்னமான ஏஸ், நீங்கள் விரும்பினால் ஒவ்வொரு திரையையும் செல்லும் இடத்திலேயே விளக்குகிறார். அவரது பட்டியில் தேடலுடன் முழு உதவியும், „இது என்ன?” வசதியும் உள்ளன: திரையில் எதைத் தொட்டாலும் அது என்ன செய்கிறது என்று அவர் சொல்வார்."],
+      ["PokerTH இன்னும் தீவிரமாக உருவாக்கப்படுகிறதா?",
+       "ஆம். PokerTH 2006 முதல் கட்டற்ற மென்பொருளாக உருவாக்கப்பட்டு இன்றும் பராமரிக்கப்படுகிறது: கணினிச் செயலியும் சேவையகமும் <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>-இல் உள்ளன, இந்த வலை கிளையன்ட் தொடர்ந்து புதுப்பிக்கப்படுகிறது (<a href=\"https://github.com/narmod/pokerth-web-client\">மூலக் குறியீடும் மாற்றப் பதிவும்</a>), அதிகாரப்பூர்வ pokerth.net வலையமைப்பில் தினமும் ஆட்டங்கள் நடைபெறுகின்றன."]
     ]
   },
   hr: {
     title: "\u010cesta pitanja \u2014 PokerTH web klijent",
-    desc: "\u010cesta pitanja o PokerTH web klijentu: besplatan poker bez reklama, igranje Texas Hold\u2019ema u pregledniku bez preuzimanja, ra\u010duni, mobitel, izvanmre\u017eni na\u010din rada, jezici i privatnost.",
+    desc: "Česta pitanja o PokerTH web klijentu: besplatan poker bez reklama i preuzimanja, igra kao gost ili bez računa, pozivnice za prijatelje, turniri, mobitel, izvanmrežni rad, jezici i privatnost.",
     h1: "PokerTH web klijent \u2014 \u010cesta pitanja",
     qa: [
       ["Je li PokerTH besplatan?",
@@ -4172,7 +4683,13 @@ var SEO_FAQ_I18N = {
       ["Mogu li u pregledniku igrati Texas Hold’em protiv drugih ljudi?",
        "Možete. Pridružite se službenoj mreži pokerth.net i igrajte protiv igrača iz cijelog svijeta ili pošaljite poveznicu s pozivnicom pa prijatelji dolaze ravno za vaš stol — sve unutar preglednika."],
       ["Treba li mi račun za igranje?",
-       "Ne. Način Lokalno / trening ne treba račun i radi izvanmrežno. Na službenoj mreži pokerth.net možete igrati Normalne igre kao gost; besplatan pokerth.net račun potreban je za Rang igre, stolove samo za registrirane igrače i chat."],
+       "Ne. Način Lokalno / trening ne treba račun i radi izvanmrežno. Na službenoj mreži pokerth.net prijavite se kao gost: poslužitelj vam dodjeljuje gostujući nadimak i odmah možete igrati Normalne igre. Na LAN-u ili namjenskom poslužitelju računa uopće nema — samo odaberete nadimak. Ništa od toga ne traži adresu e-pošte. Besplatan pokerth.net račun potreban je samo za Rang igre, stolove samo za registrirane igrače i chat."],
+      ["Kako igrati poker online s prijateljima?",
+       "Napravite stol u predvorju — na pokerth.net ili na bilo kojem LAN ili namjenskom poslužitelju — i u čekaonici pritisnite „Pozovi prijatelje“. Web klijent izradit će poveznicu s pozivnicom koju možete poslati bilo kojom aplikacijom za poruke. Prijatelji je otvaraju u pregledniku, na iPhoneu, Androidu ili računalu, bez ikakvog preuzimanja. Ako stol treba ostati privatan, postavite lozinku: lozinka nikad nije dio poveznice."],
+      ["Što se događa kad prijatelj otvori moju poveznicu s pozivnicom?",
+       "Poveznica sadrži stol i poslužitelj. Vaš se prijatelj prijavi — kao gost ili računom na pokerth.net, a na LAN-u ili namjenskom poslužitelju samo nadimkom — i web klijent zatim automatski sjeda za stol, bez traženja u predvorju. Stol zaštićen lozinkom traži lozinku; igra koja je već počela otvara se za gledanje. Poveznice s pozivnicom značajka su web klijenta i rade na svakom poslužitelju na koji se on može spojiti."],
+      ["Postoji li demo poslužitelj za isprobavanje PokerTH-a bez registracije?",
+       "Postoji. Na zaslonu za prijavu odaberite LAN / Namjenski poslužitelj i na popisu poslužitelja izaberite javni demo poslužitelj: upišite bilo koji nadimak i već ste u njegovom predvorju — bez registracije, bez adrese e-pošte. Zelena točka pokazuje koji su poslužitelji s popisa na mreži i koliko je igrača na njima."],
       ["Radi li na mobitelu?",
        "Radi. Web klijent je progresivna web aplikacija: radi u svakom modernom pregledniku na računalu, tabletu i mobitelu te se može instalirati kao obična aplikacija — na iPhoneu i iPadu preko Dijeli → Dodaj na početni zaslon, drugdje iz izbornika preglednika ili gumbom za instalaciju. Pomoć asa prikazuje korake za vaš uređaj."],
       ["Mogu li igrati protiv računala?",
@@ -4188,18 +4705,22 @@ var SEO_FAQ_I18N = {
       ["Koje podatke prikuplja web klijent?",
        "Što je manje moguće: postavke ostaju u vašem pregledniku, a praćenja ni oglašavanja nema. Kad se prijavite pokerth.net računom, vaše opcije i trofeji iz treninga sinkroniziraju se s njim pa vas prate na drugim uređajima. Pojedinosti su na stranici o privatnosti."],
       ["Mogu li imati vlastiti poslužitelj?",
-       "Možete. I namjenski PokerTH poslužitelj i ovaj web klijent otvorenog su koda, pa možete voditi vlastiti privatni poker poslužitelj, na lokalnoj mreži ili na internetu."],
+       "Možete. I namjenski PokerTH poslužitelj i ovaj web klijent otvorenog su koda, pa možete voditi vlastiti privatni poker poslužitelj na lokalnoj mreži ili na internetu. Da bi bio na popisu za sve, odaberite LAN / Namjenski poslužitelj, a zatim „Predloži moj poslužitelj“ na dnu popisa poslužitelja: kad ga administratori odobre, pojavit će se na popisu. Poslužitelj mora biti dostupan s interneta."],
       ["Kako funkcioniraju Rang igre i sezone?",
        "Rang igre na pokerth.net okupljaju 10 igrača i počinju čim se stol popuni: po 10.000 žetona, mali blind od 50 koji se udvostručuje svakih 11 ruku i 5 sekundi za potez. Mjesta od 1. do 7. donose 15, 9, 6, 4, 3, 2 i 1 bod; vaš Score je vaš prosjek po igri, ponderiran brojem odigranih igara, a ljestvica kreće ispočetka svakog kvartala. Potreban je besplatan pokerth.net račun."],
+      ["Postoje li besplatni poker turniri i natjecanja?",
+       "Postoje, tijekom cijele godine i svi su besplatni. Svaka PokerTH igra je turnir, a zajednica pokerth.net održava i redovita natjecanja s vlastitim ljestvicama: BBC, igre u kojima blindovi rastu svakih nekoliko minuta (<a href=\"https://bbc.pokerth.net/registration\">kalendar</a>, <a href=\"https://bbc.pokerth.net/results\">rezultati</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">ljestvica</a>); WeCup (WEC), turniri mirnijeg, uravnoteženog tempa (<a href=\"https://wec.pokerth.net/results\">rezultati</a>, <a href=\"https://wec.pokerth.net/results/ranking\">ljestvica</a>); i Monthly Cup, koji se održava svaki mjesec (<a href=\"https://monthlycup.pokerth.net/\">sljedeći kup i posljednji pobjednici</a>, <a href=\"https://monthlycup.pokerth.net/registration\">prijava</a>). Datumi i pravila objavljuju se na svakoj od tih stranica i na forumu <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Za sudjelovanje je potreban besplatan pokerth.net račun."],
       ["Mogu li gledati igru bez igranja?",
        "Možete. Igre u tijeku koje dopuštaju gledatelje mogu se uživo gledati iz predvorja: vidite stol i chat, ali vlastite karte ostaju skrivene i ne možete povlačiti poteze. Poveznica s pozivnicom na stol koji je već počeo otvara ga za gledanje."],
       ["Postoji li pomoć unutar aplikacije?",
-       "Postoji. Pomoć asa: As, maskota web klijenta, po želji objašnjava svaki zaslon dok napredujete. Njegov izbornik sadrži cijelu pomoć s pretraživanjem te „Što je ovo?”: dodirnite bilo što na zaslonu i on kaže čemu služi."]
+       "Postoji. Pomoć asa: As, maskota web klijenta, po želji objašnjava svaki zaslon dok napredujete. Njegov izbornik sadrži cijelu pomoć s pretraživanjem te „Što je ovo?”: dodirnite bilo što na zaslonu i on kaže čemu služi."],
+      ["Razvija li se PokerTH još uvijek?",
+       "Razvija. PokerTH se kao slobodan softver razvija od 2006. i još se održava: stolni klijent i poslužitelj nalaze se na <a href=\"https://github.com/pokerth/pokerth\">GitHubu</a>, ovaj se web klijent neprestano ažurira (<a href=\"https://github.com/narmod/pokerth-web-client\">izvorni kod i popis promjena</a>), a na službenoj mreži pokerth.net igra se svaki dan."]
     ]
   },
   sr: {
     title: "\u0427\u0435\u0441\u0442\u0430 \u043f\u0438\u0442\u0430\u045a\u0430 \u2014 PokerTH \u0432\u0435\u0431 \u043a\u043b\u0438\u0458\u0435\u043d\u0442",
-    desc: "\u0427\u0435\u0441\u0442\u0430 \u043f\u0438\u0442\u0430\u045a\u0430 \u043e PokerTH \u0432\u0435\u0431 \u043a\u043b\u0438\u0458\u0435\u043d\u0442\u0443: \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u0430\u043d \u043f\u043e\u043a\u0435\u0440 \u0431\u0435\u0437 \u0440\u0435\u043a\u043b\u0430\u043c\u0430, \u0438\u0433\u0440\u0430\u045a\u0435 Texas Hold\u2019ema \u0443 \u043f\u0440\u0435\u0433\u043b\u0435\u0434\u0430\u0447\u0443 \u0431\u0435\u0437 \u043f\u0440\u0435\u0443\u0437\u0438\u043c\u0430\u045a\u0430, \u043d\u0430\u043b\u043e\u0437\u0438, \u043c\u043e\u0431\u0438\u043b\u043d\u0438 \u0442\u0435\u043b\u0435\u0444\u043e\u043d, \u0432\u0430\u043d\u043c\u0440\u0435\u0436\u043d\u0438 \u0440\u0435\u0436\u0438\u043c, \u0458\u0435\u0437\u0438\u0446\u0438 \u0438 \u043f\u0440\u0438\u0432\u0430\u0442\u043d\u043e\u0441\u0442.",
+    desc: "Честа питања о PokerTH веб клијенту: бесплатан покер без реклама и преузимања, игра као гост или без налога, позивнице за пријатеље, турнири, мобилни телефон, ванмрежни режим, језици и приватност.",
     h1: "PokerTH \u0432\u0435\u0431 \u043a\u043b\u0438\u0458\u0435\u043d\u0442 \u2014 \u0427\u0435\u0441\u0442\u0430 \u043f\u0438\u0442\u0430\u045a\u0430",
     qa: [
       ["Да ли је PokerTH бесплатан?",
@@ -4211,7 +4732,13 @@ var SEO_FAQ_I18N = {
       ["Могу ли у прегледачу да играм Texas Hold’em против других људи?",
        "Можете. Придружите се званичној мрежи pokerth.net да бисте играли против играча из целог света или пошаљите позивну везу па пријатељи стижу право за ваш сто — све унутар прегледача."],
       ["Треба ли ми налог да бих играо?",
-       "Не. Режим Локално / вежбање не захтева налог и ради ванмрежно. На званичној мрежи pokerth.net можете као гост играти нормалне игре; бесплатан pokerth.net налог потребан је за рангиране игре, столове само за регистроване играче и ћаскање."],
+       "Не. Режим Локално / вежбање не захтева налог и ради ванмрежно. На званичној мрежи pokerth.net пријавите се као гост: сервер вам додељује гостујући надимак и одмах можете да играте нормалне игре. На LAN-у или наменском серверу налога уопште нема — само изаберете надимак. Ништа од тога не тражи адресу е-поште. Бесплатан pokerth.net налог потребан је само за рангиране игре, столове само за регистроване играче и ћаскање."],
+      ["Како играти покер онлајн са пријатељима?",
+       "Направите сто у предворју — на pokerth.net или на било ком LAN или наменском серверу — и у чекаоници притисните „Позови пријатеље“. Веб клијент прави позивну везу коју можете послати било којом апликацијом за поруке. Пријатељи је отварају у прегледачу, на iPhone-у, Android-у или рачунару, без икаквог преузимања. Ако сто треба да остане приватан, поставите лозинку: лозинка никад није део везе."],
+      ["Шта се дешава када пријатељ отвори моју позивну везу?",
+       "Веза садржи сто и сервер. Ваш пријатељ се пријави — као гост или налогом на pokerth.net, а на LAN-у или наменском серверу само надимком — и веб клијент затим аутоматски седа за сто, без тражења у предворју. Сто заштићен лозинком тражи лозинку; игра која је већ почела отвара се за гледање. Позивне везе су функција веб клијента и раде на сваком серверу на који он може да се повеже."],
+      ["Постоји ли демо сервер за испробавање PokerTH-а без регистрације?",
+       "Постоји. На екрану за пријаву изаберите LAN / Наменски сервер и на листи сервера одаберите јавни демо сервер: упишите било који надимак и већ сте у његовом предворју — без регистрације, без адресе е-поште. Зелена тачка показује који су сервери са листе на мрежи и колико је играча на њима."],
       ["Ради ли на мобилном телефону?",
        "Ради. Веб клијент је прогресивна веб апликација: ради у сваком савременом прегледачу на рачунару, таблету и телефону и може да се инсталира као обична апликација — на iPhone-у и iPad-у преко Дели → Додај на почетни екран, другде из менија прегледача или дугметом за инсталацију. Помоћ кеца приказује кораке за ваш уређај."],
       ["Могу ли да играм против рачунара?",
@@ -4227,18 +4754,22 @@ var SEO_FAQ_I18N = {
       ["Које податке прикупља веб клијент?",
        "Што је мање могуће: подешавања остају у вашем прегледачу, а праћења ни оглашавања нема. Када се пријавите pokerth.net налогом, ваше опције и пехари из вежбања синхронизују се с њим па вас прате на другим уређајима. Појединости су на страници о приватности."],
       ["Могу ли да држим сопствени сервер?",
-       "Можете. И наменски PokerTH сервер и овај веб клијент отвореног су кода, па можете водити сопствени приватни покер сервер, на локалној мрежи или на интернету."],
+       "Можете. И наменски PokerTH сервер и овај веб клијент отвореног су кода, па можете водити сопствени приватни покер сервер на локалној мрежи или на интернету. Да би био на листи за све, изаберите LAN / Наменски сервер, а затим „Предложи мој сервер“ на дну листе сервера: када га администратори одобре, појављује се на листи. Сервер мора бити доступан са интернета."],
       ["Како функционишу рангиране игре и сезоне?",
        "Рангиране игре на pokerth.net окупљају 10 играча и почињу чим се сто попуни: свако добија 10.000 жетона, мали блинд је 50 и удвостручује се на сваких 11 руку, а за потез имате 5 секунди. Места од 1. до 7. носе 15, 9, 6, 4, 3, 2 и 1 бод; ваш Резултат је просек по игри, пондерисан бројем одиграних игара, а ранг-листа почиње изнова сваког квартала. Потребан је бесплатан pokerth.net налог."],
+      ["Постоје ли бесплатни покер турнири и такмичења?",
+       "Постоје, током целе године и сви су бесплатни. Свака PokerTH игра је турнир, а заједница pokerth.net одржава и редовна такмичења са сопственим ранг-листама: BBC, игре у којима блиндови расту на сваких неколико минута (<a href=\"https://bbc.pokerth.net/registration\">календар</a>, <a href=\"https://bbc.pokerth.net/results\">резултати</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">ранг-листа</a>); WeCup (WEC), турнири мирнијег, уравнотеженог темпа (<a href=\"https://wec.pokerth.net/results\">резултати</a>, <a href=\"https://wec.pokerth.net/results/ranking\">ранг-листа</a>); и Monthly Cup, који се одржава сваког месеца (<a href=\"https://monthlycup.pokerth.net/\">следећи куп и последњи победници</a>, <a href=\"https://monthlycup.pokerth.net/registration\">пријава</a>). Датуми и правила објављују се на свакој од тих страница и на форуму <a href=\"https://www.pokerth.net/\">pokerth.net</a>. За учешће је потребан бесплатан pokerth.net налог."],
       ["Могу ли да гледам игру а да не играм?",
        "Можете. Игре у току које дозвољавају гледаоце могу се пратити уживо из предворја: видите сто и ћаскање, али сопствене карте остају скривене и не можете да играте. Позивна веза до стола који је већ почео отвара га за гледање."],
       ["Постоји ли помоћ унутар апликације?",
-       "Постоји. Помоћ кеца: Кец, маскота веб клијента, објашњава сваки екран током игре ако то желите. Његов мени садржи комплетну помоћ с претрагом и „Шта је ово?”: додирните било шта на екрану и он каже чему служи."]
+       "Постоји. Помоћ кеца: Кец, маскота веб клијента, објашњава сваки екран током игре ако то желите. Његов мени садржи комплетну помоћ с претрагом и „Шта је ово?”: додирните било шта на екрану и он каже чему служи."],
+      ["Да ли се PokerTH још увек развија?",
+       "Развија се. PokerTH се као слободан софтвер развија од 2006. године и још увек се одржава: стони клијент и сервер налазе се на <a href=\"https://github.com/pokerth/pokerth\">GitHub-у</a>, овај веб клијент се стално ажурира (<a href=\"https://github.com/narmod/pokerth-web-client\">изворни код и списак измена</a>), а на званичној мрежи pokerth.net игра се сваког дана."]
     ]
   },
   lt: {
     title: "Da\u017eni klausimai \u2014 PokerTH interneto klientas",
-    desc: "Da\u017eni klausimai apie PokerTH interneto klient\u0105: nemokamas pokeris be reklam\u0173, Texas Hold\u2019em nar\u0161ykl\u0117je nieko neatsisiun\u010diant, paskyros, telefonas, neprisijungus veikianti veiksena, kalbos ir privatumas.",
+    desc: "Dažni klausimai apie PokerTH interneto klientą: nemokamas pokeris be reklamų ir atsisiuntimo, žaidimas svečio teisėmis ar be paskyros, draugų kvietimas nuoroda, turnyrai, telefonas, neprisijungus, kalbos ir privatumas.",
     h1: "PokerTH interneto klientas \u2014 Da\u017eni klausimai",
     qa: [
       ["Ar PokerTH nemokamas?",
@@ -4250,7 +4781,13 @@ var SEO_FAQ_I18N = {
       ["Ar galiu naršyklėje žaisti Texas Hold’em prieš kitus žmones?",
        "Taip. Prisijunkite prie oficialaus tinklo pokerth.net ir žaiskite su žaidėjais iš viso pasaulio arba išsiųskite kvietimo nuorodą, kad draugai atsidurtų tiesiai prie jūsų stalo — viskas naršyklėje."],
       ["Ar norint žaisti reikia paskyros?",
-       "Ne. Režimui Vietinis / treniruotė paskyros nereikia, jis veikia ir neprisijungus. Oficialiame tinkle pokerth.net galite kaip svečias žaisti Įprastus žaidimus; nemokamos pokerth.net paskyros reikia Reitinguojamiems žaidimams, tik registruotiems skirtiems stalams ir pokalbiui."],
+       "Ne. Režimui Vietinis / treniruotė paskyros nereikia, jis veikia ir neprisijungus. Oficialiame tinkle pokerth.net prisijungiate kaip svečias: serveris suteikia jums svečio slapyvardį, ir galite iškart žaisti Įprastus žaidimus. LAN tinkle ar skirtajame serveryje paskyrų išvis nėra — tiesiog pasirenkate slapyvardį. Nė vienas iš jų neprašo el. pašto adreso. Nemokamos pokerth.net paskyros reikia tik Reitinguojamiems žaidimams, tik registruotiems skirtiems stalams ir pokalbiui."],
+      ["Kaip žaisti pokerį internetu su draugais?",
+       "Sukurkite stalą vestibiulyje — pokerth.net arba bet kuriame LAN ar skirtajame serveryje — ir laukiamajame paspauskite „Pakviesti draugus“. Interneto klientas sukuria kvietimo nuorodą, kurią galite išsiųsti bet kuria pokalbių programėle. Draugai atidaro ją savo naršyklėje — iPhone, Android ar kompiuteryje — nieko neatsisiųsdami. Nustatykite slaptažodį, jei stalas turi likti privatus: slaptažodis niekada nebūna nuorodos dalis."],
+      ["Kas nutinka, kai draugas atidaro mano kvietimo nuorodą?",
+       "Nuorodoje nurodytas stalas ir serveris. Jūsų draugas prisijungia — pokerth.net kaip svečias arba su paskyra, LAN ar skirtajame serveryje tik su slapyvardžiu — ir interneto klientas tada automatiškai prisijungia prie stalo, jo nereikia ieškoti vestibiulyje. Slaptažodžiu apsaugotas stalas paprašo slaptažodžio; jau prasidėjęs žaidimas atsidaro stebėjimui. Kvietimo nuorodos yra interneto kliento funkcija ir veikia kiekviename serveryje, prie kurio jis gali prisijungti."],
+      ["Ar yra demonstracinis serveris, kuriame galima išbandyti PokerTH neužsiregistravus?",
+       "Taip. Prisijungimo ekrane pasirinkite LAN / Skirtasis serveris ir serverių sąraše pasirinkite viešą demonstracinį serverį: įveskite bet kokį slapyvardį ir jau esate jo vestibiulyje — jokios registracijos, jokio el. pašto adreso. Žalias taškas rodo, kurie sąrašo serveriai veikia ir kiek juose yra žaidėjų."],
       ["Ar veikia telefone?",
        "Taip. Interneto klientas yra progresyvioji saityno programėlė: ji veikia bet kurioje šiuolaikinėje naršyklėje kompiuteryje, planšetėje ar telefone ir gali būti įdiegta kaip įprasta programėlė — iPhone ir iPad per Bendrinti → Pridėti į pradžios ekraną, kitur iš naršyklės meniu arba diegimo mygtuko. Tūzo pagalba parodo žingsnius jūsų įrenginiui."],
       ["Ar galiu žaisti prieš kompiuterį?",
@@ -4266,18 +4803,22 @@ var SEO_FAQ_I18N = {
       ["Kokius duomenis renka interneto klientas?",
        "Kuo mažiau: nuostatos lieka jūsų naršyklėje, jokio sekimo ar reklamos nenaudojama. Prisijungus su pokerth.net paskyra, jūsų nuostatos ir treniruotės trofėjai sinchronizuojami su ja, todėl juos matote ir kituose savo įrenginiuose. Išsamiau — privatumo puslapyje."],
       ["Ar galiu turėti savo serverį?",
-       "Taip. Ir specialus PokerTH serveris, ir šis interneto klientas yra atvirojo kodo, tad galite išlaikyti savo privatų pokerio serverį vietiniame tinkle arba internete."],
+       "Taip. Ir specialus PokerTH serveris, ir šis interneto klientas yra atvirojo kodo, tad galite išlaikyti savo privatų pokerio serverį vietiniame tinkle arba internete. Kad jis būtų rodomas visiems, pasirinkite LAN / Skirtasis serveris, tada serverių sąrašo apačioje — „Pasiūlyti savo serverį“: kai administratoriai jį patvirtins, jis atsiras sąraše. Serveris turi būti pasiekiamas iš interneto."],
       ["Kaip veikia Reitinguojami žaidimai ir sezonai?",
        "Reitinguojami žaidimai pokerth.net tinkle sodina 10 žaidėjų ir prasideda, vos stalas užpildomas: kiekvienam po 10 000 žetonų, mažasis aklasis 50, kuris dvigubėja kas 11 išdalijimų, ir 5 sekundės veiksmui. Nuo 1 iki 7 vietos gauna 15, 9, 6, 4, 3, 2 ir 1 tašką; jūsų rezultatas — žaidimų vidurkis, pasvertas pagal sužaistų žaidimų skaičių, o reitingas kas ketvirtį pradedamas iš naujo. Reikia nemokamos pokerth.net paskyros."],
+      ["Ar yra nemokamų pokerio turnyrų ir varžybų?",
+       "Taip, ištisus metus, ir visi nemokami. Kiekvienas PokerTH žaidimas yra turnyras, o pokerth.net bendruomenė dar rengia reguliarias varžybas su savais reitingais: BBC — žaidimai, kuriuose aklieji statymai didėja kas kelias minutes (<a href=\"https://bbc.pokerth.net/registration\">kalendorius</a>, <a href=\"https://bbc.pokerth.net/results\">rezultatai</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">reitingas</a>); WeCup (WEC) — ramesnio, subalansuoto tempo turnyrai (<a href=\"https://wec.pokerth.net/results\">rezultatai</a>, <a href=\"https://wec.pokerth.net/results/ranking\">reitingas</a>); ir kas mėnesį vykstanti Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">kita taurė ir naujausi nugalėtojai</a>, <a href=\"https://monthlycup.pokerth.net/registration\">registracija</a>). Datos ir taisyklės skelbiamos kiekvienoje svetainėje ir <a href=\"https://www.pokerth.net/\">pokerth.net</a> forume. Norint dalyvauti, reikia nemokamos pokerth.net paskyros."],
       ["Ar galiu stebėti žaidimą nežaisdamas?",
        "Taip. Vykstančius žaidimus, kuriuose leidžiama stebėti, galima žiūrėti tiesiogiai iš vestibiulio: matote stalą ir pokalbį, bet uždaros kortos lieka paslėptos, ir veikti negalite. Kvietimo nuoroda į jau prasidėjusį stalą atveria jį stebėjimui."],
       ["Ar programėlėje yra pagalba?",
-       "Taip. Tūzo pagalba: Tūzas, interneto kliento talismanas, jei norite, paaiškina kiekvieną ekraną žaidimo metu. Jo meniu yra visa pagalba su paieška ir „Kas tai?“: bakstelėkite bet ką ekrane, ir jis pasakys, ką tai daro."]
+       "Taip. Tūzo pagalba: Tūzas, interneto kliento talismanas, jei norite, paaiškina kiekvieną ekraną žaidimo metu. Jo meniu yra visa pagalba su paieška ir „Kas tai?“: bakstelėkite bet ką ekrane, ir jis pasakys, ką tai daro."],
+      ["Ar PokerTH vis dar aktyviai kuriamas?",
+       "Taip. PokerTH kuriamas kaip laisvoji programinė įranga nuo 2006 m. ir tebėra prižiūrimas: darbalaukio klientas ir serveris yra <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> platformoje, šis interneto klientas nuolat atnaujinamas (<a href=\"https://github.com/narmod/pokerth-web-client\">išeitinis kodas ir pakeitimų žurnalas</a>), o oficialiame pokerth.net tinkle žaidžiama kasdien."]
     ]
   },
   ca: {
     title: "Preguntes freq\u00fcents \u2014 Client web de PokerTH",
-    desc: "Preguntes freq\u00fcents sobre el client web de PokerTH: p\u00f2quer gratu\u00eft sense publicitat, jugar a Texas Hold\u2019em al navegador sense baixar res, comptes, m\u00f2bil, mode fora de l\u00ednia, lleng\u00fces i privadesa.",
+    desc: "Preguntes freqüents sobre el client web de PokerTH: pòquer gratuït sense publicitat ni baixades, jugar com a convidat o sense compte, convidar amics amb un enllaç, tornejos, mòbil, mode fora de línia, llengües i privadesa.",
     h1: "Client web de PokerTH \u2014 Preguntes freq\u00fcents",
     qa: [
       ["El PokerTH és gratuït?",
@@ -4289,7 +4830,13 @@ var SEO_FAQ_I18N = {
       ["Puc jugar a Texas Hold’em contra altres persones des del navegador?",
        "Sí. Uneix-te a la xarxa oficial pokerth.net per jugar contra jugadors d’arreu del món, o envia un enllaç d’invitació perquè els amics arribin directament a la teva taula: tot dins el navegador."],
       ["Cal un compte per jugar?",
-       "No. El mode Local / entrenament no necessita cap compte i funciona fora de línia. A la xarxa oficial pokerth.net pots jugar partides normals com a convidat; cal un compte pokerth.net gratuït per a les partides de classificació, les taules només per a jugadors registrats i el xat."],
+       "No. El mode Local / entrenament no necessita cap compte i funciona fora de línia. A la xarxa oficial pokerth.net, entra com a convidat: el servidor et dona un sobrenom de convidat i pots jugar partides normals de seguida. En una LAN o en un servidor dedicat no hi ha cap compte: només tries un sobrenom. Cap d’aquestes opcions no et demana una adreça electrònica. Un compte pokerth.net gratuït només cal per a les partides de classificació, les taules només per a jugadors registrats i el xat."],
+      ["Com puc jugar a pòquer en línia amb amics?",
+       "Crea una taula al vestíbul —a pokerth.net o a qualsevol servidor LAN o dedicat— i prem «Convida amics» a la sala d’espera. El client web genera un enllaç d’invitació que pots enviar per qualsevol aplicació de missatgeria. Els teus amics l’obren al navegador, a l’iPhone, a l’Android o a l’ordinador, sense baixar res. Posa-hi una contrasenya si la taula ha de ser privada: la contrasenya mai no forma part de l’enllaç."],
+      ["Què passa quan un amic obre el meu enllaç d’invitació?",
+       "L’enllaç porta la taula i el servidor. El teu amic entra —com a convidat o amb un compte a pokerth.net, només amb un sobrenom en una LAN o un servidor dedicat— i el client web s’uneix a la taula automàticament, sense haver-la de buscar al vestíbul. Una taula protegida amb contrasenya en demana la contrasenya; una partida que ja ha començat s’obre per mirar-la. Els enllaços d’invitació són una funció del client web i funcionen a tots els servidors als quals es pot connectar."],
+      ["Hi ha un servidor de demostració per provar el PokerTH sense registrar-se?",
+       "Sí. A la pantalla d’inici de sessió tria LAN / Servidor dedicat i selecciona el servidor públic de demostració a la Llista de servidors: escriu qualsevol sobrenom i ja ets al seu vestíbul, sense registre ni adreça electrònica. Un punt verd indica quins servidors de la llista estan en línia i quants jugadors hi ha."],
       ["Funciona al mòbil?",
        "Sí. El client web és una aplicació web progressiva: funciona en qualsevol navegador modern a l’ordinador, la tauleta o el telèfon, i es pot instal·lar com una aplicació nativa — a l’iPhone i l’iPad amb Comparteix → Afegeix a la pantalla d’inici, a la resta des del menú del navegador o amb el botó d’instal·lació. L’Ajuda de l’As mostra els passos per al teu dispositiu."],
       ["Puc jugar contra l’ordinador?",
@@ -4305,18 +4852,22 @@ var SEO_FAQ_I18N = {
       ["Quines dades recull el client web?",
        "Les mínimes possibles: la teva configuració es queda al teu navegador i no s’hi fa cap seguiment ni publicitat. Quan inicies la sessió amb un compte pokerth.net, les teves opcions i els trofeus d’entrenament se sincronitzen amb aquest compte perquè et segueixin als altres dispositius. Els detalls són a la pàgina de privadesa."],
       ["Puc allotjar el meu propi servidor?",
-       "Sí. Tant el servidor dedicat del PokerTH com aquest client web són de codi obert, així que pots mantenir el teu servidor privat de pòquer, en una xarxa local o a internet."],
+       "Sí. Tant el servidor dedicat del PokerTH com aquest client web són de codi obert, així que pots mantenir el teu propi servidor privat de pòquer, en una LAN o a internet. Perquè aparegui a la llista de tothom, tria LAN / Servidor dedicat i després «Proposa el meu servidor» a la part inferior de la Llista de servidors: un cop els administradors l’aprovin, apareixerà a la llista. El servidor ha de ser accessible des d’internet."],
       ["Com funcionen les partides de classificació i les temporades?",
        "Les partides de classificació de pokerth.net asseuen 10 jugadors i comencen tan bon punt s’omple la taula: 10.000 fitxes cadascun, una cega petita de 50 que es duplica cada 11 mans i 5 segons per actuar. Les places de la 1 a la 7 puntuen 15, 9, 6, 4, 3, 2 i 1 punts; la teva puntuació és la mitjana per partida, ponderada pel nombre de partides jugades, i la classificació torna a començar cada trimestre. Cal un compte pokerth.net gratuït."],
+      ["Hi ha tornejos i competicions de pòquer gratuïts?",
+       "Sí, durant tot l’any, i tots gratuïts. Cada partida del PokerTH és un torneig, i la comunitat de pokerth.net també organitza competicions regulars amb classificacions pròpies: la BBC, partides en què les blinds pugen cada pocs minuts (<a href=\"https://bbc.pokerth.net/registration\">calendari</a>, <a href=\"https://bbc.pokerth.net/results\">resultats</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">classificació</a>); la WeCup (WEC), tornejos a un ritme més tranquil i equilibrat (<a href=\"https://wec.pokerth.net/results\">resultats</a>, <a href=\"https://wec.pokerth.net/results/ranking\">classificació</a>); i la Monthly Cup, que se celebra cada mes (<a href=\"https://monthlycup.pokerth.net/\">propera copa i darrers guanyadors</a>, <a href=\"https://monthlycup.pokerth.net/registration\">inscripció</a>). Les dates i les regles s’anuncien a cada lloc i al fòrum de <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Per participar-hi cal un compte pokerth.net gratuït."],
       ["Puc mirar una partida sense jugar?",
        "Sí. Les partides en curs que admeten espectadors es poden mirar en directe des del vestíbul: veus la taula i el xat, però les cartes pròpies queden amagades i no pots actuar. Un enllaç d’invitació a una taula que ja ha començat l’obre per mirar-la."],
       ["Hi ha ajuda dins de l’aplicació?",
-       "Sí. L’Ajuda de l’As: l’As, la mascota del client web, t’explica cada pantalla a mesura que avances, si vols. El seu menú conté tota l’ajuda amb un cercador, i «Què és això?»: toca qualsevol cosa a la pantalla i et diu què fa."]
+       "Sí. L’Ajuda de l’As: l’As, la mascota del client web, t’explica cada pantalla a mesura que avances, si vols. El seu menú conté tota l’ajuda amb un cercador, i «Què és això?»: toca qualsevol cosa a la pantalla i et diu què fa."],
+      ["El PokerTH encara es desenvolupa activament?",
+       "Sí. El PokerTH es desenvolupa com a programari lliure des del 2006 i encara es manté: el client d’escriptori i el servidor són a <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, aquest client web s’actualitza contínuament (<a href=\"https://github.com/narmod/pokerth-web-client\">codi font i registre de canvis</a>), i cada dia es juguen partides a la xarxa oficial pokerth.net."]
     ]
   },
   gl: {
     title: "Preguntas frecuentes \u2014 Cliente web de PokerTH",
-    desc: "Preguntas frecuentes sobre o cliente web de PokerTH: p\u00f3ker de balde sen publicidade, xogar ao Texas Hold\u2019em no navegador sen descargar nada, contas, m\u00f3bil, modo sen conexi\u00f3n, linguas e privacidade.",
+    desc: "Preguntas frecuentes sobre o cliente web de PokerTH: póker de balde sen publicidade nin descargas, xogar como convidado ou sen conta, convidar amigos cunha ligazón, torneos, móbil, modo sen conexión, linguas e privacidade.",
     h1: "Cliente web de PokerTH \u2014 Preguntas frecuentes",
     qa: [
       ["PokerTH é de balde?",
@@ -4328,7 +4879,13 @@ var SEO_FAQ_I18N = {
       ["Podo xogar ao Texas Hold’em contra outras persoas dende o navegador?",
        "Si. Únete á rede oficial pokerth.net para xogar contra xogadores de todo o mundo, ou envía unha ligazón de convite para que os amigos cheguen directamente á túa mesa: todo dentro do navegador."],
       ["Cómpre unha conta para xogar?",
-       "Non. O modo Local / adestramento non precisa conta e funciona sen conexión. Na rede oficial pokerth.net podes xogar partidas Normal como convidado; cómpre unha conta pokerth.net gratuíta para as partidas de clasificación, as mesas só para rexistrados e o chat."],
+       "Non. O modo Local / adestramento non precisa conta e funciona sen conexión. Na rede oficial pokerth.net, entra como convidado: o servidor dáche un alcume de convidado e podes xogar partidas Normal de inmediato. Nunha LAN ou nun servidor dedicado non hai conta ningunha: só escolles un alcume. Ningunha destas opcións che pide un enderezo de correo electrónico. Unha conta pokerth.net gratuíta só cómpre para as partidas de clasificación, as mesas só para rexistrados e o chat."],
+      ["Como xogo ao póker en liña cos amigos?",
+       "Crea unha mesa no vestíbulo —en pokerth.net ou en calquera servidor LAN ou dedicado— e preme «Convidar amigos» na sala de espera. O cliente web xera unha ligazón de convite que podes enviar por calquera aplicación de mensaxería. Os teus amigos ábrena no seu navegador, en iPhone, Android ou nun computador, sen descargar nada. Pon un contrasinal se a mesa debe ser privada: o contrasinal nunca forma parte da ligazón."],
+      ["Que pasa cando un amigo abre a miña ligazón de convite?",
+       "A ligazón leva a mesa e o servidor. O teu amigo entra —como convidado ou cunha conta en pokerth.net, só cun alcume nunha LAN ou nun servidor dedicado— e o cliente web únese á mesa automaticamente, sen ter que buscala no vestíbulo. Unha mesa protexida con contrasinal pide o seu contrasinal; unha partida que xa comezou ábrese para vela. As ligazóns de convite son unha función do cliente web e funcionan en todos os servidores aos que se pode conectar."],
+      ["Hai un servidor de demostración para probar PokerTH sen rexistrarse?",
+       "Si. Na pantalla de inicio de sesión escolle LAN / Servidor dedicado e selecciona o servidor público de demostración na Lista de servidores: escribe calquera alcume e xa estás no seu vestíbulo, sen rexistro nin enderezo de correo electrónico. Un punto verde indica que servidores da lista están en liña e cantos xogadores hai neles."],
       ["Funciona no móbil?",
        "Si. O cliente web é unha aplicación web progresiva: funciona en calquera navegador moderno no computador, na tableta ou no teléfono, e pode instalarse como unha aplicación nativa: en iPhone e iPad con Compartir → Engadir á pantalla de inicio, noutros dispositivos desde o menú do navegador ou co botón de instalación. A Axuda do Ás amosa os pasos para o teu dispositivo."],
       ["Podo xogar contra o computador?",
@@ -4344,18 +4901,22 @@ var SEO_FAQ_I18N = {
       ["Que datos recolle o cliente web?",
        "Os menos posibles: os teus axustes quedan no teu navegador e non se emprega ningún seguimento nin publicidade. Cando inicias sesión cunha conta pokerth.net, as túas opcións e os teus trofeos de adestramento sincronízanse con ela para que te acompañen aos teus outros dispositivos. Os detalles están na páxina de privacidade."],
       ["Podo aloxar o meu propio servidor?",
-       "Si. Tanto o servidor dedicado de PokerTH como este cliente web son de código aberto, así que podes manter o teu propio servidor privado de póker, nunha rede local ou en internet."],
+       "Si. Tanto o servidor dedicado de PokerTH como este cliente web son de código aberto, así que podes manter o teu propio servidor privado de póker, nunha LAN ou en internet. Para que apareza na lista de todo o mundo, escolle LAN / Servidor dedicado e despois «Propoñer o meu servidor» na parte inferior da Lista de servidores: unha vez que os administradores o aproben, aparecerá na lista. O servidor ten que ser accesible desde internet."],
       ["Como funcionan as partidas de clasificación e as tempadas?",
        "As partidas de clasificación en pokerth.net reúnen 10 xogadores e comezan en canto a mesa está chea: 10.000 fichas cada un, unha cega pequena de 50 que se dobra cada 11 mans e 5 segundos para actuar. Os postos do 1 ao 7 puntúan 15, 9, 6, 4, 3, 2 e 1 puntos; a túa Puntuación é a túa media por partida, ponderada polo número de partidas xogadas, e a clasificación comeza de novo cada trimestre. Cómpre unha conta pokerth.net gratuíta."],
+      ["Hai torneos e competicións de póker de balde?",
+       "Si, todo o ano, e todos de balde. Cada partida de PokerTH é un torneo, e a comunidade de pokerth.net tamén organiza competicións regulares coas súas propias clasificacións: a BBC, partidas nas que as blinds soben cada poucos minutos (<a href=\"https://bbc.pokerth.net/registration\">calendario</a>, <a href=\"https://bbc.pokerth.net/results\">resultados</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">clasificación</a>); a WeCup (WEC), torneos a un ritmo máis tranquilo e equilibrado (<a href=\"https://wec.pokerth.net/results\">resultados</a>, <a href=\"https://wec.pokerth.net/results/ranking\">clasificación</a>); e a Monthly Cup, que se celebra cada mes (<a href=\"https://monthlycup.pokerth.net/\">próxima copa e últimos gañadores</a>, <a href=\"https://monthlycup.pokerth.net/registration\">inscrición</a>). As datas e as regras anúncianse en cada sitio e no foro de <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Para participar cómpre unha conta pokerth.net gratuíta."],
       ["Podo ver unha partida sen xogar?",
        "Si. As partidas en curso que permiten espectadores pódense ver en directo desde o vestíbulo: ves a mesa e o chat, pero as cartas propias seguen ocultas e non podes actuar. Unha ligazón de convite a unha mesa que xa comezou ábrea para velo."],
       ["Hai axuda dentro da aplicación?",
-       "Si. A Axuda do Ás: o Ás, a mascota do cliente web, explica cada pantalla a medida que avanzas, se queres. O seu menú contén toda a axuda cunha busca, e «Que é isto?»: toca calquera cousa da pantalla e di para que serve."]
+       "Si. A Axuda do Ás: o Ás, a mascota do cliente web, explica cada pantalla a medida que avanzas, se queres. O seu menú contén toda a axuda cunha busca, e «Que é isto?»: toca calquera cousa da pantalla e di para que serve."],
+      ["Segue desenvolvéndose activamente PokerTH?",
+       "Si. PokerTH desenvólvese como software libre desde 2006 e segue mantido: o cliente de escritorio e o servidor están en <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, este cliente web actualízase de xeito continuo (<a href=\"https://github.com/narmod/pokerth-web-client\">código fonte e rexistro de cambios</a>), e cada día xóganse partidas na rede oficial pokerth.net."]
     ]
   },
   af: {
     title: "Gereelde vrae \u2014 PokerTH-webkli\u00ebnt",
-    desc: "Gereelde vrae oor die PokerTH-webkli\u00ebnt: gratis poker sonder advertensies, speel Texas Hold\u2019em in jou blaaier sonder om iets af te laai, rekeninge, selfoon, aflynmodus, tale en privaatheid.",
+    desc: "Gereelde vrae oor die PokerTH-webkliënt: gratis poker sonder advertensies en sonder aflaai, speel as gas of sonder enige rekening, nooi vriende met ’n skakel, toernooie, selfoon, aflynmodus, tale en privaatheid.",
     h1: "PokerTH-webkli\u00ebnt \u2014 Gereelde vrae",
     qa: [
       ["Is PokerTH gratis?",
@@ -4367,7 +4928,13 @@ var SEO_FAQ_I18N = {
       ["Kan ek Texas Hold’em teen ander mense in die blaaier speel?",
        "Ja. Sluit aan by die amptelike netwerk pokerth.net om teen spelers wêreldwyd te speel, of stuur ’n uitnodigingskakel sodat vriende reguit by jou tafel beland — alles binne die blaaier."],
       ["Het ek ’n rekening nodig om te speel?",
-       "Nee. Die modus Plaaslik / oefening het geen rekening nodig nie en werk vanlyn. Op die amptelike netwerk pokerth.net kan jy Normaal-spele as gas speel; ’n gratis pokerth.net-rekening is nodig vir Ranglysspele, tafels net vir geregistreerde spelers en die klets."],
+       "Nee. Die modus Plaaslik / oefening het geen rekening nodig nie en werk vanlyn. Op die amptelike netwerk pokerth.net meld jy as gas aan: die bediener gee jou ’n gasbynaam en jy kan dadelik Normaal-spele speel. Op ’n LAN of ’n toegewyde bediener is daar glad nie ’n rekening nie — jy kies net ’n bynaam. Nie een hiervan vra vir ’n e-posadres nie. ’n Gratis pokerth.net-rekening is net nodig vir Ranglysspele, tafels net vir geregistreerde spelers en die klets."],
+      ["Hoe speel ek aanlyn poker met vriende?",
+       "Skep ’n tafel in die voorportaal — op pokerth.net of op enige LAN- of toegewyde bediener — en druk „Nooi vriende” in die wagkamer. Die webkliënt maak ’n uitnodigingskakel wat jy met enige boodskaptoepassing kan stuur. Jou vriende maak dit in hul blaaier oop, op iPhone, Android of ’n rekenaar, sonder om iets af te laai. Stel ’n wagwoord as die tafel privaat moet bly: die wagwoord is nooit deel van die skakel nie."],
+      ["Wat gebeur wanneer ’n vriend my uitnodigingskakel oopmaak?",
+       "Die skakel bevat die tafel en die bediener. Jou vriend meld aan — as gas of met ’n rekening op pokerth.net, met net ’n bynaam op ’n LAN- of toegewyde bediener — en die webkliënt sluit dan outomaties by die tafel aan, sonder dat hy dit in die voorportaal hoef te soek. ’n Tafel met ’n wagwoord vra vir die wagwoord; ’n spel wat reeds begin het, maak oop om te kyk. Uitnodigingskakels is ’n funksie van die webkliënt en werk op elke bediener waaraan dit kan koppel."],
+      ["Is daar ’n demobediener om PokerTH te probeer sonder om te registreer?",
+       "Ja. Kies op die aanmeldskerm LAN / Toegewyde bediener en kies die openbare demobediener in die Bedienerlys: tik enige bynaam in en jy is in sy voorportaal — geen registrasie, geen e-posadres. ’n Groen kolletjie wys watter gelyste bedieners aanlyn is en hoeveel spelers daarop is."],
       ["Werk dit op ’n selfoon?",
        "Ja. Die webkliënt is ’n progressiewe webtoepassing: dit loop in enige moderne blaaier op ’n rekenaar, tablet of foon, en kan soos ’n gewone toepassing geïnstalleer word — op iPhone en iPad met Deel → Voeg by tuisskerm, elders uit die blaaierkieslys of met die installeerknoppie. Die Aas se Hulp wys die stappe vir jou toestel."],
       ["Kan ek teen die rekenaar speel?",
@@ -4383,18 +4950,22 @@ var SEO_FAQ_I18N = {
       ["Watter data versamel die webkliënt?",
        "So min as moontlik: jou instellings bly in jou eie blaaier, en daar is geen sporing of advertensies nie. As jy met ’n pokerth.net-rekening aanmeld, word jou opsies en oefentrofeë daarmee gesinchroniseer, sodat hulle jou na jou ander toestelle volg. Kyk na die privaatheidsblad vir die besonderhede."],
       ["Kan ek my eie bediener bedryf?",
-       "Ja. Sowel die toegewyde PokerTH-bediener as hierdie webkliënt is oopbron, sodat jy jou eie private pokerbediener kan bedryf, op ’n plaaslike netwerk of op die internet."],
+       "Ja. Sowel die toegewyde PokerTH-bediener as hierdie webkliënt is oopbron, sodat jy jou eie private pokerbediener kan bedryf, op ’n LAN of op die internet. Om dit vir almal gelys te kry, kies LAN / Toegewyde bediener en dan „Stel my bediener voor” onderaan die Bedienerlys: sodra die administrateurs dit goedkeur, verskyn dit in die lys. Die bediener moet vanaf die internet bereikbaar wees."],
       ["Hoe werk Ranglysspele en seisoene?",
        "Ranglysspele op pokerth.net het 10 spelers en begin sodra die tafel vol is: elk 10 000 fiches, ’n klein blind van 50 wat elke 11 hande verdubbel, en 5 sekondes om te speel. Posisies 1 tot 7 kry 15, 9, 6, 4, 3, 2 en 1 punt; jou Telling is jou gemiddelde per spel, geweeg volgens die aantal spele wat jy gespeel het, en die ranglys begin elke kwartaal weer van voor af. ’n Gratis pokerth.net-rekening is nodig."],
+      ["Is daar gratis pokertoernooie en -kompetisies?",
+       "Ja, die hele jaar deur, en almal gratis. Elke PokerTH-spel is ’n toernooi, en die pokerth.net-gemeenskap hou ook gereelde kompetisies met hul eie ranglyste: die BBC, spele waarvan die blinds elke paar minute styg (<a href=\"https://bbc.pokerth.net/registration\">kalender</a>, <a href=\"https://bbc.pokerth.net/results\">uitslae</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">ranglys</a>); die WeCup (WEC), toernooie teen ’n rustiger, gebalanseerde tempo (<a href=\"https://wec.pokerth.net/results\">uitslae</a>, <a href=\"https://wec.pokerth.net/results/ranking\">ranglys</a>); en die Monthly Cup, wat elke maand gehou word (<a href=\"https://monthlycup.pokerth.net/\">volgende beker en jongste wenners</a>, <a href=\"https://monthlycup.pokerth.net/registration\">registrasie</a>). Datums en reëls word op elke werf en op die <a href=\"https://www.pokerth.net/\">pokerth.net</a>-forum aangekondig. Om deel te neem, het jy ’n gratis pokerth.net-rekening nodig."],
       ["Kan ek ’n spel kyk sonder om te speel?",
        "Ja. Lopende spele wat toeskouers toelaat, kan vanuit die voorportaal regstreeks gekyk word: jy sien die tafel en die klets, maar die eie kaarte bly verborge en jy kan nie speel nie. ’n Uitnodigingskakel na ’n tafel wat reeds begin het, maak dit oop om te kyk."],
       ["Is daar hulp binne die toepassing?",
-       "Ja. Die Aas se Hulp: die Aas, die webkliënt se maskot, verduidelik elke skerm soos jy vorder as jy dit wil hê. Sy kieslys bevat die hele hulp met ’n soekfunksie, en „Wat is dit?”: tik enigiets op die skerm en hy sê wat dit doen."]
+       "Ja. Die Aas se Hulp: die Aas, die webkliënt se maskot, verduidelik elke skerm soos jy vorder as jy dit wil hê. Sy kieslys bevat die hele hulp met ’n soekfunksie, en „Wat is dit?”: tik enigiets op die skerm en hy sê wat dit doen."],
+      ["Word PokerTH nog aktief ontwikkel?",
+       "Ja. PokerTH word sedert 2006 as vrye sagteware ontwikkel en word steeds onderhou: die rekenaarkliënt en die bediener is op <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, hierdie webkliënt word voortdurend bygewerk (<a href=\"https://github.com/narmod/pokerth-web-client\">bronkode en veranderingslog</a>), en daar word elke dag op die amptelike pokerth.net-netwerk gespeel."]
     ]
   },
   sw: {
     title: "Maswali yanayoulizwa mara kwa mara \u2014 Kiteja wavuti cha PokerTH",
-    desc: "Maswali ya kawaida kuhusu kiteja wavuti cha PokerTH: poka bila malipo na bila matangazo, kucheza Texas Hold\u2019em kwenye kivinjari bila kupakua chochote, akaunti, simu, hali ya nje ya mtandao, lugha na faragha.",
+    desc: "Maswali ya kawaida kuhusu kiteja wavuti cha PokerTH: poka bila malipo, bila matangazo wala kupakua, kucheza kama mgeni au bila akaunti, kualika marafiki kwa kiungo, mashindano, simu, nje ya mtandao, lugha na faragha.",
     h1: "Kiteja wavuti cha PokerTH \u2014 Maswali ya kawaida",
     qa: [
       ["Je, PokerTH ni bure?",
@@ -4406,7 +4977,13 @@ var SEO_FAQ_I18N = {
       ["Je, naweza kucheza Texas Hold’em dhidi ya watu wengine kwenye kivinjari?",
        "Ndiyo. Jiunge na mtandao rasmi pokerth.net ili kucheza dhidi ya wachezaji kutoka duniani kote, au tuma kiungo cha mwaliko ili marafiki wafike moja kwa moja mezani kwako — yote ndani ya kivinjari."],
       ["Je, ninahitaji akaunti ili kucheza?",
-       "Hapana. Hali ya Ndani / mazoezi haihitaji akaunti na hufanya kazi nje ya mtandao. Kwenye mtandao rasmi pokerth.net unaweza kucheza michezo ya Kawaida kama mgeni; akaunti ya bure ya pokerth.net inahitajika kwa michezo ya viwango, meza za wachezaji waliosajiliwa pekee na chati."],
+       "Hapana. Hali ya Ndani / mazoezi haihitaji akaunti na hufanya kazi nje ya mtandao. Kwenye mtandao rasmi pokerth.net, ingia kama mgeni: seva hukupa jina la utani la mgeni na unaweza kucheza michezo ya Kawaida mara moja. Kwenye LAN au seva maalum hakuna akaunti kabisa — unachagua tu jina la utani. Hakuna kati ya hizi kinachoomba anwani ya barua pepe. Akaunti ya bure ya pokerth.net inahitajika tu kwa michezo ya viwango, meza za wachezaji waliosajiliwa pekee na chati."],
+      ["Ninawezaje kucheza poka mtandaoni na marafiki?",
+       "Unda meza ukumbini — kwenye pokerth.net au kwenye seva yoyote ya LAN au seva maalum — kisha bonyeza “Alika marafiki” kwenye chumba cha kusubiri. Kiteja wavuti hutengeneza kiungo cha mwaliko unachoweza kutuma kupitia programu yoyote ya ujumbe. Marafiki zako hukifungua kwenye kivinjari chao, kwenye iPhone, Android au kompyuta, bila kupakua chochote. Weka nenosiri ikiwa meza inapaswa kubaki ya faragha: nenosiri si sehemu ya kiungo kamwe."],
+      ["Nini hutokea rafiki anapofungua kiungo changu cha mwaliko?",
+       "Kiungo hubeba meza na seva. Rafiki yako huingia — kama mgeni au kwa akaunti kwenye pokerth.net, kwa jina la utani tu kwenye LAN au seva maalum — kisha kiteja wavuti hujiunga na meza kiotomatiki, bila haja ya kuitafuta ukumbini. Meza yenye nenosiri huomba nenosiri lake; mchezo uliokwisha anza hufunguka kwa kutazama. Viungo vya mwaliko ni kipengele cha kiteja wavuti na hufanya kazi kwenye kila seva kinachoweza kuunganishwa nayo."],
+      ["Je, kuna seva ya majaribio ya kujaribu PokerTH bila kujisajili?",
+       "Ndiyo. Kwenye skrini ya kuingia chagua LAN / Seva maalum na uchague seva ya majaribio ya umma kwenye Orodha ya seva: andika jina lolote la utani na uko ukumbini mwake — bila usajili, bila anwani ya barua pepe. Kitone cha kijani huonyesha seva zipi zilizoorodheshwa ziko mtandaoni na wachezaji wangapi wamo."],
       ["Je, hufanya kazi kwenye simu?",
        "Ndiyo. Kiteja wavuti ni programu wavuti endelevu: hufanya kazi katika kivinjari chochote cha kisasa kwenye kompyuta, kompyuta kibao au simu, na kinaweza kusakinishwa kama programu ya kawaida — kwenye iPhone na iPad kwa Kushiriki → Add to Home Screen, kwingineko kupitia menyu ya kivinjari au kitufe cha kusakinisha. Msaada wa Ekaa hukuonyesha hatua za kifaa chako."],
       ["Je, naweza kucheza dhidi ya kompyuta?",
@@ -4422,18 +4999,22 @@ var SEO_FAQ_I18N = {
       ["Je, kiteja wavuti hukusanya data gani?",
        "Kidogo iwezekanavyo: mipangilio yako hubaki ndani ya kivinjari chako, na hakuna ufuatiliaji wala matangazo. Ukiingia kwa akaunti ya pokerth.net, chaguo zako na vikombe vya mazoezi husawazishwa nayo ili vikufuate kwenye vifaa vyako vingine. Angalia ukurasa wa faragha kwa maelezo."],
       ["Je, naweza kuendesha seva yangu mwenyewe?",
-       "Ndiyo. Seva maalum ya PokerTH na kiteja hiki wavuti vyote ni chanzo huria, hivyo unaweza kuendesha seva yako binafsi ya poka, kwenye mtandao wa ndani au kwenye intaneti."],
+       "Ndiyo. Seva maalum ya PokerTH na kiteja hiki wavuti vyote ni chanzo huria, hivyo unaweza kuendesha seva yako binafsi ya poka kwenye LAN au kwenye intaneti. Ili iorodheshwe kwa kila mtu, chagua LAN / Seva maalum, kisha “Pendekeza seva yangu” chini ya Orodha ya seva: wasimamizi wakiidhinisha, itaonekana kwenye orodha. Seva lazima ifikike kutoka kwenye intaneti."],
       ["Je, michezo ya viwango na misimu hufanyaje kazi?",
        "Michezo ya viwango kwenye pokerth.net huwaketisha wachezaji 10 na huanza mara meza inapojaa: vibonye 10,000 kila mmoja, blaindi ndogo ya 50 inayozidishwa mara mbili kila mikono 11, na sekunde 5 za kuchukua hatua. Nafasi za 1 hadi 7 hupata pointi 15, 9, 6, 4, 3, 2 na 1; Alama yako ni wastani wako kwa kila mchezo, ukipimwa kwa idadi ya michezo uliyocheza, na viwango huanza upya kila robo mwaka. Akaunti ya bure ya pokerth.net inahitajika."],
+      ["Je, kuna mashindano ya poka ya bure?",
+       "Ndiyo, mwaka mzima, na yote ni bure. Kila mchezo wa PokerTH ni mashindano, na jumuiya ya pokerth.net pia huendesha mashindano ya mara kwa mara yenye viwango vyake: BBC, michezo ambayo blinds hupanda kila baada ya dakika chache (<a href=\"https://bbc.pokerth.net/registration\">kalenda</a>, <a href=\"https://bbc.pokerth.net/results\">matokeo</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">viwango</a>); WeCup (WEC), mashindano kwa mwendo tulivu na wenye uwiano (<a href=\"https://wec.pokerth.net/results\">matokeo</a>, <a href=\"https://wec.pokerth.net/results/ranking\">viwango</a>); na Monthly Cup, inayofanyika kila mwezi (<a href=\"https://monthlycup.pokerth.net/\">kombe lijalo na washindi wa hivi karibuni</a>, <a href=\"https://monthlycup.pokerth.net/registration\">usajili</a>). Tarehe na kanuni hutangazwa kwenye kila tovuti na kwenye jukwaa la <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Kushiriki kunahitaji akaunti ya bure ya pokerth.net."],
       ["Je, naweza kutazama mchezo bila kucheza?",
        "Ndiyo. Michezo inayoendelea inayoruhusu watazamaji inaweza kutazamwa moja kwa moja kutoka ukumbini: unaona meza na chati, lakini karata za siri hubaki zimefichwa na huwezi kuchukua hatua. Kiungo cha mwaliko wa meza iliyokwisha anza huifungua kwa kutazama."],
       ["Je, kuna msaada ndani ya programu?",
-       "Ndiyo. Msaada wa Ekaa: Ekaa, mascot wa kiteja wavuti, hueleza kila skrini unapoendelea ukitaka. Menyu yake ina msaada wote pamoja na utafutaji, na “Hiki ni nini?”: gusa chochote kwenye skrini naye anasema kinafanya nini."]
+       "Ndiyo. Msaada wa Ekaa: Ekaa, mascot wa kiteja wavuti, hueleza kila skrini unapoendelea ukitaka. Menyu yake ina msaada wote pamoja na utafutaji, na “Hiki ni nini?”: gusa chochote kwenye skrini naye anasema kinafanya nini."],
+      ["Je, PokerTH bado inaendelezwa kikamilifu?",
+       "Ndiyo. PokerTH imeendelezwa kama programu huria tangu 2006 na bado inatunzwa: programu ya kompyuta na seva ziko kwenye <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, kiteja hiki wavuti husasishwa mfululizo (<a href=\"https://github.com/narmod/pokerth-web-client\">msimbo chanzo na orodha ya mabadiliko</a>), na michezo huchezwa kila siku kwenye mtandao rasmi pokerth.net."]
     ]
   },
   fil: {
     title: "Mga madalas itanong \u2014 PokerTH web client",
-    desc: "Mga madalas itanong tungkol sa PokerTH web client: libreng poker na walang patalastas, paglalaro ng Texas Hold\u2019em sa browser nang walang dina-download, account, telepono, offline mode, mga wika at privacy.",
+    desc: "Mga madalas itanong tungkol sa PokerTH web client: libreng poker na walang patalastas at walang download, paglalaro bilang bisita o nang walang account, pag-imbita sa mga kaibigan gamit ang link, mga torneo, telepono, offline mode, mga wika at privacy.",
     h1: "PokerTH web client \u2014 Mga madalas itanong",
     qa: [
       ["Libre ba ang PokerTH?",
@@ -4445,7 +5026,13 @@ var SEO_FAQ_I18N = {
       ["Puwede ba akong maglaro ng Texas Hold’em laban sa ibang tao sa browser?",
        "Oo. Sumali sa opisyal na network na pokerth.net para makalaban ang mga manlalaro mula sa buong mundo, o magpadala ng imbitasyong link para dumiretso ang mga kaibigan mo sa mesa mo — lahat sa loob ng browser."],
       ["Kailangan ba ng account para makalaro?",
-       "Hindi. Ang Lokal / pagsasanay na mode ay hindi nangangailangan ng account at gumagana offline. Sa opisyal na network na pokerth.net, makakalaro ka ng mga larong Normal bilang bisita; kailangan ng libreng pokerth.net account para sa mga Ranking game, sa mga mesang para sa mga rehistradong manlalaro lang at sa chat."],
+       "Hindi. Ang Lokal / pagsasanay na mode ay hindi nangangailangan ng account at gumagana offline. Sa opisyal na network na pokerth.net, mag-log in bilang bisita: bibigyan ka ng server ng guest nickname at makakalaro ka agad ng mga larong Normal. Sa LAN o dedicated server, wala talagang account — pipili ka lang ng nickname. Wala sa mga ito ang humihingi ng email address. Kailangan lang ang libreng pokerth.net account para sa mga Ranking game, sa mga mesang para sa mga rehistradong manlalaro lang at sa chat."],
+      ["Paano maglaro ng poker online kasama ang mga kaibigan?",
+       "Gumawa ng mesa sa lobby — sa pokerth.net o sa anumang LAN o dedicated server — at pindutin ang “Mag-imbita ng mga kaibigan” sa waiting room. Gagawa ang web client ng imbitasyong link na maipapadala mo sa kahit anong messenger. Bubuksan ito ng mga kaibigan mo sa kanilang browser, sa iPhone, Android o computer, nang walang dina-download. Maglagay ng password kung dapat manatiling pribado ang mesa: hindi kailanman kasama sa link ang password."],
+      ["Ano ang nangyayari kapag binuksan ng kaibigan ko ang imbitasyong link ko?",
+       "Dala ng link ang mesa at ang server. Magla-log in ang kaibigan mo — bilang bisita o gamit ang account sa pokerth.net, nickname lang sa LAN o dedicated server — at awtomatikong sasali ang web client sa mesa, nang hindi na kailangang hanapin ito sa lobby. Hihingin ng mesang may password ang password nito; ang larong nagsimula na ay magbubukas para panoorin. Feature ng web client ang mga imbitasyong link at gumagana ang mga ito sa bawat server na kaya nitong kumonekta."],
+      ["May demo server ba para subukan ang PokerTH nang hindi nagpaparehistro?",
+       "Oo. Sa login screen, piliin ang LAN / Dedicated server at piliin ang pampublikong demo server sa listahan ng server: mag-type ng kahit anong nickname at nasa lobby ka na nito — walang rehistrasyon, walang email address. Ipinapakita ng berdeng tuldok kung aling mga nakalistang server ang online at kung ilang manlalaro ang naroon."],
       ["Gumagana ba ito sa telepono?",
        "Oo. Progressive Web App ang web client: gumagana ito sa anumang makabagong browser sa kompyuter, tablet o telepono, at puwedeng i-install na parang karaniwang app — sa iPhone at iPad gamit ang Share → Add to Home Screen, sa iba pa ay mula sa menu ng browser o sa install button. Ipinapakita ng Tulong ng Alas ang mga hakbang para sa device mo."],
       ["Puwede ba akong maglaro laban sa kompyuter?",
@@ -4461,18 +5048,22 @@ var SEO_FAQ_I18N = {
       ["Anong datos ang kinokolekta ng web client?",
        "Pinakakaunti hangga't maaari: nananatili sa sarili mong browser ang mga setting mo, at walang anumang pagsubaybay o patalastas. Kapag nag-log in ka gamit ang pokerth.net account, ang mga opsyon at tropeo mo sa pagsasanay ay isi-sync dito para sumunod sa iba mong device. Tingnan ang pahina ng privacy para sa detalye."],
       ["Puwede ba akong magpatakbo ng sarili kong server?",
-       "Oo. Open source ang dedicated server ng PokerTH at ang web client na ito, kaya puwede kang magpatakbo ng sarili mong pribadong poker server, sa lokal na network o sa internet."],
+       "Oo. Open source ang dedicated server ng PokerTH at ang web client na ito, kaya puwede kang magpatakbo ng sarili mong pribadong poker server sa LAN o sa internet. Para mailista ito para sa lahat, piliin ang LAN / Dedicated server, at pagkatapos ang “Imungkahi ang server ko” sa ibaba ng listahan ng server: kapag inaprubahan ito ng mga admin, lalabas ito sa listahan. Kailangang naaabot ang server mula sa internet."],
       ["Paano gumagana ang mga Ranking game at season?",
        "Ang mga Ranking game sa pokerth.net ay may 10 manlalaro at nagsisimula sa sandaling mapuno ang mesa: tig-10,000 chips, small blind na 50 na dumodoble kada 11 kamay, at 5 segundo para kumilos. Ang mga puwesto 1 hanggang 7 ay may 15, 9, 6, 4, 3, 2 at 1 puntos; ang Score mo ay ang average mo kada laro, na tinitimbang ayon sa dami ng nalaro mong laro, at nagsisimula muli ang ranggo kada quarter. Kailangan ng libreng pokerth.net account."],
+      ["May mga libreng poker tournament at kompetisyon ba?",
+       "Oo, buong taon, at lahat libre. Torneo ang bawat laro sa PokerTH, at nagdaraos din ang komunidad ng pokerth.net ng mga regular na kompetisyon na may sariling ranking: ang BBC, mga larong tumataas ang blinds bawat ilang minuto (<a href=\"https://bbc.pokerth.net/registration\">kalendaryo</a>, <a href=\"https://bbc.pokerth.net/results\">mga resulta</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">ranking</a>); ang WeCup (WEC), mga torneo sa mas kalmado at balanseng takbo (<a href=\"https://wec.pokerth.net/results\">mga resulta</a>, <a href=\"https://wec.pokerth.net/results/ranking\">ranking</a>); at ang Monthly Cup, na ginaganap bawat buwan (<a href=\"https://monthlycup.pokerth.net/\">susunod na cup at mga pinakabagong nanalo</a>, <a href=\"https://monthlycup.pokerth.net/registration\">pagpaparehistro</a>). Inaanunsiyo ang mga petsa at patakaran sa bawat site at sa forum ng <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Kailangan ng libreng pokerth.net account para makasali."],
       ["Puwede ba akong manood ng laro nang hindi naglalaro?",
        "Oo. Ang mga tumatakbong laro na pumapayag sa mga manonood ay mapapanood nang live mula sa lobby: nakikita mo ang mesa at ang chat, pero nananatiling nakatago ang mga sariling karta at hindi ka puwedeng kumilos. Ang link ng imbitasyon sa mesang nagsimula na ay nagbubukas nito para sa panonood."],
       ["May tulong ba sa loob ng app?",
-       "Oo. Ang Tulong ng Alas: ang Alas, ang maskot ng web client, ay nagpapaliwanag sa bawat screen habang naglalaro ka kung gusto mo siya. Nasa menu niya ang buong tulong na may paghahanap, at ang “Ano ito?”: pindutin ang kahit ano sa screen at sasabihin niya kung para saan ito."]
+       "Oo. Ang Tulong ng Alas: ang Alas, ang maskot ng web client, ay nagpapaliwanag sa bawat screen habang naglalaro ka kung gusto mo siya. Nasa menu niya ang buong tulong na may paghahanap, at ang “Ano ito?”: pindutin ang kahit ano sa screen at sasabihin niya kung para saan ito."],
+      ["Aktibo pa bang dine-develop ang PokerTH?",
+       "Oo. Dine-develop ang PokerTH bilang malayang software mula pa noong 2006 at patuloy itong mina-maintain: nasa <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> ang desktop client at ang server, tuloy-tuloy na ina-update ang web client na ito (<a href=\"https://github.com/narmod/pokerth-web-client\">source code at changelog</a>), at may mga larong nilalaro araw-araw sa opisyal na network na pokerth.net."]
     ]
   },
   gd: {
     title: "Ceistean cumanta \u2014 cliant-l\u00ecn PokerTH",
-    desc: "Ceistean cumanta mun chliant-l\u00ecn PokerTH: p\u00f2cair an-asgaidh gun sanasan, Texas Hold\u2019em a chluich sa bhrabhsair gun dad a luchdachadh a-nuas, cunntasan, f\u00f2naichean, modh far-loidhne, c\u00e0nanan agus pr\u00ecobhaideachd.",
+    desc: "Ceistean cumanta mun chliant-lìn PokerTH: pòcair an-asgaidh gun sanasan is gun luchdachadh a-nuas, cluich mar aoigh no gun chunntas, cuireadh do charaidean le ceangal, farpaisean, fònaichean, cànanan agus prìobhaideachd.",
     h1: "Cliant-l\u00ecn PokerTH \u2014 Ceistean cumanta",
     qa: [
       ["A bheil PokerTH an-asgaidh?",
@@ -4484,7 +5075,13 @@ var SEO_FAQ_I18N = {
       ["Am faod mi Texas Hold’em a chluich an aghaidh dhaoine eile sa bhrabhsair?",
        "Faodaidh. Thig còmhla ris an lìonra oifigeil pokerth.net gus cluich an aghaidh chluicheadairean air feadh an t-saoghail, no cuir ceangal cuiridh airson ’s gun tig do charaidean dìreach gu do bhòrd — a h-uile càil am broinn a’ bhrabhsair."],
       ["A bheil feum agam air cunntas gus cluich?",
-       "Chan eil. Chan eil feum air cunntas sa mhodh Ionadail / trèanadh agus obraichidh e far-loidhne. Air an lìonra oifigeil pokerth.net faodaidh tu geamannan Àbhaisteach a chluich mar aoigh; feumaidh tu cunntas pokerth.net an-asgaidh airson geamannan rangachaidh, bùird a tha dhan fheadhainn chlàraichte a-mhàin agus a’ chabadaich."],
+       "Chan eil. Chan eil feum air cunntas sa mhodh Ionadail / trèanadh agus obraichidh e far-loidhne. Air an lìonra oifigeil pokerth.net, clàraich a-steach mar aoigh: bheir am frithealaiche far-ainm aoigh dhut agus ’s urrainn dhut geamannan Àbhaisteach a chluich sa bhad. Air LAN no air frithealaiche sònraichte chan eil cunntas ann idir — cha tagh thu ach far-ainm. Chan iarr gin dhiubh seo seòladh puist-d. Chan fheum thu cunntas pokerth.net an-asgaidh ach airson geamannan rangachaidh, bùird a tha dhan fheadhainn chlàraichte a-mhàin agus a’ chabadaich."],
+      ["Ciamar a chluicheas mi pòcair air-loidhne còmhla ri caraidean?",
+       "Cruthaich bòrd san lobaidh — air pokerth.net no air frithealaiche LAN no sònraichte sam bith — agus brùth “Thoir cuireadh do charaidean” san t-seòmar-feitheimh. Cruthaichidh an cliant-lìn ceangal cuiridh as urrainn dhut a chur le aplacaid theachdaireachdan sam bith. Fosglaidh do charaidean e sa bhrabhsair aca, air iPhone, Android no coimpiutair, gun dad a luchdachadh a-nuas. Suidhich facal-faire ma bu chòir don bhòrd fuireach prìobhaideach: cha bhi am facal-faire uair sam bith na phàirt dhen cheangal."],
+      ["Dè thachras nuair a dh’fhosglas caraid an ceangal cuiridh agam?",
+       "Tha am bòrd agus am frithealaiche sa cheangal. Clàraichidh do charaid a-steach — mar aoigh no le cunntas air pokerth.net, le far-ainm a-mhàin air LAN no air frithealaiche sònraichte — agus an uairsin thèid an cliant-lìn chun a’ bhùird gu fèin-obrachail, gun fheum air a lorg san lobaidh. Iarraidh bòrd le facal-faire am facal-faire aige; fosglaidh geama a thòisich mar-thà airson a choimhead. ’S e gleus dhen chliant-lìn a th’ ann an ceanglaichean cuiridh agus obraichidh iad air gach frithealaiche ris an urrainn dha ceangal."],
+      ["A bheil frithealaiche taisbeanaidh ann gus PokerTH fheuchainn gun chlàradh?",
+       "Tha. Air an sgrìn clàraidh a-steach tagh LAN / Frithealadair sònraichte agus tagh am frithealaiche taisbeanaidh poblach ann an liosta nam frithealaichean: sgrìobh far-ainm sam bith agus bidh thu san lobaidh aige — gun chlàradh, gun seòladh puist-d. Seallaidh dotag uaine dè na frithealaichean air an liosta a tha air loidhne agus co mheud cluicheadair a tha orra."],
       ["A bheil e ag obair air fòn?",
        "Tha. ’S e aplacaid-lìn adhartach a th’ anns a’ chliant-lìn: bidh e ag obair anns a h-uile brabhsair ùr-nòsach air coimpiutair, tablaid no fòn, agus gabhaidh a stàladh mar aplacaid àbhaisteach — air iPhone is iPad le Co-roinn → Cuir ris an sgrìn-dachaigh, an àiteigin eile o chlàr-taice a’ bhrabhsair no on phutan stàlaidh. Seallaidh Cobhair an Aoin na ceumannan airson an uidheim agad."],
       ["Am faod mi cluich an aghaidh a’ choimpiutair?",
@@ -4500,18 +5097,22 @@ var SEO_FAQ_I18N = {
       ["Dè an dàta a chruinnicheas an cliant-lìn?",
        "Cho beag ’s a ghabhas: fanaidh na roghainnean agad sa bhrabhsair agad fhèin, agus cha chleachdar tracadh no sanasachd sam bith. Nuair a logas tu a-steach le cunntas pokerth.net, thèid na roghainnean agus na duaisean trèanaidh agad a shioncronachadh leis airson ’s gun lean iad thu chun nan uidheaman eile agad. Faic an duilleag phrìobhaideachd airson mion-fhiosrachadh."],
       ["Am faod mi frithealaiche agam fhìn a ruith?",
-       "Faodaidh. Tha an dà chuid frithealaiche sònraichte PokerTH agus an cliant-lìn seo nan còd fosgailte, agus mar sin ’s urrainn dhut do fhrithealaiche pòcair prìobhaideach fhèin a ruith, air lìonra ionadail no air an eadar-lìn."],
+       "Faodaidh. Tha an dà chuid frithealaiche sònraichte PokerTH agus an cliant-lìn seo nan còd fosgailte, agus mar sin ’s urrainn dhut do fhrithealaiche pòcair prìobhaideach fhèin a ruith, air LAN no air an eadar-lìn. Airson ’s gum bi e air liosta do na h-uile, tagh LAN / Frithealadair sònraichte, an uairsin “Mol am frithealaiche agam” aig bonn liosta nam frithealaichean: cho luath ’s a bheir na rianairean aonta dha, nochdaidh e air an liosta. Feumaidh am frithealaiche a bhith ruigsinneach on eadar-lìn."],
       ["Ciamar a dh’obraicheas geamannan rangachaidh agus ràithean?",
        "Bidh 10 cluicheadairean aig geamannan rangachaidh air pokerth.net agus tòisichidh iad cho luath ’s a bhios am bòrd làn: 10,000 sliseag an urra, dall-gheall beag de 50 a bhios a’ dùblachadh gach 11 làmhan, agus 5 diogan airson gnìomh a dhèanamh. Cosnaidh àiteachan 1 gu 7 na puingean seo: 15, 9, 6, 4, 3, 2 agus 1; is e do Sgòr cuibheasachd gach geama agad, air a thomhas a rèir an àireamh de gheamannan a chluich thu, agus tòisichidh an rangachadh às ùr gach ràith. Tha feum air cunntas pokerth.net an-asgaidh."],
+      ["A bheil farpaisean pòcair an-asgaidh ann?",
+       "Tha, fad na bliadhna, agus iad uile an-asgaidh. ’S e farpais a th’ anns gach geama PokerTH, agus bidh coimhearsnachd pokerth.net a’ cumail farpaisean cunbhalach le an rangachadh fhèin cuideachd: am BBC, geamannan far an èirich na blinds gach beagan mhionaidean (<a href=\"https://bbc.pokerth.net/registration\">mìosachan</a>, <a href=\"https://bbc.pokerth.net/results\">toraidhean</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">rangachadh</a>); an WeCup (WEC), farpaisean aig astar nas socraiche is cothromaichte (<a href=\"https://wec.pokerth.net/results\">toraidhean</a>, <a href=\"https://wec.pokerth.net/results/ranking\">rangachadh</a>); agus am Monthly Cup, a thèid a chumail gach mìos (<a href=\"https://monthlycup.pokerth.net/\">an ath chupa agus na buannaichean as ùire</a>, <a href=\"https://monthlycup.pokerth.net/registration\">clàradh</a>). Thèid cinn-latha is riaghailtean ainmeachadh air gach làrach agus air fòram <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Feumaidh tu cunntas pokerth.net an-asgaidh gus pàirt a ghabhail."],
       ["Am faod mi geama a choimhead gun a chluich?",
        "Faodaidh. Faodar geamannan a tha a’ dol a leigeas le luchd-amhairc a choimhead beò on lobaidh: chì thu am bòrd agus a’ chabadaich, ach fanaidh na cairtean prìobhaideach falaichte agus chan urrainn dhut gnìomh a dhèanamh. Fosglaidh ceangal cuiridh gu bòrd a thòisich mar-thà e airson a choimhead."],
       ["A bheil cobhair am broinn na h-aplacaid?",
-       "Tha. Cobhair an Aoin: mìnichidh an t-Aon, mascot a’ chliant-lìn, gach sgrion fhad ’s a thèid thu air adhart ma thogras tu. Tha a’ chobhair gu lèir anns a chlàr-taice aige, le lorg, agus “Dè tha seo?”: suath ri rud sam bith air an sgrion agus innsidh e dè a nì e."]
+       "Tha. Cobhair an Aoin: mìnichidh an t-Aon, mascot a’ chliant-lìn, gach sgrion fhad ’s a thèid thu air adhart ma thogras tu. Tha a’ chobhair gu lèir anns a chlàr-taice aige, le lorg, agus “Dè tha seo?”: suath ri rud sam bith air an sgrion agus innsidh e dè a nì e."],
+      ["A bheil PokerTH fhathast ga leasachadh gu gnìomhach?",
+       "Tha. Thathar air PokerTH a leasachadh mar bhathar-bog saor bho 2006 agus thathar fhathast ga chumail suas: tha an cliant deasga agus am frithealaiche air <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, thèid an cliant-lìn seo ùrachadh gu cunbhalach (<a href=\"https://github.com/narmod/pokerth-web-client\">còd tùsail agus loga nan atharraichean</a>), agus thèid geamannan a chluich gach latha air an lìonra oifigeil pokerth.net."]
     ]
   },
   et: {
     title: "KKK — PokerTH veebiklient",
-    desc: "Korduma kippuvad küsimused PokerTH veebikliendi kohta: tasuta ja reklaamivaba pokker, Texas Hold’em brauseris ilma midagi alla laadimata, kontod, mobiil, võrguühenduseta režiim, keeled ja privaatsus.",
+    desc: "KKK PokerTH veebikliendi kohta: tasuta reklaamivaba pokker ilma allalaadimiseta, mäng külalisena või ilma kontota, sõprade kutsumine lingiga, turniirid, mobiil, võrguühenduseta režiim, keeled ja privaatsus.",
     h1: "PokerTH veebiklient — Korduma kippuvad küsimused",
     qa: [
       ["Kas PokerTH on tasuta?",
@@ -4523,7 +5124,13 @@ var SEO_FAQ_I18N = {
       ["Kas ma saan brauseris mängida Texas Hold’emi teiste inimeste vastu?",
        "Jah. Liitu ametliku pokerth.net võrguga, et mängida Texas Hold’emi otse mängijate vastu üle maailma, või saada kutselink, et sõbrad jõuaksid otse sinu lauda — kõik brauseris."],
       ["Kas mängimiseks on vaja kontot?",
-       "Ei. Režiim Kohalik / treening ei vaja kontot ja töötab ilma ühenduseta. Ametlikus pokerth.net võrgus saad Tavaline-mänge mängida külalisena; tasuta pokerth.net kontot on vaja edetabelimängudeks, ainult registreeritutele mõeldud laudadeks ja vestluseks."],
+       "Ei. Režiim Kohalik / treening ei vaja kontot ja töötab ilma ühenduseta. Ametlikus pokerth.net võrgus logid sisse külalisena: server annab sulle külalisnime ja saad kohe Tavaline-mänge mängida. LAN-is või pühendatud serveris kontosid üldse pole — valid lihtsalt hüüdnime. Ükski neist ei küsi e-posti aadressi. Tasuta pokerth.net kontot on vaja ainult edetabelimängudeks, ainult registreeritutele mõeldud laudadeks ja vestluseks."],
+      ["Kuidas mängida sõpradega veebis pokkerit?",
+       "Loo fuajees laud — pokerth.net-is või mis tahes LAN- või pühendatud serveris — ja vajuta ooteruumis „Kutsu sõpru“. Veebiklient loob kutselingi, mille saad saata ükskõik millise sõnumirakendusega. Sõbrad avavad selle oma brauseris, iPhone’is, Androidis või arvutis, ilma midagi alla laadimata. Määra parool, kui laud peab jääma privaatseks: parool ei ole kunagi lingi osa."],
+      ["Mis juhtub, kui sõber avab minu kutselingi?",
+       "Link sisaldab lauda ja serverit. Sinu sõber logib sisse — pokerth.net-is külalisena või kontoga, LAN-is või pühendatud serveris lihtsalt hüüdnimega — ja veebiklient liitub seejärel lauaga automaatselt, ilma et seda peaks fuajeest otsima. Parooliga kaitstud laud küsib parooli; juba alanud mäng avaneb vaatamiseks. Kutselingid on veebikliendi funktsioon ja töötavad igas serveris, millega see ühenduda saab."],
+      ["Kas on olemas demoserver, et PokerTH-d ilma registreerumata proovida?",
+       "Jah. Vali sisselogimiskuval LAN / pühendatud server ja vali serverite loendist avalik demoserver: sisesta ükskõik milline hüüdnimi ja oledki selle fuajees — ilma registreerumise ja e-posti aadressita. Roheline täpp näitab, millised loendi serverid on võrgus ja mitu mängijat neis on."],
       ["Kas see töötab mobiilis?",
        "Jah. Veebiklient on Progressive Web App: see töötab igas kaasaegses brauseris arvutis, tahvlis või telefonis ja seda saab paigaldada nagu tavalist rakendust — iPhone’is ja iPadis Jaga → Lisa avakuvale, mujal brauseri menüüst või paigaldusnupust. Ässa abi näitab samme sinu seadme jaoks."],
       ["Kas ma saan mängida arvuti vastu?",
@@ -4539,18 +5146,22 @@ var SEO_FAQ_I18N = {
       ["Milliseid andmeid veebiklient kogub?",
        "Nii vähe kui võimalik: seaded jäävad sinu brauserisse ning jälgimist ega reklaami ei kasutata. Kui logid sisse pokerth.net kontoga, sünkroonitakse sinu valikud ja treeningtrofeed sellega, et need järgneksid sulle teistesse seadmetesse. Vaata üksikasju privaatsuslehelt."],
       ["Kas ma saan oma serverit pidada?",
-       "Jah. PokerTH pühendatud server ja see veebiklient on mõlemad avatud lähtekoodiga, nii et saad pidada oma privaatset pokkeriserverit kohtvõrgus või internetis."],
+       "Jah. PokerTH pühendatud server ja see veebiklient on mõlemad avatud lähtekoodiga, nii et saad pidada oma privaatset pokkeriserverit kohtvõrgus või internetis. Kui soovid, et see oleks kõigile loendis nähtav, vali LAN / pühendatud server ja seejärel serverite loendi allosas „Paku minu serverit“: kui administraatorid on selle heaks kiitnud, ilmub see loendisse. Server peab olema internetist kättesaadav."],
       ["Kuidas edetabelimängud ja hooajad toimivad?",
        "Edetabelimängud pokerth.net-is võtavad 10 mängijat ja algavad niipea, kui laud on täis: igaühel 10 000 žetooni, väike blind 50, mis kahekordistub iga 11 käe järel, ja 5 sekundit tegutsemiseks. Kohad 1 kuni 7 saavad 15, 9, 6, 4, 3, 2 ja 1 punkti; sinu Score on sinu keskmine mängu kohta, kaalutud mängitud mängude arvuga, ja edetabel algab uuesti iga kvartal. Vaja on tasuta pokerth.net kontot."],
+      ["Kas on tasuta pokkeriturniire ja võistlusi?",
+       "Jah, aasta läbi ja kõik tasuta. Iga PokerTH mäng on turniir ning pokerth.net kogukond korraldab lisaks regulaarseid võistlusi oma edetabelitega: BBC, mängud, kus blindid tõusevad iga paari minuti järel (<a href=\"https://bbc.pokerth.net/registration\">kalender</a>, <a href=\"https://bbc.pokerth.net/results\">tulemused</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">edetabel</a>); WeCup (WEC), turniirid rahulikumas ja tasakaalukamas tempos (<a href=\"https://wec.pokerth.net/results\">tulemused</a>, <a href=\"https://wec.pokerth.net/results/ranking\">edetabel</a>); ning Monthly Cup, mis toimub igal kuul (<a href=\"https://monthlycup.pokerth.net/\">järgmine karikas ja viimased võitjad</a>, <a href=\"https://monthlycup.pokerth.net/registration\">registreerumine</a>). Kuupäevad ja reeglid teatatakse vastaval saidil ning <a href=\"https://www.pokerth.net/\">pokerth.net</a> foorumis. Osalemiseks on vaja tasuta pokerth.net kontot."],
       ["Kas ma saan mängu vaadata ilma mängimata?",
        "Jah. Käimasolevaid mänge, mis lubavad pealtvaatajaid, saab fuajeest otse vaadata: sa näed lauda ja vestlust, kuid taskukaardid jäävad peidetuks ja sa ei saa tegutseda. Kutselink juba alanud lauale avab selle vaatamiseks."],
       ["Kas rakenduses on abi?",
-       "Jah. Ässa abi: Äss, veebikliendi maskott, selgitab iga ekraani, kui soovid. Tema menüü sisaldab kogu abi koos otsinguga ning „Mis see on?“: puuduta ükskõik mida ekraanil ja ta ütleb, mida see teeb."]
+       "Jah. Ässa abi: Äss, veebikliendi maskott, selgitab iga ekraani, kui soovid. Tema menüü sisaldab kogu abi koos otsinguga ning „Mis see on?“: puuduta ükskõik mida ekraanil ja ta ütleb, mida see teeb."],
+      ["Kas PokerTH-d arendatakse endiselt aktiivselt?",
+       "Jah. PokerTH-d on arendatud vaba tarkvarana alates 2006. aastast ja seda hooldatakse endiselt: lauaarvutiklient ja server on <a href=\"https://github.com/pokerth/pokerth\">GitHubis</a>, seda veebiklienti uuendatakse pidevalt (<a href=\"https://github.com/narmod/pokerth-web-client\">lähtekood ja muudatuste logi</a>) ning ametlikus pokerth.net võrgus mängitakse iga päev."]
     ]
   },
   eu: {
     title: "FAQ — PokerTH web bezeroa",
-    desc: "PokerTH web bezeroari buruzko ohiko galderak: poker doakoa iragarkirik gabe, Texas Hold’em nabigatzailean ezer instalatu gabe, kontuak, mugikorra, lineaz kanpoko modua, hizkuntzak eta pribatutasuna.",
+    desc: "PokerTH web bezeroari buruzko ohiko galderak: poker doakoa iragarkirik eta deskargarik gabe, gonbidatu gisa edo konturik gabe jokatu, lagunak esteka batekin gonbidatu, txapelketak, mugikorra, hizkuntzak eta pribatutasuna.",
     h1: "PokerTH web bezeroa — Ohiko galderak",
     qa: [
       ["Doakoa al da PokerTH?",
@@ -4562,7 +5173,13 @@ var SEO_FAQ_I18N = {
       ["Jokatu al dezaket Texas Hold’em beste pertsona batzuen aurka nire nabigatzailean?",
        "Bai. Batu pokerth.net sare ofizialera mundu osoko jokalarien aurka zuzenean Texas Hold’em jokatzeko, edo bidali gonbidapen-esteka bat lagunak zuzenean zure mahaira iristeko — dena nabigatzailearen barruan."],
       ["Kontu bat behar al dut jokatzeko?",
-       "Ez. Lokala / entrenamendua moduak ez du konturik behar eta lineaz kanpo dabil. pokerth.net sare ofizialean Arrunta motako partidak jokatu ditzakezu gonbidatu gisa; pokerth.net kontu doako bat behar da Sailkapeneko partidetarako, erregistratuentzako mahaietarako eta txaterako."],
+       "Ez. Lokala / entrenamendua moduak ez du konturik behar eta lineaz kanpo dabil. pokerth.net sare ofizialean, hasi saioa gonbidatu gisa: zerbitzariak gonbidatu-ezizen bat ematen dizu eta Arrunta motako partidak berehala jokatu ditzakezu. LAN batean edo zerbitzari dedikatu batean ez dago konturik batere — ezizen bat aukeratzea besterik ez duzu. Hauetako batek ere ez du helbide elektronikorik eskatzen. pokerth.net kontu doako bat Sailkapeneko partidetarako, erregistratuentzako mahaietarako eta txaterako baino ez da behar."],
+      ["Nola jokatu pokerrean linean lagunekin?",
+       "Sortu mahai bat egongelan — pokerth.net-en edo edozein LAN zerbitzari edo zerbitzari dedikatutan — eta sakatu «Gonbidatu lagunak» itxarongelan. Web bezeroak gonbidapen-esteka bat sortzen du, edozein mezularitza-aplikazioren bidez bidal dezakezuna. Zure lagunek beren nabigatzailean irekitzen dute, iPhone-n, Android-en edo ordenagailuan, ezer deskargatu gabe. Ezarri pasahitz bat mahaiak pribatua izan behar badu: pasahitza ez da inoiz estekaren parte."],
+      ["Zer gertatzen da lagun batek nire gonbidapen-esteka irekitzen duenean?",
+       "Estekak mahaia eta zerbitzaria daramatza. Zure lagunak saioa hasten du — gonbidatu gisa edo pokerth.net-eko kontu batekin, ezizen batekin soilik LAN batean edo zerbitzari dedikatu batean — eta web bezeroa automatikoki sartzen da mahaira, egongelan bilatu beharrik gabe. Pasahitzez babestutako mahai batek bere pasahitza eskatzen du; dagoeneko hasita dagoen partida bat ikusteko irekitzen da. Gonbidapen-estekak web bezeroaren funtzio bat dira eta konekta daitekeen zerbitzari guztietan dabiltza."],
+      ["Ba al dago demo-zerbitzaririk PokerTH erregistratu gabe probatzeko?",
+       "Bai. Saio-hasierako pantailan aukeratu LAN / Zerbitzari dedikatua eta hautatu demo-zerbitzari publikoa Zerbitzarien zerrendan: idatzi edozein ezizen eta bere egongelan zaude — erregistrorik eta helbide elektronikorik gabe. Puntu berde batek erakusten du zerrendako zein zerbitzari dauden linean eta zenbat jokalari dauden bertan."],
       ["Mugikorrean dabil?",
        "Bai. Web bezeroa Progressive Web App bat da: edozein nabigatzaile modernotan dabil ordenagailuan, tabletan edo telefonoan, eta jatorrizko aplikazio bat bezala instala daiteke — iPhone-n eta iPad-en Partekatu → Gehitu hasierako pantailan erabiliz, beste gailuetan nabigatzailearen menutik edo instalazio-botoitik. Batekoaren laguntzak zure gailurako urratsak erakusten ditu."],
       ["Jokatu al dezaket ordenagailuaren aurka?",
@@ -4578,18 +5195,22 @@ var SEO_FAQ_I18N = {
       ["Zer datu biltzen ditu web bezeroak?",
        "Ahalik eta gutxien: ezarpenak zure nabigatzailean geratzen dira, eta ez da jarraipenik edo iragarkirik erabiltzen. pokerth.net kontu batekin saioa hasten duzunean, zure aukerak eta entrenamenduko garaikurrak kontuarekin sinkronizatzen dira, zure beste gailuetara jarraitu dezaten. Ikus pribatutasun-orria xehetasunetarako."],
       ["Nire zerbitzaria ostata al dezaket?",
-       "Bai. PokerTH zerbitzari dedikatua eta web bezero hau kode irekikoak dira biak, beraz zure poker-zerbitzari pribatua martxan jar dezakezu LANean edo Interneten."],
+       "Bai. PokerTH zerbitzari dedikatua eta web bezero hau kode irekikoak dira biak, beraz zure poker-zerbitzari pribatua martxan jar dezakezu LANean edo Interneten. Denentzako zerrendan ager dadin, aukeratu LAN / Zerbitzari dedikatua, eta ondoren «Proposatu nire zerbitzaria» Zerbitzarien zerrendaren behealdean: administratzaileek onartzen dutenean, zerrendan agertuko da. Zerbitzariak Internetetik eskuragarri egon behar du."],
       ["Nola funtzionatzen dute Sailkapeneko partidek eta denboraldiek?",
        "pokerth.net-eko Sailkapeneko partidek 10 jokalari biltzen dituzte eta mahaia betetzen denean hasten dira: bakoitzak 10.000 txip, 50eko blind txikia 11 eskuro bikoizten dena, eta 5 segundo jokatzeko. 1etik 7ra bitarteko postuek 15, 9, 6, 4, 3, 2 eta 1 puntu lortzen dituzte; zure Score jokatutako partida bakoitzeko batez bestekoa da, jokatu dituzun partiden kopuruaren arabera haztatua, eta sailkapena hiruhileko bakoitzean hasten da berriro. pokerth.net kontu doako bat behar da."],
+      ["Ba al dago poker-txapelketa eta lehiaketa doakorik?",
+       "Bai, urte osoan, eta guztiak doan. PokerTH partida oro txapelketa bat da, eta pokerth.net komunitateak lehiaketa erregularrak ere antolatzen ditu, bakoitza bere sailkapenarekin: BBC, blindak minutu gutxiro igotzen diren partidak (<a href=\"https://bbc.pokerth.net/registration\">egutegia</a>, <a href=\"https://bbc.pokerth.net/results\">emaitzak</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">sailkapena</a>); WeCup (WEC), erritmo lasaiagoko eta orekatuko txapelketak (<a href=\"https://wec.pokerth.net/results\">emaitzak</a>, <a href=\"https://wec.pokerth.net/results/ranking\">sailkapena</a>); eta Monthly Cup, hilero jokatzen dena (<a href=\"https://monthlycup.pokerth.net/\">hurrengo kopa eta azken irabazleak</a>, <a href=\"https://monthlycup.pokerth.net/registration\">izen-ematea</a>). Datak eta arauak webgune bakoitzean eta <a href=\"https://www.pokerth.net/\">pokerth.net</a> foroan iragartzen dira. Parte hartzeko pokerth.net kontu doako bat behar da."],
       ["Partida bat ikus dezaket jokatu gabe?",
        "Bai. Ikusleak onartzen dituzten martxan dauden partidak zuzenean ikus daitezke egongelatik: mahaia eta txata ikusten dituzu, baina poltsikoko kartak ezkutuan geratzen dira eta ezin duzu jokatu. Dagoeneko hasi den mahai baterako gonbidapen-estekak ikusteko irekitzen du."],
       ["Badago laguntzarik aplikazioaren barruan?",
-       "Bai. Batekoaren laguntza: Batekoak, web bezeroaren maskotak, pantaila bakoitza azaltzen du aurrera egin ahala, nahi baduzu. Bere menuak laguntza osoa dauka bilaketarekin, eta «Zer da hau?»: ukitu pantailako edozer eta zer egiten duen esaten du."]
+       "Bai. Batekoaren laguntza: Batekoak, web bezeroaren maskotak, pantaila bakoitza azaltzen du aurrera egin ahala, nahi baduzu. Bere menuak laguntza osoa dauka bilaketarekin, eta «Zer da hau?»: ukitu pantailako edozer eta zer egiten duen esaten du."],
+      ["Oraindik garatzen al da PokerTH aktiboki?",
+       "Bai. PokerTH software libre gisa garatzen da 2006az geroztik eta oraindik mantentzen da: mahaigaineko bezeroa eta zerbitzaria <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>-en daude, web bezero hau etengabe eguneratzen da (<a href=\"https://github.com/narmod/pokerth-web-client\">iturburu-kodea eta aldaketen erregistroa</a>), eta egunero jokatzen dira partidak pokerth.net sare ofizialean."]
     ],
   },
   lv: {
     title: "BUJ — PokerTH tīmekļa klients",
-    desc: "Bieži uzdotie jautājumi par PokerTH tīmekļa klientu: bezmaksas pokers bez reklāmām, Texas Hold’em pārlūkā bez lejupielādes, konti, mobilās ierīces, bezsaistes režīms, valodas un privātums.",
+    desc: "BUJ par PokerTH tīmekļa klientu: bezmaksas pokers bez reklāmām un lejupielādes, spēle kā viesim vai bez konta, draugu uzaicināšana ar saiti, turnīri, mobilās ierīces, bezsaistes režīms, valodas un privātums.",
     h1: "PokerTH tīmekļa klients — Bieži uzdotie jautājumi",
     qa: [
       ["Vai PokerTH ir bezmaksas?",
@@ -4601,7 +5222,13 @@ var SEO_FAQ_I18N = {
       ["Vai varu pārlūkā spēlēt Texas Hold’em pret citiem cilvēkiem?",
        "Jā. Pievienojies oficiālajam pokerth.net tīklam, lai spēlētu Texas Hold’em tiešsaistē pret spēlētājiem no visas pasaules, vai nosūti ielūguma saiti, lai draugi nonāktu tieši pie tava galda — viss pārlūkā."],
       ["Vai spēlēšanai vajadzīgs konts?",
-       "Nē. Režīmam Lokāli / treniņš konts nav vajadzīgs, un tas darbojas bezsaistē. Oficiālajā pokerth.net tīklā vari spēlēt Parastās spēles kā viesis; bezmaksas pokerth.net konts ir vajadzīgs Reitinga spēlēm, tikai reģistrētiem paredzētiem galdiem un tērzēšanai."],
+       "Nē. Režīmam Lokāli / treniņš konts nav vajadzīgs, un tas darbojas bezsaistē. Oficiālajā pokerth.net tīklā piesakies kā viesis: serveris piešķir tev viesa segvārdu, un tu vari uzreiz spēlēt Parastās spēles. LAN tīklā vai dedicētajā serverī kontu nav vispār — tu tikai izvēlies segvārdu. Neviens no tiem neprasa e-pasta adresi. Bezmaksas pokerth.net konts ir vajadzīgs tikai Reitinga spēlēm, tikai reģistrētiem paredzētiem galdiem un tērzēšanai."],
+      ["Kā spēlēt pokeru tiešsaistē ar draugiem?",
+       "Izveido galdu vestibilā — pokerth.net vai jebkurā LAN vai dedicētajā serverī — un gaidīšanas telpā nospied “Uzaicināt draugus”. Tīmekļa klients izveido ielūguma saiti, ko vari nosūtīt ar jebkuru ziņapmaiņas lietotni. Draugi to atver savā pārlūkā — iPhone, Android vai datorā —, neko nelejupielādējot. Iestati paroli, ja galdam jāpaliek privātam: parole nekad nav saites daļa."],
+      ["Kas notiek, kad draugs atver manu ielūguma saiti?",
+       "Saite satur galdu un serveri. Tavs draugs piesakās — pokerth.net kā viesis vai ar kontu, LAN tīklā vai dedicētajā serverī tikai ar segvārdu —, un tīmekļa klients pēc tam automātiski pievienojas galdam, tas nav jāmeklē vestibilā. Ar paroli aizsargāts galds prasa paroli; jau sākta spēle atveras skatīšanai. Ielūguma saites ir tīmekļa klienta funkcija un darbojas katrā serverī, ar kuru tas var savienoties."],
+      ["Vai ir demonstrācijas serveris, lai izmēģinātu PokerTH bez reģistrēšanās?",
+       "Jā. Pieteikšanās ekrānā izvēlies LAN / Dedicētais serveris un serveru sarakstā izvēlies publisko demonstrācijas serveri: ieraksti jebkuru segvārdu, un tu jau esi tā vestibilā — bez reģistrācijas, bez e-pasta adreses. Zaļš punkts rāda, kuri sarakstā esošie serveri ir tiešsaistē un cik spēlētāju tajos ir."],
       ["Vai tas darbojas mobilajās ierīcēs?",
        "Jā. Tīmekļa klients ir Progressive Web App: tas darbojas jebkurā mūsdienu pārlūkā datorā, planšetē vai tālrunī, un to var instalēt kā parastu lietotni — iPhone un iPad ar Kopīgot → Pievienot sākuma ekrānam, citur no pārlūka izvēlnes vai instalēšanas pogas. Dūža palīdzība parāda soļus tavai ierīcei."],
       ["Vai varu spēlēt pret datoru?",
@@ -4617,18 +5244,22 @@ var SEO_FAQ_I18N = {
       ["Kādus datus tīmekļa klients vāc?",
        "Pēc iespējas mazāk: iestatījumi paliek tavā pārlūkā, un netiek izmantota izsekošana vai reklāma. Piesakoties ar pokerth.net kontu, tavi iestatījumi un treniņa trofejas tiek sinhronizēti ar to, lai sekotu tev uz citām ierīcēm. Sīkāk skati privātuma lapā."],
       ["Vai varu uzturēt savu serveri?",
-       "Jā. Gan PokerTH veltītais serveris, gan šis tīmekļa klients ir atvērtā koda, tāpēc vari darbināt savu privāto pokera serveri lokālajā tīklā vai internetā."],
+       "Jā. Gan PokerTH veltītais serveris, gan šis tīmekļa klients ir atvērtā koda, tāpēc vari darbināt savu privāto pokera serveri lokālajā tīklā vai internetā. Lai tas būtu redzams sarakstā visiem, izvēlies LAN / Dedicētais serveris un pēc tam serveru saraksta apakšā “Piedāvāt savu serveri”: kad administratori to apstiprinās, tas parādīsies sarakstā. Serverim jābūt sasniedzamam no interneta."],
       ["Kā darbojas Reitinga spēles un sezonas?",
        "Reitinga spēlēs pokerth.net tīklā pie galda sēž 10 spēlētāji, un tās sākas, tiklīdz galds ir pilns: katram 10 000 žetonu, mazais blainds 50, kas dubultojas ik pēc 11 rokām, un 5 sekundes gājienam. No 1. līdz 7. vietai tiek piešķirti attiecīgi 15, 9, 6, 4, 3, 2 un 1 punkts; tavs rezultāts ir vidējais pa spēlēm, svērts pēc nospēlēto spēļu skaita, un reitings sākas no jauna katru ceturksni. Nepieciešams bezmaksas pokerth.net konts."],
+      ["Vai ir bezmaksas pokera turnīri un sacensības?",
+       "Jā, visu gadu, un visi bez maksas. Katra PokerTH spēle ir turnīrs, un pokerth.net kopiena turklāt rīko regulāras sacensības ar saviem reitingiem: BBC — spēles, kurās blaindi pieaug ik pēc dažām minūtēm (<a href=\"https://bbc.pokerth.net/registration\">kalendārs</a>, <a href=\"https://bbc.pokerth.net/results\">rezultāti</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">reitings</a>); WeCup (WEC) — turnīri mierīgākā, līdzsvarotā tempā (<a href=\"https://wec.pokerth.net/results\">rezultāti</a>, <a href=\"https://wec.pokerth.net/results/ranking\">reitings</a>); un Monthly Cup, kas notiek katru mēnesi (<a href=\"https://monthlycup.pokerth.net/\">nākamais kauss un jaunākie uzvarētāji</a>, <a href=\"https://monthlycup.pokerth.net/registration\">reģistrācija</a>). Datumi un noteikumi tiek paziņoti katrā vietnē un <a href=\"https://www.pokerth.net/\">pokerth.net</a> forumā. Lai piedalītos, nepieciešams bezmaksas pokerth.net konts."],
       ["Vai varu skatīties spēli, pats nespēlējot?",
        "Jā. Notiekošas spēles, kurās skatītāji ir atļauti, var skatīties tiešraidē no vestibila: redzi galdu un tērzēšanu, bet kabatas kārtis paliek apslēptas, un rīkoties nevari. Ielūguma saite uz jau sāktu galdu atver to skatīšanai."],
       ["Vai lietotnē ir palīdzība?",
-       "Jā. Dūža palīdzība: Dūzis, tīmekļa klienta talismans, pa ceļam izskaidro katru ekrānu, ja vēlies. Viņa izvēlnē ir visa palīdzība ar meklēšanu un “Kas tas ir?”: pieskaries jebkam ekrānā, un viņš pateiks, ko tas dara."]
+       "Jā. Dūža palīdzība: Dūzis, tīmekļa klienta talismans, pa ceļam izskaidro katru ekrānu, ja vēlies. Viņa izvēlnē ir visa palīdzība ar meklēšanu un “Kas tas ir?”: pieskaries jebkam ekrānā, un viņš pateiks, ko tas dara."],
+      ["Vai PokerTH joprojām tiek aktīvi izstrādāts?",
+       "Jā. PokerTH tiek izstrādāts kā brīvā programmatūra kopš 2006. gada un joprojām tiek uzturēts: darbvirsmas klients un serveris ir pieejami vietnē <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, šis tīmekļa klients tiek nepārtraukti atjaunināts (<a href=\"https://github.com/narmod/pokerth-web-client\">pirmkods un izmaiņu žurnāls</a>), un oficiālajā pokerth.net tīklā spēles notiek katru dienu."]
     ]
   },
   sl: {
     title: "Pogosta vprašanja — Spletni odjemalec PokerTH",
-    desc: "Pogosta vprašanja o spletnem odjemalcu PokerTH: brezplačen poker brez oglasov, Texas Hold’em v brskalniku brez prenosa, računi, mobilne naprave, način brez povezave, jeziki in zasebnost.",
+    desc: "Pogosta vprašanja o spletnem odjemalcu PokerTH: brezplačen poker brez oglasov in prenosa, igranje kot gost ali brez računa, vabila prijateljem, turnirji, mobilne naprave, način brez povezave, jeziki in zasebnost.",
     h1: "Spletni odjemalec PokerTH — Pogosta vprašanja",
     qa: [
       ["Je PokerTH brezplačen?",
@@ -4640,7 +5271,13 @@ var SEO_FAQ_I18N = {
       ["Lahko v brskalniku igram Texas Hold’em proti drugim ljudem?",
        "Da. Pridruži se uradnemu omrežju pokerth.net in igraj Texas Hold’em v živo proti igralcem z vsega sveta ali pošlji povezavo z vabilom, da prijatelji pristanejo naravnost za tvojo mizo — vse v brskalniku."],
       ["Potrebujem za igranje račun?",
-       "Ne. Način Lokalno / vadba ne potrebuje računa in deluje brez povezave. V uradnem omrežju pokerth.net lahko kot gost igraš navadne igre; brezplačen račun pokerth.net je potreben za igre z uvrstitvijo, mize samo za registrirane in klepet."],
+       "Ne. Način Lokalno / vadba ne potrebuje računa in deluje brez povezave. V uradnem omrežju pokerth.net se prijavi kot gost: strežnik ti dodeli vzdevek gosta in takoj lahko igraš navadne igre. V omrežju LAN ali na lastnem strežniku računa sploh ni — izbereš le vzdevek. Nobena od teh možnosti ne zahteva e-poštnega naslova. Brezplačen račun pokerth.net je potreben le za igre z uvrstitvijo, mize samo za registrirane in klepet."],
+      ["Kako igrati spletni poker s prijatelji?",
+       "Ustvari mizo v predverju — na pokerth.net ali na katerem koli strežniku LAN ali lastnem strežniku — in v čakalnici pritisni »Povabi prijatelje«. Spletni odjemalec ustvari povezavo z vabilom, ki jo lahko pošlješ prek katerega koli sporočilnika. Prijatelji jo odprejo v brskalniku, na iPhonu, Androidu ali računalniku, ne da bi karkoli prenesli. Če naj miza ostane zasebna, nastavi geslo: geslo nikoli ni del povezave."],
+      ["Kaj se zgodi, ko prijatelj odpre mojo povezavo z vabilom?",
+       "Povezava vsebuje mizo in strežnik. Prijatelj se prijavi — kot gost ali z računom na pokerth.net, v omrežju LAN ali na lastnem strežniku le z vzdevkom — nato pa se spletni odjemalec samodejno pridruži mizi, brez iskanja v predverju. Miza, zaščitena z geslom, zahteva geslo; igra, ki se je že začela, se odpre za opazovanje. Povezave z vabilom so funkcija spletnega odjemalca in delujejo na vsakem strežniku, s katerim se lahko poveže."],
+      ["Ali obstaja predstavitveni strežnik, kjer lahko PokerTH preizkusim brez registracije?",
+       "Da. Na prijavnem zaslonu izberi LAN / lastni strežnik in na seznamu strežnikov izberi javni predstavitveni strežnik: vpiši poljuben vzdevek in že si v njegovem predverju — brez registracije, brez e-poštnega naslova. Zelena pika pokaže, kateri strežniki s seznama so dosegljivi in koliko igralcev je na njih."],
       ["Deluje na mobilnih napravah?",
        "Da. Spletni odjemalec je Progressive Web App: teče v vsakem sodobnem brskalniku na računalniku, tablici ali telefonu in ga je mogoče namestiti kot običajno aplikacijo — na iPhonu in iPadu z Deli → Dodaj na domači zaslon, drugje iz menija brskalnika ali z gumbom za namestitev. Pomoč asa pokaže korake za tvojo napravo."],
       ["Lahko igram proti računalniku?",
@@ -4656,18 +5293,22 @@ var SEO_FAQ_I18N = {
       ["Katere podatke zbira spletni odjemalec?",
        "Čim manj: nastavitve ostanejo v tvojem brskalniku, sledenje in oglaševanje pa se ne uporabljata. Ko se prijaviš z računom pokerth.net, se tvoje možnosti in vadbeni pokali z njim sinhronizirajo, da te spremljajo na drugih napravah. Podrobnosti so na strani o zasebnosti."],
       ["Lahko gostim svoj strežnik?",
-       "Da. Namenski strežnik PokerTH in ta spletni odjemalec sta oba odprtokodna, zato lahko poganjaš svoj zasebni pokerski strežnik v lokalnem omrežju ali na internetu."],
+       "Da. Namenski strežnik PokerTH in ta spletni odjemalec sta oba odprtokodna, zato lahko poganjaš svoj zasebni pokerski strežnik v lokalnem omrežju ali na internetu. Če želiš, da je viden vsem, izberi LAN / lastni strežnik, nato pa »Predlagaj moj strežnik« na dnu seznama strežnikov: ko ga skrbniki odobrijo, se prikaže na seznamu. Strežnik mora biti dosegljiv z interneta."],
       ["Kako delujejo igre z uvrstitvijo in sezone?",
        "Igre z uvrstitvijo na pokerth.net sprejmejo 10 igralcev in se začnejo, ko je miza polna: vsak dobi 10.000 žetonov, mali blind je 50 in se podvoji vsakih 11 rok, za potezo pa imaš 5 sekund. Mesta od 1. do 7. dobijo 15, 9, 6, 4, 3, 2 in 1 točko; tvoj Rezultat je povprečje na igro, uteženo s številom odigranih iger, uvrstitev pa se vsak kvartal začne znova. Potreben je brezplačen račun pokerth.net."],
+      ["Ali obstajajo brezplačni poker turnirji in tekmovanja?",
+       "Da, vse leto in vsi brezplačni. Vsaka igra PokerTH je turnir, skupnost pokerth.net pa prireja tudi redna tekmovanja z lastnimi lestvicami: BBC, igre, v katerih blindi rastejo vsakih nekaj minut (<a href=\"https://bbc.pokerth.net/registration\">koledar</a>, <a href=\"https://bbc.pokerth.net/results\">rezultati</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">lestvica</a>); WeCup (WEC), turnirji v mirnejšem, uravnoteženem tempu (<a href=\"https://wec.pokerth.net/results\">rezultati</a>, <a href=\"https://wec.pokerth.net/results/ranking\">lestvica</a>); in Monthly Cup, ki poteka vsak mesec (<a href=\"https://monthlycup.pokerth.net/\">naslednji pokal in zadnji zmagovalci</a>, <a href=\"https://monthlycup.pokerth.net/registration\">prijava</a>). Datumi in pravila so objavljeni na posameznih straneh in na forumu <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Za sodelovanje potrebuješ brezplačen račun pokerth.net."],
       ["Lahko gledam igro, ne da bi igral?",
        "Da. Tekoče igre, ki dovoljujejo gledalce, lahko spremljaš v živo iz predverja: vidiš mizo in klepet, zasebne karte pa ostanejo skrite in ne moreš igrati. Povabilna povezava do mize, ki se je že začela, jo odpre za opazovanje."],
       ["Je v aplikaciji na voljo pomoč?",
-       "Da. Pomoč asa: As, maskota spletnega odjemalca, ti sproti razloži vsak zaslon, če to želiš. Njegov meni vsebuje celotno pomoč z iskanjem in možnost »Kaj je to?«: tapni karkoli na zaslonu in pove, kaj to počne."]
+       "Da. Pomoč asa: As, maskota spletnega odjemalca, ti sproti razloži vsak zaslon, če to želiš. Njegov meni vsebuje celotno pomoč z iskanjem in možnost »Kaj je to?«: tapni karkoli na zaslonu in pove, kaj to počne."],
+      ["Se PokerTH še aktivno razvija?",
+       "Da. PokerTH se kot prosta programska oprema razvija od leta 2006 in se še vedno vzdržuje: namizni odjemalec in strežnik sta na <a href=\"https://github.com/pokerth/pokerth\">GitHubu</a>, ta spletni odjemalec se nenehno posodablja (<a href=\"https://github.com/narmod/pokerth-web-client\">izvorna koda in seznam sprememb</a>), na uradnem omrežju pokerth.net pa se igra vsak dan."]
     ]
   },
   bs: {
     title: "Česta pitanja — PokerTH web klijent",
-    desc: "Česta pitanja o PokerTH web klijentu: besplatan poker bez reklama, Texas Hold’em u pregledniku bez preuzimanja, računi, mobilni uređaji, offline način, jezici i privatnost.",
+    desc: "Česta pitanja o PokerTH web klijentu: besplatan poker bez reklama i preuzimanja, igra kao gost ili bez računa, pozivnice za prijatelje, turniri, mobilni uređaji, offline način, jezici i privatnost.",
     h1: "PokerTH web klijent — Česta pitanja",
     qa: [
       ["Je li PokerTH besplatan?",
@@ -4679,7 +5320,13 @@ var SEO_FAQ_I18N = {
       ["Mogu li u pregledniku igrati Texas Hold’em protiv drugih ljudi?",
        "Da. Pridružite se zvaničnoj pokerth.net mreži i igrajte Texas Hold’em uživo protiv igrača iz cijelog svijeta, ili pošaljite link s pozivnicom da prijatelji stignu direktno za vaš sto — sve u pregledniku."],
       ["Treba li mi račun za igranje?",
-       "Ne. Način Lokalno / trening ne traži račun i radi offline. Na zvaničnoj pokerth.net mreži možete igrati normalne igre kao gost; besplatan pokerth.net račun potreban je za rang igre, stolove samo za registrovane igrače i chat."],
+       "Ne. Način Lokalno / trening ne traži račun i radi offline. Na zvaničnoj pokerth.net mreži prijavite se kao gost: server vam dodjeljuje gostujući nadimak i odmah možete igrati normalne igre. Na LAN-u ili namjenskom serveru računa uopće nema — samo izaberete nadimak. Ništa od toga ne traži e-mail adresu. Besplatan pokerth.net račun potreban je samo za rang igre, stolove samo za registrovane igrače i chat."],
+      ["Kako igrati poker online s prijateljima?",
+       "Napravite sto u predvorju — na pokerth.net ili na bilo kojem LAN ili namjenskom serveru — i u čekaonici pritisnite „Pozovi prijatelje“. Web klijent pravi link s pozivnicom koji možete poslati bilo kojom aplikacijom za poruke. Prijatelji ga otvaraju u pregledniku, na iPhoneu, Androidu ili računaru, bez ikakvog preuzimanja. Ako sto treba ostati privatan, postavite lozinku: lozinka nikad nije dio linka."],
+      ["Šta se dešava kada prijatelj otvori moj link s pozivnicom?",
+       "Link sadrži sto i server. Vaš prijatelj se prijavi — kao gost ili računom na pokerth.net, a na LAN-u ili namjenskom serveru samo nadimkom — i web klijent zatim automatski sjeda za sto, bez traženja u predvorju. Sto zaštićen lozinkom traži lozinku; igra koja je već počela otvara se za gledanje. Linkovi s pozivnicom su funkcija web klijenta i rade na svakom serveru na koji se on može povezati."],
+      ["Postoji li demo server za isprobavanje PokerTH-a bez registracije?",
+       "Da. Na ekranu za prijavu izaberite LAN / Namjenski server i na listi servera odaberite javni demo server: upišite bilo koji nadimak i već ste u njegovom predvorju — bez registracije, bez e-mail adrese. Zelena tačka pokazuje koji su serveri s liste online i koliko je igrača na njima."],
       ["Radi li na mobitelu?",
        "Da. Web klijent je Progressive Web App: radi u svakom modernom pregledniku na računaru, tabletu ili telefonu i može se instalirati kao obična aplikacija — na iPhoneu i iPadu preko Dijeli → Dodaj na početni zaslon, drugdje iz menija preglednika ili dugmetom za instalaciju. Pomoć asa prikazuje korake za vaš uređaj."],
       ["Mogu li igrati protiv računara?",
@@ -4695,18 +5342,22 @@ var SEO_FAQ_I18N = {
       ["Koje podatke prikuplja web klijent?",
        "Što je manje moguće: postavke ostaju u vašem pregledniku, a praćenje i oglašavanje se ne koriste. Kada se prijavite pokerth.net računom, vaše opcije i trening trofeji se sinhronizuju s njim kako bi vas pratili na vašim drugim uređajima. Detalji su na stranici o privatnosti."],
       ["Mogu li imati vlastiti server?",
-       "Da. PokerTH namjenski server i ovaj web klijent su oba otvorenog koda, pa možete pokrenuti vlastiti privatni poker server na LAN-u ili na internetu."],
+       "Da. PokerTH namjenski server i ovaj web klijent su oba otvorenog koda, pa možete pokrenuti vlastiti privatni poker server na LAN-u ili na internetu. Da bi bio na listi za sve, izaberite LAN / Namjenski server, a zatim „Predloži moj server“ na dnu liste servera: kada ga administratori odobre, pojavljuje se na listi. Server mora biti dostupan s interneta."],
       ["Kako funkcionišu rang igre i sezone?",
        "Rang igre na pokerth.net okupljaju 10 igrača i počinju čim se sto popuni: po 10.000 žetona svako, mali blind od 50 koji se udvostručuje svakih 11 ruku i 5 sekundi za potez. Mjesta od 1 do 7 donose 15, 9, 6, 4, 3, 2 i 1 bod; vaš rezultat je prosjek po igri, ponderisan brojem odigranih igara, a rang lista počinje ispočetka svakog kvartala. Potreban je besplatan pokerth.net račun."],
+      ["Postoje li besplatni poker turniri i takmičenja?",
+       "Da, tokom cijele godine i svi su besplatni. Svaka PokerTH igra je turnir, a zajednica pokerth.net održava i redovna takmičenja s vlastitim rang listama: BBC, igre u kojima blindovi rastu svakih nekoliko minuta (<a href=\"https://bbc.pokerth.net/registration\">kalendar</a>, <a href=\"https://bbc.pokerth.net/results\">rezultati</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">rang lista</a>); WeCup (WEC), turniri mirnijeg, uravnoteženog tempa (<a href=\"https://wec.pokerth.net/results\">rezultati</a>, <a href=\"https://wec.pokerth.net/results/ranking\">rang lista</a>); i Monthly Cup, koji se održava svakog mjeseca (<a href=\"https://monthlycup.pokerth.net/\">sljedeći kup i posljednji pobjednici</a>, <a href=\"https://monthlycup.pokerth.net/registration\">prijava</a>). Datumi i pravila objavljuju se na svakoj od tih stranica i na forumu <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Za učešće je potreban besplatan pokerth.net račun."],
       ["Mogu li gledati igru a da ne igram?",
        "Da. Igre u toku koje dozvoljavaju gledaoce mogu se uživo pratiti iz predvorja: vidite sto i chat, ali lične karte ostaju skrivene i ne možete igrati poteze. Link s pozivom za sto koji je već počeo otvara ga za gledanje."],
       ["Ima li pomoći unutar aplikacije?",
-       "Da. Pomoć asa: As, maskota web klijenta, objašnjava svaki ekran dok napredujete, ako to želite. Njegov meni sadrži cijelu pomoć s pretragom, i „Šta je ovo?”: dodirnite bilo šta na ekranu i on kaže čemu služi."]
+       "Da. Pomoć asa: As, maskota web klijenta, objašnjava svaki ekran dok napredujete, ako to želite. Njegov meni sadrži cijelu pomoć s pretragom, i „Šta je ovo?”: dodirnite bilo šta na ekranu i on kaže čemu služi."],
+      ["Razvija li se PokerTH još uvijek?",
+       "Da. PokerTH se kao slobodan softver razvija od 2006. godine i još se održava: desktop klijent i server su na <a href=\"https://github.com/pokerth/pokerth\">GitHubu</a>, ovaj web klijent se stalno ažurira (<a href=\"https://github.com/narmod/pokerth-web-client\">izvorni kod i spisak promjena</a>), a na zvaničnoj pokerth.net mreži igra se svaki dan."]
     ]
   },
   mk: {
     title: "Често поставувани прашања — PokerTH веб-клиент",
-    desc: "Често поставувани прашања за PokerTH веб-клиентот: бесплатен покер без реклами, Texas Hold’em во прелистувач без преземање, сметки, мобилни уреди, офлајн режим, јазици и приватност.",
+    desc: "Често поставувани прашања за PokerTH веб-клиентот: бесплатен покер без реклами и преземање, игра како гостин, покана за пријатели со линк, турнири, мобилни уреди, офлајн режим, јазици и приватност.",
     h1: "PokerTH веб-клиент — Често поставувани прашања",
     qa: [
       ["Дали PokerTH е бесплатен?",
@@ -4718,7 +5369,13 @@ var SEO_FAQ_I18N = {
       ["Можам ли во прелистувачот да играм Texas Hold’em против други луѓе?",
        "Да. Приклучете се на официјалната мрежа pokerth.net за да играте Texas Hold’em во живо против играчи од целиот свет, или испратете линк за покана за пријателите да стигнат директно на вашата маса — сè во прелистувачот."],
       ["Ми треба ли сметка за да играм?",
-       "Не. Режимот Локално / тренинг не бара сметка и работи офлајн. На официјалната мрежа pokerth.net можете да играте Нормални игри како гостин; бесплатна pokerth.net сметка е потребна за игрите со рангирање, масите само за регистрирани играчи и разговорот."],
+       "Не. Режимот Локално / тренинг не бара сметка и работи офлајн. На официјалната мрежа pokerth.net најавете се како гостин: серверот ви дава гостински прекар и веднаш можете да играте Нормални игри. На LAN или на наменски сервер воопшто нема сметка — само избирате прекар. Ниту една од овие можности не бара адреса на е-пошта. Бесплатна pokerth.net сметка е потребна само за игрите со рангирање, масите само за регистрирани играчи и разговорот."],
+      ["Како да играм покер онлајн со пријатели?",
+       "Создадете маса во предворјето — на pokerth.net или на кој било LAN или наменски сервер — и притиснете „Покани пријатели“ во чекалната. Веб-клиентот создава линк за покана што можете да го испратите преку која било апликација за пораки. Пријателите го отвораат во својот прелистувач, на iPhone, Android или компјутер, без ништо да преземаат. Поставете лозинка ако масата треба да остане приватна: лозинката никогаш не е дел од линкот."],
+      ["Што се случува кога пријател ќе го отвори мојот линк за покана?",
+       "Линкот ги содржи масата и серверот. Вашиот пријател се најавува — како гостин или со сметка на pokerth.net, само со прекар на LAN или наменски сервер — а веб-клиентот потоа автоматски се приклучува на масата, без потреба да ја бара во предворјето. Маса заштитена со лозинка ја бара својата лозинка; игра што веќе започнала се отвора за гледање. Линковите за покана се функција на веб-клиентот и работат на секој сервер на кој тој може да се поврзе."],
+      ["Има ли демо-сервер за да го пробам PokerTH без регистрација?",
+       "Да. На екранот за најава изберете LAN / наменски сервер и одберете го јавниот демо-сервер од листата на сервери: внесете кој било прекар и веќе сте во неговото предворје — без регистрација, без адреса на е-пошта. Зелена точка покажува кои од наведените сервери се онлајн и колку играчи има на нив."],
       ["Дали работи на мобилен?",
        "Да. Веб-клиентот е Progressive Web App: работи во секој модерен прелистувач на компјутер, таблет или телефон и може да се инсталира како обична апликација — на iPhone и iPad со Сподели → Додади на почетниот екран, на другите места од менито на прелистувачот или од копчето за инсталирање. Помош од кецот ги прикажува чекорите за вашиот уред."],
       ["Можам ли да играм против компјутерот?",
@@ -4734,18 +5391,22 @@ var SEO_FAQ_I18N = {
       ["Кои податоци ги собира веб-клиентот?",
        "Што е можно помалку: поставките остануваат во вашиот прелистувач, а не се користат следење ниту реклами. Кога се најавувате со pokerth.net сметка, вашите поставки и тренинг-трофеи се синхронизираат со неа за да ве следат на другите ваши уреди. Детали има на страницата за приватност."],
       ["Можам ли да хостирам сопствен сервер?",
-       "Да. Наменскиот сервер на PokerTH и овој веб-клиент се со отворен код, па можете да пуштите сопствен приватен покер сервер на LAN или на интернет."],
+       "Да. Наменскиот сервер на PokerTH и овој веб-клиент се со отворен код, па можете да пуштите сопствен приватен покер сервер на LAN или на интернет. За да биде видлив за сите, изберете LAN / наменски сервер, а потоа „Предложи го мојот сервер“ на дното од листата на сервери: штом администраторите го одобрат, тој се појавува во листата. Серверот мора да биде достапен од интернет."],
       ["Како функционираат игрите со рангирање и сезоните?",
        "Игрите со рангирање на pokerth.net собираат 10 играчи и започнуваат штом масата ќе се наполни: по 10 000 жетони, мал блајнд од 50 што се удвојува на секои 11 раки и 5 секунди за потег. Местата од 1 до 7 носат 15, 9, 6, 4, 3, 2 и 1 бод; вашиот резултат е просекот по игра, пондериран според бројот на одиграни игри, а рангирањето започнува одново секој квартал. Потребна е бесплатна pokerth.net сметка."],
+      ["Има ли бесплатни покер турнири и натпревари?",
+       "Да, во текот на целата година, и сите се бесплатни. Секоја игра во PokerTH е турнир, а заедницата на pokerth.net организира и редовни натпревари со сопствено рангирање: BBC, игри во кои блајндовите растат на секои неколку минути (<a href=\"https://bbc.pokerth.net/registration\">календар</a>, <a href=\"https://bbc.pokerth.net/results\">резултати</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">рангирање</a>); WeCup (WEC), турнири со помирно, избалансирано темпо (<a href=\"https://wec.pokerth.net/results\">резултати</a>, <a href=\"https://wec.pokerth.net/results/ranking\">рангирање</a>); и Monthly Cup, кој се одржува секој месец (<a href=\"https://monthlycup.pokerth.net/\">следниот куп и последните победници</a>, <a href=\"https://monthlycup.pokerth.net/registration\">пријавување</a>). Датумите и правилата се објавуваат на секоја од страниците и на форумот на <a href=\"https://www.pokerth.net/\">pokerth.net</a>. За учество е потребна бесплатна pokerth.net сметка."],
       ["Можам ли да гледам игра без да играм?",
        "Да. Игрите што се во тек и дозволуваат гледачи може да се гледаат во живо од предворјето: ја гледате масата и разговорот, но личните карти остануваат скриени и не можете да играте потези. Линк за покана до маса што веќе започнала ја отвора за гледање."],
       ["Има ли помош во апликацијата?",
-       "Да. Помош од кецот: Кецот, маскотата на веб-клиентот, ви го објаснува секој екран по пат, ако сакате. Во неговото мени е целата помош со пребарување и „Што е ова?“: допрете што било на екранот и тој ќе каже што прави."]
+       "Да. Помош од кецот: Кецот, маскотата на веб-клиентот, ви го објаснува секој екран по пат, ако сакате. Во неговото мени е целата помош со пребарување и „Што е ова?“: допрете што било на екранот и тој ќе каже што прави."],
+      ["Дали PokerTH сè уште активно се развива?",
+       "Да. PokerTH се развива како слободен софтвер од 2006 година и сè уште се одржува: десктоп клиентот и серверот се на <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, овој веб-клиент постојано се ажурира (<a href=\"https://github.com/narmod/pokerth-web-client\">изворен код и дневник на промени</a>), а на официјалната мрежа pokerth.net се игра секој ден."]
     ]
   },
   ms: {
     title: "Soalan Lazim — Klien Web PokerTH",
-    desc: "Soalan lazim tentang Klien Web PokerTH: poker percuma tanpa iklan, bermain Texas Hold’em dalam pelayar tanpa muat turun, akaun, sokongan mudah alih, mod luar talian, bahasa dan privasi.",
+    desc: "Soalan lazim tentang Klien Web PokerTH: poker percuma tanpa iklan dan tanpa muat turun, bermain sebagai tetamu atau tanpa akaun, menjemput rakan dengan pautan, kejohanan, mudah alih, mod luar talian, bahasa dan privasi.",
     h1: "Klien Web PokerTH — Soalan Lazim",
     qa: [
       ["Adakah PokerTH percuma?",
@@ -4757,7 +5418,13 @@ var SEO_FAQ_I18N = {
       ["Bolehkah saya bermain Texas Hold’em dalam pelayar menentang orang lain?",
        "Ya. Sertai rangkaian rasmi pokerth.net untuk bermain Texas Hold’em secara langsung menentang pemain seluruh dunia, atau hantar pautan jemputan supaya rakan terus tiba di meja anda — semuanya dalam pelayar."],
       ["Perlukah saya akaun untuk bermain?",
-       "Tidak. Mod Lokal / latihan tidak memerlukan akaun dan berfungsi di luar talian. Di rangkaian rasmi pokerth.net anda boleh bermain permainan Normal sebagai tetamu; akaun pokerth.net percuma diperlukan untuk permainan berperingkat, meja untuk pemain berdaftar sahaja dan sembang."],
+       "Tidak. Mod Lokal / latihan tidak memerlukan akaun dan berfungsi di luar talian. Di rangkaian rasmi pokerth.net, log masuk sebagai tetamu: pelayan memberi anda nama samaran tetamu dan anda boleh terus bermain permainan Normal. Di LAN atau pelayan khusus tiada akaun langsung — anda hanya perlu memilih nama samaran. Tiada satu pun daripadanya meminta alamat e-mel. Akaun pokerth.net percuma hanya diperlukan untuk permainan berperingkat, meja untuk pemain berdaftar sahaja dan sembang."],
+      ["Bagaimanakah cara bermain poker dalam talian bersama rakan?",
+       "Cipta meja di lobi — di pokerth.net atau di mana-mana LAN atau pelayan khusus — dan tekan “Undang teman” di bilik menunggu. Klien web menjana pautan jemputan yang boleh anda hantar melalui mana-mana aplikasi pesanan. Rakan anda membukanya dalam pelayar, pada iPhone, Android atau komputer, tanpa perlu memuat turun apa-apa. Tetapkan kata laluan jika meja perlu kekal peribadi: kata laluan tidak pernah menjadi sebahagian daripada pautan."],
+      ["Apakah yang berlaku apabila rakan membuka pautan jemputan saya?",
+       "Pautan itu membawa maklumat meja dan pelayan. Rakan anda log masuk — sebagai tetamu atau dengan akaun di pokerth.net, hanya dengan nama samaran di LAN atau pelayan khusus — kemudian klien web menyertai meja secara automatik, tanpa perlu mencarinya di lobi. Meja yang dilindungi kata laluan akan meminta kata laluannya; permainan yang sudah bermula dibuka untuk ditonton. Pautan jemputan ialah ciri klien web dan berfungsi pada setiap pelayan yang boleh disambungkannya."],
+      ["Adakah terdapat pelayan demo untuk mencuba PokerTH tanpa mendaftar?",
+       "Ya. Pada skrin log masuk, pilih LAN / Server khusus dan pilih pelayan demo awam dalam senarai pelayan: taip sebarang nama samaran dan anda sudah berada di lobinya — tanpa pendaftaran, tanpa alamat e-mel. Titik hijau menunjukkan pelayan tersenarai yang sedang dalam talian dan bilangan pemain di dalamnya."],
       ["Adakah ia berfungsi pada mudah alih?",
        "Ya. Klien web ialah Progressive Web App: ia berjalan dalam mana-mana pelayar moden di desktop, tablet atau telefon, dan boleh dipasang seperti aplikasi asli — pada iPhone dan iPad dengan Bagikan → Tambah ke Skrin Utama, di tempat lain dari menu pelayar atau butang pasang. Bantuan si Sat menunjukkan langkah-langkah untuk peranti anda."],
       ["Bolehkah saya bermain menentang komputer?",
@@ -4773,18 +5440,22 @@ var SEO_FAQ_I18N = {
       ["Data apa yang dikumpul oleh klien web?",
        "Sesedikit mungkin: tetapan kekal dalam pelayar anda, dan tiada penjejakan atau pengiklanan digunakan. Apabila anda log masuk dengan akaun pokerth.net, tetapan dan trofi latihan anda disegerakkan dengannya supaya mengikuti anda ke peranti lain. Lihat halaman privasi untuk butiran."],
       ["Bolehkah saya mengehos pelayan sendiri?",
-       "Ya. Pelayan khusus PokerTH dan klien web ini kedua-duanya sumber terbuka, jadi anda boleh menjalankan pelayan poker peribadi anda sendiri di LAN atau di internet."],
+       "Ya. Pelayan khusus PokerTH dan klien web ini kedua-duanya sumber terbuka, jadi anda boleh menjalankan pelayan poker peribadi anda sendiri di LAN atau di internet. Untuk menyenaraikannya kepada semua orang, pilih LAN / Server khusus, kemudian “Cadangkan server saya” di bahagian bawah senarai pelayan: setelah diluluskan oleh pentadbir, ia akan muncul dalam senarai. Pelayan mesti boleh dicapai dari internet."],
       ["Bagaimanakah permainan berperingkat dan musim berfungsi?",
        "Permainan berperingkat di pokerth.net menempatkan 10 pemain dan bermula sebaik sahaja meja penuh: 10 000 cip setiap seorang, small blind 50 yang berganda setiap 11 tangan, dan 5 saat untuk bertindak. Tempat 1 hingga 7 mendapat 15, 9, 6, 4, 3, 2 dan 1 mata; skor anda ialah purata setiap permainan, ditimbang mengikut bilangan permainan yang anda mainkan, dan kedudukan bermula semula setiap suku tahun. Akaun pokerth.net percuma diperlukan."],
+      ["Adakah terdapat kejohanan dan pertandingan poker percuma?",
+       "Ya, sepanjang tahun, dan semuanya percuma. Setiap permainan PokerTH ialah kejohanan, dan komuniti pokerth.net juga menganjurkan pertandingan tetap dengan kedudukan tersendiri: BBC, permainan yang blind-nya naik setiap beberapa minit (<a href=\"https://bbc.pokerth.net/registration\">kalendar</a>, <a href=\"https://bbc.pokerth.net/results\">keputusan</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">kedudukan</a>); WeCup (WEC), kejohanan dengan rentak yang lebih tenang dan seimbang (<a href=\"https://wec.pokerth.net/results\">keputusan</a>, <a href=\"https://wec.pokerth.net/results/ranking\">kedudukan</a>); dan Monthly Cup, diadakan setiap bulan (<a href=\"https://monthlycup.pokerth.net/\">piala seterusnya dan pemenang terkini</a>, <a href=\"https://monthlycup.pokerth.net/registration\">pendaftaran</a>). Tarikh dan peraturan diumumkan di setiap laman dan di forum <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Penyertaan memerlukan akaun pokerth.net percuma."],
       ["Bolehkah saya menonton permainan tanpa bermain?",
        "Ya. Permainan yang sedang berjalan dan membenarkan penonton boleh ditonton secara langsung dari lobi: anda melihat meja dan sembang, tetapi kad lubang kekal tersembunyi dan anda tidak boleh bertindak. Pautan jemputan ke meja yang sudah bermula membukanya untuk ditonton."],
       ["Adakah terdapat bantuan dalam aplikasi?",
-       "Ya. Bantuan si Sat: si Sat, maskot klien web, menerangkan setiap skrin semasa anda bermain jika anda mahu. Menunya mengandungi seluruh bantuan dengan carian, dan “Apakah ini?”: ketik apa-apa pada skrin dan ia memberitahu apa fungsinya."]
+       "Ya. Bantuan si Sat: si Sat, maskot klien web, menerangkan setiap skrin semasa anda bermain jika anda mahu. Menunya mengandungi seluruh bantuan dengan carian, dan “Apakah ini?”: ketik apa-apa pada skrin dan ia memberitahu apa fungsinya."],
+      ["Adakah PokerTH masih dibangunkan secara aktif?",
+       "Ya. PokerTH telah dibangunkan sebagai perisian bebas sejak 2006 dan masih diselenggara: klien desktop dan pelayan berada di <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, klien web ini dikemas kini secara berterusan (<a href=\"https://github.com/narmod/pokerth-web-client\">kod sumber dan log perubahan</a>), dan permainan dimainkan setiap hari di rangkaian rasmi pokerth.net."]
     ]
   },
   sq: {
     title: "Pyetje të shpeshta — Klienti web PokerTH",
-    desc: "Pyetje të shpeshta për klientin web PokerTH: poker falas pa reklama, Texas Hold’em në shfletues pa shkarkim, llogaritë, celulari, mënyra offline, gjuhët dhe privatësia.",
+    desc: "Pyetje të shpeshta për klientin web PokerTH: poker falas pa reklama e pa shkarkim, lojë si mysafir, ftesa për miqtë me një lidhje, turne, celulari, mënyra offline, gjuhët dhe privatësia.",
     h1: "Klienti web PokerTH — Pyetje të shpeshta",
     qa: [
       ["A është PokerTH falas?",
@@ -4796,7 +5467,13 @@ var SEO_FAQ_I18N = {
       ["A mund të luaj Texas Hold’em në shfletues kundër njerëzve të tjerë?",
        "Po. Bashkohu me rrjetin zyrtar pokerth.net për të luajtur Texas Hold’em drejtpërdrejt kundër lojtarëve nga e gjithë bota, ose dërgo një lidhje ftese që miqtë të mbërrijnë direkt në tavolinën tënde — gjithçka brenda shfletuesit."],
       ["A më duhet llogari për të luajtur?",
-       "Jo. Mënyra Lokal / stërvitje nuk kërkon llogari dhe funksionon offline. Në rrjetin zyrtar pokerth.net mund të luash lojëra Normale si mysafir; një llogari falas pokerth.net të duhet për lojërat me renditje, tavolinat vetëm për lojtarë të regjistruar dhe bisedën."],
+       "Jo. Mënyra Lokal / stërvitje nuk kërkon llogari dhe funksionon offline. Në rrjetin zyrtar pokerth.net hyr si mysafir: serveri të jep një pseudonim mysafiri dhe mund të luash menjëherë lojëra Normale. Në LAN ose në një server të dedikuar nuk ka fare llogari — thjesht zgjedh një pseudonim. Asnjëra prej tyre nuk kërkon adresë email-i. Një llogari falas pokerth.net të duhet vetëm për lojërat me renditje, tavolinat vetëm për lojtarë të regjistruar dhe bisedën."],
+      ["Si të luaj poker online me miqtë?",
+       "Krijo një tavolinë në lobi — në pokerth.net ose në çdo server LAN apo të dedikuar — dhe shtyp “Fto miq” në dhomën e pritjes. Klienti web krijon një lidhje ftese që mund ta dërgosh me çfarëdo aplikacioni mesazhesh. Miqtë e tu e hapin në shfletuesin e tyre, në iPhone, Android ose kompjuter, pa shkarkuar asgjë. Vendos një fjalëkalim nëse tavolina duhet të mbetet private: fjalëkalimi nuk është kurrë pjesë e lidhjes."],
+      ["Çfarë ndodh kur një mik hap lidhjen time të ftesës?",
+       "Lidhja përmban tavolinën dhe serverin. Shoku yt hyn — si mysafir ose me një llogari në pokerth.net, vetëm me një pseudonim në një server LAN ose të dedikuar — dhe pastaj klienti web e fut automatikisht në tavolinë, pa pasur nevojë ta kërkojë në lobi. Një tavolinë e mbrojtur me fjalëkalim kërkon fjalëkalimin e saj; një lojë që ka nisur tashmë hapet për vëzhgim. Lidhjet e ftesës janë një veçori e klientit web dhe funksionojnë në çdo server me të cilin ai mund të lidhet."],
+      ["A ka një server demo për ta provuar PokerTH pa u regjistruar?",
+       "Po. Në ekranin e hyrjes zgjidh LAN / server i dedikuar dhe merr serverin publik demo nga lista e serverëve: shkruaj çfarëdo pseudonimi dhe je në lobin e tij — pa regjistrim, pa adresë email-i. Një pikë e gjelbër tregon cilët nga serverët e listuar janë online dhe sa lojtarë ka në to."],
       ["A funksionon në celular?",
        "Po. Klienti web është një Progressive Web App: funksionon në çdo shfletues modern në kompjuter, tablet ose telefon, dhe mund të instalohet si një aplikacion i zakonshëm — në iPhone dhe iPad me Shpërndaje → Shto në ekranin fillestar, gjetkë nga menyja e shfletuesit ose me butonin e instalimit. Ndihma e Asit tregon hapat për pajisjen tënde."],
       ["A mund të luaj kundër kompjuterit?",
@@ -4812,18 +5489,22 @@ var SEO_FAQ_I18N = {
       ["Çfarë të dhënash mbledh klienti web?",
        "Sa më pak të jetë e mundur: cilësimet mbeten në shfletuesin tënd, dhe nuk përdoret asnjë gjurmim apo reklamë. Kur hyn me një llogari pokerth.net, opsionet dhe kupat e stërvitjes sinkronizohen me të, që të të ndjekin në pajisjet e tua të tjera. Shiko faqen e privatësisë për hollësi."],
       ["A mund të mbaj serverin tim?",
-       "Po. Serveri i dedikuar PokerTH dhe ky klient web janë të dy me burim të hapur, kështu që mund të mbash serverin tënd privat të pokerit në LAN ose në internet."],
+       "Po. Serveri i dedikuar PokerTH dhe ky klient web janë të dy me burim të hapur, kështu që mund të mbash serverin tënd privat të pokerit në LAN ose në internet. Që ta shohin të gjithë, zgjidh LAN / server i dedikuar, pastaj “Propozo serverin tim” në fund të listës së serverëve: sapo administratorët ta miratojnë, ai shfaqet në listë. Serveri duhet të jetë i arritshëm nga interneti."],
       ["Si funksionojnë lojërat me renditje dhe sezonet?",
        "Lojërat me renditje në pokerth.net ulin 10 lojtarë dhe fillojnë sapo tavolina të mbushet: nga 10 000 fisha secili, blind i vogël 50 që dyfishohet çdo 11 duar dhe 5 sekonda për të vepruar. Vendet 1 deri në 7 marrin 15, 9, 6, 4, 3, 2 dhe 1 pikë; Rezultati yt është mesatarja për lojë, e peshuar me numrin e lojërave që ke luajtur, dhe renditja fillon nga e para çdo tremujor. Duhet një llogari falas pokerth.net."],
+      ["A ka turne dhe gara poker falas?",
+       "Po, gjatë gjithë vitit, dhe të gjitha falas. Çdo lojë PokerTH është një turne, dhe komuniteti i pokerth.net organizon edhe gara të rregullta me renditjet e veta: BBC, lojëra ku blindet rriten çdo pak minuta (<a href=\"https://bbc.pokerth.net/registration\">kalendari</a>, <a href=\"https://bbc.pokerth.net/results\">rezultatet</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">renditja</a>); WeCup (WEC), turne me ritëm më të qetë e të ekuilibruar (<a href=\"https://wec.pokerth.net/results\">rezultatet</a>, <a href=\"https://wec.pokerth.net/results/ranking\">renditja</a>); dhe Monthly Cup, që zhvillohet çdo muaj (<a href=\"https://monthlycup.pokerth.net/\">kupa e ardhshme dhe fituesit e fundit</a>, <a href=\"https://monthlycup.pokerth.net/registration\">regjistrimi</a>). Datat dhe rregullat njoftohen në secilën faqe dhe në forumin e <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Për të marrë pjesë të duhet një llogari falas pokerth.net."],
       ["A mund të ndjek një lojë pa luajtur?",
        "Po. Lojërat në vazhdim që lejojnë vëzhgues mund të ndiqen drejtpërdrejt nga lobi: shikon tavolinën dhe bisedën, por letrat private mbeten të fshehura dhe nuk mund të veprosh. Një lidhje ftese drejt një tavoline që ka nisur tashmë e hap për vëzhgim."],
       ["A ka ndihmë brenda aplikacionit?",
-       "Po. Ndihma e Asit: Asi, maskota e klientit web, shpjegon çdo ekran gjatë rrugës nëse ti e dëshiron. Menyja e tij përmban të gjithë ndihmën me kërkim, dhe “Çfarë është kjo?”: prek çfarëdo në ekran dhe ai thotë se çfarë bën."]
+       "Po. Ndihma e Asit: Asi, maskota e klientit web, shpjegon çdo ekran gjatë rrugës nëse ti e dëshiron. Menyja e tij përmban të gjithë ndihmën me kërkim, dhe “Çfarë është kjo?”: prek çfarëdo në ekran dhe ai thotë se çfarë bën."],
+      ["A zhvillohet ende në mënyrë aktive PokerTH?",
+       "Po. PokerTH zhvillohet si softuer i lirë që nga viti 2006 dhe mirëmbahet ende: klienti për kompjuter dhe serveri janë në <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, ky klient web përditësohet vazhdimisht (<a href=\"https://github.com/narmod/pokerth-web-client\">kodi burimor dhe historiku i ndryshimeve</a>), dhe në rrjetin zyrtar pokerth.net luhet çdo ditë."]
     ]
   },
   pa: {
     title: "ਅਕਸਰ ਪੁੱਛੇ ਜਾਂਦੇ ਸਵਾਲ — PokerTH ਵੈੱਬ ਕਲਾਇਂਟ",
-    desc: "PokerTH ਵੈੱਬ ਕਲਾਇਂਟ ਬਾਰੇ ਅਕਸਰ ਪੁੱਛੇ ਜਾਂਦੇ ਸਵਾਲ: ਬਿਨਾਂ ਇਸ਼ਤਿਹਾਰ ਮੁਫ਼ਤ ਪੋਕਰ, ਬਿਨਾਂ ਡਾਊਨਲੋਡ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ Texas Hold’em, ਖਾਤੇ, ਮੋਬਾਈਲ, ਆਫਲਾਈਨ ਮੋਡ, ਭਾਸ਼ਾਵਾਂ ਅਤੇ ਪਰਦੇਦਾਰੀ।",
+    desc: "PokerTH ਵੈੱਬ ਕਲਾਇਂਟ ਬਾਰੇ ਅਕਸਰ ਪੁੱਛੇ ਜਾਂਦੇ ਸਵਾਲ: ਬਿਨਾਂ ਇਸ਼ਤਿਹਾਰ ਅਤੇ ਬਿਨਾਂ ਡਾਊਨਲੋਡ ਮੁਫ਼ਤ ਪੋਕਰ, ਮਹਿਮਾਨ ਵਜੋਂ ਜਾਂ ਬਿਨਾਂ ਖਾਤੇ ਖੇਡਣਾ, ਲਿੰਕ ਨਾਲ ਦੋਸਤਾਂ ਨੂੰ ਸੱਦਾ, ਟੂਰਨਾਮੈਂਟ, ਮੋਬਾਈਲ, ਆਫਲਾਈਨ ਮੋਡ, ਭਾਸ਼ਾਵਾਂ ਅਤੇ ਪਰਦੇਦਾਰੀ।",
     h1: "PokerTH ਵੈੱਬ ਕਲਾਇਂਟ — ਅਕਸਰ ਪੁੱਛੇ ਜਾਂਦੇ ਸਵਾਲ",
     qa: [
       ["ਕੀ PokerTH ਮੁਫ਼ਤ ਹੈ?",
@@ -4835,7 +5516,13 @@ var SEO_FAQ_I18N = {
       ["ਕੀ ਮੈਂ ਆਪਣੇ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਹੋਰ ਲੋਕਾਂ ਵਿਰੁੱਧ Texas Hold’em ਖੇਡ ਸਕਦਾ ਹਾਂ?",
        "ਹਾਂ। ਦੁਨੀਆ ਭਰ ਦੇ ਖਿਡਾਰੀਆਂ ਵਿਰੁੱਧ ਲਾਈਵ Texas Hold’em ਖੇਡਣ ਲਈ ਅਧਿਕਾਰਤ pokerth.net ਨੈੱਟਵਰਕ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ, ਜਾਂ ਸੱਦਾ ਲਿੰਕ ਭੇਜੋ ਤਾਂ ਜੋ ਦੋਸਤ ਸਿੱਧੇ ਤੁਹਾਡੇ ਟੇਬਲ ’ਤੇ ਆਉਣ — ਸਭ ਕੁਝ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ।"],
       ["ਕੀ ਖੇਡਣ ਲਈ ਖਾਤਾ ਚਾਹੀਦਾ ਹੈ?",
-       "ਨਹੀਂ। ਲੋਕਲ / ਅਭਿਆਸ ਮੋਡ ਲਈ ਕੋਈ ਖਾਤਾ ਨਹੀਂ ਚਾਹੀਦਾ ਅਤੇ ਇਹ ਆਫਲਾਈਨ ਵੀ ਚੱਲਦਾ ਹੈ। ਅਧਿਕਾਰਤ pokerth.net ਨੈੱਟਵਰਕ ’ਤੇ ਤੁਸੀਂ ਮਹਿਮਾਨ ਵਜੋਂ ਸਧਾਰਨ ਖੇਡਾਂ ਖੇਡ ਸਕਦੇ ਹੋ; ਰੈਂਕਿੰਗ ਖੇਡਾਂ, ਸਿਰਫ਼ ਰਜਿਸਟਰਡ ਖਿਡਾਰੀਆਂ ਦੇ ਟੇਬਲਾਂ ਅਤੇ ਗੱਲਬਾਤ ਲਈ ਮੁਫ਼ਤ pokerth.net ਖਾਤਾ ਚਾਹੀਦਾ ਹੈ।"],
+       "ਨਹੀਂ। ਲੋਕਲ / ਅਭਿਆਸ ਮੋਡ ਲਈ ਕੋਈ ਖਾਤਾ ਨਹੀਂ ਚਾਹੀਦਾ ਅਤੇ ਇਹ ਆਫਲਾਈਨ ਵੀ ਚੱਲਦਾ ਹੈ। ਅਧਿਕਾਰਤ pokerth.net ਨੈੱਟਵਰਕ ’ਤੇ ਮਹਿਮਾਨ ਵਜੋਂ ਲੌਗ ਇਨ ਕਰੋ: ਸਰਵਰ ਤੁਹਾਨੂੰ ਇੱਕ ਮਹਿਮਾਨ ਉਪਨਾਮ ਦਿੰਦਾ ਹੈ ਅਤੇ ਤੁਸੀਂ ਤੁਰੰਤ ਸਧਾਰਨ ਖੇਡਾਂ ਖੇਡ ਸਕਦੇ ਹੋ। LAN ਜਾਂ ਸਮਰਪਿਤ ਸਰਵਰ ’ਤੇ ਕੋਈ ਖਾਤਾ ਹੁੰਦਾ ਹੀ ਨਹੀਂ — ਬੱਸ ਇੱਕ ਉਪਨਾਮ ਚੁਣੋ। ਇਨ੍ਹਾਂ ਵਿੱਚੋਂ ਕਿਤੇ ਵੀ ਈਮੇਲ ਪਤਾ ਨਹੀਂ ਮੰਗਿਆ ਜਾਂਦਾ। ਮੁਫ਼ਤ pokerth.net ਖਾਤਾ ਸਿਰਫ਼ ਰੈਂਕਿੰਗ ਖੇਡਾਂ, ਸਿਰਫ਼ ਰਜਿਸਟਰਡ ਖਿਡਾਰੀਆਂ ਦੇ ਟੇਬਲਾਂ ਅਤੇ ਗੱਲਬਾਤ ਲਈ ਚਾਹੀਦਾ ਹੈ।"],
+      ["ਦੋਸਤਾਂ ਨਾਲ ਆਨਲਾਈਨ ਪੋਕਰ ਕਿਵੇਂ ਖੇਡੀਏ?",
+       "ਲਾਬੀ ਵਿੱਚ ਇੱਕ ਟੇਬਲ ਬਣਾਓ — pokerth.net ’ਤੇ ਜਾਂ ਕਿਸੇ ਵੀ LAN ਜਾਂ ਸਮਰਪਿਤ ਸਰਵਰ ’ਤੇ — ਅਤੇ ਉਡੀਕ ਕਮਰੇ ਵਿੱਚ « ਦੋਸਤਾਂ ਨੂੰ ਸੱਦਾ ਦਿਓ » ਦਬਾਓ। ਵੈੱਬ ਕਲਾਇਂਟ ਇੱਕ ਸੱਦਾ ਲਿੰਕ ਬਣਾਉਂਦਾ ਹੈ, ਜਿਸਨੂੰ ਤੁਸੀਂ ਕਿਸੇ ਵੀ ਮੈਸੇਂਜਰ ਰਾਹੀਂ ਭੇਜ ਸਕਦੇ ਹੋ। ਤੁਹਾਡੇ ਦੋਸਤ ਇਸਨੂੰ ਆਪਣੇ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ — iPhone, Android ਜਾਂ ਕੰਪਿਊਟਰ ’ਤੇ — ਖੋਲ੍ਹਦੇ ਹਨ, ਕੁਝ ਵੀ ਡਾਊਨਲੋਡ ਕਰਨ ਦੀ ਲੋੜ ਨਹੀਂ। ਜੇ ਟੇਬਲ ਨਿੱਜੀ ਰੱਖਣਾ ਹੈ ਤਾਂ ਪਾਸਵਰਡ ਲਗਾਓ: ਪਾਸਵਰਡ ਕਦੇ ਵੀ ਲਿੰਕ ਦਾ ਹਿੱਸਾ ਨਹੀਂ ਹੁੰਦਾ।"],
+      ["ਜਦੋਂ ਕੋਈ ਦੋਸਤ ਮੇਰਾ ਸੱਦਾ ਲਿੰਕ ਖੋਲ੍ਹਦਾ ਹੈ ਤਾਂ ਕੀ ਹੁੰਦਾ ਹੈ?",
+       "ਲਿੰਕ ਵਿੱਚ ਟੇਬਲ ਅਤੇ ਸਰਵਰ ਦੀ ਜਾਣਕਾਰੀ ਹੁੰਦੀ ਹੈ। ਤੁਹਾਡਾ ਦੋਸਤ ਲੌਗ ਇਨ ਕਰਦਾ ਹੈ — pokerth.net ’ਤੇ ਮਹਿਮਾਨ ਵਜੋਂ ਜਾਂ ਖਾਤੇ ਨਾਲ, LAN ਜਾਂ ਸਮਰਪਿਤ ਸਰਵਰ ’ਤੇ ਸਿਰਫ਼ ਉਪਨਾਮ ਨਾਲ — ਅਤੇ ਫਿਰ ਲਾਬੀ ਵਿੱਚ ਲੱਭਣ ਦੀ ਲੋੜ ਤੋਂ ਬਿਨਾਂ ਵੈੱਬ ਕਲਾਇਂਟ ਆਪਣੇ-ਆਪ ਉਸ ਟੇਬਲ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋ ਜਾਂਦਾ ਹੈ। ਪਾਸਵਰਡ-ਸੁਰੱਖਿਅਤ ਟੇਬਲ ਆਪਣਾ ਪਾਸਵਰਡ ਮੰਗਦਾ ਹੈ; ਪਹਿਲਾਂ ਹੀ ਸ਼ੁਰੂ ਹੋ ਚੁੱਕੀ ਖੇਡ ਵੇਖਣ ਲਈ ਖੁੱਲ੍ਹਦੀ ਹੈ। ਸੱਦਾ ਲਿੰਕ ਵੈੱਬ ਕਲਾਇਂਟ ਦੀ ਸਹੂਲਤ ਹਨ ਅਤੇ ਹਰ ਉਸ ਸਰਵਰ ’ਤੇ ਕੰਮ ਕਰਦੇ ਹਨ ਜਿਸ ਨਾਲ ਇਹ ਜੁੜ ਸਕਦਾ ਹੈ।"],
+      ["ਕੀ ਬਿਨਾਂ ਰਜਿਸਟਰ ਕੀਤੇ PokerTH ਅਜ਼ਮਾਉਣ ਲਈ ਕੋਈ ਡੈਮੋ ਸਰਵਰ ਹੈ?",
+       "ਹਾਂ। ਲੌਗਇਨ ਸਕ੍ਰੀਨ ’ਤੇ LAN / ਸਮਰਪਿਤ ਸਰਵਰ ਚੁਣੋ ਅਤੇ ਸਰਵਰ ਸੂਚੀ ਵਿੱਚੋਂ ਜਨਤਕ ਡੈਮੋ ਸਰਵਰ ਚੁਣੋ: ਕੋਈ ਵੀ ਉਪਨਾਮ ਲਿਖੋ ਅਤੇ ਤੁਸੀਂ ਉਸਦੀ ਲਾਬੀ ਵਿੱਚ ਪਹੁੰਚ ਜਾਂਦੇ ਹੋ — ਨਾ ਰਜਿਸਟ੍ਰੇਸ਼ਨ, ਨਾ ਈਮੇਲ ਪਤਾ। ਹਰਾ ਬਿੰਦੂ ਦਿਖਾਉਂਦਾ ਹੈ ਕਿ ਸੂਚੀ ਦੇ ਕਿਹੜੇ ਸਰਵਰ ਆਨਲਾਈਨ ਹਨ ਅਤੇ ਉਨ੍ਹਾਂ ’ਤੇ ਕਿੰਨੇ ਖਿਡਾਰੀ ਹਨ।"],
       ["ਕੀ ਇਹ ਮੋਬਾਈਲ ’ਤੇ ਚੱਲਦਾ ਹੈ?",
        "ਹਾਂ। ਵੈੱਬ ਕਲਾਇਂਟ ਇੱਕ Progressive Web App ਹੈ: ਇਹ ਡੈਸਕਟਾਪ, ਟੈਬਲੇਟ ਜਾਂ ਫੋਨ ’ਤੇ ਕਿਸੇ ਵੀ ਆਧੁਨਿਕ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਚੱਲਦਾ ਹੈ, ਅਤੇ ਨੇਟਿਵ ਐਪ ਵਾਂਗ ਇੰਸਟਾਲ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ — iPhone ਅਤੇ iPad ’ਤੇ ਸ਼ੇਅਰ → ਹੋਮ ਸਕ੍ਰੀਨ ’ਤੇ ਸ਼ਾਮਲ ਕਰੋ ਨਾਲ, ਹੋਰ ਥਾਵਾਂ ’ਤੇ ਬ੍ਰਾਊਜ਼ਰ ਮੀਨੂ ਜਾਂ ਇੰਸਟਾਲ ਬਟਨ ਤੋਂ। ਯੱਕੇ ਦੀ ਮਦਦ ਤੁਹਾਡੇ ਯੰਤਰ ਲਈ ਕਦਮ ਵਿਖਾਉਂਦੀ ਹੈ।"],
       ["ਕੀ ਮੈਂ ਕੰਪਿਊਟਰ ਵਿਰੁੱਧ ਖੇਡ ਸਕਦਾ ਹਾਂ?",
@@ -4851,18 +5538,22 @@ var SEO_FAQ_I18N = {
       ["ਵੈੱਬ ਕਲਾਇਂਟ ਕਿਹੜਾ ਡਾਟਾ ਇਕੱਠਾ ਕਰਦਾ ਹੈ?",
        "ਜਿੰਨਾ ਘੱਟ ਸੰਭਵ ਹੋਵੇ: ਸੈਟਿੰਗਾਂ ਤੁਹਾਡੇ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਰਹਿੰਦੀਆਂ ਹਨ, ਅਤੇ ਕੋਈ ਟਰੈਕਿੰਗ ਜਾਂ ਇਸ਼ਤਿਹਾਰਬਾਜ਼ੀ ਨਹੀਂ ਵਰਤੀ ਜਾਂਦੀ। ਜਦੋਂ ਤੁਸੀਂ pokerth.net ਖਾਤੇ ਨਾਲ ਲਾਗਇਨ ਕਰਦੇ ਹੋ, ਤੁਹਾਡੇ ਵਿਕਲਪ ਅਤੇ ਅਭਿਆਸ ਟਰਾਫ਼ੀਆਂ ਉਸ ਨਾਲ ਸਿੰਕ ਹੁੰਦੀਆਂ ਹਨ ਤਾਂ ਜੋ ਉਹ ਤੁਹਾਡੇ ਹੋਰ ਯੰਤਰਾਂ ’ਤੇ ਵੀ ਤੁਹਾਡੇ ਨਾਲ ਚੱਲਣ। ਵੇਰਵਿਆਂ ਲਈ ਪਰਦੇਦਾਰੀ ਪੇਜ ਵੇਖੋ।"],
       ["ਕੀ ਮੈਂ ਆਪਣਾ ਸਰਵਰ ਚਲਾ ਸਕਦਾ ਹਾਂ?",
-       "ਹਾਂ। PokerTH ਸਮਰਪਿਤ ਸਰਵਰ ਅਤੇ ਇਹ ਵੈੱਬ ਕਲਾਇਂਟ ਦੋਵੇਂ ਓਪਨ ਸੋਰਸ ਹਨ, ਇਸ ਲਈ ਤੁਸੀਂ LAN ਜਾਂ ਇੰਟਰਨੈੱਟ ’ਤੇ ਆਪਣਾ ਨਿੱਜੀ ਪੋਕਰ ਸਰਵਰ ਚਲਾ ਸਕਦੇ ਹੋ।"],
+       "ਹਾਂ। PokerTH ਸਮਰਪਿਤ ਸਰਵਰ ਅਤੇ ਇਹ ਵੈੱਬ ਕਲਾਇਂਟ ਦੋਵੇਂ ਓਪਨ ਸੋਰਸ ਹਨ, ਇਸ ਲਈ ਤੁਸੀਂ LAN ਜਾਂ ਇੰਟਰਨੈੱਟ ’ਤੇ ਆਪਣਾ ਨਿੱਜੀ ਪੋਕਰ ਸਰਵਰ ਚਲਾ ਸਕਦੇ ਹੋ। ਇਸਨੂੰ ਸਭ ਲਈ ਸੂਚੀ ਵਿੱਚ ਦਿਖਾਉਣ ਲਈ LAN / ਸਮਰਪਿਤ ਸਰਵਰ ਚੁਣੋ, ਫਿਰ ਸਰਵਰ ਸੂਚੀ ਦੇ ਹੇਠਾਂ « ਮੇਰਾ ਸਰਵਰ ਸੁਝਾਓ » ਦਬਾਓ: ਪ੍ਰਬੰਧਕਾਂ ਦੀ ਮਨਜ਼ੂਰੀ ਤੋਂ ਬਾਅਦ ਇਹ ਸੂਚੀ ਵਿੱਚ ਦਿਖਾਈ ਦਿੰਦਾ ਹੈ। ਸਰਵਰ ਇੰਟਰਨੈੱਟ ਤੋਂ ਪਹੁੰਚਯੋਗ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।"],
       ["ਰੈਂਕਿੰਗ ਖੇਡਾਂ ਅਤੇ ਸੀਜ਼ਨ ਕਿਵੇਂ ਕੰਮ ਕਰਦੇ ਹਨ?",
        "pokerth.net ’ਤੇ ਰੈਂਕਿੰਗ ਖੇਡਾਂ ਵਿੱਚ 10 ਖਿਡਾਰੀ ਬੈਠਦੇ ਹਨ ਅਤੇ ਟੇਬਲ ਭਰਦਿਆਂ ਹੀ ਸ਼ੁਰੂ ਹੋ ਜਾਂਦੀਆਂ ਹਨ: ਹਰੇਕ ਨੂੰ 10,000 ਚਿਪਸ, 50 ਦਾ ਸਮਾਲ ਬਲਾਇੰਡ ਜੋ ਹਰ 11 ਹੱਥਾਂ ਬਾਅਦ ਦੁੱਗਣਾ ਹੁੰਦਾ ਹੈ, ਅਤੇ ਕਾਰਵਾਈ ਲਈ 5 ਸਕਿੰਟ। ਸਥਾਨ 1 ਤੋਂ 7 ਨੂੰ 15, 9, 6, 4, 3, 2 ਅਤੇ 1 ਅੰਕ ਮਿਲਦੇ ਹਨ; ਤੁਹਾਡਾ ਸਕੋਰ ਪ੍ਰਤੀ ਖੇਡ ਤੁਹਾਡੀ ਔਸਤ ਹੈ, ਜੋ ਤੁਹਾਡੇ ਖੇਡੀਆਂ ਖੇਡਾਂ ਦੀ ਗਿਣਤੀ ਅਨੁਸਾਰ ਤੋਲੀ ਜਾਂਦੀ ਹੈ, ਅਤੇ ਰੈਂਕਿੰਗ ਹਰ ਤਿਮਾਹੀ ਦੁਬਾਰਾ ਸ਼ੁਰੂ ਹੁੰਦੀ ਹੈ। ਮੁਫ਼ਤ pokerth.net ਖਾਤਾ ਚਾਹੀਦਾ ਹੈ।"],
+      ["ਕੀ ਮੁਫ਼ਤ ਪੋਕਰ ਟੂਰਨਾਮੈਂਟ ਅਤੇ ਮੁਕਾਬਲੇ ਹਨ?",
+       "ਹਾਂ, ਸਾਰਾ ਸਾਲ, ਅਤੇ ਸਾਰੇ ਮੁਫ਼ਤ। PokerTH ਦੀ ਹਰ ਖੇਡ ਇੱਕ ਟੂਰਨਾਮੈਂਟ ਹੈ, ਅਤੇ pokerth.net ਭਾਈਚਾਰਾ ਆਪਣੀਆਂ ਰੈਂਕਿੰਗਾਂ ਨਾਲ ਨਿਯਮਤ ਮੁਕਾਬਲੇ ਵੀ ਕਰਵਾਉਂਦਾ ਹੈ: BBC, ਅਜਿਹੀਆਂ ਖੇਡਾਂ ਜਿਨ੍ਹਾਂ ਵਿੱਚ ਹਰ ਕੁਝ ਮਿੰਟਾਂ ਬਾਅਦ ਬਲਾਈਂਡ ਵਧਦੇ ਹਨ (<a href=\"https://bbc.pokerth.net/registration\">ਕੈਲੰਡਰ</a>, <a href=\"https://bbc.pokerth.net/results\">ਨਤੀਜੇ</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">ਰੈਂਕਿੰਗ</a>); WeCup (WEC), ਸ਼ਾਂਤ ਅਤੇ ਸੰਤੁਲਿਤ ਰਫ਼ਤਾਰ ਵਾਲੇ ਟੂਰਨਾਮੈਂਟ (<a href=\"https://wec.pokerth.net/results\">ਨਤੀਜੇ</a>, <a href=\"https://wec.pokerth.net/results/ranking\">ਰੈਂਕਿੰਗ</a>); ਅਤੇ ਹਰ ਮਹੀਨੇ ਹੋਣ ਵਾਲਾ Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">ਅਗਲਾ ਕੱਪ ਅਤੇ ਤਾਜ਼ਾ ਜੇਤੂ</a>, <a href=\"https://monthlycup.pokerth.net/registration\">ਰਜਿਸਟ੍ਰੇਸ਼ਨ</a>)। ਤਾਰੀਖਾਂ ਅਤੇ ਨਿਯਮ ਹਰ ਸਾਈਟ ’ਤੇ ਅਤੇ <a href=\"https://www.pokerth.net/\">pokerth.net</a> ਫੋਰਮ ’ਤੇ ਐਲਾਨੇ ਜਾਂਦੇ ਹਨ। ਹਿੱਸਾ ਲੈਣ ਲਈ ਮੁਫ਼ਤ pokerth.net ਖਾਤਾ ਚਾਹੀਦਾ ਹੈ।"],
       ["ਕੀ ਮੈਂ ਖੇਡੇ ਬਿਨਾਂ ਕੋਈ ਖੇਡ ਵੇਖ ਸਕਦਾ ਹਾਂ?",
        "ਹਾਂ। ਦਰਸ਼ਕਾਂ ਦੀ ਆਗਿਆ ਦੇਣ ਵਾਲੀਆਂ ਚੱਲ ਰਹੀਆਂ ਖੇਡਾਂ ਲਾਬੀ ਤੋਂ ਲਾਈਵ ਵੇਖੀਆਂ ਜਾ ਸਕਦੀਆਂ ਹਨ: ਤੁਸੀਂ ਟੇਬਲ ਅਤੇ ਗੱਲਬਾਤ ਵੇਖਦੇ ਹੋ, ਪਰ ਹੋਲ ਕਾਰਡ ਲੁਕੇ ਰਹਿੰਦੇ ਹਨ ਅਤੇ ਤੁਸੀਂ ਕਾਰਵਾਈ ਨਹੀਂ ਕਰ ਸਕਦੇ। ਪਹਿਲਾਂ ਹੀ ਸ਼ੁਰੂ ਹੋ ਚੁੱਕੇ ਟੇਬਲ ਦਾ ਸੱਦਾ ਲਿੰਕ ਉਸਨੂੰ ਵੇਖਣ ਲਈ ਖੋਲ੍ਹਦਾ ਹੈ।"],
       ["ਕੀ ਐਪ ਦੇ ਅੰਦਰ ਮਦਦ ਹੈ?",
-       "ਹਾਂ। ਯੱਕੇ ਦੀ ਮਦਦ: ਯੱਕਾ, ਵੈੱਬ ਕਲਾਇਂਟ ਦਾ ਮਾਸਕਟ, ਜੇ ਤੁਸੀਂ ਚਾਹੋ ਤਾਂ ਤੁਹਾਡੇ ਅੱਗੇ ਵਧਣ ਨਾਲ ਹਰ ਸਕ੍ਰੀਨ ਸਮਝਾਉਂਦਾ ਹੈ। ਉਸਦੇ ਮੀਨੂ ਵਿੱਚ ਖੋਜ ਨਾਲ ਪੂਰੀ ਮਦਦ ਹੈ, ਅਤੇ « ਇਹ ਕੀ ਹੈ? »: ਸਕ੍ਰੀਨ ’ਤੇ ਕਿਸੇ ਵੀ ਚੀਜ਼ ’ਤੇ ਟੈਪ ਕਰੋ ਅਤੇ ਉਹ ਦੱਸਦਾ ਹੈ ਕਿ ਉਹ ਕੀ ਕਰਦੀ ਹੈ।"]
+       "ਹਾਂ। ਯੱਕੇ ਦੀ ਮਦਦ: ਯੱਕਾ, ਵੈੱਬ ਕਲਾਇਂਟ ਦਾ ਮਾਸਕਟ, ਜੇ ਤੁਸੀਂ ਚਾਹੋ ਤਾਂ ਤੁਹਾਡੇ ਅੱਗੇ ਵਧਣ ਨਾਲ ਹਰ ਸਕ੍ਰੀਨ ਸਮਝਾਉਂਦਾ ਹੈ। ਉਸਦੇ ਮੀਨੂ ਵਿੱਚ ਖੋਜ ਨਾਲ ਪੂਰੀ ਮਦਦ ਹੈ, ਅਤੇ « ਇਹ ਕੀ ਹੈ? »: ਸਕ੍ਰੀਨ ’ਤੇ ਕਿਸੇ ਵੀ ਚੀਜ਼ ’ਤੇ ਟੈਪ ਕਰੋ ਅਤੇ ਉਹ ਦੱਸਦਾ ਹੈ ਕਿ ਉਹ ਕੀ ਕਰਦੀ ਹੈ।"],
+      ["ਕੀ PokerTH ਅਜੇ ਵੀ ਸਰਗਰਮੀ ਨਾਲ ਵਿਕਸਿਤ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ?",
+       "ਹਾਂ। PokerTH 2006 ਤੋਂ ਮੁਫ਼ਤ ਸਾਫਟਵੇਅਰ ਵਜੋਂ ਵਿਕਸਿਤ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ ਅਤੇ ਅੱਜ ਵੀ ਸੰਭਾਲਿਆ ਜਾਂਦਾ ਹੈ: ਡੈਸਕਟਾਪ ਕਲਾਇਂਟ ਅਤੇ ਸਰਵਰ <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> ’ਤੇ ਹਨ, ਇਹ ਵੈੱਬ ਕਲਾਇਂਟ ਲਗਾਤਾਰ ਅੱਪਡੇਟ ਹੁੰਦਾ ਹੈ (<a href=\"https://github.com/narmod/pokerth-web-client\">ਸਰੋਤ ਕੋਡ ਅਤੇ ਬਦਲਾਵਾਂ ਦਾ ਇਤਿਹਾਸ</a>), ਅਤੇ ਅਧਿਕਾਰਤ pokerth.net ਨੈੱਟਵਰਕ ’ਤੇ ਹਰ ਰੋਜ਼ ਖੇਡਾਂ ਖੇਡੀਆਂ ਜਾਂਦੀਆਂ ਹਨ।"]
     ]
   },
   am: {
     title: "ተደጋጋሚ ጥያቄዎች — የ PokerTH የድር ደንበኛ",
-    desc: "ስለ PokerTH የድር ደንበኛ ተደጋጋሚ ጥያቄዎች፦ ማስታወቂያ የሌለው ነጻ ፖከር፣ ያለ ማውረድ በአሳሽ ውስጥ Texas Hold’em መጫወት፣ መለያዎች፣ ሞባይል፣ ከመስመር ውጪ ሁነታ፣ ቋንቋዎች እና ግላዊነት።",
+    desc: "ስለ PokerTH የድር ደንበኛ ተደጋጋሚ ጥያቄዎች፦ ማስታወቂያ የሌለው እና ማውረድ የማያስፈልገው ነጻ ፖከር፣ እንደ እንግዳ ወይም ያለ መለያ መጫወት፣ ጓደኞችን በአገናኝ መጋበዝ፣ ውድድሮች፣ ሞባይል፣ ከመስመር ውጪ ሁነታ፣ ቋንቋዎች እና ግላዊነት።",
     h1: "የ PokerTH የድር ደንበኛ — ተደጋጋሚ ጥያቄዎች",
     qa: [
       ["PokerTH ነጻ ነው?",
@@ -4874,7 +5565,13 @@ var SEO_FAQ_I18N = {
       ["በአሳሼ ውስጥ ከሌሎች ሰዎች ጋር Texas Hold’em መጫወት እችላለሁ?",
        "አዎ። ከዓለም ዙሪያ ካሉ ተጫዋቾች ጋር በቀጥታ Texas Hold’em ለመጫወት ኦፊሴላዊውን pokerth.net አውታረ መረብ ይቀላቀሉ፣ ወይም ጓደኞች በቀጥታ ጠረጴዛዎ ላይ እንዲደርሱ የግብዣ አገናኝ ይላኩ — ሁሉም በአሳሽ ውስጥ።"],
       ["ለመጫወት መለያ ያስፈልገኛል?",
-       "አይ። የአካባቢያዊ / ልምምድ ሁነታ መለያ አያስፈልገውም እና ከመስመር ውጪ ይሠራል። በኦፊሴላዊው pokerth.net አውታረ መረብ ላይ መደበኛ ጨዋታዎችን እንደ እንግዳ መጫወት ይችላሉ፤ ለደረጃ ጨዋታዎች፣ ለተመዘገቡ ተጫዋቾች ብቻ ጠረጴዛዎች እና ለውይይቱ ነጻ የ pokerth.net መለያ ያስፈልጋል።"],
+       "አይ። የአካባቢያዊ / ልምምድ ሁነታ መለያ አያስፈልገውም እና ከመስመር ውጪ ይሠራል። በኦፊሴላዊው pokerth.net አውታረ መረብ ላይ እንደ እንግዳ ይግቡ፦ አገልጋዩ የእንግዳ ቅጽል ስም ይሰጥዎታል እና መደበኛ ጨዋታዎችን ወዲያውኑ መጫወት ይችላሉ። በ LAN ወይም በተወሰነ አገልጋይ ላይ ምንም መለያ የለም — ቅጽል ስም ብቻ ይመርጣሉ። ከእነዚህ አንዳቸውም የኢሜይል አድራሻ አይጠይቁም። ነጻ የ pokerth.net መለያ የሚያስፈልገው ለደረጃ ጨዋታዎች፣ ለተመዘገቡ ተጫዋቾች ብቻ ለሆኑ ጠረጴዛዎች እና ለውይይቱ ብቻ ነው።"],
+      ["ከጓደኞቼ ጋር በመስመር ላይ ፖከር እንዴት መጫወት እችላለሁ?",
+       "በሎቢው ውስጥ ጠረጴዛ ይፍጠሩ — በ pokerth.net ላይ ወይም በማንኛውም LAN ወይም የተወሰነ አገልጋይ ላይ — እና በመጠበቂያ ክፍሉ ውስጥ “ጓደኞችን ጋብዝ” የሚለውን ይጫኑ። የድር ደንበኛው በማንኛውም የመልዕክት መተግበሪያ መላክ የሚችሉትን የግብዣ አገናኝ ይፈጥራል። ጓደኞችዎ ምንም ሳያወርዱ በ iPhone፣ በ Android ወይም በኮምፒውተር ላይ በአሳሻቸው ይከፍቱታል። ጠረጴዛው ግላዊ ሆኖ እንዲቆይ ከፈለጉ የይለፍ ቃል ያዘጋጁ፦ የይለፍ ቃሉ በፍጹም የአገናኙ አካል አይደለም።"],
+      ["ጓደኛዬ የግብዣ አገናኜን ሲከፍት ምን ይሆናል?",
+       "አገናኙ ጠረጴዛውን እና አገልጋዩን ይይዛል። ጓደኛዎ ይገባል — በ pokerth.net ላይ እንደ እንግዳ ወይም በመለያ፣ በ LAN ወይም በተወሰነ አገልጋይ ላይ በቅጽል ስም ብቻ — ከዚያም የድር ደንበኛው በሎቢው ውስጥ መፈለግ ሳያስፈልግ ጠረጴዛውን በራስ-ሰር ይቀላቀላል። በይለፍ ቃል የተጠበቀ ጠረጴዛ የይለፍ ቃሉን ይጠይቃል፤ ቀድሞ የተጀመረ ጨዋታ ለመመልከት ይከፈታል። የግብዣ አገናኞች የድር ደንበኛው ባህሪ ናቸው እና ሊገናኝባቸው በሚችል በእያንዳንዱ አገልጋይ ላይ ይሠራሉ።"],
+      ["ሳልመዘገብ PokerTHን ለመሞከር የማሳያ አገልጋይ አለ?",
+       "አዎ። በመግቢያ ማያው ላይ LAN / የተወሰነ አገልጋይ ይምረጡ እና በአገልጋይ ዝርዝሩ ውስጥ የሕዝብ ማሳያ አገልጋዩን ይምረጡ፦ ማንኛውንም ቅጽል ስም ይተይቡ እና ሎቢው ውስጥ ነዎት — ምዝገባ የለም፣ የኢሜይል አድራሻ የለም። አረንጓዴ ነጥብ ከተዘረዘሩት አገልጋዮች የትኞቹ በመስመር ላይ እንዳሉ እና ስንት ተጫዋቾች እንዳሉባቸው ያሳያል።"],
       ["በሞባይል ላይ ይሠራል?",
        "አዎ። የድር ደንበኛው Progressive Web App ነው፦ በዴስክቶፕ፣ ታብሌት ወይም ስልክ ላይ በማንኛውም ዘመናዊ አሳሽ ውስጥ ይሠራል፣ እና እንደ ተወላጅ መተግበሪያ ሊጫን ይችላል — በ iPhone እና iPad ላይ ማጋሪያ → ወደ መነሻ ማያ ጨምር፣ በሌላ ቦታ ከአሳሽ ምናሌው ወይም ከመጫኛ አዝራሩ። የኤሱ እገዛ ለመሣሪያዎ ደረጃዎቹን ያሳያል።"],
       ["ከኮምፒውተር ጋር መጫወት እችላለሁ?",
@@ -4890,18 +5587,22 @@ var SEO_FAQ_I18N = {
       ["የድር ደንበኛው ምን ውሂብ ይሰበስባል?",
        "በተቻለ መጠን ትንሽ፦ ቅንብሮች በአሳሽዎ ውስጥ ይቆያሉ፣ እና ምንም መከታተያ ወይም ማስታወቂያ አይውልም። በ pokerth.net መለያ ሲገቡ አማራጮችዎ እና የልምምድ ዋንጫዎችዎ ከእሱ ጋር ይመሳሰላሉ፣ ስለዚህ ወደ ሌሎች መሣሪያዎችዎ ይከተሉዎታል። ለዝርዝሮች የግላዊነት ገጹን ይመልከቱ።"],
       ["የራሴን አገልጋይ ማስተናገድ እችላለሁ?",
-       "አዎ። የ PokerTH የተወሰነ አገልጋይ እና ይህ የድር ደንበኛ ሁለቱም ክፍት ምንጭ ናቸው፣ ስለዚህ በ LAN ወይም በኢንተርኔት ላይ የራስዎን የግል የፖከር አገልጋይ ማሄድ ይችላሉ።"],
+       "አዎ። የ PokerTH የተወሰነ አገልጋይ እና ይህ የድር ደንበኛ ሁለቱም ክፍት ምንጭ ናቸው፣ ስለዚህ በ LAN ወይም በኢንተርኔት ላይ የራስዎን የግል የፖከር አገልጋይ ማሄድ ይችላሉ። ለሁሉም እንዲዘረዘር LAN / የተወሰነ አገልጋይ ይምረጡ፣ ከዚያም በአገልጋይ ዝርዝሩ ግርጌ ያለውን “አገልጋዬን አቅርብ” ይጫኑ፦ አስተዳዳሪዎቹ ሲያጸድቁት በዝርዝሩ ውስጥ ይታያል። አገልጋዩ ከኢንተርኔት ተደራሽ መሆን አለበት።"],
       ["የደረጃ ጨዋታዎች እና ወቅቶች እንዴት ይሠራሉ?",
        "በ pokerth.net ላይ የደረጃ ጨዋታዎች 10 ተጫዋቾችን ያስቀምጣሉ እና ጠረጴዛው እንደሞላ ይጀምራሉ፦ እያንዳንዳቸው 10,000 ቺፖች፣ በየ11 እጆች በእጥፍ የሚጨምር የ50 ስሞል ብላይንድ፣ እና ለመንቀሳቀስ 5 ሰከንዶች። ከ1 እስከ 7 ያሉት ቦታዎች 15፣ 9፣ 6፣ 4፣ 3፣ 2 እና 1 ነጥብ ያገኛሉ፤ ነጥብዎ በጨዋታ አማካይዎ ነው፣ በተጫወቱት የጨዋታዎች ብዛት የሚመዘን፣ እና ደረጃው በየሩብ ዓመቱ እንደገና ይጀምራል። ነጻ የ pokerth.net መለያ ያስፈልጋል።"],
+      ["ነጻ የፖከር ውድድሮች እና ፉክክሮች አሉ?",
+       "አዎ፣ ዓመቱን ሙሉ፣ እና ሁሉም ነጻ ናቸው። እያንዳንዱ የ PokerTH ጨዋታ ውድድር ነው፣ እና የ pokerth.net ማኅበረሰብ የራሳቸው ደረጃ ያላቸውን መደበኛ ፉክክሮችም ያካሂዳል፦ BBC፣ ብላይንዶቹ በየጥቂት ደቂቃዎች የሚጨምሩባቸው ጨዋታዎች (<a href=\"https://bbc.pokerth.net/registration\">የቀን መቁጠሪያ</a>፣ <a href=\"https://bbc.pokerth.net/results\">ውጤቶች</a>፣ <a href=\"https://bbc.pokerth.net/results/ranking\">ደረጃ</a>)፤ WeCup (WEC)፣ ይበልጥ በተረጋጋና ሚዛናዊ ፍጥነት የሚካሄዱ ውድድሮች (<a href=\"https://wec.pokerth.net/results\">ውጤቶች</a>፣ <a href=\"https://wec.pokerth.net/results/ranking\">ደረጃ</a>)፤ እና በየወሩ የሚካሄደው Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">ቀጣዩ ዋንጫ እና የቅርብ አሸናፊዎች</a>፣ <a href=\"https://monthlycup.pokerth.net/registration\">ምዝገባ</a>)። ቀኖቹ እና ደንቦቹ በእያንዳንዱ ጣቢያ እና በ <a href=\"https://www.pokerth.net/\">pokerth.net</a> መድረክ ላይ ይታወቃሉ። ለመሳተፍ ነጻ የ pokerth.net መለያ ያስፈልጋል።"],
       ["ሳልጫወት ጨዋታ መመልከት እችላለሁ?",
        "አዎ። ተመልካቾችን የሚፈቅዱ በመካሄድ ላይ ያሉ ጨዋታዎች ከሎቢው በቀጥታ ሊታዩ ይችላሉ፦ ጠረጴዛውን እና ውይይቱን ያያሉ፣ ነገር ግን ሆል ካርታዎቹ ተደብቀው ይቆያሉ እና እርምጃ መውሰድ አይችሉም። ቀድሞ ወደ ተጀመረ ጠረጴዛ የሚወስድ የግብዣ አገናኝ ለመመልከት ይከፍተዋል።"],
       ["በመተግበሪያው ውስጥ እገዛ አለ?",
-       "አዎ። የኤሱ እገዛ፦ ኤሱ፣ የድር ደንበኛው ማስኮት፣ ከፈለጉ እያንዳንዱን ማያ እየሄዱ ያብራራል። ምናሌው ሙሉውን እገዛ በፍለጋ ይይዛል፣ እና “ይህ ምንድን ነው?”፦ በማያው ላይ ማንኛውንም ነገር ይንኩ እና ምን እንደሚያደርግ ይነግርዎታል።"]
+       "አዎ። የኤሱ እገዛ፦ ኤሱ፣ የድር ደንበኛው ማስኮት፣ ከፈለጉ እያንዳንዱን ማያ እየሄዱ ያብራራል። ምናሌው ሙሉውን እገዛ በፍለጋ ይይዛል፣ እና “ይህ ምንድን ነው?”፦ በማያው ላይ ማንኛውንም ነገር ይንኩ እና ምን እንደሚያደርግ ይነግርዎታል።"],
+      ["PokerTH አሁንም በንቃት እየተገነባ ነው?",
+       "አዎ። PokerTH ከ2006 ጀምሮ እንደ ነጻ ሶፍትዌር ሲገነባ ቆይቷል እና አሁንም ይጠበቃል፦ የዴስክቶፕ ደንበኛው እና አገልጋዩ በ <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> ላይ ናቸው፣ ይህ የድር ደንበኛ ያለማቋረጥ ይዘመናል (<a href=\"https://github.com/narmod/pokerth-web-client\">የምንጭ ኮድ እና የለውጥ መዝገብ</a>)፣ እና በኦፊሴላዊው pokerth.net አውታረ መረብ ላይ በየቀኑ ጨዋታዎች ይካሄዳሉ።"]
     ]
   },
   az: {
     title: "FAQ — PokerTH veb klienti",
-    desc: "PokerTH veb klienti haqqında tez-tez verilən suallar: reklamsız pulsuz poker, heç nə quraşdırmadan brauzerdə Texas Hold’em oynamaq, hesablar, mobil, oflayn rejim, dillər və məxfilik.",
+    desc: "PokerTH veb klienti haqqında tez-tez verilən suallar: reklamsız və yükləmədən pulsuz poker, qonaq kimi və ya hesabsız oynamaq, dostları linklə dəvət etmək, turnirlər, mobil, oflayn rejim, dillər və məxfilik.",
     h1: "PokerTH veb klienti — Tez-tez verilən suallar",
     qa: [
       ["PokerTH pulsuzdur?",
@@ -4913,7 +5614,13 @@ var SEO_FAQ_I18N = {
       ["Brauzerimdə başqa insanlara qarşı Texas Hold’em oynaya bilərəmmi?",
        "Bəli. Bütün dünyadakı oyunçulara qarşı canlı Texas Hold’em oynamaq üçün rəsmi pokerth.net şəbəkəsinə qoşulun və ya dostlarınız birbaşa masanıza düşsün deyə dəvət linki göndərin — hər şey brauzerin içində."],
       ["Oynamaq üçün hesab lazımdırmı?",
-       "Xeyr. Lokal / məşq rejimi hesab tələb etmir və oflayn işləyir. Rəsmi pokerth.net şəbəkəsində Normal oyunları qonaq kimi oynaya bilərsiniz; Reytinq oyunları, yalnız qeydiyyatlı oyunçular üçün masalar və çat üçün isə pulsuz pokerth.net hesabı lazımdır."],
+       "Xeyr. Lokal / məşq rejimi hesab tələb etmir və oflayn işləyir. Rəsmi pokerth.net şəbəkəsində qonaq kimi daxil olun: server sizə qonaq ləqəbi verir və Normal oyunları dərhal oynaya bilərsiniz. LAN-da və ya xüsusi serverdə ümumiyyətlə hesab yoxdur — sadəcə ləqəb seçirsiniz. Bunların heç biri e-poçt ünvanı istəmir. Pulsuz pokerth.net hesabı yalnız Reytinq oyunları, qeydiyyatlı oyunçular üçün masalar və çat üçün lazımdır."],
+      ["Dostlarla onlayn poker necə oynayım?",
+       "Lobbidə masa yaradın — pokerth.net-də və ya istənilən LAN ya da xüsusi serverdə — və gözləmə otağında “Dostları dəvət et” düyməsini basın. Veb klient istənilən messencerlə göndərə biləcəyiniz dəvət linki yaradır. Dostlarınız onu brauzerdə açır — iPhone-da, Android-də və ya kompüterdə, heç nə yükləmədən. Masa gizli qalmalıdırsa, parol təyin edin: parol heç vaxt linkə daxil edilmir."],
+      ["Dostum dəvət linkimi açanda nə baş verir?",
+       "Link masanı və serveri özündə saxlayır. Dostunuz daxil olur — pokerth.net-də qonaq kimi və ya hesabla, LAN-da ya da xüsusi serverdə sadəcə ləqəblə — və veb klient masaya avtomatik qoşulur, onu lobbidə axtarmağa ehtiyac qalmır. Parolla qorunan masa parolu soruşur; artıq başlamış oyun baxmaq üçün açılır. Dəvət linkləri veb klientin funksiyasıdır və onun qoşula bildiyi hər serverdə işləyir."],
+      ["PokerTH-i qeydiyyatsız sınamaq üçün demo server varmı?",
+       "Bəli. Giriş ekranında LAN / Xüsusi server seçin və Server siyahısından ictimai demo serveri götürün: istənilən ləqəbi yazın və onun lobbisindəsiniz — qeydiyyat yoxdur, e-poçt ünvanı yoxdur. Yaşıl nöqtə siyahıdakı serverlərdən hansılarının onlayn olduğunu və onlarda neçə oyunçu olduğunu göstərir."],
       ["Mobil cihazda işləyirmi?",
        "Bəli. Veb klient Progressive Web App-dır: masaüstündə, planşetdə və ya telefonda istənilən müasir brauzerdə işləyir və doğma tətbiq kimi quraşdırıla bilər — iPhone və iPad-də Paylaş → Əsas ekrana əlavə et ilə, digər cihazlarda brauzer menyusundan və ya quraşdırma düyməsindən. Tuzun köməyi cihazınız üçün addımları göstərir."],
       ["Kompüterə qarşı oynaya bilərəmmi?",
@@ -4929,18 +5636,22 @@ var SEO_FAQ_I18N = {
       ["Veb klient hansı məlumatları toplayır?",
        "Mümkün qədər az: parametrlər brauzerinizdə qalır, heç bir izləmə və ya reklam istifadə olunmur. pokerth.net hesabı ilə daxil olduqda, seçimləriniz və məşq kubokları onunla sinxronlaşdırılır ki, digər cihazlarınızda da sizi izləsin. Təfərrüatlar üçün məxfilik səhifəsinə baxın."],
       ["Öz serverimi qura bilərəmmi?",
-       "Bəli. PokerTH xüsusi serveri və bu veb klient hər ikisi açıq mənbəlidir, beləliklə LAN-da və ya internetdə öz şəxsi poker serverinizi işlədə bilərsiniz."],
+       "Bəli. PokerTH xüsusi serveri və bu veb klient hər ikisi açıq mənbəlidir, beləliklə LAN-da və ya internetdə öz şəxsi poker serverinizi işlədə bilərsiniz. Onun hamı üçün siyahıda görünməsi üçün LAN / Xüsusi server seçin, sonra Server siyahısının aşağısındakı “Serverimi təklif et” düyməsini basın: adminlər təsdiqlədikdən sonra o, siyahıda görünür. Server internetdən əlçatan olmalıdır."],
       ["Reytinq oyunları və mövsümlər necə işləyir?",
        "pokerth.net-də Reytinq oyunlarında 10 oyunçu oturur və masa dolan kimi oyun başlayır: hər kəsə 10 000 fişka, hər 11 əldən bir ikiqat artan 50 kiçik blaind və hərəkət etmək üçün 5 saniyə. 1-dən 7-yə qədər yerlər 15, 9, 6, 4, 3, 2 və 1 xal qazanır; nəticəniz oyun başına orta göstəricinizdir, oynadığınız oyunların sayına görə çəkilənmiş, və reytinq hər rübdə yenidən başlayır. Pulsuz pokerth.net hesabı lazımdır."],
+      ["Pulsuz poker turnirləri və yarışlar varmı?",
+       "Bəli, il boyu və hamısı pulsuz. Hər PokerTH oyunu bir turnirdir, pokerth.net icması isə öz reytinqləri olan müntəzəm yarışlar da keçirir: BBC — blaindlərin bir neçə dəqiqədən bir artdığı oyunlar (<a href=\"https://bbc.pokerth.net/registration\">təqvim</a>, <a href=\"https://bbc.pokerth.net/results\">nəticələr</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">reytinq</a>); WeCup (WEC) — daha sakit, balanslı tempdə turnirlər (<a href=\"https://wec.pokerth.net/results\">nəticələr</a>, <a href=\"https://wec.pokerth.net/results/ranking\">reytinq</a>); və hər ay keçirilən Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">növbəti kubok və son qaliblər</a>, <a href=\"https://monthlycup.pokerth.net/registration\">qeydiyyat</a>). Tarixlər və qaydalar hər saytda və <a href=\"https://www.pokerth.net/\">pokerth.net</a> forumunda elan olunur. İştirak üçün pulsuz pokerth.net hesabı lazımdır."],
       ["Oynamadan oyuna baxa bilərəmmi?",
        "Bəli. Tamaşaçılara icazə verən davam edən oyunlara lobbidən canlı baxmaq olar: masanı və çatı görürsünüz, lakin cib kartları gizli qalır və hərəkət edə bilməzsiniz. Artıq başlamış masaya dəvət linki onu baxmaq üçün açır."],
       ["Tətbiqin içində kömək varmı?",
-       "Bəli. Tuzun köməyi: Tuz, veb klientin maskotu, istəsəniz hər ekranı irəlilədikcə izah edir. Onun menyusunda axtarışlı bütün kömək var, həmçinin “Bu nədir?”: ekranda istənilən şeyə toxunun, o nə etdiyini deyir."]
+       "Bəli. Tuzun köməyi: Tuz, veb klientin maskotu, istəsəniz hər ekranı irəlilədikcə izah edir. Onun menyusunda axtarışlı bütün kömək var, həmçinin “Bu nədir?”: ekranda istənilən şeyə toxunun, o nə etdiyini deyir."],
+      ["PokerTH hələ də aktiv şəkildə inkişaf etdirilirmi?",
+       "Bəli. PokerTH 2006-cı ildən bəri azad proqram təminatı kimi hazırlanır və hələ də dəstəklənir: masaüstü klient və server <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>-dadır, bu veb klient daim yenilənir (<a href=\"https://github.com/narmod/pokerth-web-client\">mənbə kodu və dəyişikliklər jurnalı</a>), rəsmi pokerth.net şəbəkəsində isə hər gün oyunlar oynanılır."]
     ],
   },
   be: {
     title: "FAQ — вэб-кліент PokerTH",
-    desc: "Частыя пытанні пра вэб-кліент PokerTH: бясплатны покер без рэкламы, Texas Hold’em у браўзеры без усталявання, уліковыя запісы, тэлефоны, афлайн-рэжым, мовы і прыватнасць.",
+    desc: "Частыя пытанні пра вэб-кліент PokerTH: бясплатны покер без рэкламы і спампоўвання, гульня як госць або без уліковага запісу, запрашэнне сяброў па спасылцы, турніры, тэлефоны, афлайн, мовы і прыватнасць.",
     h1: "Вэб-кліент PokerTH — Частыя пытанні",
     qa: [
       ["PokerTH бясплатны?",
@@ -4952,7 +5663,13 @@ var SEO_FAQ_I18N = {
       ["Ці магу я гуляць у Texas Hold’em у браўзеры супраць іншых людзей?",
        "Так. Далучайцеся да афіцыйнай сеткі pokerth.net, каб гуляць у Texas Hold’em наўпрост супраць гульцоў з усяго свету, або адпраўце спасылку-запрашэнне, каб сябры трапілі адразу за ваш стол — усё ў браўзеры."],
       ["Ці патрэбны ўліковы запіс, каб гуляць?",
-       "Не. Рэжым «Лакальна / трэніроўка» не патрабуе ўліковага запісу і працуе афлайн. У афіцыйнай сетцы pokerth.net можна гуляць у звычайныя гульні як госць; бясплатны ўліковы запіс pokerth.net патрэбны для рэйтынгавых гульняў, сталоў толькі для зарэгістраваных гульцоў і чата."],
+       "Не. Рэжым «Лакальна / трэніроўка» не патрабуе ўліковага запісу і працуе афлайн. У афіцыйнай сетцы pokerth.net увайдзіце як госць: сервер дасць вам гасцявы нік, і вы адразу зможаце гуляць у гульні тыпу «Звычайная». У LAN або на выдзеленым серверы ўліковых запісаў няма зусім — вы толькі выбіраеце нік. Ніводзін з гэтых варыянтаў не патрабуе адраса электроннай пошты. Бясплатны ўліковы запіс pokerth.net патрэбны толькі для рэйтынгавых гульняў, сталоў толькі для зарэгістраваных гульцоў і чата."],
+      ["Як гуляць у покер анлайн з сябрамі?",
+       "Стварыце стол у лобі — на pokerth.net або на любым LAN- ці выдзеленым серверы — і націсніце «Запрасіць сяброў» у зале чакання. Вэб-кліент створыць спасылку-запрашэнне, якую можна адправіць праз любы мэсэнджар. Сябры адкрываюць яе ў браўзеры — на iPhone, Android або камп'ютары, нічога не спампоўваючы. Калі стол павінен застацца прыватным, задайце пароль: пароль ніколі не ўваходзіць у спасылку."],
+      ["Што адбываецца, калі сябар адкрывае маю спасылку-запрашэнне?",
+       "Спасылка змяшчае стол і сервер. Ваш сябар уваходзіць — як госць або з уліковым запісам на pokerth.net, проста з нікам на LAN- ці выдзеленым серверы, — і вэб-кліент аўтаматычна далучаецца да стала, шукаць яго ў лобі не трэба. Стол, абаронены паролем, запытае пароль; гульня, якая ўжо пачалася, адкрыецца для прагляду. Спасылкі-запрашэнні — функцыя вэб-кліента, і яны працуюць на кожным серверы, да якога ён можа падключыцца."],
+      ["Ці ёсць дэма-сервер, каб паспрабаваць PokerTH без рэгістрацыі?",
+       "Так. На экране ўваходу выберыце «LAN / Выдзелены сервер» і абярыце публічны дэма-сервер у спісе сервераў: увядзіце любы нік — і вы ў яго лобі, без рэгістрацыі і без адраса электроннай пошты. Зялёная кропка паказвае, якія серверы са спіса зараз анлайн і колькі на іх гульцоў."],
       ["Ці працуе гэта на тэлефоне?",
        "Так. Вэб-кліент — гэта Progressive Web App: ён працуе ў любым сучасным браўзеры на камп'ютары, планшэце або тэлефоне і ўсталёўваецца як звычайная праграма — на iPhone і iPad праз «Падзяліцца» → «На экран “Дадому”», у астатніх выпадках праз меню браўзера або кнопку ўсталёўкі. «Дапамога туза» паказвае крокі для вашай прылады."],
       ["Ці можна гуляць супраць камп'ютара?",
@@ -4968,18 +5685,22 @@ var SEO_FAQ_I18N = {
       ["Якія даныя збірае вэб-кліент?",
        "Як мага менш: налады застаюцца ў вашым браўзеры, ніякае адсочванне ці рэклама не выкарыстоўваюцца. Калі вы ўваходзіце ва ўліковы запіс pokerth.net, вашы опцыі і трэніровачныя трафеі сінхранізуюцца з ім, каб ісці за вамі на іншыя прылады. Падрабязнасці — на старонцы прыватнасці."],
       ["Ці магу я запусціць уласны сервер?",
-       "Так. Выдзелены сервер PokerTH і гэты вэб-кліент маюць адкрыты код, так што вы можаце запусціць уласны прыватны покерны сервер у LAN або ў інтэрнэце."],
+       "Так. Выдзелены сервер PokerTH і гэты вэб-кліент маюць адкрыты код, так што вы можаце запусціць уласны прыватны покерны сервер у LAN або ў інтэрнэце. Каб ён з'явіўся ў спісе для ўсіх, выберыце «LAN / Выдзелены сервер», а потым «Прапанаваць мой сервер» унізе спіса сервераў: пасля адабрэння адміністратарамі ён з'явіцца ў спісе. Сервер павінен быць даступны з інтэрнэту."],
       ["Як працуюць рэйтынгавыя гульні і сезоны?",
        "Рэйтынгавыя гульні на pokerth.net садзяць за стол 10 гульцоў і пачынаюцца, як толькі стол запоўніцца: па 10 000 фішак кожнаму, малы блайнд 50, які падвойваецца кожныя 11 раздач, і 5 секунд на ход. Месцы з 1 па 7 атрымліваюць 15, 9, 6, 4, 3, 2 і 1 ачко; ваш вынік — сярэдняе ачкоў за гульню, узважанае па колькасці сыграных вамі гульняў, а рэйтынг пачынаецца нанова кожны квартал. Патрэбны бясплатны ўліковы запіс pokerth.net."],
+      ["Ці ёсць бясплатныя покерныя турніры і спаборніцтвы?",
+       "Так, круглы год, і ўсе бясплатныя. Кожная гульня PokerTH — гэта турнір, а супольнасць pokerth.net яшчэ і рэгулярна праводзіць спаборніцтвы з уласнымі рэйтынгамі: BBC — гульні, у якіх блайнды растуць кожныя некалькі хвілін (<a href=\"https://bbc.pokerth.net/registration\">каляндар</a>, <a href=\"https://bbc.pokerth.net/results\">вынікі</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">рэйтынг</a>); WeCup (WEC) — турніры ў больш спакойным, збалансаваным тэмпе (<a href=\"https://wec.pokerth.net/results\">вынікі</a>, <a href=\"https://wec.pokerth.net/results/ranking\">рэйтынг</a>); і Monthly Cup, які праходзіць кожны месяц (<a href=\"https://monthlycup.pokerth.net/\">наступны кубак і апошнія пераможцы</a>, <a href=\"https://monthlycup.pokerth.net/registration\">рэгістрацыя</a>). Даты і правілы абвяшчаюцца на сайце кожнага спаборніцтва і на форуме <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Для ўдзелу патрэбны бясплатны ўліковы запіс pokerth.net."],
       ["Ці можна глядзець гульню, не гуляючы?",
        "Так. Бягучыя гульні, якія дазваляюць назіральнікаў, можна глядзець наживую з лобі: вы бачыце стол і чат, але кішэнныя карты застаюцца схаванымі, і дзейнічаць вы не можаце. Спасылка-запрашэнне на стол, які ўжо пачаўся, адкрывае яго для прагляду."],
       ["Ці ёсць дапамога ўнутры праграмы?",
-       "Так. «Дапамога туза»: Туз, талісман вэб-кліента, тлумачыць кожны экран па ходзе справы, калі вы гэтага хочаце. Яго меню змяшчае ўсю дапамогу з пошукам, а таксама «Што гэта?»: націсніце на што заўгодна на экране, і ён скажа, што гэта робіць."]
+       "Так. «Дапамога туза»: Туз, талісман вэб-кліента, тлумачыць кожны экран па ходзе справы, калі вы гэтага хочаце. Яго меню змяшчае ўсю дапамогу з пошукам, а таксама «Што гэта?»: націсніце на што заўгодна на экране, і ён скажа, што гэта робіць."],
+      ["Ці працягваецца актыўная распрацоўка PokerTH?",
+       "Так. PokerTH распрацоўваецца як свабоднае праграмнае забеспячэнне з 2006 года і па-ранейшаму падтрымліваецца: настольны кліент і сервер знаходзяцца на <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, гэты вэб-кліент пастаянна абнаўляецца (<a href=\"https://github.com/narmod/pokerth-web-client\">зыходны код і спіс змен</a>), а ў афіцыйнай сетцы pokerth.net гуляюць кожны дзень."]
     ],
   },
   km: {
     title: "សំណួរដែលសួរញឹកញាប់ — កម្មវិធីវេប PokerTH",
-    desc: "សំណួរដែលសួរញឹកញាប់អំពីកម្មវិធីវេប PokerTH៖ បៀឥតគិតថ្លៃគ្មានផ្សាយពាណិជ្ជកម្ម លេង Texas Hold’em ក្នុងកម្មវិធីរុករកដោយគ្មានការទាញយក គណនី ទូរស័ព្ទ របៀបក្រៅបណ្ដាញ ភាសា និងឯកជនភាព។",
+    desc: "សំណួរដែលសួរញឹកញាប់អំពីកម្មវិធីវេប PokerTH៖ បៀឥតគិតថ្លៃគ្មានផ្សាយពាណិជ្ជកម្ម និងគ្មានការទាញយក លេងជាភ្ញៀវ ឬគ្មានគណនី អញ្ជើញមិត្តភក្តិតាមតំណ ការប្រកួត ទូរស័ព្ទ របៀបក្រៅបណ្ដាញ ភាសា និងឯកជនភាព។",
     h1: "កម្មវិធីវេប PokerTH — សំណួរដែលសួរញឹកញាប់",
     qa: [
       ["តើ PokerTH ឥតគិតថ្លៃទេ?",
@@ -4991,7 +5712,13 @@ var SEO_FAQ_I18N = {
       ["តើខ្ញុំអាចលេង Texas Hold’em ក្នុងកម្មវិធីរុករកជាមួយមនុស្សផ្សេងទៀតបានទេ?",
        "បាទ/ចាស។ ចូលរួមបណ្ដាញផ្លូវការ pokerth.net ដើម្បីលេង Texas Hold’em ផ្ទាល់ជាមួយអ្នកលេងទូទាំងពិភពលោក ឬផ្ញើតំណអញ្ជើញឱ្យមិត្តភក្តិមកដល់តុរបស់អ្នកដោយផ្ទាល់ — ទាំងអស់ក្នុងកម្មវិធីរុករក។"],
       ["តើខ្ញុំត្រូវការគណនីដើម្បីលេងទេ?",
-       "ទេ។ របៀប “ក្នុងម៉ាស៊ីន / ហ្វឹកហាត់” មិនត្រូវការគណនី ហើយដំណើរការក្រៅបណ្ដាញ។ លើបណ្ដាញផ្លូវការ pokerth.net អ្នកអាចលេងហ្គេម “ធម្មតា” ជាភ្ញៀវ; គណនី pokerth.net ឥតគិតថ្លៃត្រូវការសម្រាប់ “ហ្គេមចំណាត់ថ្នាក់” តុសម្រាប់តែអ្នកចុះឈ្មោះ និងការជជែក។"],
+       "ទេ។ របៀប “ក្នុងម៉ាស៊ីន / ហ្វឹកហាត់” មិនត្រូវការគណនី ហើយដំណើរការក្រៅបណ្ដាញ។ លើបណ្ដាញផ្លូវការ pokerth.net សូមចូលជាភ្ញៀវ៖ ម៉ាស៊ីនមេនឹងផ្ដល់ឈ្មោះហៅក្រៅជាភ្ញៀវឱ្យអ្នក ហើយអ្នកអាចលេងហ្គេម “ធម្មតា” បានភ្លាមៗ។ លើ LAN ឬម៉ាស៊ីនមេឯកទេស គ្មានគណនីទាល់តែសោះ — អ្នកគ្រាន់តែជ្រើសឈ្មោះហៅក្រៅមួយ។ គ្មានវិធីណាមួយក្នុងចំណោមនេះសុំអាសយដ្ឋានអ៊ីមែលទេ។ គណនី pokerth.net ឥតគិតថ្លៃត្រូវការតែសម្រាប់ “ហ្គេមចំណាត់ថ្នាក់” តុសម្រាប់តែអ្នកចុះឈ្មោះ និងការជជែកប៉ុណ្ណោះ។"],
+      ["តើខ្ញុំលេងបៀអនឡាញជាមួយមិត្តភក្តិដោយរបៀបណា?",
+       "បង្កើតតុមួយក្នុងបន្ទប់រង់ចាំ — លើ pokerth.net ឬលើ LAN ឬម៉ាស៊ីនមេឯកទេសណាមួយ — ហើយចុច “អញ្ជើញមិត្តភក្តិ” ក្នុងបន្ទប់រង់ចាំ។ កម្មវិធីវេបនឹងបង្កើតតំណអញ្ជើញដែលអ្នកអាចផ្ញើតាមកម្មវិធីផ្ញើសារណាមួយ។ មិត្តភក្តិរបស់អ្នកបើកវាក្នុងកម្មវិធីរុករក លើ iPhone, Android ឬកុំព្យូទ័រ ដោយមិនចាំបាច់ទាញយកអ្វីទេ។ កំណត់ពាក្យសម្ងាត់ ប្រសិនបើតុគួរតែនៅឯកជន៖ ពាក្យសម្ងាត់មិនដែលជាផ្នែកនៃតំណទេ។"],
+      ["តើមានអ្វីកើតឡើង នៅពេលមិត្តភក្តិបើកតំណអញ្ជើញរបស់ខ្ញុំ?",
+       "តំណនេះផ្ទុកព័ត៌មានតុ និងម៉ាស៊ីនមេ។ មិត្តរបស់អ្នកចូល — ជាភ្ញៀវ ឬដោយគណនីលើ pokerth.net ដោយគ្រាន់តែឈ្មោះហៅក្រៅលើ LAN ឬម៉ាស៊ីនមេឯកទេស — បន្ទាប់មកកម្មវិធីវេបចូលរួមតុដោយស្វ័យប្រវត្តិ ដោយមិនចាំបាច់ស្វែងរកវាក្នុងបន្ទប់រង់ចាំ។ តុដែលមានពាក្យសម្ងាត់នឹងសុំពាក្យសម្ងាត់របស់វា; ហ្គេមដែលបានចាប់ផ្ដើមរួចនឹងបើកសម្រាប់មើល។ តំណអញ្ជើញជាមុខងាររបស់កម្មវិធីវេប ហើយដំណើរការលើគ្រប់ម៉ាស៊ីនមេដែលវាអាចភ្ជាប់បាន។"],
+      ["តើមានម៉ាស៊ីនមេសាកល្បងដើម្បីសាកលេង PokerTH ដោយមិនចុះឈ្មោះទេ?",
+       "បាទ/ចាស។ នៅលើអេក្រង់ចូល សូមជ្រើស LAN / ម៉ាស៊ីនមេឯកទេស ហើយជ្រើសម៉ាស៊ីនមេសាកល្បងសាធារណៈក្នុងបញ្ជីម៉ាស៊ីនមេ៖ វាយឈ្មោះហៅក្រៅណាមួយ នោះអ្នកនៅក្នុងបន្ទប់រង់ចាំរបស់វាហើយ — គ្មានការចុះឈ្មោះ គ្មានអាសយដ្ឋានអ៊ីមែល។ ចំណុចពណ៌បៃតងបង្ហាញថាម៉ាស៊ីនមេណាខ្លះក្នុងបញ្ជីកំពុងអនឡាញ និងមានអ្នកលេងប៉ុន្មាននាក់។"],
       ["តើវាដំណើរការលើទូរស័ព្ទទេ?",
        "បាទ/ចាស។ កម្មវិធីវេបជា Progressive Web App៖ វាដំណើរការក្នុងកម្មវិធីរុករកទំនើបណាមួយលើកុំព្យូទ័រ ថេប្លេត ឬទូរស័ព្ទ ហើយអាចដំឡើងដូចកម្មវិធីធម្មតា — លើ iPhone និង iPad ដោយ ចែករំលែក → បន្ថែមទៅអេក្រង់ដើម ហើយកន្លែងផ្សេងពីម៉ឺនុយកម្មវិធីរុករក ឬប៊ូតុងដំឡើង។ ជំនួយរបស់អាត់បង្ហាញជំហានសម្រាប់ឧបករណ៍របស់អ្នក។"],
       ["តើខ្ញុំអាចលេងជាមួយកុំព្យូទ័របានទេ?",
@@ -5007,18 +5734,22 @@ var SEO_FAQ_I18N = {
       ["តើកម្មវិធីវេបប្រមូលទិន្នន័យអ្វីខ្លះ?",
        "តិចបំផុតតាមដែលអាចធ្វើបាន៖ ការកំណត់នៅក្នុងកម្មវិធីរុករករបស់អ្នក ហើយគ្មានការតាមដាន ឬផ្សាយពាណិជ្ជកម្មត្រូវបានប្រើ។ នៅពេលអ្នកចូលដោយគណនី pokerth.net ជម្រើស និងពានរង្វាន់ហ្វឹកហាត់របស់អ្នកត្រូវបានធ្វើសមកាលកម្មជាមួយវា ដើម្បីតាមអ្នកទៅឧបករណ៍ផ្សេងទៀត។ សូមមើលទំព័រឯកជនភាពសម្រាប់ព័ត៌មានលម្អិត។"],
       ["តើខ្ញុំអាចបង្ហោះម៉ាស៊ីនមេផ្ទាល់ខ្លួនបានទេ?",
-       "បាទ/ចាស។ ម៉ាស៊ីនមេឯកទេស PokerTH និងកម្មវិធីវេបនេះទាំងពីរជាប្រភពបើកចំហ ដូច្នេះអ្នកអាចដំណើរការម៉ាស៊ីនមេបៀឯកជនផ្ទាល់ខ្លួនលើ LAN ឬលើអ៊ីនធឺណិត។"],
+       "បាទ/ចាស។ ម៉ាស៊ីនមេឯកទេស PokerTH និងកម្មវិធីវេបនេះទាំងពីរជាប្រភពបើកចំហ ដូច្នេះអ្នកអាចដំណើរការម៉ាស៊ីនមេបៀឯកជនផ្ទាល់ខ្លួនលើ LAN ឬលើអ៊ីនធឺណិត។ ដើម្បីឱ្យវាបង្ហាញក្នុងបញ្ជីសម្រាប់គ្រប់គ្នា សូមជ្រើស LAN / ម៉ាស៊ីនមេឯកទេស រួចចុច “ស្នើម៉ាស៊ីនមេរបស់ខ្ញុំ” នៅខាងក្រោមបញ្ជីម៉ាស៊ីនមេ៖ នៅពេលអ្នកគ្រប់គ្រងអនុម័ត វានឹងបង្ហាញក្នុងបញ្ជី។ ម៉ាស៊ីនមេត្រូវតែអាចចូលដល់បានពីអ៊ីនធឺណិត។"],
       ["តើហ្គេមចំណាត់ថ្នាក់ និងរដូវកាលដំណើរការយ៉ាងដូចម្ដេច?",
        "ហ្គេមចំណាត់ថ្នាក់លើ pokerth.net មានអ្នកលេង ១០ នាក់ ហើយចាប់ផ្ដើមភ្លាមនៅពេលតុពេញ៖ ម្នាក់ៗមានស៊ីប ១០,០០០ small blind ៥០ ដែលកើនទ្វេដងរៀងរាល់ ១១ ដៃ និង ៥ វិនាទីដើម្បីធ្វើសកម្មភាព។ ចំណាត់ថ្នាក់ទី១ ដល់ទី៧ ទទួលបាន ១៥, ៩, ៦, ៤, ៣, ២ និង ១ ពិន្ទុ; ពិន្ទុរបស់អ្នកគឺជាមធ្យមភាគក្នុងមួយហ្គេម ថ្លឹងតាមចំនួនហ្គេមដែលអ្នកបានលេង ហើយចំណាត់ថ្នាក់ចាប់ផ្ដើមឡើងវិញរៀងរាល់ត្រីមាស។ ត្រូវការគណនី pokerth.net ឥតគិតថ្លៃ។"],
+      ["តើមានការប្រកួត និងព្រឹត្តិការណ៍បៀឥតគិតថ្លៃទេ?",
+       "បាទ/ចាស ពេញមួយឆ្នាំ ហើយឥតគិតថ្លៃទាំងអស់។ ហ្គេម PokerTH នីមួយៗជាការប្រកួតមួយ ហើយសហគមន៍ pokerth.net ក៏រៀបចំការប្រកួតជាប្រចាំ ដែលមានចំណាត់ថ្នាក់ផ្ទាល់ខ្លួនផងដែរ៖ BBC ជាហ្គេមដែល blinds កើនឡើងរៀងរាល់ប៉ុន្មាននាទីម្ដង (<a href=\"https://bbc.pokerth.net/registration\">ប្រតិទិន</a>, <a href=\"https://bbc.pokerth.net/results\">លទ្ធផល</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">ចំណាត់ថ្នាក់</a>); WeCup (WEC) ជាការប្រកួតក្នុងល្បឿនស្ងប់ និងមានតុល្យភាពជាង (<a href=\"https://wec.pokerth.net/results\">លទ្ធផល</a>, <a href=\"https://wec.pokerth.net/results/ranking\">ចំណាត់ថ្នាក់</a>); និង Monthly Cup ដែលធ្វើឡើងរៀងរាល់ខែ (<a href=\"https://monthlycup.pokerth.net/\">ការប្រកួតបន្ទាប់ និងអ្នកឈ្នះចុងក្រោយ</a>, <a href=\"https://monthlycup.pokerth.net/registration\">ការចុះឈ្មោះ</a>)។ កាលបរិច្ឆេទ និងច្បាប់ត្រូវបានប្រកាសលើវេបសាយនីមួយៗ និងលើវេទិកា <a href=\"https://www.pokerth.net/\">pokerth.net</a>។ ការចូលរួមត្រូវការគណនី pokerth.net ឥតគិតថ្លៃ។"],
       ["តើខ្ញុំអាចមើលហ្គេមដោយមិនលេងបានទេ?",
        "បាទ/ចាស។ ហ្គេមដែលកំពុងដំណើរការដែលអនុញ្ញាតអ្នកមើលអាចមើលផ្ទាល់ពីបន្ទប់រង់ចាំ៖ អ្នកឃើញតុ និងការជជែក ប៉ុន្តែ hole cards នៅតែលាក់ ហើយអ្នកមិនអាចធ្វើសកម្មភាពបានទេ។ តំណអញ្ជើញទៅតុដែលបានចាប់ផ្ដើមរួចបើកវាសម្រាប់មើល។"],
       ["តើមានជំនួយក្នុងកម្មវិធីទេ?",
-       "បាទ/ចាស។ ជំនួយរបស់អាត់៖ អាត់ ជានិមិត្តសញ្ញានៃកម្មវិធីវេប ពន្យល់អេក្រង់នីមួយៗនៅពេលអ្នកទៅមុខ ប្រសិនបើអ្នកចង់បាន។ ម៉ឺនុយរបស់គាត់មានជំនួយទាំងមូលជាមួយការស្វែងរក និង “នេះជាអ្វី?”៖ ចុចលើអ្វីក៏ដោយលើអេក្រង់ ហើយគាត់ប្រាប់ថាវាធ្វើអ្វី។"]
+       "បាទ/ចាស។ ជំនួយរបស់អាត់៖ អាត់ ជានិមិត្តសញ្ញានៃកម្មវិធីវេប ពន្យល់អេក្រង់នីមួយៗនៅពេលអ្នកទៅមុខ ប្រសិនបើអ្នកចង់បាន។ ម៉ឺនុយរបស់គាត់មានជំនួយទាំងមូលជាមួយការស្វែងរក និង “នេះជាអ្វី?”៖ ចុចលើអ្វីក៏ដោយលើអេក្រង់ ហើយគាត់ប្រាប់ថាវាធ្វើអ្វី។"],
+      ["តើ PokerTH នៅតែត្រូវបានអភិវឌ្ឍយ៉ាងសកម្មទេ?",
+       "បាទ/ចាស។ PokerTH ត្រូវបានអភិវឌ្ឍជាកម្មវិធីសេរីតាំងពីឆ្នាំ ២០០៦ ហើយនៅតែត្រូវបានថែទាំ៖ កម្មវិធីកុំព្យូទ័រ និងម៉ាស៊ីនមេមាននៅលើ <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> កម្មវិធីវេបនេះត្រូវបានធ្វើបច្ចុប្បន្នភាពជាបន្តបន្ទាប់ (<a href=\"https://github.com/narmod/pokerth-web-client\">កូដប្រភព និងកំណត់ត្រាការផ្លាស់ប្ដូរ</a>) ហើយហ្គេមត្រូវបានលេងរៀងរាល់ថ្ងៃលើបណ្ដាញផ្លូវការ pokerth.net។"]
     ]
   },
   te: {
     title: "FAQ — PokerTH వెబ్ క్లయింట్",
-    desc: "PokerTH వెబ్ క్లయింట్ గురించి తరచుగా అడిగే ప్రశ్నలు: ప్రకటనలు లేని ఉచిత పోకర్, ఏమీ ఇన్‌స్టాల్ చేయకుండా బ్రౌజర్‌లో Texas Hold’em ఆడటం, ఖాతాలు, మొబైల్, ఆఫ్‌లైన్ మోడ్, భాషలు మరియు గోప్యత.",
+    desc: "PokerTH వెబ్ క్లయింట్ గురించి తరచుగా అడిగే ప్రశ్నలు: ప్రకటనలు, డౌన్‌లోడ్ లేని ఉచిత పోకర్, అతిథిగా లేదా ఖాతా లేకుండా ఆడటం, లింక్‌తో స్నేహితులను ఆహ్వానించడం, టోర్నమెంట్‌లు, మొబైల్, ఆఫ్‌లైన్ మోడ్, భాషలు మరియు గోప్యత.",
     h1: "PokerTH వెబ్ క్లయింట్ — తరచుగా అడిగే ప్రశ్నలు",
     qa: [
       ["PokerTH ఉచితమా?",
@@ -5030,7 +5761,13 @@ var SEO_FAQ_I18N = {
       ["నా బ్రౌజర్‌లో ఇతరులతో Texas Hold’em ఆడవచ్చా?",
        "అవును. ప్రపంచవ్యాప్త ఆటగాళ్లతో తలపడటానికి అధికారిక pokerth.net నెట్‌వర్క్‌లో చేరండి, లేదా మీ స్నేహితులు నేరుగా మీ టేబుల్‌కు వచ్చేలా ఆహ్వాన లింక్‌ను పంపండి — అంతా బ్రౌజర్‌లోనే."],
       ["ఆడటానికి ఖాతా కావాలా?",
-       "లేదు. లోకల్ / శిక్షణ మోడ్‌కు ఖాతా అవసరం లేదు, ఇది ఆఫ్‌లైన్‌లో పనిచేస్తుంది. అధికారిక pokerth.net నెట్‌వర్క్‌లో సాధారణం రకం గేమ్‌లను అతిథిగా ఆడవచ్చు; ర్యాంకింగ్ గేమ్‌లు, నమోదిత ఆటగాళ్లకు మాత్రమే ఉండే టేబుల్‌లు మరియు చాట్‌కు ఉచిత pokerth.net ఖాతా కావాలి."],
+       "లేదు. లోకల్ / శిక్షణ మోడ్‌కు ఖాతా అవసరం లేదు, ఇది ఆఫ్‌లైన్‌లో పనిచేస్తుంది. అధికారిక pokerth.net నెట్‌వర్క్‌లో అతిథిగా లాగిన్ అవ్వండి: సర్వర్ మీకు ఒక అతిథి మారుపేరు ఇస్తుంది, మీరు వెంటనే సాధారణం రకం గేమ్‌లు ఆడవచ్చు. LAN లేదా డెడికేటెడ్ సర్వర్‌లో అసలు ఖాతానే ఉండదు — ఒక మారుపేరు ఎంచుకుంటే చాలు. వీటిలో ఏదీ ఈమెయిల్ చిరునామా అడగదు. ఉచిత pokerth.net ఖాతా కేవలం ర్యాంకింగ్ గేమ్‌లు, నమోదిత ఆటగాళ్లకు మాత్రమే ఉండే టేబుల్‌లు మరియు చాట్‌కు మాత్రమే కావాలి."],
+      ["స్నేహితులతో ఆన్‌లైన్‌లో పోకర్ ఎలా ఆడాలి?",
+       "లాబీలో ఒక టేబుల్ సృష్టించండి — pokerth.net లో లేదా ఏదైనా LAN లేదా డెడికేటెడ్ సర్వర్‌లో — ఆపై వేచి ఉండే గదిలో “స్నేహితులను ఆహ్వానించు” నొక్కండి. వెబ్ క్లయింట్ ఒక ఆహ్వాన లింక్‌ను తయారు చేస్తుంది, దాన్ని మీరు ఏ మెసెంజర్ ద్వారానైనా పంపవచ్చు. మీ స్నేహితులు దాన్ని తమ బ్రౌజర్‌లో — iPhone, Android లేదా కంప్యూటర్‌లో — తెరుస్తారు, ఏమీ డౌన్‌లోడ్ చేయనవసరం లేదు. టేబుల్ ప్రైవేట్‌గా ఉండాలంటే పాస్‌వర్డ్ పెట్టండి: పాస్‌వర్డ్ ఎప్పుడూ లింక్‌లో భాగం కాదు."],
+      ["నా ఆహ్వాన లింక్‌ను స్నేహితుడు తెరిస్తే ఏమవుతుంది?",
+       "లింక్‌లో టేబుల్ మరియు సర్వర్ వివరాలు ఉంటాయి. మీ స్నేహితుడు లాగిన్ అవుతాడు — pokerth.net లో అతిథిగా లేదా ఖాతాతో, LAN లేదా డెడికేటెడ్ సర్వర్‌లో కేవలం మారుపేరుతో — ఆ తర్వాత లాబీలో వెతకాల్సిన అవసరం లేకుండా వెబ్ క్లయింట్ ఆటోమేటిక్‌గా ఆ టేబుల్‌లో చేరుతుంది. పాస్‌వర్డ్ రక్షిత టేబుల్ దాని పాస్‌వర్డ్ అడుగుతుంది; ఇప్పటికే మొదలైన గేమ్ చూడటానికి తెరుచుకుంటుంది. ఆహ్వాన లింక్‌లు వెబ్ క్లయింట్ ఫీచర్, అది కనెక్ట్ అవ్వగల ప్రతి సర్వర్‌లోనూ పనిచేస్తాయి."],
+      ["నమోదు చేసుకోకుండా PokerTH ను ప్రయత్నించడానికి డెమో సర్వర్ ఉందా?",
+       "అవును. లాగిన్ స్క్రీన్‌లో LAN / డెడికేటెడ్ సర్వర్ ఎంచుకుని, సర్వర్ జాబితాలో పబ్లిక్ డెమో సర్వర్‌ను ఎంచుకోండి: ఏదైనా మారుపేరు టైప్ చేస్తే మీరు దాని లాబీలోకి వెళ్తారు — నమోదు లేదు, ఈమెయిల్ చిరునామా లేదు. జాబితాలోని ఏ సర్వర్‌లు ఆన్‌లైన్‌లో ఉన్నాయో, వాటిలో ఎంతమంది ఆటగాళ్లు ఉన్నారో ఆకుపచ్చ చుక్క చూపిస్తుంది."],
       ["ఇది మొబైల్‌లో పనిచేస్తుందా?",
        "అవును. వెబ్ క్లయింట్ ఒక Progressive Web App: కంప్యూటర్, టాబ్లెట్ లేదా ఫోన్‌లోని ఏ ఆధునిక బ్రౌజర్‌లోనైనా నడుస్తుంది, నేటివ్ యాప్ లాగా ఇన్‌స్టాల్ చేయవచ్చు — iPhone మరియు iPad లో షేర్ → హోమ్ స్క్రీన్‌కు జోడించు ద్వారా, ఇతర చోట్ల బ్రౌజర్ మెనూ నుండి లేదా ఇన్‌స్టాల్ బటన్ ద్వారా. మీ పరికరానికి సంబంధించిన దశలను ఏస్ సహాయం చూపిస్తుంది."],
       ["కంప్యూటర్‌తో ఆడవచ్చా?",
@@ -5046,18 +5783,22 @@ var SEO_FAQ_I18N = {
       ["వెబ్ క్లయింట్ ఏ డేటాను సేకరిస్తుంది?",
        "వీలైనంత తక్కువ: మీ సెట్టింగ్‌లు మీ బ్రౌజర్‌లోనే ఉంటాయి, ట్రాకింగ్ లేదు, ప్రకటనలు లేవు. pokerth.net ఖాతాతో లాగిన్ అయినప్పుడు, మీ ఎంపికలు మరియు శిక్షణ కప్‌లు దానితో సింక్ అవుతాయి, కాబట్టి అవి మీ ఇతర పరికరాల్లోనూ ఉంటాయి. వివరాలు గోప్యత పేజీలో ఉన్నాయి."],
       ["నా సొంత సర్వర్‌ను హోస్ట్ చేయవచ్చా?",
-       "అవును. PokerTH డెడికేటెడ్ సర్వర్ మరియు ఈ వెబ్ క్లయింట్ రెండూ ఓపెన్ సోర్స్: లోకల్ నెట్‌వర్క్‌లో లేదా ఇంటర్నెట్‌లో మీ సొంత ప్రైవేట్ పోకర్ సర్వర్‌ను నడపవచ్చు."],
+       "అవును. PokerTH డెడికేటెడ్ సర్వర్ మరియు ఈ వెబ్ క్లయింట్ రెండూ ఓపెన్ సోర్స్, కాబట్టి LAN లో లేదా ఇంటర్నెట్‌లో మీ సొంత ప్రైవేట్ పోకర్ సర్వర్‌ను నడపవచ్చు. అందరికీ కనిపించేలా జాబితాలో చేర్చాలంటే, LAN / డెడికేటెడ్ సర్వర్ ఎంచుకుని, సర్వర్ జాబితా దిగువన ఉన్న “నా సర్వర్‌ను ప్రతిపాదించు” నొక్కండి: నిర్వాహకులు ఆమోదించిన తర్వాత అది జాబితాలో కనిపిస్తుంది. సర్వర్ ఇంటర్నెట్ నుండి చేరుకోగలిగేలా ఉండాలి."],
       ["ర్యాంకింగ్ గేమ్‌లు మరియు సీజన్‌లు ఎలా పనిచేస్తాయి?",
        "pokerth.net లో ర్యాంకింగ్ గేమ్‌లలో 10 మంది ఆటగాళ్లు కూర్చుంటారు, టేబుల్ నిండిన వెంటనే మొదలవుతాయి: ఒక్కొక్కరికి 10,000 చిప్స్, ప్రతి 11 హ్యాండ్‌లకు రెట్టింపు అయ్యే 50 స్మాల్ బ్లైండ్, చర్య తీసుకోవడానికి 5 సెకన్లు. 1 నుండి 7 స్థానాలకు వరుసగా 15, 9, 6, 4, 3, 2, 1 పాయింట్లు వస్తాయి; మీ స్కోర్ ఒక్కో గేమ్‌కు మీ సగటు, మీరు ఆడిన గేమ్‌ల సంఖ్యతో భారం వేయబడుతుంది, ర్యాంకింగ్ ప్రతి త్రైమాసికం మళ్లీ మొదలవుతుంది. ఉచిత pokerth.net ఖాతా కావాలి."],
+      ["ఉచిత పోకర్ టోర్నమెంట్‌లు, పోటీలు ఉన్నాయా?",
+       "అవును, ఏడాది పొడవునా, అన్నీ ఉచితం. ప్రతి PokerTH గేమ్ ఒక టోర్నమెంటే, అంతేకాక pokerth.net సమాజం సొంత ర్యాంకింగ్‌లతో క్రమం తప్పకుండా పోటీలు నిర్వహిస్తుంది: BBC, కొన్ని నిమిషాలకోసారి బ్లైండ్‌లు పెరిగే గేమ్‌లు (<a href=\"https://bbc.pokerth.net/registration\">క్యాలెండర్</a>, <a href=\"https://bbc.pokerth.net/results\">ఫలితాలు</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">ర్యాంకింగ్</a>); WeCup (WEC), ప్రశాంతమైన, సమతుల్య వేగంతో సాగే టోర్నమెంట్‌లు (<a href=\"https://wec.pokerth.net/results\">ఫలితాలు</a>, <a href=\"https://wec.pokerth.net/results/ranking\">ర్యాంకింగ్</a>); మరియు ప్రతి నెలా జరిగే Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">తదుపరి కప్ మరియు ఇటీవలి విజేతలు</a>, <a href=\"https://monthlycup.pokerth.net/registration\">నమోదు</a>). తేదీలు, నియమాలు ప్రతి సైట్‌లోనూ <a href=\"https://www.pokerth.net/\">pokerth.net</a> ఫోరమ్‌లోనూ ప్రకటిస్తారు. పాల్గొనడానికి ఉచిత pokerth.net ఖాతా కావాలి."],
       ["ఆడకుండా గేమ్‌ను చూడవచ్చా?",
        "అవును. ప్రేక్షకులను అనుమతించే నడుస్తున్న గేమ్‌లను లాబీ నుండి లైవ్‌గా చూడవచ్చు: మీకు టేబుల్ మరియు చాట్ కనిపిస్తాయి, కానీ హోల్ కార్డులు దాచబడే ఉంటాయి మరియు మీరు చర్యలు తీసుకోలేరు. ఇప్పటికే మొదలైన టేబుల్‌కు ఆహ్వాన లింక్ దాన్ని చూడటానికి తెరుస్తుంది."],
       ["యాప్‌లోనే సహాయం ఉందా?",
-       "అవును. ఏస్ సహాయం: వెబ్ క్లయింట్ మాస్కట్ అయిన ఏస్, మీరు కోరుకుంటే మీరు వెళ్తున్న ప్రతి స్క్రీన్‌ను వివరిస్తాడు. అతని మెనూలో శోధనతో పాటు మొత్తం సహాయం ఉంటుంది, మరియు “ఇది ఏమిటి?”: స్క్రీన్‌పై దేన్నైనా ట్యాప్ చేయండి, అది ఏమి చేస్తుందో అతను చెబుతాడు."]
+       "అవును. ఏస్ సహాయం: వెబ్ క్లయింట్ మాస్కట్ అయిన ఏస్, మీరు కోరుకుంటే మీరు వెళ్తున్న ప్రతి స్క్రీన్‌ను వివరిస్తాడు. అతని మెనూలో శోధనతో పాటు మొత్తం సహాయం ఉంటుంది, మరియు “ఇది ఏమిటి?”: స్క్రీన్‌పై దేన్నైనా ట్యాప్ చేయండి, అది ఏమి చేస్తుందో అతను చెబుతాడు."],
+      ["PokerTH ఇప్పటికీ చురుకుగా అభివృద్ధి చేయబడుతోందా?",
+       "అవును. PokerTH 2006 నుండి ఉచిత సాఫ్ట్‌వేర్‌గా అభివృద్ధి చేయబడుతోంది, ఇప్పటికీ నిర్వహించబడుతోంది: డెస్క్‌టాప్ క్లయింట్ మరియు సర్వర్ <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> లో ఉన్నాయి, ఈ వెబ్ క్లయింట్ నిరంతరం నవీకరించబడుతోంది (<a href=\"https://github.com/narmod/pokerth-web-client\">సోర్స్ కోడ్ మరియు మార్పుల చరిత్ర</a>), అధికారిక pokerth.net నెట్‌వర్క్‌లో ప్రతిరోజూ గేమ్‌లు జరుగుతాయి."]
     ]
   },
   tg: {
     title: "Саволҳои маъмул — муштарии веби PokerTH",
-    desc: "Саволҳои маъмул дар бораи муштарии веби PokerTH: покери ройгон бе реклама, бозии Texas Hold’em дар браузер бе насби чизе, ҳисобҳо, телефонҳо, реҷаи офлайн, забонҳо ва махфият.",
+    desc: "Саволҳои маъмул дар бораи муштарии веби PokerTH: покери ройгон бе реклама ва бе боргирӣ, бозӣ ҳамчун меҳмон ё бе ҳисоб, даъвати дӯстон бо пайванд, турнирҳо, телефонҳо, реҷаи офлайн, забонҳо ва махфият.",
     h1: "Муштарии веби PokerTH — Саволҳои маъмул",
     qa: [
       ["Оё PokerTH ройгон аст?",
@@ -5069,7 +5810,13 @@ var SEO_FAQ_I18N = {
       ["Оё дар браузерам бо одамони дигар Texas Hold’em бозӣ карда метавонам?",
        "Бале. Барои бозии зиндаи Texas Hold’em бо бозингарони тамоми ҷаҳон ба шабакаи расмии pokerth.net ҳамроҳ шавед, ё пайванди даъват фиристед, то дӯстон мустақиман ба мизи шумо оянд — ҳама дар браузер."],
       ["Оё барои бозӣ ҳисоб лозим аст?",
-       "Не. Реҷаи Маҳаллӣ / машқ ҳисоб талаб намекунад ва офлайн кор мекунад. Дар шабакаи расмии pokerth.net шумо метавонед бозиҳои Муқаррариро ҳамчун меҳмон бозӣ кунед; ҳисоби ройгони pokerth.net барои бозиҳои рейтингӣ, мизҳои танҳо барои бақайдгирифташудагон ва чат лозим аст."],
+       "Не. Реҷаи Маҳаллӣ / машқ ҳисоб талаб намекунад ва офлайн кор мекунад. Дар шабакаи расмии pokerth.net ҳамчун меҳмон ворид шавед: сервер ба шумо тахаллуси меҳмон медиҳад ва шумо метавонед бозиҳои Муқаррариро фавран бозӣ кунед. Дар LAN ё сервери махсус умуман ҳисоб нест — шумо танҳо тахаллус интихоб мекунед. Ҳеҷ кадоме аз инҳо суроғаи почтаи электрониро намепурсад. Ҳисоби ройгони pokerth.net танҳо барои бозиҳои рейтингӣ, мизҳои махсуси бақайдгирифташудагон ва чат лозим аст."],
+      ["Чӣ тавр бо дӯстон онлайн покер бозӣ кунам?",
+       "Дар лобби миз созед — дар pokerth.net ё дар ҳар сервери LAN ё махсус — ва дар утоқи интизорӣ тугмаи «Даъвати дӯстон»-ро пахш кунед. Муштарии веб пайванди даъват месозад, ки онро тавассути ҳар паёмрасон фиристодан мумкин аст. Дӯстонатон онро дар браузер мекушоянд — дар iPhone, Android ё компютер, бе боргирии чизе. Агар миз бояд пӯшида монад, парол гузоред: парол ҳеҷ гоҳ ба пайванд дохил намешавад."],
+      ["Вақте ки дӯстам пайванди даъвати маро мекушояд, чӣ мешавад?",
+       "Пайванд мизу серверро дар худ дорад. Дӯсти шумо ворид мешавад — дар pokerth.net ҳамчун меҳмон ё бо ҳисоб, дар LAN ё сервери махсус танҳо бо тахаллус — ва баъд муштарии веб худкор ба миз ҳамроҳ мешавад, ҷустуҷӯи он дар лобби лозим нест. Мизи бо парол ҳифзшуда паролро мепурсад; бозии аллакай оғозшуда барои тамошо кушода мешавад. Пайвандҳои даъват хусусияти муштарии веб мебошанд ва дар ҳар сервере, ки он ба он пайваст шуда метавонад, кор мекунанд."],
+      ["Оё сервери намоишӣ барои санҷидани PokerTH бе бақайдгирӣ ҳаст?",
+       "Бале. Дар экрани воридшавӣ LAN / Сервери махсусро интихоб кунед ва аз рӯйхати серверҳо сервери намоишии оммавиро интихоб кунед: ҳар тахаллусе нависед ва шумо дар лоббии он ҳастед — бе бақайдгирӣ, бе суроғаи почтаи электронӣ. Нуқтаи сабз нишон медиҳад, ки кадом серверҳои рӯйхат онлайн ҳастанд ва дар онҳо чанд бозингар ҳаст."],
       ["Оё дар телефон кор мекунад?",
        "Бале. Муштарии веб Progressive Web App аст: он дар ҳар браузери муосир дар компютер, планшет ё телефон кор мекунад ва мисли барномаи оддӣ насб карда мешавад — дар iPhone ва iPad бо Мубодила → Ба экрани асосӣ илова кардан, дар дигар ҷо аз менюи браузер ё бо тугмаи насб. Кӯмаки туз қадамҳоро барои дастгоҳи шумо нишон медиҳад."],
       ["Оё бо компютер бозӣ карда метавонам?",
@@ -5085,18 +5832,22 @@ var SEO_FAQ_I18N = {
       ["Муштарии веб кадом маълумотро ҷамъ мекунад?",
        "То ҳадди имкон кам: танзимот дар браузери шумо мемонанд ва пайгирӣ ё реклама истифода намешавад. Ҳангоми воридшавӣ бо ҳисоби pokerth.net, имконот ва ҷомҳои машқи шумо бо он ҳамоҳанг карда мешаванд, то ба дастгоҳҳои дигари шумо ҳам пайравӣ кунанд. Барои тафсилот саҳифаи махфиятро бинед."],
       ["Оё сервери худамро ҷойгир карда метавонам?",
-       "Бале. Ҳам сервери махсуси PokerTH ва ҳам ин муштарии веб кушодаманба мебошанд, бинобар ин шумо метавонед сервери хусусии покерро дар LAN ё интернет кор фармоед."],
+       "Бале. Ҳам сервери махсуси PokerTH ва ҳам ин муштарии веб кушодаманба мебошанд, бинобар ин шумо метавонед сервери хусусии покерро дар LAN ё интернет кор фармоед. Барои он ки он дар рӯйхат ба ҳама намоён шавад, LAN / Сервери махсусро интихоб кунед, сипас тугмаи «Пешниҳоди сервери ман»-ро дар поёни рӯйхати серверҳо пахш кунед: пас аз тасдиқи маъмурон он дар рӯйхат пайдо мешавад. Сервер бояд аз интернет дастрас бошад."],
       ["Бозиҳои рейтингӣ ва мавсимҳо чӣ тавр кор мекунанд?",
        "Бозиҳои рейтингӣ дар pokerth.net 10 бозингарро ҷойгир мекунанд ва ҳамин ки миз пур шавад, оғоз мешаванд: ҳар яке 10 000 чип, блайнди хурд 50, ки ҳар 11 даст дучанд мешавад, ва 5 сония барои амал. Ҷойҳои 1 то 7 мутаносибан 15, 9, 6, 4, 3, 2 ва 1 хол мегиранд; Холи шумо миёнаи шумо барои як бозӣ аст, ки бо шумораи бозиҳои бозидаатон вазн дода мешавад ва рейтинг ҳар семоҳа аз нав оғоз мешавад. Ҳисоби ройгони pokerth.net лозим аст."],
+      ["Оё турнирҳо ва мусобиқаҳои ройгони покер ҳастанд?",
+       "Бале, дар тӯли сол ва ҳама ройгон. Ҳар бозии PokerTH турнир аст ва ҷомеаи pokerth.net инчунин мусобиқаҳои мунтазам бо рейтингҳои худ мегузаронад: BBC — бозиҳое, ки блайндҳо дар онҳо ҳар чанд дақиқа боло мераванд (<a href=\"https://bbc.pokerth.net/registration\">тақвим</a>, <a href=\"https://bbc.pokerth.net/results\">натиҷаҳо</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">рейтинг</a>); WeCup (WEC) — турнирҳо бо суръати оромтар ва мутавозин (<a href=\"https://wec.pokerth.net/results\">натиҷаҳо</a>, <a href=\"https://wec.pokerth.net/results/ranking\">рейтинг</a>); ва Monthly Cup, ки ҳар моҳ баргузор мешавад (<a href=\"https://monthlycup.pokerth.net/\">ҷоми навбатӣ ва ғолибони охирин</a>, <a href=\"https://monthlycup.pokerth.net/registration\">бақайдгирӣ</a>). Санаҳо ва қоидаҳо дар ҳар сомона ва дар форуми <a href=\"https://www.pokerth.net/\">pokerth.net</a> эълон карда мешаванд. Барои иштирок ҳисоби ройгони pokerth.net лозим аст."],
       ["Оё бе бозӣ кардан бозиро тамошо карда метавонам?",
        "Бале. Бозиҳои ҷорӣ, ки тамошобинонро иҷозат медиҳанд, аз лобби зинда тамошо карда мешаванд: шумо миз ва чатро мебинед, вале кортҳои шахсӣ пинҳон мемонанд ва шумо амал карда наметавонед. Пайванди даъват ба мизе, ки аллакай оғоз шудааст, онро барои тамошо мекушояд."],
       ["Оё дар дохили барнома кӯмак ҳаст?",
-       "Бале. Кӯмаки туз: Туз, рамзи муштарии веб, агар хоҳед, ҳар экранро ҳангоми кор шарҳ медиҳад. Менюи ӯ тамоми кӯмакро бо ҷустуҷӯ дорад ва «Ин чист?»: ба ҳар чизи экран даст расонед ва ӯ мегӯяд, ки он чӣ кор мекунад."]
+       "Бале. Кӯмаки туз: Туз, рамзи муштарии веб, агар хоҳед, ҳар экранро ҳангоми кор шарҳ медиҳад. Менюи ӯ тамоми кӯмакро бо ҷустуҷӯ дорад ва «Ин чист?»: ба ҳар чизи экран даст расонед ва ӯ мегӯяд, ки он чӣ кор мекунад."],
+      ["Оё PokerTH ҳоло ҳам фаъолона таҳия мешавад?",
+       "Бале. PokerTH аз соли 2006 ҳамчун нармафзори озод таҳия мешавад ва то ҳол дастгирӣ меёбад: барномаи мизи корӣ ва сервер дар <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> ҳастанд, ин муштарии веб доимо навсозӣ мешавад (<a href=\"https://github.com/narmod/pokerth-web-client\">коди манбаъ ва таърихи тағйирот</a>) ва дар шабакаи расмии pokerth.net ҳар рӯз бозиҳо идома доранд."]
     ],
   },
   ml: {
     title: "FAQ — PokerTH വെബ് ക്ലയന്റ്",
-    desc: "PokerTH വെബ് ക്ലയന്റിനെക്കുറിച്ചുള്ള പതിവ് ചോദ്യങ്ങൾ: പരസ്യങ്ങളില്ലാത്ത സൗജന്യ പോക്കർ, ഒന്നും ഇൻസ്റ്റാൾ ചെയ്യാതെ ബ്രൗസറിൽ Texas Hold’em കളിക്കൽ, അക്കൗണ്ടുകൾ, മൊബൈൽ, ഓഫ്‌ലൈൻ മോഡ്, ഭാഷകൾ, സ്വകാര്യത.",
+    desc: "PokerTH വെബ് ക്ലയന്റിനെക്കുറിച്ചുള്ള പതിവ് ചോദ്യങ്ങൾ: പരസ്യങ്ങളും ഡൗൺലോഡും ഇല്ലാത്ത സൗജന്യ പോക്കർ, അതിഥിയായോ അക്കൗണ്ട് ഇല്ലാതെയോ കളിക്കൽ, ലിങ്ക് വഴി സുഹൃത്തുക്കളെ ക്ഷണിക്കൽ, ടൂർണമെന്റുകൾ, മൊബൈൽ, ഓഫ്‌ലൈൻ മോഡ്, ഭാഷകൾ, സ്വകാര്യത.",
     h1: "PokerTH വെബ് ക്ലയന്റ് — പതിവ് ചോദ്യങ്ങൾ",
     qa: [
       ["PokerTH സൗജന്യമാണോ?",
@@ -5108,7 +5859,13 @@ var SEO_FAQ_I18N = {
       ["എന്റെ ബ്രൗസറിൽ മറ്റ് ആളുകൾക്കെതിരെ Texas Hold’em കളിക്കാമോ?",
        "അതെ. ലോകമെമ്പാടുമുള്ള കളിക്കാരെ നേരിടാൻ ഔദ്യോഗിക pokerth.net നെറ്റ്‌വർക്കിൽ ചേരുക, അല്ലെങ്കിൽ നിങ്ങളുടെ സുഹൃത്തുക്കൾ നേരിട്ട് നിങ്ങളുടെ ടേബിളിലെത്താൻ ഒരു ക്ഷണ ലിങ്ക് അയയ്ക്കുക — എല്ലാം ബ്രൗസറിൽ തന്നെ."],
       ["കളിക്കാൻ അക്കൗണ്ട് വേണോ?",
-       "ഇല്ല. ലോക്കൽ / പരിശീലനം മോഡിന് അക്കൗണ്ട് വേണ്ട, അത് ഓഫ്‌ലൈനിലും പ്രവർത്തിക്കും. ഔദ്യോഗിക pokerth.net നെറ്റ്‌വർക്കിൽ നിങ്ങൾക്ക് അതിഥിയായി സാധാരണ ഗെയിമുകൾ കളിക്കാം; റാങ്കിംഗ് ഗെയിമുകൾക്കും രജിസ്റ്റർ ചെയ്തവർക്ക് മാത്രമുള്ള ടേബിളുകൾക്കും ചാറ്റിനും സൗജന്യ pokerth.net അക്കൗണ്ട് വേണം."],
+       "ഇല്ല. ലോക്കൽ / പരിശീലനം മോഡിന് അക്കൗണ്ട് വേണ്ട, അത് ഓഫ്‌ലൈനിലും പ്രവർത്തിക്കും. ഔദ്യോഗിക pokerth.net നെറ്റ്‌വർക്കിൽ അതിഥിയായി ലോഗിൻ ചെയ്യുക: സെർവർ നിങ്ങൾക്ക് ഒരു അതിഥി വിളിപ്പേര് നൽകും, ഉടൻ തന്നെ സാധാരണ ഗെയിമുകൾ കളിക്കാം. LAN സെർവറിലോ ഡെഡിക്കേറ്റഡ് സെർവറിലോ അക്കൗണ്ട് എന്നൊന്നില്ല — ഒരു വിളിപ്പേര് തിരഞ്ഞെടുത്താൽ മതി. ഇവയിലൊന്നും ഇമെയിൽ വിലാസം ചോദിക്കുന്നില്ല. റാങ്കിംഗ് ഗെയിമുകൾക്കും രജിസ്റ്റർ ചെയ്തവർക്ക് മാത്രമുള്ള ടേബിളുകൾക്കും ചാറ്റിനും മാത്രമാണ് സൗജന്യ pokerth.net അക്കൗണ്ട് വേണ്ടത്."],
+      ["സുഹൃത്തുക്കളോടൊപ്പം ഓൺലൈനായി പോക്കർ കളിക്കുന്നത് എങ്ങനെ?",
+       "ലോബിയിൽ ഒരു ടേബിൾ സൃഷ്ടിക്കുക — pokerth.net ൽ അല്ലെങ്കിൽ ഏതെങ്കിലും LAN സെർവറിലോ ഡെഡിക്കേറ്റഡ് സെർവറിലോ — എന്നിട്ട് കാത്തിരിപ്പ് മുറിയിൽ “സുഹൃത്തുക്കളെ ക്ഷണിക്കുക” അമർത്തുക. വെബ് ക്ലയന്റ് ഒരു ക്ഷണ ലിങ്ക് തയ്യാറാക്കും, അത് ഏത് മെസഞ്ചറിലൂടെയും അയയ്ക്കാം. നിങ്ങളുടെ സുഹൃത്തുക്കൾ അത് iPhone, Android അല്ലെങ്കിൽ കമ്പ്യൂട്ടർ എന്നിവയിലെ ബ്രൗസറിൽ തുറക്കുന്നു, ഒന്നും ഡൗൺലോഡ് ചെയ്യേണ്ടതില്ല. ടേബിൾ സ്വകാര്യമായി നിലനിർത്തണമെങ്കിൽ ഒരു പാസ്‌വേഡ് സജ്ജീകരിക്കുക: പാസ്‌വേഡ് ഒരിക്കലും ലിങ്കിന്റെ ഭാഗമാകില്ല."],
+      ["എന്റെ ക്ഷണ ലിങ്ക് ഒരു സുഹൃത്ത് തുറക്കുമ്പോൾ എന്ത് സംഭവിക്കും?",
+       "ലിങ്കിൽ ടേബിളും സെർവറും ഉൾപ്പെടുന്നു. നിങ്ങളുടെ സുഹൃത്ത് ലോഗിൻ ചെയ്യുന്നു — pokerth.net ൽ അതിഥിയായോ അക്കൗണ്ട് ഉപയോഗിച്ചോ, LAN സെർവറിലോ ഡെഡിക്കേറ്റഡ് സെർവറിലോ ഒരു വിളിപ്പേര് മാത്രം നൽകി — തുടർന്ന് ലോബിയിൽ തിരയേണ്ട ആവശ്യമില്ലാതെ വെബ് ക്ലയന്റ് സ്വയമേവ ആ ടേബിളിൽ ചേരുന്നു. പാസ്‌വേഡ് സംരക്ഷിത ടേബിൾ അതിന്റെ പാസ്‌വേഡ് ചോദിക്കും; ഇതിനകം തുടങ്ങിയ ഗെയിം കാണാനായി തുറക്കും. ക്ഷണ ലിങ്കുകൾ വെബ് ക്ലയന്റിന്റെ സവിശേഷതയാണ്, അതിന് ബന്ധിപ്പിക്കാൻ കഴിയുന്ന എല്ലാ സെർവറുകളിലും അവ പ്രവർത്തിക്കും."],
+      ["രജിസ്റ്റർ ചെയ്യാതെ PokerTH പരീക്ഷിക്കാൻ ഒരു ഡെമോ സെർവർ ഉണ്ടോ?",
+       "അതെ. ലോഗിൻ സ്ക്രീനിൽ LAN / ഡെഡിക്കേറ്റഡ് സെർവർ തിരഞ്ഞെടുത്ത്, സെർവർ പട്ടികയിൽ നിന്ന് പൊതു ഡെമോ സെർവർ തിരഞ്ഞെടുക്കുക: ഏതെങ്കിലും വിളിപ്പേര് ടൈപ്പ് ചെയ്താൽ നിങ്ങൾ അതിന്റെ ലോബിയിലെത്തും — രജിസ്ട്രേഷനില്ല, ഇമെയിൽ വിലാസവുമില്ല. പട്ടികയിലെ ഏതൊക്കെ സെർവറുകൾ ഓൺലൈനിലാണെന്നും അവയിൽ എത്ര കളിക്കാരുണ്ടെന്നും ഒരു പച്ച പുള്ളി കാണിക്കും."],
       ["ഇത് മൊബൈലിൽ പ്രവർത്തിക്കുമോ?",
        "അതെ. വെബ് ക്ലയന്റ് ഒരു Progressive Web App ആണ്: കമ്പ്യൂട്ടർ, ടാബ്‌ലെറ്റ്, ഫോൺ എന്നിവയിലെ ഏത് ആധുനിക ബ്രൗസറിലും ഇത് പ്രവർത്തിക്കും, ഒരു നേറ്റീവ് ആപ്പ് പോലെ ഇൻസ്റ്റാൾ ചെയ്യാം — iPhone, iPad എന്നിവയിൽ ഷെയർ → ഹോം സ്ക്രീനിലേക്ക് ചേർക്കുക വഴി, മറ്റിടങ്ങളിൽ ബ്രൗസർ മെനുവിൽ നിന്നോ ഇൻസ്റ്റാൾ ബട്ടണിൽ നിന്നോ. എയ്സിന്റെ സഹായം നിങ്ങളുടെ ഉപകരണത്തിനുള്ള ഘട്ടങ്ങൾ കാണിക്കും."],
       ["കമ്പ്യൂട്ടറിനെതിരെ കളിക്കാമോ?",
@@ -5124,18 +5881,22 @@ var SEO_FAQ_I18N = {
       ["വെബ് ക്ലയന്റ് എന്ത് ഡാറ്റയാണ് ശേഖരിക്കുന്നത്?",
        "കഴിയുന്നത്ര കുറച്ച്: നിങ്ങളുടെ ക്രമീകരണങ്ങൾ നിങ്ങളുടെ ബ്രൗസറിൽ തന്നെ നിൽക്കും, ട്രാക്കിംഗോ പരസ്യങ്ങളോ ഇല്ല. pokerth.net അക്കൗണ്ടിൽ ലോഗിൻ ചെയ്യുമ്പോൾ, നിങ്ങളുടെ ക്രമീകരണങ്ങളും പരിശീലന ട്രോഫികളും അതുമായി സിങ്ക് ചെയ്യപ്പെടും, അങ്ങനെ അവ നിങ്ങളുടെ മറ്റ് ഉപകരണങ്ങളിലും ലഭിക്കും. വിശദാംശങ്ങൾ സ്വകാര്യതാ പേജിലുണ്ട്."],
       ["എനിക്ക് സ്വന്തം സെർവർ ഹോസ്റ്റ് ചെയ്യാമോ?",
-       "അതെ. PokerTH ഡെഡിക്കേറ്റഡ് സെർവറും ഈ വെബ് ക്ലയന്റും രണ്ടും സ്വതന്ത്ര സോഫ്റ്റ്‌വെയറാണ്: ലോക്കൽ നെറ്റ്‌വർക്കിലോ ഇന്റർനെറ്റിലോ നിങ്ങളുടെ സ്വന്തം സ്വകാര്യ പോക്കർ സെർവർ നടത്താം."],
+       "അതെ. PokerTH ഡെഡിക്കേറ്റഡ് സെർവറും ഈ വെബ് ക്ലയന്റും രണ്ടും സ്വതന്ത്ര സോഫ്റ്റ്‌വെയറാണ്, അതിനാൽ ലോക്കൽ നെറ്റ്‌വർക്കിലോ (LAN) ഇന്റർനെറ്റിലോ നിങ്ങളുടെ സ്വന്തം സ്വകാര്യ പോക്കർ സെർവർ നടത്താം. എല്ലാവർക്കും കാണാനായി അത് പട്ടികയിൽ ചേർക്കാൻ, LAN / ഡെഡിക്കേറ്റഡ് സെർവർ തിരഞ്ഞെടുത്ത്, സെർവർ പട്ടികയുടെ താഴെയുള്ള “എന്റെ സെർവർ നിർദ്ദേശിക്കുക” അമർത്തുക: അഡ്മിൻമാർ അംഗീകരിച്ചാൽ അത് പട്ടികയിൽ പ്രത്യക്ഷപ്പെടും. സെർവർ ഇന്റർനെറ്റിൽ നിന്ന് ലഭ്യമായിരിക്കണം."],
       ["റാങ്കിംഗ് ഗെയിമുകളും സീസണുകളും എങ്ങനെ പ്രവർത്തിക്കുന്നു?",
        "pokerth.net ലെ റാങ്കിംഗ് ഗെയിമുകളിൽ 10 കളിക്കാർ ഇരിക്കും, ടേബിൾ നിറഞ്ഞാലുടൻ തുടങ്ങും: ഓരോരുത്തർക്കും 10,000 ചിപ്പുകൾ, ഓരോ 11 ഹാൻഡിലും ഇരട്ടിയാകുന്ന 50 സ്മോൾ ബ്ലൈൻഡ്, കളിക്കാൻ 5 സെക്കൻഡ്. 1 മുതൽ 7 വരെ സ്ഥാനങ്ങൾക്ക് 15, 9, 6, 4, 3, 2, 1 പോയിന്റ് ലഭിക്കും; നിങ്ങളുടെ സ്കോർ ഓരോ ഗെയിമിലെയും ശരാശരിയാണ്, കളിച്ച ഗെയിമുകളുടെ എണ്ണം അനുസരിച്ച് തൂക്കം നൽകിയത്, റാങ്കിംഗ് ഓരോ പാദത്തിലും വീണ്ടും തുടങ്ങും. സൗജന്യ pokerth.net അക്കൗണ്ട് വേണം."],
+      ["സൗജന്യ പോക്കർ ടൂർണമെന്റുകളും മത്സരങ്ങളും ഉണ്ടോ?",
+       "അതെ, വർഷം മുഴുവനും, എല്ലാം സൗജന്യമായി. ഓരോ PokerTH ഗെയിമും ഒരു ടൂർണമെന്റാണ്; കൂടാതെ pokerth.net കമ്മ്യൂണിറ്റി സ്വന്തം റാങ്കിംഗുകളോടെ പതിവ് മത്സരങ്ങളും നടത്തുന്നു: BBC, ഏതാനും മിനിറ്റുകൾ കൂടുമ്പോൾ ബ്ലൈൻഡുകൾ ഉയരുന്ന ഗെയിമുകൾ (<a href=\"https://bbc.pokerth.net/registration\">കലണ്ടർ</a>, <a href=\"https://bbc.pokerth.net/results\">ഫലങ്ങൾ</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">റാങ്കിംഗ്</a>); WeCup (WEC), ശാന്തവും സന്തുലിതവുമായ വേഗതയിലുള്ള ടൂർണമെന്റുകൾ (<a href=\"https://wec.pokerth.net/results\">ഫലങ്ങൾ</a>, <a href=\"https://wec.pokerth.net/results/ranking\">റാങ്കിംഗ്</a>); എല്ലാ മാസവും നടക്കുന്ന Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">അടുത്ത കപ്പും ഏറ്റവും പുതിയ വിജയികളും</a>, <a href=\"https://monthlycup.pokerth.net/registration\">രജിസ്ട്രേഷൻ</a>). തീയതികളും നിയമങ്ങളും ഓരോ സൈറ്റിലും <a href=\"https://www.pokerth.net/\">pokerth.net</a> ഫോറത്തിലും പ്രഖ്യാപിക്കും. പങ്കെടുക്കാൻ സൗജന്യ pokerth.net അക്കൗണ്ട് വേണം."],
       ["കളിക്കാതെ ഒരു ഗെയിം കാണാമോ?",
        "അതെ. കാണികളെ അനുവദിക്കുന്ന, നടന്നുകൊണ്ടിരിക്കുന്ന ഗെയിമുകൾ ലോബിയിൽ നിന്ന് തത്സമയം കാണാം: ടേബിളും ചാറ്റും നിങ്ങൾക്ക് കാണാം, പക്ഷേ ഹോൾ കാർഡുകൾ മറഞ്ഞിരിക്കും, നിങ്ങൾക്ക് കളിക്കാനും കഴിയില്ല. ഇതിനകം തുടങ്ങിയ ടേബിളിലേക്കുള്ള ക്ഷണ ലിങ്ക് അത് കാണാനായി തുറക്കും."],
       ["ആപ്പിനുള്ളിൽ സഹായമുണ്ടോ?",
-       "അതെ. എയ്സിന്റെ സഹായം: വെബ് ക്ലയന്റിന്റെ ഭാഗ്യചിഹ്നമായ എയ്സ്, നിങ്ങൾ ആഗ്രഹിക്കുന്നുവെങ്കിൽ, കളിക്കുന്നതിനിടയിൽ ഓരോ സ്ക്രീനും വിശദീകരിക്കും. അവന്റെ മെനുവിൽ തിരയലോടുകൂടിയ മുഴുവൻ സഹായവും “ഇതെന്താണ്?” എന്നതുമുണ്ട്: സ്ക്രീനിലെ എന്തിലെങ്കിലും ടാപ്പ് ചെയ്താൽ അത് എന്ത് ചെയ്യുന്നുവെന്ന് അവൻ പറയും."]
+       "അതെ. എയ്സിന്റെ സഹായം: വെബ് ക്ലയന്റിന്റെ ഭാഗ്യചിഹ്നമായ എയ്സ്, നിങ്ങൾ ആഗ്രഹിക്കുന്നുവെങ്കിൽ, കളിക്കുന്നതിനിടയിൽ ഓരോ സ്ക്രീനും വിശദീകരിക്കും. അവന്റെ മെനുവിൽ തിരയലോടുകൂടിയ മുഴുവൻ സഹായവും “ഇതെന്താണ്?” എന്നതുമുണ്ട്: സ്ക്രീനിലെ എന്തിലെങ്കിലും ടാപ്പ് ചെയ്താൽ അത് എന്ത് ചെയ്യുന്നുവെന്ന് അവൻ പറയും."],
+      ["PokerTH ഇപ്പോഴും സജീവമായി വികസിപ്പിക്കുന്നുണ്ടോ?",
+       "അതെ. 2006 മുതൽ സ്വതന്ത്ര സോഫ്റ്റ്‌വെയറായി വികസിപ്പിക്കുന്ന PokerTH ഇന്നും പരിപാലിക്കപ്പെടുന്നു: ഡെസ്‌ക്‌ടോപ്പ് ക്ലയന്റും സെർവറും <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> ൽ ഉണ്ട്, ഈ വെബ് ക്ലയന്റ് തുടർച്ചയായി അപ്‌ഡേറ്റ് ചെയ്യപ്പെടുന്നു (<a href=\"https://github.com/narmod/pokerth-web-client\">സോഴ്സ് കോഡും മാറ്റങ്ങളുടെ ചരിത്രവും</a>), ഔദ്യോഗിക pokerth.net നെറ്റ്‌വർക്കിൽ എല്ലാ ദിവസവും ഗെയിമുകൾ നടക്കുന്നു."]
     ]
   },
   mn: {
     title: "Түгээмэл асуулт — PokerTH вэб клиент",
-    desc: "PokerTH вэб клиентийн тухай түгээмэл асуулт: зар сурталчилгаагүй үнэгүй покер, юу ч суулгалгүй хөтөч дээр Texas Hold’em тоглох, бүртгэл, утас, офлайн горим, хэл болон нууцлал.",
+    desc: "PokerTH вэб клиентийн тухай түгээмэл асуулт: зар сурталчилгаагүй, юу ч татахгүй үнэгүй покер, зочноор эсвэл бүртгэлгүй тоглох, найзуудаа холбоосоор урих, тэмцээн, утас, офлайн горим, хэл болон нууцлал.",
     h1: "PokerTH вэб клиент — Түгээмэл асуулт",
     qa: [
       ["PokerTH үнэгүй юу?",
@@ -5147,7 +5908,13 @@ var SEO_FAQ_I18N = {
       ["Хөтөч дээрээ бусад хүмүүстэй Texas Hold’em тоглож болох уу?",
        "Тийм. Дэлхийн өнцөг булан бүрийн тоглогчидтой шууд Texas Hold’em тоглохын тулд албан ёсны pokerth.net сүлжээнд нэгдэх, эсвэл найзууд тань шууд ширээнд тань ирэхийн тулд урилгын холбоос илгээнэ үү — бүгд хөтөч дээр."],
       ["Тоглоход бүртгэл хэрэгтэй юу?",
-       "Үгүй. Дотоод / дадлага горимд бүртгэл шаардлагагүй, офлайн ажиллана. Албан ёсны pokerth.net сүлжээнд зочноор Энгийн тоглолт тоглож болно; Эрэмбийн тоглолт, зөвхөн бүртгэлтэй тоглогчдод зориулсан ширээ болон чатад үнэгүй pokerth.net бүртгэл шаардлагатай."],
+       "Үгүй. Дотоод / дадлага горимд бүртгэл шаардлагагүй, офлайн ажиллана. Албан ёсны pokerth.net сүлжээнд зочноор нэвтэрнэ үү: сервер танд зочны хоч өгөх бөгөөд та Энгийн тоглолтыг шууд тоглож болно. LAN эсвэл тусгай сервер дээр бүртгэл огт байхгүй — зөвхөн хоч сонгоно. Эдгээрийн аль нь ч имэйл хаяг асуухгүй. Үнэгүй pokerth.net бүртгэл зөвхөн Эрэмбийн тоглолт, зөвхөн бүртгэлтэй тоглогчдод зориулсан ширээ болон чатад хэрэгтэй."],
+      ["Найзуудтайгаа онлайн покер хэрхэн тоглох вэ?",
+       "Лоббид ширээ үүсгээрэй — pokerth.net дээр эсвэл дурын LAN буюу тусгай сервер дээр — тэгээд хүлээлгийн өрөөнд «Найзуудаа урих»-ыг дарна уу. Вэб клиент урилгын холбоос үүсгэх бөгөөд та үүнийг дурын мессенжерээр илгээж болно. Найзууд тань юу ч татахгүйгээр iPhone, Android эсвэл компьютер дээрээ хөтчөөр нээнэ. Ширээг хувийн байлгах бол нууц үг тохируулаарай: нууц үг хэзээ ч холбоосонд ордоггүй."],
+      ["Найз маань миний урилгын холбоосыг нээхэд юу болох вэ?",
+       "Холбоос нь ширээ болон серверийн мэдээллийг агуулна. Найз тань нэвтэрнэ — pokerth.net дээр зочноор эсвэл бүртгэлээрээ, LAN буюу тусгай сервер дээр зөвхөн хочоор — тэгээд вэб клиент лоббигоос хайх шаардлагагүйгээр ширээнд автоматаар нэгдэнэ. Нууц үгтэй ширээ нууц үгээ асууна; аль хэдийн эхэлсэн тоглолт үзэхээр нээгдэнэ. Урилгын холбоос нь вэб клиентийн боломж бөгөөд түүний холбогдож чадах бүх сервер дээр ажиллана."],
+      ["Бүртгүүлэхгүйгээр PokerTH-ийг туршиж үзэх демо сервер бий юу?",
+       "Тийм. Нэвтрэх дэлгэц дээр LAN / Тусгай сервер горимыг сонгоод серверийн жагсаалтаас нийтийн демо серверийг сонгоно уу: дурын хоч бичихэд л та түүний лоббид орно — бүртгэлгүй, имэйл хаяггүй. Ногоон цэг нь жагсаалтын аль серверүүд онлайн байгаа болон тэнд хэдэн тоглогч байгааг харуулна."],
       ["Утсан дээр ажиллах уу?",
        "Тийм. Вэб клиент нь Progressive Web App: компьютер, таблет эсвэл утсан дээрх орчин үеийн аливаа хөтөчид ажиллах ба энгийн програм шиг суулгаж болно — iPhone болон iPad дээр Хуваалцах → Үндсэн дэлгэцэд нэмэх, бусад төхөөрөмж дээр хөтчийн цэс эсвэл суулгах товчоор. Тамгын тусламж таны төхөөрөмжид тохирсон алхмуудыг харуулна."],
       ["Компьютерийн эсрэг тоглож болох уу?",
@@ -5163,18 +5930,22 @@ var SEO_FAQ_I18N = {
       ["Вэб клиент ямар өгөгдөл цуглуулдаг вэ?",
        "Аль болох бага: тохиргоо таны хөтчид үлдэх ба хяналт эсвэл зар сурталчилгаа ашигладаггүй. pokerth.net бүртгэлээр нэвтрэхэд таны тохиргоо болон дадлагын цомууд түүнтэй синк хийгдэж, бусад төхөөрөмж дээр тань дагалдана. Дэлгэрэнгүйг нууцлалын хуудаснаас үзнэ үү."],
       ["Өөрийн серверээ байршуулж болох уу?",
-       "Тийм. PokerTH-ийн тусгай сервер болон энэ вэб клиент хоёулаа нээлттэй эх учраас та LAN эсвэл интернэт дээр хувийн покерын сервер ажиллуулж болно."],
+       "Тийм. PokerTH-ийн тусгай сервер болон энэ вэб клиент хоёулаа нээлттэй эх учраас та LAN эсвэл интернэт дээр хувийн покерын сервер ажиллуулж болно. Үүнийг бүх хүнд харагдах жагсаалтад оруулахын тулд LAN / Тусгай сервер горимыг сонгоод, серверийн жагсаалтын доод хэсэгт байрлах «Миний серверийг санал болгох»-ыг дарна уу: админууд зөвшөөрмөгц жагсаалтад гарч ирнэ. Сервер интернэтээс хандах боломжтой байх ёстой."],
       ["Эрэмбийн тоглолт болон улирал хэрхэн ажилладаг вэ?",
        "pokerth.net дээрх Эрэмбийн тоглолтод 10 тоглогч суух ба ширээ дүүрмэгц эхэлнэ: тус бүр 10 000 чип, 11 гар тутамд хоёр дахин өсөх 50-ийн бага блайнд, ээлж хийхэд 5 секунд. 1-ээс 7-р байр 15, 9, 6, 4, 3, 2, 1 оноо авна; таны оноо нь тоглолт бүрийн дундаж бөгөөд тоглосон тоглолтын тоогоор жигнэгдэнэ, эрэмбэ улирал бүр дахин эхэлнэ. Үнэгүй pokerth.net бүртгэл шаардлагатай."],
+      ["Үнэгүй покерын тэмцээн, уралдаан байдаг уу?",
+       "Тийм, жилийн турш, бүгд үнэгүй. PokerTH-ийн тоглолт бүр тэмцээн бөгөөд pokerth.net-ийн нийгэмлэг өөрийн эрэмбэтэй тогтмол уралдаануудыг зохион байгуулдаг: BBC — хэдэн минут тутамд блайнд нь өсдөг тоглолтууд (<a href=\"https://bbc.pokerth.net/registration\">хуанли</a>, <a href=\"https://bbc.pokerth.net/results\">үр дүн</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">эрэмбэ</a>); WeCup (WEC) — илүү тайван, тэнцвэртэй хэмнэлтэй тэмцээнүүд (<a href=\"https://wec.pokerth.net/results\">үр дүн</a>, <a href=\"https://wec.pokerth.net/results/ranking\">эрэмбэ</a>); мөн сар бүр болдог Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">дараагийн цом ба сүүлийн ялагчид</a>, <a href=\"https://monthlycup.pokerth.net/registration\">бүртгэл</a>). Огноо болон дүрмийг тус бүрийн сайт болон <a href=\"https://www.pokerth.net/\">pokerth.net</a> форум дээр зарладаг. Оролцоход үнэгүй pokerth.net бүртгэл шаардлагатай."],
       ["Тоглохгүйгээр тоглоомыг үзэж болох уу?",
        "Тийм. Үзэгчдийг зөвшөөрдөг явагдаж буй тоглолтыг лоббигоос шууд үзэж болно: ширээ болон чатыг харах ба хувийн хөзөр нуугдмал хэвээр, та үйлдэл хийж чадахгүй. Аль хэдийн эхэлсэн ширээний урилгын холбоос түүнийг үзэхээр нээнэ."],
       ["Програм дотор тусламж байдаг уу?",
-       "Тийм. Тамгын тусламж: вэб клиентийн сахиус Тамга хүсвэл дэлгэц бүрийг явцын дундуур тайлбарлана. Түүний цэсэнд хайлттай бүх тусламж болон «Энэ юу вэ?» байдаг: дэлгэц дээрх юуг ч дарвал тэр юу хийдгийг хэлнэ."]
+       "Тийм. Тамгын тусламж: вэб клиентийн сахиус Тамга хүсвэл дэлгэц бүрийг явцын дундуур тайлбарлана. Түүний цэсэнд хайлттай бүх тусламж болон «Энэ юу вэ?» байдаг: дэлгэц дээрх юуг ч дарвал тэр юу хийдгийг хэлнэ."],
+      ["PokerTH одоо ч идэвхтэй хөгжүүлэгдэж байгаа юу?",
+       "Тийм. PokerTH 2006 оноос хойш чөлөөт програм хангамж хэлбэрээр хөгжүүлэгдэж ирсэн бөгөөд одоо ч арчлагдсаар байна: десктоп клиент болон сервер <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> дээр байдаг, энэ вэб клиент тасралтгүй шинэчлэгддэг (<a href=\"https://github.com/narmod/pokerth-web-client\">эх код ба өөрчлөлтийн түүх</a>), албан ёсны pokerth.net сүлжээнд өдөр бүр тоглолт явагддаг."]
     ],
   },
   mr: {
     title: "FAQ — PokerTH वेब क्लायंट",
-    desc: "PokerTH वेब क्लायंटबद्दल नेहमीचे प्रश्न: जाहिरातींशिवाय मोफत पोकर, काहीही इन्स्टॉल न करता ब्राउझरमध्ये Texas Hold’em खेळणं, खाती, मोबाइल, ऑफलाइन मोड, भाषा आणि गोपनीयता.",
+    desc: "PokerTH वेब क्लायंटबद्दल नेहमीचे प्रश्न: जाहिराती आणि डाउनलोडशिवाय मोफत पोकर, पाहुणा म्हणून किंवा खात्याशिवाय खेळणं, लिंकने मित्रांना आमंत्रण, स्पर्धा, मोबाइल, ऑफलाइन मोड, भाषा आणि गोपनीयता.",
     h1: "PokerTH वेब क्लायंट — नेहमीचे प्रश्न",
     qa: [
       ["PokerTH मोफत आहे का?",
@@ -5186,7 +5957,13 @@ var SEO_FAQ_I18N = {
       ["मी माझ्या ब्राउझरमध्ये इतर लोकांविरुद्ध Texas Hold’em खेळू शकतो का?",
        "हो. जगभरातल्या खेळाडूंशी सामना करण्यासाठी अधिकृत pokerth.net नेटवर्कमध्ये सामील व्हा, किंवा तुमचे मित्र थेट तुमच्या टेबलवर पोहोचावेत म्हणून आमंत्रण लिंक पाठवा — सगळं ब्राउझरमध्येच."],
       ["खेळण्यासाठी खातं लागतं का?",
-       "नाही. लोकल / सराव मोडसाठी खातं लागत नाही आणि तो ऑफलाइन चालतो. अधिकृत pokerth.net नेटवर्कवर तुम्ही पाहुणा म्हणून सामान्य गेम्स खेळू शकता; रँकिंग गेम्स, फक्त नोंदणीकृतांसाठीची टेबल्स आणि चॅटसाठी मोफत pokerth.net खातं लागतं."],
+       "नाही. लोकल / सराव मोडसाठी खातं लागत नाही आणि तो ऑफलाइन चालतो. अधिकृत pokerth.net नेटवर्कवर पाहुणा म्हणून लॉग इन करा: सर्व्हर तुम्हाला पाहुण्याचं टोपणनाव देतो आणि तुम्ही लगेच सामान्य गेम्स खेळू शकता. LAN किंवा डेडिकेटेड सर्व्हरवर खातंच नसतं — फक्त एक टोपणनाव निवडा. यापैकी कुठेही ईमेल पत्ता विचारला जात नाही. मोफत pokerth.net खातं फक्त रँकिंग गेम्स, फक्त नोंदणीकृतांसाठीची टेबल्स आणि चॅटसाठी लागतं."],
+      ["मित्रांसोबत ऑनलाइन पोकर कसं खेळायचं?",
+       "लॉबीमध्ये टेबल तयार करा — pokerth.net वर किंवा कोणत्याही LAN किंवा डेडिकेटेड सर्व्हरवर — आणि वेटिंग रूममध्ये “मित्रांना आमंत्रित करा” दाबा. वेब क्लायंट एक आमंत्रण लिंक तयार करतो, जी तुम्ही कोणत्याही मेसेंजरवरून पाठवू शकता. तुमचे मित्र ती त्यांच्या ब्राउझरमध्ये — iPhone, Android किंवा कॉम्प्युटरवर — उघडतात, काहीही डाउनलोड करायची गरज नाही. टेबल खाजगी ठेवायचं असेल तर पासवर्ड ठेवा: पासवर्ड कधीच लिंकचा भाग नसतो."],
+      ["मित्राने माझी आमंत्रण लिंक उघडली की काय होतं?",
+       "लिंकमध्ये टेबल आणि सर्व्हरची माहिती असते. तुमचा मित्र लॉग इन करतो — pokerth.net वर पाहुणा म्हणून किंवा खात्याने, LAN किंवा डेडिकेटेड सर्व्हरवर फक्त टोपणनावाने — आणि मग लॉबीमध्ये शोधायची गरज न पडता वेब क्लायंट आपोआप त्या टेबलमध्ये सामील होतो. पासवर्डने सुरक्षित टेबल त्याचा पासवर्ड विचारतं; आधीच सुरू झालेला गेम पाहण्यासाठी उघडतो. आमंत्रण लिंक्स हे वेब क्लायंटचं वैशिष्ट्य आहे आणि तो ज्या ज्या सर्व्हरशी कनेक्ट होऊ शकतो त्या प्रत्येकावर त्या चालतात."],
+      ["नोंदणी न करता PokerTH वापरून पाहण्यासाठी डेमो सर्व्हर आहे का?",
+       "हो. लॉगिन स्क्रीनवर LAN / डेडिकेटेड सर्व्हर निवडा आणि सर्व्हर यादीतून सार्वजनिक डेमो सर्व्हर निवडा: कोणतंही टोपणनाव टाइप करा आणि तुम्ही त्याच्या लॉबीत पोहोचता — नोंदणी नाही, ईमेल पत्ता नाही. यादीतले कोणते सर्व्हर ऑनलाइन आहेत आणि त्यांच्यावर किती खेळाडू आहेत हे हिरवा ठिपका दाखवतो."],
       ["हे मोबाइलवर चालतं का?",
        "हो. वेब क्लायंट एक Progressive Web App आहे: तो संगणक, टॅबलेट किंवा फोनवरील कोणत्याही आधुनिक ब्राउझरमध्ये चालतो, आणि नेटिव्ह अ‍ॅपप्रमाणे इन्स्टॉल करता येतो — iPhone आणि iPad वर शेअर → होम स्क्रीनवर जोडा वापरून, इतर ठिकाणी ब्राउझर मेनूमधून किंवा इन्स्टॉल बटणातून. एक्क्याची मदत तुमच्या उपकरणासाठीच्या पायऱ्या दाखवते."],
       ["मी संगणकाविरुद्ध खेळू शकतो का?",
@@ -5202,18 +5979,22 @@ var SEO_FAQ_I18N = {
       ["वेब क्लायंट कोणता डेटा गोळा करतो?",
        "शक्य तितका कमी: तुमची सेटिंग्ज तुमच्या ब्राउझरमध्येच राहतात, आणि ट्रॅकिंग किंवा जाहिराती नाहीत. pokerth.net खात्याने लॉग इन केल्यावर, तुमची सेटिंग्ज आणि सरावातल्या ट्रॉफीज त्याच्याशी सिंक होतात, म्हणजे त्या तुमच्या इतर उपकरणांवर तुमच्यासोबत येतात. तपशील गोपनीयता पेजवर आहे."],
       ["मी स्वतःचा सर्व्हर होस्ट करू शकतो का?",
-       "हो. PokerTH डेडिकेटेड सर्व्हर आणि हा वेब क्लायंट दोन्ही मुक्त सॉफ्टवेअर आहेत: तुम्ही लोकल नेटवर्कवर किंवा इंटरनेटवर तुमचा स्वतःचा खाजगी पोकर सर्व्हर चालवू शकता."],
+       "हो. PokerTH डेडिकेटेड सर्व्हर आणि हा वेब क्लायंट दोन्ही मुक्त सॉफ्टवेअर आहेत, त्यामुळे तुम्ही LAN वर किंवा इंटरनेटवर तुमचा स्वतःचा खाजगी पोकर सर्व्हर चालवू शकता. तो सगळ्यांना यादीत दिसावा यासाठी LAN / डेडिकेटेड सर्व्हर निवडा, मग सर्व्हर यादीच्या तळाशी असलेलं “माझा सर्व्हर सुचवा” दाबा: प्रशासकांनी मंजुरी दिल्यावर तो यादीत दिसतो. सर्व्हर इंटरनेटवरून पोहोचण्याजोगा असला पाहिजे."],
       ["रँकिंग गेम्स आणि सीझन कसे चालतात?",
        "pokerth.net वरच्या रँकिंग गेम्समध्ये 10 खेळाडू बसतात आणि टेबल भरताच गेम सुरू होतो: प्रत्येकाला 10,000 चिप्स, दर 11 हँडनंतर दुप्पट होणारा 50 चा स्मॉल ब्लाइंड, आणि खेळी करण्यासाठी 5 सेकंद. 1 ते 7 क्रमांकाच्या स्थानांना 15, 9, 6, 4, 3, 2 आणि 1 गुण मिळतात; तुमचा स्कोअर म्हणजे प्रत्येक गेमची सरासरी, खेळलेल्या गेम्सच्या संख्येनुसार भारित केलेली, आणि रँकिंग दर तिमाहीला पुन्हा सुरू होतं. मोफत pokerth.net खातं लागतं."],
+      ["मोफत पोकर टूर्नामेंट्स आणि स्पर्धा आहेत का?",
+       "हो, वर्षभर, आणि सगळ्या मोफत. PokerTH चा प्रत्येक गेम ही एक टूर्नामेंटच असते, आणि pokerth.net समुदाय स्वतःच्या क्रमवारीसह नियमित स्पर्धाही भरवतो: BBC, ज्यात दर काही मिनिटांनी ब्लाइंड्स वाढतात असे गेम्स (<a href=\"https://bbc.pokerth.net/registration\">कॅलेंडर</a>, <a href=\"https://bbc.pokerth.net/results\">निकाल</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">क्रमवारी</a>); WeCup (WEC), शांत, संतुलित वेगाच्या टूर्नामेंट्स (<a href=\"https://wec.pokerth.net/results\">निकाल</a>, <a href=\"https://wec.pokerth.net/results/ranking\">क्रमवारी</a>); आणि दर महिन्याला होणारा Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">पुढचा कप आणि अलीकडचे विजेते</a>, <a href=\"https://monthlycup.pokerth.net/registration\">नोंदणी</a>). तारखा आणि नियम प्रत्येक साइटवर आणि <a href=\"https://www.pokerth.net/\">pokerth.net</a> फोरमवर जाहीर केले जातात. भाग घेण्यासाठी मोफत pokerth.net खातं लागतं."],
       ["न खेळता गेम पाहता येतो का?",
        "हो. प्रेक्षकांना परवानगी असलेले चालू गेम्स लॉबीमधून थेट पाहता येतात: तुम्हाला टेबल आणि चॅट दिसतं, पण होल कार्ड्स लपलेली राहतात आणि तुम्ही खेळी करू शकत नाही. आधीच सुरू झालेल्या टेबलची आमंत्रण लिंक ते पाहण्यासाठी उघडते."],
       ["अ‍ॅपमध्ये मदत आहे का?",
-       "हो. एक्क्याची मदत: एक्का, वेब क्लायंटचा शुभंकर, तुम्हाला हवं असल्यास खेळताना प्रत्येक स्क्रीन समजावून सांगतो. त्याच्या मेनूमध्ये शोधासह संपूर्ण मदत आणि “हे काय आहे?” आहे: स्क्रीनवर कशावरही टॅप करा आणि तो ते काय करतं ते सांगतो."]
+       "हो. एक्क्याची मदत: एक्का, वेब क्लायंटचा शुभंकर, तुम्हाला हवं असल्यास खेळताना प्रत्येक स्क्रीन समजावून सांगतो. त्याच्या मेनूमध्ये शोधासह संपूर्ण मदत आणि “हे काय आहे?” आहे: स्क्रीनवर कशावरही टॅप करा आणि तो ते काय करतं ते सांगतो."],
+      ["PokerTH अजूनही सक्रियपणे विकसित होतो का?",
+       "हो. PokerTH 2006 पासून मुक्त सॉफ्टवेअर म्हणून विकसित होत आहे आणि आजही त्याची देखभाल होते: डेस्कटॉप क्लायंट आणि सर्व्हर <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> वर आहेत, हा वेब क्लायंट सतत अपडेट होतो (<a href=\"https://github.com/narmod/pokerth-web-client\">सोर्स कोड आणि बदलांचा इतिहास</a>), आणि अधिकृत pokerth.net नेटवर्कवर दररोज गेम्स खेळले जातात."]
     ]
   },
   kn: {
     title: "FAQ — PokerTH ವೆಬ್ ಕ್ಲೈಂಟ್",
-    desc: "PokerTH ವೆಬ್ ಕ್ಲೈಂಟ್ ಬಗ್ಗೆ ಸಾಮಾನ್ಯ ಪ್ರಶ್ನೆಗಳು: ಜಾಹೀರಾತುಗಳಿಲ್ಲದ ಉಚಿತ ಪೋಕರ್, ಏನನ್ನೂ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡದೆ ಬ್ರೌಸರ್‌ನಲ್ಲಿ Texas Hold’em ಆಡುವುದು, ಖಾತೆಗಳು, ಮೊಬೈಲ್, ಆಫ್‌ಲೈನ್ ಮೋಡ್, ಭಾಷೆಗಳು ಮತ್ತು ಗೌಪ್ಯತೆ.",
+    desc: "PokerTH ವೆಬ್ ಕ್ಲೈಂಟ್ ಬಗ್ಗೆ ಸಾಮಾನ್ಯ ಪ್ರಶ್ನೆಗಳು: ಜಾಹೀರಾತು ಮತ್ತು ಡೌನ್‌ಲೋಡ್ ಇಲ್ಲದ ಉಚಿತ ಪೋಕರ್, ಅತಿಥಿಯಾಗಿ ಅಥವಾ ಖಾತೆಯಿಲ್ಲದೆ ಆಡುವುದು, ಲಿಂಕ್ ಮೂಲಕ ಸ್ನೇಹಿತರನ್ನು ಆಹ್ವಾನಿಸುವುದು, ಟೂರ್ನಮೆಂಟ್‌ಗಳು, ಮೊಬೈಲ್, ಆಫ್‌ಲೈನ್ ಮೋಡ್, ಭಾಷೆಗಳು ಮತ್ತು ಗೌಪ್ಯತೆ.",
     h1: "PokerTH ವೆಬ್ ಕ್ಲೈಂಟ್ — ಸಾಮಾನ್ಯ ಪ್ರಶ್ನೆಗಳು",
     qa: [
       ["PokerTH ಉಚಿತವೇ?",
@@ -5225,7 +6006,13 @@ var SEO_FAQ_I18N = {
       ["ನನ್ನ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಇತರ ಜನರ ವಿರುದ್ಧ Texas Hold’em ಆಡಬಹುದೇ?",
        "ಹೌದು. ಜಗತ್ತಿನಾದ್ಯಂತದ ಆಟಗಾರರನ್ನು ಎದುರಿಸಲು ಅಧಿಕೃತ pokerth.net ನೆಟ್‌ವರ್ಕ್‌ಗೆ ಸೇರಿ, ಅಥವಾ ನಿಮ್ಮ ಸ್ನೇಹಿತರು ನೇರವಾಗಿ ನಿಮ್ಮ ಟೇಬಲ್‌ಗೆ ತಲುಪುವಂತೆ ಆಹ್ವಾನ ಲಿಂಕ್ ಕಳುಹಿಸಿ — ಎಲ್ಲವೂ ಬ್ರೌಸರ್‌ನಲ್ಲೇ."],
       ["ಆಡಲು ಖಾತೆ ಬೇಕೇ?",
-       "ಇಲ್ಲ. “ಲೋಕಲ್ / ಅಭ್ಯಾಸ” ಮೋಡ್‌ಗೆ ಖಾತೆ ಬೇಕಿಲ್ಲ ಮತ್ತು ಅದು ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿ ಕೆಲಸ ಮಾಡುತ್ತದೆ. ಅಧಿಕೃತ pokerth.net ನೆಟ್‌ವರ್ಕ್‌ನಲ್ಲಿ ನೀವು “ಸಾಮಾನ್ಯ” ಗೇಮ್‌ಗಳನ್ನು ಅತಿಥಿಯಾಗಿ ಆಡಬಹುದು; “ರ‍್ಯಾಂಕಿಂಗ್ ಗೇಮ್”, ನೋಂದಾಯಿತರಿಗೆ ಮಾತ್ರದ ಟೇಬಲ್‌ಗಳು ಮತ್ತು ಚಾಟ್‌ಗೆ ಉಚಿತ pokerth.net ಖಾತೆ ಬೇಕು."],
+       "ಇಲ್ಲ. “ಲೋಕಲ್ / ಅಭ್ಯಾಸ” ಮೋಡ್‌ಗೆ ಖಾತೆ ಬೇಕಿಲ್ಲ ಮತ್ತು ಅದು ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿ ಕೆಲಸ ಮಾಡುತ್ತದೆ. ಅಧಿಕೃತ pokerth.net ನೆಟ್‌ವರ್ಕ್‌ನಲ್ಲಿ ಅತಿಥಿಯಾಗಿ ಲಾಗಿನ್ ಮಾಡಿ: ಸರ್ವರ್ ನಿಮಗೆ ಅತಿಥಿ ಅಡ್ಡಹೆಸರು ನೀಡುತ್ತದೆ ಮತ್ತು ನೀವು ತಕ್ಷಣವೇ “ಸಾಮಾನ್ಯ” ಗೇಮ್‌ಗಳನ್ನು ಆಡಬಹುದು. LAN ಅಥವಾ ಡೆಡಿಕೇಟೆಡ್ ಸರ್ವರ್‌ನಲ್ಲಿ ಖಾತೆಯೇ ಇಲ್ಲ — ಒಂದು ಅಡ್ಡಹೆಸರು ಆರಿಸಿದರೆ ಸಾಕು. ಇವುಗಳಲ್ಲಿ ಯಾವುದೂ ಇಮೇಲ್ ವಿಳಾಸ ಕೇಳುವುದಿಲ್ಲ. ಉಚಿತ pokerth.net ಖಾತೆ ಬೇಕಾಗುವುದು “ರ‍್ಯಾಂಕಿಂಗ್ ಗೇಮ್”, ನೋಂದಾಯಿತರಿಗೆ ಮಾತ್ರದ ಟೇಬಲ್‌ಗಳು ಮತ್ತು ಚಾಟ್‌ಗೆ ಮಾತ್ರ."],
+      ["ಸ್ನೇಹಿತರೊಂದಿಗೆ ಆನ್‌ಲೈನ್‌ನಲ್ಲಿ ಪೋಕರ್ ಆಡುವುದು ಹೇಗೆ?",
+       "ಲಾಬಿಯಲ್ಲಿ ಒಂದು ಟೇಬಲ್ ರಚಿಸಿ — pokerth.net ನಲ್ಲಿ ಅಥವಾ ಯಾವುದೇ LAN ಅಥವಾ ಡೆಡಿಕೇಟೆಡ್ ಸರ್ವರ್‌ನಲ್ಲಿ — ಮತ್ತು ಕಾಯುವ ಕೊಠಡಿಯಲ್ಲಿ “ಸ್ನೇಹಿತರನ್ನು ಆಹ್ವಾನಿಸಿ” ಒತ್ತಿ. ವೆಬ್ ಕ್ಲೈಂಟ್ ಒಂದು ಆಹ್ವಾನ ಲಿಂಕ್ ರಚಿಸುತ್ತದೆ, ಅದನ್ನು ನೀವು ಯಾವುದೇ ಮೆಸೆಂಜರ್ ಮೂಲಕ ಕಳುಹಿಸಬಹುದು. ನಿಮ್ಮ ಸ್ನೇಹಿತರು ಅದನ್ನು ತಮ್ಮ ಬ್ರೌಸರ್‌ನಲ್ಲಿ — iPhone, Android ಅಥವಾ ಕಂಪ್ಯೂಟರ್‌ನಲ್ಲಿ — ತೆರೆಯುತ್ತಾರೆ, ಏನನ್ನೂ ಡೌನ್‌ಲೋಡ್ ಮಾಡಬೇಕಿಲ್ಲ. ಟೇಬಲ್ ಖಾಸಗಿಯಾಗಿರಬೇಕಿದ್ದರೆ ಪಾಸ್‌ವರ್ಡ್ ಹೊಂದಿಸಿ: ಪಾಸ್‌ವರ್ಡ್ ಎಂದಿಗೂ ಲಿಂಕ್‌ನ ಭಾಗವಾಗಿರುವುದಿಲ್ಲ."],
+      ["ನನ್ನ ಆಹ್ವಾನ ಲಿಂಕ್ ಅನ್ನು ಸ್ನೇಹಿತರು ತೆರೆದಾಗ ಏನಾಗುತ್ತದೆ?",
+       "ಲಿಂಕ್‌ನಲ್ಲಿ ಟೇಬಲ್ ಮತ್ತು ಸರ್ವರ್ ಮಾಹಿತಿ ಇರುತ್ತದೆ. ನಿಮ್ಮ ಸ್ನೇಹಿತರು ಲಾಗಿನ್ ಆಗುತ್ತಾರೆ — pokerth.net ನಲ್ಲಿ ಅತಿಥಿಯಾಗಿ ಅಥವಾ ಖಾತೆಯೊಂದಿಗೆ, LAN ಅಥವಾ ಡೆಡಿಕೇಟೆಡ್ ಸರ್ವರ್‌ನಲ್ಲಿ ಕೇವಲ ಅಡ್ಡಹೆಸರಿನೊಂದಿಗೆ — ನಂತರ ಲಾಬಿಯಲ್ಲಿ ಹುಡುಕುವ ಅಗತ್ಯವಿಲ್ಲದೆ ವೆಬ್ ಕ್ಲೈಂಟ್ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಆ ಟೇಬಲ್‌ಗೆ ಸೇರುತ್ತದೆ. ಪಾಸ್‌ವರ್ಡ್ ರಕ್ಷಿತ ಟೇಬಲ್ ಅದರ ಪಾಸ್‌ವರ್ಡ್ ಕೇಳುತ್ತದೆ; ಈಗಾಗಲೇ ಪ್ರಾರಂಭವಾದ ಗೇಮ್ ವೀಕ್ಷಣೆಗಾಗಿ ತೆರೆಯುತ್ತದೆ. ಆಹ್ವಾನ ಲಿಂಕ್‌ಗಳು ವೆಬ್ ಕ್ಲೈಂಟ್‌ನ ವೈಶಿಷ್ಟ್ಯ, ಮತ್ತು ಅದು ಸಂಪರ್ಕಿಸಬಹುದಾದ ಪ್ರತಿಯೊಂದು ಸರ್ವರ್‌ನಲ್ಲೂ ಕೆಲಸ ಮಾಡುತ್ತವೆ."],
+      ["ನೋಂದಾಯಿಸದೆ PokerTH ಪ್ರಯತ್ನಿಸಲು ಡೆಮೊ ಸರ್ವರ್ ಇದೆಯೇ?",
+       "ಹೌದು. ಲಾಗಿನ್ ಪರದೆಯಲ್ಲಿ “LAN / ಡೆಡಿಕೇಟೆಡ್ ಸರ್ವರ್” ಆರಿಸಿ ಮತ್ತು ಸರ್ವರ್ ಪಟ್ಟಿಯಲ್ಲಿ ಸಾರ್ವಜನಿಕ ಡೆಮೊ ಸರ್ವರ್ ಆಯ್ಕೆಮಾಡಿ: ಯಾವುದೇ ಅಡ್ಡಹೆಸರು ಟೈಪ್ ಮಾಡಿದರೆ ನೀವು ಅದರ ಲಾಬಿಯಲ್ಲಿರುತ್ತೀರಿ — ನೋಂದಣಿ ಇಲ್ಲ, ಇಮೇಲ್ ವಿಳಾಸವೂ ಇಲ್ಲ. ಪಟ್ಟಿಯಲ್ಲಿನ ಯಾವ ಸರ್ವರ್‌ಗಳು ಆನ್‌ಲೈನ್‌ನಲ್ಲಿವೆ ಮತ್ತು ಅವುಗಳಲ್ಲಿ ಎಷ್ಟು ಆಟಗಾರರಿದ್ದಾರೆ ಎಂಬುದನ್ನು ಹಸಿರು ಚುಕ್ಕೆ ತೋರಿಸುತ್ತದೆ."],
       ["ಇದು ಮೊಬೈಲ್‌ನಲ್ಲಿ ಕೆಲಸ ಮಾಡುತ್ತದೆಯೇ?",
        "ಹೌದು. ವೆಬ್ ಕ್ಲೈಂಟ್ ಒಂದು Progressive Web App: ಇದು ಕಂಪ್ಯೂಟರ್, ಟ್ಯಾಬ್ಲೆಟ್ ಅಥವಾ ಫೋನ್‌ನ ಯಾವುದೇ ಆಧುನಿಕ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಕೆಲಸ ಮಾಡುತ್ತದೆ, ಮತ್ತು ನೇಟಿವ್ ಆ್ಯಪ್‌ನಂತೆ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಬಹುದು — iPhone ಮತ್ತು iPad ನಲ್ಲಿ ಶೇರ್ → ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಿ ಮೂಲಕ, ಬೇರೆಡೆ ಬ್ರೌಸರ್ ಮೆನು ಅಥವಾ ಇನ್‌ಸ್ಟಾಲ್ ಬಟನ್ ಮೂಲಕ. ಎಕ್ಕದ ಸಹಾಯ ನಿಮ್ಮ ಸಾಧನಕ್ಕೆ ಹಂತಗಳನ್ನು ತೋರಿಸುತ್ತದೆ."],
       ["ಕಂಪ್ಯೂಟರ್ ವಿರುದ್ಧ ಆಡಬಹುದೇ?",
@@ -5241,18 +6028,22 @@ var SEO_FAQ_I18N = {
       ["ವೆಬ್ ಕ್ಲೈಂಟ್ ಯಾವ ಡೇಟಾವನ್ನು ಸಂಗ್ರಹಿಸುತ್ತದೆ?",
        "ಸಾಧ್ಯವಾದಷ್ಟು ಕಡಿಮೆ: ನಿಮ್ಮ ಸೆಟ್ಟಿಂಗ್‌ಗಳು ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನಲ್ಲೇ ಉಳಿಯುತ್ತವೆ, ಮತ್ತು ಟ್ರ್ಯಾಕಿಂಗ್ ಅಥವಾ ಜಾಹೀರಾತುಗಳಿಲ್ಲ. ನೀವು pokerth.net ಖಾತೆಯಿಂದ ಲಾಗ್ ಇನ್ ಮಾಡಿದಾಗ, ನಿಮ್ಮ ಆಯ್ಕೆಗಳು ಮತ್ತು ಅಭ್ಯಾಸ ಟ್ರೋಫಿಗಳು ಅದರೊಂದಿಗೆ ಸಿಂಕ್ ಆಗುತ್ತವೆ, ಹಾಗಾಗಿ ಅವು ನಿಮ್ಮ ಇತರ ಸಾಧನಗಳಿಗೂ ಬರುತ್ತವೆ. ವಿವರಗಳು ಗೌಪ್ಯತೆ ಪುಟದಲ್ಲಿವೆ."],
       ["ನನ್ನ ಸ್ವಂತ ಸರ್ವರ್ ಹೋಸ್ಟ್ ಮಾಡಬಹುದೇ?",
-       "ಹೌದು. PokerTH ಡೆಡಿಕೇಟೆಡ್ ಸರ್ವರ್ ಮತ್ತು ಈ ವೆಬ್ ಕ್ಲೈಂಟ್ ಎರಡೂ ಮುಕ್ತ ಸಾಫ್ಟ್‌ವೇರ್: ನೀವು ಲೋಕಲ್ ನೆಟ್‌ವರ್ಕ್‌ನಲ್ಲಿ ಅಥವಾ ಇಂಟರ್ನೆಟ್‌ನಲ್ಲಿ ನಿಮ್ಮ ಸ್ವಂತ ಖಾಸಗಿ ಪೋಕರ್ ಸರ್ವರ್ ನಡೆಸಬಹುದು."],
+       "ಹೌದು. PokerTH ಡೆಡಿಕೇಟೆಡ್ ಸರ್ವರ್ ಮತ್ತು ಈ ವೆಬ್ ಕ್ಲೈಂಟ್ ಎರಡೂ ಮುಕ್ತ ಸಾಫ್ಟ್‌ವೇರ್, ಆದ್ದರಿಂದ ನೀವು LAN ನಲ್ಲಿ ಅಥವಾ ಇಂಟರ್ನೆಟ್‌ನಲ್ಲಿ ನಿಮ್ಮ ಸ್ವಂತ ಖಾಸಗಿ ಪೋಕರ್ ಸರ್ವರ್ ನಡೆಸಬಹುದು. ಅದನ್ನು ಎಲ್ಲರಿಗೂ ಕಾಣುವಂತೆ ಪಟ್ಟಿಯಲ್ಲಿ ಸೇರಿಸಲು, “LAN / ಡೆಡಿಕೇಟೆಡ್ ಸರ್ವರ್” ಆರಿಸಿ, ನಂತರ ಸರ್ವರ್ ಪಟ್ಟಿಯ ಕೆಳಭಾಗದಲ್ಲಿರುವ “ನನ್ನ ಸರ್ವರ್ ಪ್ರಸ್ತಾಪಿಸಿ” ಒತ್ತಿ: ನಿರ್ವಾಹಕರು ಅನುಮೋದಿಸಿದ ಬಳಿಕ ಅದು ಪಟ್ಟಿಯಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ. ಸರ್ವರ್ ಇಂಟರ್ನೆಟ್‌ನಿಂದ ತಲುಪುವಂತಿರಬೇಕು."],
       ["ರ‍್ಯಾಂಕಿಂಗ್ ಗೇಮ್‌ಗಳು ಮತ್ತು ಸೀಸನ್‌ಗಳು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತವೆ?",
        "pokerth.net ನ ರ‍್ಯಾಂಕಿಂಗ್ ಗೇಮ್‌ಗಳಲ್ಲಿ 10 ಆಟಗಾರರು ಕುಳಿತುಕೊಳ್ಳುತ್ತಾರೆ ಮತ್ತು ಟೇಬಲ್ ತುಂಬಿದ ಕೂಡಲೇ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ: ಪ್ರತಿಯೊಬ್ಬರಿಗೆ 10,000 ಚಿಪ್‌ಗಳು, 50 ರ ಸ್ಮಾಲ್ ಬ್ಲೈಂಡ್ ಪ್ರತಿ 11 ಹ್ಯಾಂಡ್‌ಗಳಿಗೆ ದ್ವಿಗುಣಗೊಳ್ಳುತ್ತದೆ, ಮತ್ತು ಆಡಲು 5 ಸೆಕೆಂಡ್. 1 ರಿಂದ 7 ನೇ ಸ್ಥಾನಗಳು 15, 9, 6, 4, 3, 2 ಮತ್ತು 1 ಅಂಕ ಪಡೆಯುತ್ತವೆ; ನಿಮ್ಮ ಸ್ಕೋರ್ ಎಂದರೆ ಪ್ರತಿ ಗೇಮ್‌ನ ಸರಾಸರಿ, ನೀವು ಆಡಿದ ಗೇಮ್‌ಗಳ ಸಂಖ್ಯೆಯಿಂದ ತೂಕ ಹಾಕಲಾಗಿದೆ, ಮತ್ತು ಶ್ರೇಯಾಂಕ ಪ್ರತಿ ತ್ರೈಮಾಸಿಕದಲ್ಲಿ ಮತ್ತೆ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ. ಉಚಿತ pokerth.net ಖಾತೆ ಬೇಕು."],
+      ["ಉಚಿತ ಪೋಕರ್ ಟೂರ್ನಮೆಂಟ್‌ಗಳು ಮತ್ತು ಸ್ಪರ್ಧೆಗಳಿವೆಯೇ?",
+       "ಹೌದು, ವರ್ಷವಿಡೀ, ಎಲ್ಲವೂ ಉಚಿತ. ಪ್ರತಿಯೊಂದು PokerTH ಗೇಮ್ ಒಂದು ಟೂರ್ನಮೆಂಟ್, ಮತ್ತು pokerth.net ಸಮುದಾಯವು ತನ್ನದೇ ಶ್ರೇಯಾಂಕಗಳೊಂದಿಗೆ ನಿಯಮಿತ ಸ್ಪರ್ಧೆಗಳನ್ನೂ ನಡೆಸುತ್ತದೆ: BBC, ಕೆಲವು ನಿಮಿಷಗಳಿಗೊಮ್ಮೆ ಬ್ಲೈಂಡ್‌ಗಳು ಏರುವ ಗೇಮ್‌ಗಳು (<a href=\"https://bbc.pokerth.net/registration\">ಕ್ಯಾಲೆಂಡರ್</a>, <a href=\"https://bbc.pokerth.net/results\">ಫಲಿತಾಂಶಗಳು</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">ಶ್ರೇಯಾಂಕ</a>); WeCup (WEC), ಶಾಂತ, ಸಮತೋಲಿತ ವೇಗದ ಟೂರ್ನಮೆಂಟ್‌ಗಳು (<a href=\"https://wec.pokerth.net/results\">ಫಲಿತಾಂಶಗಳು</a>, <a href=\"https://wec.pokerth.net/results/ranking\">ಶ್ರೇಯಾಂಕ</a>); ಮತ್ತು ಪ್ರತಿ ತಿಂಗಳು ನಡೆಯುವ Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">ಮುಂದಿನ ಕಪ್ ಮತ್ತು ಇತ್ತೀಚಿನ ವಿಜೇತರು</a>, <a href=\"https://monthlycup.pokerth.net/registration\">ನೋಂದಣಿ</a>). ದಿನಾಂಕಗಳು ಮತ್ತು ನಿಯಮಗಳನ್ನು ಪ್ರತಿ ಸೈಟ್‌ನಲ್ಲಿ ಮತ್ತು <a href=\"https://www.pokerth.net/\">pokerth.net</a> ಫೋರಮ್‌ನಲ್ಲಿ ಪ್ರಕಟಿಸಲಾಗುತ್ತದೆ. ಭಾಗವಹಿಸಲು ಉಚಿತ pokerth.net ಖಾತೆ ಬೇಕು."],
       ["ಆಡದೆ ಆಟವನ್ನು ವೀಕ್ಷಿಸಬಹುದೇ?",
        "ಹೌದು. ವೀಕ್ಷಕರಿಗೆ ಅವಕಾಶ ನೀಡುವ ನಡೆಯುತ್ತಿರುವ ಗೇಮ್‌ಗಳನ್ನು ಲಾಬಿಯಿಂದ ನೇರವಾಗಿ ವೀಕ್ಷಿಸಬಹುದು: ನೀವು ಟೇಬಲ್ ಮತ್ತು ಚಾಟ್ ನೋಡುತ್ತೀರಿ, ಆದರೆ ಹೋಲ್ ಕಾರ್ಡ್‌ಗಳು ಮರೆಯಾಗಿಯೇ ಇರುತ್ತವೆ ಮತ್ತು ನೀವು ಆಡುವಂತಿಲ್ಲ. ಈಗಾಗಲೇ ಪ್ರಾರಂಭವಾದ ಟೇಬಲ್‌ಗೆ ಆಹ್ವಾನ ಲಿಂಕ್ ಅದನ್ನು ವೀಕ್ಷಣೆಗಾಗಿ ತೆರೆಯುತ್ತದೆ."],
       ["ಆ್ಯಪ್‌ನೊಳಗೆ ಸಹಾಯವಿದೆಯೇ?",
-       "ಹೌದು. ಎಕ್ಕದ ಸಹಾಯ: ವೆಬ್ ಕ್ಲೈಂಟ್‌ನ ಮ್ಯಾಸ್ಕಾಟ್ ಆದ ಎಕ್ಕ, ನೀವು ಬಯಸಿದರೆ ಪ್ರತಿ ಪರದೆಯನ್ನು ನೀವು ಸಾಗುತ್ತಿದ್ದಂತೆ ವಿವರಿಸುತ್ತದೆ. ಅದರ ಮೆನುವಿನಲ್ಲಿ ಹುಡುಕಾಟದೊಂದಿಗೆ ಸಂಪೂರ್ಣ ಸಹಾಯವಿದೆ, ಮತ್ತು “ಇದೇನು?”: ಪರದೆಯ ಮೇಲೆ ಯಾವುದನ್ನಾದರೂ ಟ್ಯಾಪ್ ಮಾಡಿ, ಅದು ಏನು ಮಾಡುತ್ತದೆ ಎಂದು ಅದು ಹೇಳುತ್ತದೆ."]
+       "ಹೌದು. ಎಕ್ಕದ ಸಹಾಯ: ವೆಬ್ ಕ್ಲೈಂಟ್‌ನ ಮ್ಯಾಸ್ಕಾಟ್ ಆದ ಎಕ್ಕ, ನೀವು ಬಯಸಿದರೆ ಪ್ರತಿ ಪರದೆಯನ್ನು ನೀವು ಸಾಗುತ್ತಿದ್ದಂತೆ ವಿವರಿಸುತ್ತದೆ. ಅದರ ಮೆನುವಿನಲ್ಲಿ ಹುಡುಕಾಟದೊಂದಿಗೆ ಸಂಪೂರ್ಣ ಸಹಾಯವಿದೆ, ಮತ್ತು “ಇದೇನು?”: ಪರದೆಯ ಮೇಲೆ ಯಾವುದನ್ನಾದರೂ ಟ್ಯಾಪ್ ಮಾಡಿ, ಅದು ಏನು ಮಾಡುತ್ತದೆ ಎಂದು ಅದು ಹೇಳುತ್ತದೆ."],
+      ["PokerTH ಇನ್ನೂ ಸಕ್ರಿಯವಾಗಿ ಅಭಿವೃದ್ಧಿಯಾಗುತ್ತಿದೆಯೇ?",
+       "ಹೌದು. PokerTH ಅನ್ನು 2006 ರಿಂದ ಮುಕ್ತ ಸಾಫ್ಟ್‌ವೇರ್ ಆಗಿ ಅಭಿವೃದ್ಧಿಪಡಿಸಲಾಗುತ್ತಿದೆ ಮತ್ತು ಇಂದಿಗೂ ನಿರ್ವಹಿಸಲಾಗುತ್ತಿದೆ: ಡೆಸ್ಕ್‌ಟಾಪ್ ಕ್ಲೈಂಟ್ ಮತ್ತು ಸರ್ವರ್ <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> ನಲ್ಲಿವೆ, ಈ ವೆಬ್ ಕ್ಲೈಂಟ್ ನಿರಂತರವಾಗಿ ನವೀಕರಿಸಲ್ಪಡುತ್ತದೆ (<a href=\"https://github.com/narmod/pokerth-web-client\">ಮೂಲ ಕೋಡ್ ಮತ್ತು ಬದಲಾವಣೆಗಳ ದಾಖಲೆ</a>), ಮತ್ತು ಅಧಿಕೃತ pokerth.net ನೆಟ್‌ವರ್ಕ್‌ನಲ್ಲಿ ಪ್ರತಿದಿನ ಗೇಮ್‌ಗಳು ನಡೆಯುತ್ತವೆ."]
     ]
   },
   gu: {
     title: "FAQ — PokerTH વેબ ક્લાયન્ટ",
-    desc: "PokerTH વેબ ક્લાયન્ટ વિશે સામાન્ય પ્રશ્નો: જાહેરાતો વગરનું મફત પોકર, કંઈ ઇન્સ્ટોલ કર્યા વગર બ્રાઉઝરમાં Texas Hold’em રમવું, ખાતાં, મોબાઇલ, ઓફલાઇન મોડ, ભાષાઓ અને ગોપનીયતા.",
+    desc: "PokerTH વેબ ક્લાયન્ટ વિશે સામાન્ય પ્રશ્નો: જાહેરાતો અને ડાઉનલોડ વગરનું મફત પોકર, મહેમાન તરીકે કે ખાતા વગર રમવું, લિંકથી મિત્રોને આમંત્રણ, ટુર્નામેન્ટ્સ, મોબાઇલ, ઓફલાઇન મોડ, ભાષાઓ અને ગોપનીયતા.",
     h1: "PokerTH વેબ ક્લાયન્ટ — સામાન્ય પ્રશ્નો",
     qa: [
       ["PokerTH મફત છે?",
@@ -5264,7 +6055,13 @@ var SEO_FAQ_I18N = {
       ["હું મારા બ્રાઉઝરમાં બીજા લોકો સામે Texas Hold’em રમી શકું?",
        "હા. દુનિયાભરના ખેલાડીઓનો સામનો કરવા અધિકૃત pokerth.net નેટવર્કમાં જોડાઓ, અથવા તમારા મિત્રો સીધા તમારા ટેબલ પર પહોંચે તે માટે આમંત્રણ લિંક મોકલો — બધું બ્રાઉઝરમાં જ."],
       ["રમવા ખાતું જોઈએ?",
-       "ના. લોકલ / પ્રેક્ટિસ મોડને ખાતું જોઈતું નથી અને તે ઓફલાઇન ચાલે છે. અધિકૃત pokerth.net નેટવર્ક પર તમે સામાન્ય ગેમ્સ મહેમાન તરીકે રમી શકો છો; રેન્કિંગ ગેમ્સ, ફક્ત નોંધાયેલા ખેલાડીઓ માટેનાં ટેબલ અને ચેટ માટે મફત pokerth.net ખાતું જોઈએ."],
+       "ના. લોકલ / પ્રેક્ટિસ મોડને ખાતું જોઈતું નથી અને તે ઓફલાઇન ચાલે છે. અધિકૃત pokerth.net નેટવર્ક પર મહેમાન તરીકે લોગ ઇન કરો: સર્વર તમને મહેમાન ઉપનામ આપે છે અને તમે તરત જ સામાન્ય ગેમ્સ રમી શકો છો. LAN કે ડેડિકેટેડ સર્વર પર કોઈ ખાતું જ નથી — ફક્ત એક ઉપનામ પસંદ કરો. આમાંથી ક્યાંય ઇમેઇલ સરનામું માગવામાં આવતું નથી. મફત pokerth.net ખાતું ફક્ત રેન્કિંગ ગેમ્સ, ફક્ત નોંધાયેલા ખેલાડીઓ માટેનાં ટેબલ અને ચેટ માટે જ જોઈએ."],
+      ["મિત્રો સાથે ઓનલાઇન પોકર કેવી રીતે રમવું?",
+       "લોબીમાં ટેબલ બનાવો — pokerth.net પર કે કોઈ પણ LAN કે ડેડિકેટેડ સર્વર પર — અને વેઇટિંગ રૂમમાં “મિત્રોને આમંત્રિત કરો” દબાવો. વેબ ક્લાયન્ટ એક આમંત્રણ લિંક બનાવે છે, જે તમે કોઈ પણ મેસેન્જરથી મોકલી શકો છો. તમારા મિત્રો તેને તેમના બ્રાઉઝરમાં — iPhone, Android કે કમ્પ્યુટર પર — ખોલે છે, કંઈ ડાઉનલોડ કરવાની જરૂર નથી. ટેબલ ખાનગી રાખવું હોય તો પાસવર્ડ સેટ કરો: પાસવર્ડ ક્યારેય લિંકનો ભાગ હોતો નથી."],
+      ["મિત્ર મારી આમંત્રણ લિંક ખોલે ત્યારે શું થાય?",
+       "લિંકમાં ટેબલ અને સર્વરની માહિતી હોય છે. તમારો મિત્ર લોગ ઇન કરે છે — pokerth.net પર મહેમાન તરીકે કે ખાતાથી, LAN કે ડેડિકેટેડ સર્વર પર ફક્ત ઉપનામથી — અને પછી લોબીમાં શોધવાની જરૂર વગર વેબ ક્લાયન્ટ આપમેળે તે ટેબલમાં જોડાય છે. પાસવર્ડથી સુરક્ષિત ટેબલ તેનો પાસવર્ડ માગે છે; પહેલેથી શરૂ થયેલી ગેમ જોવા માટે ખૂલે છે. આમંત્રણ લિંક્સ વેબ ક્લાયન્ટની સુવિધા છે અને તે જે સર્વર સાથે કનેક્ટ થઈ શકે તે દરેક પર ચાલે છે."],
+      ["નોંધણી વગર PokerTH અજમાવવા માટે ડેમો સર્વર છે?",
+       "હા. લોગિન સ્ક્રીન પર LAN / ડેડિકેટેડ સર્વર પસંદ કરો અને સર્વર યાદીમાંથી જાહેર ડેમો સર્વર પસંદ કરો: કોઈ પણ ઉપનામ ટાઇપ કરો અને તમે તેની લોબીમાં પહોંચી જશો — કોઈ નોંધણી નહીં, કોઈ ઇમેઇલ સરનામું નહીં. યાદીમાંના કયા સર્વર ઓનલાઇન છે અને તેમાં કેટલા ખેલાડીઓ છે તે લીલું ટપકું બતાવે છે."],
       ["આ મોબાઇલ પર ચાલે છે?",
        "હા. વેબ ક્લાયન્ટ એક Progressive Web App છે: તે કમ્પ્યુટર, ટેબ્લેટ કે ફોન પરના કોઈ પણ આધુનિક બ્રાઉઝરમાં ચાલે છે, અને નેટિવ એપની જેમ ઇન્સ્ટોલ કરી શકાય છે — iPhone અને iPad પર શેર → હોમ સ્ક્રીન પર ઉમેરો વડે, બીજે બ્રાઉઝર મેનૂમાંથી કે ઇન્સ્ટોલ બટનથી. એક્કાની મદદ તમારા ઉપકરણ માટેનાં પગલાં બતાવે છે."],
       ["હું કમ્પ્યુટર સામે રમી શકું?",
@@ -5280,18 +6077,22 @@ var SEO_FAQ_I18N = {
       ["વેબ ક્લાયન્ટ કયો ડેટા એકઠો કરે છે?",
        "શક્ય તેટલો ઓછો: તમારી સેટિંગ્સ તમારા બ્રાઉઝરમાં જ રહે છે, અને ટ્રેકિંગ કે જાહેરાતો નથી. pokerth.net ખાતાથી લૉગ ઇન કરો ત્યારે તમારા વિકલ્પો અને પ્રેક્ટિસ ટ્રોફીઓ તેની સાથે સિંક થાય છે, જેથી તે તમારા બીજા ઉપકરણો પર પણ તમારી સાથે રહે. વિગતો ગોપનીયતા પેજ પર છે."],
       ["હું મારું પોતાનું સર્વર હોસ્ટ કરી શકું?",
-       "હા. PokerTH ડેડિકેટેડ સર્વર અને આ વેબ ક્લાયન્ટ બંને મુક્ત સોફ્ટવેર છે: તમે લોકલ નેટવર્ક પર કે ઇન્ટરનેટ પર તમારું પોતાનું ખાનગી પોકર સર્વર ચલાવી શકો છો."],
+       "હા. PokerTH ડેડિકેટેડ સર્વર અને આ વેબ ક્લાયન્ટ બંને મુક્ત સોફ્ટવેર છે, તેથી તમે LAN પર કે ઇન્ટરનેટ પર તમારું પોતાનું ખાનગી પોકર સર્વર ચલાવી શકો છો. તેને બધા માટે યાદીમાં મૂકવા LAN / ડેડિકેટેડ સર્વર પસંદ કરો, પછી સર્વર યાદીના તળિયે આવેલું “મારું સર્વર સૂચવો” દબાવો: એડમિન્સ મંજૂરી આપે એટલે તે યાદીમાં દેખાય છે. સર્વર ઇન્ટરનેટ પરથી પહોંચી શકાય તેવું હોવું જોઈએ."],
       ["રેન્કિંગ ગેમ્સ અને સીઝન કેવી રીતે ચાલે છે?",
        "pokerth.net પર રેન્કિંગ ગેમ્સમાં 10 ખેલાડીઓ બેસે છે અને ટેબલ ભરાતાં જ શરૂ થાય છે: દરેકને 10,000 ચિપ્સ, 50 નો સ્મોલ બ્લાઇન્ડ જે દર 11 હેન્ડે બમણો થાય છે, અને રમવા માટે 5 સેકન્ડ. સ્થાન 1 થી 7 ને અનુક્રમે 15, 9, 6, 4, 3, 2 અને 1 પોઇન્ટ મળે છે; તમારો સ્કોર એ ગેમ દીઠ તમારી સરેરાશ છે, જે તમે રમેલી ગેમ્સની સંખ્યા પ્રમાણે ભારિત થાય છે, અને રેન્કિંગ દર ત્રિમાસિકે ફરી શરૂ થાય છે. મફત pokerth.net ખાતું જોઈએ."],
+      ["મફત પોકર ટુર્નામેન્ટ્સ અને સ્પર્ધાઓ છે?",
+       "હા, આખું વર્ષ, અને બધી મફત. PokerTH ની દરેક ગેમ એક ટુર્નામેન્ટ જ છે, અને pokerth.net સમુદાય પોતાના રેન્કિંગ સાથે નિયમિત સ્પર્ધાઓ પણ યોજે છે: BBC, જેમાં દર થોડી મિનિટે બ્લાઇન્ડ્સ વધે છે એવી ગેમ્સ (<a href=\"https://bbc.pokerth.net/registration\">કેલેન્ડર</a>, <a href=\"https://bbc.pokerth.net/results\">પરિણામો</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">રેન્કિંગ</a>); WeCup (WEC), શાંત, સંતુલિત ગતિની ટુર્નામેન્ટ્સ (<a href=\"https://wec.pokerth.net/results\">પરિણામો</a>, <a href=\"https://wec.pokerth.net/results/ranking\">રેન્કિંગ</a>); અને દર મહિને યોજાતો Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">આગામી કપ અને તાજેતરના વિજેતાઓ</a>, <a href=\"https://monthlycup.pokerth.net/registration\">નોંધણી</a>). તારીખો અને નિયમો દરેક સાઇટ પર અને <a href=\"https://www.pokerth.net/\">pokerth.net</a> ફોરમ પર જાહેર થાય છે. ભાગ લેવા મફત pokerth.net ખાતું જોઈએ."],
       ["રમ્યા વગર ગેમ જોઈ શકાય?",
        "હા. પ્રેક્ષકોને મંજૂરી આપતી ચાલુ ગેમ્સ લોબીમાંથી લાઇવ જોઈ શકાય છે: તમે ટેબલ અને ચેટ જુઓ છો, પણ હોલ કાર્ડ્સ છુપાયેલાં રહે છે અને તમે રમી શકતા નથી. શરૂ થઈ ચૂકેલા ટેબલની આમંત્રણ લિંક તેને જોવા માટે ખોલે છે."],
       ["એપમાં જ મદદ છે?",
-       "હા. એક્કાની મદદ: એક્કો, વેબ ક્લાયન્ટનો માસ્કોટ, તમે ઇચ્છો તો દરેક સ્ક્રીન સમજાવે છે. તેના મેનૂમાં સર્ચ સાથે આખી મદદ છે, અને “આ શું છે?”: સ્ક્રીન પરની કોઈ પણ વસ્તુ ટેપ કરો અને તે શું કરે છે તે તે કહે છે."]
+       "હા. એક્કાની મદદ: એક્કો, વેબ ક્લાયન્ટનો માસ્કોટ, તમે ઇચ્છો તો દરેક સ્ક્રીન સમજાવે છે. તેના મેનૂમાં સર્ચ સાથે આખી મદદ છે, અને “આ શું છે?”: સ્ક્રીન પરની કોઈ પણ વસ્તુ ટેપ કરો અને તે શું કરે છે તે તે કહે છે."],
+      ["PokerTH હજી સક્રિય રીતે વિકસાવાય છે?",
+       "હા. PokerTH 2006 થી મુક્ત સોફ્ટવેર તરીકે વિકસાવાય છે અને આજે પણ જાળવવામાં આવે છે: ડેસ્કટોપ ક્લાયન્ટ અને સર્વર <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> પર છે, આ વેબ ક્લાયન્ટ સતત અપડેટ થાય છે (<a href=\"https://github.com/narmod/pokerth-web-client\">સોર્સ કોડ અને ફેરફારોનો ઇતિહાસ</a>), અને અધિકૃત pokerth.net નેટવર્ક પર દરરોજ ગેમ્સ રમાય છે."]
     ]
   },
   ha: {
     title: "Tambayoyi da ake yawan yi — abokin cinikin yanar gizo na PokerTH",
-    desc: "Tambayoyi da ake yawan yi game da abokin cinikin yanar gizo na PokerTH: poker kyauta ba tare da talla ba, buga Texas Hold’em a burauza ba tare da sanya komai ba, asusu, waya, yanayi ba tare da intanet ba, harsuna da sirri.",
+    desc: "Tambayoyi da ake yawan yi game da abokin cinikin yanar gizo na PokerTH: poker kyauta ba talla ba saukewa, wasa a matsayin baƙo ko ba asusu, gayyatar abokai da mahaɗi, gasa, waya, harsuna da sirri.",
     h1: "Abokin cinikin yanar gizo na PokerTH — Tambayoyi da ake yawan yi",
     qa: [
       ["Shin PokerTH kyauta ne?",
@@ -5303,7 +6104,13 @@ var SEO_FAQ_I18N = {
       ["Zan iya buga Texas Hold’em da wasu mutane a burauzata?",
        "Eh. Shiga hanyar sadarwa ta hukuma ta pokerth.net don buga Texas Hold’em kai tsaye da 'yan wasa daga ko'ina a duniya, ko aika mahaɗin gayyata don abokai su iso teburinka kai tsaye — duka a cikin burauza."],
       ["Ina buƙatar asusu don yin wasa?",
-       "A'a. Yanayin Na gida / horo ba ya buƙatar asusu kuma yana aiki ba tare da intanet ba. A hanyar sadarwa ta hukuma ta pokerth.net za ka iya buga wasannin Na al'ada a matsayin baƙo; ana buƙatar asusun pokerth.net kyauta don wasannin matsayi, teburori na masu rajista kawai da hira."],
+       "A'a. Yanayin Na gida / horo ba ya buƙatar asusu kuma yana aiki ba tare da intanet ba. A hanyar sadarwa ta hukuma ta pokerth.net, shiga a matsayin baƙo: sabar za ta ba ka sunan baƙo kuma za ka iya buga wasannin Na al'ada nan take. A LAN ko a keɓaɓɓiyar sabar babu asusu ko kaɗan — sunan laƙabi kawai za ka zaɓa. Babu ɗayansu da ke neman adireshin imel. Ana buƙatar asusun pokerth.net kyauta ne kawai don wasannin matsayi, teburori na masu rajista kawai da hira."],
+      ["Ta yaya zan buga poker a kan layi da abokaina?",
+       "Ƙirƙiri tebur a zaure — a pokerth.net ko a kowace sabar LAN ko keɓaɓɓiyar sabar — sannan danna “Gayyaci abokai” a ɗakin jira. Abokin cinikin yanar gizo zai ƙirƙiri mahaɗin gayyata da za ka iya aikawa ta kowace manhajar aika saƙo. Abokanka za su buɗe shi a burauzarsu, a iPhone, Android ko kwamfuta, ba tare da sauke komai ba. Saita kalmar sirri idan tebur ya kamata ya zama na sirri: kalmar sirri ba ta taɓa kasancewa cikin mahaɗin ba."],
+      ["Me ke faruwa idan aboki ya buɗe mahaɗin gayyatata?",
+       "Mahaɗin yana ɗauke da tebur da sabar. Abokinka zai shiga — a matsayin baƙo ko da asusu a pokerth.net, da sunan laƙabi kawai a LAN ko keɓaɓɓiyar sabar — sannan abokin cinikin yanar gizo zai shiga teburin kai tsaye, ba sai ya neme shi a zaure ba. Tebur mai kalmar sirri zai nemi kalmar sirrinsa; wasan da ya riga ya fara zai buɗe don kallo. Mahaɗan gayyata fasali ne na abokin cinikin yanar gizo kuma suna aiki a kowace sabar da zai iya haɗawa da ita."],
+      ["Akwai sabar gwaji don gwada PokerTH ba tare da yin rajista ba?",
+       "Eh. A allon shiga zaɓi LAN / Keɓaɓɓiyar sabar kuma ka zaɓi sabar gwaji ta jama'a a Jerin sabobi: rubuta kowane sunan laƙabi kuma za ka shiga zaurenta — babu rajista, babu adireshin imel. Ɗigo kore yana nuna waɗanne sabobin da ke jerin suna kan layi da kuma 'yan wasa nawa ke cikinsu."],
       ["Shin yana aiki a waya?",
        "Eh. Abokin cinikin yanar gizo Progressive Web App ne: yana aiki a kowace burauza ta zamani a kwamfuta, kwamfutar hannu ko waya, kuma ana iya sanya shi kamar manhaja ta asali — a iPhone da iPad da Raba → Ƙara zuwa Allon Gida, a wasu na'urori daga menu na burauza ko maɓallin shigarwa. Taimakon Aas yana nuna matakan na'urarka."],
       ["Zan iya yin wasa da kwamfuta?",
@@ -5319,18 +6126,22 @@ var SEO_FAQ_I18N = {
       ["Waɗanne bayanai abokin cinikin yanar gizo ke tattarawa?",
        "Kaɗan gwargwadon iko: saituna suna zama a burauzarka, kuma ba a amfani da bibiya ko talla. Idan ka shiga da asusun pokerth.net, ana daidaita zaɓukanka da kofunan horonka da shi don su bi ka zuwa sauran na'urorinka. Duba shafin sirri don cikakkun bayanai."],
       ["Zan iya ɗaukar sabata?",
-       "Eh. Keɓaɓɓiyar sabar PokerTH da wannan abokin cinikin yanar gizo duka buɗaɗɗen tushe ne, don haka za ka iya gudanar da sabar poker ta sirri a LAN ko a intanet."],
+       "Eh. Keɓaɓɓiyar sabar PokerTH da wannan abokin cinikin yanar gizo duka buɗaɗɗen tushe ne, don haka za ka iya gudanar da sabar poker ta sirri taka a LAN ko a intanet. Don a jera ta ga kowa, zaɓi LAN / Keɓaɓɓiyar sabar, sannan “Gabatar da sabata” a ƙasan Jerin sabobi: da zarar masu gudanarwa sun amince da ita, za ta bayyana a jerin. Dole ne a iya isa ga sabar daga intanet."],
       ["Yaya wasannin matsayi da kaka suke aiki?",
        "Wasannin matsayi a pokerth.net suna zaunar da 'yan wasa 10 kuma suna farawa da zarar tebur ya cika: chips 10,000 ga kowa, ƙaramin blind na 50 da ke ninkawa bayan kowane hannaye 11, da daƙiƙa 5 don yin motsi. Wurare na 1 zuwa na 7 suna samun maki 15, 9, 6, 4, 3, 2 da 1; Score ɗinka shi ne matsakaicin kowane wasa naka, wanda aka auna da adadin wasannin da ka buga, kuma matsayin yana sake farawa a kowane watanni uku. Ana buƙatar asusun pokerth.net kyauta."],
+      ["Akwai gasar poker kyauta?",
+       "Eh, duk tsawon shekara, kuma duka kyauta. Kowane wasan PokerTH gasa ne, kuma al'ummar pokerth.net tana kuma shirya gasa a kai a kai da nasu matsayi: BBC, wasannin da blinds ɗinsu ke hawa bayan 'yan mintuna (<a href=\"https://bbc.pokerth.net/registration\">kalanda</a>, <a href=\"https://bbc.pokerth.net/results\">sakamako</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">matsayi</a>); WeCup (WEC), gasa a cikin sauri mai natsuwa da daidaito (<a href=\"https://wec.pokerth.net/results\">sakamako</a>, <a href=\"https://wec.pokerth.net/results/ranking\">matsayi</a>); da Monthly Cup, da ake yi kowane wata (<a href=\"https://monthlycup.pokerth.net/\">kofi na gaba da waɗanda suka ci na baya-bayan nan</a>, <a href=\"https://monthlycup.pokerth.net/registration\">rajista</a>). Ana sanar da kwanaki da ƙa'idoji a kowane shafi da kuma a dandalin <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Don shiga, kana buƙatar asusun pokerth.net kyauta."],
       ["Zan iya kallon wasa ba tare da yin wasa ba?",
        "Eh. Ana iya kallon wasannin da ke gudana kuma suka bar masu kallo kai tsaye daga zaure: kana ganin tebur da hira, amma katunan aljihu suna zama a ɓoye kuma ba za ka iya yin motsi ba. Mahaɗin gayyata zuwa tebur da ya riga ya fara yana buɗe shi don kallo."],
       ["Akwai taimako a cikin manhajar?",
-       "Eh. Taimakon Aas: Aas, alamar abokin cinikin yanar gizo, yana bayyana kowane allo yayin da kake ci gaba idan kana so. Menu ɗinsa yana ɗauke da dukan taimakon tare da bincike, da “Mene ne wannan?”: taɓa komai a allo kuma zai gaya maka abin da yake yi."]
+       "Eh. Taimakon Aas: Aas, alamar abokin cinikin yanar gizo, yana bayyana kowane allo yayin da kake ci gaba idan kana so. Menu ɗinsa yana ɗauke da dukan taimakon tare da bincike, da “Mene ne wannan?”: taɓa komai a allo kuma zai gaya maka abin da yake yi."],
+      ["Shin ana ci gaba da haɓaka PokerTH?",
+       "Eh. Ana haɓaka PokerTH a matsayin manhaja ta kyauta tun 2006 kuma har yanzu ana kula da ita: manhajar kwamfuta da sabar suna a <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, ana sabunta wannan abokin cinikin yanar gizo koyaushe (<a href=\"https://github.com/narmod/pokerth-web-client\">lambar tushe da jerin canje-canje</a>), kuma ana buga wasanni kowace rana a hanyar sadarwa ta hukuma ta pokerth.net."]
     ],
   },
   is: {
     title: "Algengar spurningar — PokerTH vefbiðlari",
-    desc: "Algengar spurningar um PokerTH vefbiðlarann: ókeypis póker án auglýsinga, Texas Hold’em í vafranum án uppsetningar, aðgangar, farsímar, ótengdur hamur, tungumál og persónuvernd.",
+    desc: "Algengar spurningar um PokerTH vefbiðlarann: ókeypis póker án auglýsinga og án niðurhals, spilað sem gestur eða alveg án aðgangs, vinum boðið með tengli, mót, farsímar, ótengdur hamur, tungumál og persónuvernd.",
     h1: "PokerTH vefbiðlari — algengar spurningar",
     qa: [
       ["Er PokerTH ókeypis?",
@@ -5342,7 +6153,13 @@ var SEO_FAQ_I18N = {
       ["Get ég spilað Texas Hold’em gegn öðru fólki í vafranum?",
        "Já. Farðu á opinbera pokerth.net netið til að mæta leikmönnum alls staðar að úr heiminum, eða sendu boðstengil svo vinir þínir lendi beint við borðið þitt — allt í vafranum."],
       ["Þarf ég aðgang til að spila?",
-       "Nei. Hamurinn „Staðbundið / æfing“ þarf engan aðgang og virkar ótengt. Á opinbera pokerth.net netinu geturðu spilað venjulega leiki sem gestur; ókeypis pokerth.net aðgang þarf fyrir stigaleiki, borð eingöngu fyrir skráða leikmenn og spjallið."],
+       "Nei. Hamurinn „Staðbundið / æfing“ þarf engan aðgang og virkar ótengt. Á opinbera pokerth.net netinu skráirðu þig inn sem gestur: þjónninn gefur þér gestanafn og þú getur strax spilað venjulega leiki. Á LAN eða sérþjóni eru engir aðgangar yfirleitt — þú velur bara notandanafn. Ekkert af þessu biður um netfang. Ókeypis pokerth.net aðgang þarf aðeins fyrir stigaleiki, borð eingöngu fyrir skráða leikmenn og spjallið."],
+      ["Hvernig spila ég póker á netinu með vinum?",
+       "Búðu til borð í anddyrinu — á pokerth.net eða á hvaða LAN- eða sérþjóni sem er — og ýttu á „Bjóða vinum“ í biðstofunni. Vefbiðlarinn býr til boðstengil sem þú getur sent með hvaða skilaboðaforriti sem er. Vinir þínir opna hann í vafranum sínum, á iPhone, Android eða tölvu, án þess að sækja neitt. Settu lykilorð ef borðið á að vera lokað: lykilorðið er aldrei hluti af tenglinum."],
+      ["Hvað gerist þegar vinur opnar boðstengilinn minn?",
+       "Tengillinn ber með sér borðið og þjóninn. Vinur þinn skráir sig inn — sem gestur eða með aðgangi á pokerth.net, aðeins með notandanafni á LAN eða sérþjóni — og vefbiðlarinn sest síðan sjálfkrafa við borðið, án þess að leita þurfi að því í anddyrinu. Borð sem er varið lykilorði biður um lykilorðið; leikur sem er þegar hafinn opnast til áhorfs. Boðstenglar eru eiginleiki vefbiðlarans og virka á öllum þjónum sem hann getur tengst."],
+      ["Er til prufuþjónn til að prófa PokerTH án skráningar?",
+       "Já. Veldu „LAN / sérþjónn“ á innskráningarskjánum og veldu almenna prufuþjóninn í þjónalistanum: sláðu inn hvaða notandanafn sem er og þá ertu í anddyrinu hans — engin skráning, ekkert netfang. Grænn punktur sýnir hvaða þjónar á listanum eru virkir og hversu margir leikmenn eru á þeim."],
       ["Virkar þetta í farsíma?",
        "Já. Vefbiðlarinn er Progressive Web App: hann keyrir í hvaða nútímavafra sem er á tölvu, spjaldtölvu eða síma, og hægt er að setja hann upp eins og hefðbundið forrit — á iPhone og iPad með Deila → Bæta við heimaskjá, annars staðar úr valmynd vafrans eða með uppsetningarhnappnum. Hjálp ássins sýnir skrefin fyrir tækið þitt."],
       ["Get ég spilað gegn tölvunni?",
@@ -5358,18 +6175,22 @@ var SEO_FAQ_I18N = {
       ["Hvaða gögnum safnar vefbiðlarinn?",
        "Eins litlu og hægt er: stillingarnar þínar haldast í vafranum þínum og það er engin rakning og engar auglýsingar. Þegar þú skráir þig inn með pokerth.net aðgangi eru valkostirnir þínir og æfingabikarar samstilltir við hann svo þeir fylgi þér í önnur tæki. Nánar á persónuverndarsíðunni."],
       ["Get ég hýst minn eigin þjón?",
-       "Já. Sérþjónn PokerTH og þessi vefbiðlari eru frjáls hugbúnaður: þú getur rekið þinn eigin einkapókerþjón á staðarneti eða á internetinu."],
+       "Já. Sérþjónn PokerTH og þessi vefbiðlari eru báðir opinn hugbúnaður, svo þú getur rekið þinn eigin einkapókerþjón á staðarneti eða á internetinu. Til að fá hann skráðan fyrir alla velurðu „LAN / sérþjónn“ og síðan „Leggja til þjóninn minn“ neðst í þjónalistanum: þegar stjórnendurnir hafa samþykkt hann birtist hann á listanum. Þjónninn verður að vera aðgengilegur af internetinu."],
       ["Hvernig virka stigaleikir og tímabil?",
        "Stigaleikir á pokerth.net taka 10 leikmenn og hefjast um leið og borðið er fullt: 10.000 spilapeningar á mann, lítill blindur upp á 50 sem tvöfaldast á 11 handa fresti og 5 sekúndur til að bregðast við. Sætin 1 til 7 gefa 15, 9, 6, 4, 3, 2 og 1 stig; skorið þitt er meðaltal á leik, vegið eftir fjölda leikja sem þú hefur spilað, og stigataflan byrjar upp á nýtt á hverjum ársfjórðungi. Til þess þarf ókeypis pokerth.net aðgang."],
+      ["Eru til ókeypis pókermót og keppnir?",
+       "Já, allt árið um kring, og allt ókeypis. Hver leikur í PokerTH er mót, og pokerth.net samfélagið heldur auk þess reglulegar keppnir með eigin stigatöflum: BBC, leikir þar sem blindarnir hækka á nokkurra mínútna fresti (<a href=\"https://bbc.pokerth.net/registration\">dagatal</a>, <a href=\"https://bbc.pokerth.net/results\">úrslit</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">stigatafla</a>); WeCup (WEC), mót á rólegri og jafnari hraða (<a href=\"https://wec.pokerth.net/results\">úrslit</a>, <a href=\"https://wec.pokerth.net/results/ranking\">stigatafla</a>); og Monthly Cup, sem er haldið í hverjum mánuði (<a href=\"https://monthlycup.pokerth.net/\">næsta mót og nýjustu sigurvegarar</a>, <a href=\"https://monthlycup.pokerth.net/registration\">skráning</a>). Dagsetningar og reglur eru kynntar á hverjum vef fyrir sig og á spjallborði <a href=\"https://www.pokerth.net/\">pokerth.net</a>. Til að taka þátt þarf ókeypis pokerth.net aðgang."],
       ["Get ég horft á leik án þess að spila?",
        "Já. Leiki í gangi sem leyfa áhorfendur má horfa á í beinni úr anddyrinu: þú sérð borðið og spjallið, en holuspilin haldast falin og þú getur ekki leikið. Boðstengill á borð sem er þegar hafið opnar það til áhorfs."],
       ["Er hjálp í forritinu sjálfu?",
-       "Já. Hjálp ássins: ásinn, lukkudýr vefbiðlarans, útskýrir hvern skjá jafnóðum ef þú vilt. Valmyndin hans geymir alla hjálpina með leit, og „Hvað er þetta?“: snertu hvað sem er á skjánum og hann segir hvað það gerir."]
+       "Já. Hjálp ássins: ásinn, lukkudýr vefbiðlarans, útskýrir hvern skjá jafnóðum ef þú vilt. Valmyndin hans geymir alla hjálpina með leit, og „Hvað er þetta?“: snertu hvað sem er á skjánum og hann segir hvað það gerir."],
+      ["Er PokerTH enn í virkri þróun?",
+       "Já. PokerTH hefur verið þróað sem frjáls hugbúnaður frá árinu 2006 og er enn viðhaldið: borðtölvubiðlarinn og þjónninn eru á <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, þessi vefbiðlari er uppfærður jafnt og þétt (<a href=\"https://github.com/narmod/pokerth-web-client\">frumkóði og breytingaskrá</a>), og spilað er á hverjum degi á opinbera pokerth.net netinu."]
     ]
   },
   uz: {
     title: "Koʻp beriladigan savollar — PokerTH veb-mijozi",
-    desc: "PokerTH veb-mijozi haqida koʻp beriladigan savollar: reklamasiz bepul poker, oʻrnatmasdan brauzerda Texas Hold’em, hisoblar, mobil qurilmalar, oflayn rejim, tillar va maxfiylik.",
+    desc: "PokerTH veb-mijozi haqida koʻp beriladigan savollar: reklamasiz va yuklab olishsiz bepul poker, mehmon sifatida yoki hisobsiz oʻynash, doʻstlarni havola bilan taklif qilish, turnirlar, mobil, oflayn rejim, tillar va maxfiylik.",
     h1: "PokerTH veb-mijozi — koʻp beriladigan savollar",
     qa: [
       ["PokerTH bepulmi?",
@@ -5381,7 +6202,13 @@ var SEO_FAQ_I18N = {
       ["Brauzerimda boshqa odamlarga qarshi Texas Hold’em oʻynay olamanmi?",
        "Ha. Butun dunyo oʻyinchilariga qarshi jonli Texas Hold’em oʻynash uchun rasmiy pokerth.net tarmogʻiga qoʻshiling yoki doʻstlaringiz toʻgʻridan-toʻgʻri stolingizga tushishi uchun taklif havolasini yuboring — hammasi brauzer ichida."],
       ["Oʻynash uchun hisob kerakmi?",
-       "Yoʻq. Lokal / mashgʻulot rejimi uchun hisob kerak emas va u oflayn ishlaydi. Rasmiy pokerth.net tarmogʻida “Oddiy” oʻyinlarni mehmon sifatida oʻynash mumkin; Reyting oʻyinlari, faqat roʻyxatdan oʻtganlar uchun stollar va chat uchun bepul pokerth.net hisobi kerak."],
+       "Yoʻq. Lokal / mashgʻulot rejimi uchun hisob kerak emas va u oflayn ishlaydi. Rasmiy pokerth.net tarmogʻida mehmon sifatida kiring: server sizga mehmon taxallusini beradi va “Oddiy” oʻyinlarni darhol oʻynashingiz mumkin. LAN’da yoki maxsus serverda hisob umuman yoʻq — siz shunchaki taxallus tanlaysiz. Ularning hech biri elektron pochta manzilini soʻramaydi. Bepul pokerth.net hisobi faqat Reyting oʻyinlari, roʻyxatdan oʻtganlar uchun stollar va chat uchun kerak."],
+      ["Doʻstlar bilan onlayn poker qanday oʻynayman?",
+       "Lobbida stol yarating — pokerth.net’da yoki istalgan LAN yoki maxsus serverda — va kutish xonasida “Doʻstlarni taklif qilish” tugmasini bosing. Veb-mijoz istalgan messenjer orqali yuborish mumkin boʻlgan taklif havolasini yaratadi. Doʻstlaringiz uni brauzerda ochadi — iPhone, Android yoki kompyuterda, hech narsa yuklab olmasdan. Stol yopiq qolishi kerak boʻlsa, parol qoʻying: parol hech qachon havolaga kiritilmaydi."],
+      ["Doʻstim taklif havolamni ochsa nima boʻladi?",
+       "Havolada stol va server koʻrsatilgan. Doʻstingiz kiradi — pokerth.net’da mehmon sifatida yoki hisob bilan, LAN’da yoki maxsus serverda shunchaki taxallus bilan — va veb-mijoz stolga avtomatik qoʻshiladi, uni lobbidan qidirishga hojat yoʻq. Parol bilan himoyalangan stol parolni soʻraydi; allaqachon boshlangan oʻyin kuzatish uchun ochiladi. Taklif havolalari veb-mijozning imkoniyati boʻlib, u ulana oladigan har qanday serverda ishlaydi."],
+      ["PokerTH’ni roʻyxatdan oʻtmasdan sinab koʻrish uchun demo-server bormi?",
+       "Ha. Kirish ekranida LAN / Maxsus server boʻlimini tanlang va Serverlar roʻyxatidan ommaviy demo-serverni tanlang: istalgan taxallusni yozing — va siz uning lobbisidasiz, roʻyxatdan oʻtish ham, elektron pochta ham kerak emas. Yashil nuqta roʻyxatdagi qaysi serverlar onlayn ekanini va ularda nechta oʻyinchi borligini koʻrsatadi."],
       ["U mobil qurilmalarda ishlaydimi?",
        "Ha. Veb-mijoz — Progressive Web App: u kompyuter, planshet yoki telefondagi istalgan zamonaviy brauzerda ishlaydi va oddiy ilova kabi oʻrnatilishi mumkin — iPhone va iPad’da Ulashish → Bosh ekranga qoʻshish orqali, boshqa qurilmalarda brauzer menyusi yoki oʻrnatish tugmasi orqali. Tuzning yordami qurilmangiz uchun qadamlarni koʻrsatadi."],
       ["Kompyuterga qarshi oʻynay olamanmi?",
@@ -5397,18 +6224,22 @@ var SEO_FAQ_I18N = {
       ["Veb-mijoz qanday maʼlumotlarni toʻplaydi?",
        "Imkon qadar kam: sozlamalar brauzeringizda qoladi, kuzatuv ham, reklama ham ishlatilmaydi. pokerth.net hisobi bilan kirganingizda, sozlamalaringiz va mashgʻulot kuboklaringiz u bilan sinxronlanadi va boshqa qurilmalaringizda ham siz bilan birga boʻladi. Tafsilotlar maxfiylik sahifasida."],
       ["Oʻz serverimni joylashtira olamanmi?",
-       "Ha. PokerTH maxsus serveri ham, ushbu veb-mijoz ham ochiq kodli, shuning uchun LAN’da yoki internetda oʻz xususiy poker serveringizni ishga tushirishingiz mumkin."],
+       "Ha. PokerTH maxsus serveri ham, ushbu veb-mijoz ham ochiq kodli, shuning uchun LAN’da yoki internetda oʻz xususiy poker serveringizni ishga tushirishingiz mumkin. Uni hamma koʻradigan roʻyxatga kiritish uchun LAN / Maxsus server boʻlimini tanlang, soʻng Serverlar roʻyxatining pastidagi “Serverimni taklif qilish” tugmasini bosing: administratorlar tasdiqlagach, u roʻyxatda paydo boʻladi. Serverga internetdan kirish mumkin boʻlishi kerak."],
       ["Reyting oʻyinlari va mavsumlar qanday ishlaydi?",
        "pokerth.net’dagi Reyting oʻyinlarida 10 oʻyinchi oʻtiradi va stol toʻlishi bilanoq boshlanadi: har biriga 10 000 fishka, har 11 qoʻldan keyin ikki baravar oshadigan 50 fishkalik kichik blaynd va harakat qilish uchun 5 soniya. 1 dan 7 gacha oʻrinlar mos ravishda 15, 9, 6, 4, 3, 2 va 1 ochko oladi; Hisobingiz — oʻyin boshiga oʻrtacha, oʻynagan oʻyinlaringiz soniga qarab tortilgan, reyting esa har chorakda qaytadan boshlanadi. Bepul pokerth.net hisobi kerak."],
+      ["Bepul poker turnirlari va musobaqalar bormi?",
+       "Ha, yil boʻyi va hammasi bepul. Har bir PokerTH oʻyini — turnir, pokerth.net hamjamiyati esa oʻz reytinglariga ega muntazam musobaqalar ham oʻtkazadi: BBC — blayndlar har bir necha daqiqada oshib boradigan oʻyinlar (<a href=\"https://bbc.pokerth.net/registration\">taqvim</a>, <a href=\"https://bbc.pokerth.net/results\">natijalar</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">reyting</a>); WeCup (WEC) — sokinroq, muvozanatli surʼatdagi turnirlar (<a href=\"https://wec.pokerth.net/results\">natijalar</a>, <a href=\"https://wec.pokerth.net/results/ranking\">reyting</a>); va har oy oʻtkaziladigan Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">navbatdagi kubok va soʻnggi gʻoliblar</a>, <a href=\"https://monthlycup.pokerth.net/registration\">roʻyxatdan oʻtish</a>). Sanalar va qoidalar har bir saytda hamda <a href=\"https://www.pokerth.net/\">pokerth.net</a> forumida eʼlon qilinadi. Ishtirok etish uchun bepul pokerth.net hisobi kerak."],
       ["Oʻynamasdan oʻyinni kuzata olamanmi?",
        "Ha. Tomoshabinlarga ruxsat beradigan davom etayotgan oʻyinlarni lobbidan jonli kuzatish mumkin: stol va chatni koʻrasiz, lekin choʻntak kartalari yashirin qoladi va harakat qila olmaysiz. Allaqachon boshlangan stolga taklif havolasi uni kuzatish uchun ochadi."],
       ["Ilovaning ichida yordam bormi?",
-       "Ha. Tuzning yordami: veb-mijoz maskoti Tuz xohlasangiz har bir ekranni siz borgan sari tushuntiradi. Uning menyusida qidiruvli toʻliq yordam va “Bu nima?” bor: ekrandagi istalgan narsaga bosing, u nima qilishini aytadi."]
+       "Ha. Tuzning yordami: veb-mijoz maskoti Tuz xohlasangiz har bir ekranni siz borgan sari tushuntiradi. Uning menyusida qidiruvli toʻliq yordam va “Bu nima?” bor: ekrandagi istalgan narsaga bosing, u nima qilishini aytadi."],
+      ["PokerTH hali ham faol rivojlantirilmoqdami?",
+       "Ha. PokerTH 2006-yildan beri erkin dasturiy taʼminot sifatida ishlab chiqilmoqda va hanuz qoʻllab-quvvatlanadi: desktop mijoz va server <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>’da, ushbu veb-mijoz doimiy yangilanib boradi (<a href=\"https://github.com/narmod/pokerth-web-client\">manba kodi va oʻzgarishlar jurnali</a>), rasmiy pokerth.net tarmogʻida esa har kuni oʻyinlar oʻynaladi."]
     ]
   },
   my: {
     title: "အမေးများသော မေးခွန်းများ — PokerTH ဝဘ်ကလိုင်းယင့်",
-    desc: "PokerTH ဝဘ်ကလိုင်းယင့်အကြောင်း အမေးများသော မေးခွန်းများ: ကြော်ငြာမပါ အခမဲ့ပိုကာ၊ ထည့်သွင်းစရာမလိုဘဲ ဘရောက်ဇာတွင် Texas Hold’em၊ အကောင့်များ၊ မိုဘိုင်း၊ အော့ဖ်လိုင်းမုဒ်၊ ဘာသာစကားများနှင့် ကိုယ်ရေးလုံခြုံမှု။",
+    desc: "PokerTH ဝဘ်ကလိုင်းယင့်အကြောင်း အမေးများသော မေးခွန်းများ: ကြော်ငြာမပါ ဒေါင်းလုဒ်မလိုသော အခမဲ့ပိုကာ၊ ဧည့်သည်အဖြစ် ကစားခြင်း၊ လင့်ခ်ဖြင့် သူငယ်ချင်းများ ဖိတ်ခြင်း၊ ပြိုင်ပွဲများ၊ မိုဘိုင်း၊ အော့ဖ်လိုင်းမုဒ်၊ ဘာသာစကားများနှင့် ကိုယ်ရေးလုံခြုံမှု။",
     h1: "PokerTH ဝဘ်ကလိုင်းယင့် — အမေးများသော မေးခွန်းများ",
     qa: [
       ["PokerTH သည် အခမဲ့လား?",
@@ -5420,7 +6251,13 @@ var SEO_FAQ_I18N = {
       ["ကျွန်ုပ်၏ဘရောက်ဇာတွင် အခြားသူများနှင့် Texas Hold’em ကစားနိုင်ပါသလား?",
        "ဟုတ်ကဲ့။ ကမ္ဘာတစ်ဝန်းရှိ ကစားသမားများနှင့် Texas Hold’em ကို တိုက်ရိုက် ကစားရန် တရားဝင် pokerth.net ကွန်ရက်သို့ ဝင်ပါ၊ သို့မဟုတ် သူငယ်ချင်းများ သင့်စားပွဲသို့ တိုက်ရိုက် ရောက်လာစေရန် ဖိတ်ကြားလင့်ခ် ပို့ပါ — အားလုံး ဘရောက်ဇာအတွင်းတွင်ပင်။"],
       ["ကစားရန် အကောင့် လိုပါသလား?",
-       "မလိုပါ။ ဒေသတွင်း / လေ့ကျင့်ရေး မုဒ်တွင် အကောင့်မလိုဘဲ အော့ဖ်လိုင်းတွင် အလုပ်လုပ်သည်။ တရားဝင် pokerth.net ကွန်ရက်တွင် ဧည့်သည်အဖြစ် ပုံမှန် ဂိမ်းများကို ကစားနိုင်သည်; အဆင့်သတ်မှတ်ဂိမ်းများ၊ မှတ်ပုံတင်ထားသူသာ ဝင်နိုင်သော စားပွဲများနှင့် ချတ်အတွက် အခမဲ့ pokerth.net အကောင့်တစ်ခု လိုအပ်သည်။"],
+       "မလိုပါ။ ဒေသတွင်း / လေ့ကျင့်ရေး မုဒ်တွင် အကောင့်မလိုဘဲ အော့ဖ်လိုင်းတွင် အလုပ်လုပ်သည်။ တရားဝင် pokerth.net ကွန်ရက်တွင် ဧည့်သည်အဖြစ် ဝင်ရောက်ပါ: ဆာဗာက ဧည့်သည်အမည်ပြောင် တစ်ခု ပေးမည်ဖြစ်ပြီး ပုံမှန် ဂိမ်းများကို ချက်ချင်း ကစားနိုင်သည်။ LAN သို့မဟုတ် သီးသန့်ဆာဗာတွင် အကောင့် လုံးဝမရှိပါ — အမည်ပြောင်တစ်ခု ရွေးရုံသာ။ ယင်းတို့အနက် မည်သည့်နည်းလမ်းကမျှ အီးမေးလ်လိပ်စာ မတောင်းပါ။ အခမဲ့ pokerth.net အကောင့်ကို အဆင့်သတ်မှတ်ဂိမ်းများ၊ မှတ်ပုံတင်ထားသူသာ ဝင်နိုင်သော စားပွဲများနှင့် ချတ်အတွက်သာ လိုအပ်သည်။"],
+      ["သူငယ်ချင်းများနှင့် ပိုကာကို အွန်လိုင်း မည်သို့ ကစားရမည်နည်း?",
+       "လော်ဘီတွင် စားပွဲတစ်ခု ဖန်တီးပါ — pokerth.net တွင် ဖြစ်စေ၊ မည်သည့် LAN သို့မဟုတ် သီးသန့်ဆာဗာတွင် ဖြစ်စေ — ပြီးလျှင် စောင့်ဆိုင်းခန်းတွင် “သူငယ်ချင်းများကို ဖိတ်ရန်” ကို နှိပ်ပါ။ ဝဘ်ကလိုင်းယင့်က မည်သည့် မက်ဆေ့ချ်အက်ပ်မှမဆို ပို့နိုင်သော ဖိတ်ကြားလင့်ခ်တစ်ခု ပြုလုပ်ပေးသည်။ သူငယ်ချင်းများက ၎င်းကို ဘရောက်ဇာတွင် ဖွင့်နိုင်သည် — iPhone၊ Android သို့မဟုတ် ကွန်ပျူတာပေါ်တွင် ဘာမျှ ဒေါင်းလုဒ်မလုပ်ရဘဲ။ စားပွဲကို သီးသန့်ထားလိုလျှင် စကားဝှက် သတ်မှတ်ပါ: စကားဝှက်သည် လင့်ခ်တွင် ဘယ်တော့မျှ မပါဝင်ပါ။"],
+      ["သူငယ်ချင်းက ကျွန်ုပ်၏ ဖိတ်ကြားလင့်ခ်ကို ဖွင့်လိုက်လျှင် ဘာဖြစ်မည်နည်း?",
+       "လင့်ခ်တွင် စားပွဲနှင့် ဆာဗာ ပါဝင်သည်။ သင့်သူငယ်ချင်းက ဝင်ရောက်သည် — pokerth.net တွင် ဧည့်သည်အဖြစ် သို့မဟုတ် အကောင့်ဖြင့်၊ LAN သို့မဟုတ် သီးသန့်ဆာဗာတွင် အမည်ပြောင်ဖြင့်သာ — ထို့နောက် ဝဘ်ကလိုင်းယင့်က လော်ဘီတွင် ရှာစရာမလိုဘဲ စားပွဲသို့ အလိုအလျောက် ဝင်ပေးသည်။ စကားဝှက်ပါသော စားပွဲက ၎င်း၏ စကားဝှက်ကို တောင်းမည်; စတင်ပြီးသော ဂိမ်းကို ကြည့်ရှုရန် ဖွင့်ပေးမည်။ ဖိတ်ကြားလင့်ခ်များသည် ဝဘ်ကလိုင်းယင့်၏ လုပ်ဆောင်ချက်ဖြစ်ပြီး ၎င်း ချိတ်ဆက်နိုင်သော ဆာဗာတိုင်းတွင် အလုပ်လုပ်သည်။"],
+      ["မှတ်ပုံမတင်ဘဲ PokerTH ကို စမ်းကစားရန် ဒီမိုဆာဗာ ရှိပါသလား?",
+       "ဟုတ်ကဲ့။ ဝင်ရောက်ရန် မျက်နှာပြင်တွင် LAN / သီးသန့်ဆာဗာ ကို ရွေးပြီး ဆာဗာစာရင်းထဲမှ အများသုံး ဒီမိုဆာဗာကို ရွေးပါ: မည်သည့် အမည်ပြောင်ကိုမဆို ရိုက်ထည့်လိုက်လျှင် ၎င်း၏ လော်ဘီသို့ ရောက်ပြီ — မှတ်ပုံတင်စရာမလို၊ အီးမေးလ်လိပ်စာ မလို။ အစိမ်းရောင်အစက်က စာရင်းထဲရှိ မည်သည့်ဆာဗာများ အွန်လိုင်းဖြစ်နေပြီး ကစားသမား မည်မျှ ရှိသည်ကို ပြသည်။"],
       ["မိုဘိုင်းတွင် အလုပ်လုပ်ပါသလား?",
        "ဟုတ်ကဲ့။ ဝဘ်ကလိုင်းယင့်သည် Progressive Web App ဖြစ်သည်: ဒက်စ်တော့၊ တက်ဘလက် သို့မဟုတ် ဖုန်းရှိ မည်သည့် ခေတ်မီဘရောက်ဇာတွင်မဆို အလုပ်လုပ်ပြီး မူရင်းအက်ပ်ကဲ့သို့ ထည့်သွင်းနိုင်သည် — iPhone နှင့် iPad တွင် မျှဝေရန် → “Add to Home Screen” ဖြင့်၊ အခြားနေရာများတွင် ဘရောက်ဇာမီနူး သို့မဟုတ် ထည့်သွင်းခလုတ်မှ။ တစ်ကွက်၏ အကူအညီက သင့်စက်အတွက် အဆင့်များကို ပြသည်။"],
       ["ကွန်ပျူတာနှင့် ကစားနိုင်ပါသလား?",
@@ -5436,18 +6273,22 @@ var SEO_FAQ_I18N = {
       ["ဝဘ်ကလိုင်းယင့်သည် မည်သည့်ဒေတာကို စုဆောင်းသနည်း?",
        "ဖြစ်နိုင်သမျှ အနည်းဆုံး: ဆက်တင်များသည် သင့်ဘရောက်ဇာတွင်သာ ရှိပြီး ခြေရာခံခြင်း သို့မဟုတ် ကြော်ငြာ မသုံးပါ။ pokerth.net အကောင့်ဖြင့် လော့ဂ်အင်ဝင်သည့်အခါ သင့်ဆက်တင်များနှင့် လေ့ကျင့်ရေးဆုဖလားများကို ၎င်းနှင့် စင့်ခ်လုပ်သဖြင့် သင့်အခြားစက်များတွင်လည်း လိုက်ပါသည်။ အသေးစိတ်ကို ကိုယ်ရေးလုံခြုံမှု စာမျက်နှာတွင် ကြည့်ပါ။"],
       ["ကျွန်ုပ်၏ကိုယ်ပိုင်ဆာဗာကို လက်ခံထားနိုင်ပါသလား?",
-       "ဟုတ်ကဲ့။ PokerTH သီးသန့်ဆာဗာနှင့် ဤဝဘ်ကလိုင်းယင့် နှစ်ခုစလုံးသည် ပွင့်လင်းရင်းမြစ်ဖြစ်သဖြင့် LAN တွင် သို့မဟုတ် အင်တာနက်တွင် သင့်ကိုယ်ပိုင် သီးသန့်ပိုကာဆာဗာကို လည်ပတ်နိုင်သည်။"],
+       "ဟုတ်ကဲ့။ PokerTH သီးသန့်ဆာဗာနှင့် ဤဝဘ်ကလိုင်းယင့် နှစ်ခုစလုံးသည် ပွင့်လင်းရင်းမြစ်ဖြစ်သဖြင့် LAN တွင် သို့မဟုတ် အင်တာနက်တွင် သင့်ကိုယ်ပိုင် သီးသန့်ပိုကာဆာဗာကို လည်ပတ်နိုင်သည်။ လူတိုင်းမြင်ရသော စာရင်းတွင် ထည့်လိုလျှင် LAN / သီးသန့်ဆာဗာ ကို ရွေးပြီး ဆာဗာစာရင်း၏ အောက်ခြေရှိ “ကျွန်ုပ်၏ ဆာဗာကို အဆိုပြုရန်” ကို နှိပ်ပါ: စီမံသူများ အတည်ပြုပြီးသည်နှင့် စာရင်းတွင် ပေါ်လာမည်။ ဆာဗာကို အင်တာနက်မှ ချိတ်ဆက်ရောက်ရှိနိုင်ရမည်။"],
       ["အဆင့်သတ်မှတ်ဂိမ်းများနှင့် ရာသီများ မည်သို့ အလုပ်လုပ်သနည်း?",
        "pokerth.net ရှိ အဆင့်သတ်မှတ်ဂိမ်းများတွင် ကစားသမား ၁၀ ဦး ထိုင်ပြီး စားပွဲပြည့်သည်နှင့် စတင်သည်: တစ်ဦးလျှင် ချစ်ပ် ၁၀,၀၀၀၊ လက် ၁၁ ကြိမ်တိုင်း နှစ်ဆတိုးသော small blind ၅၀၊ ကစားရန် ၅ စက္ကန့်။ ၁ မှ ၇ နေရာတို့က အမှတ် ၁၅၊ ၉၊ ၆၊ ၄၊ ၃၊ ၂ နှင့် ၁ ရသည်; သင့်ရမှတ်သည် ဂိမ်းတစ်ခုလျှင် ပျမ်းမျှဖြစ်ပြီး ကစားခဲ့သော ဂိမ်းအရေအတွက်ဖြင့် အလေးပေးတွက်ထားကာ အဆင့်သတ်မှတ်ချက်သည် သုံးလတစ်ကြိမ် ပြန်စသည်။ အခမဲ့ pokerth.net အကောင့်တစ်ခု လိုအပ်သည်။"],
+      ["အခမဲ့ ပိုကာပြိုင်ပွဲများနှင့် ယှဉ်ပြိုင်မှုများ ရှိပါသလား?",
+       "ဟုတ်ကဲ့၊ တစ်နှစ်ပတ်လုံး ရှိပြီး အားလုံး အခမဲ့ဖြစ်သည်။ PokerTH ဂိမ်းတိုင်းသည် ပြိုင်ပွဲတစ်ခုဖြစ်ပြီး pokerth.net အသိုင်းအဝိုင်းကလည်း ကိုယ်ပိုင် အဆင့်စာရင်းများပါသော ပုံမှန် ယှဉ်ပြိုင်မှုများ ကျင်းပသည်: BBC — မိနစ်အနည်းငယ်တိုင်း blinds တက်သော ဂိမ်းများ (<a href=\"https://bbc.pokerth.net/registration\">ပြက္ခဒိန်</a>၊ <a href=\"https://bbc.pokerth.net/results\">ရလဒ်များ</a>၊ <a href=\"https://bbc.pokerth.net/results/ranking\">အဆင့်စာရင်း</a>); WeCup (WEC) — ပိုမို အေးဆေးပြီး မျှတသော အရှိန်ဖြင့် ပြိုင်ပွဲများ (<a href=\"https://wec.pokerth.net/results\">ရလဒ်များ</a>၊ <a href=\"https://wec.pokerth.net/results/ranking\">အဆင့်စာရင်း</a>); နှင့် လစဉ် ကျင်းပသော Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">နောက်ပြိုင်ပွဲနှင့် နောက်ဆုံးအနိုင်ရသူများ</a>၊ <a href=\"https://monthlycup.pokerth.net/registration\">မှတ်ပုံတင်ရန်</a>)။ ရက်စွဲများနှင့် စည်းမျဉ်းများကို ဆိုက်တစ်ခုစီနှင့် <a href=\"https://www.pokerth.net/\">pokerth.net</a> ဖိုရမ်တွင် ကြေညာသည်။ ပါဝင်ရန် အခမဲ့ pokerth.net အကောင့်တစ်ခု လိုအပ်သည်။"],
       ["မကစားဘဲ ဂိမ်းကို ကြည့်ရှုနိုင်ပါသလား?",
        "ဟုတ်ကဲ့။ ကြည့်ရှုသူများကို ခွင့်ပြုထားသော ကစားနေဆဲ ဂိမ်းများကို လော်ဘီမှ တိုက်ရိုက် ကြည့်နိုင်သည်: စားပွဲနှင့် ချတ်ကို မြင်ရသော်လည်း ကိုယ်ပိုင်ဖဲများ ဝှက်ထားဆဲဖြစ်ပြီး သင် မည်သည့်လှုပ်ရှားမှုမျှ မလုပ်နိုင်ပါ။ စတင်ပြီးသော စားပွဲသို့ ဖိတ်ကြားလင့်ခ်သည် ၎င်းကို ကြည့်ရှုရန် ဖွင့်ပေးသည်။"],
       ["အက်ပ်အတွင်း အကူအညီ ရှိပါသလား?",
-       "ဟုတ်ကဲ့။ တစ်ကွက်၏ အကူအညီ: ဝဘ်ကလိုင်းယင့်၏ သင်္ကေတဇာတ်ကောင် တစ်ကွက်သည် သင်လိုချင်လျှင် မျက်နှာပြင်တစ်ခုချင်းစီကို ကစားရင်း ရှင်းပြပေးသည်။ သူ၏မီနူးတွင် ရှာဖွေမှုပါသော အကူအညီအားလုံးနှင့် “ဒါဘာလဲ။” ပါဝင်သည်: မျက်နှာပြင်ပေါ်ရှိ မည်သည့်အရာကိုမဆို နှိပ်လိုက်လျှင် ၎င်းက ဘာလုပ်သည်ကို သူပြောပြသည်။"]
+       "ဟုတ်ကဲ့။ တစ်ကွက်၏ အကူအညီ: ဝဘ်ကလိုင်းယင့်၏ သင်္ကေတဇာတ်ကောင် တစ်ကွက်သည် သင်လိုချင်လျှင် မျက်နှာပြင်တစ်ခုချင်းစီကို ကစားရင်း ရှင်းပြပေးသည်။ သူ၏မီနူးတွင် ရှာဖွေမှုပါသော အကူအညီအားလုံးနှင့် “ဒါဘာလဲ။” ပါဝင်သည်: မျက်နှာပြင်ပေါ်ရှိ မည်သည့်အရာကိုမဆို နှိပ်လိုက်လျှင် ၎င်းက ဘာလုပ်သည်ကို သူပြောပြသည်။"],
+      ["PokerTH ကို ယခုထိ တက်ကြွစွာ ဖွံ့ဖြိုးဆဲလား?",
+       "ဟုတ်ကဲ့။ PokerTH ကို ၂၀၀၆ ခုနှစ်ကတည်းက အခမဲ့ဆော့ဖ်ဝဲအဖြစ် ဖွံ့ဖြိုးလာခဲ့ပြီး ယခုထိ ထိန်းသိမ်းနေဆဲဖြစ်သည်: ဒက်စ်တော့ကလိုင်းယင့်နှင့် ဆာဗာသည် <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> တွင် ရှိသည်၊ ဤဝဘ်ကလိုင်းယင့်ကို အဆက်မပြတ် အပ်ဒိတ်လုပ်နေသည် (<a href=\"https://github.com/narmod/pokerth-web-client\">ရင်းမြစ်ကုဒ်နှင့် ပြောင်းလဲမှုမှတ်တမ်း</a>)၊ တရားဝင် pokerth.net ကွန်ရက်တွင်လည်း နေ့တိုင်း ဂိမ်းများ ကစားနေကြသည်။"]
     ]
   },
   ka: {
     title: "FAQ — PokerTH ვებ-კლიენტი",
-    desc: "ხშირად დასმული კითხვები PokerTH ვებ-კლიენტზე: უფასო პოკერი რეკლამის გარეშე, Texas Hold’em ბრაუზერში ჩამოტვირთვის გარეშე, ანგარიშები, მობილური, ოფლაინ რეჟიმი, ენები და კონფიდენციალურობა.",
+    desc: "ხშირად დასმული კითხვები PokerTH ვებ-კლიენტზე: უფასო პოკერი რეკლამისა და ჩამოტვირთვის გარეშე, თამაში სტუმრად, მეგობრების მოწვევა ბმულით, ტურნირები, მობილური, ოფლაინ რეჟიმი, ენები და კონფიდენციალურობა.",
     h1: "PokerTH ვებ-კლიენტი — ხშირად დასმული კითხვები",
     qa: [
       ["PokerTH უფასოა?",
@@ -5459,7 +6300,13 @@ var SEO_FAQ_I18N = {
       ["შემიძლია ბრაუზერში Texas Hold’em სხვა ადამიანების წინააღმდეგ ვითამაშო?",
        "დიახ. შეუერთდით ოფიციალურ pokerth.net ქსელს და ითამაშეთ Texas Hold’em პირდაპირ რეჟიმში მოთამაშეებთან მთელი მსოფლიოდან, ან გაუგზავნეთ მეგობრებს მოწვევის ბმული, რათა პირდაპირ თქვენს მაგიდასთან მოხვდნენ — ყველაფერი ბრაუზერში."],
       ["თამაშისთვის ანგარიში მჭირდება?",
-       "არა. “ლოკალური / სავარჯიშო” რეჟიმს ანგარიში არ სჭირდება და ოფლაინ მუშაობს. ოფიციალურ pokerth.net ქსელში Normal თამაშებში სტუმრად შეგიძლიათ ითამაშოთ; უფასო pokerth.net ანგარიში საჭიროა Ranking game-ებისთვის, მხოლოდ რეგისტრირებული მოთამაშეებისთვის განკუთვნილი მაგიდებისთვის და ჩატისთვის."],
+       "არა. “ლოკალური / სავარჯიშო” რეჟიმს ანგარიში არ სჭირდება და ოფლაინ მუშაობს. ოფიციალურ pokerth.net ქსელში შედით სტუმრად: სერვერი მოგანიჭებთ სტუმრის მეტსახელს და Normal თამაშებს მაშინვე შეძლებთ. LAN-ში ან გამოყოფილ სერვერზე ანგარიში საერთოდ არ არსებობს — უბრალოდ ირჩევთ მეტსახელს. არცერთი მათგანი ელფოსტის მისამართს არ ითხოვს. უფასო pokerth.net ანგარიში საჭიროა მხოლოდ Ranking game-ებისთვის, მხოლოდ რეგისტრირებული მოთამაშეებისთვის განკუთვნილი მაგიდებისთვის და ჩატისთვის."],
+      ["როგორ ვითამაშო პოკერი ონლაინ მეგობრებთან ერთად?",
+       "შექმენით მაგიდა ლობიში — pokerth.net-ზე ან ნებისმიერ LAN ან გამოყოფილ სერვერზე — და მოსაცდელ ოთახში დააჭირეთ “მეგობრების მოწვევა”-ს. ვებ-კლიენტი ქმნის მოწვევის ბმულს, რომლის გაგზავნაც ნებისმიერი მესენჯერით შეგიძლიათ. მეგობრები მას ბრაუზერში ხსნიან — iPhone-ზე, Android-ზე ან კომპიუტერზე, არაფრის ჩამოტვირთვის გარეშე. თუ მაგიდა კერძო უნდა დარჩეს, დააყენეთ პაროლი: პაროლი ბმულში არასდროს შედის."],
+      ["რა ხდება, როცა მეგობარი ჩემს მოწვევის ბმულს ხსნის?",
+       "ბმული შეიცავს მაგიდასა და სერვერს. თქვენი მეგობარი შედის — სტუმრად ან pokerth.net-ის ანგარიშით, LAN ან გამოყოფილ სერვერზე კი მხოლოდ მეტსახელით — და შემდეგ ვებ-კლიენტი ავტომატურად უერთდება მაგიდას, ლობიში ძებნა არ არის საჭირო. პაროლით დაცული მაგიდა პაროლს მოითხოვს; უკვე დაწყებული თამაში ყურებისთვის იხსნება. მოწვევის ბმულები ვებ-კლიენტის ფუნქციაა და მუშაობს ყველა სერვერზე, რომელსაც ის უკავშირდება."],
+      ["არის სადემონსტრაციო სერვერი, რომ PokerTH რეგისტრაციის გარეშე გამოვცადო?",
+       "დიახ. შესვლის ეკრანზე აირჩიეთ “LAN / გამოყოფილი სერვერი” და სერვერების სიიდან აირჩიეთ საჯარო სადემონსტრაციო სერვერი: ჩაწერეთ ნებისმიერი მეტსახელი და უკვე მის ლობიში ხართ — რეგისტრაციისა და ელფოსტის მისამართის გარეშე. მწვანე წერტილი აჩვენებს, სიის რომელი სერვერებია ონლაინ და რამდენი მოთამაშეა მათზე."],
       ["მობილურზე მუშაობს?",
        "დიახ. ვებ-კლიენტი არის Progressive Web App: მუშაობს ნებისმიერ თანამედროვე ბრაუზერში კომპიუტერზე, პლანშეტსა და ტელეფონზე და შეიძლება დაყენდეს, როგორც ჩვეულებრივი აპი — iPhone-სა და iPad-ზე Share → Add to Home Screen-ით, სხვაგან ბრაუზერის მენიუდან ან ინსტალაციის ღილაკით. ტუზის დახმარება აჩვენებს ნაბიჯებს თქვენი მოწყობილობისთვის."],
       ["შემიძლია კომპიუტერის წინააღმდეგ თამაში?",
@@ -5475,18 +6322,22 @@ var SEO_FAQ_I18N = {
       ["რა მონაცემებს აგროვებს ვებ-კლიენტი?",
        "მინიმალურად შესაძლებელს: პარამეტრები თქვენს ბრაუზერში რჩება და ტრეკინგი ან რეკლამა არ გამოიყენება. pokerth.net ანგარიშით შესვლისას თქვენი პარამეტრები და სავარჯიშო ტროფეები მასთან სინქრონიზდება, რათა სხვა მოწყობილობებზეც გამოგყვეთ. დეტალებისთვის იხილეთ კონფიდენციალურობის გვერდი."],
       ["შემიძლია საკუთარი სერვერის გაშვება?",
-       "დიახ. PokerTH dedicated server-იც და ეს ვებ-კლიენტიც ღია კოდისაა, ამიტომ შეგიძლიათ საკუთარი კერძო პოკერის სერვერი გაუშვათ LAN-ში ან ინტერნეტში."],
+       "დიახ. PokerTH dedicated server-იც და ეს ვებ-კლიენტიც ღია კოდისაა, ამიტომ შეგიძლიათ საკუთარი კერძო პოკერის სერვერი გაუშვათ LAN-ში ან ინტერნეტში. რომ ის ყველასთვის გამოჩნდეს, აირჩიეთ “LAN / გამოყოფილი სერვერი”, შემდეგ სერვერების სიის ბოლოში — “ჩემი სერვერის შეთავაზება”: ადმინისტრატორების დადასტურების შემდეგ ის სიაში გამოჩნდება. სერვერი ინტერნეტიდან ხელმისაწვდომი უნდა იყოს."],
       ["როგორ მუშაობს Ranking game-ები და სეზონები?",
        "pokerth.net-ზე Ranking game-ში 10 მოთამაშე ჯდება და თამაში იწყება, როგორც კი მაგიდა გაივსება: თითოეულს 10 000 ჩიპი აქვს, small blind 50-ია და ყოველ 11 დარიგებაში ორმაგდება, სვლაზე კი 5 წამია. 1-დან 7-მდე ადგილები იღებს 15, 9, 6, 4, 3, 2 და 1 ქულას; თქვენი შედეგი არის საშუალო ქულა თამაშზე, შეწონილი ნათამაშები თამაშების რაოდენობით, ხოლო რეიტინგი ყოველ კვარტალში თავიდან იწყება. საჭიროა უფასო pokerth.net ანგარიში."],
+      ["არის უფასო პოკერის ტურნირები და შეჯიბრებები?",
+       "დიახ, მთელი წლის განმავლობაში და ყველა უფასოა. PokerTH-ის ყოველი თამაში ტურნირია, ხოლო pokerth.net-ის საზოგადოება ასევე რეგულარულ შეჯიბრებებს მართავს საკუთარი რეიტინგებით: BBC — თამაშები, სადაც ბლაინდები ყოველ რამდენიმე წუთში იზრდება (<a href=\"https://bbc.pokerth.net/registration\">კალენდარი</a>, <a href=\"https://bbc.pokerth.net/results\">შედეგები</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">რეიტინგი</a>); WeCup (WEC) — ტურნირები უფრო მშვიდი, დაბალანსებული ტემპით (<a href=\"https://wec.pokerth.net/results\">შედეგები</a>, <a href=\"https://wec.pokerth.net/results/ranking\">რეიტინგი</a>); და Monthly Cup, რომელიც ყოველთვიურად იმართება (<a href=\"https://monthlycup.pokerth.net/\">შემდეგი თასი და ბოლო გამარჯვებულები</a>, <a href=\"https://monthlycup.pokerth.net/registration\">რეგისტრაცია</a>). თარიღები და წესები ცხადდება თითოეულ საიტზე და <a href=\"https://www.pokerth.net/\">pokerth.net</a>-ის ფორუმზე. მონაწილეობისთვის საჭიროა უფასო pokerth.net ანგარიში."],
       ["შემიძლია თამაშის ყურება თამაშის გარეშე?",
        "დიახ. მიმდინარე თამაშები, რომლებიც მაყურებლებს იძლევა, ლობიდან პირდაპირ შეგიძლიათ უყუროთ: ხედავთ მაგიდას და ჩატს, მაგრამ პირადი კარტები დაფარული რჩება და მოქმედება არ შეგიძლიათ. უკვე დაწყებულ მაგიდაზე მოწვევის ბმული მას ყურებისთვის ხსნის."],
       ["არის აპში დახმარება?",
-       "დიახ. ტუზის დახმარება: ტუზი, ვებ-კლიენტის მასკოტი, ყოველ ეკრანს ახსნის, თუ მოისურვებთ. მისი მენიუ მთელ დახმარებას შეიცავს ძიებით, და “ეს რა არის?”: შეეხეთ ეკრანზე ნებისმიერ რამეს და ის გეტყვით, რას აკეთებს."]
+       "დიახ. ტუზის დახმარება: ტუზი, ვებ-კლიენტის მასკოტი, ყოველ ეკრანს ახსნის, თუ მოისურვებთ. მისი მენიუ მთელ დახმარებას შეიცავს ძიებით, და “ეს რა არის?”: შეეხეთ ეკრანზე ნებისმიერ რამეს და ის გეტყვით, რას აკეთებს."],
+      ["PokerTH ჯერ კიდევ აქტიურად ვითარდება?",
+       "დიახ. PokerTH 2006 წლიდან ვითარდება როგორც თავისუფალი პროგრამა და დღემდე მხარდაჭერილია: დესკტოპ კლიენტი და სერვერი <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>-ზეა, ეს ვებ-კლიენტი მუდმივად განახლდება (<a href=\"https://github.com/narmod/pokerth-web-client\">წყაროს კოდი და ცვლილებების ჟურნალი</a>), ოფიციალურ pokerth.net ქსელში კი ყოველდღე თამაშობენ."]
     ],
   },
   kk: {
     title: "Жиі қойылатын сұрақтар — PokerTH веб-клиенті",
-    desc: "PokerTH веб-клиенті туралы жиі қойылатын сұрақтар: жарнамасыз тегін покер, ештеңе орнатпай браузерде Texas Hold’em ойнау, тіркелгілер, мобильді құрылғылар, офлайн режим, тілдер және құпиялылық.",
+    desc: "PokerTH веб-клиенті туралы жиі қойылатын сұрақтар: жарнамасыз әрі жүктеусіз тегін покер, қонақ ретінде немесе тіркелгісіз ойнау, достарды сілтеме арқылы шақыру, турнирлер, мобильді, офлайн режим, тілдер және құпиялылық.",
     h1: "PokerTH веб-клиенті — Жиі қойылатын сұрақтар",
     qa: [
       ["PokerTH тегін бе?",
@@ -5498,7 +6349,13 @@ var SEO_FAQ_I18N = {
       ["Браузерде Texas Hold’em-ді басқа адамдарға қарсы ойнай аламын ба?",
        "Иә. Бүкіл әлемдегі ойыншыларға қарсы тікелей Texas Hold’em ойнау үшін ресми pokerth.net желісіне қосылыңыз немесе достарыңыз тікелей үстеліңізге түсуі үшін шақыру сілтемесін жіберіңіз — бәрі браузер ішінде."],
       ["Ойнау үшін тіркелгі керек пе?",
-       "Жоқ. «Жергілікті / жаттығу» режиміне тіркелгі қажет емес, ол офлайн жұмыс істейді. Ресми pokerth.net желісінде «Қалыпты» ойындарды қонақ ретінде ойнауға болады; «Рейтингтік ойын», тек тіркелген ойыншыларға арналған үстелдер және чат үшін тегін pokerth.net тіркелгісі керек."],
+       "Жоқ. «Жергілікті / жаттығу» режиміне тіркелгі қажет емес, ол офлайн жұмыс істейді. Ресми pokerth.net желісінде қонақ ретінде кіріңіз: сервер сізге қонақ лақап атын береді, және «Қалыпты» ойындарды бірден ойнай аласыз. LAN-да немесе арнайы серверде тіркелгі мүлдем жоқ — тек лақап ат таңдайсыз. Бұлардың ешқайсысы электрондық пошта мекенжайын сұрамайды. Тегін pokerth.net тіркелгісі «Рейтингтік ойын», тіркелген ойыншыларға ғана арналған үстелдер және чат үшін ғана керек."],
+      ["Достарыммен онлайн покерді қалай ойнаймын?",
+       "Лоббиде үстел құрыңыз — pokerth.net-те немесе кез келген LAN не арнайы серверде — және күту бөлмесінде «Достарды шақыру» түймесін басыңыз. Веб-клиент кез келген мессенджер арқылы жіберуге болатын шақыру сілтемесін жасайды. Достарыңыз оны браузерде ашады — iPhone, Android немесе компьютерде, ештеңе жүктемей. Үстел жабық болуы керек болса, құпиясөз орнатыңыз: құпиясөз ешқашан сілтемеге кірмейді."],
+      ["Досым шақыру сілтемемді ашқанда не болады?",
+       "Сілтемеде үстел мен сервер көрсетілген. Досыңыз кіреді — pokerth.net-те қонақ ретінде немесе тіркелгімен, LAN-да не арнайы серверде жай лақап атпен — содан кейін веб-клиент үстелге автоматты түрде қосылады, оны лоббиден іздеудің қажеті жоқ. Құпиясөзбен қорғалған үстел құпиясөзді сұрайды; басталып кеткен ойын көру үшін ашылады. Шақыру сілтемелері — веб-клиенттің мүмкіндігі, олар веб-клиент қосыла алатын кез келген серверде жұмыс істейді."],
+      ["PokerTH-ті тіркелмей сынап көру үшін демо-сервер бар ма?",
+       "Иә. Кіру экранында «LAN / Арнайы сервер» бөлімін таңдап, серверлер тізімінен ашық демо-серверді таңдаңыз: кез келген лақап атты жазсаңыз болды, оның лоббиіндесіз — тіркелу де, электрондық пошта да жоқ. Жасыл нүкте тізімдегі қай серверлердің онлайн екенін және оларда қанша ойыншы бар екенін көрсетеді."],
       ["Ол мобильді құрылғыда жұмыс істей ме?",
        "Иә. Веб-клиент — Progressive Web App: ол компьютердегі, планшеттегі немесе телефондағы кез келген заманауи браузерде жұмыс істейді және кәдімгі қолданба сияқты орнатылады — iPhone мен iPad-та «Бөлісу» → «Басты экранға қосу» арқылы, басқа жерде браузер мәзірінен немесе орнату түймесінен. Тұздың көмегі құрылғыңызға арналған қадамдарды көрсетеді."],
       ["Компьютерге қарсы ойнай аламын ба?",
@@ -5514,18 +6371,22 @@ var SEO_FAQ_I18N = {
       ["Веб-клиент қандай деректерді жинайды?",
        "Мүмкіндігінше аз: баптаулар браузеріңізде қалады, бақылау да, жарнама да қолданылмайды. pokerth.net тіркелгісімен кірген кезде опцияларыңыз бен жаттығу кубоктарыңыз онымен синхрондалып, басқа құрылғыларыңызға да ілеседі. Толығырақ құпиялылық бетінен қараңыз."],
       ["Өз серверімді орналастыра аламын ба?",
-       "Иә. PokerTH арнайы сервері де, осы веб-клиент те ашық бастапқы кодты, сондықтан LAN-да немесе интернетте өз жеке покер серверіңізді іске қоса аласыз."],
+       "Иә. PokerTH арнайы сервері де, осы веб-клиент те ашық бастапқы кодты, сондықтан LAN-да немесе интернетте өз жеке покер серверіңізді іске қоса аласыз. Оны барлығы көретін тізімге қосу үшін «LAN / Арнайы сервер» бөлімін таңдап, серверлер тізімінің төменгі жағындағы «Серверімді ұсыну» түймесін басыңыз: әкімшілер мақұлдағаннан кейін ол тізімде пайда болады. Сервер интернеттен қолжетімді болуы керек."],
       ["Рейтингтік ойындар мен маусымдар қалай жұмыс істейді?",
        "pokerth.net-тегі рейтингтік ойынға 10 ойыншы отырады және үстел толған бойда басталады: әрқайсысында 10 000 фишка, кіші блайнд 50 және әр 11 таратудан кейін екі есе өседі, әрекетке 5 секунд беріледі. 1-ден 7-ге дейінгі орындар 15, 9, 6, 4, 3, 2 және 1 ұпай алады; сіздің ұпайыңыз — ойнаған ойындар санымен өлшенген бір ойынға шаққандағы орташа, ал рейтинг әр тоқсан сайын қайта басталады. Тегін pokerth.net тіркелгісі керек."],
+      ["Тегін покер турнирлері мен жарыстар бар ма?",
+       "Иә, жыл бойы және бәрі тегін. PokerTH-тегі әр ойын — турнир, ал pokerth.net қауымдастығы өз рейтингтері бар тұрақты жарыстар да өткізеді: BBC — блайндтар бірнеше минут сайын өсетін ойындар (<a href=\"https://bbc.pokerth.net/registration\">күнтізбе</a>, <a href=\"https://bbc.pokerth.net/results\">нәтижелер</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">рейтинг</a>); WeCup (WEC) — сабырлырақ, теңгерімді қарқындағы турнирлер (<a href=\"https://wec.pokerth.net/results\">нәтижелер</a>, <a href=\"https://wec.pokerth.net/results/ranking\">рейтинг</a>); және ай сайын өтетін Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">келесі кубок және соңғы жеңімпаздар</a>, <a href=\"https://monthlycup.pokerth.net/registration\">тіркелу</a>). Күндері мен ережелері әр сайтта және <a href=\"https://www.pokerth.net/\">pokerth.net</a> форумында жарияланады. Қатысу үшін тегін pokerth.net тіркелгісі керек."],
       ["Ойнамай-ақ ойынды көре аламын ба?",
        "Иә. Көрермендерге рұқсат беретін жүріп жатқан ойындарды лоббиден тікелей көруге болады: үстелді және чатты көресіз, бірақ жеке карталар жасырын болып қалады және әрекет жасай алмайсыз. Басталып кеткен үстелге шақыру сілтемесі оны көру үшін ашады."],
       ["Қолданбаның ішінде көмек бар ма?",
-       "Иә. Тұздың көмегі: Тұз — веб-клиенттің маскоты — қаласаңыз, әр экранды жүре отырып түсіндіреді. Оның мәзірінде іздеуі бар бүкіл көмек және «Бұл не?» бар: экрандағы кез келген нәрсені түртіңіз, ол не істейтінін айтады."]
+       "Иә. Тұздың көмегі: Тұз — веб-клиенттің маскоты — қаласаңыз, әр экранды жүре отырып түсіндіреді. Оның мәзірінде іздеуі бар бүкіл көмек және «Бұл не?» бар: экрандағы кез келген нәрсені түртіңіз, ол не істейтінін айтады."],
+      ["PokerTH әлі де белсенді дамып жатыр ма?",
+       "Иә. PokerTH 2006 жылдан бері еркін бағдарлама ретінде әзірленіп келеді және әлі күнге дейін қолдау көрсетіледі: жұмыс үстелі клиенті мен сервер <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>-та, бұл веб-клиент үнемі жаңартылып отырады (<a href=\"https://github.com/narmod/pokerth-web-client\">бастапқы код және өзгерістер журналы</a>), ал ресми pokerth.net желісінде күн сайын ойындар ойналады."]
     ],
   },
   ky: {
     title: "Көп берилүүчү суроолор — PokerTH веб-кардары",
-    desc: "PokerTH веб-кардары боюнча көп берилүүчү суроолор: жарнамасыз акысыз покер, эч нерсе орнотпой браузерде Texas Hold’em ойноо, аккаунттар, телефондор, оффлайн режим, тилдер жана купуялуулук.",
+    desc: "PokerTH веб-кардары боюнча көп берилүүчү суроолор: жарнамасыз жана жүктөөсүз акысыз покер, конок катары же аккаунтсуз ойноо, досторду шилтеме менен чакыруу, турнирлер, телефондор, оффлайн режим, тилдер жана купуялуулук.",
     h1: "PokerTH веб-кардары — Көп берилүүчү суроолор",
     qa: [
       ["PokerTH акысызбы?",
@@ -5537,7 +6398,13 @@ var SEO_FAQ_I18N = {
       ["Браузеримде башка адамдар менен Texas Hold’em ойной аламбы?",
        "Ооба. Дүйнөнүн бардык бурчунан келген оюнчулар менен түз Texas Hold’em ойноо үчүн расмий pokerth.net тармагына кошулуңуз, же досторуңуз түз эле үстөлүңүзгө келиши үчүн чакыруу шилтемесин жөнөтүңүз — баары браузерде."],
       ["Ойноо үчүн аккаунт керекпи?",
-       "Жок. «Локалдык / машыгуу» режимине аккаунт керек эмес, ал оффлайн иштейт. Расмий pokerth.net тармагында «Кадимки» оюндарды конок катары ойной аласыз; «Рейтингдик оюн», катталган оюнчуларга гана арналган үстөлдөр жана чат үчүн акысыз pokerth.net аккаунту керек."],
+       "Жок. «Локалдык / машыгуу» режимине аккаунт керек эмес, ал оффлайн иштейт. Расмий pokerth.net тармагында конок катары кириңиз: сервер сизге конок лакап атын берет жана «Кадимки» оюндарды дароо ойной аласыз. LAN'да же атайын серверде аккаунт такыр жок — жөн гана лакап ат тандайсыз. Алардын бири да электрондук почта дарегин сурабайт. Акысыз pokerth.net аккаунту «Рейтингдик оюн», катталган оюнчуларга гана арналган үстөлдөр жана чат үчүн гана керек."],
+      ["Достор менен онлайн покерди кантип ойнойм?",
+       "Лоббиде үстөл түзүңүз — pokerth.net'те же каалаган LAN же атайын серверде — жана күтүү бөлмөсүндө «Досторду чакыруу» баскычын басыңыз. Веб-кардар каалаган мессенджер аркылуу жөнөтүүгө боло турган чакыруу шилтемесин түзөт. Досторуңуз аны браузерде ачышат — iPhone, Android же компьютерде, эч нерсе жүктөбөй. Үстөл жабык бойдон калышы керек болсо, сырсөз коюңуз: сырсөз эч качан шилтемеге кирбейт."],
+      ["Досум чакыруу шилтемемди ачканда эмне болот?",
+       "Шилтемеде үстөл менен сервер көрсөтүлгөн. Досуңуз кирет — pokerth.net'те конок катары же аккаунт менен, LAN'да же атайын серверде жөн гана лакап ат менен — андан кийин веб-кардар үстөлгө автоматтык түрдө кошулат, аны лоббиден издөөнүн кереги жок. Сырсөз менен корголгон үстөл сырсөздү сурайт; башталып калган оюн көрүү үчүн ачылат. Чакыруу шилтемелери — веб-кардардын функциясы, алар веб-кардар туташа алган ар бир серверде иштейт."],
+      ["PokerTH'ти катталбай сынап көрүү үчүн демо-сервер барбы?",
+       "Ооба. Кирүү экранында «LAN / Атайын сервер» бөлүмүн тандап, серверлер тизмесинен ачык демо-серверди тандаңыз: каалаган лакап атты жазсаңыз эле анын лоббисиндесиз — каттоо да, электрондук почта да жок. Жашыл чекит тизмедеги кайсы серверлер онлайн экенин жана аларда канча оюнчу бар экенин көрсөтөт."],
       ["Телефондо иштейби?",
        "Ооба. Веб-кардар — Progressive Web App: ал компьютерде, планшетте же телефондо каалаган заманбап браузерде иштейт жана кадимки колдонмодой орнотулат — iPhone жана iPad түзмөктөрүндө Бөлүшүү → «Башкы экранга кошуу» аркылуу, башка түзмөктөрдө браузердин менюсунан же орнотуу баскычынан. Туздун жардамы түзмөгүңүз үчүн кадамдарды көрсөтөт."],
       ["Компьютерге каршы ойной аламбы?",
@@ -5553,18 +6420,22 @@ var SEO_FAQ_I18N = {
       ["Веб-кардар кандай маалыматтарды чогултат?",
        "Мүмкүн болушунча аз: жөндөөлөр браузериңизде калат, көз салуу же жарнама колдонулбайт. pokerth.net аккаунту менен киргениңизде опцияларыңыз жана машыгуу кубокторуңуз ага синхрондолот, ошондо алар башка түзмөктөрүңүзгө да көчөт. Толук маалымат үчүн купуялуулук барагын караңыз."],
       ["Өз серверимди жайгаштыра аламбы?",
-       "Ооба. PokerTH атайын сервери да, бул веб-кардар да ачык булактуу, ошондуктан LAN'да же интернетте жеке покер серверин иштете аласыз."],
+       "Ооба. PokerTH атайын сервери да, бул веб-кардар да ачык булактуу, ошондуктан LAN'да же интернетте жеке покер серверин иштете аласыз. Аны баарына көрүнгөн тизмеге кошуу үчүн «LAN / Атайын сервер» бөлүмүн тандап, серверлер тизмесинин ылдый жагындагы «Серверимди сунуштоо» баскычын басыңыз: администраторлор жактыргандан кийин ал тизмеде пайда болот. Сервер интернеттен жеткиликтүү болушу керек."],
       ["Рейтингдик оюндар жана сезондор кантип иштейт?",
        "pokerth.net тармагындагы рейтингдик оюнга 10 оюнчу отурат жана үстөл толгондо дароо башталат: ар бирине 10 000 чип, кичи блайнд 50 жана ар 11 колдон кийин эки эсе өсөт, аракет кылууга 5 секунд берилет. 1-ден 7-орунга чейин 15, 9, 6, 4, 3, 2 жана 1 упай берилет; сиздин упайыңыз — ойногон оюндардын санына жараша салмактанган бир оюнга орточо упай, ал эми рейтинг ар чейректе кайрадан башталат. Акысыз pokerth.net аккаунту керек."],
+      ["Акысыз покер турнирлери жана мелдештер барбы?",
+       "Ооба, жыл бою жана баары акысыз. PokerTH'теги ар бир оюн — турнир, ал эми pokerth.net коомчулугу өз рейтингдери бар үзгүлтүксүз мелдештерди да өткөрөт: BBC — блайнддар бир нече мүнөт сайын өскөн оюндар (<a href=\"https://bbc.pokerth.net/registration\">календарь</a>, <a href=\"https://bbc.pokerth.net/results\">жыйынтыктар</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">рейтинг</a>); WeCup (WEC) — токтоо, тең салмактуу темптеги турнирлер (<a href=\"https://wec.pokerth.net/results\">жыйынтыктар</a>, <a href=\"https://wec.pokerth.net/results/ranking\">рейтинг</a>); жана ай сайын өтүүчү Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">кийинки кубок жана акыркы жеңүүчүлөр</a>, <a href=\"https://monthlycup.pokerth.net/registration\">каттоо</a>). Даталары жана эрежелери ар бир сайтта жана <a href=\"https://www.pokerth.net/\">pokerth.net</a> форумунда жарыяланат. Катышуу үчүн акысыз pokerth.net аккаунту керек."],
       ["Ойнобой туруп оюнду көрсөм болобу?",
        "Ооба. Көрүүчүлөргө уруксат берген жүрүп жаткан оюндарды лоббиден түз эфирде көрсө болот: үстөлдү жана чатты көрөсүз, бирок жеке карталар жашыруун бойдон калат жана аракет кыла албайсыз. Башталып калган үстөлгө чакыруу шилтемеси аны көрүү үчүн ачат."],
       ["Колдонмонун ичинде жардам барбы?",
-       "Ооба. Туздун жардамы: Туз — веб-кардардын маскоту — кааласаңыз, ар бир экранды сиз жүрүп баратканда түшүндүрөт. Анын менюсунда издөөсү бар бүт жардам жана «Бул эмне?» бар: экрандагы каалаган нерсени бассаңыз, ал эмне кылаарын айтат."]
+       "Ооба. Туздун жардамы: Туз — веб-кардардын маскоту — кааласаңыз, ар бир экранды сиз жүрүп баратканда түшүндүрөт. Анын менюсунда издөөсү бар бүт жардам жана «Бул эмне?» бар: экрандагы каалаган нерсени бассаңыз, ал эмне кылаарын айтат."],
+      ["PokerTH дагы эле активдүү иштелип жатабы?",
+       "Ооба. PokerTH 2006-жылдан бери эркин программа катары иштелип чыгып келет жана дагы эле колдоого алынат: десктоп колдонмосу жана сервер <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>'та, бул веб-кардар үзгүлтүксүз жаңыланып турат (<a href=\"https://github.com/narmod/pokerth-web-client\">булак коду жана өзгөрүүлөр тизмеси</a>), ал эми расмий pokerth.net тармагында күн сайын оюндар ойнолот."]
     ],
   },
   si: {
     title: "නිති අසන පැන — PokerTH වෙබ් සේවාලාභියා",
-    desc: "PokerTH වෙබ් සේවාලාභියා ගැන නිති අසන ප්‍රශ්න: දැන්වීම් නැති නොමිලේ පෝකර්, කිසිවක් ස්ථාපනය නොකර බ්‍රවුසරයේ Texas Hold’em ක්‍රීඩා කිරීම, ගිණුම්, ජංගම, මාර්ගගත නොවන ප්‍රකාරය, භාෂා සහ පෞද්ගලිකත්වය.",
+    desc: "PokerTH වෙබ් සේවාලාභියා ගැන නිති අසන ප්‍රශ්න: දැන්වීම් හා බාගැනීම් නැති නොමිලේ පෝකර්, අමුත්තෙකු ලෙස හෝ ගිණුමක් නොමැතිව ක්‍රීඩා කිරීම, සබැඳියකින් මිතුරන්ට ආරාධනා, තරඟාවලි, ජංගම, මාර්ගගත නොවන ප්‍රකාරය, භාෂා සහ පෞද්ගලිකත්වය.",
     h1: "PokerTH වෙබ් සේවාලාභියා — නිති අසන ප්‍රශ්න",
     qa: [
       ["PokerTH නොමිලේද?",
@@ -5576,7 +6447,13 @@ var SEO_FAQ_I18N = {
       ["මගේ බ්‍රවුසරයේ අනෙක් පුද්ගලයන්ට එරෙහිව Texas Hold’em ක්‍රීඩා කළ හැකිද?",
        "ඔව්. ලොව පුරා ක්‍රීඩකයන්ට එරෙහිව සජීවී Texas Hold’em ක්‍රීඩා කිරීමට නිල pokerth.net ජාලයට එක්වන්න, නැතහොත් මිතුරන් සෘජුවම ඔබේ මේසයට පැමිණෙන සේ ආරාධනා සබැඳියක් යවන්න — සියල්ල බ්‍රවුසරය තුළමයි."],
       ["ක්‍රීඩා කිරීමට ගිණුමක් අවශ්‍යද?",
-       "නැත. දේශීය / පුහුණුව ප්‍රකාරයට ගිණුමක් අවශ්‍ය නැති අතර එය මාර්ගගත නොවීත් ක්‍රියා කරයි. නිල pokerth.net ජාලයේ ඔබට අමුත්තෙකු ලෙස සාමාන්‍ය ක්‍රීඩා කළ හැක; ශ්‍රේණිගත ක්‍රීඩා, ලියාපදිංචි ක්‍රීඩකයන්ට පමණක් වූ මේස සහ චැට් සඳහා නොමිලේ pokerth.net ගිණුමක් අවශ්‍යයි."],
+       "නැත. දේශීය / පුහුණුව ප්‍රකාරයට ගිණුමක් අවශ්‍ය නැති අතර එය මාර්ගගත නොවීත් ක්‍රියා කරයි. නිල pokerth.net ජාලයට අමුත්තෙකු ලෙස පිවිසෙන්න: සේවාදායකය ඔබට අමුත්තා අන්වර්ථ නාමයක් ලබා දෙන අතර ඔබට වහාම සාමාන්‍ය ක්‍රීඩා කළ හැක. LAN එකක හෝ කැපවූ සේවාදායකයක ගිණුමක් කිසිසේත් නැත — අන්වර්ථ නාමයක් තෝරාගන්න පමණයි. මේ කිසිවක් ඊමේල් ලිපිනයක් ඉල්ලන්නේ නැත. නොමිලේ pokerth.net ගිණුමක් අවශ්‍ය වන්නේ ශ්‍රේණිගත ක්‍රීඩා, ලියාපදිංචි ක්‍රීඩකයන්ට පමණක් වූ මේස සහ චැට් සඳහා පමණි."],
+      ["මිතුරන් සමඟ මාර්ගගතව පෝකර් ක්‍රීඩා කරන්නේ කෙසේද?",
+       "ලොබියේ මේසයක් සාදන්න — pokerth.net හි හෝ ඕනෑම LAN හෝ කැපවූ සේවාදායකයක — ඉන්පසු පොරොත්තු කාමරයේ « මිතුරන්ට ආරාධනා කරන්න » ඔබන්න. වෙබ් සේවාලාභියා ආරාධනා සබැඳියක් සාදයි; ඔබට එය ඕනෑම මැසෙන්ජරයක් හරහා යැවිය හැක. ඔබේ මිතුරන් එය ඔවුන්ගේ බ්‍රවුසරයේ — iPhone, Android හෝ පරිගණකයක — විවෘත කරයි, කිසිවක් බාගත කිරීමට අවශ්‍ය නැත. මේසය පෞද්ගලිකව තබා ගැනීමට අවශ්‍ය නම් මුරපදයක් සකසන්න: මුරපදය කිසි විටෙක සබැඳියේ කොටසක් නොවේ."],
+      ["මිතුරෙකු මගේ ආරාධනා සබැඳිය විවෘත කළ විට කුමක් සිදුවේද?",
+       "සබැඳියේ මේසය සහ සේවාදායකය අඩංගු වේ. ඔබේ මිතුරා පිවිසෙයි — pokerth.net හි අමුත්තෙකු ලෙස හෝ ගිණුමක් සමඟ, LAN හෝ කැපවූ සේවාදායකයක අන්වර්ථ නාමයක් පමණක් සමඟ — ඉන්පසු ලොබියේ සෙවීමට අවශ්‍ය නොවී වෙබ් සේවාලාභියා ස්වයංක්‍රීයව එම මේසයට එක්වේ. මුරපදයකින් ආරක්ෂිත මේසයක් එහි මුරපදය ඉල්ලයි; දැනටමත් ආරම්භ වූ ක්‍රීඩාවක් නැරඹීමට විවෘත වේ. ආරාධනා සබැඳි වෙබ් සේවාලාභියාගේ විශේෂාංගයක් වන අතර එයට සම්බන්ධ විය හැකි සෑම සේවාදායකයකම ක්‍රියා කරයි."],
+      ["ලියාපදිංචි නොවී PokerTH අත්හදා බැලීමට ආදර්ශන සේවාදායකයක් තිබේද?",
+       "ඔව්. පිවිසුම් තිරයේ LAN / කැපවූ සේවාදායකය තෝරා, සේවාදායක ලැයිස්තුවෙන් පොදු ආදර්ශන සේවාදායකය තෝරන්න: ඕනෑම අන්වර්ථ නාමයක් ටයිප් කළ විට ඔබ එහි ලොබියට පිවිසේ — ලියාපදිංචියක් නැත, ඊමේල් ලිපිනයක් නැත. ලැයිස්තුවේ කුමන සේවාදායක මාර්ගගතව තිබේද සහ ඒවායේ ක්‍රීඩකයන් කී දෙනෙක් සිටීද යන්න කොළ පැහැති තිතක් පෙන්වයි."],
       ["එය ජංගම දුරකථනයේ ක්‍රියා කරයිද?",
        "ඔව්. වෙබ් සේවාලාභියා Progressive Web App එකකි: එය ඩෙස්ක්ටොප්, ටැබ්ලට් හෝ දුරකථනයේ ඕනෑම නවීන බ්‍රවුසරයක ධාවනය වන අතර ස්වදේශීය යෙදුමක් මෙන් ස්ථාපනය කළ හැක — iPhone සහ iPad හි බෙදාගැනීම → “Add to Home Screen” මගින්, වෙනත් තැන්වල බ්‍රවුසර මෙනුවෙන් හෝ ස්ථාපන බොත්තමෙන්. ඒස්ගේ උදව් ඔබේ උපාංගය සඳහා පියවර පෙන්වයි."],
       ["පරිගණකයට එරෙහිව ක්‍රීඩා කළ හැකිද?",
@@ -5592,13 +6469,17 @@ var SEO_FAQ_I18N = {
       ["වෙබ් සේවාලාභියා රැස් කරන දත්ත මොනවාද?",
        "හැකි තරම් අඩුවෙන්: සැකසුම් ඔබේ බ්‍රවුසරයේ රැඳෙන අතර ලුහුබැඳීමක් හෝ දැන්වීම්කරණයක් භාවිත නොවේ. ඔබ pokerth.net ගිණුමකින් පිවිසෙන විට, ඔබේ විකල්ප සහ පුහුණු කුසලාන ඒ සමඟ සමමුහුර්ත වන බැවින් ඒවා ඔබේ අනෙක් උපාංගවලටද ඔබ පසුපස එයි. විස්තර සඳහා පෞද්ගලිකත්ව පිටුව බලන්න."],
       ["මගේම සේවාදායකයක් සත්කාරක කළ හැකිද?",
-       "ඔව්. PokerTH කැපවූ සේවාදායකය සහ මෙම වෙබ් සේවාලාභියා යන දෙකම විවෘත මූලාශ්‍ර වන බැවින් ඔබට LAN එකක හෝ අන්තර්ජාලයේ ඔබේම පෞද්ගලික පෝකර් සේවාදායකයක් ධාවනය කළ හැක."],
+       "ඔව්. PokerTH කැපවූ සේවාදායකය සහ මෙම වෙබ් සේවාලාභියා යන දෙකම විවෘත මූලාශ්‍ර වන බැවින් ඔබට LAN එකක හෝ අන්තර්ජාලයේ ඔබේම පෞද්ගලික පෝකර් සේවාදායකයක් ධාවනය කළ හැක. එය සැමට පෙනෙන සේ ලැයිස්තුගත කිරීමට, LAN / කැපවූ සේවාදායකය තෝරා, සේවාදායක ලැයිස්තුවේ පහළ ඇති « මගේ සේවාදායකය යෝජනා කරන්න » ඔබන්න: පරිපාලකයින් අනුමත කළ පසු එය ලැයිස්තුවේ දිස්වේ. සේවාදායකය අන්තර්ජාලයෙන් ළඟා විය හැකි විය යුතුය."],
       ["ශ්‍රේණිගත ක්‍රීඩා සහ වාර ක්‍රියා කරන්නේ කෙසේද?",
        "pokerth.net හි ශ්‍රේණිගත ක්‍රීඩාවල ක්‍රීඩකයන් 10 දෙනෙක් හිඳගන්නා අතර මේසය පිරුණු වහාම ආරම්භ වේ: සෑම කෙනෙකුටම චිප්ස් 10,000 ක්, හැම අත් 11 කට වරක් දෙගුණ වන 50 ක small blind එකක්, සහ ක්‍රියා කිරීමට තත්පර 5 ක්. 1 සිට 7 දක්වා ස්ථාන ලකුණු 15, 9, 6, 4, 3, 2 සහ 1 ලබයි; ඔබේ ලකුණු යනු ක්‍රීඩාවකට ඔබේ සාමාන්‍යය වන අතර එය ඔබ ක්‍රීඩා කළ ක්‍රීඩා ගණනින් බර කරනු ලැබේ, සහ ශ්‍රේණිගත කිරීම සෑම කාර්තුවකම නැවත ආරම්භ වේ. නොමිලේ pokerth.net ගිණුමක් අවශ්‍යයි."],
+      ["නොමිලේ පෝකර් තරඟාවලි සහ තරඟ තිබේද?",
+       "ඔව්, වසර පුරාම, සියල්ල නොමිලේ. සෑම PokerTH ක්‍රීඩාවක්ම තරඟාවලියකි, තවද pokerth.net ප්‍රජාව තමන්ගේම ශ්‍රේණිගත කිරීම් සහිත නිතිපතා තරඟ ද පවත්වයි: BBC, මිනිත්තු කිහිපයකට වරක් බ්ලයින්ඩ් ඉහළ යන ක්‍රීඩා (<a href=\"https://bbc.pokerth.net/registration\">දින දර්ශනය</a>, <a href=\"https://bbc.pokerth.net/results\">ප්‍රතිඵල</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">ශ්‍රේණිගත කිරීම</a>); WeCup (WEC), සන්සුන්, සමබර වේගයකින් යුත් තරඟාවලි (<a href=\"https://wec.pokerth.net/results\">ප්‍රතිඵල</a>, <a href=\"https://wec.pokerth.net/results/ranking\">ශ්‍රේණිගත කිරීම</a>); සහ සෑම මසකම පැවැත්වෙන Monthly Cup (<a href=\"https://monthlycup.pokerth.net/\">ඊළඟ කුසලානය සහ නවතම ජයග්‍රාහකයෝ</a>, <a href=\"https://monthlycup.pokerth.net/registration\">ලියාපදිංචිය</a>). දින සහ නීති එක් එක් වෙබ් අඩවියේ සහ <a href=\"https://www.pokerth.net/\">pokerth.net</a> සංසදයේ නිවේදනය කෙරේ. සහභාගී වීමට නොමිලේ pokerth.net ගිණුමක් අවශ්‍යයි."],
       ["ක්‍රීඩා නොකර ක්‍රීඩාවක් නැරඹිය හැකිද?",
        "ඔව්. නරඹන්නන්ට ඉඩ දෙන පවතින ක්‍රීඩා ලොබියෙන් සජීවීව නැරඹිය හැක: ඔබට මේසය සහ චැට් පෙනේ, නමුත් hole cards සැඟවී පවතින අතර ඔබට ක්‍රියා කළ නොහැක. දැනටමත් ආරම්භ වී ඇති මේසයකට ආරාධනා සබැඳියක් එය නැරඹීමට විවෘත කරයි."],
       ["යෙදුම තුළ උදව්වක් තිබේද?",
-       "ඔව්. ඒස්ගේ උදව්: වෙබ් සේවාලාභියාගේ මැස්කොට් වන ඒස්, ඔබට අවශ්‍ය නම්, ඔබ ඉදිරියට යන විට සෑම තිරයක්ම පැහැදිලි කරයි. ඔහුගේ මෙනුවේ සෙවුමක් සහිත සම්පූර්ණ උදව්ව තිබේ, සහ « මේ මොකක්ද? »: තිරයේ ඕනෑම දෙයක් තට්ටු කරන්න, එය කරන්නේ කුමක්දැයි ඔහු කියයි."]
+       "ඔව්. ඒස්ගේ උදව්: වෙබ් සේවාලාභියාගේ මැස්කොට් වන ඒස්, ඔබට අවශ්‍ය නම්, ඔබ ඉදිරියට යන විට සෑම තිරයක්ම පැහැදිලි කරයි. ඔහුගේ මෙනුවේ සෙවුමක් සහිත සම්පූර්ණ උදව්ව තිබේ, සහ « මේ මොකක්ද? »: තිරයේ ඕනෑම දෙයක් තට්ටු කරන්න, එය කරන්නේ කුමක්දැයි ඔහු කියයි."],
+      ["PokerTH තවමත් සක්‍රියව සංවර්ධනය වෙමින් පවතීද?",
+       "ඔව්. PokerTH 2006 සිට නිදහස් මෘදුකාංගයක් ලෙස සංවර්ධනය කෙරෙන අතර තවමත් නඩත්තු කෙරේ: ඩෙස්ක්ටොප් සේවාලාභියා සහ සේවාදායකය <a href=\"https://github.com/pokerth/pokerth\">GitHub</a> හි ඇත, මෙම වෙබ් සේවාලාභියා අඛණ්ඩව යාවත්කාලීන වේ (<a href=\"https://github.com/narmod/pokerth-web-client\">මූලාශ්‍ර කේතය සහ වෙනස්කම් ලොගය</a>), සහ නිල pokerth.net ජාලයේ සෑම දිනකම ක්‍රීඩා කෙරේ."]
     ],
   }
 };
@@ -5675,7 +6556,7 @@ function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld, lang, l
     '<meta name="viewport" content="width=device-width, initial-scale=1">' +
     '<title>' + title + '</title>' + head + '<style>' + _SEO_PAGE_CSS + '</style></head><body>' +
     _seoPageNav(lang) + '<main>' + bodyHtml +
-    '<a class="play" href="/' + (lang ? '?lang=' + lang : '') + '">Play PokerTH in your browser \u2014 free, no download</a>' +
+    '<a class="play" href="/' + (lang ? '?lang=' + lang : '') + '">' + _seoNavLabel(lang, 'cta') + '</a>' +
     '</main></body></html>';
   var buf = Buffer.from(html, 'utf8');
   res.writeHead(200, Object.assign({ 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate', 'Content-Length': buf.length }, SECURITY_HEADERS));
@@ -5794,8 +6675,14 @@ var _SEO_FAQ = [
    'Yes. PokerTH shows no ads, has no in-app purchases and no hidden costs. It is open-source software developed by volunteers, and all chips are play money.'],
   ['Can I play Texas Hold\u2019em in my browser against other people?',
    'Yes. Join the official pokerth.net network to play live Texas Hold\u2019em against players worldwide, or send an invite link so friends land directly at your table \u2014 everything inside the browser.'],
-  ['Do I need an account to play?',
-   'No. The Local / training mode needs no account and works offline. On the official pokerth.net network you can play Normal games as a guest; a free pokerth.net account is needed for Ranking games, registered-only tables and the chat.'],
+  ["Do I need an account to play?",
+   "No. Local / training mode needs no account and works offline. On the official pokerth.net network, log in as a guest: the server gives you a guest nickname and you can play Normal games straight away. On a LAN or a dedicated server there is no account at all — you only choose a nickname. None of these asks for an email address. A free pokerth.net account is only needed for Ranking games, registered-only tables and the chat."],
+  ["How do I play poker online with friends?",
+   "Create a table in the lobby — on pokerth.net or on any LAN or dedicated server — and press « Invite friends » in the waiting room. The web client builds an invitation link that you can send through any messenger. Your friends open it in their browser, on iPhone, Android or a computer, with nothing to download. Set a password if the table should stay private: the password is never part of the link."],
+  ["What happens when a friend opens my invitation link?",
+   "The link carries the table and the server. Your friend logs in — as a guest or with an account on pokerth.net, with just a nickname on a LAN or dedicated server — and the web client then joins the table automatically, with no need to look for it in the lobby. A password-protected table asks for its password; a game that has already started opens for watching. Invitation links are a feature of the web client and work on every server it can connect to."],
+  ["Is there a demo server to try PokerTH without signing up?",
+   "Yes. On the login screen choose LAN / Dedicated server and pick the public demo server in the Server list: type any nickname and you are in its lobby — no registration, no email address. A green dot shows which listed servers are online and how many players are on them."],
   ['Does it run on mobile?',
    'Yes. The web client is a Progressive Web App: it runs in any modern browser on desktop, tablet or phone, and can be installed like a native app \u2014 on iPhone and iPad with Share \u2192 Add to Home Screen, elsewhere from the browser menu or the install button. Ace\u2019s Help shows the steps for your device.'],
   ['Can I play against the computer?',
@@ -5810,14 +6697,18 @@ var _SEO_FAQ = [
    'No. PokerTH is strictly a play-money game. Chips have no monetary value and cannot be bought or sold.'],
   ['What data does the web client collect?',
    'As little as possible: settings stay in your browser, and no tracking or advertising is used. When you log in with a pokerth.net account, your options and training trophies are synced with it so they follow you to your other devices. See the privacy page for details.'],
-  ['Can I host my own server?',
-   'Yes. The PokerTH dedicated server and this web client are both open source, so you can run your own private poker server on a LAN or on the internet.'],
+  ["Can I host my own server?",
+   "Yes. The PokerTH dedicated server and this web client are both open source, so you can run your own private poker server on a LAN or on the internet. To have it listed for everyone, choose LAN / Dedicated server, then « Propose my server » at the bottom of the Server list: once the admins approve it, it appears in the list. The server must be reachable from the internet."],
   ['How do Ranking games and seasons work?',
    'Ranking games on pokerth.net seat 10 players and start as soon as the table is full: 10,000 chips each, a small blind of 50 that doubles every 11 hands, and 5 seconds to act. Places 1 to 7 score 15, 9, 6, 4, 3, 2 and 1 points; your Score is your average per game, weighted by the number of games you have played, and the ranking starts again every quarter. A free pokerth.net account is needed.'],
+  ["Are there free poker tournaments and competitions?",
+   "Yes, all year round, and all free. Every PokerTH game is a tournament, and the pokerth.net community also runs regular competitions with their own rankings: the BBC, games whose blinds rise every few minutes (<a href=\"https://bbc.pokerth.net/registration\">calendar</a>, <a href=\"https://bbc.pokerth.net/results\">results</a>, <a href=\"https://bbc.pokerth.net/results/ranking\">ranking</a>); the WeCup (WEC), tournaments at a calmer, balanced pace (<a href=\"https://wec.pokerth.net/results\">results</a>, <a href=\"https://wec.pokerth.net/results/ranking\">ranking</a>); and the Monthly Cup, held every month (<a href=\"https://monthlycup.pokerth.net/\">next cup and latest winners</a>, <a href=\"https://monthlycup.pokerth.net/registration\">registration</a>). Dates and rules are announced on each site and on the <a href=\"https://www.pokerth.net/\">pokerth.net</a> forum. Taking part needs a free pokerth.net account."],
   ['Can I watch a game without playing?',
    'Yes. Running games that allow spectators can be watched live from the lobby: you see the table and the chat, but the hole cards stay hidden and you cannot act. An invitation link to a table that has already started opens it for watching.'],
   ['Is there help inside the app?',
-   'Yes. Ace\u2019s Help: the Ace, the web client\u2019s mascot, explains each screen as you go if you want him to. His menu holds the whole help with a search, and \u00ab What\u2019s this? \u00bb: tap anything on the screen and he says what it does.']
+   'Yes. Ace\u2019s Help: the Ace, the web client\u2019s mascot, explains each screen as you go if you want him to. His menu holds the whole help with a search, and \u00ab What\u2019s this? \u00bb: tap anything on the screen and he says what it does.'],
+  ["Is PokerTH still actively developed?",
+   "Yes. PokerTH has been developed as free software since 2006 and is still maintained: the desktop client and the server are on <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, this web client is updated continuously (<a href=\"https://github.com/narmod/pokerth-web-client\">source code and changelog</a>), and games are played every day on the official pokerth.net network."]
 ];
 
 function seoFaqPage(res, method, lang) {
@@ -5840,7 +6731,7 @@ function seoFaqPage(res, method, lang) {
   var ld = { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: lang || 'en', mainEntity: ents };
   seoContentPage(res, method,
     (tr && tr.title) || 'FAQ \u2014 PokerTH Web Client',
-    (tr && tr.desc) || 'Frequently asked questions about the PokerTH Web Client: free poker with no ads, playing Texas Hold\u2019em in your browser without any download, accounts, mobile support, offline mode, languages and privacy.',
+    (tr && tr.desc) || 'Frequently asked questions about the PokerTH Web Client: free poker with no ads and no download, playing as a guest or without any account, inviting friends with a link, tournaments, mobile, offline mode, languages and privacy.',
     '/faq', body, ld, lang, langs);
 }
 
@@ -6118,6 +7009,7 @@ SEO_HANDS_I18N = require('./seo-i18n/hands.js').build(_SEO_HANDS, _sd);
 const _seoSsr = require('./seo-i18n/ssr.js');
 SEO_HOWTO_I18N = require('./seo-i18n/howto.js').build(_SEO_HOWTO, _seoPageHref);
 SEO_GLOSSARY_I18N = require('./seo-i18n/glossary.js').build(_SEO_GLOSSARY, _seoPageHref);
+SEO_NAV_I18N = require('./seo-i18n/nav.js');
 
 function seoGlossaryPage(res, method, lang) {
   var langs = seoPageLangs(SEO_GLOSSARY_I18N);
@@ -6199,8 +7091,10 @@ function sendClientHtml(req, res, live) {
       // re-syncs <html lang> at boot anyway; this is for crawlers.
       html = html.replace('<html lang="en">', '<html lang="' + lang + '"' + (_seoIsRtl(lang) ? ' dir="rtl"' : '') + '>');
       html = html.replace('<title>PokerTH Web Client</title>', '<title>' + _seoAttr(seoTitleOverride() || SEO_I18N[lang].t) + '</title>');
-    } else if (on && seoTitleOverride()) {
-      html = html.replace('<title>PokerTH Web Client</title>', '<title>' + _seoAttr(seoTitleOverride()) + '</title>');
+    } else if (on) {
+      // The English home page is the most searched variant and was the only
+      // one still served the bare static title; give it the SEO title too.
+      html = html.replace('<title>PokerTH Web Client</title>', '<title>' + _seoAttr(seoTitleOverride() || SEO_I18N.en.t) + '</title>');
     }
     // Interface text in the page language, not just the SEO block: every
     // data-i18n* node gets the value setLang() would give it at boot, so a

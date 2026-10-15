@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Search engines and AI assistants get the real picture** — the help and the FAQ no longer say a pokerth.net
+  account is required: guest login (Normal games), nickname-only LAN / dedicated servers and offline
+  training are spelled out, in the 83 languages. Five new FAQ answers (playing with friends, invitation
+  links that seat the invitee automatically, the demo server, the BBC / WeCup / Monthly Cup with links
+  to their calendars, results and rankings, project activity) and two corrected ones (account; own
+  server, now with « Propose my server »). English home page served with its full SEO title; home JSON-LD typed
+  `WebApplication` + `VideoGame` (genre, play modes, 2–10 players, platforms, licence, author, upstream
+  repo); `llms.txt` rewritten as quick, factual answers with version and last-update date; content-page
+  nav and call to action localized (`seo-i18n/nav.js`); sharper English meta and manifest descriptions (`web.74`).
 - **The client follows PokerTH 2.1.10** — the build ID sent to the server and the
   build-ID fallbacks in `net/messages.mjs` and `proto/index.mjs` move to 2.1.10 (`web.0`).
 - **A shorter changelog in « About »** — the « Web client » tab now shows this file, one

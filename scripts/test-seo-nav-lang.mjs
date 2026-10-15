@@ -29,7 +29,7 @@ function fn(name) {
   return '';
 }
 
-for (const name of ['_seoLangHref', '_seoPageNav']) {
+for (const name of ['_seoLangHref', '_seoNavLabel', '_seoPageNav', '_seoAttr']) {
   ok(fn(name) !== '', name + ' is defined in proxy.js');
 }
 
@@ -42,6 +42,11 @@ const sandbox = `
   var SEO_HANDS_I18N = {};
   var SEO_HOWTO_I18N = {};
   var SEO_GLOSSARY_I18N = {};
+  var SEO_NAV_EN = { play: '\u25b6 Play now', rules: 'Rules', hands: 'Hand rankings', howto: 'How to play',
+    gloss: 'Glossary', faq: 'FAQ', privacy: 'Privacy', src: 'Source', cta: 'Play' };
+  var SEO_NAV_I18N = { fr: { play: '\u25b6 Jouer', rules: 'R\u00e8gles', faq: 'FAQ' }, xx: { play: 'XX' } };
+  ${fn('_seoAttr')}
+  ${fn('_seoNavLabel')}
   ${fn('_seoLangHref')}
   ${fn('_seoPageNav')}
   ({ href: _seoLangHref, nav: _seoPageNav, T: { r: SEO_RULES_I18N, f: SEO_FAQ_I18N, h: SEO_HANDS_I18N, i: SEO_I18N } })
@@ -73,6 +78,13 @@ ok(navDe.indexOf('href="/faq"') !== -1, 'nav: and drops it on the page it has no
 const navEn = S.nav('');
 ok(navEn.indexOf('?lang=') === -1, 'nav: the English page links to bare URLs only');
 ok(navEn.split('<a ').length === navFr.split('<a ').length, 'nav: the same links are emitted either way');
+
+// The labels follow the language too, label by label, English as fallback.
+ok(navFr.indexOf('\u25b6 Jouer</a>') !== -1 && navFr.indexOf('Play now') === -1, 'nav: French labels on the French page');
+ok(navFr.indexOf('>Glossary</a>') !== -1, 'nav: a label missing from the translation falls back to English');
+ok(S.nav('xx').indexOf('XX') === -1, 'nav: labels of a code that is not a UI language are ignored');
+ok(navEn.indexOf('\u25b6 Play now</a>') !== -1, 'nav: the English page keeps the English labels');
+ok(/_seoNavLabel\(lang, 'cta'\)/.test(src), 'the closing call to action is localized');
 
 // The nav is called with the language the page resolved, not with nothing.
 ok(/_seoPageNav\(lang\)/.test(src), 'seoContentPage passes its language to the nav');
