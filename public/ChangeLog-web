@@ -1,4 +1,4 @@
-2026-10-15 version 2.1.10-web.77:
+2026-10-15 version 2.1.10-web.78:
 - bugfix: phone in landscape: the bet keypad keys and its Cancel / OK buttons keep a comfortable touch height again on very low screens (they had shrunk to 26 px with the reduced action bar)
 
 2026-10-15 version 2.1.10-web.76:
