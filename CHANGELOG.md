@@ -105,6 +105,12 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **`/competitions` page** — BBC, WeCup and Monthly Cup in the 83 languages (`seo-i18n/competitions.js`):
+  what each one is, how to take part, links to calendars, results and rankings, and the coming
+  dates read from the community-events relay (plus the WeCup daily game, 22:00 Berlin), never
+  waiting more than 1.5 s for it. Structured data: the three competitions as `EventSeries`, each
+  coming date as a free online `Event`. Linked from the content-page nav, the crawler block,
+  `llms.txt`, the sitemap (daily) and IndexNow; `test-seo-competitions-i18n` (`web.75`).
 - **LAN server directory, server side** — players will be able to propose their own PokerTH
   server from the LAN login screen; an admin approves or rejects each request, and approved
   servers are listed for everyone. This first step is the proxy part (new module

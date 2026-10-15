@@ -1546,7 +1546,7 @@ function _seoEnsureIndexNowKey() {
 }
 function seoIndexNowUrls(base) {
   var urls = [base + '/', base + '/rules', base + '/hand-rankings', base + '/how-to-play',
-    base + '/glossary', base + '/faq', base + '/privacy'];
+    base + '/glossary', base + '/faq', base + '/competitions', base + '/privacy'];
   for (var code in SEO_I18N) { if (code !== 'en') urls.push(base + '/?lang=' + code); }
   // Localized content pages exist only in the languages that actually have a
   // translation table. Submitting a variant we do not serve would point the
@@ -1556,6 +1556,7 @@ function seoIndexNowUrls(base) {
   seoPageLangs(SEO_HANDS_I18N).forEach(function (c) { urls.push(base + '/hand-rankings?lang=' + c); });
   seoPageLangs(SEO_HOWTO_I18N).forEach(function (c) { urls.push(base + '/how-to-play?lang=' + c); });
   seoPageLangs(SEO_GLOSSARY_I18N).forEach(function (c) { urls.push(base + '/glossary?lang=' + c); });
+  seoPageLangs(SEO_COMP_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/competitions?lang=' + c); });
   return urls;
 }
 var _indexNowLast = 0;
@@ -1720,6 +1721,7 @@ function seoBodyBlock(lang) {
     '<a href="' + _seoLangHref('/hand-rankings', SEO_HANDS_I18N, lang) + '">' + _seoPageLabel(SEO_HANDS_I18N, lang, 'Poker hand rankings') + '</a> \u2014 ' +
     '<a href="' + _seoLangHref('/how-to-play', SEO_HOWTO_I18N, lang) + '">' + _seoPageLabel(SEO_HOWTO_I18N, lang, 'How to play') + '</a> \u2014 ' +
     '<a href="' + _seoLangHref('/glossary', SEO_GLOSSARY_I18N, lang) + '">' + _seoPageLabel(SEO_GLOSSARY_I18N, lang, 'Glossary') + '</a> \u2014 ' +
+    '<a href="' + _seoLangHref('/competitions', SEO_COMP_I18N, lang) + '">' + _seoNavLabel(lang, 'comp') + '</a> \u2014 ' +
     '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">' + _seoNavLabel(lang, 'faq') + '</a> \u2014 ' +
     '<a href="/privacy">' + b.pv + '</a></p>' +
     '</div>';
@@ -1840,7 +1842,7 @@ function seoLlmsTxt(base) {
     '- Feature parity with the official PokerTH desktop client\n' +
     (u ? '\n## Links\n\n- Play: ' + u + '/\n- FAQ: ' + u + '/faq\n- How to play, step by step: ' + u + '/how-to-play\n' +
          '- Texas Hold’em rules: ' + u + '/rules\n- Poker hand rankings: ' + u + '/hand-rankings\n' +
-         '- Poker glossary: ' + u + '/glossary\n' : '\n## Links\n\n') +
+         '- Poker glossary: ' + u + '/glossary\n- Competitions and coming dates: ' + u + '/competitions\n' : '\n## Links\n\n') +
     '- Source code: https://github.com/narmod/pokerth-web-client\n' +
     '- PokerTH desktop client and server: https://github.com/pokerth/pokerth\n' +
     '- PokerTH project and forum: https://www.pokerth.net/\n';
@@ -1902,7 +1904,7 @@ function _seoLangHref(relPath, table, lang) {
 // "Play now · Rules · Glossary" in English was a page in two languages. The
 // translations live in seo-i18n/nav.js; English is the fallback per label.
 var SEO_NAV_EN = { play: '\u25b6 Play now', rules: 'Rules', hands: 'Hand rankings', howto: 'How to play',
-  gloss: 'Glossary', faq: 'FAQ', privacy: 'Privacy', src: 'Source',
+  gloss: 'Glossary', comp: 'Competitions', faq: 'FAQ', privacy: 'Privacy', src: 'Source',
   cta: 'Play PokerTH in your browser \u2014 free, no download' };
 var SEO_NAV_I18N = {};
 function _seoNavLabel(lang, k) {
@@ -1917,6 +1919,7 @@ function _seoPageNav(lang) {
     '<a href="' + _seoLangHref('/hand-rankings', SEO_HANDS_I18N, lang) + '">' + _seoNavLabel(lang, 'hands') + '</a>' +
     '<a href="' + _seoLangHref('/how-to-play', SEO_HOWTO_I18N, lang) + '">' + _seoNavLabel(lang, 'howto') + '</a>' +
     '<a href="' + _seoLangHref('/glossary', SEO_GLOSSARY_I18N, lang) + '">' + _seoNavLabel(lang, 'gloss') + '</a>' +
+    '<a href="' + _seoLangHref('/competitions', SEO_COMP_I18N, lang) + '">' + _seoNavLabel(lang, 'comp') + '</a>' +
     '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">' + _seoNavLabel(lang, 'faq') + '</a>' +
     // /privacy is a static English-only page: it has no ?lang= variant.
     '<a href="/privacy">' + _seoNavLabel(lang, 'privacy') + '</a>' +
@@ -6754,6 +6757,7 @@ function seoFaqPage(res, method, lang) {
 var SEO_HANDS_I18N = {};
 var SEO_HOWTO_I18N = {};
 var SEO_GLOSSARY_I18N = {};
+var SEO_COMP_I18N = {};
 
 // Suit symbols. Red suits get a class rather than a hard-coded colour so the
 // page CSS stays the single place that decides what red means.
@@ -7010,6 +7014,7 @@ const _seoSsr = require('./seo-i18n/ssr.js');
 SEO_HOWTO_I18N = require('./seo-i18n/howto.js').build(_SEO_HOWTO, _seoPageHref);
 SEO_GLOSSARY_I18N = require('./seo-i18n/glossary.js').build(_SEO_GLOSSARY, _seoPageHref);
 SEO_NAV_I18N = require('./seo-i18n/nav.js');
+SEO_COMP_I18N = require('./seo-i18n/competitions.js');
 
 function seoGlossaryPage(res, method, lang) {
   var langs = seoPageLangs(SEO_GLOSSARY_I18N);
@@ -7042,6 +7047,165 @@ function seoGlossaryPage(res, method, lang) {
   };
   if (base) ld.url = base + '/glossary' + (lang ? '?lang=' + lang : '');
   seoContentPage(res, method, title, desc, '/glossary', body, ld, lang, langs);
+}
+
+// ── /competitions — BBC, WeCup, Monthly Cup ──────────────────────────────
+// The page answers "free online poker tournaments": what the three community
+// competitions are, where their calendars, results and rankings live, how to
+// take part, and — from the same relay copy as the Events tab — the coming
+// dates. Those dates also go out as schema.org Events, which is what makes a
+// competition eligible for event results; only dates the sites themselves
+// publish are listed, never an invented one. Translations: seo-i18n/competitions.js.
+var _SEO_COMP = {
+  "title": "Free Online Poker Tournaments \u2014 BBC, WeCup, Monthly Cup | PokerTH",
+  "desc": "Free Texas Hold\u2019em poker tournaments all year round on pokerth.net: the BBC, the WeCup and the Monthly Cup, with their calendars, results and rankings. No real money, no download.",
+  "h1": "Free online poker tournaments and competitions",
+  "lead": "PokerTH is free, and so are its competitions. Every game on pokerth.net is a Texas Hold\u2019em tournament, and the community also runs regular competitions all year round, each with its own calendar, results and ranking. Play money only: nobody pays to enter and there is no cash to win.",
+  "bbcH2": "BBC",
+  "bbcP": "The BBC organises regular games on pokerth.net in which the blinds rise every few minutes instead of every few hands, with a ranking for each season. Its calendar lists the coming games and how many players have already signed up \u2014 most players simply join at the start time.",
+  "bbcLinks": "<a href=\"https://bbc.pokerth.net/registration\">Calendar and sign-up</a> \u00b7 <a href=\"https://bbc.pokerth.net/results\">Results</a> \u00b7 <a href=\"https://bbc.pokerth.net/results/ranking\">Ranking</a>",
+  "wecH2": "WeCup (WEC)",
+  "wecP": "The WeCup plays at a calmer, balanced pace. A WeCup game takes place every evening at 22:00, Berlin time, with no registration: just join. The best players of the monthly ranking qualify for the monthly final, and the year ends with a grand final; both are announced on the pokerth.net forum.",
+  "wecLinks": "<a href=\"https://wec.pokerth.net/results\">Results</a> \u00b7 <a href=\"https://wec.pokerth.net/results/ranking\">Monthly ranking</a>",
+  "mcH2": "Monthly Cup",
+  "mcP": "The Monthly Cup is a community competition held once a month: players sign up in advance, are seeded onto tables, and the final tables decide the champion. Dates and rules are announced on the Monthly Cup site and on the pokerth.net forum.",
+  "mcLinks": "<a href=\"https://monthlycup.pokerth.net/\">Next cup and latest winners</a> \u00b7 <a href=\"https://monthlycup.pokerth.net/registration\">Registration</a>",
+  "rankH2": "Ranking games and seasons",
+  "rankP": "Outside the cups, every Ranking game on pokerth.net counts towards a season ranking that starts again every quarter, and the best players of each day appear as the Champions of the day.",
+  "rankLinks": "<a href=\"https://www.pokerth.net/app.php/leaderboard\">pokerth.net leaderboard</a> \u00b7 <a href=\"/faq\">How Ranking games are scored</a>",
+  "joinH2": "How to take part",
+  "join": [
+    "Create a free pokerth.net account: cup and Ranking tables are for registered players.",
+    "Sign up in advance where the competition asks for it \u2014 the Monthly Cup always, the BBC optionally; the WeCup daily game needs no sign-up.",
+    "At the start time, log in from the web client or the desktop client. For cup games, the cup admins open the tables and invite the players.",
+    "Not playing? Running cup tables can be watched as a spectator from the lobby, and the Events tab of the Forum news window in the web client lists the coming dates."
+  ],
+  "upH2": "Coming dates",
+  "upNote": "Times are in Berlin time (CET/CEST), as on the competition sites.",
+  "upNone": "No date is announced right now \u2014 see the competition sites above.",
+  "up": {
+    "bbc": "BBC game",
+    "wecDaily": "WeCup daily game \u2014 no registration",
+    "wecFinal": "WeCup monthly final",
+    "wecGrand": "WeCup grand final",
+    "mc": "Monthly Cup"
+  }
+};
+var _SEO_COMP_SERIES = {
+  bbc: { url: 'https://bbc.pokerth.net/registration', org: 'https://bbc.pokerth.net/' },
+  wec: { url: 'https://wec.pokerth.net/results', org: 'https://wec.pokerth.net/' },
+  mc: { url: 'https://monthlycup.pokerth.net/', org: 'https://monthlycup.pokerth.net/' }
+};
+var _SEO_COMP_HOSTS = /^https:\/\/(www\.|bbc\.|wec\.|monthlycup\.)?pokerth\.net\//;
+var _SEO_COMP_WAIT_MS = 1500, _SEO_COMP_DAYS = 45, _SEO_COMP_MAX = 8;
+
+// Coming dates from the community-events relay, never waiting more than
+// _SEO_COMP_WAIT_MS: a slow community site must not hold the page back.
+// Resolves to null when the relay is off or has nothing yet.
+function _seoCompEvents() {
+  var cfg;
+  try { cfg = _eventsCfg(); } catch (e) { return Promise.resolve(null); }
+  if (!cfg.on) return Promise.resolve(null);
+  var got = RELAY.get('communityevents', cfg.sec * 1000, _eventsProduce, { swr: true })
+    .then(function (out) { try { var d = JSON.parse(out.body); return (d && Array.isArray(d.upcoming)) ? d.upcoming : []; } catch (e) { return []; } })
+    .catch(function () { return []; });
+  var late = new Promise(function (r) { var t = setTimeout(function () { r(null); }, _SEO_COMP_WAIT_MS); if (t.unref) t.unref(); });
+  return Promise.race([got, late]);
+}
+
+// The list shown and announced: the sites' own dates plus the next WeCup
+// daily game (22:00 Berlin, every evening, no registration), skipped on an
+// evening whose WeCup final is at the same time — as in the Events tab.
+function _seoCompUpcoming(list, now) {
+  var out = [];
+  (list || []).forEach(function (e) {
+    if (!e || !isFinite(e.at) || e.at < now || e.at > now + _SEO_COMP_DAYS * 86400000) return;
+    if (e.src === 'bbc' || e.src === 'mc' || (e.src === 'wec' && e.kind === 'final')) out.push(e);
+  });
+  var day = new Date(now);
+  for (var k = 0; k < 2; k++) {
+    var d = new Date(day.getTime() + k * 86400000);
+    var key = new Intl.DateTimeFormat('en-CA', { timeZone: communityEvents.SITE_TZ, year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
+    var at = communityEvents.zonedToEpoch(key + ' 22:00');
+    if (at && at > now) {
+      var clash = out.some(function (f) { return f.src === 'wec' && f.kind === 'final' && Math.abs(f.at - at) < 90 * 60000; });
+      if (!clash) out.push({ src: 'wec', kind: 'daily', at: at });
+      break;
+    }
+  }
+  out.sort(function (a, b) { return a.at - b.at; });
+  return out.slice(0, _SEO_COMP_MAX);
+}
+
+function _seoCompLabel(e, up) {
+  if (e.src === 'bbc') return up.bbc;
+  if (e.src === 'mc') return up.mc;
+  if (e.kind === 'daily') return up.wecDaily;
+  return e.grand ? up.wecGrand : up.wecFinal;
+}
+
+function seoCompetitionsPage(res, method, lang) {
+  var langs = seoPageLangs(SEO_COMP_I18N);
+  if (langs.indexOf(lang) === -1) lang = '';
+  var tr = (lang && SEO_COMP_I18N[lang]) || _SEO_COMP;
+  var base = seoEnabled() ? seoPublicUrl() : '';
+  var faqHref = _seoLangHref('/faq', SEO_FAQ_I18N, lang);
+  _seoCompEvents().then(function (list) {
+    var now = Date.now();
+    var up = list ? _seoCompUpcoming(list, now) : null;
+    var fmt;
+    try { fmt = new Intl.DateTimeFormat(lang || 'en', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: communityEvents.SITE_TZ }); }
+    catch (e) { fmt = new Intl.DateTimeFormat('en', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: communityEvents.SITE_TZ }); }
+    var sec = function (h, p, links) { return '<h2>' + h + '</h2><p>' + p + '</p><p>' + links + '</p>'; };
+    var body = '<h1>' + tr.h1 + '</h1><p>' + tr.lead + '</p>';
+    if (up) {
+      body += '<h2>' + tr.upH2 + '</h2>';
+      if (up.length) {
+        body += '<ul>' + up.map(function (e) {
+          var u = _SEO_COMP_HOSTS.test(String(e.url || '')) ? e.url : _SEO_COMP_SERIES[e.src].url;
+          return '<li><a href="' + _seoAttr(u) + '">' + _seoAttr(_seoCompLabel(e, tr.up)) + '</a> — <span class="ltr">' + _seoAttr(fmt.format(new Date(e.at))) + '</span></li>';
+        }).join('') + '</ul><p>' + tr.upNote + '</p>';
+      } else {
+        body += '<p>' + tr.upNone + '</p>';
+      }
+    }
+    body += sec(tr.bbcH2, tr.bbcP, tr.bbcLinks) + sec(tr.wecH2, tr.wecP, tr.wecLinks) +
+      sec(tr.mcH2, tr.mcP, tr.mcLinks) + sec(tr.rankH2, tr.rankP, tr.rankLinks.replace('href="/faq"', 'href="' + faqHref + '"')) +
+      '<h2>' + tr.joinH2 + '</h2><ol>' + tr.join.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol>';
+    // Structured data: the three competitions as EventSeries, and each coming
+    // date as an online, free Event that belongs to its series.
+    var plain = function (h) { return String(h).replace(/<[^>]*>/g, ''); };
+    var series = {
+      bbc: { name: 'BBC', description: plain(tr.bbcP), url: _SEO_COMP_SERIES.bbc.url },
+      wec: { name: 'WeCup (WEC)', description: plain(tr.wecP), url: _SEO_COMP_SERIES.wec.url },
+      mc: { name: 'Monthly Cup', description: plain(tr.mcP), url: _SEO_COMP_SERIES.mc.url }
+    };
+    var seriesLd = function (k) {
+      return { '@type': 'EventSeries', name: series[k].name, description: series[k].description, url: series[k].url,
+        eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode', isAccessibleForFree: true,
+        location: { '@type': 'VirtualLocation', url: series[k].url },
+        organizer: { '@type': 'Organization', name: series[k].name, url: _SEO_COMP_SERIES[k].org } };
+    };
+    var ld = [{ '@context': 'https://schema.org', '@type': 'ItemList', name: plain(tr.h1),
+      itemListElement: ['bbc', 'wec', 'mc'].map(function (k, i) { return { '@type': 'ListItem', position: i + 1, item: seriesLd(k) }; }) }];
+    var img = seoImage(base).url;
+    (up || []).forEach(function (e) {
+      var u = _SEO_COMP_HOSTS.test(String(e.url || '')) ? e.url : _SEO_COMP_SERIES[e.src].url;
+      var ev = { '@context': 'https://schema.org', '@type': 'Event', name: _seoCompLabel(e, tr.up),
+        startDate: new Date(e.at).toISOString(), eventStatus: 'https://schema.org/EventScheduled',
+        eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode', isAccessibleForFree: true,
+        description: series[e.src].description, inLanguage: lang || 'en',
+        location: { '@type': 'VirtualLocation', url: u },
+        organizer: { '@type': 'Organization', name: series[e.src].name, url: _SEO_COMP_SERIES[e.src].org },
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR', availability: 'https://schema.org/InStock', url: u },
+        superEvent: { '@type': 'EventSeries', name: series[e.src].name, url: series[e.src].url } };
+      if (img) ev.image = img;
+      ld.push(ev);
+    });
+    seoContentPage(res, method, tr.title, tr.desc, '/competitions', body, ld, lang, langs);
+  }).catch(function () {
+    try { res.writeHead(500); res.end(); } catch (e) {}
+  });
 }
 
 // Injected-HTML cache: one live variant, keyed on file mtime + SEO state.
@@ -12996,6 +13160,7 @@ const httpServer = http.createServer((req, res) => {
       _seoPageUrls(_sBase, '/hand-rankings', seoPageLangs(SEO_HANDS_I18N), 'monthly', '0.7') +
       _seoPageUrls(_sBase, '/how-to-play', seoPageLangs(SEO_HOWTO_I18N), 'monthly', '0.7') +
       _seoPageUrls(_sBase, '/glossary', seoPageLangs(SEO_GLOSSARY_I18N), 'monthly', '0.5') +
+      _seoPageUrls(_sBase, '/competitions', seoPageLangs(SEO_COMP_I18N), 'daily', '0.6') +
       '<url><loc>' + _sBase + '/privacy</loc>' + _sLm(_sModSelf) + '<changefreq>yearly</changefreq><priority>0.2</priority></url>\n' +
       '</urlset>\n';
     res.writeHead(200, Object.assign({ 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
@@ -13033,6 +13198,9 @@ const httpServer = http.createServer((req, res) => {
   }
   if (reqPathOnly === '/glossary' || reqPathOnly === '/glossary.html') {
     return seoGlossaryPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+  }
+  if (reqPathOnly === '/competitions' || reqPathOnly === '/competitions.html') {
+    return seoCompetitionsPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
   }
 
   // Friendly path for the pack-creator Studio, mirroring /admin -> admin.html.
