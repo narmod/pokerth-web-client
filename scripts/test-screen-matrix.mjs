@@ -129,13 +129,14 @@ async function uiAudit(page, root, scroll) {
 async function tableProblems(page, seats, spectator) {
   const g = await measureTable(page);
   const extra = await page.evaluate(() => {
-    const vis = (e) => { if (!e) return false; const c = getComputedStyle(e), r = e.getBoundingClientRect(); return c.display !== 'none' && c.visibility !== 'hidden' && r.width > 1 && r.height > 1; };
+    const VR = window.__pthVisualRect || ((e) => e.getBoundingClientRect());   // drawn box: the desktop action bar is CSS-zoomed by --abar-k
+    const vis = (e) => { if (!e) return false; const c = getComputedStyle(e), r = VR(e); return c.display !== 'none' && c.visibility !== 'hidden' && r.width > 1 && r.height > 1; };
     const out = [], W = innerWidth, H = innerHeight;
     const z = document.getElementById('g-table-zone').getBoundingClientRect();
     if (z.left < -1 || z.top < -1 || z.right > W + 1 || z.bottom > H + 1) out.push(`table zone leaves the window (${Math.round(z.left)},${Math.round(z.top)} - ${Math.round(z.right)},${Math.round(z.bottom)} / ${W}x${H})`);
     if (z.width < 120 || z.height < 120) out.push(`table zone collapsed to ${Math.round(z.width)}x${Math.round(z.height)}`);
-    [...document.querySelectorAll('.act-buttons-row .btn-action')].filter(vis).forEach((b) => { const r = b.getBoundingClientRect();
-      if (r.left < -1 || r.top < -1 || r.right > W + 1 || r.bottom > H + 1) { const m = document.querySelector('.my-zone'), mr = m && m.getBoundingClientRect();
+    [...document.querySelectorAll('.act-buttons-row .btn-action')].filter(vis).forEach((b) => { const r = VR(b);
+      if (r.left < -1 || r.top < -1 || r.right > W + 1 || r.bottom > H + 1) { const m = document.querySelector('.my-zone'), mr = m && VR(m);
         out.push(`action button "${b.textContent.trim().slice(0, 20)}" is cut by the window edge (${Math.round(r.left)},${Math.round(r.top)} - ${Math.round(r.right)},${Math.round(r.bottom)} / ${W}x${H}; action bar ${mr ? Math.round(mr.top) + '-' + Math.round(mr.bottom) + ' ' + getComputedStyle(m).position : '-'}; layout viewport ${document.documentElement.clientHeight}px tall)`); } });
     const overY = document.documentElement.scrollHeight - H;
     if (overY > 1 && getComputedStyle(document.documentElement).overflowY !== 'hidden') out.push(`page scrolls vertically by ${overY}px on the table`);

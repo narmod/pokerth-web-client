@@ -85,18 +85,50 @@ export async function shot(page, device, step) {
 // and the fix depends on WHICH reference is off.
 export const viewportReport = (page) => page.evaluate(() => {
   const probe = (h) => { const d = document.createElement('div'); d.style.cssText = 'position:fixed;left:0;top:0;width:1px;visibility:hidden;height:' + h; document.body.appendChild(d); const v = d.getBoundingClientRect().height; d.remove(); return Math.round(v); };
-  const rect = (q) => { const e = document.querySelector(q); if (!e) return '-'; const r = e.getBoundingClientRect(); return Math.round(r.top) + '-' + Math.round(r.bottom) + (getComputedStyle(e).position === 'fixed' ? ' fixed' : ''); };
+  const VR = window.__pthVisualRect || ((e) => e.getBoundingClientRect());
+  const rect = (q) => { const e = document.querySelector(q); if (!e) return '-'; const r = VR(e); return Math.round(r.top) + '-' + Math.round(r.bottom) + (getComputedStyle(e).position === 'fixed' ? ' fixed' : ''); };
   const vv = window.visualViewport;
   return `inner ${innerWidth}x${innerHeight}, visualViewport ${vv ? Math.round(vv.width) + 'x' + Math.round(vv.height) + '@' + Math.round(vv.offsetTop) : '-'}, clientHeight ${document.documentElement.clientHeight}, `
     + `100vh=${probe('100vh')} 100dvh=${probe('100dvh')} 100svh=${probe('100svh')} 100lvh=${probe('100lvh')}, body ${rect('body')}, #s-game ${rect('#s-game')}, .game-area ${rect('.game-area')}, .my-zone ${rect('.my-zone')}`
     // The column the action bar sits in: which child refuses to shrink.
-    + ' | flex: ' + ['#g-table-zone', '#g-zoom-layer', '#g-table-scaler', '.felt-oval', '.my-zone', '.action-grid'].map((q) => { const e = document.querySelector(q); if (!e) return q + ' -'; const c = getComputedStyle(e), r = e.getBoundingClientRect();
+    + ' | flex: ' + ['#g-table-zone', '#g-zoom-layer', '#g-table-scaler', '.felt-oval', '.my-zone', '.action-grid'].map((q) => { const e = document.querySelector(q); if (!e) return q + ' -'; const c = getComputedStyle(e), r = VR(e);
       return `${q} h${Math.round(r.height)} flex(${c.flex}) min-h ${c.minHeight} ${c.position}${e.style.height ? ' inline-h ' + e.style.height : ''}`; }).join(', ')
     // Every box of .game-area in its flow, in visual order: what sits between
     // the table and the action bar, or pushes the bar down.
     + ' | game-area: ' + (() => { const ga = document.querySelector('.game-area'); if (!ga) return '-'; const gc = getComputedStyle(ga);
-      return `pad ${gc.paddingTop}/${gc.paddingBottom} gap ${gc.rowGap} ` + [...ga.children].filter((k) => getComputedStyle(k).display !== 'none').map((k) => { const c = getComputedStyle(k), r = k.getBoundingClientRect();
+      return `pad ${gc.paddingTop}/${gc.paddingBottom} gap ${gc.rowGap} ` + [...ga.children].filter((k) => getComputedStyle(k).display !== 'none').map((k) => { const c = getComputedStyle(k), r = VR(k);
         return `${k.id ? '#' + k.id : '.' + (k.classList[0] || k.tagName.toLowerCase())}[o${c.order} ${c.position} ${Math.round(r.top)}+${Math.round(r.height)} m${c.marginTop}/${c.marginBottom} t${c.top} b${c.bottom}${c.transform !== 'none' ? ' tf ' + c.transform : ''}]`; }).join(' '); })();
+});
+
+// On-screen box of an element, whatever the engine does with CSS `zoom`.
+// WebKit keeps the legacy zoom geometry: getBoundingClientRect() of an element
+// inside a zoomed subtree comes back divided by its effective zoom, where
+// Chromium (128+) and Firefox return what is drawn. The action bar IS zoomed
+// (--abar-kp on very low landscape phones since web.227, --abar-k on small
+// desktop windows): read raw in WebKit it came out up to 25% lower and larger
+// than on screen - "action 1 is off-screen" at 734x343 and "cut by the window
+// edge" at 899x700 / 900x599 while both bars were fully visible.
+// installVisualRect() probes the engine once (a zoom:2 box) and defines
+// window.__pthVisualRect(el): the raw rect in engines that already return the
+// drawn box, the rect scaled by the element's effective zoom otherwise.
+// Measurements of zoomable UI go through it; openTable installs it.
+export const installVisualRect = (page) => page.evaluate(() => {
+  if (window.__pthVisualRect) return window.__pthZoomLegacy;
+  const probe = document.createElement('div'), inner = document.createElement('div');
+  probe.style.cssText = 'position:fixed;left:0;top:0;width:10px;height:10px;zoom:2;visibility:hidden;pointer-events:none';
+  inner.style.cssText = 'width:10px;height:10px';
+  probe.appendChild(inner); document.documentElement.appendChild(probe);
+  const legacy = inner.getBoundingClientRect().height < 15;   // drawn 20px tall; legacy WebKit says 10
+  probe.remove();
+  window.__pthZoomLegacy = legacy;
+  window.__pthVisualRect = (e) => {
+    const r = e.getBoundingClientRect();
+    if (!legacy) return r;
+    let z = 1;
+    for (let a = e; a && a.nodeType === 1; a = a.parentElement) { const v = parseFloat(getComputedStyle(a).zoom); if (v > 0) z *= v; }
+    return Math.abs(z - 1) < 1e-3 ? r : DOMRect.fromRect({ x: r.x * z, y: r.y * z, width: r.width * z, height: r.height * z });
+  };
+  return legacy;
 });
 
 export const overlap = (a, b, tol = 1) => !!a && !!b && a.left < b.right - tol && b.left < a.right - tol && a.top < b.bottom - tol && b.top < a.bottom - tol;
@@ -127,6 +159,7 @@ export async function openTable(page, base, options = {}) {
   await page.goto(base, { waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => document.readyState === 'complete' && window.App
     && typeof window.App.connect === 'function' && window.PthState && document.querySelector('#s-connect .btn-primary'));
+  await installVisualRect(page);
   await page.evaluate(async () => {
     try { localStorage.removeItem('pth_resume'); } catch (_e) {}
     (await import('/modules/net/session.mjs')).show('s-connect');

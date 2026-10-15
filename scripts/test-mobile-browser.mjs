@@ -40,9 +40,10 @@ const reporter = createReporter();
 const check = reporter.check;
 
 const geometry = (page) => page.evaluate(() => {
-  const rect = (e) => { if (!e) return null; const r = e.getBoundingClientRect();
+  const VR = window.__pthVisualRect || ((e) => e.getBoundingClientRect());   // drawn box: the action bar is CSS-zoomed on low landscape phones
+  const rect = (e) => { if (!e) return null; const r = VR(e);
     return { left: r.left, top: r.top, right: r.right, bottom: r.bottom, width: r.width, height: r.height }; };
-  const vis = (e) => { if (!e) return false; const c = getComputedStyle(e), r = e.getBoundingClientRect();   // offsetParent is null for position:fixed
+  const vis = (e) => { if (!e) return false; const c = getComputedStyle(e), r = VR(e);   // offsetParent is null for position:fixed
     return c.display !== 'none' && c.visibility !== 'hidden' && r.width > 1 && r.height > 1; };
   const mb = document.getElementById('g-miniboard');
   const layer = document.getElementById('g-zoom-layer'), lr = layer.getBoundingClientRect();
@@ -58,7 +59,7 @@ const geometry = (page) => page.evaluate(() => {
     plates: [...document.querySelectorAll('#g-seats .seat:not(.seat-ghost)')].map((s) => rect(s.querySelector('.seat-plate') || s)),
     comm: [...document.querySelectorAll('#g-comm .pk[data-c]')].map(rect),
     actionBar: rect(document.querySelector('.my-zone')),
-    reserve: (function () { const ga = document.querySelector('.game-area'), mz = document.querySelector('.my-zone'); return { fixed: getComputedStyle(mz).position === 'fixed', px: parseFloat(ga.style.paddingBottom) || 0, panel: mz.getBoundingClientRect().height }; })(),
+    reserve: (function () { const ga = document.querySelector('.game-area'), mz = document.querySelector('.my-zone'); return { fixed: getComputedStyle(mz).position === 'fixed', px: parseFloat(ga.style.paddingBottom) || 0, panel: VR(mz).height }; })(),
     actions: [...document.querySelectorAll('.act-buttons-row .btn-action')].filter(vis).map(rect),
     loupeBtn: vis(document.getElementById('g-zoom-toggle')) ? rect(document.getElementById('g-zoom-toggle')) : null,
     floating: ['chat-toggle-btn', 'react-toggle-btn', 'hands-toggle-btn', 'log-toggle-btn'].map((id) => document.getElementById(id)).filter(vis).map(rect),
@@ -168,7 +169,7 @@ async function runDevice(browser, name, descriptor) {
       await page.locator('#bet-keypad').waitFor({ timeout: 4000 });
       await page.waitForTimeout(500); await settle(page);
       for (const k of ['2', '5', '0']) await page.locator(`#kp-grid .kp-k[data-k="${k}"]`).tap();
-      const kp = await page.evaluate(() => { const R = (q) => { const r = document.querySelector(q).getBoundingClientRect(); return { left: r.left, top: r.top, right: r.right, bottom: r.bottom, height: r.height }; };
+      const kp = await page.evaluate(() => { const VR = window.__pthVisualRect || ((e) => e.getBoundingClientRect()); const R = (q) => { const r = VR(document.querySelector(q)); return { left: r.left, top: r.top, right: r.right, bottom: r.bottom, height: r.height }; };
         return { vw: innerWidth, vh: innerHeight, pad: R('#bet-keypad'), ok: R('#kp-ok'), cancel: R('#kp-cancel'), key: R('#kp-grid .kp-k'), panel: R('.my-zone'), me: R('#g-seats .seat.me .seat-plate'),
           zone: R('#g-table-zone'), amt: document.getElementById('kp-amt').textContent.replace(/\D/g, '') }; });
       await shot(page, name, '1b-bet-keypad');
