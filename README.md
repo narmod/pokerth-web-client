@@ -29,6 +29,10 @@
 ## ✨ Highlights
 
 - 🎮 **Zero install** — open a URL and you're at the table
+- 🆓 **Free, no ads, no real money** — open source, play-money chips only, nothing to buy
+- 👤 **No account needed** — play as a **guest** on pokerth.net (Normal games), or with just a **nickname** on any LAN / dedicated server; a free pokerth.net account adds Ranking games and the chat
+- 🔗 **Invite friends with a link** — from the waiting room, on pokerth.net or any server: your friend logs in and is seated at your table automatically
+- 🏆 **Free tournaments all year** — Ranking games with seasons, plus the community **BBC**, **WeCup** and **Monthly Cup** ([dates and links](https://webclient.pokerth.net/competitions))
 - 📱 **Installable PWA** — add to your home screen for a fullscreen app feel on iOS &amp; Android
 - 🏋️ **Offline training vs bots** — no server, proxy or connection required
 - 🔌 **Any PokerTH server** — including the public **pokerth.net**
@@ -95,6 +99,8 @@ Play right away — no account needed, no install. Pick **🌐 Internet** to joi
 Want to try with **no server or connection at all**? Pick **🏋️ Training mode** and play instantly against bots — fully offline.
 
 > Tip: it works just as well on mobile — add it to your home screen for a fullscreen app feel.
+
+New to PokerTH? Start with the [FAQ](https://webclient.pokerth.net/faq) (guest play, invitation links, demo server, community servers), [how to play](https://webclient.pokerth.net/how-to-play), the [Texas Hold'em rules](https://webclient.pokerth.net/rules) and the [free competitions](https://webclient.pokerth.net/competitions) — all available in 83 languages.
 
 ---
 
