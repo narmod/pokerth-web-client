@@ -657,6 +657,12 @@ function _qmlPortraitLayout(oppCnt, zW, zH, zoomMul, spectating, opts) {
   var grow = (1 - t) * Math.max(0, (Math.sqrt(zW * zH) - 760) / 700);
   var denseShrink = t * Math.min(0.15, Math.max(0, (zW - 1024) / 4000));
   var hiCap = Math.min(2.2, countCap * (1 + grow) - denseShrink);
+  // AJUSTEMENT WEB (web.73, narmod 15/10) : en portrait téléphone, sièges
+  // plafonnés à 1.2. Le fillCap QML monte de 1.15 (1 adversaire) à 2.0 (6) :
+  // à 4 joueurs (TL · TC · TR) rien d'autre ne limite et les boîtes passaient
+  // à ~1.45 contre ~1.15 à 3 et 5 joueurs — un pic jugé trop gros. Le
+  // plafond rend la taille quasi constante ; desktop et paysage inchangés.
+  if (mobileP) hiCap = Math.min(hiCap, 1.2);
   // Sémantique du zoom : s = base × zoom, BORNÉ par la faisabilité.
   //   zoom <= 1 : réduction proportionnelle directe (toujours faisable) ;
   //   zoom > 1  : croissance proportionnelle plafonnée par la bisection

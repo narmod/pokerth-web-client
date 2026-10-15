@@ -1202,6 +1202,12 @@ function renderSeatsImmediate() {
             ? (_bandP3.b - _bandP3.t) / 2 - 6
             : 0.15 * _zH3 - _oppH3 * _seatBoxScale / 2 - 6;
         _csComm = Math.max(0.55, Math.min(1.8, (_vHalf > 0 ? _vHalf / 62 : 0.55), Math.max(0, _zW3 - 16) / 264));
+        // AJUSTEMENT WEB (web.73, narmod 15/10) : portrait téléphone, rangée
+        // limitée à 70 % de la largeur de zone (la borne que le QML applique
+        // déjà en paysage). Sans elle, à 2-3 joueurs la bande est si haute que
+        // la rangée s'étirait sur toute la largeur d'écran (66 px par carte
+        // contre 44 px à 5-6 joueurs). Desktop portrait (sans bande) inchangé.
+        if (_bandP3) _csComm = Math.min(_csComm, Math.max(0.55, 0.70 * _zW3 / 264));
         // STRICT QML (web.71, demande narmod 15/10) : GamePage.qml
         // communityScale portrait = max(0.55, min(1.8, bande/62, (W−16)/264)),
         // rien d'autre. L'ancien ×1.17 empirique du 15/09 (mesuré quand la

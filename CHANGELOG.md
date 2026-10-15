@@ -348,6 +348,13 @@ highlights below.
   winning-hand badge are now obstacles; a side puck that does not fit is first squeezed into the gap
   (centred, `--seat-bet-gap-r/l` on the seat, at most half over its own box) before changing side; with
   no free side, the least-overlap placement wins (pot and cards weigh 3×, off-zone excluded) (`web.72`).
+- **Portrait phone: steadier seat and card sizes (web adjustment, deliberate departure from QML)** —
+  upstream's mobile `fillCap` ramps from 1.15 (1 opponent) to 2.0 (6), so with 4 players (TL · TC · TR)
+  nothing else limits the seats and they peaked at ~1.45 vs ~1.15 at 3 and 5 players; and with 2–3
+  players the band is so tall that the community row spanned the screen width. Seats are now capped at
+  1.2 and the row at 70 % of the zone width (upstream's own landscape bound) on portrait phones: on a
+  393 px wide phone the cards are 44–48 px at every table size, seats 1.11–1.2. Desktop portrait and
+  landscape unchanged (`web.73`).
 - **Studio / photo avatars fill a square seat frame** — the avatar image kept a forced
   circle (`border-radius: 50%`) even in the QML seat structure, whose frame is square: it now
   inherits the frame's shape, round in classic seats, square in QML seats (`pokerth.css`, `web.37`).
