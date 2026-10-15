@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Lobi: metin alanı dışında yazmak doğrudan sohbete yazar']],
           note: 'Android\u2019de sistemin Geri tuşu/hareketi oyundan çıkmak yerine pencereleri Esc gibi kapatır (seçeneklerden ayarlanabilir). iOS\u2019ta eşdeğer bir sistem tuşu yoktur — her pencerenin \u2715 işaretini kullan.' },
         { id: 'gamepad', t: "Oyun kumandası",
-          b: ["Oyun kumandası, gamepad destekleyen tarayıcılarda çalışır (Xbox, PlayStation, Switch Pro ve çoğu Bluetooth kumanda) — tarayıcının algılaması için düğmelerinden birine bir kez bas. Masada düğmeleri oyunu oynar; bir pencere veya menü açılır açılmaz, ve masa dışındaki her yerde, ekranda gezinmeye yarar:"],
+          b: ["Oyun kumandası, kumandaları destekleyen tarayıcılarda çalışır (Xbox, PlayStation, Switch Pro ve çoğu Bluetooth kumanda) — tarayıcının algılaması için düğmelerinden herhangi birine bir kez bas. Select, sol altta bir rozetle gösterilen iki mod arasında geçiş yapar: Oyun, sohbet ya da geçmiş açıkken bile masada oynamak için, ve Gezinme, ekranda ve pencerelerinde dolaşmak için. Sıra sana geldiğinde kumanda titrer ve kendiliğinden Oyun moduna döner."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — All-In için basılı tut"],
-            ["LT / RT", "Bahis tutarını azalt / artır"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Oyun modu: Manuel · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Masada gezin (başlık, koltuklar); B ya da bir sonraki sıran düğmeleri oyuna geri verir"],
-            ["Start / Select", "Ayarlar · Sohbet"],
-            ["D-pad / LS", "Menüler: öğeden öğeye geç"],
-            ["A / B", "Menüler: seç · geri (Esc gibi)"],
-            ["LB / RB", "Menüler: önceki / sonraki sekme"],
+            ["Select", "Oyun ile Gezinme arasında geçiş"],
+            ["Start", "Kumanda menüsü: sohbet, geçmiş, şanslar, istatistikler, tepkiler, As’ın yardımı, ayarlar, tam ekran, düğmeler, çık"],
+            ["A / X / Y", "Oyun: Check/Call · Fold · Bet/Raise (All-In için Y’yi basılı tut)"],
+            ["LT / RT", "Oyun: bahis tutarını azalt / artır"],
+            ["LB / RB", "Oyun: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Oyun: oynama modu (Manuel · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Gezinme: öğeden öğeye geç"],
+            ["A / B", "Gezinme: seç · geri (Esc gibi); B asla Fold yapmaz"],
+            ["X / Y", "Gezinme: sohbet (ekran klavyesiyle) · As’ın yardımı"],
+            ["LB / RB", "Gezinme: önceki / sonraki pencere (masa, açık paneller, As)"],
+            ["LT / RT", "Gezinme: önceki / sonraki sekme"],
             ["RS", "Kaydır"]],
-          note: "Harfler Xbox düzenini izler: PlayStation kumandasında ✕ = A, ○ = B, □ = X, △ = Y'dir ve eylem düğmeleri kendi kumandanın sembollerini gösterir. B asla Fold yapmaz. Bir listede, kaydırıcıda veya sayı alanında ← / → değeri değiştirir. Metin alanları hâlâ klavye gerektirir: A imleci alana yerleştirir, bu da telefon ve tabletlerde ekran klavyesini açar. Ayarlar: Gelişmiş seçenekler → Kullanıcı arayüzü → Oyun kumandası." }
+          note: "Harfler Xbox düzenini izler: PlayStation kumandasında ✕ = A, ○ = B, □ = X, △ = Y; eylem düğmeleri de kendi kumandanın sembollerini gösterir. Gerçek bir pencere (ayarlar, onay, kumanda menüsü) açık olduğu sürece her zaman Gezinme moduna geçer. Yazmak için bir metin alanında A, kumanda klavyesini açar: sohbet için hızlı ifadeler, D-pad ve A ile harfler, X siler, Y boşluk ekler, LB büyük harfe geçirir, RB rakam ve sembollere, Start gönderir, B kapatır. Ayarlar: Gelişmiş seçenekler → Kullanıcı arayüzü → Oyun kumandası." }
       ]
     }
   ]

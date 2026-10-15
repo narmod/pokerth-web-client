@@ -11,7 +11,7 @@
 //     while a surface is open; D-pad ↑ browses the table and X does not fold
 // Run: node scripts/test-gamepad-browser.mjs
 import { chromium } from 'playwright';
-import { startServer, openTable } from './lib/mobile-harness.mjs';
+import { startServer, openTable, turnTo } from './lib/mobile-harness.mjs';
 
 let pass = 0, fail = 0;
 function ok(cond, label) {
@@ -39,7 +39,7 @@ const page = await context.newPage();
 const errors = [];
 page.on('pageerror', (e) => errors.push(String(e)));
 
-await openTable(page, base, { seats: 4, board: 'flop', turn: 'me' });
+const ids = await openTable(page, base, { seats: 4, board: 'flop', turn: 'me' });
 
 await page.evaluate(() => {
   window.__calls = [];
@@ -110,28 +110,135 @@ await press(B.RIGHT);
 c = await calls();
 ok(c.some((x) => x[0] === 'mode' && x[1] === 1), 'D-pad → = next playing mode ' + JSON.stringify(c));
 
-// ── Navigation in the settings ──
-await press(B.START);
-ok(await page.evaluate(() => getComputedStyle(document.getElementById('adv-modal')).display !== 'none'), 'Start opens the settings');
-ok(await page.evaluate(() => window.PadNav.currentMode().mode === 'nav'), 'settings open → navigation mode');
+// ── Floating panels do not stop play ──
+await page.evaluate(() => window.toggleGameChat());
+await page.waitForTimeout(150);
+await page.evaluate(() => document.activeElement && document.activeElement.blur());   // opened with the mouse, not typing
+ok(await page.evaluate(() => getComputedStyle(document.getElementById('g-chat-panel')).display !== 'none'), 'chat panel open');
+ok(await page.evaluate(() => window.PadNav.currentMode().mode === 'game'), 'chat open → still game mode');
 await press(B.X);
-ok((await calls()).length === 0, 'X does nothing while a window is open');
+c = await calls();
+ok(c.some((x) => x[0] === 'doAction' && x[1] === 1), 'X still folds with the chat open');
+await press(B.B);
+ok(await page.evaluate(() => getComputedStyle(document.getElementById('g-chat-panel')).display === 'none'), 'B closes the chat panel');
+ok(await page.evaluate(() => window.PadNav.currentMode().mode === 'game'), 'still game mode after closing it');
+
+// ── Select: game ⇄ navigation ──
+await press(B.SELECT);
+ok(await page.evaluate(() => window.PadNav.currentMode().mode === 'nav'), 'Select → navigation');
+ok(await page.evaluate(() => { const b = document.getElementById('ctl-badge'); return !!b && !b.hidden && b.classList.contains('ctl-badge-nav'); }), 'badge shows navigation');
+ok(await page.evaluate(() => !!document.querySelector('#s-game .pad-cur')), 'ring placed on the table');
+await press(B.SELECT);
+ok(await page.evaluate(() => window.PadNav.currentMode().mode === 'game' && !document.querySelector('.pad-cur')), 'Select → back to game, ring gone');
+
+// X in navigation = chat: opens the panel and the controller keyboard.
+await page.evaluate(() => { window.__sent = []; window.App.sendGameChat = function () { const f = document.getElementById('g-chat-in'); window.__sent.push(f.value); f.value = ''; }; });
+await press(B.SELECT);
+await press(B.X);
+await page.waitForTimeout(300);
+const kb = await page.evaluate(() => { const k = document.getElementById('ctl-kb'); const r = document.querySelector('.pad-cur'); return { open: !!k && getComputedStyle(k).display !== 'none', ring: r ? r.className : null, mode: window.PadNav.currentMode().forced }; });
+ok(kb.open && /ctl-phrase/.test(kb.ring || '') && kb.mode, 'X (navigation) opens the chat and the keyboard, ring on the quick phrases ' + JSON.stringify(kb));
+ok((await calls()).length === 0, 'X did not fold in navigation');
+ok(await page.evaluate(() => document.activeElement && document.activeElement.id !== 'g-chat-in'), 'the chat field is not focused (no device keyboard)');
+await press(B.A);
+let sent = await page.evaluate(() => window.__sent.slice());
+ok(sent.length === 1 && sent[0].length > 0, 'A on a quick phrase sends it ' + JSON.stringify(sent));
+ok(await page.evaluate(() => getComputedStyle(document.getElementById('ctl-kb')).display === 'none'), 'keyboard closes after sending');
+// Type "hi" with letters, Y = space, X = backspace, Start = send.
+await press(B.A);   // ring back on the chat field (zone chat) → A opens the keyboard
+const typed = async (ch) => {
+  for (let i = 0; i < 30; i++) {
+    const step = await page.evaluate((ch) => {
+      const r = document.querySelector('.pad-cur');
+      const k = [...document.querySelectorAll('#ctl-kb .ctl-key')].find((b) => b.textContent.toLowerCase() === ch);
+      if (!k) return 'none';
+      if (r === k) return 'done';
+      if (!r) return 'down';
+      const a = r.getBoundingClientRect(), b = k.getBoundingClientRect();
+      if (b.top > a.bottom - 2) return 'down';
+      if (b.bottom < a.top + 2) return 'up';
+      return b.left > a.left ? 'right' : 'left';
+    }, ch);
+    if (step === 'done') { await press(B.A); return true; }
+    if (step === 'none') return false;
+    await press({ down: B.DOWN, up: B.UP, left: B.LEFT, right: B.RIGHT }[step]);
+  }
+  return false;
+};
+ok(await page.evaluate(() => getComputedStyle(document.getElementById('ctl-kb')).display !== 'none'), 'A on the chat field opens the keyboard');
+ok(await typed('h') && await typed('i'), 'letters typed with the D-pad and A');
+await press(B.Y); await press(B.Y);
+await press(B.X);
+const val = await page.evaluate(() => document.getElementById('g-chat-in').value);
+ok(val === 'hi ', 'Y = space, X = backspace (' + JSON.stringify(val) + ')');
+await press(B.START);
+sent = await page.evaluate(() => window.__sent.slice());
+ok(sent.length === 2 && sent[1] === 'hi ', 'Start sends the message ' + JSON.stringify(sent));
+// LB / RB cycle the zones: table ⇄ chat.
+const z0 = await page.evaluate(() => window.PadNav.currentMode().scope.id);
+await press(B.RB);
+const z1 = await page.evaluate(() => window.PadNav.currentMode().scope.id);
+ok(z0 !== z1, `RB switches zone (${z0} → ${z1})`);
+await press(B.RB);
+const z2 = await page.evaluate(() => window.PadNav.currentMode().scope.id);
+ok(z2 === z0 || z2 === 'ace-dock', `RB again goes on (${z2})`);
+await press(B.B);   // closes the chat
+await press(B.B);   // nothing left → game
+ok(await page.evaluate(() => window.PadNav.currentMode().mode === 'game'), 'B with nothing to close returns to game');
+
+// My turn comes back while navigating → game automatically.
+await press(B.SELECT);
+ok(await page.evaluate(() => window.PadNav.currentMode().mode === 'nav'), 'navigating before the turn');
+await turnTo(page, ids[1]);
+await page.waitForTimeout(150);
+await turnTo(page, 42);
+await page.waitForTimeout(250);
+ok(await page.evaluate(() => window.PadNav.currentMode().mode === 'game'), 'my turn → back to game mode automatically');
+
+// ── Start: controller menu ──
+await press(B.START);
+ok(await page.evaluate(() => getComputedStyle(document.getElementById('ctl-menu')).display !== 'none'), 'Start opens the controller menu');
+ok(await page.evaluate(() => window.PadNav.currentMode().mode === 'nav' && window.PadNav.currentMode().forced), 'menu forces navigation');
+const tilesIds = await page.evaluate(() => [...document.querySelectorAll('#ctl-menu .ctl-tile')].map((b) => b.dataset.act));
+ok(tilesIds[0] === 'resume' && tilesIds.includes('chat') && tilesIds.includes('options') && tilesIds.includes('quit'), 'table tiles ' + tilesIds.join(','));
+await press(B.X);
+ok((await calls()).length === 0, 'X does nothing in the menu');
+// Walk to the Settings tile and open it.
+let onOpt = false;
+for (let i = 0; i < 20 && !onOpt; i++) {
+  const step = await page.evaluate(() => {
+    const r = document.querySelector('.pad-cur'), o = document.querySelector('#ctl-menu .ctl-tile[data-act="options"]');
+    if (r === o) return 'done';
+    if (!r) return 'down';
+    const a = r.getBoundingClientRect(), b = o.getBoundingClientRect();
+    if (b.top > a.bottom - 2) return 'down';
+    if (b.bottom < a.top + 2) return 'up';
+    return b.left > a.left ? 'right' : 'left';
+  });
+  if (step === 'done') { onOpt = true; break; }
+  await press({ down: B.DOWN, up: B.UP, left: B.LEFT, right: B.RIGHT }[step]);
+}
+ok(onOpt, 'D-pad reaches the Settings tile');
+await press(B.A);
+await page.waitForTimeout(200);
+ok(await page.evaluate(() => getComputedStyle(document.getElementById('adv-modal')).display !== 'none' && getComputedStyle(document.getElementById('ctl-menu')).display === 'none'), 'A on Settings closes the menu and opens the settings');
+
+// ── Settings ──
 await press(B.DOWN);
 const r1 = await page.evaluate(() => { const r = document.querySelector('.pad-cur'); return r ? { inModal: document.getElementById('adv-modal').contains(r), txt: (r.textContent || r.id || r.tagName).trim().slice(0, 40) } : null; });
-ok(r1 && r1.inModal, 'first press shows the ring inside the settings ' + JSON.stringify(r1));
+ok(r1 && r1.inModal, 'ring inside the settings ' + JSON.stringify(r1));
 await press(B.DOWN); await press(B.DOWN);
 const r2 = await page.evaluate(() => { const r = document.querySelector('.pad-cur'); return r ? (r.textContent || r.id || r.tagName).trim().slice(0, 40) : null; });
 ok(r2 && r2 !== r1.txt, 'D-pad ↓ moves the ring (' + r1.txt + ' → ' + r2 + ')');
-
+await press(B.SELECT);
+ok(await page.evaluate(() => window.PadNav.currentMode().forced), 'Select ignored while a window is open');
 const cat0 = await page.evaluate(() => document.querySelector('#adv-modal .adv-cat[aria-selected="true"]').dataset.cat);
-await press(B.RB);
+await press(B.RT);
 const cat1 = await page.evaluate(() => document.querySelector('#adv-modal .adv-cat[aria-selected="true"]').dataset.cat);
-ok(cat0 !== cat1, `RB switches category (${cat0} → ${cat1})`);
-await press(B.LB);
+ok(cat0 !== cat1, `RT switches category (${cat0} → ${cat1})`);
+await press(B.LT);
 const cat2 = await page.evaluate(() => document.querySelector('#adv-modal .adv-cat[aria-selected="true"]').dataset.cat);
-ok(cat2 === cat0, 'LB goes back (' + cat2 + ')');
-
-// Walk down to a checkbox row and toggle it with A.
+ok(cat2 === cat0, 'LT goes back (' + cat2 + ')');
 let toggled = null;
 for (let i = 0; i < 25 && !toggled; i++) {
   const info = await page.evaluate(() => { const r = document.querySelector('.pad-cur'); if (!r) return null; const cb = r.querySelector && r.querySelector('input[type=checkbox]'); return cb ? { id: cb.id, on: cb.checked } : null; });
@@ -143,25 +250,30 @@ for (let i = 0; i < 25 && !toggled; i++) {
   } else await press(B.DOWN);
 }
 ok(toggled && toggled.before !== toggled.after, 'A toggles a checkbox row ' + JSON.stringify(toggled));
-
 await press(B.B);
 ok(await page.evaluate(() => getComputedStyle(document.getElementById('adv-modal')).display === 'none'), 'B closes the settings');
-ok(await page.evaluate(() => window.PadNav.currentMode().mode === 'table'), 'back to table mode');
-ok(await page.evaluate(() => !document.querySelector('.pad-cur')), 'ring cleared at the table');
+const after = await page.evaluate(() => { const m = window.PadNav.currentMode(); const r = document.querySelector('.pad-cur'); return { mode: m.mode, scope: m.scope && m.scope.id, ring: r ? (r.id || r.className) : null }; });
+ok(after.mode === 'game' && !after.ring, 'back to game mode, ring gone ' + JSON.stringify(after));
 
-// ── Browse the table ──
-await press(B.UP);
-ok(await page.evaluate(() => window.PadNav.currentMode().mode === 'nav' && !!document.querySelector('#s-game .pad-cur')), 'D-pad ↑ browses the table');
-await press(B.X);
-ok((await calls()).length === 0, 'X does not fold while browsing');
-await press(B.B);
-ok(await page.evaluate(() => window.PadNav.currentMode().mode === 'table' && !document.querySelector('.pad-cur')), 'B returns to the table buttons');
+// ── The Ace (navigation, Y) ──
+const aceAvail = await page.evaluate(() => typeof window.guideToggle === 'function' && document.body.classList.contains('guide-avail'));
+if (aceAvail) {
+  await press(B.SELECT);
+  await press(B.Y);
+  await page.waitForTimeout(1600);
+  const ace = await page.evaluate(() => { const r = document.querySelector('.pad-cur'); const d = document.getElementById('ace-dock'); return { inAce: !!(r && d && d.contains(r)), open: !!document.querySelector('#ace-dock .ad-bubble.ad-open') }; });
+  ok(ace.open && ace.inAce, 'Y opens the Ace\'s menu with the ring in his bubble ' + JSON.stringify(ace));
+  await press(B.B); await press(B.B);
+  await page.evaluate(() => window.CtlNav.setMode('game'));
+} else console.log('  (Ace not available in this fixture: skipped)');
 
 // ── Mouse takes over ──
-await press(B.UP);
+await press(B.SELECT);
 await page.mouse.click(5, 5);
 await page.waitForTimeout(100);
 ok(await page.evaluate(() => !document.body.classList.contains('pad-active') && !document.querySelector('.pad-cur')), 'a mouse click hides glyphs and ring');
+await page.evaluate(() => window.CtlNav.setMode('game'));
+await calls();
 
 // ── Option off ──
 await page.evaluate(() => { localStorage.setItem('pth_pad_on', '0'); });

@@ -452,21 +452,21 @@ export const help = {
             ["A–Z · 0–9", "Halo: tajpado ekster tekstokampo skribas rekte en la babilejon"]],
           note: "Ĉe Android, la sistema butono/gesto Reen fermas fenestrojn kiel Escape anstataŭ forlasi la ludon (agordebla en la opcioj). iOS ne havas ekvivalentan sisteman butonon — uzu la ✕ de ĉiu fenestro." },
         { id: 'gamepad', t: "Ludregilo",
-          b: ["Ludregilo funkcias en retumiloj, kiuj subtenas ludregilojn (Xbox, PlayStation, Switch Pro kaj la plej multaj Bluetooth-regiloj) — premu unufoje iun ajn el ĝiaj butonoj, por ke la retumilo detektu ĝin. Ĉe la tablo ĝiaj butonoj ludas; tuj kiam fenestro aŭ menuo estas malfermita, kaj ĉie ekster la tablo, ili anstataŭe movas vin tra la ekrano:"],
+          b: ["Ludregilo funkcias en retumiloj, kiuj subtenas ludregilojn (Xbox, PlayStation, Switch Pro kaj la plej multaj Bluetooth-regiloj) — premu unufoje iun ajn el ĝiaj butonoj, por ke la retumilo detektu ĝin. Select ŝaltas inter du reĝimoj, montritaj per insigno malsupre maldekstre: Ludo, por ludi ĉe la tablo eĉ kun la babilado aŭ la protokolo malfermitaj, kaj Navigado, por moviĝi tra la ekrano kaj ĝiaj fenestroj. Kiam venas via vico, la ludregilo vibras kaj per si mem revenas al Ludo."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — tenu ĝin por iri All-In"],
-            ["LT / RT", "Malaltigi / altigi la vetsumon"],
-            ["LB / RB", "Veto 1/3 · 1/2 · Poto"],
-            ["← / →", "Ludreĝimo: Permane · Aŭtomata Check/Call · Aŭtomata Check/Fold"],
-            ["↑", "Trarigardi la tablon (kaplinio, sidlokoj); B aŭ via sekva vico redonas la butonojn al la ludo"],
-            ["Start / Select", "Agordoj · Babilado"],
-            ["D-pad / LS", "Menuoj: iri de ero al ero"],
-            ["A / B", "Menuoj: elekti · reen (kiel Esc)"],
-            ["LB / RB", "Menuoj: antaŭa / sekva langeto"],
+            ["Select", "Ŝalti inter Ludo kaj Navigado"],
+            ["Start", "Menuo de la ludregilo: babilado, protokolo, ŝancoj, statistikoj, reagoj, Helpo de la Aso, agordoj, plenekrane, butonoj, forlasi"],
+            ["A / X / Y", "Ludo: Check/Call · Fold · Bet/Raise (tenu Y por All-In)"],
+            ["LT / RT", "Ludo: malpliigi / pliigi la vetsumon"],
+            ["LB / RB", "Ludo: Veto 1/3 · 1/2 · Poto"],
+            ["← / →", "Ludo: ludreĝimo (Permane · Aŭtomata Check/Call · Aŭtomata Check/Fold)"],
+            ["D-pad / LS", "Navigado: iri de ero al ero"],
+            ["A / B", "Navigado: elekti · reen (kiel Esc); B neniam faras Fold"],
+            ["X / Y", "Navigado: babilado (kun la surekrana klavaro) · Helpo de la Aso"],
+            ["LB / RB", "Navigado: antaŭa / sekva fenestro (tablo, malfermitaj paneloj, la Aso)"],
+            ["LT / RT", "Navigado: antaŭa / sekva langeto"],
             ["RS", "Rulumi"]],
-          note: "La literoj sekvas la aranĝon de Xbox: ĉe PlayStation-regilo ✕ = A, ○ = B, □ = X, △ = Y, kaj la agobutonoj montras la simbolojn de via propra regilo. B neniam faras Fold. En listo, ŝovilo aŭ nombra kampo, ← / → ŝanĝas la valoron. Tekstaj kampoj ankoraŭ bezonas klavaron: A metas la kursoron en la kampon, kio malfermas la ekranan klavaron ĉe telefonoj kaj tabulkomputiloj. Agordoj: Altnivelaj opcioj → Uzantinterfaco → Ludregilo." }
+          note: "La literoj sekvas la Xbox-aranĝon: sur PlayStation-regilo ✕ = A, ○ = B, □ = X, △ = Y, kaj la agbutonoj montras la simbolojn de via propra regilo. Vera fenestro (agordoj, konfirmo, menuo de la ludregilo) ĉiam ŝaltas al Navigado dum ĝi estas malfermita. Por skribi, A sur tekstokampo malfermas la klavaron de la ludregilo: rapidaj frazoj por la babilado, literoj per la direktokruco kaj A, X forviŝas, Y aldonas spaceton, LB ŝaltas majusklojn, RB ciferojn kaj simbolojn, Start sendas, B fermas. Agordoj: Altnivelaj opcioj → Uzantinterfaco → Ludregilo." }
       ]
     }
   ]

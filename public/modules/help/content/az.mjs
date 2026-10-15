@@ -452,21 +452,21 @@ export const help = {
             ["A–Z · 0–9", "Lobbi: mətn sahəsindən kənarda yazmaq birbaşa çata yazır"]],
           note: "Android-də sistemin Geri düyməsi/jesti oyundan çıxmaq əvəzinə Escape kimi pəncərələri bağlayır (seçimlərdə tənzimlənir). iOS-da ekvivalent sistem düyməsi yoxdur — hər pəncərənin ✕ düyməsindən istifadə edin." },
         { id: 'gamepad', t: "Oyun pultu",
-          b: ["Oyun pultu geympadları dəstəkləyən brauzerlərdə işləyir (Xbox, PlayStation, Switch Pro və əksər Bluetooth pultları) — brauzerin onu tanıması üçün istənilən düyməsini bir dəfə basın. Masada onun düymələri oynayır; pəncərə və ya menyu açılan kimi, həmçinin masadan kənarda hər yerdə isə ekranda hərəkət etmək üçün istifadə olunur:"],
+          b: ["Oyun pultu geympadları dəstəkləyən brauzerlərdə işləyir (Xbox, PlayStation, Switch Pro və əksər Bluetooth pultları) — brauzerin onu tanıması üçün istənilən düyməsini bir dəfə basın. Select iki rejim arasında keçid edir, rejim aşağı solda nişanla göstərilir: Oyun — çat və ya jurnal açıq olsa belə masada oynamaq üçün, və Naviqasiya — ekranda və onun pəncərələrində hərəkət etmək üçün. Növbəniz gələndə oyun pultu titrəyir və özü Oyun rejiminə qayıdır."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — All-In üçün basılı saxlayın"],
-            ["LT / RT", "Mərc məbləğini azaltmaq / artırmaq"],
-            ["LB / RB", "Mərc 1/3 · 1/2 · Bank"],
-            ["← / →", "Oyun rejimi: Əl ilə · Avto Check/Call · Avto Check/Fold"],
-            ["↑", "Masanı gəzmək (başlıq, yerlər); B və ya növbəti gedişiniz düymələri oyuna qaytarır"],
-            ["Start / Select", "Parametrlər · Çat"],
-            ["D-pad / LS", "Menyular: elementdən elementə keçmək"],
-            ["A / B", "Menyular: seçmək · geri (Esc kimi)"],
-            ["LB / RB", "Menyular: əvvəlki / növbəti vərəq"],
+            ["Select", "Oyun və Naviqasiya arasında keçid"],
+            ["Start", "Oyun pultu menyusu: çat, jurnal, ehtimallar, statistika, reaksiyalar, Tuzun köməyi, parametrlər, tam ekran, düymələr, çıx"],
+            ["A / X / Y", "Oyun: Check/Call · Fold · Bet/Raise (All-In üçün Y-ni basılı saxlayın)"],
+            ["LT / RT", "Oyun: mərc məbləğini azaltmaq / artırmaq"],
+            ["LB / RB", "Oyun: Mərc 1/3 · 1/2 · Bank"],
+            ["← / →", "Oyun: oyun rejimi (Əl ilə · Avto Check/Call · Avto Check/Fold)"],
+            ["D-pad / LS", "Naviqasiya: elementdən elementə keçmək"],
+            ["A / B", "Naviqasiya: seçmək · geri (Esc kimi); B heç vaxt Fold etmir"],
+            ["X / Y", "Naviqasiya: çat (ekran klaviaturası ilə) · Tuzun köməyi"],
+            ["LB / RB", "Naviqasiya: əvvəlki / növbəti pəncərə (masa, açıq panellər, Tuz)"],
+            ["LT / RT", "Naviqasiya: əvvəlki / növbəti vərəq"],
             ["RS", "Sürüşdürmək"]],
-          note: "Hərflər Xbox düzülüşünə uyğundur: PlayStation pultunda ✕ = A, ○ = B, □ = X, △ = Y olur və hərəkət düymələri öz pultunuzun simvollarını göstərir. B heç vaxt Fold etmir. Siyahıda, sürüşdürücüdə və ya rəqəm sahəsində ← / → dəyəri dəyişir. Mətn sahələri yenə də klaviatura tələb edir: A kursoru sahəyə qoyur, bu da telefon və planşetlərdə ekran klaviaturasını açır. Parametrlər: Əlavə seçimlər → İstifadəçi interfeysi → Oyun pultu." }
+          note: "Hərflər Xbox düzülüşünə uyğundur: PlayStation pultunda ✕ = A, ○ = B, □ = X, △ = Y olur və hərəkət düymələri öz pultunuzun simvollarını göstərir. Əsl pəncərə (parametrlər, təsdiq, oyun pultu menyusu) açıq qaldıqca həmişə Naviqasiya rejiminə keçir. Yazmaq üçün mətn sahəsində A oyun pultu klaviaturasını açır: çat üçün sürətli ifadələr, D-pad və A ilə hərflər, X silir, Y boşluq əlavə edir, LB böyük hərfləri dəyişir, RB rəqəm və simvollar, Start göndərir, B bağlayır. Parametrlər: Əlavə seçimlər → İstifadəçi interfeysi → Oyun pultu." }
       ]
     }
   ]

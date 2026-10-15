@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Predvorje: tipkanje izvan tekstnog polja piše izravno u chat']],
           note: 'Na Androidu sustavski gumb/gesta Natrag zatvara prozore poput Esc, umjesto da napusti partiju (podesivo u opcijama). iOS nema ekvivalentan sustavski gumb — koristi \u2715 svakog prozora.' },
         { id: 'gamepad', t: "Kontroler",
-          b: ["Kontroler za igre radi u preglednicima koji podržavaju gamepade (Xbox, PlayStation, Switch Pro i većina Bluetooth kontrolera) — pritisni jednom bilo koji njegov gumb kako bi ga preglednik prepoznao. Za stolom njegovi gumbi igraju; čim je otvoren prozor ili izbornik, i svugdje izvan stola, umjesto toga služe za kretanje po zaslonu:"],
+          b: ["Kontroler za igre radi u preglednicima koji podržavaju gamepade (Xbox, PlayStation, Switch Pro i većina Bluetooth kontrolera) — pritisni jednom bilo koji njegov gumb kako bi ga preglednik prepoznao. Select prebacuje između dva načina, prikazana oznakom dolje lijevo: Igra, za igranje za stolom čak i kad su chat ili zapisnik otvoreni, i Navigacija, za kretanje po zaslonu i njegovim prozorima. Kad dođeš na potez, kontroler zavibrira i sam se vraća u način Igra."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — drži ga za All-In"],
-            ["LT / RT", "Smanji / povećaj iznos uloga"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Način igre: Ručno · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Pregled stola (zaglavlje, mjesta); B ili tvoj sljedeći potez vraća gumbe igri"],
-            ["Start / Select", "Postavke · Chat"],
-            ["D-pad / LS", "Izbornici: prelazak s jedne stavke na drugu"],
-            ["A / B", "Izbornici: odabir · natrag (kao Esc)"],
-            ["LB / RB", "Izbornici: prethodna / sljedeća kartica"],
+            ["Select", "Prebacivanje između Igre i Navigacije"],
+            ["Start", "Izbornik kontrolera: chat, zapisnik, izgledi, statistika, reakcije, Pomoć asa, postavke, cijeli zaslon, gumbi, izlaz"],
+            ["A / X / Y", "Igra: Check/Call · Fold · Bet/Raise (drži Y za All-In)"],
+            ["LT / RT", "Igra: smanji / povećaj iznos uloga"],
+            ["LB / RB", "Igra: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Igra: način igre (Ručno · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Navigacija: prelazak s jedne stavke na drugu"],
+            ["A / B", "Navigacija: odabir · natrag (kao Esc); B nikad ne radi Fold"],
+            ["X / Y", "Navigacija: chat (sa zaslonskom tipkovnicom) · Pomoć asa"],
+            ["LB / RB", "Navigacija: prethodni / sljedeći prozor (stol, otvorene ploče, As)"],
+            ["LT / RT", "Navigacija: prethodna / sljedeća kartica"],
             ["RS", "Pomicanje"]],
-          note: "Slova slijede Xbox raspored: na PlayStation kontroleru ✕ = A, ○ = B, □ = X, △ = Y, a gumbi akcija prikazuju simbole tvog kontrolera. B nikad ne radi Fold. Na popisu, klizaču ili brojčanom polju ← / → mijenjaju vrijednost. Tekstna polja i dalje traže tipkovnicu: A stavlja kursor u polje, što na telefonima i tabletima otvara zaslonsku tipkovnicu. Postavke: Napredne opcije → Korisničko sučelje → Kontroler." }
+          note: "Slova slijede Xbox raspored: na PlayStation kontroleru ✕ = A, ○ = B, □ = X, △ = Y, a gumbi akcija prikazuju simbole tvog kontrolera. Pravi prozor (postavke, potvrda, izbornik kontrolera) uvijek prelazi u Navigaciju dok je otvoren. Za pisanje, A na tekstnom polju otvara tipkovnicu kontrolera: brze poruke za chat, slova D-padom i A, X briše, Y dodaje razmak, LB prebacuje na velika slova, RB na brojeve i simbole, Start šalje, B zatvara. Postavke: Napredne opcije → Korisničko sučelje → Kontroler." }
       ]
     }
   ]

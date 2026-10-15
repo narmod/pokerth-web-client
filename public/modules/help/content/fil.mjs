@@ -312,21 +312,21 @@ export const help = {
             ['A–Z · 0–9', 'Lobby: ang pag-type sa labas ng text field ay direktang isinusulat sa chat']],
           note: 'Sa Android, ang system Back button/gesture ay nagsasara ng mga window tulad ng Escape sa halip na umalis sa laro (naco-configure sa mga option). Walang katumbas na system button ang iOS \u2014 gamitin ang \u2715 ng bawat window.' },
         { id: 'gamepad', t: "Gamepad",
-          b: ["Gumagana ang game controller sa mga browser na sumusuporta sa gamepad (Xbox, PlayStation, Switch Pro at karamihan ng Bluetooth pad) — pindutin nang isang beses ang alinman sa mga button nito para ma-detect ito ng browser. Sa mesa, naglalaro ang mga button nito; kapag may bukas na window o menu, at saanman sa labas ng mesa, ginagamit naman ang mga ito para gumalaw sa screen:"],
+          b: ["Gumagana ang game controller sa mga browser na sumusuporta sa gamepad (Xbox, PlayStation, Switch Pro at karamihan ng Bluetooth pad) — pindutin nang isang beses ang alinman sa mga button nito para ma-detect ito ng browser. Nagpapalit ang Select sa pagitan ng dalawang mode, na ipinapakita ng badge sa ibabang kaliwa: Laro, para maglaro sa mesa kahit bukas ang chat o ang log, at Navigation, para gumalaw sa screen at sa mga window nito. Kapag turn mo na, magva-vibrate ang gamepad at kusang babalik sa Laro."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — pindutin nang matagal para mag-All-In"],
-            ["LT / RT", "Babaan / taasan ang halaga ng taya"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Playing mode: Mano-mano · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Tingnan ang mesa (header, mga upuan); ibinabalik ng B o ng susunod mong turn ang mga button sa laro"],
-            ["Start / Select", "Mga setting · Chat"],
-            ["D-pad / LS", "Mga menu: lumipat mula sa isang item papunta sa iba"],
-            ["A / B", "Mga menu: pumili · bumalik (tulad ng Esc)"],
-            ["LB / RB", "Mga menu: nakaraan / susunod na tab"],
+            ["Select", "Magpalit sa pagitan ng Laro at Navigation"],
+            ["Start", "Menu ng gamepad: chat, log, odds, stats, mga reaksyon, Tulong ng Alas, mga setting, fullscreen, mga button, umalis"],
+            ["A / X / Y", "Laro: Check/Call · Fold · Bet/Raise (Y nang matagal para mag-All-In)"],
+            ["LT / RT", "Laro: babaan / taasan ang halaga ng taya"],
+            ["LB / RB", "Laro: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Laro: playing mode (Mano-mano · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Navigation: lumipat mula sa isang item papunta sa iba"],
+            ["A / B", "Navigation: pumili · bumalik (tulad ng Esc); hindi kailanman nagfo-Fold ang B"],
+            ["X / Y", "Navigation: chat (gamit ang on-screen keyboard) · Tulong ng Alas"],
+            ["LB / RB", "Navigation: nakaraan / susunod na window (mesa, mga bukas na panel, ang Alas)"],
+            ["LT / RT", "Navigation: nakaraan / susunod na tab"],
             ["RS", "Mag-scroll"]],
-          note: "Sinusunod ng mga letra ang Xbox layout: sa PlayStation pad, ✕ = A, ○ = B, □ = X, △ = Y, at ipinapakita ng mga action button ang mga simbolo ng sarili mong pad. Hindi kailanman nagfo-Fold ang B. Sa listahan, slider o number field, binabago ng ← / → ang value. Kailangan pa rin ng keyboard ang mga text field: inilalagay ng A ang cursor sa field, na naglalabas ng on-screen keyboard sa mga phone at tablet. Mga setting: Mga advanced na option → User interface → Gamepad." }
+          note: "Sinusunod ng mga letra ang Xbox layout: sa PlayStation pad, ✕ = A, ○ = B, □ = X, △ = Y, at ipinapakita ng mga action button ang mga simbolo ng sarili mong pad. Ang tunay na window (mga setting, kumpirmasyon, menu ng gamepad) ay laging lumilipat sa Navigation habang bukas ito. Para magsulat, binubuksan ng A sa text field ang keyboard ng gamepad: mga mabilisang mensahe para sa chat, mga letra gamit ang D-pad at A, nagbubura ang X, nagdadagdag ng space ang Y, nagpapalit ng malaking titik ang LB, mga numero at simbolo ang RB, nagpapadala ang Start, nagsasara ang B. Mga setting: Mga advanced na option → User interface → Gamepad." }
       ]
     }
   ]

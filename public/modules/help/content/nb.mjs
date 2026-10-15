@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Lobby: skriving utenfor et tekstfelt går rett inn i sjatten']],
           note: 'På Android lukker systemets Tilbake-knapp/-bevegelse vinduer som Esc i stedet for å forlate spillet (kan stilles inn). iOS har ingen tilsvarende systemknapp — bruk \u2715 i hvert vindu.' },
         { id: 'gamepad', t: "Spillkontroller",
-          b: ["En spillkontroller fungerer i nettlesere som støtter dem (Xbox, PlayStation, Switch Pro og de fleste Bluetooth-kontrollere) — trykk én gang på en av knappene slik at nettleseren oppdager den. Ved bordet spiller knappene; så snart et vindu eller en meny er åpen, og overalt utenfor bordet, brukes de i stedet til å bevege deg rundt på skjermen:"],
+          b: ["En spillkontroller fungerer i nettlesere som støtter gamepads (Xbox, PlayStation, Switch Pro og de fleste Bluetooth-kontrollere) — trykk én gang på en av knappene så nettleseren oppdager den. Select bytter mellom to moduser, vist med et merke nede til venstre: Spill, for å spille ved bordet selv med chatten eller historikken åpen, og Navigasjon, for å bevege deg rundt på skjermen og i vinduene. Når det blir din tur, vibrerer kontrolleren og går selv tilbake til Spill."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — hold inne for All-In"],
-            ["LT / RT", "Senk / øk innsatsbeløpet"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Spillmodus: Manuell · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Bla gjennom bordet (topptekst, plasser); B eller din neste tur gir knappene tilbake til spillet"],
-            ["Start / Select", "Innstillinger · Chat"],
-            ["D-pad / LS", "Menyer: gå fra element til element"],
-            ["A / B", "Menyer: velg · tilbake (som Esc)"],
-            ["LB / RB", "Menyer: forrige / neste fane"],
+            ["Select", "Bytt mellom Spill og Navigasjon"],
+            ["Start", "Kontrollermeny: chat, historikk, sjanser, statistikk, reaksjoner, Essets hjelp, innstillinger, fullskjerm, knapper, avslutt"],
+            ["A / X / Y", "Spill: Check/Call · Fold · Bet/Raise (hold Y for All-In)"],
+            ["LT / RT", "Spill: senk / øk innsatsbeløpet"],
+            ["LB / RB", "Spill: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Spill: spillmodus (Manuell · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Navigasjon: gå fra element til element"],
+            ["A / B", "Navigasjon: velg · tilbake (som Esc); B gjør aldri Fold"],
+            ["X / Y", "Navigasjon: chat (med skjermtastaturet) · Essets hjelp"],
+            ["LB / RB", "Navigasjon: forrige / neste vindu (bordet, åpne paneler, Esset)"],
+            ["LT / RT", "Navigasjon: forrige / neste fane"],
             ["RS", "Rull"]],
-          note: "Bokstavene følger Xbox-oppsettet: på en PlayStation-kontroller er ✕ = A, ○ = B, □ = X, △ = Y, og handlingsknappene viser symbolene til din egen kontroller. B gjør aldri Fold. I en liste, en glidebryter eller et tallfelt endrer ← / → verdien. Tekstfelt krever fortsatt tastatur: A setter markøren i feltet, noe som åpner skjermtastaturet på telefoner og nettbrett. Innstillinger: Avanserte alternativer → Brukergrensesnitt → Spillkontroller." }
+          note: "Bokstavene følger Xbox-oppsettet: på en PlayStation-kontroller er ✕ = A, ○ = B, □ = X, △ = Y, og handlingsknappene viser symbolene til din egen kontroller. Et ekte vindu (innstillinger, en bekreftelse, kontrollermenyen) bytter alltid til Navigasjon så lenge det er åpent. For å skrive åpner A på et tekstfelt kontrollerens tastatur: hurtigfraser for chatten, bokstaver med D-pad og A, X sletter, Y legger til mellomrom, LB bytter til store bokstaver, RB til tall og symboler, Start sender, B lukker. Innstillinger: Avanserte alternativer → Brukergrensesnitt → Spillkontroller." }
       ]
     }
   ]

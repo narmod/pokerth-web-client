@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Lobby: att skriva utanför ett textfält skriver direkt i chatten']],
           note: 'På Android stänger systemets Bakåt-knapp/gest fönster som Esc i stället för att lämna spelet (kan ställas in). iOS har ingen motsvarande systemknapp — använd \u2715 i varje fönster.' },
         { id: 'gamepad', t: "Handkontroll",
-          b: ["En handkontroll fungerar i webbläsare som stöder spelkontroller (Xbox, PlayStation, Switch Pro och de flesta Bluetooth-kontroller) — tryck en gång på valfri knapp så att webbläsaren upptäcker den. Vid bordet spelar knapparna; så snart ett fönster eller en meny är öppen, och överallt utanför bordet, används de i stället för att förflytta dig på skärmen:"],
+          b: ["En handkontroll fungerar i webbläsare som stöder handkontroller (Xbox, PlayStation, Switch Pro och de flesta Bluetooth-kontroller) — tryck en gång på någon av dess knappar så att webbläsaren upptäcker den. Select växlar mellan två lägen, som visas med en bricka nere till vänster: Spel, för att spela vid bordet även med chatten eller historiken öppen, och Navigering, för att röra dig på skärmen och i dess fönster. När det blir din tur vibrerar handkontrollen och går själv tillbaka till Spel."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — håll in för All-In"],
-            ["LT / RT", "Sänk / höj insatsbeloppet"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Spelläge: Manuell · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Bläddra på bordet (sidhuvud, platser); B eller din nästa tur ger knapparna tillbaka till spelet"],
-            ["Start / Select", "Inställningar · Chatt"],
-            ["D-pad / LS", "Menyer: gå från objekt till objekt"],
-            ["A / B", "Menyer: välj · tillbaka (som Esc)"],
-            ["LB / RB", "Menyer: föregående / nästa flik"],
+            ["Select", "Växla mellan Spel och Navigering"],
+            ["Start", "Handkontrollmeny: chatt, historik, chanser, statistik, reaktioner, Essets hjälp, inställningar, helskärm, knappar, avsluta"],
+            ["A / X / Y", "Spel: Check/Call · Fold · Bet/Raise (håll Y för All-In)"],
+            ["LT / RT", "Spel: sänk / höj insatsbeloppet"],
+            ["LB / RB", "Spel: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Spel: spelläge (Manuell · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Navigering: flytta från objekt till objekt"],
+            ["A / B", "Navigering: välj · tillbaka (som Esc); B gör aldrig Fold"],
+            ["X / Y", "Navigering: chatt (med skärmtangentbordet) · Essets hjälp"],
+            ["LB / RB", "Navigering: föregående / nästa fönster (bordet, öppna paneler, Esset)"],
+            ["LT / RT", "Navigering: föregående / nästa flik"],
             ["RS", "Rulla"]],
-          note: "Bokstäverna följer Xbox-layouten: på en PlayStation-kontroll är ✕ = A, ○ = B, □ = X, △ = Y, och åtgärdsknapparna visar symbolerna för din egen kontroll. B gör aldrig Fold. I en lista, ett reglage eller ett sifferfält ändrar ← / → värdet. Textfält kräver fortfarande ett tangentbord: A placerar markören i fältet, vilket öppnar skärmtangentbordet på telefoner och surfplattor. Inställningar: Avancerade alternativ → Användargränssnitt → Handkontroll." }
+          note: "Bokstäverna följer Xbox-layouten: på en PlayStation-kontroll är ✕ = A, ○ = B, □ = X, △ = Y, och åtgärdsknapparna visar symbolerna på din egen kontroll. Ett riktigt fönster (inställningar, en bekräftelse, handkontrollmenyn) växlar alltid till Navigering så länge det är öppet. För att skriva öppnar A på ett textfält handkontrollens tangentbord: snabbfraser för chatten, bokstäver med styrkorset och A, X raderar, Y lägger till ett mellanslag, LB växlar versaler, RB siffror och symboler, Start skickar, B stänger. Inställningar: Avancerade alternativ → Användargränssnitt → Handkontroll." }
       ]
     }
   ]

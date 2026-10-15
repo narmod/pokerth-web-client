@@ -8410,6 +8410,83 @@ body.pad-active .pad-cur {
   outline-offset: 2px !important;
 }
 body.pad-active :focus:not(.pad-cur) { outline: none; }
+/* Mode badge at the table (modules/ui/ctl-nav.mjs): Game / Navigation. */
+#ctl-badge {
+  position: fixed; left: 10px; bottom: 10px; z-index: 990;
+  padding: 3px 10px; border-radius: 999px;
+  background: var(--modal-bg); color: var(--text-hi);
+  border: 1px solid var(--border-hi);
+  font-size: var(--fs-xs); font-weight: 700; pointer-events: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.35);
+}
+#ctl-badge.ctl-badge-nav { border-color: var(--gold-hi); color: var(--gold-hi); }
+/* Controller menu (modules/ui/ctl-menu.mjs): large tiles. */
+#ctl-menu {
+  position: fixed; inset: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+  animation: ldFade 0.2s ease-out;
+}
+.ctl-menu-card {
+  background: var(--modal-bg); border: 1px solid var(--border-hi); border-radius: 14px;
+  padding: 18px; width: min(640px, calc(100% - 32px)); max-height: calc(100% - 32px); overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+}
+.ctl-menu-title {
+  font-family: var(--ff-display); font-size: 1.15rem; font-weight: 700;
+  color: var(--text-hi); margin-bottom: 12px;
+}
+.ctl-menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
+.ctl-tile {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  min-height: 84px; padding: 10px 6px; min-width: 0;
+  background: var(--panel); color: var(--text-hi);
+  border: 1px solid var(--border); border-radius: 12px;
+  font: inherit; cursor: pointer;
+}
+.ctl-tile:hover { background: var(--panel-hi); border-color: var(--border-hi); }
+.ctl-tile-ic { font-size: 1.6rem; line-height: 1; }
+.ctl-tile-lbl { font-size: var(--fs-sm); font-weight: 600; text-align: center; overflow-wrap: anywhere; }
+.ctl-menu-keys { margin-top: 12px; font-size: var(--fs-sm); color: var(--text); line-height: 1.4; }
+.ctl-menu-keys p { margin: 0 0 8px; }
+/* Controller on-screen keyboard (modules/ui/ctl-keyboard.mjs). */
+#ctl-kb {
+  position: fixed; inset: 0; z-index: 1001;
+  display: flex; align-items: flex-end; justify-content: center;
+  background: rgba(0,0,0,0.45);
+}
+.ctl-kb-card {
+  width: min(760px, 100%); max-height: 100%; overflow-y: auto; box-sizing: border-box;
+  background: var(--modal-bg); border: 1px solid var(--border-hi); border-bottom: 0;
+  border-radius: 14px 14px 0 0; padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
+  box-shadow: 0 -6px 28px rgba(0,0,0,0.6);
+}
+.ctl-kb-text {
+  min-height: 1.6em; padding: 8px 10px; margin-bottom: 10px;
+  background: var(--field-bg); color: var(--text-hi); border: 1px solid var(--border); border-radius: 8px;
+  font-size: var(--fs-md, 1rem); overflow-wrap: anywhere;
+}
+.ctl-kb-text:empty::before { content: attr(data-ph); opacity: 0.5; }
+.ctl-kb-text::after { content: '\2502'; opacity: 0.6; animation: ctlCaret 1s steps(1) infinite; }
+@keyframes ctlCaret { 50% { opacity: 0; } }
+.ctl-kb-phrases { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.ctl-kb-phrases[hidden] { display: none; }
+.ctl-kb-row { display: flex; justify-content: center; gap: 5px; margin-bottom: 5px; }
+.ctl-key, .ctl-phrase {
+  min-width: 0; min-height: 40px; padding: 0 6px;
+  background: var(--panel); color: var(--text-hi);
+  border: 1px solid var(--border); border-radius: 8px;
+  font: inherit; font-size: 1.05rem; cursor: pointer;
+}
+.ctl-key { flex: 1 1 0; max-width: 58px; }
+.ctl-phrase { flex: 0 1 auto; font-size: var(--fs-sm); padding: 0 12px; min-height: 34px; }
+.ctl-key-fn { max-width: 72px; color: var(--gold-hi); }
+.ctl-key-fn.on { background: var(--gold); color: var(--on-gold); }
+.ctl-key-space { flex: 4 1 0; max-width: none; }
+.ctl-key-ok { max-width: 72px; background: var(--gold); color: var(--on-gold); border-color: var(--gold-hi); }
+.ctl-kb-legend { margin-top: 4px; text-align: center; font-size: var(--fs-xs); opacity: 0.65; }
+@media (prefers-reduced-motion: reduce) { .ctl-kb-text::after { animation: none; } }
 
 /* iOS Safari : empeche le zoom auto au focus d'un champ (declenche quand
    font-size < 16px). Force a 16px sur tactile uniquement ; le pinch-zoom

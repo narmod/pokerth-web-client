@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Vestíbulo: escribir fóra dun campo de texto escribe directamente no chat']],
           note: 'En Android, o botón/xesto Atrás do sistema pecha as xanelas coma Esc, en vez de saír da partida (configurable nas opcións). O iOS non ten ningún botón de sistema equivalente — usa o \u2715 de cada xanela.' },
         { id: 'gamepad', t: "Mando",
-          b: ["Un mando de xogos funciona nos navegadores compatibles con mandos (Xbox, PlayStation, Switch Pro e a maioría dos mandos Bluetooth) — preme unha vez calquera dos seus botóns para que o navegador o detecte. Na mesa, os seus botóns xogan; en canto hai unha xanela ou un menú aberto, e en calquera lugar fóra da mesa, serven para moverse pola pantalla:"],
+          b: ["Un mando de xogos funciona nos navegadores compatibles con mandos (Xbox, PlayStation, Switch Pro e a maioría dos mandos Bluetooth) — preme unha vez calquera dos seus botóns para que o navegador o detecte. Select alterna entre dous modos, indicados por unha insignia abaixo á esquerda: Xogo, para xogar na mesa mesmo co chat ou o historial abertos, e Navegación, para moverte pola pantalla e as súas xanelas. Cando chega a túa quenda, o mando vibra e volve só ao modo Xogo."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — mantelo premido para ir All-In"],
-            ["LT / RT", "Baixar / subir a cantidade da aposta"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Modo de xogo: Manual · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Percorrer a mesa (cabeceira, asentos); B ou a túa seguinte quenda devolven os botóns ao xogo"],
-            ["Start / Select", "Configuración · Chat"],
-            ["D-pad / LS", "Menús: pasar dun elemento a outro"],
-            ["A / B", "Menús: escoller · atrás (coma Esc)"],
-            ["LB / RB", "Menús: lapela anterior / seguinte"],
+            ["Select", "Alternar entre Xogo e Navegación"],
+            ["Start", "Menú do mando: chat, historial, posibilidades, estatísticas, reaccións, Axuda do Ás, configuración, pantalla completa, botóns, saír"],
+            ["A / X / Y", "Xogo: Check/Call · Fold · Bet/Raise (Y mantido para All-In)"],
+            ["LT / RT", "Xogo: baixar / subir a cantidade da aposta"],
+            ["LB / RB", "Xogo: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Xogo: modo de xogo (Manual · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Navegación: pasar dun elemento a outro"],
+            ["A / B", "Navegación: escoller · atrás (coma Esc); B nunca fai Fold"],
+            ["X / Y", "Navegación: chat (co teclado en pantalla) · Axuda do Ás"],
+            ["LB / RB", "Navegación: xanela anterior / seguinte (mesa, paneis abertos, o Ás)"],
+            ["LT / RT", "Navegación: lapela anterior / seguinte"],
             ["RS", "Desprazar"]],
-          note: "As letras seguen a disposición Xbox: nun mando PlayStation ✕ = A, ○ = B, □ = X, △ = Y, e os botóns de acción amosan os símbolos do teu propio mando. B nunca fai Fold. Nunha lista, un control desprazable ou un campo numérico, ← / → cambian o valor. Os campos de texto seguen precisando un teclado: A pon o cursor no campo, o que abre o teclado en pantalla en móbiles e tabletas. Configuración: Opcións avanzadas → Interface de usuario → Mando." }
+          note: "As letras seguen a disposición Xbox: nun mando PlayStation ✕ = A, ○ = B, □ = X, △ = Y, e os botóns de acción amosan os símbolos do teu propio mando. Unha xanela de verdade (configuración, unha confirmación, o menú do mando) pasa sempre a Navegación mentres está aberta. Para escribir, A nun campo de texto abre o teclado do mando: frases rápidas para o chat, letras coa cruceta e A, X borra, Y engade un espazo, LB cambia a maiúsculas, RB a números e símbolos, Start envía, B pecha. Configuración: Opcións avanzadas → Interface de usuario → Mando." }
       ]
     }
   ]

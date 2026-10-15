@@ -452,21 +452,21 @@ export const help = {
             ["A–Z · 0–9", "Lobi: mae teipio y tu allan i faes testun yn ysgrifennu’n syth yn y sgwrs"]],
           note: "Ar Android, mae botwm/ystum Yn ôl y system yn cau ffenestri fel Escape yn lle gadael y gêm (gellir ei addasu yn y dewisiadau). Nid oes botwm system cyfatebol gan iOS — defnyddiwch ✕ pob ffenestr." },
         { id: 'gamepad', t: "Pad gêm",
-          b: ["Mae rheolydd gêm yn gweithio mewn porwyr sy'n cefnogi padiau gêm (Xbox, PlayStation, Switch Pro a'r rhan fwyaf o badiau Bluetooth) — pwyswch unrhyw un o'i fotymau unwaith er mwyn i'r porwr ei ganfod. Wrth y bwrdd, mae ei fotymau'n chwarae; cyn gynted ag y mae ffenestr neu ddewislen ar agor, ac ym mhobman y tu allan i'r bwrdd, maen nhw'n symud o gwmpas y sgrin yn lle hynny:"],
+          b: ["Mae rheolydd gêm yn gweithio mewn porwyr sy'n cefnogi padiau gêm (Xbox, PlayStation, Switch Pro a'r rhan fwyaf o badiau Bluetooth) — pwyswch unrhyw un o'i fotymau unwaith er mwyn i'r porwr ei ganfod. Mae Select yn newid rhwng dau fodd, a ddangosir gan fathodyn ar y gwaelod ar y chwith: Gêm, i chwarae wrth y bwrdd hyd yn oed gyda'r sgwrs neu'r log ar agor, a Llywio, i symud o gwmpas y sgrin a'i ffenestri. Pan ddaw eich tro, mae'r pad gêm yn dirgrynu ac yn mynd yn ôl i Gêm ar ei ben ei hun."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — daliwch ef i fynd All-In"],
-            ["LT / RT", "Gostwng / codi swm y bet"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Modd chwarae: Â llaw · Check/Call awtomatig · Check/Fold awtomatig"],
-            ["↑", "Pori'r bwrdd (pennyn, seddi); mae B neu eich tro nesaf yn rhoi'r botymau'n ôl i'r gêm"],
-            ["Start / Select", "Gosodiadau · Sgwrs"],
-            ["D-pad / LS", "Dewislenni: symud o eitem i eitem"],
-            ["A / B", "Dewislenni: dewis · yn ôl (fel Esc)"],
-            ["LB / RB", "Dewislenni: tab blaenorol / nesaf"],
+            ["Select", "Newid rhwng Gêm a Llywio"],
+            ["Start", "Dewislen y pad gêm: sgwrs, log, siawns, ystadegau, ymatebion, Cymorth yr As, gosodiadau, sgrin lawn, botymau, gadael"],
+            ["A / X / Y", "Gêm: Check/Call · Fold · Bet/Raise (daliwch Y ar gyfer All-In)"],
+            ["LT / RT", "Gêm: gostwng / codi swm y bet"],
+            ["LB / RB", "Gêm: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Gêm: modd chwarae (Â llaw · Check/Call awtomatig · Check/Fold awtomatig)"],
+            ["D-pad / LS", "Llywio: symud o eitem i eitem"],
+            ["A / B", "Llywio: dewis · yn ôl (fel Esc); nid yw B byth yn gwneud Fold"],
+            ["X / Y", "Llywio: sgwrs (gyda'r bysellfwrdd ar y sgrin) · Cymorth yr As"],
+            ["LB / RB", "Llywio: ffenestr flaenorol / nesaf (bwrdd, paneli agored, yr As)"],
+            ["LT / RT", "Llywio: tab blaenorol / nesaf"],
             ["RS", "Sgrolio"]],
-          note: "Mae'r llythrennau'n dilyn cynllun Xbox: ar bad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, ac mae'r botymau gweithredu'n dangos symbolau eich pad eich hun. Nid yw B byth yn gwneud Fold. Mewn rhestr, llithrydd neu faes rhif, mae ← / → yn newid y gwerth. Mae angen bysellfwrdd ar feysydd testun o hyd: mae A yn rhoi'r cyrchwr yn y maes, sy'n agor y bysellfwrdd ar y sgrin ar ffonau a thabledi. Gosodiadau: Dewisiadau uwch → Rhyngwyneb defnyddiwr → Pad gêm." }
+          note: "Mae'r llythrennau'n dilyn cynllun Xbox: ar bad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, ac mae'r botymau gweithredu'n dangos symbolau eich pad chi. Mae ffenestr go iawn (gosodiadau, cadarnhad, dewislen y pad gêm) bob amser yn newid i Llywio tra bydd ar agor. I ysgrifennu, mae A ar faes testun yn agor bysellfwrdd y pad gêm: ymadroddion cyflym i'r sgwrs, llythrennau gyda'r D-pad ac A, mae X yn dileu, Y yn ychwanegu bwlch, LB yn newid priflythrennau, RB rhifau a symbolau, Start yn anfon, B yn cau. Gosodiadau: Dewisiadau uwch → Rhyngwyneb defnyddiwr → Pad gêm." }
       ]
     }
   ]

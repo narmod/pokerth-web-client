@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Vestíbul: escriure fora d’un camp de text escriu directament al xat']],
           note: 'A Android, el botó/gest Enrere del sistema tanca les finestres com Esc, en comptes de sortir de la partida (configurable a les opcions). L\u2019iOS no té cap botó de sistema equivalent — fes servir la \u2715 de cada finestra.' },
         { id: 'gamepad', t: "Comandament",
-          b: ["Un comandament de joc funciona als navegadors que admeten gamepads (Xbox, PlayStation, Switch Pro i la majoria de comandaments Bluetooth) — prem un cop qualsevol dels seus botons perquè el navegador el detecti. A la taula, els seus botons juguen; tan bon punt s’obre una finestra o un menú, i a tot arreu fora de la taula, serveixen en canvi per moure’s per la pantalla:"],
+          b: ["Un comandament de joc funciona als navegadors que admeten gamepads (Xbox, PlayStation, Switch Pro i la majoria de comandaments Bluetooth) — prem un cop qualsevol dels seus botons perquè el navegador el detecti. Select alterna entre dos modes, indicats per una insígnia a baix a l’esquerra: Joc, per jugar a la taula fins i tot amb el xat o l’historial oberts, i Navegació, per moure’t per la pantalla i les seves finestres. Quan et toca, el comandament vibra i torna sol al mode Joc."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — mantén-lo premut per fer All-In"],
-            ["LT / RT", "Baixar / pujar l’import de l’aposta"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Mode de joc: Manual · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Recórrer la taula (capçalera, seients); B o el teu proper torn tornen els botons al joc"],
-            ["Start / Select", "Configuració · Xat"],
-            ["D-pad / LS", "Menús: passar d’un element a un altre"],
-            ["A / B", "Menús: triar · enrere (com Esc)"],
-            ["LB / RB", "Menús: pestanya anterior / següent"],
+            ["Select", "Alternar entre Joc i Navegació"],
+            ["Start", "Menú del comandament: xat, historial, probabilitats, estadístiques, reaccions, Ajuda de l’As, configuració, pantalla completa, botons, surt"],
+            ["A / X / Y", "Joc: Check/Call · Fold · Bet/Raise (mantén Y per a All-In)"],
+            ["LT / RT", "Joc: baixar / pujar l’import de l’aposta"],
+            ["LB / RB", "Joc: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Joc: mode de joc (Manual · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Navegació: passar d’un element a un altre"],
+            ["A / B", "Navegació: triar · enrere (com Esc); B mai fa Fold"],
+            ["X / Y", "Navegació: xat (amb el teclat en pantalla) · Ajuda de l’As"],
+            ["LB / RB", "Navegació: finestra anterior / següent (taula, plafons oberts, l’As)"],
+            ["LT / RT", "Navegació: pestanya anterior / següent"],
             ["RS", "Desplaçar"]],
-          note: "Les lletres segueixen la disposició Xbox: en un comandament PlayStation ✕ = A, ○ = B, □ = X, △ = Y, i els botons d’acció mostren els símbols del teu comandament. B mai fa Fold. En una llista, un control lliscant o un camp numèric, ← / → canvien el valor. Els camps de text encara necessiten un teclat: A posa el cursor al camp, cosa que obre el teclat en pantalla als telèfons i tauletes. Configuració: Opcions avançades → Interfície d'usuari → Comandament." }
+          note: "Les lletres segueixen la disposició Xbox: en un comandament PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, i els botons d’acció mostren els símbols del teu comandament. Una finestra de veritat (configuració, una confirmació, el menú del comandament) sempre passa al mode Navegació mentre està oberta. Per escriure, A sobre un camp de text obre el teclat del comandament: frases ràpides per al xat, lletres amb la creueta i A, X esborra, Y afegeix un espai, LB canvia a majúscules, RB a xifres i símbols, Start envia, B tanca. Configuració: Opcions avançades → Interfície d'usuari → Comandament." }
       ]
     }
   ]

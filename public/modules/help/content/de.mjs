@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Lobby: Tippen außerhalb eines Textfelds schreibt direkt in den Chat']],
           note: 'Auf Android schließt die System-Zurück-Taste/-Geste Fenster wie Escape, statt das Spiel zu verlassen (in den Optionen einstellbar). iOS hat keine vergleichbare Systemtaste — nutze das \u2715 jedes Fensters.' },
         { id: 'gamepad', t: "Gamepad",
-          b: ["Ein Controller funktioniert in Browsern, die Gamepads unterstützen (Xbox, PlayStation, Switch Pro und die meisten Bluetooth-Controller) — drücke einmal eine beliebige Taste, damit der Browser ihn erkennt. Am Tisch spielen seine Tasten; sobald ein Fenster oder Menü offen ist, und überall außerhalb des Tisches, bewegen sie dich stattdessen über den Bildschirm:"],
+          b: ["Ein Controller funktioniert in Browsern, die Gamepads unterstützen (Xbox, PlayStation, Switch Pro und die meisten Bluetooth-Controller) — drücke einmal eine beliebige Taste, damit der Browser ihn erkennt. Select wechselt zwischen zwei Modi, angezeigt durch ein Abzeichen unten links: Spiel, um am Tisch zu spielen, auch wenn Chat oder Verlauf offen sind, und Navigation, um dich über den Bildschirm und seine Fenster zu bewegen. Wenn du dran bist, vibriert das Gamepad und kehrt von selbst zu Spiel zurück."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — gedrückt halten für All-In"],
-            ["LT / RT", "Einsatzhöhe senken / erhöhen"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Spielmodus: Manuell · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Tisch durchsuchen (Kopfleiste, Plätze); B oder dein nächster Zug gibt die Tasten an das Spiel zurück"],
-            ["Start / Select", "Einstellungen · Chat"],
-            ["D-pad / LS", "Menüs: von Eintrag zu Eintrag wechseln"],
-            ["A / B", "Menüs: auswählen · zurück (wie Esc)"],
-            ["LB / RB", "Menüs: vorheriger / nächster Reiter"],
+            ["Select", "Zwischen Spiel und Navigation wechseln"],
+            ["Start", "Gamepad-Menü: Chat, Verlauf, Chancen, Statistiken, Reaktionen, Ass-Hilfe, Einstellungen, Vollbild, Tasten, Verlassen"],
+            ["A / X / Y", "Spiel: Check/Call · Fold · Bet/Raise (Y halten für All-In)"],
+            ["LT / RT", "Spiel: Einsatzhöhe senken / erhöhen"],
+            ["LB / RB", "Spiel: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Spiel: Spielweise (Manuell · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Navigation: von Element zu Element springen"],
+            ["A / B", "Navigation: auswählen · zurück (wie Esc); B macht nie Fold"],
+            ["X / Y", "Navigation: Chat (mit der Bildschirmtastatur) · Ass-Hilfe"],
+            ["LB / RB", "Navigation: vorheriges / nächstes Fenster (Tisch, offene Panels, das Ass)"],
+            ["LT / RT", "Navigation: vorheriger / nächster Reiter"],
             ["RS", "Scrollen"]],
-          note: "Die Buchstaben folgen der Xbox-Belegung: Auf einem PlayStation-Controller gilt ✕ = A, ○ = B, □ = X, △ = Y, und die Aktionstasten zeigen die Symbole deines eigenen Controllers. B löst nie Fold aus. In einer Liste, einem Schieberegler oder einem Zahlenfeld ändern ← / → den Wert. Textfelder brauchen weiterhin eine Tastatur: A setzt den Cursor ins Feld, was auf Smartphones und Tablets die Bildschirmtastatur öffnet. Einstellungen: Erweiterte Optionen → Benutzeroberfläche → Gamepad." }
+          note: "Die Buchstaben folgen dem Xbox-Layout: Auf einem PlayStation-Controller ist ✕ = A, ○ = B, □ = X, △ = Y, und die Aktionstasten zeigen die Symbole deines eigenen Controllers. Ein echtes Fenster (Einstellungen, eine Bestätigung, das Gamepad-Menü) schaltet immer auf Navigation, solange es offen ist. Zum Schreiben öffnet A auf einem Textfeld die Gamepad-Tastatur: Schnellsätze für den Chat, Buchstaben mit Steuerkreuz und A, X löscht, Y fügt ein Leerzeichen ein, LB schaltet Großbuchstaben um, RB Zahlen und Symbole, Start sendet, B schließt. Einstellungen: Erweiterte Optionen → Benutzeroberfläche → Gamepad." }
       ]
     }
   ]

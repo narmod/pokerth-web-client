@@ -312,21 +312,21 @@ export const help = {
             ['A–Z · 0–9', 'Fuajee: tekstiväljast väljas trükkimine kirjutab otse vestlusesse']],
           note: 'Androidis sulgeb süsteemi tagasi-nupp/-liigutus aknad nagu Escape, selle asemel et mängust lahkuda (valikutes seadistatav). iOS-is vastavat süsteeminuppu ei ole \u2014 kasuta iga akna nuppu \u2715.' },
         { id: 'gamepad', t: "Mängupult",
-          b: ["Mängupult töötab brauserites, mis toetavad mängupulte (Xbox, PlayStation, Switch Pro ja enamik Bluetoothi pulte) — vajuta korra ükskõik millist selle nuppu, et brauser selle tuvastaks. Laua taga nupud mängivad; niipea kui mõni aken või menüü on avatud, ja kõikjal väljaspool lauda, liigutavad nad hoopis ekraanil ringi:"],
+          b: ["Mängupult töötab brauserites, mis toetavad mängupulte (Xbox, PlayStation, Switch Pro ja enamik Bluetoothi pulte) — vajuta korra ükskõik millist selle nuppu, et brauser selle tuvastaks. Select lülitab kahe režiimi vahel, mida näitab märk all vasakul: Mäng — laua taga mängimiseks ka siis, kui vestlus või logi on avatud, ja Navigeerimine — ekraanil ja selle akendes liikumiseks. Kui tuleb sinu kord, mängupult vibreerib ja naaseb ise režiimi Mäng."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — hoia all, et minna All-In"],
-            ["LT / RT", "Vähenda / suurenda panuse summat"],
-            ["LB / RB", "Panus 1/3 · 1/2 · pott"],
-            ["← / →", "Mängurežiim: Käsitsi · automaatne Check/Call · automaatne Check/Fold"],
-            ["↑", "Sirvi lauda (päis, kohad); B või sinu järgmine kord annab nupud mängule tagasi"],
-            ["Start / Select", "Seaded · Vestlus"],
-            ["D-pad / LS", "Menüüd: liigu elemendilt elemendile"],
-            ["A / B", "Menüüd: vali · tagasi (nagu Esc)"],
-            ["LB / RB", "Menüüd: eelmine / järgmine vahekaart"],
-            ["RS", "Kerimine"]],
-          note: "Tähed järgivad Xboxi paigutust: PlayStationi puldil ✕ = A, ○ = B, □ = X, △ = Y ning tegevusnupud näitavad sinu enda puldi sümboleid. B ei tee kunagi Fold. Loendis, liuguril või numbriväljal muudavad ← / → väärtust. Tekstiväljad vajavad endiselt klaviatuuri: A paneb kursori välja, mis avab telefonides ja tahvelarvutites ekraaniklaviatuuri. Seaded: Täpsemad valikud → Kasutajaliides → Mängupult." }
+            ["Select", "Lülita Mängu ja Navigeerimise vahel"],
+            ["Start", "Mängupuldi menüü: vestlus, logi, šansid, statistika, reaktsioonid, Ässa abi, seaded, täisekraan, nupud, välju"],
+            ["A / X / Y", "Mäng: Check/Call · Fold · Bet/Raise (All-In jaoks hoia Y all)"],
+            ["LT / RT", "Mäng: vähenda / suurenda panuse suurust"],
+            ["LB / RB", "Mäng: Panus 1/3 · 1/2 · pott"],
+            ["← / →", "Mäng: mänguviis (Käsitsi · Automaatne Check/Call · Automaatne Check/Fold)"],
+            ["D-pad / LS", "Navigeerimine: liigu elemendilt elemendile"],
+            ["A / B", "Navigeerimine: vali · tagasi (nagu Esc); B ei tee kunagi Fold"],
+            ["X / Y", "Navigeerimine: vestlus (ekraaniklaviatuuriga) · Ässa abi"],
+            ["LB / RB", "Navigeerimine: eelmine / järgmine aken (laud, avatud paneelid, äss)"],
+            ["LT / RT", "Navigeerimine: eelmine / järgmine vahekaart"],
+            ["RS", "Keri"]],
+          note: "Tähed järgivad Xboxi paigutust: PlayStationi puldil ✕ = A, ○ = B, □ = X, △ = Y ning tegevusnupud näitavad sinu enda puldi sümboleid. Päris aken (seaded, kinnitus, mängupuldi menüü) lülitab alati Navigeerimisele, kuni see on avatud. Kirjutamiseks avab A tekstiväljal mängupuldi klaviatuuri: kiirfraasid vestluseks, tähed D-padi ja A-ga, X kustutab, Y lisab tühiku, LB lülitab suurtähti, RB numbrid ja sümbolid, Start saadab, B sulgeb. Seaded: Täpsemad valikud → Kasutajaliides → Mängupult." }
       ]
     }
   ]

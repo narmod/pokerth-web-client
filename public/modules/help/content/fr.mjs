@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Lobby : taper hors d’un champ de texte écrit directement dans le chat']],
           note: 'Sur Android, le bouton/geste Retour du système ferme les fenêtres comme Échap au lieu de quitter la partie (configurable dans les options). iOS n\u2019a pas de bouton système équivalent — utilise le \u2715 de chaque fenêtre.' },
         { id: 'gamepad', t: "Manette",
-          b: ["Une manette de jeu fonctionne dans les navigateurs qui les prennent en charge (Xbox, PlayStation, Switch Pro et la plupart des manettes Bluetooth) — appuie une fois sur un de ses boutons pour que le navigateur la détecte. À la table, ses boutons jouent ; dès qu’une fenêtre ou un menu est ouvert, et partout ailleurs qu’à la table, ils servent à se déplacer dans l’écran :"],
+          b: ["Une manette de jeu fonctionne dans les navigateurs qui les prennent en charge (Xbox, PlayStation, Switch Pro et la plupart des manettes Bluetooth) — appuie une fois sur un de ses boutons pour que le navigateur la détecte. Select bascule entre deux modes, indiqués par un badge en bas à gauche : Jeu, pour jouer à la table même avec le chat ou l’historique ouverts, et Navigation, pour te déplacer dans l’écran et ses fenêtres. Quand ton tour arrive, la manette vibre et repasse seule en mode Jeu."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — maintenir pour faire All-In"],
-            ["LT / RT", "Baisser / augmenter le montant de la mise"],
-            ["LB / RB", "Mise 1/3 · 1/2 · Pot"],
-            ["← / →", "Mode de jeu : Manuel · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Parcourir la table (en-tête, sièges) ; B ou ton prochain tour rend les boutons au jeu"],
-            ["Start / Select", "Réglages · Chat"],
-            ["D-pad / LS", "Menus : passer d’un élément à l’autre"],
-            ["A / B", "Menus : choisir · retour (comme Échap)"],
-            ["LB / RB", "Menus : onglet précédent / suivant"],
+            ["Select", "Basculer entre Jeu et Navigation"],
+            ["Start", "Menu manette : chat, historique, chances, statistiques, réactions, Aide de l’As, réglages, plein écran, touches, quitter"],
+            ["A / X / Y", "Jeu : Check/Call · Fold · Bet/Raise (Y maintenu pour All-In)"],
+            ["LT / RT", "Jeu : baisser / augmenter le montant de la mise"],
+            ["LB / RB", "Jeu : Mise 1/3 · 1/2 · Pot"],
+            ["← / →", "Jeu : mode de jeu (Manuel · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Navigation : passer d’un élément à l’autre"],
+            ["A / B", "Navigation : choisir · retour (comme Échap) ; B ne fait jamais Fold"],
+            ["X / Y", "Navigation : chat (avec le clavier à l’écran) · Aide de l’As"],
+            ["LB / RB", "Navigation : fenêtre précédente / suivante (table, panneaux ouverts, l’As)"],
+            ["LT / RT", "Navigation : onglet précédent / suivant"],
             ["RS", "Faire défiler"]],
-          note: "Les lettres suivent la disposition Xbox : sur une manette PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, et les boutons d’action affichent les symboles de ta manette. B ne fait jamais Fold. Dans une liste, un curseur ou un champ numérique, ← / → changent la valeur. Les champs de texte demandent toujours un clavier : A place le curseur dans le champ, ce qui ouvre le clavier à l’écran sur téléphone et tablette. Réglages : Options avancées → Interface utilisateur → Manette." }
+          note: "Les lettres suivent la disposition Xbox : sur une manette PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, et les boutons d’action affichent les symboles de ta manette. Une vraie fenêtre (réglages, confirmation, menu manette) passe toujours en mode Navigation tant qu’elle est ouverte. Pour écrire, A sur un champ de texte ouvre le clavier de la manette : phrases rapides pour le chat, lettres avec la croix et A, X efface, Y ajoute un espace, LB passe en majuscules, RB aux chiffres et symboles, Start envoie, B ferme. Réglages : Options avancées → Interface utilisateur → Manette." }
       ]
     }
   ]

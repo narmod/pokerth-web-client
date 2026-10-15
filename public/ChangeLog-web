@@ -1,3 +1,9 @@
+2026-10-15 version 2.1.10-web.81:
+- improvement: gamepad: Select now switches between Game mode (play at the table, even with the chat, history or reactions open) and Navigation mode (move around the screen and its windows), shown by a badge; when your turn comes the gamepad goes back to Game mode by itself
+- new: gamepad: Start opens a gamepad menu (chat, history, odds, statistics, reactions, poker hands, Ace's Help, settings, fullscreen, buttons, quit)
+- new: gamepad: in Navigation mode LB/RB jump between the table, the open panels and the Ace's bubble, X opens the chat and Y the Ace's Help
+- new: gamepad: an on-screen keyboard to write in the chat and any text field, with quick phrases (Good game!, Nice hand!…) sent in one press
+
 2026-10-15 version 2.1.10-web.80:
 - improvement: on a computer, the community cards no longer get smaller when players leave the table: they keep at least the size they have at a full table
 

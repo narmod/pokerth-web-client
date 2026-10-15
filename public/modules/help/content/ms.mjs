@@ -312,21 +312,21 @@ export const help = {
             ['A–Z · 0–9', 'Lobi: menaip di luar medan teks terus menulis ke dalam sembang']],
           note: 'Di Android, tombol/gestur Kembali sistem menutup jendela seperti Escape alih-alih meninggalkan permainan (dapat dikonfigurasi di opsi). iOS tidak punya tombol sistem setara \u2014 pakai \u2715 di setiap jendela.' },
         { id: 'gamepad', t: "Gamepad",
-          b: ["Pengawal permainan berfungsi di pelayar yang menyokong gamepad (Xbox, PlayStation, Switch Pro dan kebanyakan pad Bluetooth) — tekan mana-mana tombolnya sekali agar pelayar mengesannya. Di meja, tombolnya bermain; sebaik sahaja jendela atau menu terbuka, dan di mana-mana selain di meja, tombolnya digunakan untuk bergerak di skrin:"],
+          b: ["Pengawal permainan berfungsi dalam pelayar yang menyokong gamepad (Xbox, PlayStation, Switch Pro dan kebanyakan pad Bluetooth) — tekan mana-mana butangnya sekali supaya pelayar mengesannya. Select bertukar antara dua mod, ditunjukkan oleh lencana di bawah sebelah kiri: Permainan, untuk bermain di meja walaupun sembang atau log terbuka, dan Navigasi, untuk bergerak di skrin dan jendelanya. Apabila tiba giliran anda, gamepad bergetar dan kembali sendiri ke mod Permainan."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — tahan untuk All-In"],
-            ["LT / RT", "Kurangkan / tambah jumlah taruhan"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Mode permainan: Manual · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Jelajahi meja (pengepala, kursi); B atau giliran Anda berikutnya mengembalikan tombol kepada permainan"],
-            ["Start / Select", "Tetapan · Sembang"],
-            ["D-pad / LS", "Menu: beralih dari satu item ke item lain"],
-            ["A / B", "Menu: pilih · kembali (seperti Esc)"],
-            ["LB / RB", "Menu: tab sebelumnya / berikutnya"],
+            ["Select", "Tukar antara Permainan dan Navigasi"],
+            ["Start", "Menu gamepad: sembang, log, peluang, statistik, reaksi, Bantuan si Sat, tetapan, skrin penuh, butang, keluar"],
+            ["A / X / Y", "Permainan: Check/Call · Fold · Bet/Raise (tahan Y untuk All-In)"],
+            ["LT / RT", "Permainan: kurangkan / naikkan jumlah taruhan"],
+            ["LB / RB", "Permainan: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Permainan: mode permainan (Manual · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Navigasi: bergerak dari satu item ke item lain"],
+            ["A / B", "Navigasi: pilih · kembali (seperti Esc); B tidak pernah Fold"],
+            ["X / Y", "Navigasi: sembang (dengan papan kekunci pada skrin) · Bantuan si Sat"],
+            ["LB / RB", "Navigasi: jendela sebelum / seterusnya (meja, panel terbuka, si Sat)"],
+            ["LT / RT", "Navigasi: tab sebelum / seterusnya"],
             ["RS", "Tatal"]],
-          note: "Huruf mengikut susun atur Xbox: pada pad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, dan tombol aksi menunjukkan simbol pad Anda sendiri. B tidak pernah Fold. Dalam senarai, penggeser atau kolom angka, ← / → mengubah nilai. Kolom teks masih memerlukan keyboard: A meletakkan kursor dalam kolom, yang membuka keyboard pada skrin di telefon dan tablet. Tetapan: Opsi lanjutan → Antarmuka pengguna → Gamepad." }
+          note: "Huruf mengikut susun atur Xbox: pada pad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, dan butang tindakan memaparkan simbol pad anda sendiri. Jendela sebenar (tetapan, pengesahan, menu gamepad) sentiasa bertukar ke Navigasi selagi ia terbuka. Untuk menulis, A pada medan teks membuka papan kekunci gamepad: frasa pantas untuk sembang, huruf dengan D-pad dan A, X memadam, Y menambah ruang, LB menukar huruf besar, RB ke nombor dan simbol, Start menghantar, B menutup. Tetapan: Opsi lanjutan → Antarmuka pengguna → Gamepad." }
       ]
     }
   ]

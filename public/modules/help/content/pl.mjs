@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Poczekalnia: pisanie poza polem tekstowym trafia od razu do czatu']],
           note: 'Na Androidzie systemowy przycisk/gest Wstecz zamyka okna jak Esc, zamiast opuszczać grę (konfigurowalne w opcjach). iOS nie ma odpowiednika — użyj \u2715 każdego okna.' },
         { id: 'gamepad', t: "Pad",
-          b: ["Kontroler do gier działa w przeglądarkach, które obsługują pady (Xbox, PlayStation, Switch Pro i większość padów Bluetooth) — naciśnij raz dowolny jego przycisk, aby przeglądarka go wykryła. Przy stole jego przyciski grają; gdy tylko otwarte jest okno lub menu, a także wszędzie poza stołem, służą do poruszania się po ekranie:"],
+          b: ["Kontroler do gier działa w przeglądarkach obsługujących pady (Xbox, PlayStation, Switch Pro i większość padów Bluetooth) — naciśnij raz dowolny jego przycisk, aby przeglądarka go wykryła. Select przełącza między dwoma trybami, oznaczonymi plakietką w lewym dolnym rogu: Gra — aby grać przy stole nawet z otwartym czatem lub historią, oraz Nawigacja — aby poruszać się po ekranie i jego oknach. Gdy nadejdzie twoja kolej, pad zawibruje i sam wróci do trybu Gra."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — przytrzymaj, aby zagrać All-In"],
-            ["LT / RT", "Zmniejsz / zwiększ kwotę zakładu"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Tryb gry: Ręcznie · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Przeglądanie stołu (nagłówek, miejsca); B lub twoja następna kolej oddaje przyciski grze"],
-            ["Start / Select", "Ustawienia · Czat"],
-            ["D-pad / LS", "Menu: przechodzenie między elementami"],
-            ["A / B", "Menu: wybierz · wstecz (jak Esc)"],
-            ["LB / RB", "Menu: poprzednia / następna zakładka"],
+            ["Select", "Przełączanie między trybem Gra a Nawigacja"],
+            ["Start", "Menu pada: czat, historia, szanse, statystyki, reakcje, Pomoc Asa, ustawienia, pełny ekran, przyciski, opuść"],
+            ["A / X / Y", "Gra: Check/Call · Fold · Bet/Raise (przytrzymaj Y, aby zagrać All-In)"],
+            ["LT / RT", "Gra: zmniejsz / zwiększ kwotę zakładu"],
+            ["LB / RB", "Gra: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Gra: tryb gry (Ręcznie · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Nawigacja: przechodzenie od elementu do elementu"],
+            ["A / B", "Nawigacja: wybierz · wstecz (jak Esc); B nigdy nie robi Fold"],
+            ["X / Y", "Nawigacja: czat (z klawiaturą ekranową) · Pomoc Asa"],
+            ["LB / RB", "Nawigacja: poprzednie / następne okno (stół, otwarte panele, As)"],
+            ["LT / RT", "Nawigacja: poprzednia / następna zakładka"],
             ["RS", "Przewijanie"]],
-          note: "Litery odpowiadają układowi Xbox: na padzie PlayStation ✕ = A, ○ = B, □ = X, △ = Y, a przyciski akcji pokazują symbole twojego pada. B nigdy nie robi Fold. Na liście, suwaku lub w polu liczbowym ← / → zmieniają wartość. Pola tekstowe nadal wymagają klawiatury: A umieszcza kursor w polu, co na telefonach i tabletach otwiera klawiaturę ekranową. Ustawienia: Opcje zaawansowane → Interfejs użytkownika → Pad." }
+          note: "Litery odpowiadają układowi Xbox: na padzie PlayStation ✕ = A, ○ = B, □ = X, △ = Y, a przyciski akcji pokazują symbole twojego pada. Prawdziwe okno (ustawienia, potwierdzenie, menu pada) zawsze przełącza na Nawigację, dopóki jest otwarte. Aby pisać, A na polu tekstowym otwiera klawiaturę pada: szybkie zwroty do czatu, litery krzyżakiem i A, X kasuje, Y dodaje spację, LB przełącza wielkie litery, RB cyfry i symbole, Start wysyła, B zamyka. Ustawienia: Opcje zaawansowane → Interfejs użytkownika → Pad." }
       ]
     }
   ]

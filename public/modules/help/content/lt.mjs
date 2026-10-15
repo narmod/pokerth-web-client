@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Vestibiulis: rašant ne teksto lauke, tekstas iškart rašomas į pokalbį']],
           note: '\u201eAndroid\u201c sistemos mygtukas/gestas Atgal uždaro langus kaip Esc, užuot palikęs partiją (nustatoma parinktyse). iOS neturi atitinkamo sistemos mygtuko — naudok kiekvieno lango \u2715.' },
         { id: 'gamepad', t: "Žaidimų pultelis",
-          b: ["Žaidimų pultelis veikia naršyklėse, kurios juos palaiko (Xbox, PlayStation, Switch Pro ir dauguma Bluetooth pultelių) — vieną kartą paspausk bet kurį jo mygtuką, kad naršyklė jį aptiktų. Prie stalo jo mygtukai žaidžia; kai tik atidarytas langas ar meniu, ir visur kitur, ne prie stalo, jais judama ekrane:"],
+          b: ["Žaidimų pultelis veikia naršyklėse, kurios palaiko pultelius (Xbox, PlayStation, Switch Pro ir dauguma Bluetooth pultelių) — vieną kartą paspausk bet kurį jo mygtuką, kad naršyklė jį aptiktų. Select perjungia du režimus, rodomus ženkleliu apačioje kairėje: Žaidimas — žaisti prie stalo net atidarius pokalbius ar istoriją, ir Naršymas — judėti po ekraną ir jo langus. Kai ateina tavo eilė, pultelis suvibruoja ir pats grįžta į Žaidimo režimą."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — palaikyk, kad eitum All-In"],
-            ["LT / RT", "Sumažinti / padidinti statymo sumą"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Žaidimo režimas: Rankinis · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Naršyti stalą (antraštė, vietos); B arba tavo kita eilė grąžina mygtukus žaidimui"],
-            ["Start / Select", "Nustatymai · Pokalbiai"],
-            ["D-pad / LS", "Meniu: pereiti nuo vieno elemento prie kito"],
-            ["A / B", "Meniu: pasirinkti · atgal (kaip Esc)"],
-            ["LB / RB", "Meniu: ankstesnė / kita kortelė"],
+            ["Select", "Perjungti Žaidimo ir Naršymo režimus"],
+            ["Start", "Pultelio meniu: pokalbiai, istorija, tikimybės, statistika, reakcijos, Tūzo pagalba, nustatymai, visas ekranas, mygtukai, palikti"],
+            ["A / X / Y", "Žaidimas: Check/Call · Fold · Bet/Raise (laikyk Y, kad būtų All-In)"],
+            ["LT / RT", "Žaidimas: sumažinti / padidinti statymo sumą"],
+            ["LB / RB", "Žaidimas: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Žaidimas: žaidimo režimas (Rankinis · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Naršymas: pereiti nuo elemento prie elemento"],
+            ["A / B", "Naršymas: pasirinkti · atgal (kaip Esc); B niekada nedaro Fold"],
+            ["X / Y", "Naršymas: pokalbiai (su ekranine klaviatūra) · Tūzo pagalba"],
+            ["LB / RB", "Naršymas: ankstesnis / kitas langas (stalas, atidaryti skydeliai, Tūzas)"],
+            ["LT / RT", "Naršymas: ankstesnė / kita kortelė"],
             ["RS", "Slinkti"]],
-          note: "Raidės atitinka Xbox išdėstymą: PlayStation pultelyje ✕ = A, ○ = B, □ = X, △ = Y, o veiksmų mygtukai rodo tavo pultelio simbolius. B niekada nedaro Fold. Sąraše, šliaužiklyje ar skaičių lauke ← / → keičia reikšmę. Teksto laukams vis tiek reikia klaviatūros: A įkelia žymeklį į lauką, o telefonuose ir planšetėse tada atsiveria ekrano klaviatūra. Nustatymai: Išplėstinės parinktys → Naudotojo sąsaja → Žaidimų pultelis." }
+          note: "Raidės atitinka Xbox išdėstymą: PlayStation pultelyje ✕ = A, ○ = B, □ = X, △ = Y, o veiksmų mygtukai rodo tavo pultelio simbolius. Tikras langas (nustatymai, patvirtinimas, pultelio meniu) visada persijungia į Naršymo režimą, kol yra atidarytas. Norėdamas rašyti, teksto lauke paspausk A — atsidarys pultelio klaviatūra: greitosios frazės pokalbiams, raidės su D-pad ir A, X trina, Y prideda tarpą, LB perjungia didžiąsias raides, RB — skaičius ir simbolius, Start siunčia, B uždaro. Nustatymai: Išplėstinės parinktys → Naudotojo sąsaja → Žaidimų pultelis." }
       ]
     }
   ]

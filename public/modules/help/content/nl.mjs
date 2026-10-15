@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Lobby: typen buiten een tekstveld schrijft direct in de chat']],
           note: 'Op Android sluit de systeem-Terug-knop/-beweging vensters zoals Esc in plaats van het spel te verlaten (instelbaar in de opties). iOS heeft geen vergelijkbare systeemknop — gebruik de \u2715 van elk venster.' },
         { id: 'gamepad', t: "Gamepad",
-          b: ["Een gamecontroller werkt in browsers die gamepads ondersteunen (Xbox, PlayStation, Switch Pro en de meeste Bluetooth-pads) — druk één keer op een van de knoppen zodat de browser hem herkent. Aan tafel spelen de knoppen; zodra er een venster of menu open is, en overal buiten de tafel, dienen ze om over het scherm te bewegen:"],
+          b: ["Een gamecontroller werkt in browsers die gamepads ondersteunen (Xbox, PlayStation, Switch Pro en de meeste Bluetooth-controllers) — druk één keer op een van de knoppen zodat de browser hem herkent. Select wisselt tussen twee modi, aangegeven met een badge linksonder: Spel, om aan tafel te spelen, ook als de chat of het verloop open staat, en Navigatie, om je over het scherm en door de vensters te bewegen. Als je aan de beurt bent, trilt de gamepad en gaat hij vanzelf terug naar Spel."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — ingedrukt houden voor All-In"],
-            ["LT / RT", "Inzetbedrag verlagen / verhogen"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Speelmodus: Handmatig · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Tafel doorlopen (kop, plaatsen); B of je volgende beurt geeft de knoppen terug aan het spel"],
-            ["Start / Select", "Instellingen · Chat"],
-            ["D-pad / LS", "Menu's: van item naar item gaan"],
-            ["A / B", "Menu's: kiezen · terug (zoals Esc)"],
-            ["LB / RB", "Menu's: vorig / volgend tabblad"],
+            ["Select", "Wisselen tussen Spel en Navigatie"],
+            ["Start", "Gamepadmenu: chat, verloop, kansen, statistieken, reacties, Hulp van de Aas, instellingen, volledig scherm, knoppen, verlaten"],
+            ["A / X / Y", "Spel: Check/Call · Fold · Bet/Raise (Y ingedrukt houden voor All-In)"],
+            ["LT / RT", "Spel: inzetbedrag verlagen / verhogen"],
+            ["LB / RB", "Spel: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Spel: speelmodus (Handmatig · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Navigatie: van element naar element gaan"],
+            ["A / B", "Navigatie: kiezen · terug (zoals Esc); B doet nooit Fold"],
+            ["X / Y", "Navigatie: chat (met het schermtoetsenbord) · Hulp van de Aas"],
+            ["LB / RB", "Navigatie: vorig / volgend venster (tafel, open panelen, de Aas)"],
+            ["LT / RT", "Navigatie: vorig / volgend tabblad"],
             ["RS", "Scrollen"]],
-          note: "De letters volgen de Xbox-indeling: op een PlayStation-pad is ✕ = A, ○ = B, □ = X, △ = Y, en de actieknoppen tonen de symbolen van je eigen pad. B doet nooit Fold. In een lijst, een schuifregelaar of een getalveld wijzigen ← / → de waarde. Tekstvelden hebben nog steeds een toetsenbord nodig: A zet de cursor in het veld, waardoor op telefoons en tablets het schermtoetsenbord verschijnt. Instellingen: Geavanceerde opties → Gebruikersinterface → Gamepad." }
+          note: "De letters volgen de Xbox-indeling: op een PlayStation-controller is ✕ = A, ○ = B, □ = X, △ = Y, en de actieknoppen tonen de symbolen van je eigen controller. Een echt venster (instellingen, een bevestiging, het gamepadmenu) schakelt altijd naar Navigatie zolang het open is. Om te schrijven opent A op een tekstveld het gamepadtoetsenbord: snelle zinnen voor de chat, letters met de D-pad en A, X wist, Y voegt een spatie toe, LB schakelt naar hoofdletters, RB naar cijfers en symbolen, Start verstuurt, B sluit. Instellingen: Geavanceerde opties → Gebruikersinterface → Gamepad." }
       ]
     }
   ]

@@ -11,7 +11,7 @@ use too. Items are grouped by status rather than fixed phases.
 
 ## ✅ Shipped
 
-- **Gamepad** (`2.1.10-web.79`) — play and browse the whole client with a game controller (Gamepad API): table buttons (A Check/Call, X Fold, Y Bet/Raise, hold Y All-In, triggers for the amount, bumpers for 1/3 · 1/2 · Pot) and console-style menu navigation (D-pad focus ring, A select, B back). Web addition; the official client has no gamepad support.
+- **Gamepad** (`2.1.10-web.79`, `web.81`) — play and browse the whole client with a game controller (Gamepad API). Select switches Game / Navigation: table buttons in Game (A Check/Call, X Fold, Y Bet/Raise, hold Y All-In, triggers for the amount, bumpers for 1/3 · 1/2 · Pot), a focus ring in Navigation (D-pad, A select, B back, bumpers between the table, the open panels and the Ace). Start opens a gamepad menu; an on-screen keyboard with quick chat phrases. The core (`ui/ctl-nav.mjs`) is device-agnostic, ready for a TV-remote adapter. Web addition; the official client has no gamepad support.
 
 - **SEO / search-engine visibility (admin option, off by default)** — `/admin` → Clients → Search engine visibility. Off: pages served with `noindex,nofollow`, `robots.txt` blocks all crawlers (self-hosted installs stay unindexed). On: meta description, Open Graph / Twitter cards, canonical, JSON-LD, crawler-readable summary block, plus generated `robots.txt` (AI crawlers welcomed), `sitemap.xml` and `llms.txt` from the configured public URL. Injected at serve time by `proxy.js` (v2.1.6-web.25).
 

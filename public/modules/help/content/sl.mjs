@@ -312,21 +312,21 @@ export const help = {
             ['A–Z · 0–9', 'Predverje: tipkanje zunaj besedilnega polja piše neposredno v klepet']],
           note: 'Na Androidu sistemski gumb/gesta Nazaj zapira okna kot Esc, namesto da bi zapustil igro (nastavljivo v možnostih). iOS nima ustreznega sistemskega gumba — uporabi ✕ vsakega okna.' },
         { id: 'gamepad', t: "Igralni plošček",
-          b: ["Krmilnik za igre deluje v brskalnikih, ki podpirajo igralne ploščke (Xbox, PlayStation, Switch Pro in večina ploščkov Bluetooth) — enkrat pritisni katerega koli od njegovih gumbov, da ga brskalnik zazna. Za mizo njegovi gumbi igrajo; takoj ko je odprto okno ali meni, in povsod zunaj mize, pa z njimi premikaš po zaslonu:"],
+          b: ["Igralni plošček deluje v brskalnikih, ki podpirajo igralne ploščke (Xbox, PlayStation, Switch Pro in večina ploščkov Bluetooth) — enkrat pritisni kateri koli njegov gumb, da ga brskalnik zazna. Select preklaplja med dvema načinoma, ki ju kaže značka spodaj levo: Igra, za igranje za mizo tudi z odprtim klepetom ali dnevnikom, in Navigacija, za premikanje po zaslonu in njegovih oknih. Ko pride tvoja poteza, plošček zavibrira in se sam vrne v način Igra."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — drži ga za All-In"],
-            ["LT / RT", "Znižaj / zvišaj znesek stave"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Način igre: Ročno · Samodejni Check/Call · Samodejni Check/Fold"],
-            ["↑", "Brskanje po mizi (glava, sedeži); B ali tvoja naslednja poteza vrne gumbe igri"],
-            ["Start / Select", "Nastavitve · Klepet"],
-            ["D-pad / LS", "Meniji: premik od elementa do elementa"],
-            ["A / B", "Meniji: izberi · nazaj (kot Esc)"],
-            ["LB / RB", "Meniji: prejšnji / naslednji zavihek"],
+            ["Select", "Preklop med načinoma Igra in Navigacija"],
+            ["Start", "Meni ploščka: klepet, dnevnik, kvote, statistika, reakcije, Pomoč asa, nastavitve, celozaslonski način, gumbi, zapusti"],
+            ["A / X / Y", "Igra: Check/Call · Fold · Bet/Raise (drži Y za All-In)"],
+            ["LT / RT", "Igra: zmanjšaj / povečaj znesek stave"],
+            ["LB / RB", "Igra: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Igra: način igranja (Ročno · Samodejni Check/Call · Samodejni Check/Fold)"],
+            ["D-pad / LS", "Navigacija: premik od elementa do elementa"],
+            ["A / B", "Navigacija: izbira · nazaj (kot Esc); B nikoli ne naredi Fold"],
+            ["X / Y", "Navigacija: klepet (z zaslonsko tipkovnico) · Pomoč asa"],
+            ["LB / RB", "Navigacija: prejšnje / naslednje okno (miza, odprte plošče, as)"],
+            ["LT / RT", "Navigacija: prejšnji / naslednji zavihek"],
             ["RS", "Drsenje"]],
-          note: "Črke sledijo postavitvi Xbox: na ploščku PlayStation je ✕ = A, ○ = B, □ = X, △ = Y, gumbi za dejanja pa prikazujejo simbole tvojega ploščka. B nikoli ne naredi Fold. Na seznamu, drsniku ali v številčnem polju ← / → spremenita vrednost. Za besedilna polja še vedno potrebuješ tipkovnico: A postavi kazalec v polje, kar na telefonih in tablicah odpre zaslonsko tipkovnico. Nastavitve: Napredne možnosti → Uporabniški vmesnik → Igralni plošček." }
+          note: "Črke sledijo postavitvi Xbox: na ploščku PlayStation je ✕ = A, ○ = B, □ = X, △ = Y, gumbi za poteze pa kažejo simbole tvojega ploščka. Pravo okno (nastavitve, potrditev, meni ploščka) vedno preklopi v način Navigacija, dokler je odprto. Za pisanje A na besedilnem polju odpre tipkovnico ploščka: hitri stavki za klepet, črke s smernimi gumbi in A, X briše, Y doda presledek, LB preklopi velike črke, RB številke in simbole, Start pošlje, B zapre. Nastavitve: Napredne možnosti → Uporabniški vmesnik → Igralni plošček." }
       ]
     }
   ]

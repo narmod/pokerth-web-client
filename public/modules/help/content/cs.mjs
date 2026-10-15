@@ -309,21 +309,21 @@ export const help = {
             ['A–Z · 0–9', 'Lobby: psaní mimo textové pole píše rovnou do chatu']],
           note: 'Na Androidu systémové tlačítko/gesto Zpět zavírá okna jako Esc, místo aby opustilo hru (nastavitelné v možnostech). iOS obdobné systémové tlačítko nemá — použij \u2715 každého okna.' },
         { id: 'gamepad', t: "Gamepad",
-          b: ["Herní ovladač funguje v prohlížečích, které gamepady podporují (Xbox, PlayStation, Switch Pro a většina Bluetooth ovladačů) — stiskni jednou kterékoli jeho tlačítko, aby ho prohlížeč rozpoznal. U stolu jeho tlačítka hrají; jakmile je otevřené okno nebo nabídka, a všude mimo stůl, slouží místo toho k pohybu po obrazovce:"],
+          b: ["Herní ovladač funguje v prohlížečích, které gamepady podporují (Xbox, PlayStation, Switch Pro a většina Bluetooth ovladačů) — stiskni jednou kterékoli jeho tlačítko, aby ho prohlížeč rozpoznal. Select přepíná mezi dvěma režimy, které ukazuje odznak vlevo dole: Hra — pro hraní u stolu, i když je otevřený chat nebo historie, a Navigace — pro pohyb po obrazovce a jejích oknech. Když jsi na tahu, gamepad zavibruje a sám se vrátí do režimu Hra."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — podrž pro All-In"],
-            ["LT / RT", "Snížit / zvýšit výši sázky"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Herní režim: Ručně · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Procházet stůl (záhlaví, místa); B nebo tvůj další tah vrátí tlačítka hře"],
-            ["Start / Select", "Nastavení · Chat"],
-            ["D-pad / LS", "Nabídky: přechod z položky na položku"],
-            ["A / B", "Nabídky: vybrat · zpět (jako Esc)"],
-            ["LB / RB", "Nabídky: předchozí / další záložka"],
+            ["Select", "Přepínání mezi Hrou a Navigací"],
+            ["Start", "Nabídka gamepadu: chat, historie, šance, statistiky, reakce, Nápověda od esa, nastavení, celá obrazovka, tlačítka, odejít"],
+            ["A / X / Y", "Hra: Check/Call · Fold · Bet/Raise (pro All-In drž Y)"],
+            ["LT / RT", "Hra: snížit / zvýšit výši sázky"],
+            ["LB / RB", "Hra: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Hra: herní režim (Ručně · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Navigace: přechod z položky na položku"],
+            ["A / B", "Navigace: vybrat · zpět (jako Esc); B nikdy nedělá Fold"],
+            ["X / Y", "Navigace: chat (s klávesnicí na obrazovce) · Nápověda od esa"],
+            ["LB / RB", "Navigace: předchozí / další okno (stůl, otevřené panely, eso)"],
+            ["LT / RT", "Navigace: předchozí / další záložka"],
             ["RS", "Posouvání"]],
-          note: "Písmena odpovídají rozložení Xbox: na ovladači PlayStation ✕ = A, ○ = B, □ = X, △ = Y a akční tlačítka ukazují symboly tvého ovladače. B nikdy nedělá Fold. V seznamu, posuvníku nebo číselném poli mění ← / → hodnotu. Textová pole stále potřebují klávesnici: A umístí kurzor do pole, což na telefonech a tabletech otevře klávesnici na obrazovce. Nastavení: Pokročilé možnosti → Uživatelské rozhraní → Gamepad." }
+          note: "Písmena odpovídají rozložení Xbox: na ovladači PlayStation ✕ = A, ○ = B, □ = X, △ = Y a akční tlačítka zobrazují symboly tvého ovladače. Skutečné okno (nastavení, potvrzení, nabídka gamepadu) vždy přepne do režimu Navigace, dokud je otevřené. Chceš-li psát, A na textovém poli otevře klávesnici gamepadu: rychlé fráze pro chat, písmena D-padem a A, X maže, Y přidá mezeru, LB přepíná velká písmena, RB čísla a symboly, Start odešle, B zavře. Nastavení: Pokročilé možnosti → Uživatelské rozhraní → Gamepad." }
       ]
     }
   ]

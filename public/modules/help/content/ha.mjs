@@ -452,21 +452,21 @@ export const help = {
             ["A–Z · 0–9", "Zaure: rubutu a wajen filin rubutu yana rubutawa kai tsaye cikin hira"]],
           note: "A Android, maɓallin/motsin Baya na tsarin yana rufe tagogi kamar Escape maimakon barin wasa (ana iya daidaitawa a cikin zaɓuɓɓuka). iOS ba ta da maɓallin tsarin da ya yi daidai — yi amfani da ✕ na kowace taga." },
         { id: 'gamepad', t: "Gamepad",
-          b: ["Mai sarrafa wasa yana aiki a burauzan da ke goyon bayan gamepad (Xbox, PlayStation, Switch Pro da yawancin gamepad na Bluetooth) — danna kowane maɓallinsa sau ɗaya don burauzar ta gane shi. A tebur, maɓallansa suna wasa; da zarar taga ko menu ya buɗe, da kuma ko'ina a wajen tebur, suna motsawa a kan allo maimakon haka:"],
+          b: ["Mai sarrafa wasa yana aiki a burauzan da ke goyon bayan gamepad (Xbox, PlayStation, Switch Pro da yawancin gamepad na Bluetooth) — danna kowane maɓallinsa sau ɗaya don burauzar ta gane shi. Select yana sauyawa tsakanin yanayi biyu, waɗanda alama a ƙasa hagu ke nunawa: Wasa, don yin wasa a tebur ko da hira ko log a buɗe, da Kewayawa, don motsawa a kan allo da tagoginsa. Idan lokacinka ya yi, gamepad yana girgiza kuma ya koma Wasa da kansa."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — riƙe shi don yin All-In"],
-            ["LT / RT", "Rage / ƙara adadin caca"],
-            ["LB / RB", "Caca 1/3 · 1/2 · Pot"],
-            ["← / →", "Yanayin wasa: Da hannu · Check/Call kai tsaye · Check/Fold kai tsaye"],
-            ["↑", "Duba tebur (kai, kujeru); B ko lokacinka na gaba yana mayar da maɓallai ga wasan"],
-            ["Start / Select", "Saituna · Hira"],
-            ["D-pad / LS", "Menu: matsa daga abu zuwa abu"],
-            ["A / B", "Menu: zaɓa · baya (kamar Esc)"],
-            ["LB / RB", "Menu: shafin baya / na gaba"],
+            ["Select", "Sauya tsakanin Wasa da Kewayawa"],
+            ["Start", "Menu na gamepad: hira, log, dama, ƙididdiga, martani, Taimakon Aas, saituna, cikakken allo, maɓallai, bar"],
+            ["A / X / Y", "Wasa: Check/Call · Fold · Bet/Raise (riƙe Y don All-In)"],
+            ["LT / RT", "Wasa: rage / ƙara adadin caca"],
+            ["LB / RB", "Wasa: Caca 1/3 · 1/2 · Pot"],
+            ["← / →", "Wasa: yanayin wasa (Da hannu · Check/Call kai tsaye · Check/Fold kai tsaye)"],
+            ["D-pad / LS", "Kewayawa: matsa daga abu zuwa abu"],
+            ["A / B", "Kewayawa: zaɓa · baya (kamar Esc); B ba ya taɓa yin Fold"],
+            ["X / Y", "Kewayawa: hira (da madannin kan allo) · Taimakon Aas"],
+            ["LB / RB", "Kewayawa: taga ta baya / ta gaba (tebur, faifan da ke buɗe, Aas)"],
+            ["LT / RT", "Kewayawa: shafin baya / na gaba"],
             ["RS", "Gungura"]],
-          note: "Haruffan suna bin tsarin Xbox: a gamepad na PlayStation ✕ = A, ○ = B, □ = X, △ = Y, kuma maɓallan aiki suna nuna alamomin gamepad ɗinka. B ba ya taɓa yin Fold. A jeri, madaidaicin ja ko filin lamba, ← / → suna canza ƙimar. Filayen rubutu har yanzu suna buƙatar madannai: A yana sanya siginan rubutu a filin, wanda ke buɗe madannin kan allo a wayoyi da kwamfutocin hannu. Saituna: Zaɓuɓɓuka na ci gaba → Fuskar mai amfani → Gamepad." }
+          note: "Haruffan suna bin tsarin Xbox: a gamepad na PlayStation ✕ = A, ○ = B, □ = X, △ = Y, kuma maɓallan aiki suna nuna alamomin gamepad ɗinka. Taga ta gaske (saituna, tabbatarwa, menu na gamepad) koyaushe tana komawa Kewayawa muddin tana buɗe. Don rubutu, A a filin rubutu yana buɗe madannin gamepad: gajerun jimloli don hira, haruffa da D-pad da A, X yana gogewa, Y yana ƙara sarari, LB yana sauyawa zuwa manyan haruffa, RB zuwa lambobi da alamomi, Start yana aikawa, B yana rufewa. Saituna: Zaɓuɓɓuka na ci gaba → Fuskar mai amfani → Gamepad." }
       ]
     }
   ]

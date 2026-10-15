@@ -452,21 +452,21 @@ export const help = {
             ["A–Z · 0–9", "Ilobhi: ukuthayipha ngaphandle kwenkundla yombhalo kubhala ngqo engxoxweni"]],
           note: "Ku-Android, inkinobho/ukunyakaza kohlelo okuthi Emuva kuvala amawindi njenge-Escape esikhundleni sokushiya umdlalo (kuyahleleka ezinketho). I-iOS ayinayo inkinobho yohlelo efanayo — sebenzisa u-✕ wewindi ngalinye." },
         { id: 'gamepad', t: "Isilawuli somdlalo",
-          b: ["Isilawuli somdlalo sisebenza ezipheqululini ezisekela ama-gamepad (Xbox, PlayStation, Switch Pro nezilawuli eziningi ze-Bluetooth) — cindezela kanye noma iyiphi inkinobho yaso ukuze isiphequluli sisibone. Etafuleni izinkinobho zaso ziyadlala; lapho nje kuvulwa iwindi noma imenyu, nakuyo yonke indawo ngaphandle kwetafula, zisetshenziselwa ukuhamba esikrinini:"],
+          b: ["Isilawuli somdlalo sisebenza kuziphequluli ezisekela ama-gamepad (Xbox, PlayStation, Switch Pro neziningi izilawuli ze-Bluetooth) — cindezela kanye noma iyiphi inkinobho yaso ukuze isiphequluli sisibone. I-Select ishintsha phakathi kwamamodi amabili, aboniswa ngebheji ezansi ngakwesobunxele: Umdlalo, ukuze udlale etafuleni ngisho noma ingxoxo noma ilogi ivuliwe, noKuzulazula, ukuze uhambe esikrinini nasemawindini aso. Uma sekuyithuba lakho, isilawuli siyadlidliza bese sibuyela ngokwaso kumodi yoMdlalo."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — yibambe ukuze wenze All-In"],
-            ["LT / RT", "Yehlisa / khuphula inani lokubheja"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Imodi yokudlala: Mathupha · I-Check/Call ezenzakalelayo · I-Check/Fold ezenzakalelayo"],
-            ["↑", "Phequlula itafula (isihloko, izihlalo); u-B noma ithuba lakho elilandelayo libuyisela izinkinobho emdlalweni"],
-            ["Start / Select", "Izilungiselelo · Ingxoxo"],
-            ["D-pad / LS", "Amamenyu: hamba usuka entweni eya kwenye"],
-            ["A / B", "Amamenyu: khetha · emuva (njenge-Esc)"],
-            ["LB / RB", "Amamenyu: ithebhu yangaphambilini / elandelayo"],
+            ["Select", "Shintsha phakathi koMdlalo noKuzulazula"],
+            ["Start", "Imenyu yesilawuli: ingxoxo, ilogi, amathuba, izibalo, ukusabela, Usizo luka-Ace, izilungiselelo, isikrini esigcwele, izinkinobho, phuma"],
+            ["A / X / Y", "Umdlalo: Check/Call · Fold · Bet/Raise (bamba u-Y ukuze wenze All-In)"],
+            ["LT / RT", "Umdlalo: nciphisa / khulisa inani lokubheja"],
+            ["LB / RB", "Umdlalo: Bheja 1/3 · 1/2 · Pot"],
+            ["← / →", "Umdlalo: imodi yokudlala (Mathupha · I-Check/Call ezenzakalelayo · I-Check/Fold ezenzakalelayo)"],
+            ["D-pad / LS", "Ukuzulazula: hamba ukusuka entweni eyodwa uye kwenye"],
+            ["A / B", "Ukuzulazula: khetha · emuva (njenge-Esc); B ayilokothi yenze Fold"],
+            ["X / Y", "Ukuzulazula: ingxoxo (ngekhibhodi yesikrini) · Usizo luka-Ace"],
+            ["LB / RB", "Ukuzulazula: iwindi elidlule / elilandelayo (itafula, amaphaneli avuliwe, u-Ace)"],
+            ["LT / RT", "Ukuzulazula: ithebhu edlule / elandelayo"],
             ["RS", "Skrola"]],
-          note: "Izinhlamvu zilandela ukuhlelwa kwe-Xbox: kusilawuli se-PlayStation ✕ = A, ○ = B, □ = X, △ = Y, futhi izinkinobho zezenzo zibonisa izimpawu zesilawuli sakho. B ayilokothi yenze Fold. Ohlwini, esilayidini noma enkambwini yezinombolo, ← / → kushintsha inani. Izinkambu zombhalo zisadinga ikhibhodi: A ifaka ikhesa enkambwini, okuvula ikhibhodi yesikrini ezingcingweni nakumathebulethi. Izilungiselelo: Izinketho ezithuthukisiwe → Isixhumi esibonakalayo → Isilawuli somdlalo." }
+          note: "Izinhlamvu zilandela ukuhlelwa kwe-Xbox: esilawulini se-PlayStation ✕ = A, ○ = B, □ = X, △ = Y, futhi izinkinobho zesenzo zibonisa izimpawu zesilawuli sakho. Iwindi langempela (izilungiselelo, isiqinisekiso, imenyu yesilawuli) lihlala lishintshela kuKuzulazula uma nje livuliwe. Ukuze ubhale, u-A enkundleni yombhalo uvula ikhibhodi yesilawuli: imisho esheshayo yengxoxo, izinhlamvu nge-D-pad no-A, u-X uyasula, u-Y wengeza isikhala, i-LB ishintsha osonhlamvu abakhulu, i-RB izinombolo nezimpawu, i-Start iyathumela, u-B uyavala. Izilungiselelo: Izinketho ezithuthukisiwe → Isixhumi esibonakalayo → Isilawuli somdlalo." }
       ]
     }
   ]

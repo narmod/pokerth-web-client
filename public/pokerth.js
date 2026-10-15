@@ -442,6 +442,7 @@ function openAdvancedOptions() {
   sync('adv-padon', 'pad_on', true);          // gamepad (modules/ui/gamepad.mjs, web) — on by default
   sync('adv-padrumble', 'pad_rumble', true);  // gamepad vibrates on my turn
   sync('adv-padnin', 'pad_nintendo', false);  // Nintendo layout: A/B swapped
+  sync('adv-padkb', 'pad_kb', true);          // controller on-screen keyboard for text fields
   sync('adv-tablezoom', 'table_zoom', true);
   sync('adv-browserzoom', 'browser_zoom', false);   // zoom navigateur : bloqué par défaut sur tactile
   sync('adv-backguard', 'back_guard', true);        // bouton Retour Android = Escape (parité QML §6)
@@ -12163,7 +12164,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.80'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.81'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

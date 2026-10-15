@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Lobby: digitare fuori da un campo di testo scrive direttamente nella chat']],
           note: 'Su Android, il tasto/gesto Indietro di sistema chiude le finestre come Esc invece di lasciare la partita (configurabile nelle opzioni). iOS non ha un tasto di sistema equivalente — usa la \u2715 di ogni finestra.' },
         { id: 'gamepad', t: "Controller",
-          b: ["Un controller funziona nei browser che supportano i gamepad (Xbox, PlayStation, Switch Pro e la maggior parte dei controller Bluetooth) — premi una volta uno qualsiasi dei suoi tasti perché il browser lo rilevi. Al tavolo i tasti giocano; appena è aperta una finestra o un menu, e ovunque fuori dal tavolo, servono a spostarsi nello schermo:"],
+          b: ["Un controller funziona nei browser che supportano i gamepad (Xbox, PlayStation, Switch Pro e la maggior parte dei controller Bluetooth) — premi una volta uno qualsiasi dei suoi tasti perché il browser lo rilevi. Select passa da una modalità all’altra, indicate da un badge in basso a sinistra: Gioco, per giocare al tavolo anche con la chat o la cronologia aperte, e Navigazione, per spostarti nello schermo e nelle sue finestre. Quando arriva il tuo turno, il controller vibra e torna da solo in modalità Gioco."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — tienilo premuto per andare All-In"],
-            ["LT / RT", "Diminuire / aumentare l'importo della puntata"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Modalità di gioco: Manuale · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Esplorare il tavolo (intestazione, posti); B o il tuo prossimo turno restituiscono i tasti al gioco"],
-            ["Start / Select", "Impostazioni · Chat"],
-            ["D-pad / LS", "Menu: passare da un elemento all'altro"],
-            ["A / B", "Menu: scegliere · indietro (come Esc)"],
-            ["LB / RB", "Menu: scheda precedente / successiva"],
+            ["Select", "Passare tra Gioco e Navigazione"],
+            ["Start", "Menu controller: chat, cronologia, probabilità, statistiche, reazioni, Aiuto dell’Asso, impostazioni, schermo intero, tasti, esci"],
+            ["A / X / Y", "Gioco: Check/Call · Fold · Bet/Raise (tieni premuto Y per All-In)"],
+            ["LT / RT", "Gioco: diminuire / aumentare l’importo della puntata"],
+            ["LB / RB", "Gioco: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Gioco: modalità di gioco (Manuale · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Navigazione: passare da un elemento all’altro"],
+            ["A / B", "Navigazione: scegliere · indietro (come Esc); B non fa mai Fold"],
+            ["X / Y", "Navigazione: chat (con la tastiera su schermo) · Aiuto dell’Asso"],
+            ["LB / RB", "Navigazione: finestra precedente / successiva (tavolo, pannelli aperti, l’Asso)"],
+            ["LT / RT", "Navigazione: scheda precedente / successiva"],
             ["RS", "Scorrere"]],
-          note: "Le lettere seguono il layout Xbox: su un controller PlayStation ✕ = A, ○ = B, □ = X, △ = Y, e i pulsanti di azione mostrano i simboli del tuo controller. B non fa mai Fold. In un elenco, un cursore o un campo numerico, ← / → cambiano il valore. I campi di testo richiedono ancora una tastiera: A mette il cursore nel campo, il che apre la tastiera su schermo su telefoni e tablet. Impostazioni: Opzioni avanzate → Interfaccia utente → Controller." }
+          note: "Le lettere seguono il layout Xbox: su un controller PlayStation ✕ = A, ○ = B, □ = X, △ = Y, e i pulsanti di azione mostrano i simboli del tuo controller. Una vera finestra (impostazioni, una conferma, il menu controller) passa sempre in Navigazione finché è aperta. Per scrivere, A su un campo di testo apre la tastiera del controller: frasi rapide per la chat, lettere con la croce direzionale e A, X cancella, Y aggiunge uno spazio, LB passa alle maiuscole, RB a numeri e simboli, Start invia, B chiude. Impostazioni: Opzioni avanzate → Interfaccia utente → Controller." }
       ]
     }
   ]

@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Voorportaal: tik buite ’n teksveld skryf direk in die geselsie']],
           note: 'Op Android maak die stelsel se Terug-knoppie/gebaar vensters toe soos Esc, eerder as om die spel te verlaat (in die opsies instelbaar). iOS het geen ekwivalente stelselknoppie nie — gebruik elke venster se \u2715.' },
         { id: 'gamepad', t: "Spelbeheerder",
-          b: ["’n Spelbeheerder werk in blaaiers wat gamepads ondersteun (Xbox, PlayStation, Switch Pro en die meeste Bluetooth-beheerders) — druk een keer op enige van sy knoppies sodat die blaaier dit opspoor. By die tafel speel die knoppies; sodra ’n venster of kieslys oop is, en oral buite die tafel, beweeg hulle eerder oor die skerm:"],
+          b: ["’n Spelbeheerder werk in blaaiers wat gamepads ondersteun (Xbox, PlayStation, Switch Pro en die meeste Bluetooth-beheerders) — druk een keer op enige van sy knoppies sodat die blaaier dit opspoor. Select wissel tussen twee modusse, aangedui deur ’n kenteken links onder: Spel, om by die tafel te speel selfs as die klets of die geskiedenis oop is, en Navigasie, om oor die skerm en sy vensters te beweeg. Wanneer dit jou beurt is, vibreer die spelbeheerder en keer self terug na Spel."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — hou dit in vir All-In"],
-            ["LT / RT", "Verlaag / verhoog die insetbedrag"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Speelmodus: Handmatig · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Blaai deur die tafel (kopstrook, sitplekke); B of jou volgende beurt gee die knoppies terug aan die spel"],
-            ["Start / Select", "Instellings · Klets"],
-            ["D-pad / LS", "Kieslyste: beweeg van item tot item"],
-            ["A / B", "Kieslyste: kies · terug (soos Esc)"],
-            ["LB / RB", "Kieslyste: vorige / volgende oortjie"],
+            ["Select", "Wissel tussen Spel en Navigasie"],
+            ["Start", "Spelbeheerder-kieslys: klets, geskiedenis, kanse, statistieke, reaksies, Die Aas se Hulp, instellings, volskerm, knoppies, verlaat"],
+            ["A / X / Y", "Spel: Check/Call · Fold · Bet/Raise (hou Y in vir All-In)"],
+            ["LT / RT", "Spel: verlaag / verhoog die insetbedrag"],
+            ["LB / RB", "Spel: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Spel: speelmodus (Handmatig · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Navigasie: beweeg van item tot item"],
+            ["A / B", "Navigasie: kies · terug (soos Esc); B doen nooit Fold nie"],
+            ["X / Y", "Navigasie: klets (met die skermsleutelbord) · Die Aas se Hulp"],
+            ["LB / RB", "Navigasie: vorige / volgende venster (tafel, oop panele, die Aas)"],
+            ["LT / RT", "Navigasie: vorige / volgende oortjie"],
             ["RS", "Rol"]],
-          note: "Die letters volg die Xbox-uitleg: op ’n PlayStation-beheerder is ✕ = A, ○ = B, □ = X, △ = Y, en die aksieknoppies wys die simbole van jou eie beheerder. B doen nooit Fold nie. In ’n lys, ’n skuifbalk of ’n getalveld verander ← / → die waarde. Teksvelde het steeds ’n sleutelbord nodig: A plaas die wyser in die veld, wat die skermsleutelbord op fone en tablette oopmaak. Instellings: Gevorderde opsies → Gebruikerskoppelvlak → Spelbeheerder." }
+          note: "Die letters volg die Xbox-uitleg: op ’n PlayStation-beheerder is ✕ = A, ○ = B, □ = X, △ = Y, en die aksieknoppies wys die simbole van jou eie beheerder. ’n Regte venster (instellings, ’n bevestiging, die spelbeheerder-kieslys) skakel altyd oor na Navigasie solank dit oop is. Om te skryf, maak A op ’n teksveld die spelbeheerder-sleutelbord oop: vinnige frases vir die klets, letters met die D-pad en A, X vee uit, Y voeg ’n spasie by, LB wissel hoofletters, RB syfers en simbole, Start stuur, B maak toe. Instellings: Gevorderde opsies → Gebruikerskoppelvlak → Spelbeheerder." }
       ]
     }
   ]

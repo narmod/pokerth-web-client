@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Saguão: digitar fora de um campo de texto escreve direto no bate-papo']],
           note: 'No Android, o botão/gesto Voltar do sistema fecha as janelas como Esc em vez de sair da partida (configurável nas opções). O iOS não tem botão de sistema equivalente — use o \u2715 de cada janela.' },
         { id: 'gamepad', t: "Controle",
-          b: ["Um controle de jogo funciona nos navegadores com suporte a gamepads (Xbox, PlayStation, Switch Pro e a maioria dos controles Bluetooth) — aperte qualquer botão dele uma vez para o navegador detectá-lo. Na mesa, os botões jogam; assim que uma janela ou um menu está aberto, e em qualquer lugar fora da mesa, eles servem para se mover pela tela:"],
+          b: ["Um controle de jogo funciona nos navegadores que suportam gamepads (Xbox, PlayStation, Switch Pro e a maioria dos controles Bluetooth) — aperte qualquer botão dele uma vez para o navegador detectá-lo. Select alterna entre dois modos, indicados por um selo no canto inferior esquerdo: Jogo, para jogar na mesa mesmo com o chat ou o histórico abertos, e Navegação, para se mover pela tela e suas janelas. Quando chega a sua vez, o controle vibra e volta sozinho para o modo Jogo."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — segure para ir All-In"],
-            ["LT / RT", "Diminuir / aumentar o valor da aposta"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Modo de jogo: Manual · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Navegar pela mesa (cabeçalho, lugares); B ou a sua próxima vez devolve os botões ao jogo"],
-            ["Start / Select", "Configurações · Chat"],
-            ["D-pad / LS", "Menus: passar de um item a outro"],
-            ["A / B", "Menus: escolher · voltar (como Esc)"],
-            ["LB / RB", "Menus: aba anterior / seguinte"],
+            ["Select", "Alternar entre Jogo e Navegação"],
+            ["Start", "Menu do controle: chat, histórico, chances, estatísticas, reações, Ajuda do Ás, configurações, tela cheia, botões, sair"],
+            ["A / X / Y", "Jogo: Check/Call · Fold · Bet/Raise (segure Y para All-In)"],
+            ["LT / RT", "Jogo: diminuir / aumentar o valor da aposta"],
+            ["LB / RB", "Jogo: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Jogo: modo de jogo (Manual · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Navegação: passar de um item a outro"],
+            ["A / B", "Navegação: escolher · voltar (como Esc); B nunca dá Fold"],
+            ["X / Y", "Navegação: chat (com o teclado na tela) · Ajuda do Ás"],
+            ["LB / RB", "Navegação: janela anterior / seguinte (mesa, painéis abertos, o Ás)"],
+            ["LT / RT", "Navegação: aba anterior / seguinte"],
             ["RS", "Rolar"]],
-          note: "As letras seguem o layout do Xbox: num controle PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, e os botões de ação mostram os símbolos do seu próprio controle. B nunca dá Fold. Numa lista, num controle deslizante ou num campo numérico, ← / → alteram o valor. Campos de texto ainda precisam de teclado: A coloca o cursor no campo, o que abre o teclado virtual em celulares e tablets. Configurações: Opções avançadas → Interface do usuário → Controle." }
+          note: "As letras seguem o layout Xbox: num controle PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, e os botões de ação mostram os símbolos do seu próprio controle. Uma janela de verdade (configurações, uma confirmação, o menu do controle) sempre passa para Navegação enquanto estiver aberta. Para escrever, A num campo de texto abre o teclado do controle: frases rápidas para o chat, letras com o direcional e A, X apaga, Y adiciona um espaço, LB alterna maiúsculas, RB números e símbolos, Start envia, B fecha. Configurações: Opções avançadas → Interface do usuário → Controle." }
       ]
     }
   ]

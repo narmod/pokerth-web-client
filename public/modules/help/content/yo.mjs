@@ -452,21 +452,21 @@ export const help = {
             ["A–Z · 0–9", "Gbọ̀ngàn: títẹ̀ ní ìta àpótí ọ̀rọ̀ máa ń kọ tààrà sínú ìjíròrò"]],
           note: "Lórí Android, bọ́tìnì/ìfaraṣàpèjúwe Padà ti ètò ń pa fèrèsé dé bí Escape dípò kí ó kúrò nínú eré (a lè ṣètò rẹ̀ nínú àṣàyàn). iOS kò ní bọ́tìnì ètò tí ó jọ ọ́ — lo ✕ fèrèsé kọ̀ọ̀kan." },
         { id: 'gamepad', t: "Ẹ̀rọ ìdarí eré",
-          b: ["Ẹ̀rọ ìdarí eré ń ṣiṣẹ́ nínú àwọn aṣàwákiri tó ṣe àtìlẹ́yìn fún gamepad (Xbox, PlayStation, Switch Pro àti ọ̀pọ̀ ẹ̀rọ ìdarí Bluetooth) — tẹ ọ̀kan nínú àwọn bọ́tìnì rẹ̀ lẹ́ẹ̀kan kí aṣàwákiri lè dá a mọ̀. Ní tábìlì, àwọn bọ́tìnì rẹ̀ ń ṣeré; ní kété tí fèrèsé tàbí mẹ́nù kan bá ṣí, àti níbi gbogbo lẹ́yìn tábìlì, wọ́n ń gbé ọ kiri lójú ìbòjú dípò bẹ́ẹ̀:"],
+          b: ["Ẹ̀rọ ìdarí eré ń ṣiṣẹ́ nínú àwọn aṣàwákiri tó ṣe àtìlẹ́yìn fún gamepad (Xbox, PlayStation, Switch Pro àti ọ̀pọ̀ ẹ̀rọ ìdarí Bluetooth) — tẹ ọ̀kan nínú àwọn bọ́tìnì rẹ̀ lẹ́ẹ̀kan kí aṣàwákiri lè dá a mọ̀. Select ń yí láàárín ipò méjì, tí àmì kan ní ìsàlẹ̀ òsì ń fi hàn: Eré, láti ṣeré ní tábìlì kódà nígbà tí ìjíròrò tàbí ìwé-àkọsílẹ̀ ṣí sílẹ̀, àti Ìrìnkiri, láti rìn kiri lójú ìbòjú àti àwọn fèrèsé rẹ̀. Nígbà tí ó bá kàn ọ́, ẹ̀rọ ìdarí yóò gbọ̀n, yóò sì padà sí ipò Eré fúnra rẹ̀."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — dì í mú láti ṣe All-In"],
-            ["LT / RT", "Dín iye tẹ́tẹ́ kù / gbé e sókè"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Ipò eré: Pẹ̀lú ọwọ́ · Check/Call aládàáṣiṣẹ́ · Check/Fold aládàáṣiṣẹ́"],
-            ["↑", "Wo tábìlì kiri (orí, ìjókòó); B tàbí ìgbà rẹ tó kàn ń dá àwọn bọ́tìnì padà fún eré"],
-            ["Start / Select", "Ètò · Ìjíròrò"],
-            ["D-pad / LS", "Mẹ́nù: lọ láti ohun kan sí èkejì"],
-            ["A / B", "Mẹ́nù: yàn · padà (bí Esc)"],
-            ["LB / RB", "Mẹ́nù: ojú-ewé ti tẹ́lẹ̀ / tó kàn"],
+            ["Select", "Yí láàárín Eré àti Ìrìnkiri"],
+            ["Start", "Mẹ́nù ẹ̀rọ ìdarí: ìjíròrò, ìwé-àkọsílẹ̀, àǹfààní, ìṣirò, ìhùwàsí, Ìrànlọ́wọ́ Ace, ètò, ojú kíkún, àwọn bọ́tìnì, kúrò"],
+            ["A / X / Y", "Eré: Check/Call · Fold · Bet/Raise (di Y mú fún All-In)"],
+            ["LT / RT", "Eré: dín / fi kún iye tẹ́tẹ́"],
+            ["LB / RB", "Eré: Tẹ́tẹ́ 1/3 · 1/2 · Pot"],
+            ["← / →", "Eré: ipò ṣíṣeré (Pẹ̀lú ọwọ́ · Check/Call aládàáṣiṣẹ́ · Check/Fold aládàáṣiṣẹ́)"],
+            ["D-pad / LS", "Ìrìnkiri: lọ láti ohun kan sí òmíràn"],
+            ["A / B", "Ìrìnkiri: yàn · padà (bí Esc); B kì í ṣe Fold láéláé"],
+            ["X / Y", "Ìrìnkiri: ìjíròrò (pẹ̀lú kọ́bọ́ọ̀dù orí-ìbòjú) · Ìrànlọ́wọ́ Ace"],
+            ["LB / RB", "Ìrìnkiri: fèrèsé tó ṣáájú / tó kàn (tábìlì, àwọn pánẹ́lì tó ṣí, Ace)"],
+            ["LT / RT", "Ìrìnkiri: ojú-ewé tó ṣáájú / tó kàn"],
             ["RS", "Yí lọ"]],
-          note: "Àwọn lẹ́tà tẹ̀lé ìfilélẹ̀ Xbox: lórí ẹ̀rọ ìdarí PlayStation ✕ = A, ○ = B, □ = X, △ = Y, àwọn bọ́tìnì ìgbésẹ̀ sì ń fi àmì ẹ̀rọ ìdarí tìrẹ hàn. B kì í ṣe Fold láéláé. Nínú àtòjọ, ọ̀pá ìfàsẹ́yìn tàbí àyè nọ́ńbà, ← / → ń yí iye padà. Àwọn àyè ọ̀rọ̀ ṣì nílò kíbọ́ọ̀dù: A ń fi kọ́sọ̀ sínú àyè náà, èyí tó ń ṣí kíbọ́ọ̀dù orí ìbòjú lórí fóònù àti tábúlẹ́ẹ̀tì. Ètò: Àṣàyàn ìlọsíwájú → Ojú olùlò → Ẹ̀rọ ìdarí eré." }
+          note: "Àwọn lẹ́tà tẹ̀lé ìfilélẹ̀ Xbox: lórí ẹ̀rọ ìdarí PlayStation ✕ = A, ○ = B, □ = X, △ = Y, àwọn bọ́tìnì ìgbésẹ̀ sì ń fi àmì ẹ̀rọ ìdarí tìrẹ hàn. Fèrèsé gidi (ètò, ìjẹ́rìísí, mẹ́nù ẹ̀rọ ìdarí) máa ń yí sí ipò Ìrìnkiri nígbà gbogbo tí ó bá ṣí sílẹ̀. Láti kọ̀wé, A lórí pápá ọ̀rọ̀ ń ṣí kọ́bọ́ọ̀dù ẹ̀rọ ìdarí: gbólóhùn kíákíá fún ìjíròrò, lẹ́tà pẹ̀lú D-pad àti A, X ń pa rẹ́, Y ń fi àlàfo kún, LB ń yí lẹ́tà ńlá, RB nọ́ńbà àti àmì, Start ń fi ránṣẹ́, B ń pa á dé. Ètò: Àṣàyàn ìlọsíwájú → Ojú olùlò → Ẹ̀rọ ìdarí eré." }
       ]
     }
   ]

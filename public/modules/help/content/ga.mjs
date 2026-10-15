@@ -452,21 +452,21 @@ export const help = {
             ["A–Z · 0–9", "Forhalla: scríobhann clóscríobh lasmuigh de réimse téacs díreach sa chomhrá"]],
           note: "Ar Android, dúnann cnaipe/gotha Siar an chórais fuinneoga mar a dhéanann Escape in áit an cluiche a fhágáil (is féidir é a choigeartú sna roghanna). Níl cnaipe córais comhionann ag iOS — úsáid ✕ gach fuinneoige." },
         { id: 'gamepad', t: "Rialaitheoir cluichí",
-          b: ["Oibríonn rialaitheoir cluichí sna brabhsálaithe a thacaíonn le gamepads (Xbox, PlayStation, Switch Pro agus formhór na rialaitheoirí Bluetooth) — brúigh aon cheann dá chnaipí uair amháin chun go n-aimseoidh an brabhsálaí é. Ag an mbord, imríonn a chnaipí; a luaithe a bhíonn fuinneog nó roghchlár oscailte, agus i ngach áit lasmuigh den bhord, bogann siad timpeall an scáileáin ina ionad sin:"],
+          b: ["Oibríonn rialaitheoir cluichí sna brabhsálaithe a thacaíonn le gamepads (Xbox, PlayStation, Switch Pro agus formhór na rialaitheoirí Bluetooth) — brúigh aon cheann dá chnaipí uair amháin chun go n-aimseoidh an brabhsálaí é. Athraíonn Select idir dhá mhód, a thaispeántar le suaitheantas ag bun ar chlé: Cluiche, le himirt ag an mbord fiú agus an comhrá nó an loga oscailte, agus Nascleanúint, le bogadh timpeall an scáileáin agus a chuid fuinneog. Nuair a thagann do shealsa, creathann an rialaitheoir agus filleann sé ar Cluiche leis féin."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — coinnigh brúite é le dul All-In"],
-            ["LT / RT", "Laghdaigh / méadaigh méid an ghill"],
-            ["LB / RB", "Geall 1/3 · 1/2 · Pota"],
-            ["← / →", "Mód imeartha: De láimh · Check/Call uathoibríoch · Check/Fold uathoibríoch"],
-            ["↑", "Scrúdaigh an bord (ceanntásc, suíocháin); tugann B nó do chéad sealsa eile na cnaipí ar ais don chluiche"],
-            ["Start / Select", "Socruithe · Comhrá"],
-            ["D-pad / LS", "Roghchláir: bog ó mhír go mír"],
-            ["A / B", "Roghchláir: roghnaigh · siar (cosúil le Esc)"],
-            ["LB / RB", "Roghchláir: an cluaisín roimhe seo / an chéad cheann eile"],
+            ["Select", "Athraigh idir Cluiche agus Nascleanúint"],
+            ["Start", "Roghchlár an rialaitheora: comhrá, loga, seans, staitisticí, frithghníomhartha, Cabhair an Aoin, socruithe, lánscáileán, cnaipí, fág"],
+            ["A / X / Y", "Cluiche: Check/Call · Fold · Bet/Raise (coinnigh Y le dul All-In)"],
+            ["LT / RT", "Cluiche: laghdaigh / méadaigh méid an ghill"],
+            ["LB / RB", "Cluiche: Geall 1/3 · 1/2 · Pota"],
+            ["← / →", "Cluiche: mód imeartha (De láimh · Check/Call uathoibríoch · Check/Fold uathoibríoch)"],
+            ["D-pad / LS", "Nascleanúint: bog ó mhír go mír"],
+            ["A / B", "Nascleanúint: roghnaigh · siar (cosúil le Esc); ní dhéanann B Fold riamh"],
+            ["X / Y", "Nascleanúint: comhrá (leis an méarchlár ar an scáileán) · Cabhair an Aoin"],
+            ["LB / RB", "Nascleanúint: an fhuinneog roimhe seo / an chéad cheann eile (bord, painéil oscailte, an tAon)"],
+            ["LT / RT", "Nascleanúint: an cluaisín roimhe seo / an chéad cheann eile"],
             ["RS", "Scrollaigh"]],
-          note: "Leanann na litreacha leagan amach Xbox: ar rialaitheoir PlayStation ✕ = A, ○ = B, □ = X, △ = Y, agus taispeánann na cnaipí gnímh siombailí do rialaitheora féin. Ní dhéanann B Fold riamh. I liosta, i sleamhnán nó i réimse uimhreach, athraíonn ← / → an luach. Teastaíonn méarchlár fós do réimsí téacs: cuireann A an cúrsóir sa réimse, rud a osclaíonn an méarchlár ar an scáileán ar fhóin agus ar tháibléid. Socruithe: Ardroghanna → Comhéadan úsáideora → Rialaitheoir cluichí." }
+          note: "Leanann na litreacha leagan amach Xbox: ar rialaitheoir PlayStation ✕ = A, ○ = B, □ = X, △ = Y, agus taispeánann na cnaipí gnímh siombailí do rialaitheora féin. Aistríonn fíorfhuinneog (socruithe, deimhniú, roghchlár an rialaitheora) go Nascleanúint i gcónaí fad is atá sí oscailte. Le scríobh, osclaíonn A ar réimse téacs méarchlár an rialaitheora: frásaí gasta don chomhrá, litreacha leis an D-pad agus A, scriosann X, cuireann Y spás leis, athraíonn LB go ceannlitreacha, RB go huimhreacha agus siombailí, seolann Start, dúnann B. Socruithe: Ardroghanna → Comhéadan úsáideora → Rialaitheoir cluichí." }
       ]
     }
   ]

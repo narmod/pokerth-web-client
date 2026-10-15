@@ -452,21 +452,21 @@ export const help = {
             ["A–Z · 0–9", "Egongela: testu-eremutik kanpo idazteak zuzenean txatean idazten du"]],
           note: "Android-en, sistemaren Atzera botoiak/keinuak leihoak ixten ditu Escape bezala, partidatik irten beharrean (aukeretan doi daiteke). iOS-ek ez du sistema-botoi baliokiderik — erabili leiho bakoitzaren ✕." },
         { id: 'gamepad', t: "Kontrolagailua",
-          b: ["Joko-kontrolagailuak gamepadak onartzen dituzten nabigatzaileetan funtzionatzen du (Xbox, PlayStation, Switch Pro eta Bluetooth kontrolagailu gehienak) — sakatu behin bere edozein botoi, nabigatzaileak antzeman dezan. Mahaian, bere botoiek jokatzen dute; leiho edo menu bat irekitzen den bezain laster, eta mahaitik kanpo edonon, pantailan mugitzeko balio dute horren ordez:"],
+          b: ["Joko-kontrolagailuak gamepadak onartzen dituzten nabigatzaileetan funtzionatzen du (Xbox, PlayStation, Switch Pro eta Bluetooth kontrolagailu gehienak) — sakatu behin bere edozein botoi, nabigatzaileak antzeman dezan. Select-ek bi moduren artean txandakatzen du, behean ezkerrean dagoen ikur batek adierazten duena: Jokoa, mahaian jokatzeko txata edo egunkaria irekita egon arren, eta Nabigazioa, pantailan eta bere leihoetan mugitzeko. Zure txanda iristen denean, kontrolagailuak dar-dar egiten du eta bere kabuz itzultzen da Jokora."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — eutsi sakatuta All-In egiteko"],
-            ["LT / RT", "Jaitsi / igo apustuaren kopurua"],
-            ["LB / RB", "Apustua 1/3 · 1/2 · Potea"],
-            ["← / →", "Joko-modua: Eskuzkoa · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Mahaian zehar ibili (goiburua, eserlekuak); B-k edo zure hurrengo txandak botoiak jokoari itzultzen dizkiote"],
-            ["Start / Select", "Ezarpenak · Txata"],
-            ["D-pad / LS", "Menuak: elementu batetik bestera mugitu"],
-            ["A / B", "Menuak: aukeratu · atzera (Esc bezala)"],
-            ["LB / RB", "Menuak: aurreko / hurrengo fitxa"],
+            ["Select", "Txandakatu Jokoa eta Nabigazioa"],
+            ["Start", "Kontrolagailuaren menua: txata, egunkaria, aukerak, estatistikak, erreakzioak, Batekoaren laguntza, ezarpenak, pantaila osoa, botoiak, irten"],
+            ["A / X / Y", "Jokoa: Check/Call · Fold · Bet/Raise (eutsi Y sakatuta All-In egiteko)"],
+            ["LT / RT", "Jokoa: jaitsi / igo apustuaren kopurua"],
+            ["LB / RB", "Jokoa: Apustua 1/3 · 1/2 · Potea"],
+            ["← / →", "Jokoa: joko-modua (Eskuzkoa · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Nabigazioa: elementu batetik bestera mugitu"],
+            ["A / B", "Nabigazioa: aukeratu · atzera (Esc bezala); B-k ez du inoiz Fold egiten"],
+            ["X / Y", "Nabigazioa: txata (pantailako teklatuarekin) · Batekoaren laguntza"],
+            ["LB / RB", "Nabigazioa: aurreko / hurrengo leihoa (mahaia, panel irekiak, batekoa)"],
+            ["LT / RT", "Nabigazioa: aurreko / hurrengo fitxa"],
             ["RS", "Korritu"]],
-          note: "Letrek Xbox diseinua jarraitzen dute: PlayStation kontrolagailu batean ✕ = A, ○ = B, □ = X, △ = Y, eta ekintza-botoiek zure kontrolagailuaren ikurrak erakusten dituzte. B-k ez du inoiz Fold egiten. Zerrenda, graduatzaile edo zenbaki-eremu batean, ← / → teklek balioa aldatzen dute. Testu-eremuek teklatua behar dute oraindik: A-k kurtsorea eremuan jartzen du, eta horrek pantailako teklatua irekitzen du telefono eta tabletetan. Ezarpenak: Aukera aurreratuak → Erabiltzaile-interfazea → Kontrolagailua." }
+          note: "Letrek Xbox diseinua jarraitzen dute: PlayStation kontrolagailu batean ✕ = A, ○ = B, □ = X, △ = Y, eta ekintza-botoiek zure kontrolagailuaren ikurrak erakusten dituzte. Benetako leiho batek (ezarpenak, berrespen bat, kontrolagailuaren menua) beti Nabigaziora aldatzen du irekita dagoen bitartean. Idazteko, testu-eremu batean A sakatuta kontrolagailuaren teklatua irekitzen da: esaldi azkarrak txaterako, letrak D-pad-arekin eta A-rekin, X-k ezabatzen du, Y-k zuriune bat gehitzen du, LB-k maiuskulak aldatzen ditu, RB zenbakiak eta ikurrak, Start-ek bidaltzen du, B-k ixten du. Ezarpenak: Aukera aurreratuak → Erabiltzaile-interfazea → Kontrolagailua." }
       ]
     }
   ]

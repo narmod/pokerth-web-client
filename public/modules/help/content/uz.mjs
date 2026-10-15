@@ -451,21 +451,21 @@ export const help = {
             ["A–Z · 0–9", "Lobbi: matn maydonidan tashqarida yozish to‘g‘ridan-to‘g‘ri chatga yoziladi"]],
           note: "Android’da tizimning «Orqaga» tugmasi/imo-ishorasi oʻyindan chiqish oʻrniga Escape kabi oynalarni yopadi (sozlamalarda sozlanadi). iOS’da bunga teng tizim tugmasi yoʻq — har bir oynaning ✕ belgisidan foydalaning." },
         { id: 'gamepad', t: "Geympad",
-          b: ["Oʻyin kontrolleri geympadlarni qoʻllab-quvvatlaydigan brauzerlarda ishlaydi (Xbox, PlayStation, Switch Pro va aksariyat Bluetooth kontrollerlari) — brauzer uni aniqlashi uchun istalgan tugmasini bir marta bosing. Stolda uning tugmalari oʻynaydi; oyna yoki menyu ochilishi bilanoq, shuningdek stoldan tashqarida hamma joyda, ular ekranda harakatlanish uchun xizmat qiladi:"],
+          b: ["Oʻyin kontrolleri geympadlarni qoʻllab-quvvatlaydigan brauzerlarda ishlaydi (Xbox, PlayStation, Switch Pro va aksariyat Bluetooth geympadlar) — brauzer uni aniqlashi uchun istalgan tugmasini bir marta bosing. Select pastki chapdagi belgi bilan koʻrsatiladigan ikki rejim orasida almashtiradi: Oʻyin — chat yoki jurnal ochiq boʻlsa ham stolda oʻynash uchun, va Navigatsiya — ekran va uning oynalari boʻylab harakatlanish uchun. Navbatingiz kelganda geympad tebranadi va oʻzi Oʻyin rejimiga qaytadi."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — All-In uchun bosib turing"],
-            ["LT / RT", "Tikish miqdorini kamaytirish / oshirish"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Oʻyin rejimi: Qoʻlda · Avto Check/Call · Avto Check/Fold"],
-            ["↑", "Stolni koʻzdan kechirish (sarlavha, oʻrinlar); B yoki keyingi navbatingiz tugmalarni oʻyinga qaytaradi"],
-            ["Start / Select", "Sozlamalar · Chat"],
-            ["D-pad / LS", "Menyular: bir elementdan boshqasiga oʻtish"],
-            ["A / B", "Menyular: tanlash · orqaga (Esc kabi)"],
-            ["LB / RB", "Menyular: oldingi / keyingi yorliq"],
+            ["Select", "Oʻyin va Navigatsiya orasida almashtirish"],
+            ["Start", "Geympad menyusi: chat, jurnal, ehtimollar, statistika, reaksiyalar, Tuzning yordami, sozlamalar, toʻliq ekran, tugmalar, chiqish"],
+            ["A / X / Y", "Oʻyin: Check/Call · Fold · Bet/Raise (All-In uchun Y ni bosib turing)"],
+            ["LT / RT", "Oʻyin: tikish miqdorini kamaytirish / oshirish"],
+            ["LB / RB", "Oʻyin: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Oʻyin: oʻynash rejimi (Qoʻlda · Avto Check/Call · Avto Check/Fold)"],
+            ["D-pad / LS", "Navigatsiya: bir elementdan boshqasiga oʻtish"],
+            ["A / B", "Navigatsiya: tanlash · orqaga (Esc kabi); B hech qachon Fold qilmaydi"],
+            ["X / Y", "Navigatsiya: chat (ekran klaviaturasi bilan) · Tuzning yordami"],
+            ["LB / RB", "Navigatsiya: oldingi / keyingi oyna (stol, ochiq panellar, Tuz)"],
+            ["LT / RT", "Navigatsiya: oldingi / keyingi yorliq"],
             ["RS", "Aylantirish"]],
-          note: "Harflar Xbox joylashuviga mos: PlayStation kontrollerida ✕ = A, ○ = B, □ = X, △ = Y, amal tugmalari esa oʻz kontrolleringiz belgilarini koʻrsatadi. B hech qachon Fold qilmaydi. Roʻyxat, slayder yoki raqam maydonida ← / → qiymatni oʻzgartiradi. Matn maydonlari uchun hamon klaviatura kerak: A kursorni maydonga qoʻyadi, bu esa telefon va planshetlarda ekran klaviaturasini ochadi. Sozlamalar: Kengaytirilgan sozlamalar → Foydalanuvchi interfeysi → Geympad." }
+          note: "Harflar Xbox joylashuviga mos: PlayStation geympadida ✕ = A, ○ = B, □ = X, △ = Y, harakat tugmalari esa oʻz geympadingiz belgilarini koʻrsatadi. Haqiqiy oyna (sozlamalar, tasdiqlash, geympad menyusi) ochiq turgan paytda doim Navigatsiya rejimiga oʻtadi. Yozish uchun matn maydonida A geympad klaviaturasini ochadi: chat uchun tezkor iboralar, D-pad va A bilan harflar, X oʻchiradi, Y boʻshliq qoʻshadi, LB bosh harflarni almashtiradi, RB raqamlar va belgilar, Start yuboradi, B yopadi. Sozlamalar: Kengaytirilgan sozlamalar → Foydalanuvchi interfeysi → Geympad." }
       ]
     }
   ]

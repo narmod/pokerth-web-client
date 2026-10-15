@@ -312,21 +312,21 @@ export const help = {
             ['A–Z · 0–9', 'Lobi: shkrimi jashtë një fushe teksti shkon drejt e në bisedë']],
           note: 'Në Android, butoni/gjesti i sistemit Prapa mbyll dritaret si Escape, në vend që të lërë lojën (i konfigurueshëm te opsionet). iOS s\u2019ka një buton ekuivalent sistemi — përdor ✕ e çdo dritareje.' },
         { id: 'gamepad', t: "Kontrolleri i lojës",
-          b: ["Një kontroller loje funksionon në shfletuesit që mbështesin gamepad-ët (Xbox, PlayStation, Switch Pro dhe shumica e kontrollerëve Bluetooth) — shtyp një herë cilindo nga butonat e tij që shfletuesi ta zbulojë. Në tavolinë butonat e tij luajnë; sapo hapet një dritare ose një menu, dhe kudo jashtë tavolinës, ata shërbejnë për të lëvizur nëpër ekran:"],
+          b: ["Një kontroller loje funksionon në shfletuesit që i mbështetin kontrollerët (Xbox, PlayStation, Switch Pro dhe shumica e kontrollerëve Bluetooth) — shtyp një herë cilindo nga butonat e tij që shfletuesi ta zbulojë. Select ndërron mes dy mënyrave, të treguara nga një shenjë poshtë majtas: Loja, për të luajtur në tavolinë edhe me bisedën ose regjistrin të hapur, dhe Navigimi, për të lëvizur nëpër ekran dhe dritaret e tij. Kur vjen radha jote, kontrolleri dridhet dhe kthehet vetë te mënyra Loja."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — mbaje të shtypur për All-In"],
-            ["LT / RT", "Ul / rrit shumën e bastit"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Mënyra e lojës: Manual · Check/Call automatik · Check/Fold automatik"],
-            ["↑", "Shfleto tavolinën (koka, ndenjëset); B ose radha jote e ardhshme ia kthen butonat lojës"],
-            ["Start / Select", "Opsionet · Biseda"],
-            ["D-pad / LS", "Menu: kalo nga një element te tjetri"],
-            ["A / B", "Menu: zgjidh · mbrapa (si Esc)"],
-            ["LB / RB", "Menu: skeda e mëparshme / e radhës"],
+            ["Select", "Ndërro mes Lojës dhe Navigimit"],
+            ["Start", "Menuja e kontrollerit: biseda, regjistri, shanset, statistikat, reagimet, Ndihma e Asit, cilësimet, ekran i plotë, butonat, largohu"],
+            ["A / X / Y", "Loja: Check/Call · Fold · Bet/Raise (mbaj Y për All-In)"],
+            ["LT / RT", "Loja: ul / rrit shumën e bastit"],
+            ["LB / RB", "Loja: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Loja: mënyra e lojës (Manual · Check/Call automatik · Check/Fold automatik)"],
+            ["D-pad / LS", "Navigimi: kalo nga një element te tjetri"],
+            ["A / B", "Navigimi: zgjidh · mbrapa (si Esc); B nuk bën kurrë Fold"],
+            ["X / Y", "Navigimi: biseda (me tastierën në ekran) · Ndihma e Asit"],
+            ["LB / RB", "Navigimi: dritarja e mëparshme / e radhës (tavolina, panelet e hapura, Asi)"],
+            ["LT / RT", "Navigimi: skeda e mëparshme / e radhës"],
             ["RS", "Rrotullo faqen"]],
-          note: "Shkronjat ndjekin paraqitjen Xbox: në një kontroller PlayStation ✕ = A, ○ = B, □ = X, △ = Y, dhe butonat e veprimeve tregojnë simbolet e kontrollerit tënd. B nuk bën kurrë Fold. Në një listë, rrëshqitës ose fushë numerike, ← / → ndryshojnë vlerën. Fushat e tekstit kërkojnë ende një tastierë: A vendos kursorin në fushë, gjë që hap tastierën në ekran në telefona dhe tableta. Opsionet: Opsionet e avancuara → Ndërfaqja e përdoruesit → Kontrolleri i lojës." }
+          note: "Shkronjat ndjekin paraqitjen Xbox: në një kontroller PlayStation ✕ = A, ○ = B, □ = X, △ = Y, dhe butonat e veprimit shfaqin simbolet e kontrollerit tënd. Një dritare e vërtetë (cilësimet, një konfirmim, menuja e kontrollerit) kalon gjithmonë në Navigim sa kohë që është e hapur. Për të shkruar, A mbi një fushë teksti hap tastierën e kontrollerit: fraza të shpejta për bisedën, shkronja me kryqin dhe A, X fshin, Y shton një hapësirë, LB ndërron shkronjat e mëdha, RB numrat dhe simbolet, Start dërgon, B mbyll. Cilësimet: Opsionet e avancuara → Ndërfaqja e përdoruesit → Kontrolleri i lojës." }
       ]
     }
   ]

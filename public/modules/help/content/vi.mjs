@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Sảnh: gõ phím bên ngoài ô nhập văn bản sẽ viết thẳng vào trò chuyện']],
           note: 'Trên Android, nút/cử chỉ Quay lại của hệ thống đóng cửa sổ như Esc thay vì rời ván đấu (có thể chỉnh trong tùy chọn). iOS không có nút hệ thống tương đương — hãy dùng dấu \u2715 của từng cửa sổ.' },
         { id: 'gamepad', t: "Tay cầm",
-          b: ["Tay cầm chơi game hoạt động trên các trình duyệt hỗ trợ gamepad (Xbox, PlayStation, Switch Pro và hầu hết tay cầm Bluetooth) — hãy nhấn một nút bất kỳ trên tay cầm một lần để trình duyệt nhận ra nó. Tại bàn, các nút dùng để chơi; ngay khi một cửa sổ hoặc menu được mở, và ở mọi nơi ngoài bàn chơi, chúng dùng để di chuyển trên màn hình:"],
+          b: ["Tay cầm chơi game hoạt động trên các trình duyệt hỗ trợ gamepad (Xbox, PlayStation, Switch Pro và hầu hết tay cầm Bluetooth) — bấm một nút bất kỳ một lần để trình duyệt nhận ra nó. Select chuyển giữa hai chế độ, hiển thị bằng một huy hiệu ở góc dưới bên trái: Chơi, để chơi tại bàn ngay cả khi đang mở trò chuyện hay lịch sử, và Điều hướng, để di chuyển trên màn hình và các cửa sổ. Khi đến lượt bạn, tay cầm rung và tự quay về chế độ Chơi."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — giữ để All-In"],
-            ["LT / RT", "Giảm / tăng mức cược"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Chế độ chơi: Thủ công · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Duyệt bàn (thanh tiêu đề, ghế); B hoặc lượt tiếp theo của bạn sẽ trả các nút về cho trò chơi"],
-            ["Start / Select", "Cài đặt · Trò chuyện"],
-            ["D-pad / LS", "Menu: chuyển từ mục này sang mục khác"],
-            ["A / B", "Menu: chọn · quay lại (như Esc)"],
-            ["LB / RB", "Menu: thẻ trước / thẻ sau"],
+            ["Select", "Chuyển giữa Chơi và Điều hướng"],
+            ["Start", "Menu tay cầm: trò chuyện, lịch sử, cơ hội, thống kê, biểu cảm, Trợ giúp của quân Át, cài đặt, toàn màn hình, nút bấm, rời"],
+            ["A / X / Y", "Chơi: Check/Call · Fold · Bet/Raise (giữ Y để All-In)"],
+            ["LT / RT", "Chơi: giảm / tăng mức cược"],
+            ["LB / RB", "Chơi: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Chơi: chế độ chơi (Thủ công · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Điều hướng: di chuyển từ mục này sang mục khác"],
+            ["A / B", "Điều hướng: chọn · quay lại (như Esc); B không bao giờ Fold"],
+            ["X / Y", "Điều hướng: trò chuyện (với bàn phím ảo) · Trợ giúp của quân Át"],
+            ["LB / RB", "Điều hướng: cửa sổ trước / sau (bàn chơi, các bảng đang mở, quân Át)"],
+            ["LT / RT", "Điều hướng: thẻ trước / sau"],
             ["RS", "Cuộn"]],
-          note: "Các chữ cái theo bố cục Xbox: trên tay cầm PlayStation ✕ = A, ○ = B, □ = X, △ = Y, và các nút hành động hiển thị ký hiệu của chính tay cầm của bạn. B không bao giờ Fold. Trong danh sách, thanh trượt hoặc ô số, ← / → thay đổi giá trị. Ô văn bản vẫn cần bàn phím: A đặt con trỏ vào ô, việc này mở bàn phím ảo trên điện thoại và máy tính bảng. Cài đặt: Tùy chọn nâng cao → Giao diện người dùng → Tay cầm." }
+          note: "Các chữ cái theo bố cục Xbox: trên tay cầm PlayStation ✕ = A, ○ = B, □ = X, △ = Y, và các nút hành động hiển thị ký hiệu của chính tay cầm bạn dùng. Một cửa sổ thật (cài đặt, xác nhận, menu tay cầm) luôn chuyển sang chế độ Điều hướng khi đang mở. Để gõ chữ, bấm A trên ô văn bản sẽ mở bàn phím tay cầm: câu nhanh cho trò chuyện, chữ cái bằng D-pad và A, X xóa, Y thêm dấu cách, LB bật chữ hoa, RB số và ký hiệu, Start gửi, B đóng. Cài đặt: Tùy chọn nâng cao → Giao diện người dùng → Tay cầm." }
       ]
     }
   ]

@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Lobby: tastarea în afara unui câmp de text scrie direct în chat']],
           note: 'Pe Android, butonul/gestul Înapoi al sistemului închide ferestrele ca Esc, în loc să părăsească partida (configurabil din opțiuni). iOS nu are un buton de sistem echivalent — folosește \u2715 al fiecărei ferestre.' },
         { id: 'gamepad', t: "Gamepad",
-          b: ["Un controler de joc funcționează în browserele care suportă gamepaduri (Xbox, PlayStation, Switch Pro și majoritatea gamepadurilor Bluetooth) — apasă o dată oricare dintre butoanele lui ca browserul să-l detecteze. La masă, butoanele lui joacă; de îndată ce e deschisă o fereastră sau un meniu, și oriunde în afara mesei, ele servesc la deplasarea pe ecran:"],
+          b: ["Un controler de joc funcționează în browserele care acceptă gamepaduri (Xbox, PlayStation, Switch Pro și majoritatea gamepadurilor Bluetooth) — apasă o dată oricare dintre butoanele lui ca browserul să-l detecteze. Select comută între două moduri, indicate de o insignă în stânga jos: Joc, ca să joci la masă chiar și cu chatul sau istoricul deschise, și Navigare, ca să te deplasezi pe ecran și prin ferestrele lui. Când vine rândul tău, gamepadul vibrează și revine singur în modul Joc."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — ține apăsat pentru All-In"],
-            ["LT / RT", "Micșorează / mărește suma pariului"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Modul de joc: Manual · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Parcurge masa (antet, locuri); B sau următorul tău rând dă butoanele înapoi jocului"],
-            ["Start / Select", "Setări · Chat"],
-            ["D-pad / LS", "Meniuri: treci de la un element la altul"],
-            ["A / B", "Meniuri: alege · înapoi (ca Esc)"],
-            ["LB / RB", "Meniuri: fila anterioară / următoare"],
+            ["Select", "Comută între Joc și Navigare"],
+            ["Start", "Meniul gamepadului: chat, jurnal, șanse, statistici, reacții, Ajutorul Asului, setări, ecran complet, butoane, ieși"],
+            ["A / X / Y", "Joc: Check/Call · Fold · Bet/Raise (ține apăsat Y pentru All-In)"],
+            ["LT / RT", "Joc: micșorează / mărește suma pariului"],
+            ["LB / RB", "Joc: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Joc: modul de joc (Manual · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Navigare: treci de la un element la altul"],
+            ["A / B", "Navigare: alege · înapoi (ca Esc); B nu face niciodată Fold"],
+            ["X / Y", "Navigare: chat (cu tastatura de pe ecran) · Ajutorul Asului"],
+            ["LB / RB", "Navigare: fereastra anterioară / următoare (masa, panourile deschise, Asul)"],
+            ["LT / RT", "Navigare: fila anterioară / următoare"],
             ["RS", "Derulare"]],
-          note: "Literele urmează aranjamentul Xbox: pe un gamepad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, iar butoanele de acțiune afișează simbolurile gamepadului tău. B nu face niciodată Fold. Într-o listă, un glisor sau un câmp numeric, ← / → schimbă valoarea. Câmpurile de text au în continuare nevoie de tastatură: A pune cursorul în câmp, ceea ce deschide tastatura de pe ecran pe telefoane și tablete. Setări: Opțiuni avansate → Interfața utilizatorului → Gamepad." }
+          note: "Literele urmează aranjamentul Xbox: pe un gamepad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, iar butoanele de acțiune afișează simbolurile gamepadului tău. O fereastră propriu-zisă (setări, o confirmare, meniul gamepadului) trece mereu în Navigare cât timp e deschisă. Ca să scrii, A pe un câmp de text deschide tastatura gamepadului: fraze rapide pentru chat, litere cu D-pad și A, X șterge, Y adaugă un spațiu, LB comută majusculele, RB cifrele și simbolurile, Start trimite, B închide. Setări: Opțiuni avansate → Interfața utilizatorului → Gamepad." }
       ]
     }
   ]

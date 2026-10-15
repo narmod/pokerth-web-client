@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Vestíbulo: escribir fuera de un campo de texto escribe directamente en el chat']],
           note: 'En Android, el botón/gesto Atrás del sistema cierra las ventanas como Esc en lugar de abandonar la partida (configurable en las opciones). iOS no tiene un botón de sistema equivalente — usa el \u2715 de cada ventana.' },
         { id: 'gamepad', t: "Mando",
-          b: ["Un mando de juego funciona en los navegadores compatibles con gamepads (Xbox, PlayStation, Switch Pro y la mayoría de mandos Bluetooth) — presiona una vez cualquiera de sus botones para que el navegador lo detecte. En la mesa, sus botones juegan; en cuanto se abre una ventana o un menú, y en cualquier sitio fuera de la mesa, sirven en cambio para moverse por la pantalla:"],
+          b: ["Un mando de juego funciona en los navegadores compatibles con gamepads (Xbox, PlayStation, Switch Pro y la mayoría de mandos Bluetooth) — presiona una vez cualquiera de sus botones para que el navegador lo detecte. Select alterna entre dos modos, indicados por una insignia abajo a la izquierda: Juego, para jugar en la mesa incluso con el chat o el historial abiertos, y Navegación, para moverte por la pantalla y sus ventanas. Cuando te toca, el mando vibra y vuelve solo al modo Juego."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — mantenlo pulsado para ir All-In"],
-            ["LT / RT", "Bajar / subir el importe de la apuesta"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Modo de juego: Manual · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Recorrer la mesa (cabecera, asientos); B o tu próximo turno devuelven los botones al juego"],
-            ["Start / Select", "Ajustes · Chat"],
-            ["D-pad / LS", "Menús: pasar de un elemento a otro"],
-            ["A / B", "Menús: elegir · volver (como Esc)"],
-            ["LB / RB", "Menús: pestaña anterior / siguiente"],
+            ["Select", "Alternar entre Juego y Navegación"],
+            ["Start", "Menú del mando: chat, historial, probabilidades, estadísticas, reacciones, Ayuda del As, ajustes, pantalla completa, botones, salir"],
+            ["A / X / Y", "Juego: Check/Call · Fold · Bet/Raise (mantén Y para All-In)"],
+            ["LT / RT", "Juego: bajar / subir el importe de la apuesta"],
+            ["LB / RB", "Juego: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Juego: modo de juego (Manual · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Navegación: pasar de un elemento a otro"],
+            ["A / B", "Navegación: elegir · volver (como Esc); B nunca hace Fold"],
+            ["X / Y", "Navegación: chat (con el teclado en pantalla) · Ayuda del As"],
+            ["LB / RB", "Navegación: ventana anterior / siguiente (mesa, paneles abiertos, el As)"],
+            ["LT / RT", "Navegación: pestaña anterior / siguiente"],
             ["RS", "Desplazar"]],
-          note: "Las letras siguen la disposición Xbox: en un mando PlayStation ✕ = A, ○ = B, □ = X, △ = Y, y los botones de acción muestran los símbolos de tu propio mando. B nunca hace Fold. En una lista, un deslizador o un campo numérico, ← / → cambian el valor. Los campos de texto siguen necesitando un teclado: A coloca el cursor en el campo, lo que abre el teclado en pantalla en celulares y tabletas. Ajustes: Opciones avanzadas → Interfaz de usuario → Mando." }
+          note: "Las letras siguen la disposición Xbox: en un mando PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, y los botones de acción muestran los símbolos de tu propio mando. Una ventana de verdad (ajustes, una confirmación, el menú del mando) siempre pasa al modo Navegación mientras está abierta. Para escribir, A sobre un campo de texto abre el teclado del mando: frases rápidas para el chat, letras con la cruceta y A, X borra, Y añade un espacio, LB cambia a mayúsculas, RB a números y símbolos, Start envía, B cierra. Ajustes: Opciones avanzadas → Interfaz de usuario → Mando." }
       ]
     }
   ]

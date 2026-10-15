@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Aula: kirjoittaminen tekstikentän ulkopuolella menee suoraan keskusteluun']],
           note: 'Androidilla järjestelmän Takaisin-painike/ele sulkee ikkunat kuten Esc sen sijaan, että poistuisi pelistä (säädettävissä asetuksista). iOS:llä ei ole vastaavaa järjestelmäpainiketta — käytä jokaisen ikkunan \u2715-merkkiä.' },
         { id: 'gamepad', t: "Peliohjain",
-          b: ["Peliohjain toimii selaimissa, jotka tukevat peliohjaimia (Xbox, PlayStation, Switch Pro ja useimmat Bluetooth-ohjaimet) — paina kerran mitä tahansa sen painiketta, jotta selain tunnistaa sen. Pöydässä sen painikkeet pelaavat; heti kun ikkuna tai valikko on auki, ja kaikkialla pöydän ulkopuolella, niillä liikutaan sen sijaan näytöllä:"],
+          b: ["Peliohjain toimii selaimissa, jotka tukevat peliohjaimia (Xbox, PlayStation, Switch Pro ja useimmat Bluetooth-ohjaimet) — paina kerran mitä tahansa sen painiketta, jotta selain tunnistaa sen. Select vaihtaa kahden tilan välillä, jotka näkyvät merkkinä vasemmassa alakulmassa: Peli, jolla pelaat pöydässä, vaikka chat tai historia olisi auki, ja Navigointi, jolla liikut näytöllä ja sen ikkunoissa. Kun on sinun vuorosi, peliohjain värisee ja palaa itsestään Peli-tilaan."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — pidä pohjassa All-In-siirtoon"],
-            ["LT / RT", "Pienennä / suurenna panoksen määrää"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Pelitila: Manuaalinen · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Selaa pöytää (yläpalkki, paikat); B tai seuraava vuorosi palauttaa painikkeet peliin"],
-            ["Start / Select", "Asetukset · Chat"],
-            ["D-pad / LS", "Valikot: siirry kohteesta toiseen"],
-            ["A / B", "Valikot: valitse · takaisin (kuten Esc)"],
-            ["LB / RB", "Valikot: edellinen / seuraava välilehti"],
+            ["Select", "Vaihda Pelin ja Navigoinnin välillä"],
+            ["Start", "Peliohjaimen valikko: chat, historia, mahdollisuudet, tilastot, reaktiot, Ässän apu, asetukset, koko näyttö, painikkeet, poistu"],
+            ["A / X / Y", "Peli: Check/Call · Fold · Bet/Raise (pidä Y pohjassa All-Iniä varten)"],
+            ["LT / RT", "Peli: pienennä / suurenna panoksen määrää"],
+            ["LB / RB", "Peli: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Peli: pelaustapa (Manuaalinen · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Navigointi: siirry kohteesta toiseen"],
+            ["A / B", "Navigointi: valitse · takaisin (kuten Esc); B ei koskaan tee Foldia"],
+            ["X / Y", "Navigointi: chat (näyttönäppäimistön kanssa) · Ässän apu"],
+            ["LB / RB", "Navigointi: edellinen / seuraava ikkuna (pöytä, avoimet paneelit, ässä)"],
+            ["LT / RT", "Navigointi: edellinen / seuraava välilehti"],
             ["RS", "Vieritä"]],
-          note: "Kirjaimet noudattavat Xbox-asettelua: PlayStation-ohjaimessa ✕ = A, ○ = B, □ = X, △ = Y, ja toimintopainikkeet näyttävät oman ohjaimesi symbolit. B ei koskaan tee Foldia. Listassa, liukusäätimessä tai numerokentässä ← / → muuttavat arvoa. Tekstikentät vaativat edelleen näppäimistön: A vie kohdistimen kenttään, mikä avaa puhelimissa ja tableteissa näyttönäppäimistön. Asetukset: Lisäasetukset → Käyttöliittymä → Peliohjain." }
+          note: "Kirjaimet noudattavat Xbox-asettelua: PlayStation-ohjaimessa ✕ = A, ○ = B, □ = X, △ = Y, ja toimintopainikkeet näyttävät oman ohjaimesi symbolit. Oikea ikkuna (asetukset, vahvistus, peliohjaimen valikko) vaihtaa aina Navigointiin niin kauan kuin se on auki. Kirjoittaaksesi paina A tekstikentässä, jolloin peliohjaimen näppäimistö avautuu: pikaviestit chattiin, kirjaimet ristiohjaimella ja A:lla, X poistaa, Y lisää välilyönnin, LB vaihtaa isot kirjaimet, RB numerot ja symbolit, Start lähettää, B sulkee. Asetukset: Lisäasetukset → Käyttöliittymä → Peliohjain." }
       ]
     }
   ]

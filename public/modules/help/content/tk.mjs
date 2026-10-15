@@ -452,21 +452,21 @@ export const help = {
             ["A–Z · 0–9", "Lobbi: tekst meýdançasyndan daşarda ýazmak gönüden-göni çata ýazýar"]],
           note: "Android-de ulgamyň «Yza» düwmesi/hereketi oýundan çykmagyň deregine penjireleri Escape ýaly ýapýar (opsiýalarda sazlap bolýar). iOS-da beýle ulgam düwmesi ýok — her penjiräniň ✕ belgisini ulanyň." },
         { id: 'gamepad', t: "Geýmpad",
-          b: ["Oýun kontrolleri geýmpadlary goldaýan brauzerlerde işleýär (Xbox, PlayStation, Switch Pro we Bluetooth kontrollerleriniň köpüsi) — brauzer ony tanar ýaly, onuň islendik düwmesine bir gezek basyň. Stolda onuň düwmeleri oýnaýar; penjire ýa-da menýu açylan badyna, şeýle hem stoldan daşarda hemme ýerde, olar ekranda hereket etmek üçin ulanylýar:"],
+          b: ["Oýun kontrolleri geýmpadlary goldaýan brauzerlerde işleýär (Xbox, PlayStation, Switch Pro we Bluetooth geýmpadlaryň köpüsi) — brauzer ony tanar ýaly, onuň islendik düwmesine bir gezek basyň. Select aşaky çepdäki nyşan bilen görkezilýän iki tertibiň arasynda çalşyrýar: Oýun — çat ýa-da žurnal açyk bolsa-da stolda oýnamak üçin, we Nawigasiýa — ekranda we onuň penjirelerinde hereket etmek üçin. Nobatyňyz gelende geýmpad titreýär we özbaşdak Oýun tertibine dolanýar."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — All-In üçin basyp saklaň"],
-            ["LT / RT", "Stawka mukdaryny azaltmak / artdyrmak"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Oýun tertibi: El bilen · Awtomatik Check/Call · Awtomatik Check/Fold"],
-            ["↑", "Stoly synlamak (sözbaşy, oturgyçlar); B ýa-da indiki nobatyňyz düwmeleri oýna gaýtarýar"],
-            ["Start / Select", "Sazlamalar · Çat"],
-            ["D-pad / LS", "Menýular: bir elementden beýlekisine geçmek"],
-            ["A / B", "Menýular: saýlamak · yza (Esc ýaly)"],
-            ["LB / RB", "Menýular: öňki / indiki goýma"],
+            ["Select", "Oýun bilen Nawigasiýanyň arasynda çalyşmak"],
+            ["Start", "Geýmpad menýusy: çat, žurnal, mümkinçilikler, statistika, reaksiýalar, Tuzuň kömegi, sazlamalar, doly ekran, düwmeler, çyk"],
+            ["A / X / Y", "Oýun: Check/Call · Fold · Bet/Raise (All-In üçin Y basyp saklaň)"],
+            ["LT / RT", "Oýun: stawka mukdaryny azalt / köpelt"],
+            ["LB / RB", "Oýun: Stawka 1/3 · 1/2 · Pot"],
+            ["← / →", "Oýun: oýnamak tertibi (El bilen · Awtomatik Check/Call · Awtomatik Check/Fold)"],
+            ["D-pad / LS", "Nawigasiýa: bir elementden beýlekisine geçmek"],
+            ["A / B", "Nawigasiýa: saýlamak · yza (Esc ýaly); B hiç haçan Fold etmeýär"],
+            ["X / Y", "Nawigasiýa: çat (ekran klawiaturasy bilen) · Tuzuň kömegi"],
+            ["LB / RB", "Nawigasiýa: öňki / indiki penjire (stol, açyk paneller, Tuz)"],
+            ["LT / RT", "Nawigasiýa: öňki / indiki goýma"],
             ["RS", "Aýlamak"]],
-          note: "Harplar Xbox ýerleşişine eýerýär: PlayStation kontrollerinde ✕ = A, ○ = B, □ = X, △ = Y, hereket düwmeleri bolsa öz kontrolleriňiziň nyşanlaryny görkezýär. B hiç haçan Fold etmeýär. Sanawda, süýşürijide ýa-da san meýdançasynda ← / → bahany üýtgedýär. Tekst meýdançalary üçin henizem klawiatura gerek: A kursory meýdança goýýar, bu bolsa telefonlarda we planşetlerde ekran klawiaturasyny açýar. Sazlamalar: Giňişleýin sazlamalar → Ulanyjy interfeýsi → Geýmpad." }
+          note: "Harplar Xbox ýerleşişine laýyk gelýär: PlayStation geýmpadynda ✕ = A, ○ = B, □ = X, △ = Y, hereket düwmeleri bolsa öz geýmpadyňyzyň nyşanlaryny görkezýär. Hakyky penjire (sazlamalar, tassyklama, geýmpad menýusy) açyk durka hemişe Nawigasiýa tertibine geçýär. Ýazmak üçin tekst meýdançasynda A geýmpadyň klawiaturasyny açýar: çat üçin çalt sözlemler, D-pad we A bilen harplar, X öçürýär, Y boşluk goşýar, LB baş harplary çalyşýar, RB sanlary we nyşanlary, Start iberýär, B ýapýar. Sazlamalar: Giňişleýin sazlamalar → Ulanyjy interfeýsi → Geýmpad." }
       ]
     }
   ]

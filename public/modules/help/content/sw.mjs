@@ -312,21 +312,21 @@ export const help = {
             ['A–Z · 0–9', 'Ukumbi: kuandika nje ya kisanduku cha maandishi huandika moja kwa moja kwenye chati']],
           note: 'Kwenye Android, kitufe/ishara ya Kurudi ya mfumo hufunga madirisha kama Escape badala ya kuondoka mchezoni (inasanidika kwenye chaguo). iOS haina kitufe cha mfumo sawa \u2014 tumia \u2715 ya kila dirisha.' },
         { id: 'gamepad', t: "Kidhibiti cha mchezo",
-          b: ["Kidhibiti cha mchezo hufanya kazi kwenye vivinjari vinavyotumia gamepad (Xbox, PlayStation, Switch Pro na vidhibiti vingi vya Bluetooth) — bonyeza kitufe chake chochote mara moja ili kivinjari kikitambue. Mezani vitufe vyake vinacheza; mara dirisha au menyu inapofunguliwa, na kila mahali nje ya meza, vinatumika kusogea kwenye skrini:"],
+          b: ["Kidhibiti cha mchezo hufanya kazi kwenye vivinjari vinavyokiunga mkono (Xbox, PlayStation, Switch Pro na vidhibiti vingi vya Bluetooth) — bonyeza kitufe chake chochote mara moja ili kivinjari kikitambue. Select hubadilisha kati ya hali mbili, zinazoonyeshwa na beji chini kushoto: Mchezo, kucheza mezani hata chati au kumbukumbu zikiwa wazi, na Uelekezaji, kusogea kwenye skrini na madirisha yake. Zamu yako ikifika, kidhibiti hutetemeka na hurudi chenyewe kwenye hali ya Mchezo."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — kishikilie ili kufanya All-In"],
-            ["LT / RT", "Punguza / ongeza kiasi cha dau"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Hali ya kucheza: Mwenyewe · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Vinjari meza (kichwa, viti); B au zamu yako ijayo hurudisha vitufe kwa mchezo"],
-            ["Start / Select", "Mipangilio · Chati"],
-            ["D-pad / LS", "Menyu: sogea kutoka kipengee hadi kipengee"],
-            ["A / B", "Menyu: chagua · rudi (kama Esc)"],
-            ["LB / RB", "Menyu: kichupo kilichotangulia / kinachofuata"],
+            ["Select", "Badilisha kati ya Mchezo na Uelekezaji"],
+            ["Start", "Menyu ya kidhibiti: chati, kumbukumbu, uwezekano, takwimu, miitikio, Msaada wa Ekaa, mipangilio, skrini nzima, vitufe, ondoka"],
+            ["A / X / Y", "Mchezo: Check/Call · Fold · Bet/Raise (shikilia Y kwa All-In)"],
+            ["LT / RT", "Mchezo: punguza / ongeza kiasi cha dau"],
+            ["LB / RB", "Mchezo: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Mchezo: hali ya kucheza (Mwenyewe · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Uelekezaji: sogea kutoka kipengele kimoja hadi kingine"],
+            ["A / B", "Uelekezaji: chagua · rudi (kama Esc); B haifanyi Fold kamwe"],
+            ["X / Y", "Uelekezaji: chati (kwa kibodi ya skrini) · Msaada wa Ekaa"],
+            ["LB / RB", "Uelekezaji: dirisha lililotangulia / linalofuata (meza, paneli zilizo wazi, Ekaa)"],
+            ["LT / RT", "Uelekezaji: kichupo kilichotangulia / kinachofuata"],
             ["RS", "Sogeza ukurasa"]],
-          note: "Herufi zinafuata mpangilio wa Xbox: kwenye kidhibiti cha PlayStation ✕ = A, ○ = B, □ = X, △ = Y, na vitufe vya vitendo vinaonyesha alama za kidhibiti chako. B haifanyi Fold kamwe. Kwenye orodha, kitelezi au sehemu ya nambari, ← / → hubadilisha thamani. Sehemu za maandishi bado zinahitaji kibodi: A huweka kishale ndani ya sehemu, jambo linalofungua kibodi ya skrini kwenye simu na kompyuta kibao. Mipangilio: Chaguo za kina → Kiolesura cha mtumiaji → Kidhibiti cha mchezo." }
+          note: "Herufi hufuata mpangilio wa Xbox: kwenye kidhibiti cha PlayStation ✕ = A, ○ = B, □ = X, △ = Y, na vitufe vya hatua huonyesha alama za kidhibiti chako. Dirisha halisi (mipangilio, uthibitisho, menyu ya kidhibiti) huhamia Uelekezaji kila wakati likiwa wazi. Kuandika, A kwenye sehemu ya maandishi hufungua kibodi ya kidhibiti: misemo ya haraka kwa chati, herufi kwa D-pad na A, X hufuta, Y huongeza nafasi, LB hubadilisha herufi kubwa, RB nambari na alama, Start hutuma, B hufunga. Mipangilio: Chaguo za kina → Kiolesura cha mtumiaji → Kidhibiti cha mchezo." }
       ]
     }
   ]

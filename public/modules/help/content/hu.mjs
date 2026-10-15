@@ -310,21 +310,21 @@ export const help = {
             ['A–Z · 0–9', 'Előcsarnok: szövegmezőn kívüli gépelés egyenesen a csevegésbe ír']],
           note: 'Androidon a rendszer Vissza gombja/mozdulata az ablakokat zárja be, mint az Esc, ahelyett hogy kilépne a játszmából (a beállításokban konfigurálható). Az iOS-nek nincs megfelelő rendszergombja — használd minden ablak \u2715 jelét.' },
         { id: 'gamepad', t: "Kontroller",
-          b: ["A játékkontroller azokban a böngészőkben működik, amelyek támogatják a gamepadeket (Xbox, PlayStation, Switch Pro és a legtöbb Bluetooth-kontroller) — nyomd meg egyszer bármelyik gombját, hogy a böngésző felismerje. Az asztalnál a gombjai játszanak; amint egy ablak vagy menü nyitva van, és mindenhol az asztalon kívül, a képernyőn való mozgásra szolgálnak:"],
+          b: ["A játékkontroller azokban a böngészőkben működik, amelyek támogatják a gamepadeket (Xbox, PlayStation, Switch Pro és a legtöbb Bluetooth-kontroller) — nyomd meg egyszer bármelyik gombját, hogy a böngésző felismerje. A Select két mód között vált, amelyeket egy jelvény mutat bal alul: Játék, hogy az asztalnál játszhass akkor is, ha a csevegés vagy az előzmények nyitva vannak, és Navigáció, hogy a képernyőn és annak ablakaiban mozoghass. Amikor te következel, a kontroller rezeg, és magától visszavált Játék módba."],
           keys: [
-            ["A", "Check / Call"],
-            ["X", "Fold"],
-            ["Y", "Bet / Raise — nyomva tartva All-In"],
-            ["LT / RT", "A tét összegének csökkentése / növelése"],
-            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
-            ["← / →", "Játékmód: Kézi · Auto Check/Call · Auto Check/Fold"],
-            ["↑", "Az asztal bejárása (fejléc, helyek); a B vagy a következő köröd visszaadja a gombokat a játéknak"],
-            ["Start / Select", "Beállítások · Csevegés"],
-            ["D-pad / LS", "Menük: lépés elemről elemre"],
-            ["A / B", "Menük: kiválasztás · vissza (mint az Esc)"],
-            ["LB / RB", "Menük: előző / következő lap"],
+            ["Select", "Váltás Játék és Navigáció között"],
+            ["Start", "Kontroller menü: csevegés, előzmények, esélyek, statisztika, reakciók, Az ász súgója, beállítások, teljes képernyő, gombok, kilépés"],
+            ["A / X / Y", "Játék: Check/Call · Fold · Bet/Raise (Y nyomva tartva All-In)"],
+            ["LT / RT", "Játék: a tét összegének csökkentése / növelése"],
+            ["LB / RB", "Játék: Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Játék: játékmód (Kézi · Auto Check/Call · Auto Check/Fold)"],
+            ["D-pad / LS", "Navigáció: lépés elemről elemre"],
+            ["A / B", "Navigáció: kiválasztás · vissza (mint az Esc); a B soha nem Fold"],
+            ["X / Y", "Navigáció: csevegés (a képernyő-billentyűzettel) · Az ász súgója"],
+            ["LB / RB", "Navigáció: előző / következő ablak (asztal, nyitott panelek, az Ász)"],
+            ["LT / RT", "Navigáció: előző / következő lap"],
             ["RS", "Görgetés"]],
-          note: "A betűk az Xbox-kiosztást követik: PlayStation-kontrolleren ✕ = A, ○ = B, □ = X, △ = Y, és az akciógombok a saját kontrollered szimbólumait mutatják. A B soha nem Fold. Listában, csúszkán vagy számmezőben a ← / → módosítja az értéket. A szövegmezőkhöz továbbra is billentyűzet kell: az A a mezőbe teszi a kurzort, ami telefonon és tableten megnyitja a képernyő-billentyűzetet. Beállítások: Speciális beállítások → Felhasználói felület → Kontroller." }
+          note: "A betűk az Xbox-kiosztást követik: PlayStation-kontrolleren ✕ = A, ○ = B, □ = X, △ = Y, és az akciógombok a saját kontrollered szimbólumait mutatják. Egy valódi ablak (beállítások, megerősítés, kontroller menü) mindig Navigáció módba vált, amíg nyitva van. Íráshoz az A egy szövegmezőn megnyitja a kontroller billentyűzetét: gyors üzenetek a csevegéshez, betűk a D-paddel és az A-val, az X töröl, az Y szóközt ad, az LB nagybetűre, az RB számokra és szimbólumokra vált, a Start elküldi, a B bezárja. Beállítások: Speciális beállítások → Felhasználói felület → Kontroller." }
       ]
     }
   ]

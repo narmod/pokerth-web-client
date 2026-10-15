@@ -105,6 +105,19 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **Gamepad, second iteration: modes, menu, keyboard** — the gamepad logic is split into a
+  device-agnostic core, `ui/ctl-nav.mjs` (modes, focus ring, zones, table actions, abstract actions
+  sent by an adapter), and the gamepad adapter `ui/gamepad.mjs`; a TV-remote adapter can reuse the
+  core. **Select** switches Game ⇄ Navigation (badge `#ctl-badge`); the table's side panels (chat,
+  history/odds, reactions, music, hands) no longer stop play, only real windows force Navigation;
+  my turn switches back to Game automatically. In Navigation, LB/RB cycle *zones* (screen, open
+  panels, the Ace's dock, which lives outside the screens and was unreachable), X jumps to the chat,
+  Y opens Ace's Help, LT/RT switch tabs. **Start** opens `ui/ctl-menu.mjs`, a tile menu (keynav
+  surface). Text fields open `ui/ctl-keyboard.mjs`, an on-screen keyboard (AZERTY / QWERTZ /
+  Cyrillic / QWERTY by language, accents and symbols, quick chat phrases; the field is never
+  focused, so phones do not pop their own keyboard; option `pad_kb`). A window can take the
+  controller's buttons through its `__ctl` hook (the keyboard: ⌫, space, shift, send). New keys and
+  a rewritten help section in the 83 languages; `test-gamepad-browser` extended (`web.81`).
 - **Gamepad support** — new `ui/gamepad.mjs` (browser Gamepad API, standard mapping; Xbox,
   PlayStation, Switch Pro and most Bluetooth pads; web addition, the QML client has none). Two
   modes switched automatically. *Table* (game screen, nothing open): the action-bar buttons are
