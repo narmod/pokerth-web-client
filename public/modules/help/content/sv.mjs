@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'Stäng det främsta fönstret (även Androids Bakåt-knapp)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Bordslistan i lobbyn (nås med Tab): välj ett bord \u00b7 gå med'],
             ['A–Z · 0–9', 'Lobby: att skriva utanför ett textfält skriver direkt i chatten']],
-          note: 'På Android stänger systemets Bakåt-knapp/gest fönster som Esc i stället för att lämna spelet (kan ställas in). iOS har ingen motsvarande systemknapp — använd \u2715 i varje fönster.' }
+          note: 'På Android stänger systemets Bakåt-knapp/gest fönster som Esc i stället för att lämna spelet (kan ställas in). iOS har ingen motsvarande systemknapp — använd \u2715 i varje fönster.' },
+        { id: 'gamepad', t: "Handkontroll",
+          b: ["En handkontroll fungerar i webbläsare som stöder spelkontroller (Xbox, PlayStation, Switch Pro och de flesta Bluetooth-kontroller) — tryck en gång på valfri knapp så att webbläsaren upptäcker den. Vid bordet spelar knapparna; så snart ett fönster eller en meny är öppen, och överallt utanför bordet, används de i stället för att förflytta dig på skärmen:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — håll in för All-In"],
+            ["LT / RT", "Sänk / höj insatsbeloppet"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Spelläge: Manuell · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Bläddra på bordet (sidhuvud, platser); B eller din nästa tur ger knapparna tillbaka till spelet"],
+            ["Start / Select", "Inställningar · Chatt"],
+            ["D-pad / LS", "Menyer: gå från objekt till objekt"],
+            ["A / B", "Menyer: välj · tillbaka (som Esc)"],
+            ["LB / RB", "Menyer: föregående / nästa flik"],
+            ["RS", "Rulla"]],
+          note: "Bokstäverna följer Xbox-layouten: på en PlayStation-kontroll är ✕ = A, ○ = B, □ = X, △ = Y, och åtgärdsknapparna visar symbolerna för din egen kontroll. B gör aldrig Fold. I en lista, ett reglage eller ett sifferfält ändrar ← / → värdet. Textfält kräver fortfarande ett tangentbord: A placerar markören i fältet, vilket öppnar skärmtangentbordet på telefoner och surfplattor. Inställningar: Avancerade alternativ → Användargränssnitt → Handkontroll." }
       ]
     }
   ]

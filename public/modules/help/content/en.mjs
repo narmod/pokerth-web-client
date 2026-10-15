@@ -312,7 +312,23 @@ export const help = {
             ['Esc', 'Close the topmost window (also the Android Back button)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Lobby table list (reach it with Tab): pick a table \u00b7 join it'],
             ['A–Z · 0–9', 'Lobby: typing outside a text field writes straight into the chat']],
-          note: 'On Android, the system Back button/gesture closes windows like Escape instead of leaving the game (configurable in the options). iOS has no equivalent system button \u2014 use the \u2715 of each window.' }
+          note: 'On Android, the system Back button/gesture closes windows like Escape instead of leaving the game (configurable in the options). iOS has no equivalent system button \u2014 use the \u2715 of each window.' },
+        { id: 'gamepad', t: "Gamepad",
+          b: ["A game controller works in browsers that support gamepads (Xbox, PlayStation, Switch Pro and most Bluetooth pads) — press any of its buttons once so the browser detects it. At the table its buttons play; as soon as a window or a menu is open, and everywhere outside the table, they move around the screen instead:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — hold it to go All-In"],
+            ["LT / RT", "Lower / raise the bet amount"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Playing mode: Manual · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Browse the table (header, seats); B or your next turn gives the buttons back to the game"],
+            ["Start / Select", "Settings · Chat"],
+            ["D-pad / LS", "Menus: move from item to item"],
+            ["A / B", "Menus: select · back (like Esc)"],
+            ["LB / RB", "Menus: previous / next tab"],
+            ["RS", "Scroll"]],
+          note: "Letters follow the Xbox layout: on a PlayStation pad ✕ = A, ○ = B, □ = X, △ = Y, and the action buttons show the symbols of your own pad. B never folds. In a list, a slider or a number field, ← / → change the value. Text fields still need a keyboard: A puts the cursor in the field, which brings up the on-screen keyboard on phones and tablets. Settings: Advanced options → User interface → Gamepad." }
       ]
     }
   ]

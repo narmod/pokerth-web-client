@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'Tanca la finestra del davant (també el botó Enrere d\u2019Android)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Llista de taules del vestíbul (s\u2019hi arriba amb Tab): tria una taula · uneix-t\u2019hi'],
             ['A–Z · 0–9', 'Vestíbul: escriure fora d’un camp de text escriu directament al xat']],
-          note: 'A Android, el botó/gest Enrere del sistema tanca les finestres com Esc, en comptes de sortir de la partida (configurable a les opcions). L\u2019iOS no té cap botó de sistema equivalent — fes servir la \u2715 de cada finestra.' }
+          note: 'A Android, el botó/gest Enrere del sistema tanca les finestres com Esc, en comptes de sortir de la partida (configurable a les opcions). L\u2019iOS no té cap botó de sistema equivalent — fes servir la \u2715 de cada finestra.' },
+        { id: 'gamepad', t: "Comandament",
+          b: ["Un comandament de joc funciona als navegadors que admeten gamepads (Xbox, PlayStation, Switch Pro i la majoria de comandaments Bluetooth) — prem un cop qualsevol dels seus botons perquè el navegador el detecti. A la taula, els seus botons juguen; tan bon punt s’obre una finestra o un menú, i a tot arreu fora de la taula, serveixen en canvi per moure’s per la pantalla:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — mantén-lo premut per fer All-In"],
+            ["LT / RT", "Baixar / pujar l’import de l’aposta"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Mode de joc: Manual · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Recórrer la taula (capçalera, seients); B o el teu proper torn tornen els botons al joc"],
+            ["Start / Select", "Configuració · Xat"],
+            ["D-pad / LS", "Menús: passar d’un element a un altre"],
+            ["A / B", "Menús: triar · enrere (com Esc)"],
+            ["LB / RB", "Menús: pestanya anterior / següent"],
+            ["RS", "Desplaçar"]],
+          note: "Les lletres segueixen la disposició Xbox: en un comandament PlayStation ✕ = A, ○ = B, □ = X, △ = Y, i els botons d’acció mostren els símbols del teu comandament. B mai fa Fold. En una llista, un control lliscant o un camp numèric, ← / → canvien el valor. Els camps de text encara necessiten un teclat: A posa el cursor al camp, cosa que obre el teclat en pantalla als telèfons i tauletes. Configuració: Opcions avançades → Interfície d'usuari → Comandament." }
       ]
     }
   ]

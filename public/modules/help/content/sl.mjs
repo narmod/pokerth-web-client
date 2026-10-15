@@ -310,7 +310,23 @@ export const help = {
             ['Esc', 'Zapre najvišje okno (tudi gumb Nazaj na Androidu)'],
             ['↑ ↓ · ↵', 'Seznam miz predverja (dosežeš ga s Tab): izberi mizo · pridruži se'],
             ['A–Z · 0–9', 'Predverje: tipkanje zunaj besedilnega polja piše neposredno v klepet']],
-          note: 'Na Androidu sistemski gumb/gesta Nazaj zapira okna kot Esc, namesto da bi zapustil igro (nastavljivo v možnostih). iOS nima ustreznega sistemskega gumba — uporabi ✕ vsakega okna.' }
+          note: 'Na Androidu sistemski gumb/gesta Nazaj zapira okna kot Esc, namesto da bi zapustil igro (nastavljivo v možnostih). iOS nima ustreznega sistemskega gumba — uporabi ✕ vsakega okna.' },
+        { id: 'gamepad', t: "Igralni plošček",
+          b: ["Krmilnik za igre deluje v brskalnikih, ki podpirajo igralne ploščke (Xbox, PlayStation, Switch Pro in večina ploščkov Bluetooth) — enkrat pritisni katerega koli od njegovih gumbov, da ga brskalnik zazna. Za mizo njegovi gumbi igrajo; takoj ko je odprto okno ali meni, in povsod zunaj mize, pa z njimi premikaš po zaslonu:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — drži ga za All-In"],
+            ["LT / RT", "Znižaj / zvišaj znesek stave"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Način igre: Ročno · Samodejni Check/Call · Samodejni Check/Fold"],
+            ["↑", "Brskanje po mizi (glava, sedeži); B ali tvoja naslednja poteza vrne gumbe igri"],
+            ["Start / Select", "Nastavitve · Klepet"],
+            ["D-pad / LS", "Meniji: premik od elementa do elementa"],
+            ["A / B", "Meniji: izberi · nazaj (kot Esc)"],
+            ["LB / RB", "Meniji: prejšnji / naslednji zavihek"],
+            ["RS", "Drsenje"]],
+          note: "Črke sledijo postavitvi Xbox: na ploščku PlayStation je ✕ = A, ○ = B, □ = X, △ = Y, gumbi za dejanja pa prikazujejo simbole tvojega ploščka. B nikoli ne naredi Fold. Na seznamu, drsniku ali v številčnem polju ← / → spremenita vrednost. Za besedilna polja še vedno potrebuješ tipkovnico: A postavi kazalec v polje, kar na telefonih in tablicah odpre zaslonsko tipkovnico. Nastavitve: Napredne možnosti → Uporabniški vmesnik → Igralni plošček." }
       ]
     }
   ]

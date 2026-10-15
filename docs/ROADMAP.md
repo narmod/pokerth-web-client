@@ -11,6 +11,8 @@ use too. Items are grouped by status rather than fixed phases.
 
 ## ✅ Shipped
 
+- **Gamepad** (`2.1.10-web.79`) — play and browse the whole client with a game controller (Gamepad API): table buttons (A Check/Call, X Fold, Y Bet/Raise, hold Y All-In, triggers for the amount, bumpers for 1/3 · 1/2 · Pot) and console-style menu navigation (D-pad focus ring, A select, B back). Web addition; the official client has no gamepad support.
+
 - **SEO / search-engine visibility (admin option, off by default)** — `/admin` → Clients → Search engine visibility. Off: pages served with `noindex,nofollow`, `robots.txt` blocks all crawlers (self-hosted installs stay unindexed). On: meta description, Open Graph / Twitter cards, canonical, JSON-LD, crawler-readable summary block, plus generated `robots.txt` (AI crawlers welcomed), `sitemap.xml` and `llms.txt` from the configured public URL. Injected at serve time by `proxy.js` (v2.1.6-web.25).
 
 - **Low-vision accessibility** (`2.1.8-web.122`–`.135`, `2.1.8-web.147`) — a browser-local Accessibility preference set, reachable before login and from every lobby/game header: Interface size (Standard / Large / Extra Large), an independent High contrast palette, and the existing pinch-zoom permission. Preferences apply live, survive reload, and travel through configuration export/import and account web-preference sync. On phones and tablets, Extra Large switches active play to an adaptive layout that keeps critical information visible and moves chat/log/hands/reactions into keyboard- and touch-operable drawers. This is a bounded accessibility sweep, not a claim of full WCAG conformance; manual real-device verification is still pending (see [LOW_VISION_REAL_DEVICE_ACCEPTANCE.md](docs/LOW_VISION_REAL_DEVICE_ACCEPTANCE.md)).

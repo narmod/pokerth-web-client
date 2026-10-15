@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'En üstteki pencereyi kapat (Android Geri tuşu da öyle)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Lobideki masa listesi (Tab ile ulaşılır): masa seç \u00b7 katıl'],
             ['A–Z · 0–9', 'Lobi: metin alanı dışında yazmak doğrudan sohbete yazar']],
-          note: 'Android\u2019de sistemin Geri tuşu/hareketi oyundan çıkmak yerine pencereleri Esc gibi kapatır (seçeneklerden ayarlanabilir). iOS\u2019ta eşdeğer bir sistem tuşu yoktur — her pencerenin \u2715 işaretini kullan.' }
+          note: 'Android\u2019de sistemin Geri tuşu/hareketi oyundan çıkmak yerine pencereleri Esc gibi kapatır (seçeneklerden ayarlanabilir). iOS\u2019ta eşdeğer bir sistem tuşu yoktur — her pencerenin \u2715 işaretini kullan.' },
+        { id: 'gamepad', t: "Oyun kumandası",
+          b: ["Oyun kumandası, gamepad destekleyen tarayıcılarda çalışır (Xbox, PlayStation, Switch Pro ve çoğu Bluetooth kumanda) — tarayıcının algılaması için düğmelerinden birine bir kez bas. Masada düğmeleri oyunu oynar; bir pencere veya menü açılır açılmaz, ve masa dışındaki her yerde, ekranda gezinmeye yarar:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — All-In için basılı tut"],
+            ["LT / RT", "Bahis tutarını azalt / artır"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Oyun modu: Manuel · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Masada gezin (başlık, koltuklar); B ya da bir sonraki sıran düğmeleri oyuna geri verir"],
+            ["Start / Select", "Ayarlar · Sohbet"],
+            ["D-pad / LS", "Menüler: öğeden öğeye geç"],
+            ["A / B", "Menüler: seç · geri (Esc gibi)"],
+            ["LB / RB", "Menüler: önceki / sonraki sekme"],
+            ["RS", "Kaydır"]],
+          note: "Harfler Xbox düzenini izler: PlayStation kumandasında ✕ = A, ○ = B, □ = X, △ = Y'dir ve eylem düğmeleri kendi kumandanın sembollerini gösterir. B asla Fold yapmaz. Bir listede, kaydırıcıda veya sayı alanında ← / → değeri değiştirir. Metin alanları hâlâ klavye gerektirir: A imleci alana yerleştirir, bu da telefon ve tabletlerde ekran klavyesini açar. Ayarlar: Gelişmiş seçenekler → Kullanıcı arayüzü → Oyun kumandası." }
       ]
     }
   ]

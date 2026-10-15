@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'Chiudere la finestra in primo piano (anche il tasto Indietro di Android)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Elenco dei tavoli nella lobby (si raggiunge con Tab): scegliere un tavolo \u00b7 unirsi'],
             ['A–Z · 0–9', 'Lobby: digitare fuori da un campo di testo scrive direttamente nella chat']],
-          note: 'Su Android, il tasto/gesto Indietro di sistema chiude le finestre come Esc invece di lasciare la partita (configurabile nelle opzioni). iOS non ha un tasto di sistema equivalente — usa la \u2715 di ogni finestra.' }
+          note: 'Su Android, il tasto/gesto Indietro di sistema chiude le finestre come Esc invece di lasciare la partita (configurabile nelle opzioni). iOS non ha un tasto di sistema equivalente — usa la \u2715 di ogni finestra.' },
+        { id: 'gamepad', t: "Controller",
+          b: ["Un controller funziona nei browser che supportano i gamepad (Xbox, PlayStation, Switch Pro e la maggior parte dei controller Bluetooth) — premi una volta uno qualsiasi dei suoi tasti perché il browser lo rilevi. Al tavolo i tasti giocano; appena è aperta una finestra o un menu, e ovunque fuori dal tavolo, servono a spostarsi nello schermo:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — tienilo premuto per andare All-In"],
+            ["LT / RT", "Diminuire / aumentare l'importo della puntata"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Modalità di gioco: Manuale · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Esplorare il tavolo (intestazione, posti); B o il tuo prossimo turno restituiscono i tasti al gioco"],
+            ["Start / Select", "Impostazioni · Chat"],
+            ["D-pad / LS", "Menu: passare da un elemento all'altro"],
+            ["A / B", "Menu: scegliere · indietro (come Esc)"],
+            ["LB / RB", "Menu: scheda precedente / successiva"],
+            ["RS", "Scorrere"]],
+          note: "Le lettere seguono il layout Xbox: su un controller PlayStation ✕ = A, ○ = B, □ = X, △ = Y, e i pulsanti di azione mostrano i simboli del tuo controller. B non fa mai Fold. In un elenco, un cursore o un campo numerico, ← / → cambiano il valore. I campi di testo richiedono ancora una tastiera: A mette il cursore nel campo, il che apre la tastiera su schermo su telefoni e tablet. Impostazioni: Opzioni avanzate → Interfaccia utente → Controller." }
       ]
     }
   ]

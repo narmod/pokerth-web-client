@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'Zatvori prednji prozor (i gumb Natrag na Androidu)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Popis stolova u predvorju (dolazi se Tabom): odabir stola \u00b7 pridruživanje'],
             ['A–Z · 0–9', 'Predvorje: tipkanje izvan tekstnog polja piše izravno u chat']],
-          note: 'Na Androidu sustavski gumb/gesta Natrag zatvara prozore poput Esc, umjesto da napusti partiju (podesivo u opcijama). iOS nema ekvivalentan sustavski gumb — koristi \u2715 svakog prozora.' }
+          note: 'Na Androidu sustavski gumb/gesta Natrag zatvara prozore poput Esc, umjesto da napusti partiju (podesivo u opcijama). iOS nema ekvivalentan sustavski gumb — koristi \u2715 svakog prozora.' },
+        { id: 'gamepad', t: "Kontroler",
+          b: ["Kontroler za igre radi u preglednicima koji podržavaju gamepade (Xbox, PlayStation, Switch Pro i većina Bluetooth kontrolera) — pritisni jednom bilo koji njegov gumb kako bi ga preglednik prepoznao. Za stolom njegovi gumbi igraju; čim je otvoren prozor ili izbornik, i svugdje izvan stola, umjesto toga služe za kretanje po zaslonu:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — drži ga za All-In"],
+            ["LT / RT", "Smanji / povećaj iznos uloga"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Način igre: Ručno · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Pregled stola (zaglavlje, mjesta); B ili tvoj sljedeći potez vraća gumbe igri"],
+            ["Start / Select", "Postavke · Chat"],
+            ["D-pad / LS", "Izbornici: prelazak s jedne stavke na drugu"],
+            ["A / B", "Izbornici: odabir · natrag (kao Esc)"],
+            ["LB / RB", "Izbornici: prethodna / sljedeća kartica"],
+            ["RS", "Pomicanje"]],
+          note: "Slova slijede Xbox raspored: na PlayStation kontroleru ✕ = A, ○ = B, □ = X, △ = Y, a gumbi akcija prikazuju simbole tvog kontrolera. B nikad ne radi Fold. Na popisu, klizaču ili brojčanom polju ← / → mijenjaju vrijednost. Tekstna polja i dalje traže tipkovnicu: A stavlja kursor u polje, što na telefonima i tabletima otvara zaslonsku tipkovnicu. Postavke: Napredne opcije → Korisničko sučelje → Kontroler." }
       ]
     }
   ]

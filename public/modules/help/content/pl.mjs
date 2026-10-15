@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'Zamknij wierzchnie okno (także przycisk Wstecz Androida)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Lista stołów w lobby (przejdź klawiszem Tab): wybór stołu \u00b7 dołączenie'],
             ['A–Z · 0–9', 'Poczekalnia: pisanie poza polem tekstowym trafia od razu do czatu']],
-          note: 'Na Androidzie systemowy przycisk/gest Wstecz zamyka okna jak Esc, zamiast opuszczać grę (konfigurowalne w opcjach). iOS nie ma odpowiednika — użyj \u2715 każdego okna.' }
+          note: 'Na Androidzie systemowy przycisk/gest Wstecz zamyka okna jak Esc, zamiast opuszczać grę (konfigurowalne w opcjach). iOS nie ma odpowiednika — użyj \u2715 każdego okna.' },
+        { id: 'gamepad', t: "Pad",
+          b: ["Kontroler do gier działa w przeglądarkach, które obsługują pady (Xbox, PlayStation, Switch Pro i większość padów Bluetooth) — naciśnij raz dowolny jego przycisk, aby przeglądarka go wykryła. Przy stole jego przyciski grają; gdy tylko otwarte jest okno lub menu, a także wszędzie poza stołem, służą do poruszania się po ekranie:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — przytrzymaj, aby zagrać All-In"],
+            ["LT / RT", "Zmniejsz / zwiększ kwotę zakładu"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Tryb gry: Ręcznie · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Przeglądanie stołu (nagłówek, miejsca); B lub twoja następna kolej oddaje przyciski grze"],
+            ["Start / Select", "Ustawienia · Czat"],
+            ["D-pad / LS", "Menu: przechodzenie między elementami"],
+            ["A / B", "Menu: wybierz · wstecz (jak Esc)"],
+            ["LB / RB", "Menu: poprzednia / następna zakładka"],
+            ["RS", "Przewijanie"]],
+          note: "Litery odpowiadają układowi Xbox: na padzie PlayStation ✕ = A, ○ = B, □ = X, △ = Y, a przyciski akcji pokazują symbole twojego pada. B nigdy nie robi Fold. Na liście, suwaku lub w polu liczbowym ← / → zmieniają wartość. Pola tekstowe nadal wymagają klawiatury: A umieszcza kursor w polu, co na telefonach i tabletach otwiera klawiaturę ekranową. Ustawienia: Opcje zaawansowane → Interfejs użytkownika → Pad." }
       ]
     }
   ]

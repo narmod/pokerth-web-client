@@ -450,6 +450,22 @@ export const help = {
             ["↑ ↓ · ↵", "Borðalisti anddyris (náðu í hann með Tab): velja borð · setjast"],
             ["A–Z · 0–9", "Anddyri: innsláttur utan textareits skrifast beint í spjallið"]],
           note: "Á Android lokar Til baka-hnappur/bending kerfisins gluggum eins og Escape, í stað þess að yfirgefa leikinn (stillanlegt í valkostunum). iOS hefur engan sambærilegan kerfishnapp — notaðu ✕ á hverjum glugga." },
+        { id: 'gamepad', t: "Leikjastýripinni",
+          b: ["Leikjastýripinni virkar í vöfrum sem styðja gamepad (Xbox, PlayStation, Switch Pro og flestir Bluetooth-pinnar) — ýttu einu sinni á einhvern hnapp hans svo vafrinn finni hann. Við borðið spila hnapparnir; um leið og gluggi eða valmynd er opin, og alls staðar utan borðsins, færa þeir þig um skjáinn:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — haltu inni fyrir All-In"],
+            ["LT / RT", "Lækka / hækka upphæð veðmáls"],
+            ["LB / RB", "Bet 1/3 · 1/2 · pottur"],
+            ["← / →", "Spilahamur: Handvirkt · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Skoða borðið (haus, sæti); B eða næsta umferð þín skilar hnöppunum til leiksins"],
+            ["Start / Select", "Stillingar · Spjall"],
+            ["D-pad / LS", "Valmyndir: fara á milli atriða"],
+            ["A / B", "Valmyndir: velja · til baka (eins og Esc)"],
+            ["LB / RB", "Valmyndir: fyrri / næsti flipi"],
+            ["RS", "Fletta"]],
+          note: "Stafirnir fylgja Xbox-uppsetningu: á PlayStation-pinna ✕ = A, ○ = B, □ = X, △ = Y, og aðgerðahnapparnir sýna tákn þíns eigin pinna. B gerir aldrei Fold. Í lista, sleða eða talnareit breyta ← / → gildinu. Textareitir þurfa enn lyklaborð: A setur bendilinn í reitinn, sem opnar skjályklaborðið á símum og spjaldtölvum. Stillingar: Ítarlegir valkostir → Notendaviðmót → Leikjastýripinni." },
       ]
     },
   ]

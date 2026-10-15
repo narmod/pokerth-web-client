@@ -1,3 +1,7 @@
+2026-10-15 version 2.1.10-web.79:
+- new: play with a gamepad (Xbox, PlayStation, Switch Pro and most Bluetooth pads): at the table A = Check/Call, X = Fold, Y = Bet/Raise (hold Y for All-In), LT/RT set the amount and LB/RB pick 1/3 · 1/2 · Pot; in menus and windows the D-pad moves from item to item, A selects and B goes back (B never folds)
+- new: gamepad options in Advanced options → User interface → Gamepad (on/off, vibration on your turn, Nintendo layout), and a « Gamepad » page in the help
+
 2026-10-15 version 2.1.10-web.78:
 - bugfix: phone in landscape: the bet keypad keys and its Cancel / OK buttons keep a comfortable touch height again on very low screens (they had shrunk to 26 px with the reduced action bar)
 

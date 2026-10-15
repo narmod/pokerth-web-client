@@ -2877,6 +2877,7 @@ function _processAvatarFile(file) {
 <script type="module" src="modules/ui/adv-search.mjs"></script>
 <script type="module" src="modules/ui/keynav.mjs"></script>
 <script type="module" src="modules/ui/back-guard.mjs"></script>
+<script type="module" src="modules/ui/gamepad.mjs"></script>
 <script type="module" src="modules/ui/z-order.mjs"></script>
 <script type="module" src="modules/ui/invite.mjs"></script>
 <script type="module" src="modules/ui/lan-directory.mjs"></script>
@@ -3606,6 +3607,15 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
         <div class="adv-keyhint"><span data-i18n="kbHintF">Official PokerTH keys also work: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manual / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = modes, Alt+C chat, Alt+L log, Alt+I odds.</span></div>
         <div class="adv-keyhint"><span data-i18n="kbHintExtra">Alt+S opens the settings anywhere, as in the official client. Alt+T opens the statistics panel — a web addition, the official client has no shortcut for it.</span></div>
         <div class="adv-keyhint"><em class="adv-webtag">web</em> <span data-i18n="kbHint">Tap a key, then press the new one. Space = Call, Enter = confirm raise.</span><button type="button" class="kb-reset" onclick="resetKeys()" data-i18n="kbReset">Reset</button></div>
+      </div>
+      </details>
+      <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 7h9a4.5 4.5 0 0 1 4.4 5.4l-.9 4.3a2.4 2.4 0 0 1-4.1 1.1L13.6 15h-3.2l-2.3 2.8a2.4 2.4 0 0 1-4.1-1.1l-.9-4.3A4.5 4.5 0 0 1 7.5 7z"/><path d="M7.5 10v3M6 11.5h3M15.5 10.5h.01M17.5 12.5h.01"/></svg></span><span data-i18n="advSecPad">Gamepad</span></summary>
+      <label class="adv-row"><input type="checkbox" id="adv-padon" onchange="setAdvOpt('pad_on',this.checked)"><span data-i18n="advPadOn">Play with a gamepad (game controller)</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-padrumble" onchange="setAdvOpt('pad_rumble',this.checked)"><span data-i18n="advPadRumble">Vibrate the gamepad when it is my turn</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-padnin" onchange="setAdvOpt('pad_nintendo',this.checked)"><span data-i18n="advPadNintendo">Nintendo layout: confirm with the right-hand button (A/B swapped)</span><em class="adv-webtag">web</em></label>
+      <div class="adv-keys">
+        <div class="adv-keyhint"><span data-i18n="padHintTable">At the table: A = Check/Call · X = Fold · Y = Bet/Raise, hold Y = All-In · LT/RT = bet amount · LB/RB = 1/3, 1/2, Pot · D-pad ←/→ = playing mode, ↑ = browse the table · Start = settings · Select = chat.</span></div>
+        <div class="adv-keyhint"><span data-i18n="padHintNav">In menus and windows: D-pad or left stick = move · A = select · B = back (never folds) · ←/→ on a list, slider or number = change it · LB/RB = switch tab · right stick = scroll.</span></div>
       </div>
       </details>
       </div>

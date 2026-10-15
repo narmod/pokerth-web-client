@@ -8370,6 +8370,47 @@ body.has-keyboard .act-key { display: inline-block; }
 .btn-allin .act-key,
 .btn-pct .act-key { display: none !important; } /* pas de badge de touche sur Tapis ni bets rapides (parite QML) */
 
+/* ════════════════════════════════════════════════════════════════════════
+   Gamepad (modules/ui/gamepad.mjs) — web addition.
+   body.pad-active = the pad is the last input used. The action buttons then
+   show the pad glyph (top left, round) instead of the keyboard letter; the
+   glyphs come from --pad-g-* on <html> (Xbox / PlayStation / Nintendo,
+   detected from the pad). The narrow All-In button gets none (same reason
+   as its key badge): "hold Y" shows there as the fill gauge. .pad-cur is
+   the menu focus ring.
+   ════════════════════════════════════════════════════════════════════════ */
+body.pad-active .btn-action { position: relative; }
+body.pad-active .act-key { display: none !important; }
+body.pad-active .btn-fold::before,
+body.pad-active .btn-call::before,
+body.pad-active .btn-check::before,
+body.pad-active .btn-raise::before {
+  position: absolute; top: 3px; left: 4px;
+  min-width: 1.4em; height: 1.4em; padding: 0 2px; box-sizing: border-box;
+  font-family: var(--ff-mono); font-size: var(--fs-2xs); line-height: calc(1.4em - 2px);
+  font-weight: 700; letter-spacing: 0; text-align: center;
+  border: 1px solid currentColor; border-radius: 999px;
+  opacity: 0.55; pointer-events: none;
+}
+body.pad-active .btn-fold::before { content: var(--pad-g-fold, "X"); }
+body.pad-active .btn-call::before,
+body.pad-active .btn-check::before { content: var(--pad-g-ok, "A"); }
+body.pad-active .btn-raise::before { content: var(--pad-g-raise, "Y"); }
+/* Hold-to-All-In gauge: filled left to right while Y is held. */
+.pad-hold-fill {
+  position: absolute; inset: 0; border-radius: inherit;
+  background: currentColor; opacity: 0.28; pointer-events: none;
+  transform-origin: left center; transform: scaleX(0);
+  animation: padHoldFill var(--pad-hold-ms, 600ms) linear forwards;
+}
+@keyframes padHoldFill { to { transform: scaleX(1); } }
+/* Menu focus ring, drawn on the element (or the label of its checkbox). */
+body.pad-active .pad-cur {
+  outline: 3px solid var(--gold-hi) !important;
+  outline-offset: 2px !important;
+}
+body.pad-active :focus:not(.pad-cur) { outline: none; }
+
 /* iOS Safari : empeche le zoom auto au focus d'un champ (declenche quand
    font-size < 16px). Force a 16px sur tactile uniquement ; le pinch-zoom
    reste actif (viewport intact). .raise-input exclu pour preserver la

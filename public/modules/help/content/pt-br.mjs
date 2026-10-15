@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'Fechar a janela da frente (também o botão Voltar do Android)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Lista de mesas do lobby (acessível com Tab): escolher uma mesa \u00b7 entrar'],
             ['A–Z · 0–9', 'Saguão: digitar fora de um campo de texto escreve direto no bate-papo']],
-          note: 'No Android, o botão/gesto Voltar do sistema fecha as janelas como Esc em vez de sair da partida (configurável nas opções). O iOS não tem botão de sistema equivalente — use o \u2715 de cada janela.' }
+          note: 'No Android, o botão/gesto Voltar do sistema fecha as janelas como Esc em vez de sair da partida (configurável nas opções). O iOS não tem botão de sistema equivalente — use o \u2715 de cada janela.' },
+        { id: 'gamepad', t: "Controle",
+          b: ["Um controle de jogo funciona nos navegadores com suporte a gamepads (Xbox, PlayStation, Switch Pro e a maioria dos controles Bluetooth) — aperte qualquer botão dele uma vez para o navegador detectá-lo. Na mesa, os botões jogam; assim que uma janela ou um menu está aberto, e em qualquer lugar fora da mesa, eles servem para se mover pela tela:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — segure para ir All-In"],
+            ["LT / RT", "Diminuir / aumentar o valor da aposta"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Modo de jogo: Manual · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Navegar pela mesa (cabeçalho, lugares); B ou a sua próxima vez devolve os botões ao jogo"],
+            ["Start / Select", "Configurações · Chat"],
+            ["D-pad / LS", "Menus: passar de um item a outro"],
+            ["A / B", "Menus: escolher · voltar (como Esc)"],
+            ["LB / RB", "Menus: aba anterior / seguinte"],
+            ["RS", "Rolar"]],
+          note: "As letras seguem o layout do Xbox: num controle PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, e os botões de ação mostram os símbolos do seu próprio controle. B nunca dá Fold. Numa lista, num controle deslizante ou num campo numérico, ← / → alteram o valor. Campos de texto ainda precisam de teclado: A coloca o cursor no campo, o que abre o teclado virtual em celulares e tablets. Configurações: Opções avançadas → Interface do usuário → Controle." }
       ]
     }
   ]

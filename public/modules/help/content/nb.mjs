@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'Lukk det forreste vinduet (også Androids Tilbake-knapp)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Bordlisten i lobbyen (nås med Tab): velg et bord \u00b7 bli med'],
             ['A–Z · 0–9', 'Lobby: skriving utenfor et tekstfelt går rett inn i sjatten']],
-          note: 'På Android lukker systemets Tilbake-knapp/-bevegelse vinduer som Esc i stedet for å forlate spillet (kan stilles inn). iOS har ingen tilsvarende systemknapp — bruk \u2715 i hvert vindu.' }
+          note: 'På Android lukker systemets Tilbake-knapp/-bevegelse vinduer som Esc i stedet for å forlate spillet (kan stilles inn). iOS har ingen tilsvarende systemknapp — bruk \u2715 i hvert vindu.' },
+        { id: 'gamepad', t: "Spillkontroller",
+          b: ["En spillkontroller fungerer i nettlesere som støtter dem (Xbox, PlayStation, Switch Pro og de fleste Bluetooth-kontrollere) — trykk én gang på en av knappene slik at nettleseren oppdager den. Ved bordet spiller knappene; så snart et vindu eller en meny er åpen, og overalt utenfor bordet, brukes de i stedet til å bevege deg rundt på skjermen:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — hold inne for All-In"],
+            ["LT / RT", "Senk / øk innsatsbeløpet"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Spillmodus: Manuell · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Bla gjennom bordet (topptekst, plasser); B eller din neste tur gir knappene tilbake til spillet"],
+            ["Start / Select", "Innstillinger · Chat"],
+            ["D-pad / LS", "Menyer: gå fra element til element"],
+            ["A / B", "Menyer: velg · tilbake (som Esc)"],
+            ["LB / RB", "Menyer: forrige / neste fane"],
+            ["RS", "Rull"]],
+          note: "Bokstavene følger Xbox-oppsettet: på en PlayStation-kontroller er ✕ = A, ○ = B, □ = X, △ = Y, og handlingsknappene viser symbolene til din egen kontroller. B gjør aldri Fold. I en liste, en glidebryter eller et tallfelt endrer ← / → verdien. Tekstfelt krever fortsatt tastatur: A setter markøren i feltet, noe som åpner skjermtastaturet på telefoner og nettbrett. Innstillinger: Avanserte alternativer → Brukergrensesnitt → Spillkontroller." }
       ]
     }
   ]

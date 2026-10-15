@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'Fechar a janela da frente (também o botão Voltar do Android)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Lista de mesas do lobby (acessível com Tab): escolher uma mesa \u00b7 entrar'],
             ['A–Z · 0–9', 'Átrio: escrever fora de um campo de texto escreve diretamente no chat']],
-          note: 'No Android, o botão/gesto Voltar do sistema fecha as janelas como Esc em vez de sair da partida (configurável nas opções). O iOS não tem botão de sistema equivalente — usa o \u2715 de cada janela.' }
+          note: 'No Android, o botão/gesto Voltar do sistema fecha as janelas como Esc em vez de sair da partida (configurável nas opções). O iOS não tem botão de sistema equivalente — usa o \u2715 de cada janela.' },
+        { id: 'gamepad', t: "Comando",
+          b: ["Um comando de jogo funciona nos navegadores que os suportam (Xbox, PlayStation, Switch Pro e a maioria dos comandos Bluetooth) — carrega uma vez num dos seus botões para que o navegador o detete. À mesa, os botões jogam; assim que uma janela ou um menu está aberto, e em todo o lado fora da mesa, servem para te deslocares no ecrã:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — mantém premido para fazer All-In"],
+            ["LT / RT", "Baixar / aumentar o montante da aposta"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Modo de jogo: Manual · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Percorrer a mesa (cabeçalho, lugares); B ou a tua próxima vez devolve os botões ao jogo"],
+            ["Start / Select", "Definições · Chat"],
+            ["D-pad / LS", "Menus: passar de um elemento a outro"],
+            ["A / B", "Menus: escolher · voltar (como Esc)"],
+            ["LB / RB", "Menus: separador anterior / seguinte"],
+            ["RS", "Deslocar"]],
+          note: "As letras seguem a disposição Xbox: num comando PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, e os botões de ação mostram os símbolos do teu comando. B nunca faz Fold. Numa lista, num cursor ou num campo numérico, ← / → alteram o valor. Os campos de texto continuam a precisar de teclado: A coloca o cursor no campo, o que abre o teclado no ecrã em telemóveis e tablets. Definições: Opções avançadas → Interface → Comando." }
       ]
     }
   ]

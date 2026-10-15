@@ -310,6 +310,14 @@ export function hasOpenSurface() {
   return !!_topSurface();
 }
 
+// Element of the topmost open surface (same priority as closeTop()), or null.
+// Read-only — the gamepad (ui/gamepad.mjs) keeps its menu navigation inside
+// it and switches the table buttons off while one is open.
+export function topSurfaceEl() {
+  var s = _topSurface();
+  return s ? s.el : null;
+}
+
 // Toutes les surfaces ouvertes (éléments visibles), lecture seule — la
 // mascotte (modules/mascot) s'en sert pour distinguer une fenêtre flottante
 // (elle peut jouer dessus) d'une modale ou d'un menu (elle attend).
@@ -411,6 +419,7 @@ document.addEventListener('keydown', _onKey, true);   // capture : avant les
 window.keynavRegisterOverlay = registerOverlay;
 window.keynavCloseTop = closeTop;
 window.keynavHasOpenSurface = hasOpenSurface;
+window.keynavTopSurfaceEl = topSurfaceEl;
 window.keynavOpenSurfaces = openSurfaces;
 window.keynavFocusInitial = focusInitial;
 window.keynavFocusStart = focusStart;

@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'Uždaryti viršutinį langą (taip pat \u201eAndroid\u201c mygtukas Atgal)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Poilsio salės stalų sąrašas (pasiekiamas Tab): pasirinkti stalą \u00b7 prisijungti'],
             ['A–Z · 0–9', 'Vestibiulis: rašant ne teksto lauke, tekstas iškart rašomas į pokalbį']],
-          note: '\u201eAndroid\u201c sistemos mygtukas/gestas Atgal uždaro langus kaip Esc, užuot palikęs partiją (nustatoma parinktyse). iOS neturi atitinkamo sistemos mygtuko — naudok kiekvieno lango \u2715.' }
+          note: '\u201eAndroid\u201c sistemos mygtukas/gestas Atgal uždaro langus kaip Esc, užuot palikęs partiją (nustatoma parinktyse). iOS neturi atitinkamo sistemos mygtuko — naudok kiekvieno lango \u2715.' },
+        { id: 'gamepad', t: "Žaidimų pultelis",
+          b: ["Žaidimų pultelis veikia naršyklėse, kurios juos palaiko (Xbox, PlayStation, Switch Pro ir dauguma Bluetooth pultelių) — vieną kartą paspausk bet kurį jo mygtuką, kad naršyklė jį aptiktų. Prie stalo jo mygtukai žaidžia; kai tik atidarytas langas ar meniu, ir visur kitur, ne prie stalo, jais judama ekrane:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — palaikyk, kad eitum All-In"],
+            ["LT / RT", "Sumažinti / padidinti statymo sumą"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Žaidimo režimas: Rankinis · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Naršyti stalą (antraštė, vietos); B arba tavo kita eilė grąžina mygtukus žaidimui"],
+            ["Start / Select", "Nustatymai · Pokalbiai"],
+            ["D-pad / LS", "Meniu: pereiti nuo vieno elemento prie kito"],
+            ["A / B", "Meniu: pasirinkti · atgal (kaip Esc)"],
+            ["LB / RB", "Meniu: ankstesnė / kita kortelė"],
+            ["RS", "Slinkti"]],
+          note: "Raidės atitinka Xbox išdėstymą: PlayStation pultelyje ✕ = A, ○ = B, □ = X, △ = Y, o veiksmų mygtukai rodo tavo pultelio simbolius. B niekada nedaro Fold. Sąraše, šliaužiklyje ar skaičių lauke ← / → keičia reikšmę. Teksto laukams vis tiek reikia klaviatūros: A įkelia žymeklį į lauką, o telefonuose ir planšetėse tada atsiveria ekrano klaviatūra. Nustatymai: Išplėstinės parinktys → Naudotojo sąsaja → Žaidimų pultelis." }
       ]
     }
   ]

@@ -310,7 +310,23 @@ export const help = {
             ['Esc', 'Mbyll dritaren më të sipërme (edhe butoni Prapa i Android-it)'],
             ['↑ ↓ · ↵', 'Lista e tavolinave në lobi (arrihet me Tab): zgjidh një tavolinë · bashkohu'],
             ['A–Z · 0–9', 'Lobi: shkrimi jashtë një fushe teksti shkon drejt e në bisedë']],
-          note: 'Në Android, butoni/gjesti i sistemit Prapa mbyll dritaret si Escape, në vend që të lërë lojën (i konfigurueshëm te opsionet). iOS s\u2019ka një buton ekuivalent sistemi — përdor ✕ e çdo dritareje.' }
+          note: 'Në Android, butoni/gjesti i sistemit Prapa mbyll dritaret si Escape, në vend që të lërë lojën (i konfigurueshëm te opsionet). iOS s\u2019ka një buton ekuivalent sistemi — përdor ✕ e çdo dritareje.' },
+        { id: 'gamepad', t: "Kontrolleri i lojës",
+          b: ["Një kontroller loje funksionon në shfletuesit që mbështesin gamepad-ët (Xbox, PlayStation, Switch Pro dhe shumica e kontrollerëve Bluetooth) — shtyp një herë cilindo nga butonat e tij që shfletuesi ta zbulojë. Në tavolinë butonat e tij luajnë; sapo hapet një dritare ose një menu, dhe kudo jashtë tavolinës, ata shërbejnë për të lëvizur nëpër ekran:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — mbaje të shtypur për All-In"],
+            ["LT / RT", "Ul / rrit shumën e bastit"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Mënyra e lojës: Manual · Check/Call automatik · Check/Fold automatik"],
+            ["↑", "Shfleto tavolinën (koka, ndenjëset); B ose radha jote e ardhshme ia kthen butonat lojës"],
+            ["Start / Select", "Opsionet · Biseda"],
+            ["D-pad / LS", "Menu: kalo nga një element te tjetri"],
+            ["A / B", "Menu: zgjidh · mbrapa (si Esc)"],
+            ["LB / RB", "Menu: skeda e mëparshme / e radhës"],
+            ["RS", "Rrotullo faqen"]],
+          note: "Shkronjat ndjekin paraqitjen Xbox: në një kontroller PlayStation ✕ = A, ○ = B, □ = X, △ = Y, dhe butonat e veprimeve tregojnë simbolet e kontrollerit tënd. B nuk bën kurrë Fold. Në një listë, rrëshqitës ose fushë numerike, ← / → ndryshojnë vlerën. Fushat e tekstit kërkojnë ende një tastierë: A vendos kursorin në fushë, gjë që hap tastierën në ekran në telefona dhe tableta. Opsionet: Opsionet e avancuara → Ndërfaqja e përdoruesit → Kontrolleri i lojës." }
       ]
     }
   ]

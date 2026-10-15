@@ -242,13 +242,14 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-// Petit toast d'indication du raccourci
-function showKeyHint(text) {
+// Petit toast d'indication du raccourci. icon: leading pictogram
+// (default ⌨; the gamepad, ui/gamepad.mjs, passes 🎮).
+function showKeyHint(text, icon) {
   var existing = document.getElementById('key-hint');
   if (existing) existing.remove();
   var el = document.createElement('div');
   el.id = 'key-hint';
-  el.textContent = '⌨ ' + text;
+  el.textContent = (icon || '⌨') + ' ' + text;
   el.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);' +
     'background:var(--gold);color:var(--on-gold);padding:5px 14px;border-radius:20px;' +
     'font-family:monospace;font-size:0.75rem;font-weight:700;z-index:999;' +

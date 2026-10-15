@@ -105,6 +105,22 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **Gamepad support** — new `ui/gamepad.mjs` (browser Gamepad API, standard mapping; Xbox,
+  PlayStation, Switch Pro and most Bluetooth pads; web addition, the QML client has none). Two
+  modes switched automatically. *Table* (game screen, nothing open): the action-bar buttons are
+  clicked exactly as with the mouse — A Check/Call, X Fold, Y Bet/Raise, Y held 600 ms All-In (or
+  Show) with a fill gauge, LT/RT step the slider (accelerating), LB/RB 1/3 · 1/2 · Pot, D-pad ←/→
+  playing mode, ↑ browse the table, Start settings, Select chat; a double rumble on my turn.
+  *Navigation* (outside the table, or any keynav surface open — table buttons are then dead): the
+  D-pad / left stick moves a focus ring chosen by `ui/spatial-nav.mjs` (pure geometry, unit-tested)
+  inside the topmost surface (`keynav.topSurfaceEl()`, new), A activates, B = Escape
+  (`closeTop`) and never folds, ←/→ change lists, sliders and numbers, LB/RB and LT/RT switch the
+  first / second tab list, the right stick scrolls; text fields are only focused on A (no
+  on-screen keyboard on the way through). Glyphs of the detected pad (Xbox / PlayStation /
+  Nintendo) replace the key badges while the pad is the last input used. Options `pad_on`,
+  `pad_rumble`, `pad_nintendo` (A/B swapped) in Advanced options → User interface → Gamepad; new
+  help section « Gamepad », both in the 83 languages; `test-spatial-nav`, `test-gamepad-browser`
+  (`web.79`).
 - **`/competitions` page** — BBC, WeCup and Monthly Cup in the 83 languages (`seo-i18n/competitions.js`):
   what each one is, how to take part, links to calendars, results and rankings, and the coming
   dates read from the community-events relay (plus the WeCup daily game, 22:00 Berlin), never

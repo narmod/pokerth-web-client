@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'Luk det forreste vindue (også Androids Tilbage-knap)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Bordlisten i lobbyen (nås med Tab): vælg et bord · deltag'],
             ['A–Z · 0–9', 'Lobby: tastning uden for et tekstfelt skriver direkte i chatten']],
-          note: 'På Android lukker systemets Tilbage-knap/-bevægelse vinduer som Esc i stedet for at forlade spillet (kan indstilles). iOS har ingen tilsvarende systemknap — brug \u2715 i hvert vindue.' }
+          note: 'På Android lukker systemets Tilbage-knap/-bevægelse vinduer som Esc i stedet for at forlade spillet (kan indstilles). iOS har ingen tilsvarende systemknap — brug \u2715 i hvert vindue.' },
+        { id: 'gamepad', t: "Gamepad",
+          b: ["En spillecontroller virker i browsere, der understøtter gamepads (Xbox, PlayStation, Switch Pro og de fleste Bluetooth-controllere) — tryk én gang på en af dens knapper, så browseren opdager den. Ved bordet spiller knapperne; så snart et vindue eller en menu er åben, og overalt uden for bordet, bruges de i stedet til at bevæge sig rundt på skærmen:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — hold den nede for All-In"],
+            ["LT / RT", "Sænk / hæv indsatsbeløbet"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Spilletilstand: Manuel · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Gennemse bordet (topbjælke, pladser); B eller din næste tur giver knapperne tilbage til spillet"],
+            ["Start / Select", "Indstillinger · Chat"],
+            ["D-pad / LS", "Menuer: gå fra punkt til punkt"],
+            ["A / B", "Menuer: vælg · tilbage (som Esc)"],
+            ["LB / RB", "Menuer: forrige / næste fane"],
+            ["RS", "Rul"]],
+          note: "Bogstaverne følger Xbox-layoutet: på en PlayStation-controller er ✕ = A, ○ = B, □ = X, △ = Y, og handlingsknapperne viser symbolerne fra din egen controller. B laver aldrig Fold. I en liste, en skyder eller et talfelt ændrer ← / → værdien. Tekstfelter kræver stadig et tastatur: A sætter markøren i feltet, hvilket åbner skærmtastaturet på telefoner og tablets. Indstillinger: Avancerede indstillinger → Brugergrænseflade → Gamepad." }
       ]
     }
   ]

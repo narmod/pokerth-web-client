@@ -314,7 +314,23 @@ export const help = {
             ['Esc', 'Aizvērt augšējo logu (arī Android poga “Atpakaļ”)'],
             ['↑ ↓ · ↵', 'Vestibila galdu saraksts (nokļūsti tur ar Tab): izvēlies galdu · pievienojies tam'],
             ['A–Z · 0–9', 'Vestibils: rakstīšana ārpus teksta lauka raksta tieši tērzēšanā']],
-          note: 'Android ierīcēs sistēmas poga vai žests “Atpakaļ” aizver logus tāpat kā Escape, nevis pamet spēli (konfigurējams opcijās). iOS līdzvērtīgas sistēmas pogas nav — izmanto katra loga ✕.' }
+          note: 'Android ierīcēs sistēmas poga vai žests “Atpakaļ” aizver logus tāpat kā Escape, nevis pamet spēli (konfigurējams opcijās). iOS līdzvērtīgas sistēmas pogas nav — izmanto katra loga ✕.' },
+        { id: 'gamepad', t: "Spēļu pults",
+          b: ["Spēļu pults darbojas pārlūkos, kas tās atbalsta (Xbox, PlayStation, Switch Pro un lielākā daļa Bluetooth pultu) — vienreiz nospied jebkuru tās pogu, lai pārlūks to atpazītu. Pie galda tās pogas spēlē; tiklīdz ir atvērts logs vai izvēlne, un visur ārpus galda, ar tām pārvietojas pa ekrānu:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — turi, lai ietu All-In"],
+            ["LT / RT", "Samazināt / palielināt likmes summu"],
+            ["LB / RB", "Likme 1/3 · 1/2 · Banka"],
+            ["← / →", "Spēles režīms: Manuāli · Automātiski Check/Call · Automātiski Check/Fold"],
+            ["↑", "Pārlūkot galdu (galvene, vietas); B vai tavs nākamais gājiens atdod pogas spēlei"],
+            ["Start / Select", "Iestatījumi · Tērzēšana"],
+            ["D-pad / LS", "Izvēlnes: pāriet no viena elementa uz citu"],
+            ["A / B", "Izvēlnes: izvēlēties · atpakaļ (kā Esc)"],
+            ["LB / RB", "Izvēlnes: iepriekšējā / nākamā cilne"],
+            ["RS", "Ritināt"]],
+          note: "Burti atbilst Xbox izkārtojumam: PlayStation pultī ✕ = A, ○ = B, □ = X, △ = Y, un darbību pogas rāda tavas pults simbolus. B nekad neveic Fold. Sarakstā, slīdnī vai skaitļa laukā ← / → maina vērtību. Teksta laukiem joprojām vajag tastatūru: A ieliek kursoru laukā, un tālruņos un planšetēs tad atveras ekrāna tastatūra. Iestatījumi: Papildu opcijas → Lietotāja saskarne → Spēļu pults." }
       ]
     }
   ]

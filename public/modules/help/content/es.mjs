@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'Cerrar la ventana en primer plano (también el botón Atrás de Android)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Lista de mesas del lobby (se llega con Tab): elegir una mesa \u00b7 unirse'],
             ['A–Z · 0–9', 'Vestíbulo: escribir fuera de un campo de texto escribe directamente en el chat']],
-          note: 'En Android, el botón/gesto Atrás del sistema cierra las ventanas como Esc en lugar de abandonar la partida (configurable en las opciones). iOS no tiene un botón de sistema equivalente — usa el \u2715 de cada ventana.' }
+          note: 'En Android, el botón/gesto Atrás del sistema cierra las ventanas como Esc en lugar de abandonar la partida (configurable en las opciones). iOS no tiene un botón de sistema equivalente — usa el \u2715 de cada ventana.' },
+        { id: 'gamepad', t: "Mando",
+          b: ["Un mando de juego funciona en los navegadores compatibles con gamepads (Xbox, PlayStation, Switch Pro y la mayoría de mandos Bluetooth) — pulsa una vez cualquiera de sus botones para que el navegador lo detecte. En la mesa, sus botones juegan; en cuanto se abre una ventana o un menú, y en cualquier sitio fuera de la mesa, sirven en cambio para moverse por la pantalla:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — mantenlo pulsado para ir All-In"],
+            ["LT / RT", "Bajar / subir el importe de la apuesta"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Modo de juego: Manual · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Recorrer la mesa (cabecera, asientos); B o tu próximo turno devuelven los botones al juego"],
+            ["Start / Select", "Ajustes · Chat"],
+            ["D-pad / LS", "Menús: pasar de un elemento a otro"],
+            ["A / B", "Menús: elegir · volver (como Esc)"],
+            ["LB / RB", "Menús: pestaña anterior / siguiente"],
+            ["RS", "Desplazar"]],
+          note: "Las letras siguen la disposición Xbox: en un mando PlayStation ✕ = A, ○ = B, □ = X, △ = Y, y los botones de acción muestran los símbolos de tu propio mando. B nunca hace Fold. En una lista, un deslizador o un campo numérico, ← / → cambian el valor. Los campos de texto siguen necesitando un teclado: A coloca el cursor en el campo, lo que abre el teclado en pantalla en móviles y tabletas. Ajustes: Opciones avanzadas → Interfaz de usuario → Mando." }
       ]
     }
   ]

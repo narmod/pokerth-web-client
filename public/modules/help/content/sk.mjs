@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'Zavrieť vrchné okno (aj tlačidlo Späť na Androide)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Zoznam stolov v lobby (prejdete naň Tabom): výber stola \u00b7 pripojenie'],
             ['A–Z · 0–9', 'Lobby: písanie mimo textového poľa píše rovno do chatu']],
-          note: 'Na Androide systémové tlačidlo/gesto Späť zatvára okná ako Esc, namiesto toho, aby opustilo hru (nastaviteľné v možnostiach). iOS obdobné systémové tlačidlo nemá — použi \u2715 každého okna.' }
+          note: 'Na Androide systémové tlačidlo/gesto Späť zatvára okná ako Esc, namiesto toho, aby opustilo hru (nastaviteľné v možnostiach). iOS obdobné systémové tlačidlo nemá — použi \u2715 každého okna.' },
+        { id: 'gamepad', t: "Gamepad",
+          b: ["Herný ovládač funguje v prehliadačoch, ktoré podporujú gamepady (Xbox, PlayStation, Switch Pro a väčšina Bluetooth ovládačov) — raz stlač ktorékoľvek jeho tlačidlo, aby ho prehliadač rozpoznal. Pri stole jeho tlačidlá hrajú; hneď ako je otvorené okno alebo ponuka, a všade mimo stola, slúžia na pohyb po obrazovke:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — podrž pre All-In"],
+            ["LT / RT", "Znížiť / zvýšiť výšku stávky"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Herný režim: Ručne · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Prechádzať stôl (hlavička, miesta); B alebo tvoj ďalší ťah vráti tlačidlá hre"],
+            ["Start / Select", "Nastavenia · Chat"],
+            ["D-pad / LS", "Ponuky: prechod z položky na položku"],
+            ["A / B", "Ponuky: vybrať · späť (ako Esc)"],
+            ["LB / RB", "Ponuky: predchádzajúca / ďalšia karta"],
+            ["RS", "Posúvanie"]],
+          note: "Písmená zodpovedajú rozloženiu Xbox: na ovládači PlayStation ✕ = A, ○ = B, □ = X, △ = Y a akčné tlačidlá zobrazujú symboly tvojho ovládača. B nikdy nerobí Fold. V zozname, na posuvníku alebo v číselnom poli ← / → menia hodnotu. Textové polia stále potrebujú klávesnicu: A umiestni kurzor do poľa, čím sa na telefónoch a tabletoch otvorí klávesnica na obrazovke. Nastavenia: Pokročilé možnosti → Používateľské rozhranie → Gamepad." }
       ]
     }
   ]

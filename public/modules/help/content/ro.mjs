@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'Închide fereastra din față (și butonul Înapoi pe Android)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Lista meselor din lobby (se ajunge cu Tab): alege o masă \u00b7 alătură-te'],
             ['A–Z · 0–9', 'Lobby: tastarea în afara unui câmp de text scrie direct în chat']],
-          note: 'Pe Android, butonul/gestul Înapoi al sistemului închide ferestrele ca Esc, în loc să părăsească partida (configurabil din opțiuni). iOS nu are un buton de sistem echivalent — folosește \u2715 al fiecărei ferestre.' }
+          note: 'Pe Android, butonul/gestul Înapoi al sistemului închide ferestrele ca Esc, în loc să părăsească partida (configurabil din opțiuni). iOS nu are un buton de sistem echivalent — folosește \u2715 al fiecărei ferestre.' },
+        { id: 'gamepad', t: "Gamepad",
+          b: ["Un controler de joc funcționează în browserele care suportă gamepaduri (Xbox, PlayStation, Switch Pro și majoritatea gamepadurilor Bluetooth) — apasă o dată oricare dintre butoanele lui ca browserul să-l detecteze. La masă, butoanele lui joacă; de îndată ce e deschisă o fereastră sau un meniu, și oriunde în afara mesei, ele servesc la deplasarea pe ecran:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — ține apăsat pentru All-In"],
+            ["LT / RT", "Micșorează / mărește suma pariului"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Modul de joc: Manual · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Parcurge masa (antet, locuri); B sau următorul tău rând dă butoanele înapoi jocului"],
+            ["Start / Select", "Setări · Chat"],
+            ["D-pad / LS", "Meniuri: treci de la un element la altul"],
+            ["A / B", "Meniuri: alege · înapoi (ca Esc)"],
+            ["LB / RB", "Meniuri: fila anterioară / următoare"],
+            ["RS", "Derulare"]],
+          note: "Literele urmează aranjamentul Xbox: pe un gamepad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, iar butoanele de acțiune afișează simbolurile gamepadului tău. B nu face niciodată Fold. Într-o listă, un glisor sau un câmp numeric, ← / → schimbă valoarea. Câmpurile de text au în continuare nevoie de tastatură: A pune cursorul în câmp, ceea ce deschide tastatura de pe ecran pe telefoane și tablete. Setări: Opțiuni avansate → Interfața utilizatorului → Gamepad." }
       ]
     }
   ]

@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'Dùin an uinneag aghaidh (agus putan Air ais Android)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Liosta nam bòrd san lobaidh (le Tab): tagh bòrd \u00b7 gabh pàirt'],
             ['A–Z · 0–9', 'Lobaidh: sgrìobhaidh clò-sgrìobhadh taobh a-muigh raon teacsa dìreach sa chabadaich']],
-          note: 'Air Android, dùinidh putan/gluasad Air ais an t-siostaim uinneagan mar Esc, seach a bhith a\u2019 fàgail a\u2019 gheama (gabhaidh a rèiteachadh sna roghainnean). Chan eil putan siostaim co-ionann aig iOS — cleachd an \u2715 aig gach uinneig.' }
+          note: 'Air Android, dùinidh putan/gluasad Air ais an t-siostaim uinneagan mar Esc, seach a bhith a\u2019 fàgail a\u2019 gheama (gabhaidh a rèiteachadh sna roghainnean). Chan eil putan siostaim co-ionann aig iOS — cleachd an \u2715 aig gach uinneig.' },
+        { id: 'gamepad', t: "Pad geama",
+          b: ["Obraichidh smachdaire geama sna brabhsairean a chuireas taic ri padaichean geama (Xbox, PlayStation, Switch Pro agus a’ mhòr-chuid de phadaichean Bluetooth) — brùth putan sam bith air aon turas gus an aithnich am brabhsair e. Aig a’ bhòrd, cluichidh na putanan aige; cho luath ’s a bhios uinneag no clàr-taice fosgailte, agus anns gach àite taobh a-muigh a’ bhùird, gluaisidh iad air feadh na sgrìn an àite sin:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — cum sìos e airson All-In"],
+            ["LT / RT", "Lùghdaich / meudaich suim a’ gheall"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Modh cluiche: Le làimh · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Rùraich am bòrd (bann-cinn, suidheachain); bheir B no an ath thuras agad na putanan air ais dhan gheama"],
+            ["Start / Select", "Roghainnean · Cabadaich"],
+            ["D-pad / LS", "Clàran-taice: gluais o nì gu nì"],
+            ["A / B", "Clàran-taice: tagh · air ais (mar Esc)"],
+            ["LB / RB", "Clàran-taice: an taba roimhe / an ath thaba"],
+            ["RS", "Sgrolaich"]],
+          note: "Leanaidh na litrichean co-dhealbhachd Xbox: air pad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, agus seallaidh na putanan gnìomha samhlaidhean a’ phad agad fhèin. Cha dèan B Fold a-chaoidh. Ann an liosta, sleamhnachan no raon àireimh, atharraichidh ← / → an luach. Feumaidh raointean teacsa meur-chlàr fhathast: cuiridh A an cùrsair san raon, agus fosglaidh sin am meur-chlàr air an sgrìn air fònaichean is tablaidean. Roghainnean: Roghainnean adhartach → Eadar-aghaidh a’ chleachdaiche → Pad geama." }
       ]
     }
   ]

@@ -30,7 +30,9 @@ o += help.chapters.map(c => {
       if (k === 'id') continue;
       if (k === 't' || k === 'note') parts.push(`          ${k}: ${J(T(p + '|' + k))}`);
       else if (k === 'b' || k === 'list') parts.push(`          ${k}: [\n` + sec[k].map((_, i) => `            ${J(T(p + '|' + k + i))}`).join(',\n') + ']');
-      else if (k === 'keys') parts.push('          keys: [\n' + sec[k].map((v, i) => `            [${J(v[0])}, ${J(T(p + '|keys' + i))}]`).join(',\n') + ']');
+      // help-dump shows each key name as « label   ⟦key⟧ » for context; the
+      // marker is dropped here if a translation kept it.
+      else if (k === 'keys') parts.push('          keys: [\n' + sec[k].map((v, i) => `            [${J(v[0])}, ${J(T(p + '|keys' + i).replace(/\s*⟦[^⟧]*⟧\s*$/, ''))}]`).join(',\n') + ']');
       else die('unknown help field ' + p + '.' + k);
     }
     return `        { id: ${J(sec.id)},\n` + parts.join(',\n') + ' }';

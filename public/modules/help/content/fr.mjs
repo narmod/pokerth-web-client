@@ -308,7 +308,23 @@ export const help = {
             ['Échap', 'Fermer la fenêtre au premier plan (aussi le bouton Retour Android)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Liste des tables du lobby (atteinte avec Tab) : choisir une table \u00b7 la rejoindre'],
             ['A–Z · 0–9', 'Lobby : taper hors d’un champ de texte écrit directement dans le chat']],
-          note: 'Sur Android, le bouton/geste Retour du système ferme les fenêtres comme Échap au lieu de quitter la partie (configurable dans les options). iOS n\u2019a pas de bouton système équivalent — utilise le \u2715 de chaque fenêtre.' }
+          note: 'Sur Android, le bouton/geste Retour du système ferme les fenêtres comme Échap au lieu de quitter la partie (configurable dans les options). iOS n\u2019a pas de bouton système équivalent — utilise le \u2715 de chaque fenêtre.' },
+        { id: 'gamepad', t: "Manette",
+          b: ["Une manette de jeu fonctionne dans les navigateurs qui les prennent en charge (Xbox, PlayStation, Switch Pro et la plupart des manettes Bluetooth) — appuie une fois sur un de ses boutons pour que le navigateur la détecte. À la table, ses boutons jouent ; dès qu’une fenêtre ou un menu est ouvert, et partout ailleurs qu’à la table, ils servent à se déplacer dans l’écran :"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — maintenir pour faire All-In"],
+            ["LT / RT", "Baisser / augmenter le montant de la mise"],
+            ["LB / RB", "Mise 1/3 · 1/2 · Pot"],
+            ["← / →", "Mode de jeu : Manuel · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Parcourir la table (en-tête, sièges) ; B ou ton prochain tour rend les boutons au jeu"],
+            ["Start / Select", "Réglages · Chat"],
+            ["D-pad / LS", "Menus : passer d’un élément à l’autre"],
+            ["A / B", "Menus : choisir · retour (comme Échap)"],
+            ["LB / RB", "Menus : onglet précédent / suivant"],
+            ["RS", "Faire défiler"]],
+          note: "Les lettres suivent la disposition Xbox : sur une manette PlayStation, ✕ = A, ○ = B, □ = X, △ = Y, et les boutons d’action affichent les symboles de ta manette. B ne fait jamais Fold. Dans une liste, un curseur ou un champ numérique, ← / → changent la valeur. Les champs de texte demandent toujours un clavier : A place le curseur dans le champ, ce qui ouvre le clavier à l’écran sur téléphone et tablette. Réglages : Options avancées → Interface utilisateur → Manette." }
       ]
     }
   ]

@@ -310,7 +310,23 @@ export const help = {
             ['Esc', 'Funga dirisha la juu kabisa (pia kitufe cha Kurudi cha Android)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Orodha ya meza kwenye ukumbi (fika kwa Tab): chagua meza \u00b7 jiunge'],
             ['A–Z · 0–9', 'Ukumbi: kuandika nje ya kisanduku cha maandishi huandika moja kwa moja kwenye chati']],
-          note: 'Kwenye Android, kitufe/ishara ya Kurudi ya mfumo hufunga madirisha kama Escape badala ya kuondoka mchezoni (inasanidika kwenye chaguo). iOS haina kitufe cha mfumo sawa \u2014 tumia \u2715 ya kila dirisha.' }
+          note: 'Kwenye Android, kitufe/ishara ya Kurudi ya mfumo hufunga madirisha kama Escape badala ya kuondoka mchezoni (inasanidika kwenye chaguo). iOS haina kitufe cha mfumo sawa \u2014 tumia \u2715 ya kila dirisha.' },
+        { id: 'gamepad', t: "Kidhibiti cha mchezo",
+          b: ["Kidhibiti cha mchezo hufanya kazi kwenye vivinjari vinavyotumia gamepad (Xbox, PlayStation, Switch Pro na vidhibiti vingi vya Bluetooth) — bonyeza kitufe chake chochote mara moja ili kivinjari kikitambue. Mezani vitufe vyake vinacheza; mara dirisha au menyu inapofunguliwa, na kila mahali nje ya meza, vinatumika kusogea kwenye skrini:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — kishikilie ili kufanya All-In"],
+            ["LT / RT", "Punguza / ongeza kiasi cha dau"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Hali ya kucheza: Mwenyewe · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Vinjari meza (kichwa, viti); B au zamu yako ijayo hurudisha vitufe kwa mchezo"],
+            ["Start / Select", "Mipangilio · Chati"],
+            ["D-pad / LS", "Menyu: sogea kutoka kipengee hadi kipengee"],
+            ["A / B", "Menyu: chagua · rudi (kama Esc)"],
+            ["LB / RB", "Menyu: kichupo kilichotangulia / kinachofuata"],
+            ["RS", "Sogeza ukurasa"]],
+          note: "Herufi zinafuata mpangilio wa Xbox: kwenye kidhibiti cha PlayStation ✕ = A, ○ = B, □ = X, △ = Y, na vitufe vya vitendo vinaonyesha alama za kidhibiti chako. B haifanyi Fold kamwe. Kwenye orodha, kitelezi au sehemu ya nambari, ← / → hubadilisha thamani. Sehemu za maandishi bado zinahitaji kibodi: A huweka kishale ndani ya sehemu, jambo linalofungua kibodi ya skrini kwenye simu na kompyuta kibao. Mipangilio: Chaguo za kina → Kiolesura cha mtumiaji → Kidhibiti cha mchezo." }
       ]
     }
   ]

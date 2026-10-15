@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'Maak die voorste venster toe (ook Android se Terug-knoppie)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Tafellys in die voorportaal (bereik dit met Tab): kies \u2019n tafel \u00b7 sluit daarby aan'],
             ['A–Z · 0–9', 'Voorportaal: tik buite ’n teksveld skryf direk in die geselsie']],
-          note: 'Op Android maak die stelsel se Terug-knoppie/gebaar vensters toe soos Esc, eerder as om die spel te verlaat (in die opsies instelbaar). iOS het geen ekwivalente stelselknoppie nie — gebruik elke venster se \u2715.' }
+          note: 'Op Android maak die stelsel se Terug-knoppie/gebaar vensters toe soos Esc, eerder as om die spel te verlaat (in die opsies instelbaar). iOS het geen ekwivalente stelselknoppie nie — gebruik elke venster se \u2715.' },
+        { id: 'gamepad', t: "Spelbeheerder",
+          b: ["’n Spelbeheerder werk in blaaiers wat gamepads ondersteun (Xbox, PlayStation, Switch Pro en die meeste Bluetooth-beheerders) — druk een keer op enige van sy knoppies sodat die blaaier dit opspoor. By die tafel speel die knoppies; sodra ’n venster of kieslys oop is, en oral buite die tafel, beweeg hulle eerder oor die skerm:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — hou dit in vir All-In"],
+            ["LT / RT", "Verlaag / verhoog die insetbedrag"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Speelmodus: Handmatig · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Blaai deur die tafel (kopstrook, sitplekke); B of jou volgende beurt gee die knoppies terug aan die spel"],
+            ["Start / Select", "Instellings · Klets"],
+            ["D-pad / LS", "Kieslyste: beweeg van item tot item"],
+            ["A / B", "Kieslyste: kies · terug (soos Esc)"],
+            ["LB / RB", "Kieslyste: vorige / volgende oortjie"],
+            ["RS", "Rol"]],
+          note: "Die letters volg die Xbox-uitleg: op ’n PlayStation-beheerder is ✕ = A, ○ = B, □ = X, △ = Y, en die aksieknoppies wys die simbole van jou eie beheerder. B doen nooit Fold nie. In ’n lys, ’n skuifbalk of ’n getalveld verander ← / → die waarde. Teksvelde het steeds ’n sleutelbord nodig: A plaas die wyser in die veld, wat die skermsleutelbord op fone en tablette oopmaak. Instellings: Gevorderde opsies → Gebruikerskoppelvlak → Spelbeheerder." }
       ]
     }
   ]

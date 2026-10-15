@@ -310,7 +310,23 @@ export const help = {
             ['Esc', 'Isara ang pinakaitaas na window (pati ang Android Back button)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Listahan ng mesa sa lobby (gamitin ang Tab): pumili ng mesa \u00b7 sumali'],
             ['A–Z · 0–9', 'Lobby: ang pag-type sa labas ng text field ay direktang isinusulat sa chat']],
-          note: 'Sa Android, ang system Back button/gesture ay nagsasara ng mga window tulad ng Escape sa halip na umalis sa laro (naco-configure sa mga option). Walang katumbas na system button ang iOS \u2014 gamitin ang \u2715 ng bawat window.' }
+          note: 'Sa Android, ang system Back button/gesture ay nagsasara ng mga window tulad ng Escape sa halip na umalis sa laro (naco-configure sa mga option). Walang katumbas na system button ang iOS \u2014 gamitin ang \u2715 ng bawat window.' },
+        { id: 'gamepad', t: "Gamepad",
+          b: ["Gumagana ang game controller sa mga browser na sumusuporta sa gamepad (Xbox, PlayStation, Switch Pro at karamihan ng Bluetooth pad) — pindutin nang isang beses ang alinman sa mga button nito para ma-detect ito ng browser. Sa mesa, naglalaro ang mga button nito; kapag may bukas na window o menu, at saanman sa labas ng mesa, ginagamit naman ang mga ito para gumalaw sa screen:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — pindutin nang matagal para mag-All-In"],
+            ["LT / RT", "Babaan / taasan ang halaga ng taya"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Playing mode: Mano-mano · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Tingnan ang mesa (header, mga upuan); ibinabalik ng B o ng susunod mong turn ang mga button sa laro"],
+            ["Start / Select", "Mga setting · Chat"],
+            ["D-pad / LS", "Mga menu: lumipat mula sa isang item papunta sa iba"],
+            ["A / B", "Mga menu: pumili · bumalik (tulad ng Esc)"],
+            ["LB / RB", "Mga menu: nakaraan / susunod na tab"],
+            ["RS", "Mag-scroll"]],
+          note: "Sinusunod ng mga letra ang Xbox layout: sa PlayStation pad, ✕ = A, ○ = B, □ = X, △ = Y, at ipinapakita ng mga action button ang mga simbolo ng sarili mong pad. Hindi kailanman nagfo-Fold ang B. Sa listahan, slider o number field, binabago ng ← / → ang value. Kailangan pa rin ng keyboard ang mga text field: inilalagay ng A ang cursor sa field, na naglalabas ng on-screen keyboard sa mga phone at tablet. Mga setting: Mga advanced na option → User interface → Gamepad." }
       ]
     }
   ]

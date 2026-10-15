@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'A legfelső ablak bezárása (az Android Vissza gombja is)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Asztallista az előtérben (Tabbal érhető el): asztal választása \u00b7 csatlakozás'],
             ['A–Z · 0–9', 'Előcsarnok: szövegmezőn kívüli gépelés egyenesen a csevegésbe ír']],
-          note: 'Androidon a rendszer Vissza gombja/mozdulata az ablakokat zárja be, mint az Esc, ahelyett hogy kilépne a játszmából (a beállításokban konfigurálható). Az iOS-nek nincs megfelelő rendszergombja — használd minden ablak \u2715 jelét.' }
+          note: 'Androidon a rendszer Vissza gombja/mozdulata az ablakokat zárja be, mint az Esc, ahelyett hogy kilépne a játszmából (a beállításokban konfigurálható). Az iOS-nek nincs megfelelő rendszergombja — használd minden ablak \u2715 jelét.' },
+        { id: 'gamepad', t: "Kontroller",
+          b: ["A játékkontroller azokban a böngészőkben működik, amelyek támogatják a gamepadeket (Xbox, PlayStation, Switch Pro és a legtöbb Bluetooth-kontroller) — nyomd meg egyszer bármelyik gombját, hogy a böngésző felismerje. Az asztalnál a gombjai játszanak; amint egy ablak vagy menü nyitva van, és mindenhol az asztalon kívül, a képernyőn való mozgásra szolgálnak:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — nyomva tartva All-In"],
+            ["LT / RT", "A tét összegének csökkentése / növelése"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Játékmód: Kézi · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Az asztal bejárása (fejléc, helyek); a B vagy a következő köröd visszaadja a gombokat a játéknak"],
+            ["Start / Select", "Beállítások · Csevegés"],
+            ["D-pad / LS", "Menük: lépés elemről elemre"],
+            ["A / B", "Menük: kiválasztás · vissza (mint az Esc)"],
+            ["LB / RB", "Menük: előző / következő lap"],
+            ["RS", "Görgetés"]],
+          note: "A betűk az Xbox-kiosztást követik: PlayStation-kontrolleren ✕ = A, ○ = B, □ = X, △ = Y, és az akciógombok a saját kontrollered szimbólumait mutatják. A B soha nem Fold. Listában, csúszkán vagy számmezőben a ← / → módosítja az értéket. A szövegmezőkhöz továbbra is billentyűzet kell: az A a mezőbe teszi a kurzort, ami telefonon és tableten megnyitja a képernyő-billentyűzetet. Beállítások: Speciális beállítások → Felhasználói felület → Kontroller." }
       ]
     }
   ]

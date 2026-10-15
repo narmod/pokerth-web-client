@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'Pecha a xanela da fronte (tamén o botón Atrás de Android)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Lista de mesas do vestíbulo (chégase con Tab): escoller mesa \u00b7 unirse'],
             ['A–Z · 0–9', 'Vestíbulo: escribir fóra dun campo de texto escribe directamente no chat']],
-          note: 'En Android, o botón/xesto Atrás do sistema pecha as xanelas coma Esc, en vez de saír da partida (configurable nas opcións). O iOS non ten ningún botón de sistema equivalente — usa o \u2715 de cada xanela.' }
+          note: 'En Android, o botón/xesto Atrás do sistema pecha as xanelas coma Esc, en vez de saír da partida (configurable nas opcións). O iOS non ten ningún botón de sistema equivalente — usa o \u2715 de cada xanela.' },
+        { id: 'gamepad', t: "Mando",
+          b: ["Un mando de xogos funciona nos navegadores compatibles con mandos (Xbox, PlayStation, Switch Pro e a maioría dos mandos Bluetooth) — preme unha vez calquera dos seus botóns para que o navegador o detecte. Na mesa, os seus botóns xogan; en canto hai unha xanela ou un menú aberto, e en calquera lugar fóra da mesa, serven para moverse pola pantalla:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — mantelo premido para ir All-In"],
+            ["LT / RT", "Baixar / subir a cantidade da aposta"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Modo de xogo: Manual · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Percorrer a mesa (cabeceira, asentos); B ou a túa seguinte quenda devolven os botóns ao xogo"],
+            ["Start / Select", "Configuración · Chat"],
+            ["D-pad / LS", "Menús: pasar dun elemento a outro"],
+            ["A / B", "Menús: escoller · atrás (coma Esc)"],
+            ["LB / RB", "Menús: lapela anterior / seguinte"],
+            ["RS", "Desprazar"]],
+          note: "As letras seguen a disposición Xbox: nun mando PlayStation ✕ = A, ○ = B, □ = X, △ = Y, e os botóns de acción amosan os símbolos do teu propio mando. B nunca fai Fold. Nunha lista, un control desprazable ou un campo numérico, ← / → cambian o valor. Os campos de texto seguen precisando un teclado: A pon o cursor no campo, o que abre o teclado en pantalla en móbiles e tabletas. Configuración: Opcións avanzadas → Interface de usuario → Mando." }
       ]
     }
   ]

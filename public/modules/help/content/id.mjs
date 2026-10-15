@@ -310,7 +310,23 @@ export const help = {
             ['Esc', 'Tutup jendela teratas (juga tombol Kembali Android)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Daftar meja di lobi (capai dengan Tab): pilih meja \u00b7 bergabung'],
             ['A–Z · 0–9', 'Lobi: mengetik di luar kolom teks langsung menulis ke obrolan']],
-          note: 'Di Android, tombol/gestur Kembali sistem menutup jendela seperti Escape alih-alih meninggalkan permainan (dapat dikonfigurasi di opsi). iOS tidak punya tombol sistem setara \u2014 pakai \u2715 di setiap jendela.' }
+          note: 'Di Android, tombol/gestur Kembali sistem menutup jendela seperti Escape alih-alih meninggalkan permainan (dapat dikonfigurasi di opsi). iOS tidak punya tombol sistem setara \u2014 pakai \u2715 di setiap jendela.' },
+        { id: 'gamepad', t: "Gamepad",
+          b: ["Pengontrol game berfungsi di browser yang mendukung gamepad (Xbox, PlayStation, Switch Pro, dan sebagian besar pad Bluetooth) — tekan salah satu tombolnya sekali agar browser mendeteksinya. Di meja tombol-tombolnya bermain; begitu ada jendela atau menu yang terbuka, dan di mana pun di luar meja, tombol itu dipakai untuk bergerak di layar:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — tahan untuk All-In"],
+            ["LT / RT", "Turunkan / naikkan jumlah taruhan"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Mode bermain: Manual · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Jelajahi meja (header, kursi); B atau giliran Anda berikutnya mengembalikan tombol ke permainan"],
+            ["Start / Select", "Pengaturan · Chat"],
+            ["D-pad / LS", "Menu: pindah dari item ke item"],
+            ["A / B", "Menu: pilih · kembali (seperti Esc)"],
+            ["LB / RB", "Menu: tab sebelumnya / berikutnya"],
+            ["RS", "Gulir"]],
+          note: "Huruf mengikuti tata letak Xbox: pada pad PlayStation ✕ = A, ○ = B, □ = X, △ = Y, dan tombol aksi menampilkan simbol pad Anda sendiri. B tidak pernah Fold. Pada daftar, slider, atau kolom angka, ← / → mengubah nilainya. Kolom teks tetap memerlukan keyboard: A menaruh kursor di kolom, sehingga keyboard layar muncul di ponsel dan tablet. Pengaturan: Opsi lanjutan → Antarmuka pengguna → Gamepad." }
       ]
     }
   ]

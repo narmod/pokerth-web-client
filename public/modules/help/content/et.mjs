@@ -310,7 +310,23 @@ export const help = {
             ['Esc', 'Sulge pealmine aken (ka Androidi tagasi-nupp)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Fuajee laudade loend (jõuad sinna Tab-klahviga): vali laud \u00b7 liitu sellega'],
             ['A–Z · 0–9', 'Fuajee: tekstiväljast väljas trükkimine kirjutab otse vestlusesse']],
-          note: 'Androidis sulgeb süsteemi tagasi-nupp/-liigutus aknad nagu Escape, selle asemel et mängust lahkuda (valikutes seadistatav). iOS-is vastavat süsteeminuppu ei ole \u2014 kasuta iga akna nuppu \u2715.' }
+          note: 'Androidis sulgeb süsteemi tagasi-nupp/-liigutus aknad nagu Escape, selle asemel et mängust lahkuda (valikutes seadistatav). iOS-is vastavat süsteeminuppu ei ole \u2014 kasuta iga akna nuppu \u2715.' },
+        { id: 'gamepad', t: "Mängupult",
+          b: ["Mängupult töötab brauserites, mis toetavad mängupulte (Xbox, PlayStation, Switch Pro ja enamik Bluetoothi pulte) — vajuta korra ükskõik millist selle nuppu, et brauser selle tuvastaks. Laua taga nupud mängivad; niipea kui mõni aken või menüü on avatud, ja kõikjal väljaspool lauda, liigutavad nad hoopis ekraanil ringi:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — hoia all, et minna All-In"],
+            ["LT / RT", "Vähenda / suurenda panuse summat"],
+            ["LB / RB", "Panus 1/3 · 1/2 · pott"],
+            ["← / →", "Mängurežiim: Käsitsi · automaatne Check/Call · automaatne Check/Fold"],
+            ["↑", "Sirvi lauda (päis, kohad); B või sinu järgmine kord annab nupud mängule tagasi"],
+            ["Start / Select", "Seaded · Vestlus"],
+            ["D-pad / LS", "Menüüd: liigu elemendilt elemendile"],
+            ["A / B", "Menüüd: vali · tagasi (nagu Esc)"],
+            ["LB / RB", "Menüüd: eelmine / järgmine vahekaart"],
+            ["RS", "Kerimine"]],
+          note: "Tähed järgivad Xboxi paigutust: PlayStationi puldil ✕ = A, ○ = B, □ = X, △ = Y ning tegevusnupud näitavad sinu enda puldi sümboleid. B ei tee kunagi Fold. Loendis, liuguril või numbriväljal muudavad ← / → väärtust. Tekstiväljad vajavad endiselt klaviatuuri: A paneb kursori välja, mis avab telefonides ja tahvelarvutites ekraaniklaviatuuri. Seaded: Täpsemad valikud → Kasutajaliides → Mängupult." }
       ]
     }
   ]

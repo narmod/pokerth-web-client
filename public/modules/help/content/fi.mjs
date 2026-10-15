@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'Sulje päällimmäinen ikkuna (myös Androidin Takaisin-painike)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Aulan pöytälista (siirry Tabilla): valitse pöytä \u00b7 liity'],
             ['A–Z · 0–9', 'Aula: kirjoittaminen tekstikentän ulkopuolella menee suoraan keskusteluun']],
-          note: 'Androidilla järjestelmän Takaisin-painike/ele sulkee ikkunat kuten Esc sen sijaan, että poistuisi pelistä (säädettävissä asetuksista). iOS:llä ei ole vastaavaa järjestelmäpainiketta — käytä jokaisen ikkunan \u2715-merkkiä.' }
+          note: 'Androidilla järjestelmän Takaisin-painike/ele sulkee ikkunat kuten Esc sen sijaan, että poistuisi pelistä (säädettävissä asetuksista). iOS:llä ei ole vastaavaa järjestelmäpainiketta — käytä jokaisen ikkunan \u2715-merkkiä.' },
+        { id: 'gamepad', t: "Peliohjain",
+          b: ["Peliohjain toimii selaimissa, jotka tukevat peliohjaimia (Xbox, PlayStation, Switch Pro ja useimmat Bluetooth-ohjaimet) — paina kerran mitä tahansa sen painiketta, jotta selain tunnistaa sen. Pöydässä sen painikkeet pelaavat; heti kun ikkuna tai valikko on auki, ja kaikkialla pöydän ulkopuolella, niillä liikutaan sen sijaan näytöllä:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — pidä pohjassa All-In-siirtoon"],
+            ["LT / RT", "Pienennä / suurenna panoksen määrää"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Pelitila: Manuaalinen · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Selaa pöytää (yläpalkki, paikat); B tai seuraava vuorosi palauttaa painikkeet peliin"],
+            ["Start / Select", "Asetukset · Chat"],
+            ["D-pad / LS", "Valikot: siirry kohteesta toiseen"],
+            ["A / B", "Valikot: valitse · takaisin (kuten Esc)"],
+            ["LB / RB", "Valikot: edellinen / seuraava välilehti"],
+            ["RS", "Vieritä"]],
+          note: "Kirjaimet noudattavat Xbox-asettelua: PlayStation-ohjaimessa ✕ = A, ○ = B, □ = X, △ = Y, ja toimintopainikkeet näyttävät oman ohjaimesi symbolit. B ei koskaan tee Foldia. Listassa, liukusäätimessä tai numerokentässä ← / → muuttavat arvoa. Tekstikentät vaativat edelleen näppäimistön: A vie kohdistimen kenttään, mikä avaa puhelimissa ja tableteissa näyttönäppäimistön. Asetukset: Lisäasetukset → Käyttöliittymä → Peliohjain." }
       ]
     }
   ]

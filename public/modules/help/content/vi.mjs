@@ -308,7 +308,23 @@ export const help = {
             ['Esc', 'Đóng cửa sổ trên cùng (nút Quay lại của Android cũng vậy)'],
             ['\u2191 \u2193 \u00b7 \u21b5', 'Danh sách bàn ở sảnh (dùng Tab để tới): chọn bàn \u00b7 tham gia'],
             ['A–Z · 0–9', 'Sảnh: gõ phím bên ngoài ô nhập văn bản sẽ viết thẳng vào trò chuyện']],
-          note: 'Trên Android, nút/cử chỉ Quay lại của hệ thống đóng cửa sổ như Esc thay vì rời ván đấu (có thể chỉnh trong tùy chọn). iOS không có nút hệ thống tương đương — hãy dùng dấu \u2715 của từng cửa sổ.' }
+          note: 'Trên Android, nút/cử chỉ Quay lại của hệ thống đóng cửa sổ như Esc thay vì rời ván đấu (có thể chỉnh trong tùy chọn). iOS không có nút hệ thống tương đương — hãy dùng dấu \u2715 của từng cửa sổ.' },
+        { id: 'gamepad', t: "Tay cầm",
+          b: ["Tay cầm chơi game hoạt động trên các trình duyệt hỗ trợ gamepad (Xbox, PlayStation, Switch Pro và hầu hết tay cầm Bluetooth) — hãy nhấn một nút bất kỳ trên tay cầm một lần để trình duyệt nhận ra nó. Tại bàn, các nút dùng để chơi; ngay khi một cửa sổ hoặc menu được mở, và ở mọi nơi ngoài bàn chơi, chúng dùng để di chuyển trên màn hình:"],
+          keys: [
+            ["A", "Check / Call"],
+            ["X", "Fold"],
+            ["Y", "Bet / Raise — giữ để All-In"],
+            ["LT / RT", "Giảm / tăng mức cược"],
+            ["LB / RB", "Bet 1/3 · 1/2 · Pot"],
+            ["← / →", "Chế độ chơi: Thủ công · Auto Check/Call · Auto Check/Fold"],
+            ["↑", "Duyệt bàn (thanh tiêu đề, ghế); B hoặc lượt tiếp theo của bạn sẽ trả các nút về cho trò chơi"],
+            ["Start / Select", "Cài đặt · Trò chuyện"],
+            ["D-pad / LS", "Menu: chuyển từ mục này sang mục khác"],
+            ["A / B", "Menu: chọn · quay lại (như Esc)"],
+            ["LB / RB", "Menu: thẻ trước / thẻ sau"],
+            ["RS", "Cuộn"]],
+          note: "Các chữ cái theo bố cục Xbox: trên tay cầm PlayStation ✕ = A, ○ = B, □ = X, △ = Y, và các nút hành động hiển thị ký hiệu của chính tay cầm của bạn. B không bao giờ Fold. Trong danh sách, thanh trượt hoặc ô số, ← / → thay đổi giá trị. Ô văn bản vẫn cần bàn phím: A đặt con trỏ vào ô, việc này mở bàn phím ảo trên điện thoại và máy tính bảng. Cài đặt: Tùy chọn nâng cao → Giao diện người dùng → Tay cầm." }
       ]
     }
   ]
