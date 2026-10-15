@@ -339,6 +339,12 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Bet keypad keys finger-sized again on very low landscape phones** — the action bar zoom of web.227
+  (`--abar-kp` = h/380) also shrank the keypad: 29 px keys drawn 26 px tall on an iPhone in landscape
+  (734×343). Under `data-abar-short` the keys and Cancel / OK are lengthened by 1/`--abar-kp` (28 px
+  on screen minimum). The CI had missed it: WebKit returns zoomed boxes in their unzoomed coordinates,
+  which also made the action bar look off-screen there; the test harness now measures drawn boxes
+  (`installVisualRect`). (2.1.10-web.77)
 - **Community cards sized like the QML client with few players (wide tables)** — the landscape
   `communityScale` measured the painted plates: it ignored the QML floor that never counts the top of
   the ring below 0.13 × the zone height (`topOpponentBottomY`), and dropped the bet strip that the QML

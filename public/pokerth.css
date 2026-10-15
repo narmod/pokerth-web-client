@@ -13452,6 +13452,16 @@ html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .act-buttons
    réduite d'un bloc, polices comprises (--abar-kp = h/380, plancher 0.75,
    posé par updateBottomLayout) pour ne jamais sortir de l'écran (web.227). */
 html[data-abar-short="1"] #s-game#s-game .my-zone { zoom: var(--abar-kp, 1); }
+/* Keypad keys keep a 28px touch height on screen under that zoom (web.77): the
+   29px keys of the iPhone landscape keypad came out 26px tall at --abar-kp
+   0.903 (734x343). Each key is lengthened by 1/--abar-kp instead - the panel
+   keeps its proportions, only the key rows grow (≈ 3px each at 343px high). */
+html[data-abar-short="1"] #s-game#s-game .my-zone .action-grid.kp-open > .bet-keypad .kp-grid button {
+  height: max(29px, calc(28px / var(--abar-kp, 1))); min-height: max(29px, calc(28px / var(--abar-kp, 1)));
+}
+html[data-abar-short="1"] #s-game#s-game .my-zone .action-grid.kp-open > .bet-keypad .kp-foot .btn-action {
+  height: max(29px, calc(28px / var(--abar-kp, 1))) !important; min-height: max(29px, calc(28px / var(--abar-kp, 1))) !important; max-height: none !important;
+}
 
 /* ══ LAN DIRECTORY (modules/ui/lan-directory.mjs) ══
    Login form, LAN mode: the « LAN server » drop-down of the servers approved
