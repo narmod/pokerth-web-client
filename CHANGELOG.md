@@ -24,7 +24,7 @@ highlights below.
   server, now with « Propose my server »). English home page served with its full SEO title; home JSON-LD typed
   `WebApplication` + `VideoGame` (genre, play modes, 2–10 players, platforms, licence, author, upstream
   repo); `llms.txt` rewritten as quick, factual answers with version and last-update date; content-page
-  nav and call to action localized (`seo-i18n/nav.js`); sharper English meta and manifest descriptions (`web.74`).
+  nav and call to action localized (`seo-i18n/nav.js`); sharper English meta and manifest descriptions (`web.74`). Home JSON-LD: explicit `operatingSystem` list and `publisher` (`web.76`).
 - **The client follows PokerTH 2.1.10** — the build ID sent to the server and the
   build-ID fallbacks in `net/messages.mjs` and `proto/index.mjs` move to 2.1.10 (`web.0`).
 - **A shorter changelog in « About »** — the « Web client » tab now shows this file, one

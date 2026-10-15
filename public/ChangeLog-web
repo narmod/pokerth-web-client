@@ -1,3 +1,6 @@
+2026-10-15 version 2.1.10-web.76:
+- improvement: search engines now read the supported systems (Windows, macOS, Linux, ChromeOS, Android, iOS) and the publisher of the web client
+
 2026-10-15 version 2.1.10-web.75:
 - new: a « Competitions » page (83 languages) presents the BBC, the WeCup and the Monthly Cup — what they are, how to take part, links to their calendars, results and rankings — with the coming dates, including the WeCup daily game
 
