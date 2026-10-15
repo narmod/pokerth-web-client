@@ -165,10 +165,15 @@ acts after a short notice, calling it off if someone connects in the meantime.
 - **The game server needs no code changes**: Qt/QML clients keep connecting to the public
   TCP port as always; the proxy is just another local client as far as it is concerned. The
   only server-side setting this install asks for is the rate-limit exemption in section 6.
-- **Longer term**: if a native WebSocket listener is ever added to the PokerTH server
-  itself, the proxy could be dropped — until then, this co-hosted bridge is the
-  zero-upstream-work path, and the session-grace behaviour is a feature the direct
-  `/pthlive` endpoint does not provide.
+- **Native WebSocket listener**: the dedicated server already has one — `ServerUseWebSocket`
+  (port `ServerWebSocketPort`, default 7233), `wss://` with `ServerUseWebSocketTls` (same
+  certificate as the game port), optional `ServerWebSocketResource` / `ServerWebSocketOrigin`
+  filters; see upstream `docs/server_setup_howto.txt` §5.3. The *Direct WS* transport speaks
+  that same raw-protobuf WebSocket protocol (no length prefix). The proxy remains useful on
+  top of it: it adds the session-grace / buffered-reconnect behaviour the direct endpoint does
+  not provide, and it is the only way to reach a server without a browser-trusted certificate
+  — browsers cannot use the TLS key pinning of the desktop clients, so `wss://` straight to a
+  self-signed server is refused.
 
 ## Embedding the spectator view on the website
 
