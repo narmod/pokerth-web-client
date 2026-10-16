@@ -183,7 +183,20 @@ function videopoker(c) {
     + ace(292, 128, 15, 'wave', limbOf(c));
 }
 
-const SCENES = { 'ace-runner': runner, house, solitaire, videopoker };
+function whowins(c) {
+  const board = [['K', 'h'], ['9', 'h'], ['4', 'c'], ['K', 's'], ['2', 'h']];
+  let s = feltBg(c, 'wwf');
+  s += '<rect x="60" y="10" width="200" height="5" rx="2.5" fill="rgba(0,0,0,.3)"/><rect x="60" y="10" width="120" height="5" rx="2.5" fill="#e0a33a"/>';
+  board.forEach(([r, su], i) => { s += card(103 + i * 23, 30, 21, r, su); });
+  s += '<rect x="14" y="78" width="66" height="44" rx="8" fill="rgba(216,178,90,.3)" stroke="#f0c75e" stroke-width="1.6"/>' + card(20, 82, 25, 'A', 'h') + card(49, 82, 25, 'J', 'h');
+  s += '<rect x="240" y="78" width="66" height="44" rx="8" fill="rgba(0,0,0,.2)"/>' + card(246, 82, 25, 'K', 'd') + card(275, 82, 25, 'Q', 'c');
+  s += '<text x="160" y="96" font-size="22" ' + TXT + ' text-anchor="middle" fill="#7ee2a0">✓</text>';
+  s += '<rect x="122" y="108" width="76" height="20" rx="8" fill="rgba(11,18,16,.55)" stroke="rgba(245,240,227,.55)"/><text x="160" y="122" font-size="9" ' + TXT + ' text-anchor="middle" fill="#f5f0e3">SPLIT</text>';
+  s += '<text x="47" y="74" font-size="8" ' + TXT + ' text-anchor="middle" fill="#f5d77a">FLUSH</text><text x="273" y="74" font-size="8" ' + TXT + ' text-anchor="middle" fill="rgba(245,240,227,.75)">TRIPS</text>';
+  return s;
+}
+
+const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins };
 
 /** The cover picture of game `id` for the light or dark theme. */
 export function art(id, light) {

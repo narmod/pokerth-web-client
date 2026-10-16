@@ -111,4 +111,8 @@ export const ACHIEVEMENTS = [
   // au Vidéo Poker du jeu caché (modules/games/videopoker.mjs).
   { id: 'videopoker',    icon: '🎰', cat: CATS.secret, when: 'always',
     test: () => false },
+  // Débloqué par grantSecret('whowins') : 20 bonnes réponses dans une partie
+  // de « Qui gagne ? » (modules/games/whowins.mjs).
+  { id: 'whowins',       icon: '⚖️', cat: CATS.secret, when: 'always',
+    test: () => false },
 ];

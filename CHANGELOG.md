@@ -105,6 +105,10 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **Who Wins? in the arcade** (`web.92`) — `games/whowins.mjs`: a Hold'em board and two hands, tap the winner or
+  Split before the bar runs out (9 s down to 3.5 s), three hearts; deals get harder (same-kind showdowns,
+  split pots from the third level, `makeDeal`), each answer names both hands and lights the winning five;
+  secret trophy at 20 right answers.
 - **Video Poker in the arcade** (`web.91`) — `games/videopoker.mjs`: Jacks or Better (9/6 paytable, bet 5),
   20 hands from 100 credits, daily challenge (decks seeded by day and hand, `games/deal.mjs`) or free game,
   double or nothing against the Ace (up to 5 times), secret trophy at three doubles in a row. Card games

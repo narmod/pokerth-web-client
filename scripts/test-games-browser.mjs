@@ -60,7 +60,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   }));
   ok(st.open && st.ace && st.page && st.title === 'Arcade', label + ': the arcade page opens with the Ace');
   ok(st.back && st.menu, label + ': with the header of the other pages (back, ⚙ menu)');
-  ok(st.tiles.join('|') === 'Ace Runner|Château de cartes|Poker Solitaire|Vidéo Poker', label + ': it lists the games (' + st.tiles.join(', ') + ')');
+  ok(st.tiles.join('|') === 'Ace Runner|Château de cartes|Poker Solitaire|Vidéo Poker|Qui gagne ?', label + ': it lists the games (' + st.tiles.join(', ') + ')');
   ok(st.arts === st.tiles.length, label + ': every game has its picture (' + st.arts + ')');
   ok(st.nick === 'Narmod' && st.stored === 'Narmod', label + ': the real nickname is back (field ' + st.nick + ', stored ' + st.stored + ')');
   ok(st.pad === 'arcade', label + ': the gamepad navigation steps aside');
@@ -190,6 +190,33 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   if (vp2.st === 'win') { await pg.keyboard.press('ArrowDown'); await sleep(300); }
   const vp3 = await pg.evaluate(() => ({ st: window.__pthVP.state(), cr: +document.querySelector('#pth-game .vp-cr').textContent }));
   ok(vp3.st === 'ready' && vp3.cr === 95 + (vp2.st === 'win' ? vp2.win : 0), label + ': collected, ready for the next hand (' + vp3.cr + ')');
+  await pg.keyboard.press('Escape'); await sleep(200);
+  await pg.keyboard.press('Escape'); await sleep(500);
+  // ── Who Wins?: the right hand scores, a wrong one costs a heart ──
+  await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
+  for (let i = 0; i < 4; i++) await pg.keyboard.press('ArrowRight');
+  await sleep(100);
+  await pg.keyboard.press('Space');
+  await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Qui gagne ?', null, { timeout: 8000 }).catch(() => {});
+  ok(await pg.evaluate(() => window._pthPadOwner === 'whowins'), label + ': → ×4 Space opens Who Wins?');
+  await pg.keyboard.press('Space');
+  await sleep(300);
+  const keyFor = (w) => (w === 1 ? 'ArrowLeft' : w === -1 ? 'ArrowRight' : 'ArrowDown');
+  const w1 = await pg.evaluate(() => window.__pthWW.run().q.win);
+  await shot(pg, label + '-ww-ask');
+  await pg.keyboard.press(keyFor(w1));
+  await sleep(250);
+  const ww1 = await pg.evaluate(() => ({ st: window.__pthWW.state(), ok: window.__pthWW.run().ok, score: +document.querySelector('#pth-game .ww-score').textContent }));
+  ok(ww1.st === 'shown' && ww1.ok && ww1.score >= 10, label + ': the right hand scores (' + ww1.score + ')');
+  await shot(pg, label + '-ww-shown');
+  await sleep(600);
+  await pg.keyboard.press('Space');               // go on
+  await sleep(300);
+  const w2 = await pg.evaluate(() => window.__pthWW.run().q.win);
+  await pg.keyboard.press(keyFor(w2 === 1 ? -1 : 1));
+  await sleep(250);
+  const ww2 = await pg.evaluate(() => ({ ok: window.__pthWW.run().ok, lives: window.__pthWW.run().lives, hud: document.querySelector('#pth-game .ww-lives').textContent }));
+  ok(!ww2.ok && ww2.lives === 2 && ww2.hud === '❤❤♡', label + ': a wrong answer costs a heart (' + ww2.hud + ')');
   await pg.keyboard.press('Escape'); await sleep(200);
   await pg.keyboard.press('Escape'); await sleep(500);
   await pg.keyboard.press('Escape');
