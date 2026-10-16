@@ -127,4 +127,8 @@ export const ACHIEVEMENTS = [
   // ou passer ? », leçon 1 du rayon Apprendre (modules/games/preflop.mjs).
   { id: 'preflop',       icon: '🪑', cat: CATS.secret, when: 'always',
     test: () => false },
+  // Débloqué par grantSecret('nuts') : 13 nuts trouvés sur 15 à « Trouve les
+  // nuts », leçon 2 du rayon Apprendre (modules/games/nuts.mjs).
+  { id: 'nuts',          icon: '🥜', cat: CATS.secret, when: 'always',
+    test: () => false },
 ];

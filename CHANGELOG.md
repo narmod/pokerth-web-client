@@ -105,6 +105,11 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **Find the Nuts — lesson 2** (`web.97`) — `games/nuts.mjs`: a board that says something (three of a suit, a pair,
+  three close ranks), four pairs of hole cards that share no card — the nuts, the next two hands down and one
+  further down; every pair is then named (with its five cards when two share a kind: « Full · A A A 3 3 »)
+  and the nuts' cards lit. Straight / flush / four of a kind / straight
+  flush nuts about 37 / 25 / 22 / 15 %; secret trophy at 13/15; « Who Wins? » now follows it in the path.
 - **Open or Fold? — lesson 1** (`web.96`) — `games/preflop.mjs` + `games/preflop-chart.mjs` (a prudent full-ring
   first-in chart, UTG 7 % … BTN 35 %, range notation parser, 13 × 13 grid): a 9-seat table with the folded seats
   greyed, Raise or Fold, the chart of the position after each answer, a green / red grid of your hands at the end;

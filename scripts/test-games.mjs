@@ -61,7 +61,7 @@ ok(NAME_KEYS.length === 10 && MULT.length === 10, 'ten categories');
 
 console.log('secret word');
 const { art } = await import('../public/modules/games/art.mjs');
-for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker', 'whowins', 'hilo', 'bluff', 'preflop']) {
+for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker', 'whowins', 'hilo', 'bluff', 'preflop', 'nuts']) {
   const d = art(id, false), l = art(id, true);
   const ids = [...d.matchAll(/id="([^"]+)"/g)].map((m) => m[1]), idsL = [...l.matchAll(/id="([^"]+)"/g)].map((m) => m[1]);
   ok(/^<svg[^>]*viewBox="0 0 320 140"/.test(d) && d !== l && ids.every((x) => idsL.indexOf(x) < 0), id + ': a cover picture, one for each theme, ids that do not clash');
@@ -79,7 +79,8 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'hlName', 'hlHint', 'hlHigher', 'hlLower', 'hlCash', 'hlPot', 'hlRules', 'ach_hilo', 'ach_hilo_d',
   'blName', 'blHint', 'blBets', 'blBluff', 'blTells', 'blChips', 'blRules', 'ach_bluff', 'ach_bluff_d',
   'gmShelfLearn', 'gmShelfLearnIntro', 'gmShelfPlay',
-  'ppName', 'ppHint', 'ppFolded', 'ppRange', 'ppRules', 'ach_preflop', 'ach_preflop_d'];
+  'ppName', 'ppHint', 'ppFolded', 'ppRange', 'ppRules', 'ach_preflop', 'ach_preflop_d',
+  'ntName', 'ntHint', 'ntIs', 'ntRules', 'ach_nuts', 'ach_nuts_d'];
 let missing = [], badRecord = [];
 for (const f of files) {
   const { strings } = await import(path.join(langDir, f));
@@ -175,6 +176,22 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
     'Open or Fold?: hand classes and the 13 × 13 grid');
   const cc = pf.cardsOf('T9s'), co = pf.cardsOf('T9o');
   ok(pf.classOf(cc[0], cc[1]) === 'T9s' && pf.classOf(co[0], co[1]) === 'T9o' && pf.edgeClasses('UTG').length > 10, 'Open or Fold?: cards for a class, and the close calls on the edge of a range');
+  // Find the Nuts: one pair makes the best hand, the three others do not.
+  const nt = await import('../public/modules/games/nuts.mjs');
+  const rn = rng(77);
+  let ntBad = 0;
+  const ntCats = new Set();
+  for (let i = 0; i < 150; i++) {
+    const q = nt.makeQuestion(rn);
+    const all = new Set(q.board.concat(...q.options));
+    const hands = q.options.map((o) => rankHand(q.board.concat(o)));
+    const beaten = hands.every((h, k) => k === q.answer || compareHands(hands[q.answer], h) > 0);
+    if (all.size !== 13 || q.options.length !== 4 || !beaten) ntBad++;
+    ntCats.add(q.ranks[q.answer].cat);
+  }
+  ok(nt.fiveRanks(rankHand([12, 1, 2, 3, 30, 40, 50])) === '3 3 A K 6' && nt.fiveRanks(rankHand([12, 0, 1, 2, 3, 40, 44])) === '5 4 3 2 A',
+    'Find the Nuts: two hands of the same kind are told apart by their five cards (a pair first, the wheel ends on its ace)');
+  ok(ntBad === 0 && ntCats.size >= 3, 'Find the Nuts: 13 different cards, one pair beats the three others (' + ntCats.size + ' kinds of nuts)');
   // The arcade's shelves and the (future) unlocks.
   const reg = await import('../public/modules/games/index.mjs');
   const games = reg.GAMES.filter((g) => g.id !== reg.HOME);

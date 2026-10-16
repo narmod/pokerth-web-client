@@ -240,7 +240,21 @@ function preflop(c) {
   return s;
 }
 
-const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins, hilo, bluff, preflop };
+function nuts(c) {
+  let s = feltBg(c, 'ntf');
+  [['9', 'h'], ['T', 'h'], ['J', 'h'], ['2', 'c'], ['5', 's']].forEach(([r, su], i) => { s += card(103 + i * 23, 10, 21, r === 'T' ? '10' : r, su); });
+  const opts = [[['A', 'h'], ['Q', 'h']], [['K', 'h'], ['Q', 'h']], [['Q', 'd'], ['8', 'c']], [['J', 'd'], ['J', 's']]];
+  opts.forEach((p, i) => {
+    const x = 18 + i * 74, nut = i === 1;
+    s += '<rect x="' + x + '" y="54" width="66" height="70" rx="8" fill="' + (nut ? 'rgba(63,174,106,.35)' : 'rgba(0,0,0,.2)') + '"' + (nut ? ' stroke="#7ee2a0" stroke-width="2"' : '') + '/>';
+    s += '<text x="' + (x + 5) + '" y="64" font-size="7" ' + TXT + ' fill="rgba(245,240,227,.7)">' + 'ABCD'[i] + '</text>';
+    s += card(x + 9, 62, 23, p[0][0], p[0][1]) + card(x + 35, 62, 23, p[1][0], p[1][1]);
+    if (nut) s += '<text x="' + (x + 33) + '' + '" y="120" font-size="7" ' + TXT + ' text-anchor="middle" fill="#f5d77a">ST.FLUSH</text>';
+  });
+  return s;
+}
+
+const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins, hilo, bluff, preflop, nuts };
 
 /** The cover picture of game `id` for the light or dark theme. */
 export function art(id, light) {
