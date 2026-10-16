@@ -115,4 +115,8 @@ export const ACHIEVEMENTS = [
   // de « Qui gagne ? » (modules/games/whowins.mjs).
   { id: 'whowins',       icon: '⚖️', cat: CATS.secret, when: 'always',
     test: () => false },
+  // Débloqué par grantSecret('hilo') : 10 bonnes réponses d'affilée sur un même
+  // pot à « Plus haut / Plus bas » (modules/games/hilo.mjs).
+  { id: 'hilo',          icon: '↕️', cat: CATS.secret, when: 'always',
+    test: () => false },
 ];

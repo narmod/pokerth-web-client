@@ -60,7 +60,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   }));
   ok(st.open && st.ace && st.page && st.title === 'Arcade', label + ': the arcade page opens with the Ace');
   ok(st.back && st.menu, label + ': with the header of the other pages (back, ⚙ menu)');
-  ok(st.tiles.join('|') === 'Ace Runner|Château de cartes|Poker Solitaire|Vidéo Poker|Qui gagne ?', label + ': it lists the games (' + st.tiles.join(', ') + ')');
+  ok(st.tiles.join('|') === 'Ace Runner|Château de cartes|Poker Solitaire|Vidéo Poker|Qui gagne ?|Plus haut / Plus bas', label + ': it lists the games (' + st.tiles.join(', ') + ')');
   ok(st.arts === st.tiles.length, label + ': every game has its picture (' + st.arts + ')');
   ok(st.nick === 'Narmod' && st.stored === 'Narmod', label + ': the real nickname is back (field ' + st.nick + ', stored ' + st.stored + ')');
   ok(st.pad === 'arcade', label + ': the gamepad navigation steps aside');
@@ -217,6 +217,33 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await sleep(250);
   const ww2 = await pg.evaluate(() => ({ ok: window.__pthWW.run().ok, lives: window.__pthWW.run().lives, hud: document.querySelector('#pth-game .ww-lives').textContent }));
   ok(!ww2.ok && ww2.lives === 2 && ww2.hud === '❤❤♡', label + ': a wrong answer costs a heart (' + ww2.hud + ')');
+  await pg.keyboard.press('Escape'); await sleep(200);
+  await pg.keyboard.press('Escape'); await sleep(500);
+  // ── Higher or Lower: a right guess grows the pot, Space banks it, a wrong one costs a heart ──
+  await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
+  for (let i = 0; i < 5; i++) await pg.keyboard.press('ArrowRight');
+  await sleep(100);
+  await pg.keyboard.press('Space');
+  await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Plus haut / Plus bas', null, { timeout: 8000 }).catch(() => {});
+  ok(await pg.evaluate(() => window._pthPadOwner === 'hilo'), label + ': → ×5 Space opens Higher or Lower');
+  await pg.keyboard.press('Space');
+  await sleep(300);
+  // A 7♦ face up, a K♠ next: ↑ wins.
+  await pg.evaluate(() => { const G = window.__pthHL.run(); G.cur = 5; G.shoe = G.shoe.filter((c) => c !== 5 && c !== 37); G.shoe.push(37); });
+  await shot(pg, label + '-hl-guess');
+  await pg.keyboard.press('ArrowUp');
+  await pg.waitForFunction(() => window.__pthHL.state() === 'guess', null, { timeout: 3000 }).catch(() => {});
+  const hl1 = await pg.evaluate(() => ({ pot: window.__pthHL.run().pot, streak: window.__pthHL.run().streak, cur: window.__pthHL.run().cur }));
+  ok(hl1.pot > 10 && hl1.streak === 1 && hl1.cur === 37, label + ': ↑ on a 7 with a K next: the pot grows (' + hl1.pot + ')');
+  await shot(pg, label + '-hl-won');
+  await pg.keyboard.press('Space');
+  await sleep(200);
+  const hl2 = await pg.evaluate(() => ({ score: +document.querySelector('#pth-game .hl-score').textContent, pot: window.__pthHL.run().pot }));
+  ok(hl2.score === hl1.pot && hl2.pot === 10, label + ': Space banks the pot (' + hl2.score + ')');
+  await pg.evaluate(() => { const G = window.__pthHL.run(); G.shoe = G.shoe.filter((c) => c !== 0); G.shoe.push(0); });   // a 2♦ next
+  await pg.keyboard.press('ArrowUp');
+  await pg.waitForFunction(() => window.__pthHL.state() === 'guess', null, { timeout: 3000 }).catch(() => {});
+  ok(await pg.evaluate(() => window.__pthHL.run().lives === 2 && window.__pthHL.run().pot === 10), label + ': a wrong guess loses the pot and a heart');
   await pg.keyboard.press('Escape'); await sleep(200);
   await pg.keyboard.press('Escape'); await sleep(500);
   await pg.keyboard.press('Escape');

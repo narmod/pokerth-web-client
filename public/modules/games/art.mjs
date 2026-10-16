@@ -196,7 +196,20 @@ function whowins(c) {
   return s;
 }
 
-const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins };
+function hilo(c) {
+  let s = feltBg(c, 'hlf');
+  [['4', 'c'], ['9', 'd'], ['Q', 's'], ['7', 'h'], ['2', 'c'], ['J', 'd']].forEach(([r, su], i) => { s += card(104 + i * 19, 8, 14, r, su); });
+  s += card(112, 34, 40, '8', 'h');
+  s += back(170, 30, 40) + back(168, 32, 40) + card(166, 34, 40, 'K', 's');
+  s += '<rect x="164" y="32" width="44" height="60" rx="6" fill="none" stroke="#7ee2a0" stroke-width="2"/>';
+  s += '<rect x="20" y="104" width="86" height="24" rx="8" fill="#d8b25a" stroke="#8a6510"/><text x="63" y="120" font-size="10" ' + TXT + ' text-anchor="middle" fill="#141414">▲ 46%</text>';
+  s += '<rect x="117" y="104" width="86" height="24" rx="8" fill="rgba(11,18,16,.55)" stroke="rgba(245,240,227,.55)"/><text x="160" y="120" font-size="10" ' + TXT + ' text-anchor="middle" fill="#f5f0e3">34</text>';
+  s += '<rect x="214" y="104" width="86" height="24" rx="8" fill="#d8b25a" stroke="#8a6510"/><text x="257" y="120" font-size="10" ' + TXT + ' text-anchor="middle" fill="#141414">▼ 50%</text>';
+  s += '<text x="238" y="70" font-size="14" text-anchor="middle" fill="#f5d77a" font-family="Cinzel,Georgia,serif" font-weight="700">×3</text>';
+  return s + ace(292, 96, 13, 'wave', limbOf(c));
+}
+
+const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins, hilo };
 
 /** The cover picture of game `id` for the light or dark theme. */
 export function art(id, light) {

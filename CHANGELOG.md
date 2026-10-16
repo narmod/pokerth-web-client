@@ -105,6 +105,9 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **Higher or Lower in the arcade** (`web.93`) — `games/hilo.mjs`: one-deck shoe (cards out shown, reshuffled
+  under 8), each button shows its chance and the multiplier a right guess pays (fair odds × 0.95, at least
+  ×1.05), cash out to bank the pot (from 10), three hearts; secret trophy at 10 right guesses on one pot.
 - **Who Wins? in the arcade** (`web.92`) — `games/whowins.mjs`: a Hold'em board and two hands, tap the winner or
   Split before the bar runs out (9 s down to 3.5 s), three hearts; deals get harder (same-kind showdowns,
   split pots from the third level, `makeDeal`), each answer names both hands and lights the winning five;
