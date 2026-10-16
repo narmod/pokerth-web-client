@@ -6098,6 +6098,8 @@ const App = (() => {
         try { if (window.LanDirUI && window.LanDirUI.sync) window.LanDirUI.sync(); } catch (e) {}
         try { var _ld = $('lan-dir'); if (_ld) _ld.style.display = 'none'; document.body.classList.remove('lan-dir-locked'); } catch (e) {}
         import('/modules/offline/index.mjs').catch(function(){});
+        // Hidden mini-games (secret word as the training nickname, see connect()).
+        import('/modules/games/index.mjs').catch(function(){});
         return;
       }
       // Leaving offline -> bring back the advanced gear + guest toggle; the
@@ -6143,6 +6145,23 @@ const App = (() => {
     connect(opts) {
       opts = opts || {};
       var _preserve = !!opts.preserve;
+      // ── Hidden mini-games (modules/games/index.mjs) ──
+      // In training, a secret word typed as the nickname (« mascot » or its
+      // translation) opens a mini-game instead of a table; the real nickname
+      // is put back. The registry is loaded with the training mode, so this is
+      // synchronous; if it is not there yet, load it and decide then.
+      if (!opts._gameChecked && $('server-mode') && $('server-mode').value === 'offline' && !S._connectingNow) {
+        var _gNick = (($('nick') && $('nick').value) || '').trim();
+        if (_gNick && window.PthGames) {
+          if (window.PthGames.tryLaunch(_gNick)) return;
+        } else if (_gNick) {
+          var _gSelf = this, _gOpts = Object.assign({}, opts, { _gameChecked: true });
+          import('/modules/games/index.mjs').then(function () {
+            if (!(window.PthGames && window.PthGames.tryLaunch(_gNick))) _gSelf.connect(_gOpts);
+          }).catch(function () { _gSelf.connect(_gOpts); });
+          return;
+        }
+      }
       // Un appel à connect() (clic manuel OU réessai auto « pseudo occupé »)
       // annule le compte à rebours en cours : une seule tentative à la fois.
       try { if (window._nickBusyCancel) window._nickBusyCancel(); } catch (e) {}
@@ -12177,7 +12196,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.83'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.84'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

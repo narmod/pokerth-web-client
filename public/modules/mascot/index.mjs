@@ -132,6 +132,7 @@ function onMascotScreen() {
 export function canAppear() {
   if (typeof Element === 'undefined' || typeof Element.prototype.animate !== 'function') return false;
   if (window.LIVE_MODE) return false;
+  if (window._pthGameOn) return false;   // a hidden mini-game is open (modules/games/)
   if (document.hidden) return false;
   if (!onMascotScreen() || !splashGone()) return false;
   if (motionOff()) return false;

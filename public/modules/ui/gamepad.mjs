@@ -192,7 +192,8 @@ export function padTick(now) {
   var nin = opt('pad_nintendo', false);
   var focused = true;
   try { focused = document.visibilityState !== 'hidden' && (typeof document.hasFocus !== 'function' || document.hasFocus()); } catch (e) {}
-  if (!opt('pad_on', true) || !focused) { st.prev = s.pressed; ctl.holdEnd(); st.holdAt = -1; return; }
+  // A hidden mini-game (modules/games/shell.mjs) reads the pad itself.
+  if (!opt('pad_on', true) || !focused || window._pthPadOwner) { st.prev = s.pressed; ctl.holdEnd(); st.holdAt = -1; return; }
   var prev = st.prev;
   st.prev = s.pressed;
   var down = function (b) { return !!s.pressed[b] && !prev[b]; };

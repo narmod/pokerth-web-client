@@ -105,6 +105,21 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **Ace Runner, a hidden mini-game** — in training, the nickname « mascot » (or its translation in the
+  player's language, key `gameWordAce`; case and accents ignored) opens a runner game instead of a
+  table, and the real nickname is put back in the field and in `pth_nick` (the field saves every
+  keystroke, so the name held before it was edited is restored). The Ace (the mascot's SVG, via
+  `actorKit`) jumps chip stacks and the rolling dealer button, ducks flying cards in the player's card
+  back, and picks up face-up cards in the player's deck; the best five-card hand among them (the Joker
+  is wild) multiplies the distance. Blinds up every 300 m (faster, blinds sound), an All-In gold chip
+  (crown and sceptre, invincible for a few seconds, smashes what it hits, distance ×2), sunglasses on a
+  flush or better, a showdown that turns the five cards one by one, best score per device, secret
+  trophy « Ace Runner ». Keyboard, touch (tap / swipe down, ▲ ▼ on touch screens) and gamepad. A small
+  registry, `modules/games/` (`index.mjs` trigger and registry, `shell.mjs` overlay / loop / input /
+  best score, `poker-hand.mjs`, `ace-runner.mjs`), so more games can be added; precached for offline
+  use. While a game is open the gamepad navigation (`window._pthPadOwner`) and the mascot
+  (`window._pthGameOn`) step aside. Strings in the 83 languages, hand names shared with the hands panel;
+  `test-games`, `test-games-browser` (`web.84`).
 - **TV remote (Android TV / Google TV)** — `ui/remote.mjs`, a second adapter of the controller core
   `ui/ctl-nav.mjs`: arrows (also DPAD keyCodes 19–22), OK (Enter / DPAD_CENTER 23), Back (Escape,
   GoBack, keyCode 4, and the history step handled by `back-guard.mjs`, which now asks

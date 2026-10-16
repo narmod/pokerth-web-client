@@ -95,4 +95,8 @@ export const ACHIEVEMENTS = [
   // partie, tous modes) — le tracker ne l'évalue jamais (test toujours faux).
   { id: 'egg',           icon: '🥚', cat: CATS.secret, when: 'always',
     test: () => false },
+  // Débloqué par grantSecret('runner') à la fermeture du jeu caché Ace Runner
+  // (mot secret en pseudo d'entraînement, modules/games/index.mjs).
+  { id: 'runner',        icon: '🏃', cat: CATS.secret, when: 'always',
+    test: () => false },
 ];

@@ -1,3 +1,6 @@
+2026-10-16 version 2.1.10-web.84:
+- new: a little secret has slipped into the training mode: the Ace knows a word that turns him into a runner (hint: it's what he is)
+
 2026-10-15 version 2.1.10-web.82:
 - new: play with an Android TV / Google TV remote: the arrows move a ring (at the table, over the action buttons), OK presses, holding OK opens the menu, Back goes back, Play/Pause switches between Game and Navigation, and the red, green, yellow and blue keys are Fold, Check/Call, Bet/Raise and All-In; it turns on by itself on a TV
 - improvement: the gamepad menu now has a tile to switch between Game and Navigation
