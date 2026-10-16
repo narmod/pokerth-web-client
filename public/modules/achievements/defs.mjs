@@ -139,4 +139,8 @@ export const ACHIEVEMENTS = [
   // ou Fold ? », leçon 5 du rayon Apprendre (modules/games/potodds.mjs).
   { id: 'potodds',       icon: '📐', cat: CATS.secret, when: 'always',
     test: () => false },
+  // Débloqué par grantSecret('equity') : 24 points sur 30 à « Qui est devant ? »,
+  // leçon 6 du rayon Apprendre (modules/games/equity.mjs).
+  { id: 'equity',        icon: '🎯', cat: CATS.secret, when: 'always',
+    test: () => false },
 ];

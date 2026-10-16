@@ -61,7 +61,7 @@ ok(NAME_KEYS.length === 10 && MULT.length === 10, 'ten categories');
 
 console.log('secret word');
 const { art } = await import('../public/modules/games/art.mjs');
-for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker', 'whowins', 'hilo', 'bluff', 'preflop', 'nuts', 'outs', 'potodds']) {
+for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker', 'whowins', 'hilo', 'bluff', 'preflop', 'nuts', 'outs', 'potodds', 'equity']) {
   const d = art(id, false), l = art(id, true);
   const ids = [...d.matchAll(/id="([^"]+)"/g)].map((m) => m[1]), idsL = [...l.matchAll(/id="([^"]+)"/g)].map((m) => m[1]);
   ok(/^<svg[^>]*viewBox="0 0 320 140"/.test(d) && d !== l && ids.every((x) => idsL.indexOf(x) < 0), id + ': a cover picture, one for each theme, ids that do not clash');
@@ -82,7 +82,8 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'ppName', 'ppHint', 'ppFolded', 'ppRange', 'ppRules', 'ach_preflop', 'ach_preflop_d',
   'ntName', 'ntHint', 'ntIs', 'ntRules', 'ach_nuts', 'ach_nuts_d',
   'otName', 'otHint', 'otOuts', 'otRule4', 'otRule2', 'otRules', 'ach_outs', 'ach_outs_d',
-  'pdName', 'pdHint', 'pdOdds', 'pdNeed', 'pdRules', 'ach_potodds', 'ach_potodds_d'];
+  'pdName', 'pdHint', 'pdOdds', 'pdNeed', 'pdRules', 'ach_potodds', 'ach_potodds_d',
+  'eqName', 'eqHint', 'eqTruth', 'eqRules', 'ach_equity', 'ach_equity_d', 'confirmCall'];
 let missing = [], badRecord = [];
 for (const f of files) {
   const { strings } = await import(path.join(langDir, f));
@@ -226,6 +227,23 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
     if (q.call) pdCalls++;
   }
   ok(pdBad === 0 && pdCalls > 70 && pdCalls < 130, 'Call or Fold?: pure draws on the turn, never a close call, about half of them calls (' + pdCalls + '/200)');
+  // Who's Ahead?: preflop equity, played out.
+  const eqm = await import('../public/modules/games/equity.mjs');
+  const re = rng(11);
+  const aa = eqm.equity([C(14, D), C(14, H)], [C(13, S), C(13, CL)], 20000, re);
+  const race = eqm.equity([C(7, D), C(7, H)], [C(14, S), C(13, CL)], 20000, re);
+  const dom = eqm.equity([C(14, D), C(13, H)], [C(14, S), C(12, CL)], 20000, re);
+  ok(aa > 0.79 && aa < 0.84 && race > 0.52 && race < 0.58 && dom > 0.71 && dom < 0.77,
+    "Who's Ahead?: AA v KK " + Math.round(aa * 100) + ' %, 77 v AKo ' + Math.round(race * 100) + ' %, AK v AQ ' + Math.round(dom * 100) + ' %');
+  ok(eqm.kindOf([C(7, D), C(7, H)], [C(14, S), C(13, CL)]) === 'race' && eqm.kindOf([C(14, S), C(13, CL)], [C(7, D), C(7, H)]) === 'race'
+    && eqm.kindOf([C(9, D), C(9, H)], [C(4, S), C(4, CL)]) === 'pairs' && eqm.kindOf([C(9, D), C(9, H)], [C(14, S), C(4, CL)]) === 'oneover'
+    && eqm.kindOf([C(9, D), C(9, H)], [C(5, S), C(4, CL)]) === 'under' && eqm.kindOf([C(14, D), C(13, H)], [C(14, S), C(12, CL)]) === 'dominated'
+    && eqm.kindOf([C(14, D), C(13, H)], [C(9, S), C(8, CL)]) === 'overs' && eqm.kindOf([C(14, D), C(8, H)], [C(13, S), C(9, CL)]) === 'any',
+    "Who's Ahead?: the classic kinds of matchups, seen from either side");
+  ok(eqm.pointsFor(50, 54) === 3 && eqm.pointsFor(60, 50) === 2 && eqm.pointsFor(35, 50) === 1 && eqm.pointsFor(80, 50) === 0, "Who's Ahead?: 3 points within 5, 2 within 10, 1 within 15");
+  const kinds = new Set();
+  for (let i = 0; i < 60; i++) { const q = eqm.makeMatchup(re, 200); if (q && new Set(q.me.concat(q.him)).size === 4 && q.eq >= 0 && q.eq <= 1) kinds.add(q.kind); }
+  ok(kinds.size === eqm.KINDS.length, "Who's Ahead?: every kind of matchup comes up (" + [...kinds].join(', ') + ')');
   // The arcade's shelves and the (future) unlocks.
   const reg = await import('../public/modules/games/index.mjs');
   const games = reg.GAMES.filter((g) => g.id !== reg.HOME);

@@ -282,7 +282,18 @@ function potodds(c) {
   return s;
 }
 
-const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins, hilo, bluff, preflop, nuts, outs, potodds };
+function equity(c) {
+  let s = feltBg(c, 'eqf');
+  s += ace(70, 66, 24, 'wave', limbOf(c)) + card(110, 12, 26, 'A', 'h') + card(140, 12, 26, 'K', 'h');
+  s += '<text x="174" y="38" font-size="9" ' + TXT + ' fill="rgba(245,240,227,.8)">AKs</text>';
+  s += card(134, 58, 28, 'Q', 's') + card(166, 58, 28, 'Q', 'c');
+  s += '<text x="202" y="84" font-size="10" ' + TXT + ' fill="#f5d77a">QQ</text>';
+  s += '<rect x="60" y="112" width="200" height="8" rx="4" fill="rgba(0,0,0,.3)"/><rect x="60" y="112" width="108" height="8" rx="4" fill="#d8b25a"/>';
+  s += '<path d="M168 110 l-5 -8 h10 z" fill="#7ee2a0"/><text x="168" y="134" font-size="9" ' + TXT + ' text-anchor="middle" fill="#7ee2a0">54 %</text>';
+  return s;
+}
+
+const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins, hilo, bluff, preflop, nuts, outs, potodds, equity };
 
 /** The cover picture of game `id` for the light or dark theme. */
 export function art(id, light) {

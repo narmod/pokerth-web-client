@@ -46,6 +46,7 @@ export const GAMES = [
   { id: 'whowins', shelf: 'learn', unlock: { trophy: 'nuts' }, nameKey: 'wwName', icon: '⚖️', rulesKey: 'wwRules', aspect: [0.6, 2.2], load: () => import('./whowins.mjs') },
   { id: 'outs', shelf: 'learn', unlock: { trophy: 'whowins' }, nameKey: 'otName', icon: '🧮', rulesKey: 'otRules', aspect: [0.6, 2.2], load: () => import('./outs.mjs') },
   { id: 'potodds', shelf: 'learn', unlock: { trophy: 'outs' }, nameKey: 'pdName', icon: '📐', rulesKey: 'pdRules', aspect: [0.6, 2.2], load: () => import('./potodds.mjs') },
+  { id: 'equity', shelf: 'learn', unlock: { trophy: 'potodds' }, nameKey: 'eqName', icon: '🎯', rulesKey: 'eqRules', aspect: [0.6, 2.2], load: () => import('./equity.mjs') },
   // ── For fun ──
   { id: 'ace-runner', shelf: 'play', unlock: {}, name: 'Ace Runner', icon: '🏃', rulesKey: 'arRules', aspect: [4 / 3, 2.4], load: () => import('./ace-runner.mjs') },
   { id: 'house', shelf: 'play', unlock: { trophies: 12 }, nameKey: 'hcName', icon: '🃏', rulesKey: 'hcRules', aspect: [4 / 3, 2.4], load: () => import('./house.mjs') },

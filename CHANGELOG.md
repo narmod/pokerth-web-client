@@ -105,6 +105,11 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **Who's Ahead? — lesson 6** (`web.100`) — `games/equity.mjs`: your two cards against the Ace's, all-in before the
+  flop; set your guess on a 0–100 % bar (± 5 %, or tap), the answer is a 4,000-run Monte Carlo (`equity`, a split
+  counts half). Matchups drawn evenly from seven classic kinds (`kindOf`: pair v lower pair, race, pair v one
+  overcard, pair v undercards, dominated, two overcards, any); 3 / 2 / 1 points within 5 / 10 / 15; secret trophy
+  at 24/30; unlocked by Call or Fold?. The « Learn poker » path now has six lessons.
 - **Call or Fold? — lesson 5** (`web.99`) — `games/potodds.mjs`: the turn, a pure draw (your cards add nothing to
   the board yet), the Ace bets 1/6 pot … 1.5 pot. Chances = outs / 46, needed = B / (P + 2B); never closer than
   3.5 points, half the spots are calls; the sums are shown after each answer. Secret trophy at 10/12; unlocked by
