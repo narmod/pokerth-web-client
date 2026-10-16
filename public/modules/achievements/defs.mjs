@@ -119,4 +119,8 @@ export const ACHIEVEMENTS = [
   // pot à « Plus haut / Plus bas » (modules/games/hilo.mjs).
   { id: 'hilo',          icon: '↕️', cat: CATS.secret, when: 'always',
     test: () => false },
+  // Débloqué par grantSecret('bluff') : 5 bluffs de l'As payés (Call) dans une
+  // partie du « Bluff de l'As » (modules/games/bluff.mjs).
+  { id: 'bluff',         icon: '🎭', cat: CATS.secret, when: 'always',
+    test: () => false },
 ];

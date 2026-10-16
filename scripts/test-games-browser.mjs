@@ -60,7 +60,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   }));
   ok(st.open && st.ace && st.page && st.title === 'Arcade', label + ': the arcade page opens with the Ace');
   ok(st.back && st.menu, label + ': with the header of the other pages (back, ⚙ menu)');
-  ok(st.tiles.join('|') === 'Ace Runner|Château de cartes|Poker Solitaire|Vidéo Poker|Qui gagne ?|Plus haut / Plus bas', label + ': it lists the games (' + st.tiles.join(', ') + ')');
+  ok(st.tiles.join('|') === 'Ace Runner|Château de cartes|Poker Solitaire|Vidéo Poker|Qui gagne ?|Plus haut / Plus bas|Le Bluff de l\'As', label + ': it lists the games (' + st.tiles.join(', ') + ')');
   ok(st.arts === st.tiles.length, label + ': every game has its picture (' + st.arts + ')');
   ok(st.nick === 'Narmod' && st.stored === 'Narmod', label + ': the real nickname is back (field ' + st.nick + ', stored ' + st.stored + ')');
   ok(st.pad === 'arcade', label + ': the gamepad navigation steps aside');
@@ -244,6 +244,42 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.keyboard.press('ArrowUp');
   await pg.waitForFunction(() => window.__pthHL.state() === 'guess', null, { timeout: 3000 }).catch(() => {});
   ok(await pg.evaluate(() => window.__pthHL.run().lives === 2 && window.__pthHL.run().pot === 10), label + ': a wrong guess loses the pot and a heart');
+  await pg.keyboard.press('Escape'); await sleep(200);
+  await pg.keyboard.press('Escape'); await sleep(500);
+  // ── The Ace's Bluff: he bets, Call shows his cards; Fold gives up the ante ──
+  await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
+  for (let i = 0; i < 6; i++) await pg.keyboard.press('ArrowRight');
+  await sleep(100);
+  await pg.keyboard.press('Space');
+  await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Le Bluff de l\'As', null, { timeout: 8000 }).catch(() => {});
+  ok(await pg.evaluate(() => window._pthPadOwner === 'bluff'), label + ": → ×6 Space opens the Ace's Bluff");
+  await pg.keyboard.press('Space');
+  const toDecide = async () => {
+    for (let i = 0; i < 12; i++) {
+      await pg.waitForFunction(() => ['decide', 'shown', 'over'].indexOf(window.__pthBL.state()) >= 0, null, { timeout: 5000 }).catch(() => {});
+      const st = await pg.evaluate(() => window.__pthBL.state());
+      if (st === 'decide' || st === 'over') return st;
+      await pg.keyboard.press('Space');            // a check: go on to the next hand
+      await sleep(150);
+    }
+    return '';
+  };
+  ok(await toDecide() === 'decide', label + ': the Ace bets and waits for an answer');
+  await shot(pg, label + '-bl-decide');
+  const bl0 = await pg.evaluate(() => ({ chips: window.__pthBL.run().chips, bet: window.__pthBL.run().bet }));
+  await pg.keyboard.press('Space');
+  await sleep(300);
+  const bl1 = await pg.evaluate(() => ({ st: window.__pthBL.state(), called: window.__pthBL.run().called, net: window.__pthBL.run().net, chips: window.__pthBL.run().chips }));
+  ok(bl1.st === 'shown' && bl1.called && bl1.chips === bl0.chips - bl0.bet + (bl1.net + 5 + bl0.bet), label + ': Space calls, his cards are shown (net ' + bl1.net + ')');
+  await shot(pg, label + '-bl-shown');
+  await pg.keyboard.press('Space');
+  await sleep(200);
+  if (await toDecide() === 'decide') {
+    const before = await pg.evaluate(() => window.__pthBL.run().chips);
+    await pg.keyboard.press('ArrowDown');
+    await sleep(300);
+    ok(await pg.evaluate((b) => window.__pthBL.state() === 'shown' && window.__pthBL.run().folded && window.__pthBL.run().chips === b, before), label + ': ↓ folds: only the ante is lost');
+  }
   await pg.keyboard.press('Escape'); await sleep(200);
   await pg.keyboard.press('Escape'); await sleep(500);
   await pg.keyboard.press('Escape');

@@ -209,7 +209,21 @@ function hilo(c) {
   return s + ace(292, 96, 13, 'wave', limbOf(c));
 }
 
-const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins, hilo };
+function bluff(c) {
+  let s = feltBg(c, 'blf');
+  s += ace(132, 58, 18, 'idle', limbOf(c));
+  s += '<path d="M145 16 q4 6 0 9 q-4 -3 0 -9z" fill="#7fc8ff"/>';
+  s += back(160, 16, 20) + back(183, 16, 20);
+  s += '<rect x="204" y="4" width="62" height="18" rx="8" fill="#f5f0e3"/><text x="235" y="16" font-size="8" ' + TXT + ' text-anchor="middle" fill="#141414">BET 20</text>';
+  [['A', 'h'], ['8', 'c'], ['8', 'd'], ['3', 's'], ['J', 'h']].forEach(([r, su], i) => { s += card(103 + i * 23, 62, 21, r, su); });
+  s += card(134, 96, 23, 'A', 's') + card(160, 96, 23, 'K', 'd');
+  s += '<rect x="20" y="106" width="70" height="22" rx="8" fill="#b3261e"/><text x="55" y="121" font-size="10" ' + TXT + ' text-anchor="middle" fill="#f5f0e3">Fold</text>';
+  s += '<rect x="230" y="106" width="70" height="22" rx="8" fill="#d8b25a" stroke="#8a6510"/><text x="265" y="121" font-size="10" ' + TXT + ' text-anchor="middle" fill="#141414">Call</text>';
+  s += '<text x="40" y="60" font-size="34" ' + TXT + ' text-anchor="middle" fill="rgba(245,240,227,.5)">?</text>';
+  return s;
+}
+
+const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins, hilo, bluff };
 
 /** The cover picture of game `id` for the light or dark theme. */
 export function art(id, light) {

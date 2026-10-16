@@ -105,6 +105,10 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **The Ace's Bluff in the arcade** (`web.94`) — `games/bluff.mjs`: heads-up on the river, the Ace bets his better
+  hands and bluffs half of his worse ones; Call or Fold. Every table of 5 hands he gets a tell (sweat,
+  stare, sunglasses, fidget, wave, grin) shown on 80 % of his bluffs and 15 % of his value bets, among
+  harmless habits; 20 hands from 100 chips; secret trophy « Mind Reader » at 5 bluffs called.
 - **Higher or Lower in the arcade** (`web.93`) — `games/hilo.mjs`: one-deck shoe (cards out shown, reshuffled
   under 8), each button shows its chance and the multiplier a right guess pays (fair odds × 0.95, at least
   ×1.05), cash out to bank the pot (from 10), three hearts; secret trophy at 10 right guesses on one pot.

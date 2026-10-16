@@ -33,6 +33,7 @@ export const GAMES = [
   { id: 'videopoker', nameKey: 'vpName', icon: '🎰', rulesKey: 'vpRules', aspect: [0.6, 2.2], load: () => import('./videopoker.mjs') },
   { id: 'whowins', nameKey: 'wwName', icon: '⚖️', rulesKey: 'wwRules', aspect: [0.6, 2.2], load: () => import('./whowins.mjs') },
   { id: 'hilo', nameKey: 'hlName', icon: '↕️', rulesKey: 'hlRules', aspect: [0.6, 2.2], load: () => import('./hilo.mjs') },
+  { id: 'bluff', nameKey: 'blName', icon: '🎭', rulesKey: 'blRules', aspect: [0.6, 2.2], load: () => import('./bluff.mjs') },
 ];
 // Secret words → what they open.
 export const TRIGGERS = [{ wordKey: 'gameWordAce', words: ['mascot'], open: HOME }];
