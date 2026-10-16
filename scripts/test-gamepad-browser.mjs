@@ -56,6 +56,7 @@ await page.evaluate(() => {
   window.dispatchEvent(e);
 });
 
+const KONAMI_WAIT = 1800;
 const B = { A: 0, B: 1, X: 2, Y: 3, LB: 4, RB: 5, LT: 6, RT: 7, SELECT: 8, START: 9, UP: 12, DOWN: 13, LEFT: 14, RIGHT: 15 };
 const set = (b, on) => page.evaluate(([b, on]) => { const x = window.__pad.buttons[b]; x.pressed = on; x.value = on ? 1 : 0; }, [b, on]);
 async function press(b, ms = 90) { await set(b, true); await page.waitForTimeout(ms); await set(b, false); await page.waitForTimeout(120); }
@@ -266,6 +267,42 @@ if (aceAvail) {
   await press(B.B); await press(B.B);
   await page.evaluate(() => window.CtlNav.setMode('game'));
 } else console.log('  (Ace not available in this fixture: skipped)');
+
+// ── Konami code (Navigation at the table): ↑↑↓↓←→←→ B A ──
+await page.evaluate(() => {
+  window.__eggs = 0; window.__ach = [];
+  const real = window._konamiEgg;
+  window._konamiEgg = function () { window.__eggs++; return real(); };
+  window.addEventListener('pth-achievement', (e) => window.__ach.push(e.detail && e.detail.id));
+  window.CtlNav.setMode('game');
+});
+const konami = [B.UP, B.UP, B.DOWN, B.DOWN, B.LEFT, B.RIGHT, B.LEFT, B.RIGHT];
+// Game mode: nothing (←/→ would change the playing mode, A would call).
+for (const b of konami) await press(b);
+await press(B.B); await press(B.A);
+ok(await page.evaluate(() => window.__eggs === 0), 'Konami in Game mode does nothing');
+await page.evaluate(() => window.CtlNav.setMode('game'));
+await calls();
+// Navigation with the chat open: B is held back, A completes the egg.
+await page.evaluate(() => { window.toggleGameChat(); document.activeElement && document.activeElement.blur(); });
+await press(B.SELECT);
+for (const b of konami) await press(b);
+await press(B.B);
+ok(await page.evaluate(() => getComputedStyle(document.getElementById('g-chat-panel')).display !== 'none'), 'after the code, B is held back (chat still open)');
+await press(B.A);
+await page.waitForTimeout(400);
+const egg = await page.evaluate(() => ({ n: window.__eggs, ach: window.__ach.slice(), chat: getComputedStyle(document.getElementById('g-chat-panel')).display !== 'none' }));
+ok(egg.n === 1 && egg.ach.includes('egg'), 'B A completes the code: egg + secret trophy ' + JSON.stringify(egg));
+ok(egg.chat, 'neither B nor A acted on the page');
+ok((await calls()).length === 0, 'no table action');
+// The code without A: B gives its Back, late.
+await page.waitForTimeout(5200);   // the egg plays at most once every 5 s
+for (const b of konami) await press(b);
+await press(B.B);
+await page.waitForTimeout(KONAMI_WAIT);
+ok(await page.evaluate(() => getComputedStyle(document.getElementById('g-chat-panel')).display === 'none' && window.__eggs === 1), 'B without A: Back happens late (chat closed), no egg');
+await page.evaluate(() => window.CtlNav.setMode('game'));
+await calls();
 
 // ── Mouse takes over ──
 await press(B.SELECT);

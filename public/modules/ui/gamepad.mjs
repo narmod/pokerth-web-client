@@ -61,7 +61,8 @@ var st = {
   raf: 0, seen: false, style: 'xb',
   prev: [], dir: null, dirNext: 0, stickDir: null,
   holdAt: -1, holdDone: false,
-  betNext: 0, betSteps: 0
+  betNext: 0, betSteps: 0,
+  kPos: 0, kAt: 0, kBackAt: 0      // Konami code (see konami())
 };
 
 function pads() {
@@ -142,6 +143,47 @@ function stickDir(x, y) {
   return x < 0 ? 'left' : 'right';
 }
 
+// ── Easter egg: the Konami code ────────────────────────────────────────────
+// ↑ ↑ ↓ ↓ ← → ← → on the D-pad, then B, A — in Navigation mode at the table
+// (the gamepad menu and the on-screen keyboard included; never in Game mode,
+// where ←/→ and A play). Same effect as typing it in the game chat
+// (window._konamiEgg, pokerth.js). The eight directions only move the ring;
+// once they are in, the next B is held back for KONAMI_MS: A within that
+// time plays the egg and both presses are swallowed, anything else (or the
+// time running out) gives B its usual Back, a little late. B and A are the
+// back / ok roles, so they follow the Nintendo option like the labels.
+const KONAMI = ['up', 'up', 'down', 'down', 'left', 'right', 'left', 'right'];
+export const KONAMI_MS = 1500;
+function konamiHere() {
+  var scr = document.querySelector('.screen.active');
+  return !!(scr && scr.id === 's-game') && effective().mode === 'nav';
+}
+// Returns 'egg' (A swallowed), 'held' (B swallowed) or ''.
+function konami(now, s, down, dirFire, repeat, dpad, OK, BACK) {
+  // A held-back B: A completes the code, anything else releases it.
+  if (st.kBackAt) {
+    if (down(OK) && now - st.kBackAt <= KONAMI_MS) {
+      st.kBackAt = 0; st.kPos = 0;
+      try { if (typeof window._konamiEgg === 'function') window._konamiEgg(); } catch (e) {}
+      return 'egg';
+    }
+    var other = !!dirFire || s.pressed.some(function (p, b) { return p && down(b); });
+    if (other || now - st.kBackAt > KONAMI_MS) { st.kBackAt = 0; st.kPos = 0; ctl.do('back'); }
+    return '';
+  }
+  if (!konamiHere()) { st.kPos = 0; return ''; }
+  if (st.kPos && now - st.kAt > KONAMI_MS) st.kPos = 0;
+  if (st.kPos === KONAMI.length && down(BACK)) { st.kBackAt = now; return 'held'; }
+  if (dirFire && !repeat && dpad === dirFire) {
+    if (st.kPos < KONAMI.length && dirFire === KONAMI[st.kPos]) st.kPos++;
+    else st.kPos = dirFire !== 'up' ? 0 : (st.kPos === 2 ? 2 : 1);   // ↑↑↑ still ends in ↑↑
+    st.kAt = now;
+  } else if (s.pressed.some(function (p, b) { return p && down(b) && b !== UP && b !== DOWN && b !== LEFT && b !== RIGHT; })) {
+    st.kPos = 0;
+  }
+  return '';
+}
+
 // One polling step at time `now` (ms). Exported for the tests.
 export function padTick(now) {
   var list = pads();
@@ -174,9 +216,12 @@ export function padTick(now) {
   else if (dir && now >= st.dirNext) { dirFire = dir; repeat = true; st.dirNext = now + REPEAT_EVERY; }
   st.dir = dir;
 
+  var egg = konami(now, s, down, dirFire, repeat, dpad, OK, BACK);
+  if (egg === 'egg') return;
+
   if (down(SELECT)) { ctl.do('toggle'); return; }
   if (down(START)) { ctl.do('menu'); return; }
-  if (down(BACK)) ctl.do('back');
+  if (down(BACK) && egg !== 'held') ctl.do('back');
 
   var mode = effective().mode;
   if (mode === 'game') {

@@ -10601,6 +10601,30 @@ window._chatPushHist = function (txt) {
   _chatHist.push(txt);
   if (_chatHist.length > _CHAT_HIST_MAX) _chatHist.shift();
 };
+// ── Easter egg : code Konami — effet commun au clavier (chat de partie,
+// ci-dessous) et à la manette (modules/ui/gamepad.mjs, ↑↑↓↓←→←→ B A en mode
+// Navigation à la table). Confettis (Reactions.playReactionFx) + trophée
+// secret « L'œuf » (grantSecret — catégorie cachée, visible seulement une
+// fois débloqué). Au plus une fois toutes les 5 s. Renvoie true si joué.
+var _konamiLast = 0;
+function _konamiEgg() {
+  var _nw = Date.now(); if (_nw - _konamiLast < 5000) return false; _konamiLast = _nw;
+  try {
+    var _fx = window.Reactions && window.Reactions.playReactionFx;
+    if (_fx) {
+      _fx('\u{1F95A}', window.innerWidth * 0.5, window.innerHeight * 0.45);
+      setTimeout(function () { try { _fx('\u{1F389}', window.innerWidth * 0.5, window.innerHeight * 0.45); } catch (e3) {} }, 180);
+    }
+  } catch (e4) {}
+  try {
+    import('/modules/achievements/index.mjs').then(function (m) {
+      var a = (m && m.grantSecret) ? m.grantSecret('egg') : null;
+      if (a) { try { window.dispatchEvent(new CustomEvent('pth-achievement', { detail: a })); } catch (e5) {} }
+    }).catch(function () {});
+  } catch (e6) {}
+  return true;
+}
+window._konamiEgg = _konamiEgg;
 function _attachChatKeys(id, gameScope) {
   var inp = document.getElementById(id);
   if (!inp || inp._keysAttached) return;
@@ -10608,31 +10632,19 @@ function _attachChatKeys(id, gameScope) {
   // ── Easter egg : code Konami (↑↑↓↓←→←→BA) dans le chat de PARTIE, tous
   // modes. Détection passive via addEventListener (n'interfère ni avec
   // l'historique ↑/↓ ni avec la saisie) ; le « ba » final est retiré du champ.
-  // Effet : confettis (Reactions.playReactionFx) + trophée secret « L'œuf »
-  // (grantSecret — catégorie cachée, visible seulement une fois débloqué).
+  // Effet : _konamiEgg() ci-dessus.
   if (gameScope) {
     var _kSeq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-    var _kPos = 0, _kLast = 0;
+    var _kPos = 0;
     inp.addEventListener('keydown', function (e) {
       var k = (e.key && e.key.length === 1) ? e.key.toLowerCase() : e.key;
       _kPos = (k === _kSeq[_kPos]) ? _kPos + 1 : (k === _kSeq[0] ? 1 : 0);
       if (_kPos < _kSeq.length) return;
       _kPos = 0;
-      var _nw = Date.now(); if (_nw - _kLast < 5000) return; _kLast = _nw;
-      try { inp.value = inp.value.replace(/ba$/i, ''); } catch (e2) {}
-      try {
-        var _fx = window.Reactions && window.Reactions.playReactionFx;
-        if (_fx) {
-          _fx('\u{1F95A}', window.innerWidth * 0.5, window.innerHeight * 0.45);
-          setTimeout(function () { try { _fx('\u{1F389}', window.innerWidth * 0.5, window.innerHeight * 0.45); } catch (e3) {} }, 180);
-        }
-      } catch (e4) {}
-      try {
-        import('/modules/achievements/index.mjs').then(function (m) {
-          var a = (m && m.grantSecret) ? m.grantSecret('egg') : null;
-          if (a) { try { window.dispatchEvent(new CustomEvent('pth-achievement', { detail: a })); } catch (e5) {} }
-        }).catch(function () {});
-      } catch (e6) {}
+      if (!_konamiEgg()) return;
+      // keydown comes before the « a » is inserted: keep it out, drop the « b ».
+      e.preventDefault();
+      try { inp.value = inp.value.replace(/b$/i, ''); } catch (e2) {}
     });
   }
   var tabMatches = null, tabIdx = 0, tabStart = 0, tabTail = '';
@@ -12165,7 +12177,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.82'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.83'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
