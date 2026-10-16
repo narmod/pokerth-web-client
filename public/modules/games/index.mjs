@@ -5,7 +5,7 @@
 //
 // In training (server « Training vs bots »), typing the secret word as the
 // nickname and pressing Connect opens the arcade menu (menu.mjs: Ace Runner,
-// House of Cards…) instead of a table (App.connect() in pokerth.js asks
+// House of Cards, Poker Solitaire…) instead of a table (App.connect() in pokerth.js asks
 // tryLaunch() first). The word is the translation of gameWordAce (« mascot »)
 // in the current language, plus the English word, which works in every
 // language. Matching ignores case,
@@ -27,6 +27,7 @@ export const GAMES = [
   { id: HOME, name: 'Arcade', load: () => import('./menu.mjs') },
   { id: 'ace-runner', name: 'Ace Runner', icon: '🏃', load: () => import('./ace-runner.mjs') },
   { id: 'house', nameKey: 'hcName', icon: '🃏', load: () => import('./house.mjs') },
+  { id: 'solitaire', nameKey: 'psName', icon: '♠', load: () => import('./solitaire.mjs') },
 ];
 // Secret words → what they open.
 export const TRIGGERS = [{ wordKey: 'gameWordAce', words: ['mascot'], open: HOME }];

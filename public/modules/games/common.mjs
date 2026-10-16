@@ -62,6 +62,17 @@ const CSS = `
 #pth-game .ar-show .pk{margin:0;flex:none}
 #pth-game .ar-final{font:700 clamp(14px,2.2vw,17px)/1.3 'Inconsolata',monospace;font-variant-numeric:tabular-nums;color:#f5f0e3}
 #pth-game .ar-final em{font-style:normal;color:#d8b25a}
+/* Choice tiles (arcade menu, game modes) */
+#pth-game .gm-tiles{display:flex;gap:12px;justify-content:center;width:min(640px,100%);pointer-events:auto}
+#pth-game .gm-tile{appearance:none;border:0;cursor:pointer;flex:1 1 0;min-width:0;max-width:190px;padding:14px 10px 12px;border-radius:12px;
+  background:rgba(19,30,25,.92);box-shadow:inset 0 0 0 1px rgba(216,178,90,.3);color:#f5f0e3;display:flex;flex-direction:column;align-items:center;gap:6px;
+  font:600 14px/1.2 'Inter',system-ui,sans-serif;transition:transform .12s,box-shadow .12s}
+#pth-game .gm-tile i{font-style:normal;font-size:32px;line-height:1}
+#pth-game .gm-tile b{font:700 16px/1.15 'Cinzel',Georgia,serif;letter-spacing:.02em}
+#pth-game .gm-tile small{font:500 11px 'Inconsolata',monospace;color:#9bb0a3;min-height:1.2em}
+#pth-game .gm-tile.on{box-shadow:inset 0 0 0 2px #d8b25a,0 0 18px rgba(216,178,90,.25);transform:translateY(-2px)}
+#pth-game .gm-tile:focus-visible{outline:2px solid #f5f0e3;outline-offset:2px}
+@media (max-width:520px){#pth-game .gm-tile{padding:10px 8px;gap:4px}#pth-game .gm-tile i{font-size:24px}#pth-game .gm-tile b{font-size:14px}}
 @media (max-width:520px){#pth-game .ar-slot{width:22px;height:32px}#pth-game .ar-slots .pk.sm{width:22px;height:32px;font-size:10px}
   #pth-game .ar-show{min-height:58px;gap:4px}#pth-game .ar-show .pk.lg{width:40px;height:58px;font-size:15px}
   #pth-game .pg-panel>div{gap:4px}#pth-game .pg-panel h2{font-size:20px}#pth-game .ar-stats{gap:10px}}

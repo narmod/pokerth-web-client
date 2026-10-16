@@ -103,4 +103,8 @@ export const ACHIEVEMENTS = [
   // le jeu caché (menu arcade, modules/games/house.mjs).
   { id: 'house',         icon: '🃏', cat: CATS.secret, when: 'always',
     test: () => false },
+  // Débloqué par grantSecret('solitaire') : 75 points ou plus au Poker
+  // Solitaire du jeu caché (modules/games/solitaire.mjs).
+  { id: 'solitaire',     icon: '♠️', cat: CATS.secret, when: 'always',
+    test: () => false },
 ];

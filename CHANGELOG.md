@@ -105,6 +105,17 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **Poker Solitaire in the arcade** — the third hidden game (`games/solitaire.mjs`, rules in the pure
+  `games/solitaire-rules.mjs`): 25 cards, one at a time, each into an empty cell of a 5 × 5 grid for
+  good; every row and column is a poker hand, scored on the American scale (royal flush 100 … pair 2).
+  « Daily challenge » deals the same 25 cards to every player on a UTC day (seeded from the date, no
+  server; the day's best kept on the device) or « Free game ». The Ace calls flush and straight draws
+  and cheers the hands; the ten lines are counted one by one at the end, then the score and the best
+  line. Arrows / D-pad and Space / A, or a tap on the cell; the ▲ ▼ touch buttons are hidden for it.
+  Secret trophy « Poker Solitaire » at 75 points. The shell now tells a game where an action came from
+  (key, tap position, pad button) and can hide the touch buttons; the choice tiles move to
+  `games/common.mjs`. Strings in the 83 languages, reusing the hands panel's short hand names
+  (`web.86`).
 - **House of Cards and the arcade menu** — the secret training nickname now opens an arcade menu
   (`games/menu.mjs`: ← → / tap / pad, best score per game, the Ace waving) listing Ace Runner and a
   second game, House of Cards (`games/house.mjs`). A card slides along the dealer's rail, a tap drops it

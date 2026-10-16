@@ -10,25 +10,9 @@
 import { GAMES, HOME, gameName } from './index.mjs';
 import { aceActor, fmt } from './common.mjs';
 
-const CSS = `
-#pth-game .gm-tiles{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;pointer-events:auto}
-#pth-game .gm-tile{appearance:none;border:0;cursor:pointer;width:min(190px,40vw);padding:14px 10px 12px;border-radius:12px;
-  background:rgba(19,30,25,.92);box-shadow:inset 0 0 0 1px rgba(216,178,90,.3);color:#f5f0e3;display:flex;flex-direction:column;align-items:center;gap:6px;
-  font:600 14px/1.2 'Inter',system-ui,sans-serif;transition:transform .12s,box-shadow .12s}
-#pth-game .gm-tile i{font-style:normal;font-size:32px;line-height:1}
-#pth-game .gm-tile b{font:700 16px/1.15 'Cinzel',Georgia,serif;letter-spacing:.02em}
-#pth-game .gm-tile small{font:500 11px 'Inconsolata',monospace;color:#9bb0a3;min-height:1.2em}
-#pth-game .gm-tile.on{box-shadow:inset 0 0 0 2px #d8b25a,0 0 18px rgba(216,178,90,.25);transform:translateY(-2px)}
-#pth-game .gm-tile:focus-visible{outline:2px solid #f5f0e3;outline-offset:2px}
-@media (max-width:520px){#pth-game .gm-tile{padding:10px 8px;gap:4px}#pth-game .gm-tile i{font-size:24px}#pth-game .gm-tile b{font-size:14px}}
-`;
 
 export function create(shell) {
   const { t, esc } = shell;
-  if (!document.getElementById('pth-game-menu-css')) {
-    const st = document.createElement('style'); st.id = 'pth-game-menu-css'; st.textContent = CSS;
-    document.head.appendChild(st);
-  }
   const games = GAMES.filter((g) => g.id !== HOME);
   let sel = 0, time = 0;
   const ace = aceActor(shell.layer);

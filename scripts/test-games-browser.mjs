@@ -56,7 +56,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     tiles: [...document.querySelectorAll('#pth-game .gm-tile b')].map((b) => b.textContent),
   }));
   ok(st.open && st.ace && st.title === 'Arcade', label + ': the arcade menu opens with the Ace');
-  ok(st.tiles.join('|') === 'Ace Runner|Château de cartes', label + ': it lists the games (' + st.tiles.join(', ') + ')');
+  ok(st.tiles.join('|') === 'Ace Runner|Château de cartes|Poker Solitaire', label + ': it lists the games (' + st.tiles.join(', ') + ')');
   ok(st.nick === 'Narmod' && st.stored === 'Narmod', label + ': the real nickname is back (field ' + st.nick + ', stored ' + st.stored + ')');
   ok(st.pad === 'arcade', label + ': the gamepad navigation steps aside');
   await shot(pg, label + '-menu');
@@ -126,6 +126,31 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(floors >= 1, label + ': cards land in the house (up to ' + placed + ' on a floor, ' + floors + ' floor(s))');
   ok(hOver.title === 'Tout s\'écroule !' && /·/.test(hOver.final), label + ': at full tilt it comes down, score saved (' + hOver.final.trim() + ')');
   await shot(pg, label + '-house-over');
+  await pg.keyboard.press('Escape');
+  await sleep(500);
+  // ── Poker Solitaire (daily challenge, keyboard only) ──
+  await pg.waitForSelector('#pth-game .gm-tile', { timeout: 8000 }).catch(() => {});
+  await pg.keyboard.press('ArrowRight'); await pg.keyboard.press('ArrowRight');
+  await sleep(100);
+  await pg.keyboard.press('Space');
+  await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Poker Solitaire', null, { timeout: 8000 }).catch(() => {});
+  ok(await pg.evaluate(() => window._pthPadOwner === 'solitaire' && document.querySelectorAll('#pth-game .pg-panel .gm-tile').length === 2), label + ': → → Space opens Poker Solitaire (daily / free)');
+  await shot(pg, label + '-solitaire-title');
+  await pg.keyboard.press('Space');
+  await sleep(300);
+  await pg.keyboard.press('ArrowLeft');      // the cursor moves; Space places
+  for (let i = 0; i < 25; i++) {
+    await pg.keyboard.press('Space');
+    await sleep(260);
+    if (i === 12) await shot(pg, label + '-solitaire-run');
+  }
+  await pg.waitForSelector('#pth-game .pg-panel .ar-show', { timeout: 12000 }).catch(() => {});
+  const ps = await pg.evaluate(() => ({ h2: (document.querySelector('#pth-game .pg-panel h2') || {}).textContent,
+    hud: (document.querySelector('#pth-game .ps-score') || {}).textContent, left: (document.querySelector('#pth-game .ps-left') || {}).textContent,
+    daily: localStorage.getItem('pth_game_daily_solitaire'), cards: document.querySelectorAll('#pth-game .ar-show .pk').length }));
+  ok(ps.left === '25/25' && ps.h2 === ps.hud && ps.cards === 5, label + ': 25 cards placed, ten lines counted, score ' + ps.h2 + ' and its best line shown');
+  ok(!!ps.daily && JSON.parse(ps.daily).d === new Date().toISOString().slice(0, 10), label + ': the daily score is kept for today');
+  await shot(pg, label + '-solitaire-over');
   await pg.keyboard.press('Escape');
   await sleep(500);
   await pg.keyboard.press('Escape');

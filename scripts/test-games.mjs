@@ -5,12 +5,14 @@
 //   - index.mjs: the secret word (« mascot » or its translation) opens the
 //     arcade menu — present in every language file, matched regardless of case
 //     and accents, never an ordinary nickname; the strings of the games
-//     (Ace Runner, House of Cards, menu) exist everywhere.
+//     (Ace Runner, House of Cards, Poker Solitaire, menu) exist everywhere.
+//   - solitaire-rules.mjs: the seeded daily deal, the ten lines, the score.
 // Run: node scripts/test-games.mjs
 import fs from 'fs';
 import path from 'path';
 import { evalCards, JOKER, MULT, NAME_KEYS } from '../public/modules/games/poker-hand.mjs';
 import { gameForNick, norm, GAMES } from '../public/modules/games/index.mjs';
+import { SCORE, LINES, dealFor, dayKey, scoreGrid } from '../public/modules/games/solitaire-rules.mjs';
 
 let pass = 0, fail = 0;
 function ok(cond, label) {
@@ -62,7 +64,8 @@ const langDir = path.resolve('public/modules/lang');
 const files = fs.readdirSync(langDir).filter((f) => f.endsWith('.mjs'));
 const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'arRecord', 'arNewRecord',
   'arAgain', 'arPause', 'arDistance', 'arBlinds', 'arQuit', 'ach_runner', 'ach_runner_d',
-  'hcName', 'hcHint', 'hcFloors', 'hcScore', 'hcPerfect', 'hcSteady', 'hcCollapse', 'hcAgain', 'gmPick', 'ach_house', 'ach_house_d'];
+  'hcName', 'hcHint', 'hcFloors', 'hcScore', 'hcPerfect', 'hcSteady', 'hcCollapse', 'hcAgain', 'gmPick', 'ach_house', 'ach_house_d',
+  'psName', 'psHint', 'psDaily', 'psFree', 'psCards', 'psFlushDraw', 'psStraightDraw', 'psBestLine', 'psAgain', 'ach_solitaire', 'ach_solitaire_d'];
 let missing = [], badRecord = [];
 for (const f of files) {
   const { strings } = await import(path.join(langDir, f));
@@ -81,7 +84,20 @@ ok(gameForNick('Narmod', fr) === null && gameForNick('Ace', fr) === null && game
 ok(gameForNick('', fr) === null && gameForNick('mascottes', fr) === null, 'empty or longer words do not trigger');
 ok(norm('Éliminé') === 'elimine', 'norm strips accents');
 ok(GAMES.every((g) => typeof g.load === 'function' && g.id && (g.name || g.nameKey)), 'registry entries are complete');
-ok(GAMES.some((g) => g.id === 'arcade') && GAMES.some((g) => g.id === 'ace-runner') && GAMES.some((g) => g.id === 'house'), 'arcade menu, Ace Runner and House of Cards registered');
+ok(['arcade', 'ace-runner', 'house', 'solitaire'].every((id) => GAMES.some((g) => g.id === id)), 'arcade menu, Ace Runner, House of Cards and Poker Solitaire registered');
+
+console.log('poker solitaire');
+const d1 = dealFor('pth-solitaire-2026-10-16'), d2 = dealFor('pth-solitaire-2026-10-16'), d3 = dealFor('pth-solitaire-2026-10-17');
+ok(d1.length === 25 && new Set(d1).size === 25 && d1.every((n) => n >= 0 && n < 52), 'a deal is 25 different cards');
+ok(d1.join() === d2.join() && d1.join() !== d3.join(), 'the daily deal is the same for a day, another the next day');
+ok(dayKey(new Date('2026-10-16T23:30:00Z')) === '2026-10-16', 'the day is taken in UTC');
+ok(LINES.length === 10 && LINES.every((l) => l.length === 5) && new Set(LINES.flat()).size === 25, 'ten lines of five cells');
+// Rows: four flushes and a royal flush; columns: whatever they make.
+const g = [].concat(hand('As Ks Qs Js Ts'), hand('2h 4h 6h 8h Th'), hand('2d 4d 6d 8d Td'), hand('3c 5c 7c 9c Jc'), hand('3h 5h 7h 9h Jh'));
+const rows = 100 + 4 * 20;
+const cols = LINES.slice(5).reduce((a, l) => a + SCORE[evalCards(l.map((i) => g[i])).cat], 0);
+ok(scoreGrid(g) === rows + cols, 'grid score = rows + columns (' + scoreGrid(g) + ')');
+ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);

@@ -55,7 +55,7 @@ const CSS = `
 #${ROOT_ID} .pg-pad{display:none;gap:14px}
 #${ROOT_ID} .pg-pad button{width:72px;height:52px;border-radius:12px;border:0;background:#d8b25a;color:#0b1210;font:700 20px system-ui,sans-serif;touch-action:none}
 #${ROOT_ID} .pg-pad button+button{background:transparent;color:#e8efea;box-shadow:inset 0 0 0 1px rgba(216,178,90,.4)}
-@media (pointer:coarse){#${ROOT_ID} .pg-pad{display:flex}}
+@media (pointer:coarse){#${ROOT_ID} .pg-pad{display:flex}#${ROOT_ID}.pg-nopad .pg-pad{display:none}}
 @media (prefers-reduced-motion:reduce){#${ROOT_ID} .pg-blink{animation:none}}
 `;
 
@@ -132,6 +132,8 @@ export function run(def, gameMod, opts = {}) {
         if (!on) last = performance.now();
       },
       close,
+      /** Show or hide the ▲ ▼ touch buttons (a game that is played by tapping hides them). */
+      touchPad(on) { root.classList.toggle('pg-nopad', !on); },
       /** Queue a secret trophy (granted once the overlay is closed). */
       grant(id) { if (id && grants.indexOf(id) < 0) grants.push(id); },
       /** Switch to game `id` in the same overlay (needs opts.open). */
@@ -156,7 +158,7 @@ export function run(def, gameMod, opts = {}) {
     function mount(d, mod) {
       try { if (game && game.destroy) game.destroy(); } catch (e) {}
       game = null;
-      shell.layer.innerHTML = ''; shell.hud.innerHTML = ''; shell.panel(null); shell.pause(false);
+      shell.layer.innerHTML = ''; shell.hud.innerHTML = ''; shell.panel(null); shell.pause(false); shell.touchPad(true);
       cur = d; root.setAttribute('aria-label', d.name || 'Arcade'); window._pthPadOwner = d.id;
       try { game = mod.create(shell); } catch (e) { try { console.warn('[games]', e); } catch (e2) {} }
       resize();
@@ -164,7 +166,10 @@ export function run(def, gameMod, opts = {}) {
     mount(def, gameMod);
 
     // ── Input ───────────────────────────────────────────────────────
-    const send = (a, down) => { if (!game || (shell.paused && down)) return; try { game.input(a, down); } catch (e) {} };
+    // info tells where an action came from, for games that need it (the
+    // Poker Solitaire grid): { code } a key, { x, y } a tap in world px,
+    // { pad: 'up' | 'a' | 'down' } a gamepad button.
+    const send = (a, down, info) => { if (!game || (shell.paused && down)) return; try { game.input(a, down, info || {}); } catch (e) {} };
     const KEYS = { Space: 'jump', ArrowUp: 'jump', KeyW: 'jump', ArrowDown: 'duck', KeyS: 'duck',
       ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right', Enter: 'jump', NumpadEnter: 'jump' };
     function onKey(e) {
@@ -177,7 +182,7 @@ export function run(def, gameMod, opts = {}) {
         if (game && game.running && game.running()) shell.pause(!shell.paused);
       } else if (a) {
         if (down && shell.paused) shell.pause(false);
-        else if (!(down && e.repeat)) send(a, down);
+        else if (!(down && e.repeat)) send(a, down, { code: e.code });
       } else {
         // Any other key: kept from the client behind the overlay, but the
         // browser's own (Tab, F5, F11, Ctrl+…) still works.
@@ -193,7 +198,8 @@ export function run(def, gameMod, opts = {}) {
     stage.addEventListener('pointerdown', (e) => {
       e.preventDefault(); pY = e.clientY; swiped = false;
       if (shell.paused) { shell.pause(false); return; }
-      send('jump', true);
+      const r = stage.getBoundingClientRect();
+      send('jump', true, { x: (e.clientX - r.left) / (shell.k || 1), y: (e.clientY - r.top) / (shell.k || 1) });
     });
     stage.addEventListener('pointermove', (e) => {
       if (pY != null && !swiped && e.clientY - pY > 28) { swiped = true; send('jump', false); send('duck', true); }
@@ -220,6 +226,7 @@ export function run(def, gameMod, opts = {}) {
         const ay = pad.axes && pad.axes.length > 1 ? pad.axes[1] : 0;
         const ax = pad.axes && pad.axes.length ? pad.axes[0] : 0;
         if (b(0) || b(1) || b(12) || ay < -0.6) p[0] = true;     // jump
+        if (b(12) || ay < -0.6) p[6] = true;                      // (of which: up)
         if (b(13) || ay > 0.6) p[1] = true;                       // duck
         if (b(9)) p[2] = true;                                    // Start: pause
         if (b(8)) p[3] = true;                                    // Select: back / quit
@@ -231,9 +238,9 @@ export function run(def, gameMod, opts = {}) {
       if (dn(4)) send('left', true);
       if (dn(5)) send('right', true);
       if (dn(2) && game && game.running && game.running()) shell.pause(!shell.paused);
-      else if (dn(0)) { if (shell.paused) shell.pause(false); else send('jump', true); }
+      else if (dn(0)) { if (shell.paused) shell.pause(false); else send('jump', true, { pad: p[6] ? 'up' : 'a' }); }
       if (up(0)) send('jump', false);
-      if (dn(1)) send('duck', true);
+      if (dn(1)) send('duck', true, { pad: 'down' });
       if (up(1)) send('duck', false);
       padPrev = p;
     }
