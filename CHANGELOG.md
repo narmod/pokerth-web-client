@@ -105,6 +105,10 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **House of Cards: easier to aim, harder to keep up** (`web.90`) — the place of the next card is
+  filled and pulsing, with a dotted plumb line to a mark on the rail (theme colours). Harder: rail
+  92 px/s +20 per level (max 250), a pendulum pace from level 2 (fastest mid-rail), tolerance 10 / 13 px
+  (was 12 / 16), Perfect within 2 px, a miss tilts 0.25 (was 0.16), an off-centre drop up to 0.14.
 - **Cover pictures in the arcade** (`web.89`) — each game card shows a small SVG scene of its game
   (`games/art.mjs`, no image file), painted from `ink(light)` and repainted when the theme changes;
   tapping it plays the game.

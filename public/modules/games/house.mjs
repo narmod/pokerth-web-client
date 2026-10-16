@@ -14,7 +14,9 @@
 //   Full or better    tilt back to zero, the Ace crowned, the All-In fanfare
 //   Burn      ↓ / swipe down: the hanging card is burnt, the next one comes
 //             (3 per game, one more at every blind level, 5 at most)
-//   Blinds up every 5 floors: the rail runs faster
+//   Blinds up every 5 floors: the rail runs faster; from the second level
+//             it swings like a pendulum (fastest in the middle)
+//   Aim       the place of the next card is lit, with a mark on the rail
 //   Pot       chips stacked on each floor's flat card, more for a better hand
 //   Showdown  when it falls, the best floor's five cards are turned one by one
 // The Ace lives in the house: he stands on the last floor (drawn behind the
@@ -36,13 +38,16 @@ const HANG = 34;                 // card centre below the rail
 const S = 0.25;                  // the Ace's sprite scale: he fits under a floor
 const BLIND_EVERY = 5;           // floors per blind level
 const TROPHY_FLOORS = 10;
+const PERFECT = 2;               // px off the mark that still counts as Perfect
+const MISS_TILT = 0.25;          // a card off its mark: four of them bring it down
+const OFF_TILT = 0.14;           // a card on its mark but not Perfect (× how far off)
 
 // Slot i of a floor: centre (x, y above the floor's base), angle, size.
 function slot(i) {
-  if (i === 4) return { x: 0, y: 40 + BRIDGE_H / 2, rot: 0, w: BRIDGE_W, h: BRIDGE_H, tol: 16 };
+  if (i === 4) return { x: 0, y: 40 + BRIDGE_H / 2, rot: 0, w: BRIDGE_W, h: BRIDGE_H, tol: 13 };
   const ax = i < 2 ? -FRAME_X : FRAME_X, right = i % 2 === 1;
   const off = CH / 2 * Math.sin(LEAN);
-  return { x: right ? ax + 13 - off : ax - 13 + off, y: CH / 2 * Math.cos(LEAN), rot: right ? -LEAN : LEAN, w: CW, h: CH, tol: 12 };
+  return { x: right ? ax + 13 - off : ax - 13 + off, y: CH / 2 * Math.cos(LEAN), rot: right ? -LEAN : LEAN, w: CW, h: CH, tol: 10 };
 }
 
 export function create(shell) {
@@ -95,7 +100,10 @@ export function create(shell) {
   function deal() { if (!G.deck.length) G.deck = newDeck(); return /** @type {number} */ (G.deck.pop()); }
   const slotNow = () => G.cur.length;              // next slot of the floor being built
   const amp = () => Math.min(140, 72 + G.level * 6);
-  const speed = () => Math.min(210, 74 + (G.level - 1) * 16);
+  const speed = () => Math.min(250, 92 + (G.level - 1) * 20);
+  // From the second blind level the trolley swings like a pendulum: slow at
+  // the ends of the rail, fastest in the middle — where the places are.
+  const pace = (x, A) => (G.level < 2 ? 1 : 0.55 + 0.9 * (1 - (x / A) * (x / A)));
   const W = () => shell.W, H = () => shell.H;
   const groundY = () => H() - 30;
   const sy = (wy) => groundY() - (wy - G.camY);
@@ -172,21 +180,21 @@ export function create(shell) {
     if (Math.abs(d) > sl.tol) {
       // Off its mark: it slides off and the house takes the knock.
       G.debris.push(Object.assign(debrisOf(f.n, f.x, base + sl.y, sl.rot), f.slot === 4 ? { w: BRIDGE_W, h: BRIDGE_H } : {}));
-      G.tilt += Math.sign(d) * 0.16;
+      G.tilt += Math.sign(d) * MISS_TILT;
       G.streak = 0;
       G.fx.push({ s: '✗', x: f.x, wy: base + sl.y + 20, t: 0, life: 0.7, red: true });
       sound('notifyFold');
     } else {
-      const perfect = Math.abs(d) <= 2.5;
+      const perfect = Math.abs(d) <= PERFECT;
       G.cur.push({ n: f.n, dx: d });
       if (perfect) {
         G.streak++;
-        G.tilt *= 0.8;
+        G.tilt *= 0.85;
         G.score += 5 * Math.min(G.streak, 3);
         G.fx.push({ s: t('hcPerfect') + (G.streak > 1 ? ' ×' + G.streak : ''), x: target, wy: base + sl.y + 34, t: 0, life: 0.9, gold: true, small: true });
       } else {
         G.streak = 0;
-        G.tilt += (d / sl.tol) * (f.slot === 4 ? 0.12 : 0.09);
+        G.tilt += (d / sl.tol) * OFF_TILT;
       }
       sound('notifyCard');
       if (G.cur.length === 5) floorDone();
@@ -266,7 +274,7 @@ export function create(shell) {
     time += dt;
     // The rail runs back and forth at a steady pace (title screen included).
     const A = amp();
-    G.railX += G.railDir * speed() * dt;
+    G.railX += G.railDir * speed() * pace(G.railX, A) * dt;
     if (G.railX > A) { G.railX = A; G.railDir = -1; }
     if (G.railX < -A) { G.railX = -A; G.railDir = 1; }
     if (state === 'run' && G.fall) {
@@ -394,14 +402,28 @@ export function create(shell) {
       const sl = slot(j), wy = base + sl.y;
       drawCard(g, c.n, cx + sl.x + c.dx + shift(wy), sy(wy), sl.rot + G.tilt * 0.04, sl.w, sl.h, j === 4);
     });
-    // The place of the next card: a faint outline.
-    if (state === 'run' && G.cur.length < 5) {
-      const sl = slot(G.cur.length), wy = base + sl.y;
-      g.save(); g.translate(cx + sl.x + shift(wy), sy(wy)); g.rotate(sl.rot);
+    // The place of the next card: a lit, softly pulsing outline, and a
+    // dotted plumb line up to a mark on the rail (drawRail) — drop when the
+    // hanging card passes over the mark.
+    if (state === 'run' && G.cur.length < 5 && !G.fall) {
+      const sl = slot(G.cur.length), wy = base + sl.y, x = cx + sl.x + shift(wy), y = sy(wy);
+      const col = shell.theme.light ? '140,101,16' : '216,178,90';
+      const pulse = shell.reduced ? 0.8 : 0.6 + 0.4 * Math.sin(time * 5);
+      g.save();
+      g.setLineDash([2, 4]); g.strokeStyle = 'rgba(' + col + ',' + (0.35 + 0.2 * pulse).toFixed(2) + ')'; g.lineWidth = 1;
+      g.beginPath(); g.moveTo(x, railY + 8); g.lineTo(x, y - sl.h / 2 - 4); g.stroke(); g.setLineDash([]);
+      g.translate(x, y); g.rotate(sl.rot);
       rr(g, -sl.w / 2, -sl.h / 2, sl.w, sl.h, 3);
-      g.setLineDash([3, 3]); g.strokeStyle = 'rgba(216,178,90,.55)'; g.lineWidth = 1; g.stroke(); g.setLineDash([]);
+      g.fillStyle = 'rgba(' + col + ',' + (0.14 + 0.12 * pulse).toFixed(2) + ')'; g.fill();
+      g.strokeStyle = 'rgba(' + col + ',' + (0.6 + 0.35 * pulse).toFixed(2) + ')'; g.lineWidth = 1.8; g.stroke();
       g.restore();
     }
+  }
+  /** Screen x of the place of the next card (null when there is none to show). */
+  function targetX() {
+    if (state !== 'run' || G.cur.length >= 5 || G.fall) return null;
+    const sl = slot(G.cur.length);
+    return W() / 2 + sl.x + shift(G.floors.length * FH + sl.y);
   }
   function drawRail(g) {
     const w = W(), cx = w / 2, A = amp();
@@ -414,6 +436,13 @@ export function create(shell) {
       if (state === 'run') { g.save(); g.translate(shoeX - 2, railY + 18); drawFace(g, img, G.next, 24, 34); g.restore(); }
     }
     if (state === 'over') return;
+    // The mark of the place on the rail: a small gold arrow under it.
+    const tx = targetX();
+    if (tx != null) {
+      g.fillStyle = shell.theme.light ? '#8a6510' : '#d8b25a';
+      g.beginPath(); g.moveTo(tx - 6, railY + 4); g.lineTo(tx + 6, railY + 4); g.lineTo(tx, railY + 11); g.closePath(); g.fill();
+      g.fillRect(tx - 1, railY - 7, 2, 7);
+    }
     // The trolley (a chip) and the hanging card.
     const x = cx + G.railX;
     if (!G.fall) {
