@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Mini-games instead of Arcade, the lessons removed** (`web.101`) — the page and its title are now « Mini-games »
+  (`gmTitle`, 83 languages). The « Learn poker » shelf is gone with its six lessons (`games/preflop*.mjs`,
+  `nuts`, `outs`, `potodds`, `equity`), their secret trophies, covers, strings and tests; « Who Wins? » is back
+  on the « Just for fun » shelf (future unlock at 21 trophies, Higher or Lower 24, The Ace's Bluff 27). Trophies
+  no longer defined are left out of the trophy counts (`achievements/index.mjs`), so a lesson's trophy won
+  before stops counting.
 - **Search engines and AI assistants get the real picture** — the help and the FAQ no longer say a pokerth.net
   account is required: guest login (Normal games), nickname-only LAN / dedicated servers and offline
   training are spelled out, in the 83 languages. Five new FAQ answers (playing with friends, invitation

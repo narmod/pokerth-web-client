@@ -4,7 +4,7 @@
 // 2026-10-16). Not in the official QML client.
 //
 // In training (server « Training vs bots »), typing the secret word as the
-// nickname and pressing Connect opens the arcade menu (menu.mjs: Ace Runner,
+// nickname and pressing Connect opens the mini-games page (menu.mjs: Ace Runner,
 // House of Cards, Poker Solitaire…) instead of a table (App.connect() in pokerth.js asks
 // tryLaunch() first). The word is the translation of gameWordAce (« mascot »)
 // in the current language, plus the English word, which works in every
@@ -23,37 +23,28 @@
 // ═══════════════════════════════════════════════════════════════════
 
 export const HOME = 'arcade';
-// The arcade's two shelves: a learning path (in its order) and the games
-// played for fun. The home page (menu.mjs) shows them one under the other.
+// The mini-games' shelf: the games played for fun (menu.mjs lists them in
+// this order).
 export const SHELVES = [
-  { id: 'learn', titleKey: 'gmShelfLearn', introKey: 'gmShelfLearnIntro' },
   { id: 'play', titleKey: 'gmShelfPlay' },
 ];
-// page: no stage (the arcade's home); shelf: where its card goes; rulesKey:
+// page: no stage (the home page); shelf: where its card goes; rulesKey:
 // the rules sheet (« ? » in the header, « Rules » on the home page); aspect:
 // the stage's width / height range.
 // unlock: what will open the game in the future « Arcade » mode of the login
 // (not active yet — the secret word opens everything): {} from the start,
-// { trophy: id } once that trophy is won (the learning path: each lesson's
-// trophy opens the next one), { trophies: n } with n trophies won in all.
-// The numbers are a first draft, to be tuned when the mode is built.
+// { trophy: id } once that trophy is won, { trophies: n } with n trophies won
+// in all. The numbers are a first draft, to be tuned when the mode is built.
 export const ARCADE_UNLOCK = { trophies: 10 };
 export const GAMES = [
-  { id: HOME, name: 'Arcade', page: true, load: () => import('./menu.mjs') },
-  // ── Learn ──
-  { id: 'preflop', shelf: 'learn', unlock: {}, nameKey: 'ppName', icon: '🪑', rulesKey: 'ppRules', aspect: [0.6, 2.2], load: () => import('./preflop.mjs') },
-  { id: 'nuts', shelf: 'learn', unlock: { trophy: 'preflop' }, nameKey: 'ntName', icon: '🥜', rulesKey: 'ntRules', aspect: [0.6, 2.2], load: () => import('./nuts.mjs') },
-  { id: 'whowins', shelf: 'learn', unlock: { trophy: 'nuts' }, nameKey: 'wwName', icon: '⚖️', rulesKey: 'wwRules', aspect: [0.6, 2.2], load: () => import('./whowins.mjs') },
-  { id: 'outs', shelf: 'learn', unlock: { trophy: 'whowins' }, nameKey: 'otName', icon: '🧮', rulesKey: 'otRules', aspect: [0.6, 2.2], load: () => import('./outs.mjs') },
-  { id: 'potodds', shelf: 'learn', unlock: { trophy: 'outs' }, nameKey: 'pdName', icon: '📐', rulesKey: 'pdRules', aspect: [0.6, 2.2], load: () => import('./potodds.mjs') },
-  { id: 'equity', shelf: 'learn', unlock: { trophy: 'potodds' }, nameKey: 'eqName', icon: '🎯', rulesKey: 'eqRules', aspect: [0.6, 2.2], load: () => import('./equity.mjs') },
-  // ── For fun ──
+  { id: HOME, nameKey: 'gmTitle', name: 'Mini-games', page: true, load: () => import('./menu.mjs') },
   { id: 'ace-runner', shelf: 'play', unlock: {}, name: 'Ace Runner', icon: '🏃', rulesKey: 'arRules', aspect: [4 / 3, 2.4], load: () => import('./ace-runner.mjs') },
   { id: 'house', shelf: 'play', unlock: { trophies: 12 }, nameKey: 'hcName', icon: '🃏', rulesKey: 'hcRules', aspect: [4 / 3, 2.4], load: () => import('./house.mjs') },
   { id: 'solitaire', shelf: 'play', unlock: { trophies: 15 }, nameKey: 'psName', icon: '♠', rulesKey: 'psRules', aspect: [1.25, 2.2], load: () => import('./solitaire.mjs') },
   { id: 'videopoker', shelf: 'play', unlock: { trophies: 18 }, nameKey: 'vpName', icon: '🎰', rulesKey: 'vpRules', aspect: [0.6, 2.2], load: () => import('./videopoker.mjs') },
-  { id: 'hilo', shelf: 'play', unlock: { trophies: 21 }, nameKey: 'hlName', icon: '↕️', rulesKey: 'hlRules', aspect: [0.6, 2.2], load: () => import('./hilo.mjs') },
-  { id: 'bluff', shelf: 'play', unlock: { trophies: 24 }, nameKey: 'blName', icon: '🎭', rulesKey: 'blRules', aspect: [0.6, 2.2], load: () => import('./bluff.mjs') },
+  { id: 'whowins', shelf: 'play', unlock: { trophies: 21 }, nameKey: 'wwName', icon: '⚖️', rulesKey: 'wwRules', aspect: [0.6, 2.2], load: () => import('./whowins.mjs') },
+  { id: 'hilo', shelf: 'play', unlock: { trophies: 24 }, nameKey: 'hlName', icon: '↕️', rulesKey: 'hlRules', aspect: [0.6, 2.2], load: () => import('./hilo.mjs') },
+  { id: 'bluff', shelf: 'play', unlock: { trophies: 27 }, nameKey: 'blName', icon: '🎭', rulesKey: 'blRules', aspect: [0.6, 2.2], load: () => import('./bluff.mjs') },
 ];
 /**
  * Would game `g` be open in the future Arcade mode? have = { count, owned }:

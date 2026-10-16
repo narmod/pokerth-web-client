@@ -304,7 +304,7 @@ export function run(def, gameMod, opts = {}) {
       shell.layer.innerHTML = ''; shell.hud.innerHTML = ''; shell.hud.className = 'pg-hud'; view.innerHTML = '';
       shell.panel(null); shell.pause(false); padOn = true; root.classList.remove('pg-nopad');
       cur = d; window._pthPadOwner = d.id;
-      if (titleEl) titleEl.textContent = d.id === opts.home ? 'Arcade' : (d.name || 'Arcade');
+      if (titleEl) titleEl.textContent = d.id === opts.home ? (tr('gmTitle') || 'Mini-games') : (d.name || tr('gmTitle') || 'Mini-games');
       if (helpBtn) helpBtn.style.display = d.rulesKey ? '' : 'none';
       layout();
       try { game = mod.create(shell); } catch (e) { try { console.warn('[games]', e); } catch (e2) {} }

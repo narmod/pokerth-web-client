@@ -123,24 +123,4 @@ export const ACHIEVEMENTS = [
   // partie du « Bluff de l'As » (modules/games/bluff.mjs).
   { id: 'bluff',         icon: '🎭', cat: CATS.secret, when: 'always',
     test: () => false },
-  // Débloqué par grantSecret('preflop') : 18 bonnes réponses sur 20 à « Ouvrir
-  // ou passer ? », leçon 1 du rayon Apprendre (modules/games/preflop.mjs).
-  { id: 'preflop',       icon: '🪑', cat: CATS.secret, when: 'always',
-    test: () => false },
-  // Débloqué par grantSecret('nuts') : 13 nuts trouvés sur 15 à « Trouve les
-  // nuts », leçon 2 du rayon Apprendre (modules/games/nuts.mjs).
-  { id: 'nuts',          icon: '🥜', cat: CATS.secret, when: 'always',
-    test: () => false },
-  // Débloqué par grantSecret('outs') : 10 bons comptes sur 12 à « Combien
-  // d'outs ? », leçon 4 du rayon Apprendre (modules/games/outs.mjs).
-  { id: 'outs',          icon: '🧮', cat: CATS.secret, when: 'always',
-    test: () => false },
-  // Débloqué par grantSecret('potodds') : 10 bonnes décisions sur 12 à « Call
-  // ou Fold ? », leçon 5 du rayon Apprendre (modules/games/potodds.mjs).
-  { id: 'potodds',       icon: '📐', cat: CATS.secret, when: 'always',
-    test: () => false },
-  // Débloqué par grantSecret('equity') : 24 points sur 30 à « Qui est devant ? »,
-  // leçon 6 du rayon Apprendre (modules/games/equity.mjs).
-  { id: 'equity',        icon: '🎯', cat: CATS.secret, when: 'always',
-    test: () => false },
 ];

@@ -67,10 +67,10 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     arts: [...document.querySelectorAll('#pth-game .gm-card .gm-art svg')].length,
     shelves: [...document.querySelectorAll('#pth-game .gm-shelf')].map((x) => x.getAttribute('data-shelf')),
   }));
-  ok(st.open && st.ace && st.page && st.title === 'Arcade', label + ': the arcade page opens with the Ace');
+  ok(st.open && st.ace && st.page && st.title === 'Mini-jeux', label + ': the mini-games page opens with the Ace');
   ok(st.back && st.menu, label + ': with the header of the other pages (back, ⚙ menu)');
-  const ALL = ['Ouvrir ou passer ?', 'Trouve les nuts', 'Combien d\'outs ?', 'Call ou Fold ?', 'Qui est devant ?', 'Ace Runner', 'Château de cartes', 'Poker Solitaire', 'Vidéo Poker', 'Qui gagne ?', 'Plus haut / Plus bas', 'Le Bluff de l\'As'];
-  ok(ALL.every((n) => st.tiles.indexOf(n) >= 0) && st.shelves.join('|') === 'learn|play', label + ': it lists the games on two shelves (' + st.tiles.join(', ') + ')');
+  const ALL = ['Ace Runner', 'Château de cartes', 'Poker Solitaire', 'Vidéo Poker', 'Qui gagne ?', 'Plus haut / Plus bas', 'Le Bluff de l\'As'];
+  ok(ALL.every((n) => st.tiles.indexOf(n) >= 0) && st.shelves.join('|') === 'play' && st.tiles.length === ALL.length, label + ': it lists the games on one shelf (' + st.tiles.join(', ') + ')');
   ok(st.arts === st.tiles.length, label + ': every game has its picture (' + st.arts + ')');
   ok(st.nick === 'Narmod' && st.stored === 'Narmod', label + ': the real nickname is back (field ' + st.nick + ', stored ' + st.stored + ')');
   ok(st.pad === 'arcade', label + ': the gamepad navigation steps aside');
@@ -107,7 +107,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(await pg.evaluate(() => !document.querySelector('#pth-game .pg-pause').hidden), label + ': Esc during a run pauses');
   await pg.keyboard.press('Escape');
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
-  ok(await pg.evaluate(() => !!document.querySelector('#pth-game .gm-card') && document.getElementById('ar-title').textContent === 'Arcade'), label + ': Esc again goes back to the arcade page');
+  ok(await pg.evaluate(() => !!document.querySelector('#pth-game .gm-card') && document.getElementById('ar-title').textContent === 'Mini-jeux'), label + ': Esc again goes back to the mini-games page');
   // ── House of Cards ──
   await pick(pg, 'house');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Château de cartes', null, { timeout: 8000 }).catch(() => {});
@@ -244,124 +244,6 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.keyboard.press('ArrowUp');
   await pg.waitForFunction(() => window.__pthHL.state() === 'guess', null, { timeout: 3000 }).catch(() => {});
   ok(await pg.evaluate(() => window.__pthHL.run().lives === 2 && window.__pthHL.run().pot === 10), label + ': a wrong guess loses the pot and a heart');
-  await pg.keyboard.press('Escape'); await sleep(200);
-  await pg.keyboard.press('Escape'); await sleep(500);
-  // ── Open or Fold?: the chart decides, the chart is shown ──
-  await pick(pg, 'preflop');
-  await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Ouvrir ou passer ?', null, { timeout: 8000 }).catch(() => {});
-  ok(await pg.evaluate(() => window._pthPadOwner === 'preflop'), label + ': its card then Space opens Open or Fold?');
-  await pg.keyboard.press('Space');
-  await sleep(300);
-  const should = () => pg.evaluate(async () => { const m = await import('/modules/games/preflop-chart.mjs'); const G = window.__pthPP.run(); return m.opens(G.pos, G.cls); });
-  await shot(pg, label + '-pp-ask');
-  await pg.keyboard.press((await should()) ? 'ArrowRight' : 'ArrowLeft');
-  await sleep(250);
-  const pp1 = await pg.evaluate(() => ({ st: window.__pthPP.state(), ok: window.__pthPP.run().ok, score: document.querySelector('#pth-game .pp-score').textContent }));
-  ok(pp1.st === 'shown' && pp1.ok && pp1.score === '1', label + ': the right answer scores, the chart of the position is shown');
-  await shot(pg, label + '-pp-shown');
-  await pg.keyboard.press('Space');
-  await sleep(250);
-  await pg.keyboard.press((await should()) ? 'ArrowLeft' : 'ArrowRight');
-  await sleep(250);
-  ok(await pg.evaluate(() => !window.__pthPP.run().ok && window.__pthPP.run().log.length === 2), label + ': a wrong answer is logged as a mistake');
-  await pg.keyboard.press('Escape'); await sleep(200);
-  await pg.keyboard.press('Escape'); await sleep(500);
-  // ── Find the Nuts: the right pair scores, every hand is then named ──
-  await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
-  await pick(pg, 'nuts');
-  await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Trouve les nuts', null, { timeout: 8000 }).catch(() => {});
-  ok(await pg.evaluate(() => window._pthPadOwner === 'nuts'), label + ': its card then Space opens Find the Nuts');
-  await pg.keyboard.press('Space');
-  await sleep(300);
-  await shot(pg, label + '-nt-ask');
-  const goTo = async (to) => { for (let i = 0; i < 4 && await pg.evaluate(() => window.__pthNT.run().sel) !== to; i++) { await pg.keyboard.press('ArrowRight'); await sleep(60); } };
-  await goTo(await pg.evaluate(() => window.__pthNT.run().q.answer));
-  await pg.keyboard.press('Space');
-  await sleep(250);
-  const nt1 = await pg.evaluate(() => ({ st: window.__pthNT.state(), ok: window.__pthNT.run().ok, score: document.querySelector('#pth-game .nt-score').textContent }));
-  ok(nt1.st === 'shown' && nt1.ok && nt1.score === '1', label + ': the nuts scores and every pair shows its hand');
-  await shot(pg, label + '-nt-shown');
-  await pg.keyboard.press('Space');
-  await sleep(250);
-  await goTo(await pg.evaluate(() => (window.__pthNT.run().q.answer + 1) % 4));
-  await pg.keyboard.press('Space');
-  await sleep(250);
-  ok(await pg.evaluate(() => !window.__pthNT.run().ok && window.__pthNT.run().n === 2 && window.__pthNT.run().right === 1), label + ': a beaten pair is a miss');
-  await pg.keyboard.press('Escape'); await sleep(200);
-  await pg.keyboard.press('Escape'); await sleep(500);
-  // ── Count the Outs: the right count scores, the outs are shown ──
-  await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
-  await pick(pg, 'outs');
-  await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Combien d\'outs ?', null, { timeout: 8000 }).catch(() => {});
-  ok(await pg.evaluate(() => window._pthPadOwner === 'outs'), label + ': its card then Space opens Count the Outs');
-  await pg.keyboard.press('Space');
-  await sleep(300);
-  await shot(pg, label + '-ot-ask');
-  const otTo = async (to) => { for (let i = 0; i < 4 && await pg.evaluate(() => window.__pthOT.run().sel) !== to; i++) { await pg.keyboard.press('ArrowRight'); await sleep(60); } };
-  await otTo(await pg.evaluate(() => window.__pthOT.run().q.answer));
-  await pg.keyboard.press('Space');
-  await sleep(250);
-  const ot1 = await pg.evaluate(() => ({ st: window.__pthOT.state(), ok: window.__pthOT.run().ok, score: document.querySelector('#pth-game .ot-score').textContent }));
-  ok(ot1.st === 'shown' && ot1.ok && ot1.score === '1', label + ': the right count scores and the outs are shown');
-  await shot(pg, label + '-ot-shown');
-  await pg.keyboard.press('Space');
-  await sleep(250);
-  await otTo(await pg.evaluate(() => (window.__pthOT.run().q.answer + 1) % 4));
-  await pg.keyboard.press('Space');
-  await sleep(250);
-  ok(await pg.evaluate(() => !window.__pthOT.run().ok && window.__pthOT.run().n === 2 && window.__pthOT.run().right === 1), label + ': a wrong count is a miss');
-  await shot(pg, label + '-ot-miss');
-  await pg.keyboard.press('Escape'); await sleep(200);
-  await pg.keyboard.press('Escape'); await sleep(500);
-  // ── Call or Fold?: the pot odds decide ──
-  await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
-  await pick(pg, 'potodds');
-  await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Call ou Fold ?', null, { timeout: 8000 }).catch(() => {});
-  ok(await pg.evaluate(() => window._pthPadOwner === 'potodds'), label + ': its card then Space opens Call or Fold?');
-  await pg.keyboard.press('Space');
-  await sleep(300);
-  await shot(pg, label + '-pd-ask');
-  await pg.keyboard.press((await pg.evaluate(() => window.__pthPD.run().q.call)) ? 'ArrowRight' : 'ArrowLeft');
-  await sleep(250);
-  const pd1 = await pg.evaluate(() => ({ st: window.__pthPD.state(), ok: window.__pthPD.run().ok, score: document.querySelector('#pth-game .pd-score').textContent }));
-  ok(pd1.st === 'shown' && pd1.ok && pd1.score === '1', label + ': the right decision scores and the odds are explained');
-  await shot(pg, label + '-pd-shown');
-  await pg.keyboard.press('Space');
-  await sleep(250);
-  await pg.keyboard.press((await pg.evaluate(() => window.__pthPD.run().q.call)) ? 'ArrowLeft' : 'ArrowRight');
-  await sleep(250);
-  ok(await pg.evaluate(() => !window.__pthPD.run().ok && window.__pthPD.run().n === 2 && window.__pthPD.run().right === 1), label + ': a wrong decision is a miss');
-  await shot(pg, label + '-pd-miss');
-  await pg.keyboard.press('Escape'); await sleep(200);
-  await pg.keyboard.press('Escape'); await sleep(500);
-  // ── Who's Ahead?: set the bar, the deal is played out ──
-  await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
-  await pick(pg, 'equity');
-  await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Qui est devant ?', null, { timeout: 8000 }).catch(() => {});
-  ok(await pg.evaluate(() => window._pthPadOwner === 'equity'), label + ": its card then Space opens Who's Ahead?");
-  await pg.keyboard.press('Space');
-  await sleep(400);
-  await shot(pg, label + '-eq-ask');
-  const eqTo = async (pct) => {
-    for (let i = 0; i < 22; i++) {
-      const g = await pg.evaluate(() => window.__pthEQ.run().guess);
-      if (Math.abs(g - pct) <= 2.5) break;
-      await pg.keyboard.press(g < pct ? 'ArrowRight' : 'ArrowLeft'); await sleep(40);
-    }
-  };
-  await eqTo(await pg.evaluate(() => window.__pthEQ.run().q.eq * 100));
-  await pg.keyboard.press('Space');
-  await sleep(300);
-  const eq1 = await pg.evaluate(() => ({ st: window.__pthEQ.state(), pts: window.__pthEQ.run().pts, score: document.querySelector('#pth-game .eq-score').textContent }));
-  ok(eq1.st === 'shown' && eq1.pts === 3 && eq1.score === '3', label + ': a guess on the mark scores 3 points and the truth is shown');
-  await shot(pg, label + '-eq-shown');
-  await pg.keyboard.press('Space');
-  await sleep(400);
-  await eqTo((await pg.evaluate(() => window.__pthEQ.run().q.eq * 100)) > 50 ? 0 : 100);
-  await pg.keyboard.press('Space');
-  await sleep(300);
-  ok(await pg.evaluate(() => window.__pthEQ.run().pts === 0 && window.__pthEQ.run().n === 2 && window.__pthEQ.run().points === 3), label + ': a guess far off scores nothing');
-  await shot(pg, label + '-eq-miss');
   await pg.keyboard.press('Escape'); await sleep(200);
   await pg.keyboard.press('Escape'); await sleep(500);
   // ── The Ace's Bluff: he bets, Call shows his cards; Fold gives up the ante ──

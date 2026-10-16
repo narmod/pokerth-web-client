@@ -61,7 +61,7 @@ ok(NAME_KEYS.length === 10 && MULT.length === 10, 'ten categories');
 
 console.log('secret word');
 const { art } = await import('../public/modules/games/art.mjs');
-for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker', 'whowins', 'hilo', 'bluff', 'preflop', 'nuts', 'outs', 'potodds', 'equity']) {
+for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker', 'whowins', 'hilo', 'bluff']) {
   const d = art(id, false), l = art(id, true);
   const ids = [...d.matchAll(/id="([^"]+)"/g)].map((m) => m[1]), idsL = [...l.matchAll(/id="([^"]+)"/g)].map((m) => m[1]);
   ok(/^<svg[^>]*viewBox="0 0 320 140"/.test(d) && d !== l && ids.every((x) => idsL.indexOf(x) < 0), id + ': a cover picture, one for each theme, ids that do not clash');
@@ -78,12 +78,7 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'wwName', 'wwHint', 'wwSplit', 'wwTooSlow', 'wwRules', 'ach_whowins', 'ach_whowins_d', 'gmAgain',
   'hlName', 'hlHint', 'hlHigher', 'hlLower', 'hlCash', 'hlPot', 'hlRules', 'ach_hilo', 'ach_hilo_d',
   'blName', 'blHint', 'blBets', 'blBluff', 'blTells', 'blChips', 'blRules', 'ach_bluff', 'ach_bluff_d',
-  'gmShelfLearn', 'gmShelfLearnIntro', 'gmShelfPlay',
-  'ppName', 'ppHint', 'ppFolded', 'ppRange', 'ppRules', 'ach_preflop', 'ach_preflop_d',
-  'ntName', 'ntHint', 'ntIs', 'ntRules', 'ach_nuts', 'ach_nuts_d',
-  'otName', 'otHint', 'otOuts', 'otRule4', 'otRule2', 'otRules', 'ach_outs', 'ach_outs_d',
-  'pdName', 'pdHint', 'pdOdds', 'pdNeed', 'pdRules', 'ach_potodds', 'ach_potodds_d',
-  'eqName', 'eqHint', 'eqTruth', 'eqRules', 'ach_equity', 'ach_equity_d', 'confirmCall'];
+  'gmShelfPlay', 'gmTitle'];
 let missing = [], badRecord = [];
 for (const f of files) {
   const { strings } = await import(path.join(langDir, f));
@@ -169,86 +164,13 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
     "The Ace's Bluff: he bets every better hand, bluffs about half his worse ones (" + bluffs + '/2000), checks a tie');
   ok(tellOnBluff / bluffs > 0.75 && tellOnBet / 2000 < 0.25 && TELLS.length === 6,
     "The Ace's Bluff: his tell shows on most bluffs (" + Math.round(100 * tellOnBluff / bluffs) + '%) and on few value bets (' + Math.round(100 * tellOnBet / 2000) + '%)');
-  // Open or Fold?: the opening chart.
-  const pf = await import('../public/modules/games/preflop-chart.mjs');
-  const width = (p) => { let n = 0; for (let i = 0; i < 13; i++) for (let j = 0; j < 13; j++) if (pf.opens(p, pf.cellClass(i, j))) n += i === j ? 6 : i < j ? 4 : 12; return n / 1326; };
-  ok(pf.POSITIONS.every((p, k) => !k || width(p) >= width(pf.POSITIONS[k - 1]) || p === 'SB'), 'Open or Fold?: the later the position, the wider the range (UTG ' + Math.round(100 * width('UTG')) + '% … BTN ' + Math.round(100 * width('BTN')) + '%)');
-  ok(pf.opens('UTG', 'AA') && pf.opens('UTG', '77') && !pf.opens('UTG', '66') && !pf.opens('UTG', 'KJo') && pf.opens('BTN', 'A5o') && !pf.opens('BTN', 'A4o') && pf.opens('CO', 'A2s'),
-    'Open or Fold?: UTG opens 77 not 66, the button A5o not A4o, the cutoff any suited ace');
-  ok(pf.classOf(12, 25) === 'AA' && pf.classOf(12, 11) === 'AKs' && pf.classOf(24, 12) === 'AKo' && pf.cellOf('AKs').join() === '0,1' && pf.cellClass(1, 0) === 'AKo',
-    'Open or Fold?: hand classes and the 13 × 13 grid');
-  const cc = pf.cardsOf('T9s'), co = pf.cardsOf('T9o');
-  ok(pf.classOf(cc[0], cc[1]) === 'T9s' && pf.classOf(co[0], co[1]) === 'T9o' && pf.edgeClasses('UTG').length > 10, 'Open or Fold?: cards for a class, and the close calls on the edge of a range');
-  // Find the Nuts: one pair makes the best hand, the three others do not.
-  const nt = await import('../public/modules/games/nuts.mjs');
-  const rn = rng(77);
-  let ntBad = 0;
-  const ntCats = new Set();
-  for (let i = 0; i < 150; i++) {
-    const q = nt.makeQuestion(rn);
-    const all = new Set(q.board.concat(...q.options));
-    const hands = q.options.map((o) => rankHand(q.board.concat(o)));
-    const beaten = hands.every((h, k) => k === q.answer || compareHands(hands[q.answer], h) > 0);
-    if (all.size !== 13 || q.options.length !== 4 || !beaten) ntBad++;
-    ntCats.add(q.ranks[q.answer].cat);
-  }
-  ok(nt.fiveRanks(rankHand([12, 1, 2, 3, 30, 40, 50])) === '3 3 A K 6' && nt.fiveRanks(rankHand([12, 0, 1, 2, 3, 40, 44])) === '5 4 3 2 A',
-    'Find the Nuts: two hands of the same kind are told apart by their five cards (a pair first, the wheel ends on its ace)');
-  ok(ntBad === 0 && ntCats.size >= 3, 'Find the Nuts: 13 different cards, one pair beats the three others (' + ntCats.size + ' kinds of nuts)');
-  // Count the Outs: the classic draws, the rule of 4 and 2.
-  const ot = await import('../public/modules/games/outs.mjs');
-  const C = (r, s) => s * 13 + r - 2;            // rank 2..14, suit 0 ♦ 1 ♥ 2 ♠ 3 ♣
-  const H = 1, S = 2, CL = 3, D = 0;
-  ok(ot.outsOf([C(9, H), C(8, H)], [C(2, H), C(13, H), C(5, S)]).length === 9
-    && ot.outsOf([C(9, S), C(8, CL)], [C(7, D), C(6, H), C(13, S)]).length === 8
-    && ot.outsOf([C(9, S), C(8, CL)], [C(6, D), C(5, H), C(13, S)]).length === 4
-    && ot.outsOf([C(9, H), C(8, H)], [C(7, H), C(6, CL), C(13, H)]).length === 15,
-    'Count the Outs: a flush draw has 9 outs, an open-ended straight draw 8, a gutshot 4, both draws 15');
-  ok(ot.outsOf([C(5, H), C(5, S)], [C(5, D), C(13, CL), C(9, S)]).length === 7, 'Count the Outs: a set on the flop has 7 outs to a full house or four of a kind');
-  ok(ot.oddsOf(9, true).rule === 36 && ot.oddsOf(9, true).exact === 35 && ot.oddsOf(9, false).rule === 18 && ot.oddsOf(9, false).exact === 20,
-    'Count the Outs: 9 outs, the rule of 4 says 36 % (35 % exact), the rule of 2 18 % (20 %)');
-  const ro = rng(5);
-  let otBad = 0;
-  for (let i = 0; i < 150; i++) {
-    const q = ot.makeQuestion(ro);
-    if (!q || q.choices.length !== 4 || new Set(q.choices).size !== 4 || q.choices[q.answer] !== q.outs.length || q.outs.length !== ot.outsOf(q.hand, q.board).length || q.choices.some((x) => x < 1)) otBad++;
-  }
-  ok(otBad === 0, 'Count the Outs: four different counts, the right one among them');
-  // Call or Fold?: pot odds against the chances of a pure draw.
-  const pd = await import('../public/modules/games/potodds.mjs');
-  ok(Math.abs(pd.needed(100, 50) - 0.25) < 1e-9 && Math.abs(pd.needed(100, 100) - 1 / 3) < 1e-9, 'Call or Fold?: half the pot needs 25 %, a pot-size bet 33 %');
-  const rp = rng(9);
-  let pdBad = 0, pdCalls = 0;
-  for (let i = 0; i < 200; i++) {
-    const q = pd.makeSpot(rp);
-    if (!q) { pdBad++; continue; }
-    const pure = rankHand(q.hand.concat(q.board)).cat === rankHand(q.board).cat;
-    if (!pure || q.board.length !== 4 || Math.abs(q.eq - q.need) < pd.MARGIN || (q.eq > q.need) !== q.call || q.outs.length !== ot.outsOf(q.hand, q.board).length) pdBad++;
-    if (q.call) pdCalls++;
-  }
-  ok(pdBad === 0 && pdCalls > 70 && pdCalls < 130, 'Call or Fold?: pure draws on the turn, never a close call, about half of them calls (' + pdCalls + '/200)');
-  // Who's Ahead?: preflop equity, played out.
-  const eqm = await import('../public/modules/games/equity.mjs');
-  const re = rng(11);
-  const aa = eqm.equity([C(14, D), C(14, H)], [C(13, S), C(13, CL)], 20000, re);
-  const race = eqm.equity([C(7, D), C(7, H)], [C(14, S), C(13, CL)], 20000, re);
-  const dom = eqm.equity([C(14, D), C(13, H)], [C(14, S), C(12, CL)], 20000, re);
-  ok(aa > 0.79 && aa < 0.84 && race > 0.52 && race < 0.58 && dom > 0.71 && dom < 0.77,
-    "Who's Ahead?: AA v KK " + Math.round(aa * 100) + ' %, 77 v AKo ' + Math.round(race * 100) + ' %, AK v AQ ' + Math.round(dom * 100) + ' %');
-  ok(eqm.kindOf([C(7, D), C(7, H)], [C(14, S), C(13, CL)]) === 'race' && eqm.kindOf([C(14, S), C(13, CL)], [C(7, D), C(7, H)]) === 'race'
-    && eqm.kindOf([C(9, D), C(9, H)], [C(4, S), C(4, CL)]) === 'pairs' && eqm.kindOf([C(9, D), C(9, H)], [C(14, S), C(4, CL)]) === 'oneover'
-    && eqm.kindOf([C(9, D), C(9, H)], [C(5, S), C(4, CL)]) === 'under' && eqm.kindOf([C(14, D), C(13, H)], [C(14, S), C(12, CL)]) === 'dominated'
-    && eqm.kindOf([C(14, D), C(13, H)], [C(9, S), C(8, CL)]) === 'overs' && eqm.kindOf([C(14, D), C(8, H)], [C(13, S), C(9, CL)]) === 'any',
-    "Who's Ahead?: the classic kinds of matchups, seen from either side");
-  ok(eqm.pointsFor(50, 54) === 3 && eqm.pointsFor(60, 50) === 2 && eqm.pointsFor(35, 50) === 1 && eqm.pointsFor(80, 50) === 0, "Who's Ahead?: 3 points within 5, 2 within 10, 1 within 15");
-  const kinds = new Set();
-  for (let i = 0; i < 60; i++) { const q = eqm.makeMatchup(re, 200); if (q && new Set(q.me.concat(q.him)).size === 4 && q.eq >= 0 && q.eq <= 1) kinds.add(q.kind); }
-  ok(kinds.size === eqm.KINDS.length, "Who's Ahead?: every kind of matchup comes up (" + [...kinds].join(', ') + ')');
-  // The arcade's shelves and the (future) unlocks.
+  // The mini-games' shelf and the (future) unlocks; the lessons are gone.
   const reg = await import('../public/modules/games/index.mjs');
   const games = reg.GAMES.filter((g) => g.id !== reg.HOME);
   ok(games.every((g) => reg.SHELVES.some((sh) => sh.id === g.shelf) && g.unlock), 'every game sits on a shelf and says how it unlocks');
   const ids = new Set(games.map((g) => g.id));
+  ok(['preflop', 'nuts', 'outs', 'potodds', 'equity'].every((x) => !ids.has(x)) && reg.SHELVES.map((sh) => sh.id).join() === 'play' && ids.has('whowins'),
+    'one shelf, « Just for fun », with Who Wins? back on it and no lesson left');
   ok(games.every((g) => !g.unlock.trophy || ids.has(g.unlock.trophy) || g.unlock.trophy.length), 'unlock trophies are named');
   const house = games.find((g) => g.id === 'house');
   ok(reg.unlocked(house, { count: 12, owned: new Set() }) && !reg.unlocked(house, { count: 11, owned: new Set() })

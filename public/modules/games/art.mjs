@@ -223,77 +223,7 @@ function bluff(c) {
   return s;
 }
 
-function preflop(c) {
-  let s = feltBg(c, 'ppf');
-  s += '<ellipse cx="96" cy="66" rx="70" ry="38" fill="rgba(8,40,26,.55)" stroke="rgba(216,178,90,.6)" stroke-width="2"/>';
-  const seats = ['UTG', '+1', 'MP', 'LJ', 'HJ', 'CO', 'BTN', 'SB', 'BB'];
-  seats.forEach((p, k) => {
-    const a = Math.PI / 2 + ((k - 6) * 2 * Math.PI) / 9 + 0.35, x = 96 + Math.cos(a) * 72, y = 66 + Math.sin(a) * 40;
-    const me = p === 'CO', folded = k < 5;
-    s += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="10" fill="' + (me ? '#d8b25a' : folded ? 'rgba(60,70,66,.85)' : '#f5f0e3') + '" stroke="rgba(0,0,0,.4)"/>'
-      + '<text x="' + x.toFixed(1) + '" y="' + (y + 2.5).toFixed(1) + '" font-size="6" ' + TXT + ' text-anchor="middle" fill="' + (folded ? 'rgba(245,240,227,.6)' : '#141414') + '">' + p + '</text>';
-  });
-  s += card(184, 30, 34, 'A', 'h') + card(222, 30, 34, '9', 'h');
-  s += '<rect x="174" y="104" width="56" height="22" rx="8" fill="#b3261e"/><text x="202" y="119" font-size="10" ' + TXT + ' text-anchor="middle" fill="#f5f0e3">Fold</text>';
-  s += '<rect x="238" y="104" width="56" height="22" rx="8" fill="#d8b25a" stroke="#8a6510"/><text x="266" y="119" font-size="10" ' + TXT + ' text-anchor="middle" fill="#141414">Raise</text>';
-  for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) s += '<rect x="' + (272 + j * 7) + '" y="' + (8 + i * 7) + '" width="6" height="6" fill="' + (i + j < 6 || i === j ? '#d8b25a' : 'rgba(0,0,0,.3)') + '"/>';
-  return s;
-}
-
-function nuts(c) {
-  let s = feltBg(c, 'ntf');
-  [['9', 'h'], ['T', 'h'], ['J', 'h'], ['2', 'c'], ['5', 's']].forEach(([r, su], i) => { s += card(103 + i * 23, 10, 21, r === 'T' ? '10' : r, su); });
-  const opts = [[['A', 'h'], ['Q', 'h']], [['K', 'h'], ['Q', 'h']], [['Q', 'd'], ['8', 'c']], [['J', 'd'], ['J', 's']]];
-  opts.forEach((p, i) => {
-    const x = 18 + i * 74, nut = i === 1;
-    s += '<rect x="' + x + '" y="54" width="66" height="70" rx="8" fill="' + (nut ? 'rgba(63,174,106,.35)' : 'rgba(0,0,0,.2)') + '"' + (nut ? ' stroke="#7ee2a0" stroke-width="2"' : '') + '/>';
-    s += '<text x="' + (x + 5) + '" y="64" font-size="7" ' + TXT + ' fill="rgba(245,240,227,.7)">' + 'ABCD'[i] + '</text>';
-    s += card(x + 9, 62, 23, p[0][0], p[0][1]) + card(x + 35, 62, 23, p[1][0], p[1][1]);
-    if (nut) s += '<text x="' + (x + 33) + '' + '" y="120" font-size="7" ' + TXT + ' text-anchor="middle" fill="#f5d77a">ST.FLUSH</text>';
-  });
-  return s;
-}
-
-function outs(c) {
-  let s = feltBg(c, 'otf');
-  [['7', 'h'], ['6', 'c'], ['K', 'h']].forEach(([r, su], i) => { s += card(98 + i * 25, 8, 23, r, su); });
-  s += '<rect x="173" y="8" width="23" height="32" rx="3" fill="none" stroke="rgba(245,240,227,.3)" stroke-dasharray="3 3"/>';
-  s += '<rect x="198" y="8" width="23" height="32" rx="3" fill="none" stroke="rgba(245,240,227,.3)" stroke-dasharray="3 3"/>';
-  s += card(132, 46, 26, '9', 'h') + card(162, 46, 26, '8', 'h');
-  [9, 12, 15, 17].forEach((n, i) => {
-    const x = 70 + i * 47, ok = n === 15;
-    s += '<rect x="' + x + '" y="94" width="40" height="22" rx="6" fill="' + (ok ? 'rgba(63,174,106,.55)' : 'rgba(0,0,0,.28)') + '"' + (ok ? ' stroke="#7ee2a0" stroke-width="2"' : '') + '/>';
-    s += '<text x="' + (x + 20) + '" y="109" font-size="11" ' + TXT + ' text-anchor="middle" fill="' + (ok ? '#f5d77a' : '#f5f0e3') + '">' + n + '</text>';
-  });
-  s += '<text x="160" y="131" font-size="7" ' + TXT + ' text-anchor="middle" fill="#f5d77a">15 × 4 ≈ 60 %</text>';
-  return s;
-}
-
-function potodds(c) {
-  let s = feltBg(c, 'pdf');
-  s += ace(58, 100, 24, 'idle', limbOf(c)) + back(96, 22, 20) + back(118, 22, 20);
-  s += '<rect x="84" y="2" width="70" height="16" rx="7" fill="#f5f0e3"/><text x="119" y="13" font-size="8" ' + TXT + ' text-anchor="middle" fill="#141414">BET 30</text>';
-  [['9', 'h'], ['K', 'h'], ['4', 'c'], ['2', 's']].forEach(([r, su], i) => { s += card(150 + i * 25, 10, 23, r, su); });
-  s += '<rect x="250" y="10" width="23" height="32" rx="3" fill="none" stroke="rgba(245,240,227,.35)" stroke-dasharray="3 3"/>';
-  s += card(178, 54, 24, 'A', 'h') + card(205, 54, 24, '7', 'h');
-  s += '<text x="210" y="100" font-size="8" ' + TXT + ' text-anchor="middle" fill="#f5d77a">20 % &lt; 25 %</text>';
-  s += '<rect x="96" y="108" width="62" height="24" rx="8" fill="#b3261e" stroke="#7ee2a0" stroke-width="2"/><text x="127" y="124" font-size="10" ' + TXT + ' text-anchor="middle" fill="#f5f0e3">Fold</text>';
-  s += '<rect x="164" y="108" width="62" height="24" rx="8" fill="#d8b25a"/><text x="195" y="124" font-size="10" ' + TXT + ' text-anchor="middle" fill="#141414">Call 30</text>';
-  return s;
-}
-
-function equity(c) {
-  let s = feltBg(c, 'eqf');
-  s += ace(70, 66, 24, 'wave', limbOf(c)) + card(110, 12, 26, 'A', 'h') + card(140, 12, 26, 'K', 'h');
-  s += '<text x="174" y="38" font-size="9" ' + TXT + ' fill="rgba(245,240,227,.8)">AKs</text>';
-  s += card(134, 58, 28, 'Q', 's') + card(166, 58, 28, 'Q', 'c');
-  s += '<text x="202" y="84" font-size="10" ' + TXT + ' fill="#f5d77a">QQ</text>';
-  s += '<rect x="60" y="112" width="200" height="8" rx="4" fill="rgba(0,0,0,.3)"/><rect x="60" y="112" width="108" height="8" rx="4" fill="#d8b25a"/>';
-  s += '<path d="M168 110 l-5 -8 h10 z" fill="#7ee2a0"/><text x="168" y="134" font-size="9" ' + TXT + ' text-anchor="middle" fill="#7ee2a0">54 %</text>';
-  return s;
-}
-
-const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins, hilo, bluff, preflop, nuts, outs, potodds, equity };
+const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins, hilo, bluff };
 
 /** The cover picture of game `id` for the light or dark theme. */
 export function art(id, light) {

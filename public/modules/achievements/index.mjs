@@ -18,6 +18,9 @@ export { ACHIEVEMENTS, CATS } from './defs.mjs';
 // Succès « secret » (easter eggs) : exclus des compteurs unlocked/total pour
 // que le méta-succès Collectionneur garde exactement sa sémantique d'avant.
 const SECRET_IDS = new Set(ACHIEVEMENTS.filter(d => d.cat === 'secret').map(d => d.id));
+// Trophées encore définis : un succès retiré (ex. les leçons « Apprendre le
+// poker », web.101) reste dans le stockage mais ne compte plus.
+const KNOWN_IDS = new Set(ACHIEVEMENTS.map(d => d.id));
 
 export function createAchievements(opts = {}) {
   const store = opts.store || createStore(opts.storeOpts);
@@ -36,7 +39,7 @@ export function createAchievements(opts = {}) {
     hand: S.hand,
     place: S.place,
     hour: S._hour,
-    unlocked: store.unlockedList().filter(id => !SECRET_IDS.has(id)).length,
+    unlocked: store.unlockedList().filter(id => KNOWN_IDS.has(id) && !SECRET_IDS.has(id)).length,
     total: ACHIEVEMENTS.length - SECRET_IDS.size,
   });
 
@@ -62,7 +65,7 @@ export function createAchievements(opts = {}) {
         unlocked: store.isUnlocked(d.id),
       }));
     },
-    unlockedCount() { return store.unlockedList().length; },
+    unlockedCount() { return store.unlockedList().filter(id => KNOWN_IDS.has(id)).length; },
     total() { return ACHIEVEMENTS.length; },
     reset() { store.reset(); Object.assign(S, createSession()); },
   };
