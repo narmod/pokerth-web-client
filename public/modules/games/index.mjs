@@ -3,27 +3,36 @@
 // Hidden mini-games — registry and secret trigger (web extension, narmod
 // 2026-10-16). Not in the official QML client.
 //
-// In training (server « Training vs bots »), typing a game's secret word as
-// the nickname and pressing Connect opens that game instead of a table
-// (App.connect() in pokerth.js asks tryLaunch() first). The word is the
-// translation of the game's i18n key in the current language, plus the
-// English word, which works in every language. Matching ignores case,
+// In training (server « Training vs bots »), typing the secret word as the
+// nickname and pressing Connect opens the arcade menu (menu.mjs: Ace Runner,
+// House of Cards…) instead of a table (App.connect() in pokerth.js asks
+// tryLaunch() first). The word is the translation of gameWordAce (« mascot »)
+// in the current language, plus the English word, which works in every
+// language. Matching ignores case,
 // accents and surrounding spaces. The real nickname is put back in the field
 // and in pth_nick: the secret word is never kept (the field saves every
 // keystroke, so the name held before the field was edited is restored).
 //
-// Adding a game: one entry in GAMES (its own module exporting
-// start(shell, ctx)) and its word in every language file. The shared
-// overlay, loop, input and best score live in modules/games/shell.mjs.
+// Adding a game: one entry in GAMES (its own module exporting create(shell),
+// see shell.mjs) and its name and texts in every language file; the menu
+// lists it by itself. The shared overlay, loop, input and best score live in
+// shell.mjs, the Ace and the deck helpers in common.mjs.
 //
 // Loaded when the training mode is selected (pokerth.js), so the check in
 // connect() is synchronous; precached by the service worker (sw.js).
 // ═══════════════════════════════════════════════════════════════════
 
+export const HOME = 'arcade';
 export const GAMES = [
-  { id: 'ace-runner', wordKey: 'gameWordAce', words: ['mascot'], ach: 'runner',
-    load: () => import('./ace-runner.mjs') },
+  { id: HOME, name: 'Arcade', load: () => import('./menu.mjs') },
+  { id: 'ace-runner', name: 'Ace Runner', icon: '🏃', load: () => import('./ace-runner.mjs') },
+  { id: 'house', nameKey: 'hcName', icon: '🃏', load: () => import('./house.mjs') },
 ];
+// Secret words → what they open.
+export const TRIGGERS = [{ wordKey: 'gameWordAce', words: ['mascot'], open: HOME }];
+
+/** Display name of a game in the current language. */
+export function gameName(g, translate = tr) { return g.nameKey ? (translate(g.nameKey) || g.name || g.id) : g.name; }
 
 const tr = (k) => { try { const s = typeof window.t === 'function' ? window.t(k) : k; return s && s !== k ? s : ''; } catch (e) { return ''; } };
 
@@ -32,15 +41,22 @@ export function norm(s) {
   return String(s == null ? '' : s).normalize('NFD').replace(/[̀-ͯ]/g, '').trim().toLowerCase();
 }
 
-/** Id of the game whose secret word is `nick` (current language or English), else null. */
+/** What the secret word `nick` opens (current language or English), else null. */
 export function gameForNick(nick, translate = tr) {
   const n = norm(nick);
   if (!n) return null;
-  for (const g of GAMES) {
-    const words = g.words.concat([translate(g.wordKey)]).map(norm).filter(Boolean);
-    if (words.indexOf(n) >= 0) return g.id;
+  for (const tg of TRIGGERS) {
+    const words = tg.words.concat([translate(tg.wordKey)]).map(norm).filter(Boolean);
+    if (words.indexOf(n) >= 0) return tg.open;
   }
   return null;
+}
+
+/** [def, module] of game `id`. */
+export async function loadGame(id) {
+  const g = GAMES.find((x) => x.id === id);
+  if (!g) throw new Error('unknown game ' + id);
+  return [Object.assign({}, g, { name: gameName(g) }), await g.load()];
 }
 
 // ── The nickname held before the field was edited ─────────────────
@@ -71,14 +87,16 @@ export async function launch(id) {
   if (!g || open) return;
   open = true;
   try {
-    const [shellMod, gameMod] = await Promise.all([import('./shell.mjs'), g.load()]);
-    await shellMod.run(g, gameMod);
-    // Found it: its secret trophy, granted once the overlay is gone so the
-    // trophy toast (and the Ace's cheer) can be seen.
-    if (g.ach) {
+    const [shellMod, [def, gameMod]] = await Promise.all([import('./shell.mjs'), loadGame(id)]);
+    const grants = await shellMod.run(def, gameMod, { open: loadGame, home: HOME });
+    // Secret trophies the games asked for, granted once the overlay is gone
+    // so the trophy toast (and the Ace's cheer) can be seen.
+    if (grants && grants.length) {
       const m = await import('../achievements/index.mjs');
-      const a = m && m.grantSecret ? m.grantSecret(g.ach) : null;
-      if (a) window.dispatchEvent(new CustomEvent('pth-achievement', { detail: a }));
+      for (const id2 of grants) {
+        const a = m && m.grantSecret ? m.grantSecret(id2) : null;
+        if (a) window.dispatchEvent(new CustomEvent('pth-achievement', { detail: a }));
+      }
     }
   } catch (e) {
     try { console.warn('[games]', e); } catch (e2) {}

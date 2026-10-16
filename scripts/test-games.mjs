@@ -2,9 +2,10 @@
 // Hidden mini-games (public/modules/games/): pure parts, no browser.
 //   - poker-hand.mjs: best five-card hand among any number of cards, the
 //     Joker as a wild card, multipliers and hand-name keys.
-//   - index.mjs: the secret word (« mascot » or its translation) — present in
-//     every language file, matched regardless of case and accents, never an
-//     ordinary nickname; the other Ace Runner strings exist everywhere.
+//   - index.mjs: the secret word (« mascot » or its translation) opens the
+//     arcade menu — present in every language file, matched regardless of case
+//     and accents, never an ordinary nickname; the strings of the games
+//     (Ace Runner, House of Cards, menu) exist everywhere.
 // Run: node scripts/test-games.mjs
 import fs from 'fs';
 import path from 'path';
@@ -60,25 +61,27 @@ console.log('secret word');
 const langDir = path.resolve('public/modules/lang');
 const files = fs.readdirSync(langDir).filter((f) => f.endsWith('.mjs'));
 const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'arRecord', 'arNewRecord',
-  'arAgain', 'arPause', 'arDistance', 'arBlinds', 'arQuit', 'ach_runner', 'ach_runner_d'];
+  'arAgain', 'arPause', 'arDistance', 'arBlinds', 'arQuit', 'ach_runner', 'ach_runner_d',
+  'hcName', 'hcHint', 'hcFloors', 'hcScore', 'hcPerfect', 'hcSteady', 'hcCollapse', 'hcAgain', 'gmPick', 'ach_house', 'ach_house_d'];
 let missing = [], badRecord = [];
 for (const f of files) {
   const { strings } = await import(path.join(langDir, f));
   for (const k of KEYS) if (typeof strings[k] !== 'string' || !strings[k].trim()) missing.push(f + ':' + k);
   if (strings.arRecord && strings.arRecord.indexOf('{n}') < 0) badRecord.push(f);
   const tr = (k) => strings[k] || k;
-  if (gameForNick(strings.gameWordAce, tr) !== 'ace-runner') missing.push(f + ': own word not recognised');
-  if (gameForNick('mascot', tr) !== 'ace-runner') missing.push(f + ': English word not recognised');
+  if (gameForNick(strings.gameWordAce, tr) !== 'arcade') missing.push(f + ': own word not recognised');
+  if (gameForNick('mascot', tr) !== 'arcade') missing.push(f + ': English word not recognised');
 }
 ok(missing.length === 0, 'every language has the Ace Runner strings and a working word' + (missing.length ? ' — ' + missing.slice(0, 6).join(', ') : ''));
 ok(badRecord.length === 0, 'arRecord keeps {n}' + (badRecord.length ? ' — ' + badRecord.join(', ') : ''));
 const fr = (k) => ({ gameWordAce: 'mascotte' })[k] || k;
-ok(gameForNick('  MaScOtTe ', fr) === 'ace-runner', 'case and spaces ignored');
-ok(gameForNick('Mascóte', (k) => ({ gameWordAce: 'mascote' })[k] || k) === 'ace-runner', 'accents ignored');
+ok(gameForNick('  MaScOtTe ', fr) === 'arcade', 'case and spaces ignored');
+ok(gameForNick('Mascóte', (k) => ({ gameWordAce: 'mascote' })[k] || k) === 'arcade', 'accents ignored');
 ok(gameForNick('Narmod', fr) === null && gameForNick('Ace', fr) === null && gameForNick('As', fr) === null, 'ordinary nicknames, « Ace » and « As » included, do not trigger');
 ok(gameForNick('', fr) === null && gameForNick('mascottes', fr) === null, 'empty or longer words do not trigger');
 ok(norm('Éliminé') === 'elimine', 'norm strips accents');
-ok(GAMES.every((g) => typeof g.load === 'function' && g.wordKey && g.words.length), 'registry entries are complete');
+ok(GAMES.every((g) => typeof g.load === 'function' && g.id && (g.name || g.nameKey)), 'registry entries are complete');
+ok(GAMES.some((g) => g.id === 'arcade') && GAMES.some((g) => g.id === 'ace-runner') && GAMES.some((g) => g.id === 'house'), 'arcade menu, Ace Runner and House of Cards registered');
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);

@@ -99,4 +99,8 @@ export const ACHIEVEMENTS = [
   // (mot secret en pseudo d'entraînement, modules/games/index.mjs).
   { id: 'runner',        icon: '🏃', cat: CATS.secret, when: 'always',
     test: () => false },
+  // Débloqué par grantSecret('house') : un château de cartes de 10 étages dans
+  // le jeu caché (menu arcade, modules/games/house.mjs).
+  { id: 'house',         icon: '🃏', cat: CATS.secret, when: 'always',
+    test: () => false },
 ];

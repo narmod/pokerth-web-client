@@ -15,105 +15,19 @@
 // Sounds come from modules/sounds.mjs (mute and categories respected).
 // ═══════════════════════════════════════════════════════════════════
 
-import { actorKit } from '../mascot/engine.mjs';
 import { evalCards, JOKER, rankOf, suitOf } from './poker-hand.mjs';
+import { SUITS, RANKS, CHIP, rlab, isRed, fmt, faceUrl, backUrl, cardHtml, newDeck, imageCache, rr, aceActor } from './common.mjs';
 
-const ACE_ID = 'pth-game-ace';
 const GROUND_OFF = 74;        // ground line, from the bottom of the world
 const ACE_X = 120;            // the Ace's feet, from the left
 const S = 0.5;                // sprite scale (world px per sprite px)
 const BLIND_EVERY = 300;      // metres per blind level
 const ALLIN_MS = 4500;
-const SUITS = ['♦', '♥', '♠', '♣'];
-const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-const CHIP = [['#b3261e', '#f5f0e3'], ['#1f4e9e', '#f5f0e3'], ['#1e7a46', '#f5f0e3'], ['#1b1b1b', '#d8b25a']];
-
-const CSS = `
-#${ACE_ID}{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-#${ACE_ID} .ar-box{position:absolute;left:0;top:0;width:168px;height:228px;transform-origin:0 0;will-change:transform}
-#${ACE_ID} svg>ellipse[cy="180"]{display:none}
-#${ACE_ID} .mc-lean{transform:rotate(7deg)}
-#${ACE_ID} .run .mc-legL{animation:arLeg .3s ease-in-out infinite alternate}
-#${ACE_ID} .run .mc-legR{animation:arLeg .3s ease-in-out infinite alternate-reverse}
-#${ACE_ID} .run .mc-armL{animation:arArm .3s ease-in-out infinite alternate-reverse}
-#${ACE_ID} .run .mc-armR{animation:arArm .3s ease-in-out infinite alternate}
-#${ACE_ID} .run .mc-bob{animation:arBob .15s ease-in-out infinite alternate}
-@keyframes arLeg{from{transform:rotate(26deg)}to{transform:rotate(-26deg)}}
-@keyframes arArm{from{transform:rotate(30deg)}to{transform:rotate(-24deg)}}
-@keyframes arBob{from{transform:translateY(0)}to{transform:translateY(-5px)}}
-#${ACE_ID} .air .mc-legL{transform:rotate(38deg)}#${ACE_ID} .air .mc-legR{transform:rotate(-30deg)}
-#${ACE_ID} .air .mc-armL{transform:rotate(70deg)}#${ACE_ID} .air .mc-armR{transform:rotate(-70deg)}
-#${ACE_ID} .duck .mc-squash{transform:scale(1.12,.55)}
-#${ACE_ID} .duck .mc-lean{transform:rotate(16deg)}
-#${ACE_ID} .idle .mc-breath{animation:arBreath 1.6s ease-in-out infinite alternate}
-@keyframes arBreath{from{transform:scale(1,1)}to{transform:scale(1.02,.975)}}
-#${ACE_ID} .ko .mc-lean{transform:rotate(-78deg) translateX(-30px);transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
-#${ACE_ID} .ko .mc-armL{transform:rotate(90deg)}#${ACE_ID} .ko .mc-armR{transform:rotate(-100deg)}
-#${ACE_ID} .mc-m-jump .mc-f-es,#${ACE_ID} .mc-m-jump .mc-f-mo,
-#${ACE_ID} .mc-m-yay .mc-f-eo,#${ACE_ID} .mc-m-yay .mc-f-mo,
-#${ACE_ID} .mc-m-ko .mc-f-ed,#${ACE_ID} .mc-m-ko .mc-f-mo{opacity:1}
-#${ACE_ID} .ar-king{filter:drop-shadow(0 0 6px rgba(245,197,24,.85))}
-#${ACE_ID} .ar-king.ar-ending{animation:arEnd .2s steps(2,start) infinite}
-@keyframes arEnd{50%{filter:none}}
-#pth-game .ar-lab{font:600 10px/1 'Inter',system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#9bb0a3;margin-bottom:4px}
-#pth-game .ar-num{font:700 clamp(15px,2.4vw,20px)/1 'Inconsolata',monospace;font-variant-numeric:tabular-nums;color:#f5f0e3;text-shadow:0 1px 2px rgba(0,0,0,.6)}
-#pth-game .ar-hand{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
-#pth-game .ar-slots{display:flex;gap:4px}
-#pth-game .ar-slots .pk{margin:0;flex:none}
-#pth-game .ar-slot{width:32px;height:46px;border-radius:4px;border:1px dashed rgba(216,178,90,.35);box-sizing:border-box}
-#pth-game .pk.ar-joker{background:#f5f0e3;display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1}
-#pth-game .pk.sm.ar-joker{font-size:18px}
-#pth-game .ar-name{font:600 12px/1 'Inter',system-ui,sans-serif;color:#d8b25a;text-shadow:0 1px 2px rgba(0,0,0,.6)}
-#pth-game .ar-name b{font-family:'Inconsolata',monospace;font-size:14px;margin-left:4px}
-#pth-game .ar-show{display:flex;gap:6px;justify-content:center;min-height:84px}
-#pth-game .ar-show .pk{margin:0;flex:none}
-#pth-game .ar-final{font:700 clamp(14px,2.2vw,17px)/1.3 'Inconsolata',monospace;font-variant-numeric:tabular-nums;color:#f5f0e3}
-#pth-game .ar-final em{font-style:normal;color:#d8b25a}
-@media (max-width:520px){#pth-game .ar-slot{width:22px;height:32px}#pth-game .ar-slots .pk.sm{width:22px;height:32px;font-size:10px}
-  #pth-game .ar-show{min-height:58px;gap:4px}#pth-game .ar-show .pk.lg{width:40px;height:58px;font-size:15px}
-  #pth-game .pg-panel>div{gap:4px}#pth-game .pg-panel h2{font-size:20px}}
-`;
-
-const rlab = (n) => (n === JOKER ? '🃏' : RANKS[n % 13] + SUITS[suitOf(n)]);
-const isRed = (n) => n !== JOKER && suitOf(n) < 2;
-const fmt = (v) => { try { return v.toLocaleString(document.documentElement.lang || undefined); } catch (e) { return String(v); } };
-
-// Card faces / back of the player's deck (modules/ui/deck.mjs), for the canvas.
-function faceUrl(n) {
-  try {
-    const h = typeof window.cardToHtml === 'function' ? window.cardToHtml(n, false) : '';
-    const m = /--cf:url\(([^)]*)\)/.exec(h);
-    return m && m[1] ? m[1].replace(/^["']|["']$/g, '') : '';
-  } catch (e) { return ''; }
-}
-function backUrl() {
-  try {
-    const v = getComputedStyle(document.documentElement).getPropertyValue('--card-back') || '';
-    const m = /url\((['"]?)(.*?)\1\)/.exec(v);
-    return m ? m[2] : '';
-  } catch (e) { return ''; }
-}
-function cardHtml(n, size) {
-  if (n === JOKER) return '<div class="pk ' + size + ' ar-joker">🃏</div>';
-  try { if (typeof window.cardToHtml === 'function') return window.cardToHtml(n, size === 'sm', false, size === 'sm' ? '' : ' ' + size); } catch (e) {}
-  return '<div class="pk ' + size + (isRed(n) ? ' red' : '') + '"><span class="c-rank">' + RANKS[n % 13] + '</span><span class="c-suit">' + SUITS[suitOf(n)] + '</span></div>';
-}
 
 export function create(shell) {
   const { t, esc, sound } = shell;
-  if (!document.getElementById(ACE_ID + '-css')) {
-    const kit = actorKit(ACE_ID);
-    const st = document.createElement('style'); st.id = ACE_ID + '-css';
-    st.textContent = kit.css + CSS;   // ours after the kit: overrides its fixed root
-    document.head.appendChild(st);
-  }
-  const kit = actorKit(ACE_ID);
-  const aceRoot = document.createElement('div');
-  aceRoot.id = ACE_ID;
-  aceRoot.innerHTML = '<div class="ar-box"><div class="mc-pos mc-m-smile mc-hat-none mc-tool-none idle">' + kit.html + '</div></div>';
-  shell.layer.appendChild(aceRoot);
-  const box = /** @type {HTMLElement} */ (aceRoot.firstElementChild);
-  const pos = /** @type {HTMLElement} */ (box.firstElementChild);
+  const ace = aceActor(shell.layer);
+  shell.grant('runner');   // found it: its secret trophy (granted on the way out)
 
   shell.hud.innerHTML = '<div><div class="ar-lab">' + esc(t('arDistance')) + '</div><div class="ar-num">0000</div></div>'
     + '<div class="ar-hand"><div class="ar-slots"></div><div class="ar-name"></div></div>';
@@ -122,44 +36,23 @@ export function create(shell) {
   const hName = /** @type {HTMLElement} */ (shell.hud.querySelector('.ar-name'));
 
   // Images of the deck for the canvas (glyph cards when the deck has none).
-  const imgs = {};
-  function img(url) {
-    if (!url) return null;
-    if (!imgs[url]) { const im = new Image(); im.decoding = 'async'; im.src = url; imgs[url] = im; }
-    const im = imgs[url];
-    return im.complete && im.naturalWidth ? im : null;
-  }
+  const img = imageCache();
   const back = backUrl();
 
   const lights = [];
   for (let i = 0; i < 22; i++) lights.push({ x: Math.random() * 1400, y: 20 + Math.random() * 150, r: 6 + Math.random() * 22, a: 0.08 + Math.random() * 0.16, h: Math.random() < 0.7 ? '216,178,90' : '179,38,30' });
 
-  let state = 'title', G = null, poseNow = '', moodNow = '', hatNow = '', revealTimer = 0;
+  let state = 'title', G = null, revealTimer = 0;
 
   function newRun() {
-    const deck = [];
-    for (let n = 0; n < 52; n++) deck.push(n);
-    for (let j = deck.length - 1; j > 0; j--) { const x = Math.floor(Math.random() * (j + 1)); const tmp = deck[j]; deck[j] = deck[x]; deck[x] = tmp; }
-    // One Joker, somewhere in the first two thirds of what will come out.
-    deck.splice(deck.length - 6 - Math.floor(Math.random() * 30), 0, JOKER);
+    const deck = newDeck();
     G = { t: 0, dist: 0, level: 1, speed: 330, y: 0, vy: 0, onGround: true, duck: false, holdJump: false,
       obs: [], items: [], fx: [], deck, hand: [], ev: evalCards([]), nextObs: 1.1, nextItem: 0.7,
       nextAllIn: 22 + Math.random() * 14, allInUntil: 0, scroll: 0, yayUntil: 0, coolUntil: 0, banner: null, overAt: 0 };
     renderHand();
   }
 
-  function setPose(p) { if (p !== poseNow) { if (poseNow) pos.classList.remove(poseNow); pos.classList.add(p); poseNow = p; } }
-  function setMood(m) { if (m !== moodNow) { pos.classList.remove(moodNow || 'mc-m-smile'); pos.classList.add(m); moodNow = m; } }
-  function setKing(on, ending) {
-    const h = on ? 'k' : '';
-    if (h !== hatNow) {
-      pos.classList.toggle('mc-hat-none', !on); pos.classList.toggle('mc-hat-crown', on);
-      pos.classList.toggle('mc-tool-none', !on); pos.classList.toggle('mc-tool-scepter', on);
-      pos.classList.toggle('ar-king', on); hatNow = h;
-    }
-    pos.classList.toggle('ar-ending', !!(on && ending));
-  }
-  setPose('idle');
+  const setPose = ace.pose, setMood = ace.mood, setKing = ace.king;
 
   function renderHand() {
     const ev = G.ev;
@@ -355,10 +248,6 @@ export function create(shell) {
   }
 
   // ── Drawing ───────────────────────────────────────────────────────
-  function rr(g, x, y, w, h, r) {
-    g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
-    g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
-  }
   function drawBg(g) {
     const gy = groundY(), w = W(), H = shell.H;
     const sky = g.createLinearGradient(0, 0, 0, gy); sky.addColorStop(0, '#0a100e'); sky.addColorStop(1, '#16251e');
@@ -511,8 +400,7 @@ export function create(shell) {
     drawFx(g, now);
     drawBanner(g);
     // The DOM Ace: his feet (84, 212 in sprite px) on the ground.
-    const k = shell.k, px = ACE_X - 84 * S, py = gy - G.y - 212 * S;
-    box.style.transform = 'translate(' + px * k + 'px,' + py * k + 'px) scale(' + S * k + ')';
+    ace.place(ACE_X, gy - G.y, S, shell.k);
   }
 
   return {
@@ -521,7 +409,7 @@ export function create(shell) {
     destroy() {
       clearTimeout(revealTimer);
       try { if (typeof window.resetBlindRaises === 'function') window.resetBlindRaises(); } catch (e) {}
-      aceRoot.remove();
+      ace.remove();
     },
   };
 }

@@ -105,6 +105,21 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **House of Cards and the arcade menu** — the secret training nickname now opens an arcade menu
+  (`games/menu.mjs`: ← → / tap / pad, best score per game, the Ace waving) listing Ace Runner and a
+  second game, House of Cards (`games/house.mjs`). A card slides along the dealer's rail, a tap drops it
+  on its place; a floor is five cards the real way (two A-frames and a flat card), so every floor is a
+  poker hand paid 20 × its multiplier (Joker wild). Off-mark drops lean the house — the « Tilt » gauge —
+  and at 100 % it comes down; a Perfect drop steadies it (+5, up to +15 in a row); a straight or a flush
+  halves the tilt, a full house or better resets it with the All-In fanfare and a crown for the Ace;
+  ↓ burns the hanging card (3 per game, +1 per blind level, 5 max); the next card shows on the shoe;
+  Blinds up every 5 floors (faster rail); chips stacked on each winning floor; a showdown of the best
+  floor at the end; casino → chandelier → night sky as it grows. The Ace lives in the house (drawn
+  between two canvases) and climbs a floor at a time. Secret trophy « House of Cards » at 10 floors.
+  Shared pieces move to `games/common.mjs` (the Ace actor, the player's deck, the HUD); the shell
+  gains in-place switching (`shell.open`, Esc / Select back to the menu, then out), ←/→ actions and a
+  trophy queue (`shell.grant`). Strings in the 83 languages; `test-games-browser` covers the menu and
+  the house (`web.85`).
 - **Ace Runner, a hidden mini-game** — in training, the nickname « mascot » (or its translation in the
   player's language, key `gameWordAce`; case and accents ignored) opens a runner game instead of a
   table, and the real nickname is put back in the field and in `pth_nick` (the field saves every

@@ -10,10 +10,12 @@
 // module exporting create(shell) → { update(dt), draw(g), input(action, down),
 // resize() , destroy() }.
 //
-// Input → actions: 'jump' (Space, ↑, W, tap, pad A / B / D-pad up),
-// 'duck' (↓, S, swipe down, pad D-pad down / stick down). The shell handles
-// pause (P, Start; also a hidden tab or a lost focus) and quit (✕, Esc
-// outside a run, pad Select). While a game is open, keys never reach the
+// Input → actions: 'jump' (Space, Enter, ↑, W, tap, pad A / B / D-pad up),
+// 'duck' (↓, S, swipe down, pad D-pad down / stick down), 'left' / 'right'
+// (←/→, A/D, pad D-pad / stick; the menu). The shell handles pause (P, Start;
+// also a hidden tab or a lost focus), back (Esc outside a run, pad Select: to
+// the arcade menu, then out) and quit (✕). A game can switch to another in
+// place (shell.open) and queue its secret trophy (shell.grant). While a game is open, keys never reach the
 // rest of the client (capture phase), the gamepad navigation steps aside
 // (window._pthPadOwner, modules/ui/gamepad.mjs) and the mascot does not
 // come on stage (window._pthGameOn, modules/mascot/index.mjs).
@@ -39,6 +41,7 @@ const CSS = `
 #${ROOT_ID} .pg-panel{position:absolute;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;padding:14px;text-align:center;
   background:radial-gradient(ellipse at center,rgba(11,18,16,.35),rgba(11,18,16,.82));pointer-events:none}
 #${ROOT_ID} .pg-panel[hidden]{display:none}
+#${ROOT_ID} .pg-panel.pg-clear{background:none}
 #${ROOT_ID} .pg-panel>div{display:flex;flex-direction:column;align-items:center;gap:8px;max-width:520px}
 #${ROOT_ID} h2{margin:0;font:700 clamp(22px,4.4vw,38px)/1.05 'Cinzel',Georgia,serif;letter-spacing:.04em;color:#f5f0e3}
 #${ROOT_ID} p{margin:0;font-size:clamp(12px,1.8vw,14px)}
@@ -66,8 +69,15 @@ function reduced() {
   try { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) { return false; }
 }
 
-/** Open the overlay, run the game until the player quits. */
-export function run(def, gameMod) {
+/**
+ * Open the overlay with game `def` (module `gameMod`) and run until the
+ * player quits. opts.open(id) → Promise<[def, module]> lets a game switch to
+ * another one in place (shell.open: the arcade menu); opts.home is the game
+ * Esc / Select go back to (the menu) before closing. Resolves with the ids of
+ * the trophies the games asked for (shell.grant), granted after the overlay
+ * is gone so their toast can be seen.
+ */
+export function run(def, gameMod, opts = {}) {
   return new Promise((resolve) => {
     if (!document.getElementById(ROOT_ID + '-css')) {
       const st = document.createElement('style'); st.id = ROOT_ID + '-css'; st.textContent = CSS;
@@ -77,7 +87,7 @@ export function run(def, gameMod) {
     root.id = ROOT_ID;
     root.setAttribute('role', 'dialog');
     root.setAttribute('aria-modal', 'true');
-    root.setAttribute('aria-label', 'Ace Runner');
+    root.setAttribute('aria-label', def.name || 'Arcade');
     root.innerHTML = '<button class="pg-close" type="button" aria-label="' + esc(tr('arQuit')) + '">✕</button>'
       + '<div class="pg-stage" tabindex="0"><canvas></canvas><div class="pg-layer"></div><div class="pg-hud"></div>'
       + '<div class="pg-panel" hidden><div></div></div><div class="pg-panel pg-pause" hidden><div><h2>' + esc(tr('arPause')) + '</h2>'
@@ -93,7 +103,9 @@ export function run(def, gameMod) {
     window._pthGameOn = true;
     window._pthPadOwner = def.id;
 
-    const bestKey = 'pth_game_best_' + def.id;
+    let cur = def;
+    const grants = [];
+    const bestKey = () => 'pth_game_best_' + cur.id;
     const shell = {
       H, W: 640, k: 1, dpr: 1,
       root, stage, canvas, g,
@@ -101,14 +113,15 @@ export function run(def, gameMod) {
       hud: /** @type {HTMLElement} */ (root.querySelector('.pg-hud')),
       reduced: reduced(),
       t: tr, esc,
-      /** Show `html` in the panel slot (null hides it). */
-      panel(html) {
+      /** Show `html` in the panel slot (null hides it); clear = no dimming behind. */
+      panel(html, clear) {
         if (html == null) { panel.hidden = true; return; }
         panel.firstElementChild.innerHTML = html; panel.hidden = false;
+        panel.classList.toggle('pg-clear', !!clear);
       },
       best: {
-        get() { try { return parseInt(localStorage.getItem(bestKey) || '0', 10) || 0; } catch (e) { return 0; } },
-        set(v) { try { localStorage.setItem(bestKey, String(v)); } catch (e) {} },
+        get() { try { return parseInt(localStorage.getItem(bestKey()) || '0', 10) || 0; } catch (e) { return 0; } },
+        set(v) { try { localStorage.setItem(bestKey(), String(v)); } catch (e) {} },
       },
       /** Play a sound of modules/sounds.mjs by its global name (notifyCard…). */
       sound(name, ...args) { try { const f = window[name]; if (typeof f === 'function') f(...args); } catch (e) {} },
@@ -119,6 +132,15 @@ export function run(def, gameMod) {
         if (!on) last = performance.now();
       },
       close,
+      /** Queue a secret trophy (granted once the overlay is closed). */
+      grant(id) { if (id && grants.indexOf(id) < 0) grants.push(id); },
+      /** Switch to game `id` in the same overlay (needs opts.open). */
+      open(id) {
+        if (!opts.open) return;
+        opts.open(id).then(([d, mod]) => { if (!closed) mount(d, mod); }).catch((e) => { try { console.warn('[games]', e); } catch (e2) {} });
+      },
+      /** Back to the home game (the menu) — or close when already there. */
+      back() { if (opts.home && cur.id !== opts.home) shell.open(opts.home); else close(); },
     };
 
     function resize() {
@@ -131,17 +153,26 @@ export function run(def, gameMod) {
     }
 
     let game = null;
-    try { game = gameMod.create(shell); } catch (e) { try { console.warn('[games]', e); } catch (e2) {} }
-    resize();
+    function mount(d, mod) {
+      try { if (game && game.destroy) game.destroy(); } catch (e) {}
+      game = null;
+      shell.layer.innerHTML = ''; shell.hud.innerHTML = ''; shell.panel(null); shell.pause(false);
+      cur = d; root.setAttribute('aria-label', d.name || 'Arcade'); window._pthPadOwner = d.id;
+      try { game = mod.create(shell); } catch (e) { try { console.warn('[games]', e); } catch (e2) {} }
+      resize();
+    }
+    mount(def, gameMod);
 
     // ── Input ───────────────────────────────────────────────────────
     const send = (a, down) => { if (!game || (shell.paused && down)) return; try { game.input(a, down); } catch (e) {} };
-    const KEYS = { Space: 'jump', ArrowUp: 'jump', KeyW: 'jump', ArrowDown: 'duck', KeyS: 'duck' };
+    const KEYS = { Space: 'jump', ArrowUp: 'jump', KeyW: 'jump', ArrowDown: 'duck', KeyS: 'duck',
+      ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right', Enter: 'jump', NumpadEnter: 'jump' };
     function onKey(e) {
       const down = e.type === 'keydown';
-      const a = KEYS[e.code];
+      // Enter on the ✕ button closes, as a button should.
+      const a = (e.code === 'Enter' || e.code === 'NumpadEnter') && e.target && /** @type {HTMLElement} */ (e.target).tagName === 'BUTTON' ? null : KEYS[e.code];
       if (e.code === 'Escape' && down) {
-        if (game && game.running && game.running() && !shell.paused) shell.pause(true); else close();
+        if (game && game.running && game.running() && !shell.paused) shell.pause(true); else { shell.pause(false); shell.back(); }
       } else if ((e.code === 'KeyP' || e.code === 'Pause') && down) {
         if (game && game.running && game.running()) shell.pause(!shell.paused);
       } else if (a) {
@@ -187,13 +218,18 @@ export function run(def, gameMod) {
       for (const pad of list) {
         const b = (i) => !!(pad.buttons[i] && pad.buttons[i].pressed);
         const ay = pad.axes && pad.axes.length > 1 ? pad.axes[1] : 0;
+        const ax = pad.axes && pad.axes.length ? pad.axes[0] : 0;
         if (b(0) || b(1) || b(12) || ay < -0.6) p[0] = true;     // jump
         if (b(13) || ay > 0.6) p[1] = true;                       // duck
         if (b(9)) p[2] = true;                                    // Start: pause
-        if (b(8)) p[3] = true;                                    // Select: quit
+        if (b(8)) p[3] = true;                                    // Select: back / quit
+        if (b(14) || ax < -0.6) p[4] = true;                      // left
+        if (b(15) || ax > 0.6) p[5] = true;                       // right
       }
       const dn = (i) => p[i] && !padPrev[i], up = (i) => !p[i] && padPrev[i];
-      if (dn(3)) { padPrev = p; close(); return; }
+      if (dn(3)) { padPrev = p; shell.pause(false); shell.back(); return; }
+      if (dn(4)) send('left', true);
+      if (dn(5)) send('right', true);
       if (dn(2) && game && game.running && game.running()) shell.pause(!shell.paused);
       else if (dn(0)) { if (shell.paused) shell.pause(false); else send('jump', true); }
       if (up(0)) send('jump', false);
@@ -239,7 +275,7 @@ export function run(def, gameMod) {
       window._pthGameOn = false;
       window._pthPadOwner = null;
       try { if (prevFocus && /** @type {HTMLElement} */ (prevFocus).focus) /** @type {HTMLElement} */ (prevFocus).focus({ preventScroll: true }); } catch (e) {}
-      resolve();
+      resolve(grants);
     }
   });
 }
