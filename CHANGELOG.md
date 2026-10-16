@@ -105,6 +105,9 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **Cover pictures in the arcade** (`web.89`) — each game card shows a small SVG scene of its game
+  (`games/art.mjs`, no image file), painted from `ink(light)` and repainted when the theme changes;
+  tapping it plays the game.
 - **The arcade becomes a page** (`web.88`) — `#s-arcade`, a screen with the header of « Create a table »
   (back arrow, game name, « ? » rules, trophies, accessibility, ⚙ menu) instead of a full-screen overlay.
   Back (arrow, Esc, pad Select, Android Back via `back-guard.mjs`) goes rules sheet → arcade home →

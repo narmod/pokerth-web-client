@@ -60,6 +60,13 @@ ok(evalCards(hand('7s 7h')).nameKey === 'h9n' && evalCards(hand('As Ks Qs Js Ts'
 ok(NAME_KEYS.length === 10 && MULT.length === 10, 'ten categories');
 
 console.log('secret word');
+const { art } = await import('../public/modules/games/art.mjs');
+for (const id of ['ace-runner', 'house', 'solitaire']) {
+  const d = art(id, false), l = art(id, true);
+  const ids = [...d.matchAll(/id="([^"]+)"/g)].map((m) => m[1]), idsL = [...l.matchAll(/id="([^"]+)"/g)].map((m) => m[1]);
+  ok(/^<svg[^>]*viewBox="0 0 320 140"/.test(d) && d !== l && ids.every((x) => idsL.indexOf(x) < 0), id + ': a cover picture, one for each theme, ids that do not clash');
+}
+ok(art('nope', false) === '', 'no picture for an unknown game');
 const langDir = path.resolve('public/modules/lang');
 const files = fs.readdirSync(langDir).filter((f) => f.endsWith('.mjs'));
 const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'arRecord', 'arNewRecord',

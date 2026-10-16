@@ -1,3 +1,6 @@
+2026-10-16 version 2.1.10-web.89:
+- improvement: each game of the Ace's arcade has its own picture on the arcade page, in the light or dark theme
+
 2026-10-16 version 2.1.10-web.88:
 - improvement: the Ace's arcade is now a real page, with the same header as the rest of the game (back, trophies, menu)
 - improvement: back from a game returns to the arcade page, and back from there to where you were

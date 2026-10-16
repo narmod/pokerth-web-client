@@ -55,11 +55,13 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     pad: window._pthPadOwner, title: (document.getElementById('ar-title') || {}).textContent,
     page: document.getElementById('s-arcade').classList.contains('active'),
     back: !!document.querySelector('#s-arcade .cp-header #ar-back-btn'), menu: !!document.querySelector('#s-arcade #ar-overflow-btn'),
-    tiles: [...document.querySelectorAll('#pth-game .gm-card h3')].map((b) => b.textContent),
+    tiles: [...document.querySelectorAll('#pth-game .gm-card h3')].map((b) => b.lastChild.textContent),
+    arts: [...document.querySelectorAll('#pth-game .gm-card .gm-art svg')].length,
   }));
   ok(st.open && st.ace && st.page && st.title === 'Arcade', label + ': the arcade page opens with the Ace');
   ok(st.back && st.menu, label + ': with the header of the other pages (back, ⚙ menu)');
   ok(st.tiles.join('|') === 'Ace Runner|Château de cartes|Poker Solitaire', label + ': it lists the games (' + st.tiles.join(', ') + ')');
+  ok(st.arts === 3, label + ': every game has its picture (' + st.arts + ')');
   ok(st.nick === 'Narmod' && st.stored === 'Narmod', label + ': the real nickname is back (field ' + st.nick + ', stored ' + st.stored + ')');
   ok(st.pad === 'arcade', label + ': the gamepad navigation steps aside');
   await shot(pg, label + '-menu');
@@ -212,6 +214,13 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await sleep(400);
   ok(await pg.evaluate(() => !!document.querySelector('#pth-game .gm-card') && document.getElementById('s-arcade').classList.contains('active')), 'page: the header\'s back arrow goes from a game to the arcade page');
   await shot(pg, 'page-light-home');
+  const sky = () => pg.evaluate(() => { const st = document.querySelector('#pth-game .gm-art[data-art="ace-runner"] stop'); return st && st.getAttribute('stop-color'); });
+  const skyLight = await sky();
+  await pg.evaluate(() => document.documentElement.setAttribute('data-theme', 'pokerth'));
+  await sleep(300);
+  const skyDark = await sky();
+  ok(skyLight === '#f7f0e3' && skyDark === '#0a100e', 'page: the pictures follow the theme (' + skyLight + ' → ' + skyDark + ')');
+  await shot(pg, 'page-dark-home');
   await pg.click('#ar-back-btn');
   await sleep(500);
   ok(await pg.evaluate(() => !document.getElementById('pth-game') && document.getElementById('s-connect').classList.contains('active')), 'page: and from the arcade page back to the login');
