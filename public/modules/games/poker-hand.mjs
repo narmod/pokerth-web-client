@@ -86,6 +86,21 @@ function cmp(a, b) {
 }
 function better(x, y) { return !y || x[0] > y[0] || (x[0] === y[0] && cmp(x[2], y[2]) > 0); }
 
+/**
+ * Best hand among natural cards (no joker), with what breaks ties:
+ * { cat, best, tb, nameKey } — tb are the ranks to compare, in order
+ * (kickers included). Who Wins? (whowins.mjs) and the Ace's Bluff compare
+ * two Hold'em hands with compareHands().
+ */
+export function rankHand(cards) {
+  const nat = (cards || []).filter((c) => Number.isInteger(c) && c >= 0 && c < JOKER);
+  if (!nat.length) return { cat: -1, best: [], tb: [], nameKey: '' };
+  const r = evalNatural(nat);
+  return { cat: r[0], best: r[1], tb: r[2], nameKey: NAME_KEYS[r[0]] };
+}
+/** > 0 when hand a beats hand b, < 0 when b wins, 0 for a split pot (rankHand results). */
+export function compareHands(a, b) { return a.cat !== b.cat ? a.cat - b.cat : cmp(a.tb, b.tb); }
+
 /** Best hand among `cards` (PokerTH numbers, JOKER = wild). */
 export function evalCards(cards) {
   const list = (cards || []).filter((c) => Number.isInteger(c) && c >= 0 && c <= JOKER);

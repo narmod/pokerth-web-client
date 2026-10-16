@@ -105,6 +105,11 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **Video Poker in the arcade** (`web.91`) — `games/videopoker.mjs`: Jacks or Better (9/6 paytable, bet 5),
+  20 hands from 100 credits, daily challenge (decks seeded by day and hand, `games/deal.mjs`) or free game,
+  double or nothing against the Ace (up to 5 times), secret trophy at three doubles in a row. Card games
+  share `games/ui.mjs` (felt, canvas buttons, bubble) and a tall stage in portrait (aspect from 0.6).
+  `rankHand` / `compareHands` added to `poker-hand.mjs` for the games to come. Arcade intro without a game count.
 - **House of Cards: easier to aim, harder to keep up** (`web.90`) — the place of the next card is
   filled and pulsing, with a dotted plumb line to a mark on the rail (theme colours). Harder: rail
   92 px/s +20 per level (max 250), a pendulum pace from level 2 (fastest mid-rail), tolerance 10 / 13 px

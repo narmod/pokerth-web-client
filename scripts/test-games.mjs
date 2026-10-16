@@ -61,7 +61,7 @@ ok(NAME_KEYS.length === 10 && MULT.length === 10, 'ten categories');
 
 console.log('secret word');
 const { art } = await import('../public/modules/games/art.mjs');
-for (const id of ['ace-runner', 'house', 'solitaire']) {
+for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker']) {
   const d = art(id, false), l = art(id, true);
   const ids = [...d.matchAll(/id="([^"]+)"/g)].map((m) => m[1]), idsL = [...l.matchAll(/id="([^"]+)"/g)].map((m) => m[1]);
   ok(/^<svg[^>]*viewBox="0 0 320 140"/.test(d) && d !== l && ids.every((x) => idsL.indexOf(x) < 0), id + ': a cover picture, one for each theme, ids that do not clash');
@@ -73,7 +73,8 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'arAgain', 'arPause', 'arDistance', 'arBlinds', 'arQuit', 'ach_runner', 'ach_runner_d',
   'hcName', 'hcHint', 'hcFloors', 'hcScore', 'hcPerfect', 'hcSteady', 'hcCollapse', 'hcAgain', 'gmPick', 'ach_house', 'ach_house_d',
   'psName', 'psHint', 'psDaily', 'psFree', 'psCards', 'psFlushDraw', 'psStraightDraw', 'psBestLine', 'psAgain', 'ach_solitaire', 'ach_solitaire_d',
-  'gmPlay', 'gmRules', 'gmIntro', 'arRules', 'hcRules', 'psRules'];
+  'gmPlay', 'gmRules', 'gmIntro', 'arRules', 'hcRules', 'psRules',
+  'vpName', 'vpHint', 'vpDeal', 'vpDraw', 'vpHeld', 'vpCredits', 'vpHands', 'vpJacks', 'vpDouble', 'vpCollect', 'vpPick', 'vpRules', 'ach_videopoker', 'ach_videopoker_d'];
 let missing = [], badRecord = [];
 for (const f of files) {
   const { strings } = await import(path.join(langDir, f));
@@ -106,6 +107,27 @@ const rows = 100 + 4 * 20;
 const cols = LINES.slice(5).reduce((a, l) => a + SCORE[evalCards(l.map((i) => g[i])).cat], 0);
 ok(scoreGrid(g) === rows + cols, 'grid score = rows + columns (' + scoreGrid(g) + ')');
 ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
+
+// ── Hold'em hand comparison, seeded decks, Video Poker paytable ──
+{
+  const { rankHand, compareHands } = await import('../public/modules/games/poker-hand.mjs');
+  const { deckFor, rng } = await import('../public/modules/games/deal.mjs');
+  const { payRow, PAY } = await import('../public/modules/games/videopoker.mjs');
+  const c = (r, s) => s * 13 + (r - 2);           // rank 2..14, suit 0..3 (♦ ♥ ♠ ♣)
+  const board = [c(14, 0), c(13, 1), c(7, 2), c(4, 3), c(2, 0)];
+  const a = rankHand(board.concat([c(14, 2), c(9, 1)])), b = rankHand(board.concat([c(14, 3), c(8, 1)]));
+  ok(a.cat === 1 && b.cat === 1 && compareHands(a, b) > 0, 'same pair of aces: the kicker decides (9 beats 8)');
+  const s1 = rankHand(board.concat([c(14, 2), c(3, 1)])), s2 = rankHand(board.concat([c(14, 3), c(3, 2)]));
+  ok(compareHands(s1, s2) === 0, 'same five best cards: a split pot');
+  const w = rankHand(board.concat([c(5, 1), c(3, 2)]));
+  ok(w.cat === 4 && compareHands(w, a) > 0, 'the wheel (A-2-3-4-5) is a straight and beats a pair');
+  const d1 = deckFor('vp-2026-10-16-1'), d2 = deckFor('vp-2026-10-16-1'), d3 = deckFor('vp-2026-10-16-2');
+  ok(d1.join() === d2.join() && d1.join() !== d3.join() && new Set(d1).size === 52, 'seeded decks: same seed, same 52 cards; another hand, another deal');
+  ok(typeof rng('x')() === 'number', 'rng gives numbers');
+  ok(payRow([c(11, 0), c(11, 1), c(4, 2), c(7, 3), c(9, 0)]) === PAY.length - 1 && payRow([c(10, 0), c(10, 1), c(4, 2), c(7, 3), c(9, 0)]) === -1,
+    'Video Poker: a pair of jacks pays, a pair of tens does not');
+  ok(PAY[payRow([c(10, 2), c(11, 2), c(12, 2), c(13, 2), c(14, 2)])][1] === 800, 'Video Poker: the royal flush pays 800 per credit');
+}
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);

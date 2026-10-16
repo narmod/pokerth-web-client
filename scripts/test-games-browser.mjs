@@ -60,8 +60,8 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   }));
   ok(st.open && st.ace && st.page && st.title === 'Arcade', label + ': the arcade page opens with the Ace');
   ok(st.back && st.menu, label + ': with the header of the other pages (back, ⚙ menu)');
-  ok(st.tiles.join('|') === 'Ace Runner|Château de cartes|Poker Solitaire', label + ': it lists the games (' + st.tiles.join(', ') + ')');
-  ok(st.arts === 3, label + ': every game has its picture (' + st.arts + ')');
+  ok(st.tiles.join('|') === 'Ace Runner|Château de cartes|Poker Solitaire|Vidéo Poker', label + ': it lists the games (' + st.tiles.join(', ') + ')');
+  ok(st.arts === st.tiles.length, label + ': every game has its picture (' + st.arts + ')');
   ok(st.nick === 'Narmod' && st.stored === 'Narmod', label + ': the real nickname is back (field ' + st.nick + ', stored ' + st.stored + ')');
   ok(st.pad === 'arcade', label + ': the gamepad navigation steps aside');
   await shot(pg, label + '-menu');
@@ -158,6 +158,40 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await shot(pg, label + '-solitaire-over');
   await pg.keyboard.press('Escape');
   await sleep(500);
+  // ── Video Poker (daily challenge): a pair of jacks pays, then double or nothing ──
+  await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
+  for (let i = 0; i < 3; i++) await pg.keyboard.press('ArrowRight');
+  await sleep(100);
+  await pg.keyboard.press('Space');
+  await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Vidéo Poker', null, { timeout: 8000 }).catch(() => {});
+  ok(await pg.evaluate(() => window._pthPadOwner === 'videopoker' && document.getElementById('ar-title').textContent === 'Vidéo Poker'), label + ': → → → Space opens Video Poker');
+  await pg.keyboard.press('Space');
+  await sleep(400);
+  const vp0 = await pg.evaluate(() => ({ st: window.__pthVP.state(), cr: document.querySelector('#pth-game .vp-cr').textContent, h: document.querySelector('#pth-game .vp-h').textContent }));
+  ok(vp0.st === 'hold' && vp0.cr === '95' && vp0.h === '1/20', label + ': a hand is dealt for 5 credits (' + vp0.cr + ', ' + vp0.h + ')');
+  await shot(pg, label + '-vp-hold');
+  await pg.keyboard.press('Space');                // holds the first card
+  await sleep(150);
+  ok(await pg.evaluate(() => window.__pthVP.run().held[0] === true), label + ': Space holds the card under the cursor');
+  await pg.evaluate(() => { const G = window.__pthVP.run(); G.cards = [9, 22, 2, 18, 33]; G.held = [true, true, true, true, true]; });   // J♦ J♥ 4♦ 7♥ 9♠
+  await pg.keyboard.press('ArrowDown');
+  await pg.waitForFunction(() => window.__pthVP.state() === 'win', null, { timeout: 4000 }).catch(() => {});
+  const vp1 = await pg.evaluate(() => ({ st: window.__pthVP.state(), win: window.__pthVP.run().win }));
+  ok(vp1.st === 'win' && vp1.win === 5, label + ': Jacks or Better pays 5 (' + vp1.st + ', ' + vp1.win + ')');
+  await shot(pg, label + '-vp-win');
+  await pg.keyboard.press('ArrowUp');
+  await sleep(300);
+  ok(await pg.evaluate(() => window.__pthVP.state() === 'double'), label + ': ↑ doubles: the Ace turns a card');
+  await shot(pg, label + '-vp-double');
+  await pg.keyboard.press('Space');
+  await pg.waitForFunction(() => ['win', 'ready'].indexOf(window.__pthVP.state()) >= 0, null, { timeout: 4000 }).catch(() => {});
+  const vp2 = await pg.evaluate(() => ({ st: window.__pthVP.state(), win: window.__pthVP.run().win }));
+  ok((vp2.st === 'win' && vp2.win >= 5) || (vp2.st === 'ready' && vp2.win === 0), label + ': the pick settles the double (' + vp2.st + ', ' + vp2.win + ')');
+  if (vp2.st === 'win') { await pg.keyboard.press('ArrowDown'); await sleep(300); }
+  const vp3 = await pg.evaluate(() => ({ st: window.__pthVP.state(), cr: +document.querySelector('#pth-game .vp-cr').textContent }));
+  ok(vp3.st === 'ready' && vp3.cr === 95 + (vp2.st === 'win' ? vp2.win : 0), label + ': collected, ready for the next hand (' + vp3.cr + ')');
+  await pg.keyboard.press('Escape'); await sleep(200);
+  await pg.keyboard.press('Escape'); await sleep(500);
   await pg.keyboard.press('Escape');
   await sleep(600);
   const closed = await pg.evaluate(() => ({ gone: !document.getElementById('pth-game'), pad: window._pthPadOwner, on: window._pthGameOn, ach: window._achSeen,

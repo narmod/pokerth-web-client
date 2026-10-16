@@ -152,7 +152,38 @@ function solitaire(c) {
     + '<text x="16" y="22" font-size="8" font-weight="700" fill="rgba(255,255,255,.75)" font-family="Inter,system-ui,sans-serif" letter-spacing=".08em">5 × 5</text>';
 }
 
-const SCENES = { 'ace-runner': runner, house, solitaire };
+/** The green felt of the card games (lighter in the light theme). */
+function feltBg(c, id) {
+  const f = c.light ? ['#4fa478', '#2f7a52'] : ['#25875a', '#0f4a31'];
+  const fid = id + (c.light ? 'l' : 'd');
+  return '<defs><radialGradient id="' + fid + '" cx=".5" cy=".45" r=".75"><stop offset="0" stop-color="' + f[0] + '"/><stop offset="1" stop-color="' + f[1] + '"/></radialGradient></defs>'
+    + '<rect width="320" height="140" fill="url(#' + fid + ')"/>';
+}
+const TXT = 'font-family="Inter,system-ui,sans-serif" font-weight="700"';
+
+function videopoker(c) {
+  const rows = [['ROYAL', '4000'], ['ST.FLUSH', '250'], ['QUADS', '125'], ['FULL', '45'], ['FLUSH', '30'], ['STRAIGHT', '20'], ['TRIPS', '15'], ['2 PAIR', '10'], ['J+', '5']];
+  let pt = '<rect x="10" y="12" width="84" height="116" rx="6" fill="rgba(8,24,16,.55)" stroke="rgba(216,178,90,.5)"/>';
+  rows.forEach(([n, v], i) => {
+    const y = 24 + i * 12;
+    if (i === 3) pt += '<rect x="13" y="' + (y - 8) + '" width="78" height="11" rx="3" fill="#d8b25a"/>';
+    pt += '<text x="17" y="' + y + '" font-size="7" ' + TXT + ' fill="' + (i === 3 ? '#141414' : '#f5f0e3') + '">' + n + '</text>'
+      + '<text x="87" y="' + y + '" font-size="7" ' + TXT + ' text-anchor="end" fill="' + (i === 3 ? '#141414' : '#d8b25a') + '">' + v + '</text>';
+  });
+  const hand = [['9', 'h', 1], ['9', 'c', 1], ['9', 's', 1], ['4', 'd', 0], ['4', 'h', 0]];
+  let cards = '';
+  hand.forEach(([r, su, held], i) => {
+    const x = 106 + i * 33;
+    cards += card(x, 38 - (held ? 4 : 0), 29, r, su);
+    if (held) cards += '<rect x="' + (x + 1) + '" y="' + 80 + '" width="27" height="9" rx="2" fill="#d8b25a"/><text x="' + (x + 14.5) + '" y="87" font-size="6" ' + TXT + ' text-anchor="middle" fill="#141414">HELD</text>';
+  });
+  return feltBg(c, 'vpf') + pt + cards
+    + '<rect x="134" y="104" width="100" height="22" rx="8" fill="#d8b25a" stroke="#8a6510"/><text x="184" y="118" font-size="10" ' + TXT + ' text-anchor="middle" fill="#141414">DRAW</text>'
+    + '<text x="186" y="24" font-size="12" text-anchor="middle" fill="#f5d77a" font-family="Cinzel,Georgia,serif" font-weight="700">+45</text>'
+    + ace(292, 128, 15, 'wave', limbOf(c));
+}
+
+const SCENES = { 'ace-runner': runner, house, solitaire, videopoker };
 
 /** The cover picture of game `id` for the light or dark theme. */
 export function art(id, light) {

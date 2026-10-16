@@ -107,4 +107,8 @@ export const ACHIEVEMENTS = [
   // Solitaire du jeu caché (modules/games/solitaire.mjs).
   { id: 'solitaire',     icon: '♠️', cat: CATS.secret, when: 'always',
     test: () => false },
+  // Débloqué par grantSecret('videopoker') : trois « Double » gagnés d'affilée
+  // au Vidéo Poker du jeu caché (modules/games/videopoker.mjs).
+  { id: 'videopoker',    icon: '🎰', cat: CATS.secret, when: 'always',
+    test: () => false },
 ];
