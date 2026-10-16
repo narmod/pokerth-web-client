@@ -105,6 +105,10 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **Call or Fold? — lesson 5** (`web.99`) — `games/potodds.mjs`: the turn, a pure draw (your cards add nothing to
+  the board yet), the Ace bets 1/6 pot … 1.5 pot. Chances = outs / 46, needed = B / (P + 2B); never closer than
+  3.5 points, half the spots are calls; the sums are shown after each answer. Secret trophy at 10/12; unlocked by
+  Count the Outs.
 - **Count the Outs — lesson 4** (`web.98`) — `games/outs.mjs`: your two cards and a flop (60 %) or a turn; an
   out is an unseen card after which you hold a straight or better, of a higher kind than the board with that card
   alone (`outsOf`). Four counts to choose from (the right one and three within ± 4); then the outs, what they make

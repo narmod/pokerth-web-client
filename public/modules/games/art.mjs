@@ -269,7 +269,20 @@ function outs(c) {
   return s;
 }
 
-const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins, hilo, bluff, preflop, nuts, outs };
+function potodds(c) {
+  let s = feltBg(c, 'pdf');
+  s += ace(58, 100, 24, 'idle', limbOf(c)) + back(96, 22, 20) + back(118, 22, 20);
+  s += '<rect x="84" y="2" width="70" height="16" rx="7" fill="#f5f0e3"/><text x="119" y="13" font-size="8" ' + TXT + ' text-anchor="middle" fill="#141414">BET 30</text>';
+  [['9', 'h'], ['K', 'h'], ['4', 'c'], ['2', 's']].forEach(([r, su], i) => { s += card(150 + i * 25, 10, 23, r, su); });
+  s += '<rect x="250" y="10" width="23" height="32" rx="3" fill="none" stroke="rgba(245,240,227,.35)" stroke-dasharray="3 3"/>';
+  s += card(178, 54, 24, 'A', 'h') + card(205, 54, 24, '7', 'h');
+  s += '<text x="210" y="100" font-size="8" ' + TXT + ' text-anchor="middle" fill="#f5d77a">20 % &lt; 25 %</text>';
+  s += '<rect x="96" y="108" width="62" height="24" rx="8" fill="#b3261e" stroke="#7ee2a0" stroke-width="2"/><text x="127" y="124" font-size="10" ' + TXT + ' text-anchor="middle" fill="#f5f0e3">Fold</text>';
+  s += '<rect x="164" y="108" width="62" height="24" rx="8" fill="#d8b25a"/><text x="195" y="124" font-size="10" ' + TXT + ' text-anchor="middle" fill="#141414">Call 30</text>';
+  return s;
+}
+
+const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins, hilo, bluff, preflop, nuts, outs, potodds };
 
 /** The cover picture of game `id` for the light or dark theme. */
 export function art(id, light) {

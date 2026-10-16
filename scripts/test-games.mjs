@@ -61,7 +61,7 @@ ok(NAME_KEYS.length === 10 && MULT.length === 10, 'ten categories');
 
 console.log('secret word');
 const { art } = await import('../public/modules/games/art.mjs');
-for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker', 'whowins', 'hilo', 'bluff', 'preflop', 'nuts', 'outs']) {
+for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker', 'whowins', 'hilo', 'bluff', 'preflop', 'nuts', 'outs', 'potodds']) {
   const d = art(id, false), l = art(id, true);
   const ids = [...d.matchAll(/id="([^"]+)"/g)].map((m) => m[1]), idsL = [...l.matchAll(/id="([^"]+)"/g)].map((m) => m[1]);
   ok(/^<svg[^>]*viewBox="0 0 320 140"/.test(d) && d !== l && ids.every((x) => idsL.indexOf(x) < 0), id + ': a cover picture, one for each theme, ids that do not clash');
@@ -81,7 +81,8 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'gmShelfLearn', 'gmShelfLearnIntro', 'gmShelfPlay',
   'ppName', 'ppHint', 'ppFolded', 'ppRange', 'ppRules', 'ach_preflop', 'ach_preflop_d',
   'ntName', 'ntHint', 'ntIs', 'ntRules', 'ach_nuts', 'ach_nuts_d',
-  'otName', 'otHint', 'otOuts', 'otRule4', 'otRule2', 'otRules', 'ach_outs', 'ach_outs_d'];
+  'otName', 'otHint', 'otOuts', 'otRule4', 'otRule2', 'otRules', 'ach_outs', 'ach_outs_d',
+  'pdName', 'pdHint', 'pdOdds', 'pdNeed', 'pdRules', 'ach_potodds', 'ach_potodds_d'];
 let missing = [], badRecord = [];
 for (const f of files) {
   const { strings } = await import(path.join(langDir, f));
@@ -212,6 +213,19 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
     if (!q || q.choices.length !== 4 || new Set(q.choices).size !== 4 || q.choices[q.answer] !== q.outs.length || q.outs.length !== ot.outsOf(q.hand, q.board).length || q.choices.some((x) => x < 1)) otBad++;
   }
   ok(otBad === 0, 'Count the Outs: four different counts, the right one among them');
+  // Call or Fold?: pot odds against the chances of a pure draw.
+  const pd = await import('../public/modules/games/potodds.mjs');
+  ok(Math.abs(pd.needed(100, 50) - 0.25) < 1e-9 && Math.abs(pd.needed(100, 100) - 1 / 3) < 1e-9, 'Call or Fold?: half the pot needs 25 %, a pot-size bet 33 %');
+  const rp = rng(9);
+  let pdBad = 0, pdCalls = 0;
+  for (let i = 0; i < 200; i++) {
+    const q = pd.makeSpot(rp);
+    if (!q) { pdBad++; continue; }
+    const pure = rankHand(q.hand.concat(q.board)).cat === rankHand(q.board).cat;
+    if (!pure || q.board.length !== 4 || Math.abs(q.eq - q.need) < pd.MARGIN || (q.eq > q.need) !== q.call || q.outs.length !== ot.outsOf(q.hand, q.board).length) pdBad++;
+    if (q.call) pdCalls++;
+  }
+  ok(pdBad === 0 && pdCalls > 70 && pdCalls < 130, 'Call or Fold?: pure draws on the turn, never a close call, about half of them calls (' + pdCalls + '/200)');
   // The arcade's shelves and the (future) unlocks.
   const reg = await import('../public/modules/games/index.mjs');
   const games = reg.GAMES.filter((g) => g.id !== reg.HOME);

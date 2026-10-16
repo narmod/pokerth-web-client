@@ -69,7 +69,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   }));
   ok(st.open && st.ace && st.page && st.title === 'Arcade', label + ': the arcade page opens with the Ace');
   ok(st.back && st.menu, label + ': with the header of the other pages (back, ⚙ menu)');
-  const ALL = ['Ouvrir ou passer ?', 'Trouve les nuts', 'Combien d\'outs ?', 'Ace Runner', 'Château de cartes', 'Poker Solitaire', 'Vidéo Poker', 'Qui gagne ?', 'Plus haut / Plus bas', 'Le Bluff de l\'As'];
+  const ALL = ['Ouvrir ou passer ?', 'Trouve les nuts', 'Combien d\'outs ?', 'Call ou Fold ?', 'Ace Runner', 'Château de cartes', 'Poker Solitaire', 'Vidéo Poker', 'Qui gagne ?', 'Plus haut / Plus bas', 'Le Bluff de l\'As'];
   ok(ALL.every((n) => st.tiles.indexOf(n) >= 0) && st.shelves.join('|') === 'learn|play', label + ': it lists the games on two shelves (' + st.tiles.join(', ') + ')');
   ok(st.arts === st.tiles.length, label + ': every game has its picture (' + st.arts + ')');
   ok(st.nick === 'Narmod' && st.stored === 'Narmod', label + ': the real nickname is back (field ' + st.nick + ', stored ' + st.stored + ')');
@@ -311,6 +311,27 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await sleep(250);
   ok(await pg.evaluate(() => !window.__pthOT.run().ok && window.__pthOT.run().n === 2 && window.__pthOT.run().right === 1), label + ': a wrong count is a miss');
   await shot(pg, label + '-ot-miss');
+  await pg.keyboard.press('Escape'); await sleep(200);
+  await pg.keyboard.press('Escape'); await sleep(500);
+  // ── Call or Fold?: the pot odds decide ──
+  await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
+  await pick(pg, 'potodds');
+  await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Call ou Fold ?', null, { timeout: 8000 }).catch(() => {});
+  ok(await pg.evaluate(() => window._pthPadOwner === 'potodds'), label + ': its card then Space opens Call or Fold?');
+  await pg.keyboard.press('Space');
+  await sleep(300);
+  await shot(pg, label + '-pd-ask');
+  await pg.keyboard.press((await pg.evaluate(() => window.__pthPD.run().q.call)) ? 'ArrowRight' : 'ArrowLeft');
+  await sleep(250);
+  const pd1 = await pg.evaluate(() => ({ st: window.__pthPD.state(), ok: window.__pthPD.run().ok, score: document.querySelector('#pth-game .pd-score').textContent }));
+  ok(pd1.st === 'shown' && pd1.ok && pd1.score === '1', label + ': the right decision scores and the odds are explained');
+  await shot(pg, label + '-pd-shown');
+  await pg.keyboard.press('Space');
+  await sleep(250);
+  await pg.keyboard.press((await pg.evaluate(() => window.__pthPD.run().q.call)) ? 'ArrowLeft' : 'ArrowRight');
+  await sleep(250);
+  ok(await pg.evaluate(() => !window.__pthPD.run().ok && window.__pthPD.run().n === 2 && window.__pthPD.run().right === 1), label + ': a wrong decision is a miss');
+  await shot(pg, label + '-pd-miss');
   await pg.keyboard.press('Escape'); await sleep(200);
   await pg.keyboard.press('Escape'); await sleep(500);
   // ── The Ace's Bluff: he bets, Call shows his cards; Fold gives up the ante ──

@@ -135,4 +135,8 @@ export const ACHIEVEMENTS = [
   // d'outs ? », leçon 4 du rayon Apprendre (modules/games/outs.mjs).
   { id: 'outs',          icon: '🧮', cat: CATS.secret, when: 'always',
     test: () => false },
+  // Débloqué par grantSecret('potodds') : 10 bonnes décisions sur 12 à « Call
+  // ou Fold ? », leçon 5 du rayon Apprendre (modules/games/potodds.mjs).
+  { id: 'potodds',       icon: '📐', cat: CATS.secret, when: 'always',
+    test: () => false },
 ];
