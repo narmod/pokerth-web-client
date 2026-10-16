@@ -9,7 +9,7 @@
 // The Ace waves from the top of the page.
 // ═══════════════════════════════════════════════════════════════════
 
-import { GAMES, HOME, gameName } from './index.mjs';
+import { GAMES, HOME, SHELVES, gameName } from './index.mjs';
 import { aceActor, fmt } from './common.mjs';
 import { art } from './art.mjs';
 
@@ -30,6 +30,11 @@ const CSS = `
 #pth-game .gm-card h3{margin:0;font:700 19px/1.2 'Cinzel',Georgia,serif;letter-spacing:.02em;color:var(--text-hi)}
 #pth-game .gm-card .gm-rec{margin:0;font:500 12px 'Inconsolata',monospace;color:var(--text);min-height:1.2em}
 #pth-game .gm-card .gm-btns{display:flex;gap:8px;margin-top:auto;flex-wrap:wrap}
+#pth-game .gm-shelf{display:flex;flex-direction:column;gap:10px}
+#pth-game .gm-shelf h2{margin:6px 0 0;font:700 clamp(17px,3.6vw,21px)/1.2 'Cinzel',Georgia,serif;letter-spacing:.04em;color:var(--gold)}
+#pth-game .gm-shelf>p{margin:-4px 0 0;color:var(--text);font-size:13px;line-height:1.4}
+#pth-game .gm-step{display:inline-flex;align-items:center;justify-content:center;width:1.5em;height:1.5em;margin-right:6px;border-radius:50%;
+  background:var(--gold);color:var(--on-gold,#141414);font:700 .7em/1 'Inter',system-ui,sans-serif;vertical-align:.15em}
 #pth-game .gm-keys{margin:0;color:var(--text);font-size:12px;opacity:.8}
 #pth-game .gm-keys .pg-k{color:var(--gold);border-color:var(--border-hi)}
 `;
@@ -40,18 +45,28 @@ export function create(shell) {
     const st = document.createElement('style'); st.id = 'pth-game-hub-css'; st.textContent = CSS;
     document.head.appendChild(st);
   }
-  const games = GAMES.filter((g) => g.id !== HOME).map((g) => Object.assign({}, g, { name: gameName(g, t) }));
+  // Shelf by shelf (the learning path first), in the registry's order.
+  const games = [];
+  SHELVES.forEach((sh) => GAMES.filter((g) => g.id !== HOME && (g.shelf || 'play') === sh.id)
+    .forEach((g, k) => games.push(Object.assign({}, g, { name: gameName(g, t), step: sh.id === 'learn' ? k + 1 : 0 }))));
   let sel = 0;
   const best = (id) => { try { return parseInt(localStorage.getItem('pth_game_best_' + id) || '0', 10) || 0; } catch (e) { return 0; } };
 
   shell.view.innerHTML = '<div class="gm-hub"><div class="gm-head"><div class="gm-ace"></div><div><h2>Arcade</h2><p>' + esc(t('gmIntro')) + '</p></div></div>'
-    + '<div class="gm-grid">' + games.map((g, i) => '<article class="gm-card" data-i="' + i + '">'
+    + SHELVES.map((sh) => {
+      const list = games.map((g, i) => [g, i]).filter(([g]) => (g.shelf || 'play') === sh.id);
+      if (!list.length) return '';
+      return '<section class="gm-shelf" data-shelf="' + sh.id + '"><h2>' + esc(t(sh.titleKey)) + '</h2>'
+        + (sh.introKey ? '<p>' + esc(t(sh.introKey)) + '</p>' : '')
+        + '<div class="gm-grid">' + list.map(([g, i]) => '<article class="gm-card" data-i="' + i + '">'
       + '<div class="gm-art" data-art="' + esc(g.id) + '">' + art(g.id, shell.theme.light) + '</div>'
-      + '<h3><span class="gm-ico" aria-hidden="true">' + g.icon + '</span>' + esc(g.name) + '</h3>'
+      + '<h3>' + (g.step ? '<span class="gm-step">' + g.step + '</span>' : '') + '<span class="gm-ico" aria-hidden="true">' + g.icon + '</span>' + esc(g.name) + '</h3>'
       + '<p class="gm-rec">' + (best(g.id) ? esc(t('arRecord', { n: fmt(best(g.id)) })) : '&nbsp;') + '</p>'
       + '<div class="gm-btns"><button type="button" class="pg-btn" data-play="' + i + '">' + esc(t('gmPlay')) + '</button>'
       + '<button type="button" class="pg-btn pg-ghost" data-rules="' + i + '">' + esc(t('gmRules')) + '</button></div></article>').join('')
-    + '</div><p class="gm-keys"><span class="pg-k">←</span> <span class="pg-k">→</span> · <span class="pg-k">Space</span> · <span class="pg-k">↓</span> ' + esc(t('gmRules')) + '</p></div>';
+        + '</div></section>';
+    }).join('')
+    + '<p class="gm-keys"><span class="pg-k">←</span> <span class="pg-k">→</span> · <span class="pg-k">Space</span> · <span class="pg-k">↓</span> ' + esc(t('gmRules')) + '</p></div>';
   const cards = Array.from(shell.view.querySelectorAll('.gm-card'));
   const mark = () => cards.forEach((c, i) => c.classList.toggle('on', i === sel));
   mark();

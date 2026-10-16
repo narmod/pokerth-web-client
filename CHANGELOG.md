@@ -105,6 +105,10 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **Two shelves in the arcade** (`web.95`) — `SHELVES` in `games/index.mjs`: « Learn poker » (a numbered path) and
+  « Just for fun ». Each game also states how it will unlock in a future « Arcade » login mode (`unlock`:
+  from the start, a given trophy — each lesson's opens the next — or a number of trophies; `ARCADE_UNLOCK`
+  for the mode itself; `unlocked()`), not active yet: the secret word still opens everything.
 - **The Ace's Bluff in the arcade** (`web.94`) — `games/bluff.mjs`: heads-up on the river, the Ace bets his better
   hands and bluffs half of his worse ones; Call or Fold. Every table of 5 hands he gets a tell (sweat,
   stare, sunglasses, fidget, wave, grin) shown on 80 % of his bluffs and 15 % of his value bets, among

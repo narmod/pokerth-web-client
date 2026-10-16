@@ -39,6 +39,14 @@ async function fresh(width, height) {
 }
 const shot = async (pg, name) => { if (!SHOTS) return; mkdirSync('.shots', { recursive: true }); await pg.screenshot({ path: '.shots/games-' + name + '.png' }); };
 
+// Open game `id` from the arcade's home with the keys: → up to its card, then Space.
+async function pick(pg, id) {
+  await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
+  const n = await pg.evaluate((g) => [...document.querySelectorAll('#pth-game .gm-card .gm-art')].findIndex((a) => a.getAttribute('data-art') === g), id);
+  for (let i = 0; i < n; i++) await pg.keyboard.press('ArrowRight');
+  await sleep(100);
+  await pg.keyboard.press('Space');
+}
 console.log('test-games-browser');
 for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   const { ctx, pg } = await fresh(w, h);
@@ -57,16 +65,18 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     back: !!document.querySelector('#s-arcade .cp-header #ar-back-btn'), menu: !!document.querySelector('#s-arcade #ar-overflow-btn'),
     tiles: [...document.querySelectorAll('#pth-game .gm-card h3')].map((b) => b.lastChild.textContent),
     arts: [...document.querySelectorAll('#pth-game .gm-card .gm-art svg')].length,
+    shelves: [...document.querySelectorAll('#pth-game .gm-shelf')].map((x) => x.getAttribute('data-shelf')),
   }));
   ok(st.open && st.ace && st.page && st.title === 'Arcade', label + ': the arcade page opens with the Ace');
   ok(st.back && st.menu, label + ': with the header of the other pages (back, ⚙ menu)');
-  ok(st.tiles.join('|') === 'Ace Runner|Château de cartes|Poker Solitaire|Vidéo Poker|Qui gagne ?|Plus haut / Plus bas|Le Bluff de l\'As', label + ': it lists the games (' + st.tiles.join(', ') + ')');
+  const ALL = ['Ace Runner', 'Château de cartes', 'Poker Solitaire', 'Vidéo Poker', 'Qui gagne ?', 'Plus haut / Plus bas', 'Le Bluff de l\'As'];
+  ok(ALL.every((n) => st.tiles.indexOf(n) >= 0) && st.shelves.join('|') === 'learn|play', label + ': it lists the games on two shelves (' + st.tiles.join(', ') + ')');
   ok(st.arts === st.tiles.length, label + ': every game has its picture (' + st.arts + ')');
   ok(st.nick === 'Narmod' && st.stored === 'Narmod', label + ': the real nickname is back (field ' + st.nick + ', stored ' + st.stored + ')');
   ok(st.pad === 'arcade', label + ': the gamepad navigation steps aside');
   await shot(pg, label + '-menu');
   // ── Ace Runner ──
-  await pg.keyboard.press('Space');
+  await pick(pg, 'ace-runner');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Ace Runner', null, { timeout: 8000 }).catch(() => {});
   ok(await pg.evaluate(() => window._pthPadOwner === 'ace-runner'), label + ': Space opens Ace Runner');
   await shot(pg, label + '-title');
@@ -99,11 +109,9 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
   ok(await pg.evaluate(() => !!document.querySelector('#pth-game .gm-card') && document.getElementById('ar-title').textContent === 'Arcade'), label + ': Esc again goes back to the arcade page');
   // ── House of Cards ──
-  await pg.keyboard.press('ArrowRight');
-  await sleep(100);
-  await pg.keyboard.press('Space');
+  await pick(pg, 'house');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Château de cartes', null, { timeout: 8000 }).catch(() => {});
-  ok(await pg.evaluate(() => window._pthPadOwner === 'house'), label + ': → then Space opens the House of Cards');
+  ok(await pg.evaluate(() => window._pthPadOwner === 'house'), label + ': its card then Space opens the House of Cards');
   await shot(pg, label + '-house-title');
   await pg.keyboard.press('Space');
   await sleep(500);
@@ -135,11 +143,9 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await sleep(500);
   // ── Poker Solitaire (daily challenge, keyboard only) ──
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
-  await pg.keyboard.press('ArrowRight'); await pg.keyboard.press('ArrowRight');
-  await sleep(100);
-  await pg.keyboard.press('Space');
+  await pick(pg, 'solitaire');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Poker Solitaire', null, { timeout: 8000 }).catch(() => {});
-  ok(await pg.evaluate(() => window._pthPadOwner === 'solitaire' && document.querySelectorAll('#pth-game .pg-panel .gm-tile').length === 2), label + ': → → Space opens Poker Solitaire (daily / free)');
+  ok(await pg.evaluate(() => window._pthPadOwner === 'solitaire' && document.querySelectorAll('#pth-game .pg-panel .gm-tile').length === 2), label + ': its card then Space opens Poker Solitaire (daily / free)');
   await shot(pg, label + '-solitaire-title');
   await pg.keyboard.press('Space');
   await sleep(300);
@@ -160,11 +166,9 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await sleep(500);
   // ── Video Poker (daily challenge): a pair of jacks pays, then double or nothing ──
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
-  for (let i = 0; i < 3; i++) await pg.keyboard.press('ArrowRight');
-  await sleep(100);
-  await pg.keyboard.press('Space');
+  await pick(pg, 'videopoker');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Vidéo Poker', null, { timeout: 8000 }).catch(() => {});
-  ok(await pg.evaluate(() => window._pthPadOwner === 'videopoker' && document.getElementById('ar-title').textContent === 'Vidéo Poker'), label + ': → → → Space opens Video Poker');
+  ok(await pg.evaluate(() => window._pthPadOwner === 'videopoker' && document.getElementById('ar-title').textContent === 'Vidéo Poker'), label + ': its card then Space opens Video Poker');
   await pg.keyboard.press('Space');
   await sleep(400);
   const vp0 = await pg.evaluate(() => ({ st: window.__pthVP.state(), cr: document.querySelector('#pth-game .vp-cr').textContent, h: document.querySelector('#pth-game .vp-h').textContent }));
@@ -194,11 +198,9 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.keyboard.press('Escape'); await sleep(500);
   // ── Who Wins?: the right hand scores, a wrong one costs a heart ──
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
-  for (let i = 0; i < 4; i++) await pg.keyboard.press('ArrowRight');
-  await sleep(100);
-  await pg.keyboard.press('Space');
+  await pick(pg, 'whowins');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Qui gagne ?', null, { timeout: 8000 }).catch(() => {});
-  ok(await pg.evaluate(() => window._pthPadOwner === 'whowins'), label + ': → ×4 Space opens Who Wins?');
+  ok(await pg.evaluate(() => window._pthPadOwner === 'whowins'), label + ': its card then Space opens Who Wins?');
   await pg.keyboard.press('Space');
   await sleep(300);
   const keyFor = (w) => (w === 1 ? 'ArrowLeft' : w === -1 ? 'ArrowRight' : 'ArrowDown');
@@ -221,11 +223,9 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.keyboard.press('Escape'); await sleep(500);
   // ── Higher or Lower: a right guess grows the pot, Space banks it, a wrong one costs a heart ──
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
-  for (let i = 0; i < 5; i++) await pg.keyboard.press('ArrowRight');
-  await sleep(100);
-  await pg.keyboard.press('Space');
+  await pick(pg, 'hilo');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Plus haut / Plus bas', null, { timeout: 8000 }).catch(() => {});
-  ok(await pg.evaluate(() => window._pthPadOwner === 'hilo'), label + ': → ×5 Space opens Higher or Lower');
+  ok(await pg.evaluate(() => window._pthPadOwner === 'hilo'), label + ': its card then Space opens Higher or Lower');
   await pg.keyboard.press('Space');
   await sleep(300);
   // A 7♦ face up, a K♠ next: ↑ wins.
@@ -248,11 +248,9 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.keyboard.press('Escape'); await sleep(500);
   // ── The Ace's Bluff: he bets, Call shows his cards; Fold gives up the ante ──
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
-  for (let i = 0; i < 6; i++) await pg.keyboard.press('ArrowRight');
-  await sleep(100);
-  await pg.keyboard.press('Space');
+  await pick(pg, 'bluff');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Le Bluff de l\'As', null, { timeout: 8000 }).catch(() => {});
-  ok(await pg.evaluate(() => window._pthPadOwner === 'bluff'), label + ": → ×6 Space opens the Ace's Bluff");
+  ok(await pg.evaluate(() => window._pthPadOwner === 'bluff'), label + ": its card then Space opens the Ace's Bluff");
   await pg.keyboard.press('Space');
   const toDecide = async () => {
     for (let i = 0; i < 12; i++) {
@@ -301,7 +299,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.fill('#nick', 'Mascotte');
   await pg.evaluate(() => App.connect());
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
-  await pg.click('#pth-game [data-rules="1"]');
+  await pg.evaluate(() => { const c = document.querySelector('#pth-game .gm-art[data-art="house"]').closest('.gm-card'); c.querySelector('[data-rules]').click(); });
   await sleep(200);
   const r = await pg.evaluate(() => ({ open: !document.querySelector('#pth-game .pg-rules').hidden,
     h: (document.querySelector('#pth-game .pg-sheet h3') || {}).textContent, li: document.querySelectorAll('#pth-game .pg-sheet li').length }));

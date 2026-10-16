@@ -23,18 +23,43 @@
 // ═══════════════════════════════════════════════════════════════════
 
 export const HOME = 'arcade';
-// page: no stage (the arcade's home); rulesKey: the rules sheet (« ? » in the
-// header, « Rules » on the home page); aspect: the stage's width / height range.
+// The arcade's two shelves: a learning path (in its order) and the games
+// played for fun. The home page (menu.mjs) shows them one under the other.
+export const SHELVES = [
+  { id: 'learn', titleKey: 'gmShelfLearn', introKey: 'gmShelfLearnIntro' },
+  { id: 'play', titleKey: 'gmShelfPlay' },
+];
+// page: no stage (the arcade's home); shelf: where its card goes; rulesKey:
+// the rules sheet (« ? » in the header, « Rules » on the home page); aspect:
+// the stage's width / height range.
+// unlock: what will open the game in the future « Arcade » mode of the login
+// (not active yet — the secret word opens everything): {} from the start,
+// { trophy: id } once that trophy is won (the learning path: each lesson's
+// trophy opens the next one), { trophies: n } with n trophies won in all.
+// The numbers are a first draft, to be tuned when the mode is built.
+export const ARCADE_UNLOCK = { trophies: 10 };
 export const GAMES = [
   { id: HOME, name: 'Arcade', page: true, load: () => import('./menu.mjs') },
-  { id: 'ace-runner', name: 'Ace Runner', icon: '🏃', rulesKey: 'arRules', aspect: [4 / 3, 2.4], load: () => import('./ace-runner.mjs') },
-  { id: 'house', nameKey: 'hcName', icon: '🃏', rulesKey: 'hcRules', aspect: [4 / 3, 2.4], load: () => import('./house.mjs') },
-  { id: 'solitaire', nameKey: 'psName', icon: '♠', rulesKey: 'psRules', aspect: [1.25, 2.2], load: () => import('./solitaire.mjs') },
-  { id: 'videopoker', nameKey: 'vpName', icon: '🎰', rulesKey: 'vpRules', aspect: [0.6, 2.2], load: () => import('./videopoker.mjs') },
-  { id: 'whowins', nameKey: 'wwName', icon: '⚖️', rulesKey: 'wwRules', aspect: [0.6, 2.2], load: () => import('./whowins.mjs') },
-  { id: 'hilo', nameKey: 'hlName', icon: '↕️', rulesKey: 'hlRules', aspect: [0.6, 2.2], load: () => import('./hilo.mjs') },
-  { id: 'bluff', nameKey: 'blName', icon: '🎭', rulesKey: 'blRules', aspect: [0.6, 2.2], load: () => import('./bluff.mjs') },
+  // ── Learn ──
+  { id: 'whowins', shelf: 'learn', unlock: {}, nameKey: 'wwName', icon: '⚖️', rulesKey: 'wwRules', aspect: [0.6, 2.2], load: () => import('./whowins.mjs') },
+  // ── For fun ──
+  { id: 'ace-runner', shelf: 'play', unlock: {}, name: 'Ace Runner', icon: '🏃', rulesKey: 'arRules', aspect: [4 / 3, 2.4], load: () => import('./ace-runner.mjs') },
+  { id: 'house', shelf: 'play', unlock: { trophies: 12 }, nameKey: 'hcName', icon: '🃏', rulesKey: 'hcRules', aspect: [4 / 3, 2.4], load: () => import('./house.mjs') },
+  { id: 'solitaire', shelf: 'play', unlock: { trophies: 15 }, nameKey: 'psName', icon: '♠', rulesKey: 'psRules', aspect: [1.25, 2.2], load: () => import('./solitaire.mjs') },
+  { id: 'videopoker', shelf: 'play', unlock: { trophies: 18 }, nameKey: 'vpName', icon: '🎰', rulesKey: 'vpRules', aspect: [0.6, 2.2], load: () => import('./videopoker.mjs') },
+  { id: 'hilo', shelf: 'play', unlock: { trophies: 21 }, nameKey: 'hlName', icon: '↕️', rulesKey: 'hlRules', aspect: [0.6, 2.2], load: () => import('./hilo.mjs') },
+  { id: 'bluff', shelf: 'play', unlock: { trophies: 24 }, nameKey: 'blName', icon: '🎭', rulesKey: 'blRules', aspect: [0.6, 2.2], load: () => import('./bluff.mjs') },
 ];
+/**
+ * Would game `g` be open in the future Arcade mode? have = { count, owned }:
+ * the number of trophies won and the set of their ids. Not used yet.
+ */
+export function unlocked(g, have) {
+  const u = (g && g.unlock) || {};
+  if (u.trophy && !(have.owned && have.owned.has(u.trophy))) return false;
+  if (u.trophies && (have.count || 0) < u.trophies) return false;
+  return true;
+}
 // Secret words → what they open.
 export const TRIGGERS = [{ wordKey: 'gameWordAce', words: ['mascot'], open: HOME }];
 
