@@ -968,7 +968,6 @@ export const strings = {
     "ach_win_allin_d": "Vinn en hand efter en all-in",
     "ach_bluff": "Tankeläsare",
     "ach_bluff_d": "Ta esset på bar gärning med bluff 5 gånger i ett spel",
-    "gmShelfPlay": "Bara för skojs skull",
     "gmTitle": "Minispel",
     "ach_pair_of_2": "Par i tvåor",
     "ach_pair_of_2_d": "Vinn en hand med ett par tvåor",

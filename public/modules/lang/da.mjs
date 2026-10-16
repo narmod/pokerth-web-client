@@ -969,7 +969,6 @@ export const strings = {
     "ach_win_allin_d": "Vind en hånd efter en all-in",
     "ach_bluff": "Tankelæser",
     "ach_bluff_d": "Fang esset i at bluffe 5 gange i ét spil",
-    "gmShelfPlay": "Bare for sjov",
     "gmTitle": "Minispil",
     "ach_pair_of_2": "Par i toere",
     "ach_pair_of_2_d": "Vind en hånd med et par toere",

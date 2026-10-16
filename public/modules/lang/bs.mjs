@@ -870,7 +870,6 @@ export const strings = {
     "ach_win_allin_d": "Pobijedi ruku nakon all-ina",
     "ach_bluff": "Čitač misli",
     "ach_bluff_d": "Uhvati asa u blefu 5 puta u jednoj igri",
-    "gmShelfPlay": "Samo za zabavu",
     "gmTitle": "Mini igre",
     "ach_pair_of_2": "Par dvojki",
     "ach_pair_of_2_d": "Pobijedi ruku s parom dvojki",

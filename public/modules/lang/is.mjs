@@ -594,7 +594,6 @@ export const strings = {
     "ach_win_allin_d": 'Vinndu hönd eftir að hafa farið all-in',
     "ach_bluff": "Hugsanalesari",
     "ach_bluff_d": "Gríptu ásinn við blekkingu 5 sinnum í einum leik",
-    "gmShelfPlay": "Bara til gamans",
     "gmTitle": "Smáleikir",
     "ach_pair_of_2": 'Tvistar',
     "ach_pair_of_2_d": 'Vinndu hönd með tvistapari',

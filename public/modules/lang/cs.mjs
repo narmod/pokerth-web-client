@@ -970,7 +970,6 @@ export const strings = {
     "ach_win_allin_d": "Vyhraj rozdání po all-in",
     "ach_bluff": "Čtenář myšlenek",
     "ach_bluff_d": "Přistihni eso při blafu 5krát v jedné hře",
-    "gmShelfPlay": "Jen pro zábavu",
     "gmTitle": "Minihry",
     "ach_pair_of_2": "Pár dvojek",
     "ach_pair_of_2_d": "Vyhraj rozdání s párem dvojek",

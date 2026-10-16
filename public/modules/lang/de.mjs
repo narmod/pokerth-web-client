@@ -973,7 +973,6 @@ export const strings = {
     "ach_win_allin_d": "Gewinne eine Hand nach einem All-in",
     "ach_bluff": "Gedankenleser",
     "ach_bluff_d": "Das Ass in einem Spiel 5-mal beim Bluffen erwischen",
-    "gmShelfPlay": "Einfach zum Spaß",
     "gmTitle": "Minispiele",
     "ach_pair_of_2": "Zwei Zweien",
     "ach_pair_of_2_d": "Gewinne eine Hand mit einem Paar Zweien",

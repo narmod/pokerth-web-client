@@ -597,7 +597,6 @@ export const strings = {
     "ach_win_allin_d": "Uzvari partijā pēc all-in",
     "ach_bluff": "Domu lasītājs",
     "ach_bluff_d": "Pieķer dūzi blefojam 5 reizes vienā spēlē",
-    "gmShelfPlay": "Tikai prieka pēc",
     "gmTitle": "Minispēles",
     "ach_pair_of_2": "Divnieki",
     "ach_pair_of_2_d": "Uzvari partijā ar divnieku pāri",

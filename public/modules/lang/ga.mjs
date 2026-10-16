@@ -598,7 +598,6 @@ export const strings = {
     "ach_win_allin_d": 'Buaigh lámh tar éis dul all-in',
     "ach_bluff": "Léitheoir intinne",
     "ach_bluff_d": "Beir ar an Aon ag bladhmann 5 huaire i gcluiche amháin",
-    "gmShelfPlay": "Le haghaidh spraoi",
     "gmTitle": "Mionchluichí",
     "ach_pair_of_2": 'Dóanna',
     "ach_pair_of_2_d": 'Buaigh lámh le péire dóanna i do lámh',

@@ -78,7 +78,7 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'wwName', 'wwHint', 'wwSplit', 'wwTooSlow', 'wwRules', 'ach_whowins', 'ach_whowins_d', 'gmAgain',
   'hlName', 'hlHint', 'hlHigher', 'hlLower', 'hlCash', 'hlPot', 'hlRules', 'ach_hilo', 'ach_hilo_d',
   'blName', 'blHint', 'blBets', 'blBluff', 'blTells', 'blChips', 'blRules', 'ach_bluff', 'ach_bluff_d',
-  'gmShelfPlay', 'gmTitle'];
+  'gmTitle'];
 let missing = [], badRecord = [];
 for (const f of files) {
   const { strings } = await import(path.join(langDir, f));
@@ -164,13 +164,13 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
     "The Ace's Bluff: he bets every better hand, bluffs about half his worse ones (" + bluffs + '/2000), checks a tie');
   ok(tellOnBluff / bluffs > 0.75 && tellOnBet / 2000 < 0.25 && TELLS.length === 6,
     "The Ace's Bluff: his tell shows on most bluffs (" + Math.round(100 * tellOnBluff / bluffs) + '%) and on few value bets (' + Math.round(100 * tellOnBet / 2000) + '%)');
-  // The mini-games' shelf and the (future) unlocks; the lessons are gone.
+  // The mini-games and their (future) unlocks; the lessons are gone.
   const reg = await import('../public/modules/games/index.mjs');
   const games = reg.GAMES.filter((g) => g.id !== reg.HOME);
-  ok(games.every((g) => reg.SHELVES.some((sh) => sh.id === g.shelf) && g.unlock), 'every game sits on a shelf and says how it unlocks');
+  ok(games.every((g) => g.unlock) && !('SHELVES' in reg), 'every game says how it unlocks, no shelves');
   const ids = new Set(games.map((g) => g.id));
-  ok(['preflop', 'nuts', 'outs', 'potodds', 'equity'].every((x) => !ids.has(x)) && reg.SHELVES.map((sh) => sh.id).join() === 'play' && ids.has('whowins'),
-    'one shelf, « Just for fun », with Who Wins? back on it and no lesson left');
+  ok(['preflop', 'nuts', 'outs', 'potodds', 'equity'].every((x) => !ids.has(x)) && ids.has('whowins'),
+    'Who Wins? is back and no lesson is left');
   ok(games.every((g) => !g.unlock.trophy || ids.has(g.unlock.trophy) || g.unlock.trophy.length), 'unlock trophies are named');
   const house = games.find((g) => g.id === 'house');
   ok(reg.unlocked(house, { count: 12, owned: new Set() }) && !reg.unlocked(house, { count: 11, owned: new Set() })

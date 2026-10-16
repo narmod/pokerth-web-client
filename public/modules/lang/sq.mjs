@@ -597,7 +597,6 @@ export const strings = {
     "ach_win_allin_d": "Fito një dorë pasi ke shkuar all-in",
     "ach_bluff": "Lexues mendjesh",
     "ach_bluff_d": "Kape Asin duke blofuar 5 herë në një lojë",
-    "gmShelfPlay": "Thjesht për qejf",
     "gmTitle": "Mini-lojëra",
     "ach_pair_of_2": "Dyshet",
     "ach_pair_of_2_d": "Fito një dorë me një çift dyshesh",

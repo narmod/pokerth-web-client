@@ -596,7 +596,6 @@ export const strings = {
     "ach_win_allin_d": "all-in যাওয়ার পরে হাত জিতুন",
     "ach_bluff": "মনের পাঠক",
     "ach_bluff_d": "এক খেলায় টেক্কাকে 5 বার ব্লাফ করতে ধরুন",
-    "gmShelfPlay": "শুধু মজার জন্য",
     "gmTitle": "মিনি গেম",
     "ach_pair_of_2": "দুইয়ের জোড়া",
     "ach_pair_of_2_d": "দুইয়ের জোড়া হাতে নিয়ে হাত জিতুন",

@@ -598,7 +598,6 @@ export const strings = {
     "ach_win_allin_d": 'Ci hannu bayan yin all-in',
     "ach_bluff": "Mai karanta zuciya",
     "ach_bluff_d": "Kama Ace yana yaudara sau 5 a wasa ɗaya",
-    "gmShelfPlay": "Don nishaɗi kawai",
     "gmTitle": "Ƙananan wasanni",
     "ach_pair_of_2": 'Biyu-biyu',
     "ach_pair_of_2_d": 'Ci hannu da katunan 2 guda biyu a hannunka',

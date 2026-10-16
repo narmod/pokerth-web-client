@@ -596,7 +596,6 @@ export const strings = {
     "ach_win_allin_d": "Manalo sa kamay pagkatapos mag-all-in",
     "ach_bluff": "Mambabasa ng isip",
     "ach_bluff_d": "Mahuli ang Alas na nagbu-bluff nang 5 beses sa isang laro",
-    "gmShelfPlay": "Para sa saya lang",
     "gmTitle": "Mga mini game",
     "ach_pair_of_2": "Deuces",
     "ach_pair_of_2_d": "Manalo sa kamay habang may hawak na pares na dos",

@@ -971,7 +971,6 @@ export const strings = {
     "ach_win_allin_d": "Выиграйте раздачу после all-in",
     "ach_bluff": "Чтец мыслей",
     "ach_bluff_d": "Поймать Туза на блефе 5 раз за одну игру",
-    "gmShelfPlay": "Просто для удовольствия",
     "gmTitle": "Мини-игры",
     "ach_pair_of_2": "Пара двоек",
     "ach_pair_of_2_d": "Выиграйте раздачу с парой двоек",

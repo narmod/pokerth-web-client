@@ -23,12 +23,8 @@
 // ═══════════════════════════════════════════════════════════════════
 
 export const HOME = 'arcade';
-// The mini-games' shelf: the games played for fun (menu.mjs lists them in
-// this order).
-export const SHELVES = [
-  { id: 'play', titleKey: 'gmShelfPlay' },
-];
-// page: no stage (the home page); shelf: where its card goes; rulesKey:
+// The home page (menu.mjs) lists the games in this order.
+// page: no stage (the home page); rulesKey:
 // the rules sheet (« ? » in the header, « Rules » on the home page); aspect:
 // the stage's width / height range.
 // unlock: what will open the game in the future « Arcade » mode of the login
@@ -38,13 +34,13 @@ export const SHELVES = [
 export const ARCADE_UNLOCK = { trophies: 10 };
 export const GAMES = [
   { id: HOME, nameKey: 'gmTitle', name: 'Mini-games', page: true, load: () => import('./menu.mjs') },
-  { id: 'ace-runner', shelf: 'play', unlock: {}, name: 'Ace Runner', icon: '🏃', rulesKey: 'arRules', aspect: [4 / 3, 2.4], load: () => import('./ace-runner.mjs') },
-  { id: 'house', shelf: 'play', unlock: { trophies: 12 }, nameKey: 'hcName', icon: '🃏', rulesKey: 'hcRules', aspect: [4 / 3, 2.4], load: () => import('./house.mjs') },
-  { id: 'solitaire', shelf: 'play', unlock: { trophies: 15 }, nameKey: 'psName', icon: '♠', rulesKey: 'psRules', aspect: [1.25, 2.2], load: () => import('./solitaire.mjs') },
-  { id: 'videopoker', shelf: 'play', unlock: { trophies: 18 }, nameKey: 'vpName', icon: '🎰', rulesKey: 'vpRules', aspect: [0.6, 2.2], load: () => import('./videopoker.mjs') },
-  { id: 'whowins', shelf: 'play', unlock: { trophies: 21 }, nameKey: 'wwName', icon: '⚖️', rulesKey: 'wwRules', aspect: [0.6, 2.2], load: () => import('./whowins.mjs') },
-  { id: 'hilo', shelf: 'play', unlock: { trophies: 24 }, nameKey: 'hlName', icon: '↕️', rulesKey: 'hlRules', aspect: [0.6, 2.2], load: () => import('./hilo.mjs') },
-  { id: 'bluff', shelf: 'play', unlock: { trophies: 27 }, nameKey: 'blName', icon: '🎭', rulesKey: 'blRules', aspect: [0.6, 2.2], load: () => import('./bluff.mjs') },
+  { id: 'ace-runner', unlock: {}, name: 'Ace Runner', icon: '🏃', rulesKey: 'arRules', aspect: [4 / 3, 2.4], load: () => import('./ace-runner.mjs') },
+  { id: 'house', unlock: { trophies: 12 }, nameKey: 'hcName', icon: '🃏', rulesKey: 'hcRules', aspect: [4 / 3, 2.4], load: () => import('./house.mjs') },
+  { id: 'solitaire', unlock: { trophies: 15 }, nameKey: 'psName', icon: '♠', rulesKey: 'psRules', aspect: [1.25, 2.2], load: () => import('./solitaire.mjs') },
+  { id: 'videopoker', unlock: { trophies: 18 }, nameKey: 'vpName', icon: '🎰', rulesKey: 'vpRules', aspect: [0.6, 2.2], load: () => import('./videopoker.mjs') },
+  { id: 'whowins', unlock: { trophies: 21 }, nameKey: 'wwName', icon: '⚖️', rulesKey: 'wwRules', aspect: [0.6, 2.2], load: () => import('./whowins.mjs') },
+  { id: 'hilo', unlock: { trophies: 24 }, nameKey: 'hlName', icon: '↕️', rulesKey: 'hlRules', aspect: [0.6, 2.2], load: () => import('./hilo.mjs') },
+  { id: 'bluff', unlock: { trophies: 27 }, nameKey: 'blName', icon: '🎭', rulesKey: 'blRules', aspect: [0.6, 2.2], load: () => import('./bluff.mjs') },
 ];
 /**
  * Would game `g` be open in the future Arcade mode? have = { count, owned }:

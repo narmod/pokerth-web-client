@@ -974,7 +974,6 @@ export const strings = {
     "ach_win_allin_d": "Vinci una mano dopo un all-in",
     "ach_bluff": "Lettore del pensiero",
     "ach_bluff_d": "Cogliere l'Asso a bluffare 5 volte in una partita",
-    "gmShelfPlay": "Per divertirsi",
     "gmTitle": "Minigiochi",
     "ach_pair_of_2": "Coppia di due",
     "ach_pair_of_2_d": "Vinci una mano con una coppia di due",

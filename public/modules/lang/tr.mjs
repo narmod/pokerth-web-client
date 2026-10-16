@@ -971,7 +971,6 @@ export const strings = {
     "ach_win_allin_d": "All-in sonrası bir el kazan",
     "ach_bluff": "Akıl okuyucu",
     "ach_bluff_d": "Bir oyunda As'ı 5 kez blöf yaparken yakala",
-    "gmShelfPlay": "Sadece eğlence için",
     "gmTitle": "Mini oyunlar",
     "ach_pair_of_2": "İkili çift",
     "ach_pair_of_2_d": "İkili çiftle bir el kazan",

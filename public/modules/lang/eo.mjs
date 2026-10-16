@@ -598,7 +598,6 @@ export const strings = {
     "ach_win_allin_d": 'Gajnu manon post iri all-in',
     "ach_bluff": "Pensleganto",
     "ach_bluff_d": "Kapti la Ason blufanta 5 fojojn en unu ludo",
-    "gmShelfPlay": "Nur por amuzo",
     "gmTitle": "Minilúdoj",
     "ach_pair_of_2": 'Duoj',
     "ach_pair_of_2_d": 'Gajnu manon kun paro de duoj en la mano',

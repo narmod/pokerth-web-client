@@ -597,7 +597,6 @@ export const strings = {
     "ach_win_allin_d": "Zmagaj roko po all-inu",
     "ach_bluff": "Bralec misli",
     "ach_bluff_d": "Ujemi asa pri blefu 5-krat v eni igri",
-    "gmShelfPlay": "Samo za zabavo",
     "gmTitle": "Mini igre",
     "ach_pair_of_2": "Dvojke",
     "ach_pair_of_2_d": "Zmagaj roko s parom dvojk",

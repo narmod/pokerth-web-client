@@ -599,7 +599,6 @@ export const strings = {
     "ach_win_allin_d": "Gagner une main après un all-in",
     "ach_bluff": "Liseur de pensées",
     "ach_bluff_d": "Prendre l'As en flagrant délit de bluff 5 fois dans une partie",
-    "gmShelfPlay": "Pour s'amuser",
     "gmTitle": "Mini-jeux",
     "ach_pair_of_2": "Paire de deux",
     "ach_pair_of_2_d": "Gagner une main avec une paire de deux",

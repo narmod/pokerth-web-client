@@ -596,7 +596,6 @@ export const strings = {
     "ach_win_allin_d": "Menangkan tangan setelah all-in",
     "ach_bluff": "Pembaca minda",
     "ach_bluff_d": "Tangkap Sat menggertak 5 kali dalam satu permainan",
-    "gmShelfPlay": "Sekadar untuk seronok",
     "gmTitle": "Permainan mini",
     "ach_pair_of_2": "Deuces",
     "ach_pair_of_2_d": "Menangkan tangan sambil memegang sepasang dua",

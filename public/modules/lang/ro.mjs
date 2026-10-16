@@ -970,7 +970,6 @@ export const strings = {
     "ach_win_allin_d": "Câștigă o mână după un all-in",
     "ach_bluff": "Cititor de gânduri",
     "ach_bluff_d": "Prinde Asul cu cacealmaua de 5 ori într-un joc",
-    "gmShelfPlay": "Doar pentru distracție",
     "gmTitle": "Mini-jocuri",
     "ach_pair_of_2": "Pereche de doi",
     "ach_pair_of_2_d": "Câștigă o mână cu o pereche de doi",

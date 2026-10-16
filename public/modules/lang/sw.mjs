@@ -596,7 +596,6 @@ export const strings = {
     "ach_win_allin_d": "Shinda mkono baada ya kwenda all-in",
     "ach_bluff": "Msomaji wa mawazo",
     "ach_bluff_d": "Mkamate Ree akihadaa mara 5 katika mchezo mmoja",
-    "gmShelfPlay": "Kwa burudani tu",
     "gmTitle": "Michezo midogo",
     "ach_pair_of_2": "Jozi ya Mbili",
     "ach_pair_of_2_d": "Shinda mkono ukiwa na jozi ya mbili",

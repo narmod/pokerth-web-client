@@ -969,7 +969,6 @@ export const strings = {
     "ach_win_allin_d": "Voita käsi all-inin jälkeen",
     "ach_bluff": "Ajatustenlukija",
     "ach_bluff_d": "Saa ässä kiinni bluffista 5 kertaa yhdessä pelissä",
-    "gmShelfPlay": "Ihan huviksi",
     "gmTitle": "Minipelit",
     "ach_pair_of_2": "Kakkospari",
     "ach_pair_of_2_d": "Voita käsi kakkosparilla",

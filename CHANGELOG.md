@@ -16,6 +16,8 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Mini-games without categories** (`web.102`) — the « Just for fun » heading is gone: the page lists the games
+  directly, in the registry's order (`SHELVES`, the `shelf` field and `gmShelfPlay` removed, 83 languages).
 - **Mini-games instead of Arcade, the lessons removed** (`web.101`) — the page and its title are now « Mini-games »
   (`gmTitle`, 83 languages). The « Learn poker » shelf is gone with its six lessons (`games/preflop*.mjs`,
   `nuts`, `outs`, `potodds`, `equity`), their secret trophies, covers, strings and tests; « Who Wins? » is back

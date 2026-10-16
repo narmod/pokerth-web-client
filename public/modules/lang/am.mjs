@@ -595,7 +595,6 @@ export const strings = {
     "ach_win_allin_d": "all-in ከገቡ በኋላ እጅ ያሸንፉ",
     "ach_bluff": "አእምሮ አንባቢ",
     "ach_bluff_d": "በአንድ ጨዋታ ኤሱን 5 ጊዜ ሲያታልል ያዝ",
-    "gmShelfPlay": "ለመዝናናት ብቻ",
     "gmTitle": "አነስተኛ ጨዋታዎች",
     "ach_pair_of_2": "ሁለቶች",
     "ach_pair_of_2_d": "የሁለቶች ጥንድ ይዘው እጅ ያሸንፉ",

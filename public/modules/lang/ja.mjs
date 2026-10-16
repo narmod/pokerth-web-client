@@ -966,7 +966,6 @@ export const strings = {
     "ach_win_allin_d": "オールイン後にハンドを勝ち取る",
     "ach_bluff": "読心術",
     "ach_bluff_d": "1ゲームでエースのブラフを5回見破る",
-    "gmShelfPlay": "気軽に遊ぶ",
     "gmTitle": "ミニゲーム",
     "ach_pair_of_2": "ポケットツー",
     "ach_pair_of_2_d": "2のペアでハンドを勝ち取る",

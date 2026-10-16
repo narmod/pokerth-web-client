@@ -598,7 +598,6 @@ export const strings = {
     "ach_win_allin_d": 'Пас аз all-in кардан дастро бибаред',
     "ach_bluff": "Фикрхон",
     "ach_bluff_d": "Дар як бозӣ 5 бор Тузро дар блеф дастгир кун",
-    "gmShelfPlay": "Танҳо барои вақтхушӣ",
     "gmTitle": "Мини-бозиҳо",
     "ach_pair_of_2": 'Ду дуӣ',
     "ach_pair_of_2_d": 'Бо ду дуӣ дар даст дастро бибаред',

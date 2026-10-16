@@ -972,7 +972,6 @@ export const strings = {
     "ach_win_allin_d": "Wygraj rozdanie po all-in",
     "ach_bluff": "Czytelnik myśli",
     "ach_bluff_d": "Przyłap Asa na blefie 5 razy w jednej grze",
-    "gmShelfPlay": "Dla zabawy",
     "gmTitle": "Minigry",
     "ach_pair_of_2": "Para dwójek",
     "ach_pair_of_2_d": "Wygraj rozdanie z parą dwójek",

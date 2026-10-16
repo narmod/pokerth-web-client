@@ -865,7 +865,6 @@ export const strings = {
     "ach_win_allin_d": "Laimėk ranką po all-in",
     "ach_bluff": "Minčių skaitytojas",
     "ach_bluff_d": "Pagauk tūzą blefuojantį 5 kartus per vieną žaidimą",
-    "gmShelfPlay": "Tik dėl smagumo",
     "gmTitle": "Mini žaidimai",
     "ach_pair_of_2": "Dviakių pora",
     "ach_pair_of_2_d": "Laimėk ranką su dviakių pora",

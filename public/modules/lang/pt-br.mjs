@@ -970,7 +970,6 @@ export const strings = {
     "ach_win_allin_d": "Vença uma mão após dar all-in",
     "ach_bluff": "Leitor de mentes",
     "ach_bluff_d": "Pegar o Ás blefando 5 vezes em uma partida",
-    "gmShelfPlay": "Só por diversão",
     "gmTitle": "Minijogos",
     "ach_pair_of_2": "Par de dois",
     "ach_pair_of_2_d": "Vença uma mão com um par de dois",

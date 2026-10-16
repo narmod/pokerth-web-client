@@ -866,7 +866,6 @@ export const strings = {
     "ach_win_allin_d": "Gaña unha man tras un all-in",
     "ach_bluff": "Lector de mentes",
     "ach_bluff_d": "Pillar o Ás de farol 5 veces nunha partida",
-    "gmShelfPlay": "Por diversión",
     "gmTitle": "Minixogos",
     "ach_pair_of_2": "Parella de dous",
     "ach_pair_of_2_d": "Gaña unha man cunha parella de dous",

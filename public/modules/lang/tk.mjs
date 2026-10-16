@@ -598,7 +598,6 @@ export const strings = {
     "ach_win_allin_d": 'All-in edeniňden soň eli ut',
     "ach_bluff": "Pikir okaýjy",
     "ach_bluff_d": "Bir oýunda Tuzy 5 gezek blefde tut",
-    "gmShelfPlay": "Diňe güýmenje üçin",
     "gmTitle": "Mini oýunlar",
     "ach_pair_of_2": 'Iki ikilik',
     "ach_pair_of_2_d": 'Eliňde iki ikilik bilen eli ut',

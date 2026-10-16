@@ -595,7 +595,6 @@ export const strings = {
     "ach_win_allin_d": 'all-in गेल्यानंतर हँड जिंका',
     "ach_bluff": "मन वाचणारा",
     "ach_bluff_d": "एका खेळात एक्क्याला 5 वेळा ब्लफ करताना पकडा",
-    "gmShelfPlay": "फक्त मजेसाठी",
     "gmTitle": "मिनी गेम्स",
     "ach_pair_of_2": 'ड्यूसेस',
     "ach_pair_of_2_d": 'दुर्र्यांच्या जोडीने हँड जिंका',

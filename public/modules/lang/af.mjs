@@ -865,7 +865,6 @@ export const strings = {
     "ach_win_allin_d": "Wen 'n hand ná 'n all-in",
     "ach_bluff": "Gedagteleser",
     "ach_bluff_d": "Vang die Aas 5 keer in een spel op bluf",
-    "gmShelfPlay": "Net vir die pret",
     "gmTitle": "Minispeletjies",
     "ach_pair_of_2": "Paar tweetjies",
     "ach_pair_of_2_d": "Wen 'n hand met 'n paar tweë",

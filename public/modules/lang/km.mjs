@@ -595,7 +595,6 @@ export const strings = {
     "ach_win_allin_d": "ឈ្នះដៃបន្ទាប់ពី all-in",
     "ach_bluff": "អ្នកអានចិត្ត",
     "ach_bluff_d": "ចាប់អាបំភាន់ 5 ដងក្នុងហ្គេមមួយ",
-    "gmShelfPlay": "សម្រាប់កម្សាន្តសុទ្ធ",
     "gmTitle": "ល្បែងខ្នាតតូច",
     "ach_pair_of_2": "គូលេខពីរ",
     "ach_pair_of_2_d": "ឈ្នះដៃដោយកាន់គូលេខពីរ",

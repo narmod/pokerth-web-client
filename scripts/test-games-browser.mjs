@@ -65,12 +65,12 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     back: !!document.querySelector('#s-arcade .cp-header #ar-back-btn'), menu: !!document.querySelector('#s-arcade #ar-overflow-btn'),
     tiles: [...document.querySelectorAll('#pth-game .gm-card h3')].map((b) => b.lastChild.textContent),
     arts: [...document.querySelectorAll('#pth-game .gm-card .gm-art svg')].length,
-    shelves: [...document.querySelectorAll('#pth-game .gm-shelf')].map((x) => x.getAttribute('data-shelf')),
+    shelves: document.querySelectorAll('#pth-game .gm-shelf').length,
   }));
   ok(st.open && st.ace && st.page && st.title === 'Mini-jeux', label + ': the mini-games page opens with the Ace');
   ok(st.back && st.menu, label + ': with the header of the other pages (back, ⚙ menu)');
   const ALL = ['Ace Runner', 'Château de cartes', 'Poker Solitaire', 'Vidéo Poker', 'Qui gagne ?', 'Plus haut / Plus bas', 'Le Bluff de l\'As'];
-  ok(ALL.every((n) => st.tiles.indexOf(n) >= 0) && st.shelves.join('|') === 'play' && st.tiles.length === ALL.length, label + ': it lists the games on one shelf (' + st.tiles.join(', ') + ')');
+  ok(ALL.every((n) => st.tiles.indexOf(n) >= 0) && st.shelves === 0 && st.tiles.length === ALL.length, label + ': it lists the games, no category (' + st.tiles.join(', ') + ')');
   ok(st.arts === st.tiles.length, label + ': every game has its picture (' + st.arts + ')');
   ok(st.nick === 'Narmod' && st.stored === 'Narmod', label + ': the real nickname is back (field ' + st.nick + ', stored ' + st.stored + ')');
   ok(st.pad === 'arcade', label + ': the gamepad navigation steps aside');

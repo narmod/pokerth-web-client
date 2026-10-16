@@ -598,7 +598,6 @@ export const strings = {
     "ach_win_allin_d": 'Ennill llaw ar ôl mynd all-in',
     "ach_bluff": "Darllenydd meddyliau",
     "ach_bluff_d": "Dal yr As yn bluffio 5 gwaith mewn un gêm",
-    "gmShelfPlay": "Dim ond am hwyl",
     "gmTitle": "Gemau bach",
     "ach_pair_of_2": 'Deuoedd',
     "ach_pair_of_2_d": 'Ennill llaw gyda phâr o ddeuoedd yn eich llaw',

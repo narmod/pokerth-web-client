@@ -597,7 +597,6 @@ export const strings = {
     "ach_win_allin_d": "Победи рака откако си одиш all-in",
     "ach_bluff": "Читач на мисли",
     "ach_bluff_d": "Фати го асот во блеф 5 пати во една игра",
-    "gmShelfPlay": "Само за забава",
     "gmTitle": "Мини игри",
     "ach_pair_of_2": "Двојки",
     "ach_pair_of_2_d": "Победи рака со пар двојки",

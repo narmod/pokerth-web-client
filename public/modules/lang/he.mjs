@@ -594,7 +594,6 @@ export const strings = {
     "ach_win_allin_d": "נצחו יד אחרי שהלכתם אול-אין",
     "ach_bluff": "קורא מחשבות",
     "ach_bluff_d": "לתפוס את האס מבלף 5 פעמים במשחק אחד",
-    "gmShelfPlay": "סתם בשביל הכיף",
     "gmTitle": "מיני-משחקים",
     "ach_pair_of_2": "שתיים-שתיים",
     "ach_pair_of_2_d": "נצחו יד עם זוג שתיים ביד",

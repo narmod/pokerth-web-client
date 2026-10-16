@@ -868,7 +868,6 @@ export const strings = {
     "ach_win_allin_d": "Buannaich làmh às dèidh all-in",
     "ach_bluff": "Leughadair inntinn",
     "ach_bluff_d": "Glac an t-Aon a’ bluffadh 5 tursan ann an aon gheama",
-    "gmShelfPlay": "Dìreach airson spòrs",
     "gmTitle": "Geamannan beaga",
     "ach_pair_of_2": "Paidhir dhà",
     "ach_pair_of_2_d": "Buannaich làmh le paidhir dhà",

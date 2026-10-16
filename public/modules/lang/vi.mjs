@@ -865,7 +865,6 @@ export const strings = {
     "ach_win_allin_d": "Thắng một ván bài sau khi all-in",
     "ach_bluff": "Người đọc ý nghĩ",
     "ach_bluff_d": "Bắt quân Át bluff 5 lần trong một trận",
-    "gmShelfPlay": "Chỉ để giải trí",
     "gmTitle": "Trò chơi nhỏ",
     "ach_pair_of_2": "Đôi hai",
     "ach_pair_of_2_d": "Thắng một ván bài với đôi hai",

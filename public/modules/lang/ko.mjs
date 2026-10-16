@@ -774,7 +774,6 @@ export const strings = {
     "ach_win_allin_d": "올인 후 핸드에서 승리하기",
     "ach_bluff": "독심술사",
     "ach_bluff_d": "한 게임에서 에이스의 블러프를 5번 잡아내기",
-    "gmShelfPlay": "그냥 재미로",
     "gmTitle": "미니게임",
     "ach_pair_of_2": "포켓 투",
     "ach_pair_of_2_d": "2 포켓페어로 핸드에서 승리하기",

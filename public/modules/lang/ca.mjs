@@ -866,7 +866,6 @@ export const strings = {
     "ach_win_allin_d": "Guanya una mà després d'un all-in",
     "ach_bluff": "Lector de ments",
     "ach_bluff_d": "Enxampar l'As fent farol 5 vegades en una partida",
-    "gmShelfPlay": "Per divertir-se",
     "gmTitle": "Minijocs",
     "ach_pair_of_2": "Parella de dos",
     "ach_pair_of_2_d": "Guanya una mà amb una parella de dos",

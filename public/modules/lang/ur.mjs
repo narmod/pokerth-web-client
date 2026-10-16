@@ -594,7 +594,6 @@ export const strings = {
     "ach_win_allin_d": "آل اِن جانے کے بعد ہاتھ جیتیں",
     "ach_bluff": "ذہن خواں",
     "ach_bluff_d": "ایک کھیل میں اِکّے کو 5 بار بلف کرتے پکڑیں",
-    "gmShelfPlay": "بس تفریح کے لیے",
     "gmTitle": "منی گیمز",
     "ach_pair_of_2": "دو کے دو",
     "ach_pair_of_2_d": "دو کے جوڑے کے ساتھ ہاتھ جیتیں",

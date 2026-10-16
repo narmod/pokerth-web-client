@@ -598,7 +598,6 @@ export const strings = {
     "ach_win_allin_d": "Win a hand after going all-in",
     "ach_bluff": "Mind Reader",
     "ach_bluff_d": "Catch the Ace bluffing 5 times in one game",
-    "gmShelfPlay": "Just for fun",
     "gmTitle": "Mini-games",
     "ach_pair_of_2": "Deuces",
     "ach_pair_of_2_d": "Win a hand holding a pair of twos",

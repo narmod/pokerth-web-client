@@ -865,7 +865,6 @@ export const strings = {
     "ach_win_allin_d": "Nyerj leosztást all-in után",
     "ach_bluff": "Gondolatolvasó",
     "ach_bluff_d": "Kapd rajta az Ászt blöffön 5-ször egy játékban",
-    "gmShelfPlay": "Csak a móka kedvéért",
     "gmTitle": "Minijátékok",
     "ach_pair_of_2": "Kettes pár",
     "ach_pair_of_2_d": "Nyerj leosztást egy kettes párral",

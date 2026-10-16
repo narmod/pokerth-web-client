@@ -966,7 +966,6 @@ export const strings = {
     "ach_win_allin_d": "全下后赢下一手牌",
     "ach_bluff": "读心者",
     "ach_bluff_d": "一局中识破 A 牌的诈唬 5 次",
-    "gmShelfPlay": "纯属娱乐",
     "gmTitle": "小游戏",
     "ach_pair_of_2": "一对二",
     "ach_pair_of_2_d": "以一对 2 赢下一手牌",

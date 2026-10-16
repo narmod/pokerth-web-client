@@ -588,7 +588,6 @@ export const strings = {
     "ach_win_allin_d": "Võida käsi pärast all-in\u2019i minekut",
     "ach_bluff": "Mõttelugeja",
     "ach_bluff_d": "Taba äss bluffimiselt 5 korda ühes mängus",
-    "gmShelfPlay": "Lihtsalt lõbuks",
     "gmTitle": "Minimängud",
     "ach_pair_of_2": "Kaksed",
     "ach_pair_of_2_d": "Võida käsi kahtede paariga",

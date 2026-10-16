@@ -598,7 +598,6 @@ export const strings = {
     "ach_win_allin_d": 'Wina isandla ngemuva kokwenza i-all-in',
     "ach_bluff": "Umfundi wengqondo",
     "ach_bluff_d": "Bamba u-Ace ekhohlisa izikhathi ezi-5 emdlalweni owodwa",
-    "gmShelfPlay": "Ukuzijabulisa nje",
     "gmTitle": "Imidlalo emincane",
     "ach_pair_of_2": 'Ama-2 amabili',
     "ach_pair_of_2_d": 'Wina isandla nama-2 amabili esandleni sakho',

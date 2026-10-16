@@ -598,7 +598,6 @@ export const strings = {
     "ach_win_allin_d": 'Borí ọwọ́ lẹ́yìn tí o ṣe all-in',
     "ach_bluff": "Olùka ọkàn",
     "ach_bluff_d": "Mú Ace nígbà tó ń tannijẹ ní ìgbà 5 nínú eré kan",
-    "gmShelfPlay": "Fún ìgbádùn nìkan",
     "gmTitle": "Àwọn eré kékeré",
     "ach_pair_of_2": 'Méjì méjì',
     "ach_pair_of_2_d": 'Borí ọwọ́ pẹ̀lú 2 méjì lọ́wọ́ rẹ',

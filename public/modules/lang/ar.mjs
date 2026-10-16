@@ -597,7 +597,6 @@ export const strings = {
     "ach_win_allin_d": "افز بيد بعد دخولك أول إن",
     "ach_bluff": "قارئ الأفكار",
     "ach_bluff_d": "اكشف خداع الآص 5 مرات في لعبة واحدة",
-    "gmShelfPlay": "للتسلية فقط",
     "gmTitle": "ألعاب مصغّرة",
     "ach_pair_of_2": "زوج اثنينات",
     "ach_pair_of_2_d": "افز بيد وأنت تحمل زوج اثنينات",

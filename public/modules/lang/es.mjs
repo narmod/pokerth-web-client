@@ -974,7 +974,6 @@ export const strings = {
     "ach_win_allin_d": "Gana una mano tras ir all-in",
     "ach_bluff": "Lector de mentes",
     "ach_bluff_d": "Pillar al As de farol 5 veces en una partida",
-    "gmShelfPlay": "Por diversión",
     "gmTitle": "Minijuegos",
     "ach_pair_of_2": "Par de doses",
     "ach_pair_of_2_d": "Gana una mano con pareja de doses",

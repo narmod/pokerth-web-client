@@ -598,7 +598,6 @@ export const strings = {
     "ach_win_allin_d": 'All-in qilgandan keyin qoʻlni yuting',
     "ach_bluff": "Fikr o'quvchi",
     "ach_bluff_d": "Bitta o'yinda Tuzni 5 marta blefda ushla",
-    "gmShelfPlay": "Shunchaki ermak uchun",
     "gmTitle": "Mini o'yinlar",
     "ach_pair_of_2": 'Ikkiliklar',
     "ach_pair_of_2_d": 'Qoʻlda ikkiliklar juftligi bilan qoʻlni yuting',

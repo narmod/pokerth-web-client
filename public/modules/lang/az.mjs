@@ -598,7 +598,6 @@ export const strings = {
     "ach_win_allin_d": 'All-in etdikdən sonra əli qazanın',
     "ach_bluff": "Fikir oxuyan",
     "ach_bluff_d": "Bir oyunda Tuzu 5 dəfə blefdə tut",
-    "gmShelfPlay": "Sadəcə əyləncə üçün",
     "gmTitle": "Mini oyunlar",
     "ach_pair_of_2": 'İkiliklər',
     "ach_pair_of_2_d": 'Əlinizdə cüt ikilik ilə əli qazanın',

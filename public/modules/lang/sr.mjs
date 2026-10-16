@@ -865,7 +865,6 @@ export const strings = {
     "ach_win_allin_d": "Победи руку након all-in",
     "ach_bluff": "Читач мисли",
     "ach_bluff_d": "Ухвати аса у блефу 5 пута у једној игри",
-    "gmShelfPlay": "Само за забаву",
     "gmTitle": "Мини игре",
     "ach_pair_of_2": "Пар двојки",
     "ach_pair_of_2_d": "Победи руку са паром двојки",

@@ -598,7 +598,6 @@ export const strings = {
     "ach_win_allin_d": 'All-In ගිය පසු අතක් දිනන්න',
     "ach_bluff": "මනස කියවන්නා",
     "ach_bluff_d": "එක් ක්‍රීඩාවකදී ඒස් බ්ලෆ් කරන විට 5 වරක් අල්ලන්න",
-    "gmShelfPlay": "විනෝදයට පමණි",
     "gmTitle": "කුඩා ක්‍රීඩා",
     "ach_pair_of_2": 'දෙකේ යුගලය',
     "ach_pair_of_2_d": '2 යුගලයක් අතේ තබාගෙන අතක් දිනන්න',
