@@ -52,6 +52,9 @@ function _onPop() {
   // Controller in use (gamepad, TV remote — ui/ctl-nav.mjs): Back leaves a
   // text field or Navigation mode before anything else.
   try { if (window.CtlNav && window.CtlNav.backFallback()) { _push(); return; } } catch (e) {}
+  // Arcade (modules/games/shell.mjs): Back = its back arrow — the rules, then
+  // the arcade's home, then the screen it was opened from.
+  try { if (window.PthGames && window.PthGames.isOpen()) { window.PthGames.back(); _push(); return; } } catch (e) {}
 
   // 3. Hors session (écran de connexion) : on laisse sortir.
   if (!_inSession()) { _armed = false; return; }

@@ -16,7 +16,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 import { evalCards, JOKER, rankOf, suitOf } from './poker-hand.mjs';
-import { SUITS, RANKS, CHIP, rlab, isRed, fmt, faceUrl, backUrl, cardHtml, newDeck, imageCache, rr, aceActor } from './common.mjs';
+import { SUITS, RANKS, CHIP, rlab, isRed, fmt, faceUrl, backUrl, cardHtml, newDeck, imageCache, rr, aceActor, ink } from './common.mjs';
 
 const GROUND_OFF = 74;        // ground line, from the bottom of the world
 const ACE_X = 120;            // the Ace's feet, from the left
@@ -250,7 +250,8 @@ export function create(shell) {
   // ── Drawing ───────────────────────────────────────────────────────
   function drawBg(g) {
     const gy = groundY(), w = W(), H = shell.H;
-    const sky = g.createLinearGradient(0, 0, 0, gy); sky.addColorStop(0, '#0a100e'); sky.addColorStop(1, '#16251e');
+    const C = ink(shell.theme.light);
+    const sky = g.createLinearGradient(0, 0, 0, gy); sky.addColorStop(0, C.skyTop); sky.addColorStop(1, C.skyBot);
     g.fillStyle = sky; g.fillRect(0, 0, w, gy);
     if (!shell.reduced) {
       const off = G.scroll * 0.08;
@@ -267,12 +268,12 @@ export function create(shell) {
     for (let x = -(off2 % span); x < w + span; x += span) {
       const cx = x + 120, ty = gy - 46;
       const lamp = g.createRadialGradient(cx, ty - 40, 0, cx, ty - 10, 120);
-      lamp.addColorStop(0, 'rgba(216,178,90,.16)'); lamp.addColorStop(1, 'rgba(216,178,90,0)');
+      lamp.addColorStop(0, 'rgba(' + C.lamp + ',.16)'); lamp.addColorStop(1, 'rgba(' + C.lamp + ',0)');
       g.fillStyle = lamp; g.fillRect(cx - 130, ty - 120, 260, 170);
-      g.fillStyle = '#2a1a10'; g.beginPath(); g.ellipse(cx, ty + 4, 96, 20, 0, 0, Math.PI * 2); g.fill();
-      g.fillStyle = '#123d28'; g.beginPath(); g.ellipse(cx, ty, 86, 15, 0, 0, Math.PI * 2); g.fill();
+      g.fillStyle = C.rim; g.beginPath(); g.ellipse(cx, ty + 4, 96, 20, 0, 0, Math.PI * 2); g.fill();
+      g.fillStyle = C.farFelt; g.beginPath(); g.ellipse(cx, ty, 86, 15, 0, 0, Math.PI * 2); g.fill();
       g.strokeStyle = 'rgba(216,178,90,.35)'; g.lineWidth = 1; g.beginPath(); g.moveTo(cx, ty - 130); g.lineTo(cx, ty - 62); g.stroke();
-      g.fillStyle = '#20302a'; g.beginPath(); g.moveTo(cx - 18, ty - 50); g.lineTo(cx + 18, ty - 50); g.lineTo(cx + 9, ty - 63); g.lineTo(cx - 9, ty - 63); g.closePath(); g.fill();
+      g.fillStyle = C.shade; g.beginPath(); g.moveTo(cx - 18, ty - 50); g.lineTo(cx + 18, ty - 50); g.lineTo(cx + 9, ty - 63); g.lineTo(cx - 9, ty - 63); g.closePath(); g.fill();
     }
     const felt = g.createLinearGradient(0, gy, 0, H - 26); felt.addColorStop(0, '#24774e'); felt.addColorStop(1, '#174f34');
     g.fillStyle = felt; g.fillRect(0, gy, w, H - 26 - gy);
@@ -368,7 +369,8 @@ export function create(shell) {
       } else {
         g.globalAlpha = a; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
         g.font = p.big ? '700 24px Cinzel, Georgia, serif' : p.gold ? '700 15px Cinzel, Georgia, serif' : '700 14px Inconsolata, monospace';
-        g.fillStyle = p.gold ? '#d8b25a' : p.red ? '#ff8a80' : '#f5f0e3';
+        const C = ink(shell.theme.light);
+        g.fillStyle = p.gold ? C.gold : p.red ? C.red : C.text;
         g.fillText(p.s, p.x, p.y - p.t * 40); g.globalAlpha = 1;
       }
     }
@@ -379,15 +381,16 @@ export function create(shell) {
     const a = b.t < 0.2 ? b.t / 0.2 : b.t > 1.2 ? Math.max(0, 1 - (b.t - 1.2) / 0.4) : 1;
     const w = W(), y = shell.H * 0.34;
     g.globalAlpha = a;
-    g.fillStyle = 'rgba(11,18,16,.72)'; g.fillRect(0, y - 26, w, 52);
-    g.fillStyle = 'rgba(216,178,90,.6)'; g.fillRect(0, y - 26, w, 1); g.fillRect(0, y + 25, w, 1);
+    const C = ink(shell.theme.light);
+    g.fillStyle = C.band; g.fillRect(0, y - 26, w, 52);
+    g.fillStyle = C.bandLine; g.fillRect(0, y - 26, w, 1); g.fillRect(0, y + 25, w, 1);
     g.textBaseline = 'middle'; g.textAlign = 'left';
     const fTitle = '700 22px Cinzel, Georgia, serif', fLvl = '700 22px Inconsolata, monospace';
     g.font = fTitle; const tw = g.measureText(b.s).width;
     g.font = fLvl; const lw = g.measureText(b.sub).width;
     const x0 = (w - tw - 14 - lw) / 2;
-    g.font = fTitle; g.fillStyle = '#f5f0e3'; g.fillText(b.s, x0, y);
-    g.font = fLvl; g.fillStyle = '#d8b25a'; g.fillText(b.sub, x0 + tw + 14, y);
+    g.font = fTitle; g.fillStyle = C.bandText; g.fillText(b.s, x0, y);
+    g.font = fLvl; g.fillStyle = C.bandGold; g.fillText(b.sub, x0 + tw + 14, y);
     g.globalAlpha = 1;
   }
   function draw(g) {

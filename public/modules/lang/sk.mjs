@@ -1061,6 +1061,12 @@ export const strings = {
     "psStraightDraw": "Ťah na postupku…",
     "psBestLine": "Najlepší rad: {h}",
     "psAgain": "Ťukni a vyber režim · Esc pre menu",
+    "gmPlay": "Hrať",
+    "gmRules": "Pravidlá",
+    "gmIntro": "Tri malé pokrové hry, len medzi tebou a Esom. Rekordy zostávajú v tomto zariadení.",
+    "arRules": "Eso beží po súkne: preskakuj kôpky žetónov a kotúľajúci sa gombík dealera, skrč sa pod letiacimi kartami.\nZbieraj otočené karty: tvoja najlepšia päťkartová pokrová kombinácia na konci násobí vzdialenosť (Žolík nahradí ľubovoľnú kartu).\nZlatý žetón All-In z neho na pár sekúnd urobí kráľa: nič ho nezastaví, čo rozbije, dá bonus a vzdialenosť sa počíta dvojnásobne.\nBlindy rastú každých 300 m: všetko zrýchľuje.\nMedzerník, ↑ alebo ťuknutie: skok (podrž pre vyššie) · ↓ alebo potiahnutie nadol: skrčiť sa · P: pauza.",
+    "hcRules": "Karta kĺže po koľajnici krupiéra: pusti ju na jej miesto v domčeku.\nPoschodie je päť kariet — dve strieško v tvare A a na nich položená karta —, takže každé poschodie je pokrová kombinácia vyplatená 20 × jej násobiteľom.\nKarta vedľa svojho miesta domček nakloní (ukazovateľ Tilt); pri 100 % sa všetko zrúti. Perfektný hod ho narovná.\nPostupka alebo farba naklonenie zníži na polovicu; full house alebo lepšie ho vynuluje.\n↓ alebo potiahnutie nadol spáli visiacu kartu (3 za hru, o jednu viac na každej úrovni blindov); ďalšia karta je vidieť na topánke.\nMedzerník alebo ťuknutie: pustiť · ↓: spáliť · P: pauza.",
+    "psRules": "25 kariet prichádza jedna po druhej: polož každú do prázdneho poľa mriežky 5 × 5. Tam zostane.\nKaždý riadok a každý stĺpec je pokrová kombinácia: spolu desať kombinácií.\nBody: kráľovská postupka 100, čistá postupka 75, štvorica 50, full house 25, farba 20, postupka 15, trojica 10, dva páry 5, pár 2.\nVýzva dňa: dnes rovnakých 25 kariet pre všetkých. Voľná hra: zakaždým nové zamiešanie.\nŠípky: pohyb · Medzerník: položiť · alebo ťukni na pole.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Úplná záloha (webový klient)",
     "advBackupDesc": "Uloží do jediného súboru všetko, čo tento prehliadač obsahuje: webové voľby, motívy, balíčky, vlastné miesta, obrázok avatara, úspechy a štatistiky — vrátane toho, čo je príliš veľké na synchronizáciu s účtom. Heslo ani relácia sa nikdy nepridávajú a import úspechy zlučuje namiesto nahradenia, takže o postup neprídete.",

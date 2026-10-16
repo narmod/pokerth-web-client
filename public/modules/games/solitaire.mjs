@@ -46,11 +46,13 @@ export function create(shell) {
   const img = imageCache();
   const ace = aceActor(shell.layer);
   shell.touchPad(false);
+  shell.hud.classList.add('on-felt');   // the HUD sits on the green felt in both themes
   if (!document.getElementById('pth-game-ps-css')) {
     const st = document.createElement('style'); st.id = 'pth-game-ps-css';
     st.textContent = '#pth-game .ps-box{position:absolute;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px;'
       + 'padding:12px 16px;border-radius:12px;background:rgba(11,18,16,.9);box-shadow:0 0 0 1px rgba(216,178,90,.35),0 10px 30px rgba(0,0,0,.45);max-width:calc(100% - 16px)}'
-      + '#pth-game .ps-box .ar-show{flex-wrap:nowrap}';
+      + '#pth-game .ps-box .ar-show{flex-wrap:nowrap}'
+      + '#pth-game.pg-light .ps-box{background:rgba(250,247,240,.96);box-shadow:0 0 0 1px rgba(140,105,20,.4),0 10px 26px rgba(0,0,0,.18)}';
     document.head.appendChild(st);
   }
   shell.hud.innerHTML = '<div class="ar-stats"><div><div class="ar-lab">' + esc(t('hcScore')) + '</div><div class="ar-num ps-score">0</div></div>'
@@ -222,14 +224,21 @@ export function create(shell) {
     ace.mood(score >= TROPHY_SCORE ? 'mc-m-cool' : score >= 40 ? 'mc-m-yay' : 'mc-m-smile');
     ace.pose(score >= TROPHY_SCORE ? 'wave' : 'idle');
     if (record) sound('notifyBigWin'); else if (score >= TROPHY_SCORE) sound('notifyWinner', true);
-    // The result in a box over the right side (the grid stays readable); centred on a narrow stage.
+    G.res = { score, ev, record, prev: prev || 0 };
+    renderResult();
+  }
+  // The result in a box over the right side (the grid stays readable); centred
+  // on a narrow stage — drawn again when the stage changes shape (a phone turned).
+  function renderResult() {
+    if (state !== 'over' || !G.res) return;
+    const { score, ev, record, prev } = G.res;
     const L = layout(), side = L.W >= 600;
     const pos = side ? 'left:' + Math.round(L.panelX * shell.k) + 'px' : 'left:50%';
     shell.panel('<div class="ps-box" style="' + pos + '"><h2>' + esc(fmt(score)) + '</h2>'
       + '<p>' + esc(t('psBestLine', { h: t(ev.nameKey) })) + '</p>'
       + '<div class="ar-show">' + ev.best.map((c) => cardHtml(c, 'lg')).join('') + '</div>'
       + '<p class="pg-dim">' + esc(G.daily ? t('psDaily') + ' · ' + G.day : t('psFree')) + ' · '
-      + esc(record ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(score, prev || 0)) })) + '</p>'
+      + esc(record ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(score, prev)) })) + '</p>'
       + '<p class="pg-blink">' + esc(t('psAgain')) + '</p></div>', true);
   }
 
@@ -320,7 +329,7 @@ export function create(shell) {
   }
 
   return {
-    update, draw, input,
+    update, draw, input, resize: renderResult,
     running: () => state === 'run' || state === 'tally',
     destroy() { clearTimeout(timer); ace.remove(); },
   };

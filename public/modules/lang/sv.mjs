@@ -1059,6 +1059,12 @@ export const strings = {
     "psStraightDraw": "Stegedrag…",
     "psBestLine": "Bästa linje: {h}",
     "psAgain": "Tryck för att välja läge · Esc för menyn",
+    "gmPlay": "Spela",
+    "gmRules": "Regler",
+    "gmIntro": "Tre små pokerspel, bara mellan dig och Esset. Rekorden stannar på den här enheten.",
+    "arRules": "Esset springer över filten: hoppa över markstaplar och den rullande dealerknappen, ducka under flygande kort.\nPlocka upp de öppna korten: din bästa pokerhand på fem kort multiplicerar sträckan på slutet (Jokern är joker).\nDen gyllene All-In-marken gör honom till kung några sekunder: inget stoppar honom, det han krossar ger bonus och sträckan räknas dubbelt.\nMörkarna höjs var 300:e meter: allt går fortare.\nMellanslag, ↑ eller tryck: hoppa (håll för högre) · ↓ eller svep nedåt: ducka · P: paus.",
+    "hcRules": "Ett kort glider längs dealerns skena: släpp det på sin plats i korthuset.\nEn våning är fem kort — två A-tak och ett platt kort ovanpå — så varje våning är en pokerhand, betald med 20 × sin multiplikator.\nEtt kort bredvid sin plats får huset att luta (Tilt-mätare); vid 100 % rasar allt. Ett Perfekt släpp rätar upp det.\nEn stege eller en färg halverar lutningen; en kåk eller bättre nollställer den.\n↓ eller svep nedåt bränner det hängande kortet (3 per spel, ett till för varje mörknivå); nästa kort syns på skon.\nMellanslag eller tryck: släpp · ↓: bränn · P: paus.",
+    "psRules": "25 kort kommer ett i taget: lägg varje kort i en tom ruta i 5 × 5-rutnätet. Där stannar det.\nVarje rad och varje kolumn är en pokerhand: tio händer totalt.\nPoäng: royal flush 100, färgstege 75, fyrtal 50, kåk 25, färg 20, stege 15, triss 10, två par 5, par 2.\nDagens utmaning: i dag samma 25 kort för alla. Fritt spel: en ny blandning varje gång.\nPilar: flytta · Mellanslag: lägg · eller tryck på en ruta.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Fullständig säkerhetskopia (webbklient)",
     "advBackupDesc": "Sparar allt den här webbläsaren innehåller i en enda fil: webbinställningar, teman, kortlekar, egna platser, avatarbild, prestationer och statistik — även det som är för stort för att synkas med ditt konto. Lösenord och session tas aldrig med, och import slår ihop prestationer i stället för att ersätta dem, så framsteg går aldrig förlorade.",

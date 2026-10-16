@@ -1060,6 +1060,12 @@ export const strings = {
     "psStraightDraw": "Suoranveto…",
     "psBestLine": "Paras rivi: {h}",
     "psAgain": "Napauta valitaksesi tilan · Esc valikkoon",
+    "gmPlay": "Pelaa",
+    "gmRules": "Säännöt",
+    "gmIntro": "Kolme pientä pokeripeliä, vain sinun ja Ässän välillä. Ennätykset jäävät tälle laitteelle.",
+    "arRules": "Ässä juoksee pöytäliinalla: hyppää pelimerkkipinojen ja vierivän jakajanappulan yli, kyyristy lentävien korttien alta.\nKerää kuvapuoli ylöspäin olevat kortit: paras viiden kortin pokerikätesi kertoo matkan lopussa (jokeri käy miksi tahansa kortiksi).\nKultainen All-In-merkki tekee hänestä kuninkaan muutamaksi sekunniksi: mikään ei pysäytä häntä, murskatusta saa bonusta ja matka lasketaan kaksinkertaisena.\nBlindit nousevat 300 metrin välein: kaikki nopeutuu.\nVälilyönti, ↑ tai napautus: hyppää (pidä pohjassa korkeammalle) · ↓ tai pyyhkäisy alas: kyyristy · P: tauko.",
+    "hcRules": "Kortti liukuu jakajan kiskolla: pudota se paikalleen korttitaloon.\nKerros on viisi korttia — kaksi A-kattoa ja niiden päällä vaakakortti — joten jokainen kerros on pokerikäsi, joka maksetaan 20 × sen kertoimella.\nPaikaltaan sivuun osunut kortti kallistaa taloa (Tilt-mittari); 100 %:ssa kaikki romahtaa. Täydellinen pudotus oikaisee sen.\nSuora tai väri puolittaa kallistuksen; täyskäsi tai parempi nollaa sen.\n↓ tai pyyhkäisy alas polttaa riippuvan kortin (3 per peli, yksi lisää jokaisella blinditasolla); seuraava kortti näkyy kengässä.\nVälilyönti tai napautus: pudota · ↓: polta · P: tauko.",
+    "psRules": "25 korttia tulee yksi kerrallaan: aseta kukin 5 × 5 -ruudukon tyhjään ruutuun. Siihen se jää.\nJokainen rivi ja sarake on pokerikäsi: yhteensä kymmenen kättä.\nPisteet: kuningasvärisuora 100, värisuora 75, neloset 50, täyskäsi 25, väri 20, suora 15, kolmoset 10, kaksi paria 5, pari 2.\nPäivän haaste: tänään samat 25 korttia kaikille. Vapaa peli: uusi sekoitus joka kerta.\nNuolet: liiku · Välilyönti: aseta · tai napauta ruutua.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Täysi varmuuskopio (verkkoasiakas)",
     "advBackupDesc": "Tallentaa yhteen tiedostoon kaiken, mitä tämä selain sisältää: verkkoasetukset, teemat, korttipakat, omat istumapaikat, avatarkuvan, saavutukset ja tilastot — myös sen, mikä on liian suurta tilin synkronointiin. Salasanaa ja istuntoa ei koskaan sisällytetä, ja tuonti yhdistää saavutukset korvaamisen sijaan, joten edistyminen ei katoa.",

@@ -687,6 +687,12 @@ export const strings = {
     "psStraightDraw": "Straight draw…",
     "psBestLine": "Garisan terbaik: {h}",
     "psAgain": "Ketik untuk memilih mod · Esc untuk menu",
+    "gmPlay": "Main",
+    "gmRules": "Peraturan",
+    "gmIntro": "Tiga permainan poker kecil, hanya antara anda dan Sat. Rekod kekal pada peranti ini.",
+    "arRules": "Sat berlari di atas kain meja: lompat atas timbunan cip dan butang dealer yang bergolek, tunduk di bawah kad yang terbang.\nKutip kad yang terbuka: tangan poker lima kad terbaik anda mendarab jarak pada akhirnya (Joker menggantikan mana-mana kad).\nCip emas All-In menjadikannya raja beberapa saat: tiada apa yang menghalangnya, yang dihancurkannya memberi bonus dan jarak dikira dua kali ganda.\nBlind naik setiap 300 m: semuanya jadi lebih laju.\nRuang, ↑ atau ketik: lompat (tahan untuk lebih tinggi) · ↓ atau leret ke bawah: tunduk · P: jeda.",
+    "hcRules": "Sekeping kad meluncur di rel dealer: jatuhkan di tempatnya dalam rumah kad.\nSatu tingkat ialah lima kad — dua bumbung berbentuk A dan sekeping kad mendatar di atasnya — jadi setiap tingkat ialah tangan poker, dibayar 20 × pendaraban-nya.\nKad yang tersasar dari tempatnya menyengetkan rumah (meter Tilt); pada 100 % semuanya runtuh. Jatuhan Sempurna meluruskannya.\nStraight atau flush memotong kecondongan separuh; full house atau lebih baik menjadikannya sifar.\n↓ atau leret ke bawah membakar kad yang tergantung (3 setiap permainan, satu lagi setiap tahap blind); kad seterusnya kelihatan pada kasut.\nRuang atau ketik: jatuhkan · ↓: bakar · P: jeda.",
+    "psRules": "25 kad datang satu demi satu: letak setiap satu dalam petak kosong grid 5 × 5. Ia kekal di situ.\nSetiap baris dan setiap lajur ialah tangan poker: sepuluh tangan semuanya.\nMata: royal flush 100, straight flush 75, four of a kind 50, full house 25, flush 20, straight 15, three of a kind 10, two pair 5, pair 2.\nCabaran harian: hari ini 25 kad yang sama untuk semua. Permainan bebas: kocokan baharu setiap kali.\nAnak panah: gerak · Ruang: letak · atau ketik sebuah petak.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Cadangan lengkap (klien web)",
     "advBackupDesc": "Simpan semua yang ada di peskrin ini ke satu berkas: opsi web, tema, dek, kursi kustom, gambar avatar, pencapaian dan statistik — termasuk yang terlalu besar untuk disinkronkan dengan akun Anda. Kata laluan dan sesi Anda tidak pernah disertakan, dan impor menggabungkan pencapaian alih-alih menggantinya, jadi progres tidak pernah hilang.",

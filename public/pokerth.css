@@ -512,6 +512,8 @@ body {
 
 /* ── Écran dédié « Créer une partie » (page pleine, garde le formulaire existant) ── */
 #s-create { flex-direction: column; background: var(--field-bg); }
+/* Arcade (modules/games/shell.mjs): the same page frame, its header shares the rules of #privacy-page / #s-create. */
+#s-arcade { flex-direction: column; background: var(--field-bg); }
 .cp-header {
   display: flex;
   align-items: center;
@@ -541,7 +543,7 @@ body {
    largeurs inégales des deux groupes d'icônes. max-width borné pour ne
    jamais chevaucher les icônes ; pointer-events off (label non cliquable). */
 #s-create .cp-title,
-#privacy-page .cp-title {
+#privacy-page .cp-title, #s-arcade .cp-title {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -2652,7 +2654,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   /* ── Barre d'état de jeu : tailles QML fixes (13/11 px), pas d'override ── */
 
   /* ── Menu ••• ── */
-  #g-overflow-menu, #l-overflow-menu, #cr-overflow-menu, #pv-overflow-menu { width: 264px !important; }
+  #g-overflow-menu, #l-overflow-menu, #cr-overflow-menu, #pv-overflow-menu, #ar-overflow-menu { width: 264px !important; }
 /* « La derniere surface ouverte passe devant » (z-order.mjs, bande 300-390) :
    un menu de header OUVERT est par definition la derniere surface ouverte,
    mais certains headers creent un contexte d'empilement (connect :
@@ -2669,7 +2671,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    pas une classe .open. */
 #s-connect .connect-header:has([id$="-overflow-menu"].open),
 #s-connect .connect-header:has(.cl-links[open]) { z-index: 391; }
-  #g-overflow-menu .btn-sm, #l-overflow-menu .btn-sm, #cr-overflow-menu .btn-sm, #pv-overflow-menu .btn-sm { font-size: var(--fs-md) !important; padding: 9px 32px 9px 14px !important; }
+  #g-overflow-menu .btn-sm, #l-overflow-menu .btn-sm, #cr-overflow-menu .btn-sm, #pv-overflow-menu .btn-sm, #ar-overflow-menu .btn-sm { font-size: var(--fs-md) !important; padding: 9px 32px 9px 14px !important; }
 
   /* ══ Fenetres d'informations ══ */
   .winner-card { max-width: min(640px, 86vw) !important; padding: 24px 28px !important; }
@@ -2983,7 +2985,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 #s-game .header,
 #s-lobby .header,
 #s-create .cp-header,
-#privacy-page .cp-header {
+#privacy-page .cp-header, #s-arcade .cp-header {
   position: relative;
   flex-wrap: nowrap;
   align-items: center;
@@ -3015,7 +3017,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 #l-overflow-menu,
 #connect-overflow-menu,
 #cr-overflow-menu,
-#pv-overflow-menu {
+#pv-overflow-menu, #ar-overflow-menu {
   display: none;
   position: absolute;
   top: calc(100% + 6px);
@@ -3073,12 +3075,12 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 #l-overflow-menu.open,
 #connect-overflow-menu.open,
 #cr-overflow-menu.open,
-#pv-overflow-menu.open { display: flex; }
+#pv-overflow-menu.open, #ar-overflow-menu.open { display: flex; }
 #g-overflow-menu .btn-sm,
 #l-overflow-menu .btn-sm,
 #connect-overflow-menu .btn-sm,
 #cr-overflow-menu .btn-sm,
-#pv-overflow-menu .btn-sm {
+#pv-overflow-menu .btn-sm, #ar-overflow-menu .btn-sm {
   width: 100%;
   box-sizing: border-box;
   text-align: left;
@@ -3113,7 +3115,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 #l-overflow-menu .btn-sm:hover,
 #connect-overflow-menu .btn-sm:hover,
 #cr-overflow-menu .btn-sm:hover,
-#pv-overflow-menu .btn-sm:hover {
+#pv-overflow-menu .btn-sm:hover, #ar-overflow-menu .btn-sm:hover {
   background: var(--panel-hi);
   border-color: var(--border-hi);
 }
@@ -6503,7 +6505,7 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
 #s-lobby .header .btn-icon,
 #s-game .header .btn-icon,
 #s-create .cp-header .btn-icon,
-#privacy-page .cp-header .btn-icon{
+#privacy-page .cp-header .btn-icon, #s-arcade .cp-header .btn-icon{
   background:transparent;
   border-color:transparent;
   box-shadow:none;
@@ -6511,7 +6513,7 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
 #s-lobby .header .btn-icon:hover,
 #s-game .header .btn-icon:hover,
 #s-create .cp-header .btn-icon:hover,
-#privacy-page .cp-header .btn-icon:hover{
+#privacy-page .cp-header .btn-icon:hover, #s-arcade .cp-header .btn-icon:hover{
   background:rgba(255,255,255,0.07);
   border-color:transparent;
 }
@@ -6535,10 +6537,10 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
 #s-lobby .header .btn-icon:active,
 #s-game .header .btn-icon:active,
 #s-create .cp-header .btn-icon:active,
-#privacy-page .cp-header .btn-icon,
-#privacy-page .cp-header .btn-icon:focus,
-#privacy-page .cp-header .btn-icon:focus-visible,
-#privacy-page .cp-header .btn-icon:active{
+#privacy-page .cp-header .btn-icon, #s-arcade .cp-header .btn-icon,
+#privacy-page .cp-header .btn-icon:focus, #s-arcade .cp-header .btn-icon:focus,
+#privacy-page .cp-header .btn-icon:focus-visible, #s-arcade .cp-header .btn-icon:focus-visible,
+#privacy-page .cp-header .btn-icon:active, #s-arcade .cp-header .btn-icon:active{
   outline:none;
   border-color:transparent;
   box-shadow:none;
@@ -6546,13 +6548,19 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
 #s-lobby .header #ranking-btn-lobby{ color:var(--text-hi); }
 /* Page « Créer une partie » : flèche retour + roue crantée neutres. */
 #s-create .cp-header #cr-overflow-btn{ color:var(--text-hi); }
-#privacy-page .cp-header #pv-overflow-btn{ color:var(--text-hi); }
+#privacy-page .cp-header #pv-overflow-btn, #s-arcade .cp-header #ar-overflow-btn{ color:var(--text-hi); }
 #s-create .cp-header #ranking-btn-create{ color:var(--text-hi); }
 #s-lobby .header #lobby-chat-btn{ color:var(--text-hi); }
 #s-lobby .header #l-overflow-btn{ color:var(--text-hi); }
 #s-game .header #sound-toggle-btn{ color:var(--text-hi); }
 #s-game .header #ranking-btn-game{ color:var(--text-hi); }
 #s-game .header #g-overflow-btn{ color:var(--text-hi); }
+/* Arcade (modules/games): every header icon neutral, like the create page;
+   the « ? » (rules of the game on screen) drawn as a ringed glyph. */
+#s-arcade .cp-header .btn-icon{ color:var(--text-hi); }
+#s-arcade .cp-title{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+:root[data-theme="pokerth-light"] #s-arcade .cp-header .btn-icon{ color:#1d222b; }
+#s-arcade .ar-help-q{ display:block; width:22px; height:22px; box-sizing:border-box; border:2px solid currentColor; border-radius:50%; font:700 13px/18px system-ui,-apple-system,sans-serif; text-align:center; }
 
 /* Mode clair : les icônes acier #c3ccda deviennent quasi invisibles sur la
    barre claire -> on les fonce (près du noir) pour un contraste marqué. */
@@ -7453,7 +7461,7 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
      with the clock, signal and battery (reported narmod 2026-08-01, iPhone
      and iPad, installed PWA). */
   #s-create .cp-header,
-  #privacy-page .cp-header {
+  #privacy-page .cp-header, #s-arcade .cp-header {
     /* !important : le palier paysage telephone (max-height:500px) pose
        `.header{padding:2px 6px !important}` — un shorthand qui ecrasait ces
        longhands et supprimait les insets la ou l'encoche est sur le cote.
@@ -12644,9 +12652,9 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 /* Low-vision Interface size: login, lobby, and the lobby's Create Table journey
    use the shared type scale without geometrically magnifying the page. Standard
    deliberately has no override; active-game rules are scoped separately below. */
-:root[data-interface-size="large"] :is(#s-connect, #s-lobby, #s-create) { --interface-scale: 1.5; }
-:root[data-interface-size="extra-large"] :is(#s-connect, #s-lobby, #s-create) { --interface-scale: 2; }
-:root[data-interface-size]:not([data-interface-size="standard"]) :is(#s-connect, #s-lobby, #s-create) {
+:root[data-interface-size="large"] :is(#s-connect, #s-lobby, #s-create, #s-arcade) { --interface-scale: 1.5; }
+:root[data-interface-size="extra-large"] :is(#s-connect, #s-lobby, #s-create, #s-arcade) { --interface-scale: 2; }
+:root[data-interface-size]:not([data-interface-size="standard"]) :is(#s-connect, #s-lobby, #s-create, #s-arcade) {
   --fs-3xs: calc(var(--fs-source-3xs) * var(--interface-scale));
   --fs-2xs: calc(var(--fs-source-2xs) * var(--interface-scale));
   --fs-xs: calc(var(--fs-source-xs) * var(--interface-scale));
@@ -12666,13 +12674,13 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   width: calc(30px * var(--interface-scale)) !important;
   height: calc(30px * var(--interface-scale)) !important;
 }
-:root[data-interface-size]:not([data-interface-size="standard"]) :is(#s-connect .connect-header, #s-lobby .header, #s-create .cp-header) .btn-icon {
+:root[data-interface-size]:not([data-interface-size="standard"]) :is(#s-connect .connect-header, #s-lobby .header, #s-create .cp-header, #s-arcade .cp-header) .btn-icon {
   width: calc(var(--ctrl-md) * var(--interface-scale)) !important;
   min-width: var(--ctrl-enhanced) !important;
   height: calc(var(--ctrl-header-icon) * var(--interface-scale)) !important;
   min-height: var(--ctrl-enhanced) !important;
 }
-:root[data-interface-size]:not([data-interface-size="standard"]) :is(#s-connect .connect-header, #s-lobby .header, #s-create .cp-header) .btn-icon svg {
+:root[data-interface-size]:not([data-interface-size="standard"]) :is(#s-connect .connect-header, #s-lobby .header, #s-create .cp-header, #s-arcade .cp-header) .btn-icon svg {
   width: calc(var(--icon-header) * var(--interface-scale)) !important;
   height: calc(var(--icon-header) * var(--interface-scale)) !important;
 }
@@ -12719,7 +12727,7 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   #s-lobby .lobby-grid { overflow: hidden; }
   #s-lobby .lobby-grid > #lobby-chat-panel { min-height: 100px; }
 }
-:is(#s-connect, #s-lobby, #s-create) :focus-visible {
+:is(#s-connect, #s-lobby, #s-create, #s-arcade) :focus-visible {
   outline: 3px solid var(--sel, var(--gold)) !important;
   outline-offset: 3px !important;
 }
@@ -13288,7 +13296,7 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   #s-lobby .header .btn-icon,
   #s-game .header .btn-icon,
   #s-create .cp-header .btn-icon,
-  #privacy-page .cp-header .btn-icon
+  #privacy-page .cp-header .btn-icon, #s-arcade .cp-header .btn-icon
 ) { color:var(--hc-text) !important; }
 :root[data-high-contrast="true"] .felt-oval { background:var(--hc-bg) !important; border:3px solid var(--hc-text) !important; box-shadow:0 0 0 2px var(--hc-bg),0 0 0 5px var(--hc-text) !important; filter:none !important; }
 :root[data-high-contrast="true"] .felt-oval::before { display:none !important; }
@@ -13376,13 +13384,13 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
    ranking buttons in every language. Below 560px it joins the flex flow
    between the back button and the icons, on up to two lines. */
 @media (max-width: 560px) {
-  #s-create .cp-title, #privacy-page .cp-title {
+  #s-create .cp-title, #privacy-page .cp-title, #s-arcade .cp-title {
     position: static; transform: none; max-width: none;
     flex: 1 1 0; min-width: 0; margin: 0 6px; text-align: left;
     white-space: normal; font-size: 0.95rem; line-height: 1.08;
     display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
   }
-  #s-create .cp-head-spacer, #privacy-page .cp-head-spacer { display: none; }
+  #s-create .cp-head-spacer, #privacy-page .cp-head-spacer, #s-arcade .cp-head-spacer { display: none; }
 }
 
 /* ── Login on small phones: the footer follows the card (web.97) ───────────

@@ -1061,6 +1061,12 @@ export const strings = {
     "psStraightDraw": "Dotah na postupku…",
     "psBestLine": "Nejlepší řada: {h}",
     "psAgain": "Klepni a vyber režim · Esc pro menu",
+    "gmPlay": "Hrát",
+    "gmRules": "Pravidla",
+    "gmIntro": "Tři malé pokerové hry, jen mezi tebou a Esem. Rekordy zůstávají v tomto zařízení.",
+    "arRules": "Eso běží po suknu: přeskakuj sloupce žetonů a kutálející se tlačítko dealera, skrč se pod letícími kartami.\nSbírej otočené karty: tvoje nejlepší pětikaretní pokerová kombinace na konci násobí vzdálenost (Žolík nahradí libovolnou kartu).\nZlatý žeton All-In z něj na pár sekund udělá krále: nic ho nezastaví, co rozbije, dá bonus a vzdálenost se počítá dvojnásobně.\nBlindy rostou každých 300 m: všechno zrychluje.\nMezerník, ↑ nebo klepnutí: skok (podrž pro výš) · ↓ nebo přejetí dolů: skrčit se · P: pauza.",
+    "hcRules": "Karta klouže po kolejnici krupiéra: pusť ji na její místo v domečku.\nPatro je pět karet — dvě stříšky do A a na nich položená karta —, takže každé patro je pokerová kombinace, vyplacená 20 × jejím násobitelem.\nKarta vedle svého místa domeček nakloní (ukazatel Tilt); při 100 % se vše zřítí. Perfektní hod ho narovná.\nPostupka nebo barva naklonění způlí; full house nebo lepší ho vynuluje.\n↓ nebo přejetí dolů spálí visící kartu (3 za hru, o jednu víc na každé úrovni blindů); další karta je vidět na botě.\nMezerník nebo klepnutí: pustit · ↓: spálit · P: pauza.",
+    "psRules": "25 karet přichází jedna po druhé: polož každou do prázdného pole mřížky 5 × 5. Tam zůstane.\nKaždý řádek a každý sloupec je pokerová kombinace: celkem deset kombinací.\nBody: královská postupka 100, čistá postupka 75, poker 50, full house 25, barva 20, postupka 15, trojice 10, dva páry 5, pár 2.\nVýzva dne: dnes stejných 25 karet pro všechny. Volná hra: pokaždé nové zamíchání.\nŠipky: pohyb · Mezerník: položit · nebo klepni na pole.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Úplná záloha (webový klient)",
     "advBackupDesc": "Uloží do jediného souboru vše, co tento prohlížeč obsahuje: webové volby, motivy, balíčky, vlastní místa, obrázek avatara, úspěchy a statistiky — včetně toho, co je příliš velké pro synchronizaci s účtem. Heslo ani relace se nikdy nepřidávají a import úspěchy slučuje místo nahrazení, takže o postup nikdy nepřijdete.",

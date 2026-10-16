@@ -2307,6 +2307,28 @@ function _processAvatarFile(file) {
   </div>
 </div>
 
+<!-- Arcade (hidden games, web extension narmod 2026-10-16): a page like « Create a
+     table », the same header. Filled by modules/games/shell.mjs; reached through the
+     secret training nickname (modules/games/index.mjs) or the Ace once every trophy is won. -->
+<div id="s-arcade" class="screen">
+  <div class="cp-header">
+    <button class="btn-sm btn-icon cp-back" type="button" id="ar-back-btn" onclick="if(window.PthGames)window.PthGames.back()" title="Back" data-i18n-aria="navBack" data-i18n-title="navBack" aria-label="Back"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" style="vertical-align:middle" aria-hidden="true"><path d="M12 3c-1.11 0-2 .89-2 2H3v14H2v2h20v-2h-1V5c0-1.11-.89-2-2-2zm0 2h7v14h-7zm-7 6h2v2H5z"/></svg></button>
+    <span class="cp-title" id="ar-title">Arcade</span>
+    <span class="cp-head-spacer" aria-hidden="true"></span>
+    <button class="btn-sm btn-icon" type="button" id="ar-help-btn" onclick="if(window.PthGames)window.PthGames.rules()" title="Help" data-i18n-title="helpTitle" data-i18n-aria="helpTitle" aria-label="Help"><span class="ar-help-q" aria-hidden="true">?</span></button>
+    <button class="btn-sm btn-icon" type="button" id="ranking-btn-arcade" onclick="toggleRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking"><svg class="rk-trophy" viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19 5h-2V3H7v2H5C3.9 5 3 5.9 3 7v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></button>
+    <button type="button" class="btn-sm btn-icon accessibility-entry" id="accessibility-open-arcade" title="Accessibility" data-i18n-title="accessibilityTitle" aria-label="Accessibility" data-i18n-aria="accessibilityTitle"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><circle cx="12" cy="4" r="2"/><path d="M4 7h16v2h-6v4.2l3.2 7.8h-2.3L12 15l-2.9 6H6.8l3.2-7.8V9H4V7z"/></svg></button>
+    <span class="hdr-ovf-wrap"><button class="btn-sm btn-icon" type="button" id="ar-overflow-btn" onclick="event.stopPropagation();document.getElementById('ar-overflow-menu').classList.toggle('open')" title="More" data-i18n-title="moreTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
+    <div id="ar-overflow-menu">
+      <button class="btn-sm" onclick="toggleFullscreen();document.getElementById('ar-overflow-menu').classList.remove('open')"><span style="margin-right:7px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
+      <button class="btn-sm" onclick="document.getElementById('ar-overflow-menu').classList.remove('open');toggleMusicPanel()"><span style="margin-right:7px">🎵</span><span data-i18n="musicPanelTitle">Music player</span></button>
+      <button class="btn-sm" onclick="document.getElementById('ar-overflow-menu').classList.remove('open');toggleAdvancedOptions()"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
+      <button class="btn-sm guide-menu-btn guide-only" onclick="document.getElementById('ar-overflow-menu').classList.remove('open');if(window.guideToggle)window.guideToggle()"><span class="guide-ico" aria-hidden="true">A♠</span><span data-i18n="guideBtn">Ace’s Help</span></button>
+    </div></span>
+  </div>
+  <div class="ar-main" id="arcade-main"></div>
+</div>
+
 <div id="s-game" class="screen">
   <div class="header">
     <button class="btn-sm btn-icon" onclick="App.confirmLeaveGame()" title="Quit" data-i18n-title="quitTooltip"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" style="vertical-align:middle" aria-hidden="true"><path d="M12 3c-1.11 0-2 .89-2 2H3v14H2v2h20v-2h-1V5c0-1.11-.89-2-2-2zm0 2h7v14h-7zm-7 6h2v2H5z"/></svg></button>

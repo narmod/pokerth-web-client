@@ -689,6 +689,12 @@ export const strings = {
     "psStraightDraw": "Ń dúró de straight…",
     "psBestLine": "Ìlà tó dára jù: {h}",
     "psAgain": "Fọwọ́kàn láti yan ipò · Esc fún àkójọ",
+    "gmPlay": "Ṣeré",
+    "gmRules": "Àwọn òfin",
+    "gmIntro": "Eré poker kékeré mẹ́ta, láàárín ìwọ àti Ace nìkan. Àwọn àkọsílẹ̀ máa ń wà lórí ẹ̀rọ yìí.",
+    "arRules": "Ace ń sáré lórí aṣọ tábìlì: fò kọjá òkìtì chip àti bọ́tìnnì olùpín tó ń yí, bẹ̀rẹ̀ sábẹ́ àwọn káàdì tó ń fò.\nKó àwọn káàdì tó ṣí sílẹ̀: ọwọ́ poker káàdì márùn-ún tó dára jù rẹ ló máa sọ ìjìnnà di púpọ̀ ní ìparí (Joker lè rọ́pò káàdì èyíkéyìí).\nChip wúrà All-In sọ ọ́ di ọba fún ìṣẹ́jú-àáyá díẹ̀: kò sí ohun tó lè dá a dúró, ohun tó bá fọ́ ń mú èrè wá, a sì ń ka ìjìnnà ní ìlọ́po méjì.\nÀwọn blinds ń gòkè ní gbogbo 300 m: gbogbo nǹkan ń yára sí i.\nÀyè, ↑ tàbí fọwọ́kàn: fò (tẹ̀ mọ́lẹ̀ fún gíga) · ↓ tàbí fà sísàlẹ̀: bẹ̀rẹ̀ · P: dúró.",
+    "hcRules": "Káàdì kan ń yọ̀ lórí ọ̀nà irin olùpín: jù ú sílẹ̀ sí ipò rẹ̀ nínú ilé.\nÀjà kan jẹ́ káàdì márùn-ún — òrùlé méjì tó dà bí A àti káàdì kan tó dùbúlẹ̀ lókè — nítorí náà gbogbo àjà jẹ́ ọwọ́ poker, tí a ń san ní ìlọ́po 20 olùsọdipúpọ̀ rẹ̀.\nKáàdì tó yà kúrò ní ipò rẹ̀ ń mú ilé tẹ̀ (òṣùwọ̀n Tilt); ní 100 % gbogbo rẹ̀ ń wó. Ìjùsílẹ̀ Pípé ń tọ́ ọ.\nStraight tàbí flush ń dín ìtẹ̀ kù sí ìdajì; full house tàbí èyí tó dára jù ń dá a padà sí òdo.\n↓ tàbí fífà sísàlẹ̀ ń sun káàdì tó so kọ́ (3 fún eré kan, ọ̀kan sí i ní gbogbo ìpele blinds); káàdì tó kàn ń hàn lórí bàtà.\nÀyè tàbí fọwọ́kàn: jù sílẹ̀ · ↓: sun · P: dúró.",
+    "psRules": "Káàdì 25 ń dé lọ́kọ̀ọ̀kan: fi ọ̀kọ̀ọ̀kan sínú àpótí òfìfo ti àwọ̀n 5 × 5. Ó máa wà níbẹ̀.\nGbogbo ìlà àti gbogbo òpó jẹ́ ọwọ́ poker: ọwọ́ mẹ́wàá lápapọ̀.\nÀmì: royal flush 100, straight flush 75, mẹ́rin tó jọra 50, full house 25, flush 20, straight 15, mẹ́ta tó jọra 10, méjì méjì 5, méjì 2.\nÌpèníjà òní: káàdì 25 kan náà fún gbogbo ènìyàn lónìí. Eré òmìnira: àdàpọ̀ tuntun nígbà gbogbo.\nÀwọn ọfà: gbé · Àyè: fi sí · tàbí fọwọ́kan àpótí kan.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": 'Àfipamọ́ pípé (oníbàárà wẹ́ẹ̀bù)',
     "advBackupDesc": 'Fi gbogbo ohun tí aṣàwákiri yìí ń tọ́jú pamọ́ sínú fáìlì kan: ètò wẹ́ẹ̀bù, àkòrí, àwọn káàdì, àwọn ìjókòó tìrẹ, àwòrán afàtá, àṣeyọrí àti ìṣirò — títí kan ohun tí ó tóbi jù láti múṣọ̀kan pẹ̀lú àkáǹtì rẹ. A kì í fi ọ̀rọ̀ aṣínà rẹ àti ìgbà eré rẹ kún un rárá, ìkówọlé sì ń da àwọn àṣeyọrí pọ̀ dípò kí ó rọ́pò wọn, nítorí náà ìlọsíwájú kì í sọnù.',

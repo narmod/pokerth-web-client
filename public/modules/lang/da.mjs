@@ -1060,6 +1060,12 @@ export const strings = {
     "psStraightDraw": "Straight-træk…",
     "psBestLine": "Bedste linje: {h}",
     "psAgain": "Tryk for at vælge en tilstand · Esc for menuen",
+    "gmPlay": "Spil",
+    "gmRules": "Regler",
+    "gmIntro": "Tre små pokerspil, kun mellem dig og Esset. Rekorderne bliver på denne enhed.",
+    "arRules": "Esset løber hen over filten: hop over jetonstabler og den rullende dealerknap, duk dig under flyvende kort.\nSaml de åbne kort op: din bedste pokerhånd på fem kort ganger distancen til sidst (Jokeren er joker).\nDen gyldne All-In-jeton gør ham til konge i nogle sekunder: intet stopper ham, det han smadrer giver bonus, og distancen tæller dobbelt.\nBlinds stiger hver 300 m: alt går hurtigere.\nMellemrum, ↑ eller tryk: hop (hold for højere) · ↓ eller stryg ned: duk · P: pause.",
+    "hcRules": "Et kort glider hen ad dealerens skinne: slip det på dets plads i korthuset.\nEn etage er fem kort — to A-tage og et fladt kort ovenpå — så hver etage er en pokerhånd, betalt med 20 × sin multiplikator.\nEt kort ved siden af sin plads får huset til at hælde (Tilt-måler); ved 100 % falder alt. Et Perfekt-kast retter det op.\nEn straight eller en flush halverer tilt; et fuldt hus eller bedre nulstiller det.\n↓ eller stryg ned brænder det hængende kort (3 pr. spil, ét mere for hvert blindniveau); det næste kort ses på skoen.\nMellemrum eller tryk: slip · ↓: brænd · P: pause.",
+    "psRules": "25 kort kommer ét ad gangen: læg hvert i et tomt felt i 5 × 5-gitteret. Der bliver det.\nHver række og hver kolonne er en pokerhånd: ti hænder i alt.\nPoint: royal flush 100, straight flush 75, fire ens 50, fuldt hus 25, flush 20, straight 15, tre ens 10, to par 5, par 2.\nDagens udfordring: i dag de samme 25 kort for alle. Frit spil: en ny blanding hver gang.\nPile: flyt · Mellemrum: læg · eller tryk på et felt.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Fuld sikkerhedskopi (webklient)",
     "advBackupDesc": "Gemmer alt, hvad denne browser indeholder, i én fil: webindstillinger, temaer, kortsæt, egne pladser, avatarbillede, præstationer og statistik — også det, der er for stort til at synkronisere med din konto. Din adgangskode og session medtages aldrig, og import fletter præstationer i stedet for at erstatte dem, så fremgang aldrig går tabt.",

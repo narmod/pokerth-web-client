@@ -689,6 +689,12 @@ export const strings = {
     "psStraightDraw": "Streyt gözləməsi…",
     "psBestLine": "Ən yaxşı xətt: {h}",
     "psAgain": "Rejim seçmək üçün toxunun · Menyu üçün Esc",
+    "gmPlay": "Oyna",
+    "gmRules": "Qaydalar",
+    "gmIntro": "Üç kiçik poker oyunu, yalnız səninlə Tuz arasında. Rekordlar bu cihazda qalır.",
+    "arRules": "Tuz mahud üzərində qaçır: fiş qalaqlarının və yuvarlanan diler düyməsinin üstündən tullan, uçan kartların altından əyil.\nAçıq kartları topla: beş kartlıq ən yaxşı poker əlin sonda məsafəni vurur (Coker istənilən kartı əvəz edir).\nQızıl All-In fişi onu bir neçə saniyəlik kral edir: heç nə onu dayandırmır, sındırdığı bonus verir və məsafə iki qat sayılır.\nBlaindlər hər 300 m-dən bir artır: hər şey sürətlənir.\nBoşluq, ↑ və ya toxunuş: tullan (daha hündür üçün saxla) · ↓ və ya aşağı sürüşdür: əyil · P: fasilə.",
+    "hcRules": "Kart dilerin relsi ilə sürüşür: onu qaladakı yerinə burax.\nMərtəbə beş kartdır — iki A dam və üstündə uzanmış kart —, yəni hər mərtəbə poker əlidir, vurucusunun 20 qatı ödənilir.\nYerinin yanına düşən kart qalanı əyir (Tilt göstəricisi); 100 %-də hər şey uçur. Mükəmməl buraxış onu düzəldir.\nStreyt və ya floş əyilməni yarıya endirir; full-haus və ya daha yaxşısı sıfırlayır.\n↓ və ya aşağı sürüşdürmə asılı kartı yandırır (oyuna 3, hər blaind səviyyəsində bir əlavə); növbəti kart ayaqqabıda görünür.\nBoşluq və ya toxunuş: burax · ↓: yandır · P: fasilə.",
+    "psRules": "25 kart bir-bir gəlir: hər birini 5 × 5 şəbəkənin boş xanasına qoy. Orada qalır.\nHər sətir və hər sütun poker əlidir: cəmi on əl.\nXallar: royal floş 100, streyt floş 75, kare 50, full-haus 25, floş 20, streyt 15, üçlük 10, iki cüt 5, cüt 2.\nGünün tapşırığı: bu gün hamı üçün eyni 25 kart. Sərbəst oyun: hər dəfə yeni qarışdırma.\nOxlar: hərəkət · Boşluq: qoy · və ya xanaya toxun.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": 'Tam ehtiyat nüsxə (veb klient)',
     "advBackupDesc": 'Bu brauzerin saxladığı hər şeyi bir fayla yazın: veb parametrləri, temalar, kart dəstələri, fərdi oturacaqlar, avatar şəkli, nailiyyətlər və statistika — hesabınızla sinxronlaşdırmaq üçün çox böyük olanlar da daxil. Parolunuz və sessiyanız heç vaxt daxil edilmir, idxal isə nailiyyətləri əvəz etmək əvəzinə birləşdirir, beləliklə irəliləyiş heç vaxt itmir.',

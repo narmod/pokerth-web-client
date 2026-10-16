@@ -105,6 +105,14 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **The arcade becomes a page** (`web.88`) — `#s-arcade`, a screen with the header of « Create a table »
+  (back arrow, game name, « ? » rules, trophies, accessibility, ⚙ menu) instead of a full-screen overlay.
+  Back (arrow, Esc, pad Select, Android Back via `back-guard.mjs`) goes rules sheet → arcade home →
+  the screen it was opened from (the login's training form is kept). The home is a page of cards
+  (`menu.mjs`: best score, « Play », « Rules »); each game has a rules sheet (`arRules`, `hcRules`,
+  `psRules`, 83 languages). The stage is sized from the room left (ResizeObserver, per-game aspect
+  range) so portrait ↔ landscape works mid-game, the ▲ ▼ buttons going beside it in landscape. Light
+  and dark themes: page from the theme's tokens, worlds painted from `ink(light)` (`common.mjs`).
 - **Every trophy won: the Ace gives away the arcade** — Ace's Help gets a tip on the Trophies tab
   (`w-trophies`, window `trophies`): win every trophy in the list and there is a surprise at the end.
   When the last trophy that is not secret falls (the secret ones need the word itself), the Ace comes —

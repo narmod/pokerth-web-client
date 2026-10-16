@@ -687,6 +687,12 @@ export const strings = {
     "psStraightDraw": "Kusubiri straight…",
     "psBestLine": "Mstari bora: {h}",
     "psAgain": "Gusa kuchagua hali · Esc kwa menyu",
+    "gmPlay": "Cheza",
+    "gmRules": "Sheria",
+    "gmIntro": "Michezo mitatu midogo ya poka, kati yako na Ree peke yake. Rekodi zinabaki kwenye kifaa hiki.",
+    "arRules": "Ree anakimbia juu ya kitambaa cha meza: ruka juu ya marundo ya chipsi na kitufe cha muuzaji kinachobingirika, inama chini ya karata zinazoruka.\nOkota karata zilizo wazi: mkono wako bora wa poka wa karata tano unazidisha umbali mwishoni (Joka huchukua nafasi ya karata yoyote).\nChipu ya dhahabu ya All-In inamfanya mfalme kwa sekunde chache: hakuna kinachomzuia, anachovunja kinatoa bonasi na umbali unahesabiwa mara mbili.\nBlinds hupanda kila m 300: kila kitu kinaenda kasi zaidi.\nNafasi, ↑ au gusa: ruka (shikilia kwa juu zaidi) · ↓ au telezesha chini: inama · P: sitisha.",
+    "hcRules": "Karata inateleza kwenye reli ya muuzaji: iangushe mahali pake katika nyumba.\nGhorofa ni karata tano — paa mbili zenye umbo la A na karata iliyolazwa juu yake — kwa hiyo kila ghorofa ni mkono wa poka, unaolipwa mara 20 ya kizidishi chake.\nKarata iliyo pembeni ya mahali pake inainamisha nyumba (kipimo cha Tilt); kwa 100 % kila kitu kinaanguka. Kuangusha Kamilifu kunainyoosha.\nStraight au flush hupunguza mwinamo kwa nusu; full house au bora zaidi huurudisha sifuri.\n↓ au kutelezesha chini huchoma karata iliyoning’inia (3 kwa mchezo, moja zaidi kila kiwango cha blinds); karata inayofuata inaonekana kwenye kiatu.\nNafasi au gusa: angusha · ↓: choma · P: sitisha.",
+    "psRules": "Karata 25 zinakuja moja moja: weka kila moja kwenye kisanduku kitupu cha gridi ya 5 × 5. Inabaki pale.\nKila safu na kila nguzo ni mkono wa poka: mikono kumi kwa jumla.\nPointi: royal flush 100, straight flush 75, nne zinazofanana 50, full house 25, flush 20, straight 15, tatu zinazofanana 10, jozi mbili 5, jozi 2.\nChangamoto ya leo: karata 25 zile zile kwa wote leo. Mchezo huru: kuchanga upya kila mara.\nMishale: sogea · Nafasi: weka · au gusa kisanduku.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Hifadhi kamili (kiteja cha wavuti)",
     "advBackupDesc": "Hifadhi kila kitu kilichopo kwenye kivinjari hiki kwenye faili moja: chaguo za wavuti, mandhari, deki, viti maalum, picha za avatari, mafanikio na takwimu — pamoja na vitu vikubwa mno kusawazishwa na akaunti yako. Nenosiri na kipindi chako havijumuishwi kamwe, na uingizaji huchanganya mafanikio badala ya kuyabadilisha, hivyo maendeleo hayapotei kamwe.",

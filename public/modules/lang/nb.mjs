@@ -1059,6 +1059,12 @@ export const strings = {
     "psStraightDraw": "Straighttrekk…",
     "psBestLine": "Beste linje: {h}",
     "psAgain": "Trykk for å velge modus · Esc for menyen",
+    "gmPlay": "Spill",
+    "gmRules": "Regler",
+    "gmIntro": "Tre små pokerspill, bare mellom deg og Esset. Rekordene blir på denne enheten.",
+    "arRules": "Esset løper over filten: hopp over sjetongstabler og den rullende dealerknappen, dukk under flyvende kort.\nPlukk opp de åpne kortene: den beste pokerhånden din på fem kort ganger distansen til slutt (Jokeren er joker).\nDen gylne All-In-sjetongen gjør ham til konge i noen sekunder: ingenting stopper ham, det han knuser gir bonus, og distansen teller dobbelt.\nBlindene øker hver 300 m: alt går fortere.\nMellomrom, ↑ eller trykk: hopp (hold for høyere) · ↓ eller sveip ned: dukk · P: pause.",
+    "hcRules": "Et kort glir langs dealerens skinne: slipp det på plassen sin i korthuset.\nEn etasje er fem kort — to A-tak og et flatt kort oppå — så hver etasje er en pokerhånd, betalt med 20 × multiplikatoren sin.\nEt kort ved siden av plassen får huset til å helle (Tilt-måler); ved 100 % raser alt. Et Perfekt-slipp retter det opp.\nEn straight eller en flush halverer tilt; fullt hus eller bedre nullstiller det.\n↓ eller sveip ned brenner det hengende kortet (3 per spill, ett til for hvert blindnivå); neste kort vises på skoen.\nMellomrom eller trykk: slipp · ↓: brenn · P: pause.",
+    "psRules": "25 kort kommer ett om gangen: legg hvert i en tom rute i 5 × 5-rutenettet. Der blir det.\nHver rad og hver kolonne er en pokerhånd: ti hender til sammen.\nPoeng: royal flush 100, straight flush 75, fire like 50, fullt hus 25, flush 20, straight 15, tre like 10, to par 5, par 2.\nDagens utfordring: i dag de samme 25 kortene for alle. Fritt spill: ny stokking hver gang.\nPiler: flytt · Mellomrom: legg · eller trykk på en rute.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Full sikkerhetskopi (webklient)",
     "advBackupDesc": "Lagrer alt denne nettleseren inneholder i én fil: webalternativer, temaer, kortstokker, egne plasser, avatarbilde, prestasjoner og statistikk — også det som er for stort til å synkroniseres med kontoen din. Passord og økt tas aldri med, og import slår sammen prestasjoner i stedet for å erstatte dem, så fremgang går aldri tapt.",

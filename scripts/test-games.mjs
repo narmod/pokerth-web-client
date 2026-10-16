@@ -65,7 +65,8 @@ const files = fs.readdirSync(langDir).filter((f) => f.endsWith('.mjs'));
 const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'arRecord', 'arNewRecord',
   'arAgain', 'arPause', 'arDistance', 'arBlinds', 'arQuit', 'ach_runner', 'ach_runner_d',
   'hcName', 'hcHint', 'hcFloors', 'hcScore', 'hcPerfect', 'hcSteady', 'hcCollapse', 'hcAgain', 'gmPick', 'ach_house', 'ach_house_d',
-  'psName', 'psHint', 'psDaily', 'psFree', 'psCards', 'psFlushDraw', 'psStraightDraw', 'psBestLine', 'psAgain', 'ach_solitaire', 'ach_solitaire_d'];
+  'psName', 'psHint', 'psDaily', 'psFree', 'psCards', 'psFlushDraw', 'psStraightDraw', 'psBestLine', 'psAgain', 'ach_solitaire', 'ach_solitaire_d',
+  'gmPlay', 'gmRules', 'gmIntro', 'arRules', 'hcRules', 'psRules'];
 let missing = [], badRecord = [];
 for (const f of files) {
   const { strings } = await import(path.join(langDir, f));

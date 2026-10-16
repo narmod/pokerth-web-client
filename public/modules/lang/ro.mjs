@@ -1061,6 +1061,12 @@ export const strings = {
     "psStraightDraw": "Tras la chintă…",
     "psBestLine": "Cea mai bună linie: {h}",
     "psAgain": "Atinge pentru a alege un mod · Esc pentru meniu",
+    "gmPlay": "Joacă",
+    "gmRules": "Reguli",
+    "gmIntro": "Trei jocuri mici de poker, doar între tine și As. Recordurile rămân pe acest dispozitiv.",
+    "arRules": "Asul aleargă pe postav: sari peste teancurile de jetoane și butonul de dealer care se rostogolește, apleacă-te sub cărțile care zboară.\nAdună cărțile cu fața în sus: cea mai bună mână de poker din cinci cărți înmulțește distanța la final (Jokerul ține locul oricărei cărți).\nJetonul auriu All-In îl face rege câteva secunde: nimic nu-l oprește, ce sparge aduce bonus, iar distanța contează dublu.\nCresc blind-urile la fiecare 300 m: totul merge mai repede.\nSpațiu, ↑ sau atingere: sari (ține apăsat pentru mai sus) · ↓ sau glisare în jos: apleacă-te · P: pauză.",
+    "hcRules": "O carte alunecă pe șina dealerului: las-o să cadă la locul ei în castel.\nUn etaj înseamnă cinci cărți — două acoperișuri în A și o carte culcată deasupra —, deci fiecare etaj e o mână de poker, plătită cu 20 × multiplicatorul ei.\nO carte pusă alături înclină castelul (indicatorul Tilt); la 100 % totul se prăbușește. Un Perfect îl îndreaptă.\nO chintă sau o culoare înjumătățesc tiltul; un full sau mai bun îl readuce la zero.\n↓ sau glisare în jos arde cartea agățată (3 pe joc, încă una la fiecare nivel de blind-uri); cartea următoare se vede pe sabot.\nSpațiu sau atingere: lasă · ↓: arde · P: pauză.",
+    "psRules": "Vin 25 de cărți una câte una: pune-o pe fiecare într-o căsuță goală a grilei 5 × 5. Rămâne acolo.\nFiecare rând și fiecare coloană e o mână de poker: zece mâini în total.\nPuncte: chintă roială 100, chintă de culoare 75, careu 50, full 25, culoare 20, chintă 15, trei de un fel 10, două perechi 5, pereche 2.\nProvocarea zilei: aceleași 25 de cărți pentru toți azi. Joc liber: o nouă amestecare de fiecare dată.\nSăgeți: mută · Spațiu: pune · sau atinge o căsuță.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Copie de rezervă completă (client web)",
     "advBackupDesc": "Salvează într-un singur fișier tot ce conține acest browser: opțiuni web, teme, pachete de cărți, locuri personalizate, imaginea avatarului, realizări și statistici — inclusiv ce este prea mare pentru sincronizarea cu contul. Parola și sesiunea nu sunt niciodată incluse, iar importul îmbină realizările în loc să le înlocuiască, așa că progresul nu se pierde.",

@@ -72,6 +72,9 @@ const CSS = `
 #pth-game .gm-tile small{font:500 11px 'Inconsolata',monospace;color:#9bb0a3;min-height:1.2em}
 #pth-game .gm-tile.on{box-shadow:inset 0 0 0 2px #d8b25a,0 0 18px rgba(216,178,90,.25);transform:translateY(-2px)}
 #pth-game .gm-tile:focus-visible{outline:2px solid #f5f0e3;outline-offset:2px}
+#pth-game.pg-light .gm-tile{background:rgba(255,252,246,.96);color:#1d222b;box-shadow:inset 0 0 0 1px rgba(140,105,20,.35)}
+#pth-game.pg-light .gm-tile small{color:#5a6470}
+#pth-game.pg-light .gm-tile.on{box-shadow:inset 0 0 0 2px #a07a12,0 0 14px rgba(160,122,18,.25)}
 @media (max-width:520px){#pth-game .gm-tile{padding:10px 8px;gap:4px}#pth-game .gm-tile i{font-size:24px}#pth-game .gm-tile b{font-size:14px}}
 @media (max-width:520px){#pth-game .ar-slot{width:22px;height:32px}#pth-game .ar-slots .pk.sm{width:22px;height:32px;font-size:10px}
   #pth-game .ar-show{min-height:58px;gap:4px}#pth-game .ar-show .pk.lg{width:40px;height:58px;font-size:15px}
@@ -138,6 +141,21 @@ export function drawFace(g, img, n, w, h) {
   g.fillStyle = isRed(n) ? '#c62828' : '#141414';
   g.font = '700 ' + Math.round(h * 0.3) + 'px Inconsolata, monospace'; g.fillText(RANKS[n % 13], -w * 0.18, -h * 0.26);
   g.font = Math.round(h * 0.44) + 'px Georgia, serif'; g.fillText(SUITS[suitOf(n)], w * 0.04, h * 0.14);
+}
+/**
+ * Colours of the canvas world for the page's theme (shell.theme.light):
+ * floating texts, the level banner, the night or day room of the casino.
+ */
+export function ink(light) {
+  return light ? {
+    light: true, gold: '#8a6510', text: '#2b3138', red: '#c62828',
+    band: 'rgba(255,250,240,.9)', bandText: '#1d222b', bandGold: '#8a6510', bandLine: 'rgba(140,105,20,.6)',
+    skyTop: '#f7f0e3', skyBot: '#e6d9c1', rim: '#8a6a4a', farFelt: '#3f8f63', shade: '#4b5a54', lamp: '200,150,60', glow: '200,150,60',
+  } : {
+    light: false, gold: '#d8b25a', text: '#f5f0e3', red: '#ff8a80',
+    band: 'rgba(11,18,16,.72)', bandText: '#f5f0e3', bandGold: '#d8b25a', bandLine: 'rgba(216,178,90,.6)',
+    skyTop: '#0a100e', skyBot: '#16251e', rim: '#2a1a10', farFelt: '#123d28', shade: '#20302a', lamp: '216,178,90', glow: '216,178,90',
+  };
 }
 /** Rounded rectangle path. */
 export function rr(g, x, y, w, h, r) {

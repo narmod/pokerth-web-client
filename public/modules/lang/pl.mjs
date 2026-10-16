@@ -1063,6 +1063,12 @@ export const strings = {
     "psStraightDraw": "Dobieranie do strita…",
     "psBestLine": "Najlepsza linia: {h}",
     "psAgain": "Dotknij, aby wybrać tryb · Esc – menu",
+    "gmPlay": "Graj",
+    "gmRules": "Zasady",
+    "gmIntro": "Trzy małe gry pokerowe, tylko między tobą a Asem. Rekordy zostają na tym urządzeniu.",
+    "arRules": "As biegnie po suknie: przeskakuj stosy żetonów i toczący się przycisk dealera, schylaj się pod lecącymi kartami.\nZbieraj odkryte karty: twój najlepszy pięciokartowy układ pokerowy mnoży na końcu dystans (Joker zastępuje dowolną kartę).\nZłoty żeton All-In czyni go na kilka sekund królem: nic go nie zatrzyma, to, co rozbije, daje premię, a dystans liczy się podwójnie.\nBlindy rosną co 300 m: wszystko przyspiesza.\nSpacja, ↑ lub dotknięcie: skok (przytrzymaj, by wyżej) · ↓ lub przesunięcie w dół: unik · P: pauza.",
+    "hcRules": "Karta sunie po szynie krupiera: upuść ją na jej miejsce w domku.\nPiętro to pięć kart — dwa daszki w kształcie A i płaska karta na nich — więc każde piętro to układ pokerowy, wypłacany jako 20 × jego mnożnik.\nKarta obok swojego miejsca przechyla domek (wskaźnik Tilt); przy 100 % wszystko runie. Idealny rzut go prostuje.\nStrit lub kolor zmniejszają przechył o połowę; full lub lepszy go zeruje.\n↓ lub przesunięcie w dół pali wiszącą kartę (3 na grę, jedna więcej na każdym poziomie blindów); następna karta widać na sabocie.\nSpacja lub dotknięcie: upuść · ↓: spal · P: pauza.",
+    "psRules": "25 kart przychodzi po kolei: połóż każdą w pustym polu siatki 5 × 5. Tam zostaje.\nKażdy wiersz i każda kolumna to układ pokerowy: razem dziesięć układów.\nPunkty: poker królewski 100, poker 75, kareta 50, full 25, kolor 20, strit 15, trójka 10, dwie pary 5, para 2.\nWyzwanie dnia: dziś te same 25 kart dla wszystkich. Gra swobodna: za każdym razem nowe tasowanie.\nStrzałki: ruch · Spacja: połóż · lub dotknij pola.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Pełna kopia zapasowa (klient web)",
     "advBackupDesc": "Zapisuje w jednym pliku wszystko, co przechowuje ta przeglądarka: opcje web, motywy, talie, własne miejsca, obrazek awatara, osiągnięcia i statystyki — także to, co jest zbyt duże do synchronizacji z kontem. Hasło i sesja nigdy nie są zapisywane, a import scala osiągnięcia zamiast je zastępować, więc postęp nigdy nie ginie.",

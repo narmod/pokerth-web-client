@@ -1061,6 +1061,12 @@ export const strings = {
     "psStraightDraw": "Projeto de sequência…",
     "psBestLine": "Melhor linha: {h}",
     "psAgain": "Toque para escolher um modo · Esc para o menu",
+    "gmPlay": "Jogar",
+    "gmRules": "Regras",
+    "gmIntro": "Três joguinhos de pôquer, só entre você e o Ás. Os recordes ficam neste aparelho.",
+    "arRules": "O Ás corre pelo feltro: pule as pilhas de fichas e o botão do dealer que rola, abaixe-se sob as cartas que voam.\nPegue as cartas viradas para cima: sua melhor mão de pôquer de cinco cartas multiplica a distância no fim (o Coringa vale qualquer carta).\nA ficha dourada All-In o faz rei por alguns segundos: nada o para, o que ele destrói dá bônus e a distância conta em dobro.\nOs blinds sobem a cada 300 m: tudo fica mais rápido.\nEspaço, ↑ ou toque: pular (segure para mais alto) · ↓ ou deslizar para baixo: abaixar · P: pausa.",
+    "hcRules": "Uma carta desliza pelo trilho do crupiê: solte-a no lugar dela no castelo.\nUm andar são cinco cartas — dois telhados em A e uma carta deitada em cima —, então cada andar é uma mão de pôquer, paga 20 × seu multiplicador.\nUma carta fora do lugar inclina o castelo (medidor Tilt); em 100 % tudo desaba. Um Perfeito o endireita.\nUma sequência ou um flush cortam o tilt pela metade; um full house ou melhor zera o tilt.\n↓ ou deslizar para baixo queima a carta pendurada (3 por partida, mais uma a cada nível de blinds); a próxima carta aparece no sapato.\nEspaço ou toque: soltar · ↓: queimar · P: pausa.",
+    "psRules": "Chegam 25 cartas, uma a uma: coloque cada uma numa casa vazia da grade 5 × 5. Ela fica ali.\nCada linha e cada coluna é uma mão de pôquer: dez mãos ao todo.\nPontos: royal flush 100, straight flush 75, quadra 50, full house 25, flush 20, sequência 15, trinca 10, dois pares 5, par 2.\nDesafio do dia: as mesmas 25 cartas para todos hoje. Partida livre: um novo embaralhamento a cada vez.\nSetas: mover · Espaço: colocar · ou toque numa casa.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Backup completo (cliente web)",
     "advBackupDesc": "Salva em um único arquivo tudo o que este navegador guarda: opções web, temas, baralhos, assentos personalizados, imagem do avatar, conquistas e estatísticas — incluindo o que é grande demais para sincronizar com sua conta. Sua senha e sessão nunca são incluídas, e a importação mescla as conquistas em vez de substituí-las, então nenhum progresso é perdido.",

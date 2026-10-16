@@ -688,6 +688,12 @@ export const strings = {
     "psStraightDraw": "Pritje për rresht…",
     "psBestLine": "Linja më e mirë: {h}",
     "psAgain": "Prek për të zgjedhur modalitetin · Esc për menynë",
+    "gmPlay": "Luaj",
+    "gmRules": "Rregullat",
+    "gmIntro": "Tri lojëra të vogla pokeri, vetëm mes teje dhe Asit. Rekordet mbeten në këtë pajisje.",
+    "arRules": "Asi vrapon mbi çohën: kërce mbi pirgjet e fishave dhe butonin e dilerit që rrokulliset, përkulu nën letrat që fluturojnë.\nMblidh letrat e hapura: dora jote më e mirë e pokerit me pesë letra shumëzon distancën në fund (Xhokeri zë vendin e çdo letre).\nFisha e artë All-In e bën mbret për disa sekonda: asgjë nuk e ndal, ajo që thyen jep bonus dhe distanca llogaritet dyfish.\nBlindet rriten çdo 300 m: gjithçka shpejtohet.\nHapësirë, ↑ ose prekje: kërce (mbaje për më lart) · ↓ ose rrëshqit poshtë: përkulu · P: pauzë.",
+    "hcRules": "Një letër rrëshqet mbi hekurudhën e dilerit: lëshoje në vendin e saj në kështjellë.\nNjë kat janë pesë letra — dy çati në formë A dhe një letër e shtrirë sipër —, ndaj çdo kat është një dorë pokeri, e paguar 20 × shumëzuesi i saj.\nNjë letër pranë vendit të saj e anon kështjellën (treguesi Tilt); në 100 % gjithçka shembet. Një lëshim i Përsosur e drejton.\nNjë rresht ose një ngjyrë e përgjysmojnë animin; një full house ose më mirë e kthen në zero.\n↓ ose rrëshqitja poshtë djeg letrën e varur (3 për lojë, një më shumë në çdo nivel blindesh); letra tjetër duket mbi këpucë.\nHapësirë ose prekje: lësho · ↓: digj · P: pauzë.",
+    "psRules": "25 letra vijnë një nga një: vendose secilën në një qeli bosh të rrjetës 5 × 5. Aty mbetet.\nÇdo rresht dhe çdo kolonë është një dorë pokeri: dhjetë duar gjithsej.\nPikë: royal flush 100, straight flush 75, katër të njëjta 50, full house 25, ngjyrë 20, rresht 15, tre të njëjta 10, dy çifte 5, çift 2.\nSfida e ditës: sot të njëjtat 25 letra për të gjithë. Lojë e lirë: përzierje e re çdo herë.\nShigjetat: lëviz · Hapësirë: vendos · ose prek një qeli.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Kopje rezervë e plotë (klienti web)",
     "advBackupDesc": "Ruaj gjithçka që ky shfletues mban në një skedar të vetëm: cilësimet web, temat, dekat, vendet e personalizuara, foton e avatarit, trofetë dhe statistikat — përfshirë atë që është shumë e madhe për t\u2019u sinkronizuar me llogarinë. Fjalëkalimi dhe seanca jote nuk përfshihen kurrë, dhe importimi i bashkon trofetë në vend që t\u2019i zëvendësojë, kështu që përparimi nuk humbet kurrë.",

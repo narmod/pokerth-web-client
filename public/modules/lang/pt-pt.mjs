@@ -1061,6 +1061,12 @@ export const strings = {
     "psStraightDraw": "Projeto de sequência…",
     "psBestLine": "Melhor linha: {h}",
     "psAgain": "Toca para escolher um modo · Esc para o menu",
+    "gmPlay": "Jogar",
+    "gmRules": "Regras",
+    "gmIntro": "Três pequenos jogos de póquer, só entre ti e o Ás. Os recordes ficam neste dispositivo.",
+    "arRules": "O Ás corre pelo pano: salta as pilhas de fichas e o botão do dealer que rola, baixa-te sob as cartas que voam.\nApanha as cartas viradas para cima: a tua melhor mão de póquer de cinco cartas multiplica a distância no fim (o Joker vale qualquer carta).\nA ficha dourada All-In torna-o rei durante alguns segundos: nada o pára, o que destrói dá bónus e a distância conta a dobrar.\nAs blinds sobem a cada 300 m: tudo fica mais rápido.\nEspaço, ↑ ou toque: saltar (mantém para mais alto) · ↓ ou deslizar para baixo: baixar · P: pausa.",
+    "hcRules": "Uma carta desliza pelo carril do croupier: larga-a no seu lugar no castelo.\nUm andar são cinco cartas — dois telhados em A e uma carta deitada por cima —, por isso cada andar é uma mão de póquer, paga 20 × o seu multiplicador.\nUma carta fora do lugar inclina o castelo (indicador Tilt); a 100 % tudo desaba. Um Perfeito endireita-o.\nUma sequência ou uma cor cortam o tilt para metade; um full house ou melhor põe-no a zero.\n↓ ou deslizar para baixo queima a carta suspensa (3 por partida, mais uma em cada nível de blinds); a carta seguinte vê-se no sabot.\nEspaço ou toque: largar · ↓: queimar · P: pausa.",
+    "psRules": "Chegam 25 cartas, uma a uma: põe cada uma numa casa vazia da grelha 5 × 5. Fica lá.\nCada linha e cada coluna é uma mão de póquer: dez mãos ao todo.\nPontos: sequência real 100, sequência de cor 75, póquer 50, full house 25, cor 20, sequência 15, trio 10, dois pares 5, par 2.\nDesafio do dia: as mesmas 25 cartas para todos hoje. Partida livre: uma nova baralhação de cada vez.\nSetas: mover · Espaço: colocar · ou toca numa casa.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Cópia de segurança completa (cliente web)",
     "advBackupDesc": "Guarda num único ficheiro tudo o que este navegador contém: opções web, temas, baralhos, lugares personalizados, imagem do avatar, proezas e estatísticas — incluindo o que é demasiado grande para sincronizar com a sua conta. A palavra-passe e a sessão nunca são incluídas, e a importação funde as proezas em vez de as substituir, pelo que nenhum progresso se perde.",

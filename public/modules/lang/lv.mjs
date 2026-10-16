@@ -688,6 +688,12 @@ export const strings = {
     "psStraightDraw": "Stritas izvilkums…",
     "psBestLine": "Labākā līnija: {h}",
     "psAgain": "Pieskaries, lai izvēlētos režīmu · Esc uz izvēlni",
+    "gmPlay": "Spēlēt",
+    "gmRules": "Noteikumi",
+    "gmIntro": "Trīs mazas pokera spēles, tikai starp tevi un Dūzi. Rekordi paliek šajā ierīcē.",
+    "arRules": "Dūzis skrien pa galdautu: lec pāri žetonu kaudzēm un ripojošajai dīlera pogai, pieliecies zem lidojošām kārtīm.\nSavāc atvērtās kārtis: tava labākā piecu kāršu pokera kombinācija beigās reizina attālumu (Džokers aizstāj jebkuru kārti).\nZelta All-In žetons uz dažām sekundēm padara viņu par karali: nekas viņu neaptur, sagrautais dod bonusu un attālums skaitās dubulti.\nBlaindi aug ik pēc 300 m: viss kļūst ātrāks.\nAtstarpe, ↑ vai pieskāriens: lēkt (turi, lai augstāk) · ↓ vai vilkšana uz leju: pieliekties · P: pauze.",
+    "hcRules": "Kārts slīd pa dīlera sliedi: nomet to tās vietā kāršu namiņā.\nStāvs ir piecas kārtis — divi A jumti un plakana kārts virsū —, tāpēc katrs stāvs ir pokera kombinācija, apmaksāta ar 20 × tās reizinātāju.\nKārts blakus savai vietai sasver namiņu (Tilt rādītājs); pie 100 % viss sabrūk. Perfekts nometiens to iztaisno.\nStrits vai flešs uz pusi samazina sasvērumu; fulhauss vai labāk to nonullē.\n↓ vai vilkšana uz leju sadedzina karājošos kārti (3 spēlē, viena vairāk katrā blaindu līmenī); nākamā kārts redzama kurpē.\nAtstarpe vai pieskāriens: nomest · ↓: sadedzināt · P: pauze.",
+    "psRules": "25 kārtis nāk pa vienai: ieliec katru tukšā 5 × 5 režģa rūtiņā. Tur tā paliek.\nKatra rinda un katra kolonna ir pokera kombinācija: kopā desmit kombinācijas.\nPunkti: karaliskais flešs 100, strita flešs 75, kare 50, fulhauss 25, flešs 20, strits 15, trīs vienādas 10, divi pāri 5, pāris 2.\nDienas izaicinājums: šodien tās pašas 25 kārtis visiem. Brīvā spēle: katru reizi jauna sajaukšana.\nBultiņas: pārvietoties · Atstarpe: ielikt · vai pieskaries rūtiņai.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Pilna rezerves kopija (tīmekļa klients)",
     "advBackupDesc": "Saglabā vienā failā visu, kas glabājas šajā pārlūkā: tīmekļa opcijas, motīvus, kāršu komplektus, pielāgotās vietas, avatara attēlu, sasniegumus un statistiku — arī to, kas ir par lielu, lai sinhronizētos ar kontu. Tava parole un sesija netiek iekļauta nekad, un imports sasniegumus apvieno, nevis aizstāj, tāpēc progress nepazūd.",

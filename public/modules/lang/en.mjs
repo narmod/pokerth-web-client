@@ -689,6 +689,12 @@ export const strings = {
     "psStraightDraw": "Straight draw…",
     "psBestLine": "Best line: {h}",
     "psAgain": "Tap to choose a mode · Esc for the menu",
+    "gmPlay": "Play",
+    "gmRules": "Rules",
+    "gmIntro": "Three little poker games, just between you and the Ace. Best scores stay on this device.",
+    "arRules": "The Ace runs along the felt: jump over chip stacks and the rolling dealer button, duck under flying cards.\nPick up the face-up cards: your best five-card poker hand multiplies the distance at the end (the Joker is wild).\nThe gold All-In chip makes him king for a few seconds: nothing stops him, what he smashes gives a bonus and the distance counts double.\nBlinds up every 300 m: everything goes faster.\nSpace, ↑ or a tap: jump (hold for higher) · ↓ or swipe down: duck · P: pause.",
+    "hcRules": "A card slides along the dealer’s rail: drop it on its place in the house.\nA floor is five cards — two A-frames and a flat card on top — so every floor is a poker hand, paid 20 × its multiplier.\nA card off its mark leans the house (Tilt gauge); at 100 % it all comes down. A Perfect drop steadies it.\nA straight or a flush halves the tilt; a full house or better resets it.\n↓ or swipe down burns the hanging card (3 per game, one more at each blind level); the next card shows on the shoe.\nSpace or a tap: drop · ↓: burn · P: pause.",
+    "psRules": "25 cards come one by one: put each in an empty cell of the 5 × 5 grid. It stays there.\nEvery row and every column is a poker hand: ten hands in all.\nPoints: royal flush 100, straight flush 75, four of a kind 50, full house 25, flush 20, straight 15, three of a kind 10, two pair 5, pair 2.\nDaily challenge: the same 25 cards for every player today. Free game: a new shuffle each time.\nArrows: move · Space: place · or tap a cell.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Full backup (web client)",
     "advBackupDesc": "Save everything this browser holds into one file: web options, themes, decks, custom seats, avatar image, achievements and stats — including what is too large to sync with your account. Your password and session are never included, and importing merges achievements instead of replacing them, so progress is never lost.",

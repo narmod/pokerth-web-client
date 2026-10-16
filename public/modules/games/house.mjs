@@ -24,7 +24,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 import { evalCards, JOKER } from './poker-hand.mjs';
-import { CHIP, fmt, backUrl, cardHtml, newDeck, imageCache, rr, drawFace, aceActor } from './common.mjs';
+import { CHIP, fmt, backUrl, cardHtml, newDeck, imageCache, rr, drawFace, aceActor, ink } from './common.mjs';
 
 const CW = 30, CH = 42;          // a leaning card
 const LEAN = 18 * Math.PI / 180;
@@ -305,11 +305,14 @@ export function create(shell) {
     const w = W(), h = H(), cam = G.camY;
     // Casino → ceiling → night sky as the house grows.
     const k = Math.min(1, cam / 900);
-    const top = mix([10, 16, 14], [7, 10, 26], k), bot = mix([22, 37, 30], [16, 22, 44], k);
+    // Light theme: the casino by day, then a blue sky; dark: by night, then the stars.
+    const light = shell.theme.light;
+    const top = light ? mix([247, 240, 227], [176, 206, 236], k) : mix([10, 16, 14], [7, 10, 26], k);
+    const bot = light ? mix([230, 217, 193], [226, 238, 250], k) : mix([22, 37, 30], [16, 22, 44], k);
     const sky = g.createLinearGradient(0, 0, 0, h);
     sky.addColorStop(0, 'rgb(' + top + ')'); sky.addColorStop(1, 'rgb(' + bot + ')');
     g.fillStyle = sky; g.fillRect(0, 0, w, h);
-    for (const s of stars) {
+    if (!light) for (const s of stars) {
       const y = sy(s.y * 1) + (cam * 0.5);       // half speed: far away
       if (y < -4 || y > h + 4) continue;
       g.fillStyle = 'rgba(245,240,227,' + (0.35 + 0.4 * Math.abs(Math.sin(time * 1.3 + s.x))) + ')';
@@ -402,7 +405,7 @@ export function create(shell) {
   }
   function drawRail(g) {
     const w = W(), cx = w / 2, A = amp();
-    g.fillStyle = 'rgba(216,178,90,.75)'; g.fillRect(cx - A - 30, railY - 2, 2 * A + 60, 3);
+    g.fillStyle = shell.theme.light ? 'rgba(140,105,20,.85)' : 'rgba(216,178,90,.75)'; g.fillRect(cx - A - 30, railY - 2, 2 * A + 60, 3);
     g.fillStyle = 'rgba(216,178,90,.35)'; g.fillRect(cx - A - 30, railY + 1, 2 * A + 60, 1);
     // The shoe at the right end: the next card face up on the deck.
     const shoeX = cx + A + 48;
@@ -414,7 +417,7 @@ export function create(shell) {
     // The trolley (a chip) and the hanging card.
     const x = cx + G.railX;
     if (!G.fall) {
-      g.strokeStyle = 'rgba(245,240,227,.6)'; g.lineWidth = 1; g.beginPath(); g.moveTo(x, railY); g.lineTo(x, railY + HANG - 18); g.stroke();
+      g.strokeStyle = shell.theme.light ? 'rgba(43,49,56,.55)' : 'rgba(245,240,227,.6)'; g.lineWidth = 1; g.beginPath(); g.moveTo(x, railY); g.lineTo(x, railY + HANG - 18); g.stroke();
       const sl = slot(G.cur.length);
       drawCard(g, G.card, x, railY + HANG + (G.cur.length === 4 ? -12 : 0), sl.rot, sl.w, sl.h, G.cur.length === 4);
     }
@@ -442,7 +445,8 @@ export function create(shell) {
       const y = (p.screen ? p.y : sy(p.wy)) - p.t * 30;
       g.globalAlpha = a; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
       g.font = p.big ? '700 22px Cinzel, Georgia, serif' : p.small ? '700 11px Cinzel, Georgia, serif' : p.gold ? '700 14px Cinzel, Georgia, serif' : '700 14px Inconsolata, monospace';
-      g.fillStyle = p.red ? '#ff8a80' : p.gold ? '#d8b25a' : '#f5f0e3';
+      const C = ink(shell.theme.light);
+      g.fillStyle = p.red ? C.red : p.gold ? C.gold : C.text;
       g.fillText(p.s, x, y); g.globalAlpha = 1;
     }
   }
@@ -451,14 +455,15 @@ export function create(shell) {
     const a = b.t < 0.2 ? b.t / 0.2 : b.t > 1.2 ? Math.max(0, 1 - (b.t - 1.2) / 0.4) : 1;
     const w = W(), y = H() * 0.42;
     g.globalAlpha = a;
-    g.fillStyle = 'rgba(11,18,16,.72)'; g.fillRect(0, y - 24, w, 48);
-    g.fillStyle = 'rgba(216,178,90,.6)'; g.fillRect(0, y - 24, w, 1); g.fillRect(0, y + 23, w, 1);
+    const C = ink(shell.theme.light);
+    g.fillStyle = C.band; g.fillRect(0, y - 24, w, 48);
+    g.fillStyle = C.bandLine; g.fillRect(0, y - 24, w, 1); g.fillRect(0, y + 23, w, 1);
     g.textBaseline = 'middle'; g.textAlign = 'left';
     const fT = '700 20px Cinzel, Georgia, serif', fL = '700 20px Inconsolata, monospace';
     g.font = fT; const tw = g.measureText(b.s).width; g.font = fL; const lw = g.measureText(b.sub).width;
     const x0 = (w - tw - 12 - lw) / 2;
-    g.font = fT; g.fillStyle = '#f5f0e3'; g.fillText(b.s, x0, y);
-    g.font = fL; g.fillStyle = '#d8b25a'; g.fillText(b.sub, x0 + tw + 12, y);
+    g.font = fT; g.fillStyle = C.bandText; g.fillText(b.s, x0, y);
+    g.font = fL; g.fillStyle = C.bandGold; g.fillText(b.sub, x0 + tw + 12, y);
     g.globalAlpha = 1;
   }
   function draw(g) {

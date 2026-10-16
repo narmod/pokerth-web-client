@@ -1065,6 +1065,12 @@ export const strings = {
     "psStraightDraw": "Progetto di scala…",
     "psBestLine": "Linea migliore: {h}",
     "psAgain": "Tocca per scegliere una modalità · Esc per il menu",
+    "gmPlay": "Gioca",
+    "gmRules": "Regole",
+    "gmIntro": "Tre piccoli giochi di poker, tra te e l'Asso. I record restano su questo dispositivo.",
+    "arRules": "L'Asso corre sul tappeto: salta le pile di fiches e il bottone del dealer che rotola, abbassati sotto le carte che volano.\nRaccogli le carte scoperte: la tua miglior mano di poker di cinque carte moltiplica la distanza alla fine (il Joker è jolly).\nLa fiche d'oro All-In lo fa re per qualche secondo: niente lo ferma, ciò che distrugge dà un bonus e la distanza conta doppio.\nSalgono i bui ogni 300 m: tutto accelera.\nSpazio, ↑ o tocco: salta (tieni premuto per più in alto) · ↓ o scorri in basso: abbassati · P: pausa.",
+    "hcRules": "Una carta scorre sul binario del croupier: lasciala cadere al suo posto nel castello.\nUn piano sono cinque carte — due tettoie ad A e una carta piatta sopra — quindi ogni piano è una mano di poker, pagata 20 × il suo moltiplicatore.\nUna carta fuori posto fa pendere il castello (indicatore Tilt); al 100 % crolla tutto. Un Perfetto lo raddrizza.\nUna scala o un colore dimezzano il tilt; un full o meglio lo azzera.\n↓ o scorri in basso brucia la carta appesa (3 a partita, una in più a ogni livello di bui); la carta successiva si vede sul sabot.\nSpazio o tocco: lascia · ↓: brucia · P: pausa.",
+    "psRules": "Arrivano 25 carte una alla volta: metti ciascuna in una casella vuota della griglia 5 × 5. Lì resta.\nOgni riga e ogni colonna è una mano di poker: dieci mani in tutto.\nPunti: scala reale 100, scala colore 75, poker 50, full 25, colore 20, scala 15, tris 10, doppia coppia 5, coppia 2.\nSfida del giorno: le stesse 25 carte per tutti oggi. Partita libera: un nuovo mescolamento ogni volta.\nFrecce: muoviti · Spazio: posa · oppure tocca una casella.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Backup completo (client web)",
     "advBackupDesc": "Salva in un unico file tutto ciò che contiene questo browser: opzioni web, temi, mazzi, posti personalizzati, immagine avatar, obiettivi e statistiche — compreso ciò che è troppo grande per la sincronizzazione con l'account. Password e sessione non sono mai inclusi e l'importazione unisce gli obiettivi invece di sostituirli, così i progressi non vanno persi.",

@@ -23,11 +23,13 @@
 // ═══════════════════════════════════════════════════════════════════
 
 export const HOME = 'arcade';
+// page: no stage (the arcade's home); rulesKey: the rules sheet (« ? » in the
+// header, « Rules » on the home page); aspect: the stage's width / height range.
 export const GAMES = [
-  { id: HOME, name: 'Arcade', load: () => import('./menu.mjs') },
-  { id: 'ace-runner', name: 'Ace Runner', icon: '🏃', load: () => import('./ace-runner.mjs') },
-  { id: 'house', nameKey: 'hcName', icon: '🃏', load: () => import('./house.mjs') },
-  { id: 'solitaire', nameKey: 'psName', icon: '♠', load: () => import('./solitaire.mjs') },
+  { id: HOME, name: 'Arcade', page: true, load: () => import('./menu.mjs') },
+  { id: 'ace-runner', name: 'Ace Runner', icon: '🏃', rulesKey: 'arRules', aspect: [4 / 3, 2.4], load: () => import('./ace-runner.mjs') },
+  { id: 'house', nameKey: 'hcName', icon: '🃏', rulesKey: 'hcRules', aspect: [4 / 3, 2.4], load: () => import('./house.mjs') },
+  { id: 'solitaire', nameKey: 'psName', icon: '♠', rulesKey: 'psRules', aspect: [1.25, 2.2], load: () => import('./solitaire.mjs') },
 ];
 // Secret words → what they open.
 export const TRIGGERS = [{ wordKey: 'gameWordAce', words: ['mascot'], open: HOME }];
@@ -82,6 +84,7 @@ function restoreNick() {
 }
 
 let open = false;
+let shellNow = null;          // the running shell (back / rules from the header)
 /** Open game `id` (the shell is loaded on demand). Resolves when it closes. */
 export async function launch(id) {
   const g = GAMES.find((x) => x.id === id);
@@ -89,7 +92,8 @@ export async function launch(id) {
   open = true;
   try {
     const [shellMod, [def, gameMod]] = await Promise.all([import('./shell.mjs'), loadGame(id)]);
-    const grants = await shellMod.run(def, gameMod, { open: loadGame, home: HOME });
+    const grants = await shellMod.run(def, gameMod, { open: loadGame, home: HOME, onShell: (s) => { shellNow = s; } });
+    shellNow = null;
     // Secret trophies the games asked for, granted once the overlay is gone
     // so the trophy toast (and the Ace's cheer) can be seen.
     if (grants && grants.length) {
@@ -101,7 +105,7 @@ export async function launch(id) {
     }
   } catch (e) {
     try { console.warn('[games]', e); } catch (e2) {}
-  } finally { open = false; }
+  } finally { open = false; shellNow = null; }
 }
 
 /** Called by App.connect() in training: true when a game opened instead. */
@@ -114,9 +118,13 @@ export function tryLaunch(nick) {
 }
 
 export function isOpen() { return open; }
+/** The arcade page's back arrow (and Android's Back): rules → home → out. */
+export function back() { if (shellNow) shellNow.back(); }
+/** The « ? » of the arcade page: the rules of the game on screen. */
+export function rules() { if (shellNow) shellNow.rules(); }
 
 if (typeof window !== 'undefined') {
-  window.PthGames = { tryLaunch, launch, gameForNick, isOpen };
+  window.PthGames = { tryLaunch, launch, gameForNick, isOpen, back, rules };
   try {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watchNick);
     else watchNick();

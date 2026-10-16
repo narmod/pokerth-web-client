@@ -688,6 +688,12 @@ export const strings = {
     "psStraightDraw": "Vlečenje lestvice…",
     "psBestLine": "Najboljša vrsta: {h}",
     "psAgain": "Dotakni se za izbiro načina · Esc za meni",
+    "gmPlay": "Igraj",
+    "gmRules": "Pravila",
+    "gmIntro": "Tri majhne pokerske igre, samo med tabo in Asom. Rekordi ostanejo v tej napravi.",
+    "arRules": "As teče po suknu: preskakuj stolpce žetonov in kotaleči se gumb delilca, skloni se pod letečimi kartami.\nPobiraj odprte karte: tvoja najboljša pokerska kombinacija petih kart na koncu pomnoži razdaljo (Joker nadomesti katero koli karto).\nZlati žeton All-In ga za nekaj sekund naredi za kralja: nič ga ne ustavi, kar razbije, prinese bonus, razdalja pa šteje dvojno.\nBlindi rastejo vsakih 300 m: vse se pospeši.\nPreslednica, ↑ ali dotik: skok (drži za višje) · ↓ ali poteg navzdol: sklon · P: premor.",
+    "hcRules": "Karta drsi po delilčevem tiru: spusti jo na njeno mesto v hišici.\nNadstropje je pet kart — dve strehici v obliki A in ploska karta na njiju —, zato je vsako nadstropje pokerska kombinacija, izplačana z 20 × njenim množiteljem.\nKarta zraven svojega mesta nagne hišico (merilnik Tilt); pri 100 % se vse podre. Popoln met jo poravna.\nLestvica ali barva prepolovita nagib; full house ali boljše ga izniči.\n↓ ali poteg navzdol zažge visečo karto (3 na igro, ena več na vsaki stopnji blindov); naslednja karta je vidna na čevlju.\nPreslednica ali dotik: spusti · ↓: zažgi · P: premor.",
+    "psRules": "25 kart pride ena za drugo: vsako položi v prazno polje mreže 5 × 5. Tam ostane.\nVsaka vrstica in vsak stolpec je pokerska kombinacija: skupaj deset kombinacij.\nTočke: kraljeva barvna lestvica 100, barvna lestvica 75, poker 50, full house 25, barva 20, lestvica 15, tris 10, dva para 5, par 2.\nIzziv dneva: danes istih 25 kart za vse. Prosta igra: vsakič novo mešanje.\nPuščice: premik · Preslednica: položi · ali se dotakni polja.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Popolna varnostna kopija (spletni odjemalec)",
     "advBackupDesc": "Shrani vse, kar ta brskalnik hrani, v eno datoteko: spletne nastavitve, teme, špile, prilagojena mesta, sliko avatarja, dosežke in statistiko — vključno s tem, kar je preveliko za sinhronizacijo z računom. Geslo in seja nikoli nista vključena, uvoz pa dosežke združi namesto zamenja, tako da napredek nikoli ni izgubljen.",

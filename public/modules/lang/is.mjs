@@ -685,6 +685,12 @@ export const strings = {
     "psStraightDraw": "Röðardráttur…",
     "psBestLine": "Besta lína: {h}",
     "psAgain": "Snertu til að velja ham · Esc fyrir valmyndina",
+    "gmPlay": "Spila",
+    "gmRules": "Reglur",
+    "gmIntro": "Þrír litlir pókerleikir, bara á milli þín og Ásins. Metin geymast á þessu tæki.",
+    "arRules": "Ásinn hleypur eftir dúknum: hoppaðu yfir spilapeningastafla og rúllandi gjafarahnappinn, beygðu þig undir fljúgandi spil.\nTíndu upp spilin sem snúa upp: besta fimm spila pókerhöndin þín margfaldar vegalengdina í lokin (Jókerinn gildir sem hvaða spil sem er).\nGullni All-In-peningurinn gerir hann að kóngi í nokkrar sekúndur: ekkert stöðvar hann, það sem hann brýtur gefur bónus og vegalengdin telur tvöfalt.\nBlindarnir hækka á 300 m fresti: allt fer hraðar.\nBil, ↑ eða snerting: hoppa (haltu fyrir hærra) · ↓ eða strjúka niður: beygja sig · P: hlé.",
+    "hcRules": "Spil rennur eftir braut gjafarans: slepptu því á sinn stað í spilaborginni.\nHæð er fimm spil — tvö A-þök og flatt spil ofan á — svo hver hæð er pókerhönd, greidd með 20 × margfaldara sínum.\nSpil við hliðina á sínum stað hallar húsinu (Tilt-mælir); við 100 % hrynur allt. Fullkomið fall réttir það.\nRöð eða litur helminga hallann; fullt hús eða betra núllstillir hann.\n↓ eða strjúka niður brennir hangandi spilið (3 í leik, eitt til á hverju blindastigi); næsta spil sést á skónum.\nBil eða snerting: sleppa · ↓: brenna · P: hlé.",
+    "psRules": "25 spil koma eitt í einu: settu hvert í auðan reit í 5 × 5-reitunum. Þar verður það.\nHver röð og hver dálkur er pókerhönd: tíu hendur alls.\nStig: konungleg litaröð 100, litaröð 75, fjórir eins 50, fullt hús 25, litur 20, röð 15, þrír eins 10, tvö pör 5, par 2.\nÁskorun dagsins: sömu 25 spilin fyrir alla í dag. Frjáls leikur: ný stokkun í hvert sinn.\nÖrvar: færa · Bil: setja · eða snertu reit.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": 'Heildarafrit (vefbiðlari)',
     "advBackupDesc": 'Vistaðu allt sem er í þessum vafra í eina skrá: vefstillingar, þemu, stokka, sérsniðin sæti, avatarmynd, afrek og tölfræði — líka það sem er of stórt til að samstilla við aðganginn þinn. Lykilorðið þitt og lotan eru aldrei með, og innflutningur sameinar afrek í stað þess að skipta þeim út, svo framvinda tapast aldrei.',

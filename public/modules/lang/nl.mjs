@@ -1064,6 +1064,12 @@ export const strings = {
     "psStraightDraw": "Straightdraw…",
     "psBestLine": "Beste lijn: {h}",
     "psAgain": "Tik om een modus te kiezen · Esc voor het menu",
+    "gmPlay": "Spelen",
+    "gmRules": "Regels",
+    "gmIntro": "Drie kleine pokerspellen, alleen tussen jou en de Aas. De records blijven op dit apparaat.",
+    "arRules": "De Aas rent over het laken: spring over fichestapels en de rollende dealerknop, buk onder vliegende kaarten.\nPak de open kaarten: je beste pokerhand van vijf kaarten vermenigvuldigt aan het eind de afstand (de Joker is joker).\nDe gouden All-In-fiche maakt hem een paar seconden koning: niets houdt hem tegen, wat hij verplettert geeft bonus en de afstand telt dubbel.\nBlinds up elke 300 m: alles gaat sneller.\nSpatie, ↑ of tikken: springen (vasthouden voor hoger) · ↓ of omlaag vegen: bukken · P: pauze.",
+    "hcRules": "Een kaart glijdt over de rails van de dealer: laat hem op zijn plek in het kaartenhuis vallen.\nEen verdieping is vijf kaarten — twee A-daken en een platte kaart erop — dus elke verdieping is een pokerhand, uitbetaald met 20 × zijn vermenigvuldiger.\nEen kaart naast zijn plek laat het huis hellen (Tilt-meter); bij 100 % stort alles in. Een Perfect-worp zet het recht.\nEen straat of een flush halveert de tilt; een full house of beter zet hem op nul.\n↓ of omlaag vegen verbrandt de hangende kaart (3 per spel, één extra per blindniveau); de volgende kaart ligt zichtbaar op de schoen.\nSpatie of tikken: loslaten · ↓: verbranden · P: pauze.",
+    "psRules": "Er komen 25 kaarten één voor één: leg elke kaart in een leeg vak van het 5 × 5-raster. Daar blijft hij.\nElke rij en elke kolom is een pokerhand: tien handen in totaal.\nPunten: royal flush 100, straight flush 75, four of a kind 50, full house 25, flush 20, straat 15, three of a kind 10, twee paar 5, paar 2.\nDagelijkse uitdaging: vandaag dezelfde 25 kaarten voor iedereen. Vrij spel: elke keer opnieuw geschud.\nPijlen: bewegen · Spatie: leggen · of tik op een vak.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Volledige back-up (webclient)",
     "advBackupDesc": "Slaat alles op wat deze browser bevat in één bestand: webopties, thema's, kaartsets, eigen zitplaatsen, avatarafbeelding, prestaties en statistieken — ook wat te groot is om met je account te synchroniseren. Je wachtwoord en sessie worden nooit meegenomen, en bij het importeren worden prestaties samengevoegd in plaats van vervangen, zodat voortgang nooit verloren gaat.",

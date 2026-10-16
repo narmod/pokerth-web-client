@@ -1065,6 +1065,12 @@ export const strings = {
     "psStraightDraw": "Proyecto de escalera…",
     "psBestLine": "Mejor línea: {h}",
     "psAgain": "Toca para elegir un modo · Esc para el menú",
+    "gmPlay": "Jugar",
+    "gmRules": "Reglas",
+    "gmIntro": "Tres pequeños juegos de póquer, entre tú y el As. Los mejores récords se quedan en este dispositivo.",
+    "arRules": "El As corre por el tapete: salta las pilas de fichas y el botón de dealer que rueda, agáchate bajo las cartas que vuelan.\nRecoge las cartas boca arriba: tu mejor mano de póquer de cinco cartas multiplica la distancia al final (el Joker es comodín).\nLa ficha dorada All-In lo corona unos segundos: nada lo detiene, lo que destroza da bonus y la distancia cuenta doble.\nSuben las ciegas cada 300 m: todo va más rápido.\nEspacio, ↑ o toque: saltar (mantén para más alto) · ↓ o deslizar abajo: agacharse · P: pausa.",
+    "hcRules": "Una carta se desliza por el riel del crupier: suéltala en su sitio del castillo.\nUn piso son cinco cartas — dos tejados en A y una carta plana encima —, así que cada piso es una mano de póquer, pagada 20 × su multiplicador.\nUna carta fuera de su sitio inclina el castillo (indicador Tilt); al 100 % todo se derrumba. Un ¡Perfecto! lo endereza.\nUna escalera o un color dividen el tilt por dos; un full o mejor lo pone a cero.\n↓ o deslizar abajo quema la carta colgada (3 por partida, una más en cada nivel de ciegas); la siguiente carta se ve en el sabot.\nEspacio o toque: soltar · ↓: quemar · P: pausa.",
+    "psRules": "Llegan 25 cartas una a una: coloca cada una en una casilla vacía de la cuadrícula 5 × 5. Ahí se queda.\nCada fila y cada columna es una mano de póquer: diez manos en total.\nPuntos: escalera real 100, escalera de color 75, póquer 50, full 25, color 20, escalera 15, trío 10, doble pareja 5, pareja 2.\nReto del día: las mismas 25 cartas para todos hoy. Partida libre: una nueva mezcla cada vez.\nFlechas: moverse · Espacio: colocar · o toca una casilla.",
     // ── Sauvegarde complète du client web ──
     "advBackupSec": "Copia de seguridad completa (cliente web)",
     "advBackupDesc": "Guarda en un solo archivo todo lo que contiene este navegador: opciones web, temas, barajas, asientos personalizados, imagen de avatar, logros y estadísticas — incluido lo que es demasiado grande para sincronizar con tu cuenta. La contraseña y la sesión nunca se incluyen, y al importar los logros se fusionan en lugar de reemplazarse, así que nunca se pierde progreso.",
