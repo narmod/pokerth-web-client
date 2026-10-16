@@ -61,7 +61,7 @@ ok(NAME_KEYS.length === 10 && MULT.length === 10, 'ten categories');
 
 console.log('secret word');
 const { art } = await import('../public/modules/games/art.mjs');
-for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker', 'whowins', 'hilo', 'bluff']) {
+for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker', 'whowins', 'hilo', 'bluff', 'preflop']) {
   const d = art(id, false), l = art(id, true);
   const ids = [...d.matchAll(/id="([^"]+)"/g)].map((m) => m[1]), idsL = [...l.matchAll(/id="([^"]+)"/g)].map((m) => m[1]);
   ok(/^<svg[^>]*viewBox="0 0 320 140"/.test(d) && d !== l && ids.every((x) => idsL.indexOf(x) < 0), id + ': a cover picture, one for each theme, ids that do not clash');
@@ -78,7 +78,8 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'wwName', 'wwHint', 'wwSplit', 'wwTooSlow', 'wwRules', 'ach_whowins', 'ach_whowins_d', 'gmAgain',
   'hlName', 'hlHint', 'hlHigher', 'hlLower', 'hlCash', 'hlPot', 'hlRules', 'ach_hilo', 'ach_hilo_d',
   'blName', 'blHint', 'blBets', 'blBluff', 'blTells', 'blChips', 'blRules', 'ach_bluff', 'ach_bluff_d',
-  'gmShelfLearn', 'gmShelfLearnIntro', 'gmShelfPlay'];
+  'gmShelfLearn', 'gmShelfLearnIntro', 'gmShelfPlay',
+  'ppName', 'ppHint', 'ppFolded', 'ppRange', 'ppRules', 'ach_preflop', 'ach_preflop_d'];
 let missing = [], badRecord = [];
 for (const f of files) {
   const { strings } = await import(path.join(langDir, f));
@@ -164,6 +165,16 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
     "The Ace's Bluff: he bets every better hand, bluffs about half his worse ones (" + bluffs + '/2000), checks a tie');
   ok(tellOnBluff / bluffs > 0.75 && tellOnBet / 2000 < 0.25 && TELLS.length === 6,
     "The Ace's Bluff: his tell shows on most bluffs (" + Math.round(100 * tellOnBluff / bluffs) + '%) and on few value bets (' + Math.round(100 * tellOnBet / 2000) + '%)');
+  // Open or Fold?: the opening chart.
+  const pf = await import('../public/modules/games/preflop-chart.mjs');
+  const width = (p) => { let n = 0; for (let i = 0; i < 13; i++) for (let j = 0; j < 13; j++) if (pf.opens(p, pf.cellClass(i, j))) n += i === j ? 6 : i < j ? 4 : 12; return n / 1326; };
+  ok(pf.POSITIONS.every((p, k) => !k || width(p) >= width(pf.POSITIONS[k - 1]) || p === 'SB'), 'Open or Fold?: the later the position, the wider the range (UTG ' + Math.round(100 * width('UTG')) + '% … BTN ' + Math.round(100 * width('BTN')) + '%)');
+  ok(pf.opens('UTG', 'AA') && pf.opens('UTG', '77') && !pf.opens('UTG', '66') && !pf.opens('UTG', 'KJo') && pf.opens('BTN', 'A5o') && !pf.opens('BTN', 'A4o') && pf.opens('CO', 'A2s'),
+    'Open or Fold?: UTG opens 77 not 66, the button A5o not A4o, the cutoff any suited ace');
+  ok(pf.classOf(12, 25) === 'AA' && pf.classOf(12, 11) === 'AKs' && pf.classOf(24, 12) === 'AKo' && pf.cellOf('AKs').join() === '0,1' && pf.cellClass(1, 0) === 'AKo',
+    'Open or Fold?: hand classes and the 13 × 13 grid');
+  const cc = pf.cardsOf('T9s'), co = pf.cardsOf('T9o');
+  ok(pf.classOf(cc[0], cc[1]) === 'T9s' && pf.classOf(co[0], co[1]) === 'T9o' && pf.edgeClasses('UTG').length > 10, 'Open or Fold?: cards for a class, and the close calls on the edge of a range');
   // The arcade's shelves and the (future) unlocks.
   const reg = await import('../public/modules/games/index.mjs');
   const games = reg.GAMES.filter((g) => g.id !== reg.HOME);

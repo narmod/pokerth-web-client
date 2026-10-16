@@ -123,4 +123,8 @@ export const ACHIEVEMENTS = [
   // partie du « Bluff de l'As » (modules/games/bluff.mjs).
   { id: 'bluff',         icon: '🎭', cat: CATS.secret, when: 'always',
     test: () => false },
+  // Débloqué par grantSecret('preflop') : 18 bonnes réponses sur 20 à « Ouvrir
+  // ou passer ? », leçon 1 du rayon Apprendre (modules/games/preflop.mjs).
+  { id: 'preflop',       icon: '🪑', cat: CATS.secret, when: 'always',
+    test: () => false },
 ];

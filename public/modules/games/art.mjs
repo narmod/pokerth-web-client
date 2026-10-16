@@ -223,7 +223,24 @@ function bluff(c) {
   return s;
 }
 
-const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins, hilo, bluff };
+function preflop(c) {
+  let s = feltBg(c, 'ppf');
+  s += '<ellipse cx="96" cy="66" rx="70" ry="38" fill="rgba(8,40,26,.55)" stroke="rgba(216,178,90,.6)" stroke-width="2"/>';
+  const seats = ['UTG', '+1', 'MP', 'LJ', 'HJ', 'CO', 'BTN', 'SB', 'BB'];
+  seats.forEach((p, k) => {
+    const a = Math.PI / 2 + ((k - 6) * 2 * Math.PI) / 9 + 0.35, x = 96 + Math.cos(a) * 72, y = 66 + Math.sin(a) * 40;
+    const me = p === 'CO', folded = k < 5;
+    s += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="10" fill="' + (me ? '#d8b25a' : folded ? 'rgba(60,70,66,.85)' : '#f5f0e3') + '" stroke="rgba(0,0,0,.4)"/>'
+      + '<text x="' + x.toFixed(1) + '" y="' + (y + 2.5).toFixed(1) + '" font-size="6" ' + TXT + ' text-anchor="middle" fill="' + (folded ? 'rgba(245,240,227,.6)' : '#141414') + '">' + p + '</text>';
+  });
+  s += card(184, 30, 34, 'A', 'h') + card(222, 30, 34, '9', 'h');
+  s += '<rect x="174" y="104" width="56" height="22" rx="8" fill="#b3261e"/><text x="202" y="119" font-size="10" ' + TXT + ' text-anchor="middle" fill="#f5f0e3">Fold</text>';
+  s += '<rect x="238" y="104" width="56" height="22" rx="8" fill="#d8b25a" stroke="#8a6510"/><text x="266" y="119" font-size="10" ' + TXT + ' text-anchor="middle" fill="#141414">Raise</text>';
+  for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) s += '<rect x="' + (272 + j * 7) + '" y="' + (8 + i * 7) + '" width="6" height="6" fill="' + (i + j < 6 || i === j ? '#d8b25a' : 'rgba(0,0,0,.3)') + '"/>';
+  return s;
+}
+
+const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins, hilo, bluff, preflop };
 
 /** The cover picture of game `id` for the light or dark theme. */
 export function art(id, light) {

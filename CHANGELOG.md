@@ -105,6 +105,10 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **Open or Fold? — lesson 1** (`web.96`) — `games/preflop.mjs` + `games/preflop-chart.mjs` (a prudent full-ring
+  first-in chart, UTG 7 % … BTN 35 %, range notation parser, 13 × 13 grid): a 9-seat table with the folded seats
+  greyed, Raise or Fold, the chart of the position after each answer, a green / red grid of your hands at the end;
+  half of the hands from the edge of the range; secret trophy at 18/20.
 - **Two shelves in the arcade** (`web.95`) — `SHELVES` in `games/index.mjs`: « Learn poker » (a numbered path) and
   « Just for fun ». Each game also states how it will unlock in a future « Arcade » login mode (`unlock`:
   from the start, a given trophy — each lesson's opens the next — or a number of trophies; `ARCADE_UNLOCK`
