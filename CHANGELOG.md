@@ -105,6 +105,15 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **Every trophy won: the Ace gives away the arcade** — Ace's Help gets a tip on the Trophies tab
+  (`w-trophies`, window `trophies`): win every trophy in the list and there is a surprise at the end.
+  When the last trophy that is not secret falls (the secret ones need the word itself), the Ace comes —
+  tips on or off, on the login screen or in the lobby, never at a table nor over the offer or what the
+  player asked for — and says the secret word (`gameWordAce`, the player's language), with « Play now »
+  opening the arcade directly. Once per device (`pth_arcade_told`); also on the first visit after this
+  update for players who already had them all. Texts in the 83 Ace's Help catalogues; stats pairs
+  `w-trophies` and `arcade` (revealed / play) in `server/guide-stats.js` and the admin page;
+  `test-games-browser` covers the reveal (`web.87`).
 - **Poker Solitaire in the arcade** — the third hidden game (`games/solitaire.mjs`, rules in the pure
   `games/solitaire-rules.mjs`): 25 cards, one at a time, each into an empty cell of a 5 × 5 grid for
   good; every row and column is a poker hand, scored on the American scale (royal flush 100 … pair 2).

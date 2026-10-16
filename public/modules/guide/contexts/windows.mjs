@@ -5,6 +5,8 @@
 const W = (id, key, text, target) => ({ id, window: key, priority: 50, steps: [{ text, target }] });
 
 export default [
+  // Trophies tab (training): win them all, a surprise at the end — the arcade's word (web.87)
+  W('w-trophies', 'trophies', 'c5Trophies', ['#rk-ach-wrap .rk-ach-head']),
   W('w-ranking', 'ranking', 'c5Ranking', ['#ranking-modal .rk-tabs']),
   // the Events tab button, not the whole list (a long list overflowed the window, web.289)
   W('w-events', 'events', 'c5Events', ['#fn-tabs .rk-tab[data-tab="events"]']),

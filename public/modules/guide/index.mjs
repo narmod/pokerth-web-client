@@ -119,6 +119,8 @@ const WINDOWS = [
   ['avatar', () => vis('#avatar-popup')],
   ['events', () => vis('#forum-modal') && vis('#fn-events')],
   ['posts', () => vis('#forum-modal') && vis('#fn-list')],
+  // the Trophies tab (training) before the ranking window it lives in (web.87)
+  ['trophies', () => vis('#ranking-modal') && vis('#rk-ach-wrap')],
   ['ranking', () => vis('#ranking-modal')],
   ['adv', () => vis('#adv-modal')],
   ['theme', () => vis('#theme-panel')],
@@ -1187,6 +1189,9 @@ async function evaluate() {
   lastWhere = w;
   try { trackResult(w, prev); } catch (e) {}
   if (!available()) { if (!(showing && (showing.kind === 'offer' || (onDemand() && canComeHere())))) leave(); return; }   // live embed: only what the player asked for
+  // every trophy won: the secret word of the arcade, tips on or off (web.87)
+  if (arcadePending && (w.screen === 'connect' || w.screen === 'lobby') && !blocked() && !window._pthGameOn
+    && !(showing && (showing.kind === 'offer' || showing.kind === 'bak' || onDemand()))) { revealArcade(); return; }
   if (!state.isOn()) {
     // tips off: only the offer, a last word, or what the player asked for (« More help », « ? » mode)
     // (his menu too, web.276); the offer only on the login screen and in the lobby, never at a table (D8)
@@ -1248,6 +1253,38 @@ async function evaluate() {
   if (blocked() && !(ctx && ctx.window)) return;
   if (ctx) { showContext(ctx); return; }
   m.badge(CONTEXTS.some((c) => !c.manual && snoozed.has(c.id) && applies(c, w)));
+}
+
+// ── All the trophies: the secret word of the arcade (web.87) ───────
+// The Trophies tab tells it (context w-trophies): win every trophy and there
+// is a surprise at the end. When the last one that is not secret falls (the
+// secret ones need the word itself: the games, the Konami egg), the Ace
+// comes — tips on or off, on the login screen or in the lobby, never at a
+// table, never over the offer or what the player asked for — and says the
+// word (gameWordAce of the main catalogue), with « Play now » opening the
+// arcade (modules/games/). Said once per device: pth_arcade_told.
+const KEY_ARCADE = 'pth_arcade_told';
+let arcadePending = false;
+async function checkTrophies() {
+  try {
+    if (localStorage.getItem(KEY_ARCADE) === '1' || arcadePending) return;
+    const m = await import('../achievements/index.mjs');
+    const all = m.createAchievements({}).snapshot().filter((a) => a.cat !== 'secret');
+    if (all.length && all.every((a) => a.unlocked)) { arcadePending = true; schedule(); }
+  } catch (e) {}
+}
+async function revealArcade() {
+  arcadePending = false;
+  try { localStorage.setItem(KEY_ARCADE, '1'); } catch (e) {}
+  let word = 'mascot';
+  try { const v = typeof window.t === 'function' ? window.t('gameWordAce') : ''; if (v && v !== 'gameWordAce') word = v; } catch (e) {}
+  await note('arcadeReveal', [btn('arcadePlay', true), btn('close')], (id) => {
+    endOnDemand();
+    if (id === 'arcadePlay') { beacon('arcade', 'play'); import('../games/index.mjs').then((g) => g.launch(g.HOME)).catch(() => {}); }
+  }, { w: word });
+  try { if (M) M.react('wave'); } catch (e) {}
+  try { if (typeof window.notifyBigWin === 'function') window.notifyBigWin(); } catch (e) {}
+  beacon('arcade', 'revealed');
 }
 
 // ── Live game list (C1 / C2) ───────────────────────────────────────
@@ -1420,6 +1457,8 @@ function init() {
     if (mergeFromAccount(o)) { try { if (typeof window._cfgSyncMark === 'function') window._cfgSyncMark('guide'); } catch (e) {} }
   }
   if (!available()) return;
+  window.addEventListener('pth-achievement', checkTrophies);   // the last trophy → the arcade's word (web.87)
+  checkTrophies();
   const mo = new MutationObserver(schedule);
   for (const id of ['s-connect', 's-lobby', 's-create', 's-game']) {
     const el = document.getElementById(id);

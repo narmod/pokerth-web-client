@@ -78,6 +78,9 @@ export default {
   c5CreateOffline: 'Training table: choose the number of players, a game style (the pace) and the level of the computer players, then create the table. Nothing here counts towards a ranking.',
   // C5 — windows (first opening)
   c5Ranking: 'The official **PokerTH** ranking and the community ones (**BBC**, **WEC**) in tabs. Search a player, pick a **Season** or **All-Time**, and tap a name to open the profile — tapping its chart switches between bars and pie.',
+  c5Trophies: "Your training trophies. A little secret: win **every** trophy in this list and I’ll have a surprise for you at the end!",
+  arcadeReveal: "Every trophy — bravo! Here is my surprise, a secret word: in training mode, type **{w}** as your nickname and press Connect. It opens my arcade of hidden games. Keep it between us!",
+  arcadePlay: "Play now",
   c5Events: 'The upcoming cup games. They are created by the cup admins; players register on the cup’s site or in its forum thread — the WEC game at 22:00 (server time) needs no registration. Times are shown in server time and in your local time; tap an event and the button at the bottom follows it.',
   c5Posts: 'The latest posts of the pokerth.net forum, one line per topic, newest first. The coloured tag is the forum it comes from (General, BBC, WEC…). Tap a post to read it here — it is then marked as read; ↗ opens it on the forum. A filled dot means not read yet; the badge on the button counts them, and **Mark all as read** clears them all.',
   c5Adv: 'Every option, by section. Type in the search box to find one; each switch applies at once. Options marked **web** exist only in this web client.',

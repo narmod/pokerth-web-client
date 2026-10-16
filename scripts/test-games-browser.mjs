@@ -165,6 +165,27 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(await pg.evaluate(() => !document.getElementById('pth-game') && document.getElementById('s-connect').classList.contains('active') === false), label + ': an ordinary nickname starts a normal training game');
   await ctx.close();
 }
+// ── Every trophy won: the Ace comes with the secret word (Ace's Help off) ──
+{
+  const { ctx, pg } = await fresh(1280, 800);
+  await pg.evaluate(async () => {
+    const st = await import('/modules/achievements/store.mjs');
+    const { ACHIEVEMENTS } = await import('/modules/achievements/defs.mjs');
+    const store = st.createStore();
+    ACHIEVEMENTS.filter((d) => d.cat !== 'secret').forEach((d) => store.unlock(d.id));
+    window.dispatchEvent(new CustomEvent('pth-achievement', { detail: { id: 'collector' } }));
+  });
+  await pg.waitForFunction(() => /mascotte/.test((document.querySelector('#ace-dock .ad-bubble') || {}).textContent || ''), null, { timeout: 10000 }).catch(() => {});
+  const bub = await pg.evaluate(() => ({ text: (document.querySelector('#ace-dock .ad-bubble') || {}).textContent || '', told: localStorage.getItem('pth_arcade_told'),
+    btns: [...document.querySelectorAll('#ace-dock .ad-bubble button')].map((b) => b.textContent.trim()) }));
+  ok(/mascotte/.test(bub.text) && bub.told === '1', 'all trophies: the Ace gives the secret word (« ' + bub.text.slice(0, 60) + '… »)');
+  ok(bub.btns.indexOf('Jouer maintenant') >= 0, 'his bubble offers « Play now » (' + bub.btns.join(', ') + ')');
+  await pg.evaluate(() => { const b = [...document.querySelectorAll('#ace-dock .ad-bubble button')].find((x) => x.textContent.trim() === 'Jouer maintenant'); if (b) b.click(); });
+  await pg.waitForSelector('#pth-game .gm-tile', { timeout: 8000 }).catch(() => {});
+  ok(await pg.evaluate(() => !!document.querySelector('#pth-game .gm-tile')), '« Play now » opens the arcade');
+  await shot(pg, 'reveal-arcade');
+  await ctx.close();
+}
 ok(errors.length === 0, 'no page error' + (errors.length ? ' — ' + errors.slice(0, 3).join(' | ') : ''));
 await b.close();
 server.close();

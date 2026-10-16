@@ -55,6 +55,9 @@ const EVENTS = Object.freeze({
   'w-players': ['shown', 'done', 'dismissed'],
   'w-profile': ['shown', 'done', 'dismissed'],
   'w-logs': ['shown', 'done', 'dismissed'],
+  'w-trophies': ['shown', 'done', 'dismissed'],   // the Trophies tab: win them all, a surprise (web.87)
+  // web.87 — every trophy won: the Ace says the arcade's secret word; « Play now »
+  arcade: ['revealed', 'play'],
   // L6 — « ? » mode: entered, an element explained, left
   ask: ['shown', 'explained', 'done', 'more'],   // more (H2): « More about it » → the help section
   // H1 — « More help »: opened, a section read, a search typed, the help window opened from it
