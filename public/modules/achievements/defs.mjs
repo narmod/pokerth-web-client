@@ -131,4 +131,8 @@ export const ACHIEVEMENTS = [
   // nuts », leçon 2 du rayon Apprendre (modules/games/nuts.mjs).
   { id: 'nuts',          icon: '🥜', cat: CATS.secret, when: 'always',
     test: () => false },
+  // Débloqué par grantSecret('outs') : 10 bons comptes sur 12 à « Combien
+  // d'outs ? », leçon 4 du rayon Apprendre (modules/games/outs.mjs).
+  { id: 'outs',          icon: '🧮', cat: CATS.secret, when: 'always',
+    test: () => false },
 ];

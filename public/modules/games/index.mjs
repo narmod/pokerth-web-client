@@ -44,6 +44,7 @@ export const GAMES = [
   { id: 'preflop', shelf: 'learn', unlock: {}, nameKey: 'ppName', icon: '🪑', rulesKey: 'ppRules', aspect: [0.6, 2.2], load: () => import('./preflop.mjs') },
   { id: 'nuts', shelf: 'learn', unlock: { trophy: 'preflop' }, nameKey: 'ntName', icon: '🥜', rulesKey: 'ntRules', aspect: [0.6, 2.2], load: () => import('./nuts.mjs') },
   { id: 'whowins', shelf: 'learn', unlock: { trophy: 'nuts' }, nameKey: 'wwName', icon: '⚖️', rulesKey: 'wwRules', aspect: [0.6, 2.2], load: () => import('./whowins.mjs') },
+  { id: 'outs', shelf: 'learn', unlock: { trophy: 'whowins' }, nameKey: 'otName', icon: '🧮', rulesKey: 'otRules', aspect: [0.6, 2.2], load: () => import('./outs.mjs') },
   // ── For fun ──
   { id: 'ace-runner', shelf: 'play', unlock: {}, name: 'Ace Runner', icon: '🏃', rulesKey: 'arRules', aspect: [4 / 3, 2.4], load: () => import('./ace-runner.mjs') },
   { id: 'house', shelf: 'play', unlock: { trophies: 12 }, nameKey: 'hcName', icon: '🃏', rulesKey: 'hcRules', aspect: [4 / 3, 2.4], load: () => import('./house.mjs') },

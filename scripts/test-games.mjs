@@ -61,7 +61,7 @@ ok(NAME_KEYS.length === 10 && MULT.length === 10, 'ten categories');
 
 console.log('secret word');
 const { art } = await import('../public/modules/games/art.mjs');
-for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker', 'whowins', 'hilo', 'bluff', 'preflop', 'nuts']) {
+for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker', 'whowins', 'hilo', 'bluff', 'preflop', 'nuts', 'outs']) {
   const d = art(id, false), l = art(id, true);
   const ids = [...d.matchAll(/id="([^"]+)"/g)].map((m) => m[1]), idsL = [...l.matchAll(/id="([^"]+)"/g)].map((m) => m[1]);
   ok(/^<svg[^>]*viewBox="0 0 320 140"/.test(d) && d !== l && ids.every((x) => idsL.indexOf(x) < 0), id + ': a cover picture, one for each theme, ids that do not clash');
@@ -80,7 +80,8 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'blName', 'blHint', 'blBets', 'blBluff', 'blTells', 'blChips', 'blRules', 'ach_bluff', 'ach_bluff_d',
   'gmShelfLearn', 'gmShelfLearnIntro', 'gmShelfPlay',
   'ppName', 'ppHint', 'ppFolded', 'ppRange', 'ppRules', 'ach_preflop', 'ach_preflop_d',
-  'ntName', 'ntHint', 'ntIs', 'ntRules', 'ach_nuts', 'ach_nuts_d'];
+  'ntName', 'ntHint', 'ntIs', 'ntRules', 'ach_nuts', 'ach_nuts_d',
+  'otName', 'otHint', 'otOuts', 'otRule4', 'otRule2', 'otRules', 'ach_outs', 'ach_outs_d'];
 let missing = [], badRecord = [];
 for (const f of files) {
   const { strings } = await import(path.join(langDir, f));
@@ -192,6 +193,25 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
   ok(nt.fiveRanks(rankHand([12, 1, 2, 3, 30, 40, 50])) === '3 3 A K 6' && nt.fiveRanks(rankHand([12, 0, 1, 2, 3, 40, 44])) === '5 4 3 2 A',
     'Find the Nuts: two hands of the same kind are told apart by their five cards (a pair first, the wheel ends on its ace)');
   ok(ntBad === 0 && ntCats.size >= 3, 'Find the Nuts: 13 different cards, one pair beats the three others (' + ntCats.size + ' kinds of nuts)');
+  // Count the Outs: the classic draws, the rule of 4 and 2.
+  const ot = await import('../public/modules/games/outs.mjs');
+  const C = (r, s) => s * 13 + r - 2;            // rank 2..14, suit 0 ♦ 1 ♥ 2 ♠ 3 ♣
+  const H = 1, S = 2, CL = 3, D = 0;
+  ok(ot.outsOf([C(9, H), C(8, H)], [C(2, H), C(13, H), C(5, S)]).length === 9
+    && ot.outsOf([C(9, S), C(8, CL)], [C(7, D), C(6, H), C(13, S)]).length === 8
+    && ot.outsOf([C(9, S), C(8, CL)], [C(6, D), C(5, H), C(13, S)]).length === 4
+    && ot.outsOf([C(9, H), C(8, H)], [C(7, H), C(6, CL), C(13, H)]).length === 15,
+    'Count the Outs: a flush draw has 9 outs, an open-ended straight draw 8, a gutshot 4, both draws 15');
+  ok(ot.outsOf([C(5, H), C(5, S)], [C(5, D), C(13, CL), C(9, S)]).length === 7, 'Count the Outs: a set on the flop has 7 outs to a full house or four of a kind');
+  ok(ot.oddsOf(9, true).rule === 36 && ot.oddsOf(9, true).exact === 35 && ot.oddsOf(9, false).rule === 18 && ot.oddsOf(9, false).exact === 20,
+    'Count the Outs: 9 outs, the rule of 4 says 36 % (35 % exact), the rule of 2 18 % (20 %)');
+  const ro = rng(5);
+  let otBad = 0;
+  for (let i = 0; i < 150; i++) {
+    const q = ot.makeQuestion(ro);
+    if (!q || q.choices.length !== 4 || new Set(q.choices).size !== 4 || q.choices[q.answer] !== q.outs.length || q.outs.length !== ot.outsOf(q.hand, q.board).length || q.choices.some((x) => x < 1)) otBad++;
+  }
+  ok(otBad === 0, 'Count the Outs: four different counts, the right one among them');
   // The arcade's shelves and the (future) unlocks.
   const reg = await import('../public/modules/games/index.mjs');
   const games = reg.GAMES.filter((g) => g.id !== reg.HOME);

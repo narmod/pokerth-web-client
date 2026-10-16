@@ -254,7 +254,22 @@ function nuts(c) {
   return s;
 }
 
-const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins, hilo, bluff, preflop, nuts };
+function outs(c) {
+  let s = feltBg(c, 'otf');
+  [['7', 'h'], ['6', 'c'], ['K', 'h']].forEach(([r, su], i) => { s += card(98 + i * 25, 8, 23, r, su); });
+  s += '<rect x="173" y="8" width="23" height="32" rx="3" fill="none" stroke="rgba(245,240,227,.3)" stroke-dasharray="3 3"/>';
+  s += '<rect x="198" y="8" width="23" height="32" rx="3" fill="none" stroke="rgba(245,240,227,.3)" stroke-dasharray="3 3"/>';
+  s += card(132, 46, 26, '9', 'h') + card(162, 46, 26, '8', 'h');
+  [9, 12, 15, 17].forEach((n, i) => {
+    const x = 70 + i * 47, ok = n === 15;
+    s += '<rect x="' + x + '" y="94" width="40" height="22" rx="6" fill="' + (ok ? 'rgba(63,174,106,.55)' : 'rgba(0,0,0,.28)') + '"' + (ok ? ' stroke="#7ee2a0" stroke-width="2"' : '') + '/>';
+    s += '<text x="' + (x + 20) + '" y="109" font-size="11" ' + TXT + ' text-anchor="middle" fill="' + (ok ? '#f5d77a' : '#f5f0e3') + '">' + n + '</text>';
+  });
+  s += '<text x="160" y="131" font-size="7" ' + TXT + ' text-anchor="middle" fill="#f5d77a">15 × 4 ≈ 60 %</text>';
+  return s;
+}
+
+const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins, hilo, bluff, preflop, nuts, outs };
 
 /** The cover picture of game `id` for the light or dark theme. */
 export function art(id, light) {

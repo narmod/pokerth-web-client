@@ -105,6 +105,11 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **Count the Outs — lesson 4** (`web.98`) — `games/outs.mjs`: your two cards and a flop (60 %) or a turn; an
+  out is an unseen card after which you hold a straight or better, of a higher kind than the board with that card
+  alone (`outsOf`). Four counts to choose from (the right one and three within ± 4); then the outs, what they make
+  (« Flush 9 · Straight 6 ») and the rule of 4 / 2 next to the exact odds (`oddsOf`). Four-out draws are mostly
+  passed over so flush draws, open-enders and combo draws come up; secret trophy at 10/12.
 - **Find the Nuts — lesson 2** (`web.97`) — `games/nuts.mjs`: a board that says something (three of a suit, a pair,
   three close ranks), four pairs of hole cards that share no card — the nuts, the next two hands down and one
   further down; every pair is then named (with its five cards when two share a kind: « Full · A A A 3 3 »)
