@@ -315,8 +315,8 @@ ok(wide && !/\.ck\{/.test(wide[1]),
 // -- Icons -----------------------------------------------------------------
 const gtabs = admin.slice(iTabs, admin.indexOf('</div>', iTabs));
 ok((gtabs.match(/class="ti"/g) || []).length === 3, 'each family button carries an icon');
-ok(admin.match(/<button class="tab(?: on)?" data-t="[a-z]+"(?: data-scope="[a-z]+")?><span class="ti"/g).length === 17,
-  'and so does every one of the seventeen sections');
+ok(admin.match(/<button class="tab(?: on)?" data-t="[a-z]+"(?: data-scope="[a-z]+")?><span class="ti"/g).length === 18,
+  'and so does every one of the eighteen sections');
 ok(/aria-hidden="true"/.test(gtabs), 'the icons are decorative, so a screen reader reads the label alone');
 ok(/\.ti\{margin-right:6px\}/.test(admin), 'the spacing is in the sheet, not repeated in seventeen tags');
 

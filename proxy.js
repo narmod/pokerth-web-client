@@ -9349,7 +9349,9 @@ function updateCmd() {
 // restart — this is meant for static (public/) deploys.
 function updateCmdStatic() {
   const dir = __dirname.replace(/'/g, "'\\''");
-  return "cd '" + dir + "' && " + gitPullSegment();
+  // The last line states the outcome on its own line, so the panel can tell a
+  // failed pull from a good one instead of assuming success after a delay.
+  return "cd '" + dir + "' && { " + gitPullSegment() + "; } && echo '[update-nr] ok' || echo '[update-nr] failed'";
 }
 
 // ── Historique des déploiements & retour arrière ─────────────────────────────
@@ -11291,6 +11293,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       const secs = Math.floor(Number(d && d.seconds) || 0);
       if (!(secs >= 10 && secs <= 86400)) return adminJson(res, 400, { ok: false, error: 'seconds must be between 10 and 86400' });
       const kind = (d && d.kind === 'restart') ? 'restart' : 'update';
+      if (kind === 'update' && !GIT_UPDATABLE && !process.env.UPDATE_CMD) return adminJson(res, 409, { ok: false, error: 'this install cannot self-update (' + installKind() + '): schedule "Restart only", or update from the host.' });
       const note = (d && typeof d.message === 'string') ? d.message.replace(/[\r\n]+/g, ' ').slice(0, 200) : '';
       clearScheduledRestart();
       _restartAt = Date.now() + secs * 1000;
@@ -11692,8 +11695,10 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/restart' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      const started = runDetached("sleep 1; pm2 restart " + PM2_NAME + " --update-env", UPDATE_LOG);
-      console.log('[admin] restart requested');
+      // Same restart path as the scheduled "Restart only": PM2 when present,
+      // otherwise a SIGTERM that Docker's restart policy turns into a restart.
+      const started = runDetached(restartOnlyCmd(), UPDATE_LOG);
+      console.log('[admin] restart requested (' + installKind() + ')');
       return adminJson(res, started ? 200 : 500, { ok: started, started: started });
     });
   }

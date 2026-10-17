@@ -494,6 +494,15 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Admin › Deployment tells the truth** (`web.109`) — *Restart* used `pm2 restart` unconditionally, so it did
+  nothing on a Docker install; it now takes the same path as a scheduled *Restart only* (`restartOnlyCmd()`).
+  *Back online* waited for any answer and so reported the old process, still serving while git and npm ran: it now
+  waits for a process whose uptime is shorter than the time since the click (3 min ceiling). *Update (no restart)*
+  reported success after a fixed 2.5 s whatever git returned: the pull now ends with an `[update-nr] ok|failed`
+  line that the panel reads. An install without a git checkout gets its update buttons disabled with the reason,
+  scheduling falls back to *Restart only*, and `/admin/schedule-restart` refuses an update it could not perform
+  (409). Every maintenance button, rollback and schedule button is locked while an action runs; a refused
+  *Update automatically* save puts the controls back to what is stored.
 - **es-419 derivation test green again** (`web.108`) — the mini-game strings (`web.84`–`102`) and two login help fields
   were written by hand in Latin-American Spanish, so `es-419` was no longer `derive(es)` (29 failures). Those wordings
   are folded into `scripts/es-419-rules.mjs` (narrow rules, as for the Events tab and the avatar maker); `póquer` →

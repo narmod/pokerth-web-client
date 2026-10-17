@@ -2818,6 +2818,7 @@
         _pxLoaded=true;
         if(d.proxyCfg && typeof d.proxyCfg==='object'){ var P=d.proxyCfg; if($('pxHosts'))$('pxHosts').value=(Array.isArray(P.allowedHosts)?P.allowedHosts.join('\n'):''); if($('pxGrace'))$('pxGrace').value=(typeof P.graceSec==='number'?P.graceSec:''); if($('pxGap'))$('pxGap').value=(typeof P.connGapMs==='number'?P.connGapMs:''); if($('pxPorts'))$('pxPorts').value=(Array.isArray(P.allowedPorts)?P.allowedPorts.join('\n'):''); if($('pxLog'))$('pxLog').value=(typeof P.logLevel==='string'?P.logLevel:''); if($('logQuick'))$('logQuick').value=(typeof P.logLevel==='string'?P.logLevel:''); if($('pxMax'))$('pxMax').value=(typeof P.maxClients==='number'?P.maxClients:''); }
       }
+      if(typeof d.gitUpdatable==='boolean') maintCaps(d.gitUpdatable);
       var sn=$('schedNow'), sc=$('schedCancel');
       if(sn){ if(d.restartAt){ sn.textContent='Scheduled: '+(d.restartKind==='restart'?'restart only':'update + restart')+' at '+new Date(d.restartAt).toLocaleString(); if(sc) sc.style.display=''; } else { sn.textContent='Nothing scheduled.'; if(sc) sc.style.display='none'; } }
     }).catch(function(){ $('status').innerHTML='<div class="empty err">Could not load.</div>'; });
@@ -4512,8 +4513,24 @@
   }
 
   // ── Maintenance: update / restart / clear logs (server restarts briefly) ──
-  function maintBusy(b){ srvBusy=b; if(b) srvStop(); else srvStart(); ['btnUpdate','btnRestart','btnClearLogs','btnUpdCheck'].forEach(function(id){ var e=$(id); if(e) e.disabled=b; }); }
-  function pollBack(label){
+  // Every control that starts a deployment action is locked while one runs, so
+  // a second click cannot fire a pull, a restart or a rollback on top of it.
+  var _canSelfUpdate=true;
+  function maintBusy(b){ srvBusy=b; if(b) srvStop(); else srvStart();
+    ['btnUpdate','btnUpdateNr','btnRestart','btnClearLogs','btnUpdCheck','schedCustomBtn'].forEach(function(id){ var e=$(id); if(e) e.disabled=b; });
+    document.querySelectorAll('#schedDelays button,#rbList button').forEach(function(e){ e.disabled=b; });
+    if(!b) maintCaps(_canSelfUpdate); }
+  // An install without a git checkout (Docker image) cannot pull: the update
+  // buttons are disabled with the reason, and scheduling falls back to Restart only.
+  function maintCaps(can){
+    _canSelfUpdate=!!can;
+    var why=can?'':'This install cannot self-update (no git checkout). Update from the host, e.g. docker compose pull.';
+    ['btnUpdate','btnUpdateNr','btnUpdCheck'].forEach(function(id){ var e=$(id); if(e){ e.disabled=!can||srvBusy; e.title=why; } });
+    var ub=document.querySelector('#schedKind button[data-k="update"]'), rb=document.querySelector('#schedKind button[data-k="restart"]');
+    if(ub){ ub.disabled=!can; ub.title=why; if(!can && schedKind==='update' && rb) rb.click(); }
+  }
+  function pollBack(label,t0){
+    t0=t0||Date.now();
     var msg=$('maintmsg'), tries=0; msg.textContent=label+' \u2014 server restarting, reconnecting\u2026'; msg.className='msg';
     var iv=setInterval(function(){
       tries++;
@@ -4523,16 +4540,19 @@
         if(r.status===401||r.status===403||r.status===429){ clearInterval(iv); maintBusy(false); return {}; }
         return r.json();
       }).then(function(d){
-        if(d&&d.ok){ clearInterval(iv); maintBusy(false); msg.textContent='Back online \u2014 v'+(d.version||'?')+'.'; msg.className='msg ok'; loadServer(); }
+        // The old process keeps answering while git and npm run: it is the
+        // new one only once its uptime is shorter than the time since the click.
+        var fresh=d&&d.ok&&typeof d.uptimeSec==='number'&&d.uptimeSec*1000<=Date.now()-t0+2000;
+        if(fresh){ clearInterval(iv); maintBusy(false); msg.textContent='Back online \u2014 v'+(d.runningVersion||d.version||'?')+'.'; msg.className='msg ok'; loadServer(); loadUpdateLog(); }
       }).catch(function(){});
-      if(tries>24){ clearInterval(iv); maintBusy(false); msg.textContent='Still reconnecting\u2026 use Refresh in a moment.'; msg.className='msg err'; }
+      if(tries>72){ clearInterval(iv); maintBusy(false); msg.textContent='The server has not restarted after 3 minutes \u2014 check the action log below.'; msg.className='msg err'; loadUpdateLog(); }
     },2500);
   }
   function fireAction(path,label){
-    maintBusy(true);
+    maintBusy(true); var t0=Date.now();
     api(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok()})})
-      .then(function(r){return r.json();}).then(function(d){ if(d&&d.started){ pollBack(label); } else { maintBusy(false); var m=$('maintmsg'); m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
-      .catch(function(){ pollBack(label); });
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.started){ pollBack(label,t0); } else { maintBusy(false); var m=$('maintmsg'); m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ pollBack(label,t0); });
   }
   function doUpdate(){ if(confirm('Pull the latest code and restart the server now?')) fireAction('/admin/update','Update started'); }
   function doUpdateNr(){
@@ -4540,9 +4560,23 @@
     var m=$('maintmsg'); m.textContent='Updating (no restart)\u2026'; m.className='msg'; maintBusy(true);
     api('/admin/update-nr',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok()})})
       .then(function(r){return r.json();}).then(function(d){
-        if(d&&d.started){ setTimeout(function(){ maintBusy(false); m.textContent='Pulled \u2014 client files are live, no restart. See the log below.'; m.className='msg ok'; loadUpdateLog(); }, 2500); }
+        if(d&&d.started){ nrWait(m,0); }
         else { maintBusy(false); m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; }
       }).catch(function(){ maintBusy(false); m.textContent='Update failed \u2014 network error.'; m.className='msg err'; });
+  }
+  // The pull runs detached; its last line says how it ended ([update-nr] ok /
+  // failed). Read the log until that line shows up, at most two minutes.
+  function nrWait(m,n){
+    api('/admin/update-log',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+      var log=(d&&d.ok&&d.log)||'', res=/^\[update-nr\] (ok|failed)\s*$/m.exec(log);
+      if(d&&d.ok) $('updlog').textContent=fmtLogTimes(log)||'(empty)';
+      if(res){ maintBusy(false);
+        if(res[1]==='ok'){ m.textContent='Pulled \u2014 client files are live, no restart.'; m.className='msg ok'; loadServer(); }
+        else { m.textContent='The pull failed \u2014 nothing changed. See the action log below.'; m.className='msg err'; }
+        return; }
+      if(n>=60){ maintBusy(false); m.textContent='No result after 2 minutes \u2014 check the action log below.'; m.className='msg err'; return; }
+      setTimeout(function(){ nrWait(m,n+1); },2000);
+    }).catch(function(){ if(n>=60){ maintBusy(false); m.textContent='Update status unknown \u2014 network error.'; m.className='msg err'; } else setTimeout(function(){ nrWait(m,n+1); },2000); });
   }
   function doRestart(){ if(confirm('Restart the server now?')) fireAction('/admin/restart','Restart started'); }
   function clearLogs(){
@@ -4583,8 +4617,15 @@
     api('/admin/auto-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
       .then(function(r){return r.json();}).then(function(d){
         if(d&&d.ok){ autoUpdSay(d.enabled?'Automatic updates on \u2014 notice '+d.noticeSec+'s.':'Automatic updates off.','ok'); setTimeout(autoUpdLoad,600); }
-        else autoUpdSay('Failed: '+((d&&d.error)||'error'),'err');
-      }).catch(function(){ autoUpdSay('Failed \u2014 network error.','err'); });
+        else { autoUpdSay('Not saved: '+((d&&d.error)||'error'),'err'); autoUpdRevert(); }
+      }).catch(function(){ autoUpdSay('Not saved \u2014 network error.','err'); autoUpdRevert(); });
+  }
+  function autoUpdRevert(){
+    api('/admin/auto-update',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+      if(!d||!d.ok) return;
+      if($('autoUpd')) $('autoUpd').checked=!!d.enabled;
+      if($('autoUpdSec')) $('autoUpdSec').value=d.noticeSec||60;
+    }).catch(function(){});
   }
   if($('autoUpd')) $('autoUpd').addEventListener('change', autoUpdSave);
   if($('autoUpdSec')) $('autoUpdSec').addEventListener('change', autoUpdSave);
