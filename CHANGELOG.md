@@ -16,6 +16,17 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin Statistics: World first, sections in the menu, one filter bar** (`web.119`) — the Statistics group of the
+  side menu lists its pages, World first, then Summary (the former Overview tab), Audience, Activity, Visitors, Music,
+  Ace's Help and Data; the tab row inside the panel is gone, and each page has its address (`#traffic/world`…).
+  Entering Statistics reads the figures once; moving between its pages reads nothing again. One filter card heads
+  every page: entry-mode chips (All, Internet, LAN, Training, Live; one narrows, more add, kept per browser) next to
+  the period, robots and explanations. The modes apply to connection counts — the map's Connections layer, the
+  countries, the 48 h chart by mode, Where sessions open — and the bar says that a visit is counted before any mode
+  is chosen. The map gets five layers (Visits, New devices, Connections, Installed app, Phones) and a band of local
+  time along it, placed in the map's projection (every 2 h on the world, every hour on a region, the evening in
+  green), redrawn each minute. One set of themed mode colours for the whole admin (`--m-net`, `--m-lan`, `--m-off`,
+  `--m-live`).
 - **Admin page: an Overview to land on** (`web.118`) — the first page after logging in with the master key. What needs
   attention, most urgent first (client errors seen in the last 24 h — robots aside —, a restart the files are waiting
   for, an update, LAN servers to review, a scheduled restart), each leading to its section; who is connected right

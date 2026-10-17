@@ -195,12 +195,34 @@
   .card>h2+.tsec{border-top:0;margin-top:10px;padding-top:0}
   /* Traffic: one section at a time under its own sub-tabs; the long
      explanations fold behind the Explanations switch (off by default). */
-  .card.trafhead{padding-bottom:0}
-  .trafsub{display:flex;gap:2px;overflow-x:auto;margin:12px -14px 0;padding:0 8px;border-top:1px solid var(--line);scrollbar-width:none}
-  .trafsub::-webkit-scrollbar{display:none}
-  .trafsub button{flex:0 0 auto;white-space:nowrap;background:transparent;border:0;border-bottom:2px solid transparent;color:var(--text);padding:11px 12px 9px;font:inherit;font-size:.85rem;cursor:pointer;min-height:44px}
-  .trafsub button:hover{color:var(--cream)}
-  .trafsub button.on{color:var(--gold);border-bottom-color:var(--gold);font-weight:700}
+  /* Statistics filter bar: one card on top of every section. */
+  .statbar{display:flex;flex-direction:column;gap:10px}
+  .sbrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
+  .sblbl{flex:0 0 92px;font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .sbhint{flex:1 1 260px;font-size:.76rem;color:var(--muted)}
+  .sbsp{flex:1 1 auto}
+  .statbar select{flex:0 0 auto}
+  .statbar .headnote{font-size:.78rem}
+  .chips{display:inline-flex;flex-wrap:wrap;gap:6px}
+  .chip{display:inline-flex;align-items:center;gap:7px;min-height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--navfg);font:inherit;font-size:.84rem;cursor:pointer}
+  .chip i{width:9px;height:9px;border-radius:2px;display:inline-block}
+  .chip:hover{background:var(--hover)}
+  .chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--cream);font-weight:600}
+  @media(max-width:600px){ .sblbl{flex-basis:100%} .sbsp{display:none} }
+  /* Local time along the map. */
+  .geohours{position:relative;height:34px;margin:0 0 4px;border-bottom:1px solid var(--line)}
+  .geohours .gh{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;line-height:1.15;white-space:nowrap}
+  .geohours .gh b{font-size:.74rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--cream)}
+  .geohours .gh i{font-style:normal;font-size:.62rem;color:var(--muted)}
+  .geohours .gh.eve b{color:var(--accent-text)}
+  .geohours .gh.night b{color:var(--muted)}
+  @media(max-width:600px){ .geohours .gh i{display:none} .geohours{height:20px} .geohours .gh b{font-size:.66rem} .geohours .gh:nth-child(even){display:none} }
+  /* Map layers and regions: compact chips, like the entry modes. */
+  #geoLayers,#geoViews{gap:6px;margin:10px 0 0}
+  #geoLayers button,#geoViews button{flex:0 0 auto;min-height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--navfg);font-size:.82rem;font-weight:500}
+  #geoLayers button:hover,#geoViews button:hover{background:var(--hover)}
+  #geoLayers button.on,#geoViews button.on{background:var(--accent-soft);border-color:var(--accent);color:var(--cream);font-weight:600}
+  #geoViews{margin-bottom:10px}
   #panel-traffic:not(.xpl-on) .xpl{display:none}
   /* Traffic › World : carte des pays (fuseau horaire du navigateur) */
   .geomap svg{width:100%;height:auto;display:block}
@@ -224,8 +246,7 @@
   .georow .stk{display:flex;width:90px;height:8px;border-radius:4px;overflow:hidden;background:var(--line);flex:none}
   .georow .ct{width:64px;flex:none;text-align:right}
   .georow .pc{width:44px;flex:none;text-align:right;color:var(--text)}
-  #geoModes button,#geoViews button{flex:1 1 auto;padding:7px 10px}
-  @media (max-width:480px){ .georow .stk{width:56px} .georow .pc{display:none} .geobar .gl{width:70px} #geoModes,#geoViews{gap:6px} #geoModes button,#geoViews button{padding:6px 7px;font-size:.78rem} }
+  @media (max-width:480px){ .georow .stk{width:56px} .georow .pc{display:none} .geobar .gl{width:70px} }
   #trafXpl[aria-pressed="true"],#trafBots[aria-pressed="true"]{border-color:var(--gold);background:rgba(160,172,196,.14)}
   .geobot{display:inline-block;margin-left:6px;padding:0 6px;border-radius:6px;font-size:.68rem;line-height:1.5;vertical-align:1px;border:1px solid #e0a03a;color:#e0a03a}
   .geonight{fill:#0b1433;pointer-events:none}
@@ -614,10 +635,17 @@
           <button type="button" class="tab on" data-t="overview">Overview</button>
         </div>
       </div>
-      <div class="sgrp one" data-g="stats">
+      <div class="sgrp" data-g="stats">
         <button type="button" class="gtab" data-g="stats"><svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M224,200h-8V40a8,8,0,0,0-8-8H152a8,8,0,0,0-8,8V80H96a8,8,0,0,0-8,8v40H48a8,8,0,0,0-8,8v64H32a8,8,0,0,0,0,16H224a8,8,0,0,0,0-16ZM160,48h40V200H160ZM104,96h40V200H104ZM56,144H88v56H56Z"/></svg><span>Statistics</span><i class="gbadge" aria-hidden="true"></i><svg class="gcar" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
         <div class="tabs subtabs" data-g="stats" style="display:none">
-          <button type="button" class="tab" data-t="traffic">Traffic</button>
+          <button type="button" class="tab" data-t="traffic" data-ts="world">World</button>
+          <button type="button" class="tab" data-t="traffic" data-ts="overview">Summary</button>
+          <button type="button" class="tab" data-t="traffic" data-ts="audience">Audience</button>
+          <button type="button" class="tab" data-t="traffic" data-ts="activity">Activity</button>
+          <button type="button" class="tab" data-t="traffic" data-ts="visitors">Visitors</button>
+          <button type="button" class="tab" data-t="traffic" data-ts="music">Music</button>
+          <button type="button" class="tab" data-t="traffic" data-ts="ace">Ace’s Help</button>
+          <button type="button" class="tab" data-t="traffic" data-ts="data">Data</button>
         </div>
       </div>
       <div class="sgrp" data-g="live">
@@ -720,11 +748,11 @@
     </div>
 
     <div id="panel-traffic" style="display:none">
-      <div class="card trafhead">
-        <div class="boardhead"><h2>Traffic</h2><span id="trafRange" class="headnote"></span><select id="trafPeriod" class="use" title="Period applied to every chart and breakdown on this tab (Today, Last 7 days and All time stay as they are)"><option value="1">Last 24 hours</option><option value="7">Last 7 days</option><option value="14" selected>Last 14 days</option><option value="30">Last 30 days</option><option value="60">Last 60 days</option><option value="90">Last 90 days</option></select><button id="btnTrafRefresh" class="use">Refresh</button><button id="trafBots" class="use" aria-pressed="true" title="Leave out the visits of detected automation (robot user-agents, browsers driven by a program) on every section of this tab. Counted apart, never deleted: switch off to see everything.">Hide bots</button><button id="trafXpl" class="use" aria-pressed="false" title="Show or hide the explanations under each section">Explanations</button></div>
+      <section class="card trafhead statbar" aria-label="Filters for every page of Statistics">
+        <div class="sbrow"><span class="sblbl">Entry mode</span><div class="chips" id="trafModeSel" role="group" aria-label="Entry modes"></div><span class="sbhint">Applies to connections: the map’s Connections layer, the countries and every chart split by entry mode. A visit is counted before any mode is chosen.</span></div>
+        <div class="sbrow"><span class="sblbl">Period</span><select id="trafPeriod" class="use" title="Period applied to every chart and breakdown on this tab (Today, Last 7 days and All time stay as they are)"><option value="1">Last 24 hours</option><option value="7">Last 7 days</option><option value="14" selected>Last 14 days</option><option value="30">Last 30 days</option><option value="60">Last 60 days</option><option value="90">Last 90 days</option></select><span id="trafRange" class="headnote"></span><span class="sbsp"></span><button id="trafBots" class="use" aria-pressed="true" title="Leave out the visits of detected automation (robot user-agents, browsers driven by a program) on every section of this tab. Counted apart, never deleted: switch off to see everything.">Hide bots</button><button id="trafXpl" class="use" aria-pressed="false" title="Show or hide the explanations under each section">Explanations</button><button id="btnTrafRefresh" class="use">Refresh</button></div>
         <p class="muted xpl">Anonymous footfall — no IP is ever stored. “Visits” counts browser sessions; “Unique” counts distinct devices; “New” counts devices seen for the first time. Green or red marks a move of 10&nbsp;% or more against the previous period (today is compared with yesterday up to the same hour); gold means flat or nothing to compare. Everything on this tab reads the same anonymous ping; nothing here identifies a person.</p>
-        <div class="trafsub" id="trafSub" role="tablist" aria-label="Traffic sections"><button type="button" role="tab" data-ts="overview" aria-selected="true" class="on">Overview</button><button type="button" role="tab" data-ts="audience" aria-selected="false" tabindex="-1">Audience</button><button type="button" role="tab" data-ts="activity" aria-selected="false" tabindex="-1">Activity</button><button type="button" role="tab" data-ts="visitors" aria-selected="false" tabindex="-1">Visitors</button><button type="button" role="tab" data-ts="music" aria-selected="false" tabindex="-1">Music</button><button type="button" role="tab" data-ts="ace" aria-selected="false" tabindex="-1">Ace’s Help</button><button type="button" role="tab" data-ts="world" aria-selected="false" tabindex="-1">World</button><button type="button" role="tab" data-ts="data" aria-selected="false" tabindex="-1">Data</button></div>
-      </div>
+      </section>
       <div class="tsub" data-ts="overview" role="tabpanel" aria-label="Overview">
       <div class="card">
         <div class="trafgrid" id="trafCards"><div class="empty">Loading…</div></div>
@@ -839,9 +867,9 @@
       </div>
       <div class="tsub" data-ts="world" role="tabpanel" aria-label="World" style="display:none">
       <div class="card">
-        <div class="boardhead"><h2>World</h2><span id="geoNote" class="headnote"></span><button id="geoNightBtn" class="use geoswitch" type="button" role="switch" aria-checked="true" title="Show or hide where it is night right now, with the twilights, from the real position of the sun"><span class="swt" aria-hidden="true"><i></i></span>Day / night <b class="swv">On</b></button></div>
-        <p class="muted xpl">Where visits come from, by country, over the <span class="perN">last 14 days</span>. The country is read from the browser’s time zone (Europe/Paris → France), sent with the same anonymous visit ping — no IP address is looked up. It is an approximation: a VPN does not change it, a traveller’s device does, and zones the table does not know (UTC, Etc/GMT…) count as Unknown. “All visits” counts browser sessions; an entry mode counts the sessions that opened it, as in Activity › Where sessions open — a grey bar in the list means visits that never opened a game. Detected bots are left out while “Bots hidden” is on; a country that still looks automated (only new devices, no game) is tagged “bot?”. “Day / night” shades where it is night right now, with the civil, nautical and astronomical twilights, from the real position of the sun — season and hemisphere included; the country card then adds its local time (legal time, summer time included; the main zone for a country on several) and its sunset, at the centre of the country. Counted since 2.1.10-web.28: older clients send no time zone and are left out, so totals here can be below the Overview’s.</p>
-        <div class="seg" id="geoModes" role="group" aria-label="What to count" style="flex-wrap:wrap"></div>
+        <div class="boardhead"><h2>World map</h2><span id="geoNote" class="headnote"></span><button id="geoNightBtn" class="use geoswitch" type="button" role="switch" aria-checked="true" title="Show or hide where it is night right now, with the twilights, from the real position of the sun"><span class="swt" aria-hidden="true"><i></i></span>Day / night <b class="swv">On</b></button></div>
+        <p class="muted xpl">Where visits come from, by country, over the <span class="perN">last 14 days</span>. The country is read from the browser’s time zone (Europe/Paris → France), sent with the same anonymous visit ping — no IP address is looked up. It is an approximation: a VPN does not change it, a traveller’s device does, and zones the table does not know (UTC, Etc/GMT…) count as Unknown. “Visits” counts browser sessions, “New devices” the devices seen for the first time, “Installed app” and “Phones” the visits from the installed app and from a phone or tablet; “Connections” counts the sessions that opened a game, in the entry modes picked at the top of the page, as in Activity › Where sessions open — a grey bar in the list means visits that never opened a game. The band above the map gives the local time along it, the evening in green. Detected bots are left out while “Bots hidden” is on; a country that still looks automated (only new devices, no game) is tagged “bot?”. “Day / night” shades where it is night right now, with the civil, nautical and astronomical twilights, from the real position of the sun — season and hemisphere included; the country card then adds its local time (legal time, summer time included; the main zone for a country on several) and its sunset, at the centre of the country. Counted since 2.1.10-web.28: older clients send no time zone and are left out, so totals here can be below the Overview’s.</p>
+        <div class="seg" id="geoLayers" role="group" aria-label="What the map shows" style="flex-wrap:wrap"></div>
         <div class="seg" id="geoViews" role="group" aria-label="Region" style="flex-wrap:wrap;margin-top:0"></div>
         <div id="geoMap" class="geomap"><div class="empty">Loading…</div></div>
         <div id="geoLegend" class="geolegend"></div>
@@ -1586,7 +1614,7 @@
   }
   // Shared with the admin modules (public/modules/admin/*.mjs).
   window.PthAdmin={ api:function(p,o){ return api(p,o); }, master:function(){ return _isMaster; },
-    open:function(t){ var b=document.querySelector('.tab[data-t="'+t+'"]'); if(b && b.style.display!=='none') b.click(); } };
+    open:function(t){ var p=String(t||'').split('/'), b=document.querySelector('.tab[data-t="'+p[0]+'"]'+(p[1]?'[data-ts="'+p[1]+'"]':'')); if(b && b.style.display!=='none') b.click(); } };
   // Which section is open, for the modules that follow it ('' once logged out).
   function sectionEvent(t){ try{ document.dispatchEvent(new CustomEvent('admin:section',{detail:{t:t||''}})); }catch(e){} }
   // Every admin call carries the token in the Authorization header (never the
@@ -2597,13 +2625,14 @@
   document.querySelectorAll('.gtab').forEach(function(b){
     b.addEventListener('click', function(){ setGroup(b.dataset.g, true); });
   });
+  var _curT='';
   document.querySelectorAll('.tab').forEach(function(b){ b.addEventListener('click', function(){
     document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===b);});
     var bar=b.parentElement;
     if(bar && bar.classList.contains('subtabs')) setGroup(bar.dataset.g, false);
     // Le menu peut etre plus haut que l'ecran : la section choisie y reste visible.
     try{ b.scrollIntoView({block:'nearest',inline:'nearest'}); }catch(e){}
-    var t=b.dataset.t;
+    var t=b.dataset.t, _wasT=_curT; _curT=t;
     // Un panneau par section, nomme panel-<data-t> : la liste etait recopiee a
     // la main et un panneau ajoute restait invisible tant qu'on l'y oubliait.
     document.querySelectorAll('[id^="panel-"]').forEach(function(pn){
@@ -2614,7 +2643,7 @@
     else { var _kn=$('kyNew'); if(_kn&&_kn.style.display!=='none'){ _kn.innerHTML=''; _kn.style.display='none'; } }   // a new key never stays on screen behind your back
     if(t==='board') loadBoard();
     if(t==='packages') api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
-    if(t==='traffic'){ loadTraffic(); setTimeout(_trafSubScroll,0); }
+    if(t==='traffic'){ if(_wasT!=='traffic') loadTraffic(); _trafSub(b.dataset.ts||'world'); }
     if(t==='servers') loadServers();
     if(t==='landir') loadLanDir();
     if(t==='polls') loadPolls();
@@ -2627,7 +2656,7 @@
     if(t==='sessions'){ seStart(); } else { seStop(); }
     if(t==='errors') loadErrors();
     if(t==='server'){ loadServer(); loadDeploys(); loadBlocked(); srvStart(); } else { srvStop(); }
-    sectionEvent(t);
+    sectionEvent(t+(b.dataset.ts?'/'+b.dataset.ts:''));
   }); });
 
 
@@ -4092,12 +4121,7 @@
                + '<span title="Visits whose connection opened \u2014 the /live row of \u201cWhere sessions open\u201d">'+fmt(cn)+' connected'+pc+'</span></b></div>';
         }).join('');
       }
-      var md=$('trafModes');
-      if(md){
-        var tm=(d.today&&d.today.m)||{}, am=(d.allTime&&d.allTime.m)||{};
-        var rows=[['pokerth.net','pokerthnet'],['LAN / dedicated','lan'],['Offline (bots)','offline'],['/live (spectators)','live']];
-        md.innerHTML = rows.map(function(rw){ return '<div class="srow"><span>'+rw[0]+'</span><b>'+fmt(tm[rw[1]])+' today · '+fmt(am[rw[1]])+' total</b></div>'; }).join('');
-      }
+      _trafLastD=d; _trafModeRows(d);
       // Champ absent = proxy antérieur à la fonctionnalité ; objet vide = rien
       // à compter encore. Voir renderEnv().
       _envKnown=(d.env!==undefined); _envData=_envPick(d.env||{}, d.envPeriod||null); _envTrend=d.langTrend||null; _envPeriod=d.envPeriod||null; _envColorReset(); _envSince=d.envSince||0; _envPings=d.pings||null;
@@ -4132,11 +4156,48 @@
   // Internet en bas de pile : c'est la plus grosse couche, les autres se lisent
   // mieux posees dessus.
   var MODE48=[
-    {k:'pokerthnet',n:'Internet (pokerth.net)',s:'Internet',c:'#4080d8'},
-    {k:'offline',n:'Training (bots)',s:'Training',c:'#e0b050'},
-    {k:'lan',n:'LAN / dedicated',s:'LAN',c:'#7fd17f'},
-    {k:'live',n:'/live (spectators)',s:'/live',c:'#c08ae0'}
+    {k:'pokerthnet',n:'Internet (pokerth.net)',s:'Internet',c:'var(--m-net)'},
+    {k:'lan',n:'LAN / dedicated',s:'LAN',c:'var(--m-lan)'},
+    {k:'offline',n:'Training (bots)',s:'Training',c:'var(--m-off)'},
+    {k:'live',n:'/live (spectators)',s:'Live',c:'var(--m-live)'}
   ];
+  // Entry modes picked in the filter bar (all four by default). They apply to
+  // connection counts only: a visit is counted before any mode is chosen.
+  var _trafModeSel=MODE48.map(function(m){ return m.k; });
+  try{ var _tms=JSON.parse(localStorage.getItem('pth_admin_modes')||'null'); if(Array.isArray(_tms)){ _tms=_tms.filter(function(k){ return MODE48.some(function(m){ return m.k===k; }); }); if(_tms.length) _trafModeSel=_tms; } }catch(e){}
+  function _modeOn(k){ return _trafModeSel.indexOf(k)>=0; }
+  function _modesOn(){ return MODE48.filter(function(m){ return _modeOn(m.k); }); }
+  function _modesAll(){ return _trafModeSel.length===MODE48.length; }
+  function _paintModeSel(){
+    var box=$('trafModeSel'); if(!box) return;
+    var all=_modesAll();
+    box.innerHTML='<button type="button" data-mk="all" class="chip'+(all?' on':'')+'" aria-pressed="'+all+'">All</button>'+MODE48.map(function(m){
+      var on=!all && _modeOn(m.k);
+      return '<button type="button" data-mk="'+m.k+'" class="chip'+(on?' on':'')+'" aria-pressed="'+on+'"><i style="background:'+m.c+'"></i>'+_annEsc(m.s)+'</button>';
+    }).join('');
+  }
+  // A chip alone narrows to that mode; more chips add modes; the last one
+  // switched off, or All, brings every mode back.
+  function _pickMode(k){
+    if(k==='all' || !MODE48.some(function(m){ return m.k===k; })) _trafModeSel=MODE48.map(function(m){ return m.k; });
+    else if(_modesAll()) _trafModeSel=[k];
+    else if(_modeOn(k)) _trafModeSel=_trafModeSel.filter(function(x){ return x!==k; });
+    else _trafModeSel=_trafModeSel.concat([k]);
+    if(!_trafModeSel.length) _trafModeSel=MODE48.map(function(m){ return m.k; });
+    try{ localStorage.setItem('pth_admin_modes',JSON.stringify(_trafModeSel)); }catch(e){}
+    _paintModeSel();
+    if(_trafLastD){ _trafModes48(_trafLastD); _trafModeRows(_trafLastD); }
+    _geoRedraw();
+  }
+  (function(){ var b=$('trafModeSel'); if(!b) return; _paintModeSel(); b.addEventListener('click',function(e){ var c=e.target.closest&&e.target.closest('[data-mk]'); if(c) _pickMode(c.getAttribute('data-mk')); }); })();
+  var _trafLastD=null;
+  function _trafModeRows(d){
+    var md=$('trafModes'); if(!md) return;
+    var fmt=function(n){ try{return Number(n||0).toLocaleString();}catch(e){return String(n||0);} };
+    var tm=(d.today&&d.today.m)||{}, am=(d.allTime&&d.allTime.m)||{};
+    var rows=[['pokerth.net','pokerthnet'],['LAN / dedicated','lan'],['Offline (bots)','offline'],['/live (spectators)','live']].filter(function(rw){ return _modeOn(rw[1]); });
+    md.innerHTML = rows.map(function(rw){ return '<div class="srow"><span>'+rw[0]+'</span><b>'+fmt(tm[rw[1]])+' today · '+fmt(am[rw[1]])+' total</b></div>'; }).join('');
+  }
   function _trafModes48(d){
     var box=$('trafModes48'), nt=$('trafModes48Note');
     if(!box) return;
@@ -4154,9 +4215,9 @@
       return;
     }
     var labs=h48.map(function(x){ return x.t.slice(8,10)+'.'+x.t.slice(5,7)+' '+x.t.slice(11)+'h'; });
-    var lines=MODE48.map(function(md){ return {k:md.k,n:md.n,c:md.c,vals:h48.map(function(x){ return (x.m&&x.m[md.k])||0; })}; });
+    var lines=_modesOn().map(function(md){ return {k:md.k,n:md.n,c:md.c,vals:h48.map(function(x){ return (x.m&&x.m[md.k])||0; })}; });
     _chartMount(box,labs,lines,150,'stack');
-    if(nt) nt.textContent=all.toLocaleString()+' sessions \u00b7 '+MODE48.filter(function(md){ return tot[md.k]; })
+    if(nt) nt.textContent=all.toLocaleString()+' sessions'+(_modesAll()?'':' (all modes)')+' \u00b7 '+MODE48.filter(function(md){ return tot[md.k]; })
       .map(function(md){ return md.s+' '+Math.round(tot[md.k]*100/all)+'%'; }).join(' \u00b7 ');
   }
   // -- pokerth.net contre le web client ---------------------------------------
@@ -5889,15 +5950,17 @@
   // jeu de chemins SVG deja projetes (public/vendor/world-110m.json), charge une
   // fois, sans bibliotheque. Choroplethe a l'echelle log : quelques gros pays
   // n'ecrasent pas tous les autres dans la meme teinte.
-  var _geoMap=null, _geoData=null, _geoMode='all', _geoSel='', _geoView='world', _geoAll=false, _geoSeq=0;
+  var _geoMap=null, _geoData=null, _geoLayer='v', _geoSel='', _geoView='world', _geoAll=false, _geoSeq=0;
   var GEO_VIEWS=[['world','World'],['europe','Europe'],['americas','Americas'],['asia','Asia'],['africa','Africa']];
-  try{ var _gm=localStorage.getItem('pth_admin_geo_mode'); if(_gm) _geoMode=_gm; var _gv=localStorage.getItem('pth_admin_geo_view'); if(_gv) _geoView=_gv; }catch(e){}
+  var GEO_LAYERS=[['v','Visits'],['nw','New devices'],['conn','Connections'],['pwa','Installed app'],['mob','Phones']];
+  try{ var _gl=localStorage.getItem('pth_admin_geo_layer'); if(GEO_LAYERS.some(function(x){ return x[0]===_gl; })) _geoLayer=_gl; var _gv=localStorage.getItem('pth_admin_geo_view'); if(_gv) _geoView=_gv; }catch(e){}
   var _geoNames=null; try{ _geoNames=new Intl.DisplayNames(['en'],{type:'region'}); }catch(e){}
   function _geoName(cc){ if(cc==='ZZ') return 'Unknown'; try{ return (_geoNames&&_geoNames.of(cc))||cc; }catch(e){ return cc; } }
   function _geoFlag(cc){ return cc==='ZZ' ? '<span class="ckf" aria-hidden="true"></span>' : '<img class="ckf" alt="" src="/flags/'+cc.toLowerCase()+'.svg" onerror="this.style.visibility=\'hidden\'">'; }
-  function _geoModeOf(k){ for(var i=0;i<MODE48.length;i++) if(MODE48[i].k===k) return MODE48[i]; return null; }
-  function _geoVal(c){ if(!c) return 0; if(_geoMode==='all') return c.v||0; return (c.m&&c.m[_geoMode])||0; }
-  function _geoCol(){ var m=_geoModeOf(_geoMode); return m?m.c:'var(--gold)'; }
+  function _geoVal(c){ if(!c) return 0; if(_geoLayer==='conn'){ var m=c.m||{}, t=0; _modesOn().forEach(function(x){ t+=m[x.k]||0; }); return t; } return c[_geoLayer]||0; }
+  function _geoCol(){ if(_geoLayer==='conn'){ var on=_modesOn(); return on.length===1?on[0].c:'var(--accent)'; } return 'var(--accent)'; }
+  // What the map counts, in words: the title of a country, the card, the svg label.
+  function _geoWhat(){ if(_geoLayer==='conn') return (_modesAll()?'':_modesOn().map(function(m){ return m.s; }).join(' + ')+' ')+'connections'; var l=GEO_LAYERS.filter(function(x){ return x[0]===_geoLayer; })[0]; return l[0]==='v'?'visits':(l[0]==='nw'?'new devices':(l[0]==='pwa'?'visits from the installed app':'visits from a phone or tablet')); }
   function _geoFmt(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
   function _geoPct(a,b){ return b?Math.round(100*a/b):0; }
   // Sessions ouvertes (tous modes) d'un pays.
@@ -5922,19 +5985,18 @@
     });
   }
   function _geoSegs(){
-    var ms=$('geoModes'), vs=$('geoViews');
+    var ms=$('geoLayers'), vs=$('geoViews');
     if(ms){
-      var ok=(_geoMode==='all'||_geoModeOf(_geoMode)); if(!ok) _geoMode='all';
-      ms.innerHTML=[{k:'all',s:'All visits',c:''}].concat(MODE48).map(function(m){
-        return '<button type="button" data-k="'+m.k+'" class="'+(m.k===_geoMode?'on':'')+'" aria-pressed="'+(m.k===_geoMode)+'">'
-          +(m.c?'<span aria-hidden="true" style="display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;background:'+m.c+'"></span>':'')+_annEsc(m.s)+'</button>';
-      }).join('');
+      ms.innerHTML=GEO_LAYERS.map(function(x){ var on=x[0]===_geoLayer;
+        return '<button type="button" data-k="'+x[0]+'" class="'+(on?'on':'')+'" aria-pressed="'+on+'">'+x[1]+'</button>'; }).join('');
     }
     if(vs){
       if(!GEO_VIEWS.some(function(v){ return v[0]===_geoView; })) _geoView='world';
       vs.innerHTML=GEO_VIEWS.map(function(v){ return '<button type="button" data-k="'+v[0]+'" class="'+(v[0]===_geoView?'on':'')+'" aria-pressed="'+(v[0]===_geoView)+'">'+v[1]+'</button>'; }).join('');
     }
   }
+  // Draw again only once both the figures and the map outline are in.
+  function _geoRedraw(){ if(_geoData && _geoMap && _geoMap.c) renderGeo(); }
   function renderGeo(){
     var d=_geoData, M=_geoMap, box=$('geoMap'), lg=$('geoLegend'), nt=$('geoNote'), ls=$('geoList');
     if(!box) return;
@@ -5955,7 +6017,7 @@
     });
     // Le pays choisi en dernier : son contour passe au-dessus des voisins.
     paths.sort(function(a,b){ return (a.indexOf(' sel"')>=0)-(b.indexOf(' sel"')>=0); });
-    box.innerHTML='<svg viewBox="'+vb.join(' ')+'" role="img" aria-label="Choropleth map of '+_annEsc(_geoMode==='all'?'visits':(_geoModeOf(_geoMode).n+' sessions'))+' by country">'+(_geoNight&&M.proj?_geoSphere(M):'')+paths.join('')+_geoNightSvg(M)+'</svg>'
+    box.innerHTML=_geoHours(M,vb)+'<svg viewBox="'+vb.join(' ')+'" role="img" aria-label="Choropleth map of '+_annEsc(_geoWhat())+' by country">'+(_geoNight&&M.proj?_geoSphere(M):'')+paths.join('')+_geoNightSvg(M)+'</svg>'
       +(ranked.length?'':'<div class="empty" style="margin-top:8px">Nothing counted for this selection yet'+(d.since?'':' — counting starts with the first visit from a 2.1.10-web.28 client')+'.</div>');
     var unk=_geoVal(C.ZZ);
     if(lg) lg.innerHTML='<span>fewer</span><span class="rmp" style="background:linear-gradient(90deg,color-mix(in srgb,'+col+' 18%,transparent),'+col+')"></span><span>'+_geoFmt(max)+'</span>'
@@ -6050,6 +6112,22 @@
     var sp=_neProj(M,s.lon,s.dec);
     return out+'<circle class="geosun" cx="'+sp[0].toFixed(1)+'" cy="'+sp[1].toFixed(1)+'" r="6"><title>Sun overhead</title></circle>';
   }
+  // Local time along the map: one mark per time zone band (every 2 h on the
+  // world, every hour on a region), placed at its central meridian in the
+  // map's own projection, so it lines up with the night above. Mean time of
+  // the band, not the legal time of a country (that one is on the country card).
+  function _geoHours(M,vb){
+    if(!M || !M.proj) return '';
+    var now=Date.now(), step=_geoView==='world'?2:1, out='';
+    for(var o=-12;o<=14;o+=step){
+      var x=_neProj(M,Math.max(-180,Math.min(180,o*15)),0)[0], pc=(x-vb[0])/vb[2]*100;
+      if(pc<3 || pc>97) continue;
+      var t=new Date(now+o*3600000), h=t.getUTCHours();
+      var cls=(h>=18&&h<=23)?' eve':((h<6)?' night':'');
+      out+='<span class="gh'+cls+'" style="left:'+pc.toFixed(2)+'%"><b>'+String(h).padStart(2,'0')+':'+String(t.getUTCMinutes()).padStart(2,'0')+'</b><i>UTC'+(o>0?'+'+o:(o<0?'\u2212'+(-o):''))+'</i></span>';
+    }
+    return '<div class="geohours" aria-label="Local time across the map">'+out+'</div>';
+  }
   function _geoNightLegend(){
     if(!_geoNight || !_geoMap || !_geoMap.proj) return '';
     var s=_sunPos(Date.now()), n=new Date();
@@ -6100,7 +6178,7 @@
       paint(); if(_geoData) renderGeo();
     });
     // La nuit avance : redessin chaque minute, seulement si la carte est a l'ecran.
-    setInterval(function(){ var m=$('geoMap'); if(_geoNight && _geoData && m && m.offsetParent) renderGeo(); },60000);
+    setInterval(function(){ var m=$('geoMap'); if(m && m.offsetParent) _geoRedraw(); },60000);
   })();
   function _geoDetail(){
     var el=$('geoDetail'), d=_geoData; if(!el) return;
@@ -6108,10 +6186,10 @@
     if(!c){ el.innerHTML=''; return; }
     var tot=0; Object.keys(C).forEach(function(cc){ tot+=_geoVal(C[cc]); });
     var m=c.m||{}, mt=0; MODE48.forEach(function(x){ mt+=m[x.k]||0; });
-    var what=_geoMode==='all'?'visits':(_geoModeOf(_geoMode).s+' sessions');
+    var what=_geoWhat();
     var h='<div class="gh">'+_geoFlag(_geoSel)+'<span>'+_annEsc(_geoName(_geoSel))+'</span><span class="gv">'+_geoFmt(_geoVal(c))+' '+_annEsc(what)+' · '+_geoPct(_geoVal(c),tot)+' % of all</span></div>';
     h+=MODE48.map(function(x){ var n=m[x.k]||0;
-      return '<div class="geobar" style="opacity:'+(_geoMode==='all'||_geoMode===x.k?1:.45)+'"><span class="gl">'+_annEsc(x.s)+'</span><span class="tr"><i style="width:'+(mt?(100*n/mt).toFixed(1):0)+'%;background:'+x.c+'"></i></span><span class="gn">'+_geoFmt(n)+(mt?' · '+_geoPct(n,mt)+' %':'')+'</span></div>';
+      return '<div class="geobar" style="opacity:'+(_modeOn(x.k)?1:.45)+'"><span class="gl">'+_annEsc(x.s)+'</span><span class="tr"><i style="width:'+(mt?(100*n/mt).toFixed(1):0)+'%;background:'+x.c+'"></i></span><span class="gn">'+_geoFmt(n)+(mt?' · '+_geoPct(n,mt)+' %':'')+'</span></div>';
     }).join('');
     var v=c.v||0;
     h+='<p class="muted note">'+(v?('Visits '+_geoFmt(v)+' · sessions per 100 visits '+Math.round(100*mt/v)+' · new devices '+_geoPct(c.nw||0,v)+' % · installed app '+_geoPct(c.pwa||0,v)+' % · phone or tablet '+_geoPct(c.mob||0,v)+' %'):'No visit ping with a time zone from this country in the period; the bars count sessions only.')+'</p>';
@@ -6128,8 +6206,8 @@
     if(scroll){ var b=$('geoMap'); try{ b.scrollIntoView({block:'nearest',behavior:'smooth'}); }catch(e){} }
   }
   (function(){
-    var ms=$('geoModes'), vs=$('geoViews'), mp=$('geoMap'), ls=$('geoList');
-    if(ms) ms.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-k]'); if(!b) return; _geoMode=b.dataset.k; try{ localStorage.setItem('pth_admin_geo_mode',_geoMode); }catch(x){} renderGeo(); });
+    var ms=$('geoLayers'), vs=$('geoViews'), mp=$('geoMap'), ls=$('geoList');
+    if(ms) ms.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-k]'); if(!b) return; _geoLayer=b.dataset.k; try{ localStorage.setItem('pth_admin_geo_layer',_geoLayer); }catch(x){} renderGeo(); });
     if(vs) vs.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-k]'); if(!b) return; _geoView=b.dataset.k; try{ localStorage.setItem('pth_admin_geo_view',_geoView); }catch(x){} renderGeo(); });
     if(mp) mp.addEventListener('click',function(e){ var p=e.target.closest&&e.target.closest('path[data-cc]'); if(p && !p.classList.contains('nd')) _geoPick(p.getAttribute('data-cc'), false); });
     if(ls){
@@ -6141,29 +6219,17 @@
     }
   })();
 
-  // Traffic sub-tabs. Every section stays in the DOM and loadTraffic keeps
-  // filling all of them (charts are viewBox SVG, they need no width), so the
-  // bar only chooses which one is on screen. Choice and the Explanations
-  // switch are remembered per browser, like the period.
-  var TRAF_SUBS=['overview','audience','activity','visitors','music','ace','world','data'];
-  function _trafSub(k, focus){
-    if(k==='features') k='music';   // remembered before Music and Ace’s Help were split
-    if(TRAF_SUBS.indexOf(k)<0) k='overview';
-    document.querySelectorAll('#trafSub [data-ts]').forEach(function(b){
-      var on=b.dataset.ts===k;
-      b.classList.toggle('on',on); b.setAttribute('aria-selected',on?'true':'false'); b.tabIndex=on?0:-1;
-      if(on && focus){ try{ b.focus(); b.scrollIntoView({block:'nearest',inline:'nearest'}); }catch(e){} }
-    });
+  // Statistics sections. Every section stays in the DOM and loadTraffic keeps
+  // filling all of them (charts are viewBox SVG, they need no width): the side
+  // menu only chooses which one is on screen (.tab[data-t="traffic"][data-ts]).
+  // The Explanations switch is remembered per browser, like the period.
+  var TRAF_SUBS=['world','overview','audience','activity','visitors','music','ace','data'];
+  function _trafSub(k){
+    if(k==='features') k='music';   // the former Features tab
+    if(TRAF_SUBS.indexOf(k)<0) k='world';
     document.querySelectorAll('#panel-traffic .tsub').forEach(function(p){ p.style.display = p.dataset.ts===k ? '' : 'none'; });
-    try{ localStorage.setItem('pth_admin_traf_sub',k); }catch(e){}
-    _trafSubScroll();
-  }
-  // Sur telephone la barre defile : la section choisie (memorisee, ou atteinte
-  // au clavier) doit y etre visible, centree, sans faire defiler la page.
-  function _trafSubScroll(){
-    var bar=$('trafSub'), b=bar&&bar.querySelector('.on');
-    if(!b || bar.scrollWidth<=bar.clientWidth) return;
-    bar.scrollLeft=Math.max(0, (b.offsetLeft-bar.offsetLeft)-(bar.clientWidth-b.offsetWidth)/2);
+    // The map was drawn while hidden: draw it again at its real width.
+    if(k==='world') _geoRedraw();
   }
   function _trafXpl(on){
     var pn=$('panel-traffic'), xb=$('trafXpl');
@@ -6172,20 +6238,9 @@
     try{ localStorage.setItem('pth_admin_traf_xpl',on?'1':'0'); }catch(e){}
   }
   (function(){
-    var bar=$('trafSub'); if(!bar) return;
-    bar.addEventListener('click',function(e){
-      var b=e.target.closest?e.target.closest('[data-ts]'):null;
-      if(b && bar.contains(b)) _trafSub(b.dataset.ts);
-    });
-    bar.addEventListener('keydown',function(e){
-      var i=TRAF_SUBS.indexOf((bar.querySelector('.on')||{}).dataset ? bar.querySelector('.on').dataset.ts : ''), n=TRAF_SUBS.length;
-      if(e.key==='ArrowRight') i=(i+1)%n; else if(e.key==='ArrowLeft') i=(i-1+n)%n;
-      else if(e.key==='Home') i=0; else if(e.key==='End') i=n-1; else return;
-      e.preventDefault(); _trafSub(TRAF_SUBS[i], true);
-    });
-    var k='overview', x=false;
-    try{ k=localStorage.getItem('pth_admin_traf_sub')||'overview'; x=localStorage.getItem('pth_admin_traf_xpl')==='1'; }catch(e){}
-    _trafSub(k); _trafXpl(x);
+    var x=false;
+    try{ x=localStorage.getItem('pth_admin_traf_xpl')==='1'; }catch(e){}
+    _trafXpl(x);
     var xb=$('trafXpl');
     if(xb) xb.addEventListener('click',function(){ _trafXpl(xb.getAttribute('aria-pressed')!=='true'); });
   })();

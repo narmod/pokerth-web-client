@@ -115,9 +115,9 @@ ok(/Could not load/.test(txt('ovChart')), 'a failed read says so instead of load
 
 // ── Wiring ────────────────────────────────────────────────────────────────
 ok(/<script type="module" src="\/modules\/admin\/overview\.mjs"><\/script>/.test(admin), 'the module is loaded');
-ok(/window\.PthAdmin=\{ api:/.test(admin) && /open:function\(t\)\{ var b=document\.querySelector\('\.tab\[data-t="'\+t\+'"\]'\); if\(b && b\.style\.display!=='none'\) b\.click\(\); \}/.test(admin),
-  'the page lends its api() and opens a section by its own button');
-ok(/sectionEvent\(t\);\n  \}\); \}\);/.test(admin), 'every section change is announced');
+ok(/window\.PthAdmin=\{ api:/.test(admin) && /open:function\(t\)\{ var p=String\(t\|\|''\)\.split\('\/'\)/.test(admin) && /if\(b && b\.style\.display!=='none'\) b\.click\(\); \}/.test(admin),
+  'the page lends its api() and opens a section (or a page of one) by its own button');
+ok(/sectionEvent\(t\+\(b\.dataset\.ts\?'\/'\+b\.dataset\.ts:''\)\);\n  \}\); \}\);/.test(admin), 'every section change is announced');
 ok(/function doLogout\(reason\)\{[^\n]*sectionEvent\(''\)/.test(admin), 'and logging out stops the polling');
 ok(/if\(_t==='server'\) srvStart\(\);/.test(admin), 'the log poller no longer runs behind the Overview');
 ok(/e\.detail\.t === 'overview'\) start\(\); else stop\(\)/.test(src), 'the module polls only while Overview is open');

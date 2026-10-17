@@ -268,10 +268,11 @@ use too. Items are grouped by status rather than fixed phases.
 ## 🔨 Now (in progress)
 
 - **Admin page redesign** — audit done (30 fixes, `web.109`–`web.116`); side-menu shell with light and dark
-  themes, phone drawer, section addresses and an installable admin app (`web.117`), Overview page (`web.118`).
-  Next: each section moved to the new layout one at a time, then Statistics v2 (global filter for
-  Training / Internet / LAN / Live, the world map as the main view with live connections, hour band) and
-  stored cross-filters.
+  themes, phone drawer, section addresses and an installable admin app (`web.117`), Overview page (`web.118`),
+  Statistics v2 step 1: World first with layers and the local-time band, one filter bar with entry modes
+  (`web.119`). Next: Internet and LAN cards and connections per day against the previous period; a custom date
+  range; connections live by country; then each remaining section moved to the new layout, and stored
+  cross-filters.
 
 - **Official QML client fidelity** — ongoing pixel-and-behaviour alignment of the in-game
   screen with the official QML client (action bar, mobile layouts, seat geometry).

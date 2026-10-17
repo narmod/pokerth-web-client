@@ -56,7 +56,7 @@ const CANNED = {
         addedAt: Date.now() - 30 * 864e5, lastSeen: Date.now() - 9 * 864e5, status: { online: false, players: null, error: 'ETIMEDOUT', at: Date.now() }, autoHidden: true }
     ] },
 };
-const posts = [];
+const posts = [], gets = [];
 function canned(url) {
   const path = String(url).split('?')[0];
   return CANNED[path] || { ok: true };
@@ -68,7 +68,7 @@ const dom = new JSDOM(html, {
   virtualConsole: vc,
   pretendToBeVisual: true,
   beforeParse(w) {
-    w.fetch = (url, opts) => { if (opts && opts.method === 'POST') { try { posts.push({ url: String(url), body: JSON.parse(opts.body) }); } catch (e) {} } return Promise.resolve({
+    w.fetch = (url, opts) => { gets.push(String(url)); if (opts && opts.method === 'POST') { try { posts.push({ url: String(url), body: JSON.parse(opts.body) }); } catch (e) {} } return Promise.resolve({
       ok: true, status: 200,
       json: () => Promise.resolve(canned(url)),
       text: () => Promise.resolve(''),
@@ -96,7 +96,7 @@ ok(visible().length === 1, 'exactly one panel is open at load, not ' + visible()
 ok(visible()[0] && visible()[0].id === 'panel-overview', 'and it is panel-overview, where a master key lands');
 
 const tabs = [...doc.querySelectorAll('.tab')];
-ok(tabs.length === 19, 'every section has a tab, found ' + tabs.length);
+ok(tabs.length === 26, 'every section has a tab, found ' + tabs.length);
 for (const t of tabs) {
   const id = 'panel-' + t.dataset.t;
   t.click();
@@ -119,9 +119,9 @@ for (const g of ['overview', 'stats', 'live', 'community', 'content', 'players',
   ok(visible().length === 1, 'and still exactly one panel is open');
 }
 
-ok(doc.querySelector('.sgrp[data-g="stats"]').classList.contains('one') && doc.querySelector('.sgrp[data-g="security"]').classList.contains('one'),
+ok(doc.querySelector('.sgrp[data-g="overview"]').classList.contains('one') && doc.querySelector('.sgrp[data-g="security"]').classList.contains('one'),
   'a group with a single section is marked so it opens it directly');
-ok(!doc.querySelector('.sgrp[data-g="community"]').classList.contains('one'), 'and a group with several is not');
+ok(!doc.querySelector('.sgrp[data-g="community"]').classList.contains('one') && !doc.querySelector('.sgrp[data-g="stats"]').classList.contains('one'), 'and a group with several is not');
 ok($('sideWho') && $('sideWho').textContent === 'master key', 'the menu says which key is signed in');
 ok($('sideVer') && $('sideVer').textContent === '2.1.7-web.39', 'and which build runs');
 ok($('dash').style.display === '', 'the shell is shown by clearing display, so its grid applies');
@@ -141,26 +141,38 @@ ok(tg && /Ranking funnel/.test(tg.textContent) && /40% of highlighted/.test(tg.t
   'the Ace’s Help card renders acceptance and the Ranking funnel');
 ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
 
-// ── Traffic sub-tabs: one section on screen, explanations folded ─────────
+// ── Statistics sections: picked in the menu, one on screen ───────────────
 {
   const subs = [...doc.querySelectorAll('#panel-traffic .tsub')];
   const shown = () => subs.filter((p) => p.style.display !== 'none').map((p) => p.dataset.ts);
-  const panels = () => [...doc.querySelectorAll('[id^="panel-"]')].map((p) => p.id + ':' + p.style.display).join();
-  const before = panels();
-  ok(subs.length === 8 && shown().join() === 'overview', 'the traffic panel opens on its overview alone');
-  doc.querySelector('#trafSub [data-ts="activity"]').click();
-  ok(shown().join() === 'activity', 'a sub-tab shows its section and hides the others');
-  ok(doc.querySelector('#trafSub [data-ts="activity"]').getAttribute('aria-selected') === 'true'
-    && doc.querySelector('#trafSub [data-ts="overview"]').getAttribute('aria-selected') === 'false', 'and says which one is selected');
-  ok(window.localStorage.getItem('pth_admin_traf_sub') === 'activity', 'the choice is remembered');
-  ok(panels() === before, 'the sub-tab never switches an admin panel itself');
-  ok(doc.querySelector('.tab.on') && doc.querySelector('.tab.on').dataset.t !== undefined, 'the admin tab bar is untouched by it');
-  doc.querySelector('#trafSub [data-ts="activity"]').dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
-  ok(shown().join() === 'visitors', 'the arrow keys move to the next section');
-  doc.querySelector('#trafSub [data-ts="ace"]').click();
-  ok(shown().join() === 'ace' && $('trafGuide') && $('trafGuide').offsetParent !== undefined, 'Ace’s Help has a section of its own');
-  doc.querySelector('#trafSub [data-ts="visitors"]').dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
-  ok(shown().join() === 'overview', 'and Home goes back to the overview');
+  const tab = (k) => doc.querySelector('.tab[data-t="traffic"][data-ts="' + k + '"]');
+  ok(subs.length === 8, 'the eight sections are in the panel');
+  doc.querySelector('.tab[data-t="server"]').click();
+  const n0 = gets.filter((u) => u.startsWith('/admin/visits')).length;
+  tab('world').click();
+  const n1 = gets.filter((u) => u.startsWith('/admin/visits')).length;
+  ok(shown().join() === 'world' && $('panel-traffic').style.display === 'block', 'World opens the statistics on the map, alone');
+  ok(n1 === n0 + 1, 'entering Statistics reads the figures once');
+  tab('activity').click();
+  ok(shown().join() === 'activity', 'a menu entry shows its section and hides the others');
+  ok(tab('activity').classList.contains('on') && !tab('world').classList.contains('on'), 'and the menu marks it');
+  tab('ace').click();
+  ok(shown().join() === 'ace', 'Ace’s Help has a section of its own');
+  ok(gets.filter((u) => u.startsWith('/admin/visits')).length === n1, 'moving between sections reads nothing again');
+  doc.querySelector('.gtab[data-g="stats"]').click();
+  ok(doc.querySelector('.subtabs[data-g="stats"]').style.display !== 'none', 'the Statistics group unfolds its list');
+  // Entry modes: a chip narrows, All brings everything back, the choice is kept.
+  const chips = () => [...doc.querySelectorAll('#trafModeSel [data-mk]')];
+  ok(chips().map((c) => c.dataset.mk).join() === 'all,pokerthnet,lan,offline,live', 'the filter bar offers All and the four entry modes');
+  ok(chips()[0].getAttribute('aria-pressed') === 'true', 'All is on at first');
+  doc.querySelector('#trafModeSel [data-mk="lan"]').click();
+  ok(doc.querySelector('#trafModeSel [data-mk="lan"]').getAttribute('aria-pressed') === 'true' && doc.querySelector('#trafModeSel [data-mk="all"]').getAttribute('aria-pressed') === 'false',
+    'a chip alone narrows to its mode');
+  doc.querySelector('#trafModeSel [data-mk="offline"]').click();
+  ok(window.localStorage.getItem('pth_admin_modes') === '["lan","offline"]', 'a second one adds to it, and the choice is remembered');
+  doc.querySelector('#trafModeSel [data-mk="all"]').click();
+  ok(window.localStorage.getItem('pth_admin_modes') === '["pokerthnet","lan","offline","live"]', 'All brings every mode back');
+  ok(errors.length === 0, 'switching threw nothing' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
   const xb = $('trafXpl'), pn = $('panel-traffic');
   ok(xb.getAttribute('aria-pressed') === 'false' && !pn.classList.contains('xpl-on'), 'explanations start folded');
   xb.click();

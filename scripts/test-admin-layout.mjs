@@ -42,7 +42,8 @@ const shellJs = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..',
 // side menu grouped by what the operator is doing. The buttons kept their
 // classes, so the handlers that open a panel are the same as before.
 const GROUPS = {
-  overview: ['overview'], stats: ['traffic'], live: ['sessions', 'errors'], community: ['board', 'polls', 'broadcast', 'landir'],
+  overview: ['overview'],
+  stats: ['traffic/world', 'traffic/overview', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace', 'traffic/data'], live: ['sessions', 'errors'], community: ['board', 'polls', 'broadcast', 'landir'],
   content: ['packages', 'music'], players: ['clients', 'defaults'], infra: ['servers', 'proxy', 'identity'],
   ops: ['server', 'deploy', 'access'], security: ['keys'],
 };
@@ -59,7 +60,7 @@ ok(JSON.stringify(order) === JSON.stringify(Object.keys(GROUPS)), 'the menu grou
 let all = [];
 for (const [g, tabs] of Object.entries(GROUPS)) {
   const seg = grp(g);
-  const got = [...seg.matchAll(/class="tab(?: on)?" data-t="([a-z]+)"/g)].map(m => m[1]);
+  const got = [...seg.matchAll(/class="tab(?: on)?" data-t="([a-z]+)"(?: data-ts="([a-z]+)")?/g)].map(m => m[1] + (m[2] ? '/' + m[2] : ''));
   ok(JSON.stringify(got) === JSON.stringify(tabs), 'group ' + g + ' holds ' + tabs.join(', ') + ' (got ' + got.join(', ') + ')');
   ok(/<button type="button" class="gtab(?: on)?" data-g="/.test(seg), 'group ' + g + ' has its button');
   ok(new RegExp('class="tabs subtabs" data-g="' + g + '"').test(seg), 'and its list of sections');
@@ -68,7 +69,7 @@ for (const [g, tabs] of Object.entries(GROUPS)) {
     tabs.length === 1 ? 'a one-section group opens its section directly' : 'a group of several unfolds its list');
   all = all.concat(got);
 }
-ok(all.length === 19 && new Set(all).size === 19, 'every one of the nineteen sections is reachable, once');
+ok(all.length === 26 && new Set(all).size === 26, 'every one of the twenty-six sections is reachable, once');
 for (const sc of ['packages', 'music', 'broadcast', 'polls', 'leaderboard']) {
   ok(new RegExp('data-scope="' + sc + '"').test(admin), 'scope ' + sc + ' survived the move');
 }
@@ -383,21 +384,20 @@ ok(traf.indexOf('id="trafRet"') > traf.indexOf('data-ts="audience" role="tabpane
 // Explanations switch. Every section stays in the DOM: loadTraffic fills them
 // all, the bar only chooses which one is visible.
 const TS = ['overview', 'audience', 'activity', 'visitors', 'music', 'ace', 'data'];
+const TS8 = ['world'].concat(TS);
 function tsub(k) {
   const i = traf.indexOf('<div class="tsub" data-ts="' + k + '"');
   if (i < 0) return '';
   const j = traf.indexOf('<div class="tsub" data-ts="', i + 10);
   return traf.slice(i, j < 0 ? undefined : j);
 }
-const subBar = (traf.match(/<div class="trafsub" id="trafSub" role="tablist"[^\n]*/) || [''])[0];
-ok(!!subBar, 'the traffic panel has its own sub-tab bar');
-ok(TS.every(k => subBar.includes('data-ts="' + k + '"')), 'with the seven sections, in reading order');
-ok(TS.every((k, i) => !i || subBar.indexOf('data-ts="' + TS[i - 1] + '"') < subBar.indexOf('data-ts="' + k + '"')),
-  'overview first, data last');
-ok(!/class="tab[ "]/.test(subBar), 'its buttons are not .tab: the global tab handler would take them for panels');
+// Since web.119 the side menu picks the section: no tab row of its own.
+const menuStats = [...admin.matchAll(/class="tab" data-t="traffic" data-ts="([a-z]+)"/g)].map(m => m[1]);
+ok(!/id="trafSub"/.test(admin) && !/\.trafsub/.test(admin), 'the panel no longer carries its own tab row');
+ok(JSON.stringify(menuStats) === JSON.stringify(['world'].concat(TS)), 'the menu lists the sections, World first: ' + menuStats.join(', '));
 ok(TS.every(k => tsub(k)), 'each sub-tab has its section');
 ok(TS.every((k, i) => !i || traf.indexOf('data-ts="' + TS[i - 1] + '" role="tabpanel"') < traf.indexOf('data-ts="' + k + '" role="tabpanel"')),
-  'and the sections follow the bar');
+  'the sections keep their reading order in the page');
 ok(/<div class="tsub" data-ts="overview" role="tabpanel" aria-label="Overview">/.test(traf),
   'the overview is the one visible before any script runs');
 ok(TS.slice(1).every(k => /^<div class="tsub" data-ts="[a-z]+" role="tabpanel" aria-label="[^"]+" style="display:none">/.test(tsub(k))),
@@ -419,7 +419,9 @@ ok(tsub('overview').indexOf('id="trafKpis"') < tsub('overview').indexOf('id="tra
 for (const h of ['Bottom line', 'Trends', 'Retention', 'Recent activity', 'Connections', 'Who visits', 'Music', 'Ace’s Help', 'Data &amp; settings']) {
   ok(traf.includes('<h2>' + h + '</h2>'), 'a card is headed ' + h);
 }
-ok(/<div class="boardhead"><h2>Traffic<\/h2>/.test(traf), 'the head card keeps its title, period and refresh');
+ok(/<section class="card trafhead statbar" aria-label="Filters for every page of Statistics">/.test(traf), 'one filter card heads every section');
+for (const id of ['trafModeSel', 'trafPeriod', 'trafRange', 'trafBots', 'trafXpl', 'btnTrafRefresh']) ok(traf.includes('id="' + id + '"'), id + ' is in the filter card');
+ok(traf.indexOf('id="trafModeSel"') < traf.indexOf('<div class="tsub"'), 'above every section');
 ok(!/<h2>Coming back<\/h2>/.test(traf) && !/<h3>Recent activity/.test(traf) && !/<h3>Ace’s Help/.test(traf),
   'and no card repeats the name of its own first section');
 ok(!/class="cardrow"/.test(traf), 'and no paired row survives inside it');
@@ -440,13 +442,36 @@ ok(/#panel-traffic:not\(\.xpl-on\) \.xpl\{display:none\}/.test(admin), 'it folds
 ok((traf.match(/class="muted xpl"/g) || []).length >= 10, 'the reading sections tag their explanations');
 ok(!/xpl/.test(tsub('data')), 'the data and settings section keeps its warnings visible');
 ok(/permanently deletes ALL visit data/.test(tsub('data')), 'starting with the reset one');
-ok(/function _trafSub\(k, focus\)/.test(admin) && /function _trafXpl\(on\)/.test(admin), 'switching lives in two small functions');
-ok(/localStorage\.setItem\('pth_admin_traf_sub',k\)/.test(admin) && /localStorage\.setItem\('pth_admin_traf_xpl',on\?'1':'0'\)/.test(admin),
-  'the chosen section and the switch are remembered per browser, like the period');
-ok(/if\(TRAF_SUBS\.indexOf\(k\)<0\) k='overview';/.test(admin), 'an unknown remembered section falls back to the overview');
+ok(/function _trafSub\(k\)/.test(admin) && /function _trafXpl\(on\)/.test(admin), 'switching lives in two small functions');
+ok(/localStorage\.setItem\('pth_admin_traf_xpl',on\?'1':'0'\)/.test(admin), 'the Explanations switch is remembered per browser, like the period');
+ok(!/pth_admin_traf_sub/.test(admin), 'the section is in the address now (#traffic/world), not in browser storage');
+ok(/if\(TRAF_SUBS\.indexOf\(k\)<0\) k='world';/.test(admin), 'an unknown section falls back to the map');
 ok(/if\(k==='features'\) k='music';/.test(admin), 'and the former Features tab lands on Music');
-ok(/e\.key==='ArrowRight'/.test(admin) && /e\.key==='ArrowLeft'/.test(admin), 'the bar is driven by the arrow keys as well');
-ok(/\.trafsub button\{[^}]*min-height:44px/.test(admin), 'and its targets are thumb-sized');
+ok(/if\(t==='traffic'\)\{ if\(_wasT!=='traffic'\) loadTraffic\(\); _trafSub\(b\.dataset\.ts\|\|'world'\); \}/.test(admin),
+  'Statistics reads its figures on entry, not on every section change');
+ok(/sectionEvent\(t\+\(b\.dataset\.ts\?'\/'\+b\.dataset\.ts:''\)\)/.test(admin), 'a section announces its page too');
+ok(/function idOf\(b\) \{ return b\.dataset\.t \+ \(b\.dataset\.ts \? '\/' \+ b\.dataset\.ts : ''\); \}/.test(shellJs), 'and has its own address');
+
+// -- Entry modes, chosen once for every section ---------------------------
+ok(/var _trafModeSel=MODE48\.map/.test(admin) && /localStorage\.setItem\('pth_admin_modes'/.test(admin), 'the entry modes picked are kept per browser');
+ok(/if\(!_trafModeSel\.length\) _trafModeSel=MODE48\.map/.test(admin), 'switching the last one off brings every mode back, never none');
+ok(/var lines=_modesOn\(\)\.map/.test(admin), 'the 48 h chart by mode follows them');
+ok(/\.filter\(function\(rw\)\{ return _modeOn\(rw\[1\]\); \}\)/.test(admin), 'and Where sessions open');
+ok(/if\(_geoLayer==='conn'\)\{ var m=c\.m\|\|\{\}, t=0; _modesOn\(\)\.forEach/.test(admin), 'and the Connections layer of the map');
+ok(/c:'var\(--m-net\)'/.test(admin) && /c:'var\(--m-lan\)'/.test(admin) && /c:'var\(--m-off\)'/.test(admin) && /c:'var\(--m-live\)'/.test(admin),
+  'one set of mode colours for the whole admin, themed');
+ok(/A visit is counted before any mode is chosen/.test(admin), 'the bar says what the modes cannot narrow');
+
+// -- World ------------------------------------------------------------------
+ok(/var GEO_LAYERS=\[\['v','Visits'\],\['nw','New devices'\],\['conn','Connections'\],\['pwa','Installed app'\],\['mob','Phones'\]\];/.test(admin), 'five layers on the map');
+ok(/id="geoLayers" role="group" aria-label="What the map shows"/.test(admin), 'picked above it');
+ok(/box\.innerHTML=_geoHours\(M,vb\)\+'<svg/.test(admin), 'the local-time band sits above the map');
+const hrs = body(admin, '_geoHours');
+ok(/_neProj\(M,/.test(hrs), 'placed in the map projection, so it lines up with the night');
+ok(/var now=Date\.now\(\), step=_geoView==='world'\?2:1/.test(hrs), 'every 2 h on the world, every hour on a region');
+ok(/h>=18&&h<=23\)\?' eve'/.test(hrs), 'the evening stands out');
+ok(/if\(m && m\.offsetParent\) _geoRedraw\(\);\s*\},60000\)/.test(admin), 'and it follows the clock, minute by minute, while on screen');
+ok(/function _geoRedraw\(\)\{ if\(_geoData && _geoMap && _geoMap\.c\) renderGeo\(\); \}/.test(admin), 'a redraw waits for both the figures and the outline');
 
 // -- Four windows, not seven -----------------------------------------------
 // 90, 180 and 365 days repeat "All time" to the unit until the site has a year

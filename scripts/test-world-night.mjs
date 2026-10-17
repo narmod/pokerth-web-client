@@ -89,7 +89,8 @@ ok(/<button id="geoNightBtn" class="use geoswitch" type="button" role="switch" a
 ok(/b\.setAttribute\('aria-checked',_geoNight\?'true':'false'\);/.test(admin) && /v\.textContent=_geoNight\?'On':'Off';/.test(admin), 'the switch shows its state (On / Off)');
 ok(/_geoNight=localStorage\.getItem\('pth_admin_geo_night'\)!=='0'/.test(admin) && /localStorage\.setItem\('pth_admin_geo_night'/.test(admin), 'remembered per browser');
 ok(/\+\(_geoNight&&M\.proj\?_geoSphere\(M\):''\)\+paths\.join\(''\)\+_geoNightSvg\(M\)\+'<\/svg>'/.test(admin), 'drawn over the countries, under nothing clickable');
-ok(/setInterval\(function\(\)\{ var m=\$\('geoMap'\); if\(_geoNight && _geoData && m && m\.offsetParent\) renderGeo\(\); \},60000\);/.test(admin), 'moves on every minute, only while the map is on screen');
+// Since web.119 the local-time band above the map moves too, night shown or not.
+ok(/setInterval\(function\(\)\{ var m=\$\('geoMap'\); if\(m && m\.offsetParent\) _geoRedraw\(\); \},60000\);/.test(admin), 'moves on every minute, only while the map is on screen');
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);

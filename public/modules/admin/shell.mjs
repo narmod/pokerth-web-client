@@ -64,9 +64,13 @@ function paintTitle(tab) {
 // ── Routes: #<section> ───────────────────────────────────────────────────
 // The address names the open section, so a reload, a bookmark or the back
 // button lands on it. A section the key may not open is ignored.
+// A section is named by its tab, and by its page for a tab that has several
+// (Statistics: traffic/world, traffic/audience…).
+function idOf(b) { return b.dataset.t + (b.dataset.ts ? '/' + b.dataset.ts : ''); }
 function tabFor(t) {
-  if (!t || !/^[a-z]+$/.test(t)) return null;
-  const b = document.querySelector('.tab[data-t="' + t + '"]');
+  const m = /^([a-z]+)(?:\/([a-z]+))?$/.exec(t || '');
+  if (!m) return null;
+  const b = document.querySelector('.tab[data-t="' + m[1] + '"]' + (m[2] ? '[data-ts="' + m[2] + '"]' : ''));
   return b && b.style.display !== 'none' ? b : null;
 }
 function hashName() { return decodeURIComponent((location.hash || '').replace(/^#\/?/, '')); }
@@ -91,7 +95,7 @@ document.addEventListener('click', (e) => {
   const b = e.target && e.target.closest ? e.target.closest('.tab[data-t]') : null;
   if (!b || !side || !side.contains(b)) return;
   paintTitle(b);
-  const t = b.dataset.t;
+  const t = idOf(b);
   if (hashName() !== t) {
     // A pick by hand is a step the back button should undo; one made by code
     // (a group choosing its first section, the landing section) is not.
@@ -119,7 +123,7 @@ function onShown() {
   paintTitle(cur);
   // The landing section gets its name in the address too, so the back button
   // can come back to it.
-  if (cur && !hashName()) { try { history.replaceState(history.state, '', '#' + cur.dataset.t); } catch (err) {} }
+  if (cur && !hashName()) { try { history.replaceState(history.state, '', '#' + idOf(cur)); } catch (err) {} }
 }
 if (dash) {
   new MutationObserver(onShown).observe(dash, { attributes: true, attributeFilter: ['style'] });
