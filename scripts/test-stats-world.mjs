@@ -34,6 +34,8 @@ for (let h = 0; h < 48; h++) {
   b.hc[d.getHours()] = { v: 1, m: { offline: 1 } };
 }
 fs.writeFileSync(F('visits.json'), JSON.stringify(store));
+fs.writeFileSync(F('admin-config.json'), JSON.stringify({ lanDirectory: { settings: {}, pending: [], entries: [
+  { id: 'lan_aaaaaa01', name: 'Club Lyon', host: 'lyon.example.org', port: 7234, visible: true, addedAt: Date.now() - 9e8 }] } }));
 
 const PORT = 18000 + Math.floor(Math.random() * 900), TOKEN = 'stworld-token';
 const env = Object.assign({}, process.env, {
@@ -100,12 +102,42 @@ try {
   ok(!JSON.stringify(se).includes('Europe/Berlin'), 'the time zone itself is never handed out, only the country');
   [w1, w2, w3].forEach((w) => w.close());
 
+  // ── Connections per LAN server, logins by kind (web.123) ──
+  const ping = (b, ua) => fetch(base + '/__visit', { method: 'POST', headers: Object.assign({ 'Content-Type': 'application/json' }, ua ? { 'User-Agent': ua } : {}), body: JSON.stringify(b) });
+  await ping({ mode: 'lan', vid: 'v1', srv: 'lyon.example.org:7234' });
+  await ping({ mode: 'lan', vid: 'v2', srv: 'LYON.example.org:7234' });
+  await ping({ mode: 'lan', vid: 'v3', srv: 'secret-home.example.net:7234' });
+  await ping({ mode: 'lan', vid: 'v4', srv: 'nonsense' });
+  await ping({ mode: 'pokerthnet', vid: 'v5', srv: 'pthsrv.pokerth.net:7236' });
+  await ping({ login: 'guest', vid: 'v1' }); await ping({ login: 'guest', vid: 'v2' }); await ping({ login: 'auth', vid: 'v3' });
+  await ping({ login: 'admin', vid: 'v4' });
+  await ping({ login: 'guest', vid: 'v6' }, 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)');
+  const c1 = await get('/admin/visits?days=7');
+  ok(c1.lanServers && c1.lanServers.period.lan_aaaaaa01 === 2, 'a game on a listed LAN server counts under its entry, whatever the case of the host');
+  ok(c1.lanServers.period.other === 2 && Object.keys(c1.lanServers.period).length === 2, 'an unlisted or unreadable address counts as other, and nothing else is kept');
+  ok(c1.lanServers.names.lan_aaaaaa01 === 'Club Lyon' && c1.lanServers.since > 0, 'the answer names the entries and says since when it counts');
+  ok(c1.logins && c1.logins.period.g === 2 && c1.logins.period.a === 1 && c1.logins.since > 0, 'logins are counted by kind, an unknown kind and a robot left out');
+  const c2 = await get('/admin/visits?days=7&bots=1');
+  ok(c2.logins.period.g === 3, 'the robot is counted apart, and joins when robots are shown');
+  ok(c1.series[6].lo && c1.series[6].lo.g === 2, 'today\'s point carries its logins');
+  const exp = await (await fetch(base + '/admin/visits/export?format=json', { headers: H })).text();
+  ok(!/secret-home|lyon\.example\.org|nonsense/.test(exp), 'no server address is ever stored');
+
   const empty = await get('/admin/visits?days=90');
   ok(empty.prevM.length === 90 && empty.prevM.slice(0, 60).every((x) => !Object.keys(x).length), 'days with nothing recorded are empty, not missing');
 } finally {
   proxy.kill('SIGTERM');
   try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (e) {}
 }
+const pjs = fs.readFileSync(path.join(root, 'public', 'pokerth.js'), 'utf8');
+const lob = fs.readFileSync(path.join(root, 'public', 'modules', 'net', 'msg-lobby.mjs'), 'utf8');
+ok(/window\._pthCountConnect\(_cntMode\(\), host \+ ':' \+ port\)/.test(pjs) && /if \(srv\) cm\.srv = srv;/.test(pjs), 'the client sends the LAN server with the mode ping');
+ok(/var k = 'pth_conn_' \+ mode \+ \(srv \? '@' \+ srv : ''\);/.test(pjs), 'once per server and browser session');
+ok(/window\._pthCountLogin = function \(kind\)/.test(pjs) && /if \(window\.LIVE_MODE \|\| \(kind !== 'guest' && kind !== 'auth'\)\) return;/.test(pjs), 'a login ping, players only');
+ok(/localStorage\.getItem\('pth_no_count'\) === '1'\) return; \} catch \(e\) \{\}\s*var k = 'pth_login_' \+ kind;/.test(pjs), 'which honours « do not count me »');
+ok(/window\._pthCountLogin && window\._pthCountLogin\(_lm\)/.test(lob), 'sent when the server confirms the login');
+const priv = fs.readFileSync(path.join(root, 'public', 'privacy.html'), 'utf8');
+ok(/as a guest or with an account is counted, as a total per day/.test(priv) && /never by its address/.test(priv), 'the privacy page says what is counted');
 if (fail) console.log(plog.slice(-1500));
 console.log(fail ? 'FAIL ' + fail + '/' + n : 'OK ' + n + '/' + n);
 process.exit(fail ? 1 : 0);

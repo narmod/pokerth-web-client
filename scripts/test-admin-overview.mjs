@@ -50,7 +50,7 @@ const rows = OV.dailyByMode([
 ok(rows[0].net === 5 && rows[0].lan === 2 && rows[0].off === 1 && rows[0].live === 1 && rows[0].total === 9, 'a day adds its four modes');
 ok(rows[1].today && !rows[0].today, 'today is marked, by the server\'s day key');
 ok(!rows[2].has && rows[2].total === 0, 'a day without counts says so');
-ok(/m: \(b && b\.m\) \? b\.m : undefined \}\);/.test(proxy) && (proxy.match(/m: \(b && b\.m\) \? b\.m : undefined \}\);/g) || []).length === 2,
+ok((proxy.match(/m: \(b && b\.m\) \? b\.m : undefined, lo: \(b && b\.lo\) \? b\.lo : undefined \}\);/g) || []).length === 2,
   'the visit series carries the per-mode counts, daily and hourly');
 
 // ── What needs attention ──────────────────────────────────────────────────

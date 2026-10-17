@@ -6607,7 +6607,7 @@ const App = (() => {
       S._preserveConnect = _preserve;
       _beginConnecting();   // lock button for the whole attempt (anti IP-block)
       S.ws.binaryType = 'arraybuffer';
-      S.ws.onopen    = () => { S._lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); try { window._pthCountConnect && window._pthCountConnect(_cntMode()); } catch (e) {} };
+      S.ws.onopen    = () => { S._lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); try { window._pthCountConnect && window._pthCountConnect(_cntMode(), host + ':' + port); } catch (e) {} };
       S.ws.onerror   = () => { S._lastConnectFailed = true; _endConnecting(); setStatus(t('wsError'), 'err', null, { local: true }); };
       S.ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
@@ -12235,7 +12235,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.122'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.123'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
@@ -12374,14 +12374,18 @@ window._pthTimeZone = function () {
     if (v === 'lan-dedi') return 'lan';
     return window.directWS ? 'pokerthnet' : 'lan';
   };
-  window._pthCountConnect = function (mode) {
+  // `srv` (host:port) is sent for a LAN game only: the proxy counts it under
+  // the LAN directory entry it belongs to (« other » when not listed) and
+  // never keeps the address. Counted once per server and browser session.
+  window._pthCountConnect = function (mode, srv) {
     // /live is counted apart from the web client: a spectator session is not a
     // player opening pokerth.net.
     if (window.LIVE_MODE) mode = 'live';
     try {
       if (['pokerthnet', 'lan', 'offline', 'live'].indexOf(mode) < 0) return;
       try { if (localStorage.getItem('pth_no_count') === '1') return; } catch (e) {}
-      var k = 'pth_conn_' + mode;
+      if (mode !== 'lan' || typeof srv !== 'string' || !srv || srv.length > 260) srv = '';
+      var k = 'pth_conn_' + mode + (srv ? '@' + srv : '');
       if (sessionStorage.getItem(k)) return;
       sessionStorage.setItem(k, '1');
     } catch (e) { /* sessionStorage blocked — fall through and send once */ }
@@ -12389,9 +12393,31 @@ window._pthTimeZone = function () {
       var vid = '';
       try { vid = localStorage.getItem('pth_vid') || ''; } catch (e) {}
       var cm = { mode: mode, vid: vid };
+      if (srv) cm.srv = srv;
       try { var tz = window._pthTimeZone(); if (tz) cm.tz = tz; } catch (e) {}
       try { if (window._pthAutomated()) cm.wd = true; } catch (e) {}
       var body = JSON.stringify(cm);
+      if (navigator.sendBeacon) navigator.sendBeacon('/__visit', new Blob([body], { type: 'application/json' }));
+      else fetch('/__visit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true }).catch(function () {});
+    } catch (e) {}
+  };
+  // Logged in on pokerth.net: as a guest or with an account. A total per day,
+  // nothing else (no name, no id beyond the anonymous visit id already sent).
+  // Once per kind and browser session; /live spectators are not players.
+  window._pthCountLogin = function (kind) {
+    if (window.LIVE_MODE || (kind !== 'guest' && kind !== 'auth')) return;
+    try {
+      try { if (localStorage.getItem('pth_no_count') === '1') return; } catch (e) {}
+      var k = 'pth_login_' + kind;
+      if (sessionStorage.getItem(k)) return;
+      sessionStorage.setItem(k, '1');
+    } catch (e) {}
+    try {
+      var vid = '';
+      try { vid = localStorage.getItem('pth_vid') || ''; } catch (e) {}
+      var lg = { login: kind, vid: vid };
+      try { if (window._pthAutomated()) lg.wd = true; } catch (e) {}
+      var body = JSON.stringify(lg);
       if (navigator.sendBeacon) navigator.sendBeacon('/__visit', new Blob([body], { type: 'application/json' }));
       else fetch('/__visit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true }).catch(function () {});
     } catch (e) {}

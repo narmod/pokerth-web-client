@@ -184,6 +184,8 @@ function onInitAck(sub) {
     // previous session's playerId (parity upstream 52661f2, setSession).
     try { window._inviteDrop && window._inviteDrop(false); } catch (e) {}
     S._wasAuthenticated = true;
+    // Statistics: a guest or an account logged in on pokerth.net (a total per day).
+    try { var _lm = S._currentLoginMode; if (_lm === 'guest' || _lm === 'auth') window._pthCountLogin && window._pthCountLogin(_lm); } catch (e) {}
     S._lastConnectFailed = false; // connexion réussie
     _endConnecting();           // login OK → unlock the connect button
     S._reconnectAttempts = 0;

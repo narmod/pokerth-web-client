@@ -8094,6 +8094,39 @@ function recordModeConnect(mode, bot) {
   T.all.allM[mode] = (T.all.allM[mode] || 0) + 1;
   saveVisitsSoon();
 }
+// Connections per LAN server: the address a LAN game was opened on (host:port,
+// from the mode ping) is filed under its LAN directory entry, or under
+// « other » (local server, typed address, unlisted) — the address itself is
+// never kept. `ls` in the day bucket and the hour cell, at most LAN_SRV_KEYS
+// keys a bucket so a flood of made-up addresses cannot grow it.
+const LAN_SRV_KEYS = 200;
+function lanServerKey(srv) {
+  const s = String(srv || '').slice(0, 260), i = s.lastIndexOf(':');
+  if (i <= 0) return 'other';
+  const host = s.slice(0, i).replace(/^\[|\]$/g, ''), port = s.slice(i + 1);
+  let id = '';
+  try { id = LAN_DIR.boardInfoForAddr(host, port).board || ''; } catch (e) {}
+  return /^lan_[a-z0-9]+$/i.test(id) ? id : 'other';
+}
+function recordLanServer(srv, bot) {
+  const T = visitTarget(bot);
+  let id = lanServerKey(srv);
+  [T.day, T.cell].forEach(function (b) {
+    if (!b.ls) b.ls = {};
+    const k = (b.ls[id] === undefined && Object.keys(b.ls).length >= LAN_SRV_KEYS) ? 'other' : id;
+    b.ls[k] = (b.ls[k] || 0) + 1;
+  });
+  if (!visitsStore.lanSrvSince) visitsStore.lanSrvSince = Date.now();
+  saveVisitsSoon();
+}
+// Logins on pokerth.net, guests apart from accounts: `lo: { g, a }` per day
+// and hour cell. A total, nothing else.
+function recordLogin(kind, bot) {
+  const T = visitTarget(bot), k = kind === 'auth' ? 'a' : 'g';
+  [T.day, T.cell].forEach(function (b) { if (!b.lo) b.lo = {}; b.lo[k] = (b.lo[k] || 0) + 1; });
+  if (!visitsStore.loginSince) visitsStore.loginSince = Date.now();
+  saveVisitsSoon();
+}
 // ── Lectures de musique ───────────────────────────────────────────────────
 // Le lecteur poste POST /__music { id } chaque fois qu'une piste DÉMARRE — pas
 // de reprise après pause, pas de temps d'écoute, pas d'identifiant de visiteur.
@@ -8832,6 +8865,12 @@ function visitsSummary(periodDays, h24, bots, range) {
     return out;
   });
 }
+// Sum of one per-key counter (`ls`, `lo`…) over a list of buckets.
+function visitSumKey(list, f) {
+  const out = {};
+  (list || []).forEach(function (b) { const m = b && b[f]; if (m) for (const k in m) out[k] = (out[k] || 0) + (m[k] || 0); });
+  return out;
+}
 function visitsSummaryRead(periodDays, h24, range) {
   const R = (!h24 && range) || null;
   const P = h24 ? 1 : (R ? R.P : visitPeriodDays(periodDays)), E = R ? R.E : 0;
@@ -8842,14 +8881,14 @@ function visitsSummaryRead(periodDays, h24, range) {
     for (let j = 0; j < hrs.length; j++) {
       const d = hrs[j];
       const b = visitHour(d);
-      series.push({ date: visitDayKey(d) + 'T' + String(d.getHours()).padStart(2, '0'), v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined, m: (b && b.m) ? b.m : undefined });
+      series.push({ date: visitDayKey(d) + 'T' + String(d.getHours()).padStart(2, '0'), v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined, m: (b && b.m) ? b.m : undefined, lo: (b && b.lo) ? b.lo : undefined });
     }
   } else for (let i = E + P - 1; i >= E; i--) {
     const d = new Date(now);
     d.setDate(now.getDate() - i);
     const k = visitDayKey(d);
     const b = visitDay(k);
-    series.push({ date: k, v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined, m: (b && b.m) ? b.m : undefined });
+    series.push({ date: k, v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined, m: (b && b.m) ? b.m : undefined, lo: (b && b.lo) ? b.lo : undefined });
   }
   // Connections by entry mode over the window just before, point for point:
   // the dashed reference of "Connections per day" on the admin World page.
@@ -8898,6 +8937,20 @@ function visitsSummaryRead(periodDays, h24, range) {
     allTime: { v: visitsStore.totalV || 0, u: visitsStore.totalU || 0, nw: visitsStore.totalU || 0, rt: visitsStore.totalRet || 0, lv: visitsStore.totalLV || 0, lu: visitsStore.totalLU || 0, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0, live: am.live || 0 }; })() },
     series: series,
     prevM: prevM,
+    // Connections per LAN directory entry, and pokerth.net logins (guests /
+    // accounts), over the period and the period before.
+    lanServers: (function () {
+      const cur = visitSumKey(h24 ? visitList(true, 24) : visitList(false, P, E), 'ls');
+      const prev = visitSumKey(h24 ? visitList(true, 24, 24) : visitList(false, P, E + P), 'ls');
+      const names = {};
+      try { LAN_DIR.entries().forEach(function (e) { names[e.id] = e.name || e.host; }); } catch (e) {}
+      return { period: cur, prev: prev, names: names, since: visitsStore.lanSrvSince || 0 };
+    })(),
+    logins: {
+      period: visitSumKey(h24 ? visitList(true, 24) : visitList(false, P, E), 'lo'),
+      prev: visitSumKey(h24 ? visitList(true, 24, 24) : visitList(false, P, E + P), 'lo'),
+      since: visitsStore.loginSince || 0
+    },
     hours48: visitHourSeries(48),
     hourProfile: h24 ? visitHourProfile24() : visitHourProfile(P, E),
     hourSince: visitsStore.hourSince || 0,
@@ -13623,9 +13676,11 @@ const httpServer = http.createServer((req, res) => {
         const _bot = visitIsBot(req, d);
         if (d && d.mode) {
           _pingStats.nMode++; recordModeConnect(d.mode, _bot);
+          if (d.mode === 'lan' && typeof d.srv === 'string') recordLanServer(d.srv, _bot);
           if (typeof d.tz === 'string' && VISIT_MODES.indexOf(d.mode) >= 0) recordGeo(d.tz, null, d.mode, _bot);
         }
         else if (d && d.live === true) { _pingStats.nLive++; recordLiveVisit(d.vid, _bot); }
+        else if (d && (d.login === 'guest' || d.login === 'auth')) { _pingStats.nLogin = (_pingStats.nLogin || 0) + 1; recordLogin(d.login, _bot); }
         else {
           _pingStats.n++;
           if (_bot) _pingStats.nBot = (_pingStats.nBot || 0) + 1;

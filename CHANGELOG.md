@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin Statistics: connections per LAN server, guests and accounts** (`web.123`) — the LAN mode ping now carries
+  the server (`srv`, host:port; counted once per server and browser session) and the proxy files it under its LAN
+  directory entry, or « other » (local server, typed address, unlisted), never keeping the address (`ls` per day
+  and hour cell, at most 200 keys). On a confirmed login on pokerth.net (`onInitAck`) the client sends a login ping
+  (`login: guest|auth`, once per kind and session, honours « do not count me », /live left out); the proxy counts
+  `lo: { g, a }`, robots apart. `/admin/visits` returns `lanServers` (period, period before, entry names, since) and
+  `logins` (period, period before, since), and each series point its `lo`. The World page's LAN card gains a
+  Connections column with the change against the period before and a line for unlisted servers; the Internet card
+  gives logins with the share of guests and accounts. Privacy page and player changelog updated.
 - **Admin Statistics › World: « Live now »** (`web.122`) — a sixth map layer: the connections open at this moment,
   by country, in the entry modes picked in the filter bar, read from `/admin/sessions` every 15 s while on screen
   (country card, list and legend included; a client too old to say counts as Unknown). The web client now adds

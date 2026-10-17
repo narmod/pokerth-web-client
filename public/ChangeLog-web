@@ -1,3 +1,6 @@
+2026-10-17 version 2.1.10-web.123:
+- improvement: the statistics now count how many logins on pokerth.net are guests and how many use an account, and how many games are opened on each server of the LAN list; only totals per day, never a name or a server address (see the privacy page)
+
 2026-10-17 version 2.1.10-web.122:
 - improvement: your browser's time zone is now also sent when you connect, so the server operator can see how many players are online in each country right now; it is kept as a country only, for as long as you are connected, and never stored (see the privacy page)
 

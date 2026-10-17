@@ -235,7 +235,8 @@
   .wlan .wn{display:flex;align-items:center;gap:6px;overflow:hidden;text-overflow:ellipsis;color:var(--cream)}
   .wlan .wr{text-align:right;font-variant-numeric:tabular-nums}
   .wlan .on{color:var(--ok-text)} .wlan .off{color:var(--err-text)} .wlan .hid{color:var(--muted)}
-  @media(max-width:600px){ .wkpis{grid-template-columns:repeat(2,minmax(0,1fr))} .wlan{grid-template-columns:minmax(0,1fr) auto auto} .wlan .wl{display:none} }
+  .wlan i{font-style:normal;font-size:.72rem;color:var(--muted)} .wlan i.up{color:var(--ok-text)} .wlan i.dn{color:var(--err-text)}
+  @media(max-width:600px){ .wkpis{grid-template-columns:repeat(2,minmax(0,1fr))} .wlan{grid-template-columns:minmax(0,1fr) auto auto} .wlan>span:nth-child(4n+2){display:none} }
   /* Local time along the map. */
   .geohours{position:relative;height:34px;margin:0 0 4px;border-bottom:1px solid var(--line)}
   .geohours .gh{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;line-height:1.15;white-space:nowrap}
@@ -4289,12 +4290,21 @@
     var p=Math.round((cur-prev)/prev*100), t=p>=10?'up':(p<=-10?'dn':'');
     return '<i class="'+t+'">'+(p>0?'▲ +':(p<0?'▼ −':'≈ '))+Math.abs(p)+'% vs before</i>';
   }
+  // Logins on pokerth.net over the period: guests and accounts (web.123+).
+  function _wLogins(d){
+    var L=d&&d.logins; if(!L) return '';
+    var p=L.period||{}, q=L.prev||{}, g=p.g||0, a=p.a||0, t=g+a, tp=(q.g||0)+(q.a||0);
+    if(!t) return L.since?'<span>No login counted over this period</span>':'<span>Guests and accounts are counted from 2.1.10-web.123</span>';
+    var pc=function(x){ return Math.round(100*x/t); };
+    var dl=tp?Math.round((t-tp)/tp*100):null;
+    return '<span>Logins <b>'+_wFmt(t)+'</b>'+(dl===null?'':' ('+(dl>=0?'+':'\u2212')+Math.abs(dl)+'%)')+'</span><span>Guests <b>'+pc(g)+' %</b></span><span>Accounts <b>'+pc(a)+' %</b></span>';
+  }
   function _worldInet(d){
     var box=$('wInet'), nt=$('wInetNote'); if(!box) return;
     var p=d.pth, nw=p&&p.now, cur=_wSum(d.series,['pokerthnet']), prv=_wSum(d.prevM,['pokerthnet']);
     var k3='<div><span>Connections, '+_annEsc(_perLabel(_trafPeriod))+'</span><b>'+_wFmt(cur)+'</b>'+(_wDelta(cur,prv)||'<i>through this client</i>')+'</div>';
     if(p===undefined || !nw){
-      box.innerHTML='<div class="wkpis"><div><span>Online on the server</span><b>—</b><i>'+(p&&p.on===false?'live figures switched off':'no sample yet')+'</i></div><div><span>On the web client</span><b>—</b><i></i></div>'+k3+'</div>';
+      box.innerHTML=(_wLogins(d)?'<div class="wfoot" style="margin:0 0 8px">'+_wLogins(d)+'</div>':'')+'<div class="wkpis"><div><span>Online on the server</span><b>—</b><i>'+(p&&p.on===false?'live figures switched off':'no sample yet')+'</i></div><div><span>On the web client</span><b>—</b><i></i></div>'+k3+'</div>';
       if(nt) nt.textContent='';
       return;
     }
@@ -4306,7 +4316,7 @@
       +'<div><span>On the web client</span><b>'+_wFmt(nw.wb)+'</b><i>'+_pthPct(nw.wb,nw.online)+' % of online</i></div>'
       +k3+'</div>'
       +'<h3>Players online, last 48 h — whole server and web client</h3><div id="wInet48"></div>'
-      +'<div class="wfoot">'+(best?'<span>Busiest hour <b>'+_annEsc(best.t.slice(11))+':00</b> ('+_wFmt(Math.round(best.on))+')</span>':'')
+      +'<div class="wfoot">'+_wLogins(d)+(best?'<span>Busiest hour <b>'+_annEsc(best.t.slice(11))+':00</b> ('+_wFmt(Math.round(best.on))+')</span>':'')
       +(nw.lv?'<span>/live <b>'+_wFmt(nw.lv)+'</b></span>':'')+'</div>';
     if(h48.some(function(x){ return x.n; })){
       _chartMount($('wInet48'),h48.map(function(x){ return x.t.slice(8,10)+'.'+x.t.slice(5,7)+' '+x.t.slice(11)+'h'; }),[
@@ -4333,8 +4343,13 @@
       var ao=a.status&&a.status.online?1:0, bo=b.status&&b.status.online?1:0;
       return (bo-ao) || (((b.status&&b.status.players)||0)-((a.status&&a.status.players)||0)) || String(a.name).localeCompare(String(b.name));
     });
-    var shown=rows.slice(0,8);
-    h+='<div class="wlan"><span class="wh">Server</span><span class="wh">Status</span><span class="wh wr">Now</span><span class="wh wr wl">Last seen</span>';
+    var shown;
+    var LS=(d&&d.lanServers)||null, lp=(LS&&LS.period)||{}, lq=(LS&&LS.prev)||{};
+    // Busiest first once there are counts (the sort is stable: online first among equals).
+    if(LS) rows.sort(function(a,b){ return (lp[b.id]||0)-(lp[a.id]||0); });
+    shown=rows.slice(0,8);
+    h+='<div class="wlan"><span class="wh">Server</span><span class="wh">Status</span><span class="wh wr">Now</span><span class="wh wr wl">Connections</span>';
+    var cnt=function(id){ if(!LS) return '\u2014'; var c=lp[id]||0, b=lq[id]||0; return _wFmt(c)+(b?(' <i class="'+(c>=b*1.1?'up':(c<=b*0.9?'dn':''))+'">'+(c>=b?'+':'\u2212')+Math.abs(Math.round((c-b)/b*100))+'%</i>'):''); };
     shown.forEach(function(e){
       var st=e.status||{}, known=typeof st.online==='boolean';
       var cls=e.visible===false||e.autoHidden||!known?'hid':(st.online?'on':'off');
@@ -4342,9 +4357,11 @@
       h+='<span class="wn">'+(e.country?_geoFlag(String(e.country).toUpperCase()):'')+_annEsc(e.name||e.host)+'</span>'
         +'<span class="'+cls+'">● '+lab+'</span>'
         +'<span class="wr">'+(st.online&&typeof st.players==='number'?_wFmt(st.players):'—')+'</span>'
-        +'<span class="wr wl">'+(e.lastSeen?_annEsc(_wAgo(Date.now()-e.lastSeen)):'—')+'</span>';
+        +'<span class="wr wl" title="'+(e.lastSeen?'Last seen '+_annEsc(_wAgo(Date.now()-e.lastSeen)):'')+'">'+cnt(e.id)+'</span>';
     });
-    h+='</div>'+(rows.length>8?'<p class="muted note">and '+(rows.length-8)+' more in the LAN directory</p>':'');
+    // Games opened on a server that is not in the directory (local server, typed address).
+    if(LS && (lp.other||lq.other)) h+='<span class="wn hid">Not listed (local, typed)</span><span class="hid">\u2014</span><span class="wr">\u2014</span><span class="wr wl">'+cnt('other')+'</span>';
+    h+='</div>'+(LS&&!LS.since?'<p class="muted note">Connections per server are counted from 2.1.10-web.123.</p>':'')+(rows.length>8?'<p class="muted note">and '+(rows.length-8)+' more in the LAN directory</p>':'');
     box.innerHTML=h;
   }
   function _wAgo(ms){ var m=Math.round(ms/60000); if(m<2) return 'now'; if(m<60) return m+' min ago'; var hh=Math.round(m/60); if(hh<48) return hh+' h ago'; return Math.round(hh/24)+' days ago'; }

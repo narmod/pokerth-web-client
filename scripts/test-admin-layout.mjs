@@ -521,6 +521,9 @@ ok(/_worldConn\(_trafLastD\); \}/.test(body(admin, '_pickMode')), 'connections p
 ok(/var keys=on\.map\(function\(m\)\{ return m\.k; \}\)/.test(body(admin, '_worldConn')), 'counting the modes on show only');
 ok(/_wSum\(d\.series,\['pokerthnet'\]\)/.test(body(admin, '_worldInet')) && /_wSum\(d&&d\.series,\['lan'\]\)/.test(body(admin, '_worldLan')), 'each card counts its own mode');
 ok(/api\('\/admin\/lan-directory'\)/.test(body(admin, '_worldCards')), 'the LAN card reads the directory');
+ok(/var LS=\(d&&d\.lanServers\)\|\|null/.test(body(admin, '_worldLan')) && /cnt\('other'\)/.test(body(admin, '_worldLan')), 'the LAN card counts connections per server, unlisted ones on a line of their own (web.123)');
+ok(/var L=d&&d\.logins; if\(!L\) return '';/.test(body(admin, '_wLogins')) && /Guests <b>'\+pc\(g\)\+' %<\/b>/.test(body(admin, '_wLogins')), 'the Internet card splits logins into guests and accounts');
+ok(/counted from 2\.1\.10-web\.123/.test(body(admin, '_wLogins')), 'and says when counting began rather than showing a zero');
 ok(/\.perU/.test(body(admin, '_paintPeriod')), 'the unit follows the period (day, or hour over 24 h)');
 ok(/_chartMount\(\$\('musDayChart'\),_musLabs,_musLines,160,'stack'\)/.test(admin),
   'the music history is stacked bars, not lines');
