@@ -3,7 +3,7 @@
 // rejects private messages. game/presence.mjs must route to the newest online
 // session and flag the rest as ghosts, and pm.mjs must use it.
 import { readFileSync } from 'fs';
-import { onlinePidByName, ghostPids } from '../public/modules/game/presence.mjs';
+import { onlinePidByName, ghostPids, runningSeatPids } from '../public/modules/game/presence.mjs';
 
 let bad = 0;
 const ok = (cond, label) => {
@@ -34,6 +34,16 @@ ok(g.size === 2, 'exactly two ghosts');
 ok(ghostPids({ 5: '#5', 6: '#5' }, new Set([5, 6]), 0).size === 0, 'unnamed placeholders never deduplicated');
 ok(ghostPids(players, null, ME).size === 0, 'no online set = no ghost');
 
+console.log('running tables (upstream 31c0166 parity):');
+const games = { 1: { mode: 2, seats: [12, 40] }, 2: { mode: 1, seats: [30] } };
+const keep = runningSeatPids(games);
+ok(keep.has(12) && keep.has(40) && !keep.has(30), 'only seats of started games');
+const gk = ghostPids(players, online, ME, keep);
+ok(!gk.has(12), 'older homonym seated at a running table is kept (rejoin pending)');
+ok(gk.has(30), 'homonym at a waiting table is still a ghost');
+ok(onlinePidByName(players, online, ME, 'Teressa') === 77, 'PMs still go to the newest session');
+ok(runningSeatPids(null).size === 0 && runningSeatPids({ 3: { mode: 2 } }).size === 0, 'no games / no seats = empty');
+
 console.log('wiring:');
 const pm = readFileSync(new URL('../public/modules/ui/pm.mjs', import.meta.url), 'utf8');
 ok(/import \{ onlinePidByName \} from '\.\.\/game\/presence\.mjs'/.test(pm), 'pm.mjs imports onlinePidByName');
@@ -41,7 +51,7 @@ ok(/return onlinePidByName\(S\.players \|\| \{\}, S\._lobbyPids, S\.myId, name\)
 const main = readFileSync(new URL('../public/pokerth.js', import.meta.url), 'utf8');
 ok(main.indexOf('window._pthGhostPids()') !== -1, 'players panel filters ghosts');
 const live = readFileSync(new URL('../public/modules/live/lobby.mjs', import.meta.url), 'utf8');
-ok(live.indexOf('ghostPids(players, online, S.myId)') !== -1, 'live list filters ghosts');
+ok(live.indexOf('ghostPids(players, online, S.myId, runningSeatPids(S.games))') !== -1, 'live list filters ghosts');
 const sw = readFileSync(new URL('../public/sw.js', import.meta.url), 'utf8');
 ok(sw.indexOf("'/modules/game/presence.mjs'") !== -1, 'presence.mjs precached');
 

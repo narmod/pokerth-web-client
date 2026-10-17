@@ -494,6 +494,10 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Ghost homonyms: running tables exempt** (`web.105`, upstream `31c0166` parity) — like
+  `LobbyHandler::removeStalePlayerListDuplicates`, an older homonym seated at a started table is not hidden: during a
+  rejoin the seat keeps the old pid until the next hand. `presence.mjs`: `runningSeatPids(S.games)` passed to
+  `ghostPids` by the players panel and the live list; PMs still go to the newest session.
 - **A second drop during a rejoin keeps the seat** (`web.104`, upstream `fcd25c4` / `31c0166`) — the server binds a
   reclaimed seat to the new session GUID only when it performs the rejoin at the next hand (`PerformRejoin`), but
   `onJoinGameAck` already stored the new GUID in `pth_resume`, and Init replayed the in-memory GUID first: a drop in

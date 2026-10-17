@@ -40,10 +40,28 @@ export function onlinePidByName(players, online, myId, name) {
   return best;
 }
 
+// Pids seated at a RUNNING table (netGameStarted = 2). During a rejoin the
+// seat keeps the old pid until the server performs it at the next hand, so
+// that pid and the new session share a name for a while; both are real.
+export function runningSeatPids(games) {
+  const out = new Set();
+  try {
+    for (const id in (games || {})) {
+      const g = games[id];
+      if (g && g.mode === 2 && g.seats) g.seats.forEach(function (p) { out.add(parseInt(p, 10)); });
+    }
+  } catch (e) {}
+  return out;
+}
+
 // The online pids that are only a stale copy of another online session with
 // the same name (every homonym but the keeper chosen by onlinePidByName).
-export function ghostPids(players, online, myId) {
+// A pid seated at a running table is never one: like upstream
+// (LobbyHandler::removeStalePlayerListDuplicates, 31c0166), its session ends
+// regularly with the game. `keep` = runningSeatPids(S.games), optional.
+export function ghostPids(players, online, myId, keep) {
   const set = _toSet(online);
+  const exempt = keep ? _toSet(keep) : new Set();
   const keeper = Object.create(null);
   set.forEach(function (pid) {
     const nm = players ? players[pid] : null;
@@ -54,7 +72,7 @@ export function ghostPids(players, online, myId) {
   const out = new Set();
   set.forEach(function (pid) {
     const nm = players ? players[pid] : null;
-    if (_known(nm) && keeper[nm] !== pid) out.add(pid);
+    if (_known(nm) && keeper[nm] !== pid && !exempt.has(pid)) out.add(pid);
   });
   return out;
 }
@@ -64,6 +82,6 @@ export function ghostPids(players, online, myId) {
 try {
   window._pthGhostPids = function () {
     const S = window.PthState || {};
-    return ghostPids(S.players, S._lobbyPids, S.myId);
+    return ghostPids(S.players, S._lobbyPids, S.myId, runningSeatPids(S.games));
   };
 } catch (e) {}

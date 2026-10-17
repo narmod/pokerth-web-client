@@ -1,3 +1,6 @@
+2026-10-17 version 2.1.10-web.105:
+- improvement: a player getting their seat back at a running table stays listed under both sessions until the rejoin is done, as in the official client
+
 2026-10-17 version 2.1.10-web.104:
 - bugfix: a second connection drop while you are getting your seat back at a running table no longer loses the seat
 
