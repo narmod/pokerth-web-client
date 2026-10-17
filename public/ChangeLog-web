@@ -1,3 +1,6 @@
+2026-10-17 version 2.1.10-web.108:
+- improvement: Latin-American Spanish: two advanced options now say « póker », like the rest of the translation
+
 2026-10-17 version 2.1.10-web.107:
 - improvement: a dead connection is noticed much sooner (about 30 s at the table, even on your own turn), with a « Connection problems » notice while the server does not answer, as in the official client
 

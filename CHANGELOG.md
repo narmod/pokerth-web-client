@@ -494,6 +494,10 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **es-419 derivation test green again** (`web.108`) — the mini-game strings (`web.84`–`102`) and two login help fields
+  were written by hand in Latin-American Spanish, so `es-419` was no longer `derive(es)` (29 failures). Those wordings
+  are folded into `scripts/es-419-rules.mjs` (narrow rules, as for the Events tab and the avatar maker); `póquer` →
+  `póker` is general, so the two advanced options that still said « póquer » in es-419 now match the other 21 strings.
 - **Connection watchdog with an active probe** (`web.107`, upstream `934457e` parity) — new `net/watchdog.mjs`: after a
   silence the client sends a PlayerInfoRequest for id `0xFFFFFFFF`, which every server answers and none counts as player
   activity. Table: probe 5 s / notice 10 s / drop 30 s (QML values; the passive watchdog waited up to the action

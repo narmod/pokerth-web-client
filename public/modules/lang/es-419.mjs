@@ -124,7 +124,7 @@ export const strings = {
     // GameStatusBar (bandeau d'info de jeu, parité QML §7)
     gsbTotal:'Total:', gsbBets:'Apuestas:', gsbGame:'Partida:', gsbHand:'Mano:',
   seatPokerth: 'PokerTH',
-  advUiGeneral:'General', advUiNetwork:'Red', advShowTooltips:'Mostrar descripciones emergentes', advDisableSplash:'Desactivar la pantalla de bienvenida al iniciar', advDontTranslatePoker:'No traducir los términos de póquer (Check, Call, Raise)', advNA:'web', advLanguage:'Idioma', advDefCommunity:'Comunidad predeterminada', advSecReactions:'Reacciones', advDisableReactions:'Desactivar las reacciones con emojis', advNetStateColor:'Mostrar el color del estado de red en la esquina del avatar',
+  advUiGeneral:'General', advUiNetwork:'Red', advShowTooltips:'Mostrar descripciones emergentes', advDisableSplash:'Desactivar la pantalla de bienvenida al iniciar', advDontTranslatePoker:'No traducir los términos de póker (Check, Call, Raise)', advNA:'web', advLanguage:'Idioma', advDefCommunity:'Comunidad predeterminada', advSecReactions:'Reacciones', advDisableReactions:'Desactivar las reacciones con emojis', advNetStateColor:'Mostrar el color del estado de red en la esquina del avatar',
   showPlayers: `Ver jugadores`,
   footJoin: `Unirse`,
   spectatingBadge: `Espectador`,
@@ -766,7 +766,7 @@ export const strings = {
     cfgXmlExported:'config.xml exportado — colócalo en ~/.pokerth/ del cliente de escritorio', cfgXmlImported:'config.xml importado — ajustes compartidos aplicados', cfgXmlImportErr:'Error de importación — no es un config.xml de PokerTH válido', cfgXmlReload:'¿Recargar ahora para aplicarlo todo (temas, barajas, nombres)?',
     advCfgSync:'Sincronizar automáticamente estos ajustes con mi cuenta (solo con sesión registrada — guardados en este servidor)', cfgSyncApplied:'Ajustes sincronizados desde tu cuenta',
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
-    advPokerTerms:'No traducir los términos internacionales de póquer (Check, Call, Raise)',
+    advPokerTerms:'No traducir los términos internacionales de póker (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',
     // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
     actBadgeCheck:'Check', unitMinutes:'minutos', presetWecupName:'We Cup', presetBbcName:'BBC', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
