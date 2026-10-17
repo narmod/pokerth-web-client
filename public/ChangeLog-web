@@ -1,3 +1,6 @@
+2026-10-17 version 2.1.10-web.104:
+- bugfix: a second connection drop while you are getting your seat back at a running table no longer loses the seat
+
 2026-10-17 version 2.1.10-web.103:
 - bugfix: a private message to a player who had just reconnected was sent to their old, dead session and refused — it now reaches the player
 - bugfix: a player who reconnects too quickly is no longer listed twice in the players list

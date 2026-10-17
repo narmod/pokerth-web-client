@@ -122,18 +122,22 @@ function onAnnounce(sub) {
       } catch (e) {}
     }
     // Previous session GUID, replayed as InitMessage.myLastSessionId. Source:
-    // S._sessionGuid when the page survived the drop, otherwise the base64 copy
-    // kept in pth_resume (full reload / iOS cold start after the PWA was killed
-    // in the background). Same 5 min window as the rejoin marker, matching the
-    // server's SERVER_OFFLINE_RECONNECT_TIMEOUT_SEC = 300.
-    let _lastSid = S._sessionGuid || null;
-    if (!_lastSid && !window._offlineMode) {
+    // the GUID our seat carries, kept in pth_resume (k) -- it survives a full
+    // reload / iOS cold start, and during a rejoin it is still the previous
+    // GUID, which the server checks until it performs the rejoin at the next
+    // hand (see seatGuidForJoin in msg-game-join.mjs). Same 5 min window as
+    // the rejoin marker, matching the server's
+    // SERVER_OFFLINE_RECONNECT_TIMEOUT_SEC = 300. No marker (not seated, or no
+    // storage): the GUID of the session that just dropped, as before.
+    let _lastSid = null;
+    if (!window._offlineMode) {
       try {
         var _rk = JSON.parse(localStorage.getItem('pth_resume') || 'null');
         if (_rk && _rk.k && _rk.n === S.myName && (Date.now() - _rk.t) < 5 * 60 * 1000)
           _lastSid = MSG.b64ToBytes(_rk.k);
       } catch (e) { _lastSid = null; }
     }
+    if (!_lastSid) _lastSid = S._sessionGuid || null;
     // Mot de passe serveur (optionnel, masqué sous « plus d'options »).
     // Trimmé ; vide → null donc omis de l'InitMessage. Lu directement ici
     // (comme authPass) pour couvrir aussi les reconnexions automatiques.

@@ -494,6 +494,12 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **A second drop during a rejoin keeps the seat** (`web.104`, upstream `fcd25c4` / `31c0166`) — the server binds a
+  reclaimed seat to the new session GUID only when it performs the rejoin at the next hand (`PerformRejoin`), but
+  `onJoinGameAck` already stored the new GUID in `pth_resume`, and Init replayed the in-memory GUID first: a drop in
+  that window sent a GUID the seat did not carry, and the rejoin was refused. The marker now keeps the seat's GUID
+  (`seatGuidForJoin`), moves on at `GameStartRejoin` (`commitSeatGuid`), and Init replays it before the dropped
+  session's GUID. Nothing changes in proxy mode while the session grace holds (no new Init); `scripts/test-seat-guid.mjs`.
 - **Private messages to a quick reconnect** (`web.103`) — the server can briefly list a nickname twice, the
   dead session keeping its old pid; it rejects every PM. `playerIdByName` walked the never-purged `S.players` cache
   and took the lowest (oldest) pid, so PMs went to the ghost — and to any old pid for the rest of the session.

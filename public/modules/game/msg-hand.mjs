@@ -210,6 +210,8 @@ function onGameStartRejoin(sub) {
     // handler, la reprise restait bloquee sur la wait-page (bug historique :
     // on emettait Rejoin sans jamais ecouter la reponse).
     S._gameStarted = true;
+    // The rejoin is done: the seat now carries this session's GUID.
+    try { window._resumeCommitGuid && window._resumeCommitGuid(); } catch (e) {}
     try { _updateLobbyWaitStatus(); } catch(e) {}
     try { show('s-game'); } catch(e) {}
     try { _renderLobbyWaitActions(); } catch(e) {}

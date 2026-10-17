@@ -69,6 +69,9 @@ function onGameSpectatorLeft(sub) {
 
 function onJoinGameAck(sub) {
     S.gId = Proto.u32(sub, 1);
+    // Our own seat reclaimed (RejoinExistingGame), not a fresh join or a
+    // re-spectate: read before _pendingRejoin is cleared below.
+    const _wasRejoin = !!S._pendingRejoin && S._pendingRejoin === S.gId && !S._pendingRejoinSpec;
     // Disarm the join watchdog (armed by _sendJoin in pokerth.js).
     if (S._joinWd) { clearTimeout(S._joinWd); S._joinWd = 0; }
     // Préchauffe les 52 faces + le dos du deck actif pendant la page d'attente,
@@ -87,13 +90,16 @@ function onJoinGameAck(sub) {
     if (!window._offlineMode) {
       // s:1 = session spectateur → au resume on re-spectatera au lieu de
       // réclamer un siège (voir onInitAck / _armRejoin).
-      // k = session GUID (base64). This is the proof the server requires before
-      // giving the seat back after a drop; without it, rejoining a RUNNING game
-      // is refused. Rewritten on every JoinGameAck, so also right after a
-      // successful rejoin -- the server rebinds the seat to the NEW GUID at
-      // that point (servergamestate.cpp:1573).
-      var _k = '';
-      try { if (S._sessionGuid) _k = MSG.bytesToB64(S._sessionGuid); } catch(e) {}
+      // k = the GUID our SEAT carries (base64). This is the proof the server
+      // requires before giving the seat back after a drop; without it,
+      // rejoining a RUNNING game is refused. On a fresh join the seat takes
+      // this session's GUID. On a rejoin it does NOT yet: the server rebinds
+      // the seat only when it performs the rejoin at the start of the next hand
+      // (ServerGameStateHand::PerformRejoin), so until then the previous GUID
+      // must survive another drop -- otherwise a second rejoin in that window
+      // is refused (upstream fcd25c4 / 31c0166). commitSeatGuid() moves it on
+      // at GameStartRejoin.
+      var _k = seatGuidForJoin(_wasRejoin);
       try { localStorage.setItem('pth_resume', JSON.stringify({ n: S.myName, g: S.gId, t: Date.now(), s: S._amSpectator ? 1 : 0, k: _k })); } catch(e) {}
     }
     window._hideBanner();
@@ -504,7 +510,41 @@ try {
 } catch (e) {}
 window._resumeTouch = touchResume;
 
-export { touchResume };
+// The resume marker of the current game and nick, or null.
+function _resumeMarker() {
+  try {
+    var r = JSON.parse(localStorage.getItem('pth_resume') || 'null');
+    return (r && r.g === S.gId && r.n === S.myName) ? r : null;
+  } catch (e) { return null; }
+}
+function _sessionGuidB64() {
+  try { return S._sessionGuid ? MSG.bytesToB64(S._sessionGuid) : ''; } catch (e) { return ''; }
+}
+// k to store at JoinGameAck: this session's GUID, except on a rejoin, where
+// the seat still carries the GUID already in the marker (kept when present).
+function seatGuidForJoin(isRejoin) {
+  if (isRejoin) {
+    var r = _resumeMarker();
+    if (r && r.k) return r.k;
+  }
+  return _sessionGuidB64();
+}
+// GameStartRejoin: the server has just performed our rejoin and bound the
+// seat to THIS session's GUID -- the marker follows (same moment as
+// InitGame -> WriteSessionGuidToFile in the official client).
+function commitSeatGuid() {
+  try {
+    if (window._offlineMode) return;
+    var r = _resumeMarker();
+    var k = _sessionGuidB64();
+    if (!r || !k || r.k === k) return;
+    r.k = k; r.t = Date.now();
+    localStorage.setItem('pth_resume', JSON.stringify(r));
+  } catch (e) {}
+}
+window._resumeCommitGuid = commitSeatGuid;
+
+export { touchResume, seatGuidForJoin, commitSeatGuid };
 export { onGameSpectatorJoined, onGameSpectatorLeft, onJoinGameAck, onJoinGameFailed, onGamePlayerJoined, onGamePlayerLeft, onRemovedFromGame, onStartEvent, onGameAdminChanged, onPlayerIdChanged };
 
 for (const [k, v] of Object.entries({ onGameSpectatorJoined, onGameSpectatorLeft, onJoinGameAck, onJoinGameFailed, onGamePlayerJoined, onGamePlayerLeft, onRemovedFromGame, onStartEvent, onGameAdminChanged, onPlayerIdChanged }))
