@@ -344,6 +344,43 @@ function featureOffList() {
   if (!Array.isArray(a)) return [];
   return a.filter(function (k) { return FEATURE_SWITCHES.some(function (f) { return f.key === k; }); });
 }
+// Every top-level key of _adminConfig. A config import REPLACES the whole
+// object and keeps only these keys, so a key missing here is silently wiped by
+// an export -> import round-trip (it happened to 'seo', to the server list and
+// to 'musicVotesPublic'). scripts/test-admin-config-io.mjs fails when code
+// writes a key that is not listed.
+const ADMIN_CONFIG_KEYS = Object.freeze([
+  'resetPeriod', 'modes', 'welcome', 'guestNotice', 'authNotice', 'lanNotice', 'defaultTheme', 'liveDefaults',
+  'defaults', 'loginDefaults', 'proxyCfg', 'tableDefaults', 'tableNames', 'serverName', 'serverTagline',
+  'clockZones', 'clockRef', 'discordChatWebhookUrl', 'showLoginTitle', 'lobbyClockTz', 'featureOff', 'liveStats',
+  'communityEvents', 'bannedIps', 'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
+  'musicEnabled', 'musicHidden', 'musicOrder', 'musicVotesPublic', 'seo', 'servers', 'activeServerId',
+  'pokerthnetSource', 'internetTransport', 'liveTransport', 'proxyProtocol', 'serverlistUrl', 'autoUpdate',
+  'lanDirectory'
+]);
+// Secrets and personal data removed from an export unless asked for. Returns
+// what was removed, as paths, for the file's "redacted" list.
+function _configRedact(cfg) {
+  const out = [];
+  if (cfg.discordChatWebhookUrl) { delete cfg.discordChatWebhookUrl; out.push('discordChatWebhookUrl'); }
+  const ld = cfg.lanDirectory;
+  if (ld && Array.isArray(ld.pending) && ld.pending.some(function (r) { return r && r.contact; })) {
+    ld.pending.forEach(function (r) { if (r) delete r.contact; });
+    out.push('lanDirectory.pending.contact');
+  }
+  return out;
+}
+// On restore, a value the file says it left out keeps its current value rather
+// than being erased: restoring a backup must not wipe the Discord relay.
+function _configKeepRedacted(next, redacted, current) {
+  const r = Array.isArray(redacted) ? redacted : [];
+  if (r.indexOf('discordChatWebhookUrl') >= 0 && current.discordChatWebhookUrl) next.discordChatWebhookUrl = current.discordChatWebhookUrl;
+  if (r.indexOf('lanDirectory.pending.contact') >= 0 && next.lanDirectory && Array.isArray(next.lanDirectory.pending)) {
+    const was = {};
+    ((current.lanDirectory && current.lanDirectory.pending) || []).forEach(function (q) { if (q && q.id) was[q.id] = q.contact; });
+    next.lanDirectory.pending.forEach(function (q) { if (q && q.id && was[q.id] && !q.contact) q.contact = was[q.id]; });
+  }
+}
 function saveAdminConfig() { try { fs.writeFileSync(ADMIN_CONFIG_FILE, JSON.stringify(_adminConfig)); } catch (e) { console.error('[admin] config write failed:', e.message); } }
 
 // ── LAN server directory (players propose, admin approves) ──────────────────
@@ -11418,7 +11455,14 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     let v = '';
     try { v = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
-    const out = { schema: 'pokerth-admin-config/1', exportedAt: new Date().toISOString(), version: v, config: _adminConfig || {} };
+    // Secrets and personal data stay out of the file unless asked for
+    // (?secrets=1): the Discord webhook URL lets anyone post as the relay, and
+    // pending LAN requests carry the requester's contact. The file lists what
+    // was left out, and a restore keeps the current values for those.
+    const withSecrets = (query.secrets === '1' || query.secrets === 'true');
+    const cfg = JSON.parse(JSON.stringify(_adminConfig || {}));
+    const redacted = withSecrets ? [] : _configRedact(cfg);
+    const out = { schema: 'pokerth-admin-config/1', exportedAt: new Date().toISOString(), version: v, redacted: redacted, config: cfg };
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store',
                          'Content-Disposition': 'attachment; filename="pokerth-admin-config.json"' });
     res.end(JSON.stringify(out, null, 2));
@@ -11433,25 +11477,17 @@ function handleAdmin(req, res, reqPathOnly, query) {
                 : (d && d.file && d.file.config && typeof d.file.config === 'object') ? d.file.config : null;
       if (!src) return adminJson(res, 400, { ok: false, error: 'no config object found' });
       // Liste blanche des clés de premier niveau : un fichier trafiqué ne peut
-      // pas glisser de réglage inconnu dans la configuration vivante.
-      // Every legitimate top-level key of _adminConfig must be listed here:
-      // the import REPLACES the whole config, so a key missing from this
-      // list is silently wiped by an export -> import round-trip. That is
-      // exactly what happened to 'seo' (and the server list): restoring a
-      // config reset SEO to Off. Keep in sync with the keys the code reads.
-      const ALLOWED = ['resetPeriod', 'modes', 'welcome', 'guestNotice', 'authNotice', 'lanNotice', 'defaultTheme', 'liveDefaults', 'defaults', 'loginDefaults',
-                       'proxyCfg', 'tableDefaults', 'tableNames', 'serverName', 'serverTagline', 'clockZones', 'clockRef',
-                       'discordChatWebhookUrl', 'showLoginTitle', 'lobbyClockTz', 'featureOff', 'liveStats', 'communityEvents', 'bannedIps',
-                       'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
-                       'musicEnabled', 'musicHidden', 'musicOrder',
-                       'seo', 'servers', 'activeServerId', 'pokerthnetSource',
-                       'internetTransport', 'liveTransport', 'proxyProtocol', 'serverlistUrl', 'autoUpdate',
-                       'lanDirectory'];
+      // pas glisser de réglage inconnu dans la configuration vivante. The list
+      // is ADMIN_CONFIG_KEYS (see there: a missing key is wiped by a restore).
+      const ALLOWED = ADMIN_CONFIG_KEYS;
+      const fileRedacted = (d && d.file && Array.isArray(d.file.redacted)) ? d.file.redacted
+                         : (d && Array.isArray(d.redacted)) ? d.redacted : [];
       const next = {}, taken = [], skipped = [];
       Object.keys(src).forEach(function (k) {
         if (ALLOWED.indexOf(k) >= 0) { next[k] = src[k]; taken.push(k); } else skipped.push(k);
       });
       if (!taken.length) return adminJson(res, 400, { ok: false, error: 'nothing importable in that file' });
+      _configKeepRedacted(next, fileRedacted, _adminConfig || {});
       _adminConfig = next;
       saveAdminConfig();
       // Réglages miroirés dans des variables vivantes : à resynchroniser tout de
@@ -11460,8 +11496,12 @@ function handleAdmin(req, res, reqPathOnly, query) {
           ['off', 'daily', 'weekly', 'monthly', 'yearly'].indexOf(_adminConfig.resetPeriod) >= 0) {
         STATS_RESET_PERIOD = _adminConfig.resetPeriod;
       }
+      // Caches built from the config: the SEO injection and the official
+      // serverlist are rebuilt from the restored settings, not the old ones.
+      try { _seoHtmlCache.clear(); } catch (e) {}
+      try { if (_pokerthnetSource() === 'auto') { _serverlistCache.fetchedAt = 0; setTimeout(maybeRefreshServerlist, 0); } } catch (e) {}
       console.log('[admin] configuration imported (' + taken.length + ' setting(s), ' + skipped.length + ' ignored)');
-      return adminJson(res, 200, { ok: true, imported: taken, ignored: skipped });
+      return adminJson(res, 200, { ok: true, imported: taken, ignored: skipped, kept: fileRedacted });
     }, 8 * 1024 * 1024);
   }
   // ── IP bloquées / bannies (clé maître uniquement) ──────────────────

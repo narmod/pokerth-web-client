@@ -1170,7 +1170,8 @@
       </div>
       <div class="card">
         <h2>Back up &amp; restore settings</h2>
-        <p class="muted">Everything on this dashboard except the traffic figures: modes, defaults, branding, table settings, proxy settings, kill switches, bans, package and music choices. Delegate keys and database credentials are <b>not</b> included — they are secrets, and restoring a backup must not hand back access you thought you had revoked. Restoring <b>replaces</b> the current settings.</p>
+        <p class="muted">The dashboard settings: modes, defaults, branding, table settings, proxy, game servers, LAN directory, kill switches, bans, package and music choices, SEO. <b>Not</b> included: traffic figures, scheduled messages, polls, the audit log and the deployment history (each kept in its own file), delegate keys and database credentials (secrets — restoring a backup must not hand back access you thought you had revoked). The Discord webhook and the contact details of pending LAN requests are left out unless you tick the box; restoring a file without them keeps their current values. Restoring <b>replaces</b> the current settings.</p>
+        <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="cfgSecrets" style="width:auto"> Include the Discord webhook and LAN requesters’ contact details</label>
         <div class="btnrow">
           <button id="cfgExport" class="use">Download backup</button>
           <button id="cfgImportBtn" class="use danger">Restore from file…</button>
@@ -1457,6 +1458,14 @@
     _srv[i].tls=!!row.querySelector('.srvT').checked;
     var _s=row.querySelector('.srvSNI'); _srv[i].sni=_s?_s.value.trim().toLowerCase():'';
     var _n=row.querySelector('.srvNV'); _srv[i].noverify=!!(_n&&_n.checked);
+    var _k=row.querySelector('.srvPins'); if(_k) _srv[i].pins=srvParsePins(_k.value);
+  }
+  // SPKI pins: base64 SHA-256 of the server's public key, 44 characters each,
+  // up to 4 (the proxy keeps the same, see _sanitizeServer). Separated by
+  // spaces, commas or new lines; anything else is dropped.
+  function srvParsePins(txt){
+    var out=[]; String(txt||'').split(/[\s,;]+/).forEach(function(v){ if(/^[A-Za-z0-9+\/]{43}=$/.test(v)&&out.indexOf(v)<0&&out.length<4) out.push(v); });
+    return out;
   }
   function srvSyncAll(){ var box=$('srvRows'); if(!box) return; [].slice.call(box.querySelectorAll('.gsrow')).forEach(function(row){ srvSyncRow(row,+row.getAttribute('data-i')); }); }
 
@@ -1525,7 +1534,7 @@
       return '<div class="card gsrow" style="margin:0 0 8px;padding:12px" data-i="'+i+'">'
         +'<div class="sfield"><span>Name</span><input type="text" class="srvN" maxlength="40" placeholder="PokerTH.net (internal)" value="'+srvEsc(s.name)+'">'
           +'<span class="sdirty" style="display:none">unsaved</span></div>'
-        +'<div class="sfield"><span>Host</span><input type="text" class="srvH" maxlength="255" placeholder="10.7.7.150 or box.ddns.net" value="'+srvEsc(s.host)+'" autocomplete="off"></div>'
+        +'<div class="sfield"><span>Host</span><input type="text" class="srvH" maxlength="255" placeholder="game.example.org or an IP address" value="'+srvEsc(s.host)+'" autocomplete="off"></div>'
         +'<div class="sfield"><span>Port</span><input type="number" class="srvP" min="1" max="65535" value="'+(parseInt(s.port,10)||7234)+'" style="max-width:120px"></div>'
         +(pw?'<div class="srvhint" style="color:#FFC107">⚠ '+srvEsc(pw)+'</div>':'')
         +'<div class="srowline">'
@@ -1538,6 +1547,8 @@
           +'<div class="sfield"><span>TLS name</span><input type="text" class="srvSNI" maxlength="255" placeholder="certificate name — leave empty to use Host" value="'+srvEsc(s.sni||'')+'" autocomplete="off"></div>'
           +'<div class="srowline" style="margin-top:4px"><label title="Accept a self-signed or expired certificate for THIS server only"><input type="checkbox" class="srvNV" '+(s.noverify?'checked':'')+'> Skip cert check</label></div>'
           +'<div class="srvhint">Required when Host is an IP: a certificate almost never lists the IP, only a name.</div>'
+          +'<div class="sfield" style="margin-top:6px"><span>Key pins</span><input type="text" class="srvPins" maxlength="200" placeholder="optional: SPKI sha256 base64, up to 4" value="'+srvEsc((s.pins||[]).join(' '))+'" autocomplete="off" spellcheck="false"></div>'
+          +'<div class="srvhint">Only these public keys are then accepted for this server. Leave empty to rely on the certificate check alone.</div>'
         +'</div>'
         +'<div class="srvStat msg" style="margin:8px 0 0"></div>'
         +'</div>';
@@ -1545,9 +1556,14 @@
     [].slice.call(box.querySelectorAll('.gsrow')).forEach(function(row){
       var i=+row.getAttribute('data-i');
       if(_srvDirty[i]){ var b=row.querySelector('.sdirty'); if(b) b.style.display=''; }
-      row.querySelector('.srvDel').addEventListener('click',function(){ srvSyncAll(); _srv.splice(i,1); _srvDirty={}; renderServers(); srvMarkDirty(i); });
+      row.querySelector('.srvDel').addEventListener('click',function(){
+        if(!confirm('Remove '+((_srv[i]&&(_srv[i].name||_srv[i].host))||'this server')+'? Nothing changes until you Save all.')) return;
+        srvSyncAll(); _srv.splice(i,1);
+        // The rows below move up one slot: their unsaved markers move with them.
+        var d={}; Object.keys(_srvDirty).forEach(function(k){ var n=+k; if(n<i) d[n]=true; else if(n>i) d[n-1]=true; }); _srvDirty=d;
+        renderServers(); srvMarkDirty(-1); });
       row.querySelector('.srvTest').addEventListener('click',function(){ srvSyncRow(row,i); srvProbe(i,row); });
-      ['.srvN','.srvH','.srvP','.srvSNI','.srvNV'].forEach(function(sel){ var el=row.querySelector(sel); if(el) el.addEventListener('change',function(){ srvSyncRow(row,i); srvMarkDirty(i); }); });
+      ['.srvN','.srvH','.srvP','.srvSNI','.srvNV','.srvPins'].forEach(function(sel){ var el=row.querySelector(sel); if(el) el.addEventListener('change',function(){ srvSyncRow(row,i); srvMarkDirty(i); }); });
       var _t=row.querySelector('.srvT');
       if(_t) _t.addEventListener('change',function(){ srvSyncRow(row,i); srvMarkDirty(i);
         var tb=row.querySelector('.stls'); if(tb) tb.style.display=_t.checked?'':'none'; });
@@ -1561,7 +1577,9 @@
     var box=$('srvRows'); if(box) box.innerHTML='<div class="empty">Loading…</div>';
     api('/admin/servers').then(function(r){return r.json();}).then(function(d){
       if(!d||!d.ok){ if(box) box.innerHTML='<div class="empty">'+srvEsc((d&&d.error)||'Error')+'</div>'; return; }
-      _srv=(d.servers||[]).map(function(s){return {id:s.id,name:s.name||'',host:s.host||'',port:parseInt(s.port,10)||7234,tls:!!s.tls,sni:s.sni||'',noverify:!!s.noverify};}); _srvDirty={};
+      // Every stored field comes back, pins included: Save all sends the rows
+      // whole, so a field left out here would be erased on the next save.
+      _srv=(d.servers||[]).map(function(s){return {id:s.id,name:s.name||'',host:s.host||'',port:parseInt(s.port,10)||7234,tls:!!s.tls,sni:s.sni||'',noverify:!!s.noverify,pins:Array.isArray(s.pins)?s.pins.slice(0,4):[]};}); _srvDirty={};
       _activeSrv=d.activeServerId||'';
       _srcMode=(d.source==='auto')?'auto':'manual'; _transport=(d.transport==='proxy')?'proxy':'direct'; _liveTransport=(d.liveTransport==='proxy'||d.liveTransport==='direct')?d.liveTransport:'inherit'; _pp=!!d.proxyProtocol; _slUrl=d.serverlistUrl||'';
       applySourceUI(d.serverlist||null); applyTransportUI(); applyEffectiveUI(d.effective||null);
@@ -4858,8 +4876,19 @@
   (function(){
     var ex=$('cfgExport');
     if(ex) ex.addEventListener('click',function(){
-      // Le jeton voyage en query : c'est un t\u00e9l\u00e9chargement direct, pas un fetch.
-      window.location.href='/admin/config/export?token='+encodeURIComponent(tok());
+      // Fetched with the Authorization header like every other call, then saved
+      // from a Blob: the token never goes into a URL (access logs, history).
+      var mm=$('cfgIoMsg'), sec=$('cfgSecrets')&&$('cfgSecrets').checked;
+      api('/admin/config/export'+(sec?'?secrets=1':''),{cache:'no-store'}).then(function(r){
+        if(!r.ok) throw new Error('HTTP '+r.status);
+        return r.blob();
+      }).then(function(b){
+        var a=document.createElement('a'), u=URL.createObjectURL(b);
+        a.href=u; a.download='pokerth-admin-config-'+new Date().toISOString().slice(0,10)+'.json';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function(){ URL.revokeObjectURL(u); },4000);
+        if(mm){ mm.textContent='Backup downloaded'+(sec?' (with the webhook and contact details \u2014 keep it private).':' (no webhook, no contact details).'); mm.className='msg ok'; }
+      }).catch(function(e){ if(mm){ mm.textContent='Download failed: '+e.message; mm.className='msg err'; } });
     });
     var btn=$('cfgImportBtn'), file=$('cfgImportFile'), m=$('cfgIoMsg');
     if(btn&&file){
@@ -4874,8 +4903,9 @@
           api('/admin/config/import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({file:parsed,config:parsed.config||parsed,token:tok()})})
             .then(function(r){return r.json();}).then(function(d){
               if(d&&d.ok){
-                m.textContent='Restored '+d.imported.length+' setting'+(d.imported.length===1?'':'s')+(d.ignored.length?(' \u2014 '+d.ignored.length+' unknown key(s) ignored'):'')+'. Reload the page to see them.';
+                m.textContent='Restored '+d.imported.length+' setting'+(d.imported.length===1?'':'s')+(d.ignored.length?(' \u2014 '+d.ignored.length+' unknown key(s) ignored'):'')+(d.kept&&d.kept.length?' \u2014 current webhook / contact details kept':'')+'. Reloading\u2026';
                 m.className='msg ok';
+                setTimeout(function(){ location.reload(); },1500);
               } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; }
               file.value='';
             }).catch(function(){ m.textContent='Network error.'; m.className='msg err'; file.value=''; });

@@ -494,6 +494,15 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Admin settings backup: nothing lost, nothing secret leaked** (`web.111`) — `musicVotesPublic` was missing from the
+  import allow-list and a backup → restore wiped it; the list is now `ADMIN_CONFIG_KEYS`, and
+  `scripts/test-admin-config-io.mjs` fails when code writes a key it does not hold. The file leaves out the Discord
+  webhook and the contact of pending LAN requests unless *Include…* is ticked (`?secrets=1`), says so in a
+  `redacted` list, and restoring it keeps the current values instead of erasing them. The download goes through the
+  `Authorization` header (it put the token in the URL); a restore rebuilds the SEO and serverlist caches and reloads
+  the panel. *Game servers*: the rows keep their TLS pins (*Save all* used to erase them) and gain a *Key pins* field;
+  *Remove* asks first and no longer shifts the unsaved markers onto the wrong rows; the host placeholder no longer
+  shows a private address.
 - **Admin kill switches switch features off** (`web.110`) — 9 of the 21 switches only greyed out the checkbox: the
   module behind them read `localStorage` directly and kept running (`err_report`, `polls`, `hud_on`,
   `stats_track`, `chat_abbrev`, `keynav`, `back_guard`, `pdb_auto`, `splash`; `table_zoom` in part). New
