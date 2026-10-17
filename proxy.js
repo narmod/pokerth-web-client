@@ -8815,14 +8815,14 @@ function visitsSummaryRead(periodDays, h24) {
     for (let j = 0; j < hrs.length; j++) {
       const d = hrs[j];
       const b = visitHour(d);
-      series.push({ date: visitDayKey(d) + 'T' + String(d.getHours()).padStart(2, '0'), v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined });
+      series.push({ date: visitDayKey(d) + 'T' + String(d.getHours()).padStart(2, '0'), v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined, m: (b && b.m) ? b.m : undefined });
     }
   } else for (let i = P - 1; i >= 0; i--) {
     const d = new Date(now);
     d.setDate(now.getDate() - i);
     const k = visitDayKey(d);
     const b = visitDay(k);
-    series.push({ date: k, v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined });
+    series.push({ date: k, v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined, m: (b && b.m) ? b.m : undefined });
   }
   const L = h24 ? visitList(true, 24) : null;
   return {

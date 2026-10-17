@@ -19,7 +19,9 @@
   /* Theme tokens. --gold, --cream and --text keep their old meaning (strong text,
      body text, secondary text) so every panel follows the theme unchanged. */
   :root{--bg:#0E1319;--side:#11171F;--panel:#161D27;--line:rgba(160,172,196,.16);--gold:#E7ECF3;--cream:#E7ECF3;--text:#9AA6B8;--muted:#9AA6B8;
-        --navfg:#C9D2DE;--hover:rgba(160,172,196,.08);--accent:#3DBE86;--accent-soft:#1E2A22;--accent-text:#7FD3AA;--sidew:256px}
+        --navfg:#C9D2DE;--hover:rgba(160,172,196,.08);--accent:#3DBE86;--accent-soft:#1E2A22;--accent-text:#7FD3AA;--sidew:256px;
+        --m-net:#5AA3F0;--m-lan:#E8A93B;--m-off:#B48AE8;--m-live:#3DBE86;
+        --ok-bg:#172420;--ok-line:#2B4A3B;--ok-text:#7FD3AA;--warn-bg:#231F14;--warn-line:#4A3E20;--warn-text:#F1C46C;--err-bg:#241817;--err-line:#4E2C28;--err-text:#F4A296;--info-bg:#161D27;--info-line:rgba(160,172,196,.22);--info-text:#9AA6B8}
   *{box-sizing:border-box}
   body{margin:0;font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--cream);min-height:100vh}
   .wrap{margin:0}
@@ -401,7 +403,9 @@
   .envdiag th{font-weight:600;color:var(--text);border-bottom:1px solid var(--line)}
   /* ── Light admin theme (data-admin-theme="light") ───────────── */
   :root[data-admin-theme="light"]{--bg:#F4F6F9;--side:#FFFFFF;--panel:#ffffff;--line:rgba(28,38,58,.14);--gold:#1d222b;--cream:#1b2230;--text:#566071;--muted:#5A6678;
-        --navfg:#2C3644;--hover:rgba(29,34,43,.05);--accent:#187A50;--accent-soft:#E3F3EA;--accent-text:#13704A}
+        --navfg:#2C3644;--hover:rgba(29,34,43,.05);--accent:#187A50;--accent-soft:#E3F3EA;--accent-text:#13704A;
+        --m-net:#2F6FC4;--m-lan:#B9770E;--m-off:#7A4FC0;--m-live:#1F8F5F;
+        --ok-bg:#E8F5EE;--ok-line:#B9DFC9;--ok-text:#13704A;--warn-bg:#FDF4E2;--warn-line:#EDD3A0;--warn-text:#8A5A0B;--err-bg:#FCEBE8;--err-line:#F0C3BB;--err-text:#A3362A;--info-bg:#FFFFFF;--info-line:rgba(28,38,58,.14);--info-text:#5A6678}
   :root[data-admin-theme="light"] input[type=password],
   :root[data-admin-theme="light"] select,
   :root[data-admin-theme="light"] .filter,
@@ -538,6 +542,47 @@
   @media(max-width:600px){
     .main .top .toplive{display:none}
   }
+  /* ── Overview ─────────────────────────────────────────────────────────── */
+  .ovalerts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:0 0 14px}
+  .ovalert{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:12px;border:1px solid var(--info-line);background:var(--info-bg);min-width:0}
+  .ovalert .ovai{width:22px;height:22px;flex:none;display:block;color:var(--info-text)}
+  .ovat{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.35}
+  .ovat b{font-weight:600;color:var(--cream)}
+  .ovat span{font-size:.8rem;color:var(--muted)}
+  .ovgo{flex:none;min-height:34px;padding:0 13px;border-radius:8px;border:1px solid currentColor;background:transparent;color:var(--info-text);font:inherit;font-size:.82rem;font-weight:600;cursor:pointer}
+  .ov-ok{background:var(--ok-bg);border-color:var(--ok-line)} .ov-ok .ovai,.ov-ok .ovgo{color:var(--ok-text)}
+  .ov-warn{background:var(--warn-bg);border-color:var(--warn-line)} .ov-warn .ovai,.ov-warn .ovgo{color:var(--warn-text)}
+  .ov-err{background:var(--err-bg);border-color:var(--err-line)} .ov-err .ovai,.ov-err .ovgo{color:var(--err-text)}
+  .ovmodes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 14px}
+  .ovmode{display:flex;flex-direction:column;gap:4px;padding:14px;border-radius:12px;background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--mc);min-width:0}
+  .ovmh{display:flex;align-items:center;gap:7px;color:var(--mc)}
+  .ovmh span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .ovmi{width:17px;height:17px;flex:none;display:block}
+  .ovmn{font-size:1.85rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--cream);line-height:1.15}
+  .ovms{font-size:.78rem;color:var(--muted);line-height:1.4}
+  .ovgrid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px}
+  .ovgrid>.card{margin:0}
+  .ovlink{margin-left:auto}
+  .ovchart{height:190px;display:flex;align-items:stretch;gap:6px;padding:4px 0 0;border-bottom:1px solid var(--line)}
+  .ovbar{flex:1;min-width:0;display:flex;flex-direction:column;align-items:stretch;gap:4px}
+  .ovstack{flex:1;display:flex;flex-direction:column-reverse;border-radius:3px 3px 0 0;overflow:hidden}
+  .ovstack i{display:block;flex:none}
+  .ovbar>span{font-size:.66rem;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums;padding-bottom:3px}
+  .ovbar.today .ovstack{opacity:.45}
+  .ovlegend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:.78rem;color:var(--muted)}
+  .ovlegend span{display:inline-flex;align-items:center;gap:6px}
+  .ovlegend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+  .ovlegend b{color:var(--cream);font-weight:600}
+  .ovpeak{margin-left:auto}
+  .ovrow{display:grid;grid-template-columns:22px minmax(0,1fr) auto auto;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:.85rem}
+  .ovrow:first-child{border-top:0}
+  #ovAudit .ovrow{grid-template-columns:52px minmax(0,1fr) auto}
+  .ovri{display:inline-flex}
+  .ovrn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--cream)}
+  .ovrm{color:var(--muted);font-size:.78rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+  .ovrt{color:var(--muted);font-size:.78rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+  @media(max-width:1199px){ .ovgrid{grid-template-columns:minmax(0,1fr)} }
+  @media(max-width:760px){ .ovmodes{grid-template-columns:repeat(2,minmax(0,1fr))} .ovmn{font-size:1.5rem} .ovchart{gap:3px;height:150px} }
 </style>
 <script>(function(){try{var t=localStorage.getItem('pth_admin_theme');if(t!=='light'&&t!=='dark')t='dark';document.documentElement.setAttribute('data-admin-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',t==='light'?'#FFFFFF':'#11171F');}catch(e){}})();</script>
 </head>
@@ -563,6 +608,12 @@
         <button type="button" class="sclose" id="sideClose" aria-label="Close the menu"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg></button>
       </div>
       <nav class="snav" id="tabGroups" aria-label="Sections">
+      <div class="sgrp one" data-g="overview">
+        <button type="button" class="gtab on" data-g="overview"><svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M104,40H56A16,16,0,0,0,40,56v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,104,40Zm0,64H56V56h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm0,64H152V56h48v48Zm-96,32H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,104,136Zm0,64H56V152h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,200,136Zm0,64H152V152h48v48Z"/></svg><span>Overview</span><i class="gbadge" aria-hidden="true"></i><svg class="gcar" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
+        <div class="tabs subtabs" data-g="overview">
+          <button type="button" class="tab on" data-t="overview">Overview</button>
+        </div>
+      </div>
       <div class="sgrp one" data-g="stats">
         <button type="button" class="gtab" data-g="stats"><svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M224,200h-8V40a8,8,0,0,0-8-8H152a8,8,0,0,0-8,8V80H96a8,8,0,0,0-8,8v40H48a8,8,0,0,0-8,8v64H32a8,8,0,0,0,0,16H224a8,8,0,0,0,0-16ZM160,48h40V200H160ZM104,96h40V200H104ZM56,144H88v56H56Z"/></svg><span>Statistics</span><i class="gbadge" aria-hidden="true"></i><svg class="gcar" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
         <div class="tabs subtabs" data-g="stats" style="display:none">
@@ -608,9 +659,9 @@
         </div>
       </div>
       <div class="sgrp" data-g="ops">
-        <button type="button" class="gtab on" data-g="ops"><svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M128,128a8,8,0,0,1-3,6.25l-40,32a8,8,0,1,1-10-12.5L107.19,128,75,102.25a8,8,0,1,1,10-12.5l40,32A8,8,0,0,1,128,128Zm48,24H136a8,8,0,0,0,0,16h40a8,8,0,0,0,0-16Zm56-96V200a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V56A16,16,0,0,1,40,40H216A16,16,0,0,1,232,56ZM216,200V56H40V200H216Z"/></svg><span>Operations</span><i class="gbadge" aria-hidden="true"></i><svg class="gcar" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
-        <div class="tabs subtabs" data-g="ops">
-          <button type="button" class="tab on" data-t="server">Health &amp; logs</button>
+        <button type="button" class="gtab" data-g="ops"><svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M128,128a8,8,0,0,1-3,6.25l-40,32a8,8,0,1,1-10-12.5L107.19,128,75,102.25a8,8,0,1,1,10-12.5l40,32A8,8,0,0,1,128,128Zm48,24H136a8,8,0,0,0,0,16h40a8,8,0,0,0,0-16Zm56-96V200a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V56A16,16,0,0,1,40,40H216A16,16,0,0,1,232,56ZM216,200V56H40V200H216Z"/></svg><span>Operations</span><i class="gbadge" aria-hidden="true"></i><svg class="gcar" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
+        <div class="tabs subtabs" data-g="ops" style="display:none">
+          <button type="button" class="tab" data-t="server">Health &amp; logs</button>
           <button type="button" class="tab" data-t="deploy">Deployment</button>
           <button type="button" class="tab" data-t="access">Access &amp; backup</button>
         </div>
@@ -635,7 +686,7 @@
     <main class="main" id="main">
     <div class="top">
       <button type="button" class="menubtn" id="menuBtn" aria-label="Open the menu" aria-controls="side" aria-expanded="false"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"/></svg></button>
-      <div class="tophd"><p class="eyebrow" id="pageGroup">Operations</p><h1 id="pageTitle">Health &amp; logs</h1></div>
+      <div class="tophd"><p class="eyebrow" id="pageGroup">PokerTH Admin</p><h1 id="pageTitle">Overview</h1></div>
       <div class="tophost" id="topHost" title="The host this panel is served from"></div>
       <div class="topbtns">
         <div class="toplive" id="topLive" style="display:none" title="Game server, as the login screen reads it"></div>
@@ -643,6 +694,30 @@
     </div>
     <div class="clockbar" id="clockBar" style="display:none" title="Regions picked in Infrastructure › Identity &amp; reach, earliest on the left"></div>
     <div class="pagebody" id="pageBody">
+
+    <div id="panel-overview">
+      <section class="ovalerts" id="ovAlerts" aria-label="Needs attention"><div class="empty">Loading…</div></section>
+      <section class="ovmodes" id="ovModes" aria-label="Connected right now, by entry mode"><div class="empty">Loading…</div></section>
+      <div class="ovgrid">
+        <div class="card">
+          <div class="boardhead"><h2>Connections, last 14 days</h2><span class="headnote">by entry mode · today so far, lighter</span><button type="button" class="use ovlink" data-go="traffic">Statistics</button></div>
+          <div id="ovChart"><div class="empty">Loading…</div></div>
+        </div>
+        <div class="card">
+          <div class="boardhead"><h2>Server</h2><button type="button" class="use ovlink" data-go="server">Health &amp; logs</button></div>
+          <div id="ovHealth"><div class="empty">Loading…</div></div>
+        </div>
+        <div class="card">
+          <div class="boardhead"><h2>Connected right now</h2><span class="headnote" id="ovNowN"></span><button type="button" class="use ovlink" data-go="sessions">Sessions</button></div>
+          <div id="ovNow"><div class="empty">Loading…</div></div>
+        </div>
+        <div class="card">
+          <div class="boardhead"><h2>Recent changes</h2><button type="button" class="use ovlink" data-go="keys">Audit log</button></div>
+          <div id="ovAudit"><div class="empty">Loading…</div></div>
+        </div>
+      </div>
+      <p class="muted note">Refreshed every 10 seconds for what is live, every minute for the rest, while this page is open.</p>
+    </div>
 
     <div id="panel-traffic" style="display:none">
       <div class="card trafhead">
@@ -1155,7 +1230,7 @@
         <div id="auMsg" class="msg"></div>
       </div>
     </div>
-    <div id="panel-server">
+    <div id="panel-server" style="display:none">
       <div class="card"><h2>Status</h2><div id="status"><div class="empty">Loading…</div></div></div>
       <div class="card">
         <div class="boardhead"><h2>Recent logs</h2><div class="bhact"><span class="muted">Verbosity</span><select id="logQuick"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select><button id="logsCopy" class="use">Copy</button><button id="refreshLogs" class="use">Refresh</button></div></div>
@@ -1509,6 +1584,11 @@
       : 'Admin session expired — please log in again.');
     setTimeout(function(){ _authDeadGuard=false; }, 3000);
   }
+  // Shared with the admin modules (public/modules/admin/*.mjs).
+  window.PthAdmin={ api:function(p,o){ return api(p,o); }, master:function(){ return _isMaster; },
+    open:function(t){ var b=document.querySelector('.tab[data-t="'+t+'"]'); if(b && b.style.display!=='none') b.click(); } };
+  // Which section is open, for the modules that follow it ('' once logged out).
+  function sectionEvent(t){ try{ document.dispatchEvent(new CustomEvent('admin:section',{detail:{t:t||''}})); }catch(e){} }
   // Every admin call carries the token in the Authorization header (never the
   // URL), so it stays out of server access logs and browser history.
   function api(path,opts){ opts=opts||{}; var h=Object.assign({},opts.headers||{}); var t=tok(); if(t) h.Authorization='Bearer '+t; opts.headers=h;
@@ -2040,7 +2120,7 @@
   // the last-activity stamp; activity listeners (capture+passive) just stamp.
   var IDLE_MS=10*60*1000, _idleLast=Date.now();
   function _idleReset(){ _idleLast=Date.now(); }
-  function doLogout(reason){ srvStop(); seStop(); clkStop(); liveStop(); localStorage.removeItem(TOKK); $('ltok').value=''; if($('loginErr')) $('loginErr').textContent=reason||''; show('login'); }
+  function doLogout(reason){ srvStop(); seStop(); clkStop(); liveStop(); sectionEvent(''); localStorage.removeItem(TOKK); $('ltok').value=''; if($('loginErr')) $('loginErr').textContent=reason||''; show('login'); }
   function _idleCheck(){ if(tok() && dash.style.display!=='none' && Date.now()-_idleLast>IDLE_MS) doLogout('Logged out after 10 minutes of inactivity.'); }
   ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(function(ev){ document.addEventListener(ev,_idleReset,{passive:true,capture:true}); });
   setInterval(_idleCheck, 30000);
@@ -2078,7 +2158,10 @@
       clkStart(); liveStart();
       if(_isMaster){
         api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
-        loadServer(); loadDeploys(); loadBlocked(); loadThemes(); loadFeatureSwitches(); srvStart(); loadLanDir();
+        loadServer(); loadDeploys(); loadBlocked(); loadThemes(); loadFeatureSwitches(); loadLanDir();
+        var _on=document.querySelector('.tab.on'), _t=_on?_on.dataset.t:'';
+        if(_t==='server') srvStart();
+        sectionEvent(_t);
       } else {
         srvStop();
         var first=[].slice.call(document.querySelectorAll('.tab')).find(function(b){ return b.style.display!=='none'; });
@@ -2544,6 +2627,7 @@
     if(t==='sessions'){ seStart(); } else { seStop(); }
     if(t==='errors') loadErrors();
     if(t==='server'){ loadServer(); loadDeploys(); loadBlocked(); srvStart(); } else { srvStop(); }
+    sectionEvent(t);
   }); });
 
 
@@ -6147,5 +6231,6 @@
 })();
 </script>
 <script type="module" src="/modules/admin/shell.mjs"></script>
+<script type="module" src="/modules/admin/overview.mjs"></script>
 </body>
 </html>

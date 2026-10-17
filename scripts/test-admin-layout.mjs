@@ -42,7 +42,7 @@ const shellJs = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..',
 // side menu grouped by what the operator is doing. The buttons kept their
 // classes, so the handlers that open a panel are the same as before.
 const GROUPS = {
-  stats: ['traffic'], live: ['sessions', 'errors'], community: ['board', 'polls', 'broadcast', 'landir'],
+  overview: ['overview'], stats: ['traffic'], live: ['sessions', 'errors'], community: ['board', 'polls', 'broadcast', 'landir'],
   content: ['packages', 'music'], players: ['clients', 'defaults'], infra: ['servers', 'proxy', 'identity'],
   ops: ['server', 'deploy', 'access'], security: ['keys'],
 };
@@ -68,12 +68,13 @@ for (const [g, tabs] of Object.entries(GROUPS)) {
     tabs.length === 1 ? 'a one-section group opens its section directly' : 'a group of several unfolds its list');
   all = all.concat(got);
 }
-ok(all.length === 18 && new Set(all).size === 18, 'every one of the eighteen sections is reachable, once');
+ok(all.length === 19 && new Set(all).size === 19, 'every one of the nineteen sections is reachable, once');
 for (const sc of ['packages', 'music', 'broadcast', 'polls', 'leaderboard']) {
   ok(new RegExp('data-scope="' + sc + '"').test(admin), 'scope ' + sc + ' survived the move');
 }
-ok(/class="gtab on" data-g="ops"/.test(admin), 'the dashboard opens on Operations');
-ok(/<button type="button" class="tab on" data-t="server">/.test(admin), 'on Health & logs, as before');
+ok(/class="gtab on" data-g="overview"/.test(admin), 'the dashboard opens on Overview');
+ok(/<button type="button" class="tab on" data-t="overview">/.test(admin), 'its one section is the active one');
+ok((admin.match(/class="(?:gtab|tab) on"/g) || []).length === 2, 'and nothing else is marked active');
 ok(/\.sgrp\.one \.gcar,\.sgrp\.one \.subtabs\{display:none!important\}/.test(admin), 'a one-section group shows no list to unfold');
 ok(/function setGroup\(g, pick\)/.test(admin), 'setGroup exists');
 ok(/\.gtab'\)\.forEach/.test(admin), 'group buttons are wired');
@@ -137,8 +138,9 @@ ok(/h\.textContent=location\.host/.test(admin) && /sh\.textContent=location\.hos
 ok(/\.tophost\{flex:0 0 auto/.test(admin), 'the chip is sized by its text');
 ok(/\.tophost\{[^}]*text-overflow:ellipsis/.test(admin), 'a long host is clipped, not allowed to shove the buttons off');
 ok(/\.main \.top \.tophost\{display:none\}/.test(narrow), 'on a phone the menu shows the host, the header keeps the title');
-ok(/<p class="eyebrow" id="pageGroup">Operations<\/p><h1 id="pageTitle">Health &amp; logs<\/h1>/.test(admin),
-  'the page header names the group and the section, Health & logs at load');
+ok(/<p class="eyebrow" id="pageGroup">PokerTH Admin<\/p><h1 id="pageTitle">Overview<\/h1>/.test(admin),
+  'the page header names the section, Overview at load');
+ok(/g && g !== t \? g : 'PokerTH Admin'/.test(shellJs), 'a section alone in its group does not repeat its name above itself');
 ok(/id="sideVer"/.test(admin) && /\$\('sideVer'\)/.test(admin), 'the menu shows the running build');
 ok(/id="sideWho"/.test(admin) && /\$\('sideWho'\)/.test(admin), 'and which key is signed in');
 ok(/<button id="themeBtn"/.test(admin) && /<button id="logoutBtn"/.test(admin), 'theme and log-out sit at the foot of the menu, ids unchanged');
@@ -186,8 +188,8 @@ ok(!/class="sect"/.test(admin), 'the old sub-section headings are gone, the tab 
 const openAtLoad = [...admin.matchAll(/<div id="(panel-[a-z]+)"(?! style="display:none")[^>]*>/g)]
   .map(m => m[1]);
 ok(openAtLoad.length === 1, 'exactly one panel is open at load, not ' + openAtLoad.length);
-ok(openAtLoad[0] === 'panel-server', 'and it is the one the active tab points at');
-ok(/<button type="button" class="tab on" data-t="server">/.test(admin), 'which is the tab marked active');
+ok(openAtLoad[0] === 'panel-overview', 'and it is the one the active tab points at');
+ok(/<button type="button" class="tab on" data-t="overview">/.test(admin), 'which is the tab marked active');
 ok(/#panel-defaults[^{]*\{columns:2/.test(admin), 'the five defaults cards use both columns');
 ok(!/#panel-server,/.test(admin), 'a two-card panel no longer asks for two columns');
 

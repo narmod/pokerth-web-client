@@ -316,8 +316,8 @@ ok(wide && !/\.ck\{/.test(wide[1]),
 // -- Icons -----------------------------------------------------------------
 // The menu groups carry the icons now (Phosphor, as in the QML client); the
 // sections inside a group are plain text, as in the mock-up.
-ok((admin.match(/<button type="button" class="gtab(?: on)?" data-g="[a-z]+"><svg class="gi"/g) || []).length === 8,
-  'each of the eight menu groups carries an icon');
+ok((admin.match(/<button type="button" class="gtab(?: on)?" data-g="[a-z]+"><svg class="gi"/g) || []).length === 9,
+  'each of the nine menu groups carries an icon');
 ok(!/<span class="ti"/.test(admin), 'the emoji icons of the old tab bars are gone');
 ok(/<svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false">/.test(admin),
   'the icons are decorative, so a screen reader reads the label alone');

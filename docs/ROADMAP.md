@@ -268,8 +268,8 @@ use too. Items are grouped by status rather than fixed phases.
 ## 🔨 Now (in progress)
 
 - **Admin page redesign** — audit done (30 fixes, `web.109`–`web.116`); side-menu shell with light and dark
-  themes, phone drawer, section addresses and an installable admin app (`web.117`). Next: an Overview page,
-  then each section moved to the new layout one at a time, then Statistics v2 (global filter for
+  themes, phone drawer, section addresses and an installable admin app (`web.117`), Overview page (`web.118`).
+  Next: each section moved to the new layout one at a time, then Statistics v2 (global filter for
   Training / Internet / LAN / Live, the world map as the main view with live connections, hour band) and
   stored cross-filters.
 

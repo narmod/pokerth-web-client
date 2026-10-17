@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin page: an Overview to land on** (`web.118`) — the first page after logging in with the master key. What needs
+  attention, most urgent first (client errors seen in the last 24 h — robots aside —, a restart the files are waiting
+  for, an update, LAN servers to review, a scheduled restart), each leading to its section; who is connected right
+  now by entry mode (Internet through the proxy or direct, with the server-wide figure from `/api/live`; LAN with
+  its number of servers; Training; /live spectators); connections per day over 14 days by entry mode; the server
+  card; the newest connections and the latest changes from the audit log, in words. Read-only, from the endpoints
+  the other sections use; refreshed every 10 s (live parts) and every minute while open and visible. The visit
+  series now carries each day's (or hour's) per-mode counts (`m`). `public/modules/admin/overview.mjs`,
+  `icons.mjs`, `scripts/test-admin-overview.mjs`.
 - **Admin page: a side menu** (`web.117`) — the three families on top and their horizontal section bars give way to a
   side menu grouped by task: Statistics, Live (sessions, errors), Community (leaderboard, polls, broadcasts, LAN
   directory), Content (packages, music), Player experience (modes & features, defaults), Infrastructure (game servers,

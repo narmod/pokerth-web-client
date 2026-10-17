@@ -91,12 +91,12 @@ ok(errors.length === 0, 'the page loads without throwing' + (errors.length ? ': 
 // ── Tabs and panels ───────────────────────────────────────────────────────
 const panels = [...doc.querySelectorAll('[id^="panel-"]')];
 const visible = () => panels.filter((p) => p.style.display !== 'none');
-ok(panels.length === 18, 'all 18 panels are in the document, found ' + panels.length);
+ok(panels.length === 19, 'all 19 panels are in the document, found ' + panels.length);
 ok(visible().length === 1, 'exactly one panel is open at load, not ' + visible().length);
-ok(visible()[0] && visible()[0].id === 'panel-server', 'and it is panel-server');
+ok(visible()[0] && visible()[0].id === 'panel-overview', 'and it is panel-overview, where a master key lands');
 
 const tabs = [...doc.querySelectorAll('.tab')];
-ok(tabs.length === 18, 'every section has a tab, found ' + tabs.length);
+ok(tabs.length === 19, 'every section has a tab, found ' + tabs.length);
 for (const t of tabs) {
   const id = 'panel-' + t.dataset.t;
   t.click();
@@ -108,7 +108,7 @@ for (const t of tabs) {
 ok(errors.length === 0, 'no tab click threw' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
 
 // ── Menu groups (side menu since 2.1.10-web.117) ──────────────────────────────────────────────────────────────
-for (const g of ['stats', 'live', 'community', 'content', 'players', 'infra', 'ops', 'security']) {
+for (const g of ['overview', 'stats', 'live', 'community', 'content', 'players', 'infra', 'ops', 'security']) {
   const gb = doc.querySelector('.gtab[data-g="' + g + '"]');
   gb.click();
   const bar = doc.querySelector('.subtabs[data-g="' + g + '"]');

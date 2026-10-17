@@ -56,7 +56,8 @@ function paintTitle(tab) {
   const t = label(tab), g = label(gb);
   const h = $('pageTitle'), e = $('pageGroup');
   if (h) h.textContent = t;
-  if (e) e.textContent = g;
+  // A section alone in its group (Overview) would only repeat its own name.
+  if (e) e.textContent = g && g !== t ? g : 'PokerTH Admin';
   document.title = t ? t + ' · ' + BASE_TITLE : BASE_TITLE;
 }
 
