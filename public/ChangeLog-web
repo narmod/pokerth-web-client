@@ -1,3 +1,8 @@
+2026-10-17 version 2.1.10-web.103:
+- bugfix: a private message to a player who had just reconnected was sent to their old, dead session and refused — it now reaches the player
+- bugfix: a player who reconnects too quickly is no longer listed twice in the players list
+- bugfix: a private-message partner who has left the lobby is shown as away again
+
 2026-10-16 version 2.1.10-web.102:
 - improvement: the Mini-games page lists its games directly, without a category
 

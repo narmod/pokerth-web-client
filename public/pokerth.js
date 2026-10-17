@@ -11653,6 +11653,14 @@ function renderPlayersList() {
     var _mine = (myId && nameMap[myId] && String(nameMap[myId]).charAt(0) !== '#') ? nameMap[myId] : null;
     if (_mine) rows = rows.filter(function(r){ return r.isMe || r.name !== _mine; });
   })();
+  // Same for the other players: a too-quick reconnect leaves the dead session
+  // listed under the same nickname (it rejects PMs). Only the latest session
+  // is kept (modules/game/presence.mjs).
+  (function(){
+    var _gh = null;
+    try { _gh = window._pthGhostPids ? window._pthGhostPids() : null; } catch (e) {}
+    if (_gh && _gh.size) rows = rows.filter(function(r){ return r.isMe || !_gh.has(r.pid); });
+  })();
   // Filter by search input
   var _qIn = document.getElementById('players-search-in');
   // Garde anti-autoremplissage : un gestionnaire de mots de passe peut
@@ -12196,7 +12204,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.102'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.103'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

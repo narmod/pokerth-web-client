@@ -494,6 +494,12 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Private messages to a quick reconnect** (`web.103`) — the server can briefly list a nickname twice, the
+  dead session keeping its old pid; it rejects every PM. `playerIdByName` walked the never-purged `S.players` cache
+  and took the lowest (oldest) pid, so PMs went to the ghost — and to any old pid for the rest of the session.
+  New `game/presence.mjs`: only online pids (`S._lobbyPids`), newest session among homonyms (my own session for
+  my name). The players panel and the live list hide the ghost rows; the PM « not in the lobby » marker is
+  accurate again (`scripts/test-presence.mjs`).
 - **Bet keypad keys finger-sized again on very low landscape phones** — the action bar zoom of web.227
   (`--abar-kp` = h/380) also shrank the keypad: 29 px keys drawn 26 px tall on an iPhone in landscape
   (734×343). Under `data-abar-short` the keys and Cancel / OK are lengthened by 1/`--abar-kp`: 29 px on

@@ -23,6 +23,7 @@
 import { keepDocked } from './chat-pane.mjs';
 import { onLangChange } from '../i18n.mjs';
 import { openSpectateDialog } from './spectate-dialog.mjs';
+import { ghostPids } from '../game/presence.mjs';
 
 const expanded = new Set();
 let activeTab = 'games';   // 'games' | 'players'
@@ -105,8 +106,11 @@ function renderPlayers() {
   // PlayerList join/leave notifications (see onPlayerList), exactly what the
   // ordinary players panel (renderPlayersList in pokerth.js) filters by.
   const online = S._lobbyPids || null;
+  // A ghost of a quick reconnect (same name, older pid) is not listed twice.
+  const ghosts = online ? ghostPids(players, online, S.myId) : new Set();
   const ids = Object.keys(players)
     .filter(function (pid) { return !online || online.has(parseInt(pid, 10)); })
+    .filter(function (pid) { return !ghosts.has(parseInt(pid, 10)); })
     .filter(function (pid) {
       return !needle || String(players[pid]).toLowerCase().indexOf(needle) !== -1;
     })

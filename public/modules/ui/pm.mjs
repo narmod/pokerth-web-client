@@ -22,6 +22,7 @@ import { MSG } from '../net/messages.mjs';
 import { send } from '../net/session.mjs';
 import { t } from '../i18n.mjs';
 import * as store from '../pm/store.mjs';
+import { onlinePidByName } from '../game/presence.mjs';
 
 const MAX_BYTES = 128;   // server-side chat limit, same as the lobby input
 
@@ -344,16 +345,15 @@ function toggle() {
 // Resolve a nickname to the lobby player id. Names are unique per session
 // on the server, so the lobby snapshot is authoritative (parity:
 // parsePrivateMessageTarget, which scans the player list model).
+// Only players online right now, and the latest session when the server
+// still lists a ghost of a quick reconnect under the same name (see
+// game/presence.mjs). S.players alone is a cache of every pid seen this
+// session: walking it picked the lowest -- oldest -- pid, so a PM went to the
+// ghost and was rejected, and a partner who had left still looked online.
 function playerIdByName(name) {
   if (!name) return 0;
-  try {
-    const players = S.players || {};
-    const keys = Object.keys(players);
-    for (let i = 0; i < keys.length; i++) {
-      if (players[keys[i]] === name) return parseInt(keys[i], 10) || 0;
-    }
-  } catch (e) {}
-  return 0;
+  try { return onlinePidByName(S.players || {}, S._lobbyPids, S.myId, name); }
+  catch (e) { return 0; }
 }
 
 // Am I myself sitting at a running table? Upstream blocks private messages

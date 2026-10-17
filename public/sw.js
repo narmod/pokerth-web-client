@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.10-web.102';
+const CACHE_VERSION = 'pokerth-v2.1.10-web.103';
 // Build id the page puts on the card back URL (deck.mjs _deckBack →
 // flipside.<ext>?v=<BUILD_VERSION>): CACHE_VERSION without its prefix.
 const BUILD_ID = CACHE_VERSION.replace(/^pokerth-v/, '');
@@ -86,6 +86,7 @@ const ASSETS = [
   '/modules/ui/livescroll.mjs',
   '/modules/chat/abbrev.mjs',
   '/modules/ui/pm.mjs',
+  '/modules/game/presence.mjs',
   '/modules/pm/store.mjs',
   '/modules/ui/assist-pane.mjs',
   '/modules/ui/seat-menu.mjs',
