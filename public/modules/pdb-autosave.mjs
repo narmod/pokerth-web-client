@@ -32,6 +32,8 @@
 // Aucune régression possible : si ce module n'est pas chargé, le hook
 // window._pdbAutoSave est simplement absent.
 
+import { featureOff } from './feature-off.mjs';
+
 // ── Support & option ───────────────────────────────────────────────────────
 
 function _supported() {
@@ -44,6 +46,7 @@ function _supported() {
 // dossier (l'API navigateur l'exige), l'effet réel est donc d'avoir la case
 // déjà cochée au moment où il le choisit. '0' = désactivé explicitement.
 function _enabled() {
+  if (featureOff('pdb_auto') || featureOff('log_on')) return false;
   try {
     if (typeof localStorage === 'undefined') return true;
     if (localStorage.getItem('pth_pdb_auto') === '0') return false;

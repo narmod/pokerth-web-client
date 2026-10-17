@@ -9,7 +9,10 @@
 // leur comportement natif : seules les touches reçues par la liste elle-même
 // sont traitées. Suit l'option pth_keynav (Raccourcis clavier).
 
+import { featureOff } from '../feature-off.mjs';
+
 function _enabled() {
+  if (featureOff('keynav')) return false;
   try { return localStorage.getItem('pth_keynav') !== '0'; } catch (e) { return true; }
 }
 

@@ -15,9 +15,12 @@
 // Encodage cartes : entiers bruts 0..51 (identiques protocole + log officiel).
 // Aucune conversion.
 
+import { featureOff } from './feature-off.mjs';
+
 // Lecture de l'option d'activation (ON par défaut). Relue à chaque événement
 // pour réagir immédiatement à un changement dans les options avancées.
 function _trackingEnabled() {
+  if (featureOff('stats_track')) return false;
   try {
     if (typeof localStorage === 'undefined') return true;
     const v = localStorage.getItem('pth_stats_track');
@@ -1322,6 +1325,7 @@ function _fmt(key, v) {
 
 // Option d'activation du tracking (ON par défaut) — pilote capture ET onglet.
 function _statsEnabled() {
+  if (featureOff('stats_track')) return false;
   try {
     if (typeof localStorage === 'undefined') return true;
     const v = localStorage.getItem('pth_stats_track');
@@ -1647,6 +1651,7 @@ if (typeof window !== 'undefined') window._loadSqlJs = _loadSqlJs;
 // StatsData/StatsCalculator/playerVpipCombos/cellCombo/GRID_RANKS (assemblés).
 
 function _hudOn() {
+  if (featureOff('hud_on')) return false;
   try { return localStorage.getItem('pth_hud_on') === '1'; } catch (_e) { return false; }
 }
 

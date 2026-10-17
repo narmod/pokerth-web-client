@@ -13,6 +13,8 @@
 //
 // Option : « pth_keynav » (Interface → Raccourcis clavier), activée par défaut.
 
+import { featureOff } from '../feature-off.mjs';
+
 // Surfaces fermables, DANS L'ORDRE DE PRIORITÉ : la première visible gagne.
 // Les confirmations passent avant le dialogue qui les a ouvertes, sinon
 // Escape fermerait le parent en laissant la confirmation orpheline.
@@ -70,6 +72,7 @@ const SURFACES = [
 const REG = [];   // surfaces enregistrées à chaud : {el, close}
 
 function _enabled() {
+  if (featureOff('keynav')) return false;
   try { return localStorage.getItem('pth_keynav') !== '0'; } catch (e) { return true; }
 }
 

@@ -18,6 +18,7 @@
 //   window.closePollModal()   — fermeture (croix, et Escape via ui/keynav.mjs)
 // ═══════════════════════════════════════════════════════════════════
 import { t, getLang } from '../i18n.mjs';
+import { featureOff } from '../feature-off.mjs';
 
 const MODAL_ID = 'poll-modal';
 const DONE_KEY = 'pth_poll_done';   // ids deja vus (repondus ou fermes), CSV plafonne
@@ -30,6 +31,7 @@ let _waitTimer = null;  // attente de la fermeture de la modale de bienvenue
 // _advGet(key, defOn) cote monolithe : cle absente = valeur par defaut, sinon
 // '1'/'0'. Defaut ACTIF ; afficher ne transmet rien, le vid ne part qu'au clic.
 function _optOn() {
+  if (featureOff('polls')) return false;
   try {
     const v = localStorage.getItem('pth_polls');
     if (v === null) return true;

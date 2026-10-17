@@ -946,7 +946,18 @@ function _processAvatarFile(file) {
      splash invisible mais le gate continue de tourner ; en cas d'échec de
      chargement il redevient visible pour proposer « Réessayer ». */
   var splashOff = false;
-  try { splashOff = (localStorage.getItem('pth_splash') === '0'); } catch (e) {}
+  /* Interrupteurs d'arrêt admin : la dernière liste reçue (/app-config, écrite
+     par pokerth.js) est remise en place dès ici, avant les modules — ce qui ne
+     se lit qu'au démarrage (splash, garde du bouton retour) suit l'admin dès
+     la visite suivante ; pokerth.js la remplace par la liste fraîche. */
+  try {
+    if (!window._pthFeatureOff) {
+      var _fo = JSON.parse(localStorage.getItem('pth_feature_off') || '[]'), _fm = {};
+      for (var _i = 0; Array.isArray(_fo) && _i < _fo.length; _i++) _fm[String(_fo[_i])] = true;
+      window._pthFeatureOff = _fm;
+    }
+  } catch (e) {}
+  try { splashOff = (localStorage.getItem('pth_splash') === '0') || !!(window._pthFeatureOff && window._pthFeatureOff.splash); } catch (e) {}
   if (splashOff) splash.classList.add('bs-invisible');
   /* Messages tournants du PreLoader.qml officiel (anglais dans toutes les
      langues, comme l'officiel — aucune traduction .ts). */

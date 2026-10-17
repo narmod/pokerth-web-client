@@ -24,6 +24,7 @@
 // ═══════════════════════════════════════════════════════════════════
 import { esc } from './misc.mjs';
 import { evShow, evRerender, evPrefetch } from './forum-events.mjs';
+import { featureOff } from '../feature-off.mjs';
 
 const FEED_URL = '/api/forumfeed';
 const FORUM_HOME = 'https://www.pokerth.net/';
@@ -321,6 +322,7 @@ function _renderList(posts) {
       // keyNavigationEnabled — b170786). Suit l'option clavier.
       if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
       if (['ArrowDown', 'ArrowUp', 'Home', 'End'].indexOf(e.key) < 0) return;
+      if (featureOff('keynav')) return;
       try { if (localStorage.getItem('pth_keynav') === '0') return; } catch (_) {}
       const rows = Array.prototype.slice.call(list.querySelectorAll('.fn-row'));
       const i = rows.indexOf(row);

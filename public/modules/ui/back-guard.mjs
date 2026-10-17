@@ -19,12 +19,14 @@
 
 import { t } from '../i18n.mjs';
 import { closeTop } from './keynav.mjs';
+import { featureOff } from '../feature-off.mjs';
 
 var EXIT_WINDOW = 2000;   // ms : délai du double-appui « quitter »
 var _lastAsk = 0;
 var _armed = false;
 
 function _enabled() {
+  if (featureOff('back_guard')) return false;
   try { return localStorage.getItem('pth_back_guard') !== '0'; } catch (e) { return true; }
 }
 

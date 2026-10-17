@@ -1,3 +1,8 @@
+2026-10-17 version 2.1.10-web.110:
+- bugfix: a feature the server operator has switched off now really stops (error reports, polls, seat stats, hand statistics, chat glossary, keyboard navigation, back-button guard, .pdb files, splash screen, table zoom) — before, only its option was greyed out
+- bugfix: the server's default settings (vibration, voice, assistance, amounts in big blinds) now apply from your very first visit, not the second
+- bugfix: a feature switched off on the server is no longer saved as « off » in your account settings
+
 2026-10-17 version 2.1.10-web.108:
 - improvement: Latin-American Spanish: two advanced options now say « póker », like the rest of the translation
 

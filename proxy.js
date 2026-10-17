@@ -336,6 +336,8 @@ const FEATURE_SWITCHES = [
   { key: 'keynav', label: 'Esc / Enter navigation outside the table' },
   { key: 'back_guard', label: 'Android back button guard' },
   { key: 'splash', label: 'Splash screen on startup' },
+  { key: 'ace_scenes', label: 'The Ace\u2019s antics (scenes, dances, reactions)' },
+  { key: 'ace_dance', label: 'The Ace dances to the music player' },
 ];
 function featureOffList() {
   const a = _adminConfig && _adminConfig.featureOff;

@@ -19,6 +19,8 @@
 // 5 signatures distinctes au maximum par session, 10 s minimum entre deux
 // envois, et le serveur regroupe de toute façon par signature.
 
+import { featureOff } from './feature-off.mjs';
+
 const ENDPOINT = '/clienterr';
 const MAX_SIGS = 5;          // signatures distinctes envoyées par session
 const MIN_GAP_MS = 10000;    // délai minimum entre deux envois
@@ -29,6 +31,7 @@ let _lastSent = 0;
 let _timer = null;
 
 function _optOn() {
+  if (featureOff('err_report')) return false;
   try {
     const v = localStorage.getItem('pth_err_report');
     return v === null ? true : v === '1';   // activée par défaut

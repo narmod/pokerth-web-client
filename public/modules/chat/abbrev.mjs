@@ -18,6 +18,8 @@
 // `xp` (expansion anglaise) sert de source pour Google ET de repli ultime.
 // ─────────────────────────────────────────────────────────────────────────
 
+import { featureOff } from '../feature-off.mjs';
+
 // token (minuscule) -> { xp: expansion anglaise, key: clé i18n }
 const ABBREV = {
   // Politesse / social
@@ -63,6 +65,7 @@ const _RX_SRC = '\\b(' + _TOKENS.map(_escapeRx).join('|') + ')\\b';
 
 // Option (avancées) : activée par défaut ; seul pth_chat_abbrev='0' la coupe.
 function isEnabled() {
+  if (featureOff('chat_abbrev')) return false;
   try {
     return typeof localStorage === 'undefined' || localStorage.getItem('pth_chat_abbrev') !== '0';
   } catch (_e) { return true; }

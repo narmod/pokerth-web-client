@@ -234,7 +234,7 @@ function applyAdvOpts() {
     // 19/07). Le CSS masque .cl-app-title sauf sous body.adv-show-title.
     /* adv-show-title : desormais pilote par l'admin via /app-config.showLoginTitle (reglage d'instance applique a tous) — plus d'option par utilisateur. */
     try { if (typeof window._syncStatsTab === 'function') window._syncStatsTab(); } catch (e) {}
-    try { if (typeof window._hudRefresh === 'function' && localStorage.getItem('pth_hud_on') === '1') window._hudRefresh(); else if (typeof window._hudRender === 'function') window._hudRender(); } catch (e) {}
+    try { if (typeof window._hudRefresh === 'function' && _advGet('hud_on', false)) window._hudRefresh(); else if (typeof window._hudRender === 'function') window._hudRender(); } catch (e) {}
     try {
       var _ex = document.querySelectorAll('.adv-export-btn');
       var _on = _advGet('stats_track', true);
@@ -905,7 +905,9 @@ function _cfgApplyTipLines(list) {
 }
 function _cfgCollectWebSettings(withNotes) {
   var out = {}, lists = {};
-  var B = function (advKey, def) { return _advGet(advKey, def) ? 1 : 0; };
+  // The player's own choice, not _advGet: an option the admin has switched off
+  // must not be written to the account as "off" and outlive the switch.
+  var B = function (advKey, def) { var v = _cfgLs('pth_' + advKey); return (v === null ? !!def : v === '1') ? 1 : 0; };
   // Identité & connexion
   var nick = _cfgLs('pth_nick') || _cfgLs('pth_offline_nick') || _cfgLs('pth_lan_nick');
   if (nick) out.MyName = nick;
@@ -1049,7 +1051,8 @@ window.exportPokerthConfig = exportPokerthConfig;
 // interne de la synchro, qui ne doit pas voyager d'un appareil à l'autre.
 var _BACKUP_SKIP = {
   pth_auth_login: 1, pth_pass: 1, pth_sid: 1, pth_vid: 1, pth_resume: 1,
-  pth_cfg_sync_dirty: 1, pth_cfg_sync_ts: 1, pth_cfg_sync_weblast: 1, pth_cfg_sync_webts: 1
+  pth_cfg_sync_dirty: 1, pth_cfg_sync_ts: 1, pth_cfg_sync_weblast: 1, pth_cfg_sync_webts: 1,
+  pth_feature_off: 1   // the server's kill-switch list, not a player setting
 };
 // Construit l'enregistrement de sauvegarde sans le télécharger : partagé entre
 // l'export manuel ci-dessous et l'écriture automatique (backup-autosave.mjs).
@@ -3929,15 +3932,28 @@ document.addEventListener("DOMContentLoaded", function() {
     // ONLY when this browser has never set it, so a player's own choice is never
     // overridden, and once written it is never re-applied. Values are '0'/'1'
     // ('1' = on/active), matching the in-game toggles. Note: the menu reflects
-    // these the moment it is opened; "Vibration"/"Assistance" read their flag once
-    // at load, so on a brand-new browser those two settle on the next reload.
+    // these the moment it is opened; the flags the game state reads at load are
+    // pushed into it as well (see LIVE below).
     function _applyDefaultSettings(defaults) {
       if (!defaults || typeof defaults !== 'object') return;
       var MAP = { haptic: 'pth_haptic', voice: 'pth_voice', assist: 'pth_assist', displaybb: 'pth_display_bb' };
+      // These four flags are read into the game state when the modules load,
+      // before /app-config answers: a default written now is pushed into that
+      // state too, so it holds on the first visit instead of the second.
+      var LIVE = {
+        haptic: function (v, st) { st._hapticEnabled = (v !== '0'); },
+        voice: function (v, st) { st._voiceEnabled = (v === '1'); },
+        assist: function (v, st) { st._assistOn = (v !== '0'); },
+        displaybb: function (v, st) { st._displayBB = (v === '1'); }
+      };
       Object.keys(MAP).forEach(function (k) {
         var v = defaults[k];
         if (v !== '0' && v !== '1') return;
-        try { if (localStorage.getItem(MAP[k]) === null) localStorage.setItem(MAP[k], v); } catch (e) {}
+        try {
+          if (localStorage.getItem(MAP[k]) !== null) return;
+          localStorage.setItem(MAP[k], v);
+          if (window.PthState) LIVE[k](v, window.PthState);   // modules/game/state.mjs
+        } catch (e) {}
       });
     }
     // Default login form (admin → /app-config.loginDefaults). Two knobs:
@@ -4108,6 +4124,12 @@ document.addEventListener("DOMContentLoaded", function() {
       var map = {};
       for (var i = 0; i < list.length; i++) map[String(list[i])] = true;
       window._pthFeatureOff = map;
+      // Last known list, read back at boot by pokerth-client.html: what runs
+      // once at startup (splash, back guard) is then already off next visit.
+      try { localStorage.setItem('pth_feature_off', JSON.stringify(Object.keys(map))); } catch (e) {}
+      // Features installed at boot re-read their switch now.
+      try { if (typeof window.refreshBackGuard === 'function') window.refreshBackGuard(); } catch (e) {}
+      try { if (typeof _loupeBtnSync === 'function') _loupeBtnSync(); } catch (e) {}
       try {
         var rows = document.querySelectorAll('.adv-row input[type=checkbox]');
         for (var j = 0; j < rows.length; j++) {
@@ -9425,7 +9447,7 @@ function _loupeBtnSync() {
   var w = window.innerWidth, h = window.innerHeight;
   var compact = w < 600 || (w >= h && h < 600);   // Responsive.compact (mobile)
   var enabled = true;
-  try { enabled = localStorage.getItem('pth_table_zoom') !== '0'; } catch (e) {}
+  enabled = _advGet('table_zoom', true);   // the admin kill switch wins over the stored choice
   var vis = coarse && compact && enabled;
   b.classList.toggle('loupe-avail', vis);
   if (!vis && (_loupe.on || _loupe.susp)) {
@@ -12210,7 +12232,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.109'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.110'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

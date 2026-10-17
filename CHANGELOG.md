@@ -494,6 +494,18 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Admin kill switches switch features off** (`web.110`) — 9 of the 21 switches only greyed out the checkbox: the
+  module behind them read `localStorage` directly and kept running (`err_report`, `polls`, `hud_on`,
+  `stats_track`, `chat_abbrev`, `keynav`, `back_guard`, `pdb_auto`, `splash`; `table_zoom` in part). New
+  `modules/feature-off.mjs` (`featureOff(key)`), asked by every direct reader; the last list is kept in
+  `pth_feature_off` and restored by `pokerth-client.html` before the modules load, so what runs only at startup
+  (splash, back guard) follows from the next visit, and the back guard and the loupe re-read their switch when
+  `/app-config` lands. `ace_scenes` and `ace_dance`, already checked by the mascot, join `FEATURE_SWITCHES` (the
+  server dropped them). Account sync now writes the player's own choice, not the admin override, and the list is
+  left out of the player backup. `scripts/test-feature-off.mjs` fails on any reader that skips the check.
+- **First-visit defaults apply on the first visit** (`web.110`) — vibration, voice, assistance and BB display are
+  read into `PthState` when the modules load, before `/app-config`; the default written then is now pushed into the
+  live state as well, so it no longer waits for the second visit.
 - **Admin › Deployment tells the truth** (`web.109`) — *Restart* used `pm2 restart` unconditionally, so it did
   nothing on a Docker install; it now takes the same path as a scheduled *Restart only* (`restartOnlyCmd()`).
   *Back online* waited for any answer and so reported the old process, still serving while git and npm ran: it now
