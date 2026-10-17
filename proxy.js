@@ -7813,7 +7813,7 @@ const VISIT_RETENTION_DAYS = 400; // keep per-day id sets this long (covers up t
 // qui se trompe, parce que rien ne le signale.
 function emptyVisitsStore() {
   return {
-    days: {}, totalV: 0, totalRet: 0, allU: {}, totalLV: 0, allLU: {},
+    days: {}, totalV: 0, totalRet: 0, allU: {}, totalU: 0, totalLV: 0, allLU: {}, totalLU: 0,
     allM: { pokerthnet: 0, lan: 0, offline: 0, live: 0 },
     env: {}, envSince: 0, langDiagSince: 0, music: {}, musicSince: 0, hourSince: 0, modeHourSince: 0, pthSince: 0,
     musicVotes: {}, musicVotesSince: 0,
@@ -7831,6 +7831,11 @@ try {
     visitsStore.totalRet = (typeof _vs.totalRet === 'number') ? _vs.totalRet : 0;
     visitsStore.totalLV = (typeof _vs.totalLV === 'number') ? _vs.totalLV : 0;
     visitsStore.allLU  = (_vs.allLU && typeof _vs.allLU === 'object') ? _vs.allLU : {};
+    // Devices ever seen. allU is pruned with the day buckets (400 days), so its
+    // size is not "all time"; these counters only ever grow. A store written
+    // before them starts from allU, complete while nothing has been pruned yet.
+    visitsStore.totalU  = (typeof _vs.totalU === 'number') ? _vs.totalU : Object.keys(visitsStore.allU).length;
+    visitsStore.totalLU = (typeof _vs.totalLU === 'number') ? _vs.totalLU : Object.keys(visitsStore.allLU).length;
     const _am = (_vs.allM && typeof _vs.allM === 'object') ? _vs.allM : {};
     visitsStore.allM   = { pokerthnet: _am.pokerthnet || 0, lan: _am.lan || 0, offline: _am.offline || 0, live: _am.live || 0 };
     visitsStore.env    = (_vs.env && typeof _vs.env === 'object') ? _vs.env : {};
@@ -7848,6 +7853,10 @@ try {
     visitsStore.refSince = (typeof _vs.refSince === 'number') ? _vs.refSince : 0;
     visitsStore.geoSince = (typeof _vs.geoSince === 'number') ? _vs.geoSince : 0;
     if (_vs.bt && typeof _vs.bt === 'object') visitsStore.bt = _vs.bt;   // cumuls des automates (visitIsBot)
+    if (visitsStore.bt) {
+      if (typeof visitsStore.bt.totalU !== 'number') visitsStore.bt.totalU = Object.keys(visitsStore.bt.allU || {}).length;
+      if (typeof visitsStore.bt.totalLU !== 'number') visitsStore.bt.totalLU = Object.keys(visitsStore.bt.allLU || {}).length;
+    }
   }
 } catch (e) { /* first run — start empty */ }
 let _visitsSaveTimer = null;
@@ -7881,12 +7890,15 @@ function visitDayKeyFromIndex(i) {
 // vaut 1: c'est un appareil deja connu, dont on ne saura jamais quand il est
 // arrive. Un vrai index vaut plus de vingt mille depuis 2024, d'ou le seuil.
 const VISIT_FIRST_UNKNOWN = 1000;
-function pruneVisitDays() {
-  const keys = Object.keys(visitsStore.days);
-  if (keys.length <= VISIT_RETENTION_DAYS) return;
-  keys.sort();
-  keys.slice(0, keys.length - VISIT_RETENTION_DAYS).forEach(function (k) { delete visitsStore.days[k]; });
-  pruneVisitIds();
+// Retention by DATE: a bucket older than VISIT_RETENTION_DAYS goes. Counting
+// the buckets instead kept a year-old day alive as long as there were gaps
+// (days nobody came), and the window then reached further back than 400 days.
+function pruneVisitDays(now) {
+  const d = new Date(now || Date.now()); d.setDate(d.getDate() - VISIT_RETENTION_DAYS + 1);
+  const cut = visitDayKey(d);
+  let gone = 0;
+  Object.keys(visitsStore.days).forEach(function (k) { if (k < cut) { delete visitsStore.days[k]; gone++; } });
+  if (gone) pruneVisitIds();
 }
 // The all-time device sets (allU: hash -> first day, allLU: /live) used to grow
 // forever, while the privacy page promises visit data is gone after about 13
@@ -7990,7 +8002,7 @@ function visitList(h24, n, offset) {
 // la fiche pays de l'onglet World signale encore ce qui en a l'allure.
 function visitIsBot(req, d) {
   const ua = String((req && req.headers && req.headers['user-agent']) || '');
-  return UA_BOT.test(ua) || !!(d && d.wd === true);
+  return UA_BOT_RULE.isBotUA(ua) || !!(d && d.wd === true);
 }
 function visitDayBucket(now) {
   const day = visitDayKey(now || new Date());
@@ -8329,7 +8341,9 @@ const UA_BROWSER = [
 // bas avec « en-tête de langue inexploitable » pour estimer la part de bruit
 // dans les pings — un ordre de grandeur pour lire les autres répartitions.
 // Sous-estime : beaucoup de bots envoient un Accept-Language valide (en-US).
-const UA_BOT = /bot|spider|crawl|slurp|curl|wget|python|java\/|go-http|node-fetch|axios|httpclient|headless|phantom|scrapy|libwww|okhttp/i;
+// One rule for every count and every list: server/ua-bot.js (CUBOT phones are
+// players, not robots).
+const UA_BOT_RULE = require('./server/ua-bot.js');
 function _uaPick(table, ua) {
   for (let i = 0; i < table.length; i++) if (table[i][0].test(ua)) return table[i][1];
   return 'other';
@@ -8350,9 +8364,13 @@ function _envRoom(b, val, key) {
   if (key === 'lang' && supportedLangs().indexOf(val) >= 0) return true;
   return Object.keys(b).length < ENV_KEY_CAP;
 }
-function _envBump(key, val) {
-  if (!visitsStore.env) visitsStore.env = {};
-  const b = visitsStore.env[key] || (visitsStore.env[key] = {});
+// `bot`: a robot's environment goes to visitsStore.bt.env, like every other
+// count of a robot, instead of being mixed into the people's running totals.
+function _envBump(key, val, bot) {
+  let E;
+  if (bot) { const B = visitBotAll(); E = B.env || (B.env = {}); if (!B.envSince) B.envSince = Date.now(); }
+  else E = visitsStore.env || (visitsStore.env = {});
+  const b = E[key] || (E[key] = {});
   if (!_envRoom(b, val, key)) { b.other = (b.other || 0) + 1; return; }
   b[val] = (b[val] || 0) + 1;
 }
@@ -8398,13 +8416,13 @@ function recordVisitEnv(ua, acceptLang, standalone, seenBefore, bot) {
   try {
     ua = String(ua || '');
     const os = _uaPick(UA_OS, ua), br = _uaPick(UA_BROWSER, ua);
-    _envBump('os', os);
-    _envBump('br', br);
+    _envBump('os', os, bot);
+    _envBump('br', br, bot);
     // Le croisement OS x navigateur est l'unite qui compte vraiment : « iPhone
     // Safari » se teste, « Safari » tout court ne veut pas dire grand-chose
     // quand la moitie de nos pieges connus sont propres a iOS.
-    _envBump('combo', os + ' \u00b7 ' + br);
-    _envBump('pwa', standalone ? 'standalone' : 'browser');
+    _envBump('combo', os + ' \u00b7 ' + br, bot);
+    _envBump('pwa', standalone ? 'standalone' : 'browser', bot);
     if (!visitsStore.envSince) visitsStore.envSince = Date.now();
     // Premier tag de l'en-tete, reduit a la langue de base (fr-CA, fr_CA →
     // fr ; iw → he ; und, *, en-tete absent → other). La regle vit dans
@@ -8414,13 +8432,13 @@ function recordVisitEnv(ua, acceptLang, standalone, seenBefore, bot) {
     // Un code valide refuse par le plafond tombe dans « other » : le
     // diagnostic le dit au lieu de le confondre avec un en-tete absent.
     if (lgv !== 'other' && !_envRoom((visitsStore.env && visitsStore.env.lang) || {}, lgv, 'lang')) lp = { lang: 'other', locale: null, raw: lgv + ' (cap)' };
-    _envBump('lang', lgv);
+    _envBump('lang', lgv, bot);
     // Croisement langue x new/returning : meme id hache que recordVisit (donc
     // meme notion de "deja vu"), aucune donnee de plus stockee. seenBefore est
     // null quand le ping n'a pas d'id (recordVisit n'a alors rien pu dire) —
     // dans ce cas on ne compte ni l'un ni l'autre, plutot que de deviner.
     if (seenBefore !== null && seenBefore !== undefined) {
-      _envBump(seenBefore ? 'langRet' : 'langNew', lgv);
+      _envBump(seenBefore ? 'langRet' : 'langNew', lgv, bot);
     }
     // Estimation du bruit : UA d'automate SEUL, dans env.bot. L'ancien
     // env.noise (UA d'automate OU langue inexploitable) rendait « other »
@@ -8428,7 +8446,7 @@ function recordVisitEnv(ua, acceptLang, standalone, seenBefore, bot) {
     // pas melanger deux definitions dans un meme cumul.
     // Diagnostic de langue (env.langLocale, env.otherRaw*, env.otherCombo,
     // env.bot) : premier tag d'un en-tete deja recu, compteurs plafonnes.
-    const diagCtx = { seenBefore: (seenBefore === true || seenBefore === false) ? seenBefore : null, isBot: UA_BOT.test(ua), combo: os + ' \u00b7 ' + br };
+    const diagCtx = { seenBefore: (seenBefore === true || seenBefore === false) ? seenBefore : null, isBot: UA_BOT_RULE.isBotUA(ua), combo: os + ' \u00b7 ' + br };
     if (!visitsStore.langDiagSince) visitsStore.langDiagSince = Date.now();
     LANG_STATS.record(visitsStore.env, lp, diagCtx);
     // Série quotidienne par langue : le cumul dit lesquelles, pas quand. Un
@@ -8484,6 +8502,7 @@ function recordLiveVisit(rawId, bot) {
     if (!cell.lids) cell.lids = {};
     cell.lids[h] = 1;
     if (!A.allLU) A.allLU = {};
+    if (A.allLU[h] === undefined) A.totalLU = (A.totalLU || 0) + 1;
     A.allLU[h] = 1;
   }
   saveVisitsSoon();
@@ -8522,7 +8541,7 @@ function recordVisit(rawId, bot) {
     // reconstituer une cohorte: les seaux journaliers disent qui est revenu et
     // quand. Un appareil deja inscrit garde sa valeur — la reecrire ferait
     // passer un habitue pour un nouveau venu du jour.
-    if (!seenBefore) A.allU[h] = visitDayIndex();
+    if (!seenBefore) { A.allU[h] = visitDayIndex(); A.totalU = (A.totalU || 0) + 1; }
     if (seenBefore) { bucket.rt = (bucket.rt || 0) + 1; A.totalRet = (A.totalRet || 0) + 1; cell.rt = (cell.rt || 0) + 1; }
     else {
       bucket.nw = (bucket.nw || 0) + 1;
@@ -8778,9 +8797,10 @@ function visitsSummary(periodDays, h24, bots) {
     if (bots && B) {
       const a = out.allTime;
       a.v += B.totalV || 0; a.rt += B.totalRet || 0; a.lv += B.totalLV || 0;
-      a.u += Object.keys(B.allU || {}).length; a.nw = a.u; a.lu += Object.keys(B.allLU || {}).length;
+      a.u += B.totalU || 0; a.nw = a.u; a.lu += B.totalLU || 0;
       for (const k in (B.allM || {})) a.m[k] = (a.m[k] || 0) + (B.allM[k] || 0);
       if (B.music) out.music = _visitAdd(out.music, B.music);
+      if (B.env) out.env = Object.assign(LANG_STATS.foldEnv(_visitAdd(visitsStore.env || {}, B.env)), { noiseMeta: out.env.noiseMeta });
       if (B.guide) out.guide = GUIDE_STATS.summary(_visitAdd(visitsStore.guide || {}, B.guide));
     }
     return out;
@@ -8832,7 +8852,7 @@ function visitsSummaryRead(periodDays, h24) {
     // its own browser zone and drop the wrong day.
     todayKey: visitDayKey(now),
     musicSinceKey: visitsStore.musicSince ? visitDayKey(new Date(visitsStore.musicSince)) : '',
-    allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length, nw: Object.keys(visitsStore.allU).length, rt: visitsStore.totalRet || 0, lv: visitsStore.totalLV || 0, lu: Object.keys(visitsStore.allLU || {}).length, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0, live: am.live || 0 }; })() },
+    allTime: { v: visitsStore.totalV || 0, u: visitsStore.totalU || 0, nw: visitsStore.totalU || 0, rt: visitsStore.totalRet || 0, lv: visitsStore.totalLV || 0, lu: visitsStore.totalLU || 0, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0, live: am.live || 0 }; })() },
     series: series,
     hours48: visitHourSeries(48),
     hourProfile: h24 ? visitHourProfile24() : visitHourProfile(P),
@@ -8938,7 +8958,7 @@ async function initDb() {
     try { await _dbPool.query('ALTER TABLE traffic_daily ADD COLUMN IF NOT EXISTS live_unique_visitors INT NOT NULL DEFAULT 0'); } catch (e) {}
     _dbStatus.connected = true; _dbStatus.error = '';
     console.log('[db] MySQL mirror connected (' + cfg.database + ', source: ' + cfg.source + ')');
-    dbFlushTrafficToday();
+    dbFlushTrafficAll().then(function () { _dbLastDay = visitDayKey(); });
     dbFlushLeaderboard();
     dbFlushBroadcasts();
   } catch (e) {
@@ -8951,10 +8971,26 @@ async function reconfigureDb() {
   _dbStatus.connected = false; _dbStatus.error = '';
   await initDb();
 }
+// The row of a day is written while the day runs. The first flush after
+// midnight writes yesterday's row once more, so the pings of its last
+// seconds (saved after the clock passed midnight) are not lost; on connect
+// every day still held is written, so the mirror is not missing its history.
+let _dbLastDay = '';
 async function dbFlushTrafficToday() {
   if (!_dbPool) return;
+  const day = visitDayKey();
+  if (_dbLastDay && _dbLastDay !== day) await dbFlushTrafficDay(_dbLastDay);
+  _dbLastDay = day;
+  await dbFlushTrafficDay(day);
+}
+async function dbFlushTrafficAll() {
+  if (!_dbPool) return;
+  const keys = Object.keys(visitsStore.days).sort();
+  for (const k of keys) { await dbFlushTrafficDay(k); if (!_dbPool) return; }
+}
+async function dbFlushTrafficDay(day) {
+  if (!_dbPool) return;
   try {
-    const day = visitDayKey();
     const b = visitsStore.days[day] || {};
     const u = b.ids ? Object.keys(b.ids).length : 0;
     const m = b.m || {};
@@ -13962,9 +13998,13 @@ function _errRateOk(ip) {
   r.n++;
   return r.n <= ERR_RATE_MAX;
 }
+// Message + first stack frame WITHOUT line, column and query string: the same
+// bug stays one group across deployments (every build moves the lines and
+// bumps ?v=), instead of reappearing as a new error after each one.
 function _errSig(it) {
-  const first = String(it.stack || '').split('\n')[1] || (it.src + ':' + it.line);
-  return String(it.msg || '').slice(0, 120) + '|' + String(first).trim().slice(0, 120);
+  const first = String(it.stack || '').split('\n')[1] || String(it.src || '');
+  const frame = String(first).trim().replace(/\?[^\s:)]*/g, '').replace(/(:\d+){1,2}\)?$/, '');
+  return String(it.msg || '').slice(0, 120) + '|' + frame.slice(0, 120);
 }
 function _errRecord(meta, it) {
   const sig = _errSig(it);
@@ -13982,19 +14022,27 @@ function _errRecord(meta, it) {
   g.last = Date.now();
   g.count++;
   g.path = meta.path || g.path;
-  const bump = function (o, k) { if (!k) return; if (Object.keys(o).length < 12 || o[k]) o[k] = (o[k] || 0) + 1; };
-  bump(g.vers, meta.ver); bump(g.uas, meta.ua); bump(g.ips, meta.ip); bump(g.modes, meta.mode);
+  // Caps keep the memory bounded; the IP count is the one figure read as a
+  // number ("N IPs"), so it gets room enough to mean something, and says
+  // when it reached its cap. Newest build, line and column are kept up to date.
+  const bump = function (o, k, cap) { if (!k) return false; if (o[k] || Object.keys(o).length < cap) { o[k] = (o[k] || 0) + 1; return true; } return false; };
+  bump(g.vers, meta.ver, 12); bump(g.modes, meta.mode, 12);
+  if (!bump(g.uas, meta.ua, 40)) g.uasMore = true;
+  if (!bump(g.ips, meta.ip, 500)) g.ipsMore = true;
+  g.src = it.src || g.src; g.line = it.line || g.line; g.col = it.col || g.col; g.stack = it.stack || g.stack;
 }
 function _errSnapshot() {
   const groups = [];
   _errGroups.forEach(function (g) {
     groups.push({ sig: g.sig, msg: g.msg, src: g.src, line: g.line, col: g.col, stack: g.stack,
                   path: g.path || '', first: g.first, last: g.last, count: g.count,
-                  vers: Object.keys(g.vers), uas: Object.keys(g.uas),
-                  modes: Object.keys(g.modes), ips: Object.keys(g.ips).length });
+                  vers: Object.keys(g.vers), uas: Object.keys(g.uas), uasMore: !!g.uasMore,
+                  bots: Object.keys(g.uas).filter(UA_BOT_RULE.isBotUA).length,
+                  modes: Object.keys(g.modes), ips: Object.keys(g.ips).length, ipsMore: !!g.ipsMore });
   });
   groups.sort(function (a, b) { return b.last - a.last; });
-  return { ok: true, now: Date.now(), groups: groups };
+  // The list lives in memory: it starts empty with the process.
+  return { ok: true, now: Date.now(), since: _pingStats.boot, groups: groups };
 }
 // ── Registre des sessions vivantes (tableau de bord admin, /admin/sessions) ──
 // _sessions n'indexe que les sessions AVEC sid ; ce Set les contient toutes,

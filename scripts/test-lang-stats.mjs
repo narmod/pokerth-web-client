@@ -214,7 +214,10 @@ ok(/_annEsc\(k\)/.test(admin.slice(admin.indexOf('function _envOtherDiag('), adm
     const ex = await fetch('http://127.0.0.1:' + PORT + '/admin/visits/export?fmt=json&token=' + TOKEN).then((r) => r.json());
     const S = ex.summary || {};
     ok(ex.schema === 'pokerth-traffic/1' && ex.store.env.lang.iw === 3, 'the export keeps its schema and the raw store');
-    ok(S.env.lang.he === 6 && !('iw' in S.env.lang) && S.env.lang.other === 4 + 1 + 4, 'summary.env folds: he 3+3, iw gone, und joins other');
+    // The Googlebot ping (a1, no language) is a robot's: since web.116 its
+    // environment goes to bt.env, out of the people's running totals.
+    ok(S.env.lang.he === 6 && !('iw' in S.env.lang) && S.env.lang.other === 4 + 1 + 4 - 1, 'summary.env folds: he 3+3, iw gone, und joins other');
+    ok(v.bt && v.bt.env && v.bt.env.lang && v.bt.env.lang.other === 1, 'and the robot\'s language is counted with the robots');
     ok(S.envPeriod.lang.he === 3 + 2 + 1 && !('iw' in S.envPeriod.lang) && S.envPeriod.langNew.he >= 1, 'envPeriod folds the per-day series as well');
     ok(S.envPeriod.ldDays === 1 && S.envPeriod.otherRaw['(none)'] === 1 && S.envPeriod.langLocale['pt-BR'] === 1, 'envPeriod carries the diagnostic of the period (humans only by default)');
     const ser = S.series.find((x) => x.date === today);

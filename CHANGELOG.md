@@ -494,6 +494,16 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **What the proxy stores for Traffic and Errors** (`web.116`) — one robot rule, `server/ua-bot.js`, for the visit
+  counts, the language diagnostics and the Errors list: the old `/bot/` caught CUBOT phones (real players) while the
+  Errors tab used a narrower regex of its own; the proxy now sends the classification with each error group. A
+  robot's system, browser and language go to `bt.env` instead of the people's running totals (merged back when bots
+  are shown). *All time* devices come from `totalU` / `totalLU`, counters that only grow — `allU` is pruned with the
+  day buckets, so its size was not "all time" after 400 days; the buckets now go by date, not by count, so gaps no
+  longer keep year-old days. MySQL mirror: the first flush after midnight writes yesterday's row once more (its last
+  seconds were lost) and connecting writes every day still held. Errors: the group signature drops line, column and
+  `?v=`, so a bug stays one group across deployments; IPs are counted up to 500 (`500+` said) instead of stopping
+  at 12, user agents up to 40; the list says it counts since the proxy started. `scripts/test-stats-store.mjs`.
 - **Traffic figures compare like with like** (`web.115`) — *Last 7 days* and the period tile set today so far plus the
   days before against as many complete days, and the mean, slope, halves and trend line read a series ending with
   today so far: a drop every morning. The arrows now compare complete days (complete hours for 24 h, new `full`
