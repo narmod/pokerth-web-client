@@ -80,7 +80,22 @@ function _inviteDecline() {
   try { window.send(MSG.buildRejectInvite(gid, 0)); } catch(e) {}
 }
 
-export { _inviteClear, _inviteShow, _inviteAccept, _inviteDecline };
+// An invitation belongs to the server session it was sent to (it names our
+// playerId of that session). Parity with upstream 52661f2 (setSession /
+// LobbyPage destruction): it must not outlive the session.
+//   notify = true  → voluntary disconnect: the socket is still open, so the
+//                    host gets a polite decline before we go.
+//   notify = false → a NEW session (InitAck): nothing to answer any more.
+// A wifi drop absorbed by the proxy's session grace keeps the same session
+// (no InitAck), so the invitation stays up and valid then.
+function _inviteDrop(notify) {
+  if (!S._inv) { if (document.getElementById('game-invite-banner')) _inviteClear(); return; }
+  var gid = S._inv.gameId;
+  _inviteClear();
+  if (notify) { try { window.send(MSG.buildRejectInvite(gid, 0)); } catch(e) {} }
+}
+
+export { _inviteClear, _inviteShow, _inviteAccept, _inviteDecline, _inviteDrop };
 
 for (const [k, v] of Object.entries({
-  _inviteClear, _inviteShow, _inviteAccept, _inviteDecline })) window[k] = v;
+  _inviteClear, _inviteShow, _inviteAccept, _inviteDecline, _inviteDrop })) window[k] = v;

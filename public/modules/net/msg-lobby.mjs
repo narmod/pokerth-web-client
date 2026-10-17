@@ -177,6 +177,9 @@ function onInitAck(sub) {
     // confirme (PlayerInfoReply sur soi-meme, plus bas), personne n'est
     // connu — boite vide, rien n'est persiste.
     try { window._pmSetOwner && window._pmSetOwner(''); } catch (e) {}
+    // Same for a table invitation still on screen: it was sent to the
+    // previous session's playerId (parity upstream 52661f2, setSession).
+    try { window._inviteDrop && window._inviteDrop(false); } catch (e) {}
     S._wasAuthenticated = true;
     S._lastConnectFailed = false; // connexion réussie
     _endConnecting();           // login OK → unlock the connect button

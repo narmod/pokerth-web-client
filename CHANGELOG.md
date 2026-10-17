@@ -494,6 +494,11 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **A table invitation does not outlive its session** (`web.106`, upstream `52661f2` parity) — the banner was only
+  cleared by Accept / Decline / a newer invitation, so it stayed over the login screen or a new lobby, and Accept joined
+  with an invitation made to the previous playerId. `petitions.mjs::_inviteDrop`: `disconnect()` declines it while the
+  socket is still open; `onInitAck` (a new server session) drops it silently. A proxy rebind under session grace has no
+  InitAck, so the invitation stays valid then (`scripts/test-invite-drop.mjs`).
 - **Ghost homonyms: running tables exempt** (`web.105`, upstream `31c0166` parity) — like
   `LobbyHandler::removeStalePlayerListDuplicates`, an older homonym seated at a started table is not hidden: during a
   rejoin the seat keeps the old pid until the next hand. `presence.mjs`: `runningSeatPids(S.games)` passed to

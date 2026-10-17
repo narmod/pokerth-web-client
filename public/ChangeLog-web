@@ -1,3 +1,6 @@
+2026-10-17 version 2.1.10-web.106:
+- bugfix: a table invitation no longer stays on screen after you log out or log in again; logging out declines it, so the host gets an answer
+
 2026-10-17 version 2.1.10-web.105:
 - improvement: a player getting their seat back at a running table stays listed under both sessions until the rejoin is done, as in the official client
 

@@ -6844,6 +6844,9 @@ const App = (() => {
       } catch (e) {}
     },
     disconnect() {
+      // A pending table invitation is declined while the socket is still open
+      // (parity upstream 52661f2), then the banner goes with the session.
+      try { window._inviteDrop && window._inviteDrop(true); } catch (e) {}
       S._intentionalDisconnect = true;
       _closeNotifyWS();
       S._wasAuthenticated = false;
@@ -12204,7 +12207,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.105'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.106'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
