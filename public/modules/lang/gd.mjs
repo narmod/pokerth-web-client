@@ -664,7 +664,7 @@ export const strings = {
     createPrefsSave:'💾 Sàbhail roghainnean', createPrefsSaveTip:'Sàbhail am foirm seo mar roghainnean pearsanta', createPrefsSaved:'Roghainnean air an sàbhaladh', createPrefsLoaded:'Roghainnean air an luchdadh', createPrefsNone:'Chan eil roghainnean air an sàbhaladh fhathast',
     presetFastDesc: 'astar luath!',
     proxyConnectedWait: 'Progsaidh ceangailte — a\' feitheamh ris an fhrithealaiche PokerTH…',
-    errConnLost: 'Chaidh an ceangal a chall. \'S urrainn dhut ceangal a-rithist an ceann diog no dhà.',
+    errConnLost: 'Chaidh an ceangal a chall. \'S urrainn dhut ceangal a-rithist an ceann diog no dhà.', connStalledTitle: 'Duilgheadasan leis a’ cheangal', connStalledMsg: 'Chan eil am frithealaiche a’ freagairt. A’ feitheamh ri freagairt…',
     autoTableFound: '⚡ Bòrd air a lorg — a\' gabhail pàirt #{n}',
     autoNoTable: '⚡ Gun bhùird — a\' cruthachadh fear…',
     quickCreateTitle: 'Cruthaich bòrd ùr',

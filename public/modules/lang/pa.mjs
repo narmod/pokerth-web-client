@@ -328,7 +328,7 @@ export const strings = {
     presetRankingName:'ਰੈਂਕਿੰਗ', presetRankingDesc:'ਅਧਿਕਾਰਤ ਰਫ਼ਤਾਰ', presetWecupName:'We Cup', presetWecupDesc:'ਸੰਤੁਲਿਤ ਟੂਰਨਾਮੈਂਟ', presetBbcName:'BBC', presetBbcDesc:'ਸਮਾਂ-ਆਧਾਰਿਤ ਬਲਾਇੰਡ',
     presetSaveName:'ਮੇਰੀਆਂ ਪਸੰਦਾਂ', presetSaveDesc:'ਇਹ ਸੈਟਿੰਗਾਂ ਸੰਭਾਲੋ',
     proxyConnectedWait:'ਪ੍ਰੌਕਸੀ ਜੁੜਿਆ \u2014 PokerTH ਸਰਵਰ ਦੀ ਉਡੀਕ…',
-    errConnLost:'ਕਨੈਕਸ਼ਨ ਟੁੱਟ ਗਿਆ। ਤੁਸੀਂ ਕੁਝ ਸਕਿੰਟਾਂ ਵਿੱਚ ਮੁੜ ਜੁੜ ਸਕਦੇ ਹੋ।',
+    errConnLost:'ਕਨੈਕਸ਼ਨ ਟੁੱਟ ਗਿਆ। ਤੁਸੀਂ ਕੁਝ ਸਕਿੰਟਾਂ ਵਿੱਚ ਮੁੜ ਜੁੜ ਸਕਦੇ ਹੋ।', connStalledTitle:'ਕਨੈਕਸ਼ਨ ਵਿੱਚ ਸਮੱਸਿਆ', connStalledMsg:'ਸਰਵਰ ਜਵਾਬ ਨਹੀਂ ਦੇ ਰਿਹਾ। ਜਵਾਬ ਦੀ ਉਡੀਕ ਹੋ ਰਹੀ ਹੈ…',
     autoTableFound:'\u26a1 ਟੇਬਲ ਮਿਲਿਆ \u2014 #{n} ਵਿੱਚ ਸ਼ਾਮਲ ਹੋ ਰਿਹਾ ਹੈ',
     autoNoTable:'\u26a1 ਕੋਈ ਟੇਬਲ ਨਹੀਂ \u2014 ਇੱਕ ਬਣਾਇਆ ਜਾ ਰਿਹਾ ਹੈ…',
     quickCreateTitle:'ਨਵਾਂ ਟੇਬਲ ਬਣਾਓ',

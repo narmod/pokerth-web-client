@@ -663,7 +663,7 @@ export const strings = {
     createPrefsSave:'💾 Сачувај подешавања', createPrefsSaveTip:'Сачувај овај образац као моја лична подешавања', createPrefsSaved:'Подешавања сачувана', createPrefsLoaded:'Подешавања учитана', createPrefsNone:'Још нема сачуваних подешавања',
     presetFastDesc: 'brz tempo!',
     proxyConnectedWait: 'Proksi povezan — čekanje na PokerTH server…',
-    errConnLost: 'Veza prekinuta. Možete se ponovo povezati za nekoliko sekundi.',
+    errConnLost: 'Veza prekinuta. Možete se ponovo povezati za nekoliko sekundi.', connStalledTitle: 'Problemi sa vezom', connStalledMsg: 'Server ne odgovara. Čeka se odgovor…',
     autoTableFound: '⚡ Sto pronađen — ulazak #{n}',
     autoNoTable: '⚡ Nema stolova — pravljenje…',
     quickCreateTitle: 'Napravi novi sto',

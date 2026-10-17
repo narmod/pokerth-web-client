@@ -494,6 +494,15 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Connection watchdog with an active probe** (`web.107`, upstream `934457e` parity) — new `net/watchdog.mjs`: after a
+  silence the client sends a PlayerInfoRequest for id `0xFFFFFFFF`, which every server answers and none counts as player
+  activity. Table: probe 5 s / notice 10 s / drop 30 s (QML values; the passive watchdog waited up to the action
+  timeout + 20 s). Lobby: probe 50 s (just past the 45 s heartbeat) / 60 s / 80 s instead of ~110 s. A late tick (sleep)
+  probes at once. Only against servers announcing 2.1+ (`S._srvVer`, from Announce); training, `/live`, hidden tabs
+  and older servers keep the passive watchdog, which stands down while the active one runs. The answer is dropped in
+  `onPlayerInfoReply`; the notice (`connStalledTitle`, `connStalledMsg`, 83 languages — 30 from the QML catalogues)
+  is cleared by the first frame received. A drop runs the usual forced reconnect, which rebinds through the proxy
+  under session grace (`scripts/test-watchdog-probe.mjs`).
 - **A table invitation does not outlive its session** (`web.106`, upstream `52661f2` parity) — the banner was only
   cleared by Accept / Decline / a newer invitation, so it stayed over the login screen or a new lobby, and Accept joined
   with an invitation made to the previous playerId. `petitions.mjs::_inviteDrop`: `disconnect()` declines it while the

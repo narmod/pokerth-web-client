@@ -4742,6 +4742,9 @@ const App = (() => {
   // online/focus/visibilitychange (et le rebranchement proxy est transparent).
   setInterval(function () {
     if (S._intentionalDisconnect || !S._lastConnectParams) return;
+    // The active watchdog (modules/net/watchdog.mjs: connection probe, 2.1+
+    // servers) is in charge whenever it runs; this passive one covers the rest.
+    try { if (window._wdProbing && window._wdProbing()) return; } catch (eWd) {}
     // Entraînement (offline) : pas de socket réseau à surveiller. Le FakeServer
     // peut rester muet légitimement (pause entre les mains, overlay de fin de
     // partie, onglet revenu d'arrière-plan avec timers gelés) → le watchdog
@@ -12207,7 +12210,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.106'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.107'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

@@ -414,7 +414,7 @@ export const strings = {
     presetRankingName:'റാങ്കിംഗ്', presetRankingDesc:'ഔദ്യോഗിക വേഗത', presetWecupName:'We Cup', presetWecupDesc:'സന്തുലിത ടൂർണമെന്റ്', presetBbcName:'BBC', presetBbcDesc:'സമയാധിഷ്ഠിത ബ്ലൈൻഡുകൾ',
     presetSaveName:'എന്റെ മുൻഗണനകൾ', presetSaveDesc:'ഈ ക്രമീകരണങ്ങൾ സേവ് ചെയ്യുക',
     proxyConnectedWait:'പ്രോക്സി ബന്ധിപ്പിച്ചു — PokerTH സെർവറിനായി കാത്തിരിക്കുന്നു…',
-    errConnLost:'കണക്ഷൻ നഷ്ടപ്പെട്ടു. കുറച്ച് സെക്കൻഡുകൾക്കുള്ളിൽ വീണ്ടും ബന്ധിപ്പിക്കാം.',
+    errConnLost:'കണക്ഷൻ നഷ്ടപ്പെട്ടു. കുറച്ച് സെക്കൻഡുകൾക്കുള്ളിൽ വീണ്ടും ബന്ധിപ്പിക്കാം.', connStalledTitle:'കണക്ഷൻ പ്രശ്നങ്ങൾ', connStalledMsg:'സെർവർ പ്രതികരിക്കുന്നില്ല. മറുപടിക്കായി കാത്തിരിക്കുന്നു…',
     autoTableFound:'⚡ ടേബിൾ കണ്ടെത്തി — #{n} ൽ ചേരുന്നു',
     autoNoTable:'⚡ ടേബിളുകളില്ല — ഒന്ന് സൃഷ്ടിക്കുന്നു…',
     quickCreateTitle:'പുതിയ ടേബിൾ സൃഷ്ടിക്കുക',

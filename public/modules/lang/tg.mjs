@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'суръати расмӣ', presetWecupName:'We Cup', presetWecupDesc:'турнири мутавозин', presetBbcName:'BBC', presetBbcDesc:'блайндҳо аз рӯи вақт',
     presetSaveName:'Аз они ман', presetSaveDesc:'нигоҳ доштани ин танзимот',
     proxyConnectedWait:'Прокси пайваст шуд — интизори сервери PokerTH…',
-    errConnLost:'Пайваст қатъ шуд. Пас аз чанд сония метавонед аз нав пайваст шавед.',
+    errConnLost:'Пайваст қатъ шуд. Пас аз чанд сония метавонед аз нав пайваст шавед.', connStalledTitle:'Мушкилоти пайвастшавӣ', connStalledMsg:'Сервер ҷавоб намедиҳад. Интизори ҷавоб…',
     autoTableFound:'⚡ Миз ёфт шуд — ба #{n} ҳамроҳ шуда истодааст',
     autoNoTable:'⚡ Миз нест — мизи нав сохта мешавад…',
     quickCreateTitle:'Сохтани мизи нав',

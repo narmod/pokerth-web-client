@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'gudun hukuma', presetWecupName:'We Cup', presetWecupDesc:'gasa daidaitacciya', presetBbcName:'BBC', presetBbcDesc:'blinds bisa lokaci',
     presetSaveName:'Zaɓuɓɓukana', presetSaveDesc:'adana waɗannan saitunan',
     proxyConnectedWait:'An haɗa proxy — ana jiran sabar PokerTH…',
-    errConnLost:'Haɗi ya katse. Za ka iya sake haɗawa bayan ɗan daƙiƙoƙi.',
+    errConnLost:'Haɗi ya katse. Za ka iya sake haɗawa bayan ɗan daƙiƙoƙi.', connStalledTitle:'Matsalolin haɗi', connStalledMsg:'Sabar ba ta amsawa. Ana jiran amsa…',
     autoTableFound:'⚡ An sami tebur — ana shiga #{n}',
     autoNoTable:'⚡ Babu tebur — ana ƙirƙirar sabo…',
     quickCreateTitle:'Ƙirƙiri sabon tebur',

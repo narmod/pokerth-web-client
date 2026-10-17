@@ -663,7 +663,7 @@ export const strings = {
     createPrefsSave:'💾 Salvează preferințele', createPrefsSaveTip:'Salvează acest formular ca preferințe personale', createPrefsSaved:'Preferințe salvate', createPrefsLoaded:'Preferințe încărcate', createPrefsNone:'Încă nu există preferințe salvate',
     presetFastDesc: 'ritm alert!',
     proxyConnectedWait: 'Proxy conectat — se așteaptă serverul PokerTH…',
-    errConnLost: 'Conexiune pierdută. Te poți reconecta în câteva secunde.',
+    errConnLost: 'Conexiune pierdută. Te poți reconecta în câteva secunde.', connStalledTitle: 'Probleme de conexiune', connStalledMsg: 'Serverul nu răspunde. Se așteaptă un răspuns…',
     autoTableFound: '⚡ Masă găsită — se intră la #{n}',
     autoNoTable: '⚡ Nicio masă — se creează una…',
     quickCreateTitle: 'Creează o masă nouă',

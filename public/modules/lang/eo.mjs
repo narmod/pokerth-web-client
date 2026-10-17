@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'oficiala ritmo', presetWecupName:'We Cup', presetWecupDesc:'ekvilibra turniro', presetBbcName:'BBC', presetBbcDesc:'tempobazitaj blindoj',
     presetSaveName:'Miaj preferoj', presetSaveDesc:'konservi ĉi tiujn agordojn',
     proxyConnectedWait:'Prokurilo konektita — atendante la PokerTH-servilon…',
-    errConnLost:'Konekto perdita. Vi povas rekonekti post kelkaj sekundoj.',
+    errConnLost:'Konekto perdita. Vi povas rekonekti post kelkaj sekundoj.', connStalledTitle:'Konektaj problemoj', connStalledMsg:'La servilo ne respondas. Atendante respondon…',
     autoTableFound:'⚡ Tablo trovita — aliĝado al #{n}',
     autoNoTable:'⚡ Neniu tablo — kreado de nova…',
     quickCreateTitle:'Krei novan tablon',

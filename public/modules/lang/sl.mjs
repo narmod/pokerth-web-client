@@ -416,7 +416,7 @@ export const strings = {
     presetRankingName:'Uvrstitev', presetRankingDesc:'uradni tempo', presetWecupName:'We Cup', presetWecupDesc:'uravnotežen turnir', presetBbcName:'BBC', presetBbcDesc:'časovno pogojeni blindi',
     presetSaveName:'Moje nastavitve', presetSaveDesc:'shrani te nastavitve',
     proxyConnectedWait:'Posrednik povezan — čakanje na strežnik PokerTH…',
-    errConnLost:'Povezava izgubljena. Ponovno se lahko povežeš čez nekaj sekund.',
+    errConnLost:'Povezava izgubljena. Ponovno se lahko povežeš čez nekaj sekund.', connStalledTitle:'Težave s povezavo', connStalledMsg:'Strežnik se ne odziva. Čakanje na odgovor…',
     autoTableFound:'⚡ Miza najdena — pridruževanje #{n}',
     autoNoTable:'⚡ Ni miz — ustvarjanje ene…',
     quickCreateTitle:'Ustvari novo mizo',

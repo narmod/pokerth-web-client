@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'ìyára ìjọba', presetWecupName:'We Cup', presetWecupDesc:'ìdíje ìwọ̀ntúnwọ̀nsì', presetBbcName:'BBC', presetBbcDesc:'blinds tí ó dá lórí àkókò',
     presetSaveName:'Àṣàyàn mi', presetSaveDesc:'fi ètò wọ̀nyí pamọ́',
     proxyConnectedWait:'Proxy ti sopọ̀ — à ń dúró de olùpín PokerTH…',
-    errConnLost:'Ìsopọ̀ ti bàjẹ́. O lè tún sopọ̀ lẹ́yìn ìṣẹ́jú-àáyá díẹ̀.',
+    errConnLost:'Ìsopọ̀ ti bàjẹ́. O lè tún sopọ̀ lẹ́yìn ìṣẹ́jú-àáyá díẹ̀.', connStalledTitle:'Àwọn ìṣòro ìsopọ̀', connStalledMsg:'Olùpèsè kò dáhùn. À ń dúró de ìdáhùn…',
     autoTableFound:'⚡ A rí tábìlì — ó ń darapọ̀ mọ́ #{n}',
     autoNoTable:'⚡ Kò sí tábìlì — à ń ṣẹ̀dá tuntun…',
     quickCreateTitle:'Ṣẹ̀dá tábìlì tuntun',

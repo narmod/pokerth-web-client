@@ -663,7 +663,7 @@ export const strings = {
     createPrefsSave:'💾 Išsaugoti nuostatas', createPrefsSaveTip:'Išsaugoti šią formą kaip asmenines nuostatas', createPrefsSaved:'Nuostatos išsaugotos', createPrefsLoaded:'Nuostatos įkeltos', createPrefsNone:'Išsaugotų nuostatų dar nėra',
     presetFastDesc: 'greitas tempas!',
     proxyConnectedWait: 'Tarpinis serveris prijungtas — laukiama PokerTH serverio…',
-    errConnLost: 'Ryšys nutrūko. Galėsite prisijungti iš naujo po kelių sekundžių.',
+    errConnLost: 'Ryšys nutrūko. Galėsite prisijungti iš naujo po kelių sekundžių.', connStalledTitle: 'Ryšio problemos', connStalledMsg: 'Serveris neatsako. Laukiama atsakymo…',
     autoTableFound: '⚡ Stalas rastas — jungiamasi #{n}',
     autoNoTable: '⚡ Nėra stalų — kuriamas…',
     quickCreateTitle: 'Sukurti naują stalą',

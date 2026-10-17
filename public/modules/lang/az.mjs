@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'rəsmi temp', presetWecupName:'We Cup', presetWecupDesc:'balanslı turnir', presetBbcName:'BBC', presetBbcDesc:'vaxta əsaslanan blaindlər',
     presetSaveName:'Seçimlərim', presetSaveDesc:'bu parametrləri saxla',
     proxyConnectedWait:'Proksi qoşuldu — PokerTH serveri gözlənilir…',
-    errConnLost:'Bağlantı itdi. Bir neçə saniyədən sonra yenidən qoşula bilərsiniz.',
+    errConnLost:'Bağlantı itdi. Bir neçə saniyədən sonra yenidən qoşula bilərsiniz.', connStalledTitle:'Bağlantı problemləri', connStalledMsg:'Server cavab vermir. Cavab gözlənilir…',
     autoTableFound:'⚡ Masa tapıldı — #{n} masasına qoşulur',
     autoNoTable:'⚡ Masa yoxdur — yenisi yaradılır…',
     quickCreateTitle:'Yeni masa yarat',

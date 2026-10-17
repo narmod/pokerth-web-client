@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'تصنيف', presetRankingDesc:'الإيقاع الرسمي', presetWecupName:'We Cup', presetWecupDesc:'بطولة متوازنة', presetBbcName:'BBC', presetBbcDesc:'رهانات عمياء زمنية',
     presetSaveName:'تفضيلاتي', presetSaveDesc:'حفظ هذه الإعدادات',
     proxyConnectedWait:'اتصل الوكيل — في انتظار خادم PokerTH…',
-    errConnLost:'انقطع الاتصال. يمكنك إعادة الاتصال بعد ثوانٍ قليلة.',
+    errConnLost:'انقطع الاتصال. يمكنك إعادة الاتصال بعد ثوانٍ قليلة.', connStalledTitle:'مشكلات في الاتصال', connStalledMsg:'الخادم لا يستجيب. في انتظار الرد…',
     autoTableFound:'⚡ عُثر على طاولة — انضمام إلى #{n}',
     autoNoTable:'⚡ لا طاولات — إنشاء واحدة…',
     quickCreateTitle:'إنشاء طاولة جديدة',

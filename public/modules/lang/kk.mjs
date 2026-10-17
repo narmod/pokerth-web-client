@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Рейтинг', presetRankingDesc:'ресми қарқын', presetWecupName:'We Cup', presetWecupDesc:'теңгерімді турнир', presetBbcName:'BBC', presetBbcDesc:'уақыт бойынша блайндтар',
     presetSaveName:'Менің баптауларым', presetSaveDesc:'осы баптауларды сақтау',
     proxyConnectedWait:'Прокси қосылды — PokerTH серверін күту…',
-    errConnLost:'Байланыс үзілді. Бірнеше секундтан кейін қайта қосыла аласыз.',
+    errConnLost:'Байланыс үзілді. Бірнеше секундтан кейін қайта қосыла аласыз.', connStalledTitle:'Байланыс ақаулары', connStalledMsg:'Сервер жауап бермейді. Жауап күтілуде…',
     autoTableFound:'⚡ Үстел табылды — #{n} үстеліне қосылуда',
     autoNoTable:'⚡ Үстел жоқ — жаңасы құрылуда…',
     quickCreateTitle:'Жаңа үстел құру',

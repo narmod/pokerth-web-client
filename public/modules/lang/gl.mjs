@@ -663,7 +663,7 @@ export const strings = {
     createPrefsSave:'💾 Gardar prefs', createPrefsSaveTip:'Gardar este formulario como preferencias persoais', createPrefsSaved:'Preferencias gardadas', createPrefsLoaded:'Preferencias cargadas', createPrefsNone:'Aínda non hai preferencias gardadas',
     presetFastDesc: 'ritmo rápido!',
     proxyConnectedWait: 'Proxy conectado — agardando o servidor PokerTH…',
-    errConnLost: 'Conexión perdida. Podes conectarte de novo nuns segundos.',
+    errConnLost: 'Conexión perdida. Podes conectarte de novo nuns segundos.', connStalledTitle: 'Problemas de conexión', connStalledMsg: 'O servidor non responde. Agardando unha resposta…',
     autoTableFound: '⚡ Mesa atopada — entrando #{n}',
     autoNoTable: '⚡ Ningunha mesa — creando unha…',
     quickCreateTitle: 'Crear unha mesa nova',

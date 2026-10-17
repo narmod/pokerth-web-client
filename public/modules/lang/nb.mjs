@@ -662,7 +662,7 @@ export const strings = {
     createPrefsSave:'💾 Lagre pref.', createPrefsSaveTip:'Lagre dette skjemaet som mine personlige preferanser', createPrefsSaved:'Preferanser lagret', createPrefsLoaded:'Preferanser lastet', createPrefsNone:'Ingen lagrede preferanser ennå',
     presetFastDesc: 'høyt tempo!',
     proxyConnectedWait: 'Proxy tilkoblet — venter på PokerTH-server…',
-    errConnLost: 'Tilkobling mistet. Du kan koble til igjen om noen sekunder.',
+    errConnLost: 'Tilkobling mistet. Du kan koble til igjen om noen sekunder.', connStalledTitle: 'Tilkoblingsproblemer', connStalledMsg: 'Serveren svarer ikke. Venter på svar…',
     autoTableFound: '⚡ Bord funnet — blir med #{n}',
     autoNoTable: '⚡ Ingen bord — oppretter ett…',
     quickCreateTitle: 'Opprett et nytt bord',

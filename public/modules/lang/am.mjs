@@ -414,7 +414,7 @@ export const strings = {
     presetRankingName:'ደረጃ', presetRankingDesc:'ኦፊሴላዊ ፍጥነት', presetWecupName:'We Cup', presetWecupDesc:'ሚዛናዊ ውድድር', presetBbcName:'BBC', presetBbcDesc:'በጊዜ ላይ የተመሠረቱ ብላይንዶች',
     presetSaveName:'የእኔ ምርጫዎች', presetSaveDesc:'እነዚህን ቅንብሮች አስቀምጥ',
     proxyConnectedWait:'ፕሮክሲ ተገናኝቷል \u2014 PokerTH አገልጋይን በመጠበቅ ላይ\u2026',
-    errConnLost:'ግንኙነት ተቋርጧል። ከጥቂት ሰከንዶች በኋላ እንደገና መገናኘት ይችላሉ።',
+    errConnLost:'ግንኙነት ተቋርጧል። ከጥቂት ሰከንዶች በኋላ እንደገና መገናኘት ይችላሉ።', connStalledTitle:'የግንኙነት ችግሮች', connStalledMsg:'አገልጋዩ ምላሽ እየሰጠ አይደለም። ምላሽ በመጠበቅ ላይ…',
     autoTableFound:'\u26a1 ጠረጴዛ ተገኝቷል \u2014 #{n} በመቀላቀል ላይ',
     autoNoTable:'\u26a1 ጠረጴዛዎች የሉም \u2014 አንድ በመፍጠር ላይ\u2026',
     quickCreateTitle:'አዲስ ጠረጴዛ ፍጠር',

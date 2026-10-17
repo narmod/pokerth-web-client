@@ -662,7 +662,7 @@ export const strings = {
     createPrefsSave:'💾 設定を保存', createPrefsSaveTip:'このフォームを個人設定として保存', createPrefsSaved:'設定を保存しました', createPrefsLoaded:'設定を読み込みました', createPrefsNone:'保存された設定はまだありません',
     presetFastDesc: 'ハイテンポ！',
     proxyConnectedWait: 'プロキシ接続済み — PokerTHサーバーを待っています…',
-    errConnLost: '接続が切れました。数秒後に再接続できます。',
+    errConnLost: '接続が切れました。数秒後に再接続できます。', connStalledTitle: '接続の問題', connStalledMsg: 'サーバーが応答しません。応答を待っています…',
     autoTableFound: '⚡ テーブルが見つかりました — #{n}に参加中',
     autoNoTable: '⚡ テーブルなし — 作成中…',
     quickCreateTitle: '新しいテーブルを作成',

@@ -663,7 +663,7 @@ export const strings = {
     createPrefsSave:'💾 Lưu tùy chọn', createPrefsSaveTip:'Lưu biểu mẫu này làm tùy chọn cá nhân của tôi', createPrefsSaved:'Đã lưu tùy chọn', createPrefsLoaded:'Đã tải tùy chọn', createPrefsNone:'Chưa có tùy chọn nào được lưu',
     presetFastDesc: 'nhịp độ nhanh!',
     proxyConnectedWait: 'Proxy đã kết nối — đang chờ máy chủ PokerTH…',
-    errConnLost: 'Mất kết nối. Bạn có thể kết nối lại sau vài giây.',
+    errConnLost: 'Mất kết nối. Bạn có thể kết nối lại sau vài giây.', connStalledTitle: 'Sự cố kết nối', connStalledMsg: 'Máy chủ không phản hồi. Đang chờ phản hồi…',
     autoTableFound: '⚡ Tìm thấy bàn — đang vào #{n}',
     autoNoTable: '⚡ Không có bàn — đang tạo…',
     quickCreateTitle: 'Tạo bàn mới',

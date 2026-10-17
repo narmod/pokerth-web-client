@@ -414,7 +414,7 @@ export const strings = {
     presetRankingName:'ចំណាត់ថ្នាក់', presetRankingDesc:'ល្បឿនផ្លូវការ', presetWecupName:'We Cup', presetWecupDesc:'ការប្រកួតតុល្យភាព', presetBbcName:'BBC', presetBbcDesc:'blind តាមពេលវេលា',
     presetSaveName:'ចំណូលចិត្តខ្ញុំ', presetSaveDesc:'រក្សាទុកការកំណត់ទាំងនេះ',
     proxyConnectedWait:'ប្រូកស៊ីបានភ្ជាប់ \u2014 រង់ចាំម៉ាស៊ីនមេ PokerTH\u2026',
-    errConnLost:'បាត់បង់ការភ្ជាប់។ អ្នកអាចភ្ជាប់ឡើងវិញក្នុងពេលពីរបីវិនាទី។',
+    errConnLost:'បាត់បង់ការភ្ជាប់។ អ្នកអាចភ្ជាប់ឡើងវិញក្នុងពេលពីរបីវិនាទី។', connStalledTitle:'បញ្ហាការតភ្ជាប់', connStalledMsg:'ម៉ាស៊ីនមេមិនឆ្លើយតប។ កំពុងរង់ចាំការឆ្លើយតប…',
     autoTableFound:'\u26a1 រកឃើញតុ \u2014 កំពុងចូលរួម #{n}',
     autoNoTable:'\u26a1 គ្មានតុ \u2014 កំពុងបង្កើតមួយ\u2026',
     quickCreateTitle:'បង្កើតតុថ្មី',

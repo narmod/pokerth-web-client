@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'luas oifigiúil', presetWecupName:'We Cup', presetWecupDesc:'comórtas cothromaithe', presetBbcName:'BBC', presetBbcDesc:'blinds de réir ama',
     presetSaveName:'Mo roghanna', presetSaveDesc:'sábháil na socruithe seo',
     proxyConnectedWait:'Seachfhreastalaí ceangailte — ag fanacht le freastalaí PokerTH…',
-    errConnLost:'Cailleadh an ceangal. Is féidir leat athcheangal i gceann cúpla soicind.',
+    errConnLost:'Cailleadh an ceangal. Is féidir leat athcheangal i gceann cúpla soicind.', connStalledTitle:'Fadhbanna ceangail', connStalledMsg:'Níl an freastalaí ag freagairt. Ag fanacht le freagra…',
     autoTableFound:'⚡ Aimsíodh bord — ag glacadh páirte ag #{n}',
     autoNoTable:'⚡ Gan bhoird — ceann nua á chruthú…',
     quickCreateTitle:'Cruthaigh bord nua',

@@ -663,7 +663,7 @@ export const strings = {
     createPrefsSave:'💾 Stoor voorkeure', createPrefsSaveTip:'Stoor hierdie vorm as my persoonlike voorkeure', createPrefsSaved:'Voorkeure gestoor', createPrefsLoaded:'Voorkeure gelaai', createPrefsNone:'Nog geen gestoorde voorkeure nie',
     presetFastDesc: 'vinnige tempo!',
     proxyConnectedWait: 'Instaander gekoppel — wag vir die PokerTH-bediener…',
-    errConnLost: 'Verbinding verloor. Jy kan oor ’n paar sekondes weer koppel.',
+    errConnLost: 'Verbinding verloor. Jy kan oor ’n paar sekondes weer koppel.', connStalledTitle: 'Verbindingsprobleme', connStalledMsg: 'Die bediener reageer nie. Wag vir \'n antwoord…',
     autoTableFound: '⚡ Tafel gevind — sluit aan #{n}',
     autoNoTable: '⚡ Geen tafels — skep een…',
     quickCreateTitle: 'Skep ’n nuwe tafel',

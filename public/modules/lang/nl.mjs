@@ -666,7 +666,7 @@ export const strings = {
     createPrefsSave:'💾 Voorkeuren opslaan', createPrefsSaveTip:'Dit formulier opslaan als mijn persoonlijke voorkeuren', createPrefsSaved:'Voorkeuren opgeslagen', createPrefsLoaded:'Voorkeuren geladen', createPrefsNone:'Nog geen opgeslagen voorkeuren',
     presetFastDesc: 'hoog tempo!',
     proxyConnectedWait: 'Proxy verbonden — wachten op PokerTH-server…',
-    errConnLost: 'Verbinding verloren. Je kunt over enkele seconden opnieuw verbinden.',
+    errConnLost: 'Verbinding verloren. Je kunt over enkele seconden opnieuw verbinden.', connStalledTitle: 'Verbindingsproblemen', connStalledMsg: 'De server reageert niet. Wachten op antwoord…',
     autoTableFound: '⚡ Tafel gevonden — meedoen aan #{n}',
     autoNoTable: '⚡ Geen tafels — er een maken…',
     quickCreateTitle: 'Een nieuwe tafel maken',

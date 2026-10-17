@@ -416,7 +416,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'จังหวะทางการ', presetWecupName:'We Cup', presetWecupDesc:'ทัวร์นาเมนต์สมดุล', presetBbcName:'BBC', presetBbcDesc:'บลายด์ตามเวลา',
     presetSaveName:'ค่าของฉัน', presetSaveDesc:'บันทึกการตั้งค่านี้',
     proxyConnectedWait:'พร็อกซีเชื่อมต่อแล้ว \u2014 กำลังรอเซิร์ฟเวอร์ PokerTH\u2026',
-    errConnLost:'การเชื่อมต่อหลุด คุณเชื่อมต่อใหม่ได้ในอีกไม่กี่วินาที',
+    errConnLost:'การเชื่อมต่อหลุด คุณเชื่อมต่อใหม่ได้ในอีกไม่กี่วินาที', connStalledTitle:'ปัญหาการเชื่อมต่อ', connStalledMsg:'เซิร์ฟเวอร์ไม่ตอบสนอง กำลังรอการตอบกลับ…',
     autoTableFound:'\u26a1 พบโต๊ะ \u2014 กำลังเข้าร่วม #{n}',
     autoNoTable:'\u26a1 ไม่มีโต๊ะ \u2014 กำลังสร้าง\u2026',
     quickCreateTitle:'สร้างโต๊ะใหม่',

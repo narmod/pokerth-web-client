@@ -414,7 +414,7 @@ export const strings = {
     presetRankingName:'ರ‍್ಯಾಂಕಿಂಗ್', presetRankingDesc:'ಅಧಿಕೃತ ವೇಗ', presetWecupName:'We Cup', presetWecupDesc:'ಸಮತೋಲಿತ ಟೂರ್ನಮೆಂಟ್', presetBbcName:'BBC', presetBbcDesc:'ಸಮಯಾಧಾರಿತ ಬ್ಲೈಂಡ್‌ಗಳು',
     presetSaveName:'ನನ್ನ ಆದ್ಯತೆಗಳು', presetSaveDesc:'ಈ ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಉಳಿಸಿ',
     proxyConnectedWait:'ಪ್ರಾಕ್ಸಿ ಸಂಪರ್ಕಗೊಂಡಿದೆ — PokerTH ಸರ್ವರ್‌ಗಾಗಿ ಕಾಯುತ್ತಿದೆ…',
-    errConnLost:'ಸಂಪರ್ಕ ಕಡಿತವಾಯಿತು. ಕೆಲವು ಸೆಕೆಂಡುಗಳಲ್ಲಿ ನೀವು ಮತ್ತೆ ಸಂಪರ್ಕಿಸಬಹುದು.',
+    errConnLost:'ಸಂಪರ್ಕ ಕಡಿತವಾಯಿತು. ಕೆಲವು ಸೆಕೆಂಡುಗಳಲ್ಲಿ ನೀವು ಮತ್ತೆ ಸಂಪರ್ಕಿಸಬಹುದು.', connStalledTitle:'ಸಂಪರ್ಕ ಸಮಸ್ಯೆಗಳು', connStalledMsg:'ಸರ್ವರ್ ಪ್ರತಿಕ್ರಿಯಿಸುತ್ತಿಲ್ಲ. ಉತ್ತರಕ್ಕಾಗಿ ಕಾಯಲಾಗುತ್ತಿದೆ…',
     autoTableFound:'⚡ ಟೇಬಲ್ ಸಿಕ್ಕಿತು — #{n} ಗೆ ಸೇರಲಾಗುತ್ತಿದೆ',
     autoNoTable:'⚡ ಟೇಬಲ್‌ಗಳಿಲ್ಲ — ಒಂದನ್ನು ರಚಿಸಲಾಗುತ್ತಿದೆ…',
     quickCreateTitle:'ಹೊಸ ಟೇಬಲ್ ರಚಿಸಿ',

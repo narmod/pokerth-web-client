@@ -414,7 +414,7 @@ export const strings = {
     presetRankingName:'דירוג', presetRankingDesc:'קצב רשמי', presetWecupName:'We Cup', presetWecupDesc:'טורניר מאוזן', presetBbcName:'BBC', presetBbcDesc:'בליינדים מבוססי זמן',
     presetSaveName:'ההעדפות שלי', presetSaveDesc:'שמירת ההגדרות האלה',
     proxyConnectedWait:'הפרוקסי מחובר — ממתין לשרת PokerTH…',
-    errConnLost:'החיבור אבד. תוכלו להתחבר מחדש בעוד כמה שניות.',
+    errConnLost:'החיבור אבד. תוכלו להתחבר מחדש בעוד כמה שניות.', connStalledTitle:'בעיות בחיבור', connStalledMsg:'השרת אינו מגיב. ממתין לתשובה…',
     autoTableFound:'⚡ נמצא שולחן — מצטרף אל #{n}',
     autoNoTable:'⚡ אין שולחנות — יוצר אחד…',
     quickCreateTitle:'יצירת שולחן חדש',

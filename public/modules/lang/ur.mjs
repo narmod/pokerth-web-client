@@ -414,7 +414,7 @@ export const strings = {
     presetRankingName:'درجہ بندی', presetRankingDesc:'سرکاری رفتار', presetWecupName:'We Cup', presetWecupDesc:'متوازن ٹورنامنٹ', presetBbcName:'BBC', presetBbcDesc:'وقت پر مبنی بلائنڈز',
     presetSaveName:'میری ترجیحات', presetSaveDesc:'یہ ترتیبات محفوظ کریں',
     proxyConnectedWait:'پراکسی جڑ گئی — PokerTH سرور کا انتظار…',
-    errConnLost:'کنکشن ٹوٹ گیا۔ چند سیکنڈ میں دوبارہ جڑ سکتے ہیں۔',
+    errConnLost:'کنکشن ٹوٹ گیا۔ چند سیکنڈ میں دوبارہ جڑ سکتے ہیں۔', connStalledTitle:'کنکشن کے مسائل', connStalledMsg:'سرور جواب نہیں دے رہا۔ جواب کا انتظار ہے…',
     autoTableFound:'⚡ میز ملی — #{n} میں شمولیت',
     autoNoTable:'⚡ کوئی میز نہیں — بنائی جا رہی ہے…',
     quickCreateTitle:'نئی میز بنائیں',

@@ -1,3 +1,6 @@
+2026-10-17 version 2.1.10-web.107:
+- improvement: a dead connection is noticed much sooner (about 30 s at the table, even on your own turn), with a « Connection problems » notice while the server does not answer, as in the official client
+
 2026-10-17 version 2.1.10-web.106:
 - bugfix: a table invitation no longer stays on screen after you log out or log in again; logging out declines it, so the host gets an answer
 

@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'cyflymder swyddogol', presetWecupName:'We Cup', presetWecupDesc:'twrnamaint cytbwys', presetBbcName:'BBC', presetBbcDesc:'blinds yn ôl amser',
     presetSaveName:'Fy newisiadau', presetSaveDesc:'cadw\'r gosodiadau hyn',
     proxyConnectedWait:'Dirprwy wedi cysylltu — yn aros am weinydd PokerTH…',
-    errConnLost:'Collwyd y cysylltiad. Gallwch ailgysylltu ymhen ychydig eiliadau.',
+    errConnLost:'Collwyd y cysylltiad. Gallwch ailgysylltu ymhen ychydig eiliadau.', connStalledTitle:'Problemau cysylltu', connStalledMsg:'Nid yw\'r gweinydd yn ymateb. Yn aros am ymateb…',
     autoTableFound:'⚡ Wedi canfod bwrdd — yn ymuno â #{n}',
     autoNoTable:'⚡ Dim byrddau — yn creu un newydd…',
     quickCreateTitle:'Creu bwrdd newydd',

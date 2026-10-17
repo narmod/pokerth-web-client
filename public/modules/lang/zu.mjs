@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'isivinini esisemthethweni', presetWecupName:'We Cup', presetWecupDesc:'umqhudelwano olinganiselwe', presetBbcName:'BBC', presetBbcDesc:'ama-blinds asekelwe esikhathini',
     presetSaveName:'Okwami', presetSaveDesc:'londoloza lezi zilungiselelo',
     proxyConnectedWait:'I-proxy ixhunyiwe — kulindwe iseva ye-PokerTH…',
-    errConnLost:'Uxhumano lulahlekile. Ungaxhuma kabusha ngemuva kwemizuzwana embalwa.',
+    errConnLost:'Uxhumano lulahlekile. Ungaxhuma kabusha ngemuva kwemizuzwana embalwa.', connStalledTitle:'Izinkinga zokuxhumana', connStalledMsg:'Iseva ayiphenduli. Ilinde impendulo…',
     autoTableFound:'⚡ Itafula litholakele — ijoyina #{n}',
     autoNoTable:'⚡ Alikho itafula — kudalwa elisha…',
     quickCreateTitle:'Dala itafula elisha',

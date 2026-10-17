@@ -664,7 +664,7 @@ export const strings = {
     createPrefsSave:'💾 保存偏好', createPrefsSaveTip:'将此表单保存为我的个人偏好', createPrefsSaved:'偏好已保存', createPrefsLoaded:'偏好已加载', createPrefsNone:'暂无已保存的偏好',
     presetFastDesc: '快节奏！',
     proxyConnectedWait: '代理已连接 — 等待 PokerTH 服务器…',
-    errConnLost: '连接断开。你可以在几秒后重新连接。',
+    errConnLost: '连接断开。你可以在几秒后重新连接。', connStalledTitle: '连接问题', connStalledMsg: '服务器无响应。正在等待响应…',
     autoTableFound: '⚡ 找到牌桌 — 正在加入 #{n}',
     autoNoTable: '⚡ 没有牌桌 — 正在创建…',
     quickCreateTitle: '创建新牌桌',

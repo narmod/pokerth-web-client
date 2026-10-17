@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'resmi tizlik', presetWecupName:'We Cup', presetWecupDesc:'deňagramly ýaryş', presetBbcName:'BBC', presetBbcDesc:'wagta esaslanýan blaýndlar',
     presetSaveName:'Meniňki', presetSaveDesc:'bu sazlamalary ýatda sakla',
     proxyConnectedWait:'Proksi birikdi — PokerTH serwerine garaşylýar…',
-    errConnLost:'Birikme kesildi. Birnäçe sekuntdan täzeden birigip bilersiňiz.',
+    errConnLost:'Birikme kesildi. Birnäçe sekuntdan täzeden birigip bilersiňiz.', connStalledTitle:'Birikme meseleleri', connStalledMsg:'Serwer jogap bermeýär. Jogap garaşylýar…',
     autoTableFound:'⚡ Stol tapyldy — #{n} stola goşulýar',
     autoNoTable:'⚡ Stol ýok — täzesi döredilýär…',
     quickCreateTitle:'Täze stol döret',

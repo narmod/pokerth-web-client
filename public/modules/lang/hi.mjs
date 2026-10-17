@@ -485,7 +485,7 @@ export const strings = {
     presetSaveName:'मेरी प्राथमिकताएँ', presetSaveDesc:'ये सेटिंग्स सहेजें',
     createPrefsSave:'💾 प्राथमिकताएँ सहेजें', createPrefsSaveTip:'इस फ़ॉर्म को मेरी व्यक्तिगत प्राथमिकताओं के रूप में सहेजें', createPrefsSaved:'प्राथमिकताएँ सहेजी गईं', createPrefsLoaded:'प्राथमिकताएँ लोड हुईं', createPrefsNone:'अभी तक कोई सहेजी गई प्राथमिकताएँ नहीं',
     proxyConnectedWait:'प्रॉक्सी कनेक्टेड \u2014 PokerTH सर्वर की प्रतीक्षा\u2026',
-    errConnLost:'कनेक्शन टूटा। कुछ सेकंड में पुनः कनेक्ट कर सकते हैं।',
+    errConnLost:'कनेक्शन टूटा। कुछ सेकंड में पुनः कनेक्ट कर सकते हैं।', connStalledTitle:'कनेक्शन में समस्या', connStalledMsg:'सर्वर प्रतिक्रिया नहीं दे रहा है। उत्तर की प्रतीक्षा की जा रही है…',
     autoTableFound:'\u26a1 टेबल मिली \u2014 #{n} में शामिल हो रहे हैं',
     autoNoTable:'\u26a1 कोई टेबल नहीं \u2014 एक बना रहे हैं\u2026',
     quickCreateTitle:'नई टेबल बनाएं',

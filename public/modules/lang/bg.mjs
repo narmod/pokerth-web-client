@@ -663,7 +663,7 @@ export const strings = {
     createPrefsSave:'💾 Запази предпочитания', createPrefsSaveTip:'Запази този формуляр като мои лични предпочитания', createPrefsSaved:'Предпочитанията са запазени', createPrefsLoaded:'Предпочитанията са заредени', createPrefsNone:'Все още няма запазени предпочитания',
     presetFastDesc: 'бързо темпо!',
     proxyConnectedWait: 'Проксито е свързано — изчакване на сървър PokerTH…',
-    errConnLost: 'Връзката прекъсна. Можете да се свържете отново след няколко секунди.',
+    errConnLost: 'Връзката прекъсна. Можете да се свържете отново след няколко секунди.', connStalledTitle: 'Проблеми с връзката', connStalledMsg: 'Сървърът не отговаря. Изчакване на отговор…',
     autoTableFound: '⚡ Намерена маса — влизане #{n}',
     autoNoTable: '⚡ Няма маси — създаване…',
     quickCreateTitle: 'Създай нова маса',

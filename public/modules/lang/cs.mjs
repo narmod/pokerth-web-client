@@ -663,7 +663,7 @@ export const strings = {
     createPrefsSave:'💾 Uložit předvolby', createPrefsSaveTip:'Uložit tento formulář jako mé osobní předvolby', createPrefsSaved:'Předvolby uloženy', createPrefsLoaded:'Předvolby načteny', createPrefsNone:'Zatím žádné uložené předvolby',
     presetFastDesc: 'rychlé tempo!',
     proxyConnectedWait: 'Proxy připojena — čeká se na server PokerTH…',
-    errConnLost: 'Spojení ztraceno. Za pár sekund se můžete znovu připojit.',
+    errConnLost: 'Spojení ztraceno. Za pár sekund se můžete znovu připojit.', connStalledTitle: 'Problémy s připojením', connStalledMsg: 'Server neodpovídá. Čeká se na odpověď…',
     autoTableFound: '⚡ Stůl nalezen — připojování #{n}',
     autoNoTable: '⚡ Žádné stoly — vytváření…',
     quickCreateTitle: 'Vytvořit nový stůl',

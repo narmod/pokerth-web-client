@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'official pace', presetWecupName:'We Cup', presetWecupDesc:'balanced tournament', presetBbcName:'BBC', presetBbcDesc:'time-based blinds',
     presetSaveName:'My prefs', presetSaveDesc:'save these settings',
     proxyConnectedWait:'Proxy connected \u2014 waiting for PokerTH server\u2026',
-    errConnLost:'Connection lost. You can reconnect in a few seconds.',
+    errConnLost:'Connection lost. You can reconnect in a few seconds.', connStalledTitle:'Connection problems', connStalledMsg:'The server is not responding. Waiting for a response…',
     autoTableFound:'\u26a1 Table found \u2014 joining #{n}',
     autoNoTable:'\u26a1 No tables \u2014 creating one\u2026',
     quickCreateTitle:'Create a new table',

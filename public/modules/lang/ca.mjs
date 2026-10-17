@@ -663,7 +663,7 @@ export const strings = {
     createPrefsSave:'💾 Desa les prefs', createPrefsSaveTip:'Desa aquest formulari com a preferències personals', createPrefsSaved:'Preferències desades', createPrefsLoaded:'Preferències carregades', createPrefsNone:'Encara no hi ha preferències desades',
     presetFastDesc: 'ritme ràpid!',
     proxyConnectedWait: 'Proxy connectat — esperant el servidor PokerTH…',
-    errConnLost: 'Connexió perduda. Et pots connectar de nou d\'aquí a uns segons.',
+    errConnLost: 'Connexió perduda. Et pots connectar de nou d\'aquí a uns segons.', connStalledTitle: 'Problemes de connexió', connStalledMsg: 'El servidor no respon. S\'està esperant una resposta…',
     autoTableFound: '⚡ Taula trobada — entrant #{n}',
     autoNoTable: '⚡ Cap taula — creant-ne una…',
     quickCreateTitle: 'Crea una taula nova',

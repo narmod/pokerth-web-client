@@ -416,7 +416,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'oficiālais temps', presetWecupName:'We Cup', presetWecupDesc:'līdzsvarots turnīrs', presetBbcName:'BBC', presetBbcDesc:'uz laiku balstītas aklās likmes',
     presetSaveName:'Manas izvēles', presetSaveDesc:'saglabāt šos iestatījumus',
     proxyConnectedWait:'Starpniekserveris savienots — gaida PokerTH serveri…',
-    errConnLost:'Savienojums zaudēts. Pēc dažām sekundēm vari savienoties atkārtoti.',
+    errConnLost:'Savienojums zaudēts. Pēc dažām sekundēm vari savienoties atkārtoti.', connStalledTitle:'Savienojuma problēmas', connStalledMsg:'Serveris neatbild. Gaida atbildi…',
     autoTableFound:'⚡ Galds atrasts — pievienojas #{n}',
     autoNoTable:'⚡ Nav galdu — izveido vienu…',
     quickCreateTitle:'Izveidot jaunu galdu',

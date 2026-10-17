@@ -665,7 +665,7 @@ export const strings = {
     createPrefsSave:'💾 Tercihleri kaydet', createPrefsSaveTip:'Bu formu kişisel tercihlerim olarak kaydet', createPrefsSaved:'Tercihler kaydedildi', createPrefsLoaded:'Tercihler yüklendi', createPrefsNone:'Henüz kayıtlı tercih yok',
     presetFastDesc: 'hızlı tempo!',
     proxyConnectedWait: 'Proxy bağlandı — PokerTH sunucusu bekleniyor…',
-    errConnLost: 'Bağlantı koptu. Birkaç saniye içinde yeniden bağlanabilirsin.',
+    errConnLost: 'Bağlantı koptu. Birkaç saniye içinde yeniden bağlanabilirsin.', connStalledTitle: 'Bağlantı sorunları', connStalledMsg: 'Sunucu yanıt vermiyor. Yanıt bekleniyor…',
     autoTableFound: '⚡ Masa bulundu — #{n} katılınıyor',
     autoNoTable: '⚡ Masa yok — bir tane oluşturuluyor…',
     quickCreateTitle: 'Yeni masa oluştur',

@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'афіцыйны тэмп', presetWecupName:'We Cup', presetWecupDesc:'збалансаваны турнір', presetBbcName:'BBC', presetBbcDesc:'блайнды па часе',
     presetSaveName:'Мае налады', presetSaveDesc:'захаваць гэтыя налады',
     proxyConnectedWait:'Праксі падключаны — чакаем сервер PokerTH…',
-    errConnLost:'Злучэнне страчана. Можна падключыцца зноў праз некалькі секунд.',
+    errConnLost:'Злучэнне страчана. Можна падключыцца зноў праз некалькі секунд.', connStalledTitle:'Праблемы з падключэннем', connStalledMsg:'Сервер не адказвае. Чаканне адказу…',
     autoTableFound:'⚡ Стол знойдзены — далучэнне да #{n}',
     autoNoTable:'⚡ Няма сталоў — ствараем новы…',
     quickCreateTitle:'Стварыць новы стол',

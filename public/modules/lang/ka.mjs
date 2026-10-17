@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'ოფიციალური ტემპი', presetWecupName:'We Cup', presetWecupDesc:'დაბალანსებული ტურნირი', presetBbcName:'BBC', presetBbcDesc:'დროზე დაფუძნებული ბლაინდები',
     presetSaveName:'ჩემი პარამეტრები', presetSaveDesc:'ამ პარამეტრების შენახვა',
     proxyConnectedWait:'Proxy დაკავშირებულია — PokerTH სერვერის მოლოდინი…',
-    errConnLost:'კავშირი დაიკარგა. რამდენიმე წამში შეძლებთ ხელახლა დაკავშირებას.',
+    errConnLost:'კავშირი დაიკარგა. რამდენიმე წამში შეძლებთ ხელახლა დაკავშირებას.', connStalledTitle:'კავშირის პრობლემები', connStalledMsg:'სერვერი არ პასუხობს. პასუხის მოლოდინი…',
     autoTableFound:'⚡ მაგიდა მოიძებნა — შეერთება #{n}',
     autoNoTable:'⚡ მაგიდები არ არის — იქმნება ახალი…',
     quickCreateTitle:'ახალი მაგიდის შექმნა',

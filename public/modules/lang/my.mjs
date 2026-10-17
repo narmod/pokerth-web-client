@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'အဆင့်သတ်မှတ်', presetRankingDesc:'တရားဝင် အရှိန်', presetWecupName:'We Cup', presetWecupDesc:'မျှတသော ပြိုင်ပွဲ', presetBbcName:'BBC', presetBbcDesc:'အချိန်အလိုက် ဘလိုင်း',
     presetSaveName:'ကျွန်ုပ်၏ စိတ်ကြိုက်', presetSaveDesc:'ဤဆက်တင်များကို သိမ်းရန်',
     proxyConnectedWait:'ပရောက်စီ ချိတ်ဆက်ပြီး — PokerTH ဆာဗာကို စောင့်နေသည်…',
-    errConnLost:'ချိတ်ဆက်မှု ပြတ်သွားသည်။ စက္ကန့်အနည်းငယ်အတွင်း ပြန်ချိတ်ဆက်နိုင်ပါသည်။',
+    errConnLost:'ချိတ်ဆက်မှု ပြတ်သွားသည်။ စက္ကန့်အနည်းငယ်အတွင်း ပြန်ချိတ်ဆက်နိုင်ပါသည်။', connStalledTitle:'ချိတ်ဆက်မှု ပြဿနာများ', connStalledMsg:'ဆာဗာ တုံ့ပြန်မှု မရှိပါ။ အဖြေကို စောင့်နေသည်…',
     autoTableFound:'⚡ စားပွဲတွေ့ပြီ — #{n} သို့ ဝင်နေသည်',
     autoNoTable:'⚡ စားပွဲမရှိ — တစ်ခု ဖန်တီးနေသည်…',
     quickCreateTitle:'စားပွဲအသစ် ဖန်တီးရန်',

@@ -416,7 +416,7 @@ export const strings = {
     presetRankingName:'Renditje', presetRankingDesc:'ritëm zyrtar', presetWecupName:'We Cup', presetWecupDesc:'turne i balancuar', presetBbcName:'BBC', presetBbcDesc:'blinde bazuar në kohë',
     presetSaveName:'Preferencat e mia', presetSaveDesc:'ruaj këto cilësime',
     proxyConnectedWait:'Proxy-ja u lidh — duke pritur serverin PokerTH…',
-    errConnLost:'Lidhja u humb. Mund të rilidhesh pas pak sekondash.',
+    errConnLost:'Lidhja u humb. Mund të rilidhesh pas pak sekondash.', connStalledTitle:'Probleme me lidhjen', connStalledMsg:'Serveri nuk përgjigjet. Në pritje të një përgjigjeje…',
     autoTableFound:'⚡ Tavolina u gjet — duke u bashkuar #{n}',
     autoNoTable:'⚡ Nuk ka tavolina — duke krijuar një…',
     quickCreateTitle:'Krijo një tavolinë të re',

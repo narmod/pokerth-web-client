@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'आधिकारिक गति', presetWecupName:'We Cup', presetWecupDesc:'सन्तुलित प्रतियोगिता', presetBbcName:'BBC', presetBbcDesc:'समयमा आधारित ब्लाइन्ड',
     presetSaveName:'मेरा प्राथमिकता', presetSaveDesc:'यी सेटिङहरू सुरक्षित गर्नुहोस्',
     proxyConnectedWait:'प्रोक्सी जडित — PokerTH सर्भरको प्रतीक्षा…',
-    errConnLost:'जडान टुट्यो। केही सेकेन्डमा फेरि जडान गर्न सक्नुहुन्छ।',
+    errConnLost:'जडान टुट्यो। केही सेकेन्डमा फेरि जडान गर्न सक्नुहुन्छ।', connStalledTitle:'जडानमा समस्या', connStalledMsg:'सर्भरले प्रतिक्रिया दिइरहेको छैन। जवाफको प्रतीक्षा गर्दै…',
     autoTableFound:'⚡ टेबल भेटियो — #{n} मा सामेल हुँदैछ',
     autoNoTable:'⚡ कुनै टेबल छैन — नयाँ बनाउँदैछ…',
     quickCreateTitle:'नयाँ टेबल बनाउनुहोस्',

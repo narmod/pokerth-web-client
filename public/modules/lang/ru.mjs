@@ -665,7 +665,7 @@ export const strings = {
     createPrefsSave:'💾 Сохранить настройки', createPrefsSaveTip:'Сохранить эту форму как личные настройки', createPrefsSaved:'Настройки сохранены', createPrefsLoaded:'Настройки загружены', createPrefsNone:'Сохранённых настроек пока нет',
     presetFastDesc: 'высокий темп!',
     proxyConnectedWait: 'Прокси подключён — ожидание сервера PokerTH…',
-    errConnLost: 'Соединение потеряно. Можно переподключиться через несколько секунд.',
+    errConnLost: 'Соединение потеряно. Можно переподключиться через несколько секунд.', connStalledTitle: 'Проблемы с соединением', connStalledMsg: 'Сервер не отвечает. Ожидание ответа…',
     autoTableFound: '⚡ Стол найден — подключение к #{n}',
     autoNoTable: '⚡ Нет столов — создание…',
     quickCreateTitle: 'Создать новый стол',

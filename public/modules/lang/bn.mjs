@@ -416,7 +416,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'অফিসিয়াল গতি', presetWecupName:'We Cup', presetWecupDesc:'ভারসাম্যপূর্ণ টুর্নামেন্ট', presetBbcName:'BBC', presetBbcDesc:'সময়ভিত্তিক ব্লাইন্ড',
     presetSaveName:'আমার পছন্দ', presetSaveDesc:'এই সেটিংস সংরক্ষণ করুন',
     proxyConnectedWait:'প্রক্সি সংযুক্ত \u2014 PokerTH সার্ভারের অপেক্ষায়\u2026',
-    errConnLost:'সংযোগ হারিয়ে গেছে। কয়েক সেকেন্ডে আবার সংযোগ করতে পারবেন।',
+    errConnLost:'সংযোগ হারিয়ে গেছে। কয়েক সেকেন্ডে আবার সংযোগ করতে পারবেন।', connStalledTitle:'সংযোগে সমস্যা', connStalledMsg:'সার্ভার সাড়া দিচ্ছে না। উত্তরের অপেক্ষায়…',
     autoTableFound:'\u26a1 টেবিল পাওয়া গেছে \u2014 #{n}-এ যোগ দেওয়া হচ্ছে',
     autoNoTable:'\u26a1 কোনো টেবিল নেই \u2014 তৈরি হচ্ছে\u2026',
     quickCreateTitle:'নতুন টেবিল তৈরি করুন',

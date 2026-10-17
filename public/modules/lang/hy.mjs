@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'պաշտոնական տեմպ', presetWecupName:'We Cup', presetWecupDesc:'հավասարակշռված մրցաշար', presetBbcName:'BBC', presetBbcDesc:'ժամանակային բլայնդներ',
     presetSaveName:'Իմ նախընտրությունները', presetSaveDesc:'պահել այս կարգավորումները',
     proxyConnectedWait:'Պրոքսին միացված է — սպասում ենք PokerTH սերվերին…',
-    errConnLost:'Կապը կորավ։ Կարող եք վերամիանալ մի քանի վայրկյանից։',
+    errConnLost:'Կապը կորավ։ Կարող եք վերամիանալ մի քանի վայրկյանից։', connStalledTitle:'Կապի խնդիրներ', connStalledMsg:'Սերվերը չի պատասխանում։ Սպասում ենք պատասխանի…',
     autoTableFound:'⚡ Սեղանը գտնվեց — միանում է #{n}-ին',
     autoNoTable:'⚡ Սեղաններ չկան — ստեղծվում է նորը…',
     quickCreateTitle:'Ստեղծել նոր սեղան',

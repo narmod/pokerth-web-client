@@ -414,7 +414,7 @@ export const strings = {
     presetRankingName:'رتبه‌بندی', presetRankingDesc:'آهنگ رسمی', presetWecupName:'We Cup', presetWecupDesc:'تورنمنت متعادل', presetBbcName:'BBC', presetBbcDesc:'بلایندهای زمانی',
     presetSaveName:'ترجیحات من', presetSaveDesc:'ذخیرهٔ این تنظیمات',
     proxyConnectedWait:'پراکسی وصل شد — در انتظار سرور PokerTH…',
-    errConnLost:'اتصال قطع شد. تا چند ثانیهٔ دیگر می‌توانید دوباره وصل شوید.',
+    errConnLost:'اتصال قطع شد. تا چند ثانیهٔ دیگر می‌توانید دوباره وصل شوید.', connStalledTitle:'مشکل در اتصال', connStalledMsg:'سرور پاسخ نمی‌دهد. در انتظار پاسخ…',
     autoTableFound:'⚡ میز پیدا شد — پیوستن به #{n}',
     autoNoTable:'⚡ میزی نیست — در حال ساخت…',
     quickCreateTitle:'ساخت میز جدید',

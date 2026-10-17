@@ -663,7 +663,7 @@ export const strings = {
     createPrefsSave:'💾 Beállítások mentése', createPrefsSaveTip:'Az űrlap mentése személyes beállításként', createPrefsSaved:'Beállítások mentve', createPrefsLoaded:'Beállítások betöltve', createPrefsNone:'Még nincsenek mentett beállítások',
     presetFastDesc: 'gyors tempó!',
     proxyConnectedWait: 'Proxy csatlakozva — várakozás a PokerTH-szerverre…',
-    errConnLost: 'Kapcsolat megszakadt. Néhány másodperc múlva újracsatlakozhatsz.',
+    errConnLost: 'Kapcsolat megszakadt. Néhány másodperc múlva újracsatlakozhatsz.', connStalledTitle: 'Kapcsolódási problémák', connStalledMsg: 'A szerver nem válaszol. Várakozás válaszra…',
     autoTableFound: '⚡ Asztal található — csatlakozás #{n}',
     autoNoTable: '⚡ Nincs asztal — létrehozás…',
     quickCreateTitle: 'Új asztal létrehozása',

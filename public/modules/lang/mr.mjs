@@ -414,7 +414,7 @@ export const strings = {
     presetRankingName:'रँकिंग', presetRankingDesc:'अधिकृत वेग', presetWecupName:'We Cup', presetWecupDesc:'संतुलित टूर्नामेंट', presetBbcName:'BBC', presetBbcDesc:'वेळेवर आधारित ब्लाइंड्स',
     presetSaveName:'माझी प्राधान्यं', presetSaveDesc:'ही सेटिंग्ज सेव्ह करा',
     proxyConnectedWait:'प्रॉक्सी कनेक्ट झाला — PokerTH सर्व्हरची वाट बघत आहे…',
-    errConnLost:'कनेक्शन तुटलं. काही सेकंदांत तुम्ही पुन्हा कनेक्ट करू शकता.',
+    errConnLost:'कनेक्शन तुटलं. काही सेकंदांत तुम्ही पुन्हा कनेक्ट करू शकता.', connStalledTitle:'कनेक्शनमध्ये अडचणी', connStalledMsg:'सर्व्हर प्रतिसाद देत नाही. उत्तराची प्रतीक्षा आहे…',
     autoTableFound:'⚡ टेबल सापडलं — #{n} वर सामील होत आहे',
     autoNoTable:'⚡ टेबल्स नाहीत — एक तयार करत आहे…',
     quickCreateTitle:'नवीन टेबल तयार करा',

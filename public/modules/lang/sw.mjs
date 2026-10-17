@@ -416,7 +416,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'mwendo rasmi', presetWecupName:'We Cup', presetWecupDesc:'mashindano ya uwiano', presetBbcName:'BBC', presetBbcDesc:'blind kwa muda',
     presetSaveName:'Mapendeleo yangu', presetSaveDesc:'hifadhi mipangilio hii',
     proxyConnectedWait:'Proksi imeunganishwa \u2014 kusubiri seva ya PokerTH\u2026',
-    errConnLost:'Muunganisho umepotea. Unaweza kuunganisha tena baada ya sekunde chache.',
+    errConnLost:'Muunganisho umepotea. Unaweza kuunganisha tena baada ya sekunde chache.', connStalledTitle:'Matatizo ya muunganisho', connStalledMsg:'Seva haijibu. Inasubiri jibu…',
     autoTableFound:'\u26a1 Meza imepatikana \u2014 inajiunga na #{n}',
     autoNoTable:'\u26a1 Hakuna meza \u2014 inaunda moja\u2026',
     quickCreateTitle:'Unda meza mpya',

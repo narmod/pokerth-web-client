@@ -144,6 +144,9 @@ export const S = {
   // (servergamestate.cpp, AbstractServerGameStateRunning::HandleNewPlayer).
   // Persisted base64 inside pth_resume by onJoinGameAck.
   _sessionGuid: null,
+  // Server version from AnnounceMessage.latestGameVersion (major << 8 | minor),
+  // 0 = unknown. Gates the connection probe (net/watchdog.mjs).
+  _srvVer: 0,
   _nickBusyTries: 0,      // réessais auto « pseudo occupé » (Error 4) déjà consommés
   _nickBusyName: '',      // pseudo pour lequel le compteur ci-dessus a été armé
   _nickBusyAuto: false,   // true = le prochain connect() vient du réessai auto (garde le compteur)

@@ -413,7 +413,7 @@ export const strings = {
     presetRankingName:'Stigaleikur', presetRankingDesc:'Opinber hraði', presetWecupName:'We Cup', presetWecupDesc:'Mót í jafnvægi', presetBbcName:'BBC', presetBbcDesc:'Tímastýrðir blindir',
     presetSaveName:'Mínar stillingar', presetSaveDesc:'Vista þessar stillingar',
     proxyConnectedWait:'Proxy tengt — beðið eftir PokerTH þjóni…',
-    errConnLost:'Tenging rofnaði. Þú getur tengst aftur eftir nokkrar sekúndur.',
+    errConnLost:'Tenging rofnaði. Þú getur tengst aftur eftir nokkrar sekúndur.', connStalledTitle:'Tengingarvandamál', connStalledMsg:'Þjónninn svarar ekki. Bíð eftir svari…',
     autoTableFound:'⚡ Borð fannst — sest við #{n}',
     autoNoTable:'⚡ Engin borð — bý eitt til…',
     quickCreateTitle:'Búa til nýtt borð',

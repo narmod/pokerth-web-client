@@ -418,7 +418,7 @@ export const strings = {
     presetRankingName:'Classement', presetRankingDesc:'rythme officiel', presetWecupName:'We Cup', presetWecupDesc:'tournoi équilibré', presetBbcName:'BBC', presetBbcDesc:'blindes au temps',
     presetSaveName:'Mes préfs', presetSaveDesc:'enregistrer ces réglages',
     proxyConnectedWait:'Proxy connect\u00e9 \u2014 attente du serveur PokerTH\u2026',
-    errConnLost:'Connexion perdue. Vous pouvez vous reconnecter dans quelques secondes.',
+    errConnLost:'Connexion perdue. Vous pouvez vous reconnecter dans quelques secondes.', connStalledTitle:'Problèmes de connexion', connStalledMsg:'Le serveur ne répond pas. En attente d\'une réponse…',
     autoTableFound:'\u26a1 Table trouv\u00e9e \u2014 rejoindre la #{n}',
     autoNoTable:'\u26a1 Aucune table \u2014 cr\u00e9ation en cours\u2026',
     quickCreateTitle:'Cr\u00e9er une nouvelle table',

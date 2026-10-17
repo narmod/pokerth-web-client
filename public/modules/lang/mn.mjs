@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'албан ёсны хурд', presetWecupName:'We Cup', presetWecupDesc:'тэнцвэртэй тэмцээн', presetBbcName:'BBC', presetBbcDesc:'хугацаанд суурилсан блайнд',
     presetSaveName:'Минийх', presetSaveDesc:'эдгээр тохиргоог хадгалах',
     proxyConnectedWait:'Прокси холбогдлоо — PokerTH серверийг хүлээж байна…',
-    errConnLost:'Холболт тасарлаа. Хэдэн секундын дараа дахин холбогдож болно.',
+    errConnLost:'Холболт тасарлаа. Хэдэн секундын дараа дахин холбогдож болно.', connStalledTitle:'Холболтын асуудал', connStalledMsg:'Сервер хариу өгөхгүй байна. Хариу хүлээж байна…',
     autoTableFound:'⚡ Ширээ олдлоо — #{n}-д нэгдэж байна',
     autoNoTable:'⚡ Ширээ алга — шинээр үүсгэж байна…',
     quickCreateTitle:'Шинэ ширээ үүсгэх',

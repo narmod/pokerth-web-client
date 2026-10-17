@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'නිල රිද්මය', presetWecupName:'We Cup', presetWecupDesc:'සමතුලිත තරඟාවලිය', presetBbcName:'BBC', presetBbcDesc:'කාලය මත පදනම් බ්ලයින්ඩ්',
     presetSaveName:'මගේ මනාප', presetSaveDesc:'මෙම සැකසුම් සුරකින්න',
     proxyConnectedWait:'ප්‍රොක්සිය සම්බන්ධයි — PokerTH සේවාදායකය එනතුරු රැඳී සිටී…',
-    errConnLost:'සම්බන්ධතාව බිඳ වැටිණි. තත්පර කිහිපයකින් නැවත සම්බන්ධ විය හැක.',
+    errConnLost:'සම්බන්ධතාව බිඳ වැටිණි. තත්පර කිහිපයකින් නැවත සම්බන්ධ විය හැක.', connStalledTitle:'සම්බන්ධතා ගැටලු', connStalledMsg:'සේවාදායකය ප්‍රතිචාර නොදක්වයි. පිළිතුරක් බලාපොරොත්තුවෙන්…',
     autoTableFound:'⚡ මේසයක් හමු විය — #{n} ට එක්වෙමින්',
     autoNoTable:'⚡ මේස නැත — එකක් සාදමින්…',
     quickCreateTitle:'නව මේසයක් සාදන්න',

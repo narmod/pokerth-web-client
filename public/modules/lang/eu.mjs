@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'erritmo ofiziala', presetWecupName:'We Cup', presetWecupDesc:'txapelketa orekatua', presetBbcName:'BBC', presetBbcDesc:'denboran oinarritutako blindak',
     presetSaveName:'Nire hobespenak', presetSaveDesc:'gorde ezarpen hauek',
     proxyConnectedWait:'Proxya konektatuta — PokerTH zerbitzariaren zain…',
-    errConnLost:'Konexioa galdu da. Segundo batzuk barru berriro konekta zaitezke.',
+    errConnLost:'Konexioa galdu da. Segundo batzuk barru berriro konekta zaitezke.', connStalledTitle:'Konexio-arazoak', connStalledMsg:'Zerbitzariak ez du erantzuten. Erantzunaren zain…',
     autoTableFound:'⚡ Mahaia aurkitu da — #{n} mahaian sartzen',
     autoNoTable:'⚡ Ez dago mahairik — berri bat sortzen…',
     quickCreateTitle:'Sortu mahai berria',

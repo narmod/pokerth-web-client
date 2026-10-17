@@ -414,7 +414,7 @@ export const strings = {
     presetRankingName:'ర్యాంకింగ్', presetRankingDesc:'అధికారిక వేగం', presetWecupName:'We Cup', presetWecupDesc:'సమతుల్య టోర్నమెంట్', presetBbcName:'BBC', presetBbcDesc:'సమయ ఆధారిత బ్లైండ్‌లు',
     presetSaveName:'నా ప్రాధాన్యతలు', presetSaveDesc:'ఈ సెట్టింగ్‌లను సేవ్ చేయి',
     proxyConnectedWait:'ప్రాక్సీ కనెక్ట్ అయింది — PokerTH సర్వర్ కోసం వేచి ఉంది…',
-    errConnLost:'కనెక్షన్ తెగిపోయింది. కొన్ని సెకన్లలో మళ్లీ కనెక్ట్ కావచ్చు.',
+    errConnLost:'కనెక్షన్ తెగిపోయింది. కొన్ని సెకన్లలో మళ్లీ కనెక్ట్ కావచ్చు.', connStalledTitle:'కనెక్షన్ సమస్యలు', connStalledMsg:'సర్వర్ స్పందించడం లేదు. సమాధానం కోసం వేచి ఉంది…',
     autoTableFound:'⚡ టేబుల్ దొరికింది — #{n} లో చేరుతోంది',
     autoNoTable:'⚡ టేబుల్‌లు లేవు — ఒకటి సృష్టిస్తోంది…',
     quickCreateTitle:'కొత్త టేబుల్ సృష్టించండి',

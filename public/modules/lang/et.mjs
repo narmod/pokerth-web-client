@@ -416,7 +416,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'ametlik tempo', presetWecupName:'We Cup', presetWecupDesc:'tasakaalus turniir', presetBbcName:'BBC', presetBbcDesc:'ajapõhised blindid',
     presetSaveName:'Minu eelistused', presetSaveDesc:'salvesta need seaded',
     proxyConnectedWait:'Puhvermasin ühendatud \u2014 ootan PokerTH serverit\u2026',
-    errConnLost:'Ühendus katkes. Võid mõne sekundi pärast uuesti ühenduda.',
+    errConnLost:'Ühendus katkes. Võid mõne sekundi pärast uuesti ühenduda.', connStalledTitle:'Ühenduse probleemid', connStalledMsg:'Server ei vasta. Ootan vastust…',
     autoTableFound:'\u26a1 Laud leitud \u2014 liitun lauaga #{n}',
     autoNoTable:'\u26a1 Laudu ei ole \u2014 loon uue\u2026',
     quickCreateTitle:'Loo uus laud',

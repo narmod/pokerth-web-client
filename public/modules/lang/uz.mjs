@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'Reyting', presetRankingDesc:'rasmiy surʼat', presetWecupName:'We Cup', presetWecupDesc:'muvozanatli turnir', presetBbcName:'BBC', presetBbcDesc:'vaqtga asoslangan blayndlar',
     presetSaveName:'Mening sozlamalarim', presetSaveDesc:'bu sozlamalarni saqlash',
     proxyConnectedWait:'Proksi ulandi — PokerTH serveri kutilmoqda…',
-    errConnLost:'Ulanish uzildi. Bir necha soniyadan keyin qayta ulanishingiz mumkin.',
+    errConnLost:'Ulanish uzildi. Bir necha soniyadan keyin qayta ulanishingiz mumkin.', connStalledTitle:'Ulanish muammolari', connStalledMsg:'Server javob bermayapti. Javob kutilmoqda…',
     autoTableFound:'⚡ Stol topildi — #{n} ga qoʻshilmoqda',
     autoNoTable:'⚡ Stollar yoʻq — yangisi yaratilmoqda…',
     quickCreateTitle:'Yangi stol yaratish',

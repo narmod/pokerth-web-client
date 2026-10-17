@@ -416,7 +416,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'tempo resmi', presetWecupName:'We Cup', presetWecupDesc:'turnamen seimbang', presetBbcName:'BBC', presetBbcDesc:'blind berbasis waktu',
     presetSaveName:'Preferensiku', presetSaveDesc:'simpan pengaturan ini',
     proxyConnectedWait:'Proksi tersambung \u2014 menunggu server PokerTH\u2026',
-    errConnLost:'Koneksi terputus. Anda dapat menyambungkan kembali dalam beberapa detik.',
+    errConnLost:'Koneksi terputus. Anda dapat menyambungkan kembali dalam beberapa detik.', connStalledTitle:'Masalah koneksi', connStalledMsg:'Server tidak merespons. Menunggu tanggapan…',
     autoTableFound:'\u26a1 Meja ditemukan \u2014 bergabung ke #{n}',
     autoNoTable:'\u26a1 Tidak ada meja \u2014 membuat satu\u2026',
     quickCreateTitle:'Buat meja baru',

@@ -49,6 +49,9 @@ function onAnnounce(sub) {
     const np    = Proto.u32(sub, 5);
     const pMaj  = Proto.u32(pv, 1), pMin = Proto.u32(pv, 2);
     const gMaj  = Proto.u32(gv, 1), gMin = Proto.u32(gv, 2);
+    // The server's own version: the connection probe is only sent to 2.1+
+    // (net/watchdog.mjs).
+    S._srvVer = ((gMaj & 0xff) << 8) | (gMin & 0xff);
 
     const loginMode = document.getElementById('login-mode') ? document.getElementById('login-mode').value : 'guest';
     // Mot de passe de COMPTE optionnel sur serveur dédié / LAN : s'il est
@@ -567,6 +570,9 @@ function onStatistics(sub) {
 
 function onPlayerInfoReply(sub) {
     const pid = Proto.u32(sub, 1);
+    // Answer to the connection probe (net/watchdog.mjs, id 0xFFFFFFFF): its
+    // only purpose was to make the server speak; the frame already counted.
+    if (pid === 0xFFFFFFFF) return;
     const info = Proto.sub(sub, 2);
     const name = Proto.str(info, 1);
     if (name) S.players[pid] = name;

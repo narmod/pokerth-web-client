@@ -416,7 +416,7 @@ export const strings = {
     presetRankingName:'Рангирање', presetRankingDesc:'официјално темпо', presetWecupName:'We Cup', presetWecupDesc:'урамнотежен турнир', presetBbcName:'BBC', presetBbcDesc:'временски блајндови',
     presetSaveName:'Мои поставки', presetSaveDesc:'зачувај ги овие поставки',
     proxyConnectedWait:'Проксито е поврзано — се чека серверот на PokerTH…',
-    errConnLost:'Врската е изгубена. Можеш повторно да се поврзеш за неколку секунди.',
+    errConnLost:'Врската е изгубена. Можеш повторно да се поврзеш за неколку секунди.', connStalledTitle:'Проблеми со врската', connStalledMsg:'Серверот не одговара. Се чека одговор…',
     autoTableFound:'⚡ Масата е најдена — приклучување #{n}',
     autoNoTable:'⚡ Нема маси — се создава една…',
     quickCreateTitle:'Создај нова маса',

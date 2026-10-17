@@ -416,7 +416,7 @@ export const strings = {
     presetRankingName:'Ranking', presetRankingDesc:'opisyal na bilis', presetWecupName:'We Cup', presetWecupDesc:'balanseng tournament', presetBbcName:'BBC', presetBbcDesc:'mga blind ayon sa oras',
     presetSaveName:'Mga gusto ko', presetSaveDesc:'i-save ang mga setting na ito',
     proxyConnectedWait:'Nakakonekta ang proxy \u2014 hinihintay ang PokerTH server\u2026',
-    errConnLost:'Nawala ang koneksyon. Maaari kang kumonekta muli sa ilang segundo.',
+    errConnLost:'Nawala ang koneksyon. Maaari kang kumonekta muli sa ilang segundo.', connStalledTitle:'Mga problema sa koneksyon', connStalledMsg:'Hindi tumutugon ang server. Naghihintay ng tugon…',
     autoTableFound:'\u26a1 May nakitang mesa \u2014 sumasali sa #{n}',
     autoNoTable:'\u26a1 Walang mesa \u2014 gumagawa ng isa\u2026',
     quickCreateTitle:'Gumawa ng bagong mesa',

@@ -417,7 +417,7 @@ export const strings = {
     presetRankingName:'排名', presetRankingDesc:'官方節奏', presetWecupName:'We Cup', presetWecupDesc:'均衡錦標賽', presetBbcName:'BBC', presetBbcDesc:'依時間調升盲注',
     presetSaveName:'我的偏好', presetSaveDesc:'儲存這些設定',
     proxyConnectedWait:'代理已連線 — 等待 PokerTH 伺服器…',
-    errConnLost:'連線斷開。你可以在幾秒後重新連線。',
+    errConnLost:'連線斷開。你可以在幾秒後重新連線。', connStalledTitle:'連線問題', connStalledMsg:'伺服器沒有回應。正在等候回應…',
     autoTableFound:'⚡ 找到牌桌 — 正在加入 #{n}',
     autoNoTable:'⚡ 沒有牌桌 — 正在建立…',
     quickCreateTitle:'建立新牌桌',

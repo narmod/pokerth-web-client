@@ -666,7 +666,7 @@ export const strings = {
     createPrefsSave:'💾 Zapisz ustawienia', createPrefsSaveTip:'Zapisz ten formularz jako moje osobiste ustawienia', createPrefsSaved:'Ustawienia zapisane', createPrefsLoaded:'Ustawienia wczytane', createPrefsNone:'Brak zapisanych ustawień',
     presetFastDesc: 'szybkie tempo!',
     proxyConnectedWait: 'Proxy połączone — oczekiwanie na serwer PokerTH…',
-    errConnLost: 'Utracono połączenie. Możesz połączyć ponownie za kilka sekund.',
+    errConnLost: 'Utracono połączenie. Możesz połączyć ponownie za kilka sekund.', connStalledTitle: 'Problemy z połączeniem', connStalledMsg: 'Serwer nie odpowiada. Oczekiwanie na odpowiedź…',
     autoTableFound: '⚡ Znaleziono stół — dołączanie do #{n}',
     autoNoTable: '⚡ Brak stołów — tworzenie…',
     quickCreateTitle: 'Utwórz nowy stół',
