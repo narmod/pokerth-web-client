@@ -494,6 +494,14 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Admin tabs show what the server holds** (`web.113`) — Deployment, Access, Identity, Proxy and Defaults loaded once at
+  login and then went stale; each now reloads on opening. After every successful save the settings are re-read, so a
+  field shows what was really stored (the proxy trims, clamps and drops invalid values; before, *Saved.* sat next to a
+  value that had been refused). A card holds its unsaved edit until a save made from it succeeds, and no re-read runs
+  over it — including the one *Health & logs* used to trigger, and the kill-switch save that reset the live-figures
+  and community-events cards, and the Traffic refresh that reset the database form. A failed request no longer leaves
+  *Loading…* on screen (Game servers, LAN directory, Traffic, Sessions). The two session-expiry messages are in
+  English like the rest of the panel. `scripts/test-admin-reload.mjs`.
 - **Scheduled messages fire at the time typed; edited notices keep their languages** (`web.112`) — the proxy computes
   *Daily / Weekly / Monthly at HH:MM* in its own zone, while the Broadcasts tab read the date fields (once, start,
   end, countdown) and showed every time in the browser's zone, labelled with the server's: from a browser in another

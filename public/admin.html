@@ -1421,8 +1421,8 @@
     try{ srvStop(); }catch(e){}
     try{ seStop(); }catch(e){}
     doLogout(status===429
-      ? 'Trop de tentatives — attends ~15 min puis reconnecte-toi.'
-      : 'Session admin expirée — reconnecte-toi.');
+      ? 'Too many attempts — wait about 15 minutes, then log in again.'
+      : 'Admin session expired — please log in again.');
     setTimeout(function(){ _authDeadGuard=false; }, 3000);
   }
   // Every admin call carries the token in the Authorization header (never the
@@ -1430,8 +1430,45 @@
   function api(path,opts){ opts=opts||{}; var h=Object.assign({},opts.headers||{}); var t=tok(); if(t) h.Authorization='Bearer '+t; opts.headers=h;
     return fetch(path,opts).then(function(r){
       if((r.status===401||r.status===403||r.status===429) && _POLL_PATHS.test(path)) _authDead(r.status);
+      if(r.ok && String(opts.method||'GET').toUpperCase()==='POST') { try{ cfgAfterPost(path, r.clone()); }catch(e){} }
       return r;
     }); }
+  // ── Unsaved edits ─────────────────────────────────────────────────────
+  // A card holds an unsaved edit from its first keystroke until a write made
+  // from it succeeds (the card of the last click is the one being saved).
+  // Settings are re-read from the server on opening a tab and after every
+  // save, so the fields show what was really stored (the server trims,
+  // clamps and drops invalid values) — but /admin/status fills every
+  // settings tab at once, so it only rewrites the fields while no settings
+  // card holds an unsaved edit.
+  var _dirtyCards=[], _lastCard=null;
+  var _CFG_PANELS=['panel-proxy','panel-identity','panel-defaults','panel-clients','panel-board'];
+  document.addEventListener('input',cfgMarkDirty,true);
+  document.addEventListener('change',cfgMarkDirty,true);
+  document.addEventListener('click',function(e){ var c=e.target&&e.target.closest?e.target.closest('.card'):null; if(c) _lastCard=c; },true);
+  function cfgMarkDirty(e){
+    var t=e.target; if(!t||!t.matches||!t.matches('input,select,textarea')||t.type==='file'||t.type==='search') return;
+    var c=t.closest('.card'); if(c&&_dirtyCards.indexOf(c)<0) _dirtyCards.push(c);
+  }
+  function cardDirty(el){ var c=el&&el.closest?el.closest('.card'):null; return !!(c&&_dirtyCards.indexOf(c)>=0); }
+  function cfgAnyDirty(){ return _dirtyCards.some(function(c){ return _CFG_PANELS.some(function(id){ var p=$(id); return p&&p.contains(c); }); }); }
+  // Checks and probes write nothing: they leave the card's state alone.
+  var _NO_SAVE=/\/(test|probe|lobby|serverlist|live-test|update-check)$/;
+  function cfgAfterPost(path, r){
+    if(_NO_SAVE.test(path)) return;
+    r.json().then(function(d){
+      if(d&&d.ok===false) return;
+      if(_lastCard){ var i=_dirtyCards.indexOf(_lastCard); if(i>=0) _dirtyCards.splice(i,1); }
+      if(path==='/admin/config' && !cfgAnyDirty()) setTimeout(function(){ loadStatus(true); },250);
+    }).catch(function(){});
+  }
+  // A section that failed to load says so, instead of a Loading… that never ends.
+  function loadFail(root, msg){
+    if(typeof root==='string') root=$(root); if(!root) return;
+    [].slice.call(root.querySelectorAll('.empty')).forEach(function(el){
+      if(/^\s*Loading/.test(el.textContent||'')){ el.textContent=msg||'Could not load.'; el.classList.add('err'); }
+    });
+  }
   function show(v){ login.style.display=v==='login'?'block':'none'; dash.style.display=v==='dash'?'block':'none'; }
   // location.host, pas hostname : un panneau servi sur un port non standard
   // doit le dire, sinon deux instances de la meme machine se confondent.
@@ -1576,7 +1613,7 @@
   function loadServers(){
     var box=$('srvRows'); if(box) box.innerHTML='<div class="empty">Loading…</div>';
     api('/admin/servers').then(function(r){return r.json();}).then(function(d){
-      if(!d||!d.ok){ if(box) box.innerHTML='<div class="empty">'+srvEsc((d&&d.error)||'Error')+'</div>'; return; }
+      if(!d||!d.ok){ if(box) box.innerHTML='<div class="empty">'+srvEsc((d&&d.error)||'Error')+'</div>'; loadFail('panel-servers',(d&&d.error)||'Could not load.'); return; }
       // Every stored field comes back, pins included: Save all sends the rows
       // whole, so a field left out here would be erased on the next save.
       _srv=(d.servers||[]).map(function(s){return {id:s.id,name:s.name||'',host:s.host||'',port:parseInt(s.port,10)||7234,tls:!!s.tls,sni:s.sni||'',noverify:!!s.noverify,pins:Array.isArray(s.pins)?s.pins.slice(0,4):[]};}); _srvDirty={};
@@ -1585,7 +1622,7 @@
       applySourceUI(d.serverlist||null); applyTransportUI(); applyEffectiveUI(d.effective||null);
       renderServers();
       var al=$('srvAllow'); if(al){ var hosts=(d.allowlist&&d.allowlist.hosts)||[], ports=(d.allowlist&&d.allowlist.ports)||[]; al.innerHTML='<b>Hosts:</b> '+srvEsc(hosts.join(', ')||'—')+'<br><b>Ports:</b> '+srvEsc(ports.join(', ')||'—'); }
-    }).catch(function(){ if(box) box.innerHTML='<div class="empty">Network error</div>'; });
+    }).catch(function(){ if(box) box.innerHTML='<div class="empty">Network error</div>'; loadFail('panel-servers','Network error'); });
   }
   function saveServers(){
     srvSyncAll(); var st=$('srvState'); if(st){ st.textContent='Saving…'; st.className='msg'; }
@@ -1695,7 +1732,7 @@
     api('/admin/lan-directory').then(function(r){return r.json();}).then(function(d){
       if(!d||!d.ok||!Array.isArray(d.pending)){ var m=srvEsc((d&&d.error)||'Error'); if($('ldPending')) $('ldPending').innerHTML='<div class="empty">'+m+'</div>'; if($('ldEntries')) $('ldEntries').innerHTML=''; return; }
       _ld=d; renderLanDir();
-    }).catch(function(){ if($('ldPending')) $('ldPending').innerHTML='<div class="empty">Network error</div>'; });
+    }).catch(function(){ if($('ldPending')) $('ldPending').innerHTML='<div class="empty">Network error</div>'; loadFail('panel-landir','Network error'); });
   }
   function ldPost(body,stateId,okText){
     ldSay(stateId,'Saving…');
@@ -2424,7 +2461,11 @@
     if(t==='landir') loadLanDir();
     if(t==='polls') loadPolls();
     if(t==='broadcast'){ loadBroadcasts(); if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); } }
-    if(t==='clients'){ loadStatus(true); loadThemes(); loadFeatureSwitches(); }
+    if(t==='clients'){ loadStatus(!cfgAnyDirty()); loadThemes(); loadFeatureSwitches(); }
+    if(t==='defaults'){ loadStatus(!cfgAnyDirty()); loadThemes(); }
+    if(t==='identity'||t==='proxy'){ loadStatus(!cfgAnyDirty()); }
+    if(t==='deploy'){ loadStatus(false); loadUpdateLog(); autoUpdLoad(); loadDeploys(); }
+    if(t==='access'){ loadBlocked(); }
     if(t==='sessions'){ seStart(); } else { seStop(); }
     if(t==='errors') loadErrors();
     if(t==='server'){ loadServer(); loadDeploys(); loadBlocked(); srvStart(); } else { srvStop(); }
@@ -3808,7 +3849,7 @@
     loadGeo();
     api('/admin/visits?'+_perQuery()).then(function(r){return r.json();}).then(function(d){
       var g=$('trafCards');
-      if(!d || !d.ok){ if(g) g.innerHTML='<div class="empty err">'+((d&&d.error)||'error')+'</div>'; return; }
+      if(!d || !d.ok){ if(g) g.innerHTML='<div class="empty err">'+((d&&d.error)||'error')+'</div>'; loadFail('panel-traffic',(d&&d.error)||'Could not load.'); return; }
       _trafBotInfo=d.bots||null; _paintBots();
       function fmt(n){ try{return Number(n||0).toLocaleString();}catch(e){return String(n||0);} }
       // Sous 10 % d'ecart on ne colore pas : sur une journee a 50 visites,
@@ -3910,7 +3951,7 @@
         if(db.enabled && db.lastWrite){ html+='<div class="srow"><span>Last write</span><b>'+esc((''+db.lastWrite).replace('T',' ').slice(0,19))+'</b></div>'; }
         dbx.innerHTML=html;
       }
-    }).catch(function(){ var g=$('trafCards'); if(g) g.innerHTML='<div class="empty err">Could not load.</div>'; });
+    }).catch(function(){ var g=$('trafCards'); if(g) g.innerHTML='<div class="empty err">Could not load.</div>'; loadFail('panel-traffic','Could not load.'); });
   }
   // -- Lecture analytique du trafic ------------------------------------------
   // Les tuiles du haut donnent des totaux ; ce bloc donne le sens : moyenne par
@@ -4233,12 +4274,16 @@
     api('/admin/db').then(function(r){return r.json();}).then(function(d){
       if(!d || !d.ok) return;
       var c=d.config||{}, st=d.status||{};
-      if($('dbHost')) $('dbHost').value=c.host||'';
-      if($('dbPort')) $('dbPort').value=c.port||3306;
-      if($('dbUser')) $('dbUser').value=c.user||'';
-      if($('dbDatabase')) $('dbDatabase').value=c.database||'';
-      if($('dbEnabled')) $('dbEnabled').checked=!!c.enabled;
-      if($('dbPass')){ $('dbPass').value=''; $('dbPass').placeholder=c.hasPassword?'(unchanged \u2014 leave blank to keep)':'(none)'; }
+      // Every refresh of the Traffic tab lands here: unsaved DB settings stay.
+      if(!cardDirty($('dbHost'))){
+        if($('dbHost')) $('dbHost').value=c.host||'';
+        if($('dbPort')) $('dbPort').value=c.port||3306;
+        if($('dbUser')) $('dbUser').value=c.user||'';
+        if($('dbDatabase')) $('dbDatabase').value=c.database||'';
+        if($('dbEnabled')) $('dbEnabled').checked=!!c.enabled;
+        if($('dbPass')) $('dbPass').value='';
+      }
+      if($('dbPass')) $('dbPass').placeholder=c.hasPassword?'(unchanged \u2014 leave blank to keep)':'(none)';
       var envSrc=(st.source==='env');
       ['dbHost','dbPort','dbUser','dbPass','dbDatabase','dbEnabled','dbTestBtn','dbSaveBtn'].forEach(function(id){ var el=$(id); if(el) el.disabled=envSrc; });
       if(envSrc) dbSetState('Configured via environment variables (MYSQL_*). Edit your env / CLI conf to change it; this form is inactive.','');
@@ -4260,7 +4305,7 @@
         else dbSetState('Failed: '+((d&&d.error)||'forbidden'),'err');
       }).catch(function(){ dbSetState('Network error.','err'); });
   }
-  function loadServer(){ loadStatus(true); loadLogs(); loadUpdateLog(); autoUpdLoad(); }
+  function loadServer(){ loadStatus(!cfgAnyDirty()); loadLogs(); loadUpdateLog(); autoUpdLoad(); }
   // Theme presets shown in the default-theme dropdown = built-in presets (static
   // options) + installed theme packages (palette/table/felt) fetched live.
   function loadThemes(){
@@ -5048,6 +5093,7 @@
   // card fills in without a second round trip.
   function renderLiveStats(d){
     var c=(d&&d.liveStats)||{};
+    if(cardDirty($('lsUrl'))) return;   // keep what is being typed
     if($('lsOn')) $('lsOn').checked=(c.on!==false);
     if($('lsUrl')) $('lsUrl').value=c.url||'';
     if($('lsSec')) $('lsSec').value=(typeof c.sec==='number'?c.sec:60);
@@ -5087,6 +5133,7 @@
   // Same /admin/config payload as the live figures above.
   function renderCommunityEvents(d){
     var c=(d&&d.communityEvents)||{};
+    if(cardDirty($('ceSec'))) return;
     if($('ceOn')) $('ceOn').checked=(c.on!==false);
     if($('ceSec')) $('ceSec').value=(typeof c.sec==='number'?c.sec:300);
   }
@@ -5317,7 +5364,7 @@
   function loadSessions(){
     return api('/admin/sessions').then(function(r){return r.json();}).then(function(d){
       var sum=$('seSum'), bb=$('seBridges'), nb=$('seNotify');
-      if(!d||!d.ok){ if(bb) bb.innerHTML='<div class="empty">Could not load connections.</div>'; return; }
+      if(!d||!d.ok){ if(bb) bb.innerHTML='<div class="empty">Could not load connections.</div>'; loadFail('panel-sessions','Could not load.'); return; }
       var nB=(d.bridges||[]).length, nN=(d.notify||[]).length;
       var lB=(d.bridges||[]).filter(function(x){ return x.live; }).length, lN=(d.notify||[]).filter(function(x){ return x.live; }).length;
       var _seSplit=function(l,n){ return ' ('+(n-l)+' web client, '+l+' /live)'; };
