@@ -7613,12 +7613,18 @@ function _stripDefaultNoticeLangs(out, defLangs) {
   });
   return out;
 }
-// Overlay helper: keep the operator's object untouched, swap in the built-in
-// languages (and an 'en' fallback) only while nothing is authored.
+// Overlay helper: the built-in languages, with every language the operator
+// authored laid over its built-in version. The editor shows all of them
+// pre-filled and a language saved unchanged is not stored
+// (_stripDefaultNoticeLangs), so serving only what is stored would drop every
+// language the operator did not touch as soon as one is edited.
+// es-419 has no built-in text of its own: it reads the Spanish one rather than
+// a machine translation.
 function _noticeWithDefaults(w, defLangs) {
-  var langs = (w && w.langs) || {};
-  if (Object.keys(langs).length) return { langs: langs, def: (w && w['default']) || 'fr' };
-  return { langs: defLangs, def: 'en' };
+  var langs = Object.assign({}, defLangs, (w && w.langs) || {});
+  if (!langs['es-419'] && langs.es) langs['es-419'] = langs.es;
+  var authored = Object.keys((w && w.langs) || {}).length > 0;
+  return { langs: langs, def: (authored && w['default']) || 'en' };
 }
 function _guestNoticeAdmin() { var w = _adminConfig.guestNotice || {}; var e = _noticeWithDefaults(w, GUEST_NOTICE_DEFAULT_LANGS); return { enabled: !!w.enabled, updatedAt: w.updatedAt || 0, 'default': e.def, langs: e.langs }; }
 function _guestNoticePublic() { var w = _adminConfig.guestNotice; if (!w || !w.enabled) return null; var e = _noticeWithDefaults(w, GUEST_NOTICE_DEFAULT_LANGS); return { enabled: true, updatedAt: w.updatedAt || 0, 'default': e.def, langs: e.langs }; }
@@ -9650,7 +9656,7 @@ function _bcLanTargets() { return LAN_DIR.entries().map(function (e) { return { 
 function _bcFrame(icon, message, cdAt) {
   return (cdAt ? 'INFOCD:' + cdAt + ':' : 'INFO:') + (icon || '') + ':' + (message || '');
 }
-function _parseHM(t) { const m = /^(\d{1,2}):(\d{2})$/.exec(t || ''); if (!m) return null; const h = +m[1], mi = +m[2]; if (h > 23 || mi > 60) return null; return [h, mi]; }
+function _parseHM(t) { const m = /^(\d{1,2}):(\d{2})$/.exec(t || ''); if (!m) return null; const h = +m[1], mi = +m[2]; if (h > 23 || mi > 59) return null; return [h, mi]; }
 function _atTime(baseMs, h, mi) { const d = new Date(baseMs); d.setHours(h, mi, 0, 0); return d.getTime(); }
 function _bcValidateSchedule(s) {
   if (!s || typeof s !== 'object') return null;

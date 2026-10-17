@@ -1,3 +1,6 @@
+2026-10-17 version 2.1.10-web.112:
+- bugfix: the guest, account and LAN notices stay in your language after the server operator edits the text of another language; Latin-American Spanish gets the Spanish text instead of a machine translation
+
 2026-10-17 version 2.1.10-web.110:
 - bugfix: a feature the server operator has switched off now really stops (error reports, polls, seat stats, hand statistics, chat glossary, keyboard navigation, back-button guard, .pdb files, splash screen, table zoom) — before, only its option was greyed out
 - bugfix: the server's default settings (vibration, voice, assistance, amounts in big blinds) now apply from your very first visit, not the second

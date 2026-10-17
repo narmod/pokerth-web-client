@@ -1262,7 +1262,7 @@
       </div>
       <div class="card" data-master="1">
         <h2>Guest notice (pokerth.net internet mode)</h2>
-        <p class="muted">Shown in a centered popup when someone connects as a guest in Internet / PokerTH.net mode &mdash; typically to explain what guests can and cannot do compared to a registered account. Once dismissed with &ldquo;I understand&rdquo; it stays hidden on that device until you edit the message. Each guest sees the version matching their language (fallback below; missing languages are auto-translated on the client). A built-in English text (shown pre-filled below) is used until you save your own; players dismiss it with &ldquo;I understand&rdquo;.</p>
+        <p class="muted">Shown in a centered popup when someone connects as a guest in Internet / PokerTH.net mode &mdash; typically to explain what guests can and cannot do compared to a registered account. Once dismissed with &ldquo;I understand&rdquo; it stays hidden on that device until you edit the message. Each guest sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p>
         <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="gwEnabled" style="width:auto"> Enabled</label>
         <div class="periodrow" style="margin-bottom:8px">
           <label class="muted">Edit language <select id="gwLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
@@ -1278,7 +1278,7 @@
       </div>
       <div class="card" data-master="1">
         <h2>LAN / dedicated server notice</h2>
-        <p class="muted">Shown in a centered popup when someone connects in LAN / dedicated-server mode on this instance (not offline, not Internet/PokerTH.net) &mdash; typically to explain that this instance only dials one operator-configured LAN server, and to point players toward self-hosting for any other address. Once dismissed with &ldquo;I understand&rdquo; it stays hidden on that device until you edit the message. Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). A built-in English text (shown pre-filled below) is used until you save your own.</p>
+        <p class="muted">Shown in a centered popup when someone connects in LAN / dedicated-server mode on this instance (not offline, not Internet/PokerTH.net) &mdash; typically to explain that this instance only dials one operator-configured LAN server, and to point players toward self-hosting for any other address. Once dismissed with &ldquo;I understand&rdquo; it stays hidden on that device until you edit the message. Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p>
         <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="lwEnabled" style="width:auto"> Enabled</label>
         <div class="periodrow" style="margin-bottom:8px">
           <label class="muted">Edit language <select id="lwLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
@@ -1294,7 +1294,7 @@
       </div>
       <div class="card" data-master="1">
         <h2>Registered-account notice (pokerth.net internet mode)</h2>
-        <p class="muted">The mirror of the guest notice above, for players who log in <b>with a registered account</b> in Internet / PokerTH.net mode. Once dismissed with &ldquo;I understand&rdquo; it stays hidden &mdash; the acknowledgement follows the account across devices &mdash; until you edit the message. Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). A built-in English text (shown pre-filled below) is used until you save your own; players dismiss it with &ldquo;I understand&rdquo;.</p>
+        <p class="muted">The mirror of the guest notice above, for players who log in <b>with a registered account</b> in Internet / PokerTH.net mode. Once dismissed with &ldquo;I understand&rdquo; it stays hidden &mdash; the acknowledgement follows the account across devices &mdash; until you edit the message. Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p>
         <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="awEnabled" style="width:auto"> Enabled</label>
         <div class="periodrow" style="margin-bottom:8px">
           <label class="muted">Edit language <select id="awLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
@@ -4684,13 +4684,36 @@
     el.innerHTML=(icon?_annEsc(icon)+'  ':'')+annLinkify(msg);
     el.style.cssText='display:block;margin-top:8px;max-width:420px;background:linear-gradient(135deg,rgba(200,168,74,.97),rgba(168,134,40,.97));color:#1a0a00;padding:10px 14px;border-radius:14px;font-weight:600;font-size:.88rem;white-space:pre-line;box-shadow:0 4px 14px rgba(0,0,0,.4)';
   }
+  // Broadcast times are SERVER time: "Daily at 20:00" fires at 20:00 where the
+  // proxy runs (its zone comes with the list). Every time this tab shows or
+  // reads uses that zone, so what is typed is what fires, from any browser.
+  var _bcTz='';
+  function bcLocalTz(){ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC'; }catch(e){ return 'UTC'; } }
+  function bcTz(){ return _bcTz||bcLocalTz(); }
+  function bcFmt(ms){
+    try{ return new Intl.DateTimeFormat('en-GB',{timeZone:bcTz(),weekday:'short',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(ms)); }
+    catch(e){ return new Date(ms).toLocaleString(); } }
+  // Offset of zone tz from UTC at instant ms (ms; positive east of Greenwich).
+  function bcTzOff(ms,tz){ var p={};
+    new Intl.DateTimeFormat('en-US',{timeZone:tz,hourCycle:'h23',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'})
+      .formatToParts(new Date(ms)).forEach(function(x){ p[x.type]=x.value; });
+    return Date.UTC(+p.year,+p.month-1,+p.day,(+p.hour)%24,+p.minute,+p.second)-Math.floor(ms/1000)*1000; }
+  // A datetime-local value ("YYYY-MM-DDTHH:MM") read as wall-clock time in the
+  // server's zone. Two passes settle the offset across a DST change.
+  function bcWall(v){ var m=/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(v||''); if(!m) return 0;
+    var guess=Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5]), tz=bcTz();
+    try{ var t=guess-bcTzOff(guess,tz); return guess-bcTzOff(t,tz); }catch(e){ return new Date(v).getTime(); } }
+  function bcZoneNote(now){
+    var tz=bcTz(), loc=bcLocalTz(); if(loc===tz) return ' \u2014 every time on this tab is server time.';
+    var h=0; try{ h=(bcTzOff(now,loc)-bcTzOff(now,tz))/3600000; }catch(e){}
+    return ' \u2014 every time on this tab is server time'+(h?(' (your browser, '+loc+', is '+Math.abs(h)+' h '+(h>0?'ahead':'behind')+')'):'')+'.'; }
   function bcDescribe(j){ var s=j.schedule||{},t=s.type,nm=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     if(t==='interval') return 'Every '+(s.minutes%60===0?(s.minutes/60)+' h':s.minutes+' min');
     if(t==='daily') return 'Daily at '+s.time;
     if(t==='everyDays') return 'Every '+s.days+' day(s) at '+s.time;
     if(t==='weekly') return (s.weekdays||[]).map(function(d){return nm[d];}).join(', ')+' at '+s.time;
     if(t==='monthly') return 'Day '+s.dom+' each month at '+s.time;
-    if(t==='once') return 'Once at '+new Date(s.at).toLocaleString();
+    if(t==='once') return 'Once at '+bcFmt(s.at);
     return t; }
   function bcBuildSchedule(){ var t=$('bcType').value;
     if(t==='interval') return {type:'interval',minutes:Number($('bcMinutes').value)};
@@ -4698,11 +4721,11 @@
     if(t==='everyDays') return {type:'everyDays',days:Number($('bcDays').value),time:$('bcTimeEvery').value};
     if(t==='weekly'){ var wd=[]; document.querySelectorAll('#bcWeekdays button.on').forEach(function(b){wd.push(Number(b.dataset.d));}); return {type:'weekly',weekdays:wd,time:$('bcTimeWeekly').value}; }
     if(t==='monthly') return {type:'monthly',dom:Number($('bcDom').value),time:$('bcTimeMonthly').value};
-    if(t==='once'){ var v=$('bcOnceAt').value; return {type:'once',at:v?new Date(v).getTime():0}; }
+    if(t==='once'){ var v=$('bcOnceAt').value; return {type:'once',at:v?bcWall(v):0}; }
     return null; }
   function bcSendNow(){ var msg=($('bcNowMsg').value||'').trim(); if(!msg){ bcSay('bcNowState','Message required.','err'); return; }
     var nb={message:msg,icon:$('bcNowIcon').value,target:(($('bcNowTarget')&&$('bcNowTarget').value)||'all'),token:tok()};
-    var ncd=$('bcNowCd')?$('bcNowCd').value:''; if(ncd){ var ncdMs=new Date(ncd).getTime(); if(!(ncdMs>Date.now())){ bcSay('bcNowState','Countdown must be in the future.','err'); return; } nb.countdownAt=ncdMs; }
+    var ncd=$('bcNowCd')?$('bcNowCd').value:''; if(ncd){ var ncdMs=bcWall(ncd); if(!(ncdMs>Date.now())){ bcSay('bcNowState','Countdown must be in the future.','err'); return; } nb.countdownAt=ncdMs; }
     bcSay('bcNowState','Sending\u2026');
     api('/admin/broadcast-now',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(nb)})
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) bcSay('bcNowState','Sent to '+(d.notified||0)+' player(s).','ok'); else bcSay('bcNowState','Failed: '+((d&&d.error)||'error'),'err'); })
@@ -4712,18 +4735,20 @@
     if(s&&s.type==='weekly'&&!s.weekdays.length){ bcSay('bcAddState','Pick at least one weekday.','err'); return; }
     if(s&&s.type==='once'&&!(s.at>Date.now())){ bcSay('bcAddState','Pick a future date/time.','err'); return; }
     var body={message:msg,icon:$('bcIcon').value,schedule:s,target:(($('bcTarget')&&$('bcTarget').value)||'all'),token:tok()};
-    var sa=$('bcStartAt')?$('bcStartAt').value:''; if(sa) body.startAt=new Date(sa).getTime();
-    var cdv=$('bcCd')?$('bcCd').value:''; if(cdv){ var cdMs=new Date(cdv).getTime(); if(!(cdMs>Date.now())){ bcSay('bcAddState','Countdown must be in the future.','err'); return; } body.countdownAt=cdMs; }
-    var ea=$('bcEndAt').value; if(ea) body.endAt=new Date(ea).getTime();
+    var sa=$('bcStartAt')?$('bcStartAt').value:''; if(sa) body.startAt=bcWall(sa);
+    var cdv=$('bcCd')?$('bcCd').value:''; if(cdv){ var cdMs=bcWall(cdv); if(!(cdMs>Date.now())){ bcSay('bcAddState','Countdown must be in the future.','err'); return; } body.countdownAt=cdMs; }
+    var ea=$('bcEndAt').value; if(ea) body.endAt=bcWall(ea);
     if(body.startAt&&body.endAt&&body.startAt>=body.endAt){ bcSay('bcAddState','Start must be before end.','err'); return; }
     var mr=Number($('bcMaxRuns').value||0); if(mr>0) body.maxRuns=mr;
     bcSay('bcAddState','Adding\u2026');
     api('/admin/broadcasts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ bcSay('bcAddState','Scheduled.','ok'); $('bcMsg').value=''; bcGoldPreview('bcPrev','',''); loadBroadcasts(); } else bcSay('bcAddState','Failed: '+((d&&d.error)||'error'),'err'); })
       .catch(function(){ bcSay('bcAddState','Network error.','err'); }); }
-  function bcToggle(id,en){ api('/admin/broadcasts/toggle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,enabled:en,token:tok()})}).then(function(r){return r.json();}).then(function(){loadBroadcasts();}).catch(function(){}); }
-  function bcFire(id){ api('/admin/broadcasts/fire',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,token:tok()})}).then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) bcSay('bcAddState','Sent to '+(d.notified||0)+' player(s).','ok'); loadBroadcasts(); }).catch(function(){}); }
-  function bcDelete(id){ if(!confirm('Delete this scheduled message?'))return; api('/admin/broadcasts/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,token:tok()})}).then(function(r){return r.json();}).then(function(){loadBroadcasts();}).catch(function(){}); }
+  // List actions report a refusal instead of silently reloading the list.
+  function bcListResult(d,okTxt){ if(d&&d.ok){ if(okTxt) bcSay('bcAddState',okTxt,'ok'); } else bcSay('bcAddState','Failed: '+((d&&d.error)||'error'),'err'); loadBroadcasts(); }
+  function bcToggle(id,en){ api('/admin/broadcasts/toggle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,enabled:en,token:tok()})}).then(function(r){return r.json();}).then(function(d){ bcListResult(d,''); }).catch(function(){ bcSay('bcAddState','Network error.','err'); }); }
+  function bcFire(id){ api('/admin/broadcasts/fire',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,token:tok()})}).then(function(r){return r.json();}).then(function(d){ bcListResult(d,'Sent to '+((d&&d.notified)||0)+' player(s).'); }).catch(function(){ bcSay('bcAddState','Network error.','err'); }); }
+  function bcDelete(id){ if(!confirm('Delete this scheduled message?'))return; api('/admin/broadcasts/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,token:tok()})}).then(function(r){return r.json();}).then(function(d){ bcListResult(d,'Deleted.'); }).catch(function(){ bcSay('bcAddState','Network error.','err'); }); }
   // One LAN server as a broadcast target: the directory entries come with the
   // broadcast list (names only), into the « One LAN server » group of both
   // target pickers. The current choice survives the 30 s refresh.
@@ -4740,7 +4765,8 @@
   }
   function loadBroadcasts(){ api('/admin/broadcasts').then(function(r){return r.json();}).then(function(d){
       if(d&&d.ok) bcFillLanTargets(d.lanTargets);
-      var sn=$('bcServerNow'); if(sn&&d.serverNow) sn.textContent='Server time: '+new Date(d.serverNow).toLocaleString()+(d.tz?' ('+d.tz+')':'');
+      if(d&&d.tz) _bcTz=d.tz;
+      var sn=$('bcServerNow'); if(sn&&d.serverNow) sn.textContent='Server time: '+bcFmt(d.serverNow)+' ('+bcTz()+')'+bcZoneNote(d.serverNow);
       var el=$('bcList'); if(!el) return; el.innerHTML='';
       if(!d.ok){ el.innerHTML='<div class="empty err">'+((d&&d.error)||'error')+'</div>'; return; }
       if(!d.jobs||!d.jobs.length){ el.innerHTML='<div class="empty">No scheduled messages.</div>'; return; }
@@ -4752,12 +4778,12 @@
         var bits=[bcDescribe(j)];
         if(j.target&&j.target.indexOf('lan:')===0) bits.push('\u2192 LAN: '+(_bcLanNames[j.target]||'removed server'));
         else if(j.target&&j.target!=='all') bits.push('\u2192 '+(tgN[j.target]||j.target));
-        if(j.enabled&&j.nextRun) bits.push('next '+new Date(j.nextRun).toLocaleString()); else if(!j.enabled) bits.push('disabled');
-        if(j.lastRun) bits.push('last '+new Date(j.lastRun).toLocaleString());
+        if(j.enabled&&j.nextRun) bits.push('next '+bcFmt(j.nextRun)); else if(!j.enabled) bits.push('disabled');
+        if(j.lastRun) bits.push('last '+bcFmt(j.lastRun));
         if(j.maxRuns) bits.push(j.runCount+'/'+j.maxRuns+' sent');
-        if(j.startAt) bits.push('from '+new Date(j.startAt).toLocaleString());
-        if(j.countdownAt) bits.push('\u23f3 countdown to '+new Date(j.countdownAt).toLocaleString());
-        if(j.endAt) bits.push('until '+new Date(j.endAt).toLocaleString());
+        if(j.startAt) bits.push('from '+bcFmt(j.startAt));
+        if(j.countdownAt) bits.push('\u23f3 countdown to '+bcFmt(j.countdownAt));
+        if(j.endAt) bits.push('until '+bcFmt(j.endAt));
         meta.textContent=bits.join(' \u00b7 '); row.appendChild(meta);
         var btns=document.createElement('div'); btns.className='btnrow';
         var bt=document.createElement('button'); bt.className='use'; bt.textContent=j.enabled?'Disable':'Enable'; bt.addEventListener('click',function(){bcToggle(j.id,!j.enabled);}); btns.appendChild(bt);

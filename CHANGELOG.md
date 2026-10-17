@@ -494,6 +494,15 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Scheduled messages fire at the time typed; edited notices keep their languages** (`web.112`) — the proxy computes
+  *Daily / Weekly / Monthly at HH:MM* in its own zone, while the Broadcasts tab read the date fields (once, start,
+  end, countdown) and showed every time in the browser's zone, labelled with the server's: from a browser in another
+  zone a message went out hours off. The whole tab now reads and shows server time (`bcWall` / `bcFmt`, DST-safe),
+  and says how far the browser is from it. `_parseHM` refuses minute 60; *Enable / Send now / Delete* report a
+  refusal. Guest / account / LAN notices: the editor shows every built-in language pre-filled and an unchanged one
+  is not stored, so as soon as one language was edited the other 82 were no longer served (machine translation
+  instead); `_noticeWithDefaults` now lays the authored languages over the built-in ones, and `es-419` reads the
+  Spanish text. `scripts/test-broadcast-tz.mjs`.
 - **Admin settings backup: nothing lost, nothing secret leaked** (`web.111`) — `musicVotesPublic` was missing from the
   import allow-list and a backup → restore wiped it; the list is now `ADMIN_CONFIG_KEYS`, and
   `scripts/test-admin-config-io.mjs` fails when code writes a key it does not hold. The file leaves out the Discord
