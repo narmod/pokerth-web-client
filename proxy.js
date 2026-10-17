@@ -7852,6 +7852,9 @@ try {
     visitsStore.guideSince = (typeof _vs.guideSince === 'number') ? _vs.guideSince : 0;
     visitsStore.refSince = (typeof _vs.refSince === 'number') ? _vs.refSince : 0;
     visitsStore.geoSince = (typeof _vs.geoSince === 'number') ? _vs.geoSince : 0;
+    // Since when connections per LAN server, logins and the cross-tabulated
+    // counts are kept (web.123, web.124): read back, or a restart forgot them.
+    ['lanSrvSince', 'loginSince', 'cubeSince'].forEach(function (k) { visitsStore[k] = (typeof _vs[k] === 'number') ? _vs[k] : 0; });
     if (_vs.bt && typeof _vs.bt === 'object') visitsStore.bt = _vs.bt;   // cumuls des automates (visitIsBot)
     if (visitsStore.bt) {
       if (typeof visitsStore.bt.totalU !== 'number') visitsStore.bt.totalU = Object.keys(visitsStore.bt.allU || {}).length;
@@ -8177,6 +8180,53 @@ const GEO_STATS = require('./server/geo-stats.js');
 // server/cube-stats.js. One key per session start or login, all its
 // dimensions at once; counts only.
 const CUBE_STATS = require('./server/cube-stats.js');
+// Read side (admin Statistics « Narrow to »): one type of fact (c = sessions,
+// l = logins) over the same windows as /admin/visits — preset, 24 h or a
+// custom range, and the window before — filtered (?f=dim:v|v,dim:v) and
+// broken down by one dimension (?by=). Each point of the series is a day (an
+// hour over 24 h). Small cells are masked as "<3" once a cell is defined
+// by two dimensions or more; totals stay exact. `values` lists what each
+// dimension takes over the period, unfiltered, for the lists of the page.
+function visitCubeSummary(query) {
+  query = query || {};
+  const type = query.type === 'l' ? 'l' : 'c';
+  const h24 = String(query.hours || '') === '24';
+  const bots = String(query.bots || '') === '1';
+  const R = h24 ? null : visitRange(query.from, query.to);
+  const P = h24 ? 1 : (R ? R.P : visitPeriodDays(query.days)), E = R ? R.E : 0;
+  const f = CUBE_STATS.parseFilters(type, query.f);
+  const by = (CUBE_STATS.DIMS[type].indexOf(String(query.by || '')) >= 0) ? String(query.by) : '';
+  const fDims = Object.keys(f).length, cellDims = fDims + (by ? 1 : 0);
+  return withVisitBots(bots, function () {
+    const now = new Date();
+    const keys = [], cur = [], prev = [];
+    if (h24) {
+      _hourInstants(24).reverse().forEach(function (d) { keys.push(visitDayKey(d) + 'T' + String(d.getHours()).padStart(2, '0')); cur.push(visitHour(d)); });
+      _hourInstants(24, 24).reverse().forEach(function (d) { prev.push(visitHour(d)); });
+    } else {
+      for (let i = E + P - 1; i >= E; i--) { const d = new Date(now); d.setDate(now.getDate() - i); const k = visitDayKey(d); keys.push(k); cur.push(visitDay(k)); }
+      for (let i = E + 2 * P - 1; i >= E + P; i--) { const d = new Date(now); d.setDate(now.getDate() - i); prev.push(visitDay(visitDayKey(d))); }
+    }
+    const qc = CUBE_STATS.query(cur, type, f, by), qp = CUBE_STATS.query(prev, type, f, by);
+    const series = cur.map(function (b, i) {
+      const q = CUBE_STATS.query([b], type, f, by);
+      return { date: keys[i], n: CUBE_STATS.maskN(q.total, fDims), by: by ? CUBE_STATS.mask(q.by, cellDims) : undefined };
+    });
+    const prevSeries = prev.map(function (b) { return CUBE_STATS.maskN(CUBE_STATS.query([b], type, f, '').total, fDims); });
+    const names = {};
+    if (type === 'c') { try { LAN_DIR.entries().forEach(function (e) { names[e.id] = e.name || e.host; }); } catch (e) {} }
+    return {
+      ok: true, type: type, filters: f, by: by, h24: h24, bots: bots,
+      periodDays: P, periodEnd: E, range: R ? { from: R.from, to: R.to } : null,
+      period: { total: CUBE_STATS.maskN(qc.total, fDims), by: CUBE_STATS.mask(qc.by, cellDims), overflow: qc.overflow },
+      prev: { total: CUBE_STATS.maskN(qp.total, fDims), by: CUBE_STATS.mask(qp.by, cellDims), overflow: qp.overflow },
+      series: series, prevSeries: prevSeries,
+      values: CUBE_STATS.values(cur, type), lanNames: names,
+      masked: cellDims >= 2, small: CUBE_STATS.SMALL,
+      since: visitsStore.cubeSince || 0
+    };
+  });
+}
 function recordFact(type, o, d, req, bot) {
   try {
     const T = visitTarget(bot);
@@ -10581,6 +10631,10 @@ function handleAdmin(req, res, reqPathOnly, query) {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'Content-Disposition': 'attachment; filename="pokerth-traffic.json"' });
     res.end(JSON.stringify(out, null, 2));
     return;
+  }
+  if (reqPathOnly === '/admin/cube') {
+    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    return adminJson(res, 200, visitCubeSummary(query));
   }
   if (reqPathOnly === '/admin/geo') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });

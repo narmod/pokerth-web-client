@@ -93,4 +93,52 @@ function query(list, type, filters, by) {
   return out;
 }
 
-module.exports = { DIMS, MODES, ACCOUNTS, KEY_CAP, OVERFLOW, clean, factKey, add, parse, query };
+// The values each dimension takes over a list of buckets, with their counts:
+// what a « Narrow to » list can offer, largest first.
+function values(list, type) {
+  const dims = DIMS[type] || [];
+  const out = {};
+  dims.forEach(function (d) { out[d] = {}; });
+  (list || []).forEach(function (b) {
+    const fx = b && b.fx;
+    if (!fx) return;
+    for (const k in fx) {
+      const o = parse(k);
+      if (!o || o.type !== type) continue;
+      dims.forEach(function (d) { out[d][o[d]] = (out[d][o[d]] || 0) + (fx[k] || 0); });
+    }
+  });
+  return out;
+}
+
+// Filters from a query string: "mode:lan|pokerthnet,cc:DE". Only dimensions
+// of the type, and only values a fact can hold (checked by clean(): a value
+// it would rewrite is refused, not silently turned into another one).
+function parseFilters(type, str) {
+  const dims = DIMS[type] || [];
+  const out = {};
+  String(str || '').slice(0, 600).split(',').forEach(function (part) {
+    const i = part.indexOf(':');
+    if (i <= 0) return;
+    const d = part.slice(0, i).trim();
+    if (dims.indexOf(d) < 0) return;
+    const vals = part.slice(i + 1).split('|').map(function (v) { return v.trim(); })
+      .filter(function (v) { return v && clean(d, v) === v; }).slice(0, 40);
+    if (vals.length) out[d] = (out[d] || []).concat(vals.filter(function (v) { return (out[d] || []).indexOf(v) < 0; }));
+  });
+  return out;
+}
+
+// Small cells: a count of 1 or 2 in a cell defined by two dimensions or more
+// (filters plus the breakdown) is shown as "<3". A total under two filters or
+// more is such a cell too; a total under one filter, or none, stays exact.
+const SMALL = 3;
+function maskN(n, dimsInCell) { return (dimsInCell >= 2 && n > 0 && n < SMALL) ? '<' + SMALL : n; }
+function mask(byMap, dimsInCell) {
+  if (dimsInCell < 2) return byMap;
+  const out = {};
+  for (const k in byMap) out[k] = (byMap[k] > 0 && byMap[k] < SMALL) ? '<' + SMALL : byMap[k];
+  return out;
+}
+
+module.exports = { DIMS, MODES, ACCOUNTS, KEY_CAP, OVERFLOW, SMALL, clean, factKey, add, parse, query, values, parseFilters, mask, maskN };

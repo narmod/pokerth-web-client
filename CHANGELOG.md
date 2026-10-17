@@ -16,6 +16,16 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Statistics: cross-tabulated session counts, step 2 — reading** (`web.125`) — `GET /admin/cube` (admin only):
+  sessions (`type=c`) or logins (`type=l`) over the same windows as `/admin/visits` (preset, `hours=24`, a custom
+  range) and the window before, filtered (`f=mode:lan|pokerthnet,cc:DE`) and broken down by one dimension (`by=`),
+  one point a day (an hour over 24 h) with its breakdown, the series of the window before, robots on request, the
+  values each dimension takes over the period (for the « Narrow to » lists), the LAN names and the start date.
+  Filters keep only dimensions of the type and values a fact can hold (`parseFilters`: nothing is rewritten into
+  another value). Small cells: a count of 1 or 2 in a cell defined by two dimensions or more (filters plus the
+  breakdown), or a total under two filters or more, is returned as `"<3"`. Fixed on the way: the start dates of the
+  LAN-server, login and cube counters (`lanSrvSince`, `loginSince`, `cubeSince`) were saved but not read back, so a
+  restart forgot them.
 - **Statistics: cross-tabulated session counts, step 1 — recording** (`web.124`) — `server/cube-stats.js`: each
   session start (mode ping) and each login adds 1 to ONE key holding all its dimensions — `c|mode|country|device|app|
   new|lan server` and `l|account|country|device|app|new` — in `fx` of the day bucket and of the hour cell (robots in

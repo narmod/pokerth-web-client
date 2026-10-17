@@ -90,6 +90,72 @@ try {
   try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (e) {}
 }
 
+// ── Step 2: reading (/admin/cube) ─────────────────────────────────────────
+ok(JSON.stringify(C.parseFilters('c', 'mode:lan|pokerthnet,cc:DE|de|D3,dev:m,acc:guest,lan:lan_ab12|bad host')) === JSON.stringify({ mode: ['lan', 'pokerthnet'], cc: ['DE'], dev: ['m'], lan: ['lan_ab12'] }),
+  'filters keep only dimensions of the type and values a fact can hold — nothing is rewritten into another value');
+ok(JSON.stringify(C.mask({ DE: 1, FR: 2, PL: 3, IT: 0 }, 2)) === JSON.stringify({ DE: '<3', FR: '<3', PL: 3, IT: 0 }) && C.mask({ DE: 1 }, 1).DE === 1,
+  'a cell of 1 or 2 is shown as <3 once two dimensions define it, never under one');
+ok(C.maskN(2, 2) === '<3' && C.maskN(2, 1) === 2 && C.maskN(0, 3) === 0, 'and a total under two filters is such a cell too');
+const vv = C.values(days, 'c');
+ok(vv.cc.DE === 9 && vv.cc.FR === 2 && vv.lan.lan_a1 === 4 && vv.mode.pokerthnet === 5, 'the values each dimension takes, with their counts');
+{
+  const tmp2 = fs.mkdtempSync(path.join(os.tmpdir(), 'stcube2-'));
+  const G = (x) => path.join(tmp2, x);
+  const key = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  const back = (i) => { const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() - i); return key(d); };
+  const store = { cubeSince: Date.now() - 30 * 864e5, lanSrvSince: Date.now() - 31 * 864e5, loginSince: Date.now() - 32 * 864e5, days: {} };
+  for (let i = 0; i < 20; i++) store.days[back(i)] = { v: 1, fx: {
+    'c|lan|DE|m|-|n|lan_aaaaaa01': 2, 'c|pokerthnet|FR|d|p|r|-': 5 + (i < 7 ? 0 : 1), 'c|lan|DE|d|-|r|other': 1,
+    'l|guest|DE|m|-|n': 1, 'l|auth|FR|d|-|r': 3 }, bt: { v: 1, fx: { 'c|offline|US|d|-|-|-': 4 } } };
+  const now = new Date();
+  for (let h = 0; h < 48; h++) {
+    const d = new Date(now.getTime() - h * 3600000), b = store.days[key(d)];
+    b.hc = b.hc || {};
+    b.hc[d.getHours()] = { fx: { 'c|live|JP|m|-|-|-': 1 } };
+  }
+  fs.writeFileSync(G('visits.json'), JSON.stringify(store));
+  fs.writeFileSync(G('admin-config.json'), JSON.stringify({ lanDirectory: { settings: {}, pending: [], entries: [
+    { id: 'lan_aaaaaa01', name: 'Club Lyon', host: 'lyon.example.org', port: 7234, visible: true, addedAt: Date.now() - 9e8 }] } }));
+  const PORT2 = 18000 + Math.floor(Math.random() * 900);
+  const env2 = Object.assign({}, env, { PORT: String(PORT2), VISITS_FILE: G('visits.json'), ADMIN_CONFIG_FILE: G('admin-config.json'),
+    STATS_FILE: G('stats.json'), STATS_META_FILE: G('stats.meta.json'), AUDIT_FILE: G('admin-audit.json') });
+  const px2 = spawn(process.execPath, [path.join(root, 'proxy.js'), '--notls'], { cwd: root, stdio: ['ignore', 'pipe', 'pipe'], env: env2 });
+  const base2 = 'http://127.0.0.1:' + PORT2;
+  const cube = async (q) => (await fetch(base2 + '/admin/cube?' + q, { headers: H })).json();
+  try {
+    let up = false;
+    for (let i = 0; i < 80 && !up; i++) { try { up = (await fetch(base2 + '/admin')).ok; } catch (e) {} if (!up) await new Promise((r) => setTimeout(r, 250)); }
+    ok((await fetch(base2 + '/admin/cube?days=7')).status === 403, 'the route is for the admin only');
+    const a = await cube('days=7');
+    const vs = await (await fetch(base2 + '/admin/visits?days=7', { headers: H })).json();
+    ok(vs.lanServers.since === store.lanSrvSince && vs.logins.since === store.loginSince, 'the start dates of the counters survive a restart');
+    ok(a.ok && a.type === 'c' && a.period.total === 56 && a.prev.total === 63 && a.series.length === 7 && a.prevSeries.length === 7, 'sessions over 7 days, and the 7 days before');
+    ok(a.series.map((x) => x.date).join() === [6, 5, 4, 3, 2, 1, 0].map(back).join() && a.series[6].n === 8, 'one point a day, oldest first');
+    ok(a.since > 0 && a.values.cc.DE === 21 && a.values.lan.lan_aaaaaa01 === 14 && a.lanNames.lan_aaaaaa01 === 'Club Lyon', 'with what each dimension takes, and the LAN names');
+    const b1 = await cube('days=7&f=' + encodeURIComponent('mode:lan') + '&by=lan');
+    ok(b1.period.total === 21 && b1.period.by.lan_aaaaaa01 === 14 && b1.period.by.other === 7 && b1.masked === true, 'one filter, broken down by server');
+    const b2 = await cube('days=7&f=' + encodeURIComponent('mode:lan,cc:DE,dev:d'));
+    ok(b2.period.total === 7 && b2.series.every((x) => x.n === '<3') && b2.prevSeries.every((x) => x === '<3'), 'three filters: a total of 7 is shown, a day of 1 is not');
+    const b3 = await cube('days=7&f=' + encodeURIComponent('mode:lan,dev:d') + '&by=cc');
+    ok(b3.period.by.DE === 7 && b3.series[0].by.DE === '<3', 'small cells are masked in the breakdown of each day too');
+    const b4 = await cube('days=7&by=cc');
+    ok(b4.period.by.FR === 35 && b4.series[0].by.DE === 3 && b4.masked === false, 'one dimension alone is never masked');
+    const b5 = await cube('days=7&bots=1&by=mode');
+    ok(b5.period.by.offline === 28 && !(a.values.mode.offline), 'robots join when shown, and only then');
+    const b6 = await cube('from=' + back(10) + '&to=' + back(8) + '&by=mode');
+    ok(b6.range && b6.periodDays === 3 && b6.period.by.pokerthnet === 18 && b6.prev.by.pokerthnet === 18, 'a custom range, and the range before it');
+    const b7 = await cube('hours=24&by=cc');
+    ok(b7.h24 && b7.series.length === 24 && b7.period.by.JP === 24 && b7.prev.by.JP === 24, 'over 24 hours: one point an hour, read in the hour cells');
+    const l1 = await cube('days=7&type=l&by=acc');
+    ok(l1.type === 'l' && l1.period.by.guest === 7 && l1.period.by.auth === 21 && l1.values.acc.auth === 21, 'logins are read on their own');
+    const z = await cube('days=7&f=' + encodeURIComponent('cc:de,colour:red') + '&by=nope');
+    ok(JSON.stringify(z.filters) === '{}' && z.by === '' && z.period.total === 56, 'an unusable filter or breakdown is dropped, not guessed');
+  } finally {
+    px2.kill('SIGTERM');
+    try { fs.rmSync(tmp2, { recursive: true, force: true }); } catch (e) {}
+  }
+}
+
 // ── Client wiring ─────────────────────────────────────────────────────────
 const pjs = fs.readFileSync(path.join(root, 'public', 'pokerth.js'), 'utf8');
 ok(/window\._pthIsApp = function \(\)/.test(pjs), 'the client knows when it runs as the installed app');

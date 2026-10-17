@@ -272,7 +272,7 @@ use too. Items are grouped by status rather than fixed phases.
   Statistics v2: World first with layers and the local-time band, one filter bar with entry modes (`web.119`),
   Internet and LAN cards and connections per day against the previous period (`web.120`), a custom date range
   (`web.121`), connections live by country (`web.122`), connections per LAN server and guests / accounts
-  (`web.123`), cross-tabulated session counts recorded (`web.124`). Next: the read route and the « Narrow to »
+  (`web.123`), cross-tabulated session counts recorded (`web.124`) and readable (`web.125`). Next: the « Narrow to »
   row (country, device, installed app, new / known, account, LAN server); then each remaining section moved to
   the new layout.
 
