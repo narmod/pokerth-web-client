@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin Statistics › World: Internet, LAN and connections per day** (`web.120`) — under the map, an Internet card
+  (players online on the server now and on the web client, from the live samples; connections over the period
+  against the period before; players online over 48 h, whole server and web client; busiest hour) and a LAN card
+  (players online on listed servers, servers up, connections over the period against the period before, the listed
+  servers with their state, players now and last check), then « Connections per day, by entry mode »: stacked bars
+  for the modes picked in the filter bar, with the same count over the period before as a dashed line, point for
+  point. `/admin/visits` now returns `prevM`, the per-mode counts of the window just before (days, or hours over
+  24 h; robots included when shown); the stacked chart helper takes `opt.prevBy`. `scripts/test-stats-world.mjs`.
 - **Admin Statistics: World first, sections in the menu, one filter bar** (`web.119`) — the Statistics group of the
   side menu lists its pages, World first, then Summary (the former Overview tab), Audience, Activity, Visitors, Music,
   Ace's Help and Data; the tab row inside the panel is gone, and each page has its address (`#traffic/world`…).

@@ -209,6 +209,25 @@
   .chip:hover{background:var(--hover)}
   .chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--cream);font-weight:600}
   @media(max-width:600px){ .sblbl{flex-basis:100%} .sbsp{display:none} }
+  /* World: Internet and LAN cards. */
+  .wcard{border-top:3px solid var(--mc)}
+  .wopen{margin-left:auto}
+  .wkpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:2px 0 12px}
+  .wkpis>div{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .wkpis span{font-size:.72rem;color:var(--muted)}
+  .wkpis b{font-size:1.45rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--cream);line-height:1.2}
+  .wkpis i{font-style:normal;font-size:.74rem;color:var(--muted)}
+  .wkpis .up{color:var(--ok-text)} .wkpis .dn{color:var(--err-text)}
+  .wcard h3{font-size:.8rem;font-weight:600;color:var(--muted);margin:4px 0 6px}
+  .wfoot{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:8px;font-size:.78rem;color:var(--muted)}
+  .wfoot b{color:var(--cream);font-weight:600}
+  .wlan{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;gap:0 14px;align-items:center;font-size:.84rem}
+  .wlan>span{padding:7px 0;border-top:1px solid var(--line);min-width:0;white-space:nowrap}
+  .wlan>span.wh{border-top:0;font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;padding-top:0}
+  .wlan .wn{display:flex;align-items:center;gap:6px;overflow:hidden;text-overflow:ellipsis;color:var(--cream)}
+  .wlan .wr{text-align:right;font-variant-numeric:tabular-nums}
+  .wlan .on{color:var(--ok-text)} .wlan .off{color:var(--err-text)} .wlan .hid{color:var(--muted)}
+  @media(max-width:600px){ .wkpis{grid-template-columns:repeat(2,minmax(0,1fr))} .wlan{grid-template-columns:minmax(0,1fr) auto auto} .wlan .wl{display:none} }
   /* Local time along the map. */
   .geohours{position:relative;height:34px;margin:0 0 4px;border-bottom:1px solid var(--line)}
   .geohours .gh{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;line-height:1.15;white-space:nowrap}
@@ -874,6 +893,21 @@
         <div id="geoMap" class="geomap"><div class="empty">Loading…</div></div>
         <div id="geoLegend" class="geolegend"></div>
         <div id="geoDetail" class="geodet" aria-live="polite"></div>
+      </div>
+      <div class="cardrow">
+        <div class="card wcard" style="--mc:var(--m-net)">
+          <div class="boardhead"><h2>Internet · pokerth.net</h2><span id="wInetNote" class="headnote"></span></div>
+          <div id="wInet"><div class="empty">Loading…</div></div>
+        </div>
+        <div class="card wcard" style="--mc:var(--m-lan)">
+          <div class="boardhead"><h2>LAN servers</h2><span id="wLanNote" class="headnote"></span><button type="button" class="use wopen" data-open="landir">LAN directory</button></div>
+          <div id="wLan"><div class="empty">Loading…</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="boardhead"><h2>Connections per day, by entry mode</h2><span id="wConnNote" class="headnote"></span></div>
+        <p class="muted xpl">Sessions that opened a game, in the entry modes picked at the top of the page, one bar a <span class="perU">day</span> (the last one in progress). The dashed line is the same count over the <span class="perN">last 14 days</span> just before, point for point. Hide a mode from the legend to read the others on their own scale.</p>
+        <div id="wConn"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
         <h2>Countries</h2>
@@ -3115,6 +3149,7 @@
   function _paintPeriod(){
     var sel=$('trafPeriod'); if(sel) sel.value=String(_trafPeriod);
     document.querySelectorAll('.perN').forEach(function(el){ el.textContent=_perLabel(_trafPeriod); });
+    document.querySelectorAll('.perU').forEach(function(el){ el.textContent=_perU().one; });
   }
   function _envFmt(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
   // Palette lisible sur les deux thèmes admin; la dernière teinte sert au
@@ -3487,7 +3522,7 @@
                    + '<div class="chartgd"></div><div class="chartro"></div>';
       return;
     }
-    host.innerHTML=(st.kind==='stack'?_stackChart(st.labels,vis,st.H):_lineChart(st.labels,vis,st.H))
+    host.innerHTML=(st.kind==='stack'?_stackChart(st.labels,vis,st.H,st.opt):_lineChart(st.labels,vis,st.H))
                  + _chartLegend(st)
                  + '<div class="chartgd"></div><div class="chartro"></div>';
   }
@@ -3548,12 +3583,15 @@
   // Barres empilees : une colonne par jour, une couche par serie, la premiere
   // serie en bas. A faible volume, une pile se lit la ou sept courbes se
   // superposent au zero ; le total du jour est ecrit au sommet.
-  function _stackChart(labels,series,H){
+  // opt.prevBy = { seriesKey: [values] }: the same series over the window
+  // before, drawn as one dashed line summing the series on show.
+  function _stackChart(labels,series,H,opt){
     var n=labels.length; if(!n||!series.length) return '';
-    H=H||170;
+    H=H||170; opt=opt||{};
     var W=700,padL=32,padR=10,padT=16,padB=20;
     var tot=labels.map(function(_,i){ var t=0; series.forEach(function(s){ t+=s.vals[i]||0; }); return t; });
-    var max=1; tot.forEach(function(t){ if(t>max) max=t; });
+    var prev=opt.prevBy ? labels.map(function(_,i){ var t=0; series.forEach(function(s){ var pv=opt.prevBy[s.k]; t+=(pv&&pv[i])||0; }); return t; }) : null;
+    var max=1; tot.forEach(function(t){ if(t>max) max=t; }); if(prev) prev.forEach(function(t){ if(t>max) max=t; });
     max=_lineNiceMax(max);
     var iw=W-padL-padR, ih=H-padT-padB, slot=iw/n, bw=Math.max(3,slot*0.62);
     function Y(v){ return padT+(1-(v||0)/max)*ih; }
@@ -3572,14 +3610,15 @@
         g+='<rect x="'+(CX(i)-bw/2).toFixed(1)+'" y="'+y1.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+Math.max(0.5,h).toFixed(1)+'" style="fill:'+s.c+'"/>';
         acc+=v;
       });
-      if(tot[i] && n<=20) g+='<text x="'+CX(i).toFixed(1)+'" y="'+(Y(tot[i])-4).toFixed(1)+'" text-anchor="middle" style="fill:var(--text);font-size:8.5px;font-variant-numeric:tabular-nums">'+tot[i]+'</text>';
+      if(tot[i] && n<=20 && !prev) g+='<text x="'+CX(i).toFixed(1)+'" y="'+(Y(tot[i])-4).toFixed(1)+'" text-anchor="middle" style="fill:var(--text);font-size:8.5px;font-variant-numeric:tabular-nums">'+tot[i]+'</text>';
     });
     var step=Math.max(1,Math.ceil(n/7));
     for(var i2=0;i2<n;i2++){
       if(i2%step!==0&&i2!==n-1) continue;
       g+='<text x="'+CX(i2).toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle" style="fill:var(--text);font-size:9px">'+_annEsc(labels[i2])+'</text>';
     }
-    return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="stacked daily bars">'+g+'</svg>';
+    if(prev) g+='<polyline points="'+prev.map(function(v,i){ return CX(i).toFixed(1)+','+Y(v).toFixed(1); }).join(' ')+'" style="fill:none;stroke:var(--cream);stroke-width:1.6;stroke-dasharray:5 5;opacity:.7"/>';
+    return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="stacked daily bars'+(prev?', with the previous period dashed':'')+'">'+g+'</svg>';
   }
   function _lineChart(labels,lines,H){
     var n=labels.length; if(!n) return '';
@@ -4121,7 +4160,7 @@
                + '<span title="Visits whose connection opened \u2014 the /live row of \u201cWhere sessions open\u201d">'+fmt(cn)+' connected'+pc+'</span></b></div>';
         }).join('');
       }
-      _trafLastD=d; _trafModeRows(d);
+      _trafLastD=d; _trafModeRows(d); _worldCards(d);
       // Champ absent = proxy antérieur à la fonctionnalité ; objet vide = rien
       // à compter encore. Voir renderEnv().
       _envKnown=(d.env!==undefined); _envData=_envPick(d.env||{}, d.envPeriod||null); _envTrend=d.langTrend||null; _envPeriod=d.envPeriod||null; _envColorReset(); _envSince=d.envSince||0; _envPings=d.pings||null;
@@ -4186,11 +4225,98 @@
     if(!_trafModeSel.length) _trafModeSel=MODE48.map(function(m){ return m.k; });
     try{ localStorage.setItem('pth_admin_modes',JSON.stringify(_trafModeSel)); }catch(e){}
     _paintModeSel();
-    if(_trafLastD){ _trafModes48(_trafLastD); _trafModeRows(_trafLastD); }
+    if(_trafLastD){ _trafModes48(_trafLastD); _trafModeRows(_trafLastD); _worldConn(_trafLastD); }
     _geoRedraw();
   }
   (function(){ var b=$('trafModeSel'); if(!b) return; _paintModeSel(); b.addEventListener('click',function(e){ var c=e.target.closest&&e.target.closest('[data-mk]'); if(c) _pickMode(c.getAttribute('data-mk')); }); })();
   var _trafLastD=null;
+
+  // ── World page: Internet, LAN, connections per day ──────────────────────
+  function _wFmt(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
+  // Sum of one mode (or of the modes on show) over a list of {m:{}} points.
+  function _wSum(list,keys){ var t=0; (list||[]).forEach(function(x){ var m=(x&&x.m)||x||{}; keys.forEach(function(k){ t+=m[k]||0; }); }); return t; }
+  function _wDelta(cur,prev){
+    if(!prev) return '';
+    var p=Math.round((cur-prev)/prev*100), t=p>=10?'up':(p<=-10?'dn':'');
+    return '<i class="'+t+'">'+(p>0?'▲ +':(p<0?'▼ −':'≈ '))+Math.abs(p)+'% vs before</i>';
+  }
+  function _worldInet(d){
+    var box=$('wInet'), nt=$('wInetNote'); if(!box) return;
+    var p=d.pth, nw=p&&p.now, cur=_wSum(d.series,['pokerthnet']), prv=_wSum(d.prevM,['pokerthnet']);
+    var k3='<div><span>Connections, '+_annEsc(_perLabel(_trafPeriod))+'</span><b>'+_wFmt(cur)+'</b>'+(_wDelta(cur,prv)||'<i>through this client</i>')+'</div>';
+    if(p===undefined || !nw){
+      box.innerHTML='<div class="wkpis"><div><span>Online on the server</span><b>—</b><i>'+(p&&p.on===false?'live figures switched off':'no sample yet')+'</i></div><div><span>On the web client</span><b>—</b><i></i></div>'+k3+'</div>';
+      if(nt) nt.textContent='';
+      return;
+    }
+    if(nt) nt.textContent=(nw.tables||0)+' tables · '+(nw.waiting||0)+' waiting';
+    var h48=p.h48||[], best=null;
+    h48.forEach(function(x){ if(x.n && (!best || x.on>best.on)) best=x; });
+    box.innerHTML='<div class="wkpis">'
+      +'<div><span>Online on the server</span><b>'+_wFmt(nw.online)+'</b><i>'+_wFmt(nw.today||0)+' today</i></div>'
+      +'<div><span>On the web client</span><b>'+_wFmt(nw.wb)+'</b><i>'+_pthPct(nw.wb,nw.online)+' % of online</i></div>'
+      +k3+'</div>'
+      +'<h3>Players online, last 48 h — whole server and web client</h3><div id="wInet48"></div>'
+      +'<div class="wfoot">'+(best?'<span>Busiest hour <b>'+_annEsc(best.t.slice(11))+':00</b> ('+_wFmt(Math.round(best.on))+')</span>':'')
+      +(nw.lv?'<span>/live <b>'+_wFmt(nw.lv)+'</b></span>':'')+'</div>';
+    if(h48.some(function(x){ return x.n; })){
+      _chartMount($('wInet48'),h48.map(function(x){ return x.t.slice(8,10)+'.'+x.t.slice(5,7)+' '+x.t.slice(11)+'h'; }),[
+        {k:'on',n:'Online on the server',c:'var(--muted)',vals:h48.map(function(x){ return x.on; })},
+        {k:'wb',n:'Web client',c:'var(--m-net)',vals:h48.map(function(x){ return x.wb; })}
+      ],110,'line');
+    } else { var b4=$('wInet48'); if(b4) b4.innerHTML='<div class="empty">Nothing sampled over the last 48 h.</div>'; }
+  }
+  var _wLd=null;
+  function _worldLan(d){
+    var box=$('wLan'), nt=$('wLanNote'); if(!box) return;
+    var cur=_wSum(d&&d.series,['lan']), prv=_wSum(d&&d.prevM,['lan']);
+    var ld=_wLd, E=(ld&&ld.ok&&ld.entries)||[];
+    var on=E.filter(function(e){ return e.status&&e.status.online; }), now=0;
+    on.forEach(function(e){ now+=(e.status.players||0); });
+    if(nt) nt.textContent=ld&&ld.ok ? (E.length+' listed · '+on.length+' online') : '';
+    var h='<div class="wkpis"><div><span>Online now</span><b>'+(ld&&ld.ok?_wFmt(now):'—')+'</b><i>players on listed servers</i></div>'
+      +'<div><span>Servers up</span><b>'+(ld&&ld.ok?on.length+' / '+E.length:'—')+'</b><i>checked by the proxy</i></div>'
+      +'<div><span>Connections, '+_annEsc(_perLabel(_trafPeriod))+'</span><b>'+_wFmt(cur)+'</b>'+(_wDelta(cur,prv)||'<i>through this client</i>')+'</div></div>';
+    if(!ld){ box.innerHTML=h+'<div class="empty">Loading…</div>'; return; }
+    if(!ld.ok){ box.innerHTML=h+'<div class="empty err">Could not read the LAN directory.</div>'; return; }
+    if(!E.length){ box.innerHTML=h+'<div class="empty">No LAN server is listed yet.</div>'; return; }
+    var rows=E.slice().sort(function(a,b){
+      var ao=a.status&&a.status.online?1:0, bo=b.status&&b.status.online?1:0;
+      return (bo-ao) || (((b.status&&b.status.players)||0)-((a.status&&a.status.players)||0)) || String(a.name).localeCompare(String(b.name));
+    });
+    var shown=rows.slice(0,8);
+    h+='<div class="wlan"><span class="wh">Server</span><span class="wh">Status</span><span class="wh wr">Now</span><span class="wh wr wl">Last seen</span>';
+    shown.forEach(function(e){
+      var st=e.status||{}, known=typeof st.online==='boolean';
+      var cls=e.visible===false||e.autoHidden||!known?'hid':(st.online?'on':'off');
+      var lab=e.visible===false?'hidden':(e.autoHidden?'auto-hidden':(!known?'not checked yet':(st.online?'online':'offline')));
+      h+='<span class="wn">'+(e.country?_geoFlag(String(e.country).toUpperCase()):'')+_annEsc(e.name||e.host)+'</span>'
+        +'<span class="'+cls+'">● '+lab+'</span>'
+        +'<span class="wr">'+(st.online&&typeof st.players==='number'?_wFmt(st.players):'—')+'</span>'
+        +'<span class="wr wl">'+(e.lastSeen?_annEsc(_wAgo(Date.now()-e.lastSeen)):'—')+'</span>';
+    });
+    h+='</div>'+(rows.length>8?'<p class="muted note">and '+(rows.length-8)+' more in the LAN directory</p>':'');
+    box.innerHTML=h;
+  }
+  function _wAgo(ms){ var m=Math.round(ms/60000); if(m<2) return 'now'; if(m<60) return m+' min ago'; var hh=Math.round(m/60); if(hh<48) return hh+' h ago'; return Math.round(hh/24)+' days ago'; }
+  function _worldConn(d){
+    var box=$('wConn'), nt=$('wConnNote'); if(!box||!d) return;
+    var s=d.series||[], pm=d.prevM||[], on=_modesOn();
+    if(!s.length){ box.innerHTML='<div class="empty">No figures yet.</div>'; if(nt) nt.textContent=''; return; }
+    var keys=on.map(function(m){ return m.k; }), cur=_wSum(s,keys), prv=_wSum(pm,keys);
+    if(!cur && !prv){ box.innerHTML='<div class="empty">No connection counted over this period yet'+(s.some(function(x){ return x.m; })?'':' — per-day counts by mode start with 2.1.10-web.118')+'.</div>'; if(nt) nt.textContent=''; return; }
+    var prevBy={}; on.forEach(function(m){ prevBy[m.k]=s.map(function(_,i){ var x=pm[i]; return (x&&x[m.k])||0; }); });
+    _chartMount(box,s.map(_sLab),on.map(function(m){ return {k:m.k,n:m.n,c:m.c,vals:s.map(function(x){ return (x.m&&x.m[m.k])||0; })}; }),190,'stack',{prevBy:prevBy});
+    if(nt) nt.textContent=_wFmt(cur)+' connections'+(prv?(' · '+_wFmt(prv)+' before ('+(cur>=prv?'+':'−')+Math.abs(Math.round((cur-prv)/prv*100))+'%)'):'')+' · dashed: the period before';
+  }
+  function _worldCards(d){
+    _worldInet(d); _worldConn(d); _worldLan(d);
+    api('/admin/lan-directory').then(function(r){ return r.json(); }).then(function(ld){ _wLd=ld; _worldLan(_trafLastD); }).catch(function(){ _wLd={ok:false}; _worldLan(_trafLastD); });
+  }
+  (function(){
+    var p=$('panel-traffic'); if(!p) return;
+    p.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-open]'); if(b && window.PthAdmin) window.PthAdmin.open(b.getAttribute('data-open')); });
+  })();
   function _trafModeRows(d){
     var md=$('trafModes'); if(!md) return;
     var fmt=function(n){ try{return Number(n||0).toLocaleString();}catch(e){return String(n||0);} };

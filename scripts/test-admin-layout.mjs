@@ -424,7 +424,8 @@ for (const id of ['trafModeSel', 'trafPeriod', 'trafRange', 'trafBots', 'trafXpl
 ok(traf.indexOf('id="trafModeSel"') < traf.indexOf('<div class="tsub"'), 'above every section');
 ok(!/<h2>Coming back<\/h2>/.test(traf) && !/<h3>Recent activity/.test(traf) && !/<h3>Ace’s Help/.test(traf),
   'and no card repeats the name of its own first section');
-ok(!/class="cardrow"/.test(traf), 'and no paired row survives inside it');
+ok((traf.match(/class="cardrow"/g) || []).length === 1 && /<div class="cardrow">\s*<div class="card wcard" style="--mc:var\(--m-net\)">/.test(traf),
+  'one paired row only: Internet and LAN side by side on the World page');
 ok(/\.tsec\{margin-top:20px;padding-top:16px;border-top:1px solid var\(--line\)\}/.test(admin),
   'a section is separated by a rule and some air, not by another frame');
 ok(/\.card>h2\+\.tsec\{border-top:0/.test(admin),
@@ -501,7 +502,20 @@ ok(/if \(!b \|\| !b\.h\) return null;/.test(proxy), 'yesterday without hour buck
 ok(/var MUS_TOP=10, MUS_STACK=5;/.test(admin), 'ten titles ranked, five stacked');
 ok(/box\.innerHTML=_musRank\(keys,total\)\+_musContext\(keys,total\)\+_musChart\(keys\);/.test(admin),
   'ranking, then context, then the chart');
-ok(/function _stackChart\(labels,series,H\)/.test(admin), 'a stacked bar helper exists');
+ok(/function _stackChart\(labels,series,H,opt\)/.test(admin), 'a stacked bar helper exists');
+ok(/_stackChart\(st\.labels,vis,st\.H,st\.opt\)/.test(admin), 'it gets the chart options, the previous period among them');
+ok(/var prev=opt\.prevBy \? labels\.map/.test(body(admin, '_stackChart')) && /stroke-dasharray:5 5/.test(body(admin, '_stackChart')),
+  'the period before is a dashed line summing the series on show');
+ok(/tot\.forEach\(function\(t\)\{ if\(t>max\) max=t; \}\); if\(prev\) prev\.forEach/.test(body(admin, '_stackChart')), 'and the scale makes room for it');
+// World page cards (web.120).
+for (const id of ['wInet', 'wInetNote', 'wLan', 'wLanNote', 'wConn', 'wConnNote']) ok(traf.includes('id="' + id + '"'), id + ' has its place on the World page');
+ok(traf.indexOf('id="wInet"') > traf.indexOf('id="geoMap"') && traf.indexOf('id="wConn"') < traf.indexOf('<h2>Countries</h2>'), 'under the map, above the countries');
+ok(/function _worldCards\(d\)/.test(admin) && /_trafLastD=d; _trafModeRows\(d\); _worldCards\(d\);/.test(admin), 'filled with each read of the figures');
+ok(/_worldConn\(_trafLastD\); \}/.test(body(admin, '_pickMode')), 'connections per day follow the entry modes');
+ok(/var keys=on\.map\(function\(m\)\{ return m\.k; \}\)/.test(body(admin, '_worldConn')), 'counting the modes on show only');
+ok(/_wSum\(d\.series,\['pokerthnet'\]\)/.test(body(admin, '_worldInet')) && /_wSum\(d&&d\.series,\['lan'\]\)/.test(body(admin, '_worldLan')), 'each card counts its own mode');
+ok(/api\('\/admin\/lan-directory'\)/.test(body(admin, '_worldCards')), 'the LAN card reads the directory');
+ok(/\.perU/.test(body(admin, '_paintPeriod')), 'the unit follows the period (day, or hour over 24 h)');
 ok(/_chartMount\(\$\('musDayChart'\),_musLabs,_musLines,160,'stack'\)/.test(admin),
   'the music history is stacked bars, not lines');
 ok(/return s\.filter\(function\(x\)\{ return \(x\.date\|\|''\)>=_musSinceKey; \}\);/.test(admin), 'days before counting began are dropped from the window');

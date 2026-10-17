@@ -8824,6 +8824,16 @@ function visitsSummaryRead(periodDays, h24) {
     const b = visitDay(k);
     series.push({ date: k, v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined, m: (b && b.m) ? b.m : undefined });
   }
+  // Connections by entry mode over the window just before, point for point:
+  // the dashed reference of "Connections per day" on the admin World page.
+  const prevM = [];
+  if (h24) _hourInstants(24, 24).reverse().forEach(function (d) { const b = visitHour(d); prevM.push((b && b.m) || {}); });
+  else for (let i = 2 * P - 1; i >= P; i--) {
+    const d = new Date(now);
+    d.setDate(now.getDate() - i);
+    const b = visitDay(visitDayKey(d));
+    prevM.push((b && b.m) || {});
+  }
   const L = h24 ? visitList(true, 24) : null;
   return {
     ok: true,
@@ -8854,6 +8864,7 @@ function visitsSummaryRead(periodDays, h24) {
     musicSinceKey: visitsStore.musicSince ? visitDayKey(new Date(visitsStore.musicSince)) : '',
     allTime: { v: visitsStore.totalV || 0, u: visitsStore.totalU || 0, nw: visitsStore.totalU || 0, rt: visitsStore.totalRet || 0, lv: visitsStore.totalLV || 0, lu: visitsStore.totalLU || 0, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0, live: am.live || 0 }; })() },
     series: series,
+    prevM: prevM,
     hours48: visitHourSeries(48),
     hourProfile: h24 ? visitHourProfile24() : visitHourProfile(P),
     hourSince: visitsStore.hourSince || 0,
