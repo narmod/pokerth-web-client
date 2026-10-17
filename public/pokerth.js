@@ -12235,7 +12235,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.123'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.124'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
@@ -12297,6 +12297,10 @@ window.BUILD_VERSION='2.1.10-web.123'; try{ var b=document.getElementById('cf-bu
 // pour que l'admin puisse mettre ces visites de cote (proxy.js visitIsBot).
 window._pthAutomated = function () {
   try { return navigator.webdriver === true; } catch (e) { return false; }
+};
+// Opened from the installed app (home screen / desktop PWA) rather than a tab.
+window._pthIsApp = function () {
+  try { return !!(window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true; } catch (e) { return false; }
 };
 window._pthTimeZone = function () {
   try { var z = Intl.DateTimeFormat().resolvedOptions().timeZone; return (typeof z === 'string' && z.length <= 64) ? z : ''; }
@@ -12394,6 +12398,7 @@ window._pthTimeZone = function () {
       try { vid = localStorage.getItem('pth_vid') || ''; } catch (e) {}
       var cm = { mode: mode, vid: vid };
       if (srv) cm.srv = srv;
+      if (window._pthIsApp && window._pthIsApp()) cm.pwa = true;
       try { var tz = window._pthTimeZone(); if (tz) cm.tz = tz; } catch (e) {}
       try { if (window._pthAutomated()) cm.wd = true; } catch (e) {}
       var body = JSON.stringify(cm);
@@ -12416,6 +12421,8 @@ window._pthTimeZone = function () {
       var vid = '';
       try { vid = localStorage.getItem('pth_vid') || ''; } catch (e) {}
       var lg = { login: kind, vid: vid };
+      try { var tz = window._pthTimeZone(); if (tz) lg.tz = tz; } catch (e) {}
+      if (window._pthIsApp && window._pthIsApp()) lg.pwa = true;
       try { if (window._pthAutomated()) lg.wd = true; } catch (e) {}
       var body = JSON.stringify(lg);
       if (navigator.sendBeacon) navigator.sendBeacon('/__visit', new Blob([body], { type: 'application/json' }));

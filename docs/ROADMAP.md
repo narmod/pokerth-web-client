@@ -268,12 +268,13 @@ use too. Items are grouped by status rather than fixed phases.
 ## 🔨 Now (in progress)
 
 - **Admin page redesign** — audit done (30 fixes, `web.109`–`web.116`); side-menu shell with light and dark
-  themes, phone drawer, section addresses and an installable admin app (`web.117`), Overview page (`web.118`),
-  Statistics v2 step 1: World first with layers and the local-time band, one filter bar with entry modes
-  (`web.119`), Internet and LAN cards and connections per day against the previous period (`web.120`), a custom date range (`web.121`), connections live by country (`web.122`), connections per LAN
-  server and guests / accounts (`web.123`).
-  Next: each remaining section moved to the new layout, and stored
-  cross-filters.
+  themes, phone drawer, section addresses and an installable admin app (`web.117`); Overview page (`web.118`);
+  Statistics v2: World first with layers and the local-time band, one filter bar with entry modes (`web.119`),
+  Internet and LAN cards and connections per day against the previous period (`web.120`), a custom date range
+  (`web.121`), connections live by country (`web.122`), connections per LAN server and guests / accounts
+  (`web.123`), cross-tabulated session counts recorded (`web.124`). Next: the read route and the « Narrow to »
+  row (country, device, installed app, new / known, account, LAN server); then each remaining section moved to
+  the new layout.
 
 - **Official QML client fidelity** — ongoing pixel-and-behaviour alignment of the in-game
   screen with the official QML client (action bar, mobile layouts, seat geometry).

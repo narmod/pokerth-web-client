@@ -8173,6 +8173,33 @@ const LANG_STATS = require('./server/lang-stats.js');
 const REF_STATS = require('./server/ref-stats.js');
 // Country of a visit, from the browser time zone (admin Traffic › World).
 const GEO_STATS = require('./server/geo-stats.js');
+// Cross-tabulated session counts (admin Statistics « Narrow to »), cf.
+// server/cube-stats.js. One key per session start or login, all its
+// dimensions at once; counts only.
+const CUBE_STATS = require('./server/cube-stats.js');
+function recordFact(type, o, d, req, bot) {
+  try {
+    const T = visitTarget(bot);
+    const os = _uaPick(UA_OS, String((req && req.headers && req.headers['user-agent']) || ''));
+    o.cc = (d && typeof d.tz === 'string') ? GEO_STATS.countryOfTz(d.tz) : GEO_STATS.UNKNOWN;
+    o.dev = (os === 'iPhone' || os === 'iPad' || os === 'Android') ? 'm' : 'd';
+    o.app = (d && d.pwa === true) ? 'p' : '-';
+    // New or known device: read from the first-seen day the visit counter
+    // already keeps (allU); nothing new is stored. '-' when never counted.
+    o.new = '-';
+    if (d && d.vid) {
+      const h = crypto.createHash('sha256').update(String(d.vid)).digest('hex').slice(0, 16);
+      const f = (T.all.allU || {})[h];
+      if (f !== undefined) o.new = (f === visitDayIndex()) ? 'n' : 'r';
+    }
+    const key = CUBE_STATS.factKey(type, o);
+    if (!key) return;
+    CUBE_STATS.add(T.day, key);
+    CUBE_STATS.add(T.cell, key);
+    if (!visitsStore.cubeSince) visitsStore.cubeSince = Date.now();
+    saveVisitsSoon();
+  } catch (e) {}
+}
 // Carte du monde. Le ping /__visit porte le fuseau du navigateur (tz) ;
 // GEO_STATS le ramene a un code pays (ZZ = inconnu) et l'on ne garde que des
 // totaux par pays : `geo` dans le seau du jour (meme retention que le reste),
@@ -13677,10 +13704,11 @@ const httpServer = http.createServer((req, res) => {
         if (d && d.mode) {
           _pingStats.nMode++; recordModeConnect(d.mode, _bot);
           if (d.mode === 'lan' && typeof d.srv === 'string') recordLanServer(d.srv, _bot);
+          recordFact('c', { mode: d.mode, lan: d.mode === 'lan' ? lanServerKey(d.srv) : '-' }, d, req, _bot);
           if (typeof d.tz === 'string' && VISIT_MODES.indexOf(d.mode) >= 0) recordGeo(d.tz, null, d.mode, _bot);
         }
         else if (d && d.live === true) { _pingStats.nLive++; recordLiveVisit(d.vid, _bot); }
-        else if (d && (d.login === 'guest' || d.login === 'auth')) { _pingStats.nLogin = (_pingStats.nLogin || 0) + 1; recordLogin(d.login, _bot); }
+        else if (d && (d.login === 'guest' || d.login === 'auth')) { _pingStats.nLogin = (_pingStats.nLogin || 0) + 1; recordLogin(d.login, _bot); recordFact('l', { acc: d.login }, d, req, _bot); }
         else {
           _pingStats.n++;
           if (_bot) _pingStats.nBot = (_pingStats.nBot || 0) + 1;

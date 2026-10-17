@@ -91,7 +91,8 @@ const p = visitHourProfile(30);
 const expected = 4 + (now.getHours() + 1) / 24;
 ok(Math.abs(p.days - Math.round(expected * 100) / 100) < 0.02,
   'four whole days plus the elapsed fraction of today, not five');
-ok(p.days < 5, 'so a half-finished day never drags the average down');
+// From 23:00 the day in progress counts as 24/24: five whole days is then right.
+ok(p.days < 5 || now.getHours() === 23, 'so a half-finished day never drags the average down');
 ok(p.v.length === 24 && p.nw.length === 24, 'the profile has one slot per hour');
 ok(p.v[19] > p.v[5], 'the evening carries more traffic than the small hours');
 const V = p.v.reduce((a, b) => a + b, 0), N = p.nw.reduce((a, b) => a + b, 0);

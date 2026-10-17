@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Statistics: cross-tabulated session counts, step 1 — recording** (`web.124`) — `server/cube-stats.js`: each
+  session start (mode ping) and each login adds 1 to ONE key holding all its dimensions — `c|mode|country|device|app|
+  new|lan server` and `l|account|country|device|app|new` — in `fx` of the day bucket and of the hour cell (robots in
+  their mirror). Closed value sets only (no free text, no separator can be smuggled in), at most 2,000 keys a bucket,
+  overflow under `*`, reported apart. Country from the time zone, device from the User-Agent, new / known from the
+  first-seen day the visit counter already keeps — no identifier, address or time zone stored. The client adds
+  `pwa` (installed app) to the mode and login pings, and the time zone to the login ping (`window._pthIsApp`).
+  Nothing is shown yet: the read route and the « Narrow to » row follow. Design note:
+  `claude/CONCEPTION_CUBE_STATS.md` (project docs). `scripts/test-stats-cube.mjs`.
 - **Admin Statistics: connections per LAN server, guests and accounts** (`web.123`) — the LAN mode ping now carries
   the server (`srv`, host:port; counted once per server and browser session) and the proxy files it under its LAN
   directory entry, or « other » (local server, typed address, unlisted), never keeping the address (`ls` per day
