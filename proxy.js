@@ -14117,7 +14117,7 @@ function _sessionsSnapshot() {
       nick: S.chatNick || '', auth: !!S.isAuthLogin, live: !!S.live,
       mode: (S.ws && S.ws._bcMode) || S.bcMode || '',
       host: S.host, port: S.port, tls: !!S.useTls,
-      ver: S.ver || '', ua: S.ua || '', ip: _maskIp(S.ip),
+      ver: S.ver || '', ua: S.ua || '', ip: _maskIp(S.ip), cc: S.cc || '',
       startedAt: S.startedAt || now,
       upstream: !!S.connected,
       attached: !!(S.ws && S.ws.readyState === 1),
@@ -14129,7 +14129,7 @@ function _sessionsSnapshot() {
   try {
     wss.clients.forEach(function (c) {
       if (!c._notify) return;
-      notify.push({ id: c._nid, mode: c._bcMode || '', live: !!c._live, ver: c._ver || '',
+      notify.push({ id: c._nid, mode: c._bcMode || '', live: !!c._live, ver: c._ver || '', cc: c._cc || '',
                     ua: c._ua || '', ip: _maskIp(c._ip), startedAt: c._startedAt || now,
                     attached: c.readyState === 1 });
     });
@@ -14319,6 +14319,7 @@ function _attachWs(S, ws) {
   if (ws._ip) S.ip = ws._ip;
   if (ws._ua) S.ua = ws._ua;
   if (ws._ver) S.ver = ws._ver;
+  if (ws._cc) S.cc = ws._cc;
   S.live = !!ws._live;
   // Relay scope = the upstream this socket is bridged to. Reactions/avatars
   // only fan out to peers sharing the same host:port.
@@ -14461,6 +14462,10 @@ wss.on('connection', (ws, req) => {
   // client web annoncée par &v=, User-Agent et IP du navigateur. Aucune n'est
   // utilisée pour une décision — ni filtrage, ni routage.
   ws._ver = String(params.get('v') || '').slice(0, 24);
+  // &tz= : the browser time zone, kept only as a country code for the admin's
+  // « Live now » map (GEO_STATS, the table the visit counter uses). Held with
+  // the connection, gone with it; '' for a client that does not send it.
+  ws._cc = params.get('tz') ? GEO_STATS.countryOfTz(String(params.get('tz')).slice(0, 64)) : '';
   ws._ua = String((req.headers && req.headers['user-agent']) || '').slice(0, 180);
   ws._ip = clientIp(req);
   ws._port = (req.socket && req.socket.remotePort) || 0;
@@ -14569,7 +14574,7 @@ wss.on('connection', (ws, req) => {
   const S = { sid, host, port, useTls, sock: null, ws: null, connected: false,
               rxBuf: Buffer.alloc(0), n: 0, buf: [], bufBytes: 0, grace: null,
               id: ++_sessSeq, startedAt: Date.now(), bIn: 0, bOut: 0,
-              ip: ws._ip, ipPort: ws._port || 0, ua: ws._ua, ver: ws._ver, bcMode: modeParam || '' };
+              ip: ws._ip, ipPort: ws._port || 0, ua: ws._ua, ver: ws._ver, cc: ws._cc || '', bcMode: modeParam || '' };
   _liveSessions.add(S);
   if (sid) _sessions.set(sid, S);
   _attachWs(S, ws);

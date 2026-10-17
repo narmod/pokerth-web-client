@@ -106,12 +106,17 @@ try {
 const js = fs.readFileSync(path.join(root, 'public/pokerth.js'), 'utf8');
 ok(/window\._pthTimeZone = function/.test(js) && /resolvedOptions\(\)\.timeZone/.test(js), 'client reads the browser time zone');
 ok(/msg\.tz = tz/.test(js) && /cm\.tz = tz/.test(js), 'tz sent with the visit ping and the mode ping');
+ok((js.match(/'&tz=' \+ encodeURIComponent\(z\)/g) || []).length === 2, 'and with the game connection and the notice channel (Live now map)');
+const px = fs.readFileSync(path.join(root, 'proxy.js'), 'utf8');
+ok(/ws\._cc = params\.get\('tz'\) \? GEO_STATS\.countryOfTz\(String\(params\.get\('tz'\)\)\.slice\(0, 64\)\) : '';/.test(px), 'the proxy keeps only the country of a connection');
+ok(/if \(ws\._cc\) S\.cc = ws\._cc;/.test(px) && /cc: S\.cc \|\| ''/.test(px) && /cc: c\._cc \|\| ''/.test(px), 'and hands it to the admin with each bridge and notice channel');
 const admin = fs.readFileSync(path.join(root, 'public/admin.html'), 'utf8');
 ok(/<button[^>]*data-ts="world"[^>]*>World</.test(admin) && /class="tsub" data-ts="world"/.test(admin) && /TRAF_SUBS=\[[^\]]*'world'/.test(admin), 'admin: Traffic › World section and its button');
 ok(/loadGeo\(\);[\s\S]{0,400}?api\('\/admin\/visits/.test(admin), 'admin: the World section follows the common period (loaded with the Traffic tab)');
 ok(/\/admin\/geo\?/.test(admin) && /hours=24/.test(admin) && /vendor\/world-110m\.json/.test(admin), 'admin: reads /admin/geo (days and 24 h) and the map asset');
 const priv = fs.readFileSync(path.join(root, 'public/privacy.html'), 'utf8');
 ok(/time zone/i.test(priv), 'privacy page mentions the time zone');
+ok(/held as a country code for as long as the connection lasts, and never stored/.test(priv), 'and says what happens to it on a connection');
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);

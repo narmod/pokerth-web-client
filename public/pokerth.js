@@ -4909,7 +4909,10 @@ const App = (() => {
     // &v= : version du client annoncée au proxy, purement descriptive (tableau
     // de bord admin → qui tourne encore sur une version périmée). Jamais lue
     // pour prendre une décision côté serveur.
-    const u = baseUrl + (baseUrl.indexOf('?') >= 0 ? '&' : '?') + 'notify=1&mode=' + (mode === 'offline' ? 'offline' : 'pthnet') + (window.LIVE_MODE ? '&live=1' : '') + (window.BUILD_VERSION ? '&v=' + encodeURIComponent(window.BUILD_VERSION) : '');
+    const u = baseUrl + (baseUrl.indexOf('?') >= 0 ? '&' : '?') + 'notify=1&mode=' + (mode === 'offline' ? 'offline' : 'pthnet') + (window.LIVE_MODE ? '&live=1' : '') + (window.BUILD_VERSION ? '&v=' + encodeURIComponent(window.BUILD_VERSION) : '')
+      // &tz= : the browser time zone, read by the proxy as a country code for the
+      // admin's « Live now » map; kept with the connection only, never stored.
+      + (function(){ try { var z = window._pthTimeZone && window._pthTimeZone(); return z ? '&tz=' + encodeURIComponent(z) : ''; } catch (e) { return ''; } })();
     if (S._notifyWS && S._notifyUrl === u) return; // déjà ouvert sur la bonne URL
     _closeNotifyWS();
     S._notifyUrl = u;
@@ -6498,7 +6501,7 @@ const App = (() => {
       var _bcMode = (function () { var m = _cntMode(); return m === 'pokerthnet' ? 'pthnet' : m; })();
       const finalUrl = window.directWS
         ? 'wss://www.pokerth.net:443/pthlive'
-        : effProxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + tlsParam + '&sid=' + encodeURIComponent(_getSessionId()) + '&mode=' + _bcMode + (window.LIVE_MODE ? '&live=1' : '') + (window.BUILD_VERSION ? '&v=' + encodeURIComponent(window.BUILD_VERSION) : '');
+        : effProxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + tlsParam + '&sid=' + encodeURIComponent(_getSessionId()) + '&mode=' + _bcMode + (window.LIVE_MODE ? '&live=1' : '') + (window.BUILD_VERSION ? '&v=' + encodeURIComponent(window.BUILD_VERSION) : '') + (function(){ try { var z = window._pthTimeZone && window._pthTimeZone(); return z ? '&tz=' + encodeURIComponent(z) : ''; } catch (e) { return ''; } })();
 
       setStatus(window.directWS ? t('connDirect') : t('connProxy'));
 
@@ -12232,7 +12235,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.121'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.122'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

@@ -117,6 +117,11 @@ export function fmtUptime(s) {
   const d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60);
   return (d ? d + 'd ' : '') + (h ? h + 'h ' : '') + m + 'm';
 }
+// The country of a connection (from its browser time zone), as a small flag.
+export function flag(cc) {
+  if (!/^[A-Z]{2}$/.test(cc || '') || cc === 'ZZ') return '';
+  return '<img class="ovflag" alt="" src="/flags/' + cc.toLowerCase() + '.svg" title="' + cc + '" onerror="this.remove()">';
+}
 export function dur(ms) {
   const s = Math.max(0, Math.floor(ms / 1000));
   if (s < 60) return s + ' s';
@@ -204,13 +209,13 @@ function healthHtml(s) {
 function nowListHtml(d) {
   if (!d || !d.ok) return '<div class="empty err">Could not load the connections.</div>';
   const all = [];
-  (d.bridges || []).forEach((b) => all.push({ mode: b.live ? 'live' : b.mode === 'lan' ? 'lan' : 'net', who: b.live ? 'spectator' : (b.nick || (b.auth ? 'account' : 'guest')), at: b.startedAt, where: b.live ? '/live' : (b.mode === 'lan' ? b.host : 'pokerth.net') }));
-  (d.notify || []).forEach((c) => all.push({ mode: c.live ? 'live' : c.mode === 'offline' ? 'off' : 'net', who: c.live ? 'spectator' : c.mode === 'offline' ? 'training' : 'direct client', at: c.startedAt, where: c.live ? '/live' : c.mode === 'offline' ? 'offline' : 'pokerth.net, direct' }));
+  (d.bridges || []).forEach((b) => all.push({ mode: b.live ? 'live' : b.mode === 'lan' ? 'lan' : 'net', who: b.live ? 'spectator' : (b.nick || (b.auth ? 'account' : 'guest')), at: b.startedAt, cc: b.cc, where: b.live ? '/live' : (b.mode === 'lan' ? b.host : 'pokerth.net') }));
+  (d.notify || []).forEach((c) => all.push({ mode: c.live ? 'live' : c.mode === 'offline' ? 'off' : 'net', who: c.live ? 'spectator' : c.mode === 'offline' ? 'training' : 'direct client', at: c.startedAt, cc: c.cc, where: c.live ? '/live' : c.mode === 'offline' ? 'offline' : 'pokerth.net, direct' }));
   if (!all.length) return '<div class="empty">Nobody connected right now.</div>';
   all.sort((a, b) => b.at - a.at);
   const M = Object.fromEntries(MODES.map((x) => [x.id, x]));
   const rows = all.slice(0, 6).map((r) => '<div class="ovrow"><span class="ovri" style="color:' + M[r.mode].color + '" title="' + M[r.mode].label + '">' + icon(M[r.mode].glyph, 'ovmi') + '</span>' +
-    '<span class="ovrn">' + esc(r.who) + '</span><span class="ovrm">' + esc(r.where) + '</span><span class="ovrt">' + esc(dur(d.now - r.at)) + '</span></div>').join('');
+    '<span class="ovrn">' + flag(r.cc) + esc(r.who) + '</span><span class="ovrm">' + esc(r.where) + '</span><span class="ovrt">' + esc(dur(d.now - r.at)) + '</span></div>').join('');
   return rows + (all.length > 6 ? '<p class="muted note">and ' + (all.length - 6) + ' more</p>' : '');
 }
 

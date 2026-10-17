@@ -458,13 +458,19 @@ ok(/var _trafModeSel=MODE48\.map/.test(admin) && /localStorage\.setItem\('pth_ad
 ok(/if\(!_trafModeSel\.length\) _trafModeSel=MODE48\.map/.test(admin), 'switching the last one off brings every mode back, never none');
 ok(/var lines=_modesOn\(\)\.map/.test(admin), 'the 48 h chart by mode follows them');
 ok(/\.filter\(function\(rw\)\{ return _modeOn\(rw\[1\]\); \}\)/.test(admin), 'and Where sessions open');
-ok(/if\(_geoLayer==='conn'\)\{ var m=c\.m\|\|\{\}, t=0; _modesOn\(\)\.forEach/.test(admin), 'and the Connections layer of the map');
+ok(/if\(_geoLayer==='conn'\|\|_geoLayer==='now'\)\{ var m=c\.m\|\|\{\}, t=0; _modesOn\(\)\.forEach/.test(admin), 'and the Connections and Live now layers of the map');
 ok(/c:'var\(--m-net\)'/.test(admin) && /c:'var\(--m-lan\)'/.test(admin) && /c:'var\(--m-off\)'/.test(admin) && /c:'var\(--m-live\)'/.test(admin),
   'one set of mode colours for the whole admin, themed');
 ok(/A visit is counted before any mode is chosen/.test(admin), 'the bar says what the modes cannot narrow');
 
 // -- World ------------------------------------------------------------------
-ok(/var GEO_LAYERS=\[\['v','Visits'\],\['nw','New devices'\],\['conn','Connections'\],\['pwa','Installed app'\],\['mob','Phones'\]\];/.test(admin), 'five layers on the map');
+ok(/var GEO_LAYERS=\[\['v','Visits'\],\['nw','New devices'\],\['conn','Connections'\],\['now','Live now'\],\['pwa','Installed app'\],\['mob','Phones'\]\];/.test(admin), 'six layers on the map');
+// Live now (web.122): the open connections by country, from /admin/sessions.
+ok(/function _geoC\(\)\{ return _geoLayer==='now' \? \(\(_geoLive&&_geoLive\.countries\)\|\|\{\}\) : \(\(_geoData&&_geoData\.countries\)\|\|\{\}\); \}/.test(admin), 'Live now draws from the open connections, every other layer from the period');
+ok(/var C=_geoC\(\), ccs=Object\.keys\(C\)/.test(admin) && /var C=_geoC\(\), c=C\[_geoSel\];/.test(admin), 'the map, the list and the country card all read the same source');
+ok(/var cc=\/\^\[A-Z\]\{2\}\$\/\.test\(x\.cc\|\|''\)\?x\.cc:'ZZ'/.test(admin), 'a connection without a country counts as Unknown, not dropped');
+ok(/return x\.live\?'live':\(notify\?\(x\.mode==='offline'\?'offline':'pokerthnet'\):\(x\.mode==='lan'\?'lan':'pokerthnet'\)\);/.test(admin), 'each connection is put in its entry mode, /live apart');
+ok(/if\(_geoLayer==='now' && m && m\.offsetParent && !document\.hidden\) _geoLiveLoad\(\); \},15000\)/.test(admin), 'read again every 15 s, only while on screen');
 ok(/id="geoLayers" role="group" aria-label="What the map shows"/.test(admin), 'picked above it');
 ok(/box\.innerHTML=_geoHours\(M,vb\)\+'<svg/.test(admin), 'the local-time band sits above the map');
 const hrs = body(admin, '_geoHours');

@@ -627,6 +627,7 @@
   #ovAudit .ovrow{grid-template-columns:52px minmax(0,1fr) auto}
   .ovri{display:inline-flex}
   .ovrn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--cream)}
+  .ovflag{width:17px;height:12px;border-radius:2px;object-fit:cover;vertical-align:-1px;margin-right:7px}
   .ovrm{color:var(--muted);font-size:.78rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
   .ovrt{color:var(--muted);font-size:.78rem;font-variant-numeric:tabular-nums;white-space:nowrap}
   @media(max-width:1199px){ .ovgrid{grid-template-columns:minmax(0,1fr)} }
@@ -5792,7 +5793,7 @@
           var badge=b.auth?' <span class="muted">(account)</span>':'';
           var state=!b.upstream?'connecting' : b.grace?'reconnect grace' : !b.attached?'detached' : 'live';
           var l1='<b>'+who+badge+' \u2014 '+_annEsc(_seMode(b.mode))+(b.live?' \u00b7 /live':'')+'</b>';
-          var l2=[_annEsc(b.host+':'+b.port+(b.tls?' TLS':'')),
+          var l2=[(b.cc&&b.cc!=='ZZ'?_annEsc(_geoName(b.cc)):''),_annEsc(b.host+':'+b.port+(b.tls?' TLS':'')),
                   b.ver?('v'+_annEsc(b.ver)):'v?',
                   _annEsc(_seDev(b.ua)),
                   _annEsc(b.ip),
@@ -5806,7 +5807,7 @@
         if(!nN){ nb.innerHTML='<div class="empty">No notice channel open.</div>'; }
         (d.notify||[]).forEach(function(c){
           var l1='<b>'+_annEsc(_seMode(c.mode))+(c.live?' \u00b7 /live':'')+'</b>';
-          var l2=[c.ver?('v'+_annEsc(c.ver)):'v?', _annEsc(_seDev(c.ua)), _annEsc(c.ip), _seDur(d.now-c.startedAt)].filter(Boolean).join(' \u00b7 ');
+          var l2=[(c.cc&&c.cc!=='ZZ'?_annEsc(_geoName(c.cc)):''), c.ver?('v'+_annEsc(c.ver)):'v?', _annEsc(_seDev(c.ua)), _annEsc(c.ip), _seDur(d.now-c.startedAt)].filter(Boolean).join(' \u00b7 ');
           _seRow(nb, l1+'<span>'+l2+'</span>', _seKickBtn(c.id,'this notice channel'));
         });
       }
@@ -6126,15 +6127,36 @@
   // n'ecrasent pas tous les autres dans la meme teinte.
   var _geoMap=null, _geoData=null, _geoLayer='v', _geoSel='', _geoView='world', _geoAll=false, _geoSeq=0;
   var GEO_VIEWS=[['world','World'],['europe','Europe'],['americas','Americas'],['asia','Asia'],['africa','Africa']];
-  var GEO_LAYERS=[['v','Visits'],['nw','New devices'],['conn','Connections'],['pwa','Installed app'],['mob','Phones']];
+  var GEO_LAYERS=[['v','Visits'],['nw','New devices'],['conn','Connections'],['now','Live now'],['pwa','Installed app'],['mob','Phones']];
+  // « Live now »: the connections open at this moment, by country, from
+  // /admin/sessions (each carries the country of its browser time zone; ZZ
+  // when the client is too old to send it). Read every 15 s while on screen.
+  var _geoLive=null, _geoLiveBusy=false;
+  function _geoLiveKey(x,notify){ return x.live?'live':(notify?(x.mode==='offline'?'offline':'pokerthnet'):(x.mode==='lan'?'lan':'pokerthnet')); }
+  function _geoLiveFold(d){
+    var C={}, n=0;
+    function add(x,notify){ var cc=/^[A-Z]{2}$/.test(x.cc||'')?x.cc:'ZZ', k=_geoLiveKey(x,notify), c=C[cc]||(C[cc]={m:{}}); c.m[k]=(c.m[k]||0)+1; n++; }
+    ((d&&d.bridges)||[]).forEach(function(b){ add(b,false); });
+    ((d&&d.notify)||[]).forEach(function(c){ add(c,true); });
+    return {countries:C, n:n, at:Date.now()};
+  }
+  function _geoLiveLoad(){
+    if(_geoLiveBusy) return; _geoLiveBusy=true;
+    api('/admin/sessions').then(function(r){ return r.json(); }).then(function(d){ _geoLive=(d&&d.ok)?_geoLiveFold(d):{countries:{},n:0,at:Date.now(),err:true}; })
+      .catch(function(){ _geoLive={countries:{},n:0,at:Date.now(),err:true}; })
+      .then(function(){ _geoLiveBusy=false; if(_geoLayer==='now') _geoRedraw(); });
+  }
+  setInterval(function(){ var m=$('geoMap'); if(_geoLayer==='now' && m && m.offsetParent && !document.hidden) _geoLiveLoad(); },15000);
+  // The countries the map is drawn from: the period's, or the live connections'.
+  function _geoC(){ return _geoLayer==='now' ? ((_geoLive&&_geoLive.countries)||{}) : ((_geoData&&_geoData.countries)||{}); }
   try{ var _gl=localStorage.getItem('pth_admin_geo_layer'); if(GEO_LAYERS.some(function(x){ return x[0]===_gl; })) _geoLayer=_gl; var _gv=localStorage.getItem('pth_admin_geo_view'); if(_gv) _geoView=_gv; }catch(e){}
   var _geoNames=null; try{ _geoNames=new Intl.DisplayNames(['en'],{type:'region'}); }catch(e){}
   function _geoName(cc){ if(cc==='ZZ') return 'Unknown'; try{ return (_geoNames&&_geoNames.of(cc))||cc; }catch(e){ return cc; } }
   function _geoFlag(cc){ return cc==='ZZ' ? '<span class="ckf" aria-hidden="true"></span>' : '<img class="ckf" alt="" src="/flags/'+cc.toLowerCase()+'.svg" onerror="this.style.visibility=\'hidden\'">'; }
-  function _geoVal(c){ if(!c) return 0; if(_geoLayer==='conn'){ var m=c.m||{}, t=0; _modesOn().forEach(function(x){ t+=m[x.k]||0; }); return t; } return c[_geoLayer]||0; }
-  function _geoCol(){ if(_geoLayer==='conn'){ var on=_modesOn(); return on.length===1?on[0].c:'var(--accent)'; } return 'var(--accent)'; }
+  function _geoVal(c){ if(!c) return 0; if(_geoLayer==='conn'||_geoLayer==='now'){ var m=c.m||{}, t=0; _modesOn().forEach(function(x){ t+=m[x.k]||0; }); return t; } return c[_geoLayer]||0; }
+  function _geoCol(){ if(_geoLayer==='conn'||_geoLayer==='now'){ var on=_modesOn(); return on.length===1?on[0].c:'var(--accent)'; } return 'var(--accent)'; }
   // What the map counts, in words: the title of a country, the card, the svg label.
-  function _geoWhat(){ if(_geoLayer==='conn') return (_modesAll()?'':_modesOn().map(function(m){ return m.s; }).join(' + ')+' ')+'connections'; var l=GEO_LAYERS.filter(function(x){ return x[0]===_geoLayer; })[0]; return l[0]==='v'?'visits':(l[0]==='nw'?'new devices':(l[0]==='pwa'?'visits from the installed app':'visits from a phone or tablet')); }
+  function _geoWhat(){ if(_geoLayer==='now') return (_modesAll()?'':_modesOn().map(function(m){ return m.s; }).join(' + ')+' ')+'connections open right now'; if(_geoLayer==='conn') return (_modesAll()?'':_modesOn().map(function(m){ return m.s; }).join(' + ')+' ')+'connections'; var l=GEO_LAYERS.filter(function(x){ return x[0]===_geoLayer; })[0]; return l[0]==='v'?'visits':(l[0]==='nw'?'new devices':(l[0]==='pwa'?'visits from the installed app':'visits from a phone or tablet')); }
   function _geoFmt(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
   function _geoPct(a,b){ return b?Math.round(100*a/b):0; }
   // Sessions ouvertes (tous modes) d'un pays.
@@ -6153,6 +6175,7 @@
     Promise.all([mp, api('/admin/geo?'+q).then(function(r){ return r.json(); })]).then(function(a){
       if(seq!==_geoSeq) return;
       _geoData=a[1]; renderGeo();
+      if(_geoLayer==='now') _geoLiveLoad();
     }).catch(function(){
       if(seq!==_geoSeq) return;
       var b=$('geoMap'); if(b) b.innerHTML='<div class="empty err">Could not load the map data.</div>';
@@ -6176,12 +6199,13 @@
     if(!box) return;
     _geoSegs();
     if(!d || !d.ok){ box.innerHTML='<div class="empty err">'+_annEsc((d&&d.error)||'error')+'</div>'; return; }
-    var C=d.countries||{}, ccs=Object.keys(C), tot=0, max=0;
+    var C=_geoC(), ccs=Object.keys(C), tot=0, max=0;
     ccs.forEach(function(cc){ var v=_geoVal(C[cc]); tot+=v; if(cc!=='ZZ' && v>max) max=v; });
     var ranked=ccs.filter(function(cc){ return _geoVal(C[cc])>0; }).sort(function(a,b){ return _geoVal(C[b])-_geoVal(C[a]) || (a<b?-1:1); });
     if(!_geoSel || !C[_geoSel] || !_geoVal(C[_geoSel])) _geoSel=ranked.filter(function(cc){ return cc!=='ZZ'; })[0]||ranked[0]||'';
     var per=d.h24?'last 24 hours':_perLabel(d.periodDays||_trafPeriod);
-    if(nt) nt.textContent=per+' · '+(ranked.filter(function(cc){ return cc!=='ZZ'; }).length)+' countries'+(d.since?(' · since '+new Date(d.since).toLocaleDateString()):'');
+    if(_geoLayer==='now') per='right now'+(_geoLive?(' · '+_geoLive.n+' connection'+(_geoLive.n===1?'':'s')+' · read '+new Date(_geoLive.at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})):' · reading…');
+    if(nt) nt.textContent=per+' · '+(ranked.filter(function(cc){ return cc!=='ZZ'; }).length)+' countries'+(_geoLayer!=='now'&&d.since?(' · since '+new Date(d.since).toLocaleDateString()):'');
     var col=_geoCol(), lmax=Math.log(1+max)||1, vb=(M.views&&M.views[_geoView])||[0,0,M.w,M.h];
     var paths=Object.keys(M.c).map(function(cc){
       var v=_geoVal(C[cc]), t=v?Math.log(1+v)/lmax:0;
@@ -6356,7 +6380,7 @@
   })();
   function _geoDetail(){
     var el=$('geoDetail'), d=_geoData; if(!el) return;
-    var C=(d&&d.countries)||{}, c=C[_geoSel];
+    var C=_geoC(), c=C[_geoSel];
     if(!c){ el.innerHTML=''; return; }
     var tot=0; Object.keys(C).forEach(function(cc){ tot+=_geoVal(C[cc]); });
     var m=c.m||{}, mt=0; MODE48.forEach(function(x){ mt+=m[x.k]||0; });
@@ -6366,9 +6390,10 @@
       return '<div class="geobar" style="opacity:'+(_modeOn(x.k)?1:.45)+'"><span class="gl">'+_annEsc(x.s)+'</span><span class="tr"><i style="width:'+(mt?(100*n/mt).toFixed(1):0)+'%;background:'+x.c+'"></i></span><span class="gn">'+_geoFmt(n)+(mt?' · '+_geoPct(n,mt)+' %':'')+'</span></div>';
     }).join('');
     var v=c.v||0;
-    h+='<p class="muted note">'+(v?('Visits '+_geoFmt(v)+' · sessions per 100 visits '+Math.round(100*mt/v)+' · new devices '+_geoPct(c.nw||0,v)+' % · installed app '+_geoPct(c.pwa||0,v)+' % · phone or tablet '+_geoPct(c.mob||0,v)+' %'):'No visit ping with a time zone from this country in the period; the bars count sessions only.')+'</p>';
+    if(_geoLayer==='now') h+='<p class="muted note">Connections open at this moment, by the country of their browser time zone. Pick another layer for the figures of the period.</p>';
+    else h+='<p class="muted note">'+(v?('Visits '+_geoFmt(v)+' · sessions per 100 visits '+Math.round(100*mt/v)+' · new devices '+_geoPct(c.nw||0,v)+' % · installed app '+_geoPct(c.pwa||0,v)+' % · phone or tablet '+_geoPct(c.mob||0,v)+' %'):'No visit ping with a time zone from this country in the period; the bars count sessions only.')+'</p>';
     var bc=(d.botCountries||{})[_geoSel], bv=bc?(bc.v||0):0;
-    if(!d.bots && bv) h+='<p class="muted note">'+_geoFmt(bv)+' bot visit'+(bv>1?'s':'')+' from this country hidden by “Bots hidden”.</p>';
+    if(_geoLayer!=='now' && !d.bots && bv) h+='<p class="muted note">'+_geoFmt(bv)+' bot visit'+(bv>1?'s':'')+' from this country hidden by “Bots hidden”.</p>';
     if(_geoLooksBot(c)) h+='<div class="geowarn" role="note">Looks automated: all '+_geoFmt(v)+' visits come from new devices and none opened a game. “Bots hidden” keeps them: it only takes out what announces itself as a robot.</div>';
     else if(v && !mt) h+='<p class="muted note">No game opened from these visits: people (or programs) who looked at the page and left.</p>';
     h+=_geoNightCard(_geoSel);
@@ -6381,7 +6406,7 @@
   }
   (function(){
     var ms=$('geoLayers'), vs=$('geoViews'), mp=$('geoMap'), ls=$('geoList');
-    if(ms) ms.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-k]'); if(!b) return; _geoLayer=b.dataset.k; try{ localStorage.setItem('pth_admin_geo_layer',_geoLayer); }catch(x){} renderGeo(); });
+    if(ms) ms.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-k]'); if(!b) return; _geoLayer=b.dataset.k; try{ localStorage.setItem('pth_admin_geo_layer',_geoLayer); }catch(x){} if(_geoLayer==='now') _geoLiveLoad(); _geoRedraw(); });
     if(vs) vs.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-k]'); if(!b) return; _geoView=b.dataset.k; try{ localStorage.setItem('pth_admin_geo_view',_geoView); }catch(x){} renderGeo(); });
     if(mp) mp.addEventListener('click',function(e){ var p=e.target.closest&&e.target.closest('path[data-cc]'); if(p && !p.classList.contains('nd')) _geoPick(p.getAttribute('data-cc'), false); });
     if(ls){

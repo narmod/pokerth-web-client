@@ -87,6 +87,19 @@ try {
   const h = await get('/admin/visits?hours=24&from=' + back(10) + '&to=' + back(4));
   ok(!h.range && h.series.length === 24, '24 hours ignores a range');
 
+  // ── Live now: a country per open connection (web.122) ──
+  const { default: WS } = await import(path.join(root, 'node_modules', 'ws', 'index.js'));
+  const open = (q) => new Promise((res, rej) => { const w = new WS('ws://127.0.0.1:' + PORT + '/?notify=1' + q); w.on('open', () => res(w)); w.on('error', rej); });
+  const w1 = await open('&mode=offline&tz=' + encodeURIComponent('Europe/Berlin'));
+  const w2 = await open('&mode=pthnet&live=1&tz=' + encodeURIComponent('Not/AZone'));
+  const w3 = await open('&mode=pthnet');
+  await new Promise((r) => setTimeout(r, 200));
+  const se = await get('/admin/sessions');
+  const ccs = (se.notify || []).map((c) => c.mode + ':' + (c.live ? 'live:' : '') + c.cc).sort().join();
+  ok(ccs === 'offline:DE,pthnet:,pthnet:live:ZZ', 'each open connection carries the country of its time zone (' + ccs + ')');
+  ok(!JSON.stringify(se).includes('Europe/Berlin'), 'the time zone itself is never handed out, only the country');
+  [w1, w2, w3].forEach((w) => w.close());
+
   const empty = await get('/admin/visits?days=90');
   ok(empty.prevM.length === 90 && empty.prevM.slice(0, 60).every((x) => !Object.keys(x).length), 'days with nothing recorded are empty, not missing');
 } finally {

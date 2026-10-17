@@ -1,3 +1,6 @@
+2026-10-17 version 2.1.10-web.122:
+- improvement: your browser's time zone is now also sent when you connect, so the server operator can see how many players are online in each country right now; it is kept as a country only, for as long as you are connected, and never stored (see the privacy page)
+
 2026-10-17 version 2.1.10-web.112:
 - bugfix: the guest, account and LAN notices stay in your language after the server operator edits the text of another language; Latin-American Spanish gets the Spanish text instead of a machine translation
 

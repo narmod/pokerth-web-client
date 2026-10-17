@@ -16,6 +16,13 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin Statistics › World: « Live now »** (`web.122`) — a sixth map layer: the connections open at this moment,
+  by country, in the entry modes picked in the filter bar, read from `/admin/sessions` every 15 s while on screen
+  (country card, list and legend included; a client too old to say counts as Unknown). The web client now adds
+  `&tz=` (browser time zone) to the game connection and to the notice channel; the proxy keeps only the country
+  (`GEO_STATS.countryOfTz`) on the socket and the session, hands it out as `cc` with each bridge and notice channel,
+  and never stores it. The Sessions page names the country of each connection; the Overview shows its flag. The
+  privacy page says so.
 - **Admin Statistics: a custom date range** (`web.121`) — the period list ends with « Custom range… »: two dates
   (server days, both included) and Apply; remembered per browser, put away by picking a preset. `/admin/visits` and
   `/admin/geo` read `?from=YYYY-MM-DD&to=YYYY-MM-DD` (`visitRange`: dates put in order, the end stopped at today, the
