@@ -29,9 +29,10 @@ function body(src, name) {
 // -- Proxy: two full windows, ending yesterday ------------------------------
 const lt = body(proxy, 'visitLangTrend');
 ok(!!lt, 'proxy exposes visitLangTrend');
-ok(/sumWin\(1\)/.test(lt) && /sumWin\(1 \+ win\)/.test(lt), 'current window ends yesterday (today is partial), previous window sits right before it');
+ok(/const first = \(!h24 && offset\) \? 0 : 1;/.test(lt) && /sumWin\(first\)/.test(lt) && /sumWin\(first \+ win\)/.test(lt),
+  'current window ends yesterday (today is partial) — or on the last day of a past custom range — and the previous window sits right before it');
 ok(/curDays/.test(lt) && /prevDays/.test(lt), 'it reports how many days of each window actually carry a language series');
-ok(/langTrend: visitLangTrend\(P, h24\)/.test(proxy), 'and the traffic payload carries it as langTrend over the dashboard period (or the last 24 hours)');
+ok(/langTrend: visitLangTrend\(P, h24, E\)/.test(proxy), 'and the traffic payload carries it as langTrend over the dashboard period (or the last 24 hours)');
 
 // -- Admin: the statistic itself -------------------------------------------
 const statSrc = body(admin, '_langTrendStat');

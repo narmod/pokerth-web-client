@@ -37,9 +37,9 @@ ok(f(undefined) === 14 && f('abc') === 14 && f('') === 14, 'no or unusable ?days
 ok(f('7') === 7 && f('90') === 90, 'the ends of the range pass through');
 ok(f('3') === 14, 'below the minimum falls back to the default rather than a 3-day "trend"');
 ok(f('500') === 90, 'above the maximum is clamped, so the previous trend window still fits the 400-day retention');
-ok(/visitsSummary\(query\.days, String\(query\.hours \|\| ''\) === '24', String\(query\.bots \|\| ''\) === '1'\)/.test(proxy), 'GET /admin/visits reads ?days= (and ?hours=24, ?bots=1)');
-ok(/for \(let i = P - 1; i >= 0; i--\)/.test(body(proxy, 'visitsSummaryRead')), 'the daily series is P days long');
-ok(/period: h24 \? visitWindowList\(L\) : visitWindow\(P\)/.test(proxy) && /period: h24 \? visitWindowList\(visitList\(true, 24, 24\)\) : visitWindow\(P, P\)/.test(proxy), 'the period tile has a previous-period reference');
+ok(/visitsSummary\(query\.days, _h24, String\(query\.bots \|\| ''\) === '1', _h24 \? null : visitRange\(query\.from, query\.to\)\)/.test(proxy), 'GET /admin/visits reads ?days= (and ?hours=24, ?bots=1, ?from=&to=)');
+ok(/for \(let i = E \+ P - 1; i >= E; i--\)/.test(body(proxy, 'visitsSummaryRead')), 'the daily series is P days long, ending E days back (0 without a custom range)');
+ok(/period: h24 \? visitWindowList\(L\) : visitWindow\(P, E\)/.test(proxy) && /period: h24 \? visitWindowList\(visitList\(true, 24, 24\)\) : visitWindow\(P, E \+ P\)/.test(proxy), 'the period tile has a previous-period reference');
 ok(/envPeriod: visitEnvPeriod\(P, L\)/.test(proxy) && /musicPeriod: visitMusicPeriod\(P, L\)/.test(proxy), 'environment and music are sliced by the same period');
 
 const rec = body(proxy, 'recordVisitEnv');
@@ -54,7 +54,7 @@ ok(/<select id="trafPeriod"/.test(admin), 'the tab has a period selector');
 ok(/<option value="14" selected>/.test(admin), 'defaulting to 14 days');
 ok(/api\('\/admin\/visits\?'\+_perQuery\(\)\)/.test(admin) && /'days='\+_trafPeriod/.test(admin), 'which is sent with every load');
 ok(/localStorage\.setItem\('pth_admin_period'/.test(admin), 'and remembered like the theme');
-ok(/if\(P===7\|\|!per\)\{ P=30; per=d\.month; perPrev=pv\.month; perCmp=fu\.month; \}/.test(admin), 'at 7 days the third tile shows 30 days instead of repeating "Last 7 days"');
+ok(/if\(\(P===7&&!d\.range\)\|\|!per\)\{ P=30; per=d\.month; perPrev=pv\.month; perCmp=fu\.month; \}/.test(admin), 'at 7 days the third tile shows 30 days instead of repeating "Last 7 days" (a custom range of 7 days stays itself)');
 const pick = body(admin, '_envPick');
 ok(!!pick, 'admin has _envPick');
 ok(/per\.days>0/.test(pick) && /per\.lgDays>0/.test(pick), 'a view uses the period only where its own per-day history exists — the running totals otherwise');

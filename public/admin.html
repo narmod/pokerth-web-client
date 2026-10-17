@@ -201,6 +201,14 @@
   .sblbl{flex:0 0 92px;font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
   .sbhint{flex:1 1 260px;font-size:.76rem;color:var(--muted)}
   .sbsp{flex:1 1 auto}
+  /* The note under the period (dates read, zone of the days, robots hidden) takes its own line. */
+  .statbar #trafRange{order:9;flex:1 1 100%;padding-left:102px;margin-left:0;text-align:left}
+  @media(max-width:600px){ .statbar #trafRange{padding-left:0} }
+  .rangebox{display:inline-flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+  .rangebox[hidden]{display:none}
+  .rgl{display:inline-flex;align-items:center;gap:6px;margin:0;font-size:.78rem;color:var(--muted)}
+  .rgl input{min-height:34px;padding:0 8px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--cream);font:inherit;font-size:.84rem;color-scheme:dark}
+  :root[data-admin-theme="light"] .rgl input{color-scheme:light}
   .statbar select{flex:0 0 auto}
   .statbar .headnote{font-size:.78rem}
   .chips{display:inline-flex;flex-wrap:wrap;gap:6px}
@@ -769,7 +777,7 @@
     <div id="panel-traffic" style="display:none">
       <section class="card trafhead statbar" aria-label="Filters for every page of Statistics">
         <div class="sbrow"><span class="sblbl">Entry mode</span><div class="chips" id="trafModeSel" role="group" aria-label="Entry modes"></div><span class="sbhint">Applies to connections: the map’s Connections layer, the countries and every chart split by entry mode. A visit is counted before any mode is chosen.</span></div>
-        <div class="sbrow"><span class="sblbl">Period</span><select id="trafPeriod" class="use" title="Period applied to every chart and breakdown on this tab (Today, Last 7 days and All time stay as they are)"><option value="1">Last 24 hours</option><option value="7">Last 7 days</option><option value="14" selected>Last 14 days</option><option value="30">Last 30 days</option><option value="60">Last 60 days</option><option value="90">Last 90 days</option></select><span id="trafRange" class="headnote"></span><span class="sbsp"></span><button id="trafBots" class="use" aria-pressed="true" title="Leave out the visits of detected automation (robot user-agents, browsers driven by a program) on every section of this tab. Counted apart, never deleted: switch off to see everything.">Hide bots</button><button id="trafXpl" class="use" aria-pressed="false" title="Show or hide the explanations under each section">Explanations</button><button id="btnTrafRefresh" class="use">Refresh</button></div>
+        <div class="sbrow"><span class="sblbl">Period</span><select id="trafPeriod" class="use" title="Period applied to every chart and breakdown on this tab (Today, Last 7 days and All time stay as they are)"><option value="1">Last 24 hours</option><option value="7">Last 7 days</option><option value="14" selected>Last 14 days</option><option value="30">Last 30 days</option><option value="60">Last 60 days</option><option value="90">Last 90 days</option><option value="r">Custom range…</option></select><span class="rangebox" id="trafRangeBox" hidden><label class="rgl"><span>From</span><input type="date" id="trafFrom"></label><label class="rgl"><span>to</span><input type="date" id="trafTo"></label><button type="button" id="trafRangeGo" class="use">Apply</button></span><span id="trafRange" class="headnote"></span><span class="sbsp"></span><button id="trafBots" class="use" aria-pressed="true" title="Leave out the visits of detected automation (robot user-agents, browsers driven by a program) on every section of this tab. Counted apart, never deleted: switch off to see everything.">Hide bots</button><button id="trafXpl" class="use" aria-pressed="false" title="Show or hide the explanations under each section">Explanations</button><button id="btnTrafRefresh" class="use">Refresh</button></div>
         <p class="muted xpl">Anonymous footfall — no IP is ever stored. “Visits” counts browser sessions; “Unique” counts distinct devices; “New” counts devices seen for the first time. Green or red marks a move of 10&nbsp;% or more against the previous period (today is compared with yesterday up to the same hour); gold means flat or nothing to compare. Everything on this tab reads the same anonymous ping; nothing here identifies a person.</p>
       </section>
       <div class="tsub" data-ts="overview" role="tabpanel" aria-label="Overview">
@@ -3127,16 +3135,23 @@
   // fenetre que les graphes ont toujours eue.
   var TRAF_PERIODS=[1,7,14,30,60,90], _trafPeriod=14;
   try{ var _pp=parseInt(localStorage.getItem('pth_admin_period')||'',10); if(TRAF_PERIODS.indexOf(_pp)>=0) _trafPeriod=_pp; }catch(e){}
-  function _perLabel(n){ return n===1 ? 'last 24 hours' : 'last '+n+' days'; }
+  // A custom range: two server day keys, both included (null = a preset).
+  // Its length as the server read it (clamped) comes back with the figures.
+  var _trafRange=null, _trafRangeDays=0;
+  try{ var _rg=JSON.parse(localStorage.getItem('pth_admin_range')||'null'); if(_rg && /^\d{4}-\d{2}-\d{2}$/.test(_rg.from) && /^\d{4}-\d{2}-\d{2}$/.test(_rg.to)) _trafRange={from:_rg.from,to:_rg.to}; }catch(e){}
+  function _isH24(){ return !_trafRange && _trafPeriod===1; }
+  function _dayLab(k,yr){ var d=new Date(k+'T12:00:00'); if(isNaN(d)) return k; try{ return d.toLocaleDateString('en-GB',yr?{day:'numeric',month:'short',year:'numeric'}:{day:'numeric',month:'short'}); }catch(e){ return k; } }
+  function _rangeLabel(){ if(!_trafRange) return ''; var y=_trafRange.from.slice(0,4)!==_trafRange.to.slice(0,4) || _trafRange.to.slice(0,4)!==String(new Date().getFullYear()); return _trafRange.from===_trafRange.to ? _dayLab(_trafRange.from,y) : _dayLab(_trafRange.from,y)+' \u2013 '+_dayLab(_trafRange.to,y); }
+  function _perLabel(n){ if(_trafRange) return _rangeLabel(); return n===1 ? 'last 24 hours' : 'last '+n+' days'; }
   // « Last 24 hours » (valeur 1) : le proxy rend 24 cases horaires glissantes
   // au lieu de jours (/admin/visits?hours=24) ; l'unite de chaque libelle suit.
-  function _perU(){ return _trafPeriod===1 ? {one:'hour',many:'hours',full:24} : {one:'day',many:'days',full:_trafPeriod}; }
+  function _perU(){ return _isH24() ? {one:'hour',many:'hours',full:24} : {one:'day',many:'days',full:_trafRange?(_trafRangeDays||1):_trafPeriod}; }
   function _perCounted(n){ var u=_perU(); return n<u.full ? (' \u2014 '+n+' '+(n===1?u.one:u.many)+' counted') : ''; }
   // Filtre « Hide bots » (actif par defaut, memorise par navigateur) : sans
   // bots=1, le proxy ne rend que les humains (cf. proxy.js visitIsBot).
   var _trafBots=false, _trafBotInfo=null;
   try{ _trafBots=localStorage.getItem('pth_admin_bots')==='1'; }catch(e){}
-  function _perQuery(){ return (_trafPeriod===1 ? 'hours=24' : 'days='+_trafPeriod)+(_trafBots?'&bots=1':''); }
+  function _perQuery(){ return (_trafRange ? 'from='+_trafRange.from+'&to='+_trafRange.to : (_trafPeriod===1 ? 'hours=24' : 'days='+_trafPeriod))+(_trafBots?'&bots=1':''); }
   function _paintBots(){
     var b=$('trafBots'); if(!b) return;
     b.setAttribute('aria-pressed',_trafBots?'false':'true');
@@ -3147,7 +3162,9 @@
   function _sLab(x){ var t=(x&&x.date)||''; return t.length>10 ? t.slice(11)+'h' : t.slice(5); }
   function _sFull(x){ var t=(x&&x.date)||''; return t.length>10 ? t.slice(0,10)+' '+t.slice(11)+':00' : t; }
   function _paintPeriod(){
-    var sel=$('trafPeriod'); if(sel) sel.value=String(_trafPeriod);
+    var sel=$('trafPeriod'); if(sel) sel.value=_trafRange?'r':String(_trafPeriod);
+    var rb=$('trafRangeBox'); if(rb && !(sel&&sel.value==='r'&&!_trafRange)) rb.hidden=!_trafRange;
+    if(_trafRange){ var f=$('trafFrom'), t=$('trafTo'); if(f&&!f.value) f.value=_trafRange.from; if(t&&!t.value) t.value=_trafRange.to; }
     document.querySelectorAll('.perN').forEach(function(el){ el.textContent=_perLabel(_trafPeriod); });
     document.querySelectorAll('.perU').forEach(function(el){ el.textContent=_perU().one; });
   }
@@ -3719,7 +3736,7 @@
   // moins) ; sous sept jours par moitie, pas de fleche.
   var MUS_TREND_MIN=7, _musTr=null;
   function _musTrendWin(){
-    if(_trafPeriod===1) return {w:0,full:0,ok:false,h24:true};
+    if(_isH24()) return {w:0,full:0,ok:false,h24:true};
     // Day keys come from the server (todayKey, musicSinceKey): worked out in
     // the browser's zone they named the wrong day for an admin abroad.
     var s=_musDays(), today=s.length?s[s.length-1].date:'';
@@ -3827,7 +3844,7 @@
   function renderGuide(){
     var box=$('trafGuide'); if(!box) return;
     var since=$('guideSince');
-    if(since) since.textContent=(_guidePeriodDays||_trafPeriod===1)?(_perLabel(_trafPeriod)+_perCounted(_guidePeriodDays)):(_guideSince?('all time since '+new Date(_guideSince).toLocaleDateString()):'');
+    if(since) since.textContent=(_guidePeriodDays||_isH24())?(_perLabel(_trafPeriod)+_perCounted(_guidePeriodDays)):(_guideSince?('all time since '+new Date(_guideSince).toLocaleDateString()):'');
     var g=_guideData;
     var any=g&&(g.acceptance.offered||g.acceptance.accepted||g.funnel.highlighted||Object.keys(g.contexts||{}).some(function(k){ var c=g.contexts[k]; return c.shown||c.done||c.dismissed||c.banner||c.persist_shown; }));
     if(!any){
@@ -3880,7 +3897,7 @@
   function renderSrc(){
     var box=$('trafSrc'); if(!box) return;
     var since=$('srcSince'), p=_srcData;
-    if(since) since.textContent=(p&&(p.days||_trafPeriod===1))?(_perLabel(_trafPeriod)+_perCounted(p.days)):'';
+    if(since) since.textContent=(p&&(p.days||_isH24()))?(_perLabel(_trafPeriod)+_perCounted(p.days)):'';
     var all=(p&&p.all)||{}, keys=Object.keys(all).sort(function(a,b){ return (all[b]||0)-(all[a]||0); });
     var total=0; keys.forEach(function(k){ total+=all[k]||0; });
     if(!total){
@@ -3904,7 +3921,7 @@
   function renderMusic(){
     var box=$('trafMusic'); if(!box) return;
     var since=$('musSince');
-    if(since) since.textContent=(_musPeriodDays||_trafPeriod===1)?(_perLabel(_trafPeriod)+_perCounted(_musPeriodDays)):(_musSince?('all time since '+new Date(_musSince).toLocaleDateString()):'');
+    if(since) since.textContent=(_musPeriodDays||_isH24())?(_perLabel(_trafPeriod)+_perCounted(_musPeriodDays)):(_musSince?('all time since '+new Date(_musSince).toLocaleDateString()):'');
     var keys=Object.keys(_musData).sort(function(a,b){ return (_musData[b]||0)-(_musData[a]||0); });
     var total=0; keys.forEach(function(k){ total+=_musData[k]||0; });
     if(!total){
@@ -3973,7 +3990,7 @@
     if(!per) return out;
     // « Last 24 hours » : jamais de repli sur le cumul depuis toujours, qui se
     // lirait comme les 24 dernieres heures ; une fenetre vide reste vide.
-    var h=(_trafPeriod===1);
+    var h=(_isH24());
     ['os','br','combo','pwa'].forEach(function(v){ if(per.days>0||h){ out[v]=per[v]||{}; _envSrc[v]='period'; } });
     if(per.lgDays>0||h){ out.lang=per.lang||{}; _envSrc.lang='period'; }
     if(per.lgnDays>0||h){ out.langNew=per.langNew||{}; out.langRet=per.langRet||{}; _envSrc.langNew='period'; }
@@ -4048,6 +4065,32 @@
     }); });
   })();
 
+  // ── Custom range ───────────────────────────────────────────────────────
+  // Days are the server's: today is its todayKey, the earliest day the
+  // retention keeps (400 days). Opening the dates proposes the period on show.
+  function _keyAdd(k,n){ var d=new Date(k+'T12:00:00Z'); d.setUTCDate(d.getUTCDate()+n); return d.toISOString().slice(0,10); }
+  function _todayKey(){ if(_trafTodayKey) return _trafTodayKey; var d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  function _rangeOpen(){
+    var rb=$('trafRangeBox'), f=$('trafFrom'), t=$('trafTo'), tk=_todayKey();
+    if(!rb||!f||!t) return;
+    f.max=t.max=tk; f.min=t.min=_keyAdd(tk,-399);
+    if(!t.value) t.value=_trafRange?_trafRange.to:tk;
+    if(!f.value) f.value=_trafRange?_trafRange.from:_keyAdd(t.value,-((_isH24()?1:_trafPeriod)-1));
+    rb.hidden=false;
+    try{ f.focus(); }catch(e){}
+  }
+  function _rangeSet(r){
+    _trafRange=r; _trafRangeDays=0;
+    try{ if(r) localStorage.setItem('pth_admin_range',JSON.stringify(r)); else localStorage.removeItem('pth_admin_range'); }catch(e){}
+    var rb=$('trafRangeBox'); if(rb && !r) rb.hidden=true;
+  }
+  function _rangeApply(){
+    var f=$('trafFrom'), t=$('trafTo'), a=f&&f.value, b=t&&t.value, re=/^\d{4}-\d{2}-\d{2}$/;
+    if(!re.test(a||'')||!re.test(b||'')) return;
+    if(a>b){ var x=a; a=b; b=x; f.value=a; t.value=b; }
+    _rangeSet({from:a,to:b});
+    loadTraffic();
+  }
   function loadTraffic(){
     if(!_trafWired){
       _trafWired = true;
@@ -4063,10 +4106,14 @@
         _paintBots(); loadTraffic();
       });
       var ps=$('trafPeriod'); if(ps) ps.addEventListener('change', function(){
+        if(ps.value==='r'){ _rangeOpen(); return; }
         var v=parseInt(ps.value,10); if(TRAF_PERIODS.indexOf(v)<0) return;
         _trafPeriod=v; try{ localStorage.setItem('pth_admin_period',String(v)); }catch(e){}
+        _rangeSet(null);
         loadTraffic();
       });
+      var rg=$('trafRangeGo'); if(rg) rg.addEventListener('click', _rangeApply);
+      ['trafFrom','trafTo'].forEach(function(id){ var el=$(id); if(el) el.addEventListener('keydown',function(e){ if(e.key==='Enter') _rangeApply(); }); });
     }
     _paintPeriod();
     _paintBots();
@@ -4082,6 +4129,7 @@
       var g=$('trafCards');
       if(!d || !d.ok){ if(g) g.innerHTML='<div class="empty err">'+((d&&d.error)||'error')+'</div>'; loadFail('panel-traffic',(d&&d.error)||'Could not load.'); return; }
       _trafBotInfo=d.bots||null; _paintBots();
+      if(_trafRange && d.range){ _trafRange={from:d.range.from,to:d.range.to}; _trafRangeDays=d.periodDays||0; var _f=$('trafFrom'), _t=$('trafTo'); if(_f) _f.value=d.range.from; if(_t) _t.value=d.range.to; _paintPeriod(); }
       function fmt(n){ try{return Number(n||0).toLocaleString();}catch(e){return String(n||0);} }
       // Sous 10 % d'ecart on ne colore pas : sur une journee a 50 visites,
       // c'est cinq personnes, pas un mouvement. Reference absente (proxy
@@ -4110,8 +4158,8 @@
       // La troisieme tuile suit le selecteur ; a 7 jours elle ferait doublon
       // avec « Last 7 days », on y met alors les 30 jours d'avant.
       var P=d.periodDays||_trafPeriod, per=d.period, perPrev=pv.period, perCmp=fu.period;
-      if(P===7||!per){ P=30; per=d.month; perPrev=pv.month; perCmp=fu.month; }
-      var pLbl=(d.h24&&P===1)?'Last 24 hours':'Last '+P+' days', pRef=(d.h24&&P===1)?'the 24 hours before (complete hours)':'the '+P+' days before (complete days)';
+      if((P===7&&!d.range)||!per){ P=30; per=d.month; perPrev=pv.month; perCmp=fu.month; }
+      var pLbl=(d.h24&&P===1)?'Last 24 hours':(d.range&&per===d.period?_rangeLabel():'Last '+P+' days'), pRef=(d.h24&&P===1)?'the 24 hours before (complete hours)':'the '+P+' day'+(P>1?'s':'')+' before (complete days)';
       if(g) g.innerHTML = tile('Today',d.today,pv.todayToHour,'yesterday at this hour')
         +tile('Last 7 days',d.week,pv.week,'the 7 days before (complete days)',fu.week)
         +tile(pLbl,per,perPrev,pRef,perCmp)
@@ -4526,7 +4574,7 @@
     var n=s.length;
     var rg=$('trafRange');
     var bp=(d.bots&&d.bots.period)||null, bn=bp?(bp.v||0)+(bp.lv||0):0;
-    if(rg) rg.textContent = n ? (_sFull(s[0])+' \u2192 '+_sFull(s[n-1])+' \u00b7 '+fmt(d.allTime&&d.allTime.v)+' visits all time'
+    if(rg) rg.textContent = n ? (_sFull(s[0])+' \u2192 '+_sFull(s[n-1])+(d.tz?' \u00b7 server days, '+d.tz:'')+' \u00b7 '+fmt(d.allTime&&d.allTime.v)+' visits all time'
       +(d.bots&&!d.bots.shown&&bn?' \u00b7 '+fmt(bn)+' bot visit'+(bn>1?'s':'')+' hidden':'')) : '';
     // Les vues horaires ne dependent pas de la serie quotidienne : elles sont
     // rendues meme si celle-ci est vide, sinon elles resteraient sur « Loading ».

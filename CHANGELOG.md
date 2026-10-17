@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin Statistics: a custom date range** (`web.121`) — the period list ends with « Custom range… »: two dates
+  (server days, both included) and Apply; remembered per browser, put away by picking a preset. `/admin/visits` and
+  `/admin/geo` read `?from=YYYY-MM-DD&to=YYYY-MM-DD` (`visitRange`: dates put in order, the end stopped at today, the
+  start at the retention, a year at most, impossible dates refused) as P days ending E days back; every window
+  that read « the last P days » takes that offset — series, comparison with the range before, complete-day
+  comparison (a past range is complete as it stands), hour profile, cohorts (judged at the range's last day),
+  language trend, environment, music, sources, Ace's Help, pokerth.net share, robots taken out, the map. The answer
+  carries the range as read (`range`, `periodEnd`) and the zone of the server's days (`tz`), shown under the period.
+  The third tile names the range. 24 hours ignores a range.
 - **Admin Statistics › World: Internet, LAN and connections per day** (`web.120`) — under the map, an Internet card
   (players online on the server now and on the web client, from the live samples; connections over the period
   against the period before; players online over 48 h, whole server and web client; busiest hour) and a LAN card

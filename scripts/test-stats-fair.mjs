@@ -62,7 +62,7 @@ for (const f of ['visitList', 'visitBotWindow', 'visitHourSeries', 'visitHourPro
 // ── Complete-day comparisons ──────────────────────────────────────────────
 const sum = fn(proxy, 'visitsSummaryRead');
 ok(/full: \{/.test(sum) && /week: \{ cur: visitWindow\(7, 1\), prev: visitWindow\(7, 8\) \}/.test(sum), 'the summary carries complete-day windows (7 days ending yesterday vs the 7 before)');
-ok(/cur: visitWindow\(P, 1\), prev: visitWindow\(P, P \+ 1\)/.test(sum), 'and the same for the chosen period');
+ok(/cur: visitWindow\(P, E \|\| 1\), prev: visitWindow\(P, \(E \|\| 1\) \+ P\)/.test(sum), 'and the same for the chosen period (a past custom range is complete as it stands)');
 ok(/todayKey: visitDayKey\(now\)/.test(sum) && /musicSinceKey/.test(sum), 'and the server\'s own day keys');
 ok(/tile\('Last 7 days',d\.week,pv\.week,'the 7 days before \(complete days\)',fu\.week\)/.test(admin), 'the 7-day tile compares complete days and says so');
 const ins = fn(admin, '_trafInsights');

@@ -172,6 +172,19 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   ok(window.localStorage.getItem('pth_admin_modes') === '["lan","offline"]', 'a second one adds to it, and the choice is remembered');
   doc.querySelector('#trafModeSel [data-mk="all"]').click();
   ok(window.localStorage.getItem('pth_admin_modes') === '["pokerthnet","lan","offline","live"]', 'All brings every mode back');
+  // Custom range: the select opens two dates; Apply reads the figures for them.
+  const sel = $('trafPeriod');
+  sel.value = 'r'; sel.dispatchEvent(new window.Event('change', { bubbles: true }));
+  ok(!$('trafRangeBox').hidden && /^\d{4}-\d{2}-\d{2}$/.test($('trafFrom').value) && /^\d{4}-\d{2}-\d{2}$/.test($('trafTo').value), 'Custom range opens two dates, filled with the period on show');
+  const g0 = gets.length;
+  $('trafFrom').value = '2026-09-10'; $('trafTo').value = '2026-09-01';
+  $('trafRangeGo').click();
+  const asked = gets.slice(g0).filter((u) => u.startsWith('/admin/visits?'));
+  ok(asked.length === 1 && /from=2026-09-01&to=2026-09-10/.test(asked[0]), 'Apply asks for that range, dates put in order (' + asked.join() + ')');
+  ok(gets.slice(g0).some((u) => /^\/admin\/geo\?from=2026-09-01&to=2026-09-10/.test(u)), 'and the map follows it');
+  ok(window.localStorage.getItem('pth_admin_range') === '{"from":"2026-09-01","to":"2026-09-10"}', 'the range is remembered');
+  sel.value = '30'; sel.dispatchEvent(new window.Event('change', { bubbles: true }));
+  ok($('trafRangeBox').hidden && window.localStorage.getItem('pth_admin_range') === null && /days=30/.test(gets[gets.length - 1] + gets.slice(-3).join()), 'a preset puts the range away');
   ok(errors.length === 0, 'switching threw nothing' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
   const xb = $('trafXpl'), pn = $('panel-traffic');
   ok(xb.getAttribute('aria-pressed') === 'false' && !pn.classList.contains('xpl-on'), 'explanations start folded');
