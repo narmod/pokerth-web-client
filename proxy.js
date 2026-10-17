@@ -8213,6 +8213,7 @@ function visitCubeSummary(query) {
       return { date: keys[i], n: CUBE_STATS.maskN(q.total, fDims), by: by ? CUBE_STATS.mask(q.by, cellDims) : undefined };
     });
     const prevSeries = prev.map(function (b) { return CUBE_STATS.maskN(CUBE_STATS.query([b], type, f, '').total, fDims); });
+    const prevSeriesBy = by ? prev.map(function (b) { return CUBE_STATS.mask(CUBE_STATS.query([b], type, f, by).by, cellDims); }) : undefined;
     const names = {};
     if (type === 'c') { try { LAN_DIR.entries().forEach(function (e) { names[e.id] = e.name || e.host; }); } catch (e) {} }
     return {
@@ -8220,7 +8221,7 @@ function visitCubeSummary(query) {
       periodDays: P, periodEnd: E, range: R ? { from: R.from, to: R.to } : null,
       period: { total: CUBE_STATS.maskN(qc.total, fDims), by: CUBE_STATS.mask(qc.by, cellDims), overflow: qc.overflow },
       prev: { total: CUBE_STATS.maskN(qp.total, fDims), by: CUBE_STATS.mask(qp.by, cellDims), overflow: qp.overflow },
-      series: series, prevSeries: prevSeries,
+      series: series, prevSeries: prevSeries, prevSeriesBy: prevSeriesBy,
       values: CUBE_STATS.values(cur, type), lanNames: names,
       masked: cellDims >= 2, small: CUBE_STATS.SMALL,
       since: visitsStore.cubeSince || 0

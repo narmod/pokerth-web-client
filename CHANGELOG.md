@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin Statistics: « Narrow to »** (`web.126`) — a third row in the filter card: Country, Device, App,
+  New or known, LAN server, Account, each a chip opening the list of values counted over the period (with their
+  counts), kept per browser, Clear lifts them all. While narrowed, the World page reads `/admin/cube`: the map's
+  Connections layer and the countries (`by=cc`, entry modes included), the Internet and LAN cards and connections
+  per day (`by=mode`, with the period before dashed), the LAN servers (`by=lan`), the logins (`type=l`, `by=acc`);
+  account narrows the logins only. Visits and the other pages are not narrowed, and the bar says so, as it says
+  when the period starts before counting did. Masked cells (`"<3"`) are drawn as 1 and written « <3 » / « fewer
+  than 3 ». `/admin/cube` also returns `prevSeriesBy`.
 - **Statistics: cross-tabulated session counts, step 2 — reading** (`web.125`) — `GET /admin/cube` (admin only):
   sessions (`type=c`) or logins (`type=l`) over the same windows as `/admin/visits` (preset, `hours=24`, a custom
   range) and the window before, filtered (`f=mode:lan|pokerthnet,cc:DE`) and broken down by one dimension (`by=`),

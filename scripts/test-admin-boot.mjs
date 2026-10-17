@@ -28,6 +28,9 @@ const CANNED = {
   '/admin/audit': { ok: true, entries: Array.from({ length: 25 }, (_, i) => ({ at: Date.now() - i * 1000, action: 'config', master: true, ip: '203.0.113.7', ok: true })) },
   '/admin/music-list': { ok: true, enabled: true, tracks: [{ id: 't1', title: 'One' }, { id: 'r1', title: 'Radio', stream: true }], plays: { t1: 3 } },
   '/admin/traffic': { ok: true, series: [], env: {}, music: {}, musicTitles: {}, pings: {} },
+  '/admin/cube': { ok: true, type: 'c', filters: {}, by: '', period: { total: 9, by: { DE: 6, FR: '<3' } }, prev: { total: 4, by: {} }, series: [], prevSeries: [],
+    values: { mode: { lan: 5, pokerthnet: 4 }, cc: { DE: 6, FR: 3 }, dev: { m: 4, d: 5 }, app: { '-': 9 }, new: { n: 2, r: 7 }, lan: { lan_aaa: 5, '-': 4 }, acc: { guest: 3 } },
+    lanNames: { lan_aaa: 'Club' }, masked: false, since: 1 },
   '/admin/visits': { ok: true, series: [], env: {}, music: {}, musicTitles: {}, pings: {},
     guide: { acceptance: { offered: 5, accepted: 2, declined: 1, rate: 0.4 }, contexts: { 'lobby-ranking': { shown: 10, done: 2, dismissed: 3 } },
       funnel: { highlighted: 10, joined: 4, started: 2, joinRate: 0.4, startRate: 0.5 }, create: { shown: 1, created: 0 }, guests: { shown: 2, redirect: 1 }, rankedStarts: 3 },
@@ -185,6 +188,25 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   ok(window.localStorage.getItem('pth_admin_range') === '{"from":"2026-09-01","to":"2026-09-10"}', 'the range is remembered');
   sel.value = '30'; sel.dispatchEvent(new window.Event('change', { bubbles: true }));
   ok($('trafRangeBox').hidden && window.localStorage.getItem('pth_admin_range') === null && /days=30/.test(gets[gets.length - 1] + gets.slice(-3).join()), 'a preset puts the range away');
+  // Narrow to: a chip opens its list, ticking a value and Done narrows the page.
+  await new Promise((r) => setTimeout(r, 100));
+  const chip = doc.querySelector('#trafNarrow [data-nd="cc"]');
+  ok(chip && /Country: all/.test(chip.textContent), 'Narrow to offers Country, all at first');
+  chip.click();
+  const pop = $('trafNarrowPop');
+  ok(!pop.hidden && pop.querySelectorAll('input[type=checkbox]').length === 2 && /Germany/.test(pop.textContent), 'its list holds the countries counted over the period');
+  const lanChip = doc.querySelector('#trafNarrow [data-nd="lan"]');
+  const g1 = gets.length;
+  pop.querySelector('input[value="DE"]').checked = true;
+  pop.querySelector('[data-nr="done"]').click();
+  await new Promise((r) => setTimeout(r, 100));
+  ok(window.localStorage.getItem('pth_admin_narrow') === '{"cc":["DE"]}' && /Country: Germany/.test(doc.querySelector('#trafNarrow [data-nd="cc"]').textContent), 'Done keeps the choice and names it');
+  const cubes = gets.slice(g1).filter((u) => u.startsWith('/admin/cube?'));
+  ok(cubes.some((u) => /type=c&f=cc%3ADE&by=mode/.test(u)) && cubes.some((u) => /f=cc%3ADE%2Cmode%3Alan&by=lan/.test(u)) && cubes.some((u) => /type=l&f=cc%3ADE&by=acc/.test(u)) && cubes.some((u) => /by=cc/.test(u)),
+    'and the page reads the cube narrowed (' + cubes.length + ' reads)');
+  ok(/Narrowed:/.test($('trafNarrowNote').textContent), 'the bar says what is narrowed');
+  doc.querySelector('#trafNarrow [data-nd="*"]').click();
+  ok(window.localStorage.getItem('pth_admin_narrow') === '{}' && !doc.querySelector('#trafNarrow [data-nd="*"]'), 'Clear lifts every narrowing');
   ok(errors.length === 0, 'switching threw nothing' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
   const xb = $('trafXpl'), pn = $('panel-traffic');
   ok(xb.getAttribute('aria-pressed') === 'false' && !pn.classList.contains('xpl-on'), 'explanations start folded');

@@ -465,8 +465,21 @@ ok(/A visit is counted before any mode is chosen/.test(admin), 'the bar says wha
 
 // -- World ------------------------------------------------------------------
 ok(/var GEO_LAYERS=\[\['v','Visits'\],\['nw','New devices'\],\['conn','Connections'\],\['now','Live now'\],\['pwa','Installed app'\],\['mob','Phones'\]\];/.test(admin), 'six layers on the map');
+// Narrow to (web.126): the cube read by the World page.
+ok(/<div class="sbrow nrrow"><span class="sblbl">Narrow to<\/span><div class="chips" id="trafNarrow"/.test(admin) && /id="trafNarrowPop" role="dialog"/.test(admin), 'a third row in the filter card: Narrow to, with its list');
+ok(/var NARROW_DIMS=\[\['cc','Country'\],\['dev','Device'\],\['app','App'\],\['new','New or known'\],\['lan','LAN server'\],\['acc','Account'\]\];/.test(admin), 'six dimensions to narrow by');
+ok(/localStorage\.setItem\('pth_admin_narrow'/.test(admin), 'kept per browser');
+const cl = body(admin, '_cubeLoad');
+ok(/_cubeGet\('c',_narrowF\(NARROW_C\),'mode'\)/.test(cl) && /_cubeGet\('c',_narrowF\(NARROW_C,'mode:lan'\),'lan'\)/.test(cl) && /_cubeGet\('l',_narrowF\(NARROW_L\),'acc'\)/.test(cl) && /_cubeGet\('c',_narrowF\(NARROW_C,modes\),'cc'\)/.test(cl),
+  'narrowed: by mode for the chart and cards, by server for LAN, by account for logins, by country for the map');
+ok(/if\(seq!==_cubeSeq\) return;/.test(cl), 'a late answer never paints over a newer one');
+ok(/encodeURIComponent\(f\)/.test(body(admin, '_cubeGet')) && /_perQuery\(\)/.test(body(admin, '_cubeGet')), 'the cube follows the period, range and robots of the page');
+ok(/Visits and the other pages show everything\./.test(admin), 'the bar says what the narrowing cannot reach');
+ok(/function _cv\(v\)\{ return typeof v==='string' \? 1 : \(v\|\|0\); \}/.test(admin) && /fewer than 3/.test(admin), 'a masked cell is drawn as 1 and said to be under 3');
+ok(/if\(_narrowOn\(\)\) _cubeLoad\(\);/.test(body(admin, '_pickMode')), 'the entry modes re-read the narrowed map');
 // Live now (web.122): the open connections by country, from /admin/sessions.
-ok(/function _geoC\(\)\{ return _geoLayer==='now' \? \(\(_geoLive&&_geoLive\.countries\)\|\|\{\}\) : \(\(_geoData&&_geoData\.countries\)\|\|\{\}\); \}/.test(admin), 'Live now draws from the open connections, every other layer from the period');
+ok(/return _geoLayer==='now' \? \(\(_geoLive&&_geoLive\.countries\)\|\|\{\}\) : \(\(_geoData&&_geoData\.countries\)\|\|\{\}\);/.test(body(admin, '_geoC')), 'Live now draws from the open connections, every other layer from the period');
+ok(/if\(_geoNarrowed\(\)\)\{ var o=\{\}, by=_cube\.A\.period\.by/.test(body(admin, '_geoC')), 'and the Connections layer from the cube while narrowed');
 ok(/var C=_geoC\(\), ccs=Object\.keys\(C\)/.test(admin) && /var C=_geoC\(\), c=C\[_geoSel\];/.test(admin), 'the map, the list and the country card all read the same source');
 ok(/var cc=\/\^\[A-Z\]\{2\}\$\/\.test\(x\.cc\|\|''\)\?x\.cc:'ZZ'/.test(admin), 'a connection without a country counts as Unknown, not dropped');
 ok(/return x\.live\?'live':\(notify\?\(x\.mode==='offline'\?'offline':'pokerthnet'\):\(x\.mode==='lan'\?'lan':'pokerthnet'\)\);/.test(admin), 'each connection is put in its entry mode, /live apart');
@@ -522,7 +535,7 @@ ok(/var keys=on\.map\(function\(m\)\{ return m\.k; \}\)/.test(body(admin, '_worl
 ok(/_wSum\(d\.series,\['pokerthnet'\]\)/.test(body(admin, '_worldInet')) && /_wSum\(d&&d\.series,\['lan'\]\)/.test(body(admin, '_worldLan')), 'each card counts its own mode');
 ok(/api\('\/admin\/lan-directory'\)/.test(body(admin, '_worldCards')), 'the LAN card reads the directory');
 ok(/var LS=\(d&&d\.lanServers\)\|\|null/.test(body(admin, '_worldLan')) && /cnt\('other'\)/.test(body(admin, '_worldLan')), 'the LAN card counts connections per server, unlisted ones on a line of their own (web.123)');
-ok(/var L=d&&d\.logins; if\(!L\) return '';/.test(body(admin, '_wLogins')) && /Guests <b>'\+pc\(g\)\+' %<\/b>/.test(body(admin, '_wLogins')), 'the Internet card splits logins into guests and accounts');
+ok(/var L=d&&d\.logins;/.test(body(admin, '_wLogins')) && /if\(!L\) return '';/.test(body(admin, '_wLogins')) && /Guests <b>'\+pc\(g\)\+' %<\/b>/.test(body(admin, '_wLogins')), 'the Internet card splits logins into guests and accounts');
 ok(/counted from 2\.1\.10-web\.123/.test(body(admin, '_wLogins')), 'and says when counting began rather than showing a zero');
 ok(/\.perU/.test(body(admin, '_paintPeriod')), 'the unit follows the period (day, or hour over 24 h)');
 ok(/_chartMount\(\$\('musDayChart'\),_musLabs,_musLines,160,'stack'\)/.test(admin),
