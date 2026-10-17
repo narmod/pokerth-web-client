@@ -10515,6 +10515,14 @@ function handleAdmin(req, res, reqPathOnly, query) {
       return readJsonBody(req, function (d) {
         if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
         d = d || {};
+        // At least one way in must stay open: with the three modes off the
+        // login screen has nothing left to offer. Checked before anything is
+        // changed, so a refused request leaves the configuration as it was.
+        if (d.modes && typeof d.modes === 'object') {
+          const _nm = appModes();
+          ['offline', 'lan', 'pokerthnet'].forEach(function (k) { if (d.modes[k] !== undefined) _nm[k] = !!d.modes[k]; });
+          if (!_nm.offline && !_nm.lan && !_nm.pokerthnet) return adminJson(res, 400, { ok: false, error: 'at least one mode must stay on', modes: appModes() });
+        }
         if (d.resetPeriod !== undefined) {
           const per = String(d.resetPeriod || '').toLowerCase();
           if (['off', 'daily', 'weekly', 'monthly', 'yearly'].indexOf(per) < 0) return adminJson(res, 400, { ok: false, error: 'invalid period (off|daily|weekly|monthly|yearly)' });

@@ -515,10 +515,10 @@
     <p class="sub">Enter your admin token to continue.</p>
     <div class="card">
       <label for="ltok">Admin token</label>
-      <input id="ltok" type="password" placeholder="your token (set-token)" autocomplete="off">
+      <input id="ltok" type="password" placeholder="your admin token" autocomplete="off">
       <button id="loginBtn" class="primary">Log in</button>
       <div id="loginErr" class="msg err"></div>
-      <div class="muted">Set one on the server: <code>pokerth-web set-token &lt;token&gt;</code></div>
+      <div class="muted">Set on the server: <code>STATS_ADMIN_TOKEN</code> in the <code>.env</code> file next to <code>docker-compose.yml</code> (Docker), or <code>pokerth-web set-token</code> on a native install.</div>
     </div>
   </div>
 
@@ -707,7 +707,7 @@
         </div>
         <div class="tsec">
           <h3>Database (MySQL mirror)</h3>
-  <p class="muted">Mirrors when enabled: traffic_daily, leaderboard, broadcasts. Configure below, or with the CLI: pokerth-web db-config.</p>
+  <p class="muted">Mirrors when enabled: traffic_daily, leaderboard, broadcasts. Configure below (or with <code>pokerth-web db-config</code> on a native install).</p>
           <div id="trafDb"><div class="empty">Loading…</div></div>
           <div class="defrow fld gap"><span>Host</span><input id="dbHost" maxlength="255" placeholder="127.0.0.1" autocomplete="off"></div>
           <div class="defrow fld"><span>Port</span><input id="dbPort" type="number" min="1" max="65535" placeholder="3306" autocomplete="off"></div>
@@ -1065,6 +1065,7 @@
       <div class="card">
         <div class="boardhead"><h2>Delegate keys</h2><button id="kyRefresh" class="use">Refresh</button></div>
         <div id="kyList"><div class="empty">Loading…</div></div>
+        <div id="kyListMsg" class="msg"></div>
       </div>
       <div class="card">
         <div class="boardhead"><h2>Audit log</h2><div class="bhact"><button id="auRefresh" class="use">Refresh</button><button id="auClear" class="use danger">Clear</button></div></div>
@@ -1550,7 +1551,15 @@
     var origin=eff.from==='serverlist'?'from the official serverlist (Auto)'
       :(eff.from==='manual'?'from the active server below (Manual)'
       :'built-in client default — no game server listens there');
-    var tr=eff.transport==='proxy'?'through this proxy (session grace)':'browser dials it directly (no session grace)';
+    // Mirror of the client's own rule (pokerth.js, window.directWS): "Direct"
+    // only applies to a pokerth.net host, and then the browser does not dial
+    // host:port but the one public WebSocket of pokerth.net. Any other host
+    // goes through this proxy whatever the setting says.
+    var _isPth=String(eff.host||'').toLowerCase().indexOf('pokerth.net')>=0;
+    var _direct=eff.transport!=='proxy'&&_isPth;
+    var tr=eff.transport==='proxy'?'through this proxy (session grace)'
+      :(_direct?'the browser dials wss://www.pokerth.net/pthlive directly (no session grace)'
+      :'through this proxy \u2014 Direct only applies to a pokerth.net host');
     var warn='';
     if(eff.from==='builtin') warn='<div class="srvhint" style="color:#FFC107">⚠ '+(eff.source==='auto'
       ? 'The serverlist did not resolve'+(eff.error?' ('+srvEsc(eff.error)+')':'')+' — switch to Manual and tick “Active” on a server below.'
@@ -1559,7 +1568,7 @@
     if(eff.transport==='proxy'&&_WS_PORTS.indexOf(parseInt(eff.port,10))>=0)
       warn+='<div class="srvhint" style="color:#FFC107">⚠ '+srvEsc(srvPortWarn(eff.port))+'</div>';
     box.innerHTML='<div style="margin-bottom:4px"><b>Effective target</b> — what the client will dial</div>'
-      +'<div class="tgt">'+srvEsc(eff.host)+':'+srvEsc(eff.port)+(eff.tls?' · TLS':' · plain')+(eff.name?' · '+srvEsc(eff.name):'')+'</div>'
+      +'<div class="tgt">'+(_direct?'wss://www.pokerth.net/pthlive':(srvEsc(eff.host)+':'+srvEsc(eff.port)+(eff.tls?' · TLS':' · plain')))+(eff.name?' · '+srvEsc(eff.name):'')+'</div>'
       +'<div class="srvhint">'+srvEsc(origin)+' · '+srvEsc(tr)+'</div>'+warn;
   }
 
@@ -2454,6 +2463,7 @@
     });
     if(t==='music')mzRefresh();
     if(t==='keys'){ loadKeys(); loadAudit(); }
+    else { var _kn=$('kyNew'); if(_kn&&_kn.style.display!=='none'){ _kn.innerHTML=''; _kn.style.display='none'; } }   // a new key never stays on screen behind your back
     if(t==='board') loadBoard();
     if(t==='packages') api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
     if(t==='traffic'){ loadTraffic(); setTimeout(_trafSubScroll,0); }
@@ -3606,7 +3616,7 @@
     var any=g&&(g.acceptance.offered||g.acceptance.accepted||g.funnel.highlighted||Object.keys(g.contexts||{}).some(function(k){ var c=g.contexts[k]; return c.shown||c.done||c.dismissed||c.banner||c.persist_shown; }));
     if(!any){
       box.innerHTML='<div class="empty">'+(!_guideKnown
-        ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (pm2 restart pokerth-web, or restart the container); a static update alone swaps the served files, not the process.'
+        ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (Server › Deployment › Restart); a static update alone swaps the served files, not the process.'
         : 'Nothing recorded yet — players are offered the help once, on first launch, and events start with them.')+'</div>';
       return;
     }
@@ -3659,7 +3669,7 @@
     var total=0; keys.forEach(function(k){ total+=all[k]||0; });
     if(!total){
       box.innerHTML='<div class="empty">'+(!_srcKnown
-        ? 'This proxy is not recording it yet \u2014 the running process predates the feature. Restart it (pm2 restart pokerth-web, or restart the container); a static update alone swaps the served files, not the process.'
+        ? 'This proxy is not recording it yet \u2014 the running process predates the feature. Restart it (Server › Deployment › Restart); a static update alone swaps the served files, not the process.'
         : 'Nothing recorded yet \u2014 sources are counted from the first visit after the update.')+'</div>';
       return;
     }
@@ -3685,7 +3695,7 @@
       // Comme pour les répartitions de visiteurs : un vide qui ne dit pas
       // laquelle de ses causes s'applique coûte une demi-heure.
       var why = !_musKnown
-        ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (pm2 restart pokerth-web); a static update alone swaps the served files, not the process.'
+        ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (Server › Deployment › Restart); a static update alone swaps the served files, not the process.'
         : 'Nothing recorded yet — counting started here, and a play is only counted when a track actually starts.';
       box.innerHTML='<div class="empty">'+why+'</div>';
       return;
@@ -3786,7 +3796,7 @@
       // fonctionnalité), ou il sait mais personne n'est encore passé. Les
       // confondre coûte une demi-heure de recherche.
       var why = !_envKnown
-        ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (pm2 restart pokerth-web); a static update alone swaps the served files, not the process.'
+        ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (Server › Deployment › Restart); a static update alone swaps the served files, not the process.'
         : (_envPings && !_envPings.visits)
           ? 'No visit ping has reached the proxy since it started. One ping is sent per browser session, and a browser where you ticked “Exclude my own visits” sends none at all — open the site in a private window to check.'
           : 'Nothing recorded yet — counting started here, and one ping is sent per browser session.';
@@ -3943,7 +3953,7 @@
         var db=d.db||{};
         var esc=function(x){ return (''+x).replace(/[&<>]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); };
         var state;
-        if(!db.enabled){ state='<b style="color:#a0acc4">Off</b> — configure below, or run pokerth-web db-config'; }
+        if(!db.enabled){ state='<b style="color:#a0acc4">Off</b> — configure below'; }
         else if(db.connected){ state='<b class="ok">Connected</b>'; }
         else { state='<b class="err">Error</b>'+(db.error?(' — '+esc(db.error)):''); }
         var html='<div class="srow"><span>Status</span><span>'+state+'</span></div>';
@@ -4568,11 +4578,16 @@
     });
   }
   function toggleMode(k){
-    modesState[k]=!modesState[k]; renderModes();
-    var m=$('modesmsg');
+    var m=$('modesmsg'), before=Object.assign({},modesState);
+    var next=Object.assign({},modesState); next[k]=!next[k];
+    // The last mode on cannot be switched off: the login screen would be empty.
+    if(!next.offline&&!next.lan&&!next.pokerthnet){ m.textContent='At least one mode must stay on \u2014 players would have no way in.'; m.className='msg err'; return; }
+    modesState=next; renderModes();
+    // A refused or failed save puts the toggle back: it shows what is stored.
+    function revert(txt){ modesState=before; renderModes(); m.textContent=txt; m.className='msg err'; }
     api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok(),modes:modesState})})
-      .then(function(r){return r.json();}).then(function(d){ if(d.ok){ if(d.modes){ modesState=Object.assign(modesState,d.modes); renderModes(); } m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+(d.error||'error'); m.className='msg err'; } })
-      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ if(d.modes){ modesState=Object.assign(modesState,d.modes); renderModes(); } m.textContent='Saved.'; m.className='msg ok'; } else { revert('Not saved: '+((d&&d.error)||'error')); } })
+      .catch(function(){ revert('Not saved \u2014 network error.'); });
   }
 
   // ── Maintenance: update / restart / clear logs (server restarts briefly) ──
@@ -5430,9 +5445,10 @@
   function kyRevoke(name){
     if(!confirm('Revoke key "'+name+'"? Anyone using it loses access immediately.')) return;
     api('/admin/tokens/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name})})
-      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ loadKeys(); } else { alert('Failed: '+((d&&d.error)||'error')); } })
-      .catch(function(){ alert('Network error.'); });
+      .then(function(r){return r.json();}).then(function(d){ var m=$('kyListMsg'); if(d&&d.ok){ if(m){ m.textContent='Key revoked.'; m.className='msg ok'; } loadKeys(); } else if(m){ m.textContent='Not revoked: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ var m=$('kyListMsg'); if(m){ m.textContent='Not revoked \u2014 network error.'; m.className='msg err'; } });
   }
+  var _kyNewTimer=null;
   (function(){
     var b=$('kyCreate'); if(!b) return;
     var rb=$('kyRefresh'); if(rb) rb.addEventListener('click', loadKeys);
@@ -5452,8 +5468,16 @@
             var row=document.createElement('div'); row.style.cssText='display:flex;gap:8px;align-items:center';
             var code=document.createElement('code'); code.textContent=d.token; code.style.cssText='flex:1;word-break:break-all;padding:6px 8px;background:rgba(0,0,0,.25);border-radius:6px';
             var cp=document.createElement('button'); cp.className='use'; cp.textContent='Copy';
-            cp.addEventListener('click',function(){ if(navigator.clipboard){ navigator.clipboard.writeText(d.token).then(function(){ cp.textContent='Copied'; },function(){}); } });
-            row.appendChild(code); row.appendChild(cp); box.appendChild(p); box.appendChild(row);
+            // copyText falls back to a selection copy on an http LAN panel,
+            // where navigator.clipboard does not exist.
+            cp.addEventListener('click',function(){ copyText(d.token).then(function(){ cp.textContent='Copied'; },function(){ cp.textContent='Copy failed \u2014 select the key'; }); });
+            // The full key does not stay on screen: hidden after two minutes,
+            // or as soon as the panel is left, whichever comes first.
+            var hide=document.createElement('button'); hide.className='ghost'; hide.textContent='Done';
+            function forget(){ box.innerHTML=''; box.style.display='none'; clearTimeout(_kyNewTimer); }
+            hide.addEventListener('click',forget);
+            clearTimeout(_kyNewTimer); _kyNewTimer=setTimeout(forget,120000);
+            row.appendChild(code); row.appendChild(cp); row.appendChild(hide); box.appendChild(p); box.appendChild(row);
             loadKeys();
           } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; }
         }).catch(function(){ m.textContent='Network error.'; m.className='msg err'; });

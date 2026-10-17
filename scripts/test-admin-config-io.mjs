@@ -98,6 +98,14 @@ try {
   const back2 = JSON.parse(fs.readFileSync(F('admin-config.json'), 'utf8'));
   ok(imp2 && imp2.ok && back2.serverName === 'Bare' && !back2.discordChatWebhookUrl, 'a file without a "redacted" list replaces everything, as before');
 
+  // The three entry modes cannot all be switched off.
+  const m1 = await post('/admin/config', { modes: { offline: false, lan: false } });
+  const m2 = await post('/admin/config', { modes: { pokerthnet: false } });
+  const st = await get('/admin/status');
+  ok(m1 && m1.ok && m2 && m2.ok === false && /at least one mode/.test(m2.error), 'switching off the last mode on is refused');
+  ok(st && st.modes && st.modes.pokerthnet === true && st.modes.offline === false, 'and the refused request changed nothing');
+  await post('/admin/config', { modes: { offline: true, lan: true } });
+
   // Save all from the dashboard sends the rows it loaded, pins included.
   const srv = await post('/admin/servers', { servers: [{ id: 'srv_b', name: 'B', host: 'b.example.org', port: 7236, tls: true, pins: [PIN, 'bad'] }], activeServerId: 'srv_b' });
   const list = await get('/admin/servers');

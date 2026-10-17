@@ -494,6 +494,14 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Admin leftovers** (`web.114`) — the panel no longer advises `pm2 restart pokerth-web` (the *Restart* button now works
+  on every install) and the login screen says the token is `STATS_ADMIN_TOKEN` in `.env` on Docker. The last entry
+  mode on cannot be switched off (refused by `/admin/config` before anything changes, and by the panel), and a
+  refused or failed toggle goes back to the stored state. A new delegate key is copied through `copyText` (works on
+  an http LAN panel), leaves the screen after two minutes or when the Keys tab is left, and revocation errors are
+  shown inline instead of `alert()`. *Effective target* mirrors the client's rule: Direct only applies to a
+  pokerth.net host, which the browser reaches at `wss://www.pokerth.net/pthlive`; any other host goes through the
+  proxy. `scripts/test-admin-guards.mjs`.
 - **Admin tabs show what the server holds** (`web.113`) — Deployment, Access, Identity, Proxy and Defaults loaded once at
   login and then went stale; each now reloads on opening. After every successful save the settings are re-read, so a
   field shows what was really stored (the proxy trims, clamps and drops invalid values; before, *Saved.* sat next to a
