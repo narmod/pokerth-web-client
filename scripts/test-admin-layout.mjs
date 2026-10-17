@@ -456,8 +456,10 @@ ok(/\.trafsub button\{[^}]*min-height:44px/.test(admin), 'and its targets are th
 // -- Four windows, not seven -----------------------------------------------
 // 90, 180 and 365 days repeat "All time" to the unit until the site has a year
 // behind it. They stay in the export; they no longer take the space.
-ok(/tile\('Today',d\.today,pv\.todayToHour,'yesterday at this hour'\)\s*\+tile\('Last 7 days',d\.week,pv\.week,'previous 7 days'\)\s*\+tile\(pLbl,per,perPrev,pRef\)\s*\+tile\('All time',d\.allTime\)/.test(admin)
-  && /var pLbl=\(d\.h24&&P===1\)\?'Last 24 hours':'Last '\+P\+' days', pRef=\(d\.h24&&P===1\)\?'previous 24 hours':'previous '\+P\+' days';/.test(admin),
+// web.115: the arrows of the 7-day and period tiles compare complete days
+// (complete hours for 24 h) — the `full` windows — and say so.
+ok(/tile\('Today',d\.today,pv\.todayToHour,'yesterday at this hour'\)\s*\+tile\('Last 7 days',d\.week,pv\.week,'the 7 days before \(complete days\)',fu\.week\)\s*\+tile\(pLbl,per,perPrev,pRef,perCmp\)\s*\+tile\('All time',d\.allTime\)/.test(admin)
+  && /var pLbl=\(d\.h24&&P===1\)\?'Last 24 hours':'Last '\+P\+' days', pRef=\(d\.h24&&P===1\)\?'the 24 hours before \(complete hours\)':'the '\+P\+' days before \(complete days\)';/.test(admin),
   'four windows are shown, the first three against their previous period; the third follows the period selector (24 hours included)');
 // -- Read at a glance --------------------------------------------------------
 // New devices under the unique count; green / red only past a 10 % move, and
@@ -465,7 +467,7 @@ ok(/tile\('Today',d\.today,pv\.todayToHour,'yesterday at this hour'\)\s*\+tile\(
 ok(/fmt\(o&&o\.nw\)\+' new<\/div>'/.test(admin), 'each window shows its new devices under the unique count');
 ok(/dl>=0\.10\?'up':\(dl<=-0\.10\?'dn':''\)/.test(admin), 'colour needs a move of ten percent either way');
 ok(/\(ref&&ref>0\)\? \(cur-ref\)\/ref : null/.test(admin), 'and no reference means no colour rather than red');
-ok(/var pv=d\.prev\|\|\{\};/.test(admin), 'an older proxy without prev leaves every tile neutral');
+ok(/var pv=d\.prev\|\|\{\}, fu=d\.full\|\|\{\};/.test(admin), 'an older proxy without prev leaves every tile neutral');
 ok(/\.tstat \.big\.up,\.kpi \.big\.up\{color:#7fd17f\}/.test(admin) && /\.tstat \.big\.dn,\.kpi \.big\.dn\{color:#e8735c\}/.test(admin),
   'the main figure carries the colour on both kinds of tile');
 ok(/prev: \{ todayToHour: visitYesterdayToHour\(\), yesterday: visitWindow\(1, 1\), week: visitWindow\(7, 7\), month: visitWindow\(30, 30\), period: h24 \? visitWindowList\(visitList\(true, 24, 24\)\) : visitWindow\(P, P\) \}/.test(proxy),
@@ -482,7 +484,7 @@ ok(/box\.innerHTML=_musRank\(keys,total\)\+_musContext\(keys,total\)\+_musChart\
 ok(/function _stackChart\(labels,series,H\)/.test(admin), 'a stacked bar helper exists');
 ok(/_chartMount\(\$\('musDayChart'\),_musLabs,_musLines,160,'stack'\)/.test(admin),
   'the music history is stacked bars, not lines');
-ok(/return s\.filter\(function\(x\)\{ return \(x\.date\|\|''\)>=key; \}\);/.test(admin), 'days before counting began are dropped from the window');
+ok(/return s\.filter\(function\(x\)\{ return \(x\.date\|\|''\)>=_musSinceKey; \}\);/.test(admin), 'days before counting began are dropped from the window');
 ok(/plays per 100 visits/.test(admin), 'adoption is stated as plays per hundred visits');
 ok(/title="removed from the catalogue"/.test(admin), 'a title no longer in the catalogue is marked, not hidden');
 
@@ -498,7 +500,7 @@ ok(/title="removed from the catalogue"/.test(admin), 'a title no longer in the c
   const env = `var ENV_COLORS=['#a','#b','#c','#d','#e','#f','#g','#h','#i','#z'];var MUS_TOP=10,MUS_STACK=5,_trafPeriod=14;
     var _musData={t1:30,t2:20,t3:10,t4:5,t5:3,t6:2,t7:1,t8:1,t9:1,t10:1,t11:1,t12:1};
     var _musTitles={t1:'Alpha',t2:'Beta',t3:'Gamma',t4:'Delta',t5:'Eps',t6:'Zeta',t7:'Eta',t8:'Th',t9:'Io',t11:'La'};
-    var _musSince=new Date(2026,7,23,10,0,0).getTime();
+    var _musSince=new Date(2026,7,23,10,0,0).getTime(), _musSinceKey='2026-08-23', _trafTodayKey='';   // day keys come from the server
     var _trafSeries=[{date:'2026-08-21',v:100},{date:'2026-08-22',v:100},{date:'2026-08-23',v:200,mu:{t1:20,t2:10,t6:2}},{date:'2026-08-24',v:100,mu:{t1:10,t2:10,t3:10,t12:1}}];
     var _musLines=null,_musLabs=null;
     var _musVotes={t1:{up:4,down:1},r9:{up:2,down:0},t11:{up:0,down:3}}, _musVoteTitles={t1:{title:'Alpha',stream:false},r9:{title:'Jazz FM',stream:true}},
@@ -536,7 +538,7 @@ ok(/title="removed from the catalogue"/.test(admin), 'a title no longer in the c
   ok(/class="trend na" title="Not enough history: 1 full days/.test(ranked), 'two days of history give no arrow, and say why');
   // Arrows: the share of plays, second half of the window against the first.
   const fx = new Function(env + lifted + `
-    _musSince=new Date(2026,7,1,10,0,0).getTime(); _musVotesKnown=false;
+    _musSince=new Date(2026,7,1,10,0,0).getTime(); _musSinceKey='2026-08-01'; _musVotesKnown=false;
     var s=[]; for(var i=1;i<=17;i++){ var d='2026-08-'+String(i).padStart(2,'0'); var late=i>9;
       s.push({date:d,v:50,mu:i===1?{a:1}:{a:late?6:2,b:late?2:6,c:1}}); }
     _trafSeries=s;

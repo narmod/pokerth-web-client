@@ -108,7 +108,7 @@ ok(/window\._pthTimeZone = function/.test(js) && /resolvedOptions\(\)\.timeZone/
 ok(/msg\.tz = tz/.test(js) && /cm\.tz = tz/.test(js), 'tz sent with the visit ping and the mode ping');
 const admin = fs.readFileSync(path.join(root, 'public/admin.html'), 'utf8');
 ok(/<button[^>]*data-ts="world"[^>]*>World</.test(admin) && /class="tsub" data-ts="world"/.test(admin) && /TRAF_SUBS=\[[^\]]*'world'/.test(admin), 'admin: Traffic › World section and its button');
-ok(/loadGeo\(\);\s*api\('\/admin\/visits/.test(admin), 'admin: the World section follows the common period (loaded with the Traffic tab)');
+ok(/loadGeo\(\);[\s\S]{0,400}?api\('\/admin\/visits/.test(admin), 'admin: the World section follows the common period (loaded with the Traffic tab)');
 ok(/\/admin\/geo\?/.test(admin) && /hours=24/.test(admin) && /vendor\/world-110m\.json/.test(admin), 'admin: reads /admin/geo (days and 24 h) and the map asset');
 const priv = fs.readFileSync(path.join(root, 'public/privacy.html'), 'utf8');
 ok(/time zone/i.test(priv), 'privacy page mentions the time zone');

@@ -494,6 +494,15 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Traffic figures compare like with like** (`web.115`) — *Last 7 days* and the period tile set today so far plus the
+  days before against as many complete days, and the mean, slope, halves and trend line read a series ending with
+  today so far: a drop every morning. The arrows now compare complete days (complete hours for 24 h, new `full`
+  windows in `/admin/visits`) and say so; the readings leave the day in progress out, the charts still draw it.
+  On the night clocks go back, hour 02 was read twice in every 24 h / 48 h view: the hours are walked through
+  `_hourInstants`, one per local cell. The music trend took "today" and its start day from the browser's zone; it
+  uses the server's day keys (`todayKey`, `musicSinceKey`). A slow Traffic answer can no longer paint over a newer
+  one. Cohorts say they count people only when bots are shown. `test-music-stats` follows the web.114 wording
+  (it still looked for the removed `pm2` advice). `scripts/test-stats-fair.mjs`.
 - **Admin leftovers** (`web.114`) — the panel no longer advises `pm2 restart pokerth-web` (the *Restart* button now works
   on every install) and the login screen says the token is `STATS_ADMIN_TOKEN` in `.env` on Docker. The last entry
   mode on cannot be switched off (refused by `/admin/config` before anything changes, and by the panel), and a

@@ -2892,7 +2892,7 @@
       if(sn){ if(d.restartAt){ sn.textContent='Scheduled: '+(d.restartKind==='restart'?'restart only':'update + restart')+' at '+new Date(d.restartAt).toLocaleString(); if(sc) sc.style.display=''; } else { sn.textContent='Nothing scheduled.'; if(sc) sc.style.display='none'; } }
     }).catch(function(){ $('status').innerHTML='<div class="empty err">Could not load.</div>'; });
   }
-  var _trafWired = false;
+  var _trafWired = false, _trafSeq = 0;
   // Owner self-exclusion: pth_no_count lives in the SAME origin as the client,
   // so pokerth.js reads it before firing the /__visit beacon. Per-device.
   function _noCount(){ try{ return localStorage.getItem('pth_no_count')==='1'; }catch(e){ return false; } }
@@ -3502,13 +3502,11 @@
   var MUS_TREND_MIN=7, _musTr=null;
   function _musTrendWin(){
     if(_trafPeriod===1) return {w:0,full:0,ok:false,h24:true};
+    // Day keys come from the server (todayKey, musicSinceKey): worked out in
+    // the browser's zone they named the wrong day for an admin abroad.
     var s=_musDays(), today=s.length?s[s.length-1].date:'';
-    var d=new Date(), tk=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-    if(today===tk) s=s.slice(0,-1);
-    if(_musSince && s.length){
-      var f=new Date(_musSince), fk=f.getFullYear()+'-'+String(f.getMonth()+1).padStart(2,'0')+'-'+String(f.getDate()).padStart(2,'0');
-      if(s[0].date===fk) s=s.slice(1);
-    }
+    if(today && today===_trafTodayKey) s=s.slice(0,-1);
+    if(_musSinceKey && s.length && s[0].date===_musSinceKey) s=s.slice(1);
     var w=Math.floor(s.length/2);
     if(w<MUS_TREND_MIN) return {w:w,full:s.length,ok:false};
     var cur={}, prev={}, cN=0, pN=0;
@@ -3562,11 +3560,11 @@
   }
   // La fenetre commence au jour du premier comptage : des jours vides avant
   // ne disent rien sur la musique, seulement sur l'age de la fonction.
+  var _trafTodayKey='', _musSinceKey='';
   function _musDays(){
     var s=_trafSeries||[];
-    if(!_musSince) return s;
-    var d=new Date(_musSince), key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-    return s.filter(function(x){ return (x.date||'')>=key; });
+    if(!_musSince||!_musSinceKey) return s;
+    return s.filter(function(x){ return (x.date||'')>=_musSinceKey; });
   }
   // Une lecture pour cent visites : l'adoption du panneau musique, la seule
   // tendance qui tienne quand le total du jour se compte sur les doigts.
@@ -3857,7 +3855,12 @@
     _paintNoCount();
     loadDbConfig();
     loadGeo();
+    // A quick change of period or of the bots switch starts a new read before
+    // the last one answered: only the newest may paint, whatever the order in
+    // which the answers come back.
+    var _seq=++_trafSeq;
     api('/admin/visits?'+_perQuery()).then(function(r){return r.json();}).then(function(d){
+      if(_seq!==_trafSeq) return;
       var g=$('trafCards');
       if(!d || !d.ok){ if(g) g.innerHTML='<div class="empty err">'+((d&&d.error)||'error')+'</div>'; loadFail('panel-traffic',(d&&d.error)||'Could not load.'); return; }
       _trafBotInfo=d.bots||null; _paintBots();
@@ -3872,8 +3875,10 @@
         var p=Math.round(dl*100);
         return '<div class="delta '+_tone(dl)+'">'+(p>0?'\u25b2 +':(p<0?'\u25bc \u2212':'\u2248 '))+Math.abs(p)+'% vs '+lbl+'</div>';
       }
-      function tile(lbl,o,ref,refLbl){
-        var dl=_dl(o&&o.v, ref&&ref.v), t=_tone(dl);
+      // `cmp` = {cur,prev} over complete days: the figure shown includes today
+      // so far, the arrow compares like with like.
+      function tile(lbl,o,ref,refLbl,cmp){
+        var dl=(cmp&&cmp.cur&&cmp.prev)?_dl(cmp.cur.v, cmp.prev.v):_dl(o&&o.v, ref&&ref.v), t=_tone(dl);
         return '<div class="tstat '+t+'"><div class="lbl">'+lbl+'</div><div class="big '+t+'">'+fmt(o&&o.v)+'</div>'
           +'<div class="sub">'+fmt(o&&o.u)+' unique</div>'
           +'<div class="sub">'+fmt(o&&o.nw)+' new</div>'
@@ -3882,15 +3887,16 @@
       // Sept fenetres pour quatre questions : tant que le site n'a pas un an de
       // recul, 90, 180 et 365 jours repetent « All time » au chiffre pres. Les
       // trois restent dans l'export, elles ne prennent plus la place a l'ecran.
-      var pv=d.prev||{};
+      var pv=d.prev||{}, fu=d.full||{};
+      _trafTodayKey=d.todayKey||''; _musSinceKey=d.musicSinceKey||'';
       // La troisieme tuile suit le selecteur ; a 7 jours elle ferait doublon
       // avec « Last 7 days », on y met alors les 30 jours d'avant.
-      var P=d.periodDays||_trafPeriod, per=d.period, perPrev=pv.period;
-      if(P===7||!per){ P=30; per=d.month; perPrev=pv.month; }
-      var pLbl=(d.h24&&P===1)?'Last 24 hours':'Last '+P+' days', pRef=(d.h24&&P===1)?'previous 24 hours':'previous '+P+' days';
+      var P=d.periodDays||_trafPeriod, per=d.period, perPrev=pv.period, perCmp=fu.period;
+      if(P===7||!per){ P=30; per=d.month; perPrev=pv.month; perCmp=fu.month; }
+      var pLbl=(d.h24&&P===1)?'Last 24 hours':'Last '+P+' days', pRef=(d.h24&&P===1)?'the 24 hours before (complete hours)':'the '+P+' days before (complete days)';
       if(g) g.innerHTML = tile('Today',d.today,pv.todayToHour,'yesterday at this hour')
-        +tile('Last 7 days',d.week,pv.week,'previous 7 days')
-        +tile(pLbl,per,perPrev,pRef)
+        +tile('Last 7 days',d.week,pv.week,'the 7 days before (complete days)',fu.week)
+        +tile(pLbl,per,perPrev,pRef,perCmp)
         +tile('All time',d.allTime);
       var c=$('trafChart'), s=(d.series||[]), max=1;
       _trafSeries=s;
@@ -3911,7 +3917,8 @@
         // La droite de tendance est ajoutee en dernier pour passer au-dessus
         // des courbes, et ne rejoint la legende que si la fenetre est pleine :
         // deux points ne font pas une tendance.
-        var _rg=_linreg(lines[0].vals);
+        // Fitted on the complete days only: the last point is today so far.
+        var _rg=_linreg(lines[0].vals.length>2?lines[0].vals.slice(0,-1):lines[0].vals);
         if(s.length>=5){
           lines.push({k:'trend',n:'Trend',c:'#9aa7bd',dash:true,vals:s.map(function(_,i){ return Math.max(0,_rg.a*i+_rg.b); })});
         }
@@ -4162,7 +4169,7 @@
       +(estAvg? (' \u00b7 established base '+_round1(estAvg)+' days over the same window'):'')+'</p></div>';
     _chartMount($('trafRetAct'),['1 day','2 days','3 days','4 days','5 days','6 days','7 days','8+ days'],
       [{k:'act',n:'Devices',c:'#e0a03a',vals:act}],150,'bar',{ c:'#e0a03a', xl:['1','2','3','4','5','6','7','8+'] });
-    if(nt) nt.textContent=fmt(c.known)+' devices dated \u00b7 window '+(c.window||30)+' days';
+    if(nt) nt.textContent=fmt(c.known)+' devices dated \u00b7 window '+(c.window||30)+' days'+(_trafBots?' \u00b7 people only (robots do not come back)':'');
     var oneDay=act.length? act[0] : 0;
     if(!c.newTotal) return '';
     // Tant qu'aucune cohorte n'a sept jours derriere elle, la question « faut-il
@@ -4191,6 +4198,11 @@
     _trafPth(d);
     var retLine=_trafCohorts(d);
     if(!n) return;
+    // Means, slope and halves are read on complete days (complete hours for
+    // 24 h): the last point is the one in progress and would pull every
+    // reading down each morning. The charts still draw it.
+    var sAll=s;
+    if(n>2){ s=s.slice(0,-1); n=s.length; }
     var vv=s.map(function(x){ return x.v||0; });
     var nwv=s.map(function(x){ return x.nw||0; });
     var rtv=s.map(function(x){ return x.rt||0; });
@@ -4216,7 +4228,7 @@
         ? 'no clear direction (r='+(Math.round(Math.abs(reg.r)*100)/100)+')'
         : (week>0?'+':'\u2212')+_round1(Math.abs(week))+U.per+' (r='+(Math.round(Math.abs(reg.r)*100)/100)+')';
       k.innerHTML =
-        tile('Visits / '+U.one, _round1(_mean(vv)), 'mean over '+n+' '+U.many+' \u00b7 '+trendTxt, dir==='flat'?'':dir)
+        tile('Visits / '+U.one, _round1(_mean(vv)), 'mean over '+n+' complete '+U.many+' \u00b7 '+trendTxt, dir==='flat'?'':dir)
        +tile('Unique devices / 30 d', fmt(month.u), (all.u? pct(month.u,all.u):0)+'% of the '+fmt(all.u)+' ever seen')
        +tile('New share / 30 d', (idSess? pct(month.nw,idSess):0)+'%', fmt(month.nw)+' new of '+fmt(idSess)+' identified sessions')
        +tile('Returning / '+U.one, _round1(_mean(rtv)), 'first half '+_round1(rtF)+' \u2192 second half '+_round1(rtL), rtT);
@@ -4226,8 +4238,8 @@
       +' \u2014 r='+(Math.round(Math.abs(reg.r)*100)/100)+' against '+U.noise+' noise (sd '+_round1(reg.sd)+')';
     var nb=$('trafNew');
     if(nb){
-      _chartMount(nb,s.map(function(x){ return x.date||''; }),[{k:'new',n:'New devices',c:'#e0a03a',vals:nwv}],170,'bar',
-        { c:'#e0a03a', xl:s.map(_sLab), segs:[{from:0,to:half-1},{from:half,to:n-1}] });
+      _chartMount(nb,sAll.map(function(x){ return x.date||''; }),[{k:'new',n:'New devices',c:'#e0a03a',vals:sAll.map(function(x){ return x.nw||0; })}],170,'bar',
+        { c:'#e0a03a', xl:sAll.map(_sLab), segs:[{from:0,to:half-1},{from:half,to:n-1}] });
     }
     var nn=$('trafNewNote');
     if(nn){
@@ -4240,7 +4252,7 @@
       var m=(all.m)||{}, tot=(m.pokerthnet||0)+(m.lan||0)+(m.offline||0);
       var lines=[];
       lines.push('Footfall is <b>'+(dir==='flat'?'holding steady':(dir==='up'?'rising':'slipping'))+'</b> \u2014 '
-        +'<span class="nu">'+_round1(firstH)+'</span> \u2192 <span class="nu">'+_round1(lastH)+'</span> visits/'+U.one+' between the two halves of the window'
+        +'<span class="nu">'+_round1(firstH)+'</span> \u2192 <span class="nu">'+_round1(lastH)+'</span> visits/'+U.one+' between the two halves of the window (complete '+U.many+')'
         +(solid?'':', though the '+U.noise+' spread (sd '+_round1(reg.sd)+') is wide enough that the slope may be noise')+'.');
       // Le verdict « acquisition ou retention » n'est enonce ici que faute de
       // mieux : un rapport de volumes recurrents/nouveaux le suggere, une vraie

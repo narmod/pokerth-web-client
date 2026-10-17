@@ -7945,6 +7945,22 @@ function pruneVisitCells(now) {
     if (b && b.geoH) delete b.geoH;   // 2.1.10-web.28 only, replaced by hc[h].geo
   }
 }
+// The instants of the last `n` hours, newest first, `offset` hours back, one
+// per local hour cell. Hour cells are keyed by local day and hour, so on the
+// night clocks go back 02:00 comes twice and both instants read the same cell:
+// the second one is skipped, otherwise that hour is counted twice in every
+// 24 h / 48 h view (and the night clocks go forward simply has no 02:00).
+function _hourInstants(n, offset) {
+  const out = [], seen = {};
+  const top = new Date(); top.setMinutes(0, 0, 0);
+  offset = offset || 0;
+  for (let i = offset; i < offset + n; i++) {
+    const d = new Date(top.getTime() - i * 3600000), k = visitDayKey(d) + 'T' + d.getHours();
+    if (seen[k]) continue;
+    seen[k] = 1; out.push(d);
+  }
+  return out;
+}
 // Les seaux d'une fenetre, du plus recent au plus ancien : `n` jours (seaux
 // quotidiens), ou `n` heures (cases horaires, heure en cours comprise) quand
 // h24 est vrai. `offset` decale vers le passe d'autant d'unites. Un trou vaut
@@ -7954,11 +7970,7 @@ function visitList(h24, n, offset) {
   offset = offset || 0;
   const now = new Date();
   if (h24) {
-    const top = new Date(now); top.setMinutes(0, 0, 0);
-    for (let i = offset; i < offset + n; i++) {
-      const d = new Date(top.getTime() - i * 3600000);
-      out.push(visitHour(d));
-    }
+    _hourInstants(n, offset).forEach(function (d) { out.push(visitHour(d)); });
   } else {
     for (let i = offset; i < offset + n; i++) {
       const d = new Date(now); d.setDate(now.getDate() - i);
@@ -8035,11 +8047,11 @@ function withVisitBots(bots, fn) {
 // Ce que le filtre a retire sur la fenetre (toujours compte, filtre ou non).
 function visitBotWindow(h24, n) {
   const list = [];
-  const now = new Date(), top = new Date(now); top.setMinutes(0, 0, 0);
-  for (let i = 0; i < n; i++) {
-    let b;
-    if (h24) { const d = new Date(top.getTime() - i * 3600000), day = visitsStore.days[visitDayKey(d)]; b = day && day.hc && day.hc[d.getHours()]; }
-    else { const d = new Date(now); d.setDate(now.getDate() - i); b = visitsStore.days[visitDayKey(d)]; }
+  const now = new Date();
+  if (h24) _hourInstants(n).forEach(function (d) { const day = visitsStore.days[visitDayKey(d)], b = day && day.hc && day.hc[d.getHours()]; list.push((b && b.bt) || null); });
+  else for (let i = 0; i < n; i++) {
+    const d = new Date(now); d.setDate(now.getDate() - i);
+    const b = visitsStore.days[visitDayKey(d)];
     list.push((b && b.bt) || null);
   }
   const w = visitWindowList(list);
@@ -8566,10 +8578,9 @@ function visitYesterdayToHour() {
 // ne doit jamais servir de reference pour une comparaison.
 function visitHourSeries(nHours) {
   const out = [];
-  const now = new Date();
-  now.setMinutes(0, 0, 0);
-  for (let i = nHours - 1; i >= 0; i--) {
-    const d = new Date(now.getTime() - i * 3600000);
+  const hrs = _hourInstants(nHours).reverse();
+  for (let j = 0; j < hrs.length; j++) {
+    const d = hrs[j];
     const b = visitDay(visitDayKey(d));
     const hh = d.getHours();
     const hm = (b && b.hm) || {};
@@ -8608,8 +8619,9 @@ function visitHourProfile24() {
   const v = new Array(24).fill(0), nw = new Array(24).fill(0);
   const now = new Date(), top = new Date(now); top.setMinutes(0, 0, 0);
   let days = 0;
-  for (let i = 0; i < 24; i++) {
-    const d = new Date(top.getTime() - i * 3600000);
+  const hrs = _hourInstants(24);
+  for (let i = 0; i < hrs.length; i++) {
+    const d = hrs[i];
     const b = visitDay(visitDayKey(d));
     if (!b || !b.h) continue;
     days = 1;   // chaque heure du jour y figure une fois : la « moyenne » est la valeur meme
@@ -8779,9 +8791,9 @@ function visitsSummaryRead(periodDays, h24) {
   const now = new Date();
   const series = [];
   if (h24) {
-    const top = new Date(now); top.setMinutes(0, 0, 0);
-    for (let i = 23; i >= 0; i--) {
-      const d = new Date(top.getTime() - i * 3600000);
+    const hrs = _hourInstants(24).reverse();
+    for (let j = 0; j < hrs.length; j++) {
+      const d = hrs[j];
       const b = visitHour(d);
       series.push({ date: visitDayKey(d) + 'T' + String(d.getHours()).padStart(2, '0'), v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined });
     }
@@ -8807,6 +8819,19 @@ function visitsSummaryRead(periodDays, h24) {
     // Heures de la fenetre qui ont une case : 24 un jour apres le deploiement.
     periodHours: h24 ? L.filter(function (b) { return !!b; }).length : undefined,
     prev: { todayToHour: visitYesterdayToHour(), yesterday: visitWindow(1, 1), week: visitWindow(7, 7), month: visitWindow(30, 30), period: h24 ? visitWindowList(visitList(true, 24, 24)) : visitWindow(P, P) },
+    // Like-for-like comparisons: complete days (or complete hours for 24 h)
+    // only. The windows above include today so far, and set against as many
+    // complete days they showed a drop every morning.
+    full: {
+      week: { cur: visitWindow(7, 1), prev: visitWindow(7, 8) },
+      month: { cur: visitWindow(30, 1), prev: visitWindow(30, 31) },
+      period: h24 ? { cur: visitWindowList(visitList(true, 24, 1)), prev: visitWindowList(visitList(true, 24, 25)) }
+                  : { cur: visitWindow(P, 1), prev: visitWindow(P, P + 1) }
+    },
+    // Day keys are the server's: the dashboard must not work out "today" in
+    // its own browser zone and drop the wrong day.
+    todayKey: visitDayKey(now),
+    musicSinceKey: visitsStore.musicSince ? visitDayKey(new Date(visitsStore.musicSince)) : '',
     allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length, nw: Object.keys(visitsStore.allU).length, rt: visitsStore.totalRet || 0, lv: visitsStore.totalLV || 0, lu: Object.keys(visitsStore.allLU || {}).length, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0, live: am.live || 0 }; })() },
     series: series,
     hours48: visitHourSeries(48),
@@ -12823,9 +12848,9 @@ function _pthMean(c, f) { return (c && c.n) ? Math.round((c[f] / c.n) * 10) / 10
 function pthShareSummary(periodDays, h24) {
   const now = new Date();
   const h48 = [];
-  const top = new Date(now); top.setMinutes(0, 0, 0);
-  for (let i = 47; i >= 0; i--) {
-    const d = new Date(top.getTime() - i * 3600000);
+  const hrs = _hourInstants(48).reverse();
+  for (let j = 0; j < hrs.length; j++) {
+    const d = hrs[j];
     const b = visitsStore.days[visitDayKey(d)], hh = d.getHours();
     const c = (b && b.ps) ? b.ps[hh] : null;
     h48.push({ t: visitDayKey(d) + 'T' + String(hh).padStart(2, '0'), n: (c && c.n) || 0,

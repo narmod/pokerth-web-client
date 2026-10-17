@@ -54,7 +54,7 @@ ok(/<select id="trafPeriod"/.test(admin), 'the tab has a period selector');
 ok(/<option value="14" selected>/.test(admin), 'defaulting to 14 days');
 ok(/api\('\/admin\/visits\?'\+_perQuery\(\)\)/.test(admin) && /'days='\+_trafPeriod/.test(admin), 'which is sent with every load');
 ok(/localStorage\.setItem\('pth_admin_period'/.test(admin), 'and remembered like the theme');
-ok(/if\(P===7\|\|!per\)\{ P=30; per=d\.month; perPrev=pv\.month; \}/.test(admin), 'at 7 days the third tile shows 30 days instead of repeating "Last 7 days"');
+ok(/if\(P===7\|\|!per\)\{ P=30; per=d\.month; perPrev=pv\.month; perCmp=fu\.month; \}/.test(admin), 'at 7 days the third tile shows 30 days instead of repeating "Last 7 days"');
 const pick = body(admin, '_envPick');
 ok(!!pick, 'admin has _envPick');
 ok(/per\.days>0/.test(pick) && /per\.lgDays>0/.test(pick), 'a view uses the period only where its own per-day history exists — the running totals otherwise');
