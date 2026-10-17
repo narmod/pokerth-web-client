@@ -29,118 +29,124 @@ function body(src, name) {
 }
 
 // The @media block that opens the second column.
-const wide = (admin.match(/@media\(min-width:1100px\)\{[\s\S]*?\n  \}/) || [''])[0];
+const wide = (admin.match(/@media\(min-width:1280px\)\{[\s\S]*?\n  \}/) || [''])[0];
 // Every mobile block, concatenated: the phone rules are written in more than
 // one place, and a guard that reads only the first would pass or fail on where
 // a rule happens to sit rather than on whether it exists.
 const small = (admin.match(/@media\(max-width:600px\)\{[\s\S]*?\n  \}/g) || []).join('\n');
+const narrow = (admin.match(/@media\(max-width:899px\)\{[\s\S]*?\n  \}/g) || []).join('\n');
+const shellJs = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'modules', 'admin', 'shell.mjs'), 'utf8');
 
-// ── Tab bar ───────────────────────────────────────────────────────────────
-ok(/\.tab\{flex:0 0 auto;white-space:nowrap/.test(admin),
-  'tabs size to their label and never break a title onto two lines');
-ok(/\.tabs\{display:flex;flex-wrap:wrap/.test(admin),
-  'the bar wraps rather than overflow at in-between widths');
-ok(/\.tabs\{flex-wrap:nowrap\}/.test(small),
-  'on a phone the bar scrolls instead — wrapping would defeat overflow-x');
-ok(/\.tabs\.sc-r\{/.test(small) && /\.tabs\.sc-l\{/.test(small) && /\.tabs\.sc-l\.sc-r\{/.test(small),
-  'the edge fade covers both directions and both at once');
-ok(/-webkit-mask-image/.test(small), 'the fade carries its WebKit prefix for older iOS');
+// ── Side menu (2.1.10-web.117) ────────────────────────────────────────────
+// The three families on top and their horizontal section bars made way for a
+// side menu grouped by what the operator is doing. The buttons kept their
+// classes, so the handlers that open a panel are the same as before.
+const GROUPS = {
+  stats: ['traffic'], live: ['sessions', 'errors'], community: ['board', 'polls', 'broadcast', 'landir'],
+  content: ['packages', 'music'], players: ['clients', 'defaults'], infra: ['servers', 'proxy', 'identity'],
+  ops: ['server', 'deploy', 'access'], security: ['keys'],
+};
+function grp(g) {
+  const a = admin.indexOf('<div class="sgrp');
+  const i = admin.indexOf('data-g="' + g + '"', a);
+  if (a < 0 || i < 0) return '';
+  const end = admin.indexOf('<div class="sgrp', i);
+  const navEnd = admin.indexOf('</nav>', i);
+  return admin.slice(i, end < 0 || end > navEnd ? navEnd : end);
+}
+const order = [...admin.matchAll(/<div class="sgrp(?: one)?" data-g="([a-z]+)">/g)].map(m => m[1]);
+ok(JSON.stringify(order) === JSON.stringify(Object.keys(GROUPS)), 'the menu groups run in their intended order: ' + order.join(', '));
+let all = [];
+for (const [g, tabs] of Object.entries(GROUPS)) {
+  const seg = grp(g);
+  const got = [...seg.matchAll(/class="tab(?: on)?" data-t="([a-z]+)"/g)].map(m => m[1]);
+  ok(JSON.stringify(got) === JSON.stringify(tabs), 'group ' + g + ' holds ' + tabs.join(', ') + ' (got ' + got.join(', ') + ')');
+  ok(/<button type="button" class="gtab(?: on)?" data-g="/.test(seg), 'group ' + g + ' has its button');
+  ok(new RegExp('class="tabs subtabs" data-g="' + g + '"').test(seg), 'and its list of sections');
+  ok(/<svg class="gi" viewBox="0 0 256 256" aria-hidden="true"/.test(seg), 'and a decorative Phosphor icon');
+  ok(new RegExp('<div class="sgrp' + (tabs.length === 1 ? ' one' : '') + '" data-g="' + g + '">').test(admin),
+    tabs.length === 1 ? 'a one-section group opens its section directly' : 'a group of several unfolds its list');
+  all = all.concat(got);
+}
+ok(all.length === 18 && new Set(all).size === 18, 'every one of the eighteen sections is reachable, once');
+for (const sc of ['packages', 'music', 'broadcast', 'polls', 'leaderboard']) {
+  ok(new RegExp('data-scope="' + sc + '"').test(admin), 'scope ' + sc + ' survived the move');
+}
+ok(/class="gtab on" data-g="ops"/.test(admin), 'the dashboard opens on Operations');
+ok(/<button type="button" class="tab on" data-t="server">/.test(admin), 'on Health & logs, as before');
+ok(/\.sgrp\.one \.gcar,\.sgrp\.one \.subtabs\{display:none!important\}/.test(admin), 'a one-section group shows no list to unfold');
+ok(/function setGroup\(g, pick\)/.test(admin), 'setGroup exists');
+ok(/\.gtab'\)\.forEach/.test(admin), 'group buttons are wired');
+ok(/bar\.classList\.contains\('subtabs'\)\) setGroup\(bar\.dataset\.g, false\)/.test(admin),
+  'reaching a section from code opens its group, without re-picking one');
+const scope = body(admin, 'applyScopeVisibility');
+ok(/gb\.style\.display = any/.test(scope), 'a group with nothing left in it disappears');
+ok(/if\(live && !document\.querySelector\('\.gtab\.on'\)\) setGroup\(live, true\)/.test(scope),
+  'a scoped key lands on a group it can actually open');
+ok(/grp\.classList\.toggle\('one'/.test(scope), 'a group a scoped key sees one section of opens it directly too');
+ok(/querySelectorAll\('\.tab'\)/.test(scope) && !/querySelectorAll\('\.gtab, \.tab'\)/.test(scope),
+  'group buttons carry no data-scope of their own');
+ok(!/tabsFade/.test(admin), 'the horizontal bars are gone, and the edge fade with them');
+ok(!/class="tabs gtabs"/.test(admin) && !/\.gtabs\{/.test(admin), 'no rule is left for the old family row');
+ok(/scrollIntoView\(\{block:'nearest',inline:'nearest'\}\)/.test(admin),
+  'picking a section keeps it in view in a menu taller than the screen');
 
-// ── The JS that drives the fade ───────────────────────────────────────────
-ok(/function tabsFade\(\)/.test(admin), 'tabsFade exists');
-ok(/scrollWidth-t\.clientWidth/.test(admin), 'the fade is driven by real overflow, not by a width guess');
-ok(/over>1 && t\.scrollLeft>1/.test(admin), 'no fade at all when every tab fits');
-ok(/addEventListener\('scroll', tabsFade/.test(admin), 'the fade follows the scroll');
-ok(/addEventListener\('resize', tabsFade\)/.test(admin), 'and the window size');
-ok(/setTimeout\(tabsFade, 0\)/.test(body(admin, 'applyScopeVisibility')),
-  'hiding tabs for a scoped key recomputes the overflow');
-ok(/scrollIntoView\(\{block:'nearest',inline:'nearest'/.test(admin),
-  'picking a tab brings it into view without scrolling the page');
+// ── Shell layout ──────────────────────────────────────────────────────────
+ok(/\.shell\{display:grid;grid-template-columns:var\(--sidew\) minmax\(0,1fr\)/.test(admin), 'menu and page side by side');
+ok(/\.side\{position:sticky;top:0;height:100vh;height:100dvh/.test(admin), 'the menu stays put while the page scrolls');
+ok(/\.snav\{[^}]*overflow-y:auto/.test(admin), 'and scrolls on its own when taller than the screen');
+ok(/dash\.style\.display=v==='dash'\?'':'none'/.test(admin), 'showing the dashboard clears display, so the grid applies');
+ok(/\.pagebody\{max-width:1600px\}/.test(admin), 'the page takes the width, up to where lines stop being readable');
+ok(/\.side\{position:fixed;[^}]*transform:translateX\(-102%\)/.test(narrow), 'under 900px the menu becomes a drawer');
+ok(/\.shell\.open \.side\{transform:none;visibility:visible\}/.test(narrow), 'opened by the menu button');
+ok(/\.shell\.open \.scrim\{display:block/.test(narrow), 'over a scrim that closes it');
+ok(/\.sclose,\.menubtn\{display:inline-flex\}/.test(narrow), 'both buttons only exist there');
+ok(/\.main \.top\{position:sticky;top:0/.test(narrow), 'the page header stays at hand on a phone');
+ok(/prefers-reduced-motion:reduce\)\{ \.side\{transition:none\} \}/.test(admin), 'the drawer does not slide for who asked for no motion');
+ok(/env\(safe-area-inset-top\)/.test(admin) && /viewport-fit=cover/.test(admin), 'an installed app on a notched phone keeps clear of the notch');
+ok(/id="menuBtn" aria-label="Open the menu" aria-controls="side" aria-expanded="false"/.test(admin), 'the menu button says what it controls');
+ok(/<script type="module" src="\/modules\/admin\/shell\.mjs"><\/script>/.test(admin), 'the shell module is loaded');
+ok(/menuBtn\.setAttribute\('aria-expanded', 'true'\)/.test(shellJs), 'and keeps aria-expanded in step');
+ok(/e\.key === 'Escape'/.test(shellJs), 'Escape closes the drawer');
+ok(/if \(e\.isTrusted \|\| groupByHand\) location\.hash = t;/.test(shellJs) && /history\.replaceState/.test(shellJs),
+  'a section picked by hand is a step for the back button; one picked by code is not');
+ok(/b\.style\.display !== 'none'/.test(body(shellJs, 'tabFor')), 'a route never opens a section the key may not see');
+ok(/\.click\(\)/.test(body(shellJs, 'openFromHash')), 'a route opens a section by its own button, loaders included');
+ok(/gb\.textContent !== txt/.test(shellJs), 'the group badge only writes on change, so its observer settles');
 
 // ── Two columns on a wide screen ──────────────────────────────────────────
-ok(/\.wrap\{max-width:1180px\}/.test(wide), 'the page widens past 1100px');
+ok(wide !== '', 'the two-column block exists, past 1280px once the menu takes its share');
 ok(/columns:2/.test(wide), 'the busiest panels split into two columns');
-ok(/#panel-server|#panel-traffic|#panel-clients|#panel-broadcast/.test(wide),
-  'the split is opt-in per panel, not global');
+ok(/#panel-broadcast|#panel-defaults/.test(wide), 'the split is opt-in per panel, not global');
 ok(/break-inside:avoid/.test(wide), 'a card is never cut across the column break');
 ok(/-webkit-column-break-inside:avoid/.test(wide), 'with the WebKit spelling alongside');
-// Traffic used to be a column layout with a column-span:all exception on every
-// chart, which is the shape of a panel fighting its own rules. It is one card
-// now, so both the split and its exceptions are gone.
-ok(!/#panel-traffic/.test(wide), 'the traffic panel no longer asks for two columns');
-ok(!/#trafChart|#trafCards|#trafEnv|#trafMusic/.test(wide),
-  'and needs no per-chart exception to win its width back');
-ok(/columns:2/.test(wide), 'the panels that still split into two columns keep doing so');
+ok(!/#panel-traffic/.test(wide), 'the traffic panel does not ask for two columns');
+ok(!/#trafChart|#trafCards|#trafEnv|#trafMusic/.test(wide), 'and needs no per-chart exception to win its width back');
 ok(!/columns:2/.test(small), 'nothing changes on a phone');
 
-// ── Tab families ──────────────────────────────────────────────────────────
-// Twelve flat tabs mixed three kinds of settings. The family is picked on top,
-// the section inside it. Every original section must survive the move: a lost
-// data-t is a panel nobody can reach any more.
-for (const t of ['server', 'servers', 'keys', 'clients', 'packages', 'music',
-                 'broadcast', 'polls', 'traffic', 'sessions', 'errors', 'board']) {
-  ok(new RegExp('data-t="' + t + '"').test(admin), 'section ' + t + ' is still reachable');
-}
-for (const sc of ['packages', 'music', 'broadcast', 'polls', 'leaderboard']) {
-  ok(new RegExp('data-scope="' + sc + '"').test(admin), 'scope ' + sc + ' survived the regroup');
-}
-ok((admin.match(/class="tabs subtabs"/g) || []).length === 3, 'three families');
-ok(/class="gtab on" data-g="server"/.test(admin), 'the dashboard opens on Server');
-ok(/function setGroup\(g, pick\)/.test(admin), 'setGroup exists');
-ok(/\.gtab'\)\.forEach/.test(admin), 'family buttons are wired');
-ok(/bar\.classList\.contains\('subtabs'\)\) setGroup\(bar\.dataset\.g, false\)/.test(admin),
-  'reaching a section from code reveals its family, without re-picking one');
-const scope = body(admin, 'applyScopeVisibility');
-ok(/gb\.style\.display = any/.test(scope), 'a family with nothing left in it disappears');
-ok(/if\(live && !document\.querySelector\('\.gtab\.on'\)\) setGroup\(live, true\)/.test(scope),
-  'a scoped key lands on a family it can actually open');
-ok(/querySelectorAll\('\.tab'\)/.test(scope) && !/querySelectorAll\('\.gtab, \.tab'\)/.test(scope),
-  'family buttons carry no data-scope of their own');
-ok(/document\.querySelectorAll\('\.tabs'\)\.forEach/.test(body(admin, 'tabsFade')),
-  'the edge fade now covers every bar, not just the first');
-
 // ── Header ────────────────────────────────────────────────────────────────
-// Two admin tabs look alike down to the pixel; the host is the only thing
-// that tells them apart, so it sits in the middle of the header.
-ok((admin.match(/PokerTH Web Client \u2014 Admin/g) || []).length === 3,
-  'the product is named in full, in the tab, on the login screen and on the dashboard');
-ok(!/PokerTH \u2014 Admin/.test(admin), 'and the short form is gone from all three');
-ok(/<div class="tophost" id="topHost"/.test(admin), 'the header carries a host chip');
-ok(/h\.textContent=location\.host/.test(admin) && !/location\.hostname/.test(admin),
-  'filled from the URL, host and not hostname \u2014 a panel on an odd port has to say so');
-ok(/\.top>\.tophd\{flex:1 1 0/.test(admin) && /\.topbtns\{[^}]*flex:1 1 0/.test(admin),
-  'both sides take an equal share, so the chip lands on the real centre rather than wherever the title ends');
-ok(/\.tophost\{flex:0 0 auto/.test(admin), 'while the chip itself is sized by its text');
+// Two admin tabs look alike down to the pixel; the host tells them apart.
+ok((admin.match(/PokerTH Web Client — Admin/g) || []).length === 2,
+  'the product is named in full in the window title and on the login screen');
+ok(/BASE_TITLE = 'PokerTH Web Client \u2014 Admin'/.test(shellJs), 'and the window title names the open section before it');
+ok(/<b>PokerTH Admin<\/b><span id="sideHost"/.test(admin), 'the menu carries the brand and the host');
+ok(!/PokerTH — Admin/.test(admin), 'the old short form is gone');
+ok(/<div class="tophost" id="topHost"/.test(admin), 'the page header carries a host chip');
+ok(/h\.textContent=location\.host/.test(admin) && /sh\.textContent=location\.host/.test(admin) && !/location\.hostname/.test(admin),
+  'filled from the URL, host and not hostname — a panel on an odd port has to say so');
+ok(/\.tophost\{flex:0 0 auto/.test(admin), 'the chip is sized by its text');
 ok(/\.tophost\{[^}]*text-overflow:ellipsis/.test(admin), 'a long host is clipped, not allowed to shove the buttons off');
-const smallTop = /@media\(max-width:600px\)\{([^]*?)\n  \}/g;
-const phoneCss = [...admin.matchAll(smallTop)].map(m => m[1]).join('\n');
-ok(/\.tophost\{order:3;flex:1 1 100%/.test(phoneCss),
-  'and on a phone it drops to its own full-width line instead of squeezing between title and buttons');
-ok(/\.topbtns\{display:contents\}/.test(phoneCss) && /\.topbtns>\.ghost\{order:1/.test(phoneCss),
-  'on a phone the theme and log-out buttons stay on the title line, top right');
-ok(/\.toplive\{order:2;flex:1 1 100%/.test(phoneCss),
-  'while the live-stats pill, too wide for that line, drops below on its own');
-
-// ── Family bar stands out ─────────────────────────────────────────────────
-ok(/\.gtab\{flex:1 1 0/.test(admin),
-  'the three families share the width, reading as the page navigation');
-// The 520px cap made the family row a short island above a full-width section
-// row: two bars that belong together, aligned differently. It is gone; the row
-// takes the page width like everything under it.
-ok(!/\.gtabs\{[^}]*max-width/.test(admin), 'taking the page width, aligned with the sections below');
-ok(/\.subtabs \.tab\{background:transparent;border-color:transparent\}/.test(admin),
-  'unopened sections are plain text, so the two rows do not look alike');
-ok(/\.subtabs \.tab\.on\{background:var\(--panel\);border-color:var\(--gold\)\}/.test(admin),
-  'the open section still carries its frame');
-// --gold is dark in the light theme: a plain `.gtab` rule outranks `.gtab.on`
-// (0,2,1 against 0,2,0) and used to repaint the active family's background,
-// leaving dark text on a dark fill.
-ok(/light"\] \.gtab:not\(\.on\)\{/.test(admin),
-  'the light-theme fill spares the active family');
-ok(/light"\] \.gtab\.on\{color:#f4f6fb\}/.test(admin),
-  'and the active family keeps a readable text colour there');
-ok(!/\.gtabs\{[^}]*max-width/.test(small), 'with nothing left on a phone to undo a cap that no longer exists');
-ok(/\.gtabs\{[^}]*overflow:visible/.test(small), 'three of them never need to scroll');
+ok(/\.main \.top \.tophost\{display:none\}/.test(narrow), 'on a phone the menu shows the host, the header keeps the title');
+ok(/<p class="eyebrow" id="pageGroup">Operations<\/p><h1 id="pageTitle">Health &amp; logs<\/h1>/.test(admin),
+  'the page header names the group and the section, Health & logs at load');
+ok(/id="sideVer"/.test(admin) && /\$\('sideVer'\)/.test(admin), 'the menu shows the running build');
+ok(/id="sideWho"/.test(admin) && /\$\('sideWho'\)/.test(admin), 'and which key is signed in');
+ok(/<button id="themeBtn"/.test(admin) && /<button id="logoutBtn"/.test(admin), 'theme and log-out sit at the foot of the menu, ids unchanged');
+ok(/btn\.innerHTML = l \? MOON : SUN/.test(admin), 'the theme button draws a sun or a moon, not an emoji');
+ok(/meta\[name="theme-color"\]/.test(admin), 'the browser chrome follows the admin theme');
+ok(/<link rel="manifest" href="\/admin-manifest\.json">/.test(admin), 'the admin installs as an app of its own');
+ok(/<link rel="apple-touch-icon"/.test(admin) && /apple-mobile-web-app-capable/.test(admin), 'including on iOS');
+ok(/@font-face\{font-family:'Inter';src:url\('\/fonts\/InterVariable\.woff2'\)/.test(admin), 'in Inter, the font of the QML client, self-hosted');
 
 // ── One section per panel ─────────────────────────────────────────────────
 // Overview held eight cards and Settings ten, which read as a wall. Each group
@@ -181,7 +187,7 @@ const openAtLoad = [...admin.matchAll(/<div id="(panel-[a-z]+)"(?! style="displa
   .map(m => m[1]);
 ok(openAtLoad.length === 1, 'exactly one panel is open at load, not ' + openAtLoad.length);
 ok(openAtLoad[0] === 'panel-server', 'and it is the one the active tab points at');
-ok(/<button class="tab on" data-t="server">/.test(admin), 'which is the tab marked active');
+ok(/<button type="button" class="tab on" data-t="server">/.test(admin), 'which is the tab marked active');
 ok(/#panel-defaults[^{]*\{columns:2/.test(admin), 'the five defaults cards use both columns');
 ok(!/#panel-server,/.test(admin), 'a two-card panel no longer asks for two columns');
 
@@ -261,19 +267,6 @@ ok(/setTimeout\(function\(\)\{ b\.textContent='Copy'/.test(wire), 'the button go
 ok(/wireCopy\('logsCopy','logs'\)/.test(admin) && /wireCopy\('updlogCopy','updlog'\)/.test(admin),
   'both logs on the page can be copied');
 ok(/id="logsCopy"/.test(admin) && /id="updlogCopy"/.test(admin), 'both buttons exist');
-
-// Identity & reach belongs to the server, not to the client.
-// The family buttons carry data-g too, so anchor on the bar itself.
-function bar(g) {
-  const a = admin.indexOf('class="tabs subtabs" data-g="' + g + '"');
-  return a < 0 ? '' : admin.slice(a, admin.indexOf('</div>', a));
-}
-ok(JSON.stringify([...bar('server').matchAll(/data-t="([a-z]+)"/g)].map(m => m[1]))
-   === JSON.stringify(['server', 'deploy', 'proxy', 'access', 'identity', 'servers', 'landir', 'keys']),
-  'the Server sections run in their intended order');
-ok(/data-t="identity"/.test(bar('server')), 'Identity & reach sits in the Server family');
-ok(!/data-t="identity"/.test(bar('client')), 'and no longer in the Client one');
-ok(/data-t="clients"/.test(bar('client')), 'the Client family kept its own sections');
 
 // ── Visual rhythm ─────────────────────────────────────────────────────────
 // Card titles and lead paragraphs carried their spacing in the tags, in six

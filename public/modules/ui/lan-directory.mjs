@@ -4,7 +4,7 @@
 // (web extension, no QML counterpart; narmod 2026-10-14).
 //
 // The proxy keeps a directory of community PokerTH servers: players propose
-// theirs, an admin approves them (server/lan-directory.js, admin › Server ›
+// theirs, an admin approves them (server/lan-directory.js, admin › Community ›
 // LAN directory). This module puts it on the login form, LAN mode only:
 //
 //   · a « LAN server » drop-down (#lan-dir-sel, the sel-wrap component) of

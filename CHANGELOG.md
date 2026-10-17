@@ -16,6 +16,16 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin page: a side menu** (`web.117`) — the three families on top and their horizontal section bars give way to a
+  side menu grouped by task: Statistics, Live (sessions, errors), Community (leaderboard, polls, broadcasts, LAN
+  directory), Content (packages, music), Player experience (modes & features, defaults), Infrastructure (game servers,
+  proxy, identity & reach), Operations (health & logs, deployment, access & backup) and Security (keys), with the
+  Phosphor icons of the QML client. Full width (up to 1600 px of content), light and dark themes on shared tokens,
+  Inter self-hosted. Under 900 px the menu is a drawer behind a menu button, with a sticky page header. Each section
+  has its address (`/admin#traffic`, `/admin#keys`…): reload, bookmarks and the back button land on it. The page
+  installs as an app of its own (`admin-manifest.json`, scope `/admin`). The section buttons keep their classes, so
+  every loader and scope rule is unchanged; `public/modules/admin/shell.mjs` only adds the drawer, the routes, the
+  page title and the group badges. The panels are still the former ones; they move to the new layout next.
 - **Mini-games without categories** (`web.102`) — the « Just for fun » heading is gone: the page lists the games
   directly, in the registry's order (`SHELVES`, the `shelf` field and `gmShelfPlay` removed, 83 languages).
 - **Mini-games instead of Arcade, the lessons removed** (`web.101`) — the page and its title are now « Mini-games »

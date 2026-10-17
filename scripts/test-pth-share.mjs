@@ -47,7 +47,7 @@ ok(!/chatNick|nick/.test(fn('recordPthSample')), 'no nickname is stored, only co
 // -- Run it -------------------------------------------------------------------
 const visitsStore = { days: {}, pthSince: 0 };
 const scope = new Function('visitsStore', 'PTH_SAMPLE_MS', '_liveStatsCfg', 'pruneVisitDays', '_pthLast',
-  fn('visitDayKey') + '\n' + fn('recordPthSample') + '\n' + fn('_pthMean') + '\n' + fn('pthShareSummary') +
+  fn('visitDayKey') + '\n' + fn('_hourInstants') + '\n' + fn('recordPthSample') + '\n' + fn('_pthMean') + '\n' + fn('pthShareSummary') +
   '\nreturn { visitDayKey, recordPthSample, pthShareSummary };')(visitsStore, 300000, () => ({ on: true }), () => {}, null);
 const { visitDayKey, recordPthSample, pthShareSummary } = scope;
 

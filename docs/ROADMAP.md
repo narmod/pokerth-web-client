@@ -14,7 +14,7 @@ use too. Items are grouped by status rather than fixed phases.
 - **Hidden mini-games** (`2.1.10-web.84`–`web.102`) — Video Poker (`web.91`), Who Wins? (`web.92`), Higher or Lower (`web.93`), The Ace's Bluff (`web.94`), a « Learn poker » shelf of six lessons (`web.95`–`web.100`), removed in `web.101` when the page became « Mini-games », which lists its games without categories (`web.102`); an arcade page with a picture for each game (`web.89`), the header of the other pages, rules for each game, portrait / landscape and light / dark themes (`web.88`); whoever wins every training trophy gets the secret word from the Ace (`web.87`, teased by Ace's Help on the Trophies tab); an arcade menu with « Poker Solitaire » (`web.86`: a 5 × 5 grid where every row and column is a poker hand, a daily challenge with the same deal for everyone), « House of Cards » (`web.85`: drop cards on the rail, every floor of five cards is a poker hand, the Tilt gauge, burns, Blinds up, a showdown) and « Ace Runner »: the nickname « mascot » (or its translation) in training opens a runner game with the Ace — chip stacks, flying cards, the dealer button, cards to pick up whose best poker hand multiplies the score (Joker wild), Blinds up levels, an All-In power-up, a showdown at the end, a secret trophy. `modules/games/` is a small registry so other games can follow. Web addition.
 - **Gamepad** (`2.1.10-web.79`, `web.81`) — play and browse the whole client with a game controller (Gamepad API). Select switches Game / Navigation: table buttons in Game (A Check/Call, X Fold, Y Bet/Raise, hold Y All-In, triggers for the amount, bumpers for 1/3 · 1/2 · Pot), a focus ring in Navigation (D-pad, A select, B back, bumpers between the table, the open panels and the Ace). Start opens a gamepad menu; an on-screen keyboard with quick chat phrases. The core (`ui/ctl-nav.mjs`) is device-agnostic; the Android TV remote is its second adapter (`ui/remote.mjs`, `web.82`). Web addition; the official client has no gamepad support.
 
-- **SEO / search-engine visibility (admin option, off by default)** — `/admin` → Clients → Search engine visibility. Off: pages served with `noindex,nofollow`, `robots.txt` blocks all crawlers (self-hosted installs stay unindexed). On: meta description, Open Graph / Twitter cards, canonical, JSON-LD, crawler-readable summary block, plus generated `robots.txt` (AI crawlers welcomed), `sitemap.xml` and `llms.txt` from the configured public URL. Injected at serve time by `proxy.js` (v2.1.6-web.25).
+- **SEO / search-engine visibility (admin option, off by default)** — `/admin` → Infrastructure → Identity & reach → Search engine visibility. Off: pages served with `noindex,nofollow`, `robots.txt` blocks all crawlers (self-hosted installs stay unindexed). On: meta description, Open Graph / Twitter cards, canonical, JSON-LD, crawler-readable summary block, plus generated `robots.txt` (AI crawlers welcomed), `sitemap.xml` and `llms.txt` from the configured public URL. Injected at serve time by `proxy.js` (v2.1.6-web.25).
 
 - **Low-vision accessibility** (`2.1.8-web.122`–`.135`, `2.1.8-web.147`) — a browser-local Accessibility preference set, reachable before login and from every lobby/game header: Interface size (Standard / Large / Extra Large), an independent High contrast palette, and the existing pinch-zoom permission. Preferences apply live, survive reload, and travel through configuration export/import and account web-preference sync. On phones and tablets, Extra Large switches active play to an adaptive layout that keeps critical information visible and moves chat/log/hands/reactions into keyboard- and touch-operable drawers. This is a bounded accessibility sweep, not a claim of full WCAG conformance; manual real-device verification is still pending (see [LOW_VISION_REAL_DEVICE_ACCEPTANCE.md](docs/LOW_VISION_REAL_DEVICE_ACCEPTANCE.md)).
 
@@ -267,6 +267,12 @@ use too. Items are grouped by status rather than fixed phases.
 
 ## 🔨 Now (in progress)
 
+- **Admin page redesign** — audit done (30 fixes, `web.109`–`web.116`); side-menu shell with light and dark
+  themes, phone drawer, section addresses and an installable admin app (`web.117`). Next: an Overview page,
+  then each section moved to the new layout one at a time, then Statistics v2 (global filter for
+  Training / Internet / LAN / Live, the world map as the main view with live connections, hour band) and
+  stored cross-filters.
+
 - **Official QML client fidelity** — ongoing pixel-and-behaviour alignment of the in-game
   screen with the official QML client (action bar, mobile layouts, seat geometry).
   Each upstream release gets its own pass, driven by the QML sources extracted from the
@@ -276,7 +282,7 @@ use too. Items are grouped by status rather than fixed phases.
 
 - **LAN server directory** — players propose their PokerTH server from the LAN login screen,
   the admin approves it, and approved servers fill a drop-down for everyone. Server side
-  (`server/lan-directory.js`, `web.41`), admin tab Server › LAN directory (`web.42`) and the
+  (`server/lan-directory.js`, `web.41`), admin section Community › LAN directory (`web.42`) and the
   login drop-down with the proposal form and Ace's Help (`web.43`), « Local server » first
   (`web.44`) and one leaderboard per LAN server with its own reset period (`web.46`) done. Left: deploy, then
   untick « manual address entry » on pokerth.net once servers are listed; serverlist XML export

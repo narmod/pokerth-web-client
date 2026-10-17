@@ -2,20 +2,33 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
+<meta name="theme-color" content="#11171F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PokerTH Admin">
+<link rel="manifest" href="/admin-manifest.json">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/favicon-180.png">
 <title>PokerTH Web Client — Admin</title>
 <style>
-  :root{--panel:rgba(20,25,33,.92);--line:rgba(160,172,196,.18);--gold:#eff1f5;--cream:#eff1f5;--text:#a0acc4}
+  /* Inter is the font of the official QML client; it ships with the web client. */
+  @font-face{font-family:'Inter';src:url('/fonts/InterVariable.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+  /* Theme tokens. --gold, --cream and --text keep their old meaning (strong text,
+     body text, secondary text) so every panel follows the theme unchanged. */
+  :root{--bg:#0E1319;--side:#11171F;--panel:#161D27;--line:rgba(160,172,196,.16);--gold:#E7ECF3;--cream:#E7ECF3;--text:#9AA6B8;--muted:#9AA6B8;
+        --navfg:#C9D2DE;--hover:rgba(160,172,196,.08);--accent:#3DBE86;--accent-soft:#1E2A22;--accent-text:#7FD3AA;--sidew:256px}
   *{box-sizing:border-box}
-  body{margin:0;font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(circle at 50% 0%,#1d222b,#0e1218);color:var(--cream);min-height:100vh;padding:18px}
-  .wrap{max-width:640px;margin:0 auto}
+  body{margin:0;font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--cream);min-height:100vh}
+  .wrap{margin:0}
   h1{font-size:1.15rem;margin:.2rem 0 .1rem;color:var(--gold)}
   h2{font-size:.95rem;color:var(--gold);margin:2px 0 8px}
   .sub{color:var(--text);font-size:.8rem;margin:0 0 16px}
-  .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .top{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap}
   .top>.tophd{flex:1 1 0;min-width:0}
-  .topbtns{display:flex;gap:8px;margin-top:4px;flex:1 1 0;justify-content:flex-end}
+  .topbtns{display:flex;gap:8px;flex:0 1 auto;justify-content:flex-end}
   /* Quelle instance ai-je sous les yeux ? Deux onglets d'administration se
      ressemblent trait pour trait ; l'hote est la seule chose qui les separe. */
   .tophost{flex:0 0 auto;align-self:center;max-width:40%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
@@ -43,7 +56,6 @@
   .clkopt{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border:1px solid var(--line);border-radius:999px;font-size:.8rem;cursor:pointer;user-select:none}
   .clkopt input{margin:0;flex:none}
   .clkopt.on{border-color:var(--gold);background:rgba(160,172,196,.14)}
-  .ti{margin-right:6px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px}
   /* Deux tableaux courts se lisent mieux cote a cote qu'empiles : le duo
      « connexions par serveur » / « nouveaux vs recurrents » tient sur une seule
@@ -94,24 +106,6 @@
   .lsprev .tl.on svg{color:var(--good,#4ade80)}
   .ghost,.appbtn{padding:7px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--cream);text-decoration:none;font-size:.8rem;white-space:nowrap;cursor:pointer}
   .appbtn{border-color:var(--gold);background:rgba(239,241,245,.12);color:var(--gold)}
-  .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
-  .tab{flex:0 0 auto;white-space:nowrap;padding:9px 14px;border-radius:8px 8px 0 0;border:1px solid var(--line);border-bottom:none;background:rgba(255,255,255,.03);color:var(--text);cursor:pointer;font-size:.84rem}
-  .tab.on{background:var(--panel);color:var(--gold);font-weight:700;border-color:var(--gold)}
-  /* Douze onglets a plat melangeaient trois natures de reglages. La famille se
-     choisit en haut, la section dedans : la barre du bas ne montre alors que
-     ce qui appartient a la famille courante. */
-  /* Les trois familles se partagent la largeur : elles se lisent alors comme
-     la navigation de la page, et non comme quatre boutons de plus sous ceux de
-     l'en-tete. Le plafond les empeche de devenir absurdes sur un grand ecran. */
-  .gtabs{margin:16px 0 10px;gap:8px}
-  .gtab{flex:1 1 0;min-width:0;white-space:nowrap;padding:11px 18px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;font-size:.95rem}
-  .gtab.on{background:var(--gold);color:#10151c;border-color:var(--gold);font-weight:700}
-  /* Les sections passent au second plan : seule celle qui est ouverte porte un
-     cadre, les autres ne sont que du texte. Sans ce contraste les deux rangees
-     se ressemblent et la hierarchie ne se voit plus. */
-  .subtabs{margin:0 0 14px}
-  .subtabs .tab{background:transparent;border-color:transparent}
-  .subtabs .tab.on{background:var(--panel);border-color:var(--gold)}
   .seg{display:flex;gap:8px;margin:10px 0}
   .seg button{flex:1;padding:9px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--cream);cursor:pointer;font-size:.86rem}
   .seg button.on{background:var(--gold);color:#10151c;border-color:var(--gold);font-weight:700}
@@ -318,7 +312,7 @@
   .btnrow{display:flex;gap:8px;flex-wrap:wrap}
   .use.danger{background:rgba(184,52,52,.16);border-color:rgba(184,52,52,.5);color:#e98a8a}
   .use:disabled{opacity:.5;cursor:default}
-  /* LAN directory (Server › LAN directory) */
+  /* LAN directory (Community › LAN directory) */
   .tbadge{display:inline-block;min-width:18px;padding:0 5px;margin-left:6px;border-radius:999px;background:#f0a83a;color:#1a1205;font-size:.7rem;font-weight:700;line-height:18px;text-align:center;vertical-align:1px}
   .ldreq{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:0 0 8px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
   .ldreq .ldmain{flex:999 1 380px;min-width:0}
@@ -406,8 +400,8 @@
   .envdiag td:first-child,.envdiag th:first-child{text-align:left;white-space:normal;word-break:break-all;color:var(--cream)}
   .envdiag th{font-weight:600;color:var(--text);border-bottom:1px solid var(--line)}
   /* ── Light admin theme (data-admin-theme="light") ───────────── */
-  :root[data-admin-theme="light"]{--panel:#ffffff;--line:rgba(28,38,58,.16);--gold:#1d222b;--cream:#1b2230;--text:#566071}
-  :root[data-admin-theme="light"] body{background:radial-gradient(circle at 50% 0%,#eef1f6,#d7dde7)}
+  :root[data-admin-theme="light"]{--bg:#F4F6F9;--side:#FFFFFF;--panel:#ffffff;--line:rgba(28,38,58,.14);--gold:#1d222b;--cream:#1b2230;--text:#566071;--muted:#5A6678;
+        --navfg:#2C3644;--hover:rgba(29,34,43,.05);--accent:#187A50;--accent-soft:#E3F3EA;--accent-text:#13704A}
   :root[data-admin-theme="light"] input[type=password],
   :root[data-admin-theme="light"] select,
   :root[data-admin-theme="light"] .filter,
@@ -418,17 +412,9 @@
   :root[data-admin-theme="light"] .seg button.on{color:#f4f6fb}
   :root[data-admin-theme="light"] .seg button.on{background:var(--gold)}
   :root[data-admin-theme="light"] .appbtn{background:rgba(29,34,43,.08)}
-  :root[data-admin-theme="light"] .tab,
   :root[data-admin-theme="light"] .seg button,
   :root[data-admin-theme="light"] .use,
   :root[data-admin-theme="light"] .ghost{background:rgba(29,34,43,.05)}
-  :root[data-admin-theme="light"] .tab.on{background:var(--panel)}
-  :root[data-admin-theme="light"] .gtab:not(.on){background:rgba(29,34,43,.04)}
-  /* --gold est sombre en theme clair : sans cette ligne, la famille active
-     ecrivait du texte sombre sur un fond sombre. */
-  :root[data-admin-theme="light"] .gtab.on{color:#f4f6fb}
-  :root[data-admin-theme="light"] .subtabs .tab{background:transparent}
-  :root[data-admin-theme="light"] .subtabs .tab.on{background:var(--panel)}
   :root[data-admin-theme="light"] .drop.hot{background:rgba(29,34,43,.06)}
   :root[data-admin-theme="light"] .logs{background:#f3f5f9;color:#2b3340}
   :root[data-admin-theme="light"] .prog{background:rgba(29,34,43,.1)}
@@ -445,27 +431,21 @@
 
   /* ── Responsive & desktop polish ──────────────── */
   @media(min-width:760px){
-    body{padding:28px 20px}
-    .wrap{max-width:820px}
     .card{padding:18px}
-    .tabs{gap:8px}
-    #login{max-width:440px;margin:0 auto}
     input[type=password]{max-width:480px}
   }
-  /* Sous 1100 px rien ne change : une colonne, comme avant. Au-delà, la colonne
+  /* Sous 1280 px (menu lateral compris) rien ne change : une colonne, comme avant. Au-delà, la colonne
      de 820 px laissait un tiers de l'écran vide alors que les panneaux les plus
      fournis obligent à défiler longuement. Leurs cartes se répartissent sur deux
      colonnes de hauteur équilibrée ; celles qui portent un graphique ou une
      grille reprennent toute la largeur, où elles seraient illisibles. */
-  @media(min-width:1100px){
-    .wrap{max-width:1180px}
+  @media(min-width:1280px){
     #panel-broadcast,#panel-defaults,#panel-deploy,#panel-access,#panel-identity{columns:2;column-gap:16px}
     #panel-broadcast>.card,#panel-defaults>.card,#panel-deploy>.card,#panel-access>.card,#panel-identity>.card{break-inside:avoid;-webkit-column-break-inside:avoid;margin-bottom:16px}
     /* Le panneau Traffic n'a plus qu'une carte de lecture : rien a rattraper
        sur toute la largeur, puisque rien n'est reparti en colonnes. */
   }
   @media(max-width:600px){
-    body{padding:12px}
     /* Sur un telephone la rangee ne se replie pas : elle defile lateralement,
        comme la barre des sections juste en dessous, et arrive centree sur le
        fuseau de reference. Repliee, une douzaine d'horloges mangeait la moitie
@@ -478,40 +458,93 @@
     .ck .ckn{font-size:.6rem;gap:3px}
     .ckf{width:13px;height:10px}
     .ck .cd{font-size:.58rem}
-    /* Title and buttons share the first line: theme and log-out stay top right.
-       .topbtns steps aside (display:contents) so the live pill, too wide for that
-       line, drops below at full width instead of dragging the buttons with it. */
-    .top{flex-wrap:wrap;gap:6px 8px}
-    .topbtns{display:contents}
-    .top>.tophd{flex:1 1 0}
-    .topbtns>.ghost{order:1;flex:0 0 auto;margin-top:2px}
-    .toplive{order:2;flex:1 1 100%;justify-content:center}
-    .tophost{order:3;flex:1 1 100%;max-width:none;text-align:center;margin-top:6px}
-    .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:4px}
-    .tabs::-webkit-scrollbar{display:none}
-    .tabs{flex-wrap:nowrap}
-    /* Trois familles tiennent toujours sur une ligne : pleine largeur, une
-       cible tactile par tiers d'ecran, et rien qui defile. Seules les sections
-       defilent, et le fondu de bord le dit. */
-    .gtabs{margin:12px 0 8px;overflow:visible}
-    .gtab{padding:11px 6px;font-size:.92rem}
-    .subtabs .tab{padding:8px 12px}
-    .tabs.sc-r{-webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%);mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%)}
-    .tabs.sc-l{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 26px,#000 100%);mask-image:linear-gradient(90deg,transparent 0,#000 26px,#000 100%)}
-    .tabs.sc-l.sc-r{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 26px,#000 calc(100% - 26px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 26px,#000 calc(100% - 26px),transparent 100%)}
-    .tab{flex:0 0 auto;white-space:nowrap;padding:8px 11px;font-size:.8rem}
+    .toplive{order:3;flex:1 1 100%;justify-content:center}
     .gsrow .sfield{flex-wrap:wrap}
     .gsrow .sfield>span{min-width:100%}
     .gsrow .sfield>input[type=text],.gsrow .sfield>input[type=number]{width:100%;max-width:none}
     .gsrow .srowline button{flex:1 1 40%}
   }
+  /* ── Shell: side menu + page ────────────────────────────────────────────
+     The menu groups the sections by what the operator is doing. On a wide
+     screen it stays in place; under 900px it becomes a drawer behind the
+     menu button. The section buttons keep their old classes (.gtab = a group,
+     .subtabs = its sections, .tab[data-t] = one section) so every handler
+     that opens a panel keeps working as it did. */
+  .shell{display:grid;grid-template-columns:var(--sidew) minmax(0,1fr);min-height:100vh;min-height:100dvh}
+  .side{position:sticky;top:0;height:100vh;height:100dvh;display:flex;flex-direction:column;gap:14px;background:var(--side);border-right:1px solid var(--line);
+        padding:calc(16px + env(safe-area-inset-top)) 12px calc(14px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left));z-index:30}
+  .sbrand{display:flex;align-items:center;gap:10px;padding:0 6px}
+  .sbrand img{width:34px;height:34px;flex:none;display:block}
+  .sbt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
+  .sbt b{font-size:.95rem;font-weight:600;color:var(--cream)}
+  .sbt span{font-size:.72rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .snav{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:2px;margin:0 -6px;padding:0 6px;scrollbar-width:thin}
+  .side .gtab{display:flex;align-items:center;gap:11px;width:100%;min-height:40px;padding:0 10px;border:0;border-radius:8px;background:transparent;color:var(--navfg);
+              font:inherit;font-size:.9rem;font-weight:500;text-align:left;white-space:nowrap;cursor:pointer;flex:none}
+  .side .gtab:hover{background:var(--hover)}
+  .side .gtab:focus-visible,.side .tab:focus-visible,.menubtn:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+  .side .gtab>span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .gi{width:18px;height:18px;flex:none;color:var(--muted);display:block}
+  .gcar{width:12px;height:12px;flex:none;opacity:.5;transition:transform .18s;display:block}
+  .side .gtab.on{background:var(--accent-soft);color:var(--cream);font-weight:600}
+  .side .gtab.on .gi{color:var(--accent)}
+  .side .gtab.on .gcar{transform:rotate(90deg)}
+  /* A group holding a single section opens it directly: no list to unfold. */
+  .sgrp.one .gcar,.sgrp.one .subtabs{display:none!important}
+  .side .subtabs{display:flex;flex-direction:column;gap:1px;margin:2px 0 6px;padding:0 0 0 39px}
+  .side .tab{display:flex;align-items:center;width:100%;min-height:34px;padding:0 10px;border:0;border-radius:7px;background:transparent;color:var(--muted);
+             font:inherit;font-size:.84rem;text-align:left;white-space:nowrap;cursor:pointer}
+  .side .tab:hover{color:var(--cream);background:var(--hover)}
+  .side .tab.on{color:var(--accent-text);font-weight:600;background:transparent;box-shadow:inset 2px 0 0 var(--accent)}
+  .gbadge{min-width:18px;padding:0 6px;border-radius:999px;background:#f0a83a;color:#1a1205;font-size:.7rem;font-weight:700;line-height:18px;text-align:center}
+  .gbadge:empty,.side .gtab.on .gbadge{display:none}
+  .sfoot{display:flex;flex-direction:column;gap:6px;padding:12px 6px 0;border-top:1px solid var(--line);font-size:.75rem;color:var(--muted)}
+  .sfrow{display:flex;justify-content:space-between;gap:8px}
+  .sfrow>span:last-child{color:var(--navfg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sfbtns{display:flex;gap:8px;margin-top:4px}
+  .sfbtns .ghost{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px}
+  .sfbtns #logoutBtn{flex:1}
+  .sfbtns svg{width:16px;height:16px;display:block}
+  .sclose,.menubtn{display:none;align-items:center;justify-content:center;width:44px;height:44px;flex:none;padding:0;border:0;border-radius:10px;background:transparent;color:var(--navfg);cursor:pointer}
+  .sclose svg,.menubtn svg{width:22px;height:22px;display:block}
+  .scrim{display:none}
+  .main{min-width:0;padding:calc(22px + env(safe-area-inset-top)) calc(28px + env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) 28px}
+  .pagebody{max-width:1600px}
+  .main .top{max-width:1600px;margin:0 0 4px}
+  .eyebrow{margin:0;font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .main h1{font-size:1.45rem;font-weight:600;letter-spacing:-.01em;color:var(--cream);margin:2px 0 0}
+  .main .clockbar{max-width:1600px;margin:12px 0 18px}
+  /* Login: the brand above a single card, centred. */
+  #login{max-width:440px;margin:0 auto;padding:calc(10vh + env(safe-area-inset-top)) 16px 24px}
+  .lbrand{display:flex;align-items:center;gap:12px;margin:0 0 4px}
+  .lbrand img{width:44px;height:44px;display:block}
+  .lbrand h1{margin:0}
+  @media(max-width:899px){
+    .shell{grid-template-columns:minmax(0,1fr)}
+    .side{position:fixed;left:0;top:0;bottom:0;width:min(316px,86vw);transform:translateX(-102%);transition:transform .22s ease;box-shadow:0 0 40px rgba(0,0,0,.35);visibility:hidden}
+    .shell.open .side{transform:none;visibility:visible}
+    .shell.open .scrim{display:block;position:fixed;inset:0;background:rgba(5,8,12,.55);z-index:20}
+    .sclose,.menubtn{display:inline-flex}
+    .side .gtab{min-height:46px}
+    .side .tab{min-height:42px}
+    .main{padding:0 14px calc(28px + env(safe-area-inset-bottom))}
+    .main .top{position:sticky;top:0;z-index:10;margin:0 -14px 4px;padding:calc(8px + env(safe-area-inset-top)) 10px 8px 4px;background:var(--side);border-bottom:1px solid var(--line);flex-wrap:nowrap}
+    .main h1{font-size:1.05rem;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .eyebrow{font-size:.66rem}
+    .main .top .tophost{display:none}
+  }
+  @media(max-width:899px) and (prefers-reduced-motion:reduce){ .side{transition:none} }
+  @media(max-width:600px){
+    .main .top .toplive{display:none}
+  }
 </style>
-<script>(function(){try{var t=localStorage.getItem('pth_admin_theme');if(t!=='light'&&t!=='dark')t='dark';document.documentElement.setAttribute('data-admin-theme',t);}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem('pth_admin_theme');if(t!=='light'&&t!=='dark')t='dark';document.documentElement.setAttribute('data-admin-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',t==='light'?'#FFFFFF':'#11171F');}catch(e){}})();</script>
 </head>
 <body>
 <div class="wrap">
   <div id="login" style="display:none">
-    <h1>PokerTH Web Client — Admin</h1>
+    <div class="lbrand"><img src="/logo-chip.png" alt="" width="44" height="44"><h1>PokerTH Web Client — Admin</h1></div>
     <p class="sub">Enter your admin token to continue.</p>
     <div class="card">
       <label for="ltok">Admin token</label>
@@ -522,46 +555,94 @@
     </div>
   </div>
 
-  <div id="dash" style="display:none">
+  <div id="dash" class="shell" style="display:none">
+    <aside class="side" id="side" aria-label="Admin sections">
+      <div class="sbrand">
+        <img src="/logo-chip.png" alt="" width="34" height="34">
+        <div class="sbt"><b>PokerTH Admin</b><span id="sideHost" class="mono"></span></div>
+        <button type="button" class="sclose" id="sideClose" aria-label="Close the menu"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg></button>
+      </div>
+      <nav class="snav" id="tabGroups" aria-label="Sections">
+      <div class="sgrp one" data-g="stats">
+        <button type="button" class="gtab" data-g="stats"><svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M224,200h-8V40a8,8,0,0,0-8-8H152a8,8,0,0,0-8,8V80H96a8,8,0,0,0-8,8v40H48a8,8,0,0,0-8,8v64H32a8,8,0,0,0,0,16H224a8,8,0,0,0,0-16ZM160,48h40V200H160ZM104,96h40V200H104ZM56,144H88v56H56Z"/></svg><span>Statistics</span><i class="gbadge" aria-hidden="true"></i><svg class="gcar" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
+        <div class="tabs subtabs" data-g="stats" style="display:none">
+          <button type="button" class="tab" data-t="traffic">Traffic</button>
+        </div>
+      </div>
+      <div class="sgrp" data-g="live">
+        <button type="button" class="gtab" data-g="live"><svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M237.66,18.34a8,8,0,0,0-11.32,0l-52.4,52.41-5.37-5.38a32.05,32.05,0,0,0-45.26,0L100,88.69l-6.34-6.35A8,8,0,0,0,82.34,93.66L88.69,100,65.37,123.31a32,32,0,0,0,0,45.26l5.38,5.37-52.41,52.4a8,8,0,0,0,11.32,11.32l52.4-52.41,5.37,5.38a32,32,0,0,0,45.26,0L156,167.31l6.34,6.35a8,8,0,0,0,11.32-11.32L167.31,156l23.32-23.31a32,32,0,0,0,0-45.26l-5.38-5.37,52.41-52.4A8,8,0,0,0,237.66,18.34Zm-116.29,161a16,16,0,0,1-22.62,0L76.69,157.25a16,16,0,0,1,0-22.62L100,111.31,144.69,156Zm57.94-57.94L156,144.69,111.31,100l23.32-23.31a16,16,0,0,1,22.62,0l22.06,22A16,16,0,0,1,179.31,121.37ZM88.57,35A8,8,0,0,1,103.43,29l8,20A8,8,0,0,1,96.57,55ZM24.57,93A8,8,0,0,1,35,88.57l20,8A8,8,0,0,1,49,111.43l-20-8A8,8,0,0,1,24.57,93ZM231.43,163a8,8,0,0,1-10.4,4.46l-20-8A8,8,0,1,1,207,144.57l20,8A8,8,0,0,1,231.43,163Zm-64,58.06A8,8,0,0,1,152.57,227l-8-20A8,8,0,0,1,159.43,201Z"/></svg><span>Live</span><i class="gbadge" aria-hidden="true"></i><svg class="gcar" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
+        <div class="tabs subtabs" data-g="live" style="display:none">
+          <button type="button" class="tab" data-t="sessions">Sessions</button>
+          <button type="button" class="tab" data-t="errors">Errors</button>
+        </div>
+      </div>
+      <div class="sgrp" data-g="community">
+        <button type="button" class="gtab" data-g="community"><svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,195.63a8,8,0,1,0,13.4,8.74,80,80,0,0,1,134.14,0,8,8,0,0,0,13.4-8.74A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.14,98.7a8,8,0,0,1-11.07-2.33A79.83,79.83,0,0,0,172,168a8,8,0,0,1,0-16,44,44,0,1,0-16.34-84.87,8,8,0,1,1-5.94-14.85,60,60,0,0,1,55.53,105.64,95.83,95.83,0,0,1,47.22,37.71A8,8,0,0,1,250.14,206.7Z"/></svg><span>Community</span><i class="gbadge" aria-hidden="true"></i><svg class="gcar" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
+        <div class="tabs subtabs" data-g="community" style="display:none">
+          <button type="button" class="tab" data-t="board" data-scope="leaderboard">Leaderboard</button>
+          <button type="button" class="tab" data-t="polls" data-scope="polls">Polls</button>
+          <button type="button" class="tab" data-t="broadcast" data-scope="broadcast">Broadcasts</button>
+          <button type="button" class="tab" data-t="landir">LAN directory<span class="tbadge" id="ldBadge" style="display:none" title="Requests waiting for approval"></span></button>
+        </div>
+      </div>
+      <div class="sgrp" data-g="content">
+        <button type="button" class="gtab" data-g="content"><svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M200.77,53.89A103.27,103.27,0,0,0,128,24h-1.07A104,104,0,0,0,24,128c0,43,26.58,79.06,69.36,94.17A32,32,0,0,0,136,192a16,16,0,0,1,16-16h46.21a31.81,31.81,0,0,0,31.2-24.88,104.43,104.43,0,0,0,2.59-24A103.28,103.28,0,0,0,200.77,53.89Zm13,93.71A15.89,15.89,0,0,1,198.21,160H152a32,32,0,0,0-32,32,16,16,0,0,1-21.31,15.07C62.49,194.3,40,164,40,128a88,88,0,0,1,87.09-88h.9a88.35,88.35,0,0,1,88,87.25A88.86,88.86,0,0,1,213.81,147.6ZM140,76a12,12,0,1,1-12-12A12,12,0,0,1,140,76ZM96,100A12,12,0,1,1,84,88,12,12,0,0,1,96,100Zm0,56a12,12,0,1,1-12-12A12,12,0,0,1,96,156Zm88-56a12,12,0,1,1-12-12A12,12,0,0,1,184,100Z"/></svg><span>Content</span><i class="gbadge" aria-hidden="true"></i><svg class="gcar" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
+        <div class="tabs subtabs" data-g="content" style="display:none">
+          <button type="button" class="tab" data-t="packages" data-scope="packages">Packages</button>
+          <button type="button" class="tab" data-t="music" data-scope="music">Music</button>
+        </div>
+      </div>
+      <div class="sgrp" data-g="players">
+        <button type="button" class="gtab" data-g="players"><svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M176,56H80a72,72,0,0,0,0,144h96a72,72,0,0,0,0-144Zm0,128H80A56,56,0,0,1,80,72h96a56,56,0,0,1,0,112Zm0-96a40,40,0,1,0,40,40A40,40,0,0,0,176,88Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,176,152Z"/></svg><span>Player experience</span><i class="gbadge" aria-hidden="true"></i><svg class="gcar" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
+        <div class="tabs subtabs" data-g="players" style="display:none">
+          <button type="button" class="tab" data-t="clients">Modes &amp; features</button>
+          <button type="button" class="tab" data-t="defaults">Defaults</button>
+        </div>
+      </div>
+      <div class="sgrp" data-g="infra">
+        <button type="button" class="gtab" data-g="infra"><svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M232,112H136V88h8a16,16,0,0,0,16-16V40a16,16,0,0,0-16-16H112A16,16,0,0,0,96,40V72a16,16,0,0,0,16,16h8v24H24a8,8,0,0,0,0,16H56v32H48a16,16,0,0,0-16,16v32a16,16,0,0,0,16,16H80a16,16,0,0,0,16-16V176a16,16,0,0,0-16-16H72V128H184v32h-8a16,16,0,0,0-16,16v32a16,16,0,0,0,16,16h32a16,16,0,0,0,16-16V176a16,16,0,0,0-16-16h-8V128h32a8,8,0,0,0,0-16ZM112,40h32V72H112ZM80,208H48V176H80Zm128,0H176V176h32Z"/></svg><span>Infrastructure</span><i class="gbadge" aria-hidden="true"></i><svg class="gcar" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
+        <div class="tabs subtabs" data-g="infra" style="display:none">
+          <button type="button" class="tab" data-t="servers">Game servers</button>
+          <button type="button" class="tab" data-t="proxy">Proxy</button>
+          <button type="button" class="tab" data-t="identity">Identity &amp; reach</button>
+        </div>
+      </div>
+      <div class="sgrp" data-g="ops">
+        <button type="button" class="gtab on" data-g="ops"><svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M128,128a8,8,0,0,1-3,6.25l-40,32a8,8,0,1,1-10-12.5L107.19,128,75,102.25a8,8,0,1,1,10-12.5l40,32A8,8,0,0,1,128,128Zm48,24H136a8,8,0,0,0,0,16h40a8,8,0,0,0,0-16Zm56-96V200a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V56A16,16,0,0,1,40,40H216A16,16,0,0,1,232,56ZM216,200V56H40V200H216Z"/></svg><span>Operations</span><i class="gbadge" aria-hidden="true"></i><svg class="gcar" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
+        <div class="tabs subtabs" data-g="ops">
+          <button type="button" class="tab on" data-t="server">Health &amp; logs</button>
+          <button type="button" class="tab" data-t="deploy">Deployment</button>
+          <button type="button" class="tab" data-t="access">Access &amp; backup</button>
+        </div>
+      </div>
+      <div class="sgrp one" data-g="security">
+        <button type="button" class="gtab" data-g="security"><svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.3,48,112l0-56,160,0ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"/></svg><span>Security</span><i class="gbadge" aria-hidden="true"></i><svg class="gcar" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
+        <div class="tabs subtabs" data-g="security" style="display:none">
+          <button type="button" class="tab" data-t="keys">Keys</button>
+        </div>
+      </div>
+      </nav>
+      <div class="sfoot">
+        <div class="sfrow"><span>Build</span><span id="sideVer" class="mono">—</span></div>
+        <div class="sfrow"><span>Signed in with</span><span id="sideWho">—</span></div>
+        <div class="sfbtns">
+          <button id="themeBtn" class="ghost ico" type="button" title="Toggle dark / light" aria-label="Toggle dark / light"></button>
+          <button id="logoutBtn" class="ghost" type="button"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M120,128V48a8,8,0,0,1,16,0v80a8,8,0,0,1-16,0Zm60.37-78.7a8,8,0,0,0-8.74,13.4C194.74,77.77,208,101.57,208,128a80,80,0,0,1-160,0c0-26.43,13.26-50.23,36.37-65.3a8,8,0,0,0-8.74-13.4C47.9,67.38,32,96.06,32,128a96,96,0,0,0,192,0C224,96.06,208.1,67.38,180.37,49.3Z"/></svg>Log out</button>
+        </div>
+      </div>
+    </aside>
+    <div class="scrim" id="sideScrim"></div>
+    <main class="main" id="main">
     <div class="top">
-      <div class="tophd"><h1>PokerTH Web Client — Admin</h1><p class="sub">Dashboard</p></div>
+      <button type="button" class="menubtn" id="menuBtn" aria-label="Open the menu" aria-controls="side" aria-expanded="false"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"/></svg></button>
+      <div class="tophd"><p class="eyebrow" id="pageGroup">Operations</p><h1 id="pageTitle">Health &amp; logs</h1></div>
       <div class="tophost" id="topHost" title="The host this panel is served from"></div>
       <div class="topbtns">
         <div class="toplive" id="topLive" style="display:none" title="Game server, as the login screen reads it"></div>
-        <button id="themeBtn" class="ghost ico" title="Toggle dark / light" aria-label="Toggle dark / light"></button>
-        <button id="logoutBtn" class="ghost">Log out</button>
       </div>
     </div>
-    <div class="clockbar" id="clockBar" style="display:none" title="Regions picked in Server › Identity &amp; reach, earliest on the left"></div>
-    <div class="tabs gtabs" id="tabGroups">
-      <button class="gtab on" data-g="server"><span class="ti" aria-hidden="true">🖥️</span>Server</button>
-      <button class="gtab" data-g="client"><span class="ti" aria-hidden="true">🎮</span>Client</button>
-      <button class="gtab" data-g="data"><span class="ti" aria-hidden="true">📊</span>Data</button>
-    </div>
-    <div class="tabs subtabs" data-g="server">
-      <button class="tab on" data-t="server"><span class="ti" aria-hidden="true">💓</span>Health &amp; logs</button>
-      <button class="tab" data-t="deploy"><span class="ti" aria-hidden="true">🚀</span>Deployment</button>
-      <button class="tab" data-t="proxy"><span class="ti" aria-hidden="true">🔀</span>Proxy</button>
-      <button class="tab" data-t="access"><span class="ti" aria-hidden="true">🔐</span>Access &amp; backup</button>
-      <button class="tab" data-t="identity"><span class="ti" aria-hidden="true">🪪</span>Identity &amp; reach</button>
-      <button class="tab" data-t="servers"><span class="ti" aria-hidden="true">🗄️</span>Game servers</button>
-      <button class="tab" data-t="landir"><span class="ti" aria-hidden="true">📇</span>LAN directory<span class="tbadge" id="ldBadge" style="display:none" title="Requests waiting for approval"></span></button>
-      <button class="tab" data-t="keys"><span class="ti" aria-hidden="true">🔑</span>Keys</button>
-    </div>
-    <div class="tabs subtabs" data-g="client" style="display:none">
-      <button class="tab" data-t="clients"><span class="ti" aria-hidden="true">🎛️</span>Modes &amp; features</button>
-      <button class="tab" data-t="defaults"><span class="ti" aria-hidden="true">⚙️</span>Defaults</button>
-      <button class="tab" data-t="packages" data-scope="packages"><span class="ti" aria-hidden="true">📦</span>Packages</button>
-      <button class="tab" data-t="music" data-scope="music"><span class="ti" aria-hidden="true">🎵</span>Music</button>
-      <button class="tab" data-t="broadcast" data-scope="broadcast"><span class="ti" aria-hidden="true">📢</span>Broadcasts</button>
-      <button class="tab" data-t="polls" data-scope="polls"><span class="ti" aria-hidden="true">🗳️</span>Polls</button>
-    </div>
-    <div class="tabs subtabs" data-g="data" style="display:none">
-      <button class="tab" data-t="traffic"><span class="ti" aria-hidden="true">📈</span>Traffic</button>
-      <button class="tab" data-t="sessions"><span class="ti" aria-hidden="true">👥</span>Sessions</button>
-      <button class="tab" data-t="errors"><span class="ti" aria-hidden="true">🐞</span>Errors</button>
-      <button class="tab" data-t="board" data-scope="leaderboard"><span class="ti" aria-hidden="true">🏆</span>Leaderboard</button>
-    </div>
+    <div class="clockbar" id="clockBar" style="display:none" title="Regions picked in Infrastructure › Identity &amp; reach, earliest on the left"></div>
+    <div class="pagebody" id="pageBody">
 
     <div id="panel-traffic" style="display:none">
       <div class="card trafhead">
@@ -852,7 +933,7 @@
       </div>
       <div class="card" data-master="1">
         <h2>Leaderboard reset</h2>
-        <p class="muted">For the default board (the local server and typed addresses). Each listed LAN server has its own period, set in Server › LAN directory.</p>
+        <p class="muted">For the default board (the local server and typed addresses). Each listed LAN server has its own period, set in Community › LAN directory.</p>
         <label for="period">Automatic reset period</label>
         <div class="periodrow">
           <select id="period"><option value="off">Off</option><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select>
@@ -1404,6 +1485,8 @@
         <div id="ldSetState" class="msg"></div>
       </div>
     </div>
+    </div>
+    </main>
   </div>
 </div>
 <script>
@@ -1470,10 +1553,10 @@
       if(/^\s*Loading/.test(el.textContent||'')){ el.textContent=msg||'Could not load.'; el.classList.add('err'); }
     });
   }
-  function show(v){ login.style.display=v==='login'?'block':'none'; dash.style.display=v==='dash'?'block':'none'; }
+  function show(v){ login.style.display=v==='login'?'block':'none'; dash.style.display=v==='dash'?'':'none'; }
   // location.host, pas hostname : un panneau servi sur un port non standard
   // doit le dire, sinon deux instances de la meme machine se confondent.
-  (function(){ var h=$('topHost'); if(h) h.textContent=location.host||''; })();
+  (function(){ var h=$('topHost'); if(h) h.textContent=location.host||''; var sh=$('sideHost'); if(sh) sh.textContent=location.host||''; })();
 
   // ── Game servers (PokerTH dial registry + reachability) — master-only ──
   var _srv = [];
@@ -1945,7 +2028,9 @@
   (function(){
     var btn=$('themeBtn'); if(!btn) return;
     function cur(){ return document.documentElement.getAttribute('data-admin-theme')==='light' ? 'light' : 'dark'; }
-    function paint(){ btn.textContent = cur()==='light' ? '☀️' : '🌙'; btn.title = 'Switch to ' + (cur()==='light' ? 'dark' : 'light'); }
+    var SUN='<svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"/></svg>', MOON='<svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"/></svg>';
+    function paint(){ var l=cur()==='light'; btn.innerHTML = l ? MOON : SUN; btn.title = 'Switch to ' + (l ? 'dark' : 'light'); btn.setAttribute('aria-label', btn.title);
+      var m=document.querySelector('meta[name="theme-color"]'); if(m) m.setAttribute('content', l ? '#FFFFFF' : '#11171F'); }
     function set(t){ document.documentElement.setAttribute('data-admin-theme', t); try{ localStorage.setItem('pth_admin_theme', t); }catch(e){} paint(); }
     paint();
     btn.addEventListener('click', function(){ set(cur()==='light' ? 'dark' : 'light'); });
@@ -1979,17 +2064,16 @@
       gb.style.display = any ? '' : 'none';
       if(any && !live) live=gb.dataset.g;
       if(!any && gb.classList.contains('on')) gb.classList.remove('on');
+      var grp=gb.closest('.sgrp'); if(grp && bar) grp.classList.toggle('one', [].slice.call(bar.querySelectorAll('.tab')).filter(function(t){ return t.style.display!=='none'; }).length===1);
     });
     if(live && !document.querySelector('.gtab.on')) setGroup(live, true);
-    // Les barres viennent peut-être d'être révélées (écran de connexion) ou
-    // raccourcies : leur largeur utile n'est connue qu'après ce passage.
-    setTimeout(tabsFade, 0);
   }
   function enter(){
     if(!tok()){ show('login'); return; }
     api('/admin/whoami').then(function(r){return r.json().catch(function(){return {};});}).then(function(info){
       if(!info || !info.ok){ $('loginErr').textContent=(info&&info.error)||'Invalid token'; show('login'); return; }
       _isMaster=!!info.master; applyScopeVisibility(info);
+      var _sw=$('sideWho'); if(_sw) _sw.textContent=info.master ? 'master key' : (info.label ? 'key \u201c'+info.label+'\u201d' : 'scoped key');
       $('loginErr').textContent=''; _idleLast=Date.now(); show('dash');
       clkStart(); liveStart();
       if(_isMaster){
@@ -2013,7 +2097,7 @@
   // distingué du coucher, puis les trois crépuscules et la nuit en bleus. On
   // lit ainsi le bandeau d'un coup d'œil en hiver, quand 17 h à Moscou et
   // 17 h à Lagos n'ont rien à voir.
-  // L'heure du serveur n'est PAS ici : elle est en tête de Server › Health &
+  // L'heure du serveur n'est PAS ici : elle est en tête de Operations › Health &
   // logs, où on la lit quand on en a besoin, et le bandeau reste une carte du
   // monde plutôt qu'un mélange des deux.
   // Le rendu tourne en local à partir d'un écart mesuré une fois avec le
@@ -2410,24 +2494,7 @@
   }); })();
   (function(){ var b=$('clkDefaults'); if(!b) return; b.addEventListener('click',function(){ clkPickRender(CLOCK_DEFAULT.slice()); clkRefRender(CLOCK_REF_DEFAULT); var m=$('clkMsg'); if(m){ m.textContent='Default set restored below \u2014 press Save to apply.'; m.className='msg'; } }); })();
 
-  // État de débordement de la barre d'onglets. Appelé au défilement, au
-  // redimensionnement et à chaque changement d'onglet, parce qu'afficher ou
-  // masquer un onglet change la largeur totale.
-  function tabsFade(){
-    document.querySelectorAll('.tabs').forEach(function(t){
-      var over=t.scrollWidth-t.clientWidth;
-      t.classList.toggle('sc-l', over>1 && t.scrollLeft>1);
-      t.classList.toggle('sc-r', over>1 && t.scrollLeft<over-1);
-    });
-  }
-  (function(){
-    document.querySelectorAll('.tabs').forEach(function(t){
-      t.addEventListener('scroll', tabsFade, {passive:true});
-    });
-    window.addEventListener('resize', tabsFade);
-    window.addEventListener('resize', function(){ capRows($('auList'), 10); });
-    setTimeout(tabsFade, 0);
-  })();
+  window.addEventListener('resize', function(){ capRows($('auList'), 10); });
   // Affiche la famille g. pick=true choisit sa premiere section visible, ce
   // qu'il faut quand l'operateur change de famille ; pick=false sert quand une
   // section a deja ete choisie et qu'on ne fait que suivre.
@@ -2443,7 +2510,6 @@
         if(first) first.click();
       }
     }
-    setTimeout(tabsFade, 0);
   }
   document.querySelectorAll('.gtab').forEach(function(b){
     b.addEventListener('click', function(){ setGroup(b.dataset.g, true); });
@@ -2452,9 +2518,8 @@
     document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===b);});
     var bar=b.parentElement;
     if(bar && bar.classList.contains('subtabs')) setGroup(bar.dataset.g, false);
-    // L'onglet choisi peut être à moitié hors champ sur téléphone.
-    try{ b.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'}); }catch(e){}
-    setTimeout(tabsFade, 320);
+    // Le menu peut etre plus haut que l'ecran : la section choisie y reste visible.
+    try{ b.scrollIntoView({block:'nearest',inline:'nearest'}); }catch(e){}
     var t=b.dataset.t;
     // Un panneau par section, nomme panel-<data-t> : la liste etait recopiee a
     // la main et un panneau ajoute restait invisible tant qu'on l'y oubliait.
@@ -2809,7 +2874,7 @@
     var n=$('boardNote'); if(!n) return;
     if(!_boardId){ n.textContent=_boards.length?'Reset: '+(defPeriod||'monthly')+' (the setting below). Each listed LAN server has its own board and period.':''; return; }
     var b=_boards.filter(function(x){return x.id===_boardId;})[0];
-    n.textContent=b?('Reset: '+(b.resetPeriod==='off'?'never':(b.resetPeriod||'monthly'))+' — chosen when the server was proposed; change it in Server › LAN directory › Edit.'):'';
+    n.textContent=b?('Reset: '+(b.resetPeriod==='off'?'never':(b.resetPeriod||'monthly'))+' — chosen when the server was proposed; change it in Community › LAN directory › Edit.'):'';
   }
   // The reset button only ever wipes the board picked above: say so.
   function resetLabel(){ var b=$('resetBtn'); if(b) b.textContent=_boards.length?'Reset this board':'Reset leaderboard'; }
@@ -2864,6 +2929,7 @@
       // à proxy.js reste inactif pendant ce temps. On le dit franchement.
       var _stale=(d.runningVersion && d.version && d.runningVersion!==d.version);
       var _vtxt=(d.version||'\u2014')+(_stale?(' \u2014 proxy still running '+d.runningVersion+', restart needed'):'');
+      var _sv=$('sideVer'); if(_sv) _sv.textContent=d.version||'\u2014';
       var items=[['Server time',clkServerStamp(d.now,d.tz)],['Build version',_vtxt],['Install',(d.installKind||'\u2014')+(d.gitUpdatable===false?' (self-update off)':'')],['Node',d.node||'\u2014'],['Uptime',fmtUptime(d.uptimeSec)],['Connected sockets',d.sockets==null?'\u2014':String(d.sockets)],['Active sessions',d.liveSessions==null?'\u2014':String(d.liveSessions)],['Players on board',String(d.players)],['Reset period',d.resetPeriod||'\u2014']];
       items.forEach(function(it){ var r=document.createElement('div');r.className='srow';var s=document.createElement('span');s.textContent=it[0];var b=document.createElement('b');b.textContent=it[1];if(it[0]==='Build version'&&_stale)b.className='err';r.appendChild(s);r.appendChild(b);el.appendChild(r); });
       // Only explicit (re)loads sync the editable controls, so auto-refresh never
@@ -3614,7 +3680,7 @@
     var any=g&&(g.acceptance.offered||g.acceptance.accepted||g.funnel.highlighted||Object.keys(g.contexts||{}).some(function(k){ var c=g.contexts[k]; return c.shown||c.done||c.dismissed||c.banner||c.persist_shown; }));
     if(!any){
       box.innerHTML='<div class="empty">'+(!_guideKnown
-        ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (Server › Deployment › Restart); a static update alone swaps the served files, not the process.'
+        ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (Operations › Deployment › Restart); a static update alone swaps the served files, not the process.'
         : 'Nothing recorded yet — players are offered the help once, on first launch, and events start with them.')+'</div>';
       return;
     }
@@ -3667,7 +3733,7 @@
     var total=0; keys.forEach(function(k){ total+=all[k]||0; });
     if(!total){
       box.innerHTML='<div class="empty">'+(!_srcKnown
-        ? 'This proxy is not recording it yet \u2014 the running process predates the feature. Restart it (Server › Deployment › Restart); a static update alone swaps the served files, not the process.'
+        ? 'This proxy is not recording it yet \u2014 the running process predates the feature. Restart it (Operations › Deployment › Restart); a static update alone swaps the served files, not the process.'
         : 'Nothing recorded yet \u2014 sources are counted from the first visit after the update.')+'</div>';
       return;
     }
@@ -3693,7 +3759,7 @@
       // Comme pour les répartitions de visiteurs : un vide qui ne dit pas
       // laquelle de ses causes s'applique coûte une demi-heure.
       var why = !_musKnown
-        ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (Server › Deployment › Restart); a static update alone swaps the served files, not the process.'
+        ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (Operations › Deployment › Restart); a static update alone swaps the served files, not the process.'
         : 'Nothing recorded yet — counting started here, and a play is only counted when a track actually starts.';
       box.innerHTML='<div class="empty">'+why+'</div>';
       return;
@@ -3794,7 +3860,7 @@
       // fonctionnalité), ou il sait mais personne n'est encore passé. Les
       // confondre coûte une demi-heure de recherche.
       var why = !_envKnown
-        ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (Server › Deployment › Restart); a static update alone swaps the served files, not the process.'
+        ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (Operations › Deployment › Restart); a static update alone swaps the served files, not the process.'
         : (_envPings && !_envPings.visits)
           ? 'No visit ping has reached the proxy since it started. One ping is sent per browser session, and a browser where you ticked “Exclude my own visits” sends none at all — open the site in a private window to check.'
           : 'Nothing recorded yet — counting started here, and one ping is sent per browser session.';
@@ -6080,5 +6146,6 @@
   enter();
 })();
 </script>
+<script type="module" src="/modules/admin/shell.mjs"></script>
 </body>
 </html>

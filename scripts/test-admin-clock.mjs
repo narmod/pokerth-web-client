@@ -61,9 +61,10 @@ ok(/_validTz\(r\) \? r : CLOCK_REF_DEFAULT/.test(body(proxy, '_clockRef')),
 // -- The strip lives outside the tabs --------------------------------------
 const iTop = admin.indexOf('<div class="top">');
 const iBar = admin.indexOf('id="clockBar"');
-const iTabs = admin.indexOf('<div class="tabs gtabs"');
+const iBody = admin.indexOf('<div class="pagebody"');
 ok(iBar > 0, 'the dashboard has a clock strip');
-ok(iTop < iBar && iBar < iTabs, 'sitting between the header and the families, so no tab can hide it');
+ok(admin.indexOf('<main class="main"') < iTop && iTop < iBar && iBar < iBody,
+  'sitting under the page header, above every section, so no section can hide it');
 ok(/clkStart\(\);/.test(admin), 'it starts when the dashboard opens');
 ok(/function doLogout\(reason\)\{ srvStop\(\); seStop\(\); clkStop\(\);/.test(admin),
   'and its timers stop on logout, like every other poll');
@@ -313,12 +314,13 @@ ok(wide && !/\.ck\{/.test(wide[1]),
   'and no clock rule is left in the desktop block, where the phone rules once sat doing nothing');
 
 // -- Icons -----------------------------------------------------------------
-const gtabs = admin.slice(iTabs, admin.indexOf('</div>', iTabs));
-ok((gtabs.match(/class="ti"/g) || []).length === 3, 'each family button carries an icon');
-ok(admin.match(/<button class="tab(?: on)?" data-t="[a-z]+"(?: data-scope="[a-z]+")?><span class="ti"/g).length === 18,
-  'and so does every one of the eighteen sections');
-ok(/aria-hidden="true"/.test(gtabs), 'the icons are decorative, so a screen reader reads the label alone');
-ok(/\.ti\{margin-right:6px\}/.test(admin), 'the spacing is in the sheet, not repeated in seventeen tags');
+// The menu groups carry the icons now (Phosphor, as in the QML client); the
+// sections inside a group are plain text, as in the mock-up.
+ok((admin.match(/<button type="button" class="gtab(?: on)?" data-g="[a-z]+"><svg class="gi"/g) || []).length === 8,
+  'each of the eight menu groups carries an icon');
+ok(!/<span class="ti"/.test(admin), 'the emoji icons of the old tab bars are gone');
+ok(/<svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false">/.test(admin),
+  'the icons are decorative, so a screen reader reads the label alone');
 
 // -- No escape sequence ever reaches the screen ----------------------------
 // A card shipped once reading "locally \u2014 the hours", because the text was

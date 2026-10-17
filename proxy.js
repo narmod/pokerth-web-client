@@ -113,7 +113,7 @@ function isHostAllowed(h) {
   for (var j = 0; j < regs.length; j++) { if (regs[j] && String(regs[j].host).toLowerCase() === h) return true; }
   var _auto = (typeof _serverlistCache !== 'undefined') && _serverlistCache.server;
   if (_auto && String(_auto.host).toLowerCase() === h) return true;
-  // Servers approved in the LAN directory (admin › Server › LAN directory).
+  // Servers approved in the LAN directory (admin › Community › LAN directory).
   if (LAN_DIR.hostAllowed(h)) return true;
   return false;
 }
@@ -10894,7 +10894,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       return adminJson(res, 200, { ok: true, servers: out, activeServerId: (_adminConfig.activeServerId || ''), source: _pokerthnetSource(), transport: _internetTransport(), liveTransport: _liveTransport(), proxyProtocol: _proxyProtocolOn(), serverlistUrl: _serverlistUrl() });
     });
   }
-  // ── LAN server directory (admin › Server › LAN directory). Master-only. ──
+  // ── LAN server directory (admin › Community › LAN directory). Master-only. ──
   //   GET  → { settings, pending, entries (with live status) }
   //   POST { action: settings|approve|reject|add|update|remove|check, id?, entry?, settings? }
   if (reqPathOnly === '/admin/lan-directory') {

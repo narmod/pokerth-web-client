@@ -75,6 +75,7 @@ const dom = new JSDOM(html, {
     }); };
     w.confirm = () => true;
     w.localStorage.setItem('pth_admin_token', 'test-token');
+    w.localStorage.setItem('pth_admin_tok', 'test-token');   // the key the page actually reads: log in for real
     w.scrollTo = () => {};
     w.HTMLElement.prototype.scrollIntoView = () => {};
   },
@@ -106,8 +107,8 @@ for (const t of tabs) {
 }
 ok(errors.length === 0, 'no tab click threw' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
 
-// ── Families ──────────────────────────────────────────────────────────────
-for (const g of ['server', 'client', 'data']) {
+// ── Menu groups (side menu since 2.1.10-web.117) ──────────────────────────────────────────────────────────────
+for (const g of ['stats', 'live', 'community', 'content', 'players', 'infra', 'ops', 'security']) {
   const gb = doc.querySelector('.gtab[data-g="' + g + '"]');
   gb.click();
   const bar = doc.querySelector('.subtabs[data-g="' + g + '"]');
@@ -117,6 +118,13 @@ for (const g of ['server', 'client', 'data']) {
   ok(others.every((b) => b.style.display === 'none'), 'while the other families are hidden');
   ok(visible().length === 1, 'and still exactly one panel is open');
 }
+
+ok(doc.querySelector('.sgrp[data-g="stats"]').classList.contains('one') && doc.querySelector('.sgrp[data-g="security"]').classList.contains('one'),
+  'a group with a single section is marked so it opens it directly');
+ok(!doc.querySelector('.sgrp[data-g="community"]').classList.contains('one'), 'and a group with several is not');
+ok($('sideWho') && $('sideWho').textContent === 'master key', 'the menu says which key is signed in');
+ok($('sideVer') && $('sideVer').textContent === '2.1.7-web.39', 'and which build runs');
+ok($('dash').style.display === '', 'the shell is shown by clearing display, so its grid applies');
 
 // ── Things the layout work touched ────────────────────────────────────────
 ok(typeof window.fmtLogTimes !== 'function' || true, 'log formatting is in scope');
@@ -162,7 +170,7 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   ok(!pn.classList.contains('xpl-on'), 'and a second folds them again');
   ok(errors.length === 0, 'switching threw nothing' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
 }
-// ── LAN directory (Server › LAN directory) ───────────────────────────────
+// ── LAN directory (Community › LAN directory) ───────────────────────────────
 {
   doc.querySelector('.tab[data-t="landir"]').click();
   await new Promise((r) => setTimeout(r, 200));

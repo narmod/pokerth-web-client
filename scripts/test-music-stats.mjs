@@ -91,7 +91,7 @@ ok(/\.mzplays\{/.test(admin), 'the badge has its own style');
 ok(/id="trafMusic"/.test(admin), 'the traffic tab keeps the per-day chart');
 const render = body(admin, 'renderMusic');
 ok(/_musKnown/.test(render), 'an empty chart distinguishes "proxy too old" from "nothing yet"');
-ok(/Server › Deployment › Restart/.test(render), 'the too-old case tells the operator what to do');
+ok(/Operations › Deployment › Restart/.test(render), 'the too-old case tells the operator what to do');
 // The card was the chart on its own for a while, to keep per-track totals in
 // the Music tab and nowhere else. It carries its own summary again: _musRank
 // for the per-title breakdown and _musContext for the plays/day and

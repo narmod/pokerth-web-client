@@ -32,7 +32,9 @@ const api = new Function(m[0] + '\n' + fIs[0] + '\n' + html.slice(iDev, iDevEnd 
   '\nreturn { isBot: _seIsBot, dev: _seDev };')();
 
 ok(!/ERR_BOT_UA|_errIsBot/.test(proxy), '/clienterr still records every report (no crawler drop in proxy.js)');
-ok(/var nBot=\(e\.uas\|\|\[\]\)\.filter\(_seIsBot\)/.test(html), 'each error line counts its crawler UAs');
+// Since web.116 the proxy counts robots with the shared rule (server/ua-bot.js)
+// and sends the figure; the page only counts itself for an older proxy.
+ok(/var nBot=\(typeof e\.bots==='number'\)\?e\.bots:\(e\.uas\|\|\[\]\)\.filter\(_seIsBot\)/.test(html), 'each error line counts its crawler UAs');
 
 const BOTS = {
   'Googlebot desktop': 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Chrome/129.0.6668.89 Safari/537.36',

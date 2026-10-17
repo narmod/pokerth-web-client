@@ -77,7 +77,9 @@ ok(wiped.totalLV === 0 && wiped.allLU && Object.keys(wiped.allLU).length === 0, 
 ok(/visitsStore\.allLU  = \(_vs\.allLU && typeof _vs\.allLU === 'object'\)/.test(proxy), 'which survive a restart');
 ok(/else if \(d && d\.live === true\) \{ _pingStats\.nLive\+\+; recordLiveVisit\(d\.vid, _bot\); \}/.test(proxy), '/__visit routes a live ping away from recordVisit and recordVisitEnv');
 ok(proxy.indexOf('recordLiveVisit(d.vid, _bot)') > 0 && proxy.indexOf('recordLiveVisit(d.vid, _bot)') < proxy.indexOf('recordVisit(d && d.vid, _bot)'), 'before the web-client branch');
-ok(/lv: visitsStore\.totalLV \|\| 0, lu: Object\.keys\(visitsStore\.allLU \|\| \{\}\)\.length/.test(proxy), 'the summary returns /live all-time visits and uniques');
+// Since web.116 the all-time uniques come from a counter that only grows
+// (allLU is pruned with the day buckets).
+ok(/lv: visitsStore\.totalLV \|\| 0, lu: visitsStore\.totalLU \|\| 0/.test(proxy), 'the summary returns /live all-time visits and uniques');
 ok(/conn_live,live_visits,live_unique_visitors,bot_visits'\];/.test(proxy), 'CSV gains the /live visit columns after the older ones (bot_visits follows them)');
 ok(/ADD COLUMN IF NOT EXISTS live_visits/.test(proxy) && /ADD COLUMN IF NOT EXISTS live_unique_visitors/.test(proxy), 'and so does an existing DB mirror');
 ok(/var msg = window\.LIVE_MODE \? \{ vid: vid, live: true \} : \{ vid: vid, pwa: pwa \};/.test(client) && /var body = JSON\.stringify\(msg\);/.test(client), 'the /live visit beacon says live');

@@ -58,10 +58,11 @@ ok(/function _stripDefaultNoticeLangs\(/.test(proxy) &&
 ok(/function _noticeWithDefaults\(/.test(proxy), 'the defaults overlay helper exists');
 ok((proxy.match(/_noticeWithDefaults\(w, AUTH_NOTICE_DEFAULT_LANGS\)/g) || []).length === 2,
   'both the admin and the public accessor fall back to the built-in text');
-// The overlay only fires while nothing is authored, and then serves 'en'.
-ok(/if \(Object\.keys\(langs\)\.length\) return \{ langs: langs/.test(proxy),
-  'operator-authored languages always win over the built-in text');
-ok(/return \{ langs: defLangs, def: 'en' \}/.test(proxy),
+// Since web.112 the authored languages overlay the built-in ones: editing one
+// language no longer drops the other 82 back to nothing.
+ok(/var langs = Object\.assign\(\{\}, defLangs, \(w && w\.langs\) \|\| \{\}\)/.test(proxy),
+  'operator-authored languages win over the built-in text, language by language');
+ok(/def: \(authored && w\['default'\]\) \|\| 'en'/.test(proxy),
   "the built-in text is served with an 'en' fallback language");
 
 // ── pokerth.js: client behaviour ──────────────────────────────────────────

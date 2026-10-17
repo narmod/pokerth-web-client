@@ -21,14 +21,14 @@ function fn(name) {
 function make(store) {
   const ctx = { visitsStore: store, VISIT_RETENTION_DAYS: 3 };
   vm.createContext(ctx);
-  vm.runInContext(fn('pruneVisitDays') + '\n' + fn('pruneVisitIds') + '\nthis.pruneVisitDays = pruneVisitDays; this.pruneVisitIds = pruneVisitIds;', ctx);
+  vm.runInContext(fn('visitDayKey') + '\n' + fn('pruneVisitDays') + '\n' + fn('pruneVisitIds') + '\nthis.pruneVisitDays = pruneVisitDays; this.pruneVisitIds = pruneVisitIds;', ctx);
   return ctx;
 }
 const day = (d) => '2026-09-' + String(d).padStart(2, '0');
 
 // Young store: below retention nothing is touched, orphan or not.
 let st = { days: { [day(1)]: { v: 1, ids: { a: 1 } } }, allU: { a: 1, ghost: 2 }, allLU: { g: 1 } };
-let c = make(st); c.pruneVisitDays();
+let c = make(st); c.pruneVisitDays(new Date(2026, 8, 1, 12));
 ok(st.allU.ghost !== undefined && st.allLU.g === 1, 'below retention: no id is pruned');
 
 // Retention reached: oldest bucket expires, its only device goes; devices still
@@ -43,14 +43,15 @@ st = {
   allU: { old: 1001, keep: 1001, fresh: 1003, orphan: 900 },
   allLU: { lold: 1, lkeep: 1, lorphan: 1 }
 };
-c = make(st); c.pruneVisitDays();
+// Since web.116 buckets expire by date (now minus the retention), not by count.
+c = make(st); c.pruneVisitDays(new Date(2026, 8, 4, 12));
 ok(!st.days[day(1)] && Object.keys(st.days).length === 3, 'oldest bucket expires at retention');
 ok(st.allU.old === undefined, 'device only seen in the expired bucket is dropped');
 ok(st.allU.keep === 1001 && st.allU.fresh === 1003, 'devices seen in retained buckets stay, first day intact');
 ok(st.allU.orphan === undefined, 'ids orphaned by older builds are cleared at the first expiry');
 ok(st.allLU.lold === undefined && st.allLU.lorphan === undefined && st.allLU.lkeep === 1, '/live ids follow the same rule');
 ok(c.pruneVisitIds() === 0, 'second pass removes nothing');
-ok(/keys\.slice\(0, keys\.length - VISIT_RETENTION_DAYS\)\.forEach[^\n]*\n  pruneVisitIds\(\);/.test(src), 'pruneVisitDays calls pruneVisitIds right after expiring buckets');
+ok(/if \(k < cut\) \{ delete visitsStore\.days\[k\]; gone\+\+; \}[^\n]*\n  if \(gone\) pruneVisitIds\(\);/.test(src), 'pruneVisitDays calls pruneVisitIds right after expiring buckets');
 
 console.log(`\n${n - fail}/${n} checks passed`);
 process.exit(fail ? 1 : 0);
