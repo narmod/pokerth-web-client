@@ -30,6 +30,14 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Admin Statistics: new filters (maquette A); mode colours** (`web.144`) — the filter card became a summary bar:
+  the period (a button), Refresh, and **Filters** with a count; the active filters show as pills that remove them
+  (entry modes, each narrowing, bots shown), then the dates read. Filters opens one panel — a drawer on the right,
+  a sheet from the bottom on a phone: the period as a six-step segmented control and Custom range, the entry modes
+  as tiles (All modes across), Hide bots and Explanations as switches, Narrow to as rows with the value on the
+  right, Reset, Show results. The controls kept their ids and handlers and still apply at once; the panel is a
+  modal dialog (Escape, focus kept inside and given back, page locked behind). Colours (narmod): Internet green,
+  Live/spectator tool blue, all modes rose (`--m-all`); Errors keep load failures blue (`--m-live`). New test `test-admin-filters.mjs`.
 - **Admin › Packages: one kind filter for tiles, import and library** (`web.142`) — the four tiles at the top
   are buttons that filter the library (the same tile clicked again goes back to All), and the kind picked in
   « Import a package » shows that kind in the library; a kind chosen in the library, by chip or tile, preselects
