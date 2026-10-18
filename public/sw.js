@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.10-web.142';
+const CACHE_VERSION = 'pokerth-v2.1.10-web.143';
 // Build id the page puts on the card back URL (deck.mjs _deckBack →
 // flipside.<ext>?v=<BUILD_VERSION>): CACHE_VERSION without its prefix.
 const BUILD_ID = CACHE_VERSION.replace(/^pokerth-v/, '');
@@ -825,7 +825,7 @@ self.addEventListener('fetch', function(e) {
 
   if (e.request.mode === 'navigate') {
     e.respondWith(handleNavigation(e));
-  } else if (/\.(?:js|mjs|css)$/.test(url.pathname) || /^\/(?:table\/tables|cards\/decks|themes\/themes|seats\/seats|music\/tracks)\.json$/.test(url.pathname) || url.pathname === '/app-config') {
+  } else if (/\.(?:js|mjs|css)$/.test(url.pathname) || /^\/(?:table\/tables|cards\/decks|seats\/seats|music\/tracks)\.json$/.test(url.pathname) || url.pathname === '/app-config') {
     // Code, the runtime gallery manifests, AND the live /app-config are
     // network-first: a freshly imported package or a changed admin default must
     // be visible on the next load, never served stale from the SW cache.

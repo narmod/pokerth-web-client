@@ -191,7 +191,7 @@ const PRESETS = [
 ];
 
 function applyPreset(id) {
-  var all = PRESETS.concat(_pkgPresets), p = null;
+  var all = PRESETS, p = null;
   for (var i = 0; i < all.length; i++) if (all[i].id === id) p = all[i];
   if (!p) return;
   if (p.values.theme !== undefined) palette.apply(p.values.theme);
@@ -204,7 +204,7 @@ function applyPreset(id) {
 // Which preset matches the current axis values? null = custom mix.
 function activePreset() {
   var cur = { theme: palette.get(), table: table.get(), deck: deck.get(), buttons: buttons.get(), pucks: pucks.get() };
-  var all = PRESETS.concat(_pkgPresets);
+  var all = PRESETS;
   for (var i = 0; i < all.length; i++) {
     var v = all[i].values;
     var deckOk = (v.deck === undefined) || (v.deck === cur.deck);
@@ -622,7 +622,7 @@ function _loadGalleryTables() {
           var bt = null, bv = t.buttons;
           if (bv) { bt = {}; ['fold','check','call','raise','allin'].forEach(function (k) { if (bv[k]) bt[k] = 'url(' + bv[k] + ')'; }); if (!Object.keys(bt).length) bt = null; }
           return { id: String(t.id), name: t.name || String(t.id), feltUrl: t.feltUrl, pucks: pk, preview: t.preview || (pv && pv.dealer) || null, swatch: '#1e6b1e', full: !!t.full, fs: !!t.fullscreen, align: (typeof t.align === 'string' ? t.align : null), _btn: bt, _btnRadius: (typeof t.radius === 'number' ? t.radius : null) };
-        }).filter(function (t) { if (_isBuiltinTable(t.id)) return false; if (_OFFICIAL_GALLERY_DUP[t.id]) return false; for (var i=0;i<_tablePkgs.length;i++) if (_tablePkgs[i].id===t.id) return false; return true; })
+        }).filter(function (t) { if (_isBuiltinTable(t.id)) return false; if (_OFFICIAL_GALLERY_DUP[t.id]) return false; return true; })
           .concat(_galleryTables.filter(function (t) { return t && t._imported; }));   // idem : tables importees preservees
         try { table.apply(table.get()); pucks.apply(pucks.get()); } catch (e) {}
         if (_body) _render();
@@ -631,16 +631,10 @@ function _loadGalleryTables() {
   } catch (e) {}
 }
 
-// ── Theme packages : un "table style" importe se decompose en une palette (couleurs UI/popups)
-//    + un tapis (feutre, liseré, image) + un preset combinant les deux. ──
-var _palettePkgs = [], _tablePkgs = [], _pkgPresets = [], _puckPkgs = [], _buttonPkgs = [], _themePkgs = [];
+// ── Palette / table tokens injected inline (theme packages, which fed them
+//    custom values, were retired in web.143: only the clearing path remains). ──
 var PALETTE_TOKENS = ['felt','felt-mid','felt-hi','panel','panel-hi','gold','gold-hi','gold-dim','cream','text','text-hi','border','border-hi','modal-bg','body-glow'];
 var TABLE_TOKENS = ['felt-base-hi','felt-base-mid','felt-base-lo','rail','rail-dark','rail-glow'];
-function _palettePkgById(id){ for (var i=0;i<_palettePkgs.length;i++) if (_palettePkgs[i].id===id) return _palettePkgs[i]; return null; }
-function _tablePkgById(id){ for (var i=0;i<_tablePkgs.length;i++) if (_tablePkgs[i].id===id) return _tablePkgs[i]; return null; }
-function _puckPkgById(id){ for (var i=0;i<_puckPkgs.length;i++) if (_puckPkgs[i].id===id) return _puckPkgs[i]; return null; }
-function _buttonPkgById(id){ for (var i=0;i<_buttonPkgs.length;i++) if (_buttonPkgs[i].id===id) return _buttonPkgs[i]; return null; }
-function _isBuiltinPalette(id){ for (var i=0;i<PALETTES.length;i++) if (PALETTES[i].id===id) return true; return false; }
 function _isBuiltinTable(id){ for (var i=0;i<TABLES.length;i++) if (TABLES[i].id===id) return true; return false; }
 function _injectAxis(keys, pkg, storeKey, withFelt){
   var el=document.documentElement, css='';
@@ -649,55 +643,17 @@ function _injectAxis(keys, pkg, storeKey, withFelt){
     if (v!=null){ el.style.setProperty('--'+k,v); css+='--'+k+':'+v+';'; } else el.style.removeProperty('--'+k);
   }
   if (withFelt){
-    if (pkg&&(pkg.feltUrl||pkg.felt)){ var fi='url('+(pkg.feltUrl||('/themes/'+pkg.id+'/'+pkg.felt))+') center / cover no-repeat'; el.style.setProperty('--felt-img',fi); css+='--felt-img:'+fi+';'; }
+    if (pkg&&pkg.feltUrl){ var fi='url('+pkg.feltUrl+') center / cover no-repeat'; el.style.setProperty('--felt-img',fi); css+='--felt-img:'+fi+';'; }
     else el.style.removeProperty('--felt-img');
   }
   try{ if(css) localStorage.setItem(storeKey,css); else localStorage.removeItem(storeKey); }catch(e){}
 }
-// Palettes IMPORTEES (paquets) : on ne recoit que les PALETTE_TOKENS ; les
-// autres tokens variant par palette (gold-rgb, field-bg, inset/-hi) restaient
-// sur les valeurs :root (vertes) -> seuls les builtin s'adaptaient. On les
-// DERIVE ici a partir des tokens fournis, puis on les injecte+stocke comme les
-// autres. Les builtin passent pkg=null -> aucune derivation (leurs blocs CSS
-// :root[data-theme=...] definissent deja tout).
-function _hexToRgb(c){
-  if (typeof c !== 'string') return null;
-  var m = c.trim().match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i); if (!m) return null;
-  var h = m[1]; if (h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
-  var n = parseInt(h, 16); return ((n>>16)&255)+','+((n>>8)&255)+','+(n&255);
+// Clears the palette tokens a theme package used to inject inline (and their
+// stored copy in pth_theme_css): built-in palettes are pure CSS blocks
+// (:root[data-theme=...]), so nothing is left to inject.
+function _injectPalette(){
+  _injectAxis(PALETTE_TOKENS.concat(['gold-rgb','field-bg','inset','inset-hi']), null, 'pth_theme_css', false);
 }
-function _isLightColor(c){
-  var r = _hexToRgb(c); if (!r) return false; var p = r.split(',').map(Number);
-  return (0.299*p[0] + 0.587*p[1] + 0.114*p[2]) > 140;
-}
-var _paletteChatlog = null;   // fenetres (chat/journal) derivees d'une palette importee, appliquees via la couche teinte
-function _injectPalette(pkg){
-  var keys = PALETTE_TOKENS.concat(['gold-rgb','field-bg','inset','inset-hi']);
-  _paletteChatlog = null;   // builtin / aucune palette : fenetres via repli CSS (--panel/--text-hi/--cream)
-  if (pkg && pkg.tokens) {
-    var t = pkg.tokens, d = {};
-    var grgb = _hexToRgb(t.gold);
-    if (grgb && t['gold-rgb'] == null) d['gold-rgb'] = grgb;            // halos/bordures or en rgba
-    if (t['field-bg'] == null && (t['panel-hi'] || t.panel)) d['field-bg'] = t['panel-hi'] || t.panel; // champs de saisie
-    var lightPal = (typeof t['text-hi'] === 'string') && !_isLightColor(t['text-hi']); // texte sombre => palette claire
-    if (t['inset'] == null)    d['inset']    = lightPal ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)';
-    if (t['inset-hi'] == null) d['inset-hi'] = lightPal ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.08)';
-    if (Object.keys(d).length) { pkg = Object.assign({}, pkg, { tokens: Object.assign({}, t, d) }); }
-    // Fenetres flottantes (chat/journal) : fond = PANNEAU + texte a CONTRASTE
-    // garanti (calcule sur la luminosite du panneau). Applique via la couche
-    // teinte (_injectSkinTint) pour survivre a table.apply -> TOUTES les palettes
-    // importees suivent la palette, pas seulement pokerth builtin.
-    var _pc = t.panel || t['panel-hi'];
-    if (_pc) {
-      var _dark = !_isLightColor(_pc);
-      _paletteChatlog = { bg:_pc, su:_pc,
-        tx:(_dark ? '#eff1f5' : '#1d222b'),
-        mu:(_dark ? 'rgba(239,241,245,0.5)' : 'rgba(29,34,43,0.5)') };
-    }
-  }
-  _injectAxis(keys, pkg, 'pth_theme_css', false);
-}
-function _injectTable(pkg){ _injectAxis(TABLE_TOKENS, pkg, 'pth_table_css', true); }
 function _injectButtons(spec){
   var el=document.documentElement, css='';
   for (var i=0;i<BUTTON_TOKENS.length;i++) el.style.removeProperty('--'+BUTTON_TOKENS[i]);
@@ -780,20 +736,19 @@ function _setupAutoListener(on){
   }catch(e){}
 }
 // Re-applique la teinte chat/log de la table courante apres un changement de
-// palette a chaud (sinon _paletteChatlog ne serait relu qu'au prochain
-// table.apply / reload).
+// palette a chaud.
 function _reapplyChatlogTint(){ try{ var _tb=_builtinTableById(table.get()); _injectSkinTint(_tb?_tb.id:null); }catch(e){} }
 palette.apply = function(id){
   if(id==='auto'){
     try{ localStorage.setItem('pth_theme','auto'); }catch(e){}
     document.documentElement.setAttribute('data-theme', _resolveAuto());
-    try{ _injectPalette(null); }catch(e){}
+    try{ _injectPalette(); }catch(e){}
     try{ _reapplyChatlogTint(); }catch(e){}
     _setupAutoListener(true); return;
   }
   _setupAutoListener(false);
   _palApply(id);
-  try{ if (_isBuiltinPalette(id)) _injectPalette(null); else { var pk=_palettePkgById(id); if(pk) _injectPalette(pk); } }catch(e){}
+  try{ _injectPalette(); }catch(e){}
   try{ _reapplyChatlogTint(); }catch(e){}
 };
 palette.set = palette.apply;
@@ -898,7 +853,7 @@ function _injectTintObj(m){
   for (var k in CHATLOG_VARS){ var v=r?r[k]:null; if(v) el.style.setProperty(CHATLOG_VARS[k], v); else el.style.removeProperty(CHATLOG_VARS[k]); }
   if (m && m.a) el.setAttribute('data-box-accent','1'); else el.removeAttribute('data-box-accent');
 }
-function _injectSkinTint(id){ _injectTintObj((id&&_SKIN_TINT[id]) || _paletteChatlog || null); }
+function _injectSkinTint(id){ _injectTintObj((id&&_SKIN_TINT[id]) || null); }
 
 // ── Import LOCAL de styles (tables ; decks/sieges a venir). Lecteur ZIP (store +
 //    deflate) + IndexedDB pour les assets, injection dans les galeries existantes. ──
@@ -1051,7 +1006,7 @@ buttons.apply = function(id){ _btnApply(id); try{
   // Green Casino (casino-vert) garde son rendu propre (images SVG + couleurs). Flat ('')
   // = palette Glossy mais en aplat (BUTTON_FLAT). Tous les autres (glossy, PokerTH new,
   // Sleek) -> degrades Glossy.
-  if (id==='casino-vert') { var pk=_buttonPkgById('casino-vert'); _injectButtons(pk?{images:pk.images,colors:pk.colors}:{colors:BUTTON_GLOSSY}); }
+  if (id==='casino-vert') _injectButtons(CASINO_BTN);
   else if (!id) { try{ table.apply(table.get()); }catch(e2){} }   // Auto : les boutons suivent le STYLE DE TABLE (parité QML — un seul pipeline, uniforme sur toutes les tables)
   else if (id==='flat') _injectButtons({colors:BUTTON_FLAT});
   else _injectButtons({colors:BUTTON_GLOSSY});
@@ -1066,7 +1021,7 @@ pucks.apply = function(id){ _pkApply(id); try{
   if (!id) _injectPucks(_tablePuckSet());          // Auto -> suit le tapis
   else if (id==='pokerth') _injectPucks(PUCK_SET);
   else if (id==='casino') _injectPucks(CASINO_PUCKS);
-  else { var pk=_puckPkgById(id); if(pk) _injectPucks(pk.set); else { var gt=_galleryTableById(id); if(gt) _injectPucks(gt.pucks||null); } }
+  else { var gt=_galleryTableById(id); if(gt) _injectPucks(gt.pucks||null); }
 }catch(e){}
   // Les pucks sont des <img> figes au rendu (le feutre, lui, est une variable CSS live) :
   // apres avoir change --puck-*, on redemande un rendu des sieges + barre heros pour que
@@ -1075,130 +1030,7 @@ pucks.apply = function(id){ _pkApply(id); try{
 };
 pucks.set = pucks.apply;
 try{ palette.apply(palette.get()); table.apply(table.get()); }catch(e){}   // palette (purge vars inline) + boutons/pucks via le style de table
-function _loadThemes(){
-  try{
-    fetch('/themes/themes.json',{cache:'no-store'})
-      .then(function(r){return r.ok?r.json():[];})
-      .then(function(list){
-        if(!Array.isArray(list)) return;
-        var pkgs=list.filter(function(p){return p&&p.id&&(p.palette||p.table||p.felt||p.pucks||p.buttonImages||p.buttons);});
-        _themePkgs=pkgs.map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444'}; });
-        _palettePkgs=pkgs.filter(function(p){return p.palette;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.palette}; }).filter(function(p){ return !_isBuiltinPalette(p.id); });
-        _tablePkgs=pkgs.filter(function(p){return p.table||p.felt;}).map(function(p){ return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',tokens:p.table||{},felt:p.felt||null,full:!!p.full,fs:!!p.fullscreen}; }).filter(function(p){ return !_isBuiltinTable(p.id); });
-        _pkgPresets=pkgs.filter(function(p){return p.palette||p.table||p.felt;}).map(function(p){ var vals={theme:(p.palette?String(p.id):''),table:'',buttons:'glossy',pucks:'pokerth-new'}; if(p.deck) vals.deck=String(p.deck); return {id:'pkg-'+p.id,name:p.name||String(p.id),swatch:p.swatch||'#444',values:vals}; });
-        _puckPkgs=pkgs.filter(function(p){return p.pucks;}).map(function(p){ var set={},pv=p.pucks; ['dealer','sb','bb'].forEach(function(k){ if(pv[k]) set[k]='url(/themes/'+p.id+'/'+pv[k]+')'; }); return {id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444',set:set,preview:(pv.dealer?'/themes/'+p.id+'/'+pv.dealer:null)}; }).filter(function(p){ return p.id!=='pokerth'; });
-        _buttonPkgs=pkgs.filter(function(p){return p.buttonImages||p.buttons;}).map(function(p){ var e={id:String(p.id),name:p.name||String(p.id),swatch:p.swatch||'#444'}; if(p.buttonImages){ e.images={}; ['fold','check','call','raise','allin'].forEach(function(k){ if(p.buttonImages[k]) e.images[k]='url(/themes/'+p.id+'/'+p.buttonImages[k]+')'; }); } if(p.buttons){ e.colors=p.buttons; } return e; }).filter(function(p){ return p.id!=='glossy'; });
-        try{ var pp=_palettePkgById(palette.get()); if(pp) _injectPalette(pp); var tp=_tablePkgById(table.get()); if(tp) _injectTable(tp); }catch(e){}
-        try{ table.apply(table.get()); buttons.apply(buttons.get()); pucks.apply(pucks.get()); }catch(e){}
-        if(_body) _render();
-      }).catch(function(){});
-  }catch(e){}
-}
-_loadThemes();
 _loadGalleryTables();
-
-// ── Export de theme en .zip (P3) — 100% client : fetch statique du paquet
-//    /themes/<id>/ (theme.json + assets referencesx) -> archive ZIP store-only
-//    (meme format que l'ingestion admin `kind:theme`, ré-importable tel quel).
-function _strU8(s){ if (typeof TextEncoder !== 'undefined') return new TextEncoder().encode(s);
-  var a=[]; for(var i=0;i<s.length;i++){ var c=s.charCodeAt(i);
-    if(c<128)a.push(c); else if(c<2048){a.push(192|(c>>6));a.push(128|(c&63));}
-    else {a.push(224|(c>>12));a.push(128|((c>>6)&63));a.push(128|(c&63));} } return new Uint8Array(a); }
-var _crcTab=(function(){ var t=[],c,n,k; for(n=0;n<256;n++){ c=n; for(k=0;k<8;k++) c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1); t[n]=c>>>0; } return t; })();
-function _crc32(u8){ var c=0xFFFFFFFF; for(var i=0;i<u8.length;i++) c=_crcTab[(c^u8[i])&0xFF]^(c>>>8); return (c^0xFFFFFFFF)>>>0; }
-function _zipStore(files){
-  var parts=[], central=[], offset=0;
-  function u16(v){ return [v&255,(v>>8)&255]; }
-  function u32(v){ v=v>>>0; return [v&255,(v>>8)&255,(v>>16)&255,(v>>24)&255]; }
-  var DATE=0x0021, TIME=0; // 1980-01-01
-  files.forEach(function(f){
-    var name=_strU8(f.name), data=f.data, crc=_crc32(data);
-    var lh=[].concat(u32(0x04034b50),u16(20),u16(0),u16(0),u16(TIME),u16(DATE),u32(crc),u32(data.length),u32(data.length),u16(name.length),u16(0));
-    parts.push(new Uint8Array(lh)); parts.push(name); parts.push(data);
-    var cd=[].concat(u32(0x02014b50),u16(20),u16(20),u16(0),u16(0),u16(TIME),u16(DATE),u32(crc),u32(data.length),u32(data.length),u16(name.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(offset));
-    central.push(new Uint8Array(cd)); central.push(name);
-    offset += lh.length + name.length + data.length;
-  });
-  var cdSize=0; central.forEach(function(p){ cdSize+=p.length; });
-  var eocd=new Uint8Array([].concat(u32(0x06054b50),u16(0),u16(0),u16(files.length),u16(files.length),u32(cdSize),u32(offset),u16(0)));
-  var all=parts.concat(central); all.push(eocd);
-  return new Blob(all, {type:'application/zip'});
-}
-function _dlBlob(blob,name){ try{ var u=URL.createObjectURL(blob); var a=document.createElement('a'); a.href=u; a.download=name;
-  document.body.appendChild(a); a.click(); setTimeout(function(){ try{document.body.removeChild(a);URL.revokeObjectURL(u);}catch(e){} },0); }catch(e){} }
-function _exportTheme(id, btn){
-  var old = btn ? btn.textContent : '';
-  if(btn){ btn.disabled=true; btn.textContent='\u2026'; }
-  var base='/themes/'+encodeURIComponent(id)+'/';
-  fetch(base+'theme.json',{cache:'no-store'}).then(function(r){ if(!r.ok) throw new Error('theme.json '+r.status); return r.text(); })
-  .then(function(cfgText){
-    var cfg=JSON.parse(cfgText);
-    var files=[{name:'theme.json', data:_strU8(cfgText)}];
-    var assets=[];
-    if(cfg.felt) assets.push(cfg.felt);
-    if(cfg.buttonImages) ['fold','check','call','raise','allin'].forEach(function(k){ if(cfg.buttonImages[k]) assets.push(cfg.buttonImages[k]); });
-    if(cfg.pucks) ['dealer','sb','bb'].forEach(function(k){ if(cfg.pucks[k]) assets.push(cfg.pucks[k]); });
-    var seen={}, uniq=[]; assets.forEach(function(a){ if(a && !seen[a]){ seen[a]=1; uniq.push(a); } });
-    return uniq.reduce(function(chain, fname){
-      return chain.then(function(acc){
-        return fetch(base+encodeURIComponent(fname),{cache:'no-store'}).then(function(rr){ if(!rr.ok) throw new Error(fname+' '+rr.status); return rr.arrayBuffer(); })
-          .then(function(buf){ acc.push({name:fname, data:new Uint8Array(buf)}); return acc; });
-      });
-    }, Promise.resolve(files));
-  })
-  .then(function(files){
-    _dlBlob(_zipStore(files), id+'.zip');
-    if(btn){ btn.textContent='\u2713'; setTimeout(function(){ btn.textContent=old; btn.disabled=false; },1200); }
-  })
-  .catch(function(e){ try{ console.warn('theme export failed:', e); }catch(_){}
-    if(btn){ btn.textContent='\u2717'; setTimeout(function(){ btn.textContent=old; btn.disabled=false; },1600); } });
-}
-function _exportBlock(){
-  if(!_themePkgs || !_themePkgs.length) return null;
-  var wrap=document.createElement('div');
-  wrap.appendChild(_sectionHeader(_t('themeExport','Export theme (.zip)'), ''));
-  _themePkgs.forEach(function(p){
-    var row=document.createElement('div');
-    row.style.cssText='display:flex;align-items:center;gap:8px;padding:5px 2px;';
-    var sw=document.createElement('span');
-    sw.style.cssText='width:16px;height:16px;border-radius:3px;flex:0 0 auto;border:1px solid var(--border,rgba(200,168,74,0.3));background:'+(p.swatch||'#444');
-    var nm=document.createElement('span');
-    nm.textContent=p.name;
-    nm.style.cssText='flex:1 1 auto;min-width:0;font-family:var(--ff-mono,monospace);font-size:0.8rem;color:var(--text,#ccc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
-    var btn=document.createElement('button');
-    btn.type='button'; btn.textContent='\u2913 .zip';
-    btn.style.cssText='flex:0 0 auto;font-family:var(--ff-mono,monospace);font-size:0.72rem;padding:4px 9px;border:1px solid var(--border,rgba(200,168,74,0.3));border-radius:4px;background:var(--field-bg,#1a1a1a);color:var(--gold-hi,#e8c860);cursor:pointer;';
-    btn.onclick=function(){ _exportTheme(p.id, btn); };
-    row.appendChild(sw); row.appendChild(nm); row.appendChild(btn);
-    wrap.appendChild(row);
-  });
-  return wrap;
-}
-
-// Section repliable « Options avancées » (fermee par defaut, bas du panneau) —
-// meme mecanique d'accordeon que _dropdownBlock (_openSec). Contient l'export
-// de themes ; accueillera l'import de .zip ensuite.
-function _advancedBlock(){
-  var content = _exportBlock();
-  if (!content) return null;                 // rien a montrer tant qu'aucun theme charge
-  var secId = 'advanced';
-  var open = _openSec === secId;
-  var sec = document.createElement('div'); sec.style.cssText = 'margin:0 0 11px';
-  var btn = document.createElement('button'); btn.type = 'button';
-  btn.style.cssText = 'display:flex;align-items:center;gap:8px;width:100%;box-sizing:border-box;padding:7px 9px;border-radius:8px;cursor:pointer;text-align:left;color:var(--cream,#f0e6d2);font-size:0.84rem;background:rgba(255,255,255,0.03);border:1px solid ' + (open ? 'var(--gold,#c8a84a)' : 'var(--border,rgba(200,168,74,0.25))');
-  btn.innerHTML = '<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + _t('sectionAdvanced', 'Advanced') + '</span>'
-    + '<span style="color:var(--text,#9aaa92);font-size:0.72rem;display:inline-block;transition:transform .15s;transform:rotate(' + (open ? '180' : '0') + 'deg)">\u25be</span>';
-  btn.addEventListener('click', function (e) { e.stopPropagation(); _openSec = open ? null : secId; _render(); });
-  sec.appendChild(btn);
-  if (open) {
-    _openBlockEl = sec;
-    var body = document.createElement('div'); body.style.cssText = 'margin-top:8px';
-    body.appendChild(content);
-    sec.appendChild(body);
-  }
-  return sec;
-}
-
 
 // ── Single "Theme" panel ────────────────────────────────────────────────
 const PANEL_ID = 'theme-panel', OVERLAY_ID = 'theme-panel-overlay';
@@ -1260,7 +1092,7 @@ function _row() {
 
 // -- Preview thumbnails (small inside the control, large beside it) -----------
 function _tableById(id) { for (var i = 0; i < TABLES.length; i++) if (TABLES[i].id === id) return TABLES[i]; return TABLES[0]; }
-function _presetById(id) { var all = PRESETS.concat(_pkgPresets); for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i]; return PRESETS[0]; }
+function _presetById(id) { var all = PRESETS; for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i]; return PRESETS[0]; }
 
 // Apercu d'un tapis : le client QML livre deux images par pack et choisit selon
 // l'orientation de l'ecran (Preview / PreviewPortrait). Les packs anterieurs a
@@ -1279,7 +1111,6 @@ function _feltStyle(t) {
   var _pv = _tablePreview(t);
   if (_pv) return 'background:url(' + _pv + ') center/cover';
   if (t && t.feltUrl) return 'background:url(' + t.feltUrl + ') center/cover';
-  if (t && t.felt) return 'background:url(/themes/' + t.id + '/' + t.felt + ') center/cover';
   var sw = (t && t.swatch) || '#1e6b1e';
   return 'background:' + sw + ';background:radial-gradient(circle at 50% 36%, color-mix(in srgb,' + sw + ',#fff 12%), color-mix(in srgb,' + sw + ',#000 55%))';
 }
@@ -1341,7 +1172,7 @@ function _previewHTML(kind, item, big) {
   }
   if (kind === 'preset') {
     var _tv = (item && item.values) ? item.values.table : '';
-    var t = _isBuiltinTable(_tv) ? _tableById(_tv) : (_tablePkgById(_tv) || (item && item.swatch ? { id: _tv, swatch: item.swatch } : _tableById(_tv)));
+    var t = _isBuiltinTable(_tv) ? _tableById(_tv) : (item && item.swatch ? { id: _tv, swatch: item.swatch } : _tableById(_tv));
     return '<span style="' + box + ';' + _feltStyle(t) + '">' + _cardOnFelt(item && item.values ? item.values.deck : '', big) + '</span>';
   }
   if (kind === 'seat') {
@@ -1706,7 +1537,7 @@ function openThemePanel(ev) {
   // imported in the admin show up without reloading the app. Each loader calls
   // _render() again when its fetch resolves (network-first via the service
   // worker), refreshing the open panel in place.
-  try { _loadGalleryDecks(); _loadGalleryTables(); _loadThemes(); _loadImportedTables(); _loadImportedDecks(); } catch (e) {}
+  try { _loadGalleryDecks(); _loadGalleryTables(); _loadImportedTables(); _loadImportedDecks(); } catch (e) {}
 
   if (overlay) document.body.appendChild(overlay);
   document.body.appendChild(panel);
@@ -1752,7 +1583,7 @@ window.renderThemeInto = function(host){
   if(!host) return;
   _body = host; _activeTab = _savedStyleTab();
   try { _render(); } catch(e){}
-  try { _loadGalleryDecks(); _loadGalleryTables(); _loadThemes(); _loadGallerySeats(); _loadImportedTables(); _loadImportedDecks(); _loadImportedSeats(); } catch(e){}
+  try { _loadGalleryDecks(); _loadGalleryTables(); _loadGallerySeats(); _loadImportedTables(); _loadImportedDecks(); _loadImportedSeats(); } catch(e){}
 };
 window._refreshThemePanel = function () { try { _render(); } catch (e) {} };
 // Relocalisation à chaud : le panneau de style est peint en JS, donc invisible

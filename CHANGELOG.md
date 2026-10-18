@@ -15,6 +15,20 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Removed
+- **Theme packages** (`web.143`) — `public/themes/<id>/theme.json` packages (button colours/images, pucks, an
+  optional palette or felt) no longer reached players: the style window has no theme, buttons or pucks picker,
+  the two built-in themes carried no palette, and an imported one only surfaced as a `pkg-<id>` first-visit
+  default in Admin › Defaults. Removed end to end: the admin « Theme » tile, chip, library section and import
+  kind; the `pkg-` options of the default-theme menu (a saved one now reads « No default », which is what
+  players get); in `proxy.js` the theme upload / remove / toggle kind, its listing, `BUILTIN_THEMES` (four ids
+  long gone) and the `/themes/themes.json` manifest; in `theme.mjs` the manifest fetch, package palettes /
+  felts / presets, the never-shown « Export theme (.zip) » block and its ZIP writer; the Studio « Themes » tab;
+  `install.sh theme-add / theme-list / theme-remove` (now a clear error) and the manifest regeneration;
+  `scripts/themes-manifest.mjs`, `public/themes/pokerth-new/` and `casino-vert/theme.json`; the orphan
+  `themeExport` / `sectionAdvanced` strings in every language. Tables, decks, seats and the Green Casino table
+  render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
+
 ### Changed
 - **Admin › Packages: one kind filter for tiles, import and library** (`web.142`) — the four tiles at the top
   are buttons that filter the library (the same tile clicked again goes back to All), and the kind picked in

@@ -25,7 +25,7 @@
 # to running the baked-in code. The container always starts.
 #
 # Untracked files are preserved by design — gallery packs imported from the
-# admin page land in public/{table,cards,themes,seats}/ and are untracked, so
+# admin page land in public/{table,cards,seats}/ and are untracked, so
 # the resync never deletes them.
 
 set -e
@@ -83,7 +83,7 @@ fi
 
 # ── 2. Re-sync to origin/$GIT_BRANCH on every boot ───────────────────────────
 # Hard resync rather than merge: the container is a deploy target, not a work
-# tree, and the style manifests (tables/decks/themes/seats .json) are generated
+# tree, and the style manifests (tables/decks/seats .json) are generated
 # at runtime, so the tree is routinely dirty. Untracked files survive — the
 # manifests themselves are rebuilt by proxy.js on every boot.
 # Note: options stay BEFORE the revision — `git checkout -B b REV --quiet`

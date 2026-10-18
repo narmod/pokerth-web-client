@@ -9589,11 +9589,11 @@ function restartSegment() {
 // Pull robuste : fetch explicite de la branche puis merge ff-only de FETCH_HEAD.
 // (Un simple `git pull --ff-only` échoue si le refspec du clone est cassé ou
 // single-branch — vu en production : « no such ref was fetched ».)
-// Deux manifestes SUIVIS par git sont regeneres au runtime (themes/seats) : on
-// les remet a l'etat du depot avant le fetch, sinon le merge refuse d'ecraser
-// des « local changes » — meme precaution que install.sh.
+// Le manifeste des sieges est regenere au runtime : on le remet a l'etat du
+// depot avant le fetch, sinon le merge refuse d'ecraser des « local changes »
+// — meme precaution que install.sh.
 function gitPullSegment() {
-  const clean = "git checkout -- public/themes/themes.json public/seats/seats.json 2>/dev/null || true";
+  const clean = "git checkout -- public/seats/seats.json 2>/dev/null || true";
   if (GIT_SHALLOW) {
     return clean + "; git fetch --depth 1 origin '" + GIT_BRANCH + "' && git checkout -q -f -B '" + GIT_BRANCH + "' FETCH_HEAD";
   }
@@ -9697,7 +9697,7 @@ function _deployRecord(reason) {
 // branche, donc une mise à jour ultérieure reste un fast-forward normal.
 function rollbackCmd(sha, restart) {
   const dir = __dirname.replace(/'/g, "'\\''");
-  const clean = "git checkout -- public/themes/themes.json public/seats/seats.json 2>/dev/null || true";
+  const clean = "git checkout -- public/seats/seats.json 2>/dev/null || true";
   const get = "git cat-file -e " + sha + "^{commit} 2>/dev/null || git fetch --depth 1 origin " + sha;
   const go = "git checkout -q -f -B '" + GIT_BRANCH + "' " + sha;
   const head = restart ? "sleep 1; cd '" + dir + "'" : "cd '" + dir + "'";
@@ -10254,13 +10254,10 @@ function slugId(s) {
   return String(s || '').toLowerCase().replace(/\.zip$/, '')
     .replace(/[^a-z0-9_-]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
 }
-// Built-in (git-tracked) theme packages live in public/themes/ and are scanned
-// into themes.json on every full update. They can be hidden (toggle) but never
-// removed via admin — git would restore them, and a player could be mid-theme.
-const BUILTIN_THEMES = ['bleu-nuit', 'casino-vert', 'graphite', 'pokerth-new', 'vecteur', 'violet'];
 // Packs shipped with the repository (the folders git tracks), plus the ids the
-// client draws itself: like the built-in themes they can be hidden, never
-// removed, and an upload never overwrites them. scripts/test-pkg-builtin.mjs
+// client draws itself: they can be hidden, never removed, and an upload never
+// overwrites them. (Theme packages — public/themes/<id>/theme.json — were
+// retired in web.143: no player picker used them any more.) scripts/test-pkg-builtin.mjs
 // keeps these lists equal to what git tracks.
 const BUILTIN_TABLES = ['green', 'blue', 'bordeaux', 'slate', 'photo', 'table',
   'bbc_anthem', 'casino', 'danuxi', 'disco', 'discworld', 'ivoire-chene', 'lemming', 'matrix', 'mile_high_club', 'mute', 'mute2', 'pirates', 'pokerth-live', 'pokerth-official', 'pokerth-official-fs', 'saloon', 'star_trek', 'teal', 'terminus_hotel_2', 'tripsixes', 'wanted', 'xanax'];
@@ -10269,28 +10266,23 @@ const BUILTIN_DECKS = ['svg', 'classic',
 const BUILTIN_SEATS = ['', 'pokerth', 'chip', 'plate', 'card', 'compact', 'bar',
   'boardwalk', 'high-roller', 'onyx-pill'];
 function pkgBuiltin(kind, id) {
-  const L = kind === 'table' ? BUILTIN_TABLES : kind === 'deck' ? BUILTIN_DECKS : kind === 'seat' ? BUILTIN_SEATS : kind === 'theme' ? BUILTIN_THEMES : [];
+  const L = kind === 'table' ? BUILTIN_TABLES : kind === 'deck' ? BUILTIN_DECKS : kind === 'seat' ? BUILTIN_SEATS : [];
   return L.indexOf(id) >= 0;
 }
 function regenManifest(kind) {
   const rel = kind === 'table' ? 'scripts/tables-manifest.mjs'
-    : kind === 'theme' ? 'scripts/themes-manifest.mjs'
     : kind === 'seat' ? 'scripts/seats-manifest.mjs'
     : 'scripts/decks-manifest.mjs';
-  const dir = path.join(PUBLIC_DIR, kind === 'table' ? 'table' : kind === 'theme' ? 'themes' : kind === 'seat' ? 'seats' : 'cards');
+  const dir = path.join(PUBLIC_DIR, kind === 'table' ? 'table' : kind === 'seat' ? 'seats' : 'cards');
   try { spawnSync(process.execPath, [path.join(__dirname, rel), dir], { stdio: 'ignore' }); }
   catch (e) { console.error('[admin] manifest failed:', e.message); }
 }
 function pkgList() {
   const read = function (p) { try { return JSON.parse(fs.readFileSync(p, 'utf8')) || []; } catch (e) { return []; } };
-  const themes = read(path.join(PUBLIC_DIR, 'themes', 'themes.json')).map(function (t) {
-    return { id: t.id, name: t.name || t.id, swatch: t.swatch || '#444', builtin: BUILTIN_THEMES.indexOf(t.id) >= 0 };
-  });
   const mark = function (kind) { return function (x) { return Object.assign({}, x, { builtin: pkgBuiltin(kind, x && x.id) }); }; };
   return { tables: read(path.join(PUBLIC_DIR, 'table', 'tables.json')).map(mark('table')),
            decks:  read(path.join(PUBLIC_DIR, 'cards', 'decks.json')).map(mark('deck')),
-           seats:  read(path.join(PUBLIC_DIR, 'seats', 'seats.json')).map(mark('seat')),
-           themes: themes };
+           seats:  read(path.join(PUBLIC_DIR, 'seats', 'seats.json')).map(mark('seat')) };
 }
 // Admin can hide an installed package from players without deleting it. The
 // disabled ids live in _adminConfig.pkgDisabled = { table:[...], deck:[...] };
@@ -10375,25 +10367,6 @@ function importPackage(kind, idHint, zipBuf, cb) {
     try { fs.rmSync(dest, { recursive: true, force: true }); fs.mkdirSync(dest, { recursive: true }); } catch (e) { return done('dest failed'); }
     try { fs.readdirSync(exDir).forEach(function (f) { if (/\.(png|svg|xml)$/i.test(f)) cp(f, path.join(dest, f)); }); } catch (e) {}
     regenManifest('deck');
-  } else if (kind === 'theme') {
-    // Web theme package = theme.json (palette / table / felt / buttons /
-    // buttonImages / pucks) + any image files it references, flattened.
-    if (!has('theme.json')) return done('not a PokerTH web theme (theme.json missing)');
-    let cfg = null;
-    try { cfg = JSON.parse(fs.readFileSync(path.join(exDir, 'theme.json'), 'utf8')); } catch (e) { return done('theme.json is not valid JSON'); }
-    if (!cfg || typeof cfg !== 'object') return done('theme.json is empty or invalid');
-    if (!id) id = (cfg.name ? slugId(cfg.name) : '') || ('theme-' + Date.now());
-    if (BUILTIN_THEMES.indexOf(id) >= 0) id = 'theme-' + id;   // never clobber a git-tracked theme
-    const dest = path.join(PUBLIC_DIR, 'themes', id);
-    try { fs.rmSync(dest, { recursive: true, force: true }); fs.mkdirSync(dest, { recursive: true }); } catch (e) { return done('dest failed'); }
-    try { fs.readdirSync(exDir).forEach(function (f) { if (f === 'theme.json' || /\.(png|svg|jpg|jpeg|webp)$/i.test(f)) cp(f, path.join(dest, f)); }); } catch (e) {}
-    regenManifest('theme');
-    // themes-manifest drops a theme that ends up with no usable styling (no
-    // palette/table/felt/buttons/buttonImages/pucks, or referenced images
-    // missing). Detect that and fail loudly instead of leaving it invisible.
-    let listed = false;
-    try { listed = JSON.parse(fs.readFileSync(path.join(PUBLIC_DIR, 'themes', 'themes.json'), 'utf8')).some(function (x) { return x && x.id === id; }); } catch (e) {}
-    if (!listed) { try { fs.rmSync(dest, { recursive: true, force: true }); } catch (e) {} return done('theme has no usable content (need palette, table, felt, buttons, buttonImages or pucks — and any referenced image file must be in the zip)'); }
   } else if (kind === 'seat') {
     // Seat pack = a 9-slice plate image (border-image `fill` paints the box too)
     // AND/OR a free stylesheet style.css (full custom design inside the QML
@@ -10415,8 +10388,8 @@ function importPackage(kind, idHint, zipBuf, cb) {
 
   let nm = id;
   try {
-    const sub = kind === 'table' ? 'table' : kind === 'theme' ? 'themes' : kind === 'seat' ? 'seats' : 'cards';
-    const mfn = kind === 'table' ? 'tables.json' : kind === 'theme' ? 'themes.json' : kind === 'seat' ? 'seats.json' : 'decks.json';
+    const sub = kind === 'table' ? 'table' : kind === 'seat' ? 'seats' : 'cards';
+    const mfn = kind === 'table' ? 'tables.json' : kind === 'seat' ? 'seats.json' : 'decks.json';
     const mf = path.join(PUBLIC_DIR, sub, mfn);
     const e = JSON.parse(fs.readFileSync(mf, 'utf8')).find(function (x) { return x.id === id; });
     if (e && e.name) nm = e.name;
@@ -10430,7 +10403,7 @@ function importPackage(kind, idHint, zipBuf, cb) {
 // touches them, and their MP3s are uploaded to public/music/<id>.mp3 (untracked,
 // also preserved by pull). The client-facing /music/tracks.json is composed
 // server-side (built-ins minus hidden + active admin tracks), mirroring how the
-// deck/theme galleries are filtered. Built-ins can be hidden but not removed.
+// deck/table galleries are filtered. Built-ins can be hidden but not removed.
 const MUSIC_DIR = path.join(PUBLIC_DIR, 'music');
 const MUSIC_BUILTIN_FILE = path.join(MUSIC_DIR, 'tracks.json');
 function musicBuiltins() {
@@ -10578,12 +10551,11 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/pkg-list') {
     if (!hasScope('packages', query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-    var _pl = pkgList(), _td = pkgDisabledSet('table'), _dd = pkgDisabledSet('deck'), _hd = pkgDisabledSet('theme'), _sd = pkgDisabledSet('seat'), _tf = pkgFullSet('table'), _tfs = pkgFullscreenSet('table'), _ta = pkgAlignMap('table');
+    var _pl = pkgList(), _td = pkgDisabledSet('table'), _dd = pkgDisabledSet('deck'), _sd = pkgDisabledSet('seat'), _tf = pkgFullSet('table'), _tfs = pkgFullscreenSet('table'), _ta = pkgAlignMap('table');
     return adminJson(res, 200, { ok: true,
       tables: (_pl.tables || []).map(function (t) { var _fs = _tfs.indexOf(t.id) >= 0 || (_tf.indexOf(t.id) < 0 && !!t.fullscreen); var _fu = !_fs && (_tf.indexOf(t.id) >= 0 || !!t.full); return Object.assign({}, t, { disabled: _td.indexOf(t.id) >= 0, full: _fu, fullscreen: _fs, align: _ta[t.id] || null, mode: _fs ? 'fullscreen' : (_fu ? 'full' : 'frame') }); }),
       decks:  (_pl.decks  || []).map(function (d) { return Object.assign({}, d, { disabled: _dd.indexOf(d.id) >= 0 }); }),
-      seats:  (_pl.seats  || []).map(function (s) { return Object.assign({}, s, { disabled: _sd.indexOf(s.id) >= 0 }); }),
-      themes: (_pl.themes || []).map(function (t) { return Object.assign({}, t, { disabled: _hd.indexOf(t.id) >= 0 }); }) });
+      seats:  (_pl.seats  || []).map(function (s) { return Object.assign({}, s, { disabled: _sd.indexOf(s.id) >= 0 }); }) });
   }
   if (reqPathOnly === '/admin/status') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -11183,8 +11155,8 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/pkg-upload' && req.method === 'POST') {
     if (!hasScope('packages', query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-    const kind = query.kind === 'deck' ? 'deck' : (query.kind === 'table' ? 'table' : (query.kind === 'theme' ? 'theme' : (query.kind === 'seat' ? 'seat' : null)));
-    if (!kind) return adminJson(res, 400, { ok: false, error: 'kind must be table, deck, theme or seat' });
+    const kind = query.kind === 'deck' ? 'deck' : (query.kind === 'table' ? 'table' : (query.kind === 'seat' ? 'seat' : null));
+    if (!kind) return adminJson(res, 400, { ok: false, error: 'kind must be table, deck or seat' });
     return readRawBody(req, MAX_UPLOAD, function (buf) {
       if (!buf || !buf.length) return adminJson(res, 413, { ok: false, error: 'empty upload or larger than 25 MB' });
       importPackage(kind, query.name || '', buf, function (err, info) {
@@ -11196,11 +11168,11 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/pkg-remove' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
       if (!hasScope('packages', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      const kind = (d && d.kind === 'deck') ? 'deck' : ((d && d.kind === 'table') ? 'table' : ((d && d.kind === 'theme') ? 'theme' : ((d && d.kind === 'seat') ? 'seat' : null)));
+      const kind = (d && d.kind === 'deck') ? 'deck' : ((d && d.kind === 'table') ? 'table' : ((d && d.kind === 'seat') ? 'seat' : null));
       const id = slugId(d && d.id);
       if (!kind || !id) return adminJson(res, 400, { ok: false, error: 'kind + id required' });
       if (pkgBuiltin(kind, id)) return adminJson(res, 400, { ok: false, error: 'built-in ' + kind + ' cannot be removed (you can hide it instead)' });
-      const dir = path.join(PUBLIC_DIR, kind === 'table' ? 'table' : kind === 'theme' ? 'themes' : kind === 'seat' ? 'seats' : 'cards', id);
+      const dir = path.join(PUBLIC_DIR, kind === 'table' ? 'table' : kind === 'seat' ? 'seats' : 'cards', id);
       if (!fs.existsSync(dir)) return adminJson(res, 404, { ok: false, error: 'not found' });
       try { fs.rmSync(dir, { recursive: true, force: true }); } catch (e) { return adminJson(res, 500, { ok: false, error: 'remove failed' }); }
       try { var _da = pkgDisabledSet(kind); var _i = _da.indexOf(id); if (_i >= 0) { _da.splice(_i, 1); _adminConfig.pkgDisabled[kind] = _da; saveAdminConfig(); } } catch (e) {}
@@ -11215,7 +11187,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/pkg-toggle' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
       if (!hasScope('packages', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      const kind = (d && d.kind === 'deck') ? 'deck' : ((d && d.kind === 'table') ? 'table' : ((d && d.kind === 'theme') ? 'theme' : ((d && d.kind === 'seat') ? 'seat' : null)));
+      const kind = (d && d.kind === 'deck') ? 'deck' : ((d && d.kind === 'table') ? 'table' : ((d && d.kind === 'seat') ? 'seat' : null));
       const id = slugId(d && d.id);
       if (!kind || !id) return adminJson(res, 400, { ok: false, error: 'kind + id required' });
       const enabled = !(d && d.enabled === false);   // desired state; false = hide from players
@@ -13924,11 +13896,11 @@ const httpServer = http.createServer((req, res) => {
   }
 
   // Client-facing gallery manifests, with admin-disabled packages filtered out
-  // (disabling hides a package from the theme picker without removing its files).
-  if (reqPathOnly === '/table/tables.json' || reqPathOnly === '/cards/decks.json' || reqPathOnly === '/themes/themes.json' || reqPathOnly === '/seats/seats.json') {
-    var _pkgKind = reqPathOnly === '/table/tables.json' ? 'table' : (reqPathOnly === '/themes/themes.json' ? 'theme' : (reqPathOnly === '/seats/seats.json' ? 'seat' : 'deck'));
-    var _mfSub = _pkgKind === 'table' ? 'table' : (_pkgKind === 'theme' ? 'themes' : (_pkgKind === 'seat' ? 'seats' : 'cards'));
-    var _mfName = _pkgKind === 'table' ? 'tables.json' : (_pkgKind === 'theme' ? 'themes.json' : (_pkgKind === 'seat' ? 'seats.json' : 'decks.json'));
+  // (disabling hides a package from the style picker without removing its files).
+  if (reqPathOnly === '/table/tables.json' || reqPathOnly === '/cards/decks.json' || reqPathOnly === '/seats/seats.json') {
+    var _pkgKind = reqPathOnly === '/table/tables.json' ? 'table' : (reqPathOnly === '/seats/seats.json' ? 'seat' : 'deck');
+    var _mfSub = _pkgKind === 'table' ? 'table' : (_pkgKind === 'seat' ? 'seats' : 'cards');
+    var _mfName = _pkgKind === 'table' ? 'tables.json' : (_pkgKind === 'seat' ? 'seats.json' : 'decks.json');
     var _mf = path.join(PUBLIC_DIR, _mfSub, _mfName);
     var _list = []; try { _list = JSON.parse(fs.readFileSync(_mf, 'utf8')); } catch (e) {}
     if (!Array.isArray(_list)) _list = [];
@@ -13950,7 +13922,7 @@ const httpServer = http.createServer((req, res) => {
   }
 
   // Client-facing music manifest: built-ins (minus hidden) + active admin tracks,
-  // composed server-side just like the deck/theme galleries above.
+  // composed server-side just like the deck/table galleries above.
   if (reqPathOnly === '/music/tracks.json') {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
     res.end(JSON.stringify({ version: 1, tracks: musicListForClient() }));
@@ -14842,7 +14814,7 @@ httpServer.listen(PROXY_PORT, () => {
   // non : on le fait ici pour que TOUS les chemins de déploiement soient
   // équivalents. Coût : quelques dizaines de ms. Les packs uploadés par l'admin
   // restent listés (les scripts scannent le disque, ils n'effacent rien).
-  try { ['deck', 'table', 'theme', 'seat'].forEach(function (k) { regenManifest(k); }); } catch (e) {}
+  try { ['deck', 'table', 'seat'].forEach(function (k) { regenManifest(k); }); } catch (e) {}
   // Community events warm-up (web.253): the first Events tab after a restart
   // is served from the cache instead of waiting for the five community pages.
   setTimeout(function () { try { _eventsRefresh().catch(function () {}); } catch (e) {} }, 3000);

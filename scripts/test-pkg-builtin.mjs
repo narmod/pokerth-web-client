@@ -21,8 +21,10 @@ function list(name) {
   const m = proxy.match(new RegExp('const ' + name + ' = \\[([\\s\\S]*?)\\];'));
   return m ? [...m[1].matchAll(/'([^']*)'/g)].map((x) => x[1]) : null;
 }
-const L = { table: list('BUILTIN_TABLES'), deck: list('BUILTIN_DECKS'), seat: list('BUILTIN_SEATS'), theme: list('BUILTIN_THEMES') };
-ok(L.table && L.deck && L.seat && L.theme, 'the four built-in lists are declared');
+const L = { table: list('BUILTIN_TABLES'), deck: list('BUILTIN_DECKS'), seat: list('BUILTIN_SEATS') };
+ok(L.table && L.deck && L.seat, 'the three built-in lists are declared');
+// Theme packages were retired in web.143: no list, no upload kind, no manifest.
+ok(!/BUILTIN_THEMES|themes-manifest|kind === 'theme'|'\/themes\/themes\.json'/.test(proxy), 'no theme-package code is left in proxy.js');
 
 // ── 1. Lists = what git tracks ────────────────────────────────────────────
 let tracked = null;
@@ -41,7 +43,6 @@ if (!tracked || !tracked.length) {
 ok(/if \(pkgBuiltin\('table', id\)\) id = 'table-' \+ id;/.test(proxy), 'a table upload never overwrites a built-in table');
 ok(/else if \(pkgBuiltin\('deck', id\)\) id = 'deck-' \+ id;/.test(proxy), 'nor a deck upload a built-in deck');
 ok(/if \(pkgBuiltin\('seat', id\)\) id = 'seat-' \+ id;/.test(proxy), 'nor a seat upload a built-in seat');
-ok(/if \(BUILTIN_THEMES\.indexOf\(id\) >= 0\) id = 'theme-' \+ id;/.test(proxy), 'nor a theme upload a built-in theme');
 
 // ── 3. A real proxy ───────────────────────────────────────────────────────
 const tmp = mkdtempSync(join(tmpdir(), 'pkgb-'));
@@ -63,7 +64,13 @@ try {
   ok(d.decks.length && d.decks.every((t) => t.builtin === true), 'every repository deck too (' + d.decks.length + ')');
   ok(d.seats.length && d.seats.every((t) => t.builtin === true), 'every repository seat too (' + d.seats.length + ')');
   ok(d.decks.every((t) => t.ext) && d.tables.every((t) => t.id && t.name), 'the entries keep their own fields (a deck its image type)');
-  for (const [kind, id, dir] of [['table', 'casino', 'public/table/casino'], ['deck', 'lemming', 'public/cards/lemming'], ['seat', 'onyx-pill', 'public/seats/onyx-pill'], ['theme', 'pokerth-new', 'public/themes/pokerth-new']]) {
+  ok(!('themes' in d), 'pkg-list no longer lists themes');
+  const upTheme = await (await fetch(base + '/admin/pkg-upload?kind=theme', { method: 'POST', headers: { Authorization: H.Authorization }, body: 'x' })).json();
+  ok(upTheme.ok === false && /kind must be table, deck or seat/.test(upTheme.error || ''), 'a theme upload is refused');
+  const tg = await (await fetch(base + '/admin/pkg-toggle', { method: 'POST', headers: H, body: JSON.stringify({ kind: 'theme', id: 'x', enabled: false }) })).json();
+  ok(tg.ok === false, 'and so is a theme toggle');
+  ok(existsSync(join(root, 'public/themes/casino-vert/btn-fold.svg')) && existsSync(join(root, 'public/themes/casino-vert/dealer.svg')), 'the casino-vert SVGs theme.mjs still names (CASINO_BTN / CASINO_PUCKS) stay');
+  for (const [kind, id, dir] of [['table', 'casino', 'public/table/casino'], ['deck', 'lemming', 'public/cards/lemming'], ['seat', 'onyx-pill', 'public/seats/onyx-pill']]) {
     const r = await fetch(base + '/admin/pkg-remove', { method: 'POST', headers: H, body: JSON.stringify({ kind, id }) });
     const j = await r.json();
     ok(r.status === 400 && /built-in .* cannot be removed \(you can hide it instead\)/.test(j.error || ''), 'removing the built-in ' + kind + ' ' + id + ' is refused');

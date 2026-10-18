@@ -872,6 +872,10 @@
   .ovrt{color:var(--muted);font-size:.78rem;font-variant-numeric:tabular-nums;white-space:nowrap}
   @media(max-width:1199px){ .ovgrid{grid-template-columns:minmax(0,1fr)} }
   @media(max-width:760px){ .ovmodes{grid-template-columns:repeat(2,minmax(0,1fr))} .ovmn{font-size:1.5rem} .ovchart{gap:3px;height:150px} }
+  /* Packages has three kinds since theme packages were retired (web.143): three
+     columns on a wide screen, and on a phone the odd last tile takes the row. */
+  #pkTiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+  @media(max-width:760px){ #pkTiles{grid-template-columns:repeat(2,minmax(0,1fr))} #pkTiles>.ovmode:last-child:nth-child(odd){grid-column:1/-1} }
   /* Entry-mode tiles: « Live/spectator tool » takes two lines on a phone. The
      tiles share their rows (subgrid), so the figures of a row stay level. */
   #ovModes>.ovmode,#seTiles>.ovmode{display:grid;grid-row:span 3;grid-template-rows:subgrid;row-gap:4px;align-content:start}
@@ -1230,7 +1234,7 @@
       <div class="card">
         <h2>Import a package</h2>
         <p class="muted">A <b>.zip</b> exported for the PokerTH web client: pick what it holds, then drop it. A table style, a card deck or a seat pack is also applied to this browser at once, so you can check it in the app.</p>
-        <div class="seg"><button class="on" data-k="table">Table style</button><button data-k="deck">Card deck</button><button data-k="seat">Seat pack</button><button data-k="theme">Theme</button></div>
+        <div class="seg"><button class="on" data-k="table">Table style</button><button data-k="deck">Card deck</button><button data-k="seat">Seat pack</button></div>
         <div id="drop" class="drop">Drop a <b>.zip</b> here, or click to choose</div>
         <input id="file" type="file" accept=".zip,application/zip" style="display:none">
         <div id="prog" class="prog"><i></i></div>
@@ -1239,11 +1243,10 @@
       <div class="card">
         <div class="boardhead"><h2>Library</h2><span id="pkSum" class="headnote"></span></div>
         <p class="muted"><b>On</b> / <b>Off</b> shows or hides an entry in the players’ pickers (they see it on reload). <b>Use</b> applies it to this browser only. Entries shipped with the web client are built in: hide them, they cannot be removed.</p>
-        <div class="ltool"><input id="pkgFilter" class="filter" type="search" placeholder="Filter styles, decks &amp; themes…" autocomplete="off"><div class="chips" id="pkKinds" role="group" aria-label="Show"></div></div>
+        <div class="ltool"><input id="pkgFilter" class="filter" type="search" placeholder="Filter tables, decks &amp; seats…" autocomplete="off"><div class="chips" id="pkKinds" role="group" aria-label="Show"></div></div>
         <div class="pksec" data-pk="table"><h3 class="pkh">Table styles <span class="pkn" id="pkNtable"></span></h3><div id="tables"></div></div>
         <div class="pksec" data-pk="deck"><h3 class="pkh">Card decks <span class="pkn" id="pkNdeck"></span></h3><div id="decks"></div></div>
         <div class="pksec" data-pk="seat"><h3 class="pkh">Seats <span class="pkn" id="pkNseat"></span></h3><div id="seats"></div></div>
-        <div class="pksec" data-pk="theme"><h3 class="pkh">Themes <span class="pkn" id="pkNtheme"></span></h3><div id="themes"></div></div>
       </div>
     </div>
 
@@ -2542,7 +2545,7 @@
       clkStart(); liveStart();
       if(_isMaster){
         api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
-        loadServer(); loadDeploys(); loadBlocked(); loadThemes(); loadFeatureSwitches(); loadLanDir();
+        loadServer(); loadDeploys(); loadBlocked(); loadFeatureSwitches(); loadLanDir();
         var _on=document.querySelector('.tab.on'), _t=_on?_on.dataset.t:'';
         if(_t==='server') srvStart();
         sectionEvent(_t);
@@ -3010,8 +3013,8 @@
     if(t==='landir') loadLanDir();
     if(t==='polls') loadPolls();
     if(t==='broadcast'){ loadBroadcasts(); if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); } }
-    if(t==='clients'){ loadStatus(!cfgAnyDirty()); loadThemes(); loadFeatureSwitches(); }
-    if(t==='defaults'){ loadStatus(!cfgAnyDirty()); loadThemes(); }
+    if(t==='clients'){ loadStatus(!cfgAnyDirty()); loadFeatureSwitches(); }
+    if(t==='defaults'){ loadStatus(!cfgAnyDirty()); }
     if(t==='identity'||t==='proxy'){ loadStatus(!cfgAnyDirty()); }
     if(t==='deploy'){ loadStatus(false); loadUpdateLog(); autoUpdLoad(); loadDeploys(); }
     if(t==='access'){ loadBlocked(); }
@@ -3055,7 +3058,7 @@
     var t=tok(); if(t) xhr.setRequestHeader('Authorization','Bearer '+t);
     xhr.upload.addEventListener('progress',function(e){ if(e.lengthComputable) showProg(e.loaded/e.total); });
     xhr.addEventListener('load',function(){ hideProg(); var d=null; try{ d=JSON.parse(xhr.responseText); }catch(e){}
-      if(d&&d.ok){ if(d.kind==='theme'){ say('Installed theme: '+d.name+' \u2014 it now appears in Theme \u2192 Themes.','ok'); loadThemes(); } else if(d.kind==='seat'){ applySeat(d.id); say('Imported & applied seat: '+d.name+' \u2014 open the app to see it.','ok'); } else { if(d.kind==='table')applyTable(d.id);else applyDeck(d.id); say('Imported & applied: '+d.name+' \u2014 open the app to see it.','ok'); } refresh(); }
+      if(d&&d.ok){ if(d.kind==='seat'){ applySeat(d.id); say('Imported & applied seat: '+d.name+' \u2014 open the app to see it.','ok'); } else { if(d.kind==='table')applyTable(d.id);else applyDeck(d.id); say('Imported & applied: '+d.name+' \u2014 open the app to see it.','ok'); } refresh(); }
       else say('Failed: '+((d&&d.error)||('HTTP '+xhr.status)),'err'); });
     xhr.addEventListener('error',function(){ hideProg(); say('Import failed \u2014 network error.','err'); });
     xhr.send(f);
@@ -3080,13 +3083,13 @@
       var use=document.createElement('button');use.className='use';use.textContent='Use';use.addEventListener('click',function(){useNow(k,p.id);});
       var del=document.createElement('button');del.className='del';del.textContent='Remove';del.addEventListener('click',function(){removePkg(k,p.id,p.name||p.id);});
       var fl=null, al=null; if(k==='table'){ var _modes=['frame','full','fullscreen']; var _lbl={frame:'Frame',full:'Full',fullscreen:'Fullscreen'}; var _tip={frame:'Image inside the oval table \u2014 tap to cycle (Frame \u2192 Full \u2192 Fullscreen)',full:'Full-bleed image, no oval frame \u2014 tap to cycle',fullscreen:'Image as a full-screen background, no table \u2014 tap to cycle'}; var _m=p.mode||(p.fullscreen?'fullscreen':(p.full?'full':'frame')); fl=document.createElement('button'); fl.className='toggle '+(_m==='frame'?'off':'on'); fl.textContent=_lbl[_m]; fl.title=_tip[_m]; fl.addEventListener('click',function(){ setPkgMode(p.id,_modes[(_modes.indexOf(_m)+1)%3]); }); if(_m==='fullscreen'){ al=document.createElement('select'); al.title='Fullscreen anchor: which part of the image stays visible when it is cropped'; al.style.cssText='padding:4px 6px;border-radius:8px;font-size:0.72rem;max-width:132px'; [['','Bottom (default)'],['center top','Top'],['center center','Center'],['center bottom','Bottom'],['left top','Top left'],['right top','Top right'],['left center','Left'],['right center','Right'],['left bottom','Bottom left'],['right bottom','Bottom right']].forEach(function(o){ var op=document.createElement('option'); op.value=o[0]; op.textContent=o[1]; al.appendChild(op); }); al.value=p.align||''; if(al.value!==(p.align||'')) al.value=''; al.addEventListener('change',function(){ setPkgAlign(p.id, al.value); }); } }
-      row.appendChild(tg); if(fl) row.appendChild(fl); if(al) row.appendChild(al); if(k!=='theme') row.appendChild(use); if(!p.builtin) row.appendChild(del); el.appendChild(row); }); }
-  var lastPkgs={tables:[],decks:[],seats:[],themes:[]};
+      row.appendChild(tg); if(fl) row.appendChild(fl); if(al) row.appendChild(al); row.appendChild(use); if(!p.builtin) row.appendChild(del); el.appendChild(row); }); }
+  var lastPkgs={tables:[],decks:[],seats:[]};
   function pkgMatch(p,q){ return !q || (((p.name||'')+' '+(p.id||'')).toLowerCase().indexOf(q)>=0); }
   // Tiles: how many of each kind players can pick, out of how many installed.
   // The « show » chips keep one kind on screen (kept per browser).
-  var _pkKind='all', PK_KINDS=[['table','tables','Table styles','var(--m-net)'],['deck','decks','Card decks','var(--m-lan)'],['seat','seats','Seats','var(--m-off)'],['theme','themes','Themes','var(--m-live)']];
-  try{ var _pkk=localStorage.getItem('pth_admin_pk_kind'); if(['all','table','deck','seat','theme'].indexOf(_pkk)>=0) _pkKind=_pkk; }catch(e){}
+  var _pkKind='all', PK_KINDS=[['table','tables','Table styles','var(--m-net)'],['deck','decks','Card decks','var(--m-lan)'],['seat','seats','Seats','var(--m-off)']];
+  try{ var _pkk=localStorage.getItem('pth_admin_pk_kind'); if(['all','table','deck','seat'].indexOf(_pkk)>=0) _pkKind=_pkk; }catch(e){}
   function _pkTiles(){
     var box=$('pkTiles'); if(!box) return;
     box.innerHTML=PK_KINDS.map(function(k){
@@ -3120,7 +3123,7 @@
   // A tile picks its kind; the same tile clicked again lets go (back to All).
   if($('pkTiles')) $('pkTiles').addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-pk]'); if(!b) return; var k=b.getAttribute('data-pk'); _pkSelect(_pkKind===k?'all':k); });
   _pkImportKind(_pkKind);
-  function renderPkgs(d){ lastPkgs={tables:d.tables||[],decks:d.decks||[],seats:d.seats||[],themes:d.themes||[]}; drawPkgs(); }
+  function renderPkgs(d){ lastPkgs={tables:d.tables||[],decks:d.decks||[],seats:d.seats||[]}; drawPkgs(); }
   if($('pkgFilter')) $('pkgFilter').addEventListener('input', drawPkgs);
   function refresh(){ api('/admin/pkg-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if(d.ok)renderPkgs(d); }).catch(function(){ say('Could not refresh the package list \u2014 network error.','err'); }); }
 
@@ -3545,7 +3548,7 @@
       if(syncCfg){
         if(d.resetPeriod) $('period').value=d.resetPeriod;
         if(d.modes){ modesState=Object.assign({offline:true,lan:true,pokerthnet:true},d.modes); renderModes(); }
-        if($('defTheme') && typeof d.defaultTheme==='string'){ window._defThemeVal=d.defaultTheme; $('defTheme').value=d.defaultTheme; } applyLiveDefaultsUI(d.liveDefaults);
+        if($('defTheme') && typeof d.defaultTheme==='string'){ $('defTheme').value=d.defaultTheme; if($('defTheme').value!==d.defaultTheme) $('defTheme').value=''; } applyLiveDefaultsUI(d.liveDefaults);
         if(d.defaults && typeof d.defaults==='object'){ var _DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defBB:'displaybb'}; Object.keys(_DM).forEach(function(id){ var el=$(id); if(el){ var dv=d.defaults[_DM[id]]; el.value=(dv==='0'||dv==='1')?dv:''; } }); }
         if(d.loginDefaults && typeof d.loginDefaults==='object'){ var L=d.loginDefaults; if($('defMode'))$('defMode').value=(['offline','lan-dedi','pokerthnet'].indexOf(L.mode)>=0)?L.mode:''; if($('defLanMode'))$('defLanMode').value=(L.lanMode==='forced')?'forced':'auto'; if($('defHost'))$('defHost').value=L.host||''; if($('defLanPort'))$('defLanPort').value=(L.lanPort>0)?String(L.lanPort):''; if($('defLanTls'))$('defLanTls').value=(L.lanTls?'1':'0'); if(window.syncLanMode)window.syncLanMode(); if($('defProxyUrl'))$('defProxyUrl').value=L.proxyUrl||''; if($('defHideProxy'))$('defHideProxy').value=(L.hideProxy?'1':'0'); }
         if(d.tableDefaults && typeof d.tableDefaults==='object'){ var T=d.tableDefaults; var _tm={tdPlayers:'players',tdBlind:'blind',tdStack:'stack',tdTimeout:'timeout'}; Object.keys(_tm).forEach(function(id){ var el=$(id); if(el){ var v=T[_tm[id]]; el.value=(v==null)?'':v; } }); }
@@ -5317,18 +5320,6 @@
       }).catch(function(){ dbSetState('Network error.','err'); });
   }
   function loadServer(){ loadStatus(!cfgAnyDirty()); loadLogs(); loadUpdateLog(); autoUpdLoad(); }
-  // Theme presets shown in the default-theme dropdown = built-in presets (static
-  // options) + installed theme packages (palette/table/felt) fetched live.
-  function loadThemes(){
-    fetch('/themes/themes.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():[];}).then(function(list){
-      var sel=$('defTheme'); if(!sel||!Array.isArray(list)) return;
-      Array.prototype.slice.call(sel.querySelectorAll('option[data-pkg]')).forEach(function(o){o.remove();});
-      list.filter(function(p){return p&&p.id&&(p.palette||p.table||p.felt);}).forEach(function(p){
-        var o=document.createElement('option'); o.value='pkg-'+p.id; o.textContent=(p.name||p.id); o.setAttribute('data-pkg','1'); sel.appendChild(o);
-      });
-      if(window._defThemeVal!=null) sel.value=window._defThemeVal;
-    }).catch(function(){});
-  }
   // Live auto-refresh of the Server tab (status + logs) every 5s while it's the
   // active panel and the page is visible; suspended during maintenance restarts.
   var srvTimer=null, srvBusy=false;

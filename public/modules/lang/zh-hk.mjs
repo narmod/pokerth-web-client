@@ -499,7 +499,7 @@ export const strings = {
     rankingColRank:'#', rankingColPlayer:'暱稱', rankingColScore:'分數', rankingColPoints:'積分', rankingColGames:'場數',
     rankingColAvg:'平均', tableRankTooltip:'牌桌排名', tableRankTitle:'牌桌排名 – {name}', tableRankTitleNoName:'牌桌排名',
     tableRankSubPth:'本桌玩家的當前賽季排名。', tableRankSubBbc:'本桌玩家的當前 BBC 賽季排名。', tableRankSubWec:'本桌玩家的當前 WEC 月度排名。',
-    rankingMemberSince:'加入於', rankingAwards:'獎項', rankingTickets:'門票', rankingThisSeason:'本賽季', rankingStep:'階段', rankingRank:'排名', rankingBack:'返回', rankingThisMonth:'本月', rankingThisYear:'今年', rankingCurrentSeason:'本賽季', themeExport:'匯出主題（.zip）', sectionAdvanced:'進階', rankingSeasonStats:'賽季統計', rankingShare:'占比', rankingResults:'結果', rankingToggleChart:'切換長條 / 圓餅',
+    rankingMemberSince:'加入於', rankingAwards:'獎項', rankingTickets:'門票', rankingThisSeason:'本賽季', rankingStep:'階段', rankingRank:'排名', rankingBack:'返回', rankingThisMonth:'本月', rankingThisYear:'今年', rankingCurrentSeason:'本賽季', rankingSeasonStats:'賽季統計', rankingShare:'占比', rankingResults:'結果', rankingToggleChart:'切換長條 / 圓餅',
     footPlayer:'玩家', footCreate:'＋ 建立牌桌', gameInfoTitle:'遊戲資訊', gameInfoEmpty:'請選擇一張牌桌',
     gfNone:'無清單篩選', gfOpen:'顯示開放的遊戲', gfOpenNF:'開放且未滿的遊戲', gfOpenNFNP:'開放、未滿、非私人的遊戲', gfOpenNFP:'開放、未滿、私人的遊戲', gfOpenNFR:'開放、未滿的排名遊戲',
     infoTypeLabel:'型別', infoCapitalLabel:'起始籌碼', infoPlayersInGame:'遊戲中的玩家', plIgnore:'忽略', plStats:'玩家統計',

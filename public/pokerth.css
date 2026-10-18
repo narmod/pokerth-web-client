@@ -345,8 +345,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
     url("/table/felt-green.jpg") center / cover no-repeat;
 }
 
-/* Table « image complète » — une table importée marquée full:true (tables.json /
-   themes.json) remplace TOUT le rendu CSS du tapis (bordure, liserés box-shadow,
+/* Table « image complète » — une table importée marquée full:true (tables.json)
+   remplace TOUT le rendu CSS du tapis (bordure, liserés box-shadow,
    liseré ::before, dégradés texture/halo, forme ovale) pour n'afficher QUE l'image,
    centrée et entière (contain). Les feutres-texture (photo, gallery sans full) ne
    sont pas affectés : eux gardent l'ovale + le liseré. L'image vit dans --table-img

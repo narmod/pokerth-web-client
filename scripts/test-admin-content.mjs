@@ -22,10 +22,10 @@ vc.on('jsdomError', (e) => errors.push(e.message));
 const NOW = Date.now();
 const CANNED = {
   '/admin/whoami': { ok: true, master: true, scopes: [] },
-  '/admin/status': { ok: true, version: '2.1.10-web.129', uptimeSec: 60, sockets: 0, update: {} },
+  '/admin/status': { ok: true, version: '2.1.10-web.129', uptimeSec: 60, sockets: 0, update: {}, defaultTheme: 'pkg-retired' },
   '/admin/pkg-list': { ok: true,
     tables: [{ id: 'casino', name: 'Green Casino' }, { id: 'ivoire', name: 'Ivoire & Chene' }, { id: 'old', name: 'Old <b>felt</b>', disabled: true }],
-    decks: [{ id: 'd1', name: 'Bella' }], seats: [], themes: [{ id: 'pokerth-new', name: 'PokerTH new', builtin: true }] },
+    decks: [{ id: 'd1', name: 'Bella' }], seats: [{ id: 'onyx-pill', name: 'Onyx pill', builtin: true }] },
   '/admin/music-list': { ok: true, enabled: true, votesPublic: false, plays: { t1: 40, t2: 2 }, votes: { t1: { up: 3, down: 1 }, r1: { up: 1, down: 0 } },
     tracks: [{ id: 't1', title: 'Lounge', artist: 'Kai Engel' }, { id: 't2', title: 'Late night', artist: 'Komiku', active: false }, { id: 'r1', title: 'Swiss Jazz', stream: true }] },
 };
@@ -56,13 +56,16 @@ doc.querySelector('.tab[data-t="packages"]').click();
 await tick(200);
 ok(errors.length === 0, 'opening Packages throws nothing' + (errors.length ? ': ' + errors[0] : ''));
 const pt = tiles('pkTiles');
-ok(/Table styles 2 \/ 3 1 hidden from players/.test(pt) && /Card decks 1 \/ 1 all offered to players/.test(pt) && /Seats 0 \/ 0/.test(pt) && /Themes 1 \/ 1/.test(pt), 'one tile per kind, offered out of installed (' + pt + ')');
+ok(/Table styles 2 \/ 3 1 hidden from players/.test(pt) && /Card decks 1 \/ 1 all offered to players/.test(pt) && /Seats 1 \/ 1/.test(pt) && !/Themes/.test(pt), 'one tile per kind (no Themes any more), offered out of installed (' + pt + ')');
 ok(/^5 installed$/.test($('pkSum').textContent), 'the head note counts everything');
 ok($('pkNtable').textContent === '3' && $('pkNdeck').textContent === '1', 'each kind says how many it holds');
 const rows = (id) => [...doc.querySelectorAll('#' + id + ' .pkrow')];
 ok(rows('tables').length === 3 && rows('tables')[2].classList.contains('off') && /hidden from players/.test(rows('tables')[2].textContent), 'a hidden entry is marked in words, not only dimmed');
 ok(!doc.querySelector('#tables .nm b b') && /Old <b>felt<\/b>/.test(rows('tables')[2].textContent), 'a package name is text, never markup');
-ok(/built-in/.test(rows('themes')[0].textContent) && !rows('themes')[0].querySelector('.del'), 'a built-in theme says so and has no Remove');
+ok(/built-in/.test(rows('seats')[0].textContent) && !rows('seats')[0].querySelector('.del'), 'a built-in entry says so and has no Remove');
+ok(!doc.querySelector('.pksec[data-pk="theme"]') && !doc.querySelector('#pkKinds [data-pk="theme"]') && !doc.querySelector('#panel-packages .seg button[data-k="theme"]'),
+  'Theme is gone from the library, its chips and the import choice');
+ok(doc.querySelectorAll('#pkTiles .setile').length === 3, 'three tiles: tables, decks, seats');
 doc.querySelector('#pkKinds [data-pk="deck"]').click();
 ok(doc.querySelector('.pksec[data-pk="table"]').hidden && !doc.querySelector('.pksec[data-pk="deck"]').hidden, 'a chip keeps one kind on screen');
 ok(window.localStorage.getItem('pth_admin_pk_kind') === 'deck' && /1 shown/.test($('pkSum').textContent), 'remembered, and the head note says how many are shown');
@@ -72,7 +75,7 @@ doc.querySelector('#pkKinds [data-pk="all"]').click();
 ok(seg() === 'deck' && !doc.querySelector('.pksec[data-pk="table"]').hidden, 'All shows everything and leaves the import kind alone');
 // The tiles filter too, and a tile clicked again lets go.
 const tile = (k) => doc.querySelector('#pkTiles .setile[data-pk="' + k + '"]');
-ok(['table', 'deck', 'seat', 'theme'].every((k) => tile(k) && tile(k).tagName === 'BUTTON'), 'each tile is a button');
+ok(['table', 'deck', 'seat'].every((k) => tile(k) && tile(k).tagName === 'BUTTON'), 'each tile is a button');
 tile('table').click();
 ok(!doc.querySelector('.pksec[data-pk="table"]').hidden && doc.querySelector('.pksec[data-pk="deck"]').hidden, 'a tile keeps its kind on screen');
 ok(tile('table').classList.contains('on') && tile('table').getAttribute('aria-pressed') === 'true' && doc.querySelector('#pkKinds [data-pk="table"]').classList.contains('on'), 'tile and chip both show the choice');
@@ -90,6 +93,11 @@ $('pkgFilter').dispatchEvent(new window.Event('input'));
 ok(rows('tables').length === 1 && $('pkNtable').textContent === '1 of 3', 'the filter narrows and the counts follow');
 $('pkgFilter').value = '';
 $('pkgFilter').dispatchEvent(new window.Event('input'));
+// A first-visit default saved from a retired theme package (pkg-<id>) has no
+// option any more: the dropdown says « No default », which is what players get.
+doc.querySelector('.tab[data-t="defaults"]').click();
+await tick(200);
+ok($('defTheme').value === '' && $('defTheme').selectedIndex === 0 && ![...$('defTheme').options].some((o) => /^pkg-/.test(o.value)), 'a retired pkg- default shows as No default, no pkg- option is offered');
 // Table and deck names come from the pack's XML, where « & » is « &amp; ».
 for (const f of ['tables-manifest.mjs', 'decks-manifest.mjs']) {
   const src = readFileSync(join(root, 'scripts', f), 'utf8');

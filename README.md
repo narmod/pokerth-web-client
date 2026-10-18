@@ -457,7 +457,7 @@ pokerth-web-client/
 ├── public/
 │   ├── pokerth-client.html  # HTML shell + inline head scripts
 │   ├── admin.html           # Maintainer console (served at /admin)
-│   ├── studio.html          # Style studio — design tool for decks, tables, themes and seat packs
+│   ├── studio.html          # Style studio — design tool for decks, tables and seat packs
 │   ├── privacy.html         # Privacy page (served at /privacy)
 │   ├── pokerth.js           # App orchestrator (loaded as an ES module)
 │   ├── pokerth.css          # Styles
@@ -486,7 +486,7 @@ pokerth-web-client/
 │   │   └── lang/            83 language catalogues
 │   ├── proto/               # Protobuf bundle, `.proto` source & helpers
 │   ├── vendor/              # Third-party libraries (hand evaluator, QR codes, SQLite/WASM)
-│   ├── cards/ table/ themes/ seats/ pucks/   # Deck / felt / theme / seat / puck asset packs
+│   ├── cards/ table/ seats/ pucks/   # Deck / felt / seat / puck asset packs
 │   ├── img/ flags/ fonts/ sounds/ music/     # Official avatars, country flags, webfonts, audio
 │   ├── labs/                # Experiments (Vue island proof-of-concept)
 │   └── icon-*.png · splash/ · favicon-*      # PWA icons & iOS splash screens
@@ -498,7 +498,7 @@ pokerth-web-client/
 │   └── screenshots/         # Screenshots used in this README
 ├── scripts/
 │   ├── build-proto.mjs      # Regenerates the protobuf bundle from .proto
-│   ├── *-manifest.mjs       # Generate deck / table / theme / seat manifests
+│   ├── *-manifest.mjs       # Generate deck / table / seat manifests
 │   ├── reset-stats.mjs      # Clears the family leaderboard (npm run stats:reset)
 │   └── test-*.mjs           # ~85 deterministic test suites (npm run test:*)
 ├── .github/                 # Issue & PR templates, Docker and release workflows
@@ -523,13 +523,13 @@ pokerth-web-client/
 |---|---|---|
 | `GET` | `/` | Web client |
 | `GET` | `/live` | Standalone embedded spectator client — read-only, guest-only (`?embed=1` for iframe use); see [Spectator embed](#spectator-embed-live) above and [the embedding guide](docs/INSTALL_POKERTH_NET.md#embedding-the-spectator-view-on-the-website) |
-| `GET` | `/studio` | Style studio — the design tool for decks, tables, themes and seat packs |
+| `GET` | `/studio` | Style studio — the design tool for decks, tables and seat packs |
 | `GET` | `/privacy` | Privacy page (what the analytics do and don't collect) |
 | `GET` | `/faq` · `/rules` · `/how-to-play` · `/hand-rankings` · `/glossary` | Server-rendered content pages, localised and linked from the sitemap |
 | `GET` | `/sitemap.xml` · `/robots.txt` · `/llms.txt` | Crawler files (the sitemap lists every language variant of the pages above) |
 | `GET` | `/__ver` | Newest static-asset mtime — drives the client's "new version" banner |
 | `GET` | `/app-config` | Operator's client defaults (login modes, default theme & settings, server identity, welcome message) |
-| `GET` | `/cards/decks.json` · `/table/tables.json` · `/themes/themes.json` · `/seats/seats.json` | Content manifests, filtered to the enabled packages |
+| `GET` | `/cards/decks.json` · `/table/tables.json` · `/seats/seats.json` | Content manifests, filtered to the enabled packages |
 | `GET` | `/music/tracks.json` | Background-music playlist |
 | `GET` | `/api/ranking` | Same-origin relay for the PokerTH / BBC / WEC ranking leaderboards (params: `src`, `season`, `q`, `page`) |
 | `GET` | `/api/player` | Same-origin relay for a single player's profile card (params: `src`, `nick`) |
@@ -971,15 +971,14 @@ pokerth-web help                     # list every command
 
 `set-period`, `set-token` and `admin on|off` are saved to `/etc/pokerth-web.conf` and **re-applied automatically on every update and reboot**, so you set them once.
 
-**Gallery content — card decks, table styles & themes.** Add the same items the admin **Packages** tab manages, each from a local `.zip` or a URL:
+**Gallery content — card decks & table styles.** Add the same items the admin **Packages** tab manages, each from a local `.zip` or a URL:
 
 ```bash
 sudo pokerth-web deck-add  ./mydeck.zip     # card deck    →  deck-list  / deck-remove  <id>
 sudo pokerth-web table-add ./mytable.zip    # table style  →  table-list / table-remove <id>
-sudo pokerth-web theme-add ./mytheme.zip    # UI theme     →  theme-list / theme-remove <id>
 ```
 
-Built-in decks, tables and themes are protected and can't be removed.
+Built-in decks and tables are protected and can't be removed. (Theme packages were retired in 2.1.10-web.143.)
 
 The same actions work through the one-liner if you prefer not to use the command:
 

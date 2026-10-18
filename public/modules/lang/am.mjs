@@ -496,7 +496,7 @@ export const strings = {
     rankingColRank:'#', rankingColPlayer:'ቅጽል ስም', rankingColScore:'ነጥብ', rankingColPoints:'ነጥቦች', rankingColGames:'ጨዋታዎች',
     rankingColAvg:'አማካይ', tableRankTooltip:'የጠረጴዛ ደረጃ', tableRankTitle:'የጠረጴዛ ደረጃ \u2013 {name}', tableRankTitleNoName:'የጠረጴዛ ደረጃ',
     tableRankSubPth:'በዚህ ጠረጴዛ ላይ ያሉ ተጫዋቾች የአሁኑ ወቅት ደረጃዎች።', tableRankSubBbc:'በዚህ ጠረጴዛ ላይ ያሉ ተጫዋቾች የአሁኑ BBC ወቅት ደረጃዎች።', tableRankSubWec:'በዚህ ጠረጴዛ ላይ ያሉ ተጫዋቾች የአሁኑ WEC ወር ደረጃዎች።',
-    rankingMemberSince:'አባል ከ', rankingAwards:'ሽልማቶች', rankingTickets:'ትኬቶች', rankingThisSeason:'ይህ ወቅት', rankingStep:'ደረጃ', rankingRank:'ደረጃ', rankingBack:'ተመለስ', rankingThisMonth:'በዚህ ወር', rankingThisYear:'በዚህ ዓመት', rankingCurrentSeason:'የአሁኑ ወቅት', themeExport:'ገጽታ ላክ (.zip)', sectionAdvanced:'የላቀ', rankingSeasonStats:'የወቅት ስታቲስቲክስ', rankingShare:'አጋራ', rankingResults:'ውጤቶች', rankingToggleChart:'አሞሌ / ፓይ ቀይር',
+    rankingMemberSince:'አባል ከ', rankingAwards:'ሽልማቶች', rankingTickets:'ትኬቶች', rankingThisSeason:'ይህ ወቅት', rankingStep:'ደረጃ', rankingRank:'ደረጃ', rankingBack:'ተመለስ', rankingThisMonth:'በዚህ ወር', rankingThisYear:'በዚህ ዓመት', rankingCurrentSeason:'የአሁኑ ወቅት', rankingSeasonStats:'የወቅት ስታቲስቲክስ', rankingShare:'አጋራ', rankingResults:'ውጤቶች', rankingToggleChart:'አሞሌ / ፓይ ቀይር',
     footPlayer:'ተጫዋች', footCreate:'＋ ጠረጴዛ ፍጠር', gameInfoTitle:'የጨዋታ መረጃ', gameInfoEmpty:'ጠረጴዛ ይምረጡ',
     gfNone:'የጨዋታ ዝርዝር ማጣሪያ የለም', gfOpen:'ክፍት ጨዋታዎችን አሳይ', gfOpenNF:'ክፍት እና ያልሞሉ ጨዋታዎችን አሳይ', gfOpenNFNP:'ክፍት፣ ያልሞሉ እና የግል ያልሆኑ ጨዋታዎችን አሳይ', gfOpenNFP:'ክፍት፣ ያልሞሉ እና የግል ጨዋታዎችን አሳይ', gfOpenNFR:'ክፍት፣ ያልሞሉ እና የደረጃ ጨዋታዎችን አሳይ',
     infoTypeLabel:'ዓይነት', infoCapitalLabel:'ካፒታል', infoPlayersInGame:'በጨዋታ ውስጥ ያሉ ተጫዋቾች', plIgnore:'ችላ በል', plStats:'የተጫዋች ስታቲስቲክስ',

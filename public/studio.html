@@ -77,7 +77,7 @@
 <body>
 <div class="wrap">
   <div class="top">
-    <div><h1>PokerTH — Studio</h1><p class="sub" id="sub">Create card decks, table felts &amp; themes</p></div>
+    <div><h1>PokerTH — Studio</h1><p class="sub" id="sub">Create card decks, table felts &amp; seats</p></div>
     <div class="topbtns">
       <button id="themeBtn" class="ghost" title="Toggle dark / light">Light</button>
       <a class="appbtn" href="/" target="_blank" rel="noopener">Open the app &#8599;</a>
@@ -87,7 +87,6 @@
   <div class="tabs">
     <button class="tab on" data-tab="cards">Cards</button>
     <button class="tab" data-tab="table">Table</button>
-    <button class="tab" data-tab="theme">Themes</button>
     <button class="tab" data-tab="seats">Seats</button>
   </div>
 
@@ -267,41 +266,6 @@
     <div><div class="preview"><div class="feltprev">
       <canvas class="felt" id="tPrev" width="320" height="580" style="max-width:300px"></canvas>
       <div class="pucks"><canvas id="tPd0" width="140" height="140"></canvas><canvas id="tPsb0" width="140" height="140"></canvas><canvas id="tPbb0" width="140" height="140"></canvas></div>
-    </div></div></div>
-  </section>
-
-  <!-- ===== THEMES ===== -->
-  <section id="tab-theme" class="grid hide">
-    <div class="card">
-      <h2>Theme (UI palette + felt + pucks)</h2>
-      <label>Theme name</label>
-      <input type="text" id="hName" value="My theme" maxlength="40">
-      <label>Swatch colour</label><input type="color" id="hSwatch">
-
-      <label>Palette — base colours (variants are derived)</label>
-      <div class="row">
-        <div class="col"><label class="help">Felt</label><input type="color" id="hFelt"></div>
-        <div class="col"><label class="help">Panel</label><input type="color" id="hPanel"></div>
-      </div>
-      <div class="row">
-        <div class="col"><label class="help">Gold / accent</label><input type="color" id="hGold"></div>
-        <div class="col"><label class="help">Light text</label><input type="color" id="hText"></div>
-      </div>
-
-      <label class="row" style="margin-top:12px"><input type="checkbox" id="hFeltImg" checked> <span style="margin-left:6px">Include a felt image (felt.jpg)</span></label>
-      <label class="row"><input type="checkbox" id="hPucksOn"> <span style="margin-left:6px">Include D/SB/BB pucks (based on Gold)</span></label>
-
-      <button class="btn" id="hDl">Download theme (.zip)</button>
-      <div class="size" id="hSize"></div>
-      <div class="note"><code>theme.json</code> (15 palette tokens + felt + pucks) inside a <code>&lt;name&gt;/</code> folder. Put the folder in <code>public/themes/</code> then run <code>node scripts/themes-manifest.mjs</code>. It then appears under Theme (palette + felt + pucks).</div>
-    </div>
-    <div><div class="preview"><div class="feltprev">
-      <canvas class="felt" id="hPrev" width="640" height="360"></canvas>
-      <div class="pucks" style="gap:12px">
-        <canvas id="hsw0" width="120" height="120"></canvas>
-        <canvas id="hsw1" width="120" height="120"></canvas>
-        <canvas id="hsw2" width="120" height="120"></canvas>
-      </div>
     </div></div></div>
   </section>
 
@@ -756,12 +720,6 @@ function renderTablePreview(){
  document.getElementById('tPuckOpts').style.opacity=document.getElementById('tPucks').checked?1:.4;
  drawPuck(document.getElementById('tPd0'),'D',v('tPd'));drawPuck(document.getElementById('tPsb0'),'SB',v('tPsb'));drawPuck(document.getElementById('tPbb0'),'BB',v('tPbb'));
 }
-function swatch(id,col,label){const c=document.getElementById(id),x=c.getContext('2d'),W=c.width,H=c.height;x.clearRect(0,0,W,H);x.fillStyle=col;roundRectPath(x,4,4,W-8,H-8,12);x.fill();const rgb=hx(col),lum=rgb[0]*0.299+rgb[1]*0.587+rgb[2]*0.114;x.fillStyle=lum>140?'rgba(0,0,0,.62)':'rgba(255,255,255,.88)';x.font='bold 15px ui-sans-serif,system-ui';x.textAlign='center';x.fillText(label,W/2,H-12);}
-function renderThemePreview(){
- const felt=v('hFelt');const cv=document.getElementById('hPrev');
- paintFelt(cv.getContext('2d'),cv.width,cv.height,lighten(felt,0.08),darken(felt,0.25),'radial',true,null);
- swatch('hsw0',v('hPanel'),'Panel');swatch('hsw1',v('hGold'),'Gold');swatch('hsw2',v('hText'),'Text');
-}
 
 /* ---- export helpers ---- */
 function canvasPNG(canvas,cnum){
@@ -780,9 +738,7 @@ function hx(h){h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.
 function xh(a){return '#'+a.map(x=>Math.max(0,Math.min(255,Math.round(x))).toString(16).padStart(2,'0')).join('');}
 function lighten(h,a){return xh(hx(h).map(x=>x+(255-x)*a));}
 function darken(h,a){return xh(hx(h).map(x=>x*(1-a)));}
-function mix(a,b,t){const A=hx(a),B=hx(b);return xh(A.map((x,i)=>x+(B[i]-x)*t));}
 function jpegBytes(cv){return new Promise(r=>cv.toBlob(b=>{const fr=new FileReader();fr.onload=()=>r(new Uint8Array(fr.result));fr.readAsArrayBuffer(b);},'image/jpeg',0.82));}
-function derivePalette(felt,panel,gold,text){return {'felt':felt,'felt-mid':lighten(felt,0.12),'felt-hi':lighten(felt,0.24),'panel':panel,'panel-hi':lighten(panel,0.16),'gold':gold,'gold-hi':lighten(gold,0.22),'gold-dim':darken(gold,0.28),'cream':lighten(text,0.06),'text':text,'text-hi':lighten(text,0.22),'border':mix(panel,text,0.28),'border-hi':mix(panel,text,0.45),'modal-bg':darken(panel,0.32),'body-glow':lighten(felt,0.16)};}
 
 async function exportDeck(){
  const btn=document.getElementById('cDl');btn.disabled=true;const old=btn.textContent;
@@ -821,29 +777,6 @@ async function exportTable(){
  }catch(e){document.getElementById('tSize').innerHTML='<span class="warn">Error: '+e.message+'</span>';}
  btn.disabled=false;btn.textContent=old;
 }
-async function exportTheme(){
- const btn=document.getElementById('hDl');btn.disabled=true;const old=btn.textContent;
- try{
-  const name=v('hName'),folder=slug(name);const zip=new JSZip(),f=zip.folder(folder);
-  const theme={name:name,swatch:v('hSwatch'),palette:derivePalette(v('hFelt'),v('hPanel'),v('hGold'),v('hText'))};
-  if(document.getElementById('hFeltImg').checked){
-   const cv=document.createElement('canvas');cv.width=1280;cv.height=720;
-   paintFelt(cv.getContext('2d'),1280,720,lighten(v('hFelt'),0.08),darken(v('hFelt'),0.25),'radial',true,null);
-   f.file('felt.jpg',await jpegBytes(cv));theme.felt='felt.jpg';
-  }
-  if(document.getElementById('hPucksOn').checked){
-   const p=document.createElement('canvas');p.width=240;p.height=240;
-   drawPuck(p,'D',v('hGold'));f.file('dealer.png',await canvasPNG(p,0));
-   drawPuck(p,'SB',mix(v('hGold'),v('hText'),0.18));f.file('sb.png',await canvasPNG(p,0));
-   drawPuck(p,'BB',darken(v('hGold'),0.14));f.file('bb.png',await canvasPNG(p,0));
-   theme.pucks={dealer:'dealer.png',sb:'sb.png',bb:'bb.png'};
-  }
-  f.file('theme.json',JSON.stringify(theme,null,2)+'\n');
-  const blob=await zip.generateAsync({type:'blob'});sizeMsg(document.getElementById('hSize'),blob.size);dl(blob,folder+'.zip');
- }catch(e){document.getElementById('hSize').innerHTML='<span class="warn">Error: '+e.message+'</span>';}
- btn.disabled=false;btn.textContent=old;
-}
-
 /* ---- seats (9-slice frame generator) ---- */
 function addRR(ctx,x,y,w,h,r){r=Math.max(0,Math.min(r,Math.min(w,h)/2));ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
 function seatRR(ctx,x,y,w,h,r){ctx.beginPath();addRR(ctx,x,y,w,h,r);}
@@ -945,13 +878,12 @@ document.getElementById('themeBtn').addEventListener('click',()=>setTheme(docume
 /* ---- wiring ---- */
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');
- ['cards','table','theme','seats'].forEach(n=>document.getElementById('tab-'+n).classList.toggle('hide',n!==t.dataset.tab));
- if(t.dataset.tab==='table')renderTablePreview();if(t.dataset.tab==='theme')renderThemePreview();if(t.dataset.tab==='seats')renderSeatPreview();
+ ['cards','table','seats'].forEach(n=>document.getElementById('tab-'+n).classList.toggle('hide',n!==t.dataset.tab));
+ if(t.dataset.tab==='table')renderTablePreview();if(t.dataset.tab==='seats')renderSeatPreview();
 }));
 document.getElementById('cPreset').addEventListener('change',e=>applyCardPreset(e.target.value));
 ['cName','cBg1','cBg2','cBgType','cRed','cBlack','cAccent','cBorder','cCourt','cBack','cBackPat','cGlow','cFourColor','cDiamond','cClub','cIndexFont','cIndexSize','cIndexSuit','cFourCorners','cPipStyle','cNumLayout','cWatermark','cCourtAccent','cRadius','cBorderWidth','cTexture','cFinish','cFancyAce'].forEach(id=>document.getElementById(id).addEventListener('input',renderCardPreview));
 ['tName','tF1','tF2','tFType','tVig','tPucks','tPd','tPsb','tPbb'].forEach(id=>document.getElementById(id).addEventListener('input',renderTablePreview));
-['hName','hSwatch','hFelt','hPanel','hGold','hText','hFeltImg','hPucksOn'].forEach(id=>document.getElementById(id).addEventListener('input',renderThemePreview));
 document.getElementById('tFImg').addEventListener('change',e=>{const file=e.target.files[0];if(!file){FELTIMG=null;FELTALPHA=false;renderTablePreview();return;}loadFeltFile(file);});
 function loadFeltFile(file){return new Promise((res,rej)=>{const img=new Image();img.onload=()=>{FELTIMG=img;FELTALPHA=detectAlpha(img);document.getElementById('tKeepAlpha').checked=FELTALPHA;renderTablePreview();res();};img.onerror=rej;img.src=URL.createObjectURL(file);});}
 document.querySelectorAll('#tModeChips .chip').forEach(c=>c.addEventListener('click',()=>setTMode(c.dataset.mode)));
@@ -1070,19 +1002,17 @@ document.getElementById('cvtBtn').addEventListener('click',convertOldDeck);
 
 
 document.getElementById('tDl').addEventListener('click',exportTable);
-document.getElementById('hDl').addEventListener('click',exportTheme);
 ['sName','sStyle','sMain','sThick','sWidth','sRadius','sPad','sKeyOn','sKey','sKeyW','sFill','sTrans','sSelf','sSelfWidth','sSelfPad','sQ'].forEach(id=>document.getElementById(id).addEventListener('input',renderSeatPreview));
 document.getElementById('sPreset').addEventListener('change',e=>applySeatPreset(e.target.value));
 document.getElementById('sDl').addEventListener('click',exportSeats);
 
 /* defaults */
 set('tF1','#1f6b3a');set('tF2','#0c3a1d');set('tPd','#e8c14a');set('tPsb','#3f7fd0');set('tPbb','#d9892f');
-set('hSwatch','#1f6b3a');set('hFelt','#1f6b3a');set('hPanel','#15281c');set('hGold','#d8b24a');set('hText','#e7efe6');
 
 /* init */
 setTheme(document.documentElement.getAttribute('data-admin-theme')||'dark');
 applyCardPreset('classic');renderCardPreview();applySeatPreset('gold');
-document.getElementById('sub').textContent=window.UPNG?'Create card decks, table felts & themes':'Create card decks, table felts & themes (standard compression)';
+document.getElementById('sub').textContent=window.UPNG?'Create card decks, table felts & seats':'Create card decks, table felts & seats (standard compression)';
 </script>
 </body>
 </html>

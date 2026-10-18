@@ -1,7 +1,0 @@
-{
-  "name": "Green Casino",
-  "swatch": "#1e6b1e",
-  "pucks": { "dealer": "dealer.svg", "sb": "sb.svg", "bb": "bb.svg" },
-  "buttonImages": { "fold": "btn-fold.svg", "check": "btn-check.svg", "call": "btn-call.svg", "raise": "btn-raise.svg", "allin": "btn-allin.svg" },
-  "buttons": { "btn-fold-fg": "#ffd0d0", "btn-check-fg": "#c0ffc0", "btn-call-fg": "#c0d8ff", "btn-raise-fg": "#110900", "btn-allin-fg": "#e88a8a", "btn-allin-fg-b": "#f4b0b0" }
-}
