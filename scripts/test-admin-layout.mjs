@@ -149,6 +149,17 @@ ok(/btn\.innerHTML = l \? MOON : SUN/.test(admin), 'the theme button draws a sun
 ok(/meta\[name="theme-color"\]/.test(admin), 'the browser chrome follows the admin theme');
 ok(/<link rel="manifest" href="\/admin-manifest\.json">/.test(admin), 'the admin installs as an app of its own');
 ok(/<link rel="apple-touch-icon"/.test(admin) && /apple-mobile-web-app-capable/.test(admin), 'including on iOS');
+// Its own icon (web.139, narmod): the TH chip, not the player client's.
+{
+  const { existsSync } = await import('node:fs');
+  const pub = join(dirname(fileURLToPath(import.meta.url)), '..', 'public');
+  const man = JSON.parse(readFileSync(join(pub, 'admin-manifest.json'), 'utf8'));
+  const links = [...admin.matchAll(/<link rel="(?:icon|apple-touch-icon)" href="([^"]+)"/g)].map((m) => m[1]);
+  ok(links.length >= 3 && links.every((h) => h.indexOf('/admin-icons/') === 0), 'the admin tab shows its own icon (' + links.length + ' links)');
+  ok(man.icons.length === 4 && man.icons.every((i) => i.src.indexOf('/admin-icons/') === 0) && man.icons.some((i) => i.purpose === 'maskable'),
+    'and so does the installed admin app, maskable included');
+  ok(links.concat(man.icons.map((i) => i.src)).every((h) => existsSync(join(pub, h))), 'every icon file is in public/admin-icons');
+}
 ok(/@font-face\{font-family:'Inter';src:url\('\/fonts\/InterVariable\.woff2'\)/.test(admin), 'in Inter, the font of the QML client, self-hosted');
 
 // ── One section per panel ─────────────────────────────────────────────────

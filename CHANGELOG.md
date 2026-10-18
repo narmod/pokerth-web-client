@@ -16,6 +16,10 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin icon** (`web.139`) — the dashboard has an icon of its own, the red and white TH chip: browser tab
+  (`admin.ico` 16/32/48, 32 px and 192 px PNG), iOS home screen (180 px on the theme colour) and the installed
+  admin app (192/512 px, maskable versions inside the safe zone). Files under `public/admin-icons/`; the player
+  client keeps its icon.
 - **Admin: world clock on the Overview only; « Live/spectator tool »** (`web.138`) — the clock strip moved from
   under the page header (every section) to the top of the Overview, and waits until it shows to centre on its
   reference. The /live entry mode is named « Live/spectator tool » everywhere in the dashboard (Overview and
