@@ -16,6 +16,10 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin › Packages: one kind filter for tiles, import and library** (`web.142`) — the four tiles at the top
+  are buttons that filter the library (the same tile clicked again goes back to All), and the kind picked in
+  « Import a package » shows that kind in the library; a kind chosen in the library, by chip or tile, preselects
+  it for the import. « All » leaves the import kind as it was. The choice is remembered.
 - **Admin › Errors: filter and colour by type** (`web.141`) — each error group is typed from its message:
   script error (red), rejection (amber), load failure (blue), recovered (green), diagnostic (grey; a probe that
   answers 404 or 5xx counts as a load failure). The type shows as a bar on the left of the card, the colour of

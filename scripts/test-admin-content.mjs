@@ -66,7 +66,25 @@ ok(/built-in/.test(rows('themes')[0].textContent) && !rows('themes')[0].querySel
 doc.querySelector('#pkKinds [data-pk="deck"]').click();
 ok(doc.querySelector('.pksec[data-pk="table"]').hidden && !doc.querySelector('.pksec[data-pk="deck"]').hidden, 'a chip keeps one kind on screen');
 ok(window.localStorage.getItem('pth_admin_pk_kind') === 'deck' && /1 shown/.test($('pkSum').textContent), 'remembered, and the head note says how many are shown');
+const seg = () => doc.querySelector('#panel-packages .seg button.on').dataset.k;
+ok(seg() === 'deck', 'a kind picked in the library preselects it for the import');
 doc.querySelector('#pkKinds [data-pk="all"]').click();
+ok(seg() === 'deck' && !doc.querySelector('.pksec[data-pk="table"]').hidden, 'All shows everything and leaves the import kind alone');
+// The tiles filter too, and a tile clicked again lets go.
+const tile = (k) => doc.querySelector('#pkTiles .setile[data-pk="' + k + '"]');
+ok(['table', 'deck', 'seat', 'theme'].every((k) => tile(k) && tile(k).tagName === 'BUTTON'), 'each tile is a button');
+tile('table').click();
+ok(!doc.querySelector('.pksec[data-pk="table"]').hidden && doc.querySelector('.pksec[data-pk="deck"]').hidden, 'a tile keeps its kind on screen');
+ok(tile('table').classList.contains('on') && tile('table').getAttribute('aria-pressed') === 'true' && doc.querySelector('#pkKinds [data-pk="table"]').classList.contains('on'), 'tile and chip both show the choice');
+ok(seg() === 'table', 'and the import follows');
+tile('table').click();
+ok(doc.querySelector('#pkKinds [data-pk="all"]').classList.contains('on') && !doc.querySelector('.pksec[data-pk="deck"]').hidden, 'the same tile clicked again goes back to All');
+// The import kind filters the library.
+doc.querySelector('#panel-packages .seg button[data-k="seat"]').click();
+ok(seg() === 'seat' && !doc.querySelector('.pksec[data-pk="seat"]').hidden && doc.querySelector('.pksec[data-pk="table"]').hidden, 'picking what to import shows that kind in the library');
+ok(window.localStorage.getItem('pth_admin_pk_kind') === 'seat' && tile('seat').classList.contains('on'), 'remembered, tile lit');
+doc.querySelector('#pkKinds [data-pk="all"]').click();
+ok(errors.length === 0, 'the package filters throw nothing' + (errors.length ? ': ' + errors[0] : ''));
 $('pkgFilter').value = 'ivoire';
 $('pkgFilter').dispatchEvent(new window.Event('input'));
 ok(rows('tables').length === 1 && $('pkNtable').textContent === '1 of 3', 'the filter narrows and the counts follow');

@@ -3024,7 +3024,16 @@
 
   // packages
   var kind='table';
-  document.querySelectorAll('#panel-packages .seg button').forEach(function(b){ b.addEventListener('click',function(){ kind=b.dataset.k; document.querySelectorAll('#panel-packages .seg button').forEach(function(x){x.classList.toggle('on',x===b);}); }); });
+  // The import kind and the library filter are one choice: picking what to
+  // import shows that kind in the library (and a kind picked in the library,
+  // by chip or tile, preselects it for the import). « All » in the library
+  // leaves the import kind as it was.
+  function _pkImportKind(k){
+    if(!k||k==='all') return;
+    kind=k;
+    document.querySelectorAll('#panel-packages .seg button').forEach(function(x){ x.classList.toggle('on',x.dataset.k===k); });
+  }
+  document.querySelectorAll('#panel-packages .seg button').forEach(function(b){ b.addEventListener('click',function(){ _pkSelect(b.dataset.k); }); });
   var drop=$('drop'), file=$('file'), msg=$('msg');
   drop.addEventListener('click',function(){file.click();});
   drop.addEventListener('dragover',function(e){e.preventDefault();drop.classList.add('hot');});
@@ -3082,7 +3091,8 @@
     var box=$('pkTiles'); if(!box) return;
     box.innerHTML=PK_KINDS.map(function(k){
       var a=lastPkgs[k[1]]||[], on=a.filter(function(p){ return !p.disabled; }).length;
-      return '<div class="ovmode" style="--mc:'+k[3]+'"><span class="ovmh"><i class="lvdot"></i><span>'+k[2]+'</span></span><b class="ovmn">'+on+'<small class="ovof"> / '+a.length+'</small></b><span class="ovms">'+(a.length-on?(a.length-on)+' hidden from players':'all offered to players')+'</span></div>';
+      var sel=_pkKind===k[0];
+      return '<button type="button" class="ovmode setile'+(sel?' on':'')+'" data-pk="'+k[0]+'" aria-pressed="'+sel+'" style="--mc:'+k[3]+'"><span class="ovmh"><i class="lvdot"></i><span>'+k[2]+'</span></span><b class="ovmn">'+on+'<small class="ovof"> / '+a.length+'</small></b><span class="ovms">'+(a.length-on?(a.length-on)+' hidden from players':'all offered to players')+'</span></button>';
     }).join('');
   }
   function drawPkgs(){ var q=(($('pkgFilter')&&$('pkgFilter').value)||'').trim().toLowerCase();
@@ -3100,7 +3110,16 @@
     var sum=$('pkSum'); if(sum) sum.textContent=tot+' installed'+(q||_pkKind!=='all'?' · '+shown+' shown':'');
     _pkTiles();
   }
-  if($('pkKinds')) $('pkKinds').addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-pk]'); if(!b) return; _pkKind=b.getAttribute('data-pk'); try{ localStorage.setItem('pth_admin_pk_kind',_pkKind); }catch(x){} drawPkgs(); });
+  function _pkSelect(k){
+    if(k!=='all'&&!PK_KINDS.some(function(x){ return x[0]===k; })) return;
+    _pkKind=k; _pkImportKind(k);
+    try{ localStorage.setItem('pth_admin_pk_kind',_pkKind); }catch(x){}
+    drawPkgs();
+  }
+  if($('pkKinds')) $('pkKinds').addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-pk]'); if(!b) return; _pkSelect(b.getAttribute('data-pk')); });
+  // A tile picks its kind; the same tile clicked again lets go (back to All).
+  if($('pkTiles')) $('pkTiles').addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-pk]'); if(!b) return; var k=b.getAttribute('data-pk'); _pkSelect(_pkKind===k?'all':k); });
+  _pkImportKind(_pkKind);
   function renderPkgs(d){ lastPkgs={tables:d.tables||[],decks:d.decks||[],seats:d.seats||[],themes:d.themes||[]}; drawPkgs(); }
   if($('pkgFilter')) $('pkgFilter').addEventListener('input', drawPkgs);
   function refresh(){ api('/admin/pkg-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if(d.ok)renderPkgs(d); }).catch(function(){ say('Could not refresh the package list \u2014 network error.','err'); }); }
