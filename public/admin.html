@@ -717,6 +717,29 @@
     .plbar{grid-template-columns:minmax(0,1fr) 84px;grid-template-areas:'l p' 't t'}
     .pllb{grid-area:l} .pltrack{grid-area:t} .plpct{grid-area:p}
   }
+  /* ── Content: packages and music ─────────────────────────────────────── */
+  .ovof{font-size:.95rem;font-weight:500;color:var(--muted)}
+  .pksec{margin-top:10px}
+  .pksec[hidden]{display:none}
+  .pkh{display:flex;align-items:baseline;gap:8px;margin:6px 0 2px;font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .pkn{font-weight:500;letter-spacing:0;text-transform:none}
+  .pkrow,.mzrow{border-top-color:var(--line)}
+  .pkrow.off .nm b,.mzrow.off .nm b{color:var(--navfg);font-weight:500}
+  .pkrow.off .nm,.mzrow.off .nm{opacity:.75}
+  .pkrow select{flex:none}
+  #mzAddTrack .fld,#mzAddRadio .fld{max-width:720px}
+  #mzAddTrack .fld>span:first-child,#mzAddRadio .fld>span:first-child{flex:0 0 120px}
+  #panel-music .fld>input{flex:1 1 220px;min-width:0;padding:8px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream);font:inherit;font-size:.85rem}
+  #panel-music .fld>select{width:180px;flex:none}
+  #panel-music .fld>button{flex:none}
+  :root[data-admin-theme="light"] #panel-music .fld>input{background:#fff}
+  @media(max-width:600px){
+    .pkrow{flex-wrap:wrap}
+    .pkrow .nm{flex:1 1 100%}
+    .mzrow .nm{flex:1 1 calc(100% - 70px)}
+    #mzAddTrack .fld>span:first-child,#mzAddRadio .fld>span:first-child{flex:1 1 100%}
+    #panel-music .fld>select{width:100%}
+  }
   /* ── Overview ─────────────────────────────────────────────────────────── */
   .ovalerts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:0 0 14px}
   .ovalert{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:12px;border:1px solid var(--info-line);background:var(--info-bg);min-width:0}
@@ -1110,8 +1133,10 @@
       </div>
     </div>
     <div id="panel-packages" style="display:none">
+      <section class="ovmodes" id="pkTiles" aria-label="Packages at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
-        <label>Import a package (.zip)</label>
+        <h2>Import a package</h2>
+        <p class="muted">A <b>.zip</b> exported for the PokerTH web client: pick what it holds, then drop it. A table style, a card deck or a seat pack is also applied to this browser at once, so you can check it in the app.</p>
         <div class="seg"><button class="on" data-k="table">Table style</button><button data-k="deck">Card deck</button><button data-k="seat">Seat pack</button><button data-k="theme">Theme</button></div>
         <div id="drop" class="drop">Drop a <b>.zip</b> here, or click to choose</div>
         <input id="file" type="file" accept=".zip,application/zip" style="display:none">
@@ -1119,15 +1144,18 @@
         <div id="msg" class="msg"></div>
       </div>
       <div class="card">
-        <input id="pkgFilter" class="filter" type="search" placeholder="Filter styles, decks &amp; themes…" autocomplete="off">
-        <h2>Table styles</h2><div id="tables"></div>
-        <h2 style="margin-top:14px">Card decks</h2><div id="decks"></div>
-        <h2 style="margin-top:14px">Seats</h2><div id="seats"></div>
-        <h2 style="margin-top:14px">Themes</h2><div id="themes"></div>
+        <div class="boardhead"><h2>Library</h2><span id="pkSum" class="headnote"></span></div>
+        <p class="muted"><b>On</b> / <b>Off</b> shows or hides an entry in the players’ pickers (they see it on reload). <b>Use</b> applies it to this browser only. Built-in entries cannot be removed.</p>
+        <div class="ltool"><input id="pkgFilter" class="filter" type="search" placeholder="Filter styles, decks &amp; themes…" autocomplete="off"><div class="chips" id="pkKinds" role="group" aria-label="Show"></div></div>
+        <div class="pksec" data-pk="table"><h3 class="pkh">Table styles <span class="pkn" id="pkNtable"></span></h3><div id="tables"></div></div>
+        <div class="pksec" data-pk="deck"><h3 class="pkh">Card decks <span class="pkn" id="pkNdeck"></span></h3><div id="decks"></div></div>
+        <div class="pksec" data-pk="seat"><h3 class="pkh">Seats <span class="pkn" id="pkNseat"></span></h3><div id="seats"></div></div>
+        <div class="pksec" data-pk="theme"><h3 class="pkh">Themes <span class="pkn" id="pkNtheme"></span></h3><div id="themes"></div></div>
       </div>
     </div>
 
-        <div id="panel-music" style="display:none">
+    <div id="panel-music" style="display:none">
+      <section class="ovmodes" id="mzTiles" aria-label="Music at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <h2>Music player</h2>
         <div class="defrow fld"><span>Available to players</span><select id="mzEnabled"><option value="1">On</option><option value="0">Off</option></select></div>
@@ -1185,6 +1213,7 @@
           <button id="mzLibTracks" class="on" type="button">Tracks <span id="mzCntT" class="muted"></span></button>
           <button id="mzLibRadios" type="button">Radios <span id="mzCntR" class="muted"></span></button>
         </div>
+        <input id="mzFilter" class="filter" type="search" placeholder="Filter: title, artist, genre…" autocomplete="off" style="margin-top:4px">
         <div id="mzList"><div class="empty">Loading…</div></div>
       </div>
     </div>
@@ -2906,9 +2935,9 @@
   function setPkgAlign(id,align){ api('/admin/pkg-align',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,align:align,token:tok()})})
     .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ say(d.align?('Fullscreen anchor set: '+d.align+'.'):'Fullscreen anchor reset (bottom).','ok'); refresh(); } else say('Anchor: '+((d&&d.error)||'error'),'err'); }).catch(function(){ say('Anchor change failed - network error.','err'); }); }
   function renderList(el,arr,k){ if(!arr||!arr.length){el.innerHTML='<div class="empty">(none)</div>';return;} el.innerHTML='';
-    arr.forEach(function(p){ var row=document.createElement('div');row.className='row'; if(p.disabled) row.style.opacity='0.55';
+    arr.forEach(function(p){ var row=document.createElement('div');row.className='row pkrow'+(p.disabled?' off':'');
       row.innerHTML='<div class="nm"><b></b><span></span></div>';
-      row.querySelector('b').textContent=p.name||p.id; row.querySelector('span').textContent=p.id;
+      row.querySelector('b').textContent=p.name||p.id; row.querySelector('span').textContent=p.id+(p.builtin?' \u00b7 built-in':'')+(p.disabled?' \u00b7 hidden from players':'');
       var on=!p.disabled;
       var tg=document.createElement('button');tg.className='toggle '+(on?'on':'off');tg.textContent=on?'On':'Off';tg.title=on?'Visible to players \u2014 tap to hide':'Hidden from players \u2014 tap to show';tg.addEventListener('click',function(){togglePkg(k,p.id,on);});
       var use=document.createElement('button');use.className='use';use.textContent='Use';use.addEventListener('click',function(){useNow(k,p.id);});
@@ -2917,11 +2946,33 @@
       row.appendChild(tg); if(fl) row.appendChild(fl); if(al) row.appendChild(al); if(k!=='theme') row.appendChild(use); if(!p.builtin) row.appendChild(del); el.appendChild(row); }); }
   var lastPkgs={tables:[],decks:[],seats:[],themes:[]};
   function pkgMatch(p,q){ return !q || (((p.name||'')+' '+(p.id||'')).toLowerCase().indexOf(q)>=0); }
+  // Tiles: how many of each kind players can pick, out of how many installed.
+  // The « show » chips keep one kind on screen (kept per browser).
+  var _pkKind='all', PK_KINDS=[['table','tables','Table styles','var(--m-net)'],['deck','decks','Card decks','var(--m-lan)'],['seat','seats','Seats','var(--m-off)'],['theme','themes','Themes','var(--m-live)']];
+  try{ var _pkk=localStorage.getItem('pth_admin_pk_kind'); if(['all','table','deck','seat','theme'].indexOf(_pkk)>=0) _pkKind=_pkk; }catch(e){}
+  function _pkTiles(){
+    var box=$('pkTiles'); if(!box) return;
+    box.innerHTML=PK_KINDS.map(function(k){
+      var a=lastPkgs[k[1]]||[], on=a.filter(function(p){ return !p.disabled; }).length;
+      return '<div class="ovmode" style="--mc:'+k[3]+'"><span class="ovmh"><i class="lvdot"></i><span>'+k[2]+'</span></span><b class="ovmn">'+on+'<small class="ovof"> / '+a.length+'</small></b><span class="ovms">'+(a.length-on?(a.length-on)+' hidden from players':'all offered to players')+'</span></div>';
+    }).join('');
+  }
   function drawPkgs(){ var q=(($('pkgFilter')&&$('pkgFilter').value)||'').trim().toLowerCase();
-    renderList($('tables'), lastPkgs.tables.filter(function(p){return pkgMatch(p,q);}), 'table');
-    renderList($('decks'),  lastPkgs.decks.filter(function(p){return pkgMatch(p,q);}),  'deck');
-    renderList($('seats'),  lastPkgs.seats.filter(function(p){return pkgMatch(p,q);}),  'seat');
-    renderList($('themes'), lastPkgs.themes.filter(function(p){return pkgMatch(p,q);}), 'theme'); }
+    var tot=0, shown=0;
+    PK_KINDS.forEach(function(k){
+      var all=lastPkgs[k[1]]||[], arr=all.filter(function(p){return pkgMatch(p,q);});
+      tot+=all.length; if(_pkKind==='all'||_pkKind===k[0]) shown+=arr.length;
+      renderList($(k[1]), arr, k[0]);
+      var n=$('pkN'+k[0]); if(n) n.textContent=q?(arr.length+' of '+all.length):String(all.length);
+      var sec=document.querySelector('.pksec[data-pk="'+k[0]+'"]'); if(sec) sec.hidden=!(_pkKind==='all'||_pkKind===k[0]);
+    });
+    var ch=$('pkKinds');
+    if(ch) ch.innerHTML='<button type="button" class="chip'+(_pkKind==='all'?' on':'')+'" data-pk="all" aria-pressed="'+(_pkKind==='all')+'">All</button>'
+      +PK_KINDS.map(function(k){ var on=_pkKind===k[0]; return '<button type="button" class="chip'+(on?' on':'')+'" data-pk="'+k[0]+'" aria-pressed="'+on+'"><i style="background:'+k[3]+'"></i>'+k[2]+'</button>'; }).join('');
+    var sum=$('pkSum'); if(sum) sum.textContent=tot+' installed'+(q||_pkKind!=='all'?' · '+shown+' shown':'');
+    _pkTiles();
+  }
+  if($('pkKinds')) $('pkKinds').addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-pk]'); if(!b) return; _pkKind=b.getAttribute('data-pk'); try{ localStorage.setItem('pth_admin_pk_kind',_pkKind); }catch(x){} drawPkgs(); });
   function renderPkgs(d){ lastPkgs={tables:d.tables||[],decks:d.decks||[],seats:d.seats||[],themes:d.themes||[]}; drawPkgs(); }
   if($('pkgFilter')) $('pkgFilter').addEventListener('input', drawPkgs);
   function refresh(){ api('/admin/pkg-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if(d.ok)renderPkgs(d); }).catch(function(){ say('Could not refresh the package list \u2014 network error.','err'); }); }
@@ -3086,11 +3137,17 @@
     var ct=$('mzCntT'), cr=$('mzCntR');
     var nT=mzAll.filter(function(p){return !p.stream;}).length, nR=mzAll.length-nT;
     if(ct)ct.textContent='('+nT+')'; if(cr)cr.textContent='('+nR+')';
+    _mzTiles();
     var arr=mzAll.filter(function(p){ return !!p.stream === (mzLib==='radios'); });
+    // The filter only hides rows: positions and moves stay those of the whole tab.
+    var _mq=(($('mzFilter')||{}).value||'').trim().toLowerCase();
     if(!arr.length){ el.innerHTML='<div class="empty">'+(mzLib==='radios'?'(no radios — add one above or import an .m3u playlist)':'(no tracks)')+'</div>'; return; } el.innerHTML='';
-    arr.forEach(function(p,pi){ var on=p.active!==false; var row=document.createElement('div'); row.className='row'; row.style.flexWrap='wrap';
-      if(p.id===mzEditId && !p.builtin){ mzRenderEditor(row,p); el.appendChild(row); return; }
-      if(!on)row.style.opacity='0.55';
+    var _mShown=0;
+    arr.forEach(function(p,pi){ var on=p.active!==false; var row=document.createElement('div'); row.className='row mzrow'; row.style.flexWrap='wrap';
+      if(p.id===mzEditId && !p.builtin){ mzRenderEditor(row,p); el.appendChild(row); _mShown++; return; }
+      if(_mq && ((p.title||'')+' '+(p.artist||'')+' '+p.id).toLowerCase().indexOf(_mq)<0) return;
+      _mShown++;
+      if(!on)row.classList.add('off');
       row.innerHTML='<div class="nm"><b></b><span></span></div>';
       row.querySelector('b').textContent=p.title||p.id; row.querySelector('span').textContent=(p.artist||'')+(p.artist?' \u00b7 ':'')+p.id+(p.stream?' \u00b7 \ud83d\udcfb LIVE':'')+(p.builtin?' \u00b7 built-in':'');
       if(arr.length>1){
@@ -3110,7 +3167,25 @@
       var dn=document.createElement('button'); dn.className='use'; dn.textContent='\u25BC'; dn.title='Move down'; dn.style.cssText='padding:6px 9px'; if(pi===arr.length-1)dn.disabled=true; dn.addEventListener('click',function(){ mzMove(p.id,1,arr); }); row.appendChild(dn);
       // (les déplacements restent DANS l'onglet affiché ; l'ordre global est préservé)
       if(!p.builtin){ var ed=document.createElement('button'); ed.className='use'; ed.textContent='Edit'; ed.addEventListener('click',function(){ mzEditId=p.id; mzRenderList(mzAll); }); row.appendChild(ed); var del=document.createElement('button'); del.className='del'; del.textContent='Remove'; del.addEventListener('click',function(){mzRemove(p.id,p.title||p.id);}); row.appendChild(del); }
-      el.appendChild(row); }); }
+      el.appendChild(row); });
+    if(!_mShown) el.innerHTML='<div class="empty">No entry matches the filter.</div>'; }
+  // Tiles: is the player on, what plays, and how often.
+  function _mzTiles(){
+    var box=$('mzTiles'); if(!box) return;
+    var T=mzAll.filter(function(p){ return !p.stream; }), R=mzAll.filter(function(p){ return !!p.stream; });
+    var tOn=T.filter(function(p){ return p.active!==false; }).length, rOn=R.filter(function(p){ return p.active!==false; }).length;
+    var plays=0, up=0, dn=0;
+    T.forEach(function(p){ plays+=mzPlays[p.id]||0; });
+    mzAll.forEach(function(p){ var v=mzVotes[p.id]||{}; up+=v.up||0; dn+=v.down||0; });
+    var en=$('mzEnabled')&&$('mzEnabled').value==='1';
+    var X=[['Player',en?'On':'Off',en?'in every player menu':'hidden, /music/* answers 404',en?'var(--ok-text)':'var(--muted)'],
+           ['Tracks',tOn+'<small class="ovof"> / '+T.length+'</small>',(T.length-tOn)+' hidden','var(--accent)'],
+           ['Radios',rOn+'<small class="ovof"> / '+R.length+'</small>',(R.length-rOn)+' hidden','var(--m-lan)'],
+           ['Plays',mzPlaysKnown?plays.toLocaleString():'\u2014',mzVotesKnown?('votes \u25B2 '+up+' \u00b7 \u25BC '+dn):'tracks started by players','var(--warn-text)']];
+    box.innerHTML=X.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn">'+t[1]+'</b><span class="ovms">'+t[2]+'</span></div>'; }).join('');
+  }
+  if($('mzFilter')) $('mzFilter').addEventListener('input',function(){ mzRenderList(mzAll); });
+  if($('mzEnabled')) $('mzEnabled').addEventListener('change',_mzTiles);
   function mzRefresh(){ api('/admin/music-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if($('mzEnabled')&&d&&typeof d.enabled==='boolean')$('mzEnabled').value=d.enabled?'1':'0'; mzPlaysKnown=(d&&d.plays!==undefined); mzPlays=(d&&d.plays)||{}; mzVotesKnown=(d&&d.votes!==undefined); mzVotes=(d&&d.votes)||{}; if($('mzVotesPub')&&d&&typeof d.votesPublic==='boolean')$('mzVotesPub').value=d.votesPublic?'1':'0'; if(d.ok)mzRenderList(d.tracks); else mzRenderList([]); }).catch(function(){ var el=$('mzList'); if(el)el.innerHTML='<div class="empty">Could not load tracks.</div>'; }); }
   (function(){ var d=$('mzDrop'), f=$('mzFile'); if(d&&f){ d.addEventListener('click',function(){f.click();}); d.addEventListener('dragover',function(e){e.preventDefault();d.classList.add('hot');}); d.addEventListener('dragleave',function(){d.classList.remove('hot');}); d.addEventListener('drop',function(e){e.preventDefault();d.classList.remove('hot');if(e.dataTransfer.files[0])mzUpload(e.dataTransfer.files[0]);}); f.addEventListener('change',function(){if(f.files[0])mzUpload(f.files[0]);}); } })();
 

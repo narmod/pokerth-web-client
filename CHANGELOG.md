@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin Content in the new layout** (`web.129`) — Packages: one tile per kind (table styles, card decks,
+  seats, themes: offered out of installed), the import card says what a pack does, the library gets a head note,
+  All / kind chips (kept per browser) beside the filter, a count per kind, hidden entries marked in words and rows
+  that wrap on a phone. Music: tiles (player on or off, tracks and radios offered out of installed, plays and
+  votes), the add form's fields styled like every other input (they were bare browser boxes), a library filter
+  (title, artist) that keeps each entry's real position. New test `test-admin-content.mjs`.
 - **Admin Community in the new layout** (`web.128`) — each section opens on four tiles. Leaderboard: players,
   leader, best streak, reset period; one table (medals for the top three, net in green or red, games and hands won
   out of played with the share, best streak), a header sorts by its column (the rank stays the board's own; kept
@@ -601,6 +607,8 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Table and deck names with an « & »** (`web.129`) — the name read from a pack's XML kept its entity
+  (`Ivoire &amp; Chene` in the admin list): `tables-manifest.mjs` and `decks-manifest.mjs` now decode it.
 - **What the proxy stores for Traffic and Errors** (`web.116`) — one robot rule, `server/ua-bot.js`, for the visit
   counts, the language diagnostics and the Errors list: the old `/bot/` caught CUBOT phones (real players) while the
   Errors tab used a narrower regex of its own; the proxy now sends the classification with each error group. A

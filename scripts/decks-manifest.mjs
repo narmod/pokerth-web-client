@@ -37,6 +37,14 @@ function isGalleryDeck(p, ext) {
   return true;
 }
 
+// XML attribute values carry entities (« &amp; »): the name is shown as text,
+// so it is decoded here, &amp; last so « &amp;lt; » stays « &lt; ».
+function xmlText(v) {
+  return String(v).replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'")
+    .replace(/&#(\d+);/g, function (_, n) { return String.fromCodePoint(Number(n)); })
+    .replace(/&#x([0-9a-f]+);/gi, function (_, n) { return String.fromCodePoint(parseInt(n, 16)); })
+    .replace(/&amp;/g, '&');
+}
 function deckName(p, fallback) {
   let name = fallback;
   let entries = [];
@@ -46,7 +54,7 @@ function deckName(p, fallback) {
     try {
       const xml = readFileSync(join(p, f), 'utf8');
       const m = xml.match(/StyleDescription[^>]*value\s*=\s*"([^"]+)"/i);
-      if (m && m[1].trim()) { name = m[1].trim(); break; }
+      if (m && m[1].trim()) { name = xmlText(m[1].trim()); break; }
     } catch { /* ignore */ }
   }
   return name;
