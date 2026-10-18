@@ -751,6 +751,10 @@
   :where(:root[data-admin-theme="light"] .card) textarea{background:rgba(255,255,255,.75)}
   /* ── Infrastructure ────────────────────────────────────────────────────── */
   .srvhint.warn,.warntx{color:var(--warn-text)}
+  /* ── Operations ────────────────────────────────────────────────────────── */
+  .dpauto{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+  .boardhead>h2.h3{font-size:.92rem}
+  #panel-server .ltool{margin-top:2px}
   .srvsteps{border:1px solid var(--line);border-radius:10px;padding:4px 12px 12px;margin:0 0 12px}
   .stephd{margin:12px 0 6px;color:var(--cream)}
   .stephd .muted{font-weight:400}
@@ -1491,11 +1495,13 @@
       </div>
     </div>
     <div id="panel-server" style="display:none">
+      <section class="ovmodes" id="opTiles" aria-label="This server at a glance"><div class="empty">Loading…</div></section>
       <div class="card"><h2>Status</h2><div id="status"><div class="empty">Loading…</div></div></div>
       <div class="card">
         <div class="boardhead"><h2>Recent logs</h2><div class="bhact"><span class="muted">Verbosity</span><select id="logQuick"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select><button id="logsCopy" class="use">Copy</button><button id="refreshLogs" class="use">Refresh</button></div></div>
         <div id="logQuickMsg" class="msg"></div>
         <div class="muted" style="margin:2px 0 6px">Times are shown in your own time zone; the log files keep UTC. quiet logs connections, disconnections and errors only — no per-message line, so far less written to disk under load. Applied live, no restart.</div>
+        <div class="ltool"><input id="logFilter" class="filter" type="search" placeholder="Filter the lines: a nickname, an address, a word…" autocomplete="off"><label class="ltog"><input type="checkbox" id="logProblems"> Problems only</label><span id="logCount" class="headnote"></span></div>
         <pre id="logs" class="logs"></pre>
       </div>
     </div>
@@ -1517,6 +1523,7 @@
     </div>
 
     <div id="panel-deploy" style="display:none">
+      <section class="ovmodes" id="dpTiles" aria-label="Deployment at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <h2>Maintenance</h2>
         <p class="muted">“Update (no restart)” pushes new client files live instantly without dropping connections; the other actions restart the server briefly — this page reconnects on its own.</p>
@@ -1527,7 +1534,7 @@
           <button id="btnClearLogs" class="use">Clear logs</button>
         </div>
         <div id="maintmsg" class="msg"></div>
-        <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.12)">
+        <div class="dpauto">
           <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 6px"><input type="checkbox" id="autoUpd" style="width:auto"> <b style="font-size:.88rem;color:inherit">Update automatically</b></label>
           <p class="muted">Checks this server&#39;s branch every 15 minutes. Changes that only touch client files go live at once — nobody is disconnected. Anything needing a restart (proxy, dependencies) waits until <b>no one at all</b> is connected, then acts after a short notice; if someone connects in the meantime, it is called off and retried later. An open connection is never cut this way.</p>
           <div class="periodrow" style="margin:0">
@@ -1536,7 +1543,7 @@
           </div>
           <div id="autoUpdMsg" class="msg"></div>
         </div>
-        <div class="boardhead" style="margin-top:10px"><h2 style="font-size:.92rem">Last action log</h2><button id="updlogCopy" class="use">Copy</button><button id="btnUpdLog" class="use">Refresh</button></div>
+        <div class="boardhead" style="margin-top:12px"><h2 class="h3">Last action log</h2><div class="bhact"><button id="updlogCopy" class="use">Copy</button><button id="btnUpdLog" class="use">Refresh</button></div></div>
         <pre id="updlog" class="logs" style="max-height:200px"></pre>
       </div>
       <div class="card">
@@ -1572,13 +1579,14 @@
     </div>
 
     <div id="panel-access" style="display:none">
+      <section class="ovmodes" id="acTiles" aria-label="Access at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <div class="boardhead"><h2>Blocked &amp; banned addresses</h2><button id="ipRefresh" class="use">Refresh</button></div>
         <p class="muted">Addresses that failed to authenticate on this panel, and addresses you have banned. Unlike the rest of the dashboard, addresses appear <b>in full</b> here: a masked address cannot be banned or unblocked. A ban refuses the WebSocket upgrade — the page still loads, but no game connection is made through this proxy — and drops any bridge already open from it. Your own address and loopback can never be banned.</p>
         <div id="ipYou" class="muted" style="margin-bottom:6px"></div>
-        <div style="margin:8px 0 4px"><b style="font-size:.88rem">Failed sign-ins</b></div>
+        <h3 class="pkh">Failed sign-ins <span class="pkn" id="ipBlockedN"></span></h3>
         <div id="ipBlocked"><div class="empty">Loading…</div></div>
-        <div style="margin:12px 0 4px"><b style="font-size:.88rem">Banned</b></div>
+        <h3 class="pkh" style="margin-top:14px">Banned <span class="pkn" id="ipBannedN"></span></h3>
         <div id="ipBanned"><div class="empty">—</div></div>
         <div class="periodrow" style="margin-top:8px">
           <input id="ipBanInput" class="filter" type="text" maxlength="45" placeholder="Address to ban (e.g. 203.0.113.7)" autocomplete="off" style="margin:0">
@@ -3411,6 +3419,18 @@
   function _infraTiles(d){
     var P=d.proxyCfg||{}, pr=$('prTiles'), id=$('idTiles');
     var T=function(a){ return a.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn'+(t[4]||'')+'">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join(''); };
+    var op=$('opTiles'), dp=$('dpTiles');
+    var stale=!!(d.runningVersion&&d.version&&d.runningVersion!==d.version), F=d.fd||{}, U=d.update||{}, A=d.autoUpdate||{};
+    if(op) op.innerHTML=T([
+      ['Uptime',fmtUptime(d.uptimeSec),'since the last start','var(--accent)',' sm'],
+      ['Connected',d.sockets==null?'—':String(d.sockets),(d.liveSessions==null?'':d.liveSessions+' game session'+(d.liveSessions===1?'':'s'))+(d.maxClients?' · cap '+d.maxClients:''),'var(--ok-text)'],
+      ['Build',srvEsc(d.version||'—'),stale?'still running '+srvEsc(d.runningVersion)+' — restart needed':'served = running',stale?'var(--err-text)':'var(--m-net)',' sm'],
+      ['Open files',F.softN?F.softN.toLocaleString():'—',F.approxPlayers?'about '+F.approxPlayers.toLocaleString()+' players at once':'limit of this process','var(--info-text)']]);
+    if(dp) dp.innerHTML=T([
+      ['Running',srvEsc(d.runningVersion||d.version||'—'),srvEsc(d.installKind||'?')+(d.gitUpdatable===false?' · no self-update':' · self-update'),stale?'var(--err-text)':'var(--accent)',' sm'],
+      ['Update',U.error?'Error':(U.available?'Available':(U.checkedAt?'Up to date':'—')),U.error?srvEsc(U.error):(U.available?srvEsc((U.remote||'').slice(0,8))+(U.needsRestart?' · needs a restart':' · no restart'):(U.checkedAt?'checked '+new Date(U.checkedAt).toLocaleTimeString():'not checked yet')),U.error?'var(--err-text)':(U.available?'var(--warn-text)':'var(--ok-text)')],
+      ['Auto-update',A.enabled?'On':'Off',A.enabled?'notice '+(A.noticeSec||60)+' s before a restart':'updates are applied by hand','var(--m-lan)'],
+      ['Scheduled',d.restartAt?new Date(d.restartAt).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',hour12:false}):'None',d.restartAt?(d.restartKind==='restart'?'restart only':'update + restart'):'no restart planned',d.restartAt?'var(--warn-text)':'var(--muted)']]);
     if(pr && d.proxyCfg) pr.innerHTML=T([
       ['Connected',d.sockets==null?'—':String(d.sockets),(P.maxClients?'cap '+P.maxClients+' bridges':'no cap on bridges'),'var(--ok-text)'],
       ['Session grace',(typeof P.graceSec==='number'?P.graceSec:120)+' s','a dropped player keeps the seat','var(--accent)'],
@@ -5254,7 +5274,20 @@
         : d.toLocaleDateString(undefined,{day:'2-digit',month:'short'})+' '+t;
     });
   }
-  function loadLogs(){ api('/admin/logs').then(function(r){return r.json();}).then(function(d){ var p=$('logs'); p.textContent=fmtLogTimes((d.lines||[]).join('\n')); p.scrollTop=p.scrollHeight; }).catch(function(){}); }
+  // The filter and « Problems only » narrow what the box shows (and what Copy
+  // copies); the lines themselves are read again every 5 s as before.
+  var _logLines=[], LOG_PROBLEM=/\b(error|err|warn(ing)?|fail(ed|ure)?|refused|denied|timeout|ECONN\w*|ENOTFOUND|EPIPE|crash|exception|blocked|banned|kicked)\b|\[e\]|\[w\]|✗/i;
+  function _logRender(){
+    var p=$('logs'); if(!p) return;
+    var q=(($('logFilter')||{}).value||'').trim().toLowerCase(), pb=!!(($('logProblems')||{}).checked);
+    var L=_logLines.filter(function(l){ return (!pb||LOG_PROBLEM.test(l)) && (!q||l.toLowerCase().indexOf(q)>=0); });
+    p.textContent=(q||pb)&&!L.length?'(no line matches)':L.join('\n');
+    var c=$('logCount'); if(c) c.textContent=(q||pb)?(L.length+' of '+_logLines.length+' lines'):(_logLines.length+' lines');
+    p.scrollTop=p.scrollHeight;
+  }
+  function loadLogs(){ api('/admin/logs').then(function(r){return r.json();}).then(function(d){ _logLines=fmtLogTimes((d.lines||[]).join('\n')).split('\n'); _logRender(); }).catch(function(){}); }
+  if($('logFilter')) $('logFilter').addEventListener('input',_logRender);
+  if($('logProblems')) $('logProblems').addEventListener('change',_logRender);
   // Copier un journal. navigator.clipboard exige un contexte securise, ce qui
   // exclut un panneau servi en http sur un reseau local : d'ou le repli par
   // selection, qui marche partout. Le bouton dit ce qui s'est passe, sans quoi
@@ -5843,6 +5876,15 @@
       var bl=$('ipBlocked'), bn=$('ipBanned'), you=$('ipYou');
       if(!d||!d.ok){ if(bl) bl.innerHTML='<div class="empty">Could not load.</div>'; return; }
       if(you) you.textContent='You are connecting from '+(d.you||'?')+'.';
+      var B=d.blocked||[], now=Date.now(), nowBl=B.filter(function(b){ return b.until>now; }).length, N=(d.banned||[]).length;
+      if($('ipBlockedN')) $('ipBlockedN').textContent=d.limiter?String(B.length):'';
+      if($('ipBannedN')) $('ipBannedN').textContent=String(N);
+      var at=$('acTiles');
+      if(at) at.innerHTML=[['Your address',_annEsc(d.you||'?'),'never bannable, nor loopback','var(--accent)',' sm'],
+        ['Failed sign-ins',d.limiter?String(B.length):'—',d.limiter?'addresses that got the key wrong':'no rate limiter installed','var(--info-text)',''],
+        ['Blocked now',d.limiter?String(nowBl):'—',nowBl?'locked out for a while, then free':'nobody locked out right now',nowBl?'var(--warn-text)':'var(--ok-text)',''],
+        ['Banned',String(N),N?'refused at the WebSocket upgrade':'nobody is banned',N?'var(--err-text)':'var(--muted)','']].map(function(t){
+          return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn'+t[4]+'">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join('');
       if(bl){
         bl.innerHTML='';
         if(!d.limiter){ bl.innerHTML='<div class="empty">No rate limiter installed on this server.</div>'; }

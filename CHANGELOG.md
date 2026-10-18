@@ -16,6 +16,13 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin Operations in the new layout** (`web.133`) — Health & logs: tiles (uptime, connections and game
+  sessions, the served build and whether it still waits for a restart, open files), a filter and « Problems only »
+  over the log lines (errors, warnings, refused or failed connections), with a line count; Copy copies what is shown.
+  Deployment: tiles (running build and install, update waiting and whether it needs a restart, auto-update, the
+  scheduled restart), the action log's buttons grouped, the separator in the theme colour. Access & backup: tiles
+  (your address, failed sign-ins, blocked right now, banned) and a count on each list. New test
+  `test-admin-ops.mjs`.
 - **Admin Infrastructure in the new layout** (`web.132`) — Game servers: tiles (what the Internet button
   dials and why, source, transport with /live and PROXY protocol, the dial allowlist), the three steps in one framed
   block instead of a card nested in a card, each registered server in its own frame, the allowlist as chips, every

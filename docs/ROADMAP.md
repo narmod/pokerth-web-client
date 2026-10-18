@@ -274,7 +274,7 @@ use too. Items are grouped by status rather than fixed phases.
   (`web.121`), connections live by country (`web.122`), connections per LAN server and guests / accounts
   (`web.123`), cross-tabulated session counts recorded (`web.124`), readable (`web.125`) and narrowed from the filter
   card (`web.126`); Live (Sessions and Errors) in the new layout (`web.127`), then Community (`web.128`), Content
-  (`web.129`), Player experience (`web.131`) and Infrastructure (`web.132`). Next: Operations, then Security.
+  (`web.129`), Player experience (`web.131`), Infrastructure (`web.132`) and Operations (`web.133`). Next: Security.
 
 - **Official QML client fidelity** — ongoing pixel-and-behaviour alignment of the in-game
   screen with the official QML client (action bar, mobile layouts, seat geometry).
