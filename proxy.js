@@ -9819,6 +9819,19 @@ function updateCheck(cb) {
     });
   } catch (e) { _upd.checking = false; _upd.error = e.message; return cb(_upd); }
 }
+// Après un déploiement qui laisse tourner ce processus (statique, retour
+// arrière statique), le dernier sondage décrit l'arbre d'AVANT : le tableau de
+// bord annonçait encore « Update available <ancien sha> » pour une mise à jour
+// déjà appliquée. On l'oublie tout de suite et on relit l'amont une fois git
+// passé (deux essais : un pull lent ne laisse pas l'état faux jusqu'au
+// prochain sondage). Un déploiement raté revient ainsi à l'écran.
+function _updRecheckSoon() {
+  _upd.available = false; _upd.subject = ''; _upd.files = 0; _upd.needsRestart = false;
+  [20000, 90000].forEach(function (ms) {
+    const t = setTimeout(function () { updateCheck(); }, ms);
+    if (t.unref) t.unref();
+  });
+}
 // Applique ce qui est applicable maintenant, vu l'état des lieux.
 function _autoUpdateApply() {
   const cfg = _autoUpdateCfg();
@@ -9829,7 +9842,7 @@ function _autoUpdateApply() {
     _deployRecord('before auto static update');
     runDetached(updateCmdStatic(), UPDATE_LOG);
     _upd.lastAction = new Date().toISOString() + ' — static deploy ' + _upd.remote.slice(0, 8);
-    _upd.available = false;                                     // le prochain sondage confirmera
+    _updRecheckSoon();                                          // relu une fois git passé
     console.log('[auto-update] static deploy ' + _upd.remote.slice(0, 8) + ' (' + _upd.files + ' file(s), no restart)');
     return;
   }
@@ -9867,10 +9880,11 @@ function _autoUpdateApply() {
 function autoUpdateTick() {
   const cfg = _autoUpdateCfg();
   if (!cfg.enabled || !GIT_UPDATABLE) return;
-  // Mise à jour déjà repérée et en attente d'une fenêtre libre : inutile de
-  // retourner sur le réseau, il suffit de regarder si le serveur s'est vidé.
-  if (_upd.available) return _autoUpdateApply();
-  if (Date.now() - _upd.checkedAt < AUTO_UPDATE_POLL_MS) return;
+  // Mise à jour déjà repérée et en attente d'une fenêtre libre : on regarde
+  // seulement si le serveur s'est vidé — mais l'amont continue d'avancer
+  // pendant l'attente (un serveur jamais vide attendait des jours sur le sha
+  // du premier sondage), donc il est relu au même rythme que d'habitude.
+  if (Date.now() - _upd.checkedAt < AUTO_UPDATE_POLL_MS) return _upd.available ? _autoUpdateApply() : undefined;
   updateCheck(function () { _autoUpdateApply(); });
 }
 const _autoUpdateTimer = setInterval(autoUpdateTick, AUTO_UPDATE_TICK_MS);
@@ -10577,6 +10591,12 @@ function handleAdmin(req, res, reqPathOnly, query) {
     try { version = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
     let liveSessions = null; try { liveSessions = _liveSessions.size; } catch (e) {}
+    // Once the upstream has been read (Check now, or auto-update), keep that
+    // reading fresh while someone looks at the dashboard: without auto-update
+    // nothing else re-polls, and « Update available » kept naming the commit
+    // of the first check. Background, at the auto-update pace; never a first
+    // check of its own.
+    if (GIT_UPDATABLE && _upd.checkedAt && !_upd.checking && Date.now() - _upd.checkedAt >= AUTO_UPDATE_POLL_MS) updateCheck();
     return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, liveSessions: liveSessions, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', seo: _seoAdmin(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null), autoUpdate: _autoUpdateCfg(), autoArmed: !!(_autoArmed && _restartAt > Date.now()), update: _updPublic(), now: Date.now(), tz: _serverTz(), clockZones: _clockZones(), clockRef: _clockRef(), lobbyClockTz: (_adminConfig.lobbyClockTz || ''), lobbyClockEff: _lobbyClockTz(), lobbyClockEnv: String(process.env.SERVER_TZ || '').trim() });
   }
   // ── Horloge du bandeau (toutes clés) ───────────────────────────────────
@@ -11522,6 +11542,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
         const restart = !!(d && d.restart);
         _deployRecord('before rollback');
         const started = runDetached(rollbackCmd(sha, restart), UPDATE_LOG);
+        if (started && !restart) _updRecheckSoon();
         console.log('[admin] rollback to ' + sha.slice(0, 8) + (restart ? ' (with restart)' : ' (static only)'));
         return adminJson(res, started ? 200 : 500, { ok: started, started: started, sha: sha, restart: restart });
       });
@@ -11544,6 +11565,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       if (!GIT_UPDATABLE) return adminJson(res, 409, { ok: false, error: 'this install cannot self-update (' + installKind() + ': no git checkout in the app dir).' });
       _deployRecord('before static update');
       const started = runDetached(updateCmdStatic(), UPDATE_LOG);
+      if (started) _updRecheckSoon();
       console.log('[admin] static self-update requested (git pull, no restart)');
       return adminJson(res, started ? 200 : 500, { ok: started, started: started });
     });

@@ -72,7 +72,8 @@ export function alertsFrom(st) {
     const u = s.update || {};
     if (u.available) {
       out.push({ kind: 'ok', glyph: 'download', title: 'Update available',
-        sub: (u.remote ? String(u.remote).slice(0, 8) + ' · ' : '') + (u.needsRestart ? 'needs a restart' : 'client files only, no restart'),
+        sub: (u.remote ? String(u.remote).slice(0, 8) + ' · ' : '') + (u.needsRestart ? 'needs a restart' : 'client files only, no restart')
+          + (u.checkedAt ? ' · checked ' + ago(now - u.checkedAt) : ''),
         label: 'Deploy', t: 'deploy' });
     }
     if (s.restartAt && s.restartAt > now) {
@@ -161,8 +162,11 @@ function modesHtml(now, live) {
     let sub = '';
     if (c) {
       if (x.id === 'net') {
-        sub = c.bridged + ' through this proxy · ' + c.direct + ' direct';
-        if (live && live.ok && typeof live.online === 'number') sub += '<br>' + nf(live.online) + ' online on the server' + (typeof live.tables === 'number' ? ' · ' + nf(live.tables) + ' tables' : '');
+        // Each figure stays with its words: on a phone « 0 » used to end one
+        // line and « direct » start the next.
+        const nw = (t) => '<span class="nw">' + t + '</span>';
+        sub = nw(c.bridged + ' through this proxy') + ' · ' + nw(c.direct + ' direct');
+        if (live && live.ok && typeof live.online === 'number') sub += '<br>' + nw(nf(live.online) + ' online on the server') + (typeof live.tables === 'number' ? ' · ' + nw(nf(live.tables) + ' tables') : '');
       } else if (x.id === 'lan') sub = c.n ? 'on ' + c.servers + ' server' + (c.servers === 1 ? '' : 's') : 'no LAN table right now';
       else if (x.id === 'off') sub = 'playing the bots offline';
       else sub = 'watching on /live';

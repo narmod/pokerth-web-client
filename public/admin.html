@@ -82,6 +82,7 @@
   .srveff b{color:var(--gold)}
   .srveff .tgt{font-size:1rem;color:var(--gold);word-break:break-all}
   .card-body{overflow:hidden;transition:height .24s ease}
+  .card-body.folded{visibility:hidden;transition:height .24s ease,visibility 0s linear .24s}
   .card h2.collap-h{cursor:pointer;user-select:none;position:relative;padding-right:22px}
   .card h2.collap-h::after{content:'\25BE';position:absolute;right:2px;top:.15em;font-size:.7em;opacity:.55;transition:opacity .15s}
   .card h2.collap-h.collapsed::after{content:'\25B8'}
@@ -451,7 +452,10 @@
      « % new » en dessous, alignes sous le nom. */
   @media(max-width:600px){
     .envrow{flex-wrap:wrap;row-gap:3px}
-    .envrow .nmx{flex:1 1 0;min-width:6em}
+    /* 11em, not 6em: a long count line (sources: visits, share, new, top
+       languages) squeezed the name to « Campaign · ... »; it now drops to
+       the next line instead. */
+    .envrow .nmx{flex:1 1 0;min-width:min(100%,11em)}
     .envrow .barx{flex:1 1 100%;order:5;margin-left:19px}
     .envrow .nrbadge{order:6;width:auto}
     .envrow .pct{min-width:0}
@@ -597,14 +601,21 @@
     .side .gtab{min-height:46px}
     .side .tab{min-height:42px}
     .main{padding:0 14px calc(28px + env(safe-area-inset-bottom))}
-    .main .top{position:sticky;top:0;z-index:10;margin:0 -14px 4px;padding:calc(8px + env(safe-area-inset-top)) 10px 8px 4px;background:var(--side);border-bottom:1px solid var(--line);flex-wrap:nowrap}
+    .main .top{position:sticky;top:0;z-index:10;margin:0 -14px 4px;padding:calc(8px + env(safe-area-inset-top)) 10px 8px 4px;background:var(--side);border-bottom:1px solid var(--line);flex-wrap:wrap;row-gap:6px}
+    /* The title keeps room for itself; the game-server strip goes to a second
+       row when both do not fit, instead of covering the title and pushing the
+       page 8 px past the right edge (it is painted with an inline display,
+       which a stylesheet rule could not hide). */
+    .main .top>.tophd{flex:1 1 8rem;min-width:8rem}
+    .main .topbtns{flex:1 1 auto;min-width:0;padding-left:6px}
+    .main .top .toplive{max-width:100%;flex-wrap:wrap;row-gap:4px}
     .main h1{font-size:1.05rem;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .eyebrow{font-size:.66rem}
     .main .top .tophost{display:none}
   }
   @media(max-width:899px) and (prefers-reduced-motion:reduce){ .side{transition:none} }
   @media(max-width:600px){
-    .main .top .toplive{display:none}
+    .main .top .toplive{gap:10px;padding:5px 10px;font-size:.76rem;justify-content:center}
   }
   /* ── Live: sessions and errors ───────────────────────────────────────── */
   .ltool{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:4px 0 8px}
@@ -821,6 +832,7 @@
   .ovmi{width:17px;height:17px;flex:none;display:block}
   .ovmn{font-size:1.85rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--cream);line-height:1.15}
   .ovms{font-size:.78rem;color:var(--muted);line-height:1.4}
+  .ovms .nw{white-space:nowrap}
   .ovgrid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px}
   .ovgrid>.card{margin:0}
   .ovlink{margin-left:auto}
@@ -4592,8 +4604,12 @@
       _trafInsights(d,s);
       var lvx=$('trafLive');
       if(lvx){
-        var lrows=[['Today',d.today],['Last 7 days',d.week],['Last 30 days',d.month]];
-        if(d.period && d.periodDays && d.periodDays!==7 && d.periodDays!==30) lrows.push([d.h24?'Last 24 hours':'Last '+d.periodDays+' days',d.period]);
+        var lrows=[[0,'Today',d.today],[7,'Last 7 days',d.week],[30,'Last 30 days',d.month]];
+        if(d.period && d.periodDays && d.periodDays!==7 && d.periodDays!==30) lrows.push([d.h24?1:d.periodDays,d.h24?'Last 24 hours':'Last '+d.periodDays+' days',d.period]);
+        // Shortest window first: the chosen period used to land after
+        // « Last 30 days » whatever its length (14 days read 30, then 14).
+        lrows.sort(function(a,b){ return a[0]-b[0]; });
+        lrows=lrows.map(function(r){ return [r[1],r[2]]; });
         lrows.push(['All time',d.allTime]);
         // « connected » = the /live sessions of « Where sessions open » (o.m.live,
         // counted on ws.onopen), beside the visits (counted on page load) of
@@ -7247,6 +7263,11 @@
       var folded = (firstRun || !known) ? DEFAULT_FOLDED.some(function(t){ return txt.indexOf(t)===0; }) : !!state[k];
       function setFold(f, anim){
         h2.classList.toggle('collapsed', f);
+        // A folded body is 0 px tall but its fields stayed reachable with Tab
+        // (focus landed in an invisible input). The .folded class hides them
+        // once the fold has played (visibility, not inert: scripts still
+        // click() controls inside folded cards, which inert would swallow).
+        body.classList.toggle('folded', f); h2.setAttribute('aria-expanded', f ? 'false' : 'true');
         if(!anim){ body.style.height = f ? '0px' : 'auto'; return; }
         if(f){ body.style.height = body.scrollHeight + 'px'; void body.offsetHeight; body.style.height = '0px'; }
         else { body.style.height = body.scrollHeight + 'px'; setTimeout(function(){ if(!h2.classList.contains('collapsed')) body.style.height = 'auto'; }, 280); }

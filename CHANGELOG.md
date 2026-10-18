@@ -641,6 +641,17 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Admin audit of 2026-10-18** (`web.137`) — on a phone the game-server strip of the header covered the page
+  title and pushed the whole page 8 px past the right edge (it is painted with an inline display, so the rule
+  meant to hide it never applied): the header now wraps, the title keeps its room and the strip takes a second
+  row. « Update available <sha> » kept naming the commit of the first check: after « Update (no restart) », a
+  static roll-back or an automatic static deploy the reading is dropped and the upstream read again (20 s and
+  90 s later); auto-update re-reads the upstream every 15 minutes even while an update waits for an empty
+  server; an open dashboard keeps an existing reading fresh; the announcement says how old it is. Statistics ›
+  /live spectator view lists the chosen period in order (14 days came after 30). On a phone a source name kept
+  only « Campaign · ... »: bar rows give the name 11em before the counts wrap. A folded card's fields were still
+  reachable with Tab (now hidden once folded, aria-expanded on the title). Internet tile: a figure no longer
+  splits from its words. New test `test-admin-audit-fixes.mjs`.
 - **Extra large on a phone: community cards over the side seats** (`web.136`) — in portrait the seat layout
   now receives the Interface size too, and above standard size the side columns hug the 4 px wall instead of
   stopping at the QML 15 %/85 % minimum (both the touch rows and the fixed fractions), so the doubled cards keep
