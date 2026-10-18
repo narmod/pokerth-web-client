@@ -58,13 +58,17 @@ ok(!/z\.length/.test(zones), 'an empty one is honoured as a deliberate choice');
 ok(/_validTz\(r\) \? r : CLOCK_REF_DEFAULT/.test(body(proxy, '_clockRef')),
   'and a reference left unset, or gone stale, falls back to UTC');
 
-// -- The strip lives outside the tabs --------------------------------------
-const iTop = admin.indexOf('<div class="top">');
+// -- The strip lives in the Overview (web.138, narmod) -----------------------
+// It sat under the page header on every section; it is now the top of the
+// Overview only, and waits to be visible before centring on its reference.
 const iBar = admin.indexOf('id="clockBar"');
-const iBody = admin.indexOf('<div class="pagebody"');
+const iOv = admin.indexOf('<div id="panel-overview">');
+const iAlerts = admin.indexOf('id="ovAlerts"');
 ok(iBar > 0, 'the dashboard has a clock strip');
-ok(admin.indexOf('<main class="main"') < iTop && iTop < iBar && iBar < iBody,
-  'sitting under the page header, above every section, so no section can hide it');
+ok(iOv > 0 && iOv < iBar && iBar < iAlerts, 'at the top of the Overview, above what needs attention');
+ok(admin.indexOf('id="clockBar"', iBar + 1) < 0, 'and nowhere else');
+ok(/if\(!bar\.clientWidth\)\{ _clkPend=true; return; \}/.test(admin) && /new ResizeObserver\(function\(\)\{ if\(_clkPend\) clkCentre\(\); \}\)/.test(admin),
+  'drawn while hidden, it is centred once the Overview shows');
 ok(/clkStart\(\);/.test(admin), 'it starts when the dashboard opens');
 ok(/function doLogout\(reason\)\{ srvStop\(\); seStop\(\); clkStop\(\);/.test(admin),
   'and its timers stop on logout, like every other poll');

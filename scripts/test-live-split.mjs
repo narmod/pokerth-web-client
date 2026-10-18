@@ -103,9 +103,11 @@ ok(proxy.indexOf("ws._live = params.get('live')") < proxy.indexOf("if (params.ge
 ok(/S\.live = !!ws\._live;/.test(fn(proxy, '_attachWs')), 'a bridge follows the socket currently attached');
 ok(/live: !!S\.live,/.test(fn(proxy, '_sessionsSnapshot')) && /live: !!c\._live,/.test(fn(proxy, '_sessionsSnapshot')), '/admin/sessions tags bridges and notice channels');
 ok(!/_bcMode\s*=[^;\n]*_live/.test(proxy), 'broadcast targeting is left alone');
-ok(/\['\/live \(spectators\)','live'\]/.test(admin), 'the traffic card has a /live row');
+// Named « Live/spectator tool » since web.138: plain « Live » read as « live,
+// right now » next to the Live menu (sessions and errors).
+ok(/\['Live\/spectator tool \(\/live\)','live'\]/.test(admin), 'the traffic card has a /live row');
 ok(/function _seKind\(x,notify\)\{ return x\.live\?'live':/.test(admin), 'each /live connection on the board is tagged Live, bridged or not');
-ok(/\['live','Live','var\(--m-live\)'\]/.test(admin) && /'watching on \/live'/.test(admin), 'and the board counts /live apart from the web client');
+ok(/\['live','Live\/spectator tool','var\(--m-live\)'\]/.test(admin) && /'watching on \/live'/.test(admin), 'and the board counts /live apart from the web client');
 
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);

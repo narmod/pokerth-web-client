@@ -16,7 +16,7 @@ export const MODES = [
   { id: 'net',  key: 'pokerthnet', label: 'Internet', glyph: 'globe',   color: 'var(--m-net)' },
   { id: 'lan',  key: 'lan',        label: 'LAN',      glyph: 'network', color: 'var(--m-lan)' },
   { id: 'off',  key: 'offline',    label: 'Training', glyph: 'robot',   color: 'var(--m-off)' },
-  { id: 'live', key: 'live',       label: 'Live',     glyph: 'eye',     color: 'var(--m-live)' },
+  { id: 'live', key: 'live',       label: 'Live/spectator tool', glyph: 'eye', color: 'var(--m-live)' },
 ];
 
 export function esc(s) {

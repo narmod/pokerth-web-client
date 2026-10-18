@@ -586,7 +586,7 @@
   .main .top{max-width:1600px;margin:0 0 4px}
   .eyebrow{margin:0;font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
   .main h1{font-size:1.45rem;font-weight:600;letter-spacing:-.01em;color:var(--cream);margin:2px 0 0}
-  .main .clockbar{max-width:1600px;margin:12px 0 18px}
+  .main .clockbar{max-width:1600px;margin:4px 0 18px}
   /* Login: the brand above a single card, centred. */
   #login{max-width:440px;margin:0 auto;padding:calc(10vh + env(safe-area-inset-top)) 16px 24px}
   .lbrand{display:flex;align-items:center;gap:12px;margin:0 0 4px}
@@ -857,6 +857,9 @@
   .ovrt{color:var(--muted);font-size:.78rem;font-variant-numeric:tabular-nums;white-space:nowrap}
   @media(max-width:1199px){ .ovgrid{grid-template-columns:minmax(0,1fr)} }
   @media(max-width:760px){ .ovmodes{grid-template-columns:repeat(2,minmax(0,1fr))} .ovmn{font-size:1.5rem} .ovchart{gap:3px;height:150px} }
+  /* Entry-mode tiles: « Live/spectator tool » takes two lines on a phone. The
+     tiles share their rows (subgrid), so the figures of a row stay level. */
+  #ovModes>.ovmode,#seTiles>.ovmode{display:grid;grid-row:span 3;grid-template-rows:subgrid;row-gap:4px;align-content:start}
 </style>
 <script>(function(){try{var t=localStorage.getItem('pth_admin_theme');if(t!=='light'&&t!=='dark')t='dark';document.documentElement.setAttribute('data-admin-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',t==='light'?'#FFFFFF':'#11171F');}catch(e){}})();</script>
 </head>
@@ -973,10 +976,10 @@
         <div class="toplive" id="topLive" style="display:none" title="Game server, as the login screen reads it"></div>
       </div>
     </div>
-    <div class="clockbar" id="clockBar" style="display:none" title="Regions picked in Infrastructure › Identity &amp; reach, earliest on the left"></div>
     <div class="pagebody" id="pageBody">
 
     <div id="panel-overview">
+      <div class="clockbar" id="clockBar" style="display:none" title="Regions picked in Infrastructure › Identity &amp; reach, earliest on the left"></div>
       <section class="ovalerts" id="ovAlerts" aria-label="Needs attention"><div class="empty">Loading…</div></section>
       <section class="ovmodes" id="ovModes" aria-label="Connected right now, by entry mode"><div class="empty">Loading…</div></section>
       <div class="ovgrid">
@@ -1462,8 +1465,8 @@
         <div id="identMsg" class="msg"></div>
       </div>
       <div class="card">
-        <h2>World clock (dashboard header)</h2>
-        <p class="muted">The strip above the tabs is on every tab, for every admin key. Each region gets a dial, its time and its name, ranked by offset — earliest on the left, latest on the right — around the reference below, which therefore sits in the middle. The face of each dial is that city’s actual sky, shaded from the sun’s height above its horizon: the zenith at the top, the horizon at the bottom, so the warmth of a sunset stays low on the dial while the top has already turned to night. There are no steps — the colour moves with the sun, and follows the season and the latitude, so a northern winter afternoon reads as dusk while the tropics are still in daylight. The time turns green between 18:00 and 01:00 locally, the hours when players come to the tables. A weekday is appended where the region has already rolled over, and hovering a dial gives its phase and the sun’s altitude. Up to 12 regions, plus the reference, which is always shown whether or not it is ticked. This server’s own clock is not here — it heads the status list under <b>Health &amp; logs</b>. Applies immediately (no restart needed).</p>
+        <h2>World clock (Overview)</h2>
+        <p class="muted">The strip at the top of the Overview, for every admin key. Each region gets a dial, its time and its name, ranked by offset — earliest on the left, latest on the right — around the reference below, which therefore sits in the middle. The face of each dial is that city’s actual sky, shaded from the sun’s height above its horizon: the zenith at the top, the horizon at the bottom, so the warmth of a sunset stays low on the dial while the top has already turned to night. There are no steps — the colour moves with the sun, and follows the season and the latitude, so a northern winter afternoon reads as dusk while the tropics are still in daylight. The time turns green between 18:00 and 01:00 locally, the hours when players come to the tables. A weekday is appended where the region has already rolled over, and hovering a dial gives its phase and the sun’s altitude. Up to 12 regions, plus the reference, which is always shown whether or not it is ticked. This server’s own clock is not here — it heads the status list under <b>Health &amp; logs</b>. Applies immediately (no restart needed).</p>
         <div class="defrow fld"><span style="white-space:nowrap">Reference zone</span><select id="clkRef"></select></div>
         <div id="clkPick" class="clkpick"></div>
         <p class="muted" id="clkCount" style="margin-top:10px"></p>
@@ -2823,8 +2826,13 @@
   }
   // Amene la reference au milieu de la rangee quand celle-ci defile (le
   // telephone). Sans defilement, il n'y a rien a centrer.
+  // The strip lives in the Overview only: drawn while another section is
+  // open it has no width, so the centring waits until it shows (below).
+  var _clkPend=false;
   function clkCentre(){
     var bar=$('clockBar'); if(!bar) return;
+    if(!bar.clientWidth){ _clkPend=true; return; }
+    _clkPend=false;
     var over=bar.scrollWidth-bar.clientWidth; if(over<=1) return;
     var r=bar.querySelector('.ck.ref'); if(!r) return;
     bar.scrollLeft=Math.max(0,Math.min(over,r.offsetLeft-(bar.clientWidth-r.offsetWidth)/2));
@@ -2864,6 +2872,7 @@
   }
   function clkStart(){ if(_clkTick) return; clkSync(); _clkTick=setInterval(clkRender,5000); _clkSyncT=setInterval(clkSync,300000); }
   window.addEventListener('orientationchange',function(){ setTimeout(clkCentre,120); });
+  try{ if(window.ResizeObserver && $('clockBar')) new ResizeObserver(function(){ if(_clkPend) clkCentre(); }).observe($('clockBar')); }catch(e){}
   function clkStop(){
     if(_clkTick){ clearInterval(_clkTick); _clkTick=null; }
     if(_clkSyncT){ clearInterval(_clkSyncT); _clkSyncT=null; }
@@ -4660,7 +4669,7 @@
     {k:'pokerthnet',n:'Internet (pokerth.net)',s:'Internet',c:'var(--m-net)'},
     {k:'lan',n:'LAN / dedicated',s:'LAN',c:'var(--m-lan)'},
     {k:'offline',n:'Training (bots)',s:'Training',c:'var(--m-off)'},
-    {k:'live',n:'/live (spectators)',s:'Live',c:'var(--m-live)'}
+    {k:'live',n:'Live/spectator tool (/live)',s:'Live/spectator tool',c:'var(--m-live)'}
   ];
   // Entry modes picked in the filter bar (all four by default). They apply to
   // connection counts only: a visit is counted before any mode is chosen.
@@ -4930,7 +4939,7 @@
     var md=$('trafModes'); if(!md) return;
     var fmt=function(n){ try{return Number(n||0).toLocaleString();}catch(e){return String(n||0);} };
     var tm=(d.today&&d.today.m)||{}, am=(d.allTime&&d.allTime.m)||{};
-    var rows=[['pokerth.net','pokerthnet'],['LAN / dedicated','lan'],['Offline (bots)','offline'],['/live (spectators)','live']].filter(function(rw){ return _modeOn(rw[1]); });
+    var rows=[['pokerth.net','pokerthnet'],['LAN / dedicated','lan'],['Offline (bots)','offline'],['Live/spectator tool (/live)','live']].filter(function(rw){ return _modeOn(rw[1]); });
     md.innerHTML = rows.map(function(rw){ return '<div class="srow"><span>'+rw[0]+'</span><b>'+fmt(tm[rw[1]])+' today · '+fmt(am[rw[1]])+' total</b></div>'; }).join('');
   }
   function _trafModes48(d){
@@ -4982,7 +4991,7 @@
     _chartMount($('trafPth48'),labs,[
       {k:'on',n:'pokerth.net online',c:'#9aa7bd',vals:h48.map(function(x){ return x.on; })},
       {k:'wb',n:'Web client',c:'#4080d8',vals:h48.map(function(x){ return x.wb; })},
-      {k:'lv',n:'/live (spectators)',c:'#c08ae0',vals:h48.map(function(x){ return x.lv; })}
+      {k:'lv',n:'Live/spectator tool (/live)',c:'#c08ae0',vals:h48.map(function(x){ return x.lv; })}
     ],160,'line');
     var pf=function(v){ return v? v+'%' : '\u2014'; };
     _chartMount($('trafPthShare'),labs,[{k:'share',n:'Web client share',c:'#4080d8',fmt:pf,
@@ -6484,7 +6493,7 @@
   // narrow what is shown (nothing is read again).
   var _seData=null, _seSel='all';
   try{ var _sm=localStorage.getItem('pth_admin_se_mode'); if(['all','net','lan','off','live'].indexOf(_sm)>=0) _seSel=_sm; }catch(e){}
-  var SE_MODES=[['net','Internet','var(--m-net)'],['lan','LAN','var(--m-lan)'],['off','Training','var(--m-off)'],['live','Live','var(--m-live)']];
+  var SE_MODES=[['net','Internet','var(--m-net)'],['lan','LAN','var(--m-lan)'],['off','Training','var(--m-off)'],['live','Live/spectator tool','var(--m-live)']];
   function _seKind(x,notify){ return x.live?'live':(notify?(x.mode==='offline'?'off':'net'):(x.mode==='lan'?'lan':'net')); }
   function _seRows(d){
     var out=[];

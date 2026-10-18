@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin: world clock on the Overview only; « Live/spectator tool »** (`web.138`) — the clock strip moved from
+  under the page header (every section) to the top of the Overview, and waits until it shows to centre on its
+  reference. The /live entry mode is named « Live/spectator tool » everywhere in the dashboard (Overview and
+  Sessions tiles, entry-mode chips, legends, Where sessions open, the last-48 h chart): plain « Live » read as
+  « live, right now », like the Live menu (sessions and errors). Overview and Sessions tiles share their rows, so
+  a two-line name keeps the figures level.
 - **Admin Security in the new layout — the redesign is complete** (`web.134`) — tiles (delegate keys by name,
   changes of the last 24 hours, refused writes, the last change and who made it), the categories of a new key as a
   grid where a ticked one is marked, one row per key with its categories as chips and the key masked, and the audit
