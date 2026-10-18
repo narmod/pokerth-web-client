@@ -71,6 +71,11 @@ async function chooseInterfaceSize(page, surface, value) {
   await page.locator(`#accessibility-open-${surface}`).click();
   await page.locator(`input[name="interface-size"][value="${value}"]`).check();
   await page.keyboard.press('Escape');
+  // The size is applied, and the table has laid itself out again, before
+  // anything is measured: measuring straight away sometimes read the old size.
+  await page.waitForFunction((v) => document.documentElement.getAttribute('data-interface-size') === v, value).catch(() => {});
+  await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+  await page.waitForTimeout(150);
 }
 
 async function connectFixtureSocket(page) {
@@ -176,15 +181,33 @@ async function closePlayerSettings(page) {
   await page.locator('#adv-modal').getByRole('button', { name: 'Close' }).click();
 }
 
+// The build number of the footer is hidden in these pictures: it changes with
+// every deployment, and a byte-exact comparison would then fail on each one.
 async function takeStableScreenshot(page, path) {
   await checkCanonicalScreenshot({
     browserTarget,
     canonicalPath: path,
     updateCanonical: process.env.PTH_UPDATE_ACCESSIBILITY_SCREENSHOTS === '1',
+    // Same size, and at most 2 % of the pixels differing by more than a faint
+    // shade: a card moved by a sub-pixel passes, a changed colour, a missing
+    // element or a shifted layout does not. Decoded by the browser itself.
+    similar: (actual, expected) => page.evaluate(async ([a, b]) => {
+      const load = async (b64) => createImageBitmap(await (await fetch('data:image/png;base64,' + b64)).blob());
+      const [ia, ib] = await Promise.all([load(a), load(b)]);
+      if (ia.width !== ib.width || ia.height !== ib.height) return { ok: false, ratio: null };
+      const px = (img) => { const c = new OffscreenCanvas(img.width, img.height); const x = c.getContext('2d'); x.drawImage(img, 0, 0); return x.getImageData(0, 0, img.width, img.height).data; };
+      const da = px(ia), db = px(ib);
+      let n = 0;
+      for (let i = 0; i < da.length; i += 4) {
+        if (Math.max(Math.abs(da[i] - db[i]), Math.abs(da[i + 1] - db[i + 1]), Math.abs(da[i + 2] - db[i + 2])) > 40) n++;
+      }
+      const ratio = n / (ia.width * ia.height);
+      return { ok: ratio <= 0.02, ratio };
+    }, [actual.toString('base64'), expected.toString('base64')]),
     capture: async () => {
       await page.evaluate(() => document.fonts.ready);
       if (await page.locator('#s-game.active').count()) await waitForStableTableLayout(page);
-      const stable = await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important}.seat-timeout-bar{visibility:hidden!important}' });
+      const stable = await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important}.seat-timeout-bar{visibility:hidden!important}#cf-build{visibility:hidden!important}' });
       try {
         return await page.screenshot({ animations: 'disabled', caret: 'hide' });
       } finally {
@@ -542,9 +565,18 @@ function assertExactScaled(actual, baseline, multiplier, label) {
     `${label}: expected exactly ${multiplier}x ${baseline}, got ${actual}`);
 }
 
+// Measured at rest: the login suits hop in a wave (modules/ui/login-flourish.mjs)
+// and a transformed child counts in scrollHeight, so a hop caught mid-air read
+// as clipped text. !important author styles win over running animations.
 async function assertTextFits(page, selector, label) {
-  const fits = await page.locator(selector).first().evaluate((element) =>
-    element.scrollWidth <= element.clientWidth + 1 && element.scrollHeight <= element.clientHeight + 1);
+  const rest = await page.addStyleTag({ content: `${selector}, ${selector} *{animation:none!important;transition:none!important;transform:none!important}` });
+  let fits;
+  try {
+    fits = await page.locator(selector).first().evaluate((element) =>
+      element.scrollWidth <= element.clientWidth + 1 && element.scrollHeight <= element.clientHeight + 1);
+  } finally {
+    await rest.evaluate((element) => element.remove());
+  }
   assert.equal(fits, true, `${label} is clipped`);
 }
 

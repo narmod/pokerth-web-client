@@ -123,12 +123,24 @@ function _inEditable(t) {
   return t.isContentEditable === true;
 }
 
+// An open drop-down (a button with a popup, or its list) closes itself on
+// Escape: the surface around it stays. Without this, Escape on the LAN server
+// list of the login form closed the list AND went back to the mode choice
+// (this listener runs in capture, before the list's own).
+function _popupOpen(t) {
+  if (!t || !t.closest) return false;
+  if (t.closest('[aria-haspopup][aria-expanded="true"]')) return true;
+  var lb = t.closest('[role="listbox"]');
+  return !!(lb && _visible(lb));
+}
+
 function _onKey(e) {
   if (!_enabled()) return;
   if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
   if (_tabsKey(e)) return;
 
   if (e.key === 'Escape') {
+    if (_popupOpen(e.target)) return;    // the drop-down closes itself
     var s = _topSurface();
     if (!s) return;                       // rien d'ouvert → on laisse passer
     try { s.close(); } catch (err) { return; }

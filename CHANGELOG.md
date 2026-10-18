@@ -641,6 +641,19 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Failing browser tests: three player bugs behind them** (`web.135`) — the desktop action bar
+  (`data-abar-desk`, `#s-game#s-game` rules) fixed Fold / Call / Raise at 15 px and beat the low-vision scaling:
+  its row, buttons and labels now follow `--active-play-scale`, and changing the Interface size re-measures the room
+  kept under the table (`updateBottomLayout`) before the seats are placed again. The table's connection pill
+  (`#g-conn-pill`) ran off a phone screen with a long message: `_fitConnPill()` caps it at the widest the screen
+  allows (in the table's own scale) and wraps its lines, on resize too. `keynav.mjs` let Escape go back to the mode choice while the LAN
+  server list was open: an open drop-down (`[aria-haspopup][aria-expanded=true]`, a visible listbox) now handles its
+  own Escape. Tests: the guide tests count six header menus (the arcade page) and switch off the local backup
+  offer of a fresh browser, which comes first (`test-guide-lang-first` now checks that offer in French too); the
+  accessibility screenshots hide the build number and accept a sub-pixel layout difference (2 % of pixels at most),
+  text fit is measured with the login suits at rest, and an Interface size is applied before anything is measured.
+  `test-screen-matrix` and `test-table-sweep` pass; they need about 14 and 6 minutes. Still failing:
+  `test-accessibility-browser`, Extra large on a phone with ten seats (a community card overlaps a side seat).
 - **Table and deck names with an « & »** (`web.129`) — the name read from a pack's XML kept its entity
   (`Ivoire &amp; Chene` in the admin list): `tables-manifest.mjs` and `decks-manifest.mjs` now decode it.
 - **What the proxy stores for Traffic and Errors** (`web.116`) — one robot rule, `server/ua-bot.js`, for the visit

@@ -12,7 +12,10 @@ const { server, base } = await startServer();
 const browser = await chromium.launch();
 let pass = 0, fail = 0;
 const ok = (c, l) => { if (c) { pass++; console.log('  ✓ ' + l); } else { fail++; console.log('  ✗ ' + l); } };
-const init = () => { try { localStorage.setItem('pth_guide_webdriver', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); } catch (_e) {} };
+// The local backup offer (a fresh browser) comes first and waits for an
+// answer; these checks are about the Ace's menu, so it is switched off here
+// (test-guide-lang-first.mjs checks the offer itself).
+const init = () => { try { localStorage.setItem('pth_guide_webdriver', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_bak_auto', '0'); } catch (_e) {} };
 const docks = (page) => page.evaluate(() => document.querySelectorAll('#ace-dock').length).catch(() => 0);
 const errors = [];
 
@@ -80,12 +83,12 @@ for (const [dev, re] of [['iPhone 13', /Share/], ['Pixel 7', /browser menu/], ['
 }
 { // tips off: « Ace's Help » (header menus, login button) opens his menu with the whole help (web.275)
   const ctx = await browser.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
-  await ctx.addInitScript(() => { try { localStorage.setItem('pth_guide_webdriver', '1'); localStorage.setItem('pth_guide_on', '0'); localStorage.setItem('pth_guide_offered', '1'); } catch (_e) {} });
+  await ctx.addInitScript(() => { try { localStorage.setItem('pth_guide_webdriver', '1'); localStorage.setItem('pth_guide_on', '0'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_bak_auto', '0'); } catch (_e) {} });
   const page = await ctx.newPage();
   page.on('pageerror', (e) => errors.push(String(e && e.message || e)));
   await openTable(page, base, { stopAt: 'login' });
   await page.waitForTimeout(1500);
-  ok(await page.locator('.help-menu-btn').count() === 0 && await page.locator('.guide-menu-btn').count() === 5, 'no « Help » entry in the header menus, « Ace\'s Help » in all 5');
+  ok(await page.locator('.help-menu-btn').count() === 0 && await page.locator('.guide-menu-btn').count() === 6, 'no « Help » entry in the header menus, « Ace\'s Help » in all 6');
   await page.locator('.guide-login-btn').click();
   await page.waitForSelector(bubble + ' [data-ad-btn="moreHelp"]', { timeout: 6000 });
   const ids = await page.evaluate(() => [...document.querySelectorAll('#ace-dock .ad-bubble.ad-open [data-ad-btn]')].map((b) => b.getAttribute('data-ad-btn')));

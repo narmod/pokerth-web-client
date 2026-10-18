@@ -65,8 +65,9 @@ const idx = fs.readFileSync(path.join(root, 'public/modules/guide/index.mjs'), '
 ok(!fs.existsSync(path.join(root, 'public/modules/help/index.mjs')) && fs.existsSync(path.join(root, 'public/modules/help/content/en.mjs')), 'help window module removed, its texts kept (the Ace reads them)');
 const page = fs.readFileSync(path.join(root, 'public/pokerth-client.html'), 'utf8');
 ok(!/id="help-modal"/.test(page) && !/modules\/help\/index\.mjs/.test(page), 'no help window in the page');
-// web.275: the header menus keep only « Ace's Help » (the Help entries and their option are gone)
-ok(!/help-menu-btn|adv-helpbtn/.test(page) && (page.match(/class="btn-sm guide-menu-btn guide-only"[^>]*guideToggle/g) || []).length === 5, 'header menus: « Ace\'s Help » only, in the 5 menus (privacy included)');
+// web.275: the header menus keep only « Ace's Help » (the Help entries and their option are gone);
+// a sixth menu since the arcade became a page (web.88)
+ok(!/help-menu-btn|adv-helpbtn/.test(page) && (page.match(/class="btn-sm guide-menu-btn guide-only"[^>]*guideToggle/g) || []).length === 6, 'header menus: « Ace\'s Help » only, in the 6 menus (privacy and the arcade included)');
 ok(/function toggle\(\) \{\s*if \(!available\(\)\) return;\s*if \(!canComeHere\(\)\) \{ if \(!state\.isOn\(\)\) turnOn\(\); return; \}\s*showMenu\(\);/.test(idx) && /note\(on \? 'menuOn' : 'menuOff', list/.test(idx) && /else list\.push\(btn\('turnOn'\)\)/.test(idx), '« Ace\'s Help » opens his menu, tips on or off (« Turn on tips » when off)');
 ok(/window\.toggleHelp = toggleHelpEntry;/.test(idx), 'the Help entries open « More help »');
 ok(!/help-modal|openHelp|closeHelp/.test(fs.readFileSync(path.join(root, 'public/modules/ui/keynav.mjs'), 'utf8') + fs.readFileSync(path.join(root, 'public/modules/ui/z-order.mjs'), 'utf8') + fs.readFileSync(path.join(root, 'public/sw.js'), 'utf8').replace(/help\/content/g, '')), 'no leftover of the window (Escape, z-order, precache)');

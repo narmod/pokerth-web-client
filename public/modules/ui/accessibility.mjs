@@ -166,6 +166,9 @@ function applyAccessibilityPreferences() {
   else if (sizeChanged) {
     try {
       window.requestAnimationFrame(() => {
+        // The action bar grows or shrinks with the size: the room kept under
+        // the table is measured again first, or the bottom seats ran under it.
+        try { if (typeof window.updateBottomLayout === 'function') window.updateBottomLayout(); } catch (_e) {}
         if (typeof window.renderSeats === 'function') window.renderSeats();
       });
     } catch (_error) {}

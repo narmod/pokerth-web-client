@@ -1,3 +1,8 @@
+2026-10-18 version 2.1.10-web.135:
+- bugfix: on a computer, the Large and Extra large interface sizes enlarge the Fold, Call and Raise buttons too (they stayed at their standard size), and the table makes room for the bigger bar
+- bugfix: on a phone, a long connection notice on the table (« Connection problems — The server is not responding… ») wraps on two lines instead of running off both sides of the screen
+- bugfix: Escape in the LAN server list of the login form closes the list only; it also took you back to the choice of mode
+
 2026-10-17 version 2.1.10-web.123:
 - improvement: the statistics now count how many logins on pokerth.net are guests and how many use an account, and how many games are opened on each server of the LAN list; only totals per day, never a name or a server address (see the privacy page)
 

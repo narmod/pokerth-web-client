@@ -60,7 +60,10 @@ async function runDevice(browser, name, descriptor) {
   // tests' screenshots); this test is about that offer: opt in.
   const _newContext = browser.newContext.bind(browser);
   browser = Object.create(browser);
-  browser.newContext = async (o) => { const c = await _newContext(o); await c.addInitScript(() => { try { localStorage.setItem('pth_guide_webdriver', '1'); } catch (_e) {} }); return c; };
+  // The local backup offer of a fresh browser comes before any tip and waits
+  // for an answer: switched off here, these checks are about the tips
+  // (test-guide-lang-first.mjs checks the offer).
+  browser.newContext = async (o) => { const c = await _newContext(o); await c.addInitScript(() => { try { localStorage.setItem('pth_guide_webdriver', '1'); if (localStorage.getItem('pth_bak_auto') === null) localStorage.setItem('pth_bak_auto', '0'); } catch (_e) {} }); return c; };
   const errors = [];
   const watch = (page) => page.on('pageerror', (e) => errors.push(String(e && e.message || e)));
 

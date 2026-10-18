@@ -3895,6 +3895,9 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    sous-ligne « siège réservé » passe la pastille en 2 lignes (flex-wrap)
    uniquement quand elle est affichée (rejoin armé). */
 .conn-pill { flex-wrap: wrap; }
+/* Absolutely placed at left:50%, the pill would only get half its containing
+   block when its message wraps (_fitConnPill): its width is its content. */
+.conn-pill { width: max-content; }
 .conn-pill .cp-x {
   flex: none; cursor: pointer;
   width: max(15px, calc(19px * var(--comm-scale, 1)));
@@ -13558,20 +13561,23 @@ html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .mid-row .se
   height: 26px !important; padding-top: 4px !important; padding-bottom: 4px !important;
   font-size: 11.2px !important; line-height: normal !important;
 }
+/* The low-vision Interface size (Large ×1.5, Extra large ×2: --active-play-scale,
+   1 otherwise) still enlarges Fold / Call / Raise here: these fixed sizes, with
+   their doubled id, used to beat the scaled rule and kept the buttons at 15 px. */
 html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .act-buttons-row {
-  height: 54px !important; box-sizing: border-box !important;
+  height: calc(54px * var(--active-play-scale, 1)) !important; box-sizing: border-box !important;
   padding: 5px 0 !important; margin: -1px 0 0 !important;
   gap: 8px !important; align-items: stretch !important;
 }
 html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .act-buttons-row .btn-action {
-  min-height: 0 !important; max-height: 44px !important;
+  min-height: 0 !important; max-height: calc(44px * var(--active-play-scale, 1)) !important;
   padding: 0 10px !important;
-  font-size: 15px !important; line-height: 1.05 !important;
+  font-size: calc(15px * var(--active-play-scale, 1)) !important; line-height: 1.05 !important;
   flex: 1 1 0px !important; white-space: nowrap !important;
 }
 html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .act-buttons-row .btn-action > b,
 html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .act-buttons-row .btn-action .raise-btn-amt {
-  display: block !important; font-size: 15px !important; line-height: 1.05 !important; white-space: nowrap !important;
+  display: block !important; font-size: calc(15px * var(--active-play-scale, 1)) !important; line-height: 1.05 !important; white-space: nowrap !important;
 }
 
 /* ── Format téléphone, paysage très bas (< 380 px de haut) : la barre est

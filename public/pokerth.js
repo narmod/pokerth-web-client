@@ -27,6 +27,30 @@ function _startIpBlockCountdown() {
   }, 1000);
 }
 
+// The pill lives in the scaled table, on one line: a long notice
+// (« Connection problems — The server is not responding… ») ran off a phone
+// screen on both sides. When it does not fit, its message wraps, at the
+// widest the screen allows (measured in the table's own scale); otherwise it
+// stays on one line, as before. Also on resize / rotation.
+function _fitConnPill() {
+  var p = document.getElementById('g-conn-pill'), pm = document.getElementById('g-conn-pill-msg'), ps = document.getElementById('g-conn-pill-sub');
+  if (!p || !pm || p.style.display === 'none') return;
+  try {
+    p.style.maxWidth = '';
+    pm.style.whiteSpace = ''; pm.style.textAlign = ''; pm.style.flex = ''; pm.style.minWidth = '';
+    if (ps) ps.style.whiteSpace = '';
+    var r = p.getBoundingClientRect(), k = p.offsetWidth ? r.width / p.offsetWidth : 1;
+    var room = (window.innerWidth || document.documentElement.clientWidth) - 24;
+    if (!(k > 0) || r.width <= room) return;
+    // the pill takes the widest the screen allows (in the table's own scale);
+    // the message shares the first line with the dot and the ✕ and wraps, the
+    // « seat kept » line below wraps too
+    p.style.maxWidth = Math.floor(room / k) + 'px';
+    pm.style.whiteSpace = 'normal'; pm.style.textAlign = 'center'; pm.style.flex = '1 1 0'; pm.style.minWidth = '0';
+    if (ps) ps.style.whiteSpace = 'normal';
+  } catch (e) {}
+}
+window.addEventListener('resize', function () { _fitConnPill(); });
 function _showBanner(msg) {
   // À table (écran jeu actif) : pastille rouge centrée sur les cartes communes
   // (#g-conn-pill, dans le scaler → taille asservie au modèle générique de la
@@ -68,6 +92,7 @@ function _showBanner(msg) {
   if (ps) { ps.textContent = _keep ? t('reconnSeatKept') : ''; ps.style.display = (_keep && usePill) ? 'block' : 'none'; }
   var bs = document.getElementById('reconnect-sub');
   if (bs) { bs.textContent = _keep ? t('reconnSeatKept') : ''; bs.style.display = (_keep && !usePill) ? 'inline' : 'none'; }
+  if (usePill) _fitConnPill();          // once its lines are all set
 }
 function _hideBanner() {
   try { document.body.classList.remove('conn-lost'); } catch (e) {}
@@ -12235,7 +12260,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.134'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.135'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
