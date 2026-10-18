@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin Community in the new layout** (`web.128`) — each section opens on four tiles. Leaderboard: players,
+  leader, best streak, reset period; one table (medals for the top three, net in green or red, games and hands won
+  out of played with the share, best streak), a header sorts by its column (the rank stays the board's own; kept
+  per browser), board picker and filter side by side. Polls: the list first (live / inactive badge, languages and
+  answers as chips, one bar per option, the one ahead marked), the editor below with numbered options; tiles for
+  the live poll, the option ahead, the polls and all answers. Broadcasts: tiles (scheduled, next send, sent,
+  notices switched on), one card per scheduled message (active / paused, schedule, target, next, last, sent as
+  chips). LAN directory: tiles (listed, online, players now, waiting), a filter and All / Online / Offline / Not
+  listed chips over the table (kept per browser). Same endpoints. New test `test-admin-community.mjs`.
 - **Admin Live: Sessions and Errors in the new layout** (`web.127`) — Sessions: four tiles by entry mode
   (Internet bridged / direct, LAN with its servers, Training, Live), one table for bridges and notice channels
   (mode, who, country with flag, where, device · version · masked IP, since and traffic, state, Disconnect), a

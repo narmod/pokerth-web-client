@@ -634,7 +634,7 @@
   @media(max-width:1199px){
     .lrow{grid-template-columns:110px minmax(0,1fr) minmax(0,1fr) 104px;grid-template-areas:'m w c a' 'm h d a' 'm t s a'}
     .lrow.lhd{display:none}
-    .lmode{grid-area:m;align-self:start} .lwho{grid-area:w} .lcc{grid-area:c} .lwhere{grid-area:h} .ldev{grid-area:d} .ldur{grid-area:t} .lstate{grid-area:s} .lact{grid-area:a;align-self:start}
+    .lrow .lmode{grid-area:m;align-self:start} .lrow .lwho{grid-area:w} .lrow .lcc{grid-area:c} .lrow .lwhere{grid-area:h} .lrow .ldev{grid-area:d} .lrow .ldur{grid-area:t} .lrow .lstate{grid-area:s} .lrow .lact{grid-area:a;align-self:start}
   }
   @media(max-width:600px){
     .lrow{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:'m a' 'w a' 'c s' 'h t' 'd d'}
@@ -660,6 +660,62 @@
     .ersrc,.erchips{padding-left:0}
     .eract{grid-column:1;grid-row:auto;flex-direction:row}
     .erstack{margin-left:0}
+  }
+  /* ── Community: leaderboard and polls ─────────────────────────────────── */
+  .ovms.ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ovmn.sm{font-size:1.15rem;line-height:1.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #panel-broadcast>.ovmodes{column-span:all;-webkit-column-span:all}
+  .bcrow.off .plq{color:var(--navfg)}
+  #ldEntries tr[hidden]{display:none}
+  #panel-broadcast .periodrow{flex-wrap:wrap}
+  #panel-broadcast .periodrow>button{flex:none}
+  .lsel{display:inline-flex;align-items:center;gap:8px;margin:0;font-size:.82rem;color:var(--navfg);min-width:0}
+  .lsel select{margin:0;width:auto;min-width:0;max-width:100%}
+  .lbpick{flex:1 1 320px}
+  .lbpick select{flex:1 1 auto;width:100%;text-overflow:ellipsis}
+  .lbrow{display:grid;grid-template-columns:44px minmax(0,1.6fr) minmax(0,.8fr) minmax(0,1fr) minmax(0,1fr) minmax(0,.7fr) 84px;gap:4px 12px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:.86rem;min-width:0}
+  .lbrow>span{min-width:0}
+  .lbrow small{display:block;font-size:.72rem;color:var(--muted);white-space:nowrap}
+  .lbrow.lhd{border-top:0;padding-top:0;font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .lbsort{all:unset;cursor:pointer;font:inherit;color:inherit;text-transform:inherit;letter-spacing:inherit;border-radius:4px}
+  .lbsort:hover{color:var(--cream)}
+  .lbsort.on{color:var(--accent-text)}
+  .lbsort:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .lbrk{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-size:.78rem;font-weight:700;color:var(--muted);border:1px solid var(--line);font-variant-numeric:tabular-nums}
+  .lbrk.rk1{color:#1c1408;background:#e5c158;border-color:#e5c158}
+  .lbrk.rk2{color:#1c1c1c;background:#c9ced6;border-color:#c9ced6}
+  .lbrk.rk3{color:#1c1208;background:#cd8a4e;border-color:#cd8a4e}
+  .lbname b{display:block;font-weight:600;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lbnet{font-weight:700;font-variant-numeric:tabular-nums}
+  .lbnet.pos{color:var(--ok-text)} .lbnet.neg{color:var(--err-text)}
+  .lbgw,.lbhw,.lbst{font-variant-numeric:tabular-nums;white-space:nowrap}
+  @media(max-width:600px){
+    .lbrow{grid-template-columns:36px minmax(0,1fr) auto;grid-template-areas:'r n v' 'r g a' 'r h a' 'r s a'}
+    .lbrow.lhd{display:none}
+    .lbrk{grid-area:r;align-self:start} .lbname{grid-area:n} .lbnet{grid-area:v;text-align:right} .lbgw{grid-area:g} .lbhw{grid-area:h} .lbst{grid-area:s} .lbrow .lact{grid-area:a;align-self:end}
+    .lbgw small,.lbhw small,.lbst small{display:inline;margin-left:6px}
+  }
+  .plrow{display:flex;flex-direction:column;gap:8px;padding:12px 0;border-top:1px solid var(--line)}
+  .plrow:first-child{border-top:0}
+  .plhd{display:flex;align-items:baseline;gap:10px;min-width:0}
+  .plbadge{flex:none;padding:1px 9px;border-radius:999px;border:1px solid var(--line);font-size:.72rem;font-weight:700;color:var(--muted)}
+  .plbadge.on{background:var(--ok-bg);border-color:var(--ok-line);color:var(--ok-text)}
+  .plq{font-weight:600;color:var(--cream);word-break:break-word}
+  .plrow .erchips{padding-left:0}
+  .plbars{display:flex;flex-direction:column;gap:6px}
+  .plbar{display:grid;grid-template-columns:minmax(0,38%) minmax(0,1fr) 92px;gap:10px;align-items:center;font-size:.82rem}
+  .pllb{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--navfg)}
+  .pltrack{height:9px;border-radius:5px;background:var(--hover);overflow:hidden}
+  .pltrack i{display:block;height:100%;border-radius:5px;background:var(--accent);opacity:.55}
+  .plbar.ahead .pllb{color:var(--cream);font-weight:600}
+  .plbar.ahead .pltrack i{opacity:1}
+  .plpct{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .ploptrow{margin-bottom:6px;flex-wrap:nowrap}
+  .ploptrow .filter{margin:0;flex:1;min-width:0}
+  .plnum{flex:none;width:22px;text-align:center;font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+  @media(max-width:600px){
+    .plbar{grid-template-columns:minmax(0,1fr) 84px;grid-template-areas:'l p' 't t'}
+    .pllb{grid-area:l} .pltrack{grid-area:t} .plpct{grid-area:p}
   }
   /* ── Overview ─────────────────────────────────────────────────────────── */
   .ovalerts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:0 0 14px}
@@ -1134,13 +1190,16 @@
     </div>
 
     <div id="panel-board" style="display:none">
+      <section class="ovmodes" id="lbTiles" aria-label="This board at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
-        <div class="periodrow" id="boardPickRow" style="display:none;margin:0 0 8px"><label for="boardSel" style="margin:0;flex:none">Board</label><select id="boardSel" style="flex:1 1 auto;min-width:0;width:100%;max-width:100%;text-overflow:ellipsis"></select></div>
+        <div class="boardhead"><h2>Players</h2><span id="boardcount" class="headnote"></span><button id="resetBtn" class="del">Reset leaderboard</button></div>
         <div id="boardNote" class="muted" style="margin:0 0 8px"></div>
-        <div class="boardhead"><span id="boardcount" class="muted"></span><button id="resetBtn" class="del">Reset leaderboard</button></div>
-        <input id="boardFilter" class="filter" type="search" placeholder="Filter players…" autocomplete="off">
-        <div id="players"></div>
+        <div class="ltool">
+          <div class="lsel lbpick" id="boardPickRow" style="display:none"><label for="boardSel">Board</label><select id="boardSel"></select></div>
+          <input id="boardFilter" class="filter" type="search" placeholder="Filter players…" autocomplete="off">
+        </div>
         <div id="boardmsg" class="msg"></div>
+        <div id="players" class="ltab"></div>
       </div>
       <div class="card" data-master="1">
         <h2>Leaderboard reset</h2>
@@ -1475,6 +1534,7 @@
     </div>
 
 <div id="panel-broadcast" style="display:none">
+      <section class="ovmodes" id="bcTiles" aria-label="Messages at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <h2>Send a message now</h2>
         <p class="muted">Broadcast an information message to everyone currently connected. Shown as a gold dismissible banner.</p>
@@ -1534,8 +1594,8 @@
         <div id="bcAddState" class="msg"></div>
       </div>
       <div class="card">
-        <div class="boardhead"><h2>Scheduled messages</h2><button id="bcRefresh" class="use">Refresh</button></div>
-        <div id="bcList"></div>
+        <div class="boardhead"><h2>Scheduled messages</h2><span id="bcSum" class="headnote"></span><button id="bcRefresh" class="use">Refresh</button></div>
+        <div id="bcList" class="erlist"></div>
       </div>
       <div class="card" data-master="1">
         <h2>Welcome / rules message (first visit)</h2>
@@ -1604,25 +1664,24 @@
     </div>
 
     <div id="panel-polls" style="display:none">
+      <section class="ovmodes" id="plTiles" aria-label="Polls at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
-        <div class="boardhead"><h2 id="plFormTitle">New poll</h2><button id="plNew" class="use">+ New poll</button></div>
+        <div class="boardhead"><h2>Polls</h2><span id="plSum" class="headnote"></span><div class="bhact"><button id="plNew" class="use">+ New poll</button><button id="plRefresh" class="use">Refresh</button></div></div>
         <p class="muted">Ask the players what to build next. Only clients that opted in (Advanced options &rarr; “Product polls”) see the active poll, as a lobby card, and answer once per device. The counts stay hidden until they have answered, so the figures on screen cannot sway the vote. One poll is live at a time: activating a poll retires the previous one.</p>
-        <div class="periodrow" style="margin-bottom:8px">
-          <label class="muted">Edit language <select id="plLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
-          <label class="muted">Fallback <select id="plDefault" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+        <div id="plList" class="erlist"><div class="empty">Loading…</div></div>
+      </div>
+      <div class="card" id="plForm">
+        <div class="boardhead"><h2 id="plFormTitle">New poll</h2><span id="plFilled" class="headnote"></span></div>
+        <div class="ltool">
+          <label class="lsel">Edit language <select id="plLang"></select></label>
+          <label class="lsel">Fallback <select id="plDefault"></select></label>
         </div>
-        <div id="plFilled" class="muted" style="margin:0 0 8px;font-size:.8rem"></div>
         <input id="plQuestion" class="filter" maxlength="300" placeholder="Question in this language…" style="width:100%;margin-bottom:8px">
         <div id="plOpts"></div>
-        <div class="periodrow" style="margin-top:8px"><button id="plAddOpt" class="use">+ Add option</button><button id="plSave" class="use">Save poll</button></div>
+        <div class="btnrow" style="margin-top:8px"><button id="plAddOpt" class="use">+ Add option</button><button id="plSave" class="use">Save poll</button></div>
         <div id="plState" class="msg"></div>
       </div>
-      <div class="card">
-        <div class="boardhead"><h2>Polls</h2><button id="plRefresh" class="use">Refresh</button></div>
-        <div id="plList"><div class="empty">Loading…</div></div>
-      </div>
     </div>
-
     <div id="panel-servers" style="display:none">
       <div class="card">
         <div class="boardhead"><h2>Game servers</h2><button id="srvAddBtn" class="use">+ Add server</button></div>
@@ -1660,6 +1719,7 @@
       </div>
     </div>
     <div id="panel-landir" style="display:none">
+      <section class="ovmodes" id="ldTiles" aria-label="The directory at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <div class="boardhead"><h2>Pending requests <span class="muted" id="ldPendN" style="font-weight:400"></span></h2>
           <label class="muted" style="margin:0;display:flex;align-items:center;gap:6px;font-size:.8rem"><input type="checkbox" id="ldAccept"> Accept new requests</label></div>
@@ -1675,6 +1735,7 @@
       <div class="card">
         <div class="boardhead"><h2>Published directory <span class="muted" id="ldDirN" style="font-weight:400"></span></h2><button id="ldAddBtn" class="use" type="button">+ Add manually</button></div>
         <p class="muted">Re-checked automatically (the greeting only: player count, no login). “Check” runs a full lobby probe, tables included. Unticking “Visible” keeps a server dialable by address but takes it off the list.</p>
+        <div class="ltool"><input id="ldFilter" class="filter" type="search" placeholder="Filter: name, address, country…" autocomplete="off"><div class="chips" id="ldShow" role="group" aria-label="Show"></div></div>
         <div id="ldNew"></div>
         <div id="ldEntries"><div class="empty">Loading…</div></div>
         <div id="ldDirState" class="msg"></div>
@@ -2223,7 +2284,43 @@
         +'<div class="ldline" style="margin:2px 0 0">'+(r.reason?'Reason: '+srvEsc(r.reason):'<span class="muted">No reason given.</span>')+'</div></div>';
     }).join(''):'<div class="empty">None.</div>';
   }
-  function renderLanDir(){ if(!_ld) return; ldBadge(); renderLdPending(); renderLdEntries(); renderLdRefused(); renderLdSettings(); }
+  function renderLanDir(){ if(!_ld) return; ldBadge(); renderLdPending(); renderLdEntries(); renderLdRefused(); renderLdSettings(); _ldTiles(); _ldFilterRows(); }
+  // Tiles: what players see listed, what answers right now and with how many
+  // players, and what waits for a decision.
+  function _ldTiles(){
+    var box=$('ldTiles'); if(!box||!_ld) return;
+    var E=_ld.entries||[], P=_ld.pending||[], S=_ld.settings||{};
+    var listed=E.filter(function(e){ return e.visible&&!e.autoHidden&&!e.ended; }).length;
+    var on=E.filter(function(e){ return e.status&&e.status.online; }), pl=0;
+    on.forEach(function(e){ pl+=Number(e.status.players)||0; });
+    var T=[['Listed',String(listed),'of '+E.length+' in the directory','var(--accent)'],
+           ['Online',String(on.length),S.checkMinutes?'checked every '+S.checkMinutes+' min':'re-checked automatically','var(--ok-text)'],
+           ['Players now',pl.toLocaleString(),'on the servers online','var(--m-lan)'],
+           ['Waiting',String(P.length),S.acceptRequests?'requests are open':'requests are closed',P.length?'var(--warn-text)':'var(--muted)']];
+    box.innerHTML=T.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join('');
+  }
+  // The filter and the « show » chips only hide rows of the table: nothing is
+  // read again, and an editor open above the table stays as it is.
+  var _ldShow='all';
+  try{ var _lds=localStorage.getItem('pth_admin_ld_show'); if(['all','on','off','hid'].indexOf(_lds)>=0) _ldShow=_lds; }catch(e){}
+  function _ldFilterRows(){
+    var ch=$('ldShow');
+    if(ch) ch.innerHTML=[['all','All'],['on','Online'],['off','Offline'],['hid','Not listed']].map(function(x){ var on=_ldShow===x[0]; return '<button type="button" class="chip'+(on?' on':'')+'" data-ls="'+x[0]+'" aria-pressed="'+on+'">'+x[1]+'</button>'; }).join('');
+    if(!_ld) return;
+    var q=(($('ldFilter')||{}).value||'').trim().toLowerCase(), E=_ld.entries||[], shown=0, rows=document.querySelectorAll('#ldEntries tr[data-id]');
+    [].forEach.call(rows,function(row){
+      var e=E.filter(function(x){ return x.id===row.getAttribute('data-id'); })[0]; if(!e) return;
+      var on=!!(e.status&&e.status.online), hid=!e.visible||e.autoHidden||e.ended;
+      var okS=_ldShow==='all'||(_ldShow==='on'&&on)||(_ldShow==='off'&&!on)||(_ldShow==='hid'&&hid);
+      var okQ=!q||[e.name,e.host+':'+e.port,ldPlace(e),e.desc].join(' ').toLowerCase().indexOf(q)>=0;
+      row.hidden=!(okS&&okQ); if(!row.hidden) shown++;
+    });
+    var box=$('ldEntries'), note=box&&box.querySelector('.ldnomatch');
+    if(rows.length && !shown){ if(!note){ note=document.createElement('div'); note.className='empty ldnomatch'; note.textContent='No server matches the filter.'; box.appendChild(note); } }
+    else if(note) note.parentNode.removeChild(note);
+  }
+  if($('ldFilter')) $('ldFilter').addEventListener('input',_ldFilterRows);
+  if($('ldShow')) $('ldShow').addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-ls]'); if(!b) return; _ldShow=b.getAttribute('data-ls'); try{ localStorage.setItem('pth_admin_ld_show',_ldShow); }catch(x){} _ldFilterRows(); });
   if($('ldRefClear')) $('ldRefClear').addEventListener('click',function(){ if(!confirm('Clear the list of refused requests?')) return; ldPost({action:'clearRefused'},'ldPendState','Cleared'); });
   if($('ldAddBtn')) $('ldAddBtn').addEventListener('click',function(){ _ldEdit={kind:'new'}; renderLanDir(); });
   if($('ldAccept')) $('ldAccept').addEventListener('change',function(ev){
@@ -3072,7 +3169,8 @@
 
   function bmsg(t,cls){ $('boardmsg').textContent=t; $('boardmsg').className='msg '+(cls||''); }
   function fmtSigned(n){ n=Math.round(Number(n)||0); return (n>0?'+':'')+n.toLocaleString(); }
-  var lastBoard=[], _boardId='', _boards=[];
+  var lastBoard=[], _boardId='', _boards=[], _boardDefPeriod='', _lbSort='net';
+  try{ var _lbs=localStorage.getItem('pth_admin_lb_sort'); if(['net','gw','hw','streak','name'].indexOf(_lbs)>=0) _lbSort=_lbs; }catch(e){}
   function boardQS(){ return _boardId ? '?board='+encodeURIComponent(_boardId) : ''; }
   // One leaderboard per listed LAN server (server/lan-boards.js) beside the
   // historical one (local server, typed addresses): pick which one to show.
@@ -3087,8 +3185,10 @@
       }).join('');
       if(_boardId && !_boards.some(function(b){return b.id===_boardId;})) _boardId='';
       sel.value=_boardId;
+      _boardDefPeriod=d.resetPeriod||'';
       boardNote(d.resetPeriod);
       resetLabel();
+      _lbTiles();
     }).catch(function(){});
   }
   function boardNote(defPeriod){
@@ -3097,9 +3197,24 @@
     var b=_boards.filter(function(x){return x.id===_boardId;})[0];
     n.textContent=b?('Reset: '+(b.resetPeriod==='off'?'never':(b.resetPeriod||'monthly'))+' — chosen when the server was proposed; change it in Community › LAN directory › Edit.'):'';
   }
+  // Tiles over the table: who is on this board, who leads it, the best run of
+  // wins and when it starts over. Read from what the table already has.
+  function _lbPeriodWord(p){ return ({off:'Never',daily:'Daily',weekly:'Weekly',monthly:'Monthly',yearly:'Yearly'})[p]||'Monthly'; }
+  function _lbTiles(){
+    var box=$('lbTiles'); if(!box) return;
+    var b=_boardId?_boards.filter(function(x){return x.id===_boardId;})[0]:null;
+    var top=lastBoard[0], st=null;
+    lastBoard.forEach(function(p){ if(p.streak && (!st || p.streak>st.streak)) st=p; });
+    var per=b?(b.resetPeriod||'monthly'):(_boardDefPeriod||$('period')&&$('period').value||'monthly');
+    var T=[['Players',lastBoard.length.toLocaleString(),b?srvEsc(b.name):(_boards.length?'default board':'on the leaderboard'),'var(--accent)'],
+           ['Leader',top?fmtSigned(top.net):'—',top?srvEsc(top.name):'nobody yet','var(--warn-text)'],
+           ['Best streak',st?String(st.streak):'—',st?srvEsc(st.name):'no streak yet','var(--ok-text)'],
+           ['Reset',_lbPeriodWord(per),b?'set in LAN directory':'set below','var(--info-text)']];
+    box.innerHTML=T.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join('');
+  }
   // The reset button only ever wipes the board picked above: say so.
   function resetLabel(){ var b=$('resetBtn'); if(b) b.textContent=_boards.length?'Reset this board':'Reset leaderboard'; }
-  if($('boardSel')) $('boardSel').addEventListener('change',function(e){ _boardId=e.target.value; boardNote(); resetLabel(); loadBoard(); });
+  if($('boardSel')) $('boardSel').addEventListener('change',function(e){ _boardId=e.target.value; boardNote(_boardDefPeriod); resetLabel(); loadBoard(); });
   function loadBoard(){
     loadBoardList();
     fetch('/stats'+boardQS()).then(function(r){return r.json();}).then(function(s){
@@ -3109,26 +3224,47 @@
       drawBoard();
     }).catch(function(){ $('players').innerHTML='<div class="empty err">Could not load.</div>'; });
   }
+  // One row per player: rank by net (what players see), then net, games and
+  // hands won out of played, best streak. A column header sorts by it (kept
+  // per browser); the rank stays the board's own.
+  function _lbPct(w,p){ return p?Math.round(w*100/p)+'%':'—'; }
   function drawBoard(){
     var total=lastBoard.length, q=(($('boardFilter')&&$('boardFilter').value)||'').trim().toLowerCase();
-    var list=q?lastBoard.filter(function(p){return p.name.toLowerCase().indexOf(q)>=0;}):lastBoard;
-    $('boardcount').textContent = total ? ((q? list.length+' of '+total+' players' : total+' player'+(total===1?'':'s'))+' \u00b7 by net') : '';
+    var list=q?lastBoard.filter(function(p){return p.name.toLowerCase().indexOf(q)>=0;}):lastBoard.slice();
+    var K=_lbSort;
+    if(K!=='net') list.sort(function(a,b){ if(K==='name') return a.name.localeCompare(b.name); return (b[K]-a[K]) || (b.net-a.net) || a.name.localeCompare(b.name); });
+    $('boardcount').textContent = total ? ((q? list.length+' of '+total+' players' : total+' player'+(total===1?'':'s'))+' · by '+({net:'net',gw:'games won',hw:'hands won',streak:'best streak',name:'name'})[K]) : '';
+    _lbTiles();
     var el=$('players');
     if(!total){ el.innerHTML='<div class="empty">(empty)</div>'; return; }
     if(!list.length){ el.innerHTML='<div class="empty">(no match)</div>'; return; }
     el.innerHTML='';
+    var hd=document.createElement('div'); hd.className='lbrow lhd';
+    hd.innerHTML=[['','#'],['name','Player'],['net','Net'],['gw','Games won'],['hw','Hands won'],['streak','Best streak'],['','']].map(function(c){
+      if(!c[0]) return '<span>'+c[1]+'</span>';
+      var on=K===c[0];
+      return '<button type="button" class="lbsort'+(on?' on':'')+'" data-k="'+c[0]+'" aria-pressed="'+on+'" title="Sort by '+c[1].toLowerCase()+'">'+c[1]+(on?' ↓':'')+'</button>';
+    }).join('');
+    el.appendChild(hd);
     list.forEach(function(p){
-      var row=document.createElement('div');row.className='row';
-      var rk=document.createElement('div');rk.className='rank';rk.textContent='#'+(lastBoard.indexOf(p)+1);row.appendChild(rk);
-      var nm=document.createElement('div');nm.className='nm';
-      var b=document.createElement('b');b.textContent=p.name;nm.appendChild(b);
-      var span=document.createElement('span');span.textContent=p.gw+'/'+p.gp+' games \u00b7 '+p.hw+'/'+p.hp+' hands'+(p.streak?' \u00b7 streak '+p.streak:'');nm.appendChild(span);
-      row.appendChild(nm);
-      var net=document.createElement('div');net.className='net '+(p.net>0?'pos':(p.net<0?'neg':''));net.textContent=fmtSigned(p.net);row.appendChild(net);
+      var rank=lastBoard.indexOf(p)+1;
+      var row=document.createElement('div'); row.className='lbrow';
+      row.innerHTML='<span class="lbrk'+(rank<=3?' rk'+rank:'')+'">'+rank+'</span>'
+        +'<span class="lbname"><b>'+srvEsc(p.name)+'</b></span>'
+        +'<span class="lbnet '+(p.net>0?'pos':(p.net<0?'neg':''))+'">'+fmtSigned(p.net)+'</span>'
+        +'<span class="lbgw">'+p.gw.toLocaleString()+' / '+p.gp.toLocaleString()+'<small>'+_lbPct(p.gw,p.gp)+' of games</small></span>'
+        +'<span class="lbhw">'+p.hw.toLocaleString()+' / '+p.hp.toLocaleString()+'<small>'+_lbPct(p.hw,p.hp)+' of hands</small></span>'
+        +'<span class="lbst">'+(p.streak?p.streak:'—')+'<small>best streak</small></span>';
+      var cell=document.createElement('span'); cell.className='lact';
       var del=document.createElement('button');del.className='del';del.textContent='Remove';del.addEventListener('click',function(){removePlayer(p.name);});
-      row.appendChild(del);el.appendChild(row);
+      cell.appendChild(del); row.appendChild(cell); el.appendChild(row);
     });
   }
+  if($('players')) $('players').addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('.lbsort'); if(!b) return;
+    _lbSort=b.getAttribute('data-k'); try{ localStorage.setItem('pth_admin_lb_sort',_lbSort); }catch(x){}
+    drawBoard();
+  });
   if($('boardFilter')) $('boardFilter').addEventListener('input', drawBoard);
   function removePlayer(n){ if(!confirm('Remove player \u201c'+n+'\u201d from the leaderboard?'))return;
     fetch('/stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,_delete:true,token:tok(),board:_boardId||undefined})})
@@ -5433,32 +5569,57 @@
         var off=sel.querySelector('option[value="offline"]'); sel.insertBefore(g,off||null); }
       sel.value=cur; if(sel.value!==cur) sel.value='all'; });
   }
+  // Tiles: what is scheduled, the next send, how many were sent, and which of
+  // the four popups (welcome, guest, LAN, account) are switched on.
+  var _bcJobs=null;
+  function _bcTiles(){
+    var box=$('bcTiles'); if(!box) return;
+    var jobs=_bcJobs||[], on=jobs.filter(function(j){ return j.enabled; }), next=null, sent=0;
+    on.forEach(function(j){ if(j.nextRun && (!next || j.nextRun<next.nextRun)) next=j; });
+    jobs.forEach(function(j){ sent+=j.runCount||0; });
+    var N=[['Welcome',welcomeState],['Guest',guestNoticeState],['LAN',lanNoticeState],['Account',authNoticeState]];
+    var non=N.filter(function(x){ return x[1]&&x[1].enabled; });
+    var T=[['Scheduled',_bcJobs?String(on.length):'—',_bcJobs?((jobs.length-on.length)+' paused'):'loading','var(--accent)',''],
+           ['Next send',next?bcFmt(next.nextRun):'—',next?srvEsc((next.icon?next.icon+' ':'')+next.message):'nothing scheduled','var(--warn-text)',' sm'],
+           ['Sent',sent.toLocaleString(),'by the scheduled messages','var(--ok-text)',''],
+           ['Notices on',_isMaster?(non.length+' / 4'):'—',_isMaster?(non.length?non.map(function(x){return x[0];}).join(', '):'none switched on'):'master key only','var(--info-text)','']];
+    box.innerHTML=T.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn'+t[4]+'">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join('');
+  }
+  // One card per scheduled message: state, the message, then its schedule,
+  // target and history as chips, then the actions.
   function loadBroadcasts(){ api('/admin/broadcasts').then(function(r){return r.json();}).then(function(d){
       if(d&&d.ok) bcFillLanTargets(d.lanTargets);
       if(d&&d.tz) _bcTz=d.tz;
       var sn=$('bcServerNow'); if(sn&&d.serverNow) sn.textContent='Server time: '+bcFmt(d.serverNow)+' ('+bcTz()+')'+bcZoneNote(d.serverNow);
       var el=$('bcList'); if(!el) return; el.innerHTML='';
-      if(!d.ok){ el.innerHTML='<div class="empty err">'+((d&&d.error)||'error')+'</div>'; return; }
-      if(!d.jobs||!d.jobs.length){ el.innerHTML='<div class="empty">No scheduled messages.</div>'; return; }
-      d.jobs.forEach(function(j){
-        var row=document.createElement('div'); row.className='srow'; row.style.cssText='flex-direction:column;align-items:stretch;gap:6px;padding:10px 0';
-        var msg=document.createElement('div'); msg.style.cssText='font-weight:600'; msg.textContent=(j.icon?j.icon+' ':'')+j.message; row.appendChild(msg);
-        var meta=document.createElement('div'); meta.className='muted'; meta.style.fontSize='.8rem';
-        var tgN={all:'All modes',pthnet:'pokerth.net',lan:'LAN (all servers)',offline:'Training'};
+      if(!d.ok){ el.innerHTML='<div class="empty err">'+srvEsc((d&&d.error)||'error')+'</div>'; return; }
+      _bcJobs=d.jobs||[]; _bcTiles();
+      var nOn=_bcJobs.filter(function(j){ return j.enabled; }).length, sum=$('bcSum');
+      if(sum) sum.textContent=_bcJobs.length?(_bcJobs.length+' message'+(_bcJobs.length===1?'':'s')+' · '+nOn+' active'):'';
+      if(!_bcJobs.length){ el.innerHTML='<div class="empty">No scheduled messages.</div>'; return; }
+      var tgN={all:'All modes',pthnet:'pokerth.net',lan:'LAN (all servers)',offline:'Training'};
+      _bcJobs.forEach(function(j){
+        var row=document.createElement('div'); row.className='plrow bcrow'+(j.enabled?'':' off');
+        var hd=document.createElement('div'); hd.className='plhd';
+        var bd=document.createElement('span'); bd.className='plbadge'+(j.enabled?' on':''); bd.textContent=j.enabled?'Active':'Paused'; hd.appendChild(bd);
+        var msg=document.createElement('b'); msg.className='plq'; msg.textContent=(j.icon?j.icon+' ':'')+j.message; hd.appendChild(msg);
+        row.appendChild(hd);
         var bits=[bcDescribe(j)];
-        if(j.target&&j.target.indexOf('lan:')===0) bits.push('\u2192 LAN: '+(_bcLanNames[j.target]||'removed server'));
-        else if(j.target&&j.target!=='all') bits.push('\u2192 '+(tgN[j.target]||j.target));
-        if(j.enabled&&j.nextRun) bits.push('next '+bcFmt(j.nextRun)); else if(!j.enabled) bits.push('disabled');
+        if(j.target&&j.target.indexOf('lan:')===0) bits.push('→ LAN: '+(_bcLanNames[j.target]||'removed server'));
+        else bits.push('→ '+(tgN[j.target||'all']||j.target));
+        if(j.enabled&&j.nextRun) bits.push('next '+bcFmt(j.nextRun));
         if(j.lastRun) bits.push('last '+bcFmt(j.lastRun));
-        if(j.maxRuns) bits.push(j.runCount+'/'+j.maxRuns+' sent');
+        bits.push(j.maxRuns?(j.runCount+'/'+j.maxRuns+' sent'):((j.runCount||0)+' sent'));
         if(j.startAt) bits.push('from '+bcFmt(j.startAt));
-        if(j.countdownAt) bits.push('\u23f3 countdown to '+bcFmt(j.countdownAt));
         if(j.endAt) bits.push('until '+bcFmt(j.endAt));
-        meta.textContent=bits.join(' \u00b7 '); row.appendChild(meta);
+        if(j.countdownAt) bits.push('⏳ countdown to '+bcFmt(j.countdownAt));
+        var meta=document.createElement('div'); meta.className='erchips';
+        bits.forEach(function(t){ var c=document.createElement('span'); c.className='erchip'; c.textContent=t; meta.appendChild(c); });
+        row.appendChild(meta);
         var btns=document.createElement('div'); btns.className='btnrow';
         var bt=document.createElement('button'); bt.className='use'; bt.textContent=j.enabled?'Disable':'Enable'; bt.addEventListener('click',function(){bcToggle(j.id,!j.enabled);}); btns.appendChild(bt);
         var bf=document.createElement('button'); bf.className='use'; bf.textContent='Send now'; bf.addEventListener('click',function(){bcFire(j.id);}); btns.appendChild(bf);
-        var bd=document.createElement('button'); bd.className='use danger'; bd.textContent='Delete'; bd.addEventListener('click',function(){bcDelete(j.id);}); btns.appendChild(bd);
+        var bx=document.createElement('button'); bx.className='use danger'; bx.textContent='Delete'; bx.addEventListener('click',function(){bcDelete(j.id);}); btns.appendChild(bx);
         row.appendChild(btns); el.appendChild(row);
       });
     }).catch(function(){ var el=$('bcList'); if(el) el.innerHTML='<div class="empty err">Could not load.</div>'; }); }
@@ -6208,7 +6369,7 @@
   // first filled language, else the fallback (empty) — so the live message is
   // visible immediately from any machine.
   function wcInitialLang(){ var d=welcomeState['default']||'fr'; if(welcomeState.langs[d]) return d; var f=wcFilledList(); return f.length ? f[0] : d; }
-  function loadWelcome(){ api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(!d||!d.ok||!d.welcome) return; welcomeState={ enabled:!!d.welcome.enabled, 'default':d.welcome['default']||'fr', langs:d.welcome.langs||{} }; if($('wcEnabled')) $('wcEnabled').checked=welcomeState.enabled; if($('wcDefault')) $('wcDefault').value=welcomeState['default']; wcShow(wcInitialLang()); }).catch(function(){}); }
+  function loadWelcome(){ api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(!d||!d.ok||!d.welcome) return; welcomeState={ enabled:!!d.welcome.enabled, 'default':d.welcome['default']||'fr', langs:d.welcome.langs||{} }; if($('wcEnabled')) $('wcEnabled').checked=welcomeState.enabled; if($('wcDefault')) $('wcDefault').value=welcomeState['default']; wcShow(wcInitialLang()); _bcTiles(); }).catch(function(){}); }
   function saveWelcome(){ wcCommit(); var body={ welcome:{ enabled:$('wcEnabled').checked, 'default':$('wcDefault').value, langs:welcomeState.langs }, token:tok() };
     bcSay('wcState','Saving\u2026');
     api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
@@ -6235,7 +6396,7 @@
     var p=document.createElement('div'); p.innerHTML=annLinkify(b); p.style.cssText='padding:12px 16px;white-space:pre-line;line-height:1.5;color:#efe6d2;font-size:.9rem'; el.appendChild(p);
   }
   function gwInitialLang(){ var d=guestNoticeState['default']||'fr'; if(guestNoticeState.langs[d]) return d; var f=gwFilledList(); return f.length ? f[0] : d; }
-  function loadGuestNotice(){ api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(!d||!d.ok||!d.guestNotice) return; guestNoticeState={ enabled:!!d.guestNotice.enabled, 'default':d.guestNotice['default']||'fr', langs:d.guestNotice.langs||{} }; if($('gwEnabled')) $('gwEnabled').checked=guestNoticeState.enabled; if($('gwDefault')) $('gwDefault').value=guestNoticeState['default']; gwShow(gwInitialLang()); }).catch(function(){}); }
+  function loadGuestNotice(){ api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(!d||!d.ok||!d.guestNotice) return; guestNoticeState={ enabled:!!d.guestNotice.enabled, 'default':d.guestNotice['default']||'fr', langs:d.guestNotice.langs||{} }; if($('gwEnabled')) $('gwEnabled').checked=guestNoticeState.enabled; if($('gwDefault')) $('gwDefault').value=guestNoticeState['default']; gwShow(gwInitialLang()); _bcTiles(); }).catch(function(){}); }
   function saveGuestNotice(){ gwCommit(); var body={ guestNotice:{ enabled:$('gwEnabled').checked, 'default':$('gwDefault').value, langs:guestNoticeState.langs }, token:tok() };
     bcSay('gwState','Saving\u2026');
     api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
@@ -6261,7 +6422,7 @@
     var p=document.createElement('div'); p.innerHTML=annLinkify(b); p.style.cssText='padding:12px 16px;white-space:pre-line;line-height:1.5;color:#efe6d2;font-size:.9rem'; el.appendChild(p);
   }
   function awInitialLang(){ var d=authNoticeState['default']||'fr'; if(authNoticeState.langs[d]) return d; var f=awFilledList(); return f.length ? f[0] : d; }
-  function loadAuthNotice(){ api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(!d||!d.ok||!d.authNotice) return; authNoticeState={ enabled:!!d.authNotice.enabled, 'default':d.authNotice['default']||'fr', langs:d.authNotice.langs||{} }; if($('awEnabled')) $('awEnabled').checked=authNoticeState.enabled; if($('awDefault')) $('awDefault').value=authNoticeState['default']; awShow(awInitialLang()); }).catch(function(){}); }
+  function loadAuthNotice(){ api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(!d||!d.ok||!d.authNotice) return; authNoticeState={ enabled:!!d.authNotice.enabled, 'default':d.authNotice['default']||'fr', langs:d.authNotice.langs||{} }; if($('awEnabled')) $('awEnabled').checked=authNoticeState.enabled; if($('awDefault')) $('awDefault').value=authNoticeState['default']; awShow(awInitialLang()); _bcTiles(); }).catch(function(){}); }
   function saveAuthNotice(){ awCommit(); var body={ authNotice:{ enabled:$('awEnabled').checked, 'default':$('awDefault').value, langs:authNoticeState.langs }, token:tok() };
     bcSay('awState','Saving\u2026');
     api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
@@ -6288,7 +6449,7 @@
     var p=document.createElement('div'); p.innerHTML=annLinkify(b); p.style.cssText='padding:12px 16px;white-space:pre-line;line-height:1.5;color:#efe6d2;font-size:.9rem'; el.appendChild(p);
   }
   function lwInitialLang(){ var d=lanNoticeState['default']||'en'; if(lanNoticeState.langs[d]) return d; var f=lwFilledList(); return f.length ? f[0] : d; }
-  function loadLanNotice(){ api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(!d||!d.ok||!d.lanNotice) return; lanNoticeState={ enabled:!!d.lanNotice.enabled, 'default':d.lanNotice['default']||'en', langs:d.lanNotice.langs||{} }; if($('lwEnabled')) $('lwEnabled').checked=lanNoticeState.enabled; if($('lwDefault')) $('lwDefault').value=lanNoticeState['default']; lwShow(lwInitialLang()); }).catch(function(){}); }
+  function loadLanNotice(){ api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(!d||!d.ok||!d.lanNotice) return; lanNoticeState={ enabled:!!d.lanNotice.enabled, 'default':d.lanNotice['default']||'en', langs:d.lanNotice.langs||{} }; if($('lwEnabled')) $('lwEnabled').checked=lanNoticeState.enabled; if($('lwDefault')) $('lwDefault').value=lanNoticeState['default']; lwShow(lwInitialLang()); _bcTiles(); }).catch(function(){}); }
   function saveLanNotice(){ lwCommit(); var body={ lanNotice:{ enabled:$('lwEnabled').checked, 'default':$('lwDefault').value, langs:lanNoticeState.langs }, token:tok() };
     bcSay('lwState','Saving\u2026');
     api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
@@ -6323,12 +6484,13 @@
   function plRenderOpts(){
     var box=$('plOpts'); if(!box) return; box.innerHTML='';
     pollDraft.options.forEach(function(o,i){
-      var row=document.createElement('div'); row.className='periodrow'; row.style.cssText='margin-bottom:6px';
+      var row=document.createElement('div'); row.className='periodrow ploptrow';
       var inp=document.createElement('input'); inp.className='filter'; inp.id='plOpt'+i; inp.maxLength=120;
       inp.placeholder='Option '+(i+1); inp.value=(o.label&&o.label[plEdit])||''; inp.style.cssText='margin:0;flex:1;min-width:0';
       inp.addEventListener('input',function(){ plCommit(); plUpdateFilled(); });
+      var num=document.createElement('span'); num.className='plnum'; num.textContent=String(i+1); row.insertBefore(num,row.firstChild);
       row.appendChild(inp);
-      var del=document.createElement('button'); del.className='use danger'; del.textContent='\u00d7'; del.title='Remove this option';
+      var del=document.createElement('button'); del.className='use danger'; del.textContent='\u00d7'; del.title='Remove this option'; del.setAttribute('aria-label','Remove option '+(i+1));
       del.addEventListener('click',function(){ plCommit(); pollDraft.options.splice(i,1); plRenderOpts(); plUpdateFilled(); });
       row.appendChild(del); box.appendChild(row);
     });
@@ -6352,7 +6514,7 @@
     if($('plFormTitle')) $('plFormTitle').textContent='Edit poll';
     plShow(pollDraft['default']);
     bcSay('plState','Editing an existing poll \u2014 saving keeps the answers unless you add or remove an option.');
-    if($('panel-polls')) $('panel-polls').scrollIntoView({block:'start'});
+    if($('plForm')) $('plForm').scrollIntoView({block:'start'});
   }
   function plSavePoll(){
     plCommit();
@@ -6372,40 +6534,65 @@
   function plPost(path,body){ body=body||{}; body.token=tok();
     return api(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
       .then(function(r){return r.json();}).then(function(d){ loadPolls(); return d; }).catch(function(){}); }
+  // Tiles: the live poll and its answers, the option ahead, how many polls.
+  function _plTiles(polls){
+    var box=$('plTiles'); if(!box) return;
+    var live=polls.filter(function(p){ return p.enabled; })[0], all=0;
+    polls.forEach(function(p){ all+=p.total||0; });
+    var lead=null;
+    if(live) (live.options||[]).forEach(function(o){ var c=(live.tally&&live.tally[o.id])||0; if(c && (!lead || c>lead.c)) lead={o:o,c:c}; });
+    var ld=live?(live['default']||'en'):'en';
+    var T=[['Live poll',live?String(live.total||0):'—',live?srvEsc(plText(live.question,ld)):'no poll is live','var(--ok-text)'],
+           ['Ahead',lead?Math.round(lead.c*100/live.total)+'%':'—',lead?srvEsc(plText(lead.o.label,ld)):(live?'no answer yet':'—'),'var(--warn-text)'],
+           ['Polls',String(polls.length),(polls.length-(live?1:0))+' inactive','var(--accent)'],
+           ['All answers',all.toLocaleString(),'every poll, since its last reset','var(--info-text)']];
+    box.innerHTML=T.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+(t[0]==='Live poll'&&live?' · answers':'')+'</span></span><b class="ovmn">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join('');
+  }
+  // One card per poll: state, question, languages and answers, then one bar
+  // per option (the one ahead marked) and the actions.
   function loadPolls(){
     api('/admin/polls').then(function(r){return r.json();}).then(function(d){
       var el=$('plList'); if(!el) return; el.innerHTML='';
-      if(!d||!d.ok){ el.innerHTML='<div class="empty err">'+((d&&d.error)||'error')+'</div>'; return; }
-      if(!d.polls||!d.polls.length){ el.innerHTML='<div class="empty">No poll yet.</div>'; return; }
-      d.polls.forEach(function(p){
+      if(!d||!d.ok){ el.innerHTML='<div class="empty err">'+srvEsc((d&&d.error)||'error')+'</div>'; return; }
+      var polls=d.polls||[];
+      _plTiles(polls);
+      var sum=$('plSum'); if(sum) sum.textContent=polls.length?(polls.length+' poll'+(polls.length===1?'':'s')+' · '+(polls.some(function(p){return p.enabled;})?'one live':'none live')):'';
+      if(!polls.length){ el.innerHTML='<div class="empty">No poll yet.</div>'; return; }
+      polls.forEach(function(p){
         var def=p['default']||'en';
-        var row=document.createElement('div'); row.className='srow'; row.style.cssText='flex-direction:column;align-items:stretch;gap:6px;padding:10px 0';
-        var q=document.createElement('div'); q.style.cssText='font-weight:600'; q.textContent=(p.enabled?'\u25cf ':'')+plText(p.question,def); row.appendChild(q);
-        var meta=document.createElement('div'); meta.className='muted'; meta.style.fontSize='.8rem';
-        meta.textContent=[(p.enabled?'live':'inactive'), p.total+(p.total===1?' answer':' answers'),
-                          Object.keys(p.question||{}).length+' language(s)'].join(' \u00b7 ');
+        var row=document.createElement('div'); row.className='plrow'+(p.enabled?' live':'');
+        var hd=document.createElement('div'); hd.className='plhd';
+        var bd=document.createElement('span'); bd.className='plbadge'+(p.enabled?' on':''); bd.textContent=p.enabled?'Live':'Inactive'; hd.appendChild(bd);
+        var q=document.createElement('b'); q.className='plq'; q.textContent=plText(p.question,def); hd.appendChild(q);
+        row.appendChild(hd);
+        var meta=document.createElement('div'); meta.className='erchips';
+        var langs=Object.keys(p.question||{});
+        [p.total+(p.total===1?' answer':' answers'), langs.length+' language'+(langs.length===1?'':'s')+(langs.length?': '+langs.join(', '):''), 'fallback '+def,
+         p.updatedAt?('edited '+new Date(p.updatedAt).toLocaleDateString()):''].filter(Boolean).forEach(function(t){
+          var c=document.createElement('span'); c.className='erchip'; c.textContent=t; meta.appendChild(c); });
         row.appendChild(meta);
+        var top=0; (p.options||[]).forEach(function(o){ top=Math.max(top,(p.tally&&p.tally[o.id])||0); });
+        var bars=document.createElement('div'); bars.className='plbars';
         (p.options||[]).forEach(function(o){
           var c=(p.tally&&p.tally[o.id])||0, pct=p.total?Math.round(c*100/p.total):0;
-          var line=document.createElement('div'); line.style.cssText='display:flex;align-items:center;gap:8px;font-size:.82rem';
-          var lb=document.createElement('span'); lb.style.cssText='flex:0 0 38%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
-          lb.textContent=plText(o.label,def); line.appendChild(lb);
-          var track=document.createElement('span'); track.style.cssText='flex:1;min-width:0;height:8px;border-radius:4px;background:rgba(0,0,0,.28);overflow:hidden';
-          var fill=document.createElement('i'); fill.style.cssText='display:block;height:100%;border-radius:4px;width:'+pct+'%;background:linear-gradient(90deg,#4080d8,#1a3d8b)';
+          var line=document.createElement('div'); line.className='plbar'+(top&&c===top?' ahead':'');
+          var lb=document.createElement('span'); lb.className='pllb'; lb.textContent=plText(o.label,def); line.appendChild(lb);
+          var track=document.createElement('span'); track.className='pltrack';
+          var fill=document.createElement('i'); fill.style.width=pct+'%';
           track.appendChild(fill); line.appendChild(track);
-          var num=document.createElement('span'); num.className='muted'; num.style.cssText='flex:0 0 72px;text-align:right';
-          num.textContent=c+' ('+pct+'%)'; line.appendChild(num);
-          row.appendChild(line);
+          var num=document.createElement('span'); num.className='plpct'; num.textContent=c+' · '+pct+'%'; line.appendChild(num);
+          bars.appendChild(line);
         });
-        var btns=document.createElement('div'); btns.className='btnrow';
+        row.appendChild(bars);
+        var btns=document.createElement('div'); btns.className='btnrow plact';
         var ba=document.createElement('button'); ba.className='use'; ba.textContent=p.enabled?'Deactivate':'Activate';
         ba.addEventListener('click',function(){ plPost('/admin/polls/activate',{id:p.id,enabled:!p.enabled}); }); btns.appendChild(ba);
         var be=document.createElement('button'); be.className='use'; be.textContent='Edit';
         be.addEventListener('click',function(){ plLoadIntoForm(p); }); btns.appendChild(be);
         var br=document.createElement('button'); br.className='use'; br.textContent='Reset answers';
         br.addEventListener('click',function(){ if(!confirm('Clear every answer for this poll? This cannot be undone.'))return; plPost('/admin/polls/reset',{id:p.id}); }); btns.appendChild(br);
-        var bd=document.createElement('button'); bd.className='use danger'; bd.textContent='Delete';
-        bd.addEventListener('click',function(){ if(!confirm('Delete this poll and its answers?'))return; plPost('/admin/polls/delete',{id:p.id}); }); btns.appendChild(bd);
+        var bx=document.createElement('button'); bx.className='use danger'; bx.textContent='Delete';
+        bx.addEventListener('click',function(){ if(!confirm('Delete this poll and its answers?'))return; plPost('/admin/polls/delete',{id:p.id}); }); btns.appendChild(bx);
         row.appendChild(btns); el.appendChild(row);
       });
     }).catch(function(){ var el=$('plList'); if(el) el.innerHTML='<div class="empty err">Could not load.</div>'; });
@@ -6414,7 +6601,7 @@
   if($('plQuestion')) $('plQuestion').addEventListener('input',function(){ plCommit(); plUpdateFilled(); });
   if($('plAddOpt')) $('plAddOpt').addEventListener('click',function(){ plCommit(); if(pollDraft.options.length>=10){ bcSay('plState','Ten options is the maximum.','err'); return; } pollDraft.options.push({id:plNextOptId(),label:{}}); plRenderOpts(); });
   if($('plSave')) $('plSave').addEventListener('click',plSavePoll);
-  if($('plNew')) $('plNew').addEventListener('click',plResetForm);
+  if($('plNew')) $('plNew').addEventListener('click',function(){ plResetForm(); if($('plForm')) $('plForm').scrollIntoView({block:'start'}); if($('plQuestion')) $('plQuestion').focus(); });
   if($('plRefresh')) $('plRefresh').addEventListener('click',loadPolls);
   plResetForm();
 
