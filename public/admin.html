@@ -654,15 +654,28 @@
     .lmode small{flex-basis:auto;padding-left:0}
   }
   .erlist{display:flex;flex-direction:column}
-  .errow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:11px 0;border-top:1px solid var(--line)}
+  .errow{--ek:var(--err-text);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:11px 0 11px 12px;border-top:1px solid var(--line);box-shadow:inset 3px 0 0 var(--ek)}
   .errow:first-child{border-top:0}
   .errow.bot{opacity:.72}
+  /* Colour by type of error (_erKind): the bar on the left, the count badge and
+     the type chip. A script error keeps the red badge; the others outline it. */
+  .errow.k-reject,.erk-reject{--ek:var(--warn-text)}
+  .errow.k-load,.erk-load{--ek:var(--m-net)}
+  .errow.k-ok,.erk-ok{--ek:var(--ok-text)}
+  .errow.k-diag,.erk-diag{--ek:var(--muted)}
+  .erk-crash{--ek:var(--err-text)}
+  b[class^="erk-"]{color:var(--ek)}
+  .errow:not(.k-crash) .ercount{background:transparent;border-color:var(--ek);color:var(--ek)}
+  .erchip.kind{color:var(--ek);border-color:var(--ek);font-weight:600}
+  .chip .chn{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:400}
+  .chip.on .chn{color:inherit}
+  .chip.none{opacity:.5}
   .erhd{display:flex;align-items:baseline;gap:10px;min-width:0;grid-column:1}
   .ercount{flex:none;min-width:38px;padding:1px 7px;border-radius:999px;background:var(--err-bg);border:1px solid var(--err-line);color:var(--err-text);font-size:.74rem;font-weight:700;text-align:center;font-variant-numeric:tabular-nums}
   .errow.bot .ercount{background:transparent;border-color:var(--line);color:var(--muted)}
   .ermsg{font-weight:600;color:var(--cream);word-break:break-word}
-  .ersrc{grid-column:1;font-size:.76rem;color:var(--navfg);word-break:break-all;padding-left:48px}
-  .erchips{grid-column:1;display:flex;flex-wrap:wrap;gap:5px;padding-left:48px}
+  .ersrc{grid-column:1;align-self:start;font-size:.76rem;color:var(--navfg);word-break:break-all;padding-left:48px}
+  .erchips{grid-column:1;display:flex;flex-wrap:wrap;align-items:flex-start;align-self:start;gap:5px;padding-left:48px}
   .erchip{padding:1px 8px;border-radius:999px;border:1px solid var(--line);font-size:.72rem;color:var(--navfg);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
   .erchip.bot{color:var(--muted);border-style:dashed}
   .erchip.warn{color:var(--warn-text);border-color:var(--warn-line)}
@@ -1206,8 +1219,8 @@
       <section class="ovmodes" id="erTiles" aria-label="Client errors at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <div class="boardhead"><h2>Client script errors</h2><span id="erSum" class="headnote"></span><div class="bhact"><button id="erRefresh" class="use">Refresh</button><button id="erClear" class="use danger">Clear all</button></div></div>
-        <p class="muted">JavaScript errors reported by players' browsers, grouped by signature so one recurring bug is one line with a counter. Players can switch the reporting off in Advanced options; nothing but the error itself, the build, the device and a masked IP is ever sent. Errors from search-engine crawlers are kept but marked <b>Bot only</b> (or <b>incl. bots</b>): none of them reaches a player. Kept in memory only — a restart clears the list.</p>
-        <div class="ltool"><input id="erFilter" class="filter" type="search" placeholder="Filter: message, file, version, device…" autocomplete="off"><label class="ltog"><input type="checkbox" id="erHideBots"> Hide robot-only errors</label></div>
+        <p class="muted">JavaScript errors reported by players' browsers, grouped by signature so one recurring bug is one line with a counter. Players can switch the reporting off in Advanced options; nothing but the error itself, the build, the device and a masked IP is ever sent. Errors from search-engine crawlers are kept but marked <b>Bot only</b> (or <b>incl. bots</b>): none of them reaches a player. Each error carries a colour by type: <b class="erk-crash">script error</b> (an exception in the client), <b class="erk-reject">rejection</b> (a promise nobody caught), <b class="erk-load">load failure</b> (one of our files did not arrive), <b class="erk-ok">recovered</b> (an automatic retry worked) and <b class="erk-diag">diagnostic</b> (the probe that tells why a file failed). Kept in memory only — a restart clears the list.</p>
+        <div class="ltool"><input id="erFilter" class="filter" type="search" placeholder="Filter: message, file, version, device…" autocomplete="off"><div class="chips" id="erKinds" role="group" aria-label="Error type"></div><label class="ltog"><input type="checkbox" id="erHideBots"> Hide robot-only errors</label></div>
         <div id="erMsg" class="msg"></div>
         <div id="erList" class="erlist"><div class="empty">Loading…</div></div>
       </div>
@@ -6338,8 +6351,33 @@
   // known about it as chips (count, last seen, builds, devices, players,
   // modes, robots). Tiles on top; a filter and « Hide robot-only errors »
   // only narrow what is shown.
-  var _erData=null, _erHideBots=false;
+  var _erData=null, _erHideBots=false, _erKindSel='all';
   try{ _erHideBots=localStorage.getItem('pth_admin_err_hidebots')==='1'; }catch(e){}
+  // Type of an error group, read from its message: the client collector and
+  // i18n.mjs report load failures, retries and probes in fixed English words
+  // (pokerth-client.html, modules/i18n.mjs); everything else is an exception.
+  // [key, chip label, colour, card label]
+  var ER_KINDS=[['crash','Script errors','var(--err-text)','Script error'],['reject','Rejections','var(--warn-text)','Rejection'],
+                ['load','Load failures','var(--m-net)','Load failure'],['ok','Recovered','var(--ok-text)','Recovered'],
+                ['diag','Diagnostics','var(--muted)','Diagnostic']];
+  try{ var _ek=localStorage.getItem('pth_admin_err_kind'); if(_ek==='all'||ER_KINDS.some(function(k){ return k[0]===_ek; })) _erKindSel=_ek; }catch(e){}
+  function _erKind(e){
+    var m=String((e&&e.msg)||'');
+    if(/^Unhandled rejection\b/.test(m)) return 'reject';
+    if(/^(Load-failure retry #\d+|Lang load retry) recovered\b/.test(m)) return 'ok';
+    // A probe answering 200 only says the network came back; a 404 or a 5xx
+    // means the file itself is missing or broken, which is a load failure.
+    if(/^Load-failure probe:/.test(m)) return /^Load-failure probe: HTTP [45]\d\d\b/.test(m)?'load':'diag';
+    if(/^(Failed to load |Load-failure retry #\d+ failed|Lang load failed)/.test(m)) return 'load';
+    return 'crash';
+  }
+  function _erKindChips(g){
+    var ch=$('erKinds'); if(!ch) return;
+    var n={}; g.forEach(function(e){ var k=_erKind(e); n[k]=(n[k]||0)+1; });
+    ch.innerHTML='<button type="button" class="chip'+(_erKindSel==='all'?' on':'')+'" data-ek="all" aria-pressed="'+(_erKindSel==='all')+'">All <span class="chn">'+g.length+'</span></button>'
+      +ER_KINDS.map(function(k){ var on=_erKindSel===k[0], c=n[k[0]]||0;
+        return '<button type="button" class="chip'+(on?' on':'')+(c?'':' none')+'" data-ek="'+k[0]+'" aria-pressed="'+on+'"><i style="background:'+k[2]+'"></i>'+k[1]+' <span class="chn">'+c+'</span></button>'; }).join('');
+  }
   function _erBotOnly(e){ var n=(typeof e.bots==='number')?e.bots:(e.uas||[]).filter(_seIsBot).length; return !!n && n>=(e.uas||[]).length; }
   function _erTiles(g,now){
     var box=$('erTiles'); if(!box) return;
@@ -6351,7 +6389,8 @@
   }
   function _erText(e){
     var src=String(e.src||'');
-    return [e.msg||'', src+(e.line?(':'+e.line+(e.col?(':'+e.col):'')):''), (e.vers&&e.vers.length)?'builds: '+e.vers.join(', '):'', e.stack||''].filter(Boolean).join('\n');
+    var kd=ER_KINDS.filter(function(k){ return k[0]===_erKind(e); })[0];
+    return [kd[3]+': '+(e.msg||''), src+(e.line?(':'+e.line+(e.col?(':'+e.col):'')):''), (e.vers&&e.vers.length)?'builds: '+e.vers.join(', '):'', e.stack||''].filter(Boolean).join('\n');
   }
   function _erRender(keepTop){
     var d=_erData, list=$('erList'), sum=$('erSum'); if(!d||!list) return;
@@ -6361,22 +6400,28 @@
       +(d.since?' · since the proxy started, '+new Date(d.since).toLocaleString():'');
     var hb=$('erHideBots'); if(hb) hb.checked=_erHideBots;
     var q=(($('erFilter')||{}).value||'').trim().toLowerCase();
-    var shown=g.filter(function(e){
+    // Robots and the text filter first: the type chips count what is left, so
+    // each count says what a click on it would show.
+    var pool=g.filter(function(e){
       if(_erHideBots && _erBotOnly(e)) return false;
       if(!q) return true;
       return [e.msg,e.src,(e.vers||[]).join(' '),(e.uas||[]).map(_seDev).join(' '),(e.modes||[]).join(' ')].join(' ').toLowerCase().indexOf(q)>=0;
     });
+    _erKindChips(pool);
+    var shown=_erKindSel==='all'?pool:pool.filter(function(e){ return _erKind(e)===_erKindSel; });
     list.innerHTML='';
     if(!g.length){ list.innerHTML='<div class="empty">No error reported. Enjoy it while it lasts.</div>'; _erFit(list); return; }
     if(!shown.length){ list.innerHTML='<div class="empty">No error matches the filter.</div>'; _erFit(list); return; }
     shown.forEach(function(e){
-      var row=document.createElement('div'); row.className='errow'+(_erBotOnly(e)?' bot':'');
+      var kind=_erKind(e), kd=ER_KINDS.filter(function(k){ return k[0]===kind; })[0];
+      var row=document.createElement('div'); row.className='errow k-'+kind+(_erBotOnly(e)?' bot':'');
       // Our own origin is shortened, never a third party's: a foreign host is precisely what matters.
       var _src=String(e.src||'').replace(location.origin,'');
       var where=_src?(_annEsc(_src)+(e.line?(':'+e.line+(e.col?(':'+e.col):'')):'')):'';
       var devs=(e.uas||[]).map(_seDev).filter(Boolean);
       var nBot=(typeof e.bots==='number')?e.bots:(e.uas||[]).filter(_seIsBot).length;
       var chips=[
+        '<span class="erchip kind">'+kd[3]+'</span>',
         nBot?('<span class="erchip '+(_erBotOnly(e)?'bot':'warn')+'">'+(_erBotOnly(e)?'Robots only':'incl. robots')+'</span>'):'',
         '<span class="erchip">last '+_annEsc(_erWhen(e.last))+'</span>',
         (e.first&&e.first!==e.last)?'<span class="erchip">first '+_annEsc(_erWhen(e.first))+'</span>':'',
@@ -6420,8 +6465,14 @@
     }).catch(function(){ var l=$('erList'); if(l) l.innerHTML='<div class="empty">Network error.</div>'; });
   }
   (function(){
-    var f=$('erFilter'), hb=$('erHideBots');
+    var f=$('erFilter'), hb=$('erHideBots'), ek=$('erKinds');
     if(f) f.addEventListener('input',function(){ _erRender(0); });
+    if(ek) ek.addEventListener('click',function(ev){
+      var b=ev.target.closest&&ev.target.closest('[data-ek]'); if(!b) return;
+      _erKindSel=b.getAttribute('data-ek');
+      try{ localStorage.setItem('pth_admin_err_kind',_erKindSel); }catch(x){}
+      _erRender(0);
+    });
     if(hb) hb.addEventListener('change',function(){ _erHideBots=hb.checked; try{ localStorage.setItem('pth_admin_err_hidebots',_erHideBots?'1':'0'); }catch(e){} _erRender(0); });
   })();
   (function(){

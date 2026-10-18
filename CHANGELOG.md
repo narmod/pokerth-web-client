@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin › Errors: filter and colour by type** (`web.141`) — each error group is typed from its message:
+  script error (red), rejection (amber), load failure (blue), recovered (green), diagnostic (grey; a probe that
+  answers 404 or 5xx counts as a load failure). The type shows as a bar on the left of the card, the colour of
+  the count badge and a chip in words; a row of chips above the list filters by type, with a count per type that
+  follows the text filter and « Hide robot-only errors », and the choice is remembered. Copy prefixes the type.
+  The chips of a card with a stack no longer stretch to the height of its buttons.
 - **Admin icon** (`web.139`) — the dashboard has an icon of its own, the red and white TH chip: browser tab
   (`admin.ico` 16/32/48, 32 px and 192 px PNG), iOS home screen (180 px on the theme colour) and the installed
   admin app (192/512 px, maskable versions inside the safe zone). Files under `public/admin-icons/`; the player

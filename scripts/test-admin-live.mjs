@@ -152,6 +152,58 @@ ok(cards().length === 1 && /Script error/.test(cards()[0].textContent), 'the fil
 $('erFilter').value = 'nothing-like-this';
 $('erFilter').dispatchEvent(new window.Event('input'));
 ok(/No error matches/.test($('erList').textContent), 'nothing found says so');
+$('erFilter').value = '';
+$('erFilter').dispatchEvent(new window.Event('input'));
+
+// ── Error types: filter chips and colour code ─────────────────────────────
+// Same messages as the client collector (pokerth-client.html) and i18n.mjs.
+const G = (sig, msg, src, extra) => Object.assign({ sig, msg, src: src || '', line: 0, col: 0, stack: '', first: NOW - 6e5, last: NOW - 6e5, count: 1, vers: ['2.1.10-web.140'], uas: [UA_AND], bots: 0, modes: [], ips: 1 }, extra || {});
+const S = 'https://example.org';
+CANNED['/admin/errors'] = { ok: true, now: NOW, since: NOW - 864e5, groups: [
+  G('k1', "Uncaught ReferenceError: App is not defined", S + '/', { line: 1413, col: 146 }),
+  G('k2', 'Unhandled rejection: Failed to fetch', '', { count: 3, stack: 'TypeError: Failed to fetch' }),
+  G('k3', 'Failed to load script', S + '/modules/theme.mjs'),
+  G('k4', 'Load-failure retry #2 failed, giving up', S + '/modules/theme.mjs'),
+  G('k5', 'Lang load failed, giving up', '/modules/lang/zh.mjs'),
+  G('k6', 'Load-failure probe: HTTP 404 online sw', S + '/modules/theme.mjs'),
+  G('k7', 'Load-failure probe: HTTP 200 online sw', S + '/modules/guide/index.mjs'),
+  G('k8', 'Load-failure retry #1 recovered', S + '/pokerth.css'),
+  G('k9', 'Lang load retry recovered', '/modules/lang/zh.mjs'),
+  G('k10', 'Failed to load script', S + '/modules/ui/fmt.mjs', { uas: [UA_BOT], bots: 1 }),
+] };
+window.localStorage.removeItem('pth_admin_err_kind');
+$('erRefresh').click();
+await tick(150);
+const kinds = () => cards().map((c) => (c.className.match(/\bk-(\w+)/) || [])[1]).join(',');
+ok(kinds() === 'crash,reject,load,load,load,load,diag,ok,ok,load', 'each card is typed from its message (' + kinds() + ')');
+const chip = (k) => doc.querySelector('#erKinds [data-ek="' + k + '"]');
+ok(['all', 'crash', 'reject', 'load', 'ok', 'diag'].every((k) => chip(k)), 'one chip per type, plus All');
+const cn = (k) => chip(k).querySelector('.chn').textContent;
+ok(cn('all') === '10' && cn('crash') === '1' && cn('reject') === '1' && cn('load') === '5' && cn('ok') === '2' && cn('diag') === '1',
+  'each chip counts its groups (' + ['all', 'crash', 'reject', 'load', 'ok', 'diag'].map(cn).join(',') + ')');
+ok(chip('all').classList.contains('on'), 'All is selected by default');
+ok(/Load failure/.test(cards()[2].querySelector('.erchip.kind').textContent) && /Recovered/.test(cards()[7].querySelector('.erchip.kind').textContent),
+  'every card says its type in words, not only in colour');
+chip('load').click();
+ok(cards().length === 5 && cards().every((c) => c.classList.contains('k-load')), 'Load failures keeps the five load failures');
+ok(chip('load').classList.contains('on') && chip('load').getAttribute('aria-pressed') === 'true', 'and shows it is selected');
+ok(window.localStorage.getItem('pth_admin_err_kind') === 'load', 'the choice is remembered');
+$('erHideBots').checked = true;
+$('erHideBots').dispatchEvent(new window.Event('change'));
+ok(cards().length === 4 && cn('load') === '4' && cn('all') === '9', 'hiding robots lowers the counts too');
+$('erHideBots').checked = false;
+$('erHideBots').dispatchEvent(new window.Event('change'));
+$('erFilter').value = 'theme.mjs';
+$('erFilter').dispatchEvent(new window.Event('input'));
+ok(cards().length === 3 && cn('diag') === '0' && chip('diag').classList.contains('none'), 'the text filter narrows within the type; an empty type is greyed');
+$('erFilter').value = '';
+$('erFilter').dispatchEvent(new window.Event('input'));
+chip('ok').click();
+ok(cards().length === 2 && cards().every((c) => c.classList.contains('k-ok')), 'Recovered keeps the retries that worked');
+chip('all').click();
+ok(cards().length === 10, 'All shows everything again');
+ok(errors.length === 0, 'switching types throws nothing' + (errors.length ? ': ' + errors[0] : ''));
+
 $('erClear').click();
 await tick();
 ok(posts.some((p) => /\/admin\/errors/.test(p.url) && p.body.clear === 1), 'Clear all still clears');
