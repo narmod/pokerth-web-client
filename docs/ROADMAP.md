@@ -273,7 +273,8 @@ use too. Items are grouped by status rather than fixed phases.
   Internet and LAN cards and connections per day against the previous period (`web.120`), a custom date range
   (`web.121`), connections live by country (`web.122`), connections per LAN server and guests / accounts
   (`web.123`), cross-tabulated session counts recorded (`web.124`), readable (`web.125`) and narrowed from the filter
-  card (`web.126`). Next: each remaining section moved to the new layout.
+  card (`web.126`); Live (Sessions and Errors) in the new layout (`web.127`). Next: each remaining section moved
+  to the new layout.
 
 - **Official QML client fidelity** — ongoing pixel-and-behaviour alignment of the in-game
   screen with the official QML client (action bar, mobile layouts, seat geometry).

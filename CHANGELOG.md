@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin Live: Sessions and Errors in the new layout** (`web.127`) — Sessions: four tiles by entry mode
+  (Internet bridged / direct, LAN with its servers, Training, Live), one table for bridges and notice channels
+  (mode, who, country with flag, where, device · version · masked IP, since and traffic, state, Disconnect), a
+  filter and mode chips (a tile clicked filters too, again lets go; kept per browser); on a phone each row folds
+  into a card. Errors: tiles (distinct, occurrences, last 24 h, robots only), one card per group with a count
+  badge, the source line, chips (robots, last / first seen, builds, devices, players, modes in words), Stack
+  folded, Copy, Dismiss; a filter and « Hide robot-only errors » (kept per browser). Same endpoints, nothing new
+  is recorded. New test `test-admin-live.mjs`.
 - **Admin Statistics: « Narrow to »** (`web.126`) — a third row in the filter card: Country, Device, App,
   New or known, LAN server, Account, each a chip opening the list of values counted over the period (with their
   counts), kept per browser, Clear lifts them all. While narrowed, the World page reads `/admin/cube`: the map's
