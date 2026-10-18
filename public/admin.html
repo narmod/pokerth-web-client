@@ -76,7 +76,7 @@
   .gsrow .srowline label{display:inline-flex;align-items:center;gap:5px;margin:0;font-size:.82rem}
   .gsrow .srowline button{flex:0 0 auto}
   .gsrow .stls{border-left:2px solid var(--line);padding-left:10px;margin:8px 0 0}
-  .gsrow .sdirty{font-size:.72rem;color:#FFC107;border:1px solid #FFC107;border-radius:6px;padding:1px 6px;margin-left:8px}
+  .gsrow .sdirty{font-size:.72rem;color:var(--warn-text);border:1px solid var(--warn-line);border-radius:6px;padding:1px 6px;margin-left:8px}
   .srvhint{font-size:.78rem;color:var(--text);margin:6px 0 0}
   .srveff{border:1px solid var(--line);border-radius:10px;padding:10px;margin:0 0 10px}
   .srveff b{color:var(--gold)}
@@ -664,7 +664,7 @@
   /* ── Community: leaderboard and polls ─────────────────────────────────── */
   .ovms.ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .ovmn.sm{font-size:1.15rem;line-height:1.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  #panel-broadcast>.ovmodes{column-span:all;-webkit-column-span:all}
+  [id^="panel-"]>.ovmodes{column-span:all;-webkit-column-span:all}
   .bcrow.off .plq{color:var(--navfg)}
   #ldEntries tr[hidden]{display:none}
   #panel-broadcast .periodrow{flex-wrap:wrap}
@@ -747,6 +747,17 @@
   :where(.card) input:where(:not([type]),[type=text],[type=number],[type=url],[type=email],[type=search],[type=tel],[type=time],[type=date],[type=datetime-local]){box-sizing:border-box;min-height:36px;padding:7px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream);font:inherit;font-size:.85rem}
   :where(:root[data-admin-theme="light"] .card) input:where(:not([type]),[type=text],[type=number],[type=url],[type=email],[type=search],[type=tel],[type=time],[type=date],[type=datetime-local]){background:rgba(255,255,255,.75)}
   :where(.card) input:where(:not([type]),[type=text],[type=number],[type=url]):disabled{opacity:.5}
+  :where(.card) textarea{box-sizing:border-box;padding:8px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream);font:inherit;font-size:.85rem;line-height:1.45}
+  :where(:root[data-admin-theme="light"] .card) textarea{background:rgba(255,255,255,.75)}
+  /* ── Infrastructure ────────────────────────────────────────────────────── */
+  .srvhint.warn,.warntx{color:var(--warn-text)}
+  .srvsteps{border:1px solid var(--line);border-radius:10px;padding:4px 12px 12px;margin:0 0 12px}
+  .stephd{margin:12px 0 6px;color:var(--cream)}
+  .stephd .muted{font-weight:400}
+  .gsrow{border:1px solid var(--line);border-radius:10px;padding:12px;margin:0 0 8px;background:var(--hover)}
+  .allowrow{display:flex;align-items:flex-start;gap:10px;margin:4px 0}
+  .allowrow>b{flex:0 0 46px;font-size:.8rem;color:var(--muted);padding-top:2px}
+  #pxHosts,#pxPorts{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   :where(.card) input:where(:not([type]),[type=text],[type=number],[type=url],[type=search]):focus-visible{outline:2px solid var(--accent);outline-offset:1px}
   /* ── Player experience ─────────────────────────────────────────────────── */
   .pxmode .lvdot{margin-left:2px}
@@ -1399,6 +1410,7 @@
     </div>
 
     <div id="panel-identity" style="display:none">
+      <section class="ovmodes" id="idTiles" aria-label="How this server presents itself"><div class="empty">Loading…</div></section>
       <div class="card">
         <h2>Server identity (login screen)</h2>
         <p class="muted">Shown to everyone on the login screen, regardless of theme. Leave blank for the defaults (“PokerTH” / “Web Client”).</p>
@@ -1489,6 +1501,7 @@
     </div>
 
     <div id="panel-proxy" style="display:none">
+      <section class="ovmodes" id="prTiles" aria-label="The bridge at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <h2>Proxy</h2>
         <p class="muted">Server-side bridge settings. Always-allowed hosts: pokerth.net, www.pokerth.net, pthsrv.pokerth.net, localhost, 127.0.0.1, ::1 (plus the servers approved in the LAN directory). Changes apply live (no restart).</p>
@@ -1736,12 +1749,13 @@
       </div>
     </div>
     <div id="panel-servers" style="display:none">
+      <section class="ovmodes" id="gsTiles" aria-label="Where the Internet button leads"><div class="empty">Loading…</div></section>
       <div class="card">
         <div class="boardhead"><h2>Game servers</h2><button id="srvAddBtn" class="use">+ Add server</button></div>
         <p class="muted">Where the <b>Internet / PokerTH.net</b> button of the login page connects. Three choices below — the banner always shows the result. The proxy is only a relay; it never runs the game server itself.</p>
         <div id="srvEff" class="srveff"><span class="muted">Loading…</span></div>
-        <div class="card" style="margin:0 0 10px;padding:10px">
-          <div style="margin-bottom:6px"><b>1 · Which server?</b> <span class="muted" style="font-weight:normal">(source)</span></div>
+        <div class="srvsteps">
+          <div class="stephd"><b>1 · Which server?</b> <span class="muted">(source)</span></div>
           <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvSource" class="srcManual"> <b>Manual</b> — the server marked <b>Active</b> in the list (step 3)</label>
           <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvSource" class="srcAuto"> <b>Auto</b> — follow the official serverlist (auto-updates if PokerTH moves; the list below is ignored)</label>
           <div class="srcAutoBox" style="display:none;margin:6px 0 0">
@@ -1749,18 +1763,18 @@
             <div class="periodrow" style="margin:4px 0"><button id="srvSlCheck" class="use" type="button">Check serverlist</button></div>
             <div id="srvSlStat" class="msg" style="margin:4px 0 0"></div>
           </div>
-          <div style="margin:10px 0 6px"><b>2 · How?</b> <span class="muted" style="font-weight:normal">(transport)</span></div>
+          <div class="stephd"><b>2 · How?</b> <span class="muted">(transport)</span></div>
           <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvTransport" class="trDirect"> <b>Direct WS</b> — browser dials wss://www.pokerth.net/pthlive itself (historical; no reconnect grace)</label>
           <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvTransport" class="trProxy"> <b>Via proxy</b> — bridge through this proxy (session kept alive on wifi drops, buffered reconnect)</label>
-          <div style="margin:10px 0 4px"><b>Embedded spectator mode</b> <span class="muted" style="font-weight:normal">(/live)</span></div>
+          <div class="stephd"><b>Embedded spectator mode</b> <span class="muted">(/live)</span></div>
           <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="liveTransport" class="ltInherit"> <b>Same as above</b> — /live uses whatever the Internet mode uses (default)</label>
           <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="liveTransport" class="ltDirect"> <b>Direct WS</b> — spectators dial wss://www.pokerth.net/pthlive themselves, this proxy carries nothing</label>
           <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="liveTransport" class="ltProxy"> <b>Via proxy</b> — spectators bridge through this proxy, like ordinary players</label>
           <div class="muted" style="margin:2px 0 8px;opacity:.8">An install running beside the game server and one running on a separate machine rarely want the same answer here, which is why /live has its own setting.</div>
-          <label class="muted" style="display:block;margin:3px 0 3px 22px"><input type="checkbox" id="srvPP"> Send <b>PROXY protocol</b> header — forwards each player&#39;s real IP to the game server (v1, haproxy-style). Applies to the active server above only; LAN / dedicated addresses typed by players never receive it. <span style="color:#FFC107">Enable only if that server expects it, otherwise every connection to it fails.</span></label>
+          <label class="muted" style="display:block;margin:3px 0 3px 22px"><input type="checkbox" id="srvPP"> Send <b>PROXY protocol</b> header — forwards each player&#39;s real IP to the game server (v1, haproxy-style). Applies to the active server above only; LAN / dedicated addresses typed by players never receive it. <span class="warntx">Enable only if that server expects it, otherwise every connection to it fails.</span></label>
         </div>
-        <div style="margin:2px 0 6px"><b>3 · Registered servers</b> <span class="muted" style="font-weight:normal">— used in Manual; saving also allowlists host + port. “Check” tests the values on screen with the same TLS settings as a real game.</span></div>
-        <div id="srvAutoNote" class="srvhint" style="display:none;color:#FFC107;margin:0 0 6px">Source is <b>Auto</b>: the serverlist decides — “Active” below has no effect until you switch back to Manual.</div>
+        <div class="stephd"><b>3 · Registered servers</b> <span class="muted">— used in Manual; saving also allowlists host + port. “Check” tests the values on screen with the same TLS settings as a real game.</span></div>
+        <div id="srvAutoNote" class="srvhint warn" style="display:none;margin:0 0 6px">Source is <b>Auto</b>: the serverlist decides — “Active” below has no effect until you switch back to Manual.</div>
         <div id="srvRows"><div class="empty">Loading…</div></div>
         <div class="periodrow" style="margin-top:10px"><button id="srvSaveBtn" class="use">Save all</button></div>
         <div id="srvState" class="msg"></div>
@@ -1974,12 +1988,12 @@
       :(_direct?'the browser dials wss://www.pokerth.net/pthlive directly (no session grace)'
       :'through this proxy \u2014 Direct only applies to a pokerth.net host');
     var warn='';
-    if(eff.from==='builtin') warn='<div class="srvhint" style="color:#FFC107">⚠ '+(eff.source==='auto'
+    if(eff.from==='builtin') warn='<div class="srvhint warn">⚠ '+(eff.source==='auto'
       ? 'The serverlist did not resolve'+(eff.error?' ('+srvEsc(eff.error)+')':'')+' — switch to Manual and tick “Active” on a server below.'
       : 'Pick a server below and tick “Active”, or switch the source to Auto.')+'</div>';
-    else if(eff.error) warn='<div class="srvhint" style="color:#FFC107">⚠ '+srvEsc(eff.error)+'</div>';
+    else if(eff.error) warn='<div class="srvhint warn">⚠ '+srvEsc(eff.error)+'</div>';
     if(eff.transport==='proxy'&&_WS_PORTS.indexOf(parseInt(eff.port,10))>=0)
-      warn+='<div class="srvhint" style="color:#FFC107">⚠ '+srvEsc(srvPortWarn(eff.port))+'</div>';
+      warn+='<div class="srvhint warn">⚠ '+srvEsc(srvPortWarn(eff.port))+'</div>';
     box.innerHTML='<div style="margin-bottom:4px"><b>Effective target</b> — what the client will dial</div>'
       +'<div class="tgt">'+(_direct?'wss://www.pokerth.net/pthlive':(srvEsc(eff.host)+':'+srvEsc(eff.port)+(eff.tls?' · TLS':' · plain')))+(eff.name?' · '+srvEsc(eff.name):'')+'</div>'
       +'<div class="srvhint">'+srvEsc(origin)+' · '+srvEsc(tr)+'</div>'+warn;
@@ -1988,14 +2002,14 @@
   function renderServers(){
     var box=$('srvRows'); if(!box) return;
     if(!_srv.length){ box.innerHTML='<div class="empty">No server yet. Click “+ Add server”.</div>'; return; }
-    box.innerHTML=('<div class="defrow" style="margin:0 0 8px"><label class="muted" title="No server selected: the client falls back to the address built into its code"><input type="radio" name="srvActive" class="srvANone" '+(_activeSrv?'':'checked')+'> <b>None</b> — fall back to the built-in client address (pokerth.net:7234). <span style="color:#FFC107">No game server listens there; players will not be able to connect.</span></label></div>')+_srv.map(function(s,i){
+    box.innerHTML=('<div class="defrow" style="margin:0 0 8px"><label class="muted" title="No server selected: the client falls back to the address built into its code"><input type="radio" name="srvActive" class="srvANone" '+(_activeSrv?'':'checked')+'> <b>None</b> — fall back to the built-in client address (pokerth.net:7234). <span class="warntx">No game server listens there; players will not be able to connect.</span></label></div>')+_srv.map(function(s,i){
       var pw=srvPortWarn(s.port);
-      return '<div class="card gsrow" style="margin:0 0 8px;padding:12px" data-i="'+i+'">'
+      return '<div class="gsrow" data-i="'+i+'">'
         +'<div class="sfield"><span>Name</span><input type="text" class="srvN" maxlength="40" placeholder="PokerTH.net (internal)" value="'+srvEsc(s.name)+'">'
           +'<span class="sdirty" style="display:none">unsaved</span></div>'
         +'<div class="sfield"><span>Host</span><input type="text" class="srvH" maxlength="255" placeholder="game.example.org or an IP address" value="'+srvEsc(s.host)+'" autocomplete="off"></div>'
         +'<div class="sfield"><span>Port</span><input type="number" class="srvP" min="1" max="65535" value="'+(parseInt(s.port,10)||7234)+'" style="max-width:120px"></div>'
-        +(pw?'<div class="srvhint" style="color:#FFC107">⚠ '+srvEsc(pw)+'</div>':'')
+        +(pw?'<div class="srvhint warn">⚠ '+srvEsc(pw)+'</div>':'')
         +'<div class="srowline">'
           +'<label title="Encrypt the connection to this server"><input type="checkbox" class="srvT" '+(s.tls?'checked':'')+'> TLS</label>'
           +'<label title="Use this server for the Internet / PokerTH.net button"><input type="radio" class="srvA" name="srvActive" '+(s.id&&s.id===_activeSrv?'checked':'')+' '+(s.id?'':'disabled')+'> Active</label>'
@@ -2032,6 +2046,22 @@
     });
     var _none=box.querySelector('.srvANone'); if(_none) _none.addEventListener('change',function(){ _activeSrv=''; srvMarkDirty(-1); });
   }
+  // Tiles: what the Internet button dials, who decides it, how it travels
+  // (players and /live), and how wide the dial allowlist is. From the same
+  // /admin/servers answer as the rest of the page.
+  function _gsTiles(d){
+    var box=$('gsTiles'); if(!box) return;
+    var eff=d.effective||{}, isPth=String(eff.host||'').toLowerCase().indexOf('pokerth.net')>=0, direct=eff.transport!=='proxy'&&isPth;
+    var act=(d.servers||[]).filter(function(x){ return x.id&&x.id===d.activeServerId; })[0];
+    var al=d.allowlist||{}, LT={inherit:'same as players',direct:'Direct WS',proxy:'via proxy'};
+    var T=[['Target',eff.host?(direct?'pokerth.net/pthlive':srvEsc(eff.host)+':'+srvEsc(eff.port)):'—',
+             eff.from==='builtin'?'built-in default — no game server there':(eff.from==='serverlist'?'from the official serverlist':'the active server'+(act&&act.name?': '+srvEsc(act.name):'')),
+             eff.from==='builtin'?'var(--err-text)':'var(--ok-text)',' sm'],
+           ['Source',d.source==='auto'?'Auto':'Manual',d.source==='auto'?(d.serverlist&&d.serverlist.error?'serverlist: '+srvEsc(d.serverlist.error):'the official serverlist decides'):((d.servers||[]).length+' registered server'+((d.servers||[]).length===1?'':'s')),'var(--accent)',''],
+           ['Transport',d.transport==='proxy'?'Via proxy':'Direct WS','/live: '+(LT[d.liveTransport]||LT.inherit)+(d.proxyProtocol?' · PROXY protocol':''),'var(--m-net)',''],
+           ['Dial allowlist',String((al.hosts||[]).length),'hosts · '+(al.ports||[]).length+' port'+((al.ports||[]).length===1?'':'s'),'var(--info-text)','']];
+    box.innerHTML=T.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn'+t[4]+'">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join('');
+  }
   function loadServers(){
     var box=$('srvRows'); if(box) box.innerHTML='<div class="empty">Loading…</div>';
     api('/admin/servers').then(function(r){return r.json();}).then(function(d){
@@ -2043,7 +2073,10 @@
       _srcMode=(d.source==='auto')?'auto':'manual'; _transport=(d.transport==='proxy')?'proxy':'direct'; _liveTransport=(d.liveTransport==='proxy'||d.liveTransport==='direct')?d.liveTransport:'inherit'; _pp=!!d.proxyProtocol; _slUrl=d.serverlistUrl||'';
       applySourceUI(d.serverlist||null); applyTransportUI(); applyEffectiveUI(d.effective||null);
       renderServers();
-      var al=$('srvAllow'); if(al){ var hosts=(d.allowlist&&d.allowlist.hosts)||[], ports=(d.allowlist&&d.allowlist.ports)||[]; al.innerHTML='<b>Hosts:</b> '+srvEsc(hosts.join(', ')||'—')+'<br><b>Ports:</b> '+srvEsc(ports.join(', ')||'—'); }
+      var al=$('srvAllow'); if(al){ var hosts=(d.allowlist&&d.allowlist.hosts)||[], ports=(d.allowlist&&d.allowlist.ports)||[];
+        var chips=function(a){ return a.length?a.map(function(x){ return '<span class="erchip mono">'+srvEsc(x)+'</span>'; }).join(''):'<span class="muted">—</span>'; };
+        al.innerHTML='<div class="allowrow"><b>Hosts</b><div class="erchips">'+chips(hosts)+'</div></div><div class="allowrow"><b>Ports</b><div class="erchips">'+chips(ports.map(String))+'</div></div>'; }
+      _gsTiles(d);
     }).catch(function(){ if(box) box.innerHTML='<div class="empty">Network error</div>'; loadFail('panel-servers','Network error'); });
   }
   function saveServers(){
@@ -3373,6 +3406,22 @@
       .then(function(r){return r.json();}).then(function(d){ if(d.ok){ bmsg('Leaderboard reset.','ok'); loadBoard(); } else bmsg('Reset failed: '+(d.error||'forbidden'),'err'); })
       .catch(function(){ bmsg('Network error.','err'); }); });
 
+  // Proxy and Identity tiles: the values the server holds (/admin/status),
+  // not what is being typed, so an unsaved edit never shows up here.
+  function _infraTiles(d){
+    var P=d.proxyCfg||{}, pr=$('prTiles'), id=$('idTiles');
+    var T=function(a){ return a.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn'+(t[4]||'')+'">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join(''); };
+    if(pr && d.proxyCfg) pr.innerHTML=T([
+      ['Connected',d.sockets==null?'—':String(d.sockets),(P.maxClients?'cap '+P.maxClients+' bridges':'no cap on bridges'),'var(--ok-text)'],
+      ['Session grace',(typeof P.graceSec==='number'?P.graceSec:120)+' s','a dropped player keeps the seat','var(--accent)'],
+      ['Extra hosts',String((P.allowedHosts||[]).length),(P.allowedPorts||[]).length?'and '+(P.allowedPorts||[]).length+' extra port'+((P.allowedPorts||[]).length===1?'':'s'):'port 7234 only','var(--m-lan)'],
+      ['Log',P.logLevel||'default','quiet = least CPU under load','var(--info-text)']]);
+    if(id) id.innerHTML=T([
+      ['Server name',srvEsc(d.serverName||'PokerTH'),d.serverTagline?srvEsc(d.serverTagline):'tagline: Web Client (default)','var(--accent)',' sm'],
+      ['Lobby clock',srvEsc(d.lobbyClockEff||d.lobbyClockTz||'—'),d.lobbyClockTz?'set here':'default zone','var(--warn-text)',' sm'],
+      ['Discord relay',d.discordChatWebhookUrl?'On':'Off',d.discordChatWebhookUrl?'lobby chat forwarded':'no webhook set','var(--m-net)'],
+      ['Search engines',d.seo&&d.seo.enabled?'Indexed':'Hidden',d.seo&&d.seo.enabled?srvEsc(d.seo.publicUrl||''):'noindex, robots.txt blocks crawlers',d.seo&&d.seo.enabled?'var(--ok-text)':'var(--muted)']]);
+  }
   // server
   function fmtUptime(s){ s=s||0; var d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60); return (d?d+'d ':'')+(h?h+'h ':'')+m+'m'; }
   function loadStatus(syncCfg){
@@ -3390,6 +3439,7 @@
       items.forEach(function(it){ var r=document.createElement('div');r.className='srow';var s=document.createElement('span');s.textContent=it[0];var b=document.createElement('b');b.textContent=it[1];if(it[0]==='Build version'&&_stale)b.className='err';r.appendChild(s);r.appendChild(b);el.appendChild(r); });
       // Only explicit (re)loads sync the editable controls, so auto-refresh never
       // resets the period dropdown or modes toggles while you're using them.
+      _infraTiles(d);
       if(syncCfg){
         if(d.resetPeriod) $('period').value=d.resetPeriod;
         if(d.modes){ modesState=Object.assign({offline:true,lan:true,pokerthnet:true},d.modes); renderModes(); }

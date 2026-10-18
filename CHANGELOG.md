@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin Infrastructure in the new layout** (`web.132`) — Game servers: tiles (what the Internet button
+  dials and why, source, transport with /live and PROXY protocol, the dial allowlist), the three steps in one framed
+  block instead of a card nested in a card, each registered server in its own frame, the allowlist as chips, every
+  warning in the theme's warning colour (it was a fixed yellow, hard to read on the light theme). Proxy: tiles
+  (connected and the cap, session grace, extra hosts and ports, log level). Identity & reach: tiles (server name,
+  lobby clock zone, Discord relay, search engines). The tiles show what the server holds, never an unsaved edit;
+  they span both columns of a two-column page. A bare textarea now gets the base field style too. New test
+  `test-admin-infra.mjs`.
 - **Admin Player experience in the new layout** (`web.131`) — Modes & features: tiles (entry modes offered,
   features switched off by name, live figures and community events on or off with their interval), each entry
   mode with its colour and what it is, the kill switches as a grid where a feature switched off is marked in red
