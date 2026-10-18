@@ -16,6 +16,13 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin Security in the new layout — the redesign is complete** (`web.134`) — tiles (delegate keys by name,
+  changes of the last 24 hours, refused writes, the last change and who made it), the categories of a new key as a
+  grid where a ticked one is marked, one row per key with its categories as chips and the key masked, and the audit
+  log as a table: the action in words (the endpoint beside it, the labels shared with Overview through
+  `PthAdmin.auditLabel`), the master key or the delegate key by name, the masked address, how long ago (the full
+  date beside it), done or refused with its status; a filter and « Refused only », a change count, still ten rows
+  then a scroll. Every section of the admin page now follows the same layout. New test `test-admin-security.mjs`.
 - **Admin Operations in the new layout** (`web.133`) — Health & logs: tiles (uptime, connections and game
   sessions, the served build and whether it still waits for a restart, open files), a filter and « Problems only »
   over the log lines (errors, warnings, refused or failed connections), with a line count; Copy copies what is shown.

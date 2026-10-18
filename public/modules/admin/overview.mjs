@@ -293,6 +293,10 @@ export function stop() {
   if (_slow) { clearInterval(_slow); _slow = null; }
 }
 
+// Security › Audit log reads the same labels (admin.html falls back to the raw
+// endpoint until this module has loaded).
+if (typeof window !== 'undefined' && window.PthAdmin) window.PthAdmin.auditLabel = auditLabel;
+
 if (typeof document !== 'undefined' && document.getElementById('panel-overview')) {
   document.addEventListener('admin:section', (e) => {
     if (e.detail && e.detail.t === 'overview') start(); else stop();

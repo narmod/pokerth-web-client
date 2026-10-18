@@ -753,6 +753,31 @@
   .srvhint.warn,.warntx{color:var(--warn-text)}
   /* ── Operations ────────────────────────────────────────────────────────── */
   .dpauto{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+  /* ── Security ──────────────────────────────────────────────────────────── */
+  .kyscopes{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:4px 10px;color:var(--navfg)}
+  .fsitem.kysc.on{background:var(--accent-soft);color:var(--accent-text)}
+  .kyrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+  .kyrow:first-child{border-top:0}
+  .kyleft{display:flex;flex-direction:column;gap:5px;min-width:0}
+  .kyleft b{color:var(--cream)}
+  .kyleft .erchips{padding-left:0}
+  .kyleft small{font-size:.76rem;color:var(--muted)}
+  .aurow{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,.9fr) minmax(0,.9fr) minmax(0,1fr) 110px;gap:4px 12px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:.84rem}
+  .aurow:first-child{border-top:0}
+  .aurow>span{min-width:0}
+  .aurow small{display:block;font-size:.72rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .auwhat b{display:block;font-weight:600;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .auip{color:var(--navfg);font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .auwhen{white-space:nowrap}
+  .aust{text-align:right;font-size:.78rem}
+  .aust .ok{color:var(--ok-text)} .aust .err{color:var(--err-text);font-weight:600}
+  .aurow.bad .auwhat b{color:var(--err-text)}
+  .erchip.master{color:var(--accent-text);border-color:var(--accent)}
+  @media(max-width:600px){
+    .aurow{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:'w s' 'o t' 'i i'}
+    .auwhat{grid-area:w} .aust{grid-area:s} .auwho{grid-area:o} .auwhen{grid-area:t;text-align:right} .auip{grid-area:i}
+    .auwhen small{display:none}
+  }
   .boardhead>h2.h3{font-size:.92rem}
   #panel-server .ltool{margin-top:2px}
   .srvsteps{border:1px solid var(--line);border-radius:10px;padding:4px 12px 12px;margin:0 0 12px}
@@ -1473,23 +1498,25 @@
     </div>
 
 <div id="panel-keys" style="display:none">
+      <section class="ovmodes" id="kyTiles" aria-label="Access and changes at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <h2>Create a delegate key</h2>
         <p class="muted">Give a third party access to only some sections. Pick a name and the categories they may manage. The full key is shown <b>once</b> at creation — copy it then. A lost key cannot be recovered (revoke and create a new one).</p>
         <div class="defrow fld left"><span style="white-space:nowrap">Name</span><input id="kyName" maxlength="64" placeholder="e.g. music-partner" autocomplete="off"></div>
-        <div class="defrow" style="margin:8px 0"><div id="kyScopes" style="display:flex;flex-wrap:wrap;gap:6px 16px"></div></div>
+        <div class="defrow" style="margin:8px 0"><div id="kyScopes" class="kyscopes" role="group" aria-label="Categories the key may manage"></div></div>
         <div class="rowtop"><button id="kyCreate" class="use">Create key</button></div>
         <div id="kyNew" style="display:none;margin-top:10px"></div>
         <div id="kyMsg" class="msg"></div>
       </div>
       <div class="card">
-        <div class="boardhead"><h2>Delegate keys</h2><button id="kyRefresh" class="use">Refresh</button></div>
+        <div class="boardhead"><h2>Delegate keys</h2><span id="kySum" class="headnote"></span><button id="kyRefresh" class="use">Refresh</button></div>
         <div id="kyList"><div class="empty">Loading…</div></div>
         <div id="kyListMsg" class="msg"></div>
       </div>
       <div class="card">
         <div class="boardhead"><h2>Audit log</h2><div class="bhact"><button id="auRefresh" class="use">Refresh</button><button id="auClear" class="use danger">Clear</button></div></div>
         <p class="muted">Every action that <b>changed</b> something, and who did it — the master key or a named delegate key. Reads are not logged: the dashboard polls itself every few seconds and would drown everything. Kept on disk, so a restart does not erase it. Tokens themselves are never recorded, only the name they carry.</p>
+        <div class="ltool"><input id="auFilter" class="filter" type="search" placeholder="Filter: action, key name, address…" autocomplete="off"><label class="ltog"><input type="checkbox" id="auRefused"> Refused only</label><span id="auCount" class="headnote"></span></div>
         <div id="auList"><div class="empty">Loading…</div></div>
         <div id="auMsg" class="msg"></div>
       </div>
@@ -5837,21 +5864,60 @@
   }
 
   // -- Audit log (master only) ------------------------------------------------
+  // One row per change: what (in words, the endpoint beside it), who (the
+  // master key or a delegate key by name), from where, when, and a refusal
+  // marked. The filter and « Refused only » narrow the rows; the list still
+  // stops at ten rows and scrolls.
+  var _auEntries=[], _kyKeys=null;
+  function _auLabel(a){ var f=window.PthAdmin&&window.PthAdmin.auditLabel; return f?f(a):(a||'?'); }
+  function _auAgo(ms){ var m=Math.max(0,Math.round(ms/60000)); if(m<1) return 'just now'; if(m<60) return m+' min ago'; var h=Math.round(m/60); if(h<48) return h+' h ago'; return Math.round(h/24)+' d ago'; }
+  function _auRender(){
+    var l=$('auList'); if(!l) return;
+    var e=_auEntries, q=(($('auFilter')||{}).value||'').trim().toLowerCase(), rf=!!(($('auRefused')||{}).checked);
+    _kyTiles();
+    if(!e.length){ l.innerHTML='<div class="empty">Nothing recorded yet.</div>'; var c0=$('auCount'); if(c0) c0.textContent=''; return; }
+    var L=e.filter(function(x){
+      if(rf && x.ok) return false;
+      if(!q) return true;
+      return [_auLabel(x.action),x.action,x.master?'master':x.actor,x.ip].join(' ').toLowerCase().indexOf(q)>=0;
+    });
+    var c=$('auCount'); if(c) c.textContent=(q||rf)?(L.length+' of '+e.length+' changes'):(e.length+' change'+(e.length===1?'':'s'));
+    if(!L.length){ l.innerHTML='<div class="empty">No change matches the filter.</div>'; return; }
+    var now=Date.now();
+    l.innerHTML=L.map(function(x){
+      var full=new Date(x.at).toLocaleString();
+      return '<div class="aurow'+(x.ok?'':' bad')+'">'
+        +'<span class="auwhat"><b>'+_annEsc(_auLabel(x.action))+'</b><small class="mono">'+_annEsc(x.action||'')+'</small></span>'
+        +'<span class="auwho"><span class="erchip'+(x.master?' master':'')+'">'+(x.master?'master key':_annEsc(x.actor||'?'))+'</span></span>'
+        +'<span class="auip mono">'+_annEsc(x.ip||'')+'</span>'
+        +'<span class="auwhen" title="'+_annEsc(full)+'">'+_annEsc(_auAgo(now-x.at))+'<small>'+_annEsc(full)+'</small></span>'
+        +'<span class="aust">'+(x.ok?'<span class="ok">done</span>':'<span class="err">refused'+(x.status?' ('+_annEsc(x.status)+')':'')+'</span>')+'</span>'
+        +'</div>';
+    }).join('');
+    capRows(l, 10);
+  }
   function loadAudit(){
     return api('/admin/audit').then(function(r){return r.json();}).then(function(d){
       var l=$('auList'); if(!l) return;
       if(!d||!d.ok){ l.innerHTML='<div class="empty">Could not load the audit log.</div>'; return; }
-      var e=d.entries||[];
-      if(!e.length){ l.innerHTML='<div class="empty">Nothing recorded yet.</div>'; return; }
-      l.innerHTML=e.map(function(x){
-        var when=new Date(x.at).toLocaleString();
-        var who=x.master?'master':_annEsc(x.actor||'?');
-        var st=x.ok?'':' <b class="err">'+(x.status||'')+'</b>';
-        return '<div class="srow"><span>'+_annEsc(x.action||'')+'</span><b>'+who+' \u00b7 '+_annEsc(x.ip||'')+' \u00b7 '+when+st+'</b></div>';
-      }).join('');
-      capRows(l, 10);
+      _auEntries=d.entries||[];
+      _auRender();
     }).catch(function(){ var l=$('auList'); if(l) l.innerHTML='<div class="empty">Network error.</div>'; });
   }
+  // Tiles: the delegate keys, the changes of the last 24 hours, the refused
+  // writes and the last change, from what the two lists above loaded.
+  function _kyTiles(){
+    var box=$('kyTiles'); if(!box) return;
+    var now=Date.now(), E=_auEntries, day=E.filter(function(x){ return now-x.at<864e5; }), bad=E.filter(function(x){ return !x.ok; }), last=E[0];
+    var K=_kyKeys;
+    var T=[['Delegate keys',K?String(K.length):'—',K?(K.length?K.map(function(k){ return _annEsc(k.name||''); }).join(', '):'only the master key'):'loading','var(--accent)',''],
+           ['Changes, 24 h',String(day.length),E.length+' in the log','var(--m-net)',''],
+           ['Refused',String(bad.length),bad.length?'last '+_auAgo(now-bad[0].at):'every write went through',bad.length?'var(--err-text)':'var(--ok-text)',''],
+           ['Last change',last?_auAgo(now-last.at):'—',last?_annEsc(_auLabel(last.action))+' · '+(last.master?'master key':_annEsc(last.actor||'?')):'nothing recorded yet','var(--warn-text)',' sm']];
+    box.innerHTML=T.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn'+t[4]+'">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join('');
+  }
+  if($('auFilter')) $('auFilter').addEventListener('input',_auRender);
+  if($('auRefused')) $('auRefused').addEventListener('change',_auRender);
   (function(){
     var r=$('auRefresh'); if(r) r.addEventListener('click',loadAudit);
     var c=$('auClear'); if(c) c.addEventListener('click',function(){
@@ -6500,18 +6566,21 @@
       var box=$('kyScopes'), list=$('kyList');
       if(!d||!d.ok){ if(list) list.innerHTML='<div class="empty">Could not load keys.</div>'; return; }
       if(box){ box.innerHTML=''; (d.available||[]).forEach(function(s){
-        var lbl=document.createElement('label'); lbl.className='muted'; lbl.style.cssText='display:inline-flex;align-items:center;gap:6px;white-space:nowrap';
+        var lbl=document.createElement('label'); lbl.className='fsitem kysc';
         var cb=document.createElement('input'); cb.type='checkbox'; cb.value=s; cb.style.width='auto';
+        cb.addEventListener('change',function(){ lbl.classList.toggle('on',cb.checked); });
         lbl.appendChild(cb); lbl.appendChild(document.createTextNode(' '+_kyLabel(s))); box.appendChild(lbl);
       }); }
+      _kyKeys=d.keys||[]; _kyTiles();
+      var ks=$('kySum'); if(ks) ks.textContent=_kyKeys.length?(_kyKeys.length+' key'+(_kyKeys.length===1?'':'s')):'';
       if(list){ list.innerHTML='';
         if(!(d.keys&&d.keys.length)){ list.innerHTML='<div class="empty">No delegate keys yet.</div>'; return; }
         d.keys.forEach(function(k){
-          var row=document.createElement('div'); row.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid rgba(127,127,127,.18)';
-          var left=document.createElement('div');
-          var chips=(k.scopes||[]).map(_kyLabel).join(', ');
-          var when=k.created?(' \u00b7 '+new Date(k.created).toLocaleDateString()):'';
-          left.innerHTML='<b>'+_annEsc(k.name||'')+'</b> <span class="muted">['+_annEsc(chips)+']</span><br><span class="muted" style="font-size:.8rem">'+_annEsc(k.masked||'')+when+'</span>';
+          var row=document.createElement('div'); row.className='kyrow';
+          var left=document.createElement('div'); left.className='kyleft';
+          var chips=(k.scopes||[]).map(function(s){ return '<span class="erchip">'+_annEsc(_kyLabel(s))+'</span>'; }).join('');
+          var when=k.created?('created '+new Date(k.created).toLocaleDateString()):'';
+          left.innerHTML='<b>'+_annEsc(k.name||'')+'</b><div class="erchips">'+chips+'</div><small><span class="mono">'+_annEsc(k.masked||'')+'</span>'+(when?' \u00b7 '+_annEsc(when):'')+'</small>';
           var del=document.createElement('button'); del.className='del'; del.textContent='Revoke'; del.addEventListener('click',function(){ kyRevoke(k.name); });
           row.appendChild(left); row.appendChild(del); list.appendChild(row);
         });
