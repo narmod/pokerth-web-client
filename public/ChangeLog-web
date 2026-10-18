@@ -1,3 +1,6 @@
+2026-10-18 version 2.1.10-web.140:
+- bugfix: when the hand-history database component failed to download (a brief network drop), the .pdb export and the automatic log saving stayed stuck for the rest of the session; the download is now retried and a later attempt works again
+
 2026-10-18 version 2.1.10-web.136:
 - bugfix: on a phone with the Extra large interface size, the big community cards no longer cover the players on the sides of a full table; the side seats now sit against the edges of the screen
 

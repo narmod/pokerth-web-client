@@ -94,6 +94,10 @@ ok(q().length === 0, 'a lookalike domain prefix does not pass as same-origin');
 q().length = 0;
 listeners.error(res('IMG', ORIGIN + '/avatars/x.png'));
 ok(q().length === 0, 'a 404 avatar is not a client bug');
+q().length = 0; timers.length = 0; injected.length = 0;
+listeners.error(res('LINK', ORIGIN + '/via_inject_blocker.css', { rel: 'stylesheet' }));
+await tick();
+ok(q().length === 0 && timers.length === 0, 'the stylesheet Via Browser injects is neither reported nor retried');
 
 // ── Injected-script noise ─────────────────────────────────────────
 // Browser extensions and in-app browsers run their own code inside the page;
@@ -106,6 +110,8 @@ const UC = ORIGIN + '/u.c.b.r.o.w.s.e.r/ucbrowser_script.js?UCFontSizeWebScriptD
   ['a page-translation extension', { message: 'null is not an object', filename: ORIGIN + '/', error: { stack: 'checkInScreen@' + ORIGIN + '/:1:1' } }],
   ['the script UC Browser injects', { message: "TypeError: undefined is not an object (evaluating 'a.tagName.match')", filename: UC, error: { stack: '@' + UC + ':94:461' } }],
   ['a content script using wrappedJSObject', { message: "TypeError: undefined is not an object (evaluating 'self.wrappedJSObject[sentinel]')", filename: ORIGIN + '/', error: { stack: 'global code@' + ORIGIN + '/:54:11' } }],
+  ['an iOS wallet browser emitting on window.ethereum', { message: "TypeError: undefined is not an object (evaluating 'window.ethereum.emit')", filename: ORIGIN + '/', error: { stack: 'global code@' + ORIGIN + '/:1:16' } }],
+  ['an iOS wallet browser writing window.ethereum', { message: "TypeError: undefined is not an object (evaluating 'window.ethereum.selectedAddress = undefined')", filename: ORIGIN + '/', error: { stack: 'global code@' + ORIGIN + '/:1:16' } }],
 ].forEach(([label, ev]) => {
   q().length = 0;
   listeners.error(ev);

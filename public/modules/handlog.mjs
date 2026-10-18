@@ -1502,22 +1502,67 @@ if (typeof window !== 'undefined') {
 // window._sqlJsUrl / _sqlJsWasmUrl, fournis par le glue du client).
 
 let _SQL = null;
+let _sqlPending = null;
+
+// The .wasm is fetched HERE and handed to sql.js as wasmBinary. Left to
+// itself, sql.js runs fetch(wasm).then(...) with no rejection handler: one
+// failed fetch (CDN <-> origin TLS burst, flaky mobile link) surfaced as an
+// "Unhandled rejection: Failed to fetch" AND left initSqlJs() pending forever,
+// so every later export / autosave of the session waited on it for nothing.
+// Here a failure is retried, then rejected to the caller, and the next call
+// starts over instead of reusing a dead promise.
+const _SQL_RETRY_MS = [0, 700, 2000];
+
+async function _fetchWasm(url) {
+  let last = null;
+  for (let i = 0; i < _SQL_RETRY_MS.length; i++) {
+    if (_SQL_RETRY_MS[i]) await new Promise((r) => setTimeout(r, _SQL_RETRY_MS[i]));
+    try {
+      const r = await fetch(i ? url + '?r=' + i : url, { credentials: 'same-origin' });
+      if (!r.ok) throw new Error('sqljs-wasm-http-' + r.status);
+      return new Uint8Array(await r.arrayBuffer());
+    } catch (e) { last = e; }
+  }
+  throw last || new Error('sqljs-wasm-failed');
+}
+
+function _loadSqlScript(url) {
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = url; s.onload = resolve;
+    s.onerror = () => { try { s.remove(); } catch (_e) {} reject(new Error('sqljs-load-failed')); };
+    document.head.appendChild(s);
+  });
+}
+
+async function _initSql() {
+  const jsUrl = window._sqlJsUrl || '/vendor/sql-wasm.js';
+  const wasmUrl = window._sqlJsWasmUrl || '/vendor/sql-wasm.wasm';
+  // initSqlJs est exposé en global par sql-wasm.js (chargé en <script>).
+  // Script and binary are fetched in parallel; a failed script tag is retried
+  // once with a cache-buster (same reason as the binary).
+  const bin = _fetchWasm(wasmUrl);
+  bin.catch(() => {});   // awaited below; avoids an unhandled rejection meanwhile
+  if (typeof window.initSqlJs !== 'function') {
+    try { await _loadSqlScript(jsUrl); }
+    catch (_e) {
+      await new Promise((r) => setTimeout(r, 1000));
+      await _loadSqlScript(jsUrl + '?r=1');
+    }
+  }
+  const wasmBinary = await bin;
+  return window.initSqlJs({ wasmBinary, locateFile: () => wasmUrl });
+}
 
 async function _loadSqlJs() {
   if (_SQL) return _SQL;
   if (typeof window === 'undefined') throw new Error('no-window');
-  const jsUrl = window._sqlJsUrl || '/vendor/sql-wasm.js';
-  const wasmUrl = window._sqlJsWasmUrl || '/vendor/sql-wasm.wasm';
-  // initSqlJs est exposé en global par sql-wasm.js (chargé en <script>).
-  if (typeof window.initSqlJs !== 'function') {
-    await new Promise((resolve, reject) => {
-      const s = document.createElement('script');
-      s.src = jsUrl; s.onload = resolve; s.onerror = () => reject(new Error('sqljs-load-failed'));
-      document.head.appendChild(s);
-    });
+  if (!_sqlPending) {
+    _sqlPending = _initSql().then(
+      (SQL) => { _SQL = SQL; _sqlPending = null; return SQL; },
+      (e) => { _sqlPending = null; throw e; });
   }
-  _SQL = await window.initSqlJs({ locateFile: () => wasmUrl });
-  return _SQL;
+  return _sqlPending;
 }
 
 // Colonnes de la table Hand (identiques au client officiel).

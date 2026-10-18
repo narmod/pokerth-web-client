@@ -651,6 +651,13 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **sql.js load no longer hangs; less injected-script noise** (`web.140`) — sql.js fetches its `.wasm` with
+  `fetch().then()` and no rejection handler: one failed fetch raised « Unhandled rejection: Failed to fetch » and
+  left `initSqlJs()` pending forever, so .pdb export, import and autosave waited on it for the whole session.
+  `handlog.mjs` now fetches the binary itself (3 attempts, cache-busted), passes it as `wasmBinary`, rejects on
+  final failure and starts over on the next call (`scripts/test-sqljs-load.mjs`). The error collector also drops
+  two kinds of browser-injected noise: inline scripts of iOS wallet browsers touching `window.ethereum`, and the
+  `/via_inject_blocker.css` stylesheet Via Browser (Android) adds under a fake same-origin path.
 - **Admin audit of 2026-10-18** (`web.137`) — on a phone the game-server strip of the header covered the page
   title and pushed the whole page 8 px past the right edge (it is painted with an inline display, so the rule
   meant to hide it never applied): the header now wraps, the title keeps its room and the strip takes a second
