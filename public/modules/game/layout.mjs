@@ -534,7 +534,10 @@ function _qmlPortraitLayout(oppCnt, zW, zH, zoomMul, spectating, opts) {
     var gapY = Math.max(opponentGapBase, opponentGapBase * s);
     // Les colonnes suivent la box vers l'extérieur (marge 4 px) au lieu de
     // buter sur les 15 %/85 % figés.
-    var colX = Math.max(0.15, (4 + vW / 2) / W);
+    // WEB (Interface size > 1): the scaled community cards need the full
+    // width between the side columns, so the columns hug the 4 px wall
+    // instead of stopping at the QML 15 %/85 % minimum.
+    var colX = Math.max(_st.interfaceScale > 1 ? 0 : 0.15, (4 + vW / 2) / W);
     var step = vH + gapY;
     var yTC = 4 + vH / 2;
     var yTop = yTC + step;
@@ -679,6 +682,17 @@ function _qmlPortraitLayout(oppCnt, zW, zH, zoomMul, spectating, opts) {
   } else {
     out.slots = SLOTS;   // fractions fixes ; nudges px appliqués par l'appelant
     out.band = null;
+    // WEB (Interface size > 1): same wall-hugging columns as the mobile rows,
+    // so the scaled community cards keep the width between the side columns.
+    if (_st.interfaceScale > 1) {
+      var colD = Math.max(0, Math.min(0.15, (4 + oppW * sFinal / 2) / Math.max(zW, 1)));
+      var slD = {};
+      for (var kD in SLOTS) {
+        var xD = SLOTS[kD][0];
+        slD[kD] = [xD === 0.15 ? colD : (xD === 0.85 ? 1 - colD : xD), SLOTS[kD][1]];
+      }
+      out.slots = slD;
+    }
   }
   return out;
 }

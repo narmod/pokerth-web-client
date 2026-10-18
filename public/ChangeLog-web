@@ -1,3 +1,6 @@
+2026-10-18 version 2.1.10-web.136:
+- bugfix: on a phone with the Extra large interface size, the big community cards no longer cover the players on the sides of a full table; the side seats now sit against the edges of the screen
+
 2026-10-18 version 2.1.10-web.135:
 - bugfix: on a computer, the Large and Extra large interface sizes enlarge the Fold, Call and Raise buttons too (they stayed at their standard size), and the table makes room for the bigger bar
 - bugfix: on a phone, a long connection notice on the table (« Connection problems — The server is not responding… ») wraps on two lines instead of running off both sides of the screen

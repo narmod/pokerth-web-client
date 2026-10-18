@@ -641,6 +641,11 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Extra large on a phone: community cards over the side seats** (`web.136`) — in portrait the seat layout
+  now receives the Interface size too, and above standard size the side columns hug the 4 px wall instead of
+  stopping at the QML 15 %/85 % minimum (both the touch rows and the fixed fractions), so the doubled cards keep
+  the width between them (10 seats at 390×844). Last failure of `test-accessibility-browser` (41/41);
+  `docs/screenshots/25` regenerated.
 - **Failing browser tests: three player bugs behind them** (`web.135`) — the desktop action bar
   (`data-abar-desk`, `#s-game#s-game` rules) fixed Fold / Call / Raise at 15 px and beat the low-vision scaling:
   its row, buttons and labels now follow `--active-play-scale`, and changing the Interface size re-measures the room
