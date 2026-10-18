@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Built-in packs protected** (`web.130`) — the table styles, card decks and seat packs shipped with the
+  repository are built in like the themes: `/admin/pkg-list` marks them, the admin shows no Remove for them (they
+  can still be hidden), `/admin/pkg-remove` refuses them, and an uploaded pack whose id clashes is renamed
+  (`table-…`, `deck-…`, `seat-…`) instead of replacing the shipped one. One list per kind in `proxy.js`
+  (`BUILTIN_TABLES`, `BUILTIN_DECKS`, `BUILTIN_SEATS`), kept equal to the folders git tracks by
+  `test-pkg-builtin.mjs`. Needs a proxy restart.
 - **Admin Content in the new layout** (`web.129`) — Packages: one tile per kind (table styles, card decks,
   seats, themes: offered out of installed), the import card says what a pack does, the library gets a head note,
   All / kind chips (kept per browser) beside the filter, a count per kind, hidden entries marked in words and rows

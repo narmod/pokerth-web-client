@@ -10244,6 +10244,20 @@ function slugId(s) {
 // into themes.json on every full update. They can be hidden (toggle) but never
 // removed via admin — git would restore them, and a player could be mid-theme.
 const BUILTIN_THEMES = ['bleu-nuit', 'casino-vert', 'graphite', 'pokerth-new', 'vecteur', 'violet'];
+// Packs shipped with the repository (the folders git tracks), plus the ids the
+// client draws itself: like the built-in themes they can be hidden, never
+// removed, and an upload never overwrites them. scripts/test-pkg-builtin.mjs
+// keeps these lists equal to what git tracks.
+const BUILTIN_TABLES = ['green', 'blue', 'bordeaux', 'slate', 'photo', 'table',
+  'bbc_anthem', 'casino', 'danuxi', 'disco', 'discworld', 'ivoire-chene', 'lemming', 'matrix', 'mile_high_club', 'mute', 'mute2', 'pirates', 'pokerth-live', 'pokerth-official', 'pokerth-official-fs', 'saloon', 'star_trek', 'teal', 'terminus_hotel_2', 'tripsixes', 'wanted', 'xanax'];
+const BUILTIN_DECKS = ['svg', 'classic',
+  'back-bbc-anthem', 'back-danuxi', 'back-disco', 'back-matrix', 'back-mile-high-club', 'back-nobus-black', 'back-nobus-blue', 'back-nobus-green', 'back-nobus-red', 'back-pirates', 'back-terminus-hotel-2', 'bella-union-4c', 'blacklight-4c', 'casino-vert', 'default', 'default4c', 'discworld', 'lemming', 'nobus-4c-classic', 'pokerth', 'pokerth-1-0', 'pokerth-new', 'star-trek', 'stardust-dark', 'stardust-light', 'xanax'];
+const BUILTIN_SEATS = ['', 'pokerth', 'chip', 'plate', 'card', 'compact', 'bar',
+  'boardwalk', 'high-roller', 'onyx-pill'];
+function pkgBuiltin(kind, id) {
+  const L = kind === 'table' ? BUILTIN_TABLES : kind === 'deck' ? BUILTIN_DECKS : kind === 'seat' ? BUILTIN_SEATS : kind === 'theme' ? BUILTIN_THEMES : [];
+  return L.indexOf(id) >= 0;
+}
 function regenManifest(kind) {
   const rel = kind === 'table' ? 'scripts/tables-manifest.mjs'
     : kind === 'theme' ? 'scripts/themes-manifest.mjs'
@@ -10258,9 +10272,10 @@ function pkgList() {
   const themes = read(path.join(PUBLIC_DIR, 'themes', 'themes.json')).map(function (t) {
     return { id: t.id, name: t.name || t.id, swatch: t.swatch || '#444', builtin: BUILTIN_THEMES.indexOf(t.id) >= 0 };
   });
-  return { tables: read(path.join(PUBLIC_DIR, 'table', 'tables.json')),
-           decks:  read(path.join(PUBLIC_DIR, 'cards', 'decks.json')),
-           seats:  read(path.join(PUBLIC_DIR, 'seats', 'seats.json')),
+  const mark = function (kind) { return function (x) { return Object.assign({}, x, { builtin: pkgBuiltin(kind, x && x.id) }); }; };
+  return { tables: read(path.join(PUBLIC_DIR, 'table', 'tables.json')).map(mark('table')),
+           decks:  read(path.join(PUBLIC_DIR, 'cards', 'decks.json')).map(mark('deck')),
+           seats:  read(path.join(PUBLIC_DIR, 'seats', 'seats.json')).map(mark('seat')),
            themes: themes };
 }
 // Admin can hide an installed package from players without deleting it. The
@@ -10308,7 +10323,7 @@ function importPackage(kind, idHint, zipBuf, cb) {
     const feltSrc = ['felt.png', 'felt.jpg', 'felt.jpeg', 'felt.webp', 'table.png'].find(has);
     if (!feltSrc) return done('not a PokerTH table pack (felt.png / felt.jpg — or legacy table.png — missing)');
     if (!id) id = 'table-' + Date.now();
-    if (['green', 'blue', 'bordeaux', 'slate', 'photo', 'table'].indexOf(id) >= 0) id = 'table-' + id;
+    if (pkgBuiltin('table', id)) id = 'table-' + id;   // never clobber a table shipped with the repository
     const dest = path.join(PUBLIC_DIR, 'table', id);
     try { fs.rmSync(dest, { recursive: true, force: true }); fs.mkdirSync(dest, { recursive: true }); } catch (e) { return done('dest failed'); }
     if (feltSrc === 'table.png') {
@@ -10341,6 +10356,7 @@ function importPackage(kind, idHint, zipBuf, cb) {
     if (missing) return done('incomplete deck (' + missing + ' of 52 images missing)');
     if (!id) id = 'deck-' + Date.now();
     if (id === 'svg') id = 'svg-deck';
+    else if (pkgBuiltin('deck', id)) id = 'deck-' + id;   // never clobber a deck shipped with the repository
     const dest = path.join(PUBLIC_DIR, 'cards', id);
     try { fs.rmSync(dest, { recursive: true, force: true }); fs.mkdirSync(dest, { recursive: true }); } catch (e) { return done('dest failed'); }
     try { fs.readdirSync(exDir).forEach(function (f) { if (/\.(png|svg|xml)$/i.test(f)) cp(f, path.join(dest, f)); }); } catch (e) {}
@@ -10373,7 +10389,7 @@ function importPackage(kind, idHint, zipBuf, cb) {
     const packCss = has('style.css');
     if (!plate && !packCss) return done('not a seat pack (plate.png / plate.svg or style.css missing)');
     if (!id) id = 'seat-' + Date.now();
-    if (['', 'pokerth', 'chip', 'plate', 'card', 'compact', 'bar', 'onyx-pill', 'boardwalk', 'high-roller'].indexOf(id) >= 0) id = 'seat-' + id;   // never clobber a built-in / official seat id
+    if (pkgBuiltin('seat', id)) id = 'seat-' + id;   // never clobber a built-in / official seat id
     const dest = path.join(PUBLIC_DIR, 'seats', id);
     try { fs.rmSync(dest, { recursive: true, force: true }); fs.mkdirSync(dest, { recursive: true }); } catch (e) { return done('dest failed'); }
     try { fs.readdirSync(exDir).forEach(function (f) { if (/^(plate|self|preview|bg|frame|img[0-9]?)\.(png|svg|webp|jpe?g)$/i.test(f) || f === 'seat.json' || f === 'style.css') cp(f, path.join(dest, f)); }); } catch (e) {}
@@ -11163,10 +11179,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       const kind = (d && d.kind === 'deck') ? 'deck' : ((d && d.kind === 'table') ? 'table' : ((d && d.kind === 'theme') ? 'theme' : ((d && d.kind === 'seat') ? 'seat' : null)));
       const id = slugId(d && d.id);
       if (!kind || !id) return adminJson(res, 400, { ok: false, error: 'kind + id required' });
-      if (kind === 'seat' && ['', 'pokerth', 'chip', 'plate', 'card', 'compact', 'bar', 'onyx-pill', 'boardwalk', 'high-roller'].indexOf(id) >= 0) return adminJson(res, 400, { ok: false, error: 'built-in seat cannot be removed' });
-      if (kind === 'table' && ['green', 'blue', 'bordeaux', 'slate', 'photo'].indexOf(id) >= 0) return adminJson(res, 400, { ok: false, error: 'built-in table cannot be removed' });
-      if (kind === 'deck' && ['svg', 'classic'].indexOf(id) >= 0) return adminJson(res, 400, { ok: false, error: 'built-in deck cannot be removed' });
-      if (kind === 'theme' && BUILTIN_THEMES.indexOf(id) >= 0) return adminJson(res, 400, { ok: false, error: 'built-in theme cannot be removed (you can hide it instead)' });
+      if (pkgBuiltin(kind, id)) return adminJson(res, 400, { ok: false, error: 'built-in ' + kind + ' cannot be removed (you can hide it instead)' });
       const dir = path.join(PUBLIC_DIR, kind === 'table' ? 'table' : kind === 'theme' ? 'themes' : kind === 'seat' ? 'seats' : 'cards', id);
       if (!fs.existsSync(dir)) return adminJson(res, 404, { ok: false, error: 'not found' });
       try { fs.rmSync(dir, { recursive: true, force: true }); } catch (e) { return adminJson(res, 500, { ok: false, error: 'remove failed' }); }
