@@ -740,6 +740,29 @@
     #mzAddTrack .fld>span:first-child,#mzAddRadio .fld>span:first-child{flex:1 1 100%}
     #panel-music .fld>select{width:100%}
   }
+  /* ── Form fields ────────────────────────────────────────────────────────
+     A text or number field with no class of its own was left to the browser:
+     a bare white box in the dark theme (Defaults, Live figures, Music...).
+     :where() keeps this at zero specificity, so any class still wins. */
+  :where(.card) input:where(:not([type]),[type=text],[type=number],[type=url],[type=email],[type=search],[type=tel],[type=time],[type=date],[type=datetime-local]){box-sizing:border-box;min-height:36px;padding:7px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream);font:inherit;font-size:.85rem}
+  :where(:root[data-admin-theme="light"] .card) input:where(:not([type]),[type=text],[type=number],[type=url],[type=email],[type=search],[type=tel],[type=time],[type=date],[type=datetime-local]){background:rgba(255,255,255,.75)}
+  :where(.card) input:where(:not([type]),[type=text],[type=number],[type=url]):disabled{opacity:.5}
+  :where(.card) input:where(:not([type]),[type=text],[type=number],[type=url],[type=search]):focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+  /* ── Player experience ─────────────────────────────────────────────────── */
+  .pxmode .lvdot{margin-left:2px}
+  .pxmode.off .nm b{color:var(--navfg);font-weight:500}
+  .fsgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:4px 14px;color:var(--navfg)}
+  .fsitem{display:flex;align-items:center;gap:8px;margin:0;padding:6px 8px;border-radius:8px;font-size:.84rem;cursor:pointer;min-width:0}
+  .fsitem:hover{background:var(--hover)}
+  .fsitem.off{background:var(--err-bg);color:var(--err-text)}
+  #panel-clients .f input[type=text]{width:100%}
+  #panel-defaults .fld,#panel-clients .fld{max-width:none}
+  #panel-defaults .fld:not(.left)>select,#panel-defaults .fld:not(.left)>input{flex:0 0 220px;width:220px}
+  #panel-defaults .fld.left>input{flex:1 1 160px;min-width:0}
+  #panel-defaults .fld{padding:2px 0}
+  @media(max-width:600px){
+    #panel-defaults .fld:not(.left)>select,#panel-defaults .fld:not(.left)>input{flex:1 1 100%;width:100%}
+  }
   /* ── Overview ─────────────────────────────────────────────────────────── */
   .ovalerts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:0 0 14px}
   .ovalert{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:12px;border:1px solid var(--info-line);background:var(--info-bg);min-width:0}
@@ -1243,6 +1266,7 @@
     </div>
 
     <div id="panel-clients" style="display:none">
+      <section class="ovmodes" id="pxTiles" aria-label="What players get at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <h2>App modes (login screen)</h2>
         <p class="muted">Show or hide entry modes offered to players.</p>
@@ -1250,7 +1274,7 @@
         <div id="modesmsg" class="msg"></div>
       </div>
       <div class="card">
-        <div class="boardhead"><h2>Feature kill switches</h2><button id="fsSave" class="use">Save</button></div>
+        <div class="boardhead"><h2>Feature kill switches</h2><span id="fsSum" class="headnote"></span><button id="fsSave" class="use">Save</button></div>
         <p class="muted">Turn a feature off for <b>everyone, right now</b>, without a deployment — the way out when something ships broken. Ticking a box forces the matching option off in every client: its checkbox in Advanced options goes unticked, frozen and labelled “off (admin)”. Players keep their own preference stored, so it takes effect again the moment you untick here. Applies when a client next loads the page; what only runs at startup (splash screen, back-button guard) follows from the visit after.</p>
         <div id="fsList" class="muted">Loading…</div>
         <div id="fsMsg" class="msg"></div>
@@ -5387,16 +5411,20 @@
   // app modes (login-screen entry modes)
   var modesState={offline:true,lan:true,pokerthnet:true};
   var MODE_LABELS=[['offline','Offline practice (bots)'],['lan','LAN / private server'],['pokerthnet','pokerth.net']];
+  var MODE_SUB={offline:['var(--m-off)','Training against the bots, no server'],lan:['var(--m-lan)','The LAN directory, or a typed address'],pokerthnet:['var(--m-net)','The official Internet server']};
   function renderModes(){
     var el=$('modes'); el.innerHTML='';
     MODE_LABELS.forEach(function(it){
       var k=it[0], on=modesState[k]!==false;
-      var row=document.createElement('div');row.className='row';
-      var nm=document.createElement('div');nm.className='nm';var b=document.createElement('b');b.textContent=it[1];nm.appendChild(b);row.appendChild(nm);
+      var row=document.createElement('div');row.className='row pxmode'+(on?'':' off');row.style.setProperty('--mc',MODE_SUB[k][0]);
+      var dot=document.createElement('i');dot.className='lvdot';row.appendChild(dot);
+      var nm=document.createElement('div');nm.className='nm';var b=document.createElement('b');b.textContent=it[1];nm.appendChild(b);
+      var sp=document.createElement('span');sp.textContent=MODE_SUB[k][1]+(on?'':' \u00b7 hidden from the login screen');nm.appendChild(sp);row.appendChild(nm);
       var t=document.createElement('button');t.className='toggle '+(on?'on':'off');t.textContent=on?'On':'Off';
       t.addEventListener('click',function(){ toggleMode(k); });
       row.appendChild(t);el.appendChild(row);
     });
+    _pxTiles();
   }
   function toggleMode(k){
     var m=$('modesmsg'), before=Object.assign({},modesState);
@@ -5859,16 +5887,35 @@
     renderLiveStats(d);
     renderCommunityEvents(d);
     var list=(d&&d.featureSwitches)||[], off=(d&&d.featureOff)||[];
+    _pxCfg=d; _pxTiles();
+    var fs=$('fsSum'); if(fs) fs.textContent=list.length?(off.length?off.length+' of '+list.length+' off for everyone':'all '+list.length+' features on'):'';
     if(!list.length){ box.textContent='This server exposes no kill switch.'; return; }
-    box.innerHTML=''; box.style.cssText='display:flex;flex-wrap:wrap;gap:6px 18px';
+    // A ticked box is a feature switched OFF: the row says so in red, so a
+    // forgotten switch stands out in a list of twenty-odd.
+    box.innerHTML=''; box.className='fsgrid';
     list.forEach(function(f){
-      var lbl=document.createElement('label');
-      lbl.style.cssText='display:inline-flex;align-items:center;gap:6px;white-space:nowrap';
+      var lbl=document.createElement('label'); lbl.className='fsitem'+(off.indexOf(f.key)>=0?' off':'');
       var cb=document.createElement('input');
       cb.type='checkbox'; cb.value=f.key; cb.style.width='auto'; cb.checked=off.indexOf(f.key)>=0;
+      cb.addEventListener('change',function(){ lbl.classList.toggle('off',cb.checked); });
       lbl.appendChild(cb); lbl.appendChild(document.createTextNode(' '+f.label));
       box.appendChild(lbl);
     });
+  }
+  // Tiles: the entry modes offered, the features switched off, the two relays
+  // (live figures on the login screen, community events). Saved values only:
+  // they come from the last /admin/config read and the modes state.
+  var _pxCfg=null;
+  function _pxTiles(){
+    var box=$('pxTiles'); if(!box) return;
+    var on=MODE_LABELS.filter(function(it){ return modesState[it[0]]!==false; });
+    var c=_pxCfg||{}, list=c.featureSwitches||[], off=c.featureOff||[], ls=c.liveStats||{}, ce=c.communityEvents||{};
+    var names=list.filter(function(f){ return off.indexOf(f.key)>=0; }).map(function(f){ return f.label; });
+    var T=[['Entry modes',on.length+'<small class="ovof"> / 3</small>',on.length===3?'all offered on the login screen':on.map(function(it){ return it[1]; }).join(', '),'var(--accent)'],
+           ['Features off',_pxCfg?String(off.length):'\u2014',_pxCfg?(off.length?srvEsc(names.join(', ')):'every feature is on'):'master key only',off.length?'var(--err-text)':'var(--ok-text)'],
+           ['Live figures',_pxCfg?(ls.on!==false?'On':'Off'):'\u2014',_pxCfg?(ls.on!==false?'read every '+(typeof ls.sec==='number'?ls.sec:60)+' s':'no line on the Internet card'):'master key only','var(--m-net)'],
+           ['Community events',_pxCfg?(ce.on!==false?'On':'Off'):'\u2014',_pxCfg?(ce.on!==false?'read every '+(typeof ce.sec==='number'?ce.sec:300)+' s':'no Events tab'):'master key only','var(--warn-text)']];
+    box.innerHTML=T.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join('');
   }
   (function(){
     var sb=$('fsSave'); if(!sb) return;

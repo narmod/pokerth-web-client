@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Admin Player experience in the new layout** (`web.131`) — Modes & features: tiles (entry modes offered,
+  features switched off by name, live figures and community events on or off with their interval), each entry
+  mode with its colour and what it is, the kill switches as a grid where a feature switched off is marked in red
+  as soon as it is ticked, and a head note counting them. Defaults: labels and fields aligned, one width per
+  field, full width on a phone. Every text or number field without a class of its own now gets the base field
+  style (they were bare white boxes in the dark theme), in every section. New test `test-admin-players.mjs`.
 - **Built-in packs protected** (`web.130`) — the table styles, card decks and seat packs shipped with the
   repository are built in like the themes: `/admin/pkg-list` marks them, the admin shows no Remove for them (they
   can still be hidden), `/admin/pkg-remove` refuses them, and an uploaded pack whose id clashes is renamed
