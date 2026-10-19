@@ -1514,8 +1514,8 @@
     <div id="panel-errors" style="display:none">
       <section class="ovmodes" id="erTiles" aria-label="Client errors at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
-        <div class="boardhead"><h2>Client script errors</h2><span id="erSum" class="headnote"></span><div class="bhact"><button id="erRefresh" class="use">Refresh</button><button id="erClear" class="use danger">Clear all</button></div></div>
-        <p class="muted">JavaScript errors reported by players' browsers, one line per bug with a counter. Kept in memory only &mdash; a restart clears the list.</p>
+        <div class="boardhead"><h2>Client script errors</h2><span id="erSum" class="headnote"></span><div class="bhact"><button id="erCopyAll" type="button" class="use" title="Copy the errors listed below as text, ready to paste">Copy all</button><button id="erExport" type="button" class="use" title="Download the errors listed below as a .json file">Export</button><button id="erRefresh" class="use">Refresh</button><button id="erClear" class="use danger">Clear all</button></div></div>
+        <p class="muted">JavaScript errors reported by players' browsers, one line per bug with a counter. Kept in memory only &mdash; a restart clears the list. <b>Copy all</b> and <b>Export</b> take the errors the list shows, filters included.</p>
         <details class="more"><summary>What is sent, bots, and the colours</summary><p class="muted">Players can switch the reporting off in Advanced options; nothing but the error itself, the build, the device and a masked IP is ever sent. Errors from search-engine crawlers are kept but marked <b>Bot only</b> (or <b>incl. bots</b>): none of them reaches a player. Each error carries a colour by type: <b class="erk-crash">script error</b> (an exception in the client), <b class="erk-reject">rejection</b> (a promise nobody caught), <b class="erk-load">load failure</b> (one of our files did not arrive), <b class="erk-ok">recovered</b> (an automatic retry worked) and <b class="erk-diag">diagnostic</b> (the probe that tells why a file failed).</p></details>
         <div class="ltool"><input id="erFilter" class="filter" type="search" placeholder="Filter: message, file, version, device…" autocomplete="off"><div class="chips" id="erKinds" role="group" aria-label="Error type"></div><label class="ltog"><input type="checkbox" id="erHideBots"> Hide robot-only errors</label></div>
         <div id="erMsg" class="msg"></div>
@@ -7350,7 +7350,7 @@
   // known about it as chips (count, last seen, builds, devices, players,
   // modes, robots). Tiles on top; a filter and « Hide robot-only errors »
   // only narrow what is shown.
-  var _erData=null, _erHideBots=false, _erKindSel='all';
+  var _erData=null, _erHideBots=false, _erKindSel='all', _erShown=[];
   try{ _erHideBots=localStorage.getItem('pth_admin_err_hidebots')==='1'; }catch(e){}
   // Type of an error group, read from its message: the client collector and
   // i18n.mjs report load failures, retries and probes in fixed English words
@@ -7408,6 +7408,7 @@
     });
     _erKindChips(pool);
     var shown=_erKindSel==='all'?pool:pool.filter(function(e){ return _erKind(e)===_erKindSel; });
+    _erShown=g.length?shown:[];
     list.innerHTML='';
     if(!g.length){ list.innerHTML='<div class="empty">No error reported. Enjoy it while it lasts.</div>'; _erFit(list); return; }
     if(!shown.length){ list.innerHTML='<div class="empty">No error matches the filter.</div>'; _erFit(list); return; }
@@ -7453,6 +7454,65 @@
     _erFit(list); _erWatch(list);
     if(keepTop) list.scrollTop=keepTop;
   }
+  // « Copy all » / « Export »: the errors the list shows, as one text report to
+  // paste or a .json file to attach. Masked IPs are never in the data, only a
+  // count of players; the browsers' user agents are, to reproduce a bug.
+  function _erBuild(){ var v=(($('sideVer')||{}).textContent||'').trim(); return (v&&v!=='\u2014')?v:'?'; }
+  function _erIso(t){ try{ return t?new Date(t).toISOString():''; }catch(e){ return ''; } }
+  function _erScope(){
+    var d=_erData||{}, all=(d.groups||[]).length, f=[], q=(($('erFilter')||{}).value||'').trim();
+    if(q) f.push('text "'+q+'"');
+    if(_erKindSel!=='all'){ var kd=ER_KINDS.filter(function(k){ return k[0]===_erKindSel; })[0]; if(kd) f.push('type '+kd[1]); }
+    if(_erHideBots) f.push('robot-only errors hidden');
+    return { all: all, shown: _erShown.length, filters: f };
+  }
+  function _erReport(list){
+    var d=_erData||{}, sc=_erScope();
+    var out=['PokerTH web client - client script errors',
+      'Exported '+_erIso(Date.now())+' from '+location.host+' - server build '+_erBuild()];
+    if(d.since) out.push('Collected since the proxy started, '+_erIso(d.since));
+    out.push(sc.shown+' error'+(sc.shown===1?'':'s')+(sc.shown<sc.all?' of '+sc.all:'')+(sc.filters.length?' (filter: '+sc.filters.join(', ')+')':''),'');
+    list.forEach(function(e,i){
+      var kd=ER_KINDS.filter(function(k){ return k[0]===_erKind(e); })[0];
+      var src=String(e.src||'').replace(location.origin,'');
+      var devs=(e.uas||[]).map(_seDev).filter(Boolean);
+      out.push('#'+(i+1)+' '+kd[3]+' x'+e.count+(_erBotOnly(e)?' [robots only]':((e.bots||0)?' [incl. robots]':''))+': '+(e.msg||''));
+      if(src) out.push('   at '+src+(e.line?(':'+e.line+(e.col?(':'+e.col):'')):''));
+      if(e.path) out.push('   page: '+e.path);
+      if(e.vers&&e.vers.length) out.push('   builds: '+e.vers.join(', '));
+      if(devs.length) out.push('   devices: '+devs.join(' / ')+(e.uasMore?' +more':''));
+      if(e.modes&&e.modes.filter(Boolean).length) out.push('   modes: '+e.modes.filter(Boolean).map(_seMode).join(', '));
+      out.push('   players: '+(e.ips||0)+(e.ipsMore?'+':'')+' - first '+_erIso(e.first)+' - last '+_erIso(e.last));
+      if(e.stack) out.push('   stack:\n'+String(e.stack).split('\n').map(function(l){ return '     '+l; }).join('\n'));
+      out.push('');
+    });
+    return out.join('\n');
+  }
+  function _erSay(t,cls){ var m=$('erMsg'); if(m){ m.textContent=t; m.className='msg'+(cls?' '+cls:''); } }
+  function _erCopyAll(){
+    var b=$('erCopyAll'), list=_erShown.slice();
+    if(!list.length){ _erSay('Nothing to copy: the list is empty.','err'); return; }
+    copyText(_erReport(list)).then(function(){
+      _erSay(list.length+' error'+(list.length===1?'':'s')+' copied as text.','ok');
+      if(b){ b.textContent='Copied'; setTimeout(function(){ b.textContent='Copy all'; },1500); }
+    }).catch(function(){ _erSay('Copy failed: use Export instead.','err'); });
+  }
+  function _erExport(){
+    var list=_erShown.slice(), d=_erData||{}, sc=_erScope();
+    if(!list.length){ _erSay('Nothing to export: the list is empty.','err'); return; }
+    var doc={ kind:'pokerth-client-errors', exported:_erIso(Date.now()), host:location.host,
+      build:_erBuild(), since:_erIso(d.since),
+      shown:sc.shown, total:sc.all, filters:sc.filters,
+      errors:list.map(function(e){ return Object.assign({ type:_erKind(e), robotsOnly:_erBotOnly(e), firstIso:_erIso(e.first), lastIso:_erIso(e.last) }, e); }) };
+    try{
+      var blob=new Blob([JSON.stringify(doc,null,2)+'\n'],{type:'application/json'});
+      var u=URL.createObjectURL(blob), a=document.createElement('a');
+      a.href=u; a.download='pokerth-client-errors-'+new Date().toISOString().slice(0,19).replace(/[T:]/g,'-')+'.json';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(u); },4000);
+      _erSay(list.length+' error'+(list.length===1?'':'s')+' exported to '+a.download+'.','ok');
+    }catch(x){ _erSay('Export failed.','err'); }
+  }
   function loadErrors(){
     return api('/admin/errors').then(function(r){return r.json();}).then(function(d){
       var list=$('erList');
@@ -7476,6 +7536,8 @@
   })();
   (function(){
     var b=$('erRefresh'); if(b) b.addEventListener('click',loadErrors);
+    var ca=$('erCopyAll'); if(ca) ca.addEventListener('click',_erCopyAll);
+    var ex=$('erExport'); if(ex) ex.addEventListener('click',_erExport);
     var c=$('erClear'); if(c) c.addEventListener('click',function(){
       if(!confirm('Clear every reported error? This cannot be undone.')) return;
       api('/admin/errors',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({clear:1})})

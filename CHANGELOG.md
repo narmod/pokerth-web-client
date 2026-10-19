@@ -50,6 +50,12 @@ highlights below.
   narrows the other too; one 5 s read serves both while either is open. The map card is « Connections by country ».
 
 ### Added
+- **Client errors: Copy all and Export** (`web.197`) — two buttons next to Refresh on Operations › Client errors. Both
+  take the errors the list shows (text filter, type chip and « Hide robot-only errors » included; without a filter,
+  all of them). **Copy all** copies one plain-text report — host, server build, collection start, then per error its
+  type, count, message, file:line:col, builds, devices, modes, players, first / last seen (ISO) and the stack — ready
+  to paste into an issue or a chat. **Export** downloads `pokerth-client-errors-<date>.json` with every field of each
+  group plus its type, robots-only flag and ISO dates. No IP address is in either: the proxy only ever sends a count.
 - **Live map on Live › Sessions** (`web.194`) — the « Live now » layer of Statistics › World, on the page that already
   reads the connections every 5 s: the connections listed below it, folded by country. Each country takes the colour
   of its main entry mode (Internet, LAN, Training, /live), deeper the more connections it holds; its title and the

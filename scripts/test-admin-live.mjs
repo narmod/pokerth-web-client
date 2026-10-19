@@ -44,6 +44,7 @@ const CANNED = {
     ] },
 };
 const posts = [];
+const clip = [], blobs = [], downloads = [];
 const dom = new JSDOM(html, {
   runScripts: 'dangerously', url: 'https://example.org/admin', virtualConsole: vc, pretendToBeVisual: true,
   beforeParse(w) {
@@ -55,6 +56,11 @@ const dom = new JSDOM(html, {
     w.confirm = () => true;
     w.localStorage.setItem('pth_admin_tok', 'test-token');
     w.scrollTo = () => {};
+    Object.defineProperty(w, 'isSecureContext', { value: true, configurable: true });
+    Object.defineProperty(w.navigator, 'clipboard', { value: { writeText: (t) => { clip.push(String(t)); return Promise.resolve(); } }, configurable: true });
+    w.URL.createObjectURL = (b) => { blobs.push(b); return 'blob:test/' + blobs.length; };
+    w.URL.revokeObjectURL = () => {};
+    w.HTMLAnchorElement.prototype.click = function () { downloads.push(this.download); };
     w.HTMLElement.prototype.scrollIntoView = () => {};
   },
 });
@@ -203,6 +209,38 @@ ok(cards().length === 2 && cards().every((c) => c.classList.contains('k-ok')), '
 chip('all').click();
 ok(cards().length === 10, 'All shows everything again');
 ok(errors.length === 0, 'switching types throws nothing' + (errors.length ? ': ' + errors[0] : ''));
+
+// ── Copy all / Export (web.197): the errors the list shows ──────────────
+ok($('erCopyAll') && $('erExport') && $('erCopyAll').closest('.bhact') === $('erRefresh').closest('.bhact'), 'Copy all and Export sit with Refresh and Clear all');
+$('erCopyAll').click();
+await tick();
+const rep = clip[clip.length - 1] || '';
+ok(/^PokerTH web client - client script errors/.test(rep) && /\n10 errors\n/.test(rep), 'Copy all copies a text report of the 10 errors (' + (rep.split('\n')[3] || '') + ')');
+ok(/#1 Script error x1: Uncaught ReferenceError: App is not defined\n   at \/:1413:146/.test(rep), 'each error with its type, count, message and place');
+ok(/#2 Rejection x3: Unhandled rejection: Failed to fetch[\s\S]*?stack:\n     TypeError: Failed to fetch/.test(rep), 'and its stack, indented');
+ok(/#10 Load failure x1 \[robots only\]/.test(rep) && /builds: 2\.1\.10-web\.140/.test(rep) && /players: 1 - first \d{4}-/.test(rep), 'robots, builds, players and dates are in it');
+ok(!/203\.0\.113|198\.51\.100/.test(rep), 'no IP address in it');
+ok(/10 errors copied/.test($('erMsg').textContent) && $('erMsg').classList.contains('ok'), 'the panel says it was copied');
+chip('load').click();
+$('erCopyAll').click();
+await tick();
+ok(/\n5 errors of 10 \(filter: type Load failures\)\n/.test(clip[clip.length - 1]), 'with a filter, only what is shown, and the report says so');
+$('erExport').click();
+await tick();
+ok(/^pokerth-client-errors-\d{4}-\d\d-\d\d-\d\d-\d\d-\d\d\.json$/.test(downloads[downloads.length - 1] || ''), 'Export downloads a dated .json (' + downloads[downloads.length - 1] + ')');
+const blobText = (b) => new Promise((res) => { const r = new window.FileReader(); r.onload = () => res(r.result); r.readAsText(b); });
+const exp = JSON.parse(await blobText(blobs[blobs.length - 1]));
+ok(exp.kind === 'pokerth-client-errors' && exp.shown === 5 && exp.total === 10 && exp.errors.length === 5 && exp.errors.every((e) => e.type === 'load'), 'it holds the five load failures shown, out of 10');
+ok(exp.errors[0].msg && exp.errors[0].sig && exp.errors[0].firstIso && 'robotsOnly' in exp.errors[0] && Array.isArray(exp.filters), 'every field of an error, typed and dated');
+chip('all').click();
+$('erFilter').value = 'nothing-like-this';
+$('erFilter').dispatchEvent(new window.Event('input'));
+const nClip = clip.length;
+$('erCopyAll').click();
+await tick();
+ok(clip.length === nClip && /Nothing to copy/.test($('erMsg').textContent), 'an empty list copies nothing and says so');
+$('erFilter').value = '';
+$('erFilter').dispatchEvent(new window.Event('input'));
 
 $('erClear').click();
 await tick();
