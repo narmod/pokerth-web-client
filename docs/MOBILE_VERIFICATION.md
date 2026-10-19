@@ -194,20 +194,25 @@ the usable screen (below the status bar, above the home indicator), close
 control fully visible, on top, at least 32 x 32 px, and it closes; two notices
 at once do not overlap; a window keeps its button on screen whatever the length.
 
-## Screen matrix: desktop, tablets, foldables, three engines
+## Screen matrix: desktop, tablets, foldables, three engines + Edge
 
 `npm run test:screen-matrix` (`scripts/test-screen-matrix.mjs`) covers what the
 phone tests do not: desktop monitors, tablets and foldables, in the **three**
-engines - Chromium (Chrome, Edge, Opera), **Firefox** (Gecko, run by no other
-browser test) and WebKit (Safari, and every browser on an iPad).
+engines - Chromium (Chrome, Opera), **Firefox** (Gecko, run by no other
+browser test) and WebKit (Safari, and every browser on an iPad) - plus the
+real **Microsoft Edge** on the desktop and resize profiles. Edge is
+Chromium-based, but it is its own build with its own user agent and defaults,
+and a growing share of the players use it; it is launched through Playwright's
+`msedge` channel (`npx playwright install msedge` once) and skipped with a
+notice where it is not installed.
 
 | Family | Profiles | Engines |
 |---|---|---|
-| Desktop | 1280x720, 1366x768, 1440x900 @2x, 1536x864 @1.25x, 1920x1080, 2560x1440, 3440x1440 ultrawide, 3840x2160 (4K at 100 %) | Chromium, Firefox, WebKit |
+| Desktop | 1280x720, 1366x768, 1440x900 @2x, 1536x864 @1.25x, 1920x1080, 2560x1440, 3440x1440 ultrawide, 3840x2160 (4K at 100 %) | Chromium, Firefox, WebKit, Edge |
 | iPad | iPad Mini, iPad (gen 11), iPad Pro 11 - portrait and landscape | WebKit |
 | Android tablet | Galaxy Tab S9 portrait and landscape | Chromium, Firefox |
 | Foldable | open 904x1100 (Chromium, Firefox), open landscape 1100x904, cover 344x882 (Chromium) | as listed |
-| Resize | a 1440x900 window dragged through every breakpoint and back | Chromium, Firefox, WebKit |
+| Resize | a 1440x900 window dragged through every breakpoint and back | Chromium, Firefox, WebKit, Edge |
 
 Per profile and engine:
 
@@ -228,11 +233,12 @@ Per profile and engine:
   exactly the one it started with (nothing left over from the phone layout).
 
 On GitHub it runs as one job per engine (`screen-matrix (chromium)`,
-`(firefox)`, `(webkit)`), about 15 minutes each; screenshots in the
+`(firefox)`, `(webkit)`, `(edge)`), about 15 minutes each; screenshots in the
 `screen-matrix-<engine>` artifact. Narrow it:
 
 ```sh
 PTH_ENGINES=firefox npm run test:screen-matrix
+PTH_ENGINES=edge npm run test:screen-matrix
 PTH_DEVICES="Desktop 1366x768,iPad Mini" PTH_STEPS=ui npm run test:screen-matrix
 PTH_MOBILE=resize PTH_ENGINES=webkit npm run test:screen-matrix
 ```

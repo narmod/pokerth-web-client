@@ -316,6 +316,10 @@ highlights below.
   `lobby-ranking` funnel, `web.68`).
 
 ### Added
+- **Microsoft Edge in the screen matrix** — `test-screen-matrix` runs the desktop profiles and the resize run in
+  the real Edge too (Playwright `msedge` channel, `Desktop Edge` user agent; `PTH_ENGINES=edge`), as a fourth
+  `screen-matrix (edge)` job in the Mobile verification workflow. Without Edge installed the engine is skipped
+  with a notice, like the others (`scripts/lib/mobile-harness.mjs`).
 - **Who's Ahead? — lesson 6** (`web.100`) — `games/equity.mjs`: your two cards against the Ace's, all-in before the
   flop; set your guess on a 0–100 % bar (± 5 %, or tap), the answer is a 4,000-run Monte Carlo (`equity`, a split
   counts half). Matchups drawn evenly from seven classic kinds (`kindOf`: pair v lower pair, race, pair v one

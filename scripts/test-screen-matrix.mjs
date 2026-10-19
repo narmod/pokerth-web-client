@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 // Screen matrix in real browser engines: the screens the phone tests do not
 // reach - desktop monitors from a small laptop to 4K / ultrawide, tablets and
-// foldables - in the THREE engines (Chromium = Chrome / Edge / Opera, Firefox =
-// Gecko, WebKit = Safari). The phone tests only run WebKit and Chromium on
-// phone profiles; nothing ran Firefox on the table before this test.
+// foldables - in the three engines (Chromium = Chrome / Opera, Firefox =
+// Gecko, WebKit = Safari) plus the real Microsoft Edge on the desktop
+// profiles (Chromium-based, but its own build, user agent and defaults - a
+// growing share of the players). The phone tests only run WebKit and
+// Chromium on phone profiles; nothing ran Firefox on the table before this test.
 //
 // Per profile x engine:
 //   · mode picker, login form, lobby (6-seat game listed), create-table form
@@ -24,6 +26,8 @@
 //
 // Run:   node scripts/test-screen-matrix.mjs            (npm run test:screen-matrix)
 // Env:   PTH_ENGINES="firefox"  or "chromium,webkit"  - engines to run (default all)
+//        PTH_ENGINES="edge"  - Microsoft Edge only (once: npx playwright install msedge;
+//                              skipped with a notice when Edge is not installed)
 //        PTH_DEVICES="Desktop 1920x1080,iPad Mini"     - profiles (every engine of each)
 //        PTH_MOBILE=desktop|tablet|resize              - one family only
 //        PTH_STEPS="ui,table,resize"                   - parts to run
@@ -32,8 +36,9 @@
 import { startServer, createReporter, shot, settle, openTable, enterTable, runPlan, devices, ME, GAME } from './lib/mobile-harness.mjs';
 import { UI_AUDIT, measureTable, auditTable } from './lib/layout-audit.mjs';
 
-const ENGINES = ['chromium', 'firefox', 'webkit'];
-const UA = { chromium: devices['Desktop Chrome'].userAgent, firefox: devices['Desktop Firefox'].userAgent, webkit: devices['Desktop Safari'].userAgent };
+const ENGINES = ['chromium', 'firefox', 'webkit', 'edge'];
+const UA = { chromium: devices['Desktop Chrome'].userAgent, firefox: devices['Desktop Firefox'].userAgent, webkit: devices['Desktop Safari'].userAgent,
+  edge: devices['Desktop Edge'].userAgent };
 const desktop = (w, h, dpr, note) => ENGINES.map((engine) => ({ name: `Desktop ${w}x${h}`, family: 'desktop', engine, note,
   descriptor: { viewport: { width: w, height: h }, deviceScaleFactor: dpr, isMobile: false, hasTouch: false, userAgent: UA[engine] } }));
 // A tablet runs in its own engine (iPad = WebKit, every iPad browser is WebKit)

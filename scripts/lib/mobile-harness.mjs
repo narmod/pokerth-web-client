@@ -18,7 +18,11 @@ export const MATRIX = [
   { name: 'Galaxy A55 landscape', family: 'android' },
 ];
 const ENGINES = { ios: ['webkit', webkit], android: ['chromium', chromium] };
-const BY_NAME = { chromium, firefox, webkit };
+// `edge` = the real Microsoft Edge (Playwright's Chromium launcher with the
+// msedge channel: the browser installed by "npx playwright install msedge").
+const BY_NAME = { chromium, firefox, webkit, edge: chromium };
+const LAUNCH = { edge: { channel: 'msedge' } };
+const INSTALL_NAME = { edge: 'msedge' };
 export const SHOTS = process.env.PTH_SHOTS !== '0';
 const SHOT_DIR = join(process.cwd(), 'test-artifacts', 'mobile');
 export const ME = 42, GAME = 303;
@@ -262,8 +266,8 @@ export const dealTurn = (page, card) => page.evaluate((c) => { const f = window.
 // A matrix entry is { name, family } (a Playwright device, engine chosen by
 // family: ios = WebKit, android = Chromium) or, for screens Playwright has no
 // profile for, { name, family, engine, descriptor } (test-screen-matrix: the
-// same desktop size run in Chromium, Firefox AND WebKit). Firefox does not
-// take isMobile: it is dropped from the descriptor.
+// same desktop size run in Chromium, Firefox, WebKit AND Microsoft Edge).
+// Firefox does not take isMobile: it is dropped from the descriptor.
 export async function runPlan(title, reporter, runDevice, matrix = MATRIX, hardTimeoutMin = 40) {
   // Watchdog: a browser that wedges (seen with WebKit after an internal error)
   // must not hold a CI job until its own timeout. Exit code 3 = hung.
@@ -281,11 +285,11 @@ export async function runPlan(title, reporter, runDevice, matrix = MATRIX, hardT
   console.log(title + ' - ' + runnable.map((d) => d.name + (d.engine ? ' [' + d.engine + ']' : '')).join(', '));
   let enginesRun = 0; const skipped = [];
   // Same order as before for the phone matrices (iOS profiles first), then Firefox.
-  for (const engineName of ['webkit', 'chromium', 'firefox']) {
+  for (const engineName of ['webkit', 'chromium', 'firefox', 'edge']) {
     const list = runnable.filter((d) => engineOf(d) === engineName); if (!list.length) continue;
     let browser;
-    try { browser = await BY_NAME[engineName].launch({ headless: true }); }
-    catch (_error) { skipped.push(`${engineName}: not installed - run "npx playwright install ${engineName}"`); continue; }
+    try { browser = await BY_NAME[engineName].launch({ headless: true, ...(LAUNCH[engineName] || {}) }); }
+    catch (_error) { skipped.push(`${engineName}: not installed - run "npx playwright install ${INSTALL_NAME[engineName] || engineName}"`); continue; }
     enginesRun++;
     const fams = [...new Set(list.map((d) => d.family))];
     console.log(`\n== ${fams.map((f) => (f === 'ios' ? 'iOS profiles' : f === 'android' ? 'Android profiles' : f + ' profiles')).join(' + ')} - ${engineName} ${browser.version()} ==`);

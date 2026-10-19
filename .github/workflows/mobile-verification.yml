@@ -159,15 +159,16 @@ jobs:
 
   # Desktop monitors (1280x720 to 4K / ultrawide), tablets and foldables, and a
   # window dragged through every layout breakpoint and back - one job per
-  # engine: Chromium (Chrome / Edge), Firefox (Gecko - not run anywhere else)
-  # and WebKit (Safari, every iPad browser).
+  # engine: Chromium (Chrome / Opera), Firefox (Gecko - not run anywhere else),
+  # WebKit (Safari, every iPad browser) and the real Microsoft Edge (desktop
+  # profiles and the resize run; Playwright installs it as "msedge").
   screen-matrix:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
-        engine: [chromium, firefox, webkit]
+        engine: [chromium, firefox, webkit, edge]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -181,7 +182,8 @@ jobs:
         run: |
           PW="$(node -p "require('./package.json').devDependencies.playwright")"
           npm install --no-save --no-package-lock "playwright@${PW}"
-          npx playwright install --with-deps ${{ matrix.engine }}
+          ENG="${{ matrix.engine }}"; [ "$ENG" = edge ] && ENG=msedge
+          npx playwright install --with-deps "$ENG"
 
       - name: Screen matrix (${{ matrix.engine }})
         env:
