@@ -30,6 +30,13 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Gamepad, TV remote and Ace's Help switches** (`web.168`) — Player experience › Features › « App & the Ace » can
+  now turn off the gamepad, the TV remote and the Ace's Help tips for everyone. The pad and the remote already read
+  their option through `_advGet`, and `padApply` runs on the switch refresh. For the Ace, the switch stops what he
+  does by himself — tips, the first-launch offer, « Turn on tips » in his menu — and never writes the player's own
+  option, which takes effect again once the switch is back on. Help on request stays: since H4 the Help entries of
+  the menus, « More help » and « ? » are the Ace, so cutting him would cut the in-app help. Checked in a browser
+  with all three off and the three options stored on: the checkboxes locked and tagged, no tip, More help opens.
 - **Eight more feature switches** (`web.167`) — Player experience › Features can now turn off for everyone: the winner
   window, the card dealing animation, the lobby's Forum button, « Invite friends », chat translation (switched off,
   nothing is sent to Google — chat, private messages and the auto-translated operator texts alike), the avatar

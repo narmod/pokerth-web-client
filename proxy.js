@@ -347,6 +347,10 @@ const FEATURE_SWITCHES = [
   { key: 'avatar_create', label: '\u201cCreate\u201d tab of the avatar window' },
   { key: 'cfg_sync', label: 'Settings sync with the pokerth.net account' },
   { key: 'bak_auto', label: 'Automatic backup file' },
+  // web.168
+  { key: 'guide_on', label: 'Ace\u2019s Help tips (help on request stays)' },
+  { key: 'pad_on', label: 'Gamepad (game controller)' },
+  { key: 'remote_on', label: 'TV remote (Android TV)' },
 ];
 function featureOffList() {
   const a = _adminConfig && _adminConfig.featureOff;

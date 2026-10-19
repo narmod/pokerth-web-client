@@ -85,6 +85,19 @@ for (const k of ['winner_popup', 'deal_anim', 'forum_news', 'invite_link', 'chat
 ok(/data-feat="chat_translate"/.test(client) && /data-feat="cfg_sync"/.test(client), 'the two checkboxes without setAdvOpt name their switch');
 ok(/getAttribute\('data-feat'\)/.test(js.slice(js.indexOf('function _applyFeatureOff'), js.indexOf('function _applyFeatureOff') + 2500)), 'and the lock reads it');
 ok(/function _netTrOn\(\) \{\s*try \{ if \(window\._pthFeatureOff && window\._pthFeatureOff\.chat_translate\) return false;/.test(js), 'switched off, nothing is sent to Google, operator texts included');
+// web.168: gamepad, TV remote and the Ace's Help tips. The pad and the remote
+// read their option through _advGet (ctl-nav opt()). The Ace's tips: off for
+// everyone, the player's option untouched, no first-launch offer and no « Turn
+// on tips »; help on request (the help entries of the menus are the Ace) stays.
+for (const k of ['pad_on', 'remote_on', 'guide_on']) ok(KEYS.includes(k), 'switch ' + k + ' is in the catalogue');
+const nav = readFileSync(join(PUB, 'modules', 'ui', 'ctl-nav.mjs'), 'utf8');
+ok(/_advGet/.test(nav), 'the pad and the remote read their option through _advGet');
+const guide = readFileSync(join(PUB, 'modules', 'guide', 'index.mjs'), 'utf8');
+ok(/state\.isOn = \(\) => !featureOff\('guide_on'\) && _ownIsOn\(\);/.test(guide), 'the Ace\'s tips are off while switched off');
+ok(/function turnOn\(\) \{\s*if \(featureOff\('guide_on'\)\) return;/.test(guide), 'nothing turns them back on');
+ok(/function maybeOffer\(\) \{[\s\S]{0,200}featureOff\('guide_on'\)/.test(guide), 'no first-launch offer');
+ok(/else if \(!featureOff\('guide_on'\)\) list\.push\(btn\('turnOn'\)\)/.test(guide), 'no « Turn on tips » in his menu');
+ok(/function canComeHere\(\) \{\s*if \(!avail\) return false;/.test(guide) && !/function canComeHere\(\) \{[^}]*featureOff/.test(guide), 'help on request stays');
 const coll = js.slice(js.indexOf('function _cfgCollectWebSettings'), js.indexOf('function _cfgCollectWebSettings') + 4000);
 ok(!/_advGet\(advKey/.test(coll), 'account sync writes the player\'s own choice, not the admin override');
 ok(sw.includes("'/modules/feature-off.mjs'"), 'the helper is precached for offline play');

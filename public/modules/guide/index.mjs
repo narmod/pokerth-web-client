@@ -28,6 +28,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 import { createState, mergeIn, KEY_ON } from './state.mjs';
+import { featureOff } from '../feature-off.mjs';
 import { canSpeak, pickContext, replayContext, applies, createRun } from './core.mjs';
 import { pickRankingTable, finishPlace, RANKED_TYPE, pointsFor } from './ranking-pick.mjs';
 import { CONTEXTS } from './contexts/index.mjs';
@@ -76,6 +77,12 @@ const state = createState(
   (() => { try { return window.localStorage; } catch (e) { return null; } })() || { getItem: () => null, setItem() {} },
   (k) => { try { if (typeof window._cfgSyncMark === 'function') window._cfgSyncMark(String(k).replace(/^pth_/, '')); } catch (e) {} },
 );
+// Admin switch guide_on (/app-config.featureOff): the tips are off for
+// everyone, whatever the player's stored option, which is left as it is and
+// takes effect again once the switch is back on. Help on request is not
+// touched: since H4 the Help entries of the menus are the Ace.
+const _ownIsOn = state.isOn;
+state.isOn = () => !featureOff('guide_on') && _ownIsOn();
 
 // ── Availability ───────────────────────────────────────────────────
 // ?guide=1 is kept from L1 (remembered in pth_guide_dev) for testing a
@@ -536,7 +543,7 @@ async function showMenu() {
   if (tip) list.push(btn('replayTip'));
   if (!appInstalled()) list.push(btn('installApp'));
   if (on) list.push(btn('turnOff'), btn('resetTips'));
-  else list.push(btn('turnOn'));
+  else if (!featureOff('guide_on')) list.push(btn('turnOn'));   // switched off by the admin: no « Turn on tips »
   list.push(btn('close', true));
   await note(on ? 'menuOn' : 'menuOff', list, (id) => {
     if (id === 'moreHelp') { openMoreHelp(); return; }
@@ -893,6 +900,7 @@ function setOn(on) {
 }
 
 function turnOn() {
+  if (featureOff('guide_on')) return;                  // the admin switched the tips off: nothing to turn on
   state.markOffered();
   if (!state.isOn()) setOn(true);
   else welcome();
@@ -1151,7 +1159,7 @@ function automated() {
 }
 function maybeOffer() {
   clearTimeout(offerTimer);
-  if (!available() || state.isOn() || state.wasOffered() || state.offerTired() || automated()) return;
+  if (!available() || featureOff('guide_on') || state.isOn() || state.wasOffered() || state.offerTired() || automated()) return;
   offerTimer = setTimeout(async () => {
     if (!available() || state.isOn() || state.wasOffered() || state.offerTired()) return;
     const w = where();
