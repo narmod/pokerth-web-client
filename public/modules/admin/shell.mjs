@@ -69,7 +69,7 @@ function paintTitle(tab) {
 // "overview" inside the dashboard; its address says what the menu says, and
 // the old #traffic/overview still lands on it.
 const TS_ADDR = { overview: 'summary' };
-const TS_PAGE = { summary: 'overview' };
+const TS_PAGE = { summary: 'overview', data: 'overview' };   // Data's cards moved out (web.184)
 function idOf(b) { return b.dataset.t + (b.dataset.ts ? '/' + (TS_ADDR[b.dataset.ts] || b.dataset.ts) : ''); }
 function tabFor(t) {
   const m = /^([a-z]+)(?:\/([a-z]+))?$/.exec(t || '');

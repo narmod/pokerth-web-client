@@ -1168,7 +1168,6 @@
           <button type="button" class="tab" data-t="traffic" data-ts="visitors">Visitors</button>
           <button type="button" class="tab" data-t="traffic" data-ts="music">Music</button>
           <button type="button" class="tab" data-t="traffic" data-ts="ace">Ace’s Help</button>
-          <button type="button" class="tab" data-t="traffic" data-ts="data">Data</button>
         </div>
       </div>
       <div class="sgrp" data-g="live">
@@ -1208,6 +1207,7 @@
         <div class="tabs subtabs" data-g="infra" style="display:none">
           <button type="button" class="tab" data-t="servers">Game servers</button>
           <button type="button" class="tab" data-t="proxy">Proxy</button>
+          <button type="button" class="tab" data-t="database">Database</button>
           <button type="button" class="tab" data-t="identity">Search engines</button>
         </div>
       </div>
@@ -1232,6 +1232,7 @@
         <div class="sfrow"><span>Build</span><span id="sideVer" class="mono">—</span></div>
         <div class="sfrow"><span>Signed in with</span><span id="sideWho">—</span></div>
         <div class="sfrow"><label for="idleSel">Log out when idle</label><select id="idleSel" title="Remembered on this device only"><option value="10">after 10 min</option><option value="60">after 1 h</option><option value="0">never</option></select></div>
+        <div class="sfrow"><label for="noCountSel">My visits</label><select id="noCountSel" title="Whether this browser’s visits to the client are counted in Statistics. Remembered on this device only"><option value="1">counted</option><option value="0">left out</option></select></div>
         <div class="sfbtns">
           <button id="themeBtn" class="ghost ico" type="button" title="Toggle dark / light" aria-label="Toggle dark / light"></button>
           <button id="logoutBtn" class="ghost" type="button"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M120,128V48a8,8,0,0,1,16,0v80a8,8,0,0,1-16,0Zm60.37-78.7a8,8,0,0,0-8.74,13.4C194.74,77.77,208,101.57,208,128a80,80,0,0,1-160,0c0-26.43,13.26-50.23,36.37-65.3a8,8,0,0,0-8.74-13.4C47.9,67.38,32,96.06,32,128a96,96,0,0,0,192,0C224,96.06,208.1,67.38,180.37,49.3Z"/></svg>Log out</button>
@@ -1334,6 +1335,12 @@
         <h2>Bottom line</h2>
         <p class="muted xpl">What the figures in the other sections add up to, stated in plain words. Each line is derived, not written by hand — a claim disappears when the measurement behind it is missing.</p>
         <div id="trafBottom" class="botline"><div class="empty">Loading…</div></div>
+      </div>
+      <div class="card">
+        <h2>Reset traffic stats</h2>
+        <p class="muted">⚠ This permanently deletes ALL visit data — today, history, totals, track play counts. This cannot be undone.</p>
+        <button id="btnTrafReset" class="use danger">Reset all traffic stats</button>
+        <div id="trafMsg" class="msg"></div>
       </div>
       </div>
       <div class="tsub" data-ts="audience" role="tabpanel" aria-label="Audience" style="display:none">
@@ -1457,39 +1464,6 @@
         <p class="muted xpl">Every country with at least one count for the selection above, largest first, with its sessions split by entry mode. Tap a row to show it on the map card. Countries too small for the map (Singapore, Malta, Monaco…) appear only here.</p>
         <div id="geoList"><div class="empty">Loading…</div></div>
       </div>
-      </div>
-      <div class="tsub" data-ts="data" role="tabpanel" aria-label="Data" style="display:none">
-      <section class="ovmodes" id="tsT-data" aria-label="The data at a glance"><div class="empty">Loading…</div></section>
-      <div class="card">
-          <h2>Exclude my own visits</h2>
-          <p class="muted">On THIS browser, keeps the client out of the visit counter — handy while testing the site. The setting is local to this device and affects no other browser.</p>
-          <button id="btnNoCount" class="use">Do not count my visits</button>
-        </div>
-      <div class="card">
-          <h2>Database (MySQL mirror)</h2>
-  <p class="muted">Mirrors when enabled: traffic_daily, leaderboard, broadcasts. Configure below (or with <code>pokerth-web db-config</code> on a native install).</p>
-          <div id="trafDb"><div class="empty">Loading…</div></div>
-          <div class="defrow fld gap"><span>Host</span><input id="dbHost" maxlength="255" placeholder="127.0.0.1" autocomplete="off"></div>
-          <div class="defrow fld"><span>Port</span><input id="dbPort" type="number" min="1" max="65535" placeholder="3306" autocomplete="off"></div>
-          <div class="defrow fld"><span>User</span><input id="dbUser" maxlength="128" placeholder="root" autocomplete="off"></div>
-          <div class="defrow fld"><span>Password</span><input id="dbPass" type="password" maxlength="255" placeholder="(unchanged)" autocomplete="new-password"></div>
-          <div class="defrow fld"><span>Database</span><input id="dbDatabase" maxlength="128" placeholder="pokerth" autocomplete="off"></div>
-          <div class="defrow fld"><span>Enabled</span><input id="dbEnabled" type="checkbox"></div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button id="dbTestBtn" class="use">Test connection</button><button id="dbSaveBtn" class="use" data-save>Save &amp; connect</button></div>
-          <div id="dbState" class="msg"></div>
-        </div>
-      <div class="card">
-          <h2>Export / backup</h2>
-          <p class="muted">Download the raw data for backup or import into a database. CSV = one row per day (date, visits, unique, per-server connections). JSON = full backup (restorable to visits.json).</p>
-          <div style="display:flex;gap:8px;flex-wrap:wrap"><button id="btnTrafCsv" class="use">Download CSV</button><button id="btnTrafJson" class="use">Download JSON</button></div>
-          <div id="trafExpMsg" class="msg"></div>
-        </div>
-      <div class="card">
-          <h2>Reset traffic stats</h2>
-          <p class="muted">⚠ This permanently deletes ALL visit data — today, history, totals, track play counts. This cannot be undone.</p>
-          <button id="btnTrafReset" class="use danger">Reset all traffic stats</button>
-          <div id="trafMsg" class="msg"></div>
-        </div>
       </div>
     </div>
 
@@ -1752,6 +1726,22 @@
       </div>
     </div>
 
+    <div id="panel-database" style="display:none">
+      <section class="ovmodes" id="dbTiles" aria-label="The MySQL mirror at a glance"><div class="empty">Loading…</div></section>
+      <div class="card">
+        <h2>MySQL mirror</h2>
+        <p class="muted">Mirrors when enabled: traffic_daily, leaderboard, broadcasts. Configure below (or with <code>pokerth-web db-config</code> on a native install).</p>
+        <div id="trafDb"><div class="empty">Loading…</div></div>
+        <div class="defrow fld gap"><span>Host</span><input id="dbHost" maxlength="255" placeholder="127.0.0.1" autocomplete="off"></div>
+        <div class="defrow fld"><span>Port</span><input id="dbPort" type="number" min="1" max="65535" placeholder="3306" autocomplete="off"></div>
+        <div class="defrow fld"><span>User</span><input id="dbUser" maxlength="128" placeholder="root" autocomplete="off"></div>
+        <div class="defrow fld"><span>Password</span><input id="dbPass" type="password" maxlength="255" placeholder="(unchanged)" autocomplete="new-password"></div>
+        <div class="defrow fld"><span>Database</span><input id="dbDatabase" maxlength="128" placeholder="pokerth" autocomplete="off"></div>
+        <div class="defrow fld"><span>Enabled</span><input id="dbEnabled" type="checkbox"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button id="dbTestBtn" class="use">Test connection</button><button id="dbSaveBtn" class="use" data-save>Save &amp; connect</button></div>
+        <div id="dbState" class="msg"></div>
+      </div>
+    </div>
     <div id="panel-identity" style="display:none">
       <section class="ovmodes" id="idTiles" aria-label="Search engines at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
@@ -1926,6 +1916,12 @@
           <input id="cfgImportFile" type="file" accept=".json,application/json" style="display:none">
         </div>
         <div id="cfgIoMsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2>Visit data</h2>
+        <p class="muted">The anonymous visit counts are kept apart from the settings backup above: download them here, for safekeeping or to import into a database. CSV = one row per day (date, visits, unique, per-server connections). JSON = full backup (restorable to visits.json).</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button id="btnTrafCsv" class="use">Download CSV</button><button id="btnTrafJson" class="use">Download JSON</button></div>
+        <div id="trafExpMsg" class="msg"></div>
       </div>
     </div>
 
@@ -3321,6 +3317,7 @@
     });
     if(t==='music')mzRefresh();
     if(t==='keys'){ loadKeys(); }
+    if(t==='database'){ loadDbConfig(); }
     if(t==='audit') loadAudit();
     else { var _kn=$('kyNew'); if(_kn&&_kn.style.display!=='none'){ _kn.innerHTML=''; _kn.style.display='none'; } }   // a new key never stays on screen behind your back
     if(t==='board') loadBoard();
@@ -3903,8 +3900,11 @@
   // Owner self-exclusion: pth_no_count lives in the SAME origin as the client,
   // so pokerth.js reads it before firing the /__visit beacon. Per-device.
   function _noCount(){ try{ return localStorage.getItem('pth_no_count')==='1'; }catch(e){ return false; } }
-  function _paintNoCount(){ var b=$('btnNoCount'); if(!b) return; var on=_noCount(); b.textContent=on?'My visits: ignored ✓ (click to count them again)':'Do not count my visits'; b.classList.toggle('on',on); }
-  function toggleNoCount(){ try{ if(_noCount()) localStorage.removeItem('pth_no_count'); else localStorage.setItem('pth_no_count','1'); }catch(e){} _paintNoCount(); if(_trafLastD) _tsData(_trafLastD); }
+  // « My visits » (side menu foot, web.184): this browser left out of the
+  // visit counter. The client reads the same key before sending its ping.
+  function _paintNoCount(){ var s=$('noCountSel'); if(s) s.value=_noCount()?'0':'1'; }
+  function _setNoCount(off){ try{ if(off) localStorage.setItem('pth_no_count','1'); else localStorage.removeItem('pth_no_count'); }catch(e){} _paintNoCount(); }
+  (function(){ var s=$('noCountSel'); if(!s) return; _paintNoCount(); s.addEventListener('change',function(){ _setNoCount(s.value==='0'); }); })();
   // -- What visitors run: donut + ranking, one view at a time -----------------
   // The data is four (now five) plain counter maps. Everything below is
   // presentation: the same numbers read as a share of the whole (donut) and as
@@ -5027,7 +5027,7 @@
       var why = !_envKnown
         ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (Operations › Deployment › Restart); a static update alone swaps the served files, not the process.'
         : (_envPings && !_envPings.visits)
-          ? 'No visit ping has reached the proxy since it started. One ping is sent per browser session, and a browser where you ticked “Exclude my own visits” sends none at all — open the site in a private window to check.'
+          ? 'No visit ping has reached the proxy since it started. One ping is sent per browser session, and a browser set to « My visits: left out » (side menu) sends none at all — open the site in a private window to check.'
           : 'Nothing recorded yet — counting started here, and one ping is sent per browser session.';
       box.innerHTML='<div class="empty">'+why+'</div>'+_envPingLine();
       return;
@@ -5152,15 +5152,6 @@
       ['Tips shown',g?_tsN(tips):'—','across every context','var(--m-live)'],
       ['Ranking games',f?_tsN(f.started):'—',f?(_tsN(f.highlighted)+' tables highlighted · '+_tsN(f.joined)+' joined'):'nothing recorded yet','var(--warn-text)']]);
   }
-  // Data: what is stored here, and whether this browser is counted.
-  function _tsData(d){
-    var db=d.db||{}, at=d.allTime||{}, nc=_noCount();
-    _tsTiles('data',[
-      ['MySQL mirror',!db.enabled?'Off':(db.connected?'Connected':'Error'),!db.enabled?'configured below':(db.connected?'mirroring':'see the card below'),!db.enabled?'var(--muted)':(db.connected?'var(--ok-text)':'var(--err-text)')],
-      ['Visits stored',_tsN(at.v),'all time','var(--accent)'],
-      ['Devices known',_tsN(at.u),'ever seen','var(--m-live)'],
-      ['This browser',nc?'Not counted':'Counted',nc?'your visits are left out':'your visits count','var(--warn-text)']]);
-  }
   // World: countries reached, the first one, and who is online right now.
   function _tsWorld(){
     var C=(_geoData&&_geoData.ok&&_geoData.countries)||null, n=0, best='', bv=0;
@@ -5177,11 +5168,6 @@
       _trafWired = true;
       var rb=$('btnTrafRefresh'); if(rb) rb.addEventListener('click', loadTraffic);
       var xb=$('btnTrafReset');  if(xb) xb.addEventListener('click', resetTraffic);
-      var cb=$('btnTrafCsv');  if(cb) cb.addEventListener('click', function(){ exportTraffic('csv'); });
-      var jb=$('btnTrafJson'); if(jb) jb.addEventListener('click', function(){ exportTraffic('json'); });
-      var dt=$('dbTestBtn'); if(dt) dt.addEventListener('click', dbTest);
-      var ds=$('dbSaveBtn'); if(ds) ds.addEventListener('click', dbSave);
-      var nc=$('btnNoCount'); if(nc) nc.addEventListener('click', toggleNoCount);
       var bb=$('trafBots'); if(bb) bb.addEventListener('click', function(){
         _trafBots=!_trafBots; try{ localStorage.setItem('pth_admin_bots',_trafBots?'1':'0'); }catch(e){}
         _paintBots(); loadTraffic();
@@ -5198,8 +5184,6 @@
     }
     _paintPeriod();
     _paintBots();
-    _paintNoCount();
-    loadDbConfig();
     loadGeo();
     // A quick change of period or of the bots switch starts a new read before
     // the last one answered: only the newest may paint, whatever the order in
@@ -5301,20 +5285,7 @@
       _musKnown=(d.music!==undefined); _musPeriodDays=(d.musicPeriod&&d.musicPeriod.days)||0; _musData=(_musPeriodDays||(d.h24&&d.musicPeriod))?(d.musicPeriod.plays||{}):(d.music||{}); _musTitles=d.musicTitles||{}; _musSince=d.musicSince||0; _musVotesKnown=(d.musicVotes!==undefined); _musVotes=d.musicVotes||{}; _musVoteTitles=d.musicVoteTitles||{}; _musVotesSince=d.musicVotesSince||0; renderMusic();
       _guideKnown=(d.guide!==undefined); _guidePeriodDays=(d.guidePeriod&&d.guidePeriod.days)||0; _guideData=(_guidePeriodDays||(d.h24&&d.guidePeriod))?(d.guidePeriod.summary||null):(d.guide||null); _guideSince=d.guideSince||0; renderGuide();
       _srcKnown=(d.srcPeriod!==undefined); _srcData=d.srcPeriod||null; _srcSince=d.refSince||0; renderSrc();
-      var dbx=$('trafDb');
-      if(dbx){
-        var db=d.db||{};
-        var esc=function(x){ return (''+x).replace(/[&<>]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); };
-        var state;
-        if(!db.enabled){ state='<b style="color:var(--text)">Off</b> — configure below'; }
-        else if(db.connected){ state='<b class="ok">Connected</b>'; }
-        else { state='<b class="err">Error</b>'+(db.error?(' — '+esc(db.error)):''); }
-        var html='<div class="srow"><span>Status</span><span>'+state+'</span></div>';
-        if(db.enabled && db.source){ html+='<div class="srow"><span>Source</span><b>'+esc(db.source)+'</b></div>'; }
-        if(db.enabled && db.lastWrite){ html+='<div class="srow"><span>Last write</span><b>'+esc((''+db.lastWrite).replace('T',' ').slice(0,19))+'</b></div>'; }
-        dbx.innerHTML=html;
-      }
-      _tsAudience(d); _tsActivity(d); _tsVisitors(); _tsMusic(); _tsAce(); _tsData(d); _tsWorld();
+      _tsAudience(d); _tsActivity(d); _tsVisitors(); _tsMusic(); _tsAce(); _tsWorld();
     }).catch(function(){ var g=$('trafCards'); if(g) g.innerHTML='<div class="empty err">Could not load.</div>'; loadFail('panel-traffic','Could not load.'); });
   }
   // -- Lecture analytique du trafic ------------------------------------------
@@ -6004,6 +5975,13 @@
         else { if(m){ m.className='msg err'; m.textContent='Reset failed: '+((d&&d.error)||'forbidden'); } }
       }).catch(function(){ var m=$('trafMsg'); if(m){ m.className='msg err'; m.textContent='Network error.'; } });
   }
+  // Operations › Backup › Visit data, Infrastructure › Database: wired once.
+  (function(){
+    var cb=$('btnTrafCsv'); if(cb) cb.addEventListener('click', function(){ exportTraffic('csv'); });
+    var jb=$('btnTrafJson'); if(jb) jb.addEventListener('click', function(){ exportTraffic('json'); });
+    var dt=$('dbTestBtn'); if(dt) dt.addEventListener('click', dbTest);
+    var ds=$('dbSaveBtn'); if(ds) ds.addEventListener('click', function(){ dbSave(); });
+  })();
   function dbSetState(msg, kind){ var m=$('dbState'); if(m){ m.className='msg'+(kind?(' '+kind):''); m.textContent=msg||''; } }
   function loadDbConfig(){
     api('/admin/db').then(function(r){return r.json();}).then(function(d){
@@ -6023,7 +6001,27 @@
       ['dbHost','dbPort','dbUser','dbPass','dbDatabase','dbEnabled','dbTestBtn','dbSaveBtn'].forEach(function(id){ var el=$(id); if(el) el.disabled=envSrc; });
       if(envSrc) dbSetState('Configured via environment variables (MYSQL_*). Edit your env / CLI conf to change it; this form is inactive.','');
       else dbSetState('','');
+      dbPaint(st);
     }).catch(function(){});
+  }
+  // Status rows and tiles of Infrastructure › Database, from /admin/db.
+  function dbPaint(st){
+    st=st||{};
+    var esc=_annEsc, lw=st.lastWrite?Date.parse(st.lastWrite):0;
+    var dbx=$('trafDb');
+    if(dbx){
+      var state=!st.enabled?'<b style="color:var(--text)">Off</b> — configure below':(st.connected?'<b class="ok">Connected</b>':'<b class="err">Error</b>'+(st.error?(' — '+esc(st.error)):''));
+      var html='<div class="srow"><span>Status</span><span>'+state+'</span></div>';
+      if(st.enabled && st.source) html+='<div class="srow"><span>Source</span><b>'+esc(st.source)+'</b></div>';
+      if(st.enabled && st.lastWrite) html+='<div class="srow"><span>Last write</span><b>'+esc((''+st.lastWrite).replace('T',' ').slice(0,19))+'</b></div>';
+      dbx.innerHTML=html;
+    }
+    var box=$('dbTiles'); if(!box) return;
+    var T=[['Mirror',!st.enabled?'Off':(st.connected?'Connected':'Error'),!st.enabled?'nothing is copied':(st.connected?'copying as it happens':'see the card below'),!st.enabled?'var(--muted)':(st.connected?'var(--ok-text)':'var(--err-text)')],
+      ['Set by',st.source==='env'?'Environment':'This page',st.source==='env'?'MYSQL_* variables':'the form below','var(--accent)'],
+      ['Last write',lw?_auAgo(Date.now()-lw):'—',lw?esc((''+st.lastWrite).replace('T',' ').slice(0,16)):'nothing written yet','var(--m-live)'],
+      ['Tables','3','traffic_daily, leaderboard, broadcasts','var(--warn-text)']];
+    box.innerHTML=T.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join('');
   }
   function dbFormBody(){ var b={ host:($('dbHost')?$('dbHost').value.trim():''), port:Number($('dbPort')?$('dbPort').value:3306)||3306, user:($('dbUser')?$('dbUser').value:''), database:($('dbDatabase')?$('dbDatabase').value.trim():''), enabled:($('dbEnabled')?$('dbEnabled').checked:false), token:tok() }; var pw=($('dbPass')?$('dbPass').value:''); if(pw) b.password=pw; return b; }
   function dbTest(){
@@ -8194,15 +8192,12 @@
   // filling all of them (charts are viewBox SVG, they need no width): the side
   // menu only chooses which one is on screen (.tab[data-t="traffic"][data-ts]).
   // The Explanations switch is remembered per browser, like the period.
-  var TRAF_SUBS=['overview','world','audience','activity','visitors','music','ace','data'];
+  var TRAF_SUBS=['overview','world','audience','activity','visitors','music','ace'];
   function _trafSub(k){
     if(k==='features') k='music';   // the former Features tab
-    if(k==='summary') k='overview'; // its address (#traffic/summary)
+    if(k==='summary'||k==='data') k='overview'; // its address (#traffic/summary); Data is gone (web.184)
     if(TRAF_SUBS.indexOf(k)<0) k='overview';
     document.querySelectorAll('#panel-traffic .tsub').forEach(function(p){ p.style.display = p.dataset.ts===k ? '' : 'none'; });
-    // Data holds settings, exports and the reset: no period, mode or bot
-    // filter applies to any of them, so the filter card stays off that page.
-    var fh=document.querySelector('#panel-traffic>.trafhead'); if(fh) fh.style.display = k==='data' ? 'none' : '';
     // The map was drawn while hidden: draw it again at its real width.
     if(k==='world') _geoRedraw();
   }

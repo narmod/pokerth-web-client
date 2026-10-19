@@ -41,6 +41,14 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Statistics › Data split up** (`web.184`, audit of 2026-10-19c, P1; Arnaud's choice B) — the page mixed four
+  things that are not statistics to read. The MySQL mirror (it also copies the leaderboard and the broadcasts) is
+  now Infrastructure › Database, with tiles (mirror, set by, last write, tables) read from `/admin/db` when the
+  page opens. The CSV / JSON visit export is a « Visit data » card of Operations › Backup, which already said the
+  traffic is kept apart from the settings backup. « Exclude my own visits », a preference of this browser, is
+  « My visits: counted / left out » in the side menu foot, beside the theme and the idle logout (same
+  `pth_no_count` key the client reads). The reset stays in Statistics, at the foot of Summary. The Data entry is
+  gone; `#traffic/data` opens Summary.
 - **Visitors › « Source × language »** (`web.183`, audit of 2026-10-19c, S6) — « Where visitors come from » named its
   source-by-language view « Languages », right under the « Language » view of « What visitors run », which reads
   something else (the language of every visit, not first visits by source). The button now says what it shows.

@@ -43,8 +43,8 @@ const shellJs = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..',
 // classes, so the handlers that open a panel are the same as before.
 const GROUPS = {
   overview: ['overview'],
-  stats: ['traffic/overview', 'traffic/world', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace', 'traffic/data'], live: ['sessions', 'errors'], community: ['board', 'polls', 'broadcast', 'landir'],
-  content: ['packages', 'music'], players: ['login', 'lobby', 'firstvisit', 'features'], infra: ['servers', 'proxy', 'identity'],
+  stats: ['traffic/overview', 'traffic/world', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace'], live: ['sessions', 'errors'], community: ['board', 'polls', 'broadcast', 'landir'],
+  content: ['packages', 'music'], players: ['login', 'lobby', 'firstvisit', 'features'], infra: ['servers', 'proxy', 'database', 'identity'],
   ops: ['server', 'deploy', 'backup'], security: ['keys', 'audit', 'blocked'],
 };
 function grp(g) {
@@ -174,7 +174,7 @@ function panel(id) {
   return admin.slice(a, b < 0 ? undefined : b);
 }
 const PANELS = {
-  'panel-server': 2, 'panel-proxy': 1, 'panel-deploy': 3, 'panel-backup': 1, 'panel-audit': 1, 'panel-blocked': 1,
+  'panel-server': 2, 'panel-proxy': 1, 'panel-deploy': 3, 'panel-backup': 2, 'panel-database': 1, 'panel-audit': 1, 'panel-blocked': 1,
   'panel-login': 3, 'panel-lobby': 3, 'panel-firstvisit': 2, 'panel-features': 1, 'panel-identity': 1,
 };
 for (const [id, count] of Object.entries(PANELS)) {
@@ -407,7 +407,8 @@ ok(traf.indexOf('id="trafRet"') > traf.indexOf('data-ts="audience" role="tabpane
 // one on screen at a time, and the long explanations fold behind a single
 // Explanations switch. Every section stays in the DOM: loadTraffic fills them
 // all, the bar only chooses which one is visible.
-const TS = ['overview', 'audience', 'activity', 'visitors', 'music', 'ace', 'data'];
+// web.184: Data is gone, its cards moved to Database, Backup, Summary and the side menu.
+const TS = ['overview', 'audience', 'activity', 'visitors', 'music', 'ace'];
 const TS8 = ['world'].concat(TS);
 function tsub(k) {
   const i = traf.indexOf('<div class="tsub" data-ts="' + k + '"');
@@ -434,7 +435,6 @@ const home = {
   visitors: ['trafEnv'],
   music: ['trafMusic', 'musSince'],
   ace: ['guideSec', 'trafGuide', 'guideSince'],
-  data: ['btnNoCount', 'dbHost', 'btnTrafCsv', 'btnTrafReset'],
 };
 for (const [k, ids] of Object.entries(home)) {
   for (const id of ids) ok(tsub(k).includes('id="' + id + '"'), id + ' lives under ' + k);
@@ -448,14 +448,13 @@ ok(tsub('overview').indexOf('id="trafKpis"') < tsub('overview').indexOf('id="tra
 for (const h of ['Bottom line', 'Daily visits', 'New devices per day', 'Coming back', 'Last 48 h', 'Time of day',
   'Last 48 h by entry mode', 'pokerth.net vs web client', 'Where sessions open', '/live spectator view',
   'What visitors run', 'Where visitors come from', 'Most played tracks', 'Offer, tips and Ranking funnel',
-  'Exclude my own visits', 'Database (MySQL mirror)', 'Export / backup', 'Reset traffic stats']) {
+  'Reset traffic stats']) {
   ok(traf.includes('<h2>' + h + '</h2>'), 'a card is headed ' + h);
 }
 ok(/<section class="card trafhead statbar" aria-label="Filters for every page of Statistics">/.test(traf), 'one filter card heads every section');
 for (const id of ['trafModeSel', 'trafPeriod', 'trafRange', 'trafBots', 'trafXpl', 'btnTrafRefresh']) ok(traf.includes('id="' + id + '"'), id + ' is in the filter card');
 ok(traf.indexOf('id="trafModeSel"') < traf.indexOf('<div class="tsub"'), 'above every section');
-ok(/var fh=document\.querySelector\('#panel-traffic>\.trafhead'\); if\(fh\) fh\.style\.display = k==='data' \? 'none' : '';/.test(admin),
-  'except Data, where no filter applies (web.178)');
+ok(!/data-ts="data"/.test(admin), 'no Data page any more (web.184), so no filter card to hide');
 for (const h of ['Trends', 'Retention', 'Recent activity', 'Connections', 'Who visits', 'Ace’s Help', 'Data &amp; settings']) {
   ok(!traf.includes('<h2>' + h + '</h2>'), 'no card groups subjects under « ' + h + ' » any more');
 }
@@ -464,14 +463,14 @@ ok((traf.match(/class="cardrow"/g) || []).length === 1 && /<div class="cardrow">
 ok(!/class="tsec"/.test(admin) && !/\.tsec\b/.test(admin), 'no section-inside-a-card is left, nor its style');
 ok(/#panel-traffic \.card>\.boardhead>h2\{white-space:nowrap\}/.test(admin), 'a card title does not break, so its note can take the slack');
 const cards = (k) => (tsub(k).match(/<div class="card"/g) || []).length;
-ok(cards('audience') === 3 && cards('activity') === 6 && cards('visitors') === 2 && cards('music') === 1 && cards('ace') === 1 && cards('data') === 4,
-  'one card per subject: Audience 3, Activity 6, Visitors 2, Music 1, Ace’s Help 1, Data 4');
-for (const k of ['world', 'audience', 'activity', 'visitors', 'music', 'ace', 'data']) {
+ok(cards('audience') === 3 && cards('activity') === 6 && cards('visitors') === 2 && cards('music') === 1 && cards('ace') === 1,
+  'one card per subject: Audience 3, Activity 6, Visitors 2, Music 1, Ace’s Help 1');
+for (const k of ['world', 'audience', 'activity', 'visitors', 'music', 'ace']) {
   ok(new RegExp('<div class="tsub" data-ts="' + k + '"[^>]*>\\n      <section class="ovmodes" id="tsT-' + k + '"').test(traf), k + ' opens on a row of tiles (web.182)');
 }
-ok(/_tsAudience\(d\); _tsActivity\(d\); _tsVisitors\(\); _tsMusic\(\); _tsAce\(\); _tsData\(d\); _tsWorld\(\);/.test(admin), 'filled from the figures the page already has');
+ok(/_tsAudience\(d\); _tsActivity\(d\); _tsVisitors\(\); _tsMusic\(\); _tsAce\(\); _tsWorld\(\);/.test(admin), 'filled from the figures the page already has');
 ok(/<div class="card" id="srcSec">/.test(traf) && /<div class="card" id="guideSec">/.test(traf), 'a subject keeps its id on its card');
-for (const id of ['btnNoCount', 'dbHost', 'btnTrafCsv', 'btnTrafReset', 'trafModes', 'trafEnv', 'trafMusic']) {
+for (const id of ['btnTrafReset', 'trafModes', 'trafEnv', 'trafMusic']) {
   ok(traf.includes('id="' + id + '"'), id + ' survived the split');
 }
 // Explanations: folded by default, one switch, remembered. The settings keep
@@ -479,19 +478,19 @@ for (const id of ['btnNoCount', 'dbHost', 'btnTrafCsv', 'btnTrafReset', 'trafMod
 ok(/<button id="trafXpl" class="use" aria-pressed="false"/.test(traf), 'one Explanations switch, off by default');
 ok(/#panel-traffic:not\(\.xpl-on\) \.xpl\{display:none\}/.test(admin), 'it folds every explanation of the panel at once');
 ok((traf.match(/class="muted xpl"/g) || []).length >= 10, 'the reading sections tag their explanations');
-ok(!/xpl/.test(tsub('data')), 'the data and settings section keeps its warnings visible');
-ok(/permanently deletes ALL visit data/.test(tsub('data')), 'starting with the reset one');
+ok(/<h2>Reset traffic stats<\/h2>\n        <p class="muted">⚠ This permanently deletes ALL visit data/.test(tsub('overview')), 'the reset keeps its warning in view, at the foot of Summary');
+ok(tsub('overview').indexOf('id="trafBottom"') < tsub('overview').indexOf('id="btnTrafReset"'), 'after everything that is read');
 ok(/function _trafSub\(k\)/.test(admin) && /function _trafXpl\(on\)/.test(admin), 'switching lives in two small functions');
 ok(/localStorage\.setItem\('pth_admin_traf_xpl',on\?'1':'0'\)/.test(admin), 'the Explanations switch is remembered per browser, like the period');
 ok(!/pth_admin_traf_sub/.test(admin), 'the section is in the address now (#traffic/world), not in browser storage');
 ok(/if\(TRAF_SUBS\.indexOf\(k\)<0\) k='overview';/.test(admin), 'an unknown section falls back to Summary');
-ok(/if\(k==='summary'\) k='overview';/.test(admin), 'and #traffic/summary is Summary');
+ok(/if\(k==='summary'\|\|k==='data'\) k='overview';/.test(admin), 'and #traffic/summary is Summary (the former #traffic/data too)');
 ok(/if\(k==='features'\) k='music';/.test(admin), 'and the former Features tab lands on Music');
 ok(/if\(t==='traffic'\)\{ if\(_wasT!=='traffic'\) loadTraffic\(\); _trafSub\(b\.dataset\.ts\|\|'overview'\); \}/.test(admin),
   'Statistics reads its figures on entry, not on every section change');
 ok(/sectionEvent\(t\+\(b\.dataset\.ts\?'\/'\+b\.dataset\.ts:''\)\)/.test(admin), 'a section announces its page too');
 ok(/function idOf\(b\) \{ return b\.dataset\.t \+ \(b\.dataset\.ts \? '\/' \+ \(TS_ADDR\[b\.dataset\.ts\] \|\| b\.dataset\.ts\) : ''\); \}/.test(shellJs), 'and has its own address');
-ok(/const TS_ADDR = \{ overview: 'summary' \};/.test(shellJs) && /const TS_PAGE = \{ summary: 'overview' \};/.test(shellJs), 'Summary answers to #traffic/summary, and the old #traffic/overview still works');
+ok(/const TS_ADDR = \{ overview: 'summary' \};/.test(shellJs) && /const TS_PAGE = \{ summary: 'overview', data: 'overview' \};/.test(shellJs), 'Summary answers to #traffic/summary, and the old #traffic/overview still works');
 
 // -- Entry modes, chosen once for every section ---------------------------
 ok(/var _trafModeSel=MODE48\.map/.test(admin) && /localStorage\.setItem\('pth_admin_modes'/.test(admin), 'the entry modes picked are kept per browser');
@@ -658,9 +657,16 @@ ok(!/trafNvR/.test(admin),
 // leftover, not a choice.
 ok(!/Exclure mes propres visites|Ne pas compter mes visites/.test(admin),
   'no French left in the traffic panel');
-ok(/<h2>Exclude my own visits<\/h2>/.test(traf), 'the opt-out card is in English');
-ok(traf.indexOf('id="trafBottom"') < traf.indexOf('id="btnNoCount"'),
-  'and sits with the settings, after everything that is read rather than set');
+// web.184: the opt-out is a preference of this browser, in the side menu foot
+// beside the theme and the idle logout; the client reads the same key.
+ok(/<div class="sfrow"><label for="noCountSel">My visits<\/label><select id="noCountSel"[^>]*><option value="1">counted<\/option><option value="0">left out<\/option><\/select><\/div>/.test(admin), 'My visits sits in the side menu foot');
+ok(/function _setNoCount\(off\)\{ try\{ if\(off\) localStorage\.setItem\('pth_no_count','1'\); else localStorage\.removeItem\('pth_no_count'\);/.test(admin), 'and writes the key the client reads');
+ok(!/btnNoCount/.test(admin), 'the old button is gone');
+// The MySQL mirror (traffic, leaderboard, broadcasts) is infrastructure; the
+// visit export is a backup.
+ok(panel('panel-database').includes('id="dbHost"') && panel('panel-database').includes('id="dbTiles"'), 'the MySQL mirror has its Database page, with tiles');
+ok(/if\(t==='database'\)\{ loadDbConfig\(\); \}/.test(admin) && /dbPaint\(st\);/.test(admin), 'read from /admin/db when the page opens');
+ok(panel('panel-backup').includes('<h2>Visit data</h2>') && panel('panel-backup').includes('id="btnTrafCsv"'), 'the visit export is a card of Backup');
 
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);

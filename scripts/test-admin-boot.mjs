@@ -94,7 +94,7 @@ ok(errors.length === 0, 'the page loads without throwing' + (errors.length ? ': 
 // ── Tabs and panels ───────────────────────────────────────────────────────
 const panels = [...doc.querySelectorAll('[id^="panel-"]')];
 const visible = () => panels.filter((p) => p.style.display !== 'none');
-ok(panels.length === 23, 'all 23 panels are in the document, found ' + panels.length);
+ok(panels.length === 24, 'all 24 panels are in the document, found ' + panels.length);
 ok(visible().length === 1, 'exactly one panel is open at load, not ' + visible().length);
 ok(visible()[0] && visible()[0].id === 'panel-overview', 'and it is panel-overview, where a master key lands');
 
@@ -149,7 +149,7 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   const subs = [...doc.querySelectorAll('#panel-traffic .tsub')];
   const shown = () => subs.filter((p) => p.style.display !== 'none').map((p) => p.dataset.ts);
   const tab = (k) => doc.querySelector('.tab[data-t="traffic"][data-ts="' + k + '"]');
-  ok(subs.length === 8, 'the eight sections are in the panel');
+  ok(subs.length === 7, 'the seven sections are in the panel');
   doc.querySelector('.tab[data-t="server"]').click();
   const n0 = gets.filter((u) => u.startsWith('/admin/visits')).length;
   tab('world').click();
