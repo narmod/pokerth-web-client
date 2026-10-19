@@ -31,6 +31,15 @@ highlights below.
   `themeExport` / `sectionAdvanced` strings in every language. Tables, decks, seats and the Green Casino table
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
+### Added
+- **A row of four tiles on every Statistics page** (`web.182`, audit of 2026-10-19c, S3) — like every other admin
+  page, each Statistics page now opens on four tiles, read from what the page already received (no extra request;
+  « — » until a figure is there). World: countries reached, first country, Internet online, LAN servers up.
+  Audience: visits, new devices, returning devices, back within 7 days. Activity: last 48 h, busiest hour of an
+  average day, connections today, /live today. Visitors: first system, first browser, installed-app share, first
+  language (by name). Music: plays, most played, titles played, votes. Ace's Help: help offered, accepted, tips
+  shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
+
 ### Changed
 - **Statistics › Summary tiles like every other page** (`web.181`, audit of 2026-10-19c, S3) — its eight figures sat
   as boxes inside a card, with their own size and grid (one column on a phone for the second row). They are now two

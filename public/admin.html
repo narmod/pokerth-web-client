@@ -1337,6 +1337,7 @@
       </div>
       </div>
       <div class="tsub" data-ts="audience" role="tabpanel" aria-label="Audience" style="display:none">
+      <section class="ovmodes" id="tsT-audience" aria-label="Audience at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
           <div class="boardhead"><h2>Daily visits</h2><span id="trafTrendNote" class="headnote"></span></div>
           <div id="trafChart" class="trafchart"><div class="empty">Loading…</div></div>
@@ -1353,6 +1354,7 @@
         </div>
       </div>
       <div class="tsub" data-ts="activity" role="tabpanel" aria-label="Activity" style="display:none">
+      <section class="ovmodes" id="tsT-activity" aria-label="Activity at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
           <div class="boardhead"><h2>Last 48 h</h2><span id="traf48Note" class="headnote"></span></div>
           <div id="traf48" class="barchart"><div class="empty">Loading…</div></div>
@@ -1384,6 +1386,7 @@
         </div>
       </div>
       <div class="tsub" data-ts="visitors" role="tabpanel" aria-label="Visitors" style="display:none">
+      <section class="ovmodes" id="tsT-visitors" aria-label="Visitors at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
   <div class="boardhead"><h2>What visitors run</h2><span id="envSince" class="muted" style="margin:0"></span></div>
           <p class="muted xpl">From the same anonymous ping as the visit counter: system and browser read from the User-Agent, language from the request header, installed app vs browser tab reported by the client. Sliced by the period selected above where a per-day history exists, running totals otherwise — what to test on, and which of the interface languages are actually used. In the language view the arrow compares a language’s share over the <span class="perN">last 14 days</span> (full days) with the same span before, only when the change is statistically significant.</p>
@@ -1408,6 +1411,7 @@
         </div>
       </div>
       <div class="tsub" data-ts="music" role="tabpanel" aria-label="Music" style="display:none">
+      <section class="ovmodes" id="tsT-music" aria-label="Music plays at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
   <div class="boardhead"><h2>Most played tracks</h2><span id="musSince" class="muted" style="margin:0"></span></div>
           <p class="muted xpl">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not counted as plays: a live stream has no track end, so “a play” would mean nothing there — but they can be voted on. The ranking follows the period selected above (all-time before per-day counting started); the bars stack the top five titles by day, with the rest grouped. ▲ / ▼ are the players’ thumbs on each entry, running totals since voting started (one vote per device, no per-day history). The arrow compares a title’s share of plays over the second half of the period (full days) with the first half, only when the change is statistically significant — the same test as the languages.</p>
@@ -1415,6 +1419,7 @@
         </div>
       </div>
       <div class="tsub" data-ts="ace" role="tabpanel" aria-label="Ace’s Help" style="display:none">
+      <section class="ovmodes" id="tsT-ace" aria-label="Ace’s Help at a glance"><div class="empty">Loading…</div></section>
       <div class="card" id="guideSec">
           <div class="boardhead"><h2>Offer, tips and Ranking funnel</h2><span id="guideSince" class="muted" style="margin:0"></span></div>
           <p class="muted xpl">The contextual assistant (the Ace). Anonymous counters: no visitor id, no name, no table — only which tips are shown, done (Got it or the button) or put off (Later), whether the first-launch offer is accepted, and the Ranking funnel: a table highlighted in the lobby → joined from the bubble → that game started (a Ranking game only starts when its 10 seats are full). Guests are counted apart: they cannot play Ranking games and only get the free-account bubble. Follows the period selected above.</p>
@@ -1422,6 +1427,7 @@
         </div>
       </div>
       <div class="tsub" data-ts="world" role="tabpanel" aria-label="World" style="display:none">
+      <section class="ovmodes" id="tsT-world" aria-label="The world at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <div class="boardhead"><h2>World map</h2><span id="geoNote" class="headnote"></span><button id="geoNightBtn" class="use geoswitch" type="button" role="switch" aria-checked="true" title="Show or hide where it is night right now, with the twilights, from the real position of the sun"><span class="swt" aria-hidden="true"><i></i></span>Day / night <b class="swv">On</b></button></div>
         <p class="muted xpl">Where visits come from, by country, over the <span class="perN">last 14 days</span>. The country is read from the browser’s time zone (Europe/Paris → France), sent with the same anonymous visit ping — no IP address is looked up. It is an approximation: a VPN does not change it, a traveller’s device does, and zones the table does not know (UTC, Etc/GMT…) count as Unknown. “Visits” counts browser sessions, “New devices” the devices seen for the first time, “Installed app” and “Phones” the visits from the installed app and from a phone or tablet; “Connections” counts the sessions that opened a game, in the entry modes picked at the top of the page, as in Activity › Where sessions open — a grey bar in the list means visits that never opened a game. The band above the map gives the local time along it, the evening in green. Detected bots are left out while “Bots hidden” is on; a country that still looks automated (only new devices, no game) is tagged “bot?”. “Day / night” shades where it is night right now, with the civil, nautical and astronomical twilights, from the real position of the sun — season and hemisphere included; the country card then adds its local time (legal time, summer time included; the main zone for a country on several) and its sunset, at the centre of the country. Counted since 2.1.10-web.28: older clients send no time zone and are left out, so totals here can be below the Overview’s.</p>
@@ -1453,6 +1459,7 @@
       </div>
       </div>
       <div class="tsub" data-ts="data" role="tabpanel" aria-label="Data" style="display:none">
+      <section class="ovmodes" id="tsT-data" aria-label="The data at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
           <h2>Exclude my own visits</h2>
           <p class="muted">On THIS browser, keeps the client out of the visit counter — handy while testing the site. The setting is local to this device and affects no other browser.</p>
@@ -3897,7 +3904,7 @@
   // so pokerth.js reads it before firing the /__visit beacon. Per-device.
   function _noCount(){ try{ return localStorage.getItem('pth_no_count')==='1'; }catch(e){ return false; } }
   function _paintNoCount(){ var b=$('btnNoCount'); if(!b) return; var on=_noCount(); b.textContent=on?'My visits: ignored ✓ (click to count them again)':'Do not count my visits'; b.classList.toggle('on',on); }
-  function toggleNoCount(){ try{ if(_noCount()) localStorage.removeItem('pth_no_count'); else localStorage.setItem('pth_no_count','1'); }catch(e){} _paintNoCount(); }
+  function toggleNoCount(){ try{ if(_noCount()) localStorage.removeItem('pth_no_count'); else localStorage.setItem('pth_no_count','1'); }catch(e){} _paintNoCount(); if(_trafLastD) _tsData(_trafLastD); }
   // -- What visitors run: donut + ranking, one view at a time -----------------
   // The data is four (now five) plain counter maps. Everything below is
   // presentation: the same numbers read as a share of the whole (donut) and as
@@ -5080,6 +5087,91 @@
     _rangeSet({from:a,to:b});
     loadTraffic();
   }
+  // ── Statistics: a row of four tiles on every page (web.182) ─────────────
+  // The same tile as the other admin pages, read from what the page already
+  // received: no extra request. A figure that is not there yet shows « — ».
+  function _tsTiles(k,T){
+    var box=$('tsT-'+k); if(!box) return;
+    box.innerHTML=T.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn'+(t[4]?' sm':'')+'">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join('');
+  }
+  function _tsN(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
+  function _tsPc(a,b){ return b ? Math.round(a*100/b)+'%' : '—'; }
+  function _tsPerLbl(){ return _perLabel(_trafPeriod); }
+  // Audience: who came over the period, and how many came back.
+  function _tsAudience(d){
+    var o=d.period||d.week||{}, c=(d.cohorts||{}).d7||null, L=_tsPerLbl();
+    _tsTiles('audience',[
+      ['Visits',_tsN(o.v),_tsN(o.u)+' unique · '+L,'var(--accent)'],
+      ['New devices',_tsN(o.nw),'seen for the first time · '+L,'var(--warn-text)'],
+      ['Returning',_tsN(o.rt),'devices seen before · '+L,'var(--m-live)'],
+      ['Back within 7 days',(c&&c.n)?_tsPc(c.back,c.n):'—',(c&&c.n)?(_tsN(c.back)+' of '+_tsN(c.n)+' new devices'):(d.h24?'needs whole days':'too recent to tell'),'var(--ok-text)']]);
+  }
+  // Activity: the last 48 h, the busiest hour of an average day, today.
+  function _tsActivity(d){
+    var h48=d.hours48||[], t48=0; h48.forEach(function(x){ t48+=x.v||0; });
+    var prof=d.hourProfile||{v:[],days:0}, pk=-1, pv=0;
+    for(var i=0;i<24;i++){ var v=(prof.v&&prof.v[i])||0; if(v>pv){ pv=v; pk=i; } }
+    var t=d.today||{}, m=t.m||{}, cn=0; Object.keys(m).forEach(function(k){ cn+=m[k]||0; });
+    _tsTiles('activity',[
+      ['Last 48 h',d.hours48!==undefined?_tsN(t48):'—','visits','var(--accent)'],
+      ['Busiest hour',pk>=0&&prof.days>=0.5?String(pk).padStart(2,'0')+':00':'—',pk>=0&&prof.days>=0.5?'of an average day':'needs a full day of data','var(--warn-text)'],
+      ['Connections today',_tsN(cn),'every entry mode','var(--m-net)'],
+      ['/live today',_tsN(t.lv),_tsN(t.lu)+' unique spectators','var(--m-live)']]);
+  }
+  // Visitors: the first system, browser and language, and the installed app.
+  function _tsVisitors(){
+    var E=_envData||{}, top=function(map){ var r=_envSlices(map); return r.total?[_annEsc(r.slices[0].k),_tsPc(r.slices[0].n,r.total)+' of '+_tsN(r.total)]:['—','nothing recorded yet']; };
+    var os=top(E.os), br=top(E.br), lg=top(E.lang), pw=E.pwa||{};
+    // A language arrives as its code (de, pt-BR): say its name, like the list.
+    try{ var lr=_envSlices(E.lang); if(lr.total){ var ln=new Intl.DisplayNames(['en'],{type:'language'}).of(lr.slices[0].key); if(ln) lg[0]=_annEsc(ln); } }catch(e){}
+    pw=pw, pt=(pw.standalone||0)+(pw.browser||0);
+    _tsTiles('visitors',[
+      ['First system',os[0],os[1],'var(--accent)',1],
+      ['First browser',br[0],br[1],'var(--m-live)',1],
+      ['Installed app',pt?_tsPc(pw.standalone||0,pt):'—',pt?(_tsN(pw.standalone||0)+' of '+_tsN(pt)+' sessions'):'nothing recorded yet','var(--ok-text)'],
+      ['First language',lg[0],lg[1],'var(--warn-text)',1]]);
+  }
+  // Music: plays, the title on top, how many titles, the players' votes.
+  function _tsMusic(){
+    var M=_musData||{}, keys=Object.keys(M).sort(function(a,b){ return (M[b]||0)-(M[a]||0); }), tot=0;
+    keys.forEach(function(k){ tot+=M[k]||0; });
+    var up=0, dn=0; Object.keys(_musVotes||{}).forEach(function(k){ var v=_musVotes[k]||{}; up+=v.up||0; dn+=v.down||0; });
+    _tsTiles('music',[
+      ['Plays',_tsN(tot),_musPeriodDays||_isH24()?_tsPerLbl():'all time','var(--accent)'],
+      ['Most played',keys.length?_annEsc(_musName(keys[0])):'—',keys.length?(_tsN(M[keys[0]])+' plays · '+_tsPc(M[keys[0]],tot)):'nothing played yet','var(--warn-text)',1],
+      ['Titles played',_tsN(keys.length),'different tracks','var(--m-live)'],
+      ['Votes',_musVotesKnown?_tsN(up+dn):'—',_musVotesKnown?('▲ '+_tsN(up)+' · ▼ '+_tsN(dn)+' · running totals'):'not recorded by this proxy','var(--ok-text)']]);
+  }
+  // Ace's Help: the first-launch offer, the tips, the Ranking funnel.
+  function _tsAce(){
+    var g=_guideData, a=g&&g.acceptance, f=g&&g.funnel, tips=0;
+    if(g) Object.keys(g.contexts||{}).forEach(function(k){ if(k!=='backup') tips+=(g.contexts[k].shown||0); });
+    _tsTiles('ace',[
+      ['Help offered',a?_tsN(a.offered):'—','showings on first launch','var(--accent)'],
+      ['Accepted',a&&a.offered?_gPct(a.rate):'—',a?(_tsN(a.accepted)+' of '+_tsN(a.offered)+' showings'):'nothing recorded yet','var(--ok-text)'],
+      ['Tips shown',g?_tsN(tips):'—','across every context','var(--m-live)'],
+      ['Ranking games',f?_tsN(f.started):'—',f?(_tsN(f.highlighted)+' tables highlighted · '+_tsN(f.joined)+' joined'):'nothing recorded yet','var(--warn-text)']]);
+  }
+  // Data: what is stored here, and whether this browser is counted.
+  function _tsData(d){
+    var db=d.db||{}, at=d.allTime||{}, nc=_noCount();
+    _tsTiles('data',[
+      ['MySQL mirror',!db.enabled?'Off':(db.connected?'Connected':'Error'),!db.enabled?'configured below':(db.connected?'mirroring':'see the card below'),!db.enabled?'var(--muted)':(db.connected?'var(--ok-text)':'var(--err-text)')],
+      ['Visits stored',_tsN(at.v),'all time','var(--accent)'],
+      ['Devices known',_tsN(at.u),'ever seen','var(--m-live)'],
+      ['This browser',nc?'Not counted':'Counted',nc?'your visits are left out':'your visits count','var(--warn-text)']]);
+  }
+  // World: countries reached, the first one, and who is online right now.
+  function _tsWorld(){
+    var C=(_geoData&&_geoData.ok&&_geoData.countries)||null, n=0, best='', bv=0;
+    if(C) Object.keys(C).forEach(function(cc){ var v=(C[cc]&&C[cc].v)||0; if(cc==='ZZ'||!v) return; n++; if(v>bv){ bv=v; best=cc; } });
+    var d=_trafLastD||{}, nw=d.pth&&d.pth.now, ld=_wLd, E=(ld&&ld.ok&&ld.entries)||[], on=E.filter(function(e){ return e.status&&e.status.online; });
+    _tsTiles('world',[
+      ['Countries',C?_tsN(n):'—','visits, '+_tsPerLbl(),'var(--accent)'],
+      ['First country',best?_annEsc(_geoName(best)):'—',best?(_tsN(bv)+' visits'):'nothing counted yet','var(--warn-text)',1],
+      ['Internet online',nw?_tsN(nw.online):'—',nw?(_tsN(nw.wb)+' on the web client'):'no sample yet','var(--m-net)'],
+      ['LAN servers up',ld&&ld.ok&&E.length?on.length+' / '+E.length:'—',ld&&ld.ok&&!E.length?'none listed yet':'checked by the proxy','var(--m-lan)']]);
+  }
   function loadTraffic(){
     if(!_trafWired){
       _trafWired = true;
@@ -5222,6 +5314,7 @@
         if(db.enabled && db.lastWrite){ html+='<div class="srow"><span>Last write</span><b>'+esc((''+db.lastWrite).replace('T',' ').slice(0,19))+'</b></div>'; }
         dbx.innerHTML=html;
       }
+      _tsAudience(d); _tsActivity(d); _tsVisitors(); _tsMusic(); _tsAce(); _tsData(d); _tsWorld();
     }).catch(function(){ var g=$('trafCards'); if(g) g.innerHTML='<div class="empty err">Could not load.</div>'; loadFail('panel-traffic','Could not load.'); });
   }
   // -- Lecture analytique du trafic ------------------------------------------
@@ -5594,7 +5687,7 @@
   function _worldCards(d){
     _worldInet(d); _worldConn(d); _worldLan(d);
     _cubeLoad();
-    api('/admin/lan-directory').then(function(r){ return r.json(); }).then(function(ld){ _wLd=ld; _worldLan(_trafLastD); }).catch(function(){ _wLd={ok:false}; _worldLan(_trafLastD); });
+    api('/admin/lan-directory').then(function(r){ return r.json(); }).then(function(ld){ _wLd=ld; _worldLan(_trafLastD); _tsWorld(); }).catch(function(){ _wLd={ok:false}; _worldLan(_trafLastD); _tsWorld(); });
   }
   (function(){
     var p=$('panel-traffic'); if(!p) return;
@@ -7848,7 +7941,7 @@
     var mp=_geoMap?Promise.resolve(_geoMap):fetch('/vendor/world-110m.json?rev='+GEO_MAP_REV,{cache:'no-cache'}).then(function(r){ return r.json(); }).then(function(j){ _geoMap=j; return j; });
     Promise.all([mp, api('/admin/geo?'+q).then(function(r){ return r.json(); })]).then(function(a){
       if(seq!==_geoSeq) return;
-      _geoData=a[1]; renderGeo();
+      _geoData=a[1]; renderGeo(); _tsWorld();
       if(_geoLayer==='now') _geoLiveLoad();
     }).catch(function(){
       if(seq!==_geoSeq) return;

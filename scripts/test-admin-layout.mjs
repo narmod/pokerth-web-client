@@ -466,6 +466,10 @@ ok(/#panel-traffic \.card>\.boardhead>h2\{white-space:nowrap\}/.test(admin), 'a 
 const cards = (k) => (tsub(k).match(/<div class="card"/g) || []).length;
 ok(cards('audience') === 3 && cards('activity') === 6 && cards('visitors') === 2 && cards('music') === 1 && cards('ace') === 1 && cards('data') === 4,
   'one card per subject: Audience 3, Activity 6, Visitors 2, Music 1, Ace’s Help 1, Data 4');
+for (const k of ['world', 'audience', 'activity', 'visitors', 'music', 'ace', 'data']) {
+  ok(new RegExp('<div class="tsub" data-ts="' + k + '"[^>]*>\\n      <section class="ovmodes" id="tsT-' + k + '"').test(traf), k + ' opens on a row of tiles (web.182)');
+}
+ok(/_tsAudience\(d\); _tsActivity\(d\); _tsVisitors\(\); _tsMusic\(\); _tsAce\(\); _tsData\(d\); _tsWorld\(\);/.test(admin), 'filled from the figures the page already has');
 ok(/<div class="card" id="srcSec">/.test(traf) && /<div class="card" id="guideSec">/.test(traf), 'a subject keeps its id on its card');
 for (const id of ['btnNoCount', 'dbHost', 'btnTrafCsv', 'btnTrafReset', 'trafModes', 'trafEnv', 'trafMusic']) {
   ok(traf.includes('id="' + id + '"'), id + ' survived the split');
