@@ -40,6 +40,11 @@ highlights below.
   language (by name). Music: plays, most played, titles played, votes. Ace's Help: help offered, accepted, tips
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
+### Changed
+- **Live › Map, a page of its own** (`web.195`) — the live map of `web.194` moves out of Sessions: Live is now a
+  group of two pages, **Sessions** and **Map**, each opening on the four mode tiles. A tile picked on one page
+  narrows the other too; one 5 s read serves both while either is open. The map card is « Connections by country ».
+
 ### Added
 - **Live map on Live › Sessions** (`web.194`) — the « Live now » layer of Statistics › World, on the page that already
   reads the connections every 5 s: the connections listed below it, folded by country. Each country takes the colour

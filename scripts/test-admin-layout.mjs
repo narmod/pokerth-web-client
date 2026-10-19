@@ -43,7 +43,7 @@ const shellJs = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..',
 // classes, so the handlers that open a panel are the same as before.
 const GROUPS = {
   overview: ['overview'],
-  stats: ['traffic/overview', 'traffic/world', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace'], live: ['sessions'], community: ['board', 'polls', 'broadcast', 'landir'],
+  stats: ['traffic/overview', 'traffic/world', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace'], live: ['sessions', 'livemap'], community: ['board', 'polls', 'broadcast', 'landir'],
   content: ['packages', 'music'], players: ['login', 'lobby', 'firstvisit', 'features'], infra: ['servers', 'proxy', 'database', 'identity'],
   ops: ['server', 'errors', 'deploy', 'backup'], security: ['keys', 'audit', 'blocked'],
 };
@@ -69,7 +69,7 @@ for (const [g, tabs] of Object.entries(GROUPS)) {
     tabs.length === 1 ? 'a one-section group opens its section directly' : 'a group of several unfolds its list');
   all = all.concat(got);
 }
-ok(all.length === 30 && new Set(all).size === 30, 'every one of the thirty sections is reachable, once');
+ok(all.length === 31 && new Set(all).size === 31, 'every one of the thirty-one sections is reachable, once');
 for (const sc of ['packages', 'music', 'broadcast', 'polls', 'leaderboard']) {
   ok(new RegExp('data-scope="' + sc + '"').test(admin), 'scope ' + sc + ' survived the move');
 }
@@ -464,8 +464,10 @@ ok((traf.match(/class="cardrow"/g) || []).length === 1 && /<div class="cardrow">
   'one paired row only: Internet and LAN side by side on the World page');
 ok(!/class="tsec"/.test(admin) && !/\.tsec\b/.test(admin), 'no section-inside-a-card is left, nor its style');
 ok((admin.match(/<p class="muted fsnote" data-fs="[a-z_ ]+" data-master="1"><\/p>/g) || []).length === 3 && /var FS_HOME=\{lobby_clock:\['lobby'/.test(admin), 'the lobby clock, Events tab and polls cards point at their Features switch, and back (web.188)');
-ok(panel('panel-sessions').indexOf('id="lmMap"') > 0 && panel('panel-sessions').indexOf('id="lmMap"') < panel('panel-sessions').indexOf('id="seList"'), 'Live › Sessions has a live map above its list (web.194)');
-ok(/    _lmRender\(shown, d\);/.test(admin), 'drawn from the rows the list shows (tiles and filter applied)');
+// web.195: the live map is a page of its own, Live › Map, with the same mode tiles as Sessions.
+ok(panel('panel-livemap').includes('id="lmMap"') && panel('panel-livemap').includes('id="lmTiles"') && !panel('panel-sessions').includes('id="lmMap"'), 'Live › Map holds the live map, with its tiles');
+ok(/_lmRender\(rows\.filter\(function\(r\)\{ return _seSel==='all' \|\| r\.k===_seSel; \}\), d\);/.test(admin), 'drawn from the connections of the mode picked on the tiles');
+ok(/if\(t==='sessions'\|\|t==='livemap'\)\{ seStart\(\); \}/.test(admin), 'one 5 s poll serves both pages');
 ok(/var page = card\.closest\('\.tsub'\) \|\| card\.closest\('\[id\^="panel-"\]'\);\n      if\(page && page\.querySelectorAll\('\.card'\)\.length===1\) return;/.test(admin), 'the only card of a page does not fold (web.187)');
 ok(/#panel-traffic \.card>\.boardhead>h2\{white-space:nowrap\}/.test(admin), 'a card title does not break, so its note can take the slack');
 const cards = (k) => (tsub(k).match(/<div class="card"/g) || []).length;

@@ -1148,7 +1148,7 @@
   @media(max-width:760px){ #pkTiles{grid-template-columns:repeat(2,minmax(0,1fr))} #pkTiles>.ovmode:last-child:nth-child(odd){grid-column:1/-1} }
   /* Entry-mode tiles: « Live/spectator tool » takes two lines on a phone. The
      tiles share their rows (subgrid), so the figures of a row stay level. */
-  #ovModes>.ovmode,#seTiles>.ovmode{display:grid;grid-row:span 3;grid-template-rows:subgrid;row-gap:4px;align-content:start}
+  #ovModes>.ovmode,#seTiles>.ovmode,#lmTiles>.ovmode{display:grid;grid-row:span 3;grid-template-rows:subgrid;row-gap:4px;align-content:start}
 </style>
 <script>(function(){try{var t=localStorage.getItem('pth_admin_theme');if(t!=='light'&&t!=='dark')t='dark';document.documentElement.setAttribute('data-admin-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',t==='light'?'#FFFFFF':'#11171F');}catch(e){}})();</script>
 </head>
@@ -1192,10 +1192,11 @@
           <button type="button" class="tab" data-t="traffic" data-ts="ace">Ace’s Help</button>
         </div>
       </div>
-      <div class="sgrp one" data-g="live">
+      <div class="sgrp" data-g="live">
         <button type="button" class="gtab" data-g="live"><svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M237.66,18.34a8,8,0,0,0-11.32,0l-52.4,52.41-5.37-5.38a32.05,32.05,0,0,0-45.26,0L100,88.69l-6.34-6.35A8,8,0,0,0,82.34,93.66L88.69,100,65.37,123.31a32,32,0,0,0,0,45.26l5.38,5.37-52.41,52.4a8,8,0,0,0,11.32,11.32l52.4-52.41,5.37,5.38a32,32,0,0,0,45.26,0L156,167.31l6.34,6.35a8,8,0,0,0,11.32-11.32L167.31,156l23.32-23.31a32,32,0,0,0,0-45.26l-5.38-5.37,52.41-52.4A8,8,0,0,0,237.66,18.34Zm-116.29,161a16,16,0,0,1-22.62,0L76.69,157.25a16,16,0,0,1,0-22.62L100,111.31,144.69,156Zm57.94-57.94L156,144.69,111.31,100l23.32-23.31a16,16,0,0,1,22.62,0l22.06,22A16,16,0,0,1,179.31,121.37ZM88.57,35A8,8,0,0,1,103.43,29l8,20A8,8,0,0,1,96.57,55ZM24.57,93A8,8,0,0,1,35,88.57l20,8A8,8,0,0,1,49,111.43l-20-8A8,8,0,0,1,24.57,93ZM231.43,163a8,8,0,0,1-10.4,4.46l-20-8A8,8,0,1,1,207,144.57l20,8A8,8,0,0,1,231.43,163Zm-64,58.06A8,8,0,0,1,152.57,227l-8-20A8,8,0,0,1,159.43,201Z"/></svg><span>Live</span><i class="gbadge" aria-hidden="true"></i><svg class="gcar" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
         <div class="tabs subtabs" data-g="live" style="display:none">
           <button type="button" class="tab" data-t="sessions">Sessions</button>
+          <button type="button" class="tab" data-t="livemap">Map</button>
         </div>
       </div>
       <div class="sgrp" data-g="community">
@@ -1492,19 +1493,22 @@
     <div id="panel-sessions" style="display:none">
       <section class="ovmodes" id="seTiles" aria-label="Connected right now, by entry mode"><div class="empty">Loading…</div></section>
       <div class="card">
-        <div class="boardhead"><h2>Live map</h2><span id="lmNote" class="headnote"></span></div>
-        <p class="muted">Where the connections listed below come from, right now. A country takes the colour of its main entry mode, deeper with more connections. It follows the tiles and the filter below; the country comes from each browser’s time zone.</p>
-        <div class="seg" id="lmViews" role="group" aria-label="Region" style="flex-wrap:wrap"></div>
-        <div class="lmwrap"><div id="lmMap" class="geomap lmmap"><div class="empty">Loading…</div></div><div id="lmList" class="lmlist"></div></div>
-        <div id="lmLegend" class="geolegend"></div>
-      </div>
-      <div class="card">
         <div class="boardhead"><h2>Live connections</h2><span id="seSum" class="headnote"></span><button id="seRefresh" class="use">Refresh</button></div>
         <p class="muted">Everyone connected right now, refreshed every 5&nbsp;s while this tab is open. IP addresses are partially masked.</p>
         <details class="more"><summary>Bridges, notices and /live</summary><p class="muted"><b>Bridges</b> are players whose game traffic goes through this proxy; <b>notices</b> are lightweight channels (players connected straight to pokerth.net, or training) that only receive broadcasts. Connections from the <b>/live</b> spectator view are tagged and counted apart.</p></details>
         <div class="ltool"><input id="seFilter" class="filter" type="search" placeholder="Filter: name, country, server, device, version…" autocomplete="off"><div class="chips" id="seModes" role="group" aria-label="Entry mode"></div></div>
         <div id="seMsg" class="msg"></div>
         <div id="seList" class="ltab"><div class="empty">Loading…</div></div>
+      </div>
+    </div>
+    <div id="panel-livemap" style="display:none">
+      <section class="ovmodes" id="lmTiles" aria-label="Connected right now, by entry mode"><div class="empty">Loading…</div></section>
+      <div class="card">
+        <div class="boardhead"><h2>Connections by country</h2><span id="lmNote" class="headnote"></span></div>
+        <p class="muted">Where the connections open right now come from. A country takes the colour of its main entry mode, deeper with more connections; a tile above narrows the map to its mode. The country comes from each browser’s time zone.</p>
+        <div class="seg" id="lmViews" role="group" aria-label="Region" style="flex-wrap:wrap"></div>
+        <div class="lmwrap"><div id="lmMap" class="geomap lmmap"><div class="empty">Loading…</div></div><div id="lmList" class="lmlist"></div></div>
+        <div id="lmLegend" class="geolegend"></div>
       </div>
     </div>
     <div id="panel-errors" style="display:none">
@@ -3387,7 +3391,7 @@
     if(t==='deploy'){ loadStatus(false); loadUpdateLog(); autoUpdLoad(); loadDeploys(); }
     if(t==='blocked') loadBlocked();
     if(t==='backup'){ loadAudit(); loadStatus(!cfgAnyDirty()); }
-    if(t==='sessions'){ seStart(); } else { seStop(); }
+    if(t==='sessions'||t==='livemap'){ seStart(); } else { seStop(); }
     if(t==='errors') loadErrors();
     if(t==='server'){ loadServer(); loadDeploys(); loadBlocked(); srvStart(); } else { srvStop(); }
     sectionEvent(t+(b.dataset.ts?'/'+b.dataset.ts:''));
@@ -7563,20 +7567,21 @@
     return out;
   }
   function _seTiles(rows,d){
-    var box=$('seTiles'); if(!box) return;
+    var boxes=[$('seTiles'),$('lmTiles')].filter(Boolean); if(!boxes.length) return;
     var n={net:[0,0],lan:[0,{}],off:[0],live:[0]};
     rows.forEach(function(r){ n[r.k][0]++; if(r.k==='net'&&!r.notify) n.net[1]++; if(r.k==='lan') n.lan[1][r.where]=1; });
-    box.innerHTML=SE_MODES.map(function(m){
+    var html=SE_MODES.map(function(m){
       var c=n[m[0]][0], sub=m[0]==='net'?(n.net[1]+' through this proxy · '+(c-n.net[1])+' direct')
         : m[0]==='lan'?(c?'on '+Object.keys(n.lan[1]).length+' server'+(Object.keys(n.lan[1]).length===1?'':'s'):'no LAN table right now')
         : m[0]==='off'?'playing the bots offline':'watching on /live';
       return '<button type="button" class="ovmode setile'+(_seSel===m[0]?' on':'')+'" data-sm="'+m[0]+'" style="--mc:'+m[2]+'" aria-pressed="'+(_seSel===m[0])+'"><span class="ovmh"><i class="lvdot"></i><span>'+m[1]+'</span></span><b class="ovmn">'+c+'</b><span class="ovms">'+sub+'</span></button>';
     }).join('');
+    boxes.forEach(function(b){ b.innerHTML=html; });
   }
-  // ── Live map (Live › Sessions, web.194) ─────────────────────────────────
-  // The « Live now » layer of Statistics › World, on the page that already
-  // reads the connections every 5 s: the rows of the list below (tiles and
-  // filter applied), folded by country. A country takes the colour of its main
+  // ── Live map (Live › Map, web.195) ──────────────────────────────────────
+  // The « Live now » layer of Statistics › World, read with Sessions (one
+  // poll every 5 s while either page is open): the connections of the mode
+  // picked on the tiles, folded by country. A country takes the colour of its main
   // entry mode; its title and the list beside give the split.
   var _lmBusy=false, _lmView='world', _lmLast=null;
   try{ var _lv=localStorage.getItem('pth_admin_lm_view'); if(_lv) _lmView=_lv; }catch(e){}
@@ -7636,7 +7641,7 @@
       if(!q) return true;
       return [r.who,r.sub,r.cc?_geoName(r.cc):'',r.where,r.dev,r.ver,r.state].join(' ').toLowerCase().indexOf(q)>=0;
     });
-    _lmRender(shown, d);
+    _lmRender(rows.filter(function(r){ return _seSel==='all' || r.k===_seSel; }), d);
     list.innerHTML='';
     if(!rows.length){ list.innerHTML='<div class="empty">Nobody connected right now.</div>'; return; }
     if(!shown.length){ list.innerHTML='<div class="empty">No connection matches the filter.</div>'; return; }
@@ -7672,9 +7677,10 @@
       try{ localStorage.setItem('pth_admin_se_mode',_seSel); }catch(x){}
       _seRender();
     }
-    var ch=$('seModes'), ti=$('seTiles'), f=$('seFilter');
+    var ch=$('seModes'), ti=$('seTiles'), lt=$('lmTiles'), f=$('seFilter');
     if(ch) ch.addEventListener('click',pick);
     if(ti) ti.addEventListener('click',pick);
+    if(lt) lt.addEventListener('click',pick);
     if(f) f.addEventListener('input',_seRender);
   })();
   // Every 5 s while Sessions is open and the browser tab visible; coming back

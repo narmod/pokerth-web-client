@@ -94,13 +94,13 @@ ok(errors.length === 0, 'the page loads without throwing' + (errors.length ? ': 
 // ── Tabs and panels ───────────────────────────────────────────────────────
 const panels = [...doc.querySelectorAll('[id^="panel-"]')];
 const visible = () => panels.filter((p) => p.style.display !== 'none');
-ok(panels.length === 24, 'all 24 panels are in the document, found ' + panels.length);
+ok(panels.length === 25, 'all 25 panels are in the document, found ' + panels.length);
 ok(doc.querySelectorAll('[id^="panel-"] [id^="panel-"]').length === 0, 'no panel sits inside another (a misplaced closing tag swallows the next ones)');
 ok(visible().length === 1, 'exactly one panel is open at load, not ' + visible().length);
 ok(visible()[0] && visible()[0].id === 'panel-overview', 'and it is panel-overview, where a master key lands');
 
 const tabs = [...doc.querySelectorAll('.tab')];
-ok(tabs.length === 30, 'every section has a tab, found ' + tabs.length);
+ok(tabs.length === 31, 'every section has a tab, found ' + tabs.length);
 for (const t of tabs) {
   const id = 'panel-' + t.dataset.t;
   t.click();
