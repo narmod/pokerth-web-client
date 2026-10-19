@@ -446,6 +446,8 @@ for (const h of ['Bottom line', 'Trends', 'Retention', 'Recent activity', 'Conne
 ok(/<section class="card trafhead statbar" aria-label="Filters for every page of Statistics">/.test(traf), 'one filter card heads every section');
 for (const id of ['trafModeSel', 'trafPeriod', 'trafRange', 'trafBots', 'trafXpl', 'btnTrafRefresh']) ok(traf.includes('id="' + id + '"'), id + ' is in the filter card');
 ok(traf.indexOf('id="trafModeSel"') < traf.indexOf('<div class="tsub"'), 'above every section');
+ok(/var fh=document\.querySelector\('#panel-traffic>\.trafhead'\); if\(fh\) fh\.style\.display = k==='data' \? 'none' : '';/.test(admin),
+  'except Data, where no filter applies (web.178)');
 ok(!/<h2>Coming back<\/h2>/.test(traf) && !/<h3>Recent activity/.test(traf) && !/<h3>Ace’s Help/.test(traf),
   'and no card repeats the name of its own first section');
 ok((traf.match(/class="cardrow"/g) || []).length === 1 && /<div class="cardrow">\s*<div class="card wcard" style="--mc:var\(--m-net\)">/.test(traf),

@@ -8127,6 +8127,9 @@
     if(k==='features') k='music';   // the former Features tab
     if(TRAF_SUBS.indexOf(k)<0) k='world';
     document.querySelectorAll('#panel-traffic .tsub').forEach(function(p){ p.style.display = p.dataset.ts===k ? '' : 'none'; });
+    // Data holds settings, exports and the reset: no period, mode or bot
+    // filter applies to any of them, so the filter card stays off that page.
+    var fh=document.querySelector('#panel-traffic>.trafhead'); if(fh) fh.style.display = k==='data' ? 'none' : '';
     // The map was drawn while hidden: draw it again at its real width.
     if(k==='world') _geoRedraw();
   }

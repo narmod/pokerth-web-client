@@ -32,6 +32,9 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Statistics › Data without the filter card** (`web.178`, audit of 2026-10-19c, S5) — Data holds the visit counter
+  exclusion, the MySQL mirror, the exports and the reset: no period, entry mode or bot filter applies to any of them,
+  yet the filter card headed the page. It now shows on the seven reading pages only.
 - **Admin field alignment** (`web.177`, audit of 2026-10-19c, lot 2) — the fixed control width of the settings rows
   (260 px) applied to Login screen, Lobby & tables, First visit and the LAN card only; elsewhere a text field started
   where its label ended and numbers or lists kept 110 / 130 px, so the fields of Search engines, Proxy and the MySQL
