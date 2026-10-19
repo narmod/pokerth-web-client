@@ -697,10 +697,11 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
-- **Avatar « Save image » no longer relaunches the iOS app** (`web.149`) — in a home-screen app on iPhone /
-  iPad, the `<a download>` of the blob navigated the app's single web view to the file preview, and closing it
-  relaunched the app. There, Save now goes through `navigator.share` (the sheet's « Save Image » writes to
-  Photos); Safari tabs and other platforms keep the download (`ui/avatar-studio.mjs`).
+- **Avatar « Save image » no longer relaunches the iOS app** (`web.149`, `150`) — in a home-screen app on
+  iPhone / iPad, the `<a download>` of the blob navigated the app's single web view to the file preview, and
+  closing it relaunched the app. There the menu now hides Save and keeps Share (`navigator.share`; the sheet's
+  « Save Image » writes to Photos); `web.149` routed Save to the same sheet, a duplicate. Safari tabs and other
+  platforms keep both entries (`ui/avatar-studio.mjs`).
 - **Code file answered with a 5xx no longer breaks the page** (`web.147`) — the service worker's network-first
   handler for JS/MJS/CSS passed any non-200 straight to the page, so a Cloudflare 52x burst between the edge
   and the origin failed the `<script type=module>` even though the same build's copy sat in the precache. A

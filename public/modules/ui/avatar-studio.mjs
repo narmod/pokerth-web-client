@@ -379,7 +379,10 @@ function _avmMenuLabels() {
 function _avmMenuOpen() {
   var m = document.getElementById('avm-menu'), more = document.getElementById('avm-more');
   if (!m || !m.hidden) return;
-  m.querySelector('[data-act="share"]').hidden = !_avmCanShare();
+  var canShare = _avmCanShare();
+  m.querySelector('[data-act="share"]').hidden = !canShare;
+  // Installed app on iPhone / iPad: Save is left out, see _avmIosPwa().
+  m.querySelector('[data-act="save"]').hidden = canShare && _avmIosPwa();
   m.querySelector('[data-act="copy"]').hidden = !_avmCanCopy();
   _avmPngPrepare();
   m.hidden = false;
@@ -401,8 +404,8 @@ function _avmExportFail(e) {
 
 // Installed app on iPhone / iPad: an <a download> navigates the app's only
 // web view to the file preview, and closing it (✕ or back) relaunches the
-// app. There, Save opens the share sheet instead — its « Save Image » entry
-// puts the PNG in Photos and closing the sheet leaves the app untouched.
+// app. There the menu shows Share only — the share sheet's « Save Image »
+// entry puts the PNG in Photos and closing the sheet leaves the app as is.
 function _avmIosPwa() {
   try {
     var n = window.navigator || {};
@@ -412,9 +415,6 @@ function _avmIosPwa() {
 }
 
 function _avmSave(blob) {
-  if (_avmIosPwa() && _avmCanShare()) {
-    return navigator.share({ files: [new File([blob], AVM_EXPORT_NAME, { type: 'image/png' })] });
-  }
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
   a.href = url; a.download = AVM_EXPORT_NAME; a.rel = 'noopener';
