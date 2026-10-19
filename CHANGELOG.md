@@ -32,6 +32,10 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Statistics opens on Summary** (`web.179`, audit of 2026-10-19c, S1–S2; reverses the « World first » of `web.119`,
+  Arnaud's decision) — every other group of the side menu opens on its overview, Statistics opened on the map, its
+  heaviest page. Summary is now first, and the landing page for an unknown address. Its address says what the menu
+  says, `#traffic/summary`; the former `#traffic/overview` still opens it.
 - **Statistics › Data without the filter card** (`web.178`, audit of 2026-10-19c, S5) — Data holds the visit counter
   exclusion, the MySQL mirror, the exports and the reset: no period, entry mode or bot filter applies to any of them,
   yet the filter card headed the page. It now shows on the seven reading pages only.

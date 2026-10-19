@@ -43,7 +43,7 @@ const shellJs = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..',
 // classes, so the handlers that open a panel are the same as before.
 const GROUPS = {
   overview: ['overview'],
-  stats: ['traffic/world', 'traffic/overview', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace', 'traffic/data'], live: ['sessions', 'errors'], community: ['board', 'polls', 'broadcast', 'landir'],
+  stats: ['traffic/overview', 'traffic/world', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace', 'traffic/data'], live: ['sessions', 'errors'], community: ['board', 'polls', 'broadcast', 'landir'],
   content: ['packages', 'music'], players: ['login', 'lobby', 'firstvisit', 'features'], infra: ['servers', 'proxy', 'identity'],
   ops: ['server', 'deploy', 'backup'], security: ['keys', 'audit', 'blocked'],
 };
@@ -418,7 +418,8 @@ function tsub(k) {
 // Since web.119 the side menu picks the section: no tab row of its own.
 const menuStats = [...admin.matchAll(/class="tab" data-t="traffic" data-ts="([a-z]+)"/g)].map(m => m[1]);
 ok(!/id="trafSub"/.test(admin) && !/\.trafsub/.test(admin), 'the panel no longer carries its own tab row');
-ok(JSON.stringify(menuStats) === JSON.stringify(['world'].concat(TS)), 'the menu lists the sections, World first: ' + menuStats.join(', '));
+// web.179: Summary first (it was World since web.119), like the first entry of every other group.
+ok(JSON.stringify(menuStats) === JSON.stringify(['overview', 'world'].concat(TS.slice(1))), 'the menu lists the sections, Summary first: ' + menuStats.join(', '));
 ok(TS.every(k => tsub(k)), 'each sub-tab has its section');
 ok(TS.every((k, i) => !i || traf.indexOf('data-ts="' + TS[i - 1] + '" role="tabpanel"') < traf.indexOf('data-ts="' + k + '" role="tabpanel"')),
   'the sections keep their reading order in the page');
@@ -472,12 +473,14 @@ ok(/permanently deletes ALL visit data/.test(tsub('data')), 'starting with the r
 ok(/function _trafSub\(k\)/.test(admin) && /function _trafXpl\(on\)/.test(admin), 'switching lives in two small functions');
 ok(/localStorage\.setItem\('pth_admin_traf_xpl',on\?'1':'0'\)/.test(admin), 'the Explanations switch is remembered per browser, like the period');
 ok(!/pth_admin_traf_sub/.test(admin), 'the section is in the address now (#traffic/world), not in browser storage');
-ok(/if\(TRAF_SUBS\.indexOf\(k\)<0\) k='world';/.test(admin), 'an unknown section falls back to the map');
+ok(/if\(TRAF_SUBS\.indexOf\(k\)<0\) k='overview';/.test(admin), 'an unknown section falls back to Summary');
+ok(/if\(k==='summary'\) k='overview';/.test(admin), 'and #traffic/summary is Summary');
 ok(/if\(k==='features'\) k='music';/.test(admin), 'and the former Features tab lands on Music');
-ok(/if\(t==='traffic'\)\{ if\(_wasT!=='traffic'\) loadTraffic\(\); _trafSub\(b\.dataset\.ts\|\|'world'\); \}/.test(admin),
+ok(/if\(t==='traffic'\)\{ if\(_wasT!=='traffic'\) loadTraffic\(\); _trafSub\(b\.dataset\.ts\|\|'overview'\); \}/.test(admin),
   'Statistics reads its figures on entry, not on every section change');
 ok(/sectionEvent\(t\+\(b\.dataset\.ts\?'\/'\+b\.dataset\.ts:''\)\)/.test(admin), 'a section announces its page too');
-ok(/function idOf\(b\) \{ return b\.dataset\.t \+ \(b\.dataset\.ts \? '\/' \+ b\.dataset\.ts : ''\); \}/.test(shellJs), 'and has its own address');
+ok(/function idOf\(b\) \{ return b\.dataset\.t \+ \(b\.dataset\.ts \? '\/' \+ \(TS_ADDR\[b\.dataset\.ts\] \|\| b\.dataset\.ts\) : ''\); \}/.test(shellJs), 'and has its own address');
+ok(/const TS_ADDR = \{ overview: 'summary' \};/.test(shellJs) && /const TS_PAGE = \{ summary: 'overview' \};/.test(shellJs), 'Summary answers to #traffic/summary, and the old #traffic/overview still works');
 
 // -- Entry modes, chosen once for every section ---------------------------
 ok(/var _trafModeSel=MODE48\.map/.test(admin) && /localStorage\.setItem\('pth_admin_modes'/.test(admin), 'the entry modes picked are kept per browser');

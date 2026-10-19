@@ -1156,8 +1156,8 @@
       <div class="sgrp" data-g="stats">
         <button type="button" class="gtab" data-g="stats"><svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M224,200h-8V40a8,8,0,0,0-8-8H152a8,8,0,0,0-8,8V80H96a8,8,0,0,0-8,8v40H48a8,8,0,0,0-8,8v64H32a8,8,0,0,0,0,16H224a8,8,0,0,0,0-16ZM160,48h40V200H160ZM104,96h40V200H104ZM56,144H88v56H56Z"/></svg><span>Statistics</span><i class="gbadge" aria-hidden="true"></i><svg class="gcar" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
         <div class="tabs subtabs" data-g="stats" style="display:none">
-          <button type="button" class="tab" data-t="traffic" data-ts="world">World</button>
           <button type="button" class="tab" data-t="traffic" data-ts="overview">Summary</button>
+          <button type="button" class="tab" data-t="traffic" data-ts="world">World</button>
           <button type="button" class="tab" data-t="traffic" data-ts="audience">Audience</button>
           <button type="button" class="tab" data-t="traffic" data-ts="activity">Activity</button>
           <button type="button" class="tab" data-t="traffic" data-ts="visitors">Visitors</button>
@@ -2223,7 +2223,7 @@
   }
   // Shared with the admin modules (public/modules/admin/*.mjs).
   window.PthAdmin={ api:function(p,o){ return api(p,o); }, master:function(){ return _isMaster; },
-    open:function(t){ var p=String(t||'').split('/'), b=document.querySelector('.tab[data-t="'+p[0]+'"]'+(p[1]?'[data-ts="'+p[1]+'"]':'')); if(b && b.style.display!=='none') b.click(); } };
+    open:function(t){ var p=String(t||'').split('/'); if(p[0]==='traffic' && p[1]==='summary') p[1]='overview'; var b=document.querySelector('.tab[data-t="'+p[0]+'"]'+(p[1]?'[data-ts="'+p[1]+'"]':'')); if(b && b.style.display!=='none') b.click(); } };
   // Which section is open, for the modules that follow it ('' once logged out).
   function sectionEvent(t){ try{ document.dispatchEvent(new CustomEvent('admin:section',{detail:{t:t||''}})); }catch(e){} }
   // Every admin call carries the token in the Authorization header (never the
@@ -3339,7 +3339,7 @@
     else { var _kn=$('kyNew'); if(_kn&&_kn.style.display!=='none'){ _kn.innerHTML=''; _kn.style.display='none'; } }   // a new key never stays on screen behind your back
     if(t==='board') loadBoard();
     if(t==='packages') api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
-    if(t==='traffic'){ if(_wasT!=='traffic') loadTraffic(); _trafSub(b.dataset.ts||'world'); }
+    if(t==='traffic'){ if(_wasT!=='traffic') loadTraffic(); _trafSub(b.dataset.ts||'overview'); }
     if(t==='servers'){ loadServers(); loadStatus(!cfgAnyDirty()); }
     if(t==='landir') loadLanDir();
     if(t==='polls') loadPolls();
@@ -8122,10 +8122,11 @@
   // filling all of them (charts are viewBox SVG, they need no width): the side
   // menu only chooses which one is on screen (.tab[data-t="traffic"][data-ts]).
   // The Explanations switch is remembered per browser, like the period.
-  var TRAF_SUBS=['world','overview','audience','activity','visitors','music','ace','data'];
+  var TRAF_SUBS=['overview','world','audience','activity','visitors','music','ace','data'];
   function _trafSub(k){
     if(k==='features') k='music';   // the former Features tab
-    if(TRAF_SUBS.indexOf(k)<0) k='world';
+    if(k==='summary') k='overview'; // its address (#traffic/summary)
+    if(TRAF_SUBS.indexOf(k)<0) k='overview';
     document.querySelectorAll('#panel-traffic .tsub').forEach(function(p){ p.style.display = p.dataset.ts===k ? '' : 'none'; });
     // Data holds settings, exports and the reset: no period, mode or bot
     // filter applies to any of them, so the filter card stays off that page.

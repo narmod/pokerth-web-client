@@ -65,12 +65,17 @@ function paintTitle(tab) {
 // The address names the open section, so a reload, a bookmark or the back
 // button lands on it. A section the key may not open is ignored.
 // A section is named by its tab, and by its page for a tab that has several
-// (Statistics: traffic/world, traffic/audience…).
-function idOf(b) { return b.dataset.t + (b.dataset.ts ? '/' + b.dataset.ts : ''); }
+// (Statistics: traffic/summary, traffic/world…). Summary is the page kept as
+// "overview" inside the dashboard; its address says what the menu says, and
+// the old #traffic/overview still lands on it.
+const TS_ADDR = { overview: 'summary' };
+const TS_PAGE = { summary: 'overview' };
+function idOf(b) { return b.dataset.t + (b.dataset.ts ? '/' + (TS_ADDR[b.dataset.ts] || b.dataset.ts) : ''); }
 function tabFor(t) {
   const m = /^([a-z]+)(?:\/([a-z]+))?$/.exec(t || '');
   if (!m) return null;
-  const b = document.querySelector('.tab[data-t="' + m[1] + '"]' + (m[2] ? '[data-ts="' + m[2] + '"]' : ''));
+  const ts = m[2] && (TS_PAGE[m[2]] || m[2]);
+  const b = document.querySelector('.tab[data-t="' + m[1] + '"]' + (ts ? '[data-ts="' + ts + '"]' : ''));
   return b && b.style.display !== 'none' ? b : null;
 }
 function hashName() { return decodeURIComponent((location.hash || '').replace(/^#\/?/, '')); }
