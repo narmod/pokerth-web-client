@@ -177,7 +177,7 @@ ok(p && p.body.loginDefaults.host === 'lan.example.com' && p.body.loginDefaults.
 await open('identity');
 ok(!doc.querySelector('#panel-identity #srvName,#panel-identity #lobbyClk'), 'server identity and lobby clock left Identity & reach');
 t = tiles('idTiles');
-ok(/World clock 2 regions around UTC/.test(t) && /AI crawlers Refused/.test(t), 'Identity & reach tiles follow what stayed (' + t + ')');
+ok(/^Search engines Hidden/.test(t) && /AI crawlers Refused/.test(t), 'Search engines tiles follow what stayed (' + t + ')');
 
 // ── Bare fields ───────────────────────────────────────────────────────────
 ok(/:where\(\.card\) input:where\(:not\(\[type\]\),\[type=text\],\[type=number\]/.test(html), 'a text or number field without a class gets the base field style');

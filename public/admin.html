@@ -673,8 +673,8 @@
      colonnes de hauteur équilibrée ; celles qui portent un graphique ou une
      grille reprennent toute la largeur, où elles seraient illisibles. */
   @media(min-width:1280px){
-    #panel-broadcast,#panel-login,#panel-lobby,#panel-firstvisit,#panel-deploy,#panel-identity{columns:2;column-gap:16px}
-    #panel-broadcast>.card,#panel-login>.card,#panel-lobby>.card,#panel-firstvisit>.card,#panel-deploy>.card,#panel-identity>.card{break-inside:avoid;-webkit-column-break-inside:avoid;margin-bottom:16px}
+    #panel-broadcast,#panel-login,#panel-lobby,#panel-firstvisit,#panel-deploy{columns:2;column-gap:16px}
+    #panel-broadcast>.card,#panel-login>.card,#panel-lobby>.card,#panel-firstvisit>.card,#panel-deploy>.card{break-inside:avoid;-webkit-column-break-inside:avoid;margin-bottom:16px}
     /* Le panneau Traffic n'a plus qu'une carte de lecture : rien a rattraper
        sur toute la largeur, puisque rien n'est reparti en colonnes. */
   }
@@ -748,6 +748,9 @@
   .eyebrow{margin:0;font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
   .main h1{font-size:1.45rem;font-weight:600;letter-spacing:-.01em;color:var(--cream);margin:2px 0 0}
   .main .clockbar{max-width:1600px;margin:4px 0 18px}
+  .clkedit{display:flex;justify-content:flex-end;margin:-12px 0 12px}
+  .clkedit .use{font-size:.74rem}
+  #clkCard{margin:0 0 14px}
   /* Login: the brand above a single card, centred. */
   #login{max-width:440px;margin:0 auto;padding:calc(10vh + env(safe-area-inset-top)) 16px 24px}
   .lbrand{display:flex;align-items:center;gap:12px;margin:0 0 4px}
@@ -1158,7 +1161,7 @@
         <div class="tabs subtabs" data-g="infra" style="display:none">
           <button type="button" class="tab" data-t="servers">Game servers</button>
           <button type="button" class="tab" data-t="proxy">Proxy</button>
-          <button type="button" class="tab" data-t="identity">Identity &amp; reach</button>
+          <button type="button" class="tab" data-t="identity">Search engines</button>
         </div>
       </div>
       <div class="sgrp" data-g="ops">
@@ -1200,7 +1203,18 @@
     <div class="pagebody" id="pageBody">
 
     <div id="panel-overview">
-      <div class="clockbar" id="clockBar" style="display:none" title="Regions picked in Infrastructure › Identity &amp; reach, earliest on the left"></div>
+      <div class="clockbar" id="clockBar" style="display:none" title="Regions picked with Customize the clocks, earliest on the left"></div>
+      <div class="clkedit" data-master="1"><button type="button" id="clkEdit" class="use" aria-expanded="false" aria-controls="clkCard">Customize the clocks</button></div>
+      <div class="card" id="clkCard" style="display:none">
+        <h2>World clock</h2>
+        <p class="muted">The strip above, for every admin key: one dial per region, ranked by offset around the reference zone. Up to 12 regions, plus the reference. <b>Applies immediately.</b></p>
+        <details class="more"><summary>How the dials read</summary><p class="muted">Each region gets a dial, its time and its name, ranked by offset — earliest on the left, latest on the right — around the reference below, which therefore sits in the middle. The face of each dial is that city’s actual sky, shaded from the sun’s height above its horizon: the zenith at the top, the horizon at the bottom, so the warmth of a sunset stays low on the dial while the top has already turned to night. There are no steps — the colour moves with the sun, and follows the season and the latitude, so a northern winter afternoon reads as dusk while the tropics are still in daylight. The time turns green between 18:00 and 01:00 locally, the hours when players come to the tables. A weekday is appended where the region has already rolled over, and hovering a dial gives its phase and the sun’s altitude. Up to 12 regions, plus the reference, which is always shown whether or not it is ticked. This server’s own clock is not here — it heads the status list under <b>Health &amp; logs</b>. Applies immediately (no restart needed).</p></details>
+        <div class="defrow fld"><span style="white-space:nowrap">Reference zone</span><select id="clkRef"></select></div>
+        <div id="clkPick" class="clkpick"></div>
+        <p class="muted" id="clkCount" style="margin-top:10px"></p>
+        <div class="rowtop"><button id="saveClocks" class="use" data-save>Save</button><button id="clkDefaults" class="ghost">Default set</button></div>
+        <div id="clkMsg" class="msg"></div>
+      </div>
       <section class="ovalerts" id="ovAlerts" aria-label="Needs attention"><div class="empty">Loading…</div></section>
       <section class="ovmodes" id="ovModes" aria-label="Connected right now, by entry mode"><div class="empty">Loading…</div></section>
       <div class="ovgrid">
@@ -1705,23 +1719,7 @@
     </div>
 
     <div id="panel-identity" style="display:none">
-      <section class="ovmodes" id="idTiles" aria-label="How this server presents itself"><div class="empty">Loading…</div></section>
-      <div class="card">
-        <h2>World clock (Overview)</h2>
-        <p class="muted">The strip at the top of the Overview, for every admin key. Each region gets a dial, its time and its name, ranked by offset — earliest on the left, latest on the right — around the reference below, which therefore sits in the middle. The face of each dial is that city’s actual sky, shaded from the sun’s height above its horizon: the zenith at the top, the horizon at the bottom, so the warmth of a sunset stays low on the dial while the top has already turned to night. There are no steps — the colour moves with the sun, and follows the season and the latitude, so a northern winter afternoon reads as dusk while the tropics are still in daylight. The time turns green between 18:00 and 01:00 locally, the hours when players come to the tables. A weekday is appended where the region has already rolled over, and hovering a dial gives its phase and the sun’s altitude. Up to 12 regions, plus the reference, which is always shown whether or not it is ticked. This server’s own clock is not here — it heads the status list under <b>Health &amp; logs</b>. Applies immediately (no restart needed).</p>
-        <div class="defrow fld"><span style="white-space:nowrap">Reference zone</span><select id="clkRef"></select></div>
-        <div id="clkPick" class="clkpick"></div>
-        <p class="muted" id="clkCount" style="margin-top:10px"></p>
-        <div class="rowtop"><button id="saveClocks" class="use" data-save>Save</button><button id="clkDefaults" class="ghost">Default set</button></div>
-        <div id="clkMsg" class="msg"></div>
-      </div>
-      <div class="card">
-        <h2>Discord chat relay</h2>
-        <p class="muted">Official-server parity (<code>DiscordChatWebhookUrl</code>): lobby chat messages sent by players through this proxy are forwarded to a Discord channel as <b>Player:</b> message. Game chat and private messages are never relayed. Leave blank to disable. One post per message — no duplicates however many clients are connected.</p>
-        <div class="defrow fld"><span style="white-space:nowrap">Webhook URL</span><input id="discordHook" maxlength="200" placeholder="https://discord.com/api/webhooks/…" autocomplete="off"></div>
-        <div class="rowtop"><button id="saveDiscord" class="use" data-save>Save</button></div>
-        <div id="discordMsg" class="msg"></div>
-      </div>
+      <section class="ovmodes" id="idTiles" aria-label="Search engines at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <h2>Search engine visibility (SEO)</h2>
         <p class="muted"><b>Off by default.</b> When off, every page is served with <code>noindex, nofollow</code> and <code>robots.txt</code> blocks all crawlers &mdash; a self-hosted install stays out of Google and AI search engines. Turn it on only for a public instance you want indexed: the page then gains a description, Open Graph / Twitter cards, a canonical link, structured data (JSON-LD) and a crawler-readable summary, and <code>robots.txt</code>, <code>sitemap.xml</code> and <code>llms.txt</code> are generated from the public URL below. Applies immediately (no restart needed).</p>
@@ -1951,6 +1949,13 @@
         <div id="bcList" class="erlist"></div>
       </div>
       <div class="card" data-master="1">
+        <h2>Discord chat relay</h2>
+        <p class="muted">Official-server parity (<code>DiscordChatWebhookUrl</code>): lobby chat messages sent by players through this proxy are forwarded to a Discord channel as <b>Player:</b> message. Game chat and private messages are never relayed. Leave blank to disable. One post per message — no duplicates however many clients are connected.</p>
+        <div class="defrow fld"><span style="white-space:nowrap">Webhook URL</span><input id="discordHook" maxlength="200" placeholder="https://discord.com/api/webhooks/…" autocomplete="off"></div>
+        <div class="rowtop"><button id="saveDiscord" class="use" data-save>Save</button></div>
+        <div id="discordMsg" class="msg"></div>
+      </div>
+      <div class="card" data-master="1">
         <h2>Welcome / rules message (first visit)</h2>
         <p class="muted">Shown once in a centered popup the first time someone opens the app, and again whenever you edit it. Each visitor sees the version matching their language (fallback below). Players dismiss it with “I understand”.</p>
         <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="wcEnabled" style="width:auto"> Enabled</label>
@@ -2068,7 +2073,7 @@
       </div>
       <div class="card" id="lanCard">
         <h2>LAN / dedicated button</h2>
-        <p class="muted">The server a player finds pre-filled behind the <b>LAN / dedicated</b> button of the login page. A default, never a lock: players can edit the fields, and the server they last joined is remembered. The Internet button is never affected.</p>
+        <p class="muted">The server a player finds pre-filled behind the <b>LAN / dedicated</b> button of the login page. A default, never a lock: players can edit the fields, and the server they last joined is remembered. The Internet button is never affected. The list of LAN servers, the “Local server” entry and manual address entry are set in <a href="#" data-goto="landir">Community › LAN directory › Settings</a>.</p>
         <details class="more"><summary>Automatic, forced and the proxy URL</summary><p class="muted"><i>Automatic</i> uses this page’s own address (port 7234, no TLS). <i>Forced</i> uses the host, port and TLS below; the proxy then follows that host and is rebuilt on every reconnect, so the client always reconnects. Only players who never picked a server of their own follow a change made here. A forced proxy URL (ws:// or wss://) is pushed to every client and locks the field; hiding the field removes it and its label from the login form.</p></details>
         <div class="defrow fld"><span>Server</span><select id="defLanMode"><option value="auto">Automatic (page address)</option><option value="forced">Forced (values below)</option></select></div>
         <div class="defrow fld"><span>Host</span><input id="defHost" placeholder="(page address)" maxlength="120" autocomplete="off"></div>
@@ -2118,7 +2123,7 @@
           <label class="ck"><input type="checkbox" id="ldSetLocal"> <span>List this install’s own game server first, pre-selected <span class="muted" style="margin:0;white-space:nowrap">(“Local server”)</span></span></label>
           <label class="ck"><input type="checkbox" id="ldSetManual"> <span>Allow manual address entry on the login page <span class="muted" style="margin:0;white-space:nowrap">(allowlisted hosts only)</span></span></label>
         </div>
-        <p class="muted" style="margin-top:10px">Turn “Refuse private addresses” off only when this proxy runs on the same network as the servers (a self-hosted LAN install). “Local server” is the address the LAN form used before the directory (the default login form, else this page’s host on port 7234): keep it on a self-hosted install, turn it off on pokerth.net. Manual entry lets a player type an address instead of picking one; addresses outside the allowlist are still refused.</p>
+        <p class="muted" style="margin-top:10px">Turn “Refuse private addresses” off only when this proxy runs on the same network as the servers (a self-hosted LAN install). “Local server” is the address the LAN form used before the directory (the default login form, else this page’s host on port 7234): keep it on a self-hosted install, turn it off on pokerth.net. Manual entry lets a player type an address instead of picking one; addresses outside the allowlist are still refused. The server pre-filled behind the LAN / dedicated button is set in <a href="#" data-goto="servers">Infrastructure › Game servers</a>.</p>
         <p class="muted" id="ldGlobalCap" style="margin-top:6px"></p>
         <div class="periodrow" style="margin-top:6px"><button id="ldSetSave" class="use" type="button" data-save>Save settings</button></div>
         <div id="ldSetState" class="msg"></div>
@@ -2179,7 +2184,7 @@
   // settings tab at once, so it only rewrites the fields while no settings
   // card holds an unsaved edit.
   var _dirtyCards=[], _lastCard=null;
-  var _CFG_PANELS=['panel-proxy','panel-identity','panel-login','panel-lobby','panel-firstvisit','panel-features','panel-servers','panel-board'];
+  var _CFG_PANELS=['panel-overview','panel-proxy','panel-identity','panel-login','panel-lobby','panel-firstvisit','panel-features','panel-servers','panel-board'];
   document.addEventListener('input',cfgMarkDirty,true);
   document.addEventListener('change',cfgMarkDirty,true);
   document.addEventListener('click',function(e){ var c=e.target&&e.target.closest?e.target.closest('.card'):null; if(c) _lastCard=c; },true);
@@ -3149,7 +3154,7 @@
       return f.format(new Date(now))+' \u00b7 '+(tz||'UTC');
     }catch(e){ return new Date(now).toISOString().replace('T',' ').slice(0,19)+' \u00b7 UTC'; }
   }
-  // Selecteur de villes (Server > Identity & reach)
+  // Selecteur de villes (Overview > Customize the clocks)
   function clkPickSel(){ return [].slice.call(document.querySelectorAll('#clkPick input:checked')).map(function(i){ return i.value; }); }
   function clkPickCount(){ var n=clkPickSel().length,m=$('clkCount'); if(m) m.textContent=n+' of '+CLOCK_MAX+' selected'+(n>CLOCK_MAX?' \u2014 only the first '+CLOCK_MAX+' are kept':''); }
   function clkPickRender(sel){
@@ -3214,6 +3219,15 @@
   (function(){ var b=$('clkDefaults'); if(!b) return; b.addEventListener('click',function(){ clkPickRender(CLOCK_DEFAULT.slice()); clkRefRender(CLOCK_REF_DEFAULT); var m=$('clkMsg'); if(m){ m.textContent='Default set restored below \u2014 press Save to apply.'; m.className='msg'; } }); })();
 
   window.addEventListener('resize', function(){ capRows($('auList'), 10); });
+  // « Customize the clocks » opens the world-clock settings under the strip
+  // they draw; the settings are read again at each opening.
+  (function(){ var b=$('clkEdit'), c=$('clkCard'); if(!b||!c) return; b.addEventListener('click',function(){
+    var open=c.style.display==='none'; c.style.display=open?'':'none';
+    b.textContent=open?'Done':'Customize the clocks'; b.setAttribute('aria-expanded',open?'true':'false');
+    if(open){ loadStatus(!cfgAnyDirty()); try{ c.scrollIntoView({block:'nearest'}); }catch(e){} }
+  }); })();
+  // A link inside a card that leads to another section (data-goto="<tab>").
+  document.addEventListener('click',function(e){ var a=e.target&&e.target.closest?e.target.closest('[data-goto]'):null; if(!a) return; e.preventDefault(); if(window.PthAdmin) window.PthAdmin.open(a.getAttribute('data-goto')); });
   // Affiche la famille g. pick=true choisit sa premiere section visible, ce
   // qu'il faut quand l'operateur change de famille ; pick=false sert quand une
   // section a deja ete choisie et qu'on ne fait que suivre.
@@ -3256,7 +3270,7 @@
     if(t==='servers'){ loadServers(); loadStatus(!cfgAnyDirty()); }
     if(t==='landir') loadLanDir();
     if(t==='polls') loadPolls();
-    if(t==='broadcast'){ pxNoticesTo('panel-broadcast'); loadBroadcasts(); if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); } }
+    if(t==='broadcast'){ pxNoticesTo('panel-broadcast'); loadBroadcasts(); if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); loadStatus(!cfgAnyDirty()); } }
     if(t==='login'){ pxNoticesTo('panel-login'); if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); } }
     if(t==='login'||t==='lobby'){ loadStatus(!cfgAnyDirty()); loadFeatureSwitches(); }
     if(t==='firstvisit'){ loadStatus(!cfgAnyDirty()); }
@@ -3768,12 +3782,12 @@
       ['Session grace',(typeof P.graceSec==='number'?P.graceSec:120)+' s','a dropped player keeps the seat','var(--accent)'],
       ['Extra hosts',String((P.allowedHosts||[]).length),(P.allowedPorts||[]).length?'and '+(P.allowedPorts||[]).length+' extra port'+((P.allowedPorts||[]).length===1?'':'s'):'port 7234 only','var(--m-lan)'],
       ['Log',P.logLevel||'default','quiet = least CPU under load','var(--info-text)']]);
-    var CZ=Array.isArray(d.clockZones)?d.clockZones:null;
+    var SE=d.seo||{}, ver=[['Google',SE.googleVerification],['Bing',SE.bingVerification],['Yandex',SE.yandexVerification]].filter(function(x){ return x[1]; }), IN=SE.indexNow||{};
     if(id) id.innerHTML=T([
-      ['World clock',CZ?String(CZ.length):'—',CZ?'region'+(CZ.length===1?'':'s')+' around '+srvEsc(d.clockRef||'UTC'):'regions on the Overview','var(--accent)'],
-      ['Discord relay',d.discordChatWebhookUrl?'On':'Off',d.discordChatWebhookUrl?'lobby chat forwarded':'no webhook set','var(--m-net)'],
-      ['Search engines',d.seo&&d.seo.enabled?'Indexed':'Hidden',d.seo&&d.seo.enabled?srvEsc(d.seo.publicUrl||''):'noindex, robots.txt blocks crawlers',d.seo&&d.seo.enabled?'var(--ok-text)':'var(--muted)'],
-      ['AI crawlers',d.seo&&d.seo.aiCrawlers===false?'Refused':'Allowed',d.seo&&d.seo.aiCrawlers===false?'explicit Disallow, no llms.txt':'robots.txt lets them in','var(--warn-text)']]);
+      ['Search engines',SE.enabled?'Indexed':'Hidden',SE.enabled?srvEsc(SE.publicUrl||'no public URL set'):'noindex, robots.txt blocks crawlers',SE.enabled?'var(--ok-text)':'var(--muted)'],
+      ['Verification',ver.length+'<small class="ovof"> / 3</small>',ver.length?ver.map(function(x){ return x[0]; }).join(', '):'no console token set','var(--accent)'],
+      ['IndexNow',IN.at?(IN.status>=200&&IN.status<300?'Sent':'Failed'):'—',IN.at?(IN.count+' URLs · '+new Date(IN.at).toLocaleString()):(SE.enabled?'not submitted yet':'off while hidden'),IN.at&&!(IN.status>=200&&IN.status<300)?'var(--err-text)':'var(--m-net)',''],
+      ['AI crawlers',SE.aiCrawlers===false?'Refused':'Allowed',SE.aiCrawlers===false?'explicit Disallow, no llms.txt':'robots.txt lets them in','var(--warn-text)']]);
   }
   // server
   function fmtUptime(s){ s=s||0; var d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60); return (d?d+'d ':'')+(h?h+'h ':'')+m+'m'; }
@@ -3806,7 +3820,7 @@
         if($('srvName') && typeof d.serverName==='string') $('srvName').value=d.serverName;
         if($('srvTagline') && typeof d.serverTagline==='string') $('srvTagline').value=d.serverTagline;
         if($('loginTitle')) $('loginTitle').value=(d.showLoginTitle?'1':'0');
-        if($('discordHook') && typeof d.discordChatWebhookUrl==='string') $('discordHook').value=d.discordChatWebhookUrl;
+        if($('discordHook') && typeof d.discordChatWebhookUrl==='string' && !cardDirty($('discordHook'))) $('discordHook').value=d.discordChatWebhookUrl;
         if($('clkPick') && Array.isArray(d.clockZones)) clkPickRender(d.clockZones);
         if($('clkRef')) clkRefRender(d.clockRef||CLOCK_REF_DEFAULT);
         if($('lobbyClk')) lobbyClkRender(d.lobbyClockTz||'',d.lobbyClockEff||'',d.lobbyClockEnv||'');

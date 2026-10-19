@@ -71,12 +71,26 @@ await tick(250);
 const p = tiles('prTiles');
 ok(/Connected 7 cap 400 bridges/.test(p) && /Session grace 90 s/.test(p) && /Extra hosts 2 and 1 extra port/.test(p) && /Log quiet/.test(p), 'proxy tiles from the saved settings (' + p + ')');
 
-// ── Identity ──────────────────────────────────────────────────────────────
+// ── Search engines (Identity & reach until web.163) ───────────────────────
 doc.querySelector('.tab[data-t="identity"]').click();
 await tick(250);
+ok(doc.querySelector('.tab[data-t="identity"]').textContent === 'Search engines', 'the page is called Search engines');
 const t = tiles('idTiles');
-ok(/^World clock /.test(t) && /AI crawlers /.test(t) && !/Server name|Lobby clock/.test(t), 'world clock and AI crawlers; server name and lobby clock moved to Player experience (' + t + ')');
-ok(/Discord relay On lobby chat forwarded/.test(t) && /Search engines Indexed https:\/\/webclient\.example\.org/.test(t), 'Discord and search engines');
+ok(/^Search engines Indexed https:\/\/webclient\.example\.org/.test(t) && /Verification 0 \/ 3/.test(t) && /IndexNow /.test(t) && /AI crawlers /.test(t), 'four search-engine tiles (' + t + ')');
+ok(doc.querySelectorAll('#panel-identity > .card').length === 1 && $('seoUrl').closest('#panel-identity'), 'the SEO card is alone on its page');
+// The world clock is set from the strip it draws; the Discord relay sits with the messages.
+ok($('clkCard').closest('#panel-overview') && $('clkCard').style.display === 'none', 'the world-clock settings live on Overview, closed');
+$('clkEdit').click();
+ok($('clkCard').style.display === '' && $('clkEdit').textContent === 'Done' && $('clkEdit').getAttribute('aria-expanded') === 'true', 'Customize the clocks opens them');
+$('clkEdit').click();
+ok($('clkCard').style.display === 'none' && $('clkEdit').textContent === 'Customize the clocks', 'and Done closes them');
+ok($('discordHook').closest('#panel-broadcast') && $('discordHook').closest('.card').hasAttribute('data-master'), 'the Discord relay is in Broadcasts, master key only');
+// Each LAN card points at the other.
+const lanLinks = [...doc.querySelectorAll('[data-goto]')].map((a) => a.getAttribute('data-goto'));
+ok(lanLinks.includes('servers') && lanLinks.includes('landir'), 'LAN directory and the LAN / dedicated button link to each other');
+doc.querySelector('#lanCard [data-goto="landir"]').click();
+await tick(150);
+ok(doc.querySelector('.tab.on') && doc.querySelector('.tab.on').dataset.t === 'landir', 'a link opens the section it names');
 ok(/\[id\^="panel-"\]>\.ovmodes\{column-span:all/.test(html), 'tiles span both columns of a two-column panel');
 ok(/:where\(\.card\) textarea\{/.test(html), 'a bare textarea gets the base field style too');
 ok(errors.length === 0, 'nothing threw' + (errors.length ? ': ' + errors[0] : ''));

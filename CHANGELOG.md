@@ -30,6 +30,13 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Admin: Identity & reach becomes Search engines; world clock set from the Overview; Discord relay in
+  Broadcasts** (`web.163`) — the world-clock settings move under the strip they draw: a « Customize the clocks »
+  button (master key) opens them on the Overview, read again at each opening, with the long explanation folded
+  under « How the dials read ». The Discord chat relay joins Community › Broadcasts (master key only, its field
+  not overwritten while edited). What is left of Identity & reach is the SEO card: the page is « Search engines »,
+  with tiles for indexing, verification tokens, the last IndexNow submission and AI crawlers. The LAN directory
+  settings and the LAN / dedicated button card link to each other (`data-goto`, any section).
 - **Admin: Security gathers keys, audit log and blocked addresses; Clear logs moves to the logs** (`web.162`) —
   Security has three pages instead of one: **Keys** (create and list delegate keys; tiles: keys, sections granted,
   newest key, master key), **Audit log** (its own page; tiles: changes in 24 h, refused, last change, by delegates;
