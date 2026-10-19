@@ -661,6 +661,34 @@
   :root[data-admin-theme="light"] .del,
   :root[data-admin-theme="light"] .toggle.off,
   :root[data-admin-theme="light"] .use.danger{color:#c62828}
+  /* The state colours written as literals (green / red / amber) were pale on
+     white wherever no light rule had been added: the evening clocks of
+     Overview, the rises and falls of Statistics, the LAN directory states. */
+  :root[data-admin-theme="light"] .ck.peak,
+  :root[data-admin-theme="light"] .ck.peak b,
+  :root[data-admin-theme="light"] .tstat .big.up,
+  :root[data-admin-theme="light"] .kpi .big.up,
+  :root[data-admin-theme="light"] .delta.up,
+  :root[data-admin-theme="light"] .ldline.ok,
+  :root[data-admin-theme="light"] .ldpriv .ok,
+  :root[data-admin-theme="light"] .ldst.on{color:#2e7d32}
+  :root[data-admin-theme="light"] .tstat .big.dn,
+  :root[data-admin-theme="light"] .kpi .big.dn,
+  :root[data-admin-theme="light"] .delta.dn,
+  :root[data-admin-theme="light"] .ldline.err,
+  :root[data-admin-theme="light"] .ldpriv .err{color:#c62828}
+  :root[data-admin-theme="light"] .ldchip.warn,
+  :root[data-admin-theme="light"] .ldline.warn,
+  :root[data-admin-theme="light"] .ldpriv .warn{color:var(--warn-text)}
+  /* Native controls and links follow the theme: check boxes, radio buttons,
+     the date picker, drop-down lists and scroll bars take the theme's scheme
+     and accent; a link between sections no longer comes out in the
+     browser's default blue (unreadable on the dark panels). */
+  :root{color-scheme:dark;accent-color:var(--accent);--link:#8fb8ff}
+  :root[data-admin-theme="light"]{color-scheme:light;--link:#1d5fc4}
+  a{color:var(--link)}
+  /* A count inside the picked button of a segmented control (Tracks (3)). */
+  .seg button.on .muted{color:inherit;opacity:.7}
 
   /* ── Responsive & desktop polish ──────────────── */
   @media(min-width:760px){
@@ -5197,7 +5225,7 @@
         var db=d.db||{};
         var esc=function(x){ return (''+x).replace(/[&<>]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); };
         var state;
-        if(!db.enabled){ state='<b style="color:#a0acc4">Off</b> — configure below'; }
+        if(!db.enabled){ state='<b style="color:var(--text)">Off</b> — configure below'; }
         else if(db.connected){ state='<b class="ok">Connected</b>'; }
         else { state='<b class="err">Error</b>'+(db.error?(' — '+esc(db.error)):''); }
         var html='<div class="srow"><span>Status</span><span>'+state+'</span></div>';

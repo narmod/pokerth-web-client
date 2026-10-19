@@ -32,6 +32,12 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Admin theme coverage** (`web.176`, audit of 2026-10-19c, lot 1) — the theme now reaches what it missed: links
+  between sections used the browser's default blue (contrast 1.8 on the dark panels); check boxes, radio buttons,
+  the date picker, drop-down lists and scroll bars ignored the theme (no `color-scheme` / `accent-color`); the
+  literal state colours had no light version on the evening clocks of Overview, the rises and falls of
+  Statistics and the LAN directory states (contrast down to 1.7 on white); the count inside the picked Tracks /
+  Radios button and the « Off » of the MySQL mirror were unreadable. Dark-theme colours are unchanged.
 - **Admin ergonomics** (`web.175`, audit of 2026-10-19, lot 4) — without automatic updates nothing read the
   upstream until « Check now »: Overview and Deployment said « not checked yet » (and « All clear ») while an update
   waited. A read-only check now runs 2 minutes after the start, then hourly; it never applies anything. A restart
