@@ -16,6 +16,8 @@ release. Per-build detail is on the
 highlights below.
 
 ### Removed
+- **`POST /admin/servers/probe`** (`web.174`, audit of 2026-10-19, C9) — no screen called it since the game-server
+  « Check » moved to `/admin/servers/lobby` (which also reads the lobby); removed with its README line.
 - **Theme packages** (`web.143`) — `public/themes/<id>/theme.json` packages (button colours/images, pucks, an
   optional palette or felt) no longer reached players: the style window has no theme, buttons or pucks picker,
   the two built-in themes carried no palette, and an imported one only surfaced as a `pkg-<id>` first-visit

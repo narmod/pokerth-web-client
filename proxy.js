@@ -11437,37 +11437,6 @@ function handleAdmin(req, res, reqPathOnly, query) {
       });
     });
   }
-  if (reqPathOnly === '/admin/servers/probe' && req.method === 'POST') {
-    return readJsonBody(req, function (d) {
-      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      var host = String((d && d.host) || '').trim().toLowerCase();
-      var port = parseInt((d && d.port) || 7234, 10);
-      var useTls = !!(d && d.tls);
-      if (!host) return adminJson(res, 400, { ok: false, error: 'host required' });
-      if (!isPortAllowed(port)) return adminJson(res, 200, { ok: true, reachable: false, ms: 0, error: 'port not allowed' });
-      if (!isHostAllowed(host)) return adminJson(res, 200, { ok: true, reachable: false, ms: 0, error: 'host not in allowlist (save it first)' });
-      var t0 = Date.now(), done = false, sock = null;
-      function finish(ok, err) { if (done) return; done = true; try { if (sock) sock.destroy(); } catch (e) {} return adminJson(res, 200, { ok: true, reachable: ok, ms: Date.now() - t0, error: err || '' }); }
-      try {
-        // Mêmes réglages TLS que la connexion de jeu (cf. lobbyProbe). Le corps
-        // peut les surcharger : le Check de /admin teste alors ce que l'admin a
-        // SOUS LES YEUX, sans l'obliger à enregistrer d'abord.
-        var _t = _tlsFromBody(d, host, port);
-        var _sni = _t.sni || (/^[0-9.]+$/.test(host) ? '' : host);
-        var opts = { host: host, port: port };
-        var _pins = useTls ? _tlsPinsFor(host) : [];
-        sock = useTls
-          ? tls.connect(Object.assign({ rejectUnauthorized: _pins.length ? false : !(INSECURE_TLS || _t.noverify) }, (_sni ? { servername: _sni } : {}), opts), function () {
-              if (_pins.length) { var _pe = _verifyTlsPin(sock, _pins); if (_pe) { console.warn('[probe] ' + _pe); return finish(false, 'tls pin mismatch'); } }
-              finish(true, '');
-            })
-          : net.connect(opts, function () { finish(true, ''); });
-        sock.setTimeout(6000);
-        sock.on('timeout', function () { finish(false, 'timeout'); });
-        sock.on('error', function (e) { finish(false, (e && e.code) || 'error'); });
-      } catch (e) { finish(false, (e && e.code) || 'error'); }
-    });
-  }
   if (reqPathOnly === '/admin/servers/lobby' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });

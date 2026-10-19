@@ -557,7 +557,7 @@ pokerth-web-client/
 | Sessions & analytics | `GET /admin/sessions`, `GET /admin/visits`, `GET /admin/visits/export` |
 | Packages | `GET /admin/pkg-list`, `POST /admin/pkg-{upload,remove,toggle,full,align}` |
 | Music | `GET /admin/music-list`, `POST /admin/music-{enable,upload,remove,toggle,edit,order,import}`, `POST /admin/music-radio-{add,import}`, `POST /admin/music-upload-{begin,chunk,finish}` |
-| Game servers | `GET /admin/servers`, `POST /admin/servers/{serverlist,probe,lobby}` |
+| Game servers | `GET /admin/servers`, `POST /admin/servers/{serverlist,lobby}` |
 | Update, deploys & restart | `POST /admin/update`, `POST /admin/update-nr`, `GET /admin/update-check`, `GET /admin/update-log`, `GET`/`POST` `/admin/auto-update`, `GET /admin/deploys`, `POST /admin/{schedule,cancel}-restart`, `POST /admin/restart` |
 | Database | `GET`/`POST` `/admin/db`, `POST /admin/db/test` |
 | Broadcasts & polls | `GET`/`POST` `/admin/broadcasts`, `POST /admin/broadcast-now`, `POST /admin/broadcasts/{delete,toggle,fire}`, `GET`/`POST` `/admin/polls`, `POST /admin/polls/{activate,reset,delete}` |
