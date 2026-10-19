@@ -32,6 +32,13 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Statistics: one card per subject** (`web.180`, audit of 2026-10-19c, S4; reverses the sections of `web.119`,
+  Arnaud's decision) — every other admin page gives each subject its own card; Statistics packed a page into one
+  or two cards split by rules, headed by a group name that often repeated the page (Visitors › « Who visits »).
+  The 17 subjects of Audience, Activity, Visitors, Music, Ace's Help and Data are now cards headed by their own
+  name (Daily visits, Time of day, What visitors run…); the group headings (Trends, Retention, Recent activity,
+  Connections, Who visits, Ace's Help, Data & settings) are gone. Summary and World were already built this way.
+  On Data, the MySQL mirror is a card of its own, so its « Unsaved changes » marker no longer spans the exports.
 - **Statistics opens on Summary** (`web.179`, audit of 2026-10-19c, S1–S2; reverses the « World first » of `web.119`,
   Arnaud's decision) — every other group of the side menu opens on its overview, Statistics opened on the map, its
   heaviest page. Summary is now first, and the landing page for an unknown address. Its address says what the menu

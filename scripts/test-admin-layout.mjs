@@ -441,7 +441,12 @@ for (const [k, ids] of Object.entries(home)) {
 }
 ok(tsub('overview').indexOf('id="trafKpis"') < tsub('overview').indexOf('id="trafBottom"'),
   'the overview reads the figures, then the conclusion drawn from them');
-for (const h of ['Bottom line', 'Trends', 'Retention', 'Recent activity', 'Connections', 'Who visits', 'Music', 'Ace’s Help', 'Data &amp; settings']) {
+// web.180: one card per subject, as on every other admin page (the
+// sections of web.119 were rules inside one card per page).
+for (const h of ['Bottom line', 'Daily visits', 'New devices per day', 'Coming back', 'Last 48 h', 'Time of day',
+  'Last 48 h by entry mode', 'pokerth.net vs web client', 'Where sessions open', '/live spectator view',
+  'What visitors run', 'Where visitors come from', 'Most played tracks', 'Offer, tips and Ranking funnel',
+  'Exclude my own visits', 'Database (MySQL mirror)', 'Export / backup', 'Reset traffic stats']) {
   ok(traf.includes('<h2>' + h + '</h2>'), 'a card is headed ' + h);
 }
 ok(/<section class="card trafhead statbar" aria-label="Filters for every page of Statistics">/.test(traf), 'one filter card heads every section');
@@ -449,17 +454,17 @@ for (const id of ['trafModeSel', 'trafPeriod', 'trafRange', 'trafBots', 'trafXpl
 ok(traf.indexOf('id="trafModeSel"') < traf.indexOf('<div class="tsub"'), 'above every section');
 ok(/var fh=document\.querySelector\('#panel-traffic>\.trafhead'\); if\(fh\) fh\.style\.display = k==='data' \? 'none' : '';/.test(admin),
   'except Data, where no filter applies (web.178)');
-ok(!/<h2>Coming back<\/h2>/.test(traf) && !/<h3>Recent activity/.test(traf) && !/<h3>Ace’s Help/.test(traf),
-  'and no card repeats the name of its own first section');
+for (const h of ['Trends', 'Retention', 'Recent activity', 'Connections', 'Who visits', 'Ace’s Help', 'Data &amp; settings']) {
+  ok(!traf.includes('<h2>' + h + '</h2>'), 'no card groups subjects under « ' + h + ' » any more');
+}
 ok((traf.match(/class="cardrow"/g) || []).length === 1 && /<div class="cardrow">\s*<div class="card wcard" style="--mc:var\(--m-net\)">/.test(traf),
   'one paired row only: Internet and LAN side by side on the World page');
-ok(/\.tsec\{margin-top:20px;padding-top:16px;border-top:1px solid var\(--line\)\}/.test(admin),
-  'a section is separated by a rule and some air, not by another frame');
-ok(/\.card>h2\+\.tsec\{border-top:0/.test(admin),
-  'except the first one, which has nothing above it to separate from');
-ok(/\.tsec \.boardhead>h3\{[^}]*white-space:nowrap/.test(admin),
-  'a section title does not break, so its note can take the slack');
-ok((traf.match(/<div class="tsec">/g) || []).length === 15, 'fifteen sections spread across them (the /live spectator view, the 48 h by-mode chart and pokerth.net vs web client have their own)');
+ok(!/class="tsec"/.test(admin) && !/\.tsec\b/.test(admin), 'no section-inside-a-card is left, nor its style');
+ok(/#panel-traffic \.card>\.boardhead>h2\{white-space:nowrap\}/.test(admin), 'a card title does not break, so its note can take the slack');
+const cards = (k) => (tsub(k).match(/<div class="card"/g) || []).length;
+ok(cards('audience') === 3 && cards('activity') === 6 && cards('visitors') === 2 && cards('music') === 1 && cards('ace') === 1 && cards('data') === 4,
+  'one card per subject: Audience 3, Activity 6, Visitors 2, Music 1, Ace’s Help 1, Data 4');
+ok(/<div class="card" id="srcSec">/.test(traf) && /<div class="card" id="guideSec">/.test(traf), 'a subject keeps its id on its card');
 for (const id of ['btnNoCount', 'dbHost', 'btnTrafCsv', 'btnTrafReset', 'trafModes', 'trafEnv', 'trafMusic']) {
   ok(traf.includes('id="' + id + '"'), id + ' survived the split');
 }
@@ -647,7 +652,7 @@ ok(!/trafNvR/.test(admin),
 // leftover, not a choice.
 ok(!/Exclure mes propres visites|Ne pas compter mes visites/.test(admin),
   'no French left in the traffic panel');
-ok(/<h3>Exclude my own visits<\/h3>/.test(traf), 'the opt-out section is in English');
+ok(/<h2>Exclude my own visits<\/h2>/.test(traf), 'the opt-out card is in English');
 ok(traf.indexOf('id="trafBottom"') < traf.indexOf('id="btnNoCount"'),
   'and sits with the settings, after everything that is read rather than set');
 
