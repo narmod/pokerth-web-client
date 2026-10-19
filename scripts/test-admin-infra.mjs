@@ -85,10 +85,13 @@ ok($('clkCard').style.display === '' && $('clkEdit').textContent === 'Done' && $
 $('clkEdit').click();
 ok($('clkCard').style.display === 'none' && $('clkEdit').textContent === 'Customize the clocks', 'and Done closes them');
 ok($('discordHook').closest('#panel-broadcast') && $('discordHook').closest('.card').hasAttribute('data-master'), 'the Discord relay is in Broadcasts, master key only');
-// Each LAN card points at the other.
+// Each LAN card points at the other. web.190: what the login page's LAN
+// button lists sits on Game servers, beside the button's default server.
 const lanLinks = [...doc.querySelectorAll('[data-goto]')].map((a) => a.getAttribute('data-goto'));
-ok(lanLinks.includes('servers') && lanLinks.includes('landir'), 'LAN directory and the LAN / dedicated button link to each other');
-doc.querySelector('#lanCard [data-goto="landir"]').click();
+ok(lanLinks.includes('servers') && lanLinks.includes('landir'), 'LAN directory and Game servers link to each other');
+ok(['ldSetOffline', 'ldSetLocal', 'ldSetManual'].every((k) => $(k).closest('#ldLoginCard') && $(k).closest('#panel-servers')), 'offline servers, Local server and manual entry are on Game servers');
+ok(['ldSetCheck', 'ldSetHide', 'ldSetMax', 'ldSetPrivate'].every((k) => $(k).closest('#panel-landir')), 'the directory’s own settings stay in LAN directory');
+doc.querySelector('#ldLoginCard [data-goto="landir"]').click();
 await tick(150);
 ok(doc.querySelector('.tab.on') && doc.querySelector('.tab.on').dataset.t === 'landir', 'a link opens the section it names');
 ok(/\[id\^="panel-"\]>\.ovmodes\{column-span:all/.test(html), 'tiles span both columns of a two-column panel');

@@ -280,10 +280,15 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   ok(/at most 20 connections per IP/.test($('ldGlobalCap').textContent), 'the settings state the proxy-wide guard');
   ok(/board: weekly/.test(doc.querySelector('#ldEntries tr[data-id]').textContent), 'the table shows each server’s board period');
   ok($('ldSetManual') && $('ldSetManual').checked === true && $('ldSetLocal').checked === true && $('ldSetCheck').value === '5', 'settings are filled in');
-  $('ldSetManual').checked = false; $('ldSetSave').click();
+  // web.190: two cards, two saves, each sending only its own fields (the server merges).
+  $('ldSetManual').checked = false; $('ldSetSave2').click();
   await new Promise((r) => setTimeout(r, 50));
   const sp = posts.filter((p) => p.url.startsWith('/admin/lan-directory')).pop();
-  ok(sp && sp.body.action === 'settings' && sp.body.settings.manualEntry === false && sp.body.settings.localEntry === true && sp.body.settings.checkMinutes === 5, 'Save settings posts manual entry off, local server kept');
+  ok(sp && sp.body.action === 'settings' && sp.body.settings.manualEntry === false && sp.body.settings.localEntry === true && !('checkMinutes' in sp.body.settings), 'Game servers saves manual entry off, local server kept, nothing else');
+  $('ldSetSave').click();
+  await new Promise((r) => setTimeout(r, 50));
+  const sp2 = posts.filter((p) => p.url.startsWith('/admin/lan-directory')).pop();
+  ok(sp2 && sp2.body.settings.checkMinutes === 5 && !('manualEntry' in sp2.body.settings), 'LAN directory saves its own settings only');
   ok(errors.length === 0, 'the LAN directory tab threw nothing' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
 }
 // ── Broadcasts: one LAN server as a target ───────────────────────────────

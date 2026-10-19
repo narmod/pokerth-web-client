@@ -41,6 +41,13 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **The login page's LAN list is set on Game servers** (`web.190`, audit of 2026-10-19c, P6; Arnaud's choice C) —
+  what the LAN / dedicated button offers was split: its default server on Infrastructure › Game servers, and the
+  offline servers, the « Local server » entry and manual address entry in Community › LAN directory › Settings.
+  Those three options are now a « LAN list on the login page » card on Game servers, right under the button's
+  card, with their own Save (the directory merges settings, so each card sends only its own). LAN directory keeps
+  what runs the directory: health checks, auto-hide, requests per IP, refusing private addresses. A re-read no
+  longer undoes an unsaved edit in either card.
 - **Arrival notices live on Login screen only** (`web.189`, audit of 2026-10-19c, P2; Arnaud's choice B) — the
   welcome / rules message and the guest, LAN and registered-account notices open when a player arrives. Their cards
   followed the operator between Broadcasts and Login screen (`pxNoticesTo`); they now stay on Login screen, and
