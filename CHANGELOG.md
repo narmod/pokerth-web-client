@@ -41,6 +41,10 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Deployment: « Check now » before the update buttons** (`web.186`, audit of 2026-10-19c, P5) — the check and its
+  status line (branch, up to date or what is waiting, whether it needs a restart) sat under « Update automatically »,
+  though they serve the manual updates as much. They now head the Maintenance card, above « Update (no restart) »,
+  « Update & restart » and « Restart »: read what is waiting, then apply it.
 - **Client errors under Operations** (`web.185`, audit of 2026-10-19c, P4) — the script errors players' browsers
   report are not « live »: they sat in Live beside Sessions. They are now Operations › Client errors, next to
   Health & logs, where a server problem is looked into. Live keeps Sessions alone and opens it directly, like

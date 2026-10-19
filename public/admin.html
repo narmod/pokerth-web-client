@@ -1853,6 +1853,11 @@
       <div class="card">
         <h2>Maintenance</h2>
         <p class="muted">“Update (no restart)” pushes new client files live instantly without dropping connections; the other actions restart the server briefly — this page reconnects on its own.</p>
+        <!-- web.186: what the upstream holds comes first, then the actions that
+             apply it; it used to sit under « Update automatically » though it
+             serves the manual updates as much. -->
+        <div class="rowtop" style="margin:0 0 4px"><button id="btnUpdCheck" class="use">Check now</button></div>
+        <div id="autoUpdMsg" class="msg" style="margin:0 0 10px"></div>
         <div class="btnrow">
           <button id="btnUpdateNr" class="use">Update (no restart)</button>
           <button id="btnUpdate" class="use danger">Update &amp; restart</button>
@@ -1864,8 +1869,6 @@
           <p class="muted">Checks this server&#39;s branch every 15 minutes. An open connection is never cut this way.</p>
         <details class="more"><summary>When it acts</summary><p class="muted">Changes that only touch client files go live at once &mdash; nobody is disconnected. Anything needing a restart (proxy, dependencies) waits until <b>no one at all</b> is connected, then acts after the notice below; if someone connects in the meantime, it is called off and retried later. Players connected outside a game (pokerth.net direct, training) get the usual restart notice. Cancelling an automatic restart leaves that version alone until a newer one is published.</p></details>
           <div class="defrow fld"><span>Notice before a restart <span class="muted">(seconds, 10–3600, saved on change)</span></span><input id="autoUpdSec" type="number" min="10" max="3600" placeholder="60"></div>
-          <div class="rowtop"><button id="btnUpdCheck" class="use">Check now</button></div>
-          <div id="autoUpdMsg" class="msg"></div>
         </div>
         <div class="boardhead" style="margin-top:12px"><h2 class="h3">Last action log</h2><div class="bhact"><button id="updlogCopy" class="use">Copy</button><button id="btnUpdLog" class="use">Refresh</button></div></div>
         <pre id="updlog" class="logs" style="max-height:200px"></pre>
