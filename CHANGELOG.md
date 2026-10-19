@@ -30,6 +30,10 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Privacy: account section aligned with the pokerth.net policy** (`web.155`) — `pvAcct` (every catalogue) and
+  `privacy.html` now follow `ucp.php?mode=privacy` (2026-09-23): account data as pokerth.net lists it (password kept
+  only as a hash, optional country / gender / avatar, results, ranking), the connection data its game server processes
+  for every player, guests included, and webmaster@pokerth.net for account deletion.
 - **Privacy: « Your pokerth.net account » section** (`web.154`) — `privacy.html`, the in-app overlay (`pvAcctH`, `pvAcct`,
   in every catalogue) and `/privacy?lang=xx` now say that the account (nickname, e-mail, password, forum profile,
   statistics, ranking) is kept by pokerth.net under its own policy (linked: `ucp.php?mode=privacy`), and that the login

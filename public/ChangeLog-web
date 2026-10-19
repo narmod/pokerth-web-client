@@ -1,3 +1,6 @@
+2026-10-19 version 2.1.10-web.155:
+- improvement: the « Your pokerth.net account » section of the privacy policy now matches the pokerth.net policy: what the account holds, the connection data the game server processes for every player, and who to write to (webmaster@pokerth.net) to have an account deleted
+
 2026-10-19 version 2.1.10-web.154:
 - improvement: the privacy policy has a new section about your pokerth.net account: what pokerth.net keeps, a link to its own privacy policy, and how your password travels when you log in (passed on, never kept)
 

@@ -72,7 +72,7 @@ ok(!incomplete.length, 'every catalogue holds every privacy key (' + codes.lengt
 const enS = cats.en;
 for (const [k, needle] of [['pvSrv1', 'These totals may be combined'], ['pvSrv1', 'connected right now in each country'],
   ['pvSrv1', 'as a guest or with an account'], ['pvSrvGuide', 'backup offer'], ['pvSrvLan', 'salted hash'],
-  ['pvSrvLan', 'For the admins only'], ['pvAcct', 'passes them on'], ['pvAcct', 'password manager'],
+  ['pvSrvLan', 'For the admins only'], ['pvAcct', 'passes them on'], ['pvAcct', 'password manager'], ['pvAcct', 'guests included'], ['pvAcct', 'webmaster@pokerth.net'],
   ['pvUpdated', 'October 19, 2026']]) {
   ok(enS[k].indexOf(needle) !== -1 && priv.indexOf(needle) !== -1, 'English ' + k + ' matches privacy.html: “' + needle + '”');
 }
