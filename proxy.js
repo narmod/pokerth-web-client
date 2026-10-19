@@ -1883,7 +1883,9 @@ function seoLlmsTxt(base) {
     '- Feature parity with the official PokerTH desktop client\n' +
     (u ? '\n## Links\n\n- Play: ' + u + '/\n- FAQ: ' + u + '/faq\n- How to play, step by step: ' + u + '/how-to-play\n' +
          '- Texas Hold’em rules: ' + u + '/rules\n- Poker hand rankings: ' + u + '/hand-rankings\n' +
-         '- Poker glossary: ' + u + '/glossary\n- Competitions and coming dates: ' + u + '/competitions\n' : '\n## Links\n\n') +
+         '- Poker glossary: ' + u + '/glossary\n- Competitions and coming dates: ' + u + '/competitions\n' +
+         '- Privacy policy (also in every interface language: ' + u + '/privacy?lang=<code>): ' + u + '/privacy\n' +
+         '- pokerth.net accounts, game server and forum privacy policy: https://www.pokerth.net/ucp.php?mode=privacy\n' : '\n## Links\n\n') +
     '- Source code: https://github.com/narmod/pokerth-web-client\n' +
     '- PokerTH desktop client and server: https://github.com/pokerth/pokerth\n' +
     '- PokerTH project and forum: https://www.pokerth.net/\n';
@@ -6859,7 +6861,10 @@ function _seoPrivacyFromCat(S, h1) {
 }
 
 function seoPrivacyPage(res, method, lang) {
-  if (seoEnabled()) _seoSsr.refresh(PUBLIC_DIR);
+  // Loaded whatever the SEO toggle: the translated policy is served on every
+  // install (see the /privacy route). The first request after a start may get
+  // English while the catalog loads in the background.
+  _seoSsr.refresh(PUBLIC_DIR);
   var table = _seoPrivacyTable(), langs = seoPageLangs(table);
   if (langs.indexOf(lang) === -1) lang = '';
   var html;
@@ -13614,10 +13619,15 @@ const httpServer = http.createServer((req, res) => {
     return seoCompetitionsPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
   }
 
-  // Friendly path for the pack-creator Studio, mirroring /admin -> admin.html.
+  // The privacy policy is the same page on every install, indexing on or off:
+  // a player is owed it in their language whatever the operator chose for
+  // search engines. Only the robots tags follow the SEO toggle (noindex, no
+  // canonical or hreflang while it is off), so a test or self-hosted copy is
+  // never indexed as a duplicate of the live site.
   if (reqPathOnly === '/privacy' || reqPathOnly === '/privacy.html') {
-    return seoPrivacyPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+    return seoPrivacyPage(res, req.method, seoLangFromQuery(req.url));
   }
+  // Friendly path for the pack-creator Studio, mirroring /admin -> admin.html.
   if (reqPathOnly === '/studio' || reqPathOnly === '/studio.html') {
     const p = path.join(PUBLIC_DIR, 'studio.html');
     if (fs.existsSync(p)) return sendFile(req, res, p, 'text/html; charset=utf-8', 'no-store');

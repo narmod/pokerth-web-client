@@ -35,7 +35,11 @@ ok(fn('seoPrivacyPage').indexOf('seoContentPage(') !== -1, 'seoPrivacyPage rende
 
 // The route must hand over to the shared renderer, not stream the raw file.
 const route = src.slice(src.indexOf("if (reqPathOnly === '/privacy' || reqPathOnly === '/privacy.html')"));
-ok(/^[^}]*return seoPrivacyPage\(res, req\.method, seoEnabled\(\) \? seoLangFromQuery\(req\.url\) : ''\);/.test(route), '/privacy and /privacy.html route to seoPrivacyPage');
+ok(/^[^}]*return seoPrivacyPage\(res, req\.method, seoLangFromQuery\(req\.url\)\);/.test(route), '/privacy and /privacy.html route to seoPrivacyPage, in the asked language whatever the SEO toggle');
+ok(/function seoPrivacyPage[^{]*\{[\s\S]{0,400}?\n  _seoSsr\.refresh\(PUBLIC_DIR\);/.test(src), 'the translation catalog is loaded for /privacy even with indexing off');
+ok(/Privacy policy \(also in every interface language/.test(fn('seoLlmsTxt')) && /ucp\.php\?mode=privacy/.test(fn('seoLlmsTxt')), 'llms.txt points AI crawlers at the privacy pages');
+const pjs = readFileSync(join(root, 'public', 'pokerth.js'), 'utf8');
+ok(/function privacyWeb\(\)\{ return navigator\.onLine !== false; \}/.test(pjs), 'the footer link opens the web page on every install (in-app window only offline)');
 
 const _seoPrivacyBody = new Function(extract + '; return _seoPrivacyBody;')();
 const pv = _seoPrivacyBody(priv);

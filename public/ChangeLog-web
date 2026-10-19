@@ -1,3 +1,6 @@
+2026-10-19 version 2.1.10-web.157:
+- improvement: the privacy page is the same, in your language, on every server running the web client, including LAN and self-hosted ones
+
 2026-10-19 version 2.1.10-web.156:
 - improvement: « Privacy » at the bottom of the login screen opens the privacy page in your language, in the same format as the FAQ and the rules
 

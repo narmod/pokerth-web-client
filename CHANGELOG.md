@@ -30,6 +30,12 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **`/privacy` translated on every install, indexing on or off** (`web.157`) — the route no longer drops `?lang=` and
+  the catalog loads whatever the SEO toggle, so a self-hosted or test copy serves the same translated policy as the
+  live site; only the robots tags follow the toggle (`noindex`, no canonical or hreflang while off, so a copy is never
+  indexed as a duplicate). The footer link always opens the web page (the in-app window only offline). `llms.txt`
+  now lists `/privacy`, its `?lang=` variants and the pokerth.net account policy. Checked with SEO on: `/privacy?lang=xx`
+  returns the full server-rendered text with JSON-LD to Googlebot, GPTBot, ClaudeBot and PerplexityBot alike.
 - **Connect footer « Privacy » opens `/privacy?lang=<UI language>`** (`web.156`) — it opened the in-app window. Where the
   server publishes the content pages (the footer carries `#cf-seo`) and the device is online, `openPrivacyPage()` now
   goes to the web page in the current UI language, the same format as `/faq` and `/rules`; the link's `href` follows
