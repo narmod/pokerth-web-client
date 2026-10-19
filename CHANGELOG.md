@@ -30,6 +30,10 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Admin popups on Login screen too** (`web.159`) — the welcome, guest, LAN and registered-account popups are edited
+  from Community › Broadcasts and from Player experience › Login screen. One editor per popup, not two copies: its
+  card moves into whichever of the two sections is opened, with its unsaved text, its fold and its handlers
+  (`pxNoticesTo`).
 - **Admin › Player experience reorganised around the player** (`web.158`) — the two pages *Modes & features* and
   *Defaults* become four, in the order a player meets them. **Login screen**: the entry modes with the mode a first
   visit opens on (saved on change like the modes; a hidden mode cannot be picked, and a default pointing at one is

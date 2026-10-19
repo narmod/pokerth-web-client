@@ -2152,6 +2152,15 @@
       if(r.ok && String(opts.method||'GET').toUpperCase()==='POST') { try{ cfgAfterPost(path, r.clone()); }catch(e){} }
       return r;
     }); }
+  // The four popups (welcome, guest, LAN, account) belong to two sections: what
+  // players are told (Broadcasts) and what they meet on arriving (Login
+  // screen). There is one editor of each, not two copies kept in step: its
+  // card follows the operator into whichever of the two sections is open, with
+  // its unsaved text, its fold and its handlers.
+  function pxNoticesTo(id){
+    var p=$(id); if(!p) return;
+    ['wcEnabled','gwEnabled','lwEnabled','awEnabled'].forEach(function(k){ var e=$(k), c=e&&e.closest('.card'); if(c&&c.parentNode!==p) p.appendChild(c); });
+  }
   // ── Unsaved edits ─────────────────────────────────────────────────────
   // A card holds an unsaved edit from its first keystroke until a write made
   // from it succeeds (the card of the last click is the one being saved).
@@ -3237,7 +3246,8 @@
     if(t==='servers'){ loadServers(); loadStatus(!cfgAnyDirty()); }
     if(t==='landir') loadLanDir();
     if(t==='polls') loadPolls();
-    if(t==='broadcast'){ loadBroadcasts(); if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); } }
+    if(t==='broadcast'){ pxNoticesTo('panel-broadcast'); loadBroadcasts(); if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); } }
+    if(t==='login'){ pxNoticesTo('panel-login'); if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); } }
     if(t==='login'||t==='lobby'){ loadStatus(!cfgAnyDirty()); loadFeatureSwitches(); }
     if(t==='firstvisit'){ loadStatus(!cfgAnyDirty()); }
     if(t==='features') loadFeatureSwitches();

@@ -80,7 +80,16 @@ ok(modes[1].classList.contains('off') && /hidden from the login screen/.test(mod
 const lanOpt = [...$('defMode').options].find((o) => o.value === 'lan-dedi');
 ok(lanOpt.disabled && /\(hidden\)$/.test(lanOpt.textContent), 'a hidden mode cannot be picked as the first-visit mode');
 ok($('defMode').closest('#panel-login') && $('srvName').closest('#panel-login') && $('lsUrl').closest('#panel-login'), 'entry modes, server identity and live figures live on Login screen');
-ok(doc.querySelectorAll('#panel-login > .card').length === 3, 'Login screen holds three cards');
+const notices = ['wcEnabled', 'gwEnabled', 'lwEnabled', 'awEnabled'];
+ok(notices.every((k) => $(k).closest('.card').parentNode === $('panel-login')), 'the four popups are on Login screen too');
+ok(doc.querySelectorAll('#panel-login > .card').length === 7, 'Login screen holds its three cards and the four popups');
+typeIn('wcTitle', 'Hello, unsaved');
+await open('broadcast');
+ok(notices.every((k) => $(k).closest('.card').parentNode === $('panel-broadcast')) && $('wcTitle').value === 'Hello, unsaved',
+  'back in Broadcasts it is the same editor, unsaved text included');
+ok(doc.querySelectorAll('[id="wcTitle"]').length === 1, 'one editor per popup, never a copy');
+await open('login');
+ok($('wcEnabled').closest('#panel-login'), 'and it follows the operator back to Login screen');
 
 // An unsaved LAN edit on Game servers is never sent by the mode select.
 typeIn('defHost', 'typed.but.unsaved');
