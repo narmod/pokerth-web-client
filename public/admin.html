@@ -458,12 +458,24 @@
   .fld>input[type=number]{width:110px}
   .fld>select{width:130px}
   .fld>input,.fld>select{margin:0}
+  /* Every settings row lines its control up with the rows above and below it:
+     one width for a text field, a number and a list, ending at the row's right
+     edge. A text field used to start wherever its label ended, so the fields
+     of a card formed a staircase (Search engines, Proxy, the MySQL mirror). A
+     check box or a radio button keeps its own size. */
+  .fld:not(.left):not(.chk)>input:not([type=checkbox]):not([type=radio]),
+  .fld:not(.left):not(.chk)>select{flex:0 0 260px;width:260px}
+  /* A button that belongs to the field above it, right-aligned under it. */
+  .fldact{display:flex;justify-content:flex-end;max-width:560px;margin:-1px 0 5px}
   @media(max-width:600px){
     /* Sur telephone, un champ de 110 px colle au bord droit est penible a
        viser : libelle sur une ligne, controle pleine largeur en dessous. */
     .fld{max-width:none;gap:3px}
     .fld>span:first-child{flex:1 1 100%}
     .fld>input,.fld>select,.fld>textarea{flex:1 1 100%;width:100%;min-width:0}
+    .fld:not(.left):not(.chk)>input:not([type=checkbox]):not([type=radio]),
+    .fld:not(.left):not(.chk)>select{flex:1 1 100%;width:100%}
+    .fldact{max-width:none}
   }
   .srow{display:flex;justify-content:space-between;gap:10px;padding:6px 2px;border-top:1px solid rgba(255,255,255,.06);font-size:.85rem}
   .srow:first-child{border-top:0}.srow span{color:var(--text)}.srow b{color:var(--cream);text-align:right}
@@ -1618,11 +1630,8 @@
       <div class="card" data-master="1">
         <h2>Leaderboard reset</h2>
         <p class="muted">For the default board (the local server and typed addresses). Each listed LAN server has its own period, set in Community › LAN directory.</p>
-        <label for="period">Automatic reset period</label>
-        <div class="periodrow">
-          <select id="period"><option value="off">Off</option><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select>
-          <button id="savePeriod" class="use" data-save>Save</button>
-        </div>
+        <div class="defrow fld"><span id="periodLab">Automatic reset period</span><select id="period" aria-labelledby="periodLab"><option value="off">Off</option><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select></div>
+        <div class="rowtop"><button id="savePeriod" class="use" data-save>Save</button></div>
         <div id="periodmsg" class="msg"></div>
       </div>
     </div>
@@ -1767,7 +1776,8 @@
         <details class="more"><summary>What the preset sets</summary><p class="muted">Indexing on, the public URL, <code>PokerTH</code> as the site name, AI crawlers allowed, and the branding overrides left empty so each language keeps its own translated title and description. Your Search Console, Bing and Yandex tokens are not touched &mdash; they belong to your accounts, not to the preset.</p></details>
         <div class="rowtop"><button id="seoPreset" class="use">Fill in pokerth.net settings</button></div>
         <div class="defrow fld"><span>Search engine indexing</span><select id="seoEnabled"><option value="0">Off (default)</option><option value="1">On</option></select></div>
-        <div class="defrow fld"><span style="white-space:nowrap">Public URL</span><input id="seoUrl" maxlength="200" placeholder="https://webclient.pokerth.net" autocomplete="off"><button id="seoUrlHere" class="use" style="flex:none;white-space:nowrap">Use this address</button></div>
+        <div class="defrow fld"><span style="white-space:nowrap">Public URL</span><input id="seoUrl" maxlength="200" placeholder="https://webclient.pokerth.net" autocomplete="off"></div>
+        <div class="fldact"><button id="seoUrlHere" class="use">Use this address</button></div>
         <div class="defrow fld"><span style="white-space:nowrap">Search Console token</span><input id="seoGsv" maxlength="100" placeholder="google-site-verification (optional)" autocomplete="off"></div>
         <div class="defrow fld"><span style="white-space:nowrap">Bing Webmaster token</span><input id="seoBing" maxlength="100" placeholder="msvalidate.01 (optional)" autocomplete="off"></div>
         <div class="defrow fld"><span style="white-space:nowrap">Yandex token</span><input id="seoYandex" maxlength="100" placeholder="yandex-verification (optional)" autocomplete="off"></div>

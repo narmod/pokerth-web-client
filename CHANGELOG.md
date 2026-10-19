@@ -32,6 +32,12 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Admin field alignment** (`web.177`, audit of 2026-10-19c, lot 2) — the fixed control width of the settings rows
+  (260 px) applied to Login screen, Lobby & tables, First visit and the LAN card only; elsewhere a text field started
+  where its label ended and numbers or lists kept 110 / 130 px, so the fields of Search engines, Proxy and the MySQL
+  mirror formed a staircase. The rule is now global (music keeps its own layout; check boxes and radio buttons keep
+  their size; phones still get full-width fields). « Use this address » sits under the Public URL field; the
+  leaderboard reset period is a settings row with its Save below, like the other cards.
 - **Admin theme coverage** (`web.176`, audit of 2026-10-19c, lot 1) — the theme now reaches what it missed: links
   between sections used the browser's default blue (contrast 1.8 on the dark panels); check boxes, radio buttons,
   the date picker, drop-down lists and scroll bars ignored the theme (no `color-scheme` / `accent-color`); the
