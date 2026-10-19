@@ -439,6 +439,8 @@ const home = {
 for (const [k, ids] of Object.entries(home)) {
   for (const id of ids) ok(tsub(k).includes('id="' + id + '"'), id + ' lives under ' + k);
 }
+ok(/<section class="ovmodes" id="trafCards"/.test(traf) && /<section class="ovmodes" id="trafKpis"/.test(traf), 'Summary’s figures are rows of the admin tile, not boxes in a card (web.181)');
+ok(/#trafCards>\.tstat,#trafKpis>\.kpi\{[^}]*border-top:3px solid var\(--mc,var\(--muted\)\)/.test(admin) && /#trafCards>\.tstat\.up,#trafKpis>\.kpi\.up\{--mc:var\(--ok-text\)/.test(admin), 'their top edge carries the trend');
 ok(tsub('overview').indexOf('id="trafKpis"') < tsub('overview').indexOf('id="trafBottom"'),
   'the overview reads the figures, then the conclusion drawn from them');
 // web.180: one card per subject, as on every other admin page (the

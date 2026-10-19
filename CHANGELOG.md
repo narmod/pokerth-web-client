@@ -32,6 +32,10 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Statistics › Summary tiles like every other page** (`web.181`, audit of 2026-10-19c, S3) — its eight figures sat
+  as boxes inside a card, with their own size and grid (one column on a phone for the second row). They are now two
+  rows of the admin tile: panel colour, coloured top edge, four across and two on a phone. The top edge carries the
+  trend the box border used to carry (green rising, red falling, grey flat or nothing to compare).
 - **Statistics: one card per subject** (`web.180`, audit of 2026-10-19c, S4; reverses the sections of `web.119`,
   Arnaud's decision) — every other admin page gives each subject its own card; Statistics packed a page into one
   or two cards split by rules, headed by a group name that often repeated the page (Visitors › « Who visits »).

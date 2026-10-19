@@ -178,6 +178,17 @@
   .kpi .lbl{font-size:.68rem;color:var(--text);text-transform:uppercase;letter-spacing:.06em}
   .kpi .big{font-size:1.75rem;font-weight:800;color:var(--gold);margin-top:5px;line-height:1.15;font-variant-numeric:tabular-nums}
   .kpi .sub{font-size:.74rem;color:var(--text);margin-top:5px;line-height:1.4}
+  /* Statistics › Summary (web.181): its two rows of four take the tile of
+     every other admin page (a coloured top edge on the panel colour, four
+     across, two on a phone) instead of boxes inside a card. The top edge
+     carries the trend: green rising, red falling, grey flat or nothing to
+     compare; the side edges keep their tint. */
+  #trafCards>.tstat,#trafKpis>.kpi{display:flex;flex-direction:column;gap:3px;padding:14px;border-radius:12px;background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--mc,var(--muted));min-width:0}
+  #trafCards>.tstat.up,#trafKpis>.kpi.up{--mc:var(--ok-text);border-color:rgba(127,209,127,.45);border-top-color:var(--mc)}
+  #trafCards>.tstat.dn,#trafKpis>.kpi.dn{--mc:var(--err-text);border-color:rgba(232,115,92,.45);border-top-color:var(--mc)}
+  #trafCards .lbl,#trafKpis .lbl{font-size:.72rem;color:var(--muted);letter-spacing:.06em}
+  #trafCards .big,#trafKpis .big{font-size:1.85rem;font-weight:600;margin-top:0;line-height:1.15}
+  #trafCards .sub,#trafKpis .sub{margin:0}
   /* A note that qualifies the chart belongs beside its title, not under it:
      it takes the slack in the header row and stays out of the way. */
   .headnote{flex:1 1 120px;min-width:0;text-align:right;font-size:.73rem;color:var(--text)}
@@ -1317,10 +1328,8 @@
         </div>
       </section>
       <div class="tsub" data-ts="overview" role="tabpanel" aria-label="Overview">
-      <div class="card">
-        <div class="trafgrid" id="trafCards"><div class="empty">Loading…</div></div>
-        <div class="kpirow" id="trafKpis"><div class="empty">Loading…</div></div>
-      </div>
+      <section class="ovmodes" id="trafCards" aria-label="Visits at a glance"><div class="empty">Loading…</div></section>
+      <section class="ovmodes" id="trafKpis" aria-label="Where the visits are heading"><div class="empty">Loading…</div></section>
       <div class="card">
         <h2>Bottom line</h2>
         <p class="muted xpl">What the figures in the other sections add up to, stated in plain words. Each line is derived, not written by hand — a claim disappears when the measurement behind it is missing.</p>
