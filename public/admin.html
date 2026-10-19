@@ -7046,7 +7046,7 @@
     }
     var os = /iPhone/.test(ua)?'iPhone' : /iPad/.test(ua)?'iPad' : /Android/.test(ua)?'Android'
            : /Windows/.test(ua)?'Windows' : /Mac OS X/.test(ua)?'Mac' : /Linux/.test(ua)?'Linux' : '';
-    var br = /Edg\//.test(ua)?'Edge' : /OPR\//.test(ua)?'Opera' : /Firefox\//.test(ua)?'Firefox'
+    var br = /Edg(?:e|A|iOS)?\//.test(ua)?'Edge' : /OPR\//.test(ua)?'Opera' : /Firefox\//.test(ua)?'Firefox'
            : /Chrome\//.test(ua)?'Chrome' : /Safari\//.test(ua)?'Safari' : '';
     return [os,br].filter(Boolean).join(' \u00b7 ');
   }

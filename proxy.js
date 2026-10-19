@@ -8445,8 +8445,11 @@ const UA_OS = [
 ];
 // L'ordre compte : Chrome et Edge annoncent tous deux « Safari », Edge annonce
 // « Chrome ». On teste donc du plus spécifique au plus générique.
+// Edge signs Edg/ on a computer, EdgA/ on Android and EdgiOS/ on iPhone/iPad
+// (the last two used to be counted as Chrome and Safari); Edge/ = legacy Edge.
+// Checked by scripts/test-ua-browser.mjs.
 const UA_BROWSER = [
-  [/Edg\//, 'Edge'], [/OPR\/|Opera/, 'Opera'], [/SamsungBrowser/, 'Samsung'],
+  [/Edg(?:e|A|iOS)?\//, 'Edge'], [/OPR\/|Opera/, 'Opera'], [/SamsungBrowser/, 'Samsung'],
   [/FxiOS|Firefox\//, 'Firefox'], [/CriOS/, 'Chrome'], [/Chrome\//, 'Chrome'], [/Safari\//, 'Safari'],
 ];
 // Bot-likeness (mesure, jamais filtre) : UA d'automate connu. Combiné plus

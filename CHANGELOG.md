@@ -701,6 +701,10 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Edge on Android and iPhone counted as Edge** (`web.151`) — Admin › Visitors (`UA_BROWSER` in `proxy.js`) and
+  the device label of Admin › Errors / sessions (`_seDev`, `admin.html`) only knew desktop Edge's `Edg/`: Edge on
+  Android (`EdgA/`) was counted as Chrome, on iPhone / iPad (`EdgiOS/`) as Safari, legacy Edge (`Edge/`) as Chrome.
+  Totals already recorded keep their old label. `scripts/test-ua-browser.mjs` (`npm run test:ua-browser`).
 - **Avatar « Save image » no longer relaunches the iOS app** (`web.149`, `150`) — in a home-screen app on
   iPhone / iPad, the `<a download>` of the blob navigated the app's single web view to the file preview, and
   closing it relaunched the app. There the menu now hides Save and keeps Share (`navigator.share`; the sheet's
