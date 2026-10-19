@@ -1,3 +1,6 @@
+2026-10-19 version 2.1.10-web.156:
+- improvement: « Privacy » at the bottom of the login screen opens the privacy page in your language, in the same format as the FAQ and the rules
+
 2026-10-19 version 2.1.10-web.155:
 - improvement: the « Your pokerth.net account » section of the privacy policy now matches the pokerth.net policy: what the account holds, the connection data the game server processes for every player, and who to write to (webmaster@pokerth.net) to have an account deleted
 

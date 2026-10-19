@@ -11889,7 +11889,28 @@ function renderPlayersList() {
 /* ── Page Privacy in-app (même entête cp-header que les autres écrans) ── */
 ;(function(){
   function $(id){ return document.getElementById(id); }
+  // The policy as a web page, in the player's language — the same format as
+  // /faq and /rules. Offered only where the server publishes those pages: the
+  // connect footer then carries #cf-seo. A self-hosted install with indexing
+  // off serves /privacy in English only, and offline the page cannot load:
+  // both keep the in-app window, which follows the UI language.
+  function privacyUrl(){
+    var l = window._lang || '';
+    return '/privacy' + (l && l !== 'en' ? '?lang=' + encodeURIComponent(l) : '');
+  }
+  function privacyWeb(){ return !!$('cf-seo') && navigator.onLine !== false; }
+  // Keep the footer link's href in step with the language, so a long press or
+  // "open in a new tab" reaches the same page as a plain click.
+  function syncPrivacyHref(){
+    var a = document.querySelector('a[onclick*="openPrivacyPage"]');
+    if (a) a.setAttribute('href', $('cf-seo') ? privacyUrl() : '/privacy');
+  }
+  // i18n.mjs is a module and may not be loaded yet when this runs: subscribe
+  // once the DOM is ready (onLangChange ignores a second subscription).
+  function initPrivacyHref(){ if (window._onLangChange) window._onLangChange(syncPrivacyHref); syncPrivacyHref(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initPrivacyHref); else initPrivacyHref();
   window.openPrivacyPage = function(){
+    if (privacyWeb()) { location.href = privacyUrl(); return; }
     var p = $('privacy-page'); if (!p) return;
     p.style.display = 'flex';
   };
@@ -12260,7 +12281,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.155'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.156'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

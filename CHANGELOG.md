@@ -30,6 +30,10 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Connect footer « Privacy » opens `/privacy?lang=<UI language>`** (`web.156`) — it opened the in-app window. Where the
+  server publishes the content pages (the footer carries `#cf-seo`) and the device is online, `openPrivacyPage()` now
+  goes to the web page in the current UI language, the same format as `/faq` and `/rules`; the link's `href` follows
+  language changes. With indexing off (English-only `/privacy`) or offline, the in-app window opens as before.
 - **Privacy: account section aligned with the pokerth.net policy** (`web.155`) — `pvAcct` (every catalogue) and
   `privacy.html` now follow `ucp.php?mode=privacy` (2026-09-23): account data as pokerth.net lists it (password kept
   only as a hash, optional country / gender / avatar, results, ranking), the connection data its game server processes
