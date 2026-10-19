@@ -1,3 +1,6 @@
+2026-10-19 version 2.1.10-web.145:
+- bugfix: after a game in training mode, connecting to a LAN server or to PokerTH.net works again without reloading the page (the connection used to drop at once)
+
 2026-10-18 version 2.1.10-web.140:
 - bugfix: when the hand-history database component failed to download (a brief network drop), the .pdb export and the automatic log saving stayed stuck for the rest of the session; the download is now retried and a later attempt works again
 

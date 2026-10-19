@@ -134,7 +134,8 @@ export class FakeServer {
   }
 
   _onInit(){
-    this._send('InitAck',   [[1,2,new Uint8Array([1,2,3,4])],[2,0,this.meId]]);
+    // 16-byte session GUID, the size the real server issues (and validates).
+    this._send('InitAck',   [[1,2,new Uint8Array(16).map((_, i) => i + 1)],[2,0,this.meId]]);
     this._send('PlayerList',[[1,0,this.meId],[2,0,0]]);   // -> client lands in the lobby
   }
 

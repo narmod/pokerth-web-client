@@ -34,6 +34,8 @@ ok(!!backG && backG.length === 16 && _guid.every((b, i) => b === backG[i]),
    'buildInit: myLastSessionId roundtrip byte-for-byte (16 bytes, NUL-safe)');
 ok(Proto.raw(MSG.parse(MSG.buildInit('T', 5, 1, 0, null, null, new Uint8Array(0))).sub, 3) === null,
    'buildInit: empty GUID -> field 3 omitted');
+ok(Proto.raw(MSG.parse(MSG.buildInit('T', 5, 1, 0, null, null, new Uint8Array([1, 2, 3, 4]))).sub, 3) === null,
+   'buildInit: GUID not 16 bytes -> field 3 omitted (the server would close the session)');
 const initGP = MSG.parse(MSG.buildInit('T', 5, 1, 2, null, 'srvpw', _guid));
 ok(Proto.str(initGP.sub, 4) === 'srvpw' && Proto.raw(initGP.sub, 3).length === 16,
    'buildInit: authServerPassword (4) and myLastSessionId (3) coexist');

@@ -194,7 +194,11 @@ function onInitAck(sub) {
     // Only written to pth_resume once we are actually seated (onJoinGameAck) --
     // same timing as the QML client, where WriteSessionGuidToFile() is called
     // from ClientThread::InitGame() rather than at login.
-    S._sessionGuid = Proto.raw(sub, 1);
+    // Training: the local fake server's GUID means nothing to a real server.
+    // Kept, it was replayed as myLastSessionId by the next LAN / Internet
+    // login and the server closed the session on the spot (invalid size) --
+    // only a page reload cleared it.
+    S._sessionGuid = window._offlineMode ? null : Proto.raw(sub, 1);
     // Nouvelle session : le compteur de battements repart de zero. Il peut
     // s'agir d'un AUTRE serveur (2.0.x, sans heartbeat) — garder l'ancien
     // compte armerait le watchdog lobby sur un serveur muet, qui se ferait alors

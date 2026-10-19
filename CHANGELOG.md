@@ -683,6 +683,18 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Training → LAN / Internet without a reload** (`web.145`) — the training fake server answered Init with a
+  4-byte session GUID, which the client kept and replayed as `InitMessage.myLastSessionId` on the next network
+  login. The server's `NetPacketValidator::ValidateInitMessage` only accepts 16 bytes and closes the session
+  otherwise, so every attempt (and every automatic retry) dropped at once until a page reload. `onInitAck` no
+  longer keeps a training GUID, `buildInit` sends the field only when it is exactly 16 bytes, and the fake
+  server now issues 16 bytes. `scripts/test-offline-to-network-browser.mjs` covers it through `proxy.js`.
+- **Training → LAN / Internet without a reload** (`web.145`) — the training fake server answered Init with a
+  4-byte session GUID, which the client kept and replayed as `InitMessage.myLastSessionId` on the next network
+  login. The server's `NetPacketValidator::ValidateInitMessage` only accepts 16 bytes and closes the session
+  otherwise, so every attempt (and every automatic retry) dropped at once until a page reload. `onInitAck` no
+  longer keeps a training GUID, `buildInit` sends the field only when it is exactly 16 bytes, and the fake
+  server now issues 16 bytes. `scripts/test-offline-to-network-browser.mjs` covers it through `proxy.js`.
 - **sql.js load no longer hangs; less injected-script noise** (`web.140`) — sql.js fetches its `.wasm` with
   `fetch().then()` and no rejection handler: one failed fetch raised « Unhandled rejection: Failed to fetch » and
   left `initSqlJs()` pending forever, so .pdb export, import and autosave waited on it for the whole session.

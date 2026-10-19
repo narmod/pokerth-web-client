@@ -293,7 +293,11 @@ const MSG = (() => {
     // servergamestate.cpp:943. Mirrors the QML client (guid.tmp,
     // clientstate.cpp:1380). Omitted when absent: a first login has nothing to
     // replay, and an empty value would never match a live seat anyway.
-    if (lastSessionId && lastSessionId.length) {
+    // Exactly 16 bytes or nothing: the server's NetPacketValidator
+    // (ValidateInitMessage) rejects any other size and CLOSES the session, so
+    // a malformed GUID turns every login into an instant drop (seen after the
+    // training mode, whose fake server handed out a 4-byte GUID).
+    if (lastSessionId && lastSessionId.length === 16) {
       fields.push([3, 2, lastSessionId]); // myLastSessionId
     }
     // Mot de passe SERVEUR (authServerPassword, champ 4, string). Le serveur
