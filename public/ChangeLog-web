@@ -1,3 +1,6 @@
+2026-10-19 version 2.1.10-web.153:
+- improvement: the privacy policy now says, in every language, what is counted when you connect and log in, and how a server you propose for the LAN list is handled; the privacy page of the website is translated too
+
 2026-10-19 version 2.1.10-web.150:
 - bugfix: in the app installed on an iPhone or iPad, saving your avatar no longer reloads the app; the avatar maker's menu now offers « Share… », whose « Save Image » entry puts the avatar in your Photos
 

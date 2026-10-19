@@ -35,7 +35,7 @@ ok(fn('seoPrivacyPage').indexOf('seoContentPage(') !== -1, 'seoPrivacyPage rende
 
 // The route must hand over to the shared renderer, not stream the raw file.
 const route = src.slice(src.indexOf("if (reqPathOnly === '/privacy' || reqPathOnly === '/privacy.html')"));
-ok(/^[^}]*return seoPrivacyPage\(res, req\.method\);/.test(route), '/privacy and /privacy.html route to seoPrivacyPage');
+ok(/^[^}]*return seoPrivacyPage\(res, req\.method, seoEnabled\(\) \? seoLangFromQuery\(req\.url\) : ''\);/.test(route), '/privacy and /privacy.html route to seoPrivacyPage');
 
 const _seoPrivacyBody = new Function(extract + '; return _seoPrivacyBody;')();
 const pv = _seoPrivacyBody(priv);
@@ -52,6 +52,49 @@ ok(/^\d{4}-\d{2}-\d{2}$/.test(pv.modified), 'dateModified parsed from "Last upda
 // Robustness: markers missing -> fall back to the whole <body>.
 const fb = _seoPrivacyBody('<html><body><p>plain</p></body></html>');
 ok(fb.body.indexOf('<p>plain</p>') !== -1 && fb.modified === '', 'fallback keeps the <body> content when markers are absent');
+
+// ── Translated variants (/privacy?lang=xx) ────────────────────────
+// Built from the in-app overlay's pv* strings. Every catalogue must hold the
+// whole policy, and the English strings must say what privacy.html says, or
+// the translated pages would quietly promise less than the reference text.
+const { pathToFileURL } = await import('node:url');
+const { readdirSync } = await import('node:fs');
+const pvKeysSrc = /var PV_KEYS = (\[[\s\S]*?\]);/.exec(src);
+ok(!!pvKeysSrc, 'PV_KEYS is defined');
+const PV_KEYS = pvKeysSrc ? (0, eval)(pvKeysSrc[1]) : [];
+ok(PV_KEYS.indexOf('pvSrvLan') !== -1, 'PV_KEYS includes the server-proposal item');
+const langDir = join(root, 'public', 'modules', 'lang');
+const codes = readdirSync(langDir).filter(f => f.endsWith('.mjs')).map(f => f.slice(0, -4));
+const cats = {};
+for (const c of codes) cats[c] = (await import(pathToFileURL(join(langDir, c + '.mjs')).href)).strings;
+const incomplete = codes.filter(c => PV_KEYS.some(k => typeof cats[c][k] !== 'string' || !cats[c][k]));
+ok(!incomplete.length, 'every catalogue holds every privacy key (' + codes.length + ' languages)' + (incomplete.length ? ': ' + incomplete.join(' ') : ''));
+const enS = cats.en;
+for (const [k, needle] of [['pvSrv1', 'These totals may be combined'], ['pvSrv1', 'connected right now in each country'],
+  ['pvSrv1', 'as a guest or with an account'], ['pvSrvGuide', 'backup offer'], ['pvSrvLan', 'salted hash'],
+  ['pvSrvLan', 'For the admins only']]) {
+  ok(enS[k].indexOf(needle) !== -1 && priv.indexOf(needle) !== -1, 'English ' + k + ' matches privacy.html: “' + needle + '”');
+}
+const same = codes.filter(c => c !== 'en' && ['pvSrv1', 'pvSrvGuide', 'pvSrvLan'].some(k => cats[c][k] === enS[k]));
+ok(!same.length, 'the updated items are translated, not copied from English' + (same.length ? ': ' + same.join(' ') : ''));
+
+const fromCat = new Function(fn('_seoPrivacyFromCat') + '; return _seoPrivacyFromCat;')();
+const fr = fromCat(cats.fr, 'PokerTH Web Client — Politique de confidentialité');
+ok(/^<h1>PokerTH Web Client — Politique/.test(fr), 'translated page opens with its own <h1>');
+ok((fr.match(/<h2>/g) || []).length === (priv.match(/<h2>/g) || []).length, 'translated page has the same sections as the English one');
+ok((fr.match(/<li>/g) || []).length === 11, 'translated page lists the 8 server items and the 3 licence links');
+ok(/<li><strong>Statistiques de visite<\/strong> : /.test(fr), 'the "Label :" lead-in is set bold (French spacing kept)');
+ok(/<li><strong>[^<]+<\/strong>：/.test(fromCat(cats.zh)), 'a full-width colon is recognised too');
+const evil = Object.fromEntries(PV_KEYS.map(k => [k, 'x<script>y']));
+ok(fromCat(evil).indexOf('<script>') === -1, 'catalogue text is escaped');
+
+const meta = (await import(pathToFileURL(join(root, 'seo-i18n', 'privacy.js')).href)).default;
+const seoCodes = codes.filter(c => c !== 'en').map(c => ({ 'pt-br': 'pt-BR', 'pt-pt': 'pt-PT', 'zh-hk': 'zh-HK', 'zh-tw': 'zh-TW' })[c] || c);
+const noMeta = seoCodes.filter(c => !meta[c] || !meta[c].h1 || !meta[c].desc);
+ok(!noMeta.length, 'seo-i18n/privacy.js has a heading and a description for every language' + (noMeta.length ? ': ' + noMeta.join(' ') : ''));
+
+const app = readFileSync(join(root, 'public', 'pokerth-client.html'), 'utf8');
+ok(app.indexOf('data-i18n="pvSrvLan"') !== -1, 'the in-app overlay shows the server-proposal item');
 
 console.log(`\n${n - fail}/${n} passed`);
 process.exit(fail ? 1 : 0);

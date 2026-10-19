@@ -30,6 +30,15 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **`/privacy?lang=xx` in all 82 translated languages; in-app privacy text brought level with `privacy.html`** (`web.153`) —
+  the in-app privacy overlay (`pv*` keys) had fallen behind the reference page: `pvSrv1` now also covers the live
+  per-country connection count, guest / account logins and LAN servers counted by list entry, and the combined totals;
+  `pvSrvGuide` the local backup offer; the new `pvSrvLan` item covers server proposals from the login page (admin-only
+  fields, contact erased on decision, salted IP hash kept 30 days). Translated into every catalogue. `/privacy?lang=xx`
+  is now built from those strings through the `seo-i18n/ssr.js` catalog (English still comes from `privacy.html`),
+  with heading and search description in `seo-i18n/privacy.js`; it joins the nav, crawler links, sitemap, hreflang,
+  IndexNow and the Admin › SEO coverage check like the other content pages. `scripts/test-seo-privacy.mjs` now also
+  checks that every catalogue holds the whole policy and that the English strings match `privacy.html`.
 - **`/privacy` in the same page shell as `/faq` and `/rules`** (`web.152`) — the privacy policy was sent as
   `public/privacy.html` with its own header and colours, no site nav, no Open Graph card and no breadcrumbs. It is now
   rendered by `seoContentPage()` like the other content pages: shared nav and styles, canonical, Open Graph /

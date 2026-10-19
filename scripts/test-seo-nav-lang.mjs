@@ -43,6 +43,8 @@ const sandbox = `
   var SEO_HOWTO_I18N = {};
   var SEO_GLOSSARY_I18N = {};
   var SEO_COMP_I18N = { fr: 1 };
+  // /privacy: languages whose catalogue holds the whole policy (here fr only).
+  function _seoPrivacyTable() { return { fr: {} }; }
   var SEO_NAV_EN = { play: '\u25b6 Play now', rules: 'Rules', hands: 'Hand rankings', howto: 'How to play',
     gloss: 'Glossary', comp: 'Competitions', faq: 'FAQ', privacy: 'Privacy', src: 'Source', cta: 'Play' };
   var SEO_NAV_I18N = { fr: { play: '\u25b6 Jouer', rules: 'R\u00e8gles', faq: 'FAQ' }, xx: { play: 'XX' } };
@@ -70,7 +72,7 @@ ok(navFr.indexOf('href="/rules?lang=fr"') !== -1, 'nav: Rules carries the langua
 ok(navFr.indexOf('href="/faq?lang=fr"') !== -1, 'nav: FAQ carries the language');
 ok(navFr.indexOf('href="/competitions?lang=fr"') !== -1 && S.nav('de').indexOf('href="/competitions"') !== -1, 'nav: Competitions carries the language only where translated');
 ok(navFr.indexOf('href="/glossary"') !== -1, 'nav: an untranslated page is linked bare');
-ok(navFr.indexOf('href="/privacy"') !== -1, 'nav: /privacy is English-only and stays bare');
+ok(navFr.indexOf('href="/privacy?lang=fr"') !== -1 && S.nav('de').indexOf('href="/privacy"') !== -1, 'nav: /privacy carries the language only where translated');
 ok(navFr.indexOf('?lang=fr') !== -1 && navFr.indexOf('?lang=en') === -1, 'nav: English is never spelled out');
 
 const navDe = S.nav('de');

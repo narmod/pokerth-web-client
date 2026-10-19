@@ -1596,6 +1596,7 @@ function seoIndexNowUrls(base) {
   seoPageLangs(SEO_HOWTO_I18N).forEach(function (c) { urls.push(base + '/how-to-play?lang=' + c); });
   seoPageLangs(SEO_GLOSSARY_I18N).forEach(function (c) { urls.push(base + '/glossary?lang=' + c); });
   seoPageLangs(SEO_COMP_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/competitions?lang=' + c); });
+  seoPageLangs(_seoPrivacyTable()).forEach(function (c) { if (c !== 'en') urls.push(base + '/privacy?lang=' + c); });
   return urls;
 }
 var _indexNowLast = 0;
@@ -1763,7 +1764,7 @@ function seoBodyBlock(lang) {
     '<a href="' + _seoLangHref('/glossary', SEO_GLOSSARY_I18N, lang) + '">' + _seoPageLabel(SEO_GLOSSARY_I18N, lang, 'Glossary') + '</a> \u2014 ' +
     '<a href="' + _seoLangHref('/competitions', SEO_COMP_I18N, lang) + '">' + _seoNavLabel(lang, 'comp') + '</a> \u2014 ' +
     '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">' + _seoNavLabel(lang, 'faq') + '</a> \u2014 ' +
-    '<a href="/privacy">' + b.pv + '</a></p>' +
+    '<a href="' + _seoLangHref('/privacy', _seoPrivacyTable(), lang) + '">' + b.pv + '</a></p>' +
     '</div>';
 }
 
@@ -1962,8 +1963,7 @@ function _seoPageNav(lang) {
     '<a href="' + _seoLangHref('/glossary', SEO_GLOSSARY_I18N, lang) + '">' + _seoNavLabel(lang, 'gloss') + '</a>' +
     '<a href="' + _seoLangHref('/competitions', SEO_COMP_I18N, lang) + '">' + _seoNavLabel(lang, 'comp') + '</a>' +
     '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">' + _seoNavLabel(lang, 'faq') + '</a>' +
-    // /privacy is a static English-only page: it has no ?lang= variant.
-    '<a href="/privacy">' + _seoNavLabel(lang, 'privacy') + '</a>' +
+    '<a href="' + _seoLangHref('/privacy', _seoPrivacyTable(), lang) + '">' + _seoNavLabel(lang, 'privacy') + '</a>' +
     '<a href="https://github.com/narmod/pokerth-web-client" rel="noopener">' + _seoNavLabel(lang, 'src') + '</a></nav>';
 }
 
@@ -6781,12 +6781,24 @@ function seoFaqPage(res, method, lang) {
 
 // ── /privacy ──────────────────────────────────────────────────────
 // Served in the same shell as /faq and /rules (nav, canonical, Open Graph,
-// breadcrumbs, call to action) instead of a page of its own. The text still
-// lives in public/privacy.html: the in-app overlay and the tests read it from
-// there, so it stays the single place to edit. Only the content between the
-// "Last updated" line and the back link is lifted; the file's own header,
-// styles and back link are replaced by the shared ones. English only, like
-// the file it comes from.
+// breadcrumbs, call to action). English comes from public/privacy.html, the
+// reference text: only the content between the "Last updated" line and the
+// back link is lifted; the file's own header, styles and back link are
+// replaced by the shared ones.
+//
+// The ?lang= variants are built from the in-app privacy overlay's strings
+// (the pv* keys of public/modules/lang/*.mjs), read through the same catalog
+// as the server-side rendering of the home page (seo-i18n/ssr.js), so a
+// translation edited for the app is the one the page serves. A language is
+// advertised only when its catalogue carries every key below; the heading and
+// the search description come from seo-i18n/privacy.js.
+var PV_KEYS = ['pvUpdated', 'pvWhoH', 'pvWho', 'pvLocalH', 'pvLocal', 'pvServerH',
+  'pvSrv1', 'pvSrvSync', 'pvSrvErr', 'pvSrvVotes', 'pvSrvGuide', 'pvSrv3', 'pvSrvLan', 'pvSrv2',
+  'pvThirdH', 'pvThird', 'pvThirdTr', 'pvThirdRadio', 'pvThirdPdb',
+  'pvLicH', 'pvLic1', 'pvLicSrc', 'pvLicLicense', 'pvLicGnu', 'pvLic2',
+  'pvRightsH', 'pvRights', 'pvRightsGh'];
+var SEO_PRIVACY_META = require('./seo-i18n/privacy.js');
+
 function _seoPrivacyBody(html) {
   html = String(html || '');
   var s = html.indexOf('<p class="updated">'), e = html.indexOf('<a class="back"');
@@ -6799,17 +6811,66 @@ function _seoPrivacyBody(html) {
   return { body: '<h1>PokerTH Web Client — Privacy policy</h1>' + inner.trim(), modified: mod };
 }
 
-function seoPrivacyPage(res, method) {
+// Languages whose catalogue holds the whole policy: { code: strings }.
+function _seoPrivacyTable() {
+  var cat = null, out = {};
+  try { cat = _seoSsr.catalog(); } catch (e) { /* not loaded yet */ }
+  if (!cat) return out;
+  for (var code in SEO_I18N) {
+    if (code === 'en' || !cat[code]) continue;
+    var d = cat[code], full = true;
+    for (var i = 0; i < PV_KEYS.length; i++) { if (typeof d[PV_KEYS[i]] !== 'string' || !d[PV_KEYS[i]]) { full = false; break; } }
+    if (full) out[code] = d;
+  }
+  return out;
+}
+
+// Page body from one catalogue, in the order of the in-app overlay and of
+// privacy.html. Every string is escaped: the text is translation data.
+function _seoPrivacyFromCat(S, h1) {
+  var esc = function (v) { return String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+  // List items open with "Label: text" — the label is set bold like the
+  // English page. Any colon style (":", " :", "：") is recognised; an item
+  // without one is printed as it is.
+  var item = function (k) {
+    var v = String(S[k]), m = /^([^:：]{1,60}?)(\s?[:：]\s?)([\s\S]+)$/.exec(v);
+    return '<li>' + (m ? '<strong>' + esc(m[1]) + '</strong>' + esc(m[2]) + esc(m[3]) : esc(v)) + '</li>';
+  };
+  var p = function (k) { return '<p>' + esc(S[k]) + '</p>'; };
+  var h2 = function (k) { return '<h2>' + esc(S[k]) + '</h2>'; };
+  var a = function (href, text) { return '<a href="' + href + '" target="_blank" rel="noopener noreferrer">' + text + '</a>'; };
+  return '<h1>' + esc(h1 || 'PokerTH Web Client — Privacy policy') + '</h1>' +
+    '<p class="updated">' + esc(S.pvUpdated) + '</p>' +
+    h2('pvWhoH') + p('pvWho') +
+    h2('pvLocalH') + p('pvLocal') +
+    h2('pvServerH') + '<ul>' + ['pvSrv1', 'pvSrvSync', 'pvSrvErr', 'pvSrvVotes', 'pvSrvGuide', 'pvSrv3', 'pvSrvLan', 'pvSrv2'].map(item).join('') + '</ul>' +
+    h2('pvThirdH') + p('pvThird') + p('pvThirdTr') + p('pvThirdRadio') + p('pvThirdPdb') +
+    h2('pvLicH') + p('pvLic1') +
+    '<ul><li>' + esc(S.pvLicSrc) + ' — ' + a('https://github.com/narmod/pokerth-web-client', 'github.com/narmod/pokerth-web-client') + '</li>' +
+    '<li>' + esc(S.pvLicLicense) + ' — ' + a('https://github.com/narmod/pokerth-web-client/blob/main/LICENSE', 'AGPL-3.0 — pokerth-web-client') + '</li>' +
+    '<li>' + esc(S.pvLicGnu) + ' — ' + a('https://www.gnu.org/licenses/', 'gnu.org/licenses') + '</li></ul>' +
+    p('pvLic2') +
+    h2('pvRightsH') + p('pvRights') +
+    '<p>' + a('https://www.pokerth.net/app.php/imprint', 'pokerth.net/app.php/imprint') + '</p>' +
+    p('pvRightsGh') +
+    '<p>' + a('https://github.com/narmod/pokerth-web-client/issues', 'github.com/narmod/pokerth-web-client/issues') + '</p>';
+}
+
+function seoPrivacyPage(res, method, lang) {
+  if (seoEnabled()) _seoSsr.refresh(PUBLIC_DIR);
+  var table = _seoPrivacyTable(), langs = seoPageLangs(table);
+  if (langs.indexOf(lang) === -1) lang = '';
   var html;
   try { html = fs.readFileSync(path.join(PUBLIC_DIR, 'privacy.html'), 'utf8'); }
   catch (e) { res.writeHead(404); res.end('privacy.html missing'); return; }
   var pv = _seoPrivacyBody(html);
-  var title = 'Privacy — PokerTH Web Client';
-  var ld = { '@context': 'https://schema.org', '@type': 'WebPage', name: title, inLanguage: 'en' };
+  var meta = (lang && SEO_PRIVACY_META[lang]) || {};
+  var body = lang ? _seoPrivacyFromCat(table[lang], meta.h1) : pv.body;
+  var name = (lang ? _seoNavLabel(lang, 'privacy') : 'Privacy') + ' \u2014 PokerTH Web Client', title = _seoAttr(name);
+  var desc = _seoAttr(meta.desc || 'Privacy policy of the PokerTH Web Client — what little data is processed, and what never leaves your browser.');
+  var ld = { '@context': 'https://schema.org', '@type': 'WebPage', name: name, inLanguage: lang || 'en' };
   if (pv.modified) ld.dateModified = pv.modified;
-  seoContentPage(res, method, title,
-    'Privacy policy of the PokerTH Web Client — what little data is processed, and what never leaves your browser.',
-    '/privacy', pv.body, ld, '', ['en']);
+  seoContentPage(res, method, title, desc, '/privacy', body, ld, lang, langs);
 }
 
 // ── /hand-rankings, /how-to-play, /glossary ───────────────────────
@@ -12112,7 +12173,8 @@ function handleAdmin(req, res, reqPathOnly, query) {
     var _rl = seoPageLangs(SEO_RULES_I18N).length, _fl = seoPageLangs(SEO_FAQ_I18N).length, _tot = 0;
     for (var _c in SEO_I18N) _tot++;
     var _cov = [['/rules', _rl], ['/faq', _fl], ['/hand-rankings', seoPageLangs(SEO_HANDS_I18N).length],
-      ['/how-to-play', seoPageLangs(SEO_HOWTO_I18N).length], ['/glossary', seoPageLangs(SEO_GLOSSARY_I18N).length]];
+      ['/how-to-play', seoPageLangs(SEO_HOWTO_I18N).length], ['/glossary', seoPageLangs(SEO_GLOSSARY_I18N).length],
+      ['/privacy', seoPageLangs(_seoPrivacyTable()).length]];
     _cov.forEach(function (c) {
       // seoPageLangs() always carries 'en', which is the page itself, not a
       // translation — counting it would have claimed 46 of 44.
@@ -13508,7 +13570,7 @@ const httpServer = http.createServer((req, res) => {
       _seoPageUrls(_sBase, '/how-to-play', seoPageLangs(SEO_HOWTO_I18N), 'monthly', '0.7') +
       _seoPageUrls(_sBase, '/glossary', seoPageLangs(SEO_GLOSSARY_I18N), 'monthly', '0.5') +
       _seoPageUrls(_sBase, '/competitions', seoPageLangs(SEO_COMP_I18N), 'daily', '0.6') +
-      '<url><loc>' + _sBase + '/privacy</loc>' + _sLm(_sModSelf) + '<changefreq>yearly</changefreq><priority>0.2</priority></url>\n' +
+      _seoPageUrls(_sBase, '/privacy', seoPageLangs(_seoPrivacyTable()), 'yearly', '0.2') +
       '</urlset>\n';
     res.writeHead(200, Object.assign({ 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
     res.end(_sXml);
@@ -13552,7 +13614,7 @@ const httpServer = http.createServer((req, res) => {
 
   // Friendly path for the pack-creator Studio, mirroring /admin -> admin.html.
   if (reqPathOnly === '/privacy' || reqPathOnly === '/privacy.html') {
-    return seoPrivacyPage(res, req.method);
+    return seoPrivacyPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
   }
   if (reqPathOnly === '/studio' || reqPathOnly === '/studio.html') {
     const p = path.join(PUBLIC_DIR, 'studio.html');
