@@ -182,17 +182,85 @@ function chartHtml(rows) {
   const max = Math.max(1, ...rows.map((r) => r.total));
   const tot = {}; MODES.forEach((x) => { tot[x.id] = 0; });
   rows.forEach((r) => MODES.forEach((x) => { tot[x.id] += r[x.id]; }));
-  const bars = rows.map((r) => {
+  const bars = rows.map((r, i) => {
     const d = new Date(r.date + 'T12:00:00');
-    const day = isNaN(d) ? r.date : d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
-    const tip = day + (r.today ? ' (so far)' : '') + ' — ' + MODES.map((x) => x.label + ' ' + r[x.id]).join(' · ');
-    const segs = MODES.map((x) => r[x.id] ? '<i style="height:' + (r[x.id] / max * 100).toFixed(2) + '%;background:' + x.color + '"></i>' : '').join('');
-    return '<div class="ovbar' + (r.today ? ' today' : '') + '" title="' + esc(tip) + '"><div class="ovstack">' + segs + '</div><span>' + (isNaN(d) ? '' : d.getDate()) + '</span></div>';
+    const on = MODES.filter((x) => r[x.id]);
+    // The top segment carries the rounded corners; the day's total sits on it.
+    const segs = on.map((x, j) => '<i style="height:' + (r[x.id] / max * 100).toFixed(2) + '%;background:' + x.color + '"' + (j === on.length - 1 ? ' class="ovtop"' : '') + '></i>').join('');
+    const tot = r.total ? '<b class="ovtot"><span class="tl">' + nf(r.total) + '</span><span class="ts">' + compact(r.total) + '</span></b>' : '';
+    return '<div class="ovbar' + (r.today ? ' today' : '') + '" data-i="' + i + '"><div class="ovstack">' + segs + tot + '</div><span>' + (isNaN(d) ? '' : d.getDate()) + '</span></div>';
   }).join('');
+  _chartRows = rows;
   const sum = MODES.map((x) => x.label + ' ' + tot[x.id]).join(', ');
-  return '<div class="ovchart" role="img" aria-label="Connections per day over 14 days by entry mode: ' + esc(sum) + '">' + bars + '</div>' +
+  return '<div class="ovchartw"><div class="ovchart" role="img" aria-label="Connections per day over 14 days by entry mode: ' + esc(sum) + '">' + bars + '</div>' +
+    '<div class="chartgd"></div><div class="chartro ovtip"></div></div>' +
     '<div class="ovlegend">' + MODES.map((x) => '<span><i style="background:' + x.color + '"></i>' + x.label + ' <b>' + nf(tot[x.id]) + '</b></span>').join('') +
     '<span class="ovpeak">peak ' + nf(max) + ' a day</span></div>';
+}
+
+// A day's total in four characters at most, for a phone's narrow bars.
+export function compact(n) {
+  if (n < 1000) return String(n);
+  if (n < 10000) return (Math.round(n / 100) / 10).toFixed(1).replace(/\.0$/, '') + 'k';
+  if (n < 1e6) return Math.round(n / 1000) + 'k';
+  return (Math.round(n / 1e5) / 10) + 'M';
+}
+
+// ── Reading a bar ─────────────────────────────────────────────────────────
+// The bars used to carry a title, which a phone never shows. Same reading as
+// the Statistics charts (.chartro): the mouse moves it and it leaves with the
+// pointer; a finger's tap leaves it in place, and a tap outside the chart
+// puts it away. The rows of the last paint are kept for it.
+let _chartRows = [], _tipAt = -1;
+export function tipHtml(r) {
+  if (!r) return '';
+  const d = new Date(r.date + 'T12:00:00');
+  const day = isNaN(d) ? r.date : d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+  return '<b>' + esc(day) + (r.today ? ' · so far' : '') + '</b>' +
+    MODES.map((x) => '<span><em style="background:' + x.color + '"></em><i>' + esc(x.label) + '</i><s>' + nf(r[x.id]) + '</s></span>').join('') +
+    '<span class="ovtipt"><em></em><i>Total</i><s>' + nf(r.total) + '</s></span>';
+}
+function tipShow(box, i, clientY) {
+  const r = _chartRows[i], bar = box.querySelector('.ovbar[data-i="' + i + '"]');
+  const ro = box.querySelector('.ovtip'), gd = box.querySelector('.chartgd');
+  if (!r || !bar || !ro || !gd) return;
+  _tipAt = i;
+  const hb = box.getBoundingClientRect(), bb = bar.getBoundingClientRect(), st = bar.querySelector('.ovstack').getBoundingClientRect();
+  const cx = bb.left - hb.left + bb.width / 2;
+  gd.style.left = cx.toFixed(1) + 'px'; gd.style.top = (st.top - hb.top).toFixed(1) + 'px'; gd.style.height = st.height.toFixed(1) + 'px';
+  gd.style.display = 'block';
+  ro.innerHTML = tipHtml(r);
+  ro.style.left = '0px'; ro.style.display = 'block';
+  const w = ro.offsetWidth, h = ro.offsetHeight;
+  ro.style.left = Math.max(0, Math.min(hb.width - w, cx - w / 2)).toFixed(1) + 'px';
+  let top = (clientY == null ? st.top + st.height / 2 : clientY) - hb.top + 14;
+  if (top + h > hb.height) top = Math.max(0, (clientY == null ? st.top : clientY) - hb.top - h - 14);
+  ro.style.top = top.toFixed(1) + 'px';
+}
+function tipHide(box) {
+  _tipAt = -1;
+  if (!box) return;
+  const ro = box.querySelector('.ovtip'), gd = box.querySelector('.chartgd');
+  if (ro) ro.style.display = 'none';
+  if (gd) gd.style.display = 'none';
+}
+function tipWire(host) {
+  if (!host || host._ovTip) return;
+  host._ovTip = 1;
+  const read = (e) => {
+    const box = host.querySelector('.ovchartw'); if (!box) return;
+    const bars = box.querySelectorAll('.ovbar'); if (!bars.length) return;
+    // The column under the pointer, by x only: a short bar reads as well as
+    // a tall one, and a finger need not land on the colour.
+    let i = -1;
+    bars.forEach((b) => { const rc = b.getBoundingClientRect(); if (e.clientX >= rc.left - 3 && e.clientX <= rc.right + 3) i = +b.getAttribute('data-i'); });
+    if (i < 0) { if (e.pointerType === 'mouse') tipHide(box); return; }
+    tipShow(box, i, e.clientY);
+  };
+  host.addEventListener('pointerdown', read, { passive: true });
+  host.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse' || (e.buttons & 1)) read(e); }, { passive: true });
+  host.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') tipHide(host.querySelector('.ovchartw')); }, { passive: true });
+  document.addEventListener('pointerdown', (e) => { if (!host.contains(e.target)) tipHide(host.querySelector('.ovchartw')); }, { passive: true });
 }
 
 function healthHtml(s) {
@@ -241,7 +309,14 @@ export function render(root, st) {
   const set = (id, html) => { const el = q(id); if (el && el.innerHTML !== html) el.innerHTML = html; };
   if (st.status || st.landir || st.errors) set('ovAlerts', alertsHtml(alertsFrom(st)));
   if (st.sessions) set('ovModes', modesHtml(nowByMode(st.sessions), st.live));
-  if (st.visits) set('ovChart', st.visits.ok ? chartHtml(dailyByMode(st.visits.series, st.visits.todayKey)) : '<div class="empty err">Could not load the statistics.</div>');
+  if (st.visits) {
+    const keep = _tipAt;
+    set('ovChart', st.visits.ok ? chartHtml(dailyByMode(st.visits.series, st.visits.todayKey)) : '<div class="empty err">Could not load the statistics.</div>');
+    tipWire(q('ovChart'));
+    // A refresh redraws the chart: a reading left open by a tap stays open.
+    const box = q('ovChart') && q('ovChart').querySelector('.ovchartw');
+    if (keep >= 0 && box && box.querySelector('.ovtip') && box.querySelector('.ovtip').style.display !== 'block') tipShow(box, keep, null);
+  }
   if (st.status) set('ovHealth', healthHtml(st.status));
   if (st.sessions) {
     set('ovNow', nowListHtml(st.sessions));

@@ -30,6 +30,11 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Admin Overview: daily totals and a reading that works on a phone** (`web.146`) — « Connections, last 14 days »
+  writes each day's total on its bar (shortened to 1.6k / 23k on a phone) and drops the bar titles, which a phone
+  never showed, for the reading of the Statistics charts (`.chartro`): the day, each entry mode, then the total
+  (today marked « so far »), with the guide line. The mouse moves it and takes it away when it leaves; a tap leaves
+  it open until a tap outside the chart, and a refresh keeps it open.
 - **Admin Statistics: new filters (maquette A); mode colours** (`web.144`) — the filter card became a summary bar:
   the period (a button), Refresh, and **Filters** with a count; the active filters show as pills that remove them
   (entry modes, each narrowing, bots shown), then the dates read. Filters opens one panel — a drawer on the right,

@@ -946,12 +946,23 @@
   .ovgrid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px}
   .ovgrid>.card{margin:0}
   .ovlink{margin-left:auto}
-  .ovchart{height:190px;display:flex;align-items:stretch;gap:6px;padding:4px 0 0;border-bottom:1px solid var(--line)}
+  /* The day's total sits on its bar, in the 16 px the stack keeps on top
+     (percentages resolve against the content box, so the tallest bar still
+     leaves the label its room). A tap or the mouse reads a bar (.ovtip). */
+  .ovchartw{position:relative}
+  .ovchart{height:200px;display:flex;align-items:stretch;gap:6px;padding:4px 0 0;border-bottom:1px solid var(--line);touch-action:pan-y;cursor:default}
   .ovbar{flex:1;min-width:0;display:flex;flex-direction:column;align-items:stretch;gap:4px}
-  .ovstack{flex:1;display:flex;flex-direction:column-reverse;border-radius:3px 3px 0 0;overflow:hidden}
+  .ovstack{flex:1;display:flex;flex-direction:column-reverse;padding-top:16px;box-sizing:border-box}
   .ovstack i{display:block;flex:none}
+  .ovstack i.ovtop{border-radius:3px 3px 0 0}
+  .ovtot{display:block;flex:none;padding-bottom:3px;text-align:center;font-size:.66rem;font-weight:600;line-height:13px;color:var(--cream);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .ovtot .ts{display:none}
   .ovbar>span{font-size:.66rem;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums;padding-bottom:3px}
-  .ovbar.today .ovstack{opacity:.45}
+  .ovbar.today .ovstack i{opacity:.45}
+  .ovbar.today .ovtot{color:var(--muted)}
+  .ovtip .ovtipt{margin-top:3px;padding-top:3px;border-top:1px solid var(--line);font-weight:700}
+  .ovtip .ovtipt em{background:var(--m-all)}
+  .ovtip .ovtipt s{font-weight:700}
   .ovlegend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:.78rem;color:var(--muted)}
   .ovlegend span{display:inline-flex;align-items:center;gap:6px}
   .ovlegend i{width:10px;height:10px;border-radius:2px;display:inline-block}
@@ -966,7 +977,7 @@
   .ovrm{color:var(--muted);font-size:.78rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
   .ovrt{color:var(--muted);font-size:.78rem;font-variant-numeric:tabular-nums;white-space:nowrap}
   @media(max-width:1199px){ .ovgrid{grid-template-columns:minmax(0,1fr)} }
-  @media(max-width:760px){ .ovmodes{grid-template-columns:repeat(2,minmax(0,1fr))} .ovmn{font-size:1.5rem} .ovchart{gap:3px;height:150px} }
+  @media(max-width:760px){ .ovmodes{grid-template-columns:repeat(2,minmax(0,1fr))} .ovmn{font-size:1.5rem} .ovchart{gap:3px;height:160px} .ovtot{font-size:.58rem} .ovtot .tl{display:none} .ovtot .ts{display:inline} }
   /* Packages has three kinds since theme packages were retired (web.143): three
      columns on a wide screen, and on a phone the odd last tile takes the row. */
   #pkTiles{grid-template-columns:repeat(3,minmax(0,1fr))}

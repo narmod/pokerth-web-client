@@ -103,6 +103,16 @@ ok(doc.querySelector('#ovChart .ovchart').getAttribute('role') === 'img' && /Int
 ok(/docker · no self-update/.test(txt('ovHealth')) && /7 of 500/.test(txt('ovHealth')), 'the server card paints');
 ok(/20,000 · ~9,968 players/.test(txt('ovHealth')), 'open files read as a number');
 ok(/peak 5 a day/.test(txt('ovChart')), 'the chart states its scale');
+// Daily totals and the reading (2.1.10-web.146): a total on each bar, no
+// title (a phone never shows one), a tap or the mouse reads a day.
+ok(doc.querySelectorAll('#ovChart .ovbar .ovtot').length === 2 && !doc.querySelector('#ovChart .ovbar[title]'), 'each day carries its total, no title left');
+ok(doc.querySelector('#ovChart .ovchartw .chartro.ovtip') && doc.querySelector('#ovChart .chartgd'), 'with the reading bubble and guide of the Statistics charts');
+ok(OV.compact(652) === '652' && OV.compact(1022) === '1k' && OV.compact(1550) === '1.6k' && OV.compact(23456) === '23k', 'a phone gets totals in four characters');
+const tip = OV.tipHtml({ date: '2026-10-14', today: true, net: 125, lan: 42, off: 85, live: 0, total: 252 });
+ok(/Wed,? 14 Oct · so far/.test(tip) && /Internet<\/i><s>125/.test(tip) && /Live\/spectator tool<\/i><s>0/.test(tip) && /Total<\/i><s>252/.test(tip), 'the bubble: the day, each mode, then the total');
+ok(/tipWire\(q\('ovChart'\)\)/.test(src) && /addEventListener\('pointerdown', read/.test(src) && /e\.pointerType === 'mouse'\) tipHide/.test(src), 'a tap leaves it open; the mouse takes it away when it leaves');
+ok(/if \(!host\.contains\(e\.target\)\) tipHide/.test(src), 'a tap outside the chart puts it away');
+ok(/class="ovtop"/.test(src) && !/class="top"/.test(src), 'the top segment is not the page header\'s .top (sticky on a phone)');
 ok(/spectator/.test(txt('ovNow')), 'a /live viewer is a spectator, not a guest');
 ok(doc.querySelectorAll('#ovNow .ovrow').length === 6 && /and \d+ more/.test(txt('ovNow')), 'six live connections, then a count');
 ok(!doc.querySelector('#ovNow img') && /<img src=x>/.test(txt('ovNow')), 'a nickname is shown as text, never as markup');
