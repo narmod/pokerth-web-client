@@ -1,3 +1,6 @@
+2026-10-19 version 2.1.10-web.149:
+- bugfix: in the app installed on an iPhone or iPad, « Save image » in the avatar maker no longer reloads the app when you close the image preview; it opens the share sheet, where « Save Image » puts the avatar in your Photos
+
 2026-10-19 version 2.1.10-web.147:
 - bugfix: on an unsteady connection, the app no longer fails to start because one of its files was briefly unavailable from the server; the copy already saved on your device is used instead
 

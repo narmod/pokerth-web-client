@@ -399,7 +399,22 @@ function _avmExportFail(e) {
   try { if (typeof window.showToast === 'function') window.showToast(t('avmExportFail'), { icon: '\u26A0\uFE0F', duration: 3000 }); } catch (e2) {}
 }
 
+// Installed app on iPhone / iPad: an <a download> navigates the app's only
+// web view to the file preview, and closing it (✕ or back) relaunches the
+// app. There, Save opens the share sheet instead — its « Save Image » entry
+// puts the PNG in Photos and closing the sheet leaves the app untouched.
+function _avmIosPwa() {
+  try {
+    var n = window.navigator || {};
+    var ios = /iP(hone|ad|od)/.test(n.userAgent || '') || (n.platform === 'MacIntel' && (n.maxTouchPoints || 0) > 1);
+    return ios && (n.standalone === true || document.documentElement.getAttribute('data-pwa') === '1');
+  } catch (e) { return false; }
+}
+
 function _avmSave(blob) {
+  if (_avmIosPwa() && _avmCanShare()) {
+    return navigator.share({ files: [new File([blob], AVM_EXPORT_NAME, { type: 'image/png' })] });
+  }
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
   a.href = url; a.download = AVM_EXPORT_NAME; a.rel = 'noopener';
@@ -424,7 +439,7 @@ function _avmMenuAct(act) {
     if (act === 'share') {
       return navigator.share({ files: [new File([blob], AVM_EXPORT_NAME, { type: 'image/png' })] });
     }
-    _avmSave(blob);
+    return _avmSave(blob);
   };
   try {
     if (ready) Promise.resolve(run(ready)).catch(_avmExportFail);
