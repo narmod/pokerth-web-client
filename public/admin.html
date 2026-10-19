@@ -6359,7 +6359,9 @@
     if(d&&d.installKind) bits.push(d.installKind+(d.branch?' \u00b7 branch '+d.branch:''));
     if(d&&!d.gitUpdatable) bits.push('this install cannot self-update');
     else if(s.error) bits.push('last check failed: '+s.error);
-    else if(s.available) bits.push('update available: '+String(s.remote||'').slice(0,8)+' \u2014 '+(s.subject||'')+' ('+s.files+' file(s), '+(s.needsRestart?'needs a restart \u2014 waiting for an empty server':'client files only \u2014 applied without restart')+')');
+    else if(s.available) bits.push('update available: '+String(s.remote||'').slice(0,8)+' \u2014 '+(s.subject||'')+' ('+s.files+' file(s), '+(s.needsRestart
+      ?(d.enabled?'needs a restart \u2014 waiting for an empty server':'needs a restart \u2014 \u201cUpdate & restart\u201d applies it')
+      :(d.enabled?'client files only \u2014 applied without restart':'client files only \u2014 \u201cUpdate (no restart)\u201d applies it'))+')');
     else if(s.checkedAt) bits.push('up to date (checked '+new Date(s.checkedAt).toLocaleTimeString()+')');
     else bits.push('not checked yet');
     if(d&&d.armed) bits.push('restart armed for '+new Date(d.armed).toLocaleTimeString());
@@ -6393,10 +6395,13 @@
   if($('autoUpd')) $('autoUpd').addEventListener('change', autoUpdSave);
   if($('autoUpdSec')) $('autoUpdSec').addEventListener('change', autoUpdSave);
   if($('btnUpdCheck')) $('btnUpdCheck').addEventListener('click', function(){
-    autoUpdSay('Checking\u2026');
+    var btn=this; if(btn.disabled) return;
+    btn.disabled=true; autoUpdSay('Checking\u2026');
     api('/admin/update-check?force=1',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
       if(d&&d.error) autoUpdSay('Check failed: '+d.error,'err'); else autoUpdDesc(d);
-    }).catch(function(){ autoUpdSay('Check failed \u2014 network error.','err'); });
+      loadStatus(false);                                 // the Deploy status tile shows the same reading
+    }).catch(function(){ autoUpdSay('Check failed \u2014 network error.','err'); })
+      .then(function(){ btn.disabled=false; });
   });
   // ── Schedule a restart (warns connected players, then acts after the delay) ──
   var schedKind='update';

@@ -833,6 +833,14 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **« Check now » of the automatic updates** (`web.170`) — Operations › Deploy: after every check the message
+  turned red with « this install cannot self-update », even on a git install that was up to date —
+  `/admin/update-check` answered without `gitUpdatable` / `installKind`, which the shared painter reads. Both
+  routes now answer the same view (`_autoUpdView`). A second click during a check got the previous reading at
+  once: a running check is now joined (`_updWaiters`), so every caller, the 15-minute poll included, gets the
+  fresh result. The button is busy while it checks, the Deploy status tile is refreshed with it, and with
+  automatic updates off an available update names the button that applies it instead of « applied without
+  restart ». `scripts/test-admin-update-check.mjs`.
 - **Edge on Android and iPhone counted as Edge** (`web.151`) — Admin › Visitors (`UA_BROWSER` in `proxy.js`) and
   the device label of Admin › Errors / sessions (`_seDev`, `admin.html`) only knew desktop Edge's `Edg/`: Edge on
   Android (`EdgA/`) was counted as Chrome, on iPhone / iPad (`EdgiOS/`) as Safari, legacy Edge (`Edge/`) as Chrome.

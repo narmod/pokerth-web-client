@@ -9887,6 +9887,12 @@ function _autoUpdateCfg() {
 // réseau à chaque fois.
 let _upd = { checking: false, checkedAt: 0, available: false, local: '', remote: '',
              subject: '', files: 0, needsRestart: false, error: '', lastAction: '' };
+function _autoUpdView() {
+  const cfg = _autoUpdateCfg();
+  return { enabled: cfg.enabled, noticeSec: cfg.noticeSec,
+           gitUpdatable: GIT_UPDATABLE, installKind: installKind(), branch: GIT_BRANCH,
+           armed: (_autoArmed && _restartAt > Date.now()) ? _restartAt : null, state: _updPublic() };
+}
 function _updPublic() {
   return { checkedAt: _upd.checkedAt, checking: _upd.checking, available: _upd.available,
            local: _upd.local, remote: _upd.remote, subject: _upd.subject, files: _upd.files,
@@ -9900,10 +9906,19 @@ function _pathNeedsRestart(f) {
 }
 // git fetch + comparaison, en asynchrone : un spawnSync bloquerait la boucle
 // d'événements pendant tout un aller-retour réseau.
+let _updWaiters = [];
+function _updFlush() {
+  const w = _updWaiters; _updWaiters = [];
+  w.forEach(function (fn) { try { fn(_upd); } catch (e) {} });
+}
 function updateCheck(cb) {
   cb = cb || function () {};
   if (!GIT_UPDATABLE) { _upd.error = 'no git checkout (' + installKind() + ')'; return cb(_upd); }
-  if (_upd.checking) return cb(_upd);
+  // A check already running is joined: its caller (Check now clicked twice,
+  // the 15-minute poll meeting a manual check) gets the fresh result, not the
+  // previous one.
+  _updWaiters.push(cb);
+  if (_upd.checking) return;
   _upd.checking = true;
   const dir = __dirname.replace(/'/g, "'\\''");
   const depth = GIT_SHALLOW ? '--depth 1 ' : '';   // ne jamais tronquer un clone complet
@@ -9922,7 +9937,7 @@ function updateCheck(cb) {
       _upd.checking = false; _upd.checkedAt = Date.now();
       if (code !== 0) {
         _upd.error = String(err || '').trim().split('\n').pop().slice(0, 200) || ('git exited ' + code);
-        return cb(_upd);
+        return _updFlush();
       }
       const lines = out.split('\n');
       const local = String(lines.shift() || '').trim();
@@ -9936,9 +9951,9 @@ function updateCheck(cb) {
       _upd.subject = _upd.available ? subject.slice(0, 200) : '';
       _upd.files = _upd.available ? files.length : 0;
       _upd.needsRestart = _upd.available && files.some(_pathNeedsRestart);
-      return cb(_upd);
+      return _updFlush();
     });
-  } catch (e) { _upd.checking = false; _upd.error = e.message; return cb(_upd); }
+  } catch (e) { _upd.checking = false; _upd.error = e.message; return _updFlush(); }
 }
 // Après un déploiement qui laisse tourner ce processus (statique, retour
 // arrière statique), le dernier sondage décrit l'arbre d'AVANT : le tableau de
@@ -11687,20 +11702,19 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/update-check') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     if (!GIT_UPDATABLE) return adminJson(res, 409, { ok: false, error: 'this install cannot check for updates (' + installKind() + ': no git checkout in the app dir).' });
+    // Same shape as GET /admin/auto-update: the dashboard paints both with one
+    // function (without gitUpdatable it read « this install cannot self-update »).
     if (query.force === '1' || query.force === 'true') {
       return updateCheck(function (u) {
-        return adminJson(res, 200, { ok: !u.error, error: u.error || '', branch: GIT_BRANCH, state: _updPublic() });
+        return adminJson(res, 200, Object.assign({ ok: !u.error, error: u.error || '' }, _autoUpdView()));
       });
     }
-    return adminJson(res, 200, { ok: true, branch: GIT_BRANCH, state: _updPublic() });
+    return adminJson(res, 200, Object.assign({ ok: true }, _autoUpdView()));
   }
   if (reqPathOnly === '/admin/auto-update') {
     if (req.method === 'GET') {
       if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      const cfg = _autoUpdateCfg();
-      return adminJson(res, 200, { ok: true, enabled: cfg.enabled, noticeSec: cfg.noticeSec,
-        gitUpdatable: GIT_UPDATABLE, installKind: installKind(), branch: GIT_BRANCH,
-        armed: (_autoArmed && _restartAt > Date.now()) ? _restartAt : null, state: _updPublic() });
+      return adminJson(res, 200, Object.assign({ ok: true }, _autoUpdView()));
     }
     if (req.method === 'POST') {
       return readJsonBody(req, function (d) {
