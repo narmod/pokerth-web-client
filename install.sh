@@ -745,28 +745,35 @@ do_db_config() {
   [ -n "$RUN_USER" ] || RUN_USER="$(id -un)"
   [ -n "$INSTALL_DIR" ] || { errln "No install found (missing $CONF). Install first."; exit 1; }
   local f="$INSTALL_DIR/db-config.json"
-  step "PokerTH Web Client — MySQL mirror"
-  local cH cP cU cD
+  step "PokerTH Web Client — database mirror (MySQL / MariaDB or PostgreSQL)"
+  local cT cH cP cU cD
+  cT="$(run_as env PTHF="$f" node -e 'try{var t=String(JSON.parse(require("fs").readFileSync(process.env.PTHF,"utf8")).type||"");process.stdout.write(/^(postgres|postgresql|pg)$/i.test(t)?"postgres":"mysql")}catch(e){process.stdout.write("mysql")}' 2>/dev/null)"
   cH="$(run_as env PTHF="$f" node -e 'try{process.stdout.write(String(JSON.parse(require("fs").readFileSync(process.env.PTHF,"utf8")).host||""))}catch(e){}' 2>/dev/null)"
-  cP="$(run_as env PTHF="$f" node -e 'try{process.stdout.write(String(JSON.parse(require("fs").readFileSync(process.env.PTHF,"utf8")).port||3306))}catch(e){process.stdout.write("3306")}' 2>/dev/null)"
+  cP="$(run_as env PTHF="$f" node -e 'try{process.stdout.write(String(JSON.parse(require("fs").readFileSync(process.env.PTHF,"utf8")).port||""))}catch(e){}' 2>/dev/null)"
   cU="$(run_as env PTHF="$f" node -e 'try{process.stdout.write(String(JSON.parse(require("fs").readFileSync(process.env.PTHF,"utf8")).user||""))}catch(e){}' 2>/dev/null)"
   cD="$(run_as env PTHF="$f" node -e 'try{process.stdout.write(String(JSON.parse(require("fs").readFileSync(process.env.PTHF,"utf8")).database||""))}catch(e){}' 2>/dev/null)"
-  local host port user db
-  host="$(ask 'MySQL host' "${cH:-127.0.0.1}")"
-  port="$(ask 'MySQL port' "${cP:-3306}")"
-  user="$(ask 'MySQL user' "${cU:-root}")"
-  db="$(ask 'MySQL database' "${cD:-pokerth}")"
+  local type host port user db dport duser
+  type="$(ask 'Type (mysql = MySQL / MariaDB, postgres = PostgreSQL)' "${cT:-mysql}")"
+  case "$type" in postgres|postgresql|pg|PostgreSQL) type="postgres"; dport=5432; duser=postgres ;; *) type="mysql"; dport=3306; duser=root ;; esac
+  # A port or user left at the other type's default follows the new type.
+  if [ "$cP" = "3306" ] || [ "$cP" = "5432" ]; then cP=""; fi
+  if [ "$cU" = "root" ] || [ "$cU" = "postgres" ]; then cU=""; fi
+  host="$(ask 'Database host' "${cH:-127.0.0.1}")"
+  port="$(ask 'Database port' "${cP:-$dport}")"
+  user="$(ask 'Database user' "${cU:-$duser}")"
+  db="$(ask 'Database name' "${cD:-pokerth}")"
   local pass=""
   if [ "${HAS_TTY:-0}" -eq 1 ]; then
-    printf '%sMySQL password%s [blank = keep current]: ' "$C_BOLD" "$C_RESET" > /dev/tty
+    printf '%sDatabase password%s [blank = keep current]: ' "$C_BOLD" "$C_RESET" > /dev/tty
     read -rs pass < /dev/tty || pass=""
     echo > /dev/tty
   fi
   local haspass=0; [ -n "$pass" ] && haspass=1
-  run_as env PTHF="$f" PH="$host" PP="$port" PU="$user" PD="$db" PW="$pass" PHAS="$haspass" node -e '
+  run_as env PTHF="$f" PT="$type" PH="$host" PP="$port" PU="$user" PD="$db" PW="$pass" PHAS="$haspass" node -e '
     var fs=require("fs"), e=process.env, f=e.PTHF, c={};
     try{ c=JSON.parse(fs.readFileSync(f,"utf8"))||{}; }catch(_){}
-    c.host=e.PH||""; c.port=Number(e.PP)||3306; c.user=e.PU||""; c.database=e.PD||"";
+    c.type=e.PT==="postgres"?"postgres":"mysql";
+    c.host=e.PH||""; c.port=Number(e.PP)||(c.type==="postgres"?5432:3306); c.user=e.PU||""; c.database=e.PD||"";
     if(e.PHAS==="1"){ c.password=e.PW; }
     if(typeof c.password!=="string"){ c.password=""; }
     if(c.enabled===undefined){ c.enabled=true; }
@@ -775,7 +782,7 @@ do_db_config() {
   run_as chmod 600 "$f" 2>/dev/null || true
   info "Applying and restarting"
   app_restart
-  ok "MySQL config saved (stored in $f, perms 600). Review: pokerth-web db-show"
+  ok "Database mirror config saved (stored in $f, perms 600). Review: pokerth-web db-show"
   if [ -n "$host" ] && [ -n "$db" ]; then ok "Mirror enabled — active on this restart."; else warn "Host or database empty — mirror stays off until both are set."; fi
 }
 do_db_toggle() {
@@ -793,24 +800,26 @@ do_db_toggle() {
   run_as chmod 600 "$f" 2>/dev/null || true
   info "Applying and restarting"
   app_restart
-  if [ "$val" = "true" ]; then ok "MySQL mirror enabled (active if host + database are set)."; else ok "MySQL mirror disabled."; fi
+  if [ "$val" = "true" ]; then ok "Database mirror enabled (active if host + database are set)."; else ok "Database mirror disabled."; fi
 }
 do_db_show() {
   load_state
   [ -n "$RUN_USER" ] || RUN_USER="$(id -un)"
   [ -n "$INSTALL_DIR" ] || { errln "No install found (missing $CONF). Install first."; exit 1; }
   local f="$INSTALL_DIR/db-config.json"
-  step "PokerTH Web Client — MySQL mirror config"
+  step "PokerTH Web Client — database mirror config"
   run_as env PTHF="$f" node -e '
     var fs=require("fs"), e=process.env, c;
     try{ c=JSON.parse(fs.readFileSync(e.PTHF,"utf8")); }catch(_){ console.log("  (no db-config.json yet — run: pokerth-web db-config)"); process.exit(0); }
     var pw = c.password ? ("set ("+String(c.password).length+" chars)") : "(none)";
+    var pg=/^(postgres|postgresql|pg)$/i.test(String(c.type||""));
+    console.log("  type:     "+(pg?"PostgreSQL":"MySQL / MariaDB"));
     console.log("  host:     "+(c.host||"(none)"));
-    console.log("  port:     "+(c.port||3306));
+    console.log("  port:     "+(c.port||(pg?5432:3306)));
     console.log("  user:     "+(c.user||"(none)"));
     console.log("  database: "+(c.database||"(none)"));
     console.log("  password: "+pw);
-    console.log("  enabled:  "+(c.enabled!==false));
+    console.log("  enabled:  "+(c.enabled!==false && !!(c.host && c.database)));
   '
 }
 
@@ -1094,7 +1103,7 @@ Commands:
   set-token   Set (or clear) the admin token for the remote reset endpoint
   token       Manage delegate API keys: token add <name> <scopes> | list | rm <name>
   admin       Show or hide the admin panel: on | off
-  db-config   Configure the optional MySQL mirror (host, user, password, db)
+  db-config   Configure the optional database mirror (MySQL / MariaDB or PostgreSQL)
   db-on       Enable the MySQL mirror
   db-off      Disable the MySQL mirror
   db-show     Show the MySQL mirror config (password masked)

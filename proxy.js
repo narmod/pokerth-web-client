@@ -9188,7 +9188,7 @@ function visitsSummaryRead(periodDays, h24, range) {
     guidePeriod: (function () { const p = visitGuidePeriod(P, L); return { days: p.days, summary: GUIDE_STATS.summary(p.guide) }; })(),
     guideSince: visitsStore.guideSince || 0,
     pings: { boot: _pingStats.boot, visits: _pingStats.n, bots: _pingStats.nBot || 0, modes: _pingStats.nMode, live: _pingStats.nLive, music: _pingStats.nMusic, guide: _pingStats.nGuide, last: _pingStats.last },
-    db: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error, lastWrite: _dbStatus.lastWrite, source: _dbStatus.source }
+    db: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error, lastWrite: _dbStatus.lastWrite, source: _dbStatus.source, type: _dbStatus.type }
   };
 }
 
@@ -9207,67 +9207,47 @@ function saveDbConfig() {
   try { fs.writeFileSync(DB_CONFIG_FILE, JSON.stringify(_dbFileCfg, null, 2)); try { fs.chmodSync(DB_CONFIG_FILE, 0o600); } catch (e2) {} }
   catch (e) { console.error('[db] config write failed:', e.message); }
 }
+// web.192: MySQL / MariaDB or PostgreSQL (server/db-dialects.js). The file
+// says which with `type`; from the environment, MYSQL_* is MySQL and
+// DB_TYPE=postgres with the standard PGHOST / PGPORT / PGUSER / PGPASSWORD /
+// PGDATABASE is PostgreSQL.
+const DB = require('./server/db-dialects.js');
+function _dbEnvCfg() {
+  const e = process.env;
+  if (DB.normType(e.DB_TYPE) === 'postgres' && e.PGHOST && e.PGDATABASE) return { type: 'postgres', host: e.PGHOST, port: Number(e.PGPORT) || 5432, user: e.PGUSER || 'postgres', password: e.PGPASSWORD || '', database: e.PGDATABASE, enabled: true, source: 'env' };
+  if (e.MYSQL_HOST && e.MYSQL_DATABASE) return { type: 'mysql', host: e.MYSQL_HOST, port: Number(e.MYSQL_PORT) || 3306, user: e.MYSQL_USER || 'root', password: e.MYSQL_PASSWORD || '', database: e.MYSQL_DATABASE, enabled: true, source: 'env' };
+  return null;
+}
 function resolveDbCfg() {
-  const eH = process.env.MYSQL_HOST, eD = process.env.MYSQL_DATABASE;
-  if (eH && eD) return { host: eH, port: Number(process.env.MYSQL_PORT) || 3306, user: process.env.MYSQL_USER || 'root', password: process.env.MYSQL_PASSWORD || '', database: eD, enabled: true, source: 'env' };
-  const f = _dbFileCfg || {};
-  if (f.host && f.database && f.enabled !== false) return { host: f.host, port: Number(f.port) || 3306, user: f.user || 'root', password: f.password || '', database: f.database, enabled: true, source: 'file' };
-  return { host: f.host || '', port: Number(f.port) || 3306, user: f.user || 'root', password: '', database: f.database || '', enabled: false, source: (f.host && f.database) ? 'file-disabled' : 'off' };
+  const env = _dbEnvCfg();
+  if (env) return env;
+  const f = _dbFileCfg || {}, type = DB.normType(f.type), port = Number(f.port) || DB.defaultPort(type);
+  if (f.host && f.database && f.enabled !== false) return { type: type, host: f.host, port: port, user: f.user || (type === 'postgres' ? 'postgres' : 'root'), password: f.password || '', database: f.database, enabled: true, source: 'file' };
+  return { type: type, host: f.host || '', port: port, user: f.user || '', password: '', database: f.database || '', enabled: false, source: (f.host && f.database) ? 'file-disabled' : 'off' };
 }
 // The admin's « Enabled » box says whether the mirror runs, as resolveDbCfg()
 // decides it: a file without host and database never mirrors, so the box is
 // not ticked for it (it read ticked while the status said Off). Env config wins.
 function _dbEnabledBox(f) {
-  if (process.env.MYSQL_HOST && process.env.MYSQL_DATABASE) return true;
+  if (_dbEnvCfg()) return true;
   return f.enabled !== false && !!(f.host && f.database);
 }
 let _dbPool = null;
 let _dbLbBusy = false;
 let _dbBcBusy = false;
-const _dbStatus = { enabled: false, connected: false, error: '', lastWrite: null, source: 'off' };
+const _dbStatus = { enabled: false, connected: false, error: '', lastWrite: null, source: 'off', type: 'mysql' };
 async function initDb() {
   const cfg = resolveDbCfg();
-  _dbStatus.enabled = cfg.enabled; _dbStatus.source = cfg.source;
-  if (!cfg.enabled) { console.log('[db] MySQL mirror disabled (configure via admin panel or: pokerth-web db-config)'); _dbPool = null; return; }
-  let mysql;
-  try { mysql = require('mysql2/promise'); }
-  catch (e) { _dbStatus.error = 'mysql2 not installed — run npm install'; console.error('[db]', _dbStatus.error); return; }
+  _dbStatus.enabled = cfg.enabled; _dbStatus.source = cfg.source; _dbStatus.type = cfg.type;
+  if (!cfg.enabled) { console.log('[db] database mirror disabled (configure via admin panel or: pokerth-web db-config)'); _dbPool = null; return; }
   try {
-    _dbPool = mysql.createPool({
-      host: cfg.host,
-      port: cfg.port,
-      user: cfg.user || 'root',
-      password: cfg.password || '',
-      database: cfg.database,
-      waitForConnections: true, connectionLimit: 4, connectTimeout: 8000, charset: 'utf8mb4'
-    });
-    await _dbPool.query('CREATE TABLE IF NOT EXISTS traffic_daily (' +
-      'day DATE PRIMARY KEY, visits INT NOT NULL DEFAULT 0, unique_visitors INT NOT NULL DEFAULT 0, ' +
-      'new_visitors INT NOT NULL DEFAULT 0, returning_visitors INT NOT NULL DEFAULT 0, ' +
-      'conn_pokerthnet INT NOT NULL DEFAULT 0, conn_lan INT NOT NULL DEFAULT 0, conn_offline INT NOT NULL DEFAULT 0, conn_live INT NOT NULL DEFAULT 0, live_visits INT NOT NULL DEFAULT 0, live_unique_visitors INT NOT NULL DEFAULT 0, ' +
-      'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
-    await _dbPool.query('CREATE TABLE IF NOT EXISTS leaderboard (' +
-      'player VARCHAR(190) PRIMARY KEY, hands_played INT NOT NULL DEFAULT 0, hands_won INT NOT NULL DEFAULT 0, ' +
-      'games_played INT NOT NULL DEFAULT 0, games_won INT NOT NULL DEFAULT 0, best_streak INT NOT NULL DEFAULT 0, ' +
-      'net BIGINT NOT NULL DEFAULT 0, big_win BIGINT NOT NULL DEFAULT 0, big_loss BIGINT NOT NULL DEFAULT 0, ' +
-      'avatar VARCHAR(16) DEFAULT NULL, ts BIGINT NOT NULL DEFAULT 0, ' +
-      'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
-    await _dbPool.query('CREATE TABLE IF NOT EXISTS broadcasts (' +
-      'id VARCHAR(64) PRIMARY KEY, message TEXT, icon VARCHAR(32) DEFAULT NULL, schedule_json TEXT, ' +
-      'enabled TINYINT(1) NOT NULL DEFAULT 0, start_at BIGINT DEFAULT NULL, end_at BIGINT DEFAULT NULL, countdown_at BIGINT DEFAULT NULL, max_runs INT DEFAULT NULL, ' +
-      'created_at BIGINT DEFAULT NULL, last_run BIGINT DEFAULT NULL, run_count INT NOT NULL DEFAULT 0, ' +
-      "target VARCHAR(48) NOT NULL DEFAULT 'all', " +
-      'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
-    // Migration douce pour les tables existantes (MariaDB ; sans IF NOT EXISTS on ignore l'erreur "duplicate column").
-    try { await _dbPool.query("ALTER TABLE broadcasts ADD COLUMN IF NOT EXISTS target VARCHAR(16) NOT NULL DEFAULT 'all'"); } catch (e) {}
-    try { await _dbPool.query("ALTER TABLE broadcasts MODIFY COLUMN target VARCHAR(48) NOT NULL DEFAULT 'all'"); } catch (e) {}  // 'lan:<id>' targets
-    try { await _dbPool.query('ALTER TABLE broadcasts ADD COLUMN IF NOT EXISTS start_at BIGINT DEFAULT NULL'); } catch (e) {}
-    try { await _dbPool.query('ALTER TABLE broadcasts ADD COLUMN IF NOT EXISTS countdown_at BIGINT DEFAULT NULL'); } catch (e) {}
-    try { await _dbPool.query('ALTER TABLE traffic_daily ADD COLUMN IF NOT EXISTS conn_live INT NOT NULL DEFAULT 0'); } catch (e) {}
-    try { await _dbPool.query('ALTER TABLE traffic_daily ADD COLUMN IF NOT EXISTS live_visits INT NOT NULL DEFAULT 0'); } catch (e) {}
-    try { await _dbPool.query('ALTER TABLE traffic_daily ADD COLUMN IF NOT EXISTS live_unique_visitors INT NOT NULL DEFAULT 0'); } catch (e) {}
+    _dbPool = DB.connect(cfg.type, Object.assign({}, cfg, { onError: function (e) { _dbStatus.error = e.message; _dbStatus.connected = false; console.error('[db] pool error:', e.message); } }));
+  } catch (e) { _dbPool = null; _dbStatus.error = e.message; console.error('[db]', e.message); return; }
+  try {
+    for (const q of DB.schema(cfg.type)) await _dbPool.query(q);
+    for (const q of DB.migrations(cfg.type)) { try { await _dbPool.query(q); } catch (e) {} }
     _dbStatus.connected = true; _dbStatus.error = '';
-    console.log('[db] MySQL mirror connected (' + cfg.database + ', source: ' + cfg.source + ')');
+    console.log('[db] ' + DB.label(cfg.type) + ' mirror connected (' + cfg.database + ', source: ' + cfg.source + ')');
     dbFlushTrafficAll().then(function () { _dbLastDay = visitDayKey(); });
     dbFlushLeaderboard();
     dbFlushBroadcasts();
@@ -9285,6 +9265,12 @@ async function reconfigureDb() {
 // midnight writes yesterday's row once more, so the pings of its last
 // seconds (saved after the clock passed midnight) are not lost; on connect
 // every day still held is written, so the mirror is not missing its history.
+const _DB_COLS = {
+  traffic_daily: ['day', 'visits', 'unique_visitors', 'new_visitors', 'returning_visitors', 'conn_pokerthnet', 'conn_lan', 'conn_offline', 'conn_live', 'live_visits', 'live_unique_visitors'],
+  leaderboard: ['player', 'hands_played', 'hands_won', 'games_played', 'games_won', 'best_streak', 'net', 'big_win', 'big_loss', 'avatar', 'ts'],
+  broadcasts: ['id', 'message', 'icon', 'schedule_json', 'enabled', 'start_at', 'end_at', 'countdown_at', 'max_runs', 'created_at', 'last_run', 'run_count', 'target']
+};
+function _dbUpsert(table) { return DB.upsert(_dbStatus.type, table, _DB_COLS[table], _DB_COLS[table][0]); }
 let _dbLastDay = '';
 async function dbFlushTrafficToday() {
   if (!_dbPool) return;
@@ -9305,8 +9291,7 @@ async function dbFlushTrafficDay(day) {
     const u = b.ids ? Object.keys(b.ids).length : 0;
     const m = b.m || {};
     await _dbPool.query(
-      'INSERT INTO traffic_daily (day, visits, unique_visitors, new_visitors, returning_visitors, conn_pokerthnet, conn_lan, conn_offline, conn_live, live_visits, live_unique_visitors) VALUES (?,?,?,?,?,?,?,?,?,?,?) ' +
-      'ON DUPLICATE KEY UPDATE visits=VALUES(visits), unique_visitors=VALUES(unique_visitors), new_visitors=VALUES(new_visitors), returning_visitors=VALUES(returning_visitors), conn_pokerthnet=VALUES(conn_pokerthnet), conn_lan=VALUES(conn_lan), conn_offline=VALUES(conn_offline), conn_live=VALUES(conn_live), live_visits=VALUES(live_visits), live_unique_visitors=VALUES(live_unique_visitors)',
+      _dbUpsert('traffic_daily'),
       [day, b.v || 0, u, b.nw || 0, b.rt || 0, m.pokerthnet || 0, m.lan || 0, m.offline || 0, m.live || 0, b.lv || 0, b.lids ? Object.keys(b.lids).length : 0]
     );
     _dbStatus.lastWrite = new Date().toISOString(); _dbStatus.connected = true; _dbStatus.error = '';
@@ -9320,8 +9305,7 @@ async function dbFlushLeaderboard() {
     for (const name of names) {
       const s = statsStore[name] || {};
       await _dbPool.query(
-        'INSERT INTO leaderboard (player, hands_played, hands_won, games_played, games_won, best_streak, net, big_win, big_loss, avatar, ts) VALUES (?,?,?,?,?,?,?,?,?,?,?) ' +
-        'ON DUPLICATE KEY UPDATE hands_played=VALUES(hands_played), hands_won=VALUES(hands_won), games_played=VALUES(games_played), games_won=VALUES(games_won), best_streak=VALUES(best_streak), net=VALUES(net), big_win=VALUES(big_win), big_loss=VALUES(big_loss), avatar=VALUES(avatar), ts=VALUES(ts)',
+        _dbUpsert('leaderboard'),
         [String(name).slice(0, 190), s.handsPlayed || 0, s.handsWon || 0, s.gamesPlayed || 0, s.gamesWon || 0, s.bestStreak || 0, s.net || 0, s.bigWin || 0, s.bigLoss || 0, (String(s.avatar || '').slice(0, 16) || null), s.ts || 0]
       );
     }
@@ -9337,8 +9321,7 @@ async function dbFlushBroadcasts() {
     for (const j of _broadcasts) {
       ids.push(String(j.id).slice(0, 64));
       await _dbPool.query(
-        'INSERT INTO broadcasts (id, message, icon, schedule_json, enabled, start_at, end_at, countdown_at, max_runs, created_at, last_run, run_count, target) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ' +
-        'ON DUPLICATE KEY UPDATE message=VALUES(message), icon=VALUES(icon), schedule_json=VALUES(schedule_json), enabled=VALUES(enabled), start_at=VALUES(start_at), end_at=VALUES(end_at), countdown_at=VALUES(countdown_at), max_runs=VALUES(max_runs), created_at=VALUES(created_at), last_run=VALUES(last_run), run_count=VALUES(run_count), target=VALUES(target)',
+        _dbUpsert('broadcasts'),
         [String(j.id).slice(0, 64), (j.message != null ? String(j.message).slice(0, 2000) : null), (j.icon ? String(j.icon).slice(0, 32) : null), JSON.stringify(j.schedule || null), j.enabled ? 1 : 0, (j.startAt != null ? Number(j.startAt) : null), (j.endAt != null ? Number(j.endAt) : null), (j.countdownAt != null ? Number(j.countdownAt) : null), (j.maxRuns != null ? Number(j.maxRuns) : null), (j.createdAt != null ? Number(j.createdAt) : null), (j.lastRun != null ? Number(j.lastRun) : null), Number(j.runCount) || 0, _bcTarget(j.target)]
       );
     }
@@ -11953,15 +11936,16 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/db' && req.method === 'GET') {
     if (!adminAuthed(query, null)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     const f = _dbFileCfg || {};
-    return adminJson(res, 200, { ok: true, config: { host: f.host || '', port: Number(f.port) || 3306, user: f.user || '', database: f.database || '', enabled: _dbEnabledBox(f), hasPassword: !!f.password }, status: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error || '', lastWrite: _dbStatus.lastWrite, source: _dbStatus.source } });
+    return adminJson(res, 200, { ok: true, config: { type: DB.normType(f.type), host: f.host || '', port: Number(f.port) || DB.defaultPort(f.type), user: f.user || '', database: f.database || '', enabled: _dbEnabledBox(f), hasPassword: !!f.password }, types: DB.TYPES.map(function (t) { return { value: t, label: DB.label(t) }; }), status: { type: _dbStatus.type, enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error || '', lastWrite: _dbStatus.lastWrite, source: _dbStatus.source } });
   }
   if (reqPathOnly === '/admin/db' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       if (!d || typeof d !== 'object') return adminJson(res, 400, { ok: false, error: 'bad request' });
       const c = _dbFileCfg || {};
+      if (typeof d.type === 'string') c.type = DB.normType(d.type);
       if (typeof d.host === 'string') c.host = d.host.trim().slice(0, 255);
-      if (d.port !== undefined) c.port = Number(d.port) || 3306;
+      if (d.port !== undefined) c.port = Number(d.port) || DB.defaultPort(c.type);
       if (typeof d.user === 'string') c.user = d.user.slice(0, 128);
       if (typeof d.database === 'string') c.database = d.database.trim().slice(0, 128);
       if (typeof d.enabled === 'boolean') c.enabled = d.enabled;
@@ -11969,9 +11953,9 @@ function handleAdmin(req, res, reqPathOnly, query) {
       if (typeof c.password !== 'string') c.password = '';
       _dbFileCfg = c; saveDbConfig();
       reconfigureDb().then(function () {
-        adminJson(res, 200, { ok: true, status: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error || '', source: _dbStatus.source, lastWrite: _dbStatus.lastWrite } });
+        adminJson(res, 200, { ok: true, status: { type: _dbStatus.type, enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error || '', source: _dbStatus.source, lastWrite: _dbStatus.lastWrite } });
       }).catch(function (e) {
-        adminJson(res, 200, { ok: true, status: { enabled: _dbStatus.enabled, connected: false, error: String((e && e.message) || e), source: _dbStatus.source } });
+        adminJson(res, 200, { ok: true, status: { type: _dbStatus.type, enabled: _dbStatus.enabled, connected: false, error: String((e && e.message) || e), source: _dbStatus.source } });
       });
     });
   }
@@ -11979,22 +11963,16 @@ function handleAdmin(req, res, reqPathOnly, query) {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       const f = _dbFileCfg || {};
+      const type = DB.normType((d && typeof d.type === 'string') ? d.type : f.type);
       const host = (d && typeof d.host === 'string' && d.host.trim()) ? d.host.trim() : f.host;
-      const port = (d && d.port !== undefined) ? (Number(d.port) || 3306) : (Number(f.port) || 3306);
-      const user = (d && typeof d.user === 'string') ? d.user : (f.user || 'root');
+      const port = (d && d.port !== undefined) ? (Number(d.port) || DB.defaultPort(type)) : (Number(f.port) || DB.defaultPort(type));
+      const user = (d && typeof d.user === 'string' && d.user) ? d.user : (f.user || (type === 'postgres' ? 'postgres' : 'root'));
       const database = (d && typeof d.database === 'string' && d.database.trim()) ? d.database.trim() : f.database;
       const password = (d && typeof d.password === 'string' && d.password.length) ? d.password : (f.password || '');
       if (!host || !database) return adminJson(res, 400, { ok: false, error: 'host and database required' });
-      let mysql; try { mysql = require('mysql2/promise'); } catch (e) { return adminJson(res, 200, { ok: false, error: 'mysql2 not installed \u2014 run npm install' }); }
-      (async function () {
-        let conn;
-        try {
-          conn = await mysql.createConnection({ host: host, port: port, user: user || 'root', password: password, database: database, connectTimeout: 8000 });
-          await conn.query('SELECT 1');
-          await conn.end();
-          adminJson(res, 200, { ok: true });
-        } catch (e) { try { if (conn) await conn.end(); } catch (e2) {} adminJson(res, 200, { ok: false, error: String((e && e.message) || e) }); }
-      })();
+      DB.testConnection(type, { host: host, port: port, user: user, password: password, database: database })
+        .then(function () { adminJson(res, 200, { ok: true, type: type }); })
+        .catch(function (e) { adminJson(res, 200, { ok: false, error: String((e && e.message) || e) }); });
     });
   }
   if (reqPathOnly === '/admin/tokens' && req.method === 'GET') {

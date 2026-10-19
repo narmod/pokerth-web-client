@@ -40,6 +40,16 @@ highlights below.
   language (by name). Music: plays, most played, titles played, votes. Ace's Help: help offered, accepted, tips
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
+### Added
+- **PostgreSQL for the database mirror** (`web.192`) — the optional mirror (traffic_daily, leaderboard, broadcasts)
+  now writes to MySQL / MariaDB **or PostgreSQL**. The SQL that differs (driver, column types, upsert, placeholders)
+  lives in `server/db-dialects.js`; the MySQL statements are byte for byte those of `web.191`, so an existing mirror
+  sees no change (`scripts/test-db-dialects.mjs`, with a live PostgreSQL part under `PTH_TEST_PG=1`). Infrastructure ›
+  Database gains a **Type** select (its usual port and user follow it), the tiles and status say which database;
+  `db-config.json` stores `type`; `pokerth-web db-config` asks for it first and `db-show` prints it; from the
+  environment, `DB_TYPE=postgres` with the standard `PG*` variables. New runtime dependency `pg` (pure JavaScript):
+  « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
+
 ### Fixed
 - **Database: the « Enabled » box matches the mirror** (`web.191`) — with no host and database set, the box read
   ticked (`/admin/db` reported `enabled: true` for any file without `enabled: false`) while the status said Off,

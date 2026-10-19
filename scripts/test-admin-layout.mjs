@@ -322,7 +322,8 @@ ok(/max-width:560px/.test(admin),
   'the control stays near its label instead of drifting to the far edge');
 ok(!/class="defrow" style="display:flex/.test(admin), 'no settings row carries the flex inline any more');
 // web.177: the leaderboard reset period became a settings row (75).
-ok((admin.match(/class="defrow fld/g) || []).length === 75, 'all 75 rows use it');
+// web.192: + the database Type row (76).
+ok((admin.match(/class="defrow fld/g) || []).length === 76, 'all 76 rows use it');
 ok(/\.fld\.left\{justify-content:flex-start\}/.test(admin), 'the left-aligned variant survives');
 ok(/\.fld\.gap\{margin:10px 0 5px\}/.test(admin), 'so does the wider-margin variant');
 ok(/\.fld>input\[type=number\]\{width:110px\}/.test(admin), 'short control widths live in the sheet');

@@ -726,7 +726,8 @@ These configure the **proxy** at runtime (read by `proxy.js`). They are separate
 | `ADMIN_ENABLED` | _enabled_ | Serve the `/admin` console. Set to `0` / `false` / `off` / `no` to hide it (every `/admin/*` route returns `404`). The `pokerth-web admin on`/`off` command is the persistent way to set this. |
 | `STATS_RESET_PERIOD` | `monthly` | Leaderboard auto-reset: `off` / `daily` / `weekly` / `monthly` / `yearly`. |
 | `STATS_ADMIN_TOKEN` | _(unset)_ | Token that unlocks the admin panel and the remote `/stats` reset; with no token, both are off. |
-| `MYSQL_HOST` · `MYSQL_PORT` · `MYSQL_USER` · `MYSQL_PASSWORD` · `MYSQL_DATABASE` | _(unset)_ · `3306` | Optional **MySQL/MariaDB mirror**. Set `MYSQL_HOST` + `MYSQL_DATABASE` to enable; these override the admin-panel / `db-config` settings. See [Optional MySQL mirror](#mysql-mirror). |
+| `MYSQL_HOST` · `MYSQL_PORT` · `MYSQL_USER` · `MYSQL_PASSWORD` · `MYSQL_DATABASE` | _(unset)_ · `3306` | Optional **MySQL/MariaDB mirror**. Set `MYSQL_HOST` + `MYSQL_DATABASE` to enable; these override the admin-panel / `db-config` settings. See [Optional database mirror](#mysql-mirror). |
+| `DB_TYPE=postgres` + `PGHOST` · `PGPORT` · `PGUSER` · `PGPASSWORD` · `PGDATABASE` | _(unset)_ · `5432` | Optional **PostgreSQL mirror** (the standard libpq variables). Set `DB_TYPE=postgres`, `PGHOST` and `PGDATABASE` to enable; they override the admin-panel / `db-config` settings and come before `MYSQL_*`. |
 | `PM2_NAME` | `pokerth-web` | PM2 process name the proxy targets for its self-update / restart actions. |
 | `SELF_UPDATE` | `0` | **Docker only** — `1` makes the entrypoint provision a git checkout in `/srv/app` (mount a volume there) and run the app from it, so the admin **Update** button works. See [Docker](#docker). |
 | `GIT_BRANCH` | `main` | Branch tracked by the self-update (both the Docker entrypoint and the admin Update button). |
@@ -1013,19 +1014,19 @@ To use it, open `/admin`, paste your token and **Log in**. The console is organi
 - **Game servers** *(master-only)* — the registry of PokerTH servers the proxy may dial (a LAN box or an Internet host), each with host, port, a TLS flag and a **Check** button that reads live player/game counts. It also sets what the *Internet / PokerTH.net* choice targets: **Auto** — follow PokerTH's official serverlist (`serverlist.xml.z`) so a server move is tracked automatically — or **Manual** (a built-in or registered server) — and how it gets there: **Direct WS** (the browser dials `wss://www.pokerth.net/pthlive` itself — historical default) or **Via proxy** (the connection is bridged through this proxy, gaining the session-grace / buffered-reconnect protection against wifi drops; required for a co-hosted `127.0.0.1` target). The **LAN / dedicated button** card sets the server pre-filled behind the LAN choice (automatic = this page's address, or a forced host, port and TLS) and can force or hide the proxy URL field. The **effective dial allowlist** (anti-open-relay guard) is shown for reference.
 
 <a id="mysql-mirror"></a>
-### Optional MySQL mirror
+### Optional database mirror (MySQL / MariaDB or PostgreSQL)
 
-By default the server keeps everything it needs in small JSON files (`stats.json`, `visits.json`, `broadcasts.json`) — no database required. If you'd like to also stream that data into **MySQL / MariaDB** — for dashboards, backups or external reporting — you can switch on an optional mirror. The JSON files always remain the live source of truth; MySQL is written **in addition**, never instead.
+By default the server keeps everything it needs in small JSON files (`stats.json`, `visits.json`, `broadcasts.json`) — no database required. If you'd like to also stream that data into **MySQL / MariaDB** or **PostgreSQL** — for dashboards, backups or external reporting — you can switch on an optional mirror. The JSON files always remain the live source of truth; the database is written **in addition**, never instead.
 
 When enabled, three tables are kept in sync and created automatically on first connect: **`traffic_daily`** (daily visits, unique / new / returning, per-server counts), **`leaderboard`** (per-nickname lifetime stats) and **`broadcasts`** (your scheduled messages).
 
 You can configure it three ways — whichever suits you:
 
-- **Admin panel** — the *Traffic* tab has a form (host, port, user, password, database) with an **Enabled** switch, a **Test connection** button, and **Save & connect**, which reconnects live with no restart.
-- **Command line** — `sudo pokerth-web db-config` walks through the same settings (the password prompt is hidden; leave it blank to keep the current one), then restarts. `pokerth-web db-on` / `db-off` toggle the mirror, and `pokerth-web db-show` prints the config with the password masked.
-- **Environment variables** — set `MYSQL_HOST` and `MYSQL_DATABASE` (and optionally `MYSQL_PORT`, `MYSQL_USER`, `MYSQL_PASSWORD`). Convenient for Docker or an existing ops setup.
+- **Admin panel** — *Infrastructure › Database* has a form (type, host, port, user, password, database) with an **Enabled** switch, a **Test connection** button, and **Save & connect**, which reconnects live with no restart.
+- **Command line** — `sudo pokerth-web db-config` walks through the same settings, type first (the password prompt is hidden; leave it blank to keep the current one), then restarts. `pokerth-web db-on` / `db-off` toggle the mirror, and `pokerth-web db-show` prints the config with the password masked.
+- **Environment variables** — for MySQL / MariaDB, set `MYSQL_HOST` and `MYSQL_DATABASE` (and optionally `MYSQL_PORT`, `MYSQL_USER`, `MYSQL_PASSWORD`); for PostgreSQL, set `DB_TYPE=postgres` with `PGHOST` and `PGDATABASE` (and optionally `PGPORT`, `PGUSER`, `PGPASSWORD`). Convenient for Docker or an existing ops setup.
 
-Both the admin form and the CLI write to **`db-config.json`** in the install directory (created with `600` permissions; the password is stored there and is **never returned** by the admin API). **Environment variables take precedence** when set — useful as an ops override — and in that case the admin form shows the active source and locks itself. The `mysql2` driver ships with the project, so there's nothing else to install.
+Both the admin form and the CLI write to **`db-config.json`** in the install directory (created with `600` permissions; the password is stored there and is **never returned** by the admin API). **Environment variables take precedence** when set — useful as an ops override — and in that case the admin form shows the active source and locks itself. Both drivers (`mysql2`, `pg`) ship with the project, so there's nothing else to install. The tables are the same on both; on PostgreSQL `updated_at` is a `TIMESTAMPTZ` set by each write.
 
 <a id="leaderboard-reset"></a>
 ### Resetting the family leaderboard
