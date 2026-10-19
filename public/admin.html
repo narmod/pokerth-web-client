@@ -735,6 +735,8 @@
   .sfoot{display:flex;flex-direction:column;gap:6px;padding:12px 6px 0;border-top:1px solid var(--line);font-size:.75rem;color:var(--muted)}
   .sfrow{display:flex;justify-content:space-between;gap:8px}
   .sfrow>span:last-child{color:var(--navfg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sfrow>label{font-size:inherit;color:inherit;margin:0;display:block;align-self:center}
+  .sfrow>select{width:auto;min-width:0;margin:0;padding:2px 6px;font-size:.75rem;border-radius:6px;background:transparent;color:var(--navfg);border:1px solid var(--line)}
   .sfbtns{display:flex;gap:8px;margin-top:4px}
   .sfbtns .ghost{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px}
   .sfbtns #logoutBtn{flex:1}
@@ -1184,6 +1186,7 @@
       <div class="sfoot">
         <div class="sfrow"><span>Build</span><span id="sideVer" class="mono">—</span></div>
         <div class="sfrow"><span>Signed in with</span><span id="sideWho">—</span></div>
+        <div class="sfrow"><label for="idleSel">Log out when idle</label><select id="idleSel" title="Remembered on this device only"><option value="10">after 10 min</option><option value="60">after 1 h</option><option value="0">never</option></select></div>
         <div class="sfbtns">
           <button id="themeBtn" class="ghost ico" type="button" title="Toggle dark / light" aria-label="Toggle dark / light"></button>
           <button id="logoutBtn" class="ghost" type="button"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M120,128V48a8,8,0,0,1,16,0v80a8,8,0,0,1-16,0Zm60.37-78.7a8,8,0,0,0-8.74,13.4C194.74,77.77,208,101.57,208,128a80,80,0,0,1-160,0c0-26.43,13.26-50.23,36.37-65.3a8,8,0,0,0-8.74-13.4C47.9,67.38,32,96.06,32,128a96,96,0,0,0,192,0C224,96.06,208.1,67.38,180.37,49.3Z"/></svg>Log out</button>
@@ -2774,10 +2777,15 @@
   // Auto-logout: after IDLE_MS without any pointer/key/scroll activity, clear
   // the stored token and return to the login screen. A 30 s checker compares
   // the last-activity stamp; activity listeners (capture+passive) just stamp.
+  // The delay is chosen per device (side menu › Log out when idle): 10 min by
+  // default, 1 h, or never — for a screen left open to watch the server.
   var IDLE_MS=10*60*1000, _idleLast=Date.now();
+  try{ var _im=localStorage.getItem('pth_admin_idle'); if(_im==='60') IDLE_MS=60*60*1000; else if(_im==='0') IDLE_MS=0; }catch(e){}
+  (function(){ var sel=$('idleSel'); if(!sel) return; sel.value=IDLE_MS===0?'0':(IDLE_MS===3600000?'60':'10');
+    sel.addEventListener('change',function(){ var v=sel.value; IDLE_MS=v==='0'?0:(v==='60'?3600000:600000); _idleReset(); try{ localStorage.setItem('pth_admin_idle',v); }catch(e){} }); })();
   function _idleReset(){ _idleLast=Date.now(); }
   function doLogout(reason){ srvStop(); seStop(); clkStop(); liveStop(); sectionEvent(''); localStorage.removeItem(TOKK); $('ltok').value=''; if($('loginErr')) $('loginErr').textContent=reason||''; show('login'); }
-  function _idleCheck(){ if(tok() && dash.style.display!=='none' && Date.now()-_idleLast>IDLE_MS) doLogout('Logged out after 10 minutes of inactivity.'); }
+  function _idleCheck(){ if(IDLE_MS && tok() && dash.style.display!=='none' && Date.now()-_idleLast>IDLE_MS) doLogout('Logged out after '+(IDLE_MS>=3600000?'1 hour':'10 minutes')+' of inactivity.'); }
   ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(function(ev){ document.addEventListener(ev,_idleReset,{passive:true,capture:true}); });
   setInterval(_idleCheck, 30000);
   var _isMaster=true;
@@ -7333,7 +7341,10 @@
     if(ti) ti.addEventListener('click',pick);
     if(f) f.addEventListener('input',_seRender);
   })();
-  function seStart(){ loadSessions(); if(_seTimer) return; _seTimer=setInterval(loadSessions,5000); }
+  // Every 5 s while Sessions is open and the browser tab visible; coming back
+  // to the tab reads at once instead of waiting for the next tick.
+  function seStart(){ loadSessions(); if(_seTimer) return; _seTimer=setInterval(function(){ if(!document.hidden) loadSessions(); },5000); }
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden && _seTimer) loadSessions(); });
   function seStop(){ if(_seTimer){ clearInterval(_seTimer); _seTimer=null; } }
   (function(){ var b=$('seRefresh'); if(b) b.addEventListener('click',function(){ var m=$('seMsg'); if(m){ m.textContent=''; m.className='msg'; } loadSessions(); }); })();
 

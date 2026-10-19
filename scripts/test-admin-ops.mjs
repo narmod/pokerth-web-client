@@ -97,6 +97,14 @@ ok($('cfgExport').closest('#panel-backup') && !doc.querySelector('#panel-backup 
 // ── Clear logs sits with the logs ─────────────────────────────────────────
 ok($('btnClearLogs').closest('#panel-server') && /logQuickMsg/.test(html.slice(html.indexOf('function clearLogs'), html.indexOf('function clearLogs') + 600)), 'Clear logs is under Health & logs and answers there');
 ok(/confirm\('Clear the recent logs/.test(html), 'and asks first');
+// ── Idle logout per device, Sessions paused when hidden, dead default keys (web.165) ─
+const idle = $('idleSel');
+ok(idle && [...idle.options].map((o) => o.value).join(',') === '10,60,0' && idle.value === '10', 'the side menu offers 10 min, 1 h or never, 10 min by default');
+idle.value = '0'; idle.dispatchEvent(new window.Event('change'));
+ok(window.localStorage.getItem('pth_admin_idle') === '0', 'the choice is remembered on this device');
+ok(/function _idleCheck\(\)\{ if\(IDLE_MS && /.test(html), 'never means no idle logout at all');
+ok(/setInterval\(function\(\)\{ if\(!document\.hidden\) loadSessions\(\); \},5000\)/.test(html), 'Sessions does not poll while the browser tab is hidden');
+ok(!/'autobtn'|'quickbet'/.test(readFileSync(join(root, 'proxy.js'), 'utf8')), 'the server no longer accepts the two defaults nothing applied');
 ok(errors.length === 0, 'nothing threw' + (errors.length ? ': ' + errors[0] : ''));
 
 console.log(fail ? 'FAIL ' + fail + '/' + n : 'OK ' + n + '/' + n);

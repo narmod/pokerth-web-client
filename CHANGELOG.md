@@ -30,6 +30,12 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Admin: idle logout chosen per device, Sessions paused in a hidden tab, two dead defaults dropped** (`web.165`) —
+  the side menu has « Log out when idle »: after 10 min (default), after 1 h or never, remembered on that device
+  (`pth_admin_idle`), for a screen left open to watch the server; the logout message names the delay. Live ›
+  Sessions no longer polls every 5 s while the browser tab is hidden, and reads at once when it comes back, like
+  Health & logs. `proxy.js` no longer accepts `autobtn` and `quickbet` in the first-visit defaults: nothing in the
+  admin set them and the client never applied them.
 - **Admin: every card opens on a short summary** (`web.164`) — the long explanations fold under a « details » line,
   word for word, in SEO (4), Backup, Blocked addresses, Roll back, LAN directory (pending requests, settings), Discord
   relay, Sessions, Client errors (the colour legend included), music votes, Audit log, Proxy (the always-allowed

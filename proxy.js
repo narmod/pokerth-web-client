@@ -10975,7 +10975,9 @@ function handleAdmin(req, res, reqPathOnly, query) {
           };
         }
         if (d.defaults && typeof d.defaults === 'object') {
-          var DEF_KEYS = ['haptic', 'voice', 'assist', 'autobtn', 'quickbet', 'displaybb'];
+          // The four the client applies on a first visit (_applyDefaultSettings in
+          // pokerth.js); autobtn and quickbet were accepted here but never applied.
+          var DEF_KEYS = ['haptic', 'voice', 'assist', 'displaybb'];
           var dout = {};
           DEF_KEYS.forEach(function (k) { var v = d.defaults[k]; if (v === '0' || v === '1') dout[k] = v; });
           _adminConfig.defaults = dout;
