@@ -83,7 +83,7 @@ await settle(400);
 
 const box = $('trafSrc'), seg = $('srcSeg');
 ok(!!box && !!seg, 'the sources card has its three-view switch');
-ok(seg && [...seg.querySelectorAll('button')].map((x) => x.textContent).join(' · ') === 'Channels · New visitors · Languages', 'Channels · New visitors · Languages');
+ok(seg && [...seg.querySelectorAll('button')].map((x) => x.textContent).join(' · ') === 'Channels · New visitors · Source × language', 'Channels · New visitors · Source × language');
 const segBtn = (k) => seg.querySelector('button[data-k="' + k + '"]');
 
 // ── Channels (default) ──────────────────────────────────────────────────

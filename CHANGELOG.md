@@ -41,6 +41,9 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Visitors › « Source × language »** (`web.183`, audit of 2026-10-19c, S6) — « Where visitors come from » named its
+  source-by-language view « Languages », right under the « Language » view of « What visitors run », which reads
+  something else (the language of every visit, not first visits by source). The button now says what it shows.
 - **Statistics › Summary tiles like every other page** (`web.181`, audit of 2026-10-19c, S3) — its eight figures sat
   as boxes inside a card, with their own size and grid (one column on a phone for the second row). They are now two
   rows of the admin tile: panel colour, coloured top edge, four across and two on a phone. The top edge carries the
