@@ -9214,6 +9214,13 @@ function resolveDbCfg() {
   if (f.host && f.database && f.enabled !== false) return { host: f.host, port: Number(f.port) || 3306, user: f.user || 'root', password: f.password || '', database: f.database, enabled: true, source: 'file' };
   return { host: f.host || '', port: Number(f.port) || 3306, user: f.user || 'root', password: '', database: f.database || '', enabled: false, source: (f.host && f.database) ? 'file-disabled' : 'off' };
 }
+// The admin's « Enabled » box says whether the mirror runs, as resolveDbCfg()
+// decides it: a file without host and database never mirrors, so the box is
+// not ticked for it (it read ticked while the status said Off). Env config wins.
+function _dbEnabledBox(f) {
+  if (process.env.MYSQL_HOST && process.env.MYSQL_DATABASE) return true;
+  return f.enabled !== false && !!(f.host && f.database);
+}
 let _dbPool = null;
 let _dbLbBusy = false;
 let _dbBcBusy = false;
@@ -11946,7 +11953,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/db' && req.method === 'GET') {
     if (!adminAuthed(query, null)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     const f = _dbFileCfg || {};
-    return adminJson(res, 200, { ok: true, config: { host: f.host || '', port: Number(f.port) || 3306, user: f.user || '', database: f.database || '', enabled: f.enabled !== false, hasPassword: !!f.password }, status: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error || '', lastWrite: _dbStatus.lastWrite, source: _dbStatus.source } });
+    return adminJson(res, 200, { ok: true, config: { host: f.host || '', port: Number(f.port) || 3306, user: f.user || '', database: f.database || '', enabled: _dbEnabledBox(f), hasPassword: !!f.password }, status: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error || '', lastWrite: _dbStatus.lastWrite, source: _dbStatus.source } });
   }
   if (reqPathOnly === '/admin/db' && req.method === 'POST') {
     return readJsonBody(req, function (d) {

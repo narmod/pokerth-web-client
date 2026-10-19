@@ -6043,7 +6043,7 @@
     }
     var box=$('dbTiles'); if(!box) return;
     var T=[['Mirror',!st.enabled?'Off':(st.connected?'Connected':'Error'),!st.enabled?'nothing is copied':(st.connected?'copying as it happens':'see the card below'),!st.enabled?'var(--muted)':(st.connected?'var(--ok-text)':'var(--err-text)')],
-      ['Set by',st.source==='env'?'Environment':'This page',st.source==='env'?'MYSQL_* variables':'the form below','var(--accent)'],
+      ['Set by',st.source==='env'?'Environment':(st.source==='off'?'—':'This page'),st.source==='env'?'MYSQL_* variables':(st.source==='off'?'not set up yet':'the form below'),'var(--accent)'],
       ['Last write',lw?_auAgo(Date.now()-lw):'—',lw?esc((''+st.lastWrite).replace('T',' ').slice(0,16)):'nothing written yet','var(--m-live)'],
       ['Tables','3','traffic_daily, leaderboard, broadcasts','var(--warn-text)']];
     box.innerHTML=T.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join('');
@@ -6059,7 +6059,7 @@
     dbSetState('Saving\u2026','');
     api('/admin/db',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(dbFormBody())})
       .then(function(r){return r.json();}).then(function(d){
-        if(d && d.ok){ var st=d.status||{}; if(!st.enabled) dbSetState('Saved. Mirror is disabled.','ok'); else if(st.connected) dbSetState('Saved & connected.','ok'); else dbSetState('Saved, but connection failed: '+(st.error||'error'),'err'); if($('dbPass')) $('dbPass').value=''; loadTraffic(); }
+        if(d && d.ok){ var st=d.status||{}; dbPaint(st); if(!st.enabled) dbSetState(($('dbEnabled')&&$('dbEnabled').checked)?'Saved, but the mirror stays off: it needs both a host and a database.':'Saved. Mirror is disabled.',($('dbEnabled')&&$('dbEnabled').checked)?'':'ok'); else if(st.connected) dbSetState('Saved & connected.','ok'); else dbSetState('Saved, but connection failed: '+(st.error||'error'),'err'); if($('dbPass')) $('dbPass').value=''; loadTraffic(); }
         else dbSetState('Failed: '+((d&&d.error)||'forbidden'),'err');
       }).catch(function(){ dbSetState('Network error.','err'); });
   }

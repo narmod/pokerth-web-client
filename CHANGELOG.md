@@ -40,6 +40,12 @@ highlights below.
   language (by name). Music: plays, most played, titles played, votes. Ace's Help: help offered, accepted, tips
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
+### Fixed
+- **Database: the « Enabled » box matches the mirror** (`web.191`) — with no host and database set, the box read
+  ticked (`/admin/db` reported `enabled: true` for any file without `enabled: false`) while the status said Off,
+  since `resolveDbCfg()` needs both to mirror. The box now says what the server does (`_dbEnabledBox`); « Set by »
+  reads « not set up yet »; saving with the box ticked but no host or database says why the mirror stays off.
+
 ### Changed
 - **The login page's LAN list is set on Game servers** (`web.190`, audit of 2026-10-19c, P6; Arnaud's choice C) —
   what the LAN / dedicated button offers was split: its default server on Infrastructure › Game servers, and the
