@@ -41,6 +41,10 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Client errors under Operations** (`web.185`, audit of 2026-10-19c, P4) — the script errors players' browsers
+  report are not « live »: they sat in Live beside Sessions. They are now Operations › Client errors, next to
+  Health & logs, where a server problem is looked into. Live keeps Sessions alone and opens it directly, like
+  Overview.
 - **Statistics › Data split up** (`web.184`, audit of 2026-10-19c, P1; Arnaud's choice B) — the page mixed four
   things that are not statistics to read. The MySQL mirror (it also copies the leaderboard and the broadcasts) is
   now Infrastructure › Database, with tiles (mirror, set by, last write, tables) read from `/admin/db` when the

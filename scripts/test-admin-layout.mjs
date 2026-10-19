@@ -43,9 +43,9 @@ const shellJs = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..',
 // classes, so the handlers that open a panel are the same as before.
 const GROUPS = {
   overview: ['overview'],
-  stats: ['traffic/overview', 'traffic/world', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace'], live: ['sessions', 'errors'], community: ['board', 'polls', 'broadcast', 'landir'],
+  stats: ['traffic/overview', 'traffic/world', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace'], live: ['sessions'], community: ['board', 'polls', 'broadcast', 'landir'],
   content: ['packages', 'music'], players: ['login', 'lobby', 'firstvisit', 'features'], infra: ['servers', 'proxy', 'database', 'identity'],
-  ops: ['server', 'deploy', 'backup'], security: ['keys', 'audit', 'blocked'],
+  ops: ['server', 'errors', 'deploy', 'backup'], security: ['keys', 'audit', 'blocked'],
 };
 function grp(g) {
   const a = admin.indexOf('<div class="sgrp');
