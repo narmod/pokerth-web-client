@@ -8236,6 +8236,10 @@
       if(h2s.length!==1) return;
       var h2 = h2s[0];
       if(card.firstElementChild!==h2) return;          // only header-first cards
+      // The only card of its page stays open (web.187): folding it left the
+      // page empty under its tiles (Proxy, Features, Search engines…).
+      var page = card.closest('.tsub') || card.closest('[id^="panel-"]');
+      if(page && page.querySelectorAll('.card').length===1) return;
       var body = document.createElement('div'); body.className='card-body';
       while(h2.nextSibling) body.appendChild(h2.nextSibling);
       card.appendChild(body);

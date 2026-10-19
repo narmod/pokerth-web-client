@@ -41,6 +41,10 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **The only card of a page no longer folds** (`web.187`, audit of 2026-10-19c, P7) — a click on its title left the
+  page empty under its tiles. Proxy, Database, Search engines, Features, Sessions, Client errors, Audit log, Blocked
+  addresses and the Music and Ace's Help pages of Statistics keep their card open, even where this browser had
+  folded it before; cards that share their page fold as before.
 - **Deployment: « Check now » before the update buttons** (`web.186`, audit of 2026-10-19c, P5) — the check and its
   status line (branch, up to date or what is waiting, whether it needs a restart) sat under « Update automatically »,
   though they serve the manual updates as much. They now head the Maintenance card, above « Update (no restart) »,
