@@ -37,6 +37,8 @@ highlights below.
   option, which takes effect again once the switch is back on. Help on request stays: since H4 the Help entries of
   the menus, « More help » and « ? » are the Ace, so cutting him would cut the in-app help. Checked in a browser
   with all three off and the three options stored on: the checkboxes locked and tagged, no tip, More help opens.
+  `web.169`: with the switch off, the Ace's menu text no longer mentions « Turn on tips » (`menuOffSite`, the
+  `menuOff` text without its last sentence, in the 83 guide languages).
 - **Eight more feature switches** (`web.167`) — Player experience › Features can now turn off for everyone: the winner
   window, the card dealing animation, the lobby's Forum button, « Invite friends », chat translation (switched off,
   nothing is sent to Google — chat, private messages and the auto-translated operator texts alike), the avatar

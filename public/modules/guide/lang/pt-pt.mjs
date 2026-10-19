@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Abre o menu do navegador (⋮ ou ≡), escolhe «Instalar a app» ou «Adicionar ao ecrã principal» e confirma: o ícone aparece no teu ecrã principal.',
   instDesktop: 'No Chrome ou no Edge: clica no ícone de instalação à direita da barra de endereços, ou no menu ⋮ / ⋯ → «Instalar» (Edge: Aplicações → «Instalar este site como aplicação»). No Safari, num Mac: Ficheiro → «Adicionar ao Dock». Outros navegadores: procura no menu «Instalar» ou «Adicionar ao ecrã principal».',
   menuOff: 'As minhas dicas estão desativadas, mas continuo a responder: «Mais ajuda» para a ajuda completa com pesquisa, «O que é isto?» para tocares em qualquer coisa e ouvires o que faz. Com «Ativar dicas» eu guio-te pelo caminho.',
+  menuOffSite: 'As minhas dicas estão desativadas, mas continuo a responder: «Mais ajuda» para a ajuda completa com pesquisa, «O que é isto?» para tocares em qualquer coisa e ouvires o que faz.',
   turnOn: 'Ativar dicas',
 };

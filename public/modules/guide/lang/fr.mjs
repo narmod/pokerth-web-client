@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Ouvre le menu de ton navigateur (⋮ ou ≡), choisis « Installer l’application » ou « Ajouter à l’écran d’accueil », puis confirme : l’icône atterrit sur ton écran d’accueil.',
   instDesktop: 'Dans Chrome ou Edge : clique sur l’icône d’installation à droite de la barre d’adresse, ou menu ⋮ / ⋯ → « Installer » (Edge : Applications → « Installer ce site en tant qu’application »). Dans Safari sur Mac : Fichier → « Ajouter au Dock ». Autres navigateurs : cherche « Installer » ou « Ajouter à l’écran d’accueil » dans le menu.',
   menuOff: 'Mes conseils sont désactivés, mais je réponds quand même : « Plus d’aide » pour toute l’aide avec une recherche, « C’est quoi ? » pour toucher n’importe quoi et entendre ce que ça fait. « Activer les conseils » et je te guide au fil de l’eau.',
+  menuOffSite: 'Mes conseils sont désactivés, mais je réponds quand même : « Plus d’aide » pour toute l’aide avec une recherche, « C’est quoi ? » pour toucher n’importe quoi et entendre ce que ça fait.',
   turnOn: 'Activer les conseils',
 };

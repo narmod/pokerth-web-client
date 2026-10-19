@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Buka menu peramban Anda (⋮ atau ≡), pilih “Instal aplikasi” atau “Tambahkan ke Layar utama”, lalu konfirmasi: ikon akan muncul di layar utama Anda.',
   instDesktop: 'Di Chrome atau Edge: klik ikon instal di sisi kanan bilah alamat, atau menu ⋮ / ⋯ → “Instal” (Edge: Aplikasi → “Instal situs ini sebagai aplikasi”). Di Safari pada Mac: Berkas → “Tambahkan ke Dock”. Peramban lain: cari “Instal” atau “Tambahkan ke Layar utama” di menu.',
   menuOff: 'Tip saya sedang mati, tetapi saya tetap menjawab: “Bantuan lainnya” untuk seluruh bantuan dengan pencarian, “Apa ini?” untuk mengetuk apa saja dan mengetahui fungsinya. “Aktifkan tip” dan saya memandu Anda sambil jalan.',
+  menuOffSite: 'Tip saya sedang mati, tetapi saya tetap menjawab: “Bantuan lainnya” untuk seluruh bantuan dengan pencarian, “Apa ini?” untuk mengetuk apa saja dan mengetahui fungsinya.',
   turnOn: 'Aktifkan tip',
 };

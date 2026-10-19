@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Fungua menyu ya kivinjari chako (⋮ au ≡), chagua “Install app” au “Add to Home Screen”, kisha thibitisha: ikoni itaonekana kwenye skrini yako ya nyumbani.',
   instDesktop: 'Kwenye Chrome au Edge: bofya ikoni ya kusakinisha upande wa kulia wa upau wa anwani, au menyu ⋮ / ⋯ → “Install” (Edge: Apps → “Install this site as an app”). Kwenye Safari ya Mac: File → “Add to Dock”. Vivinjari vingine: tafuta kwenye menyu “Install” au “Add to Home Screen”.',
   menuOff: 'Madokezo yangu yamezimwa, lakini bado ninajibu: “Msaada zaidi” kwa msaada mzima wenye utafutaji, “Hiki ni nini?” ili uguse chochote na usikie kinafanya nini. Ukigusa “Washa madokezo” nitakuongoza njiani.',
+  menuOffSite: 'Madokezo yangu yamezimwa, lakini bado ninajibu: “Msaada zaidi” kwa msaada mzima wenye utafutaji, “Hiki ni nini?” ili uguse chochote na usikie kinafanya nini.',
   turnOn: 'Washa madokezo',
 };

@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Buɗe menu na burauzarka (⋮ ko ≡), zaɓi “Sanya manhaja” ko “Ƙara zuwa allon gida”, sannan ka tabbatar: alamar za ta bayyana a allon gidanka.',
   instDesktop: 'A Chrome ko Edge: danna alamar sanyawa a dama na sandar adireshi, ko menu ⋮ / ⋯ → “Sanya” (Edge: Manhajoji → “Sanya wannan shafin a matsayin manhaja”). A Safari a kan Mac: Fayil → “Ƙara zuwa Dock”. Sauran burauzoci: nemo “Sanya” ko “Ƙara zuwa Allon Gida” a menu.',
   menuOff: 'Shawarwarina a kashe suke, amma har yanzu ina amsawa: “Ƙarin taimako” don cikakken taimako tare da bincike, “Mene ne wannan?” don taɓa kowane abu ka ji abin da yake yi. “Kunna shawarwari” sai in jagorance ka yayin da kake ci gaba.',
+  menuOffSite: 'Shawarwarina a kashe suke, amma har yanzu ina amsawa: “Ƙarin taimako” don cikakken taimako tare da bincike, “Mene ne wannan?” don taɓa kowane abu ka ji abin da yake yi.',
   turnOn: 'Kunna shawarwari',
 };

@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Åbn browserens menu (⋮ eller ≡), vælg »Installer app« eller »Føj til hjemmeskærm«, og bekræft: ikonet lander på din hjemmeskærm.',
   instDesktop: 'I Chrome eller Edge: klik på installationsikonet yderst til højre i adresselinjen, eller menuen ⋮ / ⋯ → »Installer« (Edge: Apps → »Installer dette websted som en app«). I Safari på en Mac: Arkiv → »Føj til Dock«. Andre browsere: se i menuen efter »Installer« eller »Føj til hjemmeskærm«.',
   menuOff: 'Mine tips er slået fra, men jeg svarer stadig: »Mere hjælp« til hele hjælpen med en søgning, »Hvad er det?« til at trykke på hvad som helst og høre, hvad det gør. »Slå tips til«, så guider jeg dig undervejs.',
+  menuOffSite: 'Mine tips er slået fra, men jeg svarer stadig: »Mere hjælp« til hele hjælpen med en søgning, »Hvad er det?« til at trykke på hvad som helst og høre, hvad det gør.',
   turnOn: 'Slå tips til',
 };

@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Atver pārlūka izvēlni (⋮ vai ≡), izvēlies „Instalēt lietotni“ vai „Pievienot sākuma ekrānam“ un apstiprini: ikona nonāks tavā sākuma ekrānā.',
   instDesktop: 'Pārlūkā Chrome vai Edge: noklikšķini uz instalēšanas ikonas adreses joslas labajā pusē vai izvēlnē ⋮ / ⋯ → „Instalēt“ (Edge: Lietotnes → „Instalēt šo vietni kā lietotni“). Safari datorā Mac: Fails → „Pievienot Dock“. Citos pārlūkos izvēlnē meklē „Instalēt“ vai „Pievienot sākuma ekrānam“.',
   menuOff: 'Mani padomi ir izslēgti, bet es joprojām atbildu: „Vairāk palīdzības“ — visa palīdzība ar meklēšanu, „Kas tas ir?“ — pieskaries jebkam un uzzini, ko tas dara. Ar „Ieslēgt padomus“ es tevi vadīšu soli pa solim.',
+  menuOffSite: 'Mani padomi ir izslēgti, bet es joprojām atbildu: „Vairāk palīdzības“ — visa palīdzība ar meklēšanu, „Kas tas ir?“ — pieskaries jebkam un uzzini, ko tas dara.',
   turnOn: 'Ieslēgt padomus',
 };

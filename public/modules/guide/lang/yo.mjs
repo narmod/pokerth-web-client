@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Ṣí àkójọ aṣàwákiri rẹ (⋮ tàbí ≡), yan “Fi ìṣàfilọ́lẹ̀ sórí ẹ̀rọ” tàbí “Fi kún ojú ilé”, lẹ́yìn náà jẹ́rìísí: àmì náà yóò hàn lórí ojú ilé rẹ.',
   instDesktop: 'Nínú Chrome tàbí Edge: tẹ àmì ìfisórí ní ọ̀tún ọ̀pá àdírẹ́sì, tàbí àkójọ ⋮ / ⋯ → “Fi sórí ẹ̀rọ” (Edge: Àwọn ìṣàfilọ́lẹ̀ → “Fi ojú-ìwé yìí sórí ẹ̀rọ gẹ́gẹ́ bí ìṣàfilọ́lẹ̀”). Nínú Safari lórí Mac: Fáìlì → “Fi kún Dock”. Àwọn aṣàwákiri míì: wá “Fi sórí ẹ̀rọ” tàbí “Fi kún ojú ilé” nínú àkójọ.',
   menuOff: 'Àwọn ìmọ̀ràn mi wà ní pípa, ṣùgbọ́n mo ṣì ń dáhùn: “Ìrànlọ́wọ́ síi” fún gbogbo ìrànlọ́wọ́ pẹ̀lú ìwádìí, “Kí ni èyí?” láti tẹ nǹkan kan kí o sì gbọ́ ohun tó ń ṣe. Tẹ “Tàn ìmọ̀ràn”, màá sì máa tọ́ ọ sọ́nà bí o ṣe ń lọ.',
+  menuOffSite: 'Àwọn ìmọ̀ràn mi wà ní pípa, ṣùgbọ́n mo ṣì ń dáhùn: “Ìrànlọ́wọ́ síi” fún gbogbo ìrànlọ́wọ́ pẹ̀lú ìwádìí, “Kí ni èyí?” láti tẹ nǹkan kan kí o sì gbọ́ ohun tó ń ṣe.',
   turnOn: 'Tàn ìmọ̀ràn',
 };

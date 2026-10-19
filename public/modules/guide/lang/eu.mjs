@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Ireki nabigatzailearen menua (⋮ edo ≡), aukeratu «Instalatu aplikazioa» edo «Gehitu hasierako pantailan» eta berretsi: ikonoa zure hasierako pantailan agertuko da.',
   instDesktop: 'Chrome edo Edge-n: egin klik helbide-barraren eskuinaldeko instalatzeko ikonoan, edo ⋮ / ⋯ menua → «Instalatu» (Edge: Aplikazioak → «Instalatu gune hau aplikazio gisa»). Mac-eko Safarin: Fitxategia → «Gehitu Dock-era». Beste nabigatzaile batzuk: bilatu menuan «Instalatu» edo «Gehitu hasierako pantailan».',
   menuOff: 'Nire aholkuak desaktibatuta daude, baina erantzuten jarraitzen dut: «Laguntza gehiago» laguntza osoa bilaketarekin ikusteko, «Zer da hau?» edozer sakatu eta zer egiten duen entzuteko. «Aktibatu aholkuak» eta bidean gidatuko zaitut.',
+  menuOffSite: 'Nire aholkuak desaktibatuta daude, baina erantzuten jarraitzen dut: «Laguntza gehiago» laguntza osoa bilaketarekin ikusteko, «Zer da hau?» edozer sakatu eta zer egiten duen entzuteko.',
   turnOn: 'Aktibatu aholkuak',
 };

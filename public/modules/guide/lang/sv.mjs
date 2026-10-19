@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Öppna webbläsarens meny (⋮ eller ≡), välj ”Installera app” eller ”Lägg till på startskärmen” och bekräfta: ikonen hamnar på din startskärm.',
   instDesktop: 'I Chrome eller Edge: klicka på installationsikonen till höger i adressfältet, eller på menyn ⋮ / ⋯ → ”Installera” (Edge: Appar → ”Installera den här webbplatsen som en app”). I Safari på en Mac: Arkiv → ”Lägg till i Dock”. Andra webbläsare: leta i menyn efter ”Installera” eller ”Lägg till på startskärmen”.',
   menuOff: 'Mina tips är avstängda, men jag svarar ändå: ”Mer hjälp” för hela hjälpen med sökning, ”Vad är det här?” — tryck på vad som helst och få veta vad det gör. Med ”Slå på tips” guidar jag dig medan du spelar.',
+  menuOffSite: 'Mina tips är avstängda, men jag svarar ändå: ”Mer hjälp” för hela hjälpen med sökning, ”Vad är det här?” — tryck på vad som helst och få veta vad det gör.',
   turnOn: 'Slå på tips',
 };

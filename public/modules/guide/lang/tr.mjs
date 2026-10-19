@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Tarayıcı menünü aç (⋮ veya ≡), “Uygulamayı yükle” veya “Ana ekrana ekle”yi seç, sonra onayla: simge ana ekranına gelir.',
   instDesktop: 'Chrome veya Edge’de: adres çubuğunun sağındaki yükleme simgesine tıkla ya da ⋮ / ⋯ menüsü → “Yükle” (Edge: Uygulamalar → “Bu siteyi uygulama olarak yükle”). Mac’te Safari’de: Dosya → “Dock’a Ekle”. Diğer tarayıcılar: menüde “Yükle” veya “Ana Ekrana Ekle” seçeneğine bak.',
   menuOff: 'İpuçlarım kapalı ama yine de yanıt veriyorum: “Daha fazla yardım” aramalı tüm yardım için, “Bu ne?” ise herhangi bir şeye dokunup ne işe yaradığını duymak için. “İpuçlarını aç” dersen ilerledikçe sana rehberlik ederim.',
+  menuOffSite: 'İpuçlarım kapalı ama yine de yanıt veriyorum: “Daha fazla yardım” aramalı tüm yardım için, “Bu ne?” ise herhangi bir şeye dokunup ne işe yaradığını duymak için.',
   turnOn: 'İpuçlarını aç',
 };

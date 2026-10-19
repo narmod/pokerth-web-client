@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Obre el menú del navegador (⋮ o ≡), tria «Instal·la l’aplicació» o «Afegeix a la pantalla d’inici» i confirma: la icona apareix a la pantalla d’inici.',
   instDesktop: 'Al Chrome o a l’Edge: fes clic a la icona d’instal·lació a la dreta de la barra d’adreces, o al menú ⋮ / ⋯ → «Instal·la» (Edge: Aplicacions → «Instal·la aquest lloc com a aplicació»). Al Safari d’un Mac: Arxiu → «Afegeix al Dock». Altres navegadors: busca al menú «Instal·la» o «Afegeix a la pantalla d’inici».',
   menuOff: 'Els meus consells estan desactivats, però encara responc: «Més ajuda» per a tota l’ajuda amb cercador, «Què és això?» per tocar qualsevol cosa i saber què fa. «Activa els consells» i et guio pas a pas.',
+  menuOffSite: 'Els meus consells estan desactivats, però encara responc: «Més ajuda» per a tota l’ajuda amb cercador, «Què és això?» per tocar qualsevol cosa i saber què fa.',
   turnOn: 'Activa els consells',
 };

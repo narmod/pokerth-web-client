@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Abre o menú do navegador (⋮ ou ≡), escolle «Instalar a app» ou «Engadir á pantalla de inicio» e confirma: a icona aparece na túa pantalla de inicio.',
   instDesktop: 'En Chrome ou Edge: fai clic na icona de instalación á dereita da barra de enderezos, ou no menú ⋮ / ⋯ → «Instalar» (Edge: Aplicacións → «Instalar este sitio como aplicación»). En Safari nun Mac: Ficheiro → «Engadir ao Dock». Outros navegadores: busca no menú «Instalar» ou «Engadir á pantalla de inicio».',
   menuOff: 'Os meus consellos están desactivados, pero sigo respondendo: «Máis axuda» para toda a axuda con busca, «Que é isto?» para tocar calquera cousa e escoitar para que serve. «Activar consellos» e guíote sobre a marcha.',
+  menuOffSite: 'Os meus consellos están desactivados, pero sigo respondendo: «Máis axuda» para toda a axuda con busca, «Que é isto?» para tocar calquera cousa e escoitar para que serve.',
   turnOn: 'Activar consellos',
 };

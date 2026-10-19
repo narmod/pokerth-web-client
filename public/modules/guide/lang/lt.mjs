@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Atverk naršyklės meniu (⋮ arba ≡), pasirink „Įdiegti programėlę“ arba „Pridėti į pradžios ekraną“ ir patvirtink: piktograma atsiras pradžios ekrane.',
   instDesktop: 'Chrome ar Edge naršyklėje: spustelėk diegimo piktogramą adreso juostos dešinėje arba meniu ⋮ / ⋯ → „Įdiegti“ (Edge: Programos → „Įdiegti šią svetainę kaip programą“). Safari naršyklėje Mac kompiuteryje: Failas → „Pridėti prie Dock“. Kitos naršyklės: meniu ieškok „Įdiegti“ arba „Pridėti į pradžios ekraną“.',
   menuOff: 'Mano patarimai išjungti, bet vis tiek atsakau: „Daugiau pagalbos“ — visa pagalba su paieška, „Kas tai?“ — bakstelėk bet ką ir sužinosi, ką tai daro. Paspausk „Įjungti patarimus“, ir aš tave vesiu žingsnis po žingsnio.',
+  menuOffSite: 'Mano patarimai išjungti, bet vis tiek atsakau: „Daugiau pagalbos“ — visa pagalba su paieška, „Kas tai?“ — bakstelėk bet ką ir sužinosi, ką tai daro.',
   turnOn: 'Įjungti patarimus',
 };

@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Brauzeriňiziň menýusyny açyň (⋮ ýa-da ≡), “Programmany gurna” ýa-da “Baş ekrana goş” saýlaň, soň tassyklaň: nyşan baş ekranyňyza düşýär.',
   instDesktop: 'Chrome ýa-da Edge-de: salgy setiriniň sag tarapyndaky gurnamak nyşanyna basyň ýa-da ⋮ / ⋯ menýusy → “Gurna” (Edge: Programmalar → “Bu sahypany programma hökmünde gurna”). Mac-daky Safari-de: Faýl → “Dock-a goş”. Başga brauzerlerde menýuda “Gurna” ýa-da “Baş ekrana goş” gözläň.',
   menuOff: 'Maslahatlarym öçük, ýöne men henizem jogap berýärin: “Has köp kömek” — gözleg bilen doly kömek, “Bu näme?” — islendik zada basyp, onuň näme edýändigini eşitmek üçin. “Maslahatlary aç” diýseňiz, men size ýoluň ugruna ýol görkezerin.',
+  menuOffSite: 'Maslahatlarym öçük, ýöne men henizem jogap berýärin: “Has köp kömek” — gözleg bilen doly kömek, “Bu näme?” — islendik zada basyp, onuň näme edýändigini eşitmek üçin.',
   turnOn: 'Maslahatlary aç',
 };

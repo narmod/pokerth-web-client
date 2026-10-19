@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Agorwch ddewislen eich porwr (⋮ neu ≡), dewiswch “Gosod yr ap” neu “Ychwanegu at y sgrin gartref”, yna cadarnhewch: bydd yr eicon yn ymddangos ar eich sgrin gartref.',
   instDesktop: 'Yn Chrome neu Edge: cliciwch yr eicon gosod ar ochr dde’r bar cyfeiriad, neu’r ddewislen ⋮ / ⋯ → “Gosod” (Edge: Apiau → “Gosod y wefan hon fel ap”). Yn Safari ar Mac: Ffeil → “Ychwanegu at y Doc”. Porwyr eraill: chwiliwch yn y ddewislen am “Gosod” neu “Ychwanegu at y Sgrin Gartref”.',
   menuOff: 'Mae fy nghyngor i ffwrdd, ond rwy’n dal i ateb: “Mwy o gymorth” ar gyfer yr holl gymorth gyda chwiliad, “Beth yw hwn?” i dapio unrhyw beth a chlywed beth mae’n ei wneud. Tapiwch “Troi cyngor ymlaen” a byddaf yn eich tywys wrth i chi fynd.',
+  menuOffSite: 'Mae fy nghyngor i ffwrdd, ond rwy’n dal i ateb: “Mwy o gymorth” ar gyfer yr holl gymorth gyda chwiliad, “Beth yw hwn?” i dapio unrhyw beth a chlywed beth mae’n ei wneud.',
   turnOn: 'Troi cyngor ymlaen',
 };

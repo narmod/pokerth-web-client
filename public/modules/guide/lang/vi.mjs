@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Mở menu trình duyệt (⋮ hoặc ≡), chọn “Cài đặt ứng dụng” hoặc “Thêm vào Màn hình chính”, rồi xác nhận: biểu tượng sẽ xuất hiện trên màn hình chính của bạn.',
   instDesktop: 'Trong Chrome hoặc Edge: nhấp biểu tượng cài đặt ở bên phải thanh địa chỉ, hoặc menu ⋮ / ⋯ → “Cài đặt” (Edge: Ứng dụng → “Cài đặt trang web này dưới dạng ứng dụng”). Trong Safari trên Mac: Tệp → “Thêm vào Dock”. Trình duyệt khác: tìm “Cài đặt” hoặc “Thêm vào Màn hình chính” trong menu.',
   menuOff: 'Mẹo của mình đang tắt, nhưng mình vẫn trả lời: “Thêm trợ giúp” cho toàn bộ phần trợ giúp có tìm kiếm, “Đây là gì?” để chạm vào bất kỳ thứ gì và nghe nó làm gì. “Bật mẹo” rồi mình sẽ hướng dẫn bạn dần dần.',
+  menuOffSite: 'Mẹo của mình đang tắt, nhưng mình vẫn trả lời: “Thêm trợ giúp” cho toàn bộ phần trợ giúp có tìm kiếm, “Đây là gì?” để chạm vào bất kỳ thứ gì và nghe nó làm gì.',
   turnOn: 'Bật mẹo',
 };

@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Öffne das Browser-Menü (⋮ oder ≡), wähle „App installieren“ oder „Zum Startbildschirm hinzufügen“ und bestätige: Das Symbol landet auf deinem Startbildschirm.',
   instDesktop: 'In Chrome oder Edge: Klicke auf das Installieren-Symbol rechts in der Adressleiste oder auf Menü ⋮ / ⋯ → „Installieren“ (Edge: Apps → „Diese Website als App installieren“). In Safari auf dem Mac: Ablage → „Zum Dock hinzufügen“. Andere Browser: Suche im Menü nach „Installieren“ oder „Zum Startbildschirm hinzufügen“.',
   menuOff: 'Meine Tipps sind aus, aber ich antworte trotzdem: „Mehr Hilfe“ für die gesamte Hilfe mit Suche, „Was ist das?“, um irgendetwas anzutippen und zu hören, was es macht. „Tipps einschalten“, und ich begleite dich Schritt für Schritt.',
+  menuOffSite: 'Meine Tipps sind aus, aber ich antworte trotzdem: „Mehr Hilfe“ für die gesamte Hilfe mit Suche, „Was ist das?“, um irgendetwas anzutippen und zu hören, was es macht.',
   turnOn: 'Tipps einschalten',
 };

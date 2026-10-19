@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Open het browsermenu (⋮ of ≡), kies “App installeren” of “Toevoegen aan startscherm” en bevestig: het pictogram verschijnt op je beginscherm.',
   instDesktop: 'In Chrome of Edge: klik op het installatiepictogram rechts in de adresbalk, of menu ⋮ / ⋯ → “Installeren” (Edge: Apps → “Deze site als app installeren”). In Safari op een Mac: Archief → “Zet in Dock”. Andere browsers: zoek in het menu naar “Installeren” of “Toevoegen aan startscherm”.',
   menuOff: 'Mijn tips staan uit, maar ik antwoord nog steeds: “Meer hulp” voor de volledige hulp met zoekfunctie, “Wat is dit?” om op iets te tikken en te horen wat het doet. Met “Tips aanzetten” begeleid ik je onderweg.',
+  menuOffSite: 'Mijn tips staan uit, maar ik antwoord nog steeds: “Meer hulp” voor de volledige hulp met zoekfunctie, “Wat is dit?” om op iets te tikken en te horen wat het doet.',
   turnOn: 'Tips aanzetten',
 };

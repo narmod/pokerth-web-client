@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Otvor ponuku prehliadača (⋮ alebo ≡), vyber „Nainštalovať aplikáciu“ alebo „Pridať na plochu“ a potvrď: ikona sa objaví na tvojej ploche.',
   instDesktop: 'V Chrome alebo Edge: klikni na ikonu inštalácie vpravo v adresnom riadku alebo na ponuku ⋮ / ⋯ → „Nainštalovať“ (Edge: Aplikácie → „Nainštalovať túto lokalitu ako aplikáciu“). V Safari na Macu: Súbor → „Pridať do Docku“. V iných prehliadačoch hľadaj v ponuke „Nainštalovať“ alebo „Pridať na plochu“.',
   menuOff: 'Moje tipy sú vypnuté, ale stále odpovedám: „Viac pomoci“ pre celú pomoc s vyhľadávaním, „Čo je to?“ — ťukni na čokoľvek a dozvieš sa, čo to robí. S „Zapnúť tipy“ ťa budem sprevádzať.',
+  menuOffSite: 'Moje tipy sú vypnuté, ale stále odpovedám: „Viac pomoci“ pre celú pomoc s vyhľadávaním, „Čo je to?“ — ťukni na čokoľvek a dozvieš sa, čo to robí.',
   turnOn: 'Zapnúť tipy',
 };

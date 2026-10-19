@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Brauzer menyusunu (⋮ və ya ≡) açın, “Tətbiqi quraşdır” və ya “Əsas ekrana əlavə et” seçin, sonra təsdiqləyin: ikon əsas ekranınızda görünəcək.',
   instDesktop: 'Chrome və ya Edge-də: ünvan çubuğunun sağındakı quraşdırma ikonuna klikləyin və ya menyu ⋮ / ⋯ → “Quraşdır” (Edge: Tətbiqlər → “Bu saytı tətbiq kimi quraşdır”). Mac-də Safari-də: Fayl → “Dok-a əlavə et”. Digər brauzerlər: menyuda “Quraşdır” və ya “Əsas ekrana əlavə et” axtarın.',
   menuOff: 'Məsləhətlərim söndürülüb, amma yenə də cavab verirəm: bütün kömək və axtarış üçün “Daha çox kömək”, istənilən şeyə toxunub nə etdiyini eşitmək üçün “Bu nədir?”. “Məsləhətləri yandır” düyməsinə toxunun, mən də addım-addım sizə bələdçilik edim.',
+  menuOffSite: 'Məsləhətlərim söndürülüb, amma yenə də cavab verirəm: bütün kömək və axtarış üçün “Daha çox kömək”, istənilən şeyə toxunub nə etdiyini eşitmək üçün “Bu nədir?”.',
   turnOn: 'Məsləhətləri yandır',
 };

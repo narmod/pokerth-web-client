@@ -545,7 +545,8 @@ async function showMenu() {
   if (on) list.push(btn('turnOff'), btn('resetTips'));
   else if (!featureOff('guide_on')) list.push(btn('turnOn'));   // switched off by the admin: no « Turn on tips »
   list.push(btn('close', true));
-  await note(on ? 'menuOn' : 'menuOff', list, (id) => {
+  // switched off by the admin: no « Turn on tips », so the text does not mention it (menuOffSite)
+  await note(on ? 'menuOn' : featureOff('guide_on') ? 'menuOffSite' : 'menuOff', list, (id) => {
     if (id === 'moreHelp') { openMoreHelp(); return; }
     if (id === 'turnOn') { const speak = canSpeakHere(); turnOn(); if (!speak) endOnDemand(); return; }   // at the table no welcome: the menu goes
     if (id === 'installApp') { showInstall(); return; }

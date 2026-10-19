@@ -356,5 +356,6 @@ export default {
   instAndroid: 'Open your browser menu (⋮ or ≡), choose « Install app » or « Add to Home screen », then confirm: the icon lands on your home screen.',
   instDesktop: 'In Chrome or Edge: click the install icon at the right of the address bar, or menu ⋮ / ⋯ → « Install » (Edge: Apps → « Install this site as an app »). In Safari on a Mac: File → « Add to Dock ». Other browsers: look in the menu for « Install » or « Add to Home Screen ».',
   menuOff: 'My tips are off, but I still answer: « More help » for the whole help with a search, « What’s this? » to tap anything and hear what it does. « Turn on tips » and I guide you as you go.',
+  menuOffSite: 'My tips are off, but I still answer: « More help » for the whole help with a search, « What’s this? » to tap anything and hear what it does.',
   turnOn: 'Turn on tips',
 };

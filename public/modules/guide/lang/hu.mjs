@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Nyisd meg a böngésző menüjét (⋮ vagy ≡), válaszd az „Alkalmazás telepítése” vagy a „Hozzáadás a kezdőképernyőhöz” lehetőséget, majd erősítsd meg: az ikon a kezdőképernyőre kerül.',
   instDesktop: 'Chrome-ban vagy Edge-ben: kattints a címsor jobb oldalán lévő telepítés ikonra, vagy a ⋮ / ⋯ menü → „Telepítés” (Edge: Alkalmazások → „Webhely telepítése alkalmazásként”). Safariban Macen: Fájl → „Hozzáadás a Dockhoz”. Más böngészők: keresd a menüben a „Telepítés” vagy a „Hozzáadás a kezdőképernyőhöz” lehetőséget.',
   menuOff: 'A tippjeim ki vannak kapcsolva, de azért válaszolok: a „További súgó” az egész súgót hozza kereséssel, a „Mi ez?” segítségével pedig bármit megérinthetsz, és megtudod, mire való. A „Tippek bekapcsolása” után menet közben vezetlek.',
+  menuOffSite: 'A tippjeim ki vannak kapcsolva, de azért válaszolok: a „További súgó” az egész súgót hozza kereséssel, a „Mi ez?” segítségével pedig bármit megérinthetsz, és megtudod, mire való.',
   turnOn: 'Tippek bekapcsolása',
 };

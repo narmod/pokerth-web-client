@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Odpri meni brskalnika (⋮ ali ≡), izberi „Namesti aplikacijo“ ali „Dodaj na domači zaslon“ in potrdi: ikona se znajde na tvojem domačem zaslonu.',
   instDesktop: 'V brskalniku Chrome ali Edge: klikni ikono za namestitev na desni strani naslovne vrstice ali meni ⋮ / ⋯ → „Namesti“ (Edge: Aplikacije → „Namesti to spletno mesto kot aplikacijo“). V brskalniku Safari na računalniku Mac: Datoteka → „Dodaj v Dock“. V drugih brskalnikih poišči v meniju „Namesti“ ali „Dodaj na domači zaslon“.',
   menuOff: 'Moji nasveti so izklopljeni, a še vedno odgovarjam: „Več pomoči“ za vso pomoč z iskanjem, „Kaj je to?“ — tapni karkoli in izvej, kaj to naredi. Z „Vklopi nasvete“ te vodim sproti.',
+  menuOffSite: 'Moji nasveti so izklopljeni, a še vedno odgovarjam: „Več pomoči“ za vso pomoč z iskanjem, „Kaj je to?“ — tapni karkoli in izvej, kaj to naredi.',
   turnOn: 'Vklopi nasvete',
 };

@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Buksan ang menu ng browser mo (⋮ o ≡), piliin ang “Install app” o “Add to Home Screen”, pagkatapos ay kumpirmahin: mapupunta ang icon sa home screen mo.',
   instDesktop: 'Sa Chrome o Edge: i-click ang install icon sa kanan ng address bar, o ang menu ⋮ / ⋯ → “Install” (Edge: Apps → “Install this site as an app”). Sa Safari sa Mac: File → “Add to Dock”. Sa ibang mga browser: hanapin sa menu ang “Install” o “Add to Home Screen”.',
   menuOff: 'Naka-off ang mga tip ko, pero sumasagot pa rin ako: “Higit pang tulong” para sa buong tulong na may paghahanap, “Ano ito?” para mag-tap ng kahit ano at marinig kung ano ang ginagawa nito. “I-on ang mga tip” at gagabayan kita habang nagpapatuloy ka.',
+  menuOffSite: 'Naka-off ang mga tip ko, pero sumasagot pa rin ako: “Higit pang tulong” para sa buong tulong na may paghahanap, “Ano ito?” para mag-tap ng kahit ano at marinig kung ano ang ginagawa nito.',
   turnOn: 'I-on ang mga tip',
 };

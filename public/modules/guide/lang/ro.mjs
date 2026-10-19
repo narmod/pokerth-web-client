@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Deschide meniul browserului (⋮ sau ≡), alege „Instalează aplicația” sau „Adaugă la ecranul principal” și confirmă: pictograma apare pe ecranul tău principal.',
   instDesktop: 'În Chrome sau Edge: dă clic pe pictograma de instalare din dreapta barei de adrese sau pe meniul ⋮ / ⋯ → „Instalează” (Edge: Aplicații → „Instalează acest site ca aplicație”). În Safari pe Mac: Fișier → „Adaugă în Dock”. Alte browsere: caută în meniu „Instalează” sau „Adaugă la ecranul principal”.',
   menuOff: 'Sfaturile mele sunt oprite, dar tot îți răspund: „Mai mult ajutor” pentru tot ajutorul, cu căutare, „Ce e asta?” ca să atingi orice și să auzi ce face. Cu „Pornește sfaturile” te ghidez pe parcurs.',
+  menuOffSite: 'Sfaturile mele sunt oprite, dar tot îți răspund: „Mai mult ajutor” pentru tot ajutorul, cu căutare, „Ce e asta?” ca să atingi orice și să auzi ce face.',
   turnOn: 'Pornește sfaturile',
 };

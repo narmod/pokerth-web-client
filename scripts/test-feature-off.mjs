@@ -97,6 +97,7 @@ ok(/state\.isOn = \(\) => !featureOff\('guide_on'\) && _ownIsOn\(\);/.test(guide
 ok(/function turnOn\(\) \{\s*if \(featureOff\('guide_on'\)\) return;/.test(guide), 'nothing turns them back on');
 ok(/function maybeOffer\(\) \{[\s\S]{0,200}featureOff\('guide_on'\)/.test(guide), 'no first-launch offer');
 ok(/else if \(!featureOff\('guide_on'\)\) list\.push\(btn\('turnOn'\)\)/.test(guide), 'no « Turn on tips » in his menu');
+ok(/featureOff\('guide_on'\) \? 'menuOffSite' : 'menuOff'/.test(guide), 'and his menu text does not mention it (menuOffSite)');
 ok(/function canComeHere\(\) \{\s*if \(!avail\) return false;/.test(guide) && !/function canComeHere\(\) \{[^}]*featureOff/.test(guide), 'help on request stays');
 const coll = js.slice(js.indexOf('function _cfgCollectWebSettings'), js.indexOf('function _cfgCollectWebSettings') + 4000);
 ok(!/_advGet\(advKey/.test(coll), 'account sync writes the player\'s own choice, not the admin override');

@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Maak jou blaaier se kieslys oop (⋮ of ≡), kies „Installeer app” of „Voeg by tuisskerm”, en bevestig: die ikoon verskyn op jou tuisskerm.',
   instDesktop: 'In Chrome of Edge: klik op die installeerikoon regs van die adresbalk, of kieslys ⋮ / ⋯ → „Installeer” (Edge: Toepassings → „Installeer hierdie werf as ’n toep”). In Safari op ’n Mac: Lêer → „Voeg by Dock”. Ander blaaiers: soek in die kieslys na „Installeer” of „Voeg by tuisskerm”.',
   menuOff: 'My wenke is af, maar ek antwoord steeds: „Meer hulp” vir die hele hulp met ’n soekfunksie, „Wat is dit?” om op enigiets te tik en te hoor wat dit doen. „Skakel wenke aan” en ek lei jou gaandeweg.',
+  menuOffSite: 'My wenke is af, maar ek antwoord steeds: „Meer hulp” vir die hele hulp met ’n soekfunksie, „Wat is dit?” om op enigiets te tik en te hoor wat dit doen.',
   turnOn: 'Skakel wenke aan',
 };

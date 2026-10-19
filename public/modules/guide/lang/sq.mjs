@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Hap menynë e shfletuesit (⋮ ose ≡), zgjidh «Instalo aplikacionin» ose «Shto në ekranin fillestar» dhe konfirmo: ikona shfaqet në ekranin tënd fillestar.',
   instDesktop: 'Në Chrome ose Edge: kliko ikonën e instalimit në të djathtë të shiritit të adresës, ose menyja ⋮ / ⋯ → «Instalo» (Edge: Aplikacionet → «Instalo këtë sajt si aplikacion»). Në Safari në Mac: Skedari → «Shto te Dock». Në shfletues të tjerë: kërko në meny «Instalo» ose «Shto në ekranin fillestar».',
   menuOff: 'Këshillat e mia janë të çaktivizuara, por prapë përgjigjem: «Më shumë ndihmë» për gjithë ndihmën me kërkim, «Çfarë është kjo?» për të prekur çfarëdo gjëje e për të dëgjuar çfarë bën. Me «Aktivizo këshillat» të udhëheq gjatë rrugës.',
+  menuOffSite: 'Këshillat e mia janë të çaktivizuara, por prapë përgjigjem: «Më shumë ndihmë» për gjithë ndihmën me kërkim, «Çfarë është kjo?» për të prekur çfarëdo gjëje e për të dëgjuar çfarë bën.',
   turnOn: 'Aktivizo këshillat',
 };

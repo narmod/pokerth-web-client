@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Otvori izbornik preglednika (⋮ ili ≡), odaberi „Instaliraj aplikaciju“ ili „Dodaj na početni zaslon“, zatim potvrdi: ikona se pojavljuje na početnom zaslonu.',
   instDesktop: 'U Chromeu ili Edgeu: klikni ikonu za instalaciju desno u adresnoj traci ili izbornik ⋮ / ⋯ → „Instaliraj“ (Edge: Aplikacije → „Instaliraj ovu web-lokaciju kao aplikaciju“). U Safariju na Macu: Datoteka → „Dodaj u Dock“. Ostali preglednici: potraži u izborniku „Instaliraj“ ili „Dodaj na početni zaslon“.',
   menuOff: 'Savjeti su mi isključeni, ali i dalje odgovaram: „Više pomoći“ za cijelu pomoć s pretraživanjem, „Što je ovo?“ da dodirneš bilo što i saznaš što radi. „Uključi savjete“ i vodim te usput.',
+  menuOffSite: 'Savjeti su mi isključeni, ali i dalje odgovaram: „Više pomoći“ za cijelu pomoć s pretraživanjem, „Što je ovo?“ da dodirneš bilo što i saznaš što radi.',
   turnOn: 'Uključi savjete',
 };

@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Apri il menu del browser (⋮ o ≡), scegli «Installa app» o «Aggiungi a schermata Home», poi conferma: l’icona compare nella schermata Home.',
   instDesktop: 'In Chrome o Edge: clicca l’icona di installazione a destra della barra degli indirizzi, oppure menu ⋮ / ⋯ → «Installa» (Edge: App → «Installa questo sito come app»). In Safari su Mac: File → «Aggiungi al Dock». Altri browser: cerca nel menu «Installa» o «Aggiungi a schermata Home».',
   menuOff: 'I miei consigli sono disattivati, ma rispondo lo stesso: «Altro aiuto» per tutto l’aiuto con una ricerca, «Cos’è?» per toccare qualsiasi cosa e scoprire a cosa serve. «Attiva i consigli» e ti guido man mano.',
+  menuOffSite: 'I miei consigli sono disattivati, ma rispondo lo stesso: «Altro aiuto» per tutto l’aiuto con una ricerca, «Cos’è?» per toccare qualsiasi cosa e scoprire a cosa serve.',
   turnOn: 'Attiva i consigli',
 };

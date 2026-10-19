@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Otwórz menu przeglądarki (⋮ lub ≡), wybierz „Zainstaluj aplikację” lub „Dodaj do ekranu głównego” i potwierdź: ikona trafi na twój ekran główny.',
   instDesktop: 'W Chrome lub Edge: kliknij ikonę instalacji po prawej stronie paska adresu albo menu ⋮ / ⋯ → „Zainstaluj” (Edge: Aplikacje → „Zainstaluj tę witrynę jako aplikację”). W Safari na Macu: Plik → „Dodaj do Docka”. Inne przeglądarki: poszukaj w menu „Zainstaluj” lub „Dodaj do ekranu głównego”.',
   menuOff: 'Moje wskazówki są wyłączone, ale nadal odpowiadam: „Więcej pomocy” — cała pomoc z wyszukiwarką, „Co to jest?” — dotknij czegokolwiek i dowiedz się, co to robi. „Włącz wskazówki”, a poprowadzę cię krok po kroku.',
+  menuOffSite: 'Moje wskazówki są wyłączone, ale nadal odpowiadam: „Więcej pomocy” — cała pomoc z wyszukiwarką, „Co to jest?” — dotknij czegokolwiek i dowiedz się, co to robi.',
   turnOn: 'Włącz wskazówki',
 };

@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Brauzer menyusini oching (⋮ yoki ≡), “Ilovani oʻrnatish” yoki “Bosh ekranga qoʻshish” bandini tanlang va tasdiqlang: belgi bosh ekraningizda paydo boʻladi.',
   instDesktop: 'Chrome yoki Edge’da: manzil qatorining oʻng tomonidagi oʻrnatish belgisini bosing yoki ⋮ / ⋯ menyusi → “Oʻrnatish” (Edge: Ilovalar → “Bu saytni ilova sifatida oʻrnatish”). Mac’dagi Safari’da: Fayl → “Dock’ka qoʻshish”. Boshqa brauzerlarda menyuda “Oʻrnatish” yoki “Bosh ekranga qoʻshish” bandini qidiring.',
   menuOff: 'Maslahatlarim oʻchiq, lekin baribir javob beraman: “Qo‘shimcha yordam” — qidiruvli toʻliq yordam, “Bu nima?” — istalgan narsani bosib, u nima qilishini eshitish uchun. “Maslahatlarni yoqish” tugmasini bossangiz, yoʻl-yoʻlakay sizga yoʻl koʻrsataman.',
+  menuOffSite: 'Maslahatlarim oʻchiq, lekin baribir javob beraman: “Qo‘shimcha yordam” — qidiruvli toʻliq yordam, “Bu nima?” — istalgan narsani bosib, u nima qilishini eshitish uchun.',
   turnOn: 'Maslahatlarni yoqish',
 };

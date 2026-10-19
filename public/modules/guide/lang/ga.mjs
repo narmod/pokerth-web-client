@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Oscail roghchlár do bhrabhsálaí (⋮ nó ≡), roghnaigh “Suiteáil an aip” nó “Cuir leis an scáileán baile”, ansin deimhnigh: socróidh an deilbhín ar do scáileán baile.',
   instDesktop: 'I Chrome nó in Edge: cliceáil an deilbhín suiteála ar dheis de bharra an tseolta, nó roghchlár ⋮ / ⋯ → “Suiteáil” (Edge: Aipeanna → “Suiteáil an suíomh seo mar aip”). I Safari ar Mac: Comhad → “Cuir leis an Dock”. Brabhsálaithe eile: lorg “Suiteáil” nó “Cuir leis an scáileán baile” sa roghchlár.',
   menuOff: 'Tá mo leideanna múchta, ach freagraím fós: “Tuilleadh cabhrach” don chabhair iomlán le cuardach, “Cad é seo?” chun aon rud a thapáil agus a chloisteáil cad a dhéanann sé. “Cuir leideanna ar siúl” agus treoróidh mé thú agus tú ag dul ar aghaidh.',
+  menuOffSite: 'Tá mo leideanna múchta, ach freagraím fós: “Tuilleadh cabhrach” don chabhair iomlán le cuardach, “Cad é seo?” chun aon rud a thapáil agus a chloisteáil cad a dhéanann sé.',
   turnOn: 'Cuir leideanna ar siúl',
 };

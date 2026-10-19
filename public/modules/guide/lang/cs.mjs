@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Otevři nabídku prohlížeče (⋮ nebo ≡), vyber „Nainstalovat aplikaci“ nebo „Přidat na plochu“ a potvrď: ikona se objeví na ploše.',
   instDesktop: 'V Chrome nebo Edge: klikni na ikonu instalace vpravo v adresním řádku, nebo nabídka ⋮ / ⋯ → „Nainstalovat“ (Edge: Aplikace → „Nainstalovat tento web jako aplikaci“). V Safari na Macu: Soubor → „Přidat do Docku“. Jiné prohlížeče: hledej v nabídce „Nainstalovat“ nebo „Přidat na plochu“.',
   menuOff: 'Moje tipy jsou vypnuté, ale pořád odpovídám: „Další nápověda“ pro celou nápovědu s vyhledáváním, „Co je to?“ — klepni na cokoli a řeknu ti, k čemu to je. „Zapnout tipy“ a budu tě provázet krok za krokem.',
+  menuOffSite: 'Moje tipy jsou vypnuté, ale pořád odpovídám: „Další nápověda“ pro celou nápovědu s vyhledáváním, „Co je to?“ — klepni na cokoli a řeknu ti, k čemu to je.',
   turnOn: 'Zapnout tipy',
 };

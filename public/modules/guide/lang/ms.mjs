@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Buka menu pelayar anda (⋮ atau ≡), pilih “Pasang aplikasi” atau “Tambah ke skrin utama”, kemudian sahkan: ikon akan muncul pada skrin utama anda.',
   instDesktop: 'Dalam Chrome atau Edge: klik ikon pemasangan di sebelah kanan bar alamat, atau menu ⋮ / ⋯ → “Pasang” (Edge: Aplikasi → “Pasang tapak ini sebagai aplikasi”). Dalam Safari pada Mac: Fail → “Tambah ke Dok”. Pelayar lain: cari “Pasang” atau “Tambah ke skrin utama” dalam menu.',
   menuOff: 'Petua saya dimatikan, tetapi saya masih menjawab: “Lagi bantuan” untuk keseluruhan bantuan dengan carian, “Apakah ini?” untuk mengetik apa-apa sahaja dan mendengar fungsinya. “Hidupkan petua” dan saya akan membimbing Anda sepanjang jalan.',
+  menuOffSite: 'Petua saya dimatikan, tetapi saya masih menjawab: “Lagi bantuan” untuk keseluruhan bantuan dengan carian, “Apakah ini?” untuk mengetik apa-apa sahaja dan mendengar fungsinya.',
   turnOn: 'Hidupkan petua',
 };

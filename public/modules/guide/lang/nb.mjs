@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Åpne nettlesermenyen (⋮ eller ≡), velg «Installer app» eller «Legg til på Hjem-skjerm», og bekreft: ikonet havner på Hjem-skjermen.',
   instDesktop: 'I Chrome eller Edge: klikk på installeringsikonet til høyre i adressefeltet, eller meny ⋮ / ⋯ → «Installer» (Edge: Apper → «Installer dette nettstedet som en app»). I Safari på Mac: Arkiv → «Legg til i Dock». Andre nettlesere: se etter «Installer» eller «Legg til på Hjem-skjerm» i menyen.',
   menuOff: 'Tipsene mine er av, men jeg svarer fortsatt: «Mer hjelp» for hele hjelpen med søk, «Hva er dette?» for å trykke på hva som helst og høre hva det gjør. «Slå på tips», så guider jeg deg underveis.',
+  menuOffSite: 'Tipsene mine er av, men jeg svarer fortsatt: «Mer hjelp» for hele hjelpen med søk, «Hva er dette?» for å trykke på hva som helst og høre hva det gjør.',
   turnOn: 'Slå på tips',
 };

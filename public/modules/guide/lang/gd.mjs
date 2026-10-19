@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Fosgail clàr-taice a’ bhrabhsair (⋮ no ≡), tagh “Stàlaich an aplacaid” no “Cuir ris an sgrìn-dhachaigh”, an uair sin dearbh: nochdaidh an ìomhaigheag air an sgrìn-dhachaigh agad.',
   instDesktop: 'Ann an Chrome no Edge: briog air an ìomhaigheag stàlaidh air taobh deas bàr an t-seòlaidh, no clàr-taice ⋮ / ⋯ → “Stàlaich” (Edge: Aplacaidean → “Stàlaich an làrach seo mar aplacaid”). Ann an Safari air Mac: Faidhle → “Cuir ris an Dock”. Brabhsairean eile: lorg “Stàlaich” no “Cuir ris an sgrìn-dhachaigh” sa chlàr-taice.',
   menuOff: 'Tha na molaidhean agam dheth, ach freagraidh mi fhathast: “Barrachd cobhair” airson a’ chobhair slàn le lorg, “Dè tha seo?” airson gnogag a thoirt air rud sam bith is cluinntinn dè a nì e. “Cuir air na molaidhean” agus bidh mi gad stiùireadh mar a thèid thu air adhart.',
+  menuOffSite: 'Tha na molaidhean agam dheth, ach freagraidh mi fhathast: “Barrachd cobhair” airson a’ chobhair slàn le lorg, “Dè tha seo?” airson gnogag a thoirt air rud sam bith is cluinntinn dè a nì e.',
   turnOn: 'Cuir air na molaidhean',
 };

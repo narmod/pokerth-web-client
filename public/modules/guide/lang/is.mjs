@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Opnaðu valmynd vafrans (⋮ eða ≡), veldu „Setja upp forrit“ eða „Bæta við heimaskjá“ og staðfestu: táknið birtist á heimaskjánum.',
   instDesktop: 'Í Chrome eða Edge: smelltu á uppsetningartáknið hægra megin í veffangastikunni, eða valmynd ⋮ / ⋯ → „Setja upp“ (Edge: Forrit → „Setja þessa vefsíðu upp sem forrit“). Í Safari á Mac: Skrá → „Bæta við Dock“. Aðrir vafrar: leitaðu í valmyndinni að „Setja upp“ eða „Bæta við heimaskjá“.',
   menuOff: 'Slökkt er á ábendingunum mínum en ég svara samt: „Meiri hjálp“ fyrir alla hjálpina með leit, „Hvað er þetta?“ til að smella á hvað sem er og sjá hvað það gerir. „Kveikja á ábendingum“ og ég leiðbeini þér jafnóðum.',
+  menuOffSite: 'Slökkt er á ábendingunum mínum en ég svara samt: „Meiri hjálp“ fyrir alla hjálpina með leit, „Hvað er þetta?“ til að smella á hvað sem er og sjá hvað það gerir.',
   turnOn: 'Kveikja á ábendingum',
 };

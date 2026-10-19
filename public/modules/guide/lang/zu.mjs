@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Vula imenyu yesiphequluli sakho (⋮ noma ≡), khetha “Faka uhlelo” noma “Engeza esikrinini sasekhaya”, bese uqinisekisa: isithonjana sifika esikrinini sakho sasekhaya.',
   instDesktop: 'Ku-Chrome noma ku-Edge: chofoza isithonjana sokufaka ngakwesokudla sebha yekheli, noma imenyu ⋮ / ⋯ → “Faka” (Edge: Izinhlelo zokusebenza → “Faka leli sayithi njengohlelo”). Ku-Safari ku-Mac: Ifayela → “Engeza ku-Dock”. Ezinye iziphequluli: funa “Faka” noma “Engeza Esikrinini Sasekhaya” kumenyu.',
   menuOff: 'Izeluleko zami zivaliwe, kodwa ngisaphendula: “Usizo olwengeziwe” kusizo lonke olunosesho, “Kuyini lokhu?” ukuze uthinte noma yini uzwe ukuthi yenzani. “Vula izeluleko” bese ngikuqondisa njengoba uqhubeka.',
+  menuOffSite: 'Izeluleko zami zivaliwe, kodwa ngisaphendula: “Usizo olwengeziwe” kusizo lonke olunosesho, “Kuyini lokhu?” ukuze uthinte noma yini uzwe ukuthi yenzani.',
   turnOn: 'Vula izeluleko',
 };

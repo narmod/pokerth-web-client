@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Ava brauseri menüü (⋮ või ≡), vali „Paigalda rakendus“ või „Lisa avakuvale“ ja kinnita: ikoon ilmub sinu avakuvale.',
   instDesktop: 'Chrome’is või Edge’is: klõpsa aadressiriba paremas servas olevat paigaldusikooni või vali menüü ⋮ / ⋯ → „Paigalda“ (Edge: Rakendused → „Paigalda see sait rakendusena“). Maci Safaris: Fail → „Lisa Dock’i“. Muud brauserid: otsi menüüst „Paigalda“ või „Lisa avakuvale“.',
   menuOff: 'Minu näpunäited on väljas, aga ma vastan ikka: „Rohkem abi“ kogu abi jaoks koos otsinguga, „Mis see on?“ et puudutada mida tahes ja kuulda, mida see teeb. „Lülita näpunäited sisse“ ja ma juhendan sind edasi.',
+  menuOffSite: 'Minu näpunäited on väljas, aga ma vastan ikka: „Rohkem abi“ kogu abi jaoks koos otsinguga, „Mis see on?“ et puudutada mida tahes ja kuulda, mida see teeb.',
   turnOn: 'Lülita näpunäited sisse',
 };

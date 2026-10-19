@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Avaa selaimen valikko (⋮ tai ≡), valitse ”Asenna sovellus” tai ”Lisää aloitusnäyttöön” ja vahvista: kuvake ilmestyy aloitusnäytölle.',
   instDesktop: 'Chromessa tai Edgessä: napsauta osoitepalkin oikeassa reunassa olevaa asennuskuvaketta tai valitse valikko ⋮ / ⋯ → ”Asenna” (Edge: Sovellukset → ”Asenna tämä sivusto sovellukseksi”). Macin Safarissa: Arkisto → ”Lisää Dockiin”. Muut selaimet: etsi valikosta ”Asenna” tai ”Lisää aloitusnäyttöön”.',
   menuOff: 'Vinkkini ovat pois päältä, mutta vastaan silti: ”Lisää ohjeita” koko ohjeeseen hakuineen, ”Mikä tämä on?” kun haluat napauttaa mitä tahansa ja kuulla, mitä se tekee. ”Ota vinkit käyttöön”, niin opastan sinua matkan varrella.',
+  menuOffSite: 'Vinkkini ovat pois päältä, mutta vastaan silti: ”Lisää ohjeita” koko ohjeeseen hakuineen, ”Mikä tämä on?” kun haluat napauttaa mitä tahansa ja kuulla, mitä se tekee.',
   turnOn: 'Ota vinkit käyttöön',
 };

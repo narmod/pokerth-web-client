@@ -337,5 +337,6 @@ export default {
   instAndroid: 'Malfermu la menuon de via retumilo (⋮ aŭ ≡), elektu “Instali la aplikaĵon” aŭ “Aldoni al hejmekrano”, poste konfirmu: la piktogramo aperos sur via hejmekrano.',
   instDesktop: 'En Chrome aŭ Edge: alklaku la instalan piktogramon dekstre de la adresbreto, aŭ la menuon ⋮ / ⋯ → “Instali” (Edge: Aplikaĵoj → “Instali ĉi tiun retejon kiel aplikaĵon”). En Safari ĉe Mac: Dosiero → “Aldoni al Dock”. Aliaj retumiloj: serĉu en la menuo “Instali” aŭ “Aldoni al hejmekrano”.',
   menuOff: 'Miaj konsiloj estas malŝaltitaj, sed mi ankoraŭ respondas: “Pli da helpo” por la tuta helpo kun serĉo, “Kio estas tio?” por tuŝeti ion ajn kaj aŭdi kion ĝi faras. “Ŝalti la konsilojn” kaj mi gvidas vin dum vi progresas.',
+  menuOffSite: 'Miaj konsiloj estas malŝaltitaj, sed mi ankoraŭ respondas: “Pli da helpo” por la tuta helpo kun serĉo, “Kio estas tio?” por tuŝeti ion ajn kaj aŭdi kion ĝi faras.',
   turnOn: 'Ŝalti la konsilojn',
 };
