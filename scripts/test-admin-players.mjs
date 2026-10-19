@@ -84,15 +84,17 @@ const lanOpt = [...$('defMode').options].find((o) => o.value === 'lan-dedi');
 ok(lanOpt.disabled && /\(hidden\)$/.test(lanOpt.textContent), 'a hidden mode cannot be picked as the first-visit mode');
 ok($('defMode').closest('#panel-login') && $('srvName').closest('#panel-login') && $('lsUrl').closest('#panel-login'), 'entry modes, server identity and live figures live on Login screen');
 const notices = ['wcEnabled', 'gwEnabled', 'lwEnabled', 'awEnabled'];
-ok(notices.every((k) => $(k).closest('.card').parentNode === $('panel-login')), 'the four popups are on Login screen too');
+ok(notices.every((k) => $(k).closest('.card').parentNode === $('panel-login')), 'the four popups live on Login screen');
 ok(doc.querySelectorAll('#panel-login > .card').length === 7, 'Login screen holds its three cards and the four popups');
 typeIn('wcTitle', 'Hello, unsaved');
 await open('broadcast');
-ok(notices.every((k) => $(k).closest('.card').parentNode === $('panel-broadcast')) && $('wcTitle').value === 'Hello, unsaved',
-  'back in Broadcasts it is the same editor, unsaved text included');
+// web.189: one home only. Broadcasts points to Login screen instead of borrowing the cards.
+ok(notices.every((k) => $(k).closest('.card').parentNode === $('panel-login')) && $('wcTitle').value === 'Hello, unsaved',
+  'opening Broadcasts leaves them on Login screen, unsaved text included');
+ok(/Arrival notices/.test($('panel-broadcast').textContent) && $('panel-broadcast').querySelector('[data-goto="login"]'), 'Broadcasts says where they are, with a link');
 ok(doc.querySelectorAll('[id="wcTitle"]').length === 1, 'one editor per popup, never a copy');
 await open('login');
-ok($('wcEnabled').closest('#panel-login'), 'and it follows the operator back to Login screen');
+ok($('wcEnabled').closest('#panel-login'), 'and they are there on the way back');
 const chip = (k) => { const c = $(k).closest('.card').querySelector('h2 .hchip'); return c ? c.textContent : ''; };
 ok(['wcEnabled', 'gwEnabled', 'lwEnabled', 'awEnabled'].every((k) => /^(On|Off)$/.test(chip(k))), 'each popup title says On or Off, folded or not');
 ok(doc.querySelectorAll('#wcEnabled').length === 1 && $('wcEnabled').closest('.card').querySelectorAll('h2 .hchip').length === 1, 'one chip per title, however often it is repainted');

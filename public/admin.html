@@ -1631,6 +1631,73 @@
         </div>
         <div id="lsMsg" class="msg"></div>
       </div>
+      <div class="card" data-master="1">
+        <h2>Welcome / rules message (first visit)</h2>
+        <p class="muted">Shown once in a centered popup the first time someone opens the app, and again whenever you edit it. Each visitor sees the version matching their language (fallback below). Players dismiss it with “I understand”.</p>
+        <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="wcEnabled" style="width:auto"> Enabled</label>
+        <div class="periodrow" style="margin-bottom:8px">
+          <label class="muted">Edit language <select id="wcLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+          <label class="muted">Fallback <select id="wcDefault" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+        </div>
+        <div id="wcFilled" class="muted" style="margin:0 0 8px;font-size:.8rem"></div>
+        <input id="wcTitle" class="filter" maxlength="200" placeholder="Title (optional)" style="width:100%;margin-bottom:8px">
+        <textarea id="wcBody" class="filter" rows="5" maxlength="4000" placeholder="Message / rules for this language…" style="width:100%;resize:vertical"></textarea>
+        <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
+        <div id="wcPrev"></div>
+        <div class="periodrow" style="margin-top:8px"><button id="wcSave" class="use" data-save>Save welcome message</button></div>
+        <div id="wcState" class="msg"></div>
+      </div>
+      <div class="card" data-master="1">
+        <h2>Guest notice (Internet)</h2>
+        <p class="muted">A popup when someone connects as a <b>guest</b> on Internet &mdash; typically what guests can and cannot do compared to a registered account. Dismissed with “I understand”, it stays hidden on that device until you edit it.</p>
+        <details class="more"><summary>Languages and built-in texts</summary><p class="muted">Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p></details>
+        <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="gwEnabled" style="width:auto"> Enabled</label>
+        <div class="periodrow" style="margin-bottom:8px">
+          <label class="muted">Edit language <select id="gwLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+          <label class="muted">Fallback <select id="gwDefault" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+        </div>
+        <div id="gwFilled" class="muted" style="margin:0 0 8px;font-size:.8rem"></div>
+        <input id="gwTitle" class="filter" maxlength="200" placeholder="Title (optional)" style="width:100%;margin-bottom:8px">
+        <textarea id="gwBody" class="filter" rows="5" maxlength="4000" placeholder="Message for guests in this language&hellip;" style="width:100%;resize:vertical"></textarea>
+        <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
+        <div id="gwPrev"></div>
+        <div class="periodrow" style="margin-top:8px"><button id="gwSave" class="use" data-save>Save guest notice</button></div>
+        <div id="gwState" class="msg"></div>
+      </div>
+      <div class="card" data-master="1">
+        <h2>LAN / dedicated server notice</h2>
+        <p class="muted">A popup when someone connects in <b>LAN / dedicated</b> mode on this instance &mdash; typically that it only dials one configured LAN server, and how to self-host for any other address. Dismissed with “I understand”, it stays hidden on that device until you edit it.</p>
+        <details class="more"><summary>Languages and built-in texts</summary><p class="muted">Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p></details>
+        <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="lwEnabled" style="width:auto"> Enabled</label>
+        <div class="periodrow" style="margin-bottom:8px">
+          <label class="muted">Edit language <select id="lwLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+          <label class="muted">Fallback <select id="lwDefault" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+        </div>
+        <div id="lwFilled" class="muted" style="margin:0 0 8px;font-size:.8rem"></div>
+        <input id="lwTitle" class="filter" maxlength="200" placeholder="Title (optional)" style="width:100%;margin-bottom:8px">
+        <textarea id="lwBody" class="filter" rows="5" maxlength="4000" placeholder="Message for LAN / dedicated players in this language&hellip;" style="width:100%;resize:vertical"></textarea>
+        <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
+        <div id="lwPrev"></div>
+        <div class="periodrow" style="margin-top:8px"><button id="lwSave" class="use" data-save>Save LAN notice</button></div>
+        <div id="lwState" class="msg"></div>
+      </div>
+      <div class="card" data-master="1">
+        <h2>Registered-account notice (Internet)</h2>
+        <p class="muted">The guest popup’s mirror, for players who log in <b>with a registered account</b> on Internet. Dismissed with “I understand”, it stays hidden &mdash; the acknowledgement follows the account across devices &mdash; until you edit it.</p>
+        <details class="more"><summary>Languages and built-in texts</summary><p class="muted">Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p></details>
+        <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="awEnabled" style="width:auto"> Enabled</label>
+        <div class="periodrow" style="margin-bottom:8px">
+          <label class="muted">Edit language <select id="awLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+          <label class="muted">Fallback <select id="awDefault" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+        </div>
+        <div id="awFilled" class="muted" style="margin:0 0 8px;font-size:.8rem"></div>
+        <input id="awTitle" class="filter" maxlength="200" placeholder="Title (optional)" style="width:100%;margin-bottom:8px">
+        <textarea id="awBody" class="filter" rows="5" maxlength="4000" placeholder="Message for registered players in this language&hellip;" style="width:100%;resize:vertical"></textarea>
+        <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
+        <div id="awPrev"></div>
+        <div class="periodrow" style="margin-top:8px"><button id="awSave" class="use" data-save>Save registered-account notice</button></div>
+        <div id="awState" class="msg"></div>
+      </div>
     </div>
 
     <div id="panel-lobby" style="display:none">
@@ -2005,71 +2072,8 @@
         <div id="discordMsg" class="msg"></div>
       </div>
       <div class="card" data-master="1">
-        <h2>Welcome / rules message (first visit)</h2>
-        <p class="muted">Shown once in a centered popup the first time someone opens the app, and again whenever you edit it. Each visitor sees the version matching their language (fallback below). Players dismiss it with “I understand”.</p>
-        <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="wcEnabled" style="width:auto"> Enabled</label>
-        <div class="periodrow" style="margin-bottom:8px">
-          <label class="muted">Edit language <select id="wcLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
-          <label class="muted">Fallback <select id="wcDefault" class="filter" style="margin:0;flex:none;width:auto"></select></label>
-        </div>
-        <div id="wcFilled" class="muted" style="margin:0 0 8px;font-size:.8rem"></div>
-        <input id="wcTitle" class="filter" maxlength="200" placeholder="Title (optional)" style="width:100%;margin-bottom:8px">
-        <textarea id="wcBody" class="filter" rows="5" maxlength="4000" placeholder="Message / rules for this language…" style="width:100%;resize:vertical"></textarea>
-        <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
-        <div id="wcPrev"></div>
-        <div class="periodrow" style="margin-top:8px"><button id="wcSave" class="use" data-save>Save welcome message</button></div>
-        <div id="wcState" class="msg"></div>
-      </div>
-      <div class="card" data-master="1">
-        <h2>Guest notice (Internet)</h2>
-        <p class="muted">A popup when someone connects as a <b>guest</b> on Internet &mdash; typically what guests can and cannot do compared to a registered account. Dismissed with “I understand”, it stays hidden on that device until you edit it.</p>
-        <details class="more"><summary>Languages and built-in texts</summary><p class="muted">Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p></details>
-        <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="gwEnabled" style="width:auto"> Enabled</label>
-        <div class="periodrow" style="margin-bottom:8px">
-          <label class="muted">Edit language <select id="gwLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
-          <label class="muted">Fallback <select id="gwDefault" class="filter" style="margin:0;flex:none;width:auto"></select></label>
-        </div>
-        <div id="gwFilled" class="muted" style="margin:0 0 8px;font-size:.8rem"></div>
-        <input id="gwTitle" class="filter" maxlength="200" placeholder="Title (optional)" style="width:100%;margin-bottom:8px">
-        <textarea id="gwBody" class="filter" rows="5" maxlength="4000" placeholder="Message for guests in this language&hellip;" style="width:100%;resize:vertical"></textarea>
-        <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
-        <div id="gwPrev"></div>
-        <div class="periodrow" style="margin-top:8px"><button id="gwSave" class="use" data-save>Save guest notice</button></div>
-        <div id="gwState" class="msg"></div>
-      </div>
-      <div class="card" data-master="1">
-        <h2>LAN / dedicated server notice</h2>
-        <p class="muted">A popup when someone connects in <b>LAN / dedicated</b> mode on this instance &mdash; typically that it only dials one configured LAN server, and how to self-host for any other address. Dismissed with “I understand”, it stays hidden on that device until you edit it.</p>
-        <details class="more"><summary>Languages and built-in texts</summary><p class="muted">Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p></details>
-        <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="lwEnabled" style="width:auto"> Enabled</label>
-        <div class="periodrow" style="margin-bottom:8px">
-          <label class="muted">Edit language <select id="lwLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
-          <label class="muted">Fallback <select id="lwDefault" class="filter" style="margin:0;flex:none;width:auto"></select></label>
-        </div>
-        <div id="lwFilled" class="muted" style="margin:0 0 8px;font-size:.8rem"></div>
-        <input id="lwTitle" class="filter" maxlength="200" placeholder="Title (optional)" style="width:100%;margin-bottom:8px">
-        <textarea id="lwBody" class="filter" rows="5" maxlength="4000" placeholder="Message for LAN / dedicated players in this language&hellip;" style="width:100%;resize:vertical"></textarea>
-        <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
-        <div id="lwPrev"></div>
-        <div class="periodrow" style="margin-top:8px"><button id="lwSave" class="use" data-save>Save LAN notice</button></div>
-        <div id="lwState" class="msg"></div>
-      </div>
-      <div class="card" data-master="1">
-        <h2>Registered-account notice (Internet)</h2>
-        <p class="muted">The guest popup’s mirror, for players who log in <b>with a registered account</b> on Internet. Dismissed with “I understand”, it stays hidden &mdash; the acknowledgement follows the account across devices &mdash; until you edit it.</p>
-        <details class="more"><summary>Languages and built-in texts</summary><p class="muted">Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p></details>
-        <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="awEnabled" style="width:auto"> Enabled</label>
-        <div class="periodrow" style="margin-bottom:8px">
-          <label class="muted">Edit language <select id="awLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
-          <label class="muted">Fallback <select id="awDefault" class="filter" style="margin:0;flex:none;width:auto"></select></label>
-        </div>
-        <div id="awFilled" class="muted" style="margin:0 0 8px;font-size:.8rem"></div>
-        <input id="awTitle" class="filter" maxlength="200" placeholder="Title (optional)" style="width:100%;margin-bottom:8px">
-        <textarea id="awBody" class="filter" rows="5" maxlength="4000" placeholder="Message for registered players in this language&hellip;" style="width:100%;resize:vertical"></textarea>
-        <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
-        <div id="awPrev"></div>
-        <div class="periodrow" style="margin-top:8px"><button id="awSave" class="use" data-save>Save registered-account notice</button></div>
-        <div id="awState" class="msg"></div>
+        <h2>Arrival notices</h2>
+        <p class="muted">The welcome / rules message and the guest, LAN and registered-account notices open when a player arrives: they are set in <a href="#login" data-goto="login">Player experience › Login screen</a>.</p>
       </div>
     </div>
 
@@ -2224,15 +2228,8 @@
       if(r.ok && String(opts.method||'GET').toUpperCase()==='POST') { try{ cfgAfterPost(path, r.clone()); }catch(e){} }
       return r;
     }); }
-  // The four popups (welcome, guest, LAN, account) belong to two sections: what
-  // players are told (Broadcasts) and what they meet on arriving (Login
-  // screen). There is one editor of each, not two copies kept in step: its
-  // card follows the operator into whichever of the two sections is open, with
-  // its unsaved text, its fold and its handlers.
-  function pxNoticesTo(id){
-    var p=$(id); if(!p) return;
-    ['wcEnabled','gwEnabled','lwEnabled','awEnabled'].forEach(function(k){ var e=$(k), c=e&&e.closest('.card'); if(c&&c.parentNode!==p) p.appendChild(c); });
-  }
+  // The four popups (welcome, guest, LAN, account) live on Login screen only
+  // (web.189): they open when a player arrives. Broadcasts points there.
   // ── Unsaved edits ─────────────────────────────────────────────────────
   // A card holds an unsaved edit from its first keystroke until a write made
   // from it succeeds (the card of the last click is the one being saved).
@@ -3334,8 +3331,8 @@
     if(t==='servers'){ loadServers(); loadStatus(!cfgAnyDirty()); }
     if(t==='landir') loadLanDir();
     if(t==='polls'){ loadPolls(); if(_isMaster) loadFeatureSwitches(); }
-    if(t==='broadcast'){ pxNoticesTo('panel-broadcast'); loadBroadcasts(); if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); loadStatus(!cfgAnyDirty()); } }
-    if(t==='login'){ pxNoticesTo('panel-login'); if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); } }
+    if(t==='broadcast'){ loadBroadcasts(); if(_isMaster){ loadStatus(!cfgAnyDirty()); } }
+    if(t==='login'){ if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); } }
     if(t==='login'||t==='lobby'){ loadStatus(!cfgAnyDirty()); loadFeatureSwitches(); }
     if(t==='firstvisit'){ loadStatus(!cfgAnyDirty()); }
     if(t==='features') loadFeatureSwitches();
@@ -3891,6 +3888,7 @@
         if($('srvTagline') && typeof d.serverTagline==='string') $('srvTagline').value=d.serverTagline;
         if($('loginTitle')) $('loginTitle').value=(d.showLoginTitle?'1':'0');
         if($('discordHook') && typeof d.discordChatWebhookUrl==='string' && !cardDirty($('discordHook'))) $('discordHook').value=d.discordChatWebhookUrl;
+        if($('bcTiles')) _bcTiles();
         if($('clkPick') && Array.isArray(d.clockZones)) clkPickRender(d.clockZones);
         if($('clkRef')) clkRefRender(d.clockRef||CLOCK_REF_DEFAULT);
         if($('lobbyClk')) lobbyClkRender(d.lobbyClockTz||'',d.lobbyClockEff||'',d.lobbyClockEnv||'');
@@ -6665,12 +6663,11 @@
     var jobs=_bcJobs||[], on=jobs.filter(function(j){ return j.enabled; }), next=null, sent=0;
     on.forEach(function(j){ if(j.nextRun && (!next || j.nextRun<next.nextRun)) next=j; });
     jobs.forEach(function(j){ sent+=j.runCount||0; });
-    var N=[['Welcome',welcomeState],['Guest',guestNoticeState],['LAN',lanNoticeState],['Account',authNoticeState]];
-    var non=N.filter(function(x){ return x[1]&&x[1].enabled; });
+    var dh=_pxStatus&&typeof _pxStatus.discordChatWebhookUrl==='string'?_pxStatus.discordChatWebhookUrl:null;
     var T=[['Scheduled',_bcJobs?String(on.length):'—',_bcJobs?((jobs.length-on.length)+' paused'):'loading','var(--accent)',''],
            ['Next send',next?bcFmt(next.nextRun):'—',next?srvEsc((next.icon?next.icon+' ':'')+next.message):'nothing scheduled','var(--warn-text)',' sm'],
            ['Sent',sent.toLocaleString(),'by the scheduled messages','var(--ok-text)',''],
-           ['Notices on',_isMaster?(non.length+' / 4'):'—',_isMaster?(non.length?non.map(function(x){return x[0];}).join(', '):'none switched on'):'master key only','var(--info-text)','']];
+           ['Discord relay',_isMaster&&dh!==null?(dh?'On':'Off'):'—',!_isMaster?'master key only':(dh===null?'loading':(dh?'lobby chat posted to Discord':'no webhook set')),'var(--info-text)','']];
     box.innerHTML=T.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn'+t[4]+'">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join('');
   }
   // One card per scheduled message: state, the message, then its schedule,

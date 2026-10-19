@@ -23,7 +23,7 @@ vc.on('jsdomError', (e) => errors.push(e.message));
 const NOW = Date.now();
 const CANNED = {
   '/admin/whoami': { ok: true, master: true, scopes: [] },
-  '/admin/status': { ok: true, version: '2.1.10-web.128', uptimeSec: 60, sockets: 0, resetPeriod: 'weekly', update: {} },
+  '/admin/status': { ok: true, version: '2.1.10-web.128', uptimeSec: 60, sockets: 0, resetPeriod: 'weekly', update: {}, discordChatWebhookUrl: 'https://discord.com/api/webhooks/1/x' },
   '/admin/lan-boards': { ok: true, resetPeriod: 'weekly', defaultPlayers: 4, boards: [{ id: 'lan_bbbbbb01', name: 'Berlin', host: 'berlin.example.org', port: 7234, visible: true, resetPeriod: 'off', players: 1 }] },
   '/stats': { 'Ann': { net: 1200, gamesWon: 4, gamesPlayed: 10, handsWon: 50, handsPlayed: 200, bestStreak: 3 },
               '<img src=x>': { net: -50, gamesWon: 9, gamesPlayed: 9, handsWon: 10, handsPlayed: 20, bestStreak: 0 },
@@ -133,7 +133,7 @@ ok(/Club <i>night<\/i>/.test(bc()[0].querySelector('.plq').textContent) && !bc()
 ok(/Daily at 20:00/.test(bc()[0].textContent) && /→ All modes/.test(bc()[0].textContent) && /5 sent/.test(bc()[0].textContent), 'schedule, target and count as chips');
 ok(/2\/4 sent/.test(bc()[1].textContent) && /→ Internet/.test(bc()[1].textContent), 'a capped message shows its cap');
 const bt = tiles('bcTiles');
-ok(/Scheduled 1 1 paused/.test(bt) && /Sent 7/.test(bt) && /Notices on 2 \/ 4 Welcome, LAN/.test(bt) && /Next send .*Club <i>night<\/i>/.test(bt), 'tiles: scheduled, next send, sent, notices on (' + bt + ')');
+ok(/Scheduled 1 1 paused/.test(bt) && /Sent 7/.test(bt) && /Discord relay On lobby chat posted to Discord/.test(bt) && /Next send .*Club <i>night<\/i>/.test(bt), 'tiles: scheduled, next send, sent, Discord relay (web.189) (' + bt + ')');
 ok(!doc.querySelector('#bcTiles i'), 'a tile shows the message as text');
 ok(/2 messages · 1 active/.test($('bcSum').textContent), 'the head note');
 [...bc()[1].querySelectorAll('.use')].find((b) => b.textContent === 'Enable').click();

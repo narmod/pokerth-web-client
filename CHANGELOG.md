@@ -41,6 +41,11 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Arrival notices live on Login screen only** (`web.189`, audit of 2026-10-19c, P2; Arnaud's choice B) — the
+  welcome / rules message and the guest, LAN and registered-account notices open when a player arrives. Their cards
+  followed the operator between Broadcasts and Login screen (`pxNoticesTo`); they now stay on Login screen, and
+  Broadcasts has an « Arrival notices » card that links there. Its fourth tile, which counted those notices, now
+  shows the Discord chat relay (On / Off).
 - **Sections and Features point at each other** (`web.188`, audit of 2026-10-19c, P3; Arnaud's choice A) — the
   lobby clock, the Events tab and the polls are set up in their section (zone, community sites, polls) and turned
   off for players by a switch in Player experience › Features; neither page said so, and the Events tab card read
