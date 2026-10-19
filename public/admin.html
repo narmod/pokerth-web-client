@@ -537,6 +537,71 @@
   .envrow .barx{flex:0 0 84px;height:6px;border-radius:4px;background:rgba(127,127,127,.18);overflow:hidden}
   .envrow .barx i{display:block;height:100%;border-radius:4px}
   .envrow .pct{flex:none;min-width:78px;text-align:right;color:var(--text);font-variant-numeric:tabular-nums;font-size:.78rem}
+  /* Where visitors come from — three views (renderSrc) */
+  #trafSrc .sd{display:inline-block;width:10px;height:10px;border-radius:3px;flex:none}
+  .srckpi{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:4px 0 12px}
+  .srckpi>div{background:var(--hover);border-radius:10px;padding:9px 11px;display:flex;flex-direction:column;gap:1px;min-width:0}
+  .srckpi span{font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;color:var(--text);font-weight:700}
+  .srckpi b{font-size:1.25rem;color:var(--cream);font-variant-numeric:tabular-nums}
+  .srcstack{display:flex;gap:2px;height:12px;border-radius:6px;overflow:hidden;margin:2px 0 6px}
+  .srcstack i{display:block;height:100%;min-width:2px}
+  .srccap{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.74rem;color:var(--text);margin-bottom:6px}
+  .srcsubt{font-size:.8rem;font-weight:600;color:var(--cream);margin-bottom:6px}
+  .srcrow{border-top:1px solid rgba(127,127,127,.12);padding:10px 0;display:flex;flex-direction:column;gap:6px}
+  .srchead{display:flex;align-items:center;gap:9px;width:100%;background:none;border:0;padding:0;color:inherit;font:inherit;text-align:left}
+  button.srchead{cursor:pointer;min-height:32px;border-radius:6px}
+  button.srchead:hover{background:var(--hover)}
+  .srchead .nm{flex:1;min-width:0;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+  .srchead .nm b{font-size:.92rem;color:var(--cream);font-weight:600}
+  .srchead .nm small{font-size:.74rem;color:var(--text);overflow-wrap:anywhere}
+  .srchead .n{font-weight:700;color:var(--cream);font-variant-numeric:tabular-nums}
+  .srchead .rate{font-size:.8rem;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums}
+  .srchead .rate.hi{color:var(--ok-text)}
+  .srchead .chev{flex:none;transition:transform .15s;color:var(--text)}
+  .srchead[aria-expanded="true"] .chev{transform:rotate(180deg)}
+  .srcbadge{font-size:.66rem;font-weight:700;color:var(--ok-text);background:var(--ok-bg);border:1px solid var(--ok-line);border-radius:6px;padding:1px 6px;white-space:nowrap}
+  .srcin{margin-left:19px;display:flex;flex-direction:column;gap:5px}
+  .srcbar{height:6px;border-radius:3px;background:rgba(127,127,127,.14);overflow:hidden;display:flex;gap:2px}
+  .srcbar i{display:block;height:100%;border-radius:3px}
+  .srcbar.split{height:9px;background:none}
+  .srcmeta{display:flex;justify-content:space-between;gap:4px 8px;flex-wrap:wrap;font-size:.78rem;color:var(--text);font-variant-numeric:tabular-nums}
+  .srcmeta b{color:var(--cream);font-weight:600}
+  .srclg{font-size:.74rem;color:var(--text)}
+  .srckids{margin:2px 0 0 19px;padding-left:11px;border-left:2px solid var(--line);display:flex;flex-direction:column;gap:8px}
+  .srckid{display:flex;flex-direction:column;gap:2px;font-size:.8rem;color:var(--cream)}
+  .srckid>div{display:flex;justify-content:space-between;gap:8px;font-variant-numeric:tabular-nums}
+  .srckid>div>span{min-width:0;overflow-wrap:anywhere}
+  .srckid>div:last-child{font-size:.74rem;color:var(--text)}
+  .srcchips{display:flex;gap:5px;flex-wrap:wrap}
+  .srcchips span{font-size:.72rem;color:var(--cream);background:var(--hover);border:1px solid var(--line);border-radius:6px;padding:2px 6px}
+  .srchl{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;margin:2px 0 12px}
+  .srchl b{font-size:1.9rem;color:var(--cream);line-height:1.1;font-variant-numeric:tabular-nums}
+  .srchl span{color:var(--text);font-size:.86rem}
+  .srclegend{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:4px 14px;margin:4px 0 14px;font-size:.78rem}
+  .srclegend>span{display:flex;align-items:center;gap:7px;min-width:0}
+  .srclegend em{flex:1;min-width:0;font-style:normal;color:var(--cream);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .srclegend b{font-variant-numeric:tabular-nums;color:var(--cream)}
+  .srckey{display:flex;gap:14px;font-size:.74rem;color:var(--text);margin-bottom:2px}
+  .srckey span{display:flex;align-items:center;gap:6px}
+  .srckey i{display:inline-block;width:12px;height:8px;border-radius:2px}
+  .srcmx{display:flex;flex-direction:column;gap:3px;overflow-x:auto}
+  .srcmx>div{display:grid;grid-template-columns:minmax(92px,1.6fr) repeat(var(--mxc),minmax(30px,1fr)) 40px;gap:3px;align-items:center;min-width:290px}
+  .srcmx .hd{font-size:.68rem;font-weight:700;color:var(--text);letter-spacing:.04em;text-align:center;text-transform:uppercase}
+  .srcmx .hd:first-child{text-align:left}
+  .srcmx .hd:last-child{text-align:right}
+  .srcmx .rh{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--cream);min-width:0}
+  .srcmx .rh .sd{width:8px;height:8px;border-radius:2px}
+  .srcmx .rh em{font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .srcmx .c{height:28px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:.76rem;font-weight:600;font-variant-numeric:tabular-nums}
+  .srcmx .c.z{background:var(--hover);color:var(--text)}
+  .srcmx .t{text-align:right;font-weight:700;color:var(--cream);font-size:.8rem;font-variant-numeric:tabular-nums}
+  .srcmxkey{display:flex;flex-direction:column;gap:6px;margin-top:8px;font-size:.74rem;color:var(--text)}
+  .srcmxkey .g{display:flex;align-items:center;gap:8px}
+  .srcmxkey .g i{flex:1;height:7px;border-radius:4px;background:linear-gradient(90deg,rgba(64,128,216,.14),rgba(64,128,216,.92))}
+  .srcfacts{margin-top:14px;padding-top:12px;border-top:1px solid rgba(127,127,127,.12);display:flex;flex-direction:column;gap:6px;font-size:.84rem;color:var(--cream)}
+  .srcfacts h4{margin:0 0 2px;font-size:.86rem}
+  .srcfacts p{margin:0;display:flex;gap:9px;line-height:1.45}
+  .srcfacts .sd{width:8px;height:8px;border-radius:2px;margin-top:6px}
   .envrow .trend{flex:none;width:62px;text-align:right;font-size:.74rem;font-variant-numeric:tabular-nums;white-space:nowrap;cursor:help}
   .envrow .trend.up{color:#5ec269}.envrow .trend.down{color:#e26d6d}.envrow .trend.flat{color:var(--text);opacity:.55}.envrow .trend.na{color:var(--text);opacity:.3}
   .envrow .votes{flex:none;min-width:74px;text-align:right;color:var(--text);font-size:.74rem;font-variant-numeric:tabular-nums;white-space:nowrap;cursor:help}
@@ -1256,7 +1321,12 @@
         </div>
         <div class="tsec" id="srcSec">
           <div class="boardhead"><h3>Where visitors come from</h3><span id="srcSince" class="muted" style="margin:0"></span></div>
-          <p class="muted xpl">One source per visit, read from the landing page before the address bar is cleaned: a <b>utm_source</b> tag if the link had one, else the <b>domain</b> of the referring site (never its path), else a table <b>invite link</b>, else one of this site’s own pages, else a <b>?lang=</b> link, else <b>direct</b> — typed, bookmark, installed app, or a referrer withheld by the browser or the app the link was opened in (chat apps usually withhold it). Bar = visits; “new” = first visits, with their top languages: where a burst of new visitors comes from. Follows the period selected above.</p>
+          <p class="muted xpl">One source per visit, read from the landing page before the address bar is cleaned: a <b>utm_source</b> tag if the link had one, else the <b>domain</b> of the referring site (never its path), else a table <b>invite link</b>, else one of this site’s own pages, else a <b>?lang=</b> link, else <b>direct</b> — typed, bookmark, installed app, or a referrer withheld by the browser or the app the link was opened in (chat apps usually withhold it). Sources are then folded into <b>channels</b> for reading: search engines, <b>AI assistants</b> (ChatGPT tags its own links utm_source=chatgpt.com, so that is not a campaign of ours), PokerTH.net, social and chat apps, real campaigns, other sites; a channel with several sources unfolds. “New” = first visits; <i>returning</i> = every other visit. <b>Channels</b> = visits by channel; <b>New visitors</b> = the same channels ranked by first visits, against returning ones; <b>Languages</b> = first visits by source and browser language (languages are kept for first visits only). Follows the period selected above.</p>
+          <div class="seg" id="srcSeg" style="flex-wrap:wrap">
+            <button type="button" class="on" data-k="ch">Channels</button>
+            <button type="button" data-k="nw">New visitors</button>
+            <button type="button" data-k="lg">Languages</button>
+          </div>
           <div id="trafSrc"><div class="empty">Loading…</div></div>
         </div>
       </div>
@@ -4482,40 +4552,248 @@
     box.innerHTML=h;
   }
   // ── Where visitors come from (server/ref-stats.js) ──
-  var _srcKnown=false, _srcData=null, _srcSince=0, _srcExpanded=false;
-  function _srcLabel(k){
-    if(k==='(direct)') return 'Direct / no referrer';
-    if(k==='(invite)') return 'Table invite link';
-    if(k==='(lang link)') return '?lang= link, no referrer';
-    if(k==='(overflow)') return 'Other (past the daily cap or unreadable)';
-    if(k.indexOf('utm:')===0) return 'Campaign · '+_annEsc(k.slice(4));
-    if(k.indexOf('site:')===0) return 'This site · '+_annEsc(k.slice(5));
+  // Three readings of the same period figures (all / nw / lang), one at a time:
+  //  · Channels — the sources folded into a few channels (search engines, AI
+  //    assistants, PokerTH.net…); a channel with several sources unfolds;
+  //  · New vs returning — the channels ranked by first visits;
+  //  · Source × language — first visits by source and language (the server
+  //    keeps the language of first visits only, ref-stats.js record()).
+  // The grouping is presentation only: the server still stores one key per
+  // source, so a channel rule can change without touching the counters.
+  var _srcKnown=false, _srcData=null, _srcSince=0, _srcExpanded=false, _srcOpen={}, _srcView='ch';
+  try{ var _sv=localStorage.getItem('pth_admin_srcview'); if(_sv==='ch'||_sv==='nw'||_sv==='lg') _srcView=_sv; }catch(e){}
+  var SRC_CHANNELS=[
+    {id:'direct',name:'Direct',sub:'no referrer',color:'#7a8494'},
+    {id:'ai',name:'AI assistants',color:'#c47ad6'},
+    {id:'home',name:'PokerTH.net',color:'#3DBE86'},
+    {id:'search',name:'Search engines',color:'#4080d8'},
+    {id:'social',name:'Social & chat apps',color:'#b58b5a'},
+    {id:'invite',name:'Table invite links',color:'#e0a03a'},
+    {id:'lang',name:'?lang= links',sub:'no referrer',color:'#4fc3c7'},
+    {id:'pages',name:'Our pages',color:'#e98a8a'},
+    {id:'campaign',name:'Campaigns',sub:'utm_source',color:'#7fd17f'},
+    {id:'ref',name:'Other sites',color:'#9aa7bd'},
+    {id:'other',name:'Unreadable / past the daily cap',color:'#6f7f99'}
+  ];
+  // Channel of one source key. AI assistants come first because they tag
+  // their own links (ChatGPT adds utm_source=chatgpt.com by itself): read as
+  // a « campaign », that traffic looked like something we had posted.
+  function _srcChannel(k){
+    k=String(k||'');
+    if(k==='(direct)') return 'direct';
+    if(k==='(invite)') return 'invite';
+    if(k==='(lang link)') return 'lang';
+    if(k==='(overflow)') return 'other';
+    if(k.indexOf('site:')===0) return 'pages';
+    var utm=k.indexOf('utm:')===0, h=utm?k.slice(4):k;
+    if(/^(?:chatgpt(?:\.com)?|chat\.openai\.com|openai(?:\.com)?|perplexity(?:\.ai)?|copilot(?:\.microsoft\.com)?|gemini(?:\.google\.com)?|claude(?:\.ai)?|chat\.deepseek\.com|deepseek(?:\.com)?|chat\.mistral\.ai|mistral(?:\.ai)?|poe\.com|you\.com|meta\.ai|grok(?:\.com)?|kimi\.moonshot\.cn|kimi\.com|doubao\.com|yuanbao\.tencent\.com|chat\.qwen\.ai|tongyi\.aliyun\.com)$/.test(h)) return 'ai';
+    if(utm) return 'campaign';
+    if(/(?:^|\.)pokerth\.net$/.test(h)) return 'home';
+    if(/^(?:(?:cn|search|images|news|global)\.)?(?:google|bing|duckduckgo|yahoo|yandex|baidu|ecosia|qwant|naver|sogou|startpage|seznam|so|sm|haosou)\.[a-z]{2,3}(?:\.[a-z]{2})?$/.test(h) || h==='search.brave.com' || h==='com.google.android.googlequicksearchbox') return 'search';
+    if(/^(?:[a-z0-9-]+\.)?(?:facebook\.com|fb\.com|messenger\.com|t\.co|twitter\.com|x\.com|reddit\.com|discord\.com|discordapp\.com|youtube\.com|instagram\.com|linkedin\.com|lnkd\.in|vk\.com|t\.me|telegram\.org|whatsapp\.com|wa\.me|weibo\.com|weibo\.cn|tiktok\.com|threads\.net|bsky\.app|mastodon\.social|pinterest\.com|tumblr\.com|qq\.com|zhihu\.com|bilibili\.com|douyin\.com)$/.test(h)
+       || /^(?:com\.tencent\.mm|com\.tencent\.mobileqq|org\.telegram\.messenger|com\.whatsapp|com\.discord|com\.reddit\.frontpage|com\.facebook\.katana|com\.facebook\.orca)$/.test(h)) return 'social';
+    return 'ref';
+  }
+  // Sums the period by channel; each channel keeps its sources (kids).
+  function _srcGroup(p){
+    var all=(p&&p.all)||{}, nw=(p&&p.nw)||{}, lg=(p&&p.lang)||{};
+    var by={}, total=0, totalNew=0, nSrc=0;
+    Object.keys(all).forEach(function(k){
+      var v=all[k]||0; if(!v) return;
+      var id=_srcChannel(k), c=by[id]||(by[id]={id:id,v:0,nw:0,langs:{},kids:[]});
+      var n=nw[k]||0, m=lg[k]||{};
+      c.v+=v; c.nw+=n; total+=v; totalNew+=n; nSrc++;
+      Object.keys(m).forEach(function(l){ c.langs[l]=(c.langs[l]||0)+(m[l]||0); });
+      c.kids.push({k:k,v:v,nw:n,langs:m});
+    });
+    var list=SRC_CHANNELS.filter(function(d){ return by[d.id]; }).map(function(d){
+      var c=by[d.id]; c.name=d.name; c.color=d.color; c.sub=d.sub||'';
+      c.kids.sort(function(a,b){ return b.v-a.v||b.nw-a.nw; });
+      return c;
+    });
+    list.sort(function(a,b){ return b.v-a.v||b.nw-a.nw; });
+    return {total:total,totalNew:totalNew,nSrc:nSrc,list:list};
+  }
+  // Short name of a source inside its channel (the channel already says what it is).
+  function _srcShort(k){
+    if(k.indexOf('utm:')===0) return _annEsc(k.slice(4));
+    if(k.indexOf('site:')===0) return _annEsc(k.slice(5));
+    if(k==='(direct)') return 'Direct';
+    if(k==='(invite)') return 'Invite links';
+    if(k==='(lang link)') return '?lang= links';
+    if(k==='(overflow)') return 'Past the cap';
     return _annEsc(k);
+  }
+  function _srcLangName(l){ return l==='other' ? 'no header' : _annEsc(_langLabel(l)); }
+  function _srcLangTop(m,n){
+    m=m||{};
+    return Object.keys(m).filter(function(l){ return m[l]>0; }).sort(function(a,b){ return m[b]-m[a]; }).slice(0,n).map(function(l){ return _srcLangName(l)+' '+_envFmt(m[l]); });
+  }
+  function _srcColor(k){ var id=_srcChannel(k); for(var i=0;i<SRC_CHANNELS.length;i++) if(SRC_CHANNELS[i].id===id) return SRC_CHANNELS[i].color; return '#6f7f99'; }
+  function _srcPct(n,T){ return T ? Math.round(n*100/T)+'%' : '0%'; }
+  function _srcStack(items,T,key){
+    var h='<div class="srcstack" role="img" aria-label="'+(key==='nw'?'Share of new visitors by channel':'Share of visits by channel')+'">';
+    items.forEach(function(c){ var n=c[key]; if(n>0) h+='<i style="width:'+(n*100/T).toFixed(2)+'%;background:'+c.color+'" title="'+_annEsc(c.name)+' · '+_srcPct(n,T)+'"></i>'; });
+    return h+'</div>';
+  }
+  var _SRC_CHEV='<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  function _srcViewCh(g){
+    var T=g.total, max=g.list[0].v||1, best=null;
+    g.list.forEach(function(c){ if(c.nw>0&&(!best||c.nw>best.nw)) best=c; });
+    if(g.list.length<2) best=null;
+    var h='<div class="srckpi"><div><span>Visits</span><b>'+_envFmt(T)+'</b></div><div><span>New</span><b>'+_envFmt(g.totalNew)+'</b></div><div><span>New rate</span><b>'+_srcPct(g.totalNew,T)+'</b></div></div>';
+    h+=_srcStack(g.list,T,'v');
+    h+='<div class="srccap"><span>Share of visits by channel</span><span>'+g.list.length+' channel'+(g.list.length>1?'s':'')+' · '+g.nSrc+' source'+(g.nSrc>1?'s':'')+'</span></div>';
+    g.list.forEach(function(c){
+      var multi=c.kids.length>1, open=multi&&!!_srcOpen[c.id], sub=c.sub;
+      if(!sub){
+        var shorts=c.kids.map(function(x){ return _srcShort(x.k); });
+        // One source whose name only repeats the channel's (pokerth.net, an
+        // invite link) adds nothing under it.
+        sub = c.kids.length===1 ? ((c.kids[0].k.charAt(0)==='(' || shorts[0].toLowerCase()===c.name.toLowerCase()) ? '' : shorts[0]) : (c.kids.length<=3 && shorts.join(' · ').length<=32 ? shorts.join(' · ') : c.kids.length+' sources');
+      }
+      var head='<span class="sd" style="background:'+c.color+'"></span><span class="nm"><b>'+_annEsc(c.name)+'</b>'+(sub?'<small>'+sub+'</small>':'')+'</span>'
+        +(best===c?'<span class="srcbadge">Most new</span>':'')+'<span class="n">'+_envFmt(c.v)+'</span>'+(multi?_SRC_CHEV:'');
+      var langs=_srcLangTop(c.langs,3);
+      h+='<div class="srcrow">'+(multi?'<button type="button" class="srchead" data-ch="'+c.id+'" aria-expanded="'+(open?'true':'false')+'">'+head+'</button>':'<div class="srchead">'+head+'</div>')
+        +'<div class="srcin"><div class="srcbar"><i style="width:'+Math.max(c.v?2:0,c.v*100/max).toFixed(1)+'%;background:'+c.color+'"></i></div>'
+        +'<div class="srcmeta"><span>'+_srcPct(c.v,T)+' of visits</span><span><b>'+_envFmt(c.nw)+' new</b> · '+_srcPct(c.nw,c.v)+' new</span></div>'
+        +(langs.length?'<div class="srclg">'+langs.join(' · ')+'</div>':'')+'</div>';
+      if(open){
+        h+='<div class="srckids">';
+        c.kids.forEach(function(x){
+          var kl=_srcLangTop(x.langs,3);
+          h+='<div class="srckid"><div><span>'+_srcShort(x.k)+'</span><b>'+_envFmt(x.v)+'</b></div><div><span>'+(kl.length?kl.join(' · '):'—')+'</span><span>'+_envFmt(x.nw)+' new</span></div></div>';
+        });
+        h+='</div>';
+      }
+      h+='</div>';
+    });
+    return h;
+  }
+  function _srcViewNew(g){
+    var T=g.totalNew, max=1;
+    var list=g.list.slice().sort(function(a,b){ return b.nw-a.nw||b.v-a.v; });
+    list.forEach(function(c){ if(c.v>max) max=c.v; });
+    var h='<div class="srchl"><b>'+_envFmt(T)+'</b><span>new of '+_envFmt(g.total)+' visits · '+_srcPct(T,g.total)+'</span></div>';
+    if(T){
+      h+='<div class="srcsubt">Where the new ones come from</div>'+_srcStack(list,T,'nw')+'<div class="srclegend">';
+      list.forEach(function(c){ if(c.nw>0) h+='<span><i class="sd" style="background:'+c.color+'"></i><em>'+_annEsc(c.name)+'</em><b>'+_srcPct(c.nw,T)+'</b></span>'; });
+      h+='</div>';
+    }
+    h+='<div class="srckey"><span><i style="background:var(--m-live)"></i>New</span><span><i style="background:rgba(127,127,127,.35)"></i>Returning</span></div>';
+    list.forEach(function(c){
+      var ret=Math.max(0,c.v-c.nw), rate=c.v?Math.round(c.nw*100/c.v):0, chips=_srcLangTop(c.langs,3);
+      h+='<div class="srcrow"><div class="srchead"><span class="sd" style="background:'+c.color+'"></span><span class="nm"><b>'+_annEsc(c.name)+'</b></span>'
+        +'<span class="rate'+(rate>=50&&c.v>=10?' hi':'')+'">'+rate+'% new</span></div>'
+        +'<div class="srcin"><div class="srcbar split"><i style="width:'+(c.nw*100/max).toFixed(1)+'%;background:var(--m-live)"></i><i style="width:'+(ret*100/max).toFixed(1)+'%;background:rgba(127,127,127,.35)"></i></div>'
+        +'<div class="srcmeta"><span><b>'+_envFmt(c.nw)+'</b> new · '+_envFmt(ret)+' returning</span><span>'+_envFmt(c.v)+' visits</span></div>'
+        +(chips.length?'<div class="srcchips">'+chips.map(function(x){ return '<span>'+x+'</span>'; }).join('')+'</div>':'')+'</div></div>';
+    });
+    return h;
+  }
+  // Facts worth reading in the source × language table, only when the
+  // numbers carry them (10 first visits at least): a source that speaks one
+  // language, the main source of each of the two largest languages, a source
+  // whose new visitors mostly send no language header. Three at most.
+  function _srcFacts(p){
+    var nw=(p&&p.nw)||{}, lg=(p&&p.lang)||{}, out=[], used={};
+    var srcs=Object.keys(nw).filter(function(s){ return (nw[s]||0)>=10; }).sort(function(a,b){ return nw[b]-nw[a]; });
+    srcs.forEach(function(s){
+      if(out.length>=3||used[s]) return;
+      var m=lg[s]||{}, n=nw[s], top=null;
+      Object.keys(m).forEach(function(l){ if(l!=='other'&&(!top||m[l]>m[top])) top=l; });
+      if(top && m[top]>=0.9*n){ used[s]=1; out.push({s:s,html:'<b>'+_srcShort(s)+'</b>: '+(m[top]>=n?'all '+_envFmt(n):_envFmt(m[top])+' of '+_envFmt(n))+' new visitors browse in '+_srcLangName(top)+'.'}); }
+    });
+    var tot={};
+    Object.keys(lg).forEach(function(s){ var m=lg[s]; Object.keys(m).forEach(function(l){ tot[l]=(tot[l]||0)+(m[l]||0); }); });
+    Object.keys(tot).filter(function(l){ return l!=='other'; }).sort(function(a,b){ return tot[b]-tot[a]; }).slice(0,2).forEach(function(l){
+      if(out.length>=3) return;
+      var best=null;
+      Object.keys(lg).forEach(function(s){ var v=(lg[s]||{})[l]||0; if(v>0&&(!best||v>lg[best][l])) best=s; });
+      if(best && !used[best] && lg[best][l]>=10){ used[best]=1; out.push({s:best,html:'<b>'+_srcShort(best)+'</b> brings the most new visitors browsing in '+_srcLangName(l)+' ('+_envFmt(lg[best][l])+').'}); }
+    });
+    srcs.forEach(function(s){
+      if(out.length>=3||used[s]) return;
+      var o=(lg[s]||{}).other||0, n=nw[s];
+      if(o>=5 && o>=0.3*n){ used[s]=1; out.push({s:s,html:'<b>'+_srcShort(s)+'</b>: '+_envFmt(o)+' of '+_envFmt(n)+' new visitors send no language header.'}); }
+    });
+    return out.slice(0,3);
+  }
+  function _srcViewLang(p){
+    var nw=(p&&p.nw)||{}, lg=(p&&p.lang)||{}, tot={};
+    Object.keys(lg).forEach(function(s){ var m=lg[s]||{}; Object.keys(m).forEach(function(l){ tot[l]=(tot[l]||0)+(m[l]||0); }); });
+    if(!Object.keys(tot).length) return '<div class="empty">No first visit in this period — languages are recorded for first visits only.</div>';
+    var langs=Object.keys(tot).filter(function(l){ return l!=='other'; }).sort(function(a,b){ return tot[b]-tot[a]; });
+    var cols=langs.slice(0,5), rest=langs.length>5 || !!tot.other;
+    var srcs=Object.keys(nw).filter(function(s){ return nw[s]>0; }).sort(function(a,b){ return nw[b]-nw[a]; });
+    var shown=_srcExpanded?srcs:srcs.slice(0,10), mx=1;
+    var rows=shown.map(function(s){
+      var m=lg[s]||{}, cells=cols.map(function(l){ return m[l]||0; });
+      if(rest){ var r=0; Object.keys(m).forEach(function(l){ if(cols.indexOf(l)<0) r+=m[l]||0; }); cells.push(r); }
+      cells.forEach(function(v){ if(v>mx) mx=v; });
+      return {s:s,cells:cells,n:nw[s]};
+    });
+    var names=cols.map(_srcLangName).concat(rest?['other languages and no header']:[]);
+    var h='<div class="srcmx" role="table" aria-label="New visitors by source and language" style="--mxc:'+names.length+'">';
+    h+='<div role="row"><span class="hd" role="columnheader">Source</span>'+cols.map(function(l){ return '<span class="hd" role="columnheader" title="'+_srcLangName(l)+'">'+_annEsc(l.toUpperCase())+'</span>'; }).join('')
+      +(rest?'<span class="hd" role="columnheader" title="Other languages and no usable header">+</span>':'')+'<span class="hd" role="columnheader">New</span></div>';
+    rows.forEach(function(r){
+      h+='<div role="row"><span class="rh" role="rowheader"><i class="sd" style="background:'+_srcColor(r.s)+'"></i><em>'+_srcShort(r.s)+'</em></span>';
+      r.cells.forEach(function(v,i){
+        if(!v){ h+='<span class="c z" role="cell" title="'+names[i]+': 0">·</span>'; return; }
+        var a=0.14+0.78*(v/mx);
+        h+='<span class="c" role="cell" title="'+names[i]+': '+v+'" style="background:rgba(64,128,216,'+a.toFixed(2)+');color:'+(a>0.45?'#fff':'var(--cream)')+'">'+_envFmt(v)+'</span>';
+      });
+      h+='<span class="t" role="cell">'+_envFmt(r.n)+'</span></div>';
+    });
+    h+='</div>';
+    h+='<div class="srcmxkey"><span>'+cols.map(function(l){ return _annEsc(l.toUpperCase())+' '+_srcLangName(l); }).join(' · ')+(rest?' · + other languages and no header':'')+'</span>'
+      +'<span class="g"><span>fewer</span><i></i><span>more</span></span></div>';
+    if(srcs.length>10) h+='<button type="button" id="srcMoreBtn" class="use" style="margin-top:8px">'+(_srcExpanded?'Show top 10':'Show all '+srcs.length+' sources')+'</button>';
+    var f=_srcFacts(p);
+    if(f.length){
+      h+='<div class="srcfacts"><h4>What stands out</h4>';
+      f.forEach(function(x){ h+='<p><i class="sd" style="background:'+_srcColor(x.s)+'"></i><span>'+x.html+'</span></p>'; });
+      h+='</div>';
+    }
+    return h;
+  }
+  function _srcPaintSeg(){
+    var seg=$('srcSeg'); if(!seg) return;
+    seg.querySelectorAll('button').forEach(function(x){ var on=x.dataset.k===_srcView; x.classList.toggle('on',on); x.setAttribute('aria-pressed',on?'true':'false'); });
   }
   function renderSrc(){
     var box=$('trafSrc'); if(!box) return;
     var since=$('srcSince'), p=_srcData;
     if(since) since.textContent=(p&&(p.days||_isH24()))?(_perLabel(_trafPeriod)+_perCounted(p.days)):'';
-    var all=(p&&p.all)||{}, keys=Object.keys(all).sort(function(a,b){ return (all[b]||0)-(all[a]||0); });
-    var total=0; keys.forEach(function(k){ total+=all[k]||0; });
-    if(!total){
+    var g=_srcGroup(p);
+    if(!g.total){
       box.innerHTML='<div class="empty">'+(!_srcKnown
-        ? 'This proxy is not recording it yet \u2014 the running process predates the feature. Restart it (Operations › Deployment › Restart); a static update alone swaps the served files, not the process.'
-        : 'Nothing recorded yet \u2014 sources are counted from the first visit after the update.')+'</div>';
+        ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (Operations › Deployment › Restart); a static update alone swaps the served files, not the process.'
+        : 'Nothing recorded yet — sources are counted from the first visit after the update.')+'</div>';
       return;
     }
-    var nw=p.nw||{}, lg=p.lang||{}, max=all[keys[0]]||1, h='';
-    var shown=_srcExpanded?keys:keys.slice(0,12);
-    h+='<div class="envrow" style="opacity:.75;font-size:.76rem"><span class="nmx">Source</span><span class="pct">visits \u00b7 share \u00b7 new (top languages)</span></div>';
-    shown.forEach(function(k){
-      var n=all[k]||0, nn=nw[k]||0, lm=lg[k]||{};
-      var top=Object.keys(lm).sort(function(a,b){ return lm[b]-lm[a]; }).slice(0,3).map(function(c){ return _annEsc(c)+' '+lm[c]; }).join(', ');
-      h+=_gBar(_srcLabel(k),n,max,Math.round(n*100/total)+'% \u00b7 '+nn+' new'+(top?' ('+top+')':''),k==='(direct)'?'#7a8494':'#4f8fe6');
-    });
-    if(keys.length>12) h+='<button id="srcMoreBtn" class="use" style="margin-top:8px">'+(_srcExpanded?'Show top 12':'Show all '+keys.length+' sources')+'</button>';
-    box.innerHTML=h;
-    var mb=$('srcMoreBtn'); if(mb) mb.onclick=function(){ _srcExpanded=!_srcExpanded; renderSrc(); };
+    box.innerHTML = _srcView==='nw' ? _srcViewNew(g) : _srcView==='lg' ? _srcViewLang(p) : _srcViewCh(g);
   }
+  (function(){
+    _srcPaintSeg();
+    var seg=$('srcSeg');
+    if(seg) seg.querySelectorAll('button').forEach(function(b){ b.addEventListener('click',function(){
+      _srcView=b.dataset.k; _srcExpanded=false;
+      try{ localStorage.setItem('pth_admin_srcview',_srcView); }catch(e){}
+      _srcPaintSeg(); renderSrc();
+    }); });
+    var box=$('trafSrc');
+    if(box) box.addEventListener('click',function(ev){
+      var t=ev.target&&ev.target.closest?ev.target.closest('button'):null;
+      if(!t||!box.contains(t)) return;
+      if(t.dataset.ch){
+        var id=t.dataset.ch; _srcOpen[id]=!_srcOpen[id]; renderSrc();
+        var nb=box.querySelector('button[data-ch="'+id+'"]'); if(nb) nb.focus();
+      } else if(t.id==='srcMoreBtn'){ _srcExpanded=!_srcExpanded; renderSrc(); }
+    });
+  })();
   function renderMusic(){
     var box=$('trafMusic'); if(!box) return;
     var since=$('musSince');

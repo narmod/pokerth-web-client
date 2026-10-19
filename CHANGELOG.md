@@ -30,6 +30,15 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Admin › Visitors: « Where visitors come from » in three views** (`web.148`) — the flat list of sources is now read
+  three ways from the same period figures (`ref-stats.js` period(), no proxy change): **Channels** (visits, new, new
+  rate; a stacked share bar; sources folded into channels — direct, AI assistants, PokerTH.net, search engines,
+  social and chat apps, invite links, ?lang= links, our pages, real campaigns, other sites — each unfolding to its
+  sources), **New visitors** (channels ranked by first visits, new against returning, top languages) and
+  **Languages** (first visits by source × browser language, five largest languages then the rest, plus up to three
+  facts the numbers carry). `utm_source=chatgpt.com` is ChatGPT tagging its own links, so it reads as an AI
+  assistant, no longer as a « Campaign ». The chosen view is remembered per browser
+  (`scripts/test-admin-sources.mjs`).
 - **Admin Overview: daily totals and a reading that works on a phone** (`web.146`) — « Connections, last 14 days »
   writes each day's total on its bar (shortened to 1.6k / 23k on a phone) and drops the bar titles, which a phone
   never showed, for the reading of the Statistics charts (`.chartro`): the day, each entry mode, then the total
