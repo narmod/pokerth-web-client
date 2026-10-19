@@ -106,7 +106,7 @@ ok(/guestNotice:\{ enabled:\$\('gwEnabled'\)\.checked/.test(adm),
   'the admin save posts the guestNotice key');
 ok(/loadGuestNotice\(\);/.test(adm), 'the broadcast tab loads the guest notice');
 ok(/data-master="1">\s*<h2>Guest notice/.test(adm), 'the card is master-only');
-ok(/DEFAULT_FOLDED = \[[^\]]*'Guest notice \(pokerth\.net internet mode\)'/.test(adm),
+ok(/DEFAULT_FOLDED = \[[^\]]*'Guest notice \(Internet\)'/.test(adm),
   'the card is folded by default');
 
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);

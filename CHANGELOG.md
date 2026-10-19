@@ -41,6 +41,10 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Live before Statistics; World without Live now** (`web.196`) — the Live group moves up the side menu, right
+  under Overview. The « Live now » layer of Statistics › World is removed (with its own 15 s read of
+  `/admin/sessions`): the open connections by country are Live › Map. World keeps five layers; a browser that
+  remembered Live now opens on Visits.
 - **Live › Map, a page of its own** (`web.195`) — the live map of `web.194` moves out of Sessions: Live is now a
   group of two pages, **Sessions** and **Map**, each opening on the four mode tiles. A tile picked on one page
   narrows the other too; one 5 s read serves both while either is open. The map card is « Connections by country ».

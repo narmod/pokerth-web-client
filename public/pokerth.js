@@ -4964,7 +4964,7 @@ const App = (() => {
     // pour prendre une décision côté serveur.
     const u = baseUrl + (baseUrl.indexOf('?') >= 0 ? '&' : '?') + 'notify=1&mode=' + (mode === 'offline' ? 'offline' : 'pthnet') + (window.LIVE_MODE ? '&live=1' : '') + (window.BUILD_VERSION ? '&v=' + encodeURIComponent(window.BUILD_VERSION) : '')
       // &tz= : the browser time zone, read by the proxy as a country code for the
-      // admin's « Live now » map; kept with the connection only, never stored.
+      // admin's Live › Map; kept with the connection only, never stored.
       + (function(){ try { var z = window._pthTimeZone && window._pthTimeZone(); return z ? '&tz=' + encodeURIComponent(z) : ''; } catch (e) { return ''; } })();
     if (S._notifyWS && S._notifyUrl === u) return; // déjà ouvert sur la bonne URL
     _closeNotifyWS();
@@ -12308,7 +12308,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.195'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.196'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

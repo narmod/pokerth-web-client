@@ -43,7 +43,7 @@ const shellJs = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..',
 // classes, so the handlers that open a panel are the same as before.
 const GROUPS = {
   overview: ['overview'],
-  stats: ['traffic/overview', 'traffic/world', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace'], live: ['sessions', 'livemap'], community: ['board', 'polls', 'broadcast', 'landir'],
+  live: ['sessions', 'livemap'], stats: ['traffic/overview', 'traffic/world', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace'], community: ['board', 'polls', 'broadcast', 'landir'],
   content: ['packages', 'music'], players: ['login', 'lobby', 'firstvisit', 'features'], infra: ['servers', 'proxy', 'database', 'identity'],
   ops: ['server', 'errors', 'deploy', 'backup'], security: ['keys', 'audit', 'blocked'],
 };
@@ -505,13 +505,13 @@ ok(/var _trafModeSel=MODE48\.map/.test(admin) && /localStorage\.setItem\('pth_ad
 ok(/if\(!_trafModeSel\.length\) _trafModeSel=MODE48\.map/.test(admin), 'switching the last one off brings every mode back, never none');
 ok(/var lines=_modesOn\(\)\.map/.test(admin), 'the 48 h chart by mode follows them');
 ok(/\.filter\(function\(rw\)\{ return _modeOn\(rw\[1\]\); \}\)/.test(admin), 'and Where sessions open');
-ok(/if\(_geoLayer==='conn'\|\|_geoLayer==='now'\)\{ var m=c\.m\|\|\{\}, t=0; _modesOn\(\)\.forEach/.test(admin), 'and the Connections and Live now layers of the map');
+ok(/if\(_geoLayer==='conn'\)\{ var m=c\.m\|\|\{\}, t=0; _modesOn\(\)\.forEach/.test(admin), 'and the Connections layer of the map');
 ok(/c:'var\(--m-net\)'/.test(admin) && /c:'var\(--m-lan\)'/.test(admin) && /c:'var\(--m-off\)'/.test(admin) && /c:'var\(--m-live\)'/.test(admin),
   'one set of mode colours for the whole admin, themed');
 ok(/A visit is counted before any mode is chosen/.test(admin), 'the bar says what the modes cannot narrow');
 
 // -- World ------------------------------------------------------------------
-ok(/var GEO_LAYERS=\[\['v','Visits'\],\['nw','New devices'\],\['conn','Connections'\],\['now','Live now'\],\['pwa','Installed app'\],\['mob','Phones'\]\];/.test(admin), 'six layers on the map');
+ok(/var GEO_LAYERS=\[\['v','Visits'\],\['nw','New devices'\],\['conn','Connections'\],\['pwa','Installed app'\],\['mob','Phones'\]\];/.test(admin), 'five layers on the map');
 // Narrow to (web.126): the cube read by the World page.
 ok(/<div class="sbrow nrrow"><span class="sblbl">Narrow to<\/span><div class="chips" id="trafNarrow"/.test(admin) && /id="trafNarrowPop" role="dialog"/.test(admin), 'a third row in the filter card: Narrow to, with its list');
 ok(/var NARROW_DIMS=\[\['cc','Country'\],\['dev','Device'\],\['app','App'\],\['new','New or known'\],\['lan','LAN server'\],\['acc','Account'\]\];/.test(admin), 'six dimensions to narrow by');
@@ -524,13 +524,12 @@ ok(/encodeURIComponent\(f\)/.test(body(admin, '_cubeGet')) && /_perQuery\(\)/.te
 ok(/Visits and the other pages show everything\./.test(admin), 'the bar says what the narrowing cannot reach');
 ok(/function _cv\(v\)\{ return typeof v==='string' \? 1 : \(v\|\|0\); \}/.test(admin) && /fewer than 3/.test(admin), 'a masked cell is drawn as 1 and said to be under 3');
 ok(/if\(_narrowOn\(\)\) _cubeLoad\(\);/.test(body(admin, '_pickMode')), 'the entry modes re-read the narrowed map');
-// Live now (web.122): the open connections by country, from /admin/sessions.
-ok(/return _geoLayer==='now' \? \(\(_geoLive&&_geoLive\.countries\)\|\|\{\}\) : \(\(_geoData&&_geoData\.countries\)\|\|\{\}\);/.test(body(admin, '_geoC')), 'Live now draws from the open connections, every other layer from the period');
+// Live now left World in web.196: the open connections by country are Live › Map.
+ok(!/\['now','Live now'\]/.test(admin) && !/_geoLive/.test(admin) && !/_geoLayer==='now'/.test(admin), 'World has no Live now layer any more (it is Live › Map)');
+ok(/return \(_geoData&&_geoData\.countries\)\|\|\{\}; \}/.test(body(admin, '_geoC')), 'every layer draws from the period');
 ok(/if\(_geoNarrowed\(\)\)\{ var o=\{\}, by=_cube\.A\.period\.by/.test(body(admin, '_geoC')), 'and the Connections layer from the cube while narrowed');
 ok(/var C=_geoC\(\), ccs=Object\.keys\(C\)/.test(admin) && /var C=_geoC\(\), c=C\[_geoSel\];/.test(admin), 'the map, the list and the country card all read the same source');
-ok(/var cc=\/\^\[A-Z\]\{2\}\$\/\.test\(x\.cc\|\|''\)\?x\.cc:'ZZ'/.test(admin), 'a connection without a country counts as Unknown, not dropped');
-ok(/return x\.live\?'live':\(notify\?\(x\.mode==='offline'\?'offline':'pokerthnet'\):\(x\.mode==='lan'\?'lan':'pokerthnet'\)\);/.test(admin), 'each connection is put in its entry mode, /live apart');
-ok(/if\(_geoLayer==='now' && m && m\.offsetParent && !document\.hidden\) _geoLiveLoad\(\); \},15000\)/.test(admin), 'read again every 15 s, only while on screen');
+ok(/var cc=\/\^\[A-Z\]\{2\}\$\/\.test\(r\.cc\|\|''\)\?r\.cc:'ZZ'/.test(admin), 'on Live › Map, a connection without a country counts as Unknown, not dropped');
 ok(/id="geoLayers" role="group" aria-label="What the map shows"/.test(admin), 'picked above it');
 ok(/box\.innerHTML=_geoHours\(M,vb\)\+'<svg/.test(admin), 'the local-time band sits above the map');
 const hrs = body(admin, '_geoHours');
