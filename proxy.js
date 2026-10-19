@@ -9701,6 +9701,13 @@ const GIT_SHALLOW = (function () {
     return probe.status === 0 && String(probe.stdout || '').trim() === 'true';
   } catch (e) { return false; }
 })();
+// Something brings the process back after the SIGTERM of a restart: PM2,
+// Docker's restart policy, systemd (INVOCATION_ID), or the operator's own
+// UPDATE_RESTART_CMD. Without it (node started by hand), « Restart » stops the
+// server for good — the dashboard says so before.
+function _supervised() {
+  return !!(IS_PM2 || IS_DOCKER || process.env.INVOCATION_ID || process.env.UPDATE_RESTART_CMD);
+}
 function installKind() {
   if (IS_PM2) return IS_DOCKER ? 'docker-pm2' : 'pm2';
   if (IS_DOCKER) return GIT_UPDATABLE ? 'docker-git' : 'docker-image';
@@ -9731,6 +9738,14 @@ function gitPullSegment() {
 // Used for self-update / restart: the spawned shell outlives the proxy when PM2
 // cycles it, so it can issue `pm2 restart` against ourselves. PATH is forced so
 // git/npm/node/pm2 resolve regardless of PM2's stripped environment.
+// The deploy actions (update, static update, rollback, restart) run detached.
+// Two at once used to run two git commands side by side, each wiping the
+// other's action log: the one still running holds the slot (10 min at most).
+let _deployBusyAt = 0;
+function _deployBusy() { return _deployBusyAt > 0 && Date.now() - _deployBusyAt < 10 * 60 * 1000; }
+function _deployBusyRefusal() {
+  return { ok: false, busy: true, error: 'another deploy action is still running (started ' + Math.round((Date.now() - _deployBusyAt) / 1000) + ' s ago) \u2014 wait for it to end' };
+}
 function runDetached(cmd, logPath) {
   try {
     let out = 'ignore';
@@ -9739,6 +9754,9 @@ function runDetached(cmd, logPath) {
       catch (e) { out = 'ignore'; }
     }
     const child = spawn('sh', ['-c', cmd], { detached: true, stdio: (out === 'ignore' ? 'ignore' : ['ignore', out, out]), env: Object.assign({}, process.env, { PATH: SAFE_PATH }) });
+    _deployBusyAt = Date.now();
+    child.on('exit', function () { _deployBusyAt = 0; });
+    child.on('error', function () { _deployBusyAt = 0; });
     child.unref();
     return true;
   } catch (e) { console.error('[admin] runDetached failed:', e.message); return false; }
@@ -9830,6 +9848,7 @@ function rollbackCmd(sha, restart) {
   const go = "git checkout -q -f -B '" + GIT_BRANCH + "' " + sha;
   const head = restart ? "sleep 1; cd '" + dir + "'" : "cd '" + dir + "'";
   const tail = restart ? (" && npm install --omit=dev --no-audit --no-fund && " + restartSegment()) : "";
+  if (!restart) return head + " && { " + clean + "; " + get + " && " + go + "; } && echo '[rollback] ok' || echo '[rollback] failed'";
   return head + " && " + clean + "; " + get + " && " + go + tail;
 }
 
@@ -9866,7 +9885,7 @@ function broadcastNotice(text, target) {
 }
 function clearScheduledRestart() {
   if (_restartTimer) { clearTimeout(_restartTimer); _restartTimer = null; }
-  _restartAt = 0; _restartKind = ''; _restartNotice = '';
+  _restartAt = 0; _restartKind = ''; _restartNotice = ''; _autoArmed = false;
 }
 
 // ── Mise à jour automatique (option, cochée depuis /admin) ───────────────────
@@ -9894,6 +9913,24 @@ function _autoUpdateCfg() {
 // réseau à chaque fois.
 let _upd = { checking: false, checkedAt: 0, available: false, local: '', remote: '',
              subject: '', files: 0, needsRestart: false, error: '', lastAction: '' };
+// Versions the automatic updates leave alone: the ones a rollback stepped back
+// from, or whose automatic restart was cancelled by hand. They resume with the
+// next version published upstream (a fix, typically); a manual update clears it.
+function _autoSkip() {
+  const a = (_adminConfig && _adminConfig.autoUpdate) || {}, k = a.skip;
+  return (k && Array.isArray(k.shas)) ? k : { shas: [], why: '', at: 0 };
+}
+function _autoSkipSet(shas, why) {
+  const c = (_adminConfig.autoUpdate && typeof _adminConfig.autoUpdate === 'object') ? _adminConfig.autoUpdate : {};
+  c.skip = { shas: shas.filter(function (x) { return /^[0-9a-f]{40}$/.test(x); }).filter(function (x, i, a) { return a.indexOf(x) === i; }).slice(0, 4), why: why, at: Date.now() };
+  _adminConfig.autoUpdate = c;
+  saveAdminConfig();
+}
+function _autoSkipClear() {
+  const c = _adminConfig.autoUpdate;
+  if (c && c.skip) { delete c.skip; saveAdminConfig(); }
+}
+function _autoSkipped() { return !!(_upd.available && _upd.remote && _autoSkip().shas.indexOf(_upd.remote) >= 0); }
 function _autoUpdView() {
   const cfg = _autoUpdateCfg();
   return { enabled: cfg.enabled, noticeSec: cfg.noticeSec,
@@ -9901,16 +9938,61 @@ function _autoUpdView() {
            armed: (_autoArmed && _restartAt > Date.now()) ? _restartAt : null, state: _updPublic() };
 }
 function _updPublic() {
+  const sk = _autoSkip();
   return { checkedAt: _upd.checkedAt, checking: _upd.checking, available: _upd.available,
            local: _upd.local, remote: _upd.remote, subject: _upd.subject, files: _upd.files,
-           needsRestart: _upd.needsRestart, error: _upd.error, lastAction: _upd.lastAction };
+           needsRestart: _upd.needsRestart, error: _upd.error, lastAction: _upd.lastAction,
+           skipped: _autoSkipped(), skipWhy: _autoSkipped() ? sk.why : '' };
 }
 // Un chemin qui n'est ni un fichier servi ni de la documentation, c'est du code
 // serveur ou des dépendances : redémarrage obligatoire.
 function _pathNeedsRestart(f) {
   if (/^public\//.test(f)) return false;
+  // scripts/ holds the tests and the manifest builders (spawned afresh each
+  // time), install.sh the host CLI: none of it is code the running proxy holds.
+  if (/^(scripts\/|install\.sh$)/.test(f)) return false;
   return !/^(docs\/|claude\/|\.github\/|README|CHANGELOG|LICENSE|\.gitignore|\.editorconfig)/.test(f);
 }
+// package.json changes on every deploy (the version bump), which made every
+// release « needs a restart » and kept the no-restart path of the automatic
+// updates from ever firing. Its diff needs a restart only when a line other than
+// the version or a `node scripts/…` script entry changed (dependencies, main…).
+function _pkgDiffNeedsRestart(diff) {
+  return String(diff || '').split('\n').some(function (l) {
+    if (!/^[+-]/.test(l) || /^(\+\+\+|---)/.test(l)) return false;
+    const t = l.slice(1).trim();
+    if (!t) return false;
+    if (/^"version":\s*"[^"]*",?$/.test(t)) return false;
+    if (/^"[\w:.-]+":\s*"node scripts\/[^"]*",?$/.test(t)) return false;
+    return true;
+  });
+}
+function _filesNeedRestart(files, pkgDiff) {
+  return files.some(function (f) { return f === 'package.json' ? _pkgDiffNeedsRestart(pkgDiff) : _pathNeedsRestart(f); });
+}
+// The proxy's own code as it runs: proxy.js, server/*.js, the lock file and the
+// dependencies. « Restart needed » compares this, not the version string, which
+// a client-only deploy bumps without touching the server.
+let _codeSigCache = { key: '', sig: '' };
+function _codeSig() {
+  try {
+    const files = [path.join(__dirname, 'proxy.js'), path.join(__dirname, 'package-lock.json')];
+    try { fs.readdirSync(path.join(__dirname, 'server')).filter(function (f) { return /\.js$/.test(f); }).sort().forEach(function (f) { files.push(path.join(__dirname, 'server', f)); }); } catch (e) {}
+    const key = files.map(function (f) { try { const st = fs.statSync(f); return f + ':' + st.size + ':' + st.mtimeMs; } catch (e) { return f + ':-'; } }).join('|');
+    let pkgKey = '';
+    try { const st = fs.statSync(path.join(__dirname, 'package.json')); pkgKey = st.size + ':' + st.mtimeMs; } catch (e) {}
+    if (_codeSigCache.key === key + '|' + pkgKey) return _codeSigCache.sig;
+    const h = crypto.createHash('sha1');
+    files.forEach(function (f) { try { h.update(fs.readFileSync(f)); } catch (e) { h.update('-'); } });
+    try {
+      const p = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'));
+      h.update(JSON.stringify([p.main || '', p.dependencies || {}, p.optionalDependencies || {}, p.engines || {}]));
+    } catch (e) {}
+    _codeSigCache = { key: key + '|' + pkgKey, sig: h.digest('hex') };
+    return _codeSigCache.sig;
+  } catch (e) { return ''; }
+}
+const BOOT_CODE_SIG = _codeSig();
 // git fetch + comparaison, en asynchrone : un spawnSync bloquerait la boucle
 // d'événements pendant tout un aller-retour réseau.
 let _updWaiters = [];
@@ -9932,7 +10014,8 @@ function updateCheck(cb) {
   const cmd = "cd '" + dir + "' && git fetch -q " + depth + "origin '" + GIT_BRANCH + "'" +
               " && git rev-parse HEAD && git rev-parse FETCH_HEAD" +
               " && git log -1 --format=%s FETCH_HEAD && echo '--'" +
-              " && git diff --name-only HEAD FETCH_HEAD";
+              " && git diff --name-only HEAD FETCH_HEAD && echo '--pkg'" +
+              " && git diff -U0 HEAD FETCH_HEAD -- package.json";
   let out = '', err = '';
   try {
     const child = spawn('sh', ['-c', cmd], { env: Object.assign({}, process.env, { PATH: SAFE_PATH }) });
@@ -9952,12 +10035,14 @@ function updateCheck(cb) {
       const subject = String(lines.shift() || '').trim();
       while (lines.length && lines[0].trim() !== '--') lines.shift();   // sujet multi-ligne : on avance jusqu'au séparateur
       lines.shift();
-      const files = lines.map(function (x) { return x.trim(); }).filter(Boolean);
+      const _pk = lines.indexOf('--pkg');
+      const pkgDiff = _pk >= 0 ? lines.slice(_pk + 1).join('\n') : '';
+      const files = (_pk >= 0 ? lines.slice(0, _pk) : lines).map(function (x) { return x.trim(); }).filter(Boolean);
       _upd.error = ''; _upd.local = local; _upd.remote = remote;
       _upd.available = /^[0-9a-f]{40}$/.test(remote) && /^[0-9a-f]{40}$/.test(local) && remote !== local;
       _upd.subject = _upd.available ? subject.slice(0, 200) : '';
       _upd.files = _upd.available ? files.length : 0;
-      _upd.needsRestart = _upd.available && files.some(_pathNeedsRestart);
+      _upd.needsRestart = _upd.available && _filesNeedRestart(files, pkgDiff);
       return _updFlush();
     });
   } catch (e) { _upd.checking = false; _upd.error = e.message; return _updFlush(); }
@@ -9980,6 +10065,8 @@ function _autoUpdateApply() {
   const cfg = _autoUpdateCfg();
   if (!cfg.enabled || !_upd.available) return;
   if (_restartAt > 0) return;                                   // une action est déjà planifiée : on ne double pas
+  if (_deployBusy()) return;                                    // a deploy action is running: next beat
+  if (_autoSkipped()) return;                                   // version set aside (rollback, cancelled restart)
   if (process.uptime() * 1000 < AUTO_UPDATE_MIN_UP_MS) return;  // trop tôt après un démarrage
   if (!_upd.needsRestart) {
     _deployRecord('before auto static update');
@@ -10004,6 +10091,10 @@ function _autoUpdateApply() {
   _restartKind = 'update';
   _restartNotice = 'NOTICE:RESTART:' + _restartAt + ':update:';
   _autoArmed = true;
+  // The window opens only with no game running, but the notify-only channels
+  // (players on pokerth.net direct or in training) are told, as for a restart
+  // scheduled by hand — they used to be cut without a word.
+  try { broadcastNotice(_restartNotice); } catch (e) {}
   _restartTimer = setTimeout(function () {
     _restartTimer = null; _restartAt = 0; _restartNotice = ''; _autoArmed = false;
     let n = 0; try { wss.clients.forEach(function (c) { if (!c._notify) n++; }); } catch (e) {}
@@ -10789,7 +10880,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     // of the first check. Background, at the auto-update pace; never a first
     // check of its own.
     if (GIT_UPDATABLE && _upd.checkedAt && !_upd.checking && Date.now() - _upd.checkedAt >= AUTO_UPDATE_POLL_MS) updateCheck();
-    return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, liveSessions: liveSessions, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, lookDefaults: _adminConfig.lookDefaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', seo: _seoAdmin(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null), autoUpdate: _autoUpdateCfg(), autoArmed: !!(_autoArmed && _restartAt > Date.now()), update: _updPublic(), now: Date.now(), tz: _serverTz(), clockZones: _clockZones(), clockRef: _clockRef(), lobbyClockTz: (_adminConfig.lobbyClockTz || ''), lobbyClockEff: _lobbyClockTz(), lobbyClockEnv: String(process.env.SERVER_TZ || '').trim() });
+    return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, canUpdate: !!(GIT_UPDATABLE || process.env.UPDATE_CMD), supervised: _supervised(), codeStale: !!(BOOT_CODE_SIG && _codeSig() !== BOOT_CODE_SIG), deployBusy: _deployBusy(), sockets: sockets, liveSessions: liveSessions, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, lookDefaults: _adminConfig.lookDefaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', seo: _seoAdmin(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null), autoUpdate: _autoUpdateCfg(), autoArmed: !!(_autoArmed && _restartAt > Date.now()), update: _updPublic(), now: Date.now(), tz: _serverTz(), clockZones: _clockZones(), clockRef: _clockRef(), lobbyClockTz: (_adminConfig.lobbyClockTz || ''), lobbyClockEff: _lobbyClockTz(), lobbyClockEnv: String(process.env.SERVER_TZ || '').trim() });
   }
   // ── Horloge du bandeau (toutes clés) ───────────────────────────────────
   // Réponse minuscule, relue toutes les 5 min : elle sert uniquement à recaler
@@ -11745,9 +11836,15 @@ function handleAdmin(req, res, reqPathOnly, query) {
         // déploie que des états que ce serveur a réellement servis.
         if (!/^[0-9a-f]{40}$/.test(sha)) return adminJson(res, 400, { ok: false, error: 'invalid sha' });
         if (!_deployHistory.some(function (h) { return h.sha === sha; })) return adminJson(res, 404, { ok: false, error: 'sha not in deploy history' });
-        if (sha === _gitOut(['rev-parse', 'HEAD'])) return adminJson(res, 400, { ok: false, error: 'already on that commit' });
+        const _headBefore = _gitOut(['rev-parse', 'HEAD']);
+        if (sha === _headBefore) return adminJson(res, 400, { ok: false, error: 'already on that commit' });
+        if (_deployBusy()) return adminJson(res, 409, _deployBusyRefusal());
         const restart = !!(d && d.restart);
         _deployRecord('before rollback');
+        // The automatic updates would bring back, a minute later, what the
+        // operator just stepped back from: that version and the upstream one
+        // known now are set aside until something newer is published.
+        _autoSkipSet([_headBefore, (_upd.available ? _upd.remote : '')], 'rollback');
         const started = runDetached(rollbackCmd(sha, restart), UPDATE_LOG);
         if (started && !restart) _updRecheckSoon();
         console.log('[admin] rollback to ' + sha.slice(0, 8) + (restart ? ' (with restart)' : ' (static only)'));
@@ -11760,6 +11857,8 @@ function handleAdmin(req, res, reqPathOnly, query) {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       if (!GIT_UPDATABLE && !process.env.UPDATE_CMD) return adminJson(res, 409, { ok: false, error: 'this install cannot self-update (' + installKind() + ": no git checkout in the app dir). Update from the host: docker compose pull (or build) && docker compose up -d \u2014 or set UPDATE_CMD." });
+      if (_deployBusy()) return adminJson(res, 409, _deployBusyRefusal());
+      _autoSkipClear();                                   // the operator goes forward by hand
       _deployRecord('before update');
       const started = runDetached(updateCmd(), UPDATE_LOG);
       console.log('[admin] self-update requested (' + installKind() + ': pull + deps + restart)');
@@ -11770,6 +11869,8 @@ function handleAdmin(req, res, reqPathOnly, query) {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       if (!GIT_UPDATABLE) return adminJson(res, 409, { ok: false, error: 'this install cannot self-update (' + installKind() + ': no git checkout in the app dir).' });
+      if (_deployBusy()) return adminJson(res, 409, _deployBusyRefusal());
+      _autoSkipClear();                                   // the operator goes forward by hand
       _deployRecord('before static update');
       const started = runDetached(updateCmdStatic(), UPDATE_LOG);
       if (started) _updRecheckSoon();
@@ -11835,13 +11936,15 @@ function handleAdmin(req, res, reqPathOnly, query) {
       _restartKind = kind;
       _restartNotice = 'NOTICE:RESTART:' + _restartAt + ':' + kind + ':' + note;
       const reached = broadcastNotice(_restartNotice);
-      _restartTimer = setTimeout(function () {
+      const _fire = function () {
+        if (_deployBusy()) { _restartTimer = setTimeout(_fire, 15000); return; }   // another action still running: shortly after it
         const cmd = (_restartKind === 'restart') ? restartOnlyCmd() : updateCmd();
-        if (_restartKind !== 'restart') _deployRecord('before scheduled update');
+        if (_restartKind !== 'restart') { _deployRecord('before scheduled update'); _autoSkipClear(); }
         console.log('[admin] scheduled ' + _restartKind + ' firing now');
         _restartTimer = null; _restartAt = 0; _restartNotice = '';
         runDetached(cmd, UPDATE_LOG);
-      }, secs * 1000);
+      };
+      _restartTimer = setTimeout(_fire, secs * 1000);
       console.log('[admin] scheduled ' + kind + ' in ' + secs + 's (notified ' + reached + ' client(s))');
       return adminJson(res, 200, { ok: true, scheduledAt: _restartAt, kind: kind, notified: reached });
     });
@@ -11850,6 +11953,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       const had = _restartAt > 0;
+      if (_autoArmed && _upd.remote) _autoSkipSet([_upd.remote], 'cancel');   // said no to this one: the next published version may come
       clearScheduledRestart();
       if (had) broadcastNotice('NOTICE:CANCEL');
       console.log('[admin] scheduled action cancelled' + (had ? '' : ' (none pending)'));
@@ -12248,6 +12352,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       // Same restart path as the scheduled "Restart only": PM2 when present,
       // otherwise a SIGTERM that Docker's restart policy turns into a restart.
+      if (_deployBusy()) return adminJson(res, 409, _deployBusyRefusal());
       const started = runDetached(restartOnlyCmd(), UPDATE_LOG);
       console.log('[admin] restart requested (' + installKind() + ')');
       return adminJson(res, started ? 200 : 500, { ok: started, started: started });
@@ -15048,10 +15153,20 @@ httpServer.on('error', (err) => {
 // immédiat. Le setTimeout est un filet : si des connexions traînent au-delà
 // d'1 s, on sort quand même avant le SIGKILL de PM2 (kill_timeout ≈ 1,6 s).
 let _shuttingDown = false;
+// Stats, polls, visits and the audit log are written a second or so after a
+// change. The restart path exits within a second of SIGTERM: the audit entry of
+// the very click that restarted, the last votes and visits were lost.
+function _flushPendingWrites() {
+  try { if (_statsSaveTimer) { clearTimeout(_statsSaveTimer); _statsSaveTimer = null; fs.writeFileSync(STATS_FILE, JSON.stringify(statsStore)); } } catch (e) { console.error('[stats] final write failed:', e.message); }
+  try { if (_pollsSaveTimer) { clearTimeout(_pollsSaveTimer); _pollsSaveTimer = null; fs.writeFileSync(POLLS_FILE, JSON.stringify(_polls)); } } catch (e) { console.error('[polls] final write failed:', e.message); }
+  try { if (_visitsSaveTimer) { clearTimeout(_visitsSaveTimer); _visitsSaveTimer = null; fs.writeFileSync(VISITS_FILE, JSON.stringify(visitsStore)); } } catch (e) { console.error('[visits] final write failed:', e.message); }
+  try { if (_auditTimer) { clearTimeout(_auditTimer); _auditTimer = null; fs.writeFileSync(AUDIT_FILE, JSON.stringify(_audit)); } } catch (e) { console.error('[audit] final write failed:', e.message); }
+}
 function _shutdown(sig) {
   if (_shuttingDown) return;
   _shuttingDown = true;
   console.log('[x] ' + sig + ' reçu — arrêt propre…');
+  _flushPendingWrites();
   try { clearInterval(_heartbeatTimer); } catch (_) {}
   try { httpServer.close(() => process.exit(0)); } catch (_) { process.exit(0); }
   setTimeout(() => process.exit(0), 1000).unref();

@@ -1848,7 +1848,7 @@
         <div class="dpauto">
           <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 6px"><input type="checkbox" id="autoUpd" style="width:auto"> <b style="font-size:.88rem;color:inherit">Update automatically</b></label>
           <p class="muted">Checks this server&#39;s branch every 15 minutes. An open connection is never cut this way.</p>
-        <details class="more"><summary>When it acts</summary><p class="muted">Changes that only touch client files go live at once &mdash; nobody is disconnected. Anything needing a restart (proxy, dependencies) waits until <b>no one at all</b> is connected, then acts after the notice below; if someone connects in the meantime, it is called off and retried later.</p></details>
+        <details class="more"><summary>When it acts</summary><p class="muted">Changes that only touch client files go live at once &mdash; nobody is disconnected. Anything needing a restart (proxy, dependencies) waits until <b>no one at all</b> is connected, then acts after the notice below; if someone connects in the meantime, it is called off and retried later. Players connected outside a game (pokerth.net direct, training) get the usual restart notice. Cancelling an automatic restart leaves that version alone until a newer one is published.</p></details>
           <div class="defrow fld"><span>Notice before a restart <span class="muted">(seconds, 10–3600, saved on change)</span></span><input id="autoUpdSec" type="number" min="10" max="3600" placeholder="60"></div>
           <div class="rowtop"><button id="btnUpdCheck" class="use">Check now</button></div>
           <div id="autoUpdMsg" class="msg"></div>
@@ -1881,7 +1881,7 @@
       <div class="card">
         <div class="boardhead"><h2>Roll back a deployment</h2><button id="rbRefresh" class="use">Refresh</button></div>
         <p class="muted">Every state this server has served, newest first. <b>Static</b> swaps the files without dropping anyone; <b>with restart</b> is what a change to <code>proxy.js</code> needs.</p>
-        <details class="more"><summary>How a rollback works</summary><p class="muted">Rolling back checks the chosen commit out again &mdash; the quickest way out when a deploy breaks the client. With restart also reinstalls dependencies, then restarts. The state you are on now is recorded first, so you can always come back forward.</p></details>
+        <details class="more"><summary>How a rollback works</summary><p class="muted">Rolling back checks the chosen commit out again &mdash; the quickest way out when a deploy breaks the client. With restart also reinstalls dependencies, then restarts. The state you are on now is recorded first, so you can always come back forward. With <b>Update automatically</b> on, the version you stepped back from is left alone until a newer one is published (a fix, typically); an update made by hand goes forward at once.</p></details>
         <div class="seg" id="rbKind"><button class="on" data-k="static">Static (no restart)</button><button data-k="restart">With restart</button></div>
         <div id="rbHead" class="muted" style="margin:8px 0"></div>
         <div id="rbList"><div class="empty">Loading…</div></div>
@@ -3801,11 +3801,11 @@
     var P=d.proxyCfg||{}, pr=$('prTiles'), id=$('idTiles');
     var T=function(a){ return a.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn'+(t[4]||'')+'">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join(''); };
     var op=$('opTiles'), dp=$('dpTiles');
-    var stale=!!(d.runningVersion&&d.version&&d.runningVersion!==d.version), F=d.fd||{}, U=d.update||{}, A=d.autoUpdate||{};
+    var stale=_proxyStale(d), F=d.fd||{}, U=d.update||{}, A=d.autoUpdate||{};
     if(op) op.innerHTML=T([
       ['Uptime',fmtUptime(d.uptimeSec),'since the last start','var(--accent)',' sm'],
       ['Connected',d.sockets==null?'—':String(d.sockets),(d.liveSessions==null?'':d.liveSessions+' game session'+(d.liveSessions===1?'':'s'))+(d.maxClients?' · cap '+d.maxClients:''),'var(--ok-text)'],
-      ['Build',srvEsc(d.version||'—'),stale?'still running '+srvEsc(d.runningVersion)+' — restart needed':'served = running',stale?'var(--err-text)':'var(--m-net)',' sm'],
+      ['Build',srvEsc(d.version||'—'),stale?'still running '+srvEsc(d.runningVersion)+' — restart needed':(d.runningVersion&&d.version&&d.runningVersion!==d.version?'proxy code unchanged since '+srvEsc(d.runningVersion):'served = running'),stale?'var(--err-text)':'var(--m-net)',' sm'],
       ['Open files',F.softN?F.softN.toLocaleString():'—',F.approxPlayers?'about '+F.approxPlayers.toLocaleString()+' players at once':'limit of this process','var(--info-text)']]);
     if(dp) dp.innerHTML=T([
       ['Running',srvEsc(d.runningVersion||d.version||'—'),srvEsc(d.installKind||'?')+(d.gitUpdatable===false?' · no self-update':' · self-update'),stale?'var(--err-text)':'var(--accent)',' sm'],
@@ -3826,6 +3826,10 @@
   }
   // server
   function fmtUptime(s){ s=s||0; var d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60); return (d?d+'d ':'')+(h?h+'h ':'')+m+'m'; }
+  // « Restart needed » means the proxy's code changed on disk (codeStale); the
+  // version string alone moves with every client-only deploy too.
+  function _proxyStale(d){ var f=window.PthAdmin&&window.PthAdmin.proxyStale; if(f) return f(d); if(typeof d.codeStale==='boolean') return d.codeStale; return !!(d.runningVersion&&d.version&&d.runningVersion!==d.version); }
+  window._proxyStale=_proxyStale;
   function loadStatus(syncCfg){
     api('/admin/status').then(function(r){return r.json();}).then(function(d){
       var el=$('status');
@@ -3834,7 +3838,7 @@
       // Fichiers servis vs code en cours d'exécution : après une mise à jour
       // statique les deux diffèrent jusqu'au redémarrage, et tout ce qui touche
       // à proxy.js reste inactif pendant ce temps. On le dit franchement.
-      var _stale=(d.runningVersion && d.version && d.runningVersion!==d.version);
+      var _stale=_proxyStale(d);
       var _vtxt=(d.version||'\u2014')+(_stale?(' \u2014 proxy still running '+d.runningVersion+', restart needed'):'');
       var _sv=$('sideVer'); if(_sv) _sv.textContent=d.version||'\u2014';
       var items=[['Server time',clkServerStamp(d.now,d.tz)],['Build version',_vtxt],['Install',(d.installKind||'\u2014')+(d.gitUpdatable===false?' (self-update off)':'')],['Node',d.node||'\u2014'],['Uptime',fmtUptime(d.uptimeSec)],['Connected sockets',d.sockets==null?'\u2014':String(d.sockets)],['Active sessions',d.liveSessions==null?'\u2014':String(d.liveSessions)],['Players on board',String(d.players)],['Reset period',d.resetPeriod||'\u2014']];
@@ -3863,7 +3867,8 @@
         _pxLoaded=true;
         if(d.proxyCfg && typeof d.proxyCfg==='object'){ var P=d.proxyCfg; if($('pxHosts'))$('pxHosts').value=(Array.isArray(P.allowedHosts)?P.allowedHosts.join('\n'):''); if($('pxGrace'))$('pxGrace').value=(typeof P.graceSec==='number'?P.graceSec:''); if($('pxGap'))$('pxGap').value=(typeof P.connGapMs==='number'?P.connGapMs:''); if($('pxPorts'))$('pxPorts').value=(Array.isArray(P.allowedPorts)?P.allowedPorts.join('\n'):''); if($('pxLog'))$('pxLog').value=(typeof P.logLevel==='string'?P.logLevel:''); if($('logQuick'))$('logQuick').value=(typeof P.logLevel==='string'?P.logLevel:''); if($('pxMax'))$('pxMax').value=(typeof P.maxClients==='number'?P.maxClients:''); }
       }
-      if(typeof d.gitUpdatable==='boolean') maintCaps(d.gitUpdatable);
+      if(typeof d.gitUpdatable==='boolean') maintCaps(d.gitUpdatable, d.canUpdate);
+      window._admSupervised=(d.supervised!==false);
       var sn=$('schedNow'), sc=$('schedCancel');
       if(sn){ if(d.restartAt){ sn.textContent='Scheduled: '+(d.restartKind==='restart'?'restart only':'update + restart')+' at '+new Date(d.restartAt).toLocaleString(); if(sc) sc.style.display=''; } else { sn.textContent='Nothing scheduled.'; if(sc) sc.style.display='none'; } }
     }).catch(function(){ $('status').innerHTML='<div class="empty err">Could not load.</div>'; });
@@ -6280,12 +6285,17 @@
     if(!b) maintCaps(_canSelfUpdate); }
   // An install without a git checkout (Docker image) cannot pull: the update
   // buttons are disabled with the reason, and scheduling falls back to Restart only.
-  function maintCaps(can){
-    _canSelfUpdate=!!can;
+  // git: pull, static update, Check now. UPDATE_CMD (an image install with its
+  // own update command) runs « Update & restart » and the scheduled update only.
+  var _canUpdate=true;
+  function maintCaps(can,canUpd){
+    _canSelfUpdate=!!can; _canUpdate=(canUpd===undefined)?!!can:!!canUpd;
     var why=can?'':'This install cannot self-update (no git checkout). Update from the host, e.g. docker compose pull.';
-    ['btnUpdate','btnUpdateNr','btnUpdCheck'].forEach(function(id){ var e=$(id); if(e){ e.disabled=!can||srvBusy; e.title=why; } });
+    var whyU=_canUpdate?'':why;
+    ['btnUpdateNr','btnUpdCheck'].forEach(function(id){ var e=$(id); if(e){ e.disabled=!can||srvBusy; e.title=why; } });
+    var bu=$('btnUpdate'); if(bu){ bu.disabled=!_canUpdate||srvBusy; bu.title=whyU; }
     var ub=document.querySelector('#schedKind button[data-k="update"]'), rb=document.querySelector('#schedKind button[data-k="restart"]');
-    if(ub){ ub.disabled=!can; ub.title=why; if(!can && schedKind==='update' && rb) rb.click(); }
+    if(ub){ ub.disabled=!_canUpdate; ub.title=whyU; if(!_canUpdate && schedKind==='update' && rb) rb.click(); }
   }
   function pollBack(label,t0){
     t0=t0||Date.now();
@@ -6312,7 +6322,9 @@
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.started){ pollBack(label,t0); } else { maintBusy(false); var m=$('maintmsg'); m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
       .catch(function(){ pollBack(label,t0); });
   }
-  function doUpdate(){ if(confirm('Pull the latest code and restart the server now?')) fireAction('/admin/update','Update started'); }
+  // Started by hand (no PM2, Docker or systemd): a restart stops it for good.
+  function _noSupervisor(){ return window._admSupervised!==false?'':'\n\nWARNING: nothing supervises this server (no PM2, Docker or systemd detected). It will STOP and will not start again by itself \u2014 you will have to start it on the host.'; }
+  function doUpdate(){ if(confirm('Pull the latest code and restart the server now?'+_noSupervisor())) fireAction('/admin/update','Update started'); }
   function doUpdateNr(){
     if(!confirm('Pull the latest code WITHOUT restarting?\n\nServed client files go live immediately (players get them on reload). proxy.js or dependency changes will NOT take effect until a real restart.')) return;
     var m=$('maintmsg'); m.textContent='Updating (no restart)\u2026'; m.className='msg'; maintBusy(true);
@@ -6324,19 +6336,21 @@
   }
   // The pull runs detached; its last line says how it ended ([update-nr] ok /
   // failed). Read the log until that line shows up, at most two minutes.
-  function nrWait(m,n){
+  function nrWait(m,n){ logWait(m,n,'update-nr','Pulled \u2014 client files are live, no restart.','The pull failed \u2014 nothing changed. See the action log below.'); }
+  function logWait(m,n,tag,okTxt,failTxt,after){
     api('/admin/update-log',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
-      var log=(d&&d.ok&&d.log)||'', res=/^\[update-nr\] (ok|failed)\s*$/m.exec(log);
+      var log=(d&&d.ok&&d.log)||'', res=new RegExp('^\\['+tag+'\\] (ok|failed)\\s*$','m').exec(log);
       if(d&&d.ok) $('updlog').textContent=fmtLogTimes(log)||'(empty)';
       if(res){ maintBusy(false);
-        if(res[1]==='ok'){ m.textContent='Pulled \u2014 client files are live, no restart.'; m.className='msg ok'; loadServer(); }
-        else { m.textContent='The pull failed \u2014 nothing changed. See the action log below.'; m.className='msg err'; }
+        if(res[1]==='ok'){ m.textContent=okTxt; m.className='msg ok'; loadServer(); }
+        else { m.textContent=failTxt; m.className='msg err'; }
+        if(after) after();
         return; }
       if(n>=60){ maintBusy(false); m.textContent='No result after 2 minutes \u2014 check the action log below.'; m.className='msg err'; return; }
-      setTimeout(function(){ nrWait(m,n+1); },2000);
-    }).catch(function(){ if(n>=60){ maintBusy(false); m.textContent='Update status unknown \u2014 network error.'; m.className='msg err'; } else setTimeout(function(){ nrWait(m,n+1); },2000); });
+      setTimeout(function(){ logWait(m,n+1,tag,okTxt,failTxt,after); },2000);
+    }).catch(function(){ if(n>=60){ maintBusy(false); m.textContent='Status unknown \u2014 network error.'; m.className='msg err'; } else setTimeout(function(){ logWait(m,n+1,tag,okTxt,failTxt,after); },2000); });
   }
-  function doRestart(){ if(confirm('Restart the server now?')) fireAction('/admin/restart','Restart started'); }
+  function doRestart(){ if(confirm('Restart the server now?'+_noSupervisor())) fireAction('/admin/restart','Restart started'); }
   // Empties the in-memory ring shown under Recent logs; the log files on disk
   // are not touched. It sits with the logs, and says so there.
   function clearLogs(){
@@ -6360,6 +6374,7 @@
     if(d&&d.installKind) bits.push(d.installKind+(d.branch?' \u00b7 branch '+d.branch:''));
     if(d&&!d.gitUpdatable) bits.push('this install cannot self-update');
     else if(s.error) bits.push('last check failed: '+s.error);
+    else if(s.available&&s.skipped) bits.push('update available: '+String(s.remote||'').slice(0,8)+' \u2014 '+(s.subject||'')+' \u2014 left alone by the automatic updates ('+(s.skipWhy==='cancel'?'its restart was cancelled':'you rolled back from it')+'); they resume with the next published version, or apply it by hand');
     else if(s.available) bits.push('update available: '+String(s.remote||'').slice(0,8)+' \u2014 '+(s.subject||'')+' ('+s.files+' file(s), '+(s.needsRestart
       ?(d.enabled?'needs a restart \u2014 waiting for an empty server':'needs a restart \u2014 \u201cUpdate & restart\u201d applies it')
       :(d.enabled?'client files only \u2014 applied without restart':'client files only \u2014 \u201cUpdate (no restart)\u201d applies it'))+')');
@@ -6402,7 +6417,7 @@
       if(d&&d.error) autoUpdSay('Check failed: '+d.error,'err'); else autoUpdDesc(d);
       loadStatus(false);                                 // the Deploy status tile shows the same reading
     }).catch(function(){ autoUpdSay('Check failed \u2014 network error.','err'); })
-      .then(function(){ btn.disabled=false; });
+      .then(function(){ btn.disabled=srvBusy||!_canSelfUpdate; });
   });
   // ── Schedule a restart (warns connected players, then acts after the delay) ──
   var schedKind='update';
@@ -6412,7 +6427,7 @@
     secs=Math.floor(secs);
     if(!(secs>=10 && secs<=86400)){ schedSay('Delay must be between 1 and 1440 minutes.','err'); return; }
     var human=secs>=3600?(secs%3600?Math.round(secs/60)+' min':(secs/3600)+' h'):Math.round(secs/60)+' min';
-    if(!confirm('Schedule \u201c'+(schedKind==='update'?'Update + restart':'Restart only')+'\u201d in '+human+'?\n\nConnected players will be notified now.')) return;
+    if(!confirm('Schedule \u201c'+(schedKind==='update'?'Update + restart':'Restart only')+'\u201d in '+human+'?\n\nConnected players will be notified now.'+_noSupervisor())) return;
     schedSay('Scheduling\u2026');
     api('/admin/schedule-restart',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({seconds:secs,kind:schedKind,message:($('schedMsg').value||'').trim(),token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ schedSay('Scheduled \u2014 '+(d.notified||0)+' player(s) notified.','ok'); loadServer(); } else schedSay('Failed: '+((d&&d.error)||'error'),'err'); })
@@ -7075,12 +7090,17 @@
     var what=_rbRestart?'reinstall dependencies and restart the server':'swap the served files with no restart';
     if(!confirm('Roll back to '+(x.version||'?')+' ('+(x.sha||'').slice(0,8)+')?\n\nThis will '+what+'.')) return;
     var m=$('rbMsg'); if(m){ m.textContent='Rolling back\u2026'; m.className='msg'; }
-    api('/admin/deploys',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rollback:x.sha,restart:_rbRestart})})
+    // The deploy buttons stay locked until the rollback has ended: a second
+    // action used to start on top of it.
+    maintBusy(true); var t0=Date.now(), withRestart=_rbRestart;
+    api('/admin/deploys',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rollback:x.sha,restart:withRestart})})
       .then(function(r){return r.json();}).then(function(d){
-        if(!m) return;
-        if(d&&d.ok){ m.textContent=_rbRestart?'Rollback started \u2014 the server restarts in a moment.':'Rollback started \u2014 the new files are live within seconds.'; m.className='msg ok'; setTimeout(loadDeploys,4000); }
-        else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; }
-      }).catch(function(){ if(m){ m.textContent='Network error.'; m.className='msg err'; } });
+        if(d&&d.ok){
+          if(withRestart){ if(m){ m.textContent='Rollback started \u2014 the server restarts in a moment.'; m.className='msg ok'; } pollBack('Rollback',t0); setTimeout(loadDeploys,4000); }
+          else { if(m){ m.textContent='Rolling back (no restart)\u2026'; m.className='msg'; } logWait(m,0,'rollback','Rolled back \u2014 the files are live, no restart. The automatic updates leave that version alone until a newer one is published.','The rollback failed \u2014 nothing changed. See the action log.',loadDeploys); }
+        }
+        else { maintBusy(false); if(m){ m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } }
+      }).catch(function(){ maintBusy(false); if(m){ m.textContent='Network error.'; m.className='msg err'; } });
   }
   (function(){
     var r=$('rbRefresh'); if(r) r.addEventListener('click',loadDeploys);

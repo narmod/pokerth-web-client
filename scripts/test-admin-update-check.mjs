@@ -18,7 +18,7 @@ const chk = proxy.slice(proxy.indexOf("reqPathOnly === '/admin/update-check'"), 
 ok((chk.match(/_autoUpdView\(\)/g) || []).length === 2, 'Check now answers like GET /admin/auto-update (one view for both)');
 ok(/function updateCheck\(cb\) \{[\s\S]{0,600}_updWaiters\.push\(cb\);\s*if \(_upd\.checking\) return;/.test(proxy), 'a check already running is joined, not answered with the old reading');
 const btn = html.slice(html.indexOf("$('btnUpdCheck').addEventListener"), html.indexOf("$('btnUpdCheck').addEventListener") + 700);
-ok(/btn\.disabled=true/.test(btn) && /btn\.disabled=false/.test(btn), 'the button is busy while it checks');
+ok(/btn\.disabled=true/.test(btn) && /btn\.disabled=srvBusy\|\|!_canSelfUpdate/.test(btn), 'the button is busy while it checks (and stays locked if a deploy action runs)');
 ok(/loadStatus\(false\)/.test(btn), 'the Deploy status tile is refreshed with it');
 ok(/Update \(no restart\)\\u201d applies it/.test(html) && /Update & restart\\u201d applies it/.test(html), 'automatic updates off: the message says which button applies it');
 

@@ -833,6 +833,27 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Deployment reliability** (`web.172`, audit of 2026-10-19, lot 2) —
+  - With « Update automatically » on, a rollback was undone about a minute later. The version rolled back from
+    (and the upstream one known then) is now set aside: the automatic updates leave it alone until a newer one is
+    published; an update made by hand goes forward and clears it (`_autoSkip`, kept in `autoUpdate.skip`).
+    Cancelling an automatic restart sets its version aside the same way instead of being re-armed within a minute.
+  - The « set by the automatic updates » flag outlived its action: a restart planned by hand afterwards showed as
+    automatic, and unticking the option cancelled it. It now goes with the planned action.
+  - Every release changes `package.json` (the version), so every release « needed a restart » and the no-restart
+    path of the automatic updates never fired. Its diff needs a restart only when something other than the
+    version or a `node scripts/…` entry changed; `scripts/` and `install.sh` no longer count. « Restart needed »
+    compares the proxy's own code (proxy.js, server/, lock file, dependencies — `codeStale`), not the version
+    string.
+  - One deploy action at a time: update, static update, rollback and restart are refused (409) while another runs,
+    a scheduled action waits for it; the panel locks during a rollback, which now reports its outcome like the
+    static update; « Check now » no longer unlocks what a running action locked.
+  - Stats, polls, visits and the audit log are flushed on SIGTERM: the audit entry of the restart click itself
+    was lost.
+  - Installs updating through `UPDATE_CMD` keep « Update & restart » and the scheduled update.
+  - An automatic restart sends the usual notice to players connected outside a game.
+  - Started by hand (no PM2, Docker or systemd), a restart stops the server for good: the confirmation says so.
+  `scripts/test-admin-deploy.mjs` (a throw-away clone with a real origin: rollback, check, update, restart).
 - **Admin data safety** (`web.171`, audit of 2026-10-19, lot 1) —
   - A restore that changed the leaderboard reset period left the period marker on the old one: the hourly
     rotation then wiped the leaderboard. The restore now moves it, as the Statistics setting does.

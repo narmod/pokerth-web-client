@@ -65,14 +65,14 @@ export function alertsFrom(st) {
   const s = st.status;
   const now = st.now || Date.now();
   if (s && s.ok) {
-    if (s.runningVersion && s.version && s.runningVersion !== s.version) {
+    if (proxyStale(s)) {
       out.push({ kind: 'warn', glyph: 'terminal', title: 'Restart needed',
         sub: 'Files are ' + s.version + ', the proxy still runs ' + s.runningVersion, label: 'Deployment', t: 'deploy' });
     }
     const u = s.update || {};
     if (u.available) {
       out.push({ kind: 'ok', glyph: 'download', title: 'Update available',
-        sub: (u.remote ? String(u.remote).slice(0, 8) + ' · ' : '') + (u.needsRestart ? 'needs a restart' : 'client files only, no restart')
+        sub: (u.remote ? String(u.remote).slice(0, 8) + ' · ' : '') + (u.skipped ? 'left alone by the automatic updates' : (u.needsRestart ? 'needs a restart' : 'client files only, no restart'))
           + (u.checkedAt ? ' · checked ' + ago(now - u.checkedAt) : ''),
         label: 'Deploy', t: 'deploy' });
     }
@@ -148,6 +148,13 @@ const ACTIONS = {
   'sessions': 'Session disconnected', 'errors': 'Error list changed', 'clear-logs': 'Logs cleared',
   'blocked': 'Address unblocked', 'db': 'MySQL mirror changed', 'clock': 'Clocks changed',
 };
+// The proxy runs older code than what is on disk (codeStale, web.172); before
+// that field, the version strings — which a client-only deploy also moves.
+export function proxyStale(s) {
+  if (!s) return false;
+  if (typeof s.codeStale === 'boolean') return s.codeStale;
+  return !!(s.runningVersion && s.version && s.runningVersion !== s.version);
+}
 export function auditLabel(a) { return ACTIONS[a] || a || '?'; }
 
 // ── Rendering ────────────────────────────────────────────────────────────
@@ -266,7 +273,7 @@ function tipWire(host) {
 
 function healthHtml(s) {
   if (!s || !s.ok) return '<div class="empty err">Could not load the server status.</div>';
-  const stale = s.runningVersion && s.version && s.runningVersion !== s.version;
+  const stale = proxyStale(s);
   const u = s.update || {};
   const rows = [
     ['Build', esc(s.version || '—') + (stale ? ' <span class="err">(running ' + esc(s.runningVersion) + ')</span>' : '')],
@@ -375,7 +382,7 @@ export function stop() {
 
 // Security › Audit log reads the same labels (admin.html falls back to the raw
 // endpoint until this module has loaded).
-if (typeof window !== 'undefined' && window.PthAdmin) window.PthAdmin.auditLabel = auditLabel;
+if (typeof window !== 'undefined' && window.PthAdmin) { window.PthAdmin.auditLabel = auditLabel; window.PthAdmin.proxyStale = proxyStale; }
 
 if (typeof document !== 'undefined' && document.getElementById('panel-overview')) {
   document.addEventListener('admin:section', (e) => {
