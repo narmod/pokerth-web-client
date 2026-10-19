@@ -30,6 +30,14 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Admin: unsaved edits shown everywhere, popup state in the title, auto-update notice labelled** (`web.161`) —
+  the « Unsaved changes » mark (accent Save + note) now covers every settings card: Save buttons carry
+  `data-save`, the card gets `.unsaved` on its first edit and loses it when its write succeeds (20 cards: Proxy,
+  SEO, Discord, world clock, the four popups, LAN directory settings, music player, leaderboard reset, MySQL…).
+  The welcome, guest, LAN and registered-account popups show On / Off in their title, folded or not, in Broadcasts
+  and on Login screen — the saved state, like the tiles. Deployment: the auto-update notice field has its label
+  (« Notice before a restart », seconds, saved on change) instead of a bare « 60 », and the state line is coloured
+  (red when the install cannot self-update or a check failed, green when up to date).
 - **Admin: texts and limits put right** (`web.160`) — one name per mode across the panel, the statistics' own pair
   (long · short): Internet (pokerth.net) · Internet, LAN / dedicated · LAN, Training (bots) · Training — the panel
   used four names for Training and five for LAN; the guest and registered-account popups are titled « (Internet) ».

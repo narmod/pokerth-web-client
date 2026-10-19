@@ -985,6 +985,8 @@
   .ftrow .nm b{white-space:normal}
   .fsgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:22px}
   .fsgrid>.row,.fsgrid>.row:first-of-type{border-top:1px solid var(--line)}
+  .hchip{display:inline-block;margin-left:10px;padding:1px 8px;border-radius:999px;border:1px solid var(--line);font-size:.68rem;font-weight:600;vertical-align:2px;color:var(--muted)}
+  .hchip.on{color:var(--ok-text);border-color:var(--ok-line);background:var(--ok-bg)}
   .card h3.subhd{display:flex;align-items:baseline;gap:8px;margin:16px 0 6px;font-size:.84rem;font-weight:600;color:var(--cream)}
   .card h3.subhd .headnote{flex:none;text-align:left;color:var(--muted);font-weight:400}
   /* The details of a setting fold under its one-line summary. */
@@ -1009,9 +1011,11 @@
     .fld.chk{flex-wrap:nowrap;gap:12px}
     .fld.chk>span:first-child{flex:1 1 auto}
   }
-  /* An edited card says so on its Save button until the write succeeds. */
-  #panel-login .card.unsaved .rowtop>.use:first-child,#panel-lobby .card.unsaved .rowtop>.use:first-child,#panel-firstvisit .card.unsaved .rowtop>.use:first-child,#lanCard.unsaved .rowtop>.use:first-child{border-color:var(--accent);color:var(--accent-text);background:var(--accent-soft)}
-  #panel-login .card.unsaved .rowtop::after,#panel-lobby .card.unsaved .rowtop::after,#panel-firstvisit .card.unsaved .rowtop::after,#lanCard.unsaved .rowtop::after{content:'Unsaved changes';margin-left:10px;font-size:.74rem;color:var(--warn-text)}
+  /* An edited card says so on its Save button until the write succeeds, in
+     every section: the Save buttons carry data-save, the card gets .unsaved on
+     its first keystroke (cfgMarkDirty) and loses it when its write succeeds. */
+  .card.unsaved [data-save]{border-color:var(--accent);color:var(--accent-text);background:var(--accent-soft)}
+  .card.unsaved :is(.rowtop,.periodrow,div):has(>[data-save])::after{content:'Unsaved changes';margin-left:10px;font-size:.74rem;color:var(--warn-text);align-self:center}
   /* ── Overview ─────────────────────────────────────────────────────────── */
   .ovalerts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:0 0 14px}
   .ovalert{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:12px;border:1px solid var(--info-line);background:var(--info-bg);min-width:0}
@@ -1425,7 +1429,7 @@
           <div class="defrow fld"><span>Password</span><input id="dbPass" type="password" maxlength="255" placeholder="(unchanged)" autocomplete="new-password"></div>
           <div class="defrow fld"><span>Database</span><input id="dbDatabase" maxlength="128" placeholder="pokerth" autocomplete="off"></div>
           <div class="defrow fld"><span>Enabled</span><input id="dbEnabled" type="checkbox"></div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button id="dbTestBtn" class="use">Test connection</button><button id="dbSaveBtn" class="use">Save &amp; connect</button></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button id="dbTestBtn" class="use">Test connection</button><button id="dbSaveBtn" class="use" data-save>Save &amp; connect</button></div>
           <div id="dbState" class="msg"></div>
         </div>
         <div class="tsec">
@@ -1491,7 +1495,7 @@
         <h2>Music player</h2>
         <div class="defrow fld"><span>Available to players</span><select id="mzEnabled"><option value="1">On</option><option value="0">Off</option></select></div>
         <div class="defrow fld"><span>Show vote counts to players</span><select id="mzVotesPub"><option value="0">Off (blind)</option><option value="1">On</option></select></div>
-        <div class="rowtop"><button id="mzSaveEnabled" class="use">Save</button></div>
+        <div class="rowtop"><button id="mzSaveEnabled" class="use" data-save>Save</button></div>
         <div id="mzEnMsg" class="msg"></div>
         <p class="muted note">Players see two thumbs on the track they are listening to. One vote per device per track, deduplicated on a salted hash of the same anonymous id used by the visit counter — no IP, no nickname, no listening time. Blind is the default: a player sees their own thumb but not the totals, so the figures on screen cannot sway the answer. Radios are votable too, unlike plays. Counts appear next to each entry in the library below.</p>
         <p class="muted note">Off removes the 🎵 entry from every player menu and makes <code>/music/*</code> answer 404 (manifest and MP3s). The track list below stays fully editable. Players already in a session keep the player until they reload.</p>
@@ -1567,7 +1571,7 @@
         <label for="period">Automatic reset period</label>
         <div class="periodrow">
           <select id="period"><option value="off">Off</option><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select>
-          <button id="savePeriod" class="use">Save</button>
+          <button id="savePeriod" class="use" data-save>Save</button>
         </div>
         <div id="periodmsg" class="msg"></div>
       </div>
@@ -1588,7 +1592,7 @@
         <div class="defrow fld"><span>Server name</span><input id="srvName" maxlength="40" placeholder="PokerTH" autocomplete="off"></div>
         <div class="defrow fld"><span>Banner / tagline</span><input id="srvTagline" maxlength="60" placeholder="Web Client" autocomplete="off"></div>
         <div class="defrow fld"><span>PokerTH title</span><select id="loginTitle"><option value="0">Hidden (default)</option><option value="1">Shown</option></select></div>
-        <div class="rowtop"><button id="saveIdent" class="use">Save</button></div>
+        <div class="rowtop"><button id="saveIdent" class="use" data-save>Save</button></div>
         <div id="identMsg" class="msg"></div>
       </div>
       <div class="card">
@@ -1599,7 +1603,7 @@
         <div class="defrow fld"><span>JSON address</span><input id="lsUrl" type="text" spellcheck="false" placeholder="https://www.pokerth.net/pthranking/live"></div>
         <p class="muted hint">Expects <code>{ online, today, tables, waiting, stale }</code>. Blank = the official address. http and https only; a host on your own network is allowed (self-hosted install).</p>
         <div class="defrow fld"><span>Refresh every <span class="muted">(seconds, 30–900)</span></span><input id="lsSec" type="number" min="30" max="900" step="10" placeholder="60"></div>
-        <div class="rowtop"><button id="lsSave" class="use">Save</button> <button id="lsTest" class="use">Test this address</button></div>
+        <div class="rowtop"><button id="lsSave" class="use" data-save>Save</button> <button id="lsTest" class="use">Test this address</button></div>
         <div class="lsprev" id="lsPrev" style="display:none">
           <div class="lsp-h">What players see on the login screen right now</div>
           <div class="lsp-r" id="lsPrevRow"></div>
@@ -1622,7 +1626,7 @@
         <div class="defrow fld left"><span>Internet</span><select id="tnNetMode"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnNetName" maxlength="48" placeholder="e.g. My online game" autocomplete="off" style="display:none"></div>
         <div class="defrow fld left"><span>LAN</span><select id="tnLanMode"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnLanName" maxlength="48" placeholder="custom table name" autocomplete="off" style="display:none"></div>
         <div class="defrow fld left"><span>Training</span><select id="tnOffMode"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnOffName" maxlength="48" placeholder="custom table name" autocomplete="off" style="display:none"></div>
-        <div class="rowtop"><button id="saveTable" class="use">Save</button></div>
+        <div class="rowtop"><button id="saveTable" class="use" data-save>Save</button></div>
         <div id="tableMsg" class="msg"></div>
       </div>
       <div class="card">
@@ -1631,7 +1635,7 @@
         <details class="more"><summary>Where the time comes from</summary><p class="muted">The PokerTH protocol carries no time, so the instant comes from this server and the zone from the setting below. <b>Default</b> uses <code>SERVER_TZ</code> if set, else Berlin (Europe/Berlin), like the desktop client. Players can hide the clock in their advanced options.</p></details>
         <div class="defrow fld"><span>Time zone</span><select id="lobbyClk"></select></div>
         <p class="muted" id="lobbyClkEff"></p>
-        <div class="rowtop"><button id="saveLobbyClk" class="use">Save</button></div>
+        <div class="rowtop"><button id="saveLobbyClk" class="use" data-save>Save</button></div>
         <div id="lobbyClkMsg" class="msg"></div>
       </div>
       <div class="card">
@@ -1641,7 +1645,7 @@
         <label class="fld chk"><span>Read the community sites and show the Events tab</span><input type="checkbox" id="ceOn"></label>
         <div class="defrow fld"><span>Refresh every <span class="muted">(seconds, 60–3600)</span></span><input id="ceSec" type="number" min="60" max="3600" step="30" placeholder="300"></div>
         <p class="muted hint">At most one round per interval for the whole server, and only while someone looks at the tab.</p>
-        <div class="rowtop"><button id="ceSave" class="use">Save</button></div>
+        <div class="rowtop"><button id="ceSave" class="use" data-save>Save</button></div>
         <div id="ceMsg" class="msg"></div>
       </div>
     </div>
@@ -1661,7 +1665,7 @@
         <div class="defrow fld"><span>Voice announce</span><select id="defVoice"><option value="">App default (off)</option><option value="1">On</option><option value="0">Off</option></select></div>
         <div class="defrow fld"><span>Hand-strength assistance</span><select id="defAssist"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
         <div class="defrow fld"><span>Chip display</span><select id="defBB"><option value="">App default (¥)</option><option value="1">BB</option><option value="0">¥</option></select></div>
-        <div class="rowtop"><button id="saveDefaults" class="use">Save</button></div>
+        <div class="rowtop"><button id="saveDefaults" class="use" data-save>Save</button></div>
         <div id="defaultsMsg" class="msg"></div>
       </div>
       <div class="card">
@@ -1682,7 +1686,7 @@
           <option value="">Shown</option>
           <option value="0">Hidden</option>
         </select></div>
-        <div class="rowtop"><button id="saveLive" class="use">Save</button></div>
+        <div class="rowtop"><button id="saveLive" class="use" data-save>Save</button></div>
         <div id="lvState" class="msg"></div>
       </div>
     </div>
@@ -1706,14 +1710,14 @@
         <div class="defrow fld"><span style="white-space:nowrap">Reference zone</span><select id="clkRef"></select></div>
         <div id="clkPick" class="clkpick"></div>
         <p class="muted" id="clkCount" style="margin-top:10px"></p>
-        <div class="rowtop"><button id="saveClocks" class="use">Save</button><button id="clkDefaults" class="ghost">Default set</button></div>
+        <div class="rowtop"><button id="saveClocks" class="use" data-save>Save</button><button id="clkDefaults" class="ghost">Default set</button></div>
         <div id="clkMsg" class="msg"></div>
       </div>
       <div class="card">
         <h2>Discord chat relay</h2>
         <p class="muted">Official-server parity (<code>DiscordChatWebhookUrl</code>): lobby chat messages sent by players through this proxy are forwarded to a Discord channel as <b>Player:</b> message. Game chat and private messages are never relayed. Leave blank to disable. One post per message — no duplicates however many clients are connected.</p>
         <div class="defrow fld"><span style="white-space:nowrap">Webhook URL</span><input id="discordHook" maxlength="200" placeholder="https://discord.com/api/webhooks/…" autocomplete="off"></div>
-        <div class="rowtop"><button id="saveDiscord" class="use">Save</button></div>
+        <div class="rowtop"><button id="saveDiscord" class="use" data-save>Save</button></div>
         <div id="discordMsg" class="msg"></div>
       </div>
       <div class="card">
@@ -1734,7 +1738,7 @@
         <p class="muted" style="margin-top:14px"><b>AI crawlers.</b> Allowed by default. Refused writes an explicit <code>Disallow</code> for GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot and the others, and <code>llms.txt</code> stops being served &mdash; staying silent under a blanket <code>Allow</code> reads as consent. It is a request, not a wall: well-behaved crawlers honour it, others do not.</p>
         <div class="defrow fld"><span style="white-space:nowrap">AI crawlers</span><select id="seoAi"><option value="1">Allowed (default)</option><option value="0">Refused</option></select></div>
         <div class="defrow fld"><span style="white-space:nowrap">IndexNow key</span><span id="seoIndexNow" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;opacity:.8;font-family:monospace;font-size:.85em">generated when indexing is enabled</span></div>
-        <div class="rowtop"><button id="saveSeo" class="use">Save</button> <button id="seoPing" class="use">Submit URLs now</button> <button id="seoCheck" class="use">Check configuration</button></div>
+        <div class="rowtop"><button id="saveSeo" class="use" data-save>Save</button> <button id="seoPing" class="use">Submit URLs now</button> <button id="seoCheck" class="use">Check configuration</button></div>
         <div id="seoMsg" class="msg"></div>
         <div id="seoChecks" style="margin-top:10px"></div>
       </div>
@@ -1787,7 +1791,7 @@
         <div class="defrow fld"><span>Connection gap <span class="muted">(ms, 0–30000)</span></span><input id="pxGap" type="number" min="0" max="30000" placeholder="5000"></div>
         <div class="defrow fld"><span>Log verbosity <span class="muted">(quiet = least CPU under load)</span></span><select id="pxLog"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select></div>
         <div class="defrow fld"><span>Max clients <span class="muted">(concurrent bridges, 0 = unlimited)</span></span><input id="pxMax" type="number" min="0" max="100000" placeholder="0"></div>
-        <div class="rowtop"><button id="savePx" class="use">Save</button></div>
+        <div class="rowtop"><button id="savePx" class="use" data-save>Save</button></div>
         <div id="pxMsg" class="msg"></div>
       </div>
     </div>
@@ -1807,10 +1811,8 @@
         <div class="dpauto">
           <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 6px"><input type="checkbox" id="autoUpd" style="width:auto"> <b style="font-size:.88rem;color:inherit">Update automatically</b></label>
           <p class="muted">Checks this server&#39;s branch every 15 minutes. Changes that only touch client files go live at once — nobody is disconnected. Anything needing a restart (proxy, dependencies) waits until <b>no one at all</b> is connected, then acts after a short notice; if someone connects in the meantime, it is called off and retried later. An open connection is never cut this way.</p>
-          <div class="periodrow" style="margin:0">
-            <input id="autoUpdSec" class="filter" type="number" min="10" max="3600" placeholder="Notice seconds (60)" style="margin:0;width:170px">
-            <button id="btnUpdCheck" class="use">Check now</button>
-          </div>
+          <div class="defrow fld"><span>Notice before a restart <span class="muted">(seconds, 10–3600, saved on change)</span></span><input id="autoUpdSec" type="number" min="10" max="3600" placeholder="60"></div>
+          <div class="rowtop"><button id="btnUpdCheck" class="use">Check now</button></div>
           <div id="autoUpdMsg" class="msg"></div>
         </div>
         <div class="boardhead" style="margin-top:12px"><h2 class="h3">Last action log</h2><div class="bhact"><button id="updlogCopy" class="use">Copy</button><button id="btnUpdLog" class="use">Refresh</button></div></div>
@@ -1954,7 +1956,7 @@
         <textarea id="wcBody" class="filter" rows="5" maxlength="4000" placeholder="Message / rules for this language…" style="width:100%;resize:vertical"></textarea>
         <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
         <div id="wcPrev"></div>
-        <div class="periodrow" style="margin-top:8px"><button id="wcSave" class="use">Save welcome message</button></div>
+        <div class="periodrow" style="margin-top:8px"><button id="wcSave" class="use" data-save>Save welcome message</button></div>
         <div id="wcState" class="msg"></div>
       </div>
       <div class="card" data-master="1">
@@ -1970,7 +1972,7 @@
         <textarea id="gwBody" class="filter" rows="5" maxlength="4000" placeholder="Message for guests in this language&hellip;" style="width:100%;resize:vertical"></textarea>
         <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
         <div id="gwPrev"></div>
-        <div class="periodrow" style="margin-top:8px"><button id="gwSave" class="use">Save guest notice</button></div>
+        <div class="periodrow" style="margin-top:8px"><button id="gwSave" class="use" data-save>Save guest notice</button></div>
         <div id="gwState" class="msg"></div>
       </div>
       <div class="card" data-master="1">
@@ -1986,7 +1988,7 @@
         <textarea id="lwBody" class="filter" rows="5" maxlength="4000" placeholder="Message for LAN / dedicated players in this language&hellip;" style="width:100%;resize:vertical"></textarea>
         <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
         <div id="lwPrev"></div>
-        <div class="periodrow" style="margin-top:8px"><button id="lwSave" class="use">Save LAN notice</button></div>
+        <div class="periodrow" style="margin-top:8px"><button id="lwSave" class="use" data-save>Save LAN notice</button></div>
         <div id="lwState" class="msg"></div>
       </div>
       <div class="card" data-master="1">
@@ -2002,7 +2004,7 @@
         <textarea id="awBody" class="filter" rows="5" maxlength="4000" placeholder="Message for registered players in this language&hellip;" style="width:100%;resize:vertical"></textarea>
         <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
         <div id="awPrev"></div>
-        <div class="periodrow" style="margin-top:8px"><button id="awSave" class="use">Save registered-account notice</button></div>
+        <div class="periodrow" style="margin-top:8px"><button id="awSave" class="use" data-save>Save registered-account notice</button></div>
         <div id="awState" class="msg"></div>
       </div>
     </div>
@@ -2067,7 +2069,7 @@
         <div class="defrow fld"><span>TLS</span><select id="defLanTls"><option value="0">No</option><option value="1">Yes</option></select></div>
         <div class="defrow fld"><span>Proxy URL</span><input id="defProxyUrl" placeholder="(auto: page address)" maxlength="180" autocomplete="off"></div>
         <div class="defrow fld"><span>Proxy URL field</span><select id="defHideProxy"><option value="0">Shown</option><option value="1">Hidden</option></select></div>
-        <div class="rowtop"><button id="saveLogin" class="use">Save</button></div>
+        <div class="rowtop"><button id="saveLogin" class="use" data-save>Save</button></div>
         <div id="loginMsg" class="msg"></div>
       </div>
       <div class="card">
@@ -2111,7 +2113,7 @@
         </div>
         <p class="muted" style="margin-top:10px">Turn “Refuse private addresses” off only when this proxy runs on the same network as the servers (a self-hosted LAN install). “Local server” is the address the LAN form used before the directory (the default login form, else this page’s host on port 7234): keep it on a self-hosted install, turn it off on pokerth.net. Manual entry lets a player type an address instead of picking one; addresses outside the allowlist are still refused.</p>
         <p class="muted" id="ldGlobalCap" style="margin-top:6px"></p>
-        <div class="periodrow" style="margin-top:6px"><button id="ldSetSave" class="use" type="button">Save settings</button></div>
+        <div class="periodrow" style="margin-top:6px"><button id="ldSetSave" class="use" type="button" data-save>Save settings</button></div>
         <div id="ldSetState" class="msg"></div>
       </div>
     </div>
@@ -6248,7 +6250,7 @@
     else bits.push('not checked yet');
     if(d&&d.armed) bits.push('restart armed for '+new Date(d.armed).toLocaleTimeString());
     if(s.lastAction) bits.push('last automatic action: '+s.lastAction);
-    autoUpdSay(bits.join(' \u00b7 '));
+    autoUpdSay(bits.join(' \u00b7 '), (d&&!d.gitUpdatable)||s.error?'err':(s.available?'':(s.checkedAt?'ok':'')));
   }
   function autoUpdLoad(){
     api('/admin/auto-update',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
@@ -6395,7 +6397,17 @@
   // Tiles: what is scheduled, the next send, how many were sent, and which of
   // the four popups (welcome, guest, LAN, account) are switched on.
   var _bcJobs=null;
+  // The four popups, folded or not, show in their title whether players get
+  // them: the saved state, like the tiles, never an unticked box not yet saved.
+  function _noticeChips(){
+    [['wcEnabled',welcomeState],['gwEnabled',guestNoticeState],['lwEnabled',lanNoticeState],['awEnabled',authNoticeState]].forEach(function(x){
+      var e=$(x[0]), h=e&&e.closest('.card')&&e.closest('.card').querySelector('h2'); if(!h) return;
+      var c=h.querySelector('.hchip'); if(!c){ h.appendChild(document.createTextNode(' ')); c=document.createElement('span'); c.className='hchip'; h.appendChild(c); }
+      var on=!!(x[1]&&x[1].enabled); c.textContent=on?'On':'Off'; c.classList.toggle('on',on);
+    });
+  }
   function _bcTiles(){
+    if(_isMaster) _noticeChips();
     var box=$('bcTiles'); if(!box) return;
     var jobs=_bcJobs||[], on=jobs.filter(function(j){ return j.enabled; }), next=null, sent=0;
     on.forEach(function(j){ if(j.nextRun && (!next || j.nextRun<next.nextRun)) next=j; });

@@ -90,6 +90,9 @@ ok(notices.every((k) => $(k).closest('.card').parentNode === $('panel-broadcast'
 ok(doc.querySelectorAll('[id="wcTitle"]').length === 1, 'one editor per popup, never a copy');
 await open('login');
 ok($('wcEnabled').closest('#panel-login'), 'and it follows the operator back to Login screen');
+const chip = (k) => { const c = $(k).closest('.card').querySelector('h2 .hchip'); return c ? c.textContent : ''; };
+ok(['wcEnabled', 'gwEnabled', 'lwEnabled', 'awEnabled'].every((k) => /^(On|Off)$/.test(chip(k))), 'each popup title says On or Off, folded or not');
+ok(doc.querySelectorAll('#wcEnabled').length === 1 && $('wcEnabled').closest('.card').querySelectorAll('h2 .hchip').length === 1, 'one chip per title, however often it is repainted');
 
 // An unsaved LAN edit on Game servers is never sent by the mode select.
 typeIn('defHost', 'typed.but.unsaved');
@@ -124,6 +127,8 @@ await tick(120);
 p = lastPost('tableDefaults');
 ok(p && p.body.tableDefaults.players === '8' && p.body.tableNames && p.body.tableNames.pokerthnet === 'Friday game', 'one Save sends the values and the names together');
 ok(!tCard.classList.contains('unsaved'), 'and the card is clean again');
+ok($('saveTable').hasAttribute('data-save') && /\.card\.unsaved \[data-save\]\{/.test(html), 'the unsaved mark follows data-save, in every section');
+ok(['savePx', 'saveSeo', 'wcSave', 'ldSetSave', 'mzSaveEnabled', 'saveLogin'].every((id) => $(id).hasAttribute('data-save')), 'Save buttons outside Player experience carry it too');
 
 // ── First visit ───────────────────────────────────────────────────────────
 await open('firstvisit');
