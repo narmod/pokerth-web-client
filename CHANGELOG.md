@@ -30,6 +30,22 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Admin › Player experience reorganised around the player** (`web.158`) — the two pages *Modes & features* and
+  *Defaults* become four, in the order a player meets them. **Login screen**: the entry modes with the mode a first
+  visit opens on (saved on change like the modes; a hidden mode cannot be picked, and a default pointing at one is
+  flagged), the server identity (from Infrastructure › Identity & reach) and the live figures of the Internet card.
+  **Lobby & tables**: one « Create a table » card for the starting values and the per-mode table names (one Save),
+  the lobby clock (from Identity & reach) and the Events tab. **First visit**: palette and in-game settings in one
+  card (one Save posts `defaultTheme` and `defaults`), and the /live spectator defaults. **Features**: the kill
+  switches grouped (At the table · Lobby & community · App & the Ace · Data on the device; an unknown key lands in
+  « Other »), each an On / Off switch that applies at once, like the entry modes — the ticked-means-off checkboxes
+  and their batch Save are gone; one tile per group. The LAN / dedicated server defaults (Automatic / Forced, host,
+  port, TLS, forced proxy URL, hidden field) move to Infrastructure › Game servers as « LAN / dedicated button »,
+  next to the Internet button they mirror; `loginDefaults` stays one object on the server, each card sending its
+  half over the stored one, so an unsaved edit on the other page is never written. Tiles on every page; long
+  explanations folded under « details »; an edited card marks its Save « Unsaved changes » until the write succeeds;
+  no player card starts folded. Identity & reach tiles: world clock, Discord relay, search engines, AI crawlers. No
+  config key or API changed. `test-admin-players.mjs` rewritten (46 checks).
 - **`/privacy` translated on every install, indexing on or off** (`web.157`) — the route no longer drops `?lang=` and
   the catalog loads whatever the SEO toggle, so a self-hosted or test copy serves the same translated policy as the
   live site; only the robots tags follow the toggle (`noindex`, no canonical or hreflang while off, so a copy is never

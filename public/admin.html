@@ -673,8 +673,8 @@
      colonnes de hauteur équilibrée ; celles qui portent un graphique ou une
      grille reprennent toute la largeur, où elles seraient illisibles. */
   @media(min-width:1280px){
-    #panel-broadcast,#panel-defaults,#panel-deploy,#panel-access,#panel-identity{columns:2;column-gap:16px}
-    #panel-broadcast>.card,#panel-defaults>.card,#panel-deploy>.card,#panel-access>.card,#panel-identity>.card{break-inside:avoid;-webkit-column-break-inside:avoid;margin-bottom:16px}
+    #panel-broadcast,#panel-login,#panel-lobby,#panel-firstvisit,#panel-deploy,#panel-access,#panel-identity{columns:2;column-gap:16px}
+    #panel-broadcast>.card,#panel-login>.card,#panel-lobby>.card,#panel-firstvisit>.card,#panel-deploy>.card,#panel-access>.card,#panel-identity>.card{break-inside:avoid;-webkit-column-break-inside:avoid;margin-bottom:16px}
     /* Le panneau Traffic n'a plus qu'une carte de lecture : rien a rattraper
        sur toute la largeur, puisque rien n'est reparti en colonnes. */
   }
@@ -974,21 +974,44 @@
   .allowrow>b{flex:0 0 46px;font-size:.8rem;color:var(--muted);padding-top:2px}
   #pxHosts,#pxPorts{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   :where(.card) input:where(:not([type]),[type=text],[type=number],[type=url],[type=search]):focus-visible{outline:2px solid var(--accent);outline-offset:1px}
-  /* ── Player experience ─────────────────────────────────────────────────── */
+  /* ── Player experience (web.157) ───────────────────────────────────────
+     Login screen, Lobby & tables, First visit, Features, plus the LAN /
+     dedicated button card of Game servers, which shares their field grid. An
+     entry mode and a feature switch are the same row: a name, what it does,
+     an On / Off switch that applies at once. */
   .pxmode .lvdot{margin-left:2px}
-  .pxmode.off .nm b{color:var(--navfg);font-weight:500}
-  .fsgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:4px 14px;color:var(--navfg)}
-  .fsitem{display:flex;align-items:center;gap:8px;margin:0;padding:6px 8px;border-radius:8px;font-size:.84rem;cursor:pointer;min-width:0}
-  .fsitem:hover{background:var(--hover)}
-  .fsitem.off{background:var(--err-bg);color:var(--err-text)}
-  #panel-clients .f input[type=text]{width:100%}
-  #panel-defaults .fld,#panel-clients .fld{max-width:none}
-  #panel-defaults .fld:not(.left)>select,#panel-defaults .fld:not(.left)>input{flex:0 0 220px;width:220px}
-  #panel-defaults .fld.left>input{flex:1 1 160px;min-width:0}
-  #panel-defaults .fld{padding:2px 0}
+  .pxmode.off .nm b,.ftrow.off .nm b{color:var(--navfg);font-weight:500}
+  .ftrow.off .nm span{color:var(--err-text)}
+  .ftrow .nm b{white-space:normal}
+  .fsgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:22px}
+  .fsgrid>.row,.fsgrid>.row:first-of-type{border-top:1px solid var(--line)}
+  .card h3.subhd{display:flex;align-items:baseline;gap:8px;margin:16px 0 6px;font-size:.84rem;font-weight:600;color:var(--cream)}
+  .card h3.subhd .headnote{flex:none;text-align:left;color:var(--muted);font-weight:400}
+  /* The details of a setting fold under its one-line summary. */
+  .card details.more{margin:-3px 0 10px}
+  .card details.more>summary{display:inline-flex;align-items:center;gap:5px;cursor:pointer;list-style:none;font-size:.74rem;color:var(--accent-text)}
+  .card details.more>summary::-webkit-details-marker{display:none}
+  .card details.more>summary::before{content:'\25B8';font-size:.8em;transition:transform .15s}
+  .card details.more[open]>summary::before{transform:rotate(90deg)}
+  .card details.more>summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+  .card details.more>p.muted{margin:6px 0 0}
+  .card p.muted.hint{margin:-2px 0 6px}
+  .fld.chk{cursor:pointer;font-size:inherit;color:inherit}
+  .fld.chk>input{flex:none;width:auto;margin:0}
+  #panel-login .fld,#panel-lobby .fld,#panel-firstvisit .fld,#lanCard .fld{max-width:none;padding:2px 0}
+  #lanCard .fld{max-width:640px}
+  #panel-login .fld:not(.left):not(.chk)>select,#panel-lobby .fld:not(.left):not(.chk)>select,#panel-firstvisit .fld:not(.left):not(.chk)>select,#lanCard .fld:not(.left):not(.chk)>select,#panel-login .fld:not(.left):not(.chk)>input,#panel-lobby .fld:not(.left):not(.chk)>input,#panel-firstvisit .fld:not(.left):not(.chk)>input,#lanCard .fld:not(.left):not(.chk)>input{flex:0 0 260px;width:260px}
+  #panel-lobby .fld.left>span:first-child{flex:0 0 120px}
+  #panel-lobby .fld.left>select{flex:none;width:130px}
+  #panel-lobby .fld.left>input{flex:1 1 160px;min-width:0}
   @media(max-width:600px){
-    #panel-defaults .fld:not(.left)>select,#panel-defaults .fld:not(.left)>input{flex:1 1 100%;width:100%}
+    #panel-login .fld:not(.left):not(.chk)>select,#panel-lobby .fld:not(.left):not(.chk)>select,#panel-firstvisit .fld:not(.left):not(.chk)>select,#lanCard .fld:not(.left):not(.chk)>select,#panel-login .fld:not(.left):not(.chk)>input,#panel-lobby .fld:not(.left):not(.chk)>input,#panel-firstvisit .fld:not(.left):not(.chk)>input,#lanCard .fld:not(.left):not(.chk)>input,#panel-lobby .fld.left>select,#panel-lobby .fld.left>input{flex:1 1 100%;width:100%}
+    .fld.chk{flex-wrap:nowrap;gap:12px}
+    .fld.chk>span:first-child{flex:1 1 auto}
   }
+  /* An edited card says so on its Save button until the write succeeds. */
+  #panel-login .card.unsaved .rowtop>.use:first-child,#panel-lobby .card.unsaved .rowtop>.use:first-child,#panel-firstvisit .card.unsaved .rowtop>.use:first-child,#lanCard.unsaved .rowtop>.use:first-child{border-color:var(--accent);color:var(--accent-text);background:var(--accent-soft)}
+  #panel-login .card.unsaved .rowtop::after,#panel-lobby .card.unsaved .rowtop::after,#panel-firstvisit .card.unsaved .rowtop::after,#lanCard.unsaved .rowtop::after{content:'Unsaved changes';margin-left:10px;font-size:.74rem;color:var(--warn-text)}
   /* ── Overview ─────────────────────────────────────────────────────────── */
   .ovalerts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:0 0 14px}
   .ovalert{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:12px;border:1px solid var(--info-line);background:var(--info-bg);min-width:0}
@@ -1120,8 +1143,10 @@
       <div class="sgrp" data-g="players">
         <button type="button" class="gtab" data-g="players"><svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M176,56H80a72,72,0,0,0,0,144h96a72,72,0,0,0,0-144Zm0,128H80A56,56,0,0,1,80,72h96a56,56,0,0,1,0,112Zm0-96a40,40,0,1,0,40,40A40,40,0,0,0,176,88Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,176,152Z"/></svg><span>Player experience</span><i class="gbadge" aria-hidden="true"></i><svg class="gcar" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
         <div class="tabs subtabs" data-g="players" style="display:none">
-          <button type="button" class="tab" data-t="clients">Modes &amp; features</button>
-          <button type="button" class="tab" data-t="defaults">Defaults</button>
+          <button type="button" class="tab" data-t="login">Login screen</button>
+          <button type="button" class="tab" data-t="lobby">Lobby &amp; tables</button>
+          <button type="button" class="tab" data-t="firstvisit">First visit</button>
+          <button type="button" class="tab" data-t="features">Features</button>
         </div>
       </div>
       <div class="sgrp" data-g="infra">
@@ -1548,76 +1573,100 @@
       </div>
     </div>
 
-    <div id="panel-clients" style="display:none">
-      <section class="ovmodes" id="pxTiles" aria-label="What players get at a glance"><div class="empty">Loading…</div></section>
+    <div id="panel-login" style="display:none">
+      <section class="ovmodes" id="lgTiles" aria-label="The login screen at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
-        <h2>App modes (login screen)</h2>
-        <p class="muted">Show or hide entry modes offered to players.</p>
+        <h2>Entry modes</h2>
+        <p class="muted">The doors the login screen offers, and the one a first-time visitor finds open. <b>Applies immediately.</b></p>
         <div id="modes"></div>
+        <div class="defrow fld gap"><span>Opens on <span class="muted">(first visit)</span></span><select id="defMode"><option value="">App default</option><option value="offline">Training (bots)</option><option value="lan-dedi">LAN / private server</option><option value="pokerthnet">pokerth.net</option></select></div>
         <div id="modesmsg" class="msg"></div>
       </div>
       <div class="card">
-        <div class="boardhead"><h2>Feature kill switches</h2><span id="fsSum" class="headnote"></span><button id="fsSave" class="use">Save</button></div>
-        <p class="muted">Turn a feature off for <b>everyone, right now</b>, without a deployment — the way out when something ships broken. Ticking a box forces the matching option off in every client: its checkbox in Advanced options goes unticked, frozen and labelled “off (admin)”. Players keep their own preference stored, so it takes effect again the moment you untick here. Applies when a client next loads the page; what only runs at startup (splash screen, back-button guard) follows from the visit after.</p>
-        <div id="fsList" class="muted">Loading…</div>
-        <div id="fsMsg" class="msg"></div>
+        <h2>Server identity</h2>
+        <p class="muted">The name and banner at the top of the login screen, for everyone, whatever the theme. Leave blank for “PokerTH” / “Web Client”.</p>
+        <div class="defrow fld"><span>Server name</span><input id="srvName" maxlength="40" placeholder="PokerTH" autocomplete="off"></div>
+        <div class="defrow fld"><span>Banner / tagline</span><input id="srvTagline" maxlength="60" placeholder="Web Client" autocomplete="off"></div>
+        <div class="defrow fld"><span>PokerTH title</span><select id="loginTitle"><option value="0">Hidden (default)</option><option value="1">Shown</option></select></div>
+        <div class="rowtop"><button id="saveIdent" class="use">Save</button></div>
+        <div id="identMsg" class="msg"></div>
       </div>
       <div class="card">
-        <div class="boardhead"><h2>Live server figures</h2><button id="lsSave" class="use">Save</button></div>
-        <p class="muted">The <b>Internet</b> card of the login screen can carry a live line — players online, games played today — read from the JSON counters the official site publishes. The proxy is the only reader: it fetches once per interval and serves every player from that one copy, so the upstream sees one request per interval instead of one per open tab, and the browser never has to reach another origin. The line hides itself whenever the answer is unusable (counters flagged stale, address unreachable, feature off here), leaving the card exactly as it was.</p>
-        <label style="display:inline-flex;align-items:center;gap:6px;margin-bottom:10px">
-          <input type="checkbox" id="lsOn" style="width:auto"> Show the line on the login screen
-        </label>
-        <div class="f">
-          <label for="lsUrl">JSON address</label>
-          <input id="lsUrl" type="text" spellcheck="false" placeholder="https://www.pokerth.net/pthranking/live">
-          <p class="muted">Expects <code>{ online, today, tables, waiting, stale }</code>. Leave empty to fall back to the official address. http and https only; a host on your own network is allowed, which is what a self-hosted install would point at.</p>
-        </div>
-        <div class="f">
-          <label for="lsSec">Refresh every</label>
-          <input id="lsSec" type="number" min="30" max="900" step="10" style="width:100px">
-          <p class="muted">Seconds, 30–900 (default 60). One read per interval for the whole server.</p>
-        </div>
-        <button id="lsTest" class="use">Test this address</button>
+        <h2>Live figures on the Internet card</h2>
+        <p class="muted">A line under the <b>Internet</b> card: players online, tables, games today. It hides itself whenever the figures are unusable.</p>
+        <details class="more"><summary>How the figures are read</summary><p class="muted">The proxy is the only reader: it fetches the JSON counters the official site publishes once per interval and serves every player from that one copy, so the upstream sees one request per interval instead of one per open tab, and the browser never reaches another origin. The line hides itself whenever the answer is unusable (counters flagged stale, address unreachable, feature off here), leaving the card exactly as it was.</p></details>
+        <label class="fld chk"><span>Show the line on the login screen</span><input type="checkbox" id="lsOn"></label>
+        <div class="defrow fld"><span>JSON address</span><input id="lsUrl" type="text" spellcheck="false" placeholder="https://www.pokerth.net/pthranking/live"></div>
+        <p class="muted hint">Expects <code>{ online, today, tables, waiting, stale }</code>. Blank = the official address. http and https only; a host on your own network is allowed (self-hosted install).</p>
+        <div class="defrow fld"><span>Refresh every <span class="muted">(seconds, 30–900)</span></span><input id="lsSec" type="number" min="30" max="900" step="10" placeholder="60"></div>
+        <div class="rowtop"><button id="lsSave" class="use">Save</button> <button id="lsTest" class="use">Test this address</button></div>
         <div class="lsprev" id="lsPrev" style="display:none">
           <div class="lsp-h">What players see on the login screen right now</div>
           <div class="lsp-r" id="lsPrevRow"></div>
         </div>
         <div id="lsMsg" class="msg"></div>
       </div>
+    </div>
+
+    <div id="panel-lobby" style="display:none">
+      <section class="ovmodes" id="ltTiles" aria-label="The lobby and the tables at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
-        <div class="boardhead"><h2>Community events</h2><button id="ceSave" class="use">Save</button></div>
-        <p class="muted">The <b>Events</b> tab of the Forum news window lists the upcoming BBC games and Monthly Cup, the latest results, and the Champions of the Day shown above the PokerTH ranking. The proxy is the only reader: one round reads the five community pages (bbc, wec, monthlycup, pokerth.net) and every player is served from that one copy; an expired copy is served at once while the next round runs, and a round where every site failed keeps the previous answer and is not retried for a minute. Turned off, the proxy reads nothing and players no longer see the Events tab nor the Champions of the Day.</p>
-        <label style="display:inline-flex;align-items:center;gap:6px;margin-bottom:10px">
-          <input type="checkbox" id="ceOn" style="width:auto"> Read the community sites and show the Events tab
-        </label>
-        <div class="f">
-          <label for="ceSec">Refresh every</label>
-          <input id="ceSec" type="number" min="60" max="3600" step="30" style="width:100px">
-          <p class="muted">Seconds, 60–3600 (default 300). At most one round per interval for the whole server, and only while someone looks at the tab.</p>
-        </div>
+        <h2>Create a table</h2>
+        <p class="muted">Starting values of the “create a table” form. A returning player keeps their own last settings; a blank field keeps the app default. Players can change everything per table.</p>
+        <div class="defrow fld"><span>Max players <span class="muted">(2–10)</span></span><input id="tdPlayers" type="number" min="2" max="10" placeholder="10"></div>
+        <div class="defrow fld"><span>Small blind <span class="muted">(1–1000000)</span></span><input id="tdBlind" type="number" min="1" max="1000000" placeholder="10"></div>
+        <div class="defrow fld"><span>Starting stack <span class="muted">(500–1000000)</span></span><input id="tdStack" type="number" min="500" max="1000000" placeholder="3000"></div>
+        <div class="defrow fld"><span>Action timer <span class="muted">(seconds, 5–120)</span></span><input id="tdTimeout" type="number" min="5" max="120" placeholder="15"></div>
+        <h3 class="subhd">Table name, per mode</h3>
+        <p class="muted">Automatic keeps the translated “X’s table”; Custom sets a fixed name (max 48 characters). Players can still rename their table.</p>
+        <div class="defrow fld left"><span>pokerth.net</span><select id="tnNetMode"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnNetName" maxlength="48" placeholder="e.g. My online game" autocomplete="off" style="display:none"></div>
+        <div class="defrow fld left"><span>LAN / private</span><select id="tnLanMode"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnLanName" maxlength="48" placeholder="custom table name" autocomplete="off" style="display:none"></div>
+        <div class="defrow fld left"><span>Offline (bots)</span><select id="tnOffMode"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnOffName" maxlength="48" placeholder="custom table name" autocomplete="off" style="display:none"></div>
+        <div class="rowtop"><button id="saveTable" class="use">Save</button></div>
+        <div id="tableMsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2>Lobby clock</h2>
+        <p class="muted">The server time in the lobby status bar of pokerth.net players, so they know when BBC, WEC and Monthly Cup games start. Set it to the zone community events are announced in (pokerth.net: Berlin). <b>Applies immediately.</b></p>
+        <details class="more"><summary>Where the time comes from</summary><p class="muted">The PokerTH protocol carries no time, so the instant comes from this server and the zone from the setting below. <b>Default</b> uses <code>SERVER_TZ</code> if set, else Berlin (Europe/Berlin), like the desktop client. Players can hide the clock in their advanced options.</p></details>
+        <div class="defrow fld"><span>Time zone</span><select id="lobbyClk"></select></div>
+        <p class="muted" id="lobbyClkEff"></p>
+        <div class="rowtop"><button id="saveLobbyClk" class="use">Save</button></div>
+        <div id="lobbyClkMsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2>Events tab</h2>
+        <p class="muted">The <b>Events</b> tab of the Forum news window: upcoming BBC games and Monthly Cup, the latest results, and the Champions of the Day above the PokerTH ranking. Off, players see neither.</p>
+        <details class="more"><summary>How the community sites are read</summary><p class="muted">The proxy is the only reader: one round reads the five community pages (bbc, wec, monthlycup, pokerth.net) and every player is served from that one copy; an expired copy is served at once while the next round runs, and a round where every site failed keeps the previous answer and is not retried for a minute. Turned off, the proxy reads nothing.</p></details>
+        <label class="fld chk"><span>Read the community sites and show the Events tab</span><input type="checkbox" id="ceOn"></label>
+        <div class="defrow fld"><span>Refresh every <span class="muted">(seconds, 60–3600)</span></span><input id="ceSec" type="number" min="60" max="3600" step="30" placeholder="300"></div>
+        <p class="muted hint">At most one round per interval for the whole server, and only while someone looks at the tab.</p>
+        <div class="rowtop"><button id="ceSave" class="use">Save</button></div>
         <div id="ceMsg" class="msg"></div>
       </div>
     </div>
 
-    <div id="panel-defaults" style="display:none">
+    <div id="panel-firstvisit" style="display:none">
+      <section class="ovmodes" id="fvTiles" aria-label="What a new visitor gets"><div class="empty">Loading…</div></section>
       <div class="card">
-        <h2>Theme</h2>
-        <p class="muted">Applied on a player's first visit only. Players who already picked a theme keep theirs.</p>
-        <div class="periodrow">
-          <select id="defTheme">
-            <option value="">No default (app default)</option>
-            <option value="official">PokerTH Dark</option>
-            <option value="officiallight">PokerTH Light</option>
-            <option value="casino">Green Casino</option>
-          </select>
-          <button id="saveTheme" class="use">Save</button>
-        </div>
-        <div id="themeMsg" class="msg"></div>
+        <h2>First-visit preferences</h2>
+        <p class="muted">What a visitor gets before choosing anything. Applied once, on the first visit: a setting the player has already changed is never touched.</p>
+        <div class="defrow fld"><span>Palette</span><select id="defTheme">
+          <option value="">App default</option>
+          <option value="official">PokerTH Dark</option>
+          <option value="officiallight">PokerTH Light</option>
+          <option value="casino">Green Casino</option>
+        </select></div>
+        <div class="defrow fld"><span>Vibration</span><select id="defHaptic"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
+        <div class="defrow fld"><span>Voice announce</span><select id="defVoice"><option value="">App default (off)</option><option value="1">On</option><option value="0">Off</option></select></div>
+        <div class="defrow fld"><span>Hand-strength assistance</span><select id="defAssist"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
+        <div class="defrow fld"><span>Chip display</span><select id="defBB"><option value="">App default (¥)</option><option value="1">BB</option><option value="0">¥</option></select></div>
+        <div class="rowtop"><button id="saveDefaults" class="use">Save</button></div>
+        <div id="defaultsMsg" class="msg"></div>
       </div>
       <div class="card">
-        <h2>Live / Spectator mode <span class="muted" style="font-weight:normal">(/live)</span></h2>
-        <p class="muted">Applies to the spectator view only. The embedded view has no Advanced options for a visitor to fall back on, so it gets its own defaults rather than the ones tuned for players. Like every default here, a visitor who already chose keeps their choice — except the chat strip, which is an operator decision.</p>
+        <h2>Spectator view <span class="muted" style="font-weight:normal">(/live)</span></h2>
+        <p class="muted">The embedded spectator page has no Advanced options for a visitor to fall back on, so it gets its own defaults. A visitor who already chose keeps their choice — except the chat strip, which is an operator decision.</p>
         <div class="defrow fld"><span>Palette</span><select id="lvTheme">
           <option value="">Same as the main client</option>
           <option value="official">PokerTH Dark</option>
@@ -1636,62 +1685,21 @@
         <div class="rowtop"><button id="saveLive" class="use">Save</button></div>
         <div id="lvState" class="msg"></div>
       </div>
+    </div>
 
+    <div id="panel-features" style="display:none">
+      <section class="ovmodes" id="ftTiles" aria-label="Features at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
-        <h2>In-game settings</h2>
-        <p class="muted">Applied on a player's first visit only; a setting a player has already changed is never touched.</p>
-        <div class="defrow fld"><span>Vibration</span><select id="defHaptic"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
-        <div class="defrow fld"><span>Voice announce</span><select id="defVoice"><option value="">App default (off)</option><option value="1">On</option><option value="0">Off</option></select></div>
-        <div class="defrow fld"><span>Assistance (hand strength)</span><select id="defAssist"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
-        <div class="defrow fld"><span>Chip display</span><select id="defBB"><option value="">App default (¥)</option><option value="1">BB</option><option value="0">¥</option></select></div>
-        <div class="rowtop"><button id="saveDefaults" class="use">Save</button></div>
-        <div id="defaultsMsg" class="msg"></div>
-      </div>
-      <div class="card">
-        <h2>Login form</h2>
-        <p class="muted">Default entry screen for new visitors, plus (for LAN / dedicated) which server to connect to. The mode applies on a first visit only. <b>LAN server</b> sets the <i>default</i> server fields, never a lock: <i>Automatic</i> uses the page's own address (port 7234, no TLS), <i>Forced</i> uses the host, port and TLS set below. In both cases a player can edit the fields and the server they last connected to is remembered, so only players who never picked one of their own follow a change made here. With <i>Forced</i>, the proxy auto-follows the host and is rebuilt on every reconnect, so the client always reconnects. A forced proxy URL (ws:// or wss://) is pushed to every client and locks the field; hiding the field removes it and its label from the login form. All of this applies to the LAN / dedicated mode only — the Internet (pokerth.net) mode is never affected.</p>
-        <div class="defrow fld"><span>Default mode</span><select id="defMode"><option value="">App default</option><option value="offline">Training (bots)</option><option value="lan-dedi">LAN / private server</option><option value="pokerthnet">pokerth.net</option></select></div>
-        <div class="defrow fld"><span>LAN server <span class="muted">(LAN / dedicated only)</span></span><select id="defLanMode"><option value="auto">Automatic (page address)</option><option value="forced">Forced (use the values below)</option></select></div>
-        <div class="defrow fld"><span>Server host</span><input id="defHost" placeholder="(page address)" maxlength="120" autocomplete="off"></div>
-        <div class="defrow fld"><span>Server port <span class="muted">(blank = 7234)</span></span><input id="defLanPort" type="number" min="1" max="65535" placeholder="7234" autocomplete="off"></div>
-        <div class="defrow fld"><span>Server uses TLS</span><select id="defLanTls"><option value="0">No</option><option value="1">Yes</option></select></div>
-        <div class="defrow fld"><span>Force WebSocket proxy URL <span class="muted">(LAN / dedicated only)</span></span><input id="defProxyUrl" placeholder="(auto: page address)" maxlength="180" autocomplete="off"></div>
-        <div class="defrow fld"><span>Hide the proxy URL field <span class="muted">(LAN / dedicated only)</span></span><select id="defHideProxy"><option value="0">No</option><option value="1">Yes</option></select></div>
-        <div class="rowtop"><button id="saveLogin" class="use">Save</button></div>
-        <div id="loginMsg" class="msg"></div>
-      </div>
-      <div class="card">
-        <h2>Table settings</h2>
-        <p class="muted">Starting values when a player opens the “create a table” form. A returning player keeps their last-used settings; leave a field blank to keep the app default. Players can change them per table.</p>
-        <div class="defrow fld"><span>Max players <span class="muted">(2–10)</span></span><input id="tdPlayers" type="number" min="2" max="10" placeholder="10"></div>
-        <div class="defrow fld"><span>Small blind <span class="muted">(1–1000000)</span></span><input id="tdBlind" type="number" min="1" max="1000000" placeholder="10"></div>
-        <div class="defrow fld"><span>Starting stack <span class="muted">(500–1000000)</span></span><input id="tdStack" type="number" min="500" max="1000000" placeholder="3000"></div>
-        <div class="defrow fld"><span>Action timer <span class="muted">(seconds, 5–120)</span></span><input id="tdTimeout" type="number" min="5" max="120" placeholder="15"></div>
-        <div class="rowtop"><button id="saveTable" class="use">Save</button></div>
-        <div id="tableMsg" class="msg"></div>
-      </div>
-      <div class="card">
-        <h2>Table name (per mode)</h2>
-        <p class="muted">Pre-fills the table name in the &ldquo;create a table&rdquo; form, per connection mode. &ldquo;Automatic&rdquo; keeps the localized default (&ldquo;X&rsquo;s table&rdquo;); pick &ldquo;Custom&rdquo; to set a fixed name. Players can still rename their table. Max 48 characters.</p>
-        <div class="defrow fld left"><span style="white-space:nowrap">pokerth.net</span><select id="tnNetMode" style="flex:none"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnNetName" maxlength="48" placeholder="e.g. My online game" autocomplete="off" style="flex:1;min-width:0;display:none"></div>
-        <div class="defrow fld left"><span style="white-space:nowrap">LAN / private</span><select id="tnLanMode" style="flex:none"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnLanName" maxlength="48" placeholder="custom table name" autocomplete="off" style="flex:1;min-width:0;display:none"></div>
-        <div class="defrow fld left"><span style="white-space:nowrap">Offline (bots)</span><select id="tnOffMode" style="flex:none"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnOffName" maxlength="48" placeholder="custom table name" autocomplete="off" style="flex:1;min-width:0;display:none"></div>
-        <div class="rowtop"><button id="saveTableName" class="use">Save</button></div>
-        <div id="tableNameMsg" class="msg"></div>
+        <h2>Feature switches</h2>
+        <p class="muted">Turn a feature off for <b>everyone, right now</b>, without a deployment — the way out when something ships broken. <b>Each switch applies immediately.</b></p>
+        <details class="more"><summary>What players see</summary><p class="muted">Off forces the matching option off in every client: its checkbox in Advanced options goes unticked, frozen and labelled “off (admin)”. Players keep their own preference stored, so it takes effect again the moment the feature is back on. A client picks the change up when it next loads the page; what only runs at startup (splash screen, back-button guard) follows from the visit after.</p></details>
+        <div id="fsList"><div class="empty">Loading…</div></div>
+        <div id="fsMsg" class="msg"></div>
       </div>
     </div>
 
     <div id="panel-identity" style="display:none">
       <section class="ovmodes" id="idTiles" aria-label="How this server presents itself"><div class="empty">Loading…</div></section>
-      <div class="card">
-        <h2>Server identity (login screen)</h2>
-        <p class="muted">Shown to everyone on the login screen, regardless of theme. Leave blank for the defaults (“PokerTH” / “Web Client”).</p>
-        <div class="defrow fld"><span>Server name</span><input id="srvName" maxlength="40" placeholder="PokerTH" autocomplete="off"></div>
-        <div class="defrow fld"><span>Banner / tagline</span><input id="srvTagline" maxlength="60" placeholder="Web Client" autocomplete="off"></div>
-        <div class="defrow fld"><span>PokerTH title</span><select id="loginTitle"><option value="0">Hidden (default)</option><option value="1">Shown</option></select></div>
-        <div class="rowtop"><button id="saveIdent" class="use">Save</button></div>
-        <div id="identMsg" class="msg"></div>
-      </div>
       <div class="card">
         <h2>World clock (Overview)</h2>
         <p class="muted">The strip at the top of the Overview, for every admin key. Each region gets a dial, its time and its name, ranked by offset — earliest on the left, latest on the right — around the reference below, which therefore sits in the middle. The face of each dial is that city’s actual sky, shaded from the sun’s height above its horizon: the zenith at the top, the horizon at the bottom, so the warmth of a sunset stays low on the dial while the top has already turned to night. There are no steps — the colour moves with the sun, and follows the season and the latitude, so a northern winter afternoon reads as dusk while the tropics are still in daylight. The time turns green between 18:00 and 01:00 locally, the hours when players come to the tables. A weekday is appended where the region has already rolled over, and hovering a dial gives its phase and the sun’s altitude. Up to 12 regions, plus the reference, which is always shown whether or not it is ticked. This server’s own clock is not here — it heads the status list under <b>Health &amp; logs</b>. Applies immediately (no restart needed).</p>
@@ -1700,14 +1708,6 @@
         <p class="muted" id="clkCount" style="margin-top:10px"></p>
         <div class="rowtop"><button id="saveClocks" class="use">Save</button><button id="clkDefaults" class="ghost">Default set</button></div>
         <div id="clkMsg" class="msg"></div>
-      </div>
-      <div class="card">
-        <h2>Lobby clock (players)</h2>
-        <p class="muted">Players connected to pokerth.net see the server time in the lobby status bar, so they know when BBC, WEC and Monthly Cup games start. The PokerTH protocol carries no time, so the instant comes from this server and the zone from the setting below — set it to the zone community events are announced in (pokerth.net: Berlin). <b>Default</b> uses <code>SERVER_TZ</code> if set, else Berlin (Europe/Berlin), like the desktop client. Players can hide the clock in their advanced options. Applies immediately (no restart needed).</p>
-        <div class="defrow fld"><span style="white-space:nowrap">Time zone</span><select id="lobbyClk"></select></div>
-        <p class="muted" id="lobbyClkEff" style="margin-top:10px"></p>
-        <div class="rowtop"><button id="saveLobbyClk" class="use">Save</button></div>
-        <div id="lobbyClkMsg" class="msg"></div>
       </div>
       <div class="card">
         <h2>Discord chat relay</h2>
@@ -2057,6 +2057,19 @@
         <div class="periodrow" style="margin-top:10px"><button id="srvSaveBtn" class="use">Save all</button></div>
         <div id="srvState" class="msg"></div>
       </div>
+      <div class="card" id="lanCard">
+        <h2>LAN / dedicated button</h2>
+        <p class="muted">The server a player finds pre-filled behind the <b>LAN / dedicated</b> button of the login page. A default, never a lock: players can edit the fields, and the server they last joined is remembered. The Internet button is never affected.</p>
+        <details class="more"><summary>Automatic, forced and the proxy URL</summary><p class="muted"><i>Automatic</i> uses this page’s own address (port 7234, no TLS). <i>Forced</i> uses the host, port and TLS below; the proxy then follows that host and is rebuilt on every reconnect, so the client always reconnects. Only players who never picked a server of their own follow a change made here. A forced proxy URL (ws:// or wss://) is pushed to every client and locks the field; hiding the field removes it and its label from the login form.</p></details>
+        <div class="defrow fld"><span>Server</span><select id="defLanMode"><option value="auto">Automatic (page address)</option><option value="forced">Forced (values below)</option></select></div>
+        <div class="defrow fld"><span>Host</span><input id="defHost" placeholder="(page address)" maxlength="120" autocomplete="off"></div>
+        <div class="defrow fld"><span>Port <span class="muted">(blank = 7234)</span></span><input id="defLanPort" type="number" min="1" max="65535" placeholder="7234" autocomplete="off"></div>
+        <div class="defrow fld"><span>TLS</span><select id="defLanTls"><option value="0">No</option><option value="1">Yes</option></select></div>
+        <div class="defrow fld"><span>Proxy URL</span><input id="defProxyUrl" placeholder="(auto: page address)" maxlength="180" autocomplete="off"></div>
+        <div class="defrow fld"><span>Proxy URL field</span><select id="defHideProxy"><option value="0">Shown</option><option value="1">Hidden</option></select></div>
+        <div class="rowtop"><button id="saveLogin" class="use">Save</button></div>
+        <div id="loginMsg" class="msg"></div>
+      </div>
       <div class="card">
         <h2>Effective dial allowlist</h2>
         <p class="muted">Hosts &amp; ports the proxy currently accepts to dial (built-in defaults + env + the servers above + the approved servers of the LAN directory). Anti-relay guard — shown for reference.</p>
@@ -2148,14 +2161,16 @@
   // settings tab at once, so it only rewrites the fields while no settings
   // card holds an unsaved edit.
   var _dirtyCards=[], _lastCard=null;
-  var _CFG_PANELS=['panel-proxy','panel-identity','panel-defaults','panel-clients','panel-board'];
+  var _CFG_PANELS=['panel-proxy','panel-identity','panel-login','panel-lobby','panel-firstvisit','panel-features','panel-servers','panel-board'];
   document.addEventListener('input',cfgMarkDirty,true);
   document.addEventListener('change',cfgMarkDirty,true);
   document.addEventListener('click',function(e){ var c=e.target&&e.target.closest?e.target.closest('.card'):null; if(c) _lastCard=c; },true);
   function cfgMarkDirty(e){
     var t=e.target; if(!t||!t.matches||!t.matches('input,select,textarea')||t.type==='file'||t.type==='search') return;
-    var c=t.closest('.card'); if(c&&_dirtyCards.indexOf(c)<0) _dirtyCards.push(c);
+    var c=t.closest('.card'); if(c&&_dirtyCards.indexOf(c)<0){ _dirtyCards.push(c); c.classList.add('unsaved'); }
   }
+  // A write that applies at once (a select saved on change) leaves its card clean.
+  function cfgClean(el){ var c=el&&el.closest?el.closest('.card'):null, i=c?_dirtyCards.indexOf(c):-1; if(i>=0) _dirtyCards.splice(i,1); if(c) c.classList.remove('unsaved'); }
   function cardDirty(el){ var c=el&&el.closest?el.closest('.card'):null; return !!(c&&_dirtyCards.indexOf(c)>=0); }
   function cfgAnyDirty(){ return _dirtyCards.some(function(c){ return _CFG_PANELS.some(function(id){ var p=$(id); return p&&p.contains(c); }); }); }
   // Checks and probes write nothing: they leave the card's state alone.
@@ -2164,7 +2179,7 @@
     if(_NO_SAVE.test(path)) return;
     r.json().then(function(d){
       if(d&&d.ok===false) return;
-      if(_lastCard){ var i=_dirtyCards.indexOf(_lastCard); if(i>=0) _dirtyCards.splice(i,1); }
+      if(_lastCard){ var i=_dirtyCards.indexOf(_lastCard); if(i>=0) _dirtyCards.splice(i,1); _lastCard.classList.remove('unsaved'); }
       if(path==='/admin/config' && !cfgAnyDirty()) setTimeout(function(){ loadStatus(true); },250);
     }).catch(function(){});
   }
@@ -3219,12 +3234,13 @@
     if(t==='board') loadBoard();
     if(t==='packages') api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
     if(t==='traffic'){ if(_wasT!=='traffic') loadTraffic(); _trafSub(b.dataset.ts||'world'); }
-    if(t==='servers') loadServers();
+    if(t==='servers'){ loadServers(); loadStatus(!cfgAnyDirty()); }
     if(t==='landir') loadLanDir();
     if(t==='polls') loadPolls();
     if(t==='broadcast'){ loadBroadcasts(); if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); } }
-    if(t==='clients'){ loadStatus(!cfgAnyDirty()); loadFeatureSwitches(); }
-    if(t==='defaults'){ loadStatus(!cfgAnyDirty()); }
+    if(t==='login'||t==='lobby'){ loadStatus(!cfgAnyDirty()); loadFeatureSwitches(); }
+    if(t==='firstvisit'){ loadStatus(!cfgAnyDirty()); }
+    if(t==='features') loadFeatureSwitches();
     if(t==='identity'||t==='proxy'){ loadStatus(!cfgAnyDirty()); }
     if(t==='deploy'){ loadStatus(false); loadUpdateLog(); autoUpdLoad(); loadDeploys(); }
     if(t==='access'){ loadBlocked(); }
@@ -3731,11 +3747,12 @@
       ['Session grace',(typeof P.graceSec==='number'?P.graceSec:120)+' s','a dropped player keeps the seat','var(--accent)'],
       ['Extra hosts',String((P.allowedHosts||[]).length),(P.allowedPorts||[]).length?'and '+(P.allowedPorts||[]).length+' extra port'+((P.allowedPorts||[]).length===1?'':'s'):'port 7234 only','var(--m-lan)'],
       ['Log',P.logLevel||'default','quiet = least CPU under load','var(--info-text)']]);
+    var CZ=Array.isArray(d.clockZones)?d.clockZones:null;
     if(id) id.innerHTML=T([
-      ['Server name',srvEsc(d.serverName||'PokerTH'),d.serverTagline?srvEsc(d.serverTagline):'tagline: Web Client (default)','var(--accent)',' sm'],
-      ['Lobby clock',srvEsc(d.lobbyClockEff||d.lobbyClockTz||'—'),d.lobbyClockTz?'set here':'default zone','var(--warn-text)',' sm'],
+      ['World clock',CZ?String(CZ.length):'—',CZ?'region'+(CZ.length===1?'':'s')+' around '+srvEsc(d.clockRef||'UTC'):'regions on the Overview','var(--accent)'],
       ['Discord relay',d.discordChatWebhookUrl?'On':'Off',d.discordChatWebhookUrl?'lobby chat forwarded':'no webhook set','var(--m-net)'],
-      ['Search engines',d.seo&&d.seo.enabled?'Indexed':'Hidden',d.seo&&d.seo.enabled?srvEsc(d.seo.publicUrl||''):'noindex, robots.txt blocks crawlers',d.seo&&d.seo.enabled?'var(--ok-text)':'var(--muted)']]);
+      ['Search engines',d.seo&&d.seo.enabled?'Indexed':'Hidden',d.seo&&d.seo.enabled?srvEsc(d.seo.publicUrl||''):'noindex, robots.txt blocks crawlers',d.seo&&d.seo.enabled?'var(--ok-text)':'var(--muted)'],
+      ['AI crawlers',d.seo&&d.seo.aiCrawlers===false?'Refused':'Allowed',d.seo&&d.seo.aiCrawlers===false?'explicit Disallow, no llms.txt':'robots.txt lets them in','var(--warn-text)']]);
   }
   // server
   function fmtUptime(s){ s=s||0; var d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60); return (d?d+'d ':'')+(h?h+'h ':'')+m+'m'; }
@@ -3755,6 +3772,8 @@
       // Only explicit (re)loads sync the editable controls, so auto-refresh never
       // resets the period dropdown or modes toggles while you're using them.
       _infraTiles(d);
+      if(d.loginDefaults && typeof d.loginDefaults==='object') _loginCfg=d.loginDefaults;
+      _pxStatus=d; _pxAllTiles();
       if(syncCfg){
         if(d.resetPeriod) $('period').value=d.resetPeriod;
         if(d.modes){ modesState=Object.assign({offline:true,lan:true,pokerthnet:true},d.modes); renderModes(); }
@@ -5921,12 +5940,6 @@
       .then(function(r){return r.json();}).then(function(d){ if(d.ok){ m.textContent='Saved: '+d.resetPeriod; m.className='msg ok'; } else { m.textContent='Failed: '+(d.error||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   });
-  (function(){ var st=$('saveTheme'); if(!st) return; st.addEventListener('click', function(){
-    var v=$('defTheme')?$('defTheme').value:'', m=$('themeMsg');
-    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({defaultTheme:v,token:tok()})})
-      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ if($('defTheme')&&typeof d.defaultTheme==='string') $('defTheme').value=d.defaultTheme; m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
-      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
-  }); })();
   (function(){ var sb=$('saveLive'); if(!sb) return; sb.addEventListener('click', function(){
     var m=$('lvState');
     var body={liveDefaults:{theme:($('lvTheme')?$('lvTheme').value:''),sound:($('lvSound')?$('lvSound').value:''),chat:($('lvChat')?$('lvChat').value:'')},token:tok()};
@@ -5943,9 +5956,9 @@
   (function(){ var sb=$('saveDefaults'); if(!sb) return; sb.addEventListener('click', function(){
     var DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defBB:'displaybb'};
     var defs={}; Object.keys(DM).forEach(function(id){ var el=$(id); if(el && (el.value==='0'||el.value==='1')) defs[DM[id]]=el.value; });
-    var m=$('defaultsMsg');
-    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({defaults:defs,token:tok()})})
-      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+    var m=$('defaultsMsg'), th=$('defTheme')?$('defTheme').value:'';
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({defaultTheme:th,defaults:defs,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ if($('defTheme')&&typeof d.defaultTheme==='string') $('defTheme').value=d.defaultTheme; m.textContent='Saved \u2014 new visitors get these on their first visit.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   }); })();
   // Host / port / TLS only mean something in "Forced" mode: dim and disable them
@@ -5961,13 +5974,37 @@
   }
   window.syncLanMode=syncLanMode;
   (function(){ var m=$('defLanMode'); if(m) m.addEventListener('change', syncLanMode); syncLanMode(); })();
-  (function(){ var sl=$('saveLogin'); if(!sl) return; sl.addEventListener('click', function(){
-    var L={ mode:($('defMode')?$('defMode').value:''), host:($('defHost')?$('defHost').value.trim():''), proxyUrl:($('defProxyUrl')?$('defProxyUrl').value.trim():''), hideProxy:($('defHideProxy')?$('defHideProxy').value==='1':false),
-            lanMode:($('defLanMode')?$('defLanMode').value:'auto'), lanPort:($('defLanPort')?$('defLanPort').value.trim():''), lanTls:($('defLanTls')?$('defLanTls').value==='1':false) };
-    var m=$('loginMsg');
-    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({loginDefaults:L,token:tok()})})
-      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
-      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  // loginDefaults is one object on the server, written whole on every save, but
+  // its two halves live on two pages: the mode a first visit opens on (Login
+  // screen) and the LAN / dedicated server (Game servers). Each card sends its
+  // own half on top of what is stored, so an unsaved edit on the other page is
+  // never written behind the operator's back.
+  var _loginCfg=null;
+  function loginBody(part){
+    var L=Object.assign({},_loginCfg||{});
+    if(part==='mode'){ L.mode=$('defMode')?$('defMode').value:''; }
+    else {
+      L.host=$('defHost')?$('defHost').value.trim():''; L.proxyUrl=$('defProxyUrl')?$('defProxyUrl').value.trim():'';
+      L.hideProxy=$('defHideProxy')?$('defHideProxy').value==='1':false; L.lanMode=$('defLanMode')?$('defLanMode').value:'auto';
+      L.lanPort=$('defLanPort')?$('defLanPort').value.trim():''; L.lanTls=$('defLanTls')?$('defLanTls').value==='1':false;
+    }
+    return L;
+  }
+  function saveLoginDefaults(part, m, okTxt, done){
+    if(!_loginCfg){ m.textContent='Settings not loaded yet \u2014 open the section again.'; m.className='msg err'; if(done) done(false); return; }
+    var body=loginBody(part);
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({loginDefaults:body,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ _loginCfg=(d.loginDefaults&&typeof d.loginDefaults==='object')?d.loginDefaults:body; m.textContent=okTxt; m.className='msg ok'; _pxAllTiles(); if(done) done(true); } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; if(done) done(false); } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; if(done) done(false); });
+  }
+  (function(){ var sl=$('saveLogin'); if(!sl) return; sl.addEventListener('click', function(){ saveLoginDefaults('lan', $('loginMsg'), 'Saved.'); }); })();
+  // The mode a first visit opens on sits with the entry modes, which apply at
+  // once: so does it. A refused write puts the select back on what is stored.
+  (function(){ var dm=$('defMode'); if(!dm) return; dm.addEventListener('change', function(){
+    var m=$('modesmsg');
+    saveLoginDefaults('mode', m, dm.value?'Saved \u2014 a first visit opens on '+dm.options[dm.selectedIndex].text+'.':'Saved \u2014 a first visit opens on the app default.', function(ok){
+      if(ok) cfgClean(dm); else if(_loginCfg){ dm.value=(['offline','lan-dedi','pokerthnet'].indexOf(_loginCfg.mode)>=0)?_loginCfg.mode:''; cfgClean(dm); }
+    });
   }); })();
   // Le serveur REMPLACE tout le bloc proxyCfg a chaque POST : un envoi partiel
   // effacerait hotes, ports, grace, gap et max clients. Toute ecriture repart
@@ -5999,21 +6036,15 @@
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   }); })();
-  (function(){ var st=$('saveTable'); if(!st) return; st.addEventListener('click', function(){
-    var T={ players:($('tdPlayers')?$('tdPlayers').value.trim():''), blind:($('tdBlind')?$('tdBlind').value.trim():''), stack:($('tdStack')?$('tdStack').value.trim():''), timeout:($('tdTimeout')?$('tdTimeout').value.trim():'') };
-    var m=$('tableMsg');
-    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tableDefaults:T,token:tok()})})
-      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
-      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
-  }); })();
-  (function(){ var b=$('saveTableName'); if(!b) return;
+  (function(){ var st=$('saveTable'); if(!st) return;
     var tog=function(selId,inpId){ var s=$(selId),i=$(inpId); if(s&&i) i.style.display=(s.value==='custom')?'':'none'; };
     [['tnNetMode','tnNetName'],['tnLanMode','tnLanName'],['tnOffMode','tnOffName']].forEach(function(t){ var s=$(t[0]); if(s) s.addEventListener('change', function(){ tog(t[0],t[1]); }); });
-    b.addEventListener('click', function(){
+    st.addEventListener('click', function(){
+      var T={ players:($('tdPlayers')?$('tdPlayers').value.trim():''), blind:($('tdBlind')?$('tdBlind').value.trim():''), stack:($('tdStack')?$('tdStack').value.trim():''), timeout:($('tdTimeout')?$('tdTimeout').value.trim():'') };
       var pick=function(selId,inpId){ var s=$(selId),i=$(inpId); return (s&&s.value==='custom'&&i)?i.value.trim().slice(0,48):''; };
       var TN={ pokerthnet:pick('tnNetMode','tnNetName'), lan:pick('tnLanMode','tnLanName'), offline:pick('tnOffMode','tnOffName') };
-      var m=$('tableNameMsg');
-      api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tableNames:TN,token:tok()})})
+      var m=$('tableMsg');
+      api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tableDefaults:T,tableNames:TN,token:tok()})})
         .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
         .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
     });
@@ -6099,7 +6130,11 @@
       t.addEventListener('click',function(){ toggleMode(k); });
       row.appendChild(t);el.appendChild(row);
     });
-    _pxTiles();
+    // A hidden mode cannot be the one a first visit opens on.
+    var dm=$('defMode'), MK={offline:'offline',lan:'lan-dedi',pokerthnet:'pokerthnet'};
+    if(dm) [].forEach.call(dm.options,function(o){ var k=Object.keys(MK).filter(function(x){ return MK[x]===o.value; })[0]; if(!k) return;
+      var off=modesState[k]===false; o.disabled=off; o.textContent=o.textContent.replace(/ \(hidden\)$/,'')+(off?' (hidden)':''); });
+    _pxAllTiles();
   }
   function toggleMode(k){
     var m=$('modesmsg'), before=Object.assign({},modesState);
@@ -6605,53 +6640,103 @@
     return api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderFeatureSwitches(d); })
       .catch(function(){ var b=$('fsList'); if(b) b.textContent='Network error.'; });
   }
+  // The catalogue's keys, grouped by where a player meets them. A key the
+  // server adds later lands in « Other » until it is placed here.
+  var FS_GROUPS=[
+    ['At the table',['hud_on','show_odds','anim_cards','table_zoom','zoom_follow','browser_zoom']],
+    ['Lobby & community',['lobby_chat','lobby_clock','lobby_type_chat','chat_abbrev','show_community','community_content','community_suggest','polls']],
+    ['App & the Ace',['splash','back_guard','keynav','ace_scenes','ace_dance']],
+    ['Data on the device',['err_report','log_on','stats_track','pdb_auto']]];
+  function fsGroups(list){
+    var placed={}, out=FS_GROUPS.map(function(g){ var items=list.filter(function(f){ return g[1].indexOf(f.key)>=0; }); items.forEach(function(f){ placed[f.key]=1; }); return [g[0],items]; });
+    var rest=list.filter(function(f){ return !placed[f.key]; });
+    if(rest.length) out.push(['Other',rest]);
+    return out.filter(function(g){ return g[1].length; });
+  }
+  var _fsOff=[];
   function renderFeatureSwitches(d){
-    var box=$('fsList'); if(!box) return;
     renderLiveStats(d);
     renderCommunityEvents(d);
-    var list=(d&&d.featureSwitches)||[], off=(d&&d.featureOff)||[];
-    _pxCfg=d; _pxTiles();
-    var fs=$('fsSum'); if(fs) fs.textContent=list.length?(off.length?off.length+' of '+list.length+' off for everyone':'all '+list.length+' features on'):'';
-    if(!list.length){ box.textContent='This server exposes no kill switch.'; return; }
-    // A ticked box is a feature switched OFF: the row says so in red, so a
-    // forgotten switch stands out in a list of twenty-odd.
-    box.innerHTML=''; box.className='fsgrid';
-    list.forEach(function(f){
-      var lbl=document.createElement('label'); lbl.className='fsitem'+(off.indexOf(f.key)>=0?' off':'');
-      var cb=document.createElement('input');
-      cb.type='checkbox'; cb.value=f.key; cb.style.width='auto'; cb.checked=off.indexOf(f.key)>=0;
-      cb.addEventListener('change',function(){ lbl.classList.toggle('off',cb.checked); });
-      lbl.appendChild(cb); lbl.appendChild(document.createTextNode(' '+f.label));
-      box.appendChild(lbl);
+    _pxCfg=d; _fsOff=((d&&d.featureOff)||[]).slice(); _pxAllTiles();
+    fsPaint();
+  }
+  function fsPaint(){
+    var box=$('fsList'); if(!box) return;
+    var list=(_pxCfg&&_pxCfg.featureSwitches)||[];
+    if(!list.length){ box.innerHTML='<div class="empty">This server exposes no feature switch.</div>'; return; }
+    box.innerHTML='';
+    fsGroups(list).forEach(function(g){
+      var nOff=g[1].filter(function(f){ return _fsOff.indexOf(f.key)>=0; }).length;
+      var h=document.createElement('h3'); h.className='subhd'; h.textContent=g[0];
+      var hn=document.createElement('span'); hn.className='headnote'; hn.textContent=nOff?nOff+' of '+g[1].length+' off':'all '+g[1].length+' on'; h.appendChild(hn);
+      var grid=document.createElement('div'); grid.className='fsgrid';
+      g[1].forEach(function(f){
+        var off=_fsOff.indexOf(f.key)>=0;
+        var row=document.createElement('div'); row.className='row ftrow'+(off?' off':''); row.setAttribute('data-k',f.key);
+        var nm=document.createElement('div'); nm.className='nm'; var b=document.createElement('b'); b.textContent=f.label; nm.appendChild(b);
+        if(off){ var sp=document.createElement('span'); sp.textContent='Off for everyone · frozen in Advanced options'; nm.appendChild(sp); }
+        row.appendChild(nm);
+        var t=document.createElement('button'); t.type='button'; t.className='toggle '+(off?'off':'on'); t.textContent=off?'Off':'On';
+        t.setAttribute('aria-pressed',off?'false':'true'); t.setAttribute('aria-label',f.label+(off?': off for everyone':': on'));
+        t.addEventListener('click',function(){ fsToggle(f); });
+        row.appendChild(t); grid.appendChild(row);
+      });
+      box.appendChild(h); box.appendChild(grid);
     });
   }
-  // Tiles: the entry modes offered, the features switched off, the two relays
-  // (live figures on the login screen, community events). Saved values only:
-  // they come from the last /admin/config read and the modes state.
-  var _pxCfg=null;
-  function _pxTiles(){
-    var box=$('pxTiles'); if(!box) return;
+  // One switch, one write: the whole list goes to the server, which keeps only
+  // the keys of its catalogue. A refused or failed write puts the switch back.
+  function fsToggle(f){
+    var m=$('fsMsg'), before=_fsOff.slice(), wasOff=_fsOff.indexOf(f.key)>=0;
+    _fsOff=wasOff?_fsOff.filter(function(k){ return k!==f.key; }):_fsOff.concat([f.key]);
+    fsPaint(); _pxAllTiles();
+    function revert(txt){ _fsOff=before; fsPaint(); _pxAllTiles(); m.textContent=txt; m.className='msg err'; }
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({featureOff:_fsOff,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){
+        if(d&&d.ok){ if(Array.isArray(d.featureOff)){ _fsOff=d.featureOff.slice(); if(_pxCfg) _pxCfg.featureOff=_fsOff.slice(); fsPaint(); _pxAllTiles(); }
+          m.textContent='Saved — '+f.label+(wasOff?' is back on.':' is off for everyone.'); m.className='msg ok'; }
+        else revert('Not saved: '+((d&&d.error)||'error'));
+      }).catch(function(){ revert('Not saved — network error.'); });
+  }
+  // Section tiles. Saved values only: the last /admin/status (_pxStatus), the
+  // last /admin/config (_pxCfg, master only) and the entry modes.
+  var _pxCfg=null, _pxStatus=null;
+  var PX_THEMES={'':'App default',official:'PokerTH Dark',officiallight:'PokerTH Light',casino:'Green Casino'};
+  var PX_MODES={'':'App default',offline:'Training (bots)','lan-dedi':'LAN / private','pokerthnet':'pokerth.net'};
+  function _pxAllTiles(){
+    var T=function(id,a){ var box=$(id); if(box) box.innerHTML=a.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn'+(t[4]||'')+'">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join(''); };
+    var c=_pxCfg||{}, d=_pxStatus||{}, ls=c.liveStats||{}, ce=c.communityEvents||{}, M='master key only';
     var on=MODE_LABELS.filter(function(it){ return modesState[it[0]]!==false; });
-    var c=_pxCfg||{}, list=c.featureSwitches||[], off=c.featureOff||[], ls=c.liveStats||{}, ce=c.communityEvents||{};
-    var names=list.filter(function(f){ return off.indexOf(f.key)>=0; }).map(function(f){ return f.label; });
-    var T=[['Entry modes',on.length+'<small class="ovof"> / 3</small>',on.length===3?'all offered on the login screen':on.map(function(it){ return it[1]; }).join(', '),'var(--accent)'],
-           ['Features off',_pxCfg?String(off.length):'\u2014',_pxCfg?(off.length?srvEsc(names.join(', ')):'every feature is on'):'master key only',off.length?'var(--err-text)':'var(--ok-text)'],
-           ['Live figures',_pxCfg?(ls.on!==false?'On':'Off'):'\u2014',_pxCfg?(ls.on!==false?'read every '+(typeof ls.sec==='number'?ls.sec:60)+' s':'no line on the Internet card'):'master key only','var(--m-net)'],
-           ['Community events',_pxCfg?(ce.on!==false?'On':'Off'):'\u2014',_pxCfg?(ce.on!==false?'read every '+(typeof ce.sec==='number'?ce.sec:300)+' s':'no Events tab'):'master key only','var(--warn-text)']];
-    box.innerHTML=T.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join('');
+    var L=_loginCfg||d.loginDefaults||{}, dm=L.mode||'';
+    var dmHidden=(dm==='offline'&&modesState.offline===false)||(dm==='lan-dedi'&&modesState.lan===false)||(dm==='pokerthnet'&&modesState.pokerthnet===false);
+    T('lgTiles',[
+      ['Entry modes',on.length+'<small class="ovof"> / 3</small>',on.length===3?'all offered on the login screen':srvEsc(on.map(function(it){ return it[1]; }).join(', ')),'var(--accent)'],
+      ['Opens on',_pxStatus?srvEsc(PX_MODES[dm]||dm):'—',dmHidden?'this mode is hidden from the login screen':'on a first visit',dmHidden?'var(--err-text)':'var(--m-lan)',' sm'],
+      ['Server name',_pxStatus?srvEsc(d.serverName||'PokerTH'):'—',d.serverTagline?srvEsc(d.serverTagline):'tagline: Web Client (default)','var(--warn-text)',' sm'],
+      ['Live figures',_pxCfg?(ls.on!==false?'On':'Off'):'—',_pxCfg?(ls.on!==false?'read every '+(typeof ls.sec==='number'?ls.sec:60)+' s':'no line on the Internet card'):M,'var(--m-net)']]);
+    var TD=d.tableDefaults||{}, TN=d.tableNames||{};
+    var tdSet=[['players',' players'],['blind',' blind'],['stack',' chips'],['timeout',' s timer']].filter(function(k){ return TD[k[0]]!=null&&TD[k[0]]!==''; });
+    var tnSet=[['pokerthnet','pokerth.net'],['lan','LAN'],['offline','offline']].filter(function(k){ return typeof TN[k[0]]==='string'&&TN[k[0]].trim(); });
+    T('ltTiles',[
+      ['Table values',_pxStatus?tdSet.length+'<small class="ovof"> / 4</small>':'—',tdSet.length?srvEsc(tdSet.map(function(k){ return TD[k[0]]+k[1]; }).join(' · ')):'app defaults','var(--accent)'],
+      ['Table names',_pxStatus?tnSet.length+'<small class="ovof"> / 3</small>':'—',tnSet.length?'custom: '+tnSet.map(function(k){ return k[1]; }).join(', '):'automatic in every mode','var(--m-lan)'],
+      ['Lobby clock',_pxStatus?srvEsc(d.lobbyClockEff||d.lobbyClockTz||'—'):'—',d.lobbyClockTz?'set here':'default zone','var(--warn-text)',' sm'],
+      ['Events tab',_pxCfg?(ce.on!==false?'On':'Off'):'—',_pxCfg?(ce.on!==false?'read every '+(typeof ce.sec==='number'?ce.sec:300)+' s':'no Events tab'):M,'var(--m-net)']]);
+    var DF=d.defaults||{}, LV=(d.liveDefaults&&typeof d.liveDefaults==='object')?d.liveDefaults:{};
+    var dfSet=[['haptic','Vibration'],['voice','Voice'],['assist','Assistance'],['displaybb','Chips']].filter(function(k){ return DF[k[0]]==='0'||DF[k[0]]==='1'; });
+    var onOff=function(v,on,off){ return v==='1'?on:(v==='0'?off:'app default'); };
+    T('fvTiles',[
+      ['Palette',_pxStatus?srvEsc(PX_THEMES[d.defaultTheme||'']||d.defaultTheme):'—','on a first visit','var(--accent)',' sm'],
+      ['Settings',_pxStatus?dfSet.length+'<small class="ovof"> / 4</small>':'—',dfSet.length?dfSet.map(function(k){ return k[1]+' '+(k[0]==='displaybb'?(DF[k[0]]==='1'?'BB':'¥'):(DF[k[0]]==='1'?'on':'off')); }).join(', '):'app defaults','var(--m-lan)'],
+      ['/live palette',_pxStatus?srvEsc(LV.theme?(PX_THEMES[LV.theme]||LV.theme):'Main client'):'—','spectator view','var(--m-net)',' sm'],
+      ['/live sound',_pxStatus?onOff(LV.sound,'On','Off').replace('app default','App default'):'—',LV.chat==='0'?'lobby chat strip hidden':'lobby chat strip shown','var(--warn-text)',' sm']]);
+    var list=c.featureSwitches||[];
+    T('ftTiles',fsGroups(list).slice(0,4).map(function(g){
+      var offN=g[1].filter(function(f){ return _fsOff.indexOf(f.key)>=0; });
+      return [srvEsc(g[0]),_pxCfg?(g[1].length-offN.length)+'<small class="ovof"> / '+g[1].length+'</small>':'—',_pxCfg?(offN.length?'off: '+srvEsc(offN.map(function(f){ return f.label; }).join(', ')):'all on'):M,offN.length?'var(--err-text)':'var(--ok-text)'];
+    }));
+    if(!list.length){ var fb=$('ftTiles'); if(fb) fb.innerHTML='<div class="empty">'+(_pxCfg?'No feature switch on this server.':M)+'</div>'; }
   }
-  (function(){
-    var sb=$('fsSave'); if(!sb) return;
-    sb.addEventListener('click', function(){
-      var box=$('fsList'), m=$('fsMsg');
-      var offs=[].slice.call(box.querySelectorAll('input:checked')).map(function(c){ return c.value; });
-      api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({featureOff:offs,token:tok()})})
-        .then(function(r){return r.json();}).then(function(d){
-          if(d&&d.ok){ m.textContent=offs.length?('Saved \u2014 '+offs.length+' feature'+(offs.length===1?'':'s')+' off for everyone.'):'Saved \u2014 every feature enabled.'; m.className='msg ok'; renderFeatureSwitches(d); }
-          else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; }
-        }).catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
-    });
-  })();
 
   // -- Game-server figures: header strip, and the preview in the settings card
   // Both read the same GET /api/live the login screen reads, so the dashboard
@@ -7833,7 +7918,7 @@
     var STORE='pth_admin_collapsed', saved=null;
     try{ saved=JSON.parse(localStorage.getItem(STORE)||'null'); }catch(e){}
     var state = saved || {}, firstRun = !saved;
-    var DEFAULT_FOLDED = ['In-game settings','Schedule a restart','Schedule a recurring message','Welcome / rules message','Guest notice (pokerth.net internet mode)','Registered-account notice (pokerth.net internet mode)','LAN / dedicated server notice'];
+    var DEFAULT_FOLDED = ['Schedule a restart','Schedule a recurring message','Welcome / rules message','Guest notice (pokerth.net internet mode)','Registered-account notice (pokerth.net internet mode)','LAN / dedicated server notice'];
     function slug(s){ return (s||'').trim().replace(/[^a-z0-9]+/gi,'_').replace(/^_+|_+$/g,'').toLowerCase().slice(0,48); }
     document.querySelectorAll('.card').forEach(function(card){
       var h2s = card.querySelectorAll('h2');

@@ -44,7 +44,7 @@ const shellJs = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..',
 const GROUPS = {
   overview: ['overview'],
   stats: ['traffic/world', 'traffic/overview', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace', 'traffic/data'], live: ['sessions', 'errors'], community: ['board', 'polls', 'broadcast', 'landir'],
-  content: ['packages', 'music'], players: ['clients', 'defaults'], infra: ['servers', 'proxy', 'identity'],
+  content: ['packages', 'music'], players: ['login', 'lobby', 'firstvisit', 'features'], infra: ['servers', 'proxy', 'identity'],
   ops: ['server', 'deploy', 'access'], security: ['keys'],
 };
 function grp(g) {
@@ -69,7 +69,7 @@ for (const [g, tabs] of Object.entries(GROUPS)) {
     tabs.length === 1 ? 'a one-section group opens its section directly' : 'a group of several unfolds its list');
   all = all.concat(got);
 }
-ok(all.length === 26 && new Set(all).size === 26, 'every one of the twenty-six sections is reachable, once');
+ok(all.length === 28 && new Set(all).size === 28, 'every one of the twenty-eight sections is reachable, once');
 for (const sc of ['packages', 'music', 'broadcast', 'polls', 'leaderboard']) {
   ok(new RegExp('data-scope="' + sc + '"').test(admin), 'scope ' + sc + ' survived the move');
 }
@@ -119,7 +119,7 @@ ok(/gb\.textContent !== txt/.test(shellJs), 'the group badge only writes on chan
 // ── Two columns on a wide screen ──────────────────────────────────────────
 ok(wide !== '', 'the two-column block exists, past 1280px once the menu takes its share');
 ok(/columns:2/.test(wide), 'the busiest panels split into two columns');
-ok(/#panel-broadcast|#panel-defaults/.test(wide), 'the split is opt-in per panel, not global');
+ok(/#panel-broadcast|#panel-login/.test(wide), 'the split is opt-in per panel, not global');
 ok(/break-inside:avoid/.test(wide), 'a card is never cut across the column break');
 ok(/-webkit-column-break-inside:avoid/.test(wide), 'with the WebKit spelling alongside');
 ok(!/#panel-traffic/.test(wide), 'the traffic panel does not ask for two columns');
@@ -177,7 +177,7 @@ const PANELS = {
   'panel-server': 2, 'panel-proxy': 1, 'panel-deploy': 3, 'panel-access': 2,
   // panel-clients: App modes, Feature kill switches, Live server figures,
   // Community events (the fourth since web.254).
-  'panel-clients': 4, 'panel-defaults': 6, 'panel-identity': 5,
+  'panel-login': 3, 'panel-lobby': 3, 'panel-firstvisit': 2, 'panel-features': 1, 'panel-identity': 3,
 };
 for (const [id, count] of Object.entries(PANELS)) {
   const seg = panel(id);
@@ -185,7 +185,7 @@ for (const [id, count] of Object.entries(PANELS)) {
   ok((seg.match(/<div class="card"/g) || []).length === count,
     id + ' carries its ' + count + ' card' + (count === 1 ? '' : 's'));
 }
-for (const t of ['proxy', 'deploy', 'access', 'defaults', 'identity']) {
+for (const t of ['proxy', 'deploy', 'access', 'login', 'lobby', 'firstvisit', 'features', 'identity']) {
   ok(new RegExp('data-t="' + t + '"').test(admin), 'a tab opens ' + t);
   ok(admin.includes('<div id="panel-' + t + '"'), 'and panel-' + t + ' answers to it');
 }
@@ -202,7 +202,8 @@ const openAtLoad = [...admin.matchAll(/<div id="(panel-[a-z]+)"(?! style="displa
 ok(openAtLoad.length === 1, 'exactly one panel is open at load, not ' + openAtLoad.length);
 ok(openAtLoad[0] === 'panel-overview', 'and it is the one the active tab points at');
 ok(/<button type="button" class="tab on" data-t="overview">/.test(admin), 'which is the tab marked active');
-ok(/#panel-defaults[^{]*\{columns:2/.test(admin), 'the five defaults cards use both columns');
+ok(/#panel-login,#panel-lobby,#panel-firstvisit[^{]*\{columns:2/.test(admin), 'Login screen, Lobby & tables and First visit use both columns');
+ok(!/#panel-features[^{]*\{columns:2/.test(admin), 'Features keeps one wide card');
 ok(!/#panel-server,/.test(admin), 'a two-card panel no longer asks for two columns');
 
 // ── Language names ────────────────────────────────────────────────────────
@@ -309,7 +310,7 @@ ok(/\n  \.fld\{display:flex/.test(admin), 'the settings row is a class now');
 ok(/max-width:560px/.test(admin),
   'the control stays near its label instead of drifting to the far edge');
 ok(!/class="defrow" style="display:flex/.test(admin), 'no settings row carries the flex inline any more');
-ok((admin.match(/class="defrow fld/g) || []).length === 63, 'all 63 rows use it');
+ok((admin.match(/class="defrow fld/g) || []).length === 67, 'all 67 rows use it');
 ok(/\.fld\.left\{justify-content:flex-start\}/.test(admin), 'the left-aligned variant survives');
 ok(/\.fld\.gap\{margin:10px 0 5px\}/.test(admin), 'so does the wider-margin variant');
 ok(/\.fld>input\[type=number\]\{width:110px\}/.test(admin), 'short control widths live in the sheet');

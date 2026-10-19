@@ -94,12 +94,12 @@ ok(errors.length === 0, 'the page loads without throwing' + (errors.length ? ': 
 // ── Tabs and panels ───────────────────────────────────────────────────────
 const panels = [...doc.querySelectorAll('[id^="panel-"]')];
 const visible = () => panels.filter((p) => p.style.display !== 'none');
-ok(panels.length === 19, 'all 19 panels are in the document, found ' + panels.length);
+ok(panels.length === 21, 'all 21 panels are in the document, found ' + panels.length);
 ok(visible().length === 1, 'exactly one panel is open at load, not ' + visible().length);
 ok(visible()[0] && visible()[0].id === 'panel-overview', 'and it is panel-overview, where a master key lands');
 
 const tabs = [...doc.querySelectorAll('.tab')];
-ok(tabs.length === 26, 'every section has a tab, found ' + tabs.length);
+ok(tabs.length === 28, 'every section has a tab, found ' + tabs.length);
 for (const t of tabs) {
   const id = 'panel-' + t.dataset.t;
   t.click();

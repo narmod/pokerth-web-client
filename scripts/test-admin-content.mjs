@@ -95,7 +95,7 @@ $('pkgFilter').value = '';
 $('pkgFilter').dispatchEvent(new window.Event('input'));
 // A first-visit default saved from a retired theme package (pkg-<id>) has no
 // option any more: the dropdown says « No default », which is what players get.
-doc.querySelector('.tab[data-t="defaults"]').click();
+doc.querySelector('.tab[data-t="firstvisit"]').click();
 await tick(200);
 ok($('defTheme').value === '' && $('defTheme').selectedIndex === 0 && ![...$('defTheme').options].some((o) => /^pkg-/.test(o.value)), 'a retired pkg- default shows as No default, no pkg- option is offered');
 // Table and deck names come from the pack's XML, where « & » is « &amp; ».

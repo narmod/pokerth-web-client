@@ -75,8 +75,8 @@ ok(/Connected 7 cap 400 bridges/.test(p) && /Session grace 90 s/.test(p) && /Ext
 doc.querySelector('.tab[data-t="identity"]').click();
 await tick(250);
 const t = tiles('idTiles');
-ok(/Server name My <b>club<\/b> tagline: Web Client \(default\)/.test(t) && !doc.querySelector('#idTiles b b'), 'the name tile, as text (' + t + ')');
-ok(/Lobby clock Europe\/Berlin default zone/.test(t) && /Discord relay On lobby chat forwarded/.test(t) && /Search engines Indexed https:\/\/webclient\.example\.org/.test(t), 'clock, Discord and search engines');
+ok(/^World clock /.test(t) && /AI crawlers /.test(t) && !/Server name|Lobby clock/.test(t), 'world clock and AI crawlers; server name and lobby clock moved to Player experience (' + t + ')');
+ok(/Discord relay On lobby chat forwarded/.test(t) && /Search engines Indexed https:\/\/webclient\.example\.org/.test(t), 'Discord and search engines');
 ok(/\[id\^="panel-"\]>\.ovmodes\{column-span:all/.test(html), 'tiles span both columns of a two-column panel');
 ok(/:where\(\.card\) textarea\{/.test(html), 'a bare textarea gets the base field style too');
 ok(errors.length === 0, 'nothing threw' + (errors.length ? ': ' + errors[0] : ''));
