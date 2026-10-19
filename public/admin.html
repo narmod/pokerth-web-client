@@ -786,6 +786,18 @@
   .sfbtns .ghost{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px}
   .sfbtns #logoutBtn{flex:1}
   .sfbtns svg{width:16px;height:16px;display:block}
+  /* A screen under 1000 px tall (a laptop, or a zoomed browser): the side
+     menu tightens so the longest group (Statistics, 7 pages) and the foot fit
+     without a scroll bar (web.193). Taller screens keep the roomier rhythm. */
+  @media(min-width:900px) and (max-height:1000px){
+    .side{gap:10px;padding-top:calc(12px + env(safe-area-inset-top));padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+    .side .gtab{min-height:36px}
+    .side .tab{min-height:30px}
+    .side .subtabs{margin:1px 0 4px}
+    .sfoot{gap:4px;padding-top:8px}
+    .sfbtns{margin-top:2px}
+    .sfbtns .ghost{height:32px}
+  }
   .sclose,.menubtn{display:none;align-items:center;justify-content:center;width:44px;height:44px;flex:none;padding:0;border:0;border-radius:10px;background:transparent;color:var(--navfg);cursor:pointer}
   .sclose svg,.menubtn svg{width:22px;height:22px;display:block}
   .scrim{display:none}

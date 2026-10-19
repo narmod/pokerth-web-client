@@ -77,6 +77,7 @@ ok(/class="gtab on" data-g="overview"/.test(admin), 'the dashboard opens on Over
 ok(/<button type="button" class="tab on" data-t="overview">/.test(admin), 'its one section is the active one');
 ok((admin.match(/class="(?:gtab|tab) on"/g) || []).length === 2, 'and nothing else is marked active');
 ok(/\.sgrp\.one \.gcar,\.sgrp\.one \.subtabs\{display:none!important\}/.test(admin), 'a one-section group shows no list to unfold');
+ok(/@media\(min-width:900px\) and \(max-height:1000px\)\{\n    \.side\{gap:10px;[^}]*\}\n    \.side \.gtab\{min-height:36px\}\n    \.side \.tab\{min-height:30px\}/.test(admin), 'on a short screen the menu tightens so Statistics fits without a scroll bar (web.193)');
 ok(/function setGroup\(g, pick\)/.test(admin), 'setGroup exists');
 ok(/\.gtab'\)\.forEach/.test(admin), 'group buttons are wired');
 ok(/bar\.classList\.contains\('subtabs'\)\) setGroup\(bar\.dataset\.g, false\)/.test(admin),

@@ -51,6 +51,10 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **No scroll bar in the side menu on a laptop screen** (`web.193`) — with Statistics open (7 pages) and the « My
+  visits » row added to the foot in `web.184`, the menu outgrew a ~900 px tall window (or a zoomed browser) and
+  scrolled, the last group half hidden. Under 1000 px of height the menu tightens (groups 36 px, pages 30 px,
+  smaller gaps and foot); it now fits down to about 770 px. Taller screens keep the roomier rhythm.
 - **Database: the « Enabled » box matches the mirror** (`web.191`) — with no host and database set, the box read
   ticked (`/admin/db` reported `enabled: true` for any file without `enabled: false`) while the status said Off,
   since `resolveDbCfg()` needs both to mirror. The box now says what the server does (`_dbEnabledBox`); « Set by »
