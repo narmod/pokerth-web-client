@@ -1922,6 +1922,7 @@ var _SEO_PAGE_CSS = 'body{margin:0;background:#0d1117;color:#d8dde4;font:16px/1.
   '.ltr{direction:ltr;unicode-bidi:isolate;white-space:nowrap}' +
   '.rd{color:#e5837f}' +
   'ol.hr{padding-left:1.3em}ol.hr>li{margin:.9em 0}' +
+  '.updated{color:#9aa4b0;font-size:.9em;margin:0 0 1.2em}' +
   '.play{display:inline-block;margin-top:26px;padding:10px 22px;background:#1f6feb;color:#fff;border-radius:6px;font-weight:600}';
 
 // Right-to-left scripts. /rules has been served in Arabic, Hebrew, Persian and
@@ -6776,6 +6777,39 @@ function seoFaqPage(res, method, lang) {
     (tr && tr.title) || 'FAQ \u2014 PokerTH Web Client',
     (tr && tr.desc) || 'Frequently asked questions about the PokerTH Web Client: free poker with no ads and no download, playing as a guest or without any account, inviting friends with a link, tournaments, mobile, offline mode, languages and privacy.',
     '/faq', body, ld, lang, langs);
+}
+
+// ── /privacy ──────────────────────────────────────────────────────
+// Served in the same shell as /faq and /rules (nav, canonical, Open Graph,
+// breadcrumbs, call to action) instead of a page of its own. The text still
+// lives in public/privacy.html: the in-app overlay and the tests read it from
+// there, so it stays the single place to edit. Only the content between the
+// "Last updated" line and the back link is lifted; the file's own header,
+// styles and back link are replaced by the shared ones. English only, like
+// the file it comes from.
+function _seoPrivacyBody(html) {
+  html = String(html || '');
+  var s = html.indexOf('<p class="updated">'), e = html.indexOf('<a class="back"');
+  var inner;
+  if (s !== -1 && e > s) inner = html.slice(s, e);
+  else { var m = html.match(/<body[^>]*>([\s\S]*)<\/body>/i); inner = m ? m[1] : ''; }
+  // "Last updated: October 12, 2026" -> 2026-10-12 for dateModified.
+  var mod = '', d = html.match(/Last updated:\s*([A-Z][a-z]+ \d{1,2}, \d{4})/);
+  if (d) { var t = Date.parse(d[1] + ' UTC'); if (!isNaN(t)) mod = new Date(t).toISOString().slice(0, 10); }
+  return { body: '<h1>PokerTH Web Client — Privacy policy</h1>' + inner.trim(), modified: mod };
+}
+
+function seoPrivacyPage(res, method) {
+  var html;
+  try { html = fs.readFileSync(path.join(PUBLIC_DIR, 'privacy.html'), 'utf8'); }
+  catch (e) { res.writeHead(404); res.end('privacy.html missing'); return; }
+  var pv = _seoPrivacyBody(html);
+  var title = 'Privacy — PokerTH Web Client';
+  var ld = { '@context': 'https://schema.org', '@type': 'WebPage', name: title, inLanguage: 'en' };
+  if (pv.modified) ld.dateModified = pv.modified;
+  seoContentPage(res, method, title,
+    'Privacy policy of the PokerTH Web Client — what little data is processed, and what never leaves your browser.',
+    '/privacy', pv.body, ld, '', ['en']);
 }
 
 // ── /hand-rankings, /how-to-play, /glossary ───────────────────────
@@ -13518,24 +13552,7 @@ const httpServer = http.createServer((req, res) => {
 
   // Friendly path for the pack-creator Studio, mirroring /admin -> admin.html.
   if (reqPathOnly === '/privacy' || reqPathOnly === '/privacy.html') {
-    // Same serve-time SEO policy as the client page: the file on disk stays
-    // neutral, the <!--__SEO_META__--> placeholder is resolved per request
-    // (noindex when the admin toggle is off, description + canonical when on).
-    // The page is tiny and rarely hit, so no cache/compression is needed here.
-    const p = path.join(PUBLIC_DIR, 'privacy.html');
-    let phtml;
-    try { phtml = fs.readFileSync(p, 'utf8'); } catch (e) { res.writeHead(404); res.end('privacy.html missing'); return; }
-    var _pOn = seoEnabled(), _pBase = _pOn ? seoPublicUrl() : '';
-    var _pMeta = _pOn
-      ? ('<meta name="description" content="Privacy policy of the PokerTH Web Client \u2014 what little data is processed, and what never leaves your browser.">' +
-         (_pBase ? '\n<link rel="canonical" href="' + _pBase + '/privacy">' : ''))
-      : '<meta name="robots" content="noindex, nofollow">';
-    phtml = phtml.replace('<!--__SEO_META__-->', _pMeta);
-    const pbuf = Buffer.from(phtml, 'utf8');
-    res.writeHead(200, Object.assign({ 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'Content-Length': pbuf.length }, SECURITY_HEADERS));
-    if (req.method === 'HEAD') { res.end(); return; }
-    res.end(pbuf);
-    return;
+    return seoPrivacyPage(res, req.method);
   }
   if (reqPathOnly === '/studio' || reqPathOnly === '/studio.html') {
     const p = path.join(PUBLIC_DIR, 'studio.html');

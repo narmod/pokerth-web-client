@@ -30,6 +30,13 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **`/privacy` in the same page shell as `/faq` and `/rules`** (`web.152`) — the privacy policy was sent as
+  `public/privacy.html` with its own header and colours, no site nav, no Open Graph card and no breadcrumbs. It is now
+  rendered by `seoContentPage()` like the other content pages: shared nav and styles, canonical, Open Graph /
+  Twitter tags, `BreadcrumbList` and a `WebPage` JSON-LD with `dateModified` taken from the « Last updated » line,
+  and the « Play » call to action; still `noindex` while indexing is off in Admin. The text itself still lives in
+  `public/privacy.html` (only the part between « Last updated » and the back link is lifted), so the in-app overlay,
+  the tests and the policy stay edited in one place. `scripts/test-seo-privacy.mjs` guards the extraction.
 - **Admin › Visitors: « Where visitors come from » in three views** (`web.148`) — the flat list of sources is now read
   three ways from the same period figures (`ref-stats.js` period(), no proxy change): **Channels** (visits, new, new
   rate; a stacked share bar; sources folded into channels — direct, AI assistants, PokerTH.net, search engines,
