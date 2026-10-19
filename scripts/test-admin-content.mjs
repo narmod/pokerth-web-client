@@ -97,7 +97,7 @@ $('pkgFilter').dispatchEvent(new window.Event('input'));
 // option any more: the dropdown says « No default », which is what players get.
 doc.querySelector('.tab[data-t="firstvisit"]').click();
 await tick(200);
-ok($('defTheme').value === '' && $('defTheme').selectedIndex === 0 && ![...$('defTheme').options].some((o) => /^pkg-/.test(o.value)), 'a retired pkg- default shows as No default, no pkg- option is offered');
+ok(['defPalette', 'defTable', 'defDeck', 'defSeat'].every((id) => $(id).value === '@') && ![...$('defTable').options, ...$('defDeck').options].some((o) => /^pkg-/.test(o.value)), 'a retired pkg- default shows as app default, no pkg- option is offered');
 // Table and deck names come from the pack's XML, where « & » is « &amp; ».
 for (const f of ['tables-manifest.mjs', 'decks-manifest.mjs']) {
   const src = readFileSync(join(root, 'scripts', f), 'utf8');

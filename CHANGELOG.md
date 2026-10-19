@@ -30,6 +30,18 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **First-visit look, axis by axis** (`web.166`) — Player experience › First visit replaces the style preset (PokerTH
+  Dark / Light / Green Casino) by one setting per axis: palette, table style, card deck, seats (the built-in ones
+  and the installed packs, a hidden pack not offered), interface size and high contrast, plus sound with the other
+  settings. New config key `lookDefaults` (`proxy.js` checks each value; in `ADMIN_CONFIG_KEYS`, served by
+  `/app-config` and the admin reads); `sound` and `contrast` join the on/off `defaults`. A preset saved before is
+  shown converted (PokerTH Dark → dark palette + PokerTH table + Royal Classic) with Save marked; saving clears
+  `defaultTheme`. Client: the `<head>` notes which axes this browser never set (`window._pthLookFresh`, read before
+  anything writes one), `theme.mjs` `applyFirstVisit()` waits for the gallery manifests then sets only those axes,
+  skipping an id the server no longer offers; size, contrast and sound are written only when never set.
+  **Fixed** on the way: the preset default itself never applied — `theme.mjs` writes every axis as it boots, so
+  `_applyDefaultTheme` always found a stored key; it now reads the same `<head>` flags. The /live « Style » keeps
+  its presets and « Same as the main client » now follows the per-axis look. New `test-look-defaults-browser.mjs`.
 - **Admin: idle logout chosen per device, Sessions paused in a hidden tab, two dead defaults dropped** (`web.165`) —
   the side menu has « Log out when idle »: after 10 min (default), after 1 h or never, remembered on that device
   (`pth_admin_idle`), for a screen left open to watch the server; the logout message names the delay. Live ›

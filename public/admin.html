@@ -1676,13 +1676,18 @@
       <section class="ovmodes" id="fvTiles" aria-label="What a new visitor gets"><div class="empty">Loading…</div></section>
       <div class="card">
         <h2>First-visit preferences</h2>
-        <p class="muted">What a visitor gets before choosing anything. Applied once, on the first visit: a setting the player has already changed is never touched.</p>
-        <div class="defrow fld"><span>Palette</span><select id="defTheme">
-          <option value="">App default</option>
-          <option value="official">PokerTH Dark</option>
-          <option value="officiallight">PokerTH Light</option>
-          <option value="casino">Green Casino</option>
-        </select></div>
+        <p class="muted">What a visitor gets before choosing anything. Each setting is applied once, on the first visit, and only if the player has not set it already.</p>
+        <div id="fvConv" class="msg" style="display:none"></div>
+        <h3 class="subhd">Look</h3>
+        <div class="defrow fld"><span>Palette</span><select id="defPalette"><option value="@">App default (follows the device)</option><option value="auto">Follows the device</option><option value="pokerth">PokerTH Dark</option><option value="pokerth-light">PokerTH Light</option></select></div>
+        <div class="defrow fld"><span>Table style</span><select id="defTable"><option value="@">App default (PokerTH)</option></select></div>
+        <div class="defrow fld"><span>Card deck</span><select id="defDeck"><option value="@">App default (Royal Classic)</option></select></div>
+        <div class="defrow fld"><span>Seats</span><select id="defSeat"><option value="@">App default (PokerTH)</option></select></div>
+        <div class="defrow fld"><span>Interface size</span><select id="defSize"><option value="@">App default (Standard)</option><option value="standard">Standard</option><option value="large">Large</option><option value="extra-large">Extra large</option></select></div>
+        <div class="defrow fld"><span>High contrast</span><select id="defContrast"><option value="">App default (off)</option><option value="1">On</option><option value="0">Off</option></select></div>
+        <p class="muted hint">Tables, decks and seats: the built-in ones and the packs installed under Content › Packages (a hidden pack is not offered).</p>
+        <h3 class="subhd">Settings</h3>
+        <div class="defrow fld"><span>Sound</span><select id="defSound"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
         <div class="defrow fld"><span>Vibration</span><select id="defHaptic"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
         <div class="defrow fld"><span>Voice announce</span><select id="defVoice"><option value="">App default (off)</option><option value="1">On</option><option value="0">Off</option></select></div>
         <div class="defrow fld"><span>Hand-strength assistance</span><select id="defAssist"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
@@ -1693,7 +1698,7 @@
       <div class="card">
         <h2>Spectator view <span class="muted" style="font-weight:normal">(/live)</span></h2>
         <p class="muted">The embedded spectator page has no Advanced options for a visitor to fall back on, so it gets its own defaults. A visitor who already chose keeps their choice — except the chat strip, which is an operator decision.</p>
-        <div class="defrow fld"><span>Palette</span><select id="lvTheme">
+        <div class="defrow fld"><span>Style</span><select id="lvTheme">
           <option value="">Same as the main client</option>
           <option value="official">PokerTH Dark</option>
           <option value="officiallight">PokerTH Light</option>
@@ -3413,7 +3418,7 @@
   // A tile picks its kind; the same tile clicked again lets go (back to All).
   if($('pkTiles')) $('pkTiles').addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-pk]'); if(!b) return; var k=b.getAttribute('data-pk'); _pkSelect(_pkKind===k?'all':k); });
   _pkImportKind(_pkKind);
-  function renderPkgs(d){ lastPkgs={tables:d.tables||[],decks:d.decks||[],seats:d.seats||[]}; drawPkgs(); }
+  function renderPkgs(d){ lastPkgs={tables:d.tables||[],decks:d.decks||[],seats:d.seats||[]}; drawPkgs(); try{ fvFillLists(); }catch(e){} }
   if($('pkgFilter')) $('pkgFilter').addEventListener('input', drawPkgs);
   function refresh(){ api('/admin/pkg-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if(d.ok)renderPkgs(d); }).catch(function(){ say('Could not refresh the package list \u2014 network error.','err'); }); }
 
@@ -3841,8 +3846,8 @@
       if(syncCfg){
         if(d.resetPeriod) $('period').value=d.resetPeriod;
         if(d.modes){ modesState=Object.assign({offline:true,lan:true,pokerthnet:true},d.modes); renderModes(); }
-        if($('defTheme') && typeof d.defaultTheme==='string'){ $('defTheme').value=d.defaultTheme; if($('defTheme').value!==d.defaultTheme) $('defTheme').value=''; } applyLiveDefaultsUI(d.liveDefaults);
-        if(d.defaults && typeof d.defaults==='object'){ var _DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defBB:'displaybb'}; Object.keys(_DM).forEach(function(id){ var el=$(id); if(el){ var dv=d.defaults[_DM[id]]; el.value=(dv==='0'||dv==='1')?dv:''; } }); }
+        fvLoad(d); applyLiveDefaultsUI(d.liveDefaults);
+        if(d.defaults && typeof d.defaults==='object'){ var _DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defBB:'displaybb',defSound:'sound',defContrast:'contrast'}; Object.keys(_DM).forEach(function(id){ var el=$(id); if(el){ var dv=d.defaults[_DM[id]]; el.value=(dv==='0'||dv==='1')?dv:''; } }); }
         if(d.loginDefaults && typeof d.loginDefaults==='object'){ var L=d.loginDefaults; if($('defMode'))$('defMode').value=(['offline','lan-dedi','pokerthnet'].indexOf(L.mode)>=0)?L.mode:''; if($('defLanMode'))$('defLanMode').value=(L.lanMode==='forced')?'forced':'auto'; if($('defHost'))$('defHost').value=L.host||''; if($('defLanPort'))$('defLanPort').value=(L.lanPort>0)?String(L.lanPort):''; if($('defLanTls'))$('defLanTls').value=(L.lanTls?'1':'0'); if(window.syncLanMode)window.syncLanMode(); if($('defProxyUrl'))$('defProxyUrl').value=L.proxyUrl||''; if($('defHideProxy'))$('defHideProxy').value=(L.hideProxy?'1':'0'); }
         if(d.tableDefaults && typeof d.tableDefaults==='object'){ var T=d.tableDefaults; var _tm={tdPlayers:'players',tdBlind:'blind',tdStack:'stack',tdTimeout:'timeout'}; Object.keys(_tm).forEach(function(id){ var el=$(id); if(el){ var v=T[_tm[id]]; el.value=(v==null)?'':v; } }); }
         if(d.tableNames && typeof d.tableNames==='object'){ var TN=d.tableNames; [['tnNetMode','tnNetName','pokerthnet'],['tnLanMode','tnLanName','lan'],['tnOffMode','tnOffName','offline']].forEach(function(t){ var sel=$(t[0]), inp=$(t[1]), v=TN[t[2]], has=(typeof v==='string'&&v.trim()); if(sel) sel.value=has?'custom':'auto'; if(inp){ inp.value=has?v:''; inp.style.display=has?'':'none'; } }); }
@@ -6017,12 +6022,63 @@
     if($('lvSound')) $('lvSound').value=(d.sound==='0'||d.sound==='1')?d.sound:'';
     if($('lvChat'))  $('lvChat').value =(d.chat==='0')?'0':'';
   }
+  // ── First visit › Look ─────────────────────────────────────────────────
+  // One value per axis, applied by the client on a first visit (theme.mjs
+  // applyFirstVisit). The built-in decks and seats mirror theme.mjs (DECKS,
+  // SEATS; scripts/test-admin-players.mjs checks they stay in step); tables,
+  // decks and seats installed as packages come from /admin/pkg-list. « @ » is
+  // « app default »: the key is left out. Table '' is the built-in PokerTH table.
+  var FV_DECKS=[['pokerth-new','PokerTH Royal Classic'],['default','PokerTH default QML card deck'],['pokerth','PokerTH'],['pokerth-1-0','PokerTH 1.0'],['casino-vert','Green Casino']];
+  var FV_SEATS=[['pokerth','PokerTH']];
+  var FV_TABLE_SKIP={'pokerth-live':1,'pokerth-official':1,'pokerth-official-fs':1,'felt-green':1};
+  // The former style presets, converted axis by axis (theme.mjs PRESETS).
+  var FV_PRESETS={official:['PokerTH Dark',{palette:'pokerth',table:'',deck:'pokerth-new'}],officiallight:['PokerTH Light',{palette:'pokerth-light',table:'',deck:'pokerth-new'}],casino:['Green Casino',{table:'casino',deck:'casino-vert'}]};
+  var _fvLook={};
+  function fvFillOne(id, builtins, pkgs, cur){
+    var el=$(id); if(!el) return;
+    var keep=(el.dataset.v!==undefined)?el.dataset.v:'@', seen={'@':1};
+    while(el.options.length>1) el.remove(1);
+    var add=function(v,t){ if(seen[v]) return; seen[v]=1; var o=document.createElement('option'); o.value=v; o.textContent=t; el.appendChild(o); };
+    builtins.forEach(function(x){ add(x[0],x[1]); });
+    (pkgs||[]).forEach(function(p){ if(p&&p.id&&!p.disabled) add(String(p.id),p.name||String(p.id)); });
+    if(cur!=null && !seen[cur]) add(cur,(cur||'PokerTH')+' (not offered to players)');
+    el.value=keep; if(el.value!==keep) el.value='@';
+  }
+  function fvFillLists(){
+    var P=(typeof lastPkgs==='object'&&lastPkgs)||{};
+    var tables=(P.tables||[]).filter(function(t){ return t&&!FV_TABLE_SKIP[t.id]; });
+    fvFillOne('defTable',[['','PokerTH default QML table style']],tables,_fvLook.table);
+    fvFillOne('defDeck',FV_DECKS,P.decks,_fvLook.deck);
+    fvFillOne('defSeat',FV_SEATS,P.seats,_fvLook.seat);
+  }
+  function fvSet(id, v){ var el=$(id); if(!el) return; el.dataset.v=v; el.value=v; if(el.value!==v){ fvFillLists(); el.value=v; } }
+  // A preset saved before web.166 shows as its axes, to be saved once.
+  function fvLoad(d){
+    var L=(d&&d.lookDefaults&&typeof d.lookDefaults==='object')?d.lookDefaults:{}, conv=$('fvConv'), pr=null;
+    if(!Object.keys(L).length && d && typeof d.defaultTheme==='string' && FV_PRESETS[d.defaultTheme]){ pr=FV_PRESETS[d.defaultTheme]; L=Object.assign({},pr[1]); }
+    _fvLook=L; fvFillLists();
+    fvSet('defPalette', L.palette!==undefined?L.palette:'@');
+    fvSet('defTable', L.table!==undefined?L.table:'@');
+    fvSet('defDeck', L.deck!==undefined?L.deck:'@');
+    fvSet('defSeat', L.seat!==undefined?L.seat:'@');
+    fvSet('defSize', L.size!==undefined?L.size:'@');
+    if(conv){ if(pr){ conv.textContent='Converted from the former style preset « '+pr[0]+' » — press Save to keep it as these settings.'; conv.className='msg'; conv.style.display=''; } else { conv.textContent=''; conv.style.display='none'; } }
+    var card=$('defPalette')&&$('defPalette').closest('.card');
+    if(pr && card && _dirtyCards.indexOf(card)<0){ _dirtyCards.push(card); card.classList.add('unsaved'); }
+  }
+  ['defPalette','defTable','defDeck','defSeat','defSize'].forEach(function(id){ var el=$(id); if(el) el.addEventListener('change',function(){ el.dataset.v=el.value; }); });
+  function fvLookBody(){
+    var L={}, M={defPalette:'palette',defTable:'table',defDeck:'deck',defSeat:'seat',defSize:'size'};
+    Object.keys(M).forEach(function(id){ var el=$(id); if(el && el.value!=='@') L[M[id]]=el.value; });
+    return L;
+  }
   (function(){ var sb=$('saveDefaults'); if(!sb) return; sb.addEventListener('click', function(){
-    var DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defBB:'displaybb'};
+    var DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defBB:'displaybb',defSound:'sound',defContrast:'contrast'};
     var defs={}; Object.keys(DM).forEach(function(id){ var el=$(id); if(el && (el.value==='0'||el.value==='1')) defs[DM[id]]=el.value; });
-    var m=$('defaultsMsg'), th=$('defTheme')?$('defTheme').value:'';
-    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({defaultTheme:th,defaults:defs,token:tok()})})
-      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ if($('defTheme')&&typeof d.defaultTheme==='string') $('defTheme').value=d.defaultTheme; m.textContent='Saved \u2014 new visitors get these on their first visit.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+    var m=$('defaultsMsg'), L=fvLookBody();
+    // The look is saved axis by axis; the former preset is cleared with it.
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({defaultTheme:'',lookDefaults:L,defaults:defs,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ var c=$('fvConv'); if(c){ c.textContent=''; c.style.display='none'; } if(d.lookDefaults) _fvLook=d.lookDefaults; m.textContent='Saved — new visitors get these on their first visit.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   }); })();
   // Host / port / TLS only mean something in "Forced" mode: dim and disable them
@@ -6822,12 +6878,16 @@
       ['Lobby clock',_pxStatus?srvEsc(d.lobbyClockEff||d.lobbyClockTz||'—'):'—',d.lobbyClockTz?'set here':'default zone','var(--warn-text)',' sm'],
       ['Events tab',_pxCfg?(ce.on!==false?'On':'Off'):'—',_pxCfg?(ce.on!==false?'read every '+(typeof ce.sec==='number'?ce.sec:300)+' s':'no Events tab'):M,'var(--m-net)']]);
     var DF=d.defaults||{}, LV=(d.liveDefaults&&typeof d.liveDefaults==='object')?d.liveDefaults:{};
-    var dfSet=[['haptic','Vibration'],['voice','Voice'],['assist','Assistance'],['displaybb','Chips']].filter(function(k){ return DF[k[0]]==='0'||DF[k[0]]==='1'; });
+    var LK=(d.lookDefaults&&typeof d.lookDefaults==='object'&&Object.keys(d.lookDefaults).length)?d.lookDefaults:((FV_PRESETS[d.defaultTheme]||[])[1]||{});
+    var PAL={auto:'Device',pokerth:'Dark','pokerth-light':'Light'}, SZ={standard:'Standard',large:'Large','extra-large':'Extra large'};
+    var _lp=(typeof lastPkgs==='object'&&lastPkgs)||{}, nm=function(builtins,pk,v){ var i; for(i=0;i<builtins.length;i++) if(builtins[i][0]===v) return builtins[i][1]; for(i=0;i<(pk||[]).length;i++) if(pk[i]&&pk[i].id===v) return (pk[i].name||v).replace(/ QML (table style|card deck)$/,''); return v; };
+    var lkSet=[['palette',function(v){ return PAL[v]||v; }],['table',function(v){ return v===''?'PokerTH table':nm([],_lp.tables,v); }],['deck',function(v){ return nm(FV_DECKS,_lp.decks,v); }],['seat',function(v){ return nm(FV_SEATS,_lp.seats,v); }],['size',function(v){ return SZ[v]||v; }]].filter(function(k){ return LK[k[0]]!==undefined; });
+    var dfSet=[['haptic','Vibration'],['voice','Voice'],['assist','Assistance'],['displaybb','Chips'],['sound','Sound'],['contrast','Contrast']].filter(function(k){ return DF[k[0]]==='0'||DF[k[0]]==='1'; });
     var onOff=function(v,on,off){ return v==='1'?on:(v==='0'?off:'app default'); };
     T('fvTiles',[
-      ['Palette',_pxStatus?srvEsc(PX_THEMES[d.defaultTheme||'']||d.defaultTheme):'—','on a first visit','var(--accent)',' sm'],
-      ['Settings',_pxStatus?dfSet.length+'<small class="ovof"> / 4</small>':'—',dfSet.length?dfSet.map(function(k){ return k[1]+' '+(k[0]==='displaybb'?(DF[k[0]]==='1'?'BB':'¥'):(DF[k[0]]==='1'?'on':'off')); }).join(', '):'app defaults','var(--m-lan)'],
-      ['/live palette',_pxStatus?srvEsc(LV.theme?(PX_THEMES[LV.theme]||LV.theme):'Main client'):'—','spectator view','var(--m-net)',' sm'],
+      ['Look',_pxStatus?lkSet.length+'<small class="ovof"> / 5</small>':'—',lkSet.length?srvEsc(lkSet.map(function(k){ return k[1](LK[k[0]]); }).join(' · ')):'app defaults','var(--accent)'],
+      ['Settings',_pxStatus?dfSet.length+'<small class="ovof"> / 6</small>':'—',dfSet.length?dfSet.map(function(k){ return k[1]+' '+(k[0]==='displaybb'?(DF[k[0]]==='1'?'BB':'¥'):(DF[k[0]]==='1'?'on':'off')); }).join(', '):'app defaults','var(--m-lan)'],
+      ['/live style',_pxStatus?srvEsc(LV.theme?(PX_THEMES[LV.theme]||LV.theme):'Main client'):'—','spectator view','var(--m-net)',' sm'],
       ['/live sound',_pxStatus?onOff(LV.sound,'On','Off').replace('app default','App default'):'—',LV.chat==='0'?'lobby chat strip hidden':'lobby chat strip shown','var(--warn-text)',' sm']]);
     var list=c.featureSwitches||[];
     T('ftTiles',fsGroups(list).slice(0,4).map(function(g){

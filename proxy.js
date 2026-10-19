@@ -351,7 +351,7 @@ function featureOffList() {
 // writes a key that is not listed.
 const ADMIN_CONFIG_KEYS = Object.freeze([
   'resetPeriod', 'modes', 'welcome', 'guestNotice', 'authNotice', 'lanNotice', 'defaultTheme', 'liveDefaults',
-  'defaults', 'loginDefaults', 'proxyCfg', 'tableDefaults', 'tableNames', 'serverName', 'serverTagline',
+  'defaults', 'lookDefaults', 'loginDefaults', 'proxyCfg', 'tableDefaults', 'tableNames', 'serverName', 'serverTagline',
   'clockZones', 'clockRef', 'discordChatWebhookUrl', 'showLoginTitle', 'lobbyClockTz', 'featureOff', 'liveStats',
   'communityEvents', 'bannedIps', 'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
   'musicEnabled', 'musicHidden', 'musicOrder', 'musicVotesPublic', 'seo', 'servers', 'activeServerId',
@@ -10677,7 +10677,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     // of the first check. Background, at the auto-update pace; never a first
     // check of its own.
     if (GIT_UPDATABLE && _upd.checkedAt && !_upd.checking && Date.now() - _upd.checkedAt >= AUTO_UPDATE_POLL_MS) updateCheck();
-    return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, liveSessions: liveSessions, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', seo: _seoAdmin(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null), autoUpdate: _autoUpdateCfg(), autoArmed: !!(_autoArmed && _restartAt > Date.now()), update: _updPublic(), now: Date.now(), tz: _serverTz(), clockZones: _clockZones(), clockRef: _clockRef(), lobbyClockTz: (_adminConfig.lobbyClockTz || ''), lobbyClockEff: _lobbyClockTz(), lobbyClockEnv: String(process.env.SERVER_TZ || '').trim() });
+    return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, liveSessions: liveSessions, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, lookDefaults: _adminConfig.lookDefaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', seo: _seoAdmin(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null), autoUpdate: _autoUpdateCfg(), autoArmed: !!(_autoArmed && _restartAt > Date.now()), update: _updPublic(), now: Date.now(), tz: _serverTz(), clockZones: _clockZones(), clockRef: _clockRef(), lobbyClockTz: (_adminConfig.lobbyClockTz || ''), lobbyClockEff: _lobbyClockTz(), lobbyClockEnv: String(process.env.SERVER_TZ || '').trim() });
   }
   // ── Horloge du bandeau (toutes clés) ───────────────────────────────────
   // Réponse minuscule, relue toutes les 5 min : elle sert uniquement à recaler
@@ -10866,7 +10866,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/config') {
     if (req.method === 'GET') {
       if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), lanNotice: _lanNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), liveStats: _liveStatsCfg(), communityEvents: _eventsCfg(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
+      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), lanNotice: _lanNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, lookDefaults: _adminConfig.lookDefaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), liveStats: _liveStatsCfg(), communityEvents: _eventsCfg(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
     }
     if (req.method === 'POST') {
       return readJsonBody(req, function (d) {
@@ -10974,10 +10974,25 @@ function handleAdmin(req, res, reqPathOnly, query) {
             chat:  (_ld.chat === '0' || _ld.chat === '1') ? _ld.chat : ''
           };
         }
+        if (d.lookDefaults && typeof d.lookDefaults === 'object') {
+          // First-visit look, one value per axis; a key left out is « app
+          // default ». Table '' is the built-in PokerTH table (a real choice,
+          // not an absence). Pack ids are checked again by the client, which
+          // skips one this server no longer offers.
+          var lk = d.lookDefaults, lo = {};
+          var _lkId = function (v) { return typeof v === 'string' && /^[A-Za-z0-9_-]{0,64}$/.test(v); };
+          if (['auto', 'pokerth', 'pokerth-light'].indexOf(lk.palette) >= 0) lo.palette = lk.palette;
+          if (_lkId(lk.table)) lo.table = lk.table;
+          if (_lkId(lk.deck) && lk.deck) lo.deck = lk.deck;
+          if (_lkId(lk.seat) && lk.seat) lo.seat = lk.seat;
+          if (['standard', 'large', 'extra-large'].indexOf(lk.size) >= 0) lo.size = lk.size;
+          _adminConfig.lookDefaults = lo;
+        }
         if (d.defaults && typeof d.defaults === 'object') {
-          // The four the client applies on a first visit (_applyDefaultSettings in
-          // pokerth.js); autobtn and quickbet were accepted here but never applied.
-          var DEF_KEYS = ['haptic', 'voice', 'assist', 'displaybb'];
+          // The on/off settings the client applies on a first visit
+          // (_applyDefaultSettings in pokerth.js); autobtn and quickbet were
+          // accepted here but never applied.
+          var DEF_KEYS = ['haptic', 'voice', 'assist', 'displaybb', 'sound', 'contrast'];
           var dout = {};
           DEF_KEYS.forEach(function (k) { var v = d.defaults[k]; if (v === '0' || v === '1') dout[k] = v; });
           _adminConfig.defaults = dout;
@@ -11130,7 +11145,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
           }
         }
         saveAdminConfig();
-        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), lanNotice: _lanNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), liveStats: _liveStatsCfg(), communityEvents: _eventsCfg(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
+        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), lanNotice: _lanNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, lookDefaults: _adminConfig.lookDefaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), liveStats: _liveStatsCfg(), communityEvents: _eventsCfg(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
       }, 2 * 1024 * 1024);
     }
     res.writeHead(405); res.end('Method not allowed'); return;
@@ -13992,7 +14007,7 @@ const httpServer = http.createServer((req, res) => {
 
   if (reqPathOnly === '/app-config') {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: true, modes: appModes(), lanDirectory: LAN_DIR.publicView(), welcome: _welcomePublic(), guestNotice: _guestNoticePublic(), authNotice: _authNoticePublic(), lanNotice: _lanNoticePublic(), poll: _pollPublic(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(true), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', featureOff: featureOffList(), pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport(), liveTransport: _liveTransport(), liveDefaults: _liveDefaults(), musicEnabled: musicEnabled(), musicVotesPublic: musicVotesPublic() }));
+    res.end(JSON.stringify({ ok: true, modes: appModes(), lanDirectory: LAN_DIR.publicView(), welcome: _welcomePublic(), guestNotice: _guestNoticePublic(), authNotice: _authNoticePublic(), lanNotice: _lanNoticePublic(), poll: _pollPublic(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, lookDefaults: _adminConfig.lookDefaults || {}, loginDefaults: _loginDefaults(true), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', featureOff: featureOffList(), pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport(), liveTransport: _liveTransport(), liveDefaults: _liveDefaults(), musicEnabled: musicEnabled(), musicVotesPublic: musicVotesPublic() }));
     return;
   }
 

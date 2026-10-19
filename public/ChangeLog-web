@@ -1,3 +1,7 @@
+2026-10-19 version 2.1.10-web.166:
+- improvement: on your first visit, the look the server picked for newcomers (palette, table, cards, seats, interface size, contrast, sound) is applied; anything you have already chosen yourself is never changed
+- bugfix: the default style picked by the server for newcomers was never applied on a first visit
+
 2026-10-19 version 2.1.10-web.157:
 - improvement: the privacy page is the same, in your language, on every server running the web client, including LAN and self-hosted ones
 

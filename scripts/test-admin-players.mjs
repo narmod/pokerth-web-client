@@ -26,6 +26,9 @@ const CANNED = {
     loginDefaults: LOGIN, defaultTheme: 'officiallight', defaults: { haptic: '0' }, liveDefaults: { theme: 'casino', sound: '0', chat: '0' },
     tableDefaults: { players: 6, blind: 20 }, tableNames: { lan: 'Family night' }, serverName: 'Home <b>poker</b>', serverTagline: '',
     lobbyClockTz: '', lobbyClockEff: 'Europe/Berlin', clockZones: ['Europe/Paris', 'Asia/Tokyo'], clockRef: 'UTC', seo: { enabled: false, aiCrawlers: false } },
+  '/admin/pkg-list': { ok: true,
+    tables: [{ id: 'pokerth-official-fs', name: 'PokerTH Official (Fullscreen)' }, { id: 'casino', name: 'Green Casino' }, { id: 'matrix', name: 'Matrix QML table style' }, { id: 'hidden-one', name: 'Hidden', disabled: true }],
+    decks: [{ id: 'discworld', name: 'Discworld (QML/SVG)' }], seats: [{ id: 'onyx-pill', name: 'Onyx Pill' }] },
   '/admin/config': { ok: true,
     featureSwitches: [{ key: 'hud_on', label: 'Stats HUD' }, { key: 'show_odds', label: 'Odds <i>tab</i>' }, { key: 'polls', label: 'Product polls' },
       { key: 'ace_dance', label: 'The Ace dances' }, { key: 'err_report', label: 'Error reporting' }, { key: 'zz_new', label: 'Something new' }],
@@ -134,14 +137,28 @@ ok(['savePx', 'saveSeo', 'wcSave', 'ldSetSave', 'mzSaveEnabled', 'saveLogin'].ev
 await open('firstvisit');
 ok(errors.length === 0, 'opening First visit throws nothing' + (errors.length ? ': ' + errors[0] : ''));
 t = tiles('fvTiles');
-ok(/Palette PokerTH Light/.test(t) && /Settings 1 \/ 4 Vibration off/.test(t), 'palette and settings tiles (' + t + ')');
-ok(/\/live palette Green Casino/.test(t) && /\/live sound Off lobby chat strip hidden/.test(t), 'spectator tiles');
-ok(doc.querySelectorAll('#panel-firstvisit > .card').length === 2, 'palette and in-game settings are one card, /live the other');
-$('defTheme').value = 'casino'; $('defVoice').value = '1';
+ok(/Look 3 \/ 5 Light · PokerTH table · PokerTH Royal Classic/.test(t) && /Settings 1 \/ 6 Vibration off/.test(t), 'look and settings tiles (' + t + ')');
+ok(/\/live style Green Casino/.test(t) && /\/live sound Off lobby chat strip hidden/.test(t), 'spectator tiles');
+ok(doc.querySelectorAll('#panel-firstvisit > .card').length === 2, 'look and settings are one card, /live the other');
+// A preset saved before web.166 (PokerTH Light) shows as its axes, to be saved once.
+ok($('defPalette').value === 'pokerth-light' && $('defTable').value === '' && $('defDeck').value === 'pokerth-new' && $('defSeat').value === '@', 'the former preset is converted axis by axis');
+ok($('fvConv').style.display === '' && /PokerTH Light/.test($('fvConv').textContent) && $('defPalette').closest('.card').classList.contains('unsaved'), 'and the card says so, Save marked');
+const opts = (id) => [...$(id).options].map((o) => o.value);
+ok(opts('defTable').includes('matrix') && opts('defTable').includes('') && !opts('defTable').includes('pokerth-official-fs') && !opts('defTable').includes('hidden-one'), 'tables: the built-in default and the installed packs, not the hidden one nor the duplicates');
+ok(opts('defDeck').includes('pokerth-new') && opts('defDeck').includes('discworld') && opts('defSeat').includes('onyx-pill'), 'decks and seats list the packs too');
+// The built-in decks and seats mirror theme.mjs.
+const themeSrc = readFileSync(join(root, 'public', 'modules', 'theme.mjs'), 'utf8');
+const ids = (name) => [...(themeSrc.match(new RegExp('const ' + name + ' = \\[([\\s\\S]*?)\\n\\];')) || ['', ''])[1].matchAll(/\{ id: '([^']*)'/g)].map((m) => m[1]).sort().join(',');
+ok(ids('DECKS') === ['casino-vert', 'default', 'pokerth', 'pokerth-1-0', 'pokerth-new'].sort().join(',') && ids('SEATS') === 'pokerth', 'the admin\'s built-in decks and seats are those of theme.mjs (' + ids('DECKS') + ' / ' + ids('SEATS') + ')');
+$('defTable').value = 'matrix'; $('defTable').dispatchEvent(new window.Event('change', { bubbles: true }));
+$('defSeat').value = 'onyx-pill'; $('defSize').value = 'large'; $('defSound').value = '0'; $('defContrast').value = '1'; $('defVoice').value = '1';
 $('saveDefaults').click();
 await tick(120);
-p = lastPost('defaults');
-ok(p && p.body.defaultTheme === 'casino' && p.body.defaults.voice === '1' && p.body.defaults.haptic === '0', 'one Save sends the palette and the settings');
+p = lastPost('lookDefaults');
+ok(p && p.body.defaultTheme === '' && p.body.lookDefaults.table === 'matrix' && p.body.lookDefaults.palette === 'pokerth-light' && p.body.lookDefaults.seat === 'onyx-pill' && p.body.lookDefaults.size === 'large',
+  'one Save sends the look axis by axis and clears the former preset (' + JSON.stringify(p && p.body.lookDefaults) + ')');
+ok(p && p.body.defaults.sound === '0' && p.body.defaults.contrast === '1' && p.body.defaults.voice === '1' && p.body.defaults.haptic === '0', 'and the settings, sound and contrast included');
+ok(!/defTheme/.test(html), 'the preset select is gone');
 ok(!/In-game settings/.test(html.match(/DEFAULT_FOLDED = \[[^\]]*\]/)[0]), 'no player card starts folded');
 
 // ── Features ──────────────────────────────────────────────────────────────

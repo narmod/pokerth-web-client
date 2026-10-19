@@ -3942,14 +3942,35 @@ document.addEventListener("DOMContentLoaded", function() {
     // and this guard short-circuits — it never re-applies.
     function _applyDefaultTheme(presetId) {
       if (!presetId) return;
-      try {
+      // theme.mjs writes every axis as it boots, so a stored key no longer
+      // means the player chose: the <head> notes which axes were empty when
+      // the page started (window._pthLookFresh). Older pages fall back to the
+      // stored keys, as before.
+      var _fr = window._pthLookFresh;
+      if (_fr) { if (!(_fr.palette && _fr.table && _fr.deck)) return; }
+      else try {
         var keys = ['pth_theme', 'pth_table', 'pth_deck', 'pth_buttons', 'pth_pucks', 'pth_seat', 'pth_cardback', 'pth_cardback_img', 'pth_cardback_ext'];
         for (var i = 0; i < keys.length; i++) { if (localStorage.getItem(keys[i]) !== null) return; }
       } catch (e) { return; }
+      if (_fr) { _fr.palette = false; _fr.table = false; _fr.deck = false; }
       var tries = 0;
       (function waitApply() {
         if (typeof window.applyThemePreset === 'function') { try { window.applyThemePreset(presetId); } catch (e) {} return; }
         if (tries++ < 60) setTimeout(waitApply, 50);
+      })();
+    }
+    // First-visit look (admin → /app-config.lookDefaults): palette, table,
+    // deck, seats through theme.mjs (first visit per axis, see applyFirstVisit),
+    // and the interface size, written only if this browser never set one.
+    function _applyLookDefaults(look) {
+      if (!look || typeof look !== 'object') return;
+      if (look.size === 'standard' || look.size === 'large' || look.size === 'extra-large') {
+        try { if (localStorage.getItem('pth_interface_size') === null) { localStorage.setItem('pth_interface_size', look.size); if (typeof window.applyAccessibilityPreferences === 'function') window.applyAccessibilityPreferences(); } } catch (e) {}
+      }
+      var tries = 0;
+      (function waitTheme() {
+        if (window.THEME && typeof window.THEME.applyFirstVisit === 'function') { try { window.THEME.applyFirstVisit(look); } catch (e) {} return; }
+        if (tries++ < 60) setTimeout(waitTheme, 50);
       })();
     }
     // First-visit default in-game settings (admin → /app-config.defaults). Same
@@ -3961,7 +3982,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // pushed into it as well (see LIVE below).
     function _applyDefaultSettings(defaults) {
       if (!defaults || typeof defaults !== 'object') return;
-      var MAP = { haptic: 'pth_haptic', voice: 'pth_voice', assist: 'pth_assist', displaybb: 'pth_display_bb' };
+      var MAP = { haptic: 'pth_haptic', voice: 'pth_voice', assist: 'pth_assist', displaybb: 'pth_display_bb', sound: 'pth_sound', contrast: 'pth_high_contrast' };
       // These four flags are read into the game state when the modules load,
       // before /app-config answers: a default written now is pushed into that
       // state too, so it holds on the first visit instead of the second.
@@ -3969,7 +3990,11 @@ document.addEventListener("DOMContentLoaded", function() {
         haptic: function (v, st) { st._hapticEnabled = (v !== '0'); },
         voice: function (v, st) { st._voiceEnabled = (v === '1'); },
         assist: function (v, st) { st._assistOn = (v !== '0'); },
-        displaybb: function (v, st) { st._displayBB = (v === '1'); }
+        displaybb: function (v, st) { st._displayBB = (v === '1'); },
+        // sounds.mjs re-reads pth_sound before every sound; the storage event
+        // refreshes the header button at once. Contrast is applied live.
+        sound: function () { try { window.dispatchEvent(new StorageEvent('storage', { key: 'pth_sound' })); } catch (e) {} },
+        contrast: function () { try { if (typeof window.applyAccessibilityPreferences === 'function') window.applyAccessibilityPreferences(); } catch (e) {} }
       };
       Object.keys(MAP).forEach(function (k) {
         var v = defaults[k];
@@ -3977,7 +4002,8 @@ document.addEventListener("DOMContentLoaded", function() {
         try {
           if (localStorage.getItem(MAP[k]) !== null) return;
           localStorage.setItem(MAP[k], v);
-          if (window.PthState) LIVE[k](v, window.PthState);   // modules/game/state.mjs
+          if (k === 'sound' || k === 'contrast') LIVE[k](v);
+          else if (window.PthState) LIVE[k](v, window.PthState);   // modules/game/state.mjs
         } catch (e) {}
       });
     }
@@ -4182,7 +4208,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function go() {
       fetch('/app-config', { cache: 'no-store' })
         .then(function (r) { return r.json(); })
-        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; window._pthLiveTransport = (c.liveTransport === 'proxy' || c.liveTransport === 'direct') ? c.liveTransport : 'inherit'; window._pthLiveDefaults = c.liveDefaults || null; } if (c && c.modes) applyModes(c.modes); if (c) _applyMusicFlag(c.musicEnabled !== false); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); window._guestNoticeCfg = (c && c.guestNotice) || null; window._authNoticeCfg = (c && c.authNotice) || null; window._lanNoticeCfg = (c && c.lanNotice) || null; if (typeof window._pollSetConfig === 'function') window._pollSetConfig(c && c.poll); if (c) { var _lvT = (window.LIVE_MODE && c.liveDefaults && c.liveDefaults.theme) ? c.liveDefaults.theme : null; if (_lvT) _applyDefaultTheme(_lvT); else if (typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); } if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); if (c && Array.isArray(c.featureOff)) _applyFeatureOff(c.featureOff); window._lanDirCfg = (c && c.lanDirectory) || null; try { if (window.LanDirUI) window.LanDirUI.setConfig(window._lanDirCfg); } catch (e) {} _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
+        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; window._pthLiveTransport = (c.liveTransport === 'proxy' || c.liveTransport === 'direct') ? c.liveTransport : 'inherit'; window._pthLiveDefaults = c.liveDefaults || null; } if (c && c.modes) applyModes(c.modes); if (c) _applyMusicFlag(c.musicEnabled !== false); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); window._guestNoticeCfg = (c && c.guestNotice) || null; window._authNoticeCfg = (c && c.authNotice) || null; window._lanNoticeCfg = (c && c.lanNotice) || null; if (typeof window._pollSetConfig === 'function') window._pollSetConfig(c && c.poll); if (c) { var _lvT = (window.LIVE_MODE && c.liveDefaults && c.liveDefaults.theme) ? c.liveDefaults.theme : null; if (_lvT) _applyDefaultTheme(_lvT); else { if (typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c.lookDefaults) _applyLookDefaults(c.lookDefaults); } } if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); if (c && Array.isArray(c.featureOff)) _applyFeatureOff(c.featureOff); window._lanDirCfg = (c && c.lanDirectory) || null; try { if (window.LanDirUI) window.LanDirUI.setConfig(window._lanDirCfg); } catch (e) {} _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
         .catch(function () {})
         // Settled, answered or not: release a connect() held by the config
         // gate (App.connect). The transport choice (_pthNetTransport) only
@@ -12280,7 +12306,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.165'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.166'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

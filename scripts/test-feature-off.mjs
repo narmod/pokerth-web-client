@@ -86,7 +86,7 @@ ok(sw.includes("'/modules/feature-off.mjs'"), 'the helper is precached for offli
 const def = js.slice(js.indexOf('function _applyDefaultSettings'), js.indexOf('function _applyDefaultSettings') + 2000);
 const mapKeys = [...(/var MAP = \{([^}]*)\}/.exec(def) || ['', ''])[1].matchAll(/(\w+):/g)].map(m => m[1]);
 const liveKeys = [...(/var LIVE = \{([\s\S]*?)\n\s*\};/.exec(def) || ['', ''])[1].matchAll(/^\s*(\w+): function/gm)].map(m => m[1]);
-ok(mapKeys.length === 4 && mapKeys.every(k => liveKeys.includes(k)), 'every admin default is pushed into the game state on the first visit');
+ok(mapKeys.length === 6 && mapKeys.every(k => liveKeys.includes(k)), 'every admin default is pushed into the game state on the first visit');
 ok(/getItem\(MAP\[k\]\) !== null\) return/.test(def), 'and only when the player never chose: a stored choice is never overridden');
 
 console.log(fail ? 'FAIL ' + fail + '/' + n : 'OK ' + n + '/' + n);

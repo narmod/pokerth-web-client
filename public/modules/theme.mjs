@@ -201,6 +201,35 @@ function applyPreset(id) {
   if (p.values.pucks !== undefined) pucks.apply(p.values.pucks);
 }
 
+// First-visit look chosen by the operator (admin › Player experience › First
+// visit, /app-config.lookDefaults): palette, table, deck, seats. An axis is set
+// only if this browser had no value of its own for it when the page started
+// (window._pthLookFresh, read in the <head> before anything writes one), so a
+// player's own choice is never overridden. It waits for the gallery manifests;
+// an id this server no longer offers is skipped. Returns the axes it set.
+function applyFirstVisit(look) {
+  if (!look || typeof look !== 'object') return Promise.resolve([]);
+  var fresh = window._pthLookFresh;
+  if (!fresh) return Promise.resolve([]);
+  return Promise.all(_galleryP.map(function (p) { return Promise.resolve(p).catch(function () {}); })).then(function () {
+    function known(list, id) { for (var i = 0; i < list.length; i++) if (list[i] && list[i].id === id) return true; return false; }
+    var AX = [['palette', palette, function (id) { return id === 'auto' || known(PALETTES, id); }],
+              ['table', table, function (id) { return known(TABLES.concat(_galleryTables), id); }],
+              ['deck', deck, function (id) { return known(DECKS.concat(_galleryDecks), id); }],
+              ['seat', seat, function (id) { return known(SEATS.concat(_gallerySeats), id); }]];
+    var done = [];
+    AX.forEach(function (a) {
+      var k = a[0];
+      if (!Object.prototype.hasOwnProperty.call(look, k) || !fresh[k]) return;
+      var id = String(look[k]);
+      if (!a[2](id)) return;
+      try { a[1].apply(id); fresh[k] = false; done.push(k); } catch (e) {}
+    });
+    if (done.length && _body) { try { _render(); } catch (e) {} }
+    return done;
+  });
+}
+
 // Which preset matches the current axis values? null = custom mix.
 function activePreset() {
   var cur = { theme: palette.get(), table: table.get(), deck: deck.get(), buttons: buttons.get(), pucks: pucks.get() };
@@ -262,10 +291,13 @@ try { var _cd = deck.get(); if (_cd) document.documentElement.setAttribute('data
 
 // Gallery card decks discovered at runtime from /cards/decks.json (managed by
 // install.sh deck-add). Best-effort: offline/absent -> only the built-in decks.
+// The three gallery manifests, as they are read: applyFirstVisit waits for
+// them so a pack id is known (deck extension, seat plate) before it is applied.
+var _galleryP = [];
 var _galleryDecks = [];
 function _loadGalleryDecks() {
   try {
-    fetch('/cards/decks.json', { cache: 'no-store' })
+    _galleryP.push(fetch('/cards/decks.json', { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : []; })
       .then(function (list) {
         if (!Array.isArray(list)) return;
@@ -275,7 +307,7 @@ function _loadGalleryDecks() {
           .concat(_galleryDecks.filter(function (d) { return d && d._imported; }));   // ne jamais perdre les decks importes en local (IndexedDB)
         if (_body) _render();
       })
-      .catch(function () {});
+      .catch(function () {}));
   } catch (e) {}
 }
 _loadGalleryDecks();
@@ -298,7 +330,7 @@ function _seatPackTraits(id) {
 try { window._seatPackTraits = _seatPackTraits; } catch (e) {}
 function _loadGallerySeats() {
   try {
-    fetch('/seats/seats.json', { cache: 'no-store' })
+    _galleryP.push(fetch('/seats/seats.json', { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : []; })
       .then(function (list) {
         if (!Array.isArray(list)) return;
@@ -313,7 +345,7 @@ function _loadGallerySeats() {
         try { seat.apply(seat.get()); } catch (e) {}   // pack now known -> inject its vars
         if (_body) _render();
       })
-      .catch(function () {});
+      .catch(function () {}));
   } catch (e) {}
 }
 // A seat image pack drives the box via CSS vars + data-seat-img (one generic CSS
@@ -612,7 +644,7 @@ var _OFFICIAL_GALLERY_DUP = { 'pokerth-official':1, 'pokerth-official-fs':1, 'fe
 function _galleryTableById(id){ for (var i=0;i<_galleryTables.length;i++) if (_galleryTables[i].id===id) return _galleryTables[i]; return null; }
 function _loadGalleryTables() {
   try {
-    fetch('/table/tables.json', { cache: 'no-store' })
+    _galleryP.push(fetch('/table/tables.json', { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : []; })
       .then(function (list) {
         if (!Array.isArray(list)) return;
@@ -627,7 +659,7 @@ function _loadGalleryTables() {
         try { table.apply(table.get()); pucks.apply(pucks.get()); } catch (e) {}
         if (_body) _render();
       })
-      .catch(function () {});
+      .catch(function () {}));
   } catch (e) {}
 }
 
@@ -1601,7 +1633,7 @@ window.setDeck  = deck.apply;    window.getDeck  = deck.get;
 window.applyThemePreset = applyPreset;
 window.THEME = {
   PALETTES: PALETTES, TABLES: TABLES, DECKS: DECKS, PRESETS: PRESETS, AXES: AXES,
-  applyPreset: applyPreset, activePreset: activePreset,
+  applyPreset: applyPreset, activePreset: activePreset, applyFirstVisit: applyFirstVisit,
   getTheme: palette.get, setTheme: palette.apply,
   getTable: table.get, setTable: table.apply,
   getDeck: deck.get, setDeck: deck.apply,
