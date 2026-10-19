@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.10-web.146';
+const CACHE_VERSION = 'pokerth-v2.1.10-web.147';
 // Build id the page puts on the card back URL (deck.mjs _deckBack →
 // flipside.<ext>?v=<BUILD_VERSION>): CACHE_VERSION without its prefix.
 const BUILD_ID = CACHE_VERSION.replace(/^pokerth-v/, '');
@@ -726,6 +726,18 @@ function handleCode(e) {
     return fetch(e.request, { cache: 'reload' }).then(function (response) {
       if (response && response.status === 200) {
         cache.put(e.request, response.clone());
+        return response;
+      }
+      // A 5xx is an edge/origin hiccup (Cloudflare 52x bursts between the
+      // edge and the origin last a few seconds), not a verdict on the file:
+      // answering with it fails the <script type=module> just like a cut
+      // connection would. Serve this version's precached copy when there is
+      // one — same build, so no version skew — and pass the error through
+      // otherwise. A 404 is passed through untouched (real "not here").
+      if (response && response.status >= 500) {
+        return cache.match(e.request).then(function (cached) {
+          return cached || response;
+        });
       }
       return response;
     }).catch(function () {

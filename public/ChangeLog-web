@@ -1,3 +1,6 @@
+2026-10-19 version 2.1.10-web.147:
+- bugfix: on an unsteady connection, the app no longer fails to start because one of its files was briefly unavailable from the server; the copy already saved on your device is used instead
+
 2026-10-19 version 2.1.10-web.145:
 - bugfix: after a game in training mode, connecting to a LAN server or to PokerTH.net works again without reloading the page (the connection used to drop at once)
 

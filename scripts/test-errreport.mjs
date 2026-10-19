@@ -101,6 +101,31 @@ mod.flush();
 ok(sent.length === 1, 'the burst produced a single POST');
 ok(sent[0].body.items.length === 5, 'at most 5 distinct signatures per session');
 
+// ── 4b. Load-failure outcomes have their own budget ───────────────
+// Three failed module tags fill the five slots (3 "Failed to load" + 2
+// probes); the third probe and the retry outcome must still leave.
+sent = [];
+mod.__testReset();
+const lf = (msg, src) => ({ msg, src, line: 0, col: 0, stack: '' });
+for (const f of ['/modules/ui/accessibility.mjs', '/modules/theme.mjs', '/modules/sounds.mjs']) {
+  window.__pthErrQ.push(lf('Failed to load script', 'https://x' + f));
+  window.__pthErrQ.push(lf('Load-failure probe: HTTP 200 online sw', 'https://x' + f));
+}
+window.__pthErrQ.push(lf('Load-failure retry #1 recovered', 'https://x/modules/theme.mjs'));
+window.__pthErrQ.push(lf('Lang load retry recovered', 'https://x/modules/lang/el.mjs'));
+for (let i = 0; i < 4; i++) window.__pthErrQ.push(err('other bug ' + i, 'o' + i));
+mod.flush();
+const msgs = sent[0].body.items.map((it) => it.msg);
+ok(msgs.filter((m) => m === 'Failed to load script').length === 3, 'the three load failures are reported');
+ok(msgs.filter((m) => /^Load-failure probe:/.test(m)).length === 3, 'every probe is reported (own budget)');
+ok(msgs.includes('Load-failure retry #1 recovered'), 'the retry outcome is reported (own budget)');
+ok(msgs.includes('Lang load retry recovered'), 'a language-file outcome is reported (own budget)');
+ok(msgs.filter((m) => /^other bug/.test(m)).length === 2, 'ordinary errors still capped at 5 signatures in all');
+mod.__testReset();
+for (let i = 0; i < 12; i++) window.__pthErrQ.push(lf('Load-failure probe: HTTP 525 online sw', 'https://x/f' + i + '.mjs'));
+mod.flush();
+ok(sent[sent.length - 1].body.items.length === 8, 'outcome lines capped at 8 per session');
+
 // ── 5. Option décochée ────────────────────────────────────────────
 sent = [];
 mod.__testReset();

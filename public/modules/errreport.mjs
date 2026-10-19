@@ -18,6 +18,12 @@
 // seconde : signature de déduplication (message + première ligne de pile),
 // 5 signatures distinctes au maximum par session, 10 s minimum entre deux
 // envois, et le serveur regroupe de toute façon par signature.
+//
+// Load-failure outcome lines (the probe that says why a file failed, the
+// in-page retry that recovered or gave up, the same for a language file) have
+// their own budget of 8, outside the 5: a burst of three failed module tags
+// used to fill the five slots with "Failed to load" + two probes, so the
+// line saying whether the player got the file in the end never left.
 
 import { featureOff } from './feature-off.mjs';
 
@@ -25,8 +31,11 @@ const ENDPOINT = '/clienterr';
 const MAX_SIGS = 5;          // signatures distinctes envoyées par session
 const MIN_GAP_MS = 10000;    // délai minimum entre deux envois
 const MAX_STACK = 600;       // caractères de pile conservés
+const MAX_OUTCOMES = 8;      // load-failure probes/outcomes, outside MAX_SIGS
 
+const _OUTCOME_RE = /^(?:Load-failure (?:probe:|retry #\d+ )|Lang load (?:retry recovered|failed, giving up))/;
 const _seen = new Set();
+const _seenOut = new Set();
 let _lastSent = 0;
 let _timer = null;
 
@@ -88,9 +97,10 @@ function flush() {
     const it = q.shift();
     if (!it) continue;
     const s = _sig(it);
-    if (_seen.has(s)) continue;
-    if (_seen.size >= MAX_SIGS) continue;
-    _seen.add(s);
+    const set = _OUTCOME_RE.test(String(it.msg || '')) ? _seenOut : _seen;
+    if (set.has(s)) continue;
+    if (set.size >= (set === _seen ? MAX_SIGS : MAX_OUTCOMES)) continue;
+    set.add(s);
     batch.push(_trim(it));
   }
   if (!batch.length) return;
@@ -99,7 +109,7 @@ function flush() {
   if (wait > 0) {
     // Trop tôt : on remet le lot en file et on réessaie plus tard (une seule
     // minuterie en vol, sinon une rafale d'erreurs en programmerait autant).
-    for (let i = batch.length - 1; i >= 0; i--) { _seen.delete(_sig(batch[i])); q.unshift(batch[i]); }
+    for (let i = batch.length - 1; i >= 0; i--) { const s = _sig(batch[i]); _seen.delete(s); _seenOut.delete(s); q.unshift(batch[i]); }
     if (!_timer) _timer = setTimeout(function () { _timer = null; flush(); }, wait + 50);
     return;
   }
@@ -120,6 +130,7 @@ document.addEventListener('visibilitychange', function () { if (document.visibil
 // garde-fous depuis une session vierge. Sans effet en production.
 function __testReset() {
   _seen.clear();
+  _seenOut.clear();
   _lastSent = 0;
   if (_timer) { clearTimeout(_timer); _timer = null; }
   if (window.__pthErrQ) window.__pthErrQ.length = 0;

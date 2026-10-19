@@ -688,6 +688,14 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Code file answered with a 5xx no longer breaks the page** (`web.147`) — the service worker's network-first
+  handler for JS/MJS/CSS passed any non-200 straight to the page, so a Cloudflare 52x burst between the edge
+  and the origin failed the `<script type=module>` even though the same build's copy sat in the precache. A
+  5xx now falls back to that cached copy (same `CACHE_VERSION`, no version skew); a 404 still passes through.
+- **Load-failure outcomes reach Admin › Errors** (`web.147`) — `errreport.mjs` caps a session at 5 distinct
+  signatures; three failed module tags filled them with « Failed to load » + two probes, so the third probe and
+  the « retry recovered / giving up » line that says how it ended were dropped. Probes and retry outcomes
+  (scripts and language files) now have their own budget of 8 (`scripts/test-errreport.mjs`).
 - **Training → LAN / Internet without a reload** (`web.145`) — the training fake server answered Init with a
   4-byte session GUID, which the client kept and replayed as `InitMessage.myLastSessionId` on the next network
   login. The server's `NetPacketValidator::ValidateInitMessage` only accepts 16 bytes and closes the session
