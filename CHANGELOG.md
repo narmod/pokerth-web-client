@@ -41,6 +41,12 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Added
+- **Live map on Live › Sessions** (`web.194`) — the « Live now » layer of Statistics › World, on the page that already
+  reads the connections every 5 s: the connections listed below it, folded by country. Each country takes the colour
+  of its main entry mode (Internet, LAN, Training, /live), deeper the more connections it holds; its title and the
+  list beside it give the split. It follows the mode tiles and the text filter of the list, has the World / Europe /
+  Americas / Asia / Africa views (remembered per browser) and the day / night shading. No extra request: the map
+  outline is the one Statistics › World already loads. World keeps its own Live now layer.
 - **PostgreSQL for the database mirror** (`web.192`) — the optional mirror (traffic_daily, leaderboard, broadcasts)
   now writes to MySQL / MariaDB **or PostgreSQL**. The SQL that differs (driver, column types, upsert, placeholders)
   lives in `server/db-dialects.js`; the MySQL statements are byte for byte those of `web.191`, so an existing mirror

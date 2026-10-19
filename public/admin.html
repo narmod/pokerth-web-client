@@ -364,17 +364,25 @@
   .geohours .gh.night b{color:var(--muted)}
   @media(max-width:600px){ .geohours .gh i{display:none} .geohours{height:20px} .geohours .gh b{font-size:.66rem} .geohours .gh:nth-child(even){display:none} }
   /* Map layers and regions: compact chips, like the entry modes. */
-  #geoLayers,#geoViews{gap:6px;margin:10px 0 0}
-  #geoLayers button,#geoViews button{flex:0 0 auto;min-height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--navfg);font-size:.82rem;font-weight:500}
-  #geoLayers button:hover,#geoViews button:hover{background:var(--hover)}
-  #geoLayers button.on,#geoViews button.on{background:var(--accent-soft);border-color:var(--accent);color:var(--cream);font-weight:600}
-  #geoViews{margin-bottom:10px}
+  #geoLayers,#geoViews,#lmViews{gap:6px;margin:10px 0 0}
+  #geoLayers button,#geoViews button,#lmViews button{flex:0 0 auto;min-height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--navfg);font-size:.82rem;font-weight:500}
+  #geoLayers button:hover,#geoViews button:hover,#lmViews button:hover{background:var(--hover)}
+  #geoLayers button.on,#geoViews button.on,#lmViews button.on{background:var(--accent-soft);border-color:var(--accent);color:var(--cream);font-weight:600}
+  #geoViews,#lmViews{margin-bottom:10px}
   #panel-traffic:not(.xpl-on) .xpl{display:none}
   /* Traffic › World : carte des pays (fuseau horaire du navigateur) */
   .geomap svg{width:100%;height:auto;display:block}
   .geomap path{stroke:var(--panel);stroke-width:.6;vector-effect:non-scaling-stroke;cursor:pointer}
   .geomap path.nd{fill:var(--line);cursor:default}
   .geomap path.sel{stroke:var(--cream);stroke-width:1.6}
+  /* Live › Sessions › Live map (web.194): the map beside its country list. */
+  .lmwrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+  .lmmap path{cursor:default}
+  .lmlist .georow{cursor:default}
+  .lmlist .georow .ct{width:40px}
+  .geolegend .lmk{display:inline-flex;align-items:center;gap:5px}
+  .geolegend .lmk i{width:9px;height:9px;border-radius:2px;display:inline-block}
+  @media(max-width:1100px){ .lmwrap{grid-template-columns:minmax(0,1fr)} }
   .geolegend{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.73rem;color:var(--text);margin:6px 0 2px}
   .geolegend .rmp{flex:1 1 80px;height:7px;border-radius:4px}
   .geodet{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
@@ -1483,6 +1491,13 @@
 
     <div id="panel-sessions" style="display:none">
       <section class="ovmodes" id="seTiles" aria-label="Connected right now, by entry mode"><div class="empty">Loading…</div></section>
+      <div class="card">
+        <div class="boardhead"><h2>Live map</h2><span id="lmNote" class="headnote"></span></div>
+        <p class="muted">Where the connections listed below come from, right now. A country takes the colour of its main entry mode, deeper with more connections. It follows the tiles and the filter below; the country comes from each browser’s time zone.</p>
+        <div class="seg" id="lmViews" role="group" aria-label="Region" style="flex-wrap:wrap"></div>
+        <div class="lmwrap"><div id="lmMap" class="geomap lmmap"><div class="empty">Loading…</div></div><div id="lmList" class="lmlist"></div></div>
+        <div id="lmLegend" class="geolegend"></div>
+      </div>
       <div class="card">
         <div class="boardhead"><h2>Live connections</h2><span id="seSum" class="headnote"></span><button id="seRefresh" class="use">Refresh</button></div>
         <p class="muted">Everyone connected right now, refreshed every 5&nbsp;s while this tab is open. IP addresses are partially masked.</p>
@@ -7558,6 +7573,55 @@
       return '<button type="button" class="ovmode setile'+(_seSel===m[0]?' on':'')+'" data-sm="'+m[0]+'" style="--mc:'+m[2]+'" aria-pressed="'+(_seSel===m[0])+'"><span class="ovmh"><i class="lvdot"></i><span>'+m[1]+'</span></span><b class="ovmn">'+c+'</b><span class="ovms">'+sub+'</span></button>';
     }).join('');
   }
+  // ── Live map (Live › Sessions, web.194) ─────────────────────────────────
+  // The « Live now » layer of Statistics › World, on the page that already
+  // reads the connections every 5 s: the rows of the list below (tiles and
+  // filter applied), folded by country. A country takes the colour of its main
+  // entry mode; its title and the list beside give the split.
+  var _lmBusy=false, _lmView='world', _lmLast=null;
+  try{ var _lv=localStorage.getItem('pth_admin_lm_view'); if(_lv) _lmView=_lv; }catch(e){}
+  (function(){
+    var v=$('lmViews'); if(!v) return;
+    v.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-k]'); if(!b) return; _lmView=b.getAttribute('data-k');
+      try{ localStorage.setItem('pth_admin_lm_view',_lmView); }catch(x){} if(_lmLast) _lmRender(_lmLast[0],_lmLast[1]); });
+  })();
+  function _lmRender(rows, d){
+    var box=$('lmMap'), ls=$('lmList'), lg=$('lmLegend'), nt=$('lmNote'); if(!box) return;
+    _lmLast=[rows,d];
+    var M=_geoMap;
+    if(!M || !M.c){
+      if(_lmBusy) return; _lmBusy=true;
+      fetch('/vendor/world-110m.json?rev='+GEO_MAP_REV,{cache:'no-cache'}).then(function(r){ return r.json(); })
+        // A bad answer waits for the next 5 s read, never loops on itself.
+        .then(function(j){ _lmBusy=false; if(!j || !j.c){ box.innerHTML='<div class="empty err">Could not load the map outline.</div>'; return; } if(!_geoMap) _geoMap=j; _lmRender(rows, d); })
+        .catch(function(){ _lmBusy=false; box.innerHTML='<div class="empty err">Could not load the map outline.</div>'; });
+      return;
+    }
+    var K={}; SE_MODES.forEach(function(m){ K[m[0]]=m; });
+    var C={}, tot={}, n=0, max=0;
+    rows.forEach(function(r){ var cc=/^[A-Z]{2}$/.test(r.cc||'')?r.cc:'ZZ', c=C[cc]||(C[cc]={m:{},n:0}); c.m[r.k]=(c.m[r.k]||0)+1; c.n++; tot[r.k]=(tot[r.k]||0)+1; n++; });
+    Object.keys(C).forEach(function(cc){ if(cc!=='ZZ' && C[cc].n>max) max=C[cc].n; });
+    function main(c){ return SE_MODES.slice().sort(function(a,b){ return (c.m[b[0]]||0)-(c.m[a[0]]||0); })[0]; }
+    function split(c){ return SE_MODES.filter(function(m){ return c.m[m[0]]; }).map(function(m){ return c.m[m[0]]+' '+m[1]; }).join(', '); }
+    if(!GEO_VIEWS.some(function(v){ return v[0]===_lmView; }) || !(M.views&&M.views[_lmView])) _lmView='world';
+    var vs=$('lmViews'); if(vs) vs.innerHTML=GEO_VIEWS.map(function(v){ var on=v[0]===_lmView; return '<button type="button" data-k="'+v[0]+'" class="'+(on?'on':'')+'" aria-pressed="'+on+'">'+v[1]+'</button>'; }).join('');
+    var lmax=Math.log(1+max)||1, vb=(M.views&&M.views[_lmView])||[0,0,M.w,M.h];
+    var paths=Object.keys(M.c).map(function(cc){
+      var c=C[cc];
+      if(!c) return '<path d="'+M.c[cc]+'" class="nd"><title>'+_annEsc(_geoName(cc))+'</title></path>';
+      return '<path d="'+M.c[cc]+'" style="fill:'+main(c)[2]+';fill-opacity:'+(0.35+0.65*Math.log(1+c.n)/lmax).toFixed(3)+'"><title>'+_annEsc(_geoName(cc))+' — '+_annEsc(split(c))+'</title></path>';
+    });
+    box.innerHTML='<svg viewBox="'+vb.join(' ')+'" role="img" aria-label="Map of the connections open right now, by country and entry mode">'+(_geoNight&&M.proj?_geoSphere(M):'')+paths.join('')+_geoNightSvg(M)+'</svg>';
+    var ccs=Object.keys(C).sort(function(a,b){ return C[b].n-C[a].n || (a<b?-1:1); });
+    if(ls) ls.innerHTML=ccs.length ? ccs.slice(0,15).map(function(cc){
+        var c=C[cc], stk=SE_MODES.map(function(m){ var v=c.m[m[0]]||0; return v?'<i style="display:block;width:'+(100*v/c.n).toFixed(1)+'%;background:'+m[2]+'"></i>':''; }).join('');
+        return '<div class="georow">'+_geoFlag(cc)+'<span class="nm">'+_annEsc(_geoName(cc))+'</span><span class="stk" title="'+_annEsc(split(c))+'">'+stk+'</span><span class="ct">'+c.n+'</span></div>';
+      }).join('')+(ccs.length>15?'<div class="muted">and '+(ccs.length-15)+' more</div>':'')
+      : '<div class="empty">'+(d&&((d.bridges||[]).length+(d.notify||[]).length)?'No connection matches the filter.':'Nobody connected right now.')+'</div>';
+    if(lg) lg.innerHTML=SE_MODES.map(function(m){ return '<span class="lmk"><i style="background:'+m[2]+'"></i>'+m[1]+' <b>'+(tot[m[0]]||0)+'</b></span>'; }).join('')+_geoNightLegend();
+    var nc=ccs.filter(function(cc){ return cc!=='ZZ'; }).length;
+    if(nt) nt.textContent=n+' connection'+(n===1?'':'s')+' · '+nc+' countr'+(nc===1?'y':'ies')+' · read '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+  }
   function _seRender(){
     var d=_seData, list=$('seList'), sum=$('seSum'), ch=$('seModes'); if(!d||!list) return;
     var rows=_seRows(d), q=(($('seFilter')||{}).value||'').trim().toLowerCase();
@@ -7572,6 +7636,7 @@
       if(!q) return true;
       return [r.who,r.sub,r.cc?_geoName(r.cc):'',r.where,r.dev,r.ver,r.state].join(' ').toLowerCase().indexOf(q)>=0;
     });
+    _lmRender(shown, d);
     list.innerHTML='';
     if(!rows.length){ list.innerHTML='<div class="empty">Nobody connected right now.</div>'; return; }
     if(!shown.length){ list.innerHTML='<div class="empty">No connection matches the filter.</div>'; return; }
