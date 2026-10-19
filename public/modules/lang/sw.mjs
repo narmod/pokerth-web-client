@@ -541,7 +541,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Jiunge na jumuiya kwenye Discord',
     privacyTitle:'Faragha',
-    pvUpdated:'Ilisasishwa mwisho: Oktoba 12, 2026',
+    pvUpdated:'Ilisasishwa mwisho: Oktoba 19, 2026',
     pvWhoH:'Nani anaendesha hii',
     pvWho:'PokerTH Web Client ni mradi wa hobi wa bure na wa chanzo huria, unaosimamiwa na mtu mmoja, Arnaud Obscur ("narmod"), kwa ushirikiano na mradi wa PokerTH. Si kampuni na hauna lengo la kibiashara: hakuna matangazo, hakuna uuzaji wa data, hakuna wasifu wa matangazo, hakuna vifuatiliaji vya wengine.',
     pvLocalH:'Kinachobaki kwenye kivinjari chako',
@@ -560,6 +560,8 @@ export const strings = {
     pvThirdTr:'Tafsiri: unapogusa kitufe cha tafsiri (🌐) kwenye ujumbe wa gumzo au chapisho la jukwaa, maandishi hutumwa kutoka kivinjari chako hadi Google Tafsiri, hadi MyMemory hilo likishindikana, na mwisho hadi Google kupitia seva hii. Hakuna kinachotumwa usipogusa, na kipengele kinaweza kuzimwa katika Chaguo za kina.',
     pvThirdRadio:'Redio: unapocheza kituo cha redio kwenye kicheza muziki, kivinjari chako huunganishwa moja kwa moja na kituo hicho.',
     pvThirdPdb:'Uchanganuzi wa kumbukumbu: ukitumia “Changanua faili la kumbukumbu”, faili la .pdb hutumwa kupitia seva hii kwa huduma ya uchanganuzi wa kumbukumbu ya pokerth.net.',
+    pvAcctH:'Akaunti yako ya pokerth.net',
+    pvAcct:'Akaunti yako ya pokerth.net (jina la utani, anwani ya barua pepe, nenosiri, wasifu wa jukwaa, takwimu za mchezo na nafasi kwenye orodha ya viwango) huundwa na kuhifadhiwa na pokerth.net, si na kiteja hiki cha wavuti, na iko chini ya sera ya faragha ya pokerth.net iliyo hapa chini. Unapoingia kwa akaunti hiyo, jina lako la utani na nenosiri lako hutoka kwenye kivinjari chako, kupitia seva hii, hadi kwenye seva ya mchezo ya pokerth.net kwa miunganisho iliyosimbwa: seva hii huyapitisha bila kuyahifadhi, na kiteja cha wavuti hakihifadhi kamwe nenosiri lako; ni kidhibiti cha manenosiri cha kivinjari chako chenyewe pekee kinachoweza kulihifadhi, ukiruhusu.',
     pvLicH:'Programu huria - AGPL-3.0',
     pvLic1:'Kiteja chote ni programu huria, kilichotolewa chini ya leseni ya GNU AGPL v3. Unaweza kusoma msimbo wa chanzo, kuthibitisha kinachofanya, kupokea nakala yako mwenyewe, na kukibadilisha:',
     pvLicSrc:'Msimbo wa chanzo',

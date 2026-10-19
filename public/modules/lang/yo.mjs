@@ -543,7 +543,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Darapọ̀ mọ́ àwùjọ lórí Discord',
     privacyTitle:'Àṣírí',
-    pvUpdated:'Àtúnṣe ìkẹyìn: 12 Oṣù Kẹwàá 2026',
+    pvUpdated:'Àtúnṣe ìkẹyìn: 19 Oṣù Kẹwàá 2026',
     pvWhoH:'Ta ló ń ṣe èyí',
     pvWho:'Oníbàárà wẹ́ẹ̀bù PokerTH jẹ́ iṣẹ́ àkànṣe ìfẹ́ ọ̀fẹ́ àti orísun ṣíṣí, tí ẹnìkan, Arnaud Obscur ("narmod"), ń tọ́jú ní ìfọwọ́sowọ́pọ̀ pẹ̀lú iṣẹ́ àkànṣe PokerTH. Kì í ṣe ilé-iṣẹ́, kò sì ní èrò òwò: kò sí ìpolówó, kò sí títa dátà, kò sí ìtọpinpin ìpolówó, kò sí olùtọpinpin ẹlòmíràn.',
     pvLocalH:'Ohun tí ó wà nínú aṣàwákiri rẹ',
@@ -562,6 +562,8 @@ export const strings = {
     pvThirdTr:'Ìtúmọ̀: nígbà tí o bá tẹ bọ́tìnì ìtúmọ̀ (🌐) lórí ìfiránṣẹ́ ìjíròrò tàbí àròkọ àpéjọ, a ń fi ọ̀rọ̀ náà ránṣẹ́ láti aṣàwákiri rẹ sí Google Translate, sí MyMemory bí ìyẹn bá kùnà, tàbí níkẹyìn nípasẹ̀ olùpín yìí sí Google. A kì í fi nǹkan kan ránṣẹ́ láìjẹ́ pé o tẹ̀ ẹ́, a sì lè pa ẹ̀yà náà nínú Àṣàyàn ìlọsíwájú.',
     pvThirdRadio:'Rédíò: nígbà tí o bá ṣe ilé-iṣẹ́ rédíò nínú aṣeré orin, aṣàwákiri rẹ ń sopọ̀ tààrà mọ́ ilé-iṣẹ́ náà.',
     pvThirdPdb:'Àyẹ̀wò ìwé-àkọsílẹ̀: bí o bá lo Ṣàyẹ̀wò fáìlì ìwé-àkọsílẹ̀, a ń fi fáìlì .pdb ránṣẹ́ nípasẹ̀ olùpín yìí sí iṣẹ́ àyẹ̀wò ìwé-àkọsílẹ̀ pokerth.net.',
+    pvAcctH:'Àkáǹtì pokerth.net rẹ',
+    pvAcct:'pokerth.net ló ń ṣẹ̀dá tí ó sì ń tọ́jú àkáǹtì pokerth.net rẹ (orúkọ ìnagijẹ, àdírẹ́sì í-meèlì, ọ̀rọ̀ aṣínà, profaili àpéjọ, ìṣirò eré àti ipò), kì í ṣe oníbàárà wẹ́ẹ̀bù yìí, ìlànà ìpamọ́ pokerth.net tí ó wà nísàlẹ̀ ló sì kàn án. Nígbà tí o bá wọlé pẹ̀lú rẹ̀, orúkọ ìnagijẹ àti ọ̀rọ̀ aṣínà rẹ ń lọ láti aṣàwákiri rẹ, gba olùpín yìí kọjá, sí olùpín eré pokerth.net lórí àwọn ìsopọ̀ tí a ti fi kóòdù dáàbò bò: olùpín yìí ń fi wọ́n ránṣẹ́ síwájú láìtọ́jú wọn, oníbàárà wẹ́ẹ̀bù kò sì ní fi ọ̀rọ̀ aṣínà rẹ pamọ́ láé; ẹ̀rọ alákòóso ọ̀rọ̀ aṣínà ti aṣàwákiri rẹ fúnra rẹ̀ nìkan ló lè tọ́jú rẹ̀, tí o bá gbà á láàyè.',
     pvLicH:'Sọ́fítíwía ọ̀fẹ́ - AGPL-3.0',
     pvLic1:'Gbogbo oníbàárà náà jẹ́ sọ́fítíwía ọ̀fẹ́ tí a tú jáde lábẹ́ ìwé àṣẹ GNU AGPL v3. O lè ka kóòdù orísun, ṣàyẹ̀wò ohun tí ó ń ṣe, gbé ẹ̀dà tìrẹ, kí o sì ṣàtúnṣe rẹ̀:',
     pvLicSrc:'Kóòdù orísun',

@@ -543,7 +543,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Joyina umphakathi ku-Discord',
     privacyTitle:'Ubumfihlo',
-    pvUpdated:'Kubuyekezwe okokugcina: 12 Okthoba 2026',
+    pvUpdated:'Kubuyekezwe okokugcina: 19 Okthoba 2026',
     pvWhoH:'Ubani oqhuba lokhu',
     pvWho:'Iklayenti lewebhu le-PokerTH liyiphrojekthi yokuzithandela yamahhala neyomthombo ovulekile, enakekelwa ngumuntu oyedwa, u-Arnaud Obscur ("narmod"), ngokubambisana nephrojekthi ye-PokerTH. Akuyona inkampani futhi akunanhloso yezentengiselwano: azikho izikhangiso, akukho kuthengiswa kwedatha, akukho kulandelelwa kwezikhangiso, azikho izilandeleli zangaphandle.',
     pvLocalH:'Okuhlala esipheqululini sakho',
@@ -562,6 +562,8 @@ export const strings = {
     pvThirdTr:'Ukuhumusha: lapho uthepha inkinobho yokuhumusha (🌐) emlayezweni wengxoxo noma kokuthunyelwe kweforamu, umbhalo uthunyelwa usuka esipheqululini sakho uya ku-Google Translate, ku-MyMemory uma lokho kuhluleka, noma ekugcineni ngale seva uye ku-Google. Akukho okuthunyelwayo ngaphandle kokuthi uthephe, futhi lesi sici singavalwa ku-Izinketho ezithuthukisiwe.',
     pvThirdRadio:'Imisakazo: lapho udlala isiteshi somsakazo esidlalini somculo, isiphequluli sakho sixhuma ngqo kuleso siteshi.',
     pvThirdPdb:'Ukuhlaziywa kwelogi: uma usebenzisa ethi Hlaziya ifayela lelogi, ifayela le-.pdb lithunyelwa ngale seva lisiwa kusevisi yokuhlaziya amalogi ye-pokerth.net.',
+    pvAcctH:'I-akhawunti yakho ye-pokerth.net',
+    pvAcct:'I-akhawunti yakho ye-pokerth.net (igama lesiteketiso, ikheli le-imeyili, iphasiwedi, iphrofayela yenkundla yezingxoxo, izibalo zemidlalo nokukleliswa) idalwa futhi igcinwe yi-pokerth.net, hhayi yileli klayenti lewebhu, futhi ingaphansi kwenqubomgomo yobumfihlo ye-pokerth.net engezansi. Uma ungena ngayo, igama lakho lesiteketiso nephasiwedi yakho kuthunyelwa kusuka esipheqululini sakho, kudlule kule seva, kuya kuseva yomdlalo ye-pokerth.net ngokuxhumana okubethelwe: le seva iyakudlulisela ngaphandle kokukugcina, futhi iklayenti lewebhu alilokothi liyigcine iphasiwedi yakho; yisiphathi samaphasiwedi sesiphequluli sakho kuphela esingayigcina, uma uvuma.',
     pvLicH:'Isofthiwe yamahhala - AGPL-3.0',
     pvLic1:'Iklayenti lonke liyisofthiwe yamahhala ekhishwe ngaphansi kwelayisensi ye-GNU AGPL v3. Ungafunda ikhodi yomthombo, uhlole ukuthi yenzani, usingathe ikhophi yakho futhi uyilungise:',
     pvLicSrc:'Ikhodi yomthombo',

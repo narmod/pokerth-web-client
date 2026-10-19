@@ -810,7 +810,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Alătură-te comunității pe Discord',
     privacyTitle:'Confidențialitate',
-    pvUpdated:'Ultima actualizare: 12 octombrie 2026',
+    pvUpdated:'Ultima actualizare: 19 octombrie 2026',
     pvWhoH:'Cine administrează',
     pvWho:'Clientul web PokerTH este un proiect personal liber și open source, întreținut de o persoană fizică, Arnaud Obscur („narmod”), în colaborare cu proiectul PokerTH. Nu este o companie și nu are scop comercial: fără reclame, fără vânzare de date, fără profilare publicitară, fără trackere terțe.',
     pvLocalH:'Ce rămâne în browserul tău',
@@ -829,6 +829,8 @@ export const strings = {
     pvThirdTr:'Traducere: când atingi butonul de traducere (🌐) al unui mesaj din chat sau al unei postări pe forum, textul este trimis din browser către Google Translate, către MyMemory dacă acesta eșuează și, în ultimă instanță, către Google prin acest server. Nimic nu este trimis fără atingerea ta, iar funcția se poate dezactiva în Opțiuni avansate.',
     pvThirdRadio:'Radiouri: când asculți un post de radio în playerul de muzică, browserul se conectează direct la acel post.',
     pvThirdPdb:'Analiza jurnalelor: dacă folosești „Analizează fișierul jurnal”, fișierul .pdb este trimis prin acest server către serviciul de analiză a jurnalelor pokerth.net.',
+    pvAcctH:'Contul tău pokerth.net',
+    pvAcct:'Contul tău pokerth.net (pseudonim, adresă de e-mail, parolă, profil de forum, statistici de joc și clasament) este creat și păstrat de pokerth.net, nu de acest client web, și este acoperit de politica de confidențialitate a pokerth.net de mai jos. Când te conectezi cu el, pseudonimul și parola ta ajung din browserul tău, prin acest server, la serverul de joc pokerth.net prin conexiuni criptate: acest server le transmite mai departe fără să le păstreze, iar clientul web nu îți salvează niciodată parola; doar propriul manager de parole al browserului tău o poate păstra, dacă îi permiți.',
     pvLicH:'Software liber - AGPL-3.0',
     pvLic1:'Întregul client este software liber, publicat sub licența GNU AGPL v3. Poți citi codul sursă, verifica ce face, găzdui propria copie și îl poți modifica:',
     pvLicSrc:'Cod sursă',

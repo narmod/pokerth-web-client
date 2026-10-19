@@ -814,7 +814,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Pridružite se zajednici na Discordu',
     privacyTitle:'Privatnost',
-    pvUpdated:'Zadnje ažuriranje: 12. listopada 2026.',
+    pvUpdated:'Zadnje ažuriranje: 19. listopada 2026.',
     pvWhoH:'Tko ovim upravlja',
     pvWho:'PokerTH web klijent slobodan je hobi projekt otvorenog koda koji održava privatna osoba, Arnaud Obscur („narmod“), u suradnji s projektom PokerTH. Nije tvrtka i nema komercijalnu svrhu: bez oglasa, bez prodaje podataka, bez oglašivačkog profiliranja, bez trackera trećih strana.',
     pvLocalH:'Što ostaje u vašem pregledaču',
@@ -833,6 +833,8 @@ export const strings = {
     pvThirdTr:'Prijevod: kad dodirneš gumb za prijevod (🌐) uz poruku u chatu ili objavu na forumu, tekst se iz pregledača šalje Google Prevoditelju, ako to ne uspije MyMemoryju, a na kraju Googleu preko ovog servera. Bez dodira ništa se ne šalje, a značajka se može isključiti u Napredne opcije.',
     pvThirdRadio:'Radio: kad slušaš radijsku postaju u glazbenom playeru, pregledač se izravno spaja na tu postaju.',
     pvThirdPdb:'Analiza zapisnika: ako koristiš „Analiziraj datoteku zapisnika”, datoteka .pdb šalje se preko ovog servera usluzi za analizu zapisnika na pokerth.net.',
+    pvAcctH:'Tvoj pokerth.net račun',
+    pvAcct:'Tvoj pokerth.net račun (nadimak, adresa e-pošte, lozinka, profil na forumu, statistika igara i rang) stvara i čuva pokerth.net, a ne ovaj web klijent, i na njega se primjenjuju pravila privatnosti pokerth.net navedena ispod. Kada se njime prijaviš, tvoj nadimak i lozinka idu iz tvog pregledača preko ovog servera do servera igre pokerth.net putem šifriranih veza: ovaj ih server prosljeđuje dalje bez čuvanja, a web klijent nikada ne sprema tvoju lozinku; može je čuvati samo vlastiti upravitelj lozinki tvog pregledača, ako to dopustiš.',
     pvLicH:'Slobodan softver - AGPL-3.0',
     pvLic1:'Cijeli klijent je slobodan softver objavljen pod licencom GNU AGPL v3. Možete čitati izvorni kod, provjeriti što radi, hostati vlastitu kopiju i mijenjati ga:',
     pvLicSrc:'Izvorni kod',

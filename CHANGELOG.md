@@ -30,6 +30,12 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Privacy: « Your pokerth.net account » section** (`web.154`) — `privacy.html`, the in-app overlay (`pvAcctH`, `pvAcct`,
+  in every catalogue) and `/privacy?lang=xx` now say that the account (nickname, e-mail, password, forum profile,
+  statistics, ranking) is kept by pokerth.net under its own policy (linked: `ucp.php?mode=privacy`), and that the login
+  travels browser → this server → game server over encrypted connections without being kept; « Last updated » moves
+  to 2026-10-19 in every language. To keep that promise true even in debug, `proxy.js` no longer hex-dumps the
+  client's `Init` / `AuthClientResponse` frames at log level 2. `scripts/test-seo-privacy.mjs` guards both.
 - **`/privacy?lang=xx` in all 82 translated languages; in-app privacy text brought level with `privacy.html`** (`web.153`) —
   the in-app privacy overlay (`pv*` keys) had fallen behind the reference page: `pvSrv1` now also covers the live
   per-country connection count, guest / account logins and LAN servers counted by list entry, and the combined totals;

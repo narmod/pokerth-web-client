@@ -810,7 +810,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Pripojte sa ku komunite na Discorde',
     privacyTitle:'Súkromie',
-    pvUpdated:'Posledná aktualizácia: 12. októbra 2026',
+    pvUpdated:'Posledná aktualizácia: 19. októbra 2026',
     pvWhoH:'Kto to prevádzkuje',
     pvWho:'Webový klient PokerTH je slobodný open-source hobby projekt, ktorý udržiava súkromná osoba, Arnaud Obscur („narmod“), v spolupráci s projektom PokerTH. Nie je to firma a nemá komerčný účel: žiadne reklamy, žiadny predaj dát, žiadne reklamné profilovanie, žiadne sledovače tretích strán.',
     pvLocalH:'Čo zostáva vo vašom prehliadači',
@@ -829,6 +829,8 @@ export const strings = {
     pvThirdTr:'Preklad: keď ťuknete na tlačidlo prekladu (🌐) pri správe v chate alebo príspevku vo fóre, text sa odošle z prehliadača do Prekladača Google, pri neúspechu do MyMemory a nakoniec cez tento server do Googlu. Bez ťuknutia sa nič neodosiela a funkciu možno vypnúť v časti Pokročilé možnosti.',
     pvThirdRadio:'Rádiá: keď v hudobnom prehrávači počúvate rozhlasovú stanicu, prehliadač sa pripája priamo k tejto stanici.',
     pvThirdPdb:'Analýza protokolov: ak použijete „Analyzovať súbor protokolu“, súbor .pdb sa odošle cez tento server do služby analýzy protokolov pokerth.net.',
+    pvAcctH:'Váš účet pokerth.net',
+    pvAcct:'Váš účet pokerth.net (prezývka, e-mailová adresa, heslo, profil vo fóre, herné štatistiky a umiestnenie v rebríčku) vytvára a uchováva pokerth.net, nie tento webový klient, a vzťahujú sa naň zásady ochrany osobných údajov pokerth.net uvedené nižšie. Keď sa ním prihlásite, vaša prezývka a heslo putujú z vášho prehliadača cez tento server na herný server pokerth.net šifrovanými spojeniami: tento server ich odovzdá ďalej bez toho, aby ich uchovával, a webový klient vaše heslo nikdy neukladá; uchovať ho môže iba vlastný správca hesiel vášho prehliadača, ak mu to povolíte.',
     pvLicH:'Slobodný softvér - AGPL-3.0',
     pvLic1:'Celý klient je slobodný softvér vydaný pod licenciou GNU AGPL v3. Môžete čítať zdrojový kód, overiť, čo robí, hostovať vlastnú kópiu a upravovať ho:',
     pvLicSrc:'Zdrojový kód',

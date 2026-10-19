@@ -539,7 +539,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Komdu í samfélagið á Discord',
     privacyTitle:'Persónuvernd',
-    pvUpdated:'Síðast uppfært: 12. október 2026',
+    pvUpdated:'Síðast uppfært: 19. október 2026',
     pvWhoH:'Hver rekur þetta',
     pvWho:'PokerTH Web Client er ókeypis, opið áhugamannaverkefni sem einstaklingur, Arnaud Obscur („narmod“), heldur úti í samstarfi við PokerTH verkefnið. Þetta er ekki fyrirtæki og hefur engan viðskiptalegan tilgang: engar auglýsingar, engin sala gagna, engin auglýsingagreining og engir rekjarar þriðja aðila.',
     pvLocalH:'Það sem verður eftir í vafranum þínum',
@@ -558,6 +558,8 @@ export const strings = {
     pvThirdTr:'Þýðing: þegar þú snertir þýðingarhnappinn (🌐) á spjallskilaboðum eða spjallborðsinnleggi er sá texti sendur úr vafranum þínum til Google Translate, til MyMemory ef það bregst, og í síðasta lagi til Google í gegnum þennan þjón. Ekkert er sent nema þú snertir hnappinn, og hægt er að slökkva á eiginleikanum í ítarlegum valkostum.',
     pvThirdRadio:'Útvarpsstöðvar: þegar þú spilar útvarpsstöð í tónlistarspilaranum tengist vafrinn þinn beint við þá stöð.',
     pvThirdPdb:'Greining skráa: ef þú notar Greina skrá er .pdb skráin send í gegnum þennan þjón til skráagreiningarþjónustu pokerth.net.',
+    pvAcctH:'Aðgangurinn þinn á pokerth.net',
+    pvAcct:'Aðgangurinn þinn á pokerth.net (gælunafn, netfang, lykilorð, prófíll á spjallborði, leikjatölfræði og stigastaða) er stofnaður og geymdur af pokerth.net, ekki af þessum vefbiðlara, og um hann gildir persónuverndarstefna pokerth.net hér fyrir neðan. Þegar þú skráir þig inn með honum fara gælunafnið þitt og lykilorðið úr vafranum þínum í gegnum þennan þjón til leikþjóns pokerth.net um dulkóðaðar tengingar: þessi þjónn sendir þau áfram án þess að geyma þau, og vefbiðlarinn vistar aldrei lykilorðið þitt; aðeins eigin lykilorðastjóri vafrans þíns má geyma það, ef þú leyfir það.',
     pvLicH:'Frjáls hugbúnaður - AGPL-3.0',
     pvLic1:'Allur biðlarinn er frjáls hugbúnaður, gefinn út undir GNU AGPL v3 leyfinu. Þú getur lesið frumkóðann, athugað hvað hann gerir, hýst þitt eigið eintak og breytt því:',
     pvLicSrc:'Frumkóði',

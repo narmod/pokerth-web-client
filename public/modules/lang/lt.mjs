@@ -809,7 +809,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Prisijunkite prie bendruomenės „Discord“',
     privacyTitle:'Privatumas',
-    pvUpdated:'Paskutinį kartą atnaujinta: 2026 m. spalio 12 d.',
+    pvUpdated:'Paskutinį kartą atnaujinta: 2026 m. spalio 19 d.',
     pvWhoH:'Kas tai prižiūri',
     pvWho:'„PokerTH“ žiniatinklio klientas – laisvas atvirojo kodo mėgėjiškas projektas, kurį prižiūri privatus asmuo Arnaud Obscur („narmod“), bendradarbiaudamas su „PokerTH“ projektu. Tai ne įmonė ir jokių komercinių tikslų nėra: jokių reklamų, jokio duomenų pardavimo, jokio reklaminio profiliavimo, jokių trečiųjų šalių sekimo priemonių.',
     pvLocalH:'Kas lieka jūsų naršyklėje',
@@ -828,6 +828,8 @@ export const strings = {
     pvThirdTr:'Vertimas: bakstelėjus vertimo mygtuką (🌐) prie pokalbio žinutės ar forumo įrašo, tekstas iš naršyklės siunčiamas į „Google“ vertėją, jei nepavyksta – į MyMemory, o galiausiai – į „Google“ per šį serverį. Nebakstelėjus niekas nesiunčiama, o funkciją galima išjungti skiltyje „Išplėstinės parinktys“.',
     pvThirdRadio:'Radijas: klausantis radijo stoties muzikos grotuve, naršyklė jungiasi tiesiogiai prie tos stoties.',
     pvThirdPdb:'Žurnalų analizė: jei naudojate „Analizuoti žurnalo failą“, .pdb failas per šį serverį siunčiamas į pokerth.net žurnalų analizės paslaugą.',
+    pvAcctH:'Jūsų pokerth.net paskyra',
+    pvAcct:'Jūsų pokerth.net paskyrą (slapyvardį, el. pašto adresą, slaptažodį, forumo profilį, žaidimo statistiką ir reitingą) sukuria ir saugo pokerth.net, o ne šis žiniatinklio klientas, ir jai taikoma toliau pateikta pokerth.net privatumo politika. Kai ja prisijungiate, jūsų slapyvardis ir slaptažodis šifruotais ryšiais keliauja iš jūsų naršyklės per šį serverį į pokerth.net žaidimo serverį: šis serveris juos perduoda jų nesaugodamas, o žiniatinklio klientas niekada neišsaugo jūsų slaptažodžio; jį gali išsaugoti tik pačios jūsų naršyklės slaptažodžių tvarkyklė, jei tai leidžiate.',
     pvLicH:'Laisva programinė įranga - AGPL-3.0',
     pvLic1:'Visas klientas yra laisva programinė įranga, išleista pagal GNU AGPL v3 licenciją. Galite skaityti pirminį kodą, patikrinti, ką jis daro, talpinti savo kopiją ir jį keisti:',
     pvLicSrc:'Pirminis kodas',

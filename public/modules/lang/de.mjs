@@ -817,7 +817,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Tritt der Community auf Discord bei',
     privacyTitle:'Datenschutz',
-    pvUpdated:'Zuletzt aktualisiert: 12. Oktober 2026',
+    pvUpdated:'Zuletzt aktualisiert: 19. Oktober 2026',
     pvWhoH:'Wer betreibt das',
     pvWho:'Der PokerTH Web Client ist ein freies Open-Source-Hobbyprojekt, gepflegt von einer Privatperson, Arnaud Obscur („narmod“), in Zusammenarbeit mit dem PokerTH-Projekt. Es ist kein Unternehmen und verfolgt keinen kommerziellen Zweck: keine Werbung, kein Datenverkauf, kein Werbeprofiling, keine Tracker von Drittanbietern.',
     pvLocalH:'Was in Ihrem Browser bleibt',
@@ -836,6 +836,8 @@ export const strings = {
     pvThirdTr:'Übersetzung: Tippst du bei einer Chatnachricht oder einem Forenbeitrag auf den Übersetzen-Knopf (🌐), wird der Text von deinem Browser an Google Übersetzer gesendet, bei einem Fehlschlag an MyMemory und zuletzt über diesen Server an Google. Ohne dein Tippen wird nichts gesendet, und die Funktion ist unter Erweiterte Optionen abschaltbar.',
     pvThirdRadio:'Radios: Spielst du im Musikplayer einen Radiosender ab, verbindet sich dein Browser direkt mit diesem Sender.',
     pvThirdPdb:'Protokollanalyse: Nutzt du „Protokolldatei analysieren“, wird die .pdb-Datei über diesen Server an den Protokollanalyse-Dienst von pokerth.net gesendet.',
+    pvAcctH:'Dein pokerth.net-Konto',
+    pvAcct:'Dein pokerth.net-Konto (Nickname, E-Mail-Adresse, Passwort, Forenprofil, Spielstatistiken und Ranglistenplatz) wird von pokerth.net angelegt und aufbewahrt, nicht von diesem Web-Client, und unterliegt der unten stehenden Datenschutzerklärung von pokerth.net. Wenn du dich damit anmeldest, gelangen dein Nickname und dein Passwort über verschlüsselte Verbindungen von deinem Browser durch diesen Server zum Spielserver von pokerth.net: Dieser Server leitet sie weiter, ohne sie aufzubewahren, und der Web-Client speichert dein Passwort nie; nur der eigene Passwort-Manager deines Browsers darf es aufbewahren, wenn du es erlaubst.',
     pvLicH:'Freie Software - AGPL-3.0',
     pvLic1:'Der gesamte Client ist freie Software unter der GNU-AGPL-v3-Lizenz. Sie können den Quellcode lesen, prüfen, was er tut, eine eigene Kopie hosten und ihn verändern:',
     pvLicSrc:'Quellcode',

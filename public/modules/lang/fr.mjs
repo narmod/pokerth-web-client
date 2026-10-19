@@ -544,7 +544,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Rejoignez la communauté sur Discord',
     privacyTitle:'Confidentialité',
-    pvUpdated:'Dernière mise à jour : 12 octobre 2026',
+    pvUpdated:'Dernière mise à jour : 19 octobre 2026',
     pvWhoH:'Qui gère ce client',
     pvWho:'Le client web PokerTH est un projet personnel libre et open source, maintenu par un particulier, Arnaud Obscur (« narmod »), en collaboration avec le projet PokerTH. Ce n\'est pas une entreprise et il n\'a aucun but commercial : pas de publicité, pas de vente de données, pas de profilage publicitaire, pas de traqueurs tiers.',
     pvLocalH:'Ce qui reste dans votre navigateur',
@@ -563,6 +563,8 @@ export const strings = {
     pvThirdTr:'Traduction : si vous touchez le bouton de traduction (🌐) d\'un message de chat ou d\'un message du forum, le texte est envoyé depuis votre navigateur à Google Traduction, puis à MyMemory en cas d\'échec, et en dernier recours à Google via ce serveur. Rien n\'est envoyé sans votre action, et la fonction est désactivable dans Options avancées.',
     pvThirdRadio:'Radios : quand vous écoutez une station de radio dans le lecteur de musique, votre navigateur se connecte directement à cette station.',
     pvThirdPdb:'Analyse des journaux : si vous utilisez « Analyser le fichier journal », le fichier .pdb est envoyé via ce serveur au service d\'analyse des journaux de pokerth.net.',
+    pvAcctH:'Votre compte pokerth.net',
+    pvAcct:'Votre compte pokerth.net (pseudo, adresse e-mail, mot de passe, profil du forum, statistiques de jeu et classement) est créé et conservé par pokerth.net, non par ce client web, et relève de la politique de confidentialité de pokerth.net ci-dessous. Quand vous vous connectez avec ce compte, votre pseudo et votre mot de passe vont de votre navigateur au serveur de jeu de pokerth.net en passant par ce serveur, via des connexions chiffrées : ce serveur les transmet sans les conserver, et le client web n\'enregistre jamais votre mot de passe ; seul le gestionnaire de mots de passe propre à votre navigateur peut le conserver, si vous l\'y autorisez.',
     pvLicH:'Logiciel libre - AGPL-3.0',
     pvLic1:'L\'intégralité du client est un logiciel libre, publié sous licence GNU AGPL v3. Vous pouvez lire le code source, vérifier ce qu\'il fait, héberger votre propre copie et le modifier :',
     pvLicSrc:'Code source',

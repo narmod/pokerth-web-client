@@ -542,7 +542,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Pievienojies kopienai Discord',
     privacyTitle:'Privātums',
-    pvUpdated:'Pēdējoreiz atjaunināts: 2026. gada 12. oktobrī',
+    pvUpdated:'Pēdējoreiz atjaunināts: 2026. gada 19. oktobrī',
     pvWhoH:'Kas to uztur',
     pvWho:'PokerTH tīmekļa klients ir brīvs un atvērtā pirmkoda hobija projekts, ko uztur privātpersona Arnaud Obscur ("narmod") sadarbībā ar PokerTH projektu. Tas nav uzņēmums, un tam nav komerciāla mērķa: nav reklāmu, datu pārdošanas, reklāmas profilēšanas vai trešo pušu izsekotāju.',
     pvLocalH:'Kas paliek tavā pārlūkā',
@@ -561,6 +561,8 @@ export const strings = {
     pvThirdTr:'Tulkošana: kad tērzēšanas ziņā vai foruma ierakstā pieskaries tulkošanas pogai (🌐), teksts no tava pārlūka tiek nosūtīts uz Google Translate vai, ja tas neizdodas, uz MyMemory, vai visbeidzot caur šo serveri uz Google. Bez tava pieskāriena netiek nosūtīts nekas, un šo funkciju var izslēgt papildu opcijās.',
     pvThirdRadio:'Radio: kad mūzikas atskaņotājā atskaņo radiostaciju, tavs pārlūks savienojas tieši ar šo staciju.',
     pvThirdPdb:'Žurnālu analīze: ja izmanto “Analizēt žurnāla failu”, .pdb fails tiek nosūtīts caur šo serveri uz pokerth.net žurnālu analīzes pakalpojumu.',
+    pvAcctH:'Tavs pokerth.net konts',
+    pvAcct:'Tavu pokerth.net kontu (segvārds, e-pasta adrese, parole, foruma profils, spēļu statistika un reitings) izveido un glabā pokerth.net, nevis šis tīmekļa klients, un uz to attiecas zemāk norādītā pokerth.net privātuma politika. Kad piesakies ar to, tavs segvārds un parole pa šifrētiem savienojumiem nonāk no tava pārlūka caur šo serveri līdz pokerth.net spēļu serverim: šis serveris tos nodod tālāk, tos neglabājot, un tīmekļa klients nekad nesaglabā tavu paroli; to var saglabāt tikai paša tava pārlūka paroļu pārvaldnieks, ja tu to atļauj.',
     pvLicH:'Brīvā programmatūra - AGPL-3.0',
     pvLic1:'Viss klients ir brīva programmatūra, kas izplatīta saskaņā ar GNU AGPL v3 licenci. Tu vari lasīt pirmkodu, pārbaudīt, ko tas dara, izvietot savu kopiju un to pārveidot:',
     pvLicSrc:'Pirmkods',

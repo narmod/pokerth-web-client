@@ -543,7 +543,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Discord-da icmaya qoşulun',
     privacyTitle:'Məxfilik',
-    pvUpdated:'Son yenilənmə: 12 oktyabr 2026',
+    pvUpdated:'Son yenilənmə: 19 oktyabr 2026',
     pvWhoH:'Bunu kim idarə edir',
     pvWho:'PokerTH veb klienti pulsuz və açıq mənbəli həvəskar layihədir, onu PokerTH layihəsi ilə əməkdaşlıqda fərdi şəxs — Arnaud Obscur ("narmod") dəstəkləyir. Bu, şirkət deyil və kommersiya məqsədi yoxdur: reklam yoxdur, məlumat satışı yoxdur, reklam profilləşdirməsi yoxdur, üçüncü tərəf izləyiciləri yoxdur.',
     pvLocalH:'Brauzerinizdə nə qalır',
@@ -562,6 +562,8 @@ export const strings = {
     pvThirdTr:'Tərcümə: çat mesajında və ya forum yazısında tərcümə düyməsinə (🌐) toxunduqda mətn brauzerinizdən Google Translate-ə, alınmazsa MyMemory-yə, ya da sonda bu server vasitəsilə Google-a göndərilir. Siz toxunmasanız heç nə göndərilmir və bu funksiya Əlavə seçimlərdə söndürülə bilər.',
     pvThirdRadio:'Radiolar: musiqi pleyerində radio stansiyası oxutduqda brauzeriniz birbaşa həmin stansiyaya qoşulur.',
     pvThirdPdb:'Jurnal təhlili: Jurnal faylını təhlil et funksiyasından istifadə etsəniz, .pdb faylı bu server vasitəsilə pokerth.net jurnal təhlili xidmətinə göndərilir.',
+    pvAcctH:'pokerth.net hesabınız',
+    pvAcct:'pokerth.net hesabınız (ləqəb, e-poçt ünvanı, parol, forum profili, oyun statistikası və reytinq) bu veb klient tərəfindən deyil, pokerth.net tərəfindən yaradılır və saxlanılır və aşağıdakı pokerth.net məxfilik siyasəti ilə əhatə olunur. Onunla daxil olduqda ləqəbiniz və parolunuz şifrələnmiş bağlantılar üzərindən brauzerinizdən bu server vasitəsilə pokerth.net oyun serverinə gedir: bu server onları saxlamadan ötürür, veb klient isə parolunuzu heç vaxt saxlamır; yalnız brauzerinizin öz parol meneceri, siz icazə versəniz, onu saxlaya bilər.',
     pvLicH:'Pulsuz proqram - AGPL-3.0',
     pvLic1:'Bütün klient GNU AGPL v3 lisenziyası ilə yayımlanan pulsuz proqramdır. Mənbə kodunu oxuya, nə etdiyini yoxlaya, öz nüsxənizi yerləşdirə və onu dəyişdirə bilərsiniz:',
     pvLicSrc:'Mənbə kodu',

@@ -808,7 +808,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Pridružite se zajednici na Discordu',
     privacyTitle:'Privatnost',
-    pvUpdated:'Zadnje ažuriranje: 12. listopada 2026.',
+    pvUpdated:'Zadnje ažuriranje: 19. listopada 2026.',
     pvWhoH:'Tko ovim upravlja',
     pvWho:'PokerTH web klijent slobodan je hobi projekt otvorenog koda koji održava privatna osoba, Arnaud Obscur („narmod“), u suradnji s projektom PokerTH. Nije tvrtka i nema komercijalnu svrhu: bez oglasa, bez prodaje podataka, bez oglašivačkog profiliranja, bez trackera trećih strana.',
     pvLocalH:'Što ostaje u vašem pregledniku',
@@ -827,6 +827,8 @@ export const strings = {
     pvThirdTr:'Prijevod: kad dodirneš gumb za prijevod (🌐) uz poruku u chatu ili objavu na forumu, tekst se iz preglednika šalje Google Prevoditelju, ako to ne uspije MyMemoryju, a na kraju Googleu preko ovog poslužitelja. Bez dodira ništa se ne šalje, a značajka se može isključiti u Napredne opcije.',
     pvThirdRadio:'Radio: kad slušaš radijsku postaju u glazbenom playeru, preglednik se izravno spaja na tu postaju.',
     pvThirdPdb:'Analiza zapisnika: ako koristiš „Analiziraj datoteku zapisnika”, datoteka .pdb šalje se preko ovog poslužitelja usluzi za analizu zapisnika na pokerth.net.',
+    pvAcctH:'Vaš pokerth.net račun',
+    pvAcct:'Vaš pokerth.net račun (nadimak, adresu e-pošte, lozinku, profil na forumu, statistiku igara i poredak na ljestvici) izrađuje i čuva pokerth.net, a ne ovaj web klijent, i na njega se primjenjuju pravila o privatnosti za pokerth.net navedena u nastavku. Kada se njime prijavite, vaš nadimak i lozinka putuju iz vašeg preglednika preko ovog poslužitelja do pokerth.net poslužitelja igre šifriranim vezama: ovaj ih poslužitelj prosljeđuje ne zadržavajući ih, a web klijent nikada ne sprema vašu lozinku; može je čuvati samo vlastiti upravitelj lozinki vašeg preglednika, ako to dopustite.',
     pvLicH:'Slobodan softver - AGPL-3.0',
     pvLic1:'Cijeli klijent je slobodan softver objavljen pod licencom GNU AGPL v3. Možete čitati izvorni kod, provjeriti što radi, hostati vlastitu kopiju i mijenjati ga:',
     pvLicSrc:'Izvorni kod',

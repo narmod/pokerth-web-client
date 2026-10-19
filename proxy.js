@@ -6794,7 +6794,7 @@ function seoFaqPage(res, method, lang) {
 // the search description come from seo-i18n/privacy.js.
 var PV_KEYS = ['pvUpdated', 'pvWhoH', 'pvWho', 'pvLocalH', 'pvLocal', 'pvServerH',
   'pvSrv1', 'pvSrvSync', 'pvSrvErr', 'pvSrvVotes', 'pvSrvGuide', 'pvSrv3', 'pvSrvLan', 'pvSrv2',
-  'pvThirdH', 'pvThird', 'pvThirdTr', 'pvThirdRadio', 'pvThirdPdb',
+  'pvThirdH', 'pvThird', 'pvThirdTr', 'pvThirdRadio', 'pvThirdPdb', 'pvAcctH', 'pvAcct',
   'pvLicH', 'pvLic1', 'pvLicSrc', 'pvLicLicense', 'pvLicGnu', 'pvLic2',
   'pvRightsH', 'pvRights', 'pvRightsGh'];
 var SEO_PRIVACY_META = require('./seo-i18n/privacy.js');
@@ -6845,6 +6845,8 @@ function _seoPrivacyFromCat(S, h1) {
     h2('pvLocalH') + p('pvLocal') +
     h2('pvServerH') + '<ul>' + ['pvSrv1', 'pvSrvSync', 'pvSrvErr', 'pvSrvVotes', 'pvSrvGuide', 'pvSrv3', 'pvSrvLan', 'pvSrv2'].map(item).join('') + '</ul>' +
     h2('pvThirdH') + p('pvThird') + p('pvThirdTr') + p('pvThirdRadio') + p('pvThirdPdb') +
+    h2('pvAcctH') + p('pvAcct') +
+    '<p>' + a('https://www.pokerth.net/ucp.php?mode=privacy', 'pokerth.net/ucp.php?mode=privacy') + '</p>' +
     h2('pvLicH') + p('pvLic1') +
     '<ul><li>' + esc(S.pvLicSrc) + ' — ' + a('https://github.com/narmod/pokerth-web-client', 'github.com/narmod/pokerth-web-client') + '</li>' +
     '<li>' + esc(S.pvLicLicense) + ' — ' + a('https://github.com/narmod/pokerth-web-client/blob/main/LICENSE', 'AGPL-3.0 — pokerth-web-client') + '</li>' +
@@ -14633,7 +14635,10 @@ function _attachWs(S, ws) {
       if (_ll >= 1) {
         const d = describeMsg(_pl);
         console.log('[C→S] ' + d.name + ' (' + _n + 'b)');
-        if (_ll >= 2 && _n <= 32) console.log('      hex: ' + buf.slice(4).toString('hex'));
+        // Never the login frames, even in debug: Init and AuthClientResponse
+        // carry the account password, which the privacy page says this
+        // server passes on without keeping.
+        if (_ll >= 2 && _n <= 32 && d.name !== 'Init' && d.name !== 'AuthClientResponse') console.log('      hex: ' + buf.slice(4).toString('hex'));
       }
     }
     S.sock.write(buf);

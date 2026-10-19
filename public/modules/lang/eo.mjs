@@ -543,7 +543,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Aliĝu al la komunumo ĉe Discord',
     privacyTitle:'Privateco',
-    pvUpdated:'Laste ĝisdatigita: 12 oktobro 2026',
+    pvUpdated:'Laste ĝisdatigita: 19 oktobro 2026',
     pvWhoH:'Kiu mastrumas ĉi tion',
     pvWho:'La retkliento de PokerTH estas libera kaj malfermitkoda hobia projekto, prizorgata de privatulo, Arnaud Obscur ("narmod"), kunlabore kun la projekto PokerTH. Ĝi ne estas firmao kaj ne havas komercan celon: neniuj reklamoj, neniu vendo de datumoj, neniu reklama profilado, neniuj eksteraj spuriloj.',
     pvLocalH:'Kio restas en via retumilo',
@@ -562,6 +562,8 @@ export const strings = {
     pvThirdTr:'Tradukado: kiam vi tuŝas la tradukan butonon (🌐) sur babila mesaĝo aŭ foruma afiŝo, la teksto estas sendita el via retumilo al Google Translate, se tio malsukcesas al MyMemory, aŭ fine tra ĉi tiu servilo al Google. Nenio estas sendita sen via tuŝo, kaj la funkcio estas malŝaltebla en Altnivelaj opcioj.',
     pvThirdRadio:'Radioj: kiam vi ludas radiostacion en la muzikludilo, via retumilo konektiĝas rekte al tiu stacio.',
     pvThirdPdb:'Protokola analizo: se vi uzas Analizi protokolan dosieron, la .pdb-dosiero estas sendita tra ĉi tiu servilo al la protokol-analiza servo de pokerth.net.',
+    pvAcctH:'Via konto de pokerth.net',
+    pvAcct:'Vian konton de pokerth.net (kromnomo, retpoŝtadreso, pasvorto, foruma profilo, ludstatistikoj kaj rangigo) kreas kaj tenas pokerth.net, ne ĉi tiu retkliento, kaj ĝin kovras la privateca politiko de pokerth.net ĉi-sube. Kiam vi ensalutas per ĝi, via kromnomo kaj pasvorto iras de via retumilo tra ĉi tiu servilo al la ludservilo de pokerth.net per ĉifritaj konektoj: ĉi tiu servilo plusendas ilin sen konservi ilin, kaj la retkliento neniam konservas vian pasvorton; nur la propra pasvortadministrilo de via retumilo povas konservi ĝin, se vi permesas tion.',
     pvLicH:'Libera programaro - AGPL-3.0',
     pvLic1:'La tuta kliento estas libera programaro eldonita laŭ la permesilo GNU AGPL v3. Vi povas legi la fontkodon, kontroli kion ĝi faras, gastigi vian propran kopion kaj modifi ĝin:',
     pvLicSrc:'Fontkodo',

@@ -810,7 +810,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Tham gia cộng đồng trên Discord',
     privacyTitle:'Quyền riêng tư',
-    pvUpdated:'Cập nhật lần cuối: 12 tháng 10, 2026',
+    pvUpdated:'Cập nhật lần cuối: 19 tháng 10, 2026',
     pvWhoH:'Ai vận hành trang này',
     pvWho:'PokerTH Web Client là một dự án sở thích tự do, mã nguồn mở, được duy trì bởi một cá nhân, Arnaud Obscur (“narmod”), hợp tác với dự án PokerTH. Đây không phải công ty và không có mục đích thương mại: không quảng cáo, không bán dữ liệu, không lập hồ sơ quảng cáo, không trình theo dõi bên thứ ba.',
     pvLocalH:'Những gì lưu trong trình duyệt của bạn',
@@ -829,6 +829,8 @@ export const strings = {
     pvThirdTr:'Dịch: khi bạn chạm nút dịch (🌐) trên tin nhắn trò chuyện hoặc bài viết diễn đàn, văn bản được gửi từ trình duyệt đến Google Dịch, đến MyMemory nếu không thành công, và cuối cùng đến Google qua máy chủ này. Không có gì được gửi nếu bạn không chạm, và có thể tắt tính năng trong Tùy chọn nâng cao.',
     pvThirdRadio:'Radio: khi bạn phát một đài radio trong trình phát nhạc, trình duyệt kết nối trực tiếp đến đài đó.',
     pvThirdPdb:'Phân tích nhật ký: nếu bạn dùng “Phân tích tệp nhật ký”, tệp .pdb được gửi qua máy chủ này đến dịch vụ phân tích nhật ký của pokerth.net.',
+    pvAcctH:'Tài khoản pokerth.net của bạn',
+    pvAcct:'Tài khoản pokerth.net của bạn (biệt danh, địa chỉ e-mail, mật khẩu, hồ sơ diễn đàn, thống kê trò chơi và thứ hạng) do pokerth.net tạo và lưu giữ, không phải web client này, và thuộc phạm vi chính sách quyền riêng tư của pokerth.net bên dưới. Khi bạn đăng nhập bằng tài khoản này, biệt danh và mật khẩu của bạn được truyền từ trình duyệt của bạn qua máy chủ này tới máy chủ trò chơi pokerth.net qua các kết nối được mã hóa: máy chủ này chuyển tiếp chúng mà không lưu giữ, và web client không bao giờ lưu mật khẩu của bạn; chỉ trình quản lý mật khẩu riêng của trình duyệt của bạn mới có thể lưu nó, nếu bạn cho phép.',
     pvLicH:'Phần mềm tự do - AGPL-3.0',
     pvLic1:'Toàn bộ client là phần mềm tự do, phát hành theo giấy phép GNU AGPL v3. Bạn có thể đọc mã nguồn, kiểm tra nó làm gì, tự lưu trữ bản sao của mình và chỉnh sửa nó:',
     pvLicSrc:'Mã nguồn',

@@ -543,7 +543,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Shiga al\'umma a Discord',
     privacyTitle:'Sirri',
-    pvUpdated:'An sabunta na ƙarshe: 12 ga Oktoba 2026',
+    pvUpdated:'An sabunta na ƙarshe: 19 ga Oktoba 2026',
     pvWhoH:'Wa ke gudanar da wannan',
     pvWho:'Abokin cinikin yanar gizo na PokerTH aiki ne na sha\'awa na kyauta kuma buɗaɗɗen tushe, wanda wani mutum, Arnaud Obscur ("narmod"), ke kula da shi tare da haɗin gwiwar aikin PokerTH. Ba kamfani ba ne kuma ba shi da manufar kasuwanci: babu talla, babu sayar da bayanai, babu bibiyar talla, babu masu bibiya na wasu.',
     pvLocalH:'Abin da ke zama a burauzarka',
@@ -562,6 +562,8 @@ export const strings = {
     pvThirdTr:'Fassara: idan ka taɓa maɓallin fassara (🌐) a kan saƙon hira ko rubutun dandali, ana aika rubutun daga burauzarka zuwa Google Translate, idan hakan ya kasa zuwa MyMemory, ko a ƙarshe ta wannan sabar zuwa Google. Ba a aika komai ba sai ka taɓa, kuma ana iya kashe fasalin a cikin Zaɓuɓɓuka na ci gaba.',
     pvThirdRadio:'Rediyo: idan ka kunna tashar rediyo a mai kunna kiɗa, burauzarka tana haɗawa kai tsaye da wannan tashar.',
     pvThirdPdb:'Binciken log: idan ka yi amfani da Bincika fayil na log, ana aika fayil ɗin .pdb ta wannan sabar zuwa sabis na binciken log na pokerth.net.',
+    pvAcctH:'Asusunka na pokerth.net',
+    pvAcct:'pokerth.net ne ke ƙirƙira da adana asusunka na pokerth.net (laƙabi, adireshin imel, kalmar sirri, bayanin martaba na dandalin tattaunawa, ƙididdigar wasa da matsayi), ba wannan abokin cinikin yanar gizo ba, kuma yana ƙarƙashin manufar sirri ta pokerth.net da ke ƙasa. Idan ka shiga da shi, laƙabinka da kalmar sirrinka suna tafiya daga burauzarka ta wannan sabar zuwa sabar wasan pokerth.net ta hanyoyin haɗi da aka ɓoye: wannan sabar tana miƙa su ba tare da adana su ba, kuma abokin cinikin yanar gizo ba ya taɓa adana kalmar sirrinka; manajan kalmomin sirri na burauzarka da kansa kaɗai ne zai iya adana ta, idan ka yarda.',
     pvLicH:'Manhaja ta kyauta - AGPL-3.0',
     pvLic1:'Dukan abokin ciniki manhaja ce ta kyauta da aka fitar ƙarƙashin lasisin GNU AGPL v3. Za ka iya karanta lambar tushe, duba abin da take yi, ɗaukar kwafinka da gyara ta:',
     pvLicSrc:'Lambar tushe',

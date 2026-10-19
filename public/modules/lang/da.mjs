@@ -809,7 +809,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Bliv en del af fællesskabet på Discord',
     privacyTitle:'Privatliv',
-    pvUpdated:'Senest opdateret: 12. oktober 2026',
+    pvUpdated:'Senest opdateret: 19. oktober 2026',
     pvWhoH:'Hvem driver dette',
     pvWho:'PokerTH-webklienten er et frit open source-hobbyprojekt, vedligeholdt af en privatperson, Arnaud Obscur (”narmod”), i samarbejde med PokerTH-projektet. Det er ikke en virksomhed og har intet kommercielt formål: ingen reklamer, intet salg af data, ingen annonceprofilering, ingen tredjepartstrackere.',
     pvLocalH:'Hvad der bliver i din browser',
@@ -828,6 +828,8 @@ export const strings = {
     pvThirdTr:'Oversættelse: når du trykker på oversætknappen (🌐) ved en chatbesked eller et forumindlæg, sendes teksten fra din browser til Google Oversæt, til MyMemory hvis det mislykkes, og til sidst via denne server til Google. Intet sendes, uden at du trykker, og funktionen kan slås fra under Avancerede indstillinger.',
     pvThirdRadio:'Radio: når du afspiller en radiostation i musikafspilleren, forbinder din browser direkte til den station.',
     pvThirdPdb:'Loganalyse: hvis du bruger »Analysér logfil«, sendes .pdb-filen via denne server til pokerth.nets loganalysetjeneste.',
+    pvAcctH:'Din pokerth.net-konto',
+    pvAcct:'Din pokerth.net-konto (kaldenavn, e-mailadresse, adgangskode, forumprofil, spilstatistik og placering på ranglisten) oprettes og opbevares af pokerth.net, ikke af denne webklient, og er omfattet af privatlivspolitikken for pokerth.net nedenfor. Når du logger ind med den, går dit kaldenavn og din adgangskode fra din browser via denne server til pokerth.net-spilserveren over krypterede forbindelser: denne server videresender dem uden at gemme dem, og webklienten gemmer aldrig din adgangskode; kun din browsers egen adgangskodeadministrator må gemme den, hvis du tillader det.',
     pvLicH:'Fri software - AGPL-3.0',
     pvLic1:'Hele klienten er fri software udgivet under GNU AGPL v3-licensen. Du kan læse kildekoden, kontrollere hvad den gør, hoste din egen kopi og ændre den:',
     pvLicSrc:'Kildekode',

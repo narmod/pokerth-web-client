@@ -810,7 +810,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Csatlakozz a közösséghez a Discordon',
     privacyTitle:'Adatvédelem',
-    pvUpdated:'Utolsó frissítés: 2026. október 12.',
+    pvUpdated:'Utolsó frissítés: 2026. október 19.',
     pvWhoH:'Ki üzemelteti',
     pvWho:'A PokerTH webes kliens egy szabad, nyílt forráskódú hobbiprojekt, amelyet egy magánszemély, Arnaud Obscur („narmod”) tart karban a PokerTH projekttel együttműködve. Nem cég, és nincs kereskedelmi célja: nincs reklám, nincs adateladás, nincs hirdetési profilozás, nincsenek harmadik féltől származó követők.',
     pvLocalH:'Mi marad a böngésződben',
@@ -829,6 +829,8 @@ export const strings = {
     pvThirdTr:'Fordítás: ha egy csevegőüzenet vagy fórumbejegyzés fordítás gombjára (🌐) koppintasz, a szöveg a böngésződből a Google Fordítóhoz kerül, ha ez nem sikerül, a MyMemoryhoz, végső esetben pedig ezen a szerveren keresztül a Google-hoz. Koppintás nélkül semmi sem kerül elküldésre, és a funkció kikapcsolható itt: Speciális beállítások.',
     pvThirdRadio:'Rádiók: ha a zenelejátszóban rádióállomást hallgatsz, a böngésződ közvetlenül ahhoz az állomáshoz csatlakozik.',
     pvThirdPdb:'Naplóelemzés: ha a „Naplófájl elemzése” funkciót használod, a .pdb fájl ezen a szerveren keresztül a pokerth.net naplóelemző szolgáltatásához kerül.',
+    pvAcctH:'A pokerth.net-fiókod',
+    pvAcct:'A pokerth.net-fiókodat (becenév, e-mail-cím, jelszó, fórumprofil, játékstatisztikák és helyezés) a pokerth.net hozza létre és tárolja, nem ez a webes kliens, és az alábbi pokerth.net adatvédelmi irányelvek vonatkoznak rá. Amikor ezzel jelentkezel be, a beceneved és a jelszavad titkosított kapcsolatokon keresztül jut el a böngésződből ezen a szerveren át a pokerth.net játékszerveréig: ez a szerver anélkül továbbítja őket, hogy megőrizné, a webes kliens pedig soha nem menti el a jelszavadat; csak a böngésződ saját jelszókezelője tárolhatja, ha engedélyezed.',
     pvLicH:'Szabad szoftver - AGPL-3.0',
     pvLic1:'A teljes kliens szabad szoftver, a GNU AGPL v3 licenc alatt jelent meg. Elolvashatod a forráskódot, ellenőrizheted, mit csinál, üzemeltetheted a saját példányodat, és módosíthatod:',
     pvLicSrc:'Forráskód',

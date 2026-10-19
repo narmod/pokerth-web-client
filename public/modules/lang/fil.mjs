@@ -541,7 +541,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Sumali sa komunidad sa Discord',
     privacyTitle:'Privacy',
-    pvUpdated:'Huling na-update: Oktubre 12, 2026',
+    pvUpdated:'Huling na-update: Oktubre 19, 2026',
     pvWhoH:'Sino ang nagpapatakbo nito',
     pvWho:'Ang PokerTH Web Client ay isang libre at open-source na hobby project, pinapanatili ng isang indibidwal, si Arnaud Obscur ("narmod"), sa pakikipagtulungan sa proyektong PokerTH. Hindi ito kumpanya at walang komersyal na layunin: walang ad, walang pagbebenta ng data, walang advertising profiling, walang third-party tracker.',
     pvLocalH:'Ang nananatili sa iyong browser',
@@ -560,6 +560,8 @@ export const strings = {
     pvThirdTr:'Pagsasalin: kapag tinapik ang button ng pagsasalin (🌐) sa mensahe ng chat o post sa forum, ang teksto ay ipinapadala mula sa iyong browser sa Google Translate, sa MyMemory kung hindi matagumpay, at sa huli sa Google sa pamamagitan ng server na ito. Walang ipinapadala kung hindi tinapik, at ang feature ay maaaring i-off sa Mga advanced na option.',
     pvThirdRadio:'Radyo: kapag nagpapatugtog ng istasyon ng radyo sa music player, direktang kumokonekta ang iyong browser sa istasyong iyon.',
     pvThirdPdb:'Pagsusuri ng log: kung gagamitin ang “Suriin ang log file”, ang .pdb file ay ipinapadala sa pamamagitan ng server na ito sa serbisyo ng pagsusuri ng log ng pokerth.net.',
+    pvAcctH:'Ang iyong pokerth.net account',
+    pvAcct:'Ang iyong pokerth.net account (nickname, e-mail address, password, profile sa forum, mga istatistika ng laro at ranggo) ay ginagawa at iniingatan ng pokerth.net, hindi ng web client na ito, at sakop ito ng patakaran sa privacy ng pokerth.net sa ibaba. Kapag nag-log in ka gamit ito, ang iyong nickname at password ay dumadaan mula sa iyong browser sa server na ito papunta sa game server ng pokerth.net sa pamamagitan ng mga naka-encrypt na koneksyon: ipinapasa ang mga ito ng server na ito nang hindi iniimbak, at hindi kailanman sine-save ng web client ang iyong password; ang sariling password manager lang ng iyong browser ang maaaring mag-imbak nito, kung papayagan mo.',
     pvLicH:'Libreng software - AGPL-3.0',
     pvLic1:'Ang buong client ay libreng software, inilabas sa ilalim ng lisensyang GNU AGPL v3. Maaari mong basahin ang source code, i-verify ang ginagawa nito, mag-host ng sarili mong kopya, at baguhin ito:',
     pvLicSrc:'Source code',

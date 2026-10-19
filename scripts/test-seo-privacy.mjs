@@ -72,7 +72,8 @@ ok(!incomplete.length, 'every catalogue holds every privacy key (' + codes.lengt
 const enS = cats.en;
 for (const [k, needle] of [['pvSrv1', 'These totals may be combined'], ['pvSrv1', 'connected right now in each country'],
   ['pvSrv1', 'as a guest or with an account'], ['pvSrvGuide', 'backup offer'], ['pvSrvLan', 'salted hash'],
-  ['pvSrvLan', 'For the admins only']]) {
+  ['pvSrvLan', 'For the admins only'], ['pvAcct', 'passes them on'], ['pvAcct', 'password manager'],
+  ['pvUpdated', 'October 19, 2026']]) {
   ok(enS[k].indexOf(needle) !== -1 && priv.indexOf(needle) !== -1, 'English ' + k + ' matches privacy.html: “' + needle + '”');
 }
 const same = codes.filter(c => c !== 'en' && ['pvSrv1', 'pvSrvGuide', 'pvSrvLan'].some(k => cats[c][k] === enS[k]));
@@ -92,6 +93,14 @@ const meta = (await import(pathToFileURL(join(root, 'seo-i18n', 'privacy.js')).h
 const seoCodes = codes.filter(c => c !== 'en').map(c => ({ 'pt-br': 'pt-BR', 'pt-pt': 'pt-PT', 'zh-hk': 'zh-HK', 'zh-tw': 'zh-TW' })[c] || c);
 const noMeta = seoCodes.filter(c => !meta[c] || !meta[c].h1 || !meta[c].desc);
 ok(!noMeta.length, 'seo-i18n/privacy.js has a heading and a description for every language' + (noMeta.length ? ': ' + noMeta.join(' ') : ''));
+
+ok(fr.indexOf('href="https://www.pokerth.net/ucp.php?mode=privacy"') !== -1, 'translated page links to the pokerth.net account privacy policy');
+ok(priv.indexOf('href="https://www.pokerth.net/ucp.php?mode=privacy"') !== -1, 'English page links to the pokerth.net account privacy policy');
+const updDup = codes.filter(c => c !== 'en' && cats[c].pvUpdated === enS.pvUpdated);
+ok(!updDup.length, 'the new date is translated in every language' + (updDup.length ? ': ' + updDup.join(' ') : ''));
+// The page promises the password is passed on without being kept: the
+// debug hex dump of client frames must never include the login frames.
+ok(/_n <= 32 && d\.name !== 'Init' && d\.name !== 'AuthClientResponse'\)/.test(src), 'login frames are never hex-dumped in the proxy log');
 
 const app = readFileSync(join(root, 'public', 'pokerth-client.html'), 'utf8');
 ok(app.indexOf('data-i18n="pvSrvLan"') !== -1, 'the in-app overlay shows the server-proposal item');

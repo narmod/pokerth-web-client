@@ -543,7 +543,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Bí páirteach sa phobal ar Discord',
     privacyTitle:'Príobháideacht',
-    pvUpdated:'Nuashonraithe go deireanach: 12 Deireadh Fómhair 2026',
+    pvUpdated:'Nuashonraithe go deireanach: 19 Deireadh Fómhair 2026',
     pvWhoH:'Cé a reáchtálann é seo',
     pvWho:'Tionscadal caitheamh aimsire saor agus foinse oscailte is ea cliant gréasáin PokerTH, á chothabháil ag duine aonair, Arnaud Obscur ("narmod"), i gcomhar le tionscadal PokerTH. Ní comhlacht é agus níl aon aidhm tráchtála aige: gan fógraí, gan díol sonraí, gan próifíliú fógraíochta, gan rianaitheoirí tríú páirtí.',
     pvLocalH:'Cad a fhanann i do bhrabhsálaí',
@@ -562,6 +562,8 @@ export const strings = {
     pvThirdTr:'Aistriúchán: nuair a thapálann tú an cnaipe aistriúcháin (🌐) ar theachtaireacht chomhrá nó ar phostáil fóraim, seoltar an téacs ó do bhrabhsálaí chuig Google Translate, chuig MyMemory má theipeann air sin, nó ar deireadh tríd an bhfreastalaí seo chuig Google. Ní sheoltar dada mura dtapálann tú, agus is féidir an ghné a mhúchadh sna hArdroghanna.',
     pvThirdRadio:'Raidiónna: nuair a sheinneann tú stáisiún raidió sa seinnteoir ceoil, ceanglaíonn do bhrabhsálaí go díreach leis an stáisiún sin.',
     pvThirdPdb:'Anailís logaí: má úsáideann tú Anailísigh comhad loga, seoltar an comhad .pdb tríd an bhfreastalaí seo chuig seirbhís anailíse logaí pokerth.net.',
+    pvAcctH:'Do chuntas pokerth.net',
+    pvAcct:'Is é pokerth.net, ní an cliant gréasáin seo, a chruthaíonn agus a choinníonn do chuntas pokerth.net (leasainm, seoladh ríomhphoist, pasfhocal, próifíl fóraim, staitisticí cluichí agus rangú), agus clúdaíonn beartas príobháideachais pokerth.net thíos é. Nuair a logálann tú isteach leis, téann do leasainm agus do phasfhocal ó do bhrabhsálaí tríd an bhfreastalaí seo chuig freastalaí cluichí pokerth.net thar naisc chriptithe: cuireann an freastalaí seo ar aghaidh iad gan iad a choinneáil, agus ní shábhálann an cliant gréasáin do phasfhocal riamh; ní féidir ach le bainisteoir pasfhocal do bhrabhsálaí féin é a choinneáil, má cheadaíonn tú é.',
     pvLicH:'Bogearraí saora - AGPL-3.0',
     pvLic1:'Is bogearraí saora an cliant ar fad, eisithe faoi cheadúnas GNU AGPL v3. Is féidir leat an cód foinseach a léamh, a sheiceáil cad a dhéanann sé, do chóip féin a óstáil agus é a athrú:',
     pvLicSrc:'Cód foinseach',

@@ -810,7 +810,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Sluit aan by die gemeenskap op Discord',
     privacyTitle:'Privaatheid',
-    pvUpdated:'Laas opgedateer: 12 Oktober 2026',
+    pvUpdated:'Laas opgedateer: 19 Oktober 2026',
     pvWhoH:'Wie bedryf dit',
     pvWho:'Die PokerTH-webkliënt is \'n vrye oopbron-stokperdjieprojek, onderhou deur \'n individu, Arnaud Obscur (“narmod”), in samewerking met die PokerTH-projek. Dit is nie \'n maatskappy nie en het geen kommersiële doel nie: geen advertensies, geen verkoop van data, geen advertensieprofilering, geen derdeparty-spoorders nie.',
     pvLocalH:'Wat in jou blaaier bly',
@@ -829,6 +829,8 @@ export const strings = {
     pvThirdTr:'Vertaling: wanneer jy die vertaalknoppie (🌐) by ’n kletsboodskap of forumplasing tik, word die teks van jou blaaier na Google Translate gestuur, na MyMemory as dit misluk, en laastens via hierdie bediener na Google. Niks word gestuur tensy jy tik nie, en die funksie kan afgeskakel word in Gevorderde opsies.',
     pvThirdRadio:'Radio’s: wanneer jy ’n radiostasie in die musiekspeler speel, koppel jou blaaier direk aan daardie stasie.',
     pvThirdPdb:'Logontleding: as jy “Ontleed logboeklêer” gebruik, word die .pdb-lêer via hierdie bediener na die logontledingsdiens van pokerth.net gestuur.',
+    pvAcctH:'Jou pokerth.net-rekening',
+    pvAcct:'Jou pokerth.net-rekening (bynaam, e-posadres, wagwoord, forumprofiel, spelstatistieke en rangorde) word deur pokerth.net geskep en bewaar, nie deur hierdie webkliënt nie, en word gedek deur die privaatheidsbeleid van pokerth.net hieronder. Wanneer jy daarmee aanmeld, gaan jou bynaam en wagwoord oor geënkripteerde verbindings van jou blaaier deur hierdie bediener na die pokerth.net-spelbediener: hierdie bediener stuur hulle aan sonder om hulle te bewaar, en die webkliënt stoor nooit jou wagwoord nie; slegs jou blaaier se eie wagwoordbestuurder mag dit bewaar, as jy dit toelaat.',
     pvLicH:'Vrye sagteware - AGPL-3.0',
     pvLic1:'Die hele kliënt is vrye sagteware, vrygestel onder die GNU AGPL v3-lisensie. Jy kan die bronkode lees, kyk wat dit doen, jou eie kopie huisves en dit wysig:',
     pvLicSrc:'Bronkode',

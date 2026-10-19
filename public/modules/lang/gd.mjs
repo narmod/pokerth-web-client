@@ -813,7 +813,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Gabh pàirt sa choimhearsnachd air Discord',
     privacyTitle:'Prìobhaideachd',
-    pvUpdated:'Air ùrachadh mu dheireadh: 12 an Dàmhair 2026',
+    pvUpdated:'Air ùrachadh mu dheireadh: 19 an Dàmhair 2026',
     pvWhoH:'Cò tha a\' ruith seo',
     pvWho:'Tha cliant-lìn PokerTH na phròiseact cur-seachad saor le còd fosgailte, air a chumail suas le neach fa leth, Arnaud Obscur (“narmod”), ann an co-obrachadh le pròiseact PokerTH. Chan e companaidh a th\' ann agus chan eil adhbhar malairteach aige: gun sanasachd, gun reic dàta, gun phròifileadh shanasan, gun luchd-tracaidh treas-phàrtaidh.',
     pvLocalH:'Na dh\'fhuiricheas sa bhrabhsair agad',
@@ -832,6 +832,8 @@ export const strings = {
     pvThirdTr:'Eadar-theangachadh: nuair a thapas tu am putan eadar-theangachaidh (🌐) air teachdaireachd cabadaich no post fòraim, thèid an teacsa a chur on bhrabhsair agad gu Google Translate, gu MyMemory mura soirbhich sin, agus mu dheireadh gu Google tron fhrithealaiche seo. Cha tèid dad a chur mura tapaich thu, agus gabhaidh an gleus a chur dheth ann an Roghainnean adhartach.',
     pvThirdRadio:'Rèidiothan: nuair a chluicheas tu stèisean rèidio sa chluicheadair chiùil, ceanglaidh am brabhsair agad gu dìreach ris an stèisean sin.',
     pvThirdPdb:'Mion-sgrùdadh logaichean: ma chleachdas tu “Sgrùdaich faidhle log”, thèid am faidhle .pdb a chur tron fhrithealaiche seo gu seirbheis mion-sgrùdadh logaichean pokerth.net.',
+    pvAcctH:'An cunntas pokerth.net agad',
+    pvAcct:'Tha an cunntas pokerth.net agad (far-ainm, seòladh puist-d, facal-faire, pròifil fòraim, stadastaireachd geama agus rangachadh) ga chruthachadh agus ga chumail le pokerth.net, chan ann leis a’ chliant-lìn seo, agus tha poileasaidh prìobhaideachd pokerth.net gu h-ìosal ga chòmhdach. Nuair a chlàraicheas tu a-steach leis, thèid am far-ainm agus am facal-faire agad on bhrabhsair agad tron fhrithealaiche seo gu frithealaiche geama pokerth.net thar cheanglaichean crioptaichte: cuiridh am frithealaiche seo air adhart iad gun an cumail, agus cha shàbhail an cliant-lìn am facal-faire agad uair sam bith; chan fhaod ach manaidsear fhaclan-faire a’ bhrabhsair agad fhèin a chumail, ma cheadaicheas tu sin.',
     pvLicH:'Bathar-bog saor - AGPL-3.0',
     pvLic1:'Tha an cliant gu lèir na bhathar-bog saor, air fhoillseachadh fo cheadachas GNU AGPL v3. \'S urrainn dhut an còd tùsail a leughadh, dearbhadh dè nì e, lethbhreac agad fhèin a chumail agus atharrachadh:',
     pvLicSrc:'Còd tùsail',

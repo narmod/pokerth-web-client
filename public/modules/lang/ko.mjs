@@ -614,7 +614,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Discord 커뮤니티에 참여하세요',
     privacyTitle:'개인정보 보호',
-    pvUpdated:'마지막 업데이트: 2026년 10월 12일',
+    pvUpdated:'마지막 업데이트: 2026년 10월 19일',
     pvWhoH:'운영자 안내',
     pvWho:'PokerTH 웹 클라이언트는 PokerTH 프로젝트와 협력하여 개인(Arnaud Obscur, “narmod”)이 유지하는 자유 오픈소스 취미 프로젝트입니다. 회사가 아니며 상업적 목적이 없습니다. 광고 없음, 데이터 판매 없음, 광고 프로파일링 없음, 제3자 추적기 없음.',
     pvLocalH:'브라우저에 남는 것',
@@ -633,6 +633,8 @@ export const strings = {
     pvThirdTr:'번역: 채팅 메시지나 포럼 글의 번역 버튼(🌐)을 누르면 텍스트가 브라우저에서 Google 번역으로, 실패하면 MyMemory로, 마지막으로 이 서버를 거쳐 Google로 전송됩니다. 누르지 않으면 아무것도 전송되지 않으며, 이 기능은 “고급 옵션”에서 끌 수 있습니다.',
     pvThirdRadio:'라디오: 음악 플레이어에서 라디오 방송을 재생하면 브라우저가 해당 방송국에 직접 연결됩니다.',
     pvThirdPdb:'로그 분석: “로그 파일 분석”을 사용하면 .pdb 파일이 이 서버를 거쳐 pokerth.net 로그 분석 서비스로 전송됩니다.',
+    pvAcctH:'pokerth.net 계정 안내',
+    pvAcct:'pokerth.net 계정(닉네임, 이메일 주소, 비밀번호, 포럼 프로필, 게임 통계 및 순위)은 이 웹 클라이언트가 아니라 pokerth.net이 만들고 보관하며, 아래의 pokerth.net 개인정보 처리방침이 적용됩니다. 이 계정으로 로그인하면 닉네임과 비밀번호가 암호화된 연결을 통해 브라우저에서 이 서버를 거쳐 pokerth.net 게임 서버로 전달됩니다. 이 서버는 이를 보관하지 않고 그대로 전달하며, 웹 클라이언트는 비밀번호를 절대 저장하지 않습니다. 비밀번호를 보관할 수 있는 것은 사용자가 허용한 경우 브라우저 자체의 비밀번호 관리자뿐입니다.',
     pvLicH:'자유 소프트웨어 - AGPL-3.0',
     pvLic1:'클라이언트 전체가 GNU AGPL v3 라이선스의 자유 소프트웨어입니다. 소스 코드를 읽고, 동작을 확인하고, 자신의 사본을 호스팅하고, 수정할 수 있습니다:',
     pvLicSrc:'소스 코드',

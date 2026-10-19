@@ -813,7 +813,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Word lid van de community op Discord',
     privacyTitle:'Privacy',
-    pvUpdated:'Laatst bijgewerkt: 12 oktober 2026',
+    pvUpdated:'Laatst bijgewerkt: 19 oktober 2026',
     pvWhoH:'Wie beheert dit',
     pvWho:'De PokerTH-webclient is een vrij en open-source hobbyproject, onderhouden door een particulier, Arnaud Obscur (“narmod”), in samenwerking met het PokerTH-project. Het is geen bedrijf en heeft geen commercieel doel: geen advertenties, geen verkoop van gegevens, geen advertentieprofilering, geen trackers van derden.',
     pvLocalH:'Wat in je browser blijft',
@@ -832,6 +832,8 @@ export const strings = {
     pvThirdTr:'Vertaling: als je op de vertaalknop (🌐) van een chatbericht of forumbericht tikt, wordt de tekst vanuit je browser naar Google Translate gestuurd, naar MyMemory als dat mislukt, en ten slotte via deze server naar Google. Zonder tik wordt niets verstuurd, en de functie is uit te zetten in Geavanceerde opties.',
     pvThirdRadio:'Radio\'s: als je een radiozender afspeelt in de muziekspeler, maakt je browser rechtstreeks verbinding met die zender.',
     pvThirdPdb:'Loganalyse: als je ‘Logbestand analyseren’ gebruikt, wordt het .pdb-bestand via deze server naar de loganalysedienst van pokerth.net gestuurd.',
+    pvAcctH:'Je pokerth.net-account',
+    pvAcct:'Je pokerth.net-account (bijnaam, e-mailadres, wachtwoord, forumprofiel, spelstatistieken en ranking) wordt aangemaakt en bewaard door pokerth.net, niet door deze webclient, en valt onder het privacybeleid van pokerth.net hieronder. Als je ermee inlogt, gaan je bijnaam en wachtwoord over versleutelde verbindingen van je browser via deze server naar de spelserver van pokerth.net: deze server geeft ze door zonder ze te bewaren, en de webclient slaat je wachtwoord nooit op; alleen de eigen wachtwoordbeheerder van je browser mag het bewaren, als je dat toestaat.',
     pvLicH:'Vrije software - AGPL-3.0',
     pvLic1:'De hele client is vrije software, uitgebracht onder de GNU AGPL v3-licentie. Je kunt de broncode lezen, controleren wat hij doet, je eigen kopie hosten en hem aanpassen:',
     pvLicSrc:'Broncode',

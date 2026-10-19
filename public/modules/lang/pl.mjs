@@ -812,7 +812,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Dołącz do społeczności na Discordzie',
     privacyTitle:'Prywatność',
-    pvUpdated:'Ostatnia aktualizacja: 12 października 2026',
+    pvUpdated:'Ostatnia aktualizacja: 19 października 2026',
     pvWhoH:'Kto to prowadzi',
     pvWho:'Klient webowy PokerTH to wolny, otwartoźródłowy projekt hobbystyczny, utrzymywany przez osobę prywatną, Arnauda Obscura („narmod”), we współpracy z projektem PokerTH. To nie firma i nie ma celu komercyjnego: bez reklam, bez sprzedaży danych, bez profilowania reklamowego, bez zewnętrznych trackerów.',
     pvLocalH:'Co zostaje w Twojej przeglądarce',
@@ -831,6 +831,8 @@ export const strings = {
     pvThirdTr:'Tłumaczenie: gdy dotkniesz przycisku tłumaczenia (🌐) przy wiadomości czatu lub wpisie na forum, tekst jest wysyłany z przeglądarki do Tłumacza Google, w razie niepowodzenia do MyMemory, a w ostateczności do Google przez ten serwer. Bez dotknięcia nic nie jest wysyłane, a funkcję można wyłączyć w: Opcje zaawansowane.',
     pvThirdRadio:'Radia: gdy słuchasz stacji radiowej w odtwarzaczu muzyki, przeglądarka łączy się bezpośrednio z tą stacją.',
     pvThirdPdb:'Analiza dzienników: jeśli użyjesz opcji „Analizuj plik dziennika”, plik .pdb jest wysyłany przez ten serwer do usługi analizy dzienników pokerth.net.',
+    pvAcctH:'Twoje konto pokerth.net',
+    pvAcct:'Twoje konto pokerth.net (nick, adres e-mail, hasło, profil na forum, statystyki gier i ranking) jest tworzone i przechowywane przez pokerth.net, a nie przez tego klienta webowego, i obejmuje je polityka prywatności pokerth.net poniżej. Gdy się na nie logujesz, Twój nick i hasło trafiają szyfrowanymi połączeniami z Twojej przeglądarki przez ten serwer do serwera gry pokerth.net: ten serwer przekazuje je dalej, nie przechowując ich, a klient webowy nigdy nie zapisuje Twojego hasła; może je przechowywać tylko własny menedżer haseł Twojej przeglądarki, jeśli na to pozwolisz.',
     pvLicH:'Wolne oprogramowanie - AGPL-3.0',
     pvLic1:'Cały klient to wolne oprogramowanie na licencji GNU AGPL v3. Możesz czytać kod źródłowy, sprawdzać, co robi, hostować własną kopię i go modyfikować:',
     pvLicSrc:'Kod źródłowy',

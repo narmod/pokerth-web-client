@@ -805,7 +805,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'加入 Discord 社群',
     privacyTitle:'隱私',
-    pvUpdated:'最後更新：2026年10月12日',
+    pvUpdated:'最後更新：2026年10月19日',
     pvWhoH:'營運者',
     pvWho:'PokerTH 網頁用戶端是一個自由開源的業餘專案，由個人 Arnaud Obscur（“narmod”）與 PokerTH 專案合作維護。它不是公司，沒有商業目的：無廣告、不出售資料、無廣告輪廓分析、無第三方追蹤器。',
     pvLocalH:'保留在瀏覽器中的內容',
@@ -824,6 +824,8 @@ export const strings = {
     pvThirdTr:'翻譯：點選聊天訊息或論壇文章上的翻譯按鈕（🌐）時，文字會從你的瀏覽器傳送到 Google 翻譯；失敗時傳送到 MyMemory；最後透過本伺服器傳送到 Google。不點選就不會傳送任何內容，此功能可在「進階選項」中關閉。',
     pvThirdRadio:'電台：在音樂播放器中收聽電台時，你的瀏覽器會直接連線到該電台。',
     pvThirdPdb:'記錄分析：使用「分析記錄檔」時，.pdb 檔案會透過本伺服器傳送到 pokerth.net 的記錄分析服務。',
+    pvAcctH:'你的 pokerth.net 帳號',
+    pvAcct:'你的 pokerth.net 帳號（暱稱、電子郵件地址、密碼、論壇個人檔案、遊戲統計與排名）由 pokerth.net 建立並保管，而非本網頁用戶端，並受下方 pokerth.net 隱私權政策規範。使用該帳號登入時，你的暱稱和密碼會透過加密連線，從你的瀏覽器經由本伺服器傳送到 pokerth.net 遊戲伺服器：本伺服器只轉送而不保存它們，網頁用戶端也從不儲存你的密碼；只有你瀏覽器本身的密碼管理員可能會保存它（若你允許）。',
     pvLicH:'自由軟體 - AGPL-3.0',
     pvLic1:'整個用戶端都是自由軟體，以 GNU AGPL v3 授權條款發布。您可以閱讀原始碼、驗證其行為、託管自己的副本並進行修改：',
     pvLicSrc:'原始碼',

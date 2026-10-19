@@ -542,7 +542,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Pridruži se skupnosti na Discordu',
     privacyTitle:'Zasebnost',
-    pvUpdated:'Nazadnje posodobljeno: 12. oktober 2026',
+    pvUpdated:'Nazadnje posodobljeno: 19. oktober 2026',
     pvWhoH:'Kdo upravlja to stran',
     pvWho:'Spletni odjemalec PokerTH je brezplačen in odprtokoden hobi projekt, ki ga vzdržuje posameznik, Arnaud Obscur (»narmod«), v sodelovanju s projektom PokerTH. Ni podjetje in nima komercialnega namena: brez oglasov, brez prodaje podatkov, brez oglasnega profiliranja, brez sledilnikov tretjih oseb.',
     pvLocalH:'Kaj ostane v tvojem brskalniku',
@@ -561,6 +561,8 @@ export const strings = {
     pvThirdTr:'Prevajanje: ko tapneš gumb za prevod (🌐) na sporočilu v klepetu ali objavi na forumu, se besedilo pošlje iz tvojega brskalnika Google Translate ali, če to ne uspe, storitvi MyMemory, ali nazadnje prek tega strežnika Googlu. Nič se ne pošlje, dokler ne tapneš, funkcijo pa lahko izklopiš v Naprednih možnostih.',
     pvThirdRadio:'Radii: ko v predvajalniku glasbe predvajaš radijsko postajo, se tvoj brskalnik poveže neposredno s to postajo.',
     pvThirdPdb:'Analiza dnevnika: če uporabiš Analiziraj dnevniško datoteko, se datoteka .pdb pošlje prek tega strežnika storitvi za analizo dnevnikov pokerth.net.',
+    pvAcctH:'Tvoj račun pokerth.net',
+    pvAcct:'Tvoj račun pokerth.net (vzdevek, e-poštni naslov, geslo, profil na forumu, statistika iger in uvrstitev) ustvari in hrani pokerth.net, ne ta spletni odjemalec, zanj pa velja pravilnik o zasebnosti pokerth.net, naveden spodaj. Ko se z njim prijaviš, tvoj vzdevek in geslo potujeta iz tvojega brskalnika prek tega strežnika do strežnika igre pokerth.net po šifriranih povezavah: ta strežnik ju posreduje naprej, ne da bi ju hranil, spletni odjemalec pa tvojega gesla nikoli ne shrani; hrani ga lahko samo lastni upravitelj gesel tvojega brskalnika, če mu to dovoliš.',
     pvLicH:'Prosto programje - AGPL-3.0',
     pvLic1:'Celoten odjemalec je prosto programje, izdano pod licenco GNU AGPL v3. Lahko prebereš izvorno kodo, preveriš, kaj počne, gostiš svojo kopijo in jo spremeniš:',
     pvLicSrc:'Izvorna koda',

@@ -543,7 +543,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Batu komunitatera Discord-en',
     privacyTitle:'Pribatutasuna',
-    pvUpdated:'Azken eguneraketa: 2026ko urriaren 12a',
+    pvUpdated:'Azken eguneraketa: 2026ko urriaren 19a',
     pvWhoH:'Nork kudeatzen du hau',
     pvWho:'PokerTH web bezeroa doako eta kode irekiko zaletasun-proiektu bat da, pertsona batek mantentzen duena, Arnaud Obscur-ek («narmod»), PokerTH proiektuarekin lankidetzan. Ez da enpresa bat eta ez du helburu komertzialik: ez dago iragarkirik, ez datu-salmentarik, ez publizitate-profilaketarik, ez hirugarrenen jarraitzailerik.',
     pvLocalH:'Zer geratzen den zure nabigatzailean',
@@ -562,6 +562,8 @@ export const strings = {
     pvThirdTr:'Itzulpena: txateko mezu batean edo foroko mezu batean itzulpen-botoia (🌐) sakatzen duzunean, testua zure nabigatzailetik Google Translate-ra bidaltzen da, huts eginez gero MyMemory-ra, edo azkenik zerbitzari honen bidez Google-ra. Ez da ezer bidaltzen zuk sakatu gabe, eta funtzioa Aukera aurreratuetan desgai daiteke.',
     pvThirdRadio:'Irratiak: musika-erreproduzigailuan irrati-kate bat erreproduzitzen duzunean, zure nabigatzailea zuzenean konektatzen da kate horretara.',
     pvThirdPdb:'Egunkari-analisia: Aztertu egunkari-fitxategia erabiltzen baduzu, .pdb fitxategia zerbitzari honen bidez bidaltzen da pokerth.net-en egunkarien analisi-zerbitzura.',
+    pvAcctH:'Zure pokerth.net kontua',
+    pvAcct:'Zure pokerth.net kontua (ezizena, helbide elektronikoa, pasahitza, foroko profila, joko-estatistikak eta sailkapena) pokerth.net-ek sortzen eta gordetzen du, ez web bezero honek, eta behean dagoen pokerth.net-eko pribatutasun-politikak hartzen du. Harekin saioa hasten duzunean, zure ezizena eta pasahitza zure nabigatzailetik zerbitzari honetatik igarota pokerth.net-eko joko-zerbitzarira doaz konexio enkriptatuen bidez: zerbitzari honek aurrera bidaltzen ditu gorde gabe, eta web bezeroak ez du inoiz zure pasahitza gordetzen; zure nabigatzailearen beraren pasahitz-kudeatzaileak bakarrik gorde dezake, zuk baimentzen badiozu.',
     pvLicH:'Software librea - AGPL-3.0',
     pvLic1:'Bezero osoa software librea da, GNU AGPL v3 lizentziapean argitaratua. Iturburu-kodea irakur dezakezu, zer egiten duen egiaztatu, zure kopia ostatatu eta aldatu:',
     pvLicSrc:'Iturburu-kodea',

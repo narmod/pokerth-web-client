@@ -543,7 +543,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Discord’da hamjamiyatga qoʻshiling',
     privacyTitle:'Maxfiylik',
-    pvUpdated:'Oxirgi yangilanish: 2026-yil 12-oktabr',
+    pvUpdated:'Oxirgi yangilanish: 2026-yil 19-oktabr',
     pvWhoH:'Buni kim yuritadi',
     pvWho:'PokerTH veb-mijozi — bepul va ochiq kodli havaskorlik loyihasi boʻlib, uni jismoniy shaxs Arnaud Obscur ("narmod") PokerTH loyihasi bilan hamkorlikda yuritadi. Bu kompaniya emas va hech qanday tijorat maqsadi yoʻq: reklama yoʻq, maʼlumotlar sotilmaydi, reklama profillari tuzilmaydi, uchinchi tomon kuzatuvchilari yoʻq.',
     pvLocalH:'Brauzeringizda nima qoladi',
@@ -562,6 +562,8 @@ export const strings = {
     pvThirdTr:'Tarjima: chat xabari yoki forum postidagi tarjima tugmasini (🌐) bosganingizda matn brauzeringizdan Google Translate’ga, u ishlamasa MyMemory’ga yoki oxirgi chora sifatida shu server orqali Google’ga yuboriladi. Siz bosmaguningizcha hech narsa yuborilmaydi va bu funksiyani Kengaytirilgan sozlamalarda oʻchirish mumkin.',
     pvThirdRadio:'Radiolar: musiqa pleyerida radiostansiyani ijro etganingizda brauzeringiz toʻgʻridan-toʻgʻri oʻsha stansiyaga ulanadi.',
     pvThirdPdb:'Jurnal tahlili: «Jurnal faylini tahlil qilish» funksiyasidan foydalansangiz, .pdb fayli shu server orqali pokerth.net jurnal tahlili xizmatiga yuboriladi.',
+    pvAcctH:'pokerth.net hisobingiz',
+    pvAcct:'pokerth.net hisobingiz (taxallus, elektron pochta manzili, parol, forum profili, oʻyin statistikasi va reyting) ushbu veb-mijoz tomonidan emas, balki pokerth.net tomonidan yaratiladi va saqlanadi hamda quyidagi pokerth.net maxfiylik siyosatiga boʻysunadi. U bilan kirganingizda taxallusingiz va parolingiz brauzeringizdan shu server orqali pokerth.net oʻyin serveriga shifrlangan ulanishlar bilan uzatiladi: bu server ularni saqlamasdan uzatadi, veb-mijoz esa parolingizni hech qachon saqlamaydi; uni faqat brauzeringizning oʻz parol menejeri, agar ruxsat bersangiz, saqlashi mumkin.',
     pvLicH:'Erkin dasturiy taʼminot - AGPL-3.0',
     pvLic1:'Butun mijoz GNU AGPL v3 litsenziyasi ostida tarqatiladigan erkin dasturiy taʼminotdir. Siz manba kodini oʻqishingiz, u nima qilishini tekshirishingiz, oʻz nusxangizni joylashtirishingiz va uni oʻzgartirishingiz mumkin:',
     pvLicSrc:'Manba kodi',

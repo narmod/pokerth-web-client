@@ -810,7 +810,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Discord\'da topluluğa katıl',
     privacyTitle:'Gizlilik',
-    pvUpdated:'Son güncelleme: 12 Ekim 2026',
+    pvUpdated:'Son güncelleme: 19 Ekim 2026',
     pvWhoH:'Bunu kim yürütüyor',
     pvWho:'PokerTH Web İstemcisi, PokerTH projesiyle iş birliği içinde bir birey, Arnaud Obscur (“narmod”) tarafından sürdürülen özgür ve açık kaynaklı bir hobi projesidir. Bir şirket değildir ve ticari amacı yoktur: reklam yok, veri satışı yok, reklam profillemesi yok, üçüncü taraf izleyici yok.',
     pvLocalH:'Tarayıcınızda kalanlar',
@@ -829,6 +829,8 @@ export const strings = {
     pvThirdTr:'Çeviri: bir sohbet mesajında veya forum gönderisinde çeviri düğmesine (🌐) dokunduğunda metin tarayıcından Google Çeviri\'ye, bu başarısız olursa MyMemory\'ye, son çare olarak da bu sunucu üzerinden Google\'a gönderilir. Dokunmadığın sürece hiçbir şey gönderilmez ve özellik Gelişmiş seçenekler bölümünden kapatılabilir.',
     pvThirdRadio:'Radyolar: müzik çalarda bir radyo istasyonu dinlediğinde tarayıcın doğrudan o istasyona bağlanır.',
     pvThirdPdb:'Günlük analizi: “Günlük dosyasını analiz et” seçeneğini kullanırsan .pdb dosyası bu sunucu üzerinden pokerth.net günlük analiz hizmetine gönderilir.',
+    pvAcctH:'pokerth.net hesabın',
+    pvAcct:'pokerth.net hesabın (takma ad, e-posta adresi, parola, forum profili, oyun istatistikleri ve sıralama) bu web istemcisi tarafından değil, pokerth.net tarafından oluşturulur ve saklanır; aşağıdaki pokerth.net gizlilik politikasına tabidir. Bu hesapla giriş yaptığında takma adın ve parolan, tarayıcından bu sunucu üzerinden pokerth.net oyun sunucusuna şifreli bağlantılarla iletilir: bu sunucu bunları saklamadan aktarır ve web istemcisi parolanı asla kaydetmez; yalnızca tarayıcının kendi parola yöneticisi, izin verirsen, onu saklayabilir.',
     pvLicH:'Özgür yazılım - AGPL-3.0',
     pvLic1:'İstemcinin tamamı, GNU AGPL v3 lisansı altında yayımlanan özgür yazılımdır. Kaynak kodu okuyabilir, ne yaptığını doğrulayabilir, kendi kopyanızı barındırabilir ve değiştirebilirsiniz:',
     pvLicSrc:'Kaynak kodu',

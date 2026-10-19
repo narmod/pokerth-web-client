@@ -541,7 +541,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Bergabunglah dengan komunitas di Discord',
     privacyTitle:'Privasi',
-    pvUpdated:'Terakhir diperbarui: 12 Oktober 2026',
+    pvUpdated:'Terakhir diperbarui: 19 Oktober 2026',
     pvWhoH:'Siapa yang menjalankan ini',
     pvWho:'Klien Web PokerTH adalah proyek hobi gratis dan sumber terbuka, dipelihara oleh perorangan, Arnaud Obscur ("narmod"), bekerja sama dengan proyek PokerTH. Ini bukan perusahaan dan tidak memiliki tujuan komersial: tanpa iklan, tanpa penjualan data, tanpa profil iklan, tanpa pelacak pihak ketiga.',
     pvLocalH:'Yang tetap di peskrin Anda',
@@ -560,6 +560,8 @@ export const strings = {
     pvThirdTr:'Terjemahan: saat Anda mengetuk tombol terjemah (🌐) pada mesej sembang atau posting forum, teks dikirim dari browser Anda ke Google Terjemahan, ke MyMemory jika gagal, dan terakhir ke Google melalui server ini. Tidak ada yang dikirim tanpa ketukan Anda, dan fitur ini dapat dimatikan di Opsi lanjutan.',
     pvThirdRadio:'Radio: saat Anda memutar stasiun radio di pemutar musik, browser Anda terhubung langsung ke stasiun tersebut.',
     pvThirdPdb:'Analisis log: jika Anda memakai “Analisis berkas log”, berkas .pdb dikirim melalui server ini ke layanan analisis log pokerth.net.',
+    pvAcctH:'Akaun pokerth.net Anda',
+    pvAcct:'Akaun pokerth.net Anda (nama samaran, alamat e-mel, kata laluan, profil forum, statistik permainan dan kedudukan) dicipta dan disimpan oleh pokerth.net, bukan oleh klien web ini, dan tertakluk pada dasar privasi pokerth.net di bawah. Apabila Anda log masuk dengannya, nama samaran dan kata laluan Anda dihantar menerusi sambungan yang disulitkan dari pelayar Anda melalui server ini ke server permainan pokerth.net: server ini memanjangkannya tanpa menyimpannya, dan klien web tidak pernah menyimpan kata laluan Anda; hanya pengurus kata laluan pelayar Anda sendiri boleh menyimpannya, jika Anda membenarkannya.',
     pvLicH:'Perangkat lunak bebas - AGPL-3.0',
     pvLic1:'Seluruh klien adalah perangkat lunak bebas, dirilis dengan lisensi GNU AGPL v3. Anda dapat membaca kode sumbernya, memverifikasi cara kerjanya, menampung salinan Anda sendiri, dan memodifikasinya:',
     pvLicSrc:'Kode sumber',

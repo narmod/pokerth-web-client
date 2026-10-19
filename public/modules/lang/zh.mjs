@@ -805,7 +805,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'加入 Discord 社区',
     privacyTitle:'隐私',
-    pvUpdated:'最后更新：2026年10月12日',
+    pvUpdated:'最后更新：2026年10月19日',
     pvWhoH:'运营者',
     pvWho:'PokerTH 网页客户端是一个自由开源的业余项目，由个人 Arnaud Obscur（“narmod”）与 PokerTH 项目合作维护。它不是公司，没有商业目的：无广告、不出售数据、无广告画像、无第三方跟踪器。',
     pvLocalH:'保留在浏览器中的内容',
@@ -824,6 +824,8 @@ export const strings = {
     pvThirdTr:'翻译：点击聊天消息或论坛帖子上的翻译按钮（🌐）时，文本会从你的浏览器发送到 Google 翻译；失败时发送到 MyMemory；最后通过本服务器发送到 Google。不点击就不会发送任何内容，此功能可在“高级选项”中关闭。',
     pvThirdRadio:'电台：在音乐播放器中收听电台时，你的浏览器会直接连接到该电台。',
     pvThirdPdb:'日志分析：使用“分析日志文件”时，.pdb 文件会通过本服务器发送到 pokerth.net 的日志分析服务。',
+    pvAcctH:'你的 pokerth.net 账号',
+    pvAcct:'你的 pokerth.net 账号（昵称、电子邮件地址、密码、论坛资料、游戏统计和排名）由 pokerth.net 创建和保管，而非本网页客户端，并受下方 pokerth.net 隐私政策的约束。使用该账号登录时，你的昵称和密码会通过加密连接，从你的浏览器经由本服务器传送到 pokerth.net 游戏服务器：本服务器只转发而不保存它们，网页客户端也从不保存你的密码；只有你的浏览器自带的密码管理器可能会保存它（如果你允许）。',
     pvLicH:'自由软件 - AGPL-3.0',
     pvLic1:'整个客户端都是自由软件，以 GNU AGPL v3 许可证发布。您可以阅读源代码、验证其行为、托管自己的副本并进行修改：',
     pvLicSrc:'源代码',

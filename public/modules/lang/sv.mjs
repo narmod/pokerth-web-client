@@ -808,7 +808,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Gå med i gemenskapen på Discord',
     privacyTitle:'Integritet',
-    pvUpdated:'Senast uppdaterad: 12 oktober 2026',
+    pvUpdated:'Senast uppdaterad: 19 oktober 2026',
     pvWhoH:'Vem driver detta',
     pvWho:'PokerTH-webbklienten är ett fritt hobbyprojekt med öppen källkod, som underhålls av en privatperson, Arnaud Obscur (”narmod”), i samarbete med PokerTH-projektet. Det är inget företag och har inget kommersiellt syfte: inga annonser, ingen försäljning av data, ingen annonsprofilering, inga tredjepartsspårare.',
     pvLocalH:'Vad som stannar i din webbläsare',
@@ -827,6 +827,8 @@ export const strings = {
     pvThirdTr:'Översättning: när du trycker på översättningsknappen (🌐) vid ett chattmeddelande eller ett foruminlägg skickas texten från din webbläsare till Google Översätt, till MyMemory om det misslyckas och till sist via den här servern till Google. Inget skickas utan att du trycker, och funktionen kan stängas av under Avancerade alternativ.',
     pvThirdRadio:'Radio: när du spelar en radiostation i musikspelaren ansluter din webbläsare direkt till den stationen.',
     pvThirdPdb:'Logganalys: om du använder ”Analysera loggfil” skickas .pdb-filen via den här servern till logganalystjänsten på pokerth.net.',
+    pvAcctH:'Ditt pokerth.net-konto',
+    pvAcct:'Ditt pokerth.net-konto (smeknamn, e-postadress, lösenord, forumprofil, spelstatistik och ranking) skapas och lagras av pokerth.net, inte av denna webbklient, och omfattas av integritetspolicyn för pokerth.net nedan. När du loggar in med det går ditt smeknamn och lösenord från din webbläsare via den här servern till spelservern hos pokerth.net över krypterade anslutningar: den här servern skickar dem vidare utan att spara dem, och webbklienten sparar aldrig ditt lösenord; bara webbläsarens egen lösenordshanterare kan spara det, om du tillåter det.',
     pvLicH:'Fri programvara - AGPL-3.0',
     pvLic1:'Hela klienten är fri programvara under GNU AGPL v3-licensen. Du kan läsa källkoden, kontrollera vad den gör, driva en egen kopia och ändra den:',
     pvLicSrc:'Källkod',

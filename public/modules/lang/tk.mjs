@@ -543,7 +543,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Discord-daky jemgyýete goşulyň',
     privacyTitle:'Gizlinlik',
-    pvUpdated:'Soňky täzelenme: 2026-njy ýylyň 12-njy oktýabry',
+    pvUpdated:'Soňky täzelenme: 2026-njy ýylyň 19-njy oktýabry',
     pvWhoH:'Muny kim alyp barýar',
     pvWho:'PokerTH web müşderisi — bir adamyň, Arnaud Obscur ("narmod"), PokerTH taslamasy bilen hyzmatdaşlykda alyp barýan mugt we açyk çeşmeli meýletin taslamasy. Bu kompaniýa däl we täjirçilik maksady ýok: mahabat ýok, maglumat satylmaýar, mahabat yzarlamasy ýok, üçünji tarapyň yzarlaýjylary ýok.',
     pvLocalH:'Brauzeriňizde näme galýar',
@@ -562,6 +562,8 @@ export const strings = {
     pvThirdTr:'Terjime: çat habarynda ýa-da forum ýazgysynda terjime düwmesine (🌐) basanyňyzda, tekst brauzeriňizden Google Translate-e, ol başartmasa MyMemory-e, ýa-da iň soňunda şu serwer arkaly Google-a ugradylýar. Siz basmasaňyz hiç zat ugradylmaýar we bu aýratynlygy Giňişleýin sazlamalarda öçürip bolýar.',
     pvThirdRadio:'Radiolar: aýdym-saz pleýerinde radiostansiýany çalanyňyzda, brauzeriňiz şol stansiýa göni birigýär.',
     pvThirdPdb:'Žurnal derňewi: «Žurnal faýlyny derňe» ulansaňyz, .pdb faýly şu serwer arkaly pokerth.net žurnal derňew hyzmatyna ugradylýar.',
+    pvAcctH:'pokerth.net hasabyňyz',
+    pvAcct:'pokerth.net hasabyňyz (lakam, e-poçta salgysy, parol, forum profili, oýun statistikasy we reýting) bu web müşderi tarapyndan däl-de, pokerth.net tarapyndan döredilýär we saklanýar hem-de aşakdaky pokerth.net gizlinlik syýasatyna degişlidir. Onuň bilen gireniňizde lakamyňyz we parolyňyz brauzeriňizden şu serweriň üsti bilen pokerth.net oýun serwerine şifrlenen birikmeler arkaly geçýär: bu serwer olary saklamazdan geçirýär, web müşderi bolsa parolyňyzy hiç haçan ýatda saklamaýar; ony diňe brauzeriňiziň öz parol dolandyryjysy, siz rugsat berseňiz, saklap biler.',
     pvLicH:'Erkin programma üpjünçiligi - AGPL-3.0',
     pvLic1:'Tutuş müşderi GNU AGPL v3 ygtyýarnamasy boýunça çykarylan erkin programma üpjünçiligidir. Çeşme koduny okap, onuň näme edýändigini barlap, öz nusgaňyzy ýerleşdirip we üýtgedip bilersiňiz:',
     pvLicSrc:'Çeşme kody',

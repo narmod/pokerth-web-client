@@ -813,7 +813,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Junte-se à comunidade no Discord',
     privacyTitle:'Privacidade',
-    pvUpdated:'Última atualização: 12 de outubro de 2026',
+    pvUpdated:'Última atualização: 19 de outubro de 2026',
     pvWhoH:'Quem gere isto',
     pvWho:'O cliente web PokerTH é um projeto pessoal livre e de código aberto, mantido por um particular, Arnaud Obscur («narmod»), em colaboração com o projeto PokerTH. Não é uma empresa e não tem fins comerciais: sem anúncios, sem venda de dados, sem perfis publicitários, sem rastreadores de terceiros.',
     pvLocalH:'O que fica no seu navegador',
@@ -832,6 +832,8 @@ export const strings = {
     pvThirdTr:'Tradução: se tocares no botão de tradução (🌐) de uma mensagem do chat ou de uma publicação do fórum, o texto é enviado do teu navegador para o Google Tradutor, para o MyMemory se falhar e, por fim, para o Google através deste servidor. Nada é enviado sem o teu toque, e a funcionalidade pode ser desativada em Opções avançadas.',
     pvThirdRadio:'Rádios: quando ouves uma estação de rádio no leitor de música, o teu navegador liga-se diretamente a essa estação.',
     pvThirdPdb:'Análise de registos: se usares “Analisar ficheiro de registo”, o ficheiro .pdb é enviado através deste servidor para o serviço de análise de registos do pokerth.net.',
+    pvAcctH:'A tua conta do pokerth.net',
+    pvAcct:'A tua conta do pokerth.net (alcunha, endereço de e-mail, palavra-passe, perfil no fórum, estatísticas de jogo e classificação) é criada e mantida pelo pokerth.net, não por este cliente web, e está abrangida pela política de privacidade do pokerth.net abaixo. Quando inicias sessão com ela, a tua alcunha e a tua palavra-passe vão do teu navegador, através deste servidor, até ao servidor de jogo do pokerth.net por ligações encriptadas: este servidor reencaminha-as sem as guardar, e o cliente web nunca guarda a tua palavra-passe; só o gestor de palavras-passe do teu próprio navegador a pode guardar, se o permitires.',
     pvLicH:'Software livre - AGPL-3.0',
     pvLic1:'Todo o cliente é software livre, publicado sob a licença GNU AGPL v3. Pode ler o código-fonte, verificar o que faz, alojar a sua própria cópia e modificá-lo:',
     pvLicSrc:'Código-fonte',

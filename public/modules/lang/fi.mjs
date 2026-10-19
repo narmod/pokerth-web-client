@@ -809,7 +809,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Liity yhteisöön Discordissa',
     privacyTitle:'Tietosuoja',
-    pvUpdated:'Viimeksi päivitetty: 12. lokakuuta 2026',
+    pvUpdated:'Viimeksi päivitetty: 19. lokakuuta 2026',
     pvWhoH:'Kuka tätä ylläpitää',
     pvWho:'PokerTH-verkkoasiakas on vapaa ja avoimen lähdekoodin harrastusprojekti, jota ylläpitää yksityishenkilö, Arnaud Obscur (”narmod”), yhteistyössä PokerTH-projektin kanssa. Se ei ole yritys eikä sillä ole kaupallista tarkoitusta: ei mainoksia, ei tietojen myyntiä, ei mainosprofilointia, ei kolmansien osapuolten seuraimia.',
     pvLocalH:'Mikä pysyy selaimessasi',
@@ -828,6 +828,8 @@ export const strings = {
     pvThirdTr:'Käännös: kun napautat chat-viestin tai foorumiviestin käännöspainiketta (🌐), teksti lähetetään selaimestasi Google Kääntäjään, sen epäonnistuessa MyMemoryyn ja viimeisenä keinona tämän palvelimen kautta Googlelle. Mitään ei lähetetä ilman napautusta, ja toiminnon voi poistaa käytöstä kohdassa Lisäasetukset.',
     pvThirdRadio:'Radiot: kun kuuntelet radioasemaa musiikkisoittimessa, selaimesi muodostaa yhteyden suoraan kyseiseen asemaan.',
     pvThirdPdb:'Lokianalyysi: jos käytät toimintoa ”Analysoi lokitiedosto”, .pdb-tiedosto lähetetään tämän palvelimen kautta pokerth.netin lokianalyysipalveluun.',
+    pvAcctH:'Sinun pokerth.net-tilisi',
+    pvAcct:'Sinun pokerth.net-tilisi (nimimerkki, sähköpostiosoite, salasana, foorumiprofiili, pelitilastot ja sijoitus) luo ja säilyttää pokerth.net, ei tämä verkkoasiakas, ja sitä koskee alla oleva pokerth.netin tietosuojakäytäntö. Kun kirjaudut sillä, nimimerkkisi ja salasanasi kulkevat selaimestasi tämän palvelimen kautta pokerth.netin pelipalvelimelle salattuja yhteyksiä pitkin: tämä palvelin välittää ne eteenpäin tallentamatta niitä, eikä verkkoasiakas koskaan tallenna salasanaasi; vain selaimesi oma salasanojen hallinta voi säilyttää sen, jos sallit sen.',
     pvLicH:'Vapaa ohjelmisto - AGPL-3.0',
     pvLic1:'Koko asiakasohjelma on vapaata ohjelmistoa, julkaistu GNU AGPL v3 -lisenssillä. Voit lukea lähdekoodin, tarkistaa mitä se tekee, isännöidä omaa kopiotasi ja muokata sitä:',
     pvLicSrc:'Lähdekoodi',

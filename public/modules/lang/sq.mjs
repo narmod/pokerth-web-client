@@ -542,7 +542,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Bashkohu me komunitetin në Discord',
     privacyTitle:'Privatësia',
-    pvUpdated:'Përditësuar për herë të fundit: 12 tetor 2026',
+    pvUpdated:'Përditësuar për herë të fundit: 19 tetor 2026',
     pvWhoH:'Kush e menaxhon këtë',
     pvWho:'Klienti Web i PokerTH është një projekt hobi falas dhe me burim të hapur, i mirëmbajtur nga një individ, Arnaud Obscur (“narmod”), në bashkëpunim me projektin PokerTH. Nuk është kompani dhe nuk ka qëllim komercial: pa reklama, pa shitje të dhënash, pa profilizim reklamash, pa gjurmues të palëve të treta.',
     pvLocalH:'Çfarë mbetet në shfletuesin tënd',
@@ -561,6 +561,8 @@ export const strings = {
     pvThirdTr:'Përkthimi: kur prek butonin e përkthimit (🌐) te një mesazh bisede ose postim forumi, teksti dërgohet nga shfletuesi yt te Google Translate, ose te MyMemory nëse kjo dështon, ose përfundimisht përmes këtij serveri te Google. Asgjë nuk dërgohet nëse nuk prek, dhe funksioni mund të çaktivizohet në Opsionet e avancuara.',
     pvThirdRadio:'Radiot: kur luan një stacion radioje në lexuesin e muzikës, shfletuesi yt lidhet drejtpërdrejt me atë stacion.',
     pvThirdPdb:'Analiza e regjistrit: nëse përdor Analizo skedarin e regjistrit, skedari .pdb dërgohet përmes këtij serveri te shërbimi i analizës së regjistrave të pokerth.net.',
+    pvAcctH:'Llogaria jote pokerth.net',
+    pvAcct:'Llogaria jote pokerth.net (pseudonimi, adresa e email-it, fjalëkalimi, profili në forum, statistikat e lojës dhe renditja) krijohet dhe ruhet nga pokerth.net, jo nga ky klient web, dhe mbulohet nga politika e privatësisë e pokerth.net më poshtë. Kur hyn me të, pseudonimi yt dhe fjalëkalimi yt shkojnë nga shfletuesi yt, përmes këtij serveri, te serveri i lojës pokerth.net nëpërmjet lidhjeve të enkriptuara: ky server i përcjell ato pa i ruajtur, dhe klienti web nuk e ruan kurrë fjalëkalimin tënd; vetëm menaxheri i fjalëkalimeve i vetë shfletuesit tënd mund ta ruajë, nëse e lejon.',
     pvLicH:'Softuer i lirë - AGPL-3.0',
     pvLic1:'I gjithë klienti është softuer i lirë, i lëshuar nën licencën GNU AGPL v3. Mund të lexosh kodin burimor, të verifikosh çfarë bën, të strehosh kopjen tënde dhe ta modifikosh:',
     pvLicSrc:'Kodi burimor',

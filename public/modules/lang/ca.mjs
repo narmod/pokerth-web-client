@@ -811,7 +811,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Uneix-te a la comunitat a Discord',
     privacyTitle:'Privadesa',
-    pvUpdated:'Darrera actualització: 12 d’octubre de 2026',
+    pvUpdated:'Darrera actualització: 19 d’octubre de 2026',
     pvWhoH:'Qui ho gestiona',
     pvWho:'El client web de PokerTH és un projecte personal lliure i de codi obert, mantingut per un particular, Arnaud Obscur («narmod»), en col·laboració amb el projecte PokerTH. No és una empresa i no té finalitat comercial: sense anuncis, sense venda de dades, sense perfils publicitaris, sense rastrejadors de tercers.',
     pvLocalH:'Què es queda al teu navegador',
@@ -830,6 +830,8 @@ export const strings = {
     pvThirdTr:'Traducció: quan toques el botó de traducció (🌐) d\'un missatge del xat o d\'una publicació del fòrum, el text s\'envia des del navegador a Google Translate, a MyMemory si falla i, en darrer terme, a Google a través d\'aquest servidor. No s\'envia res si no toques, i la funció es pot desactivar a Opcions avançades.',
     pvThirdRadio:'Ràdios: quan escoltes una emissora al reproductor de música, el navegador es connecta directament a aquesta emissora.',
     pvThirdPdb:'Anàlisi de registres: si fas servir «Analitza el fitxer de registre», el fitxer .pdb s\'envia a través d\'aquest servidor al servei d\'anàlisi de registres de pokerth.net.',
+    pvAcctH:'El teu compte de pokerth.net',
+    pvAcct:'El teu compte de pokerth.net (sobrenom, adreça electrònica, contrasenya, perfil del fòrum, estadístiques de joc i classificació) el crea i el conserva pokerth.net, no aquest client web, i està cobert per la política de privadesa de pokerth.net que trobaràs a continuació. Quan inicies sessió amb aquest compte, el teu sobrenom i la teva contrasenya van del teu navegador, a través d’aquest servidor, fins al servidor de joc de pokerth.net per connexions xifrades: aquest servidor els transmet sense conservar-los, i el client web no desa mai la teva contrasenya; només el gestor de contrasenyes propi del teu navegador la pot conservar, si ho permets.',
     pvLicH:'Programari lliure - AGPL-3.0',
     pvLic1:'Tot el client és programari lliure, publicat sota la llicència GNU AGPL v3. Pots llegir el codi font, verificar què fa, allotjar la teva pròpia còpia i modificar-lo:',
     pvLicSrc:'Codi font',

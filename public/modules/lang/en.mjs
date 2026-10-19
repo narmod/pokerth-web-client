@@ -543,7 +543,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Join the community on Discord',
     privacyTitle:'Privacy',
-    pvUpdated:'Last updated: October 12, 2026',
+    pvUpdated:'Last updated: October 19, 2026',
     pvWhoH:'Who runs this',
     pvWho:'The PokerTH Web Client is a free and open-source hobby project, maintained by an individual, Arnaud Obscur ("narmod"), in collaboration with the PokerTH project. It is not a company and has no commercial purpose: no ads, no sale of data, no advertising profiling, no third-party trackers.',
     pvLocalH:'What stays in your browser',
@@ -562,6 +562,8 @@ export const strings = {
     pvThirdTr:'Translation: when you tap the translate button (🌐) on a chat message or a forum post, the text is sent from your browser to Google Translate, or to MyMemory if that fails, or finally through this server to Google. Nothing is sent unless you tap, and the feature can be turned off in Advanced options.',
     pvThirdRadio:'Radios: when you play a radio station in the music player, your browser connects directly to that station.',
     pvThirdPdb:'Log analysis: if you use Analyse log file, the .pdb file is sent through this server to the pokerth.net log analysis service.',
+    pvAcctH:'Your pokerth.net account',
+    pvAcct:'Your pokerth.net account (nickname, e-mail address, password, forum profile, game statistics and ranking) is created and kept by pokerth.net, not by this web client, and is covered by the pokerth.net privacy policy below. When you log in with it, your nickname and password go from your browser through this server to the pokerth.net game server over encrypted connections: this server passes them on without keeping them, and the web client never saves your password; only your browser’s own password manager may keep it, if you allow it.',
     pvLicH:'Free software - AGPL-3.0',
     pvLic1:'The entire client is free software, released under the GNU AGPL v3 license. You can read the source code, verify what it does, host your own copy, and modify it:',
     pvLicSrc:'Source code',

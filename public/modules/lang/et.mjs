@@ -533,7 +533,7 @@ export const strings = {
     // v0.3.675 : carte Discord compacte sous la card de login
     discordCardText:'Liitu kogukonnaga Discordis',
     privacyTitle:'Privaatsus',
-    pvUpdated:'Viimati uuendatud: 12. oktoober 2026',
+    pvUpdated:'Viimati uuendatud: 19. oktoober 2026',
     pvWhoH:'Kes seda haldab',
     pvWho:'PokerTH veebiklient on vaba ja avatud lähtekoodiga harrastusprojekt, mida haldab üksikisik Arnaud Obscur („narmod“) koostöös PokerTH projektiga. See ei ole ettevõte ega oma ärilist eesmärki: reklaame ei ole, andmeid ei müüda, reklaamiprofiile ei koostata ja kolmandate osapoolte jälitajaid ei kasutata.',
     pvLocalH:'Mis jääb sinu brauserisse',
@@ -552,6 +552,8 @@ export const strings = {
     pvThirdTr:'Tõlge: kui puudutad vestlussõnumi või foorumipostituse juures tõlkenuppu (🌐), saadetakse tekst sinu brauserist Google Translate\u2019i, selle ebaõnnestumisel MyMemoryle ja viimaks läbi selle serveri Google\u2019ile. Ilma puudutuseta ei saadeta midagi ning funktsiooni saab täpsemates valikutes välja lülitada.',
     pvThirdRadio:'Raadiod: kui esitad muusikamängijas raadiojaama, ühendub sinu brauser otse selle jaamaga.',
     pvThirdPdb:'Logianalüüs: kui kasutad käsku „Analüüsi logifaili“, saadetakse .pdb-fail läbi selle serveri pokerth.net logianalüüsi teenusesse.',
+    pvAcctH:'Sinu pokerth.net konto',
+    pvAcct:'Sinu pokerth.net kontot (hüüdnimi, e-posti aadress, parool, foorumiprofiil, mängustatistika ja koht edetabelis) loob ja säilitab pokerth.net, mitte see veebiklient, ning sellele kehtib allpool viidatud pokerth.net-i privaatsuspoliitika. Kui logid sellega sisse, liiguvad sinu hüüdnimi ja parool krüpteeritud ühenduste kaudu sinu brauserist läbi selle serveri pokerth.net-i mänguserverisse: see server edastab need neid säilitamata ja veebiklient ei salvesta kunagi sinu parooli; seda võib säilitada ainult sinu brauseri enda paroolihaldur, kui sa seda lubad.',
     pvLicH:'Vaba tarkvara - AGPL-3.0',
     pvLic1:'Kogu klient on vaba tarkvara, mis on välja antud GNU AGPL v3 litsentsi all. Sa võid lähtekoodi lugeda, kontrollida, mida see teeb, majutada oma koopiat ja seda muuta:',
     pvLicSrc:'Lähtekood',
