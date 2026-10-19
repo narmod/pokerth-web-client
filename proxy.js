@@ -10123,6 +10123,21 @@ function autoUpdateTick() {
 }
 const _autoUpdateTimer = setInterval(autoUpdateTick, AUTO_UPDATE_TICK_MS);
 if (_autoUpdateTimer.unref) _autoUpdateTimer.unref();
+// Without automatic updates nothing read the upstream until someone clicked
+// « Check now »: the Overview said « not checked yet » and « All clear » while
+// an update waited. A read-only check 2 minutes after the start, then hourly
+// (the automatic updates poll every 15 min on their own). It never applies
+// anything: the dashboard only learns what is published.
+const UPSTREAM_READ_MS = 60 * 60 * 1000;
+function _upstreamRead() {
+  if (!GIT_UPDATABLE || _autoUpdateCfg().enabled || _upd.checking) return;
+  if (_upd.checkedAt && Date.now() - _upd.checkedAt < UPSTREAM_READ_MS - 60000) return;
+  updateCheck();
+}
+const _upstreamFirst = setTimeout(_upstreamRead, 2 * 60 * 1000);
+if (_upstreamFirst.unref) _upstreamFirst.unref();
+const _upstreamTimer = setInterval(_upstreamRead, UPSTREAM_READ_MS);
+if (_upstreamTimer.unref) _upstreamTimer.unref();
 
 // ── Information broadcast scheduler ─────────────────────────────────────────
 const _BC_ICONS = ['', '\u2139\ufe0f', '\ud83d\udce2', '\u26a0\ufe0f', '\ud83c\udf89']; // '' ℹ️ 📢 ⚠️ 🎉
@@ -10876,10 +10891,8 @@ function handleAdmin(req, res, reqPathOnly, query) {
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
     let liveSessions = null; try { liveSessions = _liveSessions.size; } catch (e) {}
     // Once the upstream has been read (Check now, or auto-update), keep that
-    // reading fresh while someone looks at the dashboard: without auto-update
-    // nothing else re-polls, and « Update available » kept naming the commit
-    // of the first check. Background, at the auto-update pace; never a first
-    // check of its own.
+    // reading fresh while someone looks at the dashboard, at the auto-update
+    // pace (the hourly read-only check, _upstreamRead, covers the rest).
     if (GIT_UPDATABLE && _upd.checkedAt && !_upd.checking && Date.now() - _upd.checkedAt >= AUTO_UPDATE_POLL_MS) updateCheck();
     return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, canUpdate: !!(GIT_UPDATABLE || process.env.UPDATE_CMD), supervised: _supervised(), codeStale: !!(BOOT_CODE_SIG && _codeSig() !== BOOT_CODE_SIG), deployBusy: _deployBusy(), sockets: sockets, liveSessions: liveSessions, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, lookDefaults: _adminConfig.lookDefaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', seo: _seoAdmin(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null), autoUpdate: _autoUpdateCfg(), autoArmed: !!(_autoArmed && _restartAt > Date.now()), update: _updPublic(), now: Date.now(), tz: _serverTz(), clockZones: _clockZones(), clockRef: _clockRef(), lobbyClockTz: (_adminConfig.lobbyClockTz || ''), lobbyClockEff: _lobbyClockTz(), lobbyClockEnv: String(process.env.SERVER_TZ || '').trim() });
   }

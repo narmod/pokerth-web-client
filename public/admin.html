@@ -3841,7 +3841,9 @@
       var _stale=_proxyStale(d);
       var _vtxt=(d.version||'\u2014')+(_stale?(' \u2014 proxy still running '+d.runningVersion+', restart needed'):'');
       var _sv=$('sideVer'); if(_sv) _sv.textContent=d.version||'\u2014';
-      var items=[['Server time',clkServerStamp(d.now,d.tz)],['Build version',_vtxt],['Install',(d.installKind||'\u2014')+(d.gitUpdatable===false?' (self-update off)':'')],['Node',d.node||'\u2014'],['Uptime',fmtUptime(d.uptimeSec)],['Connected sockets',d.sockets==null?'\u2014':String(d.sockets)],['Active sessions',d.liveSessions==null?'\u2014':String(d.liveSessions)],['Players on board',String(d.players)],['Reset period',d.resetPeriod||'\u2014']];
+      // Uptime, connections and the build are the tiles above; the list keeps
+      // the rest (the build row returns only to say a restart is needed).
+      var items=[['Server time',clkServerStamp(d.now,d.tz)]].concat(_stale?[['Build version',_vtxt]]:[]).concat([['Install',(d.installKind||'\u2014')+(d.gitUpdatable===false?' (self-update off)':'')+(d.supervised===false?' \u00b7 no supervisor: a restart stops it':'')],['Node',d.node||'\u2014'],['Players on board',String(d.players)],['Reset period',d.resetPeriod||'\u2014']]);
       items.forEach(function(it){ var r=document.createElement('div');r.className='srow';var s=document.createElement('span');s.textContent=it[0];var b=document.createElement('b');b.textContent=it[1];if(it[0]==='Build version'&&_stale)b.className='err';r.appendChild(s);r.appendChild(b);el.appendChild(r); });
       // Only explicit (re)loads sync the editable controls, so auto-refresh never
       // resets the period dropdown or modes toggles while you're using them.
@@ -3870,7 +3872,7 @@
       if(typeof d.gitUpdatable==='boolean') maintCaps(d.gitUpdatable, d.canUpdate);
       window._admSupervised=(d.supervised!==false);
       var sn=$('schedNow'), sc=$('schedCancel');
-      if(sn){ if(d.restartAt){ sn.textContent='Scheduled: '+(d.restartKind==='restart'?'restart only':'update + restart')+' at '+new Date(d.restartAt).toLocaleString(); if(sc) sc.style.display=''; } else { sn.textContent='Nothing scheduled.'; if(sc) sc.style.display='none'; } }
+      if(sn){ if(d.restartAt){ sn.textContent='Scheduled: '+(d.restartKind==='restart'?'restart only':'update + restart')+' at '+new Date(d.restartAt).toLocaleString(); if(sc) sc.style.display=''; if(window._admCardOpen && window._admSchedOpened!==d.restartAt){ window._admSchedOpened=d.restartAt; window._admCardOpen('Schedule a restart'); } } else { sn.textContent='Nothing scheduled.'; if(sc) sc.style.display='none'; } }
     }).catch(function(){ $('status').innerHTML='<div class="empty err">Could not load.</div>'; });
   }
   var _trafWired = false, _trafSeq = 0;
@@ -8111,7 +8113,10 @@
   (function(){
     var STORE='pth_admin_collapsed', saved=null;
     try{ saved=JSON.parse(localStorage.getItem(STORE)||'null'); }catch(e){}
-    var state = saved || {}, firstRun = !saved;
+    var state = saved || {}, firstRun = !saved, _openers = {};
+    // Opens a card for this view (not remembered): a restart planned while its
+    // card is folded showed nothing — neither when nor the Cancel button.
+    window._admCardOpen = function(title){ Object.keys(_openers).forEach(function(t){ if(t.indexOf(title)===0) _openers[t](); }); };
     var DEFAULT_FOLDED = ['Schedule a restart','Schedule a recurring message','Welcome / rules message','Guest notice (Internet)','Registered-account notice (Internet)','LAN / dedicated server notice'];
     function slug(s){ return (s||'').trim().replace(/[^a-z0-9]+/gi,'_').replace(/^_+|_+$/g,'').toLowerCase().slice(0,48); }
     document.querySelectorAll('.card').forEach(function(card){
@@ -8139,6 +8144,7 @@
         else { body.style.height = body.scrollHeight + 'px'; setTimeout(function(){ if(!h2.classList.contains('collapsed')) body.style.height = 'auto'; }, 280); }
       }
       setFold(folded, false); state[k]=folded;
+      _openers[txt]=function(){ if(h2.classList.contains('collapsed')) setFold(false, true); };
       function toggle(){ var f = !h2.classList.contains('collapsed'); setFold(f, true); state[k]=f; try{ localStorage.setItem(STORE, JSON.stringify(state)); }catch(e){} }
       h2.addEventListener('click', toggle);
       h2.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); } });

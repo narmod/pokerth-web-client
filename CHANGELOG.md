@@ -32,6 +32,13 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Admin ergonomics** (`web.175`, audit of 2026-10-19, lot 4) — without automatic updates nothing read the
+  upstream until « Check now »: Overview and Deployment said « not checked yet » (and « All clear ») while an update
+  waited. A read-only check now runs 2 minutes after the start, then hourly; it never applies anything. A restart
+  planned while its folded card was closed showed neither its time nor Cancel: arriving on Deployment opens the
+  card once per plan. Health & logs › Status no longer repeats the tiles above it (uptime, connections, build —
+  the build row returns only to say a restart is needed) and says when nothing supervises the process.
+  `scripts/test-admin-ergonomics.mjs`.
 - **Gamepad, TV remote and Ace's Help switches** (`web.168`) — Player experience › Features › « App & the Ace » can
   now turn off the gamepad, the TV remote and the Ace's Help tips for everyone. The pad and the remote already read
   their option through `_advGet`, and `padApply` runs on the switch refresh. For the Ace, the switch stops what he

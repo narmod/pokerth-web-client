@@ -96,7 +96,7 @@ ok(/setInterval\(clkRender,\s*5000\)/.test(admin) && /setInterval\(clkSync,\s*30
 
 // -- The server clock moved to the status list -----------------------------
 ok(!/'Server'/.test(render), 'the strip no longer carries a Server row of its own');
-ok(/var items=\[\['Server time',clkServerStamp\(d\.now,d\.tz\)\],\['Build version'/.test(admin),
+ok(/var items=\[\['Server time',clkServerStamp\(d\.now,d\.tz\)\]\]/.test(admin),
   'it heads the status list under Health & logs instead');
 const stamp = body(admin, 'clkServerStamp');
 ok(/timeZone:tz\|\|'UTC'/.test(stamp), 'and is formatted in the server zone, not the browser one');
