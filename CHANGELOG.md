@@ -41,6 +41,13 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Sections and Features point at each other** (`web.188`, audit of 2026-10-19c, P3; Arnaud's choice A) — the
+  lobby clock, the Events tab and the polls are set up in their section (zone, community sites, polls) and turned
+  off for players by a switch in Player experience › Features; neither page said so, and the Events tab card read
+  « On » while « Community content » hid it from everyone. Each card now says whether players see it and which
+  switch decides, with a link to Features (master key only); the Lobby clock and Events tab tiles say « turned off
+  for players in Features » when that is the case; each of the three switches in Features links back to its
+  section.
 - **The only card of a page no longer folds** (`web.187`, audit of 2026-10-19c, P7) — a click on its title left the
   page empty under its tiles. Proxy, Database, Search engines, Features, Sessions, Client errors, Audit log, Blocked
   addresses and the Music and Ace's Help pages of Statistics keep their card open, even where this browser had

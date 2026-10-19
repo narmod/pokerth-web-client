@@ -461,6 +461,7 @@ for (const h of ['Trends', 'Retention', 'Recent activity', 'Connections', 'Who v
 ok((traf.match(/class="cardrow"/g) || []).length === 1 && /<div class="cardrow">\s*<div class="card wcard" style="--mc:var\(--m-net\)">/.test(traf),
   'one paired row only: Internet and LAN side by side on the World page');
 ok(!/class="tsec"/.test(admin) && !/\.tsec\b/.test(admin), 'no section-inside-a-card is left, nor its style');
+ok((admin.match(/<p class="muted fsnote" data-fs="[a-z_ ]+" data-master="1"><\/p>/g) || []).length === 3 && /var FS_HOME=\{lobby_clock:\['lobby'/.test(admin), 'the lobby clock, Events tab and polls cards point at their Features switch, and back (web.188)');
 ok(/var page = card\.closest\('\.tsub'\) \|\| card\.closest\('\[id\^="panel-"\]'\);\n      if\(page && page\.querySelectorAll\('\.card'\)\.length===1\) return;/.test(admin), 'the only card of a page does not fold (web.187)');
 ok(/#panel-traffic \.card>\.boardhead>h2\{white-space:nowrap\}/.test(admin), 'a card title does not break, so its note can take the slack');
 const cards = (k) => (tsub(k).match(/<div class="card"/g) || []).length;

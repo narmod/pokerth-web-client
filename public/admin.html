@@ -1049,6 +1049,8 @@
   .card details.more>p.muted{margin:6px 0 0}
   .card p.muted.hint{margin:-2px 0 6px}
   .fld.chk{cursor:pointer;font-size:inherit;color:inherit}
+  .ftrow .nm .fshome{display:block;font-size:.72rem;color:var(--text)}
+  .fsnote{margin:2px 0 10px}
   .fld.chk>input{flex:none;width:auto;margin:0}
   #panel-login .fld,#panel-lobby .fld,#panel-firstvisit .fld,#lanCard .fld{max-width:none;padding:2px 0}
   #lanCard .fld{max-width:640px}
@@ -1652,6 +1654,7 @@
         <h2>Lobby clock</h2>
         <p class="muted">The server time in the lobby status bar of pokerth.net players, so they know when BBC, WEC and Monthly Cup games start. Set it to the zone community events are announced in (pokerth.net: Berlin). <b>Applies immediately.</b></p>
         <details class="more"><summary>Where the time comes from</summary><p class="muted">The PokerTH protocol carries no time, so the instant comes from this server and the zone from the setting below. <b>Default</b> uses <code>SERVER_TZ</code> if set, else Berlin (Europe/Berlin), like the desktop client. Players can hide the clock in their advanced options.</p></details>
+        <p class="muted fsnote" data-fs="lobby_clock community_content" data-master="1"></p>
         <div class="defrow fld"><span>Time zone</span><select id="lobbyClk"></select></div>
         <p class="muted" id="lobbyClkEff"></p>
         <div class="rowtop"><button id="saveLobbyClk" class="use" data-save>Save</button></div>
@@ -1661,6 +1664,7 @@
         <h2>Events tab</h2>
         <p class="muted">The <b>Events</b> tab of the Forum news window: upcoming BBC games and Monthly Cup, the latest results, and the Champions of the Day above the PokerTH ranking. Off, players see neither.</p>
         <details class="more"><summary>How the community sites are read</summary><p class="muted">The proxy is the only reader: one round reads the five community pages (bbc, wec, monthlycup, pokerth.net) and every player is served from that one copy; an expired copy is served at once while the next round runs, and a round where every site failed keeps the previous answer and is not retried for a minute. Turned off, the proxy reads nothing.</p></details>
+        <p class="muted fsnote" data-fs="community_content" data-master="1"></p>
         <label class="fld chk"><span>Read the community sites and show the Events tab</span><input type="checkbox" id="ceOn"></label>
         <div class="defrow fld"><span>Refresh every <span class="muted">(seconds, 60–3600)</span></span><input id="ceSec" type="number" min="60" max="3600" step="30" placeholder="300"></div>
         <p class="muted hint">At most one round per interval for the whole server, and only while someone looks at the tab.</p>
@@ -2075,6 +2079,7 @@
         <div class="boardhead"><h2>Polls</h2><span id="plSum" class="headnote"></span><div class="bhact"><button id="plNew" class="use">+ New poll</button><button id="plRefresh" class="use">Refresh</button></div></div>
         <p class="muted">Ask the players what to build next. One poll is live at a time: activating a poll retires the previous one.</p>
         <details class="more"><summary>What players see</summary><p class="muted">The active poll opens in a window when a player reaches the lobby (unless they turned “Product polls” off in Advanced options); one answer per device. The counts stay hidden until they have answered, so the figures on screen cannot sway the vote.</p></details>
+        <p class="muted fsnote" data-fs="polls" data-master="1"></p>
         <div id="plList" class="erlist"><div class="empty">Loading…</div></div>
         <div id="plListMsg" class="msg"></div>
       </div>
@@ -3328,7 +3333,7 @@
     if(t==='traffic'){ if(_wasT!=='traffic') loadTraffic(); _trafSub(b.dataset.ts||'overview'); }
     if(t==='servers'){ loadServers(); loadStatus(!cfgAnyDirty()); }
     if(t==='landir') loadLanDir();
-    if(t==='polls') loadPolls();
+    if(t==='polls'){ loadPolls(); if(_isMaster) loadFeatureSwitches(); }
     if(t==='broadcast'){ pxNoticesTo('panel-broadcast'); loadBroadcasts(); if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); loadStatus(!cfgAnyDirty()); } }
     if(t==='login'){ pxNoticesTo('panel-login'); if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); } }
     if(t==='login'||t==='lobby'){ loadStatus(!cfgAnyDirty()); loadFeatureSwitches(); }
@@ -6949,7 +6954,26 @@
     _pxCfg=d; _fsOff=((d&&d.featureOff)||[]).slice(); _pxAllTiles();
     fsPaint();
   }
+  // Two levels, one per page (web.188): a section sets the server side up
+  // (zone, community sites, polls), a Features switch turns the thing off for
+  // every player. Each says where the other one is, and what it currently
+  // does, so an « On » card is never read as « players see it ».
+  var FS_HOME={lobby_clock:['lobby','Lobby & tables'],community_content:['lobby','Lobby & tables'],polls:['polls','Polls']};
+  var FS_HOME_GRP={lobby:'Player experience',polls:'Community'};
+  function _fsLabel(k){ var l=((_pxCfg&&_pxCfg.featureSwitches)||[]).filter(function(f){ return f.key===k; })[0]; return l?l.label:k; }
+  function _fsIsOff(k){ return _fsOff.indexOf(k)>=0; }
+  function _fsXlinks(){
+    if(!_pxCfg) return;
+    document.querySelectorAll('.fsnote[data-fs]').forEach(function(p){
+      var keys=p.getAttribute('data-fs').split(' '), off=keys.filter(_fsIsOff);
+      p.innerHTML='Players: '+(off.length
+        ? '<b class="err">turned off</b> by '+off.map(function(k){ return '« '+_annEsc(_fsLabel(k))+' »'; }).join(' and ')
+        : '<b>shown</b> — the switch'+(keys.length>1?'es':'')+' '+keys.map(function(k){ return '« '+_annEsc(_fsLabel(k))+' »'; }).join(' and ')+' '+(keys.length>1?'are':'is')+' on')
+        +' in <a href="#features" data-goto="features">Player experience › Features</a>.';
+    });
+  }
   function fsPaint(){
+    _fsXlinks();
     var box=$('fsList'); if(!box) return;
     var list=(_pxCfg&&_pxCfg.featureSwitches)||[];
     if(!list.length){ box.innerHTML='<div class="empty">This server exposes no feature switch.</div>'; return; }
@@ -6964,6 +6988,8 @@
         var row=document.createElement('div'); row.className='row ftrow'+(off?' off':''); row.setAttribute('data-k',f.key);
         var nm=document.createElement('div'); nm.className='nm'; var b=document.createElement('b'); b.textContent=f.label; nm.appendChild(b);
         if(off){ var sp=document.createElement('span'); sp.textContent='Off for everyone · frozen in Advanced options'; nm.appendChild(sp); }
+        var hm=FS_HOME[f.key];
+        if(hm){ var hs=document.createElement('span'); hs.className='fshome'; hs.innerHTML='Set up in <a href="#'+hm[0]+'" data-goto="'+hm[0]+'">'+FS_HOME_GRP[hm[0]]+' › '+hm[1]+'</a>'; nm.appendChild(hs); }
         row.appendChild(nm);
         var t=document.createElement('button'); t.type='button'; t.className='toggle '+(off?'off':'on'); t.textContent=off?'Off':'On';
         t.setAttribute('aria-pressed',off?'false':'true'); t.setAttribute('aria-label',f.label+(off?': off for everyone':': on'));
@@ -7009,8 +7035,8 @@
     T('ltTiles',[
       ['Table values',_pxStatus?tdSet.length+'<small class="ovof"> / 4</small>':'—',tdSet.length?srvEsc(tdSet.map(function(k){ return TD[k[0]]+k[1]; }).join(' · ')):'app defaults','var(--accent)'],
       ['Table names',_pxStatus?tnSet.length+'<small class="ovof"> / 3</small>':'—',tnSet.length?'custom: '+tnSet.map(function(k){ return k[1]; }).join(', '):'automatic in every mode','var(--m-lan)'],
-      ['Lobby clock',_pxStatus?srvEsc(d.lobbyClockEff||d.lobbyClockTz||'—'):'—',d.lobbyClockTz?'set here':'default zone','var(--warn-text)',' sm'],
-      ['Events tab',_pxCfg?(ce.on!==false?'On':'Off'):'—',_pxCfg?(ce.on!==false?'read every '+(typeof ce.sec==='number'?ce.sec:300)+' s':'no Events tab'):M,'var(--m-net)']]);
+      ['Lobby clock',_pxStatus?srvEsc(d.lobbyClockEff||d.lobbyClockTz||'—'):'—',(_pxCfg&&(_fsIsOff('lobby_clock')||_fsIsOff('community_content')))?'turned off for players in Features':(d.lobbyClockTz?'set here':'default zone'),'var(--warn-text)',' sm'],
+      ['Events tab',_pxCfg?(ce.on!==false?'On':'Off'):'—',_pxCfg?(_fsIsOff('community_content')?'turned off for players in Features':(ce.on!==false?'read every '+(typeof ce.sec==='number'?ce.sec:300)+' s':'no Events tab')):M,'var(--m-net)']]);
     var DF=d.defaults||{}, LV=(d.liveDefaults&&typeof d.liveDefaults==='object')?d.liveDefaults:{};
     var LK=(d.lookDefaults&&typeof d.lookDefaults==='object'&&Object.keys(d.lookDefaults).length)?d.lookDefaults:((FV_PRESETS[d.defaultTheme]||[])[1]||{});
     var PAL={auto:'Device',pokerth:'Dark','pokerth-light':'Light'}, SZ={standard:'Standard',large:'Large','extra-large':'Extra large'};
