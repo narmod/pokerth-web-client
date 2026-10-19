@@ -30,6 +30,14 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Admin: Security gathers keys, audit log and blocked addresses; Clear logs moves to the logs** (`web.162`) —
+  Security has three pages instead of one: **Keys** (create and list delegate keys; tiles: keys, sections granted,
+  newest key, master key), **Audit log** (its own page; tiles: changes in 24 h, refused, last change, by delegates;
+  the Overview's « Recent changes » leads there) and **Blocked addresses** (from Operations › Access & backup, with
+  its tiles). Operations › Access & backup becomes **Backup**, with tiles (last restore, last change, Discord
+  webhook, what a backup keeps apart). **Clear logs** leaves Deployment › Maintenance for the head of Health &
+  logs › Recent logs, asks first, and says there that the files on disk are kept (it only empties the in-memory
+  ring). The log verbosity stays settable from both Proxy and Health & logs.
 - **Admin: unsaved edits shown everywhere, popup state in the title, auto-update notice labelled** (`web.161`) —
   the « Unsaved changes » mark (accent Save + note) now covers every settings card: Save buttons carry
   `data-save`, the card gets `.unsaved` on its first edit and loses it when its write succeeds (20 cards: Proxy,

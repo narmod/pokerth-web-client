@@ -79,14 +79,24 @@ await tick(300);
 const d = tiles('dpTiles');
 ok(/Running 2\.1\.10-web\.132 docker · self-update/.test(d) && /Update Available 01234567 · needs a restart/.test(d), 'running build and the update waiting (' + d + ')');
 ok(/Auto-update On notice 90 s before a restart/.test(d) && /Scheduled \d\d:\d\d restart only/.test(d), 'auto-update and the scheduled restart (' + d + ')');
-ok(!/rgba\(255,255,255,\.12\)/.test(html.slice(html.indexOf('<div id="panel-deploy"'), html.indexOf('<div id="panel-access"'))), 'no fixed white separator left in Deployment');
+ok(!/rgba\(255,255,255,\.12\)/.test(html.slice(html.indexOf('<div id="panel-deploy"'), html.indexOf('<div id="panel-backup"'))), 'no fixed white separator left in Deployment');
 
-// ── Access & backup ───────────────────────────────────────────────────────
-doc.querySelector('.tab[data-t="access"]').click();
+// ── Security › Blocked addresses (Operations › Access & backup until web.162) ─
+doc.querySelector('.tab[data-t="blocked"]').click();
 await tick(300);
 const a = tiles('acTiles');
 ok(/Your address 198\.51\.100\.7/.test(a) && /Failed sign-ins 2/.test(a) && /Blocked now 1 locked out/.test(a) && /Banned 1 refused at the WebSocket upgrade/.test(a), 'address, failed, blocked now, banned (' + a + ')');
 ok($('ipBlockedN').textContent === '2' && $('ipBannedN').textContent === '1', 'each list heading carries its count');
+ok($('ipBanInput').closest('#panel-blocked') && $('acTiles').closest('#panel-blocked'), 'blocked addresses and their tiles live under Security');
+// ── Operations › Backup ───────────────────────────────────────────────────
+doc.querySelector('.tab[data-t="backup"]').click();
+await tick(300);
+const bk = tiles('bkTiles');
+ok(/^Last restore /.test(bk) && /Discord webhook /.test(bk) && /Kept apart Traffic/.test(bk), 'Backup has its tiles (' + bk + ')');
+ok($('cfgExport').closest('#panel-backup') && !doc.querySelector('#panel-backup #ipBanInput'), 'the backup card is alone on its page');
+// ── Clear logs sits with the logs ─────────────────────────────────────────
+ok($('btnClearLogs').closest('#panel-server') && /logQuickMsg/.test(html.slice(html.indexOf('function clearLogs'), html.indexOf('function clearLogs') + 600)), 'Clear logs is under Health & logs and answers there');
+ok(/confirm\('Clear the recent logs/.test(html), 'and asks first');
 ok(errors.length === 0, 'nothing threw' + (errors.length ? ': ' + errors[0] : ''));
 
 console.log(fail ? 'FAIL ' + fail + '/' + n : 'OK ' + n + '/' + n);

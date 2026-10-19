@@ -45,7 +45,7 @@ const GROUPS = {
   overview: ['overview'],
   stats: ['traffic/world', 'traffic/overview', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace', 'traffic/data'], live: ['sessions', 'errors'], community: ['board', 'polls', 'broadcast', 'landir'],
   content: ['packages', 'music'], players: ['login', 'lobby', 'firstvisit', 'features'], infra: ['servers', 'proxy', 'identity'],
-  ops: ['server', 'deploy', 'access'], security: ['keys'],
+  ops: ['server', 'deploy', 'backup'], security: ['keys', 'audit', 'blocked'],
 };
 function grp(g) {
   const a = admin.indexOf('<div class="sgrp');
@@ -69,7 +69,7 @@ for (const [g, tabs] of Object.entries(GROUPS)) {
     tabs.length === 1 ? 'a one-section group opens its section directly' : 'a group of several unfolds its list');
   all = all.concat(got);
 }
-ok(all.length === 28 && new Set(all).size === 28, 'every one of the twenty-eight sections is reachable, once');
+ok(all.length === 30 && new Set(all).size === 30, 'every one of the thirty sections is reachable, once');
 for (const sc of ['packages', 'music', 'broadcast', 'polls', 'leaderboard']) {
   ok(new RegExp('data-scope="' + sc + '"').test(admin), 'scope ' + sc + ' survived the move');
 }
@@ -174,9 +174,7 @@ function panel(id) {
   return admin.slice(a, b < 0 ? undefined : b);
 }
 const PANELS = {
-  'panel-server': 2, 'panel-proxy': 1, 'panel-deploy': 3, 'panel-access': 2,
-  // panel-clients: App modes, Feature kill switches, Live server figures,
-  // Community events (the fourth since web.254).
+  'panel-server': 2, 'panel-proxy': 1, 'panel-deploy': 3, 'panel-backup': 1, 'panel-audit': 1, 'panel-blocked': 1,
   'panel-login': 3, 'panel-lobby': 3, 'panel-firstvisit': 2, 'panel-features': 1, 'panel-identity': 3,
 };
 for (const [id, count] of Object.entries(PANELS)) {
@@ -185,7 +183,7 @@ for (const [id, count] of Object.entries(PANELS)) {
   ok((seg.match(/<div class="card"/g) || []).length === count,
     id + ' carries its ' + count + ' card' + (count === 1 ? '' : 's'));
 }
-for (const t of ['proxy', 'deploy', 'access', 'login', 'lobby', 'firstvisit', 'features', 'identity']) {
+for (const t of ['proxy', 'deploy', 'backup', 'audit', 'blocked', 'login', 'lobby', 'firstvisit', 'features', 'identity']) {
   ok(new RegExp('data-t="' + t + '"').test(admin), 'a tab opens ' + t);
   ok(admin.includes('<div id="panel-' + t + '"'), 'and panel-' + t + ' answers to it');
 }

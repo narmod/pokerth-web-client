@@ -673,8 +673,8 @@
      colonnes de hauteur équilibrée ; celles qui portent un graphique ou une
      grille reprennent toute la largeur, où elles seraient illisibles. */
   @media(min-width:1280px){
-    #panel-broadcast,#panel-login,#panel-lobby,#panel-firstvisit,#panel-deploy,#panel-access,#panel-identity{columns:2;column-gap:16px}
-    #panel-broadcast>.card,#panel-login>.card,#panel-lobby>.card,#panel-firstvisit>.card,#panel-deploy>.card,#panel-access>.card,#panel-identity>.card{break-inside:avoid;-webkit-column-break-inside:avoid;margin-bottom:16px}
+    #panel-broadcast,#panel-login,#panel-lobby,#panel-firstvisit,#panel-deploy,#panel-identity{columns:2;column-gap:16px}
+    #panel-broadcast>.card,#panel-login>.card,#panel-lobby>.card,#panel-firstvisit>.card,#panel-deploy>.card,#panel-identity>.card{break-inside:avoid;-webkit-column-break-inside:avoid;margin-bottom:16px}
     /* Le panneau Traffic n'a plus qu'une carte de lecture : rien a rattraper
        sur toute la largeur, puisque rien n'est reparti en colonnes. */
   }
@@ -1166,13 +1166,15 @@
         <div class="tabs subtabs" data-g="ops" style="display:none">
           <button type="button" class="tab" data-t="server">Health &amp; logs</button>
           <button type="button" class="tab" data-t="deploy">Deployment</button>
-          <button type="button" class="tab" data-t="access">Access &amp; backup</button>
+          <button type="button" class="tab" data-t="backup">Backup</button>
         </div>
       </div>
-      <div class="sgrp one" data-g="security">
+      <div class="sgrp" data-g="security">
         <button type="button" class="gtab" data-g="security"><svg class="gi" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.3,48,112l0-56,160,0ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"/></svg><span>Security</span><i class="gbadge" aria-hidden="true"></i><svg class="gcar" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
         <div class="tabs subtabs" data-g="security" style="display:none">
           <button type="button" class="tab" data-t="keys">Keys</button>
+          <button type="button" class="tab" data-t="audit">Audit log</button>
+          <button type="button" class="tab" data-t="blocked">Blocked addresses</button>
         </div>
       </div>
       </nav>
@@ -1215,7 +1217,7 @@
           <div id="ovNow"><div class="empty">Loading…</div></div>
         </div>
         <div class="card">
-          <div class="boardhead"><h2>Recent changes</h2><button type="button" class="use ovlink" data-go="keys">Audit log</button></div>
+          <div class="boardhead"><h2>Recent changes</h2><button type="button" class="use ovlink" data-go="audit">Audit log</button></div>
           <div id="ovAudit"><div class="empty">Loading…</div></div>
         </div>
       </div>
@@ -1745,7 +1747,7 @@
     </div>
 
 <div id="panel-keys" style="display:none">
-      <section class="ovmodes" id="kyTiles" aria-label="Access and changes at a glance"><div class="empty">Loading…</div></section>
+      <section class="ovmodes" id="kyTiles" aria-label="Delegate keys at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <h2>Create a delegate key</h2>
         <p class="muted">Give a third party access to only some sections. Pick a name and the categories they may manage. The full key is shown <b>once</b> at creation — copy it then. A lost key cannot be recovered (revoke and create a new one).</p>
@@ -1760,6 +1762,9 @@
         <div id="kyList"><div class="empty">Loading…</div></div>
         <div id="kyListMsg" class="msg"></div>
       </div>
+    </div>
+    <div id="panel-audit" style="display:none">
+      <section class="ovmodes" id="auTiles" aria-label="Changes at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <div class="boardhead"><h2>Audit log</h2><div class="bhact"><button id="auRefresh" class="use">Refresh</button><button id="auClear" class="use danger">Clear</button></div></div>
         <p class="muted">Every action that <b>changed</b> something, and who did it — the master key or a named delegate key. Reads are not logged: the dashboard polls itself every few seconds and would drown everything. Kept on disk, so a restart does not erase it. Tokens themselves are never recorded, only the name they carry.</p>
@@ -1768,11 +1773,28 @@
         <div id="auMsg" class="msg"></div>
       </div>
     </div>
+    <div id="panel-blocked" style="display:none">
+      <section class="ovmodes" id="acTiles" aria-label="Blocked addresses at a glance"><div class="empty">Loading…</div></section>
+      <div class="card">
+        <div class="boardhead"><h2>Blocked &amp; banned addresses</h2><button id="ipRefresh" class="use">Refresh</button></div>
+        <p class="muted">Addresses that failed to authenticate on this panel, and addresses you have banned. Unlike the rest of the dashboard, addresses appear <b>in full</b> here: a masked address cannot be banned or unblocked. A ban refuses the WebSocket upgrade — the page still loads, but no game connection is made through this proxy — and drops any bridge already open from it. Your own address and loopback can never be banned.</p>
+        <div id="ipYou" class="muted" style="margin-bottom:6px"></div>
+        <h3 class="pkh">Failed sign-ins <span class="pkn" id="ipBlockedN"></span></h3>
+        <div id="ipBlocked"><div class="empty">Loading…</div></div>
+        <h3 class="pkh" style="margin-top:14px">Banned <span class="pkn" id="ipBannedN"></span></h3>
+        <div id="ipBanned"><div class="empty">—</div></div>
+        <div class="periodrow" style="margin-top:8px">
+          <input id="ipBanInput" class="filter" type="text" maxlength="45" placeholder="Address to ban (e.g. 203.0.113.7)" autocomplete="off" style="margin:0">
+          <button id="ipBanBtn" class="use danger">Ban</button>
+        </div>
+        <div id="ipMsg" class="msg"></div>
+      </div>
+    </div>
     <div id="panel-server" style="display:none">
       <section class="ovmodes" id="opTiles" aria-label="This server at a glance"><div class="empty">Loading…</div></section>
       <div class="card"><h2>Status</h2><div id="status"><div class="empty">Loading…</div></div></div>
       <div class="card">
-        <div class="boardhead"><h2>Recent logs</h2><div class="bhact"><span class="muted">Verbosity</span><select id="logQuick"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select><button id="logsCopy" class="use">Copy</button><button id="refreshLogs" class="use">Refresh</button></div></div>
+        <div class="boardhead"><h2>Recent logs</h2><div class="bhact"><span class="muted">Verbosity</span><select id="logQuick"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select><button id="logsCopy" class="use">Copy</button><button id="refreshLogs" class="use">Refresh</button><button id="btnClearLogs" class="use danger">Clear</button></div></div>
         <div id="logQuickMsg" class="msg"></div>
         <div class="muted" style="margin:2px 0 6px">Times are shown in your own time zone; the log files keep UTC. quiet logs connections, disconnections and errors only — no per-message line, so far less written to disk under load. Applied live, no restart.</div>
         <div class="ltool"><input id="logFilter" class="filter" type="search" placeholder="Filter the lines: a nickname, an address, a word…" autocomplete="off"><label class="ltog"><input type="checkbox" id="logProblems"> Problems only</label><span id="logCount" class="headnote"></span></div>
@@ -1805,7 +1827,6 @@
           <button id="btnUpdateNr" class="use">Update (no restart)</button>
           <button id="btnUpdate" class="use danger">Update &amp; restart</button>
           <button id="btnRestart" class="use">Restart</button>
-          <button id="btnClearLogs" class="use">Clear logs</button>
         </div>
         <div id="maintmsg" class="msg"></div>
         <div class="dpauto">
@@ -1850,22 +1871,8 @@
       </div>
     </div>
 
-    <div id="panel-access" style="display:none">
-      <section class="ovmodes" id="acTiles" aria-label="Access at a glance"><div class="empty">Loading…</div></section>
-      <div class="card">
-        <div class="boardhead"><h2>Blocked &amp; banned addresses</h2><button id="ipRefresh" class="use">Refresh</button></div>
-        <p class="muted">Addresses that failed to authenticate on this panel, and addresses you have banned. Unlike the rest of the dashboard, addresses appear <b>in full</b> here: a masked address cannot be banned or unblocked. A ban refuses the WebSocket upgrade — the page still loads, but no game connection is made through this proxy — and drops any bridge already open from it. Your own address and loopback can never be banned.</p>
-        <div id="ipYou" class="muted" style="margin-bottom:6px"></div>
-        <h3 class="pkh">Failed sign-ins <span class="pkn" id="ipBlockedN"></span></h3>
-        <div id="ipBlocked"><div class="empty">Loading…</div></div>
-        <h3 class="pkh" style="margin-top:14px">Banned <span class="pkn" id="ipBannedN"></span></h3>
-        <div id="ipBanned"><div class="empty">—</div></div>
-        <div class="periodrow" style="margin-top:8px">
-          <input id="ipBanInput" class="filter" type="text" maxlength="45" placeholder="Address to ban (e.g. 203.0.113.7)" autocomplete="off" style="margin:0">
-          <button id="ipBanBtn" class="use danger">Ban</button>
-        </div>
-        <div id="ipMsg" class="msg"></div>
-      </div>
+    <div id="panel-backup" style="display:none">
+      <section class="ovmodes" id="bkTiles" aria-label="Backups at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <h2>Back up &amp; restore settings</h2>
         <p class="muted">The dashboard settings: modes, defaults, branding, table settings, proxy, game servers, LAN directory, kill switches, bans, package and music choices, SEO. <b>Not</b> included: traffic figures, scheduled messages, polls, the audit log and the deployment history (each kept in its own file), delegate keys and database credentials (secrets — restoring a backup must not hand back access you thought you had revoked). The Discord webhook and the contact details of pending LAN requests are left out unless you tick the box; restoring a file without them keeps their current values. Restoring <b>replaces</b> the current settings.</p>
@@ -3240,7 +3247,8 @@
       pn.style.display = (pn.id === 'panel-' + t) ? 'block' : 'none';
     });
     if(t==='music')mzRefresh();
-    if(t==='keys'){ loadKeys(); loadAudit(); }
+    if(t==='keys'){ loadKeys(); }
+    if(t==='audit') loadAudit();
     else { var _kn=$('kyNew'); if(_kn&&_kn.style.display!=='none'){ _kn.innerHTML=''; _kn.style.display='none'; } }   // a new key never stays on screen behind your back
     if(t==='board') loadBoard();
     if(t==='packages') api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
@@ -3255,7 +3263,8 @@
     if(t==='features') loadFeatureSwitches();
     if(t==='identity'||t==='proxy'){ loadStatus(!cfgAnyDirty()); }
     if(t==='deploy'){ loadStatus(false); loadUpdateLog(); autoUpdLoad(); loadDeploys(); }
-    if(t==='access'){ loadBlocked(); }
+    if(t==='blocked') loadBlocked();
+    if(t==='backup'){ loadAudit(); loadStatus(!cfgAnyDirty()); }
     if(t==='sessions'){ seStart(); } else { seStop(); }
     if(t==='errors') loadErrors();
     if(t==='server'){ loadServer(); loadDeploys(); loadBlocked(); srvStart(); } else { srvStop(); }
@@ -3785,7 +3794,7 @@
       // resets the period dropdown or modes toggles while you're using them.
       _infraTiles(d);
       if(d.loginDefaults && typeof d.loginDefaults==='object') _loginCfg=d.loginDefaults;
-      _pxStatus=d; _pxAllTiles();
+      _pxStatus=d; _pxAllTiles(); _bkTiles();
       if(syncCfg){
         if(d.resetPeriod) $('period').value=d.resetPeriod;
         if(d.modes){ modesState=Object.assign({offline:true,lan:true,pokerthnet:true},d.modes); renderModes(); }
@@ -6228,10 +6237,16 @@
     }).catch(function(){ if(n>=60){ maintBusy(false); m.textContent='Update status unknown \u2014 network error.'; m.className='msg err'; } else setTimeout(function(){ nrWait(m,n+1); },2000); });
   }
   function doRestart(){ if(confirm('Restart the server now?')) fireAction('/admin/restart','Restart started'); }
+  // Empties the in-memory ring shown under Recent logs; the log files on disk
+  // are not touched. It sits with the logs, and says so there.
   function clearLogs(){
+    if(!confirm('Clear the recent logs shown here? The log files on disk are kept.')) return;
+    var m=$('logQuickMsg');
     api('/admin/clear-logs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok()})})
-      .then(function(r){return r.json();}).then(function(d){ var m=$('maintmsg'); if(d&&d.ok){ m.textContent='Logs cleared.'; m.className='msg ok'; loadLogs(); } else { m.textContent='Failed.'; m.className='msg err'; } }).catch(function(){ var m=$('maintmsg'); m.textContent='Clear logs failed \u2014 network error.'; m.className='msg err'; });
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Recent logs cleared (the files on disk are kept).'; m.className='msg ok'; loadLogs(); } else { m.textContent='Not cleared: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Not cleared \u2014 network error.'; m.className='msg err'; });
   }
+
   function loadUpdateLog(){ api('/admin/update-log',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) $('updlog').textContent=fmtLogTimes(d.log)||'(empty)'; }).catch(function(){}); }
   if($('btnUpdateNr')) $('btnUpdateNr').addEventListener('click', doUpdateNr);
   if($('btnUpdate')) $('btnUpdate').addEventListener('click', doUpdate);
@@ -6529,15 +6544,34 @@
   // Tiles: the delegate keys, the changes of the last 24 hours, the refused
   // writes and the last change, from what the two lists above loaded.
   function _kyTiles(){
-    var box=$('kyTiles'); if(!box) return;
-    var now=Date.now(), E=_auEntries, day=E.filter(function(x){ return now-x.at<864e5; }), bad=E.filter(function(x){ return !x.ok; }), last=E[0];
-    var K=_kyKeys;
-    var T=[['Delegate keys',K?String(K.length):'—',K?(K.length?K.map(function(k){ return _annEsc(k.name||''); }).join(', '):'only the master key'):'loading','var(--accent)',''],
-           ['Changes, 24 h',String(day.length),E.length+' in the log','var(--m-net)',''],
-           ['Refused',String(bad.length),bad.length?'last '+_auAgo(now-bad[0].at):'every write went through',bad.length?'var(--err-text)':'var(--ok-text)',''],
-           ['Last change',last?_auAgo(now-last.at):'—',last?_annEsc(_auLabel(last.action))+' · '+(last.master?'master key':_annEsc(last.actor||'?')):'nothing recorded yet','var(--warn-text)',' sm']];
-    box.innerHTML=T.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn'+t[4]+'">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join('');
+    var K=_kyKeys, box=$('kyTiles'), au=$('auTiles');
+    var T=function(el,a){ if(el) el.innerHTML=a.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn'+t[4]+'">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join(''); };
+    var sc={}; (K||[]).forEach(function(k){ (k.scopes||[]).forEach(function(x){ sc[x]=1; }); });
+    var newest=(K||[]).filter(function(k){ return k.created; }).sort(function(a,b){ return b.created-a.created; })[0];
+    var now=Date.now();
+    T(box,[['Delegate keys',K?String(K.length):'—',K?(K.length?K.map(function(k){ return _annEsc(k.name||''); }).join(', '):'only the master key'):'loading','var(--accent)',''],
+           ['Sections granted',K?String(Object.keys(sc).length):'—',K?(Object.keys(sc).length?Object.keys(sc).join(', '):'none'):'loading','var(--m-lan)',''],
+           ['Newest key',newest?_auAgo(now-newest.created):'—',newest?_annEsc(newest.name||''):'no key yet','var(--warn-text)',' sm'],
+           ['Master key','Full access','every section, keys and this page','var(--m-net)',' sm']]);
+    var E=_auEntries, day=E.filter(function(x){ return now-x.at<864e5; }), bad=E.filter(function(x){ return !x.ok; }), last=E[0];
+    T(au,[['Changes, 24 h',String(day.length),E.length+' in the log','var(--m-net)',''],
+          ['Refused',String(bad.length),bad.length?'last '+_auAgo(now-bad[0].at):'every write went through',bad.length?'var(--err-text)':'var(--ok-text)',''],
+          ['Last change',last?_auAgo(now-last.at):'—',last?_annEsc(_auLabel(last.action))+' · '+(last.master?'master key':_annEsc(last.actor||'?')):'nothing recorded yet','var(--warn-text)',' sm'],
+          ['By delegates',String(E.filter(function(x){ return !x.master; }).length),'writes made with a delegate key','var(--accent)','']]);
+    _bkTiles();
   }
+  // Backup: what a restore would bring back, and what it leaves out. Read from
+  // the audit log (restores, settings saved) and the last /admin/status.
+  function _bkTiles(){
+    var box=$('bkTiles'); if(!box) return;
+    var now=Date.now(), E=_auEntries||[], rest=E.filter(function(x){ return x.action==='config/import'; })[0], cfg=E.filter(function(x){ return x.ok&&x.action!=='config/import'; })[0], d=_pxStatus||{};
+    box.innerHTML=[['Last restore',rest?_auAgo(now-rest.at):'—',rest?(rest.master?'master key':_annEsc(rest.actor||'?')):'no restore in the log','var(--accent)',' sm'],
+      ['Last change',cfg?_auAgo(now-cfg.at):'—',cfg?_annEsc(_auLabel(cfg.action))+' — a backup taken before it misses it':'nothing recorded yet','var(--warn-text)',' sm'],
+      ['Discord webhook',d.discordChatWebhookUrl?'Set':'None',d.discordChatWebhookUrl?'left out unless the box is ticked':'nothing secret to leave out','var(--m-net)',''],
+      ['Kept apart','Traffic','keys, database credentials, scheduled messages, polls','var(--muted)',' sm']].map(function(t){
+        return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn'+t[4]+'">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join('');
+  }
+
   if($('auFilter')) $('auFilter').addEventListener('input',_auRender);
   if($('auRefused')) $('auRefused').addEventListener('change',_auRender);
   (function(){

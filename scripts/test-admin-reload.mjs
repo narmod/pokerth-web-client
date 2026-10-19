@@ -31,7 +31,7 @@ function body(name) {
 // ── Every settings tab reloads on opening ─────────────────────────────────
 const sw = admin.slice(admin.indexOf("document.querySelectorAll('.tab').forEach(function(b){ b.addEventListener('click'"));
 const handler = sw.slice(0, sw.indexOf('}); });'));
-for (const t of ['deploy', 'access', 'identity', 'proxy', 'login', 'lobby', 'firstvisit', 'features', 'servers', 'server']) {
+for (const t of ['deploy', 'backup', 'blocked', 'audit', 'identity', 'proxy', 'login', 'lobby', 'firstvisit', 'features', 'servers', 'server']) {
   ok(new RegExp("t==='" + t + "'").test(handler), 'opening "' + t + '" reloads its data');
 }
 ok(/t==='deploy'\)\{[^}]*loadUpdateLog\(\)[^}]*autoUpdLoad\(\)[^}]*loadDeploys\(\)/.test(handler), 'Deployment re-reads the action log, the auto-update state and the rollback list');

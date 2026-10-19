@@ -94,12 +94,12 @@ ok(errors.length === 0, 'the page loads without throwing' + (errors.length ? ': 
 // ── Tabs and panels ───────────────────────────────────────────────────────
 const panels = [...doc.querySelectorAll('[id^="panel-"]')];
 const visible = () => panels.filter((p) => p.style.display !== 'none');
-ok(panels.length === 21, 'all 21 panels are in the document, found ' + panels.length);
+ok(panels.length === 23, 'all 23 panels are in the document, found ' + panels.length);
 ok(visible().length === 1, 'exactly one panel is open at load, not ' + visible().length);
 ok(visible()[0] && visible()[0].id === 'panel-overview', 'and it is panel-overview, where a master key lands');
 
 const tabs = [...doc.querySelectorAll('.tab')];
-ok(tabs.length === 28, 'every section has a tab, found ' + tabs.length);
+ok(tabs.length === 30, 'every section has a tab, found ' + tabs.length);
 for (const t of tabs) {
   const id = 'panel-' + t.dataset.t;
   t.click();
@@ -122,7 +122,7 @@ for (const g of ['overview', 'stats', 'live', 'community', 'content', 'players',
   ok(visible().length === 1, 'and still exactly one panel is open');
 }
 
-ok(doc.querySelector('.sgrp[data-g="overview"]').classList.contains('one') && doc.querySelector('.sgrp[data-g="security"]').classList.contains('one'),
+ok(doc.querySelector('.sgrp[data-g="overview"]').classList.contains('one') && !doc.querySelector('.sgrp[data-g="security"]').classList.contains('one'),
   'a group with a single section is marked so it opens it directly');
 ok(!doc.querySelector('.sgrp[data-g="community"]').classList.contains('one') && !doc.querySelector('.sgrp[data-g="stats"]').classList.contains('one'), 'and a group with several is not');
 ok($('sideWho') && $('sideWho').textContent === 'master key', 'the menu says which key is signed in');
