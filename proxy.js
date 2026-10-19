@@ -7432,8 +7432,11 @@ function sendClientHtml(req, res, live) {
 }
 
 // First-visit welcome / rules message (operator-authored, per language).
-function _welcomeAdmin() { var w = _adminConfig.welcome || {}; return { enabled: !!w.enabled, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
-function _welcomePublic() { var w = _adminConfig.welcome; if (!w || !w.enabled) return null; return { enabled: true, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
+// A welcome written before a fallback was stored keeps French (what its players
+// got); one nobody has written yet starts in English, the panel's language.
+function _welcomeDef(w) { return (w && w['default']) || (w && w.langs && Object.keys(w.langs).length ? 'fr' : 'en'); }
+function _welcomeAdmin() { var w = _adminConfig.welcome || {}; return { enabled: !!w.enabled, updatedAt: w.updatedAt || 0, 'default': _welcomeDef(w), langs: w.langs || {} }; }
+function _welcomePublic() { var w = _adminConfig.welcome; if (!w || !w.enabled) return null; return { enabled: true, updatedAt: w.updatedAt || 0, 'default': _welcomeDef(w), langs: w.langs || {} }; }
 // Guest notice: same operator-authored multilingual shape as the welcome
 // message, but aimed at pokerth.net internet GUESTS and shown by the client on
 // every guest connection (the client persists no seen-version for it).
@@ -10901,7 +10904,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
             });
             w.langs = out;
           }
-          if (!w['default']) w['default'] = 'fr';
+          if (!w['default']) w['default'] = 'en';
           w.updatedAt = Date.now();
           _adminConfig.welcome = w;
         }
@@ -10920,7 +10923,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
             });
             gw.langs = _stripDefaultNoticeLangs(gout, GUEST_NOTICE_DEFAULT_LANGS);
           }
-          if (!gw['default']) gw['default'] = 'fr';
+          if (!gw['default']) gw['default'] = 'en';
           gw.updatedAt = Date.now();
           _adminConfig.guestNotice = gw;
         }
@@ -10939,7 +10942,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
             });
             aw.langs = _stripDefaultNoticeLangs(aout, AUTH_NOTICE_DEFAULT_LANGS);
           }
-          if (!aw['default']) aw['default'] = 'fr';
+          if (!aw['default']) aw['default'] = 'en';
           aw.updatedAt = Date.now();
           _adminConfig.authNotice = aw;
         }
@@ -11030,11 +11033,13 @@ function handleAdmin(req, res, reqPathOnly, query) {
         }
         if (d.tableDefaults && typeof d.tableDefaults === 'object') {
           var td = d.tableDefaults, tdout = {};
+          // The limits of the players' own « create a table » form (cf-* in
+          // pokerth-client.html): a default outside them would be clipped there.
           var _tdInt = function (v, lo, hi) { if (v == null || v === '') return null; var n = parseInt(v, 10); return (isFinite(n) && n >= lo && n <= hi) ? n : null; };
           var _pl = _tdInt(td.players, 2, 10);       if (_pl != null) tdout.players = _pl;
-          var _bl = _tdInt(td.blind,   1, 1000000);  if (_bl != null) tdout.blind   = _bl;
-          var _st = _tdInt(td.stack, 500, 1000000);  if (_st != null) tdout.stack   = _st;
-          var _to = _tdInt(td.timeout, 5, 120);      if (_to != null) tdout.timeout = _to;
+          var _bl = _tdInt(td.blind,   5, 20000);    if (_bl != null) tdout.blind   = _bl;
+          var _st = _tdInt(td.stack, 1000, 1000000);  if (_st != null) tdout.stack   = _st;
+          var _to = _tdInt(td.timeout, 5, 60);       if (_to != null) tdout.timeout = _to;
           _adminConfig.tableDefaults = tdout;
         }
         if (d.tableNames && typeof d.tableNames === 'object') {

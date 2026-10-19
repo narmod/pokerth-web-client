@@ -30,6 +30,17 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Admin: texts and limits put right** (`web.160`) — one name per mode across the panel, the statistics' own pair
+  (long · short): Internet (pokerth.net) · Internet, LAN / dedicated · LAN, Training (bots) · Training — the panel
+  used four names for Training and five for LAN; the guest and registered-account popups are titled « (Internet) ».
+  Lobby & tables › Create a table takes the limits of the players' own form (blind 5–20000, stack 1000–1000000,
+  timer 5–60 s; it allowed 1–1000000, 500–1000000 and 5–120, and a value outside was clipped in the form), with
+  « app default » as placeholder since that default depends on the mode; `proxy.js` accepts the same limits. Polls:
+  the poll is on by default and opens in a window (the text said opt-in and « lobby card »). Proxy: 7234 and 7236
+  are the default ports (it said « 7234 is always allowed »), the ALLOWED_HOSTS variable and the effective
+  allowlist are named, and the private-address placeholder is gone. A new welcome, notice or poll starts with
+  English as its fallback language (it was French); a welcome already written without a stored fallback keeps
+  French, so no player sees a different text (`_welcomeDef`).
 - **Admin popups on Login screen too** (`web.159`) — the welcome, guest, LAN and registered-account popups are edited
   from Community › Broadcasts and from Player experience › Login screen. One editor per popup, not two copies: its
   card moves into whichever of the two sections is opened, with its unsaved text, its fold and its handlers

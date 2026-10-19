@@ -71,8 +71,8 @@ ok(!doc.querySelector('[data-t="clients"],[data-t="defaults"],#panel-clients,#pa
 await open('login');
 ok(errors.length === 0, 'opening Login screen throws nothing' + (errors.length ? ': ' + errors[0] : ''));
 let t = tiles('lgTiles');
-ok(/Entry modes 2 \/ 3 Offline practice \(bots\), pokerth\.net/.test(t), 'the modes tile counts and names what is offered (' + t + ')');
-ok(/Opens on LAN \/ private this mode is hidden from the login screen/.test(t), 'a first visit opening on a hidden mode is flagged');
+ok(/Entry modes 2 \/ 3 Training \(bots\), Internet \(pokerth\.net\)/.test(t), 'the modes tile counts and names what is offered (' + t + ')');
+ok(/Opens on LAN this mode is hidden from the login screen/.test(t), 'a first visit opening on a hidden mode is flagged');
 ok(/Server name Home <b>poker<\/b>/.test(t) && !doc.querySelector('#lgTiles b b') && /Live figures On read every 90 s/.test(t), 'server name (as text) and live figures tiles');
 const modes = [...doc.querySelectorAll('#modes .pxmode')];
 ok(modes.length === 3 && modes.every((r) => r.querySelector('.lvdot') && r.style.getPropertyValue('--mc')), 'each mode row has its colour');
@@ -109,6 +109,9 @@ ok(errors.length === 0, 'opening Lobby & tables throws nothing' + (errors.length
 t = tiles('ltTiles');
 ok(/Table values 2 \/ 4 6 players · 20 blind/.test(t) && /Table names 1 \/ 3 custom: LAN/.test(t), 'table tiles count what is set (' + t + ')');
 ok(/Lobby clock Europe\/Berlin default zone/.test(t) && /Events tab Off no Events tab/.test(t), 'lobby clock and Events tab tiles');
+ok([['tdPlayers', '2', '10'], ['tdBlind', '5', '20000'], ['tdStack', '1000', '1000000'], ['tdTimeout', '5', '60']].every(([id, lo, hi]) => $(id).min === lo && $(id).max === hi && $(id).placeholder === 'app default'),
+  'the table fields carry the limits of the players\' own form, and no single default number');
+ok(/var _bl = _tdInt\(td\.blind, +5, 20000\)/.test(readFileSync(join(root, 'proxy.js'), 'utf8')) && /_tdInt\(td\.timeout, 5, 60\)/.test(readFileSync(join(root, 'proxy.js'), 'utf8')), 'and the server accepts the same limits');
 ok($('lobbyClk').closest('#panel-lobby') && $('ceOn').closest('#panel-lobby') && $('tnLanMode').closest('#panel-lobby'), 'lobby clock, Events tab and table names live here');
 typeIn('tdPlayers', '8');
 const tCard = $('tdPlayers').closest('.card');

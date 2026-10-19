@@ -128,7 +128,7 @@ ok(/TypeError: x is <undefined>/.test(c0.querySelector('.ermsg').textContent) &&
 ok(/^\/pokerth\.js:10:2$/.test(c0.querySelector('.ersrc').textContent), 'our own origin is shortened in the source line');
 ok(/incl\. robots/.test(c0.textContent) && /Robots only/.test(cards()[1].textContent), 'robots are marked, mixed or alone');
 ok(/v2\.1\.10-web\.126 \+1/.test(c0.textContent), 'builds fold into the first plus a count');
-ok(/3 players/.test(c0.textContent) && /pokerth\.net, Training/.test(c0.textContent), 'players and modes, in words');
+ok(/3 players/.test(c0.textContent) && /Internet, Training/.test(c0.textContent), 'players and modes, in words');
 ok(cards()[1].classList.contains('bot'), 'a robot-only card is dimmed');
 const pre = c0.querySelector('pre.erstack');
 ok(pre && pre.hidden, 'the stack is folded');

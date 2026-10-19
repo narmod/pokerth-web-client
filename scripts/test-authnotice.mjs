@@ -113,7 +113,7 @@ ok(/authNotice:\{ enabled:\$\('awEnabled'\)\.checked/.test(adm),
   'the admin save posts the authNotice key');
 ok(/loadAuthNotice\(\);/.test(adm), 'the broadcast tab loads the registered-account notice');
 ok(/data-master="1">\s*<h2>Registered-account notice/.test(adm), 'the card is master-only');
-ok(/DEFAULT_FOLDED = \[[^\]]*'Registered-account notice \(pokerth\.net internet mode\)'/.test(adm),
+ok(/DEFAULT_FOLDED = \[[^\]]*'Registered-account notice \(Internet\)'/.test(adm),
   'the card is folded by default');
 
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);

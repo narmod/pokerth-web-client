@@ -131,7 +131,7 @@ ok(bc().length === 2, 'one card per scheduled message');
 ok(bc()[0].querySelector('.plbadge.on').textContent === 'Active' && bc()[1].classList.contains('off') && /Paused/.test(bc()[1].textContent), 'active and paused are marked');
 ok(/Club <i>night<\/i>/.test(bc()[0].querySelector('.plq').textContent) && !bc()[0].querySelector('.plq *'), 'the message is text, never markup');
 ok(/Daily at 20:00/.test(bc()[0].textContent) && /→ All modes/.test(bc()[0].textContent) && /5 sent/.test(bc()[0].textContent), 'schedule, target and count as chips');
-ok(/2\/4 sent/.test(bc()[1].textContent) && /→ pokerth\.net/.test(bc()[1].textContent), 'a capped message shows its cap');
+ok(/2\/4 sent/.test(bc()[1].textContent) && /→ Internet/.test(bc()[1].textContent), 'a capped message shows its cap');
 const bt = tiles('bcTiles');
 ok(/Scheduled 1 1 paused/.test(bt) && /Sent 7/.test(bt) && /Notices on 2 \/ 4 Welcome, LAN/.test(bt) && /Next send .*Club <i>night<\/i>/.test(bt), 'tiles: scheduled, next send, sent, notices on (' + bt + ')');
 ok(!doc.querySelector('#bcTiles i'), 'a tile shows the message as text');

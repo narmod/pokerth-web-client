@@ -1579,7 +1579,7 @@
         <h2>Entry modes</h2>
         <p class="muted">The doors the login screen offers, and the one a first-time visitor finds open. <b>Applies immediately.</b></p>
         <div id="modes"></div>
-        <div class="defrow fld gap"><span>Opens on <span class="muted">(first visit)</span></span><select id="defMode"><option value="">App default</option><option value="offline">Training (bots)</option><option value="lan-dedi">LAN / private server</option><option value="pokerthnet">pokerth.net</option></select></div>
+        <div class="defrow fld gap"><span>Opens on <span class="muted">(first visit)</span></span><select id="defMode"><option value="">App default</option><option value="offline">Training (bots)</option><option value="lan-dedi">LAN / dedicated</option><option value="pokerthnet">Internet (pokerth.net)</option></select></div>
         <div id="modesmsg" class="msg"></div>
       </div>
       <div class="card">
@@ -1612,16 +1612,16 @@
       <section class="ovmodes" id="ltTiles" aria-label="The lobby and the tables at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <h2>Create a table</h2>
-        <p class="muted">Starting values of the “create a table” form. A returning player keeps their own last settings; a blank field keeps the app default. Players can change everything per table.</p>
-        <div class="defrow fld"><span>Max players <span class="muted">(2–10)</span></span><input id="tdPlayers" type="number" min="2" max="10" placeholder="10"></div>
-        <div class="defrow fld"><span>Small blind <span class="muted">(1–1000000)</span></span><input id="tdBlind" type="number" min="1" max="1000000" placeholder="10"></div>
-        <div class="defrow fld"><span>Starting stack <span class="muted">(500–1000000)</span></span><input id="tdStack" type="number" min="500" max="1000000" placeholder="3000"></div>
-        <div class="defrow fld"><span>Action timer <span class="muted">(seconds, 5–120)</span></span><input id="tdTimeout" type="number" min="5" max="120" placeholder="15"></div>
+        <p class="muted">Starting values of the “create a table” form, within the limits of that form. A returning player keeps their own last settings; a blank field keeps the app default, which depends on the mode. Players can change everything per table.</p>
+        <div class="defrow fld"><span>Max players <span class="muted">(2–10)</span></span><input id="tdPlayers" type="number" min="2" max="10" placeholder="app default"></div>
+        <div class="defrow fld"><span>Small blind <span class="muted">(5–20000)</span></span><input id="tdBlind" type="number" min="5" max="20000" placeholder="app default"></div>
+        <div class="defrow fld"><span>Starting stack <span class="muted">(1000–1000000)</span></span><input id="tdStack" type="number" min="1000" max="1000000" placeholder="app default"></div>
+        <div class="defrow fld"><span>Action timer <span class="muted">(seconds, 5–60)</span></span><input id="tdTimeout" type="number" min="5" max="60" placeholder="app default"></div>
         <h3 class="subhd">Table name, per mode</h3>
         <p class="muted">Automatic keeps the translated “X’s table”; Custom sets a fixed name (max 48 characters). Players can still rename their table.</p>
-        <div class="defrow fld left"><span>pokerth.net</span><select id="tnNetMode"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnNetName" maxlength="48" placeholder="e.g. My online game" autocomplete="off" style="display:none"></div>
-        <div class="defrow fld left"><span>LAN / private</span><select id="tnLanMode"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnLanName" maxlength="48" placeholder="custom table name" autocomplete="off" style="display:none"></div>
-        <div class="defrow fld left"><span>Offline (bots)</span><select id="tnOffMode"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnOffName" maxlength="48" placeholder="custom table name" autocomplete="off" style="display:none"></div>
+        <div class="defrow fld left"><span>Internet</span><select id="tnNetMode"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnNetName" maxlength="48" placeholder="e.g. My online game" autocomplete="off" style="display:none"></div>
+        <div class="defrow fld left"><span>LAN</span><select id="tnLanMode"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnLanName" maxlength="48" placeholder="custom table name" autocomplete="off" style="display:none"></div>
+        <div class="defrow fld left"><span>Training</span><select id="tnOffMode"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnOffName" maxlength="48" placeholder="custom table name" autocomplete="off" style="display:none"></div>
         <div class="rowtop"><button id="saveTable" class="use">Save</button></div>
         <div id="tableMsg" class="msg"></div>
       </div>
@@ -1780,9 +1780,9 @@
       <section class="ovmodes" id="prTiles" aria-label="The bridge at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <h2>Proxy</h2>
-        <p class="muted">Server-side bridge settings. Always-allowed hosts: pokerth.net, www.pokerth.net, pthsrv.pokerth.net, localhost, 127.0.0.1, ::1 (plus the servers approved in the LAN directory). Changes apply live (no restart).</p>
-        <div style="margin:5px 0"><div style="margin-bottom:3px">Extra allowed hosts <span class="muted">(one per line — required before a default-login host can connect)</span></div><textarea id="pxHosts" rows="3" placeholder="game.example.com&#10;192.168.1.50" autocomplete="off" style="width:100%;box-sizing:border-box;resize:vertical"></textarea></div>
-        <div style="margin:5px 0"><div style="margin-bottom:3px">Extra allowed ports <span class="muted">(one per line — 1–65535; 7234 is always allowed)</span></div><textarea id="pxPorts" rows="2" placeholder="7234" autocomplete="off" style="width:100%;box-sizing:border-box;resize:vertical"></textarea></div>
+        <p class="muted">Server-side bridge settings. Always-allowed hosts: pokerth.net, www.pokerth.net, pthsrv.pokerth.net, localhost, 127.0.0.1, ::1, plus those of the ALLOWED_HOSTS variable, the registered game servers and the servers approved in the LAN directory — the full list is under Game servers › Effective dial allowlist. Changes apply live (no restart).</p>
+        <div style="margin:5px 0"><div style="margin-bottom:3px">Extra allowed hosts <span class="muted">(one per line — needed for the forced host of the LAN / dedicated button)</span></div><textarea id="pxHosts" rows="3" placeholder="game.example.com&#10;lan.example.org" autocomplete="off" style="width:100%;box-sizing:border-box;resize:vertical"></textarea></div>
+        <div style="margin:5px 0"><div style="margin-bottom:3px">Extra allowed ports <span class="muted">(one per line — 1–65535; 7234 and 7236 are allowed unless the ALLOWED_PORTS variable says otherwise)</span></div><textarea id="pxPorts" rows="2" placeholder="7234" autocomplete="off" style="width:100%;box-sizing:border-box;resize:vertical"></textarea></div>
         <div class="defrow fld"><span>Session grace <span class="muted">(seconds, 10–900)</span></span><input id="pxGrace" type="number" min="10" max="900" placeholder="120"></div>
         <div class="defrow fld"><span>Connection gap <span class="muted">(ms, 0–30000)</span></span><input id="pxGap" type="number" min="0" max="30000" placeholder="5000"></div>
         <div class="defrow fld"><span>Log verbosity <span class="muted">(quiet = least CPU under load)</span></span><select id="pxLog"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select></div>
@@ -1889,7 +1889,7 @@
             <option value="">No icon</option><option value="ℹ️">ℹ️ Info</option><option value="📢">📢 Announce</option><option value="⚠️">⚠️ Warning</option><option value="🎉">🎉 Celebrate</option>
           </select>
           <select id="bcNowTarget" class="filter" style="margin:0;flex:none;width:auto">
-            <option value="all">All modes</option><option value="pthnet">pokerth.net</option><option value="lan">LAN (all servers)</option><option value="offline">Training (offline)</option>
+            <option value="all">All modes</option><option value="pthnet">Internet (pokerth.net)</option><option value="lan">LAN (all servers)</option><option value="offline">Training (bots)</option>
           </select>
           <button id="bcNowSend" class="use">Send now</button>
         </div>
@@ -1909,7 +1909,7 @@
             <option value="">No icon</option><option value="ℹ️">ℹ️ Info</option><option value="📢">📢 Announce</option><option value="⚠️">⚠️ Warning</option><option value="🎉">🎉 Celebrate</option>
           </select>
           <select id="bcTarget" class="filter" style="margin:0;flex:none;width:auto">
-            <option value="all">All modes</option><option value="pthnet">pokerth.net</option><option value="lan">LAN (all servers)</option><option value="offline">Training (offline)</option>
+            <option value="all">All modes</option><option value="pthnet">Internet (pokerth.net)</option><option value="lan">LAN (all servers)</option><option value="offline">Training (bots)</option>
           </select>
           <select id="bcType" class="filter" style="margin:0;flex:1">
             <option value="interval">Every…</option><option value="daily">Daily at…</option><option value="everyDays">Every X days at…</option><option value="weekly">Weekly on… at…</option><option value="monthly">Day X each month at…</option><option value="once">Once at…</option>
@@ -1958,7 +1958,7 @@
         <div id="wcState" class="msg"></div>
       </div>
       <div class="card" data-master="1">
-        <h2>Guest notice (pokerth.net internet mode)</h2>
+        <h2>Guest notice (Internet)</h2>
         <p class="muted">Shown in a centered popup when someone connects as a guest in Internet / PokerTH.net mode &mdash; typically to explain what guests can and cannot do compared to a registered account. Once dismissed with &ldquo;I understand&rdquo; it stays hidden on that device until you edit the message. Each guest sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p>
         <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="gwEnabled" style="width:auto"> Enabled</label>
         <div class="periodrow" style="margin-bottom:8px">
@@ -1975,7 +1975,7 @@
       </div>
       <div class="card" data-master="1">
         <h2>LAN / dedicated server notice</h2>
-        <p class="muted">Shown in a centered popup when someone connects in LAN / dedicated-server mode on this instance (not offline, not Internet/PokerTH.net) &mdash; typically to explain that this instance only dials one operator-configured LAN server, and to point players toward self-hosting for any other address. Once dismissed with &ldquo;I understand&rdquo; it stays hidden on that device until you edit the message. Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p>
+        <p class="muted">Shown in a centered popup when someone connects in LAN / dedicated mode on this instance (not Training, not Internet) &mdash; typically to explain that this instance only dials one operator-configured LAN server, and to point players toward self-hosting for any other address. Once dismissed with &ldquo;I understand&rdquo; it stays hidden on that device until you edit the message. Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p>
         <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="lwEnabled" style="width:auto"> Enabled</label>
         <div class="periodrow" style="margin-bottom:8px">
           <label class="muted">Edit language <select id="lwLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
@@ -1990,7 +1990,7 @@
         <div id="lwState" class="msg"></div>
       </div>
       <div class="card" data-master="1">
-        <h2>Registered-account notice (pokerth.net internet mode)</h2>
+        <h2>Registered-account notice (Internet)</h2>
         <p class="muted">The mirror of the guest notice above, for players who log in <b>with a registered account</b> in Internet / PokerTH.net mode. Once dismissed with &ldquo;I understand&rdquo; it stays hidden &mdash; the acknowledgement follows the account across devices &mdash; until you edit the message. Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p>
         <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="awEnabled" style="width:auto"> Enabled</label>
         <div class="periodrow" style="margin-bottom:8px">
@@ -2011,7 +2011,7 @@
       <section class="ovmodes" id="plTiles" aria-label="Polls at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <div class="boardhead"><h2>Polls</h2><span id="plSum" class="headnote"></span><div class="bhact"><button id="plNew" class="use">+ New poll</button><button id="plRefresh" class="use">Refresh</button></div></div>
-        <p class="muted">Ask the players what to build next. Only clients that opted in (Advanced options &rarr; “Product polls”) see the active poll, as a lobby card, and answer once per device. The counts stay hidden until they have answered, so the figures on screen cannot sway the vote. One poll is live at a time: activating a poll retires the previous one.</p>
+        <p class="muted">Ask the players what to build next. The active poll opens in a window when a player reaches the lobby (unless they turned “Product polls” off in Advanced options); one answer per device. The counts stay hidden until they have answered, so the figures on screen cannot sway the vote. One poll is live at a time: activating a poll retires the previous one.</p>
         <div id="plList" class="erlist"><div class="empty">Loading…</div></div>
       </div>
       <div class="card" id="plForm">
@@ -5520,7 +5520,7 @@
     var md=$('trafModes'); if(!md) return;
     var fmt=function(n){ try{return Number(n||0).toLocaleString();}catch(e){return String(n||0);} };
     var tm=(d.today&&d.today.m)||{}, am=(d.allTime&&d.allTime.m)||{};
-    var rows=[['pokerth.net','pokerthnet'],['LAN / dedicated','lan'],['Offline (bots)','offline'],['Live/spectator tool (/live)','live']].filter(function(rw){ return _modeOn(rw[1]); });
+    var rows=[['Internet (pokerth.net)','pokerthnet'],['LAN / dedicated','lan'],['Training (bots)','offline'],['Live/spectator tool (/live)','live']].filter(function(rw){ return _modeOn(rw[1]); });
     md.innerHTML = rows.map(function(rw){ return '<div class="srow"><span>'+rw[0]+'</span><b>'+fmt(tm[rw[1]])+' today · '+fmt(am[rw[1]])+' total</b></div>'; }).join('');
   }
   function _trafModes48(d){
@@ -6126,7 +6126,7 @@
 
   // app modes (login-screen entry modes)
   var modesState={offline:true,lan:true,pokerthnet:true};
-  var MODE_LABELS=[['offline','Offline practice (bots)'],['lan','LAN / private server'],['pokerthnet','pokerth.net']];
+  var MODE_LABELS=[['offline','Training (bots)'],['lan','LAN / dedicated'],['pokerthnet','Internet (pokerth.net)']];
   var MODE_SUB={offline:['var(--m-off)','Training against the bots, no server'],lan:['var(--m-lan)','The LAN directory, or a typed address'],pokerthnet:['var(--m-net)','The official Internet server']};
   function renderModes(){
     var el=$('modes'); el.innerHTML='';
@@ -6420,7 +6420,7 @@
       var nOn=_bcJobs.filter(function(j){ return j.enabled; }).length, sum=$('bcSum');
       if(sum) sum.textContent=_bcJobs.length?(_bcJobs.length+' message'+(_bcJobs.length===1?'':'s')+' · '+nOn+' active'):'';
       if(!_bcJobs.length){ el.innerHTML='<div class="empty">No scheduled messages.</div>'; return; }
-      var tgN={all:'All modes',pthnet:'pokerth.net',lan:'LAN (all servers)',offline:'Training'};
+      var tgN={all:'All modes',pthnet:'Internet',lan:'LAN (all servers)',offline:'Training'};
       _bcJobs.forEach(function(j){
         var row=document.createElement('div'); row.className='plrow bcrow'+(j.enabled?'':' off');
         var hd=document.createElement('div'); hd.className='plhd';
@@ -6712,7 +6712,7 @@
   // last /admin/config (_pxCfg, master only) and the entry modes.
   var _pxCfg=null, _pxStatus=null;
   var PX_THEMES={'':'App default',official:'PokerTH Dark',officiallight:'PokerTH Light',casino:'Green Casino'};
-  var PX_MODES={'':'App default',offline:'Training (bots)','lan-dedi':'LAN / private','pokerthnet':'pokerth.net'};
+  var PX_MODES={'':'App default',offline:'Training','lan-dedi':'LAN','pokerthnet':'Internet'};
   function _pxAllTiles(){
     var T=function(id,a){ var box=$(id); if(box) box.innerHTML=a.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn'+(t[4]||'')+'">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join(''); };
     var c=_pxCfg||{}, d=_pxStatus||{}, ls=c.liveStats||{}, ce=c.communityEvents||{}, M='master key only';
@@ -6726,7 +6726,7 @@
       ['Live figures',_pxCfg?(ls.on!==false?'On':'Off'):'—',_pxCfg?(ls.on!==false?'read every '+(typeof ls.sec==='number'?ls.sec:60)+' s':'no line on the Internet card'):M,'var(--m-net)']]);
     var TD=d.tableDefaults||{}, TN=d.tableNames||{};
     var tdSet=[['players',' players'],['blind',' blind'],['stack',' chips'],['timeout',' s timer']].filter(function(k){ return TD[k[0]]!=null&&TD[k[0]]!==''; });
-    var tnSet=[['pokerthnet','pokerth.net'],['lan','LAN'],['offline','offline']].filter(function(k){ return typeof TN[k[0]]==='string'&&TN[k[0]].trim(); });
+    var tnSet=[['pokerthnet','Internet'],['lan','LAN'],['offline','Training']].filter(function(k){ return typeof TN[k[0]]==='string'&&TN[k[0]].trim(); });
     T('ltTiles',[
       ['Table values',_pxStatus?tdSet.length+'<small class="ovof"> / 4</small>':'—',tdSet.length?srvEsc(tdSet.map(function(k){ return TD[k[0]]+k[1]; }).join(' · ')):'app defaults','var(--accent)'],
       ['Table names',_pxStatus?tnSet.length+'<small class="ovof"> / 3</small>':'—',tnSet.length?'custom: '+tnSet.map(function(k){ return k[1]; }).join(', '):'automatic in every mode','var(--m-lan)'],
@@ -7145,7 +7145,7 @@
            : /Chrome\//.test(ua)?'Chrome' : /Safari\//.test(ua)?'Safari' : '';
     return [os,br].filter(Boolean).join(' \u00b7 ');
   }
-  function _seMode(m){ return m==='pthnet'?'pokerth.net' : m==='lan'?'LAN / private' : m==='offline'?'Training' : (m||'\u2014'); }
+  function _seMode(m){ return m==='pthnet'?'Internet' : m==='lan'?'LAN' : m==='offline'?'Training' : (m||'\u2014'); }
   function _seKickBtn(id,label){
     var b=document.createElement('button'); b.className='del'; b.textContent='Disconnect';
     b.addEventListener('click',function(){
@@ -7330,8 +7330,8 @@
 
   // ── Welcome / first-visit message (per language) ────────────────────────
   var WC_LANGS=['af','am','ar','az','be','bg','bn','bs','ca','cs','cy','da','de','el','en','eo','es','es-419','et','eu','fa','fi','fil','fr','ga','gd','gl','gu','ha','he','hi','hr','hu','hy','id','is','it','ja','ka','kk','km','kn','ko','ky','lt','lv','mk','ml','mn','mr','ms','sq','my','nb','ne','nl','pa','pl','pt-br','pt-pt','ro','ru','si','sk','sl','sr','sv','sw','ta','te','tg','th','tk','tr','uk','ur','uz','vi','yo','zh','zh-hk','zh-tw','zu'];
-  var welcomeState={ enabled:false, 'default':'fr', langs:{} };
-  var wcEdit='fr'; // language currently shown in the editor
+  var welcomeState={ enabled:false, 'default':'en', langs:{} };
+  var wcEdit='en'; // language currently shown in the editor
   (function(){ var a=$('wcLang'), b=$('wcDefault'); if(a&&b){ WC_LANGS.forEach(function(c){ var o1=document.createElement('option'); o1.value=c; o1.textContent=c; a.appendChild(o1); var o2=document.createElement('option'); o2.value=c; o2.textContent=c; b.appendChild(o2); }); a.value='fr'; b.value='fr'; } })();
   function wcFilledList(){ return Object.keys(welcomeState.langs); }
   function wcUpdateFilled(){ var el=$('wcFilled'); if(!el) return; var f=wcFilledList(); el.textContent = f.length ? ('Filled languages: '+f.join(', ')) : 'No language filled yet.'; }
@@ -7349,7 +7349,7 @@
   // First language to show: the configured fallback if it has content, else the
   // first filled language, else the fallback (empty) — so the live message is
   // visible immediately from any machine.
-  function wcInitialLang(){ var d=welcomeState['default']||'fr'; if(welcomeState.langs[d]) return d; var f=wcFilledList(); return f.length ? f[0] : d; }
+  function wcInitialLang(){ var d=welcomeState['default']||'en'; if(welcomeState.langs[d]) return d; var f=wcFilledList(); return f.length ? f[0] : d; }
   function loadWelcome(){ api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(!d||!d.ok||!d.welcome) return; welcomeState={ enabled:!!d.welcome.enabled, 'default':d.welcome['default']||'fr', langs:d.welcome.langs||{} }; if($('wcEnabled')) $('wcEnabled').checked=welcomeState.enabled; if($('wcDefault')) $('wcDefault').value=welcomeState['default']; wcShow(wcInitialLang()); _bcTiles(); }).catch(function(){}); }
   function saveWelcome(){ wcCommit(); var body={ welcome:{ enabled:$('wcEnabled').checked, 'default':$('wcDefault').value, langs:welcomeState.langs }, token:tok() };
     bcSay('wcState','Saving\u2026');
@@ -7363,8 +7363,8 @@
   // ── Guest notice (pokerth.net internet guests, every connection) ────────
   // Same multilingual editor shape as the welcome message above; posts the
   // 'guestNotice' key of /admin/config instead of 'welcome'.
-  var guestNoticeState={ enabled:false, 'default':'fr', langs:{} };
-  var gwEdit='fr';
+  var guestNoticeState={ enabled:false, 'default':'en', langs:{} };
+  var gwEdit='en';
   (function(){ var a=$('gwLang'), b=$('gwDefault'); if(a&&b){ WC_LANGS.forEach(function(c){ var o1=document.createElement('option'); o1.value=c; o1.textContent=c; a.appendChild(o1); var o2=document.createElement('option'); o2.value=c; o2.textContent=c; b.appendChild(o2); }); a.value='fr'; b.value='fr'; } })();
   function gwFilledList(){ return Object.keys(guestNoticeState.langs); }
   function gwUpdateFilled(){ var el=$('gwFilled'); if(!el) return; var f=gwFilledList(); el.textContent = f.length ? ('Filled languages: '+f.join(', ')) : 'No language filled yet.'; }
@@ -7376,7 +7376,7 @@
     if(t){ var h=document.createElement('div'); h.textContent=t; h.style.cssText='padding:12px 16px;font-weight:700;color:#e0c070;border-bottom:1px solid rgba(200,168,74,.25)'; el.appendChild(h); }
     var p=document.createElement('div'); p.innerHTML=annLinkify(b); p.style.cssText='padding:12px 16px;white-space:pre-line;line-height:1.5;color:#efe6d2;font-size:.9rem'; el.appendChild(p);
   }
-  function gwInitialLang(){ var d=guestNoticeState['default']||'fr'; if(guestNoticeState.langs[d]) return d; var f=gwFilledList(); return f.length ? f[0] : d; }
+  function gwInitialLang(){ var d=guestNoticeState['default']||'en'; if(guestNoticeState.langs[d]) return d; var f=gwFilledList(); return f.length ? f[0] : d; }
   function loadGuestNotice(){ api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(!d||!d.ok||!d.guestNotice) return; guestNoticeState={ enabled:!!d.guestNotice.enabled, 'default':d.guestNotice['default']||'fr', langs:d.guestNotice.langs||{} }; if($('gwEnabled')) $('gwEnabled').checked=guestNoticeState.enabled; if($('gwDefault')) $('gwDefault').value=guestNoticeState['default']; gwShow(gwInitialLang()); _bcTiles(); }).catch(function(){}); }
   function saveGuestNotice(){ gwCommit(); var body={ guestNotice:{ enabled:$('gwEnabled').checked, 'default':$('gwDefault').value, langs:guestNoticeState.langs }, token:tok() };
     bcSay('gwState','Saving\u2026');
@@ -7389,8 +7389,8 @@
 
   // ── Registered-account notice (pokerth.net auth logins, every connection) ─
   // Mirror of the guest notice above; posts the 'authNotice' key.
-  var authNoticeState={ enabled:false, 'default':'fr', langs:{} };
-  var awEdit='fr';
+  var authNoticeState={ enabled:false, 'default':'en', langs:{} };
+  var awEdit='en';
   (function(){ var a=$('awLang'), b=$('awDefault'); if(a&&b){ WC_LANGS.forEach(function(c){ var o1=document.createElement('option'); o1.value=c; o1.textContent=c; a.appendChild(o1); var o2=document.createElement('option'); o2.value=c; o2.textContent=c; b.appendChild(o2); }); a.value='fr'; b.value='fr'; } })();
   function awFilledList(){ return Object.keys(authNoticeState.langs); }
   function awUpdateFilled(){ var el=$('awFilled'); if(!el) return; var f=awFilledList(); el.textContent = f.length ? ('Filled languages: '+f.join(', ')) : 'No language filled yet.'; }
@@ -7402,7 +7402,7 @@
     if(t){ var h=document.createElement('div'); h.textContent=t; h.style.cssText='padding:12px 16px;font-weight:700;color:#e0c070;border-bottom:1px solid rgba(200,168,74,.25)'; el.appendChild(h); }
     var p=document.createElement('div'); p.innerHTML=annLinkify(b); p.style.cssText='padding:12px 16px;white-space:pre-line;line-height:1.5;color:#efe6d2;font-size:.9rem'; el.appendChild(p);
   }
-  function awInitialLang(){ var d=authNoticeState['default']||'fr'; if(authNoticeState.langs[d]) return d; var f=awFilledList(); return f.length ? f[0] : d; }
+  function awInitialLang(){ var d=authNoticeState['default']||'en'; if(authNoticeState.langs[d]) return d; var f=awFilledList(); return f.length ? f[0] : d; }
   function loadAuthNotice(){ api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(!d||!d.ok||!d.authNotice) return; authNoticeState={ enabled:!!d.authNotice.enabled, 'default':d.authNotice['default']||'fr', langs:d.authNotice.langs||{} }; if($('awEnabled')) $('awEnabled').checked=authNoticeState.enabled; if($('awDefault')) $('awDefault').value=authNoticeState['default']; awShow(awInitialLang()); _bcTiles(); }).catch(function(){}); }
   function saveAuthNotice(){ awCommit(); var body={ authNotice:{ enabled:$('awEnabled').checked, 'default':$('awDefault').value, langs:authNoticeState.langs }, token:tok() };
     bcSay('awState','Saving\u2026');
@@ -7444,8 +7444,8 @@
   // Same multilingual editor shape as the welcome message above: one draft kept
   // in memory, the visible fields committed into the language being edited
   // before any language switch, so nothing typed is ever lost.
-  var pollDraft={ id:null, 'default':'fr', question:{}, options:[] };
-  var plEdit='fr';
+  var pollDraft={ id:null, 'default':'en', question:{}, options:[] };
+  var plEdit='en';
   (function(){ var a=$('plLang'), b=$('plDefault'); if(a&&b){ WC_LANGS.forEach(function(c){ var o1=document.createElement('option'); o1.value=c; o1.textContent=c; a.appendChild(o1); var o2=document.createElement('option'); o2.value=c; o2.textContent=c; b.appendChild(o2); }); a.value='fr'; b.value='fr'; } })();
   // Pick the best available text: the poll's fallback language, then English,
   // then whatever was authored — an admin list should never render blank.
@@ -7481,7 +7481,7 @@
   function plNextOptId(){ var n=0; pollDraft.options.forEach(function(o){ var m=/^o(\d+)$/.exec(o.id||''); if(m) n=Math.max(n,+m[1]); }); return 'o'+(n+1); }
   function plShow(code){ plEdit=code; if($('plLang')) $('plLang').value=code; if($('plQuestion')) $('plQuestion').value=pollDraft.question[code]||''; plRenderOpts(); plUpdateFilled(); }
   function plResetForm(){
-    pollDraft={ id:null, 'default':($('plDefault')?$('plDefault').value:'fr'), question:{}, options:[{id:'o1',label:{}},{id:'o2',label:{}}] };
+    pollDraft={ id:null, 'default':($('plDefault')?$('plDefault').value:'en'), question:{}, options:[{id:'o1',label:{}},{id:'o2',label:{}}] };
     if($('plFormTitle')) $('plFormTitle').textContent='New poll';
     plShow(plEdit); bcSay('plState','');
   }
@@ -7489,7 +7489,7 @@
   // leaves the ballots already cast intact (the server only clears the tally
   // when the set of ids actually changes).
   function plLoadIntoForm(p){
-    pollDraft={ id:p.id, 'default':p['default']||'fr', question:Object.assign({},p.question||{}),
+    pollDraft={ id:p.id, 'default':p['default']||'en', question:Object.assign({},p.question||{}),
                 options:(p.options||[]).map(function(o){ return { id:o.id, label:Object.assign({},o.label||{}) }; }) };
     if($('plDefault')) $('plDefault').value=pollDraft['default'];
     if($('plFormTitle')) $('plFormTitle').textContent='Edit poll';
@@ -7928,7 +7928,7 @@
     var STORE='pth_admin_collapsed', saved=null;
     try{ saved=JSON.parse(localStorage.getItem(STORE)||'null'); }catch(e){}
     var state = saved || {}, firstRun = !saved;
-    var DEFAULT_FOLDED = ['Schedule a restart','Schedule a recurring message','Welcome / rules message','Guest notice (pokerth.net internet mode)','Registered-account notice (pokerth.net internet mode)','LAN / dedicated server notice'];
+    var DEFAULT_FOLDED = ['Schedule a restart','Schedule a recurring message','Welcome / rules message','Guest notice (Internet)','Registered-account notice (Internet)','LAN / dedicated server notice'];
     function slug(s){ return (s||'').trim().replace(/[^a-z0-9]+/gi,'_').replace(/^_+|_+$/g,'').toLowerCase().slice(0,48); }
     document.querySelectorAll('.card').forEach(function(card){
       var h2s = card.querySelectorAll('h2');
