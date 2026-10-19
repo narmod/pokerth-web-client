@@ -30,6 +30,12 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Admin: every card opens on a short summary** (`web.164`) — the long explanations fold under a « details » line,
+  word for word, in SEO (4), Backup, Blocked addresses, Roll back, LAN directory (pending requests, settings), Discord
+  relay, Sessions, Client errors (the colour legend included), music votes, Audit log, Proxy (the always-allowed
+  hosts, with a link to the effective allowlist), auto-update, the three login popups, Polls and the LAN / dedicated
+  button. Nothing is removed. `test-admin-layout.mjs` now fails when a card summary outside « details » runs past
+  45 words (the Statistics explanations, behind their own Explain switch, are left out).
 - **Admin: Identity & reach becomes Search engines; world clock set from the Overview; Discord relay in
   Broadcasts** (`web.163`) — the world-clock settings move under the strip they draw: a « Customize the clocks »
   button (master key) opens them on the Overview, read again at each opening, with the long explanation folded

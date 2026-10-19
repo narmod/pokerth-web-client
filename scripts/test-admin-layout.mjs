@@ -203,6 +203,19 @@ ok(/<button type="button" class="tab on" data-t="overview">/.test(admin), 'which
 ok(/#panel-login,#panel-lobby,#panel-firstvisit[^{]*\{columns:2/.test(admin), 'Login screen, Lobby & tables and First visit use both columns');
 ok(!/#panel-features[^{]*\{columns:2/.test(admin), 'Features keeps one wide card');
 ok(!/#panel-server,/.test(admin), 'a two-card panel no longer asks for two columns');
+// ── One-line summaries (web.164) ──────────────────────────────────────────
+// A card opens on a short summary; the detail folds under « details ». The
+// Statistics explanations are left out: they hide behind their own Explain switch.
+{
+  const bodyHtml = admin.slice(admin.indexOf('<body'), admin.indexOf('<script', admin.indexOf('<body')));
+  const outside = bodyHtml.replace(/<details[\s\S]*?<\/details>/g, '');
+  const long = [...outside.matchAll(/<p class="muted([^"]*)"[^>]*>([\s\S]*?)<\/p>/g)]
+    .filter((m) => !/xpl/.test(m[1]))
+    .map((m) => m[2].replace(/<[^>]+>/g, '').trim())
+    .filter((t) => t.split(/\s+/).length > 45);
+  ok(long.length === 0, 'no card summary runs past 45 words' + (long.length ? ': ' + long[0].slice(0, 60) : ''));
+  ok((admin.match(/<details class="more">/g) || []).length >= 25, 'the detail folds under « details » instead');
+}
 
 // ── Language names ────────────────────────────────────────────────────────
 // A code has to be decoded; a name reads. Intl covers whatever arrives in

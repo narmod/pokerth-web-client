@@ -1468,7 +1468,8 @@
       <section class="ovmodes" id="seTiles" aria-label="Connected right now, by entry mode"><div class="empty">Loading…</div></section>
       <div class="card">
         <div class="boardhead"><h2>Live connections</h2><span id="seSum" class="headnote"></span><button id="seRefresh" class="use">Refresh</button></div>
-        <p class="muted">Everyone connected right now. <b>Bridges</b> are players whose game traffic goes through this proxy; <b>notices</b> are lightweight channels (players connected straight to pokerth.net, or training) that only receive broadcasts. Connections from the <b>/live</b> spectator view are tagged and counted apart. IP addresses are shown partially masked. Auto-refreshes every 5&nbsp;s while this tab is open.</p>
+        <p class="muted">Everyone connected right now, refreshed every 5&nbsp;s while this tab is open. IP addresses are partially masked.</p>
+        <details class="more"><summary>Bridges, notices and /live</summary><p class="muted"><b>Bridges</b> are players whose game traffic goes through this proxy; <b>notices</b> are lightweight channels (players connected straight to pokerth.net, or training) that only receive broadcasts. Connections from the <b>/live</b> spectator view are tagged and counted apart.</p></details>
         <div class="ltool"><input id="seFilter" class="filter" type="search" placeholder="Filter: name, country, server, device, version…" autocomplete="off"><div class="chips" id="seModes" role="group" aria-label="Entry mode"></div></div>
         <div id="seMsg" class="msg"></div>
         <div id="seList" class="ltab"><div class="empty">Loading…</div></div>
@@ -1478,7 +1479,8 @@
       <section class="ovmodes" id="erTiles" aria-label="Client errors at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <div class="boardhead"><h2>Client script errors</h2><span id="erSum" class="headnote"></span><div class="bhact"><button id="erRefresh" class="use">Refresh</button><button id="erClear" class="use danger">Clear all</button></div></div>
-        <p class="muted">JavaScript errors reported by players' browsers, grouped by signature so one recurring bug is one line with a counter. Players can switch the reporting off in Advanced options; nothing but the error itself, the build, the device and a masked IP is ever sent. Errors from search-engine crawlers are kept but marked <b>Bot only</b> (or <b>incl. bots</b>): none of them reaches a player. Each error carries a colour by type: <b class="erk-crash">script error</b> (an exception in the client), <b class="erk-reject">rejection</b> (a promise nobody caught), <b class="erk-load">load failure</b> (one of our files did not arrive), <b class="erk-ok">recovered</b> (an automatic retry worked) and <b class="erk-diag">diagnostic</b> (the probe that tells why a file failed). Kept in memory only — a restart clears the list.</p>
+        <p class="muted">JavaScript errors reported by players' browsers, one line per bug with a counter. Kept in memory only &mdash; a restart clears the list.</p>
+        <details class="more"><summary>What is sent, bots, and the colours</summary><p class="muted">Players can switch the reporting off in Advanced options; nothing but the error itself, the build, the device and a masked IP is ever sent. Errors from search-engine crawlers are kept but marked <b>Bot only</b> (or <b>incl. bots</b>): none of them reaches a player. Each error carries a colour by type: <b class="erk-crash">script error</b> (an exception in the client), <b class="erk-reject">rejection</b> (a promise nobody caught), <b class="erk-load">load failure</b> (one of our files did not arrive), <b class="erk-ok">recovered</b> (an automatic retry worked) and <b class="erk-diag">diagnostic</b> (the probe that tells why a file failed).</p></details>
         <div class="ltool"><input id="erFilter" class="filter" type="search" placeholder="Filter: message, file, version, device…" autocomplete="off"><div class="chips" id="erKinds" role="group" aria-label="Error type"></div><label class="ltog"><input type="checkbox" id="erHideBots"> Hide robot-only errors</label></div>
         <div id="erMsg" class="msg"></div>
         <div id="erList" class="erlist"><div class="empty">Loading…</div></div>
@@ -1513,7 +1515,8 @@
         <div class="defrow fld"><span>Show vote counts to players</span><select id="mzVotesPub"><option value="0">Off (blind)</option><option value="1">On</option></select></div>
         <div class="rowtop"><button id="mzSaveEnabled" class="use" data-save>Save</button></div>
         <div id="mzEnMsg" class="msg"></div>
-        <p class="muted note">Players see two thumbs on the track they are listening to. One vote per device per track, deduplicated on a salted hash of the same anonymous id used by the visit counter — no IP, no nickname, no listening time. Blind is the default: a player sees their own thumb but not the totals, so the figures on screen cannot sway the answer. Radios are votable too, unlike plays. Counts appear next to each entry in the library below.</p>
+        <p class="muted note">Players see two thumbs on the track they are listening to; counts appear next to each entry in the library below. Radios are votable too.</p>
+        <details class="more"><summary>How votes are counted</summary><p class="muted">One vote per device per track, deduplicated on a salted hash of the same anonymous id used by the visit counter &mdash; no IP, no nickname, no listening time. Blind is the default: a player sees their own thumb but not the totals, so the figures on screen cannot sway the answer. Radios are votable, unlike plays.</p></details>
         <p class="muted note">Off removes the 🎵 entry from every player menu and makes <code>/music/*</code> answer 404 (manifest and MP3s). The track list below stays fully editable. Players already in a session keep the player until they reload.</p>
       </div>
       <div class="card">
@@ -1722,20 +1725,24 @@
       <section class="ovmodes" id="idTiles" aria-label="Search engines at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <h2>Search engine visibility (SEO)</h2>
-        <p class="muted"><b>Off by default.</b> When off, every page is served with <code>noindex, nofollow</code> and <code>robots.txt</code> blocks all crawlers &mdash; a self-hosted install stays out of Google and AI search engines. Turn it on only for a public instance you want indexed: the page then gains a description, Open Graph / Twitter cards, a canonical link, structured data (JSON-LD) and a crawler-readable summary, and <code>robots.txt</code>, <code>sitemap.xml</code> and <code>llms.txt</code> are generated from the public URL below. Applies immediately (no restart needed).</p>
-        <p class="muted" style="margin-top:14px">Running the official instance? <b>Fill in pokerth.net settings</b> puts every field back to what <code>webclient.pokerth.net</code> uses: indexing on, the public URL, <code>PokerTH</code> as the site name, AI crawlers allowed, and the branding overrides left empty so each language keeps its own translated title and description. Your Search Console, Bing and Yandex tokens are not touched &mdash; they belong to your accounts, not to the preset. Nothing is written until you press Save.</p>
+        <p class="muted"><b>Off by default:</b> pages say <code>noindex</code> and <code>robots.txt</code> blocks every crawler, so a self-hosted install stays out of Google and AI search engines. Turn it on only for a public instance you want indexed. <b>Applies immediately.</b></p>
+        <details class="more"><summary>What indexing adds</summary><p class="muted">The page gains a description, Open Graph / Twitter cards, a canonical link, structured data (JSON-LD) and a crawler-readable summary, and <code>robots.txt</code>, <code>sitemap.xml</code> and <code>llms.txt</code> are generated from the public URL below.</p></details>
+        <p class="muted" style="margin-top:14px">Running the official instance? <b>Fill in pokerth.net settings</b> puts every field back to what <code>webclient.pokerth.net</code> uses. Nothing is written until you press Save.</p>
+        <details class="more"><summary>What the preset sets</summary><p class="muted">Indexing on, the public URL, <code>PokerTH</code> as the site name, AI crawlers allowed, and the branding overrides left empty so each language keeps its own translated title and description. Your Search Console, Bing and Yandex tokens are not touched &mdash; they belong to your accounts, not to the preset.</p></details>
         <div class="rowtop"><button id="seoPreset" class="use">Fill in pokerth.net settings</button></div>
         <div class="defrow fld"><span>Search engine indexing</span><select id="seoEnabled"><option value="0">Off (default)</option><option value="1">On</option></select></div>
         <div class="defrow fld"><span style="white-space:nowrap">Public URL</span><input id="seoUrl" maxlength="200" placeholder="https://webclient.pokerth.net" autocomplete="off"><button id="seoUrlHere" class="use" style="flex:none;white-space:nowrap">Use this address</button></div>
         <div class="defrow fld"><span style="white-space:nowrap">Search Console token</span><input id="seoGsv" maxlength="100" placeholder="google-site-verification (optional)" autocomplete="off"></div>
         <div class="defrow fld"><span style="white-space:nowrap">Bing Webmaster token</span><input id="seoBing" maxlength="100" placeholder="msvalidate.01 (optional)" autocomplete="off"></div>
         <div class="defrow fld"><span style="white-space:nowrap">Yandex token</span><input id="seoYandex" maxlength="100" placeholder="yandex-verification (optional)" autocomplete="off"></div>
-        <p class="muted" style="margin-top:14px"><b>Branding.</b> Leave these blank on an official instance &mdash; the title and description are already translated into every interface language, and an override replaces the translation in <i>all</i> of them with the single line you write here. They exist so a self-hosted server can appear under its own name.</p>
+        <p class="muted" style="margin-top:14px"><b>Branding.</b> Leave these blank on an official instance.</p>
+        <details class="more"><summary>Why</summary><p class="muted">The title and description are already translated into every interface language, and an override replaces the translation in <i>all</i> of them with the single line you write here. They exist so a self-hosted server can appear under its own name.</p></details>
         <div class="defrow fld"><span style="white-space:nowrap">Site name</span><input id="seoSiteName" maxlength="60" placeholder="PokerTH (used in link previews)" autocomplete="off"></div>
         <div class="defrow fld"><span style="white-space:nowrap">Title override</span><input id="seoTitle" maxlength="70" placeholder="blank = translated default (max ~60 characters)" autocomplete="off"></div>
         <div class="defrow fld"><span style="white-space:nowrap">Description override</span><input id="seoDesc" maxlength="200" placeholder="blank = translated default (max ~155 characters)" autocomplete="off"></div>
         <div class="defrow fld"><span style="white-space:nowrap">Social card image</span><input id="seoImage" maxlength="300" placeholder="blank = bundled 1200&times;630 image, or https://&hellip; or /path.png" autocomplete="off"></div>
-        <p class="muted" style="margin-top:14px"><b>AI crawlers.</b> Allowed by default. Refused writes an explicit <code>Disallow</code> for GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot and the others, and <code>llms.txt</code> stops being served &mdash; staying silent under a blanket <code>Allow</code> reads as consent. It is a request, not a wall: well-behaved crawlers honour it, others do not.</p>
+        <p class="muted" style="margin-top:14px"><b>AI crawlers.</b> Allowed by default; Refused asks them to stay away.</p>
+        <details class="more"><summary>What Refused does</summary><p class="muted">It writes an explicit <code>Disallow</code> for GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot and the others, and <code>llms.txt</code> stops being served &mdash; staying silent under a blanket <code>Allow</code> reads as consent. It is a request, not a wall: well-behaved crawlers honour it, others do not.</p></details>
         <div class="defrow fld"><span style="white-space:nowrap">AI crawlers</span><select id="seoAi"><option value="1">Allowed (default)</option><option value="0">Refused</option></select></div>
         <div class="defrow fld"><span style="white-space:nowrap">IndexNow key</span><span id="seoIndexNow" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;opacity:.8;font-family:monospace;font-size:.85em">generated when indexing is enabled</span></div>
         <div class="rowtop"><button id="saveSeo" class="use" data-save>Save</button> <button id="seoPing" class="use">Submit URLs now</button> <button id="seoCheck" class="use">Check configuration</button></div>
@@ -1765,7 +1772,8 @@
       <section class="ovmodes" id="auTiles" aria-label="Changes at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <div class="boardhead"><h2>Audit log</h2><div class="bhact"><button id="auRefresh" class="use">Refresh</button><button id="auClear" class="use danger">Clear</button></div></div>
-        <p class="muted">Every action that <b>changed</b> something, and who did it — the master key or a named delegate key. Reads are not logged: the dashboard polls itself every few seconds and would drown everything. Kept on disk, so a restart does not erase it. Tokens themselves are never recorded, only the name they carry.</p>
+        <p class="muted">Every action that <b>changed</b> something, and who did it &mdash; the master key or a named delegate key. Kept on disk.</p>
+        <details class="more"><summary>What is not logged</summary><p class="muted">Reads are not logged: the dashboard polls itself every few seconds and would drown everything. Tokens themselves are never recorded, only the name they carry. A restart does not erase the log.</p></details>
         <div class="ltool"><input id="auFilter" class="filter" type="search" placeholder="Filter: action, key name, address…" autocomplete="off"><label class="ltog"><input type="checkbox" id="auRefused"> Refused only</label><span id="auCount" class="headnote"></span></div>
         <div id="auList"><div class="empty">Loading…</div></div>
         <div id="auMsg" class="msg"></div>
@@ -1775,7 +1783,8 @@
       <section class="ovmodes" id="acTiles" aria-label="Blocked addresses at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <div class="boardhead"><h2>Blocked &amp; banned addresses</h2><button id="ipRefresh" class="use">Refresh</button></div>
-        <p class="muted">Addresses that failed to authenticate on this panel, and addresses you have banned. Unlike the rest of the dashboard, addresses appear <b>in full</b> here: a masked address cannot be banned or unblocked. A ban refuses the WebSocket upgrade — the page still loads, but no game connection is made through this proxy — and drops any bridge already open from it. Your own address and loopback can never be banned.</p>
+        <p class="muted">Addresses that failed to sign in to this panel, and those you banned &mdash; in full, since a masked address cannot be banned or unblocked. Your own address and loopback can never be banned.</p>
+        <details class="more"><summary>What a ban does</summary><p class="muted">A ban refuses the WebSocket upgrade &mdash; the page still loads, but no game connection is made through this proxy &mdash; and drops any bridge already open from it.</p></details>
         <div id="ipYou" class="muted" style="margin-bottom:6px"></div>
         <h3 class="pkh">Failed sign-ins <span class="pkn" id="ipBlockedN"></span></h3>
         <div id="ipBlocked"><div class="empty">Loading…</div></div>
@@ -1804,7 +1813,8 @@
       <section class="ovmodes" id="prTiles" aria-label="The bridge at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <h2>Proxy</h2>
-        <p class="muted">Server-side bridge settings. Always-allowed hosts: pokerth.net, www.pokerth.net, pthsrv.pokerth.net, localhost, 127.0.0.1, ::1, plus those of the ALLOWED_HOSTS variable, the registered game servers and the servers approved in the LAN directory — the full list is under Game servers › Effective dial allowlist. Changes apply live (no restart).</p>
+        <p class="muted">Server-side bridge settings. <b>Applies immediately.</b></p>
+        <details class="more"><summary>Hosts allowed without being listed here</summary><p class="muted">pokerth.net, www.pokerth.net, pthsrv.pokerth.net, localhost, 127.0.0.1, ::1, plus those of the ALLOWED_HOSTS variable, the registered game servers and the servers approved in the LAN directory &mdash; the full list is under <a href="#" data-goto="servers">Game servers › Effective dial allowlist</a>.</p></details>
         <div style="margin:5px 0"><div style="margin-bottom:3px">Extra allowed hosts <span class="muted">(one per line — needed for the forced host of the LAN / dedicated button)</span></div><textarea id="pxHosts" rows="3" placeholder="game.example.com&#10;lan.example.org" autocomplete="off" style="width:100%;box-sizing:border-box;resize:vertical"></textarea></div>
         <div style="margin:5px 0"><div style="margin-bottom:3px">Extra allowed ports <span class="muted">(one per line — 1–65535; 7234 and 7236 are allowed unless the ALLOWED_PORTS variable says otherwise)</span></div><textarea id="pxPorts" rows="2" placeholder="7234" autocomplete="off" style="width:100%;box-sizing:border-box;resize:vertical"></textarea></div>
         <div class="defrow fld"><span>Session grace <span class="muted">(seconds, 10–900)</span></span><input id="pxGrace" type="number" min="10" max="900" placeholder="120"></div>
@@ -1829,7 +1839,8 @@
         <div id="maintmsg" class="msg"></div>
         <div class="dpauto">
           <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 6px"><input type="checkbox" id="autoUpd" style="width:auto"> <b style="font-size:.88rem;color:inherit">Update automatically</b></label>
-          <p class="muted">Checks this server&#39;s branch every 15 minutes. Changes that only touch client files go live at once — nobody is disconnected. Anything needing a restart (proxy, dependencies) waits until <b>no one at all</b> is connected, then acts after a short notice; if someone connects in the meantime, it is called off and retried later. An open connection is never cut this way.</p>
+          <p class="muted">Checks this server&#39;s branch every 15 minutes. An open connection is never cut this way.</p>
+        <details class="more"><summary>When it acts</summary><p class="muted">Changes that only touch client files go live at once &mdash; nobody is disconnected. Anything needing a restart (proxy, dependencies) waits until <b>no one at all</b> is connected, then acts after the notice below; if someone connects in the meantime, it is called off and retried later.</p></details>
           <div class="defrow fld"><span>Notice before a restart <span class="muted">(seconds, 10–3600, saved on change)</span></span><input id="autoUpdSec" type="number" min="10" max="3600" placeholder="60"></div>
           <div class="rowtop"><button id="btnUpdCheck" class="use">Check now</button></div>
           <div id="autoUpdMsg" class="msg"></div>
@@ -1861,7 +1872,8 @@
       </div>
       <div class="card">
         <div class="boardhead"><h2>Roll back a deployment</h2><button id="rbRefresh" class="use">Refresh</button></div>
-        <p class="muted">Every state this server has actually served, newest first. Rolling back checks the chosen commit out again — the quickest way out when a deploy breaks the client. <b>Static</b> swaps the served files with no dropped connection; <b>with restart</b> also reinstalls dependencies and restarts, which is what a change to <code>proxy.js</code> needs. The state you are on now is recorded first, so you can always come back forward.</p>
+        <p class="muted">Every state this server has served, newest first. <b>Static</b> swaps the files without dropping anyone; <b>with restart</b> is what a change to <code>proxy.js</code> needs.</p>
+        <details class="more"><summary>How a rollback works</summary><p class="muted">Rolling back checks the chosen commit out again &mdash; the quickest way out when a deploy breaks the client. With restart also reinstalls dependencies, then restarts. The state you are on now is recorded first, so you can always come back forward.</p></details>
         <div class="seg" id="rbKind"><button class="on" data-k="static">Static (no restart)</button><button data-k="restart">With restart</button></div>
         <div id="rbHead" class="muted" style="margin:8px 0"></div>
         <div id="rbList"><div class="empty">Loading…</div></div>
@@ -1873,7 +1885,8 @@
       <section class="ovmodes" id="bkTiles" aria-label="Backups at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <h2>Back up &amp; restore settings</h2>
-        <p class="muted">The dashboard settings: modes, defaults, branding, table settings, proxy, game servers, LAN directory, kill switches, bans, package and music choices, SEO. <b>Not</b> included: traffic figures, scheduled messages, polls, the audit log and the deployment history (each kept in its own file), delegate keys and database credentials (secrets — restoring a backup must not hand back access you thought you had revoked). The Discord webhook and the contact details of pending LAN requests are left out unless you tick the box; restoring a file without them keeps their current values. Restoring <b>replaces</b> the current settings.</p>
+        <p class="muted">Every dashboard setting in one file. Restoring <b>replaces</b> the current settings.</p>
+        <details class="more"><summary>What a backup holds, and what it leaves out</summary><p class="muted">The dashboard settings: modes, defaults, branding, table settings, proxy, game servers, LAN directory, kill switches, bans, package and music choices, SEO. <b>Not</b> included: traffic figures, scheduled messages, polls, the audit log and the deployment history (each kept in its own file), delegate keys and database credentials (secrets — restoring a backup must not hand back access you thought you had revoked). The Discord webhook and the contact details of pending LAN requests are left out unless you tick the box; restoring a file without them keeps their current values. Restoring <b>replaces</b> the current settings.</p></details>
         <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="cfgSecrets" style="width:auto"> Include the Discord webhook and LAN requesters’ contact details</label>
         <div class="btnrow">
           <button id="cfgExport" class="use">Download backup</button>
@@ -1950,7 +1963,8 @@
       </div>
       <div class="card" data-master="1">
         <h2>Discord chat relay</h2>
-        <p class="muted">Official-server parity (<code>DiscordChatWebhookUrl</code>): lobby chat messages sent by players through this proxy are forwarded to a Discord channel as <b>Player:</b> message. Game chat and private messages are never relayed. Leave blank to disable. One post per message — no duplicates however many clients are connected.</p>
+        <p class="muted">Lobby chat messages sent through this proxy are posted to a Discord channel as <b>Player:</b> message. Leave blank to disable.</p>
+        <details class="more"><summary>What is relayed</summary><p class="muted">Official-server parity (<code>DiscordChatWebhookUrl</code>). Game chat and private messages are never relayed. One post per message &mdash; no duplicates however many clients are connected.</p></details>
         <div class="defrow fld"><span style="white-space:nowrap">Webhook URL</span><input id="discordHook" maxlength="200" placeholder="https://discord.com/api/webhooks/…" autocomplete="off"></div>
         <div class="rowtop"><button id="saveDiscord" class="use" data-save>Save</button></div>
         <div id="discordMsg" class="msg"></div>
@@ -1973,7 +1987,8 @@
       </div>
       <div class="card" data-master="1">
         <h2>Guest notice (Internet)</h2>
-        <p class="muted">Shown in a centered popup when someone connects as a guest in Internet / PokerTH.net mode &mdash; typically to explain what guests can and cannot do compared to a registered account. Once dismissed with &ldquo;I understand&rdquo; it stays hidden on that device until you edit the message. Each guest sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p>
+        <p class="muted">A popup when someone connects as a <b>guest</b> on Internet &mdash; typically what guests can and cannot do compared to a registered account. Dismissed with “I understand”, it stays hidden on that device until you edit it.</p>
+        <details class="more"><summary>Languages and built-in texts</summary><p class="muted">Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p></details>
         <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="gwEnabled" style="width:auto"> Enabled</label>
         <div class="periodrow" style="margin-bottom:8px">
           <label class="muted">Edit language <select id="gwLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
@@ -1989,7 +2004,8 @@
       </div>
       <div class="card" data-master="1">
         <h2>LAN / dedicated server notice</h2>
-        <p class="muted">Shown in a centered popup when someone connects in LAN / dedicated mode on this instance (not Training, not Internet) &mdash; typically to explain that this instance only dials one operator-configured LAN server, and to point players toward self-hosting for any other address. Once dismissed with &ldquo;I understand&rdquo; it stays hidden on that device until you edit the message. Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p>
+        <p class="muted">A popup when someone connects in <b>LAN / dedicated</b> mode on this instance &mdash; typically that it only dials one configured LAN server, and how to self-host for any other address. Dismissed with “I understand”, it stays hidden on that device until you edit it.</p>
+        <details class="more"><summary>Languages and built-in texts</summary><p class="muted">Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p></details>
         <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="lwEnabled" style="width:auto"> Enabled</label>
         <div class="periodrow" style="margin-bottom:8px">
           <label class="muted">Edit language <select id="lwLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
@@ -2005,7 +2021,8 @@
       </div>
       <div class="card" data-master="1">
         <h2>Registered-account notice (Internet)</h2>
-        <p class="muted">The mirror of the guest notice above, for players who log in <b>with a registered account</b> in Internet / PokerTH.net mode. Once dismissed with &ldquo;I understand&rdquo; it stays hidden &mdash; the acknowledgement follows the account across devices &mdash; until you edit the message. Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p>
+        <p class="muted">The guest popup’s mirror, for players who log in <b>with a registered account</b> on Internet. Dismissed with “I understand”, it stays hidden &mdash; the acknowledgement follows the account across devices &mdash; until you edit it.</p>
+        <details class="more"><summary>Languages and built-in texts</summary><p class="muted">Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). Every language comes with a built-in text, shown pre-filled below: a language you edit replaces its built-in version, the others keep theirs.</p></details>
         <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="awEnabled" style="width:auto"> Enabled</label>
         <div class="periodrow" style="margin-bottom:8px">
           <label class="muted">Edit language <select id="awLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
@@ -2025,7 +2042,8 @@
       <section class="ovmodes" id="plTiles" aria-label="Polls at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
         <div class="boardhead"><h2>Polls</h2><span id="plSum" class="headnote"></span><div class="bhact"><button id="plNew" class="use">+ New poll</button><button id="plRefresh" class="use">Refresh</button></div></div>
-        <p class="muted">Ask the players what to build next. The active poll opens in a window when a player reaches the lobby (unless they turned “Product polls” off in Advanced options); one answer per device. The counts stay hidden until they have answered, so the figures on screen cannot sway the vote. One poll is live at a time: activating a poll retires the previous one.</p>
+        <p class="muted">Ask the players what to build next. One poll is live at a time: activating a poll retires the previous one.</p>
+        <details class="more"><summary>What players see</summary><p class="muted">The active poll opens in a window when a player reaches the lobby (unless they turned “Product polls” off in Advanced options); one answer per device. The counts stay hidden until they have answered, so the figures on screen cannot sway the vote.</p></details>
         <div id="plList" class="erlist"><div class="empty">Loading…</div></div>
       </div>
       <div class="card" id="plForm">
@@ -2073,7 +2091,8 @@
       </div>
       <div class="card" id="lanCard">
         <h2>LAN / dedicated button</h2>
-        <p class="muted">The server a player finds pre-filled behind the <b>LAN / dedicated</b> button of the login page. A default, never a lock: players can edit the fields, and the server they last joined is remembered. The Internet button is never affected. The list of LAN servers, the “Local server” entry and manual address entry are set in <a href="#" data-goto="landir">Community › LAN directory › Settings</a>.</p>
+        <p class="muted">The server a player finds pre-filled behind the <b>LAN / dedicated</b> button of the login page &mdash; a default, never a lock. The list of LAN servers, the “Local server” entry and manual address entry are in <a href="#" data-goto="landir">Community › LAN directory › Settings</a>.</p>
+        <details class="more"><summary>Players’ own choice</summary><p class="muted">Players can edit the fields, and the server they last joined is remembered. The Internet button is never affected.</p></details>
         <details class="more"><summary>Automatic, forced and the proxy URL</summary><p class="muted"><i>Automatic</i> uses this page’s own address (port 7234, no TLS). <i>Forced</i> uses the host, port and TLS below; the proxy then follows that host and is rebuilt on every reconnect, so the client always reconnects. Only players who never picked a server of their own follow a change made here. A forced proxy URL (ws:// or wss://) is pushed to every client and locks the field; hiding the field removes it and its label from the login form.</p></details>
         <div class="defrow fld"><span>Server</span><select id="defLanMode"><option value="auto">Automatic (page address)</option><option value="forced">Forced (values below)</option></select></div>
         <div class="defrow fld"><span>Host</span><input id="defHost" placeholder="(page address)" maxlength="120" autocomplete="off"></div>
@@ -2095,7 +2114,8 @@
       <div class="card">
         <div class="boardhead"><h2>Pending requests <span class="muted" id="ldPendN" style="font-weight:400"></span></h2>
           <label class="muted" style="margin:0;display:flex;align-items:center;gap:6px;font-size:.8rem"><input type="checkbox" id="ldAccept"> Accept new requests</label></div>
-        <p class="muted">Sent from the login page (LAN › Propose my server). Approving adds the server to the LAN list of every player and to the dial allowlist; the game-server registry is not touched. What the requester wrote for the admins (nickname, note, contact) is never shown to players; the contact is erased as soon as you approve or reject, the note becomes the server’s internal note. No IP is kept (only a salted hash, to count requests from one address over 30 days). The player gets no answer: the server appearing in the list is the answer.</p>
+        <p class="muted">Servers proposed from the login page (LAN › Propose my server). Approving adds one to every player’s LAN list and to the dial allowlist; the player gets no answer &mdash; the server appearing in the list is the answer.</p>
+        <details class="more"><summary>What is kept, and what players see</summary><p class="muted">The game-server registry is not touched. What the requester wrote for the admins (nickname, note, contact) is never shown to players; the contact is erased as soon as you approve or reject, the note becomes the server’s internal note. No IP is kept (only a salted hash, to count requests from one address over 30 days).</p></details>
         <div id="ldPending"><div class="empty">Loading…</div></div>
         <div id="ldPendState" class="msg"></div>
         <details id="ldRefusedBox" style="margin-top:10px"><summary class="muted">Refused requests <span id="ldRefN"></span></summary>
@@ -2123,7 +2143,8 @@
           <label class="ck"><input type="checkbox" id="ldSetLocal"> <span>List this install’s own game server first, pre-selected <span class="muted" style="margin:0;white-space:nowrap">(“Local server”)</span></span></label>
           <label class="ck"><input type="checkbox" id="ldSetManual"> <span>Allow manual address entry on the login page <span class="muted" style="margin:0;white-space:nowrap">(allowlisted hosts only)</span></span></label>
         </div>
-        <p class="muted" style="margin-top:10px">Turn “Refuse private addresses” off only when this proxy runs on the same network as the servers (a self-hosted LAN install). “Local server” is the address the LAN form used before the directory (the default login form, else this page’s host on port 7234): keep it on a self-hosted install, turn it off on pokerth.net. Manual entry lets a player type an address instead of picking one; addresses outside the allowlist are still refused. The server pre-filled behind the LAN / dedicated button is set in <a href="#" data-goto="servers">Infrastructure › Game servers</a>.</p>
+        <p class="muted" style="margin-top:10px">Turn “Refuse private addresses” off only on a self-hosted LAN install. The server pre-filled behind the LAN / dedicated button is set in <a href="#" data-goto="servers">Infrastructure › Game servers</a>.</p>
+        <details class="more"><summary>Private addresses, Local server and manual entry</summary><p class="muted">Refusing private addresses only makes sense off when this proxy runs on the same network as the servers. “Local server” is the address the LAN form used before the directory (the default login form, else this page’s host on port 7234): keep it on a self-hosted install, turn it off on pokerth.net. Manual entry lets a player type an address instead of picking one; addresses outside the allowlist are still refused.</p></details>
         <p class="muted" id="ldGlobalCap" style="margin-top:6px"></p>
         <div class="periodrow" style="margin-top:6px"><button id="ldSetSave" class="use" type="button" data-save>Save settings</button></div>
         <div id="ldSetState" class="msg"></div>
