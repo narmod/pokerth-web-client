@@ -65,7 +65,8 @@ window._refreshOwnCards = function () {
 function animateCardDeal() {
   // Option avancée « Animation de la distribution » (web, défaut ON) —
   // désactivable, demande du forum : le va-et-vient des cartes distrait.
-  try { if (localStorage.getItem('pth_deal_anim') === '0') return; } catch (e) {}
+  // L'interrupteur admin (deal_anim) prime sur le choix du joueur.
+  try { if (window._pthFeatureOff && window._pthFeatureOff.deal_anim) return; if (localStorage.getItem('pth_deal_anim') === '0') return; } catch (e) {}
   if (!S._lastPixPos.length) return;
   var cx = S._potCenter.x, cy = S._potCenter.y;
   if (!cx) return;

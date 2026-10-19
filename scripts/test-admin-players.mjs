@@ -165,7 +165,7 @@ ok(!/In-game settings/.test(html.match(/DEFAULT_FOLDED = \[[^\]]*\]/)[0]), 'no p
 await open('features');
 ok(errors.length === 0, 'opening Features throws nothing' + (errors.length ? ': ' + errors[0] : ''));
 const groups = [...doc.querySelectorAll('#fsList h3.subhd')].map((h) => h.firstChild.textContent);
-ok(groups.join('|') === 'At the table|Lobby & community|App & the Ace|Data on the device|Other', 'switches grouped by where players meet them, unknown keys under Other: ' + groups.join(', '));
+ok(groups.join('|') === 'At the table|Lobby & community|App & the Ace|Data & privacy|Other', 'switches grouped by where players meet them, unknown keys under Other: ' + groups.join(', '));
 t = tiles('ftTiles');
 ok(/At the table 2 \/ 2 all on/.test(t) && /App & the Ace 0 \/ 1 off: The Ace dances/.test(t), 'one tile per group (' + t + ')');
 const row = (k) => doc.querySelector('#fsList .ftrow[data-k="' + k + '"]');

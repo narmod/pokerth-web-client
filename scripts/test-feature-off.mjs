@@ -78,6 +78,13 @@ ok(/localStorage\.setItem\('pth_feature_off'/.test(js), '/app-config stores the 
 ok(/refreshBackGuard\(\)/.test(js.slice(js.indexOf('function _applyFeatureOff'), js.indexOf('function _applyFeatureOff') + 1500)),
   'the back guard, installed at boot, re-reads its switch when the list arrives');
 ok(/pth_feature_off: 1/.test(js), 'the list is server state: left out of the player backup');
+// web.167: eight more switches. Two of their checkboxes do not call setAdvOpt
+// (chat translation, account sync): they name their key in data-feat, so the
+// lock and the « off (admin) » tag reach them too.
+for (const k of ['winner_popup', 'deal_anim', 'forum_news', 'invite_link', 'chat_translate', 'avatar_create', 'cfg_sync', 'bak_auto']) ok(KEYS.includes(k), 'switch ' + k + ' is in the catalogue');
+ok(/data-feat="chat_translate"/.test(client) && /data-feat="cfg_sync"/.test(client), 'the two checkboxes without setAdvOpt name their switch');
+ok(/getAttribute\('data-feat'\)/.test(js.slice(js.indexOf('function _applyFeatureOff'), js.indexOf('function _applyFeatureOff') + 2500)), 'and the lock reads it');
+ok(/function _netTrOn\(\) \{\s*try \{ if \(window\._pthFeatureOff && window\._pthFeatureOff\.chat_translate\) return false;/.test(js), 'switched off, nothing is sent to Google, operator texts included');
 const coll = js.slice(js.indexOf('function _cfgCollectWebSettings'), js.indexOf('function _cfgCollectWebSettings') + 4000);
 ok(!/_advGet\(advKey/.test(coll), 'account sync writes the player\'s own choice, not the admin override');
 ok(sw.includes("'/modules/feature-off.mjs'"), 'the helper is precached for offline play');

@@ -6798,10 +6798,10 @@
   // The catalogue's keys, grouped by where a player meets them. A key the
   // server adds later lands in « Other » until it is placed here.
   var FS_GROUPS=[
-    ['At the table',['hud_on','show_odds','anim_cards','table_zoom','zoom_follow','browser_zoom']],
-    ['Lobby & community',['lobby_chat','lobby_clock','lobby_type_chat','chat_abbrev','show_community','community_content','community_suggest','polls']],
-    ['App & the Ace',['splash','back_guard','keynav','ace_scenes','ace_dance']],
-    ['Data on the device',['err_report','log_on','stats_track','pdb_auto']]];
+    ['At the table',['hud_on','show_odds','anim_cards','deal_anim','winner_popup','table_zoom','zoom_follow','browser_zoom']],
+    ['Lobby & community',['lobby_chat','lobby_clock','lobby_type_chat','chat_abbrev','chat_translate','forum_news','invite_link','show_community','community_content','community_suggest','polls']],
+    ['App & the Ace',['splash','back_guard','keynav','avatar_create','ace_scenes','ace_dance']],
+    ['Data & privacy',['err_report','log_on','stats_track','pdb_auto','bak_auto','cfg_sync']]];
   function fsGroups(list){
     var placed={}, out=FS_GROUPS.map(function(g){ var items=list.filter(function(f){ return g[1].indexOf(f.key)>=0; }); items.forEach(function(f){ placed[f.key]=1; }); return [g[0],items]; });
     var rest=list.filter(function(f){ return !placed[f.key]; });

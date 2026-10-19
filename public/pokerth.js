@@ -528,7 +528,7 @@ function openAdvancedOptions() {
     var _ase = document.getElementById('adv-assiststyle'); if (_ase) _ase.value = _as;
   } catch (e) {}
   try { var _sl = document.getElementById('adv-seatlayout'); if (_sl) { var _slv = localStorage.getItem('pth_seat_layout'); _sl.value = (_slv === 'pokerth-official' || _slv === 'pokerth-ellipse' || _slv === 'custom') ? _slv : 'auto'; } } catch (e) {}
-  try { var _ctr = document.getElementById('adv-chattranslate'); if (_ctr) { _ctr.checked = (localStorage.getItem('pth_chat_translate') !== '0'); if (!window._chatTrSupported) { var _ctl = _ctr.closest('label'); if (_ctl) _ctl.style.opacity = '0.55'; } } } catch (e) {}
+  try { var _ctr = document.getElementById('adv-chattranslate'); if (_ctr) { _ctr.checked = !(window._pthFeatureOff && window._pthFeatureOff.chat_translate) && (localStorage.getItem('pth_chat_translate') !== '0'); if (!window._chatTrSupported) { var _ctl = _ctr.closest('label'); if (_ctl) _ctl.style.opacity = '0.55'; } } } catch (e) {}
   try { window._rebindAction = null; _renderKeyButtons(); } catch (e) {}
   sync('adv-tooltips', 'tooltips', true);
   try { var _nr = document.getElementById('adv-noreact'); if (_nr) _nr.checked = (localStorage.getItem('pth_react_muted') === '1'); } catch (e) {}
@@ -2185,8 +2185,9 @@ window._mmTranslate = function (text, target) {
 window._chatTrTarget = _chatTrTarget;
 function _applyChatTranslateFlag() {
   // ACTIVE par defaut (demande narmod) : seul un '0' explicite desactive.
+  // L'interrupteur admin (chat_translate) coupe tout envoi a Google.
   var on = true;
-  try { on = localStorage.getItem('pth_chat_translate') !== '0'; } catch (e) {}
+  try { on = !(window._pthFeatureOff && window._pthFeatureOff.chat_translate) && localStorage.getItem('pth_chat_translate') !== '0'; } catch (e) {}
   document.body.classList.toggle('chat-tr-on', !!(on && window._chatTrSupported));
 }
 function setChatTranslate(on) {
@@ -2621,7 +2622,7 @@ function _detectTranslate(text) {
 // untouched. The swap is skipped when gtx reports the detected source equal
 // to the client's language (message already readable) or a no-op result.
 function _netTrOn() {
-  try { return localStorage.getItem('pth_chat_translate') !== '0'; } catch (e) { return true; }
+  try { if (window._pthFeatureOff && window._pthFeatureOff.chat_translate) return false; return localStorage.getItem('pth_chat_translate') !== '0'; } catch (e) { return true; }
 }
 function _gtxAuto(text) {
   if (!text || !String(text).trim() || !_netTrOn() || typeof window._gtxTranslate !== 'function') return Promise.resolve(null);
@@ -4185,9 +4186,9 @@ document.addEventListener("DOMContentLoaded", function() {
         var rows = document.querySelectorAll('.adv-row input[type=checkbox]');
         for (var j = 0; j < rows.length; j++) {
           var inp = rows[j], oc = inp.getAttribute('onchange') || '';
-          var m = oc.match(/setAdvOpt\('([a-z_0-9]+)'/);
-          if (!m) continue;
-          var off = !!map[m[1]];
+          var m = oc.match(/setAdvOpt\('([a-z_0-9]+)'/), fk = m ? m[1] : inp.getAttribute('data-feat');
+          if (!fk) continue;
+          var off = !!map[fk];
           inp.disabled = off;
           if (off) inp.checked = false;
           var row = inp.closest ? inp.closest('.adv-row') : null;
@@ -4204,6 +4205,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
       } catch (e) {}
       try { applyAdvOpts(); } catch (e) {}
+      try { _applyChatTranslateFlag(); } catch (e) {}
     }
     function go() {
       fetch('/app-config', { cache: 'no-store' })
@@ -12306,7 +12308,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.166'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.167'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

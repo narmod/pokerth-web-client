@@ -338,6 +338,15 @@ const FEATURE_SWITCHES = [
   { key: 'splash', label: 'Splash screen on startup' },
   { key: 'ace_scenes', label: 'The Ace\u2019s antics (scenes, dances, reactions)' },
   { key: 'ace_dance', label: 'The Ace dances to the music player' },
+  // web.167
+  { key: 'winner_popup', label: 'Winner window at the end of a hand' },
+  { key: 'deal_anim', label: 'Card dealing animation' },
+  { key: 'forum_news', label: 'Forum button in the lobby header' },
+  { key: 'invite_link', label: '\u201cInvite friends\u201d button' },
+  { key: 'chat_translate', label: 'Chat translation (sends the message to Google)' },
+  { key: 'avatar_create', label: '\u201cCreate\u201d tab of the avatar window' },
+  { key: 'cfg_sync', label: 'Settings sync with the pokerth.net account' },
+  { key: 'bak_auto', label: 'Automatic backup file' },
 ];
 function featureOffList() {
   const a = _adminConfig && _adminConfig.featureOff;

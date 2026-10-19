@@ -30,6 +30,15 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Eight more feature switches** (`web.167`) — Player experience › Features can now turn off for everyone: the winner
+  window, the card dealing animation, the lobby's Forum button, « Invite friends », chat translation (switched off,
+  nothing is sent to Google — chat, private messages and the auto-translated operator texts alike), the avatar
+  window's « Create » tab, the account settings sync and the automatic backup file. Five were already read through
+  `_advGet`; the three direct readers (`pth_chat_translate` ×3, `pth_deal_anim`, `pth_bak_auto`) now check the
+  switch first. The two checkboxes whose `onchange` is not `setAdvOpt` (chat translation, account sync) name their
+  switch in `data-feat`, so they get the lock and the « off (admin) » tag too. The last group is renamed « Data &
+  privacy ». Checked in a browser with all eight off: every checkbox locked and tagged, no translate button, no
+  Forum button.
 - **First-visit look, axis by axis** (`web.166`) — Player experience › First visit replaces the style preset (PokerTH
   Dark / Light / Green Casino) by one setting per axis: palette, table style, card deck, seats (the built-in ones
   and the installed packs, a hidden pack not offered), interface size and high contrast, plus sound with the other

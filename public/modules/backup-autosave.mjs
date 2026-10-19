@@ -47,6 +47,8 @@ function _supported() {
 function _enabled() {
   try {
     if (typeof localStorage === 'undefined') return true;
+    // The admin switch (bak_auto) wins over the player's stored choice.
+    if (typeof window !== 'undefined' && window._pthFeatureOff && window._pthFeatureOff.bak_auto) return false;
     if (localStorage.getItem('pth_bak_auto') === '0') return false;
     return true;
   } catch (_e) { return true; }
