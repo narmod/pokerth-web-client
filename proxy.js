@@ -10216,6 +10216,7 @@ function armBroadcast(job) {
   const delay = next - Date.now();
   if (delay > _BC_MAXT) { _bcTimers[job.id] = setTimeout(function () { armBroadcast(job); }, _BC_MAXT); return; }
   _bcTimers[job.id] = setTimeout(function () {
+    if (job.maxRuns && (job.runCount || 0) >= job.maxRuns) { job._nextRun = null; delete _bcTimers[job.id]; saveBroadcasts(); return; }   // maximum reached meanwhile
     fireBroadcast(job);
     if ((job.schedule || {}).type === 'once') { job.enabled = false; job._nextRun = null; }
     saveBroadcasts();
@@ -12193,7 +12194,8 @@ function handleAdmin(req, res, reqPathOnly, query) {
     // Capability probe for the admin UI: report what the presented key may do.
     if (adminAuthed(query)) return adminJson(res, 200, { ok: true, master: true, scopes: ADMIN_SCOPES });
     var _wt = (query && query.token) || '', _wr = _loadScopedTokens().find(function (r) { return r.token === _wt; });
-    if (_wr) return adminJson(res, 200, { ok: true, master: false, scopes: (_wr.scopes || []).filter(function (s) { return ADMIN_SCOPES.indexOf(s) >= 0; }) });
+    // label: the key's name, shown in the dashboard's sidebar (« key "music-partner" »).
+    if (_wr) return adminJson(res, 200, { ok: true, master: false, label: String(_wr.name || '').slice(0, 64), scopes: (_wr.scopes || []).filter(function (s) { return ADMIN_SCOPES.indexOf(s) >= 0; }) });
     return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
   }
   // ── Product polls (admin) — store and helpers defined near _pollPublic() ──
@@ -12338,7 +12340,12 @@ function handleAdmin(req, res, reqPathOnly, query) {
       if (!hasScope('broadcast', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       const job = _broadcasts.find(function (j) { return j.id === (d && d.id); });
       if (!job) return adminJson(res, 404, { ok: false, error: 'not found' });
-      const n = fireBroadcast(job); saveBroadcasts();
+      const n = fireBroadcast(job);
+      // Sent by hand, it counts toward « max runs » like a scheduled send: the
+      // timer is armed again from the new count (it used to fire anyway, one
+      // send over the maximum).
+      armBroadcast(job);
+      saveBroadcasts();
       return adminJson(res, 200, { ok: true, notified: n });
     });
   }

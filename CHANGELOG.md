@@ -833,6 +833,11 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Delegate keys and scheduled messages** (`web.173`, audit of 2026-10-19, lot 3) — the sidebar showed « scoped
+  key » for every delegate key: `whoami` now gives its name (`label`). « Send now » counted toward « max runs » but
+  the timer already armed sent one more: the job is re-armed from the new count, and a timer firing past the
+  maximum stands down. `pokerth-web token add` did not know the `polls` scope (now the same list as
+  `ADMIN_SCOPES`). `scripts/test-admin-scopes.mjs`.
 - **Deployment reliability** (`web.172`, audit of 2026-10-19, lot 2) —
   - With « Update automatically » on, a rollback was undone about a minute later. The version rolled back from
     (and the upstream one known then) is now set aside: the automatic updates leave it alone until a newer one is
