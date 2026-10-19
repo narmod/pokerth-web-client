@@ -117,7 +117,7 @@ ok(/Table values 2 \/ 4 6 players · 20 blind/.test(t) && /Table names 1 \/ 3 cu
 ok(/Lobby clock Europe\/Berlin default zone/.test(t) && /Events tab Off no Events tab/.test(t), 'lobby clock and Events tab tiles');
 ok([['tdPlayers', '2', '10'], ['tdBlind', '5', '20000'], ['tdStack', '1000', '1000000'], ['tdTimeout', '5', '60']].every(([id, lo, hi]) => $(id).min === lo && $(id).max === hi && $(id).placeholder === 'app default'),
   'the table fields carry the limits of the players\' own form, and no single default number');
-ok(/var _bl = _tdInt\(td\.blind, +5, 20000\)/.test(readFileSync(join(root, 'proxy.js'), 'utf8')) && /_tdInt\(td\.timeout, 5, 60\)/.test(readFileSync(join(root, 'proxy.js'), 'utf8')), 'and the server accepts the same limits');
+ok(/var _bl = _tdInt\(td\.blind, +5, 20000[,)]/.test(readFileSync(join(root, 'proxy.js'), 'utf8')) && /_tdInt\(td\.timeout, 5, 60[,)]/.test(readFileSync(join(root, 'proxy.js'), 'utf8')), 'and the server accepts the same limits');
 ok($('lobbyClk').closest('#panel-lobby') && $('ceOn').closest('#panel-lobby') && $('tnLanMode').closest('#panel-lobby'), 'lobby clock, Events tab and table names live here');
 typeIn('tdPlayers', '8');
 const tCard = $('tdPlayers').closest('.card');

@@ -603,6 +603,13 @@ function _issueSyncToken(S) {
 // see _serverTlsOpts. The proxy remains a pure
 // relay; it does NOT run or configure the dedicated game server itself.
 function _serversList() { var a = _adminConfig && _adminConfig.servers; return Array.isArray(a) ? a : []; }
+// The game-server list, as POST /admin/servers keeps it (also used by a restore).
+function _cleanServers(arr) {
+  var out = [];
+  if (!Array.isArray(arr)) return out;
+  for (var i = 0; i < arr.length && out.length < 50; i++) { var s = _sanitizeServer(arr[i]); if (s) out.push(s); }
+  return out;
+}
 function _sanitizeServer(s) {
   if (!s || typeof s !== 'object') return null;
   var host = String(s.host || '').trim().toLowerCase().slice(0, 255);
@@ -10269,6 +10276,64 @@ function _bannableIp(ip) {
   if (/^(127\.|::1$|::ffff:127\.)/.test(ip)) return '';
   return ip;
 }
+// A ban list as the Ban button builds it: valid, never the loopback, never the
+// address making the request, no duplicates, 500 at most (a restore used to
+// take any list as it came).
+function _cleanBanned(list, ownIp) {
+  const out = [];
+  (Array.isArray(list) ? list : []).forEach(function (x) {
+    const ip = _bannableIp(x);
+    if (ip && ip !== ownIp && out.indexOf(ip) < 0 && out.length < 500) out.push(ip);
+  });
+  return out;
+}
+// Drops what is already open from a banned address: banning someone who is
+// playing must not wait for his next connection.
+function _dropBannedIp(ip) {
+  let cut = 0;
+  try {
+    _liveSessions.forEach(function (S) { if (S.ip === ip) { const w = S.ws; S.ws = null; _destroySession(S); if (w) { try { _allClients.delete(w); } catch (e) {} try { w.close(4009, 'Banned'); } catch (e) {} } cut++; } });
+    wss.clients.forEach(function (c) { if (c._notify && c._ip === ip) { try { c.close(4009, 'Banned'); } catch (e) {} cut++; } });
+  } catch (e) {}
+  return cut;
+}
+// Proxy settings as Admin › Proxy saves them. errs (optional) collects what
+// was refused: the Save route answers 400 with it, a restore drops it.
+function _cleanProxyCfg(pc, errs) {
+  const pout = {}, no = function (m) { if (errs) errs.push(m); };
+  pc = (pc && typeof pc === 'object') ? pc : {};
+  if (Array.isArray(pc.allowedHosts)) {
+    pout.allowedHosts = [];
+    pc.allowedHosts.forEach(function (s) {
+      s = String(s == null ? '' : s).trim().toLowerCase();
+      if (!s) return;
+      if (!/^[a-z0-9.\-:]+$/.test(s)) return no('invalid host: ' + s.slice(0, 64));
+      if (pout.allowedHosts.length < 50) pout.allowedHosts.push(s);
+    });
+  }
+  if (Array.isArray(pc.allowedPorts)) {
+    pout.allowedPorts = [];
+    pc.allowedPorts.forEach(function (s) {
+      if (s == null || String(s).trim() === '') return;
+      const n = parseInt(s, 10);
+      if (!(Number.isInteger(n) && n >= 1 && n <= 65535)) return no('invalid port: ' + String(s).slice(0, 16));
+      if (pout.allowedPorts.length < 20) pout.allowedPorts.push(n);
+    });
+  }
+  const num = function (v, lo, hi, key, label) {
+    if (v == null || v === '') return;
+    const n = parseInt(v, 10);
+    if (String(v).trim() !== '' && Number.isInteger(n) && n >= lo && n <= hi) pout[key] = n;
+    else no(label + ' must be between ' + lo + ' and ' + hi);
+  };
+  num(pc.graceSec, 10, 900, 'graceSec', 'reconnection grace (seconds)');
+  num(pc.connGapMs, 0, 30000, 'connGapMs', 'gap between connections (ms)');
+  num(pc.maxClients, 0, 100000, 'maxClients', 'max clients');
+  const lv = (pc.logLevel == null ? '' : String(pc.logLevel)).trim().toLowerCase();
+  if (lv === 'quiet' || lv === 'normal' || lv === 'verbose') pout.logLevel = lv;
+  else if (lv) no('invalid log level: ' + lv.slice(0, 16));
+  return pout;
+}
 
 // ── Journal d'audit des actions d'administration ──────────────────────
 // Les clés déléguées permettent de confier une section à un tiers ; il ne
@@ -10376,6 +10441,25 @@ function clientIp(req) {
   return peer || 'unknown';
 }
 
+// The leaderboard's admin writes (wipe, remove a player) go through /stats,
+// outside /admin: they get the same audit entry and brute-force guard here.
+// A blocked address is refused (429); a wrong token counts as a failure.
+function _statsAdminGate(req, res, query, action, go) {
+  const ip = clientIp(req);
+  res._rlIp = ip;
+  res.on('finish', function () { auditRecord(req, res, action, query); });
+  if (!_rlAdminFail) return go();
+  _rlAdminFail.get(ip).then(function (r) {
+    if (r && r.remainingPoints <= 0 && r.msBeforeNext > 0) {
+      res.writeHead(429, { 'Content-Type': 'application/json; charset=utf-8', 'Retry-After': String(Math.ceil(r.msBeforeNext / 1000)), 'Cache-Control': 'no-store' });
+      return res.end(JSON.stringify({ ok: false, error: 'too many failed attempts, retry later' }));
+    }
+    go();
+  }).catch(function () { go(); });
+}
+function _statsAdminFail(res) {
+  if (_rlAdminFail && res._rlIp) { _rlAdminFail.consume(res._rlIp).catch(function () {}); _noteAdminFail(res._rlIp); }
+}
 function adminJson(res, code, obj) {
   // Penalize failed admin auth (brute-force guard). res._rlIp is attached by
   // the /admin routing in the HTTP handler; consume() is fire-and-forget.
@@ -10900,17 +10984,29 @@ function handleAdmin(req, res, reqPathOnly, query) {
       return readJsonBody(req, function (d) {
         if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
         d = d || {};
+        // A refused request changes nothing. The blocks below are applied one
+        // after the other and a later one can still be refused (an SEO token,
+        // a time zone…): what came before used to stay live — robots.txt
+        // switched while the page said « Failed » — until the next restart.
+        const _cfgBefore = JSON.stringify(_adminConfig), _perBefore = STATS_RESET_PERIOD, _metaBefore = statsMeta.period;
+        const _refuse = function (obj) {
+          try { _adminConfig = JSON.parse(_cfgBefore); } catch (e) {}
+          STATS_RESET_PERIOD = _perBefore;
+          if (statsMeta.period !== _metaBefore) { statsMeta.period = _metaBefore; try { saveStatsMeta(); } catch (e) {} }
+          try { _seoHtmlCache.clear(); } catch (e) {}
+          return adminJson(res, 400, obj);
+        };
         // At least one way in must stay open: with the three modes off the
         // login screen has nothing left to offer. Checked before anything is
         // changed, so a refused request leaves the configuration as it was.
         if (d.modes && typeof d.modes === 'object') {
           const _nm = appModes();
           ['offline', 'lan', 'pokerthnet'].forEach(function (k) { if (d.modes[k] !== undefined) _nm[k] = !!d.modes[k]; });
-          if (!_nm.offline && !_nm.lan && !_nm.pokerthnet) return adminJson(res, 400, { ok: false, error: 'at least one mode must stay on', modes: appModes() });
+          if (!_nm.offline && !_nm.lan && !_nm.pokerthnet) return _refuse({ ok: false, error: 'at least one mode must stay on', modes: appModes() });
         }
         if (d.resetPeriod !== undefined) {
           const per = String(d.resetPeriod || '').toLowerCase();
-          if (['off', 'daily', 'weekly', 'monthly', 'yearly'].indexOf(per) < 0) return adminJson(res, 400, { ok: false, error: 'invalid period (off|daily|weekly|monthly|yearly)' });
+          if (['off', 'daily', 'weekly', 'monthly', 'yearly'].indexOf(per) < 0) return _refuse({ ok: false, error: 'invalid period (off|daily|weekly|monthly|yearly)' });
           STATS_RESET_PERIOD = per; _adminConfig.resetPeriod = per;
           try { statsMeta.period = statsPeriodKey(); saveStatsMeta(); } catch (e) {}
         }
@@ -11039,7 +11135,8 @@ function handleAdmin(req, res, reqPathOnly, query) {
           // URL de proxy imposée à tous les clients (vide = auto-détection depuis
           // l'adresse de la page, comportement historique). Schéma ws/wss exigé.
           var _pu = (typeof ld.proxyUrl === 'string') ? ld.proxyUrl.trim().slice(0, 180) : '';
-          lout.proxyUrl = /^wss?:\/\/[^\s]+$/i.test(_pu) ? _pu : '';
+          if (_pu && !/^wss?:\/\/[^\s]+$/i.test(_pu)) return _refuse({ ok: false, error: 'invalid proxy URL (expected ws:// or wss://\u2026)' });
+          lout.proxyUrl = _pu;
           // Masquer le champ « URL du proxy WebSocket » et son libellé.
           lout.hideProxy = !!ld.hideProxy;
           // Politique du serveur LAN / dédié : 'auto' (adresse mémorisée par le
@@ -11048,43 +11145,27 @@ function handleAdmin(req, res, reqPathOnly, query) {
           // Absent = déduit de l'ancien réglage `host` (compat ascendante).
           lout.lanMode = (ld.lanMode === 'forced' || ld.lanMode === 'auto') ? ld.lanMode : (lout.host ? 'forced' : 'auto');
           var _lnp = parseInt(ld.lanPort, 10);
+          if (ld.lanPort != null && String(ld.lanPort).trim() !== '' && Number(ld.lanPort) !== 0 && !(Number.isInteger(_lnp) && _lnp >= 1 && _lnp <= 65535)) return _refuse({ ok: false, error: 'LAN port must be between 1 and 65535' });
           lout.lanPort = (Number.isInteger(_lnp) && _lnp >= 1 && _lnp <= 65535) ? _lnp : 0;
           lout.lanTls = !!ld.lanTls;
           _adminConfig.loginDefaults = lout;
         }
         if (d.proxyCfg && typeof d.proxyCfg === 'object') {
-          var pc = d.proxyCfg, pout = {};
-          if (Array.isArray(pc.allowedHosts)) {
-            pout.allowedHosts = pc.allowedHosts
-              .map(function (s) { return String(s == null ? '' : s).trim().toLowerCase(); })
-              .filter(function (s) { return s && /^[a-z0-9.\-:]+$/.test(s); })
-              .slice(0, 50);
-          }
-          if (Array.isArray(pc.allowedPorts)) {
-            pout.allowedPorts = pc.allowedPorts
-              .map(function (s) { return parseInt(s, 10); })
-              .filter(function (n) { return Number.isInteger(n) && n >= 1 && n <= 65535; })
-              .slice(0, 20);
-          }
-          var _gs = (pc.graceSec == null || pc.graceSec === '') ? null : parseInt(pc.graceSec, 10);
-          if (_gs != null && _gs >= 10 && _gs <= 900) pout.graceSec = _gs;
-          var _cg = (pc.connGapMs == null || pc.connGapMs === '') ? null : parseInt(pc.connGapMs, 10);
-          if (_cg != null && _cg >= 0 && _cg <= 30000) pout.connGapMs = _cg;
-          var _lv = (pc.logLevel == null ? '' : String(pc.logLevel)).trim().toLowerCase();
-          if (_lv === 'quiet' || _lv === 'normal' || _lv === 'verbose') pout.logLevel = _lv;
-          var _mx = (pc.maxClients == null || pc.maxClients === '') ? null : parseInt(pc.maxClients, 10);
-          if (_mx != null && _mx >= 0 && _mx <= 100000) pout.maxClients = _mx;
+          var _pxErr = [], pout = _cleanProxyCfg(d.proxyCfg, _pxErr);
+          if (_pxErr.length) return _refuse({ ok: false, error: _pxErr.join('; ') });
           _adminConfig.proxyCfg = pout;
         }
         if (d.tableDefaults && typeof d.tableDefaults === 'object') {
           var td = d.tableDefaults, tdout = {};
           // The limits of the players' own « create a table » form (cf-* in
           // pokerth-client.html): a default outside them would be clipped there.
-          var _tdInt = function (v, lo, hi) { if (v == null || v === '') return null; var n = parseInt(v, 10); return (isFinite(n) && n >= lo && n <= hi) ? n : null; };
-          var _pl = _tdInt(td.players, 2, 10);       if (_pl != null) tdout.players = _pl;
-          var _bl = _tdInt(td.blind,   5, 20000);    if (_bl != null) tdout.blind   = _bl;
-          var _st = _tdInt(td.stack, 1000, 1000000);  if (_st != null) tdout.stack   = _st;
-          var _to = _tdInt(td.timeout, 5, 60);       if (_to != null) tdout.timeout = _to;
+          var _tdBad = [];
+          var _tdInt = function (v, lo, hi, label) { if (v == null || v === '') return null; var n = parseInt(v, 10); if (isFinite(n) && n >= lo && n <= hi) return n; _tdBad.push(label + ' must be between ' + lo + ' and ' + hi); return null; };
+          var _pl = _tdInt(td.players, 2, 10, 'players');           if (_pl != null) tdout.players = _pl;
+          var _bl = _tdInt(td.blind,   5, 20000, 'small blind');    if (_bl != null) tdout.blind   = _bl;
+          var _st = _tdInt(td.stack, 1000, 1000000, 'start stack'); if (_st != null) tdout.stack   = _st;
+          var _to = _tdInt(td.timeout, 5, 60, 'action timeout');    if (_to != null) tdout.timeout = _to;
+          if (_tdBad.length) return _refuse({ ok: false, error: _tdBad.join('; ') });
           _adminConfig.tableDefaults = tdout;
         }
         if (d.tableNames && typeof d.tableNames === 'object') {
@@ -11097,19 +11178,19 @@ function handleAdmin(req, res, reqPathOnly, query) {
         }
         if (typeof d.discordChatWebhookUrl === 'string') {
           var dw = d.discordChatWebhookUrl.trim().slice(0, 200);
-          if (dw && !DISCORD_WEBHOOK_RE.test(dw)) return adminJson(res, 400, { ok: false, error: 'invalid Discord webhook URL (expected https://discord.com/api/webhooks/…)' });
+          if (dw && !DISCORD_WEBHOOK_RE.test(dw)) return _refuse({ ok: false, error: 'invalid Discord webhook URL (expected https://discord.com/api/webhooks/…)' });
           _adminConfig.discordChatWebhookUrl = dw;   // vide = relais désactivé
         }
         if (Array.isArray(d.clockZones)) {
           _adminConfig.clockZones = d.clockZones.filter(_validTz).slice(0, CLOCK_ZONES_MAX);
         }
         if (typeof d.clockRef === 'string') {
-          if (!_validTz(d.clockRef)) return adminJson(res, 400, { ok: false, error: 'unknown time zone: ' + d.clockRef.slice(0, 64) });
+          if (!_validTz(d.clockRef)) return _refuse({ ok: false, error: 'unknown time zone: ' + d.clockRef.slice(0, 64) });
           _adminConfig.clockRef = d.clockRef;
         }
         if (typeof d.lobbyClockTz === 'string') {
           const lz = d.lobbyClockTz.trim();
-          if (lz && !_validTz(lz)) return adminJson(res, 400, { ok: false, error: 'unknown time zone: ' + lz.slice(0, 64) });
+          if (lz && !_validTz(lz)) return _refuse({ ok: false, error: 'unknown time zone: ' + lz.slice(0, 64) });
           _adminConfig.lobbyClockTz = lz;   // '' = default (SERVER_TZ, else Europe/Berlin)
         }
         if (typeof d.serverName === 'string')    _adminConfig.serverName    = d.serverName.trim().slice(0, 40);
@@ -11138,22 +11219,22 @@ function handleAdmin(req, res, reqPathOnly, query) {
           if (typeof d.seo.enabled === 'boolean') _so.enabled = d.seo.enabled;
           if (typeof d.seo.publicUrl === 'string') {
             var _su = d.seo.publicUrl.trim().slice(0, 200).replace(/\/+$/, '');
-            if (_su && !/^https?:\/\/[^\s"'<>]+$/i.test(_su)) return adminJson(res, 400, { ok: false, error: 'invalid public URL (expected https://\u2026)' });
+            if (_su && !/^https?:\/\/[^\s"'<>]+$/i.test(_su)) return _refuse({ ok: false, error: 'invalid public URL (expected https://\u2026)' });
             _so.publicUrl = _su;
           }
           if (typeof d.seo.googleVerification === 'string') {
             var _sg = d.seo.googleVerification.trim().slice(0, 100);
-            if (_sg && !/^[A-Za-z0-9_-]+$/.test(_sg)) return adminJson(res, 400, { ok: false, error: 'invalid verification token (letters, digits, - and _ only)' });
+            if (_sg && !/^[A-Za-z0-9_-]+$/.test(_sg)) return _refuse({ ok: false, error: 'invalid verification token (letters, digits, - and _ only)' });
             _so.googleVerification = _sg;
           }
           if (typeof d.seo.bingVerification === 'string') {
             var _sb = d.seo.bingVerification.trim().slice(0, 100);
-            if (_sb && !/^[A-Za-z0-9_-]+$/.test(_sb)) return adminJson(res, 400, { ok: false, error: 'invalid Bing verification token (letters, digits, - and _ only)' });
+            if (_sb && !/^[A-Za-z0-9_-]+$/.test(_sb)) return _refuse({ ok: false, error: 'invalid Bing verification token (letters, digits, - and _ only)' });
             _so.bingVerification = _sb;
           }
           if (typeof d.seo.yandexVerification === 'string') {
             var _sy = d.seo.yandexVerification.trim().slice(0, 100);
-            if (_sy && !/^[A-Za-z0-9_-]+$/.test(_sy)) return adminJson(res, 400, { ok: false, error: 'invalid Yandex verification token (letters, digits, - and _ only)' });
+            if (_sy && !/^[A-Za-z0-9_-]+$/.test(_sy)) return _refuse({ ok: false, error: 'invalid Yandex verification token (letters, digits, - and _ only)' });
             _so.yandexVerification = _sy;
           }
           if (typeof d.seo.siteName === 'string')    _so.siteName    = d.seo.siteName.trim().slice(0, 60);
@@ -11161,7 +11242,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
           if (typeof d.seo.description === 'string') _so.description = d.seo.description.trim().slice(0, 200);
           if (typeof d.seo.image === 'string') {
             var _si = d.seo.image.trim().slice(0, 300);
-            if (_si && !/^(https?:\/\/[^\s"'<>]+|\/[^\s"'<>]*)$/i.test(_si)) return adminJson(res, 400, { ok: false, error: 'invalid image (expected https://\u2026 or a path starting with /)' });
+            if (_si && !/^(https?:\/\/[^\s"'<>]+|\/[^\s"'<>]*)$/i.test(_si)) return _refuse({ ok: false, error: 'invalid image (expected https://\u2026 or a path starting with /)' });
             _so.image = _si;
           }
           if (typeof d.seo.aiCrawlers === 'boolean') _so.aiCrawlers = d.seo.aiCrawlers;
@@ -11196,8 +11277,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       if (!d || !Array.isArray(d.servers)) return adminJson(res, 400, { ok: false, error: 'servers[] required' });
-      var out = [];
-      for (var i = 0; i < d.servers.length && out.length < 50; i++) { var s = _sanitizeServer(d.servers[i]); if (s) out.push(s); }
+      var out = _cleanServers(d.servers);
       _adminConfig.servers = out;
       // Active server for the client's "Internet / PokerTH.net" mode: keep the
       // pointer only while it still matches a saved server, else clear it.
@@ -11506,7 +11586,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       }
       saveAdminConfig();
       return adminJson(res, 200, { ok: true, added: added.length, skipped: skipped, items: added });
-    });
+    }, 1024 * 1024);   // the playlist may be 512 KB of text, JSON-escaped on the way
   }
   if (reqPathOnly === '/admin/music-remove' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
@@ -11904,13 +11984,29 @@ function handleAdmin(req, res, reqPathOnly, query) {
       });
       if (!taken.length) return adminJson(res, 400, { ok: false, error: 'nothing importable in that file' });
       _configKeepRedacted(next, fileRedacted, _adminConfig || {});
+      // The blocks that open the proxy to hosts or shut addresses out go
+      // through the same checks as their own Save buttons: a hand-edited file
+      // cannot widen the dial allowlist or ban the loopback.
+      if ('servers' in next) next.servers = _cleanServers(next.servers);
+      if ('proxyCfg' in next) next.proxyCfg = _cleanProxyCfg(next.proxyCfg);
+      const _bannedBefore = bannedIps().slice();
+      if ('bannedIps' in next) next.bannedIps = _cleanBanned(next.bannedIps, clientIp(req));
       _adminConfig = next;
       saveAdminConfig();
+      // Addresses the restore bans: what they already have open is dropped, as
+      // the Ban button does.
+      let _dropped = 0;
+      bannedIps().forEach(function (ip) { if (_bannedBefore.indexOf(ip) < 0) _dropped += _dropBannedIp(ip); });
+      if (_dropped) console.log('[admin] restore: ' + _dropped + ' live connection(s) from banned addresses dropped');
       // Réglages miroirés dans des variables vivantes : à resynchroniser tout de
       // suite, sinon l'import ne prendrait effet qu'au redémarrage.
       if (typeof _adminConfig.resetPeriod === 'string' &&
           ['off', 'daily', 'weekly', 'monthly', 'yearly'].indexOf(_adminConfig.resetPeriod) >= 0) {
         STATS_RESET_PERIOD = _adminConfig.resetPeriod;
+        // As the Statistics setting does: the current period is the new one's.
+        // Left on the old key, the hourly rotation saw a change of period and
+        // wiped the leaderboard.
+        try { statsMeta.period = statsPeriodKey(); saveStatsMeta(); } catch (e) {}
       }
       // Caches built from the config: the SEO injection and the official
       // serverlist are rebuilt from the restored settings, not the old ones.
@@ -11958,11 +12054,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
           saveAdminConfig();
           // Coupe aussi les ponts déjà ouverts depuis cette adresse : bannir
           // quelqu'un qui joue déjà ne doit pas attendre sa prochaine connexion.
-          let cut = 0;
-          try {
-            _liveSessions.forEach(function (S) { if (S.ip === ip) { const w = S.ws; S.ws = null; _destroySession(S); if (w) { try { _allClients.delete(w); } catch (e) {} try { w.close(4009, 'Banned'); } catch (e) {} } cut++; } });
-            wss.clients.forEach(function (c) { if (c._notify && c._ip === ip) { try { c.close(4009, 'Banned'); } catch (e) {} cut++; } });
-          } catch (e) {}
+          const cut = _dropBannedIp(ip);
           console.log('[admin] banned ' + ip + (cut ? ' (' + cut + ' live connection(s) dropped)' : ''));
           return adminJson(res, 200, { ok: true, banned: bannedIps(), dropped: cut });
         }
@@ -12033,7 +12125,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       _polls.push(poll); savePollsSoon();
       console.log('[polls] created ' + poll.id + ' (' + options.length + ' options)');
       return adminJson(res, 200, { ok: true, id: poll.id, poll: _pollAdmin(poll) });
-    });
+    }, 1024 * 1024);   // up to 90 languages \u00d7 (question + 10 options)
   }
   if (reqPathOnly === '/admin/polls/activate' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
@@ -12098,6 +12190,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       const _cd = (d.countdownAt && Number(d.countdownAt) > 0) ? Number(d.countdownAt) : null;
       if (_cd && _cd <= Date.now()) return adminJson(res, 400, { ok: false, error: 'countdown already passed' });
       const _st = (d.startAt && Number(d.startAt) > 0) ? Number(d.startAt) : null;
+      if (d.endAt && Number(d.endAt) > 0 && Number(d.endAt) <= Date.now()) return adminJson(res, 400, { ok: false, error: 'the end date has already passed' });
       const _en = (d.endAt && Number(d.endAt) > Date.now()) ? Number(d.endAt) : null;
       if (_st && _en && _st >= _en) return adminJson(res, 400, { ok: false, error: 'start must be before end' });
       const job = {
@@ -13545,6 +13638,9 @@ const httpServer = http.createServer((req, res) => {
   const query = url.parse(req.url, true).query;
   if (reqPathOnly === '/admin' || reqPathOnly === '/admin.html' || reqPathOnly.indexOf('/admin/') === 0) {
     const q = url.parse(req.url, true).query;
+    // Every write is logged, limiter or not (RATE_LIMIT_DISABLED=1, or
+    // rate-limiter-flexible missing, used to leave the Audit log empty).
+    if (req.method === 'POST') res.on('finish', function () { auditRecord(req, res, reqPathOnly, q); });
     if (_rlAdminFail) {
       const ip = clientIp(req);
       res._rlIp = ip;
@@ -13557,7 +13653,6 @@ const httpServer = http.createServer((req, res) => {
       if (req.method === 'GET' && (reqPathOnly === '/admin/status' || reqPathOnly === '/admin/logs'
           || reqPathOnly === '/admin/sessions' || reqPathOnly === '/admin/broadcasts'
           || reqPathOnly === '/admin/clock')) res._rlNoPenalty = true;
-      if (req.method === 'POST') res.on('finish', function () { auditRecord(req, res, reqPathOnly, q); });
       _rlAdminFail.get(ip).then(function (r) {
         if (r && r.remainingPoints <= 0 && r.msBeforeNext > 0) {
           res.writeHead(429, { 'Content-Type': 'application/json; charset=utf-8', 'Retry-After': String(Math.ceil(r.msBeforeNext / 1000)), 'Cache-Control': 'no-store' });
@@ -14093,42 +14188,56 @@ const httpServer = http.createServer((req, res) => {
           var _j = function (code, obj) { res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(obj)); };
           if (!LAN_BOARDS.exists(_b)) return _j(404, { ok: false, error: 'unknown board' });
           if (d && d._resetAll) {
-            if (!hasScope('leaderboard', query, d && d.token)) return _j(403, { ok: false, error: 'forbidden' });
-            LAN_BOARDS.reset(_b, 'manual endpoint');
-            return _j(200, { ok: true, reset: true });
+            return _statsAdminGate(req, res, query, 'leaderboard/reset', function () {
+              if (!hasScope('leaderboard', query, d && d.token)) { _statsAdminFail(res); return _j(403, { ok: false, error: 'forbidden' }); }
+              LAN_BOARDS.reset(_b, 'manual endpoint');
+              return _j(200, { ok: true, reset: true });
+            });
           }
           if (!d || typeof d.name !== 'string' || !d.name.trim()) return _j(400, { ok: false });
           var _n = d.name.trim().slice(0, 32);
           if (d._delete) {
-            if (!hasScope('leaderboard', query, d && d.token)) return _j(403, { ok: false, error: 'forbidden' });
-            LAN_BOARDS.remove(_b, _n);
+            return _statsAdminGate(req, res, query, 'leaderboard/delete', function () {
+              if (!hasScope('leaderboard', query, d && d.token)) { _statsAdminFail(res); return _j(403, { ok: false, error: 'forbidden' }); }
+              LAN_BOARDS.remove(_b, _n);
+              return _j(200, { ok: true });
+            });
           } else if (!LAN_BOARDS.upsert(_b, _n, d)) return _j(409, { ok: false, error: 'board full' });
           return _j(200, { ok: true });
         }
         // Admin: wipe the whole leaderboard at once. Disabled unless
         // STATS_ADMIN_TOKEN is set; the request must echo the same token.
         if (d && d._resetAll) {
-          if (!hasScope('leaderboard', query, d && d.token)) {
-            res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
-            res.end('{"ok":false,"error":"forbidden"}'); return;
-          }
-          wipeLeaderboard('manual endpoint');
-          const k = statsPeriodKey(); if (k) { statsMeta.period = k; saveStatsMeta(); }
-          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-          res.end('{"ok":true,"reset":true}'); return;
+          return _statsAdminGate(req, res, query, 'leaderboard/reset', function () {
+            if (!hasScope('leaderboard', query, d && d.token)) {
+              _statsAdminFail(res);
+              res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
+              res.end('{"ok":false,"error":"forbidden"}'); return;
+            }
+            wipeLeaderboard('manual endpoint');
+            const k = statsPeriodKey(); if (k) { statsMeta.period = k; saveStatsMeta(); }
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+            res.end('{"ok":true,"reset":true}');
+          });
         }
         if (!d || typeof d.name !== 'string' || !d.name.trim()) {
           res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' }); res.end('{"ok":false}'); return;
         }
         const name = d.name.trim().slice(0, 32);
         if (d._delete) {
-          if (!hasScope('leaderboard', query, d && d.token)) {
-            res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
-            res.end('{"ok":false,"error":"forbidden"}'); return;
-          }
-          delete statsStore[name]; dbDeletePlayer(name);
+          return _statsAdminGate(req, res, query, 'leaderboard/delete', function () {
+            if (!hasScope('leaderboard', query, d && d.token)) {
+              _statsAdminFail(res);
+              res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
+              res.end('{"ok":false,"error":"forbidden"}'); return;
+            }
+            delete statsStore[name]; dbDeletePlayer(name);
+            saveStatsSoon();
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+            res.end('{"ok":true}');
+          });
         }
-        else statsStore[name] = mergeSnapshot(statsStore[name], sanitizeSnapshot(d));
+        statsStore[name] = mergeSnapshot(statsStore[name], sanitizeSnapshot(d));
         saveStatsSoon();
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
         res.end('{"ok":true}');

@@ -2053,6 +2053,7 @@
         <p class="muted">Ask the players what to build next. One poll is live at a time: activating a poll retires the previous one.</p>
         <details class="more"><summary>What players see</summary><p class="muted">The active poll opens in a window when a player reaches the lobby (unless they turned “Product polls” off in Advanced options); one answer per device. The counts stay hidden until they have answered, so the figures on screen cannot sway the vote.</p></details>
         <div id="plList" class="erlist"><div class="empty">Loading…</div></div>
+        <div id="plListMsg" class="msg"></div>
       </div>
       <div class="card" id="plForm">
         <div class="boardhead"><h2 id="plFormTitle">New poll</h2><span id="plFilled" class="headnote"></span></div>
@@ -7669,9 +7670,15 @@
         else bcSay('plState','Failed: '+((d&&d.error)||'error'),'err');
       }).catch(function(){ bcSay('plState','Network error.','err'); });
   }
+  // Activate / reset / delete: a refusal or a lost request is said under the
+  // list (it used to do nothing, silently).
   function plPost(path,body){ body=body||{}; body.token=tok();
+    var m=$('plListMsg'); if(m){ m.textContent=''; m.className='msg'; }
     return api(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
-      .then(function(r){return r.json();}).then(function(d){ loadPolls(); return d; }).catch(function(){}); }
+      .then(function(r){return r.json();}).then(function(d){
+        if(!(d&&d.ok)&&m){ m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; }
+        loadPolls(); return d; })
+      .catch(function(){ if(m){ m.textContent='Network error \u2014 nothing changed.'; m.className='msg err'; } }); }
   // Tiles: the live poll and its answers, the option ahead, how many polls.
   function _plTiles(polls){
     var box=$('plTiles'); if(!box) return;

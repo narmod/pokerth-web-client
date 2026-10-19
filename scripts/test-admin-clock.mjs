@@ -46,7 +46,7 @@ ok(/function _validTz\(/.test(proxy) && /new Intl\.DateTimeFormat\('en-US', \{ t
   'a zone is validated by Intl, not by a hand-kept list');
 ok(/_adminConfig\.clockZones = d\.clockZones\.filter\(_validTz\)\.slice\(0, CLOCK_ZONES_MAX\)/.test(proxy),
   'a saved selection is filtered and capped before it lands in the config');
-ok(/if \(!_validTz\(d\.clockRef\)\) return adminJson\(res, 400/.test(proxy),
+ok(/if \(!_validTz\(d\.clockRef\)\) return (adminJson\(res, 400|_refuse\()/.test(proxy),
   'and an unknown reference is refused rather than dropped, which would look like a save that did nothing');
 ok(/'clockZones', 'clockRef',/.test(proxy),
   'both survive an export -> import round-trip, which silently wiped seo once');

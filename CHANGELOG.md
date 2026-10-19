@@ -833,6 +833,25 @@ highlights below.
   `test-lobby-typechat` (`web.32`).
 
 ### Fixed
+- **Admin data safety** (`web.171`, audit of 2026-10-19, lot 1) —
+  - A restore that changed the leaderboard reset period left the period marker on the old one: the hourly
+    rotation then wiped the leaderboard. The restore now moves it, as the Statistics setting does.
+  - A restore kept the game servers, the proxy allowlist and the ban list as the file had them: they now go
+    through the same checks as their Save buttons (`_cleanServers`, `_cleanProxyCfg`, `_cleanBanned` — never the
+    loopback or the requester), and connections already open from newly banned addresses are dropped.
+  - The audit hook depended on the brute-force limiter: with `RATE_LIMIT_DISABLED=1` or without
+    `rate-limiter-flexible`, nothing was logged. The leaderboard wipe and player removal (through `/stats`, outside
+    `/admin`) were neither audited nor guarded: they now are (« Leaderboard reset », « Player removed from the
+    leaderboard »; a wrong token counts toward the block).
+  - `POST /admin/config` applied its blocks one after the other: a later refusal (an SEO token, a time zone…) left
+    the earlier ones live — robots.txt switched while the page said « Failed » — until the next restart. A refused
+    request now changes nothing.
+  - Values out of range (proxy grace / gap / max clients / hosts / ports, table defaults, the login proxy URL and
+    LAN port) were dropped in silence under « Saved. »: they are refused with the reason.
+  - Radio playlists over ~15 KB and polls in many languages died as « Network error » (16 KB body cap): the
+    routes now take 1 MB. Poll actions (activate, reset, delete) say when they fail. A scheduled message whose end
+    date has passed is refused instead of repeating forever.
+  `scripts/test-admin-safety.mjs`.
 - **« Check now » of the automatic updates** (`web.170`) — Operations › Deploy: after every check the message
   turned red with « this install cannot self-update », even on a git install that was up to date —
   `/admin/update-check` answered without `gitUpdatable` / `installKind`, which the shared painter reads. Both
