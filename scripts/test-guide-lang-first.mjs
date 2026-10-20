@@ -46,7 +46,9 @@ for (const [on, slow] of [['0', false], ['0', true], ['1', false]]) {
   await ctx.addInitScript(() => { try { localStorage.setItem('pth_guide_webdriver', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_lang', 'fr'); } catch (_e) {} });
   const page = await ctx.newPage();
   await openTable(page, base, { stopAt: 'login' });
-  await page.waitForSelector(B + ' [data-ad-btn="bakCreate"]', { timeout: 15000 }).catch(() => {});
+  // 45 s, not 15: on a loaded machine (full-suite run) the offer came later and
+  // the read below caught the card shown before it (« Plus tard · Suivant »).
+  await page.waitForSelector(B + ' [data-ad-btn="bakCreate"]', { timeout: 45000 }).catch(() => {});
   const btns = await page.evaluate((b) => [...document.querySelectorAll(b + ' .ad-btn')].map((x) => ({ id: x.getAttribute('data-ad-btn'), t: x.textContent.trim() })), B);
   const ids = btns.map((b) => b.id).join(','), labels = btns.map((b) => b.t).join(' · ');
   ok(ids === 'bakLater,bakRestore,bakCreate' && /Plus tard/.test(labels) && /sauvegarde/i.test(labels) && !/Later|Restore|Create/.test(labels),

@@ -556,6 +556,21 @@ async function visibleMetrics(page, selectors) {
   })), selectors);
 }
 
+// Metrics once the layout has settled: after an Interface size change the
+// table re-fits (card size, then the rank/suit glyphs) over a few frames, and on
+// a loaded machine a single read could land mid-way (42.50 instead of 42.57 for
+// a 1.5x rank). Read until two reads 250 ms apart agree, for up to 5 s.
+async function settledMetrics(page, selectors) {
+  let prev = await visibleMetrics(page, selectors);
+  for (let i = 0; i < 20; i++) {
+    await page.waitForTimeout(250);
+    const cur = await visibleMetrics(page, selectors);
+    if (JSON.stringify(cur) === JSON.stringify(prev)) return cur;
+    prev = cur;
+  }
+  return prev;
+}
+
 function assertScaled(actual, baseline, multiplier, label) {
   assert.ok(actual >= baseline * (multiplier - 0.05), `${label}: expected ${multiplier}x ${baseline}, got ${actual}`);
 }
@@ -1002,7 +1017,7 @@ try {
     const samples = {};
     for (const [value, multiplier] of [['standard', 1], ['large', 1.5], ['extra-large', 2]]) {
       await chooseInterfaceSize(page, 'connect', value);
-      samples[value] = await visibleMetrics(page, selectors);
+      samples[value] = await settledMetrics(page, selectors);
       for (const selector of selectors) {
         assert.equal(samples[value][selector].visible, true, `${value} ${selector} is outside the viewport`);
         assertScaled(samples[value][selector].fontSize, samples.standard[selector].fontSize, multiplier, `${value} ${selector}`);
@@ -1022,7 +1037,7 @@ try {
     const samples = {};
     for (const [value, multiplier] of [['standard', 1], ['large', 1.5], ['extra-large', 2]]) {
       await chooseInterfaceSize(page, 'lobby', value);
-      samples[value] = await visibleMetrics(page, selectors);
+      samples[value] = await settledMetrics(page, selectors);
       for (const selector of selectors.slice(0, 3)) {
         assert.equal(samples[value][selector].visible, true, `${value} ${selector} is outside the viewport`);
         assertScaled(samples[value][selector].fontSize, samples.standard[selector].fontSize, multiplier, `${value} ${selector}`);
@@ -1294,7 +1309,7 @@ try {
       if (value !== 'standard') await chooseInterfaceSize(page, 'game', value);
       await page.locator('#g-actions .btn-fold').waitFor();
       for (const selector of [...fontSelectors, cardSelector, ...cardInfoSelectors, timerSelector]) assert.ok(await page.locator(selector).count(), `active-hand fixture did not render ${selector}`);
-      samples[value] = await visibleMetrics(page, [...fontSelectors, cardSelector, ...cardInfoSelectors, timerSelector]);
+      samples[value] = await settledMetrics(page, [...fontSelectors, cardSelector, ...cardInfoSelectors, timerSelector]);
       for (const selector of fontSelectors) {
         assert.equal(samples[value][selector].visible, true, `${value} active hand ${selector} is outside the viewport: ${JSON.stringify(samples[value][selector])}`);
         assertExactScaled(samples[value][selector].fontSize, samples.standard[selector].fontSize, multiplier, `${value} active hand ${selector}`);
