@@ -48,12 +48,21 @@ await new Promise((r) => lan.listen(0, '127.0.0.1', r));
 const LAN = lan.address().port;
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'off2net-'));
 fs.writeFileSync(path.join(tmp, 'cfg.json'), JSON.stringify({ lanDirectory: { settings: { refusePrivate: false, manualEntry: true, localEntry: true }, entries: [] } }));
-const PORT = 18900 + Math.floor(Math.random() * 90);
+// A free port from the OS, not a random pick in a range other tests share: a
+// proxy left over by another test on the same port answered this page with its
+// own allowlist, and the LAN dial was refused (« inits=0 », flaky full-suite run).
+const PORT = await new Promise((r) => { const t = net.createServer(); t.listen(0, '127.0.0.1', () => { const p = t.address().port; t.close(() => r(p)); }); });
 const env = { PORT: String(PORT), ALLOWED_PORTS: String(LAN), STATS_ADMIN_TOKEN: 'x', ADMIN_CONFIG_FILE: path.join(tmp, 'cfg.json') };
 for (const k of ['STATS_FILE', 'STATS_META_FILE', 'AUDIT_FILE', 'VISITS_FILE', 'BROADCASTS_FILE', 'POLLS_FILE', 'SCOPED_TOKENS_FILE', 'DEPLOY_HISTORY_FILE', 'DB_CONFIG_FILE']) env[k] = path.join(tmp, k.toLowerCase() + '.json');
 const px = spawn(process.execPath, [path.join(root, 'proxy.js')], { cwd: root, env: Object.assign({}, process.env, env), stdio: 'ignore' });
-await new Promise((r) => setTimeout(r, 2500));
+let pxExited = false; px.on('exit', () => { pxExited = true; });
 const base = 'http://127.0.0.1:' + PORT;
+// Wait until OUR proxy answers (not a fixed delay: a slow start under load).
+for (let i = 0; i < 60; i++) {
+  if (pxExited) { console.log('FAIL the proxy exited at start (port ' + PORT + ' taken?)'); process.exit(1); }
+  try { const r = await fetch(base + '/__ver', { cache: 'no-store' }); if (r.ok) break; } catch (e) {}
+  await new Promise((r) => setTimeout(r, 250));
+}
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const b = await chromium.launch();
 
@@ -78,10 +87,14 @@ async function scenario(label, steps) {
   const pg = await ctx.newPage();
   await pg.goto(base + '/'); await pg.waitForSelector('.login-card'); await sleep(1200);
   for (const s of steps) await s(pg);
+  // The lobby may take a little longer on a loaded machine: poll up to 15 s
+  // more instead of trusting the fixed wait of the last step.
+  for (let i = 0; i < 30 && (await screen(pg)) !== 's-lobby'; i++) await sleep(500);
   const sc = await screen(pg);
   const ok = sc === 's-lobby' && invalidInits === 0 && inits >= 1;
   ok ? pass++ : fail++;
-  console.log((ok ? 'ok   ' : 'FAIL ') + label + (ok ? '' : ` — screen=${sc} inits=${inits} rejected=${invalidInits}`));
+  const st = ok ? '' : await pg.evaluate(() => ((document.querySelector('#s-connect .status, #status, .conn-status') || {}).textContent || '').trim()).catch(() => '');
+  console.log((ok ? 'ok   ' : 'FAIL ') + label + (ok ? '' : ` — screen=${sc} inits=${inits} rejected=${invalidInits} status="${st}"`));
   await ctx.close();
 }
 
