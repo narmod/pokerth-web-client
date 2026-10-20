@@ -211,6 +211,8 @@ export const S = {
   turnPid: 0,
   _lastSbPid: 0,           // SB/BB du dernier rendu (popup d'info joueur)
   _lastBbPid: 0,
+  _handSbPid: 0,           // SB/BB annoncés par le serveur pour la main en cours
+  _handBbPid: 0,           // (PlayersActionDone gameState 4/5), 0 = pas encore
 
   // ── V9.3 · Cœur de main : identité / sièges / verrous (domaine E, 3/3) ──
   seats: [],               // player IDs in seat order (GameStartInitial) — figé après 1ʳᵉ main

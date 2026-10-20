@@ -288,6 +288,7 @@ function onHandStart(sub) {
     S._preActionOpen = false; // referme tout panneau "aperçu" à chaque main
     S._preAction = '';        // désarme toute pré-action à chaque nouvelle main
     S._actedStreet = -1;      // je n'ai pas encore parlé dans cette main
+    S._handSbPid = 0; S._handBbPid = 0; // blinds of this hand: set by PlayersActionDone
     S._roundEnded = false;    // nouvelle main → verrous de manche levés
     S._boardDealing = false;
     S._inShowdown = false;
@@ -687,6 +688,12 @@ function onPlayersActionDone(sub) {
     const money  = Proto.u32(sub, 6);
     S.highestBet   = Proto.u32(sub, 7);
     S.minRaise     = Proto.u32(sub, 8);
+    // Blind postings carry gameState netStatePreflopSmallBlind (4) /
+    // netStatePreflopBigBlind (5): the authoritative SB / BB of this hand
+    // (seat-render.mjs prefers them over its own derivation).
+    const _gs = Proto.u32(sub, 3);
+    if (_gs === 4) S._handSbPid = pid;
+    else if (_gs === 5) S._handBbPid = pid;
     try { trackLastActionPid(pid, action, bet, S.highestBet); } catch (_e) {}
     // Zoom-follow : le joueur a agi → pan en attente exécuté tout de suite
     try { if (window._zoomFollowActed) window._zoomFollowActed(); } catch (_e) {}

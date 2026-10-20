@@ -612,12 +612,34 @@ function renderSeatsImmediate() {
     }
     return -1;
   }
-  const sbPid = dealerIdx >= 0 && S.seats.length > 1
-    ? nextActiveSeat(dealerIdx, 1)
-    : -1;
-  const bbPid = dealerIdx >= 0 && S.seats.length > 2
-    ? nextActiveSeat(dealerIdx, 2)
-    : (S.seats.length === 2 ? S.seats[dealerIdx] : -1); // heads-up: dealer = SB
+  // Heads-up is decided by the players still IN the game, not by the seat
+  // count: seats[] is frozen at the first deal and keeps busted / gone
+  // players, so a table that started with 3+ players never had
+  // seats.length === 2 once it got down to two. The 3+ rule then ran
+  // (SB = next after dealer, BB = next-next = the dealer again) and the
+  // pucks were swapped for the whole heads-up (forum report 20/10/2026).
+  // Same predicate as nextActiveSeat(); the dealer counts even when he is
+  // all-in this hand.
+  let activeCount = 0, dealerActive = false;
+  for (const _p of S.seats) {
+    const _d = S.seatData[_p];
+    if (_d && !_d.gone && _d.active !== false
+        && !(_d.active !== true && _d.money != null && _d.money <= 0)) {
+      activeCount++;
+      if (_p === S.dealerPid) dealerActive = true;
+    }
+  }
+  const headsUp = activeCount === 2 && dealerActive;
+  let sbPid = dealerIdx < 0 || S.seats.length < 2 ? -1
+    : (headsUp ? S.dealerPid : nextActiveSeat(dealerIdx, 1));          // heads-up: dealer = SB
+  let bbPid = dealerIdx < 0 || S.seats.length < 2 ? -1
+    : (headsUp ? nextActiveSeat(dealerIdx, 1) : nextActiveSeat(dealerIdx, 2));
+  // Once the server has announced the blinds of THIS hand (PlayersActionDone
+  // with netStatePreflopSmallBlind / BigBlind, see msg-hand.mjs) its word
+  // wins over the derivation — the official clients set BUTTON_SMALL_BLIND /
+  // BUTTON_BIG_BLIND from exactly those messages (clientstate.cpp).
+  if (S._handSbPid && S.seats.includes(S._handSbPid)) sbPid = S._handSbPid;
+  if (S._handBbPid && S.seats.includes(S._handBbPid)) bbPid = S._handBbPid;
   // Mémorise SB/BB pour le popup d'info joueur (lu hors de renderSeats).
   S._lastSbPid = sbPid; S._lastBbPid = bbPid;
 

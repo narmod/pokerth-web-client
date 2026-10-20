@@ -72,6 +72,13 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **SB / BB swapped in heads-up** (`web.198`, forum report) — once a table that started with three players or more
+  got down to two, the pucks showed the dealer as big blind and the other player as small blind for the rest of the
+  game. `seat-render.mjs` decided heads-up on `seats.length === 2`, but `seats[]` is frozen at the first deal and
+  keeps busted / gone players, so the 3+ rule ran (SB = next after dealer, BB = the dealer again). Heads-up is now
+  read from the players still in the game, and the blinds the server announces for the hand (`PlayersActionDone`
+  with `netStatePreflopSmallBlind` / `BigBlind`, which is what the official clients use) take precedence once they
+  arrive. Tests: `test-seat-render.mjs`, `test-msg-hand.mjs`, `test-state.mjs`.
 - **No scroll bar in the side menu on a laptop screen** (`web.193`) — with Statistics open (7 pages) and the « My
   visits » row added to the foot in `web.184`, the menu outgrew a ~900 px tall window (or a zoomed browser) and
   scrolled, the last group half hidden. Under 1000 px of height the menu tightens (groups 36 px, pages 30 px,

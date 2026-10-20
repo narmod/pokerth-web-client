@@ -137,7 +137,8 @@ ok(Array.isArray(S.myCards) && S.myCards.length === 2 && S.myCards[0] === null
 ok(S._cardKey === null && S._cardIV === null, 'crypto cartes init = null');
 ok(S.highestBet === 0 && S.minRaise === 0 && S.pot === 0 && S.collectedPot === 0, 'mises init = 0');
 ok(S.gameState === 0 && S.dealerPid === 0 && S.turnPid === 0
-   && S._lastSbPid === 0 && S._lastBbPid === 0, 'phase/positions init = 0');
+   && S._lastSbPid === 0 && S._lastBbPid === 0
+   && S._handSbPid === 0 && S._handBbPid === 0, 'phase/positions init = 0');
 
 // V9.3 — Identité / sièges / verrous
 ok(Array.isArray(S.seats) && S.seats.length === 0
@@ -206,7 +207,7 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    'pot', 'collectedPot', 'gameState', 'dealerPid', 'turnPid',
    '_actedStreet', '_roundEnded', '_boardDealing', '_inShowdown',
    '_allInCondition', '_lastActionPid',
-   '_lastSbPid', '_lastBbPid',
+   '_lastSbPid', '_lastBbPid', '_handSbPid', '_handBbPid',
    'seats', 'seatData', 'amInGame', 'myName', '_gameStarted', '_seatsFrozen',
    '_peakSeatCount',
    '_amSpectator', 'autoAction',

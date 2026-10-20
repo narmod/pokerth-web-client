@@ -105,6 +105,13 @@ ok(window._sdLosers.size === 0 && window._sdWinners.size === 0,
    'onHandStart : estompage/surbrillance showdown réinitialisés');
 ok(cardDing >= 1 || myDeal >= 0, 'onHandStart : effets de distribution déclenchés');
 
+// Blinds annoncés par le serveur (PlayersActionDone gameState 4 = SB, 5 = BB) :
+// mémorisés pour la main en cours, remis à zéro au HandStart suivant.
+ok(S._handSbPid === 0 && S._handBbPid === 0, 'onHandStart : blinds annoncés remis à zéro');
+M.onPlayersActionDone(subOf([[1, 0, 12], [2, 0, 9], [3, 0, 4], [4, 0, 0], [5, 0, 10], [6, 0, 2990], [7, 0, 10], [8, 0, 20]]));
+M.onPlayersActionDone(subOf([[1, 0, 12], [2, 0, 5], [3, 0, 5], [4, 0, 0], [5, 0, 20], [6, 0, 2980], [7, 0, 20], [8, 0, 20]]));
+ok(S._handSbPid === 9 && S._handBbPid === 5, 'onPlayersActionDone : SB/BB du serveur mémorisés');
+
 // Main suivante
 sub = subOf([[1, 0, 12],
   [2, 2, Proto.encode([[1, 0, 3], [2, 0, 40]])],

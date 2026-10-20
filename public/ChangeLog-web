@@ -1,3 +1,6 @@
+2026-10-20 version 2.1.10-web.198:
+- bugfix: in heads-up, the SB and BB pucks were swapped once a bigger table got down to two players: the dealer is now shown as small blind, as at the official tables
+
 2026-10-19 version 2.1.10-web.166:
 - improvement: on your first visit, the look the server picked for newcomers (palette, table, cards, seats, interface size, contrast, sound) is applied; anything you have already chosen yourself is never changed
 - bugfix: the default style picked by the server for newcomers was never applied on a first visit

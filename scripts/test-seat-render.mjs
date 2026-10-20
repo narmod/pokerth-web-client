@@ -107,6 +107,32 @@ try { M.renderSeatsImmediate(); } catch (e) { threw = e; }
 ok(!threw, 'renderSeatsImmediate : mode spectateur sans exception');
 S._amSpectator = false;
 
+// ── SB/BB en heads-up (rapport forum 20/10/2026) : la table a démarré à 4,
+// deux joueurs sont éliminés → seats[] garde 4 entrées. Heads-up = dealer SB,
+// l'autre BB (pas la règle 3+ qui inversait les pucks).
+S.seats = [9, 5, 11, 13];
+S.seatData = { 5: { money: 3000, bet: 0, active: true }, 9: { money: 2500, bet: 0, active: true },
+  11: { money: 0, bet: 0, active: false }, 13: { money: 0, bet: 0, gone: true } };
+S.dealerPid = 9; S._handSbPid = 0; S._handBbPid = 0;
+M.renderSeatsImmediate();
+ok(S._lastSbPid === 9 && S._lastBbPid === 5,
+   'heads-up dans une table de 4 : dealer = SB, l\'autre = BB (' + S._lastSbPid + '/' + S._lastBbPid + ')');
+S.dealerPid = 5;
+M.renderSeatsImmediate();
+ok(S._lastSbPid === 5 && S._lastBbPid === 9, 'heads-up : les blinds suivent le bouton');
+// 3 actifs : règle normale (SB = après dealer, BB = suivant).
+S.seatData[11] = { money: 800, bet: 0, active: true };
+S.dealerPid = 9;
+M.renderSeatsImmediate();
+ok(S._lastSbPid === 5 && S._lastBbPid === 11, '3 actifs : SB/BB après le dealer');
+// Annonce serveur (PlayersActionDone gameState 4/5) : prioritaire.
+S._handSbPid = 11; S._handBbPid = 9;
+M.renderSeatsImmediate();
+ok(S._lastSbPid === 11 && S._lastBbPid === 9, 'blinds annoncés par le serveur prioritaires');
+S._handSbPid = 0; S._handBbPid = 0;
+S.seatData = { 5: { money: 3000, bet: 0 }, 9: { money: 2500, bet: 50 },
+  11: { money: 1000, bet: 0, folded: true }, 13: { money: 4000, bet: 100 } };
+
 // Ponts window
 ok(window.renderSeatsImmediate === M.renderSeatsImmediate && window.renderSeats === M.renderSeats &&
    window.getPlayerName === M.getPlayerName && window.isBot === M.isBot,
