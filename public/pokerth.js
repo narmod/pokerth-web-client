@@ -5676,6 +5676,16 @@ const App = (() => {
     else el.scrollTop = 0; // le plus recent est en haut (liste inversee)
   }
   window._retranslateLog = renderLog;
+  // Vide le journal de partie (nouvelle partie — parite QML GameHandler::setGame,
+  // qui vide m_gameLogModel avec le chat). Vidage EN PLACE : S.actionLog est
+  // partage par reference (export, retraduction).
+  function clearGameLog() {
+    S.actionLog.length = 0;
+    renderLog(0);
+    var el = document.getElementById('g-log-body');
+    if (el && typeof window._liveReset === 'function') window._liveReset(el);
+  }
+  window.clearGameLog = clearGameLog;
   // Texte brut du journal (ordre chronologique) pour l'export.
   function _buildLogText() {
     return S.actionLog.map(function(fn){ var s; try { s = fn(); } catch (_e) { s = ''; } return s; }).join('\n');
@@ -12308,7 +12318,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.200'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.201'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

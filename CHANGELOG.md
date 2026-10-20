@@ -72,6 +72,10 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Game log emptied at every new game** (`web.201`) — `S.actionLog` (the game log box) was never reset either.
+  The same first-deal gate now calls `clearGameLog()` (`pokerth.js`, empties the array in place, re-renders,
+  resets the live-scroll anchor), like QML `GameHandler::setGame` (`m_gameLogModel.clear()`). A rejoin keeps it;
+  the `.pdb` hand history (`handlog.mjs`) is separate and unaffected.
 - **Game chat emptied at every new game** (`web.200`, forum report) — `#g-chat-msgs` was never cleared, so the
   messages of earlier games stayed above the new one. The first deal of a game (`GameStartInitial`, first-deal
   gate of `onGameStartInitial`) now empties it, like QML `GameHandler::setGame` (`m_chatLog.clear()`). Messages

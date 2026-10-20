@@ -1,3 +1,6 @@
+2026-10-20 version 2.1.10-web.201:
+- improvement: the game log also starts empty at every new game, as in the official client
+
 2026-10-20 version 2.1.10-web.200:
 - improvement: the game chat starts empty at every new game, as in the official client: messages from previous games no longer stay above it
 

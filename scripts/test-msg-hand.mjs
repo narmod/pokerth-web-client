@@ -74,16 +74,18 @@ S._preAction = 'fold'; S._preActionOpen = true;
 S._raiseMode = 0; S._raiseEvery = 0;
 
 // ── onGameStartInitial : ordre des sièges + partie démarrée
-let chatCleared = [];
+let chatCleared = [], logCleared = 0;
 window.clearChatPanel = (which) => { chatCleared.push(which); };
+window.clearGameLog = () => { logCleared++; };
 let sub = subOf([[1, 0, 12], [2, 0, 1],
   [3, 2, Proto.encode([[1, 0, 5], [1, 0, 9]])]]); // playerSeats packé... selon parseur
 try { M.onGameStartInitial(sub); } catch (e) { /* structure packée testée plus bas si besoin */ }
-ok(chatCleared.length === 1 && chatCleared[0] === 'game',
-   'onGameStartInitial : chat de partie vidé à la 1re donne (parité QML setGame)');
-chatCleared = [];
+ok(chatCleared.length === 1 && chatCleared[0] === 'game' && logCleared === 1,
+   'onGameStartInitial : chat et log de partie vidés à la 1re donne (parité QML setGame)');
+chatCleared = []; logCleared = 0;
 try { M.onGameStartInitial(sub); } catch (e) {}
-ok(chatCleared.length === 0, 'onGameStartInitial : chat conservé aux GameStartInitial suivants');
+ok(chatCleared.length === 0 && logCleared === 0,
+   'onGameStartInitial : chat et log conservés aux GameStartInitial suivants');
 // Quel que soit le détail du décodage des sièges, l'état « partie démarrée » doit être posé.
 ok(S._gameStarted === true, 'onGameStartInitial : partie marquée démarrée');
 ok(S.handNum === 0, 'onGameStartInitial : numéro de main inchangé (compté par HandStart)');
