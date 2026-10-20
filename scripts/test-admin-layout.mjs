@@ -593,7 +593,7 @@ ok(/title="removed from the catalogue"/.test(admin), 'a title no longer in the c
 // Render it against a fixture: the pieces are lifted out and run with a
 // series shaped like the proxy's, to check the maths and not only the text.
 {
-  const need = ['_musRank','_musDays','_musContext','_musChart','_musName','_stackChart','_lineNiceMax','_annEsc','_round1','_sLab','_perU',
+  const need = ['_musRank','_musDays','_musContext','_musChart','_musName','_stackChart','_niceAxis','_axLab','_isInt','_xTicks','_annEsc','_round1','_sLab','_perU',
                 '_musVoteCell','_musTrendWin','_musTrendBadge','_musVotedElsewhere','_langTrendStat'];
   // body() strips the header; here the whole function is needed to run it.
   const whole = n => { const h = admin.indexOf('function ' + n + '('); const b = body(admin, n); return b ? admin.slice(h, admin.indexOf(b, h) + b.length) : ''; };

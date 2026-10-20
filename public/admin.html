@@ -4235,12 +4235,40 @@
   // grille, labels de dates éclairciés (~7 max), points porteurs d'un title=
   // en bonus desktop. var() CSS ne se résout pas dans les attributs SVG →
   // tout passe par style= (piège connu).
-  function _lineNiceMax(m){
-    if(m<=4) return Math.max(1,m);
-    var p=Math.pow(10,Math.floor(Math.log(m)/Math.LN10));
-    var u=m/p;
-    var n=(u<=1?1:u<=2?2:u<=5?5:10)*p;
-    return n;
+  // Y axis with round steps (audit 2026-10-20, S1). The old top (1, 2, 5 x 10^n)
+  // was cut in four: 50 gave 0 · 13 · 25 · 38 · 50, a fractional top 0 · 0 · 1 · 1.
+  // The step is the smallest of 1, 2, 5 x 10^k (25, 250… from 10 up) that keeps
+  // the axis to five intervals at most; counts (int) never get a step under 1.
+  // Returns the top, the step, the number of intervals and the decimals to show.
+  function _niceAxis(m,int){
+    m=+m||0; if(!(m>0)) m=1;
+    var raw=m/5, k=Math.floor(Math.log(raw)/Math.LN10), best=0;
+    for(var e=k;e<=k+1;e++){
+      var p=Math.pow(10,e);
+      [1,2,2.5,5].forEach(function(u){
+        if(u===2.5 && e<1) return;
+        var st=u*p; if(int && st<1) return;
+        if(st>=raw-1e-9 && (!best || st<best)) best=st;
+      });
+    }
+    if(!best) best=int?1:Math.pow(10,k+1);
+    var n=Math.max(1,Math.ceil(m/best-1e-9)), dec=best>=1?0:Math.ceil(-Math.log(best)/Math.LN10-1e-9);
+    return {max:n*best, step:best, n:n, dec:dec};
+  }
+  function _axLab(ax,s){ var v=ax.step*s; return ax.dec?v.toFixed(ax.dec):String(Math.round(v)); }
+  function _isInt(vals){ return vals.every(function(v){ return (v||0)%1===0; }); }
+  // X labels, the same in every chart (S2): one in `step`, the last always,
+  // anchored inside the frame when it would spill over the right edge (« 10-2( »,
+  // « 16l »); a label too close before the last one is left out so they never collide.
+  function _xTicks(n,xAt,labs,H,W){
+    var step=Math.max(1,Math.ceil(n/7)), g='';
+    for(var i=0;i<n;i++){
+      if(i!==n-1 && (i%step!==0 || n-1-i<step)) continue;
+      var t=String(labs[i]==null?'':labs[i]), x=xAt(i), half=t.length*2.7, a='middle';
+      if(x+half>W-1){ x=W-1; a='end'; } else if(x-half<1){ x=1; a='start'; }
+      g+='<text x="'+x.toFixed(1)+'" y="'+(H-6)+'" text-anchor="'+a+'" style="fill:var(--text);font-size:9px">'+_annEsc(t)+'</text>';
+    }
+    return g;
   }
   // -- Petites statistiques de lecture ---------------------------------------
   // Une moyenne dit ou on en est, une pente dit ou on va, et r dit s'il faut y
@@ -4267,8 +4295,8 @@
     opt=opt||{};
     var col=opt.c||'#e0a03a', H=opt.H||170;
     var W=700,padL=32,padR=10,padT=16,padB=20;
-    var max=1; vals.forEach(function(v){ if((v||0)>max) max=v||0; });
-    max=_lineNiceMax(max);
+    var max=0; vals.forEach(function(v){ if((v||0)>max) max=v||0; });
+    var ax=_niceAxis(max,_isInt(vals)); max=ax.max;
     var iw=W-padL-padR, ih=H-padT-padB, slot=iw/n, bw=Math.max(3,slot*0.62);
     function Y(v){ return padT+(1-(v||0)/max)*ih; }
     function CX(i){ return padL+slot*i+slot/2; }
@@ -4280,10 +4308,10 @@
       g+='<rect x="'+hx.toFixed(1)+'" y="'+padT+'" width="'+hw.toFixed(1)+'" height="'+ih+'" style="fill:'+(opt.hiC||'#e0a03a')+';opacity:.10"/>';
       if(opt.hiLabel) g+='<text x="'+(hx+hw/2).toFixed(1)+'" y="'+(padT+9)+'" text-anchor="middle" style="fill:var(--text);font-size:9px;font-weight:700">'+_annEsc(opt.hiLabel)+'</text>';
     }
-    for(s2=0;s2<=4;s2++){
-      var vv=Math.round((max*s2)/4), yy=Y(vv);
+    for(s2=0;s2<=ax.n;s2++){
+      var yy=Y(ax.step*s2);
       g+='<line x1="'+padL+'" y1="'+yy.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+yy.toFixed(1)+'" style="stroke:rgba(127,127,127,.18);stroke-width:1"/>'
-        +'<text x="'+(padL-5)+'" y="'+(yy+3).toFixed(1)+'" text-anchor="end" style="fill:var(--text);font-size:9px;font-variant-numeric:tabular-nums">'+vv+'</text>';
+        +'<text x="'+(padL-5)+'" y="'+(yy+3).toFixed(1)+'" text-anchor="end" style="fill:var(--text);font-size:9px;font-variant-numeric:tabular-nums">'+_axLab(ax,s2)+'</text>';
     }
     vals.forEach(function(v,i){
       var y=Y(v), h=Math.max(1,padT+ih-y);
@@ -4291,11 +4319,7 @@
       g+='<rect x="'+(CX(i)-bw/2).toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="2" style="fill:'+bc+'"><title>'+_annEsc(labels[i])+': '+(v||0)+'</title></rect>';
       if(n<=20) g+='<text x="'+CX(i).toFixed(1)+'" y="'+(y-4).toFixed(1)+'" text-anchor="middle" style="fill:var(--text);font-size:8.5px;font-variant-numeric:tabular-nums">'+(v||0)+'</text>';
     });
-    var step=Math.max(1,Math.ceil(n/7));
-    for(var i2=0;i2<n;i2++){
-      if(i2%step!==0&&i2!==n-1) continue;
-      g+='<text x="'+CX(i2).toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle" style="fill:var(--text);font-size:9px">'+_annEsc((opt.xl||labels)[i2])+'</text>';
-    }
+    g+=_xTicks(n,CX,opt.xl||labels,H,W);
     if(opt.ref!==undefined && opt.ref<=max){
       var ry=Y(opt.ref);
       g+='<line x1="'+padL+'" y1="'+ry.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+ry.toFixed(1)+'" style="stroke:var(--cream);stroke-width:1.2;stroke-dasharray:5 4;opacity:.65"/>';
@@ -4457,16 +4481,16 @@
     var W=700,padL=32,padR=10,padT=16,padB=20;
     var tot=labels.map(function(_,i){ var t=0; series.forEach(function(s){ t+=s.vals[i]||0; }); return t; });
     var prev=opt.prevBy ? labels.map(function(_,i){ var t=0; series.forEach(function(s){ var pv=opt.prevBy[s.k]; t+=(pv&&pv[i])||0; }); return t; }) : null;
-    var max=1; tot.forEach(function(t){ if(t>max) max=t; }); if(prev) prev.forEach(function(t){ if(t>max) max=t; });
-    max=_lineNiceMax(max);
+    var max=0; tot.forEach(function(t){ if(t>max) max=t; }); if(prev) prev.forEach(function(t){ if(t>max) max=t; });
+    var ax=_niceAxis(max,_isInt(tot.concat(prev||[]))); max=ax.max;
     var iw=W-padL-padR, ih=H-padT-padB, slot=iw/n, bw=Math.max(3,slot*0.62);
     function Y(v){ return padT+(1-(v||0)/max)*ih; }
     function CX(i){ return padL+slot*i+slot/2; }
     var g='', s2;
-    for(s2=0;s2<=4;s2++){
-      var vv=Math.round((max*s2)/4), yy=Y(vv);
+    for(s2=0;s2<=ax.n;s2++){
+      var yy=Y(ax.step*s2);
       g+='<line x1="'+padL+'" y1="'+yy.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+yy.toFixed(1)+'" style="stroke:rgba(127,127,127,.18);stroke-width:1"/>'
-        +'<text x="'+(padL-5)+'" y="'+(yy+3).toFixed(1)+'" text-anchor="end" style="fill:var(--text);font-size:9px;font-variant-numeric:tabular-nums">'+vv+'</text>';
+        +'<text x="'+(padL-5)+'" y="'+(yy+3).toFixed(1)+'" text-anchor="end" style="fill:var(--text);font-size:9px;font-variant-numeric:tabular-nums">'+_axLab(ax,s2)+'</text>';
     }
     labels.forEach(function(lab,i){
       var acc=0;
@@ -4478,11 +4502,7 @@
       });
       if(tot[i] && n<=20 && !prev) g+='<text x="'+CX(i).toFixed(1)+'" y="'+(Y(tot[i])-4).toFixed(1)+'" text-anchor="middle" style="fill:var(--text);font-size:8.5px;font-variant-numeric:tabular-nums">'+tot[i]+'</text>';
     });
-    var step=Math.max(1,Math.ceil(n/7));
-    for(var i2=0;i2<n;i2++){
-      if(i2%step!==0&&i2!==n-1) continue;
-      g+='<text x="'+CX(i2).toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle" style="fill:var(--text);font-size:9px">'+_annEsc(labels[i2])+'</text>';
-    }
+    g+=_xTicks(n,CX,labels,H,W);
     if(prev) g+='<polyline points="'+prev.map(function(v,i){ return CX(i).toFixed(1)+','+Y(v).toFixed(1); }).join(' ')+'" style="fill:none;stroke:var(--cream);stroke-width:1.6;stroke-dasharray:5 5;opacity:.7"/>';
     return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="stacked daily bars'+(prev?', with the previous period dashed':'')+'">'+g+'</svg>';
   }
@@ -4490,23 +4510,18 @@
     var n=labels.length; if(!n) return '';
     H=H||170;
     var W=700,padL=38,padR=10,padT=10,padB=20;
-    var max=1; lines.forEach(function(l){ l.vals.forEach(function(v){ if((v||0)>max) max=v||0; }); });
-    max=_lineNiceMax(max);
+    var max=0, all=[]; lines.forEach(function(l){ l.vals.forEach(function(v){ all.push(v); if((v||0)>max) max=v||0; }); });
+    var ax=_niceAxis(max,_isInt(all)); max=ax.max;
     var iw=W-padL-padR, ih=H-padT-padB;
     function X(i){ return n===1?padL+iw/2:padL+(i*iw)/(n-1); }
     function Y(v){ return padT+(1-(v||0)/max)*ih; }
     var g='';
-    var steps=4;
-    for(var s=0;s<=steps;s++){
-      var vv=Math.round((max*s)/steps), yy=Y(vv);
+    for(var s=0;s<=ax.n;s++){
+      var yy=Y(ax.step*s);
       g+='<line x1="'+padL+'" y1="'+yy.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+yy.toFixed(1)+'" style="stroke:rgba(127,127,127,.18);stroke-width:1"/>'
-        +'<text x="'+(padL-5)+'" y="'+(yy+3).toFixed(1)+'" text-anchor="end" style="fill:var(--text);font-size:9px;font-variant-numeric:tabular-nums">'+vv+'</text>';
+        +'<text x="'+(padL-5)+'" y="'+(yy+3).toFixed(1)+'" text-anchor="end" style="fill:var(--text);font-size:9px;font-variant-numeric:tabular-nums">'+_axLab(ax,s)+'</text>';
     }
-    var step=Math.max(1,Math.ceil(n/7));
-    for(var i=0;i<n;i++){
-      if(i%step!==0&&i!==n-1) continue;
-      g+='<text x="'+X(i).toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle" style="fill:var(--text);font-size:9px">'+_annEsc(labels[i])+'</text>';
-    }
+    g+=_xTicks(n,X,labels,H,W);
     lines.forEach(function(l){
       var pts=l.vals.map(function(v,i){ return X(i).toFixed(1)+','+Y(v).toFixed(1); }).join(' ');
       // Une droite de tendance n'est pas une mesure : trait fin, pointille, et

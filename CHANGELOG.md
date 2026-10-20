@@ -72,6 +72,13 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Statistics charts: round axis steps, last label inside the frame** (`web.209`, audit of 2026-10-20, S1–S3) —
+  the top of every line, bar and stacked chart (1, 2, 5 × 10ⁿ) was cut in four: 50 read 0 · 13 · 25 · 38 · 50, 10 read
+  0 · 3 · 5 · 8 · 10, a ratio 0 · 0 · 1 · 1 · 1, and Daily visits topped at 500 for ~300. `_niceAxis()` now picks the
+  smallest round step (1, 2, 5 × 10ⁿ, and 25, 250… from 10 up) that keeps the axis to five intervals, never under 1
+  for counts, with decimals for ratios. `_xTicks()` draws the X labels of the three charts: the last one is anchored
+  inside the right edge (it was cut: « 10-2( », « 16l ») and a label too close before it is left out. Guarded in
+  `scripts/test-admin-charts.mjs`.
 - **Statistics › Summary: a past range keeps its last day** (`web.208`, audit of 2026-10-20, B6) — the mean, slope
   and halves of « Visits / day », « Returning / day » and the Bottom line leave out the day in progress so that it
   does not pull every reading down each morning; a past custom range has none, yet lost its last day too (10 → 16 Oct

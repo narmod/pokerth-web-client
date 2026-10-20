@@ -64,7 +64,7 @@ ok(/_annEsc\(l\.n\|\|l\.k\)/.test(leg), 'labels are escaped — some of them are
 // -- Run it -----------------------------------------------------------------
 const need = ['_chartSig', '_chartMount', '_chartVisible', '_chartLegend', '_chartDraw',
   '_chartIndex', '_chartCentre', '_chartHide', '_chartRead',
-  '_lineChart', '_stackChart', '_barChart', '_mean', '_lineNiceMax', '_annEsc', '_round1'];
+  '_lineChart', '_stackChart', '_barChart', '_mean', '_niceAxis', '_axLab', '_isInt', '_xTicks', '_annEsc', '_round1'];
 ok(!need.some(x => !whole(x)), 'every chart helper is liftable');
 const env = grab(/var CHART_W=700;/) + grab(/var CHART_GEO=\{[^;]*;/) + 'var _chartUid=0,_charts={};';
 
@@ -170,6 +170,27 @@ ok(/\.chartro i\{[^}]*min-width:0[^}]*text-overflow:ellipsis/.test(admin), 'a lo
 ok(/ro\.style\.left='0px';\s*ro\.style\.display='block';/.test(body(admin, '_chartRead')),
   'the bubble is measured at full width before it is placed');
 ok(/<i>'\+_annEsc\(l\.n\|\|l\.k\)\+'<\/i>/.test(body(admin, '_chartRead')), 'the label sits in its own element, value beside it');
+
+// -- Round axis steps and labels that stay in the frame (audit 2026-10-20, S1, S2)
+{
+  const ax = new Function(whole('_annEsc') + whole('_niceAxis') + whole('_axLab') + whole('_isInt') + whole('_xTicks') +
+    '\nreturn { _niceAxis, _axLab, _isInt, _xTicks };')();
+  const ticks = (m, int) => { const a = ax._niceAxis(m, int), t = []; for (let i = 0; i <= a.n; i++) t.push(ax._axLab(a, i)); return t.join(' '); };
+  ok(ticks(50, true) === '0 10 20 30 40 50', 'a top of 50 reads 0 10 20 30 40 50, not 0 13 25 38 50 (' + ticks(50, true) + ')');
+  ok(ticks(10, true) === '0 2 4 6 8 10' && ticks(3, true) === '0 1 2 3', 'small counts step by whole units');
+  ok(ticks(302, true) === '0 100 200 300 400', 'the top stays close to the data (Daily visits: 400, not 500)');
+  ok(ticks(1.6, false) === '0.0 0.5 1.0 1.5 2.0', 'a ratio gets decimal steps, not 0 0 1 1 1');
+  ok(ticks(0, true) === '0 1', 'nothing to draw still gives an axis');
+  ok([7, 13, 29, 110, 519, 1003, 12345].every(m => { const a = ax._niceAxis(m, true); return a.n <= 5 && a.max >= m && a.step >= 1; }),
+    'never more than five intervals, always above the data');
+  const lab = Array.from({ length: 14 }, (_, i) => '10-' + String(7 + i).padStart(2, '0'));
+  const svg = ax._xTicks(14, i => 38 + i * 652 / 13, lab, 170, 700);
+  const last = /<text x="([\d.]+)" y="164" text-anchor="(\w+)"[^>]*>10-20<\/text>/.exec(svg);
+  ok(last && last[2] === 'end' && +last[1] <= 699, 'the last label is anchored inside the right edge');
+  ok(!/>10-19</.test(svg), 'and the label just before it is left out rather than collide');
+  ok(/>10-07</.test(svg) && (svg.match(/<text/g) || []).length === 7, 'one label in two (07 09 11 13 15 17), plus the last');
+  ok(!/_lineNiceMax/.test(admin), 'no chart cuts its top in four any more');
+}
 
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);
