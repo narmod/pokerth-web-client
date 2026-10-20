@@ -190,6 +190,12 @@ ok(/<i>'\+_annEsc\(l\.n\|\|l\.k\)\+'<\/i>/.test(body(admin, '_chartRead')), 'the
   ok(!/>10-19</.test(svg), 'and the label just before it is left out rather than collide');
   ok(/>10-07</.test(svg) && (svg.match(/<text/g) || []).length === 7, 'one label in two (07 09 11 13 15 17), plus the last');
   ok(!/_lineNiceMax/.test(admin), 'no chart cuts its top in four any more');
+  // -- New devices per day: averages in the header, lines under the figures (S5)
+  const bc = body(admin, '_barChart');
+  ok(!/>avg '/.test(bc) && bc.indexOf('(opt.segs||[]).forEach') < bc.indexOf('vals.forEach(function(v,i)'),
+    'the per-half lines carry no « avg » label and are drawn under the bars and their figures');
+  ok(/paint-order:stroke;stroke:var\(--panel\)/.test(bc), 'figures keep a halo in the card colour where a line runs behind');
+  ok(/: 'avg '\+_round1\(f\)\+' \\u2192 '\+_round1\(l\)\+' per '\+U\.one\+' \\u00b7 '/.test(admin), 'both averages are in the header note');
   // -- Readable on a phone (S4): text scaled by k, fewer x labels so they never touch
   const k = 2.35, svgM = ax._xTicks(14, i => 38 * k + i * (700 - 48 * k) / 13, lab, 170 * k, 700, k);
   const xs = [...svgM.matchAll(/<text x="([\d.]+)"[^>]*text-anchor="(\w+)"[^>]*font-size:([\d.]+)px">([^<]+)</g)];

@@ -1378,7 +1378,7 @@
         </div>
       <div class="card">
           <div class="boardhead"><h2>New devices per day</h2><span id="trafNewNote" class="headnote"></span></div>
-          <p class="muted xpl">A device is counted once, the first time it is ever seen. The horizontal marks are the average over each half of the window — the comparison acquisition is actually judged on.</p>
+          <p class="muted xpl">A device is counted once, the first time it is ever seen. The horizontal marks are the average over each half of the window — the comparison acquisition is actually judged on; their values are in the header.</p>
           <div id="trafNew" class="barchart"><div class="empty">Loading…</div></div>
         </div>
       <div class="card">
@@ -4318,23 +4318,25 @@
       g+='<line x1="'+padL+'" y1="'+yy.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+yy.toFixed(1)+'" style="stroke:rgba(127,127,127,.18);stroke-width:1"/>'
         +'<text x="'+(padL-5*k).toFixed(1)+'" y="'+(yy+3*k).toFixed(1)+'" text-anchor="end" style="fill:var(--text);font-size:'+(9*k).toFixed(2)+'px;font-variant-numeric:tabular-nums">'+_axLab(ax,s2)+'</text>';
     }
+    // Per-half averages (S5): drawn under the bars and their figures, which they
+    // used to cross; their values are in the chart's header note, not on it.
+    (opt.segs||[]).forEach(function(sg){
+      var part=vals.slice(sg.from,sg.to+1); if(!part.length) return;
+      var y=Y(_mean(part));
+      g+='<line x1="'+(CX(sg.from)-slot/2+2).toFixed(1)+'" y1="'+y.toFixed(1)+'" x2="'+(CX(sg.to)+slot/2-2).toFixed(1)+'" y2="'+y.toFixed(1)+'" style="stroke:var(--cream);stroke-width:'+(1.5*k).toFixed(2)+';opacity:.75"/>';
+    });
     vals.forEach(function(v,i){
       var y=Y(v), h=Math.max(1,padT+ih-y);
       var bc=opt.colFn? opt.colFn(v,i) : col;
       g+='<rect x="'+(CX(i)-bw/2).toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="2" style="fill:'+bc+'"><title>'+_annEsc(labels[i])+': '+(v||0)+'</title></rect>';
-      if(n<=20) g+='<text x="'+CX(i).toFixed(1)+'" y="'+(y-4*k).toFixed(1)+'" text-anchor="middle" style="fill:var(--text);font-size:'+(8.5*k).toFixed(2)+'px;font-variant-numeric:tabular-nums">'+(v||0)+'</text>';
+      // A halo in the card colour keeps a figure sharp where an average line runs behind it.
+      if(n<=20) g+='<text x="'+CX(i).toFixed(1)+'" y="'+(y-4*k).toFixed(1)+'" text-anchor="middle" style="fill:var(--text);font-size:'+(8.5*k).toFixed(2)+'px;font-variant-numeric:tabular-nums;paint-order:stroke;stroke:var(--panel);stroke-width:'+(3*k).toFixed(1)+';stroke-linejoin:round">'+(v||0)+'</text>';
     });
     g+=_xTicks(n,CX,opt.xl||labels,H,W,k);
     if(opt.ref!==undefined && opt.ref<=max){
       var ry=Y(opt.ref);
       g+='<line x1="'+padL+'" y1="'+ry.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+ry.toFixed(1)+'" style="stroke:var(--cream);stroke-width:'+(1.2*k).toFixed(2)+';stroke-dasharray:'+(5*k).toFixed(1)+' '+(4*k).toFixed(1)+';opacity:.65"/>';
     }
-    (opt.segs||[]).forEach(function(sg){
-      var part=vals.slice(sg.from,sg.to+1); if(!part.length) return;
-      var av=_mean(part), y=Y(av);
-      g+='<line x1="'+(CX(sg.from)-slot/2+2).toFixed(1)+'" y1="'+y.toFixed(1)+'" x2="'+(CX(sg.to)+slot/2-2).toFixed(1)+'" y2="'+y.toFixed(1)+'" style="stroke:var(--cream);stroke-width:'+(1.5*k).toFixed(2)+';opacity:.75"/>'
-        +'<text x="'+CX(Math.round((sg.from+sg.to)/2)).toFixed(1)+'" y="'+(y-4*k).toFixed(1)+'" text-anchor="middle" style="fill:var(--cream);font-size:'+(9*k).toFixed(2)+'px;font-weight:700">avg '+_round1(av)+'</text>';
-    });
     return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="daily bars">'+g+'</svg>';
   }
   // ── Graphiques interactifs ─────────────────────────────────────────────
@@ -6048,7 +6050,7 @@
       var f=_mean(nwv.slice(0,half)), l=_mean(nwv.slice(half));
       nn.textContent = n<2 ? 'a single '+U.one+': no halves to compare'
         : (!f && !l) ? 'no new device in the window'
-        : (!f ? 'first half was empty' : (l>=f? 'up ':'down ')+_round1(l/f)+'x the first half');
+        : 'avg '+_round1(f)+' \u2192 '+_round1(l)+' per '+U.one+' \u00b7 '+(!f ? 'first half was empty' : (l>=f? 'up ':'down ')+_round1(l/f)+'x the first half');
     }
     var bl=$('trafBottom');
     if(bl){

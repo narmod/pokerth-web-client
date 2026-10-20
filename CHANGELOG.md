@@ -72,6 +72,10 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Statistics › Audience › New devices per day: averages in the header** (`web.211`, audit of 2026-10-20, S5) — the
+  « avg 127.2 » labels of the two per-half lines sat on the bar figures and the lines crossed them. The labels are gone;
+  the header note gives both (« avg 127.2 → 135.9 per day · up 1.1x the first half »), the lines are drawn under the
+  bars, and bar figures keep a halo in the card colour. Guarded in `scripts/test-admin-charts.mjs`.
 - **Statistics charts readable on a phone** (`web.210`, audit of 2026-10-20, S4) — the charts are 700 units wide and
   stretched to their box: on a phone (~330 px) the 9-unit text came out at about 4 px and a chart was ~80 px tall; the
   half-width ones (Time of day, Active days) were ~7 px even on a desktop. `_chartDraw()` now measures the box and
