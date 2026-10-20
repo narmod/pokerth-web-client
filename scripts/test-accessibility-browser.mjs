@@ -376,8 +376,11 @@ async function waitForStableTableLayout(page) {
       const current = JSON.stringify(values);
       if (current !== prior) stableSince = now;
       prior = current;
-      if (now - stableSince >= 180) resolve();
-      else if (now - started >= 2000) reject(new Error('table layout did not stabilize within 2 seconds'));
+      // 400 ms quiet / 6 s cap (were 180 ms / 2 s): the table re-fits on
+      // debounced timers, and on a loaded machine one landed after a 180 ms
+      // quiet spell (card width read at 105 instead of 145 after the loupe).
+      if (now - stableSince >= 400) resolve();
+      else if (now - started >= 6000) reject(new Error('table layout did not stabilize within 6 seconds'));
       else requestAnimationFrame(sample);
     };
     requestAnimationFrame(sample);
@@ -467,9 +470,17 @@ async function turnCueOutcome(page) {
 async function outboundSizeChangeTraffic(page, before) {
   return page.evaluate(async (start) => {
     const { MSG } = await import('/modules/net/messages.mjs');
+    // Background traffic that no control causes is left out: ResetTimeout (real
+    // input, msg-social.mjs) and the connection watchdog's probe, which a table
+    // sends after 5 s without a server frame (net/watchdog.mjs) — a long check
+    // on a silent fixture crosses that line.
+    const { buildProbe } = await import('/modules/net/watchdog.mjs');
+    const probe = Array.from(buildProbe()).join(',');
     return window.WebSocket.instance.sent.slice(start)
       .filter((frame) => frame instanceof ArrayBuffer)
-      .map((frame) => MSG.parse(new Uint8Array(frame).slice(4)).type)
+      .map((frame) => new Uint8Array(frame).slice(4))
+      .filter((payload) => Array.from(payload).join(',') !== probe)
+      .map((payload) => MSG.parse(payload).type)
       .filter((type) => type !== MSG.T.ResetTimeout);
   }, before);
 }
