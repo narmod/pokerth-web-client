@@ -223,7 +223,31 @@ function bluff(c) {
   return s;
 }
 
-const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins, hilo, bluff };
+function pokerdrop(c) {
+  let s = feltBg(c, 'pdf');
+  const x0 = 92, y0 = 30, cw = 14, ch = 17, g = 2;
+  s += '<rect x="' + (x0 - 4) + '" y="' + (y0 - 4) + '" width="' + (7 * cw + 6 * g + 8) + '" height="' + (6 * ch + 5 * g + 8) + '" rx="5" fill="rgba(0,0,0,.24)" stroke="rgba(216,178,90,.45)"/>';
+  // Cards by column, from the bottom: a gold line of five across the bottom row.
+  const cols = [[['9', 'h'], ['3', 'c']], [['T', 's'], ['K', 'd'], ['2', 'h']], [['J', 'h'], ['5', 's']], [['Q', 'd'], ['8', 'c'], ['4', 'h'], ['A', 's']],
+    [['K', 'c'], ['7', 'd']], [['6', 's']], []];
+  for (let k = 0; k < 7; k++) for (let r = 0; r < 6; r++) {
+    const x = x0 + k * (cw + g), y = y0 + (5 - r) * (ch + g), p = cols[k][r];
+    s += p ? card(x, y, cw, p[0] === 'T' ? '10' : p[0], p[1])
+      : '<rect x="' + x + '" y="' + y + '" width="' + cw + '" height="' + ch + '" rx="2" fill="rgba(0,0,0,.2)" stroke="rgba(255,255,255,.1)"/>';
+  }
+  const by = y0 + 5 * (ch + g) + ch / 2;
+  s += '<path d="M' + (x0 + cw / 2) + ' ' + by + ' H' + (x0 + 4 * (cw + g) + cw / 2) + '" stroke="#f0c75e" stroke-width="3" stroke-linecap="round" opacity=".8"/>';
+  s += '<text x="' + (x0 + 2 * (cw + g) + cw / 2) + '" y="' + (by - 13) + '" font-size="9" ' + TXT + ' text-anchor="middle" fill="#f5d77a">+12</text>';
+  // The card falling into the sixth column.
+  const fx = x0 + 5 * (cw + g);
+  s += '<path d="M' + (fx + 4) + ' 6 V18 M' + (fx + 10) + ' 4 V16" stroke="' + c.gold + '" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>';
+  s += card(fx, 10, cw, 'A', 'h');
+  s += card(20, 52, 24, 'J', 's') + card(48, 52, 24, '9', 'd');
+  s += back(254, 18, 20) + back(278, 18, 20);
+  return s + ace(278, 128, 15, 'wave', limbOf(c));
+}
+
+const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins, hilo, bluff, pokerdrop };
 
 /** The cover picture of game `id` for the light or dark theme. */
 export function art(id, light) {

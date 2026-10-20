@@ -41,6 +41,7 @@ export const GAMES = [
   { id: 'whowins', unlock: { trophies: 21 }, nameKey: 'wwName', icon: '⚖️', rulesKey: 'wwRules', aspect: [0.6, 2.2], load: () => import('./whowins.mjs') },
   { id: 'hilo', unlock: { trophies: 24 }, nameKey: 'hlName', icon: '↕️', rulesKey: 'hlRules', aspect: [0.6, 2.2], load: () => import('./hilo.mjs') },
   { id: 'bluff', unlock: { trophies: 27 }, nameKey: 'blName', icon: '🎭', rulesKey: 'blRules', aspect: [0.6, 2.2], load: () => import('./bluff.mjs') },
+  { id: 'pokerdrop', unlock: { trophies: 30 }, nameKey: 'pdName', icon: '⬇️', rulesKey: 'pdRules', aspect: [0.6, 2.2], load: () => import('./pokerdrop.mjs') },
 ];
 /**
  * Would game `g` be open in the future Arcade mode? have = { count, owned }:

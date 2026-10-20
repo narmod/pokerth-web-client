@@ -1,3 +1,6 @@
+2026-10-20 version 2.1.10-web.223:
+- new: Poker Drop in the Ace's arcade: drop your cards in a 7 × 6 grid, five in a row make a poker hand — against the Ace, with a friend on the same screen or in the daily challenge, on points or in sudden death
+
 2026-10-20 version 2.1.10-web.202:
 - bugfix: after the connection came back on its own (computer waking up, network change), you could be removed from the table for inactivity about 20 minutes later even while playing and after answering the warning
 

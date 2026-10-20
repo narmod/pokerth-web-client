@@ -32,6 +32,17 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Added
+- **Poker Drop in the arcade** (`web.223`) — `games/pokerdrop.mjs` (« Puissance Poker » in French): an upright
+  7 × 6 grid, a card dropped in a column falls to the lowest free cell; the cards belong to no one, each player
+  holds two face up, plays one and draws. Every line of five (across, up, both diagonals: 44 lines) is a poker
+  hand scored by whoever fills it (pair 1 … royal flush 150), the best line of each direction counting.
+  Opponents: the Ace (`aceMove()`: what a drop scores minus the best reply the opponent's two cards allow, plus
+  the promise of the lines, with an occasional slip), two players on one screen (a coloured mark on each card
+  dropped), or the daily challenge alone (the same deck for everyone on a UTC day, its best kept per day).
+  Rules: Points, or Sudden death — the first straight or better wins at once (a full house, tried first, came
+  up in about 10 % of simulated games). The landing cell and what the drop would score are shown before the
+  drop. Pure rules in `games/pokerdrop-rules.mjs` (unit-tested); cover picture; secret trophy « Poker Drop » for
+  beating the Ace with 40 points or more; 20 new keys in 83 languages.
 - **Poker odds calculator on `/poker-odds`** (`web.221`) — pick your two cards, the board (flop, turn, river) and
   either an opponent's hand or 1–9 random opponents: win / tie / lose and the distribution of your final hand.
   Exact enumeration whenever the deals fit (always heads-up against a known hand: up to 1,712,304 boards; one

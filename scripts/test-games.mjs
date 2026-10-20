@@ -61,7 +61,7 @@ ok(NAME_KEYS.length === 10 && MULT.length === 10, 'ten categories');
 
 console.log('secret word');
 const { art } = await import('../public/modules/games/art.mjs');
-for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker', 'whowins', 'hilo', 'bluff']) {
+for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker', 'whowins', 'hilo', 'bluff', 'pokerdrop']) {
   const d = art(id, false), l = art(id, true);
   const ids = [...d.matchAll(/id="([^"]+)"/g)].map((m) => m[1]), idsL = [...l.matchAll(/id="([^"]+)"/g)].map((m) => m[1]);
   ok(/^<svg[^>]*viewBox="0 0 320 140"/.test(d) && d !== l && ids.every((x) => idsL.indexOf(x) < 0), id + ': a cover picture, one for each theme, ids that do not clash');
@@ -78,18 +78,22 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'wwName', 'wwHint', 'wwSplit', 'wwTooSlow', 'wwRules', 'ach_whowins', 'ach_whowins_d', 'gmAgain',
   'hlName', 'hlHint', 'hlHigher', 'hlLower', 'hlCash', 'hlPot', 'hlRules', 'ach_hilo', 'ach_hilo_d',
   'blName', 'blHint', 'blBets', 'blBluff', 'blTells', 'blChips', 'blRules', 'ach_bluff', 'ach_bluff_d',
+  'pdName', 'pdHint', 'pdVsAce', 'pdTwo', 'pdPoints', 'pdSudden', 'pdSuddenGoal', 'pdYou', 'pdAce', 'pdPlayer', 'pdYourTurn', 'pdAceTurn',
+  'pdTurn', 'pdYouWin', 'pdAceWins', 'pdWins', 'pdTie', 'pdRules', 'ach_pdrop', 'ach_pdrop_d',
   'gmTitle'];
 let missing = [], badRecord = [];
 for (const f of files) {
   const { strings } = await import(path.join(langDir, f));
   for (const k of KEYS) if (typeof strings[k] !== 'string' || !strings[k].trim()) missing.push(f + ':' + k);
   if (strings.arRecord && strings.arRecord.indexOf('{n}') < 0) badRecord.push(f);
+  for (const k of ['pdPlayer', 'pdTurn', 'pdWins']) if (strings[k] && strings[k].indexOf('{n}') < 0) badRecord.push(f + ':' + k);
+  if (strings.pdRules && strings.pdRules.split('\n').length !== 7) badRecord.push(f + ':pdRules lines');
   const tr = (k) => strings[k] || k;
   if (gameForNick(strings.gameWordAce, tr) !== 'arcade') missing.push(f + ': own word not recognised');
   if (gameForNick('mascot', tr) !== 'arcade') missing.push(f + ': English word not recognised');
 }
 ok(missing.length === 0, 'every language has the Ace Runner strings and a working word' + (missing.length ? ' — ' + missing.slice(0, 6).join(', ') : ''));
-ok(badRecord.length === 0, 'arRecord keeps {n}' + (badRecord.length ? ' — ' + badRecord.join(', ') : ''));
+ok(badRecord.length === 0, 'arRecord, pdPlayer, pdTurn, pdWins keep {n}, pdRules has 7 lines' + (badRecord.length ? ' — ' + badRecord.join(', ') : ''));
 const fr = (k) => ({ gameWordAce: 'mascotte' })[k] || k;
 ok(gameForNick('  MaScOtTe ', fr) === 'arcade', 'case and spaces ignored');
 ok(gameForNick('Mascóte', (k) => ({ gameWordAce: 'mascote' })[k] || k) === 'arcade', 'accents ignored');
@@ -176,6 +180,26 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
   ok(reg.unlocked(house, { count: 12, owned: new Set() }) && !reg.unlocked(house, { count: 11, owned: new Set() })
     && reg.unlocked({ unlock: { trophy: 'x' } }, { count: 0, owned: new Set(['x']) }) && !reg.unlocked({ unlock: { trophy: 'x' } }, { count: 30, owned: new Set() }),
     'unlocked(): a count of trophies, or one trophy in particular');
+  // Poker Drop: the grid, its lines, a drop's score, the Ace's play.
+  const P = await import('../public/modules/games/pokerdrop-rules.mjs');
+  ok(P.WINDOWS.length === 44 && P.WINDOWS.every((w) => w.cells.length === 5), 'Poker Drop: 44 lines of five on the 7 × 6 grid (' + P.WINDOWS.length + ')');
+  const pg = P.emptyGrid();
+  ok(P.dropRow(pg, 3) === 0 && P.openCols(pg).length === 7, 'Poker Drop: a card falls to the bottom row of an empty column');
+  // Bottom row: ♠ 10 J Q K, the A♠ dropped in the fifth column fills a royal flush.
+  [c(10, 2), c(11, 2), c(12, 2), c(13, 2)].forEach((n, i) => { pg[P.cellOf(0, i)] = n; });
+  const sd = P.scoreDrop(pg, P.cellOf(0, 4), c(14, 2));
+  ok(sd.points === 150 && sd.cat === 9 && sd.lines.length === 1 && sd.lines[0].dir === 0, 'Poker Drop: filling a royal flush across scores 150');
+  ok(P.scoreDrop(pg, P.cellOf(0, 4), c(2, 0)).points === 0 && P.scoreDrop(pg, P.cellOf(0, 5), c(14, 2)).lines.length === 0,
+    'Poker Drop: a high card scores 0, a line with a gap is not full');
+  for (let r = 0; r < 6; r++) pg[P.cellOf(r, 6)] = 40 + r;
+  ok(P.dropRow(pg, 6) === -1 && P.openCols(pg).indexOf(6) < 0, 'Poker Drop: a full column takes no more card');
+  const mv = P.aceMove(pg, [c(2, 0), c(14, 2)], [c(3, 1), c(4, 1)], { level: 2, rnd: rng('pd') });
+  ok(mv && mv.col === 4 && mv.k === 1, 'Poker Drop: the Ace takes the royal flush when it is there');
+  const blockG = P.emptyGrid();
+  [c(5, 1), c(6, 1), c(7, 1), c(8, 1)].forEach((n, i) => { blockG[P.cellOf(0, i)] = n; });
+  const mvB = P.aceMove(blockG, [c(2, 0), c(13, 3)], [c(9, 1), c(3, 2)], { level: 2, sudden: true, rnd: rng('pd2') });
+  ok(mvB && mvB.col === 4, 'Poker Drop: in sudden death the Ace blocks the straight flush the opponent holds');
+  ok(P.SCORE.length === 10 && P.SCORE[9] === 150 && P.SUDDEN_CAT === 4, 'Poker Drop: the scale, sudden death at a straight');
   ok(same > 80 && splits > 2 && early === 0, 'Who Wins?: harder levels bring same-kind showdowns (' + same + '/200) and split pots (' + splits + '), none at first');
 }
 

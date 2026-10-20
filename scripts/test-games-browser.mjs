@@ -69,7 +69,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   }));
   ok(st.open && st.ace && st.page && st.title === 'Mini-jeux', label + ': the mini-games page opens with the Ace');
   ok(st.back && st.menu, label + ': with the header of the other pages (back, ⚙ menu)');
-  const ALL = ['Ace Runner', 'Château de cartes', 'Poker Solitaire', 'Vidéo Poker', 'Qui gagne ?', 'Plus haut / Plus bas', 'Le Bluff de l\'As'];
+  const ALL = ['Ace Runner', 'Château de cartes', 'Poker Solitaire', 'Vidéo Poker', 'Qui gagne ?', 'Plus haut / Plus bas', 'Le Bluff de l\'As', 'Puissance Poker'];
   ok(ALL.every((n) => st.tiles.indexOf(n) >= 0) && st.shelves === 0 && st.tiles.length === ALL.length, label + ': it lists the games, no category (' + st.tiles.join(', ') + ')');
   ok(st.arts === st.tiles.length, label + ': every game has its picture (' + st.arts + ')');
   ok(st.nick === 'Narmod' && st.stored === 'Narmod', label + ': the real nickname is back (field ' + st.nick + ', stored ' + st.stored + ')');
@@ -278,6 +278,26 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     await sleep(300);
     ok(await pg.evaluate((b) => window.__pthBL.state() === 'shown' && window.__pthBL.run().folded && window.__pthBL.run().chips === b, before), label + ': ↓ folds: only the ante is lost');
   }
+  await pg.keyboard.press('Escape'); await sleep(200);
+  await pg.keyboard.press('Escape'); await sleep(500);
+  // ── Poker Drop: against the Ace, a drop falls to the bottom, the Ace answers ──
+  await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
+  await pick(pg, 'pokerdrop');
+  await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Puissance Poker', null, { timeout: 8000 }).catch(() => {});
+  const pdTiles = await pg.evaluate(() => ({ tiles: document.querySelectorAll('#pth-game .pg-panel .gm-tile').length, rules: document.querySelectorAll('#pth-game .pg-panel [data-rule]').length }));
+  ok(pdTiles.tiles === 3 && pdTiles.rules === 2, label + ': Poker Drop offers three opponents and two rules');
+  await pg.keyboard.press('ArrowDown'); await sleep(100);
+  ok(await pg.evaluate(() => document.querySelector('#pth-game [data-rule="sudden"]').className.indexOf('pg-ghost') < 0), label + ': ↓ switches to sudden death');
+  await pg.keyboard.press('ArrowDown'); await sleep(100);
+  await pg.keyboard.press('Space');
+  await pg.waitForFunction(() => window.__pthPD && window.__pthPD.state() === 'run', null, { timeout: 4000 }).catch(() => {});
+  await pg.keyboard.press('Space');
+  await sleep(700);
+  const pd1 = await pg.evaluate(() => { const G = window.__pthPD.run(); return { bottom: G.grid[3] != null, moves: G.moves, hand: G.players[0].hand.filter((x) => x != null).length }; });
+  ok(pd1.bottom && pd1.moves >= 1 && pd1.hand === 2, label + ': Space drops the card to the bottom of the middle column, a new card is drawn');
+  await pg.waitForFunction(() => window.__pthPD.run().moves >= 2 && window.__pthPD.run().turn === 0, null, { timeout: 8000 }).catch(() => {});
+  ok(await pg.evaluate(() => window.__pthPD.run().moves >= 2 && window.__pthPD.run().players[1].hand.every((x) => x != null)), label + ': the Ace plays his move and draws');
+  await shot(pg, label + '-pd-run');
   await pg.keyboard.press('Escape'); await sleep(200);
   await pg.keyboard.press('Escape'); await sleep(500);
   await pg.keyboard.press('Escape');

@@ -123,4 +123,8 @@ export const ACHIEVEMENTS = [
   // partie du « Bluff de l'As » (modules/games/bluff.mjs).
   { id: 'bluff',         icon: '🎭', cat: CATS.secret, when: 'always',
     test: () => false },
+  // Débloqué par grantSecret('pdrop') : battre l'As au « Puissance Poker » avec
+  // 40 points ou plus (modules/games/pokerdrop.mjs).
+  { id: 'pdrop',         icon: '⬇️', cat: CATS.secret, when: 'always',
+    test: () => false },
 ];
