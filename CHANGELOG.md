@@ -32,6 +32,13 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Added
+- **`/play-with-friends`** (`web.217`, SEO) — a server-rendered page for « play poker with friends online »: the
+  three steps (log in, create a Normal table, « Invite friends » with link, QR code, WhatsApp / Telegram / SMS /
+  email), private tables (the password never travels in the link), home-game settings, phones and computers at one
+  table, chat (account only on pokerth.net), own server, and five questions; `HowTo` + `FAQPage` JSON-LD. Wired into
+  the sitemap, IndexNow, llms.txt, the crawler block and the admin coverage check. English first: the nav and
+  crawler links appear in a language only once its entry lands in `seo-i18n/friends.js` (empty for now);
+  `scripts/test-seo-friends-i18n.mjs` guards both.
 - **A row of four tiles on every Statistics page** (`web.182`, audit of 2026-10-19c, S3) — like every other admin
   page, each Statistics page now opens on four tiles, read from what the page already received (no extra request;
   « — » until a figure is there). World: countries reached, first country, Internet online, LAN servers up.

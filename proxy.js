@@ -1607,7 +1607,7 @@ function _seoEnsureIndexNowKey() {
 }
 function seoIndexNowUrls(base) {
   var urls = [base + '/', base + '/rules', base + '/hand-rankings', base + '/how-to-play',
-    base + '/glossary', base + '/faq', base + '/competitions', base + '/privacy'];
+    base + '/glossary', base + '/faq', base + '/competitions', base + '/play-with-friends', base + '/privacy'];
   for (var code in SEO_I18N) { if (code !== 'en') urls.push(base + '/?lang=' + code); }
   // Localized content pages exist only in the languages that actually have a
   // translation table. Submitting a variant we do not serve would point the
@@ -1618,6 +1618,7 @@ function seoIndexNowUrls(base) {
   seoPageLangs(SEO_HOWTO_I18N).forEach(function (c) { urls.push(base + '/how-to-play?lang=' + c); });
   seoPageLangs(SEO_GLOSSARY_I18N).forEach(function (c) { urls.push(base + '/glossary?lang=' + c); });
   seoPageLangs(SEO_COMP_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/competitions?lang=' + c); });
+  seoPageLangs(SEO_FRIENDS_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/play-with-friends?lang=' + c); });
   seoPageLangs(_seoPrivacyTable()).forEach(function (c) { if (c !== 'en') urls.push(base + '/privacy?lang=' + c); });
   return urls;
 }
@@ -1806,6 +1807,7 @@ function seoBodyBlock(lang) {
     '<a href="' + _seoLangHref('/how-to-play', SEO_HOWTO_I18N, lang) + '">' + _seoPageLabel(SEO_HOWTO_I18N, lang, 'How to play') + '</a> \u2014 ' +
     '<a href="' + _seoLangHref('/glossary', SEO_GLOSSARY_I18N, lang) + '">' + _seoPageLabel(SEO_GLOSSARY_I18N, lang, 'Glossary') + '</a> \u2014 ' +
     '<a href="' + _seoLangHref('/competitions', SEO_COMP_I18N, lang) + '">' + _seoNavLabel(lang, 'comp') + '</a> \u2014 ' +
+    (_seoFriendsIn(lang) ? '<a href="' + _seoLangHref('/play-with-friends', SEO_FRIENDS_I18N, lang) + '">' + _seoNavLabel(lang, 'friends') + '</a> \u2014 ' : '') +
     '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">' + _seoNavLabel(lang, 'faq') + '</a> \u2014 ' +
     '<a href="' + _seoLangHref('/privacy', _seoPrivacyTable(), lang) + '">' + b.pv + '</a></p>' +
     '</div>';
@@ -1927,6 +1929,7 @@ function seoLlmsTxt(base) {
     (u ? '\n## Links\n\n- Play: ' + u + '/\n- FAQ: ' + u + '/faq\n- How to play, step by step: ' + u + '/how-to-play\n' +
          '- Texas Hold’em rules: ' + u + '/rules\n- Poker hand rankings: ' + u + '/hand-rankings\n' +
          '- Poker glossary: ' + u + '/glossary\n- Competitions and coming dates: ' + u + '/competitions\n' +
+         '- Play poker with friends (private table, invitation link, QR code): ' + u + '/play-with-friends\n' +
          '- Privacy policy (also in every interface language: ' + u + '/privacy?lang=<code>): ' + u + '/privacy\n' +
          '- pokerth.net accounts, game server and forum privacy policy: https://www.pokerth.net/ucp.php?mode=privacy\n' : '\n## Links\n\n') +
     '- Source code: https://github.com/narmod/pokerth-web-client\n' +
@@ -1991,13 +1994,18 @@ function _seoLangHref(relPath, table, lang) {
 // "Play now · Rules · Glossary" in English was a page in two languages. The
 // translations live in seo-i18n/nav.js; English is the fallback per label.
 var SEO_NAV_EN = { play: '\u25b6 Play now', rules: 'Rules', hands: 'Hand rankings', howto: 'How to play',
-  gloss: 'Glossary', comp: 'Competitions', faq: 'FAQ', privacy: 'Privacy', src: 'Source',
+  gloss: 'Glossary', comp: 'Competitions', friends: 'Play with friends', faq: 'FAQ', privacy: 'Privacy', src: 'Source',
   cta: 'Play PokerTH in your browser \u2014 free, no download' };
 var SEO_NAV_I18N = {};
 function _seoNavLabel(lang, k) {
   var e = (lang && SEO_I18N[lang] && SEO_NAV_I18N[lang]) || null;
   return _seoAttr((e && e[k]) || SEO_NAV_EN[k]);
 }
+
+// /play-with-friends is linked only where it exists in the reader's language
+// (English, plus each entry of seo-i18n/friends.js as it lands), so a
+// translated page never carries an English label pointing at English text.
+function _seoFriendsIn(lang) { return !lang || !!(SEO_FRIENDS_I18N && SEO_FRIENDS_I18N[lang]); }
 
 function _seoPageNav(lang) {
   lang = lang || '';
@@ -2007,6 +2015,7 @@ function _seoPageNav(lang) {
     '<a href="' + _seoLangHref('/how-to-play', SEO_HOWTO_I18N, lang) + '">' + _seoNavLabel(lang, 'howto') + '</a>' +
     '<a href="' + _seoLangHref('/glossary', SEO_GLOSSARY_I18N, lang) + '">' + _seoNavLabel(lang, 'gloss') + '</a>' +
     '<a href="' + _seoLangHref('/competitions', SEO_COMP_I18N, lang) + '">' + _seoNavLabel(lang, 'comp') + '</a>' +
+    (_seoFriendsIn(lang) ? '<a href="' + _seoLangHref('/play-with-friends', SEO_FRIENDS_I18N, lang) + '">' + _seoNavLabel(lang, 'friends') + '</a>' : '') +
     '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">' + _seoNavLabel(lang, 'faq') + '</a>' +
     '<a href="' + _seoLangHref('/privacy', _seoPrivacyTable(), lang) + '">' + _seoNavLabel(lang, 'privacy') + '</a>' +
     '<a href="https://github.com/narmod/pokerth-web-client" rel="noopener">' + _seoNavLabel(lang, 'src') + '</a></nav>';
@@ -6943,6 +6952,7 @@ var SEO_HANDS_I18N = {};
 var SEO_HOWTO_I18N = {};
 var SEO_GLOSSARY_I18N = {};
 var SEO_COMP_I18N = {};
+var SEO_FRIENDS_I18N = {};
 
 // Suit symbols. Red suits get a class rather than a hard-coded colour so the
 // page CSS stays the single place that decides what red means.
@@ -7189,6 +7199,7 @@ function _seoPageHref(page, lang) {
   if (page === 'howto') return _seoLangHref('/how-to-play', SEO_HOWTO_I18N, lang);
   if (page === 'glossary') return _seoLangHref('/glossary', SEO_GLOSSARY_I18N, lang);
   if (page === 'faq') return _seoLangHref('/faq', SEO_FAQ_I18N, lang);
+  if (page === 'friends') return _seoLangHref('/play-with-friends', SEO_FRIENDS_I18N, lang);
   return '/';
 }
 
@@ -7200,6 +7211,7 @@ SEO_HOWTO_I18N = require('./seo-i18n/howto.js').build(_SEO_HOWTO, _seoPageHref);
 SEO_GLOSSARY_I18N = require('./seo-i18n/glossary.js').build(_SEO_GLOSSARY, _seoPageHref);
 SEO_NAV_I18N = require('./seo-i18n/nav.js');
 SEO_COMP_I18N = require('./seo-i18n/competitions.js');
+SEO_FRIENDS_I18N = require('./seo-i18n/friends.js');
 
 function seoGlossaryPage(res, method, lang) {
   var langs = seoPageLangs(SEO_GLOSSARY_I18N);
@@ -7232,6 +7244,90 @@ function seoGlossaryPage(res, method, lang) {
   };
   if (base) ld.url = base + '/glossary' + (lang ? '?lang=' + lang : '');
   seoContentPage(res, method, title, desc, '/glossary', body, ld, lang, langs);
+}
+
+// ── /play-with-friends — private table, invitation link, QR code ─────────
+// The page answers "play poker with friends online": a free private table,
+// one link (or a QR code) to send, friends seated automatically. Only what
+// the client does today: invitation dialog (modules/ui/invite.mjs), link
+// format and password policy (modules/net/invite-link.mjs), guests limited
+// to Normal games and kept out of the chat by the pokerth.net server.
+// Translations: seo-i18n/friends.js.
+var _SEO_FRIENDS = {
+  "title": "Play Poker with Friends Online — Free, No Download | PokerTH",
+  "desc": "Set up a free private poker table and send one link or a QR code: friends join from any phone or computer and are seated automatically. No account, no money.",
+  "ldHeadline": "How to play poker with friends online, for free",
+  "ldDesc": "Create a private Texas Hold’em table in the PokerTH web client and invite friends with a link or a QR code.",
+  "h1": "Play poker with friends online, free",
+  "lead": "A poker night without chips to count or cards to shuffle: PokerTH deals Texas Hold’em in the browser, for up to 10 players at a table. You set up the table, send one link, and your friends sit down — on a phone, a tablet or a computer, with nothing to download and no real money involved.",
+  "stepsH2": "Your poker night in three steps",
+  "steps": [
+    ["Open PokerTH and log in",
+     "Open this site in any browser. On the official pokerth.net network, log in as a guest or with a free account; on your own LAN or dedicated server, a nickname is enough. No download, no email address."],
+    ["Create your table",
+     "In the lobby, create a table and keep the <strong>Normal</strong> game type, so friends can join as guests. Choose the number of seats (up to 10), the starting stack, how fast the blinds rise and the time to act. Add a password if the table should stay private."],
+    ["Send the invitation",
+     "In the waiting room, press <strong>Invite friends</strong>. Share the link through WhatsApp, Telegram, SMS or email, copy it, or let friends in the same room scan the QR code. Whoever opens it logs in and is seated at your table automatically. When everyone is there, press <strong>Start Game</strong>."]
+  ],
+  "privH2": "A table that stays private",
+  "privP": "A password keeps strangers out: anyone who joins, even from your link, has to type it. The password is never part of the invitation link, so a forwarded or screenshotted link does not open the table on its own. The link only names the table and the server.",
+  "setH2": "Settings for a home game",
+  "setP": "Every PokerTH game is a tournament: everyone starts with the same stack and plays until one player holds every chip. For a relaxed evening, give a big starting stack, slow blinds and a long time to act; for a quick game before dinner, do the opposite. Friends who arrive late can watch the table as spectators if you allow it.",
+  "mixH2": "Phones and computers at the same table",
+  "mixP": "The web client runs in any modern browser, on iPhone, Android, Windows, macOS and Linux. Anyone can add it to their home screen and play it like an app; the invitation link then opens straight in it. Around a real table, the QR code is the fastest way in: every player scans it with their phone.",
+  "talkH2": "Talking during the game",
+  "talkP": "On pokerth.net the table chat is for players with a free account; guests can play but not chat. Many groups simply keep a voice or video call open next to the table.",
+  "ownH2": "On your own server",
+  "ownP": "For a club, an office or a school, run your own PokerTH server on a LAN or on the internet: the server and this web client are both free and open source. Players then need only a nickname, and invitation links work there just as they do on pokerth.net.",
+  "faqH2": "Questions",
+  "faq": [
+    ["Do my friends need an account?",
+     "No. On pokerth.net they can join a Normal table as guests, and on a LAN or dedicated server a nickname is all it takes. A free pokerth.net account adds the chat, registered-only tables and Ranking games."],
+    ["How many players can join?",
+     "Up to 10 players per table, plus spectators if the table allows them."],
+    ["Is it really free?",
+     "Yes. PokerTH is free and open-source software with no ads and no in-app purchases. Chips are play money only: nothing can be bought, sold or won."],
+    ["Can we play on phones?",
+     "Yes, on iPhone and Android as well as on a computer, in the browser or installed on the home screen. Players on phones and computers share the same table."],
+    ["What if a friend opens the link after the game has started?",
+     "The table opens for watching, so they can follow the game as a spectator."]
+  ]
+};
+
+function seoFriendsPage(res, method, lang) {
+  var langs = seoPageLangs(SEO_FRIENDS_I18N);
+  if (langs.indexOf(lang) === -1) lang = '';
+  var tr = (lang && SEO_FRIENDS_I18N[lang]) || _SEO_FRIENDS;
+  var base = seoEnabled() ? seoPublicUrl() : '';
+  var sec = function (h, p) { return '<h2>' + h + '</h2><p>' + p + '</p>'; };
+  var body = '<h1>' + tr.h1 + '</h1><p>' + tr.lead + '</p>' +
+    '<h2>' + tr.stepsH2 + '</h2><ol>' + tr.steps.map(function (st) {
+      return '<li><strong>' + st[0] + '.</strong> ' + st[1] + '</li>';
+    }).join('') + '</ol>' +
+    sec(tr.privH2, tr.privP) + sec(tr.setH2, tr.setP) + sec(tr.mixH2, tr.mixP) +
+    sec(tr.talkH2, tr.talkP) + sec(tr.ownH2, tr.ownP) +
+    '<h2>' + tr.faqH2 + '</h2>' + tr.faq.map(function (q) {
+      return '<h3>' + q[0] + '</h3><p>' + q[1] + '</p>';
+    }).join('');
+  var plain = function (h) { return String(h).replace(/<[^>]*>/g, ''); };
+  var url = base ? base + '/play-with-friends' + (lang ? '?lang=' + lang : '') : '';
+  var howto = {
+    '@context': 'https://schema.org', '@type': 'HowTo',
+    name: tr.ldHeadline, description: tr.ldDesc, inLanguage: lang || 'en',
+    totalTime: 'PT2M',
+    estimatedCost: { '@type': 'MonetaryAmount', currency: 'EUR', value: '0' },
+    step: tr.steps.map(function (st, n) {
+      return { '@type': 'HowToStep', position: n + 1, name: plain(st[0]), text: plain(st[1]) };
+    })
+  };
+  if (url) howto.url = url;
+  var faq = {
+    '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: lang || 'en',
+    mainEntity: tr.faq.map(function (q) {
+      return { '@type': 'Question', name: plain(q[0]), acceptedAnswer: { '@type': 'Answer', text: plain(q[1]) } };
+    })
+  };
+  seoContentPage(res, method, tr.title, tr.desc, '/play-with-friends', body, [howto, faq], lang, langs);
 }
 
 // ── /competitions — BBC, WeCup, Monthly Cup ──────────────────────────────
@@ -12468,7 +12564,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     for (var _c in SEO_I18N) _tot++;
     var _cov = [['/rules', _rl], ['/faq', _fl], ['/hand-rankings', seoPageLangs(SEO_HANDS_I18N).length],
       ['/how-to-play', seoPageLangs(SEO_HOWTO_I18N).length], ['/glossary', seoPageLangs(SEO_GLOSSARY_I18N).length],
-      ['/privacy', seoPageLangs(_seoPrivacyTable()).length]];
+      ['/play-with-friends', seoPageLangs(SEO_FRIENDS_I18N).length], ['/privacy', seoPageLangs(_seoPrivacyTable()).length]];
     _cov.forEach(function (c) {
       // seoPageLangs() always carries 'en', which is the page itself, not a
       // translation — counting it would have claimed 46 of 44.
@@ -13866,6 +13962,7 @@ const httpServer = http.createServer((req, res) => {
       _seoPageUrls(_sBase, '/how-to-play', seoPageLangs(SEO_HOWTO_I18N), 'monthly', '0.7') +
       _seoPageUrls(_sBase, '/glossary', seoPageLangs(SEO_GLOSSARY_I18N), 'monthly', '0.5') +
       _seoPageUrls(_sBase, '/competitions', seoPageLangs(SEO_COMP_I18N), 'daily', '0.6') +
+      _seoPageUrls(_sBase, '/play-with-friends', seoPageLangs(SEO_FRIENDS_I18N), 'monthly', '0.7') +
       _seoPageUrls(_sBase, '/privacy', seoPageLangs(_seoPrivacyTable()), 'yearly', '0.2') +
       '</urlset>\n';
     res.writeHead(200, Object.assign({ 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
@@ -13906,6 +14003,9 @@ const httpServer = http.createServer((req, res) => {
   }
   if (reqPathOnly === '/competitions' || reqPathOnly === '/competitions.html') {
     return seoCompetitionsPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+  }
+  if (reqPathOnly === '/play-with-friends' || reqPathOnly === '/play-with-friends.html') {
+    return seoFriendsPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
   }
 
   // The privacy policy is the same page on every install, indexing on or off:
