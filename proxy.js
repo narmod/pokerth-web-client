@@ -1607,7 +1607,7 @@ function _seoEnsureIndexNowKey() {
 }
 function seoIndexNowUrls(base) {
   var urls = [base + '/', base + '/rules', base + '/hand-rankings', base + '/how-to-play',
-    base + '/glossary', base + '/faq', base + '/competitions', base + '/play-with-friends', base + '/poker-odds', base + '/privacy'];
+    base + '/glossary', base + '/faq', base + '/competitions', base + '/play-with-friends', base + '/poker-odds', base + '/play-against-computer', base + '/privacy'];
   for (var code in SEO_I18N) { if (code !== 'en') urls.push(base + '/?lang=' + code); }
   // Localized content pages exist only in the languages that actually have a
   // translation table. Submitting a variant we do not serve would point the
@@ -1620,6 +1620,7 @@ function seoIndexNowUrls(base) {
   seoPageLangs(SEO_COMP_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/competitions?lang=' + c); });
   seoPageLangs(SEO_FRIENDS_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/play-with-friends?lang=' + c); });
   seoPageLangs(SEO_ODDS_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/poker-odds?lang=' + c); });
+  seoPageLangs(SEO_BOTS_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/play-against-computer?lang=' + c); });
   seoPageLangs(_seoPrivacyTable()).forEach(function (c) { if (c !== 'en') urls.push(base + '/privacy?lang=' + c); });
   return urls;
 }
@@ -1810,6 +1811,7 @@ function seoBodyBlock(lang) {
     '<a href="' + _seoLangHref('/competitions', SEO_COMP_I18N, lang) + '">' + _seoNavLabel(lang, 'comp') + '</a> \u2014 ' +
     (_seoFriendsIn(lang) ? '<a href="' + _seoLangHref('/play-with-friends', SEO_FRIENDS_I18N, lang) + '">' + _seoNavLabel(lang, 'friends') + '</a> \u2014 ' : '') +
     (_seoOddsIn(lang) ? '<a href="' + _seoLangHref('/poker-odds', SEO_ODDS_I18N, lang) + '">' + _seoNavLabel(lang, 'odds') + '</a> \u2014 ' : '') +
+    (_seoBotsIn(lang) ? '<a href="' + _seoLangHref('/play-against-computer', SEO_BOTS_I18N, lang) + '">' + _seoNavLabel(lang, 'bots') + '</a> \u2014 ' : '') +
     '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">' + _seoNavLabel(lang, 'faq') + '</a> \u2014 ' +
     '<a href="' + _seoLangHref('/privacy', _seoPrivacyTable(), lang) + '">' + b.pv + '</a></p>' +
     '</div>';
@@ -1933,6 +1935,7 @@ function seoLlmsTxt(base) {
          '- Poker glossary: ' + u + '/glossary\n- Competitions and coming dates: ' + u + '/competitions\n' +
          '- Play poker with friends (private table, invitation link, QR code): ' + u + '/play-with-friends\n' +
          '- Poker odds (outs, rule of 2 and 4, pot odds, preflop matchups, computed exactly): ' + u + '/poker-odds\n' +
+         '- Play poker against the computer (training mode, difficulty levels, offline): ' + u + '/play-against-computer\n' +
          '- Privacy policy (also in every interface language: ' + u + '/privacy?lang=<code>): ' + u + '/privacy\n' +
          '- pokerth.net accounts, game server and forum privacy policy: https://www.pokerth.net/ucp.php?mode=privacy\n' : '\n## Links\n\n') +
     '- Source code: https://github.com/narmod/pokerth-web-client\n' +
@@ -2004,7 +2007,7 @@ function _seoLangHref(relPath, table, lang) {
 // "Play now · Rules · Glossary" in English was a page in two languages. The
 // translations live in seo-i18n/nav.js; English is the fallback per label.
 var SEO_NAV_EN = { play: '\u25b6 Play now', rules: 'Rules', hands: 'Hand rankings', howto: 'How to play',
-  gloss: 'Glossary', comp: 'Competitions', friends: 'Play with friends', odds: 'Poker odds', faq: 'FAQ', privacy: 'Privacy', src: 'Source',
+  gloss: 'Glossary', comp: 'Competitions', friends: 'Play with friends', odds: 'Poker odds', bots: 'Vs computer', faq: 'FAQ', privacy: 'Privacy', src: 'Source',
   cta: 'Play PokerTH in your browser \u2014 free, no download' };
 var SEO_NAV_I18N = {};
 function _seoNavLabel(lang, k) {
@@ -2018,6 +2021,8 @@ function _seoNavLabel(lang, k) {
 function _seoFriendsIn(lang) { return !lang || !!(SEO_FRIENDS_I18N && SEO_FRIENDS_I18N[lang]); }
 // Same rule for /poker-odds.
 function _seoOddsIn(lang) { return !lang || !!(SEO_ODDS_I18N && SEO_ODDS_I18N[lang]); }
+// Same rule for /play-against-computer.
+function _seoBotsIn(lang) { return !lang || !!(SEO_BOTS_I18N && SEO_BOTS_I18N[lang]); }
 
 function _seoPageNav(lang) {
   lang = lang || '';
@@ -2029,6 +2034,7 @@ function _seoPageNav(lang) {
     '<a href="' + _seoLangHref('/glossary', SEO_GLOSSARY_I18N, lang) + '">' + _seoNavLabel(lang, 'gloss') + '</a>' +
     '<a href="' + _seoLangHref('/competitions', SEO_COMP_I18N, lang) + '">' + _seoNavLabel(lang, 'comp') + '</a>' +
     (_seoFriendsIn(lang) ? '<a href="' + _seoLangHref('/play-with-friends', SEO_FRIENDS_I18N, lang) + '">' + _seoNavLabel(lang, 'friends') + '</a>' : '') +
+    (_seoBotsIn(lang) ? '<a href="' + _seoLangHref('/play-against-computer', SEO_BOTS_I18N, lang) + '">' + _seoNavLabel(lang, 'bots') + '</a>' : '') +
     '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">' + _seoNavLabel(lang, 'faq') + '</a>' +
     '<a href="' + _seoLangHref('/privacy', _seoPrivacyTable(), lang) + '">' + _seoNavLabel(lang, 'privacy') + '</a>' +
     '<a href="https://github.com/narmod/pokerth-web-client" rel="noopener">' + _seoNavLabel(lang, 'src') + '</a></nav>';
@@ -6822,9 +6828,11 @@ var _SEO_FAQ = [
    "Yes. PokerTH has been developed as free software since 2006 and is still maintained: the desktop client and the server are on <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, this web client is updated continuously (<a href=\"https://github.com/narmod/pokerth-web-client\">source code and changelog</a>), and games are played every day on the official pokerth.net network."]
 ];
 
-// Position of « How do I play poker online with friends? » in _SEO_FAQ (and
-// in every translation: same order, scripts/test-seo-sync.mjs).
+// Position of « How do I play poker online with friends? » and of « Can I
+// play against the computer? » in _SEO_FAQ (and in every translation: same
+// order, scripts/test-seo-sync.mjs).
 var _SEO_FAQ_FRIENDS_IX = 5;
+var _SEO_FAQ_BOTS_IX = 9;
 
 function seoFaqPage(res, method, lang) {
   var langs = seoPageLangs(SEO_FAQ_I18N);
@@ -6841,6 +6849,7 @@ function seoFaqPage(res, method, lang) {
     body += '<dt>' + qa[i][0] + '</dt><dd>' + qa[i][1] + '</dd>';
     // « How do I play poker online with friends? » points on to the full page.
     if (i === _SEO_FAQ_FRIENDS_IX) { var _fl = _seoFriendsLink(lang); if (_fl) body += '<dd>' + _fl.slice(3, -4) + '</dd>'; }
+    if (i === _SEO_FAQ_BOTS_IX) { var _bl = _seoBotsLink(lang); if (_bl) body += '<dd>' + _bl.slice(3, -4) + '</dd>'; }
     ents.push({ '@type': 'Question', name: qa[i][0],
       acceptedAnswer: { '@type': 'Answer', text: qa[i][1] } });
   }
@@ -6973,6 +6982,7 @@ var SEO_GLOSSARY_I18N = {};
 var SEO_COMP_I18N = {};
 var SEO_FRIENDS_I18N = {};
 var SEO_ODDS_I18N = {};
+var SEO_BOTS_I18N = {};
 
 // Suit symbols. Red suits get a class rather than a hard-coded colour so the
 // page CSS stays the single place that decides what red means.
@@ -7233,6 +7243,25 @@ function _seoOddsLink(lang) {
   return '<p><a href="' + _seoLangHref('/poker-odds', SEO_ODDS_I18N, lang) + '">' + h1 + '</a></p>';
 }
 
+// /play-against-computer: links on to the pages a learner reads next, each
+// with that page's own <h1> in the reader's language. Built in code so the
+// translations carry no markup.
+function _seoBotsRelated(lang) {
+  var h1 = function (table, en) { var e = lang && table && table[lang]; return (e && e.h1) || en; };
+  var items = [
+    [_seoLangHref('/how-to-play', SEO_HOWTO_I18N, lang), _seoPageLabel(SEO_HOWTO_I18N, lang, 'How to play')],
+    [_seoLangHref('/hand-rankings', SEO_HANDS_I18N, lang), _seoPageLabel(SEO_HANDS_I18N, lang, 'Poker hand rankings')]
+  ];
+  if (_seoOddsIn(lang)) items.push([_seoLangHref('/poker-odds', SEO_ODDS_I18N, lang), h1(SEO_ODDS_I18N, _SEO_ODDS.h1)]);
+  return '<ul>' + items.map(function (i) { return '<li><a href="' + i[0] + '">' + i[1] + '</a></li>'; }).join('') + '</ul>';
+}
+// Link to /play-against-computer, anchor = its <h1>, only where translated.
+function _seoBotsLink(lang) {
+  if (!_seoBotsIn(lang)) return '';
+  var h1 = ((lang && SEO_BOTS_I18N[lang]) || _SEO_BOTS).h1;
+  return '<p><a href="' + _seoLangHref('/play-against-computer', SEO_BOTS_I18N, lang) + '">' + h1 + '</a></p>';
+}
+
 function _seoPageHref(page, lang) {
   if (page === 'rules') return _seoLangHref('/rules', SEO_RULES_I18N, lang);
   if (page === 'hands') return _seoLangHref('/hand-rankings', SEO_HANDS_I18N, lang);
@@ -7241,6 +7270,7 @@ function _seoPageHref(page, lang) {
   if (page === 'faq') return _seoLangHref('/faq', SEO_FAQ_I18N, lang);
   if (page === 'friends') return _seoLangHref('/play-with-friends', SEO_FRIENDS_I18N, lang);
   if (page === 'odds') return _seoLangHref('/poker-odds', SEO_ODDS_I18N, lang);
+  if (page === 'bots') return _seoLangHref('/play-against-computer', SEO_BOTS_I18N, lang);
   return '/';
 }
 
@@ -7249,6 +7279,7 @@ function _seoPageHref(page, lang) {
 SEO_NAV_I18N = require('./seo-i18n/nav.js');
 SEO_FRIENDS_I18N = require('./seo-i18n/friends.js');
 SEO_ODDS_I18N = require('./seo-i18n/odds.js');
+SEO_BOTS_I18N = require('./seo-i18n/bots.js');
 SEO_HANDS_I18N = require('./seo-i18n/hands.js').build(_SEO_HANDS, _sd);
 // Hand names per language, for the /poker-odds calculator.
 var _SEO_HANDS_PARTS = require('./seo-i18n/hands.js').PARTS;
@@ -7558,6 +7589,96 @@ function seoOddsPage(res, method, lang) {
     isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' }, inLanguage: lang || 'en' };
   if (url) app.url = url;
   seoContentPage(res, method, tr.title, tr.desc, '/poker-odds', body, [art, app, faq], lang, langs);
+}
+
+// ── /play-against-computer — training mode against the bots ──────────────
+// The page answers "poker against the computer", "offline poker", "practice
+// poker vs bots". Only what the client does: modules/offline/* (engine, bots
+// with skill levels and play styles, presets), modules/achievements/defs.mjs
+// (trophies), the PWA's offline cache. Translations: seo-i18n/bots.js.
+var _SEO_BOTS = {
+  "title": "Play Poker Against the Computer — Free, Offline | PokerTH",
+  "desc": "Free Texas Hold’em against computer opponents, up to 9 bots at your table, from easy to hard. No account, no money, and it works offline on phone and PC.",
+  "ldHeadline": "Play Texas Hold’em poker against the computer, free and offline",
+  "ldDesc": "Training mode of the PokerTH web client: Texas Hold’em against computer opponents, with difficulty levels, play styles and trophies.",
+  "h1": "Play poker against the computer, free and offline",
+  "lead": "The training mode of PokerTH deals full Texas Hold’em tournaments against computer opponents, right in your browser. No account, no connection once the site has been opened, and nothing at stake: the place to learn the game, to try a new strategy, or to play a quick game on the train.",
+  "stepsH2": "Start a game in three steps",
+  "steps": [
+    ["Open PokerTH and choose Local / training",
+     "Open this site and pick Local / training on the first screen. There is no login and no download; once the site has been opened, the mode also works without a connection."],
+    ["Set up your table",
+     "Choose up to 9 computer opponents, the starting stack, how fast the blinds rise and the game speed, or start from a ready-made format. Pick the bots’ difficulty in the same window."],
+    ["Start the game",
+     "Press Start: the empty seats fill with computer players and the cards are dealt. The game runs until one player holds every chip."]
+  ],
+  "levelsH2": "Four difficulty levels",
+  "levels": [
+    ["Easy", "Bots that misjudge their hands and rarely bluff: the right opponents for a first game."],
+    ["Normal", "Solid opponents that read their chances well and play correctly when their stack gets short."],
+    ["Hard", "The strongest bots: precise hand reading, sharp short-stack play and more bluffs."],
+    ["Mixed", "A varied table, the default: on average three easy bots, five normal and two hard in every ten."]
+  ],
+  "brainH2": "How the bots think",
+  "brainP": "Each bot works out its real chance of winning the hand by dealing out the remaining cards many times, against the number of players still in the pot. It plays tighter in early position and steals from late position, continuation-bets after raising before the flop, semi-bluffs strong draws and, from the normal level up, switches to all-in-or-fold play when its stack gets short.",
+  "stylesH2": "Five playing styles",
+  "stylesP": "Difficulty sets how well a bot reads the game; its style sets how it plays. Every new table mixes:",
+  "styles": [
+    ["Rock", "very tight and careful, enters few pots and rarely bluffs."],
+    ["Tight-aggressive", "picks good hands and bets them hard."],
+    ["Loose-aggressive", "plays many hands and puts pressure on you."],
+    ["Calling station", "calls far too often and seldom raises."],
+    ["Maniac", "raises and bluffs constantly."]
+  ],
+  "formatsH2": "Practise the real formats",
+  "formatsP": "Ready-made settings let you start a Relaxed, Normal or Fast game, or practise under the conditions of the pokerth.net competitions: the official Ranking pace, the We Cup and the BBC with its time-based blinds. Your own settings can be saved as a format of your own.",
+  "trophiesH2": "Trophies and statistics",
+  "trophiesP": "Training mode has its own progression: more than thirty trophies in six categories — hands played, games won, winning streaks, a victory against nine hard bots, bluffs, and a few secrets. Statistics against the bots are kept apart from your online games, and when you log in with a pokerth.net account your trophies follow you to your other devices.",
+  "learnH2": "The best place to learn",
+  "learnP": "Every aid of the web client works here without pressure: the Odds tab with your chance of winning as the cards come out, the hand-strength display, pre-selected actions and keyboard shortcuts. When you feel ready, the same table awaits you on pokerth.net against real players.",
+  "offlineH2": "Offline, on every device",
+  "offlineP": "PokerTH is a web app: it runs in the browser on iPhone, Android, Windows, macOS and Linux, and can be added to the home screen like an app. Once opened, training mode needs no connection at all — in airplane mode, in the metro or anywhere without a signal.",
+  "faqH2": "Questions",
+  "faq": [
+    ["Can I play poker against the computer for free?",
+     "Yes. PokerTH is free and open-source software, with no ads and no in-app purchases. Chips are play money only."],
+    ["Do I need an account or a connection?",
+     "No. Training mode needs no account, and once the site has been opened it works without a connection."],
+    ["How many computer opponents can I play against?",
+     "Up to 9, for a full table of 10 players, or a single one for heads-up."],
+    ["Are the bots good?",
+     "That is up to you: easy bots make mistakes, hard bots read their chances precisely and bluff more, and the mixed table blends the three levels with five playing styles."],
+    ["Can I play with friends and bots at the same table?",
+     "Yes. When you host a table on your own PokerTH server, on a LAN or on the internet, the waiting room can fill the empty seats with computer players."]
+  ]
+};
+
+function seoBotsPage(res, method, lang) {
+  var langs = seoPageLangs(SEO_BOTS_I18N);
+  if (langs.indexOf(lang) === -1) lang = '';
+  var tr = (lang && SEO_BOTS_I18N[lang]) || _SEO_BOTS;
+  var base = seoEnabled() ? seoPublicUrl() : '';
+  var sec = function (h, p) { return '<h2>' + h + '</h2><p>' + p + '</p>'; };
+  var dl = function (rows) { return '<ul>' + rows.map(function (r) { return '<li><strong>' + r[0] + '</strong> — ' + r[1] + '</li>'; }).join('') + '</ul>'; };
+  var body = '<h1>' + tr.h1 + '</h1><p>' + tr.lead + '</p>' +
+    '<h2>' + tr.stepsH2 + '</h2><ol>' + tr.steps.map(function (st) {
+      return '<li><strong>' + st[0] + '</strong><br>' + st[1] + '</li>';
+    }).join('') + '</ol>' +
+    '<h2>' + tr.levelsH2 + '</h2>' + dl(tr.levels) +
+    sec(tr.brainH2, tr.brainP) +
+    '<h2>' + tr.stylesH2 + '</h2><p>' + tr.stylesP + '</p>' + dl(tr.styles) +
+    sec(tr.formatsH2, tr.formatsP) + sec(tr.trophiesH2, tr.trophiesP) +
+    sec(tr.learnH2, tr.learnP) + _seoBotsRelated(lang) + sec(tr.offlineH2, tr.offlineP) +
+    '<h2>' + tr.faqH2 + '</h2>' + tr.faq.map(function (q) { return '<h3>' + q[0] + '</h3><p>' + q[1] + '</p>'; }).join('');
+  var plain = function (h) { return String(h).replace(/<[^>]*>/g, ''); };
+  var url = base ? base + '/play-against-computer' + (lang ? '?lang=' + lang : '') : '';
+  var howto = { '@context': 'https://schema.org', '@type': 'HowTo', name: tr.ldHeadline, description: tr.ldDesc,
+    inLanguage: lang || 'en', totalTime: 'PT1M', estimatedCost: { '@type': 'MonetaryAmount', currency: 'EUR', value: '0' },
+    step: tr.steps.map(function (st, n) { return { '@type': 'HowToStep', position: n + 1, name: plain(st[0]), text: plain(st[1]) }; }) };
+  if (url) howto.url = url;
+  var faq = { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: lang || 'en',
+    mainEntity: tr.faq.map(function (q) { return { '@type': 'Question', name: plain(q[0]), acceptedAnswer: { '@type': 'Answer', text: plain(q[1]) } }; }) };
+  seoContentPage(res, method, tr.title, tr.desc, '/play-against-computer', body, [howto, faq], lang, langs);
 }
 
 // ── /competitions — BBC, WeCup, Monthly Cup ──────────────────────────────
@@ -12794,7 +12915,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     for (var _c in SEO_I18N) _tot++;
     var _cov = [['/rules', _rl], ['/faq', _fl], ['/hand-rankings', seoPageLangs(SEO_HANDS_I18N).length],
       ['/how-to-play', seoPageLangs(SEO_HOWTO_I18N).length], ['/glossary', seoPageLangs(SEO_GLOSSARY_I18N).length],
-      ['/play-with-friends', seoPageLangs(SEO_FRIENDS_I18N).length], ['/poker-odds', seoPageLangs(SEO_ODDS_I18N).length], ['/privacy', seoPageLangs(_seoPrivacyTable()).length]];
+      ['/play-with-friends', seoPageLangs(SEO_FRIENDS_I18N).length], ['/poker-odds', seoPageLangs(SEO_ODDS_I18N).length], ['/play-against-computer', seoPageLangs(SEO_BOTS_I18N).length], ['/privacy', seoPageLangs(_seoPrivacyTable()).length]];
     _cov.forEach(function (c) {
       // seoPageLangs() always carries 'en', which is the page itself, not a
       // translation — counting it would have claimed 46 of 44.
@@ -14194,6 +14315,7 @@ const httpServer = http.createServer((req, res) => {
       _seoPageUrls(_sBase, '/competitions', seoPageLangs(SEO_COMP_I18N), 'daily', '0.6') +
       _seoPageUrls(_sBase, '/play-with-friends', seoPageLangs(SEO_FRIENDS_I18N), 'monthly', '0.7') +
       _seoPageUrls(_sBase, '/poker-odds', seoPageLangs(SEO_ODDS_I18N), 'monthly', '0.7') +
+      _seoPageUrls(_sBase, '/play-against-computer', seoPageLangs(SEO_BOTS_I18N), 'monthly', '0.7') +
       _seoPageUrls(_sBase, '/privacy', seoPageLangs(_seoPrivacyTable()), 'yearly', '0.2') +
       '</urlset>\n';
     res.writeHead(200, Object.assign({ 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
@@ -14234,6 +14356,9 @@ const httpServer = http.createServer((req, res) => {
   }
   if (reqPathOnly === '/competitions' || reqPathOnly === '/competitions.html') {
     return seoCompetitionsPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+  }
+  if (reqPathOnly === '/play-against-computer' || reqPathOnly === '/play-against-computer.html') {
+    return seoBotsPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
   }
   if (reqPathOnly === '/poker-odds' || reqPathOnly === '/poker-odds.html') {
     return seoOddsPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');

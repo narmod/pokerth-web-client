@@ -32,6 +32,14 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Added
+- **`/play-against-computer`** (`web.224`, SEO, English first) — training mode for « poker against the
+  computer / offline »: three steps, the four difficulty levels (with the mixed split), how the bots think
+  (equity by dealing out the cards, position, c-bets, semi-bluffs, push/fold from normal up), the five playing
+  styles, the practice formats, trophies and separate statistics, offline on every device, five questions;
+  `HowTo` + `FAQPage` JSON-LD; links on to /how-to-play, /hand-rankings and /poker-odds, and from the /faq answer
+  « Can I play against the computer? ». Wired like the other pages (nav « Vs computer » gated on the language,
+  sitemap, IndexNow, llms.txt, crawler block, admin coverage); `seo-i18n/bots.js` is empty until the translations.
+  Guard: `scripts/test-seo-bots.mjs`, which also checks the page's claims against the bot and trophy code.
 - **Poker Drop in the arcade** (`web.223`) — `games/pokerdrop.mjs` (« Puissance Poker » in French): an upright
   7 × 6 grid, a card dropped in a column falls to the lowest free cell; the cards belong to no one, each player
   holds two face up, plays one and draws. Every line of five (across, up, both diagonals: 44 lines) is a poker
