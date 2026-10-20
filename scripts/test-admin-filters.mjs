@@ -64,5 +64,15 @@ ok(/--m-net:#1F8F5F;--m-lan:#B9770E;--m-off:#7A4FC0;--m-live:#2F6FC4;--m-all:#B8
 ok(/data-mk="all"[\s\S]{0,120}style="--mc:var\(--m-all\)"/.test(body(admin, '_paintModeSel')) && /All modes/.test(body(admin, '_paintModeSel')), 'the All modes tile wears the total colour');
 ok(/<span class="nrk">'\+x\[1\]\+'<span class="fsvh">: <\/span><\/span><span class="nrv">/.test(admin), 'a Narrow row still reads « Country: all » to a screen reader');
 
+// ── The entry-mode filter reaches every figure split by mode (audit 2026-10-20, B3)
+const act = body(admin, '_tsActivity'), m48 = body(admin, '_trafModes48'), pick = body(admin, '_pickMode');
+ok(/on=_modesOn\(\); on\.forEach\(function\(md\)\{ cn\+=m\[md\.k\]\|\|0; \}\);/.test(act) && /_modesAll\(\)\?'every entry mode':on\.map/.test(act),
+  'Activity › Connections today counts the modes picked and names them');
+ok(/_tsActivity\(_trafLastD\)/.test(pick), 'and is drawn again when the modes change');
+ok(!/\(all modes\)/.test(m48) && /'% of '\+all\.toLocaleString\(\)\+' across every mode'/.test(m48),
+  'the 48 h note gives the sessions of the modes on show and their share, not every mode as if unfiltered');
+ok(/return \(n&&_modeOn\(x\.k\)\)\?'<i style="display:block;width:'\+\(100\*n\/mt\)/.test(admin) && /'Sessions in the modes picked, out of every mode'/.test(admin),
+  'the Countries list bars keep the modes picked, out of every mode');
+
 console.log(fail ? 'FAIL ' + fail + '/' + n : 'OK ' + n + '/' + n);
 process.exit(fail ? 1 : 0);

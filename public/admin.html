@@ -5168,11 +5168,12 @@
     var h48=d.hours48||[], t48=0; h48.forEach(function(x){ t48+=x.v||0; });
     var prof=d.hourProfile||{v:[],days:0}, pk=-1, pv=0;
     for(var i=0;i<24;i++){ var v=(prof.v&&prof.v[i])||0; if(v>pv){ pv=v; pk=i; } }
-    var t=d.today||{}, m=t.m||{}, cn=0; Object.keys(m).forEach(function(k){ cn+=m[k]||0; });
+    // Follows the entry modes picked in Filters (the modes picked, by name).
+    var t=d.today||{}, m=t.m||{}, cn=0, on=_modesOn(); on.forEach(function(md){ cn+=m[md.k]||0; });
     _tsTiles('activity',[
       ['Last 48 h',d.hours48!==undefined?_tsN(t48):'—','visits','var(--accent)'],
       ['Busiest hour',pk>=0&&prof.days>=0.5?String(pk).padStart(2,'0')+':00':'—',pk>=0&&prof.days>=0.5?'of an average day':'needs a full day of data','var(--warn-text)'],
-      ['Connections today',_tsN(cn),'every entry mode','var(--m-net)'],
+      ['Connections today',_tsN(cn),_modesAll()?'every entry mode':on.map(function(md){ return _annEsc(md.s); }).join(' + '),on.length===1?on[0].c:'var(--m-net)'],
       ['/live today',_tsN(t.lv),_tsN(t.lu)+' unique spectators','var(--m-live)']]);
   }
   // Visitors: the first system, browser and language, and the installed app.
@@ -5390,7 +5391,7 @@
     if(!_trafModeSel.length) _trafModeSel=MODE48.map(function(m){ return m.k; });
     try{ localStorage.setItem('pth_admin_modes',JSON.stringify(_trafModeSel)); }catch(e){}
     _paintModeSel();
-    if(_trafLastD){ _trafModes48(_trafLastD); _trafModeRows(_trafLastD); _worldConn(_trafLastD); }
+    if(_trafLastD){ _trafModes48(_trafLastD); _trafModeRows(_trafLastD); _worldConn(_trafLastD); _tsActivity(_trafLastD); }
     if(_narrowOn()) _cubeLoad();
     _geoRedraw();
   }
@@ -5755,8 +5756,11 @@
     var labs=h48.map(function(x){ return x.t.slice(8,10)+'.'+x.t.slice(5,7)+' '+x.t.slice(11)+'h'; });
     var lines=_modesOn().map(function(md){ return {k:md.k,n:md.n,c:md.c,vals:h48.map(function(x){ return (x.m&&x.m[md.k])||0; })}; });
     _chartMount(box,labs,lines,150,'stack');
-    if(nt) nt.textContent=all.toLocaleString()+' sessions'+(_modesAll()?'':' (all modes)')+' \u00b7 '+MODE48.filter(function(md){ return tot[md.k]; })
-      .map(function(md){ return md.s+' '+Math.round(tot[md.k]*100/all)+'%'; }).join(' \u00b7 ');
+    // Filtered: the sessions of the modes on show, and what share of every mode they are.
+    var sel=0; _modesOn().forEach(function(md){ sel+=tot[md.k]; });
+    if(nt) nt.textContent=_modesAll()
+      ? all.toLocaleString()+' sessions \u00b7 '+MODE48.filter(function(md){ return tot[md.k]; }).map(function(md){ return md.s+' '+Math.round(tot[md.k]*100/all)+'%'; }).join(' \u00b7 ')
+      : sel.toLocaleString()+' '+_modesOn().map(function(md){ return md.s; }).join(' + ')+' sessions \u00b7 '+Math.round(sel*100/all)+'% of '+all.toLocaleString()+' across every mode';
   }
   // -- pokerth.net contre le web client ---------------------------------------
   // Echantillons du proxy toutes les 5 min, moyennes par heure (48 h) et par
@@ -8189,9 +8193,11 @@
       var show=_geoAll?ranked:ranked.slice(0,25);
       ls.innerHTML=show.map(function(cc,i){
         var c=C[cc], m=c.m||{}, mt=0; MODE48.forEach(function(x){ mt+=m[x.k]||0; });
-        var stk=MODE48.map(function(x){ var n=m[x.k]||0; return n?'<i style="display:block;width:'+(100*n/mt).toFixed(1)+'%;background:'+x.c+'"></i>':''; }).join('');
+        // Filtered by entry mode: the modes picked keep their width out of every
+        // mode's sessions, the others leave the track empty (as on the country card).
+        var stk=MODE48.map(function(x){ var n=m[x.k]||0; return (n&&_modeOn(x.k))?'<i style="display:block;width:'+(100*n/mt).toFixed(1)+'%;background:'+x.c+'"></i>':''; }).join('');
         return '<div class="georow'+(cc===_geoSel?' on':'')+'" data-cc="'+cc+'" role="button" tabindex="0"><span class="rk">'+(i+1)+'</span>'+_geoFlag(cc)
-          +'<span class="nm">'+_annEsc(_geoName(cc))+(_geoLooksBot(c)?'<span class="geobot" title="Every visit is a new device and none opened a game: looks automated">bot?</span>':'')+'</span><span class="stk" title="'+(mt?'Sessions by entry mode':'No game opened: page views only')+'">'+stk+'</span>'
+          +'<span class="nm">'+_annEsc(_geoName(cc))+(_geoLooksBot(c)?'<span class="geobot" title="Every visit is a new device and none opened a game: looks automated">bot?</span>':'')+'</span><span class="stk" title="'+(mt?(_modesAll()?'Sessions by entry mode':'Sessions in the modes picked, out of every mode'):'No game opened: page views only')+'">'+stk+'</span>'
           +'<span class="ct">'+(typeof c.n==='string'?'&lt;3':_geoFmt(_geoVal(c)))+'</span><span class="pc">'+_geoPct(_geoVal(c),tot)+' %</span></div>';
       }).join('')+(ranked.length>25?'<div class="seg"><button type="button" id="geoMore">'+(_geoAll?'Show the top 25':'Show all '+ranked.length)+'</button></div>':'')
       +'<div class="geolegend">'+MODE48.map(function(x){ return '<span><span aria-hidden="true" style="display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;background:'+x.c+'"></span>'+_annEsc(x.s)+'</span>'; }).join('')+'</div>';

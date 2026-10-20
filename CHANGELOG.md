@@ -72,6 +72,13 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Statistics: the entry-mode filter reaches every figure split by mode** (`web.205`, audit of 2026-10-20,
+  B3) — with Training alone picked, Activity › « Connections today » still counted every mode, the note of « Last 48 h
+  by entry mode » read « 336 sessions (all modes) · Internet 55 %… » above a Training-only chart, and the bars of
+  World › Countries kept all four modes although the Filters panel says the filter applies to the countries. The tile
+  now counts and names the modes picked (and is drawn again when they change), the note gives their sessions and
+  share of every mode (« 101 Training sessions · 30 % of 336 across every mode »), and each country bar keeps only the
+  modes picked, out of every mode's sessions. Guarded in `scripts/test-admin-filters.mjs`.
 - **Statistics: no « vs before » against a period that was not fully counted** (`web.204`, audit of
   2026-10-20, B2) — a young store, or one just reset, set a full period against a few days: « Last 30 days »
   read « +152 % » with 16 days of data in the 30 before. `/admin/visits` now returns `cover` (today, week, month,

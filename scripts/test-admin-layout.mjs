@@ -576,7 +576,7 @@ ok(/tot\.forEach\(function\(t\)\{ if\(t>max\) max=t; \}\); if\(prev\) prev\.forE
 for (const id of ['wInet', 'wInetNote', 'wLan', 'wLanNote', 'wConn', 'wConnNote']) ok(traf.includes('id="' + id + '"'), id + ' has its place on the World page');
 ok(traf.indexOf('id="wInet"') > traf.indexOf('id="geoMap"') && traf.indexOf('id="wConn"') < traf.indexOf('<h2>Countries</h2>'), 'under the map, above the countries');
 ok(/function _worldCards\(d\)/.test(admin) && /_trafLastD=d; _trafModeRows\(d\); _worldCards\(d\);/.test(admin), 'filled with each read of the figures');
-ok(/_worldConn\(_trafLastD\); \}/.test(body(admin, '_pickMode')), 'connections per day follow the entry modes');
+ok(/_worldConn\(_trafLastD\);/.test(body(admin, '_pickMode')), 'connections per day follow the entry modes');
 ok(/var keys=on\.map\(function\(m\)\{ return m\.k; \}\)/.test(body(admin, '_worldConn')), 'counting the modes on show only');
 ok(/_wSum\(d\.series,\['pokerthnet'\]\)/.test(body(admin, '_worldInet')) && /_wSum\(d&&d\.series,\['lan'\]\)/.test(body(admin, '_worldLan')), 'each card counts its own mode');
 ok(/api\('\/admin\/lan-directory'\)/.test(body(admin, '_worldCards')), 'the LAN card reads the directory');
