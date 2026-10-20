@@ -72,6 +72,12 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Statistics › Summary: a past range keeps its last day** (`web.208`, audit of 2026-10-20, B6) — the mean, slope
+  and halves of « Visits / day », « Returning / day » and the Bottom line leave out the day in progress so that it
+  does not pull every reading down each morning; a past custom range has none, yet lost its last day too (10 → 16 Oct
+  read « mean over 6 complete days »). The last point is now dropped only when it is in progress: always for 24 h,
+  for a window ending today, never for a range that ended before (`periodEnd` > 0). Guarded in
+  `scripts/test-stats-fair.mjs`.
 - **Statistics: edge-case labels** (`web.207`, audit of 2026-10-20, B5) — a one-day range read « window 1 days »,
   « mean over 1 complete days », « first half was empty » and « first half 0.0 → second half … » (one day has no
   halves: now « a single day: no halves to compare »); « Back within 7 days » said « too recent to tell » for a window

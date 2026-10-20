@@ -66,7 +66,7 @@ ok(/cur: visitWindow\(P, E \|\| 1\), prev: visitWindow\(P, \(E \|\| 1\) \+ P\)/.
 ok(/todayKey: visitDayKey\(now\)/.test(sum) && /musicSinceKey/.test(sum), 'and the server\'s own day keys');
 ok(/tile\('Last 7 days',d\.week,pv\.week,'the 7 days before \(complete days\)',fu\.week,cv\.week\)/.test(admin), 'the 7-day tile compares complete days and says so');
 const ins = fn(admin, '_trafInsights');
-ok(/if\(n>2\)\{ s=s\.slice\(0,-1\); n=s\.length; \}/.test(ins), 'mean, slope and halves leave the day in progress out');
+ok(/if\(n>2 && live\)\{ s=s\.slice\(0,-1\); n=s\.length; \}/.test(ins), 'mean, slope and halves leave the day in progress out');
 ok(/_linreg\(lines\[0\]\.vals\.length>2\?lines\[0\]\.vals\.slice\(0,-1\)/.test(admin), 'so does the trend line of the chart');
 
 // ── Server day keys, request order ────────────────────────────────────────
@@ -75,5 +75,9 @@ ok(!/getFullYear\(\)/.test(mt) && /_trafTodayKey/.test(mt) && /_musSinceKey/.tes
 const lt = fn(admin, 'loadTraffic');
 ok(/var _seq=\+\+_trafSeq;/.test(lt) && /if\(_seq!==_trafSeq\) return;/.test(lt), 'only the newest Traffic answer paints');
 
+// The point in progress is left out of means, slope and halves, only when there
+// is one: always for 24 h, never for a past custom range (audit 2026-10-20, B6).
+ok(/var sAll=s, live=d\.h24 \|\| !d\.periodEnd;\n\s+if\(n>2 && live\)\{ s=s\.slice\(0,-1\); n=s\.length; \}/.test(admin),
+  'a window ending now drops its day (hour) in progress; a past range keeps every day');
 console.log(fail ? 'FAIL ' + fail + '/' + n : 'OK ' + n + '/' + n);
 process.exit(fail ? 1 : 0);

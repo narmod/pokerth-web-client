@@ -5966,9 +5966,10 @@
     if(!n) return;
     // Means, slope and halves are read on complete days (complete hours for
     // 24 h): the last point is the one in progress and would pull every
-    // reading down each morning. The charts still draw it.
-    var sAll=s;
-    if(n>2){ s=s.slice(0,-1); n=s.length; }
+    // reading down each morning. The charts still draw it. A past custom
+    // range (periodEnd > 0) has no day in progress: all of it is kept.
+    var sAll=s, live=d.h24 || !d.periodEnd;
+    if(n>2 && live){ s=s.slice(0,-1); n=s.length; }
     var vv=s.map(function(x){ return x.v||0; });
     var nwv=s.map(function(x){ return x.nw||0; });
     var rtv=s.map(function(x){ return x.rt||0; });
