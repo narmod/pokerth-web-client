@@ -5265,26 +5265,28 @@
       }
       // `cmp` = {cur,prev} over complete days: the figure shown includes today
       // so far, the arrow compares like with like.
-      function tile(lbl,o,ref,refLbl,cmp){
-        var dl=(cmp&&cmp.cur&&cmp.prev)?_dl(cmp.cur.v, cmp.prev.v):_dl(o&&o.v, ref&&ref.v), t=_tone(dl);
+      // `cov` false: the window before was not counted from its first day
+      // (cover, proxy.js visitCovered) — no percentage, it says so instead.
+      function tile(lbl,o,ref,refLbl,cmp,cov){
+        var dl=cov===false?null:((cmp&&cmp.cur&&cmp.prev)?_dl(cmp.cur.v, cmp.prev.v):_dl(o&&o.v, ref&&ref.v)), t=_tone(dl);
         return '<div class="tstat '+t+'"><div class="lbl">'+lbl+'</div><div class="big '+t+'">'+fmt(o&&o.v)+'</div>'
           +'<div class="sub">'+fmt(o&&o.u)+' unique</div>'
           +'<div class="sub">'+fmt(o&&o.nw)+' new</div>'
-          +_dtxt(dl,refLbl)+'</div>';
+          +(cov===false?'<div class="delta">previous period incomplete</div>':_dtxt(dl,refLbl))+'</div>';
       }
       // Sept fenetres pour quatre questions : tant que le site n'a pas un an de
       // recul, 90, 180 et 365 jours repetent « All time » au chiffre pres. Les
       // trois restent dans l'export, elles ne prennent plus la place a l'ecran.
-      var pv=d.prev||{}, fu=d.full||{};
+      var pv=d.prev||{}, fu=d.full||{}, cv=d.cover||{};
       _trafTodayKey=d.todayKey||''; _musSinceKey=d.musicSinceKey||'';
       // La troisieme tuile suit le selecteur ; a 7 jours elle ferait doublon
       // avec « Last 7 days », on y met alors les 30 jours d'avant.
-      var P=d.periodDays||_trafPeriod, per=d.period, perPrev=pv.period, perCmp=fu.period;
-      if((P===7&&!d.range)||!per){ P=30; per=d.month; perPrev=pv.month; perCmp=fu.month; }
+      var P=d.periodDays||_trafPeriod, per=d.period, perPrev=pv.period, perCmp=fu.period, perCov=cv.period;
+      if((P===7&&!d.range)||!per){ P=30; per=d.month; perPrev=pv.month; perCmp=fu.month; perCov=cv.month; }
       var pLbl=(d.h24&&P===1)?'Last 24 hours':(d.range&&per===d.period?_rangeLabel():'Last '+P+' days'), pRef=(d.h24&&P===1)?'the 24 hours before (complete hours)':'the '+P+' day'+(P>1?'s':'')+' before (complete days)';
-      if(g) g.innerHTML = tile('Today',d.today,pv.todayToHour,'yesterday at this hour')
-        +tile('Last 7 days',d.week,pv.week,'the 7 days before (complete days)',fu.week)
-        +tile(pLbl,per,perPrev,pRef,perCmp)
+      if(g) g.innerHTML = tile('Today',d.today,pv.todayToHour,'yesterday at this hour',null,cv.today)
+        +tile('Last 7 days',d.week,pv.week,'the 7 days before (complete days)',fu.week,cv.week)
+        +tile(pLbl,per,perPrev,pRef,perCmp,perCov)
         +tile('All time',d.allTime);
       var c=$('trafChart'), s=(d.series||[]), max=1;
       _trafSeries=s;
@@ -5603,7 +5605,10 @@
   function _wFmt(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
   // Sum of one mode (or of the modes on show) over a list of {m:{}} points.
   function _wSum(list,keys){ var t=0; (list||[]).forEach(function(x){ var m=(x&&x.m)||x||{}; keys.forEach(function(k){ t+=m[k]||0; }); }); return t; }
-  function _wDelta(cur,prev){
+  // cov false: the period before was not counted from its first day.
+  var W_INCOMPLETE='<i>previous period incomplete</i>';
+  function _wDelta(cur,prev,cov){
+    if(cov===false) return W_INCOMPLETE;
     if(!prev) return '';
     var p=Math.round((cur-prev)/prev*100), t=p>=10?'up':(p<=-10?'dn':'');
     return '<i class="'+t+'">'+(p>0?'▲ +':(p<0?'▼ −':'≈ '))+Math.abs(p)+'% vs before</i>';
@@ -5612,20 +5617,21 @@
   function _wLogins(d){
     var L=d&&d.logins;
     var E=_cube&&_cube.E&&_cube.E.ok?_cube.E:null;
-    if(E){ var eb=E.period.by||{}, ep=E.prev.by||{}; L={period:{g:_cv(eb.guest),a:_cv(eb.auth)}, prev:{g:_cv(ep.guest),a:_cv(ep.auth)}, since:E.since}; }
+    var cov=(d&&d.cover||{}).logins;
+    if(E){ var eb=E.period.by||{}, ep=E.prev.by||{}; L={period:{g:_cv(eb.guest),a:_cv(eb.auth)}, prev:{g:_cv(ep.guest),a:_cv(ep.auth)}, since:E.since}; cov=E.prevCovered; }
     if(!L) return '';
     var p=L.period||{}, q=L.prev||{}, g=p.g||0, a=p.a||0, t=g+a, tp=(q.g||0)+(q.a||0);
     if(!t) return L.since?'<span>No login counted over this period</span>':'<span>Guests and accounts are counted from 2.1.10-web.123</span>';
     var pc=function(x){ return Math.round(100*x/t); };
-    var dl=tp?Math.round((t-tp)/tp*100):null;
+    var dl=(tp&&cov!==false)?Math.round((t-tp)/tp*100):null;
     return '<span>Logins <b>'+_wFmt(t)+'</b>'+(dl===null?'':' ('+(dl>=0?'+':'\u2212')+Math.abs(dl)+'%)')+'</span><span>Guests <b>'+pc(g)+' %</b></span><span>Accounts <b>'+pc(a)+' %</b></span>';
   }
   function _worldInet(d){
     var box=$('wInet'), nt=$('wInetNote'); if(!box) return;
     var p=d.pth, nw=p&&p.now, cur=_wSum(d.series,['pokerthnet']), prv=_wSum(d.prevM,['pokerthnet']);
-    var B=_cube&&_cube.B&&_cube.B.ok?_cube.B:null, cb=B?B.period.by.pokerthnet:null;
-    if(B){ cur=_cv(cb); prv=_cv(B.prev.by.pokerthnet); }
-    var k3='<div><span>Connections, '+_annEsc(_perLabel(_trafPeriod))+(B?' \u00b7 narrowed':'')+'</span><b>'+(B?_cf(cb||0):_wFmt(cur))+'</b>'+(_wDelta(cur,prv)||'<i>through this client</i>')+'</div>';
+    var B=_cube&&_cube.B&&_cube.B.ok?_cube.B:null, cb=B?B.period.by.pokerthnet:null, cov=(d.cover||{}).prev;
+    if(B){ cur=_cv(cb); prv=_cv(B.prev.by.pokerthnet); cov=B.prevCovered; }
+    var k3='<div><span>Connections, '+_annEsc(_perLabel(_trafPeriod))+(B?' \u00b7 narrowed':'')+'</span><b>'+(B?_cf(cb||0):_wFmt(cur))+'</b>'+(_wDelta(cur,prv,cov)||'<i>through this client</i>')+'</div>';
     if(p===undefined || !nw){
       box.innerHTML=(_wLogins(d)?'<div class="wfoot" style="margin:0 0 8px">'+_wLogins(d)+'</div>':'')+'<div class="wkpis"><div><span>Online on the server</span><b>—</b><i>'+(p&&p.on===false?'live figures switched off':'no sample yet')+'</i></div><div><span>On the web client</span><b>—</b><i></i></div>'+k3+'</div>';
       if(nt) nt.textContent='';
@@ -5653,14 +5659,15 @@
     var box=$('wLan'), nt=$('wLanNote'); if(!box) return;
     var cur=_wSum(d&&d.series,['lan']), prv=_wSum(d&&d.prevM,['lan']);
     var NB=_cube&&_cube.B&&_cube.B.ok?_cube.B:null, NC=_cube&&_cube.C&&_cube.C.ok?_cube.C:null;
-    if(NB){ cur=_cv(NB.period.by.lan); prv=_cv(NB.prev.by.lan); }
+    var cov=((d&&d.cover)||{}).prev;
+    if(NB){ cur=_cv(NB.period.by.lan); prv=_cv(NB.prev.by.lan); cov=NB.prevCovered; }
     var ld=_wLd, E=(ld&&ld.ok&&ld.entries)||[];
     var on=E.filter(function(e){ return e.status&&e.status.online; }), now=0;
     on.forEach(function(e){ now+=(e.status.players||0); });
     if(nt) nt.textContent=ld&&ld.ok ? (E.length+' listed · '+on.length+' online') : '';
     var h='<div class="wkpis"><div><span>Online now</span><b>'+(ld&&ld.ok?_wFmt(now):'—')+'</b><i>players on listed servers</i></div>'
       +'<div><span>Servers up</span><b>'+(ld&&ld.ok?on.length+' / '+E.length:'—')+'</b><i>checked by the proxy</i></div>'
-      +'<div><span>Connections, '+_annEsc(_perLabel(_trafPeriod))+(NB?' \u00b7 narrowed':'')+'</span><b>'+(NB?_cf(NB.period.by.lan||0):_wFmt(cur))+'</b>'+(_wDelta(cur,prv)||'<i>through this client</i>')+'</div></div>';
+      +'<div><span>Connections, '+_annEsc(_perLabel(_trafPeriod))+(NB?' \u00b7 narrowed':'')+'</span><b>'+(NB?_cf(NB.period.by.lan||0):_wFmt(cur))+'</b>'+(_wDelta(cur,prv,cov)||'<i>through this client</i>')+'</div></div>';
     if(!ld){ box.innerHTML=h+'<div class="empty">Loading…</div>'; return; }
     if(!ld.ok){ box.innerHTML=h+'<div class="empty err">Could not read the LAN directory.</div>'; return; }
     if(!E.length){ box.innerHTML=h+'<div class="empty">No LAN server is listed yet.</div>'; return; }
@@ -5670,13 +5677,14 @@
     });
     var shown;
     var LS=(d&&d.lanServers)||null;
-    if(NC) LS={period:NC.period.by||{}, prev:NC.prev.by||{}, since:NC.since};
+    var lcov=((d&&d.cover)||{}).lan;
+    if(NC){ LS={period:NC.period.by||{}, prev:NC.prev.by||{}, since:NC.since}; lcov=NC.prevCovered; }
     var lp=(LS&&LS.period)||{}, lq=(LS&&LS.prev)||{};
     // Busiest first once there are counts (the sort is stable: online first among equals).
     if(LS) rows.sort(function(a,b){ return _cv(lp[b.id])-_cv(lp[a.id]); });
     shown=rows.slice(0,8);
     h+='<div class="wlan"><span class="wh">Server</span><span class="wh">Status</span><span class="wh wr">Now</span><span class="wh wr wl">Connections</span>';
-    var cnt=function(id){ if(!LS) return '\u2014'; var c=lp[id]||0, b=lq[id]||0; if(typeof c==='string'||typeof b==='string') return _cf(c); return _wFmt(c)+(b?(' <i class="'+(c>=b*1.1?'up':(c<=b*0.9?'dn':''))+'">'+(c>=b?'+':'\u2212')+Math.abs(Math.round((c-b)/b*100))+'%</i>'):''); };
+    var cnt=function(id){ if(!LS) return '\u2014'; var c=lp[id]||0, b=lq[id]||0; if(typeof c==='string'||typeof b==='string') return _cf(c); return _wFmt(c)+((b&&lcov!==false)?(' <i class="'+(c>=b*1.1?'up':(c<=b*0.9?'dn':''))+'">'+(c>=b?'+':'\u2212')+Math.abs(Math.round((c-b)/b*100))+'%</i>'):''); };
     shown.forEach(function(e){
       var st=e.status||{}, known=typeof st.online==='boolean';
       var cls=e.visible===false||e.autoHidden||!known?'hid':(st.online?'on':'off');
@@ -5701,7 +5709,7 @@
       if(!tot && !totp){ box.innerHTML='<div class="empty">No connection matches the narrowing over this period.</div>'; if(nt) nt.textContent='narrowed'; return; }
       var prevBy2={}; on2.forEach(function(m){ prevBy2[m.k]=s2.map(function(_,i){ return _cv(pb[i]&&pb[i][m.k]); }); });
       _chartMount(box,s2.map(_sLab),on2.map(function(m){ return {k:m.k,n:m.n,c:m.c,vals:s2.map(function(x){ return _cv(x.by&&x.by[m.k]); })}; }),190,'stack',{prevBy:prevBy2});
-      if(nt) nt.textContent='narrowed \u00b7 '+_wFmt(tot)+' connections'+(totp?' \u00b7 '+_wFmt(totp)+' before':'')+' \u00b7 dashed: the period before'+(NB.masked?' \u00b7 cells under 3 drawn as 1':'');
+      if(nt) nt.textContent='narrowed \u00b7 '+_wFmt(tot)+' connections'+(NB.prevCovered===false?' \u00b7 previous period incomplete':(totp?' \u00b7 '+_wFmt(totp)+' before':''))+' \u00b7 dashed: the period before'+(NB.masked?' \u00b7 cells under 3 drawn as 1':'');
       return;
     }
     var s=d.series||[], pm=d.prevM||[], on=_modesOn();
@@ -5710,7 +5718,7 @@
     if(!cur && !prv){ box.innerHTML='<div class="empty">No connection counted over this period yet'+(s.some(function(x){ return x.m; })?'':' — per-day counts by mode start with 2.1.10-web.118')+'.</div>'; if(nt) nt.textContent=''; return; }
     var prevBy={}; on.forEach(function(m){ prevBy[m.k]=s.map(function(_,i){ var x=pm[i]; return (x&&x[m.k])||0; }); });
     _chartMount(box,s.map(_sLab),on.map(function(m){ return {k:m.k,n:m.n,c:m.c,vals:s.map(function(x){ return (x.m&&x.m[m.k])||0; })}; }),190,'stack',{prevBy:prevBy});
-    if(nt) nt.textContent=_wFmt(cur)+' connections'+(prv?(' · '+_wFmt(prv)+' before ('+(cur>=prv?'+':'−')+Math.abs(Math.round((cur-prv)/prv*100))+'%)'):'')+' · dashed: the period before';
+    if(nt) nt.textContent=_wFmt(cur)+' connections'+((d.cover||{}).prev===false?' · previous period incomplete':prv?(' · '+_wFmt(prv)+' before ('+(cur>=prv?'+':'−')+Math.abs(Math.round((cur-prv)/prv*100))+'%)'):'')+' · dashed: the period before';
   }
   function _worldCards(d){
     _worldInet(d); _worldConn(d); _worldLan(d);

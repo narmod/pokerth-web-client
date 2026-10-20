@@ -544,7 +544,7 @@ ok(/function _geoRedraw\(\)\{ if\(_geoData && _geoMap && _geoMap\.c\) renderGeo\
 // behind it. They stay in the export; they no longer take the space.
 // web.115: the arrows of the 7-day and period tiles compare complete days
 // (complete hours for 24 h) — the `full` windows — and say so.
-ok(/tile\('Today',d\.today,pv\.todayToHour,'yesterday at this hour'\)\s*\+tile\('Last 7 days',d\.week,pv\.week,'the 7 days before \(complete days\)',fu\.week\)\s*\+tile\(pLbl,per,perPrev,pRef,perCmp\)\s*\+tile\('All time',d\.allTime\)/.test(admin)
+ok(/tile\('Today',d\.today,pv\.todayToHour,'yesterday at this hour',null,cv\.today\)\s*\+tile\('Last 7 days',d\.week,pv\.week,'the 7 days before \(complete days\)',fu\.week,cv\.week\)\s*\+tile\(pLbl,per,perPrev,pRef,perCmp,perCov\)\s*\+tile\('All time',d\.allTime\)/.test(admin)
   && /var pLbl=\(d\.h24&&P===1\)\?'Last 24 hours':\(d\.range&&per===d\.period\?_rangeLabel\(\):'Last '\+P\+' days'\), pRef=\(d\.h24&&P===1\)\?'the 24 hours before \(complete hours\)':'the '\+P\+' day'\+\(P>1\?'s':''\)\+' before \(complete days\)';/.test(admin),
   'four windows are shown, the first three against their previous period; the third follows the period selector (24 hours included)');
 // -- Read at a glance --------------------------------------------------------
@@ -553,7 +553,7 @@ ok(/tile\('Today',d\.today,pv\.todayToHour,'yesterday at this hour'\)\s*\+tile\(
 ok(/fmt\(o&&o\.nw\)\+' new<\/div>'/.test(admin), 'each window shows its new devices under the unique count');
 ok(/dl>=0\.10\?'up':\(dl<=-0\.10\?'dn':''\)/.test(admin), 'colour needs a move of ten percent either way');
 ok(/\(ref&&ref>0\)\? \(cur-ref\)\/ref : null/.test(admin), 'and no reference means no colour rather than red');
-ok(/var pv=d\.prev\|\|\{\}, fu=d\.full\|\|\{\};/.test(admin), 'an older proxy without prev leaves every tile neutral');
+ok(/var pv=d\.prev\|\|\{\}, fu=d\.full\|\|\{\}, cv=d\.cover\|\|\{\};/.test(admin), 'an older proxy without prev leaves every tile neutral (and without cover, compares as before)');
 ok(/\.tstat \.big\.up,\.kpi \.big\.up\{color:#7fd17f\}/.test(admin) && /\.tstat \.big\.dn,\.kpi \.big\.dn\{color:#e8735c\}/.test(admin),
   'the main figure carries the colour on both kinds of tile');
 ok(/prev: \{ todayToHour: visitYesterdayToHour\(\), yesterday: visitWindow\(1, 1\), week: visitWindow\(7, 7\), month: visitWindow\(30, 30\), period: h24 \? visitWindowList\(visitList\(true, 24, 24\)\) : visitWindow\(P, E \+ P\) \}/.test(proxy),

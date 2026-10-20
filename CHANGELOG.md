@@ -72,6 +72,14 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Statistics: no « vs before » against a period that was not fully counted** (`web.204`, audit of
+  2026-10-20, B2) — a young store, or one just reset, set a full period against a few days: « Last 30 days »
+  read « +152 % » with 16 days of data in the 30 before. `/admin/visits` now returns `cover` (today, week, month,
+  period, prev, logins, lan) and `/admin/cube` `prevCovered`, from `visitCovered()`: the window before is covered
+  when an older day bucket exists (the first counted day never counts as whole) and, for logins, LAN servers and
+  the cube, when that figure was already kept. Where it is not, Summary's tiles, World's Internet and LAN cards and
+  « Connections per day » say « previous period incomplete » instead of a percentage; logins and per-server counts
+  drop theirs. Guarded in `scripts/test-visit-hours.mjs`.
 - **Statistics › Audience › Coming back: « the earliest on »** (`web.203`, audit of 2026-10-20, B1) — the line
   under the return rates gave the earliest dated device of the whole history (`cohorts.since`, e.g. 5 Sep) while
   saying « N first seen in the window, the earliest on … » for a window that began on 7 Oct. `visitCohorts()` now

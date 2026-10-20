@@ -8349,7 +8349,9 @@ function visitCubeSummary(query) {
       series: series, prevSeries: prevSeries, prevSeriesBy: prevSeriesBy,
       values: CUBE_STATS.values(cur, type), lanNames: names,
       masked: cellDims >= 2, small: CUBE_STATS.SMALL,
-      since: visitsStore.cubeSince || 0
+      since: visitsStore.cubeSince || 0,
+      // The window before was counted from its first day (visitCovered).
+      prevCovered: visitCovered(h24 ? 2 : E + 2 * P - 1, visitsStore.cubeSince || 0)
     };
   });
 }
@@ -8797,6 +8799,31 @@ function recordVisit(rawId, bot) {
 // qui precedent les 7 derniers. Sert de reference « periode precedente » aux
 // tuiles de l'admin, qui n'ont ainsi pas a reconstituer une union d'appareils
 // a partir de la serie journaliere.
+// ── Is a comparison window fully counted? ───────────────────────────────
+// A « vs before » percentage is only honest when the window it is set against
+// was counted from its first day: a young store, or one just reset, compares a
+// full period with a few days and shows +150 %. `back` = how many days before
+// today the window's oldest day lies. It is covered when an older day bucket
+// exists (counting had started the day before), and, for a figure kept since
+// a later build (logins, LAN servers, the cube), when `sinceMs` is older too.
+// The first counted day is never taken as whole: it rarely starts at midnight.
+function visitOldestBack() {
+  const t = visitDayIndex();
+  let m = -1;
+  for (const k in visitsStore.days) {
+    const p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(k);
+    if (!p) continue;
+    const b = t - Math.floor(Date.UTC(+p[1], +p[2] - 1, +p[3]) / 86400000);
+    if (b > m) m = b;
+  }
+  return m;
+}
+function visitCovered(back, sinceMs, oldest) {
+  if (oldest === undefined) oldest = visitOldestBack();
+  if (oldest <= back) return false;
+  if (sinceMs && visitDayIndex() - visitDayIndex(new Date(sinceMs)) <= back) return false;
+  return true;
+}
 function visitWindow(daysBack, offset) {
   return visitWindowList(visitList(false, daysBack, offset));
 }
@@ -9166,6 +9193,18 @@ function visitsSummaryRead(periodDays, h24, range) {
     hourSince: visitsStore.hourSince || 0,
     modeHourSince: visitsStore.modeHourSince || 0,
     pth: pthShareSummary(P, h24, E),
+    // Whether each « vs before » compares against a fully counted window
+    // (visitCovered). The oldest day of: yesterday (today's tile); full.week.prev
+    // (7, 8); full.month.prev (30, 31); full.period.prev; and prev.period, which
+    // prevM, logins.prev and lanServers.prev share. 24 h: the hours 25-48 back.
+    cover: (function () {
+      const o = visitOldestBack(), pb = h24 ? 2 : E + 2 * P - 1;
+      return {
+        today: visitCovered(1, 0, o), week: visitCovered(14, 0, o), month: visitCovered(60, 0, o),
+        period: visitCovered(h24 ? 2 : (E || 1) + 2 * P - 1, 0, o), prev: visitCovered(pb, 0, o),
+        logins: visitCovered(pb, visitsStore.loginSince || 0, o), lan: visitCovered(pb, visitsStore.lanSrvSince || 0, o)
+      };
+    })(),
     cohorts: h24 ? null : visitCohorts(P, E),
     env: Object.assign(LANG_STATS.foldEnv(visitsStore.env || {}), { noiseMeta: LANG_STATS.noiseMeta(visitsStore.langDiagSince) }),
     envSince: visitsStore.envSince || 0,

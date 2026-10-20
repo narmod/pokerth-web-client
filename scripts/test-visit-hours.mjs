@@ -158,6 +158,34 @@ const none = cohortScope({ days: {}, allU: {} }, 1000).visitCohorts(30);
 ok(none.known === 0 && none.d1.n === 0 && none.newTotal === 0 && none.first === 0,
   'an empty store answers with zeros, not with a rate over nothing');
 
+// -- « vs before » only against a fully counted window (audit 2026-10-20, B2)
+const coverScope = new Function('visitsStore',
+  fn('visitDayIndex') + '\n' + fn('visitDayKeyFromIndex') + '\n' + fn('visitOldestBack') + '\n' + fn('visitCovered') +
+  '\nreturn { visitDayIndex, visitDayKeyFromIndex, visitOldestBack, visitCovered };');
+const store3 = { days: {} };
+const cv = coverScope(store3);
+const t3 = cv.visitDayIndex();
+ok(cv.visitOldestBack() === -1 && cv.visitCovered(1) === false, 'an empty store covers nothing');
+store3.days[cv.visitDayKeyFromIndex(t3 - 45)] = { v: 1, ids: {} };
+store3.days[cv.visitDayKeyFromIndex(t3 - 3)] = { v: 1, ids: {} };
+store3.days.junk = { v: 1 };
+ok(cv.visitOldestBack() === 45, 'the oldest day bucket sets how far back counting goes (junk keys ignored)');
+ok(cv.visitCovered(27) === true, '14 days against the 14 before (oldest day 27 back): covered');
+ok(cv.visitCovered(59) === false, '30 days against the 30 before (59 back) with 46 days of data: incomplete');
+ok(cv.visitCovered(45) === false, 'the first counted day is never taken as whole');
+ok(cv.visitCovered(27, Date.now() - 10 * 86400000) === false && cv.visitCovered(5, Date.now() - 10 * 86400000) === true,
+  'a figure counted since a later build is covered only from that build on');
+ok(/cover: \(function \(\) \{/.test(src) && /prevCovered: visitCovered\(h24 \? 2 : E \+ 2 \* P - 1, visitsStore\.cubeSince/.test(src),
+  'the summary and the cube both say whether the window before is covered');
+const adm = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'admin.html'), 'utf8');
+ok(/function tile\(lbl,o,ref,refLbl,cmp,cov\)\{\n\s+var dl=cov===false\?null:/.test(adm) && /previous period incomplete<\/div>/.test(adm),
+  'Summary: an incomplete period before gives no percentage, it says so');
+ok((adm.match(/_wDelta\(cur,prv,cov\)/g) || []).length === 2 && /if\(cov===false\) return W_INCOMPLETE;/.test(adm),
+  'World: the Internet and LAN cards follow the cover (the cube one when narrowed)');
+ok(/\(tp&&cov!==false\)\?Math\.round/.test(adm) && /\(b&&lcov!==false\)\?/.test(adm), 'no percentage either on logins or per LAN server');
+ok(/NB\.prevCovered===false\?' \\u00b7 previous period incomplete'/.test(adm) && /\(d\.cover\|\|\{\}\)\.prev===false\?' · previous period incomplete'/.test(adm),
+  'connections per day: the note says it, narrowed or not');
+
 // -- Wiping means wiping ---------------------------------------------------
 // The reset listed its fields by hand and the list had drifted from the one
 // used at startup: music, musicSince and hourSince survived a "delete
