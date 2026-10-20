@@ -72,6 +72,11 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Statistics › Filters › Narrow to: the list opens under its row** (`web.214`, audit of 2026-10-20, S8) — the list of
+  values opened below all six rows, a screen away from the one tapped on a phone; it now opens right under it, as an
+  accordion, and follows when another row is tapped (it goes back to its place before the rows are redrawn). In the
+  country list, « Unknown » sat in the middle of its row: its empty flag slot took the name's flexible width.
+  Guarded in `scripts/test-admin-filters.mjs`.
 - **Admin: every card folds the same way** (`web.213`, audit of 2026-10-20, S7) — only cards opening on their bare
   `<h2>` folded; the 35 whose title sits in a `.boardhead` beside a note or buttons (Daily visits, World map, Game
   servers, Audit log…) did not, so a page mixed both. They fold now: the head stays, the body folds, the head's

@@ -226,6 +226,9 @@
   .nrlist label{display:flex;align-items:center;gap:8px;margin:0;padding:7px 12px;font-size:.85rem;color:var(--cream);cursor:pointer}
   .nrlist label:hover{background:var(--hover)}
   .nrlist label span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* The empty flag slot of « Unknown » is a span too: it took half the row and
+     pushed the name to the middle (audit 2026-10-20, S8). */
+  .nrlist label span.ckf{flex:none}
   .nrlist label b{font-weight:500;font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
   .nrft{display:flex;justify-content:flex-end;gap:8px;padding:8px 12px;border-top:1px solid var(--line)}
   @media(max-width:600px){ .nrpop{left:0} }
@@ -328,6 +331,8 @@
   .fsheet .nrclear{align-self:flex-start;margin-top:8px}
   .fsheet .nrrow .sbhint{flex:none}
   .fsheet .nrpop{position:static;width:auto;max-height:none;margin:6px 0 0;box-shadow:none}
+  /* Opened under the row that was tapped, as an accordion (S8). */
+  .fsheet #trafNarrow>.nrpop{margin:4px 0 10px}
   .fsfoot{padding:12px 20px 16px;border-top:1px solid var(--line)}
   .fsgo{width:100%;min-height:50px;border:0;border-radius:14px;background:var(--accent);color:#0E1319;font:inherit;font-size:1rem;font-weight:600;cursor:pointer}
   :root[data-admin-theme="light"] .fsopen,:root[data-admin-theme="light"] .fsgo{color:#fff}
@@ -5500,6 +5505,9 @@
   function _narrowSave(){ try{ localStorage.setItem('pth_admin_narrow',JSON.stringify(_narrow)); }catch(e){} }
   function _paintNarrow(){
     var box=$('trafNarrow'), nt=$('trafNarrowNote'); if(!box) return;
+    // The open list sits inside the rows (below its own): back home before
+    // the rows are drawn again, or it would be wiped with them.
+    var pop0=$('trafNarrowPop'); if(pop0 && box.contains(pop0)) box.parentNode.appendChild(pop0);
     box.innerHTML=NARROW_DIMS.map(function(x){
       var sel=_narrow[x[0]]||[], txt=sel.length ? sel.slice(0,2).map(function(v){ return _narrowLabel(x[0],v); }).join(', ')+(sel.length>2?' +'+(sel.length-2):'') : 'all';
       return '<button type="button" class="chip nrchip'+(sel.length?' on':'')+'" data-nd="'+x[0]+'" aria-haspopup="true" aria-expanded="'+(_narrowOpen===x[0])+'"><span class="nrk">'+x[1]+'<span class="fsvh">: </span></span><span class="nrv">'+_annEsc(txt)+'</span></button>';
@@ -5531,6 +5539,10 @@
             +(dim==='cc'?_geoFlag(v):'')+'<span>'+_annEsc(_narrowLabel(dim,v))+'</span><b>'+_wFmt(vals[v]||0)+'</b></label>';
         }).join('')+'</div>' : '<div class="empty">Nothing counted over this period.</div>')
       +'<div class="nrft"><button type="button" class="use" data-nr="none">All</button><button type="button" class="use" data-nr="done">Done</button></div>';
+    // In the Filters panel the list opens right under the row tapped (S8): at
+    // the bottom of all six rows it was a screen away from it on a phone.
+    var chip=pop.closest('.fsheet') && $('trafNarrow').querySelector('[data-nd="'+dim+'"]');
+    if(chip && chip.nextSibling!==pop) chip.parentNode.insertBefore(pop, chip.nextSibling);
     pop.hidden=false;
   }
   function _narrowClose(apply){

@@ -84,5 +84,11 @@ ok(/class="fspill'\+\(u\?'':' off'\)\+'"/.test(fsp) && /\(not used on this page\
 ok(/'not used on this page<\/span>'/.test(fsp) && /\.fspill\.off\{background:transparent;color:var\(--muted\)/.test(admin),
   'with one visible line saying what greyed means');
 
+// ── Narrow: the list opens under its row; « Unknown » not centred (audit 2026-10-20, S8)
+ok(/var chip=pop\.closest\('\.fsheet'\) && \$\('trafNarrow'\)\.querySelector\('\[data-nd="'\+dim\+'"\]'\);\n\s+if\(chip && chip\.nextSibling!==pop\) chip\.parentNode\.insertBefore\(pop, chip\.nextSibling\);/.test(body(admin, '_paintNarrowPop')),
+  'in the Filters panel the list opens right under the row tapped');
+ok(/var pop0=\$\('trafNarrowPop'\); if\(pop0 && box\.contains\(pop0\)\) box\.parentNode\.appendChild\(pop0\);\n\s+box\.innerHTML=NARROW_DIMS\.map/.test(body(admin, '_paintNarrow')),
+  'and goes back home before the rows are drawn again, so it is never wiped with them');
+ok(/\.nrlist label span\.ckf\{flex:none\}/.test(admin), 'the empty flag slot of « Unknown » no longer takes half the row');
 console.log(fail ? 'FAIL ' + fail + '/' + n : 'OK ' + n + '/' + n);
 process.exit(fail ? 1 : 0);
