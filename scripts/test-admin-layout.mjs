@@ -594,12 +594,12 @@ ok(/title="removed from the catalogue"/.test(admin), 'a title no longer in the c
 // series shaped like the proxy's, to check the maths and not only the text.
 {
   const need = ['_musRank','_musDays','_musContext','_musChart','_musName','_stackChart','_niceAxis','_axLab','_isInt','_xTicks','_annEsc','_round1','_sLab','_perU',
-                '_musVoteCell','_musTrendWin','_musTrendBadge','_musVotedElsewhere','_langTrendStat'];
+                '_musVoteCell','_musTrendWin','_musTrendBadge','_musVotedElsewhere','_langTrendStat','_stDate'];
   // body() strips the header; here the whole function is needed to run it.
   const whole = n => { const h = admin.indexOf('function ' + n + '('); const b = body(admin, n); return b ? admin.slice(h, admin.indexOf(b, h) + b.length) : ''; };
   const lifted = need.map(whole).join('\n');
   ok(!need.some(n => !whole(n)), 'every music helper is liftable');
-  const env = `var ENV_COLORS=['#a','#b','#c','#d','#e','#f','#g','#h','#i','#z'];var MUS_TOP=10,MUS_STACK=5,_trafPeriod=14,_trafRange=null,_trafRangeDays=0;function _isH24(){ return false; }
+  const env = `var ST_MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];var ENV_COLORS=['#a','#b','#c','#d','#e','#f','#g','#h','#i','#z'];var MUS_TOP=10,MUS_STACK=5,_trafPeriod=14,_trafRange=null,_trafRangeDays=0;function _isH24(){ return false; }
     var _musData={t1:30,t2:20,t3:10,t4:5,t5:3,t6:2,t7:1,t8:1,t9:1,t10:1,t11:1,t12:1};
     var _musTitles={t1:'Alpha',t2:'Beta',t3:'Gamma',t4:'Delta',t5:'Eps',t6:'Zeta',t7:'Eta',t8:'Th',t9:'Io',t11:'La'};
     var _musSince=new Date(2026,7,23,10,0,0).getTime(), _musSinceKey='2026-08-23', _trafTodayKey='';   // day keys come from the server

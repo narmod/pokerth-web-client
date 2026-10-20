@@ -3987,7 +3987,7 @@
   var _trafRange=null, _trafRangeDays=0;
   try{ var _rg=JSON.parse(localStorage.getItem('pth_admin_range')||'null'); if(_rg && /^\d{4}-\d{2}-\d{2}$/.test(_rg.from) && /^\d{4}-\d{2}-\d{2}$/.test(_rg.to)) _trafRange={from:_rg.from,to:_rg.to}; }catch(e){}
   function _isH24(){ return !_trafRange && _trafPeriod===1; }
-  function _dayLab(k,yr){ var d=new Date(k+'T12:00:00'); if(isNaN(d)) return k; try{ return d.toLocaleDateString('en-GB',yr?{day:'numeric',month:'short',year:'numeric'}:{day:'numeric',month:'short'}); }catch(e){ return k; } }
+  function _dayLab(k,yr){ var d=new Date(k+'T12:00:00'); if(isNaN(d)) return k; return d.getDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]+(yr?' '+d.getFullYear():''); }
   function _rangeLabel(){ if(!_trafRange) return ''; var y=_trafRange.from.slice(0,4)!==_trafRange.to.slice(0,4) || _trafRange.to.slice(0,4)!==String(new Date().getFullYear()); return _trafRange.from===_trafRange.to ? _dayLab(_trafRange.from,y) : _dayLab(_trafRange.from,y)+' \u2013 '+_dayLab(_trafRange.to,y); }
   function _perLabel(n){ if(_trafRange) return _rangeLabel(); return n===1 ? 'last 24 hours' : 'last '+n+' days'; }
   // « Last 24 hours » (valeur 1) : le proxy rend 24 cases horaires glissantes
@@ -4008,7 +4008,19 @@
   }
   // Etiquette courte d'un point de serie : « MM-JJ » pour un jour, « HHh » pour une heure.
   function _sLab(x){ var t=(x&&x.date)||''; return t.length>10 ? t.slice(11)+'h' : t.slice(5); }
-  function _sFull(x){ var t=(x&&x.date)||''; return t.length>10 ? t.slice(0,10)+' '+t.slice(11)+':00' : t; }
+  // One date format across Statistics (audit 2026-10-20, S6): « 7 Oct 2026 ».
+  // x = a server day key (YYYY-MM-DD, read at noon so no zone shifts it) or a
+  // timestamp; withTime adds « , 14:05 ». The pages mixed ISO keys, « 10 Oct »
+  // and the browser's numeric locale (9/5/2026).
+  // Months written out here, not by the locale: en-GB gives « Sept » beside « Oct ».
+  var ST_MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function _stDate(x,withTime){
+    var d=typeof x==='number'?new Date(x):new Date(String(x||'').slice(0,10)+'T12:00:00');
+    if(isNaN(d)) return String(x||'');
+    var p2=function(n){ return (n<10?'0':'')+n; };
+    return d.getDate()+' '+ST_MON[d.getMonth()]+' '+d.getFullYear()+(withTime?', '+p2(d.getHours())+':'+p2(d.getMinutes()):'');
+  }
+  function _sFull(x){ var t=(x&&x.date)||''; return t.length>10 ? _stDate(t)+' '+t.slice(11)+':00' : _stDate(t); }
   function _paintPeriod(){
     var sel=$('trafPeriod'); if(sel) sel.value=_trafRange?'r':String(_trafPeriod);
     var rb=$('trafRangeBox'); if(rb && !(sel&&sel.value==='r'&&!_trafRange)) rb.hidden=!_trafRange;
@@ -4147,7 +4159,7 @@
     if(!keys.length){
       if(!((_envData.lang||{}).other)) return '';
       return '<div class="envdiag muted">What is behind “No usable language header” is recorded '
-           + (_envLangDiagSince?('since '+new Date(_envLangDiagSince).toLocaleDateString()):'from proxy 2.1.9-web.299 on')+'.</div>';
+           + (_envLangDiagSince?('since '+_stDate(_envLangDiagSince)):'from proxy 2.1.9-web.299 on')+'.</div>';
     }
     keys.sort(function(a,b){ return (raw[b]||0)-(raw[a]||0); });
     var nw=_envData.otherRawNew||{}, rt=_envData.otherRawRet||{}, bo=_envData.otherRawBot||{}, cl=_envData.otherRawClean||{};
@@ -4214,7 +4226,7 @@
     if(n<60000) return Math.max(1,Math.round(n/1000))+' s ago';
     if(n<3600000) return Math.round(n/60000)+' min ago';
     if(n<86400000) return Math.round(n/3600000)+' h ago';
-    return new Date(ts).toLocaleDateString();
+    return _stDate(ts);
   }
   // Ligne de diagnostic : combien de pings sont arrivés depuis que le processus
   // tourne. Zéro ping et zéro donnée ne veut pas dire la même chose que des
@@ -4610,7 +4622,7 @@
   function _musVoteCell(k){
     if(!_musVotesKnown) return '';
     var v=_musVotes[k]||{}, up=v.up||0, dn=v.down||0;
-    var since=_musVotesSince?(' since '+new Date(_musVotesSince).toLocaleDateString()):'';
+    var since=_musVotesSince?(' since '+_stDate(_musVotesSince)):'';
     return '<span class="votes'+(up||dn?'':' none')+'" title="Thumbs up / down from players'+since+', one vote per device (running totals)">'
       +(up||dn? '\u25B2 '+up+' \u00b7 \u25BC '+dn : '\u2014')+'</span>';
   }
@@ -4730,7 +4742,7 @@
   function renderGuide(){
     var box=$('trafGuide'); if(!box) return;
     var since=$('guideSince');
-    if(since) since.textContent=(_guidePeriodDays||_isH24())?(_perLabel(_trafPeriod)+_perCounted(_guidePeriodDays)):(_guideSince?('all time since '+new Date(_guideSince).toLocaleDateString()):'');
+    if(since) since.textContent=(_guidePeriodDays||_isH24())?(_perLabel(_trafPeriod)+_perCounted(_guidePeriodDays)):(_guideSince?('all time since '+_stDate(_guideSince)):'');
     var g=_guideData;
     var any=g&&(g.acceptance.offered||g.acceptance.accepted||g.funnel.highlighted||Object.keys(g.contexts||{}).some(function(k){ var c=g.contexts[k]; return c.shown||c.done||c.dismissed||c.banner||c.persist_shown; }));
     if(!any){
@@ -5015,7 +5027,7 @@
   function renderMusic(){
     var box=$('trafMusic'); if(!box) return;
     var since=$('musSince');
-    if(since) since.textContent=(_musPeriodDays||_isH24())?(_perLabel(_trafPeriod)+_perCounted(_musPeriodDays)):(_musSince?('all time since '+new Date(_musSince).toLocaleDateString()):'');
+    if(since) since.textContent=(_musPeriodDays||_isH24())?(_perLabel(_trafPeriod)+_perCounted(_musPeriodDays)):(_musSince?('all time since '+_stDate(_musSince)):'');
     var keys=Object.keys(_musData).sort(function(a,b){ return (_musData[b]||0)-(_musData[a]||0); });
     var total=0; keys.forEach(function(k){ total+=_musData[k]||0; });
     if(!total){
@@ -5098,8 +5110,8 @@
   }
   function _envSrcLine(){
     var v=_envView, P=_trafPeriod;
-    if(!_envPeriod) return _envSince?('since '+new Date(_envSince).toLocaleDateString()):'';
-    if(_envSrc[v]!=='period') return 'running totals'+(_envSince?(' since '+new Date(_envSince).toLocaleDateString()):'')+' \u2014 per-day history for this view starts with this proxy version';
+    if(!_envPeriod) return _envSince?('since '+_stDate(_envSince)):'';
+    if(_envSrc[v]!=='period') return 'running totals'+(_envSince?(' since '+_stDate(_envSince)):'')+' \u2014 per-day history for this view starts with this proxy version';
     var have=v==='lang'?_envPeriod.lgDays:_envPeriod.days, U=_perU();
     return _perLabel(P)+(have<U.full?(' \u2014 per-'+U.one+' history covers '+have+' of '+U.full+' '+U.many):'');
   }
@@ -5498,7 +5510,7 @@
       var late=since && from && new Date(since).toISOString().slice(0,10)>String(from).slice(0,10);
       nt.textContent='Narrowed: the map’s Connections layer and countries, the Internet and LAN cards and connections per day (World page). Visits and the other pages show everything.'
         +(_narrow.acc?' Account narrows the logins only.':'')
-        +' Counts under 3 read “<3”.'+(late?' Counted since '+new Date(since).toLocaleDateString()+': the days before have nothing to narrow.':'')
+        +' Counts under 3 read “<3”.'+(late?' Counted since '+_stDate(since)+': the days before have nothing to narrow.':'')
         +(since?'':' Nothing counted yet: these counts start with 2.1.10-web.124.');
     }
   }
@@ -5799,7 +5811,7 @@
     MODE48.forEach(function(md){ tot[md.k]=0; });
     h48.forEach(function(x){ var m=x.m||{}; MODE48.forEach(function(md){ var v=m[md.k]||0; tot[md.k]+=v; all+=v; }); });
     if(!all){
-      box.innerHTML='<div class="empty">Nothing recorded yet'+(d.modeHourSince?(' \u2014 hourly counting started '+new Date(d.modeHourSince).toLocaleString()):'')+'.</div>';
+      box.innerHTML='<div class="empty">Nothing recorded yet'+(d.modeHourSince?(' \u2014 hourly counting started '+_stDate(d.modeHourSince,true)):'')+'.</div>';
       if(nt) nt.textContent='';
       return;
     }
@@ -5965,7 +5977,7 @@
     var estAvg=c.estTotal? c.estDays/c.estTotal : 0;
     box.innerHTML=
       '<div><h3>Return rate of new devices</h3>'+left
-      +'<p class="muted">'+fmt(c.newTotal)+' first seen in the window'+(c.first?(', the earliest on '+_annEsc(c.first)):'')+'.</p></div>'
+      +'<p class="muted">'+fmt(c.newTotal)+' first seen in the window'+(c.first?(', the earliest on '+_annEsc(_stDate(c.first))):'')+'.</p></div>'
       +'<div><h3>Active days of newcomers</h3>'
       +'<div id="trafRetAct"></div>'
       +'<p class="muted">'+(newAvg? ('avg '+_round1(newAvg)+' days'):'\u2014')
@@ -6042,7 +6054,7 @@
       +' \u2014 r='+(Math.round(Math.abs(reg.r)*100)/100)+' against '+U.noise+' noise (sd '+_round1(reg.sd)+')';
     var nb=$('trafNew');
     if(nb){
-      _chartMount(nb,sAll.map(function(x){ return x.date||''; }),[{k:'new',n:'New devices',c:'#e0a03a',vals:sAll.map(function(x){ return x.nw||0; })}],170,'bar',
+      _chartMount(nb,sAll.map(_sFull),[{k:'new',n:'New devices',c:'#e0a03a',vals:sAll.map(function(x){ return x.nw||0; })}],170,'bar',
         { c:'#e0a03a', xl:sAll.map(_sLab), segs:[{from:0,to:half-1},{from:half,to:n-1}] });
     }
     var nn=$('trafNewNote');
@@ -8223,7 +8235,7 @@
     var ranked=ccs.filter(function(cc){ return _geoVal(C[cc])>0; }).sort(function(a,b){ return _geoVal(C[b])-_geoVal(C[a]) || (a<b?-1:1); });
     if(!_geoSel || !C[_geoSel] || !_geoVal(C[_geoSel])) _geoSel=ranked.filter(function(cc){ return cc!=='ZZ'; })[0]||ranked[0]||'';
     var per=d.h24?'last 24 hours':_perLabel(d.periodDays||_trafPeriod);
-    if(nt) nt.textContent=per+' · '+(ranked.filter(function(cc){ return cc!=='ZZ'; }).length)+' countries'+(d.since?(' · since '+new Date(d.since).toLocaleDateString()):'');
+    if(nt) nt.textContent=per+' · '+(ranked.filter(function(cc){ return cc!=='ZZ'; }).length)+' countries'+(d.since?(' · since '+_stDate(d.since)):'');
     var col=_geoCol(), lmax=Math.log(1+max)||1, vb=(M.views&&M.views[_geoView])||[0,0,M.w,M.h];
     var paths=Object.keys(M.c).map(function(cc){
       var v=_geoVal(C[cc]), t=v?Math.log(1+v)/lmax:0;

@@ -72,6 +72,12 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Statistics: one date format, « 7 Oct 2026 »** (`web.212`, audit of 2026-10-20, S6) — the pages mixed ISO day keys
+  (« 2026-10-07 » in the filters bar, Coming back and the New devices readout), « 10 Oct » and the browser's numeric
+  locale (« since 9/5/2026 » under the map, Narrow, Visitors, Music, Ace's Help). `_stDate()` writes every date of
+  Statistics the same way, with the time when it matters (« hourly counting started 7 Oct 2026, 14:05 »); months are
+  written out (three letters, so no « Sept »), custom ranges included. Other admin sections are unchanged. Guarded in
+  `scripts/test-admin-period.mjs`.
 - **Statistics › Audience › New devices per day: averages in the header** (`web.211`, audit of 2026-10-20, S5) — the
   « avg 127.2 » labels of the two per-half lines sat on the bar figures and the lines crossed them. The labels are gone;
   the header note gives both (« avg 127.2 → 135.9 per day · up 1.1x the first half »), the lines are drawn under the

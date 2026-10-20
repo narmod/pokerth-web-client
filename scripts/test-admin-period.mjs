@@ -71,5 +71,19 @@ ok(/n<2 \? 'a single '\+U\.one\+': no halves to compare'/.test(admin) && /n<2\?'
 ok(/var why=d\.h24\?'needs whole days':\(!C\.newTotal\?'no new device in the window':\(\(d\.periodDays\|\|0\)<=7\?'needs a window of 8 days or more':'too recent to tell'\)\);/.test(body(admin, '_tsAudience')),
   'Back within 7 days says why there is no rate, not « too recent » for an old empty window');
 ok(/\(d\.h24\?' \\u00b7 server time, ':' \\u00b7 server days, '\)\+d\.tz/.test(admin), 'the 24-hour window reads server time, not server days');
+// One date format across Statistics: « 7 Oct 2026 » (audit 2026-10-20, S6).
+{
+  const whole = n => { const h = admin.indexOf('function ' + n + '('); const b = body(admin, n); return b ? admin.slice(h, admin.indexOf(b, h) + b.length) : ''; };
+  const f = new Function(admin.match(/var ST_MON=\[[^\]]+\];/)[0] + whole('_stDate') + whole('_sFull') + whole('_dayLab') + '\nreturn { _stDate, _sFull, _dayLab };')();
+  ok(f._stDate('2026-09-05') === '5 Sep 2026' && f._stDate('2026-10-07') === '7 Oct 2026', 'a day key reads « 5 Sep 2026 » (three-letter months, not « Sept »)');
+  ok(f._stDate(new Date(2026, 9, 7, 14, 5).getTime(), true) === '7 Oct 2026, 14:05', 'a timestamp, with its time when asked');
+  ok(f._sFull({ date: '2026-10-19T18' }) === '19 Oct 2026 18:00' && f._sFull({ date: '2026-10-07' }) === '7 Oct 2026', 'the date line of the filters bar uses it');
+  ok(f._dayLab('2026-09-05', true) === '5 Sep 2026' && f._dayLab('2026-09-05') === '5 Sep', 'custom ranges name months the same way');
+  ok(/'all time since '\+_stDate\(_guideSince\)/.test(admin) && /'all time since '\+_stDate\(_musSince\)/.test(admin) && /\(' · since '\+_stDate\(d\.since\)\)/.test(admin)
+    && /'since '\+_stDate\(_envLangDiagSince\)/.test(admin) && /\(' since '\+_stDate\(_musVotesSince\)\)/.test(admin) && /' Counted since '\+_stDate\(since\)/.test(admin)
+    && /hourly counting started '\+_stDate\(d\.modeHourSince,true\)/.test(admin) && /return _stDate\(ts\);/.test(admin),
+    'every Statistics « since » uses it, none the numeric browser locale (9/5/2026)');
+  ok(/_chartMount\(nb,sAll\.map\(_sFull\),/.test(admin) && /the earliest on '\+_annEsc\(_stDate\(c\.first\)\)/.test(admin), 'nor a raw day key in a readout or a note');
+}
 console.log(fail ? `\n${fail}/${n} checks failed` : `\nall ${n} checks passed`);
 process.exit(fail ? 1 : 0);
