@@ -470,6 +470,14 @@ ok(/_lmRender\(rows\.filter\(function\(r\)\{ return _seSel==='all' \|\| r\.k===_
 ok(/if\(t==='sessions'\|\|t==='livemap'\)\{ seStart\(\); \}/.test(admin), 'one 5 s poll serves both pages');
 ok(/var page = card\.closest\('\.tsub'\) \|\| card\.closest\('\[id\^="panel-"\]'\);\n      if\(page && page\.querySelectorAll\('\.card'\)\.length===1\) return;/.test(admin), 'the only card of a page does not fold (web.187)');
 ok(/#panel-traffic \.card>\.boardhead>h2\{white-space:nowrap\}/.test(admin), 'a card title does not break, so its note can take the slack');
+// S7 (audit 2026-10-20): a card whose title sits in a .boardhead folds too, the
+// same way as a header-first card, with the arrow right after the title.
+ok(/if\(first===h2\) head = h2;[^\n]*\n\s+else if\(first && first\.classList\.contains\('boardhead'\) && first\.contains\(h2\)\) head = first;/.test(admin)
+  && /while\(head\.nextSibling\) body\.appendChild\(head\.nextSibling\);/.test(admin), 'a .boardhead card folds: its head stays, its body folds, its buttons keep their job');
+ok(/var h2 = card\.querySelector\('h2'\); if\(!h2\) return;/.test(admin) && /first\.tagName==='STYLE' \|\| first\.tagName==='SCRIPT'/.test(admin),
+  'the first title leads (subtitles allowed in the body), a <style> opening the card is skipped');
+ok(/\.card h2\.collap-h::after\{content:'\\25BE';display:inline-block;margin-left:8px/.test(admin) && !/h2\.collap-h::after\{[^}]*position:absolute/.test(admin),
+  'the fold arrow follows the title on every card');
 const cards = (k) => (tsub(k).match(/<div class="card"/g) || []).length;
 ok(cards('audience') === 3 && cards('activity') === 6 && cards('visitors') === 2 && cards('music') === 1 && cards('ace') === 1,
   'one card per subject: Audience 3, Activity 6, Visitors 2, Music 1, Ace’s Help 1');

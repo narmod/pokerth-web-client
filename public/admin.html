@@ -85,8 +85,10 @@
   .srveff .tgt{font-size:1rem;color:var(--gold);word-break:break-all}
   .card-body{overflow:hidden;transition:height .24s ease}
   .card-body.folded{visibility:hidden;transition:height .24s ease,visibility 0s linear .24s}
-  .card h2.collap-h{cursor:pointer;user-select:none;position:relative;padding-right:22px}
-  .card h2.collap-h::after{content:'\25BE';position:absolute;right:2px;top:.15em;font-size:.7em;opacity:.55;transition:opacity .15s}
+  /* The fold arrow follows the title, the same on header-first and .boardhead
+     cards (S7); the whole title line stays clickable. */
+  .card h2.collap-h{cursor:pointer;user-select:none}
+  .card h2.collap-h::after{content:'\25BE';display:inline-block;margin-left:8px;vertical-align:.12em;font-size:.7em;opacity:.55;transition:opacity .15s}
   .card h2.collap-h.collapsed::after{content:'\25B8'}
   .card h2.collap-h:hover::after{opacity:.95}
   label{font-size:.78rem;color:var(--text);display:block;margin:0 0 5px}
@@ -8482,8 +8484,10 @@
     if(xb) xb.addEventListener('click',function(){ _trafXpl(xb.getAttribute('aria-pressed')!=='true'); });
   })();
 
-  // Collapsible cards: any card whose first child is its <h2> becomes foldable —
-  // click (or Enter/Space) the title to fold/unfold. We wrap the body once so the
+  // Collapsible cards: any card whose first child is its <h2> — or a .boardhead
+  // holding it, beside a note or buttons (audit 2026-10-20, S7: those cards did
+  // not fold, so a page mixed both) — becomes foldable: click (or Enter/Space)
+  // the title to fold/unfold; the head's buttons keep their own job. We wrap the body once so the
   // inner controls' own display logic (e.g. the Cancel button) is never touched.
   // State is remembered per browser; the longest cards start folded on first run.
   (function(){
@@ -8496,16 +8500,22 @@
     var DEFAULT_FOLDED = ['Schedule a restart','Schedule a recurring message','Welcome / rules message','Guest notice (Internet)','Registered-account notice (Internet)','LAN / dedicated server notice'];
     function slug(s){ return (s||'').trim().replace(/[^a-z0-9]+/gi,'_').replace(/^_+|_+$/g,'').toLowerCase().slice(0,48); }
     document.querySelectorAll('.card').forEach(function(card){
-      var h2s = card.querySelectorAll('h2');
-      if(h2s.length!==1) return;
-      var h2 = h2s[0];
-      if(card.firstElementChild!==h2) return;          // only header-first cards
+      // The title is the card's first <h2>; later ones are subtitles of its body
+      // (Deployment › Maintenance › Last action log). A <style> block opening the
+      // card (Content › Music › Library) is not its first child.
+      var h2 = card.querySelector('h2'); if(!h2) return;
+      var first = card.firstElementChild, head = null;
+      while(first && (first.tagName==='STYLE' || first.tagName==='SCRIPT')) first = first.nextElementSibling;
+      if(first===h2) head = h2;                         // header-first cards
+      else if(first && first.classList.contains('boardhead') && first.contains(h2)) head = first;
+      else return;
       // The only card of its page stays open (web.187): folding it left the
       // page empty under its tiles (Proxy, Features, Search engines…).
       var page = card.closest('.tsub') || card.closest('[id^="panel-"]');
       if(page && page.querySelectorAll('.card').length===1) return;
       var body = document.createElement('div'); body.className='card-body';
-      while(h2.nextSibling) body.appendChild(h2.nextSibling);
+      while(head.nextSibling) body.appendChild(head.nextSibling);
+      // the style block stays where it was, before the head: nothing to move
       card.appendChild(body);
       h2.classList.add('collap-h'); h2.setAttribute('role','button'); h2.tabIndex=0;
       var k = slug(h2.textContent);

@@ -72,6 +72,13 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Admin: every card folds the same way** (`web.213`, audit of 2026-10-20, S7) — only cards opening on their bare
+  `<h2>` folded; the 35 whose title sits in a `.boardhead` beside a note or buttons (Daily visits, World map, Game
+  servers, Audit log…) did not, so a page mixed both. They fold now: the head stays, the body folds, the head's
+  buttons keep their own job. The first `<h2>` is the title (Deployment › Maintenance keeps its « Last action log »
+  subtitle), a `<style>` opening a card is skipped (Content › Music › Library), and the arrow follows the title on
+  every card instead of the far right edge on some. The only card of a page still does not fold (web.187). Guarded in
+  `scripts/test-admin-layout.mjs`.
 - **Statistics: one date format, « 7 Oct 2026 »** (`web.212`, audit of 2026-10-20, S6) — the pages mixed ISO day keys
   (« 2026-10-07 » in the filters bar, Coming back and the New devices readout), « 10 Oct » and the browser's numeric
   locale (« since 9/5/2026 » under the map, Narrow, Visitors, Music, Ace's Help). `_stDate()` writes every date of
