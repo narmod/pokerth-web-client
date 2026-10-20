@@ -5903,7 +5903,7 @@
     var estAvg=c.estTotal? c.estDays/c.estTotal : 0;
     box.innerHTML=
       '<div><h3>Return rate of new devices</h3>'+left
-      +'<p class="muted">'+fmt(c.newTotal)+' first seen in the window'+(c.since?(', the earliest on '+_annEsc(c.since)):'')+'.</p></div>'
+      +'<p class="muted">'+fmt(c.newTotal)+' first seen in the window'+(c.first?(', the earliest on '+_annEsc(c.first)):'')+'.</p></div>'
       +'<div><h3>Active days of newcomers</h3>'
       +'<div id="trafRetAct"></div>'
       +'<p class="muted">'+(newAvg? ('avg '+_round1(newAvg)+' days'):'\u2014')

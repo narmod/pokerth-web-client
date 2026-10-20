@@ -72,6 +72,11 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Statistics › Audience › Coming back: « the earliest on »** (`web.203`, audit of 2026-10-20, B1) — the line
+  under the return rates gave the earliest dated device of the whole history (`cohorts.since`, e.g. 5 Sep) while
+  saying « N first seen in the window, the earliest on … » for a window that began on 7 Oct. `visitCohorts()` now
+  also returns `first`, the earliest first visit inside the window (custom ranges included); the card reads it.
+  `since` keeps its meaning (when dating started). Guarded in `scripts/test-visit-hours.mjs`.
 - **AFK kick after a transparent reconnection** (`web.202`, report sp0ck: Teressa, BBC game 802, kicked in hand 36
   while playing by hand) — `connect({preserve:true})` (wake from sleep / tab return with a dead socket, RX watchdog,
   `online` event) cleared `S._wasAuthenticated`, but the proxy rebinds such a page to the SAME authenticated server

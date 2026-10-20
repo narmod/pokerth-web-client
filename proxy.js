@@ -8987,7 +8987,9 @@ function visitCohorts(windowDays, offset) {
     return false;
   }
   const out = {
-    window: windowDays, known: 0, since: 0,
+    // since: earliest dated first visit ever (when dating started);
+    // first: earliest first visit inside this window (the cohort's start).
+    window: windowDays, known: 0, since: 0, first: 0,
     d1: { n: 0, back: 0 }, d3: { n: 0, back: 0 }, d7: { n: 0, back: 0 },
     active: [0, 0, 0, 0, 0, 0, 0, 0],
     newTotal: 0, newDays: 0, estTotal: 0, estDays: 0
@@ -9002,6 +9004,7 @@ function visitCohorts(windowDays, offset) {
       if (!out.since || f < out.since) out.since = f;
     }
     if (dated && f >= from && f <= today) {
+      if (!out.first || f < out.first) out.first = f;
       if (f <= today - 1) { out.d1.n++; if (cameBack(h, f + 1, f + 1)) out.d1.back++; }
       if (f <= today - 3) { out.d3.n++; if (cameBack(h, f + 1, f + 3)) out.d3.back++; }
       if (f <= today - 7) { out.d7.n++; if (cameBack(h, f + 1, f + 7)) out.d7.back++; }
@@ -9014,6 +9017,7 @@ function visitCohorts(windowDays, offset) {
     }
   }
   if (out.since) out.since = visitDayKeyFromIndex(out.since);
+  if (out.first) out.first = visitDayKeyFromIndex(out.first);
   return out;
 }
 // Période du tableau de bord : un seul nombre de jours pilote la série

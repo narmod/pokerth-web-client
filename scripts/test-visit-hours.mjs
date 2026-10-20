@@ -149,8 +149,13 @@ ok(c.active[0] === 3 && c.active[1] === 2, 'active days land in the right bucket
 ok(c.estTotal === 3 && c.estDays / c.estTotal === 4,
   'pre-measurement devices serve as the established-base comparison instead of being dropped');
 ok(c.since === co.visitDayKeyFromIndex(today - 10), 'the earliest dated first visit is reported');
+store2.allU.h20 = today - 40; put(today - 40, [20]);                          // dated, before the window
+const c7 = co.visitCohorts(7);
+ok(c7.since === co.visitDayKeyFromIndex(today - 40) && c7.first === co.visitDayKeyFromIndex(today - 1),
+  'since is the earliest dated device ever, first the earliest inside the window (what the card says)');
+ok(co.visitCohorts(30).first === co.visitDayKeyFromIndex(today - 10), 'a device before the window never sets first');
 const none = cohortScope({ days: {}, allU: {} }, 1000).visitCohorts(30);
-ok(none.known === 0 && none.d1.n === 0 && none.newTotal === 0,
+ok(none.known === 0 && none.d1.n === 0 && none.newTotal === 0 && none.first === 0,
   'an empty store answers with zeros, not with a rate over nothing');
 
 // -- Wiping means wiping ---------------------------------------------------
