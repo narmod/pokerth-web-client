@@ -40,14 +40,18 @@ highlights below.
   (pure `computeOdds()` + DOM); its texts and the hand names of `/hand-rankings` in the page's language arrive as
   JSON in the page. `WebApplication` JSON-LD; `<noscript>` note. Guard: `scripts/test-odds-calc.mjs` (exact
   heads-up equals `odds-data.json`, plan, river, seeded simulation, cancel).
-- **`/poker-odds`** (`web.220`, SEO, English first) — outs and the chance to hit them (turn, river, flop to
+- **`/poker-odds`** (`web.220`, `web.222`, SEO) — outs and the chance to hit them (turn, river, flop to
   river), the rule of 2 and 4, pot odds with a worked example, eight preflop matchups and starting-hand odds, five
   questions; `Article` + `FAQPage` JSON-LD, tables that scroll inside their box on a phone. No figure is typed
   by hand: `scripts/gen-poker-odds.mjs` writes `seo-i18n/odds-data.json` (matchups by exact enumeration of all
   1,712,304 boards with the vendored evaluator — cross-checked board by board against `game/cards.mjs` — the rest
   by combinatorics) and the text carries `{placeholders}` formatted per language. Wired like `/play-with-friends`
   (nav « Poker odds » gated on the language, sitemap, IndexNow, llms.txt, crawler block, admin coverage);
-  `seo-i18n/odds.js` is empty until the translations land. Guard: `scripts/test-seo-odds.mjs`.
+  Guard: `scripts/test-seo-odds.mjs`. `web.222`: translated into all 82 other languages (`seo-i18n/odds.js`, same
+  `{placeholders}` as the English, checked string by string), « Poker odds » nav label in `nav.js`, and linked
+  from /hand-rankings and /glossary in the reader's language (built in code, fingerprints unchanged). Numbers
+  follow the digits of the text: Latin for Nepali and Marathi (`_seoNumLocale`, page and calculator), native
+  for Persian, Bengali and Burmese; the Outs column is formatted too.
 - **`/play-with-friends`** (`web.217`–`web.219`, SEO) — a server-rendered page for « play poker with friends online »: the
   three steps (log in, create a Normal table, « Invite friends » with link, QR code, WhatsApp / Telegram / SMS /
   email), private tables (the password never travels in the link), home-game settings, phones and computers at one
@@ -108,6 +112,10 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Content-page nav overhung a phone screen by a pixel** (`web.222`) — inline links with a right margin let a
+  two-word label (« Comment jouer ») break at the line end, so /rules, /faq… scrolled sideways at 375 px in some
+  languages. The nav is now a wrapping flex row of unbreakable labels (`dir=rtl` handled by flex); checked on 70
+  page × language pairs at 375 px.
 - **Statistics › Filters › Narrow to: the list opens under its row** (`web.214`, audit of 2026-10-20, S8) — the list of
   values opened below all six rows, a screen away from the one tapped on a phone; it now opens right under it, as an
   accordion, and follows when another row is tapped (it goes back to its place before the rows are redrawn). In the

@@ -1949,9 +1949,11 @@ var _SEO_PAGE_CSS = 'body{margin:0;background:#0d1117;color:#d8dde4;font:16px/1.
   'main{max-width:720px;margin:0 auto;padding:28px 20px 60px}' +
   'h1{font-size:1.7em;color:#fff;margin:.4em 0 .6em}h2{font-size:1.2em;color:#fff;margin:1.5em 0 .5em}' +
   'a{color:#5ab0f7;text-decoration:none}a:hover{text-decoration:underline}' +
-  'nav{padding:14px 20px;background:#161b22;border-bottom:1px solid #30363d;font-size:.95em}' +
-  'nav a{margin-right:14px}ul{padding-left:1.3em}li{margin:.3em 0}' +
-  '[dir=rtl] nav a{margin-right:0;margin-left:14px}' +
+  // Nav: a wrapping row of unbreakable links. Inline links with a margin let
+  // a two-word label break at the line end and overhang the viewport by a
+  // pixel on a phone; flex-wrap keeps each label whole and follows dir=rtl.
+  'nav{display:flex;flex-wrap:wrap;gap:4px 14px;padding:14px 20px;background:#161b22;border-bottom:1px solid #30363d;font-size:.95em}' +
+  'nav a{white-space:nowrap}ul{padding-left:1.3em}li{margin:.3em 0}' +
   '[dir=rtl] ul,[dir=rtl] ol{padding-left:0;padding-right:1.3em}' +
   '[dir=rtl] dd{margin:.3em 0 0 0}' +
   '[dir=rtl] th,[dir=rtl] td{text-align:right}[dir=rtl] td.n{text-align:left}' +
@@ -7064,6 +7066,7 @@ function seoHandsPage(res, method, lang) {
       return { '@type': 'ListItem', position: n + 1, name: h[0], description: h[1] };
     })
   };
+  body += _seoOddsLink(lang);   // on to the odds of these hands
   seoContentPage(res, method, title, desc, '/hand-rankings', body, [art, list], lang, langs);
 }
 
@@ -7223,6 +7226,13 @@ function _seoFriendsLink(lang) {
   return '<p><a href="' + _seoLangHref('/play-with-friends', SEO_FRIENDS_I18N, lang) + '">' + h1 + '</a></p>';
 }
 
+// Same for /poker-odds, linked from /hand-rankings and /glossary.
+function _seoOddsLink(lang) {
+  if (!_seoOddsIn(lang)) return '';
+  var h1 = ((lang && SEO_ODDS_I18N[lang]) || _SEO_ODDS).h1;
+  return '<p><a href="' + _seoLangHref('/poker-odds', SEO_ODDS_I18N, lang) + '">' + h1 + '</a></p>';
+}
+
 function _seoPageHref(page, lang) {
   if (page === 'rules') return _seoLangHref('/rules', SEO_RULES_I18N, lang);
   if (page === 'hands') return _seoLangHref('/hand-rankings', SEO_HANDS_I18N, lang);
@@ -7278,6 +7288,7 @@ function seoGlossaryPage(res, method, lang) {
     })
   };
   if (base) ld.url = base + '/glossary' + (lang ? '?lang=' + lang : '');
+  body += _seoOddsLink(lang);   // outs and pot odds, worked out
   seoContentPage(res, method, title, desc, '/glossary', body, ld, lang, langs);
 }
 
@@ -7452,15 +7463,24 @@ var _SEO_ODDS = {
   ]
 };
 
+// Locale used to format numbers. Intl writes Nepali (and a few others) in
+// native digits by default; where that language's text is written with
+// Latin digits — as the /poker-odds translations and the older pages are —
+// the figures follow the text, so a sentence never mixes two digit systems.
+var _SEO_LATN_DIGITS = ['ne', 'mr'];
+function _seoNumLocale(lang) {
+  lang = lang || 'en';
+  return _SEO_LATN_DIGITS.indexOf(lang) !== -1 ? lang + '-u-nu-latn' : lang;
+}
 // Percent in the reader's language (0.35 -> "35.0%", "35,0 %"): one decimal,
 // two below 1% so that 0.45% does not read as 0.5%.
 function _seoPct(lang, x) {
   var d = x < 0.01 ? 2 : 1;
-  try { return new Intl.NumberFormat(lang || 'en', { style: 'percent', minimumFractionDigits: d, maximumFractionDigits: d }).format(x); }
+  try { return new Intl.NumberFormat(_seoNumLocale(lang), { style: 'percent', minimumFractionDigits: d, maximumFractionDigits: d }).format(x); }
   catch (e) { return (x * 100).toFixed(d) + '%'; }
 }
 function _seoNum(lang, x, dec) {
-  try { return new Intl.NumberFormat(lang || 'en', { maximumFractionDigits: dec || 0 }).format(x); }
+  try { return new Intl.NumberFormat(_seoNumLocale(lang), { maximumFractionDigits: dec || 0 }).format(x); }
   catch (e) { return String(x); }
 }
 // Cards as rank + coloured suit symbol, left-to-right in every script.
@@ -7497,7 +7517,7 @@ function seoOddsPage(res, method, lang) {
   // names of /hand-rankings in the same language travel as JSON; '<' is
   // escaped so nothing in it can close the script element.
   var _hp = lang && _SEO_HANDS_PARTS && _SEO_HANDS_PARTS[lang];
-  var calcData = Object.assign({}, tr.calc, { lang: lang || 'en',
+  var calcData = Object.assign({}, tr.calc, { lang: lang || 'en', numLocale: _seoNumLocale(lang),
     cats: (_hp && _hp.names && _hp.names.length === 10) ? _hp.names : _SEO_HANDS.map(function (h) { return h[0]; }) });
   var body = '<h1>' + tr.h1 + '</h1><p>' + tr.lead + '</p>' +
     '<h2>' + tr.calc.h2 + '</h2><p>' + tr.calc.intro + '</p>' +
@@ -7506,7 +7526,7 @@ function seoOddsPage(res, method, lang) {
     '<script type="module" src="/modules/seo/odds-calc.mjs"></script>' +
     '<h2>' + tr.outsH2 + '</h2><p>' + f(tr.outsP) + '</p>' +
     '<div class="tw"><table>' + th(tr.outsCols) + D.outs.map(function (r) {
-      return '<tr><td>' + tr.draws[r.id] + '</td><td class="n">' + r.outs + '</td><td class="n">' + _seoPct(lang, r.turn) +
+      return '<tr><td>' + tr.draws[r.id] + '</td><td class="n">' + _seoNum(lang, r.outs) + '</td><td class="n">' + _seoPct(lang, r.turn) +
         '</td><td class="n">' + _seoPct(lang, r.river) + '</td><td class="n">' + _seoPct(lang, r.flopToRiver) + '</td></tr>';
     }).join('') + '</table></div><p class="updated">' + tr.outsNote + '</p>' +
     '<h2>' + tr.ruleH2 + '</h2><p>' + f(tr.ruleP) + '</p>' +

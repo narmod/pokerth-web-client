@@ -153,7 +153,7 @@ export function computeOdds(q, onDone, opt) {
 
 // ── DOM ─────────────────────────────────────────────────────────────────────
 function mount(root, T) {
-  const lang = T.lang || 'en';
+  const lang = T.numLocale || T.lang || 'en';   // number format chosen by the page (digits match its text)
   // One decimal; two below 1%; a possible but rarer-than-0.01% hand reads
   // « < 0.01% » rather than a misleading « 0.0% ».
   const fmtPct = (x, d) => { try { return new Intl.NumberFormat(lang, { style: 'percent', minimumFractionDigits: d, maximumFractionDigits: d }).format(x); } catch (e) { return (x * 100).toFixed(d) + '%'; } };
