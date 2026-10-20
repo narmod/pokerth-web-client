@@ -41,6 +41,12 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Search engines: visible `<h1>`, site name and publisher** (`web.215`, SEO audit of 2026-10-20) — the
+  connect screen's brand block (chip `alt="PokerTH"` · suits · Web Client) is now the page's `<h1>`, styled exactly
+  as before (the suits are `aria-hidden`); the off-viewport `#seo-intro` heading becomes an `<h2>`, so no heading
+  lives only in hidden text. With SEO on, the home page also carries a `WebSite` + `Organization` JSON-LD graph
+  (name « PokerTH Web Client », publisher PokerTH Development Team with its logo) — the site-name signal results
+  otherwise replace with the bare host name. `visits.json` (runtime footfall store) is now git-ignored.
 - **Live before Statistics; World without Live now** (`web.196`) — the Live group moves up the side menu, right
   under Overview. The « Live now » layer of Statistics › World is removed (with its own 15 s read of
   `/admin/sessions`): the open connections by country are Live › Map. World keeps five layers; a browser that

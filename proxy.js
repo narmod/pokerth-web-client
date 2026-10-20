@@ -1757,6 +1757,25 @@ function seoHeadBlock(base, lang) {
   if (canon) ld.url = canon;
   if (img) { ld.image = img; ld.screenshot = img; }
   out.push('<script type="application/ld+json">' + JSON.stringify(ld) + '</script>');
+  // WebSite + Organization: the site-name signal search engines read on a
+  // home page (otherwise results show the bare host name), plus the
+  // publisher's logo. Same name as the <title> prefix and the app entity.
+  if (base) {
+    var site_ld = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        { '@type': 'WebSite', '@id': base + '/#website', url: base + '/',
+          name: 'PokerTH Web Client',
+          alternateName: (seoSiteName() !== 'PokerTH Web Client' && seoSiteName() !== 'PokerTH') ? [seoSiteName(), 'PokerTH'] : ['PokerTH'],
+          inLanguage: lang || 'en', publisher: { '@id': base + '/#organization' } },
+        { '@type': 'Organization', '@id': base + '/#organization', name: 'PokerTH Development Team',
+          url: 'https://www.pokerth.net/',
+          logo: { '@type': 'ImageObject', url: base + '/favicon-512.png', width: 512, height: 512 },
+          sameAs: ['https://github.com/pokerth/pokerth', 'https://github.com/narmod/pokerth-web-client'] }
+      ]
+    };
+    out.push('<script type="application/ld+json">' + JSON.stringify(site_ld) + '</script>');
+  }
   return out.join('\n');
 }
 
@@ -1769,7 +1788,9 @@ function seoBodyBlock(lang) {
   var loc = (lang && SEO_I18N[lang]) || SEO_I18N.en;
   var b = (lang && SEO_BODY_I18N[lang]) || SEO_BODY_I18N.en;
   return '<div id="seo-intro" aria-hidden="true" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden">' +
-    '<h1>' + _seoAttr(seoTitleOverride() || loc.t) + '</h1>' +
+    // <h2>, not <h1>: the page's single <h1> is the visible brand block of
+    // the connect screen, so no heading lives only in off-viewport text.
+    '<h2>' + _seoAttr(seoTitleOverride() || loc.t) + '</h2>' +
     '<p>' + _seoAttr(seoDescOverride() || loc.d) + '</p>' +
     '<p>' + b.m + '</p>' +
     '<p>' + b.g + '</p>' +

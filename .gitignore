@@ -37,6 +37,10 @@ deploy-history.json
 # Scoped delegate API keys (managed by install.sh: pokerth-web token …; chmod 600)
 scoped-tokens.json
 
+# Anonymous footfall metrics (proxy.js VISITS_FILE): server-owned runtime state,
+# untracked like admin-config.json above.
+visits.json
+
 # Product polls authored from the admin panel: definitions + anonymous tallies
 # (server-owned runtime state, untracked like admin-config.json above).
 polls.json

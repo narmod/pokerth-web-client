@@ -673,6 +673,12 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .card-logo, .card.login-in-mode .card-logo, .lb-chip { transition: none; }
 }
+/* The brand block is the page's visible <h1> (SEO): chip (alt « PokerTH »),
+   optional title, suits and « Web Client ». Reset the heading's UA styles so it
+   renders exactly like the former <div> stack. .cl-app-title keeps its own
+   display rule (hidden unless body.adv-show-title), so it is not forced here. */
+.card-brand-h1 { margin: 0; font: inherit; color: inherit; letter-spacing: inherit; }
+.card-brand-h1 > .card-suits-row, .card-brand-h1 > .card-subtitle { display: block; }
 .card-suits-row { font-size: var(--fs-lg); letter-spacing: 0.2em; opacity: 0.7; margin-bottom: 4px; }
 .card-suits-row .r { color: var(--red); }
 /* Login flourish (modules/ui/login-flourish.mjs): the suits hop in a wave and
