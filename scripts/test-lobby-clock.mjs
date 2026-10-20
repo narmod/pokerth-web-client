@@ -33,7 +33,9 @@ ok(/_adminConfig\.lobbyClockTz[\s\S]{0,120}process\.env\.SERVER_TZ[\s\S]{0,120}L
 ok(/const LOBBY_CLOCK_TZ_DEFAULT = 'Europe\/Berlin';/.test(proxy), 'the default zone is Berlin, like the QML client');
 { const fn = proxy.slice(proxy.indexOf('function _lobbyClockTz('), proxy.indexOf('function _lobbyClockTz(') + 400);
   ok(!/_serverTz\(\)/.test(fn.slice(0, fn.indexOf('\n}') + 2)), "the host's zone is never used for the lobby clock"); }
-ok(/if \(lz && !_validTz\(lz\)\) return adminJson\(res, 400/.test(proxy), 'an unknown zone is refused by the admin API');
+// Refused through _refuse(), which rolls the whole save back and answers 400.
+ok(/if \(lz && !_validTz\(lz\)\) return (adminJson\(res, 400|_refuse\()/.test(proxy)
+   && /const _refuse = function \(obj\) \{[\s\S]{0,400}return adminJson\(res, 400, obj\);/.test(proxy), 'an unknown zone is refused by the admin API');
 ok(/'lobbyClockTz',/.test(proxy), 'the setting survives an export -> import round-trip');
 ok(/key: 'lobby_clock'/.test(proxy), 'the admin can kill-switch it');
 

@@ -18,6 +18,8 @@ import { dirname, join } from 'node:path';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const R = p => readFileSync(join(root, p), 'utf8');
 const proxy = R('proxy.js'), client = R('public/pokerth.js'), admin = R('public/admin.html');
+// Since web.192 the SQL of the DB mirror lives in server/db-dialects.js (MySQL / PostgreSQL).
+const dialects = R('server/db-dialects.js');
 let n = 0, fail = 0;
 function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); } else console.log('  ✓', msg); }
 function fn(src, name) {
@@ -51,8 +53,9 @@ ok(!('bogus' in r.store.allM), 'an unknown mode is still refused');
 ok(/live: am\.live \|\| 0 \}; \}\)\(\) \}/.test(proxy), 'the summary returns the all-time /live count');
 ok(/live: _am\.live \|\| 0 \};/.test(proxy), 'which survives a restart');
 ok(/conn_offline,conn_live[,']/.test(proxy) && /m\.offline \|\| 0, m\.live \|\| 0[,\]]/.test(proxy), 'CSV export has a conn_live column, after the existing ones so old readers keep theirs');
-ok(/ALTER TABLE traffic_daily ADD COLUMN IF NOT EXISTS conn_live/.test(proxy), 'an existing DB mirror gains the column');
-ok(/conn_live=VALUES\(conn_live\)/.test(proxy), 'and is written to');
+ok(/ALTER TABLE traffic_daily ADD COLUMN IF NOT EXISTS conn_live/.test(dialects), 'an existing DB mirror gains the column');
+// The upsert is built from the column list (db-dialects upsert(): c=VALUES(c) / c=EXCLUDED.c).
+ok(/traffic_daily: \[[^\]]*'conn_live'/.test(proxy) && /c \+ '=VALUES\(' \+ c \+ '\)'/.test(dialects), 'and is written to');
 
 // -- 1c. Visits (footfall), run for real ---------------------------------
 const runV = new Function('crypto',
@@ -81,7 +84,8 @@ ok(proxy.indexOf('recordLiveVisit(d.vid, _bot)') > 0 && proxy.indexOf('recordLiv
 // (allLU is pruned with the day buckets).
 ok(/lv: visitsStore\.totalLV \|\| 0, lu: visitsStore\.totalLU \|\| 0/.test(proxy), 'the summary returns /live all-time visits and uniques');
 ok(/conn_live,live_visits,live_unique_visitors,bot_visits'\];/.test(proxy), 'CSV gains the /live visit columns after the older ones (bot_visits follows them)');
-ok(/ADD COLUMN IF NOT EXISTS live_visits/.test(proxy) && /ADD COLUMN IF NOT EXISTS live_unique_visitors/.test(proxy), 'and so does an existing DB mirror');
+ok(/ADD COLUMN IF NOT EXISTS live_visits/.test(dialects) && /ADD COLUMN IF NOT EXISTS live_unique_visitors/.test(dialects)
+   && /traffic_daily: \[[^\]]*'live_visits', 'live_unique_visitors'/.test(proxy), 'and so does an existing DB mirror');
 ok(/var msg = window\.LIVE_MODE \? \{ vid: vid, live: true \} : \{ vid: vid, pwa: pwa \};/.test(client) && /var body = JSON\.stringify\(msg\);/.test(client), 'the /live visit beacon says live');
 ok(/id="trafLive"/.test(admin) && /fmt\(lv\)\+' visits · '\+fmt\(o\.lu\)\+' unique · '/.test(admin), 'the traffic card shows /live visits and uniques');
 // Visits (page load) and sessions (connection opened) are two events: the

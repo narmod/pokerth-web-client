@@ -70,6 +70,16 @@ export const RULES = [
   // Login help, same review.
   [/\bpartidas Normal al momento\b/g, 'partidas Normal de inmediato'],
   [/\bque se añada el tuyo\b/g, 'que se agregue el tuyo'],
+  // Privacy texts (web.153–155), written by hand for es-419 and folded back
+  // here the same way. Phrase-scoped: the quotes and « teléfono » stay as in
+  // es everywhere else.
+  [/\(o como «otro»\)/g, '(o como “otro”)'],
+  [/«Solo para los administradores»/g, '“Solo para los administradores”'],
+  [/\bdesde un teléfono en\b/g, 'desde un celular en'],
+  [/\btambién trata datos de conexión\b/g, 'también procesa datos de conexión'],
+  [/\bhoras de conexión\b/g, 'horarios de conexión'],
+  [/\btal como describe esa política\b/g, 'tal como lo describe esa política'],
+  [/\bgestor de contraseñas\b/g, 'administrador de contraseñas'],
 ];
 export function derive(text) {
   let t = String(text);

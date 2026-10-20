@@ -57,7 +57,8 @@ check('persisted across restarts', /'defaultTheme', 'liveDefaults'/.test(proxy))
 check('the live palette wins over the global one only on /live',
   /window\.LIVE_MODE && c\.liveDefaults && c\.liveDefaults\.theme/.test(client));
 check('the global default still applies everywhere else',
-  /else if \(typeof c\.defaultTheme === 'string'\) _applyDefaultTheme\(c\.defaultTheme\)/.test(client));
+  // since web.166 the else-branch is a block (it also applies lookDefaults)
+  /else (\{ )?if \(typeof c\.defaultTheme === 'string'\) _applyDefaultTheme\(c\.defaultTheme\)/.test(client));
 for (const id of ['lvTheme', 'lvSound', 'lvChat']) {
   check('admin offers ' + id, new RegExp('id="' + id + '"').test(admin));
 }
