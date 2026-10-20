@@ -72,6 +72,12 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Statistics: edge-case labels** (`web.207`, audit of 2026-10-20, B5) — a one-day range read « window 1 days »,
+  « mean over 1 complete days », « first half was empty » and « first half 0.0 → second half … » (one day has no
+  halves: now « a single day: no halves to compare »); « Back within 7 days » said « too recent to tell » for a window
+  100 days old with nobody in it — it now says why there is no rate (needs whole days · no new device in the window ·
+  needs a window of 8 days or more · too recent to tell); the 24-hour date line said « server days » (now « server
+  time »). Music's « all time » with no per-day history was right and stays. Guarded in `scripts/test-admin-period.mjs`.
 - **Statistics: a filter a page does not use is greyed there** (`web.206`, audit of 2026-10-20, B4) — the pills
   of the bar (« Training », « Country France ») stayed as they were on Summary, Audience, Visitors, Music and Ace's
   Help, which they do not change, and read as applied. Entry modes act on World and Activity, Narrow on World, bots

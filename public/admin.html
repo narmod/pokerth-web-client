@@ -5160,12 +5160,15 @@
   function _tsPerLbl(){ return _perLabel(_trafPeriod); }
   // Audience: who came over the period, and how many came back.
   function _tsAudience(d){
-    var o=d.period||d.week||{}, c=(d.cohorts||{}).d7||null, L=_tsPerLbl();
+    var o=d.period||d.week||{}, C=d.cohorts||{}, c=C.d7||null, L=_tsPerLbl();
+    // No rate: say why — hours, no newcomer at all, a window too short for a
+    // 7-day return inside it, or newcomers too recent (proxy.js visitCohorts).
+    var why=d.h24?'needs whole days':(!C.newTotal?'no new device in the window':((d.periodDays||0)<=7?'needs a window of 8 days or more':'too recent to tell'));
     _tsTiles('audience',[
       ['Visits',_tsN(o.v),_tsN(o.u)+' unique · '+L,'var(--accent)'],
       ['New devices',_tsN(o.nw),'seen for the first time · '+L,'var(--warn-text)'],
       ['Returning',_tsN(o.rt),'devices seen before · '+L,'var(--m-live)'],
-      ['Back within 7 days',(c&&c.n)?_tsPc(c.back,c.n):'—',(c&&c.n)?(_tsN(c.back)+' of '+_tsN(c.n)+' new devices'):(d.h24?'needs whole days':'too recent to tell'),'var(--ok-text)']]);
+      ['Back within 7 days',(c&&c.n)?_tsPc(c.back,c.n):'—',(c&&c.n)?(_tsN(c.back)+' of '+_tsN(c.n)+' new devices'):why,'var(--ok-text)']]);
   }
   // Activity: the last 48 h, the busiest hour of an average day, today.
   function _tsActivity(d){
@@ -5932,7 +5935,7 @@
       +(estAvg? (' \u00b7 established base '+_round1(estAvg)+' days over the same window'):'')+'</p></div>';
     _chartMount($('trafRetAct'),['1 day','2 days','3 days','4 days','5 days','6 days','7 days','8+ days'],
       [{k:'act',n:'Devices',c:'#e0a03a',vals:act}],150,'bar',{ c:'#e0a03a', xl:['1','2','3','4','5','6','7','8+'] });
-    if(nt) nt.textContent=fmt(c.known)+' devices dated \u00b7 window '+(c.window||30)+' days'+(_trafBots?' \u00b7 people only (robots do not come back)':'');
+    if(nt) nt.textContent=fmt(c.known)+' devices dated \u00b7 window '+(c.window||30)+((c.window||30)===1?' day':' days')+(_trafBots?' \u00b7 people only (robots do not come back)':'');
     var oneDay=act.length? act[0] : 0;
     if(!c.newTotal) return '';
     // Tant qu'aucune cohorte n'a sept jours derriere elle, la question « faut-il
@@ -5952,7 +5955,7 @@
     var n=s.length;
     var rg=$('trafRange');
     var bp=(d.bots&&d.bots.period)||null, bn=bp?(bp.v||0)+(bp.lv||0):0;
-    if(rg) rg.textContent = n ? (_sFull(s[0])+' \u2192 '+_sFull(s[n-1])+(d.tz?' \u00b7 server days, '+d.tz:'')+' \u00b7 '+fmt(d.allTime&&d.allTime.v)+' visits all time'
+    if(rg) rg.textContent = n ? (_sFull(s[0])+' \u2192 '+_sFull(s[n-1])+(d.tz?(d.h24?' \u00b7 server time, ':' \u00b7 server days, ')+d.tz:'')+' \u00b7 '+fmt(d.allTime&&d.allTime.v)+' visits all time'
       +(d.bots&&!d.bots.shown&&bn?' \u00b7 '+fmt(bn)+' bot visit'+(bn>1?'s':'')+' hidden':'')) : '';
     // Les vues horaires ne dependent pas de la serie quotidienne : elles sont
     // rendues meme si celle-ci est vide, sinon elles resteraient sur « Loading ».
@@ -5991,10 +5994,10 @@
         ? 'no clear direction (r='+(Math.round(Math.abs(reg.r)*100)/100)+')'
         : (week>0?'+':'\u2212')+_round1(Math.abs(week))+U.per+' (r='+(Math.round(Math.abs(reg.r)*100)/100)+')';
       k.innerHTML =
-        tile('Visits / '+U.one, _round1(_mean(vv)), 'mean over '+n+' complete '+U.many+' \u00b7 '+trendTxt, dir==='flat'?'':dir)
+        tile('Visits / '+U.one, _round1(_mean(vv)), 'mean over '+n+' complete '+(n===1?U.one:U.many)+' \u00b7 '+trendTxt, dir==='flat'?'':dir)
        +tile('Unique devices / 30 d', fmt(month.u), (all.u? pct(month.u,all.u):0)+'% of the '+fmt(all.u)+' ever seen')
        +tile('New share / 30 d', (idSess? pct(month.nw,idSess):0)+'%', fmt(month.nw)+' new of '+fmt(idSess)+' identified sessions')
-       +tile('Returning / '+U.one, _round1(_mean(rtv)), 'first half '+_round1(rtF)+' \u2192 second half '+_round1(rtL), rtT);
+       +tile('Returning / '+U.one, _round1(_mean(rtv)), n<2?'a single '+U.one+': no halves to compare':'first half '+_round1(rtF)+' \u2192 second half '+_round1(rtL), n<2?'':rtT);
     }
     var tn=$('trafTrendNote');
     if(tn) tn.textContent = (dir==='flat'?'flat':(dir==='up'?'rising':'falling'))
@@ -6007,7 +6010,8 @@
     var nn=$('trafNewNote');
     if(nn){
       var f=_mean(nwv.slice(0,half)), l=_mean(nwv.slice(half));
-      nn.textContent = (!f && !l) ? 'no new device in the window'
+      nn.textContent = n<2 ? 'a single '+U.one+': no halves to compare'
+        : (!f && !l) ? 'no new device in the window'
         : (!f ? 'first half was empty' : (l>=f? 'up ':'down ')+_round1(l/f)+'x the first half');
     }
     var bl=$('trafBottom');
