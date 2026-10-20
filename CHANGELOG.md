@@ -32,6 +32,14 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Added
+- **Poker odds calculator on `/poker-odds`** (`web.221`) — pick your two cards, the board (flop, turn, river) and
+  either an opponent's hand or 1–9 random opponents: win / tie / lose and the distribution of your final hand.
+  Exact enumeration whenever the deals fit (always heads-up against a known hand: up to 1,712,304 boards; one
+  random opponent from the flop on), a 60,000-deal simulation otherwise; evaluation by the vendored phe, work cut
+  into ~12 ms slices, a newer request cancels the running one. New module `public/modules/seo/odds-calc.mjs`
+  (pure `computeOdds()` + DOM); its texts and the hand names of `/hand-rankings` in the page's language arrive as
+  JSON in the page. `WebApplication` JSON-LD; `<noscript>` note. Guard: `scripts/test-odds-calc.mjs` (exact
+  heads-up equals `odds-data.json`, plan, river, seeded simulation, cancel).
 - **`/poker-odds`** (`web.220`, SEO, English first) — outs and the chance to hit them (turn, river, flop to
   river), the rule of 2 and 4, pot odds with a worked example, eight preflop matchups and starting-hand odds, five
   questions; `Article` + `FAQPage` JSON-LD, tables that scroll inside their box on a phone. No figure is typed

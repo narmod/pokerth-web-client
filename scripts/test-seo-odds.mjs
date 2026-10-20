@@ -53,11 +53,15 @@ ok(DATA.starting.find((r) => r.id === 'specificPair').combos * 221 === 1326, 'a 
 const EN = lift('_SEO_ODDS');
 const keys = Object.keys(EN);
 const VARS = ['f9turn', 'f9one', 'f9river', 'f15river', 'boards', 'combos', 'aakk', 'kkaa', 'qqak', '22ak'];
+// {n} is filled by the calculator itself (number of deals), only in its texts.
+const CALC_VARS = ['n'];
 const ph = (s) => (String(s).match(/\{([a-z0-9]+)\}/gi) || []).map((x) => x.slice(1, -1)).sort();
 const flat = (v) => Array.isArray(v) ? v.flat().join(' ') : (v && typeof v === 'object') ? Object.values(v).join(' ') : String(v);
 ok([...EN.title].length <= 60, `English title fits a snippet (${[...EN.title].length})`);
 ok([...EN.desc].length <= 160, `English description fits a snippet (${[...EN.desc].length})`);
-ok(keys.every((k) => ph(flat(EN[k])).every((p) => VARS.includes(p))), 'English: every {placeholder} is one the page fills');
+ok(keys.every((k) => ph(flat(EN[k])).every((p) => (k === 'calc' ? CALC_VARS : VARS).includes(p))), 'English: every {placeholder} is one the page or the calculator fills');
+ok(['h2', 'intro', 'you', 'board', 'opp', 'players', 'pick', 'clear', 'win', 'tie', 'lose', 'exact', 'sim', 'working', 'need', 'boardHint', 'oppHint', 'final', 'noscript'].every((k) => String(EN.calc[k] || '').trim()), 'English: every calculator text');
+ok(/<script type="module" src="\/modules\/seo\/odds-calc\.mjs"><\/script>/.test(src) && /replace\(\/<\/g, '\\\\u003c'\)/.test(src), 'calculator loaded, its JSON cannot close the script element');
 ok(DATA.outs.every((r) => EN.draws[r.id]) && DATA.starting.every((r) => EN.starting[r.id]), 'English: a label for every draw and starting hand');
 ok(EN.outsCols.length === 5 && EN.matchCols.length === 5 && EN.startCols.length === 3 && EN.faq.length === 5, 'English: column and question counts');
 ok(/function seoOddsPage\(/.test(src) && /_seoOddsVars\(lang\)/.test(src), 'page builder fills the placeholders per language');

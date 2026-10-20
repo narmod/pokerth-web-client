@@ -7240,6 +7240,8 @@ SEO_NAV_I18N = require('./seo-i18n/nav.js');
 SEO_FRIENDS_I18N = require('./seo-i18n/friends.js');
 SEO_ODDS_I18N = require('./seo-i18n/odds.js');
 SEO_HANDS_I18N = require('./seo-i18n/hands.js').build(_SEO_HANDS, _sd);
+// Hand names per language, for the /poker-odds calculator.
+var _SEO_HANDS_PARTS = require('./seo-i18n/hands.js').PARTS;
 // Serve-time localization of pokerth-client.html (see sendClientHtml).
 const _seoSsr = require('./seo-i18n/ssr.js');
 SEO_HOWTO_I18N = require('./seo-i18n/howto.js').build(_SEO_HOWTO, _seoPageHref, _seoFriendsLink);
@@ -7381,6 +7383,27 @@ var _SEO_ODDS = {
   "ldDesc": "Texas Hold’em odds computed exactly: outs, the rule of 2 and 4, pot odds and preflop matchups.",
   "h1": "Poker odds: outs, pot odds and preflop matchups",
   "lead": "Good poker decisions come down to a few numbers: how likely your hand is to improve, how much you have to pay to find out, and how two hands stand against each other before the flop. Every figure on this page is computed exactly, not copied from a chart.",
+  "calc": {
+    "h2": "Poker odds calculator",
+    "intro": "Pick your two cards and, if you like, the board and an opponent’s hand. The calculator deals out every remaining card — exactly whenever it can, by simulation otherwise — and shows how often you win.",
+    "you": "Your hand",
+    "board": "Board",
+    "opp": "Opponent (optional)",
+    "players": "Opponents",
+    "pick": "Tap a card to place it in the highlighted slot; tap a slot to empty it.",
+    "clear": "Clear",
+    "win": "Win",
+    "tie": "Tie",
+    "lose": "Lose",
+    "exact": "Exact: every one of the {n} possible deals.",
+    "sim": "Simulation of {n} random deals.",
+    "working": "Calculating…",
+    "need": "Choose your two cards to see your odds.",
+    "boardHint": "The board takes three cards (the flop), then four, then five.",
+    "oppHint": "Choose both of your opponent’s cards, or none.",
+    "final": "Your final hand",
+    "noscript": "The calculator needs JavaScript. The tables below work without it."
+  },
   "outsH2": "Outs: your chance to hit",
   "outsP": "An out is a card still in the deck that turns your hand into the likely winner. On the flop, 47 cards are unseen: with 9 outs, one card hits on the turn {f9turn} of the time, and by the river — two cards to come — {f9river}.",
   "outsCols": ["Draw", "Outs", "Turn", "River (from the turn)", "Turn or river (from the flop)"],
@@ -7470,7 +7493,17 @@ function seoOddsPage(res, method, lang) {
   var v = _seoOddsVars(lang), D = SEO_ODDS_DATA;
   var f = function (s) { return _seoFill(s, v); };
   var th = function (cols) { return '<tr>' + cols.map(function (c) { return '<th>' + c + '</th>'; }).join('') + '</tr>'; };
+  // Calculator (public/modules/seo/odds-calc.mjs): its texts and the ten hand
+  // names of /hand-rankings in the same language travel as JSON; '<' is
+  // escaped so nothing in it can close the script element.
+  var _hp = lang && _SEO_HANDS_PARTS && _SEO_HANDS_PARTS[lang];
+  var calcData = Object.assign({}, tr.calc, { lang: lang || 'en',
+    cats: (_hp && _hp.names && _hp.names.length === 10) ? _hp.names : _SEO_HANDS.map(function (h) { return h[0]; }) });
   var body = '<h1>' + tr.h1 + '</h1><p>' + tr.lead + '</p>' +
+    '<h2>' + tr.calc.h2 + '</h2><p>' + tr.calc.intro + '</p>' +
+    '<div id="odds-calc"></div><noscript><p class="updated">' + tr.calc.noscript + '</p></noscript>' +
+    '<script type="application/json" id="odds-calc-data">' + JSON.stringify(calcData).replace(/</g, '\\u003c') + '</script>' +
+    '<script type="module" src="/modules/seo/odds-calc.mjs"></script>' +
     '<h2>' + tr.outsH2 + '</h2><p>' + f(tr.outsP) + '</p>' +
     '<div class="tw"><table>' + th(tr.outsCols) + D.outs.map(function (r) {
       return '<tr><td>' + tr.draws[r.id] + '</td><td class="n">' + r.outs + '</td><td class="n">' + _seoPct(lang, r.turn) +
@@ -7499,7 +7532,12 @@ function seoOddsPage(res, method, lang) {
     mainEntity: tr.faq.map(function (q) {
       return { '@type': 'Question', name: plain(q[0]), acceptedAnswer: { '@type': 'Answer', text: plain(f(q[1])) } };
     }) };
-  seoContentPage(res, method, tr.title, tr.desc, '/poker-odds', body, [art, faq], lang, langs);
+  // The calculator, described as the free web tool it is.
+  var app = { '@context': 'https://schema.org', '@type': 'WebApplication', name: tr.calc.h2, description: plain(tr.calc.intro),
+    applicationCategory: 'GameApplication', operatingSystem: 'Any (web browser)', browserRequirements: 'Requires JavaScript',
+    isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' }, inLanguage: lang || 'en' };
+  if (url) app.url = url;
+  seoContentPage(res, method, tr.title, tr.desc, '/poker-odds', body, [art, app, faq], lang, langs);
 }
 
 // ── /competitions — BBC, WeCup, Monthly Cup ──────────────────────────────
