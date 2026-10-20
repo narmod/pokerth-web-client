@@ -7251,7 +7251,8 @@ function seoGlossaryPage(res, method, lang) {
 // one link (or a QR code) to send, friends seated automatically. Only what
 // the client does today: invitation dialog (modules/ui/invite.mjs), link
 // format and password policy (modules/net/invite-link.mjs), guests limited
-// to Normal games and kept out of the chat by the pokerth.net server.
+// to Normal games and kept out of the chat by the pokerth.net server, and
+// self-hosting as the README documents it (one-liner, Docker, CasaOS, Pi).
 // Translations: seo-i18n/friends.js.
 var _SEO_FRIENDS = {
   "title": "Play Poker with Friends Online — Free, No Download | PokerTH",
@@ -7277,8 +7278,8 @@ var _SEO_FRIENDS = {
   "mixP": "The web client runs in any modern browser, on iPhone, Android, Windows, macOS and Linux. Anyone can add it to their home screen and play it like an app; the invitation link then opens straight in it. Around a real table, the QR code is the fastest way in: every player scans it with their phone.",
   "talkH2": "Talking during the game",
   "talkP": "On pokerth.net the table chat is for players with a free account; guests can play but not chat. Many groups simply keep a voice or video call open next to the table.",
-  "ownH2": "On your own server",
-  "ownP": "For a club, an office or a school, run your own PokerTH server on a LAN or on the internet: the server and this web client are both free and open source. Players then need only a nickname, and invitation links work there just as they do on pokerth.net.",
+  "ownH2": "Host it yourself, at home",
+  "ownP": "You can also install PokerTH at home \u2014 on a PC, a home server or a Raspberry Pi \u2014 for a family game, a club, an office or a school. The PokerTH server and this web client are both free and open source: the web client installs with a single command, with Docker or on CasaOS, and every phone or tablet on your Wi-Fi then plays in its browser with just a nickname. Invitation links work there just as they do on pokerth.net. The installation guide is on <a href=\"https://github.com/narmod/pokerth-web-client#self-hosting\">GitHub</a>.",
   "faqH2": "Questions",
   "faq": [
     ["Do my friends need an account?",

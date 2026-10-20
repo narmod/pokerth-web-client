@@ -7,8 +7,9 @@
 // 2. completeness of every translation: every English field, filled, with the
 //    same number of steps and questions — a half-filled entry would publish a
 //    half-English page under a localized URL;
-// 3. markup: translations carry no links and no HTML beyond the <strong> tags
-//    the English uses (UI labels), and an attribute-safe title/description;
+// 3. markup: no HTML beyond the <strong> tags (UI labels) and links; every
+//    field carries exactly the English hrefs, in order (a mistyped install
+//    guide URL would send readers nowhere); attribute-safe title/description;
 // 4. wiring: route, nav, crawler block, sitemap, IndexNow, llms.txt and the
 //    admin coverage check all know the page, and the nav/crawler links are
 //    gated on the reader's language.
@@ -41,7 +42,8 @@ const EN = lift('_SEO_FRIENDS');
 const keys = Object.keys(EN);
 const pairs = (a, len) => Array.isArray(a) && a.length === len &&
   a.every(x => Array.isArray(x) && x.length === 2 && x.every(y => String(y || '').trim()));
-const extraHtml = (s) => /<(?!\/?strong>)[^>]*>/.test(String(s));
+const extraHtml = (s) => /<(?!\/?strong>|a href="https:\/\/[^"<>]+">|\/a>)[^>]*>/.test(String(s));
+const hrefs = (v) => (String(Array.isArray(v) ? v.flat().join(' ') : v).match(/href="[^"]*"/g) || []);
 
 // 1. English
 ok([...EN.title].length <= 60, `English title fits a snippet (${[...EN.title].length} chars)`);
@@ -49,7 +51,8 @@ ok([...EN.desc].length <= 160, `English description fits a snippet (${[...EN.des
 ok(pairs(EN.steps, 3), 'English: three steps');
 ok(pairs(EN.faq, 5), 'English: five questions');
 ok(!/["<>]/.test(EN.title + EN.desc + EN.ldHeadline + EN.ldDesc), 'English head fields are attribute-safe');
-ok(!keys.some(k => extraHtml(Array.isArray(EN[k]) ? EN[k].flat().join(' ') : EN[k])), 'English: no HTML beyond <strong>');
+ok(!keys.some(k => extraHtml(Array.isArray(EN[k]) ? EN[k].flat().join(' ') : EN[k])), 'English: no HTML beyond <strong> and links');
+ok(hrefs(EN.ownP).includes('href="https://github.com/narmod/pokerth-web-client#self-hosting"'), 'English: self-hosting section links to the install guide');
 
 // 2–3. Translations
 const codes = Object.keys(T);
@@ -63,7 +66,8 @@ for (const code of codes) {
     return typeof p[k] !== 'string' || !p[k].trim();
   });
   ok(missing.length === 0, `${code}: complete${missing.length ? ' — missing ' + missing.join(', ') : ''}`);
-  ok(!keys.some(k => extraHtml(Array.isArray(p[k]) ? p[k].flat().join(' ') : p[k])), `${code}: no HTML beyond <strong>`);
+  ok(!keys.some(k => extraHtml(Array.isArray(p[k]) ? p[k].flat().join(' ') : p[k])), `${code}: no HTML beyond <strong> and links`);
+  ok(keys.every(k => JSON.stringify(hrefs(p[k])) === JSON.stringify(hrefs(EN[k]))), `${code}: links identical to English`);
   ok(!/["<>]/.test(p.title + p.desc + p.ldHeadline + p.ldDesc), `${code}: head fields are attribute-safe`);
   ok(Object.keys(p).every(k => keys.includes(k)), `${code}: no unknown field`);
 }

@@ -32,10 +32,11 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Added
-- **`/play-with-friends`** (`web.217`, SEO) — a server-rendered page for « play poker with friends online »: the
+- **`/play-with-friends`** (`web.217`–`web.218`, SEO) — a server-rendered page for « play poker with friends online »: the
   three steps (log in, create a Normal table, « Invite friends » with link, QR code, WhatsApp / Telegram / SMS /
   email), private tables (the password never travels in the link), home-game settings, phones and computers at one
-  table, chat (account only on pokerth.net), own server, and five questions; `HowTo` + `FAQPage` JSON-LD. Wired into
+  table, chat (account only on pokerth.net), hosting it yourself at home (PC, home server or Raspberry Pi; one-liner,
+  Docker or CasaOS, linked to the README install guide), and five questions; `HowTo` + `FAQPage` JSON-LD. Wired into
   the sitemap, IndexNow, llms.txt, the crawler block and the admin coverage check. English first: the nav and
   crawler links appear in a language only once its entry lands in `seo-i18n/friends.js` (empty for now);
   `scripts/test-seo-friends-i18n.mjs` guards both.
