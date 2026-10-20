@@ -351,7 +351,7 @@ ok(/function _barChart\(labels,vals,opt\)/.test(admin), 'daily bars have a helpe
 ok(/\(opt\.segs\|\|\[\]\)\.forEach/.test(admin), 'with per-half averages drawn over them');
 ok(/function _trafInsights\(d,s\)/.test(admin), 'the reading of the numbers lives in one place');
 ok(/_trafInsights\(d,s\);/.test(body(admin, 'loadTraffic')), 'and loadTraffic calls it');
-ok(/l\.dash\? ';stroke-width:1\.5;stroke-dasharray/.test(admin), 'the trend line is dashed');
+ok(/l\.dash\? ';stroke-width:'\+\(1\.5\*k\)\.toFixed\(2\)\+';stroke-dasharray/.test(admin), 'the trend line is dashed');
 ok(/if\(l\.dash\) return;/.test(admin), 'and carries no dot, since no day was measured there');
 ok(/if\(s\.length>=5\)/.test(admin), 'two points do not make a trend, so a short window shows none');
 ok(/Math\.abs\(reg\.r\)>=0\.32/.test(admin), 'a weak correlation is reported as flat rather than as a direction');
@@ -568,8 +568,8 @@ ok(/var MUS_TOP=10, MUS_STACK=5;/.test(admin), 'ten titles ranked, five stacked'
 ok(/box\.innerHTML=_musRank\(keys,total\)\+_musContext\(keys,total\)\+_musChart\(keys\);/.test(admin),
   'ranking, then context, then the chart');
 ok(/function _stackChart\(labels,series,H,opt\)/.test(admin), 'a stacked bar helper exists');
-ok(/_stackChart\(st\.labels,vis,st\.H,st\.opt\)/.test(admin), 'it gets the chart options, the previous period among them');
-ok(/var prev=opt\.prevBy \? labels\.map/.test(body(admin, '_stackChart')) && /stroke-dasharray:5 5/.test(body(admin, '_stackChart')),
+ok(/_stackChart\(st\.labels,vis,st\.H,Object\.assign\(\{\},st\.opt,\{k:k\}\)\)/.test(admin), 'it gets the chart options, the previous period among them (and the font scale)');
+ok(/var prev=opt\.prevBy \? labels\.map/.test(body(admin, '_stackChart')) && /stroke-dasharray:'\+\(5\*k\)\.toFixed\(1\)\+' '\+\(5\*k\)\.toFixed\(1\)/.test(body(admin, '_stackChart')),
   'the period before is a dashed line summing the series on show');
 ok(/tot\.forEach\(function\(t\)\{ if\(t>max\) max=t; \}\); if\(prev\) prev\.forEach/.test(body(admin, '_stackChart')), 'and the scale makes room for it');
 // World page cards (web.120).

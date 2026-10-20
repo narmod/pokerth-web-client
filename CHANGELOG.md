@@ -72,6 +72,13 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Statistics charts readable on a phone** (`web.210`, audit of 2026-10-20, S4) — the charts are 700 units wide and
+  stretched to their box: on a phone (~330 px) the 9-unit text came out at about 4 px and a chart was ~80 px tall; the
+  half-width ones (Time of day, Active days) were ~7 px even on a desktop. `_chartDraw()` now measures the box and
+  scales text, margins, strokes, dots and height by `k` (`_chartK()`, 1 to 3) so that text shows at about 10 px; a
+  full-width desktop chart keeps k = 1. X labels widen their step with k so they never touch, the pointer reading
+  uses the scaled margins, and a ResizeObserver redraws a chart drawn hidden or resized. Guarded in
+  `scripts/test-admin-charts.mjs`.
 - **Statistics charts: round axis steps, last label inside the frame** (`web.209`, audit of 2026-10-20, S1–S3) —
   the top of every line, bar and stacked chart (1, 2, 5 × 10ⁿ) was cut in four: 50 read 0 · 13 · 25 · 38 · 50, 10 read
   0 · 3 · 5 · 8 · 10, a ratio 0 · 0 · 1 · 1 · 1, and Daily visits topped at 500 for ~300. `_niceAxis()` now picks the

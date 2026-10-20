@@ -62,11 +62,11 @@ ok(/aria-pressed="/.test(leg), 'and says whether it is on');
 ok(/_annEsc\(l\.n\|\|l\.k\)/.test(leg), 'labels are escaped — some of them are language and track names');
 
 // -- Run it -----------------------------------------------------------------
-const need = ['_chartSig', '_chartMount', '_chartVisible', '_chartLegend', '_chartDraw',
+const need = ['_chartSig', '_chartK', '_chartMount', '_chartVisible', '_chartLegend', '_chartDraw',
   '_chartIndex', '_chartCentre', '_chartHide', '_chartRead',
   '_lineChart', '_stackChart', '_barChart', '_mean', '_niceAxis', '_axLab', '_isInt', '_xTicks', '_annEsc', '_round1'];
 ok(!need.some(x => !whole(x)), 'every chart helper is liftable');
-const env = grab(/var CHART_W=700;/) + grab(/var CHART_GEO=\{[^;]*;/) + 'var _chartUid=0,_charts={};';
+const env = grab(/var CHART_W=700;/) + grab(/var CHART_GEO=\{[^;]*;/) + grab(/var CHART_TXT=\d+;/) + 'var _chartUid=0,_charts={};';
 
 const dom = new JSDOM('<div id="host"></div>', { url: 'http://localhost/admin', runScripts: 'outside-only' });
 const w = dom.window;
@@ -185,11 +185,24 @@ ok(/<i>'\+_annEsc\(l\.n\|\|l\.k\)\+'<\/i>/.test(body(admin, '_chartRead')), 'the
     'never more than five intervals, always above the data');
   const lab = Array.from({ length: 14 }, (_, i) => '10-' + String(7 + i).padStart(2, '0'));
   const svg = ax._xTicks(14, i => 38 + i * 652 / 13, lab, 170, 700);
-  const last = /<text x="([\d.]+)" y="164" text-anchor="(\w+)"[^>]*>10-20<\/text>/.exec(svg);
+  const last = /<text x="([\d.]+)" y="164\.0" text-anchor="(\w+)"[^>]*>10-20<\/text>/.exec(svg);
   ok(last && last[2] === 'end' && +last[1] <= 699, 'the last label is anchored inside the right edge');
   ok(!/>10-19</.test(svg), 'and the label just before it is left out rather than collide');
   ok(/>10-07</.test(svg) && (svg.match(/<text/g) || []).length === 7, 'one label in two (07 09 11 13 15 17), plus the last');
   ok(!/_lineNiceMax/.test(admin), 'no chart cuts its top in four any more');
+  // -- Readable on a phone (S4): text scaled by k, fewer x labels so they never touch
+  const k = 2.35, svgM = ax._xTicks(14, i => 38 * k + i * (700 - 48 * k) / 13, lab, 170 * k, 700, k);
+  const xs = [...svgM.matchAll(/<text x="([\d.]+)"[^>]*text-anchor="(\w+)"[^>]*font-size:([\d.]+)px">([^<]+)</g)];
+  ok(xs.length >= 3 && xs.every(m => +m[3] === 21.15), 'x labels grow with the scale (9 x 2.35 = 21.15 units, ~10 px on a phone)');
+  const box = m => { const w = m[4].length * 5.4 * k, x = +m[1]; return m[2] === 'end' ? [x - w, x] : m[2] === 'start' ? [x, x + w] : [x - w / 2, x + w / 2]; };
+  ok(xs.every((m, i) => !i || box(xs[i - 1])[1] <= box(m)[0]), 'and are spaced so none overlaps the next (' + xs.map(m => m[4]).join(' ') + ')');
+  const chk = new Function('var CHART_W=700, CHART_TXT=10;' + whole('_chartK') + '\nreturn _chartK;')();
+  ok(chk({ clientWidth: 1090 }) === 1 && chk({ clientWidth: 330 }) === 2.35 && chk({ clientWidth: 0 }, { k: 1.5 }) === 1.5,
+    'k is 1 on a wide desktop chart, ~2.35 at phone width, and kept when the width is unknown (hidden)');
+  ok(/new ResizeObserver\(function\(\)\{\n\s+var st=_charts\[host\.id\]; if\(st && host\.clientWidth && _chartK\(host,st\)!==st\.k\) _chartDraw\(host\.id\);/.test(admin),
+    'a chart drawn hidden or resized is drawn again at its real width');
+  ok(/var n=st\.labels\.length, geo=CHART_GEO\[st\.kind\]\|\|CHART_GEO\.line, k=st\.k\|\|1, gl=geo\.l\*k;/.test(admin),
+    'the pointer reading uses the scaled margins');
 }
 
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);

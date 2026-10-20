@@ -4260,13 +4260,18 @@
   // X labels, the same in every chart (S2): one in `step`, the last always,
   // anchored inside the frame when it would spill over the right edge (« 10-2( »,
   // « 16l »); a label too close before the last one is left out so they never collide.
-  function _xTicks(n,xAt,labs,H,W){
-    var step=Math.max(1,Math.ceil(n/7)), g='';
+  // k (S4): the font scale of a chart drawn narrow; labels are k times wider,
+  // so fewer of them fit — the step widens until they no longer touch.
+  function _xTicks(n,xAt,labs,H,W,k){
+    k=k||1;
+    var wide=0; for(var j=0;j<n;j++){ var L=String(labs[j]==null?'':labs[j]).length; if(L>wide) wide=L; }
+    var gap=n>1?Math.abs(xAt(n-1)-xAt(0))/(n-1):W;
+    var step=Math.max(1,Math.ceil(n/7),Math.ceil(wide*5.4*k*1.2/gap)), g='';
     for(var i=0;i<n;i++){
       if(i!==n-1 && (i%step!==0 || n-1-i<step)) continue;
-      var t=String(labs[i]==null?'':labs[i]), x=xAt(i), half=t.length*2.7, a='middle';
+      var t=String(labs[i]==null?'':labs[i]), x=xAt(i), half=t.length*2.7*k, a='middle';
       if(x+half>W-1){ x=W-1; a='end'; } else if(x-half<1){ x=1; a='start'; }
-      g+='<text x="'+x.toFixed(1)+'" y="'+(H-6)+'" text-anchor="'+a+'" style="fill:var(--text);font-size:9px">'+_annEsc(t)+'</text>';
+      g+='<text x="'+x.toFixed(1)+'" y="'+(H-6*k).toFixed(1)+'" text-anchor="'+a+'" style="fill:var(--text);font-size:'+(9*k).toFixed(2)+'px">'+_annEsc(t)+'</text>';
     }
     return g;
   }
@@ -4293,8 +4298,8 @@
   function _barChart(labels,vals,opt){
     var n=labels.length; if(!n) return '';
     opt=opt||{};
-    var col=opt.c||'#e0a03a', H=opt.H||170;
-    var W=700,padL=32,padR=10,padT=16,padB=20;
+    var k=opt.k||1, col=opt.c||'#e0a03a', H=(opt.H||170)*k;
+    var W=700,padL=32*k,padR=10*k,padT=16*k,padB=20*k;
     var max=0; vals.forEach(function(v){ if((v||0)>max) max=v||0; });
     var ax=_niceAxis(max,_isInt(vals)); max=ax.max;
     var iw=W-padL-padR, ih=H-padT-padB, slot=iw/n, bw=Math.max(3,slot*0.62);
@@ -4306,29 +4311,29 @@
     if(opt.hi && opt.hi.to>=opt.hi.from){
       var hx=padL+slot*opt.hi.from, hw=slot*(opt.hi.to-opt.hi.from+1);
       g+='<rect x="'+hx.toFixed(1)+'" y="'+padT+'" width="'+hw.toFixed(1)+'" height="'+ih+'" style="fill:'+(opt.hiC||'#e0a03a')+';opacity:.10"/>';
-      if(opt.hiLabel) g+='<text x="'+(hx+hw/2).toFixed(1)+'" y="'+(padT+9)+'" text-anchor="middle" style="fill:var(--text);font-size:9px;font-weight:700">'+_annEsc(opt.hiLabel)+'</text>';
+      if(opt.hiLabel) g+='<text x="'+(hx+hw/2).toFixed(1)+'" y="'+(padT+9*k).toFixed(1)+'" text-anchor="middle" style="fill:var(--text);font-size:'+(9*k).toFixed(2)+'px;font-weight:700">'+_annEsc(opt.hiLabel)+'</text>';
     }
     for(s2=0;s2<=ax.n;s2++){
       var yy=Y(ax.step*s2);
       g+='<line x1="'+padL+'" y1="'+yy.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+yy.toFixed(1)+'" style="stroke:rgba(127,127,127,.18);stroke-width:1"/>'
-        +'<text x="'+(padL-5)+'" y="'+(yy+3).toFixed(1)+'" text-anchor="end" style="fill:var(--text);font-size:9px;font-variant-numeric:tabular-nums">'+_axLab(ax,s2)+'</text>';
+        +'<text x="'+(padL-5*k).toFixed(1)+'" y="'+(yy+3*k).toFixed(1)+'" text-anchor="end" style="fill:var(--text);font-size:'+(9*k).toFixed(2)+'px;font-variant-numeric:tabular-nums">'+_axLab(ax,s2)+'</text>';
     }
     vals.forEach(function(v,i){
       var y=Y(v), h=Math.max(1,padT+ih-y);
       var bc=opt.colFn? opt.colFn(v,i) : col;
       g+='<rect x="'+(CX(i)-bw/2).toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="2" style="fill:'+bc+'"><title>'+_annEsc(labels[i])+': '+(v||0)+'</title></rect>';
-      if(n<=20) g+='<text x="'+CX(i).toFixed(1)+'" y="'+(y-4).toFixed(1)+'" text-anchor="middle" style="fill:var(--text);font-size:8.5px;font-variant-numeric:tabular-nums">'+(v||0)+'</text>';
+      if(n<=20) g+='<text x="'+CX(i).toFixed(1)+'" y="'+(y-4*k).toFixed(1)+'" text-anchor="middle" style="fill:var(--text);font-size:'+(8.5*k).toFixed(2)+'px;font-variant-numeric:tabular-nums">'+(v||0)+'</text>';
     });
-    g+=_xTicks(n,CX,opt.xl||labels,H,W);
+    g+=_xTicks(n,CX,opt.xl||labels,H,W,k);
     if(opt.ref!==undefined && opt.ref<=max){
       var ry=Y(opt.ref);
-      g+='<line x1="'+padL+'" y1="'+ry.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+ry.toFixed(1)+'" style="stroke:var(--cream);stroke-width:1.2;stroke-dasharray:5 4;opacity:.65"/>';
+      g+='<line x1="'+padL+'" y1="'+ry.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+ry.toFixed(1)+'" style="stroke:var(--cream);stroke-width:'+(1.2*k).toFixed(2)+';stroke-dasharray:'+(5*k).toFixed(1)+' '+(4*k).toFixed(1)+';opacity:.65"/>';
     }
     (opt.segs||[]).forEach(function(sg){
       var part=vals.slice(sg.from,sg.to+1); if(!part.length) return;
       var av=_mean(part), y=Y(av);
-      g+='<line x1="'+(CX(sg.from)-slot/2+2).toFixed(1)+'" y1="'+y.toFixed(1)+'" x2="'+(CX(sg.to)+slot/2-2).toFixed(1)+'" y2="'+y.toFixed(1)+'" style="stroke:var(--cream);stroke-width:1.5;opacity:.75"/>'
-        +'<text x="'+CX(Math.round((sg.from+sg.to)/2)).toFixed(1)+'" y="'+(y-4).toFixed(1)+'" text-anchor="middle" style="fill:var(--cream);font-size:9px;font-weight:700">avg '+_round1(av)+'</text>';
+      g+='<line x1="'+(CX(sg.from)-slot/2+2).toFixed(1)+'" y1="'+y.toFixed(1)+'" x2="'+(CX(sg.to)+slot/2-2).toFixed(1)+'" y2="'+y.toFixed(1)+'" style="stroke:var(--cream);stroke-width:'+(1.5*k).toFixed(2)+';opacity:.75"/>'
+        +'<text x="'+CX(Math.round((sg.from+sg.to)/2)).toFixed(1)+'" y="'+(y-4*k).toFixed(1)+'" text-anchor="middle" style="fill:var(--cream);font-size:'+(9*k).toFixed(2)+'px;font-weight:700">avg '+_round1(av)+'</text>';
     });
     return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="daily bars">'+g+'</svg>';
   }
@@ -4344,6 +4349,17 @@
   var CHART_W=700;
   var CHART_GEO={line:{l:38,r:10,t:10,b:20},stack:{l:32,r:10,t:16,b:20},bar:{l:32,r:10,t:16,b:20}};
   var _chartUid=0, _charts={};
+  // Font scale of a chart (audit 2026-10-20, S4). The SVG is 700 units wide and
+  // stretched to its box: on a phone (~330 px) 9-unit text came out at 4 px.
+  // Text, margins and height grow by k so that text shows at about 10 px; a
+  // full-width desktop chart stays at k = 1. Unknown width (drawn hidden): the
+  // last k, until the ResizeObserver of _chartMount redraws it on show.
+  var CHART_TXT=10;
+  function _chartK(host,st){
+    var w=host&&host.clientWidth;
+    if(!w) return (st&&st.k)||1;
+    return Math.round(Math.max(1,Math.min(3,CHART_TXT*CHART_W/(9*w)))*20)/20;
+  }
   function _chartSig(lines){ return lines.map(function(l){ return l.k; }).join('|'); }
   // Le trafic se rafraichit tout seul : si la signature des series n'a pas
   // bouge, on garde ce que l'admin avait masque. Sinon un clic serait defait
@@ -4356,10 +4372,14 @@
     if(!host.id) host.id='chart'+(++_chartUid);
     var sig=_chartSig(lines), prev=_charts[host.id];
     _charts[host.id]={labels:labels,lines:lines,H:H||170,kind:kind||'line',opt:opt||{},
-                      hidden:(prev&&prev.sig===sig)?prev.hidden:{},sig:sig};
+                      hidden:(prev&&prev.sig===sig)?prev.hidden:{},sig:sig,k:prev?prev.k:1};
     host.classList.add('chartbox');
     if(!host._chartWired){
       host._chartWired=1;
+      // A new width (phone turned, panel shown after a hidden draw) can change k.
+      if(typeof ResizeObserver==='function') new ResizeObserver(function(){
+        var st=_charts[host.id]; if(st && host.clientWidth && _chartK(host,st)!==st.k) _chartDraw(host.id);
+      }).observe(host);
       host.addEventListener('click',function(e){
         var b=e.target.closest?e.target.closest('.lgi'):null;
         if(!b||!host.contains(b)) return;
@@ -4406,29 +4426,29 @@
   }
   function _chartDraw(id){
     var st=_charts[id], host=document.getElementById(id); if(!st||!host) return;
-    var vis=_chartVisible(st);
+    var vis=_chartVisible(st), k=st.k=_chartK(host,st);
     if(st.kind==='bar'){
-      host.innerHTML=_barChart(st.labels,(st.lines[0]&&st.lines[0].vals)||[],Object.assign({},st.opt,{H:st.H}))
+      host.innerHTML=_barChart(st.labels,(st.lines[0]&&st.lines[0].vals)||[],Object.assign({},st.opt,{H:st.H,k:k}))
                    + '<div class="chartgd"></div><div class="chartro"></div>';
       return;
     }
-    host.innerHTML=(st.kind==='stack'?_stackChart(st.labels,vis,st.H,st.opt):_lineChart(st.labels,vis,st.H))
+    host.innerHTML=(st.kind==='stack'?_stackChart(st.labels,vis,st.H,Object.assign({},st.opt,{k:k})):_lineChart(st.labels,vis,st.H,{k:k}))
                  + _chartLegend(st)
                  + '<div class="chartgd"></div><div class="chartro"></div>';
   }
   // Index de la colonne sous le pointeur. Le SVG est etire en largeur, on
   // repasse donc par la fraction de largeur plutot que par des pixels.
   function _chartIndex(st,frac){
-    var n=st.labels.length, geo=CHART_GEO[st.kind]||CHART_GEO.line;
-    var x=frac*CHART_W, iw=CHART_W-geo.l-geo.r;
-    if(st.kind==='stack'||st.kind==='bar'){ var slot=iw/n; return Math.max(0,Math.min(n-1,Math.floor((x-geo.l)/slot))); }
+    var n=st.labels.length, geo=CHART_GEO[st.kind]||CHART_GEO.line, k=st.k||1, gl=geo.l*k;
+    var x=frac*CHART_W, iw=CHART_W-(geo.l+geo.r)*k;
+    if(st.kind==='stack'||st.kind==='bar'){ var slot=iw/n; return Math.max(0,Math.min(n-1,Math.floor((x-gl)/slot))); }
     if(n===1) return 0;
-    return Math.max(0,Math.min(n-1,Math.round((x-geo.l)*(n-1)/iw)));
+    return Math.max(0,Math.min(n-1,Math.round((x-gl)*(n-1)/iw)));
   }
   function _chartCentre(st,i){
-    var n=st.labels.length, geo=CHART_GEO[st.kind]||CHART_GEO.line, iw=CHART_W-geo.l-geo.r;
-    if(st.kind==='stack'||st.kind==='bar') return (geo.l+(iw/n)*i+(iw/n)/2)/CHART_W;
-    return (n===1?geo.l+iw/2:geo.l+(i*iw)/(n-1))/CHART_W;
+    var n=st.labels.length, geo=CHART_GEO[st.kind]||CHART_GEO.line, k=st.k||1, gl=geo.l*k, iw=CHART_W-(geo.l+geo.r)*k;
+    if(st.kind==='stack'||st.kind==='bar') return (gl+(iw/n)*i+(iw/n)/2)/CHART_W;
+    return (n===1?gl+iw/2:gl+(i*iw)/(n-1))/CHART_W;
   }
   function _chartHide(id){
     var host=document.getElementById(id); if(!host) return;
@@ -4477,8 +4497,8 @@
   // before, drawn as one dashed line summing the series on show.
   function _stackChart(labels,series,H,opt){
     var n=labels.length; if(!n||!series.length) return '';
-    H=H||170; opt=opt||{};
-    var W=700,padL=32,padR=10,padT=16,padB=20;
+    opt=opt||{}; var k=opt.k||1; H=(H||170)*k;
+    var W=700,padL=32*k,padR=10*k,padT=16*k,padB=20*k;
     var tot=labels.map(function(_,i){ var t=0; series.forEach(function(s){ t+=s.vals[i]||0; }); return t; });
     var prev=opt.prevBy ? labels.map(function(_,i){ var t=0; series.forEach(function(s){ var pv=opt.prevBy[s.k]; t+=(pv&&pv[i])||0; }); return t; }) : null;
     var max=0; tot.forEach(function(t){ if(t>max) max=t; }); if(prev) prev.forEach(function(t){ if(t>max) max=t; });
@@ -4490,7 +4510,7 @@
     for(s2=0;s2<=ax.n;s2++){
       var yy=Y(ax.step*s2);
       g+='<line x1="'+padL+'" y1="'+yy.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+yy.toFixed(1)+'" style="stroke:rgba(127,127,127,.18);stroke-width:1"/>'
-        +'<text x="'+(padL-5)+'" y="'+(yy+3).toFixed(1)+'" text-anchor="end" style="fill:var(--text);font-size:9px;font-variant-numeric:tabular-nums">'+_axLab(ax,s2)+'</text>';
+        +'<text x="'+(padL-5*k).toFixed(1)+'" y="'+(yy+3*k).toFixed(1)+'" text-anchor="end" style="fill:var(--text);font-size:'+(9*k).toFixed(2)+'px;font-variant-numeric:tabular-nums">'+_axLab(ax,s2)+'</text>';
     }
     labels.forEach(function(lab,i){
       var acc=0;
@@ -4500,16 +4520,16 @@
         g+='<rect x="'+(CX(i)-bw/2).toFixed(1)+'" y="'+y1.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+Math.max(0.5,h).toFixed(1)+'" style="fill:'+s.c+'"/>';
         acc+=v;
       });
-      if(tot[i] && n<=20 && !prev) g+='<text x="'+CX(i).toFixed(1)+'" y="'+(Y(tot[i])-4).toFixed(1)+'" text-anchor="middle" style="fill:var(--text);font-size:8.5px;font-variant-numeric:tabular-nums">'+tot[i]+'</text>';
+      if(tot[i] && n<=20 && !prev) g+='<text x="'+CX(i).toFixed(1)+'" y="'+(Y(tot[i])-4*k).toFixed(1)+'" text-anchor="middle" style="fill:var(--text);font-size:'+(8.5*k).toFixed(2)+'px;font-variant-numeric:tabular-nums">'+tot[i]+'</text>';
     });
-    g+=_xTicks(n,CX,labels,H,W);
-    if(prev) g+='<polyline points="'+prev.map(function(v,i){ return CX(i).toFixed(1)+','+Y(v).toFixed(1); }).join(' ')+'" style="fill:none;stroke:var(--cream);stroke-width:1.6;stroke-dasharray:5 5;opacity:.7"/>';
+    g+=_xTicks(n,CX,labels,H,W,k);
+    if(prev) g+='<polyline points="'+prev.map(function(v,i){ return CX(i).toFixed(1)+','+Y(v).toFixed(1); }).join(' ')+'" style="fill:none;stroke:var(--cream);stroke-width:'+(1.6*k).toFixed(2)+';stroke-dasharray:'+(5*k).toFixed(1)+' '+(5*k).toFixed(1)+';opacity:.7"/>';
     return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="stacked daily bars'+(prev?', with the previous period dashed':'')+'">'+g+'</svg>';
   }
-  function _lineChart(labels,lines,H){
+  function _lineChart(labels,lines,H,opt){
     var n=labels.length; if(!n) return '';
-    H=H||170;
-    var W=700,padL=38,padR=10,padT=10,padB=20;
+    var k=(opt&&opt.k)||1; H=(H||170)*k;
+    var W=700,padL=38*k,padR=10*k,padT=10*k,padB=20*k;
     var max=0, all=[]; lines.forEach(function(l){ l.vals.forEach(function(v){ all.push(v); if((v||0)>max) max=v||0; }); });
     var ax=_niceAxis(max,_isInt(all)); max=ax.max;
     var iw=W-padL-padR, ih=H-padT-padB;
@@ -4519,18 +4539,18 @@
     for(var s=0;s<=ax.n;s++){
       var yy=Y(ax.step*s);
       g+='<line x1="'+padL+'" y1="'+yy.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+yy.toFixed(1)+'" style="stroke:rgba(127,127,127,.18);stroke-width:1"/>'
-        +'<text x="'+(padL-5)+'" y="'+(yy+3).toFixed(1)+'" text-anchor="end" style="fill:var(--text);font-size:9px;font-variant-numeric:tabular-nums">'+_axLab(ax,s)+'</text>';
+        +'<text x="'+(padL-5*k).toFixed(1)+'" y="'+(yy+3*k).toFixed(1)+'" text-anchor="end" style="fill:var(--text);font-size:'+(9*k).toFixed(2)+'px;font-variant-numeric:tabular-nums">'+_axLab(ax,s)+'</text>';
     }
-    g+=_xTicks(n,X,labels,H,W);
+    g+=_xTicks(n,X,labels,H,W,k);
     lines.forEach(function(l){
       var pts=l.vals.map(function(v,i){ return X(i).toFixed(1)+','+Y(v).toFixed(1); }).join(' ');
       // Une droite de tendance n'est pas une mesure : trait fin, pointille, et
       // pas de marqueur — rien a survoler, il n'y a pas de valeur du jour la.
-      var st=l.dash? ';stroke-width:1.5;stroke-dasharray:6 5;opacity:.85' : ';stroke-width:2;stroke-linejoin:round;stroke-linecap:round';
+      var st=l.dash? ';stroke-width:'+(1.5*k).toFixed(2)+';stroke-dasharray:'+(6*k).toFixed(1)+' '+(5*k).toFixed(1)+';opacity:.85' : ';stroke-width:'+(2*k).toFixed(2)+';stroke-linejoin:round;stroke-linecap:round';
       g+='<polyline points="'+pts+'" style="fill:none;stroke:'+l.c+st+'"/>';
       if(l.dash) return;
       l.vals.forEach(function(v,i){
-        g+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="2.6" style="fill:'+l.c+'"/>';
+        g+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="'+(2.6*k).toFixed(2)+'" style="fill:'+l.c+'"/>';
       });
     });
     return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="trend">'+g+'</svg>';
