@@ -12,6 +12,7 @@ import path from 'path';
 import { spawn } from 'child_process';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
+import { freePort } from './lib/free-port.mjs';
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const require = createRequire(import.meta.url);
@@ -52,7 +53,7 @@ ok(['FR', 'DE', 'US', 'BR', 'IN', 'CN', 'RU', 'AU'].every((c) => map.c[c] && /^M
 // ── proxy routes ──
 const VISITS = path.join(os.tmpdir(), 'pth-geo-' + process.pid + '.json');
 try { fs.unlinkSync(VISITS); } catch (e) {}
-const PORT = 18000 + Math.floor(Math.random() * 900);
+const PORT = await freePort();
 const TOKEN = 'geo-test-' + process.pid;
 const proxy = spawn(process.execPath, [path.join(root, 'proxy.js')], {
   cwd: root, stdio: ['ignore', 'pipe', 'pipe'],

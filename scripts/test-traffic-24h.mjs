@@ -10,6 +10,7 @@ import os from 'os';
 import path from 'path';
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
+import { freePort } from './lib/free-port.mjs';
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 let pass = 0, fail = 0;
@@ -23,7 +24,7 @@ const dayKey = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(
 const VISITS = path.join(os.tmpdir(), 'pth-24h-' + process.pid + '.json');
 const old = new Date(); old.setDate(old.getDate() - 5);
 fs.writeFileSync(VISITS, JSON.stringify({ days: { [dayKey(old)]: { v: 3, ids: {}, hc: { 4: { v: 3 } }, geoH: { 4: {} } } }, totalV: 3, allU: {} }));
-const PORT = 18000 + Math.floor(Math.random() * 900);
+const PORT = await freePort();
 const TOKEN = 't24-' + process.pid;
 const proxy = spawn(process.execPath, [path.join(root, 'proxy.js')], {
   cwd: root, stdio: ['ignore', 'pipe', 'pipe'],

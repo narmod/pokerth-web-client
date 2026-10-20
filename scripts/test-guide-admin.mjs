@@ -12,6 +12,7 @@ import path from 'path';
 import { spawn } from 'child_process';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
+import { freePort } from './lib/free-port.mjs';
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const require = createRequire(import.meta.url);
@@ -68,7 +69,7 @@ ok(G.period(2, (i) => (i === 0 ? { gd: { 'x.y': 5, 'offer.offered': 2 } } : null
 // ── the real route ──
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'guide-'));
 const VISITS = path.join(tmp, 'visits.json');
-const PORT = 18000 + Math.floor(Math.random() * 900);
+const PORT = await freePort();
 const proxy = spawn(process.execPath, [path.join(root, 'proxy.js')], {
   cwd: root, stdio: ['ignore', 'pipe', 'pipe'],
   env: Object.assign({}, process.env, { PORT: String(PORT), VISITS_FILE: VISITS, ADMIN_ENABLED: '0' }),

@@ -14,6 +14,7 @@ import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
+import { freePort } from './lib/free-port.mjs';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const require = createRequire(import.meta.url);
@@ -69,7 +70,7 @@ ok(pr.pruned === 1, 'and the device lists are pruned with them');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'statsstore-'));
 const F = (x) => path.join(tmp, x);
 fs.writeFileSync(F('visits.json'), JSON.stringify({ days: {}, totalV: 5, allU: { aaaaaaaaaaaaaaaa: 20000, bbbbbbbbbbbbbbbb: 20000 }, totalRet: 0 }));
-const PORT = 18000 + Math.floor(Math.random() * 900), TOKEN = 'statsstore-token';
+const PORT = await freePort(), TOKEN = 'statsstore-token';
 const env = Object.assign({}, process.env, { PORT: String(PORT), ADMIN_ENABLED: '1', STATS_ADMIN_TOKEN: TOKEN,
   VISITS_FILE: F('visits.json'), ADMIN_CONFIG_FILE: F('admin-config.json'), STATS_FILE: F('stats.json'), STATS_META_FILE: F('stats.meta.json'),
   DEPLOY_HISTORY_FILE: F('dh.json'), AUDIT_FILE: F('audit.json'), BROADCASTS_FILE: F('bc.json'), POLLS_FILE: F('polls.json') });

@@ -13,6 +13,7 @@ import { spawn } from 'child_process';
 import fs from 'fs'; import os from 'os'; import path from 'path'; import net from 'net';
 import { fileURLToPath } from 'url';
 import { JSDOM } from 'jsdom';
+import { freePort, waitForServer } from './lib/free-port.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dom = new JSDOM('<!doctype html><html><body></body></html>', { url: 'http://localhost/' });
 for (const k of ['window', 'document', 'localStorage', 'navigator', 'CustomEvent', 'Event']) { try { globalThis[k] = k === 'window' ? dom.window : dom.window[k]; } catch (e) {} }
@@ -51,18 +52,13 @@ fs.writeFileSync(path.join(tmp, 'cfg.json'), JSON.stringify({ lanDirectory: { se
 // A free port from the OS, not a random pick in a range other tests share: a
 // proxy left over by another test on the same port answered this page with its
 // own allowlist, and the LAN dial was refused (« inits=0 », flaky full-suite run).
-const PORT = await new Promise((r) => { const t = net.createServer(); t.listen(0, '127.0.0.1', () => { const p = t.address().port; t.close(() => r(p)); }); });
+const PORT = await freePort();
 const env = { PORT: String(PORT), ALLOWED_PORTS: String(LAN), STATS_ADMIN_TOKEN: 'x', ADMIN_CONFIG_FILE: path.join(tmp, 'cfg.json') };
 for (const k of ['STATS_FILE', 'STATS_META_FILE', 'AUDIT_FILE', 'VISITS_FILE', 'BROADCASTS_FILE', 'POLLS_FILE', 'SCOPED_TOKENS_FILE', 'DEPLOY_HISTORY_FILE', 'DB_CONFIG_FILE']) env[k] = path.join(tmp, k.toLowerCase() + '.json');
 const px = spawn(process.execPath, [path.join(root, 'proxy.js')], { cwd: root, env: Object.assign({}, process.env, env), stdio: 'ignore' });
-let pxExited = false; px.on('exit', () => { pxExited = true; });
 const base = 'http://127.0.0.1:' + PORT;
 // Wait until OUR proxy answers (not a fixed delay: a slow start under load).
-for (let i = 0; i < 60; i++) {
-  if (pxExited) { console.log('FAIL the proxy exited at start (port ' + PORT + ' taken?)'); process.exit(1); }
-  try { const r = await fetch(base + '/__ver', { cache: 'no-store' }); if (r.ok) break; } catch (e) {}
-  await new Promise((r) => setTimeout(r, 250));
-}
+try { await waitForServer(base, px); } catch (e) { console.log('FAIL ' + e.message); px.kill(); lan.close(); process.exit(1); }
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const b = await chromium.launch();
 

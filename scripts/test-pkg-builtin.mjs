@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawn, execFileSync } from 'node:child_process';
+import { freePort } from './lib/free-port.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const proxy = readFileSync(join(root, 'proxy.js'), 'utf8');
@@ -48,7 +49,7 @@ ok(/if \(pkgBuiltin\('seat', id\)\) id = 'seat-' \+ id;/.test(proxy), 'nor a sea
 const tmp = mkdtempSync(join(tmpdir(), 'pkgb-'));
 const F = (x) => join(tmp, x);
 writeFileSync(F('a.json'), '{}');
-const PORT = 19000 + Math.floor(Math.random() * 900), TOKEN = 'pkg-builtin-token';
+const PORT = await freePort(), TOKEN = 'pkg-builtin-token';
 const env = Object.assign({}, process.env, { PORT: String(PORT), ADMIN_ENABLED: '1', STATS_ADMIN_TOKEN: TOKEN, ADMIN_CONFIG_FILE: F('a.json'),
   VISITS_FILE: F('v.json'), STATS_FILE: F('s.json'), STATS_META_FILE: F('sm.json'), BROADCASTS_FILE: F('b.json'), POLLS_FILE: F('p.json'),
   DB_CONFIG_FILE: F('db.json'), DEPLOY_HISTORY_FILE: F('dh.json'), SCOPED_TOKENS_FILE: F('st.json'), AUDIT_FILE: F('au.json'), LAN_BOARDS_FILE: F('lb.json') });

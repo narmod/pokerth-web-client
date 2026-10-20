@@ -9,6 +9,7 @@ import { chromium } from 'playwright';
 import { spawn } from 'child_process';
 import fs from 'fs'; import os from 'os'; import path from 'path';
 import { fileURLToPath } from 'url';
+import { freePort, waitForServer } from './lib/free-port.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 let n = 0, fail = 0;
 function ok(c, m) { n++; if (!c) { fail++; console.error('  ✗', m); } else console.log('  ✓', m); }
@@ -20,14 +21,14 @@ ok(/setTimeout\(_upstreamRead, 2 \* 60 \* 1000\)/.test(proxy) && /setInterval\(_
 
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'ergo-'));
 fs.writeFileSync(path.join(tmp, 'cfg.json'), '{}');
-const TOK = 'tok-ergo-test-12', PORT = 18300 + Math.floor(Math.random() * 90);
+const TOK = 'tok-ergo-test-12', PORT = await freePort();
 const env = { PORT: String(PORT), STATS_ADMIN_TOKEN: TOK, ADMIN_CONFIG_FILE: path.join(tmp, 'cfg.json') };
 for (const k of ['STATS_FILE', 'STATS_META_FILE', 'AUDIT_FILE', 'VISITS_FILE', 'BROADCASTS_FILE', 'POLLS_FILE', 'SCOPED_TOKENS_FILE', 'DEPLOY_HISTORY_FILE']) env[k] = path.join(tmp, k.toLowerCase() + '.json');
 const px = spawn(process.execPath, [path.join(root, 'proxy.js'), '--notls'], { cwd: root, env: Object.assign({}, process.env, env), stdio: 'ignore' });
 const base = 'http://127.0.0.1:' + PORT;
 const b = await chromium.launch();
 try {
-  await sleep(2500);
+  await waitForServer(base, px);
   const pg = await b.newPage({ viewport: { width: 1440, height: 900 } });
   const errs = []; pg.on('pageerror', (e) => errs.push(String(e)));
   await pg.addInitScript((t) => { try { localStorage.setItem('pth_admin_tok', t); } catch (e) {} }, TOK);

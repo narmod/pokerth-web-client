@@ -13,16 +13,17 @@
 import { spawn } from 'child_process';
 import fs from 'fs'; import os from 'os'; import path from 'path';
 import { fileURLToPath } from 'url';
+import { freePort, waitForServer } from './lib/free-port.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 let n = 0, fail = 0;
 function ok(c, m) { n++; if (!c) { fail++; console.error('  ✗', m); } else console.log('  ✓', m); }
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const TOK = 'tok-admin-safety-123';
 
-function start(cfg, extraEnv) {
+async function start(cfg, extraEnv) {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'admsafe-'));
   fs.writeFileSync(path.join(tmp, 'cfg.json'), JSON.stringify(cfg));
-  const PORT = 18600 + Math.floor(Math.random() * 90);
+  const PORT = await freePort();
   const env = { PORT: String(PORT), STATS_ADMIN_TOKEN: TOK, ADMIN_CONFIG_FILE: path.join(tmp, 'cfg.json') };
   for (const k of ['STATS_FILE', 'STATS_META_FILE', 'AUDIT_FILE', 'VISITS_FILE', 'BROADCASTS_FILE', 'POLLS_FILE', 'SCOPED_TOKENS_FILE', 'DEPLOY_HISTORY_FILE']) env[k] = path.join(tmp, k.toLowerCase() + '.json');
   const px = spawn(process.execPath, [path.join(root, 'proxy.js'), '--notls'], { cwd: root, env: Object.assign({}, process.env, env, extraEnv || {}), stdio: 'ignore' });
@@ -33,9 +34,9 @@ function start(cfg, extraEnv) {
 }
 
 // ── 1. Limiter on ────────────────────────────────────────────────────────
-let s = start({ resetPeriod: 'weekly', bannedIps: ['5.6.7.8'] });
+let s = await start({ resetPeriod: 'weekly', bannedIps: ['5.6.7.8'] });
 try {
-  await sleep(2500);
+  await waitForServer(s.base, s.px);
   // Restore: reset period, servers, proxy allowlist, bans.
   let r = await s.post('/admin/config/import', { config: {
     resetPeriod: 'monthly',
@@ -99,9 +100,9 @@ try {
 } finally { s.px.kill(); }
 
 // ── 2. Limiter off: writes are still audited ────────────────────────────
-s = start({}, { RATE_LIMIT_DISABLED: '1' });
+s = await start({}, { RATE_LIMIT_DISABLED: '1' });
 try {
-  await sleep(2500);
+  await waitForServer(s.base, s.px);
   await s.post('/admin/config', { serverName: 'No limiter' });
   await sleep(200);
   const au = await s.get('/admin/audit');

@@ -11,6 +11,7 @@ import os from 'os';
 import path from 'path';
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
+import { freePort } from './lib/free-port.mjs';
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 let pass = 0, fail = 0;
@@ -21,7 +22,7 @@ function ok(cond, label) {
 
 const VISITS = path.join(os.tmpdir(), 'pth-bots-' + process.pid + '.json');
 try { fs.unlinkSync(VISITS); } catch (e) {}
-const PORT = 18000 + Math.floor(Math.random() * 900);
+const PORT = await freePort();
 const TOKEN = 'bots-' + process.pid;
 const proxy = spawn(process.execPath, [path.join(root, 'proxy.js')], {
   cwd: root, stdio: ['ignore', 'pipe', 'pipe'],

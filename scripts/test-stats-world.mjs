@@ -11,6 +11,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { freePort } from './lib/free-port.mjs';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 let n = 0, fail = 0;
@@ -37,7 +38,7 @@ fs.writeFileSync(F('visits.json'), JSON.stringify(store));
 fs.writeFileSync(F('admin-config.json'), JSON.stringify({ lanDirectory: { settings: {}, pending: [], entries: [
   { id: 'lan_aaaaaa01', name: 'Club Lyon', host: 'lyon.example.org', port: 7234, visible: true, addedAt: Date.now() - 9e8 }] } }));
 
-const PORT = 18000 + Math.floor(Math.random() * 900), TOKEN = 'stworld-token';
+const PORT = await freePort(), TOKEN = 'stworld-token';
 const env = Object.assign({}, process.env, {
   PORT: String(PORT), ADMIN_ENABLED: '1', STATS_ADMIN_TOKEN: TOKEN,
   ADMIN_CONFIG_FILE: F('admin-config.json'), VISITS_FILE: F('visits.json'), STATS_FILE: F('stats.json'),

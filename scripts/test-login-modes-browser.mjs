@@ -13,6 +13,7 @@ import { chromium } from 'playwright';
 import { spawn } from 'child_process';
 import fs from 'fs'; import os from 'os'; import path from 'path'; import net from 'net';
 import { fileURLToPath } from 'url';
+import { freePort, waitForServer } from './lib/free-port.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'modes-'));
 const fake = net.createServer((s) => { s.on('error', () => {}); });
@@ -21,11 +22,11 @@ const FAKE = fake.address().port;
 fs.writeFileSync(path.join(tmp, 'cfg.json'), JSON.stringify({ lanDirectory: { settings: { refusePrivate: false, manualEntry: false, localEntry: true },
   entries: [{ id: 'lan_aaaaaa000001', name: 'Club A', host: '127.0.0.1', port: FAKE, visible: true, addedAt: 1, lastSeen: Date.now(), resetPeriod: 'weekly' },
             { id: 'lan_aaaaaa000002', name: 'Club B TLS', host: 'b.invalid', port: 7236, tls: true, visible: true, addedAt: 1, lastSeen: Date.now() }] } }));
-const PORT = 18800 + Math.floor(Math.random() * 90);
+const PORT = await freePort();
 const env = { PORT: String(PORT), ALLOWED_PORTS: String(FAKE) + ',7236', STATS_ADMIN_TOKEN: 'x', ADMIN_CONFIG_FILE: path.join(tmp, 'cfg.json') };
 for (const k of ['STATS_FILE', 'STATS_META_FILE', 'AUDIT_FILE', 'VISITS_FILE', 'BROADCASTS_FILE', 'POLLS_FILE', 'SCOPED_TOKENS_FILE', 'DEPLOY_HISTORY_FILE', 'DB_CONFIG_FILE']) env[k] = path.join(tmp, k.toLowerCase() + '.json');
 const px = spawn(process.execPath, [path.join(root, 'proxy.js')], { cwd: root, env: Object.assign({}, process.env, env), stdio: 'ignore' });
-await new Promise((r) => setTimeout(r, 2500));
+await waitForServer('http://127.0.0.1:' + PORT, px);
 const base = 'http://127.0.0.1:' + PORT;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const b = await chromium.launch();

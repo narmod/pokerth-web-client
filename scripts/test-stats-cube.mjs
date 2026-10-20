@@ -12,6 +12,7 @@ import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
+import { freePort } from './lib/free-port.mjs';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const require = createRequire(import.meta.url);
@@ -45,7 +46,7 @@ const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'stcube-'));
 const F = (x) => path.join(tmp, x);
 fs.writeFileSync(F('admin-config.json'), JSON.stringify({ lanDirectory: { settings: {}, pending: [], entries: [
   { id: 'lan_aaaaaa01', name: 'Club Lyon', host: 'lyon.example.org', port: 7234, visible: true, addedAt: Date.now() - 9e8 }] } }));
-const PORT = 18000 + Math.floor(Math.random() * 900), TOKEN = 'stcube-token';
+const PORT = await freePort(), TOKEN = 'stcube-token';
 const env = Object.assign({}, process.env, {
   PORT: String(PORT), ADMIN_ENABLED: '1', STATS_ADMIN_TOKEN: TOKEN,
   ADMIN_CONFIG_FILE: F('admin-config.json'), VISITS_FILE: F('visits.json'), STATS_FILE: F('stats.json'),
@@ -116,7 +117,7 @@ ok(vv.cc.DE === 9 && vv.cc.FR === 2 && vv.lan.lan_a1 === 4 && vv.mode.pokerthnet
   fs.writeFileSync(G('visits.json'), JSON.stringify(store));
   fs.writeFileSync(G('admin-config.json'), JSON.stringify({ lanDirectory: { settings: {}, pending: [], entries: [
     { id: 'lan_aaaaaa01', name: 'Club Lyon', host: 'lyon.example.org', port: 7234, visible: true, addedAt: Date.now() - 9e8 }] } }));
-  const PORT2 = 18000 + Math.floor(Math.random() * 900);
+  const PORT2 = await freePort();
   const env2 = Object.assign({}, env, { PORT: String(PORT2), VISITS_FILE: G('visits.json'), ADMIN_CONFIG_FILE: G('admin-config.json'),
     STATS_FILE: G('stats.json'), STATS_META_FILE: G('stats.meta.json'), AUDIT_FILE: G('admin-audit.json') });
   const px2 = spawn(process.execPath, [path.join(root, 'proxy.js'), '--notls'], { cwd: root, stdio: ['ignore', 'pipe', 'pipe'], env: env2 });

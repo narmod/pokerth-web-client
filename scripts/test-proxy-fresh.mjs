@@ -15,6 +15,7 @@ import { spawn } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import WebSocket from 'ws';
+import { freePort } from './lib/free-port.mjs';
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 let fails = 0, checks = 0;
@@ -42,7 +43,7 @@ await new Promise((res) => fake.listen(0, '127.0.0.1', res));
 const FAKE_PORT = fake.address().port;
 
 // ── Real proxy, spawned with the fake in its allowlist ──────────────
-const PROXY_PORT = 18099;
+const PROXY_PORT = await freePort();
 const proxy = spawn(process.execPath, [path.join(root, 'proxy.js')], {
   cwd: root,
   env: Object.assign({}, process.env, {

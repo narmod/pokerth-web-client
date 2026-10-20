@@ -8,6 +8,7 @@
 import { spawn } from 'child_process';
 import fs from 'fs'; import os from 'os'; import path from 'path';
 import { fileURLToPath } from 'url';
+import { freePort, waitForServer } from './lib/free-port.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 let n = 0, fail = 0;
 function ok(c, m) { n++; if (!c) { fail++; console.error('  ✗', m); } else console.log('  ✓', m); }
@@ -22,14 +23,14 @@ ok(/info\.label \? 'key \\u201c'\+info\.label/.test(html), 'the sidebar shows th
 
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'scopes-'));
 fs.writeFileSync(path.join(tmp, 'cfg.json'), '{}');
-const TOK = 'tok-scopes-test-1', PORT = 18400 + Math.floor(Math.random() * 90);
+const TOK = 'tok-scopes-test-1', PORT = await freePort();
 const env = { PORT: String(PORT), STATS_ADMIN_TOKEN: TOK, ADMIN_CONFIG_FILE: path.join(tmp, 'cfg.json') };
 for (const k of ['STATS_FILE', 'STATS_META_FILE', 'AUDIT_FILE', 'VISITS_FILE', 'BROADCASTS_FILE', 'POLLS_FILE', 'SCOPED_TOKENS_FILE', 'DEPLOY_HISTORY_FILE']) env[k] = path.join(tmp, k.toLowerCase() + '.json');
 const px = spawn(process.execPath, [path.join(root, 'proxy.js'), '--notls'], { cwd: root, env: Object.assign({}, process.env, env), stdio: 'ignore' });
 const base = 'http://127.0.0.1:' + PORT;
 const post = (p, b, t) => fetch(base + p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({ token: t || TOK }, b)) }).then((r) => r.json());
 try {
-  await sleep(2500);
+  await waitForServer(base, px);
   const k = await post('/admin/tokens', { name: 'music-partner', scopes: ['music', 'polls'] });
   ok(k.ok && k.token, 'a delegate key with the polls scope');
   const who = await fetch(base + '/admin/whoami?token=' + k.token).then((r) => r.json());

@@ -7,6 +7,7 @@
 import { spawn } from 'child_process';
 import fs from 'fs'; import os from 'os'; import path from 'path';
 import { fileURLToPath } from 'url';
+import { freePort, waitForServer } from './lib/free-port.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 let n = 0, fail = 0;
 function ok(c, m) { n++; if (!c) { fail++; console.error('  ✗', m); } else console.log('  ✓', m); }
@@ -25,12 +26,12 @@ ok(/Update \(no restart\)\\u201d applies it/.test(html) && /Update & restart\\u2
 // Live: the real proxy, two checks at once.
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'updchk-'));
 fs.writeFileSync(path.join(tmp, 'cfg.json'), '{}');
-const PORT = 18700 + Math.floor(Math.random() * 90);
+const PORT = await freePort();
 const env = { PORT: String(PORT), STATS_ADMIN_TOKEN: 'tok-update-check-1', ADMIN_CONFIG_FILE: path.join(tmp, 'cfg.json') };
 for (const k of ['STATS_FILE', 'STATS_META_FILE', 'AUDIT_FILE', 'VISITS_FILE', 'BROADCASTS_FILE', 'POLLS_FILE', 'SCOPED_TOKENS_FILE', 'DEPLOY_HISTORY_FILE']) env[k] = path.join(tmp, k.toLowerCase() + '.json');
 const px = spawn(process.execPath, [path.join(root, 'proxy.js'), '--notls'], { cwd: root, env: Object.assign({}, process.env, env), stdio: 'ignore' });
 try {
-  await sleep(2500);
+  await waitForServer('http://127.0.0.1:' + PORT, px);
   const base = 'http://127.0.0.1:' + PORT, q = '?token=tok-update-check-1';
   const g = await (await fetch(base + '/admin/auto-update' + q)).json();
   if (!g.gitUpdatable) {

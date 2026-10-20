@@ -13,6 +13,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { freePort } from './lib/free-port.mjs';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const proxySrc = fs.readFileSync(path.join(root, 'proxy.js'), 'utf8');
@@ -49,7 +50,7 @@ const start = {
   lanDirectory: { settings: {}, entries: [], pending: [{ id: 'req1', host: 'lan.example.org', port: 7234, nick: 'Bob', contact: 'bob@example.org' }] },
 };
 fs.writeFileSync(F('admin-config.json'), JSON.stringify(start));
-const PORT = 18000 + Math.floor(Math.random() * 900);
+const PORT = await freePort();
 const TOKEN = 'cfgio-test-token';
 const env = Object.assign({}, process.env, {
   PORT: String(PORT), ADMIN_ENABLED: '1', STATS_ADMIN_TOKEN: TOKEN,

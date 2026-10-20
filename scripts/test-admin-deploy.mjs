@@ -13,6 +13,7 @@
 import { spawn, execFileSync } from 'child_process';
 import fs from 'fs'; import os from 'os'; import path from 'path';
 import { fileURLToPath } from 'url';
+import { freePort, waitForServer } from './lib/free-port.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 let n = 0, fail = 0;
 function ok(c, m) { n++; if (!c) { fail++; console.error('  ✗', m); } else console.log('  ✓', m); }
@@ -60,7 +61,7 @@ const tmpd = path.join(T, 'tmp'); fs.mkdirSync(tmpd);
 fs.writeFileSync(path.join(T, 'cfg.json'), '{}');
 fs.writeFileSync(path.join(T, 'hist.json'), JSON.stringify([{ sha: A, version: pj.version, subject: 'A', seen: Date.now() - 6e4, last: Date.now() - 6e4, reason: 'seed' }]));
 const TOK = 'tok-deploy-test-1';
-const PORT = 18500 + Math.floor(Math.random() * 90);
+const PORT = await freePort();
 const env = { PORT: String(PORT), STATS_ADMIN_TOKEN: TOK, ADMIN_CONFIG_FILE: path.join(T, 'cfg.json'), DEPLOY_HISTORY_FILE: path.join(T, 'hist.json'), TMPDIR: tmpd, RATE_LIMIT_DISABLED: '1' };
 for (const k of ['STATS_FILE', 'STATS_META_FILE', 'AUDIT_FILE', 'VISITS_FILE', 'BROADCASTS_FILE', 'POLLS_FILE', 'SCOPED_TOKENS_FILE']) env[k] = path.join(T, k.toLowerCase() + '.json');
 const base = 'http://127.0.0.1:' + PORT;
@@ -70,7 +71,7 @@ const waitLog = async (tag) => { for (let i = 0; i < 40; i++) { await sleep(500)
 const start = () => { const px = spawn(process.execPath, [path.join(clone, 'proxy.js'), '--notls'], { cwd: clone, env: Object.assign({}, process.env, env), stdio: 'ignore' }); return px; };
 let px = start();
 try {
-  await sleep(2500);
+  await waitForServer(base, px);
   let st = await get('/admin/status');
   ok(st.ok && st.gitUpdatable === true && st.codeStale === false && st.supervised === false, 'status: git install, code as booted, no supervisor detected (started by hand)');
   // Rollback B → A, without restart.

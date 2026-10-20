@@ -6,6 +6,7 @@ import { createRequire } from 'node:module';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { freePort } from './lib/free-port.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const require = createRequire(import.meta.url);
@@ -97,7 +98,7 @@ ok(/_annEsc\(k\.slice\(4\)\)/.test(admin) && /return _annEsc\(k\);/.test(admin),
   const tmp = fs.mkdtempSync(join(os.tmpdir(), 'refstats-'));
   const VISITS = join(tmp, 'visits.json');
   const d = new Date(), today = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-  const PORT = 18990 + Math.floor(Math.random() * 90), TOKEN = 'ref-stats-test';
+  const PORT = await freePort(), TOKEN = 'ref-stats-test';
   const proxyP = spawn(process.execPath, [join(root, 'proxy.js')], {
     cwd: root, stdio: ['ignore', 'pipe', 'pipe'],
     env: Object.assign({}, process.env, { PORT: String(PORT), VISITS_FILE: VISITS, ADMIN_ENABLED: '1', STATS_ADMIN_TOKEN: TOKEN }),

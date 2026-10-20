@@ -17,6 +17,7 @@ import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
 import * as P from '../public/proto/index.mjs';
 import WebSocket from 'ws';
+import { freePort } from './lib/free-port.mjs';
 
 const require = createRequire(import.meta.url);
 const LD = require('../server/lan-directory.js');
@@ -285,7 +286,7 @@ ok(!r.reachable && !r.pokerth && r.error, 'a closed port is unreachable (' + r.e
 // ── 3. end to end through proxy.js ─────────────────────────────────
 console.log('Through proxy.js');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'lan-dir-'));
-const PROXY_PORT = 18000 + Math.floor(Math.random() * 900);
+const PROXY_PORT = await freePort();
 const TOKEN = 'test-token-' + Math.random().toString(36).slice(2);
 const proxy = spawn(process.execPath, [path.join(root, 'proxy.js')], {
   cwd: root,

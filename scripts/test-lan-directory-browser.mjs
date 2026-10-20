@@ -20,6 +20,7 @@ import { spawn } from 'child_process';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { chromium } from 'playwright';
 import * as P from '../public/proto/index.mjs';
+import { freePort } from './lib/free-port.mjs';
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 let fails = 0, checks = 0;
@@ -99,7 +100,7 @@ fs.writeFileSync(cfgFile, JSON.stringify({ lanDirectory: {
     { id: 'lan_aaaaaa02', name: 'Gone club', host: 'gone.invalid', port: FAKE, tls: false, visible: true, addedAt: 1, lastSeen: Date.now() - 3600000 },
     { id: 'lan_aaaaaa03', name: 'Hidden club', host: 'hidden.invalid', port: FAKE, tls: false, visible: false, addedAt: 1, lastSeen: 0 }
   ] } }));
-const PORT = 18000 + Math.floor(Math.random() * 900);
+const PORT = await freePort();
 const TOKEN = 'ui-' + Math.random().toString(36).slice(2);
 const env = { PORT: String(PORT), ALLOWED_PORTS: String(FAKE), STATS_ADMIN_TOKEN: TOKEN, ADMIN_CONFIG_FILE: cfgFile };
 for (const k of ['STATS_FILE', 'STATS_META_FILE', 'AUDIT_FILE', 'VISITS_FILE', 'BROADCASTS_FILE', 'POLLS_FILE', 'SCOPED_TOKENS_FILE', 'DEPLOY_HISTORY_FILE', 'DB_CONFIG_FILE'])
