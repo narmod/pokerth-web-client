@@ -3701,6 +3701,16 @@ document.addEventListener("DOMContentLoaded", function() {
       // connected and the lobby is visible. Read at GLOBAL scope (the App
       // IIFE's show() reads window._pendingGo).
       if (go === 'play' || go === 'create') window._pendingGo = go;
+      // ?go=train (CTA of /play-against-computer): land on the connect screen
+      // already in Local / training. Written as the saved server mode BEFORE
+      // the saved-prefs restore below, so restore and the 400 ms select
+      // watcher both agree on 'offline'; the 2-step wizard is then jumped to
+      // the training form once restore has run (see _pendingTrainPick). The
+      // player still presses Connect: nothing starts by itself.
+      if (go === 'train') {
+        window._pendingTrainPick = true;
+        try { localStorage.setItem('pth_server_mode', 'offline'); } catch (eT) {}
+      }
       if (h) { var hi = document.getElementById('host'); if (hi) hi.value = h; }
       if (p) { var pi = document.getElementById('port'); if (pi) pi.value = p; }
       if (tls !== null) {
@@ -3837,7 +3847,10 @@ document.addEventListener("DOMContentLoaded", function() {
         // Clean the URL so a manual refresh doesn't re-trigger auto-join
         // (and so the link doesn't linger in the address bar). We keep
         // the pending join in memory (window._pendingAutoJoin).
-        try { window.history.replaceState({}, '', window.location.pathname); } catch(e) {}
+        // ?lang= (a localized landing link) is kept: i18n.mjs may read it
+        // after this runs, and it only ever applies to this visit.
+        var _keepLang = sp.get('lang');
+        try { window.history.replaceState({}, '', window.location.pathname + (_keepLang ? '?lang=' + encodeURIComponent(_keepLang) : '')); } catch(e) {}
       }
     } catch(e) {}
   })();
@@ -3890,6 +3903,18 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     }
   } catch(e) {}
+  // ?go=train: jump the wizard to the training form, as a tap on its card
+  // would — unless the operator disabled training (card hidden, see
+  // applyModes), in which case the normal first step stays.
+  if (window._pendingTrainPick) {
+    window._pendingTrainPick = false;
+    try {
+      var _tcard = document.querySelector('.login-card[onclick*="offline"]');
+      var _tsm = document.getElementById('server-mode');
+      var _topt = _tsm && Array.prototype.filter.call(_tsm.options, function (o) { return o.value === 'offline'; })[0];
+      if (_tcard && _tcard.offsetParent !== null && !(_topt && _topt.disabled) && typeof loginPickMode === 'function') loginPickMode(_tcard, 'offline');
+    } catch (eTP) {}
+  }
 
   // Back/forward cache (bfcache) restores form state (incl. the server-mode
   // <select>) without firing onchange — re-sync the connect UI when shown.
@@ -12328,7 +12353,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.224'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.225'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

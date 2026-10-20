@@ -6673,7 +6673,9 @@ function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld, lang, l
     '<meta name="viewport" content="width=device-width, initial-scale=1">' +
     '<title>' + title + '</title>' + head + '<style>' + _SEO_PAGE_CSS + '</style></head><body>' +
     _seoPageNav(lang) + '<main>' + bodyHtml +
-    '<a class="play" href="/' + (lang ? '?lang=' + lang : '') + '">' + _seoNavLabel(lang, 'cta') + '</a>' +
+    // The CTA opens the app; from /play-against-computer straight on the
+    // training form (?go=train, parseShareLink in pokerth.js).
+    '<a class="play" href="/' + (lang ? '?lang=' + lang : '') + (relPath === '/play-against-computer' ? (lang ? '&' : '?') + 'go=train' : '') + '">' + _seoNavLabel(lang, 'cta') + '</a>' +
     '</main></body></html>';
   var buf = Buffer.from(html, 'utf8');
   res.writeHead(200, Object.assign({ 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate', 'Content-Length': buf.length }, SECURITY_HEADERS));

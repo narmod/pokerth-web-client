@@ -32,7 +32,12 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Added
-- **`/play-against-computer`** (`web.224`, SEO, English first) — training mode for « poker against the
+- **`?go=train` opens the app on the training form** (`web.225`) — like the `?go=play` / `?go=create` shortcuts:
+  the connect screen lands on Local / training (the player still presses Connect; nothing starts by itself). The
+  mode is saved before the saved-prefs restore so the restore and the select watcher agree; skipped when the
+  operator disabled training. Cleaning a shortcut URL now keeps `?lang=`. Used by the « Play » button of
+  `/play-against-computer`; guarded in `scripts/test-seo-bots.mjs`.
+- **`/play-against-computer`** (`web.224`, `web.225`, SEO) — training mode for « poker against the
   computer / offline »: three steps, the four difficulty levels (with the mixed split), how the bots think
   (equity by dealing out the cards, position, c-bets, semi-bluffs, push/fold from normal up), the five playing
   styles, the practice formats, trophies and separate statistics, offline on every device, five questions;
@@ -40,6 +45,9 @@ highlights below.
   « Can I play against the computer? ». Wired like the other pages (nav « Vs computer » gated on the language,
   sitemap, IndexNow, llms.txt, crawler block, admin coverage); `seo-i18n/bots.js` is empty until the translations.
   Guard: `scripts/test-seo-bots.mjs`, which also checks the page's claims against the bot and trophy code.
+  `web.225`: translated into all 82 other languages (`seo-i18n/bots.js`; level names, « Local / training »,
+  « Start » and format names are each catalog's own words) with a « Vs computer » nav label; its « Play » button
+  now opens the app straight on the training form.
 - **Poker Drop in the arcade** (`web.223`) — `games/pokerdrop.mjs` (« Puissance Poker » in French): an upright
   7 × 6 grid, a card dropped in a column falls to the lowest free cell; the cards belong to no one, each player
   holds two face up, plays one and draws. Every line of five (across, up, both diagonals: 44 lines) is a poker

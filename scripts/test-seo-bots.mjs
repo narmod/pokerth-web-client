@@ -84,5 +84,13 @@ const FAQ = lift('_SEO_FAQ'), ix = Number((src.match(/var _SEO_FAQ_BOTS_IX = (\d
 ok(FAQ[ix] && /against the computer\?$/.test(FAQ[ix][0]), `/faq links to it under « ${FAQ[ix] && FAQ[ix][0]} »`);
 ok(/SEO_BOTS_I18N = require\('\.\/seo-i18n\/bots\.js'\)/.test(src), 'translation table loaded');
 
+// 5. ?go=train — the page's CTA opens the app on the training form
+const app = readFileSync(join(root, 'public/pokerth.js'), 'utf8');
+ok(/relPath === '\/play-against-computer' \? \(lang \? '&' : '\?'\) \+ 'go=train'/.test(src), 'the CTA of /play-against-computer carries go=train (after ?lang=)');
+ok(/if \(go === 'train'\) \{\s*window\._pendingTrainPick = true;\s*try \{ localStorage\.setItem\('pth_server_mode', 'offline'\);/.test(app), 'pokerth.js: go=train saves the training mode before the prefs restore');
+ok(app.indexOf("localStorage.setItem('pth_server_mode', 'offline')") < app.indexOf("var savedSrv = localStorage.getItem('pth_server_mode');"), '… which comes later in the file');
+ok(/if \(window\._pendingTrainPick\) \{[\s\S]{0,600}loginPickMode\(_tcard, 'offline'\)/.test(app) && /_tcard\.offsetParent !== null && !\(_topt && _topt\.disabled\)/.test(app), 'pokerth.js: jumps to the training form, unless training is disabled');
+ok(/window\.location\.pathname \+ \(_keepLang \? '\?lang=' \+ encodeURIComponent\(_keepLang\) : ''\)/.test(app), 'pokerth.js: cleaning the URL keeps ?lang=');
+
 console.log(fail ? `\n${fail}/${n} failed` : `\n${n}/${n} passed`);
 process.exit(fail ? 1 : 0);
