@@ -6602,7 +6602,17 @@ const App = (() => {
         pass: $('pass') ? $('pass').value : '' };
       S._reconnectAttempts = 0;
       S._intentionalDisconnect = false;
-      S._wasAuthenticated = false;
+      // NOT on a preserve reconnect (wake from sleep, dead socket found by the
+      // watchdog, 'online' event): the proxy rebinds the page to the SAME,
+      // already authenticated server session, which sends no Announce and no
+      // InitAck — the only place that sets the flag back to true. Clearing it
+      // here left it false for the rest of the session, so _afkActivity
+      // (msg-social.mjs) never sent a ResetTimeout again and the player was
+      // kicked by the in-game AFK timer 21 min later, warning popup and OK
+      // click included (report sp0ck 20/10/2026, Teressa, BBC game 802).
+      // If the grace has expired the proxy opens a new upstream: onAnnounce
+      // clears the flag until the InitAck of that new session.
+      if (!_preserve) S._wasAuthenticated = false;
       S._currentLoginMode = loginMode; // sauvegarder pour ChatReject
       // The CreateGame form defaults depend on this mode. Refresh them
       // now so the values are correct the first time the user opens it.
@@ -12318,7 +12328,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.201'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.202'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

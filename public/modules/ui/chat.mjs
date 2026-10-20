@@ -122,7 +122,14 @@ function _chatLocalCmd(text, echo) {
         online: navigator.onLine,
         reconnects: S._reconnectAttempts,
         msgsTotal: ms0.total,
-        msgsLast10s: last10
+        msgsLast10s: last10,
+        authenticated: !!S._wasAuthenticated,
+        afk: (function () {
+          var a = window._pthAfkStats; if (!a) return null;
+          return { resetSent: a.sent, lastResetAgoS: a.lastSent ? Math.round((now - a.lastSent) / 1000) : null,
+            droppedNoAuth: a.noAuth, droppedNoSocket: a.noSocket, warnings: a.warnings,
+            lastWarningAgoS: a.lastWarning ? Math.round((now - a.lastWarning) / 1000) : null };
+        })()
       }));
       var t0 = performance.now();
       fetch('/__ver?ping=' + Date.now(), { cache: 'no-store' })

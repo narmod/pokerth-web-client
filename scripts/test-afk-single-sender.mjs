@@ -60,4 +60,22 @@ const doFn = nav.match(/ {2}do: function \(action, arg\) \{[\s\S]*?var m = modal
 assert.ok(doFn && /window\._afkActivity\(\)/.test(doFn[0]),
   'ctl.do() must report controller input as activity before dispatching it');
 
+// The sender is gated on S._wasAuthenticated. A preserve reconnect (wake from
+// sleep, watchdog, 'online') rebinds to the SAME authenticated server session:
+// no Announce, no InitAck, so connect() must not clear the flag then —
+// otherwise no ResetTimeout ever leaves again and the player is AFK-kicked
+// 21 min later (sp0ck 20/10/2026, Teressa, BBC game 802).
+const main = readFileSync(join(root, 'pokerth.js'), 'utf8');
+const conn = main.slice(main.indexOf('    connect(opts) {'), main.indexOf('S._preserveConnect = _preserve;'));
+assert.ok(conn.length > 1000, 'connect() body not found');
+assert.ok(/if \(!_preserve\) S\._wasAuthenticated = false;/.test(conn),
+  'connect() must clear _wasAuthenticated only on a fresh handshake');
+assert.ok(!/^\s*S\._wasAuthenticated = false;/m.test(conn),
+  'connect() must not clear _wasAuthenticated unconditionally');
+// …and a new server session (grace expired → new upstream) is not logged in
+// until its InitAck: onAnnounce clears the flag.
+const lobby = readFileSync(join(root, 'modules/net/msg-lobby.mjs'), 'utf8');
+const ann = lobby.slice(lobby.indexOf('function onAnnounce('), lobby.indexOf('const pv    = Proto.sub(sub, 1);'));
+assert.ok(/S\._wasAuthenticated = false;/.test(ann), 'onAnnounce must clear _wasAuthenticated');
+
 console.log('test-afk-single-sender: OK');

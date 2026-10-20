@@ -118,6 +118,17 @@ window._timeoutWarnAck();
 ok(els['timeout-warn-modal'].style.display === 'none', 'OK : popup fermé');
 ok(sent.length === 1, 'OK : ResetTimeout envoyé');
 ok(S._afkWarned === false, 'OK : avertissement consommé');
+ok(window._pthAfkStats && window._pthAfkStats.sent === 1 && window._pthAfkStats.warnings === 1,
+   'compteurs AFK : 1 avertissement, 1 ResetTimeout envoyé');
+// Session non marquée authentifiée : l'entrée est comptée comme perdue (noAuth),
+// rien ne part — c'est ce que /netdbg expose pour diagnostiquer un kick AFK.
+S._wasAuthenticated = false;
+M.onTimeoutWarning(subOf([[1, 0, 0], [2, 0, 60]]));
+const _noAuth0 = window._pthAfkStats.noAuth;
+window._timeoutWarnAck();
+ok(sent.length === 1 && window._pthAfkStats.noAuth === _noAuth0 + 1,
+   'non authentifié : rien n\'est envoyé, entrée comptée dans noAuth');
+S._wasAuthenticated = true; S._afkWarned = false;
 
 // Fermeture d'autorité à la mort du socket : pas de compte à rebours orphelin.
 M.onTimeoutWarning(subOf([[1, 0, 0], [2, 0, 30]]));

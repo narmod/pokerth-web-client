@@ -129,6 +129,8 @@ function onTimeoutWarning(sub) {
   // réarme immédiatement (le rate-limit est court-circuité) ; un joueur
   // réellement absent est kické comme partout ailleurs.
   S._afkWarned = true;
+  _afkStats.warnings++; _afkStats.lastWarning = Date.now();
+  try { console.log('[afk] timeout warning, reason ' + reason + ', ' + sec + ' s left; ResetTimeouts sent so far: ' + _afkStats.sent + ', inputs dropped (not authenticated): ' + _afkStats.noAuth); } catch (_e) {}
   // A chat line is easy to miss, especially in the lobby where nobody is
   // watching the log -- reported on the forum as "the client disconnects from
   // the lobby and just stays there". The QML client plays a sound and opens a
@@ -322,15 +324,30 @@ function onDialog(sub) {
 // (aucun serveur à rassurer — et surtout ne pas réveiller le moteur local).
 const AFK_RESET_INTERVAL_MS = 3 * 60 * 1000; // = kAfkResetIntervalMs QML
 let _afkLastReset = 0;
+// Diagnostic counters (shown by /netdbg, chat.mjs): how many ResetTimeouts
+// left, when, and how many real inputs were dropped and why. noAuth growing
+// while playing means the session flag is wrong — the cause of the AFK kicks
+// fixed in web.202.
+const _afkStats = { sent: 0, lastSent: 0, noSocket: 0, noAuth: 0, warnings: 0, lastWarning: 0 };
+window._pthAfkStats = _afkStats;
 function _afkActivity() {
   try {
     if (window._offlineMode) return;
-    if (!S.ws || S.ws.readyState !== WebSocket.OPEN || !S._wasAuthenticated) return;
+    if (!S.ws || S.ws.readyState !== WebSocket.OPEN) { _afkStats.noSocket++; return; }
+    if (!S._wasAuthenticated) {
+      _afkStats.noAuth++;
+      if (S._afkWarned) { try { console.warn('[afk] ResetTimeout NOT sent: session not marked authenticated'); } catch (_e) {} }
+      return;
+    }
     const now = Date.now();
     if (!S._afkWarned && now - _afkLastReset < AFK_RESET_INTERVAL_MS) return;
     _afkLastReset = now;
+    const _wasWarned = S._afkWarned;
     S._afkWarned = false;
-    send(Proto.encode([[1,0,68],[69,2,new Uint8Array(0)]])); // ResetTimeoutMessage
+    if (send(Proto.encode([[1,0,68],[69,2,new Uint8Array(0)]]))) { // ResetTimeoutMessage
+      _afkStats.sent++; _afkStats.lastSent = now;
+      if (_wasWarned) { try { console.log('[afk] ResetTimeout sent after the timeout warning'); } catch (_e) {} }
+    }
   } catch (e) {}
 }
 try {

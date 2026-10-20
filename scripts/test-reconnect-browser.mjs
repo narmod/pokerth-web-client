@@ -140,6 +140,42 @@ async function runDevice(browser, name, descriptor) {
     } catch (error) { reporter.fail('D aborted', String(error && error.message || error).split('\n')[0]); }
     finally { await context.close(); }
   }
+  // ── E · forced rebind (wake from sleep / dead socket): AFK reset keeps working ──
+  // connect({preserve:true}) rebinds to the SAME authenticated server session:
+  // no Announce, no InitAck. It used to clear S._wasAuthenticated, so no
+  // ResetTimeout ever left again and the player was AFK-kicked 21 min later,
+  // warning popup and OK click included (sp0ck 20/10/2026, BBC game 802).
+  {
+    const { context, page, errors } = await fresh(browser, descriptor);
+    try {
+      const before = await snap(page);
+      await page.evaluate(() => window._forceReconnect('test: wake from sleep'));
+      await tick(page, 600);
+      const back = await snap(page);
+      await check('E forced rebind: one new socket, not a fresh login, session still authenticated', async () => {
+        assert.equal(back.sockets, before.sockets + 1, `${back.sockets - before.sockets} sockets opened`);
+        assert.ok(back.open, 'the rebind socket is not open');
+        assert.ok(!/fresh=1/.test(back.url || ''), 'the rebind asks the proxy for a FRESH session');
+        assert.equal(await page.evaluate(() => !!window.PthState._wasAuthenticated), true,
+          'the session lost its authenticated flag on a transparent rebind');
+      });
+      // A timeout warning arrives; the player taps: ResetTimeout must leave on the new socket.
+      await page.evaluate(() => { window.PthState._afkWarned = true; });
+      const sentBefore = (await snap(page)).sent;
+      await page.locator('.act-buttons-row .btn-action').first().tap();
+      await tick(page, 300);
+      const hasReset = await page.evaluate((from) => window.WebSocket.instance.sent.slice(from).some((f) => {
+        const b = new Uint8Array(f instanceof ArrayBuffer ? f : f.buffer || f);
+        const p = b.length >= 4 ? b.subarray(4) : b;   // 4-byte length prefix (proxy mode)
+        return p.length === 5 && p[0] === 0x08 && p[1] === 0x44 && p[2] === 0xaa && p[3] === 0x04 && p[4] === 0x00;
+      }), sentBefore);
+      await check('E after the rebind, real input still sends ResetTimeout', async () => {
+        assert.ok(hasReset, 'no ResetTimeoutMessage left on the rebound socket: the player would be AFK-kicked');
+      });
+      await check('E: no JavaScript error', async () => assert.equal(errors.length, 0, errors.join(' | ')));
+    } catch (error) { reporter.fail('E aborted', String(error && error.message || error).split('\n')[0]); }
+    finally { await context.close(); }
+  }
   // ── B · the network stays down ──────────────────────────────────────────
   {
     const { context, page, errors } = await fresh(browser, descriptor);

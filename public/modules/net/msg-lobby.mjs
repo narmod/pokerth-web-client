@@ -43,6 +43,10 @@ function onAnnounce(sub) {
     S._lobbyPids.clear();
     S._lobbyPlayerCount = 0;
     S._pendingNameRequests.clear();
+    // Same for authentication: a new server session is not logged in until
+    // its InitAck. Packets such as ResetTimeout sent before that would be
+    // refused (Init state). A transparent rebind keeps the flag (connect()).
+    S._wasAuthenticated = false;
     const pv    = Proto.sub(sub, 1); // protocolVersion (réseau, ex: 5.1)
     const gv    = Proto.sub(sub, 2); // latestGameVersion (appli, ex: 2.0)
     const stype = Proto.u32(sub, 4); // 0=LAN, 1=NoAuth, 2=Auth

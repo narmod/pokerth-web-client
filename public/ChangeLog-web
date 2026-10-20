@@ -1,3 +1,6 @@
+2026-10-20 version 2.1.10-web.202:
+- bugfix: after the connection came back on its own (computer waking up, network change), you could be removed from the table for inactivity about 20 minutes later even while playing and after answering the warning
+
 2026-10-20 version 2.1.10-web.201:
 - improvement: the game log also starts empty at every new game, as in the official client
 

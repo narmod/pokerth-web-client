@@ -72,6 +72,16 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **AFK kick after a transparent reconnection** (`web.202`, report sp0ck: Teressa, BBC game 802, kicked in hand 36
+  while playing by hand) — `connect({preserve:true})` (wake from sleep / tab return with a dead socket, RX watchdog,
+  `online` event) cleared `S._wasAuthenticated`, but the proxy rebinds such a page to the SAME authenticated server
+  session: no Announce, no InitAck, so the flag stayed false for the rest of the session. `_afkActivity` is gated on
+  it, so no `ResetTimeout` ever left again (the warning popup's OK included) and the in-game activity timer kicked
+  the player 21 min later. The flag is now cleared only on a fresh handshake, and by `onAnnounce` (a new server
+  session when the grace has expired) until its InitAck. Diagnostics: `window._pthAfkStats` (ResetTimeouts sent,
+  inputs dropped for no socket / not authenticated, warnings) in `/netdbg`, plus `[afk]` console lines on a
+  warning. Tests: scenario E of `test-reconnect-browser.mjs` (fails on `web.201`), guards in
+  `test-afk-single-sender.mjs`, counters in `test-msg-social.mjs`.
 - **Game log emptied at every new game** (`web.201`) — `S.actionLog` (the game log box) was never reset either.
   The same first-deal gate now calls `clearGameLog()` (`pokerth.js`, empties the array in place, re-renders,
   resets the live-scroll anchor), like QML `GameHandler::setGame` (`m_gameLogModel.clear()`). A rejoin keeps it;
