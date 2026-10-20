@@ -2378,8 +2378,10 @@ var PARTS = {
 // Assemble one page body per language, once, at load. `steps` is the
 // language-neutral _SEO_HOWTO array — only its length is used, since each
 // language supplies its own step text — and `href(page, lang)` resolves an
-// internal link to the right language variant.
-function build(steps, href) {
+// internal link to the right language variant; `more(lang)`, when given,
+// returns the HTML that follows the « playing with friends » paragraph (the
+// link to /play-with-friends, or '' where that page is not translated).
+function build(steps, href, more) {
   var out = {};
   for (var code in PARTS) {
     var p = PARTS[code], body = '<h1>' + p.h1 + '</h1><p>' + p.lead(href, code) + '</p>', i;
@@ -2387,7 +2389,7 @@ function build(steps, href) {
       body += '<h2>' + (i + 1) + '. ' + p.steps[i][0] + '</h2><p>' + p.steps[i][1] + '</p>';
     }
     body += '<h2>' + p.phoneH2 + '</h2><p>' + p.phoneP + '</p>' +
-      '<h2>' + p.friendsH2 + '</h2><p>' + p.friendsP + '</p>' +
+      '<h2>' + p.friendsH2 + '</h2><p>' + p.friendsP + '</p>' + (more ? more(code) : '') +
       '<h2>' + p.faqH2 + '</h2><p>' + p.faqP(href, code) + '</p>';
     out[code] = {
       title: p.title, desc: p.desc, ldHeadline: p.ldHeadline, ldDesc: p.ldDesc, body: body

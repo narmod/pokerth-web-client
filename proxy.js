@@ -6809,6 +6809,10 @@ var _SEO_FAQ = [
    "Yes. PokerTH has been developed as free software since 2006 and is still maintained: the desktop client and the server are on <a href=\"https://github.com/pokerth/pokerth\">GitHub</a>, this web client is updated continuously (<a href=\"https://github.com/narmod/pokerth-web-client\">source code and changelog</a>), and games are played every day on the official pokerth.net network."]
 ];
 
+// Position of « How do I play poker online with friends? » in _SEO_FAQ (and
+// in every translation: same order, scripts/test-seo-sync.mjs).
+var _SEO_FAQ_FRIENDS_IX = 5;
+
 function seoFaqPage(res, method, lang) {
   var langs = seoPageLangs(SEO_FAQ_I18N);
   if (langs.indexOf(lang) === -1) lang = '';
@@ -6822,6 +6826,8 @@ function seoFaqPage(res, method, lang) {
   var ents = [];
   for (var i = 0; i < qa.length; i++) {
     body += '<dt>' + qa[i][0] + '</dt><dd>' + qa[i][1] + '</dd>';
+    // « How do I play poker online with friends? » points on to the full page.
+    if (i === _SEO_FAQ_FRIENDS_IX) { var _fl = _seoFriendsLink(lang); if (_fl) body += '<dd>' + _fl.slice(3, -4) + '</dd>'; }
     ents.push({ '@type': 'Question', name: qa[i][0],
       acceptedAnswer: { '@type': 'Answer', text: qa[i][1] } });
   }
@@ -7102,6 +7108,7 @@ function seoHowToPage(res, method, lang) {
     '<p>Create a table, set a password if you want it private, and send the invitation link. It opens the table ' +
     'directly \u2014 in the installed app if they have added it to their home screen, in a browser tab otherwise. ' +
     'Nobody needs to install anything or hand over an email address.</p>' +
+    _seoFriendsLink('') +
     '<h2>Common questions</h2>' +
     '<p>No money is ever involved, in any mode. Your settings, style packs and training progress stay on your own ' +
     'device, and follow you to your other devices when you log in with a pokerth.net account. The interface is available in 83 languages, while the five action words \u2014 Fold, Check, Call, Raise, ' +
@@ -7193,6 +7200,17 @@ var _SEO_GLOSSARY = [
 // French reader following "voir les règles" from the French page should land on
 // the French rules. The builders get this resolver, which applies the same rule
 // as the nav — carry ?lang= only where the target page exists in that language.
+// A link to /play-with-friends whose anchor text is that page's own <h1> in
+// the reader's language — or nothing where the page is not translated yet.
+// Built in code, not written into the prose of /faq and /how-to-play, so the
+// English of those pages (and the fingerprint their translations are checked
+// against, scripts/test-seo-sync.mjs) is unchanged.
+function _seoFriendsLink(lang) {
+  if (!_seoFriendsIn(lang)) return '';
+  var h1 = ((lang && SEO_FRIENDS_I18N[lang]) || _SEO_FRIENDS).h1;
+  return '<p><a href="' + _seoLangHref('/play-with-friends', SEO_FRIENDS_I18N, lang) + '">' + h1 + '</a></p>';
+}
+
 function _seoPageHref(page, lang) {
   if (page === 'rules') return _seoLangHref('/rules', SEO_RULES_I18N, lang);
   if (page === 'hands') return _seoLangHref('/hand-rankings', SEO_HANDS_I18N, lang);
@@ -7204,14 +7222,15 @@ function _seoPageHref(page, lang) {
 }
 
 // Order matters: each table must exist before another body links into it.
+// Nav labels and /play-with-friends come first: the how-to body links to it.
+SEO_NAV_I18N = require('./seo-i18n/nav.js');
+SEO_FRIENDS_I18N = require('./seo-i18n/friends.js');
 SEO_HANDS_I18N = require('./seo-i18n/hands.js').build(_SEO_HANDS, _sd);
 // Serve-time localization of pokerth-client.html (see sendClientHtml).
 const _seoSsr = require('./seo-i18n/ssr.js');
-SEO_HOWTO_I18N = require('./seo-i18n/howto.js').build(_SEO_HOWTO, _seoPageHref);
+SEO_HOWTO_I18N = require('./seo-i18n/howto.js').build(_SEO_HOWTO, _seoPageHref, _seoFriendsLink);
 SEO_GLOSSARY_I18N = require('./seo-i18n/glossary.js').build(_SEO_GLOSSARY, _seoPageHref);
-SEO_NAV_I18N = require('./seo-i18n/nav.js');
 SEO_COMP_I18N = require('./seo-i18n/competitions.js');
-SEO_FRIENDS_I18N = require('./seo-i18n/friends.js');
 
 function seoGlossaryPage(res, method, lang) {
   var langs = seoPageLangs(SEO_GLOSSARY_I18N);
@@ -7303,7 +7322,9 @@ function seoFriendsPage(res, method, lang) {
   var sec = function (h, p) { return '<h2>' + h + '</h2><p>' + p + '</p>'; };
   var body = '<h1>' + tr.h1 + '</h1><p>' + tr.lead + '</p>' +
     '<h2>' + tr.stepsH2 + '</h2><ol>' + tr.steps.map(function (st) {
-      return '<li><strong>' + st[0] + '.</strong> ' + st[1] + '</li>';
+      // Title and text on two lines: no '.' appended, which would be wrong
+      // punctuation in Chinese, Japanese, Thai, Burmese, Amharic…
+      return '<li><strong>' + st[0] + '</strong><br>' + st[1] + '</li>';
     }).join('') + '</ol>' +
     sec(tr.privH2, tr.privP) + sec(tr.setH2, tr.setP) + sec(tr.mixH2, tr.mixP) +
     sec(tr.talkH2, tr.talkP) + sec(tr.ownH2, tr.ownP) +

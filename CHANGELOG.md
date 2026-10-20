@@ -32,14 +32,17 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Added
-- **`/play-with-friends`** (`web.217`–`web.218`, SEO) — a server-rendered page for « play poker with friends online »: the
+- **`/play-with-friends`** (`web.217`–`web.219`, SEO) — a server-rendered page for « play poker with friends online »: the
   three steps (log in, create a Normal table, « Invite friends » with link, QR code, WhatsApp / Telegram / SMS /
   email), private tables (the password never travels in the link), home-game settings, phones and computers at one
   table, chat (account only on pokerth.net), hosting it yourself at home (PC, home server or Raspberry Pi; one-liner,
   Docker or CasaOS, linked to the README install guide), and five questions; `HowTo` + `FAQPage` JSON-LD. Wired into
-  the sitemap, IndexNow, llms.txt, the crawler block and the admin coverage check. English first: the nav and
-  crawler links appear in a language only once its entry lands in `seo-i18n/friends.js` (empty for now);
-  `scripts/test-seo-friends-i18n.mjs` guards both.
+  the sitemap, IndexNow, llms.txt, the crawler block and the admin coverage check. `web.219`: translated into all
+  82 other languages (`seo-i18n/friends.js`, UI labels taken from each catalog) with a « Play with friends » nav
+  label in `nav.js`; /faq (under « How do I play poker online with friends? ») and /how-to-play (after « Playing
+  with friends ») link to it in the reader's language, built in code so their English and translation fingerprints
+  are unchanged. Step titles no longer get a « . » appended (wrong in CJK, Thai, Amharic…).
+  `scripts/test-seo-friends-i18n.mjs` guards content, links and wiring.
 - **A row of four tiles on every Statistics page** (`web.182`, audit of 2026-10-19c, S3) — like every other admin
   page, each Statistics page now opens on four tiles, read from what the page already received (no extra request;
   « — » until a figure is there). World: countries reached, first country, Internet online, LAN servers up.

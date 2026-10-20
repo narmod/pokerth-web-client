@@ -103,7 +103,7 @@ for (const code of codes) {
 }
 
 // And proxy.js has to wire the module up, after the data it needs exists.
-ok(/SEO_HOWTO_I18N = require\('\.\/seo-i18n\/howto\.js'\)\.build\(_SEO_HOWTO, _seoPageHref\);/.test(proxy),
+ok(/SEO_HOWTO_I18N = require\('\.\/seo-i18n\/howto\.js'\)\.build\(_SEO_HOWTO, _seoPageHref(, _seoFriendsLink)?\);/.test(proxy),
   'proxy.js builds SEO_HOWTO_I18N from the module');
 ok(proxy.indexOf("SEO_HOWTO_I18N = require('./seo-i18n/howto.js')") > proxy.indexOf('var _SEO_HOWTO = ['),
   'and does so after _SEO_HOWTO is assigned');

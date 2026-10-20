@@ -82,6 +82,11 @@ ok(/base \+ '\/play-with-friends'/.test(src) && /'\/play-with-friends\?lang=' \+
 ok(/\/play-with-friends\\n/.test(src), 'linked from llms.txt');
 ok(/\['\/play-with-friends', seoPageLangs\(SEO_FRIENDS_I18N\)\.length\]/.test(src), 'counted in the admin translation coverage');
 ok(/SEO_FRIENDS_I18N = require\('\.\/seo-i18n\/friends\.js'\)/.test(src), 'translation table loaded');
+ok(src.indexOf("SEO_FRIENDS_I18N = require('./seo-i18n/friends.js')") < src.indexOf("require('./seo-i18n/howto.js').build("), 'loaded before the how-to bodies that link to it');
+ok(/require\('\.\/seo-i18n\/howto\.js'\)\.build\(_SEO_HOWTO, _seoPageHref, _seoFriendsLink\)/.test(src), '/how-to-play (translations) links to it');
+ok(/email address\.<\/p>' \+\n    _seoFriendsLink\(''\) \+/.test(src), '/how-to-play (English) links to it after « Playing with friends »');
+const FAQ = lift('_SEO_FAQ'), ix = Number((src.match(/var _SEO_FAQ_FRIENDS_IX = (\d+);/) || [])[1]);
+ok(FAQ[ix] && /with friends\?$/.test(FAQ[ix][0]), `/faq links to it under « ${FAQ[ix] && FAQ[ix][0]} »`);
 
 console.log(fail ? `\n${fail}/${n} failed` : `\n${n}/${n} passed`);
 process.exit(fail ? 1 : 0);
