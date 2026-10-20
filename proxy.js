@@ -1104,7 +1104,9 @@ function seoYandex() {
 // EVERY language — the operator writes one line, in one language, and it is
 // their call. Empty means "keep the translated default", which is what
 // pokerth.net wants.
-function seoSiteName() { var v = String(_seoCfg().siteName || '').trim(); return v || 'PokerTH'; }
+// Default = the WebSite JSON-LD name and the <title> prefix, so og:site_name,
+// title and structured data all give search engines the same site name.
+function seoSiteName() { var v = String(_seoCfg().siteName || '').trim(); return v || 'PokerTH Web Client'; }
 function seoTitleOverride() { return String(_seoCfg().title || '').trim(); }
 function seoDescOverride() { return String(_seoCfg().description || '').trim(); }
 // Social card image. A custom one is taken at face value: we do not know its

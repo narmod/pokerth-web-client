@@ -41,6 +41,9 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Default site name « PokerTH Web Client »** (`web.216`) — `og:site_name` on every page now defaults to the
+  same name as the `<title>` prefix and the `WebSite` JSON-LD (was « PokerTH »); the admin placeholder and the
+  pokerth.net preset follow. A site name already saved in Admin › Search engines is kept as is.
 - **Search engines: visible `<h1>`, site name and publisher** (`web.215`, SEO audit of 2026-10-20) — the
   connect screen's brand block (chip `alt="PokerTH"` · suits · Web Client) is now the page's `<h1>`, styled exactly
   as before (the suits are `aria-hidden`); the off-viewport `#seo-intro` heading becomes an `<h2>`, so no heading
