@@ -667,6 +667,12 @@ export const ctl = {
   // One action from the adapter. arg: { repeat } for directions, { dx, dy }
   // for 'scroll', a number for 'bet' / 'quickBet' / 'playMode'.
   do: function (action, arg) {
+    // A pad or remote button is real user input, yet it raises no DOM
+    // pointer/key event the AFK listener could see (the remote even stops
+    // the key at window capture): tell the server we are here, otherwise a
+    // controller player is kicked for inactivity after ~21 min. Same
+    // rate-limited sender as mouse / touch / keyboard (msg-social.mjs).
+    try { if (typeof window._afkActivity === 'function') window._afkActivity(); } catch (e) {}
     // The open window may take the controller's buttons for itself (the
     // on-screen keyboard: ⌫, space, shift, send…).
     var m = modal();

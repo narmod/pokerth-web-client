@@ -72,6 +72,12 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Gamepad / TV remote players kicked for inactivity** (`web.199`) — the server's in-game AFK timer (warning at
+  20 min, kick 60 s later) is only reset by real input reported as `ResetTimeout`; plays themselves
+  (`MyActionRequest`) do not count. The web sender `_afkActivity` listens to pointer / key / wheel / touch events,
+  but a pad raises none and the remote stops its keys at window capture, so a controller player never sent one.
+  `ctl.do()` (the single entry of both adapters) now reports activity through the same rate-limited helper
+  (`window._afkActivity`). Guarded in `test-afk-single-sender.mjs`.
 - **SB / BB swapped in heads-up** (`web.198`, forum report) — once a table that started with three players or more
   got down to two, the pucks showed the dealer as big blind and the other player as small blind for the rest of the
   game. `seat-render.mjs` decided heads-up on `seats.length === 2`, but `seats[]` is frozen at the first deal and

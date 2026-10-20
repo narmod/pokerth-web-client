@@ -240,6 +240,8 @@ try {
 } catch (e) {}
 
 window._timeoutWarnAck = _timeoutWarnAck;
+// Real input that raises no DOM event (gamepad, TV remote: ui/ctl-nav.mjs).
+window._afkActivity = function () { _afkActivity(); };
 // Called from the socket's onclose: the warning belongs to a session that no
 // longer exists, and leaving a dead countdown on screen would be worse than
 // the silence it was meant to fix (QML does the same in onConnectionFailed).

@@ -1,3 +1,6 @@
+2026-10-20 version 2.1.10-web.199:
+- bugfix: playing with a gamepad or a TV remote no longer gets you removed from the game for inactivity after about 20 minutes
+
 2026-10-20 version 2.1.10-web.198:
 - bugfix: in heads-up, the SB and BB pucks were swapped once a bigger table got down to two players: the dealer is now shown as small blind, as at the official tables
 

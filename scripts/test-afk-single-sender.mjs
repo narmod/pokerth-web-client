@@ -50,4 +50,14 @@ assert.ok(render, 'renderMyTurnActions not found');
 assert.ok(!/\bsend\s*\(/.test(render[0]),
   'renderMyTurnActions() runs on its own each turn and must never send to the server');
 
+// Gamepad / TV remote: real input with no DOM event the listeners could see.
+// Every controller action goes through ctl.do(), which must report activity
+// through the same rate-limited helper (bridged as window._afkActivity).
+assert.ok(/window\._afkActivity = function \(\) \{ _afkActivity\(\); \};/.test(src),
+  'msg-social.mjs must bridge _afkActivity on window');
+const nav = readFileSync(join(root, 'modules/ui/ctl-nav.mjs'), 'utf8');
+const doFn = nav.match(/ {2}do: function \(action, arg\) \{[\s\S]*?var m = modal\(\);/);
+assert.ok(doFn && /window\._afkActivity\(\)/.test(doFn[0]),
+  'ctl.do() must report controller input as activity before dispatching it');
+
 console.log('test-afk-single-sender: OK');
