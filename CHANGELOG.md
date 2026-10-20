@@ -32,6 +32,14 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Added
+- **`/poker-odds`** (`web.220`, SEO, English first) — outs and the chance to hit them (turn, river, flop to
+  river), the rule of 2 and 4, pot odds with a worked example, eight preflop matchups and starting-hand odds, five
+  questions; `Article` + `FAQPage` JSON-LD, tables that scroll inside their box on a phone. No figure is typed
+  by hand: `scripts/gen-poker-odds.mjs` writes `seo-i18n/odds-data.json` (matchups by exact enumeration of all
+  1,712,304 boards with the vendored evaluator — cross-checked board by board against `game/cards.mjs` — the rest
+  by combinatorics) and the text carries `{placeholders}` formatted per language. Wired like `/play-with-friends`
+  (nav « Poker odds » gated on the language, sitemap, IndexNow, llms.txt, crawler block, admin coverage);
+  `seo-i18n/odds.js` is empty until the translations land. Guard: `scripts/test-seo-odds.mjs`.
 - **`/play-with-friends`** (`web.217`–`web.219`, SEO) — a server-rendered page for « play poker with friends online »: the
   three steps (log in, create a Normal table, « Invite friends » with link, QR code, WhatsApp / Telegram / SMS /
   email), private tables (the password never travels in the link), home-game settings, phones and computers at one
