@@ -74,5 +74,15 @@ ok(!/\(all modes\)/.test(m48) && /'% of '\+all\.toLocaleString\(\)\+' across eve
 ok(/return \(n&&_modeOn\(x\.k\)\)\?'<i style="display:block;width:'\+\(100\*n\/mt\)/.test(admin) && /'Sessions in the modes picked, out of every mode'/.test(admin),
   'the Countries list bars keep the modes picked, out of every mode');
 
+// ── A filter a page does not use is greyed there, not hidden (audit 2026-10-20, B4)
+ok(/var FS_PAGES=\{mode:\['world','activity'\], nd:\['world'\]\}, _trafCur='overview';/.test(admin),
+  'entry modes act on World and Activity, Narrow on World; bots everywhere (no entry)');
+ok(/_trafCur=k; _fsPaint\(\);/.test(body(admin, '_trafSub')), 'changing page repaints the pills');
+const fsp = body(admin, '_fsPaint');
+ok(/class="fspill'\+\(u\?'':' off'\)\+'"/.test(fsp) && /\(not used on this page\)/.test(fsp) && /data-fsrm="'\+p\.k\+'"/.test(fsp),
+  'a pill not used here is greyed, says so to a screen reader, and can still be removed');
+ok(/'not used on this page<\/span>'/.test(fsp) && /\.fspill\.off\{background:transparent;color:var\(--muted\)/.test(admin),
+  'with one visible line saying what greyed means');
+
 console.log(fail ? 'FAIL ' + fail + '/' + n : 'OK ' + n + '/' + n);
 process.exit(fail ? 1 : 0);

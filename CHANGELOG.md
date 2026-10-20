@@ -72,6 +72,12 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Statistics: a filter a page does not use is greyed there** (`web.206`, audit of 2026-10-20, B4) — the pills
+  of the bar (« Training », « Country France ») stayed as they were on Summary, Audience, Visitors, Music and Ace's
+  Help, which they do not change, and read as applied. Entry modes act on World and Activity, Narrow on World, bots
+  on every page: elsewhere a pill is drawn greyed (outline, muted text, ≥ 5.8:1 in both themes), says « not used on
+  this page » (one visible line, and to a screen reader on the pill) and can still be removed. Changing page repaints
+  them. Guarded in `scripts/test-admin-filters.mjs`.
 - **Statistics: the entry-mode filter reaches every figure split by mode** (`web.205`, audit of 2026-10-20,
   B3) — with Training alone picked, Activity › « Connections today » still counted every mode, the note of « Last 48 h
   by entry mode » read « 336 sessions (all modes) · Internet 55 %… » above a Training-only chart, and the bars of

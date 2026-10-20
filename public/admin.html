@@ -272,6 +272,10 @@
   .fspill button{flex:none;width:28px;height:28px;padding:0;border:0;border-radius:14px;background:transparent;color:inherit;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
   .fspill button:hover{background:var(--hover)}
   .fspill button svg{width:13px;height:13px}
+  /* A filter this page does not use (audit 2026-10-20, B4): still removable, greyed. */
+  .fspill.off{background:transparent;color:var(--muted);box-shadow:inset 0 0 0 1px var(--line)}
+  .fspill.off .dots{opacity:.5}
+  .fsoffnote{align-self:center;color:var(--muted);font-size:.75rem}
   .fsheet{position:fixed;inset:0;z-index:60}
   .fsheet[hidden]{display:none}
   .fsscrim{position:absolute;inset:0;background:rgba(5,8,12,.6)}
@@ -5514,6 +5518,10 @@
   // The panel holds the controls the bar used to show (same ids, same
   // handlers, applied at once); the bar says what is on: the period, a count
   // and one removable pill per active filter.
+  // Which Statistics pages each filter acts on (bots: every page, server side).
+  // The others still show it, greyed, so it is not mistaken for applied there.
+  var FS_PAGES={mode:['world','activity'], nd:['world']}, _trafCur='overview';
+  function _fsUsed(k){ var pg=FS_PAGES[k.indexOf('nd:')===0?'nd':k]; return !pg || pg.indexOf(_trafCur)>=0; }
   var FS_X='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>';
   function _fsPaint(){
     var lab=$('fsPerLab'); if(!lab) return;
@@ -5536,7 +5544,9 @@
     });
     if(_trafBots) pills.push({k:'bots',html:'<span>Bots shown</span>',lab:'Bots shown (hide them again)'});
     var box=$('fsChips');
-    if(box) box.innerHTML=pills.map(function(p){ return '<span class="fspill">'+p.html+'<button type="button" data-fsrm="'+p.k+'" aria-label="Remove '+_annEsc(p.lab)+'">'+FS_X+'</button></span>'; }).join('');
+    var off=0;
+    if(box) box.innerHTML=pills.map(function(p){ var u=_fsUsed(p.k); if(!u) off++; return '<span class="fspill'+(u?'':' off')+'"'+(u?'':' title="Not used on this page"')+'>'+p.html+(u?'':'<span class="fsvh"> (not used on this page)</span>')+'<button type="button" data-fsrm="'+p.k+'" aria-label="Remove '+_annEsc(p.lab)+'">'+FS_X+'</button></span>'; }).join('')
+      +(off?'<span class="fsoffnote" aria-hidden="true">'+(off===pills.length?'':'greyed: ')+'not used on this page</span>':'');
     var n=$('fsCount'); if(n){ n.textContent=String(pills.length); n.hidden=!pills.length; }
     var ob=$('fsOpen'); if(ob) ob.setAttribute('aria-label','Filters'+(pills.length?', '+pills.length+' on':''));
   }
@@ -8400,6 +8410,7 @@
     if(k==='summary'||k==='data') k='overview'; // its address (#traffic/summary); Data is gone (web.184)
     if(TRAF_SUBS.indexOf(k)<0) k='overview';
     document.querySelectorAll('#panel-traffic .tsub').forEach(function(p){ p.style.display = p.dataset.ts===k ? '' : 'none'; });
+    _trafCur=k; _fsPaint();
     // The map was drawn while hidden: draw it again at its real width.
     if(k==='world') _geoRedraw();
   }
