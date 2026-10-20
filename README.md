@@ -313,7 +313,7 @@ A full appearance system, reached from the **Theme** button — a styles window 
 - **Built-in diagnostics via chat commands** — type `/help` in any chat for local commands (`/diag`, `/update`, `/netdbg`, `/carddbg`, `/msglog`, `/audiodbg`, `/storage`, `/logdump`, `/fps`, `/table`, `/lang`, `/sound`, `/zoom`, `/copy`, `/clear`…); replies are shown only to you (see [docs/DIAGNOSTIC.md](docs/DIAGNOSTIC.md))
 - **Hand logs** — every hand is recorded locally in the official `.pdb` model (session / game / player / hand / action), and the **Logs** window ports the desktop client's log manager: preview with search and highlighting, HTML and text export, upload to the official log-analysis service, plus web-only extras (automatic retention, *delete everything*)
 - **In-app help** — a chaptered user guide built into the client (getting started, the lobby, the table, options, troubleshooting…), with its own catalogue in each of the 83 languages
-- **Content pages** — `/how-to-play`, `/play-with-friends`, `/play-against-computer`, `/poker-odds`, `/hand-rankings`, `/rules`, `/glossary` and `/faq` are server-rendered, localised pages that also work as an entry point for search engines
+- **Content pages** — `/how-to-play`, `/play-with-friends`, `/play-against-computer`, `/poker-odds`, `/starting-hands`, `/hand-rankings`, `/rules`, `/glossary` and `/faq` are server-rendered, localised pages that also work as an entry point for search engines
 - Poker hand reference overlay (? button)
 - **Resilient reconnection** — exponential-backoff auto-reconnect with a live countdown,
   plus automatic resume when the tab returns to the foreground or the network path
@@ -525,7 +525,7 @@ pokerth-web-client/
 | `GET` | `/live` | Standalone embedded spectator client — read-only, guest-only (`?embed=1` for iframe use); see [Spectator embed](#spectator-embed-live) above and [the embedding guide](docs/INSTALL_POKERTH_NET.md#embedding-the-spectator-view-on-the-website) |
 | `GET` | `/studio` | Style studio — the design tool for decks, tables and seat packs |
 | `GET` | `/privacy` | Privacy page (what the analytics do and don't collect) |
-| `GET` | `/faq` · `/rules` · `/how-to-play` · `/play-with-friends` · `/play-against-computer` · `/poker-odds` · `/hand-rankings` · `/glossary` | Server-rendered content pages, localised and linked from the sitemap |
+| `GET` | `/faq` · `/rules` · `/how-to-play` · `/play-with-friends` · `/play-against-computer` · `/poker-odds` · `/starting-hands` · `/hand-rankings` · `/glossary` | Server-rendered content pages, localised and linked from the sitemap |
 | `GET` | `/sitemap.xml` · `/robots.txt` · `/llms.txt` | Crawler files (the sitemap lists every language variant of the pages above) |
 | `GET` | `/__ver` | Newest static-asset mtime — drives the client's "new version" banner |
 | `GET` | `/app-config` | Operator's client defaults (login modes, default theme & settings, server identity, welcome message) |

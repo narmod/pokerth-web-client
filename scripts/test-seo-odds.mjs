@@ -98,7 +98,7 @@ ok(/_seoPageUrls\(_sBase, '\/poker-odds'/.test(src), 'listed in the sitemap');
 ok(/base \+ '\/poker-odds'/.test(src) && /'\/poker-odds\?lang=' \+ c/.test(src), 'submitted through IndexNow, with its languages');
 ok(/\/poker-odds\\n/.test(src), 'linked from llms.txt');
 ok(/\['\/poker-odds', seoPageLangs\(SEO_ODDS_I18N\)\.length\]/.test(src), 'counted in the admin translation coverage');
-ok(/body \+= _seoOddsLink\(lang\);[^\n]*\n  seoContentPage\(res, method, title, desc, '\/hand-rankings'/.test(src) && /body \+= _seoOddsLink\(lang\);[^\n]*\n  seoContentPage\(res, method, title, desc, '\/glossary'/.test(src), '/hand-rankings and /glossary link to it, in the reader\u2019s language');
+ok(/body \+= _seoOddsLink\(lang\)[^\n]*\n  seoContentPage\(res, method, title, desc, '\/hand-rankings'/.test(src) && /body \+= _seoOddsLink\(lang\);[^\n]*\n  seoContentPage\(res, method, title, desc, '\/glossary'/.test(src), '/hand-rankings and /glossary link to it, in the reader\u2019s language');
 ok(/SEO_ODDS_I18N = require\('\.\/seo-i18n\/odds\.js'\)/.test(src) && /require\('\.\/seo-i18n\/odds-data\.json'\)/.test(src), 'translation table and figures loaded');
 
 console.log(fail ? `\n${fail}/${n} failed` : `\n${n}/${n} passed`);

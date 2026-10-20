@@ -32,6 +32,16 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Added
+- **`/starting-hands`** (`web.226`, SEO, English first) — the 169 starting hands in a 13 × 13 chart coloured by
+  strength, the top twenty against 1, 3 and 6 opponents, how the ranking shifts in multiway pots, suited vs
+  offsuit, the worst hand, how often each kind is dealt, how to use a chart, five questions; `Article` +
+  `ItemList` (the full ranking) + `FAQPage` JSON-LD. No figure is typed by hand: `scripts/gen-starting-hands.mjs`
+  writes `seo-i18n/starting-hands.json` (seeded simulation with the vendored evaluator: 1,000,000 deals per hand
+  heads-up, 200,000 against 3, 100,000 against 6; `--check` recomputes it), and every claim the text makes about
+  the data is asserted by `scripts/test-seo-starting.mjs`, which also re-simulates three hands with
+  `game/cards.mjs`. Linked from /hand-rankings and /poker-odds; wired like the other pages (nav « Starting
+  hands » gated on the language). `_seoFill` now accepts `_` in placeholder names. `seo-i18n/starting.js` is
+  empty until the translations.
 - **`?go=train` opens the app on the training form** (`web.225`) — like the `?go=play` / `?go=create` shortcuts:
   the connect screen lands on Local / training (the player still presses Connect; nothing starts by itself). The
   mode is saved before the saved-prefs restore so the restore and the select watcher agree; skipped when the

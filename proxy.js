@@ -1607,7 +1607,7 @@ function _seoEnsureIndexNowKey() {
 }
 function seoIndexNowUrls(base) {
   var urls = [base + '/', base + '/rules', base + '/hand-rankings', base + '/how-to-play',
-    base + '/glossary', base + '/faq', base + '/competitions', base + '/play-with-friends', base + '/poker-odds', base + '/play-against-computer', base + '/privacy'];
+    base + '/glossary', base + '/faq', base + '/competitions', base + '/play-with-friends', base + '/poker-odds', base + '/play-against-computer', base + '/starting-hands', base + '/privacy'];
   for (var code in SEO_I18N) { if (code !== 'en') urls.push(base + '/?lang=' + code); }
   // Localized content pages exist only in the languages that actually have a
   // translation table. Submitting a variant we do not serve would point the
@@ -1621,6 +1621,7 @@ function seoIndexNowUrls(base) {
   seoPageLangs(SEO_FRIENDS_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/play-with-friends?lang=' + c); });
   seoPageLangs(SEO_ODDS_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/poker-odds?lang=' + c); });
   seoPageLangs(SEO_BOTS_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/play-against-computer?lang=' + c); });
+  seoPageLangs(SEO_START_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/starting-hands?lang=' + c); });
   seoPageLangs(_seoPrivacyTable()).forEach(function (c) { if (c !== 'en') urls.push(base + '/privacy?lang=' + c); });
   return urls;
 }
@@ -1812,6 +1813,7 @@ function seoBodyBlock(lang) {
     (_seoFriendsIn(lang) ? '<a href="' + _seoLangHref('/play-with-friends', SEO_FRIENDS_I18N, lang) + '">' + _seoNavLabel(lang, 'friends') + '</a> \u2014 ' : '') +
     (_seoOddsIn(lang) ? '<a href="' + _seoLangHref('/poker-odds', SEO_ODDS_I18N, lang) + '">' + _seoNavLabel(lang, 'odds') + '</a> \u2014 ' : '') +
     (_seoBotsIn(lang) ? '<a href="' + _seoLangHref('/play-against-computer', SEO_BOTS_I18N, lang) + '">' + _seoNavLabel(lang, 'bots') + '</a> \u2014 ' : '') +
+    (_seoStartIn(lang) ? '<a href="' + _seoLangHref('/starting-hands', SEO_START_I18N, lang) + '">' + _seoNavLabel(lang, 'start') + '</a> \u2014 ' : '') +
     '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">' + _seoNavLabel(lang, 'faq') + '</a> \u2014 ' +
     '<a href="' + _seoLangHref('/privacy', _seoPrivacyTable(), lang) + '">' + b.pv + '</a></p>' +
     '</div>';
@@ -1936,6 +1938,7 @@ function seoLlmsTxt(base) {
          '- Play poker with friends (private table, invitation link, QR code): ' + u + '/play-with-friends\n' +
          '- Poker odds (outs, rule of 2 and 4, pot odds, preflop matchups, computed exactly): ' + u + '/poker-odds\n' +
          '- Play poker against the computer (training mode, difficulty levels, offline): ' + u + '/play-against-computer\n' +
+         '- Starting hands chart (all 169 hands ranked against 1, 3 and 6 opponents): ' + u + '/starting-hands\n' +
          '- Privacy policy (also in every interface language: ' + u + '/privacy?lang=<code>): ' + u + '/privacy\n' +
          '- pokerth.net accounts, game server and forum privacy policy: https://www.pokerth.net/ucp.php?mode=privacy\n' : '\n## Links\n\n') +
     '- Source code: https://github.com/narmod/pokerth-web-client\n' +
@@ -1984,6 +1987,13 @@ var _SEO_PAGE_CSS = 'body{margin:0;background:#0d1117;color:#d8dde4;font:16px/1.
   '.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;margin:.6em 0 1em;font-size:.95em}' +
   'th,td{border-bottom:1px solid #30363d;padding:.35em .5em;text-align:start;vertical-align:top}' +
   'th{color:#9aa4b0;font-weight:600}td.n{text-align:end;white-space:nowrap;font-variant-numeric:tabular-nums}' +
+  // Starting-hands chart (/starting-hands): 13 x 13 squares, hand and chance;
+  // always left-to-right (it is a matrix, not text), compact on a phone.
+  'table.sh{direction:ltr;table-layout:fixed;min-width:340px;margin:.6em 0 1.2em;font-size:12px}' +
+  'table.sh td{border:1px solid #0d1117;padding:3px 1px;text-align:center;color:#f0f3f6;line-height:1.15}' +
+  'table.sh td b{display:block;font-weight:600}table.sh td span{display:block;font-size:.85em;opacity:.85;font-variant-numeric:tabular-nums}' +
+  'table.sh td.p b{text-decoration:underline}' +
+  '@media (max-width:480px){table.sh{font-size:10px}}' +
   '.updated{color:#9aa4b0;font-size:.9em;margin:0 0 1.2em}' +
   '.play{display:inline-block;margin-top:26px;padding:10px 22px;background:#1f6feb;color:#fff;border-radius:6px;font-weight:600}';
 
@@ -2007,7 +2017,7 @@ function _seoLangHref(relPath, table, lang) {
 // "Play now · Rules · Glossary" in English was a page in two languages. The
 // translations live in seo-i18n/nav.js; English is the fallback per label.
 var SEO_NAV_EN = { play: '\u25b6 Play now', rules: 'Rules', hands: 'Hand rankings', howto: 'How to play',
-  gloss: 'Glossary', comp: 'Competitions', friends: 'Play with friends', odds: 'Poker odds', bots: 'Vs computer', faq: 'FAQ', privacy: 'Privacy', src: 'Source',
+  gloss: 'Glossary', comp: 'Competitions', friends: 'Play with friends', odds: 'Poker odds', bots: 'Vs computer', start: 'Starting hands', faq: 'FAQ', privacy: 'Privacy', src: 'Source',
   cta: 'Play PokerTH in your browser \u2014 free, no download' };
 var SEO_NAV_I18N = {};
 function _seoNavLabel(lang, k) {
@@ -2023,12 +2033,15 @@ function _seoFriendsIn(lang) { return !lang || !!(SEO_FRIENDS_I18N && SEO_FRIEND
 function _seoOddsIn(lang) { return !lang || !!(SEO_ODDS_I18N && SEO_ODDS_I18N[lang]); }
 // Same rule for /play-against-computer.
 function _seoBotsIn(lang) { return !lang || !!(SEO_BOTS_I18N && SEO_BOTS_I18N[lang]); }
+// Same rule for /starting-hands.
+function _seoStartIn(lang) { return !lang || !!(SEO_START_I18N && SEO_START_I18N[lang]); }
 
 function _seoPageNav(lang) {
   lang = lang || '';
   return '<nav><a href="' + _seoLangHref('/', SEO_I18N, lang) + '">' + _seoNavLabel(lang, 'play') + '</a>' +
     '<a href="' + _seoLangHref('/rules', SEO_RULES_I18N, lang) + '">' + _seoNavLabel(lang, 'rules') + '</a>' +
     '<a href="' + _seoLangHref('/hand-rankings', SEO_HANDS_I18N, lang) + '">' + _seoNavLabel(lang, 'hands') + '</a>' +
+    (_seoStartIn(lang) ? '<a href="' + _seoLangHref('/starting-hands', SEO_START_I18N, lang) + '">' + _seoNavLabel(lang, 'start') + '</a>' : '') +
     (_seoOddsIn(lang) ? '<a href="' + _seoLangHref('/poker-odds', SEO_ODDS_I18N, lang) + '">' + _seoNavLabel(lang, 'odds') + '</a>' : '') +
     '<a href="' + _seoLangHref('/how-to-play', SEO_HOWTO_I18N, lang) + '">' + _seoNavLabel(lang, 'howto') + '</a>' +
     '<a href="' + _seoLangHref('/glossary', SEO_GLOSSARY_I18N, lang) + '">' + _seoNavLabel(lang, 'gloss') + '</a>' +
@@ -6985,6 +6998,7 @@ var SEO_COMP_I18N = {};
 var SEO_FRIENDS_I18N = {};
 var SEO_ODDS_I18N = {};
 var SEO_BOTS_I18N = {};
+var SEO_START_I18N = {};
 
 // Suit symbols. Red suits get a class rather than a hard-coded colour so the
 // page CSS stays the single place that decides what red means.
@@ -7078,7 +7092,7 @@ function seoHandsPage(res, method, lang) {
       return { '@type': 'ListItem', position: n + 1, name: h[0], description: h[1] };
     })
   };
-  body += _seoOddsLink(lang);   // on to the odds of these hands
+  body += _seoOddsLink(lang) + _seoStartLink(lang);   // on to the odds of these hands and the starting-hands chart
   seoContentPage(res, method, title, desc, '/hand-rankings', body, [art, list], lang, langs);
 }
 
@@ -7255,7 +7269,22 @@ function _seoBotsRelated(lang) {
     [_seoLangHref('/hand-rankings', SEO_HANDS_I18N, lang), _seoPageLabel(SEO_HANDS_I18N, lang, 'Poker hand rankings')]
   ];
   if (_seoOddsIn(lang)) items.push([_seoLangHref('/poker-odds', SEO_ODDS_I18N, lang), h1(SEO_ODDS_I18N, _SEO_ODDS.h1)]);
+  if (_seoStartIn(lang)) items.push([_seoLangHref('/starting-hands', SEO_START_I18N, lang), h1(SEO_START_I18N, _SEO_START.h1)]);
   return '<ul>' + items.map(function (i) { return '<li><a href="' + i[0] + '">' + i[1] + '</a></li>'; }).join('') + '</ul>';
+}
+// /starting-hands: links on to the odds page, the hand rankings and the
+// training mode, each with that page's own title in the reader's language.
+function _seoStartRelated(lang) {
+  var items = [[_seoLangHref('/hand-rankings', SEO_HANDS_I18N, lang), _seoPageLabel(SEO_HANDS_I18N, lang, 'Poker hand rankings')]];
+  if (_seoOddsIn(lang)) items.push([_seoLangHref('/poker-odds', SEO_ODDS_I18N, lang), ((lang && SEO_ODDS_I18N[lang]) || _SEO_ODDS).h1]);
+  if (_seoBotsIn(lang)) items.push([_seoLangHref('/play-against-computer', SEO_BOTS_I18N, lang), ((lang && SEO_BOTS_I18N[lang]) || _SEO_BOTS).h1]);
+  return '<ul>' + items.map(function (i) { return '<li><a href="' + i[0] + '">' + i[1] + '</a></li>'; }).join('') + '</ul>';
+}
+// Link to /starting-hands, anchor = its <h1>, only where translated.
+function _seoStartLink(lang) {
+  if (!_seoStartIn(lang)) return '';
+  var h1 = ((lang && SEO_START_I18N[lang]) || _SEO_START).h1;
+  return '<p><a href="' + _seoLangHref('/starting-hands', SEO_START_I18N, lang) + '">' + h1 + '</a></p>';
 }
 // Link to /play-against-computer, anchor = its <h1>, only where translated.
 function _seoBotsLink(lang) {
@@ -7273,6 +7302,7 @@ function _seoPageHref(page, lang) {
   if (page === 'friends') return _seoLangHref('/play-with-friends', SEO_FRIENDS_I18N, lang);
   if (page === 'odds') return _seoLangHref('/poker-odds', SEO_ODDS_I18N, lang);
   if (page === 'bots') return _seoLangHref('/play-against-computer', SEO_BOTS_I18N, lang);
+  if (page === 'start') return _seoLangHref('/starting-hands', SEO_START_I18N, lang);
   return '/';
 }
 
@@ -7282,6 +7312,7 @@ SEO_NAV_I18N = require('./seo-i18n/nav.js');
 SEO_FRIENDS_I18N = require('./seo-i18n/friends.js');
 SEO_ODDS_I18N = require('./seo-i18n/odds.js');
 SEO_BOTS_I18N = require('./seo-i18n/bots.js');
+SEO_START_I18N = require('./seo-i18n/starting.js');
 SEO_HANDS_I18N = require('./seo-i18n/hands.js').build(_SEO_HANDS, _sd);
 // Hand names per language, for the /poker-odds calculator.
 var _SEO_HANDS_PARTS = require('./seo-i18n/hands.js').PARTS;
@@ -7536,7 +7567,7 @@ function _seoOddsVars(lang) {
     qqak: _seoPct(lang, m['qq-ak'].winA), '22ak': _seoPct(lang, m['22-ak'].winA)
   };
 }
-function _seoFill(s, v) { return String(s).replace(/\{([a-z0-9]+)\}/gi, function (all, k) { return (k in v) ? v[k] : all; }); }
+function _seoFill(s, v) { return String(s).replace(/\{([a-z0-9_]+)\}/gi, function (all, k) { return (k in v) ? v[k] : all; }); }
 
 function seoOddsPage(res, method, lang) {
   var langs = seoPageLangs(SEO_ODDS_I18N);
@@ -7569,7 +7600,7 @@ function seoOddsPage(res, method, lang) {
       return '<tr><td>' + _seoCards(r.handA) + '</td><td>' + _seoCards(r.handB) + '</td><td class="n">' + _seoPct(lang, r.winA) +
         '</td><td class="n">' + _seoPct(lang, r.tie) + '</td><td class="n">' + _seoPct(lang, r.winB) + '</td></tr>';
     }).join('') + '</table></div>' +
-    '<h2>' + tr.startH2 + '</h2><p>' + f(tr.startP) + '</p>' +
+    '<h2>' + tr.startH2 + '</h2><p>' + f(tr.startP) + '</p>' + _seoStartLink(lang) +
     '<div class="tw"><table>' + th(tr.startCols) + D.starting.map(function (r) {
       return '<tr><td>' + tr.starting[r.id] + '</td><td class="n">' + _seoPct(lang, r.p) + '</td><td class="n">' + _seoNum(lang, 1 / r.p, 1 / r.p < 10 ? 1 : 0) + '</td></tr>';
     }).join('') + '</table></div>' +
@@ -7681,6 +7712,129 @@ function seoBotsPage(res, method, lang) {
   var faq = { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: lang || 'en',
     mainEntity: tr.faq.map(function (q) { return { '@type': 'Question', name: plain(q[0]), acceptedAnswer: { '@type': 'Answer', text: plain(q[1]) } }; }) };
   seoContentPage(res, method, tr.title, tr.desc, '/play-against-computer', body, [howto, faq], lang, langs);
+}
+
+// ── /starting-hands — the 169 starting hands, charted and ranked ─────────
+// The page answers "poker starting hands chart", "best starting hands",
+// "is AK better than QQ". Every figure comes from
+// seo-i18n/starting-hands.json (scripts/gen-starting-hands.mjs: seeded
+// simulation with the vendored evaluator, 1,000,000 deals per hand heads-up)
+// and is formatted per language at render time; the text only carries
+// {placeholders}. Translations: seo-i18n/starting.js.
+var SEO_START_DATA = require('./seo-i18n/starting-hands.json');
+var _SEO_START = {
+  "title": "Poker Starting Hands Chart — All 169 Hands Ranked | PokerTH",
+  "desc": "All 169 Texas Hold’em starting hands in one chart, ranked by their chance to win against one, three and six opponents. Suited or offsuit, pairs, and the worst hand.",
+  "ldHeadline": "Texas Hold’em starting hands chart: all 169 hands ranked",
+  "ldDesc": "The 169 Texas Hold’em starting hands, charted and ranked by their chance to win against one, three and six random hands.",
+  "h1": "Texas Hold’em starting hands: all 169, ranked",
+  "lead": "Your two hole cards are the first decision of every hand. There are {combos} ways to be dealt two cards, but only 169 different starting hands once suits are set aside. This page charts all of them with their chance to win, worked out by simulating a million deals for each.",
+  "chartH2": "The starting hands chart",
+  "chartP": "Pairs run down the diagonal. Above it are the suited hands (s, both cards of the same suit), below it the offsuit hands (o). T stands for ten. The number in each square is the chance that the hand wins against one random hand when all five board cards are dealt, ties counted as half a win; the greener the square, the stronger the hand.",
+  "topH2": "The best starting hands",
+  "topP": "The twenty strongest hands against one opponent, and how they hold up against three and six:",
+  "cols": ["Rank", "Hand", "1 opponent", "3 opponents", "6 opponents"],
+  "multiH2": "More opponents, different hands",
+  "multiP": "Every hand wins less often as players join the pot, but not at the same rate, so the ranking changes. Pocket aces stay on top: {aa1} heads-up, still {aa6} against six opponents. Suited connectors climb, because they make straights and flushes that win big pots: seven-six suited goes from rank {r76s1} heads-up to rank {r76s6} against six, jack-ten suited from {rjts1} to {rjts6}. Medium pairs drop \u2014 sevens fall from rank {r77_1} to {r77_6} \u2014 and so do offsuit hands with one high card and a weak kicker, such as king-six offsuit, from {rk6o1} to {rk6o6}.",
+  "suitedH2": "Suited or offsuit?",
+  "suitedP": "Two cards of the same suit are worth more than the same cards offsuit — about {suitGain} more on average across all 78 pairs of ranks, from {suitMin} to {suitMax} depending on the hand. It matters, but less than it looks: flushes are rare, and a weak suited hand is still a weak hand.",
+  "worstH2": "The worst starting hand",
+  "worstP": "Against one random hand, three-two offsuit is the weakest of all at {w32}. Seven-two offsuit, often called the worst hand in poker, wins {w72} and ranks {r72} of 169 heads-up \u2014 but against six opponents it is the very last, because its two cards are too far apart to make a straight together and too low to win much else.",
+  "countH2": "How often you are dealt each kind",
+  "countP": "Of the {combos} possible two-card hands, {pairCombos} are pairs ({pairPct}), {suitedCombos} are suited ({suitedPct}) and {offCombos} are offsuit ({offPct}). Each pair can be dealt 6 ways, each suited hand 4 ways, each offsuit hand 12 ways — which is why you see ace-king offsuit three times as often as ace-king suited.",
+  "useH2": "How to use a chart like this",
+  "useP": "A chart ranks hands by raw strength, before anyone has acted. At a real table, play fewer hands from early position, where many players act after you, and more from the button and the cut-off. Raise rather than call with the hands you play, fold the bottom of the chart, and remember that a hand’s value also depends on the stacks, the blinds and your opponents. In a PokerTH tournament the blinds keep rising, so the hands worth playing widen as stacks get short.",
+  "faqH2": "Questions",
+  "faq": [
+    ["What is the best starting hand in Texas Hold’em?",
+     "Pocket aces. They win {aa1} against one random hand, and they are the favourite against every other starting hand."],
+    ["Is ace-king better than a pair of queens?",
+     "No, but it is close: queens win {qqak} against ace-king offsuit. Against one random hand ace-king suited wins {aks1} and queens {qq1}."],
+    ["How many starting hands are there?",
+     "{combos} two-card combinations, which make 169 different starting hands: 13 pairs, 78 suited and 78 offsuit."],
+    ["How much is a suited hand worth?",
+     "About {suitGain} more chance to win than the same hand offsuit, on average."],
+    ["Where can I practise starting-hand selection?",
+     "In PokerTH’s training mode against computer opponents, with the Odds tab showing your chance of winning as the cards come out."]
+  ]
+};
+
+// Starting-hands chart cell colour: chance to win heads-up, 30%..86%, from
+// red to green. The number in the cell carries the same information.
+function _seoStartBg(x) {
+  var t = Math.max(0, Math.min(1, (x - 0.30) / 0.56));
+  return 'hsl(' + Math.round(t * 125) + ',55%,' + Math.round(26 + t * 4) + '%)';
+}
+function _seoStartVars(lang) {
+  var H = {}; SEO_START_DATA.hands.forEach(function (h) { H[h.name] = h; });
+  var gains = [];
+  SEO_START_DATA.hands.forEach(function (h) { if (h.kind === 'suited') gains.push(h.vs1 - H[h.name.slice(0, 2) + 'o'].vs1); });
+  var avg = gains.reduce(function (a, b) { return a + b; }, 0) / gains.length;
+  // Rank against six opponents (the stored rank is heads-up).
+  var R6 = {}; SEO_START_DATA.hands.slice().sort(function (a, b) { return b.vs6 - a.vs6 || (a.name < b.name ? -1 : 1); }).forEach(function (h, i) { R6[h.name] = i + 1; });
+  var cnt = { pair: 0, suited: 0, offsuit: 0 };
+  SEO_START_DATA.hands.forEach(function (h) { cnt[h.kind] += h.combos; });
+  var P = function (x) { return _seoPct(lang, x); }, N = function (x) { return _seoNum(lang, x); };
+  return {
+    combos: N(1326), aa1: P(H.AA.vs1), aa6: P(H.AA.vs6), ako1: P(H.AKo.vs1), ako6: P(H.AKo.vs6),
+    aks1: P(H.AKs.vs1), qq1: P(H.QQ.vs1), qqak: P(_seoQqAk()),
+    suitGain: P(avg), suitMin: P(Math.min.apply(null, gains)), suitMax: P(Math.max.apply(null, gains)),
+    w32: P(H['32o'].vs1), w72: P(H['72o'].vs1), r72: N(H['72o'].rank),
+    r76s1: N(H['76s'].rank), r76s6: N(R6['76s']), rjts1: N(H.JTs.rank), rjts6: N(R6.JTs),
+    r77_1: N(H['77'].rank), r77_6: N(R6['77']), rk6o1: N(H.K6o.rank), rk6o6: N(R6.K6o),
+    pairCombos: N(cnt.pair), suitedCombos: N(cnt.suited), offCombos: N(cnt.offsuit),
+    pairPct: P(cnt.pair / 1326), suitedPct: P(cnt.suited / 1326), offPct: P(cnt.offsuit / 1326)
+  };
+}
+// QQ against AKo, from the exact matchups of /poker-odds (odds-data.json).
+function _seoQqAk() { var m = SEO_ODDS_DATA.matchups.filter(function (r) { return r.id === 'qq-ak'; })[0]; return m ? m.winA : 0; }
+
+function seoStartPage(res, method, lang) {
+  var langs = seoPageLangs(SEO_START_I18N);
+  if (langs.indexOf(lang) === -1) lang = '';
+  var tr = (lang && SEO_START_I18N[lang]) || _SEO_START;
+  var base = seoEnabled() ? seoPublicUrl() : '';
+  var v = _seoStartVars(lang), f = function (s) { return _seoFill(s, v); };
+  var D = SEO_START_DATA.hands;
+  var grid = '<div class="tw"><table class="sh" aria-label="' + _seoAttr(tr.chartH2) + '">';
+  for (var i = 0; i < 13; i++) {
+    grid += '<tr>';
+    for (var j = 0; j < 13; j++) {
+      var h = D[i * 13 + j];
+      grid += '<td style="background:' + _seoStartBg(h.vs1) + '"' + (h.kind === 'pair' ? ' class="p"' : '') + '><b>' + h.name + '</b><span>' +
+        _seoNum(lang, h.vs1 * 100, 0) + '</span></td>';
+    }
+    grid += '</tr>';
+  }
+  grid += '</table></div>';
+  var top = D.slice().sort(function (a, b) { return a.rank - b.rank; }).slice(0, 20);
+  var th = '<tr>' + tr.cols.map(function (c) { return '<th>' + c + '</th>'; }).join('') + '</tr>';
+  var topTable = '<div class="tw"><table>' + th + top.map(function (h) {
+    return '<tr><td class="n">' + _seoNum(lang, h.rank) + '</td><td><span class="cards">' + h.name + '</span></td><td class="n">' + _seoPct(lang, h.vs1) +
+      '</td><td class="n">' + _seoPct(lang, h.vs3) + '</td><td class="n">' + _seoPct(lang, h.vs6) + '</td></tr>';
+  }).join('') + '</table></div>';
+  var sec = function (h, p) { return '<h2>' + h + '</h2><p>' + f(p) + '</p>'; };
+  var body = '<h1>' + tr.h1 + '</h1><p>' + f(tr.lead) + '</p>' +
+    '<h2>' + tr.chartH2 + '</h2><p>' + f(tr.chartP) + '</p>' + grid +
+    '<h2>' + tr.topH2 + '</h2><p>' + tr.topP + '</p>' + topTable +
+    sec(tr.multiH2, tr.multiP) + sec(tr.suitedH2, tr.suitedP) + sec(tr.worstH2, tr.worstP) +
+    sec(tr.countH2, tr.countP) + sec(tr.useH2, tr.useP) + _seoStartRelated(lang) +
+    '<h2>' + tr.faqH2 + '</h2>' + tr.faq.map(function (q) { return '<h3>' + q[0] + '</h3><p>' + f(q[1]) + '</p>'; }).join('');
+  var plain = function (h) { return String(h).replace(/<[^>]*>/g, ''); };
+  var url = base ? base + '/starting-hands' + (lang ? '?lang=' + lang : '') : '';
+  var art = { '@context': 'https://schema.org', '@type': 'Article', headline: tr.ldHeadline, description: tr.ldDesc,
+    author: { '@type': 'Organization', name: 'PokerTH Development Team' },
+    publisher: { '@type': 'Organization', name: 'PokerTH Development Team', url: 'https://www.pokerth.net/' }, inLanguage: lang || 'en' };
+  if (url) art.mainEntityOfPage = url;
+  // The ranking itself, strongest first, as data a crawler can read.
+  var list = { '@context': 'https://schema.org', '@type': 'ItemList', name: plain(tr.ldHeadline),
+    itemListOrder: 'https://schema.org/ItemListOrderDescending', numberOfItems: D.length,
+    itemListElement: D.slice().sort(function (a, b) { return a.rank - b.rank; }).map(function (h) {
+      return { '@type': 'ListItem', position: h.rank, name: h.name };
+    }) };
+  var faq = { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: lang || 'en',
+    mainEntity: tr.faq.map(function (q) { return { '@type': 'Question', name: plain(q[0]), acceptedAnswer: { '@type': 'Answer', text: plain(f(q[1])) } }; }) };
+  seoContentPage(res, method, tr.title, tr.desc, '/starting-hands', body, [art, list, faq], lang, langs);
 }
 
 // ── /competitions — BBC, WeCup, Monthly Cup ──────────────────────────────
@@ -12917,7 +13071,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     for (var _c in SEO_I18N) _tot++;
     var _cov = [['/rules', _rl], ['/faq', _fl], ['/hand-rankings', seoPageLangs(SEO_HANDS_I18N).length],
       ['/how-to-play', seoPageLangs(SEO_HOWTO_I18N).length], ['/glossary', seoPageLangs(SEO_GLOSSARY_I18N).length],
-      ['/play-with-friends', seoPageLangs(SEO_FRIENDS_I18N).length], ['/poker-odds', seoPageLangs(SEO_ODDS_I18N).length], ['/play-against-computer', seoPageLangs(SEO_BOTS_I18N).length], ['/privacy', seoPageLangs(_seoPrivacyTable()).length]];
+      ['/play-with-friends', seoPageLangs(SEO_FRIENDS_I18N).length], ['/poker-odds', seoPageLangs(SEO_ODDS_I18N).length], ['/play-against-computer', seoPageLangs(SEO_BOTS_I18N).length], ['/starting-hands', seoPageLangs(SEO_START_I18N).length], ['/privacy', seoPageLangs(_seoPrivacyTable()).length]];
     _cov.forEach(function (c) {
       // seoPageLangs() always carries 'en', which is the page itself, not a
       // translation — counting it would have claimed 46 of 44.
@@ -14318,6 +14472,7 @@ const httpServer = http.createServer((req, res) => {
       _seoPageUrls(_sBase, '/play-with-friends', seoPageLangs(SEO_FRIENDS_I18N), 'monthly', '0.7') +
       _seoPageUrls(_sBase, '/poker-odds', seoPageLangs(SEO_ODDS_I18N), 'monthly', '0.7') +
       _seoPageUrls(_sBase, '/play-against-computer', seoPageLangs(SEO_BOTS_I18N), 'monthly', '0.7') +
+      _seoPageUrls(_sBase, '/starting-hands', seoPageLangs(SEO_START_I18N), 'monthly', '0.7') +
       _seoPageUrls(_sBase, '/privacy', seoPageLangs(_seoPrivacyTable()), 'yearly', '0.2') +
       '</urlset>\n';
     res.writeHead(200, Object.assign({ 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
@@ -14358,6 +14513,9 @@ const httpServer = http.createServer((req, res) => {
   }
   if (reqPathOnly === '/competitions' || reqPathOnly === '/competitions.html') {
     return seoCompetitionsPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+  }
+  if (reqPathOnly === '/starting-hands' || reqPathOnly === '/starting-hands.html') {
+    return seoStartPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
   }
   if (reqPathOnly === '/play-against-computer' || reqPathOnly === '/play-against-computer.html') {
     return seoBotsPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');

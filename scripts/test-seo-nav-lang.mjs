@@ -48,10 +48,11 @@ const sandbox = `
   // /poker-odds: 'fr' translated, 'de' not.
   var SEO_ODDS_I18N = { fr: 1 };
   var SEO_BOTS_I18N = { fr: 1 };
+  var SEO_START_I18N = { fr: 1 };
   // /privacy: languages whose catalogue holds the whole policy (here fr only).
   function _seoPrivacyTable() { return { fr: {} }; }
   var SEO_NAV_EN = { play: '\u25b6 Play now', rules: 'Rules', hands: 'Hand rankings', howto: 'How to play',
-    gloss: 'Glossary', comp: 'Competitions', friends: 'Play with friends', odds: 'Poker odds', bots: 'Vs computer', faq: 'FAQ', privacy: 'Privacy', src: 'Source', cta: 'Play' };
+    gloss: 'Glossary', comp: 'Competitions', friends: 'Play with friends', odds: 'Poker odds', bots: 'Vs computer', start: 'Starting hands', faq: 'FAQ', privacy: 'Privacy', src: 'Source', cta: 'Play' };
   var SEO_NAV_I18N = { fr: { play: '\u25b6 Jouer', rules: 'R\u00e8gles', faq: 'FAQ' }, xx: { play: 'XX' } };
   ${fn('_seoAttr')}
   ${fn('_seoNavLabel')}
@@ -59,6 +60,7 @@ const sandbox = `
   ${fn('_seoFriendsIn')}
   ${fn('_seoOddsIn')}
   ${fn('_seoBotsIn')}
+  ${fn('_seoStartIn')}
   ${fn('_seoPageNav')}
   ({ href: _seoLangHref, nav: _seoPageNav, T: { r: SEO_RULES_I18N, f: SEO_FAQ_I18N, h: SEO_HANDS_I18N, i: SEO_I18N } })
 `;
@@ -86,6 +88,7 @@ ok(S.nav('').indexOf('href="/poker-odds"') !== -1, 'nav: Poker odds on the Engli
 ok(navFr.indexOf('href="/poker-odds?lang=fr"') !== -1, 'nav: Poker odds carries the language where translated');
 ok(S.nav('de').indexOf('/poker-odds') === -1, 'nav: no Poker odds link where the page is not translated yet');
 ok(navFr.indexOf('href="/play-against-computer?lang=fr"') !== -1 && S.nav('de').indexOf('/play-against-computer') === -1, 'nav: Vs computer only where translated');
+ok(navFr.indexOf('href="/starting-hands?lang=fr"') !== -1 && S.nav('de').indexOf('/starting-hands') === -1, 'nav: Starting hands only where translated');
 ok(navFr.indexOf('href="/glossary"') !== -1, 'nav: an untranslated page is linked bare');
 ok(navFr.indexOf('href="/privacy?lang=fr"') !== -1 && S.nav('de').indexOf('href="/privacy"') !== -1, 'nav: /privacy carries the language only where translated');
 ok(navFr.indexOf('?lang=fr') !== -1 && navFr.indexOf('?lang=en') === -1, 'nav: English is never spelled out');
