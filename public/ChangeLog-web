@@ -1,3 +1,6 @@
+2026-10-20 version 2.1.10-web.200:
+- improvement: the game chat starts empty at every new game, as in the official client: messages from previous games no longer stay above it
+
 2026-10-20 version 2.1.10-web.199:
 - bugfix: playing with a gamepad or a TV remote no longer gets you removed from the game for inactivity after about 20 minutes
 

@@ -111,6 +111,12 @@ function onGameStartInitial(sub) {
       S.seats  = newSeats.slice(); // copy, defensive
       S._seatsFrozen = true;
       S.handNum = 0;
+      // New game → empty game chat (parity QML GameHandler::setGame, which
+      // clears m_chatLog when the game starts). Without it the messages of
+      // the previous games stayed above the new one (forum report
+      // 20/10/2026). Only the first deal: the rejoin path (GameStartRejoin)
+      // never comes here, so a reconnect keeps the conversation.
+      try { if (typeof window.clearChatPanel === 'function') window.clearChatPanel('game'); } catch (_e) {}
       // Nouvelle table → repartir de zéro pour les stats de session
       // (sinon le stack de départ et l'historique de la table précédente
       // persistent et faussent le « gain net »).

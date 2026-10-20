@@ -72,6 +72,11 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Game chat emptied at every new game** (`web.200`, forum report) — `#g-chat-msgs` was never cleared, so the
+  messages of earlier games stayed above the new one. The first deal of a game (`GameStartInitial`, first-deal
+  gate of `onGameStartInitial`) now empties it, like QML `GameHandler::setGame` (`m_chatLog.clear()`). Messages
+  typed in the waiting room go too, as in QML; a rejoin (`GameStartRejoin`) keeps the conversation. The lobby chat
+  and the unread badge (shared with the lobby) are untouched.
 - **Gamepad / TV remote players kicked for inactivity** (`web.199`) — the server's in-game AFK timer (warning at
   20 min, kick 60 s later) is only reset by real input reported as `ResetTimeout`; plays themselves
   (`MyActionRequest`) do not count. The web sender `_afkActivity` listens to pointer / key / wheel / touch events,
