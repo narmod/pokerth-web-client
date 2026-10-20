@@ -1607,7 +1607,7 @@ function _seoEnsureIndexNowKey() {
 }
 function seoIndexNowUrls(base) {
   var urls = [base + '/', base + '/rules', base + '/hand-rankings', base + '/how-to-play',
-    base + '/glossary', base + '/faq', base + '/competitions', base + '/play-with-friends', base + '/poker-odds', base + '/play-against-computer', base + '/starting-hands', base + '/privacy'];
+    base + '/glossary', base + '/faq', base + '/competitions', base + '/play-with-friends', base + '/poker-odds', base + '/play-against-computer', base + '/starting-hands', base + '/accessibility', base + '/privacy'];
   for (var code in SEO_I18N) { if (code !== 'en') urls.push(base + '/?lang=' + code); }
   // Localized content pages exist only in the languages that actually have a
   // translation table. Submitting a variant we do not serve would point the
@@ -1622,6 +1622,7 @@ function seoIndexNowUrls(base) {
   seoPageLangs(SEO_ODDS_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/poker-odds?lang=' + c); });
   seoPageLangs(SEO_BOTS_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/play-against-computer?lang=' + c); });
   seoPageLangs(SEO_START_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/starting-hands?lang=' + c); });
+  seoPageLangs(SEO_A11Y_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/accessibility?lang=' + c); });
   seoPageLangs(_seoPrivacyTable()).forEach(function (c) { if (c !== 'en') urls.push(base + '/privacy?lang=' + c); });
   return urls;
 }
@@ -1814,6 +1815,7 @@ function seoBodyBlock(lang) {
     (_seoOddsIn(lang) ? '<a href="' + _seoLangHref('/poker-odds', SEO_ODDS_I18N, lang) + '">' + _seoNavLabel(lang, 'odds') + '</a> \u2014 ' : '') +
     (_seoBotsIn(lang) ? '<a href="' + _seoLangHref('/play-against-computer', SEO_BOTS_I18N, lang) + '">' + _seoNavLabel(lang, 'bots') + '</a> \u2014 ' : '') +
     (_seoStartIn(lang) ? '<a href="' + _seoLangHref('/starting-hands', SEO_START_I18N, lang) + '">' + _seoNavLabel(lang, 'start') + '</a> \u2014 ' : '') +
+    (_seoA11yIn(lang) ? '<a href="' + _seoLangHref('/accessibility', SEO_A11Y_I18N, lang) + '">' + _seoNavLabel(lang, 'a11y') + '</a> \u2014 ' : '') +
     '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">' + _seoNavLabel(lang, 'faq') + '</a> \u2014 ' +
     '<a href="' + _seoLangHref('/privacy', _seoPrivacyTable(), lang) + '">' + b.pv + '</a></p>' +
     '</div>';
@@ -1939,6 +1941,7 @@ function seoLlmsTxt(base) {
          '- Poker odds (outs, rule of 2 and 4, pot odds, preflop matchups, computed exactly): ' + u + '/poker-odds\n' +
          '- Play poker against the computer (training mode, difficulty levels, offline): ' + u + '/play-against-computer\n' +
          '- Starting hands chart (all 169 hands ranked against 1, 3 and 6 opponents): ' + u + '/starting-hands\n' +
+         '- Accessibility (interface size, high contrast, four-colour decks, keyboard, gamepad, TV remote, voice): ' + u + '/accessibility\n' +
          '- Privacy policy (also in every interface language: ' + u + '/privacy?lang=<code>): ' + u + '/privacy\n' +
          '- pokerth.net accounts, game server and forum privacy policy: https://www.pokerth.net/ucp.php?mode=privacy\n' : '\n## Links\n\n') +
     '- Source code: https://github.com/narmod/pokerth-web-client\n' +
@@ -2017,7 +2020,7 @@ function _seoLangHref(relPath, table, lang) {
 // "Play now · Rules · Glossary" in English was a page in two languages. The
 // translations live in seo-i18n/nav.js; English is the fallback per label.
 var SEO_NAV_EN = { play: '\u25b6 Play now', rules: 'Rules', hands: 'Hand rankings', howto: 'How to play',
-  gloss: 'Glossary', comp: 'Competitions', friends: 'Play with friends', odds: 'Poker odds', bots: 'Vs computer', start: 'Starting hands', faq: 'FAQ', privacy: 'Privacy', src: 'Source',
+  gloss: 'Glossary', comp: 'Competitions', friends: 'Play with friends', odds: 'Poker odds', bots: 'Vs computer', start: 'Starting hands', a11y: 'Accessibility', faq: 'FAQ', privacy: 'Privacy', src: 'Source',
   cta: 'Play PokerTH in your browser \u2014 free, no download' };
 var SEO_NAV_I18N = {};
 function _seoNavLabel(lang, k) {
@@ -2035,6 +2038,8 @@ function _seoOddsIn(lang) { return !lang || !!(SEO_ODDS_I18N && SEO_ODDS_I18N[la
 function _seoBotsIn(lang) { return !lang || !!(SEO_BOTS_I18N && SEO_BOTS_I18N[lang]); }
 // Same rule for /starting-hands.
 function _seoStartIn(lang) { return !lang || !!(SEO_START_I18N && SEO_START_I18N[lang]); }
+// Same rule for /accessibility.
+function _seoA11yIn(lang) { return !lang || !!(SEO_A11Y_I18N && SEO_A11Y_I18N[lang]); }
 
 function _seoPageNav(lang) {
   lang = lang || '';
@@ -2048,6 +2053,7 @@ function _seoPageNav(lang) {
     '<a href="' + _seoLangHref('/competitions', SEO_COMP_I18N, lang) + '">' + _seoNavLabel(lang, 'comp') + '</a>' +
     (_seoFriendsIn(lang) ? '<a href="' + _seoLangHref('/play-with-friends', SEO_FRIENDS_I18N, lang) + '">' + _seoNavLabel(lang, 'friends') + '</a>' : '') +
     (_seoBotsIn(lang) ? '<a href="' + _seoLangHref('/play-against-computer', SEO_BOTS_I18N, lang) + '">' + _seoNavLabel(lang, 'bots') + '</a>' : '') +
+    (_seoA11yIn(lang) ? '<a href="' + _seoLangHref('/accessibility', SEO_A11Y_I18N, lang) + '">' + _seoNavLabel(lang, 'a11y') + '</a>' : '') +
     '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">' + _seoNavLabel(lang, 'faq') + '</a>' +
     '<a href="' + _seoLangHref('/privacy', _seoPrivacyTable(), lang) + '">' + _seoNavLabel(lang, 'privacy') + '</a>' +
     '<a href="https://github.com/narmod/pokerth-web-client" rel="noopener">' + _seoNavLabel(lang, 'src') + '</a></nav>';
@@ -6999,6 +7005,7 @@ var SEO_FRIENDS_I18N = {};
 var SEO_ODDS_I18N = {};
 var SEO_BOTS_I18N = {};
 var SEO_START_I18N = {};
+var SEO_A11Y_I18N = {};
 
 // Suit symbols. Red suits get a class rather than a hard-coded colour so the
 // page CSS stays the single place that decides what red means.
@@ -7303,6 +7310,7 @@ function _seoPageHref(page, lang) {
   if (page === 'odds') return _seoLangHref('/poker-odds', SEO_ODDS_I18N, lang);
   if (page === 'bots') return _seoLangHref('/play-against-computer', SEO_BOTS_I18N, lang);
   if (page === 'start') return _seoLangHref('/starting-hands', SEO_START_I18N, lang);
+  if (page === 'a11y') return _seoLangHref('/accessibility', SEO_A11Y_I18N, lang);
   return '/';
 }
 
@@ -7313,6 +7321,7 @@ SEO_FRIENDS_I18N = require('./seo-i18n/friends.js');
 SEO_ODDS_I18N = require('./seo-i18n/odds.js');
 SEO_BOTS_I18N = require('./seo-i18n/bots.js');
 SEO_START_I18N = require('./seo-i18n/starting.js');
+SEO_A11Y_I18N = require('./seo-i18n/a11y.js');
 SEO_HANDS_I18N = require('./seo-i18n/hands.js').build(_SEO_HANDS, _sd);
 // Hand names per language, for the /poker-odds calculator.
 var _SEO_HANDS_PARTS = require('./seo-i18n/hands.js').PARTS;
@@ -7835,6 +7844,84 @@ function seoStartPage(res, method, lang) {
   var faq = { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: lang || 'en',
     mainEntity: tr.faq.map(function (q) { return { '@type': 'Question', name: plain(q[0]), acceptedAnswer: { '@type': 'Answer', text: plain(f(q[1])) } }; }) };
   seoContentPage(res, method, tr.title, tr.desc, '/starting-hands', body, [art, list, faq], lang, langs);
+}
+
+// ── /accessibility — playing poker with low vision, keyboard, gamepad ────
+// The page answers "accessible poker", "poker large text / high contrast",
+// "poker with keyboard / gamepad", "poker for visually impaired". Only what
+// the client does: modules/ui/accessibility.mjs (Interface size, High
+// contrast), the four-colour decks (cards/*-4c), the table magnifier, keyboard shortcuts,
+// gamepad and TV remote (ui/ctl-*.mjs, ui/remote.mjs), voice announcements
+// and vibration (ui/media.mjs), reduced motion, anti-peek and the
+// accidental-call guard. It says plainly what is not supported yet (play
+// with a screen reader alone). Translations: seo-i18n/a11y.js.
+var _SEO_A11Y = {
+  "title": "Accessible Poker — Large Text, Keyboard, Gamepad | PokerTH",
+  "desc": "Free Texas Hold’em with bigger text, high contrast, four-colour decks, a table magnifier, voice announcements and full keyboard, gamepad and TV-remote play.",
+  "ldHeadline": "Accessible online poker: large text, high contrast, keyboard and gamepad",
+  "ldDesc": "The accessibility features of the PokerTH web client: interface size, high contrast, four-colour decks, magnifier, voice announcements, keyboard, gamepad and TV remote.",
+  "h1": "Accessible poker: play your way",
+  "lead": "PokerTH is free Texas Hold’em in the browser, and it adapts to the way you see and play: bigger text and buttons, stronger contrast, decks that tell the suits apart by colour, a magnifier for small screens, voice announcements, and complete control from a keyboard, a gamepad or a TV remote.",
+  "findH2": "Where to find it",
+  "findP": "The Accessibility button — the person icon at the top of every screen, from the login screen to the table — opens the main settings at any time, even in the middle of a hand. Everything else is in Advanced options. Your choices are remembered on the device and, when you log in with a pokerth.net account, follow you to your other devices.",
+  "seeH2": "Seeing the table",
+  "see": [
+    ["Interface size", "Standard, Large or Extra Large: text, cards, chips and buttons grow together, on the login screen, in the lobby and at the table, and the layout reflows to stay usable on a phone."],
+    ["High contrast", "A stronger-contrast palette across the whole interface, from the menus to the table, at every interface size."],
+    ["Four-colour decks", "Card decks that give each suit its own colour, so hearts and diamonds, or spades and clubs, are never told apart by shape alone. Pick one in Advanced options \u2192 Style."],
+    ["Table magnifier", "On a phone, the table zooms to twice its size and pans with a finger; the view comes back to your seat when it is your turn. Browser pinch-zoom can also be allowed."],
+    ["Light, dark or automatic", "The whole client follows your choice or your system’s, with themes, decks and table colours to suit your eyes."]
+  ],
+  "keysH2": "Keyboard",
+  "keysP": "Every action has a key. The official PokerTH function keys work at the table — F1 to F4 for Fold, Check/Call, Bet/Raise and All-In, F5 to show your cards, F6 to F8 for the playing modes — and the web client adds single letters (F, C, R, A, and 1, 2, 3 for a third of the pot, half the pot or the pot), all of which can be re-bound. Escape closes the window on top, Tab and the arrow keys move through the lobby’s table list, and Alt+S opens the settings from anywhere.",
+  "padH2": "Gamepad and TV remote",
+  "padP": "A game controller — Xbox, PlayStation, Switch Pro and most Bluetooth pads — plays the whole game: buttons for every action, triggers to set the bet, and a navigation mode to move through the screens, the chat and the menus. It vibrates when your turn comes. On Android TV and Google TV the remote works the same way, and remotes with the four colour keys use them for Fold, Check/Call, Bet/Raise and All-In.",
+  "hearH2": "Hearing and feeling the game",
+  "hearP": "Voice announcements read the game events aloud with your device’s own voices, in your language where the system has one. On Android phones a short vibration marks your turn. Game sounds come in four groups — actions, chat, network notices and blind raises — that can be turned on or off separately, with one volume slider.",
+  "calmH2": "Fewer surprises",
+  "calmP": "When your system asks for reduced motion, the client tones down its animations. Anti-peek keeps your own cards hidden until you tap them, and the accidental-call guard briefly blocks the Call button right after a big raise, so a tap meant for a smaller call cannot pay the raised amount by mistake.",
+  "langH2": "In your language, with a guide",
+  "langP": "The interface is available in {langs} languages, right to left where needed. Ace’s Help, the web client’s mascot, explains each screen as you go if you want him to, and « What’s this? » tells you what anything on the screen does.",
+  "faqH2": "Questions",
+  "faq": [
+    ["Can I make the cards and text bigger?",
+     "Yes. Choose Large or Extra Large in the Accessibility window; cards, text and buttons grow together on every screen, including the table."],
+    ["Is there a high-contrast mode?",
+     "Yes, in the Accessibility window. It works with every interface size."],
+    ["Can I play without a mouse or a touch screen?",
+     "Yes, entirely with the keyboard, with a gamepad, or with an Android TV remote."],
+    ["Does it work with a screen reader?",
+     "Not fully yet. Voice announcements read the game events aloud and the menus carry labels, but the poker table itself is a visual interface and cannot yet be played with a screen reader alone."],
+    ["Is it free?",
+     "Yes. PokerTH is free and open-source software, with no ads and no in-app purchases; all chips are play money."]
+  ]
+};
+
+function seoA11yPage(res, method, lang) {
+  var langs = seoPageLangs(SEO_A11Y_I18N);
+  if (langs.indexOf(lang) === -1) lang = '';
+  var tr = (lang && SEO_A11Y_I18N[lang]) || _SEO_A11Y;
+  var base = seoEnabled() ? seoPublicUrl() : '';
+  var v = { langs: _seoNum(lang, supportedLangCount() || 83) }, f = function (s) { return _seoFill(s, v); };
+  var sec = function (h, p) { return '<h2>' + h + '</h2><p>' + f(p) + '</p>'; };
+  var body = '<h1>' + tr.h1 + '</h1><p>' + tr.lead + '</p>' +
+    sec(tr.findH2, tr.findP) +
+    '<h2>' + tr.seeH2 + '</h2><ul>' + tr.see.map(function (r) { return '<li><strong>' + r[0] + '</strong> — ' + r[1] + '</li>'; }).join('') + '</ul>' +
+    sec(tr.keysH2, tr.keysP) + sec(tr.padH2, tr.padP) + sec(tr.hearH2, tr.hearP) + sec(tr.calmH2, tr.calmP) + sec(tr.langH2, tr.langP) +
+    '<h2>' + tr.faqH2 + '</h2>' + tr.faq.map(function (q) { return '<h3>' + q[0] + '</h3><p>' + f(q[1]) + '</p>'; }).join('');
+  var plain = function (h) { return String(h).replace(/<[^>]*>/g, ''); };
+  var url = base ? base + '/accessibility' + (lang ? '?lang=' + lang : '') : '';
+  var art = { '@context': 'https://schema.org', '@type': 'Article', headline: tr.ldHeadline, description: tr.ldDesc,
+    author: { '@type': 'Organization', name: 'PokerTH Development Team' },
+    publisher: { '@type': 'Organization', name: 'PokerTH Development Team', url: 'https://www.pokerth.net/' }, inLanguage: lang || 'en',
+    // schema.org accessibility vocabulary — only what the client really offers.
+    about: { '@type': 'WebApplication', name: 'PokerTH Web Client',
+      accessibilityFeature: ['largePrint', 'highContrastDisplay', 'displayTransformability', 'synthesizedSpeech'],
+      accessibilityControl: ['fullKeyboardControl', 'fullMouseControl', 'fullTouchControl'] } };
+  if (url) art.mainEntityOfPage = url;
+  var faq = { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: lang || 'en',
+    mainEntity: tr.faq.map(function (q) { return { '@type': 'Question', name: plain(q[0]), acceptedAnswer: { '@type': 'Answer', text: plain(f(q[1])) } }; }) };
+  seoContentPage(res, method, tr.title, tr.desc, '/accessibility', body, [art, faq], lang, langs);
 }
 
 // ── /competitions — BBC, WeCup, Monthly Cup ──────────────────────────────
@@ -13071,7 +13158,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     for (var _c in SEO_I18N) _tot++;
     var _cov = [['/rules', _rl], ['/faq', _fl], ['/hand-rankings', seoPageLangs(SEO_HANDS_I18N).length],
       ['/how-to-play', seoPageLangs(SEO_HOWTO_I18N).length], ['/glossary', seoPageLangs(SEO_GLOSSARY_I18N).length],
-      ['/play-with-friends', seoPageLangs(SEO_FRIENDS_I18N).length], ['/poker-odds', seoPageLangs(SEO_ODDS_I18N).length], ['/play-against-computer', seoPageLangs(SEO_BOTS_I18N).length], ['/starting-hands', seoPageLangs(SEO_START_I18N).length], ['/privacy', seoPageLangs(_seoPrivacyTable()).length]];
+      ['/play-with-friends', seoPageLangs(SEO_FRIENDS_I18N).length], ['/poker-odds', seoPageLangs(SEO_ODDS_I18N).length], ['/play-against-computer', seoPageLangs(SEO_BOTS_I18N).length], ['/starting-hands', seoPageLangs(SEO_START_I18N).length], ['/accessibility', seoPageLangs(SEO_A11Y_I18N).length], ['/privacy', seoPageLangs(_seoPrivacyTable()).length]];
     _cov.forEach(function (c) {
       // seoPageLangs() always carries 'en', which is the page itself, not a
       // translation — counting it would have claimed 46 of 44.
@@ -14473,6 +14560,7 @@ const httpServer = http.createServer((req, res) => {
       _seoPageUrls(_sBase, '/poker-odds', seoPageLangs(SEO_ODDS_I18N), 'monthly', '0.7') +
       _seoPageUrls(_sBase, '/play-against-computer', seoPageLangs(SEO_BOTS_I18N), 'monthly', '0.7') +
       _seoPageUrls(_sBase, '/starting-hands', seoPageLangs(SEO_START_I18N), 'monthly', '0.7') +
+      _seoPageUrls(_sBase, '/accessibility', seoPageLangs(SEO_A11Y_I18N), 'monthly', '0.5') +
       _seoPageUrls(_sBase, '/privacy', seoPageLangs(_seoPrivacyTable()), 'yearly', '0.2') +
       '</urlset>\n';
     res.writeHead(200, Object.assign({ 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
@@ -14513,6 +14601,9 @@ const httpServer = http.createServer((req, res) => {
   }
   if (reqPathOnly === '/competitions' || reqPathOnly === '/competitions.html') {
     return seoCompetitionsPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+  }
+  if (reqPathOnly === '/accessibility' || reqPathOnly === '/accessibility.html') {
+    return seoA11yPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
   }
   if (reqPathOnly === '/starting-hands' || reqPathOnly === '/starting-hands.html') {
     return seoStartPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');

@@ -32,6 +32,14 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Added
+- **`/accessibility`** (`web.228`, SEO, English first) — « accessible poker »: where the Accessibility button is,
+  interface size and high contrast (synced with the account), four-colour decks, the table magnifier and pinch
+  zoom, light/dark, keyboard (official F-keys and re-bindable letters), gamepad and Android TV remote, voice
+  announcements and vibration, reduced motion, anti-peek and the accidental-call guard, 83 languages and Ace's
+  Help, five questions — including a plain « not fully yet » for screen-reader play. `Article` (with schema.org
+  `accessibilityFeature` / `accessibilityControl`) + `FAQPage` JSON-LD. Wired like the other pages (nav
+  « Accessibility » gated on the language). Guard: `scripts/test-seo-a11y.mjs`, which checks every feature the
+  page names against the client's code. `seo-i18n/a11y.js` is empty until the translations.
 - **`/starting-hands`** (`web.226`, `web.227`, SEO) — the 169 starting hands in a 13 × 13 chart coloured by
   strength, the top twenty against 1, 3 and 6 opponents, how the ranking shifts in multiway pots, suited vs
   offsuit, the worst hand, how often each kind is dealt, how to use a chart, five questions; `Article` +
