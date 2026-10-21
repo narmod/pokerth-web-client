@@ -225,7 +225,7 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
-- **iPhone app: no band under the screen after a reload or a navigation** (`web.248`, to be confirmed on a device) —
+- **iPhone app: no band under the screen after a reload or a navigation** (`web.248`, confirmed on an iPhone 2026-10-21; the band the August and September attempts never fully removed) —
   started from the home screen the login screen fills the iPhone, but loaded by a navigation (« Play now » on a guide
   page) or by the « new version » reload a black band showed under it: iOS can report a viewport short by the
   home-indicator inset and keep it. On an iPhone home-screen app the window is the screen, so the `--app-h` script
