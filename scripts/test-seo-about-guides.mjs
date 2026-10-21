@@ -70,6 +70,12 @@ await run({ seo: { enabled: true, publicUrl: 'https://example.org' } }, async (g
 await run({}, async (get) => {
   const off = list((await get('/')).b);
   ok(off && off.links.length === PAGES.length, 'SEO off (self-hosted): the list is there too');
+  // …and the pages it links to answer in the player's language (they were
+  // English whenever indexing was off), still noindex.
+  const j = JSON.parse((await get('/seo-guides.json?lang=fr')).b);
+  const badLang = [];
+  for (const [href] of j.links) { const h = (await get(href)).b; if (!/<html lang="fr"/.test(h) || !/<meta name="robots" content="noindex, nofollow">/.test(h)) badLang.push(href); }
+  ok(!badLang.length, 'SEO off: every guide served in French for ?lang=fr, noindex' + (badLang.length ? ' — ' + badLang.join(' ') : ''));
 });
 console.log(`\n${n - fail}/${n} passed`);
 process.exit(fail ? 1 : 0);

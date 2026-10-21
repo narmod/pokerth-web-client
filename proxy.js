@@ -15001,41 +15001,46 @@ const httpServer = http.createServer((req, res) => {
       return;
     }
   }
+  // The guide pages answer in the requested language on every install, like
+  // /privacy below (web.246): with indexing off they were always English, so a
+  // player of a self-hosted or test server who opened a guide from About ›
+  // Poker guides got English whatever their interface language. Only the
+  // robots tags follow the SEO toggle (noindex, no canonical or hreflang).
   if (reqPathOnly === '/rules' || reqPathOnly === '/rules.html') {
-    return seoRulesPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+    return seoRulesPage(res, req.method, seoLangFromQuery(req.url));
   }
   if (reqPathOnly === '/faq' || reqPathOnly === '/faq.html') {
-    return seoFaqPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+    return seoFaqPage(res, req.method, seoLangFromQuery(req.url));
   }
   if (reqPathOnly === '/hand-rankings' || reqPathOnly === '/hand-rankings.html') {
-    return seoHandsPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+    return seoHandsPage(res, req.method, seoLangFromQuery(req.url));
   }
   if (reqPathOnly === '/how-to-play' || reqPathOnly === '/how-to-play.html') {
-    return seoHowToPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+    return seoHowToPage(res, req.method, seoLangFromQuery(req.url));
   }
   if (reqPathOnly === '/glossary' || reqPathOnly === '/glossary.html') {
-    return seoGlossaryPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+    return seoGlossaryPage(res, req.method, seoLangFromQuery(req.url));
   }
   if (reqPathOnly === '/competitions' || reqPathOnly === '/competitions.html') {
-    return seoCompetitionsPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+    return seoCompetitionsPage(res, req.method, seoLangFromQuery(req.url));
   }
   if (reqPathOnly === '/host-a-server' || reqPathOnly === '/host-a-server.html') {
-    return seoHostPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+    return seoHostPage(res, req.method, seoLangFromQuery(req.url));
   }
   if (reqPathOnly === '/accessibility' || reqPathOnly === '/accessibility.html') {
-    return seoA11yPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+    return seoA11yPage(res, req.method, seoLangFromQuery(req.url));
   }
   if (reqPathOnly === '/starting-hands' || reqPathOnly === '/starting-hands.html') {
-    return seoStartPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+    return seoStartPage(res, req.method, seoLangFromQuery(req.url));
   }
   if (reqPathOnly === '/play-against-computer' || reqPathOnly === '/play-against-computer.html') {
-    return seoBotsPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+    return seoBotsPage(res, req.method, seoLangFromQuery(req.url));
   }
   if (reqPathOnly === '/poker-odds' || reqPathOnly === '/poker-odds.html') {
-    return seoOddsPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+    return seoOddsPage(res, req.method, seoLangFromQuery(req.url));
   }
   if (reqPathOnly === '/play-with-friends' || reqPathOnly === '/play-with-friends.html') {
-    return seoFriendsPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+    return seoFriendsPage(res, req.method, seoLangFromQuery(req.url));
   }
 
   // The privacy policy is the same page on every install, indexing on or off:

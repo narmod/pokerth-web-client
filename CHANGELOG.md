@@ -225,6 +225,11 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Guide pages in the player's language with indexing off** (`web.246`) — on an install with SEO disabled (a
+  self-hosted or test server), /rules, /faq and the other guide pages ignored `?lang=` and always answered in
+  English, so a guide opened from About › Poker guides was English whatever the interface language. They now
+  answer in the requested language on every install, like /privacy; only the robots tags follow the SEO toggle
+  (noindex, no canonical or hreflang). Checked in `scripts/test-seo-about-guides.mjs`.
 - **Content pages no longer widen a small phone** (`web.244`, SEO re-audit of 2026-10-21) — at 360 px, /privacy and
   /poker-odds in German were 409 and 394 px wide: one long compound in the large title (« Datenschutzerklärung »)
   could not break. Titles now hyphenate (`hyphens:auto`, `overflow-wrap:break-word`), so does the text; a sweep of
