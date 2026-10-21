@@ -225,6 +225,9 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Statistics: Internet and LAN cards move to Activity** (`web.252`) — the « Internet · pokerth.net » and « LAN
+  servers » cards leave World for Activity, just above « pokerth.net vs web client »; the Internet card drops its
+  48 h chart, which repeated that card's own. World keeps the map, connections per day and the countries.
 - **Audit log and deployment history kept in `/data`** (`web.251`) — `admin-audit.json` and `deploy-history.json`
   defaulted to the app dir, the only persisted state outside the `/data` volume: an image-baked container lost the
   audit log and the roll-back list on every recreation. They now sit beside `admin-config.json` (the Dockerfile also

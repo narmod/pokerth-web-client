@@ -461,7 +461,7 @@ for (const h of ['Trends', 'Retention', 'Recent activity', 'Connections', 'Who v
   ok(!traf.includes('<h2>' + h + '</h2>'), 'no card groups subjects under « ' + h + ' » any more');
 }
 ok((traf.match(/class="cardrow"/g) || []).length === 1 && /<div class="cardrow">\s*<div class="card wcard" style="--mc:var\(--m-net\)">/.test(traf),
-  'one paired row only: Internet and LAN side by side on the World page');
+  'one paired row only: Internet and LAN side by side');
 ok(!/class="tsec"/.test(admin) && !/\.tsec\b/.test(admin), 'no section-inside-a-card is left, nor its style');
 ok((admin.match(/<p class="muted fsnote" data-fs="[a-z_ ]+" data-master="1"><\/p>/g) || []).length === 3 && /var FS_HOME=\{lobby_clock:\['lobby'/.test(admin), 'the lobby clock, Events tab and polls cards point at their Features switch, and back (web.188)');
 // web.195: the live map is a page of its own, Live › Map, with the same mode tiles as Sessions.
@@ -582,8 +582,13 @@ ok(/var prev=opt\.prevBy \? labels\.map/.test(body(admin, '_stackChart')) && /st
   'the period before is a dashed line summing the series on show');
 ok(/tot\.forEach\(function\(t\)\{ if\(t>max\) max=t; \}\); if\(prev\) prev\.forEach/.test(body(admin, '_stackChart')), 'and the scale makes room for it');
 // World page cards (web.120).
-for (const id of ['wInet', 'wInetNote', 'wLan', 'wLanNote', 'wConn', 'wConnNote']) ok(traf.includes('id="' + id + '"'), id + ' has its place on the World page');
-ok(traf.indexOf('id="wInet"') > traf.indexOf('id="geoMap"') && traf.indexOf('id="wConn"') < traf.indexOf('<h2>Countries</h2>'), 'under the map, above the countries');
+// web.252: the Internet and LAN cards moved to Activity, beside « pokerth.net vs web client »,
+// whose 48 h chart the Internet card used to repeat.
+for (const id of ['wInet', 'wInetNote', 'wLan', 'wLanNote']) ok(tsub('activity').includes('id="' + id + '"') && !tsub('world').includes('id="' + id + '"'), id + ' has its place on the Activity page');
+ok(tsub('activity').indexOf('id="wInet"') < tsub('activity').indexOf('id="trafPth"'), 'just above pokerth.net vs web client');
+ok(!/wInet48/.test(admin), 'the Internet card no longer repeats the 48 h chart');
+for (const id of ['wConn', 'wConnNote']) ok(tsub('world').includes('id="' + id + '"'), id + ' stays on the World page');
+ok(tsub('world').indexOf('id="wConn"') > tsub('world').indexOf('id="geoMap"') && tsub('world').indexOf('id="wConn"') < tsub('world').indexOf('<h2>Countries</h2>'), 'under the map, above the countries');
 ok(/function _worldCards\(d\)/.test(admin) && /_trafLastD=d; _trafModeRows\(d\); _worldCards\(d\);/.test(admin), 'filled with each read of the figures');
 ok(/_worldConn\(_trafLastD\);/.test(body(admin, '_pickMode')), 'connections per day follow the entry modes');
 ok(/var keys=on\.map\(function\(m\)\{ return m\.k; \}\)/.test(body(admin, '_worldConn')), 'counting the modes on show only');

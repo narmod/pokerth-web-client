@@ -1410,6 +1410,16 @@
           <p class="muted xpl">Sessions opened per hour over the last 48 hours (server local time), stacked by entry mode — the same count as “Where sessions open” below, spread hour by hour. Tap a legend entry to hide a mode and rescale the others; tap a bar to read it. The last bar is the hour in progress. Hourly counting by mode started with 2.1.10-web.7: hours before that are empty, not quiet.</p>
           <div id="trafModes48"><div class="empty">Loading…</div></div>
         </div>
+      <div class="cardrow">
+        <div class="card wcard" style="--mc:var(--m-net)">
+          <div class="boardhead"><h2>Internet · pokerth.net</h2><span id="wInetNote" class="headnote"></span></div>
+          <div id="wInet"><div class="empty">Loading…</div></div>
+        </div>
+        <div class="card wcard" style="--mc:var(--m-lan)">
+          <div class="boardhead"><h2>LAN servers</h2><span id="wLanNote" class="headnote"></span><button type="button" class="use wopen" data-open="landir">LAN directory</button></div>
+          <div id="wLan"><div class="empty">Loading…</div></div>
+        </div>
+      </div>
       <div class="card">
           <div class="boardhead"><h2>pokerth.net vs web client</h2><span id="trafPthNote" class="headnote"></span></div>
           <p class="muted xpl">Every 5 minutes the proxy reads the official counters of pokerth.net (the same figures as the Internet card of the login screen: online, tables, waiting, today) and counts, at that same instant, the web client players signed in to pokerth.net — through this proxy or connected straight to it. <b>Share</b> = web client players ÷ players online on pokerth.net, from hourly means (48 h) or daily means (period). /live spectators are shown apart, not in the share. Recording started with 2.1.10-web.9 and needs the live figures switched on (Settings): hours before that are empty, not quiet.</p>
@@ -1477,16 +1487,6 @@
         <div id="geoMap" class="geomap"><div class="empty">Loading…</div></div>
         <div id="geoLegend" class="geolegend"></div>
         <div id="geoDetail" class="geodet" aria-live="polite"></div>
-      </div>
-      <div class="cardrow">
-        <div class="card wcard" style="--mc:var(--m-net)">
-          <div class="boardhead"><h2>Internet · pokerth.net</h2><span id="wInetNote" class="headnote"></span></div>
-          <div id="wInet"><div class="empty">Loading…</div></div>
-        </div>
-        <div class="card wcard" style="--mc:var(--m-lan)">
-          <div class="boardhead"><h2>LAN servers</h2><span id="wLanNote" class="headnote"></span><button type="button" class="use wopen" data-open="landir">LAN directory</button></div>
-          <div id="wLan"><div class="empty">Loading…</div></div>
-        </div>
       </div>
       <div class="card">
         <div class="boardhead"><h2>Connections per day, by entry mode</h2><span id="wConnNote" class="headnote"></span></div>
@@ -5518,7 +5518,7 @@
       if(!_narrowOn()){ nt.textContent='Sessions and logins by country, device, installed app, new or known device, LAN server and account.'; return; }
       var since=_cubeVals&&_cubeVals.c&&_cubeVals.c.since, from=_trafLastD&&_trafLastD.series&&_trafLastD.series[0]&&_trafLastD.series[0].date;
       var late=since && from && new Date(since).toISOString().slice(0,10)>String(from).slice(0,10);
-      nt.textContent='Narrowed: the map’s Connections layer and countries, the Internet and LAN cards and connections per day (World page). Visits and the other pages show everything.'
+      nt.textContent='Narrowed: the map’s Connections layer and countries, connections per day (World page), the Internet and LAN cards (Activity page). Visits and the other pages show everything.'
         +(_narrow.acc?' Account narrows the logins only.':'')
         +' Counts under 3 read “<3”.'+(late?' Counted since '+_stDate(since)+': the days before have nothing to narrow.':'')
         +(since?'':' Nothing counted yet: these counts start with 2.1.10-web.124.');
@@ -5678,7 +5678,7 @@
     _fsPaint();
   })();
 
-  // ── World page: Internet, LAN, connections per day ──────────────────────
+  // ── Internet and LAN cards (Activity page since web.252), connections per day (World) ──
   function _wFmt(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
   // Sum of one mode (or of the modes on show) over a list of {m:{}} points.
   function _wSum(list,keys){ var t=0; (list||[]).forEach(function(x){ var m=(x&&x.m)||x||{}; keys.forEach(function(k){ t+=m[k]||0; }); }); return t; }
@@ -5721,15 +5721,8 @@
       +'<div><span>Online on the server</span><b>'+_wFmt(nw.online)+'</b><i>'+_wFmt(nw.today||0)+' today</i></div>'
       +'<div><span>On the web client</span><b>'+_wFmt(nw.wb)+'</b><i>'+_pthPct(nw.wb,nw.online)+' % of online</i></div>'
       +k3+'</div>'
-      +'<h3>Players online, last 48 h — whole server and web client</h3><div id="wInet48"></div>'
-      +'<div class="wfoot">'+_wLogins(d)+(best?'<span>Busiest hour <b>'+_annEsc(best.t.slice(11))+':00</b> ('+_wFmt(Math.round(best.on))+')</span>':'')
+      +'<div class="wfoot">'+_wLogins(d)+(best?'<span>Busiest hour, 48 h <b>'+_annEsc(best.t.slice(11))+':00</b> ('+_wFmt(Math.round(best.on))+')</span>':'')
       +(nw.lv?'<span>/live <b>'+_wFmt(nw.lv)+'</b></span>':'')+'</div>';
-    if(h48.some(function(x){ return x.n; })){
-      _chartMount($('wInet48'),h48.map(function(x){ return x.t.slice(8,10)+'.'+x.t.slice(5,7)+' '+x.t.slice(11)+'h'; }),[
-        {k:'on',n:'Online on the server',c:'var(--muted)',vals:h48.map(function(x){ return x.on; })},
-        {k:'wb',n:'Web client',c:'var(--m-net)',vals:h48.map(function(x){ return x.wb; })}
-      ],110,'line');
-    } else { var b4=$('wInet48'); if(b4) b4.innerHTML='<div class="empty">Nothing sampled over the last 48 h.</div>'; }
   }
   var _wLd=null;
   function _worldLan(d){
