@@ -158,6 +158,17 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **« Via proxy » is obeyed even when `/app-config` is slow** (`web.230`, Live › Sessions, 21/10/2026) — the admin's
+  Internet transport only reaches the browser with `/app-config`, and the gate of `App.connect()` waited for it at
+  most 5 s: past that, or on any failed fetch (network error, 5xx, the service worker's 503 « Offline »), the dial
+  went ahead with the transport unknown, read as « Direct », and the host still on its built-in `pokerth.net`. A
+  player on a slow network (seen from China) thus played straight on `wss://www.pokerth.net/pthlive` on an instance
+  set to « Via proxy », listed in the admin as a « Direct client » notice channel. The gate is no longer bounded:
+  the dial waits for the answer, and the loader asks again after 1, 2, 4, 8 s then every 10 s (10 s timeout per
+  request), showing « Connection is taking a while… » after three misses. Only a 404 — a site serving the
+  client without any admin config — releases the dial on the built-in defaults. Waiting no longer locks the form:
+  another click, the training button or Disconnect replaces or drops the held dial. `scripts/test-transport-gate.mjs`
+  now covers a down-then-back `/app-config`, a 503, a 9 s answer, a 404 and training picked while a dial is held.
 - **Content-page nav overhung a phone screen by a pixel** (`web.222`) — inline links with a right margin let a
   two-word label (« Comment jouer ») break at the line end, so /rules, /faq… scrolled sideways at 375 px in some
   languages. The nav is now a wrapping flex row of unbreakable labels (`dir=rtl` handled by flex); checked on 70

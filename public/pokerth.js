@@ -4232,18 +4232,58 @@ document.addEventListener("DOMContentLoaded", function() {
       try { applyAdvOpts(); } catch (e) {}
       try { _applyChatTranslateFlag(); } catch (e) {}
     }
+    // /app-config carries the admin's choices, the Internet transport among
+    // them (« Via proxy » / « Direct »), and nothing else may decide it: the
+    // gate in App.connect holds every dial until this loader has settled.
+    //  - 200 with a JSON object: applied, then the gate is released;
+    //  - 404: this site has no admin config at all (the client served as
+    //    static files): the built-in defaults ARE the configuration, release;
+    //  - anything else (network error, 5xx, the service worker's 503
+    //    « Offline », no answer within 10 s, a body that is not JSON) says
+    //    nothing about the admin's choice: keep the gate shut and ask again,
+    //    after 1, 2, 4, 8 s, then every 10 s.
+    // Until web.229 every failure released the gate after at most 5 s with
+    // the transport unknown, read as « Direct »: players of a « Via proxy »
+    // instance on a slow network went straight to pokerth.net (seen in the
+    // admin as « Direct client » notice channels, 21/10/2026).
+    var _cfgTries = 0;
+    function _applyAppConfig(c) {
+      window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; window._pthLiveTransport = (c.liveTransport === 'proxy' || c.liveTransport === 'direct') ? c.liveTransport : 'inherit'; window._pthLiveDefaults = c.liveDefaults || null;
+      try { if (c && c.modes) applyModes(c.modes); if (c) _applyMusicFlag(c.musicEnabled !== false); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); window._guestNoticeCfg = (c && c.guestNotice) || null; window._authNoticeCfg = (c && c.authNotice) || null; window._lanNoticeCfg = (c && c.lanNotice) || null; if (typeof window._pollSetConfig === 'function') window._pollSetConfig(c && c.poll); if (c) { var _lvT = (window.LIVE_MODE && c.liveDefaults && c.liveDefaults.theme) ? c.liveDefaults.theme : null; if (_lvT) _applyDefaultTheme(_lvT); else { if (typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c.lookDefaults) _applyLookDefaults(c.lookDefaults); } } if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); if (c && Array.isArray(c.featureOff)) _applyFeatureOff(c.featureOff); window._lanDirCfg = (c && c.lanDirectory) || null; try { if (window.LanDirUI) window.LanDirUI.setConfig(window._lanDirCfg); } catch (e) {} _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} } catch (e) { try { console.error('[app-config] apply failed:', e); } catch (_e) {} }
+    }
+    function _releaseCfgGate() {
+      window._appConfigSettled = true;
+      var q = window._appConfigWaiters || []; window._appConfigWaiters = [];
+      q.forEach(function (f) { try { f(); } catch (e) {} });
+    }
     function go() {
-      fetch('/app-config', { cache: 'no-store' })
-        .then(function (r) { return r.json(); })
-        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; window._pthLiveTransport = (c.liveTransport === 'proxy' || c.liveTransport === 'direct') ? c.liveTransport : 'inherit'; window._pthLiveDefaults = c.liveDefaults || null; } if (c && c.modes) applyModes(c.modes); if (c) _applyMusicFlag(c.musicEnabled !== false); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); window._guestNoticeCfg = (c && c.guestNotice) || null; window._authNoticeCfg = (c && c.authNotice) || null; window._lanNoticeCfg = (c && c.lanNotice) || null; if (typeof window._pollSetConfig === 'function') window._pollSetConfig(c && c.poll); if (c) { var _lvT = (window.LIVE_MODE && c.liveDefaults && c.liveDefaults.theme) ? c.liveDefaults.theme : null; if (_lvT) _applyDefaultTheme(_lvT); else { if (typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c.lookDefaults) _applyLookDefaults(c.lookDefaults); } } if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); if (c && Array.isArray(c.featureOff)) _applyFeatureOff(c.featureOff); window._lanDirCfg = (c && c.lanDirectory) || null; try { if (window.LanDirUI) window.LanDirUI.setConfig(window._lanDirCfg); } catch (e) {} _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
-        .catch(function () {})
-        // Settled, answered or not: release a connect() held by the config
-        // gate (App.connect). The transport choice (_pthNetTransport) only
-        // exists from here on.
-        .then(function () {
-          window._appConfigSettled = true;
-          var q = window._appConfigWaiters || []; window._appConfigWaiters = [];
-          q.forEach(function (f) { try { f(); } catch (e) {} });
+      var ac = (typeof AbortController === 'function') ? new AbortController() : null;
+      var tmo = ac ? setTimeout(function () { try { ac.abort(); } catch (e) {} }, 10000) : null;
+      fetch('/app-config', ac ? { cache: 'no-store', signal: ac.signal } : { cache: 'no-store' })
+        .then(function (r) {
+          if (r.status === 404) return null;
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json().then(function (c) {
+            if (!c || typeof c !== 'object') throw new Error('not a config object');
+            return c;
+          });
+        })
+        .then(function (c) {
+          if (tmo) clearTimeout(tmo);
+          if (c) _applyAppConfig(c);
+          _releaseCfgGate();
+        }, function (err) {
+          if (tmo) clearTimeout(tmo);
+          _cfgTries++;
+          var d = Math.min(10000, 1000 * Math.pow(2, _cfgTries - 1));
+          try { console.warn('[app-config] ' + ((err && err.message) || err) + ' - retry in ' + d + ' ms'); } catch (e) {}
+          // A player is waiting on the gate: after the third miss, say it is slow.
+          try {
+            if (_cfgTries >= 3 && (window._appConfigWaiters || []).length && typeof window.setStatus === 'function') {
+              window.setStatus('⏳ ' + ((typeof window.t === 'function' && window.t('connectSlow')) || 'Initialisation…'));
+            }
+          } catch (e) {}
+          setTimeout(go, d);
         });
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
@@ -6317,30 +6357,29 @@ const App = (() => {
 
       // ── /app-config gate ──
       // The admin's Internet transport (« Via proxy » / « Direct ») arrives
-      // with /app-config. Before it does, _pthNetTransport is undefined and
-      // the choice below read that as « direct »: an invite link (auto-
-      // connect 350 ms after load) or a quick click on a slow network went
-      // straight to pokerth.net on an instance set to « Via proxy » (seen in
-      // the admin as a pokerth.net notice channel). Wait for the answer —
-      // bounded, so an unreachable /app-config never holds the player; then
-      // the historical default applies, which is also the only route left
-      // when the site serving the proxy cannot be reached. Training does
-      // not depend on it and never waits.
+      // with /app-config, and only that answer may decide it. Before it,
+      // _pthNetTransport is undefined; the old wait here was bounded (5 s)
+      // and then dialled anyway, reading undefined as « Direct »: on a slow
+      // network a « Via proxy » instance sent players straight to
+      // pokerth.net (admin: « Direct client » notice channels, 21/10/2026).
+      // So the dial now waits for the answer however long it takes; the
+      // loader keeps asking and says so after a few misses. Waiting does
+      // NOT set S._connectingNow: an unbounded wait must never lock the
+      // form. A later connect() (another click, the training button) or a
+      // disconnect() replaces the held one instead of adding to it.
+      // Training does not depend on the config and never waits.
       var _gateSm = $('server-mode') ? $('server-mode').value : '';
       if (!window._appConfigSettled && !window._offlineMode && _gateSm !== 'offline') {
-        var selfCfg = this, firedCfg = false;
-        var goCfg = function () {
-          if (firedCfg) return; firedCfg = true;
-          S._connectingNow = false;
-          window._appConfigSettled = true;   // one bounded wait per page, never two
+        var selfCfg = this;
+        var tokCfg = window._cfgGateTok = (window._cfgGateTok || 0) + 1;
+        (window._appConfigWaiters || (window._appConfigWaiters = [])).push(function () {
+          if (tokCfg !== window._cfgGateTok) return;   // replaced or cancelled meanwhile
           selfCfg.connect(opts);
-        };
-        S._connectingNow = true;             // a second click while waiting is ignored
+        });
         setStatus('⏳ ' + (t('initializing') || 'Initialisation…'));
-        (window._appConfigWaiters || (window._appConfigWaiters = [])).push(goCfg);
-        setTimeout(goCfg, 5000);
         return;
       }
+      window._cfgGateTok = (window._cfgGateTok || 0) + 1;   // this dial goes ahead: a held one is void
 
       // ── Fix 1: anti-blocage 'rapid mode swap' ──
       // Read the current mode + nickname BEFORE doing any rate-limit check
@@ -6973,6 +7012,8 @@ const App = (() => {
       // A pending table invitation is declined while the socket is still open
       // (parity upstream 52661f2), then the banner goes with the session.
       try { window._inviteDrop && window._inviteDrop(true); } catch (e) {}
+      // A connect() still held by the /app-config gate must not fire later.
+      window._cfgGateTok = (window._cfgGateTok || 0) + 1;
       S._intentionalDisconnect = true;
       _closeNotifyWS();
       S._wasAuthenticated = false;
@@ -12353,7 +12394,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.229'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.230'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
