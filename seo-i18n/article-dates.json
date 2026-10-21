@@ -1,0 +1,27 @@
+{
+  "/rules": {
+    "published": "2026-08-11",
+    "modified": "2026-10-02",
+    "en": "841a9535aeb9aa2c"
+  },
+  "/hand-rankings": {
+    "published": "2026-08-25",
+    "modified": "2026-10-20",
+    "en": "4cbc964677f67ae5"
+  },
+  "/poker-odds": {
+    "published": "2026-10-20",
+    "modified": "2026-10-20",
+    "en": "5e6bb2e39d7f44fa"
+  },
+  "/starting-hands": {
+    "published": "2026-10-20",
+    "modified": "2026-10-20",
+    "en": "eab15ba3b4384b33"
+  },
+  "/accessibility": {
+    "published": "2026-10-20",
+    "modified": "2026-10-21",
+    "en": "9216bda91c36ca2f"
+  }
+}

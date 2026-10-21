@@ -132,6 +132,12 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Article pages carry dates, image and publisher** (`web.236`, SEO) — /rules, /hand-rankings, /poker-odds,
+  /starting-hands and /accessibility: the Article JSON-LD now has `datePublished`, `dateModified`, the social card
+  as `image`, and the PokerTH Development Team as author and publisher (with its logo), plus
+  `article:published_time` / `article:modified_time` for link cards. Dates live in `seo-i18n/article-dates.json`
+  with a fingerprint of each English body; `scripts/test-seo-article-ld.mjs` fails when a body changes and its
+  date does not (`--update` records the day).
 - **Search titles and descriptions sized for a result snippet** (`web.235`, SEO) — the audit found home, /faq and
   /how-to-play descriptions of 190–290 characters in most of the 83 languages, plus long titles. Home, /faq,
   /how-to-play, /competitions, /rules, /hand-rankings, /glossary and /starting-hands were rewritten to fit

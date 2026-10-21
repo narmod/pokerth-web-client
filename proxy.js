@@ -6655,6 +6655,14 @@ function seoPageAlternates(base, relPath, langs) {
   return out;
 }
 
+// Dates of the pages typed Article (schema.org): when each was first
+// published and when its text last changed. Kept in
+// seo-i18n/article-dates.json with a fingerprint of the English body;
+// scripts/test-seo-article-ld.mjs fails when the body changes and the date
+// does not (--update records today's).
+var SEO_ARTICLE_DATES = {};
+try { SEO_ARTICLE_DATES = require('./seo-i18n/article-dates.json'); } catch (e) { SEO_ARTICLE_DATES = {}; }
+var _SEO_PUBLISHER = { '@type': 'Organization', name: 'PokerTH Development Team', url: 'https://www.pokerth.net/' };
 function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld, lang, langs) {
   var on = seoEnabled(), base = on ? seoPublicUrl() : '';
   lang = lang || '';
@@ -6663,7 +6671,26 @@ function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld, lang, l
   // or the variants would be de-indexed in favour of the page they alias.
   var url = base ? base + relPath + (lang ? '?lang=' + lang : '') : '';
   var _im = seoImage(base), img = _im.url;
-  var head;
+  var head, artMeta = '';
+  // Article pages: dates, image and publisher, the fields Google lists for
+  // an Article and that each page used to leave out.
+  // ld is one block or a list of blocks; only the Article one is touched.
+  var _ad = SEO_ARTICLE_DATES[relPath];
+  var _art = function (x) {
+    if (!x || x['@type'] !== 'Article') return x;
+    x = Object.assign({}, x);
+    if (_ad && _ad.published) {
+      x.datePublished = _ad.published;
+      x.dateModified = _ad.modified || _ad.published;
+      artMeta = '<meta property="article:published_time" content="' + x.datePublished + '">' +
+        '<meta property="article:modified_time" content="' + x.dateModified + '">';
+    }
+    if (img) x.image = img;
+    x.author = Object.assign({}, _SEO_PUBLISHER);
+    x.publisher = Object.assign({}, _SEO_PUBLISHER, base ? { logo: { '@type': 'ImageObject', url: base + '/favicon-512.png', width: 512, height: 512 } } : {});
+    return x;
+  };
+  if (on && ld) ld = Array.isArray(ld) ? ld.map(_art) : _art(ld);
   if (on) {
     // Breadcrumbs: Google renders the trail in place of the raw URL, and it
     // is the only structured hint that these pages belong to the app rather
@@ -6682,7 +6709,7 @@ function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld, lang, l
       '<meta property="og:type" content="article"><meta property="og:site_name" content="' + _seoAttr(seoSiteName()) + '">' +
       '<meta property="og:title" content="' + title + '">' +
       '<meta property="og:description" content="' + desc + '">' +
-      (url ? '<meta property="og:url" content="' + url + '">' : '') +
+      (url ? '<meta property="og:url" content="' + url + '">' : '') + artMeta +
       (OG_LOCALE[lang || 'en'] ? '<meta property="og:locale" content="' + OG_LOCALE[lang || 'en'] + '">' : '') +
       // Without these a shared /rules or /faq link showed as a bare URL in
       // Discord, WhatsApp and X — the home page had cards, these did not.
