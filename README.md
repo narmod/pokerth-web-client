@@ -912,11 +912,14 @@ Both the PokerTH server **and** this web proxy are extremely light: PokerTH is a
 **Install:**
 
 1. Flash a **64-bit, Debian-based OS** — **Raspberry Pi OS (64-bit) is recommended** (Debian arm64 works too). An `apt`-based system is required: the one-liner installer needs `apt` and stops cleanly on non-apt distros (Alpine, Fedora…).
-2. Install the PokerTH server — it is packaged for Debian / Ubuntu including ARM:
+2. Install the PokerTH server — build `pokerth_dedicated_server` **2.1.10 or later** from the [upstream sources](https://github.com/pokerth/pokerth) by following its [server guide](https://github.com/pokerth/pokerth/blob/stable/docs/server_setup_howto.txt) (Qt ≥ 6.7, CMake, a C++23 compiler). The `pokerth-server` package of Linux distributions is an older version.
    ```bash
-   sudo apt update && sudo apt install pokerth-server
+   git clone https://github.com/pokerth/pokerth.git && cd pokerth
+   cmake -DCMAKE_BUILD_TYPE=Release -S . -B ./build -G Ninja
+   cmake --build ./build --target pokerth_dedicated_server
+   ./build/bin/pokerth_dedicated_server
    ```
-   (If your distro doesn't ship it, build it from the [upstream sources](https://github.com/pokerth/pokerth).) Run `pokerth_server`; it listens on TCP **7234** by default.
+   It listens on TCP **7234** by default.
 3. Install the web proxy with the one-liner — it sets up Node.js 20, PM2, the project and a boot service, and works on ARM:
    ```bash
    curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/install.sh | bash

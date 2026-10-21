@@ -43,7 +43,14 @@ const flat = (v) => Array.isArray(v) ? v.flat().join(' ') : String(v);
 const all = keys.map((k) => flat(EN[k])).join(' ');
 
 // 1. Facts
-ok(/sudo apt install pokerth-server/.test(readme) && /TCP \*\*7234\*\*/.test(readme) && /apt install pokerth-server/.test(all) && /7234/.test(all), 'PokerTH server: apt package, TCP 7234');
+// The distribution package (pokerth-server) is older than the 2.1.x protocol:
+// the page and the README build the server from source instead.
+ok(!/apt install pokerth-server/.test(all) && !/apt install pokerth-server/.test(readme), 'no « apt install pokerth-server » (an older version) on the page or in the README');
+ok(/version 2\.1\.10 or later/.test(all) && /older version/.test(all) && /TCP \*\*7234\*\*/.test(readme) && /7234/.test(all), 'PokerTH server: built from source, 2.1.10 or later, TCP 7234; the distro package is called older');
+const CMDS = lift('_SEO_HOST_CMDS');
+ok(CMDS.length === 2 && /cmake --build \.\/build --target pokerth_dedicated_server/.test(CMDS[0]) && /build\/bin\/pokerth_dedicated_server$/.test(CMDS[0]), 'step 1 shows the build of the server guide (pokerth_dedicated_server)');
+ok(CMDS[1] === 'curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/install.sh | bash' && readme.includes(CMDS[1]), 'step 2 shows the installation script, exactly as in the README');
+ok(/'<pre class="cmd"><code>' \+ _seoAttr\(_SEO_HOST_CMDS\[i\]\)/.test(src), 'the commands are escaped into a <pre>, left-to-right in every language');
 ok(existsSync(join(root, 'install.sh')) && /install\.sh \| bash/.test(readme), 'one-command install (install.sh)');
 ok(/`amd64` \/ `arm64` \/ `armv7`/.test(readme) && /amd64, arm64 and armv7/.test(all), 'Docker image for amd64, arm64 and armv7');
 ok(existsSync(join(root, 'docs/CASAOS.md')) && /x-casaos/.test(read('docker-compose.yml')), 'CasaOS: guide and Compose metadata');
@@ -54,7 +61,8 @@ ok(/lives at \*\*`\/admin`\*\*/.test(readme) && /set-token/.test(readme) && /\*\
 ok(existsSync(join(root, '.gitignore')) && /deploy-history\.json/.test(read('.gitignore')), 'admin roll-back (deployment history)');
 ok(/\*\*Leaderboard\*\* — reset the shared leaderboard/.test(readme), 'shared leaderboard');
 const G = lift('_SEO_HOST_GUIDES').map((u) => u.replace('https://github.com/narmod/pokerth-web-client', ''));
-ok(G.every((g) => g.startsWith('#') ? readme.includes('<a id="' + g.slice(1) + '"></a>') : existsSync(join(root, g.replace('/blob/main/', '')))), 'every guide link points at an existing README anchor or file');
+ok(G[0] === 'https://github.com/pokerth/pokerth/blob/stable/docs/server_setup_howto.txt', 'the first guide is the PokerTH server guide (upstream, branch stable)');
+ok(G.slice(1).every((g) => g.startsWith('#') ? readme.includes('<a id="' + g.slice(1) + '"></a>') : existsSync(join(root, g.replace('/blob/main/', '')))), 'every other guide link points at an existing README anchor or file');
 
 // 2. English
 const pairs = (v, len) => Array.isArray(v) && v.length === len && v.every((x) => Array.isArray(x) && x.length === 2 && x.every((y) => String(y || '').trim()));

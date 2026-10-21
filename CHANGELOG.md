@@ -32,9 +32,11 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Added
-- **`/host-a-server`** (`web.231`, SEO, English first) — « host your own poker server »: why (private, yours to
-  shape, free), the two pieces (PokerTH dedicated server + web client), three steps (`apt install pokerth-server`,
-  TCP 7234; one-command install, Docker multi-arch image or CasaOS; open port 8080 on the LAN), Raspberry Pi
+- **`/host-a-server`** (`web.231`–`web.232`, SEO, English first) — « host your own poker server »: why (private, yours to
+  shape, free), the two pieces (PokerTH dedicated server + web client), three steps (build
+  `pokerth_dedicated_server` 2.1.10+ from source per the upstream server guide — the distributions' `pokerth-server`
+  package is older —, TCP 7234; the installation script, Docker multi-arch image or CasaOS; port 8080 on the LAN),
+  with the build and `install.sh` commands shown in `<pre>` blocks (`web.232`), Raspberry Pi
   advice, HTTP on the LAN vs HTTPS for the PWA extras, the admin panel, invitation links and the public server
   list, links to the README guides (built in code), five questions; `HowTo` + `FAQPage` JSON-LD. Linked from the
   /faq answer « Can I host my own server? » and from « Host it yourself » on /play-with-friends. Wired like the
@@ -126,6 +128,9 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **README: the PokerTH server is built from source** (`web.232`) — the Raspberry Pi guide no longer says
+  `apt install pokerth-server`: that package is an older version. It now builds `pokerth_dedicated_server` 2.1.10+
+  from the upstream sources and links the PokerTH server guide.
 - **Default site name « PokerTH Web Client »** (`web.216`) — `og:site_name` on every page now defaults to the
   same name as the `<title>` prefix and the `WebSite` JSON-LD (was « PokerTH »); the admin placeholder and the
   pokerth.net preset follow. A site name already saved in Admin › Search engines is kept as is.

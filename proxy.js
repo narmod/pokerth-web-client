@@ -1999,6 +1999,9 @@ var _SEO_PAGE_CSS = 'body{margin:0;background:#0d1117;color:#d8dde4;font:16px/1.
   'table.sh td{border:1px solid #0d1117;padding:3px 1px;text-align:center;color:#f0f3f6;line-height:1.15}' +
   'table.sh td b{display:block;font-weight:600}table.sh td span{display:block;font-size:.85em;opacity:.85;font-variant-numeric:tabular-nums}' +
   'table.sh td.p b{text-decoration:underline}' +
+  // Shell commands (/host-a-server): scroll inside the box, always LTR.
+  'pre.cmd{direction:ltr;text-align:left;overflow-x:auto;background:#161b22;border:1px solid #30363d;border-radius:6px;padding:.6em .8em;margin:.5em 0 .3em;font-size:.85em;line-height:1.5}' +
+  'pre.cmd code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre}' +
   '@media (max-width:480px){table.sh{font-size:10px}}' +
   '.updated{color:#9aa4b0;font-size:.9em;margin:0 0 1.2em}' +
   '.play{display:inline-block;margin-top:26px;padding:10px 22px;background:#1f6feb;color:#fff;border-radius:6px;font-weight:600}';
@@ -7944,16 +7947,26 @@ function seoA11yPage(res, method, lang) {
 // ── /host-a-server — your own PokerTH server and web client ──────────────
 // The page answers "host your own poker server", "private poker server",
 // "self-hosted poker", "poker on a Raspberry Pi". Only what the README and the
-// code document: the PokerTH dedicated server (pokerth_server, TCP 7234), the
+// code document: the PokerTH dedicated server (built from source, 2.1.10+, TCP
+// 7234 — docs/server_setup_howto.txt of pokerth/pokerth), the
 // web client's install paths (install.sh one-liner, Docker multi-arch image,
 // CasaOS, manual + HTTPS), the Raspberry Pi notes, the admin panel, the
 // shared LAN leaderboard, invitation links and the LAN directory. The guide
-// links are built here (_SEO_HOST_GUIDES): translations carry no markup.
+// links and the command blocks are built here (_SEO_HOST_GUIDES,
+// _SEO_HOST_CMDS): translations carry no markup.
 // Translations: seo-i18n/host.js.
 var _SEO_HOST_REPO = 'https://github.com/narmod/pokerth-web-client';
 var _SEO_HOST_GUIDES = [
+  'https://github.com/pokerth/pokerth/blob/stable/docs/server_setup_howto.txt',
   _SEO_HOST_REPO + '#self-hosting', _SEO_HOST_REPO + '#docker', _SEO_HOST_REPO + '/blob/main/docs/CASAOS.md',
   _SEO_HOST_REPO + '#raspberry-pi', _SEO_HOST_REPO + '#manual-installation', _SEO_HOST_REPO + '#admin-panel'
+];
+// Shell commands shown under steps 1 and 2 — the same in every language.
+// Step 1: the build of the PokerTH server guide (docs/server_setup_howto.txt,
+// 2.2 and 3); step 2: the web client's installation script (README).
+var _SEO_HOST_CMDS = [
+  'git clone https://github.com/pokerth/pokerth.git\ncd pokerth\ncmake -DCMAKE_BUILD_TYPE=Release -S . -B ./build -G Ninja\ncmake --build ./build --target pokerth_dedicated_server\n./build/bin/pokerth_dedicated_server',
+  'curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/install.sh | bash'
 ];
 var _SEO_HOST = {
   "title": "Host Your Own Poker Server \u2014 Free, Self-Hosted | PokerTH",
@@ -7973,9 +7986,9 @@ var _SEO_HOST = {
   "stepsH2": "Set it up in three steps",
   "steps": [
     ["Install the PokerTH server",
-     "On Debian, Ubuntu or Raspberry Pi OS it is a package: sudo apt install pokerth-server. Start pokerth_server; it listens on TCP port 7234. Elsewhere, build it from the PokerTH sources."],
+     "Build pokerth_dedicated_server from the PokerTH sources \u2014 version 2.1.10 or later \u2014 by following the server guide of the PokerTH project: it needs Qt 6.7 or newer, CMake and a C++23 compiler. The pokerth-server package of Linux distributions is an older version. The server listens on TCP port 7234."],
     ["Install the web client",
-     "On Debian or Ubuntu one command installs Node.js, the web client and a service that starts with the machine. Docker users pull a ready-made image for amd64, arm64 and armv7, and CasaOS imports the same Compose file as an app."],
+     "On Debian, Ubuntu or Raspberry Pi OS the installation script sets up Node.js, the web client and a service that starts with the machine, in one command. Docker users pull a ready-made image for amd64, arm64 and armv7, and CasaOS imports the same Compose file as an app."],
     ["Play",
      "On any device on your network, open the address of the machine on port 8080, choose LAN / Dedicated server, type a nickname and create a table."]
   ],
@@ -7988,7 +8001,7 @@ var _SEO_HOST = {
   "shareH2": "Invite players from outside",
   "shareP": "Invitation links and QR codes work on your server just as on pokerth.net: a friend opens the link and is seated at your table. If your server is reachable from the internet, you can also propose it for the public server list of the web client; it appears there once the admins of the web client approve it.",
   "guidesH2": "Step-by-step guides",
-  "guides": ["Self-hosting and the one-command install", "Docker", "CasaOS", "Raspberry Pi", "Manual installation and HTTPS", "The admin panel"],
+  "guides": ["PokerTH server setup guide", "Self-hosting and the one-command install", "Docker", "CasaOS", "Raspberry Pi", "Manual installation and HTTPS", "The admin panel"],
   "faqH2": "Questions",
   "faq": [
     ["Is it free to host a PokerTH server?",
@@ -8013,7 +8026,9 @@ function seoHostPage(res, method, lang) {
   var body = '<h1>' + tr.h1 + '</h1><p>' + tr.lead + '</p>' +
     '<h2>' + tr.whyH2 + '</h2><ul>' + tr.why.map(function (r) { return '<li><strong>' + r[0] + '</strong> — ' + r[1] + '</li>'; }).join('') + '</ul>' +
     sec(tr.partsH2, tr.partsP) +
-    '<h2>' + tr.stepsH2 + '</h2><ol>' + tr.steps.map(function (st) { return '<li><strong>' + st[0] + '</strong><br>' + st[1] + '</li>'; }).join('') + '</ol>' +
+    '<h2>' + tr.stepsH2 + '</h2><ol>' + tr.steps.map(function (st, i) {
+      return '<li><strong>' + st[0] + '</strong><br>' + st[1] + (_SEO_HOST_CMDS[i] ? '<pre class="cmd"><code>' + _seoAttr(_SEO_HOST_CMDS[i]) + '</code></pre>' : '') + '</li>';
+    }).join('') + '</ol>' +
     sec(tr.piH2, tr.piP) + sec(tr.httpsH2, tr.httpsP) + sec(tr.adminH2, tr.adminP) + sec(tr.shareH2, tr.shareP) +
     '<h2>' + tr.guidesH2 + '</h2><ul>' + tr.guides.map(function (g, i) { return '<li><a href="' + _SEO_HOST_GUIDES[i] + '" rel="noopener">' + g + '</a></li>'; }).join('') + '</ul>' +
     _seoFriendsLink(lang) +
@@ -8022,7 +8037,7 @@ function seoHostPage(res, method, lang) {
   var url = base ? base + '/host-a-server' + (lang ? '?lang=' + lang : '') : '';
   var howto = { '@context': 'https://schema.org', '@type': 'HowTo', name: tr.ldHeadline, description: tr.ldDesc, inLanguage: lang || 'en',
     estimatedCost: { '@type': 'MonetaryAmount', currency: 'EUR', value: '0' },
-    tool: [{ '@type': 'HowToTool', name: 'PokerTH dedicated server' }, { '@type': 'HowToTool', name: 'PokerTH web client' }],
+    tool: [{ '@type': 'HowToTool', name: 'PokerTH dedicated server 2.1.10 or later' }, { '@type': 'HowToTool', name: 'PokerTH web client' }],
     step: tr.steps.map(function (st, n) { return { '@type': 'HowToStep', position: n + 1, name: plain(st[0]), text: plain(st[1]) }; }) };
   if (url) howto.url = url;
   var faq = { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: lang || 'en',
