@@ -305,6 +305,9 @@ try{var _d=document.documentElement,_p=localStorage.getItem('pth_theme'),_tb=loc
                       mm('(display-mode: fullscreen)').matches));
     if (!pwa) return;
     d.setAttribute('data-pwa', '1');
+    /* iPhone home-screen app: the window is the screen (fullH below); the
+       full-screen layers follow the measured height there (pokerth.css, web.249). */
+    try { if (navigator.standalone === true && /iPhone|iPod/.test(navigator.userAgent || '')) d.setAttribute('data-pwa-iphone', '1'); } catch (e) {}
     function editing() {
       var a = document.activeElement;
       return !!(a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable));

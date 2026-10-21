@@ -225,6 +225,12 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **iPhone app: full-screen layers reach the bottom too** (`web.249`) — follow-up of `web.248`: the screens take the
+  corrected height, but a layer anchored to the bottom of the window (About, privacy, boot splash, end-of-game and
+  award overlays, dialogs, lobby drawers…) would still stop where iOS believes the window ends, leaving a strip of
+  the screen beneath. On an iPhone home-screen app (`data-pwa-iphone`, set by the `--app-h` script) they take
+  `height: var(--app-h)`; Android keeps `inset:0` so its dialogs still shrink with the keyboard.
+  `test-pwa-height.mjs` now emulates an iPhone app whose window is 34 px short.
 - **iPhone app: no band under the screen after a reload or a navigation** (`web.248`, confirmed on an iPhone 2026-10-21; the band the August and September attempts never fully removed) —
   started from the home screen the login screen fills the iPhone, but loaded by a navigation (« Play now » on a guide
   page) or by the « new version » reload a black band showed under it: iOS can report a viewport short by the

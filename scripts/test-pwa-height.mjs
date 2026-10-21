@@ -27,5 +27,39 @@ ok(run({ ...IP, iw: 393, ih: 500 }, 500) === 500, 'a large gap (keyboard, anythi
 ok(run({ st: true, ua: 'Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X)', sw: 820, sh: 1180, iw: 820, ih: 1146 }, 1146) === 1146, 'iPad (windowed apps): unchanged');
 ok(run({ st: undefined, ua: 'Mozilla/5.0 (Linux; Android 14)', sw: 412, sh: 915, iw: 412, ih: 880 }, 880) === 880, 'Android: unchanged');
 ok(run({ ...IP, st: false, iw: 393, ih: 700 }, 700) === 700, 'iPhone Safari tab (not installed): unchanged');
+
+// web.249: the full-screen layers (About, privacy, splash, dialogs, lobby
+// drawers) follow the same height on an iPhone home-screen app. Emulated: an
+// iPhone whose viewport is 34 px short of its screen.
+const css = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'pokerth.css'), 'utf8');
+ok(/:root\[data-pwa-iphone="1"\] :is\(#boot-splash, #about-page, #privacy-page,[\s\S]*?\) \{\s*bottom: auto; height: var\(--app-h, 100dvh\);/.test(css), 'iPhone app: full-screen layers take --app-h');
+ok(/d\.setAttribute\('data-pwa-iphone', '1'\)/.test(html), 'the flag is set for an iPhone home-screen app only');
+{
+  const { chromium, devices } = await import('playwright');
+  const { spawn } = await import('node:child_process');
+  const { mkdtempSync, writeFileSync, rmSync } = await import('node:fs');
+  const { tmpdir } = await import('node:os');
+  const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+  const tmp = mkdtempSync(join(tmpdir(), 'pth-ph-'));
+  writeFileSync(join(tmp, 'admin-config.json'), '{}');
+  const PORT = 18000 + Math.floor(Math.random() * 900);
+  const child = spawn(process.execPath, [join(root, 'proxy.js'), '--notls', String(PORT)], {
+    env: Object.assign({}, process.env, { ADMIN_CONFIG_FILE: join(tmp, 'admin-config.json'), VISITS_FILE: join(tmp, 'visits.json'), NO_PROXY: '*' }), stdio: 'ignore' });
+  const b = await chromium.launch();
+  try {
+    await new Promise((r) => setTimeout(r, 2500));
+    const ctx = await b.newContext({ ...devices['iPhone 13'], viewport: { width: 390, height: 810 }, serviceWorkers: 'block' });
+    await ctx.addInitScript(() => { Object.defineProperty(navigator, 'standalone', { get: () => true }); Object.defineProperty(screen, 'height', { get: () => 844 }); Object.defineProperty(screen, 'width', { get: () => 390 }); });
+    const p = await ctx.newPage();
+    await p.route(/^https?:\/\/(?!127\.0\.0\.1)/, (r) => r.abort());
+    for (let i = 0; i < 40; i++) { try { await p.goto(`http://127.0.0.1:${PORT}/`, { waitUntil: 'domcontentloaded' }); break; } catch (e) { await new Promise((r) => setTimeout(r, 250)); } }
+    await p.waitForTimeout(2500);
+    const r = await p.evaluate(() => { window.openAboutPage(); const d = document.documentElement;
+      return { flag: d.dataset.pwaIphone, appH: d.style.getPropertyValue('--app-h'), screen: Math.round(document.querySelector('.screen.active').getBoundingClientRect().bottom),
+        about: Math.round(document.getElementById('about-page').getBoundingClientRect().bottom) }; });
+    ok(r.flag === '1' && r.appH === '844px', `emulated iPhone app, viewport 810 / screen 844: --app-h ${r.appH}`);
+    ok(r.screen === 844 && r.about === 844, `the login screen and the About page reach the bottom (${r.screen}, ${r.about})`);
+  } finally { await b.close(); child.kill(); rmSync(tmp, { recursive: true, force: true }); }
+}
 console.log(`\n${n - fail}/${n} passed`);
 process.exit(fail ? 1 : 0);
