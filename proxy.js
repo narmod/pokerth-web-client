@@ -1607,7 +1607,7 @@ function _seoEnsureIndexNowKey() {
 }
 function seoIndexNowUrls(base) {
   var urls = [base + '/', base + '/rules', base + '/hand-rankings', base + '/how-to-play',
-    base + '/glossary', base + '/faq', base + '/competitions', base + '/play-with-friends', base + '/poker-odds', base + '/play-against-computer', base + '/starting-hands', base + '/accessibility', base + '/privacy'];
+    base + '/glossary', base + '/faq', base + '/competitions', base + '/play-with-friends', base + '/poker-odds', base + '/play-against-computer', base + '/starting-hands', base + '/accessibility', base + '/host-a-server', base + '/privacy'];
   for (var code in SEO_I18N) { if (code !== 'en') urls.push(base + '/?lang=' + code); }
   // Localized content pages exist only in the languages that actually have a
   // translation table. Submitting a variant we do not serve would point the
@@ -1623,6 +1623,7 @@ function seoIndexNowUrls(base) {
   seoPageLangs(SEO_BOTS_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/play-against-computer?lang=' + c); });
   seoPageLangs(SEO_START_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/starting-hands?lang=' + c); });
   seoPageLangs(SEO_A11Y_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/accessibility?lang=' + c); });
+  seoPageLangs(SEO_HOST_I18N).forEach(function (c) { if (c !== 'en') urls.push(base + '/host-a-server?lang=' + c); });
   seoPageLangs(_seoPrivacyTable()).forEach(function (c) { if (c !== 'en') urls.push(base + '/privacy?lang=' + c); });
   return urls;
 }
@@ -1816,6 +1817,7 @@ function seoBodyBlock(lang) {
     (_seoBotsIn(lang) ? '<a href="' + _seoLangHref('/play-against-computer', SEO_BOTS_I18N, lang) + '">' + _seoNavLabel(lang, 'bots') + '</a> \u2014 ' : '') +
     (_seoStartIn(lang) ? '<a href="' + _seoLangHref('/starting-hands', SEO_START_I18N, lang) + '">' + _seoNavLabel(lang, 'start') + '</a> \u2014 ' : '') +
     (_seoA11yIn(lang) ? '<a href="' + _seoLangHref('/accessibility', SEO_A11Y_I18N, lang) + '">' + _seoNavLabel(lang, 'a11y') + '</a> \u2014 ' : '') +
+    (_seoHostIn(lang) ? '<a href="' + _seoLangHref('/host-a-server', SEO_HOST_I18N, lang) + '">' + _seoNavLabel(lang, 'host') + '</a> \u2014 ' : '') +
     '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">' + _seoNavLabel(lang, 'faq') + '</a> \u2014 ' +
     '<a href="' + _seoLangHref('/privacy', _seoPrivacyTable(), lang) + '">' + b.pv + '</a></p>' +
     '</div>';
@@ -1942,6 +1944,7 @@ function seoLlmsTxt(base) {
          '- Play poker against the computer (training mode, difficulty levels, offline): ' + u + '/play-against-computer\n' +
          '- Starting hands chart (all 169 hands ranked against 1, 3 and 6 opponents): ' + u + '/starting-hands\n' +
          '- Accessibility (interface size, high contrast, four-colour decks, keyboard, gamepad, TV remote, voice): ' + u + '/accessibility\n' +
+         '- Host your own server (PokerTH server + web client, one-command install, Docker, CasaOS, Raspberry Pi): ' + u + '/host-a-server\n' +
          '- Privacy policy (also in every interface language: ' + u + '/privacy?lang=<code>): ' + u + '/privacy\n' +
          '- pokerth.net accounts, game server and forum privacy policy: https://www.pokerth.net/ucp.php?mode=privacy\n' : '\n## Links\n\n') +
     '- Source code: https://github.com/narmod/pokerth-web-client\n' +
@@ -2020,7 +2023,7 @@ function _seoLangHref(relPath, table, lang) {
 // "Play now · Rules · Glossary" in English was a page in two languages. The
 // translations live in seo-i18n/nav.js; English is the fallback per label.
 var SEO_NAV_EN = { play: '\u25b6 Play now', rules: 'Rules', hands: 'Hand rankings', howto: 'How to play',
-  gloss: 'Glossary', comp: 'Competitions', friends: 'Play with friends', odds: 'Poker odds', bots: 'Vs computer', start: 'Starting hands', a11y: 'Accessibility', faq: 'FAQ', privacy: 'Privacy', src: 'Source',
+  gloss: 'Glossary', comp: 'Competitions', friends: 'Play with friends', odds: 'Poker odds', bots: 'Vs computer', start: 'Starting hands', a11y: 'Accessibility', host: 'Host a server', faq: 'FAQ', privacy: 'Privacy', src: 'Source',
   cta: 'Play PokerTH in your browser \u2014 free, no download' };
 var SEO_NAV_I18N = {};
 function _seoNavLabel(lang, k) {
@@ -2040,6 +2043,8 @@ function _seoBotsIn(lang) { return !lang || !!(SEO_BOTS_I18N && SEO_BOTS_I18N[la
 function _seoStartIn(lang) { return !lang || !!(SEO_START_I18N && SEO_START_I18N[lang]); }
 // Same rule for /accessibility.
 function _seoA11yIn(lang) { return !lang || !!(SEO_A11Y_I18N && SEO_A11Y_I18N[lang]); }
+// Same rule for /host-a-server.
+function _seoHostIn(lang) { return !lang || !!(SEO_HOST_I18N && SEO_HOST_I18N[lang]); }
 
 function _seoPageNav(lang) {
   lang = lang || '';
@@ -2053,6 +2058,7 @@ function _seoPageNav(lang) {
     '<a href="' + _seoLangHref('/competitions', SEO_COMP_I18N, lang) + '">' + _seoNavLabel(lang, 'comp') + '</a>' +
     (_seoFriendsIn(lang) ? '<a href="' + _seoLangHref('/play-with-friends', SEO_FRIENDS_I18N, lang) + '">' + _seoNavLabel(lang, 'friends') + '</a>' : '') +
     (_seoBotsIn(lang) ? '<a href="' + _seoLangHref('/play-against-computer', SEO_BOTS_I18N, lang) + '">' + _seoNavLabel(lang, 'bots') + '</a>' : '') +
+    (_seoHostIn(lang) ? '<a href="' + _seoLangHref('/host-a-server', SEO_HOST_I18N, lang) + '">' + _seoNavLabel(lang, 'host') + '</a>' : '') +
     (_seoA11yIn(lang) ? '<a href="' + _seoLangHref('/accessibility', SEO_A11Y_I18N, lang) + '">' + _seoNavLabel(lang, 'a11y') + '</a>' : '') +
     '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">' + _seoNavLabel(lang, 'faq') + '</a>' +
     '<a href="' + _seoLangHref('/privacy', _seoPrivacyTable(), lang) + '">' + _seoNavLabel(lang, 'privacy') + '</a>' +
@@ -6854,6 +6860,7 @@ var _SEO_FAQ = [
 // order, scripts/test-seo-sync.mjs).
 var _SEO_FAQ_FRIENDS_IX = 5;
 var _SEO_FAQ_BOTS_IX = 9;
+var _SEO_FAQ_HOST_IX = 15;   // « Can I host my own server? »
 
 function seoFaqPage(res, method, lang) {
   var langs = seoPageLangs(SEO_FAQ_I18N);
@@ -6871,6 +6878,7 @@ function seoFaqPage(res, method, lang) {
     // « How do I play poker online with friends? » points on to the full page.
     if (i === _SEO_FAQ_FRIENDS_IX) { var _fl = _seoFriendsLink(lang); if (_fl) body += '<dd>' + _fl.slice(3, -4) + '</dd>'; }
     if (i === _SEO_FAQ_BOTS_IX) { var _bl = _seoBotsLink(lang); if (_bl) body += '<dd>' + _bl.slice(3, -4) + '</dd>'; }
+    if (i === _SEO_FAQ_HOST_IX) { var _hl = _seoHostLink(lang); if (_hl) body += '<dd>' + _hl.slice(3, -4) + '</dd>'; }
     ents.push({ '@type': 'Question', name: qa[i][0],
       acceptedAnswer: { '@type': 'Answer', text: qa[i][1] } });
   }
@@ -7006,6 +7014,7 @@ var SEO_ODDS_I18N = {};
 var SEO_BOTS_I18N = {};
 var SEO_START_I18N = {};
 var SEO_A11Y_I18N = {};
+var SEO_HOST_I18N = {};
 
 // Suit symbols. Red suits get a class rather than a hard-coded colour so the
 // page CSS stays the single place that decides what red means.
@@ -7293,6 +7302,12 @@ function _seoStartLink(lang) {
   var h1 = ((lang && SEO_START_I18N[lang]) || _SEO_START).h1;
   return '<p><a href="' + _seoLangHref('/starting-hands', SEO_START_I18N, lang) + '">' + h1 + '</a></p>';
 }
+// Link to /host-a-server, anchor = its <h1>, only where translated.
+function _seoHostLink(lang) {
+  if (!_seoHostIn(lang)) return '';
+  var h1 = ((lang && SEO_HOST_I18N[lang]) || _SEO_HOST).h1;
+  return '<p><a href="' + _seoLangHref('/host-a-server', SEO_HOST_I18N, lang) + '">' + h1 + '</a></p>';
+}
 // Link to /play-against-computer, anchor = its <h1>, only where translated.
 function _seoBotsLink(lang) {
   if (!_seoBotsIn(lang)) return '';
@@ -7311,6 +7326,7 @@ function _seoPageHref(page, lang) {
   if (page === 'bots') return _seoLangHref('/play-against-computer', SEO_BOTS_I18N, lang);
   if (page === 'start') return _seoLangHref('/starting-hands', SEO_START_I18N, lang);
   if (page === 'a11y') return _seoLangHref('/accessibility', SEO_A11Y_I18N, lang);
+  if (page === 'host') return _seoLangHref('/host-a-server', SEO_HOST_I18N, lang);
   return '/';
 }
 
@@ -7322,6 +7338,7 @@ SEO_ODDS_I18N = require('./seo-i18n/odds.js');
 SEO_BOTS_I18N = require('./seo-i18n/bots.js');
 SEO_START_I18N = require('./seo-i18n/starting.js');
 SEO_A11Y_I18N = require('./seo-i18n/a11y.js');
+SEO_HOST_I18N = require('./seo-i18n/host.js');
 SEO_HANDS_I18N = require('./seo-i18n/hands.js').build(_SEO_HANDS, _sd);
 // Hand names per language, for the /poker-odds calculator.
 var _SEO_HANDS_PARTS = require('./seo-i18n/hands.js').PARTS;
@@ -7427,7 +7444,7 @@ function seoFriendsPage(res, method, lang) {
       return '<li><strong>' + st[0] + '</strong><br>' + st[1] + '</li>';
     }).join('') + '</ol>' +
     sec(tr.privH2, tr.privP) + sec(tr.setH2, tr.setP) + sec(tr.mixH2, tr.mixP) +
-    sec(tr.talkH2, tr.talkP) + sec(tr.ownH2, tr.ownP) +
+    sec(tr.talkH2, tr.talkP) + sec(tr.ownH2, tr.ownP) + _seoHostLink(lang) +
     '<h2>' + tr.faqH2 + '</h2>' + tr.faq.map(function (q) {
       return '<h3>' + q[0] + '</h3><p>' + q[1] + '</p>';
     }).join('');
@@ -7922,6 +7939,95 @@ function seoA11yPage(res, method, lang) {
   var faq = { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: lang || 'en',
     mainEntity: tr.faq.map(function (q) { return { '@type': 'Question', name: plain(q[0]), acceptedAnswer: { '@type': 'Answer', text: plain(f(q[1])) } }; }) };
   seoContentPage(res, method, tr.title, tr.desc, '/accessibility', body, [art, faq], lang, langs);
+}
+
+// ── /host-a-server — your own PokerTH server and web client ──────────────
+// The page answers "host your own poker server", "private poker server",
+// "self-hosted poker", "poker on a Raspberry Pi". Only what the README and the
+// code document: the PokerTH dedicated server (pokerth_server, TCP 7234), the
+// web client's install paths (install.sh one-liner, Docker multi-arch image,
+// CasaOS, manual + HTTPS), the Raspberry Pi notes, the admin panel, the
+// shared LAN leaderboard, invitation links and the LAN directory. The guide
+// links are built here (_SEO_HOST_GUIDES): translations carry no markup.
+// Translations: seo-i18n/host.js.
+var _SEO_HOST_REPO = 'https://github.com/narmod/pokerth-web-client';
+var _SEO_HOST_GUIDES = [
+  _SEO_HOST_REPO + '#self-hosting', _SEO_HOST_REPO + '#docker', _SEO_HOST_REPO + '/blob/main/docs/CASAOS.md',
+  _SEO_HOST_REPO + '#raspberry-pi', _SEO_HOST_REPO + '#manual-installation', _SEO_HOST_REPO + '#admin-panel'
+];
+var _SEO_HOST = {
+  "title": "Host Your Own Poker Server \u2014 Free, Self-Hosted | PokerTH",
+  "desc": "A private Texas Hold\u2019em server at home, in a club or a school: the free PokerTH server and web client, set up in one command, with Docker or on a Raspberry Pi.",
+  "ldHeadline": "How to host your own PokerTH poker server",
+  "ldDesc": "Set up a private, self-hosted Texas Hold’em server with the PokerTH dedicated server and the PokerTH web client.",
+  "h1": "Host your own poker server",
+  "lead": "PokerTH is free and open source from end to end: the game server and this web client can run on your own machine. A PC, a home server or a Raspberry Pi is enough for a family game, a club night, an office league or a school, and every phone, tablet or computer on your network then plays in its browser with just a nickname.",
+  "whyH2": "Why run your own",
+  "why": [
+    ["Private", "Your games stay on your machine and your network; players need no account and no email address, just a nickname."],
+    ["Yours to shape", "Give the server its own name, choose which modes the login screen offers, post a welcome message, and keep a shared leaderboard for your group."],
+    ["Free", "No licence, no subscription, no ads: the PokerTH server and the web client are both free software."]
+  ],
+  "partsH2": "Two pieces",
+  "partsP": "A PokerTH game needs the PokerTH dedicated server, which deals the cards and runs the tables, and the web client, which serves the app to the browsers and connects them to that server. They can run on the same machine. The desktop PokerTH client connects to the same server, so players can mix browsers and desktop apps at one table.",
+  "stepsH2": "Set it up in three steps",
+  "steps": [
+    ["Install the PokerTH server",
+     "On Debian, Ubuntu or Raspberry Pi OS it is a package: sudo apt install pokerth-server. Start pokerth_server; it listens on TCP port 7234. Elsewhere, build it from the PokerTH sources."],
+    ["Install the web client",
+     "On Debian or Ubuntu one command installs Node.js, the web client and a service that starts with the machine. Docker users pull a ready-made image for amd64, arm64 and armv7, and CasaOS imports the same Compose file as an app."],
+    ["Play",
+     "On any device on your network, open the address of the machine on port 8080, choose LAN / Dedicated server, type a nickname and create a table."]
+  ],
+  "piH2": "On a Raspberry Pi",
+  "piP": "PokerTH exchanges small messages and the players’ devices do all the drawing, so a Raspberry Pi is plenty: a Pi 4 with 2 GB is the sweet spot, a Pi 5 is more than enough. For a smooth evening the network matters more than the board — plug the Pi into the router with a cable, and use a good Wi-Fi access point for the players.",
+  "httpsH2": "HTTP on the LAN, HTTPS for the extras",
+  "httpsP": "On your own network the game works over plain HTTP. Installing the app on the home screen, playing offline and receiving notifications need HTTPS, which the guide sets up with Nginx and a free Let’s Encrypt certificate.",
+  "adminH2": "An admin panel in the browser",
+  "adminP": "A token-protected console at /admin shows who is connected, updates the web client in one click and can roll it back, sends announcements to the players, resets the leaderboard, installs card decks, table styles and music, lists the game servers the client may reach, and hands out keys that unlock only some of its sections.",
+  "shareH2": "Invite players from outside",
+  "shareP": "Invitation links and QR codes work on your server just as on pokerth.net: a friend opens the link and is seated at your table. If your server is reachable from the internet, you can also propose it for the public server list of the web client; it appears there once the admins of the web client approve it.",
+  "guidesH2": "Step-by-step guides",
+  "guides": ["Self-hosting and the one-command install", "Docker", "CasaOS", "Raspberry Pi", "Manual installation and HTTPS", "The admin panel"],
+  "faqH2": "Questions",
+  "faq": [
+    ["Is it free to host a PokerTH server?",
+     "Yes. The PokerTH server and the web client are free and open-source software; you only need a machine to run them."],
+    ["What hardware do I need?",
+     "Very little: any PC or home server that runs Linux or Docker, or a Raspberry Pi 4 or 5. A wired network connection matters more than processing power."],
+    ["Do the players need to install anything?",
+     "No. They open the server’s address in a browser on their phone, tablet or computer; the desktop PokerTH client works too."],
+    ["Does it need pokerth.net or an internet connection?",
+     "No. A server on your local network runs on its own: the players connect to it directly, with just a nickname."],
+    ["How many players can join?",
+     "Up to 10 players per table, plus spectators, and as many tables as your group needs."]
+  ]
+};
+
+function seoHostPage(res, method, lang) {
+  var langs = seoPageLangs(SEO_HOST_I18N);
+  if (langs.indexOf(lang) === -1) lang = '';
+  var tr = (lang && SEO_HOST_I18N[lang]) || _SEO_HOST;
+  var base = seoEnabled() ? seoPublicUrl() : '';
+  var sec = function (h, p) { return '<h2>' + h + '</h2><p>' + p + '</p>'; };
+  var body = '<h1>' + tr.h1 + '</h1><p>' + tr.lead + '</p>' +
+    '<h2>' + tr.whyH2 + '</h2><ul>' + tr.why.map(function (r) { return '<li><strong>' + r[0] + '</strong> — ' + r[1] + '</li>'; }).join('') + '</ul>' +
+    sec(tr.partsH2, tr.partsP) +
+    '<h2>' + tr.stepsH2 + '</h2><ol>' + tr.steps.map(function (st) { return '<li><strong>' + st[0] + '</strong><br>' + st[1] + '</li>'; }).join('') + '</ol>' +
+    sec(tr.piH2, tr.piP) + sec(tr.httpsH2, tr.httpsP) + sec(tr.adminH2, tr.adminP) + sec(tr.shareH2, tr.shareP) +
+    '<h2>' + tr.guidesH2 + '</h2><ul>' + tr.guides.map(function (g, i) { return '<li><a href="' + _SEO_HOST_GUIDES[i] + '" rel="noopener">' + g + '</a></li>'; }).join('') + '</ul>' +
+    _seoFriendsLink(lang) +
+    '<h2>' + tr.faqH2 + '</h2>' + tr.faq.map(function (q) { return '<h3>' + q[0] + '</h3><p>' + q[1] + '</p>'; }).join('');
+  var plain = function (h) { return String(h).replace(/<[^>]*>/g, ''); };
+  var url = base ? base + '/host-a-server' + (lang ? '?lang=' + lang : '') : '';
+  var howto = { '@context': 'https://schema.org', '@type': 'HowTo', name: tr.ldHeadline, description: tr.ldDesc, inLanguage: lang || 'en',
+    estimatedCost: { '@type': 'MonetaryAmount', currency: 'EUR', value: '0' },
+    tool: [{ '@type': 'HowToTool', name: 'PokerTH dedicated server' }, { '@type': 'HowToTool', name: 'PokerTH web client' }],
+    step: tr.steps.map(function (st, n) { return { '@type': 'HowToStep', position: n + 1, name: plain(st[0]), text: plain(st[1]) }; }) };
+  if (url) howto.url = url;
+  var faq = { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: lang || 'en',
+    mainEntity: tr.faq.map(function (q) { return { '@type': 'Question', name: plain(q[0]), acceptedAnswer: { '@type': 'Answer', text: plain(q[1]) } }; }) };
+  seoContentPage(res, method, tr.title, tr.desc, '/host-a-server', body, [howto, faq], lang, langs);
 }
 
 // ── /competitions — BBC, WeCup, Monthly Cup ──────────────────────────────
@@ -13158,7 +13264,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     for (var _c in SEO_I18N) _tot++;
     var _cov = [['/rules', _rl], ['/faq', _fl], ['/hand-rankings', seoPageLangs(SEO_HANDS_I18N).length],
       ['/how-to-play', seoPageLangs(SEO_HOWTO_I18N).length], ['/glossary', seoPageLangs(SEO_GLOSSARY_I18N).length],
-      ['/play-with-friends', seoPageLangs(SEO_FRIENDS_I18N).length], ['/poker-odds', seoPageLangs(SEO_ODDS_I18N).length], ['/play-against-computer', seoPageLangs(SEO_BOTS_I18N).length], ['/starting-hands', seoPageLangs(SEO_START_I18N).length], ['/accessibility', seoPageLangs(SEO_A11Y_I18N).length], ['/privacy', seoPageLangs(_seoPrivacyTable()).length]];
+      ['/play-with-friends', seoPageLangs(SEO_FRIENDS_I18N).length], ['/poker-odds', seoPageLangs(SEO_ODDS_I18N).length], ['/play-against-computer', seoPageLangs(SEO_BOTS_I18N).length], ['/starting-hands', seoPageLangs(SEO_START_I18N).length], ['/accessibility', seoPageLangs(SEO_A11Y_I18N).length], ['/host-a-server', seoPageLangs(SEO_HOST_I18N).length], ['/privacy', seoPageLangs(_seoPrivacyTable()).length]];
     _cov.forEach(function (c) {
       // seoPageLangs() always carries 'en', which is the page itself, not a
       // translation — counting it would have claimed 46 of 44.
@@ -14561,6 +14667,7 @@ const httpServer = http.createServer((req, res) => {
       _seoPageUrls(_sBase, '/play-against-computer', seoPageLangs(SEO_BOTS_I18N), 'monthly', '0.7') +
       _seoPageUrls(_sBase, '/starting-hands', seoPageLangs(SEO_START_I18N), 'monthly', '0.7') +
       _seoPageUrls(_sBase, '/accessibility', seoPageLangs(SEO_A11Y_I18N), 'monthly', '0.5') +
+      _seoPageUrls(_sBase, '/host-a-server', seoPageLangs(SEO_HOST_I18N), 'monthly', '0.6') +
       _seoPageUrls(_sBase, '/privacy', seoPageLangs(_seoPrivacyTable()), 'yearly', '0.2') +
       '</urlset>\n';
     res.writeHead(200, Object.assign({ 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
@@ -14601,6 +14708,9 @@ const httpServer = http.createServer((req, res) => {
   }
   if (reqPathOnly === '/competitions' || reqPathOnly === '/competitions.html') {
     return seoCompetitionsPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+  }
+  if (reqPathOnly === '/host-a-server' || reqPathOnly === '/host-a-server.html') {
+    return seoHostPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
   }
   if (reqPathOnly === '/accessibility' || reqPathOnly === '/accessibility.html') {
     return seoA11yPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');

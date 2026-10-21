@@ -32,6 +32,14 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Added
+- **`/host-a-server`** (`web.231`, SEO, English first) — « host your own poker server »: why (private, yours to
+  shape, free), the two pieces (PokerTH dedicated server + web client), three steps (`apt install pokerth-server`,
+  TCP 7234; one-command install, Docker multi-arch image or CasaOS; open port 8080 on the LAN), Raspberry Pi
+  advice, HTTP on the LAN vs HTTPS for the PWA extras, the admin panel, invitation links and the public server
+  list, links to the README guides (built in code), five questions; `HowTo` + `FAQPage` JSON-LD. Linked from the
+  /faq answer « Can I host my own server? » and from « Host it yourself » on /play-with-friends. Wired like the
+  other pages (nav « Host a server » gated on the language). Guard: `scripts/test-seo-host.mjs`, which checks the
+  page's claims and every guide link against the repository. `seo-i18n/host.js` is empty until the translations.
 - **`/accessibility`** (`web.228`, `web.229`, SEO) — « accessible poker »: where the Accessibility button is,
   interface size and high contrast (synced with the account), four-colour decks, the table magnifier and pinch
   zoom, light/dark, keyboard (official F-keys and re-bindable letters), gamepad and Android TV remote, voice
