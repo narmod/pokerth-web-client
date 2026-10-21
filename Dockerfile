@@ -19,7 +19,8 @@ COPY --chown=node:node . .
 # Writable directory for ALL persisted state. A named volume is mounted here
 # by docker-compose so everything survives container recreation: leaderboard,
 # admin-panel config, broadcasts, polls, visit counters, MySQL mirror config,
-# delegate API keys and per-player preferences.
+# delegate API keys, per-player preferences, the admin audit log and the
+# deployment history (roll-back).
 RUN mkdir -p /data && chown -R node:node /data
 ENV STATS_FILE=/data/stats.json
 ENV STATS_META_FILE=/data/stats.meta.json
@@ -32,6 +33,8 @@ ENV SCOPED_TOKENS_FILE=/data/scoped-tokens.json
 ENV WEC_FINALS_FILE=/data/wec-finals.json
 ENV MC_CUPS_FILE=/data/monthly-cups.json
 ENV PREFS_DIR=/data/prefs
+ENV AUDIT_FILE=/data/admin-audit.json
+ENV DEPLOY_HISTORY_FILE=/data/deploy-history.json
 
 # Live directory for the optional self-updating mode (SELF_UPDATE=1): the
 # entrypoint provisions a git checkout here and runs the app from it, so the

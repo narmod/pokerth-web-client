@@ -394,6 +394,27 @@ function _configKeepRedacted(next, redacted, current) {
     next.lanDirectory.pending.forEach(function (q) { if (q && q.id && was[q.id] && !q.contact) q.contact = was[q.id]; });
   }
 }
+// Server-owned state that is not a setting (audit log, deployment history)
+// lives beside admin-config.json: /data in the Docker image, where the named
+// volume survives a container recreation — the app dir does not, in the
+// image-baked mode. Before web.251 these two files sat in the app dir; a file
+// left there is copied over once, so no history is lost on the move. Only in
+// a container: elsewhere a test pointing these files at a temp dir must not
+// pick up the app dir's own copy.
+const _IN_CONTAINER = (function () {
+  try { if (fs.existsSync('/.dockerenv')) return true; } catch (e) {}
+  try { return /docker|containerd|kubepods/.test(fs.readFileSync('/proc/1/cgroup', 'utf8')); } catch (e) { return false; }
+})();
+function _stateFile(envName, name) {
+  const f = process.env[envName] || path.join(path.dirname(ADMIN_CONFIG_FILE), name), old = path.join(__dirname, name);
+  try {
+    if (_IN_CONTAINER && f !== old && !fs.existsSync(f) && fs.existsSync(old)) {
+      fs.writeFileSync(f, fs.readFileSync(old));
+      console.log('[state] ' + name + ' copied from the app dir to ' + f);
+    }
+  } catch (e) { console.error('[state] could not move ' + name + ': ' + e.message); return old; }
+  return f;
+}
 function saveAdminConfig() { try { fs.writeFileSync(ADMIN_CONFIG_FILE, JSON.stringify(_adminConfig)); } catch (e) { console.error('[admin] config write failed:', e.message); } }
 
 // ── LAN server directory (players propose, admin approves) ──────────────────
@@ -10961,9 +10982,9 @@ function updateCmdStatic() {
 // On garde donc trace des états successivement servis, ce qui suffit à revenir
 // en arrière depuis le tableau de bord.
 //
-// Le fichier vit à côté d'admin-config.json : hors git, propriété du serveur,
-// préservé par `git pull` (fichier non suivi).
-const DEPLOY_HISTORY_FILE = process.env.DEPLOY_HISTORY_FILE || path.join(__dirname, 'deploy-history.json');
+// Le fichier vit à côté d'admin-config.json (/data sous Docker) : hors git,
+// propriété du serveur, préservé par `git pull` (fichier non suivi).
+const DEPLOY_HISTORY_FILE = _stateFile('DEPLOY_HISTORY_FILE', 'deploy-history.json');
 // Profondeur volontairement courte : au-delà de quelques déploiements, revenir
 // en arrière n'a plus de sens — la configuration, la base et le protocole ont
 // bougé entre-temps. Une liste courte est aussi une liste qu'on lit.
@@ -11624,8 +11645,8 @@ function _cleanProxyCfg(pc, errs) {
 // interroge /admin/status toutes les quelques secondes, elles noieraient tout.
 //
 // Persisté sur disque : un journal d'audit qui disparaît au redémarrage ne vaut
-// pas grand-chose. Fichier non suivi, comme admin-config.json.
-const AUDIT_FILE = process.env.AUDIT_FILE || path.join(__dirname, 'admin-audit.json');
+// pas grand-chose. Fichier non suivi, à côté d'admin-config.json (/data sous Docker).
+const AUDIT_FILE = _stateFile('AUDIT_FILE', 'admin-audit.json');
 const AUDIT_MAX = 500;
 let _audit = [];
 try { _audit = JSON.parse(fs.readFileSync(AUDIT_FILE, 'utf8')) || []; } catch (e) { _audit = []; }

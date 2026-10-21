@@ -225,6 +225,14 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Audit log and deployment history kept in `/data`** (`web.251`) — `admin-audit.json` and `deploy-history.json`
+  defaulted to the app dir, the only persisted state outside the `/data` volume: an image-baked container lost the
+  audit log and the roll-back list on every recreation. They now sit beside `admin-config.json` (the Dockerfile also
+  sets `AUDIT_FILE` / `DEPLOY_HISTORY_FILE`), which moves them into `/data` on existing containers without an image
+  rebuild; in a container, a copy left in the app dir is carried over once. Plain installs are unchanged.
+  `scripts/test-state-files.mjs` checks that every relocatable file points into `/data`.
+- **Admin Live › Map: local-time band** (`web.250`) — the hour band of Statistics › World now heads the live map
+  too, following its region.
 - **iPhone app: full-screen layers reach the bottom too** (`web.249`) — follow-up of `web.248`: the screens take the
   corrected height, but a layer anchored to the bottom of the window (About, privacy, boot splash, end-of-game and
   award overlays, dialogs, lobby drawers…) would still stop where iOS believes the window ends, leaving a strip of
