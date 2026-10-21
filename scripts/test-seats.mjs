@@ -87,6 +87,35 @@ ok(typeof window._tableAutofit === 'number' && window._tableAutofit > 0 && windo
 const sc = byId.get('g-table-scaler');
 ok(/scale\(/.test(sc.style.transform || ''), 'scaler gets a scale() transform');
 
+// 4b) web.259 (scintillement du board, iOS) : sans changement de mise en page,
+// un nouvel appel réutilise la mesure — ni scale(1) ni --comm-scale réécrits.
+{
+  const writes = [];
+  const props = new Map([['--comm-scale', '0.9']]);
+  let tf = '', tfo = '';
+  const st = {
+    get transform() { return tf; }, set transform(v) { writes.push('transform=' + v); tf = v; },
+    get transformOrigin() { return tfo; }, set transformOrigin(v) { writes.push('origin=' + v); tfo = v; },
+    getPropertyValue: (k) => props.get(k) || '',
+    setProperty: (k, v) => { writes.push(k + '=' + v); props.set(k, String(v)); },
+    removeProperty: (k) => { writes.push(k + '=∅'); props.delete(k); },
+  };
+  byId.set('g-table-zone', el('div', { clientWidth: 390, clientHeight: 500 }));
+  byId.set('g-table-scaler', el('div', { scrollWidth: 780, scrollHeight: 1000, offsetWidth: 780, style: st }));
+  M.autoScaleTable();
+  const fit1 = window._tableAutofit;
+  ok(writes.includes('transform=scale(1)') && writes.includes('--comm-scale=1') && props.get('--comm-scale') === '0.9',
+     'first call measures at scale(1) / --comm-scale 1 and restores --comm-scale');
+  writes.length = 0;
+  M.autoScaleTable();
+  ok(writes.length === 0, 'unchanged layout: second call writes nothing (' + writes.join(', ') + ')');
+  ok(window._tableAutofit === fit1, 'unchanged layout: same autofit reused');
+  byId.get('g-table-zone').clientWidth = 300;
+  writes.length = 0;
+  M.autoScaleTable();
+  ok(writes.includes('transform=scale(1)') && window._tableAutofit < fit1, 'layout change: re-measures and refits');
+}
+
 // 5) autoScaleTable sans DOM -> no-op silencieux
 byId.delete('g-table-zone'); byId.delete('g-table-scaler');
 const prevFit = window._tableAutofit;

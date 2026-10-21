@@ -234,6 +234,14 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Community cards no longer flicker on iPhone** (`web.259`) — on iOS Safari the board faces went blank for one or
+  two frames, in pairs ~150 ms apart, with nothing else changing on screen. `autoScaleTable()` (`modules/game/seats.mjs`),
+  called by every `renderSeats` then again 150 ms later, set the scaler to `scale(1)` and `--comm-scale` to 1 to
+  measure, then restored them: same final render, but WebKit repainted the row and the `background-image: var(--cf)`
+  faces came out transparent. It now reads the current layout first without writing anything and reuses the last
+  reference measure when nothing moved (zone/scaler size, `--comm-scale`, viewport); the final `transform` /
+  `transform-origin` writes only happen when the value changes. Layout changes still re-measure exactly as before.
+  Guard: `scripts/test-seats.mjs` (4b).
 - **Errors and Sessions show versions** (`web.258`) — the device label now reads « iPhone iOS 17 · Safari 17 »,
   « Android 14 · Firefox 143 », « Windows · Chrome 141 »: same reading as Visitors › System / Browser version, from the
   raw User-Agent the error already keeps (nothing new collected). `_seUaVer` in `admin.html` is a copy of

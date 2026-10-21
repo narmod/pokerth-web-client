@@ -1,3 +1,6 @@
+2026-10-21 version 2.1.10-web.259:
+- bugfix: iPhone: the community cards no longer flicker (blank for an instant) during a hand
+
 2026-10-21 version 2.1.10-web.249:
 - bugfix: iPhone app: About, dialogs and other full-screen windows also reach the bottom of the screen after an update
 

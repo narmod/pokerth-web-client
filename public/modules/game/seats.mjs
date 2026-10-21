@@ -183,11 +183,13 @@ function _applyTableZoomSafe() {
 document.addEventListener('DOMContentLoaded', function() { setTimeout(_applyTableZoomSafe, 500); });
 window.addEventListener('resize', _applyTableZoomSafe);
 
+// web.259 : dernière mesure de référence (scale(1) + --comm-scale 1), réutilisée
+// tant que la mise en page n'a pas bougé — voir autoScaleTable.
+var _astMeasure = null;
 function autoScaleTable() {
   var tz = document.getElementById('g-table-zone');
   var sc = document.getElementById('g-table-scaler');
   if (!tz || !sc) return;
-  sc.style.transform = 'scale(1)';
   // web.70 : mesure à --comm-scale = 1 — la taille de la rangée community
   // (fixée APRÈS, d'après l'autofit) ne doit pas entrer dans l'autofit, sinon
   // une rangée plus large que le feutre ferait baisser l'autofit, qui la
@@ -195,12 +197,32 @@ function autoScaleTable() {
   var _csSt = sc.style, _csOk = _csSt && typeof _csSt.getPropertyValue === 'function'
     && typeof _csSt.setProperty === 'function' && typeof _csSt.removeProperty === 'function';
   var _csPrev = _csOk ? _csSt.getPropertyValue('--comm-scale') : '';
-  if (_csOk) _csSt.setProperty('--comm-scale', '1');
-  // Forcer un reflow avant de lire les dimensions
-  void sc.offsetWidth;
-  var tzW = tz.clientWidth, tzH = tz.clientHeight;
-  var scW = sc.scrollWidth, scH = sc.scrollHeight;
-  if (_csOk) { if (_csPrev) _csSt.setProperty('--comm-scale', _csPrev); else _csSt.removeProperty('--comm-scale'); }
+  // web.259 : scintillement des cartes communes sur iPhone (vidéo narmod
+  // 21/10). Chaque appel passait le scaler à scale(1) et --comm-scale à 1 pour
+  // mesurer, puis restaurait : rendu final identique, mais Safari iOS repeint
+  // alors la rangée et ses faces (background-image: var(--cf)) sortent
+  // transparentes 1 à 2 images — par paires à ~150 ms, renderSeats appelant
+  // autoScaleTable puis setTimeout(autoScaleTable, 150). On lit d'abord l'état
+  // courant SANS rien écrire (scrollWidth/clientWidth ne dépendent pas du
+  // transform propre du scaler) ; si rien n'a changé depuis la dernière mesure
+  // de référence, on la réutilise et on ne touche à rien.
+  var _rootCs = '';
+  try { _rootCs = document.documentElement.style.getPropertyValue('--comm-scale'); } catch (e) {}
+  var _astKey = [tz.clientWidth, tz.clientHeight, sc.scrollWidth, sc.scrollHeight,
+    _csPrev, _rootCs, window.innerWidth, window.innerHeight].join('|');
+  var tzW, tzH, scW, scH;
+  if (_astMeasure && _astMeasure.key === _astKey) {
+    tzW = _astMeasure.tzW; tzH = _astMeasure.tzH; scW = _astMeasure.scW; scH = _astMeasure.scH;
+  } else {
+    sc.style.transform = 'scale(1)';
+    if (_csOk) _csSt.setProperty('--comm-scale', '1');
+    // Forcer un reflow avant de lire les dimensions
+    void sc.offsetWidth;
+    tzW = tz.clientWidth; tzH = tz.clientHeight;
+    scW = sc.scrollWidth; scH = sc.scrollHeight;
+    if (_csOk) { if (_csPrev) _csSt.setProperty('--comm-scale', _csPrev); else _csSt.removeProperty('--comm-scale'); }
+    _astMeasure = (tzW && scW && tzH && scH) ? { key: _astKey, tzW: tzW, tzH: tzH, scW: scW, scH: scH } : null;
+  }
   var ov = document.querySelector('.felt-oval');
   var ga = document.querySelector('.game-area');
   if (!tzW || !scW || !tzH || !scH) {
@@ -219,15 +241,21 @@ function autoScaleTable() {
   var scale = Math.min(scaleMax, tzW / scW, tzH / scH);
   if (scale < 0.05) scale = 0.5; // fallback visible
   window._tableAutofit = scale; // zoom applique separement (voir _applyZoomTransforms)
-  sc.style.transform = 'scale(' + scale.toFixed(3) + ')';
-  sc.style.transformOrigin = 'center center';
+  // web.259 : n'écrire que si la valeur change (aucune repeinture inutile).
+  var _scTf = 'scale(' + scale.toFixed(3) + ')';
+  if (sc.style.transform !== _scTf) sc.style.transform = _scTf;
+  if (sc.style.transformOrigin !== 'center center') sc.style.transformOrigin = 'center center';
   // Cartes communes : ici le scaler est a autofit SANS le zoom. On compense
   // #g-comm par scale(zoom) pour qu'elles grossissent/retrecissent comme les
   // sieges (qui portent scale(eff) via #g-seats). Neutralise dans
   // _applyZoomTransforms ou le scaler porte deja autofit*eff (pas de double).
   var _cz = (typeof _getTableZoom === 'function') ? _getTableZoom() : 1;
   var _cc = document.getElementById('g-comm');
-  if (_cc) { _cc.style.transformOrigin = 'center center'; _cc.style.transform = (Math.abs(_cz - 1) > 0.001 ? 'translate(-50%, -50%) scale(' + _cz.toFixed(3) + ')' : ''); }
+  if (_cc) {
+    var _ccTf = (Math.abs(_cz - 1) > 0.001 ? 'translate(-50%, -50%) scale(' + _cz.toFixed(3) + ')' : '');
+    if (_cc.style.transformOrigin !== 'center center') _cc.style.transformOrigin = 'center center';
+    if (_cc.style.transform !== _ccTf) _cc.style.transform = _ccTf;
+  }
 }
 document.addEventListener('DOMContentLoaded', function() { setTimeout(autoScaleTable, 400); });
 
