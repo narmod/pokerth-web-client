@@ -6742,14 +6742,101 @@ function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld, lang, l
   res.end(buf);
 }
 
+// When a content page last changed, for <lastmod>. The dated pages keep the
+// day in seo-i18n/article-dates.json (fingerprinted over every language,
+// scripts/test-seo-article-ld.mjs); /privacy uses the « Last updated » line of
+// privacy.html; /competitions lists upcoming events, so it changes daily.
+// proxy.js's own mtime is the fallback — it moves on every deploy, which is
+// why it is no longer the answer for the dated pages.
+function seoPageModified(relPath) {
+  var d = SEO_ARTICLE_DATES[relPath];
+  if (d && d.modified) return d.modified;
+  if (relPath === '/competitions') return _seoIsoDay(Date.now());
+  if (relPath === '/privacy') {
+    try { var m = _seoPrivacyBody(fs.readFileSync(path.join(__dirname, 'public', 'privacy.html'), 'utf8')).modified; if (m) return m; } catch (e) {}
+  }
+  return seoLastModSelf();
+}
+
+// Sitemap index (web.239): one child sitemap per page, plus one for / and its
+// language variants, each with its own <lastmod>. The single /sitemap.xml had
+// reached 8.5 MB — 83 languages × 15 pages, every URL repeating its full
+// hreflang set — and was fetched whole on every crawl; a crawler now
+// refetches only the children whose date moved.
+function seoSitemapChildren(_sBase) {
+  // Language variants of / carry the full hreflang alternate set via
+  // xhtml:link, per Google's sitemap guidance for multilingual sites
+  // (https://developers.google.com/search/docs/specialty/international/localized-versions#sitemap).
+  // The set comes from seoHreflangPairs, the same helper the <head> uses,
+  // so the two can never drift apart.
+  var home = function () {
+    var alt = seoHreflangPairs(_sBase).map(function (p) {
+      return '<xhtml:link rel="alternate" hreflang="' + p[0] + '" href="' + p[1] + '"/>';
+    }).join('');
+    var lm = seoLastModApp(), l = lm ? '<lastmod>' + lm + '</lastmod>' : '';
+    var out = '<url><loc>' + _sBase + '/</loc>' + l + alt + '<changefreq>weekly</changefreq><priority>1.0</priority></url>\n';
+    for (var c in SEO_I18N) {
+      if (c === 'en') continue;
+      out += '<url><loc>' + _sBase + '/?lang=' + c + '</loc>' + l + alt + '<changefreq>weekly</changefreq><priority>0.8</priority></url>\n';
+    }
+    return out;
+  };
+  var page = function (rel, fn) { return { slug: rel.slice(1), lastmod: seoPageModified(rel), urls: fn }; };
+  return [
+    { slug: 'home', lastmod: seoLastModApp(), urls: home },
+    page('/rules', function () { return _seoPageUrls(_sBase, '/rules', seoPageLangs(SEO_RULES_I18N), 'monthly', '0.6'); }),
+    page('/faq', function () { return _seoPageUrls(_sBase, '/faq', seoPageLangs(SEO_FAQ_I18N), 'monthly', '0.5'); }),
+    page('/hand-rankings', function () { return _seoPageUrls(_sBase, '/hand-rankings', seoPageLangs(SEO_HANDS_I18N), 'monthly', '0.7'); }),
+    page('/how-to-play', function () { return _seoPageUrls(_sBase, '/how-to-play', seoPageLangs(SEO_HOWTO_I18N), 'monthly', '0.7'); }),
+    page('/glossary', function () { return _seoPageUrls(_sBase, '/glossary', seoPageLangs(SEO_GLOSSARY_I18N), 'monthly', '0.5'); }),
+    page('/competitions', function () { return _seoPageUrls(_sBase, '/competitions', seoPageLangs(SEO_COMP_I18N), 'daily', '0.6'); }),
+    page('/play-with-friends', function () { return _seoPageUrls(_sBase, '/play-with-friends', seoPageLangs(SEO_FRIENDS_I18N), 'monthly', '0.7'); }),
+    page('/poker-odds', function () { return _seoPageUrls(_sBase, '/poker-odds', seoPageLangs(SEO_ODDS_I18N), 'monthly', '0.7'); }),
+    page('/play-against-computer', function () { return _seoPageUrls(_sBase, '/play-against-computer', seoPageLangs(SEO_BOTS_I18N), 'monthly', '0.7'); }),
+    page('/starting-hands', function () { return _seoPageUrls(_sBase, '/starting-hands', seoPageLangs(SEO_START_I18N), 'monthly', '0.7'); }),
+    page('/accessibility', function () { return _seoPageUrls(_sBase, '/accessibility', seoPageLangs(SEO_A11Y_I18N), 'monthly', '0.5'); }),
+    page('/host-a-server', function () { return _seoPageUrls(_sBase, '/host-a-server', seoPageLangs(SEO_HOST_I18N), 'monthly', '0.6'); }),
+    // The privacy translations come from the app catalogs, loaded in the
+    // background on first use (like the /privacy page itself does).
+    page('/privacy', function () { _seoSsr.refresh(PUBLIC_DIR); return _seoPageUrls(_sBase, '/privacy', seoPageLangs(_seoPrivacyTable()), 'yearly', '0.2'); })
+  ];
+}
+
+// XML for robots: compressed once per distinct body (gzip + brotli), an ETag
+// from the content, 304 on If-None-Match, Last-Modified from the newest
+// <lastmod>. A sitemap unchanged since the last crawl now costs a header.
+var _seoXmlCache = new Map();
+function _seoSendXml(req, res, xml, lastmod) {
+  var tag = '"' + crypto.createHash('sha1').update(xml).digest('hex').slice(0, 20) + '"';
+  var ent = _seoXmlCache.get(tag);
+  if (!ent) {
+    var buf = Buffer.from(xml, 'utf8');
+    ent = { raw: buf, gz: zlib.gzipSync(buf), br: zlib.brotliCompressSync(buf, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 5 } }) };
+    if (_seoXmlCache.size > 40) _seoXmlCache.clear();
+    _seoXmlCache.set(tag, ent);
+  }
+  var headers = Object.assign({ 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate',
+    'ETag': tag, 'Vary': 'Accept-Encoding' }, SECURITY_HEADERS);
+  if (lastmod) { var t = Date.parse(lastmod + 'T00:00:00Z'); if (!isNaN(t)) headers['Last-Modified'] = new Date(t).toUTCString(); }
+  var inm = String(req.headers['if-none-match'] || '');
+  if (inm && inm.split(/\s*,\s*/).some(function (v) { return v.replace(/^W\//, '') === tag || v === '*'; })) {
+    res.writeHead(304, headers); res.end(); return;
+  }
+  var ae = String(req.headers['accept-encoding'] || ''), body = ent.raw;
+  if (/\bbr\b/.test(ae)) { body = ent.br; headers['Content-Encoding'] = 'br'; }
+  else if (/\bgzip\b/.test(ae)) { body = ent.gz; headers['Content-Encoding'] = 'gzip'; }
+  headers['Content-Length'] = body.length;
+  res.writeHead(200, headers);
+  if (req.method === 'HEAD') { res.end(); return; }
+  res.end(body);
+}
+
 // Sitemap entries for a content page and each language it exists in. The
 // xhtml:link set matches the one the page itself serves, per Google's rule
 // that the two must agree.
 function _seoPageUrls(base, relPath, langs, freq, prio) {
   var href = function (c) { return base + relPath + (c === 'en' ? '' : '?lang=' + c); };
-  // These pages are rendered from tables inside proxy.js, so its mtime is
-  // exactly when their text last changed.
-  var lm = seoLastModSelf();
+  var lm = seoPageModified(relPath);
   var alt = '';
   if (langs.length > 1) {
     alt = '<xhtml:link rel="alternate" hreflang="x-default" href="' + href('en') + '"/>';
@@ -13371,7 +13458,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     });
     _add(seoAiCrawlers() ? 'ok' : 'warn', seoAiCrawlers() ? 'AI crawlers are allowed and llms.txt is served.' : 'AI crawlers are refused in robots.txt and llms.txt returns 404.');
     var _urlCount = _base ? seoIndexNowUrls(_base).length : 0;
-    if (_urlCount) _add('ok', 'sitemap.xml advertises ' + _urlCount + ' URLs.');
+    if (_urlCount) _add('ok', 'sitemap.xml indexes ' + seoSitemapChildren(_base).length + ' sitemaps listing ' + _urlCount + ' URLs.');
     return adminJson(res, 200, { ok: true, checks: _ck, indexNow: _seoAdmin().indexNow });
   }
   if (reqPathOnly === '/admin/update-log') {
@@ -14730,47 +14817,27 @@ const httpServer = http.createServer((req, res) => {
     res.end(_rTxt);
     return;
   }
-  if (reqPathOnly === '/sitemap.xml') {
+  var _smSlug = reqPathOnly === '/sitemap.xml' ? '' : (reqPathOnly.match(/^\/sitemap-([a-z-]+)\.xml$/) || [])[1];
+  if (_smSlug !== undefined) {
     var _sBase = seoEnabled() ? seoPublicUrl() : '';
     if (!_sBase) { res.writeHead(404); res.end('Not found'); return; }
-    // Language variants of / carry the full hreflang alternate set via
-    // xhtml:link, per Google's sitemap guidance for multilingual sites
-    // (https://developers.google.com/search/docs/specialty/international/localized-versions#sitemap).
-    // The set comes from seoHreflangPairs, the same helper the <head> uses,
-    // so the two can never drift apart.
-    var _sAlt = seoHreflangPairs(_sBase).map(function (p) {
-      return '<xhtml:link rel="alternate" hreflang="' + p[0] + '" href="' + p[1] + '"/>';
-    }).join('');
-    // <lastmod> — the app pages date from the newest served asset, the
-    // server-rendered pages from proxy.js itself.
-    var _sModApp = seoLastModApp(), _sModSelf = seoLastModSelf();
-    var _sLm = function (d) { return d ? '<lastmod>' + d + '</lastmod>' : ''; };
-    var _sVariants = '';
-    for (var _sc2 in SEO_I18N) {
-      if (_sc2 === 'en') continue;
-      _sVariants += '<url><loc>' + _sBase + '/?lang=' + _sc2 + '</loc>' + _sLm(_sModApp) + _sAlt + '<changefreq>weekly</changefreq><priority>0.8</priority></url>\n';
+    var _sKids = seoSitemapChildren(_sBase), _sXml, _sLm = '';
+    if (!_smSlug) {
+      // /sitemap.xml: the index, one <sitemap> per child with its date.
+      _sXml = '<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+        _sKids.map(function (k) {
+          if (k.lastmod > _sLm) _sLm = k.lastmod;
+          return '<sitemap><loc>' + _sBase + '/sitemap-' + k.slug + '.xml</loc>' + (k.lastmod ? '<lastmod>' + k.lastmod + '</lastmod>' : '') + '</sitemap>\n';
+        }).join('') + '</sitemapindex>\n';
+    } else {
+      var _sKid = _sKids.filter(function (k) { return k.slug === _smSlug; })[0];
+      if (!_sKid) { res.writeHead(404); res.end('Not found'); return; }
+      _sLm = _sKid.lastmod;
+      _sXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' +
+        _sKid.urls() + '</urlset>\n';
     }
-    var _sXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
-      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' +
-      '<url><loc>' + _sBase + '/</loc>' + _sLm(_sModApp) + _sAlt + '<changefreq>weekly</changefreq><priority>1.0</priority></url>\n' +
-      _sVariants +
-      _seoPageUrls(_sBase, '/rules', seoPageLangs(SEO_RULES_I18N), 'monthly', '0.6') +
-      _seoPageUrls(_sBase, '/faq', seoPageLangs(SEO_FAQ_I18N), 'monthly', '0.5') +
-      _seoPageUrls(_sBase, '/hand-rankings', seoPageLangs(SEO_HANDS_I18N), 'monthly', '0.7') +
-      _seoPageUrls(_sBase, '/how-to-play', seoPageLangs(SEO_HOWTO_I18N), 'monthly', '0.7') +
-      _seoPageUrls(_sBase, '/glossary', seoPageLangs(SEO_GLOSSARY_I18N), 'monthly', '0.5') +
-      _seoPageUrls(_sBase, '/competitions', seoPageLangs(SEO_COMP_I18N), 'daily', '0.6') +
-      _seoPageUrls(_sBase, '/play-with-friends', seoPageLangs(SEO_FRIENDS_I18N), 'monthly', '0.7') +
-      _seoPageUrls(_sBase, '/poker-odds', seoPageLangs(SEO_ODDS_I18N), 'monthly', '0.7') +
-      _seoPageUrls(_sBase, '/play-against-computer', seoPageLangs(SEO_BOTS_I18N), 'monthly', '0.7') +
-      _seoPageUrls(_sBase, '/starting-hands', seoPageLangs(SEO_START_I18N), 'monthly', '0.7') +
-      _seoPageUrls(_sBase, '/accessibility', seoPageLangs(SEO_A11Y_I18N), 'monthly', '0.5') +
-      _seoPageUrls(_sBase, '/host-a-server', seoPageLangs(SEO_HOST_I18N), 'monthly', '0.6') +
-      _seoPageUrls(_sBase, '/privacy', seoPageLangs(_seoPrivacyTable()), 'yearly', '0.2') +
-      '</urlset>\n';
-    res.writeHead(200, Object.assign({ 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
-    res.end(_sXml);
-    return;
+    return _seoSendXml(req, res, _sXml, _sLm);
   }
   if (reqPathOnly === '/llms.txt') {
     // The file exists to brief AI crawlers. Serving it while robots.txt tells

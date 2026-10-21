@@ -132,6 +132,14 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Sitemap index, real dates, compression** (`web.239`, SEO) — `/sitemap.xml` was one 8.5 MB file (83 languages ×
+  15 pages, every URL repeating its hreflang set), fetched whole on every crawl, and every page's `<lastmod>` was
+  `proxy.js`'s mtime, which moves on each deploy. It is now an index of 14 child sitemaps (`/sitemap-home.xml`,
+  `/sitemap-rules.xml`, …), each with the day its page last changed: from `seo-i18n/article-dates.json` (now dating
+  every content page, fingerprinted over all its languages by `scripts/test-seo-article-ld.mjs` — run it with
+  `--update` after editing a page), the « Last updated » line for /privacy, today for /competitions. Sitemaps are
+  served gzip/brotli (930 KB → 13 KB), with an ETag answered by 304 and a Last-Modified. Guarded by
+  `scripts/test-seo-sitemap.mjs`.
 - **/faq and /glossary in themed sections** (`web.237`, SEO) — both pages were one flat list under the H1. The FAQ
   now has five H2 themes (Free and private · Getting started · Friends and tournaments · Devices and languages ·
   About PokerTH) with each question as an H3, and FAQPage lists the questions in the same reading order; the

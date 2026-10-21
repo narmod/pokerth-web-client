@@ -1,14 +1,17 @@
 #!/usr/bin/env node
-// The content pages typed Article (/rules, /hand-rankings, /poker-odds,
-// /starting-hands, /accessibility) carry the fields Google lists for an
-// Article: datePublished, dateModified, image, author and publisher with a
-// logo, plus article:published_time / article:modified_time for link cards.
-// The dates come from seo-i18n/article-dates.json, which also keeps a
-// fingerprint of each page's English body (<main>). When the body changes,
-// this test fails until the date is moved on:
+// Content page dates. seo-i18n/article-dates.json keeps, for every content
+// page except / (dated by the app assets), /competitions (a live calendar)
+// and /privacy (its « Last updated » line), the day it was first published
+// and the day its text last changed, with a fingerprint of the page's body
+// (<main>) in every language. When any of them changes, this test fails until
+// the date is moved on:
 //   node scripts/test-seo-article-ld.mjs --update   (records today's date)
-// A new Article page fails here until it has an entry (--update adds it).
-// Run: node scripts/test-seo-article-ld.mjs   (~5 s)
+// The dates feed the sitemap <lastmod> of each page (web.239) and, on the
+// pages typed Article (/rules, /hand-rankings, /poker-odds, /starting-hands,
+// /accessibility), the fields Google lists for an Article: datePublished,
+// dateModified, image, author and publisher with a logo, plus
+// article:published_time / article:modified_time for link cards.
+// Run: node scripts/test-seo-article-ld.mjs   (~30 s)
 import { spawn } from 'node:child_process';
 import { mkdtempSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -16,12 +19,15 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import http from 'node:http';
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const FILE = join(root, 'seo-i18n', 'article-dates.json');
 const UPDATE = process.argv.includes('--update');
 const PAGES = ['/', '/faq', '/rules', '/hand-rankings', '/how-to-play', '/glossary', '/competitions', '/privacy',
   '/play-with-friends', '/poker-odds', '/play-against-computer', '/starting-hands', '/accessibility', '/host-a-server'];
+const UNDATED = ['/', '/competitions', '/privacy'];
 const BASE = 'https://example.org';
 const tmp = mkdtempSync(join(tmpdir(), 'pth-art-'));
 writeFileSync(join(tmp, 'admin-config.json'), JSON.stringify({ seo: { enabled: true, publicUrl: BASE } }));
@@ -33,7 +39,16 @@ let n = 0, fail = 0;
 const ok = (c, m) => { n++; if (!c) { fail++; console.error('  ✗', m); } else console.log('  ✓', m); };
 const blocks = (h) => [...h.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].flatMap((m) => [].concat(JSON.parse(m[1])));
 const meta = (h, p) => (h.match(new RegExp('<meta property="' + p + '" content="([^"]*)"')) || [])[1];
-const fp = (h) => createHash('sha1').update((h.match(/<main>([\s\S]*)<\/main>/) || [])[1] || '').digest('hex').slice(0, 16);
+const main = (h) => (h.match(/<main>([\s\S]*)<\/main>/) || [])[1] || '';
+const LANGS = Object.keys(require(join(root, 'seo-i18n', 'competitions.js')));
+// One fingerprint over the page in English and in every language it exists in
+// (a language without its own version falls back to English and adds nothing new).
+async function fpAll(p) {
+  const h = createHash('sha1');
+  h.update(main(await get(p)));
+  for (const l of LANGS) h.update('\n' + l + '\n' + main(await get(p + '?lang=' + l)));
+  return h.digest('hex').slice(0, 16);
+}
 const today = new Date().toISOString().slice(0, 10);
 const ISO = /^\d{4}-\d{2}-\d{2}$/;
 const dates = JSON.parse(readFileSync(FILE, 'utf8'));
@@ -43,17 +58,18 @@ try {
   for (const p of PAGES) {
     const h = await get(p);
     const art = blocks(h).find((b) => b['@type'] === 'Article');
-    if (!art) { ok(!dates[p], `${p}: no Article, no stale date entry`); continue; }
-    const f = fp(h), d = dates[p];
-    if (UPDATE && (!d || d.en !== f)) {
-      dates[p] = { published: (d && d.published) || today, modified: today, en: f }; changed = true;
-      console.log(`  · ${p}: ${d ? 'English body changed' : 'new Article page'}, dated ${today}`);
+    if (UNDATED.includes(p)) { ok(!dates[p] && !art, `${p}: dated elsewhere, no entry`); continue; }
+    const f = await fpAll(p), d = dates[p];
+    if (UPDATE && (!d || d.fp !== f)) {
+      dates[p] = { published: (d && d.published) || today, modified: today, fp: f }; changed = true;
+      console.log(`  · ${p}: ${d ? 'text changed' : 'new page'}, dated ${today}`);
       continue;
     }
     ok(d, `${p}: has an entry in seo-i18n/article-dates.json`);
     if (!d) continue;
-    ok(d.en === f, `${p}: English body unchanged since ${d.modified}` + (d.en === f ? '' : ' — move the date: node scripts/test-seo-article-ld.mjs --update'));
+    ok(d.fp === f, `${p}: text unchanged in every language since ${d.modified}` + (d.fp === f ? '' : ' — move the date: node scripts/test-seo-article-ld.mjs --update'));
     ok(ISO.test(d.published) && ISO.test(d.modified) && d.published <= d.modified && d.modified <= today, `${p}: dates in order (${d.published} ≤ ${d.modified} ≤ today)`);
+    if (!art) continue;
     ok(art.datePublished === d.published && art.dateModified === d.modified, `${p}: datePublished / dateModified in the JSON-LD`);
     ok(meta(h, 'article:published_time') === d.published && meta(h, 'article:modified_time') === d.modified, `${p}: article:published_time / modified_time`);
     ok(art.image === BASE + '/screenshots/social-preview.png', `${p}: image is the social card`);
