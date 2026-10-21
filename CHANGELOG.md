@@ -225,6 +225,10 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Errors and Sessions name a device like Visitors** (`web.256`) — `_seDev` in `admin.html` had its own shorter
+  detection (no in-app, WebView, Yandex, HarmonyOS, Smart TV…; the installed iPhone app had no browser). It now reads
+  `SE_UA_OS` / `SE_UA_BROWSER`, copies of the `proxy.js` tables that `scripts/test-ua-browser.mjs` keeps identical
+  entry for entry; « macOS » still shows as « Mac ».
 - **Visitors: more browsers and platforms told apart** (`web.255`) — `UA_OS` / `UA_BROWSER` in `proxy.js`. New
   browser labels: **In-app** (Facebook, Instagram, the Google app, WeChat, TikTok…), **WebView** (Android `; wv)`),
   **Yandex**, **UC**, **Huawei**, **Xiaomi**, **Silk**, **DuckDuckGo**, **Meta Quest**; Opera on iOS (`OPT/`) counts as

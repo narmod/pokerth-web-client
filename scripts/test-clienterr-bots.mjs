@@ -24,8 +24,9 @@ function ok(cond, label) {
 
 const m = html.match(/^ *var ERR_BOT_UA = (\/.*\/[a-z]*);$/m);
 const fIs = html.match(/^ *function _seIsBot\(ua\)\{.*\}$/m);
-const iDev = html.indexOf('function _seDev(ua){');
-const iDevEnd = html.indexOf('\n  }\n', iDev);
+// From the UA tables on (web.256: _seDev reads SE_UA_OS / SE_UA_BROWSER).
+const iDev = html.indexOf('var SE_UA_OS = [');
+const iDevEnd = html.indexOf('\n  }\n', html.indexOf('function _seDev(ua){', iDev));
 ok(!!m && !!fIs && iDev > 0 && iDevEnd > iDev, 'ERR_BOT_UA, _seIsBot and _seDev are still in admin.html');
 if (!m || !fIs || iDev < 0) { console.log('\nFAIL ' + fails); process.exit(1); }
 const api = new Function(m[0] + '\n' + fIs[0] + '\n' + html.slice(iDev, iDevEnd + 4) +

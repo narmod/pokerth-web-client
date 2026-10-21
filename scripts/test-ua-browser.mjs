@@ -28,11 +28,18 @@ const grab = (re, what) => { const m = proxy.match(re); ok(!!m, what + ' found i
 const src = grab(/^const UA_OS = \[[\s\S]*?^\];$/m, 'UA_OS') + '\n' +
   grab(/^const UA_BROWSER = \[[\s\S]*?^\];$/m, 'UA_BROWSER') + '\n' +
   grab(/^function _uaPick\(table, ua\) \{[\s\S]*?^\}$/m, '_uaPick');
-const iDev = html.indexOf('function _seDev(ua){');
-const iDevEnd = html.indexOf('\n  }\n', iDev);
+const iDev = html.indexOf('var SE_UA_OS = [');
+const iDevEnd = html.indexOf('\n  }\n', html.indexOf('function _seDev(ua){', iDev));
 const fIs = html.match(/^ *function _seIsBot\(ua\)\{.*\}$/m);
 const bot = html.match(/^ *var ERR_BOT_UA = (\/.*\/[a-z]*);$/m);
-ok(iDev > 0 && iDevEnd > iDev && !!fIs && !!bot, '_seDev, _seIsBot and ERR_BOT_UA found in admin.html');
+ok(iDev > 0 && iDevEnd > iDev && !!fIs && !!bot, 'SE_UA_OS / SE_UA_BROWSER, _seDev, _seIsBot and ERR_BOT_UA found in admin.html');
+// One rule for the whole admin (web.256): the Errors / Sessions tables are the
+// Visitors tables, entry for entry.
+const tbl = (txt, re) => { const m = txt.match(re); return m ? m[1].replace(/\s+/g, '') : null; };
+const pOs = tbl(proxy, /^const UA_OS = \[([\s\S]*?)^\];$/m), pBr = tbl(proxy, /^const UA_BROWSER = \[([\s\S]*?)^\];$/m);
+const aOs = tbl(html, /^ *var SE_UA_OS = \[([\s\S]*?)^ *\];$/m), aBr = tbl(html, /^ *var SE_UA_BROWSER = \[([\s\S]*?)^ *\];$/m);
+ok(!!pOs && pOs === aOs, 'admin SE_UA_OS is the same table as proxy UA_OS');
+ok(!!pBr && pBr === aBr, 'admin SE_UA_BROWSER is the same table as proxy UA_BROWSER');
 if (fails) { console.log('\nFAIL ' + fails); process.exit(1); }
 
 const srv = new Function(src.replace(/^const /mg, 'var ') +
@@ -123,7 +130,8 @@ const CASES = [
 ];
 for (const [label, ua, os, br, dev] of CASES) {
   ok(srv.os(ua) === os && srv.br(ua) === br, `visitors: ${label} → ${srv.os(ua)} / ${srv.br(ua)}`);
-  if (dev) ok(adm(ua) === dev, `admin label: ${label} → ${adm(ua)}`);
+  const want = dev || [os === 'macOS' ? 'Mac' : os, br].filter((x) => x && x !== 'other').join(' · ');
+  ok(adm(ua) === want, `admin label: ${label} → ${adm(ua)}`);
 }
 ok(srv.br('') === 'other' && adm('') === '', 'empty UA: « other » / no label');
 ok(srv.os('') === 'other' && srv.os('curl/8.5.0') === 'other' && srv.br('curl/8.5.0') === 'other', 'a UA naming no platform stays « other »');

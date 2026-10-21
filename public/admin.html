@@ -7669,17 +7669,36 @@
   var ERR_BOT_UA = /bot\/|bot;|spider|crawl|slurp|HeadlessChrome|Lighthouse|\+https?:\/\//i;
   function _seIsBot(ua){ return ERR_BOT_UA.test(String(ua||'')); }
   // Short, human device label from the User-Agent. Best-effort only: it labels
-  // a row, nothing depends on it.
+  // a row, nothing depends on it. The two tables are a copy of proxy.js
+  // UA_OS / UA_BROWSER (Visitors), kept identical by scripts/test-ua-browser.mjs,
+  // so Errors, Sessions and Visitors name a device the same way (web.256).
+  var SE_UA_OS = [
+    [/iPhone|iPod/, 'iPhone'], [/iPad/, 'iPad'],
+    [/OpenHarmony|HarmonyOS|ArkWeb/, 'HarmonyOS'], [/KAIOS/i, 'KaiOS'],
+    [/PlayStation|Xbox|Nintendo/, 'Console'],
+    [/OculusBrowser|\bQuest\b|Pico Neo|PicoBrowser/, 'VR headset'],
+    [/SMART-TV|SmartTV|Web0S|webOS|Tizen|HbbTV|BRAVIA|GoogleTV|Android ?TV|CrKey|\bAFT[A-Z0-9]{1,6}\b/, 'Smart TV'],
+    [/Android/, 'Android'],
+    [/Windows NT/, 'Windows'], [/Mac OS X/, 'macOS'], [/CrOS/, 'ChromeOS'],
+    [/FreeBSD|OpenBSD|NetBSD/, 'BSD'], [/Linux/, 'Linux'],
+  ];
+  var SE_UA_BROWSER = [
+    [/FBAN\/|FBAV\/|FB_IAB|Instagram |\bLine\/|MicroMessenger|Snapchat|musical_ly|BytedanceWebview|TikTok|LinkedInApp|Pinterest|GSA\//, 'In-app'],
+    [/Edg(?:e|A|iOS)?\//, 'Edge'], [/OPR\/|Opera|OPT\/|OPiOS\//, 'Opera'], [/OculusBrowser/, 'Meta Quest'],
+    [/SamsungBrowser/, 'Samsung'], [/YaBrowser\/|YaSearchBrowser/, 'Yandex'], [/UCBrowser\/|UCWEB|UBrowser\//, 'UC'],
+    [/HuaweiBrowser\/|HBPC\//, 'Huawei'], [/MiuiBrowser\/|XiaoMi\//, 'Xiaomi'], [/Ddg\/|DuckDuckGo\//, 'DuckDuckGo'],
+    [/Silk\//, 'Silk'], [/FxiOS|Firefox\//, 'Firefox'], [/; wv\)/, 'WebView'],
+    [/CriOS/, 'Chrome'], [/Chrome\//, 'Chrome'], [/Safari\//, 'Safari'], [/(?:iPhone|iPad|iPod).*AppleWebKit\//, 'Safari'],
+  ];
+  function _seUaPick(t,ua){ for(var i=0;i<t.length;i++) if(t[i][0].test(ua)) return t[i][1]; return ''; }
   function _seDev(ua){
     ua=String(ua||''); if(!ua) return '';
     if(_seIsBot(ua)){
       var bn=ua.match(/([A-Za-z-]*bot)[\/;]/i) || ua.match(/HeadlessChrome|Lighthouse/i);
       return 'Bot'+(bn?(' ('+(bn[1]||bn[0])+')'):'');
     }
-    var os = /iPhone/.test(ua)?'iPhone' : /iPad/.test(ua)?'iPad' : /Android/.test(ua)?'Android'
-           : /Windows/.test(ua)?'Windows' : /Mac OS X/.test(ua)?'Mac' : /Linux/.test(ua)?'Linux' : '';
-    var br = /Edg(?:e|A|iOS)?\//.test(ua)?'Edge' : /OPR\//.test(ua)?'Opera' : /Firefox\//.test(ua)?'Firefox'
-           : /Chrome\//.test(ua)?'Chrome' : /Safari\//.test(ua)?'Safari' : '';
+    var os=_seUaPick(SE_UA_OS,ua), br=_seUaPick(SE_UA_BROWSER,ua);
+    if(os==='macOS') os='Mac';
     return [os,br].filter(Boolean).join(' \u00b7 ');
   }
   function _seMode(m){ return m==='pthnet'?'Internet' : m==='lan'?'LAN' : m==='offline'?'Training' : (m||'\u2014'); }
