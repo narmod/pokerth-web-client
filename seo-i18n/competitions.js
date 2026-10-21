@@ -7,7 +7,7 @@
 // match the English ones exactly (scripts/test-seo-competitions-i18n.mjs).
 module.exports = {
   af: {
-    title: "Gratis aanlyn pokertoernooie — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Gratis pokertoernooie — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Gratis Texas Hold’em-pokertoernooie die hele jaar op pokerth.net: BBC, WeCup en Monthly Cup, met kalenders, uitslae en ranglyste. Geen regte geld, geen aflaai.",
     h1: "Gratis aanlyn pokertoernooie en -kompetisies",
     lead: "PokerTH is gratis, en so ook sy kompetisies. Elke spel op pokerth.net is ’n Texas Hold’em-toernooi, en die gemeenskap hou ook die hele jaar deur gereelde kompetisies, elk met sy eie kalender, uitslae en ranglys. Slegs speelgeld: niemand betaal om in te skryf nie en daar is geen kontant om te wen nie.",
@@ -31,7 +31,7 @@ module.exports = {
     up: {"bbc": "BBC-spel", "wecDaily": "Daaglikse WeCup-spel — geen registrasie", "wecFinal": "Maandelikse WeCup-eindstryd", "wecGrand": "Groot WeCup-eindstryd", "mc": "Monthly Cup"}
   },
   am: {
-    title: "ነጻ የኦንላይን ፖከር ውድድሮች — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "ነጻ የፖከር ውድድሮች — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "በ pokerth.net ላይ ዓመቱን ሙሉ ነጻ የ Texas Hold’em ፖከር ውድድሮች፦ BBC፣ WeCup እና Monthly Cup ከቀን መቁጠሪያ፣ ውጤቶች እና ደረጃ ጋር። እውነተኛ ገንዘብ የለም፣ ማውረድ አያስፈልግም።",
     h1: "ነጻ የኦንላይን ፖከር ውድድሮች እና ፉክክሮች",
     lead: "PokerTH ነጻ ነው፤ ፉክክሮቹም እንዲሁ። በ pokerth.net ላይ ያለ እያንዳንዱ ጨዋታ የ Texas Hold’em ውድድር ነው፣ ማኅበረሰቡም ዓመቱን ሙሉ መደበኛ ፉክክሮችን ያካሂዳል፤ እያንዳንዳቸው የራሳቸው የቀን መቁጠሪያ፣ ውጤቶች እና ደረጃ አላቸው። የጨዋታ ገንዘብ ብቻ፦ ለመግባት ማንም አይከፍልም፣ የገንዘብ ሽልማትም የለም።",
@@ -55,7 +55,7 @@ module.exports = {
     up: {"bbc": "የ BBC ጨዋታ", "wecDaily": "የ WeCup ዕለታዊ ጨዋታ — ምዝገባ አያስፈልግም", "wecFinal": "የ WeCup ወርሃዊ ፍጻሜ", "wecGrand": "የ WeCup ታላቅ ፍጻሜ", "mc": "Monthly Cup"}
   },
   ar: {
-    title: "بطولات بوكر مجانية على الإنترنت — BBC وWeCup وMonthly Cup | PokerTH",
+    title: "بطولات بوكر مجانية — BBC وWeCup وMonthly Cup | PokerTH",
     desc: "بطولات بوكر تكساس هولدم مجانية طوال العام على pokerth.net: BBC وWeCup وMonthly Cup، مع التقويم والنتائج والتصنيفات. بلا أموال حقيقية وبلا تنزيل.",
     h1: "بطولات ومسابقات بوكر مجانية على الإنترنت",
     lead: "PokerTH مجاني، وكذلك مسابقاته. كل لعبة على pokerth.net بطولة تكساس هولدم، كما ينظّم المجتمع مسابقات منتظمة على مدار السنة، لكل منها تقويمها ونتائجها وتصنيفها الخاص. اللعب بأموال افتراضية فقط: لا يدفع أحد مقابل المشاركة، ولا توجد أموال نقدية للفوز بها.",
@@ -79,7 +79,7 @@ module.exports = {
     up: {"bbc": "مباراة BBC", "wecDaily": "مباراة WeCup اليومية — بدون تسجيل", "wecFinal": "النهائي الشهري لـ WeCup", "wecGrand": "النهائي الكبير لـ WeCup", "mc": "Monthly Cup"}
   },
   az: {
-    title: "Pulsuz onlayn poker turnirləri — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Pulsuz poker turnirləri — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "pokerth.net-də il boyu pulsuz Texas Hold’em poker turnirləri: BBC, WeCup və Monthly Cup — təqvimləri, nəticələri və reytinqləri. Real pul və yükləmə yoxdur.",
     h1: "Pulsuz onlayn poker turnirləri və yarışlar",
     lead: "PokerTH pulsuzdur, onun yarışları da. pokerth.net-də hər oyun Texas Hold’em turniridir, icma isə il boyu müntəzəm yarışlar da keçirir — hər birinin öz təqvimi, nəticələri və reytinqi var. Yalnız oyun pulu: iştirak üçün heç kim pul ödəmir və qazanılacaq nağd pul yoxdur.",
@@ -103,7 +103,7 @@ module.exports = {
     up: {"bbc": "BBC oyunu", "wecDaily": "WeCup gündəlik oyunu — qeydiyyat yoxdur", "wecFinal": "WeCup aylıq finalı", "wecGrand": "WeCup böyük finalı", "mc": "Monthly Cup"}
   },
   be: {
-    title: "Бясплатныя онлайн-турніры па покеры — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Бясплатныя покер-турніры — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Бясплатныя покерныя турніры Texas Hold’em увесь год на pokerth.net: BBC, WeCup і Monthly Cup — каляндары, вынікі, рэйтынгі. Без рэальных грошай і спампоўвання.",
     h1: "Бясплатныя онлайн-турніры і спаборніцтвы па покеры",
     lead: "PokerTH бясплатны, як і яго спаборніцтвы. Кожная гульня на pokerth.net — гэта турнір па Texas Hold’em, а супольнасць яшчэ і круглы год праводзіць рэгулярныя спаборніцтвы, кожнае са сваім каляндаром, вынікамі і рэйтынгам. Гульня ідзе толькі на віртуальныя фішкі: за ўдзел ніхто не плаціць, і грашовых выйгрышаў няма.",
@@ -127,7 +127,7 @@ module.exports = {
     up: {"bbc": "Гульня BBC", "wecDaily": "Штодзённая гульня WeCup — без рэгістрацыі", "wecFinal": "Месячны фінал WeCup", "wecGrand": "Вялікі фінал WeCup", "mc": "Monthly Cup"}
   },
   bg: {
-    title: "Безплатни онлайн покер турнири — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Безплатни покер турнири — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Безплатни покер турнири по Texas Hold’em целогодишно в pokerth.net: BBC, WeCup и Monthly Cup — календари, резултати, класирания. Без истински пари и изтегляне.",
     h1: "Безплатни онлайн покер турнири и състезания",
     lead: "PokerTH е безплатен, както и неговите състезания. Всяка игра в pokerth.net е турнир по Texas Hold’em, а общността провежда и редовни състезания през цялата година, всяко със собствен календар, резултати и класиране. Играе се само с виртуални чипове: никой не плаща за участие и няма парични печалби.",
@@ -151,7 +151,7 @@ module.exports = {
     up: {"bbc": "Игра на BBC", "wecDaily": "Ежедневна игра на WeCup — без регистрация", "wecFinal": "Месечен финал на WeCup", "wecGrand": "Голям финал на WeCup", "mc": "Monthly Cup"}
   },
   bn: {
-    title: "বিনামূল্যে অনলাইন পোকার টুর্নামেন্ট — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "ফ্রি পোকার টুর্নামেন্ট — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "pokerth.net-এ সারা বছর বিনামূল্যের Texas Hold’em পোকার টুর্নামেন্ট: BBC, WeCup ও Monthly Cup, সঙ্গে ক্যালেন্ডার, ফলাফল ও র‍্যাংকিং। আসল টাকা নয়, ডাউনলোডও নয়।",
     h1: "বিনামূল্যের অনলাইন পোকার টুর্নামেন্ট ও প্রতিযোগিতা",
     lead: "PokerTH বিনামূল্যে, তার প্রতিযোগিতাগুলোও তাই। pokerth.net-এর প্রতিটি গেমই একটি Texas Hold’em টুর্নামেন্ট, আর সম্প্রদায় সারা বছর নিয়মিত প্রতিযোগিতাও আয়োজন করে, যার প্রতিটির নিজস্ব ক্যালেন্ডার, ফলাফল ও র‍্যাংকিং আছে। শুধু খেলার টাকায় খেলা: অংশ নিতে কাউকে টাকা দিতে হয় না, আর জেতার মতো কোনো নগদ অর্থও নেই।",
@@ -175,8 +175,8 @@ module.exports = {
     up: {"bbc": "BBC গেম", "wecDaily": "WeCup দৈনিক গেম — নিবন্ধন লাগবে না", "wecFinal": "WeCup মাসিক ফাইনাল", "wecGrand": "WeCup গ্র্যান্ড ফাইনাল", "mc": "Monthly Cup"}
   },
   bs: {
-    title: "Besplatni online poker turniri — BBC, WeCup, Monthly Cup | PokerTH",
-    desc: "Besplatni Texas Hold’em turniri cijele godine na pokerth.net: BBC, WeCup i Monthly Cup s kalendarima, rezultatima i rang listama. Bez pravog novca i preuzimanja.",
+    title: "Besplatni poker turniri — BBC, WeCup, Monthly Cup | PokerTH",
+    desc: "Besplatni Texas Hold’em turniri cijele godine na pokerth.net: BBC, WeCup i Monthly Cup s kalendarima, rezultatima i ljestvicama. Bez pravog novca i preuzimanja.",
     h1: "Besplatni online poker turniri i takmičenja",
     lead: "PokerTH je besplatan, a besplatna su i njegova takmičenja. Svaka igra na pokerth.net je Texas Hold’em turnir, a zajednica tokom cijele godine održava i redovna takmičenja, svako s vlastitim kalendarom, rezultatima i rang listom. Igra se samo za virtuelni novac: niko ne plaća učešće i nema pravog novca koji se može osvojiti.",
     bbcH2: "BBC",
@@ -199,7 +199,7 @@ module.exports = {
     up: {"bbc": "BBC igra", "wecDaily": "Dnevna WeCup igra — bez prijave", "wecFinal": "Mjesečno finale WeCupa", "wecGrand": "Veliko finale WeCupa", "mc": "Monthly Cup"}
   },
   ca: {
-    title: "Tornejos de pòquer gratuïts en línia — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Torneig de pòquer gratis — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Tornejos de pòquer Texas Hold’em gratuïts tot l’any a pokerth.net: BBC, WeCup i Monthly Cup, amb calendaris, resultats i classificacions. Sense diners reals.",
     h1: "Tornejos i competicions de pòquer gratuïts en línia",
     lead: "El PokerTH és gratuït, i les seves competicions també. Cada partida de pokerth.net és un torneig de Texas Hold’em, i la comunitat també organitza competicions regulars durant tot l’any, cadascuna amb el seu calendari, els seus resultats i la seva classificació. Només diners de joc: ningú no paga per participar-hi i no hi ha diners per guanyar.",
@@ -223,7 +223,7 @@ module.exports = {
     up: {"bbc": "Partida de la BBC", "wecDaily": "Partida diària de la WeCup — sense inscripció", "wecFinal": "Final mensual de la WeCup", "wecGrand": "Gran final de la WeCup", "mc": "Monthly Cup"}
   },
   cs: {
-    title: "Pokerové turnaje online zdarma — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Pokerové turnaje zdarma — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Bezplatné turnaje v Texas Hold’em po celý rok na pokerth.net: BBC, WeCup a Monthly Cup s kalendáři, výsledky a žebříčky. Bez skutečných peněz, bez stahování.",
     h1: "Pokerové turnaje a soutěže online zdarma",
     lead: "PokerTH je zdarma a jeho soutěže také. Každá hra na pokerth.net je turnaj v Texas Hold’em a komunita navíc po celý rok pořádá pravidelné soutěže, každou s vlastním kalendářem, výsledky a žebříčkem. Hraje se jen o herní peníze: nikdo neplatí startovné a žádné skutečné peníze se vyhrát nedají.",
@@ -247,7 +247,7 @@ module.exports = {
     up: {"bbc": "Hra BBC", "wecDaily": "Denní hra WeCup — bez registrace", "wecFinal": "Měsíční finále WeCup", "wecGrand": "Velké finále WeCup", "mc": "Monthly Cup"}
   },
   cy: {
-    title: "Twrnameintiau pocer am ddim ar-lein — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Twrnameintiau am ddim — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Twrnameintiau pocer Texas Hold’em am ddim drwy'r flwyddyn ar pokerth.net: BBC, WeCup a Monthly Cup, gyda chalendrau, canlyniadau a safleoedd. Dim arian go iawn.",
     h1: "Twrnameintiau a chystadlaethau pocer am ddim ar-lein",
     lead: "Mae PokerTH am ddim, a'i gystadlaethau hefyd. Mae pob gêm ar pokerth.net yn dwrnamaint Texas Hold’em, ac mae'r gymuned hefyd yn cynnal cystadlaethau rheolaidd drwy gydol y flwyddyn, pob un â'i galendr, ei ganlyniadau a'i safleoedd ei hun. Arian chwarae yn unig: does neb yn talu i gymryd rhan a does dim arian parod i'w ennill.",
@@ -271,7 +271,7 @@ module.exports = {
     up: {"bbc": "Gêm BBC", "wecDaily": "Gêm ddyddiol y WeCup — dim cofrestru", "wecFinal": "Rownd derfynol fisol y WeCup", "wecGrand": "Rownd derfynol fawreddog y WeCup", "mc": "Monthly Cup"}
   },
   da: {
-    title: "Gratis pokerturneringer online — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Gratis pokerturneringer — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Gratis Texas Hold’em-turneringer hele året på pokerth.net: BBC, WeCup og Monthly Cup med kalender, resultater og ranglister. Ingen rigtige penge eller download.",
     h1: "Gratis pokerturneringer og konkurrencer online",
     lead: "PokerTH er gratis, og det er konkurrencerne også. Hvert spil på pokerth.net er en Texas Hold’em-turnering, og fællesskabet afholder desuden faste konkurrencer hele året rundt, hver med sin egen kalender, sine egne resultater og sin egen rangliste. Kun legepenge: ingen betaler for at deltage, og der er ingen penge at vinde.",
@@ -295,7 +295,7 @@ module.exports = {
     up: {"bbc": "BBC-spil", "wecDaily": "Dagligt WeCup-spil — ingen tilmelding", "wecFinal": "WeCups månedsfinale", "wecGrand": "WeCups store finale", "mc": "Monthly Cup"}
   },
   de: {
-    title: "Kostenlose Online-Pokerturniere — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Kostenlose Pokerturniere — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Kostenlose Pokerturniere das ganze Jahr auf pokerth.net: BBC, WeCup und Monthly Cup mit Kalender, Ergebnissen und Ranglisten. Ohne Echtgeld, ohne Download.",
     h1: "Kostenlose Online-Pokerturniere und Wettbewerbe",
     lead: "PokerTH ist kostenlos, und seine Wettbewerbe sind es auch. Jedes Spiel auf pokerth.net ist ein Texas-Hold’em-Turnier, und die Community veranstaltet außerdem das ganze Jahr über regelmäßige Wettbewerbe, jeder mit eigenem Kalender, eigenen Ergebnissen und eigener Rangliste. Gespielt wird nur mit Spielgeld: Niemand zahlt für die Teilnahme, und es gibt kein Geld zu gewinnen.",
@@ -319,7 +319,7 @@ module.exports = {
     up: {"bbc": "BBC-Spiel", "wecDaily": "Tägliches WeCup-Spiel — keine Anmeldung", "wecFinal": "WeCup-Monatsfinale", "wecGrand": "Großes WeCup-Finale", "mc": "Monthly Cup"}
   },
   el: {
-    title: "Δωρεάν τουρνουά πόκερ online — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Δωρεάν τουρνουά πόκερ — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Δωρεάν τουρνουά πόκερ Texas Hold’em όλο τον χρόνο στο pokerth.net: BBC, WeCup και Monthly Cup, με ημερολόγια, αποτελέσματα, κατατάξεις. Χωρίς χρήματα και λήψη.",
     h1: "Δωρεάν διαδικτυακά τουρνουά και διοργανώσεις πόκερ",
     lead: "Το PokerTH είναι δωρεάν, όπως και οι διοργανώσεις του. Κάθε παιχνίδι στο pokerth.net είναι τουρνουά Texas Hold’em, και η κοινότητα διοργανώνει επίσης τακτικούς αγώνες όλο τον χρόνο, ο καθένας με το δικό του ημερολόγιο, αποτελέσματα και κατάταξη. Παίζεται μόνο με εικονικά χρήματα: κανείς δεν πληρώνει για να συμμετάσχει και δεν υπάρχουν χρήματα να κερδίσετε.",
@@ -343,7 +343,7 @@ module.exports = {
     up: {"bbc": "Παιχνίδι BBC", "wecDaily": "Καθημερινό παιχνίδι WeCup — χωρίς εγγραφή", "wecFinal": "Μηνιαίος τελικός WeCup", "wecGrand": "Μεγάλος τελικός WeCup", "mc": "Monthly Cup"}
   },
   eo: {
-    title: "Senpagaj retaj pokerturniroj — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Senpagaj pokerturniroj — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Senpagaj pokerturniroj de Texas Hold’em la tutan jaron ĉe pokerth.net: BBC, WeCup kaj Monthly Cup, kun kalendaroj, rezultoj kaj rangigoj. Sen mono, sen elŝuto.",
     h1: "Senpagaj retaj pokerturniroj kaj konkursoj",
     lead: "PokerTH estas senpaga, kaj same ĝiaj konkursoj. Ĉiu ludo ĉe pokerth.net estas turniro de Texas Hold’em, kaj la komunumo ankaŭ organizas regulajn konkursojn la tutan jaron, ĉiu kun propra kalendaro, rezultoj kaj rangigo. Nur ludmono: neniu pagas por partopreni kaj ne eblas gajni monon.",
@@ -367,7 +367,7 @@ module.exports = {
     up: {"bbc": "BBC-ludo", "wecDaily": "Ĉiutaga WeCup-ludo — sen aliĝo", "wecFinal": "Monata finalo de WeCup", "wecGrand": "Granda finalo de WeCup", "mc": "Monthly Cup"}
   },
   es: {
-    title: "Torneos de póquer online gratis — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Torneos de póquer gratis — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Torneos de póquer gratis todo el año en pokerth.net: BBC, WeCup y Monthly Cup, con calendarios, resultados y clasificaciones. Sin dinero real ni descargas.",
     h1: "Torneos y competiciones de póquer online gratis",
     lead: "PokerTH es gratis, y sus competiciones también. Cada partida de pokerth.net es un torneo de Texas Hold’em, y además la comunidad organiza competiciones periódicas durante todo el año, cada una con su propio calendario, sus resultados y su clasificación. Solo se juega con dinero ficticio: nadie paga por participar y no hay dinero que ganar.",
@@ -391,7 +391,7 @@ module.exports = {
     up: {"bbc": "Partida de la BBC", "wecDaily": "Partida diaria de la WeCup — sin inscripción", "wecFinal": "Final mensual de la WeCup", "wecGrand": "Gran final de la WeCup", "mc": "Monthly Cup"}
   },
   'es-419': {
-    title: "Torneos de póquer en línea gratis — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Torneos de póquer gratis — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Torneos de póquer gratis todo el año en pokerth.net: BBC, WeCup y Monthly Cup, con calendarios, resultados y clasificaciones. Sin dinero real ni descargas.",
     h1: "Torneos y competencias de póquer en línea gratis",
     lead: "PokerTH es gratis, y sus competencias también. Cada partida de pokerth.net es un torneo de Texas Hold’em, y además la comunidad organiza competencias periódicas durante todo el año, cada una con su propio calendario, sus resultados y su clasificación. Solo se juega con dinero ficticio: nadie paga por participar y no hay dinero que ganar.",
@@ -415,7 +415,7 @@ module.exports = {
     up: {"bbc": "Partida de la BBC", "wecDaily": "Partida diaria de la WeCup — sin inscripción", "wecFinal": "Final mensual de la WeCup", "wecGrand": "Gran final de la WeCup", "mc": "Monthly Cup"}
   },
   et: {
-    title: "Tasuta pokkeriturniirid internetis — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Tasuta pokkeriturniirid — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Tasuta Texas Hold’emi turniirid aasta läbi pokerth.net-is: BBC, WeCup ja Monthly Cup – kalendrid, tulemused ja edetabelid. Ilma päris rahata ja allalaadimiseta.",
     h1: "Tasuta pokkeriturniirid ja -võistlused internetis",
     lead: "PokerTH on tasuta ja seda on ka selle võistlused. Iga mäng pokerth.net-is on Texas Hold’emi turniir ning kogukond korraldab lisaks aasta läbi regulaarseid võistlusi, millest igaühel on oma kalender, tulemused ja edetabel. Ainult mänguraha: keegi ei maksa osalemise eest ja raha võita ei saa.",
@@ -439,7 +439,7 @@ module.exports = {
     up: {"bbc": "BBC mäng", "wecDaily": "WeCupi igapäevane mäng — registreerumist pole vaja", "wecFinal": "WeCupi kuu finaal", "wecGrand": "WeCupi suur finaal", "mc": "Monthly Cup"}
   },
   eu: {
-    title: "Doako poker-txapelketak sarean — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Doako poker-txapelketak — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Texas Hold’em poker-txapelketa doakoak urte osoan pokerth.net-en: BBC, WeCup eta Monthly Cup, egutegi, emaitza eta sailkapenekin. Benetako dirurik gabe.",
     h1: "Doako poker-txapelketak eta lehiaketak sarean",
     lead: "PokerTH doakoa da, baita bere lehiaketak ere. pokerth.net-eko partida oro Texas Hold’em txapelketa bat da, eta komunitateak lehiaketa erregularrak ere antolatzen ditu urte osoan, bakoitza bere egutegi, emaitza eta sailkapenarekin. Jolas-dirua soilik: inork ez du ordaintzen parte hartzeko eta ez dago dirurik irabazteko.",
@@ -463,7 +463,7 @@ module.exports = {
     up: {"bbc": "BBC partida", "wecDaily": "WeCup eguneroko partida — izena eman gabe", "wecFinal": "WeCup hileko finala", "wecGrand": "WeCup final handia", "mc": "Monthly Cup"}
   },
   fa: {
-    title: "تورنمنت‌های رایگان پوکر آنلاین — BBC، WeCup، Monthly Cup | PokerTH",
+    title: "تورنمنت‌های رایگان پوکر — BBC، WeCup، Monthly Cup | PokerTH",
     desc: "تورنمنت‌های رایگان پوکر تگزاس هولدم در تمام سال در pokerth.net: BBC، WeCup و Monthly Cup با تقویم، نتایج و رتبه‌بندی. بدون پول واقعی، بدون بارگیری.",
     h1: "تورنمنت‌ها و مسابقه‌های رایگان پوکر آنلاین",
     lead: "PokerTH رایگان است و مسابقه‌هایش هم همین‌طور. هر بازی در pokerth.net یک تورنمنت تگزاس هولدم است و جامعهٔ بازیکنان افزون بر آن در تمام سال مسابقه‌های منظمی برگزار می‌کند که هر کدام تقویم، نتایج و رتبه‌بندی ویژهٔ خود را دارد. فقط با پول بازی: هیچ‌کس برای شرکت پولی نمی‌پردازد و هیچ جایزهٔ نقدی‌ای در کار نیست.",
@@ -487,8 +487,8 @@ module.exports = {
     up: {"bbc": "بازی BBC", "wecDaily": "بازی روزانهٔ WeCup — بدون ثبت‌نام", "wecFinal": "فینال ماهانهٔ WeCup", "wecGrand": "فینال بزرگ WeCup", "mc": "Monthly Cup"}
   },
   fi: {
-    title: "Ilmaiset pokeriturnaukset netissä — BBC, WeCup, Monthly Cup | PokerTH",
-    desc: "Ilmaisia Texas Hold’em -turnauksia ympäri vuoden pokerth.netissä: BBC, WeCup ja Monthly Cup – kalenterit, tulokset ja sijoitukset. Ei oikeaa rahaa, ei latauksia.",
+    title: "Ilmaiset pokerikisat — BBC, WeCup, Monthly Cup | PokerTH",
+    desc: "Ilmaisia Texas Hold’em -turnauksia ympäri vuoden pokerth.netissä: BBC, WeCup ja Monthly Cup – kalenteri, tulokset ja sijoitukset. Ei oikeaa rahaa, ei latauksia.",
     h1: "Ilmaiset pokeriturnaukset ja -kilpailut netissä",
     lead: "PokerTH on ilmainen, ja niin ovat sen kilpailutkin. Jokainen peli pokerth.net-verkossa on Texas Hold’em -turnaus, ja yhteisö järjestää lisäksi säännöllisiä kilpailuja ympäri vuoden, kullakin oma kalenterinsa, tuloksensa ja sijoituslistansa. Vain leikkirahaa: kukaan ei maksa osallistumisesta, eikä rahaa voi voittaa.",
     bbcH2: "BBC",
@@ -511,7 +511,7 @@ module.exports = {
     up: {"bbc": "BBC-peli", "wecDaily": "WeCupin päivittäinen peli — ei ilmoittautumista", "wecFinal": "WeCupin kuukausifinaali", "wecGrand": "WeCupin suurfinaali", "mc": "Monthly Cup"}
   },
   fil: {
-    title: "Libreng Online Poker Tournament — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Libreng Poker Tournament — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Libreng Texas Hold’em poker tournament buong taon sa pokerth.net: BBC, WeCup at Monthly Cup, may kalendaryo, resulta at ranking. Walang totoong pera o download.",
     h1: "Mga libreng online poker tournament at kompetisyon",
     lead: "Libre ang PokerTH, at libre rin ang mga kompetisyon nito. Torneo ng Texas Hold’em ang bawat laro sa pokerth.net, at nagdaraos din ang komunidad ng mga regular na kompetisyon buong taon, bawat isa may sariling kalendaryo, mga resulta at ranking. Play money lang: walang nagbabayad para sumali at walang perang mapapanalunan.",
@@ -535,7 +535,7 @@ module.exports = {
     up: {"bbc": "Larong BBC", "wecDaily": "Pang-araw-araw na laro ng WeCup — walang rehistrasyon", "wecFinal": "Buwanang final ng WeCup", "wecGrand": "Grand final ng WeCup", "mc": "Monthly Cup"}
   },
   fr: {
-    title: "Tournois de poker en ligne gratuits — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Tournois poker gratuits — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Tournois de poker gratuits toute l’année sur pokerth.net : BBC, WeCup et Monthly Cup, calendriers, résultats et classements. Sans argent réel ni téléchargement.",
     h1: "Tournois et compétitions de poker en ligne gratuits",
     lead: "PokerTH est gratuit, et ses compétitions aussi. Chaque partie sur pokerth.net est un tournoi de Texas Hold’em, et la communauté organise en plus des compétitions régulières toute l’année, chacune avec son calendrier, ses résultats et son classement. On joue uniquement avec des jetons fictifs : la participation ne coûte rien et il n’y a pas d’argent à gagner.",
@@ -559,7 +559,7 @@ module.exports = {
     up: {"bbc": "Partie BBC", "wecDaily": "Partie quotidienne WeCup — sans inscription", "wecFinal": "Finale mensuelle WeCup", "wecGrand": "Grande finale WeCup", "mc": "Monthly Cup"}
   },
   ga: {
-    title: "Comórtais phócair saor in aisce ar líne — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Comórtais phócair saor — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Comórtais phócair Texas Hold’em saor in aisce ar pokerth.net i rith na bliana: an BBC, an WeCup agus an Monthly Cup, le torthaí agus rangú. Gan airgead fíor.",
     h1: "Comórtais phócair saor in aisce ar líne",
     lead: "Tá PokerTH saor in aisce, agus a chomórtais freisin. Is comórtas Texas Hold’em é gach cluiche ar pokerth.net, agus reáchtálann an pobal comórtais rialta i rith na bliana freisin, gach ceann acu lena fhéilire, a thorthaí agus a rangú féin. Airgead súgartha amháin: ní íocann aon duine chun páirt a ghlacadh agus níl aon airgead tirim le buachan.",
@@ -583,8 +583,8 @@ module.exports = {
     up: {"bbc": "Cluiche BBC", "wecDaily": "Cluiche laethúil WeCup — gan clárú", "wecFinal": "Cluiche ceannais míosúil WeCup", "wecGrand": "Mórchluiche ceannais WeCup", "mc": "Monthly Cup"}
   },
   gd: {
-    title: "Farpaisean pòcair an-asgaidh air loidhne — BBC, WeCup, Monthly Cup | PokerTH",
-    desc: "Farpaisean pòcair Texas Hold’em an-asgaidh fad na bliadhna air pokerth.net: BBC, WeCup is Monthly Cup, le mìosachain, toraidhean is rangachadh. Gun airgead fìor.",
+    title: "Farpaisean pòcair saor — BBC, WeCup, Monthly Cup | PokerTH",
+    desc: "Farpaisean pòcair Texas Hold’em an-asgaidh air pokerth.net: BBC, WeCup is Monthly Cup, le mìosachain, toraidhean is rangachadh. Gun airgead fìor.",
     h1: "Farpaisean pòcair an-asgaidh air loidhne",
     lead: "Tha PokerTH an-asgaidh, agus tha na farpaisean aige cuideachd. ’S e farpais Texas Hold’em a th’ anns gach geama air pokerth.net, agus bidh a’ choimhearsnachd cuideachd a’ cumail farpaisean cunbhalach fad na bliadhna, gach tè le a mìosachan, a toraidhean is a rangachadh fhèin. Airgead-cluiche a-mhàin: chan fheum duine pàigheadh airson pàirt a ghabhail agus chan eil airgead ri bhuannachadh.",
     bbcH2: "BBC",
@@ -607,7 +607,7 @@ module.exports = {
     up: {"bbc": "Geama BBC", "wecDaily": "Geama làitheil WeCup — gun chlàradh", "wecFinal": "Cuairt dheireannach mhìosail WeCup", "wecGrand": "Cuairt dheireannach mhòr WeCup", "mc": "Monthly Cup"}
   },
   gl: {
-    title: "Torneos de póker de balde en liña — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Torneos de póker gratis — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Torneos de póker Texas Hold’em de balde todo o ano en pokerth.net: BBC, WeCup e Monthly Cup, con calendarios, resultados e clasificacións. Sen diñeiro real.",
     h1: "Torneos e competicións de póker de balde en liña",
     lead: "PokerTH é de balde, e as súas competicións tamén. Cada partida en pokerth.net é un torneo de Texas Hold’em, e a comunidade tamén organiza competicións regulares durante todo o ano, cada unha co seu calendario, os seus resultados e a súa clasificación. Só diñeiro de xogo: ninguén paga por participar e non hai diñeiro que gañar.",
@@ -631,7 +631,7 @@ module.exports = {
     up: {"bbc": "Partida da BBC", "wecDaily": "Partida diaria da WeCup — sen inscrición", "wecFinal": "Final mensual da WeCup", "wecGrand": "Gran final da WeCup", "mc": "Monthly Cup"}
   },
   gu: {
-    title: "મફત ઓનલાઇન પોકર ટુર્નામેન્ટ્સ — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "મફત પોકર ટુર્નામેન્ટ્સ — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "pokerth.net પર આખું વર્ષ મફત Texas Hold’em પોકર ટુર્નામેન્ટ્સ: BBC, WeCup અને Monthly Cup — કેલેન્ડર, પરિણામો અને રેન્કિંગ. અસલી પૈસા નહીં, ડાઉનલોડ નહીં.",
     h1: "મફત ઓનલાઇન પોકર ટુર્નામેન્ટ્સ અને સ્પર્ધાઓ",
     lead: "PokerTH મફત છે, અને તેની સ્પર્ધાઓ પણ. pokerth.net પરની દરેક ગેમ એક Texas Hold’em ટુર્નામેન્ટ જ છે, અને સમુદાય આખું વર્ષ નિયમિત સ્પર્ધાઓ પણ યોજે છે, દરેકનું પોતાનું કેલેન્ડર, પરિણામો અને રેન્કિંગ હોય છે. ફક્ત રમતના પૈસા: ભાગ લેવા કોઈ ચૂકવણી કરતું નથી અને જીતવા માટે કોઈ રોકડ નથી.",
@@ -655,7 +655,7 @@ module.exports = {
     up: {"bbc": "BBC ગેમ", "wecDaily": "WeCup દૈનિક ગેમ — નોંધણી નથી", "wecFinal": "WeCup માસિક ફાઇનલ", "wecGrand": "WeCup ગ્રાન્ડ ફાઇનલ", "mc": "Monthly Cup"}
   },
   ha: {
-    title: "Gasar poker kyauta a intanet — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Gasar poker kyauta — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Gasar poker Texas Hold’em kyauta duk shekara a pokerth.net: BBC, WeCup da Monthly Cup, tare da kalanda, sakamako da matsayi. Babu kuɗi na gaske, babu saukewa.",
     h1: "Gasannin poker kyauta a intanet",
     lead: "PokerTH kyauta ne, haka ma gasanninsa. Kowane wasa a pokerth.net gasar Texas Hold’em ce, kuma al'ummar tana kuma shirya gasanni a kai a kai duk tsawon shekara, kowace da nata kalanda, sakamako da matsayi. Kuɗin wasa kawai: babu wanda ke biya don shiga kuma babu kuɗi da za a ci.",
@@ -679,7 +679,7 @@ module.exports = {
     up: {"bbc": "Wasan BBC", "wecDaily": "Wasan yau da kullum na WeCup — babu rajista", "wecFinal": "Wasan ƙarshe na wata na WeCup", "wecGrand": "Babban wasan ƙarshe na WeCup", "mc": "Monthly Cup"}
   },
   he: {
-    title: "טורנירי פוקר אונליין בחינם — BBC, WeCup ו-Monthly Cup | PokerTH",
+    title: "טורנירי פוקר בחינם — BBC, WeCup ו-Monthly Cup | PokerTH",
     desc: "טורנירי פוקר טקסאס הולדם בחינם כל השנה ב-pokerth.net: ה-BBC, ה-WeCup וה-Monthly Cup, עם לוחות מועדים, תוצאות ודירוגים. בלי כסף אמיתי, בלי הורדה.",
     h1: "טורנירים ותחרויות פוקר אונליין בחינם",
     lead: "PokerTH חינמי, וכך גם התחרויות שלו. כל משחק ב-pokerth.net הוא טורניר טקסאס הולדם, והקהילה מקיימת גם תחרויות קבועות לאורך כל השנה, לכל אחת לוח מועדים, תוצאות ודירוג משלה. משחקים בכסף וירטואלי בלבד: אף אחד לא משלם כדי להשתתף, ואין כסף אמיתי לזכות בו.",
@@ -703,7 +703,7 @@ module.exports = {
     up: {"bbc": "משחק BBC", "wecDaily": "משחק WeCup יומי — ללא הרשמה", "wecFinal": "הגמר החודשי של WeCup", "wecGrand": "הגמר הגדול של WeCup", "mc": "Monthly Cup"}
   },
   hi: {
-    title: "मुफ़्त ऑनलाइन पोकर टूर्नामेंट — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "मुफ़्त पोकर टूर्नामेंट — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "pokerth.net पर साल भर मुफ़्त Texas Hold’em पोकर टूर्नामेंट: BBC, WeCup और Monthly Cup, उनके कैलेंडर, परिणाम और रैंकिंग के साथ। न असली पैसा, न डाउनलोड।",
     h1: "मुफ़्त ऑनलाइन पोकर टूर्नामेंट और प्रतियोगिताएँ",
     lead: "PokerTH मुफ़्त है, और उसकी प्रतियोगिताएँ भी। pokerth.net पर हर खेल एक Texas Hold’em टूर्नामेंट है, और समुदाय साल भर नियमित प्रतियोगिताएँ भी चलाता है, जिनमें से हर एक का अपना कैलेंडर, परिणाम और रैंकिंग है। सिर्फ़ नकली पैसों से खेल: भाग लेने के लिए कोई पैसा नहीं देता और जीतने के लिए कोई नकद राशि नहीं है।",
@@ -727,7 +727,7 @@ module.exports = {
     up: {"bbc": "BBC खेल", "wecDaily": "WeCup दैनिक खेल — पंजीकरण नहीं", "wecFinal": "WeCup मासिक फ़ाइनल", "wecGrand": "WeCup ग्रैंड फ़ाइनल", "mc": "Monthly Cup"}
   },
   hr: {
-    title: "Besplatni online poker turniri — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Besplatni poker turniri — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Besplatni Texas Hold’em turniri cijele godine na pokerth.net: BBC, WeCup i Monthly Cup s kalendarima, rezultatima i ljestvicama. Bez pravog novca i preuzimanja.",
     h1: "Besplatni online poker turniri i natjecanja",
     lead: "PokerTH je besplatan, a besplatna su i njegova natjecanja. Svaka igra na pokerth.net je Texas Hold’em turnir, a zajednica tijekom cijele godine održava i redovita natjecanja, svako s vlastitim kalendarom, rezultatima i ljestvicom. Igra se samo za virtualni novac: nitko ne plaća sudjelovanje i nema pravog novca koji se može osvojiti.",
@@ -751,7 +751,7 @@ module.exports = {
     up: {"bbc": "BBC igra", "wecDaily": "Dnevna WeCup igra — bez prijave", "wecFinal": "Mjesečno finale WeCupa", "wecGrand": "Veliko finale WeCupa", "mc": "Monthly Cup"}
   },
   hu: {
-    title: "Ingyenes online pókerversenyek — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Ingyenes pókerversenyek — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Ingyenes Texas Hold’em pókerversenyek egész évben a pokerth.neten: BBC, WeCup és Monthly Cup naptárral, eredményekkel, ranglistával. Pénz és letöltés nélkül.",
     h1: "Ingyenes online pókerversenyek és bajnokságok",
     lead: "A PokerTH ingyenes, és a bajnokságai is azok. A pokerth.neten minden játék egy Texas Hold’em-verseny, a közösség pedig egész évben rendszeres bajnokságokat is szervez, mindegyiket saját naptárral, eredményekkel és ranglistával. Csak játékpénzzel: senki sem fizet a részvételért, és pénzt sem lehet nyerni.",
@@ -775,7 +775,7 @@ module.exports = {
     up: {"bbc": "BBC-játék", "wecDaily": "WeCup napi játék — nincs regisztráció", "wecFinal": "WeCup havi döntő", "wecGrand": "WeCup nagydöntő", "mc": "Monthly Cup"}
   },
   hy: {
-    title: "Անվճար առցանց պոկերի մրցաշարեր — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Անվճար պոկերի մրցաշարեր — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Անվճար Texas Hold’em պոկերի մրցաշարեր ամբողջ տարին pokerth.net-ում՝ BBC, WeCup, Monthly Cup, օրացույցներ, արդյունքներ, վարկանիշներ։ Առանց փողի և ներբեռնման։",
     h1: "Անվճար առցանց պոկերի մրցաշարեր և մրցույթներ",
     lead: "PokerTH-ն անվճար է, ինչպես և նրա մրցույթները։ pokerth.net-ի յուրաքանչյուր խաղ Texas Hold’em մրցաշար է, իսկ համայնքը նաև ամբողջ տարին կանոնավոր մրցույթներ է անցկացնում, որոնցից յուրաքանչյուրն ունի իր օրացույցը, արդյունքները և վարկանիշը։ Միայն խաղային փողով. ոչ ոք չի վճարում մասնակցության համար, և իրական փող շահել հնարավոր չէ։",
@@ -799,7 +799,7 @@ module.exports = {
     up: {"bbc": "BBC խաղ", "wecDaily": "WeCup-ի ամենօրյա խաղ — առանց գրանցման", "wecFinal": "WeCup-ի ամսական եզրափակիչ", "wecGrand": "WeCup-ի մեծ եզրափակիչ", "mc": "Monthly Cup"}
   },
   id: {
-    title: "Turnamen Poker Online Gratis — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Turnamen Poker Gratis — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Turnamen poker Texas Hold’em gratis sepanjang tahun di pokerth.net: BBC, WeCup, dan Monthly Cup dengan jadwal, hasil, peringkat. Tanpa uang asli, tanpa unduhan.",
     h1: "Turnamen dan kompetisi poker online gratis",
     lead: "PokerTH gratis, begitu pula kompetisinya. Setiap permainan di pokerth.net adalah turnamen Texas Hold’em, dan komunitasnya juga rutin menggelar kompetisi sepanjang tahun, masing-masing dengan kalender, hasil, dan peringkatnya sendiri. Hanya memakai uang mainan: tidak ada yang membayar untuk ikut dan tidak ada uang tunai yang bisa dimenangkan.",
@@ -823,7 +823,7 @@ module.exports = {
     up: {"bbc": "Permainan BBC", "wecDaily": "Permainan harian WeCup — tanpa pendaftaran", "wecFinal": "Final bulanan WeCup", "wecGrand": "Grand final WeCup", "mc": "Monthly Cup"}
   },
   is: {
-    title: "Ókeypis pókermót á netinu — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Ókeypis pókermót — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Ókeypis Texas Hold’em mót allt árið á pokerth.net: BBC, WeCup og Monthly Cup, með dagatölum, úrslitum og stigatöflum. Engir alvörupeningar, ekkert niðurhal.",
     h1: "Ókeypis pókermót og keppnir á netinu",
     lead: "PokerTH er ókeypis og keppnirnar líka. Hver leikur á pokerth.net er Texas Hold’em mót, og samfélagið heldur auk þess reglulegar keppnir allt árið um kring, hver með eigið dagatal, úrslit og stigatöflu. Aðeins leikpeningar: enginn borgar fyrir þátttöku og ekki er hægt að vinna neina peninga.",
@@ -847,7 +847,7 @@ module.exports = {
     up: {"bbc": "BBC-leikur", "wecDaily": "Daglegur WeCup-leikur — engin skráning", "wecFinal": "Mánaðarúrslit WeCup", "wecGrand": "Stóru lokaúrslit WeCup", "mc": "Monthly Cup"}
   },
   it: {
-    title: "Tornei di poker online gratis — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Tornei di poker gratis — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Tornei di poker Texas Hold’em gratis tutto l’anno su pokerth.net: BBC, WeCup e Monthly Cup con calendari, risultati e classifiche. Senza soldi veri né download.",
     h1: "Tornei e competizioni di poker online gratuiti",
     lead: "PokerTH è gratuito, e lo sono anche le sue competizioni. Ogni partita su pokerth.net è un torneo di Texas Hold’em, e la comunità organizza anche competizioni regolari tutto l’anno, ognuna con il proprio calendario, i propri risultati e la propria classifica. Solo denaro virtuale: nessuno paga per partecipare e non ci sono soldi da vincere.",
@@ -871,7 +871,7 @@ module.exports = {
     up: {"bbc": "Partita BBC", "wecDaily": "Partita giornaliera WeCup — senza iscrizione", "wecFinal": "Finale mensile WeCup", "wecGrand": "Gran finale WeCup", "mc": "Monthly Cup"}
   },
   ja: {
-    title: "無料オンラインポーカートーナメント — BBC・WeCup・Monthly Cup | PokerTH",
+    title: "無料ポーカートーナメント — BBC・WeCup・Monthly Cup | PokerTH",
     desc: "pokerth.net で一年中開催される無料のテキサスホールデム・トーナメント。BBC、WeCup、Monthly Cup の日程・結果・ランキングを掲載。リアルマネーなし、ダウンロード不要。",
     h1: "無料のオンラインポーカートーナメントと大会",
     lead: "PokerTH は無料で、その大会も無料です。pokerth.net のゲームはどれもテキサスホールデムのトーナメントで、さらにコミュニティが一年を通して定期的に大会を開いており、それぞれに独自の日程、結果、ランキングがあります。使うのはプレイマネーだけで、参加費は一切かからず、賞金もありません。",
@@ -895,7 +895,7 @@ module.exports = {
     up: {"bbc": "BBC ゲーム", "wecDaily": "WeCup 毎日のゲーム · 登録不要", "wecFinal": "WeCup 月間ファイナル", "wecGrand": "WeCup グランドファイナル", "mc": "Monthly Cup"}
   },
   ka: {
-    title: "უფასო ონლაინ პოკერის ტურნირები — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "უფასო პოკერის ტურნირები — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "უფასო Texas Hold’em პოკერის ტურნირები მთელი წელი pokerth.net-ზე: BBC, WeCup და Monthly Cup — კალენდრები, შედეგები, რეიტინგები. ფულისა და ჩამოტვირთვის გარეშე.",
     h1: "უფასო ონლაინ პოკერის ტურნირები და შეჯიბრებები",
     lead: "PokerTH უფასოა, ისევე როგორც მისი შეჯიბრებები. pokerth.net-ზე ყოველი თამაში Texas Hold’em ტურნირია, ხოლო საზოგადოება მთელი წლის განმავლობაში რეგულარულ შეჯიბრებებსაც მართავს, თითოეულს საკუთარი კალენდრით, შედეგებითა და რეიტინგით. მხოლოდ სათამაშო ფულით: მონაწილეობისთვის არავინ იხდის და ფულის მოგება შეუძლებელია.",
@@ -919,7 +919,7 @@ module.exports = {
     up: {"bbc": "BBC-ის თამაში", "wecDaily": "WeCup-ის ყოველდღიური თამაში — რეგისტრაციის გარეშე", "wecFinal": "WeCup-ის ყოველთვიური ფინალი", "wecGrand": "WeCup-ის დიდი ფინალი", "mc": "Monthly Cup"}
   },
   kk: {
-    title: "Тегін онлайн покер турнирлері — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Тегін покер турнирлері — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "pokerth.net-те жыл бойы тегін Texas Hold’em покер турнирлері: BBC, WeCup және Monthly Cup — күнтізбелері, нәтижелері мен рейтингтері. Нақты ақшасыз, жүктеусіз.",
     h1: "Тегін онлайн покер турнирлері мен жарыстар",
     lead: "PokerTH тегін, оның жарыстары да тегін. pokerth.net-тегі әр ойын — Texas Hold’em турнирі, ал қауымдастық жыл бойы тұрақты жарыстар да өткізеді, олардың әрқайсысының өз күнтізбесі, нәтижелері мен рейтингі бар. Тек ойын ақшасы: қатысу үшін ешкім төлемейді, ұтып алатын нақты ақша да жоқ.",
@@ -943,7 +943,7 @@ module.exports = {
     up: {"bbc": "BBC ойыны", "wecDaily": "WeCup күнделікті ойыны — тіркеусіз", "wecFinal": "WeCup айлық финалы", "wecGrand": "WeCup үлкен финалы", "mc": "Monthly Cup"}
   },
   km: {
-    title: "ការប្រកួតបៀអនឡាញឥតគិតថ្លៃ — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "ការប្រកួតបៀឥតគិតថ្លៃ — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "ការប្រកួតបៀ Texas Hold’em ឥតគិតថ្លៃពេញមួយឆ្នាំលើ pokerth.net៖ BBC, WeCup និង Monthly Cup ជាមួយប្រតិទិន លទ្ធផល និងចំណាត់ថ្នាក់។ គ្មានលុយពិត គ្មានការទាញយក។",
     h1: "ការប្រកួត និងព្រឹត្តិការណ៍បៀអនឡាញឥតគិតថ្លៃ",
     lead: "PokerTH ឥតគិតថ្លៃ ហើយការប្រកួតរបស់វាក៏ឥតគិតថ្លៃដែរ។ ហ្គេមនីមួយៗលើ pokerth.net ជាការប្រកួត Texas Hold’em មួយ ហើយសហគមន៍ក៏រៀបចំការប្រកួតជាប្រចាំពេញមួយឆ្នាំ ដែលនីមួយៗមានប្រតិទិន លទ្ធផល និងចំណាត់ថ្នាក់ផ្ទាល់ខ្លួន។ លេងតែលុយសម្រាប់លេងប៉ុណ្ណោះ៖ គ្មាននរណាបង់ប្រាក់ដើម្បីចូលរួម ហើយក៏គ្មានសាច់ប្រាក់សម្រាប់ឈ្នះដែរ។",
@@ -967,7 +967,7 @@ module.exports = {
     up: {"bbc": "ហ្គេម BBC", "wecDaily": "ហ្គេមប្រចាំថ្ងៃ WeCup — មិនចាំបាច់ចុះឈ្មោះ", "wecFinal": "វគ្គផ្ដាច់ព្រ័ត្រប្រចាំខែ WeCup", "wecGrand": "វគ្គផ្ដាច់ព្រ័ត្រធំ WeCup", "mc": "Monthly Cup"}
   },
   kn: {
-    title: "ಉಚಿತ ಆನ್‌ಲೈನ್ ಪೋಕರ್ ಟೂರ್ನಮೆಂಟ್‌ಗಳು — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "ಉಚಿತ ಪೋಕರ್ ಟೂರ್ನಿಗಳು — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "pokerth.net ನಲ್ಲಿ ವರ್ಷವಿಡೀ ಉಚಿತ Texas Hold’em ಪೋಕರ್ ಟೂರ್ನಮೆಂಟ್‌ಗಳು: BBC, WeCup, Monthly Cup — ಕ್ಯಾಲೆಂಡರ್, ಫಲಿತಾಂಶಗಳು, ಶ್ರೇಯಾಂಕ. ನೈಜ ಹಣವಿಲ್ಲ, ಡೌನ್‌ಲೋಡ್ ಇಲ್ಲ.",
     h1: "ಉಚಿತ ಆನ್‌ಲೈನ್ ಪೋಕರ್ ಟೂರ್ನಮೆಂಟ್‌ಗಳು ಮತ್ತು ಸ್ಪರ್ಧೆಗಳು",
     lead: "PokerTH ಉಚಿತ, ಅದರ ಸ್ಪರ್ಧೆಗಳೂ ಉಚಿತ. pokerth.net ನಲ್ಲಿನ ಪ್ರತಿಯೊಂದು ಗೇಮ್ ಒಂದು Texas Hold’em ಟೂರ್ನಮೆಂಟ್, ಮತ್ತು ಸಮುದಾಯವು ವರ್ಷವಿಡೀ ನಿಯಮಿತ ಸ್ಪರ್ಧೆಗಳನ್ನೂ ನಡೆಸುತ್ತದೆ; ಪ್ರತಿಯೊಂದಕ್ಕೂ ತನ್ನದೇ ಕ್ಯಾಲೆಂಡರ್, ಫಲಿತಾಂಶಗಳು ಮತ್ತು ಶ್ರೇಯಾಂಕವಿದೆ. ಆಟದ ಹಣ ಮಾತ್ರ: ಭಾಗವಹಿಸಲು ಯಾರೂ ಹಣ ಕೊಡುವುದಿಲ್ಲ, ಗೆಲ್ಲಲು ನಗದೂ ಇಲ್ಲ.",
@@ -991,7 +991,7 @@ module.exports = {
     up: {"bbc": "BBC ಗೇಮ್", "wecDaily": "WeCup ದೈನಂದಿನ ಗೇಮ್ — ನೋಂದಣಿ ಇಲ್ಲ", "wecFinal": "WeCup ಮಾಸಿಕ ಫೈನಲ್", "wecGrand": "WeCup ಗ್ರ್ಯಾಂಡ್ ಫೈನಲ್", "mc": "Monthly Cup"}
   },
   ko: {
-    title: "무료 온라인 포커 토너먼트 — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "무료 포커 토너먼트 — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "pokerth.net에서 일 년 내내 열리는 무료 텍사스 홀덤 토너먼트. BBC, WeCup, Monthly Cup의 일정, 결과, 랭킹을 확인하세요. 실제 돈도, 다운로드도 필요 없습니다.",
     h1: "무료 온라인 포커 토너먼트와 대회",
     lead: "PokerTH는 무료이며, 대회도 마찬가지입니다. pokerth.net의 모든 게임은 텍사스 홀덤 토너먼트이고, 커뮤니티는 일 년 내내 정기적인 대회도 운영하며 대회마다 고유한 일정, 결과, 랭킹이 있습니다. 게임 머니만 사용하므로 참가비를 내는 사람도 없고 받을 상금도 없습니다.",
@@ -1015,7 +1015,7 @@ module.exports = {
     up: {"bbc": "BBC 게임", "wecDaily": "WeCup 매일 게임 · 등록 불필요", "wecFinal": "WeCup 월간 결승", "wecGrand": "WeCup 그랜드 파이널", "mc": "Monthly Cup"}
   },
   ky: {
-    title: "Акысыз онлайн покер турнирлери — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Акысыз покер турнирлери — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "pokerth.net'те жыл бою акысыз Texas Hold’em покер турнирлери: BBC, WeCup жана Monthly Cup — календарлары, жыйынтыктары, рейтингдери. Чыныгы акчасыз, жүктөөсүз.",
     h1: "Акысыз онлайн покер турнирлери жана мелдештер",
     lead: "PokerTH акысыз, анын мелдештери да акысыз. pokerth.net'теги ар бир оюн — Texas Hold’em турнири, ал эми коомчулук жыл бою үзгүлтүксүз мелдештерди да өткөрөт, алардын ар биринин өз календары, жыйынтыктары жана рейтинги бар. Оюн акчасы гана: катышуу үчүн эч ким төлөбөйт жана утуп алчу накталай акча жок.",
@@ -1039,8 +1039,8 @@ module.exports = {
     up: {"bbc": "BBC оюну", "wecDaily": "WeCup күнүмдүк оюну — каттоосуз", "wecFinal": "WeCup айлык финалы", "wecGrand": "WeCup чоң финалы", "mc": "Monthly Cup"}
   },
   lt: {
-    title: "Nemokami pokerio turnyrai internetu — BBC, WeCup, Monthly Cup | PokerTH",
-    desc: "Nemokami Texas Hold’em turnyrai ištisus metus pokerth.net: BBC, WeCup ir Monthly Cup su kalendoriais, rezultatais ir reitingais. Be tikrų pinigų ir atsisiuntimų.",
+    title: "Nemokami pokerio turnyrai: BBC, WeCup, Monthly Cup | PokerTH",
+    desc: "Nemokami Texas Hold’em turnyrai visus metus pokerth.net: BBC, WeCup ir Monthly Cup su kalendoriais, rezultatais ir reitingais. Be tikrų pinigų ir atsisiuntimų.",
     h1: "Nemokami pokerio turnyrai ir varžybos internetu",
     lead: "PokerTH nemokamas, kaip ir jo varžybos. Kiekvienas žaidimas pokerth.net yra Texas Hold’em turnyras, o bendruomenė dar ištisus metus rengia reguliarias varžybas, kurių kiekviena turi savo kalendorių, rezultatus ir reitingą. Žaidžiama tik žaidybiniais pinigais: niekas nemoka už dalyvavimą ir laimėti pinigų negalima.",
     bbcH2: "BBC",
@@ -1063,7 +1063,7 @@ module.exports = {
     up: {"bbc": "BBC žaidimas", "wecDaily": "Kasdienis WeCup žaidimas — be registracijos", "wecFinal": "WeCup mėnesio finalas", "wecGrand": "WeCup didysis finalas", "mc": "Monthly Cup"}
   },
   lv: {
-    title: "Bezmaksas pokera turnīri tiešsaistē — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Bezmaksas pokera turnīri — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Bezmaksas Teksasas Hold’ema turnīri visu gadu pokerth.net: BBC, WeCup un Monthly Cup – kalendāri, rezultāti un reitingi. Bez īstas naudas, bez lejupielādes.",
     h1: "Bezmaksas pokera turnīri un sacensības tiešsaistē",
     lead: "PokerTH ir bez maksas, un tādas ir arī tā sacensības. Katra spēle pokerth.net ir Teksasas Hold’ema turnīrs, un kopiena turklāt visu gadu rīko regulāras sacensības, katrai savs kalendārs, rezultāti un reitings. Tikai spēles nauda: neviens nemaksā par dalību, un naudu laimēt nevar.",
@@ -1087,7 +1087,7 @@ module.exports = {
     up: {"bbc": "BBC spēle", "wecDaily": "WeCup ikdienas spēle — bez reģistrācijas", "wecFinal": "WeCup mēneša fināls", "wecGrand": "WeCup lielais fināls", "mc": "Monthly Cup"}
   },
   mk: {
-    title: "Бесплатни онлајн покер турнири — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Бесплатни покер турнири — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Бесплатни Texas Hold’em покер турнири цела година на pokerth.net: BBC, WeCup и Monthly Cup, со календари, резултати, рангирања. Без вистински пари и преземање.",
     h1: "Бесплатни онлајн покер турнири и натпревари",
     lead: "PokerTH е бесплатен, а такви се и неговите натпревари. Секоја игра на pokerth.net е Texas Hold’em турнир, а заедницата организира и редовни натпревари во текот на целата година, секој со свој календар, резултати и рангирање. Само со виртуелни пари: никој не плаќа за учество и нема пари за освојување.",
@@ -1111,7 +1111,7 @@ module.exports = {
     up: {"bbc": "BBC игра", "wecDaily": "Дневна WeCup игра — без пријава", "wecFinal": "Месечно финале на WeCup", "wecGrand": "Големо финале на WeCup", "mc": "Monthly Cup"}
   },
   ml: {
-    title: "സൗജന്യ ഓൺലൈൻ പോക്കർ ടൂർണമെന്റുകൾ — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "സൗജന്യ പോക്കർ ടൂർണമെന്റ് — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "pokerth.net-ൽ വർഷം മുഴുവനും സൗജന്യ Texas Hold’em പോക്കർ ടൂർണമെന്റുകൾ: BBC, WeCup, Monthly Cup — കലണ്ടറുകൾ, ഫലങ്ങൾ, റാങ്കിംഗുകൾ. യഥാർത്ഥ പണമില്ല, ഡൗൺലോഡ് വേണ്ട.",
     h1: "സൗജന്യ ഓൺലൈൻ പോക്കർ ടൂർണമെന്റുകളും മത്സരങ്ങളും",
     lead: "PokerTH സൗജന്യമാണ്, അതിന്റെ മത്സരങ്ങളും അങ്ങനെതന്നെ. pokerth.net-ലെ ഓരോ ഗെയിമും ഒരു Texas Hold’em ടൂർണമെന്റാണ്; കൂടാതെ കമ്മ്യൂണിറ്റി വർഷം മുഴുവനും പതിവ് മത്സരങ്ങൾ നടത്തുന്നു, ഓരോന്നിനും സ്വന്തം കലണ്ടറും ഫലങ്ങളും റാങ്കിംഗും ഉണ്ട്. കളിപ്പണം മാത്രം: പങ്കെടുക്കാൻ ആരും പണം നൽകുന്നില്ല, നേടാൻ പണവുമില്ല.",
@@ -1135,7 +1135,7 @@ module.exports = {
     up: {"bbc": "BBC ഗെയിം", "wecDaily": "WeCup ദിവസേനയുള്ള ഗെയിം — രജിസ്ട്രേഷൻ വേണ്ട", "wecFinal": "WeCup പ്രതിമാസ ഫൈനൽ", "wecGrand": "WeCup ഗ്രാൻഡ് ഫൈനൽ", "mc": "Monthly Cup"}
   },
   mn: {
-    title: "Үнэгүй онлайн покерын тэмцээн — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Үнэгүй покерын тэмцээн — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "pokerth.net дээр жилийн турш үнэгүй Texas Hold’em покерын тэмцээн: BBC, WeCup, Monthly Cup — хуанли, үр дүн, эрэмбэтэй. Жинхэнэ мөнгөгүй, татах шаардлагагүй.",
     h1: "Үнэгүй онлайн покерын тэмцээн, уралдаанууд",
     lead: "PokerTH үнэгүй, түүний уралдаанууд ч мөн адил. pokerth.net дээрх тоглолт бүр Texas Hold’em тэмцээн бөгөөд нийгэмлэг жилийн турш тогтмол уралдаанууд зохион байгуулдаг, тус бүр өөрийн хуанли, үр дүн, эрэмбэтэй. Зөвхөн тоглоомын мөнгө: оролцохын тулд хэн ч төлбөр төлөхгүй, хожих бэлэн мөнгө ч байхгүй.",
@@ -1159,7 +1159,7 @@ module.exports = {
     up: {"bbc": "BBC тоглолт", "wecDaily": "WeCup-ийн өдөр тутмын тоглолт — бүртгэлгүй", "wecFinal": "WeCup-ийн сарын финал", "wecGrand": "WeCup-ийн их финал", "mc": "Monthly Cup"}
   },
   mr: {
-    title: "मोफत ऑनलाइन पोकर टूर्नामेंट्स — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "मोफत पोकर टूर्नामेंट्स — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "pokerth.net वर वर्षभर मोफत Texas Hold’em पोकर टूर्नामेंट्स: BBC, WeCup आणि Monthly Cup — कॅलेंडर, निकाल आणि क्रमवारी. खरे पैसे नाहीत, डाउनलोड नाही.",
     h1: "मोफत ऑनलाइन पोकर टूर्नामेंट्स आणि स्पर्धा",
     lead: "PokerTH मोफत आहे, आणि त्याच्या स्पर्धाही. pokerth.net वरचा प्रत्येक गेम ही एक Texas Hold’em टूर्नामेंटच असते, आणि समुदाय वर्षभर नियमित स्पर्धाही भरवतो, प्रत्येकीचं स्वतःचं कॅलेंडर, निकाल आणि क्रमवारी असते. फक्त खेळाचे पैसे: प्रवेशासाठी कोणीही पैसे भरत नाही आणि जिंकण्यासाठी रोख रक्कमही नसते.",
@@ -1183,8 +1183,8 @@ module.exports = {
     up: {"bbc": "BBC गेम", "wecDaily": "WeCup दैनिक गेम — नोंदणी नाही", "wecFinal": "WeCup मासिक अंतिम फेरी", "wecGrand": "WeCup ग्रँड फायनल", "mc": "Monthly Cup"}
   },
   ms: {
-    title: "Kejohanan Poker Dalam Talian Percuma — BBC, WeCup, Monthly Cup | PokerTH",
-    desc: "Kejohanan poker Texas Hold’em percuma sepanjang tahun di pokerth.net: BBC, WeCup, Monthly Cup — kalendar, keputusan, kedudukan. Tiada wang sebenar, tanpa muat turun.",
+    title: "Kejohanan Poker Percuma — BBC, WeCup, Monthly Cup | PokerTH",
+    desc: "Kejohanan poker Texas Hold’em percuma sepanjang tahun di pokerth.net: BBC, WeCup, Monthly Cup — kalendar, keputusan, kedudukan. Tiada wang sebenar.",
     h1: "Kejohanan dan pertandingan poker dalam talian percuma",
     lead: "PokerTH percuma, begitu juga pertandingannya. Setiap permainan di pokerth.net ialah kejohanan Texas Hold’em, dan komuniti juga menganjurkan pertandingan tetap sepanjang tahun, masing-masing dengan kalendar, keputusan dan kedudukan tersendiri. Wang mainan sahaja: tiada siapa membayar untuk menyertai dan tiada wang tunai untuk dimenangi.",
     bbcH2: "BBC",
@@ -1207,8 +1207,8 @@ module.exports = {
     up: {"bbc": "Permainan BBC", "wecDaily": "Permainan harian WeCup — tiada pendaftaran", "wecFinal": "Final bulanan WeCup", "wecGrand": "Final besar WeCup", "mc": "Monthly Cup"}
   },
   my: {
-    title: "အခမဲ့ အွန်လိုင်း ပိုကာပြိုင်ပွဲများ — BBC, WeCup, Monthly Cup | PokerTH",
-    desc: "pokerth.net တွင် တစ်နှစ်ပတ်လုံး အခမဲ့ Texas Hold’em ပိုကာပြိုင်ပွဲများ: BBC၊ WeCup၊ Monthly Cup — ပြက္ခဒိန်၊ ရလဒ်နှင့် အဆင့်စာရင်း။ ငွေအစစ်မသုံး၊ ဒေါင်းလုဒ်မလို။",
+    title: "အခမဲ့ ပိုကာပြိုင်ပွဲများ — BBC, WeCup, Monthly Cup | PokerTH",
+    desc: "pokerth.net တွင် တစ်နှစ်ပတ်လုံး အခမဲ့ Texas Hold’em ပိုကာပြိုင်ပွဲများ: BBC၊ WeCup၊ Monthly Cup — ပြက္ခဒိန်၊ ရလဒ်၊ အဆင့်စာရင်း။ ငွေအစစ်မသုံး၊ ဒေါင်းလုဒ်မလို။",
     h1: "အခမဲ့ အွန်လိုင်း ပိုကာပြိုင်ပွဲများနှင့် ယှဉ်ပြိုင်မှုများ",
     lead: "PokerTH သည် အခမဲ့ဖြစ်ပြီး ၎င်း၏ ယှဉ်ပြိုင်မှုများလည်း အခမဲ့ဖြစ်သည်။ pokerth.net ရှိ ဂိမ်းတိုင်းသည် Texas Hold’em ပြိုင်ပွဲတစ်ခုဖြစ်ပြီး အသိုင်းအဝိုင်းကလည်း တစ်နှစ်ပတ်လုံး ပုံမှန် ယှဉ်ပြိုင်မှုများ ကျင်းပသည်၊ တစ်ခုစီတွင် ကိုယ်ပိုင် ပြက္ခဒိန်၊ ရလဒ်နှင့် အဆင့်စာရင်း ရှိသည်။ ကစားငွေသာ သုံးသည်: ပါဝင်ရန် မည်သူမျှ ငွေမပေးရဘဲ အနိုင်ရနိုင်သော ငွေသားလည်း မရှိပါ။",
     bbcH2: "BBC",
@@ -1231,8 +1231,8 @@ module.exports = {
     up: {"bbc": "BBC ဂိမ်း", "wecDaily": "WeCup နေ့စဉ်ကစားပွဲ — စာရင်းသွင်းရန်မလို", "wecFinal": "WeCup လစဉ် ဗိုလ်လုပွဲ", "wecGrand": "WeCup ဗိုလ်လုပွဲကြီး", "mc": "Monthly Cup"}
   },
   nb: {
-    title: "Gratis pokerturneringer på nett — BBC, WeCup, Monthly Cup | PokerTH",
-    desc: "Gratis Texas Hold’em-turneringer hele året på pokerth.net: BBC, WeCup og Monthly Cup med kalender, resultater og rangeringer. Ingen ekte penger eller nedlasting.",
+    title: "Gratis pokerturneringer — BBC, WeCup, Monthly Cup | PokerTH",
+    desc: "Gratis Texas Hold’em-turneringer hele året på pokerth.net: BBC, WeCup og Monthly Cup med kalender, resultater og rangeringer. Uten ekte penger eller nedlasting.",
     h1: "Gratis pokerturneringer og konkurranser på nett",
     lead: "PokerTH er gratis, og det er konkurransene også. Hvert spill på pokerth.net er en Texas Hold’em-turnering, og fellesskapet arrangerer i tillegg faste konkurranser hele året, hver med egen kalender, egne resultater og egen rangering. Kun lekepenger: ingen betaler for å delta, og det finnes ingen penger å vinne.",
     bbcH2: "BBC",
@@ -1255,7 +1255,7 @@ module.exports = {
     up: {"bbc": "BBC-spill", "wecDaily": "Daglig WeCup-spill — ingen påmelding", "wecFinal": "WeCups månedsfinale", "wecGrand": "WeCups store finale", "mc": "Monthly Cup"}
   },
   ne: {
-    title: "निःशुल्क अनलाइन पोकर टुर्नामेन्ट — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "मुफ्त पोकर टुर्नामेन्ट — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "pokerth.net मा वर्षभरि निःशुल्क Texas Hold’em पोकर टुर्नामेन्ट: BBC, WeCup र Monthly Cup — पात्रो, नतिजा र र्‍याङ्किङ। वास्तविक पैसा छैन, डाउनलोड छैन।",
     h1: "निःशुल्क अनलाइन पोकर टुर्नामेन्ट र प्रतियोगिता",
     lead: "PokerTH निःशुल्क छ, र यसका प्रतियोगिता पनि। pokerth.net को हरेक खेल एउटा Texas Hold’em टुर्नामेन्ट हो, र समुदायले वर्षभरि नियमित प्रतियोगिता पनि चलाउँछ, हरेकको आफ्नै पात्रो, नतिजा र र्‍याङ्किङ हुन्छ। खेलको पैसा मात्र: भाग लिन कसैले तिर्नु पर्दैन र जित्ने नगद पनि छैन।",
@@ -1279,7 +1279,7 @@ module.exports = {
     up: {"bbc": "BBC खेल", "wecDaily": "WeCup दैनिक खेल — दर्ता आवश्यक छैन", "wecFinal": "WeCup मासिक फाइनल", "wecGrand": "WeCup ग्रान्ड फाइनल", "mc": "Monthly Cup"}
   },
   nl: {
-    title: "Gratis online pokertoernooien — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Gratis pokertoernooien — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Het hele jaar gratis Texas Hold’em-pokertoernooien op pokerth.net: BBC, WeCup en Monthly Cup, met kalender, uitslagen, ranglijst. Geen echt geld, geen download.",
     h1: "Gratis online pokertoernooien en competities",
     lead: "PokerTH is gratis, en de competities ook. Elk spel op pokerth.net is een Texas Hold’em-toernooi, en de community organiseert het hele jaar door ook vaste competities, elk met een eigen kalender, uitslagen en ranglijst. Alleen speelgeld: niemand betaalt om mee te doen en er valt geen geld te winnen.",
@@ -1303,7 +1303,7 @@ module.exports = {
     up: {"bbc": "BBC-spel", "wecDaily": "Dagelijks WeCup-spel — geen inschrijving", "wecFinal": "WeCup-maandfinale", "wecGrand": "Grote finale van de WeCup", "mc": "Monthly Cup"}
   },
   pa: {
-    title: "ਮੁਫ਼ਤ ਆਨਲਾਈਨ ਪੋਕਰ ਟੂਰਨਾਮੈਂਟ — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "ਮੁਫ਼ਤ ਪੋਕਰ ਟੂਰਨਾਮੈਂਟ — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "pokerth.net ’ਤੇ ਸਾਰਾ ਸਾਲ ਮੁਫ਼ਤ Texas Hold’em ਪੋਕਰ ਟੂਰਨਾਮੈਂਟ: BBC, WeCup ਅਤੇ Monthly Cup — ਕੈਲੰਡਰ, ਨਤੀਜੇ ਅਤੇ ਰੈਂਕਿੰਗ। ਅਸਲ ਪੈਸਾ ਨਹੀਂ, ਕੋਈ ਡਾਊਨਲੋਡ ਨਹੀਂ।",
     h1: "ਮੁਫ਼ਤ ਆਨਲਾਈਨ ਪੋਕਰ ਟੂਰਨਾਮੈਂਟ ਅਤੇ ਮੁਕਾਬਲੇ",
     lead: "PokerTH ਮੁਫ਼ਤ ਹੈ, ਅਤੇ ਇਸਦੇ ਮੁਕਾਬਲੇ ਵੀ। pokerth.net ’ਤੇ ਹਰ ਖੇਡ ਇੱਕ Texas Hold’em ਟੂਰਨਾਮੈਂਟ ਹੈ, ਅਤੇ ਭਾਈਚਾਰਾ ਸਾਰਾ ਸਾਲ ਨਿਯਮਤ ਮੁਕਾਬਲੇ ਵੀ ਕਰਵਾਉਂਦਾ ਹੈ, ਹਰੇਕ ਦਾ ਆਪਣਾ ਕੈਲੰਡਰ, ਨਤੀਜੇ ਅਤੇ ਰੈਂਕਿੰਗ ਹੁੰਦੀ ਹੈ। ਸਿਰਫ਼ ਖੇਡ ਵਾਲਾ ਪੈਸਾ: ਹਿੱਸਾ ਲੈਣ ਲਈ ਕੋਈ ਭੁਗਤਾਨ ਨਹੀਂ ਕਰਦਾ ਅਤੇ ਜਿੱਤਣ ਲਈ ਕੋਈ ਨਕਦੀ ਨਹੀਂ।",
@@ -1327,7 +1327,7 @@ module.exports = {
     up: {"bbc": "BBC ਖੇਡ", "wecDaily": "WeCup ਰੋਜ਼ਾਨਾ ਖੇਡ — ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਨਹੀਂ", "wecFinal": "WeCup ਮਾਸਿਕ ਫਾਈਨਲ", "wecGrand": "WeCup ਗ੍ਰੈਂਡ ਫਾਈਨਲ", "mc": "Monthly Cup"}
   },
   pl: {
-    title: "Darmowe turnieje pokerowe online — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Darmowe turnieje pokera — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Darmowe turnieje Texas Hold’em cały rok na pokerth.net: BBC, WeCup i Monthly Cup z kalendarzami, wynikami i rankingami. Bez prawdziwych pieniędzy i pobierania.",
     h1: "Darmowe turnieje i zawody pokerowe online",
     lead: "PokerTH jest darmowy, podobnie jak jego zawody. Każda gra na pokerth.net to turniej Texas Hold’em, a społeczność przez cały rok organizuje też regularne zawody, każde z własnym kalendarzem, wynikami i rankingiem. Gra toczy się wyłącznie o wirtualne żetony: nikt nie płaci za udział i nie ma do wygrania prawdziwych pieniędzy.",
@@ -1351,7 +1351,7 @@ module.exports = {
     up: {"bbc": "Gra BBC", "wecDaily": "Codzienna gra WeCup — bez zapisów", "wecFinal": "Finał miesiąca WeCup", "wecGrand": "Wielki finał WeCup", "mc": "Monthly Cup"}
   },
   'pt-BR': {
-    title: "Torneios de pôquer online grátis — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Torneio de pôquer grátis — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Torneios de pôquer Texas Hold’em grátis o ano todo no pokerth.net: BBC, WeCup e Monthly Cup, com agenda, resultados e rankings. Sem dinheiro real nem download.",
     h1: "Torneios e competições de pôquer online gratuitos",
     lead: "O PokerTH é gratuito, e as competições também. Toda partida no pokerth.net é um torneio de Texas Hold’em, e a comunidade também organiza competições regulares o ano todo, cada uma com seu próprio calendário, resultados e ranking. Só dinheiro fictício: ninguém paga para participar e não há dinheiro a ganhar.",
@@ -1375,7 +1375,7 @@ module.exports = {
     up: {"bbc": "Partida do BBC", "wecDaily": "Partida diária da WeCup — sem inscrição", "wecFinal": "Final mensal da WeCup", "wecGrand": "Grande final da WeCup", "mc": "Monthly Cup"}
   },
   'pt-PT': {
-    title: "Torneios de póquer online grátis — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Póquer: torneios grátis — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Torneios de póquer Texas Hold’em grátis todo o ano no pokerth.net: BBC, WeCup e Monthly Cup — datas, resultados e classificação. Sem dinheiro real nem download.",
     h1: "Torneios e competições de póquer online gratuitos",
     lead: "O PokerTH é gratuito, e as suas competições também. Cada jogo no pokerth.net é um torneio de Texas Hold’em, e a comunidade organiza ainda competições regulares durante todo o ano, cada uma com o seu calendário, resultados e classificação. Apenas dinheiro fictício: ninguém paga para participar e não há dinheiro para ganhar.",
@@ -1399,7 +1399,7 @@ module.exports = {
     up: {"bbc": "Jogo do BBC", "wecDaily": "Partida diária da WeCup — sem inscrição", "wecFinal": "Final mensal da WeCup", "wecGrand": "Grande final da WeCup", "mc": "Monthly Cup"}
   },
   ro: {
-    title: "Turnee de poker online gratuite — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Turnee de poker gratuite — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Turnee gratuite de poker Texas Hold’em tot anul pe pokerth.net: BBC, WeCup și Monthly Cup, cu calendare, rezultate, clasamente. Fără bani reali sau descărcare.",
     h1: "Turnee și competiții de poker online gratuite",
     lead: "PokerTH este gratuit, la fel și competițiile sale. Fiecare joc de pe pokerth.net este un turneu Texas Hold’em, iar comunitatea organizează și competiții regulate tot anul, fiecare cu propriul calendar, propriile rezultate și propriul clasament. Doar bani virtuali: nimeni nu plătește pentru a participa și nu se câștigă bani.",
@@ -1423,7 +1423,7 @@ module.exports = {
     up: {"bbc": "Joc BBC", "wecDaily": "Joc zilnic WeCup — fără înscriere", "wecFinal": "Finala lunară WeCup", "wecGrand": "Marea finală WeCup", "mc": "Monthly Cup"}
   },
   ru: {
-    title: "Бесплатные онлайн-турниры по покеру — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Бесплатные покер-турниры — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Бесплатные покерные турниры Texas Hold’em весь год на pokerth.net: BBC, WeCup и Monthly Cup — календари, результаты, рейтинги. Без реальных денег и скачивания.",
     h1: "Бесплатные онлайн-турниры и соревнования по покеру",
     lead: "PokerTH бесплатен, как и его соревнования. Каждая игра на pokerth.net — это турнир по Texas Hold’em, а сообщество ещё и круглый год проводит регулярные соревнования, у каждого из которых свой календарь, результаты и рейтинг. Игра идёт только на виртуальные фишки: за участие никто не платит, и денежных выигрышей нет.",
@@ -1447,7 +1447,7 @@ module.exports = {
     up: {"bbc": "Игра BBC", "wecDaily": "Ежедневная игра WeCup — без регистрации", "wecFinal": "Месячный финал WeCup", "wecGrand": "Большой финал WeCup", "mc": "Monthly Cup"}
   },
   si: {
-    title: "නොමිලේ ඔන්ලයින් පෝකර් තරඟාවලි — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "නොමිලේ පෝකර් තරඟාවලි — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "pokerth.net හි වසර පුරාම නොමිලේ Texas Hold’em පෝකර් තරඟාවලි: BBC, WeCup සහ Monthly Cup — දින දර්ශන, ප්‍රතිඵල සහ ශ්‍රේණිගත කිරීම්. සැබෑ මුදල් නැත, බාගැනීමක් නැත.",
     h1: "නොමිලේ ඔන්ලයින් පෝකර් තරඟාවලි සහ තරඟ",
     lead: "PokerTH නොමිලේ, එහි තරඟ ද එසේමය. pokerth.net හි සෑම ක්‍රීඩාවක්ම Texas Hold’em තරඟාවලියකි, තවද ප්‍රජාව වසර පුරාම නිතිපතා තරඟ ද පවත්වයි; ඒ සෑම එකකටම තමන්ගේම දින දර්ශනයක්, ප්‍රතිඵල සහ ශ්‍රේණිගත කිරීමක් ඇත. ක්‍රීඩා මුදල් පමණි: සහභාගී වීමට කිසිවෙකු මුදල් ගෙවන්නේ නැත, දිනා ගැනීමට මුදල් ද නැත.",
@@ -1471,7 +1471,7 @@ module.exports = {
     up: {"bbc": "BBC ක්‍රීඩාව", "wecDaily": "WeCup දෛනික ක්‍රීඩාව — ලියාපදිංචිය අවශ්‍ය නැත", "wecFinal": "WeCup මාසික අවසන් තරඟය", "wecGrand": "WeCup මහා අවසන් තරඟය", "mc": "Monthly Cup"}
   },
   sk: {
-    title: "Pokerové turnaje online zadarmo — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Pokerové turnaje zadarmo — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Bezplatné turnaje v Texas Hold’em celý rok na pokerth.net: BBC, WeCup a Monthly Cup s kalendármi, výsledkami a rebríčkami. Bez reálnych peňazí, bez sťahovania.",
     h1: "Pokerové turnaje a súťaže online zadarmo",
     lead: "PokerTH je zadarmo a jeho súťaže tiež. Každá hra na pokerth.net je turnaj v Texas Hold’em a komunita navyše po celý rok organizuje pravidelné súťaže, každú s vlastným kalendárom, výsledkami a rebríčkom. Hrá sa len o herné peniaze: nikto neplatí štartovné a žiadne skutočné peniaze sa vyhrať nedajú.",
@@ -1495,7 +1495,7 @@ module.exports = {
     up: {"bbc": "Hra BBC", "wecDaily": "Denná hra WeCup — bez registrácie", "wecFinal": "Mesačné finále WeCup", "wecGrand": "Veľké finále WeCup", "mc": "Monthly Cup"}
   },
   sl: {
-    title: "Brezplačni spletni poker turnirji — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Zastonj poker turnirji — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Brezplačni turnirji Texas Hold’em vse leto na pokerth.net: BBC, WeCup in Monthly Cup s koledarji, rezultati in lestvicami. Brez pravega denarja, brez prenosa.",
     h1: "Brezplačni spletni poker turnirji in tekmovanja",
     lead: "PokerTH je brezplačen in prav tako njegova tekmovanja. Vsaka igra na pokerth.net je turnir v Texas Hold’emu, skupnost pa vse leto prireja tudi redna tekmovanja, vsako s svojim koledarjem, rezultati in lestvico. Igra se samo z igralnim denarjem: nihče ne plača prijavnine in pravega denarja ni mogoče dobiti.",
@@ -1519,7 +1519,7 @@ module.exports = {
     up: {"bbc": "Igra BBC", "wecDaily": "Dnevna igra WeCup — brez prijave", "wecFinal": "Mesečni finale WeCup", "wecGrand": "Veliki finale WeCup", "mc": "Monthly Cup"}
   },
   sq: {
-    title: "Turne poker online falas — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Turne poker falas — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Turne poker Texas Hold’em falas gjithë vitin në pokerth.net: BBC, WeCup dhe Monthly Cup, me kalendarë, rezultate dhe renditje. Pa para të vërteta, pa shkarkim.",
     h1: "Turne dhe gara poker online falas",
     lead: "PokerTH është falas, dhe po ashtu edhe garat e tij. Çdo lojë në pokerth.net është një turne Texas Hold’em, dhe komuniteti organizon edhe gara të rregullta gjatë gjithë vitit, secila me kalendarin, rezultatet dhe renditjen e vet. Vetëm me para virtuale: askush nuk paguan për të marrë pjesë dhe nuk fitohen para.",
@@ -1543,7 +1543,7 @@ module.exports = {
     up: {"bbc": "Lojë BBC", "wecDaily": "Lojë e përditshme WeCup — pa regjistrim", "wecFinal": "Finalja mujore WeCup", "wecGrand": "Finalja e madhe WeCup", "mc": "Monthly Cup"}
   },
   sr: {
-    title: "Бесплатни онлајн покер турнири — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Бесплатни покер турнири — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Бесплатни Texas Hold’em турнири целе године на pokerth.net: BBC, WeCup и Monthly Cup са календарима, резултатима и ранг-листама. Без правог новца и преузимања.",
     h1: "Бесплатни онлајн покер турнири и такмичења",
     lead: "PokerTH је бесплатан, а бесплатна су и његова такмичења. Свака игра на pokerth.net је Texas Hold’em турнир, а заједница током целе године одржава и редовна такмичења, свако са сопственим календаром, резултатима и ранг-листом. Игра се само за виртуелни новац: нико не плаћа учешће и нема правог новца који се може освојити.",
@@ -1567,7 +1567,7 @@ module.exports = {
     up: {"bbc": "BBC игра", "wecDaily": "Дневна WeCup игра — без пријаве", "wecFinal": "Месечно финале WeCup-а", "wecGrand": "Велико финале WeCup-а", "mc": "Monthly Cup"}
   },
   sv: {
-    title: "Gratis pokerturneringar online — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Gratis pokerturneringar — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Gratis Texas Hold’em-turneringar året runt på pokerth.net: BBC, WeCup och Monthly Cup med kalender, resultat och ranking. Inga riktiga pengar eller nedladdning.",
     h1: "Gratis pokerturneringar och tävlingar online",
     lead: "PokerTH är gratis, och det är tävlingarna också. Varje spel på pokerth.net är en Texas Hold’em-turnering, och gemenskapen anordnar dessutom regelbundna tävlingar året runt, var och en med egen kalender, egna resultat och egen ranking. Bara låtsaspengar: ingen betalar för att delta och det finns inga pengar att vinna.",
@@ -1591,7 +1591,7 @@ module.exports = {
     up: {"bbc": "BBC-spel", "wecDaily": "Dagligt WeCup-spel — ingen anmälan", "wecFinal": "WeCups månadsfinal", "wecGrand": "WeCups stora final", "mc": "Monthly Cup"}
   },
   sw: {
-    title: "Mashindano ya poka ya bure mtandaoni — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Mashindano ya poka bure — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Mashindano ya poka ya Texas Hold’em bure mwaka mzima kwenye pokerth.net: BBC, WeCup na Monthly Cup, na kalenda, matokeo na viwango. Bila pesa halisi.",
     h1: "Mashindano ya poka ya bure mtandaoni",
     lead: "PokerTH ni bure, na mashindano yake pia. Kila mchezo kwenye pokerth.net ni mashindano ya Texas Hold’em, na jumuiya pia huendesha mashindano ya mara kwa mara mwaka mzima, kila moja likiwa na kalenda, matokeo na viwango vyake. Pesa za mchezo pekee: hakuna anayelipa ili kushiriki na hakuna pesa taslimu za kushinda.",
@@ -1615,8 +1615,8 @@ module.exports = {
     up: {"bbc": "Mchezo wa BBC", "wecDaily": "Mchezo wa kila siku wa WeCup — bila usajili", "wecFinal": "Fainali ya mwezi ya WeCup", "wecGrand": "Fainali kuu ya WeCup", "mc": "Monthly Cup"}
   },
   ta: {
-    title: "இலவச ஆன்லைன் போக்கர் டோர்னமென்ட்கள் — BBC, WeCup, Monthly Cup | PokerTH",
-    desc: "pokerth.net-இல் ஆண்டு முழுவதும் இலவச Texas Hold’em போக்கர் டோர்னமென்ட்கள்: BBC, WeCup, Monthly Cup — நாட்காட்டி, முடிவுகள், தரவரிசை. நிஜப் பணமோ பதிவிறக்கமோ இல்லை.",
+    title: "இலவச போக்கர் போட்டிகள் — BBC, WeCup, Monthly Cup | PokerTH",
+    desc: "pokerth.net-இல் ஆண்டு முழுவதும் இலவச Texas Hold’em டோர்னமென்ட்கள்: BBC, WeCup, Monthly Cup — நாட்காட்டி, முடிவுகள், தரவரிசை. நிஜப் பணமோ பதிவிறக்கமோ இல்லை.",
     h1: "இலவச ஆன்லைன் போக்கர் டோர்னமென்ட்களும் போட்டிகளும்",
     lead: "PokerTH இலவசம், அதன் போட்டிகளும் இலவசம்தான். pokerth.net-இல் ஒவ்வொரு ஆட்டமும் ஒரு Texas Hold’em டோர்னமென்ட்; மேலும் சமூகம் ஆண்டு முழுவதும் வழக்கமான போட்டிகளை நடத்துகிறது, ஒவ்வொன்றுக்கும் தனி நாட்காட்டி, முடிவுகள், தரவரிசை உண்டு. விளையாட்டுப் பணம் மட்டுமே: பங்கேற்க யாரும் கட்டணம் செலுத்துவதில்லை, வெல்வதற்குப் பணமும் இல்லை.",
     bbcH2: "BBC",
@@ -1639,8 +1639,8 @@ module.exports = {
     up: {"bbc": "BBC ஆட்டம்", "wecDaily": "WeCup தினசரி ஆட்டம் — பதிவு தேவையில்லை", "wecFinal": "WeCup மாதாந்திர இறுதிப் போட்டி", "wecGrand": "WeCup பெரும் இறுதிப் போட்டி", "mc": "Monthly Cup"}
   },
   te: {
-    title: "ఉచిత ఆన్‌లైన్ పోకర్ టోర్నమెంట్‌లు — BBC, WeCup, Monthly Cup | PokerTH",
-    desc: "pokerth.net లో ఏడాది పొడవునా ఉచిత Texas Hold’em పోకర్ టోర్నమెంట్‌లు: BBC, WeCup, Monthly Cup — క్యాలెండర్, ఫలితాలు, ర్యాంకింగ్. నిజమైన డబ్బు లేదు, డౌన్‌లోడ్ లేదు.",
+    title: "ఉచిత పోకర్ టోర్నమెంట్‌లు — BBC, WeCup, Monthly Cup | PokerTH",
+    desc: "pokerth.net లో ఏడాది పొడవునా ఉచిత Texas Hold’em టోర్నమెంట్‌లు: BBC, WeCup, Monthly Cup — క్యాలెండర్, ఫలితాలు, ర్యాంకింగ్. నిజమైన డబ్బు లేదు, డౌన్‌లోడ్ లేదు.",
     h1: "ఉచిత ఆన్‌లైన్ పోకర్ టోర్నమెంట్‌లు మరియు పోటీలు",
     lead: "PokerTH ఉచితం, దాని పోటీలు కూడా ఉచితమే. pokerth.net లో ప్రతి గేమ్ ఒక Texas Hold’em టోర్నమెంటే, అంతేకాక సమాజం ఏడాది పొడవునా క్రమం తప్పకుండా పోటీలు నిర్వహిస్తుంది, ఒక్కోదానికి సొంత క్యాలెండర్, ఫలితాలు, ర్యాంకింగ్ ఉంటాయి. ఆట డబ్బు మాత్రమే: పాల్గొనడానికి ఎవరూ డబ్బు చెల్లించరు, గెలవడానికి నగదు కూడా ఉండదు.",
     bbcH2: "BBC",
@@ -1663,7 +1663,7 @@ module.exports = {
     up: {"bbc": "BBC గేమ్", "wecDaily": "WeCup రోజువారీ గేమ్ — నమోదు అవసరం లేదు", "wecFinal": "WeCup నెలవారీ ఫైనల్", "wecGrand": "WeCup గ్రాండ్ ఫైనల్", "mc": "Monthly Cup"}
   },
   tg: {
-    title: "Турнирҳои ройгони онлайн покер — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Турнирҳои ройгони покер — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Турнирҳои ройгони покери Texas Hold’em дар тӯли сол дар pokerth.net: BBC, WeCup ва Monthly Cup — тақвимҳо, натиҷаҳо ва рейтингҳо. Бе пули воқеӣ, бе боргирӣ.",
     h1: "Турнирҳо ва мусобиқаҳои ройгони онлайн покер",
     lead: "PokerTH ройгон аст, мусобиқаҳояш низ. Ҳар бозӣ дар pokerth.net турнири Texas Hold’em аст ва ҷомеа инчунин дар тӯли сол мусобиқаҳои мунтазам мегузаронад, ки ҳар кадомаш тақвим, натиҷаҳо ва рейтинги худро дорад. Танҳо пули бозӣ: барои иштирок ҳеҷ кас пул намедиҳад ва пули нақде барои бурдан нест.",
@@ -1687,7 +1687,7 @@ module.exports = {
     up: {"bbc": "Бозии BBC", "wecDaily": "Бозии ҳаррӯзаи WeCup — бе бақайдгирӣ", "wecFinal": "Финали моҳонаи WeCup", "wecGrand": "Финали калони WeCup", "mc": "Monthly Cup"}
   },
   th: {
-    title: "ทัวร์นาเมนต์โป๊กเกอร์ออนไลน์ฟรี — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "ทัวร์นาเมนต์โป๊กเกอร์ฟรี — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "ทัวร์นาเมนต์โป๊กเกอร์ Texas Hold’em ฟรีตลอดทั้งปีบน pokerth.net ทั้ง BBC, WeCup, Monthly Cup พร้อมปฏิทิน ผลการแข่งขัน และอันดับ ไม่ใช้เงินจริง ไม่ต้องดาวน์โหลด",
     h1: "ทัวร์นาเมนต์และการแข่งขันโป๊กเกอร์ออนไลน์ฟรี",
     lead: "PokerTH เล่นได้ฟรี และการแข่งขันก็ฟรีเช่นกัน ทุกเกมบน pokerth.net คือทัวร์นาเมนต์ Texas Hold’em และชุมชนยังจัดการแข่งขันเป็นประจำตลอดทั้งปี แต่ละรายการมีปฏิทิน ผลการแข่งขัน และอันดับของตัวเอง ใช้เงินจำลองเท่านั้น ไม่มีใครต้องจ่ายค่าสมัคร และไม่มีเงินสดให้ชิง",
@@ -1711,7 +1711,7 @@ module.exports = {
     up: {"bbc": "เกม BBC", "wecDaily": "เกมประจำวัน WeCup — ไม่ต้องลงทะเบียน", "wecFinal": "รอบชิงประจำเดือน WeCup", "wecGrand": "รอบชิงชนะเลิศใหญ่ WeCup", "mc": "Monthly Cup"}
   },
   tk: {
-    title: "Mugt onlaýn poker turnirleri — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Mugt poker turnirleri — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "pokerth.net-de ýylboýy mugt Texas Hold’em poker turnirleri: BBC, WeCup we Monthly Cup — senenamalary, netijeleri we reýtingleri. Hakyky pulsuz, ýüklemesiz.",
     h1: "Mugt onlaýn poker turnirleri we ýaryşlar",
     lead: "PokerTH mugt, onuň ýaryşlary hem. pokerth.net-däki her bir oýun Texas Hold’em turniridir, jemgyýet bolsa ýylboýy yzygiderli ýaryşlary hem geçirýär, olaryň her biriniň öz senenamasy, netijeleri we reýtingi bar. Diňe oýun puly: gatnaşmak üçin hiç kim töleg etmeýär we utup boljak nagt pul ýok.",
@@ -1735,7 +1735,7 @@ module.exports = {
     up: {"bbc": "BBC oýny", "wecDaily": "WeCup gündelik oýny — hasaba alyş gerek däl", "wecFinal": "WeCup aýlyk finaly", "wecGrand": "WeCup uly finaly", "mc": "Monthly Cup"}
   },
   tr: {
-    title: "Ücretsiz Online Poker Turnuvaları — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Ücretsiz Poker Turnuvası — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "pokerth.net’te yıl boyu ücretsiz Texas Hold’em poker turnuvaları: BBC, WeCup ve Monthly Cup; takvimleri, sonuçları ve sıralamaları. Gerçek para ve indirme yok.",
     h1: "Ücretsiz online poker turnuvaları ve yarışmaları",
     lead: "PokerTH ücretsizdir, yarışmaları da öyle. pokerth.net’teki her oyun bir Texas Hold’em turnuvasıdır; topluluk ayrıca yıl boyunca her birinin kendi takvimi, sonuçları ve sıralaması olan düzenli yarışmalar düzenler. Yalnızca oyun parası: kimse katılmak için ödeme yapmaz ve kazanılacak nakit yoktur.",
@@ -1759,8 +1759,8 @@ module.exports = {
     up: {"bbc": "BBC oyunu", "wecDaily": "WeCup günlük oyunu — kayıt yok", "wecFinal": "WeCup aylık finali", "wecGrand": "WeCup büyük finali", "mc": "Monthly Cup"}
   },
   uk: {
-    title: "Безкоштовні онлайн-турніри з покеру — BBC, WeCup, Monthly Cup | PokerTH",
-    desc: "Безкоштовні покерні турніри Texas Hold’em увесь рік на pokerth.net: BBC, WeCup і Monthly Cup — календарі, результати, рейтинги. Без реальних грошей і завантаження.",
+    title: "Безкоштовні турніри — BBC, WeCup, Monthly Cup | PokerTH",
+    desc: "Безкоштовні покерні турніри Texas Hold’em увесь рік на pokerth.net: BBC, WeCup і Monthly Cup — календарі, результати, рейтинги. Без реальних грошей.",
     h1: "Безкоштовні онлайн-турніри та змагання з покеру",
     lead: "PokerTH безкоштовний, як і його змагання. Кожна гра на pokerth.net — це турнір із Texas Hold’em, а спільнота ще й цілий рік проводить регулярні змагання, кожне з власним календарем, результатами й рейтингом. Гра лише на віртуальні фішки: за участь ніхто не платить, і грошових виграшів немає.",
     bbcH2: "BBC",
@@ -1783,7 +1783,7 @@ module.exports = {
     up: {"bbc": "Гра BBC", "wecDaily": "Щоденна гра WeCup — без реєстрації", "wecFinal": "Місячний фінал WeCup", "wecGrand": "Великий фінал WeCup", "mc": "Monthly Cup"}
   },
   ur: {
-    title: "مفت آن لائن پوکر ٹورنامنٹ — BBC، WeCup، Monthly Cup | PokerTH",
+    title: "مفت پوکر ٹورنامنٹ — BBC، WeCup، Monthly Cup | PokerTH",
     desc: "pokerth.net پر سارا سال مفت ٹیکساس ہولڈم پوکر ٹورنامنٹ: BBC، WeCup اور Monthly Cup، کیلنڈر، نتائج اور درجہ بندی کے ساتھ۔ نہ اصلی پیسہ، نہ ڈاؤن لوڈ۔",
     h1: "مفت آن لائن پوکر ٹورنامنٹ اور مقابلے",
     lead: "PokerTH مفت ہے، اور اس کے مقابلے بھی۔ pokerth.net پر ہر گیم ایک ٹیکساس ہولڈم ٹورنامنٹ ہے، اور کمیونٹی سارا سال باقاعدہ مقابلے بھی کرواتی ہے، جن میں سے ہر ایک کا اپنا کیلنڈر، نتائج اور درجہ بندی ہے۔ صرف فرضی رقم سے کھیل: شرکت کے لیے کوئی کچھ ادا نہیں کرتا اور جیتنے کے لیے کوئی نقد رقم نہیں۔",
@@ -1807,7 +1807,7 @@ module.exports = {
     up: {"bbc": "BBC گیم", "wecDaily": "WeCup روزانہ گیم — رجسٹریشن نہیں", "wecFinal": "WeCup ماہانہ فائنل", "wecGrand": "WeCup گرینڈ فائنل", "mc": "Monthly Cup"}
   },
   uz: {
-    title: "Bepul onlayn poker turnirlari — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Bepul poker turnirlari — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "pokerth.net’da yil boʻyi bepul Texas Hold’em poker turnirlari: BBC, WeCup va Monthly Cup — taqvimlari, natijalari, reytinglari. Haqiqiy pulsiz, yuklab olishsiz.",
     h1: "Bepul onlayn poker turnirlari va musobaqalar",
     lead: "PokerTH bepul, uning musobaqalari ham. pokerth.net’dagi har bir oʻyin — Texas Hold’em turniri, hamjamiyat esa yil boʻyi muntazam musobaqalar ham oʻtkazadi, ularning har birining oʻz taqvimi, natijalari va reytingi bor. Faqat oʻyin puli: ishtirok etish uchun hech kim pul toʻlamaydi va yutib olinadigan naqd pul yoʻq.",
@@ -1831,7 +1831,7 @@ module.exports = {
     up: {"bbc": "BBC oʻyini", "wecDaily": "WeCup kundalik oʻyini — roʻyxatdan oʻtish shart emas", "wecFinal": "WeCup oylik finali", "wecGrand": "WeCup katta finali", "mc": "Monthly Cup"}
   },
   vi: {
-    title: "Giải đấu poker online miễn phí — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Giải đấu poker miễn phí — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Giải đấu poker Texas Hold’em miễn phí quanh năm trên pokerth.net: BBC, WeCup, Monthly Cup với lịch, kết quả, bảng xếp hạng. Không tiền thật, không cần tải.",
     h1: "Giải đấu và cuộc thi poker trực tuyến miễn phí",
     lead: "PokerTH miễn phí, và các cuộc thi của nó cũng vậy. Mỗi ván trên pokerth.net đều là một giải đấu Texas Hold’em, và cộng đồng còn tổ chức các cuộc thi định kỳ quanh năm, mỗi cuộc thi có lịch thi đấu, kết quả và bảng xếp hạng riêng. Chỉ chơi bằng tiền ảo: không ai phải trả phí để tham gia và cũng không có tiền mặt để thắng.",
@@ -1855,7 +1855,7 @@ module.exports = {
     up: {"bbc": "Ván BBC", "wecDaily": "Ván WeCup hằng ngày — không cần đăng ký", "wecFinal": "Chung kết tháng WeCup", "wecGrand": "Chung kết lớn WeCup", "mc": "Monthly Cup"}
   },
   yo: {
-    title: "Ìdíje poker ọ̀fẹ́ lórí ayélujára — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Ìdíje poker ọ̀fẹ́ — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Ìdíje poker Texas Hold’em ọ̀fẹ́ ní gbogbo ọdún lórí pokerth.net: BBC, WeCup àti Monthly Cup, pẹ̀lú kàlẹ́ńdà, àbájáde àti ipò. Kò sí owó gidi, kò sí gbígbàsílẹ̀.",
     h1: "Àwọn ìdíje poker ọ̀fẹ́ lórí ayélujára",
     lead: "PokerTH jẹ́ ọ̀fẹ́, bẹ́ẹ̀ sì ni àwọn ìdíje rẹ̀. Gbogbo eré lórí pokerth.net jẹ́ ìdíje Texas Hold’em, àwùjọ náà sì tún ń ṣe àwọn ìdíje déédéé ní gbogbo ọdún, ọ̀kọ̀ọ̀kan pẹ̀lú kàlẹ́ńdà, àbájáde àti ipò tirẹ̀. Owó eré nìkan: kò sí ẹni tí ń sanwó láti wọlé, kò sì sí owó gidi láti jẹ.",
@@ -1879,7 +1879,7 @@ module.exports = {
     up: {"bbc": "Eré BBC", "wecDaily": "Eré ojoojúmọ́ WeCup — kò sí ìforúkọsílẹ̀", "wecFinal": "Àṣekágbá oṣooṣù WeCup", "wecGrand": "Àṣekágbá ńlá WeCup", "mc": "Monthly Cup"}
   },
   zh: {
-    title: "免费在线扑克锦标赛 — BBC、WeCup、Monthly Cup | PokerTH",
+    title: "免费扑克锦标赛 — BBC、WeCup、Monthly Cup | PokerTH",
     desc: "pokerth.net 全年举办免费德州扑克锦标赛：BBC、WeCup 和 Monthly Cup，附日程、结果与排名。不涉及真钱，无需下载。",
     h1: "免费在线扑克锦标赛与比赛",
     lead: "PokerTH 是免费的，它的比赛也同样免费。pokerth.net 上的每一局游戏都是一场德州扑克锦标赛，社区还全年定期举办各类比赛，每项比赛都有自己的日程、结果和排名。只使用游戏筹码：参赛无需付费，也没有现金可赢。",
@@ -1903,7 +1903,7 @@ module.exports = {
     up: {"bbc": "BBC 牌局", "wecDaily": "WeCup 每日比赛 · 无需报名", "wecFinal": "WeCup 月度决赛", "wecGrand": "WeCup 总决赛", "mc": "Monthly Cup"}
   },
   'zh-HK': {
-    title: "免費網上撲克錦標賽 — BBC、WeCup、Monthly Cup | PokerTH",
+    title: "免費撲克錦標賽 — BBC、WeCup、Monthly Cup | PokerTH",
     desc: "pokerth.net 全年舉行免費德州撲克錦標賽：BBC、WeCup 及 Monthly Cup，附賽程、成績和排名。不涉真錢，毋須下載。",
     h1: "免費網上撲克錦標賽與比賽",
     lead: "PokerTH 是免費的，它的比賽也一樣免費。pokerth.net 上的每一局遊戲都是一場德州撲克錦標賽，社群亦全年定期舉行各類比賽，每項比賽都有自己的賽程、成績和排名。只用遊戲籌碼：參賽毋須付費，也沒有現金可贏。",
@@ -1927,7 +1927,7 @@ module.exports = {
     up: {"bbc": "BBC 牌局", "wecDaily": "WeCup 每日比賽 · 毋須報名", "wecFinal": "WeCup 每月決賽", "wecGrand": "WeCup 總決賽", "mc": "Monthly Cup"}
   },
   'zh-TW': {
-    title: "免費線上撲克錦標賽 — BBC、WeCup、Monthly Cup | PokerTH",
+    title: "免費撲克錦標賽 — BBC、WeCup、Monthly Cup | PokerTH",
     desc: "pokerth.net 整年舉辦免費德州撲克錦標賽：BBC、WeCup 和 Monthly Cup，附賽程、成績與排名。不用真錢，無須下載。",
     h1: "免費線上撲克錦標賽與比賽",
     lead: "PokerTH 是免費的，它的比賽也一樣免費。pokerth.net 上的每一局遊戲都是一場德州撲克錦標賽，社群還整年定期舉辦各種比賽，每項比賽都有自己的賽程、成績和排名。只使用遊戲籌碼：參賽不用付費，也沒有現金可以贏。",
@@ -1951,7 +1951,7 @@ module.exports = {
     up: {"bbc": "BBC 牌局", "wecDaily": "WeCup 每日比賽 · 無需報名", "wecFinal": "WeCup 月度決賽", "wecGrand": "WeCup 總決賽", "mc": "Monthly Cup"}
   },
   zu: {
-    title: "Imiqhudelwano ye-poker yamahhala ku-inthanethi — BBC, WeCup, Monthly Cup | PokerTH",
+    title: "Imiqhudelwano yamahhala — BBC, WeCup, Monthly Cup | PokerTH",
     desc: "Imiqhudelwano ye-poker yamahhala unyaka wonke ku-pokerth.net: i-BBC, i-WeCup ne-Monthly Cup, namakhalenda, imiphumela namazinga. Akukho mali yangempela.",
     h1: "Imiqhudelwano nemincintiswano ye-poker yamahhala ku-inthanethi",
     lead: "I-PokerTH imahhala, kanjalo nemincintiswano yayo. Wonke umdlalo ku-pokerth.net ungumqhudelwano we-Texas Hold’em, futhi umphakathi uphinde uqhube imincintiswano evamile unyaka wonke, ngamunye unekhalenda yawo, imiphumela yawo nezinga lawo. Imali yokudlala kuphela: akekho okhokhayo ukuze angene futhi ayikho imali ongayinqoba.",

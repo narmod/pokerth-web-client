@@ -132,6 +132,12 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Search titles and descriptions sized for a result snippet** (`web.235`, SEO) — the audit found home, /faq and
+  /how-to-play descriptions of 190–290 characters in most of the 83 languages, plus long titles. Home, /faq,
+  /how-to-play, /competitions, /rules, /hand-rankings, /glossary and /starting-hands were rewritten to fit
+  (English title ≤ 60 / description ≤ 160; other languages ≤ 70 / ≤ 200 in snippet width, where a Chinese,
+  Japanese or Korean glyph counts double, so CJK texts were tightened rather than padded). Guarded by
+  `scripts/test-seo-meta-length.mjs`, which renders the 14 content pages in every language through the proxy.
 - **README: the PokerTH server is built from source** (`web.232`) — the Raspberry Pi guide no longer says
   `apt install pokerth-server`: that package is an older version. It now builds `pokerth_dedicated_server` 2.1.10+
   from the upstream sources and links the PokerTH server guide.

@@ -26,7 +26,7 @@ var PARTS = {
 
   fr: {
     title: "Comment jouer au poker en ligne gratuitement — PokerTH Web",
-    desc: "Pas à pas : jouez au poker Texas Hold’em gratuitement dans votre navigateur, sans téléchargement ni compte — hors ligne contre des bots, sur le réseau officiel pokerth.net ou à une table privée entre amis.",
+    desc: "Pas à pas : jouez au Texas Hold’em gratuitement dans le navigateur, sans téléchargement ni compte — hors ligne contre des bots, sur pokerth.net ou entre amis.",
     ldHeadline: "Comment jouer gratuitement au poker Texas Hold’em dans son navigateur",
     ldDesc: "Guide pas à pas pour jouer gratuitement au Texas Hold’em dans le client web PokerTH.",
     h1: "Comment jouer au poker en ligne, gratuitement, dans votre navigateur",
@@ -54,7 +54,7 @@ var PARTS = {
   },
   ga: {
     title: "Conas pócar a imirt ar líne saor in aisce — PokerTH Web",
-    desc: "Céim ar chéim: imir pócar Texas Hold’em saor in aisce i do bhrabhsálaí, gan íoslódáil ná cuntas — as líne in aghaidh róbónna, ar líonra oifigiúil pokerth.net nó ag bord príobháideach le cairde.",
+    desc: "Céim ar chéim: imir Texas Hold’em saor in aisce i do bhrabhsálaí, gan íoslódáil ná cuntas — as líne in aghaidh róbónna, ar pokerth.net nó ag bord príobháideach.",
     ldHeadline: "Conas pócar Texas Hold’em a imirt saor in aisce sa bhrabhsálaí",
     ldDesc: "Treoir céim ar chéim chun Texas Hold’em a imirt saor in aisce i gcliant gréasáin PokerTH.",
     h1: "Conas pócar a imirt ar líne, saor in aisce, i do bhrabhsálaí",
@@ -83,7 +83,7 @@ var PARTS = {
 
   de: {
     title: "Poker online kostenlos spielen — so geht’s | PokerTH Web",
-    desc: "Schritt für Schritt: kostenlos Texas Hold’em im Browser spielen, ohne Download und ohne Konto — offline gegen Bots, im offiziellen Netzwerk pokerth.net oder am privaten Tisch mit Freunden.",
+    desc: "Schritt für Schritt: kostenlos Texas Hold’em im Browser spielen, ohne Download und Konto — offline gegen Bots, auf pokerth.net oder am Privattisch mit Freunden.",
     ldHeadline: "Kostenlos Texas Hold’em Poker im Browser spielen",
     ldDesc: "Eine Schritt-für-Schritt-Anleitung zum kostenlosen Texas Hold’em im PokerTH-Web-Client.",
     h1: "Poker online spielen — kostenlos, direkt im Browser",
@@ -112,7 +112,7 @@ var PARTS = {
 
   es: {
     title: "Cómo jugar al póker online gratis — PokerTH Web",
-    desc: "Paso a paso: juega al póker Texas Hold’em gratis en tu navegador, sin descargas ni cuenta — sin conexión contra bots, en la red oficial pokerth.net o en una mesa privada con amigos.",
+    desc: "Paso a paso: juega al Texas Hold’em gratis en tu navegador, sin descargas ni cuenta — sin conexión contra bots, en pokerth.net o en una mesa privada con amigos.",
     ldHeadline: "Cómo jugar gratis al póker Texas Hold’em en el navegador",
     ldDesc: "Una guía paso a paso para jugar gratis al Texas Hold’em en el cliente web de PokerTH.",
     h1: "Cómo jugar al póker online, gratis, en tu navegador",
@@ -140,7 +140,7 @@ var PARTS = {
   },
   'es-419': {
     title: "Cómo jugar al póker online gratis — PokerTH Web",
-    desc: "Paso a paso: juega al póker Texas Hold’em gratis en tu navegador, sin descargas ni cuenta — sin conexión contra bots, en la red oficial pokerth.net o en una mesa privada con amigos.",
+    desc: "Paso a paso: juega Texas Hold’em gratis en tu navegador, sin descargas ni cuenta — sin conexión contra bots, en pokerth.net o en una mesa privada con amigos.",
     ldHeadline: "Cómo jugar gratis al póker Texas Hold’em en el navegador",
     ldDesc: "Una guía paso a paso para jugar gratis al Texas Hold’em en el cliente web de PokerTH.",
     h1: "Cómo jugar al póker online, gratis, en tu navegador",
@@ -169,7 +169,7 @@ var PARTS = {
 
   'pt-BR': {
     title: "Como jogar pôquer online grátis — PokerTH Web",
-    desc: "Passo a passo: jogue pôquer Texas Hold’em grátis no navegador, sem download e sem cadastro — offline contra bots, na rede oficial pokerth.net ou numa mesa privada com amigos.",
+    desc: "Passo a passo: jogue Texas Hold’em grátis no navegador, sem download e sem cadastro — offline contra bots, no pokerth.net ou numa mesa privada com amigos.",
     ldHeadline: "Como jogar pôquer Texas Hold’em grátis no navegador",
     ldDesc: "Um guia passo a passo para jogar Texas Hold’em de graça no cliente web do PokerTH.",
     h1: "Como jogar pôquer online, de graça, no seu navegador",
@@ -198,7 +198,7 @@ var PARTS = {
 
   it: {
     title: "Come giocare a poker online gratis — PokerTH Web",
-    desc: "Passo dopo passo: gioca a poker Texas Hold’em gratis nel browser, senza download e senza account — offline contro i bot, sulla rete ufficiale pokerth.net o a un tavolo privato con gli amici.",
+    desc: "Passo dopo passo: gioca a Texas Hold’em gratis nel browser, senza download né account — offline contro i bot, su pokerth.net o a un tavolo privato con amici.",
     ldHeadline: "Come giocare gratis a poker Texas Hold’em nel browser",
     ldDesc: "Una guida passo dopo passo per giocare gratis a Texas Hold’em nel client web di PokerTH.",
     h1: "Come giocare a poker online, gratis, nel browser",
@@ -227,7 +227,7 @@ var PARTS = {
 
   pl: {
     title: "Jak grać w pokera online za darmo — PokerTH Web",
-    desc: "Krok po kroku: graj w pokera Texas Hold’em za darmo w przeglądarce, bez pobierania i bez konta — offline z botami, w oficjalnej sieci pokerth.net albo przy prywatnym stole ze znajomymi.",
+    desc: "Krok po kroku: graj za darmo w Texas Hold’em w przeglądarce, bez pobierania i konta — offline z botami, na pokerth.net albo przy prywatnym stole ze znajomymi.",
     ldHeadline: "Jak grać za darmo w pokera Texas Hold’em w przeglądarce",
     ldDesc: "Przewodnik krok po kroku po darmowej grze w Texas Hold’em w kliencie webowym PokerTH.",
     h1: "Jak grać w pokera online, za darmo, w przeglądarce",
@@ -256,7 +256,7 @@ var PARTS = {
 
   ru: {
     title: "Как играть в покер онлайн бесплатно — PokerTH Web",
-    desc: "Пошагово: играйте в техасский холдем бесплатно прямо в браузере, без скачивания и без аккаунта — офлайн против ботов, в официальной сети pokerth.net или за закрытым столом с друзьями.",
+    desc: "Пошагово: играйте в техасский холдем бесплатно в браузере, без скачивания и аккаунта — офлайн против ботов, на pokerth.net или за закрытым столом с друзьями.",
     ldHeadline: "Как бесплатно играть в техасский холдем в браузере",
     ldDesc: "Пошаговое руководство по бесплатной игре в техасский холдем в веб-клиенте PokerTH.",
     h1: "Как играть в покер онлайн, бесплатно, прямо в браузере",
@@ -285,7 +285,7 @@ var PARTS = {
 
   zh: {
     title: "如何免费在线玩扑克 — PokerTH 网页版",
-    desc: "一步一步教你在浏览器里免费玩德州扑克，无需下载、无需注册——离线对战电脑、加入官方 pokerth.net 网络，或和朋友开一桌私人牌局。",
+    desc: "一步步教你在浏览器中免费玩德州扑克，无需下载或注册：离线对战电脑、登录 pokerth.net，或与好友开私人牌桌。",
     ldHeadline: "如何在浏览器中免费玩德州扑克",
     ldDesc: "在 PokerTH 网页版客户端免费玩德州扑克的分步指南。",
     h1: "如何在浏览器里免费在线玩扑克",
@@ -314,7 +314,7 @@ var PARTS = {
 
   nl: {
     title: "Hoe speel je gratis poker online — PokerTH Web",
-    desc: "Stap voor stap: speel gratis Texas Hold’em poker in je browser, zonder download en zonder account — offline tegen bots, op het officiële pokerth.net-netwerk of aan een privétafel met vrienden.",
+    desc: "Stap voor stap: speel gratis Texas Hold’em in je browser, zonder download of account — offline tegen bots, op pokerth.net of aan een privétafel met vrienden.",
     ldHeadline: "Gratis Texas Hold’em poker spelen in je browser",
     ldDesc: "Een stapsgewijze handleiding om gratis Texas Hold’em te spelen in de PokerTH-webclient.",
     h1: "Hoe je gratis poker online speelt, in je browser",
@@ -343,7 +343,7 @@ var PARTS = {
 
   tr: {
     title: "Ücretsiz online poker nasıl oynanır — PokerTH Web",
-    desc: "Adım adım: tarayıcınızda ücretsiz Texas Hold’em pokeri oynayın, indirme ve hesap gerekmeden — botlara karşı çevrimdışı, resmî pokerth.net ağında ya da arkadaşlarınızla özel bir masada.",
+    desc: "Adım adım: tarayıcınızda ücretsiz Texas Hold’em oynayın, indirme ve hesap olmadan — botlara karşı çevrimdışı, pokerth.net’te ya da arkadaşlarla özel bir masada.",
     ldHeadline: "Tarayıcıda ücretsiz Texas Hold’em pokeri nasıl oynanır",
     ldDesc: "PokerTH web istemcisinde ücretsiz Texas Hold’em oynamak için adım adım kılavuz.",
     h1: "Tarayıcınızda ücretsiz online poker nasıl oynanır",
@@ -372,7 +372,7 @@ var PARTS = {
 
   uk: {
     title: "Як грати в покер онлайн безкоштовно — PokerTH Web",
-    desc: "Покроково: грайте в техаський холдем безкоштовно прямо в браузері, без завантаження та без облікового запису — офлайн проти ботів, в офіційній мережі pokerth.net або за приватним столом із друзями.",
+    desc: "Покроково: грайте в техаський холдем безкоштовно в браузері, без завантаження й акаунта — офлайн проти ботів, на pokerth.net або за приватним столом із друзями.",
     ldHeadline: "Як безкоштовно грати в техаський холдем у браузері",
     ldDesc: "Покрокова інструкція, як безкоштовно грати в техаський холдем у вебклієнті PokerTH.",
     h1: "Як грати в покер онлайн, безкоштовно, просто в браузері",
@@ -401,7 +401,7 @@ var PARTS = {
 
   ja: {
     title: "ブラウザで無料ポーカーを遊ぶ方法 — PokerTH ウェブ版",
-    desc: "手順で解説：ダウンロードもアカウントも不要で、ブラウザから無料でテキサスホールデムを。オフラインで対コンピュータ、公式 pokerth.net、あるいは友達だけのプライベートテーブルで。",
+    desc: "ダウンロードもアカウントも不要。ブラウザで無料のテキサスホールデムを遊ぶ手順：オフラインでボットと対戦、pokerth.net でプレイ、友達とプライベートテーブル。",
     ldHeadline: "ブラウザで無料のテキサスホールデムを遊ぶ方法",
     ldDesc: "PokerTH ウェブ版クライアントで無料のテキサスホールデムを遊ぶための手順ガイド。",
     h1: "ブラウザで無料のオンラインポーカーを遊ぶ方法",
@@ -430,7 +430,7 @@ var PARTS = {
 
   ko: {
     title: "브라우저에서 무료로 포커 하는 방법 — PokerTH 웹",
-    desc: "단계별 안내: 다운로드도 계정도 없이 브라우저에서 무료로 텍사스 홀덤을 즐기세요 — 오프라인으로 컴퓨터와, 공식 pokerth.net 네트워크에서, 또는 친구들과 비공개 테이블에서.",
+    desc: "단계별 안내: 다운로드도 계정도 없이 브라우저에서 무료로 텍사스 홀덤 포커를 즐기는 방법 — 오프라인으로 봇과 연습하고, 공식 pokerth.net 네트워크에서 플레이하거나, 친구들과 비공개 테이블에서 즐기세요.",
     ldHeadline: "브라우저에서 무료로 텍사스 홀덤 하는 방법",
     ldDesc: "PokerTH 웹 클라이언트에서 무료로 텍사스 홀덤을 즐기기 위한 단계별 안내.",
     h1: "브라우저에서 무료로 온라인 포커 하는 방법",
@@ -459,7 +459,7 @@ var PARTS = {
 
   id: {
     title: "Cara main poker online gratis — PokerTH Web",
-    desc: "Langkah demi langkah: main poker Texas Hold’em gratis di peramban, tanpa unduhan dan tanpa akun — offline melawan bot, di jaringan resmi pokerth.net, atau di meja privat bersama teman.",
+    desc: "Langkah demi langkah: main Texas Hold’em gratis di peramban, tanpa unduhan dan akun — offline melawan bot, di pokerth.net, atau di meja privat bersama teman.",
     ldHeadline: "Cara main poker Texas Hold’em gratis di peramban",
     ldDesc: "Panduan langkah demi langkah untuk main Texas Hold’em gratis di klien web PokerTH.",
     h1: "Cara main poker online gratis, langsung di peramban",
@@ -488,7 +488,7 @@ var PARTS = {
 
   vi: {
     title: "Cách chơi poker trực tuyến miễn phí — PokerTH Web",
-    desc: "Từng bước: chơi poker Texas Hold’em miễn phí ngay trên trình duyệt, không cần tải và không cần tài khoản — chơi ngoại tuyến với máy, trên mạng chính thức pokerth.net, hoặc ở bàn riêng với bạn bè.",
+    desc: "Từng bước: chơi Texas Hold’em miễn phí trên trình duyệt, không cần tải hay tài khoản — ngoại tuyến với bot, trên pokerth.net hoặc ở bàn riêng với bạn bè.",
     ldHeadline: "Cách chơi poker Texas Hold’em miễn phí trên trình duyệt",
     ldDesc: "Hướng dẫn từng bước để chơi Texas Hold’em miễn phí trên ứng dụng web PokerTH.",
     h1: "Cách chơi poker trực tuyến miễn phí ngay trên trình duyệt",
@@ -516,7 +516,7 @@ var PARTS = {
   },
   yo: {
     title: "Bí a ṣe ń ṣe poker lórí ayélujára lọ́fẹ̀ẹ́ — PokerTH Web",
-    desc: "Ní ìgbésẹ̀-ìgbésẹ̀: ṣe poker Texas Hold’em ọ̀fẹ́ nínú aṣàwákiri rẹ, láìsí gbígbàsílẹ̀ tàbí àkáǹtì — láìsí ayélujára pẹ̀lú bot, lórí nẹ́tíwọ̀ọ̀kì ìjọba pokerth.net tàbí ní tábìlì àṣírí pẹ̀lú àwọn ọ̀rẹ́.",
+    desc: "Ìgbésẹ̀-ìgbésẹ̀: ṣe Texas Hold’em ọ̀fẹ́ nínú aṣàwákiri, láìsí gbígbàsílẹ̀ tàbí àkáǹtì — láìsí ayélujára, lórí pokerth.net tàbí ní tábìlì àṣírí pẹ̀lú ọ̀rẹ́.",
     ldHeadline: "Bí a ṣe ń ṣe poker Texas Hold’em ọ̀fẹ́ nínú aṣàwákiri",
     ldDesc: "Ìtọ́sọ́nà ìgbésẹ̀-ìgbésẹ̀ láti ṣe Texas Hold’em ọ̀fẹ́ nínú oníbàárà wẹ́ẹ̀bù PokerTH.",
     h1: "Bí a ṣe ń ṣe poker lórí ayélujára, lọ́fẹ̀ẹ́, nínú aṣàwákiri rẹ",
@@ -543,8 +543,8 @@ var PARTS = {
     faqP: function (h, c) { return "Kò sí owó nínú rẹ̀ ní ọ̀nà kankan. Ètò rẹ, àpò ọ̀nà àti ìlọsíwájú ìdánrawò ń wà lórí ẹ̀rọ rẹ, wọ́n sì ń tẹ̀lé ọ lọ sórí àwọn ẹ̀rọ rẹ mìíràn nígbà tí o bá wọlé pẹ̀lú àkáǹtì pokerth.net. Ojú olùlò wà ní èdè 83, nígbà tí ọ̀rọ̀ ìgbésẹ̀ márùn-ún — Fold, Check, Call, Raise, All-In — ń wà ní èdè Gẹ̀ẹ́sì, bí ó ti rí ní gbogbo tábìlì lágbàáyé. Púpọ̀ sí i nínú <a href=\"{faq}\">àwọn ìbéèrè tí a máa ń béèrè</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
   zu: {
-    title: "Indlela yokudlala i-poker ku-inthanethi mahhala — PokerTH Web",
-    desc: "Isinyathelo ngesinyathelo: dlala i-poker ye-Texas Hold’em mahhala esipheqululini sakho, ngaphandle kokulanda noma i-akhawunti — ungaxhunyiwe namabhothi, kunethiwekhi esemthethweni ye-pokerth.net noma etafuleni langasese nabangani.",
+    title: "Indlela yokudlala i-poker ku-inthanethi mahhala — PokerTH",
+    desc: "Isinyathelo ngesinyathelo: dlala i-Texas Hold’em mahhala esipheqululini, ngaphandle kokulanda noma i-akhawunti — namabhothi, ku-pokerth.net noma nabangani.",
     ldHeadline: "Indlela yokudlala i-poker ye-Texas Hold’em mahhala esipheqululini",
     ldDesc: "Umhlahlandlela wesinyathelo ngesinyathelo wokudlala i-Texas Hold’em mahhala eklayentini lewebhu le-PokerTH.",
     h1: "Indlela yokudlala i-poker ku-inthanethi, mahhala, esipheqululini sakho",
@@ -573,7 +573,7 @@ var PARTS = {
 
   ar: {
     title: "كيف تلعب البوكر مجانًا على الإنترنت — PokerTH ويب",
-    desc: "خطوة بخطوة: العب بوكر تكساس هولدم مجانًا في متصفحك، دون تنزيل ودون حساب — بلا اتصال أمام خصوم الحاسوب، على شبكة pokerth.net الرسمية، أو على طاولة خاصة مع الأصدقاء.",
+    desc: "خطوة بخطوة: العب بوكر تكساس هولدم مجانًا في متصفحك دون تنزيل أو حساب — دون اتصال أمام الروبوتات، على pokerth.net أو على طاولة خاصة مع الأصدقاء.",
     ldHeadline: "كيف تلعب بوكر تكساس هولدم مجانًا في المتصفح",
     ldDesc: "دليل خطوة بخطوة للعب تكساس هولدم مجانًا في عميل PokerTH على الويب.",
     h1: "كيف تلعب البوكر على الإنترنت مجانًا، من متصفحك",
@@ -602,7 +602,7 @@ var PARTS = {
 
   fa: {
     title: "چطور رایگان پوکر آنلاین بازی کنیم — PokerTH وب",
-    desc: "گام‌به‌گام: پوکر تگزاس هولدم را رایگان در مرورگر خود بازی کنید، بدون دانلود و بدون حساب کاربری — آفلاین مقابل حریفان رایانه‌ای، در شبکهٔ رسمی pokerth.net، یا سر میزی خصوصی با دوستان.",
+    desc: "گام‌به‌گام: پوکر تگزاس هولدم را رایگان در مرورگر خود بازی کنید، بدون دانلود و حساب کاربری — آفلاین مقابل ربات‌ها، در pokerth.net یا سر میزی خصوصی با دوستان.",
     ldHeadline: "چطور در مرورگر رایگان تگزاس هولدم بازی کنیم",
     ldDesc: "راهنمای گام‌به‌گام بازی رایگان تگزاس هولدم در کلاینت وب PokerTH.",
     h1: "چطور رایگان پوکر آنلاین بازی کنیم، همان‌جا در مرورگر",
@@ -631,7 +631,7 @@ var PARTS = {
 
   he: {
     title: "איך משחקים פוקר אונליין בחינם — PokerTH ווב",
-    desc: "שלב אחר שלב: לשחק פוקר טקסס הולדם בחינם בדפדפן, בלי הורדה ובלי חשבון — לא מקוון מול המחשב, ברשת הרשמית pokerth.net, או בשולחן פרטי עם חברים.",
+    desc: "שלב אחר שלב: לשחק פוקר טקסס הולדם בחינם בדפדפן, בלי הורדה ובלי חשבון — לא מקוון מול בוטים, ב-pokerth.net או בשולחן פרטי עם חברים.",
     ldHeadline: "איך לשחק פוקר טקסס הולדם בחינם בדפדפן",
     ldDesc: "מדריך שלב אחר שלב לשחק טקסס הולדם בחינם בלקוח הווב של PokerTH.",
     h1: "איך משחקים פוקר אונליין בחינם, ישר מהדפדפן",
@@ -660,7 +660,7 @@ var PARTS = {
 
   ur: {
     title: "مفت آن لائن پوکر کیسے کھیلیں — PokerTH ویب",
-    desc: "قدم بہ قدم: اپنے براؤزر میں مفت ٹیکساس ہولڈم پوکر کھیلیں، بغیر ڈاؤن لوڈ اور بغیر اکاؤنٹ کے — آف لائن کمپیوٹر کے مقابل، سرکاری pokerth.net نیٹ ورک پر، یا دوستوں کے ساتھ نجی میز پر۔",
+    desc: "قدم بہ قدم: اپنے براؤزر میں مفت ٹیکساس ہولڈم کھیلیں، بغیر ڈاؤن لوڈ اور اکاؤنٹ کے — آف لائن بوٹس کے خلاف، pokerth.net پر، یا دوستوں کے ساتھ نجی میز پر۔",
     ldHeadline: "براؤزر میں مفت ٹیکساس ہولڈم پوکر کیسے کھیلیں",
     ldDesc: "PokerTH ویب کلائنٹ میں مفت ٹیکساس ہولڈم کھیلنے کی قدم بہ قدم رہنمائی۔",
     h1: "اپنے براؤزر میں مفت آن لائن پوکر کیسے کھیلیں",
@@ -689,7 +689,7 @@ var PARTS = {
 
   hi: {
     title: "मुफ़्त ऑनलाइन पोकर कैसे खेलें — PokerTH वेब",
-    desc: "चरण दर चरण: बिना डाउनलोड और बिना खाते के अपने ब्राउज़र में मुफ़्त टेक्सास होल्डम पोकर खेलें — ऑफ़लाइन कंप्यूटर के ख़िलाफ़, आधिकारिक pokerth.net नेटवर्क पर, या दोस्तों के साथ निजी टेबल पर।",
+    desc: "चरण दर चरण: बिना डाउनलोड या खाते के अपने ब्राउज़र में मुफ़्त टेक्सास होल्डम खेलें — ऑफ़लाइन बॉट्स के ख़िलाफ़, pokerth.net पर, या दोस्तों के साथ निजी टेबल पर।",
     ldHeadline: "ब्राउज़र में मुफ़्त टेक्सास होल्डम पोकर कैसे खेलें",
     ldDesc: "PokerTH वेब क्लाइंट में मुफ़्त टेक्सास होल्डम खेलने की चरण दर चरण गाइड।",
     h1: "अपने ब्राउज़र में मुफ़्त ऑनलाइन पोकर कैसे खेलें",
@@ -718,7 +718,7 @@ var PARTS = {
 
   th: {
     title: "วิธีเล่นโป๊กเกอร์ออนไลน์ฟรี — PokerTH เว็บ",
-    desc: "ทีละขั้น: เล่นโป๊กเกอร์เท็กซัสโฮลด์เอ็มฟรีในเบราว์เซอร์ ไม่ต้องดาวน์โหลดและไม่ต้องสมัคร — เล่นออฟไลน์กับคอมพิวเตอร์ บนเครือข่ายทางการ pokerth.net หรือที่โต๊ะส่วนตัวกับเพื่อน",
+    desc: "ทีละขั้น: เล่นโป๊กเกอร์เท็กซัสโฮลด์เอ็มฟรีในเบราว์เซอร์ ไม่ต้องดาวน์โหลดหรือสมัครบัญชี — เล่นออฟไลน์กับบอต บน pokerth.net หรือที่โต๊ะส่วนตัวกับเพื่อน",
     ldHeadline: "วิธีเล่นโป๊กเกอร์เท็กซัสโฮลด์เอ็มฟรีในเบราว์เซอร์",
     ldDesc: "คู่มือทีละขั้นสำหรับเล่นเท็กซัสโฮลด์เอ็มฟรีบนไคลเอนต์เว็บ PokerTH",
     h1: "วิธีเล่นโป๊กเกอร์ออนไลน์ฟรีในเบราว์เซอร์ของคุณ",
@@ -746,7 +746,7 @@ var PARTS = {
   },
   tk: {
     title: "Onlaýn pokeri mugt nädip oýnamaly — PokerTH Web",
-    desc: "Ädimme-ädim: brauzeriňizde ýüklemezden we hasapsyz mugt Texas Hold’em pokerini oýnaň — botlar bilen oflaýn, resmi pokerth.net torunda ýa-da dostlar bilen hususy stolda.",
+    desc: "Ädimme-ädim: brauzeriňizde ýüklemezden we hasapsyz mugt Texas Hold’em oýnaň — botlar bilen oflaýn, pokerth.net-de ýa-da dostlar bilen hususy stolda.",
     ldHeadline: "Brauzerde Texas Hold’em pokerini mugt nädip oýnamaly",
     ldDesc: "PokerTH web müşderisinde Texas Hold’em-i mugt oýnamak boýunça ädimme-ädim gollanma.",
     h1: "Onlaýn pokeri brauzeriňizde mugt nädip oýnamaly",
@@ -775,7 +775,7 @@ var PARTS = {
 
   bn: {
     title: "বিনামূল্যে অনলাইন পোকার কীভাবে খেলবেন — PokerTH ওয়েব",
-    desc: "ধাপে ধাপে: ডাউনলোড ছাড়া আর অ্যাকাউন্ট ছাড়াই ব্রাউজারে বিনামূল্যে টেক্সাস হোল্ডেম পোকার খেলুন — অফলাইনে কম্পিউটারের বিরুদ্ধে, সরকারি pokerth.net নেটওয়ার্কে, বা বন্ধুদের সঙ্গে ব্যক্তিগত টেবিলে।",
+    desc: "ধাপে ধাপে: ডাউনলোড বা অ্যাকাউন্ট ছাড়াই ব্রাউজারে বিনামূল্যে টেক্সাস হোল্ডেম খেলুন — অফলাইনে বটের বিরুদ্ধে, pokerth.net-এ বা বন্ধুদের সঙ্গে ব্যক্তিগত টেবিলে।",
     ldHeadline: "ব্রাউজারে বিনামূল্যে টেক্সাস হোল্ডেম পোকার কীভাবে খেলবেন",
     ldDesc: "PokerTH ওয়েব ক্লায়েন্টে বিনামূল্যে টেক্সাস হোল্ডেম খেলার ধাপে ধাপে নির্দেশিকা।",
     h1: "ব্রাউজারেই বিনামূল্যে অনলাইন পোকার কীভাবে খেলবেন",
@@ -804,7 +804,7 @@ var PARTS = {
 
   'pt-PT': {
     title: "Como jogar póquer online grátis — PokerTH Web",
-    desc: "Passo a passo: jogue póquer Texas Hold’em grátis no navegador, sem transferências e sem registo — offline contra o computador, na rede oficial pokerth.net ou numa mesa privada com amigos.",
+    desc: "Passo a passo: jogue Texas Hold’em grátis no navegador, sem transferências e sem conta — offline contra bots, no pokerth.net ou numa mesa privada com amigos.",
     ldHeadline: "Como jogar póquer Texas Hold’em grátis no navegador",
     ldDesc: "Um guia passo a passo para jogar Texas Hold’em grátis no cliente web do PokerTH.",
     h1: "Como jogar póquer online, grátis, no seu navegador",
@@ -833,7 +833,7 @@ var PARTS = {
 
   'zh-TW': {
     title: "如何免費線上玩撲克 — PokerTH 網頁版",
-    desc: "一步步教你在瀏覽器裡免費玩德州撲克，不必下載、不必註冊——離線對戰電腦、加入官方 pokerth.net 網路，或和朋友開一桌私人牌局。",
+    desc: "一步步教你在瀏覽器中免費玩德州撲克，免下載、免註冊：離線與電腦對戰、登入 pokerth.net，或和好友開私人牌桌。",
     ldHeadline: "如何在瀏覽器中免費玩德州撲克",
     ldDesc: "在 PokerTH 網頁版用戶端免費玩德州撲克的分步指南。",
     h1: "如何在瀏覽器裡免費線上玩撲克",
@@ -861,7 +861,7 @@ var PARTS = {
   },
   'zh-HK': {
     title: "如何免費網上玩撲克 — PokerTH 網頁版",
-    desc: "一步步教你在瀏覽器裡免費玩德州撲克，不必下載、不必註冊——離線對戰電腦、加入官方 pokerth.net 網絡，或和朋友開一桌私人牌局。",
+    desc: "一步步教你在瀏覽器免費玩德州撲克，無需下載或註冊：離線與電腦對戰、登入 pokerth.net，或與朋友開私人牌枱。",
     ldHeadline: "如何在瀏覽器中免費玩德州撲克",
     ldDesc: "在 PokerTH 網頁版客戶端免費玩德州撲克的分步指南。",
     h1: "如何在瀏覽器裡免費網上玩撲克",
@@ -890,7 +890,7 @@ var PARTS = {
 
   sv: {
     title: "Så spelar du poker online gratis — PokerTH Web",
-    desc: "Steg för steg: spela Texas Hold’em-poker gratis i webbläsaren, utan nedladdning och utan konto — offline mot datorn, på det officiella nätverket pokerth.net eller vid ett privat bord med vänner.",
+    desc: "Steg för steg: spela Texas Hold’em gratis i webbläsaren, utan nedladdning eller konto — offline mot bottar, på pokerth.net eller vid ett privat bord med vänner.",
     ldHeadline: "Så spelar du gratis Texas Hold’em-poker i webbläsaren",
     ldDesc: "En steg-för-steg-guide till att spela Texas Hold’em gratis i PokerTH:s webbklient.",
     h1: "Så spelar du poker online gratis, direkt i webbläsaren",
@@ -919,7 +919,7 @@ var PARTS = {
 
   da: {
     title: "Sådan spiller du poker online gratis — PokerTH Web",
-    desc: "Trin for trin: spil Texas Hold’em-poker gratis i browseren, uden download og uden konto — offline mod computeren, på det officielle netværk pokerth.net eller ved et privat bord med venner.",
+    desc: "Trin for trin: spil gratis Texas Hold’em i browseren uden download og uden konto — offline mod botter, på pokerth.net eller ved et privat bord med venner.",
     ldHeadline: "Sådan spiller du gratis Texas Hold’em-poker i browseren",
     ldDesc: "En trin-for-trin-guide til at spille Texas Hold’em gratis i PokerTH’s webklient.",
     h1: "Sådan spiller du poker online gratis, direkte i browseren",
@@ -948,7 +948,7 @@ var PARTS = {
 
   nb: {
     title: "Slik spiller du poker på nett gratis — PokerTH Web",
-    desc: "Steg for steg: spill Texas Hold’em-poker gratis i nettleseren, uten nedlasting og uten konto — offline mot datamaskinen, på det offisielle nettverket pokerth.net eller ved et privat bord med venner.",
+    desc: "Steg for steg: spill gratis Texas Hold’em i nettleseren, uten nedlasting og uten konto — offline mot botter, på pokerth.net eller ved et privat bord med venner.",
     ldHeadline: "Slik spiller du gratis Texas Hold’em-poker i nettleseren",
     ldDesc: "En steg-for-steg-guide til å spille Texas Hold’em gratis i PokerTHs nettklient.",
     h1: "Slik spiller du poker på nett gratis, rett i nettleseren",
@@ -976,7 +976,7 @@ var PARTS = {
   },
   ne: {
     title: "अनलाइन निःशुल्क पोकर कसरी खेल्ने — PokerTH Web",
-    desc: "चरणबद्ध रूपमा: डाउनलोड र खाताबिना आफ्नो ब्राउजरमा निःशुल्क Texas Hold’em पोकर खेल्नुहोस् — बोटहरूसँग अफलाइन, आधिकारिक pokerth.net नेटवर्कमा, वा साथीहरूसँग निजी टेबलमा।",
+    desc: "चरणबद्ध रूपमा: डाउनलोड र खाताबिना ब्राउजरमा निःशुल्क Texas Hold’em खेल्नुहोस् — बोटहरूसँग अफलाइन, pokerth.net मा वा साथीहरूसँग निजी टेबलमा।",
     ldHeadline: "ब्राउजरमा निःशुल्क Texas Hold’em पोकर कसरी खेल्ने",
     ldDesc: "PokerTH वेब क्लाइन्टमा निःशुल्क Texas Hold’em खेल्ने चरणबद्ध मार्गदर्शन।",
     h1: "अनलाइन पोकर कसरी खेल्ने, निःशुल्क, तपाईंको ब्राउजरमा",
@@ -1005,7 +1005,7 @@ var PARTS = {
 
   fi: {
     title: "Näin pelaat pokeria ilmaiseksi netissä — PokerTH Web",
-    desc: "Vaihe vaiheelta: pelaa Texas Hold’em -pokeria ilmaiseksi selaimessa, ilman latausta ja ilman tiliä — offline tietokonetta vastaan, virallisessa pokerth.net-verkossa tai yksityisessä pöydässä kavereiden kanssa.",
+    desc: "Vaiheittain: pelaa ilmaista Texas Hold’emia selaimessa ilman latausta ja tiliä — offline botteja vastaan, pokerth.netissä tai omassa pöydässä kaverien kanssa.",
     ldHeadline: "Näin pelaat ilmaista Texas Hold’em -pokeria selaimessa",
     ldDesc: "Vaiheittainen opas ilmaiseen Texas Hold’emiin PokerTH:n selainversiossa.",
     h1: "Näin pelaat pokeria ilmaiseksi netissä, suoraan selaimessa",
@@ -1034,7 +1034,7 @@ var PARTS = {
 
   cs: {
     title: "Jak hrát poker online zdarma — PokerTH Web",
-    desc: "Krok za krokem: hrajte poker Texas Hold’em zdarma v prohlížeči, bez stahování a bez účtu — offline proti počítači, v oficiální síti pokerth.net nebo u soukromého stolu s přáteli.",
+    desc: "Krok za krokem: hrajte Texas Hold’em zdarma v prohlížeči, bez stahování a bez účtu — offline proti botům, na pokerth.net nebo u soukromého stolu s přáteli.",
     ldHeadline: "Jak hrát zdarma poker Texas Hold’em v prohlížeči",
     ldDesc: "Návod krok za krokem, jak si zdarma zahrát Texas Hold’em ve webovém klientu PokerTH.",
     h1: "Jak hrát poker online zdarma, přímo v prohlížeči",
@@ -1062,7 +1062,7 @@ var PARTS = {
   },
   cy: {
     title: "Sut i chwarae pocer ar-lein am ddim — PokerTH Web",
-    desc: "Cam wrth gam: chwaraewch bocer Texas Hold’em am ddim yn eich porwr, heb lawrlwytho na chyfrif — all-lein yn erbyn botiaid, ar rwydwaith swyddogol pokerth.net neu wrth fwrdd preifat gyda ffrindiau.",
+    desc: "Cam wrth gam: chwarae Texas Hold’em am ddim yn y porwr, heb lawrlwytho na chyfrif — all-lein yn erbyn botiaid, ar pokerth.net neu ar fwrdd preifat â ffrindiau.",
     ldHeadline: "Sut i chwarae pocer Texas Hold’em am ddim yn y porwr",
     ldDesc: "Canllaw cam wrth gam i chwarae Texas Hold’em am ddim yng nghleient gwe PokerTH.",
     h1: "Sut i chwarae pocer ar-lein, am ddim, yn eich porwr",
@@ -1091,7 +1091,7 @@ var PARTS = {
 
   sk: {
     title: "Ako hrať poker online zadarmo — PokerTH Web",
-    desc: "Krok za krokom: hrajte poker Texas Hold’em zadarmo v prehliadači, bez sťahovania a bez účtu — offline proti počítaču, v oficiálnej sieti pokerth.net alebo pri súkromnom stole s priateľmi.",
+    desc: "Krok za krokom: hrajte Texas Hold’em zadarmo v prehliadači, bez sťahovania a účtu — offline proti botom, na pokerth.net alebo pri súkromnom stole s priateľmi.",
     ldHeadline: "Ako hrať zadarmo poker Texas Hold’em v prehliadači",
     ldDesc: "Návod krok za krokom, ako si zadarmo zahrať Texas Hold’em vo webovom klientovi PokerTH.",
     h1: "Ako hrať poker online zadarmo, priamo v prehliadači",
@@ -1120,7 +1120,7 @@ var PARTS = {
 
   ro: {
     title: "Cum să joci poker online gratis — PokerTH Web",
-    desc: "Pas cu pas: joacă poker Texas Hold’em gratis în browser, fără descărcare și fără cont — offline împotriva calculatorului, în rețeaua oficială pokerth.net sau la o masă privată cu prietenii.",
+    desc: "Pas cu pas: joacă Texas Hold’em gratis în browser, fără descărcare și fără cont — offline împotriva boților, pe pokerth.net sau la o masă privată cu prietenii.",
     ldHeadline: "Cum să joci gratis poker Texas Hold’em în browser",
     ldDesc: "Un ghid pas cu pas pentru a juca gratis Texas Hold’em în clientul web PokerTH.",
     h1: "Cum să joci poker online gratis, direct în browser",
@@ -1149,7 +1149,7 @@ var PARTS = {
 
   hu: {
     title: "Hogyan játssz ingyen online pókert — PokerTH Web",
-    desc: "Lépésről lépésre: játssz ingyen Texas Hold’em pókert a böngésződben, letöltés és regisztráció nélkül — offline a gép ellen, a hivatalos pokerth.net hálózaton, vagy zárt asztalnál a barátaiddal.",
+    desc: "Lépésről lépésre: játssz ingyen Texas Hold’emet a böngészőben, letöltés és fiók nélkül — offline botok ellen, a pokerth.net-en vagy zárt asztalnál barátaiddal.",
     ldHeadline: "Hogyan játssz ingyen Texas Hold’em pókert a böngésződben",
     ldDesc: "Lépésről lépésre útmutató az ingyenes Texas Hold’emhez a PokerTH webes kliensében.",
     h1: "Hogyan játssz ingyen online pókert, egyenesen a böngésződben",
@@ -1177,7 +1177,7 @@ var PARTS = {
   },
   hy: {
     title: "Ինչպես խաղալ պոկեր առցանց անվճար — PokerTH Web",
-    desc: "Քայլ առ քայլ՝ խաղացեք Texas Hold’em պոկեր անվճար ձեր դիտարկիչում՝ առանց ներբեռնման և հաշվի — անցանց բոտերի դեմ, պաշտոնական pokerth.net ցանցում կամ ընկերների հետ մասնավոր սեղանի մոտ։",
+    desc: "Քայլ առ քայլ՝ խաղացեք անվճար Texas Hold’em ձեր դիտարկիչում՝ առանց ներբեռնման և հաշվի — անցանց բոտերի դեմ, pokerth.net-ում կամ ընկերների հետ մասնավոր սեղանի մոտ։",
     ldHeadline: "Ինչպես խաղալ Texas Hold’em պոկեր անվճար դիտարկիչում",
     ldDesc: "Քայլ առ քայլ ուղեցույց PokerTH վեբ կլիենտում անվճար Texas Hold’em խաղալու համար։",
     h1: "Ինչպես խաղալ պոկեր առցանց, անվճար, ձեր դիտարկիչում",
@@ -1206,7 +1206,7 @@ var PARTS = {
 
   el: {
     title: "Πώς να παίξετε πόκερ online δωρεάν — PokerTH Web",
-    desc: "Βήμα βήμα: παίξτε πόκερ Texas Hold’em δωρεάν στον περιηγητή σας, χωρίς λήψη και χωρίς λογαριασμό — εκτός σύνδεσης απέναντι στον υπολογιστή, στο επίσημο δίκτυο pokerth.net ή σε ιδιωτικό τραπέζι με φίλους.",
+    desc: "Βήμα βήμα: παίξτε δωρεάν Texas Hold’em στον περιηγητή σας, χωρίς λήψη ή λογαριασμό — εκτός σύνδεσης με bots, στο pokerth.net ή σε ιδιωτικό τραπέζι με φίλους.",
     ldHeadline: "Πώς να παίξετε δωρεάν πόκερ Texas Hold’em στον περιηγητή",
     ldDesc: "Οδηγός βήμα βήμα για να παίξετε δωρεάν Texas Hold’em στον πελάτη ιστού του PokerTH.",
     h1: "Πώς να παίξετε πόκερ online δωρεάν, μέσα από τον περιηγητή σας",
@@ -1234,7 +1234,7 @@ var PARTS = {
   },
   eo: {
     title: "Kiel ludi pokeron rete senpage — PokerTH Web",
-    desc: "Paŝon post paŝo: ludu Texas Hold’em pokeron senpage en via retumilo, sen elŝuto kaj sen konto — senkonekte kontraŭ robotoj, en la oficiala reto pokerth.net aŭ ĉe privata tablo kun amikoj.",
+    desc: "Paŝon post paŝo: ludu senpagan Texas Hold’em en via retumilo, sen elŝuto aŭ konto — senkonekte kontraŭ robotoj, ĉe pokerth.net aŭ ĉe privata tablo kun amikoj.",
     ldHeadline: "Kiel ludi Texas Hold’em pokeron senpage en la retumilo",
     ldDesc: "Paŝa gvidilo por ludi Texas Hold’em senpage en la retkliento de PokerTH.",
     h1: "Kiel ludi pokeron rete, senpage, en via retumilo",
@@ -1263,7 +1263,7 @@ var PARTS = {
 
   bg: {
     title: "Как да играете покер онлайн безплатно — PokerTH Web",
-    desc: "Стъпка по стъпка: играйте покер Тексас Холдем безплатно в браузъра, без изтегляне и без регистрация — офлайн срещу компютъра, в официалната мрежа pokerth.net или на частна маса с приятели.",
+    desc: "Стъпка по стъпка: играйте покер Тексас Холдем безплатно в браузъра, без изтегляне и профил — офлайн срещу ботове, на pokerth.net или на частна маса с приятели.",
     ldHeadline: "Как да играете безплатно покер Тексас Холдем в браузъра",
     ldDesc: "Ръководство стъпка по стъпка за безплатна игра на Тексас Холдем в уеб клиента на PokerTH.",
     h1: "Как да играете покер онлайн безплатно, направо в браузъра",
@@ -1292,7 +1292,7 @@ var PARTS = {
 
   hr: {
     title: "Kako besplatno igrati poker online — PokerTH Web",
-    desc: "Korak po korak: igrajte Texas Hold’em poker besplatno u pregledniku, bez preuzimanja i bez računa — offline protiv računala, na službenoj mreži pokerth.net ili za privatnim stolom s prijateljima.",
+    desc: "Korak po korak: igrajte besplatan Texas Hold’em u pregledniku, bez preuzimanja i računa — offline protiv botova, na pokerth.net ili privatno s prijateljima.",
     ldHeadline: "Kako besplatno igrati Texas Hold’em poker u pregledniku",
     ldDesc: "Vodič korak po korak za besplatnu igru Texas Hold’ema u PokerTH web klijentu.",
     h1: "Kako besplatno igrati poker online, izravno u pregledniku",
@@ -1321,7 +1321,7 @@ var PARTS = {
 
   bs: {
     title: "Kako besplatno igrati poker online — PokerTH Web",
-    desc: "Korak po korak: igraj Texas Hold’em poker besplatno u svom pregledaču, bez preuzimanja i bez računa — offline protiv računara, na zvaničnoj mreži pokerth.net ili za privatnim stolom sa prijateljima.",
+    desc: "Korak po korak: igraj besplatan Texas Hold’em u pregledaču, bez preuzimanja i računa — offline protiv botova, na pokerth.net ili privatno s prijateljima.",
     ldHeadline: "Kako besplatno igrati Texas Hold’em poker u pregledaču",
     ldDesc: "Vodič korak po korak za besplatnu igru Texas Hold’ema u PokerTH web klijentu.",
     h1: "Kako besplatno igrati poker online, direktno u pregledaču",
@@ -1350,7 +1350,7 @@ var PARTS = {
 
   mk: {
     title: "Како бесплатно да играш покер онлајн — PokerTH Web",
-    desc: "Чекор по чекор: играј Texas Hold’em покер бесплатно во својот прелистувач, без преземање и без сметка — офлајн против компјутер, на официјалната мрежа pokerth.net или на приватна маса со пријатели.",
+    desc: "Чекор по чекор: играј бесплатен Texas Hold’em во прелистувач, без преземање и сметка — офлајн против ботови, на pokerth.net или на приватна маса со пријатели.",
     ldHeadline: "Како бесплатно да играш Texas Hold’em покер во прелистувачот",
     ldDesc: "Водич чекор по чекор за бесплатно играње Texas Hold’em во веб-клиентот PokerTH.",
     h1: "Како бесплатно да играш покер онлајн, директно во прелистувачот",
@@ -1380,7 +1380,7 @@ var PARTS = {
   sr: {
 
     title: "Kako besplatno igrati poker onlajn — PokerTH Web",
-    desc: "Korak po korak: igrajte Teksas Holdem poker besplatno u pregledaču, bez preuzimanja i bez naloga — oflajn protiv računara, na zvaničnoj mreži pokerth.net ili za privatnim stolom sa prijateljima.",
+    desc: "Korak po korak: igrajte Teksas Holdem besplatno u pregledaču, bez preuzimanja i naloga — protiv botova, na pokerth.net ili za privatnim stolom sa prijateljima.",
     ldHeadline: "Kako besplatno igrati Teksas Holdem poker u pregledaču",
     ldDesc: "Vodič korak po korak za besplatnu igru Teksas Holdema u PokerTH veb klijentu.",
     h1: "Kako besplatno igrati poker onlajn, direktno u pregledaču",
@@ -1409,7 +1409,7 @@ var PARTS = {
 
   ca: {
     title: "Com jugar al pòquer en línia gratis — PokerTH Web",
-    desc: "Pas a pas: juga al pòquer Texas Hold’em gratis al navegador, sense descàrregues i sense compte — fora de línia contra l’ordinador, a la xarxa oficial pokerth.net o en una taula privada amb amics.",
+    desc: "Pas a pas: juga al Texas Hold’em gratis al navegador, sense descàrregues ni compte — fora de línia contra bots, a pokerth.net o en una taula privada amb amics.",
     ldHeadline: "Com jugar gratis al pòquer Texas Hold’em al navegador",
     ldDesc: "Una guia pas a pas per jugar gratis al Texas Hold’em al client web de PokerTH.",
     h1: "Com jugar al pòquer en línia gratis, des del navegador",
@@ -1438,7 +1438,7 @@ var PARTS = {
 
   gl: {
     title: "Como xogar ao póker en liña de balde — PokerTH Web",
-    desc: "Paso a paso: xoga ao póker Texas Hold’em de balde no navegador, sen descargas e sen conta — sen conexión contra o computador, na rede oficial pokerth.net ou nunha mesa privada cos amigos.",
+    desc: "Paso a paso: xoga ao Texas Hold’em de balde no navegador, sen descargas nin conta — sen conexión contra bots, en pokerth.net ou nunha mesa privada cos amigos.",
     ldHeadline: "Como xogar de balde ao póker Texas Hold’em no navegador",
     ldDesc: "Unha guía paso a paso para xogar de balde ao Texas Hold’em no cliente web de PokerTH.",
     h1: "Como xogar ao póker en liña de balde, desde o navegador",
@@ -1467,7 +1467,7 @@ var PARTS = {
 
   lt: {
     title: "Kaip nemokamai žaisti pokerį internete — PokerTH Web",
-    desc: "Žingsnis po žingsnio: žaiskite Texas Hold’em pokerį nemokamai naršyklėje, be atsisiuntimo ir be paskyros — neprisijungus prieš kompiuterį, oficialiame pokerth.net tinkle arba prie privataus stalo su draugais.",
+    desc: "Pažingsniui: žaiskite Texas Hold’em nemokamai naršyklėje be atsisiuntimo ir paskyros — neprisijungę prieš botus, pokerth.net ar privačiame stale su draugais.",
     ldHeadline: "Kaip nemokamai žaisti Texas Hold’em pokerį naršyklėje",
     ldDesc: "Žingsnis po žingsnio vadovas, kaip nemokamai žaisti Texas Hold’em PokerTH žiniatinklio kliente.",
     h1: "Kaip nemokamai žaisti pokerį internete, tiesiai naršyklėje",
@@ -1496,7 +1496,7 @@ var PARTS = {
 
   et: {
     title: "Kuidas mängida veebis tasuta pokkerit — PokerTH Web",
-    desc: "Samm-sammult: mängi Texas Hold’emi pokkerit tasuta oma brauseris, ilma allalaadimise ja kontota — võrguvabalt arvuti vastu, ametlikus pokerth.net võrgus või privaatses lauas koos sõpradega.",
+    desc: "Samm-sammult: mängi tasuta Texas Hold’emi brauseris, ilma allalaadimise ja kontota — võrguvabalt bottide vastu, pokerth.net-is või privaatses lauas sõpradega.",
     ldHeadline: "Kuidas mängida brauseris tasuta Texas Hold’emi pokkerit",
     ldDesc: "Samm-sammuline juhend, kuidas mängida PokerTH veebikliendis tasuta Texas Hold’emi.",
     h1: "Kuidas mängida veebis tasuta pokkerit, otse oma brauseris",
@@ -1524,7 +1524,7 @@ var PARTS = {
   },
   eu: {
     title: "Nola jokatu pokerrean linean doan — PokerTH Web",
-    desc: "Urratsez urrats: jokatu Texas Hold’em pokerrean doan zure nabigatzailean, deskargarik eta konturik gabe — lineaz kanpo boten aurka, pokerth.net sare ofizialean edo lagunekin mahai pribatu batean.",
+    desc: "Urratsez urrats: jokatu Texas Hold’em doan nabigatzailean, deskargarik eta konturik gabe — lineaz kanpo botekin, pokerth.net-en edo lagunekin mahai pribatuan.",
     ldHeadline: "Nola jokatu Texas Hold’em pokerrean doan nabigatzailean",
     ldDesc: "PokerTH web bezeroan Texas Hold’em doan jokatzeko urratsez urratseko gida.",
     h1: "Nola jokatu pokerrean linean, doan, zure nabigatzailean",
@@ -1552,7 +1552,7 @@ var PARTS = {
   },
   lv: {
     title: "Kā spēlēt bezmaksas pokeru tiešsaistē — PokerTH Web",
-    desc: "Soli pa solim: spēlē Teksasas Hold’ema pokeru bez maksas savā pārlūkā, bez lejupielādes un konta — bezsaistē pret datoru, oficiālajā pokerth.net tīklā vai privātā galdā ar draugiem.",
+    desc: "Soli pa solim: spēlē Teksasas Hold’emu bez maksas pārlūkā, bez lejupielādes un konta — bezsaistē pret botiem, pokerth.net vai privātā galdā ar draugiem.",
     ldHeadline: "Kā pārlūkā spēlēt bezmaksas Teksasas Hold’ema pokeru",
     ldDesc: "Soli pa solim ceļvedis, kā PokerTH tīmekļa klientā spēlēt bezmaksas Teksasas Hold’emu.",
     h1: "Kā spēlēt bezmaksas pokeru tiešsaistē, tieši savā pārlūkā",
@@ -1581,7 +1581,7 @@ var PARTS = {
 
   sl: {
     title: "Kako igrati brezplačen poker na spletu — PokerTH Web",
-    desc: "Korak za korakom: igraj Texas Hold’em poker brezplačno v svojem brskalniku, brez prenosa in računa — brez povezave proti računalniku, v uradnem omrežju pokerth.net ali za zasebno mizo s prijatelji.",
+    desc: "Korak za korakom: igraj brezplačen Texas Hold’em v brskalniku, brez prenosa in računa — brez povezave z boti, na pokerth.net ali za zasebno mizo s prijatelji.",
     ldHeadline: "Kako igrati brezplačen Texas Hold’em poker v brskalniku",
     ldDesc: "Vodnik po korakih, kako brezplačno igrati Texas Hold’em v spletnem odjemalcu PokerTH.",
     h1: "Kako igrati brezplačen poker na spletu, neposredno v brskalniku",
@@ -1611,7 +1611,7 @@ var PARTS = {
 
   ms: {
     title: "Cara Bermain Poker Percuma dalam Talian — PokerTH Web",
-    desc: "Langkah demi langkah: mainkan poker Texas Hold’em secara percuma dalam pelayar anda, tanpa muat turun dan tanpa akaun — luar talian menentang komputer, di rangkaian rasmi pokerth.net atau di meja peribadi bersama rakan.",
+    desc: "Langkah demi langkah: main Texas Hold’em percuma dalam pelayar, tanpa muat turun atau akaun — luar talian menentang bot, di pokerth.net atau di meja peribadi.",
     ldHeadline: "Cara Bermain Poker Texas Hold’em Percuma dalam Pelayar",
     ldDesc: "Panduan langkah demi langkah untuk bermain Texas Hold’em secara percuma dalam klien web PokerTH.",
     h1: "Cara Bermain Poker Percuma dalam Talian, Terus dalam Pelayar",
@@ -1640,7 +1640,7 @@ var PARTS = {
 
   sq: {
     title: "Si të Luash Poker Falas Online — PokerTH Web",
-    desc: "Hap pas hapi: luaj poker Texas Hold’em falas në shfletuesin tënd, pa shkarkim dhe pa llogari — offline kundër kompjuterit, në rrjetin zyrtar pokerth.net ose te një tavolinë private me miq.",
+    desc: "Hap pas hapi: luaj Texas Hold’em falas në shfletues, pa shkarkim dhe pa llogari — offline kundër botëve, në pokerth.net ose te një tavolinë private me miq.",
     ldHeadline: "Si të Luash Poker Texas Hold’em Falas në Shfletues",
     ldDesc: "Udhëzues hap pas hapi për të luajtur Texas Hold’em falas në klientin web PokerTH.",
     h1: "Si të Luash Poker Falas Online, Direkt në Shfletues",
@@ -1668,7 +1668,7 @@ var PARTS = {
   },
   pa: {
     title: "ਆਨਲਾਈਨ ਮੁਫ਼ਤ ਪੋਕਰ ਕਿਵੇਂ ਖੇਡੀਏ — PokerTH Web",
-    desc: "ਕਦਮ-ਦਰ-ਕਦਮ: ਆਪਣੇ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਮੁਫ਼ਤ Texas Hold’em ਪੋਕਰ ਖੇਡੋ, ਬਿਨਾਂ ਡਾਊਨਲੋਡ ਅਤੇ ਬਿਨਾਂ ਖਾਤੇ — ਕੰਪਿਊਟਰ ਵਿਰੁੱਧ ਆਫਲਾਈਨ, ਅਧਿਕਾਰਤ pokerth.net ਨੈੱਟਵਰਕ \u2019ਤੇ ਜਾਂ ਦੋਸਤਾਂ ਨਾਲ ਨਿੱਜੀ ਟੇਬਲ \u2019ਤੇ।",
+    desc: "ਕਦਮ-ਦਰ-ਕਦਮ: ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਮੁਫ਼ਤ Texas Hold’em ਖੇਡੋ, ਬਿਨਾਂ ਡਾਊਨਲੋਡ ਜਾਂ ਖਾਤੇ — ਬੋਟਾਂ ਵਿਰੁੱਧ ਆਫਲਾਈਨ, pokerth.net ’ਤੇ ਜਾਂ ਦੋਸਤਾਂ ਨਾਲ ਨਿੱਜੀ ਟੇਬਲ ’ਤੇ।",
     ldHeadline: "ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਮੁਫ਼ਤ Texas Hold’em ਪੋਕਰ ਕਿਵੇਂ ਖੇਡੀਏ",
     ldDesc: "PokerTH ਵੈੱਬ ਕਲਾਇਂਟ ਵਿੱਚ ਮੁਫ਼ਤ Texas Hold’em ਖੇਡਣ ਦੀ ਕਦਮ-ਦਰ-ਕਦਮ ਗਾਈਡ।",
     h1: "ਆਨਲਾਈਨ ਮੁਫ਼ਤ ਪੋਕਰ ਕਿਵੇਂ ਖੇਡੀਏ, ਸਿੱਧਾ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ",
@@ -1696,7 +1696,7 @@ var PARTS = {
   },
   am: {
     title: "በመስመር ላይ በነጻ ፖከር እንዴት እንደሚጫወቱ — PokerTH Web",
-    desc: "ደረጃ በደረጃ፦ ያለ ማውረድ እና ያለ መለያ በአሳሽዎ ውስጥ በነጻ Texas Hold’em ፖከር ይጫወቱ — ከኮምፒውተር ጋር ከመስመር ውጪ፣ በኦፊሴላዊው pokerth.net አውታረ መረብ ላይ ወይም ከጓደኞች ጋር በግል ጠረጴዛ።",
+    desc: "ደረጃ በደረጃ፦ ያለ ማውረድ እና ያለ መለያ በአሳሽዎ ውስጥ በነጻ Texas Hold’em ይጫወቱ — ከቦቶች ጋር ከመስመር ውጪ፣ በ pokerth.net ላይ ወይም ከጓደኞች ጋር በግል ጠረጴዛ።",
     ldHeadline: "በአሳሽ ውስጥ በነጻ Texas Hold’em ፖከር እንዴት እንደሚጫወቱ",
     ldDesc: "በ PokerTH የድር ደንበኛ ውስጥ በነጻ Texas Hold’em ለመጫወት ደረጃ በደረጃ መመሪያ።",
     h1: "በመስመር ላይ በነጻ ፖከር እንዴት እንደሚጫወቱ፣ በቀጥታ በአሳሽ ውስጥ",
@@ -1724,7 +1724,7 @@ var PARTS = {
   },
   az: {
     title: "Onlayn pulsuz poker necə oynanılır — PokerTH Web",
-    desc: "Addım-addım: Texas Hold’em pokerini brauzerinizdə pulsuz, yükləmə və hesab olmadan oynayın — botlara qarşı oflayn, rəsmi pokerth.net şəbəkəsində və ya dostlarla şəxsi masada.",
+    desc: "Addım-addım: Texas Hold’em pokerini brauzerinizdə pulsuz, yükləmə və hesab olmadan oynayın — botlara qarşı oflayn, pokerth.net-də və ya dostlarla şəxsi masada.",
     ldHeadline: "Brauzerdə pulsuz Texas Hold’em pokeri necə oynanılır",
     ldDesc: "PokerTH veb klientində pulsuz Texas Hold’em oynamaq üçün addım-addım bələdçi.",
     h1: "Onlayn poker necə oynanılır, pulsuz, brauzerinizdə",
@@ -1752,7 +1752,7 @@ var PARTS = {
   },
   be: {
     title: "Як гуляць у покер анлайн бясплатна — PokerTH Web",
-    desc: "Крок за крокам: гуляйце ў покер Texas Hold’em бясплатна ў браўзеры, без спампоўвання і ўліковага запісу — афлайн супраць ботаў, у афіцыйнай сетцы pokerth.net або за прыватным сталом з сябрамі.",
+    desc: "Крок за крокам: гуляйце ў Texas Hold’em бясплатна ў браўзеры, без спампоўвання і ўліковага запісу — афлайн супраць ботаў, на pokerth.net або з сябрамі.",
     ldHeadline: "Як бясплатна гуляць у покер Texas Hold’em у браўзеры",
     ldDesc: "Пакрокавае кіраўніцтва, як бясплатна гуляць у Texas Hold’em у вэб-кліенце PokerTH.",
     h1: "Як гуляць у покер анлайн, бясплатна, у вашым браўзеры",
@@ -1780,7 +1780,7 @@ var PARTS = {
   },
   km: {
     title: "របៀបលេងបៀអនឡាញឥតគិតថ្លៃ — PokerTH Web",
-    desc: "ជាជំហានៗ៖ លេងបៀ Texas Hold’em ឥតគិតថ្លៃក្នុងកម្មវិធីរុករក ដោយគ្មានការទាញយក និងគ្មានគណនី — ក្រៅបណ្ដាញជាមួយកុំព្យូទ័រ លើបណ្ដាញផ្លូវការ pokerth.net ឬជាមួយមិត្តភក្តិនៅតុឯកជន។",
+    desc: "ជាជំហានៗ៖ លេងបៀ Texas Hold’em ឥតគិតថ្លៃក្នុងកម្មវិធីរុករក គ្មានការទាញយក គ្មានគណនី — ក្រៅបណ្ដាញជាមួយបូត លើ pokerth.net ឬនៅតុឯកជនជាមួយមិត្តភក្តិ។",
     ldHeadline: "របៀបលេងបៀ Texas Hold’em ឥតគិតថ្លៃក្នុងកម្មវិធីរុករក",
     ldDesc: "មគ្គុទ្ទេសក៍ជាជំហានៗសម្រាប់លេង Texas Hold’em ឥតគិតថ្លៃក្នុងកម្មវិធីវេប PokerTH។",
     h1: "របៀបលេងបៀអនឡាញឥតគិតថ្លៃ ដោយផ្ទាល់ក្នុងកម្មវិធីរុករក",
@@ -1808,7 +1808,7 @@ var PARTS = {
   },
   te: {
     title: "ఆన్‌లైన్‌లో ఉచితంగా పోకర్ ఎలా ఆడాలి — PokerTH Web",
-    desc: "దశలవారీగా: డౌన్‌లోడ్ లేదా ఖాతా లేకుండా మీ బ్రౌజర్‌లో ఉచితంగా Texas Hold’em పోకర్ ఆడండి — బాట్‌లతో ఆఫ్‌లైన్‌లో, అధికారిక pokerth.net నెట్‌వర్క్‌లో లేదా స్నేహితులతో ప్రైవేట్ టేబుల్‌లో.",
+    desc: "దశలవారీగా: డౌన్‌లోడ్ లేదా ఖాతా లేకుండా బ్రౌజర్‌లో ఉచితంగా Texas Hold’em ఆడండి — బాట్‌లతో ఆఫ్‌లైన్‌లో, pokerth.net లో లేదా స్నేహితులతో ప్రైవేట్ టేబుల్‌లో.",
     ldHeadline: "మీ బ్రౌజర్‌లో ఉచితంగా Texas Hold’em పోకర్ ఎలా ఆడాలి",
     ldDesc: "PokerTH వెబ్ క్లయింట్‌లో ఉచితంగా Texas Hold’em ఆడటానికి దశలవారీ మార్గదర్శి.",
     h1: "మీ బ్రౌజర్‌లో, ఉచితంగా, ఆన్‌లైన్‌లో పోకర్ ఎలా ఆడాలి",
@@ -1835,8 +1835,8 @@ var PARTS = {
     faqP: function (h, c) { return "ఏ మోడ్‌లోనూ, ఎప్పుడూ డబ్బు ప్రమేయం ఉండదు. మీ సెట్టింగ్‌లు, స్టైల్ ప్యాక్‌లు మరియు శిక్షణ పురోగతి మీ పరికరంలోనే ఉంటాయి, మీరు pokerth.net ఖాతాతో లాగిన్ అయినప్పుడు మీ ఇతర పరికరాల్లోనూ అనుసరిస్తాయి. ఇంటర్‌ఫేస్ 83 భాషల్లో ఉంది, అయితే ఐదు చర్య పదాలు — Fold, Check, Call, Raise, All-In — ప్రపంచంలోని ప్రతి టేబుల్ వద్ద లాగే ఇంగ్లీష్‌లోనే ఉంటాయి. మరిన్ని వివరాలు <a href=\"{faq}\">FAQ</a> లో.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   tg: {
-    title: "Чӣ тавр покери онлайнро ройгон бозӣ кардан мумкин аст — PokerTH Web",
-    desc: "Қадам ба қадам: покери Texas Hold’em-ро ройгон дар браузери худ, бе боргирӣ ва ҳисоб бозӣ кунед — офлайн бо ботҳо, дар шабакаи расмии pokerth.net ё дар мизи хусусӣ бо дӯстон.",
+    title: "Чӣ тавр покери онлайнро ройгон бозӣ кунем — PokerTH Web",
+    desc: "Қадам ба қадам: Texas Hold’em-ро ройгон дар браузери худ, бе боргирӣ ва ҳисоб бозӣ кунед — офлайн бо ботҳо, дар pokerth.net ё дар мизи хусусӣ бо дӯстон.",
     ldHeadline: "Чӣ тавр покери Texas Hold’em-ро ройгон дар браузер бозӣ кардан мумкин аст",
     ldDesc: "Дастури қадам ба қадам барои бозии ройгони Texas Hold’em дар муштарии веби PokerTH.",
     h1: "Чӣ тавр покери онлайнро ройгон дар браузери худ бозӣ кардан мумкин аст",
@@ -1864,7 +1864,7 @@ var PARTS = {
   },
   ml: {
     title: "ഓൺലൈനിൽ സൗജന്യമായി പോക്കർ എങ്ങനെ കളിക്കാം — PokerTH Web",
-    desc: "ഘട്ടം ഘട്ടമായി: ഡൗൺലോഡോ അക്കൗണ്ടോ ഇല്ലാതെ നിങ്ങളുടെ ബ്രൗസറിൽ സൗജന്യമായി Texas Hold’em പോക്കർ കളിക്കുക — ബോട്ടുകൾക്കെതിരെ ഓഫ്‌ലൈനിൽ, ഔദ്യോഗിക pokerth.net നെറ്റ്‌വർക്കിൽ, അല്ലെങ്കിൽ സുഹൃത്തുക്കളോടൊപ്പം സ്വകാര്യ ടേബിളിൽ.",
+    desc: "ഘട്ടം ഘട്ടമായി: ഡൗൺലോഡോ അക്കൗണ്ടോ ഇല്ലാതെ ബ്രൗസറിൽ സൗജന്യ Texas Hold’em കളിക്കുക — ബോട്ടുകളോട് ഓഫ്‌ലൈനിലോ, pokerth.net ലോ, സുഹൃത്തുക്കളുമായി സ്വകാര്യ ടേബിളിലോ.",
     ldHeadline: "നിങ്ങളുടെ ബ്രൗസറിൽ സൗജന്യമായി Texas Hold’em പോക്കർ എങ്ങനെ കളിക്കാം",
     ldDesc: "PokerTH വെബ് ക്ലയന്റിൽ സൗജന്യമായി Texas Hold’em കളിക്കാനുള്ള ഘട്ടം ഘട്ടമായ വഴികാട്ടി.",
     h1: "നിങ്ങളുടെ ബ്രൗസറിൽ, സൗജന്യമായി, ഓൺലൈനിൽ പോക്കർ എങ്ങനെ കളിക്കാം",
@@ -1892,7 +1892,7 @@ var PARTS = {
   },
   mn: {
     title: "Онлайн покерыг үнэгүй хэрхэн тоглох вэ — PokerTH Web",
-    desc: "Алхам алхмаар: хөтөч дээрээ татахгүй, бүртгэлгүйгээр үнэгүй Texas Hold’em покер тоглох — боттой офлайн, албан ёсны pokerth.net сүлжээнд эсвэл найзуудтайгаа хувийн ширээнд.",
+    desc: "Алхам алхмаар: хөтөч дээрээ татахгүй, бүртгэлгүйгээр үнэгүй Texas Hold’em тоглох — боттой офлайн, pokerth.net дээр эсвэл найзуудтайгаа хувийн ширээнд.",
     ldHeadline: "Хөтөч дээр Texas Hold’em покерыг үнэгүй хэрхэн тоглох вэ",
     ldDesc: "PokerTH вэб клиент дээр Texas Hold’em-ийг үнэгүй тоглох алхам алхмын заавар.",
     h1: "Онлайн покерыг хөтөч дээрээ үнэгүй хэрхэн тоглох вэ",
@@ -1920,7 +1920,7 @@ var PARTS = {
   },
   mr: {
     title: "ऑनलाइन मोफत पोकर कसा खेळायचा — PokerTH Web",
-    desc: "पायरी पायरीने: डाउनलोड किंवा खात्याशिवाय तुमच्या ब्राउझरमध्ये मोफत Texas Hold’em पोकर खेळा — बॉट्सविरुद्ध ऑफलाइन, अधिकृत pokerth.net नेटवर्कवर, किंवा मित्रांसोबत खाजगी टेबलवर.",
+    desc: "पायरी पायरीने: डाउनलोड किंवा खात्याशिवाय तुमच्या ब्राउझरमध्ये मोफत Texas Hold’em खेळा — बॉट्सविरुद्ध ऑफलाइन, pokerth.net वर किंवा मित्रांसोबत खाजगी टेबलवर.",
     ldHeadline: "तुमच्या ब्राउझरमध्ये मोफत Texas Hold’em पोकर कसा खेळायचा",
     ldDesc: "PokerTH वेब क्लायंटमध्ये मोफत Texas Hold’em खेळण्यासाठी पायरी पायरीने मार्गदर्शक.",
     h1: "तुमच्या ब्राउझरमध्ये, मोफत, ऑनलाइन पोकर कसा खेळायचा",
@@ -1948,7 +1948,7 @@ var PARTS = {
   },
   kn: {
     title: "ಆನ್‌ಲೈನ್‌ನಲ್ಲಿ ಉಚಿತ ಪೋಕರ್ ಆಡುವುದು ಹೇಗೆ — PokerTH Web",
-    desc: "ಹಂತ ಹಂತವಾಗಿ: ಡೌನ್‌ಲೋಡ್ ಅಥವಾ ಖಾತೆಯಿಲ್ಲದೆ ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಉಚಿತವಾಗಿ Texas Hold’em ಪೋಕರ್ ಆಡಿ — ಬಾಟ್‌ಗಳ ವಿರುದ್ಧ ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿ, ಅಧಿಕೃತ pokerth.net ನೆಟ್‌ವರ್ಕ್‌ನಲ್ಲಿ, ಅಥವಾ ಸ್ನೇಹಿತರೊಂದಿಗೆ ಖಾಸಗಿ ಟೇಬಲ್‌ನಲ್ಲಿ.",
+    desc: "ಹಂತ ಹಂತವಾಗಿ: ಡೌನ್‌ಲೋಡ್, ಖಾತೆ ಇಲ್ಲದೆ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಉಚಿತ Texas Hold’em ಆಡಿ — ಬಾಟ್‌ಗಳ ವಿರುದ್ಧ ಆಫ್‌ಲೈನ್, pokerth.net ನಲ್ಲಿ ಅಥವಾ ಸ್ನೇಹಿತರ ಖಾಸಗಿ ಟೇಬಲ್‌ನಲ್ಲಿ.",
     ldHeadline: "ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಉಚಿತವಾಗಿ Texas Hold’em ಪೋಕರ್ ಆಡುವುದು ಹೇಗೆ",
     ldDesc: "PokerTH ವೆಬ್ ಕ್ಲೈಂಟ್‌ನಲ್ಲಿ ಉಚಿತವಾಗಿ Texas Hold’em ಆಡಲು ಹಂತ ಹಂತದ ಮಾರ್ಗದರ್ಶಿ.",
     h1: "ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನಲ್ಲಿ, ಉಚಿತವಾಗಿ, ಆನ್‌ಲೈನ್ ಪೋಕರ್ ಆಡುವುದು ಹೇಗೆ",
@@ -1976,7 +1976,7 @@ var PARTS = {
   },
   gu: {
     title: "ઓનલાઇન મફત પોકર કેવી રીતે રમવું — PokerTH Web",
-    desc: "પગલું દર પગલું: ડાઉનલોડ કે ખાતા વગર તમારા બ્રાઉઝરમાં મફત Texas Hold’em પોકર રમો — બોટ્સ સામે ઓફલાઇન, અધિકૃત pokerth.net નેટવર્ક પર, કે મિત્રો સાથે ખાનગી ટેબલ પર.",
+    desc: "પગલું દર પગલું: ડાઉનલોડ કે ખાતા વગર તમારા બ્રાઉઝરમાં મફત Texas Hold’em રમો — બોટ્સ સામે ઓફલાઇન, pokerth.net પર, કે મિત્રો સાથે ખાનગી ટેબલ પર.",
     ldHeadline: "તમારા બ્રાઉઝરમાં મફત Texas Hold’em પોકર કેવી રીતે રમવું",
     ldDesc: "PokerTH વેબ ક્લાયન્ટમાં મફત Texas Hold’em રમવા માટે પગલું દર પગલું માર્ગદર્શિકા.",
     h1: "તમારા બ્રાઉઝરમાં, મફત, ઓનલાઇન પોકર કેવી રીતે રમવું",
@@ -2004,7 +2004,7 @@ var PARTS = {
   },
   ha: {
     title: "Yadda ake buga poker a kan layi kyauta — PokerTH Web",
-    desc: "Mataki-mataki: buga poker na Texas Hold’em kyauta a burauzarka, ba tare da saukewa ko asusu ba — ba tare da intanet ba da bots, a hanyar sadarwa ta hukuma ta pokerth.net ko a tebur na sirri tare da abokai.",
+    desc: "Mataki-mataki: buga Texas Hold’em kyauta a burauzarka, ba saukewa ko asusu — ba tare da intanet ba da bots, a pokerth.net ko a tebur na sirri tare da abokai.",
     ldHeadline: "Yadda ake buga poker na Texas Hold’em kyauta a burauza",
     ldDesc: "Jagora mataki-mataki don buga Texas Hold’em kyauta a abokin cinikin yanar gizo na PokerTH.",
     h1: "Yadda ake buga poker a kan layi, kyauta, a burauzarka",
@@ -2032,7 +2032,7 @@ var PARTS = {
   },
   is: {
     title: "Hvernig á að spila ókeypis póker á netinu — PokerTH Web",
-    desc: "Skref fyrir skref: spilaðu ókeypis Texas Hold’em póker í vafranum þínum án niðurhals og án aðgangs — ótengt gegn bottum, á opinbera pokerth.net netinu eða við einkaborð með vinum.",
+    desc: "Skref fyrir skref: spilaðu ókeypis Texas Hold’em í vafranum þínum án niðurhals og aðgangs — ótengt gegn bottum, á pokerth.net eða við einkaborð með vinum.",
     ldHeadline: "Hvernig á að spila ókeypis Texas Hold’em póker í vafranum",
     ldDesc: "Leiðbeiningar skref fyrir skref um að spila ókeypis Texas Hold’em í PokerTH vefbiðlaranum.",
     h1: "Hvernig á að spila póker á netinu, ókeypis, í vafranum þínum",
@@ -2062,7 +2062,7 @@ var PARTS = {
 
    af: {
     title: "Hoe om gratis aanlyn poker te speel — PokerTH Web",
-    desc: "Stap vir stap: speel Texas Hold’em-poker gratis in jou blaaier, sonder aflaai en sonder rekening — vanlyn teen die rekenaar, op die amptelike pokerth.net-netwerk, of aan ’n privaat tafel met vriende.",
+    desc: "Stap vir stap: speel gratis Texas Hold’em in jou blaaier, sonder aflaai of rekening — vanlyn teen botte, op pokerth.net of aan ’n privaat tafel met vriende.",
     ldHeadline: "Hoe om gratis Texas Hold’em-poker in jou blaaier te speel",
     ldDesc: "’n Stap-vir-stap-gids om gratis Texas Hold’em in die PokerTH-webkliënt te speel.",
     h1: "Hoe om gratis aanlyn poker te speel, reg in jou blaaier",
@@ -2091,7 +2091,7 @@ var PARTS = {
 
   fil: {
     title: "Paano maglaro ng libreng poker online — PokerTH Web",
-    desc: "Hakbang-hakbang: maglaro ng libreng Texas Hold’em poker sa browser mo, walang download at walang account — offline laban sa kompyuter, sa opisyal na pokerth.net, o sa pribadong mesa kasama ang mga kaibigan.",
+    desc: "Hakbang-hakbang: maglaro ng libreng Texas Hold’em sa browser, walang download o account — offline laban sa bot, sa pokerth.net o sa pribadong mesa ng barkada.",
     ldHeadline: "Paano maglaro ng libreng Texas Hold’em poker sa browser",
     ldDesc: "Gabay hakbang-hakbang sa paglalaro ng libreng Texas Hold’em sa web client ng PokerTH.",
     h1: "Paano maglaro ng libreng poker online, diretso sa browser mo",
@@ -2120,7 +2120,7 @@ var PARTS = {
 
   sw: {
     title: "Jinsi ya kucheza poka mtandaoni bila malipo — PokerTH Web",
-    desc: "Hatua kwa hatua: cheza poka ya Texas Hold’em bila malipo kwenye kivinjari chako, bila kupakua na bila akaunti — nje ya mtandao dhidi ya kompyuta, kwenye mtandao rasmi wa pokerth.net, au kwenye meza ya faragha na marafiki.",
+    desc: "Hatua kwa hatua: cheza Texas Hold’em bure kivinjarini bila kupakua wala akaunti — nje ya mtandao dhidi ya boti, pokerth.net, au mezani kwa faragha na marafiki.",
     ldHeadline: "Jinsi ya kucheza poka ya Texas Hold’em bila malipo kwenye kivinjari",
     ldDesc: "Mwongozo wa hatua kwa hatua wa kucheza Texas Hold’em bila malipo kwenye programu ya wavuti ya PokerTH.",
     h1: "Jinsi ya kucheza poka mtandaoni bila malipo, moja kwa moja kwenye kivinjari",
@@ -2148,8 +2148,8 @@ var PARTS = {
   },
 
   gd: {
-    title: "Mar a chluicheas tu pòcair air-loidhne an-asgaidh — PokerTH Web",
-    desc: "Ceum air cheum: cluich pòcair Texas Hold’em an-asgaidh sa bhrabhsair agad, gun luchdachadh a-nuas is gun chunntas — far-loidhne an aghaidh a’ choimpiutair, air lìonra oifigeil pokerth.net, no aig bòrd prìobhaideach còmhla ri caraidean.",
+    title: "Mar a chluicheas tu pòcair air-loidhne saor — PokerTH Web",
+    desc: "Ceum air cheum: cluich Texas Hold’em an-asgaidh sa bhrabhsair, gun luchdachadh no cunntas — far-loidhne, air pokerth.net no aig bòrd prìobhaideach le caraidean.",
     ldHeadline: "Mar a chluicheas tu pòcair Texas Hold’em an-asgaidh sa bhrabhsair",
     ldDesc: "Iùl ceum air cheum gus Texas Hold’em a chluich an-asgaidh ann an cliant-lìn PokerTH.",
     h1: "Mar a chluicheas tu pòcair air-loidhne an-asgaidh, sa bhrabhsair agad fhèin",
@@ -2177,8 +2177,8 @@ var PARTS = {
   },
 
   uz: {
-    title: "Onlayn pokerni bepul qanday oʻynash mumkin — PokerTH veb-mijozi",
-    desc: "Qadam-baqadam: brauzeringizda yuklab olmasdan va hisobsiz bepul Texas Hold’em pokerini oʻynang — botlarga qarshi oflayn, rasmiy pokerth.net tarmogʻida yoki doʻstlar bilan xususiy stolda.",
+    title: "Onlayn pokerni bepul qanday oʻynash — PokerTH veb-mijozi",
+    desc: "Qadam-baqadam: brauzerda yuklab olmasdan va hisobsiz bepul Texas Hold’em oʻynang — botlarga qarshi oflayn, pokerth.net’da yoki doʻstlar bilan xususiy stolda.",
     ldHeadline: "Brauzerda bepul Texas Hold’em pokerini qanday oʻynash mumkin",
     ldDesc: "PokerTH veb-mijozida bepul Texas Hold’em oʻynash boʻyicha qadam-baqadam qoʻllanma.",
     h1: "Onlayn pokerni brauzeringizda bepul qanday oʻynash mumkin",
@@ -2206,7 +2206,7 @@ var PARTS = {
   },
   my: {
     title: "အွန်လိုင်း ပိုကာကို အခမဲ့ ကစားနည်း — PokerTH Web",
-    desc: "အဆင့်ဆင့်: Texas Hold’em ပိုကာကို ဒေါင်းလုဒ်မလို၊ အကောင့်မလိုဘဲ သင့်ဘရောက်ဇာတွင် အခမဲ့ ကစားပါ — ဘော့များနှင့် အော့ဖ်လိုင်း၊ တရားဝင် pokerth.net ကွန်ရက်တွင်၊ သို့မဟုတ် သူငယ်ချင်းများနှင့် သီးသန့်စားပွဲတွင်။",
+    desc: "အဆင့်ဆင့်: ဒေါင်းလုဒ်၊ အကောင့်မလိုဘဲ ဘရောက်ဇာတွင် Texas Hold’em အခမဲ့ ကစားပါ — ဘော့နှင့် အော့ဖ်လိုင်း၊ pokerth.net တွင် သို့မဟုတ် သူငယ်ချင်းနှင့် သီးသန့်စားပွဲ။",
     ldHeadline: "သင့်ဘရောက်ဇာတွင် Texas Hold’em ပိုကာကို အခမဲ့ ကစားနည်း",
     ldDesc: "PokerTH ဝဘ်ကလိုင်းယင့်တွင် Texas Hold’em ကို အခမဲ့ ကစားရန် အဆင့်ဆင့် လမ်းညွှန်။",
     h1: "သင့်ဘရောက်ဇာတွင် အွန်လိုင်း ပိုကာကို အခမဲ့ ကစားနည်း",
@@ -2234,7 +2234,7 @@ var PARTS = {
   },
   ka: {
     title: "როგორ ვითამაშოთ პოკერი ონლაინ უფასოდ — PokerTH Web",
-    desc: "ნაბიჯ-ნაბიჯ: ითამაშეთ Texas Hold’em პოკერი უფასოდ ბრაუზერში, ჩამოტვირთვისა და ანგარიშის გარეშე — ოფლაინ ბოტების წინააღმდეგ, ოფიციალურ pokerth.net ქსელში ან მეგობრებთან კერძო მაგიდაზე.",
+    desc: "ნაბიჯ-ნაბიჯ: ითამაშეთ უფასო Texas Hold’em ბრაუზერში, ჩამოტვირთვისა და ანგარიშის გარეშე — ოფლაინ ბოტებთან, pokerth.net-ზე ან მეგობრებთან კერძო მაგიდაზე.",
     ldHeadline: "როგორ ვითამაშოთ Texas Hold’em პოკერი უფასოდ ბრაუზერში",
     ldDesc: "ნაბიჯ-ნაბიჯ გზამკვლევი PokerTH ვებ-კლიენტში Texas Hold’em-ის უფასოდ სათამაშოდ.",
     h1: "როგორ ვითამაშოთ პოკერი ონლაინ, უფასოდ, პირდაპირ ბრაუზერში",
@@ -2262,7 +2262,7 @@ var PARTS = {
   },
   kk: {
     title: "Онлайн покерді қалай тегін ойнауға болады — PokerTH Web",
-    desc: "Қадам-қадаммен: Texas Hold’em покерін браузеріңізде тегін, жүктеусіз және тіркелгісіз ойнаңыз — боттарға қарсы офлайн, ресми pokerth.net желісінде немесе достарыңызбен жеке үстелде.",
+    desc: "Қадам-қадаммен: Texas Hold’em покерін браузерде тегін, жүктеусіз және тіркелгісіз ойнаңыз — боттарға қарсы офлайн, pokerth.net-те немесе достармен жеке үстелде.",
     ldHeadline: "Texas Hold’em покерін браузерде қалай тегін ойнауға болады",
     ldDesc: "PokerTH веб-клиентінде Texas Hold’em-ді тегін ойнауға арналған қадамдық нұсқаулық.",
     h1: "Онлайн покерді браузеріңізде қалай тегін ойнауға болады",
@@ -2290,7 +2290,7 @@ var PARTS = {
   },
   ky: {
     title: "Онлайн покерди акысыз кантип ойнош керек — PokerTH Web",
-    desc: "Кадам сайын: браузериңизде жүктөөсүз жана аккаунтсуз акысыз Texas Hold’em покерин ойноңуз — боттор менен оффлайн, расмий pokerth.net тармагында же достор менен жеке үстөлдө.",
+    desc: "Кадам сайын: браузериңизде жүктөөсүз жана аккаунтсуз акысыз Texas Hold’em ойноңуз — боттор менен оффлайн, pokerth.net'те же достор менен жеке үстөлдө.",
     ldHeadline: "Браузерде Texas Hold’em покерин акысыз кантип ойнош керек",
     ldDesc: "PokerTH веб-кардарында Texas Hold’em'ди акысыз ойноо боюнча кадамдык колдонмо.",
     h1: "Онлайн покерди браузериңизде акысыз кантип ойнош керек",
@@ -2318,7 +2318,7 @@ var PARTS = {
   },
   si: {
     title: "නොමිලේ මාර්ගගත පෝකර් ක්‍රීඩා කරන ආකාරය — PokerTH",
-    desc: "පියවරෙන් පියවර: බාගැනීමක් හෝ ගිණුමක් නොමැතිව ඔබේ බ්‍රවුසරයේ නොමිලේ Texas Hold’em පෝකර් ක්‍රීඩා කරන්න — බොට්වලට එරෙහිව මාර්ගගත නොවී, නිල pokerth.net ජාලයේ, හෝ මිතුරන් සමඟ පෞද්ගලික මේසයක.",
+    desc: "පියවරෙන් පියවර: බාගැනීමක් හෝ ගිණුමක් නොමැතිව බ්‍රවුසරයේ නොමිලේ Texas Hold’em ක්‍රීඩා කරන්න — නොබැඳිව බොට් සමඟ, pokerth.net හි හෝ මිතුරන් සමඟ පෞද්ගලික මේසයක.",
     ldHeadline: "ඔබේ බ්‍රවුසරයේ නොමිලේ Texas Hold’em පෝකර් ක්‍රීඩා කරන ආකාරය",
     ldDesc: "PokerTH වෙබ් සේවාලාභියාගේ නොමිලේ Texas Hold’em ක්‍රීඩා කිරීමට පියවරෙන් පියවර මාර්ගෝපදේශය.",
     h1: "ඔබේ බ්‍රවුසරයේ නොමිලේ මාර්ගගත පෝකර් ක්‍රීඩා කරන ආකාරය",
@@ -2346,7 +2346,7 @@ var PARTS = {
   },
   ta: {
     title: "இணையத்தில் இலவசமாக போக்கர் விளையாடுவது எப்படி — PokerTH வலை",
-    desc: "படிப்படியாக: பதிவிறக்கம் இல்லாமல், கணக்கு இல்லாமல் உங்கள் உலாவியிலேயே இலவசமாக டெக்சாஸ் ஹோல்டெம் போக்கர் விளையாடுங்கள் — இணையம் இல்லாமல் கணினிக்கு எதிராக, அதிகாரப்பூர்வ pokerth.net வலையமைப்பில், அல்லது நண்பர்களுடன் தனி மேசையில்.",
+    desc: "படிப்படியாக: பதிவிறக்கம், கணக்கு இன்றி உலாவியில் இலவசமாக டெக்சாஸ் ஹோல்டெம் ஆடுங்கள் — பாட்களுடன் ஆஃப்லைனில், pokerth.net-இல் அல்லது நண்பர்களுடன் தனி மேசையில்.",
     ldHeadline: "உலாவியில் இலவசமாக டெக்சாஸ் ஹோல்டெம் போக்கர் விளையாடுவது எப்படி",
     ldDesc: "PokerTH வலை செயலியில் இலவசமாக டெக்சாஸ் ஹோல்டெம் விளையாடுவதற்கான படிப்படியான வழிகாட்டி.",
     h1: "உங்கள் உலாவியிலேயே இலவசமாக இணையப் போக்கர் விளையாடுவது எப்படி",

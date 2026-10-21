@@ -282,7 +282,7 @@ var PARTS = {
 
   es: {
     title: "Glosario de póker — términos del Texas Hold’em — PokerTH",
-    desc: "Qué significan los términos del póker, de all-in a wheel: ciegas, kicker, outs, pot odds, set y trips, botes secundarios y showdown, explicados en lenguaje claro.",
+    desc: "Qué significan los términos del póker, de all-in a wheel: ciegas, kicker, outs, pot odds, set y trips, botes secundarios y showdown, en lenguaje claro.",
     ldHeadline: "Glosario de póker — términos del Texas Hold’em explicados",
     ldDesc: "Un glosario de términos del póker Texas Hold’em, de all-in a wheel.",
     h1: "Glosario de póker — términos del Texas Hold’em",
@@ -347,7 +347,7 @@ var PARTS = {
   },
   'es-419': {
     title: "Glosario de póker — términos del Texas Hold’em — PokerTH",
-    desc: "Qué significan los términos del póker, de all-in a wheel: ciegas, kicker, outs, pot odds, set y trips, pozos secundarios y showdown, explicados en lenguaje claro.",
+    desc: "Qué significan los términos del póker, de all-in a wheel: ciegas, kicker, outs, pot odds, set y trips, pozos secundarios y showdown, en lenguaje claro.",
     ldHeadline: "Glosario de póker — términos del Texas Hold’em explicados",
     ldDesc: "Un glosario de términos del póker Texas Hold’em, de all-in a wheel.",
     h1: "Glosario de póker — términos del Texas Hold’em",
@@ -413,7 +413,7 @@ var PARTS = {
 
   'pt-BR': {
     title: "Glossário de pôquer — termos do Texas Hold’em — PokerTH",
-    desc: "O que significam os termos do pôquer, de all-in a wheel: blinds, kicker, outs, pot odds, set e trips, potes laterais e showdown, explicados em linguagem simples.",
+    desc: "O que significam os termos do pôquer, de all-in a wheel: blinds, kicker, outs, pot odds, set e trips, potes laterais e showdown, em linguagem simples.",
     ldHeadline: "Glossário de pôquer — termos do Texas Hold’em explicados",
     ldDesc: "Um glossário dos termos do pôquer Texas Hold’em, de all-in a wheel.",
     h1: "Glossário de pôquer — termos do Texas Hold’em",
@@ -743,7 +743,7 @@ var PARTS = {
 
   'pt-PT': {
     title: "Glossário de póquer — termos do Texas Hold’em — PokerTH",
-    desc: "O que significam os termos do póquer, de all-in a wheel: blinds, kicker, outs, pot odds, set e trips, potes secundários e showdown, explicados em linguagem simples.",
+    desc: "O que significam os termos do póquer, de all-in a wheel: blinds, kicker, outs, pot odds, set e trips, potes secundários e showdown, em linguagem simples.",
     ldHeadline: "Glossário de póquer — termos do Texas Hold’em explicados",
     ldDesc: "Um glossário dos termos do póquer Texas Hold’em, de all-in a wheel.",
     h1: "Glossário de póquer — termos do Texas Hold’em",
@@ -1242,7 +1242,7 @@ var PARTS = {
   },
   hy: {
     title: "Պոկերի բառարան — Texas Hold’em-ի տերմիններ — PokerTH",
-    desc: "Ինչ են նշանակում պոկերի տերմինները՝ all-in-ից մինչև wheel. բլայնդներ, կիկեր, աութներ, բանկի հավանականություններ, set և trips, կողային բանկեր և showdown՝ բացատրված պարզ լեզվով։",
+    desc: "Ինչ են նշանակում պոկերի տերմինները՝ all-in-ից մինչև wheel. բլայնդներ, կիկեր, աութներ, բանկի հավանականություններ, set և trips, կողային բանկեր և showdown։",
     ldHeadline: "Պոկերի բառարան — Texas Hold’em-ի տերմինների բացատրություն",
     ldDesc: "Texas Hold’em պոկերի տերմինների բառարան՝ all-in-ից մինչև wheel։",
     h1: "Պոկերի բառարան — Texas Hold’em-ի տերմիններ",
@@ -1353,7 +1353,7 @@ var PARTS = {
 
   ro: {
     title: "Glosar de poker — termeni de Texas Hold’em — PokerTH",
-    desc: "Ce înseamnă termenii de poker, de la all-in la wheel: blinduri, kicker, outs, cotele potului, set și trips, poturi secundare și showdown, explicate pe înțelesul tuturor.",
+    desc: "Ce înseamnă termenii de poker, de la all-in la wheel: blinduri, kicker, outs, cotele potului, set și trips, poturi secundare și showdown, explicate simplu.",
     ldHeadline: "Glosar de poker — termenii de Texas Hold’em explicați",
     ldDesc: "Un glosar al termenilor de poker Texas Hold’em, de la all-in la wheel.",
     h1: "Glosar de poker — termeni de Texas Hold’em",
@@ -2709,7 +2709,7 @@ var PARTS = {
 
   ca: {
     title: "Glossari de pòquer — termes del Texas Hold’em — PokerTH",
-    desc: "Què volen dir els termes del pòquer, d’all-in a wheel: cegues, kicker, outs, probabilitats del pot, set i trips, pots secundaris i obertura de cartes, en llenguatge planer.",
+    desc: "Què volen dir els termes del pòquer, d’all-in a wheel: cegues, kicker, outs, probabilitats del pot, set i trips, pots secundaris i obertura de cartes.",
     ldHeadline: "Glossari de pòquer — els termes del Texas Hold’em",
     ldDesc: "Un glossari dels termes del pòquer Texas Hold’em, d’all-in a wheel.",
     h1: "Glossari de pòquer — termes del Texas Hold’em",
@@ -2775,7 +2775,7 @@ var PARTS = {
 
   gl: {
     title: "Glosario de póker — termos do Texas Hold’em — PokerTH",
-    desc: "Que significan os termos do póker, de all-in a wheel: cegas, kicker, outs, probabilidades do bote, set e trips, botes secundarios e apertura de cartas, en linguaxe sinxela.",
+    desc: "Que significan os termos do póker, de all-in a wheel: cegas, kicker, outs, probabilidades do bote, set e trips, botes secundarios e apertura de cartas.",
     ldHeadline: "Glosario de póker — os termos do Texas Hold’em",
     ldDesc: "Un glosario dos termos do póker Texas Hold’em, de all-in a wheel.",
     h1: "Glosario de póker — termos do Texas Hold’em",
@@ -2841,7 +2841,7 @@ var PARTS = {
 
   lt: {
     title: "Pokerio žodynėlis — Texas Hold’em terminai — PokerTH",
-    desc: "Ką reiškia pokerio terminai, nuo all-in iki wheel: aklieji statymai, kikeris, autai, banko šansai, setas ir tripsas, šalutiniai bankai ir kortų atvertimas, paprasta kalba.",
+    desc: "Ką reiškia pokerio terminai, nuo all-in iki wheel: aklieji statymai, kikeris, autai, banko šansai, setas ir tripsas, šalutiniai bankai ir atvertimas, paprastai.",
     ldHeadline: "Pokerio žodynėlis — Texas Hold’em terminai",
     ldDesc: "Texas Hold’em pokerio terminų žodynėlis, nuo all-in iki wheel.",
     h1: "Pokerio žodynėlis — Texas Hold’em terminai",
@@ -3136,7 +3136,7 @@ var PARTS = {
   },
   zu: {
     title: "Isichazamazwi se-poker — amagama e-Texas Hold’em — PokerTH",
-    desc: "Izincazelo zamagama e-poker, kusukela ku-all-in kuya ku-wheel: ama-blinds, i-kicker, ama-outs, ama-pot odds, i-set ne-trips, i-pot eseceleni ne-showdown, kuchazwe ngendlela elula.",
+    desc: "Izincazelo zamagama e-poker, kusukela ku-all-in kuya ku-wheel: ama-blinds, i-kicker, ama-outs, ama-pot odds, i-set ne-trips, i-pot eseceleni ne-showdown.",
     ldHeadline: "Isichazamazwi se-poker — amagama e-Texas Hold’em achaziwe",
     ldDesc: "Isichazamazwi samagama e-poker ye-Texas Hold’em, kusukela ku-all-in kuya ku-wheel.",
     h1: "Isichazamazwi se-poker — amagama e-Texas Hold’em",
@@ -3312,7 +3312,7 @@ var PARTS = {
   },
   tk: {
     title: "Poker sözlügi — Texas Hold’em adalgalary — PokerTH",
-    desc: "Poker adalgalarynyň kesgitlemeleri, All-In-den tigre çenli: blaýndlar, kiker, autlar, bank ähtimallygy, set we trips, goşmaça bank we şoudaun, ýönekeý dilde düşündirilen.",
+    desc: "Poker adalgalary ýönekeý dilde, All-In-den tigre çenli: blaýndlar, kiker, autlar, bank ähtimallygy, set we trips, goşmaça bank we şoudaun.",
     ldHeadline: "Poker sözlügi — Texas Hold’em adalgalarynyň düşündirişi",
     ldDesc: "Texas Hold’em poker adalgalarynyň sözlügi, All-In-den tigre çenli.",
     h1: "Poker sözlügi — Texas Hold’em adalgalary",
@@ -3564,7 +3564,7 @@ var PARTS = {
 
   uz: {
     title: "Poker lugʻati — Texas Hold’em atamalari — PokerTH",
-    desc: "Poker atamalari nimani anglatadi, all-in’dan wheel’gacha: blayndlar, kikerlar, autlar, bank imkoniyatlari, set va trips, yon banklar va shoudaunlar — sodda tilda tushuntirilgan.",
+    desc: "Poker atamalari nimani anglatadi, all-in’dan wheel’gacha: blayndlar, kikerlar, autlar, bank imkoniyatlari, set va trips, yon banklar va shoudaun — sodda tilda.",
     ldHeadline: "Poker lugʻati — Texas Hold’em atamalari izohi",
     ldDesc: "Texas Hold’em poker atamalari lugʻati, all-in’dan wheel’gacha.",
     h1: "Poker lugʻati — Texas Hold’em atamalari izohi",
@@ -3629,7 +3629,7 @@ var PARTS = {
   },
   my: {
     title: "ပိုကာ ဝေါဟာရ — Texas Hold’em အသုံးအနှုန်းများ — PokerTH",
-    desc: "all-in မှ wheel အထိ ပိုကာအသုံးအနှုန်းများ၏ အဓိပ္ပာယ်: ဘလိုင်း၊ kicker၊ outs၊ pot odds၊ set နှင့် trips၊ side pot နှင့် ရှိုးဒေါင်းများ — ရိုးရှင်းသော စကားဖြင့် ရှင်းပြထားသည်။",
+    desc: "all-in မှ wheel အထိ ပိုကာအသုံးအနှုန်းများ: ဘလိုင်း၊ kicker၊ outs၊ pot odds၊ set နှင့် trips၊ side pot နှင့် ရှိုးဒေါင်း — ရိုးရှင်းစွာ ရှင်းပြထားသည်။",
     ldHeadline: "ပိုကာ ဝေါဟာရ — Texas Hold’em အသုံးအနှုန်းများ ရှင်းလင်းချက်",
     ldDesc: "all-in မှ wheel အထိ Texas Hold’em ပိုကာ အသုံးအနှုန်းများ၏ ဝေါဟာရ။",
     h1: "ပိုကာ ဝေါဟာရ — Texas Hold’em အသုံးအနှုန်းများ ရှင်းလင်းချက်",
@@ -3816,7 +3816,7 @@ var PARTS = {
   },
   kk: {
     title: "Покер глоссарийі — Texas Hold’em терминдері — PokerTH",
-    desc: "All-In-нен wheel-ге дейінгі покер терминдері нені білдіреді: блайндтар, кикер, ауттар, банк мүмкіндіктері, сет пен трипс, қосымша банктер және шоудаун — қарапайым тілмен түсіндірілген.",
+    desc: "Покер терминдері All-In-нен wheel-ге дейін қарапайым тілмен: блайндтар, кикер, ауттар, банк мүмкіндіктері, сет пен трипс, қосымша банктер және шоудаун.",
     ldHeadline: "Покер глоссарийі — Texas Hold’em терминдерінің түсіндірмесі",
     ldDesc: "All-In-нен wheel-ге дейінгі Texas Hold’em покер терминдерінің глоссарийі.",
     h1: "Покер глоссарийі — Texas Hold’em терминдері",
@@ -3926,7 +3926,7 @@ var PARTS = {
   },
   ky: {
     title: "Покер сөздүгү — Texas Hold’em терминдери — PokerTH",
-    desc: "Покер терминдеринин аныктамалары, all-in'ден дөңгөлөккө чейин: блайнддар, кикер, ауттар, банк мүмкүнчүлүктөрү, сет жана трипс, кошумча банк жана шоудаун, жөнөкөй тил менен түшүндүрүлгөн.",
+    desc: "Покер терминдери, all-in'ден дөңгөлөккө чейин: блайнддар, кикер, ауттар, банк мүмкүнчүлүктөрү, сет жана трипс, кошумча банк жана шоудаун, жөнөкөй тил менен.",
     ldHeadline: "Покер сөздүгү — Texas Hold’em терминдеринин түшүндүрмөсү",
     ldDesc: "Texas Hold’em покер терминдеринин сөздүгү, all-in'ден дөңгөлөккө чейин.",
     h1: "Покер сөздүгү — Texas Hold’em терминдери",
@@ -4113,7 +4113,7 @@ var PARTS = {
   },
   ta: {
     title: "போக்கர் சொற்களஞ்சியம் — டெக்சாஸ் ஹோல்டெம் சொற்கள் — PokerTH",
-    desc: "போக்கர் சொற்களின் பொருள், all-in முதல் wheel வரை: கட்டாயப் பணயம், கிக்கர், அவுட்கள், பானை விகிதம், செட் மற்றும் ட்ரிப்ஸ், பக்கப் பானை, சீட்டு திறப்பு — எளிய மொழியில்.",
+    desc: "போக்கர் சொற்களின் பொருள், all-in முதல் wheel வரை: கட்டாயப் பணயம், கிக்கர், அவுட்கள், பானை விகிதம், செட், ட்ரிப்ஸ், பக்கப் பானை, சீட்டு திறப்பு — எளிய மொழியில்.",
     ldHeadline: "போக்கர் சொற்களஞ்சியம் — டெக்சாஸ் ஹோல்டெம் சொற்கள்",
     ldDesc: "டெக்சாஸ் ஹோல்டெம் போக்கர் சொற்களின் சொற்களஞ்சியம், all-in முதல் wheel வரை.",
     h1: "போக்கர் சொற்களஞ்சியம் — டெக்சாஸ் ஹோல்டெம் சொற்கள்",
@@ -4310,7 +4310,7 @@ var PARTS = {
   },
   eu: {
     title: "Poker-glosarioa — Texas Hold’em-en terminoak — PokerTH",
-    desc: "Zer esan nahi duten pokerreko terminoek, all-in-etik wheel-era: blindak, kickerra, outs-ak, potearen aukerak, set eta trips, alboko poteak eta showdown-a, hitz errazetan azalduta.",
+    desc: "Pokerreko terminoak, all-in-etik wheel-era: blindak, kickerra, outs-ak, potearen aukerak, set eta trips, alboko poteak eta showdown-a, hitz errazetan azalduta.",
     ldHeadline: "Poker-glosarioa — Texas Hold’em-en terminoak azalduta",
     ldDesc: "Texas Hold’em pokerreko terminoen glosarioa, all-in-etik wheel-era.",
     h1: "Poker-glosarioa — Texas Hold’em-en terminoak",
@@ -4420,7 +4420,7 @@ var PARTS = {
   },
   lv: {
     title: "Pokera vārdnīca — Teksasas Hold’ema termini — PokerTH",
-    desc: "Ko nozīmē pokera termini, no all-in līdz wheel: aklās likmes, kikers, izejas, bankas izredzes, set un trips, sānu bankas un kāršu atklāšana, vienkārši izskaidroti.",
+    desc: "Ko nozīmē pokera termini, no all-in līdz wheel: aklās likmes, kikers, izejas, bankas izredzes, set un trips, sānu bankas un atklāšana, vienkārši izskaidroti.",
     ldHeadline: "Pokera vārdnīca — Teksasas Hold’ema termini",
     ldDesc: "Teksasas Hold’ema pokera terminu vārdnīca, no all-in līdz wheel.",
     h1: "Pokera vārdnīca — Teksasas Hold’ema termini",
@@ -4751,7 +4751,7 @@ var PARTS = {
 
   sq: {
     title: "Fjalori i Pokerit — Termat e Texas Hold’em — PokerTH",
-    desc: "Çfarë do të thonë termat e pokerit, nga all-in te wheel: blindet, kicker, outs, shanset e bankës, set dhe trips, banka anësore dhe showdown, të shpjeguara thjesht.",
+    desc: "Çfarë do të thonë termat e pokerit, nga all-in te wheel: blindet, kicker, outs, shanset e bankës, set dhe trips, banka anësore dhe showdown, shpjeguar thjesht.",
     ldHeadline: "Fjalori i Pokerit — Termat e Texas Hold’em",
     ldDesc: "Fjalori i termave të pokerit të Texas Hold’em, nga all-in te wheel.",
     h1: "Fjalori i Pokerit — Termat e Texas Hold’em",
@@ -4946,7 +4946,7 @@ var PARTS = {
   },
   az: {
     title: "Poker lüğəti — Texas Hold’em terminləri — PokerTH",
-    desc: "Poker terminləri nə deməkdir, all-in-dən wheel-ə qədər: blaindlər, kiker, autlar, bank ehtimalları, set və trips, yan banklar və showdown, sadə dillə izah olunur.",
+    desc: "Poker terminləri nə deməkdir, all-in-dən wheel-ə qədər: blaindlər, kiker, autlar, bank ehtimalları, set və trips, yan banklar və showdown, sadə dillə izahı.",
     ldHeadline: "Poker lüğəti — Texas Hold’em terminlərinin izahı",
     ldDesc: "All-in-dən wheel-ə qədər Texas Hold’em poker terminləri lüğəti.",
     h1: "Poker lüğəti — Texas Hold’em terminləri",
@@ -5251,7 +5251,7 @@ var PARTS = {
   },
   tg: {
     title: "Луғати покер — истилоҳоти Texas Hold’em — PokerTH",
-    desc: "Таърифи истилоҳоти покер, аз All-In то чарх: блайндҳо, кикер, аутҳо, эҳтимолияти банк, сет ва трипс, банки иловагӣ ва шоудаун, бо забони содда шарҳ дода шудаанд.",
+    desc: "Таърифи истилоҳоти покер аз All-In то чарх: блайндҳо, кикер, аутҳо, эҳтимолияти банк, сет ва трипс, банки иловагӣ ва шоудаун, бо забони содда шарҳ дода шудаанд.",
     ldHeadline: "Луғати покер — шарҳи истилоҳоти Texas Hold’em",
     ldDesc: "Луғати истилоҳоти покери Texas Hold’em, аз All-In то чарх.",
     h1: "Луғати покер — истилоҳоти Texas Hold’em",
@@ -5910,7 +5910,7 @@ var PARTS = {
 
 
     title: "Kamusi ya poka — istilahi za Texas Hold’em — PokerTH",
-    desc: "Maana ya istilahi za poka, kuanzia all-in hadi wheel: dau la kulazimishwa, kicker, auti, uwiano wa pot, set na trips, pot ya pembeni na kufunua karata, kwa lugha rahisi.",
+    desc: "Maana ya istilahi za poka, kuanzia all-in hadi wheel: dau la kulazimishwa, kicker, auti, uwiano wa pot, set na trips, pot ya pembeni na kufunua karata.",
     ldHeadline: "Kamusi ya poka — istilahi za Texas Hold’em",
     ldDesc: "Kamusi ya istilahi za poka ya Texas Hold’em, kuanzia all-in hadi wheel.",
     h1: "Kamusi ya poka — istilahi za Texas Hold’em",
@@ -5976,7 +5976,7 @@ var PARTS = {
 
   gd: {
     title: "Faclair pòcair — briathran Texas Hold’em — PokerTH",
-    desc: "Dè tha briathran a’ phòcair a’ ciallachadh, o all-in gu wheel: dallabhan, kicker, outs, cothroman a’ phota, set agus trips, poit taobh agus foillseachadh nan cairtean.",
+    desc: "Dè tha briathran a’ phòcair a’ ciallachadh, o all-in gu wheel: dallabhan, kicker, outs, cothroman a’ phota, set is trips, poit taobh is foillseachadh chairtean.",
     ldHeadline: "Faclair pòcair — briathran Texas Hold’em",
     ldDesc: "Faclair de bhriathran pòcair Texas Hold’em, o all-in gu wheel.",
     h1: "Faclair pòcair — briathran Texas Hold’em",
@@ -6041,8 +6041,8 @@ var PARTS = {
   },
 
   fil: {
-    title: "Talasalitaan ng poker — mga termino sa Texas Hold’em — PokerTH",
-    desc: "Kahulugan ng mga terminong poker, mula all-in hanggang wheel: blind, kicker, outs, pot odds, set at trips, side pot at showdown, ipinaliwanag sa simpleng salita.",
+    title: "Talasalitaan ng poker sa Texas Hold’em — PokerTH",
+    desc: "Kahulugan ng mga terminong poker, mula all-in hanggang wheel: blind, kicker, outs, pot odds, set at trips, side pot at showdown, ipinaliwanag nang simple.",
     ldHeadline: "Talasalitaan ng poker — mga termino sa Texas Hold’em",
     ldDesc: "Talasalitaan ng mga terminong poker sa Texas Hold’em, mula all-in hanggang wheel.",
     h1: "Talasalitaan ng poker — mga termino sa Texas Hold’em",

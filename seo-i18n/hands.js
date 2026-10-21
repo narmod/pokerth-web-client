@@ -32,7 +32,7 @@ var PARTS = {
 
   fr: {
     title: 'Combinaisons du poker — ordre des mains au Texas Hold’em',
-    desc: 'Les dix combinaisons du poker Texas Hold’em classées de la quinte flush royale à la carte haute, avec des exemples, la probabilité de chacune et la façon dont les égalités sont départagées.',
+    desc: "Les dix combinaisons du Texas Hold’em, de la quinte flush royale à la carte haute, avec des exemples, la probabilité de chacune et le départage des égalités.",
     ldHeadline: 'Combinaisons du poker — Texas Hold’em',
     ldDesc: 'Les dix combinaisons du Texas Hold’em dans l’ordre, avec exemples, fréquences et règles de départage.',
     h1: 'Combinaisons du poker',
@@ -112,7 +112,7 @@ var PARTS = {
 
   de: {
     title: 'Pokerblätter — Reihenfolge der Hände beim Texas Hold’em',
-    desc: 'Alle zehn Texas-Hold’em-Pokerblätter vom Royal Flush bis zur höchsten Karte, mit Beispielen, der Wahrscheinlichkeit jedes Blatts und der Frage, wie Kicker und Gleichstände entschieden werden.',
+    desc: "Alle zehn Texas-Hold’em-Pokerblätter vom Royal Flush bis zur höchsten Karte, mit Beispielen, Wahrscheinlichkeiten und Regeln für Kicker und Gleichstände.",
     ldHeadline: 'Pokerblätter — Texas Hold’em',
     ldDesc: 'Die zehn Texas-Hold’em-Blätter der Reihe nach, mit Beispielen, Häufigkeiten und Regeln für Gleichstände.',
     h1: 'Pokerblätter',
@@ -147,7 +147,7 @@ var PARTS = {
 
   es: {
     title: 'Jugadas de póker — orden de las manos en Texas Hold’em',
-    desc: 'Las diez jugadas del póker Texas Hold’em ordenadas de la escalera real a la carta alta, con ejemplos, la probabilidad de cada una y cómo se resuelven los kickers y los empates.',
+    desc: "Las diez jugadas del Texas Hold’em, de la escalera real a la carta alta, con ejemplos, la probabilidad de cada una y cómo se resuelven kickers y empates.",
     ldHeadline: 'Jugadas de póker — Texas Hold’em',
     ldDesc: 'Las diez jugadas del Texas Hold’em en orden, con ejemplos, frecuencias y reglas de desempate.',
     h1: 'Jugadas de póker',
@@ -181,7 +181,7 @@ var PARTS = {
   },
   'es-419': {
     title: 'Jugadas de póker — orden de las manos en Texas Hold’em',
-    desc: 'Las diez jugadas del póker Texas Hold’em ordenadas de la escalera real a la carta alta, con ejemplos, la probabilidad de cada una y cómo se resuelven los kickers y los empates.',
+    desc: "Las diez jugadas del Texas Hold’em de la escalera real a la carta alta, con ejemplos, la probabilidad de cada una y cómo se resuelven los kickers y los empates.",
     ldHeadline: 'Jugadas de póker — Texas Hold’em',
     ldDesc: 'Las diez jugadas del Texas Hold’em en orden, con ejemplos, frecuencias y reglas de desempate.',
     h1: 'Jugadas de póker',
@@ -322,7 +322,7 @@ var PARTS = {
 
   pl: {
     title: "Układy w pokerze — kolejność kart w Texas Hold’em",
-    desc: "Wszystkie dziesięć układów pokerowych Texas Hold’em, od pokera królewskiego po wysoką kartę, z przykładami, prawdopodobieństwem każdego z nich oraz zasadami rozstrzygania remisów.",
+    desc: "Wszystkie dziesięć układów Texas Hold’em, od pokera królewskiego po wysoką kartę, z przykładami, prawdopodobieństwem każdego i zasadami rozstrzygania remisów.",
     ldHeadline: "Układy w pokerze — Texas Hold’em",
     ldDesc: "Dziesięć układów Texas Hold’em po kolei, z przykładami, częstością występowania i zasadami remisów.",
     h1: "Układy w pokerze",
@@ -357,7 +357,7 @@ var PARTS = {
 
   ru: {
     title: "Комбинации в покере — старшинство рук в техасском холдеме",
-    desc: "Все десять покерных комбинаций техасского холдема по старшинству, от флеш-рояля до старшей карты, с примерами, вероятностью каждой и правилами разрешения ничьих.",
+    desc: "Все десять покерных комбинаций техасского холдема по старшинству, от флеш-рояля до старшей карты, с примерами, вероятностью каждой и правилами при ничьей.",
     ldHeadline: "Комбинации в покере — техасский холдем",
     ldDesc: "Десять комбинаций техасского холдема по порядку, с примерами, частотой выпадения и правилами кикера.",
     h1: "Комбинации в покере",
@@ -427,7 +427,7 @@ var PARTS = {
 
   uk: {
     title: "Комбінації в покері — старшинство рук у техаському холдемі",
-    desc: "Усі десять покерних комбінацій техаського холдему за старшинством, від флеш-роялю до старшої карти, з прикладами, ймовірністю кожної та правилами розв’язання нічиїх.",
+    desc: "Усі десять покерних комбінацій техаського холдему за старшинством, від флеш-роялю до старшої карти, з прикладами, ймовірністю кожної та правилами нічиїх.",
     ldHeadline: "Комбінації в покері — техаський холдем",
     ldDesc: "Десять комбінацій техаського холдему по порядку, з прикладами, частотою та правилами кікера.",
     h1: "Комбінації в покері",
@@ -567,7 +567,7 @@ var PARTS = {
 
   id: {
     title: "Peringkat kartu poker — urutan kartu Texas Hold’em",
-    desc: "Sepuluh susunan kartu poker Texas Hold’em dari royal flush sampai kartu tinggi, lengkap dengan contoh, peluang munculnya masing-masing, serta cara kicker dan hasil seri ditentukan.",
+    desc: "Sepuluh susunan kartu poker Texas Hold’em dari royal flush sampai kartu tinggi, dengan contoh, peluang masing-masing, serta cara kicker dan seri ditentukan.",
     ldHeadline: "Peringkat kartu poker — Texas Hold’em",
     ldDesc: "Sepuluh susunan kartu Texas Hold’em berurutan, dengan contoh, frekuensi, dan aturan penentuan seri.",
     h1: "Peringkat kartu poker",
@@ -681,7 +681,7 @@ var PARTS = {
   },
   zu: {
     title: "Izandla ze-poker — ukulandelana kwezandla ku-Texas Hold’em",
-    desc: "Izandla eziyishumi ze-poker ze-Texas Hold’em ngokulandelana kusukela ku-Royal Flush kuya ku-High Card, nezibonelo, amathuba esandla ngasinye nendlela okuxazululwa ngayo ukulingana.",
+    desc: "Izandla eziyishumi ze-Texas Hold’em kusukela ku-Royal Flush kuya ku-High Card, nezibonelo, amathuba esandla ngasinye nokuthi kuxazululwa kanjani ukulingana.",
     ldHeadline: "Izandla ze-poker — Texas Hold’em",
     ldDesc: "Izandla eziyishumi ze-Texas Hold’em ngokulandelana, nezibonelo, ukuvama kwazo nemithetho yokulingana.",
     h1: "Izandla ze-poker",
@@ -760,7 +760,7 @@ var PARTS = {
     seeP: "ใน PokerTH แท็บโอกาสจะบอกชื่อมือที่ดีที่สุดของคุณ ณ ตอนนั้นและโอกาสชนะของคุณเมื่อไพ่ทยอยเปิด คุณจึงไม่ต้องมานั่งประกอบเองตอนเวลากำลังจะหมด และเมื่อถึงตอนเปิดไพ่ ระบบจะบอกชื่อไพ่ชุดที่ชนะไว้ใต้ไพ่กองกลาง การฝึกในโหมดในเครื่อง / ฝึกซ้อมกับคู่แข่งคอมพิวเตอร์คือวิธีที่เร็วที่สุดที่จะจำลำดับนี้ได้ขึ้นใจ"
   },
   tk: {
-    title: "Poker kombinasiýalary — Texas Hold’em-de kombinasiýalaryň tertibi",
+    title: "Poker kombinasiýalary — Texas Hold’em tertibi | PokerTH",
     desc: "Texas Hold’em-iň on poker kombinasiýasy roýal-fleşden uly karta çenli tertipde, mysallar, her biriniň ähtimallygy we deňligiň nähili çözülýändigi bilen.",
     ldHeadline: "Poker kombinasiýalary — Texas Hold’em",
     ldDesc: "Texas Hold’em-iň on kombinasiýasy tertip boýunça, mysallar, ýygylyk we deňlik düzgünleri bilen.",
@@ -1156,7 +1156,7 @@ var PARTS = {
 
   fi: {
     title: "Pokerikädet — käsien järjestys Texas Hold’emissa",
-    desc: "Texas Hold’emin kaikki kymmenen pokerikättä värisuorasta ässästä korkeimpaan korttiin, esimerkkeineen, kunkin käden todennäköisyys sekä kickerin ja tasatilanteiden ratkaisu.",
+    desc: "Texas Hold’emin kaikki kymmenen pokerikättä kuningasvärisuorasta korkeimpaan korttiin: esimerkit, todennäköisyydet sekä kickerin ja tasatilanteiden ratkaisu.",
     ldHeadline: "Pokerikädet — Texas Hold’em",
     ldDesc: "Texas Hold’emin kymmenen kättä järjestyksessä, esimerkit, yleisyydet ja tasatilanteiden säännöt.",
     h1: "Pokerikädet",
@@ -1191,7 +1191,7 @@ var PARTS = {
 
   cs: {
     title: "Pokerové kombinace — pořadí karet v Texas Hold’em",
-    desc: "Všech deset pokerových kombinací Texas Hold’em od královské postupky po vysokou kartu, s příklady, pravděpodobností každé z nich a pravidly pro kickera a shodné kombinace.",
+    desc: "Všech deset pokerových kombinací Texas Hold’em od královské postupky po vysokou kartu, s příklady, pravděpodobností každé a pravidly pro kickera a remízy.",
     ldHeadline: "Pokerové kombinace — Texas Hold’em",
     ldDesc: "Deset kombinací Texas Hold’em popořadě, s příklady, četností a pravidly pro shodu.",
     h1: "Pokerové kombinace",
@@ -1225,7 +1225,7 @@ var PARTS = {
   },
   cy: {
     title: "Dwylo pocer — trefn y dwylo yn Texas Hold’em",
-    desc: "Deg llaw pocer Texas Hold’em mewn trefn o'r fflysh brenhinol i'r cerdyn uchel, gydag enghreifftiau, tebygolrwydd pob un a sut mae canlyniadau cyfartal yn cael eu datrys.",
+    desc: "Deg llaw Texas Hold’em mewn trefn, o'r fflysh brenhinol i'r cerdyn uchel, gydag enghreifftiau, tebygolrwydd pob un a sut mae llaw gyfartal yn cael ei datrys.",
     ldHeadline: "Dwylo pocer — Texas Hold’em",
     ldDesc: "Deg llaw Texas Hold’em yn eu trefn, gydag enghreifftiau, amlder a rheolau ar gyfer canlyniadau cyfartal.",
     h1: "Dwylo pocer",
@@ -1271,7 +1271,7 @@ var PARTS = {
 
   sk: {
     title: "Pokerové kombinácie — poradie kariet v Texas Hold’em",
-    desc: "Všetkých desať pokerových kombinácií Texas Hold’em od kráľovskej postupky po vysokú kartu, s príkladmi, pravdepodobnosťou každej z nich a pravidlami pre kickera a zhodu.",
+    desc: "Všetkých desať kombinácií Texas Hold’em od kráľovskej postupky po vysokú kartu, s príkladmi, pravdepodobnosťou každej z nich a pravidlami pre kickera a zhodu.",
     ldHeadline: "Pokerové kombinácie — Texas Hold’em",
     ldDesc: "Desať kombinácií Texas Hold’em po poradí, s príkladmi, početnosťou a pravidlami pri zhode.",
     h1: "Pokerové kombinácie",
@@ -1306,7 +1306,7 @@ var PARTS = {
 
   ro: {
     title: "Combinații la poker — ordinea mâinilor la Texas Hold’em",
-    desc: "Toate cele zece combinații de poker Texas Hold’em, de la chinta roială la carte mare, cu exemple, probabilitatea fiecăreia și modul în care se departajează kickerul și egalitățile.",
+    desc: "Cele zece combinații de poker Texas Hold’em, de la chinta roială la carte mare, cu exemple, probabilitatea fiecăreia și cum se departajează egalitățile.",
     ldHeadline: "Combinații la poker — Texas Hold’em",
     ldDesc: "Cele zece combinații de la Texas Hold’em în ordine, cu exemple, frecvențe și reguli de departajare.",
     h1: "Combinații la poker",
@@ -1341,7 +1341,7 @@ var PARTS = {
 
   hu: {
     title: "Póker kézsorrend — a lapok rangsora Texas Hold’emben",
-    desc: "A Texas Hold’em mind a tíz póker kombinációja a royal flushtől a magas lapig, példákkal, az egyes kezek valószínűségével, valamint a kicker és a döntetlen eldöntésének szabályaival.",
+    desc: "A Texas Hold’em mind a tíz póker kombinációja a royal flushtől a magas lapig, példákkal, valószínűségekkel, valamint a kicker és a döntetlen szabályaival.",
     ldHeadline: "Póker kézsorrend — Texas Hold’em",
     ldDesc: "A Texas Hold’em tíz kombinációja sorrendben, példákkal, gyakoriságokkal és a döntetlen szabályaival.",
     h1: "Póker kézsorrend",
@@ -1374,8 +1374,8 @@ var PARTS = {
     seeP: "A PokerTH-ban az Esélyek fül megnevezi az éppen legjobb kezedet és a nyerési esélyedet, ahogy jönnek a lapok, így soha nem kell időzavarban fejben összeraknod, a showdownnál pedig a nyertes kombináció neve ott áll a közös lapok alatt. A Helyi / gyakorlás módban a gép ellenfelek elleni gyakorlás a leggyorsabb módja annak, hogy a sorrend az ujjaidba álljon."
   },
   hy: {
-    title: "Պոկերի կոմբինացիաներ — կոմբինացիաների կարգը Texas Hold’em-ում",
-    desc: "Texas Hold’em պոկերի տասը կոմբինացիաները՝ դասակարգված ռոյալ ֆլեշից մինչև բարձր խաղաթուղթ, օրինակներով, յուրաքանչյուրի հավանականությամբ և թե ինչպես են լուծվում հավասարությունները։",
+    title: "Պոկերի կոմբինացիաների կարգը Texas Hold’em-ում | PokerTH",
+    desc: "Texas Hold’em պոկերի տասը կոմբինացիաները՝ ռոյալ ֆլեշից մինչև բարձր խաղաթուղթ, օրինակներով, յուրաքանչյուրի հավանականությամբ և հավասարությունների լուծմամբ։",
     ldHeadline: "Պոկերի կոմբինացիաներ — Texas Hold’em",
     ldDesc: "Texas Hold’em-ի տասը կոմբինացիաները հերթականությամբ՝ օրինակներով, հաճախականություններով և հավասարության կանոններով։",
     h1: "Պոկերի կոմբինացիաներ",
@@ -1421,7 +1421,7 @@ var PARTS = {
 
   'pt-PT': {
     title: "Mãos do póquer — ordem das mãos no Texas Hold’em",
-    desc: "As dez mãos do póquer Texas Hold’em por ordem, do royal flush à carta alta, com exemplos, a probabilidade de cada uma e a forma como kickers e empates são resolvidos.",
+    desc: "As dez mãos do póquer Texas Hold’em por ordem, do royal flush à carta alta, com exemplos, a probabilidade de cada uma e como se resolvem kickers e empates.",
     ldHeadline: "Mãos do póquer — Texas Hold’em",
     ldDesc: "As dez mãos do Texas Hold’em por ordem, com exemplos, frequências e regras de desempate.",
     h1: "Mãos do póquer",
@@ -1524,8 +1524,8 @@ var PARTS = {
   },
 
   el: {
-    title: "Κατάταξη χεριών στο πόκερ — η σειρά των χεριών στο Texas Hold’em",
-    desc: "Και τα δέκα χέρια του πόκερ Texas Hold’em με τη σειρά, από το ρουαγιάλ φλος ως το υψηλό φύλλο, με παραδείγματα, την πιθανότητα κάθε χεριού και τον τρόπο που κρίνονται το κίκερ και οι ισοπαλίες.",
+    title: "Κατάταξη χεριών πόκερ στο Texas Hold’em — PokerTH",
+    desc: "Τα δέκα χέρια του Texas Hold’em με τη σειρά, από το ρουαγιάλ φλος ως το υψηλό φύλλο, με παραδείγματα, πιθανότητες και πώς κρίνονται κίκερ και ισοπαλίες.",
     ldHeadline: "Κατάταξη χεριών στο πόκερ — Texas Hold’em",
     ldDesc: "Τα δέκα χέρια του Texas Hold’em με τη σειρά, με παραδείγματα, συχνότητες και κανόνες ισοπαλίας.",
     h1: "Κατάταξη χεριών στο πόκερ",
@@ -1639,7 +1639,7 @@ var PARTS = {
   },
 
   hr: {
-    title: "Jačina kombinacija u pokeru — redoslijed ruku u Texas Hold’emu",
+    title: "Jačina kombinacija u Texas Hold’emu | PokerTH",
     desc: "Svih deset poker kombinacija u Texas Hold’emu, od royal flusha do visoke karte, s primjerima, vjerojatnošću svake i pravilima za kicker i izjednačene ruke.",
     ldHeadline: "Jačina kombinacija u pokeru — Texas Hold’em",
     ldDesc: "Deset kombinacija Texas Hold’ema redom, s primjerima, učestalošću i pravilima kod izjednačenja.",
@@ -1710,7 +1710,7 @@ var PARTS = {
 
   ca: {
     title: "Jugades de pòquer — ordre de les mans al Texas Hold’em",
-    desc: "Les deu jugades de pòquer del Texas Hold’em ordenades de l’escala reial a la carta alta, amb exemples, la probabilitat de cadascuna i com es resolen els kickers i els empats.",
+    desc: "Les deu jugades del Texas Hold’em de l’escala reial a la carta alta, amb exemples, la probabilitat de cadascuna i com es resolen els kickers i els empats.",
     ldHeadline: "Jugades de pòquer — Texas Hold’em",
     ldDesc: "Les deu jugades del Texas Hold’em per ordre, amb exemples, freqüències i regles de desempat.",
     h1: "Jugades de pòquer",
@@ -1745,7 +1745,7 @@ var PARTS = {
 
   gl: {
     title: "Xogadas de póker — orde das mans no Texas Hold’em",
-    desc: "As dez xogadas de póker do Texas Hold’em ordenadas da escaleira real á carta alta, con exemplos, a probabilidade de cada unha e como se resolven os kickers e os empates.",
+    desc: "As dez xogadas do Texas Hold’em ordenadas da escaleira real á carta alta, con exemplos, a probabilidade de cada unha e como se resolven os kickers e os empates.",
     ldHeadline: "Xogadas de póker — Texas Hold’em",
     ldDesc: "As dez xogadas do Texas Hold’em por orde, con exemplos, frecuencias e regras de desempate.",
     h1: "Xogadas de póker",
@@ -1814,8 +1814,8 @@ var PARTS = {
   },
 
   fil: {
-    title: "Ranggo ng mga kamay sa poker — pagkakasunod-sunod sa Texas Hold’em",
-    desc: "Lahat ng sampung kamay sa poker na Texas Hold’em mula royal flush hanggang high card, may mga halimbawa, ang tsansa ng bawat isa, at kung paano tinutukoy ang kicker at tabla.",
+    title: "Ranggo ng mga kamay sa Texas Hold’em — PokerTH",
+    desc: "Lahat ng sampung kamay sa Texas Hold’em mula royal flush hanggang high card, may halimbawa, tsansa ng bawat isa, at kung paano tinutukoy ang kicker at tabla.",
     ldHeadline: "Ranggo ng mga kamay sa poker — Texas Hold’em",
     ldDesc: "Ang sampung kamay ng Texas Hold’em ayon sa ranggo, may mga halimbawa, dalas, at panuntunan sa tabla.",
     h1: "Ranggo ng mga kamay sa poker",
@@ -1849,8 +1849,8 @@ var PARTS = {
   },
 
   gd: {
-    title: "Rangachadh làmhan puicear — òrdugh nan làmhan an Texas Hold’em",
-    desc: "Na deich làmhan puicear an Texas Hold’em bhon t-sreath rìoghail chun na cairt àrd, le eisimpleirean, an teans air gach tè agus mar a thèid an kicker agus co-ionannachd a rèiteach.",
+    title: "Rangachadh làmhan puicear an Texas Hold’em | PokerTH",
+    desc: "Na deich làmhan puicear an Texas Hold’em bhon t-sreath rìoghail chun na cairt àrd, le eisimpleirean, an teans air gach tè agus mar a rèitichear co-ionannachd.",
     ldHeadline: "Rangachadh làmhan puicear — Texas Hold’em",
     ldDesc: "Na deich làmhan an Texas Hold’em an òrdugh, le eisimpleirean, tricead agus riaghailtean co-ionannachd.",
     h1: "Rangachadh làmhan puicear",
@@ -1885,7 +1885,7 @@ var PARTS = {
 
   lt: {
     title: "Pokerio derinių eiliškumas — rankų tvarka Texas Hold’em",
-    desc: "Visi dešimt Texas Hold’em pokerio derinių nuo karališkosios eilės iki aukščiausios kortos, su pavyzdžiais, kiekvieno tikimybe ir taisyklėmis dėl kikerio bei lygiųjų.",
+    desc: "Visi dešimt Texas Hold’em pokerio derinių nuo karališkosios eilės iki aukščiausios kortos, su pavyzdžiais, tikimybėmis ir taisyklėmis dėl kikerio bei lygiųjų.",
     ldHeadline: "Pokerio derinių eiliškumas — Texas Hold’em",
     ldDesc: "Dešimt Texas Hold’em derinių iš eilės, su pavyzdžiais, dažniu ir lygiųjų taisyklėmis.",
     h1: "Pokerio derinių eiliškumas",
@@ -1955,7 +1955,7 @@ var PARTS = {
   },
   eu: {
     title: "Pokerreko eskuak — eskuen hurrenkera Texas Hold’em-en",
-    desc: "Texas Hold’em pokerreko hamar eskuak, eskailera errealetik karta altura ordenatuta, adibideekin, bakoitzaren probabilitatearekin eta berdinketak nola ebazten diren.",
+    desc: "Texas Hold’em pokerreko hamar eskuak, eskailera errealetik karta altura, adibideekin, bakoitzaren probabilitatearekin eta berdinketak nola ebazten diren.",
     ldHeadline: "Pokerreko eskuak — Texas Hold’em",
     ldDesc: "Texas Hold’em-en hamar eskuak ordenan, adibide, maiztasun eta berdinketa-arauekin.",
     h1: "Pokerreko eskuak",
@@ -1999,8 +1999,8 @@ var PARTS = {
     seeP: "PokerTH-n Aukerak fitxak zure uneko eskurik onena eta irabazteko aukera izendatzen ditu kartak agertu ahala, denbora-presiopean zuk berreraiki behar izan ez dezazun, eta showdown-ean konbinazio irabazlea karta komunen azpian izendatzen da. Lokala / entrenamendua moduan ordenagailuak kontrolatutako aurkarien aurka entrenatzea da hurrenkera hau ikasteko biderik azkarrena.",
   },
   lv: {
-    title: "Pokera kombināciju stiprums — kombināciju secība Teksasas Hold’emā",
-    desc: "Visas desmit Teksasas Hold’ema kombinācijas no karaliskās rindas līdz augstākajai kārtij, ar piemēriem, katras kombinācijas varbūtību un kikera un neizšķirtu noteikumiem.",
+    title: "Pokera kombināciju secība Teksasas Hold’emā | PokerTH",
+    desc: "Visas desmit Teksasas Hold’ema kombinācijas no karaliskās rindas līdz augstākajai kārtij, ar piemēriem, varbūtībām un kikera un neizšķirtu noteikumiem.",
     ldHeadline: "Pokera kombināciju stiprums — Teksasas Hold’em",
     ldDesc: "Desmit Teksasas Hold’ema kombinācijas pēc kārtas, ar piemēriem, to biežumu un neizšķirtu noteikumiem.",
     h1: "Pokera kombināciju stiprums",
@@ -2069,7 +2069,7 @@ var PARTS = {
   },
 
   bs: {
-    title: "Jačina kombinacija u pokeru — redoslijed ruku u Texas Hold’emu",
+    title: "Jačina kombinacija u pokeru — Texas Hold’em | PokerTH",
     desc: "Svih deset poker kombinacija u Texas Hold’emu, od royal flusha do visoke karte, s primjerima, vjerovatnoćom svake i pravilima za kicker i izjednačene ruke.",
     ldHeadline: "Jačina kombinacija u pokeru — Texas Hold’em",
     ldDesc: "Deset kombinacija Texas Hold’ema redom, s primjerima, učestalošću i pravilima kod izjednačenja.",
@@ -2104,7 +2104,7 @@ var PARTS = {
   },
 
   mk: {
-    title: "Јачина на покер комбинации — редослед на раце во Texas Hold’em",
+    title: "Јачина на покер комбинации во Texas Hold’em — PokerTH",
     desc: "Сите десет покер комбинации во Texas Hold’em, од ројал флаш до висока карта, со примери, веројатноста на секоја и правилата за кикер и изедначени раце.",
     ldHeadline: "Јачина на покер комбинации — Texas Hold’em",
     ldDesc: "Десет комбинации на Texas Hold’em по ред, со примери, зачестеност и правила за изедначување.",
@@ -2140,8 +2140,8 @@ var PARTS = {
 
 
   ms: {
-    title: "Kekuatan Kombinasi Poker — Susunan Tangan dalam Texas Hold’em",
-    desc: "Kesemua sepuluh kombinasi poker dalam Texas Hold’em, dari Royal Flush hingga kad tertinggi, dengan contoh, kebarangkalian setiap satu dan peraturan untuk kicker serta tangan seri.",
+    title: "Kekuatan Kombinasi Poker — Susunan Tangan Texas Hold’em",
+    desc: "Kesemua sepuluh kombinasi poker Texas Hold’em, dari Royal Flush hingga kad tertinggi, dengan contoh, kebarangkalian setiap satu dan peraturan kicker dan seri.",
     ldHeadline: "Kekuatan Kombinasi Poker — Texas Hold’em",
     ldDesc: "Sepuluh kombinasi Texas Hold’em mengikut susunan, dengan contoh, kekerapan dan peraturan untuk seri.",
     h1: "Kekuatan Kombinasi Poker",
@@ -2175,8 +2175,8 @@ var PARTS = {
   },
 
   sq: {
-    title: "Fuqia e Kombinimeve në Poker — Renditja e Duarve në Texas Hold’em",
-    desc: "Të gjitha dhjetë kombinimet e pokerit në Texas Hold’em, nga Royal Flush te letra më e lartë, me shembuj, probabilitetin e secilit dhe rregullat për kicker-in dhe duart e barabarta.",
+    title: "Kombinimet në Poker — Renditja në Texas Hold’em | PokerTH",
+    desc: "Të dhjetë kombinimet e Texas Hold’em, nga Royal Flush te letra më e lartë, me shembuj, probabilitetin e secilit dhe rregullat për kicker-in dhe barazimet.",
     ldHeadline: "Fuqia e Kombinimeve në Poker — Texas Hold’em",
     ldDesc: "Dhjetë kombinimet e Texas Hold’em sipas renditjes, me shembuj, shpeshtësinë dhe rregullat për barazitë.",
     h1: "Fuqia e Kombinimeve në Poker",
@@ -2277,7 +2277,7 @@ var PARTS = {
     seeP: "በ PokerTH ውስጥ የ“ዕድሎች” ትር የአሁኑን ምርጥ እጅዎን እና የማሸነፍ ዕድልዎን ካርታዎች ሲወጡ ይጠራል፣ በጊዜ ግፊት ውስጥ በአእምሮዎ መገንባት እንዳይኖርብዎ፣ እና በ showdown ላይ አሸናፊው ጥምረት ከጋራ ካርታዎቹ በታች ይጠራል። በአካባቢያዊ / ልምምድ ሁነታ ከኮምፒውተር ተቃዋሚዎች ጋር መለማመድ ይህን ደረጃ ልማድ ለማድረግ ፈጣኑ መንገድ ነው።"
   },
   az: {
-    title: "Poker kombinasiyaları — Texas Hold’em-də kombinasiyaların sırası",
+    title: "Poker kombinasiyaları — Texas Hold’em sıralaması | PokerTH",
     desc: "Texas Hold’em pokerinin royal flaşdan yüksək karta qədər sıralanmış on kombinasiyası, nümunələr, hər birinin ehtimalı və bərabərliklərin necə həll olunduğu ilə.",
     ldHeadline: "Poker kombinasiyaları — Texas Hold’em",
     ldDesc: "Texas Hold’em-in on kombinasiyası sıra ilə, nümunələr, tezliklər və bərabərlik qaydaları ilə.",
@@ -2356,7 +2356,7 @@ var PARTS = {
     seeP: "У PokerTH укладка «Шанцы» называе вашу лепшую камбінацыю і шанец выйграць па меры адкрыцця карт, каб вам ніколі не даводзілася складаць яе пад ціскам часу, а на шоўдаўне пераможная камбінацыя называецца пад агульнымі картамі. Трэніроўка ў рэжыме «Лакальна / трэніроўка» супраць камп'ютарных супернікаў застаецца самым хуткім спосабам засвоіць гэтае старшынство.",
   },
   km: {
-    title: "ចំណាត់ថ្នាក់ដៃបៀ — របៀបដែលដៃត្រូវបានចាត់ថ្នាក់ក្នុង Texas Hold’em",
+    title: "ចំណាត់ថ្នាក់ដៃបៀ Texas Hold’em | PokerTH",
     desc: "ដៃបៀទាំងដប់នៃ Texas Hold’em ពី Royal Flush ដល់សន្លឹកខ្ពស់ ជាមួយឧទាហរណ៍ ប្រូបាប៊ីលីតេនីមួយៗ និងច្បាប់ kicker និងដៃស្មើគ្នា។",
     ldHeadline: "ចំណាត់ថ្នាក់ដៃបៀ — Texas Hold’em",
     ldDesc: "ដៃទាំងដប់នៃ Texas Hold’em តាមលំដាប់ចំណាត់ថ្នាក់ ជាមួយឧទាហរណ៍ ភាពញឹកញាប់ និងច្បាប់ស្មើគ្នា។",
@@ -2390,7 +2390,7 @@ var PARTS = {
     seeP: "ក្នុង PokerTH ផ្ទាំង “ឱកាស” ប្រាប់ឈ្មោះការផ្គុំល្អបំផុតបច្ចុប្បន្នរបស់អ្នក និងឱកាសឈ្នះរបស់អ្នក នៅពេលបៀចេញ ដើម្បីកុំឱ្យអ្នកត្រូវសាងសង់វាក្នុងគំនិតក្រោមសម្ពាធពេលវេលា ហើយនៅ showdown ការផ្គុំដែលឈ្នះត្រូវបានដាក់ឈ្មោះនៅក្រោមបៀរួម។ ការហ្វឹកហាត់ក្នុងរបៀប “ក្នុងម៉ាស៊ីន / ហ្វឹកហាត់” ជាមួយគូប្រកួតកុំព្យូទ័រជាវិធីលឿនបំផុតដើម្បីធ្វើឱ្យចំណាត់ថ្នាក់នេះក្លាយជាទម្លាប់។"
   },
   te: {
-    title: 'పోకర్ హ్యాండ్ ర్యాంకింగ్‌లు — Texas Hold’em లో హ్యాండ్‌ల క్రమం',
+    title: "పోకర్ హ్యాండ్ ర్యాంకింగ్‌లు — Texas Hold’em | PokerTH",
     desc: 'Texas Hold’em పోకర్‌లోని పది హ్యాండ్‌లు Royal Flush నుండి High Card వరకు క్రమంలో, ఉదాహరణలతో, ప్రతిదాని సంభావ్యతతో, సమాన హ్యాండ్‌లను ఎలా తేలుస్తారో వివరణతో.',
     ldHeadline: 'పోకర్ హ్యాండ్ ర్యాంకింగ్‌లు — Texas Hold’em',
     ldDesc: 'Texas Hold’em లోని పది హ్యాండ్‌లు క్రమంలో, ఉదాహరణలు, తరచుదనం మరియు టై-బ్రేక్ నియమాలతో.',
@@ -2424,7 +2424,7 @@ var PARTS = {
     seeP: "PokerTH లో ఆడ్స్ ట్యాబ్ కార్డులు వచ్చే కొద్దీ మీ ప్రస్తుత అత్యుత్తమ హ్యాండ్ పేరును మరియు గెలిచే అవకాశాన్ని చూపిస్తుంది, కాబట్టి సమయ ఒత్తిడిలో మీరే లెక్కించుకోవాల్సిన అవసరం ఉండదు, షోడౌన్‌లో గెలిచిన కలయిక పేరు కమ్యూనిటీ కార్డుల కింద చూపబడుతుంది. లోకల్ / శిక్షణ మోడ్‌లో కంప్యూటర్ నియంత్రించే ప్రత్యర్థులతో సాధన చేయడమే ఈ క్రమాన్ని అలవాటు చేసుకోవడానికి అత్యంత వేగవంతమైన మార్గం."
   },
   tg: {
-    title: "Комбинатсияҳои покер — тартиби комбинатсияҳо дар Texas Hold’em",
+    title: "Комбинатсияҳои покер дар Texas Hold’em — PokerTH",
     desc: "Даҳ комбинатсияи покери Texas Hold’em бо тартиб аз роял-флеш то корти баланд, бо мисолҳо, эҳтимолияти ҳар кадом ва тарзи ҳалли баробарӣ.",
     ldHeadline: "Комбинатсияҳои покер — Texas Hold’em",
     ldDesc: "Даҳ комбинатсияи Texas Hold’em бо тартиб, бо мисолҳо, басомад ва қоидаҳои баробарӣ.",
@@ -2459,7 +2459,7 @@ var PARTS = {
   },
   ml: {
     title: 'പോക്കർ ഹാൻഡ് റാങ്കിംഗുകൾ — Texas Hold’em ലെ ഹാൻഡുകളുടെ ക്രമം',
-    desc: 'Texas Hold’em പോക്കറിലെ പത്ത് ഹാൻഡുകൾ Royal Flush മുതൽ High Card വരെ ക്രമത്തിൽ, ഉദാഹരണങ്ങളോടെ, ഓരോന്നിന്റെയും സാധ്യതയോടെ, തുല്യ ഹാൻഡുകൾ എങ്ങനെ തീർപ്പാക്കുന്നുവെന്ന വിശദീകരണത്തോടെ.',
+    desc: "Texas Hold’em പോക്കറിലെ പത്ത് ഹാൻഡുകൾ Royal Flush മുതൽ High Card വരെ ക്രമത്തിൽ, ഉദാഹരണങ്ങളും സാധ്യതകളും തുല്യ ഹാൻഡുകൾ തീർപ്പാക്കുന്ന രീതിയും സഹിതം.",
     ldHeadline: 'പോക്കർ ഹാൻഡ് റാങ്കിംഗുകൾ — Texas Hold’em',
     ldDesc: 'Texas Hold’em ലെ പത്ത് ഹാൻഡുകൾ ക്രമത്തിൽ, ഉദാഹരണങ്ങൾ, ആവൃത്തി, ടൈ-ബ്രേക്ക് നിയമങ്ങൾ എന്നിവയോടെ.',
     h1: 'പോക്കർ ഹാൻഡ് റാങ്കിംഗുകൾ',
@@ -2527,7 +2527,7 @@ var PARTS = {
   },
   mr: {
     title: 'पोकर हँड क्रमवारी — Texas Hold’em मधील हँड्सचा क्रम',
-    desc: 'Texas Hold’em पोकरमधील दहा हँड्स Royal Flush पासून High Card पर्यंत क्रमाने, उदाहरणांसह, प्रत्येकाच्या शक्यतेसह आणि समान हँड्स कसे सोडवले जातात याच्या स्पष्टीकरणासह.',
+    desc: "Texas Hold’em पोकरमधील दहा हँड्स Royal Flush पासून High Card पर्यंत क्रमाने, उदाहरणांसह, प्रत्येकाच्या शक्यतेसह आणि बरोबरी कशी सोडवली जाते याच्या स्पष्टीकरणासह.",
     ldHeadline: 'पोकर हँड क्रमवारी — Texas Hold’em',
     ldDesc: 'Texas Hold’em मधील दहा हँड्स क्रमाने, उदाहरणं, वारंवारता आणि टाय-ब्रेकच्या नियमांसह.',
     h1: 'पोकर हँड क्रमवारी',
@@ -2560,8 +2560,8 @@ var PARTS = {
     seeP: "PokerTH मध्ये कार्ड्स येतात तसं ऑड्स टॅब तुमचा सध्याचा सर्वोत्तम हँड आणि जिंकण्याची शक्यता सांगतो, त्यामुळे वेळेच्या दबावाखाली तुम्हाला ते स्वतः काढावं लागत नाही, आणि शोडाउनला जिंकणारं कॉम्बिनेशन कम्युनिटी कार्ड्सच्या खाली नमूद केलं जातं. लोकल / सराव मोडमध्ये संगणक नियंत्रित प्रतिस्पर्ध्यांविरुद्ध सराव करणं हा हा क्रम अंगवळणी पाडण्याचा सर्वात जलद मार्ग आहे."
   },
   kn: {
-    title: 'ಪೋಕರ್ ಹ್ಯಾಂಡ್ ಶ್ರೇಯಾಂಕಗಳು — Texas Hold’em ನಲ್ಲಿ ಹ್ಯಾಂಡ್‌ಗಳ ಕ್ರಮ',
-    desc: 'Texas Hold’em ಪೋಕರ್‌ನ ಹತ್ತು ಹ್ಯಾಂಡ್‌ಗಳು Royal Flush ನಿಂದ High Card ವರೆಗೆ ಕ್ರಮವಾಗಿ, ಉದಾಹರಣೆಗಳೊಂದಿಗೆ, ಪ್ರತಿಯೊಂದರ ಸಂಭವನೀಯತೆಯೊಂದಿಗೆ ಮತ್ತು ಸಮಾನ ಹ್ಯಾಂಡ್‌ಗಳನ್ನು ಹೇಗೆ ಬಗೆಹರಿಸಲಾಗುತ್ತದೆ ಎಂಬ ವಿವರಣೆಯೊಂದಿಗೆ.',
+    title: "Texas Hold’em ಪೋಕರ್ ಹ್ಯಾಂಡ್ ಶ್ರೇಯಾಂಕಗಳು | PokerTH",
+    desc: "Texas Hold’em ಪೋಕರ್‌ನ ಹತ್ತು ಹ್ಯಾಂಡ್‌ಗಳು Royal Flush ನಿಂದ High Card ವರೆಗೆ, ಉದಾಹರಣೆಗಳು, ಪ್ರತಿಯೊಂದರ ಸಂಭವನೀಯತೆ ಮತ್ತು ಟೈಗಳನ್ನು ಬಗೆಹರಿಸುವ ವಿಧಾನದೊಂದಿಗೆ.",
     ldHeadline: 'ಪೋಕರ್ ಹ್ಯಾಂಡ್ ಶ್ರೇಯಾಂಕಗಳು — Texas Hold’em',
     ldDesc: 'Texas Hold’em ನ ಹತ್ತು ಹ್ಯಾಂಡ್‌ಗಳು ಕ್ರಮವಾಗಿ, ಉದಾಹರಣೆಗಳು, ಆವರ್ತನಗಳು ಮತ್ತು ಟೈ-ಬ್ರೇಕ್ ನಿಯಮಗಳೊಂದಿಗೆ.',
     h1: 'ಪೋಕರ್ ಹ್ಯಾಂಡ್ ಶ್ರೇಯಾಂಕಗಳು',
@@ -2674,7 +2674,7 @@ var PARTS = {
   },
   is: {
     title: 'Röðun pókerhanda — röð handa í Texas Hold’em',
-    desc: 'Pókerhendurnar tíu í Texas Hold’em í röð, frá konunglegri litaröð niður í hátt spil, með dæmum, líkum á hverri hönd og skýringu á því hvernig skorið er úr um jafnar hendur.',
+    desc: "Pókerhendurnar tíu í Texas Hold’em í röð, frá konunglegri litaröð niður í hátt spil, með dæmum, líkum á hverri hönd og hvernig skorið er úr um jafnar hendur.",
     ldHeadline: 'Röðun pókerhanda — Texas Hold’em',
     ldDesc: 'Hendurnar tíu í Texas Hold’em í röð, með dæmum, tíðni og reglum um jafnar hendur.',
     h1: 'Röðun pókerhanda',
@@ -2709,8 +2709,8 @@ var PARTS = {
 
    sw: {
 
-    title: "Mpangilio wa mikono ya poka — daraja la mikono katika Texas Hold’em",
-    desc: "Mikono yote kumi ya poka ya Texas Hold’em kuanzia royal flush hadi karata ya juu, ikiwa na mifano, uwezekano wa kila mmoja, na jinsi kicker na sare zinavyoamuliwa.",
+    title: "Mikono ya poka — daraja la mikono katika Texas Hold’em",
+    desc: "Mikono kumi ya poka ya Texas Hold’em kuanzia royal flush hadi karata ya juu, pamoja na mifano, uwezekano wa kila mmoja na jinsi kicker na sare zinavyoamuliwa.",
     ldHeadline: "Mpangilio wa mikono ya poka — Texas Hold’em",
     ldDesc: "Mikono kumi ya Texas Hold’em kwa mpangilio, ikiwa na mifano, mara ngapi hutokea, na kanuni za sare.",
     h1: "Mpangilio wa mikono ya poka",
@@ -2744,8 +2744,8 @@ var PARTS = {
   },
 
   uz: {
-    title: "Poker kombinatsiyalari reytingi — Texas Hold’em’da qoʻllar tartibi",
-    desc: "Texas Hold’em’ning oʻnta poker kombinatsiyasi royal-fleshdan katta kartagacha tartib bilan: misollar, har birining chiqish ehtimoli hamda kiker va teng qoʻllar qanday hal qilinishi.",
+    title: "Poker kombinatsiyalari — Texas Hold’em tartibi | PokerTH",
+    desc: "Texas Hold’em’ning oʻnta poker kombinatsiyasi royal-fleshdan katta kartagacha: misollar, har birining ehtimoli hamda kiker va teng qoʻllar qanday hal qilinishi.",
     ldHeadline: "Poker kombinatsiyalari reytingi — Texas Hold’em",
     ldDesc: "Texas Hold’em’ning oʻnta kombinatsiyasi tartib bilan: misollar, uchrash chastotasi va teng qoʻllar qoidalari.",
     h1: "Poker kombinatsiyalari reytingi",
@@ -2779,7 +2779,7 @@ var PARTS = {
   },
   my: {
     title: "ပိုကာ ဖဲလက် အဆင့်များ — Texas Hold’em ဖဲလက်များ၏ အစဉ်",
-    desc: "Texas Hold’em ပိုကာ ဖဲလက် ဆယ်မျိုးလုံးကို Royal Flush မှ High Card အထိ အစဉ်လိုက်၊ ဥပမာများ၊ တစ်ခုစီ ရနိုင်ခြေ၊ kicker နှင့် သရေကျမှုများကို ဖြေရှင်းပုံတို့နှင့်အတူ။",
+    desc: "Texas Hold’em ဖဲလက် ဆယ်မျိုးကို Royal Flush မှ High Card အထိ အစဉ်လိုက်၊ ဥပမာ၊ ရနိုင်ခြေ၊ kicker နှင့် သရေကျမှု ဖြေရှင်းပုံတို့နှင့်အတူ။",
     ldHeadline: "ပိုကာ ဖဲလက် အဆင့်များ — Texas Hold’em",
     ldDesc: "Texas Hold’em ဖဲလက် ဆယ်မျိုးကို အစဉ်လိုက်၊ ဥပမာများ၊ ဖြစ်ပေါ်နှုန်းနှင့် သရေဖြေရှင်းရေး စည်းမျဉ်းများနှင့်အတူ။",
     h1: "ပိုကာ ဖဲလက် အဆင့်များ",
@@ -2858,7 +2858,7 @@ var PARTS = {
   },
   kk: {
     title: "Покер комбинациялары — Texas Hold’em-дегі қолдардың реті",
-    desc: "Texas Hold’em покерінің он комбинациясы роял-флештен үлкен картаға дейін ретімен, мысалдарымен, әрқайсысының ықтималдығымен және тең жағдайлардың қалай шешілетінімен берілген.",
+    desc: "Texas Hold’em покерінің он комбинациясы роял-флештен үлкен картаға дейін: мысалдар, әрқайсысының ықтималдығы және тең жағдайлардың қалай шешілетіні.",
     ldHeadline: "Покер комбинациялары — Texas Hold’em",
     ldDesc: "Texas Hold’em-нің он комбинациясы ретімен, мысалдарымен, жиілігімен және теңдікті шешу ережелерімен.",
     h1: "Покер комбинациялары",
@@ -2891,7 +2891,7 @@ var PARTS = {
     seeP: "PokerTH-те «Ықтималдық» қойындысы карталар ашылған сайын ең үздік комбинацияңызды және ұту мүмкіндігіңізді атап көрсетеді, сондықтан оны уақыт қысымында өзіңіз құрастырудың қажеті жоқ, ал шоудаунда ұтқан комбинация ортақ карталардың астында аталады. «Жергілікті / жаттығу» режимінде компьютер басқаратын қарсыластарға қарсы жаттығу — бұл ретті жаттап алудың ең жылдам жолы.",
   },
   ky: {
-    title: "Покер комбинациялары — Texas Hold’em'деги комбинациялардын тартиби",
+    title: "Покер комбинациялары — Texas Hold’em'деги тартиби",
     desc: "Texas Hold’em'дин он покер комбинациясы роял-флештен жогорку картага чейинки тартипте, мисалдар, ар биринин ыктымалдыгы жана теңдик кантип чечилери менен.",
     ldHeadline: "Покер комбинациялары — Texas Hold’em",
     ldDesc: "Texas Hold’em'дин он комбинациясы тартиби менен, мисалдар, жыштык жана теңдик эрежелери менен.",
@@ -2971,7 +2971,7 @@ var PARTS = {
   },
   ta: {
     title: "போக்கர் சீட்டுக் கோர்வைகள் — டெக்சாஸ் ஹோல்டெம் வரிசை",
-    desc: "டெக்சாஸ் ஹோல்டெம் போக்கரின் பத்து கோர்வைகளும் அரச வரிசை முதல் உயர் சீட்டு வரை, எடுத்துக்காட்டுகள், ஒவ்வொன்றும் வர வாய்ப்பு, கிக்கர் மற்றும் சமநிலை தீர்வு விதிகளுடன்.",
+    desc: "டெக்சாஸ் ஹோல்டெம் போக்கரின் பத்து கோர்வைகளும் அரச வரிசை முதல் உயர் சீட்டு வரை, எடுத்துக்காட்டுகள், வாய்ப்புகள், கிக்கர் மற்றும் சமநிலை தீர்வு விதிகளுடன்.",
     ldHeadline: "போக்கர் சீட்டுக் கோர்வைகள் — டெக்சாஸ் ஹோல்டெம்",
     ldDesc: "டெக்சாஸ் ஹோல்டெம்மின் பத்து கோர்வைகள் வரிசைப்படி, எடுத்துக்காட்டுகள், அடிக்கடி வரும் விகிதம், சமநிலை விதிகளுடன்.",
     h1: "போக்கர் சீட்டுக் கோர்வைகள்",
