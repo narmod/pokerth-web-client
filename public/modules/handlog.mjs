@@ -443,17 +443,34 @@ const DB_VERSION = 1;
 function _openDb() {
   return new Promise((resolve, reject) => {
     if (typeof indexedDB === 'undefined') { reject(new Error('no-indexeddb')); return; }
-    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    let req;
+    try { req = indexedDB.open(DB_NAME, DB_VERSION); } catch (e) { reject(e); return; }
     req.onupgradeneeded = (e) => {
-      const db = e.target.result;
-      if (!db.objectStoreNames.contains('meta'))    db.createObjectStore('meta', { keyPath: 'k' });
-      if (!db.objectStoreNames.contains('games'))   db.createObjectStore('games', { keyPath: 'id' });   // id = `${sessionId}:${uniqueGameID}`
-      if (!db.objectStoreNames.contains('players')) db.createObjectStore('players', { keyPath: 'id' }); // id = `${sessionId}:${ug}:${seat}`
-      if (!db.objectStoreNames.contains('hands'))   db.createObjectStore('hands', { keyPath: 'id' });   // id = `${sessionId}:${ug}:${handID}`
-      if (!db.objectStoreNames.contains('actions')) db.createObjectStore('actions', { keyPath: 'id' }); // id = `${sessionId}:${actionID}`
+      // Safari iOS (navigation privée, stockage purgé par ITP, WebView) peut
+      // livrer un upgradeneeded dont e.target.result est undefined : on lit
+      // req.result, et sans base exploitable on avorte l'upgrade proprement
+      // (→ onerror → reject → HandStore._dead) au lieu de jeter hors promesse.
+      let db;
+      try { db = req.result || (e && e.target && e.target.result); } catch (_e) { db = null; }
+      try {
+        if (!db || !db.objectStoreNames) throw new Error('no-db-in-upgrade');
+        if (!db.objectStoreNames.contains('meta'))    db.createObjectStore('meta', { keyPath: 'k' });
+        if (!db.objectStoreNames.contains('games'))   db.createObjectStore('games', { keyPath: 'id' });   // id = `${sessionId}:${uniqueGameID}`
+        if (!db.objectStoreNames.contains('players')) db.createObjectStore('players', { keyPath: 'id' }); // id = `${sessionId}:${ug}:${seat}`
+        if (!db.objectStoreNames.contains('hands'))   db.createObjectStore('hands', { keyPath: 'id' });   // id = `${sessionId}:${ug}:${handID}`
+        if (!db.objectStoreNames.contains('actions')) db.createObjectStore('actions', { keyPath: 'id' }); // id = `${sessionId}:${actionID}`
+      } catch (err) {
+        try { if (req.transaction) req.transaction.abort(); } catch (_e) {}
+        reject(err);
+      }
     };
-    req.onsuccess = () => resolve(req.result);
+    req.onsuccess = () => {
+      const db = req.result;
+      if (!db) { reject(new Error('no-db')); return; }
+      resolve(db);
+    };
     req.onerror = () => reject(req.error);
+    req.onblocked = () => {};
   });
 }
 

@@ -112,6 +112,7 @@ const UC = ORIGIN + '/u.c.b.r.o.w.s.e.r/ucbrowser_script.js?UCFontSizeWebScriptD
   ['a content script using wrappedJSObject', { message: "TypeError: undefined is not an object (evaluating 'self.wrappedJSObject[sentinel]')", filename: ORIGIN + '/', error: { stack: 'global code@' + ORIGIN + '/:54:11' } }],
   ['an iOS wallet browser emitting on window.ethereum', { message: "TypeError: undefined is not an object (evaluating 'window.ethereum.emit')", filename: ORIGIN + '/', error: { stack: 'global code@' + ORIGIN + '/:1:16' } }],
   ['an iOS wallet browser writing window.ethereum', { message: "TypeError: undefined is not an object (evaluating 'window.ethereum.selectedAddress = undefined')", filename: ORIGIN + '/', error: { stack: 'global code@' + ORIGIN + '/:1:16' } }],
+  ['the Facebook/Instagram in-app browser logger', { message: 'Uncaught Error: Error invoking postMessage: Java object is gone', filename: 'iabjs://navigation_performance_logger_android', error: { stack: 'Error: Error invoking postMessage: Java object is gone\n    at sendDataToNative (iabjs://navigation_performance_logger_android:1:11722)' } }],
 ].forEach(([label, ev]) => {
   q().length = 0;
   listeners.error(ev);

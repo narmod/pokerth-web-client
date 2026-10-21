@@ -88,10 +88,15 @@
        extensions Safari iOS qui la supposent) — jamais utilisée par le client.
      - any error naming window.ethereum: iOS wallet browsers inject an inline
        script that writes/emits on it before defining it — the client never
-       touches ethereum. */
+       touches ethereum.
+     - iabjs:// frames: scripts the Facebook/Instagram/Messenger in-app browser
+       injects (navigation_performance_logger_android…); their postMessage to
+       the native side fails with "Java object is gone" once the WebView tears
+       down — never client code. */
   function isExtNoise(msg, src, stack) {
     var s = String(msg || '') + '\n' + String(src || '') + '\n' + String(stack || '');
     if (s.indexOf('-extension://') !== -1) return true;
+    if (s.indexOf('iabjs://') !== -1) return true;
     if (String(msg || '') === 'Script error.') return true;
     if (s.indexOf('Cannot redefine property: ethereum') !== -1) return true;
     if (/window\.ethereum\b/.test(String(msg || ''))) return true;
