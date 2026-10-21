@@ -1516,7 +1516,7 @@
       <section class="ovmodes" id="lmTiles" aria-label="Connected right now, by entry mode"><div class="empty">Loading…</div></section>
       <div class="card">
         <div class="boardhead"><h2>Connections by country</h2><span id="lmNote" class="headnote"></span></div>
-        <p class="muted">Where the connections open right now come from. A country takes the colour of its main entry mode, deeper with more connections; a tile above narrows the map to its mode. The country comes from each browser’s time zone.</p>
+        <p class="muted">Where the connections open right now come from. A country takes the colour of its main entry mode, deeper with more connections; a tile above narrows the map to its mode. The country comes from each browser’s time zone. Local time along the top.</p>
         <div class="seg" id="lmViews" role="group" aria-label="Region" style="flex-wrap:wrap"></div>
         <div class="lmwrap"><div id="lmMap" class="geomap lmmap"><div class="empty">Loading…</div></div><div id="lmList" class="lmlist"></div></div>
         <div id="lmLegend" class="geolegend"></div>
@@ -7768,7 +7768,7 @@
       if(!c) return '<path d="'+M.c[cc]+'" class="nd"><title>'+_annEsc(_geoName(cc))+'</title></path>';
       return '<path d="'+M.c[cc]+'" style="fill:'+main(c)[2]+';fill-opacity:'+(0.35+0.65*Math.log(1+c.n)/lmax).toFixed(3)+'"><title>'+_annEsc(_geoName(cc))+' — '+_annEsc(split(c))+'</title></path>';
     });
-    box.innerHTML='<svg viewBox="'+vb.join(' ')+'" role="img" aria-label="Map of the connections open right now, by country and entry mode">'+(_geoNight&&M.proj?_geoSphere(M):'')+paths.join('')+_geoNightSvg(M)+'</svg>';
+    box.innerHTML=_geoHours(M,vb,_lmView)+'<svg viewBox="'+vb.join(' ')+'" role="img" aria-label="Map of the connections open right now, by country and entry mode">'+(_geoNight&&M.proj?_geoSphere(M):'')+paths.join('')+_geoNightSvg(M)+'</svg>';
     var ccs=Object.keys(C).sort(function(a,b){ return C[b].n-C[a].n || (a<b?-1:1); });
     if(ls) ls.innerHTML=ccs.length ? ccs.slice(0,15).map(function(cc){
         var c=C[cc], stk=SE_MODES.map(function(m){ var v=c.m[m[0]]||0; return v?'<i style="display:block;width:'+(100*v/c.n).toFixed(1)+'%;background:'+m[2]+'"></i>':''; }).join('');
@@ -8356,13 +8356,13 @@
     var sp=_neProj(M,s.lon,s.dec);
     return out+'<circle class="geosun" cx="'+sp[0].toFixed(1)+'" cy="'+sp[1].toFixed(1)+'" r="6"><title>Sun overhead</title></circle>';
   }
-  // Local time along the map: one mark per time zone band (every 2 h on the
+  // Local time along the map (World and Live › Map): one mark per time zone band (every 2 h on the
   // world, every hour on a region), placed at its central meridian in the
   // map's own projection, so it lines up with the night above. Mean time of
   // the band, not the legal time of a country (that one is on the country card).
-  function _geoHours(M,vb){
+  function _geoHours(M,vb,vw){
     if(!M || !M.proj) return '';
-    var now=Date.now(), step=_geoView==='world'?2:1, out='';
+    var now=Date.now(), step=(vw||_geoView)==='world'?2:1, out='';
     for(var o=-12;o<=14;o+=step){
       var x=_neProj(M,Math.max(-180,Math.min(180,o*15)),0)[0], pc=(x-vb[0])/vb[2]*100;
       if(pc<3 || pc>97) continue;

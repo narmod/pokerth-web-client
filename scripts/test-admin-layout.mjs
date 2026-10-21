@@ -542,7 +542,8 @@ ok(/id="geoLayers" role="group" aria-label="What the map shows"/.test(admin), 'p
 ok(/box\.innerHTML=_geoHours\(M,vb\)\+'<svg/.test(admin), 'the local-time band sits above the map');
 const hrs = body(admin, '_geoHours');
 ok(/_neProj\(M,/.test(hrs), 'placed in the map projection, so it lines up with the night');
-ok(/var now=Date\.now\(\), step=_geoView==='world'\?2:1/.test(hrs), 'every 2 h on the world, every hour on a region');
+ok(/var now=Date\.now\(\), step=\(vw\|\|_geoView\)==='world'\?2:1/.test(hrs), 'every 2 h on the world, every hour on a region');
+ok(/box\.innerHTML=_geoHours\(M,vb,_lmView\)\+'<svg/.test(body(admin, '_lmRender')), 'Live › Map carries the same band, following its own region');
 ok(/h>=18&&h<=23\)\?' eve'/.test(hrs), 'the evening stands out');
 ok(/if\(m && m\.offsetParent\) _geoRedraw\(\);\s*\},60000\)/.test(admin), 'and it follows the clock, minute by minute, while on screen');
 ok(/function _geoRedraw\(\)\{ if\(_geoData && _geoMap && _geoMap\.c\) renderGeo\(\); \}/.test(admin), 'a redraw waits for both the figures and the outline');
