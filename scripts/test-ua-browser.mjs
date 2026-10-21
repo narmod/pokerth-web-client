@@ -40,8 +40,16 @@ const pOs = tbl(proxy, /^const UA_OS = \[([\s\S]*?)^\];$/m), pBr = tbl(proxy, /^
 const aOs = tbl(html, /^ *var SE_UA_OS = \[([\s\S]*?)^ *\];$/m), aBr = tbl(html, /^ *var SE_UA_BROWSER = \[([\s\S]*?)^ *\];$/m);
 ok(!!pOs && pOs === aOs, 'admin SE_UA_OS is the same table as proxy UA_OS');
 ok(!!pBr && pBr === aBr, 'admin SE_UA_BROWSER is the same table as proxy UA_BROWSER');
+// …and the version reader is server/ua-hints.js's, word for word (web.258).
+const hints = fs.readFileSync(path.join(root, 'server', 'ua-hints.js'), 'utf8');
+const hBlk = hints.slice(hints.indexOf('// Browser label → where'), hints.indexOf('module.exports')).replace(/\s+/g, '');
+const aStart = html.indexOf('var _seUaVer = (function(){');
+const aBlk = html.slice(html.indexOf('// Browser label → where', aStart), html.indexOf('return versions;', aStart)).replace(/\s+/g, '');
+ok(aStart > 0 && hBlk.length > 200 && hBlk === aBlk, 'admin _seUaVer is a copy of server/ua-hints.js BR_VER / iosMajor / versions');
 if (fails) { console.log('\nFAIL ' + fails); process.exit(1); }
 
+// The version reader the admin copies (web.258).
+const ver = (await import('node:module')).createRequire(import.meta.url)(path.join(root, 'server', 'ua-hints.js')).versions;
 const srv = new Function(src.replace(/^const /mg, 'var ') +
   '\nreturn { os: (ua) => _uaPick(UA_OS, ua), br: (ua) => _uaPick(UA_BROWSER, ua) };')();
 const adm = new Function(bot[0] + '\n' + fIs[0] + '\n' + html.slice(iDev, iDevEnd + 4) + '\nreturn _seDev;')();
@@ -49,27 +57,27 @@ const adm = new Function(bot[0] + '\n' + fIs[0] + '\n' + html.slice(iDev, iDevEn
 // [label, UA, proxy OS, proxy browser, admin label]
 const CASES = [
   ['Edge Windows', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0',
-    'Windows', 'Edge', 'Windows · Edge'],
+    'Windows', 'Edge', 'Windows · Edge 141'],
   ['Edge macOS', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0',
-    'macOS', 'Edge', 'Mac · Edge'],
+    'macOS', 'Edge', 'Mac · Edge 141'],
   ['Edge Android', 'Mozilla/5.0 (Linux; Android 14; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36 EdgA/141.0.0.0',
-    'Android', 'Edge', 'Android · Edge'],
+    'Android', 'Edge', 'Android 14 · Edge 141'],
   ['Edge iPhone', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 EdgiOS/141.0.3537.70 Mobile/15E148 Safari/605.1.15',
-    'iPhone', 'Edge', 'iPhone · Edge'],
+    'iPhone', 'Edge', 'iPhone iOS 18 · Edge 141'],
   ['Edge iPad', 'Mozilla/5.0 (iPad; CPU OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 EdgiOS/141.0.3537.70 Mobile/15E148 Safari/605.1.15',
-    'iPad', 'Edge', 'iPad · Edge'],
+    'iPad', 'Edge', 'iPad iOS 18 · Edge 141'],
   ['Edge legacy (EdgeHTML)', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19045',
-    'Windows', 'Edge', 'Windows · Edge'],
+    'Windows', 'Edge', 'Windows · Edge 18'],
   ['Chrome Windows', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36',
-    'Windows', 'Chrome', 'Windows · Chrome'],
+    'Windows', 'Chrome', 'Windows · Chrome 141'],
   ['Chrome Android', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36',
-    'Android', 'Chrome', 'Android · Chrome'],
+    'Android', 'Chrome', 'Android · Chrome 141'],
   ['Safari iPhone', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Mobile/15E148 Safari/604.1',
-    'iPhone', 'Safari', 'iPhone · Safari'],
+    'iPhone', 'Safari', 'iPhone iOS 18 · Safari 18'],
   ['Opera Windows', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 OPR/124.0.0.0',
-    'Windows', 'Opera', 'Windows · Opera'],
+    'Windows', 'Opera', 'Windows · Opera 124'],
   ['Firefox Linux', 'Mozilla/5.0 (X11; Linux x86_64; rv:143.0) Gecko/20100101 Firefox/143.0',
-    'Linux', 'Firefox', 'Linux · Firefox'],
+    'Linux', 'Firefox', 'Linux · Firefox 143'],
   ['Samsung Internet', 'Mozilla/5.0 (Linux; Android 14; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/28.0 Chrome/130.0.0.0 Mobile Safari/537.36',
     'Android', 'Samsung', null],
   // -- web.255 --------------------------------------------------------------
@@ -130,7 +138,9 @@ const CASES = [
 ];
 for (const [label, ua, os, br, dev] of CASES) {
   ok(srv.os(ua) === os && srv.br(ua) === br, `visitors: ${label} → ${srv.os(ua)} / ${srv.br(ua)}`);
-  const want = dev || [os === 'macOS' ? 'Mac' : os, br].filter((x) => x && x !== 'other').join(' · ');
+  const v = ver(ua, os, br);
+  const osL = v.osv ? ((os === 'iPhone' || os === 'iPad') ? os + ' ' + v.osv : v.osv) : (os === 'macOS' ? 'Mac' : os);
+  const want = dev || [osL, v.brv || br].filter((x) => x && x !== 'other').join(' · ');
   ok(adm(ua) === want, `admin label: ${label} → ${adm(ua)}`);
 }
 ok(srv.br('') === 'other' && adm('') === '', 'empty UA: « other » / no label');

@@ -60,7 +60,7 @@ const PLAYERS = {
 for (const [k, ua] of Object.entries(BOTS)) ok(api.isBot(ua) && /^Bot/.test(api.dev(ua)), 'crawler tagged: ' + k + ' \u2192 ' + api.dev(ua));
 for (const [k, ua] of Object.entries(PLAYERS)) ok(!api.isBot(ua) && !/Bot/.test(api.dev(ua)), 'player not tagged: ' + k + (ua ? ' \u2192 ' + api.dev(ua) : ''));
 ok(api.dev(BOTS['Googlebot desktop']) === 'Bot (Googlebot)', 'Googlebot desktop reads « Bot (Googlebot) »');
-ok(api.dev(PLAYERS['Android CUBOT']) === 'Android \u00b7 Chrome', 'CUBOT phone reads « Android \u00b7 Chrome »');
+ok(/^Android( \d+)? \u00b7 Chrome \d+$/.test(api.dev(PLAYERS['Android CUBOT'])), 'CUBOT phone reads « Android · Chrome N » (web.258: versions) \u2192 ' + api.dev(PLAYERS['Android CUBOT']));
 
 console.log(fails ? '\nFAIL ' + fails : '\nOK');
 process.exit(fails ? 1 : 0);

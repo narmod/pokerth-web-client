@@ -234,6 +234,11 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Errors and Sessions show versions** (`web.258`) — the device label now reads « iPhone iOS 17 · Safari 17 »,
+  « Android 14 · Firefox 143 », « Windows · Chrome 141 »: same reading as Visitors › System / Browser version, from the
+  raw User-Agent the error already keeps (nothing new collected). `_seUaVer` in `admin.html` is a copy of
+  `server/ua-hints.js` (`BR_VER`, `iosMajor`, `versions`) that `scripts/test-ua-browser.mjs` keeps word for word.
+  The text filter of Client errors matches versions too.
 - **Errors and Sessions name a device like Visitors** (`web.256`) — `_seDev` in `admin.html` had its own shorter
   detection (no in-app, WebView, Yandex, HarmonyOS, Smart TV…; the installed iPhone app had no browser). It now reads
   `SE_UA_OS` / `SE_UA_BROWSER`, copies of the `proxy.js` tables that `scripts/test-ua-browser.mjs` keeps identical

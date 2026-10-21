@@ -7697,6 +7697,56 @@
     [/CriOS/, 'Chrome'], [/Chrome\//, 'Chrome'], [/Safari\//, 'Safari'], [/(?:iPhone|iPad|iPod).*AppleWebKit\//, 'Safari'],
   ];
   function _seUaPick(t,ua){ for(var i=0;i<t.length;i++) if(t[i][0].test(ua)) return t[i][1]; return ''; }
+  // Major versions (« iOS 17 », « Safari 17 », « Chrome 141 ») : copie mot pour
+  // mot de server/ua-hints.js (BR_VER, iosMajor, versions), gardee identique
+  // par scripts/test-ua-browser.mjs — meme lecture que Visitors (web.258).
+  var _seUaVer = (function(){
+    // Browser label → where its own major version sits in the UA. A label not
+    // listed (In-app, Silk, Huawei…) gets no version: its number says little.
+    const BR_VER = {
+      Chrome: /(?:Chrome|CriOS)\/(\d{1,4})\./,
+      Edge: /(?:Edg|EdgA|EdgiOS|Edge)\/(\d{1,4})\./,
+      Firefox: /(?:Firefox|FxiOS)\/(\d{1,4})\./,
+      Opera: /(?:OPR|OPT|OPiOS)\/(\d{1,4})\./,
+      Samsung: /SamsungBrowser\/(\d{1,4})\./,
+      WebView: /Chrome\/(\d{1,4})\./,
+      Brave: /Chrome\/(\d{1,4})\./,
+      Yandex: /YaBrowser\/(\d{1,4})\./,
+    };
+
+    function iosMajor(ua) {
+      const m = ua.match(/(?:iPhone|iPad|iPod)[^)]*? OS (\d{1,2})_/);
+      if (!m) return 0;
+      const v = ua.match(/Version\/(\d{1,2})\./);
+      return Math.max(+m[1], v ? +v[1] : 0);
+    }
+
+    // { osv, brv }: strings, or null when the UA gives nothing trustworthy.
+    function versions(ua, os, br) {
+      ua = String(ua || '');
+      let osv = null, brv = null;
+      if (os === 'iPhone' || os === 'iPad') {
+        const n = iosMajor(ua);
+        if (n) osv = 'iOS ' + n;
+      } else if (os === 'Android') {
+        // « Android 10; K » is Chromium's frozen value, not the device's.
+        const m = ua.match(/Android (\d{1,2})(?:[.;)]|\s)/);
+        if (m && !/Android 10; K\)/.test(ua)) osv = 'Android ' + m[1];
+      }
+      if (br === 'Safari') {
+        // WebKit is the system's on iOS: an installed app or a Safari with no
+        // Version/ token runs the iOS major. On macOS, Version/ alone.
+        const v = ua.match(/Version\/(\d{1,2})\./);
+        const n = v ? +v[1] : (os === 'iPhone' || os === 'iPad') ? iosMajor(ua) : 0;
+        if (n) brv = 'Safari ' + n;
+      } else if (BR_VER[br]) {
+        const m = ua.match(BR_VER[br]);
+        if (m) brv = br + ' ' + m[1];
+      }
+      return { osv: osv, brv: brv };
+    }
+    return versions;
+  })();
   function _seDev(ua){
     ua=String(ua||''); if(!ua) return '';
     if(_seIsBot(ua)){
@@ -7704,8 +7754,11 @@
       return 'Bot'+(bn?(' ('+(bn[1]||bn[0])+')'):'');
     }
     var os=_seUaPick(SE_UA_OS,ua), br=_seUaPick(SE_UA_BROWSER,ua);
-    if(os==='macOS') os='Mac';
-    return [os,br].filter(Boolean).join(' \u00b7 ');
+    // « iPhone iOS 17 · Safari 17 » : le systeme porte sa version quand l'UA
+    // la dit vraiment (iOS, Android hors Chrome), le navigateur la sienne.
+    var v=_seUaVer(ua,os||'other',br||'other');
+    var osL=v.osv?(os==='iPhone'||os==='iPad'?os+' '+v.osv:v.osv):(os==='macOS'?'Mac':os);
+    return [osL, v.brv||br].filter(Boolean).join(' \u00b7 ');
   }
   function _seMode(m){ return m==='pthnet'?'Internet' : m==='lan'?'LAN' : m==='offline'?'Training' : (m||'\u2014'); }
   function _seKickBtn(id,label){
