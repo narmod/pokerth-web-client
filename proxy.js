@@ -1967,7 +1967,20 @@ var _SEO_LOZENGE = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
 var _SEO_NONLATIN = ['ar', 'fa', 'ur', 'he', 'ru', 'uk', 'be', 'bg', 'mk', 'sr', 'kk', 'ky', 'mn', 'tg', 'el', 'hy', 'ka', 'am',
   'hi', 'mr', 'ne', 'bn', 'pa', 'gu', 'ta', 'te', 'kn', 'ml', 'si', 'th', 'km', 'my', 'zh', 'ja', 'ko'];
 var _SEO_PAGE_CSS =
-  "@font-face{font-family:'Inter';src:url(/fonts/InterVariable.woff2) format('woff2');font-weight:100 900;font-display:swap}" +
+  // Inter in the two small subsets (Latin 48 KB, Latin Extended 85 KB) the
+  // browser fetches only when a page uses them; the full 343 KB file stays
+  // for Greek, Cyrillic and Vietnamese, the scripts the subsets lack.
+  "@font-face{font-family:'Inter';src:url(/fonts/InterVariable.woff2) format('woff2');font-weight:100 900;font-display:swap;" +
+    "unicode-range:U+0370-03FF,U+0400-052F,U+1C80-1C8F,U+1EA0-1EF9,U+20AB}" +
+  "@font-face{font-family:'Inter';src:url(/fonts/inter-latin-ext-wght-normal.woff2) format('woff2');font-weight:100 900;font-display:swap;" +
+    "unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AA,U+20AC-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}" +
+  "@font-face{font-family:'Inter';src:url(/fonts/inter-latin-wght-normal.woff2) format('woff2');font-weight:100 900;font-display:swap;" +
+    "unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}" +
+  // A fallback sized like Inter (metrics as published for Inter over Arial),
+  // so the text barely moves when the web font replaces it — notably on
+  // Cyrillic, Greek and Vietnamese pages, whose Inter file is the large one.
+  "@font-face{font-family:'Inter Fallback';src:local('Arial'),local('Helvetica'),local('Liberation Sans');" +
+    "size-adjust:107.4%;ascent-override:90.2%;descent-override:22.48%;line-gap-override:0%}" +
   "@font-face{font-family:'Cinzel';font-weight:600;font-display:swap;src:url(/fonts/cinzel-latin-600-normal.woff2) format('woff2');" +
     "unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2212,U+FEFF,U+FFFD}" +
   "@font-face{font-family:'Cinzel';font-weight:600;font-display:swap;src:url(/fonts/cinzel-latin-ext-600-normal.woff2) format('woff2');" +
@@ -1975,7 +1988,7 @@ var _SEO_PAGE_CSS =
   ':root{--bg:#0d1912;--felt:#15372a;--felt-lo:#0b2219;--ink:#dce2d8;--ivory:#f4ecd9;--brass:#d9b45b;--muted:#9db1a3;' +
     '--line:rgba(217,180,91,.18);--chip:#c8352a;--panel:#12241b;color-scheme:dark}' +
   'html{background:var(--bg)}' +
-  "body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.7 Inter,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-text-size-adjust:100%}" +
+  "body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.7 Inter,'Inter Fallback',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-text-size-adjust:100%}" +
   '.in{max-width:44rem;margin:0 auto;padding:0 20px}' +
   // Header: the chip and the name, then every page as one quiet row — a
   // strip that scrolls sideways on a phone instead of six lines of links.
@@ -6803,15 +6816,24 @@ function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld, lang, l
   var nav = _seoPageNav(lang).replace(new RegExp('<a href="' + relPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(\\?lang=[^"]*)?">'), function (m) { return m.slice(0, -1) + ' aria-current="page">'; });
   var html = '<!DOCTYPE html><html lang="' + (lang || 'en') + '"' + (_seoIsRtl(lang) ? ' dir="rtl"' : '') + '><head><meta charset="utf-8">' +
     '<meta name="viewport" content="width=device-width, initial-scale=1">' +
+    '<meta name="theme-color" content="#0b2219">' +
+    '<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">' +
+    '<link rel="apple-touch-icon" href="/favicon-180.png">' +
+    // The title and text faces, fetched at once rather than after the CSS is
+    // parsed, so the swap from the fallback lands before the reader notices.
+    // Latin-script pages only: the others never use these files.
+    (_SEO_NONLATIN.indexOf((lang || 'en').split('-')[0]) === -1
+      ? '<link rel="preload" href="/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>' +
+        '<link rel="preload" href="/fonts/cinzel-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>' : '') +
     '<title>' + title + '</title>' + head + '<style>' + _SEO_PAGE_CSS + '</style></head><body>' +
     '<header class="top"><div class="in"><a class="brand" href="' + _seoLangHref('/', SEO_I18N, lang) + '">' +
-    '<img src="/logo-chip.png" alt="" width="34" height="34"><span class="bn"><b>PokerTH</b> <span>Web Client</span></span></a>' + nav + '</div></header>' +
+    '<img src="/logo-chip-68.png" alt="" width="34" height="34"><span class="bn"><b>PokerTH</b> <span>Web Client</span></span></a>' + nav + '</div></header>' +
     '<main>' + (hero ? '<div class="hero"><div class="in">' + hero + cta + '</div></div>' : '') +
     '<div class="body in">' + rest + cta + '</div></main></body></html>';
-  var buf = Buffer.from(html, 'utf8');
-  res.writeHead(200, Object.assign({ 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate', 'Content-Length': buf.length }, SECURITY_HEADERS));
-  if (method === 'HEAD') { res.end(); return; }
-  res.end(buf);
+  // Compressed (≈ ÷4) and validated: a revisit with the same ETag is a 304.
+  // res.req is the request this response answers (Node ≥ 15.7).
+  _seoSendText(res.req || { headers: {}, method: method }, res, 'text/html; charset=utf-8', _seoEtag(html),
+    on ? seoPageModified(relPath) : '', { raw: Buffer.from(html, 'utf8') });
 }
 
 // When a content page last changed, for <lastmod>. The dated pages keep the
@@ -6879,7 +6901,7 @@ function seoSitemapChildren(_sBase) {
 // <lastmod>. A sitemap unchanged since the last crawl now costs a header.
 var _seoXmlCache = new Map();
 function _seoSendXml(req, res, xml, lastmod) {
-  var tag = '"' + crypto.createHash('sha1').update(xml).digest('hex').slice(0, 20) + '"';
+  var tag = _seoEtag(xml);
   var ent = _seoXmlCache.get(tag);
   if (!ent) {
     var buf = Buffer.from(xml, 'utf8');
@@ -6887,19 +6909,27 @@ function _seoSendXml(req, res, xml, lastmod) {
     if (_seoXmlCache.size > 40) _seoXmlCache.clear();
     _seoXmlCache.set(tag, ent);
   }
-  var headers = Object.assign({ 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate',
+  _seoSendText(req, res, 'application/xml; charset=utf-8', tag, lastmod, ent);
+}
+function _seoEtag(text) { return '"' + crypto.createHash('sha1').update(text).digest('hex').slice(0, 20) + '"'; }
+// Shared by the sitemaps and the content pages: ETag, 304 on If-None-Match,
+// Last-Modified from a day, and the body in the best encoding the client
+// takes. `ent` holds the raw buffer and, when cached, its compressed forms;
+// an HTML page is compressed on the fly in the one encoding asked for.
+function _seoSendText(req, res, type, tag, lastmod, ent) {
+  var headers = Object.assign({ 'Content-Type': type, 'Cache-Control': 'no-cache, must-revalidate',
     'ETag': tag, 'Vary': 'Accept-Encoding' }, SECURITY_HEADERS);
   if (lastmod) { var t = Date.parse(lastmod + 'T00:00:00Z'); if (!isNaN(t)) headers['Last-Modified'] = new Date(t).toUTCString(); }
-  var inm = String(req.headers['if-none-match'] || '');
+  var inm = String((req && req.headers['if-none-match']) || '');
   if (inm && inm.split(/\s*,\s*/).some(function (v) { return v.replace(/^W\//, '') === tag || v === '*'; })) {
     res.writeHead(304, headers); res.end(); return;
   }
-  var ae = String(req.headers['accept-encoding'] || ''), body = ent.raw;
-  if (/\bbr\b/.test(ae)) { body = ent.br; headers['Content-Encoding'] = 'br'; }
-  else if (/\bgzip\b/.test(ae)) { body = ent.gz; headers['Content-Encoding'] = 'gzip'; }
+  var ae = String((req && req.headers['accept-encoding']) || ''), body = ent.raw;
+  if (/\bbr\b/.test(ae)) { body = ent.br || zlib.brotliCompressSync(ent.raw, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 5 } }); headers['Content-Encoding'] = 'br'; }
+  else if (/\bgzip\b/.test(ae)) { body = ent.gz || zlib.gzipSync(ent.raw); headers['Content-Encoding'] = 'gzip'; }
   headers['Content-Length'] = body.length;
   res.writeHead(200, headers);
-  if (req.method === 'HEAD') { res.end(); return; }
+  if (req && req.method === 'HEAD') { res.end(); return; }
   res.end(body);
 }
 

@@ -132,6 +132,14 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Content pages: lighter and validated** (`web.242`, SEO audit of 2026-10-21) — the pages were sent raw and re-downloaded
+  on every visit, and pulled the full 343 KB Inter file. Now: brotli/gzip (/rules 27 KB → 6 KB), an ETag answered
+  by 304 and a Last-Modified from the page's date (shared sender with the sitemaps); Inter in its Latin (48 KB) and
+  Latin Extended (85 KB) subsets, the full file only for Greek, Cyrillic and Vietnamese; text and title faces
+  preloaded on Latin-script pages; a local fallback sized like Inter so the text barely moves when the font
+  arrives (Russian page CLS 0.107 → 0.058); the header logo at 68 px (`logo-chip-68.png`, 3 KB instead of 28 KB);
+  favicon, apple-touch-icon and theme-color in `<head>`. A first visit to /rules went from about 400 KB to 70 KB.
+  Guarded by `scripts/test-seo-page-delivery.mjs`.
 - **New look for the content pages** (`web.240`, SEO) — /rules, /faq, /poker-odds and the other server-rendered pages
   take the app's classic theme: a header with the PokerTH chip, a red « Play now » button and the page links in one
   row (a sideways strip on a phone, current page marked); the title and opening paragraph on a felt band with the
