@@ -39,7 +39,10 @@ let n = 0, fail = 0;
 const ok = (c, m) => { n++; if (!c) { fail++; console.error('  ✗', m); } else console.log('  ✓', m); };
 const blocks = (h) => [...h.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].flatMap((m) => [].concat(JSON.parse(m[1])));
 const meta = (h, p) => (h.match(new RegExp('<meta property="' + p + '" content="([^"]*)"')) || [])[1];
-const main = (h) => (h.match(/<main>([\s\S]*)<\/main>/) || [])[1] || '';
+// The page's words, not its markup: a restyle (web.240 moved the title onto a
+// header band) is not a new version of the text.
+const main = (h) => ((h.match(/<main>([\s\S]*)<\/main>/) || [])[1] || '')
+  .replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 const LANGS = Object.keys(require(join(root, 'seo-i18n', 'competitions.js')));
 // One fingerprint over the page in English and in every language it exists in
 // (a language without its own version falls back to English and adds nothing new).

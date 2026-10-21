@@ -1,3 +1,7 @@
+2026-10-21 version 2.1.10-web.240:
+- improvement: the guide pages (rules, hand rankings, FAQ, odds, glossary…) have a new look in the colours of the PokerTH table, with the Play now button always at the top
+- improvement: the FAQ and the glossary are grouped by theme
+
 2026-10-21 version 2.1.10-web.233:
 - new: « Host your own server » guide page, in every language: the PokerTH server and the web client on your own machine, the install commands, Raspberry Pi, and the QML and widget clients joining the same tables
 

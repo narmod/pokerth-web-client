@@ -132,6 +132,14 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **New look for the content pages** (`web.240`, SEO) — /rules, /faq, /poker-odds and the other server-rendered pages
+  take the app's classic theme: a header with the PokerTH chip, a red « Play now » button and the page links in one
+  row (a sideways strip on a phone, current page marked); the title and opening paragraph on a felt band with the
+  card-back lozenge, edged with the chip's red and ivory rim; Cinzel for the title (Latin scripts; other scripts
+  keep the text face) and Inter for the text, both from `/fonts`; gold links and table headings; the call to action
+  shaped like the chip, now also under the opening paragraph. The odds calculator follows the same colours
+  (CSS variables in `modules/seo/odds-calc.mjs`). Text, headings, links and structured data are unchanged; the date
+  fingerprints in `test-seo-article-ld.mjs` now read the page's words rather than its markup.
 - **Sitemap index, real dates, compression** (`web.239`, SEO) — `/sitemap.xml` was one 8.5 MB file (83 languages ×
   15 pages, every URL repeating its hreflang set), fetched whole on every crawl, and every page's `<lastmod>` was
   `proxy.js`'s mtime, which moves on each deploy. It is now an index of 14 child sitemaps (`/sitemap-home.xml`,

@@ -1958,57 +1958,116 @@ function seoLlmsTxt(base) {
 // carry the crawlable substance: full Texas Hold'em rules and an FAQ with
 // FAQPage JSON-LD. Same serve-time policy as /privacy: always reachable, but
 // noindex (and no canonical / JSON-LD) while the admin SEO toggle is off.
-var _SEO_PAGE_CSS = 'body{margin:0;background:#0d1117;color:#d8dde4;font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}' +
-  'main{max-width:720px;margin:0 auto;padding:28px 20px 60px}' +
-  'h1{font-size:1.7em;color:#fff;margin:.4em 0 .6em}h2{font-size:1.2em;color:#fff;margin:1.5em 0 .5em}' +
-  'a{color:#5ab0f7;text-decoration:none}a:hover{text-decoration:underline}' +
-  // Nav: a wrapping row of unbreakable links. Inline links with a margin let
-  // a two-word label break at the line end and overhang the viewport by a
-  // pixel on a phone; flex-wrap keeps each label whole and follows dir=rtl.
-  'nav{display:flex;flex-wrap:wrap;gap:4px 14px;padding:14px 20px;background:#161b22;border-bottom:1px solid #30363d;font-size:.95em}' +
-  'nav a{white-space:nowrap}ul{padding-left:1.3em}li{margin:.3em 0}' +
+// The look of the server-rendered pages: the app's own classic theme — the
+// green felt and gold lozenge of its card back, the red PokerTH chip, Cinzel
+// (the app's display face) for the page title and Inter for the text, both
+// served from /fonts, so the page makes no third-party request. The content,
+// headings and links are the ones search engines read; this only dresses them.
+var _SEO_LOZENGE = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Cpath d='M11 1L21 11L11 21L1 11Z' fill='none' stroke='%23d9b45b' stroke-width='.7' opacity='.22'/%3E%3Ccircle cx='11' cy='11' r='.9' fill='%23d9b45b' opacity='.3'/%3E%3C/svg%3E\")";
+var _SEO_NONLATIN = ['ar', 'fa', 'ur', 'he', 'ru', 'uk', 'be', 'bg', 'mk', 'sr', 'kk', 'ky', 'mn', 'tg', 'el', 'hy', 'ka', 'am',
+  'hi', 'mr', 'ne', 'bn', 'pa', 'gu', 'ta', 'te', 'kn', 'ml', 'si', 'th', 'km', 'my', 'zh', 'ja', 'ko'];
+var _SEO_PAGE_CSS =
+  "@font-face{font-family:'Inter';src:url(/fonts/InterVariable.woff2) format('woff2');font-weight:100 900;font-display:swap}" +
+  "@font-face{font-family:'Cinzel';font-weight:600;font-display:swap;src:url(/fonts/cinzel-latin-600-normal.woff2) format('woff2');" +
+    "unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2212,U+FEFF,U+FFFD}" +
+  "@font-face{font-family:'Cinzel';font-weight:600;font-display:swap;src:url(/fonts/cinzel-latin-ext-600-normal.woff2) format('woff2');" +
+    "unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+1EF2-1EFF,U+20A0-20AB,U+20AD-20C0,U+2C60-2C7F,U+A720-A7FF}" +
+  ':root{--bg:#0d1912;--felt:#15372a;--felt-lo:#0b2219;--ink:#dce2d8;--ivory:#f4ecd9;--brass:#d9b45b;--muted:#9db1a3;' +
+    '--line:rgba(217,180,91,.18);--chip:#c8352a;--panel:#12241b;color-scheme:dark}' +
+  'html{background:var(--bg)}' +
+  "body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.7 Inter,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-text-size-adjust:100%}" +
+  '.in{max-width:44rem;margin:0 auto;padding:0 20px}' +
+  // Header: the chip and the name, then every page as one quiet row — a
+  // strip that scrolls sideways on a phone instead of six lines of links.
+  // The first link (« Play now ») is lifted out as the red chip button.
+  '.top{background:var(--felt-lo);border-bottom:1px solid var(--line)}' +
+  '.top .in{position:relative;max-width:68rem;padding-top:12px;padding-bottom:4px}' +
+  '.brand{display:inline-flex;align-items:center;gap:10px;color:var(--ivory);font-weight:700;font-size:1.05em;letter-spacing:.01em;text-decoration:none}' +
+  '.brand img{width:34px;height:34px;display:block}' +
+  'nav{display:flex;gap:2px 18px;overflow-x:auto;scrollbar-width:none;padding:10px 0 8px;font-size:.88em}' +
+  // On a phone the row ends in a fade, the hint that it scrolls.
+  '.top .in::after{content:"";position:absolute;bottom:0;inset-inline-end:0;width:44px;height:46px;pointer-events:none;' +
+    'background:linear-gradient(90deg,rgba(11,34,25,0),var(--felt-lo))}' +
+  '[dir=rtl] .top .in::after{background:linear-gradient(270deg,rgba(11,34,25,0),var(--felt-lo))}' +
+  'nav::-webkit-scrollbar{display:none}' +
+  'nav a{white-space:nowrap;color:var(--muted);text-decoration:none;padding:4px 0;border-bottom:2px solid transparent}' +
+  'nav a:hover{color:var(--ivory)}nav a[aria-current=page]{color:var(--ivory);border-bottom-color:var(--brass)}' +
+  'nav a:first-child{position:absolute;top:12px;inset-inline-end:20px;padding:6px 16px;border:0;border-radius:999px;' +
+    'background:var(--chip);color:#fff8ec;font-weight:600;box-shadow:inset 0 0 0 2px rgba(255,248,236,.55)}' +
+  'nav a:first-child:hover{background:#d8443a;color:#fff}' +
+  '@media (min-width:900px){nav{flex-wrap:wrap;overflow:visible}.top .in::after{display:none}}' +
+  // Hero: the felt with the card-back lozenge, the title in Cinzel, the
+  // lead set larger, and the chip's rim — red with ivory inserts — as its edge.
+  '.hero{background:' + _SEO_LOZENGE + ',radial-gradient(120% 140% at 50% 0%,var(--felt) 0%,var(--felt-lo) 70%);' +
+    'border-bottom:6px solid transparent;border-image:repeating-linear-gradient(90deg,var(--chip) 0 34px,var(--ivory) 34px 46px) 6}' +
+  '.hero .in{padding-top:44px;padding-bottom:40px}' +
+  ".hero h1{font-family:Cinzel,Georgia,'Times New Roman',serif;font-weight:600;font-size:clamp(1.85rem,1.1rem + 3vw,3rem);" +
+    'line-height:1.15;letter-spacing:.005em;color:var(--ivory);margin:0 0 .45em;text-wrap:balance}' +
+  '.hero p{font-size:1.12em;line-height:1.65;color:#e8eadf;margin:0;max-width:38em}' +
+  '.hero .play{margin-top:24px}' +
+  '.body{padding-top:12px;padding-bottom:72px}' +
+  'h1{font-size:2em;color:var(--ivory);line-height:1.2}' +
+  'h2{font-size:1.38em;line-height:1.3;color:var(--ivory);font-weight:650;margin:2.1em 0 .55em;letter-spacing:-.005em}' +
+  'h3{font-size:1.08em;color:var(--ivory);font-weight:600;margin:1.5em 0 .3em}' +
+  'p{margin:.7em 0}strong,b{color:#f0ece0;font-weight:600}' +
+  'a{color:var(--brass);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:rgba(217,180,91,.45)}' +
+  'a:hover{color:var(--ivory);text-decoration-color:var(--ivory)}' +
+  'a:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:3px}' +
+  'ul{padding-left:1.3em}li{margin:.35em 0}li::marker{color:var(--brass)}' +
   '[dir=rtl] ul,[dir=rtl] ol{padding-left:0;padding-right:1.3em}' +
   '[dir=rtl] dd{margin:.3em 0 0 0}' +
   '[dir=rtl] th,[dir=rtl] td{text-align:right}[dir=rtl] td.n{text-align:left}' +
-  'dt{font-weight:600;color:#fff;margin-top:1.1em}dd{margin:.3em 0 0 0}' +
+  'dl{margin:.4em 0}dt{font-weight:600;color:var(--ivory);margin-top:1.2em}dd{margin:.25em 0 0 0}' +
   // FAQ entries: the question is an H3 under its section, set like a dt.
-  '.qa h3{font-size:1em;font-weight:600;color:#fff;margin:1.1em 0 0}.qa p{margin:.3em 0 0}' +
+  '.qa h3{font-size:1em;font-weight:600;color:var(--ivory);margin:1.3em 0 0}.qa p{margin:.3em 0 0}' +
   // Glossary entries carry the English term — which is what turns up in
   // the chat — followed by the local equivalent where the language has
   // one. The equivalent is set lighter so the entry still scans as one
   // headword rather than two competing ones. Kept LTR-safe: the English
   // term is a Latin run inside an Arabic or Hebrew line.
-  'dt .loc{font-weight:400;color:#9aa4b0}dt .en{direction:ltr;unicode-bidi:isolate}' +
-  'table{border-collapse:collapse;width:100%;margin:.6em 0;font-size:.95em}' +
-  'th,td{text-align:left;padding:7px 10px;border-bottom:1px solid #30363d;vertical-align:top}' +
-  'th{color:#fff;font-weight:600}td.n{white-space:nowrap;text-align:right;color:#9aa4b0}' +
+  'dt .loc{font-weight:400;color:var(--muted)}dt .en{direction:ltr;unicode-bidi:isolate}' +
   // Card examples and rank sequences read left to right in every language.
   // Inside an Arabic, Hebrew, Persian or Urdu paragraph the bidi algorithm
-  // would otherwise reorder them at the boundaries — A\u2660 K\u2666 flipping
-  // to K\u2666 A\u2660, and 10-J-Q-K-A reading backwards — which turns a
+  // would otherwise reorder them at the boundaries — A♠ K♦ flipping
+  // to K♦ A♠, and 10-J-Q-K-A reading backwards — which turns a
   // worked example into a wrong one. Isolating them costs nothing in LTR.
-  '.cards{font-size:1.05em;letter-spacing:.06em;white-space:nowrap;direction:ltr;unicode-bidi:isolate}' +
+  '.cards{font-size:1.05em;letter-spacing:.06em;white-space:nowrap;direction:ltr;unicode-bidi:isolate;color:var(--ivory)}' +
   '.ltr{direction:ltr;unicode-bidi:isolate;white-space:nowrap}' +
-  '.rd{color:#e5837f}' +
-  'ol.hr{padding-left:1.3em}ol.hr>li{margin:.9em 0}' +
+  '.rd{color:#ef8a7f}' +
+  'ol{padding-left:1.4em}ol>li::marker{color:var(--brass);font-weight:600}ol.hr{padding-left:1.4em}ol.hr>li{margin:1em 0}' +
   // Tables (/poker-odds): scroll sideways inside their box on a phone rather
   // than widen the page; figures right-aligned in tabular digits.
-  '.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;margin:.6em 0 1em;font-size:.95em}' +
-  'th,td{border-bottom:1px solid #30363d;padding:.35em .5em;text-align:start;vertical-align:top}' +
-  'th{color:#9aa4b0;font-weight:600}td.n{text-align:end;white-space:nowrap;font-variant-numeric:tabular-nums}' +
+  '.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;margin:.6em 0 1.2em;font-size:.93em}' +
+  'th,td{border-bottom:1px solid var(--line);padding:.45em .6em;text-align:start;vertical-align:top}' +
+  'th{color:var(--brass);font-weight:600;font-size:.92em}td.n{text-align:end;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink)}' +
+  'tbody tr:hover td{background:rgba(217,180,91,.05)}' +
   // Starting-hands chart (/starting-hands): 13 x 13 squares, hand and chance;
   // always left-to-right (it is a matrix, not text), compact on a phone.
   'table.sh{direction:ltr;table-layout:fixed;min-width:340px;margin:.6em 0 1.2em;font-size:12px}' +
-  'table.sh td{border:1px solid #0d1117;padding:3px 1px;text-align:center;color:#f0f3f6;line-height:1.15}' +
-  'table.sh td b{display:block;font-weight:600}table.sh td span{display:block;font-size:.85em;opacity:.85;font-variant-numeric:tabular-nums}' +
+  'table.sh td{border:1px solid var(--bg);padding:3px 1px;text-align:center;color:#f0f3f6;line-height:1.15}' +
+  'table.sh td b{display:block;font-weight:600;color:inherit}table.sh td span{display:block;font-size:.85em;opacity:.85;font-variant-numeric:tabular-nums}' +
   'table.sh td.p b{text-decoration:underline}' +
   // Shell commands (/host-a-server): scroll inside the box, always LTR.
-  'pre.cmd{direction:ltr;text-align:left;overflow-x:auto;background:#161b22;border:1px solid #30363d;border-radius:6px;padding:.6em .8em;margin:.5em 0 .3em;font-size:.85em;line-height:1.5}' +
+  'pre.cmd{direction:ltr;text-align:left;overflow-x:auto;background:#081510;border:1px solid var(--line);border-radius:8px;padding:.7em .9em;margin:.5em 0 .3em;font-size:.84em;line-height:1.55;color:#e8eadf}' +
   'pre.cmd code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre}' +
   'p.cmdsrc{direction:ltr;text-align:left;margin:.2em 0 .6em;font-size:.88em;overflow-wrap:anywhere}' +
-  '@media (max-width:480px){table.sh{font-size:10px}}' +
-  '.updated{color:#9aa4b0;font-size:.9em;margin:0 0 1.2em}' +
-  '.play{display:inline-block;margin-top:26px;padding:10px 22px;background:#1f6feb;color:#fff;border-radius:6px;font-weight:600}';
+  '@media (max-width:480px){table.sh{font-size:10px}body{font-size:16px}.hero .in{padding-top:32px;padding-bottom:30px}}' +
+  '.updated{color:var(--muted);font-size:.9em;margin:0 0 1.2em}' +
+  // The call to action is the PokerTH chip: red, with the ivory inserts of
+  // its rim as a dashed ring.
+  '.play{display:inline-block;margin-top:30px;padding:12px 28px;background:var(--chip);color:#fff8ec;font-weight:650;font-size:1.02em;' +
+    'border-radius:999px;text-decoration:none;border:2px dashed rgba(255,248,236,.8);outline:3px solid var(--chip);outline-offset:0}' +
+  '.play:hover{background:#d8443a;outline-color:#d8443a;color:#fff}' +
+  '.play:focus-visible{outline:3px solid var(--brass);outline-offset:3px}' +
+  // On a phone the label usually wraps: a full-width block with softer
+  // corners reads better than a two-line pill.
+  '@media (max-width:480px){.play{display:block;text-align:center;font-size:.95em;padding:11px 18px;border-radius:16px}}' +
+  // Cinzel only has Latin letters: in other scripts the title keeps the text
+  // face, or a Latin word inside it (« PokerTH ») would come out in capitals.
+  _SEO_NONLATIN.map(function (l) { return ':lang(' + l + ') .hero h1'; }).join(',') + '{font-family:inherit;font-weight:700;letter-spacing:0}' +
+  // Odds calculator (modules/seo/odds-calc.mjs) reads these.
+  '.oc{--oc-panel:var(--panel);--oc-bg:#0a1710;--oc-line:rgba(217,180,91,.22);--oc-accent:var(--brass);--oc-muted:var(--muted);--oc-ink:var(--ink)}' +
+  '@media (prefers-reduced-motion:no-preference){a,.play{transition:color .15s,background-color .15s}}';
 
 // Right-to-left scripts. /rules has been served in Arabic, Hebrew, Persian and
 // Urdu for a while with nothing but <html lang>, which lays the page out
@@ -6728,14 +6787,22 @@ function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld, lang, l
   } else {
     head = '<meta name="robots" content="noindex, nofollow">';
   }
+  // The CTA opens the app; from /play-against-computer straight on the
+  // training form (?go=train, parseShareLink in pokerth.js).
+  var cta = '<a class="play" href="/' + (lang ? '?lang=' + lang : '') + (relPath === '/play-against-computer' ? (lang ? '&' : '?') + 'go=train' : '') + '">' + _seoNavLabel(lang, 'cta') + '</a>';
+  // The title and the opening paragraph go on the felt (.hero); the rest of
+  // the page follows in the reading column. Same markup order as before.
+  var _hm = String(bodyHtml).match(/^\s*<h1>[\s\S]*?<\/h1>(?:\s*<p>[\s\S]*?<\/p>)?/);
+  var hero = _hm ? _hm[0] : '', rest = _hm ? String(bodyHtml).slice(_hm[0].length) : bodyHtml;
+  // The current page is marked in the header row.
+  var nav = _seoPageNav(lang).replace(new RegExp('<a href="' + relPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(\\?lang=[^"]*)?">'), function (m) { return m.slice(0, -1) + ' aria-current="page">'; });
   var html = '<!DOCTYPE html><html lang="' + (lang || 'en') + '"' + (_seoIsRtl(lang) ? ' dir="rtl"' : '') + '><head><meta charset="utf-8">' +
     '<meta name="viewport" content="width=device-width, initial-scale=1">' +
     '<title>' + title + '</title>' + head + '<style>' + _SEO_PAGE_CSS + '</style></head><body>' +
-    _seoPageNav(lang) + '<main>' + bodyHtml +
-    // The CTA opens the app; from /play-against-computer straight on the
-    // training form (?go=train, parseShareLink in pokerth.js).
-    '<a class="play" href="/' + (lang ? '?lang=' + lang : '') + (relPath === '/play-against-computer' ? (lang ? '&' : '?') + 'go=train' : '') + '">' + _seoNavLabel(lang, 'cta') + '</a>' +
-    '</main></body></html>';
+    '<header class="top"><div class="in"><a class="brand" href="' + _seoLangHref('/', SEO_I18N, lang) + '">' +
+    '<img src="/logo-chip.png" alt="" width="34" height="34">PokerTH</a>' + nav + '</div></header>' +
+    '<main>' + (hero ? '<div class="hero"><div class="in">' + hero + cta + '</div></div>' : '') +
+    '<div class="body in">' + rest + cta + '</div></main></body></html>';
   var buf = Buffer.from(html, 'utf8');
   res.writeHead(200, Object.assign({ 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate', 'Content-Length': buf.length }, SECURITY_HEADERS));
   if (method === 'HEAD') { res.end(); return; }

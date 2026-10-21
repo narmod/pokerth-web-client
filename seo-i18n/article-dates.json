@@ -2,56 +2,56 @@
   "/rules": {
     "published": "2026-08-11",
     "modified": "2026-10-02",
-    "fp": "01d17809021e5dca"
+    "fp": "e29bf30b85baaa3c"
   },
   "/faq": {
     "published": "2026-08-11",
     "modified": "2026-10-21",
-    "fp": "2895dc8f31afe520"
+    "fp": "ea7cff11cbfcf081"
   },
   "/hand-rankings": {
     "published": "2026-08-25",
     "modified": "2026-10-20",
-    "fp": "0632d05b83550771"
+    "fp": "06c7274d6ef83598"
   },
   "/how-to-play": {
     "published": "2026-08-25",
     "modified": "2026-10-20",
-    "fp": "2bd1997c9d5ffafe"
+    "fp": "59c1f8a4b1d8e940"
   },
   "/glossary": {
     "published": "2026-08-25",
     "modified": "2026-10-21",
-    "fp": "5fb3d01d039c25d2"
+    "fp": "614523287f837f1e"
   },
   "/play-with-friends": {
     "published": "2026-10-20",
     "modified": "2026-10-21",
-    "fp": "3ef4c494d091259a"
+    "fp": "b651764a8735a35f"
   },
   "/poker-odds": {
     "published": "2026-10-20",
     "modified": "2026-10-20",
-    "fp": "cd89f129f5641642"
+    "fp": "c23c248f917eaf6e"
   },
   "/play-against-computer": {
     "published": "2026-10-20",
     "modified": "2026-10-20",
-    "fp": "8486e015a3242d2b"
+    "fp": "44906f032ece94aa"
   },
   "/starting-hands": {
     "published": "2026-10-20",
     "modified": "2026-10-20",
-    "fp": "e016b21f09d37981"
+    "fp": "d8b14da8d2895aa0"
   },
   "/accessibility": {
     "published": "2026-10-20",
     "modified": "2026-10-21",
-    "fp": "f4141508c72733a7"
+    "fp": "088240085de3a408"
   },
   "/host-a-server": {
     "published": "2026-10-21",
     "modified": "2026-10-21",
-    "fp": "4208d44e37f044d1"
+    "fp": "9d915f951967ed92"
   }
 }
