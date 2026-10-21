@@ -9771,6 +9771,8 @@ const UA_BROWSER = [
 // One rule for every count and every list: server/ua-bot.js (CUBOT phones are
 // players, not robots).
 const UA_BOT_RULE = require('./server/ua-bot.js');
+// Client Hints (Brave…) and major versions: server/ua-hints.js (web.257).
+const UA_HINTS = require('./server/ua-hints.js');
 function _uaPick(table, ua) {
   for (let i = 0; i < table.length; i++) if (table[i][0].test(ua)) return table[i][1];
   return 'other';
@@ -9839,10 +9841,18 @@ function supportedLangs() {
   } catch (e) { _langsCache = _langsCache || []; }
   return _langsCache;
 }
-function recordVisitEnv(ua, acceptLang, standalone, seenBefore, bot, clientLang) {
+function recordVisitEnv(ua, acceptLang, standalone, seenBefore, bot, clientLang, hints) {
   try {
     ua = String(ua || '');
-    const os = _uaPick(UA_OS, ua), br = _uaPick(UA_BROWSER, ua);
+    hints = hints || {};
+    // Les Client Hints Chromium (Sec-CH-UA…) affinent un « Chrome » lu dans
+    // l'UA (Brave a l'UA exact de Chrome) et completent un OS « other ».
+    const os = UA_HINTS.refineOs(_uaPick(UA_OS, ua), hints.platform);
+    const br = UA_HINTS.refineBrowser(_uaPick(UA_BROWSER, ua), hints.brands);
+    // Versions majeures (iOS 18, Chrome 141…) : series quotidiennes seules
+    // (ev.osv / ev.brv), pas de cumul depuis toujours — les numeros montent
+    // sans fin et rempliraient le plafond d'une cle par version.
+    const ver = UA_HINTS.versions(ua, os, br);
     _envBump('os', os, bot);
     _envBump('br', br, bot);
     // Le croisement OS x navigateur est l'unite qui compte vraiment : « iPhone
@@ -9893,7 +9903,8 @@ function recordVisitEnv(ua, acceptLang, standalone, seenBefore, bot, clientLang)
       // au sélecteur de période de la page admin de découper « Who visits »
       // comme le reste, au lieu d'un cumul depuis toujours.
       if (!bucket.ev) bucket.ev = {};
-      [['os', os], ['br', br], ['combo', os + ' \u00b7 ' + br], ['pwa', standalone ? 'standalone' : 'browser']].forEach(function (kv) {
+      [['os', os], ['br', br], ['combo', os + ' \u00b7 ' + br], ['pwa', standalone ? 'standalone' : 'browser'],
+        ['osv', ver.osv || 'unknown'], ['brv', ver.brv || 'unknown']].forEach(function (kv) {
         const b = bucket.ev[kv[0]] || (bucket.ev[kv[0]] = {});
         if (!_envRoom(b, kv[1], kv[0])) b.other = (b.other || 0) + 1;
         else b[kv[1]] = (b[kv[1]] || 0) + 1;
@@ -10148,7 +10159,7 @@ function visitLangTrend(win, h24, offset) {
 // `lgDays` ceux qui portent `lg` (plus ancien) : la page retombe sur le cumul
 // pour une vue dont la série n'existe pas encore, et le dit.
 function visitEnvPeriod(daysBack, list) {
-  const out = { os: {}, br: {}, combo: {}, pwa: {}, lang: {}, langNew: {}, langRet: {}, days: 0, lgDays: 0, lgnDays: 0 };
+  const out = { os: {}, br: {}, combo: {}, pwa: {}, osv: {}, brv: {}, lang: {}, langNew: {}, langRet: {}, days: 0, verDays: 0, lgDays: 0, lgnDays: 0 };
   list = list || visitList(false, daysBack);
   const lds = [];
   function add(dst, src) { for (const k in src) dst[k] = (dst[k] || 0) + (src[k] || 0); }
@@ -10156,6 +10167,8 @@ function visitEnvPeriod(daysBack, list) {
     const b = list[i];
     if (!b) continue;
     if (b.ev) { out.days++; ['os', 'br', 'combo', 'pwa'].forEach(function (k) { if (b.ev[k]) add(out[k], b.ev[k]); }); }
+    // Versions (web.257+) : verDays = jours qui les portent.
+    if (b.ev && b.ev.brv) { out.verDays++; add(out.osv, b.ev.osv || {}); add(out.brv, b.ev.brv); }
     if (b.lg) { out.lgDays++; add(out.lang, b.lg); }
     if (b.lgn || b.lgr) { out.lgnDays++; if (b.lgn) add(out.langNew, b.lgn); if (b.lgr) add(out.langRet, b.lgr); }
     if (b.ld) lds.push(b.ld);
@@ -15343,7 +15356,8 @@ const httpServer = http.createServer((req, res) => {
           const _nl = (d && typeof d.nl === 'string') ? d.nl : '';
           recordVisitEnv(req.headers && req.headers['user-agent'],
                          req.headers && req.headers['accept-language'],
-                         !!(d && d.pwa), _seenBefore, _bot, _nl);
+                         !!(d && d.pwa), _seenBefore, _bot, _nl,
+                         { brands: req.headers['sec-ch-ua'], platform: req.headers['sec-ch-ua-platform'] });
           recordVisitSource(d, req.headers && req.headers['accept-language'], _seenBefore, _bot, _nl);
           if (d && typeof d.tz === 'string') {
             const _os = _uaPick(UA_OS, String((req.headers && req.headers['user-agent']) || ''));

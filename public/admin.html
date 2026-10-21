@@ -1440,11 +1440,13 @@
       <section class="ovmodes" id="tsT-visitors" aria-label="Visitors at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
   <div class="boardhead"><h2>What visitors run</h2><span id="envSince" class="muted" style="margin:0"></span></div>
-          <p class="muted xpl">From the same anonymous ping as the visit counter: system and browser read from the User-Agent, language from the request header, installed app vs browser tab reported by the client. Sliced by the period selected above where a per-day history exists, running totals otherwise — what to test on, and which of the interface languages are actually used. In the language view the arrow compares a language’s share over the <span class="perN">last 14 days</span> (full days) with the same span before, only when the change is statistically significant.</p>
+          <p class="muted xpl">From the same anonymous ping as the visit counter: system and browser read from the User-Agent (refined by the brand list Chromium browsers send, which tells Brave apart), major versions from the User-Agent where it still gives them (iOS, Android outside Chrome, browsers — per-day history only, from 2.1.10-web.257), language from the request header, installed app vs browser tab reported by the client. Sliced by the period selected above where a per-day history exists, running totals otherwise — what to test on, and which of the interface languages are actually used. In the language view the arrow compares a language’s share over the <span class="perN">last 14 days</span> (full days) with the same span before, only when the change is statistically significant.</p>
           <div class="seg" id="envSeg" style="flex-wrap:wrap">
             <button class="on" data-k="combo">Device + browser</button>
             <button data-k="os">System</button>
             <button data-k="br">Browser</button>
+            <button data-k="osv">System version</button>
+            <button data-k="brv">Browser version</button>
             <button data-k="pwa">Installed</button>
             <button data-k="lang">Language</button>
           </div>
@@ -4050,6 +4052,8 @@
   // l'estimation de bruit plus bas, et c'est presque toujours un automate.
   var ENV_TITLES={
     other:'User-Agent the table does not recognise.',
+    'osv:unknown':'No trustworthy version in the User-Agent: Windows and macOS freeze it, so does Chrome on Android (always \u201cAndroid 10\u201d), and other systems are not read.',
+    'brv:unknown':'A browser whose version is not read (in-app, Silk, Huawei\u2026) or a User-Agent without one.',
     'lang:other':'Pings whose Accept-Language header is missing or cannot name a language (*, C, und, malformed\u2026) \u2014 not an untranslated language: a valid code always keeps its own key, translated or not. Almost always a bot or a script; what was actually received is listed below the ranking.'
   };
   function _envTitle(k){ return ENV_TITLES[_envView+':'+k]||ENV_TITLES[k]||''; }
@@ -5117,6 +5121,8 @@
     // lirait comme les 24 dernieres heures ; une fenetre vide reste vide.
     var h=(_isH24());
     ['os','br','combo','pwa'].forEach(function(v){ if(per.days>0||h){ out[v]=per[v]||{}; _envSrc[v]='period'; } });
+    // Versions : series quotidiennes seules (pas de cumul cote proxy).
+    ['osv','brv'].forEach(function(v){ out[v]=per[v]||{}; _envSrc[v]='period'; });
     if(per.lgDays>0||h){ out.lang=per.lang||{}; _envSrc.lang='period'; }
     if(per.lgnDays>0||h){ out.langNew=per.langNew||{}; out.langRet=per.langRet||{}; _envSrc.langNew='period'; }
     // Diagnostic de langue (proxy 2.1.9-web.299+) : la periode des qu'un jour
@@ -5131,7 +5137,7 @@
     var v=_envView, P=_trafPeriod;
     if(!_envPeriod) return _envSince?('since '+_stDate(_envSince)):'';
     if(_envSrc[v]!=='period') return 'running totals'+(_envSince?(' since '+_stDate(_envSince)):'')+' \u2014 per-day history for this view starts with this proxy version';
-    var have=v==='lang'?_envPeriod.lgDays:_envPeriod.days, U=_perU();
+    var have=v==='lang'?_envPeriod.lgDays:(v==='osv'||v==='brv')?(_envPeriod.verDays||0):_envPeriod.days, U=_perU();
     return _perLabel(P)+(have<U.full?(' \u2014 per-'+U.one+' history covers '+have+' of '+U.full+' '+U.many):'');
   }
   function _envNewRetBadge(key){

@@ -203,6 +203,15 @@ highlights below.
   narrows the other too; one 5 s read serves both while either is open. The map card is « Connections by country ».
 
 ### Added
+- **Visitors: Client Hints and major versions** (`web.257`, `server/ua-hints.js`) — Chromium browsers send their
+  brand list (`Sec-CH-UA`) and platform on every HTTPS request with no opt-in; the proxy now reads them to refine a
+  « Chrome » read from the User-Agent (**Brave**, whose UA is Chrome's, plus Opera, Edge, Yandex, Samsung, WebView,
+  Vivaldi, DuckDuckGo, Whale) and to fill an OS left at « other ». A UA label that is already specific is kept.
+  « What visitors run » gains **System version** (iOS N; Android N outside Chrome, whose reduced UA always says 10;
+  Windows and macOS freeze theirs) and **Browser version** (Chrome 141, Safari 18…). Since iOS 26 the iPhone UA keeps
+  « OS 18_6 »: Safari's `Version/` gives the real major. Versions are per-day maps only (`ev.osv` / `ev.brv`,
+  `envPeriod.verDays`), never a running total that only grows. Nothing new is asked of the client.
+  `scripts/test-ua-hints.mjs`.
 - **Client errors: Copy all and Export** (`web.197`) — two buttons next to Refresh on Operations › Client errors. Both
   take the errors the list shows (text filter, type chip and « Hide robot-only errors » included; without a filter,
   all of them). **Copy all** copies one plain-text report — host, server build, collection start, then per error its

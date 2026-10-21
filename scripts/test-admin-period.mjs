@@ -47,7 +47,7 @@ ok(/bucket\.ev\b/.test(rec) && /\['os', os\], \['br', br\], \['combo'/.test(rec)
 ok(/_envRoom\(b, kv\[1\], kv\[0\]\)/.test(rec), 'with the same cardinality cap as the running totals');
 ok(/seenBefore \? 'lgr' : 'lgn'/.test(rec), 'and the language × new/returning split is kept per day too');
 const ep = body(proxy, 'visitEnvPeriod');
-ok(/days: 0, lgDays: 0, lgnDays: 0/.test(ep), 'the period summary reports how many days each series really has, since they started at different times');
+ok(/days: 0, verDays: 0, lgDays: 0, lgnDays: 0/.test(ep), 'the period summary reports how many days each series really has, since they started at different times (versions: web.257)');
 
 // -- Admin -----------------------------------------------------------------
 ok(/<select id="trafPeriod"/.test(admin), 'the tab has a period selector');
