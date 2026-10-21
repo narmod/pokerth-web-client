@@ -139,7 +139,8 @@ highlights below.
   keep the text face) and Inter for the text, both from `/fonts`; gold links and table headings; the call to action
   shaped like the chip, now also under the opening paragraph. The odds calculator follows the same colours
   (CSS variables in `modules/seo/odds-calc.mjs`). Text, headings, links and structured data are unchanged; the date
-  fingerprints in `test-seo-article-ld.mjs` now read the page's words rather than its markup.
+  fingerprints in `test-seo-article-ld.mjs` now read the page's words rather than its markup. `web.241`: the header
+  reads « PokerTH Web Client », the site name search engines are given (« Web Client » lighter, stacked on a phone).
 - **Sitemap index, real dates, compression** (`web.239`, SEO) — `/sitemap.xml` was one 8.5 MB file (83 languages ×
   15 pages, every URL repeating its hreflang set), fetched whole on every crawl, and every page's `<lastmod>` was
   `proxy.js`'s mtime, which moves on each deploy. It is now an index of 14 child sitemaps (`/sitemap-home.xml`,

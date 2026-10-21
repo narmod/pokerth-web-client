@@ -1984,6 +1984,11 @@ var _SEO_PAGE_CSS =
   '.top .in{position:relative;max-width:68rem;padding-top:12px;padding-bottom:4px}' +
   '.brand{display:inline-flex;align-items:center;gap:10px;color:var(--ivory);font-weight:700;font-size:1.05em;letter-spacing:.01em;text-decoration:none}' +
   '.brand img{width:34px;height:34px;display:block}' +
+  // « PokerTH Web Client », the site name search engines are given: the
+  // name in bold, « Web Client » lighter; stacked on a phone so it never
+  // runs into the Play now button.
+  '.bn b{font-weight:700;color:var(--ivory)}.bn span{font-weight:400;color:var(--muted)}' +
+  '@media (max-width:520px){.bn{display:flex;flex-direction:column;line-height:1.1}.bn span{font-size:.78em;letter-spacing:.02em}}' +
   'nav{display:flex;gap:2px 18px;overflow-x:auto;scrollbar-width:none;padding:10px 0 8px;font-size:.88em}' +
   // On a phone the row ends in a fade, the hint that it scrolls.
   '.top .in::after{content:"";position:absolute;bottom:0;inset-inline-end:0;width:44px;height:46px;pointer-events:none;' +
@@ -6800,7 +6805,7 @@ function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld, lang, l
     '<meta name="viewport" content="width=device-width, initial-scale=1">' +
     '<title>' + title + '</title>' + head + '<style>' + _SEO_PAGE_CSS + '</style></head><body>' +
     '<header class="top"><div class="in"><a class="brand" href="' + _seoLangHref('/', SEO_I18N, lang) + '">' +
-    '<img src="/logo-chip.png" alt="" width="34" height="34">PokerTH</a>' + nav + '</div></header>' +
+    '<img src="/logo-chip.png" alt="" width="34" height="34"><span class="bn"><b>PokerTH</b> <span>Web Client</span></span></a>' + nav + '</div></header>' +
     '<main>' + (hero ? '<div class="hero"><div class="in">' + hero + cta + '</div></div>' : '') +
     '<div class="body in">' + rest + cta + '</div></main></body></html>';
   var buf = Buffer.from(html, 'utf8');
