@@ -7982,7 +7982,7 @@ var _SEO_HOST = {
     ["Free", "No licence, no subscription, no ads: the PokerTH server and the web client are both free software."]
   ],
   "partsH2": "Two pieces",
-  "partsP": "A PokerTH game needs the PokerTH dedicated server, which deals the cards and runs the tables, and the web client, which serves the app to the browsers and connects them to that server. They can run on the same machine. The desktop PokerTH client connects to the same server, so players can mix browsers and desktop apps at one table.",
+  "partsP": "A PokerTH game needs the PokerTH dedicated server, which deals the cards and runs the tables, and the web client, which serves the app to the browsers and connects them to that server. They can run on the same machine. Everything stays compatible: the PokerTH apps connect to the same server as the browsers \u2014 the QML client on Windows, macOS, Linux and Android, and the classic widget client on the desktop \u2014 so players can mix browsers and apps at one table.",
   "stepsH2": "Set it up in three steps",
   "steps": [
     ["Install the PokerTH server",
@@ -7990,7 +7990,7 @@ var _SEO_HOST = {
     ["Install the web client",
      "On Debian, Ubuntu or Raspberry Pi OS the installation script sets up Node.js, the web client and a service that starts with the machine, in one command. Docker users pull a ready-made image for amd64, arm64 and armv7, and CasaOS imports the same Compose file as an app."],
     ["Play",
-     "On any device on your network, open the address of the machine on port 8080, choose LAN / Dedicated server, type a nickname and create a table."]
+     "On any device on your network, open the address of the machine on port 8080, choose LAN / Dedicated server, type a nickname and create a table. Players with the PokerTH QML or widget client connect to the same machine on port 7234 and join the same tables."]
   ],
   "piH2": "On a Raspberry Pi",
   "piP": "PokerTH exchanges small messages and the players’ devices do all the drawing, so a Raspberry Pi is plenty: a Pi 4 with 2 GB is the sweet spot, a Pi 5 is more than enough. For a smooth evening the network matters more than the board — plug the Pi into the router with a cable, and use a good Wi-Fi access point for the players.",
@@ -8009,7 +8009,7 @@ var _SEO_HOST = {
     ["What hardware do I need?",
      "Very little: any PC or home server that runs Linux or Docker, or a Raspberry Pi 4 or 5. A wired network connection matters more than processing power."],
     ["Do the players need to install anything?",
-     "No. They open the server’s address in a browser on their phone, tablet or computer; the desktop PokerTH client works too."],
+     "No. They open the server’s address in a browser on their phone, tablet or computer. Those who prefer an app can use the PokerTH QML client or the classic widget client: they connect to the same server and play at the same tables."],
     ["Does it need pokerth.net or an internet connection?",
      "No. A server on your local network runs on its own: the players connect to it directly, with just a nickname."],
     ["How many players can join?",

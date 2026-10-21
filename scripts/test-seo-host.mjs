@@ -56,6 +56,7 @@ ok(/`amd64` \/ `arm64` \/ `armv7`/.test(readme) && /amd64, arm64 and armv7/.test
 ok(existsSync(join(root, 'docs/CASAOS.md')) && /x-casaos/.test(read('docker-compose.yml')), 'CasaOS: guide and Compose metadata');
 ok(/\*\*Pi 4 \(2 GB\)\*\* \| ✅ Recommended sweet spot/.test(readme) && /Pi 4 with 2 GB is the sweet spot/.test(all), 'Raspberry Pi 4 (2 GB) is the sweet spot');
 ok(/process\.env\.PORT \|\| '8080'/.test(src) && /port 8080/.test(all), 'default port 8080');
+ok(/QML client/.test(EN.partsP) && /widget client/.test(EN.partsP) && /QML or widget client/.test(EN.steps[2][1]) && /port 7234/.test(EN.steps[2][1]) && /QML client or the classic widget client/.test(EN.faq[2][1]), 'the QML and widget clients join the same server (parts, step 3, FAQ)');
 ok(/PWA extras \(install to home screen, offline, notifications\) need HTTPS/.test(readme), 'HTTPS needed for install, offline, notifications');
 ok(/lives at \*\*`\/admin`\*\*/.test(readme) && /set-token/.test(readme) && /\*\*Broadcasts\*\*/.test(readme) && /\*\*Packages\*\*/.test(readme) && /\*\*Music\*\*/.test(readme) && /\*\*Keys\*\*/.test(readme) && /\*\*Game servers\*\*/.test(readme), 'admin panel: token, broadcasts, packages, music, keys, game servers');
 ok(existsSync(join(root, '.gitignore')) && /deploy-history\.json/.test(read('.gitignore')), 'admin roll-back (deployment history)');

@@ -32,7 +32,7 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Added
-- **`/host-a-server`** (`web.231`–`web.232`, SEO, English first) — « host your own poker server »: why (private, yours to
+- **`/host-a-server`** (`web.231`–`web.233`, SEO) — « host your own poker server »: why (private, yours to
   shape, free), the two pieces (PokerTH dedicated server + web client), three steps (build
   `pokerth_dedicated_server` 2.1.10+ from source per the upstream server guide — the distributions' `pokerth-server`
   package is older —, TCP 7234; the installation script, Docker multi-arch image or CasaOS; port 8080 on the LAN),
@@ -41,7 +41,9 @@ highlights below.
   list, links to the README guides (built in code), five questions; `HowTo` + `FAQPage` JSON-LD. Linked from the
   /faq answer « Can I host my own server? » and from « Host it yourself » on /play-with-friends. Wired like the
   other pages (nav « Host a server » gated on the language). Guard: `scripts/test-seo-host.mjs`, which checks the
-  page's claims and every guide link against the repository. `seo-i18n/host.js` is empty until the translations.
+  page's claims and every guide link against the repository. `web.233`: the QML and widget clients join the same LAN
+  server (« everything stays compatible »: parts, step 3 with port 7234, FAQ), and the page in all 82 other languages
+  (`seo-i18n/host.js`; « LAN / Dedicated server » is each catalog's `loginLanTitle`) with a « Host a server » nav label.
 - **`/accessibility`** (`web.228`, `web.229`, SEO) — « accessible poker »: where the Accessibility button is,
   interface size and high contrast (synced with the account), four-colour decks, the table magnifier and pinch
   zoom, light/dark, keyboard (official F-keys and re-bindable letters), gamepad and Android TV remote, voice
