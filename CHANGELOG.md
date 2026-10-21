@@ -225,6 +225,12 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **iPhone app: no band under the screen after a reload or a navigation** (`web.248`, to be confirmed on a device) —
+  started from the home screen the login screen fills the iPhone, but loaded by a navigation (« Play now » on a guide
+  page) or by the « new version » reload a black band showed under it: iOS can report a viewport short by the
+  home-indicator inset and keep it. On an iPhone home-screen app the window is the screen, so the `--app-h` script
+  now takes the screen size in layout pixels when the measure is short by an inset-sized gap (≤ 60 px); iPad,
+  Android, Safari tabs and larger gaps (keyboard) are untouched. `scripts/test-pwa-height.mjs`.
 - **Ace's Help: the « x/10 » frame in a ranked waiting room** (`web.247`) — the gold frame around the waiting-room
   notice went out at the next arrival and never came back: the lobby re-renders that notice, and the highlight
   kept following the old, detached node. `guide/highlight.mjs` now re-finds a replaced target with the step's own

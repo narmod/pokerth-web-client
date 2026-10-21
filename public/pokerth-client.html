@@ -309,11 +309,29 @@ try{var _d=document.documentElement,_p=localStorage.getItem('pth_theme'),_tb=loc
       var a = document.activeElement;
       return !!(a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable));
     }
+    /* iPhone home-screen app, loaded by a navigation or a reload rather than
+       a cold start (narmod 2026-10-21: « Play now » from a guide page, the
+       « new version » reload): iOS can report a viewport short by the
+       home-indicator inset and keep it — the band again, black on the login
+       screen. On an iPhone the app window IS the screen (no windowing there),
+       so its size in layout pixels is the true height. Only a gap the size of
+       that inset is corrected; any other difference is left to the measure. */
+    function fullH(h) {
+      try {
+        if (navigator.standalone !== true || !/iPhone|iPod/.test(navigator.userAgent || '')) return h;
+        var sw = screen.width, sh = screen.height, lw = window.innerWidth;
+        if (!sw || !sh || !lw) return h;
+        var lg = Math.max(sw, sh), sm = Math.min(sw, sh);
+        var portrait = mm ? mm('(orientation: portrait)').matches : window.innerHeight >= lw;
+        var full = portrait ? lg * (lw / sm) : sm * (lw / lg);
+        return (full > h && full - h <= 60) ? full : h;
+      } catch (e) { return h; }
+    }
     function setH() {
       try {
         if (editing()) return;
         var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-        if (h) d.style.setProperty('--app-h', Math.round(h) + 'px');
+        if (h) d.style.setProperty('--app-h', Math.round(fullH(h)) + 'px');
       } catch (e) {}
     }
     setH();
@@ -356,7 +374,7 @@ try{var _d=document.documentElement,_p=localStorage.getItem('pth_theme'),_tb=loc
     }
     function edge() {
       try {
-        var w = window.innerWidth, h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+        var w = window.innerWidth, h = fullH((window.visualViewport && window.visualViewport.height) || window.innerHeight);
         var c = '';
         for (var n = document.elementFromPoint(w / 2, h - 2); n && n.nodeType === 1; n = n.parentElement) {
           var cs = getComputedStyle(n);
