@@ -225,6 +225,15 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Visitors: more browsers and platforms told apart** (`web.255`) — `UA_OS` / `UA_BROWSER` in `proxy.js`. New
+  browser labels: **In-app** (Facebook, Instagram, the Google app, WeChat, TikTok…), **WebView** (Android `; wv)`),
+  **Yandex**, **UC**, **Huawei**, **Xiaomi**, **Silk**, **DuckDuckGo**, **Meta Quest**; Opera on iOS (`OPT/`) counts as
+  Opera. The installed app on iPhone / iPad (no `Safari/` token) counted as « other » and now counts as Safari, so the
+  « iOS Safari » share no longer misses it. New platforms: **HarmonyOS**, **KaiOS**, **Smart TV** (Tizen, webOS,
+  Fire TV, Android TV…), **Console** (PlayStation, Xbox, Switch), **VR headset**, **BSD** — each tested before the OS
+  its UA borrows (Android, Windows NT, Linux). HarmonyOS and KaiOS count as mobile in the cube and the map
+  (`UA_MOBILE_OS`, one list for both). Still impossible from the UA alone: iPadOS Safari (signs Macintosh, stays
+  macOS), Brave and Vivaldi (Chrome's exact UA). History keeps its old labels; the new ones start with this build.
 - **Visitor language: « No usable language header » no longer hides a language** (`web.254`) — only the first
   tag of `Accept-Language` was read, so `*, fr-FR`, `und, en` or `,en` counted as « other ». `server/lang-stats.js`
   now walks the tags in order (at most 8) and keeps the first usable one; when the header holds none (absent, as in

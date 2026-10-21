@@ -9522,7 +9522,7 @@ function recordFact(type, o, d, req, bot) {
     const T = visitTarget(bot);
     const os = _uaPick(UA_OS, String((req && req.headers && req.headers['user-agent']) || ''));
     o.cc = (d && typeof d.tz === 'string') ? GEO_STATS.countryOfTz(d.tz) : GEO_STATS.UNKNOWN;
-    o.dev = (os === 'iPhone' || os === 'iPad' || os === 'Android') ? 'm' : 'd';
+    o.dev = UA_MOBILE_OS.indexOf(os) >= 0 ? 'm' : 'd';
     o.app = (d && d.pwa === true) ? 'p' : '-';
     // New or known device: read from the first-seen day the visit counter
     // already keeps (allU); nothing new is stored. '-' when never counted.
@@ -9728,18 +9728,41 @@ function musicPlayTitles() {
 // Ce sont des totaux cumulés, pas des séries : quatre petits dictionnaires de
 // compteurs, alimentés par le même ping anonyme que les visites. Rien de plus
 // n'est stocké — pas d'UA brut, pas d'IP.
+// 2.1.10-web.255: platforms that used to read as « other » or as the OS
+// their UA borrows. Order matters here too: a console signs Windows NT, a
+// Fire TV, KaiOS and the older HarmonyOS sign Android, a headset or a TV
+// signs Linux — so each is tested before the OS it borrows from.
+// iPadOS Safari signs « Macintosh » and stays macOS: the UA cannot tell.
 const UA_OS = [
-  [/iPhone/, 'iPhone'], [/iPad/, 'iPad'], [/Android/, 'Android'],
-  [/Windows NT/, 'Windows'], [/Mac OS X/, 'macOS'], [/CrOS/, 'ChromeOS'], [/Linux/, 'Linux'],
+  [/iPhone|iPod/, 'iPhone'], [/iPad/, 'iPad'],
+  [/OpenHarmony|HarmonyOS|ArkWeb/, 'HarmonyOS'], [/KAIOS/i, 'KaiOS'],
+  [/PlayStation|Xbox|Nintendo/, 'Console'],
+  [/OculusBrowser|\bQuest\b|Pico Neo|PicoBrowser/, 'VR headset'],
+  [/SMART-TV|SmartTV|Web0S|webOS|Tizen|HbbTV|BRAVIA|GoogleTV|Android ?TV|CrKey|\bAFT[A-Z0-9]{1,6}\b/, 'Smart TV'],
+  [/Android/, 'Android'],
+  [/Windows NT/, 'Windows'], [/Mac OS X/, 'macOS'], [/CrOS/, 'ChromeOS'],
+  [/FreeBSD|OpenBSD|NetBSD/, 'BSD'], [/Linux/, 'Linux'],
 ];
+// Phones and tablets, for the mobile / desktop split of the cube and the map.
+const UA_MOBILE_OS = ['iPhone', 'iPad', 'Android', 'HarmonyOS', 'KaiOS'];
 // L'ordre compte : Chrome et Edge annoncent tous deux « Safari », Edge annonce
 // « Chrome ». On teste donc du plus spécifique au plus générique.
 // Edge signs Edg/ on a computer, EdgA/ on Android and EdgiOS/ on iPhone/iPad
 // (the last two used to be counted as Chrome and Safari); Edge/ = legacy Edge.
 // Checked by scripts/test-ua-browser.mjs.
+// 2.1.10-web.255: in-app browsers (Facebook, Instagram, the Google app…),
+// the Android WebView and the browsers that used to read as Chrome or Safari
+// (Yandex, UC, Huawei, Xiaomi, Silk, DuckDuckGo, Opera on iOS) get their own
+// label. An iPhone / iPad page with no Safari/ token is the installed app
+// (home screen) or a WebKit view: WebKit, so Safari. Brave and Vivaldi send
+// Chrome's exact UA and stay Chrome.
 const UA_BROWSER = [
-  [/Edg(?:e|A|iOS)?\//, 'Edge'], [/OPR\/|Opera/, 'Opera'], [/SamsungBrowser/, 'Samsung'],
-  [/FxiOS|Firefox\//, 'Firefox'], [/CriOS/, 'Chrome'], [/Chrome\//, 'Chrome'], [/Safari\//, 'Safari'],
+  [/FBAN\/|FBAV\/|FB_IAB|Instagram |\bLine\/|MicroMessenger|Snapchat|musical_ly|BytedanceWebview|TikTok|LinkedInApp|Pinterest|GSA\//, 'In-app'],
+  [/Edg(?:e|A|iOS)?\//, 'Edge'], [/OPR\/|Opera|OPT\/|OPiOS\//, 'Opera'], [/OculusBrowser/, 'Meta Quest'],
+  [/SamsungBrowser/, 'Samsung'], [/YaBrowser\/|YaSearchBrowser/, 'Yandex'], [/UCBrowser\/|UCWEB|UBrowser\//, 'UC'],
+  [/HuaweiBrowser\/|HBPC\//, 'Huawei'], [/MiuiBrowser\/|XiaoMi\//, 'Xiaomi'], [/Ddg\/|DuckDuckGo\//, 'DuckDuckGo'],
+  [/Silk\//, 'Silk'], [/FxiOS|Firefox\//, 'Firefox'], [/; wv\)/, 'WebView'],
+  [/CriOS/, 'Chrome'], [/Chrome\//, 'Chrome'], [/Safari\//, 'Safari'], [/(?:iPhone|iPad|iPod).*AppleWebKit\//, 'Safari'],
 ];
 // Bot-likeness (mesure, jamais filtre) : UA d'automate connu. Combiné plus
 // bas avec « en-tête de langue inexploitable » pour estimer la part de bruit
@@ -15324,7 +15347,7 @@ const httpServer = http.createServer((req, res) => {
           recordVisitSource(d, req.headers && req.headers['accept-language'], _seenBefore, _bot, _nl);
           if (d && typeof d.tz === 'string') {
             const _os = _uaPick(UA_OS, String((req.headers && req.headers['user-agent']) || ''));
-            recordGeo(d.tz, { nw: _seenBefore === false, pwa: !!d.pwa, mob: _os === 'iPhone' || _os === 'iPad' || _os === 'Android' }, null, _bot);
+            recordGeo(d.tz, { nw: _seenBefore === false, pwa: !!d.pwa, mob: UA_MOBILE_OS.indexOf(_os) >= 0 }, null, _bot);
           }
         }
       } catch (e) { /* ignore a bad ping */ }
