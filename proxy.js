@@ -2020,7 +2020,10 @@ var _SEO_PAGE_CSS =
     'border-bottom:6px solid transparent;border-image:repeating-linear-gradient(90deg,var(--chip) 0 34px,var(--ivory) 34px 46px) 6}' +
   '.hero .in{padding-top:44px;padding-bottom:40px}' +
   ".hero h1{font-family:Cinzel,Georgia,'Times New Roman',serif;font-weight:600;font-size:clamp(1.85rem,1.1rem + 3vw,3rem);" +
-    'line-height:1.15;letter-spacing:.005em;color:var(--ivory);margin:0 0 .45em;text-wrap:balance}' +
+    'line-height:1.15;letter-spacing:.005em;color:var(--ivory);margin:0 0 .45em;text-wrap:balance;hyphens:auto;overflow-wrap:break-word}' +
+  // A long compound in a large title (« Datenschutzerklärung » at 360 px)
+  // must hyphenate or break rather than widen the page.
+  'main{overflow-wrap:break-word}h2,h3{hyphens:auto}' +
   '.hero p{font-size:1.12em;line-height:1.65;color:#e8eadf;margin:0;max-width:38em}' +
   '.hero .play{margin-top:24px}' +
   '.body{padding-top:12px;padding-bottom:72px}' +

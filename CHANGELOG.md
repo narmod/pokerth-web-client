@@ -225,6 +225,10 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Content pages no longer widen a small phone** (`web.244`, SEO re-audit of 2026-10-21) — at 360 px, /privacy and
+  /poker-odds in German were 409 and 394 px wide: one long compound in the large title (« Datenschutzerklärung »)
+  could not break. Titles now hyphenate (`hyphens:auto`, `overflow-wrap:break-word`), so does the text; a sweep of
+  the 13 content pages in all 83 languages at 360 px finds no overflow.
 - **Web app manifest: the wide screenshot's real size** (`web.238`) — `social-preview.png` was declared 1280×640
   but is 1200×630; install prompts and stores that check the size skip a screenshot that does not match.
   `scripts/test-manifest-sizes.mjs` now reads every icon and screenshot the manifest lists and compares.
