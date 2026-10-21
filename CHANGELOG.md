@@ -132,6 +132,12 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **/faq and /glossary in themed sections** (`web.237`, SEO) — both pages were one flat list under the H1. The FAQ
+  now has five H2 themes (Free and private · Getting started · Friends and tournaments · Devices and languages ·
+  About PokerTH) with each question as an H3, and FAQPage lists the questions in the same reading order; the
+  glossary has four (Actions · Cards and hands · Bets and the pot · Table and tournaments), alphabetical inside
+  each. Headings in all 83 languages (`seo-i18n/sections.js`); `scripts/test-seo-sections.mjs` checks every
+  question and term sits in exactly one section and that every language renders them.
 - **Article pages carry dates, image and publisher** (`web.236`, SEO) — /rules, /hand-rankings, /poker-odds,
   /starting-hands and /accessibility: the Article JSON-LD now has `datePublished`, `dateModified`, the social card
   as `image`, and the PokerTH Development Team as author and publisher (with its logo), plus

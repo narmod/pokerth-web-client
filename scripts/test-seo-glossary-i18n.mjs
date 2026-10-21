@@ -133,8 +133,8 @@ for (const code of RTL) {
     `${code}: rank sequences in definitions are isolated from bidi reordering${loose.length ? ' — ' + loose.join(', ') : ''}`);
 }
 
-ok(/SEO_GLOSSARY_I18N = require\('\.\/seo-i18n\/glossary\.js'\)\.build\(_SEO_GLOSSARY, _seoPageHref\);/.test(proxy),
-  'proxy.js builds SEO_GLOSSARY_I18N from the module');
+ok(/SEO_GLOSSARY_I18N = require\('\.\/seo-i18n\/glossary\.js'\)\.build\(_SEO_GLOSSARY, _seoPageHref, _SEO_GLOSSARY_GROUP_IX,/.test(proxy),
+  'proxy.js builds SEO_GLOSSARY_I18N from the module, in its themed sections');
 ok(proxy.indexOf("SEO_GLOSSARY_I18N = require('./seo-i18n/glossary.js')") > proxy.indexOf('var _SEO_GLOSSARY = ['),
   'and does so after _SEO_GLOSSARY is assigned');
 ok(/dt \.loc\{/.test(proxy), 'the page CSS styles the local equivalent');

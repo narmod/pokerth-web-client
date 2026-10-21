@@ -6112,22 +6112,29 @@ var PARTS = {
 // language-neutral _SEO_GLOSSARY array, which supplies the English headwords
 // so a translation cannot drift from them or reorder them, and
 // `href(page, lang)` resolves an internal link to the right language variant.
-function build(glossary, href) {
+// `groups` lists the themed sections as arrays of indexes into `glossary`
+// and `heads(code)` their translated headings (H2).
+function build(glossary, href, groups, heads) {
   var out = {};
+  if (!groups) groups = [glossary.map(function (g, i) { return i; })];
   for (var code in PARTS) {
-    var p = PARTS[code], dl = '<dl>', i;
-    for (i = 0; i < glossary.length; i++) {
-      var en = glossary[i][0], loc = p.terms[i][0];
-      // Many languages have simply adopted the English word — ante, flop,
-      // turn, river, pot. Printing "Ante (ante)" would be noise, so an
-      // equivalent that only differs by case is dropped here rather than
-      // relying on every translation to have passed null for it.
-      if (loc && loc.toLowerCase() === en.toLowerCase()) loc = null;
-      dl += '<dt><span class="en">' + en + '</span>' +
-        (loc ? ' <span class="loc">(' + loc + ')</span>' : '') + '</dt>' +
-        '<dd>' + p.terms[i][1] + '</dd>';
+    var p = PARTS[code], dl = '', h = heads ? heads(code) : null, g, gi, i;
+    for (g = 0; g < groups.length; g++) {
+      dl += (h ? '<h2>' + h[g] + '</h2>' : '') + '<dl>';
+      for (gi = 0; gi < groups[g].length; gi++) {
+        i = groups[g][gi];
+        var en = glossary[i][0], loc = p.terms[i][0];
+        // Many languages have simply adopted the English word — ante, flop,
+        // turn, river, pot. Printing "Ante (ante)" would be noise, so an
+        // equivalent that only differs by case is dropped here rather than
+        // relying on every translation to have passed null for it.
+        if (loc && loc.toLowerCase() === en.toLowerCase()) loc = null;
+        dl += '<dt><span class="en">' + en + '</span>' +
+          (loc ? ' <span class="loc">(' + loc + ')</span>' : '') + '</dt>' +
+          '<dd>' + p.terms[i][1] + '</dd>';
+      }
+      dl += '</dl>';
     }
-    dl += '</dl>';
     out[code] = {
       title: p.title, desc: p.desc, ldHeadline: p.ldHeadline, ldDesc: p.ldDesc,
       body: '<h1>' + p.h1 + '</h1><p>' + p.lead + '</p>' + dl +

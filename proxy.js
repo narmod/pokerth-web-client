@@ -1971,6 +1971,8 @@ var _SEO_PAGE_CSS = 'body{margin:0;background:#0d1117;color:#d8dde4;font:16px/1.
   '[dir=rtl] dd{margin:.3em 0 0 0}' +
   '[dir=rtl] th,[dir=rtl] td{text-align:right}[dir=rtl] td.n{text-align:left}' +
   'dt{font-weight:600;color:#fff;margin-top:1.1em}dd{margin:.3em 0 0 0}' +
+  // FAQ entries: the question is an H3 under its section, set like a dt.
+  '.qa h3{font-size:1em;font-weight:600;color:#fff;margin:1.1em 0 0}.qa p{margin:.3em 0 0}' +
   // Glossary entries carry the English term — which is what turns up in
   // the chat — followed by the local equivalent where the language has
   // one. The equivalent is set lighter so the entry still scans as one
@@ -6893,6 +6895,34 @@ var _SEO_FAQ = [
 var _SEO_FAQ_FRIENDS_IX = 5;
 var _SEO_FAQ_BOTS_IX = 9;
 var _SEO_FAQ_HOST_IX = 15;   // « Can I host my own server? »
+// /faq and /glossary in themed sections (H2), so the page has an outline a
+// search engine or an assistant can quote from, instead of a single flat list
+// under the H1. Groups are indexes into _SEO_FAQ / names in _SEO_GLOSSARY;
+// every entry appears exactly once (scripts/test-seo-sections.mjs). The
+// headings are translated in seo-i18n/sections.js, English being the fallback.
+var _SEO_FAQ_GROUPS = [
+  [0, 2, 13, 14],          // free and private
+  [1, 3, 4, 7, 9, 19],     // getting started
+  [5, 6, 16, 17, 18],      // friends and tournaments
+  [8, 11, 12],             // devices and languages
+  [10, 15, 20]             // about PokerTH
+];
+var _SEO_GLOSSARY_GROUPS = [
+  ['All-In', 'Call', 'Check', 'Check-raise', 'Fold', 'Limp', 'Muck', 'Raise', 'Re-raise', 'Slow play', 'Straddle', 'Value bet'],
+  ['Backdoor', 'Board', 'Community cards', 'Connectors', 'Draw', 'Drawing dead', 'Flop', 'Hole cards', 'Kicker', 'Nuts',
+   'Offsuit', 'Outs', 'Overpair', 'Pocket pair', 'Preflop', 'Rainbow', 'River', 'Set', 'Suited', 'Trips', 'Turn', 'Wheel'],
+  ['Ante', 'Big blind', 'Blinds', 'Equity', 'Pot', 'Pot odds', 'Short stack', 'Side pot', 'Small blind', 'Split pot', 'Stack'],
+  ['Bad beat', 'Bubble', 'Button', 'Freeroll', 'Heads-up', 'Showdown', 'Sit and go', 'Tilt', 'Under the gun']
+];
+var _SEO_SECTIONS_EN = {
+  faq: ['Free and private', 'Getting started', 'Friends and tournaments', 'Devices and languages', 'About PokerTH'],
+  gloss: ['Actions', 'Cards and hands', 'Bets and the pot', 'Table and tournaments']
+};
+var SEO_SECTIONS_I18N = require('./seo-i18n/sections.js');
+function _seoSections(lang, page) {
+  var t = lang && SEO_SECTIONS_I18N[lang] && SEO_SECTIONS_I18N[lang][page];
+  return (t && t.length === _SEO_SECTIONS_EN[page].length) ? t : _SEO_SECTIONS_EN[page];
+}
 
 function seoFaqPage(res, method, lang) {
   var langs = seoPageLangs(SEO_FAQ_I18N);
@@ -6903,18 +6933,24 @@ function seoFaqPage(res, method, lang) {
   // reader and another to the crawler \u2014 which is the failure Google
   // penalises hardest on this page type.
   var qa = (tr && tr.qa) || _SEO_FAQ;
-  var body = '<h1>' + ((tr && tr.h1) || 'PokerTH Web Client \u2014 Frequently Asked Questions') + '</h1><dl>';
-  var ents = [];
-  for (var i = 0; i < qa.length; i++) {
-    body += '<dt>' + qa[i][0] + '</dt><dd>' + qa[i][1] + '</dd>';
-    // « How do I play poker online with friends? » points on to the full page.
-    if (i === _SEO_FAQ_FRIENDS_IX) { var _fl = _seoFriendsLink(lang); if (_fl) body += '<dd>' + _fl.slice(3, -4) + '</dd>'; }
-    if (i === _SEO_FAQ_BOTS_IX) { var _bl = _seoBotsLink(lang); if (_bl) body += '<dd>' + _bl.slice(3, -4) + '</dd>'; }
-    if (i === _SEO_FAQ_HOST_IX) { var _hl = _seoHostLink(lang); if (_hl) body += '<dd>' + _hl.slice(3, -4) + '</dd>'; }
-    ents.push({ '@type': 'Question', name: qa[i][0],
-      acceptedAnswer: { '@type': 'Answer', text: qa[i][1] } });
+  var body = '<h1>' + ((tr && tr.h1) || 'PokerTH Web Client \u2014 Frequently Asked Questions') + '</h1>';
+  var ents = [], heads = _seoSections(lang, 'faq');
+  // Themed sections (H2), one H3 per question; FAQPage lists the questions
+  // in the same order the reader sees them.
+  for (var g = 0; g < _SEO_FAQ_GROUPS.length; g++) {
+    body += '<h2>' + heads[g] + '</h2>';
+    for (var gi = 0; gi < _SEO_FAQ_GROUPS[g].length; gi++) {
+      var i = _SEO_FAQ_GROUPS[g][gi];
+      body += '<div class="qa"><h3>' + qa[i][0] + '</h3><p>' + qa[i][1] + '</p>';
+      // « How do I play poker online with friends? » points on to the full page.
+      if (i === _SEO_FAQ_FRIENDS_IX) body += _seoFriendsLink(lang);
+      if (i === _SEO_FAQ_BOTS_IX) body += _seoBotsLink(lang);
+      if (i === _SEO_FAQ_HOST_IX) body += _seoHostLink(lang);
+      body += '</div>';
+      ents.push({ '@type': 'Question', name: qa[i][0],
+        acceptedAnswer: { '@type': 'Answer', text: qa[i][1] } });
+    }
   }
-  body += '</dl>';
   var ld = { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: lang || 'en', mainEntity: ents };
   seoContentPage(res, method,
     (tr && tr.title) || 'PokerTH Web Client FAQ \u2014 Free Poker in Your Browser',
@@ -7377,18 +7413,28 @@ var _SEO_HANDS_PARTS = require('./seo-i18n/hands.js').PARTS;
 // Serve-time localization of pokerth-client.html (see sendClientHtml).
 const _seoSsr = require('./seo-i18n/ssr.js');
 SEO_HOWTO_I18N = require('./seo-i18n/howto.js').build(_SEO_HOWTO, _seoPageHref, _seoFriendsLink);
-SEO_GLOSSARY_I18N = require('./seo-i18n/glossary.js').build(_SEO_GLOSSARY, _seoPageHref);
+// Glossary groups as indexes into _SEO_GLOSSARY, resolved once by headword.
+var _SEO_GLOSSARY_GROUP_IX = _SEO_GLOSSARY_GROUPS.map(function (grp) {
+  return grp.map(function (w) { for (var i = 0; i < _SEO_GLOSSARY.length; i++) if (_SEO_GLOSSARY[i][0] === w) return i; return -1; })
+    .filter(function (i) { return i >= 0; });
+});
+SEO_GLOSSARY_I18N = require('./seo-i18n/glossary.js').build(_SEO_GLOSSARY, _seoPageHref, _SEO_GLOSSARY_GROUP_IX,
+  function (code) { return _seoSections(code, 'gloss'); });
 SEO_COMP_I18N = require('./seo-i18n/competitions.js');
 
 function seoGlossaryPage(res, method, lang) {
   var langs = seoPageLangs(SEO_GLOSSARY_I18N);
   if (langs.indexOf(lang) === -1) lang = '';
   var tr = lang ? SEO_GLOSSARY_I18N[lang] : null;
-  var dl = '<dl>';
-  for (var i = 0; i < _SEO_GLOSSARY.length; i++) {
-    dl += '<dt>' + _SEO_GLOSSARY[i][0] + '</dt><dd>' + _SEO_GLOSSARY[i][1] + '</dd>';
+  var heads = _SEO_SECTIONS_EN.gloss, dl = '';
+  for (var g = 0; g < _SEO_GLOSSARY_GROUP_IX.length; g++) {
+    dl += '<h2>' + heads[g] + '</h2><dl>';
+    for (var gi = 0; gi < _SEO_GLOSSARY_GROUP_IX[g].length; gi++) {
+      var i = _SEO_GLOSSARY_GROUP_IX[g][gi];
+      dl += '<dt>' + _SEO_GLOSSARY[i][0] + '</dt><dd>' + _SEO_GLOSSARY[i][1] + '</dd>';
+    }
+    dl += '</dl>';
   }
-  dl += '</dl>';
   var body = '<h1>Poker Glossary \u2014 Texas Hold\u2019em Terms Explained</h1>' +
     '<p>The words you will meet at a Hold\u2019em table, in the chat and in PokerTH itself. The five action words \u2014 ' +
     'Fold, Check, Call, Raise and All-In \u2014 stay in English in every one of the ' + (supportedLangCount() || 83) + ' interface languages, because ' +
