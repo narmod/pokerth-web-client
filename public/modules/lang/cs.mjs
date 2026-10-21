@@ -792,7 +792,7 @@ export const strings = {
     abWebBy:"Webový klient: Arnaud Obscur (narmod@pokerth.net), ve spolupráci s projektem PokerTH.",
     abProject1:"PokerTH je svobodná pokerová hra Texas Hold'em s otevřeným kódem, vyvíjená od roku 2006. Tento webový klient je její prohlížečovou verzí, vyvíjenou ve spolupráci s projektem PokerTH.",
     abProject2:"Zdrojový kód je volně dostupný:",
-    abProjectWeb:"Webový klient",
+    abProjectWeb:"Webový klient", abGuides:"Pokerové příručky",
     abThanks2:"Děkujeme také komunitě PokerTH.net, překladatelům a testerům a současným správcům za podporu tohoto webového klienta.",
     abLicense1:"Webový klient PokerTH je vydán pod licencí GNU AGPL v3. PokerTH je vydán pod licencí GNU GPL.",
     abLicense2:"Úplné znění licencí je k dispozici se zdrojovým kódem:",

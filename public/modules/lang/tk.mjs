@@ -525,7 +525,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Web müşderi: Arnaud Obscur (narmod@pokerth.net), PokerTH taslamasy bilen hyzmatdaşlykda.',
     abProject1:'PokerTH — 2006-njy ýyldan bäri işlenip düzülýän mugt we açyk çeşmeli Texas Hold\'em poker oýny. Bu web müşderi onuň brauzer wersiýasy bolup, PokerTH taslamasy bilen hyzmatdaşlykda döredildi.',
-    abProject2:'Çeşme kody mugt elýeterli:', abProjectWeb:'Web müşderi',
+    abProject2:'Çeşme kody mugt elýeterli:', abProjectWeb:'Web müşderi', abGuides:'Poker gollanmalary',
     abThanks1:'PokerTH toparyna — Felix Hammer, Florian Thauer, Lothar May — we 2006-njy ýyldan bäri taslama goşant goşanlaryň hemmesine sag bolsun.',
     abThanks2:'Şeýle hem PokerTH.net jemgyýetine, terjimeçilere we synagçylara, şeýle hem bu web müşderini goldaýan häzirki goldawçylara sag bolsun.',
     abLicense1:'PokerTH web müşderisi GNU AGPL v3 ygtyýarnamasy boýunça çykaryldy. PokerTH GNU GPL ygtyýarnamasy boýunça çykaryldy.',

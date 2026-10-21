@@ -525,7 +525,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Iklayenti lewebhu: Arnaud Obscur (narmod@pokerth.net), ngokubambisana nephrojekthi ye-PokerTH.',
     abProject1:'I-PokerTH ingumdlalo we-poker we-Texas Hold\'em wamahhala nowomthombo ovulekile, othuthukiswa kusukela ngo-2006. Leli klayenti lewebhu liyinguqulo yawo yesiphequluli, eyakhiwe ngokubambisana nephrojekthi ye-PokerTH.',
-    abProject2:'Ikhodi yomthombo itholakala mahhala:', abProjectWeb:'Iklayenti lewebhu',
+    abProject2:'Ikhodi yomthombo itholakala mahhala:', abProjectWeb:'Iklayenti lewebhu', abGuides:'Imihlahlandlela ye-poker',
     abThanks1:'Siyabonga ithimba le-PokerTH — Felix Hammer, Florian Thauer, Lothar May — nabo bonke abanikele kule phrojekthi kusukela ngo-2006.',
     abThanks2:'Siyabonga nomphakathi we-PokerTH.net, abahumushi nabahloli, nabanakekeli bamanje ngokuxhasa leli klayenti lewebhu.',
     abLicense1:'Iklayenti lewebhu le-PokerTH likhishwe ngaphansi kwelayisensi ye-GNU AGPL v3. I-PokerTH ikhishwe ngaphansi kwelayisensi ye-GNU GPL.',

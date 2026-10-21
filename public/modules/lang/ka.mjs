@@ -525,7 +525,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'ვებ-კლიენტი: Arnaud Obscur (narmod@pokerth.net), PokerTH პროექტთან თანამშრომლობით.',
     abProject1:'PokerTH არის უფასო და ღია კოდის Texas Hold\'em პოკერის თამაში, რომელიც 2006 წლიდან ვითარდება. ეს ვებ-კლიენტი მისი ბრაუზერული ვერსიაა და PokerTH პროექტთან თანამშრომლობით იქმნება.',
-    abProject2:'საწყისი კოდი თავისუფლად არის ხელმისაწვდომი:', abProjectWeb:'ვებ-კლიენტი',
+    abProject2:'საწყისი კოდი თავისუფლად არის ხელმისაწვდომი:', abProjectWeb:'ვებ-კლიენტი', abGuides:'პოკერის გზამკვლევები',
     abThanks1:'მადლობა PokerTH გუნდს — Felix Hammer, Florian Thauer, Lothar May — და პროექტის ყველა მონაწილეს 2006 წლიდან.',
     abThanks2:'ასევე მადლობა PokerTH.net საზოგადოებას, მთარგმნელებსა და ტესტერებს, და ამჟამინდელ maintainers-ს ამ ვებ-კლიენტის მხარდაჭერისთვის.',
     abLicense1:'PokerTH ვებ-კლიენტი ვრცელდება GNU AGPL v3 ლიცენზიით. PokerTH ვრცელდება GNU GPL ლიცენზიით.',

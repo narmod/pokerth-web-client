@@ -524,7 +524,7 @@ export const strings = {
     abCopy:'(c) 2006–2026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Spletni odjemalec: Arnaud Obscur (narmod@pokerth.net), v sodelovanju s projektom PokerTH.',
     abProject1:"PokerTH je brezplačna in odprtokodna pokrska igra Texas Hold'em, razvita od leta 2006. Ta spletni odjemalec je njena različica za brskalnik, razvita v sodelovanju s projektom PokerTH.",
-    abProject2:'Izvorna koda je prosto dostopna:', abProjectWeb:'Spletni odjemalec',
+    abProject2:'Izvorna koda je prosto dostopna:', abProjectWeb:'Spletni odjemalec', abGuides:'Vodniki za poker',
     abThanks1:'Zahvala ekipi PokerTH — Felix Hammer, Florian Thauer, Lothar May — in vsem sodelavcem projekta od leta 2006.',
     abThanks2:'Zahvala tudi skupnosti PokerTH.net, prevajalcem in testerjem ter trenutnim vzdrževalcem za podporo temu spletnemu odjemalcu.',
     abLicense1:'Spletni odjemalec PokerTH je izdan pod licenco GNU AGPL v3. PokerTH je izdan pod licenco GNU GPL.',

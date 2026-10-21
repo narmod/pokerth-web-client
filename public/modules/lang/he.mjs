@@ -521,7 +521,7 @@ export const strings = {
     abCopy:'(c) 2006–2026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'לקוח הרשת: Arnaud Obscur (narmod@pokerth.net), בשיתוף פעולה עם פרויקט PokerTH.',
     abProject1:'PokerTH הוא משחק פוקר טקסס הולדם חופשי ובקוד פתוח, המפותח מאז 2006. לקוח הרשת הזה הוא גרסת הדפדפן שלו, שפותחה בשיתוף פעולה עם פרויקט PokerTH.',
-    abProject2:'קוד המקור זמין בחופשיות:', abProjectWeb:'לקוח הרשת',
+    abProject2:'קוד המקור זמין בחופשיות:', abProjectWeb:'לקוח הרשת', abGuides:'מדריכי פוקר',
     abThanks1:'תודה לצוות PokerTH — Felix Hammer, Florian Thauer, Lothar May — ולכל תורמי הפרויקט מאז 2006.',
     abThanks2:'תודה גם לקהילת PokerTH.net, למתרגמים ולבודקים, ולמתחזקים הנוכחיים על תמיכתם בלקוח הרשת הזה.',
     abLicense1:'לקוח הרשת של PokerTH משוחרר תחת רישיון GNU AGPL v3. ‏PokerTH משוחרר תחת רישיון GNU GPL.',

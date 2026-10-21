@@ -795,7 +795,7 @@ export const strings = {
     abWebBy:"Cliant-lìn: Arnaud Obscur (narmod@pokerth.net), ann an co-obrachadh le pròiseact PokerTH.",
     abProject1:"'S e geama pòcair Texas Hold'em saor le còd fosgailte a th' ann am PokerTH, ga leasachadh bho 2006. 'S e tionndadh a' bhrabhsair dheth a th' anns a' chliant-lìn seo, ga leasachadh ann an co-obrachadh le pròiseact PokerTH.",
     abProject2:"Tha an còd tùsail ri fhaighinn gu saor:",
-    abProjectWeb:"Cliant-lìn",
+    abProjectWeb:"Cliant-lìn", abGuides:"Stiùiridhean pòcair",
     abThanks2:"Taing cuideachd do choimhearsnachd PokerTH.net, dha na h-eadar-theangairean is luchd-deuchainn, agus dhan luchd-glèidhidh làithreach airson taic a chumail ris a' chliant-lìn seo.",
     abLicense1:"Tha cliant-lìn PokerTH ga fhoillseachadh fo cheadachas GNU AGPL v3. Tha PokerTH ga fhoillseachadh fo cheadachas GNU GPL.",
     abLicense2:"Tha teacsa slàn nan ceadachasan ri fhaighinn leis a' chòd tùsail:",

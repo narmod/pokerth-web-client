@@ -525,7 +525,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Cliant gréasáin: Arnaud Obscur (narmod@pokerth.net), i gcomhar le tionscadal PokerTH.',
     abProject1:'Cluiche pócair Texas Hold\'em saor agus foinse oscailte is ea PokerTH, á fhorbairt ó 2006. Is é an cliant gréasáin seo a leagan brabhsálaí, forbartha i gcomhar le tionscadal PokerTH.',
-    abProject2:'Tá an cód foinseach ar fáil go saor:', abProjectWeb:'Cliant gréasáin',
+    abProject2:'Tá an cód foinseach ar fáil go saor:', abProjectWeb:'Cliant gréasáin', abGuides:'Treoracha pócair',
     abThanks1:'Buíochas le foireann PokerTH — Felix Hammer, Florian Thauer, Lothar May — agus le gach duine a chuidigh leis an tionscadal ó 2006.',
     abThanks2:'Buíochas freisin le pobal PokerTH.net, leis na haistritheoirí agus na tástálaithe, agus leis na cothaitheoirí reatha as tacú leis an gcliant gréasáin seo.',
     abLicense1:'Eisítear cliant gréasáin PokerTH faoi cheadúnas GNU AGPL v3. Eisítear PokerTH faoi cheadúnas GNU GPL.',

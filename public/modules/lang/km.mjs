@@ -522,7 +522,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'កម្មវិធីវេប៖ Arnaud Obscur (narmod@pokerth.net) ដោយសហការជាមួយគម្រោង PokerTH។',
     abProject1:"PokerTH គឺជាហ្គេមបៀ Texas Hold'em ឥតគិតថ្លៃ និងប្រភពបើកចំហ ដែលបានអភិវឌ្ឍតាំងពីឆ្នាំ ២០០៦។ កម្មវិធីវេបនេះជាកំណែកម្មវិធីរុករករបស់វា ដែលបានអភិវឌ្ឍដោយសហការជាមួយគម្រោង PokerTH។",
-    abProject2:'កូដប្រភពមានដោយឥតគិតថ្លៃ៖', abProjectWeb:'កម្មវិធីវេប',
+    abProject2:'កូដប្រភពមានដោយឥតគិតថ្លៃ៖', abProjectWeb:'កម្មវិធីវេប', abGuides:'មគ្គុទ្ទេសក៍បៀ',
     abThanks1:'អរគុណដល់ក្រុម PokerTH \u2014 Felix Hammer, Florian Thauer, Lothar May \u2014 និងអ្នកចូលរួមគម្រោងទាំងអស់តាំងពីឆ្នាំ ២០០៦។',
     abThanks2:'អរគុណផងដែរដល់សហគមន៍ PokerTH.net អ្នកបកប្រែ និងអ្នកសាកល្បង និងអ្នកថែទាំបច្ចុប្បន្នដែលគាំទ្រកម្មវិធីវេបនេះ។',
     abLicense1:'កម្មវិធីវេប PokerTH ត្រូវបានចេញផ្សាយក្រោមអាជ្ញាបណ្ណ GNU AGPL v3។ PokerTH ត្រូវបានចេញផ្សាយក្រោមអាជ្ញាបណ្ណ GNU GPL។',

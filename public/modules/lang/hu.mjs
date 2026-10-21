@@ -792,7 +792,7 @@ export const strings = {
     abWebBy:"Webes kliens: Arnaud Obscur (narmod@pokerth.net), a PokerTH projekttel együttműködésben.",
     abProject1:"A PokerTH egy szabad, nyílt forráskódú Texas Hold'em pókerjáték, amelyet 2006 óta fejlesztenek. Ez a webes kliens a böngészős változata, a PokerTH projekttel együttműködésben fejlesztve.",
     abProject2:"A forráskód szabadon elérhető:",
-    abProjectWeb:"Webes kliens",
+    abProjectWeb:"Webes kliens", abGuides:"Pókerútmutatók",
     abThanks2:"Köszönet a PokerTH.net közösségének, a fordítóknak és tesztelőknek, valamint a jelenlegi karbantartóknak a webes kliens támogatásáért.",
     abLicense1:"A PokerTH webes kliens a GNU AGPL v3 licenc alatt jelenik meg. A PokerTH a GNU GPL licenc alatt jelenik meg.",
     abLicense2:"A licencek teljes szövege elérhető a forráskóddal együtt:",

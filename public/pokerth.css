@@ -10485,6 +10485,10 @@ html.reduce-fx .seat-action-badge {
 .ab-pane a { color:var(--info,#2a6fb0); }
 .ab-pane p { color:var(--text-hi); font-size:var(--fs-md); line-height:1.6; max-width:820px; }
 .ab-pane ul { color:var(--text-hi); font-size:var(--fs-md); line-height:1.9; padding-left:22px; }
+/* Onglet Guides du poker (web.243) : les 12 pages guides sur deux colonnes
+   dès que la fenêtre le permet. */
+.ab-guides ul { columns: 2 14em; column-gap: 28px; }
+.ab-guides li { break-inside: avoid; }
 
 /* ── Galerie d'avatars d'exemple (client Qt-Widgets officiel) ── */
 .avgal-overlay {

@@ -523,7 +523,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'เว็บไคลเอนต์: Arnaud Obscur (narmod@pokerth.net) ร่วมมือกับโครงการ PokerTH',
     abProject1:"PokerTH คือเกมโป๊กเกอร์ Texas Hold'em ฟรีและโอเพนซอร์ส พัฒนามาตั้งแต่ปี 2006 เว็บไคลเอนต์นี้คือเวอร์ชันเบราว์เซอร์ พัฒนาร่วมมือกับโครงการ PokerTH",
-    abProject2:'ซอร์สโค้ดเปิดให้ใช้อย่างอิสระ:', abProjectWeb:'เว็บไคลเอนต์',
+    abProject2:'ซอร์สโค้ดเปิดให้ใช้อย่างอิสระ:', abProjectWeb:'เว็บไคลเอนต์', abGuides:'คู่มือโป๊กเกอร์',
     abThanks1:'ขอบคุณทีม PokerTH \u2014 Felix Hammer, Florian Thauer, Lothar May \u2014 และผู้มีส่วนร่วมทุกคนตั้งแต่ปี 2006',
     abThanks2:'ขอบคุณชุมชน PokerTH.net นักแปลและผู้ทดสอบ รวมถึงผู้ดูแลปัจจุบันที่สนับสนุนเว็บไคลเอนต์นี้',
     abLicense1:'เว็บไคลเอนต์ PokerTH เผยแพร่ภายใต้ใบอนุญาต GNU AGPL v3 ส่วน PokerTH เผยแพร่ภายใต้ใบอนุญาต GNU GPL',

@@ -525,7 +525,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Муштарии веб: Arnaud Obscur (narmod@pokerth.net), дар ҳамкорӣ бо лоиҳаи PokerTH.',
     abProject1:'PokerTH — бозии ройгон ва кушодаманбаи покери Texas Hold\'em аст, ки аз соли 2006 таҳия мешавад. Ин муштарии веб версияи браузерии он аст, ки дар ҳамкорӣ бо лоиҳаи PokerTH сохта шудааст.',
-    abProject2:'Коди манбаъ ройгон дастрас аст:', abProjectWeb:'Муштарии веб',
+    abProject2:'Коди манбаъ ройгон дастрас аст:', abProjectWeb:'Муштарии веб', abGuides:'Дастурҳои покер',
     abThanks1:'Ташаккур ба дастаи PokerTH — Felix Hammer, Florian Thauer, Lothar May — ва ба ҳамаи онҳое, ки аз соли 2006 ба лоиҳа саҳм гузоштаанд.',
     abThanks2:'Инчунин ташаккур ба ҷомеаи PokerTH.net, тарҷумонҳо ва санҷишгарон ва нигаҳдорандагони ҷорӣ барои дастгирии ин муштарии веб.',
     abLicense1:'Муштарии веби PokerTH таҳти иҷозатномаи GNU AGPL v3 нашр шудааст. PokerTH таҳти иҷозатномаи GNU GPL нашр шудааст.',

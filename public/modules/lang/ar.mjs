@@ -524,7 +524,7 @@ export const strings = {
     abCopy:'(c) 2006–2026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'عميل الويب: Arnaud Obscur (narmod@pokerth.net)، بالتعاون مع مشروع PokerTH.',
     abProject1:'PokerTH لعبة بوكر تكساس هولدم حرة ومفتوحة المصدر، تُطوَّر منذ 2006. عميل الويب هذا هو نسختها للمتصفح، مطوَّر بالتعاون مع مشروع PokerTH.',
-    abProject2:'الشيفرة المصدرية متاحة بحرية:', abProjectWeb:'عميل الويب',
+    abProject2:'الشيفرة المصدرية متاحة بحرية:', abProjectWeb:'عميل الويب', abGuides:'أدلة البوكر',
     abThanks1:'شكرًا لفريق PokerTH — Felix Hammer وFlorian Thauer وLothar May — ولكل المساهمين في المشروع منذ 2006.',
     abThanks2:'شكرًا أيضًا لمجتمع PokerTH.net والمترجمين والمختبرين والمشرفين الحاليين لدعمهم عميل الويب هذا.',
     abLicense1:'يصدر عميل ويب PokerTH برخصة GNU AGPL v3. ويصدر PokerTH برخصة GNU GPL.',

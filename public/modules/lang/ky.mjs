@@ -525,7 +525,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Веб-кардар: Arnaud Obscur (narmod@pokerth.net), PokerTH долбоору менен бирдикте.',
     abProject1:'PokerTH — 2006-жылдан бери иштелип чыгып жаткан акысыз жана ачык булактуу Texas Hold\'em покер оюну. Бул веб-кардар — анын браузердеги версиясы, PokerTH долбоору менен бирдикте жасалган.',
-    abProject2:'Булак коду акысыз жеткиликтүү:', abProjectWeb:'Веб-кардар',
+    abProject2:'Булак коду акысыз жеткиликтүү:', abProjectWeb:'Веб-кардар', abGuides:'Покер боюнча колдонмолор',
     abThanks1:'PokerTH командасына — Felix Hammer, Florian Thauer, Lothar May — жана 2006-жылдан бери долбоорго салым кошкондордун баарына рахмат.',
     abThanks2:'Ошондой эле PokerTH.net коомчулугуна, котормочуларга жана тестерлерге, ошондой эле бул веб-кардарды колдогон учурдагы тейлөөчүлөргө рахмат.',
     abLicense1:'PokerTH веб-кардары GNU AGPL v3 лицензиясы боюнча чыгарылган. PokerTH GNU GPL лицензиясы боюнча чыгарылган.',

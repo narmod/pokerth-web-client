@@ -596,7 +596,7 @@ export const strings = {
     abWebBy:"웹 클라이언트: Arnaud Obscur (narmod@pokerth.net), PokerTH 프로젝트와 협력.",
     abProject1:"PokerTH는 2006년부터 개발된 자유 오픈 소스 텍사스 홀덤 포커 게임입니다. 이 웹 클라이언트는 PokerTH 프로젝트와 협력하여 개발된 브라우저 버전입니다.",
     abProject2:"소스 코드는 자유롭게 이용할 수 있습니다:",
-    abProjectWeb:"웹 클라이언트",
+    abProjectWeb:"웹 클라이언트", abGuides:"포커 가이드",
     abThanks2:"또한 PokerTH.net 커뮤니티, 번역자와 테스터, 그리고 이 웹 클라이언트를 지원해 주는 현재의 관리자들에게 감사드립니다.",
     abLicense1:"PokerTH 웹 클라이언트는 GNU AGPL v3 라이선스로 배포됩니다. PokerTH는 GNU GPL 라이선스로 배포됩니다.",
     abLicense2:"라이선스 전문은 소스 코드와 함께 제공됩니다:",

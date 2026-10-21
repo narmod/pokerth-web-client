@@ -525,7 +525,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'ဝဘ်ကလိုင်းယင့်: Arnaud Obscur (narmod@pokerth.net)၊ PokerTH ပရောဂျက်နှင့် ပူးပေါင်း၍။',
     abProject1:'PokerTH သည် ၂၀၀၆ ခုနှစ်ကတည်းက ဖန်တီးလာသော အခမဲ့၊ ပွင့်လင်းရင်းမြစ် Texas Hold\'em ပိုကာဂိမ်းဖြစ်သည်။ ဤဝဘ်ကလိုင်းယင့်သည် ၎င်း၏ ဘရောက်ဇာဗားရှင်းဖြစ်ပြီး PokerTH ပရောဂျက်နှင့် ပူးပေါင်း၍ ဖန်တီးထားသည်။',
-    abProject2:'ရင်းမြစ်ကုဒ်ကို လွတ်လပ်စွာ ရယူနိုင်သည်:', abProjectWeb:'ဝဘ်ကလိုင်းယင့်',
+    abProject2:'ရင်းမြစ်ကုဒ်ကို လွတ်လပ်စွာ ရယူနိုင်သည်:', abProjectWeb:'ဝဘ်ကလိုင်းယင့်', abGuides:'ပိုကာ လမ်းညွှန်များ',
     abThanks1:'PokerTH အဖွဲ့ — Felix Hammer, Florian Thauer, Lothar May — နှင့် ၂၀၀၆ ခုနှစ်ကတည်းက ပရောဂျက်တွင် ပါဝင်ကူညီသူအားလုံးကို ကျေးဇူးတင်ပါသည်။',
     abThanks2:'PokerTH.net အသိုက်အဝန်း၊ ဘာသာပြန်သူများနှင့် စမ်းသပ်သူများ၊ ဤဝဘ်ကလိုင်းယင့်ကို ပံ့ပိုးပေးသော လက်ရှိ ထိန်းသိမ်းသူများကိုလည်း ကျေးဇူးတင်ပါသည်။',
     abLicense1:'PokerTH ဝဘ်ကလိုင်းယင့်ကို GNU AGPL v3 လိုင်စင်ဖြင့် ထုတ်ဝေထားသည်။ PokerTH ကို GNU GPL လိုင်စင်ဖြင့် ထုတ်ဝေထားသည်။',

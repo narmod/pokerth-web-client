@@ -523,7 +523,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Kiteja cha wavuti: Arnaud Obscur (narmod@pokerth.net), kwa ushirikiano na mradi wa PokerTH.',
     abProject1:"PokerTH ni mchezo wa bure na wa chanzo huria wa poker wa Texas Hold'em, unaotengenezwa tangu 2006. Kiteja hiki cha wavuti ni toleo lake la kivinjari, lililojengwa kwa ushirikiano na mradi wa PokerTH.",
-    abProject2:'Msimbo wa chanzo unapatikana kwa uhuru:', abProjectWeb:'Kiteja cha wavuti',
+    abProject2:'Msimbo wa chanzo unapatikana kwa uhuru:', abProjectWeb:'Kiteja cha wavuti', abGuides:'Miongozo ya poka',
     abThanks1:'Shukrani kwa timu ya PokerTH \u2014 Felix Hammer, Florian Thauer, Lothar May \u2014 na wachangiaji wote wa mradi tangu 2006.',
     abThanks2:'Shukrani pia kwa jumuiya ya PokerTH.net, watafsiri na wajaribu, na wasimamizi wa sasa wanaounga mkono kiteja hiki cha wavuti.',
     abLicense1:'Kiteja cha wavuti cha PokerTH kimetolewa chini ya leseni ya GNU AGPL v3. PokerTH imetolewa chini ya leseni ya GNU GPL.',

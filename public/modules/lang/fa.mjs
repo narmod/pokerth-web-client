@@ -521,7 +521,7 @@ export const strings = {
     abCopy:'(c) 2006–2026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'کلاینت وب: Arnaud Obscur (narmod@pokerth.net)، با همکاری پروژهٔ PokerTH.',
     abProject1:'PokerTH یک بازی پوکر تگزاس هولدم آزاد و متن‌باز است که از ۲۰۰۶ توسعه می‌یابد. این کلاینت وب نسخهٔ مرورگری آن است، توسعه‌یافته با همکاری پروژهٔ PokerTH.',
-    abProject2:'کد منبع آزادانه در دسترس است:', abProjectWeb:'کلاینت وب',
+    abProject2:'کد منبع آزادانه در دسترس است:', abProjectWeb:'کلاینت وب', abGuides:'راهنماهای پوکر',
     abThanks1:'سپاس از تیم PokerTH — Felix Hammer، Florian Thauer، Lothar May — و همهٔ مشارکت‌کنندگان پروژه از ۲۰۰۶.',
     abThanks2:'همچنین سپاس از جامعهٔ PokerTH.net، مترجمان و آزمایندگان، و نگه‌دارندگان کنونی برای پشتیبانی از این کلاینت وب.',
     abLicense1:'کلاینت وب PokerTH زیر پروانهٔ GNU AGPL v3 منتشر می‌شود. خود PokerTH زیر پروانهٔ GNU GPL منتشر می‌شود.',

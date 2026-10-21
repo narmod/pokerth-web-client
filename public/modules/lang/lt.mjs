@@ -791,7 +791,7 @@ export const strings = {
     abWebBy:"Žiniatinklio klientas: Arnaud Obscur (narmod@pokerth.net), bendradarbiaujant su PokerTH projektu.",
     abProject1:"PokerTH – laisvas atviro kodo Texas Hold'em pokerio žaidimas, kuriamas nuo 2006 m. Šis žiniatinklio klientas yra jo naršyklės versija, kuriama bendradarbiaujant su PokerTH projektu.",
     abProject2:"Šaltinio kodas laisvai prieinamas:",
-    abProjectWeb:"Žiniatinklio klientas",
+    abProjectWeb:"Žiniatinklio klientas", abGuides:"Pokerio vadovai",
     abThanks2:"Taip pat ačiū PokerTH.net bendruomenei, vertėjams ir testuotojams bei dabartiniams prižiūrėtojams už šio žiniatinklio kliento palaikymą.",
     abLicense1:"PokerTH žiniatinklio klientas išleistas pagal GNU AGPL v3 licenciją. PokerTH išleistas pagal GNU GPL licenciją.",
     abLicense2:"Visi licencijų tekstai pateikiami kartu su šaltinio kodu:",

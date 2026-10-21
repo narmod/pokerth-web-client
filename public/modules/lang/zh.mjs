@@ -787,7 +787,7 @@ export const strings = {
     abWebBy:"网页客户端：Arnaud Obscur（narmod@pokerth.net），与 PokerTH 项目合作开发。",
     abProject1:"PokerTH 是一款自 2006 年开始开发的自由开源德州扑克游戏。此网页客户端是其浏览器版本，与 PokerTH 项目合作开发。",
     abProject2:"源代码可自由获取：",
-    abProjectWeb:"网页客户端",
+    abProjectWeb:"网页客户端", abGuides:"扑克指南",
     abThanks2:"同时感谢 PokerTH.net 社区、翻译者和测试者，以及支持此网页客户端的现任维护者。",
     abLicense1:"PokerTH 网页客户端以 GNU AGPL v3 许可证发布。PokerTH 以 GNU GPL 许可证发布。",
     abLicense2:"许可证全文随源代码提供：",

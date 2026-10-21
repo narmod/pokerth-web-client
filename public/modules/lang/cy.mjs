@@ -525,7 +525,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Cleient gwe: Arnaud Obscur (narmod@pokerth.net), mewn cydweithrediad â phrosiect PokerTH.',
     abProject1:'Gêm pocer Texas Hold\'em rydd a chod agored yw PokerTH, sy\'n cael ei datblygu ers 2006. Y cleient gwe hwn yw ei fersiwn porwr, a ddatblygwyd mewn cydweithrediad â phrosiect PokerTH.',
-    abProject2:'Mae\'r cod ffynhonnell ar gael yn rhydd:', abProjectWeb:'Cleient gwe',
+    abProject2:'Mae\'r cod ffynhonnell ar gael yn rhydd:', abProjectWeb:'Cleient gwe', abGuides:'Canllawiau pocer',
     abThanks1:'Diolch i dîm PokerTH — Felix Hammer, Florian Thauer, Lothar May — ac i bawb sydd wedi cyfrannu at y prosiect ers 2006.',
     abThanks2:'Diolch hefyd i gymuned PokerTH.net, y cyfieithwyr a\'r profwyr, ac i\'r cynhalwyr presennol am gefnogi\'r cleient gwe hwn.',
     abLicense1:'Mae cleient gwe PokerTH yn cael ei ryddhau dan drwydded GNU AGPL v3. Mae PokerTH yn cael ei ryddhau dan drwydded GNU GPL.',

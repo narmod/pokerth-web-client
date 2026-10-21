@@ -525,7 +525,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Oníbàárà wẹ́ẹ̀bù: Arnaud Obscur (narmod@pokerth.net), ní ìfọwọ́sowọ́pọ̀ pẹ̀lú iṣẹ́ àkànṣe PokerTH.',
     abProject1:'PokerTH jẹ́ eré poker Texas Hold\'em ọ̀fẹ́ àti orísun ṣíṣí, tí a ti ń ṣe láti 2006. Oníbàárà wẹ́ẹ̀bù yìí ni ẹ̀yà aṣàwákiri rẹ̀, tí a ṣe ní ìfọwọ́sowọ́pọ̀ pẹ̀lú iṣẹ́ àkànṣe PokerTH.',
-    abProject2:'Kóòdù orísun wà ní ọ̀fẹ́:', abProjectWeb:'Oníbàárà wẹ́ẹ̀bù',
+    abProject2:'Kóòdù orísun wà ní ọ̀fẹ́:', abProjectWeb:'Oníbàárà wẹ́ẹ̀bù', abGuides:'Ìtọ́sọ́nà poker',
     abThanks1:'Ọpẹ́ fún ẹgbẹ́ PokerTH — Felix Hammer, Florian Thauer, Lothar May — àti fún gbogbo àwọn tí ó ti dá sí iṣẹ́ àkànṣe náà láti 2006.',
     abThanks2:'Ọpẹ́ pẹ̀lú fún àwùjọ PokerTH.net, àwọn olùtúmọ̀ àti olùdánwò, àti àwọn olùtọ́jú lọ́wọ́lọ́wọ́ fún àtìlẹ́yìn oníbàárà wẹ́ẹ̀bù yìí.',
     abLicense1:'A tú oníbàárà wẹ́ẹ̀bù PokerTH jáde lábẹ́ ìwé àṣẹ GNU AGPL v3. A tú PokerTH jáde lábẹ́ ìwé àṣẹ GNU GPL.',

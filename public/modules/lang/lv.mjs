@@ -524,7 +524,7 @@ export const strings = {
     abCopy:'(c) 2006–2026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Tīmekļa klients: Arnaud Obscur (narmod@pokerth.net), sadarbībā ar PokerTH projektu.',
     abProject1:"PokerTH ir brīva un atvērtā pirmkoda Teksasas Hold'em pokera spēle, ko izstrādā kopš 2006. gada. Šis tīmekļa klients ir tās pārnesums uz pārlūku, izstrādāts sadarbībā ar PokerTH projektu.",
-    abProject2:'Pirmkods ir brīvi pieejams:', abProjectWeb:'Tīmekļa klients',
+    abProject2:'Pirmkods ir brīvi pieejams:', abProjectWeb:'Tīmekļa klients', abGuides:'Pokera ceļveži',
     abThanks1:'Paldies PokerTH komandai — Felix Hammer, Florian Thauer, Lothar May — un visiem projekta veidotājiem kopš 2006. gada.',
     abThanks2:'Paldies arī PokerTH.net kopienai, tulkotājiem un testētājiem, kā arī pašreizējiem uzturētājiem par atbalstu šim tīmekļa klientam.',
     abLicense1:'PokerTH tīmekļa klients tiek izplatīts saskaņā ar GNU AGPL v3 licenci. PokerTH tiek izplatīts saskaņā ar GNU GPL licenci.',

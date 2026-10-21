@@ -525,7 +525,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Web client: Arnaud Obscur (narmod@pokerth.net), in collaboration with the PokerTH project.',
     abProject1:"PokerTH is a free and open source Texas Hold'em poker game, developed since 2006. This web client is its browser port, developed in collaboration with the PokerTH project.",
-    abProject2:'The source code is freely available:', abProjectWeb:'Web client',
+    abProject2:'The source code is freely available:', abProjectWeb:'Web client', abGuides:'Poker guides',
     abThanks1:'Thanks to the PokerTH team \u2014 Felix Hammer, Florian Thauer, Lothar May \u2014 and to all project contributors since 2006.',
     abThanks2:'Thanks also to the PokerTH.net community, the translators and testers, and the current maintainers for supporting this web client.',
     abLicense1:'The PokerTH web client is released under the GNU AGPL v3 license. PokerTH is released under the GNU GPL license.',

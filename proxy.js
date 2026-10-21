@@ -2149,6 +2149,34 @@ function _seoPageNav(lang) {
     '<a href="https://github.com/narmod/pokerth-web-client" rel="noopener">' + _seoNavLabel(lang, 'src') + '</a></nav>';
 }
 
+// The guide pages, as links in the page language: the « Poker guides » tab of
+// the in-app About window. Written into the served HTML, so search
+// engines and the AI crawlers that run no JavaScript find every guide from the
+// home page; a player sees them on opening About. Same gating as the nav.
+function _seoGuideLinks(lang) {
+  lang = lang || '';
+  var L = [];
+  var add = function (ok, rel, table, key) { if (ok) L.push([_seoLangHref(rel, table, lang), _seoNavLabel(lang, key)]); };
+  add(true, '/rules', SEO_RULES_I18N, 'rules');
+  add(true, '/hand-rankings', SEO_HANDS_I18N, 'hands');
+  add(_seoStartIn(lang), '/starting-hands', SEO_START_I18N, 'start');
+  add(_seoOddsIn(lang), '/poker-odds', SEO_ODDS_I18N, 'odds');
+  add(true, '/how-to-play', SEO_HOWTO_I18N, 'howto');
+  add(true, '/glossary', SEO_GLOSSARY_I18N, 'gloss');
+  add(true, '/competitions', SEO_COMP_I18N, 'comp');
+  add(_seoFriendsIn(lang), '/play-with-friends', SEO_FRIENDS_I18N, 'friends');
+  add(_seoBotsIn(lang), '/play-against-computer', SEO_BOTS_I18N, 'bots');
+  add(_seoHostIn(lang), '/host-a-server', SEO_HOST_I18N, 'host');
+  add(_seoA11yIn(lang), '/accessibility', SEO_A11Y_I18N, 'a11y');
+  add(true, '/faq', SEO_FAQ_I18N, 'faq');
+  return L;
+}
+function seoAboutGuides(lang) {
+  return '<div class="ab-guides" id="ab-guides" data-lang="' + (lang || 'en') + '"><ul>' +
+    _seoGuideLinks(lang).map(function (g) { return '<li><a href="' + g[0] + '" target="_blank" rel="noopener">' + g[1] + '</a></li>'; }).join('') +
+    '</ul></div>';
+}
+
 // Translations for the standalone /rules and /faq pages. Only the languages
 // present here are advertised: publishing 44 URLs that all serve the same
 // English text would be duplicate content, which costs more than it earns.
@@ -8518,6 +8546,10 @@ function sendClientHtml(req, res, live) {
     html = html.replace('<!--__SEO_HEAD__-->', on ? seoHeadBlock(base, lang) : '<meta name="robots" content="noindex, nofollow">');
     html = html.replace('<!--__SEO_BODY__-->', on ? seoBodyBlock(lang) : '');
     html = html.replace('<!--__SEO_FOOTER__-->', on ? seoFooterBlock(lang) : '');
+    // About › Project › Guides: on every install (the guide pages exist on all
+    // of them), in the page language; modules/seo/about-guides.mjs relabels it
+    // when the player's interface language differs.
+    html = html.replace('<!--__ABOUT_GUIDES__-->', seoAboutGuides(lang));
     if (lang) {
       // Localized variant: matching <html lang> and <title>. The i18n module
       // re-syncs <html lang> at boot anyway; this is for crawlers.
@@ -14940,6 +14972,14 @@ const httpServer = http.createServer((req, res) => {
         _sKid.urls() + '</urlset>\n';
     }
     return _seoSendXml(req, res, _sXml, _sLm);
+  }
+  // The About › Guides list in another language, for a player whose interface
+  // language is not the one the page was served in.
+  if (reqPathOnly === '/seo-guides.json') {
+    var _gl = seoLangFromQuery(req.url);
+    res.writeHead(200, Object.assign({ 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-cache' }, SECURITY_HEADERS));
+    res.end(JSON.stringify({ lang: _gl || 'en', links: _seoGuideLinks(_gl) }));
+    return;
   }
   if (reqPathOnly === '/llms.txt') {
     // The file exists to brief AI crawlers. Serving it while robots.txt tells

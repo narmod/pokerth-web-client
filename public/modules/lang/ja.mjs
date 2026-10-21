@@ -787,7 +787,7 @@ export const strings = {
     abWebBy:"Webクライアント：Arnaud Obscur（narmod@pokerth.net）、PokerTHプロジェクトとの協力による。",
     abProject1:"PokerTHは2006年から開発されている自由でオープンソースのテキサスホールデムポーカーゲームです。このWebクライアントはそのブラウザー版で、PokerTHプロジェクトとの協力のもと開発されています。",
     abProject2:"ソースコードは自由に入手できます：",
-    abProjectWeb:"Webクライアント",
+    abProjectWeb:"Webクライアント", abGuides:"ポーカーガイド",
     abThanks2:"また、PokerTH.netコミュニティ、翻訳者とテスター、そしてこのWebクライアントを支えてくださっている現在のメンテナーの皆様に感謝します。",
     abLicense1:"PokerTH WebクライアントはGNU AGPL v3ライセンスの下で公開されています。PokerTHはGNU GPLライセンスの下で公開されています。",
     abLicense2:"ライセンスの全文はソースコードとともに入手できます：",

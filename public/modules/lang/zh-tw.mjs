@@ -787,7 +787,7 @@ export const strings = {
     abWebBy:"網頁用戶端：Arnaud Obscur（narmod@pokerth.net），與 PokerTH 專案合作開發。",
     abProject1:"PokerTH 是一款自 2006 年開始開發的自由開源德州撲克遊戲。此網頁用戶端是其瀏覽器版本，與 PokerTH 專案合作開發。",
     abProject2:"原始碼可自由取得：",
-    abProjectWeb:"網頁用戶端",
+    abProjectWeb:"網頁用戶端", abGuides:"撲克指南",
     abThanks2:"同時感謝 PokerTH.net 社群、翻譯者和測試者，以及支持此網頁用戶端的現任維護者。",
     abLicense1:"PokerTH 網頁用戶端以 GNU AGPL v3 授權條款發布。PokerTH 以 GNU GPL 授權條款發布。",
     abLicense2:"授權條款全文隨原始碼提供：",

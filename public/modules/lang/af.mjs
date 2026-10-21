@@ -792,7 +792,7 @@ export const strings = {
     abWebBy:"Webkliënt: Arnaud Obscur (narmod@pokerth.net), in samewerking met die PokerTH-projek.",
     abProject1:"PokerTH is 'n vrye oopbron Texas Hold'em-pokerspel, ontwikkel sedert 2006. Hierdie webkliënt is die blaaierweergawe daarvan, ontwikkel in samewerking met die PokerTH-projek.",
     abProject2:"Die bronkode is vrylik beskikbaar:",
-    abProjectWeb:"Webkliënt",
+    abProjectWeb:"Webkliënt", abGuides:"Pokergidse",
     abThanks2:"Dank ook aan die PokerTH.net-gemeenskap, die vertalers en toetsers, en die huidige onderhouers vir die ondersteuning van hierdie webkliënt.",
     abLicense1:"Die PokerTH-webkliënt word vrygestel onder die GNU AGPL v3-lisensie. PokerTH word vrygestel onder die GNU GPL-lisensie.",
     abLicense2:"Die volledige lisensietekste is beskikbaar saam met die bronkode:",

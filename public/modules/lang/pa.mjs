@@ -522,7 +522,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'ਵੈੱਬ ਕਲਾਇਂਟ: Arnaud Obscur (narmod@pokerth.net), PokerTH ਪ੍ਰੋਜੈਕਟ ਦੇ ਸਹਿਯੋਗ ਨਾਲ।',
     abProject1:"PokerTH ਇੱਕ ਮੁਫ਼ਤ ਅਤੇ ਓਪਨ ਸੋਰਸ Texas Hold'em ਪੋਕਰ ਖੇਡ ਹੈ, 2006 ਤੋਂ ਵਿਕਸਿਤ। ਇਹ ਵੈੱਬ ਕਲਾਇਂਟ ਇਸਦਾ ਬ੍ਰਾਊਜ਼ਰ ਸੰਸਕਰਣ ਹੈ, PokerTH ਪ੍ਰੋਜੈਕਟ ਦੇ ਸਹਿਯੋਗ ਨਾਲ ਵਿਕਸਿਤ।",
-    abProject2:'ਸਰੋਤ ਕੋਡ ਮੁਫ਼ਤ ਉਪਲਬਧ ਹੈ:', abProjectWeb:'ਵੈੱਬ ਕਲਾਇਂਟ',
+    abProject2:'ਸਰੋਤ ਕੋਡ ਮੁਫ਼ਤ ਉਪਲਬਧ ਹੈ:', abProjectWeb:'ਵੈੱਬ ਕਲਾਇਂਟ', abGuides:'ਪੋਕਰ ਗਾਈਡਾਂ',
     abThanks1:'PokerTH ਟੀਮ — Felix Hammer, Florian Thauer, Lothar May — ਅਤੇ 2006 ਤੋਂ ਸਾਰੇ ਯੋਗਦਾਨੀਆਂ ਦਾ ਧੰਨਵਾਦ।',
     abThanks2:'PokerTH.net ਕਮਿਊਨਿਟੀ, ਅਨੁਵਾਦਕਾਂ, ਟੈਸਟਰਾਂ ਅਤੇ ਇਸ ਵੈੱਬ ਕਲਾਇਂਟ ਦਾ ਸਮਰਥਨ ਕਰਨ ਵਾਲੇ ਮੌਜੂਦਾ ਮੈਂਟੇਨਰਾਂ ਦਾ ਵੀ ਧੰਨਵਾਦ।',
     abLicense1:'PokerTH ਵੈੱਬ ਕਲਾਇਂਟ GNU AGPL v3 ਲਾਇਸੈਂਸ ਹੇਠ ਜਾਰੀ ਹੈ। PokerTH GNU GPL ਲਾਇਸੈਂਸ ਹੇਠ ਜਾਰੀ ਹੈ।',

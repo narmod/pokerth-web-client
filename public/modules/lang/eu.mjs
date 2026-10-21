@@ -525,7 +525,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Web bezeroa: Arnaud Obscur (narmod@pokerth.net), PokerTH proiektuarekin lankidetzan.',
     abProject1:'PokerTH 2006tik garatzen ari den Texas Hold\'em poker-joko doako eta kode irekikoa da. Web bezero hau haren nabigatzaile-bertsioa da, PokerTH proiektuarekin lankidetzan garatua.',
-    abProject2:'Iturburu-kodea libreki eskuragarri dago:', abProjectWeb:'Web bezeroa',
+    abProject2:'Iturburu-kodea libreki eskuragarri dago:', abProjectWeb:'Web bezeroa', abGuides:'Poker-gidak',
     abThanks1:'Eskerrik asko PokerTH taldeari — Felix Hammer, Florian Thauer, Lothar May — eta 2006tik proiektuan parte hartu duten guztiei.',
     abThanks2:'Eskerrik asko, halaber, PokerTH.net komunitateari, itzultzaileei eta probatzaileei, eta web bezero honi laguntzen dioten egungo mantentzaileei.',
     abLicense1:'PokerTH web bezeroa GNU AGPL v3 lizentziapean argitaratzen da. PokerTH GNU GPL lizentziapean argitaratzen da.',

@@ -522,7 +522,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'ವೆಬ್ ಕ್ಲೈಂಟ್: Arnaud Obscur (narmod@pokerth.net), PokerTH ಪ್ರಾಜೆಕ್ಟ್‌ನ ಸಹಯೋಗದೊಂದಿಗೆ.',
     abProject1:'PokerTH ಎಂಬುದು 2006 ರಿಂದ ಅಭಿವೃದ್ಧಿಯಾಗುತ್ತಿರುವ ಉಚಿತ ಮತ್ತು ಓಪನ್ ಸೋರ್ಸ್ Texas Hold\'em ಪೋಕರ್ ಗೇಮ್. ಈ ವೆಬ್ ಕ್ಲೈಂಟ್ ಅದರ ಬ್ರೌಸರ್ ಆವೃತ್ತಿ, PokerTH ಪ್ರಾಜೆಕ್ಟ್‌ನ ಸಹಯೋಗದೊಂದಿಗೆ ಅಭಿವೃದ್ಧಿಪಡಿಸಲಾಗಿದೆ.',
-    abProject2:'ಸೋರ್ಸ್ ಕೋಡ್ ಮುಕ್ತವಾಗಿ ಲಭ್ಯವಿದೆ:', abProjectWeb:'ವೆಬ್ ಕ್ಲೈಂಟ್',
+    abProject2:'ಸೋರ್ಸ್ ಕೋಡ್ ಮುಕ್ತವಾಗಿ ಲಭ್ಯವಿದೆ:', abProjectWeb:'ವೆಬ್ ಕ್ಲೈಂಟ್', abGuides:'ಪೋಕರ್ ಮಾರ್ಗದರ್ಶಿಗಳು',
     abThanks1:'PokerTH ತಂಡಕ್ಕೆ — Felix Hammer, Florian Thauer, Lothar May — ಹಾಗೂ 2006 ರಿಂದ ಪ್ರಾಜೆಕ್ಟ್‌ಗೆ ಕೊಡುಗೆ ನೀಡಿದ ಎಲ್ಲರಿಗೂ ಧನ್ಯವಾದಗಳು.',
     abThanks2:'PokerTH.net ಕಮ್ಯೂನಿಟಿಗೆ, ಅನುವಾದಕರು ಮತ್ತು ಪರೀಕ್ಷಕರಿಗೆ, ಮತ್ತು ಈ ವೆಬ್ ಕ್ಲೈಂಟ್ ಅನ್ನು ಬೆಂಬಲಿಸುವ ಪ್ರಸ್ತುತ ನಿರ್ವಾಹಕರಿಗೆ ಧನ್ಯವಾದಗಳು.',
     abLicense1:'PokerTH ವೆಬ್ ಕ್ಲೈಂಟ್ ಅನ್ನು GNU AGPL v3 ಪರವಾನಗಿಯಡಿ ಬಿಡುಗಡೆ ಮಾಡಲಾಗಿದೆ. PokerTH ಅನ್ನು GNU GPL ಪರವಾನಗಿಯಡಿ ಬಿಡುಗಡೆ ಮಾಡಲಾಗಿದೆ.',

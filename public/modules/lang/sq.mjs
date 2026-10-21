@@ -524,7 +524,7 @@ export const strings = {
     abCopy:'(c) 2006–2026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Klienti web: Arnaud Obscur (narmod@pokerth.net), në bashkëpunim me projektin PokerTH.',
     abProject1:"PokerTH është një lojë pokeri Texas Hold'em falas dhe me burim të hapur, e zhvilluar që nga 2006. Ky klient web është versioni i tij për shfletues, i zhvilluar në bashkëpunim me projektin PokerTH.",
-    abProject2:'Kodi burimor është lirisht i disponueshëm:', abProjectWeb:'Klienti web',
+    abProject2:'Kodi burimor është lirisht i disponueshëm:', abProjectWeb:'Klienti web', abGuides:'Udhëzues për pokerin',
     abThanks1:'Falënderime për ekipin e PokerTH — Felix Hammer, Florian Thauer, Lothar May — dhe për të gjithë kontribuesit e projektit që nga 2006.',
     abThanks2:'Falënderime edhe për komunitetin e PokerTH.net, përkthyesit dhe testuesit, dhe mirëmbajtësit aktualë për mbështetjen e këtij klienti web.',
     abLicense1:'Klienti web i PokerTH lëshohet nën licencën GNU AGPL v3. PokerTH lëshohet nën licencën GNU GPL.',

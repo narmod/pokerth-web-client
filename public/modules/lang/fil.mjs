@@ -523,7 +523,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Web client: Arnaud Obscur (narmod@pokerth.net), sa pakikipagtulungan sa proyektong PokerTH.',
     abProject1:"Ang PokerTH ay isang libre at open source na larong poker na Texas Hold'em, binubuo mula 2006. Ang web client na ito ang browser na bersyon nito, binuo sa pakikipagtulungan sa proyektong PokerTH.",
-    abProject2:'Malayang makukuha ang source code:', abProjectWeb:'Web client',
+    abProject2:'Malayang makukuha ang source code:', abProjectWeb:'Web client', abGuides:'Mga gabay sa poker',
     abThanks1:'Salamat sa PokerTH team \u2014 Felix Hammer, Florian Thauer, Lothar May \u2014 at sa lahat ng contributor ng proyekto mula 2006.',
     abThanks2:'Salamat din sa komunidad ng PokerTH.net, sa mga tagasalin at tester, at sa mga kasalukuyang maintainer sa pagsuporta sa web client na ito.',
     abLicense1:'Ang PokerTH web client ay inilabas sa ilalim ng lisensyang GNU AGPL v3. Ang PokerTH ay inilabas sa ilalim ng lisensyang GNU GPL.',

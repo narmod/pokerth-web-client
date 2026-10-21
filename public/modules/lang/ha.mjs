@@ -525,7 +525,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Abokin cinikin yanar gizo: Arnaud Obscur (narmod@pokerth.net), tare da haɗin gwiwar aikin PokerTH.',
     abProject1:'PokerTH wasan poker Texas Hold\'em ne na kyauta kuma buɗaɗɗen tushe, wanda ake haɓakawa tun 2006. Wannan abokin cinikin yanar gizo sigarsa ce ta burauza, wadda aka haɓaka tare da haɗin gwiwar aikin PokerTH.',
-    abProject2:'Lambar tushe tana samuwa kyauta:', abProjectWeb:'Abokin cinikin yanar gizo',
+    abProject2:'Lambar tushe tana samuwa kyauta:', abProjectWeb:'Abokin cinikin yanar gizo', abGuides:'Jagororin poker',
     abThanks1:'Godiya ga ƙungiyar PokerTH — Felix Hammer, Florian Thauer, Lothar May — da duk waɗanda suka ba da gudummawa ga aikin tun 2006.',
     abThanks2:'Godiya kuma ga al\'ummar PokerTH.net, masu fassara da masu gwaji, da masu kula na yanzu saboda tallafa wa wannan abokin cinikin yanar gizo.',
     abLicense1:'An fitar da abokin cinikin yanar gizo na PokerTH ƙarƙashin lasisin GNU AGPL v3. An fitar da PokerTH ƙarƙashin lasisin GNU GPL.',

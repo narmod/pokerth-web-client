@@ -522,7 +522,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'వెబ్ క్లయింట్: Arnaud Obscur (narmod@pokerth.net), PokerTH ప్రాజెక్ట్ సహకారంతో.',
     abProject1:'PokerTH అనేది 2006 నుండి అభివృద్ధి చేయబడుతున్న ఉచిత, ఓపెన్ సోర్స్ Texas Hold\'em పోకర్ గేమ్. ఈ వెబ్ క్లయింట్ దాని బ్రౌజర్ పోర్ట్, PokerTH ప్రాజెక్ట్ సహకారంతో అభివృద్ధి చేయబడింది.',
-    abProject2:'సోర్స్ కోడ్ ఉచితంగా అందుబాటులో ఉంది:', abProjectWeb:'వెబ్ క్లయింట్',
+    abProject2:'సోర్స్ కోడ్ ఉచితంగా అందుబాటులో ఉంది:', abProjectWeb:'వెబ్ క్లయింట్', abGuides:'పోకర్ గైడ్‌లు',
     abThanks1:'PokerTH బృందానికి — Felix Hammer, Florian Thauer, Lothar May — మరియు 2006 నుండి ప్రాజెక్ట్‌కు సహకరించిన అందరికీ కృతజ్ఞతలు.',
     abThanks2:'PokerTH.net కమ్యూనిటీకి, అనువాదకులకు మరియు టెస్టర్‌లకు, ఈ వెబ్ క్లయింట్‌కు మద్దతిస్తున్న ప్రస్తుత నిర్వాహకులకు కూడా కృతజ్ఞతలు.',
     abLicense1:'PokerTH వెబ్ క్లయింట్ GNU AGPL v3 లైసెన్స్ కింద విడుదల చేయబడింది. PokerTH GNU GPL లైసెన్స్ కింద విడుదల చేయబడింది.',

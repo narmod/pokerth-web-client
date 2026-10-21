@@ -525,7 +525,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'वेब क्लाइन्ट: Arnaud Obscur (narmod@pokerth.net), PokerTH परियोजनाको सहकार्यमा।',
     abProject1:'PokerTH सन् २००६ देखि विकास हुँदै आएको निःशुल्क र खुला स्रोतको Texas Hold\'em पोकर खेल हो। यो वेब क्लाइन्ट यसको ब्राउजर संस्करण हो, जुन PokerTH परियोजनाको सहकार्यमा विकास गरिएको हो।',
-    abProject2:'स्रोत कोड स्वतन्त्र रूपमा उपलब्ध छ:', abProjectWeb:'वेब क्लाइन्ट',
+    abProject2:'स्रोत कोड स्वतन्त्र रूपमा उपलब्ध छ:', abProjectWeb:'वेब क्लाइन्ट', abGuides:'पोकर मार्गदर्शिका',
     abThanks1:'PokerTH टोली — Felix Hammer, Florian Thauer, Lothar May — र सन् २००६ देखिका सबै परियोजना योगदानकर्ताहरूलाई धन्यवाद।',
     abThanks2:'PokerTH.net समुदाय, अनुवादक र परीक्षकहरू, तथा यो वेब क्लाइन्टलाई साथ दिने हालका मर्मतकर्ताहरूलाई पनि धन्यवाद।',
     abLicense1:'PokerTH वेब क्लाइन्ट GNU AGPL v3 इजाजतपत्रअन्तर्गत जारी गरिएको छ। PokerTH GNU GPL इजाजतपत्रअन्तर्गत जारी गरिएको छ।',

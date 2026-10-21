@@ -523,7 +523,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'ওয়েব ক্লায়েন্ট: Arnaud Obscur (narmod@pokerth.net), PokerTH প্রকল্পের সহযোগিতায়।',
     abProject1:"PokerTH একটি ফ্রি ও ওপেন সোর্স Texas Hold'em পোকার গেম, ২০০৬ সাল থেকে উন্নয়নশীল। এই ওয়েব ক্লায়েন্ট এর ব্রাউজার সংস্করণ, PokerTH প্রকল্পের সহযোগিতায় নির্মিত।",
-    abProject2:'সোর্স কোড অবাধে উপলব্ধ:', abProjectWeb:'ওয়েব ক্লায়েন্ট',
+    abProject2:'সোর্স কোড অবাধে উপলব্ধ:', abProjectWeb:'ওয়েব ক্লায়েন্ট', abGuides:'পোকার গাইড',
     abThanks1:'PokerTH দল \u2014 Felix Hammer, Florian Thauer, Lothar May \u2014 এবং ২০০৬ সাল থেকে প্রকল্পের সব অবদানকারীকে ধন্যবাদ।',
     abThanks2:'PokerTH.net কমিউনিটি, অনুবাদক ও পরীক্ষক এবং এই ওয়েব ক্লায়েন্টকে সমর্থনকারী বর্তমান রক্ষণাবেক্ষণকারীদেরও ধন্যবাদ।',
     abLicense1:'PokerTH ওয়েব ক্লায়েন্ট GNU AGPL v3 লাইসেন্সের অধীনে প্রকাশিত। PokerTH GNU GPL লাইসেন্সের অধীনে প্রকাশিত।',

@@ -525,7 +525,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Վեբ կլիենտ՝ Arnaud Obscur (narmod@pokerth.net), PokerTH նախագծի հետ համագործակցությամբ։',
     abProject1:'PokerTH-ը անվճար և բաց կոդով Texas Hold\'em պոկերի խաղ է, որը մշակվում է 2006 թվականից։ Այս վեբ կլիենտը դրա դիտարկիչային տարբերակն է՝ մշակված PokerTH նախագծի հետ համագործակցությամբ։',
-    abProject2:'Սկզբնական կոդը ազատ հասանելի է՝', abProjectWeb:'Վեբ կլիենտ',
+    abProject2:'Սկզբնական կոդը ազատ հասանելի է՝', abProjectWeb:'Վեբ կլիենտ', abGuides:'Պոկերի ուղեցույցներ',
     abThanks1:'Շնորհակալություն PokerTH թիմին — Felix Hammer, Florian Thauer, Lothar May — և 2006 թվականից ի վեր նախագծի բոլոր մասնակիցներին։',
     abThanks2:'Շնորհակալություն նաև PokerTH.net համայնքին, թարգմանիչներին և փորձարկողներին, ինչպես նաև ներկայիս սպասարկողներին՝ այս վեբ կլիենտին աջակցելու համար։',
     abLicense1:'PokerTH վեբ կլիենտը թողարկված է GNU AGPL v3 լիցենզիայով։ PokerTH-ը թողարկված է GNU GPL լիցենզիայով։',

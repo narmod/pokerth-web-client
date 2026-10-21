@@ -132,6 +132,13 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **About › « Poker guides » tab** (`web.243`, SEO audit of 2026-10-21, point 5) — of the 14 content pages only
+  /rules and /faq were linked visibly from the home page; the rest only from the off-screen crawler block. The About
+  window gets a « Poker guides » tab listing the 12 guide pages. The list is written into the served HTML by
+  `proxy.js` (`seoAboutGuides`, placeholder `<!--__ABOUT_GUIDES__-->`) in the page language, on every install, so
+  search engines and AI crawlers that run no JavaScript find every guide from the home page; when the player's
+  interface language differs, `modules/seo/about-guides.mjs` relabels it from `/seo-guides.json`. Tab label
+  `abGuides` in all 83 catalogs. Guarded by `scripts/test-seo-about-guides.mjs`.
 - **Content pages: lighter and validated** (`web.242`, SEO audit of 2026-10-21) — the pages were sent raw and re-downloaded
   on every visit, and pulled the full 343 KB Inter file. Now: brotli/gzip (/rules 27 KB → 6 KB), an ETag answered
   by 304 and a Last-Modified from the page's date (shared sender with the sitemaps); Inter in its Latin (48 KB) and

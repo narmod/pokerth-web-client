@@ -525,7 +525,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Вэб-кліент: Arnaud Obscur (narmod@pokerth.net), у супрацоўніцтве з праектам PokerTH.',
     abProject1:'PokerTH — бясплатная гульня ў покер Texas Hold\'em з адкрытым кодам, якая распрацоўваецца з 2006 года. Гэты вэб-кліент — яе версія для браўзера, распрацаваная ў супрацоўніцтве з праектам PokerTH.',
-    abProject2:'Зыходны код свабодна даступны:', abProjectWeb:'Вэб-кліент',
+    abProject2:'Зыходны код свабодна даступны:', abProjectWeb:'Вэб-кліент', abGuides:'Даведнікі па покеры',
     abThanks1:'Дзякуй камандзе PokerTH — Felix Hammer, Florian Thauer, Lothar May — і ўсім удзельнікам праекта з 2006 года.',
     abThanks2:'Дзякуй таксама супольнасці PokerTH.net, перакладчыкам і тэстарам, а таксама цяперашнім суправаджальнікам за падтрымку гэтага вэб-кліента.',
     abLicense1:'Вэб-кліент PokerTH распаўсюджваецца па ліцэнзіі GNU AGPL v3. PokerTH распаўсюджваецца па ліцэнзіі GNU GPL.',

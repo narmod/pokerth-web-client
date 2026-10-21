@@ -791,7 +791,7 @@ export const strings = {
     abWebBy:"Web-asiakasohjelma: Arnaud Obscur (narmod@pokerth.net), yhteistyössä PokerTH-projektin kanssa.",
     abProject1:"PokerTH on vapaa ja avoimen lähdekoodin Texas Hold'em -pokeripeli, jota on kehitetty vuodesta 2006. Tämä web-asiakasohjelma on sen selainversio, kehitetty yhteistyössä PokerTH-projektin kanssa.",
     abProject2:"Lähdekoodi on vapaasti saatavilla:",
-    abProjectWeb:"Web-asiakasohjelma",
+    abProjectWeb:"Web-asiakasohjelma", abGuides:"Pokerioppaat",
     abThanks2:"Kiitos myös PokerTH.net-yhteisölle, kääntäjille ja testaajille sekä nykyisille ylläpitäjille tämän web-asiakasohjelman tukemisesta.",
     abLicense1:"PokerTH:n web-asiakasohjelma on julkaistu GNU AGPL v3 -lisenssillä. PokerTH on julkaistu GNU GPL -lisenssillä.",
     abLicense2:"Lisenssien täydelliset tekstit ovat saatavilla lähdekoodin mukana:",

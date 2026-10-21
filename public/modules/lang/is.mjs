@@ -521,7 +521,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Vefbiðlari: Arnaud Obscur (narmod@pokerth.net), í samstarfi við PokerTH verkefnið.',
     abProject1:'PokerTH er ókeypis og opinn Texas Hold\'em pókerleikur sem hefur verið í þróun síðan 2006. Þessi vefbiðlari er vafraútgáfa hans, þróuð í samstarfi við PokerTH verkefnið.',
-    abProject2:'Frumkóðinn er öllum aðgengilegur:', abProjectWeb:'Vefbiðlari',
+    abProject2:'Frumkóðinn er öllum aðgengilegur:', abProjectWeb:'Vefbiðlari', abGuides:'Leiðarvísar um póker',
     abThanks1:'Þakkir til PokerTH teymisins — Felix Hammer, Florian Thauer, Lothar May — og til allra sem hafa lagt verkefninu lið síðan 2006.',
     abThanks2:'Þakkir til PokerTH.net samfélagsins, þýðenda og prófara, og til núverandi umsjónarmanna sem styðja þennan vefbiðlara.',
     abLicense1:'PokerTH vefbiðlarinn er gefinn út undir GNU AGPL v3 leyfinu. PokerTH er gefið út undir GNU GPL leyfinu.',

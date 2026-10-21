@@ -522,7 +522,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'የድር ደንበኛ፦ Arnaud Obscur (narmod@pokerth.net)፣ ከ PokerTH ፕሮጀክት ጋር በመተባበር።',
     abProject1:"PokerTH ከ2006 ጀምሮ የተሠራ ነጻ እና ክፍት ምንጭ የ Texas Hold'em ፖከር ጨዋታ ነው። ይህ የድር ደንበኛ ከ PokerTH ፕሮጀክት ጋር በመተባበር የተሠራ የአሳሽ ሥሪቱ ነው።",
-    abProject2:'የምንጭ ኮዱ በነጻ ይገኛል፦', abProjectWeb:'የድር ደንበኛ',
+    abProject2:'የምንጭ ኮዱ በነጻ ይገኛል፦', abProjectWeb:'የድር ደንበኛ', abGuides:'የፖከር መመሪያዎች',
     abThanks1:'ለ PokerTH ቡድን \u2014 Felix Hammer፣ Florian Thauer፣ Lothar May \u2014 እና ከ2006 ጀምሮ ለሁሉም የፕሮጀክት አስተዋጽዖ አድራጊዎች ምስጋና።',
     abThanks2:'እንዲሁም ለ PokerTH.net ማህበረሰብ፣ ለተርጓሚዎች እና ሞካሪዎች፣ እና ይህን የድር ደንበኛ ለሚደግፉ የአሁኑ ጠባቂዎች ምስጋና።',
     abLicense1:'የ PokerTH የድር ደንበኛ በ GNU AGPL v3 ፈቃድ ተለቋል። PokerTH በ GNU GPL ፈቃድ ተለቋል።',

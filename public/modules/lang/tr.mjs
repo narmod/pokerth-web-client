@@ -792,7 +792,7 @@ export const strings = {
     abWebBy:"Web istemcisi: Arnaud Obscur (narmod@pokerth.net), PokerTH projesiyle iş birliği içinde.",
     abProject1:"PokerTH, 2006'dan beri geliştirilen özgür ve açık kaynaklı bir Texas Hold'em poker oyunudur. Bu web istemcisi, PokerTH projesiyle iş birliği içinde geliştirilen tarayıcı sürümüdür.",
     abProject2:"Kaynak kodu özgürce erişilebilir:",
-    abProjectWeb:"Web istemcisi",
+    abProjectWeb:"Web istemcisi", abGuides:"Poker rehberleri",
     abThanks2:"Ayrıca PokerTH.net topluluğuna, çevirmenlere ve test edenlere, ve bu web istemcisini destekleyen mevcut bakımcılara teşekkürler.",
     abLicense1:"PokerTH web istemcisi GNU AGPL v3 lisansı altında yayınlanmıştır. PokerTH, GNU GPL lisansı altında yayınlanmıştır.",
     abLicense2:"Lisansların tam metni kaynak kodla birlikte mevcuttur:",

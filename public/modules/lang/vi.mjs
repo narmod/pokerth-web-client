@@ -792,7 +792,7 @@ export const strings = {
     abWebBy:"Ứng dụng web: Arnaud Obscur (narmod@pokerth.net), hợp tác với dự án PokerTH.",
     abProject1:"PokerTH là trò chơi poker Texas Hold'em tự do, mã nguồn mở, được phát triển từ năm 2006. Ứng dụng web này là phiên bản trình duyệt của nó, được phát triển với sự hợp tác của dự án PokerTH.",
     abProject2:"Mã nguồn được cung cấp tự do:",
-    abProjectWeb:"Ứng dụng web",
+    abProjectWeb:"Ứng dụng web", abGuides:"Hướng dẫn poker",
     abThanks2:"Cũng xin cảm ơn cộng đồng PokerTH.net, các dịch giả và người kiểm thử, cùng các nhà bảo trì hiện tại đã hỗ trợ ứng dụng web này.",
     abLicense1:"Ứng dụng web PokerTH được phát hành theo giấy phép GNU AGPL v3. PokerTH được phát hành theo giấy phép GNU GPL.",
     abLicense2:"Toàn văn các giấy phép có sẵn cùng với mã nguồn:",

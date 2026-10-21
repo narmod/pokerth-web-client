@@ -36,7 +36,8 @@ ok(/@media \(max-width: ?560px\) \{ \.ab-tab \{ font-size:var\(--fs-sm\); \} \}/
    'police reduite sous 560px');
 const html = readFileSync('public/pokerth-client.html', 'utf8');
 const tabs = html.match(/<button class="ab-tab[^"]*"[^>]*><span class="ab-tab-lbl" data-i18n="[^"]+">[^<]+<\/span><\/button>/g) || [];
-ok(tabs.length === 6, 'les 6 onglets portent le span interne .ab-tab-lbl (' + tabs.length + ')');
+// 7 since web.243 (Guides tab).
+ok(tabs.length === 7, 'les 7 onglets portent le span interne .ab-tab-lbl (' + tabs.length + ')');
 
 console.log('.cf label:');
 const cf = (css.match(/\.cf label \{[^}]*\}/) || [''])[0];

@@ -793,7 +793,7 @@ export const strings = {
     abWebBy:"Cliente web: Arnaud Obscur (narmod@pokerth.net), en colaboración co proxecto PokerTH.",
     abProject1:"PokerTH é un xogo de póker Texas Hold'em libre e de código aberto, desenvolvido desde 2006. Este cliente web é a súa versión para navegador, desenvolvida en colaboración co proxecto PokerTH.",
     abProject2:"O código fonte está libremente dispoñible:",
-    abProjectWeb:"Cliente web",
+    abProjectWeb:"Cliente web", abGuides:"Guías de póker",
     abThanks2:"Grazas tamén á comunidade de PokerTH.net, aos tradutores e probadores, e aos mantedores actuais polo apoio a este cliente web.",
     abLicense1:"O cliente web de PokerTH publícase baixo a licenza GNU AGPL v3. PokerTH publícase baixo a licenza GNU GPL.",
     abLicense2:"O texto completo das licenzas está dispoñible co código fonte:",

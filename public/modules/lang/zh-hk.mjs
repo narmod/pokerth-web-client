@@ -525,7 +525,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'網頁客戶端：Arnaud Obscur（narmod@pokerth.net），與 PokerTH 專案合作開發。',
     abProject1:'PokerTH 是一款自 2006 年開始開發的自由開源德州撲克遊戲。此網頁客戶端是其瀏覽器版本，與 PokerTH 專案合作開發。',
-    abProject2:'原始碼可自由取得：', abProjectWeb:'網頁客戶端',
+    abProject2:'原始碼可自由取得：', abProjectWeb:'網頁客戶端', abGuides:'撲克指南',
     abThanks1:'感謝 PokerTH 團隊 — Felix Hammer、Florian Thauer、Lothar May — 以及自 2006 年以來所有專案貢獻者。',
     abThanks2:'同時感謝 PokerTH.net 社群、翻譯者和測試者，以及支持此網頁客戶端的現任維護者。',
     abLicense1:'PokerTH 網頁客戶端以 GNU AGPL v3 授權條款發布。PokerTH 以 GNU GPL 授權條款發布。',

@@ -525,7 +525,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Retkliento: Arnaud Obscur (narmod@pokerth.net), kunlabore kun la projekto PokerTH.',
     abProject1:'PokerTH estas libera kaj malfermitkoda Texas Hold\'em pokera ludo, evoluigata ekde 2006. Ĉi tiu retkliento estas ĝia retumila versio, evoluigita kunlabore kun la projekto PokerTH.',
-    abProject2:'La fontkodo estas libere havebla:', abProjectWeb:'Retkliento',
+    abProject2:'La fontkodo estas libere havebla:', abProjectWeb:'Retkliento', abGuides:'Pokeraj gvidiloj',
     abThanks1:'Dankon al la teamo de PokerTH — Felix Hammer, Florian Thauer, Lothar May — kaj al ĉiuj kontribuintoj al la projekto ekde 2006.',
     abThanks2:'Dankon ankaŭ al la komunumo de PokerTH.net, al la tradukintoj kaj testantoj, kaj al la nunaj prizorgantoj pro subteno de ĉi tiu retkliento.',
     abLicense1:'La retkliento de PokerTH estas eldonita laŭ la permesilo GNU AGPL v3. PokerTH estas eldonita laŭ la permesilo GNU GPL.',

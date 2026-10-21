@@ -792,7 +792,7 @@ export const strings = {
     abWebBy:"Web client: Arnaud Obscur (narmod@pokerth.net), σε συνεργασία με το έργο PokerTH.",
     abProject1:"Το PokerTH είναι ένα ελεύθερο παιχνίδι πόκερ Texas Hold'em ανοιχτού κώδικα, που αναπτύσσεται από το 2006. Αυτός ο web client είναι η έκδοσή του για πρόγραμμα περιήγησης, αναπτυγμένη σε συνεργασία με το έργο PokerTH.",
     abProject2:"Ο πηγαίος κώδικας είναι ελεύθερα διαθέσιμος:",
-    abProjectWeb:"Web client",
+    abProjectWeb:"Web client", abGuides:"Οδηγοί πόκερ",
     abThanks2:"Ευχαριστούμε επίσης την κοινότητα του PokerTH.net, τους μεταφραστές και τους δοκιμαστές, καθώς και τους σημερινούς συντηρητές για την υποστήριξη αυτού του web client.",
     abLicense1:"Ο web client του PokerTH διατίθεται υπό την άδεια GNU AGPL v3. Το PokerTH διατίθεται υπό την άδεια GNU GPL.",
     abLicense2:"Το πλήρες κείμενο των αδειών είναι διαθέσιμο με τον πηγαίο κώδικα:",

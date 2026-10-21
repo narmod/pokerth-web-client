@@ -525,7 +525,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'වෙබ් සේවාලාභියා: Arnaud Obscur (narmod@pokerth.net), PokerTH ව්‍යාපෘතිය සමඟ සහයෝගයෙන්.',
     abProject1:'PokerTH යනු 2006 සිට සංවර්ධනය වන නිදහස් සහ විවෘත මූලාශ්‍ර Texas Hold\'em පෝකර් ක්‍රීඩාවකි. මෙම වෙබ් සේවාලාභියා එහි බ්‍රවුසර අනුවාදය වන අතර PokerTH ව්‍යාපෘතිය සමඟ සහයෝගයෙන් සංවර්ධනය කෙරේ.',
-    abProject2:'මූලාශ්‍ර කේතය නිදහසේ ලබාගත හැක:', abProjectWeb:'වෙබ් සේවාලාභියා',
+    abProject2:'මූලාශ්‍ර කේතය නිදහසේ ලබාගත හැක:', abProjectWeb:'වෙබ් සේවාලාභියා', abGuides:'පෝකර් මාර්ගෝපදේශ',
     abThanks1:'PokerTH කණ්ඩායමට — Felix Hammer, Florian Thauer, Lothar May — සහ 2006 සිට ව්‍යාපෘතියට දායක වූ සියල්ලන්ට ස්තූතියි.',
     abThanks2:'PokerTH.net ප්‍රජාවට, පරිවර්තකයන්ට සහ පරීක්ෂකයන්ට, මෙන්ම මෙම වෙබ් සේවාලාභියාට සහාය දෙන වත්මන් නඩත්තුකරුවන්ට ද ස්තූතියි.',
     abLicense1:'PokerTH වෙබ් සේවාලාභියා GNU AGPL v3 බලපත්‍රය යටතේ නිකුත් කෙරේ. PokerTH GNU GPL බලපත්‍රය යටතේ නිකුත් කෙරේ.',

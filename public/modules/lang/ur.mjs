@@ -521,7 +521,7 @@ export const strings = {
     abCopy:'(c) 2006–2026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'ویب کلائنٹ: Arnaud Obscur (narmod@pokerth.net)، PokerTH منصوبے کے تعاون سے۔',
     abProject1:'PokerTH ایک آزاد اور اوپن سورس ٹیکساس ہولڈم پوکر گیم ہے، جو ۲۰۰۶ سے تیار ہو رہی ہے۔ یہ ویب کلائنٹ اس کا براؤزر ورژن ہے، جو PokerTH منصوبے کے تعاون سے تیار ہوا۔',
-    abProject2:'سورس کوڈ آزادانہ دستیاب ہے:', abProjectWeb:'ویب کلائنٹ',
+    abProject2:'سورس کوڈ آزادانہ دستیاب ہے:', abProjectWeb:'ویب کلائنٹ', abGuides:'پوکر گائیڈز',
     abThanks1:'PokerTH ٹیم — Felix Hammer، Florian Thauer، Lothar May — اور ۲۰۰۶ سے منصوبے کے تمام معاونین کا شکریہ۔',
     abThanks2:'PokerTH.net کمیونٹی، مترجمین اور جانچ کرنے والوں، اور موجودہ منتظمین کا بھی شکریہ کہ وہ اس ویب کلائنٹ کی حمایت کرتے ہیں۔',
     abLicense1:'PokerTH ویب کلائنٹ GNU AGPL v3 لائسنس کے تحت جاری ہوتا ہے۔ خود PokerTH ‏GNU GPL لائسنس کے تحت جاری ہوتا ہے۔',

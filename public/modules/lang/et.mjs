@@ -515,7 +515,7 @@ export const strings = {
     abCopy:'(c) 2006\u20132026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May',
     abWebBy:'Veebiklient: Arnaud Obscur (narmod@pokerth.net), koostöös PokerTH projektiga.',
     abProject1:"PokerTH on vaba ja avatud lähtekoodiga Texas Hold'emi pokkerimäng, mida on arendatud alates 2006. aastast. See veebiklient on selle brauseripordi, mis on loodud koostöös PokerTH projektiga.",
-    abProject2:'Lähtekood on vabalt saadaval:', abProjectWeb:'Veebiklient',
+    abProject2:'Lähtekood on vabalt saadaval:', abProjectWeb:'Veebiklient', abGuides:'Pokkerijuhendid',
     abThanks1:'Tänud PokerTH meeskonnale \u2014 Felix Hammer, Florian Thauer, Lothar May \u2014 ja kõigile projekti panustajatele alates 2006. aastast.',
     abThanks2:'Tänud ka PokerTH.net kogukonnale, tõlkijatele ja testijatele ning praegustele hooldajatele selle veebikliendi toetamise eest.',
     abLicense1:'PokerTH veebiklient on välja antud GNU AGPL v3 litsentsi all. PokerTH on välja antud GNU GPL litsentsi all.',
