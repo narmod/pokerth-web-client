@@ -12397,7 +12397,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.253'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.254'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
@@ -12487,7 +12487,7 @@ window._pthTimeZone = function () {
       }
       // pwa : seul champ que le serveur ne peut pas déduire de l'en-tête (l'UA
       // est identique en onglet et en app installée). OS, navigateur et langue
-      // sont dérivés côté serveur. tz : le fuseau du navigateur (« Europe/Paris »),
+      // sont dérivés côté serveur (langue : repli sur nl, ci-dessous). tz : le fuseau du navigateur (« Europe/Paris »),
       // que le proxy ramène à un pays pour la carte de l'admin (server/geo-stats.js)
       // — aucune IP n'est lue pour cela.
       var pwa = false;
@@ -12501,6 +12501,13 @@ window._pthTimeZone = function () {
       try { if (window._pthAutomated()) msg.wd = true; } catch (e) {}
       if (!window.LIVE_MODE) {
         try { var tz = window._pthTimeZone(); if (tz) msg.tz = tz; } catch (e) {}
+        // nl : navigator.languages (3 premières), lu par le proxy seulement
+        // quand l'en-tête Accept-Language ne porte aucune langue (WebView,
+        // en-tête absent) — même donnée, même comptage en totaux.
+        try {
+          var nl = (navigator.languages && navigator.languages.length) ? navigator.languages.slice(0, 3).join(',') : (navigator.language || '');
+          if (typeof nl === 'string' && nl && nl.length <= 128) msg.nl = nl;
+        } catch (e) {}
         try {
           var L = window.__pthLanding || {};
           if (L.ref) msg.ref = String(L.ref);

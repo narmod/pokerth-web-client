@@ -9590,11 +9590,11 @@ function recordGuideEvent(ctx, ev, bot) {
 // One key per visit ping (server/ref-stats.js), in today's bucket: sources
 // for every visit, and for new visitors the source and the source x
 // language. Same id, same new/returning verdict as recordVisit.
-function recordVisitSource(d, acceptLang, seenBefore, bot) {
+function recordVisitSource(d, acceptLang, seenBefore, bot, clientLang) {
   try {
     const T = visitTarget(bot);
     const isNew = (seenBefore === true || seenBefore === false) ? !seenBefore : null;
-    const key = REF_STATS.classify(d), lg = LANG_STATS.parse(acceptLang).lang;
+    const key = REF_STATS.classify(d), lg = LANG_STATS.resolve(acceptLang, clientLang).lang;
     REF_STATS.record(visitsStore, T.day, key, isNew, lg, Date.now());
     REF_STATS.record(null, T.cell, key, isNew, lg, Date.now());
     saveVisitsSoon();
@@ -9816,7 +9816,7 @@ function supportedLangs() {
   } catch (e) { _langsCache = _langsCache || []; }
   return _langsCache;
 }
-function recordVisitEnv(ua, acceptLang, standalone, seenBefore, bot) {
+function recordVisitEnv(ua, acceptLang, standalone, seenBefore, bot, clientLang) {
   try {
     ua = String(ua || '');
     const os = _uaPick(UA_OS, ua), br = _uaPick(UA_BROWSER, ua);
@@ -9828,10 +9828,11 @@ function recordVisitEnv(ua, acceptLang, standalone, seenBefore, bot) {
     _envBump('combo', os + ' \u00b7 ' + br, bot);
     _envBump('pwa', standalone ? 'standalone' : 'browser', bot);
     if (!visitsStore.envSince) visitsStore.envSince = Date.now();
-    // Premier tag de l'en-tete, reduit a la langue de base (fr-CA, fr_CA →
-    // fr ; iw → he ; und, *, en-tete absent → other). La regle vit dans
+    // Premier tag exploitable de l'en-tete, reduit a la langue de base (fr-CA,
+    // fr_CA → fr ; iw → he ; « *, fr » → fr) ; sans aucun, navigator.languages
+    // envoye par le ping (d.nl) ; sinon other. La regle vit dans
     // server/lang-stats.js, testee seule (scripts/test-lang-stats.mjs).
-    let lp = LANG_STATS.parse(acceptLang);
+    let lp = LANG_STATS.resolve(acceptLang, clientLang);
     const lgv = lp.lang;
     // Un code valide refuse par le plafond tombe dans « other » : le
     // diagnostic le dit au lieu de le confondre avec un en-tete absent.
@@ -15314,10 +15315,13 @@ const httpServer = http.createServer((req, res) => {
           _pingStats.n++;
           if (_bot) _pingStats.nBot = (_pingStats.nBot || 0) + 1;
           const _seenBefore = recordVisit(d && d.vid, _bot);
+          // d.nl : navigator.languages du navigateur, repli quand l'en-tete
+          // Accept-Language ne porte aucune langue (WebView, en-tete absent).
+          const _nl = (d && typeof d.nl === 'string') ? d.nl : '';
           recordVisitEnv(req.headers && req.headers['user-agent'],
                          req.headers && req.headers['accept-language'],
-                         !!(d && d.pwa), _seenBefore, _bot);
-          recordVisitSource(d, req.headers && req.headers['accept-language'], _seenBefore, _bot);
+                         !!(d && d.pwa), _seenBefore, _bot, _nl);
+          recordVisitSource(d, req.headers && req.headers['accept-language'], _seenBefore, _bot, _nl);
           if (d && typeof d.tz === 'string') {
             const _os = _uaPick(UA_OS, String((req.headers && req.headers['user-agent']) || ''));
             recordGeo(d.tz, { nw: _seenBefore === false, pwa: !!d.pwa, mob: _os === 'iPhone' || _os === 'iPad' || _os === 'Android' }, null, _bot);

@@ -85,6 +85,39 @@ is('<script>', 'other', null, '(malformed)');
 is('a'.repeat(5000), 'other', null, '(malformed)');
 is('en-' + 'x'.repeat(40), 'other', null, '(malformed)');
 
+// -- An unusable first tag no longer hides a later usable one (web.254) ------
+function rec(h, lang, locale, skipped, client) {
+  const p = client === undefined ? L.parse(h) : L.resolve(h, client);
+  const via = client === undefined ? 'tag' : 'navigator';
+  ok(p.lang === lang && p.locale === locale && p.raw === null && p.skipped === skipped && p.via === via,
+    JSON.stringify(h) + (client === undefined ? '' : ' + nl ' + JSON.stringify(client)) + ' → ' + lang + ' past ' + skipped + ' via ' + via
+    + (p.lang === lang && p.skipped === skipped && p.via === via ? '' : '  (got ' + JSON.stringify(p) + ')'));
+}
+rec('*, fr-FR', 'fr', 'fr-FR', '*');
+rec('und, en', 'en', 'en', 'und');
+rec('mul, de;q=0.8', 'de', 'de', 'mul');
+rec(',en', 'en', 'en', '(empty)');
+rec(';q=0.5, en', 'en', 'en', '(empty)');
+rec('C, en_US.UTF-8', 'en', 'en-US', 'C');
+rec('x-klingon, *, pt-BR', 'pt', 'pt-BR', 'x-klingon');
+rec('<b>, es', 'es', 'es', '(malformed)');
+is('*, und, mul', 'other', null, '*');
+is('fr-FR, *', 'fr', 'fr-FR');
+ok(L.parse('fr-FR, en').skipped === undefined, 'a usable first tag carries no "skipped"');
+is('*,' + ','.repeat(L.MAX_TAGS) + 'fr', 'other', null, '*');
+ok(L.parse('*,' + 'x,'.repeat(100000) + 'fr').lang === 'other', 'a list longer than ' + L.MAX_TAGS + ' tags is not walked to its end');
+
+// -- navigator.languages (ping field nl): only when the header has nothing --
+rec(undefined, 'fr', 'fr-FR', '(none)', 'fr-FR,fr,en');
+rec('', 'de', 'de-AT', '(empty)', 'de-AT');
+rec('*', 'ja', 'ja-JP', '*', 'ja-JP');
+ok(L.resolve('en-GB', 'fr-FR').lang === 'en' && L.resolve('en-GB', 'fr-FR').skipped === undefined, 'the header wins whenever it carries a language');
+ok(L.resolve('*, it', 'fr').lang === 'it' && L.resolve('*, it', 'fr').via === 'tag', 'a later header tag is preferred to the client value');
+ok(L.resolve(undefined, '*').raw === '(none)' && L.resolve(undefined, '').raw === '(none)', 'an unusable client value changes nothing');
+ok(L.resolve(undefined, 'fr,' + 'x'.repeat(L.CLIENT_MAX)).raw === '(none)', 'an oversized client value is ignored');
+ok(L.resolve(undefined, 42).raw === '(none)' && L.resolve(undefined, ['fr']).raw === '(none)', 'a non-string client value is ignored');
+ok(L.resolve(undefined, 'iw-IL').lang === 'he' && L.resolve(undefined, 'und').lang === 'other', 'the client value folds and voids like the header');
+
 // -- Read-time folding: history under an old code reads with the new one ----
 const hist = { he: 10, iw: 3, id: 4, in: 1, tl: 2, fil: 5, und: 2, other: 7, fur: 1, no: 1, nb: 4 };
 const f = L.foldLangMap(hist);
@@ -114,6 +147,11 @@ ok(fe.lang.he === 1 && fe.langNew.id === 1 && fe.langRet.fil === 1 && fe.os.iw =
     'otherCombo only counts the "other" pings');
   ok(d.langLocale['pt-BR'] === 1 && d.langLocale['fur-IT'] === 1 && !d.otherRaw['fur-IT'], 'a recognised language goes to langLocale, never to otherRaw');
   ok(d.bot['bot-like'] === 2 && d.bot.clean === 3, 'bot-like no longer depends on the language: 2 bot UAs out of 5, whatever their header');
+  L.record(d, L.parse('*, fr-FR'), { seenBefore: false, isBot: false, combo: 'Windows · Chrome' });
+  L.record(d, L.resolve(undefined, 'de-DE'), { seenBefore: false, isBot: false, combo: 'Android · WebView' });
+  ok(d.langRecovered['* \u2192 later tag'] === 1 && d.langRecovered['(none) \u2192 navigator'] === 1, 'langRecovered says which first tag was skipped and where the language came from');
+  ok(d.langLocale['fr-FR'] === 1 && d.langLocale['de-DE'] === 1 && d.otherRaw['*'] === 1 && d.otherRaw['(none)'] === 2,
+    'a recovered ping counts in its language, never in otherRaw');
 }
 
 // -- A flood of distinct garbage cannot grow the maps ----------------------
@@ -143,7 +181,8 @@ ok(fe.lang.he === 1 && fe.langNew.id === 1 && fe.langRet.fil === 1 && fe.os.iw =
 
 // -- Wiring in proxy.js ----------------------------------------------------
 ok(/const LANG_STATS = require\('\.\/server\/lang-stats\.js'\)/.test(proxy), 'proxy.js loads the module');
-ok(/LANG_STATS\.parse\(acceptLang\)/.test(proxy), 'the header is parsed by the module, not by an inline regex');
+ok((proxy.match(/LANG_STATS\.resolve\(acceptLang, clientLang\)/g) || []).length === 2, 'the header (then nl) is resolved by the module, for the environment and the source alike');
+ok(/typeof d\.nl === 'string'/.test(proxy), 'the ping field nl is only taken as a string');
 ok(!/lgv === 'other'\) \? 'bot-like'/.test(proxy), 'the language no longer feeds the bot-like estimate');
 ok(/_envRoom\(bucket\.lg, lgv, 'lang'\)/.test(proxy), 'the per-day lang series keeps its rule');
 ok(/LANG_STATS\.foldEnv\(visitsStore\.env/.test(proxy), 'the running totals are folded when read');
@@ -186,6 +225,15 @@ ok(/_annEsc\(k\)/.test(admin.slice(admin.indexOf('function _envOtherDiag('), adm
       r.on('error', () => res(0)); r.end(body);
     });
   }
+  function beaconNl(vid, nl, headers) {
+    return new Promise((res) => {
+      const body = JSON.stringify({ vid, pwa: false, nl });
+      const r = http.request({ host: '127.0.0.1', port: PORT, path: '/__visit', method: 'POST',
+        headers: Object.assign({ 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) }, headers) },
+        (x) => { x.resume(); res(x.statusCode); });
+      r.on('error', () => res(0)); r.end(body);
+    });
+  }
   let up = false;
   for (let i = 0; i < 60 && !up; i++) { await new Promise((r) => setTimeout(r, 150)); up = (await beacon('', { 'User-Agent': 'probe' })) === 204; }
   try {
@@ -197,18 +245,22 @@ ok(/_annEsc\(k\)/.test(admin.slice(admin.indexOf('function _envOtherDiag('), adm
     await beacon('a3', { 'User-Agent': WIN, 'Accept-Language': 'pt_BR' });
     await beacon('a3', { 'User-Agent': WIN, 'Accept-Language': '*' });
     await beacon('a4', { 'User-Agent': WIN, 'Accept-Language': 'x'.repeat(3000) });
+    await beacon('a5', { 'User-Agent': WIN, 'Accept-Language': '*, fr-FR' });
+    await beaconNl('a6', 'de-AT,de', { 'User-Agent': WIN });
     await new Promise((r) => setTimeout(r, 2200));   // saveVisitsSoon (1.5 s)
     const v = JSON.parse(fs.readFileSync(VISITS, 'utf8'));
     const e = v.env || {}, b = (v.days || {})[today] || {};
     ok(e.lang.iw === 3 && e.lang.und === 1 && b.lg.iw === 3, 'the stored history is left as it was (iw, und)');
     ok(e.lang.he === 3 && e.lang.pt === 1, 'new pings are stored under the current code (iw-IL → he, pt_BR → pt)');
     ok(e.noise.clean === 6 && e.noise['bot-like'] === 4, 'the old noise counter is frozen, not mixed with the new rule');
-    ok(e.bot && e.bot['bot-like'] === 1 && e.bot.clean === 5, 'env.bot judges the User-Agent alone: Googlebot is a bot, a header-less "probe" is not');
+    ok(e.bot && e.bot['bot-like'] === 1 && e.bot.clean === 7, 'env.bot judges the User-Agent alone: Googlebot is a bot, a header-less "probe" is not');
     ok(e.otherRaw['(none)'] === 2 && e.otherRaw['*'] === 1 && e.otherRaw['(malformed)'] === 1, 'otherRaw: no header ×2, * ×1, a 3000-char header as (malformed)');
     ok(e.otherRawBot['(none)'] === 1 && e.otherRawClean['(none)'] === 1 && e.otherRawClean['*'] === 1, 'split by User-Agent');
     ok(e.otherRawRet['*'] === 1 && e.otherRawNew['(none)'] === 1, 'split by new / returning (a3 came back)');
     ok(e.otherCombo['other · Chrome'] === 1, 'the crawler shape is visible: Chrome with no OS');
     ok(e.langLocale['he-IL'] === 1 && e.langLocale['pt-BR'] === 1, 'langLocale keeps the region');
+    ok(e.lang.fr === 1 && e.lang.de === 1 && e.langLocale['fr-FR'] === 1 && e.langLocale['de-AT'] === 1, 'end to end: "*, fr-FR" counts as fr, a header-less ping with nl as de');
+    ok(e.langRecovered && e.langRecovered['* \u2192 later tag'] === 1 && e.langRecovered['(none) \u2192 navigator'] === 1, 'and both are listed as recovered');
     ok(b.ld && b.ld.otherRaw['(none)'] === 1 && b.ld.langLocale['pt-BR'] === 1, 'and the same maps are kept per day');
     ok(b.bt && b.bt.ld && b.bt.ld.otherRaw['(none)'] === 1 && b.bt.v === 1, 'the Googlebot ping is kept apart, in the day\'s bot share (bt)');
     ok(v.langDiagSince > 1000, 'the diagnostic records when it started');

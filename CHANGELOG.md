@@ -225,6 +225,13 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Visitor language: « No usable language header » no longer hides a language** (`web.254`) — only the first
+  tag of `Accept-Language` was read, so `*, fr-FR`, `und, en` or `,en` counted as « other ». `server/lang-stats.js`
+  now walks the tags in order (at most 8) and keeps the first usable one; when the header holds none (absent, as in
+  some WebViews), the visit ping's new `nl` field — `navigator.languages`, first three, ≤ 128 chars, run through the
+  same parser — is read instead (`resolve()`). The header always wins when it carries a language. Such pings count in
+  their language, and a new capped diagnostic map `langRecovered` (« * → later tag », « (none) → navigator ») is
+  shown under « Behind “No usable language header” ». No new kind of data: the language was already counted as totals.
 - **Statistics: filters said where they apply** (`web.253`, filter audit of 2026-10-21) — « Narrow to » was greyed
   on Activity although it narrows the Internet and LAN cards there; the Bottom line's mode shares were all-time in
   a card that follows the period (now the period, named); a custom range got no /live row of its own (or one

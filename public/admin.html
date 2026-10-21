@@ -4160,10 +4160,22 @@
   // UA d'automate ou non, et le couple OS · navigateur de ces pings. Ces
   // valeurs viennent du client : toujours echappees.
   var OTHER_RAW_TITLES={'(none)':'No Accept-Language header at all','(empty)':'Header present but empty','(malformed)':'Too long, or characters that cannot be in a language tag','(overflow)':'Further distinct values, past the cap'};
+  // Pings dont le premier tag etait inexploitable mais dont la langue a ete
+  // retrouvee (tag suivant, ou navigator.languages) : comptes dans leur
+  // langue, jamais dans « No usable language header » (proxy 2.1.10-web.254+).
+  function _envRecovered(){
+    var rc=_envData.langRecovered||{}, rk=Object.keys(rc).sort(function(a,b){ return (rc[b]||0)-(rc[a]||0); });
+    if(!rk.length) return '';
+    var t=0; rk.forEach(function(k){ t+=rc[k]||0; });
+    return '<div style="margin-top:6px" title="Counted in their language, not in this row">Language recovered past an unusable first tag ('+_envFmt(t)+'): '
+         + rk.slice(0,8).map(function(k){ return '<span class="misslg">'+_annEsc(k)+' <s>'+_envFmt(rc[k]||0)+'</s></span>'; }).join('')+'</div>';
+  }
   function _envOtherDiag(){
     if(_envView!=='lang') return '';
     var raw=_envData.otherRaw||{}, keys=Object.keys(raw);
     if(!keys.length){
+      var rec=_envRecovered();
+      if(rec) return '<div class="envdiag">'+rec+'</div>';
       if(!((_envData.lang||{}).other)) return '';
       return '<div class="envdiag muted">What is behind “No usable language header” is recorded '
            + (_envLangDiagSince?('since '+_stDate(_envLangDiagSince)):'from proxy 2.1.9-web.299 on')+'.</div>';
@@ -4179,7 +4191,7 @@
     var combo=ck.length?('<div style="margin-top:6px">Their device + browser: '+ck.map(function(k){ return '<span class="misslg">'+_annEsc(k)+' <s>'+_envFmt(oc[k]||0)+'</s></span>'; }).join('')+'</div>'):'';
     return '<div class="envdiag"><b>Behind “No usable language header”</b> — the first tag received'
          + (_envSrc.ld==='period'?'':' (running totals)')
-         + '<table><tr><th>Value</th><th>Pings</th><th>New / returning</th><th>Bot UA / other UA</th></tr>'+rows+'</table>'+more+combo+'</div>';
+         + '<table><tr><th>Value</th><th>Pings</th><th>New / returning</th><th>Bot UA / other UA</th></tr>'+rows+'</table>'+more+combo+_envRecovered()+'</div>';
   }
   // Variantes regionales des langues les plus vues : pt → pt-BR / pt-PT.
   // « fr » seul (pas de region envoyee) compte comme une variante a part.
@@ -5110,7 +5122,7 @@
     // Diagnostic de langue (proxy 2.1.9-web.299+) : la periode des qu'un jour
     // le porte, sinon le cumul (qui ne commence lui aussi qu'a cette version).
     if(per.ldDays>0||h){
-      ['langLocale','otherRaw','otherRawNew','otherRawRet','otherRawBot','otherRawClean','otherCombo','bot'].forEach(function(k){ out[k]=per[k]||{}; });
+      ['langLocale','otherRaw','otherRawNew','otherRawRet','otherRawBot','otherRawClean','otherCombo','bot','langRecovered'].forEach(function(k){ out[k]=per[k]||{}; });
       _envSrc.ld='period';
     }
     return out;

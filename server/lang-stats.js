@@ -5,15 +5,23 @@
 // I/O, no clock; proxy.js stores the numbers in visits.json and
 // scripts/test-lang-stats.mjs drives this module directly.
 //
-// Only the FIRST tag of a header the browser already sends is read. Nothing
-// else is collected: no IP, no raw User-Agent, no fingerprint.
+// The first USABLE tag of a header the browser already sends is kept: tags
+// are read in order and an unusable one ("*", "und", an empty slot) is
+// skipped (2.1.10-web.254; until then only the first tag was read, so
+// "*, fr-FR" counted as "other"). When the header holds no language at all,
+// the browser's own navigator.languages, sent with the visit ping, is read
+// the same way (resolve). Nothing else is collected: no IP, no raw
+// User-Agent, no fingerprint.
 //
 //   lang     base language, the historical statistic ("fr", "zh", "fur")
 //   locale   canonical locale of a recognised language ("fr-CA",
 //            "zh-Hant-TW", "es-419", or "fr" alone when no region is sent)
-//   raw      for an unusable header only: what was received, so the "other"
-//            bucket can be read — "(none)", "(empty)", "(malformed)", or the
-//            tag itself ("*", "C", "x-klingon", "und")
+//   raw      for an unusable header only: what its FIRST tag was, so the
+//            "other" bucket can be read — "(none)", "(empty)",
+//            "(malformed)", or the tag itself ("*", "C", "x-klingon", "und")
+//   skipped  for a language found past an unusable first tag: that first
+//            tag, as raw would have named it
+//   via      with skipped: 'tag' (a later tag of the header) or 'navigator'
 //
 // A valid 2-3 letter ISO 639 code keeps its own key even when PokerTH has
 // no translation for it (fur stays fur): that is how new languages are
@@ -35,6 +43,11 @@ function isVoid(l) { return LANG_VOID[l] === 1 || /^q[a-t][a-z]$/.test(l); }
 // POSIX alphabet, is stored as "(malformed)": a client cannot mint keys.
 const RAW_MAX = 35;
 const RAW_OK = /^[A-Za-z0-9_\-.@*]+$/;
+// Tags read per header (or per navigator.languages list) before giving up:
+// a real browser puts its language in the first two or three.
+const MAX_TAGS = 8;
+// navigator.languages as sent by the client: longer is not a language list.
+const CLIENT_MAX = 128;
 
 // Cardinality caps, per counter map (running total and each day alike).
 // Past the cap a NEW key lands in "(overflow)", never in "other", so the
@@ -42,16 +55,14 @@ const RAW_OK = /^[A-Za-z0-9_\-.@*]+$/;
 const CAP_RAW = 50;      // otherRaw* — distinct unusable values
 const CAP_LOCALE = 250;  // langLocale — ~85 languages x their usual regions
 const CAP_COMBO = 70;    // otherCombo — bounded by the OS x browser tables
+const CAP_RECOVERED = 50; // langRecovered — first tag x where the language came from
 const OVERFLOW = '(overflow)';
 
-function parse(header) {
-  if (header === undefined || header === null) return { lang: 'other', locale: null, raw: '(none)' };
-  const s = String(header);
-  const comma = s.indexOf(',');
-  const first = comma < 0 ? s : s.slice(0, comma);
+// One tag of the list ("fr-CA;q=0.9"): the same result as parse().
+function parseTag(item) {
   // Drop the parameters (";q=0.9") before anything else: a bare "en;q=0.9"
   // used to read as unusable.
-  const tag = first.split(';')[0].trim();
+  const tag = item.split(';')[0].trim();
   if (!tag) return { lang: 'other', locale: null, raw: '(empty)' };
   if (tag.length > RAW_MAX || !RAW_OK.test(tag)) return { lang: 'other', locale: null, raw: '(malformed)' };
   // POSIX locales ("en_US.UTF-8", "de_DE@euro"): codeset and modifier go,
@@ -70,6 +81,30 @@ function parse(header) {
   }
   if (parts[i] && (/^[A-Za-z]{2}$/.test(parts[i]) || /^\d{3}$/.test(parts[i]))) region = parts[i].toUpperCase();
   return { lang: base, locale: [base, script, region].filter(Boolean).join('-'), raw: null };
+}
+
+function parse(header) {
+  if (header === undefined || header === null) return { lang: 'other', locale: null, raw: '(none)' };
+  const items = String(header).split(',', MAX_TAGS);
+  const first = parseTag(items[0]);
+  if (first.lang !== 'other') return first;
+  for (let k = 1; k < items.length; k++) {
+    const p = parseTag(items[k]);
+    if (p.lang !== 'other') return { lang: p.lang, locale: p.locale, raw: null, skipped: first.raw, via: 'tag' };
+  }
+  return first;
+}
+
+// The header first; navigator.languages (`client`, "fr-FR,en") only when the
+// header holds no language at all. The header keeps the last word whenever
+// it has one, and the client value goes through the same parser, so it
+// cannot mint a key the header could not.
+function resolve(header, client) {
+  const h = parse(header);
+  if (h.lang !== 'other' || typeof client !== 'string' || !client || client.length > CLIENT_MAX) return h;
+  const c = parse(client);
+  if (c.lang === 'other') return h;
+  return { lang: c.lang, locale: c.locale, raw: null, skipped: h.raw, via: 'navigator' };
 }
 
 // Same rule as parse(), applied to a stored { code: count } map: retired
@@ -111,7 +146,7 @@ function bumpCapped(dst, key, cap) {
 
 // The diagnostic maps, by name. The running totals live beside lang in
 // visitsStore.env; each day keeps the same maps under bucket.ld.
-const DIAG_KEYS = ['langLocale', 'otherRaw', 'otherRawNew', 'otherRawRet', 'otherRawBot', 'otherRawClean', 'otherCombo', 'bot'];
+const DIAG_KEYS = ['langLocale', 'otherRaw', 'otherRawNew', 'otherRawRet', 'otherRawBot', 'otherRawClean', 'otherCombo', 'bot', 'langRecovered'];
 
 // One ping, into one target ({ langLocale: {...}, ... }). `ctx`:
 //   seenBefore  true / false / null (null: no id, neither new nor returning)
@@ -122,6 +157,9 @@ function record(dst, p, ctx) {
   bumpCapped(m('bot'), ctx.isBot ? 'bot-like' : 'clean', 2);
   if (p.lang !== 'other') {
     if (p.locale) bumpCapped(m('langLocale'), p.locale, CAP_LOCALE);
+    // Found past an unusable first tag: which one, and where the language
+    // came from ("* → later tag", "(none) → navigator").
+    if (p.skipped) bumpCapped(m('langRecovered'), p.skipped + (p.via === 'navigator' ? ' \u2192 navigator' : ' \u2192 later tag'), CAP_RECOVERED);
     return;
   }
   bumpCapped(m('otherRaw'), p.raw, CAP_RAW);
@@ -147,5 +185,5 @@ function period(lds) {
   return out;
 }
 
-module.exports = { LANG_FOLD, LANG_VOID, RAW_MAX, CAP_RAW, CAP_LOCALE, CAP_COMBO, OVERFLOW, DIAG_KEYS,
-  parse, isVoid, foldLangMap, foldEnv, noiseMeta, record, period };
+module.exports = { LANG_FOLD, LANG_VOID, RAW_MAX, MAX_TAGS, CLIENT_MAX, CAP_RAW, CAP_LOCALE, CAP_COMBO, CAP_RECOVERED, OVERFLOW, DIAG_KEYS,
+  parse, resolve, isVoid, foldLangMap, foldEnv, noiseMeta, record, period };
