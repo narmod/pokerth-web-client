@@ -193,6 +193,9 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Web app manifest: the wide screenshot's real size** (`web.238`) — `social-preview.png` was declared 1280×640
+  but is 1200×630; install prompts and stores that check the size skip a screenshot that does not match.
+  `scripts/test-manifest-sizes.mjs` now reads every icon and screenshot the manifest lists and compares.
 - **« Via proxy » is obeyed even when `/app-config` is slow** (`web.230`, Live › Sessions, 21/10/2026) — the admin's
   Internet transport only reaches the browser with `/app-config`, and the gate of `App.connect()` waited for it at
   most 5 s: past that, or on any failed fetch (network error, 5xx, the service worker's 503 « Offline »), the dial

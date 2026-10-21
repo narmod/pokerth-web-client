@@ -111,7 +111,7 @@
   "screenshots": [
     {
       "src": "/screenshots/social-preview.png",
-      "sizes": "1280x640",
+      "sizes": "1200x630",
       "type": "image/png",
       "form_factor": "wide",
       "label": "PokerTH Web Client \u2014 play Texas Hold'em in your browser"
