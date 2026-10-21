@@ -24,6 +24,13 @@ permissions:
   contents: write
   packages: write
 
+# Two push events on the same commit can start two runs at once; both would
+# pick the same tag and the loser fails on 'gh release create'. Queue runs
+# instead, so the second one sees the tag and skips.
+concurrency:
+  group: auto-release-${{ github.ref }}
+  cancel-in-progress: false
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -105,6 +112,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          if gh release view "${{ steps.decide.outputs.tag }}" >/dev/null 2>&1; then
+            echo "Release ${{ steps.decide.outputs.tag }} already exists — skipping."
+            exit 0
+          fi
           gh release create "${{ steps.decide.outputs.tag }}" \
             --target "${GITHUB_SHA}" \
             --title "${{ steps.decide.outputs.tag }}" \
