@@ -2002,6 +2002,7 @@ var _SEO_PAGE_CSS = 'body{margin:0;background:#0d1117;color:#d8dde4;font:16px/1.
   // Shell commands (/host-a-server): scroll inside the box, always LTR.
   'pre.cmd{direction:ltr;text-align:left;overflow-x:auto;background:#161b22;border:1px solid #30363d;border-radius:6px;padding:.6em .8em;margin:.5em 0 .3em;font-size:.85em;line-height:1.5}' +
   'pre.cmd code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre}' +
+  'p.cmdsrc{direction:ltr;text-align:left;margin:.2em 0 .6em;font-size:.88em;overflow-wrap:anywhere}' +
   '@media (max-width:480px){table.sh{font-size:10px}}' +
   '.updated{color:#9aa4b0;font-size:.9em;margin:0 0 1.2em}' +
   '.play{display:inline-block;margin-top:26px;padding:10px 22px;background:#1f6feb;color:#fff;border-radius:6px;font-weight:600}';
@@ -7961,6 +7962,13 @@ var _SEO_HOST_GUIDES = [
   _SEO_HOST_REPO + '#self-hosting', _SEO_HOST_REPO + '#docker', _SEO_HOST_REPO + '/blob/main/docs/CASAOS.md',
   _SEO_HOST_REPO + '#raspberry-pi', _SEO_HOST_REPO + '#manual-installation', _SEO_HOST_REPO + '#admin-panel'
 ];
+// Official sources under the step-1 commands, written as their own
+// addresses so the line needs no translation: the PokerTH repository
+// (always the latest server) and its server guide.
+var _SEO_HOST_SRC = [
+  ['https://github.com/pokerth/pokerth', 'github.com/pokerth/pokerth'],
+  ['https://github.com/pokerth/pokerth/blob/stable/docs/server_setup_howto.txt', 'docs/server_setup_howto.txt']
+];
 // Shell commands shown under steps 1 and 2 — the same in every language.
 // Step 1: the build of the PokerTH server guide (docs/server_setup_howto.txt,
 // 2.2 and 3); step 2: the web client's installation script (README).
@@ -8027,7 +8035,8 @@ function seoHostPage(res, method, lang) {
     '<h2>' + tr.whyH2 + '</h2><ul>' + tr.why.map(function (r) { return '<li><strong>' + r[0] + '</strong> — ' + r[1] + '</li>'; }).join('') + '</ul>' +
     sec(tr.partsH2, tr.partsP) +
     '<h2>' + tr.stepsH2 + '</h2><ol>' + tr.steps.map(function (st, i) {
-      return '<li><strong>' + st[0] + '</strong><br>' + st[1] + (_SEO_HOST_CMDS[i] ? '<pre class="cmd"><code>' + _seoAttr(_SEO_HOST_CMDS[i]) + '</code></pre>' : '') + '</li>';
+      return '<li><strong>' + st[0] + '</strong><br>' + st[1] + (_SEO_HOST_CMDS[i] ? '<pre class="cmd"><code>' + _seoAttr(_SEO_HOST_CMDS[i]) + '</code></pre>' : '') +
+        (i === 0 ? '<p class="cmdsrc">' + _SEO_HOST_SRC.map(function (l) { return '\u2197 <a href="' + l[0] + '" rel="noopener">' + l[1] + '</a>'; }).join(' \u00b7 ') + '</p>' : '') + '</li>';
     }).join('') + '</ol>' +
     sec(tr.piH2, tr.piP) + sec(tr.httpsH2, tr.httpsP) + sec(tr.adminH2, tr.adminP) + sec(tr.shareH2, tr.shareP) +
     '<h2>' + tr.guidesH2 + '</h2><ul>' + tr.guides.map(function (g, i) { return '<li><a href="' + _SEO_HOST_GUIDES[i] + '" rel="noopener">' + g + '</a></li>'; }).join('') + '</ul>' +

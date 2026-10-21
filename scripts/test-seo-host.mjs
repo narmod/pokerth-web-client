@@ -51,6 +51,8 @@ const CMDS = lift('_SEO_HOST_CMDS');
 ok(CMDS.length === 2 && /cmake --build \.\/build --target pokerth_dedicated_server/.test(CMDS[0]) && /build\/bin\/pokerth_dedicated_server$/.test(CMDS[0]), 'step 1 shows the build of the server guide (pokerth_dedicated_server)');
 ok(CMDS[1] === 'curl -sSL https://raw.githubusercontent.com/narmod/pokerth-web-client/HEAD/install.sh | bash' && readme.includes(CMDS[1]), 'step 2 shows the installation script, exactly as in the README');
 ok(/'<pre class="cmd"><code>' \+ _seoAttr\(_SEO_HOST_CMDS\[i\]\)/.test(src), 'the commands are escaped into a <pre>, left-to-right in every language');
+const SRC = lift('_SEO_HOST_SRC');
+ok(SRC[0][0] === 'https://github.com/pokerth/pokerth' && SRC[1][0] === 'https://github.com/pokerth/pokerth/blob/stable/docs/server_setup_howto.txt' && /i === 0 \? '<p class="cmdsrc">'/.test(src), 'step 1 links the official PokerTH repository and its server guide, in every language');
 ok(existsSync(join(root, 'install.sh')) && /install\.sh \| bash/.test(readme), 'one-command install (install.sh)');
 ok(/`amd64` \/ `arm64` \/ `armv7`/.test(readme) && /amd64, arm64 and armv7/.test(all), 'Docker image for amd64, arm64 and armv7');
 ok(existsSync(join(root, 'docs/CASAOS.md')) && /x-casaos/.test(read('docker-compose.yml')), 'CasaOS: guide and Compose metadata');
