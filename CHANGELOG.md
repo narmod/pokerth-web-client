@@ -225,6 +225,12 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Statistics: filters said where they apply** (`web.253`, filter audit of 2026-10-21) — « Narrow to » was greyed
+  on Activity although it narrows the Internet and LAN cards there; the Bottom line's mode shares were all-time in
+  a card that follows the period (now the period, named); a custom range got no /live row of its own (or one
+  labelled « Last N days »); the music chart said « per day » over 24 h, with a raw date; the Busiest hour,
+  Visitors and Ace's Help tiles now name their window (or « running totals » / « all time » on a fallback); the
+  period tooltip no longer claims only three windows stay fixed.
 - **Statistics: Internet and LAN cards move to Activity** (`web.252`) — the « Internet · pokerth.net » and « LAN
   servers » cards leave World for Activity, just above « pokerth.net vs web client »; the Internet card drops its
   48 h chart, which repeated that card's own. World keeps the map, connections per day and the countries.

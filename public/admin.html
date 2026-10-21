@@ -1343,7 +1343,7 @@
                 <div class="fsh">Period</div>
                 <div class="fsseg" id="fsSeg" role="group" aria-label="Period"><button type="button" data-per="1">24 h</button><button type="button" data-per="7">7 d</button><button type="button" data-per="14">14 d</button><button type="button" data-per="30">30 d</button><button type="button" data-per="60">60 d</button><button type="button" data-per="90">90 d</button></div>
                 <button type="button" class="fsrow" id="fsCustom"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg><span>Custom range…</span><small id="fsCustomLab"></small></button>
-                <div class="fsrange"><select id="trafPeriod" class="use" tabindex="-1" aria-hidden="true" title="Period applied to every chart and breakdown on this tab (Today, Last 7 days and All time stay as they are)"><option value="1">Last 24 hours</option><option value="7">Last 7 days</option><option value="14" selected>Last 14 days</option><option value="30">Last 30 days</option><option value="60">Last 60 days</option><option value="90">Last 90 days</option><option value="r">Custom range…</option></select><span class="rangebox" id="trafRangeBox" hidden><label class="rgl"><span>From</span><input type="date" id="trafFrom"></label><label class="rgl"><span>to</span><input type="date" id="trafTo"></label><button type="button" id="trafRangeGo" class="use">Apply</button></span></div>
+                <div class="fsrange"><select id="trafPeriod" class="use" tabindex="-1" aria-hidden="true" title="Period applied to every chart and breakdown of Statistics; a fixed window (Today, Last 48 h, All time, live figures…) says so in its title"><option value="1">Last 24 hours</option><option value="7">Last 7 days</option><option value="14" selected>Last 14 days</option><option value="30">Last 30 days</option><option value="60">Last 60 days</option><option value="90">Last 90 days</option><option value="r">Custom range…</option></select><span class="rangebox" id="trafRangeBox" hidden><label class="rgl"><span>From</span><input type="date" id="trafFrom"></label><label class="rgl"><span>to</span><input type="date" id="trafTo"></label><button type="button" id="trafRangeGo" class="use">Apply</button></span></div>
               </div>
               <div class="fssec">
                 <div class="fsh">Entry mode<span>connections only</span></div>
@@ -4733,7 +4733,7 @@
       })});
     }
     _musLines=lls; _musLabs=labs;
-    return '<div class="muted" style="margin:14px 0 4px">Plays per day \u2014 since '+_annEsc(s[0].date||'')+'</div>'
+    return '<div class="muted" style="margin:14px 0 4px">Plays per '+_perU().one+' \u2014 since '+_annEsc(_sFull(s[0]))+'</div>'
          + '<div id="musDayChart"></div>';
   }
   // ── Ace's Help (L3) — acceptance, tips, Ranking funnel ──
@@ -5235,7 +5235,7 @@
     var t=d.today||{}, m=t.m||{}, cn=0, on=_modesOn(); on.forEach(function(md){ cn+=m[md.k]||0; });
     _tsTiles('activity',[
       ['Last 48 h',d.hours48!==undefined?_tsN(t48):'—','visits','var(--accent)'],
-      ['Busiest hour',pk>=0&&prof.days>=0.5?String(pk).padStart(2,'0')+':00':'—',pk>=0&&prof.days>=0.5?'of an average day':'needs a full day of data','var(--warn-text)'],
+      ['Busiest hour',pk>=0&&prof.days>=0.5?String(pk).padStart(2,'0')+':00':'—',pk>=0&&prof.days>=0.5?'of an average day · '+_tsPerLbl():'needs a full day of data','var(--warn-text)'],
       ['Connections today',_tsN(cn),_modesAll()?'every entry mode':on.map(function(md){ return _annEsc(md.s); }).join(' + '),on.length===1?on[0].c:'var(--m-net)'],
       ['/live today',_tsN(t.lv),_tsN(t.lu)+' unique spectators','var(--m-live)']]);
   }
@@ -5245,12 +5245,12 @@
     var os=top(E.os), br=top(E.br), lg=top(E.lang), pw=E.pwa||{};
     // A language arrives as its code (de, pt-BR): say its name, like the list.
     try{ var lr=_envSlices(E.lang); if(lr.total){ var ln=new Intl.DisplayNames(['en'],{type:'language'}).of(lr.slices[0].key); if(ln) lg[0]=_annEsc(ln); } }catch(e){}
-    pw=pw, pt=(pw.standalone||0)+(pw.browser||0);
+    var pt=(pw.standalone||0)+(pw.browser||0), win=function(v){ return _envSrc[v]==='period'?' · '+_tsPerLbl():' · running totals'; };
     _tsTiles('visitors',[
-      ['First system',os[0],os[1],'var(--accent)',1],
-      ['First browser',br[0],br[1],'var(--m-live)',1],
-      ['Installed app',pt?_tsPc(pw.standalone||0,pt):'—',pt?(_tsN(pw.standalone||0)+' of '+_tsN(pt)+' sessions'):'nothing recorded yet','var(--ok-text)'],
-      ['First language',lg[0],lg[1],'var(--warn-text)',1]]);
+      ['First system',os[0],os[1]+(os[0]!=='—'?win('os'):''),'var(--accent)',1],
+      ['First browser',br[0],br[1]+(br[0]!=='—'?win('br'):''),'var(--m-live)',1],
+      ['Installed app',pt?_tsPc(pw.standalone||0,pt):'—',pt?(_tsN(pw.standalone||0)+' of '+_tsN(pt)+' sessions'+win('pwa')):'nothing recorded yet','var(--ok-text)'],
+      ['First language',lg[0],lg[1]+(lg[0]!=='—'?win('lang'):''),'var(--warn-text)',1]]);
   }
   // Music: plays, the title on top, how many titles, the players' votes.
   function _tsMusic(){
@@ -5267,10 +5267,11 @@
   function _tsAce(){
     var g=_guideData, a=g&&g.acceptance, f=g&&g.funnel, tips=0;
     if(g) Object.keys(g.contexts||{}).forEach(function(k){ if(k!=='backup') tips+=(g.contexts[k].shown||0); });
+    var W=' · '+((_guidePeriodDays||_isH24())?_tsPerLbl():'all time');
     _tsTiles('ace',[
-      ['Help offered',a?_tsN(a.offered):'—','showings on first launch','var(--accent)'],
+      ['Help offered',a?_tsN(a.offered):'—','showings on first launch'+(a?W:''),'var(--accent)'],
       ['Accepted',a&&a.offered?_gPct(a.rate):'—',a?(_tsN(a.accepted)+' of '+_tsN(a.offered)+' showings'):'nothing recorded yet','var(--ok-text)'],
-      ['Tips shown',g?_tsN(tips):'—','across every context','var(--m-live)'],
+      ['Tips shown',g?_tsN(tips):'—','across every context'+(g?W:''),'var(--m-live)'],
       ['Ranking games',f?_tsN(f.started):'—',f?(_tsN(f.highlighted)+' tables highlighted · '+_tsN(f.joined)+' joined'):'nothing recorded yet','var(--warn-text)']]);
   }
   // World: countries reached, the first one, and who is online right now.
@@ -5383,7 +5384,7 @@
       var lvx=$('trafLive');
       if(lvx){
         var lrows=[[0,'Today',d.today],[7,'Last 7 days',d.week],[30,'Last 30 days',d.month]];
-        if(d.period && d.periodDays && d.periodDays!==7 && d.periodDays!==30) lrows.push([d.h24?1:d.periodDays,d.h24?'Last 24 hours':'Last '+d.periodDays+' days',d.period]);
+        if(d.period && d.periodDays && (d.range || (d.periodDays!==7 && d.periodDays!==30))) lrows.push([d.h24?1:d.periodDays+(d.range?0.5:0),d.h24?'Last 24 hours':(d.range?_rangeLabel():'Last '+d.periodDays+' days'),d.period]);
         // Shortest window first: the chosen period used to land after
         // « Last 30 days » whatever its length (14 days read 30, then 14).
         lrows.sort(function(a,b){ return a[0]-b[0]; });
@@ -5586,7 +5587,7 @@
   // and one removable pill per active filter.
   // Which Statistics pages each filter acts on (bots: every page, server side).
   // The others still show it, greyed, so it is not mistaken for applied there.
-  var FS_PAGES={mode:['world','activity'], nd:['world']}, _trafCur='overview';
+  var FS_PAGES={mode:['world','activity'], nd:['world','activity']}, _trafCur='overview';
   function _fsUsed(k){ var pg=FS_PAGES[k.indexOf('nd:')===0?'nd':k]; return !pg || pg.indexOf(_trafCur)>=0; }
   var FS_X='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>';
   function _fsPaint(){
@@ -6073,7 +6074,7 @@
     }
     var bl=$('trafBottom');
     if(bl){
-      var m=(all.m)||{}, tot=(m.pokerthnet||0)+(m.lan||0)+(m.offline||0);
+      var m=((d.period&&d.period.m)||all.m)||{}, tot=(m.pokerthnet||0)+(m.lan||0)+(m.offline||0), mPer=d.period&&d.period.m?('Over '+(_trafRange?_rangeLabel():'the '+_perLabel(d.periodDays||_trafPeriod))):'All time';
       var lines=[];
       lines.push('Footfall is <b>'+(dir==='flat'?'holding steady':(dir==='up'?'rising':'slipping'))+'</b> \u2014 '
         +'<span class="nu">'+_round1(firstH)+'</span> \u2192 <span class="nu">'+_round1(lastH)+'</span> visits/'+U.one+' between the two halves of the window (complete '+U.many+')'
@@ -6085,7 +6086,7 @@
       lines.push('<span class="nu">'+fmt(month.u)+'</span> distinct devices over 30 days, <span class="nu">'+(all.u?pct(month.u,all.u):0)+'%</span> of the '
         +'<span class="nu">'+fmt(all.u)+'</span> ever seen. Returning devices carry <span class="nu">'+(idSess?pct(month.rt,idSess):0)+'%</span> of identified sessions'
         +(_retVerdict? '.' : ' \u2014 the lever is <b>'+((idSess && month.rt>=month.nw)?'acquisition':'retention')+'</b>.'));
-      if(tot) lines.push('Sessions open on pokerth.net <span class="nu">'+pct(m.pokerthnet,tot)+'%</span> of the time, '
+      if(tot) lines.push(mPer+', sessions open on pokerth.net <span class="nu">'+pct(m.pokerthnet,tot)+'%</span> of the time, '
         +'against <span class="nu">'+pct(m.offline,tot)+'%</span> in offline training and <span class="nu">'+pct(m.lan,tot)+'%</span> on LAN or a dedicated server.'
         +(m.live?' Spectators opened <span class="nu">'+fmt(m.live)+'</span> more on /live, not counted in those shares.':''));
       if(retLine) lines.push(retLine);
