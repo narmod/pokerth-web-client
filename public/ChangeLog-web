@@ -1,3 +1,6 @@
+2026-10-21 version 2.1.10-web.247:
+- bugfix: in a ranked waiting room, Ace's Help keeps the player counter (x/10) outlined when new players arrive
+
 2026-10-21 version 2.1.10-web.246:
 - bugfix: on servers without search-engine indexing, the guide pages opened from About now follow your interface language instead of always showing English
 

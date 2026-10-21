@@ -21,6 +21,7 @@ html.reduce-fx #ag-ring.ag-on{animation:none}
 
 let ring = null;
 let target = null;
+let find = null;     // re-finds the target when a re-render replaced it (web.247)
 let raf = 0;
 let ro = null;
 let poll = 0;
@@ -70,6 +71,18 @@ function shownRect(el) {
 function place() {
   raf = 0;
   if (!ring || !target) return;
+  // The element can be replaced while it is outlined: the waiting room
+  // re-renders its « x/10 » notice at every arrival, and the frame went out
+  // with the old node and never came back (test-guide-browser, C2). Follow the
+  // new one.
+  if (!target.isConnected && find) {
+    let n = null;
+    try { n = find(); } catch (e) { n = null; }
+    if (n && n !== target) {
+      target = n;
+      if (ro) { try { ro.disconnect(); ro.observe(n); ro.observe(document.body); } catch (e) {} }
+    }
+  }
   const r = visible(target) ? shownRect(target) : null;
   if (!r) { ring.classList.remove('ag-on'); return; }
   const pad = 4;
@@ -101,11 +114,17 @@ function revealInScroller(el) {
   }
 }
 
-/** Outlines `el` (an element or a CSS selector). Replaces any previous highlight. */
-export function highlight(el) {
-  if (typeof el === 'string') { try { el = document.querySelector(el); } catch (e) { el = null; } }
+/**
+ * Outlines `el` (an element or a CSS selector). Replaces any previous highlight.
+ * `refind` (optional) returns the element to outline when `el` has been
+ * replaced by a re-render; a selector re-finds itself.
+ */
+export function highlight(el, refind) {
+  let sel = null;
+  if (typeof el === 'string') { sel = el; try { el = document.querySelector(el); } catch (e) { el = null; } }
   clear();
   if (!el) return false;
+  find = typeof refind === 'function' ? refind : sel ? () => document.querySelector(sel) : null;
   styleOnce();
   ring = document.createElement('div');
   ring.id = 'ag-ring';
@@ -137,5 +156,5 @@ export function clear() {
   if (poll) { clearInterval(poll); poll = 0; }
   if (raf) { cancelAnimationFrame(raf); raf = 0; }
   if (ring) { try { ring.remove(); } catch (e) {} }
-  ring = null; target = null;
+  ring = null; target = null; find = null;
 }

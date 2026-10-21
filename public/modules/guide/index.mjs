@@ -424,7 +424,9 @@ function renderStep(opts = {}) {
   } catch (e) { closeBubble(); schedule(); return; }      // the situation changed under the step
   if (!opts.keepHighlight || (target && hl.current() !== target)) {
     hl.clear();
-    if (target) hl.highlight(target);
+    // a re-render may replace the outlined element (the « x/10 » notice):
+    // the highlight re-finds it with the same rule
+    if (target) hl.highlight(target, () => (tour ? tourTarget(run.ctx, step, w) : firstVisible(val(step.target, w))));
   }
   let say = gt(text, vars);
   const lk = tour && run.ctx.locked;

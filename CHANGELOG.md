@@ -225,6 +225,11 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Ace's Help: the « x/10 » frame in a ranked waiting room** (`web.247`) — the gold frame around the waiting-room
+  notice went out at the next arrival and never came back: the lobby re-renders that notice, and the highlight
+  kept following the old, detached node. `guide/highlight.mjs` now re-finds a replaced target with the step's own
+  rule (`highlight(el, refind)`; a selector re-finds itself). `test-guide-browser.mjs` C2 failed on 1–2 devices
+  out of 4 before; 177/177 now.
 - **Guide pages in the player's language with indexing off** (`web.246`) — on an install with SEO disabled (a
   self-hosted or test server), /rules, /faq and the other guide pages ignored `?lang=` and always answered in
   English, so a guide opened from About › Poker guides was English whatever the interface language. They now
