@@ -83,7 +83,7 @@ ok(/'more-help': \['shown', 'section', 'search', 'window'\]/.test(fs.readFileSyn
 // ── audit web.276 ──
 const hs = fs.readFileSync(path.join(root, 'public/modules/guide/hotspots.mjs'), 'utf8');
 ok(hs.indexOf("['#cf-preset-perso'") < hs.indexOf("['.cf-preset[data-preset]'") && hs.indexOf("['#cf-prefs-save-btn'") < hs.indexOf("['.btn-cf-reset'"), '« ? »: My prefs and Save are explained as themselves, not as a preset / reset (first match wins)');
-ok(/let asking = false;/.test(idx) && /async function showContext\(ctx\) \{\s*exitAsk\(true\);/.test(idx) && /function flash\(key, ms\) \{[^}]*\n\s*if \(showing && showing\.kind !== 'ctx'\) return;/.test(idx) && /asking\) return;/.test(idx), '« ? » mode ends when another bubble takes its place; « Just one more! » never over what the player asked for');
+ok(/let asking = false;/.test(idx) && /async function showContext\(ctx(?:, tapKey)?\) \{\s*exitAsk\(true\);/.test(idx) && /function flash\(key, ms\) \{[^}]*\n\s*if \(showing && showing\.kind !== 'ctx'\) return;/.test(idx) && /asking\) return;/.test(idx), '« ? » mode ends when another bubble takes its place; « Just one more! » never over what the player asked for');
 ok(/if \(on\) b\.classList\.remove\('guide-ask'\);/.test(idx), '« ? » mode reads the page\'s own hand cursor (not the « help » cursor it sets)');
 ok(/if \(!m\.isDocked\(\)\) return null;/.test(idx), 'a dock cancelled by leave() stops its caller');
 ok(!('hsHelp' in en2) && !('nothingHere' in en2) && /tap for my menu/.test(en2.aceLabel) && !/help, Ace/.test(en2.hsMenu), 'texts: no Help entry in the menu text, the Ace\'s label says a tap opens his menu');

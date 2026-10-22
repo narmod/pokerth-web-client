@@ -239,6 +239,16 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Ace's Help no longer repeats a tip the player simply carried on from** (`web.264`) — the admin counters
+  (2026-10-22) showed tips shown far more often than answered (login 1274 shown · 155 done; nickname/avatar
+  906 · 300; ranked result 452 · 136). When the player moved on without answering (picked a mode, connected,
+  started the game, left the page, closed the window), `modules/guide/index.mjs::evaluate` only folded the
+  bubble: the tip was never marked seen and came back at every visit. It is now marked seen and counted as a
+  new `acted` event (`server/guide-stats.js`, admin « moved on » column, `docs/GUIDE.md`). Live tips
+  (`lobby-ranking`, `lobby-ranking-create`, `wait-ranking`) and tips opened by a tap on a table keep their
+  rules. Also: a tip opened by a tap on a table now counts `shown` once per table, like its `done` (the guest
+  bubble showed more « done » than « shown »). `proxy.js` is unchanged but `server/guide-stats.js` is: restart
+  the container for `acted` to be counted (until then the proxy refuses it, harmlessly).
 - **A tap before the app exists brings back « Retry » and reports why** (`web.263`) — a player's error log showed
   three « App is not defined » errors from inline handlers (mode card, guest box, Connect) on Android 15 ·
   Chrome 121, with no load failure and no other error from that device: `pokerth.js` never ran, and the boot

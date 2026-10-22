@@ -1,3 +1,6 @@
+2026-10-22 version 2.1.10-web.264:
+- improvement: Ace's Help no longer repeats a tip at every visit when you simply carried on (picked a mode, connected, started the game, closed the window): it counts as read
+
 2026-10-22 version 2.1.10-web.263:
 - bugfix: if the app has not finished starting, tapping the home screen no longer does nothing: the « Unstable connection — Retry » screen comes back
 

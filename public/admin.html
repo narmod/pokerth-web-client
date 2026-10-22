@@ -4787,9 +4787,9 @@
     h+=_gBar('Game started (10/10)',f.started,fmax,_gPct(f.startRate)+' of joined','#4f8fe6');
     h+='<div class="muted" style="margin-top:6px">No open table: « Create a Ranking table » shown '+g.create.shown+' · used '+g.create.created+'. Ranked games started with the help on: '+g.rankedStarts+'.</div>';
     h+='<h4 style="margin:14px 0 4px">Tips</h4>';
-    h+='<div class="envrow" style="opacity:.75;font-size:.76rem"><span class="nmx">Context</span><span class="pct">shown · done · later</span></div>';
+    h+='<div class="envrow" style="opacity:.75;font-size:.76rem"><span class="nmx">Context</span><span class="pct">shown · done · later · moved on</span></div>';
     GUIDE_CTX.forEach(function(c){
-      var x=(g.contexts||{})[c[0]]||{}, evs=c[2]||['shown','done','dismissed'];
+      var x=(g.contexts||{})[c[0]]||{}, evs=c[2]||['shown','done','dismissed','acted'];
       h+='<div class="envrow"><span class="nmx">'+c[1]+'</span><span class="pct">'+evs.map(function(e){ return x[e]||0; }).join(' · ')+'</span></div>';
     });
     h+='<div class="muted" style="margin-top:6px">Guests: free-account bubble shown '+g.guests.shown+' · « Create an account » tapped '+g.guests.redirect+'.</div>';

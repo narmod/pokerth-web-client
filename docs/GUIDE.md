@@ -245,17 +245,17 @@ series in the visit buckets (`gd`), and share the visit counter's retention and 
 | `welcome` | `shown`, `done` |
 | `lobby-ranking` | `shown`, `done`, `dismissed`, `join`, `started` |
 | `lobby-ranking-create` | `shown`, `done`, `dismissed`, `create` |
-| `lobby-guest` | `shown`, `done`, `dismissed`, `guest_redirect` |
+| `lobby-guest` | `shown`, `done`, `dismissed`, `acted`, `guest_redirect` |
 | `lobby-watch` | `shown`, `done`, `dismissed`, `watch` |
 | `lobby-cup` | `shown`, `done`, `dismissed`, `events` |
-| `lobby-flag` | `shown`, `done`, `dismissed`, `profile` |
+| `lobby-flag` | `shown`, `done`, `dismissed`, `acted`, `profile` |
 | `lobby-open` | `shown`, `done`, `dismissed`, `join` |
 | `wait-ranking` | `shown`, `done`, `dismissed`, `started` |
-| `ranked-result` | `shown`, `done`, `dismissed` |
-| `login` | `shown`, `done`, `dismissed`, `signup` |
-| `login-profile` | `shown`, `done`, `dismissed` |
-| `wait-normal` | `shown`, `done`, `dismissed` |
-| `create-game`, `w-…` (10 windows) | `shown`, `done`, `dismissed` |
+| `ranked-result` | `shown`, `done`, `dismissed`, `acted` |
+| `login` | `shown`, `done`, `dismissed`, `acted`, `signup` |
+| `login-profile`, `login-lan` | `shown`, `done`, `dismissed`, `acted` |
+| `wait-normal` | `shown`, `done`, `dismissed`, `acted` |
+| `create-game`, `w-…` (windows) | `shown`, `done`, `dismissed`, `acted` |
 | `ask` | `shown` (mode entered), `explained` (an element with an entry), `done` (mode left) |
 
 What each event means:
@@ -264,6 +264,12 @@ What each event means:
   once per game.
 - `done` means *Got it*, the last *Next*, or an action button.
 - `dismissed` means *Later*, Escape, a tap on the Ace, or 25 s without an answer.
+- `acted` (web.264) means the player moved on without answering: picked a mode, connected,
+  started the game, left the page or closed the window. The tip is then marked seen and does
+  not come back. Counted for every tip except the live ones (`lobby-ranking`,
+  `lobby-ranking-create`, `wait-ranking`) and the ones opened by a tap on a table.
+- For a tip opened by a tap on a table (`lobby-open`, `lobby-watch`, `lobby-cup`, and
+  `lobby-guest` when replayed), `shown` is counted once per table, like `done` (web.264).
 - `lobby-ranking.started` means the table the player joined from the bubble started. A
   Ranking game only starts with 10/10 players.
 - `wait-ranking.started` means a Ranking game started while the help was on.
@@ -273,7 +279,7 @@ period. It shows:
 
 - the acceptance of the first-launch offer;
 - the **Ranking funnel**: table highlighted → joined from the bubble → game started;
-- shown, done and *Later* for each tip;
+- shown, done, *Later* and *moved on* for each tip;
 - guests on their own line.
 
 Because `proxy.js` changed, the container has to be restarted after the deploy.

@@ -489,6 +489,24 @@ function onCtxButton(id) {
   if (M) M.badge(true);
 }
 
+// The player moved on without answering the tip (picked a mode, connected,
+// started the game, left the page, closed the window…) — web.264. Before,
+// the bubble was only folded away: the tip was not seen, so it came back at
+// every visit (admin, 2026-10-22: login shown 1274 · done 155). Now it is
+// seen, counted as « acted », and does not come back. Live tips (the Ranking
+// table, the Ranking waiting room facts) follow the game list and keep their
+// own rules; a tip the player opened himself (manual) is only counted.
+function movedOn() {
+  const run = showing && showing.kind === 'ctx' && showing.run;
+  if (!run || run.ctx.live || run.ctx.manual) return;
+  const cid = run.ctx.id;
+  beacon(cid, 'acted');
+  state.markSeen(cid);
+  snoozed.delete(cid);
+  resumeAt.delete(cid);
+  if (cid === 'ranked-result') result = null;       // told once per game
+}
+
 function finish(cid) {
   state.markSeen(cid);
   snoozed.delete(cid);
@@ -505,7 +523,7 @@ function closeBubble() {
   if (M) M.hush();
 }
 
-async function showContext(ctx) {
+async function showContext(ctx, tapKey) {
   exitAsk(true);                                       // a tip over « ? » mode ends it (web.276)
   if (!(await ensureDock())) return;
   let run;
@@ -519,8 +537,9 @@ async function showContext(ctx) {
   renderStep();
   // points in a Ranking game: « Well done! » once the bubble is closed (modules/mascot/index.mjs, web.266)
   if (ctx.id === 'ranked-result' && result && result.place && pointsFor(result.place) > 0 && typeof window.mascotCheer === 'function') window.mascotCheer('ranked');
-  // statistics: once per session per context (the result: once per game)
-  const key = ctx.id + (ctx.repeat && result ? ':' + result.gid : '');
+  // statistics: once per session per context (the result: once per game; a
+  // tip opened by a tap on a table: once per table, like its done — web.264)
+  const key = ctx.id + (tapKey ? ':' + tapKey : ctx.repeat && result ? ':' + result.gid : '');
   if (!counted.has(key)) { counted.add(key); beacon(ctx.id, 'shown'); }
 }
 
@@ -1232,7 +1251,7 @@ async function evaluate() {
       noteTimer = setTimeout(() => { if (showing && showing.kind === 'luck') leave(); }, 1800);
       return;
     }
-    if (!(showing && showing.kind === 'luck')) leave();   // silent during a hand (D8)
+    if (!(showing && showing.kind === 'luck')) { movedOn(); leave(); }   // silent during a hand (D8); a tip left unanswered: the player moved on (web.264)
     return;
   }
   maybeBak();                                          // the local backup offer (web.20) goes before the tips
@@ -1243,7 +1262,7 @@ async function evaluate() {
   if (moved && M && M.isDocked()) M.settle(true);       // new layout: a free spot again, bubble or not
   if (M && M.bubbleOpen()) {
     // the tip on screen no longer applies (the player moved on): fold it away
-    if (showing && showing.kind === 'ctx' && !applies(showing.run.ctx, w)) closeBubble();
+    if (showing && showing.kind === 'ctx' && !applies(showing.run.ctx, w)) { movedOn(); closeBubble(); }
     // a window just opened over a screen tip: the window's explanation comes first
     else if (showing && showing.kind === 'ctx' && !showing.run.ctx.window
       && (pickContext(w, CONTEXTS, { seen: state.seen, snoozed: (id) => snoozed.has(id) }) || {}).window) closeBubble();
@@ -1347,13 +1366,13 @@ function onListTap(ev) {
     if (!ctx) return;
     tapTold.add('w:' + gid);
     watchGid = Number(gid) || 0;
-    showContext(ctx);
+    showContext(ctx, 'w' + gid);
     return;
   }
   if (g.mode === 1 && tapCup) {
     if (snoozed.has('lobby-cup') || tapTold.has('c:' + gid)) return;
     const cx = CONTEXTS.find((c) => c.id === 'lobby-cup');
-    if (cx) { tapTold.add('c:' + gid); showContext(cx); }
+    if (cx) { tapTold.add('c:' + gid); showContext(cx, 'c' + gid); }
     return;
   }
   // an open table he can sit at, not a cup game: « it does not count for the ranking — join it? » (web.67);
@@ -1366,13 +1385,13 @@ function onListTap(ev) {
     if (!co) return;
     tapTold.add('o:' + gid);
     openGid = Number(gid) || 0; openName = tableName(g); openRanked = ranked;
-    showContext(co);
+    showContext(co, 'o' + gid);
     return;
   }
   if (g.mode !== 1 || !guest || g.type === 1) return;
   if (snoozed.has('lobby-guest') || tapTold.has('g:' + gid)) return;
   const ctx = CONTEXTS.find((c) => c.id === 'lobby-guest');
-  if (ctx) { tapTold.add('g:' + gid); showContext(ctx); }
+  if (ctx) { tapTold.add('g:' + gid); showContext(ctx, 'g' + gid); }
 }
 
 // ── My place in a Ranking game (C2.4) ──────────────────────────────

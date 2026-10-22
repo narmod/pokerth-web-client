@@ -12,6 +12,9 @@
 // What the dashboard wants to know:
 //  · acceptance — how many players were offered the help and said yes;
 //  · per context — shown / done (Got it or the action) / dismissed (Later);
+//    acted (web.264) — the player moved on without answering (picked a
+//    mode, connected, started the game, closed the window…): the tip is
+//    then seen and does not come back;
 //  · the Ranking funnel, the project's success metric: a table was
 //    highlighted in the lobby → the player joined it from the bubble → that
 //    game started (a Ranking game only starts when its 10 seats are full);
@@ -30,32 +33,32 @@ const EVENTS = Object.freeze({
   welcome: ['shown', 'done'],
   'lobby-ranking': ['shown', 'done', 'dismissed', 'join', 'started'],
   'lobby-ranking-create': ['shown', 'done', 'dismissed', 'create'],
-  'lobby-guest': ['shown', 'done', 'dismissed', 'guest_redirect'],
+  'lobby-guest': ['shown', 'done', 'dismissed', 'acted', 'guest_redirect'],
   'lobby-watch': ['shown', 'done', 'dismissed', 'watch'],   // tap on a running game (web.64)
   'lobby-cup': ['shown', 'done', 'dismissed', 'events'],    // tap on a cup game not started yet (web.65)
-  'lobby-flag': ['shown', 'done', 'dismissed', 'profile'],  // no flag next to my name (web.66)
+  'lobby-flag': ['shown', 'done', 'dismissed', 'acted', 'profile'],  // no flag next to my name (web.66)
   'lobby-open': ['shown', 'done', 'dismissed', 'join'],     // tap on an open non-ranked table (web.67)
   'wait-ranking': ['shown', 'done', 'dismissed', 'started'],
-  'ranked-result': ['shown', 'done', 'dismissed'],
+  'ranked-result': ['shown', 'done', 'dismissed', 'acted'],
   // L4
-  login: ['shown', 'done', 'dismissed', 'signup'],
-  'login-profile': ['shown', 'done', 'dismissed'],
-  'login-lan': ['shown', 'done', 'dismissed'],   // LAN directory (web.43)
-  'wait-normal': ['shown', 'done', 'dismissed'],
+  login: ['shown', 'done', 'dismissed', 'acted', 'signup'],
+  'login-profile': ['shown', 'done', 'dismissed', 'acted'],
+  'login-lan': ['shown', 'done', 'dismissed', 'acted'],   // LAN directory (web.43)
+  'wait-normal': ['shown', 'done', 'dismissed', 'acted'],
   // L5 — game creation page and windows (first opening)
-  'create-game': ['shown', 'done', 'dismissed'],
-  'w-ranking': ['shown', 'done', 'dismissed'],
-  'w-events': ['shown', 'done', 'dismissed'],
-  'w-posts': ['shown', 'done', 'dismissed'],   // web.289
-  'w-help': ['shown', 'done', 'dismissed'],
-  'w-adv': ['shown', 'done', 'dismissed'],
-  'w-theme': ['shown', 'done', 'dismissed'],
-  'w-music': ['shown', 'done', 'dismissed'],
-  'w-avatar': ['shown', 'done', 'dismissed'],
-  'w-players': ['shown', 'done', 'dismissed'],
-  'w-profile': ['shown', 'done', 'dismissed'],
-  'w-logs': ['shown', 'done', 'dismissed'],
-  'w-trophies': ['shown', 'done', 'dismissed'],   // the Trophies tab: win them all, a surprise (web.87)
+  'create-game': ['shown', 'done', 'dismissed', 'acted'],
+  'w-ranking': ['shown', 'done', 'dismissed', 'acted'],
+  'w-events': ['shown', 'done', 'dismissed', 'acted'],
+  'w-posts': ['shown', 'done', 'dismissed', 'acted'],   // web.289
+  'w-help': ['shown', 'done', 'dismissed', 'acted'],
+  'w-adv': ['shown', 'done', 'dismissed', 'acted'],
+  'w-theme': ['shown', 'done', 'dismissed', 'acted'],
+  'w-music': ['shown', 'done', 'dismissed', 'acted'],
+  'w-avatar': ['shown', 'done', 'dismissed', 'acted'],
+  'w-players': ['shown', 'done', 'dismissed', 'acted'],
+  'w-profile': ['shown', 'done', 'dismissed', 'acted'],
+  'w-logs': ['shown', 'done', 'dismissed', 'acted'],
+  'w-trophies': ['shown', 'done', 'dismissed', 'acted'],   // the Trophies tab: win them all, a surprise (web.87)
   // web.87 — every trophy won: the Ace says the arcade's secret word; « Play now »
   arcade: ['revealed', 'play'],
   // L6 — « ? » mode: entered, an element explained, left
