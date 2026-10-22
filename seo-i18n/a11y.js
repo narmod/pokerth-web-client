@@ -3246,24 +3246,24 @@ module.exports = {
     "title": "Poker Mesra OKU — Teks Besar, Papan Kekunci, Gamepad | PokerTH",
     "desc": "Texas Hold’em percuma: teks lebih besar, kontras tinggi, dek empat warna, kaca pembesar, pengumuman suara, dan main dengan papan kekunci, gamepad atau alat kawalan TV.",
     "ldHeadline": "Poker dalam talian mesra OKU: teks besar, kontras tinggi, papan kekunci dan gamepad",
-    "ldDesc": "Ciri Aksesibilitas klien web PokerTH: ukuran antarmuka, kontras tinggi, dek empat warna, kaca pembesar, pengumuman suara, papan kekunci, gamepad dan alat kawalan jauh TV.",
+    "ldDesc": "Ciri kebolehcapaian klien web PokerTH: saiz antara muka, kontras tinggi, dek empat warna, kaca pembesar, pengumuman suara, papan kekunci, gamepad dan alat kawalan jauh TV.",
     "h1": "Poker mesra OKU: main mengikut cara anda",
     "lead": "PokerTH ialah Texas Hold’em percuma dalam pelayar, dan ia menyesuaikan diri dengan cara anda melihat dan bermain: teks dan butang lebih besar, kontras lebih kuat, dek yang membezakan jenis kad dengan warna, kaca pembesar untuk skrin kecil, pengumuman suara, dan kawalan penuh daripada papan kekunci, gamepad atau alat kawalan jauh TV.",
     "findH2": "Di mana untuk mencarinya",
-    "findP": "Butang Aksesibilitas — ikon orang di bahagian atas setiap skrin, dari skrin log masuk hingga ke meja — membuka tetapan utama pada bila-bila masa, malah di tengah-tengah satu pusingan. Selebihnya ada dalam Opsi lanjutan. Pilihan anda diingati pada peranti dan, apabila anda log masuk dengan akaun pokerth.net, ia mengikut anda ke peranti anda yang lain.",
+    "findP": "Butang Kebolehcapaian — ikon orang di bahagian atas setiap skrin, dari skrin log masuk hingga ke meja — membuka tetapan utama pada bila-bila masa, malah di tengah-tengah satu pusingan. Selebihnya ada dalam Pilihan lanjutan. Pilihan anda diingati pada peranti dan, apabila anda log masuk dengan akaun pokerth.net, ia mengikut anda ke peranti anda yang lain.",
     "seeH2": "Melihat meja dengan jelas",
     "see": [
       [
-        "Ukuran antarmuka",
-        "Standar, Besar atau Sangat besar: teks, kad, cip dan butang membesar bersama, pada skrin log masuk, di lobi dan di meja, dan susun atur menyesuaikan diri supaya tetap mudah digunakan pada telefon."
+        "Saiz antara muka",
+        "Standard, Besar atau Sangat besar: teks, kad, cip dan butang membesar bersama, pada skrin log masuk, di lobi dan di meja, dan susun atur menyesuaikan diri supaya tetap mudah digunakan pada telefon."
       ],
       [
         "Kontras tinggi",
-        "Palet dengan kontras lebih kuat di seluruh antarmuka, dari menu hingga ke meja, pada setiap ukuran antarmuka."
+        "Palet dengan kontras lebih kuat di seluruh antara muka, dari menu hingga ke meja, pada setiap saiz antara muka."
       ],
       [
         "Dek empat warna",
-        "Dek kad yang memberi setiap jenis kad warnanya sendiri, supaya hati dan wajik, atau sped dan kelawar, tidak pernah dibezakan melalui bentuk sahaja. Pilih satu dalam Opsi lanjutan → Gaya."
+        "Dek kad yang memberi setiap jenis kad warnanya sendiri, supaya hati dan wajik, atau sped dan kelawar, tidak pernah dibezakan melalui bentuk sahaja. Pilih satu dalam Pilihan lanjutan → Gaya."
       ],
       [
         "Kaca pembesar meja",
@@ -3279,20 +3279,20 @@ module.exports = {
     "padH2": "Gamepad dan alat kawalan jauh TV",
     "padP": "Pengawal permainan — Xbox, PlayStation, Switch Pro dan kebanyakan pad Bluetooth — boleh memainkan seluruh permainan: butang untuk setiap tindakan, picu untuk menetapkan taruhan, dan mod navigasi untuk bergerak melalui skrin, sembang dan menu. Ia bergetar apabila tiba giliran anda. Pada Android TV dan Google TV, alat kawalan jauh berfungsi dengan cara yang sama, dan alat kawalan jauh yang mempunyai empat kekunci warna menggunakannya untuk Fold, Check/Call, Bet/Raise dan All-In.",
     "hearH2": "Mendengar dan merasai permainan",
-    "hearP": "Pengumuman permainan membacakan peristiwa permainan, sama ada dengan suara peranti anda sendiri, dalam bahasa anda jika sistem menyediakannya, atau melalui pembaca skrin anda (NVDA, JAWS, VoiceOver atau TalkBack) tanpa bercakap dua kali; pilih dalam tetingkap Aksesibilitas. Pada telefon Android, getaran pendek menandakan giliran anda. Bunyi permainan terbahagi kepada empat kumpulan — tindakan, sembang, notis rangkaian dan kenaikan blind — yang boleh dihidupkan atau dimatikan secara berasingan, dengan satu peluncur kelantangan.",
+    "hearP": "Pengumuman permainan membacakan peristiwa permainan, sama ada dengan suara peranti anda sendiri, dalam bahasa anda jika sistem menyediakannya, atau melalui pembaca skrin anda (NVDA, JAWS, VoiceOver atau TalkBack) tanpa bercakap dua kali; pilih dalam tetingkap Kebolehcapaian. Pada telefon Android, getaran pendek menandakan giliran anda. Bunyi permainan terbahagi kepada empat kumpulan — tindakan, sembang, notis rangkaian dan kenaikan blind — yang boleh dihidupkan atau dimatikan secara berasingan, dengan satu peluncur kelantangan.",
     "calmH2": "Kurang kejutan",
     "calmP": "Apabila sistem anda meminta gerakan dikurangkan, klien mengurangkan animasinya. Anti-intip menyembunyikan kad anda sendiri sehingga anda mengetuknya, dan penjaga call tak sengaja menyekat butang Call seketika sejurus selepas raise besar, supaya ketukan untuk call yang lebih kecil tidak tersilap membayar jumlah yang dinaikkan.",
     "langH2": "Dalam bahasa anda, dengan pemandu",
-    "langP": "Antarmuka tersedia dalam {langs} bahasa, dari kanan ke kiri apabila perlu. Bantuan si Sat — si Sat ialah maskot klien web — menerangkan setiap skrin sambil anda bermain jika anda mahu, dan “Apakah ini?” memberitahu anda fungsi apa sahaja pada skrin.",
+    "langP": "Antara muka tersedia dalam {langs} bahasa, dari kanan ke kiri apabila perlu. Bantuan Sat — Sat ialah maskot klien web — menerangkan setiap skrin sambil anda bermain jika anda mahu, dan “Apakah ini?” memberitahu anda fungsi apa sahaja pada skrin.",
     "faqH2": "Soalan",
     "faq": [
       [
         "Bolehkah saya membesarkan kad dan teks?",
-        "Ya. Pilih Besar atau Sangat besar dalam tetingkap Aksesibilitas; kad, teks dan butang membesar bersama pada setiap skrin, termasuk meja."
+        "Ya. Pilih Besar atau Sangat besar dalam tetingkap Kebolehcapaian; kad, teks dan butang membesar bersama pada setiap skrin, termasuk meja."
       ],
       [
         "Adakah mod kontras tinggi?",
-        "Ya, dalam tetingkap Aksesibilitas. Ia berfungsi dengan setiap ukuran antarmuka."
+        "Ya, dalam tetingkap Kebolehcapaian. Ia berfungsi dengan setiap saiz antara muka."
       ],
       [
         "Bolehkah saya bermain tanpa tetikus atau skrin sentuh?",
@@ -3300,7 +3300,7 @@ module.exports = {
       ],
       [
         "Adakah ia berfungsi dengan pembaca skrin?",
-        "Sebahagiannya. Pengumuman permainan boleh dihantar ke pembaca skrin anda dan bukannya suara terbina dalam, dan menu mempunyai label, tetapi meja poker itu sendiri ialah antarmuka visual dan belum boleh dimainkan dengan pembaca skrin sahaja."
+        "Sebahagiannya. Pengumuman permainan boleh dihantar ke pembaca skrin anda dan bukannya suara terbina dalam, dan menu mempunyai label, tetapi meja poker itu sendiri ialah antara muka visual dan belum boleh dimainkan dengan pembaca skrin sahaja."
       ],
       [
         "Adakah ia percuma?",

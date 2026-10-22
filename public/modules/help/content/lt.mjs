@@ -123,7 +123,7 @@ export const help = {
           note: 'Rašymui į vietinį aplanką reikia File System Access API: tik Chrome, Edge ir Opera kompiuteryje. Kitur parinktis pati pasiaiškina, o rankinis eksportas iš žurnalų lango lieka prieinamas. Naršyklė failą gali tik pakeisti, bet ne papildyti, todėl .pdb skaitanti programa turėtų jį atverti iš naujo po kiekvieno pakeitimo.' },
         { id: 'assist', t: 'Asistentas (rankos stiprumas)',
           b: ['Kortelės Tikimybės viršuje asistento juosta skaito tavo ranką už tave. Prieš flopą ji įvardija tavo pradinę ranką ir įvertina ją žvaigždutėmis; nuo flopo rodo tavo dabartinę geriausią kombinaciją ir po greitos simuliacijos — numatomą tikimybę laimėti ranką procentais, su spalvos indikatoriumi nuo raudonos (silpna) iki žalios (stipri). Kaip ir tikimybių monitorius, naudoja tik informaciją, kurią gali matyti.',
-              "Du rodymo stiliai yra Išplėstinės parinktys → Vietos: Segmentai (dešimt blokų) arba klasikinė eigos juosta. Visą asistentą galima išjungti Išplėstinės parinktys → Pagalba.",
+              'Du rodymo stiliai yra Išplėstinės parinktys → Vietos: Segmentai (dešimt blokų) arba klasikinė eigos juosta. Visą asistentą galima išjungti Išplėstinės parinktys → Pagalba.',
               'Prie reitingo stalų pagalba visada išjungta, kad visi žaidėjai turėtų tą pačią informaciją, kaip ir kompiuterio kliente. Žemiau esantis tikimybių monitorius lieka prieinamas.'] },
         { id: 'assistwin', t: 'Asistentas kaip plūduriuojantis valdiklis',
           b: ['Asistento bloką galima atplėšti nuo skydelio į savą, visada viršuje esantį langelį: naudok atplėšimo mygtuką ant bloko, tada perkelk ir keisk jo dydį bet kur virš stalo — patogu stebėti rankos stiprumą neatidarant viso skydelio. Pritvirtinimo mygtukas grąžina jį į kortelę Tikimybės, o padėtis įsimenama. Skydelio viduje tempimo rankenėlė tarp Asistento ir tikimybių leidžia paskirstyti erdvę tarp jų.'] },
@@ -131,7 +131,7 @@ export const help = {
           b: ['Kortelė Statistika seka tavo sesiją: sužaistos rankos, matyti flopai, showdownai, laimėjimų procentai ir dar daugiau. Statistikos sekimą galima išjungti Išplėstinėse parinktyse.'] },
         { id: 'hud', t: 'Statistikos HUD prie vietų',
           b: ['HUD prie kiekvieno žaidėjo vietos prikabina mažą statistikos langelį, sudarytą iš partijų, kurias užrašei savo žurnaluose: stebėtų partijų skaičius, tada VPIP (kaip dažnai jis savanoriškai deda pinigus pre-flop), PFR (pre-flop kėlimai) ir AF (agresyvumo koeficientas), spalvomis nuo pasyvaus iki agresyvaus. Po jais ženklelis apibendrina žaidėją žodžiais \u2014 Ankštas-Pasyvus, Laisvas-Agresyvus ir taip toliau \u2014 šalia mažo ciferblato, kurio įsižiebęs ketvirtis skaitomas iš kairės į dešinę nuo ankšto iki laisvo, o iš apačios į viršų nuo pasyvaus iki agresyvaus. Ženklelis rodomas nuo pat pirmos partijos, bet lieka pritemdytas iki 25 partijų, nuo kurių tampa patikimas. Bakstelėk langelį, kad pamatytum išsamų iššokantį langą su visais skaičiais (3-bet, continuation bet, fold prieš 3-bet, vogimo bandymai, showdown rodikliai\u2026), ir vilk jį, jei kažką užstoja.',
-              "HUD žino tik tai, ką matei prie savo stalų — jis skaito tavo vietinius rankų žurnalus, tad įrašymas turi būti įjungtas, o skaičiai prasmingi tampa tik po pakankamai rankų. Pagal numatytuosius nustatymus ji išjungta: įjunk ją Išplėstinės parinktys → Pagalba."] },
+              'HUD žino tik tai, ką matei prie savo stalų — jis skaito tavo vietinius rankų žurnalus, tad įrašymas turi būti įjungtas, o skaičiai prasmingi tampa tik po pakankamai rankų. Pagal numatytuosius nustatymus ji išjungta: įjunk ją Išplėstinės parinktys → Pagalba.'] },
         { id: 'handsbtn', t: 'Kombinacijų apžvalga',
           b: ['Pokerio rankų piktograma ant stalo audeklo bet kada atidaro greitą 10 kombinacijų apžvalgą — patogu mokantis. Galima paslėpti Išplėstinėse parinktyse.'] }
       ]
@@ -148,7 +148,7 @@ export const help = {
             'Jaustukų mygtukas atidaro pilną parinkiklį; rašant : taip pat siūlomi emote rašymo metu.'] },
         { id: 'emotes', t: 'Emote ir šypsenėlės',
           b: ['Pokalbis emote kodus verčia lygiai taip pat kaip oficialus darbalaukio klientas: parašyk pavadinimą tarp dviejų dvitaškių ir jis virsta jaustuku — :sunny: \u2192 \u2600, :+1: \u2192 \uD83D\uDC4D, :joy: \u2192 \uD83D\uDE02, :four_leaf_clover: \u2192 \uD83C\uDF40\u2026 palaikoma per 1 900 kodų (pilnas GitHub rinkinys). Verčiamos ir klasikinės tekstinės šypsenėlės: :-) ;) :D xD :P <3 ir dar apie aštuoniasdešimt.',
-              "Rašant : atsidaro pasiūlymų dėžutė, kuri užbaigia kodą rašymo metu (↑/↓ pasirinkti, Tab ar Enter patvirtinti). Jaustukų vertimą galima visiškai išjungti Išplėstinės parinktys → Pokalbiai."] },
+              'Rašant : atsidaro pasiūlymų dėžutė, kuri užbaigia kodą rašymo metu (↑/↓ pasirinkti, Tab ar Enter patvirtinti). Jaustukų vertimą galima visiškai išjungti Išplėstinės parinktys → Pokalbiai.'] },
         { id: 'commands', t: 'Pokalbio komandos',
           b: ['Pokalbis supranta pasvirojo brūkšnio komandas. Dvi matomos kitiems:'],
           keys: [
@@ -176,7 +176,7 @@ export const help = {
         { id: 'reactions', t: 'Jaustukų reakcijos',
           b: ['Reakcijų mygtukas atidaro parinkiklį su 30 animuotų reakcijų (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), kurios su efektu paleidžiamos virš tavo vietos, matomos visam stalui — įskaitant darbalaukio kliento žaidėjus. Reakcijas galima visiškai išjungti Išplėstinėse parinktyse.'] },
         { id: 'translate', t: 'Suprask visus',
-          b: ["Įjungus pokalbių vertimą, vertimo mygtukas atsiranda eilutėje po žymekliu — arba toje, kurią bakstelsi jutikliniame ekrane — ir parodo žinutę tavo kalba naršyklės vertėju. Jį galima nuolat rodyti visose eilutėse lange Išplėstinės parinktys → Pokalbiai, kur gyvena ir paaiškinimas apie įprastas stalo santrumpas (gg, nh, utg…)."],
+          b: ['Įjungus pokalbių vertimą, vertimo mygtukas atsiranda eilutėje po žymekliu — arba toje, kurią bakstelsi jutikliniame ekrane — ir parodo žinutę tavo kalba naršyklės vertėju. Jį galima nuolat rodyti visose eilutėse lange Išplėstinės parinktys → Pokalbiai, kur gyvena ir paaiškinimas apie įprastas stalo santrumpas (gg, nh, utg…).'],
           note: 'Vertimas naudoja Google Translate paslaugą ir veikia bet kurioje naršyklėje — reikia tik interneto ryšio. Žinutė vertimo paslaugai siunčiama tik tada, kai palieti jos vertimo mygtuką, niekada automatiškai.' },
         { id: 'social', t: 'Žaidėjai: profilis, kvietimas, ignoravimas',
           b: ['Paliesk bet kurį žaidėją — prie stalo ar fojė sąraše — kad atidarytum jo kortelę: profilis ir statistika, kvietimas į tavo partiją arba ignoravimas (jo pokalbio žinutės paslepiamos; ignoravimą bet kada gali atšaukti). Patvirtinimą prieš kvietimą/ignoravimą galima įjungti parinktyse.'] }
@@ -247,7 +247,7 @@ export const help = {
         { id: 'what', t: 'Kas tai',
           b: ['Vietinis / treniruotės režimas — pilnavertė partija prieš kompiuterio valdomus varžovus: be ryšio, be paskyros, niekas nestatoma. Kai programėlė įdiegta (ar net tik kartą aplankyta), ji veikia visiškai neprisijungus — puikiai tinka mokytis žaidimo, išbandyti sąsają ar leisti laiką lėktuvo režimu.'] },
         { id: 'setup', t: 'Partijos nustatymas',
-          b: ["Pasirink varžovų skaičių, pradinę krūvą, blindus ir jų kilimą bei žaidimo greitį. Botų sudėtis ir sudėtingumas reguliuojami Išplėstinės parinktys → Vietinis žaidimas — nuo švelnių varžovų iki kietesnio ir įvairesnio stalo."] },
+          b: ['Pasirink varžovų skaičių, pradinę krūvą, blindus ir jų kilimą bei žaidimo greitį. Botų sudėtis ir sudėtingumas reguliuojami Išplėstinės parinktys → Vietinis žaidimas — nuo švelnių varžovų iki kietesnio ir įvairesnio stalo.'] },
         { id: 'trophies', t: 'Trofėjai',
           b: ['Treniruotės režimas turi savą pažangą: 28 trofėjai šešiose kategorijose (pažanga, technika, stilius, formatai, pramoga ir viena slapta) atrakinami žaidžiant — sužaistos rankos, laimėtos partijos, dideli blefai, ypatingos rankos ir dar daugiau. Trofėjų pažanga kaupiama ir sujungiama tarp įrenginių, kai įjungtas paskyros nustatymų sinchronizavimas.'] },
         { id: 'learn', t: 'Gera vieta mokytis',
@@ -267,7 +267,7 @@ export const help = {
           b: ['Žaidimo garsai sugrupuoti į keturias atskirai įjungiamas kategorijas, lygiai kaip darbalaukio kliente: žaidimo veiksmai (išdalytos kortos, Check, Call, Raise, tavo eilė\u2026), fojė pokalbio pranešimas, tinklo partijos pranešimai (žaidėjas prisijungė, partija paruošta) ir blindų kilimo pranešimas. Vienas garsumo šliaužiklis valdo visus, Išplėstinės parinktys \u2192 Garsas.'],
           note: 'Visos naršyklės — ypač iOS — atsisako groti garsą, kol kartą nepaliesi puslapio. Jei partija prasideda tyloje, vienas palietimas bet kur pažadina garsą; klientas taip pat automatiškai pataiso garso variklį, kai iOS jį pristabdo (įeinantis skambutis, fonas\u2026).' },
         { id: 'voice', t: 'Balsas ir vibracija',
-          b: ["Du papildomi kanalai gali laikyti tave informuotą nežiūrint į ekraną. Žaidimo pranešimai garsiai skaito žaidimo įvykius — veiksmus, tavo eilę, nugalėtoją, — o langas Pritaikymas neįgaliesiems nustato, kaip: Išjungta, Įtaisytasis balsas (tavo įrenginio kalbos sintezė) arba Ekrano skaitytuvas („NVDA“, „JAWS“, „VoiceOver“ ar „TalkBack“ skaito juos savo balsu, nekalbėdami dukart). Telefone trumpa vibracija gali pažymėti tavo eilę; ją rasi Išplėstinės parinktys → Statymas ir ėjimas."],
+          b: ['Du papildomi kanalai gali laikyti tave informuotą nežiūrint į ekraną. Žaidimo pranešimai garsiai skaito žaidimo įvykius — veiksmus, tavo eilę, nugalėtoją, — o langas Pritaikymas neįgaliesiems nustato, kaip: Išjungta, Įtaisytasis balsas (tavo įrenginio kalbos sintezė) arba Ekrano skaitytuvas („NVDA“, „JAWS“, „VoiceOver“ ar „TalkBack“ skaito juos savo balsu, nekalbėdami dukart). Telefone trumpa vibracija gali pažymėti tavo eilę; ją rasi Išplėstinės parinktys → Statymas ir ėjimas.'],
           note: 'Vibracija veikia \u201eAndroid\u201c (\u201eChromium\u201c naršyklės); \u201eApple\u201c nesuteikia vibracijos API svetainėms, tad \u201eiPhone\u201c vibruoti negali. Balso pranešimai veikia visur, bet prieinami balsai ir kalbos priklauso nuo tavo sistemos — klientas naudoja geriausią rastą atitikmenį.' }
       ]
     },
@@ -297,7 +297,7 @@ export const help = {
             ['F11', 'Visas ekranas']],
           note: 'Spartiesiems klavišams reikia fizinės klaviatūros. \u201eMac\u201c F klavišai pagal numatytuosius nustatymus valdo mediją: laikyk Fn (arba macOS nustatymuose įjunk \u201eNaudoti F1, F2 ir kt. klavišus kaip standartinius funkcinius klavišus\u201c). \u201eiPhone\u201c visą ekraną riboja iOS — programėlės įdiegimas kaip PWA suteikia tą pačią viso ekrano patirtį.' },
         { id: 'webkeys', t: 'Žiniatinklio raidžių klavišai',
-          b: ["Žiniatinklio plėtinys: vienos raidės klavišai ir Alt+T taip pat vykdo veiksmus, o visus galima perskirti lange Išplėstinės parinktys → Spartieji klavišai:"],
+          b: ['Žiniatinklio plėtinys: vienos raidės klavišai ir Alt+T taip pat vykdo veiksmus, o visus galima perskirti lange Išplėstinės parinktys → Spartieji klavišai:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],

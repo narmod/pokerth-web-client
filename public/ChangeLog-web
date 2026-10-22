@@ -1,3 +1,6 @@
+2026-10-23 version 2.1.10-web.284:
+- bugfix: Malay is now real Malaysian Malay throughout the app, the help and the Ace's tips (many texts were in Indonesian)
+
 2026-10-22 version 2.1.10-web.281:
 - bugfix: the help now names the settings sections exactly as the options window shows them, in every language
 - bugfix: Serbian is now written entirely in Cyrillic, including the language name in the language list

@@ -368,6 +368,12 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Malay was largely Indonesian** (`web.284`) — the `ms` catalogue had been derived from `id`: ~900 of 1857
+  strings rewritten in Malaysian Malay with one glossary (tetapan, tetingkap, kata laluan, pelayan, hantar,
+  Pilihan lanjutan, Kebolehcapaian, « anda »…), then a consistency pass; 219 help fields, 113 Ace's Help texts
+  (« Bantuan Sat ») and the /accessibility page follow the same terms and the exact menu labels. A few
+  corrupted words from an old find-and-replace (« peskrin », « mengpadam ») are gone. The strings rewritten in
+  `web.280`–`281` keep the quote style of their file (a test reads `advAceDance:'…'` literally).
 - **Admin › Statistics: an average day read hour by hour** (`web.283`) — the hour profile divided all 24 hours
   by one number of days, the day in progress counting for its elapsed fraction: hours still to come today, and
   those before counting began on its first day, were read as zero visits, so the evening looked quieter every
