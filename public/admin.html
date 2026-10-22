@@ -4796,7 +4796,7 @@
     // web.27 — the local backup offer (blank browser storage), Ace's bubble or fallback banner
     var bk=(g.contexts||{}).backup||{}, bkN=function(e){ return bk[e]||0; };
     h+='<h4 style="margin:14px 0 4px">Local backup offer</h4>';
-    h+='<div class="srow"><span>Offered</span><b>'+bkN('shown')+' by the Ace · '+bkN('banner')+' by the fallback banner</b></div>';
+    h+='<div class="srow"><span>Offered</span><b>'+bkN('shown')+' by the Ace · '+bkN('banner')+' by the fallback banner · '+bkN('returning')+' after « I already play »</b></div>';
     h+='<div class="srow"><span>Create a backup</span><b>'+bkN('create')+' tapped · '+bkN('created')+' created</b></div>';
     h+='<div class="srow"><span>Restore a backup</span><b>'+bkN('restore')+' tapped · '+bkN('restored')+' restored</b></div>';
     h+='<div class="srow"><span>Later</span><b>'+bkN('dismissed')+' · then « Show me » '+bkN('showme')+'</b></div>';

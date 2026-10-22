@@ -415,6 +415,25 @@ function _count(ev) {
   try { import('./guide/beacons.mjs').then((m) => { try { m.beacon('backup', ev); } catch (_e) {} }).catch(() => {}); } catch (_e) {}
 }
 function _offerPending() { return !!(_offer && !_offer.done && !_offer.banner); }
+// web.265 — on a first visit the Ace asks « First time on PokerTH? » before
+// this offer. While that question waits he keeps this one (keep: no fallback
+// banner after WATCH_MS); a newcomer (« Show me ») gets it at a later visit
+// instead (defer), a returning player (« I already play ») right away. Until
+// it has been shown once, NEXT_KEY makes the next session offer it again,
+// even though the storage is no longer blank (no write hold then).
+const NEXT_KEY = 'pth_bak_offer_next';
+function _nextOffer() { try { return localStorage.getItem(NEXT_KEY) === '1'; } catch (_e) { return false; } }
+function _setNext(on) { try { if (on) localStorage.setItem(NEXT_KEY, '1'); else localStorage.removeItem(NEXT_KEY); } catch (_e) {} }
+function _offerKeep() {
+  if (!_offerPending()) return;
+  _offer.kept = true;
+  if (_offerKind() !== 'persist') _setNext(true);   // Firefox: its offer comes back by itself (PERSIST_MAX)
+}
+function _offerDefer() {
+  if (!_offerPending()) return;
+  if (_offerKind() !== 'persist') _setNext(true);
+  _offerDone(true);
+}
 function _offerKind() { return (_offer && _offer.kind) || 'folder'; }
 function _offerFallback() {
   if (!_offerPending()) return;
@@ -641,7 +660,10 @@ function _showRestoreBanner() {
 function _holdState() { return _hold; }
 
 function _maybeOfferRestore() {
-  if (!_supported() || !_enabled() || !_FRESH_AT_BOOT) { _hold = false; return; }
+  // web.265: put off from an earlier visit (NEXT_KEY) — offered now, unless a folder was picked meanwhile
+  const next = !_FRESH_AT_BOOT && _nextOffer();
+  if (next && _state.dirName) _setNext(false);
+  if (!_supported() || !_enabled() || !(_FRESH_AT_BOOT || (next && !_state.dirName))) { _hold = false; return; }
   // Since 2.1.8-web.10 the offer also shows when NO folder is remembered
   // (brand-new browser): the player learns a local backup exists. Create
   // picks a folder; Restore goes straight to the picker (_pickNext starts
@@ -652,7 +674,7 @@ function _maybeOfferRestore() {
   if (_automated()) { _offerFallback(); return; }
   try { document.dispatchEvent(new CustomEvent('pth:bakoffer')); } catch (_e) {}
   _later(() => { if (_offer && !_offer.claimed) _offerFallback(); }, CLAIM_MS);
-  _later(() => { if (_offer && !_offer.shown) _offerFallback(); }, WATCH_MS);
+  _later(() => { if (_offer && !_offer.shown && !_offer.kept) _offerFallback(); }, WATCH_MS);   // kept: the Ace asks first (web.265)
 }
 
 // ── Firefox: protect the settings (persistent storage, web.31) ─────────────
@@ -791,7 +813,11 @@ if (typeof window !== 'undefined') {
       if (!_offer) return;
       if (!_offer.shown && _offer.kind === 'persist') _persistSetN(_persistN() + 1);   // at most PERSIST_MAX showings per device
       _offer.shown = true;
+      _setNext(false);                                  // shown once: no more « next visit » (web.265)
     },
+    keep: _offerKeep,
+    defer: _offerDefer,
+    known: () => !!_state.dirName,                      // a folder is remembered: a backup exists, its question comes first
     fallback: _offerFallback,
     texts: _offerTexts,
     path: _offerPath,

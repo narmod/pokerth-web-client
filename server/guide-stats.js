@@ -66,7 +66,8 @@ const EVENTS = Object.freeze({
   // H1 — « More help »: opened, a section read, a search typed, the help window opened from it
   'more-help': ['shown', 'section', 'search', 'window'],
   // web.27 — the local backup offer on a blank browser storage (backup-autosave.mjs)
-  backup: ['shown', 'banner', 'create', 'created', 'restore', 'restored', 'dismissed', 'showme',
+  // returning (web.265): « I already play » on a blank browser — the offer asks « Had a backup? »
+  backup: ['shown', 'banner', 'create', 'created', 'restore', 'restored', 'dismissed', 'showme', 'returning',
     'persist_shown', 'persist', 'persisted', 'persist_no', 'persist_later'],   // Firefox (web.31)
 });
 

@@ -87,7 +87,7 @@ async function runDevice(browser, name, descriptor) {
     await openTable(page, base, { stopAt: 'login' }); await noBanner(page);
     await check(`${name}: the Ace offers his help on first launch`, async () => {
       await page.locator(bubble).waitFor({ timeout: 9000 });
-      assert.match(await text(page), /New here/);
+      assert.match(await text(page), /First time on PokerTH/);
       assert.equal(await page.locator('#ace-dock .ad-ace .mc-pos').count(), 1, 'no Ace drawn');
     });
     await check(`${name}: Ace, bubble and buttons inside the screen, finger-sized`, async () => {
@@ -681,7 +681,7 @@ async function runDevice(browser, name, descriptor) {
   }
 
   // ── the Ace speaks the player's language (French, and Arabic right to left) ──
-  for (const [lang, re] of [['fr', /Tu débutes ici/], ['ar', /[\u0600-\u06FF]/]]) {
+  for (const [lang, re] of [['fr', /Première fois sur PokerTH/], ['ar', /[\u0600-\u06FF]/]]) {
     const ctx = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });
     await ctx.addInitScript((l) => { try { localStorage.setItem('pth_lang', l); } catch (_e) {} }, lang);
     const page = await ctx.newPage(); watch(page);

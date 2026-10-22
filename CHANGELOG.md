@@ -132,6 +132,15 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **First visit: « First time on PokerTH? » comes first, the backup offer after** (`web.265`) — admin counters
+  (2026-10-22): the first-launch offer was accepted on 16 % of devices and left unanswered on 45 %; on a
+  blank desktop Chrome / Firefox the Ace's very first words were the local backup offer (2,247 shown, 11
+  backups made). The offer now reads « First time on PokerTH? I'll show you how to join a game in a few taps »
+  with « Show me » / « I already play » (guide catalogues, 83 languages); the welcome is one short line that
+  goes by itself after 6 s. The backup offer waits for that answer (`backup-autosave.mjs` keep / defer /
+  known): « Show me » puts it off to a later visit (`pth_bak_offer_next`), « I already play » shows it at
+  once as « Had a backup of your settings? I can restore it. » with Restore first (new `backup.returning`
+  counter, admin). A remembered backup folder still gets the restore offer first.
 - **About: the tab bar scrolls sideways when it does not fit** (`web.261`) — on a phone the seven tabs were clamped to
   two lines and cut mid-word (« A prop… », « Journa / l des… »). When they do not fit, the bar now scrolls
   horizontally with each name whole on one line, a fade on the side where tabs remain, and the active tab brought

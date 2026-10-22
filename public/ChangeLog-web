@@ -1,3 +1,7 @@
+2026-10-22 version 2.1.10-web.265:
+- improvement: first visit: the Ace now asks « First time on PokerTH? » before anything else, with « Show me » or « I already play »; his welcome is shorter
+- improvement: the backup of your settings is no longer the first question on a new browser: offered at a later visit to new players, and right away (« Had a backup? ») to players who already play
+
 2026-10-22 version 2.1.10-web.264:
 - improvement: Ace's Help no longer repeats a tip at every visit when you simply carried on (picked a mode, connected, started the game, closed the window): it counts as read
 

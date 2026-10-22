@@ -15,9 +15,9 @@ export default {
   name: 'Ace’s Help',
   aceLabel: 'Ace’s Help — tap for my menu',
   // first-launch offer (once, D3)
-  offer: 'New here? I can show you around as you go.',
-  offerYes: 'Yes, please',
-  offerNo: 'No thanks',
+  offer: 'First time on PokerTH? I’ll show you how to join a game in a few taps.',
+  offerYes: 'Show me',
+  offerNo: 'I already play',
   // buttons shared by every tip (D7)
   gotIt: 'Got it',
   bakShowMe: 'Show me',
@@ -26,7 +26,8 @@ export default {
   prev: 'Back',
   close: 'Close',
   // turning the help on / off, menu bubble
-  welcome: 'Great! I’ll pop up down here whenever there is something useful to explain. Tap me any time for my menu: more help, the tip of this screen, and « What’s this? » — then tap anything and I explain it. The yellow « ? » on my bubbles does that too.',
+  welcome: 'Great, I’ll stay down here and pop up when it helps. Tap me any time if you have a question.',
+  bakReturning: 'Had a backup of your settings? I can restore it.',
   menuOn: 'Ace’s Help is on. « What’s this? »: tap it, then tap anything on the screen and I tell you what it does (the yellow « ? » on my bubbles does the same).',
   turnOff: 'Turn off',
   resetTips: 'Show all tips again',

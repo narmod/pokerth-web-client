@@ -19,9 +19,16 @@ player accepts, a small Ace docks at the bottom right. When there is something u
 explain where the player is, he opens a bubble. It works on the real app and the real
 tables, with no tutorial mode and no fake data.
 
-- **Offered once** on first launch: *"New here? I can show you around as you go."*
-  with the buttons *Yes, please* and *No thanks*. After that, the offer never shows again, on any
-  device linked to the same account. The help stays off until the player says yes.
+- **Offered once** on first launch: *"First time on PokerTH? I'll show you how to join a game
+  in a few taps."* with the buttons *Show me* and *I already play* (web.265: the second one is not a
+  refusal, it sorts players). After that, the offer never shows again, on any device linked to the
+  same account. The help stays off until the player says *Show me*; then one short line (*"Great,
+  I'll stay down here…"*, gone by itself after 6 s) and the tip of the screen follows.
+- **The local backup offer waits for that answer** (web.265). On a blank browser it used to come
+  first. Now *Show me* (a newcomer, nothing to back up yet) puts it off to a later visit
+  (`pth_bak_offer_next`), and *I already play* shows it at once, asking *"Had a backup of your
+  settings? I can restore it."* with *Restore* first (`backup.returning`). When a backup folder is
+  remembered, the restore offer still comes first, as before.
 - **Turned on and off** from a button on the login screen, an entry in the header menus
   (lobby, create, table, next to *Help*) and *Advanced options → Assistance*.
 - **Unobtrusive.** There is no dark overlay. A highlight is a pulsing gold outline. Each

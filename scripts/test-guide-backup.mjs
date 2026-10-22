@@ -50,6 +50,9 @@ w._bakOffer = {
   create: () => { calls.push('create'); return Promise.resolve(next); },
   restore: () => { calls.push('restore'); return Promise.resolve(next); },
   done: (later) => { calls.push('done:' + !!later); pending = false; },
+  known: () => true,          // a backup folder is remembered: its offer still comes before « First time? » (web.265)
+  keep: () => calls.push('keep'),
+  defer: () => calls.push('defer'),
 };
 for (const k of Object.getOwnPropertyNames(w)) { if (k === 'performance' || k in globalThis) continue; try { globalThis[k] = w[k]; } catch (e) {} }
 
@@ -118,6 +121,7 @@ w._bakOffer = {
   persist: () => { pcalls.push('persist'); return Promise.resolve('no'); },
   done: (later) => { pcalls.push('done:' + !!later); ppending = false; },
 };
+w.localStorage.setItem('pth_guide_offered', '1');   // « First time on PokerTH? » answered: until then this offer waits (web.265)
 w.document.dispatchEvent(new w.CustomEvent('pth:bakoffer'));
 ok(await until(() => bub() && /Mets tes réglages à l’abri/.test(bub().textContent)), 'Firefox: the Ace offers to protect the settings (French)');
 const pb = bub();
@@ -137,11 +141,11 @@ ok(q2.includes('persist') && q2.includes('persist_no'), 'Firefox: counted (tappe
 const bk = fs.readFileSync('public/modules/backup-autosave.mjs', 'utf8');
 ok(/window\._bakOffer = \{/.test(bk) && /dispatchEvent\(new CustomEvent\('pth:bakoffer'\)\)/.test(bk), 'backup-autosave hands the offer over (window._bakOffer, pth:bakoffer)');
 ok(/if \(_automated\(\)\) \{ _offerFallback\(\); return; \}/.test(bk), 'automated browsers keep the banner (the browser tests close it)');
-ok(/_later\(\(\) => \{ if \(_offer && !_offer\.claimed\) _offerFallback\(\); \}, CLAIM_MS\)/.test(bk) && /!_offer\.shown\) _offerFallback\(\); \}, WATCH_MS\)/.test(bk), 'the banner as a safety net: not claimed, or not shown in time');
+ok(/_later\(\(\) => \{ if \(_offer && !_offer\.claimed\) _offerFallback\(\); \}, CLAIM_MS\)/.test(bk) && /!_offer\.shown && !_offer\.kept\) _offerFallback\(\); \}, WATCH_MS\)/.test(bk), 'the banner as a safety net: not claimed, or not shown in time');
 ok(/addEventListener\('pth:langchange', relabel\)/.test(bk), 'the banner follows the language too');
 ok(/_toast\(_offerHint\(false\), \{ icon: '', duration: 7000 \}\)/.test(bk), 'the banner\'s Later / ✕ tell where to find it too (toast)');
 const idx = fs.readFileSync('public/modules/guide/index.mjs', 'utf8');
-ok(/function bannerUp\(\) \{\s*if \(bakPending\(\)\) return true;/.test(idx), 'the first-launch offer waits for it');
+ok(/function bannerUp\(\) \{\s*if \(bakPending\(\) && bakKnown\(\)\) return true;/.test(idx), 'the first-launch offer waits for it (a backup folder known, web.265)');
 // Firefox (web.31): module + boot
 ok(/if \(!_supported\(\)\) \{ _maybeOfferPersist\(\); return; \}/.test(bk) && /function _maybeOfferPersist\(\) \{\s*if \(window\.LIVE_MODE \|\| !_isFirefox\(\) \|\| !_persistApi\(\) \|\| !_enabled\(\) \|\| _automated\(\)\) return;/.test(bk), 'Firefox only, never /live nor automated');
 ok(/if \(_persistN\(\) >= PERSIST_MAX\) return;/.test(bk) && /const PERSIST_MAX = 3;/.test(bk) && /if \(already\) return;/.test(bk), 'at most 3 showings per device, never once protected');

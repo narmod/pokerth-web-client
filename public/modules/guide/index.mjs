@@ -157,7 +157,7 @@ function blocked() {
 /** First-run banners at the bottom of the screen (local backup…): the offer waits for them —
  *  and for the local backup offer the Ace says himself (web.20). */
 function bannerUp() {
-  if (bakPending()) return true;
+  if (bakPending() && bakKnown()) return true;          // web.265: with no backup folder known, « First time? » goes first
   const b = document.getElementById('bak-restore-banner');
   return !!(b && b.getBoundingClientRect().height > 0);
 }
@@ -941,9 +941,20 @@ function resetTips() {
   note('resetDone', [btn('close', true)], () => { closeBubble(); schedule(); });
 }
 
+function bakDefer() { const o = bak(); try { if (o && o.pending() && typeof o.defer === 'function') o.defer(); } catch (e) {} }
+
+// web.265: one short line, then the tip of this screen comes by itself
+const WELCOME_MS = 6000;
+let welcomeTimer = 0;
 function welcome() {
   const ctx = CONTEXTS.find((c) => c.id === 'welcome');
-  if (ctx && canSpeakHere()) showContext(ctx);
+  if (!ctx || !canSpeakHere()) return;
+  showContext(ctx);
+  clearTimeout(welcomeTimer);
+  welcomeTimer = setTimeout(() => {
+    welcomeTimer = 0;
+    if (showing && showing.kind === 'ctx' && showing.run && showing.run.ctx.id === 'welcome') onCtxButton('gotIt');
+  }, WELCOME_MS);
 }
 
 function canSpeakHere() {
@@ -1024,6 +1035,7 @@ let bakBusy = false;
 let bakMsg = null;            // { text, err } under the path line
 let bakHint = false;          // « Later » answered: where to find it again is on screen
 let bakCounted = false;       // statistics: the offer counted once per page, however often it comes back
+let bakReturning = false;     // « I already play » on a blank browser: the offer asks « Had a backup? » (web.265)
 function bak() { const o = window._bakOffer; return o && typeof o.pending === 'function' ? o : null; }
 function bakPending() { const o = bak(); try { return !!(o && o.pending()); } catch (e) { return false; } }
 /** 'folder' (the backup file) or 'persist' (Firefox: protect the settings, web.31). */
@@ -1037,9 +1049,27 @@ function claimBak() {
   bakMsg = null;
   maybeBak();
 }
+// web.265 — first visit: « First time on PokerTH? » comes first; the backup
+// offer waits for its answer (and is kept from its fallback banner), unless
+// a backup folder is remembered — then restoring is what matters, as before.
+function offerComing() {
+  return available() && !featureOff('guide_on') && !state.isOn() && !state.wasOffered() && !state.offerTired() && !automated();
+}
+/** A backup folder is remembered (or an older module without known()): its offer keeps coming first. */
+function bakKnown() {
+  const o = bak();
+  try { return !o || typeof o.known !== 'function' || !!o.known(); } catch (e) { return true; }
+}
+function bakWaits() {
+  if (!offerComing() || bakKnown()) return false;
+  const o = bak();
+  try { if (o && typeof o.keep === 'function') o.keep(); } catch (e) {}
+  return true;
+}
 function maybeBak() {
   clearTimeout(bakTimer);
   if (!bakPending() || (showing && showing.kind === 'bak')) return;
+  if (bakWaits()) return;
   bakTimer = setTimeout(async () => {
     bakTimer = 0;
     if (!bakPending() || (showing && showing.kind === 'bak')) return;
@@ -1060,7 +1090,7 @@ function maybeBak() {
     showing = { kind: 'bak' };
     renderBak();
     try { bak().shown(); } catch (e) {}
-    if (!bakCounted) { bakCounted = true; beacon('backup', bakEv('shown')); }
+    if (!bakCounted) { bakCounted = true; beacon('backup', bakEv('shown')); if (bakReturning && bakKind() !== 'persist') beacon('backup', 'returning'); }
   }, 600);
 }
 function renderBak(focus) {
@@ -1086,12 +1116,14 @@ function renderBak(focus) {
     M.say({ html: htmlP, buttons: buttonsP, onButton: onBakButton, focus: !!focus });
     return;
   }
-  const html = `<p class="ad-text"><b>${esc(tx.title)}</b></p><p class="ad-text ad-bak-body">${esc(tx.body)}</p>`
+  // « I already play » (web.265): « Had a backup of your settings? » — Restore first
+  const ret = bakReturning;
+  const html = `<p class="ad-text"><b>${esc(ret ? gt('bakReturning') : tx.title)}</b></p><p class="ad-text ad-bak-body">${esc(tx.body)}</p>`
     + `<p class="ad-bak-path">${esc(o.path())}</p>${msg}`;
   const buttons = bakBusy ? [] : [
     { id: 'bakLater', label: tx.later },
-    { id: 'bakRestore', label: tx.restore },
-    { id: 'bakCreate', label: tx.create, primary: true },
+    { id: 'bakRestore', label: tx.restore, primary: ret },
+    { id: 'bakCreate', label: tx.create, primary: !ret },
   ];
   M.say({ html, buttons, onButton: onBakButton, focus: !!focus });
 }
@@ -1199,7 +1231,10 @@ function maybeOffer() {
       buttons: [btn('offerNo'), btn('offerYes', true)],
       onButton: (id) => {
         state.markOffered();
-        if (id === 'offerYes') { beacon('offer', 'accepted'); closeBubble(); turnOn(); }
+        // web.265: « Show me » — a newcomer has nothing to back up yet: the backup offer waits for a later visit;
+        // « I already play » on a blank browser — maybe his settings were wiped: « Had a backup? » right away
+        if (id === 'offerYes') { beacon('offer', 'accepted'); closeBubble(); bakDefer(); turnOn(); }
+        else if (id === 'offerNo' && bakPending()) { beacon('offer', 'dismissed'); bakReturning = true; closeBubble(); maybeBak(); }
         else { beacon('offer', 'dismissed'); leave(); }
       },
     });
