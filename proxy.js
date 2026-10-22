@@ -10051,7 +10051,11 @@ function visitWindowList(list) {
     lv += b.lv || 0;
     if (b.lids) for (const k in b.lids) lu[k] = 1;
   }
-  return { v: v, u: Object.keys(u).length, m: m, nw: nw, rt: rt, lv: lv, lu: Object.keys(lu).length };
+  const un = Object.keys(u).length;
+  // rd = returning DEVICES: seen in the window, first seen before it. `rt`
+  // counts the VISITS of devices already known (a newcomer's second page load
+  // the same day included), so it is not set against `nw` (devices).
+  return { v: v, u: un, m: m, nw: nw, rt: rt, rd: Math.max(0, un - nw), lv: lv, lu: Object.keys(lu).length };
 }
 // Hier, arrete a l'heure courante : comparer un « aujourd'hui » de 13h a un
 // hier complet ferait voir rouge chaque matin. Faute de cases horaires (jour
@@ -10063,9 +10067,14 @@ function visitYesterdayToHour() {
   const b = visitDay(visitDayKey(d));
   if (!b || !b.h) return null;
   const hh = now.getHours();
+  // The hour in progress weighs what has passed of it: today has only
+  // `min` minutes of it, a whole hour of yesterday would tilt every evening
+  // reading down (up to the busiest hour's worth).
+  const f = (now.getMinutes() * 60 + now.getSeconds()) / 3600;
   let v = 0, nw = 0;
-  for (let i = 0; i <= hh; i++) { v += b.h[i] || 0; if (b.hn) nw += b.hn[i] || 0; }
-  return { v: v, nw: nw };
+  for (let i = 0; i < hh; i++) { v += b.h[i] || 0; if (b.hn) nw += b.hn[i] || 0; }
+  v += (b.h[hh] || 0) * f; if (b.hn) nw += (b.hn[hh] || 0) * f;
+  return { v: Math.round(v), nw: Math.round(nw) };
 }
 // Les 48 dernieres heures, dans l'ordre. La derniere case est l'heure en cours
 // et n'est donc pas finie : le tableau de bord la dessine quand meme, mais elle
@@ -10318,6 +10327,17 @@ function visitSumKey(list, f) {
   (list || []).forEach(function (b) { const m = b && b[f]; if (m) for (const k in m) out[k] = (out[k] || 0) + (m[k] || 0); });
   return out;
 }
+// Returning devices of one day (or hour cell): the devices seen there minus
+// the ones seen there for the very first time.
+function visitPointRd(p) { p.rd = Math.max(0, (p.u || 0) - (p.nw || 0)); return p; }
+// First day of the store that was counted from midnight: the oldest bucket is
+// the day counting began (or restarted after a reset), seldom a whole day.
+// Days before it are not zero visits but no measure at all, so the dashboard
+// leaves them out of every mean, slope and half. '' while nothing is counted.
+function visitCountedFrom(oldest) {
+  if (oldest === undefined) oldest = visitOldestBack();
+  return oldest >= 0 ? visitDayKeyFromIndex(visitDayIndex() - oldest + 1) : '';
+}
 function visitsSummaryRead(periodDays, h24, range) {
   const R = (!h24 && range) || null;
   const P = h24 ? 1 : (R ? R.P : visitPeriodDays(periodDays)), E = R ? R.E : 0;
@@ -10328,14 +10348,14 @@ function visitsSummaryRead(periodDays, h24, range) {
     for (let j = 0; j < hrs.length; j++) {
       const d = hrs[j];
       const b = visitHour(d);
-      series.push({ date: visitDayKey(d) + 'T' + String(d.getHours()).padStart(2, '0'), v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined, m: (b && b.m) ? b.m : undefined, lo: (b && b.lo) ? b.lo : undefined });
+      series.push(visitPointRd({ date: visitDayKey(d) + 'T' + String(d.getHours()).padStart(2, '0'), v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined, m: (b && b.m) ? b.m : undefined, lo: (b && b.lo) ? b.lo : undefined }));
     }
   } else for (let i = E + P - 1; i >= E; i--) {
     const d = new Date(now);
     d.setDate(now.getDate() - i);
     const k = visitDayKey(d);
     const b = visitDay(k);
-    series.push({ date: k, v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined, m: (b && b.m) ? b.m : undefined, lo: (b && b.lo) ? b.lo : undefined });
+    series.push(visitPointRd({ date: k, v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? LANG_STATS.foldLangMap(b.lg) : undefined, mu: (b && b.mu) ? b.mu : undefined, m: (b && b.m) ? b.m : undefined, lo: (b && b.lo) ? b.lo : undefined }));
   }
   // Connections by entry mode over the window just before, point for point:
   // the dashed reference of "Connections per day" on the admin World page.
@@ -10380,6 +10400,7 @@ function visitsSummaryRead(periodDays, h24, range) {
     // Day keys are the server's: the dashboard must not work out "today" in
     // its own browser zone and drop the wrong day.
     todayKey: visitDayKey(now),
+    countedFrom: visitCountedFrom(),
     musicSinceKey: visitsStore.musicSince ? visitDayKey(new Date(visitsStore.musicSince)) : '',
     allTime: { v: visitsStore.totalV || 0, u: visitsStore.totalU || 0, nw: visitsStore.totalU || 0, rt: visitsStore.totalRet || 0, lv: visitsStore.totalLV || 0, lu: visitsStore.totalLU || 0, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0, live: am.live || 0 }; })() },
     series: series,

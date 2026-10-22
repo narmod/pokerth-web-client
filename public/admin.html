@@ -4325,6 +4325,9 @@
     return {a:a,b:b,r:r,sd:Math.sqrt(res/n)};
   }
   function _round1(x){ return (Math.round(x*10)/10).toFixed(1); }
+  // Returning DEVICES of a day or a window: seen there, first seen before.
+  // `rt` is the visits of known devices (reloads included) — not devices.
+  function _rdOf(x){ return !x?0:(x.rd!=null?x.rd:Math.max(0,(x.u||0)-(x.nw||0))); }
   // -- Histogramme --------------------------------------------------------
   // Meme grille et memes couleurs de texte que _lineChart, pour que les deux
   // graphes du panneau se lisent comme une seule planche. Les repères sont des
@@ -4502,7 +4505,7 @@
     var i=_chartIndex(st,frac), vis=_chartVisible(st);
     var ro=host.querySelector('.chartro'), gd=host.querySelector('.chartgd');
     if(!ro||!gd) return;
-    ro.innerHTML='<b>'+_annEsc(st.labels[i]||'')+'</b>'+vis.map(function(l){
+    ro.innerHTML='<b>'+_annEsc(st.labels[i]||'')+'</b>'+vis.filter(function(l){ return l.vals[i]!==null; }).map(function(l){
       return '<span><em style="background:'+l.c+'"></em><i>'+_annEsc(l.n||l.k)+'</i>'
            + '<s>'+(l.fmt?l.fmt(l.vals[i]||0):_round1(l.vals[i]||0))+'</s></span>';
     }).join('');
@@ -4567,7 +4570,7 @@
     var n=labels.length; if(!n) return '';
     var k=(opt&&opt.k)||1; H=(H||170)*k;
     var W=700,padL=38*k,padR=10*k,padT=10*k,padB=20*k;
-    var max=0, all=[]; lines.forEach(function(l){ l.vals.forEach(function(v){ all.push(v); if((v||0)>max) max=v||0; }); });
+    var max=0, all=[]; lines.forEach(function(l){ l.vals.forEach(function(v){ if(v==null) return; all.push(v); if(v>max) max=v; }); });
     var ax=_niceAxis(max,_isInt(all)); max=ax.max;
     var iw=W-padL-padR, ih=H-padT-padB;
     function X(i){ return n===1?padL+iw/2:padL+(i*iw)/(n-1); }
@@ -4580,13 +4583,14 @@
     }
     g+=_xTicks(n,X,labels,H,W,k);
     lines.forEach(function(l){
-      var pts=l.vals.map(function(v,i){ return X(i).toFixed(1)+','+Y(v).toFixed(1); }).join(' ');
+      var pts=l.vals.map(function(v,i){ return v==null?'':X(i).toFixed(1)+','+Y(v).toFixed(1); }).filter(Boolean).join(' ');
       // Une droite de tendance n'est pas une mesure : trait fin, pointille, et
       // pas de marqueur — rien a survoler, il n'y a pas de valeur du jour la.
       var st=l.dash? ';stroke-width:'+(1.5*k).toFixed(2)+';stroke-dasharray:'+(6*k).toFixed(1)+' '+(5*k).toFixed(1)+';opacity:.85' : ';stroke-width:'+(2*k).toFixed(2)+';stroke-linejoin:round;stroke-linecap:round';
       g+='<polyline points="'+pts+'" style="fill:none;stroke:'+l.c+st+'"/>';
       if(l.dash) return;
       l.vals.forEach(function(v,i){
+        if(v==null) return;
         g+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="'+(2.6*k).toFixed(2)+'" style="fill:'+l.c+'"/>';
       });
     });
@@ -5243,7 +5247,7 @@
     _tsTiles('audience',[
       ['Visits',_tsN(o.v),_tsN(o.u)+' unique · '+L,'var(--accent)'],
       ['New devices',_tsN(o.nw),'seen for the first time · '+L,'var(--warn-text)'],
-      ['Returning',_tsN(o.rt),'devices seen before · '+L,'var(--m-live)'],
+      ['Returning',_tsN(_rdOf(o)),'devices known before the period · '+L,'var(--m-live)'],
       ['Back within 7 days',(c&&c.n)?_tsPc(c.back,c.n):'—',(c&&c.n)?(_tsN(c.back)+' of '+_tsN(c.n)+' new devices'):why,'var(--ok-text)']]);
   }
   // Activity: the last 48 h, the busiest hour of an average day, today.
@@ -5387,15 +5391,21 @@
         ];
         if(s.length && s[0].nw!==undefined){
           lines.push({k:'new',n:'New',c:'#e0b050',vals:s.map(function(x){ return x.nw||0; })});
-          lines.push({k:'returning',n:'Returning',c:'#c08ae0',vals:s.map(function(x){ return x.rt||0; })});
+          lines.push({k:'returning',n:'Returning',c:'#c08ae0',vals:s.map(_rdOf)});
         }
         // La droite de tendance est ajoutee en dernier pour passer au-dessus
         // des courbes, et ne rejoint la legende que si la fenetre est pleine :
         // deux points ne font pas une tendance.
-        // Fitted on the complete days only: the last point is today so far.
-        var _rg=_linreg(lines[0].vals.length>2?lines[0].vals.slice(0,-1):lines[0].vals);
-        if(s.length>=5){
-          lines.push({k:'trend',n:'Trend',c:'#9aa7bd',dash:true,vals:s.map(function(_,i){ return Math.max(0,_rg.a*i+_rg.b); })});
+        // Fitted on the complete days only: the last point is today so far
+        // (not for a past range), and the days before counting began are no
+        // measure (countedFrom) — the line starts where the counting does.
+        var _v0=lines[0].vals, _t0=0, _cf=(!d.h24&&d.countedFrom)||'';
+        if(_cf) while(_t0<s.length && String(s[_t0].date||'')<_cf) _t0++;
+        var _fit=_v0.slice(_t0);
+        if(_fit.length>2 && (d.h24||!d.periodEnd)) _fit=_fit.slice(0,-1);
+        var _rg=_linreg(_fit);
+        if(_fit.length>=4){
+          lines.push({k:'trend',n:'Trend',c:'#9aa7bd',dash:true,vals:s.map(function(_,i){ return i<_t0?null:Math.max(0,_rg.a*(i-_t0)+_rg.b); })});
         }
         c.className='linechart';
         _chartMount(c,labs,lines,170,'line');
@@ -6047,16 +6057,23 @@
     // range (periodEnd > 0) has no day in progress: all of it is kept.
     var sAll=s, live=d.h24 || !d.periodEnd;
     if(n>2 && live){ s=s.slice(0,-1); n=s.length; }
+    // Days before counting began (store young or reset) are no measure, not
+    // zero visits: left out, or a 60-day mean over 20 counted days reads a
+    // third of the truth (proxy.js visitCountedFrom).
+    var off=0, cf=(!d.h24&&d.countedFrom)||'';
+    if(cf){ while(off<n && String(s[off].date||'')<cf) off++; if(off){ s=s.slice(off); n=s.length; } }
     var vv=s.map(function(x){ return x.v||0; });
     var nwv=s.map(function(x){ return x.nw||0; });
-    var rtv=s.map(function(x){ return x.rt||0; });
+    var rdv=s.map(_rdOf);
     // Serie horaire (« Last 24 hours ») : moyennes par heure, pente par heure.
     var U=d.h24?{one:'hour',many:'hours',slope:1,per:'/hour',noise:'hour-to-hour'}:{one:'day',many:'days',slope:7,per:'/week',noise:'day-to-day'};
     var reg=_linreg(vv), week=reg.a*U.slope;
     var half=Math.floor(n/2);
     var firstH=_mean(vv.slice(0,half)), lastH=_mean(vv.slice(half));
-    var month=d.month||{}, all=d.allTime||{};
-    var idSess=(month.nw||0)+(month.rt||0);
+    // The device tiles and the closing lines read the period picked in Filters
+    // like the rest of the page: they used to stay on 30 days whatever it was.
+    var per=d.period||d.month||{}, all=d.allTime||{}, perRd=_rdOf(per), L=_tsPerLbl();
+    var perTxt=_trafRange?_rangeLabel():'the '+_perLabel(d.periodDays||_trafPeriod);
     // r au carre sous 0.1 : la pente n'explique presque rien, on le dit plutot
     // que d'afficher une fleche qui ferait croire a un mouvement.
     var solid=Math.abs(reg.r)>=0.32;
@@ -6066,16 +6083,16 @@
       function tile(lbl,big,sub,t){ t=t||''; return '<div class="kpi '+t+'"><div class="lbl">'+lbl+'</div><div class="big '+t+'">'+big+'</div><div class="sub">'+sub+'</div></div>'; }
       // Meme seuil de 10 % que les tuiles du haut ; la pente n'est coloree que
       // si elle sort du bruit (r), les moities que si l'ecart est franc.
-      var rtF=_mean(rtv.slice(0,half)), rtL=_mean(rtv.slice(half));
+      var rtF=_mean(rdv.slice(0,half)), rtL=_mean(rdv.slice(half));
       var rtT = !(rtF>0) ? '' : (rtL/rtF>=1.10?'up':(rtL/rtF<=0.90?'dn':''));
       var trendTxt = dir==='flat'
         ? 'no clear direction (r='+(Math.round(Math.abs(reg.r)*100)/100)+')'
         : (week>0?'+':'\u2212')+_round1(Math.abs(week))+U.per+' (r='+(Math.round(Math.abs(reg.r)*100)/100)+')';
       k.innerHTML =
-        tile('Visits / '+U.one, _round1(_mean(vv)), 'mean over '+n+' complete '+(n===1?U.one:U.many)+' \u00b7 '+trendTxt, dir==='flat'?'':dir)
-       +tile('Unique devices / 30 d', fmt(month.u), (all.u? pct(month.u,all.u):0)+'% of the '+fmt(all.u)+' ever seen')
-       +tile('New share / 30 d', (idSess? pct(month.nw,idSess):0)+'%', fmt(month.nw)+' new of '+fmt(idSess)+' identified sessions')
-       +tile('Returning / '+U.one, _round1(_mean(rtv)), n<2?'a single '+U.one+': no halves to compare':'first half '+_round1(rtF)+' \u2192 second half '+_round1(rtL), n<2?'':rtT);
+        tile('Visits / '+U.one, n?_round1(_mean(vv)):'\u2014', n?('mean over '+n+' complete '+(n===1?U.one:U.many)+(off?' since counting began':'')+' \u00b7 '+trendTxt):'no complete '+U.one+' counted yet', (n&&dir!=='flat')?dir:'')
+       +tile('Unique devices', fmt(per.u), (all.u? pct(per.u,all.u):0)+'% of the '+fmt(all.u)+' ever seen \u00b7 '+L)
+       +tile('New share', (per.u? pct(per.nw,per.u):0)+'%', fmt(per.nw)+' new of '+fmt(per.u)+' devices \u00b7 '+L)
+       +tile('Returning / '+U.one, n?_round1(_mean(rdv)):'\u2014', !n?'no complete '+U.one+' counted yet':(n<2?'devices seen on an earlier '+U.one+' \u00b7 a single '+U.one+': no halves to compare':'devices seen on an earlier '+U.one+' \u00b7 first half '+_round1(rtF)+' \u2192 second half '+_round1(rtL)), n<2?'':rtT);
     }
     var tn=$('trafTrendNote');
     if(tn) tn.textContent = (dir==='flat'?'flat':(dir==='up'?'rising':'falling'))
@@ -6083,7 +6100,7 @@
     var nb=$('trafNew');
     if(nb){
       _chartMount(nb,sAll.map(_sFull),[{k:'new',n:'New devices',c:'#e0a03a',vals:sAll.map(function(x){ return x.nw||0; })}],170,'bar',
-        { c:'#e0a03a', xl:sAll.map(_sLab), segs:[{from:0,to:half-1},{from:half,to:n-1}] });
+        { c:'#e0a03a', xl:sAll.map(_sLab), segs:n>=2?[{from:off,to:off+half-1},{from:off+half,to:off+n-1}]:[] });
     }
     var nn=$('trafNewNote');
     if(nn){
@@ -6103,9 +6120,9 @@
       // mieux : un rapport de volumes recurrents/nouveaux le suggere, une vraie
       // mesure de retour le sait. Des que les cohortes existent, la phrase leur
       // laisse la conclusion plutot que d'en rendre deux, differentes.
-      lines.push('<span class="nu">'+fmt(month.u)+'</span> distinct devices over 30 days, <span class="nu">'+(all.u?pct(month.u,all.u):0)+'%</span> of the '
-        +'<span class="nu">'+fmt(all.u)+'</span> ever seen. Returning devices carry <span class="nu">'+(idSess?pct(month.rt,idSess):0)+'%</span> of identified sessions'
-        +(_retVerdict? '.' : ' \u2014 the lever is <b>'+((idSess && month.rt>=month.nw)?'acquisition':'retention')+'</b>.'));
+      lines.push('<span class="nu">'+fmt(per.u)+'</span> distinct devices over '+perTxt+', <span class="nu">'+(all.u?pct(per.u,all.u):0)+'%</span> of the '
+        +'<span class="nu">'+fmt(all.u)+'</span> ever seen; <span class="nu">'+(per.u?pct(perRd,per.u):0)+'%</span> of them had come before'
+        +(_retVerdict? '.' : ' \u2014 the lever is <b>'+((per.u && perRd>=per.nw)?'acquisition':'retention')+'</b>.'));
       if(tot) lines.push(mPer+', sessions open on pokerth.net <span class="nu">'+pct(m.pokerthnet,tot)+'%</span> of the time, '
         +'against <span class="nu">'+pct(m.offline,tot)+'%</span> in offline training and <span class="nu">'+pct(m.lan,tot)+'%</span> on LAN or a dedicated server.'
         +(m.live?' Spectators opened <span class="nu">'+fmt(m.live)+'</span> more on /live, not counted in those shares.':''));

@@ -368,6 +368,17 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Admin › Statistics › Summary: figures that set like against like** (`web.282`) — « Returning » counted the
+  *visits* of devices already known (a newcomer's second page load the same day included) and set them against
+  *new devices*: a day of 762 devices, 496 of them new, read about 660 returning instead of 266. Day points and
+  windows now carry `rd` = devices seen − devices new (`proxy.js` `visitWindowList` / `visitPointRd`); « Returning /
+  day », the Returning line of the chart, the Audience tile, « New share » (new devices ÷ devices) and the
+  acquisition/retention verdict all read it. `rt` (visits) is unchanged in the summary, the CSV and the database.
+  « Unique devices », « New share » and the closing lines followed 30 days whatever the period: they now read the
+  period picked in Filters (24 h, presets, custom range). Days before counting began (`countedFrom`: the day after
+  the oldest bucket, which seldom starts at midnight) are left out of every mean, slope, half and the trend line
+  instead of counting as zero visits. « Yesterday at this hour » weighs the hour in progress by the minutes passed
+  instead of a whole hour. `scripts/test-stats-fair.mjs`.
 - **Help menu paths and the Serbian script** (`web.281`) — in 49 languages the help named settings sections
   (Advanced options → Seats / Log messages / Assistance / Local game / Betting & turn…) differently from the
   labels the options window shows; 337 help fields now use the exact catalogue labels (es-419 re-derived). The

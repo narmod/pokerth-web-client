@@ -353,7 +353,7 @@ ok(/function _trafInsights\(d,s\)/.test(admin), 'the reading of the numbers live
 ok(/_trafInsights\(d,s\);/.test(body(admin, 'loadTraffic')), 'and loadTraffic calls it');
 ok(/l\.dash\? ';stroke-width:'\+\(1\.5\*k\)\.toFixed\(2\)\+';stroke-dasharray/.test(admin), 'the trend line is dashed');
 ok(/if\(l\.dash\) return;/.test(admin), 'and carries no dot, since no day was measured there');
-ok(/if\(s\.length>=5\)/.test(admin), 'two points do not make a trend, so a short window shows none');
+ok(/if\(_fit\.length>=4\)/.test(admin), 'two points do not make a trend, so a short window shows none');
 ok(/Math\.abs\(reg\.r\)>=0\.32/.test(admin), 'a weak correlation is reported as flat rather than as a direction');
 for (const id of ['trafRange', 'trafKpis', 'trafTrendNote', 'trafNew', 'trafNewNote', 'trafBottom']) {
   ok(traf.includes('id="' + id + '"'), id + ' has a home in the panel');

@@ -67,7 +67,7 @@ ok(/todayKey: visitDayKey\(now\)/.test(sum) && /musicSinceKey/.test(sum), 'and t
 ok(/tile\('Last 7 days',d\.week,pv\.week,'the 7 days before \(complete days\)',fu\.week,cv\.week\)/.test(admin), 'the 7-day tile compares complete days and says so');
 const ins = fn(admin, '_trafInsights');
 ok(/if\(n>2 && live\)\{ s=s\.slice\(0,-1\); n=s\.length; \}/.test(ins), 'mean, slope and halves leave the day in progress out');
-ok(/_linreg\(lines\[0\]\.vals\.length>2\?lines\[0\]\.vals\.slice\(0,-1\)/.test(admin), 'so does the trend line of the chart');
+ok(/if\(_fit\.length>2 && \(d\.h24\|\|!d\.periodEnd\)\) _fit=_fit\.slice\(0,-1\);/.test(admin), 'so does the trend line of the chart');
 
 // ── Server day keys, request order ────────────────────────────────────────
 const mt = fn(admin, '_musTrendWin') + fn(admin, '_musDays');
@@ -79,5 +79,58 @@ ok(/var _seq=\+\+_trafSeq;/.test(lt) && /if\(_seq!==_trafSeq\) return;/.test(lt)
 // is one: always for 24 h, never for a past custom range (audit 2026-10-20, B6).
 ok(/var sAll=s, live=d\.h24 \|\| !d\.periodEnd;\n\s+if\(n>2 && live\)\{ s=s\.slice\(0,-1\); n=s\.length; \}/.test(admin),
   'a window ending now drops its day (hour) in progress; a past range keeps every day');
+
+// ── Devices against devices (audit 2026-10-22) ────────────────────────────
+// `rt` counts the visits of known devices (a newcomer's reload included), `nw`
+// the devices seen for the first time: the dashboard sets devices against
+// devices, rd = u − nw, never rt against nw.
+{
+  const ctx = {};
+  vm.createContext(ctx);
+  vm.runInContext(fn(proxy, 'visitWindowList') + '\n' + fn(proxy, 'visitPointRd') + '\n' + fn(admin, '_rdOf'), ctx);
+  const d1 = { v: 6, ids: { a: 1, b: 1 }, nw: 2, rt: 4 };      // a and b arrive, reload four times
+  const d2 = { v: 5, ids: { a: 1, c: 1 }, nw: 1, rt: 4 };      // a comes back, c arrives
+  const w2 = vm.runInContext('visitWindowList(L)', Object.assign(ctx, { L: [d1, d2] }));
+  ok(w2.u === 3 && w2.nw === 3 && w2.rd === 0 && w2.rt === 8, 'over both days: three devices, all new in the window, none returning (rt still the 8 visits)');
+  const w1 = vm.runInContext('visitWindowList(L)', Object.assign(ctx, { L: [d2] }));
+  ok(w1.u === 2 && w1.nw === 1 && w1.rd === 1, 'the second day alone: one device back, one new');
+  const p = vm.runInContext('visitPointRd({ u: 762, nw: 496, rt: 661 })', ctx);
+  ok(p.rd === 266, 'a day of 762 devices with 496 new has 266 returning, whatever its 661 returning visits');
+  ok(vm.runInContext('_rdOf({ u: 10, nw: 4 }) === 6 && _rdOf({ u: 10, nw: 4, rd: 5 }) === 5 && _rdOf(null) === 0', ctx), 'the dashboard falls back on u − nw for an older proxy');
+}
+ok(!/x\.rt\b|\.rt\|\||month\.rt/.test(fn(admin, '_trafInsights') + fn(admin, 'loadTraffic') + fn(admin, '_tsAudience')), 'no dashboard figure reads returning visits as returning devices');
+
+// The device tiles and the closing lines follow the period picked in Filters.
+{
+  const tI = fn(admin, '_trafInsights');
+  ok(/var per=d\.period\|\|d\.month\|\|\{\}/.test(tI) && !/Unique devices \/ 30 d|New share \/ 30 d|over 30 days/.test(tI), 'Unique devices, New share and the closing lines read the chosen period');
+  ok(/pct\(per\.nw,per\.u\)/.test(tI), 'New share = new devices out of the devices of the period');
+}
+
+// Days before counting began are no measure: out of means, slope and halves.
+{
+  const ctx = { visitOldestBack: function () { return 3; }, visitDayIndex: function () { return 20000; } };
+  vm.createContext(ctx);
+  vm.runInContext(fn(proxy, 'visitDayKeyFromIndex') + '\n' + fn(proxy, 'visitCountedFrom'), ctx);
+  ok(vm.runInContext('visitCountedFrom()', ctx) === vm.runInContext('visitDayKeyFromIndex(19998)', ctx), 'the first complete day is the one after counting began');
+  ok(vm.runInContext('visitCountedFrom(-1)', ctx) === '', 'nothing counted: no day');
+  ok(/countedFrom: visitCountedFrom\(\)/.test(sum), 'the summary carries it');
+  const tI = fn(admin, '_trafInsights');
+  ok(/while\(off<n && String\(s\[off\]\.date\|\|''\)<cf\) off\+\+;/.test(tI), 'the insights drop the days before it');
+  ok(/segs:n>=2\?\[\{from:off,to:off\+half-1\},\{from:off\+half,to:off\+n-1\}\]:\[\]/.test(tI), 'and the halves on the new-devices chart start where counting does');
+  ok(/i<_t0\?null:/.test(fn(admin, 'loadTraffic')) && /if\(v==null\) return;/.test(fn(admin, '_lineChart')), 'the trend line starts there too, nothing drawn before');
+}
+
+// Yesterday at this hour weighs the hour in progress by what has passed of it.
+{
+  const FIXED = new Date('2026-10-20T15:30:00').getTime();
+  class FakeDate extends Date { constructor(...a) { if (a.length) super(...a); else super(FIXED); } static now() { return FIXED; } }
+  const h = {}, hn = {}; for (let i = 0; i < 24; i++) { h[i] = 10; hn[i] = 2; }
+  const ctx = { Date: FakeDate, visitDay: function () { return { h: h, hn: hn }; } };
+  vm.createContext(ctx);
+  vm.runInContext(fn(proxy, 'visitDayKey') + '\n' + fn(proxy, 'visitYesterdayToHour'), ctx);
+  const y = vm.runInContext('visitYesterdayToHour()', ctx);
+  ok(y.v === 155 && y.nw === 31, 'at 15:30, yesterday counts 15 whole hours and half of the 16th (155, not 160)');
+}
 console.log(fail ? 'FAIL ' + fail + '/' + n : 'OK ' + n + '/' + n);
 process.exit(fail ? 1 : 0);
