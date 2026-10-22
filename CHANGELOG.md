@@ -148,6 +148,14 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Content pages in the PokerTH look** (`web.279`, asked by narmod) — `_SEO_PAGE_CSS` (proxy.js) dressed `/rules`,
+  `/faq` and the guides in the old « classic » theme (green felt, brass, Cinzel titles), which matched neither the
+  app's default `pokerth` theme nor pokerth.net. Now: the `pokerth` palette (slate `#161b23`/`#1d222b`, text
+  `#a0acc4`, QML yellow `#e3c800` as accent), the start screen's flames (`/img/pokerth-login-bg.webp`) under a
+  slate veil behind the title, the four suits drawn from CSS (decoration, not page text), Inter 800 for the
+  title, H2 as the forum's grey-blue → navy category bars (mirrored in RTL), a solid red chip button and the
+  closing button in a start-screen panel under the chip. Cinzel is no longer loaded or preloaded there
+  (`test-seo-page-delivery.mjs` updated); the page text is unchanged (`test-seo-article-ld.mjs` fingerprints hold).
 - **The Ace's dances: twelve more** (`web.278`, asked by narmod) — the fast and rush ranges had one dance each
   (disco, techno), repeated for the whole song. `POOLS` now hold slow 6 (+ `wave`, `taichi`), mid 7 (+ `poplock`,
   `dab`), fast 5 (+ `runningman`, `macarena`, `swing`, `cabbage`), rush 5 (+ `shuffle`, `pogo`, `cancan`,

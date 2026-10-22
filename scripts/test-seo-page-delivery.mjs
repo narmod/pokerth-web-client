@@ -5,8 +5,8 @@
 //     on every visit;
 //   - a favicon, an Apple touch icon and a theme colour in <head>;
 //   - the text face as two small Inter subsets (the full 343 KB file only
-//     for Greek, Cyrillic and Vietnamese), the title and text faces
-//     preloaded on Latin-script pages only;
+//     for Greek, Cyrillic and Vietnamese), preloaded on Latin-script
+//     pages only (web.279: Inter throughout, Cinzel no longer used);
 //   - the header logo at its display size (68 px for 34 px at 2x), not the
 //     256 px original.
 // Run: node scripts/test-seo-page-delivery.mjs   (~3 s)
@@ -47,7 +47,7 @@ try {
   ok(head.status === 200 && !head.buf.length && head.headers.etag === tag, 'HEAD: headers only, same ETag');
   ok(/<link rel="icon" href="\/favicon\.svg"/.test(html) && /<link rel="apple-touch-icon" href="\/favicon-180\.png">/.test(html) && /<meta name="theme-color" content="#[0-9a-f]{6}">/.test(html), 'favicon, apple-touch-icon and theme-color in <head>');
   for (const f of ['favicon.svg', 'favicon-32.png', 'favicon-180.png']) ok(existsSync(join(pub, f)), `/${f} exists`);
-  ok(/rel="preload" href="\/fonts\/inter-latin-wght-normal\.woff2" as="font" type="font\/woff2" crossorigin/.test(html) && /rel="preload" href="\/fonts\/cinzel-latin-600-normal\.woff2"/.test(html), 'Latin page: text and title faces preloaded');
+  ok(/rel="preload" href="\/fonts\/inter-latin-wght-normal\.woff2" as="font" type="font\/woff2" crossorigin/.test(html) && !/cinzel/i.test(html), 'Latin page: the text face preloaded, no display face (Inter throughout)');
   const ru = (await req('/rules?lang=ru')).buf.toString('utf8');
   ok(!/rel="preload"/.test(ru), 'Cyrillic page: nothing preloaded');
   const all = [...html.matchAll(/@font-face\{([^}]*)\}/g)].map((m) => m[1]);
