@@ -148,6 +148,18 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Ace Runner: easy start, card heights by level** (`web.275`) — asked by narmod.
+  · Start speed 330 → 280 (`SPEED0`); first obstacle after 1.8 s (was 1.1 s).
+  · Sparse start: `EASY_START` (1 s) added between obstacles at level 1, `EASY_STEP` (0.25 s) less per level,
+    nothing from level 5 (then the existing tightening, −0.06 s per level, max −0.3 s).
+  · Flying cards: mid height (duck) only at first; from `FLY_LOW_LVL` (3) also low (22 px, jump over: a `jump`
+    for the arrival spacing); from `FLY_HIGH_LVL` (5) also high (110 px, stay on the ground: jumping hits);
+    ±`FLY_JITTER` (4 px) random offset; from `FLY_DRIFT_LVL` (7) mid / high cards drift ±`FLY_DRIFT` (8 px).
+    Every band checked against the Ace's boxes: mid hits standing and clears ducking (≥ 7 px), low hits both
+    (jump), high clears standing (≥ 5 px).
+  · `arRules` gains one line on the heights, 83 languages.
+  · Touch pad of every mini-game (`games/shell.mjs`), reported by narmod (taps landing beside ▲ ▼): 96 × 64 px
+    under the stage (was 72 × 52, `PAD_H` 64 → 78); in landscape they stretch to the stage's height.
 - **Ace Runner: fairer, richer runs** (`web.274`) — asked by narmod after `web.273`.
   · Jump buffer: a jump pressed up to `JUMP_BUFFER_MS` (140 ms) before landing fires on landing (held → full
     jump, released → short hop). There is no ledge, so no coyote time is needed.

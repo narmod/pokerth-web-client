@@ -39,7 +39,7 @@
 
 export const H = 360;
 const ROOT_ID = 'pth-game';
-const PAD_W = 84, PAD_H = 64;      // room the touch buttons take beside / under the stage
+const PAD_W = 84, PAD_H = 78;      // room the touch buttons take beside / under the stage
 
 const CSS = `
 #arcade-main{flex:1;min-height:0;display:flex;position:relative}
@@ -72,8 +72,10 @@ const CSS = `
 #${ROOT_ID}.pg-touch.pg-nopad .pg-land .pg-pad{display:none}
 #${ROOT_ID} .pg-land .pg-pad button[data-a="jump"]{order:-1}
 #${ROOT_ID} .pg-land .pg-pad button[data-a="duck"]{order:1}
-#${ROOT_ID} .pg-pad button{width:72px;height:52px;flex:none;border-radius:12px;border:0;background:var(--gold);color:var(--on-gold,#141414);font:700 20px system-ui,sans-serif;touch-action:none;cursor:pointer}
+#${ROOT_ID} .pg-pad button{width:96px;height:64px;flex:none;border-radius:12px;border:0;background:var(--gold);color:var(--on-gold,#141414);font:700 20px system-ui,sans-serif;touch-action:none;cursor:pointer}
 #${ROOT_ID} .pg-pad button[data-a="duck"]{background:transparent;color:var(--text-hi);box-shadow:inset 0 0 0 1px var(--border-hi)}
+/* Landscape: beside the stage, as tall as it (easy to hit without looking). */
+#${ROOT_ID} .pg-land .pg-pad button{width:72px;height:auto;align-self:stretch;min-height:64px}
 #${ROOT_ID} .pg-pad button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 #${ROOT_ID} .pg-view{position:absolute;inset:0;overflow:auto;padding:16px max(16px,env(safe-area-inset-right,0px)) calc(24px + var(--pth-sab,0px)) max(16px,env(safe-area-inset-left,0px))}
 #${ROOT_ID} .pg-rules{position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.45)}

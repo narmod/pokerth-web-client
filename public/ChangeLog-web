@@ -1,3 +1,8 @@
+2026-10-22 version 2.1.10-web.275:
+- improvement: Ace Runner starts slower and with few obstacles, then they come closer level after level
+- new: Ace Runner: as the blinds go up, flying cards come at different heights: low ones to jump over, high ones to stay under, and later some drift up and down
+- improvement: mini-games on a touch screen: bigger ▲ ▼ buttons, as tall as the game when the phone is sideways, so a tap no longer lands beside them
+
 2026-10-22 version 2.1.10-web.274:
 - new: Ace Runner: a rare blue shield chip, the insurance, takes one hit for the Ace (🛡️ in the corner while you hold it)
 - new: Ace Runner: skim past an obstacle without touching it for +10 m

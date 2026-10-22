@@ -5,9 +5,10 @@
 //
 // The Ace (the SVG mascot of modules/mascot/engine.mjs, via actorKit) runs
 // along the felt. Chip stacks and the rolling dealer button: jump. Flying
-// cards (the player's card back): duck. Face-up cards (the player's deck)
-// are picked up; the best five-card hand among them (games/poker-hand.mjs,
-// the Joker is wild) multiplies the distance at the end.
+// cards (the player's card back): duck, or jump when they skim the felt, or
+// stay down when they fly high (more heights as the blinds go up). Face-up
+// cards (the player's deck) are picked up; the best five-card hand among them
+// (games/poker-hand.mjs, the Joker is wild) multiplies the distance at the end.
 //   Blinds up   every BLIND_EVERY metres: a level, a little faster (eased in,
 //               no jolt), with the blinds sound
 //   All-In      the gold chip: crown and sceptre, nothing stops him for a few
@@ -30,8 +31,17 @@ const S = 0.5;                // sprite scale (world px per sprite px)
 const BLIND_EVERY = 300;      // metres per blind level
 const ALLIN_MS = 4500;
 // Speed (world px/s): gentle, eased growth (was +55 per level, +2/s, cap 900:
-// top speed in under a minute, a jolt at each level).
-const SPEED0 = 330, SPEED_LVL = 20, SPEED_T = 0.7, SPEED_MAX = 800, SPEED_EASE = 1.5;
+// top speed in under a minute, a jolt at each level). Start 280 (was 330).
+// Obstacles: sparse at first, EASY_START extra seconds between them at level 1,
+// EASY_STEP less at each level until none.
+const EASY_START = 1.0, EASY_STEP = 0.25;
+// Flying cards: at mid height (duck) at first; low ones (jump over) from level
+// FLY_LOW_LVL, high ones (stay on the ground) from FLY_HIGH_LVL, drifting up and
+// down from FLY_DRIFT_LVL. Heights are above the felt line; each keeps a
+// little random offset (FLY_JITTER), all within reach of the hit boxes.
+const FLY_MID = 74, FLY_LOW = 22, FLY_HIGH = 110, FLY_JITTER = 4, FLY_DRIFT = 8;
+const FLY_LOW_LVL = 3, FLY_HIGH_LVL = 5, FLY_DRIFT_LVL = 7;
+const SPEED0 = 280, SPEED_LVL = 20, SPEED_T = 0.7, SPEED_MAX = 800, SPEED_EASE = 1.5;
 const JUMP_BUFFER_MS = 140;   // a jump pressed this long before landing still counts
 // Minimum time (s) between two obstacles reaching the Ace, by kind (previous → next).
 const GAP = { jump: { jump: 0.5, duck: 0.74 }, duck: { jump: 0.46, duck: 0.36 } };
@@ -67,7 +77,7 @@ export function create(shell) {
   function newRun() {
     const deck = newDeck();
     G = { t: 0, dist: 0, level: 1, speed: SPEED0, y: 0, vy: 0, onGround: true, duck: false, holdJump: false,
-      obs: [], items: [], fx: [], deck, hand: [], ev: evalCards([]), nextObs: 1.1, nextItem: 0.7,
+      obs: [], items: [], fx: [], deck, hand: [], ev: evalCards([]), nextObs: 1.8, nextItem: 0.7,
       nextAllIn: 22 + Math.random() * 14, allInUntil: 0, scroll: 0, yayUntil: 0, coolUntil: 0, banner: null, overAt: 0,
       jumpBufUntil: 0, lastArr: -9, lastKind: 'duck', ins: false, nextIns: 35 + Math.random() * 20, safeUntil: 0 };
     renderHand(); renderStats();
@@ -141,7 +151,11 @@ export function create(shell) {
     const gy = groundY(), roll = Math.random();
     let x = W() + 40;
     if (G.dist > 250 && roll < 0.27) {
-      x = place([{ type: 'fly', x, y: gy - 74, w: 38, h: 24, phase: Math.random() * 6, vx: 110 }], 'duck', 110);
+      const lv = G.level, r = Math.random();
+      const band = lv >= FLY_HIGH_LVL ? (r < 0.3 ? 'low' : r < 0.55 ? 'high' : 'mid') : lv >= FLY_LOW_LVL ? (r < 0.35 ? 'low' : 'mid') : 'mid';
+      const y0 = gy - (band === 'low' ? FLY_LOW : band === 'high' ? FLY_HIGH : FLY_MID) + (Math.random() * 2 - 1) * FLY_JITTER;
+      const amp = band !== 'low' && lv >= FLY_DRIFT_LVL ? FLY_DRIFT : 0;
+      x = place([{ type: 'fly', x, y: y0, y0, amp, w: 38, h: 24, phase: Math.random() * 6, vx: 110 }], band === 'low' ? 'jump' : 'duck', 110);
     } else if (G.dist > 450 && roll < 0.42) {
       x = place([{ type: 'dealer', x: x + 20, r: 13, vx: 150, rot: 0 }], 'jump', 150) - 20;
     } else {
@@ -200,7 +214,10 @@ export function create(shell) {
       }
     }
     G.nextObs -= dt;
-    if (G.nextObs <= 0) { spawnObstacle(); G.nextObs = 0.75 + Math.random() * 1.1 - Math.min(0.3, (G.level - 1) * 0.06); }
+    if (G.nextObs <= 0) {
+      spawnObstacle();
+      G.nextObs = 0.75 + Math.random() * 1.1 + Math.max(0, EASY_START - (G.level - 1) * EASY_STEP) - Math.min(0.3, (G.level - 1) * 0.06);
+    }
     G.nextItem -= dt;
     if (G.nextItem <= 0) { spawnItem(); G.nextItem = 1.6 + Math.random() * 1.6; }
     G.nextAllIn -= dt;
@@ -218,6 +235,7 @@ export function create(shell) {
       const o = G.obs[i];
       o.x -= dx + (o.vx || 0) * dt;
       if (o.type === 'dealer') o.rot -= ((G.speed + o.vx) * dt) / o.r;
+      else if (o.amp) o.y = o.y0 + Math.sin(G.t * 1.7 + o.phase) * o.amp;
       if (o.x < -60) { G.obs.splice(i, 1); continue; }
       const ob = obsBox(o, gy);
       if (hit(ab, ob)) {
