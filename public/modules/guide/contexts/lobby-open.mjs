@@ -15,7 +15,8 @@ export default {
   when: (w) => !w.offline && !w.gid && !!w.openGid,
   fold: 25000,
   steps: [{
-    text: (w) => (w.openRanked ? 'c1OpenRanked' : w.guest ? 'c1OpenGuest' : 'c1Open'),
+    // LAN / dedicated server (web.272): no word about the ranking, which only pokerth.net keeps
+    text: (w) => (w.lan ? 'c1OpenLan' : w.openRanked ? 'c1OpenRanked' : w.guest ? 'c1OpenGuest' : 'c1Open'),
     vars: (w) => ({ name: (w && w.openName) || '', n: (w && w.openN) | 0, max: (w && w.openMax) || 10 }),
     target: (w) => ['#lobby-foot-join', '#g-list .game-row[data-gid="' + w.openGid + '"] .btn-join'],
     buttons: ['later', 'gotIt', 'join'],

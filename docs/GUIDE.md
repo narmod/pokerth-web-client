@@ -180,6 +180,16 @@ The bubble normally sits next to the Ace. It moves to the top right, under the h
 when it would hide the element it is talking about or more controls. Parts of the current
 screen registered for Escape, such as the login form, do not stop the Ace from speaking.
 
+## LAN / dedicated server (web.272)
+
+`where.lan` is true once logged in on a LAN or dedicated server (online, not pokerth.net,
+not the training mode). There, `lobby-lan` explains once that the list holds this server's
+tables only and that nothing counts towards the pokerth.net ranking; a tap on a free table
+says `c1OpenLan` (no ranking talk); the game type step of the creation tour says
+`c5CreateLan` (who may sit down; there are no ranked games on a LAN server); the full tour's
+players and password steps say `cfPlayersLan` / `cfPasswordLan` (players also in training); and the cup bubbles (`lobby-cup`,
+the cup text of `lobby-watch`) only speak on pokerth.net, where cup games exist.
+
 ## Game creation and windows (L5)
 
 `create-game` (screen `create`) is a quick tour of the form (web.266): the game style,

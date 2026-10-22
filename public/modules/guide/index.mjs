@@ -212,6 +212,8 @@ export function where() {
     guest,
     ranked,
     net,
+    // a LAN / dedicated server (web.272): online, logged in, not pokerth.net (window._amLanMode)
+    lan: screen !== 'connect' && !window._offlineMode && !net && !!s._currentLoginMode,
     spectator: !!s._amSpectator,
     gid: s.gId || 0,
     host: !!(s.gId && s.amGameAdmin && !s._amSpectator),
@@ -1503,7 +1505,8 @@ function onListTap(ev) {
   const g = s.games ? s.games[gid] : null;
   if (!g || s.gId || s.amInGame || window._offlineMode) return;
   if (!canSpeak(where())) return;
-  tapCup = cupName(g);
+  // cup games are pokerth.net's: on a LAN server a table named « BBC… » is just a table (web.272)
+  tapCup = (s._currentLoginMode === 'auth' || s._currentLoginMode === 'guest') ? cupName(g) : '';
   if (g.mode === 2) {
     if (snoozed.has('lobby-watch') || tapTold.has('w:' + gid)) return;
     const ctx = CONTEXTS.find((c) => c.id === 'lobby-watch');

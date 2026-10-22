@@ -190,6 +190,11 @@ async function runDevice(browser, name, descriptor) {
       assert.deepEqual(under, []);
     });
     await shot(page, name, 'guide-lobby');
+    await check(`${name}: LAN / dedicated server lobby: the LAN tip, no word about ranked games but « no ranked games here » (web.272)`, async () => {
+      await page.waitForFunction(() => /LAN \/ dedicated server/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 5000 });
+      const txt = await page.evaluate(() => document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text').textContent);
+      assert.match(txt, /no ranked games here/);
+    });
     await check(`${name}: C4 — seated at a Normal table: the host starts, invite friends`, async () => {
       await page.evaluate(() => { const f = window.__fx; f.socket.receive(f.envelope(f.MSG.T.JoinGameAck, 25, [[1, 0, f.GAME], [2, 0, 0]])); });
       await page.locator('#s-lobby.lobby-waiting').waitFor({ timeout: 4000 });
@@ -215,7 +220,7 @@ async function runDevice(browser, name, descriptor) {
   // ── C1 → C2: a Ranking table on pokerth.net, joined, filled, started ──
   {
     const ctx = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });
-    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('g2')) { sessionStorage.setItem('g2', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_guide_seen', JSON.stringify({ r: 0, s: { welcome: 1, login: 1, 'login-profile': 1 } })); } } catch (_e) {} });
+    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('g2')) { sessionStorage.setItem('g2', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_guide_seen', JSON.stringify({ r: 0, s: { welcome: 1, login: 1, 'login-profile': 1, 'lobby-lan': 1 } })); } } catch (_e) {} });
     const page = await ctx.newPage(); watch(page);
     await openTable(page, base, { stopAt: 'lobby', seats: 6 });
     // pokerth.net login, two open Ranking tables: 404 (7 players) and 405 (3)
@@ -287,7 +292,7 @@ async function runDevice(browser, name, descriptor) {
   // ── C5: the game creation page and a window, first opening ──
   {
     const ctx = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });
-    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('g5')) { sessionStorage.setItem('g5', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_guide_seen', JSON.stringify({ r: 0, s: { welcome: 1, login: 1, 'login-profile': 1 } })); } } catch (_e) {} });
+    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('g5')) { sessionStorage.setItem('g5', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_guide_seen', JSON.stringify({ r: 0, s: { welcome: 1, login: 1, 'login-profile': 1, 'lobby-lan': 1 } })); } } catch (_e) {} });
     const page = await ctx.newPage(); watch(page);
     await openTable(page, base, { stopAt: 'lobby', seats: 6 });
     const bubbleText = () => page.evaluate(() => (document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || '');
@@ -362,7 +367,8 @@ async function runDevice(browser, name, descriptor) {
           await page.waitForTimeout(600);
         }
       }
-      assert.ok(seen.some((t) => /Four game types/.test(t)), 'the game types step is part of the tour: ' + seen.join(' | '));
+      // this scenario runs on a LAN server (unauth): its game type text (web.272), no Ranking game in it
+      assert.ok(seen.some((t) => /The game type decides/.test(t)), 'the game types step is part of the tour: ' + seen.join(' | '));
       assert.ok(/Create table/.test(seen[seen.length - 1]) || /Last step/.test(seen[seen.length - 1]), 'the tour ends on the buttons: ' + seen[seen.length - 1]);
       await page.locator(btn('gotIt')).waitFor({ timeout: 2000 });
       await click(page, btn('gotIt'));
@@ -391,7 +397,7 @@ async function runDevice(browser, name, descriptor) {
   // ── C6: « ? » mode — a tap explains, a second tap acts ──
   {
     const ctx = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });
-    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('g6')) { sessionStorage.setItem('g6', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_guide_seen', JSON.stringify({ r: 0, s: { welcome: 1, login: 1, 'login-profile': 1, 'w-ranking': 1 } })); } } catch (_e) {} });
+    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('g6')) { sessionStorage.setItem('g6', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_guide_seen', JSON.stringify({ r: 0, s: { welcome: 1, login: 1, 'login-profile': 1, 'lobby-lan': 1, 'w-ranking': 1 } })); } } catch (_e) {} });
     const page = await ctx.newPage(); watch(page);
     await openTable(page, base, { stopAt: 'lobby', seats: 6 });
     const txt = () => page.evaluate(() => (document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || '');
@@ -449,7 +455,7 @@ async function runDevice(browser, name, descriptor) {
   // ── idle scenes from his spot (web.265): same size, out and back, tapped, called back by a tip ──
   {
     const ctx = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });
-    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('g7')) { sessionStorage.setItem('g7', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_guide_seen', JSON.stringify({ r: 0, s: { welcome: 1, login: 1, 'login-profile': 1 } })); } } catch (_e) {} });
+    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('g7')) { sessionStorage.setItem('g7', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_guide_seen', JSON.stringify({ r: 0, s: { welcome: 1, login: 1, 'login-profile': 1, 'lobby-lan': 1 } })); } } catch (_e) {} });
     const page = await ctx.newPage(); watch(page);
     await openTable(page, base, { stopAt: 'lobby', seats: 6 });
     await page.locator('#ace-dock .ad-ace').waitFor({ timeout: 5000 });
@@ -511,6 +517,12 @@ async function runDevice(browser, name, descriptor) {
       await page.evaluate(() => window.__demo);
       await click(page, btn('close'));
       await page.waitForTimeout(400);
+      // tips reset in a LAN lobby: the LAN tip comes back (web.272) — answered, so the scenes below run
+      try {
+        await page.waitForFunction(() => /LAN \/ dedicated server/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 3000 });
+        await click(page, btn('gotIt'));
+        await page.waitForTimeout(400);
+      } catch (_e) {}
     });
     await shot(page, name, 'guide-scene-back');
     const waitScene = (ms) => page.waitForFunction(() => /Well done/.test((document.querySelector('#mascot-root .mc-bubble') || {}).textContent || ''), null, { timeout: ms });
@@ -665,7 +677,7 @@ async function runDevice(browser, name, descriptor) {
   // ── C1 for a guest: no Ranking table pointed at, a free account instead (D16) ──
   {
     const ctx = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });
-    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('g3')) { sessionStorage.setItem('g3', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_guide_seen', JSON.stringify({ r: 0, s: { welcome: 1, login: 1, 'login-profile': 1 } })); } } catch (_e) {} });
+    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('g3')) { sessionStorage.setItem('g3', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_guide_seen', JSON.stringify({ r: 0, s: { welcome: 1, login: 1, 'login-profile': 1, 'lobby-lan': 1 } })); } } catch (_e) {} });
     const page = await ctx.newPage(); watch(page);
     await openTable(page, base, { stopAt: 'lobby', seats: 6 });
     await page.evaluate(() => {

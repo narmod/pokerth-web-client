@@ -9,7 +9,7 @@ export default {
   id: 'lobby-cup',
   manual: true,
   screens: ['lobby'],
-  when: (w) => !w.offline && !w.gid && !!w.cupName,
+  when: (w) => !w.offline && !!w.net && !w.gid && !!w.cupName,   // cups are pokerth.net's (web.272)
   fold: 25000,
   steps: [{
     text: 'c1Cup',

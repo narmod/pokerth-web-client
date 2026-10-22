@@ -148,6 +148,14 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Ace's Help on a LAN / dedicated server** (`web.272`) — reported by narmod: the help did not adapt to the
+  connection mode. On a LAN server the lobby had no tip at all, a tap on a free table spoke of the ranking,
+  the creation tour's game type step spoke of the pokerth.net account and Ranking tables, and a table named
+  « BBC… » triggered the cup bubble. `where.lan`; new context `lobby-lan` (once: this server's tables, join or
+  create, invite friends, nothing counts towards the pokerth.net ranking); `c1OpenLan`, `c5CreateLan` (type
+  names taken from each language's `c5Create`); cup bubbles on pokerth.net only. There are no ranked games on a
+  LAN server: none of these texts names one, and the full tour's players / password steps get `cfPlayersLan` /
+  `cfPasswordLan` (players also in training). 83 guide catalogues.
 - **Guests: what an account brings, how to come back with it, and whether they do** (`web.268`) — most players
   with Ace's Help on were guests, who cannot play Ranking games (sp0ck's goal), and the admin stopped at « Create
   an account » tapped (245). The guest bubble (`c1Guest`) now says what the free account brings (points at every

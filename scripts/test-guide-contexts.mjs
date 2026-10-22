@@ -48,6 +48,23 @@ ok(pick({ screen: 'wait', ranked: true }, ['wait-ranking']) === null, 'facts tol
 ok(pick({ screen: 'game', ranked: true, playing: true }) === null, 'silent during a hand (D8)');
 ok(pick({ screen: 'game', ranked: true, playing: false }) === null, 'silent at the table');
 ok(pick({ screen: 'create' }) === 'create-game', 'game creation page → the types, Ranking for account holders, presets are practice');
+// web.272: a LAN / dedicated server
+ok(pick({ net: false, lan: true, rankPick: null }) === 'lobby-lan', 'LAN lobby → this server\'s tables, no ranking');
+ok(pick({ net: false, lan: true, rankPick: null }, ['lobby-lan']) === null, 'LAN lobby: said once');
+ok(pick({ net: true, lan: false }) !== 'lobby-lan', 'pokerth.net lobby: not the LAN tip');
+{
+  const CO = CONTEXTS.find((c) => c.id === 'lobby-open'), CC = CONTEXTS.find((c) => c.id === 'lobby-cup'), CT = CONTEXTS.find((c) => c.id === 'create-game');
+  ok(CO.steps[0].text(W({ lan: true, net: false, openRanked: true })) === 'c1OpenLan' && CO.steps[0].text(W({ openRanked: true })) === 'c1OpenRanked', 'tap on a free table in LAN: no word about the ranking');
+  ok(!C.applies(CC, W({ net: false, lan: true, gid: 0, cupName: 'BBC' })) && C.applies(CC, W({ gid: 0, cupName: 'BBC' })), 'cup bubble on pokerth.net only');
+  const typeStep = CT.steps.find((s) => s.target === '#cf-gtype-row');
+  ok(typeStep.text(W({ lan: true, net: false, screen: 'create' })) === 'c5CreateLan' && typeStep.text(W({ screen: 'create' })) === 'c5Create', 'create page, game type in LAN: who may sit down, nothing about the account');
+  ok(['c1Lan', 'c1OpenLan', 'c5CreateLan', 'cfPlayersLan', 'cfPasswordLan'].every((k) => k in EN) && !/account/.test(EN.c1Lan + EN.c1OpenLan + EN.c5CreateLan), 'LAN texts exist, no pokerth.net account in them');
+  // there are no ranked games on a LAN server (narmod): no Ranking type named in the LAN texts
+  ok(!/Ranking game|ranked game starts/i.test(EN.c5CreateLan + EN.cfPlayersLan + EN.cfPasswordLan + EN.c1OpenLan), 'LAN texts never offer a Ranking game');
+  const full = CONTEXTS.find((c) => c.id === 'create-game-full');
+  const keysFor = (w) => full.steps.map((s) => (typeof s.text === 'function' ? s.text(W(Object.assign({ screen: 'create' }, w))) : s.text));
+  ok(keysFor({ lan: true, net: false }).includes('cfPlayersLan') && keysFor({ lan: true, net: false }).includes('cfPasswordLan') && keysFor({ offline: true }).includes('cfPlayersLan') && keysFor({}).includes('cfPlayers'), 'full tour: players / password without the Ranking game in LAN (and players in training)');
+}
 // web.287: a tour of the form, one field per step, in the order of the page
 const CG = CONTEXTS.find((c) => c.id === 'create-game-full');   // web.266: the tour of every field, from « Full tour »
 const CQ = CONTEXTS.find((c) => c.id === 'create-game');        // web.266: the quick tour

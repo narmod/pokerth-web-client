@@ -19,7 +19,8 @@ const ON = (w) => !w.offline;
 const TOUR = { screens: ['create'], tour: true, row: '.cf-row', locked: { sel: '.cf-locked', text: 'cfLocked' } };   // row: the whole row of a field, label included
 // the game style block = quick settings: open by default in training / LAN, folded on pokerth.net (web.288)
 const STYLE = { text: (w) => (w.styleOpen ? 'cfStyle' : 'cfStyleClosed'), target: ['#cf-style-grid', '.cf-style-label-row'], optional: true };
-const TYPE = { text: (w) => (w.guest ? 'c5CreateGuest' : 'c5Create'), target: '#cf-gtype-row', when: ON, optional: true };
+// LAN / dedicated server (web.272): who may sit down, nothing about the pokerth.net account / ranking
+const TYPE = { text: (w) => (w.guest ? 'c5CreateGuest' : w.lan ? 'c5CreateLan' : 'c5Create'), target: '#cf-gtype-row', when: ON, optional: true };
 const BUTTONS = { text: 'cfActions', target: '#create-form .cf-actions', optional: true };
 
 export default {
@@ -45,9 +46,10 @@ export const createGameFull = {
     { text: (w) => (w.prefs ? 'cfPrefs' : 'cfPrefsNone'), target: ['#cf-preset-perso', '.cf-style-label-row'], optional: true },
     { text: (w) => (w.guest ? 'cfNameGuest' : 'cfName'), target: '#cf-name', when: ON, optional: true },
     TYPE,
-    { text: 'cfPassword', target: '#cf-use-password', when: ON, optional: true },
+    // no ranked games on a LAN / dedicated server, nor in training (web.272)
+    { text: (w) => (w.lan ? 'cfPasswordLan' : 'cfPassword'), target: '#cf-use-password', when: ON, optional: true },
     { text: 'cfSpectators', target: '#cf-allow-spectators', when: ON, optional: true },
-    { text: 'cfPlayers', target: '#cf-players', optional: true },
+    { text: (w) => (w.lan || w.offline ? 'cfPlayersLan' : 'cfPlayers'), target: '#cf-players', optional: true },
     { text: 'cfStack', target: '#cf-stack', optional: true },
     { text: 'cfBlind', target: '#cf-blind', optional: true },
     { text: 'cfInterval', target: '#cf-raise-every', optional: true },

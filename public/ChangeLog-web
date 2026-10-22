@@ -1,3 +1,6 @@
+2026-10-22 version 2.1.10-web.272:
+- improvement: on a LAN or dedicated server, Ace's Help speaks of that server: what its lobby shows (no ranked games there), free tables and game types without any word about ranked games or the pokerth.net account, and no cup bubbles
+
 2026-10-22 version 2.1.10-web.271:
 - bugfix: iPad app: no more band at the bottom of the screen after an update or after « Play now » on a guide page (same fix as on iPhone)
 

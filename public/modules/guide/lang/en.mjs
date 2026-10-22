@@ -52,6 +52,8 @@ export default {
   c1Cup: "A cup game: **{name}**. You cannot join it with a tap: the cup admins invite the players registered for it. The next cup games, and how to take part, are in the events.",
   c1Flag: "No flag next to your name? Flags come from the pokerth.net account. To show your own flag: www.pokerth.net → User Control Panel → Profile → Edit profile → **Country** → **Submit**. It appears at your next login.",
   c1Open: "**{name}** is not a ranked game: it does not count for the ranking. A seat is free — shall we join it?",
+  c1OpenLan: '**{name}**: a seat is free (**{n}/{max}**). Shall we join it?',
+  c1Lan: 'LAN / dedicated server: this list shows the tables of this server only. Tap a free table to join it, or create your own — **Invite friends** in the waiting room sends your friends a link. There are no ranked games here: they are played on pokerth.net only.',
   c1OpenGuest: "**{name}** is a Normal game, open to guests: it does not count for the ranking. A seat is free — shall we join it?",
   c1OpenRanked: "**{name}** is a ranked game: it counts for the ranking, with points by your final place. It starts by itself once every seat is taken (**{n}/{max}** now). Shall we join it?",
   // C2 — ranked waiting room (one fact every ~20 s)
@@ -76,6 +78,7 @@ export default {
   c4Offline: 'Training table: press **Start Game** — the empty seats are filled with computer players.',
   // C5 — game creation page
   c5Create: 'Four game types: **Normal** (open to all), **Registered players only**, **Invited players only** and **Ranking game**. Any player with an account can create a Ranking table: 10 players, no password, it starts by itself when full. The cup presets (BBC, We Cup…) are for practice only — they don’t create a real cup game.',
+  c5CreateLan: 'The game type decides who may sit down: **Normal** (open to all), **Registered players only** or **Invited players only**. There are no ranked games on a LAN or dedicated server.',
   c5CreateGuest: 'As a guest you can create **Normal** games. Ranking tables and registered-only games need a (free) pokerth.net account.',
   c5CreateOffline: 'Training table: choose the number of players, a game style (the pace) and the level of the computer players, then create the table. Nothing here counts towards a ranking.',
   // C5 — windows (first opening)
@@ -102,8 +105,10 @@ export default {
   cfName: '**Game name**: what the other players see in the list of tables. Say what to expect — « Fast game », « Beginners welcome »…',
   cfNameGuest: '**Game name**: as a guest, the name is chosen for you.',
   cfPassword: '**Password**: switch it on to keep the table private — only players who know the password can sit down. Not available for a **Ranking game** or an **Invited players only** game.',
+  cfPasswordLan: '**Password**: switch it on to keep the table private — only players who know the password can sit down. Not available for an **Invited players only** game.',
   cfSpectators: '**Spectators**: lets other players watch the game without playing.',
   cfPlayers: '**Max players**: from 2 to 10 seats. The host starts the game from the waiting room, even with empty seats — a **Ranking game** starts by itself once all 10 seats are taken.',
+  cfPlayersLan: '**Max players**: from 2 to 10 seats. The host starts the game from the waiting room, even with empty seats.',
   cfStack: '**Starting stack**: the chips each player gets. What counts is the stack compared with the blinds: 3000 chips with a small blind of 10 is 150 big blinds, a comfortable game. Fewer big blinds = a faster game, with more all-ins.',
   cfBlind: '**First small blind**: the small blind when the game starts. The big blind is always twice the small blind.',
   cfInterval: '**Blind increase interval**: the blinds go up every so many **hands** or **minutes**. The shorter the interval, the shorter the game.',
