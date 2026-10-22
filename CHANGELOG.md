@@ -148,6 +148,12 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **The Ace's dances: twelve more** (`web.278`, asked by narmod) — the fast and rush ranges had one dance each
+  (disco, techno), repeated for the whole song. `POOLS` now hold slow 6 (+ `wave`, `taichi`), mid 7 (+ `poplock`,
+  `dab`), fast 5 (+ `runningman`, `macarena`, `swing`, `cabbage`), rush 5 (+ `shuffle`, `pogo`, `cancan`,
+  `jumpstyle`); the leads (`danceFor`) are unchanged. A `poses()` helper sets one arm pose per beat (macarena,
+  pop-lock). All go through the joins of `web.277`; pop-lock, pogo and jumpstyle keep their sharp moves (not in
+  `SMOOTH`). The join replay of `test-mascot-groove.mjs` now covers all 22 non-robot dances.
 - **The Ace's dances, smoother** (`web.277`, `modules/mascot/acts-dance.mjs`) — reported by narmod: the dances
   did not flow. Causes: every move is `fill:'none'`, so at each change of figure or bar a limb snapped back to rest
   then to the next pose; bars were chained by a `setTimeout` after the previous one ended (a gap, then a re-phase);

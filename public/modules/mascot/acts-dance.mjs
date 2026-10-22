@@ -8,13 +8,22 @@
 // picks a dance of that tempo's range — a new one every two bars (PHRASE):
 //   slow (< 90 BPM)  sway (arms up like lighters) · slowdance (hugging the
 //                    air, a heart floats up) · reggae (off-beat shoulders,
-//                    loose arms) · waltz (one turn every three beats)
+//                    loose arms) · waltz (one turn every three beats) ·
+//                    wave (a ripple across the arms) · taichi (wide slow
+//                    arms, weight shift)
 //   mid (90–114)     hiphop (bounce, pumps, step-touch) · robot (stiff,
 //                    jerky arms) · moon (moonwalk on the beat and back) ·
 //                    floss (arms swing, hips the other way) · charleston
-//                    (kicks and swinging arms)
-//   fast (115–135)   disco (the twist, the disco point, flashing suits)
-//   rush (> 135)     techno (a jump on every beat, hands up)
+//                    (kicks and swinging arms) · poplock (moves locked on
+//                    the beat) · dab (step-touch, a dab on the last beat)
+//   fast (115–135)   disco (the twist, the disco point, flashing suits) ·
+//                    runningman (piston knees) · macarena (a pose a beat,
+//                    a hop) · swing (crossed kicks, jazz hands) · cabbage
+//                    (cabbage patch: fists circling, hips swinging)
+//   rush (> 135)     techno (a jump on every beat, hands up) · shuffle
+//                    (heel-toe slides) · pogo (straight jumps, head
+//                    banging) · cancan (high kicks) · jumpstyle (jumps,
+//                    a leg kicking forward in turn)
 // No ear (iOS default player, radio outside the Web Audio graph, silent
 // analyser): the mid dances on a generic tempo, not in sync.
 // A new tempo range (new track, new tempo): a spin, then the new dance. The
@@ -231,10 +240,206 @@ function charleston(H, b, t0, beats) {
   return end;
 }
 
-export const STYLES = { sway, slowdance, reggae, waltz, hiphop, robot, moon, floss, charleston, disco, techno };
+// ── New dances (web.278) ────────────────────────────────────────────────
+
+/** Arms through a list of poses, one per beat: a quick move (`move` of a beat, eased), then held. */
+function poses(H, node, list, b, t0, beats, move, easing) {
+  const d = beats * b, pts = [[0, H.rot(0)]];
+  for (let i = 0; i < beats; i++) {
+    const a = list[i % list.length];
+    pts.push([i * b + move * b, H.rot(a), easing]);
+    if (i < beats - 1) pts.push([(i + 1) * b, H.rot(a), easing]);
+  }
+  pts.push([d, H.rot(list[(beats - 1) % list.length])]);
+  H.track(node, d, pts, 'none', t0);
+}
+
+// ── Wave (slow): a ripple from one arm to the other across the body ─────
+function wave(H, b, t0, beats) {
+  const E = H.E, end = t0 + beats * b, n = Math.max(1, Math.floor(beats / 4));
+  H.cycle(E.armL, [H.rot(20), { offset: 0.25, ...H.rot(115) }, { offset: 0.5, ...H.rot(160) }, { offset: 0.75, ...H.rot(115) }, H.rot(20)], 4 * b, t0, n);
+  H.cycle(E.armR, [H.rot(-160), { offset: 0.25, ...H.rot(-115) }, { offset: 0.5, ...H.rot(-20) }, { offset: 0.75, ...H.rot(-115) }, H.rot(-160)], 4 * b, t0, n);
+  H.cycle(E.lean, [H.rot(-6), { offset: 0.5, ...H.rot(6) }, H.rot(-6)], 4 * b, t0, n);
+  H.cycle(E.legL, [H.rot(0), { offset: 0.5, ...H.rot(6) }, H.rot(0)], 4 * b, t0, n);
+  H.cycle(E.legR, [H.rot(-6), { offset: 0.5, ...H.rot(0) }, H.rot(-6)], 4 * b, t0, n);
+  bounce(H, E.bob, b, t0, beats, 2);
+  H.faceWin(t0, end, ['ec', 'ms']);
+  H.notesWin(t0, end);
+  return end;
+}
+
+// ── Tai-chi (slow): wide slow arms, the weight from one leg to the other ─
+function taichi(H, b, t0, beats) {
+  const { E, st } = H, x = H.cur.x, k = st.k, end = t0 + beats * b, n = Math.max(1, Math.floor(beats / 4));
+  H.cycle(E.armL, [H.rot(0), { offset: 0.25, ...H.rot(85) }, { offset: 0.5, ...H.rot(135) }, { offset: 0.75, ...H.rot(65) }, H.rot(0)], 4 * b, t0, n);
+  H.cycle(E.armR, [H.rot(0), { offset: 0.25, ...H.rot(-85) }, { offset: 0.5, ...H.rot(-135) }, { offset: 0.75, ...H.rot(-65) }, H.rot(0)], 4 * b, t0, n);
+  H.cycle(E.bob, [Y(0), { offset: 0.5, ...Y(4) }, Y(0)], 4 * b, t0, n);   // knees bent at the top of the move
+  H.cycle(E.lean, [H.rot(-3), { offset: 0.5, ...H.rot(3) }, H.rot(-3)], 4 * b, t0, n);
+  H.cycle(E.legL, [H.rot(4), { offset: 0.5, ...H.rot(-2) }, H.rot(4)], 4 * b, t0, n);
+  H.cycle(E.legR, [H.rot(2), { offset: 0.5, ...H.rot(-4) }, H.rot(2)], 4 * b, t0, n);
+  const D = (st.maxX - x) >= (x - st.minX) ? 1 : -1, dx = D * 8 * k, d = end - t0;
+  H.track(E.pos, d, [[0, H.P(x, st.yF)], [d / 2, H.P(x + dx, st.yF), H.EIO], [d, H.P(x, st.yF), H.EIO]], 'forwards', t0);
+  H.faceWin(t0, end, ['ec', 'ms']);
+  return end;
+}
+
+// ── Pop-lock (mid): a quick move, then a lock on every beat, a pop of the chest ─
+function poplock(H, b, t0, beats) {
+  const E = H.E, end = t0 + beats * b;
+  poses(H, E.armL, [90, 20, 90, 150, 45, 90, 20, 0], b, t0, beats, 0.2, 'ease-out');
+  poses(H, E.armR, [-20, -90, -150, -90, -45, -20, -90, 0], b, t0, beats, 0.2, 'ease-out');
+  poses(H, E.lean, [-4, -4, 4, 4, 0, -5, 5, 0], b, t0, beats, 0.15, 'ease-out');
+  H.cycle(E.squash, [H.sq(1, 1), { offset: 0.06, ...H.sq(1.05, 0.94) }, { offset: 0.18, ...H.sq(1, 1) }, H.sq(1, 1)], b, t0, beats);
+  H.cycle(E.bob, [Y(0), { offset: 0.06, ...Y(2) }, { offset: 0.18, ...Y(0) }, Y(0)], b, t0, beats);
+  H.cycle(E.legL, [H.rot(0), { offset: 0.5, ...H.rot(6), easing: 'ease-out' }, H.rot(0)], 2 * b, t0, Math.max(1, Math.floor(beats / 2)));
+  H.faceWin(t0, end, ['gl', 'mt']);
+  return end;
+}
+
+// ── Dab (mid): step-touch, then a dab on the last beat ──────────────────
+function dab(H, b, t0, beats) {
+  const { E, st } = H, x = H.cur.x, k = st.k, end = t0 + beats * b, last = end - b, m = beats - 1;
+  const D = (st.maxX - x) >= (x - st.minX) ? 1 : -1, dx = D * 16 * k;
+  const pts = [[0, H.P(x, st.yF)]];
+  for (let i = 0; i + 1 < m; i += 2) pts.push([(i + 0.5) * b, H.P(x + dx, st.yF), H.EIO], [(i + 1.5) * b, H.P(x, st.yF), H.EIO]);
+  H.track(E.pos, end - t0, pts, 'forwards', t0);
+  H.cycle(E.armL, [H.rot(-20), { offset: 0.5, ...H.rot(20) }, H.rot(-20)], b, t0, m);
+  H.cycle(E.armR, [H.rot(-20), { offset: 0.5, ...H.rot(20) }, H.rot(-20)], b, t0, m);
+  H.cycle(E.legL, [H.rot(0), { offset: 0.5, ...H.rot(8) }, H.rot(0)], b, t0, m);
+  bounce(H, E.bob, b, t0, m, 4);
+  H.faceWin(t0, last, H.F.GRIN);
+  // the dab: one arm up and out, the other across the face, the head in the elbow
+  H.track(E.armL, b, [[0, H.rot(-20)], [0.25 * b, H.rot(125), 'ease-out'], [0.8 * b, H.rot(125)], [b, H.rot(0)]], 'none', last);
+  H.track(E.armR, b, [[0, H.rot(-20)], [0.25 * b, H.rot(105), 'ease-out'], [0.8 * b, H.rot(105)], [b, H.rot(0)]], 'none', last);
+  H.track(E.lean, b, [[0, H.rot(0)], [0.25 * b, H.rot(-12), 'ease-out'], [0.8 * b, H.rot(-12)], [b, H.rot(0)]], 'none', last);
+  H.faceWin(last, end, H.F.WINK);
+  return end;
+}
+
+// ── Running man (fast): a knee up like a piston, the other foot slides back ─
+function runningman(H, b, t0, beats) {
+  const E = H.E, end = t0 + beats * b, n = Math.max(1, Math.floor(beats / 2));
+  H.cycle(E.legL, [H.rot(0), { offset: 0.25, ...H.rot(30) }, { offset: 0.5, ...H.rot(0) }, { offset: 0.75, ...H.rot(-10) }, H.rot(0)], 2 * b, t0, n);
+  H.cycle(E.legR, [H.rot(10), { offset: 0.25, ...H.rot(0) }, { offset: 0.5, ...H.rot(0) }, { offset: 0.75, ...H.rot(-30) }, H.rot(10)], 2 * b, t0, n);
+  H.cycle(E.armL, [H.rot(-35), { offset: 0.5, ...H.rot(35) }, H.rot(-35)], 2 * b, t0, n);
+  H.cycle(E.armR, [H.rot(-35), { offset: 0.5, ...H.rot(35) }, H.rot(-35)], 2 * b, t0, n);
+  H.cycle(E.bob, [Y(0), { offset: 0.25, ...Y(-6) }, Y(0)], b, t0, beats);
+  H.cycle(E.lean, [H.rot(2), { offset: 0.5, ...H.rot(-2) }, H.rot(2)], 2 * b, t0, n);
+  H.faceWin(t0, end, ['gl', 'ms']);
+  return end;
+}
+
+// ── Macarena (fast): a pose of the arms on each beat, a hop on the last ──
+function macarena(H, b, t0, beats) {
+  const E = H.E, end = t0 + beats * b, last = end - b;
+  poses(H, E.armL, [90, 90, 135, 135, 165, 165, 30, 30], b, t0, beats, 0.35);
+  poses(H, E.armR, [0, -90, -90, -135, -135, -165, -165, -30], b, t0, beats, 0.35);
+  H.cycle(E.lean, [H.rot(-4), { offset: 0.5, ...H.rot(4) }, H.rot(-4)], 2 * b, t0, Math.max(1, Math.floor(beats / 2)));
+  bounce(H, E.bob, b, t0, beats - 1, 4);
+  H.faceWin(t0, last, ['gl', 'ms']);
+  // the hop, with a look aside
+  H.track(E.bob, b, [[0, Y(0)], [0.4 * b, Y(-12), 'ease-out'], [0.8 * b, Y(0), 'ease-in'], [b, Y(0)]], 'none', last);
+  H.track(E.card, b, [[0, H.ry(0)], [0.4 * b, H.facing(1)], [0.85 * b, H.facing(1)], [b, H.ry(0)]], 'none', last);
+  H.track(E.legL, b, [[0, H.rot(0)], [0.4 * b, H.rot(10)], [0.8 * b, H.rot(0)]], 'none', last);
+  H.track(E.legR, b, [[0, H.rot(0)], [0.4 * b, H.rot(-10)], [0.8 * b, H.rot(0)]], 'none', last);
+  H.faceWin(last, end, H.F.GRIN);
+  return end;
+}
+
+// ── Swing (fast): crossed kicks, jazz hands shaking by the head ─────────
+function swing(H, b, t0, beats) {
+  const E = H.E, end = t0 + beats * b, n = Math.max(1, Math.floor(beats / 2));
+  H.cycle(E.legL, [H.rot(0), { offset: 0.25, ...H.rot(-24) }, { offset: 0.5, ...H.rot(0) }, H.rot(0)], 2 * b, t0, n);
+  H.cycle(E.legR, [H.rot(0), { offset: 0.5, ...H.rot(0) }, { offset: 0.75, ...H.rot(24) }, H.rot(0)], 2 * b, t0, n);
+  H.cycle(E.armL, [H.rot(102), { offset: 0.5, ...H.rot(116) }, H.rot(102)], b / 4, t0, beats * 4);
+  H.cycle(E.armR, [H.rot(-116), { offset: 0.5, ...H.rot(-102) }, H.rot(-116)], b / 4, t0, beats * 4);
+  H.cycle(E.lean, [H.rot(5), { offset: 0.5, ...H.rot(-5) }, H.rot(5)], 2 * b, t0, n);
+  bounce(H, E.bob, b, t0, beats, 4);
+  H.faceWin(t0, end, H.F.GRIN);
+  return end;
+}
+
+// ── Cabbage patch (fast): fists circling in front of the chest, swinging hips ─
+function cabbage(H, b, t0, beats) {
+  const { E, st } = H, x = H.cur.x, k = st.k, end = t0 + beats * b, n = Math.max(1, Math.floor(beats / 2));
+  H.cycle(E.armL, [H.rot(45), { offset: 0.25, ...H.rot(72) }, { offset: 0.5, ...H.rot(58) }, { offset: 0.75, ...H.rot(30) }, H.rot(45)], b, t0, beats);
+  H.cycle(E.armR, [H.rot(-58), { offset: 0.25, ...H.rot(-30) }, { offset: 0.5, ...H.rot(-45) }, { offset: 0.75, ...H.rot(-72) }, H.rot(-58)], b, t0, beats);
+  H.cycle(E.lean, [H.rot(-6), { offset: 0.5, ...H.rot(6) }, H.rot(-6)], 2 * b, t0, n);
+  H.cycle(E.legL, [H.rot(0), { offset: 0.5, ...H.rot(7) }, H.rot(0)], 2 * b, t0, n);
+  H.cycle(E.legR, [H.rot(-7), { offset: 0.5, ...H.rot(0) }, H.rot(-7)], 2 * b, t0, n);
+  const dx = 6 * k, pts = [[0, H.P(x, st.yF)]];   // the hips carry him a little, from his spot and back to it
+  for (let i = 0; i < n; i++) pts.push([(2 * i + 0.5) * b, H.P(x + dx, st.yF), H.EIO], [(2 * i + 1.5) * b, H.P(x - dx, st.yF), H.EIO]);
+  pts.push([end - t0, H.P(x, st.yF), H.EIO]);
+  H.track(E.pos, end - t0, pts, 'forwards', t0);
+  bounce(H, E.bob, b, t0, beats, 3);
+  H.faceWin(t0, end, ['ec', 'mg']);
+  return end;
+}
+
+// ── Shuffle (rush): heel-toe slides, sideways and back ──────────────────
+function shuffle(H, b, t0, beats) {
+  const { E, st } = H, x = H.cur.x, k = st.k, end = t0 + beats * b, a = Math.max(1, Math.floor(beats / 2));
+  const D = (st.maxX - x) >= (x - st.minX) ? 1 : -1, dx = D * Math.min(18 * a * k, 0.7 * Math.max(st.maxX - x, x - st.minX));
+  H.track(E.pos, end - t0, [[0, H.P(x, st.yF)], [a * b, H.P(x + dx, st.yF), H.EIO], [end - t0, H.P(x, st.yF), H.EIO]], 'forwards', t0);
+  H.cycle(E.legL, [H.rot(-14), { offset: 0.5, ...H.rot(14) }, H.rot(-14)], b, t0, beats);
+  H.cycle(E.legR, [H.rot(14), { offset: 0.5, ...H.rot(-14) }, H.rot(14)], b, t0, beats);
+  H.cycle(E.armL, [H.rot(-25), { offset: 0.5, ...H.rot(25) }, H.rot(-25)], b, t0, beats);
+  H.cycle(E.armR, [H.rot(-25), { offset: 0.5, ...H.rot(25) }, H.rot(-25)], b, t0, beats);
+  bounce(H, E.bob, b, t0, beats, 4);
+  H.faceWin(t0, end, ['gl', 'ms']);
+  return end;
+}
+
+// ── Pogo (rush): straight jumps, arms down, the head banging ────────────
+function pogo(H, b, t0, beats) {
+  const E = H.E, end = t0 + beats * b, half = t0 + Math.floor(beats / 2) * b;
+  H.cycle(E.bob, [Y(0), { offset: 0.35, ...Y(-14), easing: 'ease-in' }, { offset: 0.65, ...Y(0) }, Y(0)], b, t0, beats);
+  H.cycle(E.squash, [H.sq(1, 1), { offset: 0.65, ...H.sq(1, 1) }, { offset: 0.74, ...H.sq(1.1, 0.88) }, H.sq(1, 1)], b, t0, beats);
+  H.cycle(E.lean, [H.rot(-6), { offset: 0.5, ...H.rot(6) }, H.rot(-6)], b, t0, beats);
+  H.cycle(E.armL, [H.rot(-8), { offset: 0.35, ...H.rot(-18) }, H.rot(-8)], b, t0, beats);
+  H.cycle(E.armR, [H.rot(8), { offset: 0.35, ...H.rot(18) }, H.rot(8)], b, t0, beats);
+  H.faceWin(t0, half, ['eo', 'mo']);
+  H.faceWin(half, end, H.F.TEETH);
+  return end;
+}
+
+// ── Cancan (rush): high kicks in turn, a hand up, the red suits flash ───
+function cancan(H, b, t0, beats) {
+  const E = H.E, end = t0 + beats * b, n = Math.max(1, Math.floor(beats / 2));
+  H.cycle(E.legL, [H.rot(0), { offset: 0.2, ...H.rot(60) }, { offset: 0.45, ...H.rot(0) }, H.rot(0)], 2 * b, t0, n);
+  H.cycle(E.legR, [H.rot(0), { offset: 0.5, ...H.rot(0) }, { offset: 0.7, ...H.rot(-60) }, { offset: 0.95, ...H.rot(0) }, H.rot(0)], 2 * b, t0, n);
+  H.cycle(E.lean, [H.rot(-7), { offset: 0.5, ...H.rot(7) }, H.rot(-7)], 2 * b, t0, n);
+  H.cycle(E.armL, [H.rot(130), { offset: 0.5, ...H.rot(150) }, H.rot(130)], b, t0, beats);
+  H.cycle(E.armR, [H.rot(-30), { offset: 0.5, ...H.rot(-40) }, H.rot(-30)], 2 * b, t0, n);
+  bounce(H, E.bob, b, t0, beats, 4);
+  for (let i = 0; i < beats; i++) H.suitWin(t0 + i * b, t0 + (i + 1) * b, i % 2 ? 'D' : 'H');
+  H.faceWin(t0, end, H.F.GRIN);
+  return end;
+}
+
+// ── Jumpstyle (rush): a jump on every beat, a leg kicking forward in turn ─
+function jumpstyle(H, b, t0, beats) {
+  const E = H.E, end = t0 + beats * b, n = Math.max(1, Math.floor(beats / 2));
+  H.cycle(E.bob, [Y(0), { offset: 0.3, ...Y(-10), easing: 'ease-in' }, { offset: 0.6, ...Y(0) }, Y(0)], b, t0, beats);
+  H.cycle(E.squash, [H.sq(1, 1), { offset: 0.6, ...H.sq(1, 1) }, { offset: 0.7, ...H.sq(1.07, 0.92) }, H.sq(1, 1)], b, t0, beats);
+  H.cycle(E.legL, [H.rot(0), { offset: 0.15, ...H.rot(36) }, { offset: 0.3, ...H.rot(0) }, H.rot(0)], 2 * b, t0, n);
+  H.cycle(E.legR, [H.rot(0), { offset: 0.5, ...H.rot(0) }, { offset: 0.65, ...H.rot(-36) }, { offset: 0.8, ...H.rot(0) }, H.rot(0)], 2 * b, t0, n);
+  H.cycle(E.armL, [H.rot(-30), { offset: 0.3, ...H.rot(40) }, H.rot(-30)], b, t0, beats);
+  H.cycle(E.armR, [H.rot(30), { offset: 0.3, ...H.rot(-40) }, H.rot(30)], b, t0, beats);
+  const S = ['C', 'S'];
+  for (let i = 0; i < beats; i++) H.suitWin(t0 + i * b, t0 + (i + 1) * b, S[i % 2]);
+  H.faceWin(t0, end, H.F.TEETH);
+  return end;
+}
+
+export const STYLES = {
+  sway, slowdance, reggae, waltz, wave, taichi, hiphop, robot, moon, floss, charleston, poplock, dab,
+  disco, runningman, macarena, swing, cabbage, techno, shuffle, pogo, cancan, jumpstyle,
+};
 
 /** Dances whose keyframes are all eased (the others keep their sharp moves on purpose). */
-export const SMOOTH = new Set(['sway', 'slowdance', 'reggae', 'waltz', 'hiphop', 'floss', 'charleston', 'disco']);
+export const SMOOTH = new Set(['sway', 'slowdance', 'reggae', 'waltz', 'wave', 'taichi', 'hiphop', 'floss', 'charleston', 'dab',
+  'disco', 'runningman', 'macarena', 'swing', 'cabbage', 'shuffle', 'cancan']);
 const PHRASE = 16;     // beats of one dance before the next one (two bars)
 const FACE_PAD = 40;   // face and suit windows run a little into the next bar: no flash of the costume's mood in between
 const JOINTS = ['armL', 'armR', 'legL', 'legR', 'lean', 'bob', 'squash', 'card'];   // the limbs smoothJoins looks after

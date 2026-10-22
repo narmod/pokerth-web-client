@@ -50,10 +50,10 @@ export function rangeStick(bpm, prev, margin = RANGE_MARGIN) {
 }
 /** The dances of each range (modules/mascot/acts-dance.mjs); the first one leads. */
 export const POOLS = {
-  slow: ['sway', 'slowdance', 'reggae', 'waltz'],
-  mid: ['hiphop', 'robot', 'moon', 'floss', 'charleston'],
-  fast: ['disco'],
-  rush: ['techno'],
+  slow: ['sway', 'slowdance', 'reggae', 'waltz', 'wave', 'taichi'],
+  mid: ['hiphop', 'robot', 'moon', 'floss', 'charleston', 'poplock', 'dab'],
+  fast: ['disco', 'runningman', 'macarena', 'swing', 'cabbage'],
+  rush: ['techno', 'shuffle', 'pogo', 'cancan', 'jumpstyle'],
 };
 /** Lead dance of a tempo (bpm 0 / null: the generic groove). */
 export function danceFor(bpm) { return POOLS[rangeFor(bpm)][0]; }

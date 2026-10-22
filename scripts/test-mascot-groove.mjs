@@ -78,15 +78,16 @@ ok(G.danceFor(136) === 'techno' && G.danceFor(175) === 'techno', '> 135: techno'
 ok(G.danceFor(G.GENERIC_BPM) === 'hiphop', 'generic tempo dances hip-hop');
 // ── Several dances per range (web.282): a different one each bar ──
 ok(G.rangeFor(80) === 'slow' && G.rangeFor(100) === 'mid' && G.rangeFor(0) === 'mid' && G.rangeFor(125) === 'fast' && G.rangeFor(150) === 'rush', 'tempo ranges');
-ok(G.POOLS.slow.length === 4 && G.POOLS.mid.length === 5, 'slow: 4 dances, mid: 5 dances');
+ok(G.POOLS.slow.length === 6 && G.POOLS.mid.length === 7 && G.POOLS.fast.length === 5 && G.POOLS.rush.length === 5, 'slow: 6 dances, mid: 7, fast: 5, rush: 5 (web.278)');
 {
   let prev = null, rep = 0, seen = new Set(), out = 0;
   for (let i = 0; i < 400; i++) { const d = G.pickDance(i % 2 ? 80 : 100, prev, rnd); if (d === prev) rep++; if (G.POOLS[G.rangeFor(i % 2 ? 80 : 100)].indexOf(d) < 0) out++; seen.add(d); prev = d; }
   ok(rep === 0, 'never the same dance two bars in a row');
   ok(out === 0, 'always a dance of the tempo range');
-  ok(seen.size === 9, `every slow and mid dance comes up (${seen.size}/9)`);
+  ok(seen.size === 13, `every slow and mid dance comes up (${seen.size}/13)`);
 }
-{ let prev = null, ok1 = true; for (let i = 0; i < 20; i++) { const d = G.pickDance(150, prev, rnd); if (d !== 'techno') ok1 = false; prev = d; } ok(ok1, 'one dance in a range: it repeats'); }
+{ let prev = null, rep = 0, seen = new Set(); for (let i = 0; i < 200; i++) { const d = G.pickDance(i % 2 ? 125 : 150, prev, rnd); if (d === prev) rep++; seen.add(d); prev = d; } ok(rep === 0 && seen.size === 10, `fast and rush vary too (${seen.size}/10, no repeat)`); }
+{ let prev = null, ok1 = true; for (let i = 0; i < 20; i++) { const d = G.pickDanceIn('solo', prev, rnd); if (G.POOLS.mid.indexOf(d) < 0) ok1 = false; prev = d; } ok(ok1, 'unknown range: the mid dances'); }
 
 
 // ── End to end on synthetic audio: analyser emulation (Blackman window,
@@ -148,7 +149,7 @@ ok(G.POOLS.slow.length === 4 && G.POOLS.mid.length === 5, 'slow: 4 dances, mid: 
   }
 }
 
-// ── Smooth dancing (web.277): range hysteresis, joins between figures ──
+// ── Smooth dancing (web.277, dances of web.278): range hysteresis, joins between figures ──
 ok(G.rangeStick(116, 'mid') === 'mid' && G.rangeStick(113, 'fast') === 'fast' && G.rangeStick(119, 'mid') === 'fast', 'tempo range sticks within ±3 BPM of its limits');
 ok(G.rangeStick(88, 'mid') === 'mid' && G.rangeStick(86, 'mid') === 'slow' && G.rangeStick(137, 'fast') === 'fast' && G.rangeStick(0, 'fast') === 'mid', 'range margin both ways, no tempo → generic');
 { let s = 7, same = true; const r1 = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
@@ -221,7 +222,10 @@ ok(G.rangeStick(88, 'mid') === 'mid' && G.rangeStick(86, 'mid') === 'slow' && G.
     }
     return { worst, where };
   }
-  const seq = [['sway', 'slow'], ['slowdance', 'slow'], ['reggae', 'slow'], ['waltz', 'slow'], ['hiphop', 'mid'], ['moon', 'mid'], ['floss', 'mid'], ['charleston', 'mid'], ['disco', 'fast'], ['techno', 'rush'], ['hiphop', 'mid'], ['sway', 'slow']];
+  const seq = [['sway', 'slow'], ['slowdance', 'slow'], ['reggae', 'slow'], ['waltz', 'slow'], ['wave', 'slow'], ['taichi', 'slow'],
+    ['hiphop', 'mid'], ['moon', 'mid'], ['floss', 'mid'], ['charleston', 'mid'], ['poplock', 'mid'], ['dab', 'mid'],
+    ['disco', 'fast'], ['runningman', 'fast'], ['macarena', 'fast'], ['swing', 'fast'], ['cabbage', 'fast'],
+    ['techno', 'rush'], ['shuffle', 'rush'], ['pogo', 'rush'], ['cancan', 'rush'], ['jumpstyle', 'rush'], ['hiphop', 'mid'], ['sway', 'slow']];
   const raw = run(seq, false), soft = run(seq, true);
   ok(raw.worst > 60, `without joins the limbs jump (${raw.worst.toFixed(0)}° at once, ${raw.where})`);
   ok(soft.worst < 12, `with joins no limb moves more than 12° in 4 ms (worst ${soft.worst.toFixed(1)}, ${soft.where})`);
