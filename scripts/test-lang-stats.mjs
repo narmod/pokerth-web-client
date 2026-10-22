@@ -253,11 +253,15 @@ ok(/_annEsc\(k\)/.test(admin.slice(admin.indexOf('function _envOtherDiag('), adm
     ok(e.lang.iw === 3 && e.lang.und === 1 && b.lg.iw === 3, 'the stored history is left as it was (iw, und)');
     ok(e.lang.he === 3 && e.lang.pt === 1, 'new pings are stored under the current code (iw-IL → he, pt_BR → pt)');
     ok(e.noise.clean === 6 && e.noise['bot-like'] === 4, 'the old noise counter is frozen, not mixed with the new rule');
-    ok(e.bot && e.bot['bot-like'] === 1 && e.bot.clean === 7, 'env.bot judges the User-Agent alone: Googlebot is a bot, a header-less "probe" is not');
-    ok(e.otherRaw['(none)'] === 2 && e.otherRaw['*'] === 1 && e.otherRaw['(malformed)'] === 1, 'otherRaw: no header ×2, * ×1, a 3000-char header as (malformed)');
-    ok(e.otherRawBot['(none)'] === 1 && e.otherRawClean['(none)'] === 1 && e.otherRawClean['*'] === 1, 'split by User-Agent');
-    ok(e.otherRawRet['*'] === 1 && e.otherRawNew['(none)'] === 1, 'split by new / returning (a3 came back)');
-    ok(e.otherCombo['other · Chrome'] === 1, 'the crawler shape is visible: Chrome with no OS');
+    // Since web.290 a robot's running diagnostics go with its counts (bt.env), as
+    // its per-day ones already did: the people's « other » row is explained by
+    // the people's pings only. ?bots=1 adds them back.
+    const BE = (v.bt && v.bt.env) || {};
+    ok(e.bot && !e.bot['bot-like'] && e.bot.clean === 7 && BE.bot && BE.bot['bot-like'] === 1, 'env.bot judges the User-Agent alone: Googlebot is a bot (counted with the robots), a header-less "probe" is not');
+    ok(e.otherRaw['(none)'] === 1 && e.otherRaw['*'] === 1 && e.otherRaw['(malformed)'] === 1 && BE.otherRaw && BE.otherRaw['(none)'] === 1, 'otherRaw: no header ×1 (the robot\'s apart), * ×1, a 3000-char header as (malformed)');
+    ok(!(e.otherRawBot && e.otherRawBot['(none)']) && BE.otherRawBot['(none)'] === 1 && e.otherRawClean['(none)'] === 1 && e.otherRawClean['*'] === 1, 'split by User-Agent');
+    ok(e.otherRawRet['*'] === 1 && BE.otherRawNew && BE.otherRawNew['(none)'] === 1, 'split by new / returning (a3 came back; the new header-less one is the robot)');
+    ok(BE.otherCombo && BE.otherCombo['other · Chrome'] === 1, 'the crawler shape is visible (with the robots): Chrome with no OS');
     ok(e.langLocale['he-IL'] === 1 && e.langLocale['pt-BR'] === 1, 'langLocale keeps the region');
     ok(e.lang.fr === 1 && e.lang.de === 1 && e.langLocale['fr-FR'] === 1 && e.langLocale['de-AT'] === 1, 'end to end: "*, fr-FR" counts as fr, a header-less ping with nl as de');
     ok(e.langRecovered && e.langRecovered['* \u2192 later tag'] === 1 && e.langRecovered['(none) \u2192 navigator'] === 1, 'and both are listed as recovered');

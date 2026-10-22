@@ -368,6 +368,16 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Admin › Statistics: stale « now », empty samples, filters applied alike** (`web.290`) — pokerth.net « online
+  now » kept the last sample forever: with the live figures switched off or the upstream silent, an hours-old
+  figure read as current on World, Activity and the World tiles; it now expires after two missed samples
+  (« no recent sample (last … ago) »). The pokerth.net vs web-client charts drew hours and days without a sample
+  (before the first one, or live figures off) as 0 players / 0 %, which read as a rise once sampling began: no
+  point is drawn there now. The admin home chart ignored « Hide bots »: it follows the Statistics switch.
+  « Where sessions open » shows the chosen period beside today and the total. A robot's running language
+  diagnostics (`otherRaw*`, `otherCombo`, `bot`, `langLocale`) go with its counts in `bt.env`, as its per-day
+  ones already did, so the people's « No usable language header » row is explained by people's pings only.
+  `scripts/test-stats-fair.mjs`, `scripts/test-lang-stats.mjs`.
 - **Admin › Statistics › Music (and Sources, Ace's Help): days counted, complete days** (`web.289`) — « plays per
   day » and « plays per 100 visits » counted today so far and the day counting began (from its first play) as
   whole days: 340 / 14 = 24.3 instead of 26. They now read complete days only, as the trend does (the hour in

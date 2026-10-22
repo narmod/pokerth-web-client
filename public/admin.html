@@ -5789,7 +5789,7 @@
     var F=B?_wFullCube(B,'pokerthnet'):_wFullM(d,['pokerthnet']);
     var k3='<div><span>Connections, '+_annEsc(_perLabel(_trafPeriod))+(B?' \u00b7 narrowed':'')+'</span><b>'+(B?_cf(cb||0):_wFmt(cur))+'</b>'+(_wDelta(F.cur,F.prev,F.cov)||'<i>through this client</i>')+'</div>';
     if(p===undefined || !nw){
-      box.innerHTML=(_wLogins(d)?'<div class="wfoot" style="margin:0 0 8px">'+_wLogins(d)+'</div>':'')+'<div class="wkpis"><div><span>Online on the server</span><b>—</b><i>'+(p&&p.on===false?'live figures switched off':'no sample yet')+'</i></div><div><span>On the web client</span><b>—</b><i></i></div>'+k3+'</div>';
+      box.innerHTML=(_wLogins(d)?'<div class="wfoot" style="margin:0 0 8px">'+_wLogins(d)+'</div>':'')+'<div class="wkpis"><div><span>Online on the server</span><b>—</b><i>'+(p&&p.on===false?'live figures switched off':(p&&p.lastAt?'no recent sample (last '+_wAgo(Date.now()-p.lastAt)+')':'no sample yet'))+'</i></div><div><span>On the web client</span><b>—</b><i></i></div>'+k3+'</div>';
       if(nt) nt.textContent='';
       return;
     }
@@ -5886,9 +5886,9 @@
   function _trafModeRows(d){
     var md=$('trafModes'); if(!md) return;
     var fmt=function(n){ try{return Number(n||0).toLocaleString();}catch(e){return String(n||0);} };
-    var tm=(d.today&&d.today.m)||{}, am=(d.allTime&&d.allTime.m)||{};
+    var tm=(d.today&&d.today.m)||{}, am=(d.allTime&&d.allTime.m)||{}, pm=(d.period&&d.period.m)||{}, pl=_tsPerLbl();
     var rows=[['Internet (pokerth.net)','pokerthnet'],['LAN / dedicated','lan'],['Training (bots)','offline'],['Live/spectator tool (/live)','live']].filter(function(rw){ return _modeOn(rw[1]); });
-    md.innerHTML = rows.map(function(rw){ return '<div class="srow"><span>'+rw[0]+'</span><b>'+fmt(tm[rw[1]])+' today · '+fmt(am[rw[1]])+' total</b></div>'; }).join('');
+    md.innerHTML = rows.map(function(rw){ return '<div class="srow"><span>'+rw[0]+'</span><b>'+fmt(tm[rw[1]])+' today · '+fmt(pm[rw[1]])+' '+pl+' · '+fmt(am[rw[1]])+' total</b></div>'; }).join('');
   }
   function _trafModes48(d){
     var box=$('trafModes48'), nt=$('trafModes48Note');
@@ -5940,9 +5940,11 @@
       +'<h3>Web client share by '+(p.h24?'hour \u2014 last 24 h':'day')+'</h3><div id="trafPthDays"></div>';
     var labs=h48.map(function(x){ return x.t.slice(8,10)+'.'+x.t.slice(5,7)+' '+x.t.slice(11)+'h'; });
     _chartMount($('trafPth48'),labs,[
-      {k:'on',n:'pokerth.net online',c:'#9aa7bd',vals:h48.map(function(x){ return x.on; })},
-      {k:'wb',n:'Web client',c:'#4080d8',vals:h48.map(function(x){ return x.wb; })},
-      {k:'lv',n:'Live/spectator tool (/live)',c:'#c08ae0',vals:h48.map(function(x){ return x.lv; })}
+      // An hour (day) without a sample — before the first one, or the live
+      // figures off — is no measure, not zero players: no point is drawn.
+      {k:'on',n:'pokerth.net online',c:'#9aa7bd',vals:h48.map(function(x){ return x.n?x.on:null; })},
+      {k:'wb',n:'Web client',c:'#4080d8',vals:h48.map(function(x){ return x.n?x.wb:null; })},
+      {k:'lv',n:'Live/spectator tool (/live)',c:'#c08ae0',vals:h48.map(function(x){ return x.n?x.lv:null; })}
     ],160,'line');
     var pf=function(v){ return v? v+'%' : '\u2014'; };
     _chartMount($('trafPthShare'),labs,[{k:'share',n:'Web client share',c:'#4080d8',fmt:pf,
@@ -5950,12 +5952,12 @@
       { c:'#4080d8', colFn:function(v,i){ return i===h48.length-1 ? '#2c5896' : '#4080d8'; } });
     var dl=days.map(function(x){ return p.h24 ? _sLab(x) : x.date; });
     _chartMount($('trafPthDays'),dl,[
-      {k:'share',n:'Web client share',c:'#4080d8',fmt:pf,vals:days.map(function(x){ return _pthPct(x.wb,x.on); })},
+      {k:'share',n:'Web client share',c:'#4080d8',fmt:pf,vals:days.map(function(x){ return x.n?_pthPct(x.wb,x.on):null; })},
       // At the online peak: the web-client count of that very sample (wbAtX);
       // a day recorded before it was kept has no point rather than a ratio of
       // two peaks taken at different moments.
       {k:'peak',n:'Share at the online peak',c:'#e0b050',fmt:pf,vals:days.map(function(x){ return (x.n&&x.wbAtX!=null)?_pthPct(x.wbAtX,x.onX):null; })},
-      {k:'lv',n:'/live share',c:'#c08ae0',fmt:pf,vals:days.map(function(x){ return _pthPct(x.lv,x.on); })}
+      {k:'lv',n:'/live share',c:'#c08ae0',fmt:pf,vals:days.map(function(x){ return x.n?_pthPct(x.lv,x.on):null; })}
     ],160,'line');
   }
   // -- L'heure du jour -------------------------------------------------------

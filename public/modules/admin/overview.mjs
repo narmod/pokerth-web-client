@@ -355,11 +355,14 @@ function loadFast(seq) {
     _st.sessions = se; _st.status = s; _st.now = Date.now(); paint();
   });
 }
+function botsShown() { try { return localStorage.getItem('pth_admin_bots') === '1'; } catch (e) { return false; } }
 function loadSlow(seq) {
   const A = window.PthAdmin;
   if (!A || document.hidden) return;
   Promise.all([
-    json(A.api('/admin/visits?days=14')),
+    // Same « Hide bots » as Statistics (pth_admin_bots), or the two pages
+    // gave different totals for the same days.
+    json(A.api('/admin/visits?days=14' + (botsShown() ? '&bots=1' : ''))),
     json(A.api('/admin/lan-directory')),
     json(A.api('/admin/errors')),
     json(A.api('/admin/audit')),

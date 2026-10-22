@@ -212,5 +212,16 @@ ok(!/x\.rt\b|\.rt\|\||month\.rt/.test(fn(admin, '_trafInsights') + fn(admin, 'lo
   ok(/d\.musicPeriod\.counted!=null\?d\.musicPeriod\.counted:d\.musicPeriod\.days/.test(admin), 'a quiet period stays the period, not all-time figures');
   ok(/pick 30 days, or a range of '\+\(2\*MUS_TREND_MIN\+1\)\+' days or more/.test(admin), 'the trend tip asks for a period that can show it');
 }
+
+// Lot 5 — stale « now », empty samples, filters applied alike.
+{
+  const ps = fn(proxy, 'pthShareSummary');
+  ok(/fresh = !!\(on && _pthLast && Date\.now\(\) - _pthLast\.at < 2 \* PTH_SAMPLE_MS\)/.test(ps) && /now: fresh \? _pthLast : null/.test(ps), 'pokerth.net « now » expires after two missed samples');
+  ok(/vals:h48\.map\(function\(x\)\{ return x\.n\?x\.on:null; \}\)/.test(fn(admin, '_trafPth')) && /x\.n\?_pthPct\(x\.wb,x\.on\):null/.test(fn(admin, '_trafPth')), 'hours and days without a sample are not drawn as zero');
+  ok(/LANG_STATS\.record\(bot \? \(visitBotAll\(\)\.env/.test(fn(proxy, 'recordVisitEnv')), 'a bot’s language diagnostics go with its counts');
+  const ov = readFileSync(join(root, 'public', 'modules', 'admin', 'overview.mjs'), 'utf8');
+  ok(/\/admin\/visits\?days=14' \+ \(botsShown\(\) \? '&bots=1' : ''\)/.test(ov), 'the overview chart follows Hide bots like Statistics');
+  ok(/fmt\(pm\[rw\[1\]\]\)\+' '\+pl\+' · '/.test(fn(admin, '_trafModeRows')), '« Where sessions open » shows the chosen period too');
+}
 console.log(fail ? 'FAIL ' + fail + '/' + n : 'OK ' + n + '/' + n);
 process.exit(fail ? 1 : 0);

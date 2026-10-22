@@ -9943,7 +9943,10 @@ function recordVisitEnv(ua, acceptLang, standalone, seenBefore, bot, clientLang,
     // env.bot) : premier tag d'un en-tete deja recu, compteurs plafonnes.
     const diagCtx = { seenBefore: (seenBefore === true || seenBefore === false) ? seenBefore : null, isBot: UA_BOT_RULE.isBotUA(ua), combo: os + ' \u00b7 ' + br };
     if (!visitsStore.langDiagSince) visitsStore.langDiagSince = Date.now();
-    LANG_STATS.record(visitsStore.env, lp, diagCtx);
+    // A bot's diagnostics go with its counts (bt.env, like _envBump): kept with
+    // the humans', they explained a « No usable language header » row they
+    // were not in when Hide bots was on. ?bots=1 adds them back (visitsSummary).
+    LANG_STATS.record(bot ? (visitBotAll().env || (visitBotAll().env = {})) : visitsStore.env, lp, diagCtx);
     // Série quotidienne par langue : le cumul dit lesquelles, pas quand. Un
     // petit dictionnaire par jour (même seau que les visites, même rétention,
     // même plafond de cardinalité) suffit à tracer l'évolution dans le temps.
@@ -14810,7 +14813,10 @@ function pthShareSummary(periodDays, h24, offset) {
     }
     days.push({ date: k, n: a.n, on: _pthMean(a, 'on'), wb: _pthMean(a, 'wb'), lv: _pthMean(a, 'lv'), onX: a.onX, wbX: a.wbX, wbAtX: a.wbAtX, td: a.td });
   }
-  return { since: visitsStore.pthSince || 0, sampleSec: PTH_SAMPLE_MS / 1000, on: _liveStatsCfg().on, now: _pthLast, h48: h48, days: days, h24: !!h24 };
+  // « now » is the last sample while it is recent: switched off, or the
+  // upstream no longer answering, an hours-old figure read as « online now ».
+  const on = _liveStatsCfg().on, fresh = !!(on && _pthLast && Date.now() - _pthLast.at < 2 * PTH_SAMPLE_MS);
+  return { since: visitsStore.pthSince || 0, sampleSec: PTH_SAMPLE_MS / 1000, on: on, now: fresh ? _pthLast : null, lastAt: _pthLast ? _pthLast.at : 0, h48: h48, days: days, h24: !!h24 };
 }
 
 // Dashboard "Test" button: read a candidate URL once, bypassing the cache and
