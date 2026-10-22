@@ -335,6 +335,7 @@ export default {
   hsChip: 'Zhetoni i PokerTH — preke dhe rrotullohet.',
   installApp: 'Instalo aplikacionin',
   instNow: 'Instalo tani',
+  instAsk: 'Do PokerTH në ekranin kryesor?',
   instWhy: 'Pasi të instalohet, PokerTH hapet në ekran të plotë me ikonën e vet, niset menjëherë dhe modaliteti i stërvitjes funksionon offline.',
   instPrompt: 'Prek «Instalo tani» dhe konfirmo: kaq.',
   instIos: 'Në iPhone dhe iPad: prek butonin Shpërndaje (një katror me shigjetë lart — në iOS-in e fundit mund të jetë në menynë ⋯), zgjidh «Shto në ekranin fillestar», pastaj «Shto». Funksionon në Safari, dhe në iOS-in e fundit edhe në Chrome e Edge.',

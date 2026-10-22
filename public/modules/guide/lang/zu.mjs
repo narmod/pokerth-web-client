@@ -335,6 +335,7 @@ export default {
   hsChip: 'Ishipi le-PokerTH — lithephe futhi liyajikeleza.',
   installApp: 'Faka uhlelo',
   instNow: 'Faka manje',
+  instAsk: 'Ufuna i-PokerTH esikrinini sakho sasekhaya?',
   instWhy: 'Uma selifakiwe, i-PokerTH ivula isikrini esigcwele nesithonjana sayo, iqala ngokushesha, futhi imodi yokuziqeqesha isebenza ngaphandle kwe-inthanethi.',
   instPrompt: 'Thepha “Faka manje” bese uqinisekisa: kuphelele lapho.',
   instIos: 'Ku-iPhone nase-iPad: thepha inkinobho ethi Yabelana (isikwele esinomcibisholo oya phezulu — ku-iOS entsha kungase kube semenyu ethi ⋯), khetha “Engeza Esikrinini Sasekhaya”, bese “Engeza”. Isebenza ku-Safari, nakuba ku-iOS entsha ne-Chrome ne-Edge.',

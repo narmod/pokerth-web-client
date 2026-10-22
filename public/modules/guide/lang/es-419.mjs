@@ -335,6 +335,7 @@ export default {
   hsChip: 'La ficha de PokerTH — tócala y gira.',
   installApp: 'Instalar la app',
   instNow: 'Instalar ahora',
+  instAsk: '¿Quieres PokerTH en tu pantalla de inicio?',
   instWhy: 'Una vez instalado, PokerTH se abre a pantalla completa con su propio icono, arranca al instante y el modo entrenamiento funciona sin conexión.',
   instPrompt: 'Toca «Instalar ahora» y confirma: ya está.',
   instIos: 'En iPhone y iPad: toca el botón Compartir (un cuadrado con una flecha hacia arriba; en iOS recientes puede estar en el menú ⋯), elige «Añadir a pantalla de inicio» y luego «Añadir». Funciona en Safari y, en iOS recientes, también en Chrome y Edge.',

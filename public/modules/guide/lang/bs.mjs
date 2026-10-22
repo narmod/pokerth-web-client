@@ -335,6 +335,7 @@ export default {
   hsChip: 'PokerTH žeton — dodirni ga i zavrtjet će se.',
   installApp: 'Instaliraj aplikaciju',
   instNow: 'Instaliraj sada',
+  instAsk: 'Želiš li PokerTH na početnom ekranu?',
   instWhy: 'Kad je instaliran, PokerTH se otvara preko cijelog zaslona sa svojom ikonom, pokreće se odmah, a trening način radi offline.',
   instPrompt: 'Dodirni „Instaliraj sada“ i potvrdi: to je sve.',
   instIos: 'Na iPhoneu i iPadu: dodirni gumb Dijeli (kvadrat sa strelicom prema gore — na novijem iOS-u može biti u meniju ⋯), odaberi „Dodaj na početni zaslon“, zatim „Dodaj“. Radi u Safariju, a na novijem iOS-u i u Chromeu i Edgeu.',

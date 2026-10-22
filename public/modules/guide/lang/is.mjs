@@ -335,6 +335,7 @@ export default {
   hsChip: 'PokerTH-spilapeningurinn — ýttu á hann og hann snýst.',
   installApp: 'Setja upp forritið',
   instNow: 'Setja upp núna',
+  instAsk: 'Viltu fá PokerTH á heimaskjáinn?',
   instWhy: 'Eftir uppsetningu opnast PokerTH á öllum skjánum með sitt eigið tákn, ræsist samstundis og æfingahamurinn virkar án nettengingar.',
   instPrompt: 'Ýttu á „Setja upp núna“ og staðfestu: það er allt og sumt.',
   instIos: 'Á iPhone og iPad: ýttu á deilihnappinn (ferningur með ör upp — í nýlegu iOS getur hann verið í ⋯ valmyndinni), veldu „Bæta við heimaskjá“ og síðan „Bæta við“. Þetta virkar í Safari og í nýlegu iOS einnig í Chrome og Edge.',

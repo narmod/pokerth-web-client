@@ -335,6 +335,7 @@ export default {
   hsChip: 'An t-sliseag PokerTH — thoir gnogag oirre agus tionndaidhidh i.',
   installApp: 'Stàlaich an aplacaid',
   instNow: 'Stàlaich a-nis',
+  instAsk: 'A bheil thu ag iarraidh PokerTH air an sgrìn-dachaigh agad?',
   instWhy: 'Às dèidh a stàladh, fosglaidh PokerTH làn-sgrìn le ìomhaigheag fhèin, tòisichidh e sa bhad, agus obraichidh am modh trèanaidh far-loidhne.',
   instPrompt: 'Thoir gnogag air “Stàlaich a-nis” agus dearbh: sin e.',
   instIos: 'Air iPhone is iPad: thoir gnogag air a’ phutan Co-roinn (ceàrnag le saighead suas — air iOS o chionn ghoirid, faodaidh e a bhith sa chlàr-taice ⋯), tagh “Cuir ris an sgrìn-dhachaigh”, an uair sin “Cuir ris”. Obraichidh e ann an Safari, agus air iOS o chionn ghoirid ann an Chrome is Edge cuideachd.',

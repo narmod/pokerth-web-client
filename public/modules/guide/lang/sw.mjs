@@ -335,6 +335,7 @@ export default {
   hsChip: 'Chipu ya PokerTH — iguse nayo huzunguka.',
   installApp: 'Sakinisha programu',
   instNow: 'Sakinisha sasa',
+  instAsk: 'Ungependa PokerTH kwenye skrini yako ya mwanzo?',
   instWhy: 'Ikishasakinishwa, PokerTH hufunguka kwenye skrini nzima ikiwa na ikoni yake, huanza mara moja, na hali ya mazoezi hufanya kazi nje ya mtandao.',
   instPrompt: 'Gusa “Sakinisha sasa” kisha thibitisha: ni hivyo tu.',
   instIos: 'Kwenye iPhone na iPad: gusa kitufe cha Kushiriki (mraba wenye mshale unaoelekea juu — kwenye iOS mpya kinaweza kuwa kwenye menyu ya ⋯), chagua “Add to Home Screen”, kisha “Add”. Hufanya kazi kwenye Safari, na kwenye iOS mpya pia kwenye Chrome na Edge.',

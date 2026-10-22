@@ -335,6 +335,7 @@ export default {
   hsChip: 'Sceallóg PokerTH — tapáil í agus casfaidh sí.',
   installApp: 'Suiteáil an aip',
   instNow: 'Suiteáil anois',
+  instAsk: 'Ar mhaith leat PokerTH ar do scáileán baile?',
   instWhy: 'Nuair atá PokerTH suiteáilte, osclaíonn sé ar an scáileán iomlán lena dheilbhín féin, tosaíonn sé láithreach, agus oibríonn an mód cleachtaidh as líne.',
   instPrompt: 'Tapáil “Suiteáil anois” agus deimhnigh: sin é.',
   instIos: 'Ar iPhone agus iPad: tapáil an cnaipe Comhroinn (cearnóg le saighead suas — ar iOS le déanaí, d’fhéadfadh sé a bheith sa roghchlár ⋯), roghnaigh “Cuir leis an Scáileán Baile”, ansin “Cuir leis”. Oibríonn sé i Safari, agus ar iOS le déanaí i Chrome agus Edge freisin.',

@@ -335,6 +335,7 @@ export default {
   hsChip: 'Guntun PokerTH — taɓa shi sai ya juya.',
   installApp: 'Sanya manhaja',
   instNow: 'Sanya yanzu',
+  instAsk: 'Kana son PokerTH a allon gidanka?',
   instWhy: 'Idan an sanya shi, PokerTH yana buɗewa a cikakken allo da alamarsa, yana farawa nan take, kuma yanayin horo yana aiki ba tare da intanet ba.',
   instPrompt: 'Taɓa “Sanya yanzu” ka tabbatar: shi ke nan.',
   instIos: 'A iPhone da iPad: taɓa maɓallin Raba (murabba’i mai kibiya sama — a sabbin iOS yana iya kasancewa a menu na ⋯), zaɓi “Ƙara zuwa Allon Gida”, sannan “Ƙara”. Yana aiki a Safari, kuma a sabbin iOS a Chrome da Edge ma.',

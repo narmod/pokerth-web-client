@@ -335,6 +335,7 @@ export default {
   hsChip: 'La PokerTH-ĵetono — tuŝetu ĝin kaj ĝi turniĝas.',
   installApp: 'Instali la aplikaĵon',
   instNow: 'Instali nun',
+  instAsk: 'Ĉu vi volas PokerTH sur via hejmekrano?',
   instWhy: 'Instalita, PokerTH malfermiĝas plenekrane kun propra piktogramo, lanĉiĝas tuj, kaj la trejna reĝimo funkcias senkonekte.',
   instPrompt: 'Tuŝetu “Instali nun” kaj konfirmu: jen ĉio.',
   instIos: 'Ĉe iPhone kaj iPad: tuŝetu la butonon Kunhavigi (kvadrato kun sago supren — ĉe novaj iOS-versioj ĝi povas troviĝi en la menuo ⋯), elektu “Aldoni al hejmekrano”, poste “Aldoni”. Ĝi funkcias en Safari, kaj ĉe novaj iOS-versioj ankaŭ en Chrome kaj Edge.',

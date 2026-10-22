@@ -32,6 +32,13 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Added
+- **The Ace offers to install the app after a finished game** (`web.269`) — admin (2026-10-22): the installed app
+  holds 4 % of the sessions, 77 % of them from returning players against 47 % in the browser, and installing
+  was never proposed. Back in the lobby or on the login screen after a game played, tips on or off, never at a
+  table: « Want PokerTH on your home screen? » + why, Install now (Chromium's prompt) or Show me (the steps of
+  the device). Twice per device, 20 h apart, never when installed or not installable (desktop without the
+  prompt), after « First time on PokerTH? » when that is still to come. Counted: `install.shown` / `later` /
+  `install` / `howto` / `installed` (admin row). New key `instAsk` in the 83 guide catalogues.
 - **`/host-a-server`** (`web.231`–`web.234`, SEO) — « host your own poker server »: why (private, yours to
   shape, free), the two pieces (PokerTH dedicated server + web client), three steps (build
   `pokerth_dedicated_server` 2.1.10+ from source per the upstream server guide — the distributions' `pokerth-server`

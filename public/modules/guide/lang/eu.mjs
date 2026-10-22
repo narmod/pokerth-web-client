@@ -335,6 +335,7 @@ export default {
   hsChip: 'PokerTH fitxa — sakatu eta biratu egiten da.',
   installApp: 'Instalatu aplikazioa',
   instNow: 'Instalatu orain',
+  instAsk: 'PokerTH hasierako pantailan nahi duzu?',
   instWhy: 'Instalatuta, PokerTH pantaila osoan irekitzen da bere ikonoarekin, berehala abiarazten da eta entrenamendu-modua lineaz kanpo dabil.',
   instPrompt: 'Sakatu «Instalatu orain» eta berretsi: hori da guztia.',
   instIos: 'iPhone eta iPad-en: sakatu Partekatu botoia (gezi bat gora duen koadroa; iOS berrietan ⋯ menuan egon daiteke), aukeratu «Gehitu hasierako pantailan» eta gero «Gehitu». Safarin dabil, eta iOS berrietan Chrome eta Edge-n ere bai.',

@@ -1240,6 +1240,74 @@ function trackSignup(w) {
   if (rec && typeof rec.c === 'string' && Number(rec.t) > Date.now() - SIGNUP_DAYS * 864e5) beacon(rec.c, 'account');
 }
 
+// ── Install the app, after a finished game (web.269) ───────────────
+// Admin (2026-10-22): 77 % of the sessions in the installed app come from
+// returning players, 47 % in the browser — and only 4 % of the sessions are
+// in the app: installing was never proposed, only one tap away (login
+// button, the Ace's menu). Back in the lobby (or on the login screen) after a
+// game he played, the Ace — tips on or off, never at a table — asks once:
+// « Want PokerTH on your home screen? » + why. Install now (Chromium's own
+// prompt) or Show me (iPhone / iPad / Android without it: the steps, the
+// same note as his menu). Twice per device at most, at least 20 h apart,
+// never when the app already runs installed, never where it cannot be
+// installed (desktop without the browser's prompt). Counted: install.shown /
+// later / install / howto / installed (appinstalled after the question).
+const KEY_INST_N = 'pth_inst_n';
+const KEY_INST_AT = 'pth_inst_at';
+const INST_MAX = 2;
+const INST_GAP_MS = 20 * 3600 * 1000;
+let instPlayed = false;       // a hand of this game was played (not as a spectator)
+let instPending = false;      // a game was just left: ask at the next quiet moment
+let instAsked = false;        // asked on this page
+let instTimer = 0;
+let offerSeenPage = false;    // « First time on PokerTH? » was shown on this page
+function appStandalone() {
+  try { if (typeof window.pwaInstalled === 'function') return !!window.pwaInstalled(); } catch (e) {}
+  try { return navigator.standalone === true || !!(window.matchMedia && window.matchMedia('(display-mode: standalone)').matches); } catch (e) { return false; }
+}
+function canPrompt() { try { return typeof window.pwaCanPrompt === 'function' && !!window.pwaCanPrompt(); } catch (e) { return false; } }
+function installable() {
+  if (appStandalone()) return false;
+  if (canPrompt()) return true;
+  const k = installKey(navigator.userAgent, navigator.maxTouchPoints || 0);
+  return k === 'instIos' || k === 'instAndroid';
+}
+function trackPlayed(w, prev) {
+  if (w.playing && !w.spectator) instPlayed = true;
+  if (prev && prev.screen === 'game' && w.screen !== 'game' && instPlayed) { instPlayed = false; instPending = true; }
+}
+function instNum(k) { try { const n = Number(localStorage.getItem(k) || 0); return Number.isFinite(n) && n > 0 ? n : 0; } catch (e) { return 0; } }
+function maybeInstall() {
+  clearTimeout(instTimer);
+  if (!instPending || instAsked || showing) return;
+  instTimer = setTimeout(async () => {
+    instTimer = 0;
+    if (!instPending || instAsked || showing) return;
+    if (!available() || automated() || !installable() || instNum(KEY_INST_N) >= INST_MAX || Date.now() - instNum(KEY_INST_AT) < INST_GAP_MS) { instPending = false; return; }
+    if (offerComing() && !offerSeenPage) return;        // « First time on PokerTH? » first (next evaluate tries again)
+    const w = where();
+    if (!(w.screen === 'lobby' || w.screen === 'connect') || !splashGone() || blocked() || document.hidden || bannerUp()) return;
+    const m = await ensureDock();
+    if (!m || showing || instAsked) return;
+    instAsked = true; instPending = false;
+    try { localStorage.setItem(KEY_INST_N, String(instNum(KEY_INST_N) + 1)); localStorage.setItem(KEY_INST_AT, String(Date.now())); } catch (e) {}
+    showing = { kind: 'inst' };
+    beacon('install', 'shown');
+    const prompt = canPrompt();
+    m.say({
+      text: gt('instAsk') + ' ' + gt('instWhy'),
+      buttons: [btn('later'), prompt ? btn('instNow', true) : btn('offerYes', true)],
+      onButton: (id) => {
+        if (id === 'instNow') { beacon('install', 'install'); endInst(); try { window.pwaInstall(); } catch (e) {} return; }
+        if (id === 'offerYes') { beacon('install', 'howto'); showing = null; showInstall(); return; }   // the steps of this device
+        beacon('install', 'later'); endInst();
+      },
+    });
+  }, 1500);
+}
+function endInst() { closeBubble(); if (!state.isOn()) leave(); else schedule(); }
+if (typeof window !== 'undefined') window.addEventListener('appinstalled', () => { if (instAsked) beacon('install', 'installed'); });
+
 // ── First-launch offer (D3) ────────────────────────────────────────
 // Not under automation (navigator.webdriver): the other browser tests and
 // their canonical screenshots must not get a bubble 2.5 s after loading.
@@ -1257,6 +1325,7 @@ function maybeOffer() {
     const m = await ensureDock();
     if (!m || state.isOn() || state.wasOffered() || state.offerTired()) return;
     showing = { kind: 'offer' };
+    offerSeenPage = true;
     // offered = every showing; first = once per device (web.6), the
     // denominator of the per-device acceptance in the admin
     const nShow = state.countOfferShow();
@@ -1290,18 +1359,20 @@ async function evaluate() {
   lastWhere = w;
   try { trackResult(w, prev); } catch (e) {}
   try { trackSignup(w); } catch (e) {}                 // web.268: tips on or off
+  try { trackPlayed(w, prev); } catch (e) {}           // web.269: a game played, then left → the install question
   if (!available()) { if (!(showing && (showing.kind === 'offer' || (onDemand() && canComeHere())))) leave(); return; }   // live embed: only what the player asked for
   // every trophy won: the secret word of the arcade, tips on or off (web.87)
   if (arcadePending && (w.screen === 'connect' || w.screen === 'lobby') && !blocked() && !window._pthGameOn
-    && !(showing && (showing.kind === 'offer' || showing.kind === 'bak' || onDemand()))) { revealArcade(); return; }
+    && !(showing && (showing.kind === 'offer' || showing.kind === 'bak' || showing.kind === 'inst' || onDemand()))) { revealArcade(); return; }
   if (!state.isOn()) {
     // tips off: only the offer, a last word, or what the player asked for (« More help », « ? » mode)
     // (his menu too, web.276); the offer only on the login screen and in the lobby, never at a table (D8)
-    const offerish = showing && (showing.kind === 'offer' || showing.kind === 'bak');
+    const offerish = showing && (showing.kind === 'offer' || showing.kind === 'bak' || showing.kind === 'inst');
     if (!(offerish || (showing && onDemand()))) leave();
     else if (offerish ? !(w.screen === 'connect' || w.screen === 'lobby') : (showing.kind !== 'note' && !canComeHere())) leave();
     maybeBak();
     maybeOffer();
+    maybeInstall();
     return;
   }
   // statistics: a Ranking game started from its waiting room (it only starts
@@ -1354,6 +1425,7 @@ async function evaluate() {
   // over a modal / menu only a window's own explanation speaks (C5)
   if (blocked() && !(ctx && ctx.window)) return;
   if (ctx) { showContext(ctx); return; }
+  maybeInstall();                                      // web.269: no tip to give — the install question, if a game was just left
   m.badge(CONTEXTS.some((c) => !c.manual && snoozed.has(c.id) && applies(c, w)));
 }
 

@@ -335,6 +335,7 @@ export default {
   hsChip: 'PokerTH-sjetongen — trykk på den, så snurrer den.',
   installApp: 'Installer appen',
   instNow: 'Installer nå',
+  instAsk: 'Vil du ha PokerTH på startskjermen?',
   instWhy: 'Når PokerTH er installert, åpnes det i fullskjerm med eget ikon, starter umiddelbart, og treningsmodusen fungerer offline.',
   instPrompt: 'Trykk på «Installer nå» og bekreft: det er alt.',
   instIos: 'På iPhone og iPad: trykk på Del-knappen (en firkant med en pil opp — på nyere iOS kan den ligge i ⋯-menyen), velg «Legg til på Hjem-skjerm», og deretter «Legg til». Det fungerer i Safari, og på nyere iOS også i Chrome og Edge.',

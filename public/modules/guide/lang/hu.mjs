@@ -335,6 +335,7 @@ export default {
   hsChip: 'A PokerTH zseton — koppints rá, és megpörög.',
   installApp: 'Alkalmazás telepítése',
   instNow: 'Telepítés most',
+  instAsk: 'Szeretnéd a PokerTH-t a kezdőképernyődön?',
   instWhy: 'Telepítve a PokerTH teljes képernyőn, saját ikonnal nyílik meg, azonnal elindul, a gyakorlómód pedig offline is működik.',
   instPrompt: 'Koppints a „Telepítés most” gombra, és erősítsd meg: ennyi az egész.',
   instIos: 'iPhone-on és iPaden: koppints a Megosztás gombra (felfelé mutató nyilas négyzet — újabb iOS-en a ⋯ menüben lehet), válaszd a „Főképernyőhöz adás” lehetőséget, majd a „Hozzáadás” gombot. Safariban működik, újabb iOS-en pedig Chrome-ban és Edge-ben is.',

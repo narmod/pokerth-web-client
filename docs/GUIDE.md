@@ -29,6 +29,13 @@ tables, with no tutorial mode and no fake data.
   (`pth_bak_offer_next`), and *I already play* shows it at once, asking *"Had a backup of your
   settings? I can restore it."* with *Restore* first (`backup.returning`). When a backup folder is
   remembered, the restore offer still comes first, as before.
+- **Install the app** (web.269). Back in the lobby or on the login screen after a game he
+  played (not as a spectator), the Ace asks, tips on or off and never at a table: *"Want
+  PokerTH on your home screen?"* + why (`instAsk` + `instWhy`), with *Install now* (Chromium's
+  own prompt) or *Show me* (iPhone / iPad / Android without it: the steps). Twice per device at
+  most, 20 h apart (`pth_inst_n`, `pth_inst_at`), never when the app runs installed, never on a
+  desktop browser without the install prompt, and after *"First time on PokerTH?"* when that is
+  still to come. Events: `install.shown` / `later` / `install` / `howto` / `installed`.
 - **Why a Create / Restore did not succeed** is counted (web.267): `backup.create_abort` /
   `_exists` / `_noperm` / `_bad` and `backup.restore_abort` / `_nofile` / `_noperm` / `_empty` /
   `_bad` (the picker closed, no file in the folder, access refused…), from the Ace's bubble and

@@ -335,6 +335,7 @@ export default {
   hsChip: 'La fiche di PokerTH — toccala e gira.',
   installApp: 'Installa l’app',
   instNow: 'Installa ora',
+  instAsk: 'Vuoi PokerTH nella schermata Home?',
   instWhy: 'Una volta installato, PokerTH si apre a schermo intero con la sua icona, parte all’istante e la modalità allenamento funziona offline.',
   instPrompt: 'Tocca «Installa ora» e conferma: tutto qui.',
   instIos: 'Su iPhone e iPad: tocca il pulsante Condividi (un quadrato con una freccia verso l’alto — sulle versioni recenti di iOS può trovarsi nel menu ⋯), scegli «Aggiungi alla schermata Home», poi «Aggiungi». Funziona in Safari e, sulle versioni recenti di iOS, anche in Chrome ed Edge.',

@@ -335,6 +335,7 @@ export default {
   hsChip: 'Ṣípì PokerTH — tẹ̀ ẹ́ yóò sì yí po.',
   installApp: 'Fi ìṣàfilọ́lẹ̀ sórí ẹ̀rọ',
   instNow: 'Fi sórí ẹ̀rọ báyìí',
+  instAsk: 'Ṣé o fẹ́ PokerTH lórí ojú ìbẹ̀rẹ̀ rẹ?',
   instWhy: 'Nígbà tí a bá ti fi sórí ẹ̀rọ, PokerTH ń ṣí ní ojú kíkún pẹ̀lú àmì tirẹ̀, ó ń bẹ̀rẹ̀ lójú ẹsẹ̀, ọ̀nà ìdánrawò sì ń ṣiṣẹ́ láìsí ayélujára.',
   instPrompt: 'Tẹ “Fi sórí ẹ̀rọ báyìí” kí o sì jẹ́rìísí: ìyẹn ni gbogbo rẹ̀.',
   instIos: 'Lórí iPhone àti iPad: tẹ bọ́tìnì Pín (onígun mẹ́rin pẹ̀lú ọfà tó ń tọ́ka sókè — lórí iOS tuntun ó lè wà nínú àkójọ ⋯), yan “Fi kún Ojú Ilé”, lẹ́yìn náà “Fi kún un”. Ó ń ṣiṣẹ́ nínú Safari, àti lórí iOS tuntun nínú Chrome àti Edge pẹ̀lú.',

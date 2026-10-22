@@ -354,6 +354,7 @@ export default {
   hsChip: 'The PokerTH chip — tap it and it spins.',
   installApp: 'Install the app',
   instNow: 'Install now',
+  instAsk: 'Want PokerTH on your home screen?',
   instWhy: 'Installed, PokerTH opens full screen with its own icon, starts instantly, and the training mode works offline.',
   instPrompt: 'Tap « Install now » and confirm: that’s all.',
   instIos: 'On iPhone and iPad: tap the Share button (a square with an arrow up — on recent iOS it may be in the ⋯ menu), choose « Add to Home Screen », then « Add ». It works in Safari, and on recent iOS in Chrome and Edge too.',

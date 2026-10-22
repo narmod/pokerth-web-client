@@ -335,6 +335,7 @@ export default {
   hsChip: 'Żeton PokerTH — dotknij go, a zakręci się.',
   installApp: 'Zainstaluj aplikację',
   instNow: 'Zainstaluj teraz',
+  instAsk: 'Chcesz mieć PokerTH na ekranie głównym?',
   instWhy: 'Po instalacji PokerTH otwiera się na pełnym ekranie z własną ikoną, startuje natychmiast, a tryb treningowy działa offline.',
   instPrompt: 'Dotknij „Zainstaluj teraz” i potwierdź: to wszystko.',
   instIos: 'Na iPhonie i iPadzie: dotknij przycisku Udostępnij (kwadrat ze strzałką w górę — w nowszym iOS może być w menu ⋯), wybierz „Dodaj do ekranu początkowego”, potem „Dodaj”. Działa w Safari, a w nowszym iOS także w Chrome i Edge.',

@@ -335,6 +335,7 @@ export default {
   hsChip: 'Die PokerTH-skyfie — tik daarop en dit draai.',
   installApp: 'Installeer die toep',
   instNow: 'Installeer nou',
+  instAsk: 'Wil jy PokerTH op jou tuisskerm hê?',
   instWhy: 'Wanneer dit geïnstalleer is, open PokerTH op volle skerm met sy eie ikoon, begin dit dadelik en werk die oefenmodus vanlyn.',
   instPrompt: 'Tik „Installeer nou” en bevestig: dis al.',
   instIos: 'Op iPhone en iPad: tik die Deel-knoppie (’n vierkant met ’n pyltjie op — op onlangse iOS kan dit in die ⋯-kieslys wees), kies „Voeg by tuisskerm”, dan „Voeg by”. Dit werk in Safari, en op onlangse iOS ook in Chrome en Edge.',

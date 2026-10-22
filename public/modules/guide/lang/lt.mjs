@@ -335,6 +335,7 @@ export default {
   hsChip: 'PokerTH žetonas — bakstelėk jį ir jis sukasi.',
   installApp: 'Įdiegti programėlę',
   instNow: 'Įdiegti dabar',
+  instAsk: 'Nori PokerTH pradiniame ekrane?',
   instWhy: 'Įdiegtas PokerTH atsidaro per visą ekraną su sava piktograma, paleidžiamas akimirksniu, o treniruotės režimas veikia be interneto.',
   instPrompt: 'Bakstelėk „Įdiegti dabar“ ir patvirtink — viskas.',
   instIos: 'iPhone ir iPad įrenginiuose: bakstelėk bendrinimo mygtuką (kvadratas su rodykle aukštyn — naujesnėje iOS jis gali būti meniu ⋯), pasirink „Pridėti į pradžios ekraną“, tada „Pridėti“. Tai veikia per Safari, o naujesnėje iOS — ir per Chrome bei Edge.',

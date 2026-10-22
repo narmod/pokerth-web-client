@@ -335,6 +335,7 @@ export default {
   hsChip: 'Chip PokerTH — ketuk dan chip ini berputar.',
   installApp: 'Instal aplikasi',
   instNow: 'Instal sekarang',
+  instAsk: 'Mau PokerTH di layar utama Anda?',
   instWhy: 'Setelah terinstal, PokerTH terbuka layar penuh dengan ikonnya sendiri, langsung berjalan, dan mode latihan bisa dipakai offline.',
   instPrompt: 'Ketuk “Instal sekarang” lalu konfirmasi: hanya itu.',
   instIos: 'Di iPhone dan iPad: ketuk tombol Bagikan (kotak dengan panah ke atas — di iOS terbaru bisa ada di menu ⋯), pilih “Tambah ke Layar Utama”, lalu “Tambah”. Berfungsi di Safari, dan di iOS terbaru juga di Chrome dan Edge.',

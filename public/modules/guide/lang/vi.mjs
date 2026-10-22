@@ -335,6 +335,7 @@ export default {
   hsChip: 'Chip PokerTH — chạm vào là nó xoay.',
   installApp: 'Cài đặt ứng dụng',
   instNow: 'Cài đặt ngay',
+  instAsk: 'Bạn muốn có PokerTH trên màn hình chính?',
   instWhy: 'Sau khi cài, PokerTH mở toàn màn hình với biểu tượng riêng, khởi động tức thì và chế độ luyện tập chạy được ngoại tuyến.',
   instPrompt: 'Chạm “Cài đặt ngay” rồi xác nhận: vậy là xong.',
   instIos: 'Trên iPhone và iPad: chạm nút Chia sẻ (hình vuông có mũi tên hướng lên — trên iOS mới nó có thể nằm trong menu ⋯), chọn “Thêm vào Màn hình chính”, rồi chạm “Thêm”. Cách này dùng được trong Safari, và trên iOS mới cả trong Chrome và Edge.',

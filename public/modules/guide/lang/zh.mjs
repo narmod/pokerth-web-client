@@ -335,6 +335,7 @@ export default {
   hsChip: 'PokerTH 筹码 —— 点按它就会旋转。',
   installApp: '安装应用',
   instNow: '立即安装',
+  instAsk: '想把 PokerTH 放到主屏幕吗？',
   instWhy: '安装后，PokerTH 会以全屏打开并带有自己的图标，启动更快，训练模式还能离线使用。',
   instPrompt: '点按“立即安装”并确认：就这么简单。',
   instIos: '在 iPhone 和 iPad 上：点按分享按钮（带向上箭头的方框——在较新的 iOS 上它可能位于 ⋯ 菜单中），选择“添加到主屏幕”，然后点按“添加”。它在 Safari 中可用，在较新的 iOS 上 Chrome 和 Edge 也可以。',

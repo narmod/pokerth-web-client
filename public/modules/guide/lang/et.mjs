@@ -335,6 +335,7 @@ export default {
   hsChip: 'PokerTH žetoon — puuduta seda ja see hakkab pöörlema.',
   installApp: 'Paigalda rakendus',
   instNow: 'Paigalda kohe',
+  instAsk: 'Kas soovid PokerTH-d oma avakuvale?',
   instWhy: 'Paigaldatuna avaneb PokerTH täisekraanil oma ikooniga, käivitub kohe ja treeningrežiim töötab ka ilma võrguühenduseta.',
   instPrompt: 'Puuduta „Paigalda kohe“ ja kinnita: see on kõik.',
   instIos: 'iPhone’is ja iPadis: puuduta jagamisnuppu (ruut ülesnoolega; uuemas iOS-is võib see olla menüüs ⋯), vali „Lisa avakuvale“ ja seejärel „Lisa“. See töötab Safaris ning uuemas iOS-is ka Chrome’is ja Edge’is.',

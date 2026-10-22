@@ -335,6 +335,7 @@ export default {
   hsChip: 'De PokerTH-chip — tik erop en hij draait.',
   installApp: 'De app installeren',
   instNow: 'Nu installeren',
+  instAsk: 'Wil je PokerTH op je startscherm?',
   instWhy: 'Eenmaal geïnstalleerd opent PokerTH schermvullend met een eigen pictogram, start het direct en werkt de trainingsmodus offline.',
   instPrompt: 'Tik op “Nu installeren” en bevestig: dat is alles.',
   instIos: 'Op iPhone en iPad: tik op de Deel-knop (een vierkant met een pijl omhoog — op recente iOS kan die in het ⋯-menu staan), kies “Zet op beginscherm” en daarna “Voeg toe”. Het werkt in Safari en op recente iOS ook in Chrome en Edge.',

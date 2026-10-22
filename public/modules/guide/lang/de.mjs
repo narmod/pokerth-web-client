@@ -335,6 +335,7 @@ export default {
   hsChip: 'Der PokerTH-Chip — tippe ihn an, und er dreht sich.',
   installApp: 'App installieren',
   instNow: 'Jetzt installieren',
+  instAsk: 'Möchtest du PokerTH auf deinem Startbildschirm?',
   instWhy: 'Installiert öffnet sich PokerTH im Vollbild mit eigenem Symbol, startet sofort, und der Trainingsmodus funktioniert offline.',
   instPrompt: 'Tippe auf „Jetzt installieren“ und bestätige: Das war’s.',
   instIos: 'Auf iPhone und iPad: Tippe auf den Teilen-Knopf (ein Quadrat mit Pfeil nach oben — bei neuerem iOS kann er im ⋯-Menü sein), wähle „Zum Home-Bildschirm“ und dann „Hinzufügen“. Das klappt in Safari, bei neuerem iOS auch in Chrome und Edge.',

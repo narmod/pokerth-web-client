@@ -335,6 +335,7 @@ export default {
   hsChip: 'PokerTH fishkasi — unga bosing, u aylanadi.',
   installApp: 'Ilovani oʻrnatish',
   instNow: 'Hozir oʻrnatish',
+  instAsk: 'PokerTH bosh ekraningizda boʻlsinmi?',
   instWhy: 'Oʻrnatilgach, PokerTH oʻz belgisi bilan toʻliq ekranda ochiladi, bir zumda ishga tushadi va mashgʻulot rejimi oflayn ishlaydi.',
   instPrompt: '“Hozir oʻrnatish” tugmasini bosing va tasdiqlang: hammasi shu.',
   instIos: 'iPhone va iPad’da: Ulashish tugmasini bosing (yuqoriga strelkali kvadrat — yangi iOS’da u ⋯ menyusida boʻlishi mumkin), “Bosh ekranga qoʻshish” bandini tanlang, soʻng “Qoʻshish” ni bosing. U Safari’da, yangi iOS’da esa Chrome va Edge’da ham ishlaydi.',

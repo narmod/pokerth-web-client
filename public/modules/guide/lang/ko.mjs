@@ -335,6 +335,7 @@ export default {
   hsChip: 'PokerTH 칩이에요. 탭하면 빙글 돌아요.',
   installApp: '앱 설치',
   instNow: '지금 설치',
+  instAsk: 'PokerTH를 홈 화면에 둘까요?',
   instWhy: '설치하면 PokerTH가 전용 아이콘과 함께 전체 화면으로 열리고, 바로 실행되며, 연습 모드는 오프라인에서도 작동해요.',
   instPrompt: '“지금 설치”를 탭하고 확인해 주세요. 그게 전부예요.',
   instIos: 'iPhone과 iPad에서는 공유 버튼(위쪽 화살표가 있는 네모 — 최신 iOS에서는 ⋯ 메뉴 안에 있을 수 있어요)을 탭하고 “홈 화면에 추가”를 선택한 다음 “추가”를 탭하세요. Safari에서 되고, 최신 iOS에서는 Chrome과 Edge에서도 돼요.',

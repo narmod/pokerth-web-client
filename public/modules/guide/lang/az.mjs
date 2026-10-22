@@ -335,6 +335,7 @@ export default {
   hsChip: 'PokerTH çipi — toxunun, fırlanacaq.',
   installApp: 'Tətbiqi quraşdırın',
   instNow: 'İndi quraşdır',
+  instAsk: 'PokerTH-i ana ekranınızda istəyirsiniz?',
   instWhy: 'Quraşdırıldıqdan sonra PokerTH öz ikonu ilə tam ekranda açılır, dərhal başlayır və məşq rejimi oflayn işləyir.',
   instPrompt: '“İndi quraşdır” düyməsinə toxunun və təsdiqləyin: hamısı budur.',
   instIos: 'iPhone və iPad-də: Paylaş düyməsinə toxunun (yuxarı oxlu kvadrat — son iOS-da ⋯ menyusunda ola bilər), “Əsas ekrana əlavə et” seçin, sonra “Əlavə et”. Safari-də işləyir, son iOS-da Chrome və Edge-də də.',

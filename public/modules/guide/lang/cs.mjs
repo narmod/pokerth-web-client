@@ -335,6 +335,7 @@ export default {
   hsChip: 'Žeton PokerTH — klepni na něj a roztočí se.',
   installApp: 'Nainstalovat aplikaci',
   instNow: 'Nainstalovat teď',
+  instAsk: 'Chceš PokerTH na domovské obrazovce?',
   instWhy: 'Po instalaci se PokerTH otevře na celou obrazovku s vlastní ikonou, spustí se okamžitě a tréninkový režim funguje offline.',
   instPrompt: 'Klepni na „Nainstalovat teď“ a potvrď: to je vše.',
   instIos: 'Na iPhonu a iPadu: klepni na tlačítko Sdílet (čtverec se šipkou nahoru — v novějším iOS může být v nabídce ⋯), vyber „Přidat na plochu“ a pak „Přidat“. Funguje v Safari a v novějším iOS i v Chrome a Edge.',

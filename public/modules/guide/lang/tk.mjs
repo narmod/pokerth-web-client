@@ -335,6 +335,7 @@ export default {
   hsChip: 'PokerTH çipi — oňa basyň, ol aýlanar.',
   installApp: 'Programmany gurnaň',
   instNow: 'Indi gurnaň',
+  instAsk: 'PokerTH-i baş ekranyňyzda isleýärsiňizmi?',
   instWhy: 'Gurnalanda PokerTH öz nyşany bilen doly ekranda açylýar, derrew başlaýar we türgenleşik režimi internetsiz işleýär.',
   instPrompt: '“Indi gurnaň” düwmesine basyň we tassyklaň: bar zat şu.',
   instIos: 'iPhone we iPad-de: Paýlaş düwmesine basyň (ýokaryk ok bilen inedördül — soňky iOS-da ol ⋯ menýusynda bolup biler), “Baş ekrana goş” saýlaň, soň “Goş” düwmesine basyň. Ol Safari-de, soňky iOS-da bolsa Chrome we Edge-de hem işleýär.',

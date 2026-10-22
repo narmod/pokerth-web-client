@@ -335,6 +335,7 @@ export default {
   hsChip: 'PokerTH-pelimerkki — napauta sitä, niin se pyörii.',
   installApp: 'Asenna sovellus',
   instNow: 'Asenna nyt',
+  instAsk: 'Haluatko PokerTH:n aloitusnäytöllesi?',
   instWhy: 'Asennettuna PokerTH avautuu koko näytölle omalla kuvakkeellaan, käynnistyy heti ja harjoittelutila toimii offline-tilassa.',
   instPrompt: 'Napauta ”Asenna nyt” ja vahvista: siinä kaikki.',
   instIos: 'iPhonessa ja iPadissa: napauta Jaa-painiketta (neliö ja ylöspäin osoittava nuoli; uudessa iOS:ssä se voi olla ⋯-valikossa), valitse ”Lisää Koti-valikkoon” ja sitten ”Lisää”. Se toimii Safarissa ja uudessa iOS:ssä myös Chromessa ja Edgessä.',

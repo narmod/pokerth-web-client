@@ -335,6 +335,7 @@ export default {
   hsChip: 'Ang chip ng PokerTH — i-tap ito at iikot ito.',
   installApp: 'I-install ang app',
   instNow: 'I-install ngayon',
+  instAsk: 'Gusto mo ba ang PokerTH sa home screen mo?',
   instWhy: 'Kapag naka-install, nagbubukas ang PokerTH nang full screen na may sariling icon, agad na nagsisimula, at gumagana offline ang training mode.',
   instPrompt: 'I-tap ang “I-install ngayon” at kumpirmahin: tapos na.',
   instIos: 'Sa iPhone at iPad: i-tap ang Share button (parisukat na may arrow na pataas — sa mga bagong iOS, maaaring nasa ⋯ menu ito), piliin ang “Add to Home Screen”, pagkatapos ay “Add”. Gumagana ito sa Safari, at sa mga bagong iOS, pati sa Chrome at Edge.',

@@ -335,6 +335,7 @@ export default {
   hsChip: 'Sglodyn PokerTH — tapiwch arno a bydd yn troelli.',
   installApp: 'Gosod yr ap',
   instNow: 'Gosod nawr',
+  instAsk: 'Hoffech chi PokerTH ar eich sgrin gartref?',
   instWhy: 'Ar ôl ei osod, mae PokerTH yn agor ar sgrin lawn gyda’i eicon ei hun, yn cychwyn ar unwaith, ac mae’r modd ymarfer yn gweithio all-lein.',
   instPrompt: 'Tapiwch “Gosod nawr” a chadarnhewch: dyna i gyd.',
   instIos: 'Ar iPhone ac iPad: tapiwch y botwm Rhannu (sgwâr gyda saeth i fyny — ar iOS diweddar gall fod yn y ddewislen ⋯), dewiswch “Ychwanegu at y Sgrin Gartref”, yna “Ychwanegu”. Mae’n gweithio yn Safari, ac ar iOS diweddar yn Chrome ac Edge hefyd.',

@@ -335,6 +335,7 @@ export default {
   hsChip: 'Žeton PokerTH — tapni ga in se zavrti.',
   installApp: 'Namesti aplikacijo',
   instNow: 'Namesti zdaj',
+  instAsk: 'Želiš PokerTH na začetnem zaslonu?',
   instWhy: 'Ko je nameščen, se PokerTH odpre na celem zaslonu z lastno ikono, zažene se takoj, vadbeni način pa deluje brez povezave.',
   instPrompt: 'Tapni „Namesti zdaj“ in potrdi: to je vse.',
   instIos: 'Na iPhone in iPadu: tapni gumb Deli (kvadrat s puščico navzgor — v novejšem iOS je lahko v meniju ⋯), izberi „Dodaj na domači zaslon“ in nato „Dodaj“. Deluje v brskalniku Safari, v novejšem iOS pa tudi v brskalnikih Chrome in Edge.',

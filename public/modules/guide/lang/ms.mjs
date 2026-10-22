@@ -335,6 +335,7 @@ export default {
   hsChip: 'Cip PokerTH — ketik dan ia berputar.',
   installApp: 'Pasang aplikasi',
   instNow: 'Pasang sekarang',
+  instAsk: 'Mahu PokerTH di skrin utama anda?',
   instWhy: 'Setelah dipasang, PokerTH dibuka dalam skrin penuh dengan ikonnya sendiri, bermula serta-merta dan mod latihan berfungsi tanpa internet.',
   instPrompt: 'Ketik “Pasang sekarang” dan sahkan: itu sahaja.',
   instIos: 'Pada iPhone dan iPad: ketik butang Kongsi (petak dengan anak panah ke atas — pada iOS terkini ia mungkin berada dalam menu ⋯), pilih “Tambah ke Skrin Utama”, kemudian “Tambah”. Ia berfungsi dalam Safari, dan pada iOS terkini dalam Chrome dan Edge juga.',

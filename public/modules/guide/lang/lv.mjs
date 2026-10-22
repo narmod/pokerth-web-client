@@ -335,6 +335,7 @@ export default {
   hsChip: 'PokerTH žetons — pieskaries tam, un tas griežas.',
   installApp: 'Instalēt lietotni',
   instNow: 'Instalēt tagad',
+  instAsk: 'Vai vēlies PokerTH savā sākuma ekrānā?',
   instWhy: 'Pēc instalēšanas PokerTH atveras pilnā ekrānā ar savu ikonu, startē uzreiz, un treniņa režīms darbojas bezsaistē.',
   instPrompt: 'Pieskaries „Instalēt tagad“ un apstiprini — tas ir viss.',
   instIos: 'iPhone un iPad ierīcēs: pieskaries kopīgošanas pogai (kvadrāts ar bultiņu uz augšu — jaunākajā iOS tā var būt izvēlnē ⋯), izvēlies „Pievienot sākuma ekrānam“, pēc tam „Pievienot“. Tas darbojas Safari, bet jaunākajā iOS arī Chrome un Edge.',
