@@ -116,7 +116,7 @@ async function runDevice(browser, name, descriptor) {
           return { above: c.top - h.bottom, below: f.top - c.bottom, underFooter: innerHeight - f.bottom }; });
       } finally { await fctx.close(); }
       assert.ok(notch.above > 8 && Math.abs(notch.above - notch.below) <= 3, `with safe areas the card is not centred: ${Math.round(notch.above)}px above, ${Math.round(notch.below)}px below`);
-      assert.ok(Math.abs(notch.underFooter - 34) <= 3, `with safe areas the footer is ${Math.round(notch.underFooter)}px above the bottom edge (home indicator needs 34)`);
+      assert.ok(Math.abs(notch.underFooter - 14) <= 3, `with safe areas the footer is ${Math.round(notch.underFooter)}px above the bottom edge (web.262: 34px inset - 20 = 14, clear of the indicator bar)`);
     });
     await openTable(page, base, { seats: SEATS, board: 'flop', turn: 'me' });
     await page.locator('#s-game.active .act-buttons-row .btn-action').first().waitFor();

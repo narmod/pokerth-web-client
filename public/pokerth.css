@@ -13456,12 +13456,17 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
      box that started under the header and ended too high, looked pushed up.
      Top: real header height (34px of bar + its own max(4px, inset) padding) +
      the same 14px gap as under the card. Bottom: exactly what the footer had
-     when it was absolutely positioned, max(10px, inset) - once, on the screen. */
+     when it was absolutely positioned, max(10px, inset) - once, on the screen.
+     web.262 (narmod, iPhone): the footer is plain text and three round icons,
+     nothing that competes with the home-indicator swipe, so it may come down
+     into the top of the inset: inset - 20px, i.e. 14px on a 34px iPhone - the
+     last line still clears the indicator bar (8-13px from the edge). Without
+     an inset (browser tab, Android) this stays 10px, as before. */
   #s-connect {
     --pth-sat: env(safe-area-inset-top, 0px); --pth-sab: env(safe-area-inset-bottom, 0px);
     justify-content: flex-start;
     padding-top: calc(34px + max(4px, var(--pth-sat)) + 14px);
-    padding-bottom: max(10px, var(--pth-sab));
+    padding-bottom: max(10px, calc(var(--pth-sab) - 20px));
   }
   #s-connect > .card { margin-top: auto; margin-bottom: auto; flex: 0 0 auto; }
   #s-connect > .connect-footer { position: static; flex: 0 0 auto; margin-top: 14px; padding-bottom: 0; }
