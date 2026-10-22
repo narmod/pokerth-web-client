@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Fișa unui jucător: profil și statistici. De aici îl poți invita la masa ta sau îl poți ignora — mesajele lui de chat sunt ascunse și poți anula oricând.',
   c5Logs: 'Jurnalele tale: fiecare partidă jucată pe acest dispozitiv e înregistrată aici, cu o previzualizare, exporturi HTML și text și o analiză a jocului tău.',
   cfIntro: 'Hai să completăm formularul împreună, câte un câmp — te duc eu la fiecare. **Următorul** merge mai departe, **Înapoi** revine, **Mai târziu** oprește turul.',
+  cfIntroShort: 'Un tur rapid: stilul de joc, tipul jocului, apoi butonul care creează masa. **Tur complet**, la final, explică fiecare câmp.',
+  fullTour: 'Tur complet',
   cfStyle: '**Stil de joc** = setări rapide: o atingere completează capitalul de pornire, blindurile și limitele de timp. **Relaxat** pentru partide lungi, **Normal** pentru una echilibrată, **Rapid** pentru cele scurte; **Clasament**, **We Cup** și **BBC** copiază formate reale ca să le exersezi. Toate valorile de mai jos pot fi schimbate în continuare; **Restrânge** pliază stilurile.',
   cfStyleClosed: '**Stil de joc** = setări rapide, restrânse aici. **Extinde** le afișează: o atingere completează capitalul de pornire, blindurile și limitele de timp — de la **Relaxat** la **Rapid**, plus formatele **Clasament**, **We Cup** și **BBC** pentru exersare.',
   cfPrefs: '**Al meu**: setările tale pentru acest mod — antrenament, LAN și Internet au fiecare setările lor. O atingere le reîncarcă în tot formularul. Ele completează formularul și cât timp nu ai creat încă o partidă în acest mod; după aceea, se deschide cu ultima ta partidă. Modifică-le câmp cu câmp în **Opțiuni avansate** → **Preferințe de masă**.',

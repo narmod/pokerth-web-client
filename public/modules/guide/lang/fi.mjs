@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Pelaajan kortti: profiili ja tilastot. Täältä voit kutsua hänet pöytääsi tai ohittaa hänet — hänen chat-viestinsä piilotetaan, ja voit perua ohituksen milloin tahansa.',
   c5Logs: 'Lokisi: jokainen tällä laitteella pelattu peli tallentuu tänne, ja mukana on esikatselu, HTML- ja tekstivienti sekä pelisi analyysi.',
   cfIntro: 'Käydään lomake läpi yhdessä, kenttä kerrallaan — tuon jokaisen näkyviin. **Seuraava** jatkaa, **Edellinen** palaa takaisin, **Myöhemmin** lopettaa kierroksen.',
+  cfIntroShort: 'Pikakierros: pelityyli, pelin tyyppi ja sitten painike, joka luo pöydän. **Koko kierros** lopussa selittää jokaisen kentän.',
+  fullTour: 'Koko kierros',
   cfStyle: '**Pelityyli** = pika-asetukset: yksi napautus täyttää aloituspääoman, blindit ja aikarajat. **Rauhallinen** pitkiin peleihin, **Normaali** tasapainoiseen, **Nopea** lyhyisiin; **Ranking**, **We Cup** ja **BBC** jäljittelevät oikeita formaatteja, jotta voit harjoitella niitä. Jokaista alla olevaa arvoa voi yhä muuttaa; **Supista** piilottaa tyylit.',
   cfStyleClosed: '**Pelityyli** = pika-asetukset, tässä supistettuina. **Laajenna** näyttää ne: yksi napautus täyttää aloituspääoman, blindit ja aikarajat — vaihtoehdot **Rauhallinen**, **Normaali** ja **Nopea** sekä harjoiteltavat formaatit **Ranking**, **We Cup** ja **BBC**.',
   cfPrefs: '**Omat**: omat asetuksesi tälle tilalle — tiloilla Harjoittelu, LAN ja Internet on kullakin omansa. Yksi napautus lataa ne takaisin koko lomakkeeseen. Ne myös täyttävät lomakkeen, kunnes olet luonut pelin tässä tilassa; sen jälkeen lomake avautuu viimeisimmän pelisi asetuksilla. Muokkaa niitä kenttä kerrallaan kohdassa **Lisäasetukset** → **Pöytäasetukset**.',

@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Thẻ của người chơi: hồ sơ và thống kê. Từ đây bạn có thể mời họ vào bàn của mình, hoặc bỏ qua họ — tin nhắn trò chuyện của họ bị ẩn, và bạn có thể hoàn tác bất cứ lúc nào.',
   c5Logs: 'Nhật ký của bạn: mọi ván chơi trên thiết bị này đều được ghi lại ở đây, kèm bản xem trước, xuất HTML và văn bản, cùng phần phân tích lối chơi của bạn.',
   cfIntro: 'Cùng điền biểu mẫu này nhé, từng ô một — mình sẽ đưa từng ô ra cho bạn xem. **Tiếp** để đi tiếp, **Quay lại** để lùi lại, **Để sau** để dừng hướng dẫn.',
+  cfIntroShort: 'Một vòng nhanh: phong cách chơi, loại ván, rồi nút tạo bàn. **Hướng dẫn đầy đủ** ở cuối giải thích từng mục.',
+  fullTour: 'Hướng dẫn đầy đủ',
   cfStyle: '**Phong cách chơi** = thiết lập nhanh: một chạm điền sẵn vốn khởi đầu, blind và giới hạn thời gian. **Thư thái** cho ván dài, **Thường** cho ván cân bằng, **Nhanh** cho ván chớp nhoáng; **Xếp hạng**, **We Cup** và **BBC** mô phỏng thể thức thật để bạn luyện tập. Mọi giá trị bên dưới vẫn có thể thay đổi; **Thu gọn** ẩn các phong cách đi.',
   cfStyleClosed: '**Phong cách chơi** = thiết lập nhanh, đang được thu gọn ở đây. **Mở rộng** để hiện chúng: một chạm điền sẵn vốn khởi đầu, blind và giới hạn thời gian — từ **Thư thái** đến **Nhanh**, cùng các thể thức **Xếp hạng**, **We Cup** và **BBC** để luyện tập.',
   cfPrefs: '**Của tôi**: thiết lập riêng của bạn cho chế độ này — luyện tập, LAN và Internet mỗi chế độ giữ một bộ riêng. Một chạm tải lại chúng vào toàn bộ biểu mẫu. Chúng cũng điền sẵn biểu mẫu cho đến khi bạn tạo ván ở chế độ này; sau đó biểu mẫu mở với ván gần nhất của bạn. Chỉnh từng trường trong **Tùy chọn nâng cao** → **Tùy chọn bàn**.',

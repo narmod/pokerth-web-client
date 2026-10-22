@@ -46,7 +46,8 @@ const EVENTS = Object.freeze({
   'login-lan': ['shown', 'done', 'dismissed', 'acted'],   // LAN directory (web.43)
   'wait-normal': ['shown', 'done', 'dismissed', 'acted'],
   // L5 — game creation page and windows (first opening)
-  'create-game': ['shown', 'done', 'dismissed', 'acted'],
+  'create-game': ['shown', 'done', 'dismissed', 'acted', 'full'],   // full (web.266): « Full tour » tapped
+  'create-game-full': ['shown', 'done', 'dismissed'],               // the tour of every field, on demand (web.266)
   'w-ranking': ['shown', 'done', 'dismissed', 'acted'],
   'w-events': ['shown', 'done', 'dismissed', 'acted'],
   'w-posts': ['shown', 'done', 'dismissed', 'acted'],   // web.289

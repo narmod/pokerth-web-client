@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Spēlētāja kartīte: profils un statistika. No šejienes vari uzaicināt viņu pie sava galda vai ignorēt — viņa tērzēšanas ziņas tiek paslēptas, un to jebkurā brīdī var atcelt.',
   c5Logs: 'Tavi žurnāli: katra šajā ierīcē nospēlētā spēle tiek ierakstīta šeit, ar priekšskatījumu, HTML un teksta eksportu un tavas spēles analīzi.',
   cfIntro: 'Iziesim cauri šai veidlapai kopā, pa vienam laukam — es katru parādīšu. **Tālāk** iet uz priekšu, **Atpakaļ** atgriežas, **Vēlāk** pārtrauc apskati.',
+  cfIntroShort: 'Īsa ekskursija: spēles stils, spēles veids un tad poga, kas izveido galdu. Beigās **Pilna ekskursija** izskaidro katru lauku.',
+  fullTour: 'Pilna ekskursija',
   cfStyle: '**Spēles stils** = ātrie iestatījumi: viens pieskāriens aizpilda sākuma žetonus, aklās likmes un laika ierobežojumus. **Mierīgs** garām spēlēm, **Normāls** līdzsvarotai, **Ātrs** īsām; **Ranking**, **We Cup** un **BBC** atdarina īstus formātus, lai tu varētu tos trenēt. Katru vērtību zemāk joprojām var mainīt; **Sakļaut** paslēpj stilus.',
   cfStyleClosed: '**Spēles stils** = ātrie iestatījumi, šeit sakļauti. **Izvērst** tos parāda: viens pieskāriens aizpilda sākuma žetonus, aklās likmes un laika ierobežojumus — no **Mierīgs** līdz **Ātrs**, kā arī formāti **Ranking**, **We Cup** un **BBC** treniņam.',
   cfPrefs: '**Manas izvēles**: tavi personīgie iestatījumi šim režīmam — režīmiem Treniņš, LAN un Internets katram ir savi. Viens pieskāriens tos ielādē atpakaļ visā veidlapā. Tie arī aizpilda veidlapu, kamēr neesi izveidojis spēli šajā režīmā; pēc tam tā atveras ar tavu pēdējo spēli. Labo tos lauku pa laukam sadaļā **Papildu opcijas** → **Galda izvēles**.',

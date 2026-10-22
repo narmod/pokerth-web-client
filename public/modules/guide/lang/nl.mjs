@@ -79,6 +79,8 @@ export default {
   c5Profile: 'De kaart van een speler: profiel en statistieken. Hier kun je hem uitnodigen aan je tafel, of hem negeren — zijn chatberichten worden verborgen, en je kunt dat op elk moment ongedaan maken.',
   c5Logs: 'Je logboeken: elk spel dat op dit apparaat is gespeeld, wordt hier vastgelegd, met een voorbeeld, export naar HTML en tekst en een analyse van je spel.',
   cfIntro: 'We lopen dit formulier samen door, veld voor veld — ik breng elk veld in beeld. **Volgende** gaat verder, **Vorige** gaat terug, **Later** stopt de rondleiding.',
+  cfIntroShort: 'Een korte rondleiding: de spelstijl, het speltype en dan de knop die de tafel aanmaakt. **Volledige rondleiding** aan het eind legt elk veld uit.',
+  fullTour: 'Volledige rondleiding',
   cfStyle: '**Spelstijl** = snelle instellingen: één tik vult het startkapitaal, de blinds en de tijdslimieten in. **Ontspannen** voor lange spellen, **Normaal** voor een evenwichtig spel, **Snel** voor korte; **Ranking**, **We Cup** en **BBC** nemen echte formats over zodat je ze kunt oefenen. Elke waarde hieronder blijft aanpasbaar; **Inklappen** klapt de stijlen weg.',
   cfStyleClosed: '**Spelstijl** = snelle instellingen, hier ingeklapt. **Uitklappen** toont ze: één tik vult het startkapitaal, de blinds en de tijdslimieten in — van **Ontspannen** tot **Snel**, plus de formats **Ranking**, **We Cup** en **BBC** om te oefenen.',
   cfPrefs: '**Mijn**: je eigen instellingen voor deze modus — Training, LAN en Internet hebben elk de hunne. Eén tik laadt ze terug in het hele formulier. Ze vullen het formulier ook in zolang je in deze modus nog geen spel hebt gemaakt; daarna opent het met je laatste spel. Pas ze veld voor veld aan in **Geavanceerde opties** → **Tafelvoorkeuren**.',

@@ -9,23 +9,42 @@
 // own lines; fields that are not on the page (training: name, type,
 // password…; the bot level online) are left out. A field greyed out by the
 // game type or a community template says so (locked).
+//
+// web.266: the tour of every field (up to 16 steps) was put off by most
+// players (admin, 2026-10-22: 1221 shown · 254 done · 623 « Later »). The
+// page now gets a QUICK tour — game style, game type, the buttons — whose
+// last step offers « Full tour »: the walk through every field, as before
+// (manual context create-game-full, never picked by the engine on its own).
 const ON = (w) => !w.offline;
+const TOUR = { screens: ['create'], tour: true, row: '.cf-row', locked: { sel: '.cf-locked', text: 'cfLocked' } };   // row: the whole row of a field, label included
+// the game style block = quick settings: open by default in training / LAN, folded on pokerth.net (web.288)
+const STYLE = { text: (w) => (w.styleOpen ? 'cfStyle' : 'cfStyleClosed'), target: ['#cf-style-grid', '.cf-style-label-row'], optional: true };
+const TYPE = { text: (w) => (w.guest ? 'c5CreateGuest' : 'c5Create'), target: '#cf-gtype-row', when: ON, optional: true };
+const BUTTONS = { text: 'cfActions', target: '#create-form .cf-actions', optional: true };
 
 export default {
   id: 'create-game',
   priority: 20,
-  screens: ['create'],
-  tour: true,
-  row: '.cf-row',          // outline the whole row of a field, label included
-  locked: { sel: '.cf-locked', text: 'cfLocked' },
+  ...TOUR,
+  steps: [
+    { text: (w) => (w.offline ? 'c5CreateOffline' : 'cfIntroShort') },
+    STYLE,
+    TYPE,
+    Object.assign({}, BUTTONS, { buttons: ['later', 'fullTour', 'gotIt'] }),
+  ],
+};
+
+export const createGameFull = {
+  id: 'create-game-full',
+  manual: true,
+  ...TOUR,
   steps: [
     { text: (w) => (w.offline ? 'c5CreateOffline' : 'cfIntro') },
-    // the game style block = quick settings: open by default in training / LAN, folded on pokerth.net (web.288)
-    { text: (w) => (w.styleOpen ? 'cfStyle' : 'cfStyleClosed'), target: ['#cf-style-grid', '.cf-style-label-row'], optional: true },
+    STYLE,
     // my prefs: the ⭐ pill once saved for this mode, else how to save them
     { text: (w) => (w.prefs ? 'cfPrefs' : 'cfPrefsNone'), target: ['#cf-preset-perso', '.cf-style-label-row'], optional: true },
     { text: (w) => (w.guest ? 'cfNameGuest' : 'cfName'), target: '#cf-name', when: ON, optional: true },
-    { text: (w) => (w.guest ? 'c5CreateGuest' : 'c5Create'), target: '#cf-gtype-row', when: ON, optional: true },
+    TYPE,
     { text: 'cfPassword', target: '#cf-use-password', when: ON, optional: true },
     { text: 'cfSpectators', target: '#cf-allow-spectators', when: ON, optional: true },
     { text: 'cfPlayers', target: '#cf-players', optional: true },
@@ -36,6 +55,6 @@ export default {
     { text: 'cfTimeout', target: '#cf-timeout', optional: true },
     { text: 'cfDelay', target: '#cf-delay', optional: true },
     { text: 'cfSkill', target: '#cf-skill-row', when: (w) => !!w.offline, optional: true },
-    { text: 'cfActions', target: '#create-form .cf-actions', optional: true },
+    BUTTONS,
   ],
 };

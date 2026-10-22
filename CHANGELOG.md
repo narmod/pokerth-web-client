@@ -132,6 +132,12 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **A quick tour of the game creation page, the full one on demand** (`web.266`) — admin counters
+  (2026-10-22): the tour of every field (up to 16 steps) was shown 1,221 times, finished 254 times and put
+  off 623 times (« Later » brings it back at every visit). `create-game` is now a quick tour — intro, game
+  style, game type, the buttons — whose last step offers « Full tour » (`create-game.full`), opening the
+  former tour as the manual context `create-game-full`. New keys `cfIntroShort`, `fullTour` in the 83 guide
+  catalogues; admin rows and `docs/GUIDE.md` follow.
 - **First visit: « First time on PokerTH? » comes first, the backup offer after** (`web.265`) — admin counters
   (2026-10-22): the first-launch offer was accepted on 16 % of devices and left unanswered on 45 %; on a
   blank desktop Chrome / Firefox the Ace's very first words were the local backup offer (2,247 shown, 11

@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Karta e një lojtari: profili dhe statistikat. Që këtu mund ta ftosh në tavolinën tënde ose ta injorosh — mesazhet e tij në bisedë fshihen, dhe mund ta anulosh kurdo.',
   c5Logs: 'Regjistrat e tu: çdo lojë e luajtur në këtë pajisje regjistrohet këtu, me pamje paraprake, eksport në HTML dhe tekst dhe një analizë të lojës tënde.',
   cfIntro: 'Le ta plotësojmë bashkë këtë formular, një fushë në një kohë — do të ta tregoj secilën me radhë. **Tjetra** të çon përpara, **Mbrapa** të kthen pas, **Më vonë** e ndal turin.',
+  cfIntroShort: 'Një xhiro e shpejtë: stili i lojës, lloji i lojës, pastaj butoni që krijon tryezën. **Xhiro e plotë** në fund shpjegon çdo fushë.',
+  fullTour: 'Xhiro e plotë',
   cfStyle: '**Stili i lojës** = cilësime të shpejta: një prekje plotëson stokun fillestar, blindet dhe kufijtë e kohës. **I qetë** për lojëra të gjata, **Normale** për një lojë të ekuilibruar, **E shpejtë** për lojëra të shkurtra; **Renditje**, **We Cup** dhe **BBC** kopjojnë formate të vërteta që të stërvitesh me to. Çdo vlerë më poshtë mund të ndryshohet sërish; **Mbyll** i palos stilet.',
   cfStyleClosed: '**Stili i lojës** = cilësime të shpejta, të palosura këtu. **Zgjero** i shfaq: një prekje plotëson stokun fillestar, blindet dhe kufijtë e kohës — nga **I qetë** te **E shpejtë**, plus formatet **Renditje**, **We Cup** dhe **BBC** për stërvitje.',
   cfPrefs: '**Preferencat e mia**: cilësimet e tua për këtë mënyrë — stërvitja, LAN dhe Interneti kanë secili të vetat. Një prekje i ngarkon sërish në të gjithë formularin. Ato e plotësojnë formularin edhe derisa të krijosh një lojë në këtë mënyrë; pas kësaj, ai hapet me lojën tënde të fundit. Ndryshoji fushë pas fushe te **Opsionet e avancuara** → **Preferencat e tavolinës**.',

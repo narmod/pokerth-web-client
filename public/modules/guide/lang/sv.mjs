@@ -79,6 +79,8 @@ export default {
   c5Profile: 'En spelares kort: profil och statistik. Härifrån kan du bjuda in hen till ditt bord eller ignorera hen — hens chattmeddelanden döljs, och du kan ångra det när som helst.',
   c5Logs: 'Dina loggar: varje spel som spelats på den här enheten sparas här, med förhandsvisning, export till HTML och text och en analys av ditt spel.',
   cfIntro: 'Vi går igenom formuläret tillsammans, ett fält i taget — jag visar dig vart och ett. **Nästa** går vidare, **Tillbaka** går bakåt, **Senare** avslutar turen.',
+  cfIntroShort: 'En snabb rundtur: spelstilen, speltypen och sedan knappen som skapar bordet. **Hela rundturen** i slutet förklarar varje fält.',
+  fullTour: 'Hela rundturen',
   cfStyle: '**Spelstil** = snabbinställningar: ett tryck fyller i startkapital, blinds och tidsgränser. **Avslappnad** för långa spel, **Normal** för ett balanserat, **Snabb** för korta; **Ranking**, **We Cup** och **BBC** kopierar riktiga format så att du kan öva på dem. Alla värden nedan kan fortfarande ändras; **Fäll ihop** döljer stilarna.',
   cfStyleClosed: '**Spelstil** = snabbinställningar, hopfällda här. **Expandera** visar dem: ett tryck fyller i startkapital, blinds och tidsgränser — från **Avslappnad** till **Snabb**, plus formaten **Ranking**, **We Cup** och **BBC** att öva på.',
   cfPrefs: '**Mina**: dina egna inställningar för det här läget — Träning, LAN och Internet har var sina. Ett tryck laddar in dem i hela formuläret igen. De fyller också i formuläret tills du har skapat ett spel i det här läget; därefter öppnas det med ditt senaste spel. Ändra dem fält för fält under **Avancerade alternativ** → **Bordsinställningar**.',

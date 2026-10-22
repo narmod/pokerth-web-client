@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Oyunçunun kartı: profil və statistika. Buradan onu masanıza dəvət edə və ya ignor edə bilərsiniz — onun çat mesajları gizlədilir və bunu istənilən vaxt geri qaytara bilərsiniz.',
   c5Logs: 'Jurnallarınız: bu cihazda oynanan hər oyun burada qeyd olunur — önizləmə, HTML və mətn ixracı, həmçinin oyununuzun təhlili ilə.',
   cfIntro: 'Bu formanı birlikdə, sahə-sahə keçək — hər birini sizə göstərəcəyəm. **Növbəti** irəli aparır, **Geri** geri qaytarır, **Sonra** turu dayandırır.',
+  cfIntroShort: 'Qısa tur: oyun üslubu, oyun növü, sonra masanı yaradan düymə. Sonda **Tam tur** hər sahəni izah edir.',
+  fullTour: 'Tam tur',
   cfStyle: '**Oyun üslubu** — tez ayarlar: bir toxunuş başlanğıc steki, blaindləri və vaxt limitlərini doldurur. **Sakit** uzun oyunlar üçün, **Normal** balanslı oyun üçün, **Sürətli** qısa oyunlar üçün; **Ranking**, **We Cup** və **BBC** məşq etməyiniz üçün real formatları təkrarlayır. Aşağıdakı hər dəyəri yenə də dəyişmək olar; **Yığ** üslubları gizlədir.',
   cfStyleClosed: '**Oyun üslubu** — tez ayarlar, burada yığılıb. **Genişləndir** onları göstərir: bir toxunuş başlanğıc steki, blaindləri və vaxt limitlərini doldurur — **Sakit**, **Normal**, **Sürətli**, həmçinin məşq üçün **Ranking**, **We Cup** və **BBC** formatları.',
   cfPrefs: '**Seçimlərim** — bu rejim üçün öz ayarlarınız: məşq, LAN və İnternet hər biri özününkünü saxlayır. Bir toxunuş onları bütün formaya geri yükləyir. Bu rejimdə oyun yaradana qədər onlar formanı da doldurur; ondan sonra forma son oyununuzla açılır. Onları **Əlavə seçimlər** → **Masa seçimləri** bölməsində sahə-sahə dəyişin.',

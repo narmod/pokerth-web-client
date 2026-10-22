@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Kartica igralca: profil in statistika. Od tu ga lahko povabiš k svoji mizi ali ga ignoriraš — njegova sporočila v klepetu so skrita, to pa lahko kadar koli prekličeš.',
   c5Logs: 'Tvoji dnevniki: vsaka igra, odigrana na tej napravi, je zabeležena tukaj, s predogledom, izvozom v HTML in besedilo ter analizo tvoje igre.',
   cfIntro: 'Pojdiva skupaj skozi ta obrazec, polje za poljem — vsako ti bom pokazal. **Naprej** za naslednje, **Nazaj** za prejšnje, **Pozneje** za konec ogleda.',
+  cfIntroShort: 'Kratek ogled: slog igre, vrsta igre, nato gumb, ki ustvari mizo. **Celoten ogled** na koncu razloži vsako polje.',
+  fullTour: 'Celoten ogled',
   cfStyle: '**Slog igre** = hitre nastavitve: en dotik izpolni začetne žetone, blinde in časovne omejitve. **Sproščeno** za dolge igre, **Običajno** za uravnoteženo, **Hitro** za kratke; **Uvrstitev**, **We Cup** in **BBC** posnemajo prave formate, da jih lahko vadiš. Vsako vrednost spodaj lahko še vedno spremeniš; **Strni** skrije sloge.',
   cfStyleClosed: '**Slog igre** = hitre nastavitve, tukaj strnjene. **Razširi** jih prikaže: en dotik izpolni začetne žetone, blinde in časovne omejitve — od **Sproščeno** do **Hitro**, poleg tega še formati **Uvrstitev**, **We Cup** in **BBC** za vadbo.',
   cfPrefs: '**Moje nastavitve**: tvoje lastne nastavitve za ta način — vadba, LAN in splet imajo vsak svoje. En dotik jih znova naloži v celoten obrazec. Obrazec izpolnjujejo tudi, dokler v tem načinu ne ustvariš igre; nato se odpre s tvojo zadnjo igro. Urejaš jih polje za poljem v **Napredne možnosti** → **Nastavitve mize**.',

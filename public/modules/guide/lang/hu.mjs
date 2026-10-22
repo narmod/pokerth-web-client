@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Egy játékos kártyája: profil és statisztikák. Innen meghívhatod az asztalodhoz, vagy mellőzheted — a csevegőüzenetei elrejtődnek, és ezt bármikor visszavonhatod.',
   c5Logs: 'A naplóid: az ezen az eszközön játszott minden játék itt rögzül, előnézettel, HTML- és szövegexporttal, valamint a játékod elemzésével.',
   cfIntro: 'Menjünk végig együtt ezen az űrlapon, mezőről mezőre — mindegyiket megmutatom. A **Tovább** előre visz, a **Vissza** visszalép, a **Később** leállítja a bemutatót.',
+  cfIntroShort: 'Gyors körbevezetés: a játékstílus, a játék típusa, majd az asztalt létrehozó gomb. A végén a **Teljes bemutató** minden mezőt elmagyaráz.',
+  fullTour: 'Teljes bemutató',
   cfStyle: '**Játékstílus** = gyorsbeállítások: egy koppintás kitölti a kezdő zsetonokat, a vakokat és az időkorlátokat. **Nyugodt** a hosszú játékokhoz, **Normál** a kiegyensúlyozotthoz, **Gyors** a rövidekhez; a **Ranglista**, a **We Cup** és a **BBC** valódi formátumokat másol, hogy gyakorolhasd őket. Minden lenti érték továbbra is módosítható; az **Összecsukás** elrejti a stílusokat.',
   cfStyleClosed: '**Játékstílus** = gyorsbeállítások, itt összecsukva. A **Kibontás** megmutatja őket: egy koppintás kitölti a kezdő zsetonokat, a vakokat és az időkorlátokat — a **Nyugodt** stílustól a **Gyors** stílusig, plusz a **Ranglista**, **We Cup** és **BBC** formátumok gyakorláshoz.',
   cfPrefs: '**Sajátom**: a saját beállításaid ehhez a módhoz — gyakorlás, LAN és Internet mind külön tárolja a sajátját. Egy koppintás visszatölti őket az egész űrlapba. Az űrlapot is ezek töltik ki, amíg nem hozol létre játékot ebben a módban; utána a legutóbbi játékoddal nyílik meg. Mezőnként szerkesztheted őket: **Speciális beállítások** → **Asztalbeállítások**.',

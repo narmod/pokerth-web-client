@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Kartica igrača: profil i statistike. Odavde ga možeš pozvati za svoj stol ili ignorirati — njegove poruke u chatu se sakrivaju, a to možeš poništiti u bilo kojem trenutku.',
   c5Logs: 'Tvoji zapisnici: svaka partija odigrana na ovom uređaju bilježi se ovdje, s pregledom, izvozom u HTML i tekst te analizom tvoje igre.',
   cfIntro: 'Prođimo zajedno kroz ovaj obrazac, polje po polje — svako ću ti pokazati. **Dalje** ide naprijed, **Natrag** se vraća, **Kasnije** prekida obilazak.',
+  cfIntroShort: 'Kratki obilazak: stil igre, vrsta igre, zatim gumb koji stvara stol. **Cijeli obilazak** na kraju objašnjava svako polje.',
+  fullTour: 'Cijeli obilazak',
   cfStyle: '**Stil igre** = brze postavke: jedan dodir popunjava početne žetone, blindove i vremenska ograničenja. **Mirna** za duge partije, **Normalna** za uravnoteženu, **Brza** za kratke; **Rang-lista**, **We Cup** i **BBC** preuzimaju prave formate da ih možeš vježbati. Svaku vrijednost ispod i dalje možeš promijeniti; **Sažmi** skriva stilove.',
   cfStyleClosed: '**Stil igre** = brze postavke, ovdje sažete. **Proširi** ih prikazuje: jedan dodir popunjava početne žetone, blindove i vremenska ograničenja — od **Mirna** do **Brza**, plus formati **Rang-lista**, **We Cup** i **BBC** za vježbu.',
   cfPrefs: '**Moje**: tvoje vlastite postavke za ovaj način — trening, LAN i Internet imaju svaki svoje. Jedan dodir ih vraća u cijeli obrazac. Popunjavaju ga i dok ne stvoriš partiju u ovom načinu; nakon toga se otvara s tvojom zadnjom partijom. Uređuj ih polje po polje u **Napredne opcije** → **Postavke stola**.',

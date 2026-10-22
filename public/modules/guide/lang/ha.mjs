@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Katin ɗan wasa: bayani da ƙididdiga. Daga nan kana iya gayyatarsa zuwa teburinka, ko ka ƙi kula da shi — ana ɓoye saƙonnin hirarsa, kuma kana iya soke hakan a kowane lokaci.',
   c5Logs: 'Log ɗinka: kowane wasan da aka buga a wannan na’ura ana rubuta shi a nan, tare da samfoti, fitarwa zuwa HTML da rubutu, da kuma nazarin wasanka.',
   cfIntro: 'Mu bi wannan fom tare, fili ɗaya bayan ɗaya — zan kawo maka kowanne. **Na gaba** yana ci gaba, **Baya** yana komawa baya, **Anjima** yana dakatar da rangadin.',
+  cfIntroShort: 'Ɗan rangadi: salon wasa, nau’in wasa, sannan maɓallin da ke ƙirƙirar teburin. **Cikakken rangadi** a ƙarshe na bayyana kowane fili.',
+  fullTour: 'Cikakken rangadi',
   cfStyle: '**Salon wasa** = saituna masu sauri: taɓawa ɗaya tana cike tarin farko, blinds da iyakokin lokaci. **Natsuwa** don dogayen wasanni, **Na al\'ada** don wasa mai daidaito, **Mai sauri** don gajerun wasanni; **Ranking**, **We Cup** da **BBC** suna kwaikwayon ainihin tsare-tsare don ka yi atisaye da su. Kowace ƙima a ƙasa za a iya canza ta har yanzu; **Naɗe** yana naɗe salon.',
   cfStyleClosed: '**Salon wasa** = saituna masu sauri, an naɗe su a nan. **Faɗaɗa** yana nuna su: taɓawa ɗaya tana cike tarin farko, blinds da iyakokin lokaci — daga **Natsuwa** zuwa **Mai sauri**, da kuma tsare-tsaren **Ranking**, **We Cup** da **BBC** don atisaye.',
   cfPrefs: '**Zaɓuɓɓukana**: saitunanka na kanka don wannan yanayi — horo, LAN da Intanet kowanne yana da nasa. Taɓawa ɗaya tana sake loda su cikin dukan fom ɗin. Suna kuma cike fom ɗin har sai ka ƙirƙiri wasa a wannan yanayi; bayan haka, yana buɗewa da wasanka na ƙarshe. Gyara su fili-fili a **Zaɓuɓɓuka na ci gaba** → **Zaɓuɓɓukan tebur**.',

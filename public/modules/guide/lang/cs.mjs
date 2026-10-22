@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Karta hráče: profil a statistiky. Odtud ho můžeš pozvat ke svému stolu nebo ignorovat — jeho zprávy v chatu se skryjí a ignorování můžeš kdykoli zrušit.',
   c5Logs: 'Tvoje protokoly: každá hra odehraná na tomto zařízení se zde zaznamenává, s náhledem, exportem do HTML a textu a analýzou tvé hry.',
   cfIntro: 'Projdeme tento formulář spolu, jedno pole po druhém — každé ti ukážu. **Další** jde dál, **Zpět** se vrací, **Později** prohlídku ukončí.',
+  cfIntroShort: 'Rychlá prohlídka: styl hry, typ hry a pak tlačítko, které stůl vytvoří. **Celá prohlídka** na konci vysvětlí každé pole.',
+  fullTour: 'Celá prohlídka',
   cfStyle: '**Styl hry** = rychlá nastavení: jedno klepnutí vyplní počáteční žetony, blindy a časové limity. **Klidná** pro dlouhé hry, **Normální** pro vyváženou, **Rychlá** pro krátké; **Žebříček**, **We Cup** a **BBC** kopírují skutečné formáty, abys je mohl trénovat. Každou hodnotu níže můžeš dál změnit; **Sbalit** styly schová.',
   cfStyleClosed: '**Styl hry** = rychlá nastavení, tady sbalená. **Rozbalit** je zobrazí: jedno klepnutí vyplní počáteční žetony, blindy a časové limity — od **Klidná** po **Rychlá**, plus formáty **Žebříček**, **We Cup** a **BBC** k trénování.',
   cfPrefs: '**Moje**: tvoje vlastní nastavení pro tento režim — trénink, LAN i Internet mají každý svoje. Jedno klepnutí je načte zpět do celého formuláře. Formulář vyplňují také, dokud v tomto režimu nezaložíš hru; potom se otevře s tvou poslední hrou. Uprav je pole po poli v **Pokročilé možnosti** → **Předvolby stolu**.',

@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Bir oyuncunun kartı: profil ve istatistikler. Buradan onu masana davet edebilir ya da yok sayabilirsin — sohbet mesajları gizlenir ve bunu her an geri alabilirsin.',
   c5Logs: 'Günlüklerin: bu cihazda oynanan her oyun burada kaydedilir; önizleme, HTML ve metin dışa aktarımları ve oyununun analiziyle birlikte.',
   cfIntro: 'Bu formu birlikte, alan alan dolduralım — her birini sana tek tek göstereceğim. **İleri** devam eder, **Geri** bir önceki adıma döner, **Sonra** turu durdurur.',
+  cfIntroShort: 'Kısa bir tur: oyun stili, oyun türü, ardından masayı oluşturan düğme. Sondaki **Tam tur** her alanı açıklar.',
+  fullTour: 'Tam tur',
   cfStyle: '**Oyun tarzı** = hızlı ayarlar: tek dokunuş başlangıç sermayesini, blind’ları ve süre sınırlarını doldurur. Uzun oyunlar için **Rahat**, dengeli bir oyun için **Normal**, hızlı oyunlar için **Hızlı**; **Sıralama**, **We Cup** ve **BBC** gerçek formatları kopyalar, böylece pratik yapabilirsin. Aşağıdaki her değer yine de değiştirilebilir; **Daralt** stilleri gizler.',
   cfStyleClosed: '**Oyun tarzı** = hızlı ayarlar, burada daraltılmış. **Genişlet** onları gösterir: tek dokunuş başlangıç sermayesini, blind’ları ve süre sınırlarını doldurur — **Rahat**’tan **Hızlı**’ya, ayrıca pratik için **Sıralama**, **We Cup** ve **BBC** formatları.',
   cfPrefs: '**Benim**: bu mod için kendi ayarların — antrenman, LAN ve İnternet ayrı ayrı tutulur. Tek dokunuş onları tüm forma geri yükler. Bu modda bir oyun oluşturana kadar formu da onlar doldurur; sonrasında form son oyununla açılır. Onları **Gelişmiş seçenekler** → **Masa tercihleri** içinde alan alan düzenle.',

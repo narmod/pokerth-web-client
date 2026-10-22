@@ -473,6 +473,13 @@ function onCtxButton(id) {
   const cid = run.ctx.id;
   if (id === 'next') { if (run.next()) renderStep(); else { beacon(cid, 'done'); finish(cid); } return; }
   if (id === 'prev') { run.prev(); renderStep(); return; }
+  if (id === 'fullTour') {                             // the quick tour's last step → every field (web.266)
+    const full = CONTEXTS.find((c) => c.id === 'create-game-full');
+    beacon(cid, 'done'); beacon(cid, 'full');
+    finish(cid);
+    if (full) { snoozed.delete(full.id); showContext(full); }
+    return;
+  }
   if (id === 'gotIt') { beacon(cid, 'done'); finish(cid); return; }
   if (ACTIONS.indexOf(id) >= 0) {
     const w = where();

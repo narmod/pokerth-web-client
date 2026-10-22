@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Karto de ludanto: profilo kaj statistikoj. De ĉi tie vi povas inviti lin al via tablo, aŭ ignori lin — liaj babilaj mesaĝoj estas kaŝitaj, kaj vi povas malfari tion iam ajn.',
   c5Logs: 'Viaj protokoloj: ĉiu ludo ludita per ĉi tiu aparato estas registrita ĉi tie, kun antaŭrigardo, eksportoj en HTML kaj teksto kaj analizo de via ludado.',
   cfIntro: 'Ni plenigu ĉi tiun formularon kune, po unu kampo — mi montros al vi ĉiun. **Sekva** iras antaŭen, **Antaŭa** reiras, **Poste** ĉesigas la gvidadon.',
+  cfIntroShort: 'Rapida trarigardo: la ludstilo, la ludtipo, poste la butono kiu kreas la tablon. **Plena trarigardo** fine klarigas ĉiun kampon.',
+  fullTour: 'Plena trarigardo',
   cfStyle: '**Ludstilo** = rapidaj agordoj: unu tuŝo plenigas la komencan stakon, la blindojn kaj la tempolimojn. **Trankvila** por longaj ludoj, **Normala** por ekvilibra, **Rapida** por rapidaj; **Ranking**, **We Cup** kaj **BBC** kopias verajn formatojn, por ke vi ekzerciĝu. Ĉiun valoron sube vi ankoraŭ povas ŝanĝi; **Faldi** kaŝas la stilojn.',
   cfStyleClosed: '**Ludstilo** = rapidaj agordoj, ĉi tie falditaj. **Malfaldi** montras ilin: unu tuŝo plenigas la komencan stakon, la blindojn kaj la tempolimojn — de **Trankvila** ĝis **Rapida**, plus la formatoj **Ranking**, **We Cup** kaj **BBC** por ekzerciĝi.',
   cfPrefs: '**Miaj preferoj**: viaj propraj agordoj por ĉi tiu reĝimo — ĉiu el trejnado, LAN kaj Interreto havas siajn. Unu tuŝo reŝargas ilin en la tutan formularon. Ili ankaŭ plenigas la formularon, ĝis vi kreos ludon en ĉi tiu reĝimo; poste ĝi malfermiĝas kun via lasta ludo. Redaktu ilin kampo post kampo en **Altnivelaj opcioj** → **Tablaj preferoj**.',

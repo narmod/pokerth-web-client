@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Žaidėjo kortelė: profilis ir statistika. Iš čia gali pakviesti jį prie savo stalo arba ignoruoti — jo pokalbio žinutės paslepiamos, o tai gali atšaukti bet kada.',
   c5Logs: 'Tavo žurnalai: kiekvienas šiame įrenginyje sužaistas žaidimas įrašomas čia, su peržiūra, eksportu į HTML ir tekstą bei tavo žaidimo analize.',
   cfIntro: 'Pereikime šią formą kartu, po vieną lauką — kiekvieną tau parodysiu. **Toliau** eina pirmyn, **Atgal** grįžta, **Vėliau** sustabdo apžvalgą.',
+  cfIntroShort: 'Trumpa apžvalga: žaidimo stilius, žaidimo tipas, tada mygtukas, kuris sukuria stalą. Pabaigoje **Visa apžvalga** paaiškina kiekvieną lauką.',
+  fullTour: 'Visa apžvalga',
   cfStyle: '**Žaidimo stilius** = greitieji nustatymai: vienas prisilietimas užpildo pradinį kapitalą, blaindus ir laiko ribas. **Ramus** ilgiems žaidimams, **Įprastas** subalansuotam, **Greitas** trumpiems; **Reitingas**, **We Cup** ir **BBC** atkartoja tikrus formatus, kad galėtum juos treniruotis. Kiekvieną žemiau esančią reikšmę vis tiek galima keisti; **Suskleisti** paslepia stilius.',
   cfStyleClosed: '**Žaidimo stilius** = greitieji nustatymai, čia suskleisti. **Išskleisti** juos parodo: vienas prisilietimas užpildo pradinį kapitalą, blaindus ir laiko ribas — nuo **Ramus** iki **Greitas**, taip pat formatai **Reitingas**, **We Cup** ir **BBC** treniruotei.',
   cfPrefs: '**Mano**: tavo asmeniniai nustatymai šiam režimui — režimai Treniruotė, LAN ir Internetas turi kiekvienas savo. Vienas prisilietimas juos vėl įkelia į visą formą. Jie taip pat užpildo formą, kol šiame režime nesi sukūręs žaidimo; vėliau ji atsidaro su tavo paskutiniu žaidimu. Redaguok juos laukas po lauko skiltyje **Išplėstinės parinktys** → **Stalo nuostatos**.',

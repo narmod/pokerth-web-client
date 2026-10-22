@@ -79,6 +79,8 @@ export default {
   c5Profile: 'La scheda di un giocatore: profilo e statistiche. Da qui puoi invitarlo al tuo tavolo o ignorarlo — i suoi messaggi in chat vengono nascosti, e puoi annullare in qualsiasi momento.',
   c5Logs: 'I tuoi registri: ogni partita giocata su questo dispositivo viene registrata qui, con anteprima, esportazioni HTML e testo e un’analisi del tuo gioco.',
   cfIntro: 'Compiliamo insieme questo modulo, un campo alla volta — ti porto io a ciascuno. **Avanti** prosegue, **Indietro** torna indietro, **Più tardi** interrompe il tour.',
+  cfIntroShort: 'Un giro veloce: lo stile di gioco, il tipo di partita, poi il pulsante che crea il tavolo. **Giro completo**, alla fine, spiega ogni campo.',
+  fullTour: 'Giro completo',
   cfStyle: '**Stile di gioco** = impostazioni rapide: un tocco compila capitale iniziale, bui e limiti di tempo. **Rilassato** per partite lunghe, **Normale** per una equilibrata, **Veloce** per quelle rapide; **Ranking**, **We Cup** e **BBC** riprendono formati reali per allenarti. Ogni valore qui sotto resta modificabile; **Riduci** richiude gli stili.',
   cfStyleClosed: '**Stile di gioco** = impostazioni rapide, chiuse qui. **Espandi** le mostra: un tocco compila capitale iniziale, bui e limiti di tempo — da **Rilassato** a **Veloce**, più i formati **Ranking**, **We Cup** e **BBC** per allenarti.',
   cfPrefs: '**Mio**: le tue impostazioni per questa modalità — allenamento, LAN e Internet hanno ognuna le proprie. Un tocco le ricarica in tutto il modulo. Compilano anche il modulo finché non hai creato una partita in questa modalità; dopo, si apre con la tua ultima partita. Modificale campo per campo in **Opzioni avanzate** → **Preferenze del tavolo**.',

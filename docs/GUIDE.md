@@ -170,7 +170,9 @@ screen registered for Escape, such as the login form, do not stop the Ace from s
 
 ## Game creation and windows (L5)
 
-`create-game` (screen `create`) is a guided tour of the form (web.287), one field per
+`create-game` (screen `create`) is a quick tour of the form (web.266): the game style,
+the game type, then the buttons, whose step offers *Full tour* (event `create-game.full`).
+That opens `create-game-full` (manual), the guided tour of every field (web.287), one field per
 step in the order of the page: game style (quick settings — open by default in training
 and LAN, folded on pokerth.net; the text follows Expand / Collapse), My prefs (the ⭐ pill,
 or how to save them with 💾 — per mode), name, type, password, spectators, max
@@ -262,7 +264,9 @@ series in the visit buckets (`gd`), and share the visit counter's retention and 
 | `login` | `shown`, `done`, `dismissed`, `acted`, `signup` |
 | `login-profile`, `login-lan` | `shown`, `done`, `dismissed`, `acted` |
 | `wait-normal` | `shown`, `done`, `dismissed`, `acted` |
-| `create-game`, `w-…` (windows) | `shown`, `done`, `dismissed`, `acted` |
+| `create-game` | `shown`, `done`, `dismissed`, `acted`, `full` |
+| `create-game-full` | `shown`, `done`, `dismissed` |
+| `w-…` (windows) | `shown`, `done`, `dismissed`, `acted` |
 | `ask` | `shown` (mode entered), `explained` (an element with an entry), `done` (mode left) |
 
 What each event means:

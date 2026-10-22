@@ -79,6 +79,8 @@ export default {
   c5Profile: 'A ficha de um jogador: perfil e estatísticas. Daqui você pode convidá-lo para a sua mesa ou ignorá-lo — as mensagens dele no chat ficam ocultas, e você pode desfazer isso a qualquer momento.',
   c5Logs: 'Seus registros: toda partida jogada neste dispositivo fica registrada aqui, com uma prévia, exportações em HTML e texto e uma análise do seu jogo.',
   cfIntro: 'Vamos preencher este formulário juntos, um campo de cada vez — eu levo você até cada um. **Próximo** avança, **Anterior** volta, **Mais tarde** encerra o tour.',
+  cfIntroShort: 'Um tour rápido: o estilo de jogo, o tipo de partida e depois o botão que cria a mesa. O **Tour completo**, no final, explica cada campo.',
+  fullTour: 'Tour completo',
   cfStyle: '**Estilo de jogo** = ajustes rápidos: um toque preenche o capital inicial, os blinds e os limites de tempo. **Relaxado** para partidas longas, **Normal** para uma equilibrada, **Rápido** para as curtas; **Ranking**, **We Cup** e **BBC** copiam formatos reais para você treinar. Todos os valores abaixo continuam editáveis; **Recolher** esconde os estilos.',
   cfStyleClosed: '**Estilo de jogo** = ajustes rápidos, recolhidos aqui. **Expandir** mostra os ajustes: um toque preenche o capital inicial, os blinds e os limites de tempo — de **Relaxado** a **Rápido**, além dos formatos **Ranking**, **We Cup** e **BBC** para treinar.',
   cfPrefs: '**Meu**: suas próprias configurações para este modo — treino, LAN e Internet têm cada um as suas. Um toque as recarrega no formulário inteiro. Elas também preenchem o formulário enquanto você não tiver criado uma partida neste modo; depois disso, ele abre com a sua última partida. Edite-as campo a campo em **Opções avançadas** → **Preferências de mesa**.',

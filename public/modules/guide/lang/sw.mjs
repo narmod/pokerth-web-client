@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Kadi ya mchezaji: wasifu na takwimu. Kutoka hapa unaweza kumwalika kwenye meza yako, au kumpuuza — jumbe zake za chati zinafichwa, na unaweza kutendua wakati wowote.',
   c5Logs: 'Kumbukumbu zako: kila mchezo uliochezwa kwenye kifaa hiki unarekodiwa hapa, pamoja na onyesho la kukagua, uhamishaji wa HTML na maandishi, na uchambuzi wa uchezaji wako.',
   cfIntro: 'Tupitie fomu hii pamoja, sehemu moja baada ya nyingine — nitakuonyesha kila moja. **Endelea** husonga mbele, **Rudi** hurudi nyuma, **Baadaye** husimamisha ziara.',
+  cfIntroShort: 'Ziara fupi: mtindo wa mchezo, aina ya mchezo, kisha kitufe kinachounda meza. **Ziara kamili** mwishoni inaeleza kila sehemu.',
+  fullTour: 'Ziara kamili',
   cfStyle: '**Mtindo wa mchezo** = mipangilio ya haraka: mguso mmoja hujaza rundo la kuanzia, blinds na mipaka ya muda. **Tulivu** kwa michezo mirefu, **Kawaida** kwa mchezo uliosawazika, **Haraka** kwa michezo ya haraka; **Ranking**, **We Cup** na **BBC** huiga miundo halisi ili uweze kuifanyia mazoezi. Kila thamani hapa chini bado inaweza kubadilishwa; **Kunja** hukunja mitindo.',
   cfStyleClosed: '**Mtindo wa mchezo** = mipangilio ya haraka, imekunjwa hapa. **Panua** huionyesha: mguso mmoja hujaza rundo la kuanzia, blinds na mipaka ya muda — kuanzia **Tulivu** hadi **Haraka**, pamoja na miundo ya **Ranking**, **We Cup** na **BBC** ya kufanyia mazoezi.',
   cfPrefs: '**Mapendeleo yangu**: mipangilio yako mwenyewe ya hali hii — mazoezi, LAN na Intaneti kila moja ina yake. Mguso mmoja huirejesha kwenye fomu nzima. Pia hujaza fomu hadi utakapounda mchezo katika hali hii; baada ya hapo, fomu hufunguka na mchezo wako wa mwisho. Ibadilishe sehemu kwa sehemu katika **Chaguo za kina** → **Mapendeleo ya meza**.',

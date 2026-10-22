@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Spjald leikmanns: prófíll og tölfræði. Héðan geturðu boðið honum að borðinu þínu eða hunsað hann — spjallskilaboð hans eru falin og þú getur afturkallað það hvenær sem er.',
   c5Logs: 'Skrárnar þínar: hver leikur sem spilaður er á þessu tæki er skráður hér, með forskoðun, útflutningi í HTML og texta og greiningu á spilamennsku þinni.',
   cfIntro: 'Förum saman yfir þetta eyðublað, einn reit í einu — ég sýni þér hvern og einn. **Næsta** heldur áfram, **Til baka** fer til baka, **Seinna** stöðvar kynninguna.',
+  cfIntroShort: 'Stutt yfirferð: leikstíllinn, leikgerðin og svo hnappurinn sem býr til borðið. **Full yfirferð** í lokin útskýrir hvern reit.',
+  fullTour: 'Full yfirferð',
   cfStyle: '**Leikstíll** = flýtistillingar: ein snerting fyllir inn upphafsstafla, blinda og tímamörk. **Rólegt** fyrir langa leiki, **Venjulegt** fyrir jafnvægi, **Hratt** fyrir stutta; **Stigaleikur**, **We Cup** og **BBC** líkja eftir raunverulegum sniðum svo þú getir æft þau. Öllum gildum hér fyrir neðan má enn breyta; **Fella saman** felur stílana.',
   cfStyleClosed: '**Leikstíll** = flýtistillingar, felldar saman hér. **Opna** sýnir þær: ein snerting fyllir inn upphafsstafla, blinda og tímamörk — frá **Rólegt** til **Hratt**, auk sniðanna **Stigaleikur**, **We Cup** og **BBC** til að æfa.',
   cfPrefs: '**Mínar stillingar**: þínar eigin stillingar fyrir þennan ham — Æfing, LAN og Internet hafa hvert sínar. Ein snerting hleður þeim aftur inn í allt eyðublaðið. Þær fylla líka út eyðublaðið þar til þú hefur búið til leik í þessum ham; eftir það opnast það með síðasta leiknum þínum. Breyttu þeim reit fyrir reit í **Ítarlegir valkostir** → **Borðstillingar**.',

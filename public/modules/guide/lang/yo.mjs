@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Káàdì òṣèré kan: àkọsílẹ̀ àti ìṣirò. Láti ibí o lè pè é sí tábìlì rẹ, tàbí fojú fò ó — a ń fi ìfiránṣẹ́ ìjíròrò rẹ̀ pamọ́, o sì lè dá a padà nígbàkúùgbà.',
   c5Logs: 'Àwọn ìwé-àkọsílẹ̀ rẹ: gbogbo eré tí a ṣe lórí ẹ̀rọ yìí ni a ń kọ sílẹ̀ níbí, pẹ̀lú àkọ́wò, ìkójáde HTML àti ọ̀rọ̀, àti ìtúpalẹ̀ bí o ṣe ń ṣeré.',
   cfIntro: 'Jẹ́ ká jọ la fọ́ọ̀mù yìí kọjá, apá kan lẹ́ẹ̀kan — màá mú ọ̀kọ̀ọ̀kan wá síwájú rẹ. **Èyí tó kàn** ń tẹ̀síwájú, **Padà** ń padà sẹ́yìn, **Nígbà míì** ń dá ìrìn-àjò náà dúró.',
+  cfIntroShort: 'Ìrìnàjò kúkúrú: ọ̀nà ìṣeré, irú eré, lẹ́yìn náà bọ́tìnnì tó ń ṣẹ̀dá tábìlì. **Ìrìnàjò kíkún** ní ìparí ń ṣàlàyé gbogbo àyè.',
+  fullTour: 'Ìrìnàjò kíkún',
   cfStyle: '**Ọ̀nà eré** = ètò kíákíá: ìfọwọ́kàn kan ń ṣètò àkójọ ìbẹ̀rẹ̀, blinds àti ààlà àkókò. **Pẹ̀lẹ́** fún eré gígùn, **Déédéé** fún eré tó dọ́gba, **Kíákíá** fún eré kíá; **Ranking**, **We Cup** àti **BBC** ń tẹ̀lé ìlànà gidi kí o lè fi wọ́n dánra wò. O ṣì lè yí gbogbo iye ìsàlẹ̀ padà; **Ká a** ń ká àwọn ọ̀nà náà kúrò.',
   cfStyleClosed: '**Ọ̀nà eré** = ètò kíákíá, tí a ká sí ibí. **Fẹ̀ ẹ́** ń fi wọ́n hàn: ìfọwọ́kàn kan ń ṣètò àkójọ ìbẹ̀rẹ̀, blinds àti ààlà àkókò — láti **Pẹ̀lẹ́** dé **Kíákíá**, pẹ̀lú ìlànà **Ranking**, **We Cup** àti **BBC** fún ìdánrawò.',
   cfPrefs: '**Àṣàyàn mi**: ètò tìrẹ fún ọ̀nà yìí — ìdánrawò, LAN àti Ayélujára ọ̀kọ̀ọ̀kan ní tirẹ̀. Ìfọwọ́kàn kan ń tún gbé wọn wọlé sí gbogbo fọ́ọ̀mù náà. Wọ́n tún ń kún fọ́ọ̀mù náà títí o fi ṣẹ̀dá eré kan nínú ọ̀nà yìí; lẹ́yìn náà, ó ń ṣí pẹ̀lú eré rẹ tó kẹ́yìn. Ṣàtúnṣe wọn lọ́kọ̀ọ̀kan nínú **Àṣàyàn ìlọsíwájú** → **Àṣàyàn tábìlì**.',

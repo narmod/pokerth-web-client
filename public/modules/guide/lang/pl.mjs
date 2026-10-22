@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Karta gracza: profil i statystyki. Stąd możesz zaprosić go do swojego stołu albo go ignorować — jego wiadomości na czacie są ukrywane, a możesz to cofnąć w każdej chwili.',
   c5Logs: 'Twoje dzienniki: każda gra rozegrana na tym urządzeniu jest tu zapisywana, z podglądem, eksportem do HTML i tekstu oraz analizą twojej gry.',
   cfIntro: 'Przejdźmy razem przez ten formularz, pole po polu — pokażę ci każde z nich. **Dalej** idzie naprzód, **Wstecz** cofa, **Później** kończy prezentację.',
+  cfIntroShort: 'Krótka wycieczka: styl gry, rodzaj gry, a potem przycisk, który tworzy stół. **Pełna wycieczka** na końcu objaśnia każde pole.',
+  fullTour: 'Pełna wycieczka',
   cfStyle: '**Styl gry** = szybkie ustawienia: jedno dotknięcie wypełnia kapitał początkowy, blindy i limity czasu. **Spokojny** na długie gry, **Normalny** na wyważoną, **Szybki** na krótkie; **Ranking**, **We Cup** i **BBC** kopiują prawdziwe formaty, żebyś mógł je poćwiczyć. Każdą wartość poniżej nadal można zmienić; **Zwiń** chowa style.',
   cfStyleClosed: '**Styl gry** = szybkie ustawienia, tu zwinięte. **Rozwiń** je pokazuje: jedno dotknięcie wypełnia kapitał początkowy, blindy i limity czasu — od **Spokojny** do **Szybki**, plus formaty **Ranking**, **We Cup** i **BBC** do poćwiczenia.',
   cfPrefs: '**Moje**: twoje własne ustawienia dla tego trybu — trening, LAN i Internet mają każdy swoje. Jedno dotknięcie wczytuje je z powrotem do całego formularza. Wypełniają go też, dopóki nie utworzysz gry w tym trybie; potem otwiera się z twoją ostatnią grą. Zmieniaj je pole po polu w **Opcje zaawansowane** → **Preferencje stołu**.',

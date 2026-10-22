@@ -49,10 +49,18 @@ ok(pick({ screen: 'game', ranked: true, playing: true }) === null, 'silent durin
 ok(pick({ screen: 'game', ranked: true, playing: false }) === null, 'silent at the table');
 ok(pick({ screen: 'create' }) === 'create-game', 'game creation page → the types, Ranking for account holders, presets are practice');
 // web.287: a tour of the form, one field per step, in the order of the page
-const CG = CONTEXTS.find((c) => c.id === 'create-game');
-const tourKeys = (w) => { const r = C.createRun(CG, W(w)); const out = []; for (let s = r.step(); s; s = r.next()) out.push(typeof s.text === 'function' ? s.text(W(w)) : s.text); return out; };
+const CG = CONTEXTS.find((c) => c.id === 'create-game-full');   // web.266: the tour of every field, from « Full tour »
+const CQ = CONTEXTS.find((c) => c.id === 'create-game');        // web.266: the quick tour
+const tourKeys = (w, ctx = CG) => { const r = C.createRun(ctx, W(w)); const out = []; for (let s = r.step(); s; s = r.next()) out.push(typeof s.text === 'function' ? s.text(W(w)) : s.text); return out; };
 const onlineTour = tourKeys({ screen: 'create' });
 ok(CG.tour === true && CG.locked && CG.locked.text === 'cfLocked' && 'cfLocked' in EN, 'create page: a tour, greyed-out fields explained');
+// web.266: the quick tour — style, type, buttons — then « Full tour »
+ok(CQ.tour === true && !CQ.manual && CG.manual === true && CQ.row === CG.row && CQ.locked === CG.locked, 'quick tour picked on the page, the full one only on demand');
+ok(tourKeys({ screen: 'create' }, CQ).join() === 'cfIntroShort,cfStyleClosed,c5Create,cfActions', 'quick tour (account): intro, style, type, buttons — ' + tourKeys({ screen: 'create' }, CQ).join());
+ok(tourKeys({ screen: 'create', guest: true }, CQ).join() === 'cfIntroShort,cfStyleClosed,c5CreateGuest,cfActions', 'quick tour (guest): the guest type line');
+ok(tourKeys({ screen: 'create', offline: true }, CQ).join() === 'c5CreateOffline,cfStyleClosed,cfActions', 'quick tour (training): no type step');
+const lastQ = CQ.steps[CQ.steps.length - 1];
+ok(lastQ.buttons.join() === 'later,fullTour,gotIt' && 'fullTour' in EN && 'cfIntroShort' in EN && EN.cfIntroShort.includes('**' + EN.fullTour + '**'), 'last step: Later · Full tour · Got it, the intro names the button');
 ok(onlineTour.join() === 'cfIntro,cfStyleClosed,cfPrefsNone,cfName,c5Create,cfPassword,cfSpectators,cfPlayers,cfStack,cfBlind,cfInterval,cfOrder,cfTimeout,cfDelay,cfActions', 'create page (account): every field, in the order of the form — ' + onlineTour.join());
 const guestTour = tourKeys({ screen: 'create', guest: true });
 ok(guestTour.indexOf('c5CreateGuest') >= 0 && guestTour.indexOf('cfNameGuest') >= 0 && guestTour.indexOf('c5Create') < 0, 'create page (guest): guest lines for the name and the type');

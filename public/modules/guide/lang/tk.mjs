@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Oýunçynyň karty: profil we statistika. Şu ýerden ony stoluňyza çagyryp ýa-da äsgermezlik edip bilersiňiz — onuň çat habarlary gizlenýär we muny islän wagtyňyz ýatyryp bilersiňiz.',
   c5Logs: 'Žurnallaryňyz: bu enjamda oýnalan her oýun şu ýerde ýazylýar — öňünden görmek, HTML we tekst eksporty hem-de oýnuňyzyň derňewi bilen.',
   cfIntro: 'Bu formany bilelikde, meýdança-meýdança geçeliň — her birini size görkezerin. **Indiki** öňe geçirýär, **Yza** yzyna gaýtarýar, **Soňrak** tanyşdyrmany togtadýar.',
+  cfIntroShort: 'Gysga syýahat: oýun stili, oýun görnüşi, soňra stoly döredýän düwme. Ahyrdaky **Doly syýahat** her meýdany düşündirýär.',
+  fullTour: 'Doly syýahat',
   cfStyle: '**Oýun stili** — tiz sazlamalar: bir basyş başlangyç stegi, blaýndlary we wagt çäklerini doldurýar. **Asuda** uzak oýunlar üçin, **Adaty** deňagramly oýun üçin, **Çalt** gysga oýunlar üçin; **Ranking**, **We Cup** we **BBC** türgenleşmegiňiz üçin hakyky formatlary gaýtalaýar. Aşakdaky her bahany soň hem üýtgedip bolýar; **Ýygna** stilleri gizleýär.',
   cfStyleClosed: '**Oýun stili** — tiz sazlamalar, bu ýerde ýygnalan. **Giňelt** olary görkezýär: bir basyş başlangyç stegi, blaýndlary we wagt çäklerini doldurýar — **Asuda**, **Adaty**, **Çalt**, şeýle hem türgenleşmek üçin **Ranking**, **We Cup** we **BBC** formatlary.',
   cfPrefs: '**Meniňki** — bu režim üçin öz sazlamalaryňyz: türgenleşik, LAN we Onlaýn her biri özüniňkini saklaýar. Bir basyş olary tutuş forma gaýtadan ýükleýär. Bu režimde oýun döredýänçäňiz olar formany hem doldurýar; ondan soň forma soňky oýnuňyz bilen açylýar. Olary **Giňişleýin sazlamalar** → **Stol saýlawlary** bölüminde meýdan-meýdan üýtgediň.',

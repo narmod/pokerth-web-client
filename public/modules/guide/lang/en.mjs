@@ -92,6 +92,8 @@ export default {
   c5Profile: 'A player’s card: profile and statistics. From here you can invite them to your table, or ignore them — their chat messages are hidden, and you can undo it at any time.',
   c5Logs: 'Your logs: every game played on this device is recorded here, with a preview, HTML and text exports and an analysis of your play.',
   cfIntro: 'Let’s go through this form together, one field at a time — I’ll bring each one into view. **Next** moves on, **Back** goes back, **Later** stops the tour.',
+  cfIntroShort: 'A quick tour: the game style, the game type, then the button that creates the table. **Full tour**, at the end, explains every field.',
+  fullTour: 'Full tour',
   cfStyle: '**Game style** = quick settings: one tap fills in the starting stack, the blinds and the time limits. **Relaxed** for long games, **Normal** for a balanced one, **Fast** for quick ones; **Ranking**, **We Cup** and **BBC** copy real formats so you can practise them. Every value below can still be changed; **Collapse** folds the styles away.',
   cfStyleClosed: '**Game style** = quick settings, folded here. **Expand** shows them: one tap fills in the starting stack, the blinds and the time limits — from **Relaxed** to **Fast**, plus the **Ranking**, **We Cup** and **BBC** formats to practise.',
   cfPrefs: '**My prefs**: your own settings for this mode — training, LAN and Internet each keep theirs. One tap loads them back into the whole form. They also fill the form until you have created a game in this mode; after that it opens with your last game. Edit them field by field in **Advanced options** → **Table preferences**.',

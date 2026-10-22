@@ -79,6 +79,8 @@ export default {
   c5Profile: 'A ficha dun xogador: perfil e estatísticas. Desde aquí podes convidalo á túa mesa ou ignoralo — as súas mensaxes de chat agóchanse, e podes desfacelo en calquera momento.',
   c5Logs: 'Os teus rexistros: cada partida xogada neste dispositivo gárdase aquí, cunha vista previa, exportacións en HTML e texto e unha análise do teu xogo.',
   cfIntro: 'Imos encher este formulario xuntos, un campo de cada vez — lévote a cada un. **Seguinte** avanza, **Anterior** volve atrás, **Máis tarde** detén a visita.',
+  cfIntroShort: 'Unha visita rápida: o estilo de xogo, o tipo de partida e o botón que crea a mesa. **Visita completa**, ao final, explica cada campo.',
+  fullTour: 'Visita completa',
   cfStyle: '**Estilo de xogo** = axustes rápidos: un toque enche o capital inicial, as cegas e os límites de tempo. **Tranquilo** para partidas longas, **Normal** para unha equilibrada, **Rápido** para as curtas; **Ranking**, **We Cup** e **BBC** copian formatos reais para que os practiques. Todos os valores de embaixo pódense cambiar igualmente; **Pregar** recolle os estilos.',
   cfStyleClosed: '**Estilo de xogo** = axustes rápidos, pregados aquí. **Despregar** amósaos: un toque enche o capital inicial, as cegas e os límites de tempo — de **Tranquilo** a **Rápido**, ademais dos formatos **Ranking**, **We Cup** e **BBC** para practicar.',
   cfPrefs: '**Meu**: os teus propios axustes para este modo — adestramento, LAN e Internet teñen cada un os seus. Un toque cárgaos de novo en todo o formulario. Tamén enchen o formulario mentres non crees unha partida neste modo; despois, ábrese coa túa última partida. Edítaos campo a campo en **Opcións avanzadas** → **Preferencias de mesa**.',

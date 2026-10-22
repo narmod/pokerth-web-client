@@ -311,9 +311,18 @@ async function runDevice(browser, name, descriptor) {
     await check(`${name}: C5 — the game creation page: a tour of the form, « 1/N »`, async () => {
       await page.waitForTimeout(800);
       await page.evaluate(() => window.App.openCreatePage());
-      await page.waitForFunction(() => /one field at a time/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 5000 });
+      await page.waitForFunction(() => /A quick tour/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 5000 });
       assert.match(await page.locator(bubble + ' .ad-step').innerText(), /^1\/\d+$/);
       assert.equal(await page.locator(btn('prev')).count(), 0, 'no Back on the first step');
+    });
+    await check(`${name}: C5 — the quick tour (web.266): a few steps, then « Full tour » opens the tour of every field`, async () => {
+      let n = 0;
+      while (await page.locator(btn('next')).count() && n < 6) { await click(page, btn('next')); await page.waitForTimeout(600); n++; }
+      assert.ok(n >= 2 && n <= 3, 'quick tour: ' + (n + 1) + ' steps');
+      assert.match(await bubbleText(), /Last step/);
+      await click(page, btn('fullTour'));
+      await page.waitForFunction(() => /one field at a time/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 5000 });
+      assert.match(await page.locator(bubble + ' .ad-step').innerText(), /^1\/\d+$/);
     });
     await shot(page, name, 'guide-c5-create');
     // every field in turn: brought into view, outlined, the bubble inside the screen and off the field

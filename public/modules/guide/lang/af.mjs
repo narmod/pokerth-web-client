@@ -79,6 +79,8 @@ export default {
   c5Profile: '’n Speler se kaartjie: profiel en statistieke. Van hier af kan jy hom na jou tafel nooi, of hom ignoreer — sy kletsboodskappe word versteek, en jy kan dit enige tyd ongedaan maak.',
   c5Logs: 'Jou logboeke: elke spel wat op hierdie toestel gespeel is, word hier aangeteken, met ’n voorskou, HTML- en teksuitvoere en ’n ontleding van jou spel.',
   cfIntro: 'Kom ons gaan saam deur hierdie vorm, een veld op ’n slag — ek bring elkeen in sig. **Volgende** gaan voort, **Terug** gaan terug, **Later** stop die toer.',
+  cfIntroShort: '’n Vinnige toer: die spelstyl, die speltipe, dan die knoppie wat die tafel skep. **Volledige toer** aan die einde verduidelik elke veld.',
+  fullTour: 'Volledige toer',
   cfStyle: '**Spelstyl** = vinnige instellings: een tik vul die beginkapitaal, blinds en tydsbeperkings in. **Kalm** vir lang spelle, **Normaal** vir ’n gebalanseerde een, **Vinnig** vir vinnige spelle; **Ranking**, **We Cup** en **BBC** volg regte formate sodat jy hulle kan oefen. Elke waarde hieronder kan steeds verander word; **Vou toe** vou die style weg.',
   cfStyleClosed: '**Spelstyl** = vinnige instellings, hier toegevou. **Vou oop** wys hulle: een tik vul die beginkapitaal, blinds en tydsbeperkings in — van **Kalm** tot **Vinnig**, plus die formate **Ranking**, **We Cup** en **BBC** om te oefen.',
   cfPrefs: '**Myne**: jou eie instellings vir hierdie modus — oefening, LAN en Internet hou elk hul eie. Een tik laai hulle terug in die hele vorm. Hulle vul ook die vorm totdat jy ’n spel in hierdie modus geskep het; daarna maak dit oop met jou laaste spel. Wysig hulle veld vir veld in **Gevorderde opsies** → **Tafelvoorkeure**.',

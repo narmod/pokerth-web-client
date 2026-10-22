@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Mängija kaart: profiil ja statistika. Siit saad ta oma lauda kutsuda või teda eirata — tema vestlussõnumid peidetakse ja saad selle igal ajal tagasi võtta.',
   c5Logs: 'Sinu logid: iga selles seadmes mängitud mäng salvestatakse siia koos eelvaate, HTML- ja tekstiekspordi ning sinu mängu analüüsiga.',
   cfIntro: 'Käime selle vormi koos läbi, üks väli korraga — toon igaühe sulle nähtavale. **Edasi** liigub edasi, **Tagasi** läheb tagasi, **Hiljem** lõpetab tuuri.',
+  cfIntroShort: 'Kiire ringkäik: mängustiil, mängu tüüp ja siis nupp, mis laua loob. Lõpus **Täielik ringkäik** selgitab iga välja.',
+  fullTour: 'Täielik ringkäik',
   cfStyle: '**Mängustiil** = kiirseaded: üks puudutus täidab algžetoonid, blindid ja ajapiirangud. **Rahulik** pikkadeks mängudeks, **Tavaline** tasakaalukaks, **Kiire** lühikesteks; **Ranking**, **We Cup** ja **BBC** järgivad päris formaate, et saaksid neid harjutada. Iga allpool olevat väärtust saab ikka muuta; **Ahenda** peidab stiilid.',
   cfStyleClosed: '**Mängustiil** = kiirseaded, siin ahendatud. **Laienda** näitab neid: üks puudutus täidab algžetoonid, blindid ja ajapiirangud — valikud **Rahulik**, **Tavaline** ja **Kiire** ning harjutamiseks formaadid **Ranking**, **We Cup** ja **BBC**.',
   cfPrefs: '**Minu eelistused**: sinu enda seaded selle režiimi jaoks — Treening, LAN ja Internet hoiavad igaüks oma. Üks puudutus laadib need tagasi kogu vormi. Need täidavad vormi ka seni, kuni sa pole selles režiimis mängu loonud; pärast seda avaneb vorm sinu viimase mänguga. Muuda neid välja kaupa jaotises **Täpsemad valikud** → **Laua eelistused**.',

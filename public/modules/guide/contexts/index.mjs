@@ -14,7 +14,7 @@ import login from './login.mjs';
 import loginProfile from './login-profile.mjs';
 import loginLan from './login-lan.mjs';
 import waitNormal from './wait-normal.mjs';
-import createGame from './create.mjs';
+import createGame, { createGameFull } from './create.mjs';
 import windows from './windows.mjs';
 
-export const CONTEXTS = [...windows, rankedResult, createGame, lobbyRanking, lobbyRankingCreate, lobbyGuest, lobbyWatch, lobbyCup, lobbyOpen, lobbyFlag, waitRanking, waitNormal, login, loginProfile, loginLan, welcome];
+export const CONTEXTS = [...windows, rankedResult, createGame, createGameFull, lobbyRanking, lobbyRankingCreate, lobbyGuest, lobbyWatch, lobbyCup, lobbyOpen, lobbyFlag, waitRanking, waitNormal, login, loginProfile, loginLan, welcome];

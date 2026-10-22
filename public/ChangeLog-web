@@ -1,3 +1,6 @@
+2026-10-22 version 2.1.10-web.266:
+- improvement: the Ace's tour of the « Create a game » page is now short (game style, game type, Create); « Full tour » at the end still explains every field
+
 2026-10-22 version 2.1.10-web.265:
 - improvement: first visit: the Ace now asks « First time on PokerTH? » before anything else, with « Show me » or « I already play »; his welcome is shorter
 - improvement: the backup of your settings is no longer the first question on a new browser: offered at a later visit to new players, and right away (« Had a backup? ») to players who already play

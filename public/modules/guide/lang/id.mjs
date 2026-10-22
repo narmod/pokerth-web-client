@@ -79,6 +79,8 @@ export default {
   c5Profile: 'Kartu pemain: profil dan statistik. Dari sini Anda bisa mengundangnya ke meja Anda, atau mengabaikannya — pesan obrolannya disembunyikan, dan Anda bisa membatalkannya kapan saja.',
   c5Logs: 'Log Anda: setiap permainan yang dimainkan di perangkat ini tercatat di sini, dengan pratinjau, ekspor HTML dan teks, serta analisis permainan Anda.',
   cfIntro: 'Mari isi formulir ini bersama, satu kolom demi satu kolom — saya akan menampilkan setiap kolom. **Berikutnya** untuk lanjut, **Sebelumnya** untuk kembali, **Nanti** untuk menghentikan tur.',
+  cfIntroShort: 'Tur singkat: gaya permainan, jenis permainan, lalu tombol yang membuat meja. **Tur lengkap** di akhir menjelaskan setiap kolom.',
+  fullTour: 'Tur lengkap',
   cfStyle: '**Gaya permainan** = pengaturan kilat: satu ketukan mengisi stack awal, blind, dan batas waktu. **Santai** untuk permainan panjang, **Normal** untuk yang seimbang, **Cepat** untuk yang singkat; **Ranking**, **We Cup**, dan **BBC** meniru format sungguhan agar Anda bisa berlatih. Semua nilai di bawah masih bisa diubah; **Ciutkan** melipat gaya-gaya itu.',
   cfStyleClosed: '**Gaya permainan** = pengaturan kilat, terlipat di sini. **Perluas** menampilkannya: satu ketukan mengisi stack awal, blind, dan batas waktu — dari **Santai** hingga **Cepat**, plus format **Ranking**, **We Cup**, dan **BBC** untuk latihan.',
   cfPrefs: '**Preferensiku**: pengaturan pribadi Anda untuk mode ini — latihan, LAN, dan Internet masing-masing punya sendiri. Satu ketukan memuatnya kembali ke seluruh formulir. Pengaturan ini juga mengisi formulir sampai Anda membuat permainan di mode ini; setelah itu formulir terbuka dengan permainan terakhir Anda. Ubah per kolom di **Opsi lanjutan** → **Preferensi meja**.',
