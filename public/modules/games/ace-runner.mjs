@@ -30,6 +30,7 @@ const ACE_X = 120;            // the Ace's feet, from the left
 const S = 0.5;                // sprite scale (world px per sprite px)
 const BLIND_EVERY = 300;      // metres per blind level
 const ALLIN_MS = 4500;
+const ALLIN_WARN_MS = 1500;   // the end is announced: the bar flashes, the Ace blinks, a short buzz
 // Speed (world px/s): gentle, eased growth (was +55 per level, +2/s, cap 900:
 // top speed in under a minute, a jolt at each level). Start 280 (was 330).
 // Obstacles: sparse at first, EASY_START extra seconds between them at level 1,
@@ -78,7 +79,7 @@ export function create(shell) {
     const deck = newDeck();
     G = { t: 0, dist: 0, level: 1, speed: SPEED0, y: 0, vy: 0, onGround: true, duck: false, holdJump: false,
       obs: [], items: [], fx: [], deck, hand: [], ev: evalCards([]), nextObs: 1.8, nextItem: 0.7,
-      nextAllIn: 22 + Math.random() * 14, allInUntil: 0, scroll: 0, yayUntil: 0, coolUntil: 0, banner: null, overAt: 0,
+      nextAllIn: 22 + Math.random() * 14, allInUntil: 0, allInWarned: false, scroll: 0, yayUntil: 0, coolUntil: 0, banner: null, overAt: 0,
       jumpBufUntil: 0, lastArr: -9, lastKind: 'duck', ins: false, nextIns: 35 + Math.random() * 20, safeUntil: 0 };
     renderHand(); renderStats();
   }
@@ -265,7 +266,9 @@ export function create(shell) {
     for (let f = G.fx.length - 1; f >= 0; f--) { const p = G.fx[f]; p.t += dt; if (p.t > p.life) G.fx.splice(f, 1); }
     setPose(!G.onGround ? 'air' : G.duck ? 'duck' : 'run');
     setMood(now < G.yayUntil ? 'mc-m-yay' : now < G.coolUntil ? 'mc-m-cool' : !G.onGround ? 'mc-m-jump' : king ? 'mc-m-fierce' : 'mc-m-smile');
-    setKing(king, king && G.allInUntil - now < 1000);
+    const ending = king && G.allInUntil - now < ALLIN_WARN_MS;
+    if (ending && !G.allInWarned) { G.allInWarned = true; buzz(25); }
+    setKing(king, ending);
     hDist.textContent = String(Math.floor(G.dist)).padStart(4, '0');
   }
 
@@ -295,7 +298,7 @@ export function create(shell) {
   }
   function collect(it) {
     if (it.kind === 'allin') {
-      G.allInUntil = performance.now() + ALLIN_MS;
+      G.allInUntil = performance.now() + ALLIN_MS; G.allInWarned = false;
       G.fx.push({ type: 'txt', x: ACE_X + 30, y: groundY() - G.y - 120, s: 'ALL-IN!', gold: true, big: true, t: 0, life: 1.3 });
       burst(it.x, it.y, 8, ['#f5c518', '#d8b25a']);
       sound('notifyAllIn');
@@ -522,6 +525,15 @@ export function create(shell) {
       const gr = g.createRadialGradient(ACE_X, gy - G.y - 44, 0, ACE_X, gy - G.y - 44, 58);
       gr.addColorStop(0, 'rgba(90,150,255,0)'); gr.addColorStop(0.75, 'rgba(90,150,255,.16)'); gr.addColorStop(1, 'rgba(90,150,255,0)');
       g.fillStyle = gr; g.fillRect(ACE_X - 60, gy - G.y - 104, 120, 120);
+    }
+    // All-In: a gold bar over his head empties as the time runs out.
+    const left = state === 'run' ? G.allInUntil - performance.now() : 0;
+    if (left > 0) {
+      const bw = 64, bh = 7, bx = ACE_X - bw / 2, by = Math.max(52, gy - G.y - 136), f = Math.min(1, left / ALLIN_MS);
+      const warn = left < ALLIN_WARN_MS, off = warn && !shell.reduced && Math.floor(left / 120) % 2;
+      rr(g, bx - 1.5, by - 1.5, bw + 3, bh + 3, 5); g.fillStyle = 'rgba(0,0,0,.55)'; g.fill();
+      if (!off) { rr(g, bx, by, Math.max(bh, bw * f), bh, 3.5); g.fillStyle = warn ? '#e8503f' : '#f5c518'; g.fill(); }
+      rr(g, bx - 1.5, by - 1.5, bw + 3, bh + 3, 5); g.strokeStyle = warn ? 'rgba(232,80,63,.9)' : 'rgba(245,197,24,.8)'; g.lineWidth = 1; g.stroke();
     }
     const blink = state === 'run' && performance.now() < G.safeUntil;
     ace.place(ACE_X, gy - G.y, S, shell.k);

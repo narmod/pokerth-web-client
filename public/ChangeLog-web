@@ -1,3 +1,6 @@
+2026-10-22 version 2.1.10-web.276:
+- improvement: Ace Runner: during All-In a gold bar over the Ace shows the time left; it turns red and flashes for the last second and a half, and the phone gives a short buzz
+
 2026-10-22 version 2.1.10-web.275:
 - improvement: Ace Runner starts slower and with few obstacles, then they come closer level after level
 - new: Ace Runner: as the blinds go up, flying cards come at different heights: low ones to jump over, high ones to stay under, and later some drift up and down

@@ -148,6 +148,10 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Ace Runner: All-In timer** (`web.276`) — reported by narmod: the end of the All-In could not be seen
+  coming (only the last second blinked). A gold bar over the Ace empties over `ALLIN_MS` (kept below the HUD,
+  y ≥ 52); for the last `ALLIN_WARN_MS` (1.5 s, was 1 s for the crown blink) it turns red and flashes (steady
+  with reduced motion), the crown blinks, and one short buzz. A new All-In refills it.
 - **Ace Runner: easy start, card heights by level** (`web.275`) — asked by narmod.
   · Start speed 330 → 280 (`SPEED0`); first obstacle after 1.8 s (was 1.1 s).
   · Sparse start: `EASY_START` (1 s) added between obstacles at level 1, `EASY_STEP` (0.25 s) less per level,
