@@ -4792,7 +4792,7 @@
       var x=(g.contexts||{})[c[0]]||{}, evs=c[2]||['shown','done','dismissed','acted'];
       h+='<div class="envrow"><span class="nmx">'+c[1]+'</span><span class="pct">'+evs.map(function(e){ return x[e]||0; }).join(' · ')+'</span></div>';
     });
-    h+='<div class="muted" style="margin-top:6px">Guests: free-account bubble shown '+g.guests.shown+' · « Create an account » tapped '+g.guests.redirect+'.</div>';
+    h+='<div class="muted" style="margin-top:6px">Guests: free-account bubble shown '+g.guests.shown+' · « Create an account » tapped '+g.guests.redirect+' · then back with an account '+(g.guests.account||0)+'. Login screen: « Create an account » '+(g.guests.loginSignup||0)+' · then back with an account '+(g.guests.loginAccount||0)+'.</div>';
     // web.27 — the local backup offer (blank browser storage), Ace's bubble or fallback banner
     var bk=(g.contexts||{}).backup||{}, bkN=function(e){ return bk[e]||0; };
     h+='<h4 style="margin:14px 0 4px">Local backup offer</h4>';

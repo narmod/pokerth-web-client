@@ -674,7 +674,7 @@ async function runDevice(browser, name, descriptor) {
       f.socket.receive(f.envelope(f.MSG.T.GameListNew, 14, [[1, 0, 404], [2, 0, 1], [3, 0, 0], [4, 0, 60], [4, 0, 61], [5, 0, 60], [6, 2, info]]));
     });
     await check(`${name}: guest — one bubble about a free account, no Join, no highlight`, async () => {
-      await page.waitForFunction(() => /free\) pokerth\.net account/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 5000 });
+      await page.waitForFunction(() => /free pokerth\.net account/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 5000 });
       assert.equal(await page.locator(btn('join')).count(), 0);
       assert.equal(await page.locator(btn('signup')).count(), 1);
       assert.equal(await page.locator('#ag-ring.ag-on').count(), 0);
@@ -684,7 +684,14 @@ async function runDevice(browser, name, descriptor) {
       await page.waitForTimeout(300);
       assert.equal(await page.locator(bubble).count(), 0);
       await page.locator('#g-list .game-row[data-gid="404"] .game-name').click();
-      await page.waitForFunction(() => /free\) pokerth\.net account/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 3000 });
+      await page.waitForFunction(() => /free pokerth\.net account/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 3000 });
+    });
+    await check(`${name}: guest — « Create an account »: the Ace says how to come back, the device remembers it (web.268)`, async () => {
+      await page.evaluate(() => { window.open = () => null; });
+      await click(page, btn('signup'));
+      await page.waitForFunction(() => /log in on Internet/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 3000 });
+      const rec = await page.evaluate(() => JSON.parse(localStorage.getItem('pth_guide_signup') || 'null'));
+      assert.ok(rec && rec.c === 'lobby-guest' && rec.t > 0, JSON.stringify(rec));
     });
     await ctx.close();
   }

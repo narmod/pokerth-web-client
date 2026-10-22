@@ -455,7 +455,7 @@ function doAction(id, w, cid) {
     if (id === 'join' && w.rankPick) joinedGid = w.rankPick.id;
     if (id === 'join' && w.rankPick && window.App && window.App.joinGame) window.App.joinGame(w.rankPick.id);
     else if (id === 'createRanking' && window.App && window.App.openCreatePage) window.App.openCreatePage({ ranking: true });
-    else if (id === 'signup') window.open(SIGNUP_URL, '_blank', 'noopener');
+    else if (id === 'signup') { window.open(SIGNUP_URL, '_blank', 'noopener'); signedUp(cid); }
     else if (id === 'seeRanking' && typeof window.toggleRankingModal === 'function') window.toggleRankingModal();
     else if (id === 'seeEvents' && typeof window.openForumModal === 'function') window.openForumModal();
     else if (id === 'editProfile') window.open(PROFILE_URL, '_blank', 'noopener');
@@ -1218,6 +1218,28 @@ function onBakButton(id) {
   });
 }
 
+// ── « Create an account » → back with an account (web.268) ──────────
+// Tapped in a bubble (the guest one, the login one): the device remembers it
+// (pth_guide_signup, local only), the Ace says how to come back — log in on
+// Internet with the new account, Guest mode unticked — and the first time this
+// device reaches the lobby with an account within SIGNUP_DAYS, `<ctx>.account`
+// is counted once. That is the end of the guest → account funnel the admin
+// could not see (245 « Create an account » tapped, then nothing).
+const KEY_SIGNUP = 'pth_guide_signup';
+const SIGNUP_DAYS = 30;
+function signedUp(cid) {
+  try { localStorage.setItem(KEY_SIGNUP, JSON.stringify({ c: cid, t: Date.now() })); } catch (e) {}
+  setTimeout(() => { note('signupThen', [btn('gotIt', true)]); }, 0);   // after finish() closed the tip
+}
+function trackSignup(w) {
+  if (!w || !w.net || w.guest || (w.screen !== 'lobby' && w.screen !== 'wait')) return;
+  let rec = null;
+  try { rec = JSON.parse(localStorage.getItem(KEY_SIGNUP) || 'null'); } catch (e) { rec = null; }
+  if (!rec) return;
+  try { localStorage.removeItem(KEY_SIGNUP); } catch (e) {}
+  if (rec && typeof rec.c === 'string' && Number(rec.t) > Date.now() - SIGNUP_DAYS * 864e5) beacon(rec.c, 'account');
+}
+
 // ── First-launch offer (D3) ────────────────────────────────────────
 // Not under automation (navigator.webdriver): the other browser tests and
 // their canonical screenshots must not get a bubble 2.5 s after loading.
@@ -1267,6 +1289,7 @@ async function evaluate() {
   const w = where();
   lastWhere = w;
   try { trackResult(w, prev); } catch (e) {}
+  try { trackSignup(w); } catch (e) {}                 // web.268: tips on or off
   if (!available()) { if (!(showing && (showing.kind === 'offer' || (onDemand() && canComeHere())))) leave(); return; }   // live embed: only what the player asked for
   // every trophy won: the secret word of the arcade, tips on or off (web.87)
   if (arcadePending && (w.screen === 'connect' || w.screen === 'lobby') && !blocked() && !window._pthGameOn

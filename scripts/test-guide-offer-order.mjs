@@ -31,6 +31,12 @@ if (!SCENARIO) {
     [/const next = !_FRESH_AT_BOOT && _nextOffer\(\);/.test(bk) && /!\(_FRESH_AT_BOOT \|\| \(next && !_state\.dirName\)\)/.test(bk), 'put off: offered again at the next visit, unless a folder was picked'],
     [/_offer\.shown = true;\s*_setNext\(false\);/.test(bk), 'shown once: no more « next visit »'],
   ];
+  // web.268: « Create an account » → back with an account
+  const gi = fs.readFileSync('public/modules/guide/index.mjs', 'utf8');
+  const en = fs.readFileSync('public/modules/guide/lang/en.mjs', 'utf8');
+  wire.push([/else if \(id === 'signup'\) \{ window\.open\(SIGNUP_URL, '_blank', 'noopener'\); signedUp\(cid\); \}/.test(gi), 'signup: the device remembers it, the Ace says how to come back']);
+  wire.push([/if \(!w \|\| !w\.net \|\| w\.guest \|\| \(w\.screen !== 'lobby' && w\.screen !== 'wait'\)\) return;/.test(gi) && /beacon\(rec\.c, 'account'\)/.test(gi) && /try \{ trackSignup\(w\); \} catch/.test(gi), 'back in the lobby with an account: <ctx>.account, once']);
+  wire.push([/signupThen: '[^']*\*\*Internet\*\*[^']*\*\*Guest mode\*\*/.test(en) && /c1Guest: '[^']*seasonal ranking/.test(en), 'texts: what the account brings, how to come back (Internet, Guest mode)']);
   let pass = 0;
   for (const [c, label] of wire) { console.log((c ? '  ✓ ' : '  ✗ ') + label); if (c) pass++; else failed++; }
   console.log(`\nwiring: ${pass}/${wire.length} · scenarios failed: ${failed}`);

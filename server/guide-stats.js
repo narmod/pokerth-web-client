@@ -33,7 +33,8 @@ const EVENTS = Object.freeze({
   welcome: ['shown', 'done'],
   'lobby-ranking': ['shown', 'done', 'dismissed', 'join', 'started'],
   'lobby-ranking-create': ['shown', 'done', 'dismissed', 'create'],
-  'lobby-guest': ['shown', 'done', 'dismissed', 'acted', 'guest_redirect'],
+  // account (web.268): « Create an account » tapped, then this device reached the lobby with an account
+  'lobby-guest': ['shown', 'done', 'dismissed', 'acted', 'guest_redirect', 'account'],
   'lobby-watch': ['shown', 'done', 'dismissed', 'watch'],   // tap on a running game (web.64)
   'lobby-cup': ['shown', 'done', 'dismissed', 'events'],    // tap on a cup game not started yet (web.65)
   'lobby-flag': ['shown', 'done', 'dismissed', 'acted', 'profile'],  // no flag next to my name (web.66)
@@ -41,7 +42,7 @@ const EVENTS = Object.freeze({
   'wait-ranking': ['shown', 'done', 'dismissed', 'started'],
   'ranked-result': ['shown', 'done', 'dismissed', 'acted'],
   // L4
-  login: ['shown', 'done', 'dismissed', 'acted', 'signup'],
+  login: ['shown', 'done', 'dismissed', 'acted', 'signup', 'account'],
   'login-profile': ['shown', 'done', 'dismissed', 'acted'],
   'login-lan': ['shown', 'done', 'dismissed', 'acted'],   // LAN directory (web.43)
   'wait-normal': ['shown', 'done', 'dismissed', 'acted'],
@@ -139,7 +140,8 @@ function summary(g) {
     contexts,
     funnel: { highlighted, joined, started, joinRate: rate(joined, highlighted), startRate: rate(started, joined) },
     create: { shown: n('lobby-ranking-create', 'shown'), created: n('lobby-ranking-create', 'create') },
-    guests: { shown: n('lobby-guest', 'shown'), redirect: n('lobby-guest', 'guest_redirect') },
+    guests: { shown: n('lobby-guest', 'shown'), redirect: n('lobby-guest', 'guest_redirect'), account: n('lobby-guest', 'account'),
+      loginSignup: n('login', 'signup'), loginAccount: n('login', 'account') },
     rankedStarts: n('wait-ranking', 'started'),
   };
 }

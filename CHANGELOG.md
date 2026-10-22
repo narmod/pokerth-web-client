@@ -132,6 +132,13 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Guests: what an account brings, how to come back with it, and whether they do** (`web.268`) — most players
+  with Ace's Help on were guests, who cannot play Ranking games (sp0ck's goal), and the admin stopped at « Create
+  an account » tapped (245). The guest bubble (`c1Guest`) now says what the free account brings (points at every
+  table, a seasonal ranking, the chat, the flag); after the tap the Ace says how to come back — log in on
+  Internet with the new account, Guest mode unticked (`signupThen`, the labels of each language). The device
+  remembers the tap (`pth_guide_signup`, local) and, the first time it reaches the lobby with an account
+  within 30 days, counts `lobby-guest.account` / `login.account` (admin, Guests line). 83 guide catalogues.
 - **Backup offer: why a Create / Restore did not succeed is counted** (`web.267`) — the admin showed 23
   restores tapped and 0 restored, 86 creates tapped and 11 created, with no way to tell a bug from a closed
   picker. A new Chromium end-to-end test (`scripts/test-backup-restore-browser.mjs`, the folder picker handing

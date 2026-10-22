@@ -259,14 +259,14 @@ series in the visit buckets (`gd`), and share the visit counter's retention and 
 | `welcome` | `shown`, `done` |
 | `lobby-ranking` | `shown`, `done`, `dismissed`, `join`, `started` |
 | `lobby-ranking-create` | `shown`, `done`, `dismissed`, `create` |
-| `lobby-guest` | `shown`, `done`, `dismissed`, `acted`, `guest_redirect` |
+| `lobby-guest` | `shown`, `done`, `dismissed`, `acted`, `guest_redirect`, `account` |
 | `lobby-watch` | `shown`, `done`, `dismissed`, `watch` |
 | `lobby-cup` | `shown`, `done`, `dismissed`, `events` |
 | `lobby-flag` | `shown`, `done`, `dismissed`, `acted`, `profile` |
 | `lobby-open` | `shown`, `done`, `dismissed`, `join` |
 | `wait-ranking` | `shown`, `done`, `dismissed`, `started` |
 | `ranked-result` | `shown`, `done`, `dismissed`, `acted` |
-| `login` | `shown`, `done`, `dismissed`, `acted`, `signup` |
+| `login` | `shown`, `done`, `dismissed`, `acted`, `signup`, `account` |
 | `login-profile`, `login-lan` | `shown`, `done`, `dismissed`, `acted` |
 | `wait-normal` | `shown`, `done`, `dismissed`, `acted` |
 | `create-game` | `shown`, `done`, `dismissed`, `acted`, `full` |
@@ -289,6 +289,10 @@ What each event means:
 - `lobby-ranking.started` means the table the player joined from the bubble started. A
   Ranking game only starts with 10/10 players.
 - `wait-ranking.started` means a Ranking game started while the help was on.
+- `lobby-guest.account` / `login.account` (web.268): *Create an account* was tapped in that
+  bubble, then this device reached the lobby with a pokerth.net account (not a guest) within 30
+  days — counted once (`pth_guide_signup`, local). After the tap the Ace says how to come back:
+  log in on *Internet* with the new account, *Guest mode* unticked (`signupThen`).
 
 The admin card is in the *Traffic* tab, under *Ace's Help*, and follows the selected
 period. It shows:

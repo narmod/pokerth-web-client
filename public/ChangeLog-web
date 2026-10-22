@@ -1,3 +1,6 @@
+2026-10-22 version 2.1.10-web.268:
+- improvement: for guests, the Ace explains what a free account brings (ranked games, points, seasonal ranking, chat, flag) and, after « Create an account », how to come back and log in with it
+
 2026-10-22 version 2.1.10-web.266:
 - improvement: the Ace's tour of the « Create a game » page is now short (game style, game type, Create); « Full tour » at the end still explains every field
 

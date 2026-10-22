@@ -44,7 +44,8 @@ export default {
   // C1 — pokerth.net lobby
   c1Join: 'A ranked game is waiting for you: **{n}/{max}** players. It starts as soon as it’s full!',
   c1None: 'No ranked game open right now. Create one — any player with an account can! It starts by itself as soon as 10 players have joined.',
-  c1Guest: 'Ranked games need a (free) pokerth.net account. As a guest you can play Normal games.',
+  c1Guest: 'Ranked games need a free pokerth.net account (one minute to create): points at every table, a seasonal ranking, the chat and your flag. As a guest you can play Normal games.',
+  signupThen: 'Once your account is created (check your e-mail if pokerth.net asks you to confirm it), come back and log in on **Internet** with your nickname and password, **Guest mode** unticked.',
   c1Watch: "This game is already being played: you can no longer take a seat, but you can watch it as a **spectator**. Select a running game, then tap **{spec}** below the list. Shall we watch this one?",
   c1WatchAgain: "This game is in progress — want to watch it?",
   c1WatchCup: "A cup game: **{name}**. Only the cup admins open these tables and invite the players. It is already being played, but anyone can watch it as a **spectator**: tap **{spec}** below the list. Shall we watch it?",
