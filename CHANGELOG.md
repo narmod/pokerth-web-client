@@ -285,6 +285,11 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **iPad app: no band under the screen either** (`web.271`, to be confirmed on a device) — the `web.248`/`web.249`
+  height correction was iPhone-only because an iPad app can run in a window; the same band was reported on an iPad.
+  `fullH()` now also applies on an iPad home-screen app (iPadOS sends a Mac user agent, detected by touch support),
+  but only while the app fills the screen width: in a window, Split View or Slide Over the measure is kept. The
+  full-screen layers (`data-pwa-iphone`) follow `--app-h` on the iPad too. `scripts/test-pwa-height.mjs`.
 - **Ace's Help no longer repeats a tip the player simply carried on from** (`web.264`) — the admin counters
   (2026-10-22) showed tips shown far more often than answered (login 1274 shown · 155 done; nickname/avatar
   906 · 300; ranked result 452 · 136). When the player moved on without answering (picked a mode, connected,

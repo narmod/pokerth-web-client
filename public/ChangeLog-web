@@ -1,3 +1,6 @@
+2026-10-22 version 2.1.10-web.271:
+- bugfix: iPad app: no more band at the bottom of the screen after an update or after « Play now » on a guide page (same fix as on iPhone)
+
 2026-10-22 version 2.1.10-web.270:
 - new: waiting for your table in another tab? The tab title blinks and, if you allowed it with « 🔔 Notify me » in the waiting room, a notification tells you when a ranked table needs one more player and when your table starts
 - improvement: the browser no longer asks for notifications as soon as you reach the lobby, only when you tap « 🔔 Notify me »

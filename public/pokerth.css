@@ -506,9 +506,9 @@ body {
    (position:fixed + inset:0 or bottom:0) still ends where iOS believes the
    window ends — short by the home-indicator inset after a reload or a
    navigation — and the screen under it shows as a strip. Those layers take the
-   same measured height. iPhone only (data-pwa-iphone): there the app window is
-   the screen and the keyboard does not resize it, whereas on Android a dialog
-   must keep shrinking with the keyboard. */
+   same measured height. iPhone and iPad (data-pwa-iphone, iPad since web.271):
+   there the keyboard does not resize the app window, whereas on Android a
+   dialog must keep shrinking with the keyboard. */
 :root[data-pwa-iphone="1"] :is(#boot-splash, #about-page, #privacy-page, #game-info-modal, #player-info-modal,
   #avatar-popup.avatar-popup-as-modal, #invite-modal, #conn-lost-modal, #hands-overlay, #password-prompt,
   #install-popup, .winner-overlay, .endgame-overlay, #disconnect-dialog, #quick-create-dialog, #ctl-menu, #ctl-kb,

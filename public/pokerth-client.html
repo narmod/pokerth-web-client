@@ -392,9 +392,21 @@ try{var _d=document.documentElement,_p=localStorage.getItem('pth_theme'),_tb=loc
                       mm('(display-mode: fullscreen)').matches));
     if (!pwa) return;
     d.setAttribute('data-pwa', '1');
-    /* iPhone home-screen app: the window is the screen (fullH below); the
-       full-screen layers follow the measured height there (pokerth.css, web.249). */
-    try { if (navigator.standalone === true && /iPhone|iPod/.test(navigator.userAgent || '')) d.setAttribute('data-pwa-iphone', '1'); } catch (e) {}
+    /* iPhone or iPad home-screen app: the window is (usually) the screen
+       (fullH below); the full-screen layers follow the measured height there
+       (pokerth.css, web.249). iPadOS reports a Mac user agent by default, hence
+       the touch test. The flag keeps its historical name; on an iPad in a
+       window --app-h is simply the measure, which is right there. */
+    function iosKind() {
+      try {
+        if (navigator.standalone !== true) return '';
+        var ua = navigator.userAgent || '';
+        if (/iPhone|iPod/.test(ua)) return 'phone';
+        if (/iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return 'pad';
+      } catch (e) {}
+      return '';
+    }
+    try { if (iosKind()) d.setAttribute('data-pwa-iphone', '1'); } catch (e) {}
     function editing() {
       var a = document.activeElement;
       return !!(a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable));
@@ -405,14 +417,19 @@ try{var _d=document.documentElement,_p=localStorage.getItem('pth_theme'),_tb=loc
        home-indicator inset and keep it — the band again, black on the login
        screen. On an iPhone the app window IS the screen (no windowing there),
        so its size in layout pixels is the true height. Only a gap the size of
-       that inset is corrected; any other difference is left to the measure. */
+       that inset is corrected; any other difference is left to the measure.
+       iPad (narmod 2026-10-22: same band on an iPad app): same correction, but
+       only while the app fills the screen width — in a window, Split View or
+       Slide Over the window is not the screen and the measure is kept. */
     function fullH(h) {
       try {
-        if (navigator.standalone !== true || !/iPhone|iPod/.test(navigator.userAgent || '')) return h;
+        var kind = iosKind();
+        if (!kind) return h;
         var sw = screen.width, sh = screen.height, lw = window.innerWidth;
         if (!sw || !sh || !lw) return h;
         var lg = Math.max(sw, sh), sm = Math.min(sw, sh);
         var portrait = mm ? mm('(orientation: portrait)').matches : window.innerHeight >= lw;
+        if (kind === 'pad' && Math.abs(lw - (portrait ? sm : lg)) > 1) return h;
         var full = portrait ? lg * (lw / sm) : sm * (lw / lg);
         return (full > h && full - h <= 60) ? full : h;
       } catch (e) { return h; }

@@ -16,15 +16,23 @@ const src = html.slice(html.indexOf('    function fullH(h) {'), html.indexOf('  
 let n = 0, fail = 0;
 const ok = (c, m) => { n++; if (!c) { fail++; console.error('  ✗', m); } else console.log('  ✓', m); };
 ok(src.length > 100 && /Math\.round\(fullH\(h\)\)/.test(html) && /h = fullH\(\(window\.visualViewport/.test(html), 'setH() and the band camouflage both go through fullH()');
-const run = (env, h) => new Function('navigator', 'screen', 'window', 'mm', src + '\nreturn fullH(' + h + ');')(
-  { standalone: env.st, userAgent: env.ua }, { width: env.sw, height: env.sh }, { innerWidth: env.iw, innerHeight: env.ih },
+const kindSrc = html.slice(html.indexOf('    function iosKind() {'), html.indexOf("    try { if (iosKind())"));
+ok(kindSrc.length > 100, 'iosKind() found');
+const run = (env, h) => new Function('navigator', 'screen', 'window', 'mm', kindSrc + src + '\nreturn fullH(' + h + ');')(
+  { standalone: env.st, userAgent: env.ua, maxTouchPoints: env.tp || 0 }, { width: env.sw, height: env.sh }, { innerWidth: env.iw, innerHeight: env.ih },
   (q) => ({ matches: /portrait/.test(q) ? env.ih >= env.iw : false }));
 const IP = { st: true, ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)', sw: 393, sh: 852 };
 ok(run({ ...IP, iw: 393, ih: 818 }, 818) === 852, 'iPhone portrait, 34 px short: the screen height');
 ok(run({ ...IP, iw: 393, ih: 852 }, 852) === 852, 'iPhone portrait, right height: unchanged');
 ok(run({ ...IP, iw: 852, ih: 372 }, 372) === 393, 'iPhone landscape, 21 px short: the screen height');
 ok(run({ ...IP, iw: 393, ih: 500 }, 500) === 500, 'a large gap (keyboard, anything else) is left alone');
-ok(run({ st: true, ua: 'Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X)', sw: 820, sh: 1180, iw: 820, ih: 1146 }, 1146) === 1146, 'iPad (windowed apps): unchanged');
+const PAD = { st: true, ua: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15', tp: 5, sw: 820, sh: 1180 };
+ok(run({ ...PAD, iw: 820, ih: 1160 }, 1160) === 1180, 'iPad app full screen (Mac UA + touch), portrait, 20 px short: the screen height');
+ok(run({ ...PAD, iw: 1180, ih: 800 }, 800) === 820, 'iPad app full screen, landscape, 20 px short: the screen height');
+ok(run({ ...PAD, ua: 'Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X)', iw: 820, ih: 1160 }, 1160) === 1180, 'iPad app with an iPad user agent: corrected too');
+ok(run({ ...PAD, iw: 700, ih: 1146 }, 1146) === 1146, 'iPad app in a window / Split View: unchanged');
+ok(run({ ...PAD, iw: 820, ih: 700 }, 700) === 700, 'iPad: a large gap (keyboard) is left alone');
+ok(run({ ...PAD, tp: 0, sw: 1512, sh: 982, iw: 1512, ih: 940 }, 940) === 940, 'Mac web app (no touch): unchanged');
 ok(run({ st: undefined, ua: 'Mozilla/5.0 (Linux; Android 14)', sw: 412, sh: 915, iw: 412, ih: 880 }, 880) === 880, 'Android: unchanged');
 ok(run({ ...IP, st: false, iw: 393, ih: 700 }, 700) === 700, 'iPhone Safari tab (not installed): unchanged');
 
@@ -33,7 +41,7 @@ ok(run({ ...IP, st: false, iw: 393, ih: 700 }, 700) === 700, 'iPhone Safari tab 
 // iPhone whose viewport is 34 px short of its screen.
 const css = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'pokerth.css'), 'utf8');
 ok(/:root\[data-pwa-iphone="1"\] :is\(#boot-splash, #about-page, #privacy-page,[\s\S]*?\) \{\s*bottom: auto; height: var\(--app-h, 100dvh\);/.test(css), 'iPhone app: full-screen layers take --app-h');
-ok(/d\.setAttribute\('data-pwa-iphone', '1'\)/.test(html), 'the flag is set for an iPhone home-screen app only');
+ok(/if \(iosKind\(\)\) d\.setAttribute\('data-pwa-iphone', '1'\)/.test(html), 'the flag is set for an iPhone or iPad home-screen app only');
 {
   const { chromium, devices } = await import('playwright');
   const { spawn } = await import('node:child_process');
