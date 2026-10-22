@@ -4327,6 +4327,16 @@
   function _round1(x){ return (Math.round(x*10)/10).toFixed(1); }
   // Returning DEVICES of a day or a window: seen there, first seen before.
   // `rt` is the visits of known devices (reloads included) — not devices.
+  // An average day, hour by hour: each hour over the days it was counted
+  // whole (proxy.js visitHourProfile `dh`); an older proxy: one divisor.
+  function _profMeans(prof){
+    var v=[], nw=[], dh=prof&&prof.dh, D=(prof&&prof.days)||0;
+    for(var i=0;i<24;i++){
+      var q=dh?(dh[i]||0):D;
+      v.push(q?((prof.v&&prof.v[i])||0)/q:0); nw.push(q?((prof.nw&&prof.nw[i])||0)/q:0);
+    }
+    return {v:v,nw:nw};
+  }
   function _rdOf(x){ return !x?0:(x.rd!=null?x.rd:Math.max(0,(x.u||0)-(x.nw||0))); }
   // -- Histogramme --------------------------------------------------------
   // Meme grille et memes couleurs de texte que _lineChart, pour que les deux
@@ -5253,8 +5263,8 @@
   // Activity: the last 48 h, the busiest hour of an average day, today.
   function _tsActivity(d){
     var h48=d.hours48||[], t48=0; h48.forEach(function(x){ t48+=x.v||0; });
-    var prof=d.hourProfile||{v:[],days:0}, pk=-1, pv=0;
-    for(var i=0;i<24;i++){ var v=(prof.v&&prof.v[i])||0; if(v>pv){ pv=v; pk=i; } }
+    var prof=d.hourProfile||{v:[],days:0}, pm=_profMeans(prof), pk=-1, pv=0;
+    for(var i=0;i<24;i++){ var v=pm.v[i]; if(v>pv){ pv=v; pk=i; } }
     // Follows the entry modes picked in Filters (the modes picked, by name).
     var t=d.today||{}, m=t.m||{}, cn=0, on=_modesOn(); on.forEach(function(md){ cn+=m[md.k]||0; });
     _tsTiles('activity',[
@@ -5931,8 +5941,10 @@
       }
     }
     if(n48) n48.textContent = tot48 ? (tot48.toLocaleString()+' visits \u00b7 last bar is the hour in progress') : '';
-    var V=0,N=0;
-    for(var i=0;i<24;i++){ V+=prof.v[i]||0; N+=prof.nw[i]||0; }
+    // Means per hour, not sums: an hour counted on fewer days (today's still
+    // to come, the start of counting) is not taken for a quiet one.
+    var pm=_profMeans(prof), V=0, N=0;
+    for(var i=0;i<24;i++){ V+=pm.v[i]; N+=pm.nw[i]; }
     if(!box) return '';
     if(!V || days<0.5){
       box.innerHTML='<div class="empty">An average day needs at least a full day of hourly data \u2014 come back tomorrow.</div>';
@@ -5944,17 +5956,17 @@
     // deux et ne trouverait jamais la vraie plage.
     var lowAt=0, lowSum=Infinity;
     for(var a=0;a<24;a++){
-      var sum=0; for(var k=0;k<4;k++) sum+=prof.v[(a+k)%24]||0;
+      var sum=0; for(var k=0;k<4;k++) sum+=pm.v[(a+k)%24];
       if(sum<lowSum){ lowSum=sum; lowAt=a; }
     }
     var lowLbl=String(lowAt).padStart(2,'0')+':00\u2013'+String((lowAt+4)%24).padStart(2,'0')+':00';
     var labs=[]; for(var q=0;q<24;q++) labs.push(String(q).padStart(2,'0'));
-    var perH=prof.v.map(function(v){ return Math.round((v/days)*10)/10; });
+    var perH=pm.v.map(function(v){ return Math.round(v*10)/10; });
     // Index : part des premieres venues a cette heure divisee par la part du
     // trafic a cette heure. 1.0 = exactement proportionnel. Une heure sans
     // trafic n'a pas d'index du tout ; faute de mieux elle est posee a zero,
     // mais dans une teinte neutre (colFn) pour ne pas se lire « aucun nouveau ».
-    var idx=prof.v.map(function(v,i){ return (v && N && V) ? Math.round(((prof.nw[i]/N)/(v/V))*100)/100 : 0; });
+    var idx=pm.v.map(function(v,i){ return (v && N && V) ? Math.round(((pm.nw[i]/N)/(v/V))*100)/100 : 0; });
     var wrapHi=(lowAt+4<=24)? {from:lowAt,to:lowAt+3} : null;
     box.innerHTML=
       '<div><h3>Visits per hour '+(d.h24?'(last 24 hours)':'(daily mean)')+'</h3><div id="trafHoursV"></div></div>'
@@ -5967,7 +5979,7 @@
         colFn:function(v){ return v>1.2?'#e0a03a':(v?'#9aa7bd':'#6f7f99'); } });
     var lowShare=Math.round((lowSum/V)*100);
     var lowIdxV=0, lowIdxN=0;
-    for(var z=0;z<4;z++){ lowIdxV+=prof.v[(lowAt+z)%24]||0; lowIdxN+=prof.nw[(lowAt+z)%24]||0; }
+    for(var z=0;z<4;z++){ lowIdxV+=pm.v[(lowAt+z)%24]; lowIdxN+=pm.nw[(lowAt+z)%24]; }
     var lowIdx=(lowIdxV && N && V)? ((lowIdxN/N)/(lowIdxV/V)) : 0;
     if(nh) nh.textContent='quietest stretch '+lowLbl+' \u2014 '+lowShare+'% of all visits'
       +(lowIdx?(', first-time share '+(Math.round(lowIdx*100)/100)+'x proportional'):'')

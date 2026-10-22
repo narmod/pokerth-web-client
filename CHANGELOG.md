@@ -368,6 +368,12 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Admin › Statistics: an average day read hour by hour** (`web.283`) — the hour profile divided all 24 hours
+  by one number of days, the day in progress counting for its elapsed fraction: hours still to come today, and
+  those before counting began on its first day, were read as zero visits, so the evening looked quieter every
+  afternoon. `visitHourProfile` now returns `dh`, the days on which each hour was counted whole (the hour in
+  progress and the hour counting began are left out); « Visits per hour », « Busiest hour », the quietest
+  stretch and the new-device index read per-hour means. `scripts/test-visit-hours.mjs`, `test-stats-fair.mjs`.
 - **Admin › Statistics › Summary: figures that set like against like** (`web.282`) — « Returning » counted the
   *visits* of devices already known (a newcomer's second page load the same day included) and set them against
   *new devices*: a day of 762 devices, 496 of them new, read about 660 returning instead of 266. Day points and

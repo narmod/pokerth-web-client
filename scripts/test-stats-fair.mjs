@@ -132,5 +132,18 @@ ok(!/x\.rt\b|\.rt\|\||month\.rt/.test(fn(admin, '_trafInsights') + fn(admin, 'lo
   const y = vm.runInContext('visitYesterdayToHour()', ctx);
   ok(y.v === 155 && y.nw === 31, 'at 15:30, yesterday counts 15 whole hours and half of the 16th (155, not 160)');
 }
+
+// An average day reads each hour over the days it was counted whole.
+{
+  const ctx = {};
+  vm.createContext(ctx);
+  vm.runInContext(fn(admin, '_profMeans'), ctx);
+  const v = Array(24).fill(100), dh = Array(24).fill(5); v[21] = 80; dh[21] = 4;   // 21:00 not reached yet today
+  const m = vm.runInContext('_profMeans(P)', Object.assign(ctx, { P: { v: v, nw: Array(24).fill(0), dh: dh, days: 4.88 } }));
+  ok(m.v[21] === 20 && m.v[3] === 20, 'an hour not yet reached today is not read as a quieter one (20 = 20)');
+  const o = vm.runInContext('_profMeans(P)', Object.assign(ctx, { P: { v: Array(24).fill(10), nw: Array(24).fill(0), days: 2 } }));
+  ok(o.v[0] === 5, 'an older proxy without dh keeps the single divisor');
+  ok(/pm=_profMeans\(prof\)/.test(fn(admin, '_tsActivity')) && /var pm=_profMeans\(prof\)/.test(fn(admin, '_trafHours')), 'Busiest hour, Visits per hour, the quiet stretch and the newcomer index all read the means');
+}
 console.log(fail ? 'FAIL ' + fail + '/' + n : 'OK ' + n + '/' + n);
 process.exit(fail ? 1 : 0);

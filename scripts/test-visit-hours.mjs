@@ -88,18 +88,29 @@ ok(visitHourSeries(48).length === 48 && !visitsStore.days[visitDayKey(gap)].h,
   'a day with no hour bucket does not break the series');
 
 const p = visitHourProfile(30);
-const expected = 4 + (now.getHours() + 1) / 24;
+const hh = now.getHours();
+const expected = 4 + hh / 24;
 ok(Math.abs(p.days - Math.round(expected * 100) / 100) < 0.02,
-  'four whole days plus the elapsed fraction of today, not five');
-// From 23:00 the day in progress counts as 24/24: five whole days is then right.
-ok(p.days < 5 || now.getHours() === 23, 'so a half-finished day never drags the average down');
-ok(p.v.length === 24 && p.nw.length === 24, 'the profile has one slot per hour');
+  'four whole days plus today\'s complete hours, not five');
+ok(p.days < 5, 'so a half-finished day never drags the average down');
+ok(p.v.length === 24 && p.nw.length === 24 && p.dh.length === 24, 'the profile has one slot per hour');
+ok(p.dh.every((x, k) => x === (k < hh ? 5 : 4)), 'each hour is divided by the days it was counted whole: today only up to the hour in progress');
+ok(p.dh.every((x, k) => p.v[k] / x === (QUIET.includes(k) ? 2 : 20)), 'so every hour reads its true daily mean (20, or 2 in the trough), the evening as much as the morning');
 ok(p.v[19] > p.v[5], 'the evening carries more traffic than the small hours');
 const V = p.v.reduce((a, b) => a + b, 0), N = p.nw.reduce((a, b) => a + b, 0);
 const idx = h => (p.nw[h] / N) / (p.v[h] / V);
 ok(idx(5) > 1.5, 'newcomers are over-represented in the trough — the point of the second bucket');
 ok(idx(19) < 1, 'and under-represented at peak, where the regulars are');
 
+{
+  // Counting began at 10:xx three days ago: that day's hours 0-10 are no measure.
+  const st = new Date(now); st.setDate(now.getDate() - 3); st.setHours(10, 20, 0, 0);
+  visitsStore.hourSince = st.getTime();
+  const q = visitHourProfile(30);
+  ok(q.dh[3] === (3 < hh ? 4 : 3) && q.dh[10] === (10 < hh ? 4 : 3) && q.dh[11] === (11 < hh ? 4 : 3) + 1,
+    'the day counting began only counts the hours after the one it began in');
+  delete visitsStore.hourSince;
+}
 // Nothing recorded at all: no NaN, no division by zero, just zeros.
 const empty = new Function('visitsStore',
   'let _visitBots = false, _visitMerged = null;\n' + fn('_visitAdd') + '\n' + fn('visitWithBots') + '\n' + fn('visitDay') + '\n' + fn('visitDayKey') + '\n' + fn('visitHourProfile') + '\nreturn visitHourProfile;')({ days: {} })(30);

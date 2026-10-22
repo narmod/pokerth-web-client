@@ -10098,23 +10098,33 @@ function visitHourSeries(nHours) {
 // nombre de jours entier alors que la journee n'est qu'a moitie faite ecraserait
 // tout le profil vers le bas. Un jour anterieur au deploiement n'a pas de seau
 // et ne compte donc pas du tout, plutot que de compter comme un jour a zero.
+// An average day, hour by hour: each hour is divided by the days on which
+// THAT hour was counted whole (`dh`). One divisor for the 24 hours made the
+// hours still to come today, and those before counting began on its first
+// day, read as zero visits: the evening was under-rated every afternoon.
+// The hour in progress is left out (`v` too), as is the hour counting began.
+// `days` = mean coverage (sum of dh / 24), for the « needs a full day » test.
 function visitHourProfile(daysBack, offset) {
-  const v = new Array(24).fill(0), nw = new Array(24).fill(0);
+  const v = new Array(24).fill(0), nw = new Array(24).fill(0), dh = new Array(24).fill(0);
   const now = new Date();
-  let days = 0;
   offset = offset || 0;
+  const since = visitsStore.hourSince ? new Date(visitsStore.hourSince) : null;
+  const sinceKey = since ? visitDayKey(since) : '', sinceH = since ? since.getHours() : -1;
   for (let i = offset; i < offset + daysBack; i++) {
     const d = new Date(now);
     d.setDate(now.getDate() - i);
-    const b = visitDay(visitDayKey(d));
+    const key = visitDayKey(d);
+    const b = visitDay(key);
     if (!b || !b.h) continue;
-    days += (i === 0) ? (now.getHours() + 1) / 24 : 1;
-    for (let k = 0; k < 24; k++) {
+    const from = key === sinceKey ? sinceH + 1 : 0, to = (i === 0) ? now.getHours() : 24;
+    for (let k = from; k < to; k++) {
       v[k] += b.h[k] || 0;
       if (b.hn) nw[k] += b.hn[k] || 0;
+      dh[k]++;
     }
   }
-  return { v: v, nw: nw, days: Math.round(days * 100) / 100 };
+  let t = 0; for (let k = 0; k < 24; k++) t += dh[k];
+  return { v: v, nw: nw, dh: dh, days: Math.round((t / 24) * 100) / 100 };
 }
 // Meme profil sur les 24 dernieres heures glissantes : chaque heure du jour y
 // figure une fois, lue dans les cases `h`/`hn` ; days vaut 1 des qu'il y a des
@@ -10133,7 +10143,7 @@ function visitHourProfile24() {
     v[hh] += b.h[hh] || 0;
     if (b.hn) nw[hh] += b.hn[hh] || 0;
   }
-  return { v: v, nw: nw, days: days };
+  return { v: v, nw: nw, dh: v.map(function () { return days; }), days: days };
 }
 // ── Cohortes : qui revient, et combien de jours ───────────────────────────
 // Le compteur nouveaux/recurrents dit qu'un appareil est deja venu, jamais
