@@ -153,7 +153,7 @@ export const strings = {
   advSecChat: "Trò chuyện",
   advSecCommunity: "Cộng đồng",
   advSecAvatars: "Ảnh đại diện",
-  advSecHelp: "Trợ giúp", advHandsBtn: "Hiện biểu tượng các bộ bài poker trên bàn",
+  advSecHelp: "Hỗ trợ", advHandsBtn: "Hiện biểu tượng các bộ bài poker trên bàn",
   advSecSeats: "Chỗ ngồi",
   advSecKeys: "Phím tắt",
   advAnimCards: "Hoạt ảnh lá bài", advDealAnim:"Hoạt ảnh chia bài (lá bài bay)",

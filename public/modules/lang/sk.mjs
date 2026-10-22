@@ -153,7 +153,7 @@ export const strings = {
   advSecChat: "Chat",
   advSecCommunity: "Komunita",
   advSecAvatars: "Avatary",
-  advSecHelp: "Pomocník", advHandsBtn: "Zobraziť ikonu pokrových kombinácií na stole",
+  advSecHelp: "Asistencia", advHandsBtn: "Zobraziť ikonu pokrových kombinácií na stole",
   advSecSeats: "Miesta",
   advSecKeys: "Klávesové skratky",
   advAnimCards: "Animácie kariet", advDealAnim:"Animácia rozdávania (lietajúce karty)",

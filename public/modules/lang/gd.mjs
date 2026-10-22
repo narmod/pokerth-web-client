@@ -154,7 +154,7 @@ export const strings = {
   advSecChat: "Cabadaich",
   advSecCommunity: "Coimhearsnachd",
   advSecAvatars: "Avatars",
-  advSecHelp: "Cobhair", advHandsBtn: "Seall ìomhaigheag làmhan a' phòcair air a' bhòrd",
+  advSecHelp: "Taic", advHandsBtn: "Seall ìomhaigheag làmhan a' phòcair air a' bhòrd",
   advSecSeats: "Suidheachain",
   advSecKeys: "Ath-ghoiridean meur-chlàir",
   advAnimCards: "Beòthachadh chairtean", advDealAnim:"Beòthachadh riarachaidh (cairtean ag itealaich)",

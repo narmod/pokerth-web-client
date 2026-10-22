@@ -160,7 +160,7 @@ export const strings = {
   advSecChat: "Chat",
   advSecCommunity: "Community",
   advSecAvatars: "Avatare",
-  advSecHelp: "Hilfe", advHandsBtn: "Symbol der Pokerblätter auf dem Tisch anzeigen",
+  advSecHelp: "Assistenz", advHandsBtn: "Symbol der Pokerblätter auf dem Tisch anzeigen",
   advSecSeats: "Plätze",
   advSecKeys: "Tastenkürzel",
   advAnimCards: "Kartenanimationen", advDealAnim:"Austeil-Animation (fliegende Karten)",

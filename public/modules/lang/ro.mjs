@@ -153,7 +153,7 @@ export const strings = {
   advSecChat: "Chat",
   advSecCommunity: "Comunitate",
   advSecAvatars: "Avataruri",
-  advSecHelp: "Ajutor", advHandsBtn: "Afișează pictograma mâinilor de poker pe masă",
+  advSecHelp: "Asistență", advHandsBtn: "Afișează pictograma mâinilor de poker pe masă",
   advSecSeats: "Locuri",
   advSecKeys: "Scurtături de tastatură",
   advAnimCards: "Animații ale cărților", advDealAnim:"Animația împărțirii cărților (cărți zburătoare)",

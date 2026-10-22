@@ -152,7 +152,7 @@ export const strings = {
   advSecChat: "チャット",
   advSecCommunity: "コミュニティ",
   advSecAvatars: "アバター",
-  advSecHelp: "ヘルプ", advHandsBtn: "テーブルにポーカー役アイコンを表示",
+  advSecHelp: "アシスト", advHandsBtn: "テーブルにポーカー役アイコンを表示",
   advSecSeats: "席",
   advSecKeys: "キーボードショートカット",
   advAnimCards: "カードアニメーション", advDealAnim:"カード配りアニメーション（飛ぶカード）",

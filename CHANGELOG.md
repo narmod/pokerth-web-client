@@ -368,6 +368,11 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **« Assistance » no longer reads « Help »** (`web.286`) — in 49 languages the Advanced options section that holds
+  the play aids (Assistance pane, odds, hands button, HUD, Ace's Help) was labelled with the word for « Help »
+  (Aide, Hilfe, ヘルプ…), easy to confuse with the Help menu. `advSecHelp` now carries the language's assistance
+  term — the `assist` label where it already was one, otherwise a new term also given to `assist` where that
+  one read « Help » too (ru, uk, lt, hu, nl, pl, tr…). The help's menu paths follow (audit: 0 mismatch).
 - **Admin › Statistics › World and Activity: « vs before » like for like** (`web.285`) — the arrows on the
   Internet and LAN connection cards, each LAN server, the logins and the « Connections per day » note set the
   period including today so far against as many complete days before: about −11 % in red every morning on flat

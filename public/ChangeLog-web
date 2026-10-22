@@ -1,3 +1,6 @@
+2026-10-23 version 2.1.10-web.286:
+- improvement: in Advanced options, the « Assistance » section is no longer called « Help » in many languages, so it is not mixed up with the Help menu
+
 2026-10-23 version 2.1.10-web.284:
 - bugfix: Malay is now real Malaysian Malay throughout the app, the help and the Ace's tips (many texts were in Indonesian)
 

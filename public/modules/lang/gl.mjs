@@ -153,7 +153,7 @@ export const strings = {
   advSecChat: "Chat",
   advSecCommunity: "Comunidade",
   advSecAvatars: "Avatares",
-  advSecHelp: "Axuda", advHandsBtn: "Mostrar a icona das mans de póker",
+  advSecHelp: "Asistencia", advHandsBtn: "Mostrar a icona das mans de póker",
   advSecSeats: "Asentos",
   advSecKeys: "Atallos de teclado",
   advAnimCards: "Animacións das cartas", advDealAnim:"Animación do reparto (cartas voando)",
