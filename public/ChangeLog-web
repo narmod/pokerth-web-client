@@ -1,3 +1,10 @@
+2026-10-22 version 2.1.10-web.274:
+- new: Ace Runner: a rare blue shield chip, the insurance, takes one hit for the Ace (🛡️ in the corner while you hold it)
+- new: Ace Runner: skim past an obstacle without touching it for +10 m
+- improvement: Ace Runner: the blind level is always shown next to the distance
+- improvement: Ace Runner: a jump pressed just before landing is no longer lost, and obstacles always leave room to land and jump again, whatever the speed
+- improvement: Ace Runner: the phone vibrates on a crash, on blinds up and when the insurance pays (if vibration is on)
+
 2026-10-22 version 2.1.10-web.273:
 - improvement: Ace Runner speeds up more gently: each new blind level is only a little faster and the change is smooth, the top speed is lower and comes after about two minutes instead of under one
 

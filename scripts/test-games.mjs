@@ -70,7 +70,7 @@ ok(art('nope', false) === '', 'no picture for an unknown game');
 const langDir = path.resolve('public/modules/lang');
 const files = fs.readdirSync(langDir).filter((f) => f.endsWith('.mjs'));
 const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'arRecord', 'arNewRecord',
-  'arAgain', 'arPause', 'arDistance', 'arBlinds', 'arQuit', 'ach_runner', 'ach_runner_d',
+  'arAgain', 'arPause', 'arDistance', 'arLevel', 'arBlinds', 'arQuit', 'ach_runner', 'ach_runner_d',
   'hcName', 'hcHint', 'hcFloors', 'hcScore', 'hcPerfect', 'hcSteady', 'hcCollapse', 'hcAgain', 'gmPick', 'ach_house', 'ach_house_d',
   'psName', 'psHint', 'psDaily', 'psFree', 'psCards', 'psFlushDraw', 'psStraightDraw', 'psBestLine', 'psAgain', 'ach_solitaire', 'ach_solitaire_d',
   'gmPlay', 'gmRules', 'gmIntro', 'arRules', 'hcRules', 'psRules',

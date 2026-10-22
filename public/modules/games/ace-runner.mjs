@@ -12,7 +12,12 @@
 //               no jolt), with the blinds sound
 //   All-In      the gold chip: crown and sceptre, nothing stops him for a few
 //               seconds, he smashes what he runs into, the distance counts double
+//   Insurance   the blue shield chip: it takes one hit for him (🛡️ in the HUD)
+//   Close call  skimming an obstacle without touching it: +CLOSE_BONUS metres
 //   Showdown    at the end the five cards of the hand are turned one by one
+// Fairness: a jump pressed just before landing is kept (JUMP_BUFFER_MS), and
+// obstacles are spaced by the time they reach the Ace (GAP), whatever the speed
+// or their own motion, so a jump always has room to land.
 // Sounds come from modules/sounds.mjs (mute and categories respected).
 // ═══════════════════════════════════════════════════════════════════
 
@@ -27,15 +32,26 @@ const ALLIN_MS = 4500;
 // Speed (world px/s): gentle, eased growth (was +55 per level, +2/s, cap 900:
 // top speed in under a minute, a jolt at each level).
 const SPEED0 = 330, SPEED_LVL = 20, SPEED_T = 0.7, SPEED_MAX = 800, SPEED_EASE = 1.5;
+const JUMP_BUFFER_MS = 140;   // a jump pressed this long before landing still counts
+// Minimum time (s) between two obstacles reaching the Ace, by kind (previous → next).
+const GAP = { jump: { jump: 0.5, duck: 0.74 }, duck: { jump: 0.46, duck: 0.36 } };
+const CLOSE_PX = 12, CLOSE_BONUS = 10;   // a close call: within CLOSE_PX, +CLOSE_BONUS m
+const INS_COL = ['#1f4e9e', '#f5f0e3'];
+const SAFE_MS = 900;          // after the insurance pays: a short blink, no new hit
 
 export function create(shell) {
   const { t, esc, sound } = shell;
   const ace = aceActor(shell.layer);
   shell.grant('runner');   // found it: its secret trophy (granted on the way out)
 
-  shell.hud.innerHTML = '<div><div class="ar-lab">' + esc(t('arDistance')) + '</div><div class="ar-num">0000</div></div>'
+  shell.hud.innerHTML = '<div class="ar-stats"><div><div class="ar-lab">' + esc(t('arDistance')) + '</div><div class="ar-num ar-d">0000</div></div>'
+    + '<div><div class="ar-lab">' + esc(t('arLevel')) + '</div><div class="ar-num ar-lv">1</div></div>'
+    + '<div class="ar-ins" hidden><div class="ar-lab">&nbsp;</div><div class="ar-num">🛡️</div></div></div>'
     + '<div class="ar-hand"><div class="ar-slots"></div><div class="ar-name"></div></div>';
-  const hDist = /** @type {HTMLElement} */ (shell.hud.querySelector('.ar-num'));
+  const hDist = /** @type {HTMLElement} */ (shell.hud.querySelector('.ar-d'));
+  const hLvl = /** @type {HTMLElement} */ (shell.hud.querySelector('.ar-lv'));
+  const hIns = /** @type {HTMLElement} */ (shell.hud.querySelector('.ar-ins'));
+  const buzz = (p) => { try { if (typeof window.hapticBuzz === 'function') window.hapticBuzz(p); } catch (e) {} };
   const hSlots = /** @type {HTMLElement} */ (shell.hud.querySelector('.ar-slots'));
   const hName = /** @type {HTMLElement} */ (shell.hud.querySelector('.ar-name'));
 
@@ -52,8 +68,9 @@ export function create(shell) {
     const deck = newDeck();
     G = { t: 0, dist: 0, level: 1, speed: SPEED0, y: 0, vy: 0, onGround: true, duck: false, holdJump: false,
       obs: [], items: [], fx: [], deck, hand: [], ev: evalCards([]), nextObs: 1.1, nextItem: 0.7,
-      nextAllIn: 22 + Math.random() * 14, allInUntil: 0, scroll: 0, yayUntil: 0, coolUntil: 0, banner: null, overAt: 0 };
-    renderHand();
+      nextAllIn: 22 + Math.random() * 14, allInUntil: 0, scroll: 0, yayUntil: 0, coolUntil: 0, banner: null, overAt: 0,
+      jumpBufUntil: 0, lastArr: -9, lastKind: 'duck', ins: false, nextIns: 35 + Math.random() * 20, safeUntil: 0 };
+    renderHand(); renderStats();
   }
 
   const setPose = ace.pose, setMood = ace.mood, setKing = ace.king;
@@ -64,6 +81,11 @@ export function create(shell) {
     for (let i = 0; i < 5; i++) h += ev.best[i] != null ? cardHtml(ev.best[i], 'sm') : '<div class="ar-slot"></div>';
     hSlots.innerHTML = h;
     hName.innerHTML = (ev.nameKey ? esc(t(ev.nameKey)) : '') + ' <b>×' + ev.mult + '</b>';
+  }
+
+  function renderStats() {
+    hLvl.textContent = String(G.level);
+    hIns.hidden = !G.ins;
   }
 
   function titlePanel() {
@@ -89,6 +111,7 @@ export function create(shell) {
       if (state !== 'run') return;
       G.holdJump = true;
       if (G.onGround) { G.vy = -880; G.onGround = false; G.duck = false; }
+      else G.jumpBufUntil = performance.now() + JUMP_BUFFER_MS;   // kept for the landing
     } else if (a === 'jump') {
       if (!G) return;
       G.holdJump = false;
@@ -103,19 +126,32 @@ export function create(shell) {
   // ── World ─────────────────────────────────────────────────────────
   const groundY = () => shell.H - GROUND_OFF;
   const W = () => shell.W;
+  // Push the new obstacle(s) far enough right that they reach the Ace at least
+  // GAP seconds after the previous ones (their own speed vx included).
+  function place(group, kind, vx) {
+    const v = G.speed + vx, x0 = group[0].x;
+    const arr = G.t + (x0 - ACE_X) / v, need = G.lastArr + GAP[G.lastKind][kind];
+    const shift = arr < need ? (need - arr) * v : 0;
+    for (const o of group) { o.x += shift; G.obs.push(o); }
+    const tail = group[group.length - 1];
+    G.lastArr = G.t + (tail.x - ACE_X) / v; G.lastKind = kind;
+    return x0 + shift;
+  }
   function spawnObstacle() {
-    const gy = groundY(), roll = Math.random(), x = W() + 40;
+    const gy = groundY(), roll = Math.random();
+    let x = W() + 40;
     if (G.dist > 250 && roll < 0.27) {
-      G.obs.push({ type: 'fly', x, y: gy - 74, w: 38, h: 24, phase: Math.random() * 6, vx: 110 });
+      x = place([{ type: 'fly', x, y: gy - 74, w: 38, h: 24, phase: Math.random() * 6, vx: 110 }], 'duck', 110);
     } else if (G.dist > 450 && roll < 0.42) {
-      G.obs.push({ type: 'dealer', x: x + 20, r: 13, vx: 150, rot: 0 });
+      x = place([{ type: 'dealer', x: x + 20, r: 13, vx: 150, rot: 0 }], 'jump', 150) - 20;
     } else {
       const n = 3 + Math.floor(Math.random() * (G.level >= 3 ? 7 : 5));
-      G.obs.push({ type: 'stack', x, w: 30, n, h: n * 6 + 4, col: Math.floor(Math.random() * 4) });
+      const group = [{ type: 'stack', x, w: 30, n, h: n * 6 + 4, col: Math.floor(Math.random() * 4) }];
       if (G.level >= 3 && Math.random() < 0.28) {
         const n2 = 3 + Math.floor(Math.random() * 4);
-        G.obs.push({ type: 'stack', x: x + 38, w: 30, n: n2, h: n2 * 6 + 4, col: Math.floor(Math.random() * 4) });
+        group.push({ type: 'stack', x: x + 38, w: 30, n: n2, h: n2 * 6 + 4, col: Math.floor(Math.random() * 4) });
       }
+      x = place(group, 'jump', 0);
     }
     // A card right above the obstacle: risk for a reward.
     if (Math.random() < 0.3 && G.deck.length) G.items.push({ kind: 'card', x: x + 14, y: gy - 130 - Math.random() * 20, c: G.deck.pop(), t: Math.random() * 6 });
@@ -149,13 +185,19 @@ export function create(shell) {
     if (lvl > G.level) {
       G.level = lvl;
       G.banner = { s: t('arBlinds'), sub: String(lvl), t: 0 };
-      sound('notifyBlindsUp');
+      sound('notifyBlindsUp'); buzz(30); renderStats();
     }
     if (G.banner) { G.banner.t += dt; if (G.banner.t > 1.6) G.banner = null; }
     if (!G.onGround) {
       G.vy += (G.holdJump && G.vy < 0 ? 2100 : 2900) * dt;
       G.y -= G.vy * dt;
-      if (G.y <= 0) { G.y = 0; G.vy = 0; G.onGround = true; }
+      if (G.y <= 0) {
+        G.y = 0; G.vy = 0; G.onGround = true;
+        if (now < G.jumpBufUntil) {   // pressed just before landing: jump again
+          G.jumpBufUntil = 0; G.onGround = false; G.duck = false;
+          G.vy = G.holdJump ? -880 : -360;
+        }
+      }
     }
     G.nextObs -= dt;
     if (G.nextObs <= 0) { spawnObstacle(); G.nextObs = 0.75 + Math.random() * 1.1 - Math.min(0.3, (G.level - 1) * 0.06); }
@@ -166,15 +208,33 @@ export function create(shell) {
       G.items.push({ kind: 'allin', x: W() + 30, y: groundY() - 110 - Math.random() * 30, t: 0 });
       G.nextAllIn = 28 + Math.random() * 20;
     }
+    if (!G.ins) G.nextIns -= dt;
+    if (G.nextIns <= 0) {
+      G.items.push({ kind: 'ins', x: W() + 30, y: groundY() - 40 - Math.random() * 70, t: 0 });
+      G.nextIns = 40 + Math.random() * 25;
+    }
     const ab = aceBox(), gy = groundY();
     for (let i = G.obs.length - 1; i >= 0; i--) {
       const o = G.obs[i];
       o.x -= dx + (o.vx || 0) * dt;
       if (o.type === 'dealer') o.rot -= ((G.speed + o.vx) * dt) / o.r;
       if (o.x < -60) { G.obs.splice(i, 1); continue; }
-      if (hit(ab, obsBox(o, gy))) {
+      const ob = obsBox(o, gy);
+      if (hit(ab, ob)) {
         if (king) { G.obs.splice(i, 1); smash(o); continue; }
+        if (now < G.safeUntil) { o.passed = true; continue; }
+        if (G.ins) { G.obs.splice(i, 1); insured(o); continue; }
         die(); return;
+      }
+      // Close call: how near the Ace came while level with it, paid once passed.
+      if (!o.passed) {
+        if (ab.r > ob.l && ab.l < ob.r) {
+          const gap = Math.max(ob.t - ab.b, ab.t - ob.b);
+          o.near = Math.min(o.near == null ? 1e9 : o.near, gap);
+        } else if (ob.r < ab.l) {
+          o.passed = true;
+          if (o.near != null && o.near < CLOSE_PX && !king && now >= G.safeUntil) closeCall(o, ob);
+        }
       }
     }
     for (let j = G.items.length - 1; j >= 0; j--) {
@@ -203,12 +263,31 @@ export function create(shell) {
     G.fx.push({ type: 'txt', x: o.x, y: gy - 60, s: '+25', gold: true, t: 0, life: 0.7 });
     sound('notifyCard');
   }
+  function insured(o) {
+    G.ins = false; G.safeUntil = performance.now() + SAFE_MS; renderStats();
+    const gy = groundY();
+    burst(o.x, o.type === 'fly' ? o.y : gy - 20, 8, [INS_COL[0], INS_COL[1]]);
+    G.fx.push({ type: 'txt', x: ACE_X + 30, y: gy - G.y - 110, s: '🛡️', big: true, t: 0, life: 0.9 });
+    sound('notifyFold'); buzz(50);
+  }
+  function closeCall(o, ob) {
+    G.dist += CLOSE_BONUS;
+    G.fx.push({ type: 'txt', x: ACE_X + 24, y: Math.min(ob.t, groundY() - G.y - 90) - 6, s: '+' + CLOSE_BONUS, gold: true, t: 0, life: 0.7 });
+    void o;
+  }
   function collect(it) {
     if (it.kind === 'allin') {
       G.allInUntil = performance.now() + ALLIN_MS;
       G.fx.push({ type: 'txt', x: ACE_X + 30, y: groundY() - G.y - 120, s: 'ALL-IN!', gold: true, big: true, t: 0, life: 1.3 });
       burst(it.x, it.y, 8, ['#f5c518', '#d8b25a']);
       sound('notifyAllIn');
+      return;
+    }
+    if (it.kind === 'ins') {
+      G.ins = true; renderStats();
+      burst(it.x, it.y, 6, [INS_COL[0], INS_COL[1]]);
+      G.fx.push({ type: 'txt', x: it.x, y: it.y - 24, s: '🛡️', t: 0, life: 0.9 });
+      sound('notifyCard'); buzz(20);
       return;
     }
     const prev = G.ev.cat;
@@ -226,7 +305,7 @@ export function create(shell) {
   function die() {
     state = 'over'; G.overAt = performance.now();
     setKing(false); setPose('ko'); setMood('mc-m-ko');
-    sound('notifyFold');
+    sound('notifyFold'); buzz([60, 40, 90]);
     const d = Math.floor(G.dist), score = d * G.ev.mult, prevBest = shell.best.get();
     const record = score > prevBest;
     if (record) shell.best.set(score);
@@ -348,6 +427,19 @@ export function create(shell) {
       g.restore();
       return;
     }
+    if (it.kind === 'ins') {
+      const gr = g.createRadialGradient(it.x, y, 0, it.x, y, 32);
+      gr.addColorStop(0, 'rgba(90,150,255,.5)'); gr.addColorStop(1, 'rgba(90,150,255,0)');
+      g.fillStyle = gr; g.fillRect(it.x - 32, y - 32, 64, 64);
+      g.save(); g.translate(it.x, y); g.scale(Math.max(0.2, Math.abs(Math.cos(it.t * 4))), 1);
+      g.fillStyle = INS_COL[0]; g.beginPath(); g.arc(0, 0, 14, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = '#0d2350'; g.lineWidth = 1.5; g.stroke();
+      g.strokeStyle = INS_COL[1]; g.setLineDash([4, 3.3]); g.lineWidth = 3; g.beginPath(); g.arc(0, 0, 11, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
+      // A small shield in the middle.
+      g.fillStyle = INS_COL[1]; g.beginPath(); g.moveTo(0, -6.5); g.lineTo(5.5, -4); g.lineTo(5, 1.5); g.quadraticCurveTo(3.5, 5, 0, 7); g.quadraticCurveTo(-3.5, 5, -5, 1.5); g.lineTo(-5.5, -4); g.closePath(); g.fill();
+      g.restore();
+      return;
+    }
     glow(g, it.x, y, 30, 0.35);
     const c = it.c, im = c === JOKER ? null : img(faceUrl(c));
     if (im) {
@@ -408,7 +500,14 @@ export function create(shell) {
     drawFx(g, now);
     drawBanner(g);
     // The DOM Ace: his feet (84, 212 in sprite px) on the ground.
+    if (state === 'run' && G.ins && !shell.reduced) {
+      const gr = g.createRadialGradient(ACE_X, gy - G.y - 44, 0, ACE_X, gy - G.y - 44, 58);
+      gr.addColorStop(0, 'rgba(90,150,255,0)'); gr.addColorStop(0.75, 'rgba(90,150,255,.16)'); gr.addColorStop(1, 'rgba(90,150,255,0)');
+      g.fillStyle = gr; g.fillRect(ACE_X - 60, gy - G.y - 104, 120, 120);
+    }
+    const blink = state === 'run' && performance.now() < G.safeUntil;
     ace.place(ACE_X, gy - G.y, S, shell.k);
+    ace.fade(blink && Math.floor(performance.now() / 90) % 2 ? 0.35 : 1);
   }
 
   return {

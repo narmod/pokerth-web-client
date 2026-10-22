@@ -148,6 +148,21 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Ace Runner: fairer, richer runs** (`web.274`) — asked by narmod after `web.273`.
+  · Jump buffer: a jump pressed up to `JUMP_BUFFER_MS` (140 ms) before landing fires on landing (held → full
+    jump, released → short hop). There is no ledge, so no coyote time is needed.
+  · Spacing by arrival time: obstacles were spaced in spawn time only, and the dealer button (+150 px/s) or a
+    flying card (+110 px/s) could close the gap on the previous one. `place()` now pushes a new group right so
+    it reaches the Ace at least `GAP[previous][next]` seconds after the last one (jump→jump 0.5 s,
+    jump→duck 0.74 s, duck→jump 0.46 s, duck→duck 0.36 s).
+  · HUD: blind level beside the distance (new key `arLevel`, 83 languages).
+  · Close call: an obstacle passed within `CLOSE_PX` (12 px) without touching gives `+CLOSE_BONUS` (10 m),
+    not while All-In or just after the insurance paid.
+  · Insurance: a blue shield chip every 40–65 s while none is held; it absorbs one hit (the obstacle is
+    smashed, no bonus) then `SAFE_MS` (0.9 s) of blinking protection; 🛡️ in the HUD and a blue halo while held.
+    `aceActor().fade()` added in `games/common.mjs`.
+  · Vibration through `window.hapticBuzz` (respects the player's haptic setting): crash, blinds up, insurance.
+  · `arRules` gains one line (insurance + close call) in all 83 languages.
 - **Ace Runner: gentler speed curve** (`web.273`) — reported by narmod: the run sped up too fast and each
   level was a jolt. Speed was `330 + 55·(level−1) + 2·t`, capped at 900; since levels are counted in distance,
   speed and levels fed each other and the cap came at ≈ 50 s (level 11). Now `+20` per level, `+0.7·t`, cap 800,

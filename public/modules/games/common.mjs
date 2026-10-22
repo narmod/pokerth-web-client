@@ -198,6 +198,8 @@ export function aceActor(layer) {
         + (rot ? ' rotate(' + rot + 'deg)' : '');
     },
     show(on) { root.style.display = on ? '' : 'none'; },
+    /** Opacity of the Ace (1 = normal), e.g. a blink while protected. */
+    fade(a) { box.style.opacity = a >= 1 ? '' : String(a); },
     remove() { root.remove(); },
   };
 }
