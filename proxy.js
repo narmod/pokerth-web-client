@@ -9620,6 +9620,20 @@ function recordVisitSource(d, acceptLang, seenBefore, bot, clientLang) {
   } catch (e) {}
 }
 // `list` : seaux de la fenetre (visitList) ; sans liste, les `daysBack` derniers jours.
+// Days (hours over 24 h) of the window on which a feature was counting: on
+// or after its start (`sinceMs`) and the store's first day. `days` in the
+// period summaries counts the days that carry an event: two quiet days read
+// « 12 days counted » although counting ran all 14, and a week without a
+// play fell back to all-time figures.
+function visitCountedIn(h24, P, E, sinceMs) {
+  if (!sinceMs) return 0;
+  if (h24) return Math.max(0, Math.min(24, Math.floor((Date.now() - sinceMs) / 3600000) + 1));
+  const t = visitDayIndex(), ob = visitOldestBack();
+  const lo = Math.max(visitDayIndex(new Date(sinceMs)), ob >= 0 ? t - ob : t);
+  let n = 0;
+  for (let i = (E || 0); i < (E || 0) + P; i++) if (t - i >= lo) n++;
+  return n;
+}
 function visitSourcePeriod(daysBack, list) {
   list = list || visitList(false, daysBack);
   return REF_STATS.period(list.length, function (i) { return list[i]; });
@@ -10526,10 +10540,10 @@ function visitsSummaryRead(periodDays, h24, range) {
     langDiagSince: visitsStore.langDiagSince || 0,
     langTrend: visitLangTrend(P, h24, E),
     envPeriod: visitEnvPeriod(P, L),
-    musicPeriod: visitMusicPeriod(P, L),
+    musicPeriod: Object.assign(visitMusicPeriod(P, L), { counted: visitCountedIn(h24, P, E, visitsStore.musicSince || 0) }),
     // Where visitors come from, over the period (no all-time total: the
     // series starts with the feature, refSince says when).
-    srcPeriod: visitSourcePeriod(P, L),
+    srcPeriod: Object.assign(visitSourcePeriod(P, L), { counted: visitCountedIn(h24, P, E, visitsStore.refSince || 0) }),
     refSince: visitsStore.refSince || 0,
     langs: supportedLangs(),
     langN: supportedLangCount(),
@@ -10547,7 +10561,7 @@ function visitsSummaryRead(periodDays, h24, range) {
       const p = visitGuidePeriod(P, L), sum = GUIDE_STATS.summary(p.guide), gk = visitGuideDevSinceKey();
       if (h24) { if (sum.acceptance.deviceRate > 1 || !gk) sum.acceptance.deviceRate = null; }
       else { const ks = []; for (let i = E; i < E + P; i++) { const d = new Date(now); d.setDate(now.getDate() - i); ks.push(visitDayKey(d)); } visitGuideDevRate(sum, ks, gk); }
-      return { days: p.days, summary: sum };
+      return { days: p.days, counted: visitCountedIn(h24, P, E, visitsStore.guideSince || 0), summary: sum };
     })(),
     guideSince: visitsStore.guideSince || 0,
     pings: { boot: _pingStats.boot, visits: _pingStats.n, bots: _pingStats.nBot || 0, modes: _pingStats.nMode, live: _pingStats.nLive, music: _pingStats.nMusic, guide: _pingStats.nGuide, last: _pingStats.last },

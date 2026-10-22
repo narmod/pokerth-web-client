@@ -368,6 +368,13 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Admin › Statistics › Music (and Sources, Ace's Help): days counted, complete days** (`web.289`) — « plays per
+  day » and « plays per 100 visits » counted today so far and the day counting began (from its first play) as
+  whole days: 340 / 14 = 24.3 instead of 26. They now read complete days only, as the trend does (the hour in
+  progress is left out over 24 h). The period summaries carry `counted` (`visitCountedIn`: days of the window on
+  which the counter ran) instead of « days with an event »: a week without a play no longer falls back to
+  all-time figures beside a period mean, and two quiet days no longer read « 12 days counted » for 14. The trend
+  tip asks for a period that can show it (30 days, or a range of 15 days or more). `scripts/test-stats-fair.mjs`.
 - **Admin › Statistics: one unit on each side of every ratio** (`web.288`) — country card: « sessions per 100
   visits » added /live spectators (sessions with no web-client visit, counted apart) to the games: 350 per 100
   for a country with 10 visits, 5 games and 30 spectators; it now reads « game sessions », /live apart, and

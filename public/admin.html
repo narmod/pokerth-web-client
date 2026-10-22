@@ -4686,7 +4686,7 @@
   }
   function _musTrendBadge(k){
     var t=_musTr; if(!t) return '';
-    if(!t.ok) return '<span class="trend na" title="'+(t.h24?'Trends compare whole days \u2014 pick a period of 14 days or more':'Not enough history: '+t.full+' full days counted in this period, '+(2*MUS_TREND_MIN)+' needed (pick a longer period)')+'">\u00b7</span>';
+    if(!t.ok) return '<span class="trend na" title="'+(t.h24?'Trends compare whole days \u2014 pick 30 days, or a range of '+(2*MUS_TREND_MIN+1)+' days or more':'Not enough history: '+t.full+' full days counted in this period, '+(2*MUS_TREND_MIN)+' needed (pick a longer period)')+'">\u00b7</span>';
     var a=t.cur[k]||0, b=t.prev[k]||0;
     var st=_langTrendStat(a,t.curN,b,t.prevN);
     if(!st) return '<span class="trend na" title="Too few plays to tell ('+(a+b)+' over '+(2*t.w)+' days)">\u00b7</span>';
@@ -4739,12 +4739,21 @@
   // Une lecture pour cent visites : l'adoption du panneau musique, la seule
   // tendance qui tienne quand le total du jour se compte sur les doigts.
   function _musContext(keys,total){
-    var days=_musDays(); if(!days.length) return '';
+    // The mean reads complete days only, as the trend does (_musTrendWin):
+    // today so far and the day counting began (from its first play) would
+    // count as whole days. Over 24 h, the hour in progress is left out.
+    var days=_musDays().slice();
+    if(_isH24()) days=days.slice(0,-1);
+    else {
+      if(days.length && days[days.length-1].date===_trafTodayKey) days=days.slice(0,-1);
+      if(_musSinceKey && days.length && days[0].date===_musSinceKey) days=days.slice(1);
+    }
+    if(!days.length) return '<div class="envhi"><b>'+total+'</b> play'+(total>1?'s':'')+' across <b>'+keys.length+'</b> title'+(keys.length>1?'s':'')+'.</div>';
     var pl=0, vis=0;
     days.forEach(function(x){ var mu=x.mu||{}; for(var k in mu) pl+=mu[k]||0; vis+=x.v||0; });
     var per=vis? pl*100/vis : 0;
     return '<div class="envhi"><b>'+total+'</b> play'+(total>1?'s':'')+' across <b>'+keys.length+'</b> title'+(keys.length>1?'s':'')
-      +' \u2014 <b>'+_round1(pl/days.length)+'</b> plays/'+_perU().one+' over '+days.length+' '+(days.length>1?_perU().many:_perU().one)
+      +' \u2014 <b>'+_round1(pl/days.length)+'</b> plays/'+_perU().one+' over '+days.length+' complete '+(days.length>1?_perU().many:_perU().one)
       +(vis?', <b>'+(per<10?per.toFixed(1):Math.round(per))+'</b> plays per 100 visits':'')+'.</div>';
   }
   function _musChart(keys){
@@ -5035,7 +5044,8 @@
   function renderSrc(){
     var box=$('trafSrc'); if(!box) return;
     var since=$('srcSince'), p=_srcData;
-    if(since) since.textContent=(p&&(p.days||_isH24()))?(_perLabel(_trafPeriod)+_perCounted(p.days)):'';
+    var pd=p?(p.counted!=null?p.counted:p.days):0;
+    if(since) since.textContent=(p&&(pd||_isH24()))?(_perLabel(_trafPeriod)+_perCounted(pd)):'';
     var g=_srcGroup(p);
     if(!g.total){
       box.innerHTML='<div class="empty">'+(!_srcKnown
@@ -5452,8 +5462,11 @@
       // à compter encore. Voir renderEnv().
       _envKnown=(d.env!==undefined); _envData=_envPick(d.env||{}, d.envPeriod||null); _envTrend=d.langTrend||null; _envPeriod=d.envPeriod||null; _envColorReset(); _envSince=d.envSince||0; _envPings=d.pings||null;
       _envLangsKnown=Array.isArray(d.langs); _envLangs=_envLangsKnown?d.langs:[]; _envLangN=d.langN||0; _envLangDiagSince=d.langDiagSince||0; renderEnv();
-      _musKnown=(d.music!==undefined); _musPeriodDays=(d.musicPeriod&&d.musicPeriod.days)||0; _musData=(_musPeriodDays||(d.h24&&d.musicPeriod))?(d.musicPeriod.plays||{}):(d.music||{}); _musTitles=d.musicTitles||{}; _musSince=d.musicSince||0; _musVotesKnown=(d.musicVotes!==undefined); _musVotes=d.musicVotes||{}; _musVoteTitles=d.musicVoteTitles||{}; _musVotesSince=d.musicVotesSince||0; renderMusic();
-      _guideKnown=(d.guide!==undefined); _guidePeriodDays=(d.guidePeriod&&d.guidePeriod.days)||0; _guideData=(_guidePeriodDays||(d.h24&&d.guidePeriod))?(d.guidePeriod.summary||null):(d.guide||null); _guideSince=d.guideSince||0; renderGuide();
+      // `counted` = days the counter ran in the window (proxy.js visitCountedIn);
+      // `days` (days with a play) for an older proxy. A quiet week is a quiet
+      // week, not a reason to show all-time figures.
+      _musKnown=(d.music!==undefined); _musPeriodDays=(d.musicPeriod&&(d.musicPeriod.counted!=null?d.musicPeriod.counted:d.musicPeriod.days))||0; _musData=(_musPeriodDays||(d.h24&&d.musicPeriod))?(d.musicPeriod.plays||{}):(d.music||{}); _musTitles=d.musicTitles||{}; _musSince=d.musicSince||0; _musVotesKnown=(d.musicVotes!==undefined); _musVotes=d.musicVotes||{}; _musVoteTitles=d.musicVoteTitles||{}; _musVotesSince=d.musicVotesSince||0; renderMusic();
+      _guideKnown=(d.guide!==undefined); _guidePeriodDays=(d.guidePeriod&&(d.guidePeriod.counted!=null?d.guidePeriod.counted:d.guidePeriod.days))||0; _guideData=(_guidePeriodDays||(d.h24&&d.guidePeriod))?(d.guidePeriod.summary||null):(d.guide||null); _guideSince=d.guideSince||0; renderGuide();
       _srcKnown=(d.srcPeriod!==undefined); _srcData=d.srcPeriod||null; _srcSince=d.refSince||0; renderSrc();
       _tsAudience(d); _tsActivity(d); _tsVisitors(); _tsMusic(); _tsAce(); _tsWorld();
     }).catch(function(){ var g=$('trafCards'); if(g) g.innerHTML='<div class="empty err">Could not load.</div>'; loadFail('panel-traffic','Could not load.'); });

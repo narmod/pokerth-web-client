@@ -40,7 +40,7 @@ ok(f('500') === 90, 'above the maximum is clamped, so the previous trend window 
 ok(/visitsSummary\(query\.days, _h24, String\(query\.bots \|\| ''\) === '1', _h24 \? null : visitRange\(query\.from, query\.to\)\)/.test(proxy), 'GET /admin/visits reads ?days= (and ?hours=24, ?bots=1, ?from=&to=)');
 ok(/for \(let i = E \+ P - 1; i >= E; i--\)/.test(body(proxy, 'visitsSummaryRead')), 'the daily series is P days long, ending E days back (0 without a custom range)');
 ok(/period: h24 \? visitWindowList\(L\) : visitWindow\(P, E\)/.test(proxy) && /period: h24 \? visitWindowList\(visitList\(true, 24, 24\)\) : visitWindow\(P, E \+ P\)/.test(proxy), 'the period tile has a previous-period reference');
-ok(/envPeriod: visitEnvPeriod\(P, L\)/.test(proxy) && /musicPeriod: visitMusicPeriod\(P, L\)/.test(proxy), 'environment and music are sliced by the same period');
+ok(/envPeriod: visitEnvPeriod\(P, L\)/.test(proxy) && /musicPeriod: Object\.assign\(visitMusicPeriod\(P, L\)/.test(proxy), 'environment and music are sliced by the same period');
 
 const rec = body(proxy, 'recordVisitEnv');
 ok(/bucket\.ev\b/.test(rec) && /\['os', os\], \['br', br\], \['combo'/.test(rec), 'each ping also lands in a per-day environment dictionary');

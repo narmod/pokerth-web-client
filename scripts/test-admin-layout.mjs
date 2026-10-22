@@ -636,8 +636,9 @@ ok(/title="removed from the catalogue"/.test(admin), 'a title no longer in the c
   ok(/removed from the catalogue/.test(ranked) && />t10</.test(ranked) && /t11|t12/.test(r.rank) === false,
     'an id without a title is shown by id and flagged');
   ok(/<b>76<\/b> plays across <b>12<\/b> titles/.test(r.ctx), 'the context line states the totals');
-  ok(/<b>31\.5<\/b> plays\/day over 2 days/.test(r.ctx), 'plays per day are averaged over the window only');
-  ok(/<b>21<\/b> plays per 100 visits/.test(r.ctx), 'adoption is plays over visits of the same days');
+  // 23 Aug is the day counting began (from 10:00): a part day, left out of the mean.
+  ok(/<b>31\.0<\/b> plays\/day over 1 complete day/.test(r.ctx), 'plays per day are averaged over the complete days of the window only');
+  ok(/<b>31<\/b> plays per 100 visits/.test(r.ctx), 'adoption is plays over visits of the same days');
   // The chart is now a mount point; the series it hands over are what gets
   // drawn, and the legend is built from them rather than written alongside.
   ok(/id="musDayChart"/.test(r.chart), 'the markup is a mount point the controller fills');

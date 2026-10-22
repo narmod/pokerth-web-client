@@ -194,5 +194,23 @@ ok(!/x\.rt\b|\.rt\|\||month\.rt/.test(fn(admin, '_trafInsights') + fn(admin, 'lo
   ok(/Players whose game started \(10\/10\)/.test(fn(admin, 'renderGuide')) && /\['Ranked starts'/.test(fn(admin, '_tsAce')), 'ranking starts are counted as players, and said so');
   ok(/bridges: bridges, liveSessions/.test(proxy) && /s\.bridges != null/.test(readFileSync(join(root, 'public', 'modules', 'admin', 'overview.mjs'), 'utf8')), 'the cap is set against game bridges, not every socket');
 }
+
+// Lot 4 — Music (and the other per-feature periods): days counted, complete days.
+{
+  const T = 20000;
+  const ctx = { visitDayIndex: function (d) { return d ? Math.floor(d.getTime() / 86400000) : T; }, visitOldestBack: function () { return 60; } };
+  vm.createContext(ctx);
+  vm.runInContext(fn(proxy, 'visitCountedIn'), ctx);
+  ctx.since = (T - 3) * 86400000 + 3600000;
+  ok(vm.runInContext('visitCountedIn(false, 14, 0, since)', ctx) === 4, 'a feature started 3 days ago has counted 4 days of a 14-day window, quiet or not');
+  ok(vm.runInContext('visitCountedIn(false, 14, 0, 1)', ctx) === 14, 'an old feature: every day of the window');
+  ok(vm.runInContext('visitCountedIn(false, 7, 0, 0)', ctx) === 0, 'never started: nothing counted');
+  const sumSrc = fn(proxy, 'visitsSummaryRead');
+  ok(/counted: visitCountedIn\(h24, P, E, visitsStore\.musicSince/.test(sumSrc) && /counted: visitCountedIn\(h24, P, E, visitsStore\.refSince/.test(sumSrc) && /counted: visitCountedIn\(h24, P, E, visitsStore\.guideSince/.test(sumSrc), 'music, sources and Ace’s Help say how many days they counted');
+  const mc = fn(admin, '_musContext');
+  ok(/days\[days\.length-1\]\.date===_trafTodayKey\) days=days\.slice\(0,-1\);/.test(mc) && /days\[0\]\.date===_musSinceKey\) days=days\.slice\(1\);/.test(mc), 'plays per day leave today and the day counting began out');
+  ok(/d\.musicPeriod\.counted!=null\?d\.musicPeriod\.counted:d\.musicPeriod\.days/.test(admin), 'a quiet period stays the period, not all-time figures');
+  ok(/pick 30 days, or a range of '\+\(2\*MUS_TREND_MIN\+1\)\+' days or more/.test(admin), 'the trend tip asks for a period that can show it');
+}
 console.log(fail ? 'FAIL ' + fail + '/' + n : 'OK ' + n + '/' + n);
 process.exit(fail ? 1 : 0);
