@@ -368,6 +368,18 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Admin › Statistics: one unit on each side of every ratio** (`web.288`) — country card: « sessions per 100
+  visits » added /live spectators (sessions with no web-client visit, counted apart) to the games: 350 per 100
+  for a country with 10 visits, 5 games and 30 spectators; it now reads « game sessions », /live apart, and
+  « new devices » becomes « first visits » (first visits ÷ visits). Language « % new » badge: first visits ÷ all
+  visits of known devices, reloads included — relabelled « % first visits ». pokerth.net « share at peak »
+  divided the online peak by a web-client peak taken at another moment: each hour now keeps the web-client
+  count of the online-peak sample (`wbAtX`), days recorded before have no point. Ace's Help « per device »
+  set acceptances since the counters began against devices counted from 2.1.10-web.6 (190 %): only the
+  acceptances of days from the first counted device are used (`visitGuideDevRate`), and a rate above 100 % is
+  not shown; « Ranking games » / « Game started » count players, now said so. Overview and Operations:
+  « Connections 80 of 60 » set every socket (notify channels, /live) against the cap on game bridges;
+  `/admin/status` now returns `bridges`, shown against the cap. `scripts/test-stats-fair.mjs`.
 - **Admin › Statistics › Audience: honest return rates** (`web.287`) — `visitCohorts` judged yesterday's newcomers
   on today so far (their next-day window), and the last day of every 3- and 7-day window too, so the rates read
   low; it now stops at the last complete day (`last`: yesterday, or the end of a past range). « Active days of

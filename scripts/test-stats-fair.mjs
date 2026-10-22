@@ -166,5 +166,33 @@ ok(!/x\.rt\b|\.rt\|\||month\.rt/.test(fn(admin, '_trafInsights') + fn(admin, 'lo
   ok(/_wFullM\(d,keys\)/.test(fn(admin, '_worldConn')) && /_wFullCube\(NB,m\.k\)/.test(fn(admin, '_worldConn')), 'and the connections-per-day note, plain or narrowed');
   ok(/_hourInstants\(24, 1\)/.test(fn(proxy, 'visitHourProfile24')), 'the 24-hour average day leaves the hour in progress out');
 }
+
+// Lot 3 — one unit on each side of every ratio.
+{
+  ok(/var ms=mt-\(m\.live\|\|0\);/.test(fn(admin, '_geoDetail')) && /game sessions per 100 visits '\+Math\.round\(100\*ms\/v\)/.test(fn(admin, '_geoDetail')), 'country card: /live spectators are not game sessions per 100 web-client visits');
+  ok(/% first visits<\/span>/.test(fn(admin, '_envNewRetBadge')) && !/% new<\/span>/.test(fn(admin, '_envNewRetBadge')), 'language badge says first visits, the share it is');
+  // Share at the online peak: the web-client count of that very sample.
+  const ctx = { visitsStore: { days: {} }, pruneVisitDays: function () {} };
+  vm.createContext(ctx);
+  vm.runInContext(fn(proxy, 'visitDayKey') + '\n' + fn(proxy, 'recordPthSample'), ctx);
+  const at = new Date('2026-10-20T21:10:00');
+  ctx.at = at;
+  vm.runInContext('recordPthSample({ ok: true, online: 200 }, { wb: 4 }, at); recordPthSample({ ok: true, online: 50 }, { wb: 10 }, at);', ctx);
+  const c = ctx.visitsStore.days['2026-10-20'].ps[21];
+  ok(c.onX === 200 && c.wbAtX === 4 && c.wbX === 10, 'the online peak keeps the web-client count of its own sample (4 of 200, not the hour’s 10)');
+  ok(/x\.wbAtX!=null\)\?_pthPct\(x\.wbAtX,x\.onX\):null/.test(fn(admin, '_trafPth')), 'and the chart plots it, nothing for a day recorded before');
+  // Ace's Help: per-device rate over the days devices were counted.
+  const g = { visitDay: function (k) { return { '2026-10-01': { gd: { 'offer.accepted': 300 } }, '2026-10-12': { gd: { 'offer.accepted': 80, 'offer.first': 200 } } }[k] || null; } };
+  vm.createContext(g);
+  vm.runInContext(fn(proxy, 'visitGuideDevRate'), g);
+  g.S = { acceptance: { accepted: 380, devices: 200, deviceRate: 1.9 } };
+  vm.runInContext("visitGuideDevRate(S, ['2026-10-01', '2026-10-12'], '2026-10-12')", g);
+  ok(g.S.acceptance.deviceRate === 0.4, 'per device: 80 acceptances of the 200 devices counted, not 380 (190 %)');
+  g.T = { acceptance: { accepted: 50, devices: 10 } };
+  vm.runInContext("visitGuideDevRate(T, ['2026-10-12'], '2026-10-12')", g);
+  ok(g.T.acceptance.deviceRate === null, 'above 100 % is not a rate: none shown');
+  ok(/Players whose game started \(10\/10\)/.test(fn(admin, 'renderGuide')) && /\['Ranked starts'/.test(fn(admin, '_tsAce')), 'ranking starts are counted as players, and said so');
+  ok(/bridges: bridges, liveSessions/.test(proxy) && /s\.bridges != null/.test(readFileSync(join(root, 'public', 'modules', 'admin', 'overview.mjs'), 'utf8')), 'the cap is set against game bridges, not every socket');
+}
 console.log(fail ? 'FAIL ' + fail + '/' + n : 'OK ' + n + '/' + n);
 process.exit(fail ? 1 : 0);

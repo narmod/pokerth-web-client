@@ -9624,6 +9624,30 @@ function visitSourcePeriod(daysBack, list) {
   list = list || visitList(false, daysBack);
   return REF_STATS.period(list.length, function (i) { return list[i]; });
 }
+// « Per device · X% said yes » = acceptances ÷ devices offered. Devices are
+// counted from 2.1.10-web.6 (offer.first), acceptances from the start of the
+// counters: over a window reaching before web.6 the rate read 190 %. Only the
+// acceptances of days from the first one that counted devices are set against
+// them; a rate still above 100 % (a device offered in the window before,
+// accepting in this one) is not a rate: null, the card shows « — ».
+function visitGuideDevSinceKey() {
+  let k0 = '';
+  for (const k in visitsStore.days) {
+    const b = visitDay(k), g = b && b.gd;
+    if (g && g['offer.first'] && (!k0 || k < k0)) k0 = k;
+  }
+  return k0;
+}
+function visitGuideDevRate(sum, keys, sinceKey) {
+  if (!sum || !sum.acceptance) return sum;
+  const a = sum.acceptance;
+  if (!sinceKey || !a.devices) { a.deviceRate = null; return sum; }
+  let acc = 0;
+  (keys || []).forEach(function (k) { if (k >= sinceKey) { const b = visitDay(k); acc += (b && b.gd && b.gd['offer.accepted']) || 0; } });
+  a.devAccepted = acc;
+  a.deviceRate = acc <= a.devices ? acc / a.devices : null;
+  return sum;
+}
 function visitGuidePeriod(daysBack, list) {
   list = list || visitList(false, daysBack);
   return GUIDE_STATS.period(list.length, function (i) { return list[i]; });
@@ -10360,7 +10384,7 @@ function visitsSummary(periodDays, h24, bots, range) {
       for (const k in (B.allM || {})) a.m[k] = (a.m[k] || 0) + (B.allM[k] || 0);
       if (B.music) out.music = _visitAdd(out.music, B.music);
       if (B.env) out.env = Object.assign(LANG_STATS.foldEnv(_visitAdd(visitsStore.env || {}, B.env)), { noiseMeta: out.env.noiseMeta });
-      if (B.guide) out.guide = GUIDE_STATS.summary(_visitAdd(visitsStore.guide || {}, B.guide));
+      if (B.guide) out.guide = visitGuideDevRate(GUIDE_STATS.summary(_visitAdd(visitsStore.guide || {}, B.guide)), Object.keys(visitsStore.days), visitGuideDevSinceKey());
     }
     return out;
   });
@@ -10518,8 +10542,13 @@ function visitsSummaryRead(periodDays, h24, range) {
     musicVotesSince: visitsStore.musicVotesSince || 0,
     musicVoteTitles: musicVoteTitles(),
     // Aide de l'As : totaux depuis le début, et sur la période choisie (jours comptés)
-    guide: GUIDE_STATS.summary(visitsStore.guide || {}),
-    guidePeriod: (function () { const p = visitGuidePeriod(P, L); return { days: p.days, summary: GUIDE_STATS.summary(p.guide) }; })(),
+    guide: visitGuideDevRate(GUIDE_STATS.summary(visitsStore.guide || {}), Object.keys(visitsStore.days), visitGuideDevSinceKey()),
+    guidePeriod: (function () {
+      const p = visitGuidePeriod(P, L), sum = GUIDE_STATS.summary(p.guide), gk = visitGuideDevSinceKey();
+      if (h24) { if (sum.acceptance.deviceRate > 1 || !gk) sum.acceptance.deviceRate = null; }
+      else { const ks = []; for (let i = E; i < E + P; i++) { const d = new Date(now); d.setDate(now.getDate() - i); ks.push(visitDayKey(d)); } visitGuideDevRate(sum, ks, gk); }
+      return { days: p.days, summary: sum };
+    })(),
     guideSince: visitsStore.guideSince || 0,
     pings: { boot: _pingStats.boot, visits: _pingStats.n, bots: _pingStats.nBot || 0, modes: _pingStats.nMode, live: _pingStats.nLive, music: _pingStats.nMusic, guide: _pingStats.nGuide, last: _pingStats.last },
     db: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error, lastWrite: _dbStatus.lastWrite, source: _dbStatus.source, type: _dbStatus.type }
@@ -12213,12 +12242,15 @@ function handleAdmin(req, res, reqPathOnly, query) {
     let version = '';
     try { version = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
+    // Game bridges, the only connections maxClients caps: `sockets` also holds
+    // the notify channels and /live, and « 80 of 60 » read as over the cap.
+    let bridges = null; try { bridges = _allClients.size; } catch (e) {}
     let liveSessions = null; try { liveSessions = _liveSessions.size; } catch (e) {}
     // Once the upstream has been read (Check now, or auto-update), keep that
     // reading fresh while someone looks at the dashboard, at the auto-update
     // pace (the hourly read-only check, _upstreamRead, covers the rest).
     if (GIT_UPDATABLE && _upd.checkedAt && !_upd.checking && Date.now() - _upd.checkedAt >= AUTO_UPDATE_POLL_MS) updateCheck();
-    return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, canUpdate: !!(GIT_UPDATABLE || process.env.UPDATE_CMD), supervised: _supervised(), codeStale: !!(BOOT_CODE_SIG && _codeSig() !== BOOT_CODE_SIG), deployBusy: _deployBusy(), sockets: sockets, liveSessions: liveSessions, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, lookDefaults: _adminConfig.lookDefaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', seo: _seoAdmin(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null), autoUpdate: _autoUpdateCfg(), autoArmed: !!(_autoArmed && _restartAt > Date.now()), update: _updPublic(), now: Date.now(), tz: _serverTz(), clockZones: _clockZones(), clockRef: _clockRef(), lobbyClockTz: (_adminConfig.lobbyClockTz || ''), lobbyClockEff: _lobbyClockTz(), lobbyClockEnv: String(process.env.SERVER_TZ || '').trim() });
+    return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, canUpdate: !!(GIT_UPDATABLE || process.env.UPDATE_CMD), supervised: _supervised(), codeStale: !!(BOOT_CODE_SIG && _codeSig() !== BOOT_CODE_SIG), deployBusy: _deployBusy(), sockets: sockets, bridges: bridges, liveSessions: liveSessions, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, lookDefaults: _adminConfig.lookDefaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', seo: _seoAdmin(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null), autoUpdate: _autoUpdateCfg(), autoArmed: !!(_autoArmed && _restartAt > Date.now()), update: _updPublic(), now: Date.now(), tz: _serverTz(), clockZones: _clockZones(), clockRef: _clockRef(), lobbyClockTz: (_adminConfig.lobbyClockTz || ''), lobbyClockEff: _lobbyClockTz(), lobbyClockEnv: String(process.env.SERVER_TZ || '').trim() });
   }
   // ── Horloge du bandeau (toutes clés) ───────────────────────────────────
   // Réponse minuscule, relue toutes les 5 min : elle sert uniquement à recaler
@@ -14704,7 +14736,9 @@ function recordPthSample(L, W, when) {
   c.n++;
   c.on += L.online; c.wb += wb; c.lv += lv;
   c.tb += L.tables || 0; c.wt += L.waiting || 0;
-  if (L.online > c.onX) c.onX = L.online;
+  // The web-client count AT the online peak: « share at peak » divided the
+  // peak online by a web-client peak taken at another moment of the hour.
+  if (L.online > c.onX || c.wbAtX === undefined && L.online === c.onX) { c.onX = L.online; c.wbAtX = wb; }
   if (wb > c.wbX) c.wbX = wb;
   if (typeof L.today === 'number') c.td = L.today;
   if (!visitsStore.pthSince) visitsStore.pthSince = d.getTime();
@@ -14739,7 +14773,7 @@ function pthShareSummary(periodDays, h24, offset) {
     const c = (b && b.ps) ? b.ps[hh] : null;
     h48.push({ t: visitDayKey(d) + 'T' + String(hh).padStart(2, '0'), n: (c && c.n) || 0,
                on: _pthMean(c, 'on'), wb: _pthMean(c, 'wb'), lv: _pthMean(c, 'lv'),
-               tb: _pthMean(c, 'tb'), wt: _pthMean(c, 'wt'), onX: (c && c.onX) || 0, wbX: (c && c.wbX) || 0 });
+               tb: _pthMean(c, 'tb'), wt: _pthMean(c, 'wt'), onX: (c && c.onX) || 0, wbX: (c && c.wbX) || 0, wbAtX: c ? c.wbAtX : undefined });
   }
   const days = [];
   const P = periodDays || 14;
@@ -14747,7 +14781,7 @@ function pthShareSummary(periodDays, h24, offset) {
   if (h24) {
     h48.slice(-24).forEach(function (x) {
       const k = x.t.slice(0, 10), b = visitsStore.days[k], c = (b && b.ps) ? b.ps[parseInt(x.t.slice(11), 10)] : null;
-      days.push({ date: x.t, n: x.n, on: x.on, wb: x.wb, lv: x.lv, onX: x.onX, wbX: x.wbX, td: (c && c.td) || 0 });
+      days.push({ date: x.t, n: x.n, on: x.on, wb: x.wb, lv: x.lv, onX: x.onX, wbX: x.wbX, wbAtX: x.wbAtX, td: (c && c.td) || 0 });
     });
   } else for (let i = (offset || 0) + P - 1; i >= (offset || 0); i--) {
     const d = new Date(now); d.setDate(now.getDate() - i);
@@ -14756,11 +14790,11 @@ function pthShareSummary(periodDays, h24, offset) {
     if (b && b.ps) for (const hh in b.ps) {
       const c = b.ps[hh];
       a.n += c.n || 0; a.on += c.on || 0; a.wb += c.wb || 0; a.lv += c.lv || 0;
-      if ((c.onX || 0) > a.onX) a.onX = c.onX;
+      if ((c.onX || 0) > a.onX) { a.onX = c.onX; a.wbAtX = c.wbAtX; }
       if ((c.wbX || 0) > a.wbX) a.wbX = c.wbX;
       if ((c.td || 0) > a.td) a.td = c.td;
     }
-    days.push({ date: k, n: a.n, on: _pthMean(a, 'on'), wb: _pthMean(a, 'wb'), lv: _pthMean(a, 'lv'), onX: a.onX, wbX: a.wbX, td: a.td });
+    days.push({ date: k, n: a.n, on: _pthMean(a, 'on'), wb: _pthMean(a, 'wb'), lv: _pthMean(a, 'lv'), onX: a.onX, wbX: a.wbX, wbAtX: a.wbAtX, td: a.td });
   }
   return { since: visitsStore.pthSince || 0, sampleSec: PTH_SAMPLE_MS / 1000, on: _liveStatsCfg().on, now: _pthLast, h48: h48, days: days, h24: !!h24 };
 }

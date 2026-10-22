@@ -280,7 +280,10 @@ function healthHtml(s) {
     ['Uptime', esc(fmtUptime(s.uptimeSec))],
     ['Install', esc(s.installKind || '—') + ' · ' + (s.gitUpdatable === false ? 'no self-update' : 'self-update')],
     ['Updates', u.checkedAt ? (u.available ? 'available' : 'up to date') + ' · checked ' + esc(ago(Date.now() - u.checkedAt)) : (s.gitUpdatable === false ? 'by image' : 'not checked yet')],
-    ['Connections', nf(s.sockets) + (s.maxClients ? ' of ' + nf(s.maxClients) : ' · no cap')],
+    // The cap is on game bridges; the sockets also count notify channels and /live.
+    ['Connections', s.bridges != null
+      ? nf(s.bridges) + ' game bridge' + (s.bridges === 1 ? '' : 's') + (s.maxClients ? ' of ' + nf(s.maxClients) : ' · no cap') + ' · ' + nf(s.sockets) + ' sockets in all'
+      : nf(s.sockets) + (s.maxClients ? ' of ' + nf(s.maxClients) : ' · no cap')],
     ['Open files', s.fd ? (s.fd.softN ? nf(s.fd.softN) : esc(s.fd.soft)) + (s.fd.approxPlayers ? ' · ~' + nf(s.fd.approxPlayers) + ' players' : '') : '—'],
   ];
   return rows.map((r) => '<div class="srow"><span>' + r[0] + '</span><b>' + r[1] + '</b></div>').join('');

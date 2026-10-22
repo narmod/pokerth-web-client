@@ -113,12 +113,12 @@ ok(/beacon\(ctx\.id, 'shown'\)/.test(idx) && /beacon\(cid, 'done'\)/.test(idx) &
 ok(/join: 'join', createRanking: 'create', signup: 'signup'/.test(idx) && /cid === 'lobby-guest' \? 'guest_redirect'/.test(idx), 'actions mapped to join / create / signup (guest_redirect for a guest in the lobby)');
 const proxySrc = fs.readFileSync(path.join(root, 'proxy.js'), 'utf8');
 ok(/guide: \{\}, guideSince: 0/.test(proxySrc), 'the counters are part of the empty store (reset clears them)');
-ok(/guidePeriod:/.test(proxySrc) && /guide: GUIDE_STATS\.summary/.test(proxySrc), 'the traffic summary carries all-time and period figures');
+ok(/guidePeriod:/.test(proxySrc) && /guide: visitGuideDevRate\(GUIDE_STATS\.summary/.test(proxySrc), 'the traffic summary carries all-time and period figures');
 const route = proxySrc.slice(proxySrc.indexOf("reqPathOnly === '/__guide'"), proxySrc.indexOf("reqPathOnly === '/__guide'") + 800);
 ok(!/clientIp|x-forwarded-for|remoteAddress/.test(route), 'the route never reads the caller address');
 const admin = fs.readFileSync(path.join(root, 'public/admin.html'), 'utf8');
 ok(/id="trafGuide"/.test(admin) && /function renderGuide\(\)/.test(admin), 'admin card present');
-ok(/Ranking funnel/.test(admin) && /Game started \(10\/10\)/.test(admin), 'the funnel is shown');
+ok(/Ranking funnel/.test(admin) && /Players whose game started \(10\/10\)/.test(admin), 'the funnel is shown');
 // web.27 — the local backup offer: counted on both carriers, shown on the card
 ok(['shown', 'banner', 'create', 'created', 'restore', 'restored', 'dismissed', 'showme'].every((e) => G.valid('backup', e)) && !G.valid('backup', 'nope'), 'backup offer: its events accepted, others refused');
 { const st = {}, d = {}; G.record(st, d, 'backup', 'banner', 1); G.record(st, d, 'backup', 'created', 1);
