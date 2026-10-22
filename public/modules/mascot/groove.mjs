@@ -34,6 +34,20 @@ export function rangeFor(bpm) {
   if (bpm <= 135) return 'fast';
   return 'rush';
 }
+/** Limits of each range [from, to) — same as rangeFor (BPM come in half steps). */
+const LIMITS = { slow: [0, 90], mid: [90, 115], fast: [115, 135.5], rush: [135.5, Infinity] };
+/** Range kept while the tempo stays within this many BPM past its limits. */
+export const RANGE_MARGIN = 3;
+/**
+ * Tempo range with a margin: a song that hovers at a limit (114 / 116 BPM)
+ * stays in the range it started in, instead of spinning from one to the other.
+ */
+export function rangeStick(bpm, prev, margin = RANGE_MARGIN) {
+  const r = rangeFor(bpm);
+  if (!bpm || !prev || r === prev || !LIMITS[prev]) return r;
+  const [lo, hi] = LIMITS[prev];
+  return bpm >= lo - margin && bpm < hi + margin ? prev : r;
+}
 /** The dances of each range (modules/mascot/acts-dance.mjs); the first one leads. */
 export const POOLS = {
   slow: ['sway', 'slowdance', 'reggae', 'waltz'],
@@ -44,8 +58,10 @@ export const POOLS = {
 /** Lead dance of a tempo (bpm 0 / null: the generic groove). */
 export function danceFor(bpm) { return POOLS[rangeFor(bpm)][0]; }
 /** Next dance for a bar: from the tempo's range, never the one just danced (when there is a choice). */
-export function pickDance(bpm, prev, rnd = Math.random) {
-  const pool = POOLS[rangeFor(bpm)], list = pool.length > 1 ? pool.filter((d) => d !== prev) : pool;
+export function pickDance(bpm, prev, rnd = Math.random) { return pickDanceIn(rangeFor(bpm), prev, rnd); }
+/** Same, from a range already chosen (rangeStick). */
+export function pickDanceIn(range, prev, rnd = Math.random) {
+  const pool = POOLS[range] || POOLS.mid, list = pool.length > 1 ? pool.filter((d) => d !== prev) : pool;
   return list[Math.floor(rnd() * list.length) % list.length];
 }
 

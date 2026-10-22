@@ -148,6 +148,86 @@ ok(G.POOLS.slow.length === 4 && G.POOLS.mid.length === 5, 'slow: 4 dances, mid: 
   }
 }
 
+// ── Smooth dancing (web.277): range hysteresis, joins between figures ──
+ok(G.rangeStick(116, 'mid') === 'mid' && G.rangeStick(113, 'fast') === 'fast' && G.rangeStick(119, 'mid') === 'fast', 'tempo range sticks within ±3 BPM of its limits');
+ok(G.rangeStick(88, 'mid') === 'mid' && G.rangeStick(86, 'mid') === 'slow' && G.rangeStick(137, 'fast') === 'fast' && G.rangeStick(0, 'fast') === 'mid', 'range margin both ways, no tempo → generic');
+{ let s = 7, same = true; const r1 = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+  for (let i = 0; i < 50; i++) { const t = s; const a = G.pickDance(100, 'robot', r1); s = t; if (G.pickDanceIn('mid', 'robot', r1) !== a) same = false; }
+  ok(same, 'pickDance and pickDanceIn agree'); }
+{
+  const D = await import(pathToFileURL(path.resolve('public/modules/mascot/acts-dance.mjs')).href);
+  ok(D.ease('linear', 0.3) === 0.3 && Math.abs(D.ease('ease-in-out', 0.5) - 0.5) < 1e-3 && D.ease('ease-in-out', 0.1) < 0.1 && D.ease('steps(1, end)', 0.9) === 0, 'easing curves');
+  ok(D.fmtTf(D.parseTf('translate(-9px,0px) rotate(14deg)')) === 'translate(-9px,0px) rotate(14deg)' && D.parseTf('rotate(3deg) x') === null, 'transforms read and written back');
+  ok(D.tfGap(D.parseTf('rotateY(355deg)'), D.parseTf('rotateY(0deg)')) === 5 && D.tfGap(D.parseTf('translate(4px,0px) rotate(10deg)'), D.parseTf('rotate(3deg)')) === 7, 'a full turn is no gap, missing functions are neutral');
+  // A small fake of the engine's animation helpers (same frames as engine.mjs track/cycle).
+  const anims = [], E = {};
+  for (const k of ['armL', 'armR', 'legL', 'legR', 'lean', 'bob', 'squash', 'card', 'pos', 'notes']) E[k] = { k };
+  const anim = (node, frames, o) => {
+    const a = { node, frames, o, playbackRate: 1, startTime: null, effect: { target: node,
+      getTiming: () => ({ delay: o.delay || 0, duration: o.duration, iterations: o.iterations || 1, fill: o.fill || 'auto' }),
+      getKeyframes: () => frames.map((f) => ({ computedOffset: typeof f.offset === 'number' ? f.offset : null, transform: f.transform, easing: f.easing || 'linear' })) } };
+    anims.push(a); return a;
+  };
+  const rot = (d) => ({ transform: `rotate(${d}deg)` }), cyc4 = (a, b) => [{ transform: 'rotate(0deg)', easing: 'ease-in-out' }, { offset: 0.25, ...rot(a), easing: 'ease-in-out' }, { offset: 0.75, ...rot(b), easing: 'ease-in-out' }, rot(0)];
+  const mw = (d) => [{ transform: `translate(${-9 * d}px,0px) rotate(0deg)` }, { offset: 0.46, transform: `translate(${7 * d}px,0px) rotate(0deg)` }, { offset: 0.54, transform: `translate(${7 * d}px,-5px) rotate(${14 * d}deg)` }, { offset: 0.92, transform: `translate(${-9 * d}px,-5px) rotate(${14 * d}deg)` }, { transform: `translate(${-9 * d}px,0px) rotate(0deg)` }];
+  const H = {
+    cur: { x: 200 }, E, st: { k: 1, minX: 0, maxX: 600, yF: 300 }, EIO: 'ease-in-out', F: { LOVE: [], GRIN: [], TEETH: [], WINK: [] }, HEART: '',
+    rot, sq: (x, y) => ({ transform: `scale(${x},${y})` }), ry: (d) => ({ transform: `rotateY(${d}deg)` }), facing: (d) => ({ transform: `rotateY(${d * 30}deg)` }),
+    P: (x, y) => ({ transform: `translate(${x}px,${y}px)` }), SWING_F: cyc4(16, -16), SWING_B: cyc4(-16, 16), mwFrames: mw, mwFramesB: (d) => mw(d),
+    play: (n, f, o) => anim(n, f, o),
+    cycle: (n, f, ms, delay, count) => anim(n, f, { duration: Math.max(1, ms), delay: Math.max(0, delay), iterations: Math.max(1, count), fill: 'none' }),
+    track(n, total, pts, fill = 'forwards', delay = 0) {
+      const fr = pts.map(([ms, p, e]) => Object.assign({ offset: Math.max(0, Math.min(1, ms / total)) }, p, e ? { easing: e } : {}));
+      for (let i = 1; i < fr.length; i++) if (fr[i].offset < fr[i - 1].offset) fr[i].offset = fr[i - 1].offset;
+      if (fr[0].offset > 0) { const f0 = Object.assign({}, fr[0], { offset: 0 }); delete f0.easing; fr.unshift(f0); }
+      if (fr[fr.length - 1].offset < 1) { const fl = Object.assign({}, fr[fr.length - 1], { offset: 1 }); delete fl.easing; fr.push(fl); }
+      return anim(n, fr, { duration: Math.max(1, total), fill, delay });
+    },
+    faceWin() {}, suitWin() {}, notesWin() {}, worldProp: () => ({ style: {}, remove() {} }),
+  };
+  /** What a node shows at t: the latest animation that applies (the browser's composite order). */
+  const shown = (node, t) => {
+    for (let i = anims.length - 1; i >= 0; i--) {
+      const a = anims[i]; if (a.node !== node || a.startTime === null) continue;
+      const f = D.norm(a.frames); if (!f) continue;
+      const st = a.startTime + (a.o.delay || 0), dur = a.o.duration, n = a.o.iterations || 1;
+      if (t < st) continue;
+      if (t - st >= dur * n) { if (a.o.fill === 'forwards' || a.o.fill === 'both') return D.sampleFrames(f, 1); continue; }
+      return D.sampleFrames(f, ((t - st) % dur) / dur);
+    }
+    return null;
+  };
+  /** The dance loop of groove(), without timers: bars back to back at 100 BPM. */
+  function run(list, smooth) {
+    anims.length = 0;
+    const R = { joints: new Map(), base: 0 }, b = 600, h = 132, lead = 600;
+    let next = 1000, zone = null;
+    for (const [style, range] of list) {
+      R.base = next - lead;
+      let t = next - R.base;
+      if (zone && range !== zone) t = D._test.spinFor(D._test.rig(H, R, false), b, t);
+      zone = range;
+      next = R.base + D.STYLES[style](D._test.rig(H, R, D.SMOOTH.has(style)), b, t, 8);
+      if (smooth) D._test.blends(H, R, next - h, h);
+    }
+    let worst = 0, where = '';
+    for (const k of ['armL', 'armR', 'legL', 'legR', 'lean', 'bob', 'squash', 'card']) {
+      let prev = null;
+      for (let t = 1000; t < next - h; t += 4) {
+        const s = shown(E[k], t) || D.parseTf(k === 'squash' ? 'scale(1,1)' : k === 'bob' ? 'translateY(0px)' : k === 'card' ? 'rotateY(0deg)' : 'rotate(0deg)');
+        if (prev) { const g = D.tfGap(prev, s); if (g > worst) { worst = g; where = `${k} at ${t} ms`; } }
+        prev = s;
+      }
+    }
+    return { worst, where };
+  }
+  const seq = [['sway', 'slow'], ['slowdance', 'slow'], ['reggae', 'slow'], ['waltz', 'slow'], ['hiphop', 'mid'], ['moon', 'mid'], ['floss', 'mid'], ['charleston', 'mid'], ['disco', 'fast'], ['techno', 'rush'], ['hiphop', 'mid'], ['sway', 'slow']];
+  const raw = run(seq, false), soft = run(seq, true);
+  ok(raw.worst > 60, `without joins the limbs jump (${raw.worst.toFixed(0)}° at once, ${raw.where})`);
+  ok(soft.worst < 12, `with joins no limb moves more than 12° in 4 ms (worst ${soft.worst.toFixed(1)}, ${soft.where})`);
+  ok(anims.every((a) => a.startTime !== null || a.node === E.notes), 'every move is set on the timeline in absolute time');
+}
+
 // ── Wiring ──
 const read = (p) => fs.readFileSync(p, 'utf8');
 const music = read('public/modules/music.mjs');

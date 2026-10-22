@@ -148,6 +148,21 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **The Ace's dances, smoother** (`web.277`, `modules/mascot/acts-dance.mjs`) — reported by narmod: the dances
+  did not flow. Causes: every move is `fill:'none'`, so at each change of figure or bar a limb snapped back to rest
+  then to the next pose; bars were chained by a `setTimeout` after the previous one ended (a gap, then a re-phase);
+  most keyframes were linear.
+  · Every dance move is set on the timeline in absolute time (`startTime`), and the next bar is scheduled about
+  one beat before the current one ends, on the beat grid (`nextStart`: nudged by ≤ 0.15 beat, else the next beat).
+  · `smoothJoins()` records what each limb shows and lays an eased blend (≈ 0.22 beat each side, 70–170 ms) over
+  every jump — between bars, between the halves of hip-hop / disco, at a release to rest; it also handles composed
+  transforms (moonwalk steps). Face and suit windows overlap the next bar by 40 ms.
+  · The soft dances (`SMOOTH`) ease every keyframe left linear; robot, techno and moon keep their sharp moves.
+  · A new dance every two bars (`PHRASE`, 16 beats) instead of every bar; the tempo range sticks within ±3 BPM of
+  its limits (`groove.mjs` `rangeStick`, `pickDanceIn`); the spin between ranges lasts whole beats.
+  · Slow dance: the arms' hold starts on its first beat (it overrode the end of the previous bar).
+  · `scripts/test-mascot-groove.mjs` replays twelve bars against a fake engine: no limb moves more than 12° in 4 ms
+  with the joins (180° without).
 - **Ace Runner: All-In timer** (`web.276`) — reported by narmod: the end of the All-In could not be seen
   coming (only the last second blinked). A gold bar over the Ace empties over `ALLIN_MS` (kept below the HUD,
   y ≥ 52); for the last `ALLIN_WARN_MS` (1.5 s, was 1 s for the crown blink) it turns red and flashes (steady

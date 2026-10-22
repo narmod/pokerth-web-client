@@ -1,3 +1,7 @@
+2026-10-22 version 2.1.10-web.277:
+- improvement: the Ace dances more smoothly to the music: his arms and legs flow from one move to the next instead of jumping, and the dance goes on without a pause between bars
+- improvement: the Ace keeps each dance a little longer (two bars) before switching, and no longer spins back and forth on a song whose tempo sits between two styles
+
 2026-10-22 version 2.1.10-web.276:
 - improvement: Ace Runner: during All-In a gold bar over the Ace shows the time left; it turns red and flashes for the last second and a half, and the phone gives a short buzz
 

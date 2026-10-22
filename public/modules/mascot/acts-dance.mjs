@@ -5,7 +5,7 @@
 // touches anything (any input sends him away, like every scene). Every bar
 // (8 beats; 4 while the tempo is still unknown) he asks the ear
 // (modules/mascot/groove.mjs) for the tempo, starts on the next beat and
-// picks a dance of that tempo's range — a different one each bar (web.282):
+// picks a dance of that tempo's range — a new one every two bars (PHRASE):
 //   slow (< 90 BPM)  sway (arms up like lighters) · slowdance (hugging the
 //                    air, a heart floats up) · reggae (off-beat shoulders,
 //                    loose arms) · waltz (one turn every three beats)
@@ -17,7 +17,17 @@
 //   rush (> 135)     techno (a jump on every beat, hands up)
 // No ear (iOS default player, radio outside the Web Audio graph, silent
 // analyser): the mid dances on a generic tempo, not in sync.
-// A new tempo range (new track, new tempo): a spin, then the new dance.
+// A new tempo range (new track, new tempo): a spin, then the new dance. The
+// range sticks within ±3 BPM of its limits (groove.mjs rangeStick), so a song
+// near 115 BPM does not spin back and forth.
+// Smoothness (web.277): every move is set on the animation timeline in
+// absolute time (startTime), and the next bar is scheduled about one beat
+// before the current one ends, on the beat grid — no pause between bars.
+// Where a limb would jump (end of one figure, start of the next, a limb
+// released to its rest pose), smoothJoins() lays a short eased blend over
+// the joint, about a fifth of a beat each side, from where the limb is to
+// where the dance wants it. The soft dances (SMOOTH) ease every keyframe;
+// robot stays jerky, techno keeps its landing, moon its steps.
 // Console: window._mascotForceDance = 'robot', then mascotDemo('groove'),
 // shows one dance only (any name of STYLES). Music paused
 // (lock screen, media keys): he waits tapping his foot, and leaves after
@@ -113,8 +123,9 @@ function techno(H, b, t0, beats) {
 // ── Slow dance: hugging the air, swaying, a heart floats up ─────────────
 function slowdance(H, b, t0, beats) {
   const { E, st } = H, x = H.cur.x, k = st.k, end = t0 + beats * b, half = Math.max(1, Math.floor(beats / 2));
-  H.track(E.armL, end, [[0, H.rot(0)], [t0, H.rot(0)], [t0 + b / 2, H.rot(62)], [end - b / 2, H.rot(62)], [end, H.rot(0)]], 'none');
-  H.track(E.armR, end, [[0, H.rot(0)], [t0, H.rot(0)], [t0 + b / 2, H.rot(-62)], [end - b / 2, H.rot(-62)], [end, H.rot(0)]], 'none');
+  const d = end - t0;   // from the first beat: before it, the bar running now keeps the arms
+  H.track(E.armL, d, [[0, H.rot(0)], [b / 2, H.rot(62)], [d - b / 2, H.rot(62)], [d, H.rot(0)]], 'none', t0);
+  H.track(E.armR, d, [[0, H.rot(0)], [b / 2, H.rot(-62)], [d - b / 2, H.rot(-62)], [d, H.rot(0)]], 'none', t0);
   H.cycle(E.lean, [H.rot(-5), { offset: 0.5, ...H.rot(5), easing: H.EIO }, H.rot(-5)], 2 * b, t0, half);
   H.cycle(E.legL, [H.rot(0), { offset: 0.25, ...H.rot(8) }, { offset: 0.5, ...H.rot(0) }, H.rot(0)], 2 * b, t0, half);
   H.cycle(E.legR, [H.rot(0), { offset: 0.75, ...H.rot(-8) }, H.rot(0)], 2 * b, t0, half);
@@ -222,9 +233,16 @@ function charleston(H, b, t0, beats) {
 
 export const STYLES = { sway, slowdance, reggae, waltz, hiphop, robot, moon, floss, charleston, disco, techno };
 
-/** A full turn on one beat: the move between two tempo ranges. */
+/** Dances whose keyframes are all eased (the others keep their sharp moves on purpose). */
+export const SMOOTH = new Set(['sway', 'slowdance', 'reggae', 'waltz', 'hiphop', 'floss', 'charleston', 'disco']);
+const PHRASE = 16;     // beats of one dance before the next one (two bars)
+const FACE_PAD = 40;   // face and suit windows run a little into the next bar: no flash of the costume's mood in between
+const JOINTS = ['armL', 'armR', 'legL', 'legR', 'lean', 'bob', 'squash', 'card'];   // the limbs smoothJoins looks after
+const JUMP = 1.5;      // a joint moving more than this in no time (deg, px, scale ×100) is a jump to smooth
+
+/** A full turn on whole beats (at least 400 ms): the move between two tempo ranges. */
 function spin(H, b, t0) {
-  const ms = Math.max(400, b);
+  const ms = Math.max(1, Math.ceil(400 / b - 1e-9)) * b;
   H.track(H.E.card, ms, [[0, H.ry(0)], [ms, H.ry(360), H.EIO]], 'none', t0);
   H.track(H.E.armL, ms, [[0, H.rot(0)], [ms / 2, H.rot(70)], [ms, H.rot(0)]], 'none', t0);
   H.track(H.E.armR, ms, [[0, H.rot(0)], [ms / 2, H.rot(-70)], [ms, H.rot(0)]], 'none', t0);
@@ -233,11 +251,11 @@ function spin(H, b, t0) {
 }
 
 /** Music paused: he waits, tapping his foot. */
-function waitPose(H, ms) {
+function waitPose(H, t0, ms) {
   const E = H.E;
-  H.cycle(E.legR, [H.rot(0), { offset: 0.5, ...H.rot(-9) }, H.rot(0)], 600, 0, Math.max(1, Math.round(ms / 600)));
-  H.faceWin(0, ms, ['eo', 'mt']);
-  return ms;
+  H.cycle(E.legR, [H.rot(0), { offset: 0.5, ...H.rot(-9) }, H.rot(0)], 600, t0, Math.max(1, Math.round(ms / 600)));
+  H.faceWin(t0, t0 + ms, ['eo', 'mt']);
+  return t0 + ms;
 }
 
 /** Drops the finished animations: a long dance must not pile them up. */
@@ -245,41 +263,269 @@ function prune(c) {
   try { c.anims = c.anims.filter((a) => a.playState !== 'finished'); } catch (e) {}
 }
 
+// ── Joins: what each limb shows over time, and blends over its jumps ───
+// Pure helpers, tested by scripts/test-mascot-groove.mjs.
+
+const clock = () => (typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now());
+
+const BEZ = { ease: [0.25, 0.1, 0.25, 1], 'ease-in': [0.42, 0, 1, 1], 'ease-out': [0, 0, 0.58, 1], 'ease-in-out': [0.42, 0, 0.58, 1] };
+/** Value of a CSS easing at x (0–1): linear, the keyword curves, cubic-bezier() and steps(1, …). */
+export function ease(name, x) {
+  if (!name || name === 'linear') return x;
+  if (/^steps\(/.test(name)) return /start/.test(name) ? (x > 0 ? 1 : 0) : (x >= 1 ? 1 : 0);
+  const m = /^cubic-bezier\(([^,]+),([^,]+),([^,]+),([^)]+)\)$/.exec(name);
+  const p = BEZ[name] || (m ? m.slice(1).map(Number) : null);
+  if (!p) return x;
+  const cx = 3 * p[0], bx = 3 * (p[2] - p[0]) - cx, ax = 1 - cx - bx;
+  const cy = 3 * p[1], by = 3 * (p[3] - p[1]) - cy, ay = 1 - cy - by;
+  let lo = 0, hi = 1, t = x;
+  for (let i = 0; i < 30; i++) {
+    t = (lo + hi) / 2;
+    if (((ax * t + bx) * t + cx) * t < x) lo = t; else hi = t;
+  }
+  return ((ay * t + by) * t + cy) * t;
+}
+
+/**
+ * A transform as a list of functions: 'translate(-9px,0px) rotate(14deg)' →
+ * [{ fn: 'translate', v: [-9, 0], u: ['px', 'px'] }, { fn: 'rotate', v: [14], u: ['deg'] }]
+ * (null when it cannot be read).
+ */
+export function parseTf(s) {
+  if (typeof s !== 'string') return null;
+  const re = /\s*([a-zA-Z0-9]+)\(([^()]*)\)\s*/g, out = [];
+  let m, at = 0;
+  while ((m = re.exec(s)) && m.index === at) {
+    const args = m[2].split(',').map((x) => x.trim()), v = args.map(parseFloat);
+    if (v.some((x) => !isFinite(x))) return null;
+    out.push({ fn: m[1], v, u: args.map((x) => (/[a-z%]+$/i.exec(x) || [''])[0]) });
+    at = re.lastIndex;
+  }
+  return out.length && at === s.length ? out : null;
+}
+export const fmtTf = (t) => t.map((p) => `${p.fn}(${p.v.map((x, i) => +x.toFixed(3) + (p.u[i] || '')).join(',')})`).join(' ');
+const isScale = (fn) => /^scale/.test(fn);
+const restPart = (p) => ({ fn: p.fn, v: p.v.map(() => (isScale(p.fn) ? 1 : 0)), u: p.u });
+const restOf = (t) => t.map(restPart);
+/** a padded with neutral functions to b's list (a's functions a subsequence of b's), else null. */
+function pad(a, b) {
+  const out = [];
+  let i = 0;
+  for (const p of b) {
+    if (i < a.length && a[i].fn === p.fn && a[i].v.length === p.v.length) out.push(a[i++]);
+    else out.push(restPart(p));
+  }
+  return i === a.length ? out : null;
+}
+/** The two transforms on the same list of functions, or null when they cannot be matched. */
+function match(a, b) {
+  if (!a || !b) return null;
+  if (a.length === b.length && a.every((p, i) => p.fn === b[i].fn && p.v.length === b[i].v.length)) return [a, b];
+  const pa = a.length <= b.length ? pad(a, b) : null;
+  if (pa) return [pa, b];
+  const pb = b.length < a.length ? pad(b, a) : null;
+  return pb ? [a, pb] : null;
+}
+
+/** Keyframes → [{ off, tf, e }] with every offset filled in (null when one is not a single transform). */
+export function norm(frames) {
+  if (!frames || frames.length < 2) return null;
+  const f = frames.map((k) => ({ off: typeof k.offset === 'number' ? k.offset : null, tf: parseTf(k.transform), e: k.easing || null }));
+  if (f.some((k) => !k.tf)) return null;
+  if (f[0].off === null) f[0].off = 0;
+  if (f[f.length - 1].off === null) f[f.length - 1].off = 1;
+  for (let i = 1; i < f.length; i++) {
+    if (f[i].off !== null) continue;
+    let j = i;
+    while (f[j].off === null) j++;
+    const a = f[i - 1].off, b = f[j].off;
+    for (let k = i; k < j; k++) f[k].off = a + (b - a) * (k - i + 1) / (j - i + 1);
+  }
+  return f;
+}
+
+/** The transform of normalised keyframes at progress p (0–1). */
+export function sampleFrames(f, p) {
+  let i = 0;
+  while (i < f.length - 2 && p >= f[i + 1].off) i++;
+  const a = f[i], b = f[i + 1], span = b.off - a.off;
+  const y = ease(a.e, span > 0 ? Math.min(1, Math.max(0, (p - a.off) / span)) : 1);
+  const m = match(a.tf, b.tf);
+  if (!m) return y < 1 ? a.tf : b.tf;
+  return m[1].map((q, i) => ({ fn: q.fn, v: m[0][i].v.map((v, k) => v + (q.v[k] - v) * y), u: q.u }));
+}
+
+/** What a recorded animation shows at time t (null when it does not apply then). */
+function recAt(r, t) {
+  if (t < r.start) return null;
+  const el = t - r.start, total = r.dur * r.iter;
+  if (el >= total) return r.hold ? sampleFrames(r.f, 1) : null;
+  return sampleFrames(r.f, (el % r.dur) / r.dur);
+}
+/** What a joint shows at time t: the latest animation that applies, else its rest pose. */
+export function shownAt(J, t) {
+  for (let i = J.recs.length - 1; i >= 0; i--) {
+    const s = recAt(J.recs[i], t);
+    if (s) return s;
+  }
+  return restOf(J.tpl);
+}
+/** A turn about Y is the same pose every 360°: bring `from` within half a turn of `to`. */
+function unwrap(from, to) {
+  const m = match(from, to);
+  if (!m) return from;
+  return m[0].map((p, i) => {
+    if (p.fn !== 'rotateY') return p;
+    const d = ((((p.v[0] - m[1][i].v[0]) % 360) + 540) % 360) - 180;
+    return { fn: p.fn, v: [m[1][i].v[0] + d], u: p.u };
+  });
+}
+/** How far apart two transforms are (deg, px, scale ×100); Infinity when they cannot be matched. */
+export function tfGap(a, b) {
+  const m = match(unwrap(a, b), b);
+  if (!m) return Infinity;
+  let d = 0;
+  m[0].forEach((p, i) => p.v.forEach((v, k) => { d = Math.max(d, Math.abs(v - m[1][i].v[k]) * (isScale(p.fn) ? 100 : 1)); }));
+  return d;
+}
+
+/** Records an animation of a joint (keyframes, absolute start, duration, iterations). */
+export function record(R, node, frames, start, dur, iter, hold) {
+  const f = norm(frames);
+  if (!node || !f) return;
+  let J = R.joints.get(node);
+  if (!J) { J = { node, recs: [], tpl: f[0].tf, done: -Infinity }; R.joints.set(node, J); }
+  J.recs.push({ f, start, dur: Math.max(1, dur), iter: Math.max(1, iter || 1), hold: !!hold });
+}
+
+/**
+ * Blends over the jumps of every joint between its last pass and `upTo`
+ * (absolute ms): each jump gets an eased move from where the limb is h ms
+ * before to where the dance has it h ms after; jumps closer than 2h share
+ * one blend. play(node, frames, startAbs, ms) lays the blend.
+ */
+export function smoothJoins(R, upTo, h, play) {
+  for (const J of R.joints.values()) {
+    const ts = [];
+    for (const r of J.recs) {
+      // a move set since the last pass counts even where that pass already went
+      for (const t of [r.start, r.start + r.dur * r.iter]) if ((t >= J.done || !r.seen) && t < upTo && ts.indexOf(t) < 0) ts.push(t);
+    }
+    for (const r of J.recs) r.seen = true;
+    ts.sort((a, b) => a - b);
+    const jumps = ts.filter((t) => tfGap(shownAt(J, t - 0.5), shownAt(J, t + 0.5)) > JUMP);
+    for (let i = 0; i < jumps.length;) {
+      let j = i;
+      while (j + 1 < jumps.length && jumps[j + 1] - jumps[j] < 2 * h) j++;
+      const w0 = jumps[i] - h, w1 = jumps[j] + h, m = match(unwrap(shownAt(J, w0), shownAt(J, w1)), shownAt(J, w1));
+      if (m) play(J.node, [{ transform: fmtTf(m[0]), easing: 'ease-in-out' }, { transform: fmtTf(m[1]) }], w0, w1 - w0);
+      i = j + 1;
+    }
+    J.done = upTo;
+    // what is over for good no longer matters
+    J.recs = J.recs.filter((r) => r.hold || r.start + r.dur * r.iter > upTo - 4000);
+  }
+}
+
+/**
+ * The helper object a dance gets: the engine's, with every animation set
+ * at the bar's absolute time (R.base) and recorded for smoothJoins; `smooth`
+ * eases the keyframes that have no easing of their own.
+ */
+function rig(H, R, smooth) {
+  const D = Object.create(H);
+  const joints = new Set(JOINTS.map((k) => H.E[k]).filter(Boolean));   // props, hearts, the position: left alone
+  const keep = (a) => {
+    if (!a) return a;
+    try { if (a.playbackRate === 1 && typeof a.startTime !== 'undefined') a.startTime = R.base; } catch (e) {}
+    try {
+      const fx = a.effect, tm = fx.getTiming();
+      if (joints.has(fx.target)) {
+        record(R, fx.target, fx.getKeyframes().map((k) => ({ offset: k.computedOffset, transform: k.transform, easing: k.easing })),
+          R.base + (tm.delay || 0), +tm.duration || 1, tm.iterations, tm.fill === 'forwards' || tm.fill === 'both');
+      }
+    } catch (e) {}
+    return a;
+  };
+  const soft = (frames) => frames.map((k, i) => (i < frames.length - 1 && !k.easing ? Object.assign({}, k, { easing: H.EIO }) : k));
+  D.cycle = (node, frames, ms, delay, count) => keep(H.cycle(node, smooth ? soft(frames) : frames, ms, delay, count));
+  D.track = (node, total, pts, fill, delay) => keep(H.track(node, total, smooth ? pts.map((p) => (p[2] ? p : [p[0], p[1], H.EIO])) : pts, fill, delay));
+  D.play = (node, frames, opts) => keep(H.play(node, frames, opts));
+  D.faceWin = (t0, t1, show) => H.faceWin(t0, t1 + FACE_PAD, show);
+  D.suitWin = (t0, t1, k) => H.suitWin(t0, t1 + FACE_PAD, k);
+  return D;
+}
+
+/** Lays the blends of smoothJoins with the engine, at their absolute time. */
+function blends(H, R, upTo, h) {
+  smoothJoins(R, upTo, h, (node, frames, at, ms) => {
+    const a = H.play(node, frames, { duration: Math.max(1, ms), delay: at - R.base, fill: 'none' });
+    try { if (a && a.playbackRate === 1) a.startTime = R.base; } catch (e) {}
+  });
+}
+
+/**
+ * When the next bar starts (absolute ms). `at` is the end of the bar
+ * running now (0: nothing running, start on the next beat). On the beat
+ * grid, the end of the bar is nudged by at most 0.15 beat; further off (a
+ * new estimate moved the beats), the bar waits for the next beat.
+ */
+export function nextStart(at, tp, b, now) {
+  if (!tp.synced) return at || now;
+  const nb = tp.nextBeat;
+  if (at) {
+    const c = nb + Math.round((at - nb) / b) * b;
+    if (Math.abs(c - at) <= 0.15 * b) return c;
+    return nb + Math.ceil((at - nb) / b - 1e-9) * b;
+  }
+  const t = (((nb - now) % b) + b) % b;
+  return t > 0.85 * b ? now : now + t;   // the beat has just gone by: go on at once, no freeze
+}
+
 async function groove(H) {
   const M = window.Music;
   if (!M || typeof M.isPlaying !== 'function') return;
   const own = !Ear.listening();   // the loader usually started the ear already
   if (own) Ear.start(() => (M.beatLevel ? M.beatLevel() : null));
-  let track = M.current ? M.current() : null, style = null, zone = null, pausedSince = 0;
+  const R = { joints: new Map(), base: 0 };
+  let track = M.current ? M.current() : null, style = null, zone = null, pausedSince = 0, inStyle = 0;
+  let next = 0;   // when the next bar starts (absolute ms); 0: on the next beat
   try {
     for (;;) {
       const c = H.cur;
       if (!c || c.dead || c.leaving) return;
       prune(c);
+      const now = clock();
+      if (next && now > next - 40) next = 0;   // woken up late (busy page, throttled timer): back on a beat
+      R.base = now;
       if (!M.isPlaying()) {
-        if (!pausedSince) pausedSince = Date.now();
-        if (Date.now() - pausedSince > PAUSE_GIVEUP) return;
-        await H.wait(waitPose(H, 1800));
+        if (!pausedSince) pausedSince = now;
+        if (now - pausedSince > PAUSE_GIVEUP) return;
+        const at = next || now;
+        next = now + waitPose(rig(H, R, false), at - now, 1800);
+        blends(H, R, next - 120, 120);
+        await H.wait(Math.max(0, next - 500 - clock()));
         continue;
       }
       pausedSince = 0;
       const id = M.current ? M.current() : null;
       if (id !== track) { track = id; Ear.reset(); }
       const tp = Ear.tempo(), b = 60000 / tp.bpm;
-      let t = 0;
-      if (tp.synced) {
-        const nowT = typeof performance !== 'undefined' ? performance.now() : Date.now();
-        t = Math.max(0, tp.nextBeat - nowT);
-        while (t >= b) t -= b;
-        if (t > 0.85 * b) t = 0;   // the beat has just gone by (end of the previous bar): go on at once, no freeze
-      }
-      const bpm = tp.synced ? tp.bpm : 0, range = Ear.rangeFor(bpm);
-      if (style && range !== zone) t = spin(H, b, t);   // a new tempo range: a spin first
-      zone = range;
+      const h = Math.max(70, Math.min(170, 0.22 * b)), lead = Math.max(450, Math.min(800, b));
+      next = nextStart(next, tp, b, now);
+      let t = next - now;
+      const bpm = tp.synced ? tp.bpm : 0, range = Ear.rangeStick(bpm, zone);
+      if (style && range !== zone) t = spin(rig(H, R, false), b, t);   // a new tempo range: a spin first
       const force = window._mascotForceDance;   // console / test: one dance only (see the header)
-      style = force && STYLES[force] ? force : Ear.pickDance(bpm, style);
+      if (force && STYLES[force]) style = force;
+      else if (!style || range !== zone || inStyle >= PHRASE) { style = Ear.pickDanceIn(range, style); inStyle = 0; }
+      zone = range;
+      const beats = tp.synced ? BAR : BAR / 2;   // no tempo yet: short bars, to sync sooner
       H.cur.grooveStyle = style; H.cur.grooveBpm = tp.synced ? tp.bpm : 0;
-      await H.wait(STYLES[style](H, b, t, tp.synced ? BAR : BAR / 2));   // no tempo yet: short bars, to sync sooner
+      next = now + STYLES[style](rig(H, R, SMOOTH.has(style)), b, t, beats);
+      inStyle += beats;
+      blends(H, R, next - h, h);
+      await H.wait(Math.max(0, next - lead - clock()));
     }
   } finally {
     if (own) Ear.stop();
@@ -287,3 +533,5 @@ async function groove(H) {
 }
 
 export const DANCE = { groove };
+/** Test hooks (scripts/test-mascot-groove.mjs). */
+export const _test = { rig, blends, spinFor: spin };
