@@ -1,3 +1,6 @@
+2026-10-22 version 2.1.10-web.263:
+- bugfix: if the app has not finished starting, tapping the home screen no longer does nothing: the « Unstable connection — Retry » screen comes back
+
 2026-10-22 version 2.1.10-web.262:
 - improvement: iPhone app: the home screen footer (links, version) sits closer to the bottom edge
 

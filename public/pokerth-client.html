@@ -105,6 +105,51 @@
     if (s.indexOf('wrappedJSObject') !== -1) return true;
     return false;
   }
+  /* Boot stall (web.263): one line describing the page at the moment a
+     player's gesture reached an inline onclick="App.x()" while the app did
+     not exist — the boot overlay should have held that gesture. Seen in
+     production (Android 15 · Chrome 121): three such errors, no load failure
+     and no other error from that device, so pokerth.js never ran and the
+     overlay let the taps through. Fixed English words, like the load-failure
+     lines: up = seconds since navigation, doc = readyState, tag = pokerth.js
+     tags (/retry = re-injected), js = its resource timing (duration, bytes,
+     HTTP status) or none, splash = classes/display/position/opacity/
+     pointer-events/size@origin or gone, top = element at the viewport centre,
+     vp = viewport, lang = __pthLangReady, t = typeof window.t, sw = service
+     worker in control, ar = one-shot reload already used. */
+  function bootState() {
+    var p = [];
+    try { p.push('up=' + Math.round(performance.now() / 1000) + 's'); } catch (_) {}
+    try { p.push('doc=' + document.readyState); } catch (_) {}
+    try {
+      var tags = document.querySelectorAll('script[src*="pokerth.js"]');
+      p.push('tag=' + tags.length + (tags.length && tags[tags.length - 1].getAttribute('data-pth-retry') ? '/retry' : ''));
+    } catch (_) {}
+    try {
+      var es = performance.getEntriesByType('resource'), r = null;
+      for (var i = 0; i < es.length; i++) if (/\/pokerth\.js(?:\?|$)/.test(es[i].name)) r = es[i];
+      p.push(r ? 'js=' + Math.round(r.duration) + 'ms/' + (r.transferSize || 0) + 'B' + (r.responseStatus ? '/' + r.responseStatus : '') : 'js=none');
+    } catch (_) {}
+    try {
+      var sp = document.getElementById('boot-splash');
+      if (!sp) p.push('splash=gone');
+      else {
+        var cs = getComputedStyle(sp), b = sp.getBoundingClientRect();
+        p.push('splash=' + (sp.className || '-') + '/' + cs.display + '/' + cs.position + '/op' + cs.opacity +
+               '/pe' + cs.pointerEvents + '/' + Math.round(b.width) + 'x' + Math.round(b.height) + '@' + Math.round(b.left) + ',' + Math.round(b.top));
+      }
+    } catch (_) {}
+    try {
+      var el = document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2);
+      p.push('top=' + (el ? (el.id ? '#' + el.id : String(el.tagName || '?').toLowerCase()) : 'none'));
+      p.push('vp=' + window.innerWidth + 'x' + window.innerHeight);
+    } catch (_) {}
+    try { p.push('lang=' + String(window.__pthLangReady)); } catch (_) {}
+    try { p.push('t=' + typeof window.t); } catch (_) {}
+    try { p.push('sw=' + (navigator.serviceWorker && navigator.serviceWorker.controller ? 1 : 0)); } catch (_) {}
+    try { p.push('ar=' + (sessionStorage.getItem('pth_autoreload') ? 1 : 0)); } catch (_) {}
+    return p.join(' ');
+  }
   window.addEventListener('error', function (ev) {
     if (!ev) return;
     var t = ev.target;
@@ -239,6 +284,19 @@
         setTimeout(function () {
           try { if (!window._swReadyOnce) location.reload(); } catch (_) {}
         }, 1800);
+      }
+    } catch (_) {}
+    // A gesture hit an inline App.* handler before the app existed (web.263):
+    // once per page, send the Boot stall line above and bring the boot
+    // overlay back in its « Retry » state (window.__pthBootStall, boot gate)
+    // instead of leaving a form that silently ignores every tap. Chrome and
+    // Firefox say "App is not defined", Safari "Can't find variable: App".
+    try {
+      if (!window.App && !window.__pthBootStallSent &&
+          /\bApp is not defined\b|Can't find variable: App\b/.test(String(ev.message || ''))) {
+        window.__pthBootStallSent = 1;
+        push({ msg: 'Boot stall: ' + bootState(), src: '', line: 0, col: 0, stack: '' });
+        if (typeof window.__pthBootStall === 'function') window.__pthBootStall();
       }
     } catch (_) {}
   }, true);
@@ -1209,6 +1267,30 @@ function _processAvatarFile(file) {
       else if (!appReady()) fail();
     }, 80);
   });
+
+  /* Safety net (web.263), called by the error collector when a player's tap
+     reached an inline App.* handler while the app did not exist: the overlay
+     failed to hold that tap. Put it back on top, in its « Retry » state, with
+     inline geometry in case the stylesheet rule was not applied; keep
+     watching, and if the app does start after all, reveal as usual. */
+  window.__pthBootStall = function () {
+    if (gone || appReady()) return;
+    try {
+      if (!splash.parentNode && document.body) document.body.appendChild(splash);
+      splash.classList.remove('bs-hide');
+      var st = splash.style;
+      st.position = 'fixed'; st.top = '0'; st.left = '0'; st.width = '100%'; st.height = '100%';
+      st.zIndex = '2147483647'; st.pointerEvents = 'auto';
+    } catch (e) {}
+    fail();
+    clearInterval(poll);
+    var n = 0;
+    poll = setInterval(function () {
+      relabel();
+      if (appReady() && langReady()) { clearInterval(poll); reveal(); return; }
+      if (++n > 1200) clearInterval(poll);
+    }, 50);
+  };
 })();
 </script>
 

@@ -185,6 +185,32 @@ ok(q().length === 1 && q()[0].line === 7, 'a script error is reported with its p
 listeners.unhandledrejection({ reason: { message: 'nope', stack: 'Error: nope\n    at g' } });
 ok(q().length === 2 && /Unhandled rejection/.test(q()[1].msg), 'an unhandled rejection is reported');
 
+// ── Boot stall (web.263) ──────────────────────────────────────────
+// A tap reached an inline App.* handler before the app existed: besides the
+// error itself, one line describing the page, and the boot overlay comes back
+// in its « Retry » state. Once per page, never once the app exists.
+const appErr = (msg) => ({ message: msg, filename: ORIGIN + '/', lineno: 1479, colno: 146,
+  error: { stack: 'ReferenceError: App is not defined\n    at HTMLSelectElement.onchange (' + ORIGIN + '/:1479:146)' } });
+let stalls = 0;
+window.__pthBootStall = () => { stalls++; };
+q().length = 0;
+listeners.error(appErr('Uncaught ReferenceError: App is not defined'));
+ok(q().length === 2 && q()[0].line === 1479 && /^Boot stall: up=\d+s/.test(q()[1].msg),
+   'an "App is not defined" tap is reported, followed by one Boot stall line');
+ok(stalls === 1, 'and the boot overlay is brought back');
+listeners.error(appErr('Uncaught ReferenceError: App is not defined'));
+ok(q().length === 3 && stalls === 1, 'only once per page');
+window.__pthBootStallSent = 0; window.App = {};
+listeners.error(appErr('Uncaught ReferenceError: App is not defined'));
+ok(stalls === 1 && !q().slice(3).some(e => /^Boot stall/.test(e.msg)), 'never once the app exists');
+delete window.App; q().length = 0;
+listeners.error(appErr("ReferenceError: Can't find variable: App"));
+ok(stalls === 2 && q().some(e => /^Boot stall/.test(e.msg)), 'the Safari wording is recognised too');
+window.__pthBootStallSent = 0; q().length = 0;
+listeners.error(appErr('Uncaught ReferenceError: AppX is not defined'));
+ok(stalls === 2 && q().length === 1, 'another missing name is a plain error');
+delete window.__pthBootStall; window.__pthBootStallSent = 0;
+
 // ── Queue ceiling ─────────────────────────────────────────────────
 // Une page qui part en boucle ne doit pas faire gonfler la file sans fin.
 q().length = 0;

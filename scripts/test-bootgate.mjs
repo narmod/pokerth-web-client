@@ -52,6 +52,15 @@ ok(/classList\.remove\('bs-invisible'\)/.test(html),
    'on failure the overlay becomes visible again to offer Retry');
 ok(/window\.App/.test(html), 'window.App is still what the gate waits on');
 
+// Safety net (web.263): if a tap gets through anyway (Android 15 · Chrome 121 in
+// production), the error collector calls the gate, which restores Retry.
+const net = (html.match(/window\.__pthBootStall = function \(\) \{[\s\S]*?\n  \};/) || [''])[0];
+ok(!!net, 'the boot gate exposes window.__pthBootStall');
+ok(/fail\(\)/.test(net) && /classList\.remove\('bs-hide'\)/.test(net) && /pointerEvents = 'auto'/.test(net),
+   'it puts the overlay back on top in its Retry state');
+ok(/reveal\(\)/.test(net), 'and still reveals if the app starts after all');
+ok(/window\.__pthBootStall\(\)/.test(html), 'the error collector calls it');
+
 // Les gestionnaires en ligne qui motivent tout ceci.
 const inline = (html.match(/on(?:click|change)="[^"]*\bApp\./g) || []).length;
 ok(inline > 0, 'the page still wires inline App.* handlers (' + inline + ' found)');

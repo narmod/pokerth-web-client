@@ -239,6 +239,16 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **A tap before the app exists brings back « Retry » and reports why** (`web.263`) — a player's error log showed
+  three « App is not defined » errors from inline handlers (mode card, guest box, Connect) on Android 15 ·
+  Chrome 121, with no load failure and no other error from that device: `pokerth.js` never ran, and the boot
+  overlay let the taps through, so the home screen silently ignored every gesture. The inline error collector
+  (`pokerth-client.html`) now recognises that error (Chrome/Firefox and Safari wordings), once per page sends a
+  « Boot stall: … » line describing the page (pokerth.js tag and resource timing, overlay classes / computed
+  style / geometry, element at the viewport centre, language gate, service worker), and calls the boot gate's
+  new `window.__pthBootStall`, which puts the overlay back on top in its « Retry » state (inline geometry as a
+  fallback) and keeps watching for the app. The line uses the outcome budget in `modules/errreport.mjs` and is
+  classed as a Diagnostic in Admin › Errors.
 - **Version skew between modules recovers on its own** (`web.260`) — a player's error log showed
   `ctl-nav.mjs` (fresh) failing to link against a `keynav.mjs` older than `web.72` (« does not provide an export
   named 'openSurfaces' »). An old service worker still in control falls back to ITS cache when one code request
