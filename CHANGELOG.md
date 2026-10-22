@@ -148,6 +148,11 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Ace Runner: gentler speed curve** (`web.273`) — reported by narmod: the run sped up too fast and each
+  level was a jolt. Speed was `330 + 55·(level−1) + 2·t`, capped at 900; since levels are counted in distance,
+  speed and levels fed each other and the cap came at ≈ 50 s (level 11). Now `+20` per level, `+0.7·t`, cap 800,
+  and the speed eases toward its target (`SPEED_EASE`) instead of stepping: cap at ≈ 1 min 50 s (level 20).
+  Constants `SPEED0 / SPEED_LVL / SPEED_T / SPEED_MAX / SPEED_EASE` at the top of `games/ace-runner.mjs`.
 - **Ace's Help on a LAN / dedicated server** (`web.272`) — reported by narmod: the help did not adapt to the
   connection mode. On a LAN server the lobby had no tip at all, a tap on a free table spoke of the ranking,
   the creation tour's game type step spoke of the pokerth.net account and Ranking tables, and a table named

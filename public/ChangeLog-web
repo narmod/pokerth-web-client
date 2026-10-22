@@ -1,3 +1,6 @@
+2026-10-22 version 2.1.10-web.273:
+- improvement: Ace Runner speeds up more gently: each new blind level is only a little faster and the change is smooth, the top speed is lower and comes after about two minutes instead of under one
+
 2026-10-22 version 2.1.10-web.272:
 - improvement: on a LAN or dedicated server, Ace's Help speaks of that server: what its lobby shows (no ranked games there), free tables and game types without any word about ranked games or the pokerth.net account, and no cup bubbles
 

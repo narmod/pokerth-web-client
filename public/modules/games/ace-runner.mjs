@@ -8,7 +8,8 @@
 // cards (the player's card back): duck. Face-up cards (the player's deck)
 // are picked up; the best five-card hand among them (games/poker-hand.mjs,
 // the Joker is wild) multiplies the distance at the end.
-//   Blinds up   every BLIND_EVERY metres: a level, faster, with the blinds sound
+//   Blinds up   every BLIND_EVERY metres: a level, a little faster (eased in,
+//               no jolt), with the blinds sound
 //   All-In      the gold chip: crown and sceptre, nothing stops him for a few
 //               seconds, he smashes what he runs into, the distance counts double
 //   Showdown    at the end the five cards of the hand are turned one by one
@@ -23,6 +24,9 @@ const ACE_X = 120;            // the Ace's feet, from the left
 const S = 0.5;                // sprite scale (world px per sprite px)
 const BLIND_EVERY = 300;      // metres per blind level
 const ALLIN_MS = 4500;
+// Speed (world px/s): gentle, eased growth (was +55 per level, +2/s, cap 900:
+// top speed in under a minute, a jolt at each level).
+const SPEED0 = 330, SPEED_LVL = 20, SPEED_T = 0.7, SPEED_MAX = 800, SPEED_EASE = 1.5;
 
 export function create(shell) {
   const { t, esc, sound } = shell;
@@ -46,7 +50,7 @@ export function create(shell) {
 
   function newRun() {
     const deck = newDeck();
-    G = { t: 0, dist: 0, level: 1, speed: 330, y: 0, vy: 0, onGround: true, duck: false, holdJump: false,
+    G = { t: 0, dist: 0, level: 1, speed: SPEED0, y: 0, vy: 0, onGround: true, duck: false, holdJump: false,
       obs: [], items: [], fx: [], deck, hand: [], ev: evalCards([]), nextObs: 1.1, nextItem: 0.7,
       nextAllIn: 22 + Math.random() * 14, allInUntil: 0, scroll: 0, yayUntil: 0, coolUntil: 0, banner: null, overAt: 0 };
     renderHand();
@@ -137,7 +141,8 @@ export function create(shell) {
     const now = performance.now();
     const king = now < G.allInUntil;
     G.t += dt;
-    G.speed = Math.min(900, 330 + (G.level - 1) * 55 + G.t * 2);
+    const target = Math.min(SPEED_MAX, SPEED0 + (G.level - 1) * SPEED_LVL + G.t * SPEED_T);
+    G.speed += (target - G.speed) * Math.min(1, dt * SPEED_EASE);
     const dx = G.speed * dt;
     G.scroll += dx; G.dist += (dx / 10) * (king ? 2 : 1);
     const lvl = 1 + Math.floor(G.dist / BLIND_EVERY);
