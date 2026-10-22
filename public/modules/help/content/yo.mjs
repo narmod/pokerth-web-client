@@ -393,7 +393,7 @@ export const help = {
         { id: "voice",
           t: "Ohùn àti ìgbọ̀nrìrì",
           b: [
-            "Ọ̀nà àfikún méjì lè máa sọ fún ọ láìwo ojú: ìkéde ohùn ń ka àwọn ìṣẹ̀lẹ̀ eré sókè pẹ̀lú ẹ̀rọ ìsọ̀rọ̀ ẹ̀rọ rẹ, lórí fóònù ìgbọ̀nrìrì kúkúrú sì lè sàmì sí àkókò rẹ. Àwọn méjèèjì jẹ́ àfikún wẹ́ẹ̀bù, wọ́n wà ní pípa tàbí títàn ní àkọ́kọ́ gẹ́gẹ́ bí ẹ̀rọ, nínú Àṣàyàn ìlọsíwájú → Tẹ́tẹ́ àti àkókò."],
+            "Ọ̀nà àfikún méjì lè máa sọ fún ọ láìwo ojú. Ìkéde eré ń ka àwọn ìṣẹ̀lẹ̀ eré sókè — ìgbésẹ̀, àkókò rẹ, ẹni tó borí — fèrèsé Ìráyèsí sì ni ó ń pinnu bí: Pa, Ohùn inú ẹ̀rọ (ẹ̀rọ ìsọ̀rọ̀ ẹ̀rọ rẹ) tàbí Ẹ̀rọ olùkàwé ojú-ìbòjú (NVDA, JAWS, VoiceOver tàbí TalkBack ń kà wọ́n pẹ̀lú ohùn tiwọn, láìsọ̀rọ̀ lẹ́ẹ̀mejì). Lórí fóònù, ìgbọ̀nrìrì kúkúrú lè sàmì sí àkókò rẹ; ó wà nínú Àṣàyàn ìlọsíwájú → Tẹ́tẹ́ àti àkókò."],
           note: "Ìgbọ̀nrìrì ń ṣiṣẹ́ lórí Android (aṣàwákiri Chromium); Apple kò fún àwọn ojú-òpó ní API ìgbọ̀nrìrì, nítorí náà iPhone kò lè gbọ̀n. Ìkéde ohùn ń ṣiṣẹ́ níbi gbogbo, ṣùgbọ́n àwọn ohùn àti èdè tí ó wà gbára lé ètò rẹ — oníbàárà ń lo èyí tí ó bá a mu jù tí ó rí." }
       ]
     },

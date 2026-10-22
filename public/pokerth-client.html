@@ -1151,6 +1151,7 @@ function _processAvatarFile(file) {
     '/modules/game/state.mjs',
     '/modules/ui/fmt.mjs',
     '/modules/ui/media.mjs',
+    '/modules/ui/announcer.mjs',
     '/modules/game/turn-timer.mjs',
     '/modules/game/stats.mjs',
     '/modules/net/petitions.mjs',
@@ -2969,6 +2970,13 @@ function _processAvatarFile(file) {
     </fieldset>
     <label class="accessibility-toggle"><input type="checkbox" id="accessibility-high-contrast"><span data-i18n="accessibilityHighContrast">High contrast</span></label>
     <label class="accessibility-toggle"><input type="checkbox" id="accessibility-browser-zoom"><span data-i18n="advBrowserZoom">Allow browser zoom (pinch) on phone / tablet</span></label>
+    <fieldset class="accessibility-size accessibility-announce" aria-describedby="announce-hint">
+      <legend data-i18n="announceLegend">Game announcements</legend>
+      <label><input type="radio" name="announce-mode" value="off"><span><strong data-i18n="announceOff">Off</strong></span></label>
+      <label><input type="radio" name="announce-mode" value="voice"><span><strong data-i18n="announceVoice">Built-in voice</strong></span></label>
+      <label><input type="radio" name="announce-mode" value="sr"><span><strong data-i18n="announceScreenReader">Screen reader</strong></span></label>
+      <p class="accessibility-hint" id="announce-hint" data-i18n="announceHint">The built-in voice reads the game events with your device’s voices. Choose Screen reader if you use NVDA, JAWS, VoiceOver or TalkBack: it reads them in its own voice, without speaking twice.</p>
+    </fieldset>
     <button type="button" class="accessibility-reset" id="accessibility-reset" data-i18n="accessibilityReset">Reset accessibility preferences</button>
   </section>
 </div>
@@ -3032,6 +3040,7 @@ function _processAvatarFile(file) {
 <script type="module" src="modules/game/state.mjs"></script>
 <script type="module" src="modules/ui/fmt.mjs"></script>
 <script type="module" src="modules/ui/media.mjs"></script>
+<script type="module" src="modules/ui/announcer.mjs"></script>
 <script type="module" src="modules/game/turn-timer.mjs"></script>
 <script type="module" src="modules/game/stats.mjs"></script>
 <script type="module" src="modules/net/petitions.mjs"></script>
@@ -3768,7 +3777,6 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       <label class="adv-row"><input type="checkbox" id="adv-ownclick" onchange="setAdvOpt('own_click',this.checked)"><span data-i18n="advOwnClick">Reveal my cards on tap</span></label>
       </details>
       <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.4"/><path d="M12 4v3M12 17v3M4 12h3M17 12h3"/></svg></span><span data-i18n="advSecBet">Betting &amp; turn</span></summary>
-      <label class="adv-row"><input type="checkbox" id="adv-voice" onchange="setVoice(this.checked)"><span data-i18n="voiceLabel">Voice</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-haptic" onchange="setHaptic(this.checked)"><span data-i18n="hapticLabel">Vibration</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-displaybb" onchange="setDisplayBB(this.checked)"><span data-i18n="advDisplayBB">Show amounts in big blinds</span><em class="adv-webtag">web</em></label>
       </details>

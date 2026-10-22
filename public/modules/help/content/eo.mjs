@@ -393,7 +393,7 @@ export const help = {
         { id: "voice",
           t: "Voĉaj anoncoj kaj vibrado",
           b: [
-            "Du pliaj kanaloj povas informi vin sen rigardi la ekranon: voĉaj anoncoj legas la ludokazaĵojn per la parolsintezo de via aparato, kaj sur telefonoj mallonga vibrado povas signali vian vicon. Ambaŭ estas retaj etendaĵoj, defaŭlte ŝaltitaj aŭ malŝaltitaj laŭ la aparato, en Altnivelaj opcioj → Vetoj kaj vico."],
+            "Du pliaj kanaloj povas informi vin sen rigardi la ekranon. Ludaj anoncoj laŭtlegas la ludokazaĵojn — agojn, vian vicon, la gajninton — kaj la fenestro Alirebleco difinas kiel: Malŝaltite, Integrita voĉo (la parolsintezo de via aparato) aŭ Ekranlegilo (NVDA, JAWS, VoiceOver aŭ TalkBack legas ilin per sia propra voĉo, sen paroli dufoje). Sur telefonoj mallonga vibrado povas signali vian vicon; ĝi troviĝas en Altnivelaj opcioj → Vetoj kaj vico."],
           note: "Vibrado funkcias ĉe Android (Chromium-retumiloj); Apple ne provizas vibradan API al retejoj, do iPhone-oj ne povas vibri. Voĉaj anoncoj funkcias ĉie, sed la disponeblaj voĉoj kaj lingvoj dependas de via sistemo — la kliento uzas la plej bonan kongruon, kiun ĝi trovas." }
       ]
     },

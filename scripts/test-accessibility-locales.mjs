@@ -10,6 +10,12 @@ const keys = [
   'accessibilityExtraLarge',
   'accessibilityHighContrast',
   'accessibilityReset',
+  'announceLegend',
+  'announceOff',
+  'announceVoice',
+  'announceScreenReader',
+  'announceHint',
+  'announceSrOn',
 ];
 const files = readdirSync('public/modules/lang').filter((file) => file.endsWith('.mjs')).sort();
 const failures = [];

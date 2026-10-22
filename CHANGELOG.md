@@ -32,6 +32,16 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Added
+- **Game announcements for screen readers** (`web.280`) — the « Voice » checkbox (Advanced options → Betting &
+  turn) becomes a three-way choice in the Accessibility window: Off, Built-in voice (speech synthesis, as before)
+  or Screen reader. New `modules/ui/announcer.mjs`: one `announce(text, {urgent})` for every game event (actions,
+  your turn, winner); in Screen-reader mode the text goes to two visually hidden ARIA live regions under
+  `<body>` (polite log, lines appended and pruned to 6; assertive for « your turn »), so NVDA, JAWS, VoiceOver or
+  TalkBack read it in their own voice and the two voices never overlap. `pth_voice` stays authoritative for the
+  built-in voice (admin first-visit default, settings sync, older clients), `pth_announce` adds `sr` and joins
+  the synced keys; a player who had the voice on keeps it. Accessibility « Reset » turns announcements off.
+  `toggleVoice` moved from `media.mjs` to the announcer. Help « Voice and vibration » and the /accessibility page
+  (« Hearing the game », screen-reader FAQ) updated in every language. Test: `scripts/test-announcer.mjs`.
 - **Waiting room alerts when the tab is in the background** (`web.270`) — a Ranking table only starts with 10/10;
   the player went to another tab, the game started without him and, at 5 s per action, he was folded hand after
   hand: the sounds existed (QML parity), nothing visible. `modules/ui/wait-alert.mjs`: with `document.hidden`, a

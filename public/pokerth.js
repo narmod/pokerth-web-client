@@ -458,7 +458,6 @@ function openAdvancedOptions() {
   sync('adv-assist', 'assist', true);
   sync('adv-showodds', 'show_odds', true);
   sync('adv-handsbtn', 'hands_btn', true);
-  sync('adv-voice', 'voice', false);
   sync('adv-haptic', 'haptic', true);
   sync('adv-displaybb', 'display_bb', false);
   sync('adv-nohideignored', 'no_hide_ignored', false);
@@ -1514,7 +1513,7 @@ function _cfgSyncEnabled() { return _advGet('cfg_sync', true); }
 var _CFG_WEB_SYNC_KEYS = [
   // Toggles web-only (via setAdvOpt → pth_<clé>)
   'pth_show_community', 'pth_chat_noemoji', 'pth_chat_ts', 'pth_chat_clear_login', 'pth_lobby_type_chat', 'pth_chat_tr_always', 'pth_guard_raise', 'pth_community_suggest',
-  'pth_assist', 'pth_show_odds', 'pth_hands_btn', 'pth_voice', 'pth_avatar_create',
+  'pth_assist', 'pth_show_odds', 'pth_hands_btn', 'pth_voice', 'pth_announce', 'pth_avatar_create',
   'pth_haptic', 'pth_display_bb', 'pth_table_zoom', 'pth_zoom_follow',
   'pth_community_content', 'pth_sound_vol',
   'pth_log_on', 'pth_create_dialog', 'pth_status_bar', 'pth_blinds_badge', 'pth_deal_anim',
@@ -4807,8 +4806,9 @@ const App = (() => {
   }
   window.toggleDisplayBB = toggleDisplayBB;
 
-  // [9f-2] Voix (speak, _speakNext, _pickVoice, voiceActionPhrase, toggleVoice,
-  // _syncMediaToggleButtons…) déplacée dans public/modules/ui/media.mjs.
+  // [9f-2] Voix (speak, _speakNext, _pickVoice, voiceActionPhrase,
+  // _syncMediaToggleButtons…) déplacée dans public/modules/ui/media.mjs ;
+  // toggleVoice et le choix de sortie des annonces dans modules/ui/announcer.mjs.
   // Spectators present on the current table. Populated by
   // GameSpectatorJoined messages from the server (one is sent per
   // existing spectator when we ourselves join, plus live updates
@@ -4850,7 +4850,8 @@ const App = (() => {
   // Setters (etat precis) pour les cases des Options avancees : bascule le toggle
   // existant seulement si l'etat courant differe de la valeur voulue, ce qui
   // reutilise toute la logique d'application + retour visuel des toggles.
-  window.setVoice = function (on) { if (!!on !== S._voiceEnabled) toggleVoice(); };
+  // Voice: built-in voice on/off, routed through the announcer (modules/ui/announcer.mjs).
+  window.setVoice = function (on) { if (typeof window.setAnnounceMode === 'function') window.setAnnounceMode(on ? 'voice' : 'off'); };
   window.setDisplayBB = function (on) { if (!!on !== S._displayBB) toggleDisplayBB(); };
   window.setHaptic = function (on) { if (!!on !== S._hapticEnabled) toggleHaptic(); };
   // [9f-10] Cycle de connexion (show, _beginConnecting/_endConnecting,
@@ -12434,7 +12435,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.279'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.280'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

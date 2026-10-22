@@ -51,12 +51,14 @@ ok(/Table zoom \(phones\)/.test(help) && /advBrowserZoom/.test(read('public/modu
 ok(/F1 \/ F2 \/ F3 \/ F4/.test(help) && /can be re-bound/.test(help) && /Alt\+S/.test(help), 'official F-keys, re-bindable letter keys, Alt+S');
 ok(/Xbox, PlayStation, Switch Pro/.test(help) && /TV remote \(Android TV\)/.test(help) && /🔴 🟢 🟡 🔵/.test(help), 'gamepad and Android TV remote with colour keys');
 ok(/speechSynthesis/.test(media) && /navigator\.vibrate/.test(media), 'voice announcements and vibration');
+const announcer = read('public/modules/ui/announcer.mjs');
+ok(/aria-live/.test(announcer) && html.includes('name="announce-mode" value="sr"'), 'announcements can go to a screen reader (live region, Accessibility window)');
 ok((css.match(/prefers-reduced-motion: reduce/g) || []).length >= 3, 'reduced motion honoured');
 ok(/own_click: 'AntiPeekMode', guard_call: 'AccidentallyCallBlocker'/.test(app), 'anti-peek and the accidental-call guard');
 const EN = lift('_SEO_A11Y'), keys = Object.keys(EN);
 const flat = (v) => Array.isArray(v) ? v.flat().join(' ') : String(v);
 const all = keys.map((k) => flat(EN[k])).join(' ');
-ok(/Not fully yet/.test(EN.faq[3][1]) && !/screen.reader (support|compatible|friendly)/i.test(all), 'screen-reader play is not claimed');
+ok(/^Partly\./.test(EN.faq[3][1]) && /cannot yet be played with a screen reader alone/.test(EN.faq[3][1]) && !/screen.reader (support|compatible|friendly)/i.test(all), 'screen-reader play is not claimed');
 ok(!/accessibilityHazard/.test(src.slice(src.indexOf('function seoA11yPage('), src.indexOf('function seoA11yPage(') + 3000)), 'JSON-LD claims no hazard-free guarantee');
 
 // 2. English

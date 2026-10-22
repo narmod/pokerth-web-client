@@ -393,7 +393,7 @@ export const help = {
         { id: "voice",
           t: "Ses we titreme",
           b: [
-            "Iki goşmaça kanal ekrana seretmezden hem sizi habarly saklap biler: ses bilen habar bermek enjamyňyzyň gürleýiş sintezi arkaly oýun wakalaryny okaýar, telefonlarda bolsa gysga titreme nobatyňyzy belläp biler. Ikisi hem web goşundylary, enjama görä deslapky ýagdaýda öçük ýa-da açyk, Giňişleýin sazlamalar → Stawkalar we nobat bölüminde."],
+            "Iki goşmaça kanal ekrana seretmezden hem sizi habarly saklap biler. Oýun habarlary oýun wakalaryny — hereketleri, nobatyňyzy, ýeňijini — okaýar, nähili okaljagyny bolsa Elýeterlilik penjiresi kesgitleýär: Öçük, Içki ses (enjamyňyzyň gürleýiş sintezi) ýa-da Ekran okaýjy (NVDA, JAWS, VoiceOver ýa-da TalkBack olary öz sesi bilen, iki gezek gürlemezden okaýar). Telefonlarda gysga titreme nobatyňyzy belläp biler; ol Giňişleýin sazlamalar → Stawkalar we nobat bölüminde ýerleşýär."],
           note: "Titreme Android-de (Chromium brauzerleri) işleýär; Apple saýtlara titreme API-sini bermeýär, şonuň üçin iPhone titräp bilmeýär. Ses bilen habar bermek hemme ýerde işleýär, ýöne elýeterli sesler we diller ulgamyňyza bagly — müşderi tapan iň laýygyny ulanýar." }
       ]
     },

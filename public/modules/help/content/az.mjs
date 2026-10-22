@@ -393,7 +393,7 @@ export const help = {
         { id: "voice",
           t: "Səsli bildiriş və vibrasiya",
           b: [
-            "İki əlavə kanal ekrana baxmadan sizi məlumatlandıra bilər: səsli elanlar cihazınızın nitq sintezi ilə oyun hadisələrini oxuyur, telefonlarda isə qısa vibrasiya növbənizi bildirə bilər. Hər ikisi veb genişləndirmələridir, cihazdan asılı olaraq standart olaraq aktiv və ya deaktivdir, Əlavə seçimlər → Mərclər və növbə bölməsində."],
+            "İki əlavə kanal ekrana baxmadan sizi məlumatlandıra bilər. Oyun elanları oyun hadisələrini — hərəkətləri, növbənizi, qalibi — ucadan oxuyur, necə oxunacağını isə Əlçatanlıq pəncərəsi müəyyən edir: Deaktiv, Daxili səs (cihazınızın nitq sintezi) və ya Ekran oxuyucusu (NVDA, JAWS, VoiceOver və ya TalkBack onları öz səsi ilə, ikiqat səsləndirmə olmadan oxuyur). Telefonlarda qısa vibrasiya növbənizi bildirə bilər; bu seçim Əlavə seçimlər → Mərclər və növbə bölməsindədir."],
           note: "Vibrasiya Android-də (Chromium brauzerləri) işləyir; Apple vibrasiya API-sini saytlara açmır, ona görə iPhone-lar vibrasiya edə bilmir. Səsli elanlar hər yerdə işləyir, lakin mövcud səslər və dillər sisteminizdən asılıdır — klient tapdığı ən uyğun variantdan istifadə edir." }
       ]
     },

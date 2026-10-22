@@ -9752,6 +9752,8 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
 .accessibility-size label strong{color:var(--text-hi)}
 .accessibility-size label small{color:var(--text)}
 .accessibility-toggle{border-top:1px solid var(--border)}
+.accessibility-announce{margin:var(--sp-4) 0 var(--sp-5);padding-top:var(--sp-4);border-top:1px solid var(--border)}
+.accessibility-hint{margin:var(--sp-2) var(--sp-3) 0;color:var(--text);font-size:.9em;line-height:1.45}
 .accessibility-reset{width:100%;min-height:calc(var(--ctrl-lg) + var(--sp-1));margin-top:var(--sp-6);padding:var(--sp-3) var(--sp-6);border:1px solid var(--border-hi);border-radius:var(--r-md);background:var(--inset);color:var(--text-hi);font:600 var(--fs-base)/1.2 var(--ff-display);cursor:pointer}
 .accessibility-close:focus-visible,.accessibility-size input:focus-visible,.accessibility-toggle input:focus-visible,.accessibility-reset:focus-visible{outline:3px solid var(--sel,var(--gold));outline-offset:3px}
 @media (max-width:599.98px){.accessibility-card{width:calc(100vw - var(--sp-7));max-height:calc(100dvh - var(--sp-7));padding:var(--sp-7) var(--sp-6)}}

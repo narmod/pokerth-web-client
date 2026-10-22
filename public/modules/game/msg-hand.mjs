@@ -40,7 +40,8 @@ import { animateChipToPot } from '../ui/table-cards.mjs';
 import { renderHandStrength } from '../ui/odds-panel.mjs';
 import { startTurnTimer, stopTurnTimer } from '../game/turn-timer.mjs';
 import { renderMyTurnActions, _runPreAction, _playAutoMode, notifyMyTurnVisuals } from '../ui/action-bar.mjs';
-import { speak, hapticBuzz, voiceActionPhrase } from '../ui/media.mjs';
+import { hapticBuzz, voiceActionPhrase } from '../ui/media.mjs';
+import { announce } from '../ui/announcer.mjs';
 import { recordHand } from '../game/stats.mjs';
 import { addChat } from '../ui/chat.mjs';
 import { _hlEliminatedPids, _snapshotHandResults, showWinnerOverlay, showWinHandBadge,
@@ -726,7 +727,7 @@ function onPlayersActionDone(sub) {
     window.setPot(S.pot);
     // No log line for the blinds either: "Computer3: " says nothing.
     if (aLabel) window.logAction(window.getPlayerName(pid) + ': ' + aLabel + (bet ? ' ' + bet : ''), true);
-    speak(voiceActionPhrase(action, pid, bet));
+    announce(voiceActionPhrase(action, pid, bet));
     if (pid === S.myId) {
       // Street de ma prise de parole : la barre d'action reste inerte tant
       // que rien ne me redonne la parole (relance adverse ou street
@@ -1017,7 +1018,7 @@ function onEndOfHandShow(sub) {
           for (var _wi = 0; _wi < winners.length; _wi++) if (winners[_wi].won > top) top = winners[_wi].won;
           return _wonHere >= top ? 'win' : 'win-side';
         });
-    speak(t('voiceWins', { name: window.getPlayerName(pid), n: fmtChipsVoice(won) }));
+    announce(t('voiceWins', { name: window.getPlayerName(pid), n: fmtChipsVoice(won) }));
       }
     }
     // Enregistrer la perte si je ne suis pas dans les gagnants

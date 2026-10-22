@@ -45,7 +45,7 @@ module.exports = {
     "padH2": "Spelbeheerder en TV-afstandbeheer",
     "padP": "’n Spelbeheerder — Xbox, PlayStation, Switch Pro en die meeste Bluetooth-beheerders — speel die hele spel: knoppies vir elke aksie, snellers om die inset te stel, en ’n navigasiemodus om deur die skerms, die klets en die kieslyste te beweeg. Dit vibreer wanneer dit jou beurt is. Op Android TV en Google TV werk die afstandbeheer op dieselfde manier, en afstandbeheerders met die vier kleursleutels gebruik dit vir Fold, Check/Call, Bet/Raise en All-In.",
     "hearH2": "Die spel hoor en voel",
-    "hearP": "Stemaankondigings lees die spelgebeure hardop met jou toestel se eie stemme, in jou taal waar die stelsel een het. Op Android-fone merk ’n kort vibrasie jou beurt. Spelklanke kom in vier groepe — aksies, klets, netwerkkennisgewings en blindeverhogings — wat elk afsonderlik aan- of afgeskakel kan word, met een volumeskuif.",
+    "hearP": "Spelaankondigings lees die spelgebeure hardop, óf met jou toestel se eie stemme, in jou taal waar die stelsel een het, óf deur jou skermleser (NVDA, JAWS, VoiceOver of TalkBack) sonder om twee keer te praat; kies in die Toeganklikheid-venster. Op Android-fone merk ’n kort vibrasie jou beurt. Spelklanke kom in vier groepe — aksies, klets, netwerkkennisgewings en blindeverhogings — wat elk afsonderlik aan- of afgeskakel kan word, met een volumeskuif.",
     "calmH2": "Minder verrassings",
     "calmP": "Wanneer jou stelsel om minder beweging vra, demp die kliënt sy animasies. Die loerbeskerming hou jou eie kaarte toe totdat jy daarop tik, en die toevallige-Call-wag sluit die Call-knoppie kortliks net ná ’n groot verhoging, sodat ’n tik wat vir ’n kleiner Call bedoel is nie per ongeluk die verhoogde bedrag kan betaal nie.",
     "langH2": "In jou taal, met ’n gids",
@@ -66,7 +66,7 @@ module.exports = {
       ],
       [
         "Werk dit met ’n skermleser?",
-        "Nog nie heeltemal nie. Stemaankondigings lees die spelgebeure hardop en die kieslyste het etikette, maar die pokertafel self is ’n visuele koppelvlak en kan nog nie met net ’n skermleser gespeel word nie."
+        "Gedeeltelik. Spelaankondigings kan na jou skermleser gestuur word in plaas van na die ingeboude stem, en die kieslyste het etikette, maar die pokertafel self is ’n visuele koppelvlak en kan nog nie met net ’n skermleser gespeel word nie."
       ],
       [
         "Is dit gratis?",
@@ -111,7 +111,7 @@ module.exports = {
     "padH2": "የጨዋታ መቆጣጠሪያ እና የቲቪ ሪሞት",
     "padP": "የጨዋታ መቆጣጠሪያ — Xbox፣ PlayStation፣ Switch Pro እና አብዛኛዎቹ የ Bluetooth መቆጣጠሪያዎች — ሙሉውን ጨዋታ ይጫወታል፦ ለእያንዳንዱ እርምጃ አዝራሮች፣ ውርርዱን ለማስተካከል ትሪገሮች፣ እና በማያዎቹ፣ በውይይቱ እና በምናሌዎቹ ውስጥ ለመንቀሳቀስ የአሰሳ ሁነታ። ተራዎ ሲደርስ ይንዘረዘራል። በ Android TV እና በ Google TV ላይ ሪሞቱ በተመሳሳይ መንገድ ይሠራል፣ አራቱ የቀለም ቁልፎች ያሏቸው ሪሞቶችም ለ Fold፣ Check/Call፣ Bet/Raise እና All-In ይጠቀሙባቸዋል።",
     "hearH2": "ጨዋታውን መስማትና መሰማት",
-    "hearP": "የድምጽ ማስታወቂያዎች የጨዋታ ክስተቶችን በመሣሪያዎ የራሱ ድምጾች ጮክ ብለው ያነባሉ፣ ስርዓቱ ቋንቋዎን የሚደግፍ ከሆነ በቋንቋዎ። በ Android ስልኮች ላይ አጭር ንዝረት ተራዎን ያመለክታል። የጨዋታ ድምጾች በአራት ቡድኖች ይመጣሉ — እርምጃዎች፣ ውይይት፣ የአውታረ መረብ ማሳወቂያዎች እና የብላይንድ ጭማሪዎች — እያንዳንዳቸው በተናጠል ሊበሩ ወይም ሊጠፉ ይችላሉ፣ በአንድ የድምጽ መጠን ተንሸራታች።",
+    "hearP": "የጨዋታ ማስታወቂያዎች የጨዋታ ክስተቶችን ጮክ ብለው ያነባሉ፣ በመሣሪያዎ የራሱ ድምጾች (ስርዓቱ ቋንቋዎን የሚደግፍ ከሆነ በቋንቋዎ) ወይም በማያ ገጽ አንባቢዎ (NVDA፣ JAWS፣ VoiceOver ወይም TalkBack) በኩል ያለ ድርብ ንባብ፤ ምርጫው በተደራሽነት መስኮቱ ውስጥ ነው። በ Android ስልኮች ላይ አጭር ንዝረት ተራዎን ያመለክታል። የጨዋታ ድምጾች በአራት ቡድኖች ይመጣሉ — እርምጃዎች፣ ውይይት፣ የአውታረ መረብ ማሳወቂያዎች እና የብላይንድ ጭማሪዎች — እያንዳንዳቸው በተናጠል ሊበሩ ወይም ሊጠፉ ይችላሉ፣ በአንድ የድምጽ መጠን ተንሸራታች።",
     "calmH2": "ያነሱ ድንገተኛ ነገሮች",
     "calmP": "ስርዓትዎ የተቀነሰ እንቅስቃሴ ሲጠይቅ ደንበኛው አኒሜሽኖቹን ያለዝባል። ጸረ-ማየት እስኪነኩ ድረስ የራስዎን ካርታዎች ተደብቀው ያቆያል፣ የአጋጣሚ-Call ጥበቃም ከትልቅ raise በኋላ ወዲያውኑ የ Call አዝራሩን ለአጭር ጊዜ ያግዳል፣ ለትንሽ call የታሰበ ንክኪ በስህተት የጨመረውን መጠን እንዳይከፍል።",
     "langH2": "በቋንቋዎ፣ ከመሪ ጋር",
@@ -132,7 +132,7 @@ module.exports = {
       ],
       [
         "ከማያ ገጽ አንባቢ ጋር ይሠራል?",
-        "ገና ሙሉ በሙሉ አይደለም። የድምጽ ማስታወቂያዎች የጨዋታ ክስተቶችን ጮክ ብለው ያነባሉ፣ ምናሌዎቹም መለያዎች አሏቸው፣ ነገር ግን የፖከር ጠረጴዛው ራሱ የእይታ በይነገጽ ነው፣ እና ገና በማያ ገጽ አንባቢ ብቻ ሊጫወት አይችልም።"
+        "በከፊል። የጨዋታ ማስታወቂያዎች ከአብሮ የተሰራው ድምጽ ይልቅ ወደ ማያ ገጽ አንባቢዎ ሊላኩ ይችላሉ፣ ምናሌዎቹም መለያዎች አሏቸው፣ ነገር ግን የፖከር ጠረጴዛው ራሱ የእይታ በይነገጽ ነው፣ እና ገና በማያ ገጽ አንባቢ ብቻ ሊጫወት አይችልም።"
       ],
       [
         "ነጻ ነው?",
@@ -177,7 +177,7 @@ module.exports = {
     "padH2": "يد التحكم وجهاز التحكم عن بُعد للتلفاز",
     "padP": "يد تحكم الألعاب — Xbox وPlayStation وSwitch Pro ومعظم أيادي التحكم بتقنية Bluetooth — تكفي للعبة كلها: أزرار لكل حركة، وزنادات لضبط الرهان، ووضع تنقّل للتحرّك بين الشاشات والدردشة والقوائم. وتهتز عندما يحين دورك. على Android TV وGoogle TV يعمل جهاز التحكم عن بُعد بالطريقة نفسها، وأجهزة التحكم التي تحمل المفاتيح الملونة الأربعة تستخدمها لـ Fold وCheck/Call وBet/Raise وAll-In.",
     "hearH2": "سماع اللعبة والإحساس بها",
-    "hearP": "تقرأ الإعلانات الصوتية أحداث اللعبة بصوت عالٍ بأصوات جهازك نفسه، وبلغتك إن كان النظام يوفّرها. على هواتف Android يعلن اهتزاز قصير عن دورك. وتأتي أصوات اللعبة في أربع مجموعات — الحركات، والدردشة، وتنبيهات الشبكة، وارتفاع الرهانات العمياء — يمكن تفعيل كل منها أو إيقافه على حدة، مع شريط واحد لمستوى الصوت.",
+    "hearP": "تقرأ إعلانات اللعبة أحداثها بصوت عالٍ، إما بأصوات جهازك نفسه، وبلغتك إن كان النظام يوفّرها، وإما عبر قارئ الشاشة لديك (NVDA أو JAWS أو VoiceOver أو TalkBack) دون أن تُنطق مرتين؛ ويتم الاختيار في نافذة إمكانية الوصول. على هواتف Android يعلن اهتزاز قصير عن دورك. وتأتي أصوات اللعبة في أربع مجموعات — الحركات، والدردشة، وتنبيهات الشبكة، وارتفاع الرهانات العمياء — يمكن تفعيل كل منها أو إيقافه على حدة، مع شريط واحد لمستوى الصوت.",
     "calmH2": "مفاجآت أقل",
     "calmP": "عندما يطلب نظامك تقليل الحركة، يخفّف العميل رسومه المتحركة. ويبقي منع التلصص أوراقك مخفية حتى تنقر عليها، ويحجب حارس المتابعة العرضية زر Call لحظات بعد رفع كبير، حتى لا تدفع نقرةٌ موجّهة لمتابعة أصغر المبلغَ المرفوع بالخطأ.",
     "langH2": "بلغتك، ومعك مرشد",
@@ -198,7 +198,7 @@ module.exports = {
       ],
       [
         "هل يعمل مع قارئ الشاشة؟",
-        "ليس بالكامل بعد. تقرأ الإعلانات الصوتية أحداث اللعبة بصوت عالٍ وتحمل القوائم تسميات، لكن طاولة البوكر نفسها واجهة مرئية ولا يمكن بعدُ لعبها بقارئ الشاشة وحده."
+        "جزئيًا. يمكن إرسال إعلانات اللعبة إلى قارئ الشاشة لديك بدلًا من الصوت المدمج، وتحمل القوائم تسميات، لكن طاولة البوكر نفسها واجهة مرئية ولا يمكن بعدُ لعبها بقارئ الشاشة وحده."
       ],
       [
         "هل هو مجاني؟",
@@ -243,7 +243,7 @@ module.exports = {
     "padH2": "Oyun pultu və televizor pultu",
     "padP": "Oyun pultu — Xbox, PlayStation, Switch Pro və əksər Bluetooth pultları — bütün oyunu idarə edir: hər hərəkət üçün düymələr, mərci təyin etmək üçün tətiklər və ekranlar, çat və menyular arasında hərəkət etmək üçün naviqasiya rejimi. Növbəniz gələndə o titrəyir. Android TV və Google TV-də televizor pultu eyni şəkildə işləyir, dörd rəngli düyməsi olan pultlar isə onları Fold, Check/Call, Bet/Raise və All-In üçün istifadə edir.",
     "hearH2": "Oyunu eşitmək və hiss etmək",
-    "hearP": "Səsli elanlar oyun hadisələrini cihazınızın öz səsləri ilə, sistemdə varsa öz dilinizdə ucadan oxuyur. Android telefonlarda qısa vibrasiya növbənizi bildirir. Oyun səsləri dörd qrupa bölünür — hərəkətlər, çat, şəbəkə bildirişləri və blaind artımları — onları ayrı-ayrılıqda aça və ya söndürə bilərsiniz, hamısı üçün tək səs sürüşdürücüsü var.",
+    "hearP": "Oyun elanları oyun hadisələrini ucadan oxuyur — ya cihazınızın öz səsləri ilə, sistemdə varsa öz dilinizdə, ya da ekran oxuyucunuz (NVDA, JAWS, VoiceOver və ya TalkBack) vasitəsilə, ikiqat səsləndirmə olmadan; seçimi Əlçatanlıq pəncərəsində edin. Android telefonlarda qısa vibrasiya növbənizi bildirir. Oyun səsləri dörd qrupa bölünür — hərəkətlər, çat, şəbəkə bildirişləri və blaind artımları — onları ayrı-ayrılıqda aça və ya söndürə bilərsiniz, hamısı üçün tək səs sürüşdürücüsü var.",
     "calmH2": "Daha az sürpriz",
     "calmP": "Sisteminiz azaldılmış hərəkət istədikdə klient animasiyalarını yumşaldır. Anti-peek öz kartlarınızı onlara toxunana qədər gizli saxlayır, təsadüfi call qoruması isə böyük raise-dən dərhal sonra Call düyməsini qısa müddətə bloklayır ki, daha kiçik call üçün nəzərdə tutulmuş toxunuş səhvən artırılmış məbləği ödəməsin.",
     "langH2": "Öz dilinizdə, bələdçi ilə",
@@ -264,7 +264,7 @@ module.exports = {
       ],
       [
         "Ekran oxuyucusu ilə işləyirmi?",
-        "Hələ tam yox. Səsli elanlar oyun hadisələrini ucadan oxuyur və menyuların etiketləri var, lakin poker masasının özü vizual interfeysdir və hələ yalnız ekran oxuyucusu ilə oynanıla bilməz."
+        "Qismən. Oyun elanları daxili səs əvəzinə ekran oxuyucunuza göndərilə bilər və menyuların etiketləri var, lakin poker masasının özü vizual interfeysdir və hələ yalnız ekran oxuyucusu ilə oynanıla bilməz."
       ],
       [
         "Pulsuzdurmu?",
@@ -309,7 +309,7 @@ module.exports = {
     "padH2": "Геймпад і пульт ТБ",
     "padP": "З геймпадам — Xbox, PlayStation, Switch Pro і большасцю Bluetooth-геймпадаў — можна гуляць ад пачатку да канца: кнопкі для кожнага дзеяння, трыгеры, каб задаць стаўку, і рэжым навігацыі, каб перамяшчацца па экранах, чаце і меню. Калі надыходзіць ваш ход, ён вібруе. На Android TV і Google TV пульт працуе гэтак жа, а пульты з чатырма каляровымі клавішамі выкарыстоўваюць іх для Fold, Check/Call, Bet/Raise і All-In.",
     "hearH2": "Чуць і адчуваць гульню",
-    "hearP": "Галасавыя аб'явы зачытваюць гульнявыя падзеі ўласнымі галасамі вашай прылады, на вашай мове, калі ў сістэме ёсць такі голас. На тэлефонах з Android кароткая вібрацыя пазначае ваш ход. Гукі гульні падзелены на чатыры групы — дзеянні, чат, сеткавыя апавяшчэнні і павышэнне блайндаў, — якія можна ўключаць і выключаць асобна, з адным паўзунком гучнасці.",
+    "hearP": "Гульнявыя аб'явы зачытваюць падзеі гульні ўголас — уласнымі галасамі вашай прылады, на вашай мове, калі ў сістэме ёсць такі голас, або праз вашу праграму чытання з экрана (NVDA, JAWS, VoiceOver ці TalkBack), без падвойнага агучвання; выбар робіцца ў акне «Даступнасць». На тэлефонах з Android кароткая вібрацыя пазначае ваш ход. Гукі гульні падзелены на чатыры групы — дзеянні, чат, сеткавыя апавяшчэнні і павышэнне блайндаў, — якія можна ўключаць і выключаць асобна, з адным паўзунком гучнасці.",
     "calmH2": "Менш нечаканасцей",
     "calmP": "Калі ваша сістэма просіць паменшыць рух, кліент змякчае свае анімацыі. Anti-peek трымае вашы карты закрытымі, пакуль вы да іх не дакранецеся, а абарона ад выпадковага call ненадоўга блакуе кнопку Call адразу пасля вялікага raise, каб дотык, прызначаны для меншага call, не мог памылкова заплаціць павышаную суму.",
     "langH2": "На вашай мове, з гідам",
@@ -330,7 +330,7 @@ module.exports = {
       ],
       [
         "Ці працуе гэта з праграмай чытання з экрана?",
-        "Пакуль не цалкам. Галасавыя аб'явы зачытваюць гульнявыя падзеі, а меню маюць подпісы, але сам покерны стол — гэта візуальны інтэрфейс, і ў яго пакуль нельга гуляць толькі з праграмай чытання з экрана."
+        "Часткова. Гульнявыя аб'явы можна накіроўваць у праграму чытання з экрана замест убудаванага голасу, а меню маюць подпісы, але сам покерны стол — гэта візуальны інтэрфейс, і ў яго пакуль нельга гуляць толькі з праграмай чытання з экрана."
       ],
       [
         "Гэта бясплатна?",
@@ -375,7 +375,7 @@ module.exports = {
     "padH2": "Геймпад и ТВ дистанционно",
     "padP": "Геймпадът — Xbox, PlayStation, Switch Pro и повечето Bluetooth контролери — играе цялата игра: бутони за всяко действие, тригери за размера на залога и режим Навигация за движение по екраните, чата и менютата. Той вибрира, когато дойде вашият ред. На Android TV и Google TV дистанционното работи по същия начин, а дистанционните с четирите цветни бутона ги използват за Fold, Check/Call, Bet/Raise и All-In.",
     "hearH2": "Да чувате и усещате играта",
-    "hearP": "Гласовите обявления четат на глас игровите събития с гласовете на самото ви устройство, на вашия език, ако системата има такъв глас. На телефони с Android кратка вибрация отбелязва вашия ред. Звуците на играта са в четири групи — действия, чат, мрежови известия и вдигане на блайндовете, — които се включват и изключват поотделно, с един плъзгач за сила на звука.",
+    "hearP": "Игровите обявления четат на глас игровите събития с гласовете на самото ви устройство, на вашия език, ако системата има такъв глас, или чрез вашия екранен четец (NVDA, JAWS, VoiceOver или TalkBack), без двойно озвучаване; изборът се прави в прозореца Достъпност. На телефони с Android кратка вибрация отбелязва вашия ред. Звуците на играта са в четири групи — действия, чат, мрежови известия и вдигане на блайндовете, — които се включват и изключват поотделно, с един плъзгач за сила на звука.",
     "calmH2": "По-малко изненади",
     "calmP": "Когато системата ви изисква намалено движение, клиентът смекчава анимациите си. Защитата от надничане държи вашите карти скрити, докато не ги докоснете, а защитата от случаен Call за кратко заключва бутона Call веднага след голямо вдигане, така че докосване, предназначено за по-малък Call, да не плати по погрешка вдигнатата сума.",
     "langH2": "На вашия език, с водач",
@@ -396,7 +396,7 @@ module.exports = {
       ],
       [
         "Работи ли с екранен четец?",
-        "Все още не напълно. Гласовите обявления четат на глас игровите събития и менютата имат етикети, но самата покер маса е визуален интерфейс и все още не може да се играе само с екранен четец."
+        "Отчасти. Игровите обявления могат да се изпращат към вашия екранен четец вместо към вградения глас и менютата имат етикети, но самата покер маса е визуален интерфейс и все още не може да се играе само с екранен четец."
       ],
       [
         "Безплатно ли е?",
@@ -441,7 +441,7 @@ module.exports = {
     "padH2": "গেমপ্যাড ও টিভি রিমোট",
     "padP": "একটি গেম কন্ট্রোলার — Xbox, PlayStation, Switch Pro এবং বেশিরভাগ Bluetooth প্যাড — দিয়ে পুরো খেলাটাই খেলা যায়: প্রতিটি অ্যাকশনের জন্য বোতাম, বাজির পরিমাণ ঠিক করতে ট্রিগার, আর স্ক্রিন, চ্যাট ও মেনুতে চলাফেরার জন্য নেভিগেশন মোড। আপনার পালা এলে এটি কেঁপে ওঠে। Android TV ও Google TV-তে রিমোট একইভাবে কাজ করে, আর চারটি রঙিন কী থাকা রিমোটে সেগুলো Fold, Check/Call, Bet/Raise ও All-In-এর জন্য ব্যবহৃত হয়।",
     "hearH2": "খেলা শোনা ও অনুভব করা",
-    "hearP": "কণ্ঠ ঘোষণা আপনার ডিভাইসের নিজস্ব কণ্ঠে খেলার ঘটনাগুলো জোরে পড়ে শোনায়, সিস্টেমে থাকলে আপনার ভাষাতেই। Android ফোনে একটি ছোট কম্পন আপনার পালা জানায়। খেলার শব্দ চারটি দলে ভাগ করা — অ্যাকশন, চ্যাট, নেটওয়ার্ক বিজ্ঞপ্তি আর ব্লাইন্ড বাড়া — যেগুলো আলাদাভাবে চালু বা বন্ধ করা যায়, একটিমাত্র ভলিউম স্লাইডারসহ।",
+    "hearP": "খেলার ঘোষণা খেলার ঘটনাগুলো জোরে পড়ে শোনায় — হয় আপনার ডিভাইসের নিজস্ব কণ্ঠে, সিস্টেমে থাকলে আপনার ভাষাতেই, নয়তো আপনার স্ক্রিন রিডারের মাধ্যমে (NVDA, JAWS, VoiceOver বা TalkBack), একই কথা দুবার না বলে; অ্যাক্সেসিবিলিটি উইন্ডোতে বেছে নিন। Android ফোনে একটি ছোট কম্পন আপনার পালা জানায়। খেলার শব্দ চারটি দলে ভাগ করা — অ্যাকশন, চ্যাট, নেটওয়ার্ক বিজ্ঞপ্তি আর ব্লাইন্ড বাড়া — যেগুলো আলাদাভাবে চালু বা বন্ধ করা যায়, একটিমাত্র ভলিউম স্লাইডারসহ।",
     "calmH2": "কম চমক",
     "calmP": "আপনার সিস্টেম কম মোশন চাইলে ক্লায়েন্ট তার অ্যানিমেশন কমিয়ে দেয়। উঁকি-বিরোধী আপনার নিজের কার্ড ট্যাপ না করা পর্যন্ত লুকিয়ে রাখে, আর দুর্ঘটনাজনিত-call রক্ষক বড় raise-এর ঠিক পরে Call বোতাম অল্প সময়ের জন্য আটকে রাখে, যাতে ছোট call-এর উদ্দেশ্যে করা ট্যাপ ভুল করে বাড়ানো পরিমাণ পরিশোধ না করে।",
     "langH2": "আপনার ভাষায়, সঙ্গে একজন গাইড",
@@ -462,7 +462,7 @@ module.exports = {
       ],
       [
         "স্ক্রিন রিডারের সঙ্গে কাজ করে কি?",
-        "এখনও পুরোপুরি নয়। কণ্ঠ ঘোষণা খেলার ঘটনাগুলো জোরে পড়ে শোনায় এবং মেনুগুলোতে লেবেল আছে, কিন্তু পোকার টেবিলটি নিজেই একটি দৃশ্যমান ইন্টারফেস এবং এখনও শুধু স্ক্রিন রিডার দিয়ে খেলা যায় না।"
+        "আংশিকভাবে। খেলার ঘোষণা অন্তর্নির্মিত কণ্ঠস্বরের বদলে আপনার স্ক্রিন রিডারে পাঠানো যায় এবং মেনুগুলোতে লেবেল আছে, কিন্তু পোকার টেবিলটি নিজেই একটি দৃশ্যমান ইন্টারফেস এবং এখনও শুধু স্ক্রিন রিডার দিয়ে খেলা যায় না।"
       ],
       [
         "এটি কি বিনামূল্যে?",
@@ -507,7 +507,7 @@ module.exports = {
     "padH2": "Gamepad i TV daljinski upravljač",
     "padP": "Kontroler za igre — Xbox, PlayStation, Switch Pro i većina Bluetooth kontrolera — igra cijelu igru: dugmad za svaku radnju, okidači za podešavanje uloga i način navigacije za kretanje kroz ekrane, chat i menije. Zavibrira kad dođe tvoj red. Na Android TV-u i Google TV-u daljinski upravljač radi na isti način, a daljinski s četiri tipke u boji koriste ih za Fold, Check/Call, Bet/Raise i All-In.",
     "hearH2": "Slušaj i osjeti igru",
-    "hearP": "Glasovne najave naglas čitaju događaje igre glasovima tvog uređaja, na tvom jeziku ako ga sistem ima. Na Android telefonima kratka vibracija označava tvoj potez. Zvukovi igre dijele se u četiri grupe — radnje, chat, mrežna obavještenja i povećanja blindova — koje se uključuju ili isključuju zasebno, uz jedan klizač jačine zvuka.",
+    "hearP": "Najave igre naglas čitaju događaje igre, bilo glasovima tvog uređaja, na tvom jeziku ako ga sistem ima, bilo putem tvog čitača ekrana (NVDA, JAWS, VoiceOver ili TalkBack), bez dvostrukog izgovaranja; biraš u prozoru Pristupačnost. Na Android telefonima kratka vibracija označava tvoj potez. Zvukovi igre dijele se u četiri grupe — radnje, chat, mrežna obavještenja i povećanja blindova — koje se uključuju ili isključuju zasebno, uz jedan klizač jačine zvuka.",
     "calmH2": "Manje iznenađenja",
     "calmP": "Kad sistem traži smanjeno kretanje, klijent ublažava svoje animacije. Zaštita od virenja drži tvoje karte skrivenima dok ih ne dodirneš, a zaštita od slučajnog Calla nakratko zaključava dugme Call odmah nakon velikog povišenja, da dodir namijenjen manjem Callu ne bi greškom platio povišeni iznos.",
     "langH2": "Na tvom jeziku, s vodičem",
@@ -528,7 +528,7 @@ module.exports = {
       ],
       [
         "Radi li s čitačem ekrana?",
-        "Još ne u potpunosti. Glasovne najave naglas čitaju događaje igre, a meniji imaju oznake, ali sam poker sto je vizuelni interfejs i još se ne može igrati samo uz čitač ekrana."
+        "Djelimično. Najave igre mogu se slati tvom čitaču ekrana umjesto ugrađenog glasa, a meniji imaju oznake, ali sam poker sto je vizuelni interfejs i još se ne može igrati samo uz čitač ekrana."
       ],
       [
         "Je li besplatno?",
@@ -573,7 +573,7 @@ module.exports = {
     "padH2": "Comandament de joc i comandament de la TV",
     "padP": "Un comandament de joc — Xbox, PlayStation, Switch Pro i la majoria de comandaments Bluetooth — permet jugar tota la partida: botons per a cada acció, gatells per fixar l’aposta i un mode de navegació per moure’s per les pantalles, el xat i els menús. Vibra quan et toca. A Android TV i Google TV el comandament a distància funciona igual, i els comandaments amb les quatre tecles de colors les fan servir per a Fold, Check/Call, Bet/Raise i All-In.",
     "hearH2": "Sentir i notar el joc",
-    "hearP": "Els anuncis de veu llegeixen en veu alta els esdeveniments del joc amb les veus del teu dispositiu, en el teu idioma si el sistema en té. Als mòbils Android, una vibració curta marca el teu torn. Els sons del joc es divideixen en quatre grups — accions, xat, avisos de xarxa i pujades de cegues — que es poden activar o desactivar per separat, amb un sol control de volum.",
+    "hearP": "Els anuncis del joc llegeixen en veu alta els esdeveniments de la partida, ja sigui amb les veus del teu dispositiu, en el teu idioma si el sistema en té, o a través del teu lector de pantalla (NVDA, JAWS, VoiceOver o TalkBack) sense parlar dues vegades; tria-ho a la finestra Accessibilitat. Als mòbils Android, una vibració curta marca el teu torn. Els sons del joc es divideixen en quatre grups — accions, xat, avisos de xarxa i pujades de cegues — que es poden activar o desactivar per separat, amb un sol control de volum.",
     "calmH2": "Menys sorpreses",
     "calmP": "Quan el sistema demana menys moviment, el client suavitza les animacions. La protecció antiespieta manté les teves cartes tapades fins que les toques, i la protecció anti-Call accidental bloqueja un moment el botó Call just després d’una pujada gran, perquè un toc pensat per a un Call més petit no pugui pagar per error la quantitat pujada.",
     "langH2": "En el teu idioma, amb un guia",
@@ -594,7 +594,7 @@ module.exports = {
       ],
       [
         "Funciona amb un lector de pantalla?",
-        "Encara no del tot. Els anuncis de veu llegeixen en veu alta els esdeveniments del joc i els menús tenen etiquetes, però la taula de pòquer és en si una interfície visual i encara no s’hi pot jugar només amb un lector de pantalla."
+        "En part. Els anuncis del joc es poden enviar al teu lector de pantalla en lloc de la veu integrada, i els menús tenen etiquetes, però la taula de pòquer és en si una interfície visual i encara no s’hi pot jugar només amb un lector de pantalla."
       ],
       [
         "És gratis?",
@@ -639,7 +639,7 @@ module.exports = {
     "padH2": "Gamepad a dálkový ovladač TV",
     "padP": "Herní ovladač — Xbox, PlayStation, Switch Pro a většina Bluetooth ovladačů — zvládne celou hru: tlačítka pro každou akci, triggery pro nastavení sázky a režim navigace pro pohyb po obrazovkách, chatu a nabídkách. Když jste na tahu, zavibruje. Na Android TV a Google TV funguje stejně dálkový ovladač a ovladače se čtyřmi barevnými tlačítky jimi provádějí Fold, Check/Call, Bet/Raise a All-In.",
     "hearH2": "Hru slyšet i cítit",
-    "hearP": "Hlasová oznámení předčítají herní události nahlas hlasy vašeho zařízení, ve vašem jazyce, pokud ho systém má. Na telefonech s Androidem označí váš tah krátká vibrace. Herní zvuky jsou rozdělené do čtyř skupin — akce, chat, síťová oznámení a zvýšení blindů —, které lze zapnout či vypnout zvlášť, s jedním posuvníkem hlasitosti.",
+    "hearP": "Herní oznámení předčítají herní události nahlas, buď hlasy vašeho zařízení, ve vašem jazyce, pokud ho systém má, nebo prostřednictvím vaší čtečky obrazovky (NVDA, JAWS, VoiceOver nebo TalkBack), aniž by se hlasy překrývaly; volbu provedete v okně Přístupnost. Na telefonech s Androidem označí váš tah krátká vibrace. Herní zvuky jsou rozdělené do čtyř skupin — akce, chat, síťová oznámení a zvýšení blindů —, které lze zapnout či vypnout zvlášť, s jedním posuvníkem hlasitosti.",
     "calmH2": "Méně překvapení",
     "calmP": "Když systém žádá omezení pohybu, klient ztlumí své animace. Ochrana proti nakukování drží vaše karty zakryté, dokud se jich nedotknete, a pojistka proti náhodnému Callu krátce zablokuje tlačítko Call hned po velkém navýšení, aby klepnutí mířené na menší Call nezaplatilo omylem navýšenou částku.",
     "langH2": "Ve vašem jazyce, s průvodcem",
@@ -660,7 +660,7 @@ module.exports = {
       ],
       [
         "Funguje to se čtečkou obrazovky?",
-        "Zatím ne úplně. Hlasová oznámení předčítají herní události nahlas a nabídky mají popisky, ale samotný pokerový stůl je vizuální rozhraní a zatím se na něm nedá hrát jen se čtečkou obrazovky."
+        "Částečně. Herní oznámení lze místo vestavěného hlasu posílat do vaší čtečky obrazovky a nabídky mají popisky, ale samotný pokerový stůl je vizuální rozhraní a zatím se na něm nedá hrát jen se čtečkou obrazovky."
       ],
       [
         "Je to zdarma?",
@@ -705,7 +705,7 @@ module.exports = {
     "padH2": "Pad gêm a theclyn rheoli o bell y teledu",
     "padP": "Mae rheolydd gêm — Xbox, PlayStation, Switch Pro a'r rhan fwyaf o badiau Bluetooth — yn chwarae'r gêm gyfan: botymau ar gyfer pob gweithred, sbardunau i osod y bet, a modd llywio i symud drwy'r sgriniau, y sgwrs a'r dewislenni. Mae'n dirgrynu pan ddaw eich tro. Ar Android TV a Google TV mae'r teclyn rheoli o bell yn gweithio yn yr un ffordd, ac mae teclynnau sydd â'r pedair bysell liw yn eu defnyddio ar gyfer Fold, Check/Call, Bet/Raise ac All-In.",
     "hearH2": "Clywed a theimlo'r gêm",
-    "hearP": "Mae cyhoeddiadau llais yn darllen digwyddiadau'r gêm yn uchel gyda lleisiau eich dyfais ei hun, yn eich iaith chi lle mae gan y system un. Ar ffonau Android mae dirgryniad byr yn nodi eich tro. Daw synau'r gêm mewn pedwar grŵp — gweithredoedd, sgwrs, hysbysiadau rhwydwaith a chodiadau'r blinds — y gellir eu troi ymlaen neu i ffwrdd ar wahân, gydag un llithrydd sain.",
+    "hearP": "Mae cyhoeddiadau'r gêm yn darllen digwyddiadau'r gêm yn uchel, naill ai gyda lleisiau eich dyfais ei hun, yn eich iaith chi lle mae gan y system un, neu drwy eich darllenydd sgrin (NVDA, JAWS, VoiceOver neu TalkBack) heb siarad ddwywaith; gallwch ddewis yn y ffenestr Hygyrchedd. Ar ffonau Android mae dirgryniad byr yn nodi eich tro. Daw synau'r gêm mewn pedwar grŵp — gweithredoedd, sgwrs, hysbysiadau rhwydwaith a chodiadau'r blinds — y gellir eu troi ymlaen neu i ffwrdd ar wahân, gydag un llithrydd sain.",
     "calmH2": "Llai o syrpréis",
     "calmP": "Pan fydd eich system yn gofyn am lai o symud, mae'r cleient yn lleddfu ei animeiddiadau. Mae Anti-peek yn cadw'ch cardiau eich hun yn gudd nes i chi eu tapio, ac mae'r gwarchod rhag call damweiniol yn rhwystro'r botwm Call am ennyd yn syth ar ôl raise mawr, fel na all tap a fwriadwyd ar gyfer call llai dalu'r swm uwch drwy gamgymeriad.",
     "langH2": "Yn eich iaith chi, gyda thywysydd",
@@ -726,7 +726,7 @@ module.exports = {
       ],
       [
         "Ydy e'n gweithio gyda darllenydd sgrin?",
-        "Ddim yn llawn eto. Mae cyhoeddiadau llais yn darllen digwyddiadau'r gêm yn uchel ac mae labeli ar y dewislenni, ond rhyngwyneb gweledol yw'r bwrdd pocer ei hun ac ni ellir ei chwarae â darllenydd sgrin yn unig eto."
+        "Yn rhannol. Gellir anfon cyhoeddiadau'r gêm i'ch darllenydd sgrin yn lle'r llais adeiledig, ac mae labeli ar y dewislenni, ond rhyngwyneb gweledol yw'r bwrdd pocer ei hun ac ni ellir ei chwarae â darllenydd sgrin yn unig eto."
       ],
       [
         "Ydy e am ddim?",
@@ -771,7 +771,7 @@ module.exports = {
     "padH2": "Gamepad og tv-fjernbetjening",
     "padP": "En spillecontroller — Xbox, PlayStation, Switch Pro og de fleste Bluetooth-controllere — styrer hele spillet: knapper til alle handlinger, triggere til at indstille indsatsen og en navigationstilstand til at bevæge sig rundt i skærmene, chatten og menuerne. Den vibrerer, når det bliver din tur. På Android TV og Google TV fungerer fjernbetjeningen på samme måde, og fjernbetjeninger med de fire farvede taster bruger dem til Fold, Check/Call, Bet/Raise og All-In.",
     "hearH2": "Hør og mærk spillet",
-    "hearP": "Stemmeannonceringer læser spilbegivenhederne højt med enhedens egne stemmer, på dit sprog, hvis systemet har en stemme til det. På Android-telefoner markerer en kort vibration din tur. Spillydene er delt i fire grupper — handlinger, chat, netværksnotifikationer og blindforhøjelser — som kan slås til og fra hver for sig, med én lydstyrkeskyder.",
+    "hearP": "Spilannonceringer læser spilbegivenhederne højt, enten med enhedens egne stemmer, på dit sprog, hvis systemet har en stemme til det, eller via din skærmlæser (NVDA, JAWS, VoiceOver eller TalkBack), uden at der bliver talt dobbelt; du vælger i vinduet Tilgængelighed. På Android-telefoner markerer en kort vibration din tur. Spillydene er delt i fire grupper — handlinger, chat, netværksnotifikationer og blindforhøjelser — som kan slås til og fra hver for sig, med én lydstyrkeskyder.",
     "calmH2": "Færre overraskelser",
     "calmP": "Når dit system beder om reduceret bevægelse, dæmper klienten sine animationer. Kigge-beskyttelsen holder dine egne kort skjult, indtil du trykker på dem, og værnet mod utilsigtet Call låser kortvarigt Call-knappen lige efter en stor forhøjelse, så et tryk ment til et mindre Call ikke ved en fejl betaler det forhøjede beløb.",
     "langH2": "På dit sprog, med en guide",
@@ -792,7 +792,7 @@ module.exports = {
       ],
       [
         "Virker det med en skærmlæser?",
-        "Ikke fuldt ud endnu. Stemmeannonceringer læser spilbegivenhederne højt, og menuerne har etiketter, men selve pokerbordet er en visuel brugerflade og kan endnu ikke spilles med en skærmlæser alene."
+        "Delvist. Spilannonceringer kan sendes til din skærmlæser i stedet for den indbyggede stemme, og menuerne har etiketter, men selve pokerbordet er en visuel brugerflade og kan endnu ikke spilles med en skærmlæser alene."
       ],
       [
         "Er det gratis?",
@@ -837,7 +837,7 @@ module.exports = {
     "padH2": "Gamepad und TV-Fernbedienung",
     "padP": "Mit einem Controller — Xbox, PlayStation, Switch Pro und die meisten Bluetooth-Controller — spielen Sie das ganze Spiel: Tasten für jede Aktion, Trigger zum Einstellen des Einsatzes und ein Navigationsmodus, um sich durch die Bildschirme, den Chat und die Menüs zu bewegen. Er vibriert, wenn Sie an der Reihe sind. Auf Android TV und Google TV funktioniert die Fernbedienung genauso, und Fernbedienungen mit den vier Farbtasten nutzen diese für Fold, Check/Call, Bet/Raise und All-In.",
     "hearH2": "Das Spiel hören und spüren",
-    "hearP": "Sprachansagen lesen die Spielereignisse mit den Stimmen Ihres Geräts vor, in Ihrer Sprache, sofern das System eine solche Stimme hat. Auf Android-Handys zeigt eine kurze Vibration an, dass Sie am Zug sind. Die Spielsounds sind in vier Gruppen eingeteilt — Aktionen, Chat, Netzwerkhinweise und Blind-Erhöhungen —, die sich einzeln ein- und ausschalten lassen, mit einem einzigen Lautstärkeregler.",
+    "hearP": "Spielansagen lesen die Spielereignisse vor, entweder mit den Stimmen Ihres Geräts, in Ihrer Sprache, sofern das System eine solche Stimme hat, oder über Ihren Screenreader (NVDA, JAWS, VoiceOver oder TalkBack), ohne doppelte Ansage; die Wahl treffen Sie im Fenster „Barrierefreiheit“. Auf Android-Handys zeigt eine kurze Vibration an, dass Sie am Zug sind. Die Spielsounds sind in vier Gruppen eingeteilt — Aktionen, Chat, Netzwerkhinweise und Blind-Erhöhungen —, die sich einzeln ein- und ausschalten lassen, mit einem einzigen Lautstärkeregler.",
     "calmH2": "Weniger Überraschungen",
     "calmP": "Wenn Ihr System reduzierte Bewegung anfordert, schwächt der Client seine Animationen ab. Der Anti-Spick-Schutz hält Ihre eigenen Karten verdeckt, bis Sie sie antippen, und der Schutz vor versehentlichem Call sperrt die Call-Schaltfläche kurz nach einer großen Erhöhung, damit ein Tippen, das einem kleineren Call galt, nicht versehentlich den erhöhten Betrag bezahlt.",
     "langH2": "In Ihrer Sprache, mit einem Begleiter",
@@ -858,7 +858,7 @@ module.exports = {
       ],
       [
         "Funktioniert es mit einem Screenreader?",
-        "Noch nicht vollständig. Sprachansagen lesen die Spielereignisse vor, und die Menüs sind beschriftet, aber der Pokertisch selbst ist eine visuelle Oberfläche und lässt sich noch nicht allein mit einem Screenreader spielen."
+        "Teilweise. Spielansagen lassen sich statt an die integrierte Stimme an Ihren Screenreader senden, und die Menüs sind beschriftet, aber der Pokertisch selbst ist eine visuelle Oberfläche und lässt sich noch nicht allein mit einem Screenreader spielen."
       ],
       [
         "Ist es kostenlos?",
@@ -903,7 +903,7 @@ module.exports = {
     "padH2": "Χειριστήριο και τηλεχειριστήριο τηλεόρασης",
     "padP": "Ένα χειριστήριο παιχνιδιών — Xbox, PlayStation, Switch Pro και τα περισσότερα χειριστήρια Bluetooth — παίζει όλο το παιχνίδι: κουμπιά για κάθε ενέργεια, σκανδάλες για το ποσό του πονταρίσματος και λειτουργία Πλοήγησης για να κινείστε στις οθόνες, στη συνομιλία και στα μενού. Δονείται όταν έρχεται η σειρά σας. Σε Android TV και Google TV το τηλεχειριστήριο λειτουργεί με τον ίδιο τρόπο, και τα τηλεχειριστήρια με τα τέσσερα χρωματιστά πλήκτρα τα χρησιμοποιούν για Fold, Check/Call, Bet/Raise και All-In.",
     "hearH2": "Ακούστε και νιώστε το παιχνίδι",
-    "hearP": "Οι φωνητικές ανακοινώσεις διαβάζουν δυνατά τα γεγονότα του παιχνιδιού με τις φωνές της ίδιας της συσκευής σας, στη γλώσσα σας όταν το σύστημα διαθέτει φωνή γι’ αυτήν. Σε κινητά Android μια σύντομη δόνηση σημαίνει τη σειρά σας. Οι ήχοι του παιχνιδιού χωρίζονται σε τέσσερις ομάδες — ενέργειες, συνομιλία, ειδοποιήσεις δικτύου και αυξήσεις των blinds — που ενεργοποιούνται ή απενεργοποιούνται χωριστά, με ένα ρυθμιστικό έντασης.",
+    "hearP": "Οι ανακοινώσεις παιχνιδιού διαβάζουν δυνατά τα γεγονότα του παιχνιδιού είτε με τις φωνές της ίδιας της συσκευής σας, στη γλώσσα σας όταν το σύστημα διαθέτει φωνή γι’ αυτήν, είτε μέσω του αναγνώστη οθόνης σας (NVDA, JAWS, VoiceOver ή TalkBack), χωρίς διπλή εκφώνηση· η επιλογή γίνεται στο παράθυρο Προσβασιμότητα. Σε κινητά Android μια σύντομη δόνηση σημαίνει τη σειρά σας. Οι ήχοι του παιχνιδιού χωρίζονται σε τέσσερις ομάδες — ενέργειες, συνομιλία, ειδοποιήσεις δικτύου και αυξήσεις των blinds — που ενεργοποιούνται ή απενεργοποιούνται χωριστά, με ένα ρυθμιστικό έντασης.",
     "calmH2": "Λιγότερες εκπλήξεις",
     "calmP": "Όταν το σύστημά σας ζητά μειωμένη κίνηση, η εφαρμογή περιορίζει τα κινούμενα εφέ της. Η προστασία από κρυφοκοίταγμα κρατά τα φύλλα σας κρυμμένα ώσπου να τα αγγίξετε, και η προστασία από τυχαίο Call κλειδώνει για λίγο το κουμπί Call αμέσως μετά από μεγάλο ανέβασμα, ώστε ένα άγγιγμα προορισμένο για μικρότερο Call να μην πληρώσει κατά λάθος το ανεβασμένο ποσό.",
     "langH2": "Στη γλώσσα σας, με οδηγό",
@@ -924,7 +924,7 @@ module.exports = {
       ],
       [
         "Λειτουργεί με αναγνώστη οθόνης;",
-        "Όχι πλήρως ακόμη. Οι φωνητικές ανακοινώσεις διαβάζουν δυνατά τα γεγονότα του παιχνιδιού και τα μενού έχουν ετικέτες, αλλά το ίδιο το τραπέζι του πόκερ είναι οπτική διεπαφή και δεν μπορεί ακόμη να παιχτεί μόνο με αναγνώστη οθόνης."
+        "Εν μέρει. Οι ανακοινώσεις παιχνιδιού μπορούν να σταλούν στον αναγνώστη οθόνης σας αντί για την ενσωματωμένη φωνή, και τα μενού έχουν ετικέτες, αλλά το ίδιο το τραπέζι του πόκερ είναι οπτική διεπαφή και δεν μπορεί ακόμη να παιχτεί μόνο με αναγνώστη οθόνης."
       ],
       [
         "Είναι δωρεάν;",
@@ -969,7 +969,7 @@ module.exports = {
     "padH2": "Ludregilo kaj televida teleregilo",
     "padP": "Ludregilo — Xbox, PlayStation, Switch Pro kaj la plej multaj Bluetooth-regiloj — ludas la tutan ludon: butonoj por ĉiu ago, ellasiloj por agordi la veton, kaj navigada reĝimo por moviĝi tra la ekranoj, la babilado kaj la menuoj. Ĝi vibras kiam venas via vico. Ĉe Android TV kaj Google TV la teleregilo funkcias same, kaj teleregiloj kun la kvar koloraj klavoj uzas ilin por Fold, Check/Call, Bet/Raise kaj All-In.",
     "hearH2": "Aŭdi kaj senti la ludon",
-    "hearP": "Voĉaj anoncoj laŭtlegas la ludokazaĵojn per la propraj voĉoj de via aparato, en via lingvo kiam la sistemo havas tian. Ĉe Android-telefonoj mallonga vibrado signalas vian vicon. La ludsonoj estas en kvar grupoj — agoj, babilado, retaj sciigoj kaj plialtigoj de blindoj — kiujn oni povas ŝalti aŭ malŝalti aparte, kun unu laŭteca ŝovilo.",
+    "hearP": "Ludaj anoncoj laŭtlegas la ludokazaĵojn, aŭ per la propraj voĉoj de via aparato, en via lingvo kiam la sistemo havas tian, aŭ per via ekranlegilo (NVDA, JAWS, VoiceOver aŭ TalkBack) sen paroli dufoje; elektu en la fenestro Alirebleco. Ĉe Android-telefonoj mallonga vibrado signalas vian vicon. La ludsonoj estas en kvar grupoj — agoj, babilado, retaj sciigoj kaj plialtigoj de blindoj — kiujn oni povas ŝalti aŭ malŝalti aparte, kun unu laŭteca ŝovilo.",
     "calmH2": "Malpli da surprizoj",
     "calmP": "Kiam via sistemo petas malpli da movado, la kliento mildigas siajn animaciojn. Anti-peek tenas viajn proprajn kartojn kaŝitaj ĝis vi tuŝas ilin, kaj la protekto kontraŭ hazarda call momente blokas la butonon Call tuj post granda raise, por ke tuŝo celita al pli malgranda call ne erare pagu la plialtigitan sumon.",
     "langH2": "En via lingvo, kun gvidanto",
@@ -990,7 +990,7 @@ module.exports = {
       ],
       [
         "Ĉu ĝi funkcias kun ekranlegilo?",
-        "Ankoraŭ ne plene. Voĉaj anoncoj laŭtlegas la ludokazaĵojn kaj la menuoj havas etikedojn, sed la pokera tablo mem estas vida interfaco kaj ankoraŭ ne ludeblas per ekranlegilo sola."
+        "Parte. Ludajn anoncojn oni povas sendi al via ekranlegilo anstataŭ al la integrita voĉo, kaj la menuoj havas etikedojn, sed la pokera tablo mem estas vida interfaco kaj ankoraŭ ne ludeblas per ekranlegilo sola."
       ],
       [
         "Ĉu ĝi estas senpaga?",
@@ -1035,7 +1035,7 @@ module.exports = {
     "padH2": "Mando y mando a distancia de la TV",
     "padP": "Un mando de juego — Xbox, PlayStation, Switch Pro y la mayoría de los mandos Bluetooth — controla toda la partida: botones para cada acción, gatillos para ajustar la apuesta y un modo de navegación para moverse por las pantallas, el chat y los menús. Vibra cuando llega tu turno. En Android TV y Google TV el mando a distancia funciona igual, y los mandos con las cuatro teclas de color las usan para Fold, Check/Call, Bet/Raise y All-In.",
     "hearH2": "Oír y sentir la partida",
-    "hearP": "Los anuncios de voz leen en voz alta los eventos del juego con las voces de tu propio dispositivo, en tu idioma si el sistema dispone de él. En los teléfonos Android, una breve vibración marca tu turno. Los sonidos del juego se dividen en cuatro grupos — acciones, chat, avisos de red y subidas de ciegas — que se activan o desactivan por separado, con un único control de volumen.",
+    "hearP": "Los anuncios del juego leen en voz alta los eventos de la partida, ya sea con las voces de tu propio dispositivo, en tu idioma si el sistema dispone de él, o a través de tu lector de pantalla (NVDA, JAWS, VoiceOver o TalkBack), sin que nada se lea dos veces; se elige en la ventana Accesibilidad. En los teléfonos Android, una breve vibración marca tu turno. Los sonidos del juego se dividen en cuatro grupos — acciones, chat, avisos de red y subidas de ciegas — que se activan o desactivan por separado, con un único control de volumen.",
     "calmH2": "Menos sobresaltos",
     "calmP": "Cuando tu sistema pide reducir el movimiento, el cliente suaviza sus animaciones. La anti-miradas mantiene tus propias cartas ocultas hasta que las tocas, y la guarda contra Call accidental bloquea brevemente el botón Call justo después de una gran subida, para que un toque pensado para un Call más pequeño no pague por error el importe subido.",
     "langH2": "En tu idioma, con un guía",
@@ -1056,7 +1056,7 @@ module.exports = {
       ],
       [
         "¿Funciona con un lector de pantalla?",
-        "Todavía no del todo. Los anuncios de voz leen en voz alta los eventos del juego y los menús llevan etiquetas, pero la mesa de póker en sí es una interfaz visual y todavía no se puede jugar solo con un lector de pantalla."
+        "En parte. Los anuncios del juego pueden enviarse a tu lector de pantalla en lugar de a la voz integrada, y los menús llevan etiquetas, pero la mesa de póker en sí es una interfaz visual y todavía no se puede jugar solo con un lector de pantalla."
       ],
       [
         "¿Es gratis?",
@@ -1101,7 +1101,7 @@ module.exports = {
     "padH2": "Mando de juego y mando a distancia de TV",
     "padP": "Un mando de juego — Xbox, PlayStation, Switch Pro y la mayoría de mandos Bluetooth — permite jugar la partida entera: botones para cada acción, gatillos para fijar la apuesta y un modo de navegación para moverte por las pantallas, el chat y los menús. Vibra cuando llega tu turno. En Android TV y Google TV el mando a distancia funciona igual, y los mandos con las cuatro teclas de colores las usan para Fold, Check/Call, Bet/Raise y All-In.",
     "hearH2": "Oír y sentir el juego",
-    "hearP": "Los anuncios de voz leen en voz alta los eventos del juego con las voces de tu propio dispositivo, en tu idioma si el sistema tiene una. En los teléfonos Android, una breve vibración marca tu turno. Los sonidos del juego se dividen en cuatro grupos — acciones, chat, avisos de red y subidas de ciegas — que se pueden activar o desactivar por separado, con un solo control de volumen.",
+    "hearP": "Los anuncios del juego leen en voz alta los eventos de la partida, ya sea con las voces de tu propio dispositivo, en tu idioma si el sistema dispone de él, o a través de tu lector de pantalla (NVDA, JAWS, VoiceOver o TalkBack), sin que nada se lea dos veces; se elige en la ventana Accesibilidad. En los teléfonos Android, una breve vibración marca tu turno. Los sonidos del juego se dividen en cuatro grupos — acciones, chat, avisos de red y subidas de ciegas — que se activan o desactivan por separado, con un único control de volumen.",
     "calmH2": "Menos sorpresas",
     "calmP": "Cuando tu sistema pide reducir el movimiento, el cliente suaviza sus animaciones. La anti-miradas mantiene tus propias cartas ocultas hasta que las tocas, y la guarda contra Call accidental bloquea brevemente el botón Call justo después de una subida grande, para que un toque destinado a un Call más pequeño no pueda pagar por error el importe subido.",
     "langH2": "En tu idioma, con un guía",
@@ -1122,7 +1122,7 @@ module.exports = {
       ],
       [
         "¿Funciona con un lector de pantalla?",
-        "Todavía no del todo. Los anuncios de voz leen en voz alta los eventos del juego y los menús tienen etiquetas, pero la mesa de póker en sí es una interfaz visual y todavía no se puede jugar solo con un lector de pantalla."
+        "En parte. Los anuncios del juego pueden enviarse a tu lector de pantalla en lugar de a la voz integrada, y los menús llevan etiquetas, pero la mesa de póker en sí es una interfaz visual y todavía no se puede jugar solo con un lector de pantalla."
       ],
       [
         "¿Es gratis?",
@@ -1167,7 +1167,7 @@ module.exports = {
     "padH2": "Mängupult ja teleripult",
     "padP": "Mängupult — Xbox, PlayStation, Switch Pro ja enamik Bluetoothi pulte — mängib kogu mängu: nupud iga käigu jaoks, päästikud panuse seadmiseks ja navigeerimisrežiim ekraanidel, vestluses ja menüüdes liikumiseks. Kui tuleb sinu kord, see vibreerib. Android TV-s ja Google TV-s töötab kaugjuhtimispult samamoodi ning nelja värvilise nupuga puldid kasutavad neid Fold, Check/Call, Bet/Raise ja All-In jaoks.",
     "hearH2": "Mängu kuulda ja tunda",
-    "hearP": "Hääleteated loevad mängusündmused ette sinu seadme enda häältega, sinu keeles, kui süsteemis see olemas on. Android-telefonides märgib lühike vibratsioon sinu käiku. Mänguhelid on neljas rühmas — käigud, vestlus, võrguteated ja blindide tõus —, mida saab eraldi sisse või välja lülitada, ühe helitugevuse liuguriga.",
+    "hearP": "Mänguteated loevad mängusündmused ette kas sinu seadme enda häältega, sinu keeles, kui süsteemis see olemas on, või sinu ekraanilugeja kaudu (NVDA, JAWS, VoiceOver või TalkBack), ilma et midagi kaks korda räägitaks; valiku teed aknas Juurdepääsetavus. Android-telefonides märgib lühike vibratsioon sinu käiku. Mänguhelid on neljas rühmas — käigud, vestlus, võrguteated ja blindide tõus —, mida saab eraldi sisse või välja lülitada, ühe helitugevuse liuguriga.",
     "calmH2": "Vähem üllatusi",
     "calmP": "Kui süsteem palub liikumist vähendada, tõmbab klient oma animatsioonid tagasi. Piilumisvastane kaitse hoiab sinu enda kaardid varjatuna, kuni neid puudutad, ja juhusliku Call’i kaitse blokeerib nupu Call korraks kohe pärast suurt tõstmist, nii et väiksemale Call’ile mõeldud puudutus ei saa kogemata tõstetud summat maksta.",
     "langH2": "Sinu keeles, koos giidiga",
@@ -1188,7 +1188,7 @@ module.exports = {
       ],
       [
         "Kas see töötab ekraanilugejaga?",
-        "Veel mitte täielikult. Hääleteated loevad mängusündmused ette ja menüüdel on sildid, kuid pokkerilaud ise on visuaalne liides ja seda ei saa veel mängida ainult ekraanilugejaga."
+        "Osaliselt. Mänguteated saab sisseehitatud hääle asemel saata sinu ekraanilugejale ja menüüdel on sildid, kuid pokkerilaud ise on visuaalne liides ja seda ei saa veel mängida ainult ekraanilugejaga."
       ],
       [
         "Kas see on tasuta?",
@@ -1233,7 +1233,7 @@ module.exports = {
     "padH2": "Kontrolagailua eta telebistaren urruneko agintea",
     "padP": "Joko-kontrolagailu batekin — Xbox, PlayStation, Switch Pro eta Bluetooth kontrolagailu gehienak — joko osoa jokatzen da: botoiak ekintza bakoitzerako, katuak apustua ezartzeko, eta nabigazio-modu bat pantailetan, txatean eta menuetan mugitzeko. Dar-dar egiten du zure txanda iristen denean. Android TV eta Google TV-n urruneko agintea modu berean dabil, eta lau kolore-tekla dituzten aginteek Fold, Check/Call, Bet/Raise eta All-In egiteko erabiltzen dituzte.",
     "hearH2": "Jokoa entzun eta sentitu",
-    "hearP": "Ahots-iragarpenek jokoaren gertaerak ozen irakurtzen dituzte zure gailuaren ahotsekin, zure hizkuntzan sistemak hizkuntza horretako ahotsa duenean. Android telefonoetan bibrazio labur batek zure txanda adierazten du. Jokoaren soinuak lau taldetan datoz — ekintzak, txata, sareko oharrak eta blinden igoerak —, eta bakoitza bere aldetik aktibatu edo desaktiba daiteke, bolumen-graduatzaile bakarrarekin.",
+    "hearP": "Jokoaren iragarpenek jokoaren gertaerak ozen irakurtzen dituzte, zure gailuaren ahotsekin (zure hizkuntzan, sistemak hizkuntza horretako ahotsa duenean) edo zure pantaila-irakurgailuaren bidez (NVDA, JAWS, VoiceOver edo TalkBack), ahotsak gainjarri gabe; Irisgarritasuna leihoan aukeratzen da. Android telefonoetan bibrazio labur batek zure txanda adierazten du. Jokoaren soinuak lau taldetan datoz — ekintzak, txata, sareko oharrak eta blinden igoerak —, eta bakoitza bere aldetik aktibatu edo desaktiba daiteke, bolumen-graduatzaile bakarrarekin.",
     "calmH2": "Ezusteko gutxiago",
     "calmP": "Zure sistemak mugimendu gutxiago eskatzen duenean, bezeroak bere animazioak leuntzen ditu. Anti-peek-ek zure kartak ezkutuan mantentzen ditu ukitu arte, eta nahi gabeko call-aren babesak Call botoia blokeatzen du une batez raise handi baten ondoren, call txikiago baterako ukitu batek ezin dezan kopuru igoa nahi gabe ordaindu.",
     "langH2": "Zure hizkuntzan, gidari batekin",
@@ -1254,7 +1254,7 @@ module.exports = {
       ],
       [
         "Pantaila-irakurgailu batekin dabil?",
-        "Oraindik ez guztiz. Ahots-iragarpenek jokoaren gertaerak ozen irakurtzen dituzte eta menuek etiketak dituzte, baina poker-mahaia bera interfaze bisuala da, eta oraindik ezin da pantaila-irakurgailu batekin bakarrik jokatu."
+        "Neurri batean. Jokoaren iragarpenak zure pantaila-irakurgailura bidal daitezke ahots integratuaren ordez, eta menuek etiketak dituzte, baina poker-mahaia bera interfaze bisuala da, eta oraindik ezin da pantaila-irakurgailu batekin bakarrik jokatu."
       ],
       [
         "Doakoa al da?",
@@ -1299,7 +1299,7 @@ module.exports = {
     "padH2": "دستهٔ بازی و کنترل تلویزیون",
     "padP": "یک دستهٔ بازی — Xbox، PlayStation، Switch Pro و بیشتر دسته‌های Bluetooth — کل بازی را پیش می‌برد: دکمه برای هر حرکت، ماشه‌ها برای تنظیم مبلغ شرط، و حالت پیمایش برای جابه‌جایی میان صفحه‌ها، گفتگو و منوها. وقتی نوبتتان برسد می‌لرزد. روی Android TV و Google TV کنترل از راه دور هم همین‌طور کار می‌کند، و کنترل‌هایی که چهار کلید رنگی دارند از آن‌ها برای Fold، Check/Call، Bet/Raise و All-In استفاده می‌کنند.",
     "hearH2": "شنیدن و حس کردن بازی",
-    "hearP": "اعلام‌های گفتاری رویدادهای بازی را با صداهای خود دستگاهتان بلند می‌خوانند، به زبان شما اگر سیستم آن را داشته باشد. روی گوشی‌های اندرویدی، لرزشی کوتاه نوبت شما را نشان می‌دهد. صداهای بازی در چهار گروه‌اند — حرکات، گفتگو، اعلان‌های شبکه و افزایش بلایند — که جداگانه روشن یا خاموش می‌شوند، با یک لغزندهٔ بلندی صدا.",
+    "hearP": "اعلام‌های بازی رویدادهای بازی را بلند می‌خوانند، یا با صداهای خود دستگاهتان، به زبان شما اگر سیستم آن را داشته باشد، یا از طریق صفحه‌خوان شما (NVDA، JAWS، VoiceOver یا TalkBack) بی‌آنکه چیزی دو بار گفته شود؛ انتخاب آن در پنجرهٔ دسترس‌پذیری است. روی گوشی‌های اندرویدی، لرزشی کوتاه نوبت شما را نشان می‌دهد. صداهای بازی در چهار گروه‌اند — حرکات، گفتگو، اعلان‌های شبکه و افزایش بلایند — که جداگانه روشن یا خاموش می‌شوند، با یک لغزندهٔ بلندی صدا.",
     "calmH2": "غافلگیری کمتر",
     "calmP": "وقتی سیستم شما درخواست کاهش حرکت دارد، کلاینت انیمیشن‌هایش را ملایم‌تر می‌کند. ضد دید کارت‌هایتان را تا وقتی رویشان نزنید پنهان نگه می‌دارد، و محافظ کال ناخواسته درست پس از افزایشی بزرگ دکمهٔ Call را لحظه‌ای می‌بندد تا ضربه‌ای که برای کالی کوچک‌تر بود به اشتباه مبلغ افزایش‌یافته را نپردازد.",
     "langH2": "به زبان شما، با یک راهنما",
@@ -1320,7 +1320,7 @@ module.exports = {
       ],
       [
         "با صفحه‌خوان کار می‌کند؟",
-        "هنوز به‌طور کامل نه. اعلام‌های گفتاری رویدادهای بازی را بلند می‌خوانند و منوها برچسب دارند، اما خود میز پوکر یک رابط دیداری است و هنوز نمی‌توان فقط با صفحه‌خوان با آن بازی کرد."
+        "تا حدی. اعلام‌های بازی را می‌توان به‌جای گفتار داخلی به صفحه‌خوان شما فرستاد و منوها برچسب دارند، اما خود میز پوکر یک رابط دیداری است و هنوز نمی‌توان فقط با صفحه‌خوان با آن بازی کرد."
       ],
       [
         "رایگان است؟",
@@ -1365,7 +1365,7 @@ module.exports = {
     "padH2": "Peliohjain ja TV:n kaukosäädin",
     "padP": "Peliohjaimella — Xbox, PlayStation, Switch Pro ja useimmat Bluetooth-ohjaimet — pelaat koko pelin: painikkeet jokaiselle toiminnolle, liipaisimet panoksen säätämiseen ja navigointitila, jolla liikut ruuduissa, chatissa ja valikoissa. Ohjain värisee, kun vuorosi tulee. Android TV:ssä ja Google TV:ssä kaukosäädin toimii samoin, ja kaukosäätimissä, joissa on neljä värinäppäintä, ne toimivat Fold-, Check/Call-, Bet/Raise- ja All-In-näppäiminä.",
     "hearH2": "Kuule ja tunne peli",
-    "hearP": "Puheilmoitukset lukevat pelitapahtumat ääneen laitteesi omilla äänillä, omalla kielelläsi, jos järjestelmässä sellainen on. Android-puhelimissa lyhyt värinä kertoo, että on sinun vuorosi. Pelin äänet jakautuvat neljään ryhmään — toiminnot, chat, verkkoilmoitukset ja blindien nostot — jotka voi kytkeä päälle tai pois erikseen, ja niillä on yksi yhteinen äänenvoimakkuussäädin.",
+    "hearP": "Peli-ilmoitukset lukevat pelitapahtumat ääneen joko laitteesi omilla äänillä, omalla kielelläsi, jos järjestelmässä sellainen on, tai ruudunlukijasi (NVDA, JAWS, VoiceOver tai TalkBack) kautta niin, ettei mitään puhuta kahteen kertaan; valinta tehdään Saavutettavuus-ikkunassa. Android-puhelimissa lyhyt värinä kertoo, että on sinun vuorosi. Pelin äänet jakautuvat neljään ryhmään — toiminnot, chat, verkkoilmoitukset ja blindien nostot — jotka voi kytkeä päälle tai pois erikseen, ja niillä on yksi yhteinen äänenvoimakkuussäädin.",
     "calmH2": "Vähemmän yllätyksiä",
     "calmP": "Kun järjestelmäsi pyytää vähentämään liikettä, asiakasohjelma hillitsee animaatioitaan. Kurkkimissuoja pitää omat korttisi piilossa, kunnes napautat niitä, ja vahinko-Callin esto lukitsee Call-painikkeen hetkeksi heti suuren korotuksen jälkeen, jotta pienempään Calliin tarkoitettu napautus ei voi vahingossa maksaa korotettua summaa.",
     "langH2": "Omalla kielelläsi, oppaan kanssa",
@@ -1386,7 +1386,7 @@ module.exports = {
       ],
       [
         "Toimiiko se ruudunlukijan kanssa?",
-        "Ei vielä täysin. Puheilmoitukset lukevat pelitapahtumat ääneen ja valikoissa on tekstitunnisteet, mutta itse pokeripöytä on visuaalinen käyttöliittymä, eikä sitä voi vielä pelata pelkällä ruudunlukijalla."
+        "Osittain. Peli-ilmoitukset voi ohjata ruudunlukijaan sisäänrakennetun puheen sijaan, ja valikoissa on tekstitunnisteet, mutta itse pokeripöytä on visuaalinen käyttöliittymä, eikä sitä voi vielä pelata pelkällä ruudunlukijalla."
       ],
       [
         "Onko se ilmainen?",
@@ -1431,7 +1431,7 @@ module.exports = {
     "padH2": "Gamepad at TV remote",
     "padP": "Kayang laruin ng game controller — Xbox, PlayStation, Switch Pro at karamihan ng Bluetooth pad — ang buong laro: mga button para sa bawat aksyon, mga trigger para itakda ang taya, at Navigation mode para gumalaw sa mga screen, sa chat at sa mga menu. Nagva-vibrate ito kapag turn mo na. Sa Android TV at Google TV, ganoon din gumagana ang remote, at ginagamit ng mga remote na may apat na de-kulay na key ang mga ito para sa Fold, Check/Call, Bet/Raise at All-In.",
     "hearH2": "Pakinggan at damhin ang laro",
-    "hearP": "Binabasa nang malakas ng voice announcements ang mga pangyayari sa laro gamit ang mga boses ng sarili mong device, sa iyong wika kung mayroon nito ang sistema. Sa mga Android phone, minamarkahan ng maikling vibration ang turn mo. Nahahati ang mga tunog ng laro sa apat na grupo — mga aksyon, chat, abiso ng network at pagtaas ng blinds — na maaaring i-on o i-off nang hiwalay, na may iisang volume slider.",
+    "hearP": "Binabasa nang malakas ng mga announcement ng laro ang mga pangyayari sa laro, gamit man ang mga boses ng sarili mong device, sa iyong wika kung mayroon nito ang sistema, o sa pamamagitan ng screen reader mo (NVDA, JAWS, VoiceOver o TalkBack) nang hindi nagsasalita nang dalawang beses; pumili sa window na Accessibility. Sa mga Android phone, minamarkahan ng maikling vibration ang turn mo. Nahahati ang mga tunog ng laro sa apat na grupo — mga aksyon, chat, abiso ng network at pagtaas ng blinds — na maaaring i-on o i-off nang hiwalay, na may iisang volume slider.",
     "calmH2": "Mas kaunting sorpresa",
     "calmP": "Kapag humiling ang sistema mo ng reduced motion, pinahihina ng client ang mga animation nito. Pinapanatiling nakatago ng Anti-peek ang sarili mong mga baraha hanggang i-tap mo ang mga ito, at panandaliang bina-block ng accidental-call guard ang Call button pagkatapos ng malaking raise, para ang tap na para sa mas maliit na call ay hindi aksidenteng makabayad ng itinaas na halaga.",
     "langH2": "Sa iyong wika, may gabay",
@@ -1452,7 +1452,7 @@ module.exports = {
       ],
       [
         "Gumagana ba ito sa screen reader?",
-        "Hindi pa nang buo. Binabasa nang malakas ng voice announcements ang mga pangyayari sa laro at may mga label ang mga menu, pero ang mesa ng poker mismo ay visual na interface at hindi pa malalaro gamit ang screen reader lamang."
+        "Bahagya. Maaaring ipadala ang mga announcement ng laro sa screen reader mo sa halip na sa built-in na boses, at may mga label ang mga menu, pero ang mesa ng poker mismo ay visual na interface at hindi pa malalaro gamit ang screen reader lamang."
       ],
       [
         "Libre ba ito?",
@@ -1497,7 +1497,7 @@ module.exports = {
     "padH2": "Manette et télécommande TV",
     "padP": "Une manette de jeu — Xbox, PlayStation, Switch Pro et la plupart des manettes Bluetooth — permet de jouer toute la partie : un bouton pour chaque action, les gâchettes pour régler la mise, et un mode Navigation pour parcourir les écrans, le chat et les menus. Elle vibre quand votre tour arrive. Sur Android TV et Google TV, la télécommande fonctionne de la même façon, et les télécommandes dotées des quatre touches de couleur s’en servent pour Fold, Check/Call, Bet/Raise et All-In.",
     "hearH2": "Entendre et ressentir la partie",
-    "hearP": "Les annonces vocales lisent à voix haute les événements du jeu avec les voix de votre appareil, dans votre langue si votre système en possède une. Sur les téléphones Android, une courte vibration signale votre tour. Les sons du jeu se répartissent en quatre groupes — actions, chat, notifications réseau et hausses des blindes — activables séparément, avec un seul curseur de volume.",
+    "hearP": "Les annonces de jeu lisent à voix haute les événements du jeu, soit avec les voix de votre appareil, dans votre langue si votre système en possède une, soit via votre lecteur d’écran (NVDA, JAWS, VoiceOver ou TalkBack), sans que les deux voix se chevauchent ; le choix se fait dans la fenêtre Accessibilité. Sur les téléphones Android, une courte vibration signale votre tour. Les sons du jeu se répartissent en quatre groupes — actions, chat, notifications réseau et hausses des blindes — activables séparément, avec un seul curseur de volume.",
     "calmH2": "Moins de surprises",
     "calmP": "Quand votre système demande de réduire les animations, le client atténue les siennes. L’anti-regard garde vos propres cartes masquées jusqu’à ce que vous les touchiez, et la garde anti-Call accidentel bloque brièvement le bouton Call juste après une grosse relance, pour qu’un appui destiné à un Call plus petit ne paie pas par erreur le montant relancé.",
     "langH2": "Dans votre langue, avec un guide",
@@ -1518,7 +1518,7 @@ module.exports = {
       ],
       [
         "Fonctionne-t-il avec un lecteur d’écran ?",
-        "Pas encore complètement. Les annonces vocales lisent à voix haute les événements du jeu et les menus portent des libellés, mais la table de poker elle-même est une interface visuelle et ne peut pas encore se jouer avec un lecteur d’écran seul."
+        "En partie. Les annonces de jeu peuvent être envoyées à votre lecteur d’écran au lieu de la voix intégrée, et les menus portent des libellés, mais la table de poker elle-même est une interface visuelle et ne peut pas encore se jouer avec un lecteur d’écran seul."
       ],
       [
         "Est-ce gratuit ?",
@@ -1563,7 +1563,7 @@ module.exports = {
     "padH2": "Rialaitheoir cluichí agus cianrialtán teilifíse",
     "padP": "Imríonn rialaitheoir cluichí — Xbox, PlayStation, Switch Pro agus formhór na rialaitheoirí Bluetooth — an cluiche ar fad: cnaipí do gach beart, truicir chun an geall a shocrú, agus mód nascleanúna chun bogadh trí na scáileáin, an comhrá agus na roghchláir. Creathann sé nuair a thagann do shealsa. Ar Android TV agus Google TV oibríonn an cianrialtán ar an mbealach céanna, agus úsáideann cianrialtáin a bhfuil na ceithre eochair datha orthu iad le haghaidh Fold, Check/Call, Bet/Raise agus All-In.",
     "hearH2": "An cluiche a chloisteáil agus a mhothú",
-    "hearP": "Léann fógraí gutha imeachtaí an chluiche os ard le guthanna do ghléis féin, i do theanga féin má tá ceann ag an gcóras. Ar fhóin Android, cuireann creathadh gairid do shealsa in iúl. Tagann fuaimeanna an chluiche i gceithre ghrúpa — bearta, comhrá, fógraí líonra agus ardú na blinds — ar féidir iad a chur ar siúl nó a mhúchadh ar leith, le sleamhnán fuaime amháin.",
+    "hearP": "Léann fógraí an chluiche imeachtaí an chluiche os ard, le guthanna do ghléis féin, i do theanga féin má tá ceann ag an gcóras, nó trí do léitheoir scáileáin (NVDA, JAWS, VoiceOver nó TalkBack) gan labhairt faoi dhó; roghnaigh san fhuinneog Inrochtaineacht. Ar fhóin Android, cuireann creathadh gairid do shealsa in iúl. Tagann fuaimeanna an chluiche i gceithre ghrúpa — bearta, comhrá, fógraí líonra agus ardú na blinds — ar féidir iad a chur ar siúl nó a mhúchadh ar leith, le sleamhnán fuaime amháin.",
     "calmH2": "Níos lú iontas",
     "calmP": "Nuair a iarrann do chóras gluaiseacht laghdaithe, maolaíonn an cliant a bheochana. Coinníonn Anti-peek do chártaí féin folaithe go dtí go dtapálann tú iad, agus blocálann an chosaint ar call de thaisme an cnaipe Call ar feadh nóiméid díreach tar éis raise mhóir, ionas nach féidir le tapáil a bhí beartaithe do call níos lú an méid ardaithe a íoc de thaisme.",
     "langH2": "I do theanga féin, le treoraí",
@@ -1584,7 +1584,7 @@ module.exports = {
       ],
       [
         "An oibríonn sé le léitheoir scáileáin?",
-        "Ní go hiomlán fós. Léann fógraí gutha imeachtaí an chluiche os ard agus tá lipéid ar na roghchláir, ach is comhéadan amhairc é an bord pócair féin agus ní féidir é a imirt fós le léitheoir scáileáin amháin."
+        "Go páirteach. Is féidir fógraí an chluiche a sheoladh chuig do léitheoir scáileáin in ionad an ghutha ionsuite, agus tá lipéid ar na roghchláir, ach is comhéadan amhairc é an bord pócair féin agus ní féidir é a imirt fós le léitheoir scáileáin amháin."
       ],
       [
         "An bhfuil sé saor in aisce?",
@@ -1629,7 +1629,7 @@ module.exports = {
     "padH2": "Pad geama is smachd-iomallach TBh",
     "padP": "Cluichidh pad geama — Xbox, PlayStation, Switch Pro is a’ mhòr-chuid de phadaichean Bluetooth — an geama gu lèir: putanan airson gach gnìomh, na putanan-losgaidh gus an geall a shuidheachadh, agus modh seòladaireachd gus gluasad tro na sgrìnichean, a’ chabadaich is na clàran-taice. Critheachaidh e nuair a thig do chuairt. Air Android TV is Google TV obraichidh an smachd-iomallach san aon dòigh, agus cleachdaidh smachdan-iomallach aig a bheil na ceithir iuchraichean dathte iad airson Fold, Check/Call, Bet/Raise is All-In.",
     "hearH2": "An geama a chluinntinn ’s a mhothachadh",
-    "hearP": "Leughaidh na h-innsidhean guth tachartasan a’ gheama a-mach àrd le guthan an uidheim agad fhèin, nad chànan fhèin far a bheil fear aig an t-siostam. Air fònaichean Android, comharraichidh crith ghoirid do chuairt. Tha fuaimean a’ gheama ann an ceithir buidhnean — gnìomhan, cabadaich, brathan lìonraidh is àrdachadh nan dallabhan — a ghabhas cur air no dheth fa leth, le aon sleamhnachan àirde-fhuaim.",
+    "hearP": "Leughaidh brathan a’ gheama tachartasan a’ gheama a-mach àrd, an dàrna cuid le guthan an uidheim agad fhèin, nad chànan fhèin far a bheil fear aig an t-siostam, no tron leughadair-sgrìn agad (NVDA, JAWS, VoiceOver no TalkBack) gun bhruidhinn dà thuras; tagh san uinneag Ruigsinneachd. Air fònaichean Android, comharraichidh crith ghoirid do chuairt. Tha fuaimean a’ gheama ann an ceithir buidhnean — gnìomhan, cabadaich, brathan lìonraidh is àrdachadh nan dallabhan — a ghabhas cur air no dheth fa leth, le aon sleamhnachan àirde-fhuaim.",
     "calmH2": "Nas lugha de dh’iongnaidhean",
     "calmP": "Nuair a dh’iarras an siostam agad gluasad nas lugha, ìslichidh an cliant na beòthachaidhean aige. Cumaidh an dìon o phriobadh na cairtean agad fhèin dùinte gus an toir thu gnogag orra, agus glasaidh an dìon o Call tubaisteach am putan Call greis bheag dìreach às dèidh àrdachadh mòr, gus nach urrainn do ghnogag a bha an dùil airson Call nas lugha an t-suim àrdaichte a phàigheadh le mearachd.",
     "langH2": "Nad chànan fhèin, le iùl",
@@ -1650,7 +1650,7 @@ module.exports = {
       ],
       [
         "An obraich e le leughadair-sgrìn?",
-        "Chan obraich buileach fhathast. Leughaidh na h-innsidhean guth tachartasan a’ gheama a-mach àrd agus tha leubailean air na clàran-taice, ach ’s e eadar-aghaidh lèirsinneach a th’ anns a’ bhòrd pòcair fhèin agus cha ghabh a chluich le leughadair-sgrìn a-mhàin fhathast."
+        "Ann am pàirt. Gabhaidh brathan a’ gheama an cur dhan leughadair-sgrìn agad an àite guth an uidheim, agus tha leubailean air na clàran-taice, ach ’s e eadar-aghaidh lèirsinneach a th’ anns a’ bhòrd pòcair fhèin agus cha ghabh a chluich le leughadair-sgrìn a-mhàin fhathast."
       ],
       [
         "A bheil e an-asgaidh?",
@@ -1695,7 +1695,7 @@ module.exports = {
     "padH2": "Mando de xogos e mando da TV",
     "padP": "Un mando de xogos — Xbox, PlayStation, Switch Pro e a maioría dos mandos Bluetooth — xoga a partida enteira: botóns para cada acción, gatillos para fixar a aposta e un modo de navegación para moverse polas pantallas, o chat e os menús. Vibra cando chega a túa quenda. En Android TV e Google TV o mando a distancia funciona igual, e os mandos coas catro teclas de cores úsanas para Fold, Check/Call, Bet/Raise e All-In.",
     "hearH2": "Oír e sentir a partida",
-    "hearP": "Os anuncios de voz len en alto os acontecementos do xogo coas voces do teu propio dispositivo, na túa lingua se o sistema ten unha. Nos móbiles Android unha vibración curta marca a túa quenda. Os sons do xogo veñen en catro grupos — accións, chat, avisos de rede e subas de cegas — que se poden activar ou desactivar por separado, cun único control de volume.",
+    "hearP": "Os anuncios do xogo len en alto os acontecementos da partida, ben coas voces do teu propio dispositivo, na túa lingua se o sistema ten unha, ben a través do teu lector de pantalla (NVDA, JAWS, VoiceOver ou TalkBack) sen falar dúas veces; elíxese na xanela Accesibilidade. Nos móbiles Android unha vibración curta marca a túa quenda. Os sons do xogo veñen en catro grupos — accións, chat, avisos de rede e subas de cegas — que se poden activar ou desactivar por separado, cun único control de volume.",
     "calmH2": "Menos sorpresas",
     "calmP": "Cando o teu sistema pide movemento reducido, o cliente suaviza as súas animacións. A protección antiespía mantén as túas cartas tapadas ata que as tocas, e a protección anti-Call accidental bloquea un momento o botón Call xusto tras unha suba grande, para que un toque pensado para un Call máis pequeno non pague por erro a cantidade subida.",
     "langH2": "Na túa lingua, cun guía",
@@ -1716,7 +1716,7 @@ module.exports = {
       ],
       [
         "Funciona cun lector de pantalla?",
-        "Aínda non por completo. Os anuncios de voz len en alto os acontecementos do xogo e os menús levan etiquetas, pero a propia mesa de póker é unha interface visual e aínda non se pode xogar só cun lector de pantalla."
+        "En parte. Os anuncios do xogo pódense enviar ao teu lector de pantalla en lugar da voz integrada, e os menús levan etiquetas, pero a propia mesa de póker é unha interface visual e aínda non se pode xogar só cun lector de pantalla."
       ],
       [
         "É de balde?",
@@ -1761,7 +1761,7 @@ module.exports = {
     "padH2": "ગેમપેડ અને ટીવી રિમોટ",
     "padP": "ગેમ કંટ્રોલર — Xbox, PlayStation, Switch Pro અને મોટાભાગના Bluetooth પેડ — થી આખી ગેમ રમી શકાય છે: દરેક ક્રિયા માટે બટનો, બેટ નક્કી કરવા ટ્રિગર્સ, અને સ્ક્રીન, ચેટ અને મેનૂમાં ફરવા માટે નેવિગેશન મોડ. તમારો વારો આવે ત્યારે તે વાઇબ્રેટ થાય છે. Android TV અને Google TV પર રિમોટ એ જ રીતે કામ કરે છે, અને ચાર રંગીન કીઝવાળાં રિમોટ તેનો ઉપયોગ Fold, Check/Call, Bet/Raise અને All-In માટે કરે છે.",
     "hearH2": "ગેમ સાંભળો અને અનુભવો",
-    "hearP": "અવાજ દ્વારા જાહેરાતો તમારા ઉપકરણના પોતાના અવાજોથી ગેમની ઘટનાઓ મોટેથી વાંચે છે, અને સિસ્ટમમાં તમારી ભાષાનો અવાજ હોય ત્યાં તમારી ભાષામાં. Android ફોન પર ટૂંકું વાઇબ્રેશન તમારો વારો સૂચવે છે. ગેમના અવાજો ચાર જૂથમાં આવે છે — ક્રિયાઓ, ચેટ, નેટવર્ક સૂચનાઓ અને બ્લાઇન્ડ્સનો વધારો — જેને એક જ વૉલ્યુમ સ્લાઇડર સાથે અલગ અલગ ચાલુ કે બંધ કરી શકાય છે.",
+    "hearP": "ગેમની જાહેરાતો ગેમની ઘટનાઓ મોટેથી વાંચે છે, કાં તો તમારા ઉપકરણના પોતાના અવાજોથી (સિસ્ટમમાં તમારી ભાષાનો અવાજ હોય ત્યાં તમારી ભાષામાં), કાં તો તમારા સ્ક્રીન રીડર (NVDA, JAWS, VoiceOver અથવા TalkBack) દ્વારા, બે અવાજો એકબીજા પર ચડ્યા વગર; પસંદગી સુલભતા વિન્ડોમાં કરો. Android ફોન પર ટૂંકું વાઇબ્રેશન તમારો વારો સૂચવે છે. ગેમના અવાજો ચાર જૂથમાં આવે છે — ક્રિયાઓ, ચેટ, નેટવર્ક સૂચનાઓ અને બ્લાઇન્ડ્સનો વધારો — જેને એક જ વૉલ્યુમ સ્લાઇડર સાથે અલગ અલગ ચાલુ કે બંધ કરી શકાય છે.",
     "calmH2": "ઓછાં આશ્ચર્ય",
     "calmP": "જ્યારે તમારી સિસ્ટમ ઓછી ગતિ માગે ત્યારે ક્લાયન્ટ તેનાં એનિમેશન હળવાં કરે છે. ડોકિયાં સામે રક્ષણ તમે ટૅપ કરો ત્યાં સુધી તમારાં પોતાનાં કાર્ડ્સ છુપાવી રાખે છે, અને ભૂલથી થતા Call સામે રક્ષણ મોટા Raise પછી તરત Call બટનને થોડી વાર માટે બ્લોક કરે છે, જેથી નાના Call માટે કરેલો ટૅપ ભૂલથી વધારેલી રકમ ન ચૂકવી દે.",
     "langH2": "તમારી ભાષામાં, માર્ગદર્શક સાથે",
@@ -1782,7 +1782,7 @@ module.exports = {
       ],
       [
         "શું તે સ્ક્રીન રીડર સાથે કામ કરે છે?",
-        "હજી પૂરેપૂરું નહીં. અવાજ દ્વારા જાહેરાતો ગેમની ઘટનાઓ મોટેથી વાંચે છે અને મેનૂ પર લેબલ છે, પણ પોકર ટેબલ પોતે દૃશ્ય ઇન્ટરફેસ છે અને હજી ફક્ત સ્ક્રીન રીડરથી રમી શકાતું નથી."
+        "આંશિક રીતે. ગેમની જાહેરાતો બિલ્ટ-ઇન અવાજને બદલે તમારા સ્ક્રીન રીડરને મોકલી શકાય છે અને મેનૂ પર લેબલ છે, પણ પોકર ટેબલ પોતે દૃશ્ય ઇન્ટરફેસ છે અને હજી ફક્ત સ્ક્રીન રીડરથી રમી શકાતું નથી."
       ],
       [
         "શું તે મફત છે?",
@@ -1827,7 +1827,7 @@ module.exports = {
     "padH2": "Gamepad da rimot na TV",
     "padP": "Mai sarrafa wasa — Xbox, PlayStation, Switch Pro da yawancin gamepad na Bluetooth — yana buga dukan wasan: maɓallai don kowane motsi, maɓallan trigger don saita adadin caca, da yanayin Kewayawa don motsawa cikin allo, hira da menu. Yana girgiza idan lokacinka ya yi. A Android TV da Google TV rimot yana aiki haka nan, kuma rimot masu maɓallan launi huɗu suna amfani da su don Fold, Check/Call, Bet/Raise da All-In.",
     "hearH2": "Saurara da jin wasa",
-    "hearP": "Sanarwar murya tana karanta abubuwan da ke faruwa a wasa da babbar murya, da muryoyin na'urarka, a harshenka idan tsarin yana da shi. A wayoyin Android ɗan girgiza yana nuna lokacinka. Sautukan wasa suna cikin rukunoni huɗu — motsi, hira, sanarwar hanyar sadarwa da ƙarin blinds — da ake iya kunna ko kashe su daban, tare da madaidaicin ƙara ɗaya.",
+    "hearP": "Sanarwar wasa tana karanta abubuwan da ke faruwa a wasa da babbar murya, ko dai da muryoyin na'urarka, a harshenka idan tsarin yana da shi, ko ta hanyar mai karanta allonka (NVDA, JAWS, VoiceOver ko TalkBack) ba tare da an faɗa sau biyu ba; zaɓi a tagar Samun dama. A wayoyin Android ɗan girgiza yana nuna lokacinka. Sautukan wasa suna cikin rukunoni huɗu — motsi, hira, sanarwar hanyar sadarwa da ƙarin blinds — da ake iya kunna ko kashe su daban, tare da madaidaicin ƙara ɗaya.",
     "calmH2": "Ƙarancin abubuwan mamaki",
     "calmP": "Idan tsarinka ya nemi rage motsi, manhajar tana rage rayarwarta. Anti-peek yana ɓoye katunanka har sai ka taɓa su, kuma kariya daga call na bazata tana toshe maɓallin Call na ɗan lokaci nan da nan bayan babban raise, don kada taɓawa da aka nufa don ƙaramin call ta biya adadin da aka ƙara bisa kuskure.",
     "langH2": "A harshenka, tare da jagora",
@@ -1848,7 +1848,7 @@ module.exports = {
       ],
       [
         "Yana aiki da mai karanta allo?",
-        "Ba gaba ɗaya ba tukuna. Sanarwar murya tana karanta abubuwan wasa da babbar murya kuma menu suna da lakabi, amma teburin poker kansa fuska ce ta gani kuma har yanzu ba za a iya buga shi da mai karanta allo kaɗai ba."
+        "Wani ɓangare. Ana iya tura sanarwar wasa zuwa mai karanta allonka maimakon muryar na'ura, kuma menu suna da lakabi, amma teburin poker kansa fuska ce ta gani kuma har yanzu ba za a iya buga shi da mai karanta allo kaɗai ba."
       ],
       [
         "Kyauta ne?",
@@ -1893,7 +1893,7 @@ module.exports = {
     "padH2": "גיימפד ושלט טלוויזיה",
     "padP": "בעזרת בקר משחק — Xbox, PlayStation, Switch Pro ורוב הבקרים מסוג Bluetooth — אפשר לשחק את כל המשחק: כפתורים לכל פעולה, הדקים לקביעת ההימור ומצב ניווט כדי לעבור בין המסכים, הצ’אט והתפריטים. הבקר רוטט כשמגיע תורכם. ב-Android TV וב-Google TV השלט עובד באותה דרך, ושלטים עם ארבעת מקשי הצבע משתמשים בהם ל-Fold, Check/Call, Bet/Raise ו-All-In.",
     "hearH2": "לשמוע ולהרגיש את המשחק",
-    "hearP": "הכרזות קוליות מקריאות את אירועי המשחק בקולות של המכשיר שלכם, בשפה שלכם אם יש למערכת קול כזה. בטלפוני Android רטט קצר מסמן את תורכם. צלילי המשחק מחולקים לארבע קבוצות — פעולות, צ’אט, הודעות רשת ועליית בליינדים — שאפשר להפעיל או לכבות כל אחת בנפרד, עם מחוון עוצמה אחד.",
+    "hearP": "הכרזות המשחק מקריאות את אירועי המשחק בקול — בקולות של המכשיר שלכם, בשפה שלכם אם יש למערכת קול כזה, או דרך קורא המסך שלכם (NVDA, JAWS, VoiceOver או TalkBack) בלי הקראה כפולה; הבחירה נעשית בחלון הנגישות. בטלפוני Android רטט קצר מסמן את תורכם. צלילי המשחק מחולקים לארבע קבוצות — פעולות, צ’אט, הודעות רשת ועליית בליינדים — שאפשר להפעיל או לכבות כל אחת בנפרד, עם מחוון עוצמה אחד.",
     "calmH2": "פחות הפתעות",
     "calmP": "כשהמערכת שלכם מבקשת להפחית תנועה, הלקוח מרכך את האנימציות שלו. מניעת הצצה שומרת את הקלפים שלכם מוסתרים עד שתקישו עליהם, ומגן ה-Call בשוגג חוסם לרגע את כפתור ה-Call מיד אחרי העלאה גדולה, כך שהקשה שכוונה ל-Call קטן יותר לא תשלם בטעות את הסכום המועלה.",
     "langH2": "בשפה שלכם, עם מדריך",
@@ -1914,7 +1914,7 @@ module.exports = {
       ],
       [
         "זה עובד עם קורא מסך?",
-        "עדיין לא באופן מלא. הכרזות קוליות מקריאות את אירועי המשחק והתפריטים כוללים תוויות, אבל שולחן הפוקר עצמו הוא ממשק חזותי ועדיין אי אפשר לשחק בו בעזרת קורא מסך בלבד."
+        "חלקית. אפשר לשלוח את הכרזות המשחק לקורא המסך שלכם במקום לקול המובנה, והתפריטים כוללים תוויות, אבל שולחן הפוקר עצמו הוא ממשק חזותי ועדיין אי אפשר לשחק בו בעזרת קורא מסך בלבד."
       ],
       [
         "זה בחינם?",
@@ -1959,7 +1959,7 @@ module.exports = {
     "padH2": "गेमपैड और टीवी रिमोट",
     "padP": "गेम कंट्रोलर — Xbox, PlayStation, Switch Pro और अधिकांश Bluetooth पैड — पूरा खेल खेलता है: हर क्रिया के लिए बटन, दाँव तय करने के लिए ट्रिगर, और स्क्रीन, चैट और मेन्यू में घूमने के लिए नेविगेशन मोड। आपकी बारी आने पर यह कंपन करता है। Android TV और Google TV पर रिमोट इसी तरह काम करता है, और चार रंगीन कुंजियों वाले रिमोट उन्हें Fold, Check/Call, Bet/Raise और All-In के लिए इस्तेमाल करते हैं।",
     "hearH2": "खेल को सुनें और महसूस करें",
-    "hearP": "आवाज़ की घोषणाएँ आपके उपकरण की अपनी आवाज़ों से खेल की घटनाएँ ऊँची आवाज़ में पढ़ती हैं, आपकी भाषा में, अगर सिस्टम में वह उपलब्ध हो। Android फ़ोन पर एक छोटा कंपन आपकी बारी बताता है। खेल की ध्वनियाँ चार समूहों में हैं — क्रियाएँ, चैट, नेटवर्क सूचनाएँ और ब्लाइंड बढ़ना — जिन्हें अलग-अलग चालू या बंद किया जा सकता है, एक ही वॉल्यूम स्लाइडर के साथ।",
+    "hearP": "खेल की घोषणाएँ खेल की घटनाएँ ऊँची आवाज़ में पढ़ती हैं — या तो आपके उपकरण की अपनी आवाज़ों से, आपकी भाषा में, अगर सिस्टम में वह उपलब्ध हो, या आपके स्क्रीन रीडर (NVDA, JAWS, VoiceOver या TalkBack) के ज़रिए, बिना दो बार बोले; चुनाव सुलभता विंडो में करें। Android फ़ोन पर एक छोटा कंपन आपकी बारी बताता है। खेल की ध्वनियाँ चार समूहों में हैं — क्रियाएँ, चैट, नेटवर्क सूचनाएँ और ब्लाइंड बढ़ना — जिन्हें अलग-अलग चालू या बंद किया जा सकता है, एक ही वॉल्यूम स्लाइडर के साथ।",
     "calmH2": "कम चौंकाने वाली बातें",
     "calmP": "जब आपका सिस्टम कम गति की माँग करता है, तो क्लाइंट अपने एनिमेशन हल्के कर देता है। झाँकने से सुरक्षा आपके अपने पत्तों को तब तक छिपाए रखती है जब तक आप उन्हें छू न लें, और आकस्मिक Call से सुरक्षा किसी बड़ी बढ़त के तुरंत बाद Call बटन को थोड़ी देर के लिए बंद कर देती है, ताकि छोटे Call के लिए किया गया स्पर्श गलती से बढ़ी हुई राशि न चुका दे।",
     "langH2": "आपकी भाषा में, एक गाइड के साथ",
@@ -1980,7 +1980,7 @@ module.exports = {
       ],
       [
         "क्या यह स्क्रीन रीडर के साथ काम करता है?",
-        "अभी पूरी तरह नहीं। आवाज़ की घोषणाएँ खेल की घटनाएँ ऊँची आवाज़ में पढ़ती हैं और मेन्यू पर लेबल हैं, लेकिन पोकर की मेज़ अपने आप में एक दृश्य इंटरफ़ेस है और अभी केवल स्क्रीन रीडर के सहारे नहीं खेली जा सकती।"
+        "आंशिक रूप से। खेल की घोषणाएँ अंतर्निहित आवाज़ की जगह आपके स्क्रीन रीडर को भेजी जा सकती हैं और मेन्यू पर लेबल हैं, लेकिन पोकर की मेज़ अपने आप में एक दृश्य इंटरफ़ेस है और अभी केवल स्क्रीन रीडर के सहारे नहीं खेली जा सकती।"
       ],
       [
         "क्या यह मुफ़्त है?",
@@ -2025,7 +2025,7 @@ module.exports = {
     "padH2": "Kontroler i TV daljinski upravljač",
     "padP": "Kontrolerom za igre — Xbox, PlayStation, Switch Pro i većinom Bluetooth kontrolera — igra se cijela igra: gumbi za svaku radnju, okidači za podešavanje uloga i način Navigacija za kretanje po zaslonima, chatu i izbornicima. Kontroler zavibrira kad dođete na potez. Na Android TV-u i Google TV-u daljinski upravljač radi na isti način, a daljinski s četiri tipke u boji koriste ih za Fold, Check/Call, Bet/Raise i All-In.",
     "hearH2": "Čuti i osjetiti igru",
-    "hearP": "Glasovne najave naglas čitaju događaje u igri glasovima vašeg uređaja, na vašem jeziku ako ga sustav ima. Na Android telefonima kratka vibracija označava vaš potez. Zvukovi igre podijeljeni su u četiri skupine — radnje, chat, mrežne obavijesti i povećanja blindova — koje se mogu zasebno uključiti ili isključiti, uz jedan klizač glasnoće.",
+    "hearP": "Najave igre naglas čitaju događaje u igri, bilo glasovima vašeg uređaja, na vašem jeziku ako ga sustav ima, bilo putem vašeg čitača zaslona (NVDA, JAWS, VoiceOver ili TalkBack), bez preklapanja glasova; odabir je u prozoru Pristupačnost. Na Android telefonima kratka vibracija označava vaš potez. Zvukovi igre podijeljeni su u četiri skupine — radnje, chat, mrežne obavijesti i povećanja blindova — koje se mogu zasebno uključiti ili isključiti, uz jedan klizač glasnoće.",
     "calmH2": "Manje iznenađenja",
     "calmP": "Kad vaš sustav zatraži smanjeno kretanje, klijent ublažava svoje animacije. Zaštita od virenja drži vaše karte skrivenima dok ih ne dodirnete, a zaštita od slučajnog Calla nakratko zaključava gumb Call odmah nakon velikog povišenja, kako dodir namijenjen manjem Callu ne bi greškom platio povišeni iznos.",
     "langH2": "Na vašem jeziku, s vodičem",
@@ -2046,7 +2046,7 @@ module.exports = {
       ],
       [
         "Radi li s čitačem zaslona?",
-        "Još ne u potpunosti. Glasovne najave naglas čitaju događaje u igri i izbornici imaju oznake, ali sam pokerski stol je vizualno sučelje i još se ne može igrati samo s čitačem zaslona."
+        "Djelomično. Najave igre mogu se slati vašem čitaču zaslona umjesto ugrađenom glasu, a izbornici imaju oznake, ali sam pokerski stol je vizualno sučelje i još se ne može igrati samo s čitačem zaslona."
       ],
       [
         "Je li besplatan?",
@@ -2091,7 +2091,7 @@ module.exports = {
     "padH2": "Kontroller és TV-távirányító",
     "padP": "Egy játékkontroller — Xbox, PlayStation, Switch Pro és a legtöbb Bluetooth-kontroller — az egész játékot vezérli: gombok minden akcióhoz, ravaszok a tét beállításához, és navigációs mód a képernyők, a csevegés és a menük bejárásához. Rezeg, amikor te következel. Android TV-n és Google TV-n a távirányító ugyanígy működik, a négy színes gombbal rendelkező távirányítók pedig ezeket használják a Fold, Check/Call, Bet/Raise és All-In műveletekhez.",
     "hearH2": "Halld és érezd a játékot",
-    "hearP": "A hangbemondás az eszközöd saját hangjaival felolvassa a játékeseményeket, a te nyelveden, ha a rendszerben van ilyen hang. Android telefonokon egy rövid rezgés jelzi, hogy te következel. A játékhangok négy csoportba tartoznak — akciók, csevegés, hálózati értesítések és vakemelések —, amelyek külön-külön kapcsolhatók be és ki, egyetlen hangerőcsúszkával.",
+    "hearP": "A játékbemondás felolvassa a játékeseményeket, akár az eszközöd saját hangjaival, a te nyelveden, ha a rendszerben van ilyen hang, akár a képernyőolvasódon (NVDA, JAWS, VoiceOver vagy TalkBack) keresztül, kétszeres bemondás nélkül; ezt az Akadálymentesség ablakban választhatod ki. Android telefonokon egy rövid rezgés jelzi, hogy te következel. A játékhangok négy csoportba tartoznak — akciók, csevegés, hálózati értesítések és vakemelések —, amelyek külön-külön kapcsolhatók be és ki, egyetlen hangerőcsúszkával.",
     "calmH2": "Kevesebb meglepetés",
     "calmP": "Ha a rendszered csökkentett mozgást kér, a kliens visszafogja az animációit. A leskelődés elleni védelem addig rejtve tartja a saját lapjaidat, amíg meg nem érinted őket, a véletlen Call elleni védelem pedig egy nagy emelés után rövid időre zárolja a Call gombot, hogy egy kisebb Callnak szánt érintés ne fizethesse ki tévedésből a megemelt összeget.",
     "langH2": "A te nyelveden, idegenvezetővel",
@@ -2112,7 +2112,7 @@ module.exports = {
       ],
       [
         "Működik képernyőolvasóval?",
-        "Még nem teljesen. A hangbemondás felolvassa a játékeseményeket, és a menük címkékkel vannak ellátva, de maga a pókerasztal vizuális felület, és egyedül képernyőolvasóval még nem lehet rajta játszani."
+        "Részben. A játékbemondás a beépített hang helyett a képernyőolvasódhoz is küldhető, és a menük címkékkel vannak ellátva, de maga a pókerasztal vizuális felület, és egyedül képernyőolvasóval még nem lehet rajta játszani."
       ],
       [
         "Ingyenes?",
@@ -2157,7 +2157,7 @@ module.exports = {
     "padH2": "Խաղային կարգավար և հեռուստացույցի հեռակառավարիչ",
     "padP": "Խաղային կարգավարով — Xbox, PlayStation, Switch Pro և Bluetooth կարգավարների մեծ մասը — կարելի է խաղալ ամբողջ խաղը՝ կոճակներ յուրաքանչյուր գործողության համար, ձգաններ՝ խաղադրույքը սահմանելու համար, և նավարկման ռեժիմ՝ էկրաններով, չատով և ընտրացանկերով շարժվելու համար։ Այն թրթռում է, երբ գալիս է ձեր հերթը։ Android TV-ում և Google TV-ում հեռակառավարիչն աշխատում է նույն կերպ, իսկ չորս գունավոր ստեղներ ունեցող հեռակառավարիչներն օգտագործում են դրանք Fold, Check/Call, Bet/Raise և All-In-ի համար։",
     "hearH2": "Լսել և զգալ խաղը",
-    "hearP": "Ձայնային հայտարարությունները բարձրաձայն կարդում են խաղի իրադարձությունները ձեր սարքի սեփական ձայներով՝ ձեր լեզվով, եթե համակարգն այն ունի։ Android հեռախոսներում կարճ թրթռոցը նշում է ձեր հերթը։ Խաղի ձայները բաժանված են չորս խմբի — գործողություններ, չատ, ցանցային ծանուցումներ և բլայնդների բարձրացում — որոնք կարելի է միացնել կամ անջատել առանձին, ձայնի ուժգնության մեկ սահիչով։",
+    "hearP": "Խաղի հայտարարությունները բարձրաձայն կարդում են խաղի իրադարձությունները՝ կա՛մ ձեր սարքի սեփական ձայներով՝ ձեր լեզվով, եթե համակարգն այն ունի, կա՛մ ձեր էկրանի ընթերցիչի միջոցով (NVDA, JAWS, VoiceOver կամ TalkBack)՝ առանց կրկնակի խոսելու. ընտրությունը կատարվում է Մատչելիություն պատուհանում։ Android հեռախոսներում կարճ թրթռոցը նշում է ձեր հերթը։ Խաղի ձայները բաժանված են չորս խմբի — գործողություններ, չատ, ցանցային ծանուցումներ և բլայնդների բարձրացում — որոնք կարելի է միացնել կամ անջատել առանձին, ձայնի ուժգնության մեկ սահիչով։",
     "calmH2": "Ավելի քիչ անակնկալներ",
     "calmP": "Երբ ձեր համակարգը խնդրում է նվազեցնել շարժումը, կլիենտը մեղմացնում է իր անիմացիաները։ Anti-peek-ը ձեր սեփական խաղաթղթերը փակ է պահում, մինչև դրանց չհպեք, իսկ պատահական call-ի պաշտպանությունը մեծ raise-ից անմիջապես հետո կարճ ժամանակով արգելափակում է Call կոճակը, որպեսզի ավելի փոքր call-ի համար նախատեսված հպումը սխալմամբ չվճարի բարձրացված գումարը։",
     "langH2": "Ձեր լեզվով, ուղեկցորդով",
@@ -2178,7 +2178,7 @@ module.exports = {
       ],
       [
         "Աշխատո՞ւմ է էկրանի ընթերցիչի հետ։",
-        "Դեռ ոչ ամբողջությամբ։ Ձայնային հայտարարությունները բարձրաձայն կարդում են խաղի իրադարձությունները, և ընտրացանկերն ունեն պիտակներ, բայց պոկերի սեղանն ինքնին տեսողական ինտերֆեյս է, և դեռ հնարավոր չէ խաղալ միայն էկրանի ընթերցիչով։"
+        "Մասամբ։ Խաղի հայտարարությունները կարելի է ուղարկել ձեր էկրանի ընթերցիչին՝ ներկառուցված ձայնի փոխարեն, և ընտրացանկերն ունեն պիտակներ, բայց պոկերի սեղանն ինքնին տեսողական ինտերֆեյս է, և դեռ հնարավոր չէ խաղալ միայն էկրանի ընթերցիչով։"
       ],
       [
         "Անվճա՞ր է։",
@@ -2223,7 +2223,7 @@ module.exports = {
     "padH2": "Gamepad dan remote TV",
     "padP": "Pengontrol game — Xbox, PlayStation, Switch Pro, dan sebagian besar pad Bluetooth — memainkan seluruh permainan: tombol untuk setiap aksi, pemicu untuk mengatur taruhan, dan mode navigasi untuk bergerak di layar, obrolan, dan menu. Pengontrol bergetar saat giliran Anda tiba. Di Android TV dan Google TV, remote bekerja dengan cara yang sama, dan remote yang memiliki empat tombol warna memakainya untuk Fold, Check/Call, Bet/Raise, dan All-In.",
     "hearH2": "Mendengar dan merasakan permainan",
-    "hearP": "Pengumuman suara membacakan peristiwa permainan dengan suara bawaan perangkat Anda, dalam bahasa Anda bila sistem menyediakannya. Di ponsel Android, getaran singkat menandai giliran Anda. Suara permainan terbagi dalam empat kelompok — aksi, obrolan, pemberitahuan jaringan, dan kenaikan blind — yang dapat diaktifkan atau dimatikan secara terpisah, dengan satu penggeser volume.",
+    "hearP": "Pengumuman permainan membacakan peristiwa permainan, baik dengan suara bawaan perangkat Anda, dalam bahasa Anda bila sistem menyediakannya, maupun melalui pembaca layar Anda (NVDA, JAWS, VoiceOver, atau TalkBack) tanpa berbicara dua kali; pilih di jendela Aksesibilitas. Di ponsel Android, getaran singkat menandai giliran Anda. Suara permainan terbagi dalam empat kelompok — aksi, obrolan, pemberitahuan jaringan, dan kenaikan blind — yang dapat diaktifkan atau dimatikan secara terpisah, dengan satu penggeser volume.",
     "calmH2": "Lebih sedikit kejutan",
     "calmP": "Saat sistem Anda meminta gerakan dikurangi, klien meredam animasinya. Anti-intip menjaga kartu Anda tetap tersembunyi sampai Anda mengetuknya, dan penjaga call tak sengaja memblokir sebentar tombol Call tepat setelah raise besar, sehingga ketukan yang dimaksudkan untuk call yang lebih kecil tidak bisa membayar jumlah yang dinaikkan secara tidak sengaja.",
     "langH2": "Dalam bahasa Anda, dengan pemandu",
@@ -2244,7 +2244,7 @@ module.exports = {
       ],
       [
         "Apakah bisa dipakai dengan pembaca layar?",
-        "Belum sepenuhnya. Pengumuman suara membacakan peristiwa permainan dan menu memiliki label, tetapi meja poker itu sendiri adalah antarmuka visual dan belum bisa dimainkan hanya dengan pembaca layar."
+        "Sebagian. Pengumuman permainan dapat dikirim ke pembaca layar Anda sebagai pengganti suara bawaan, dan menu memiliki label, tetapi meja poker itu sendiri adalah antarmuka visual dan belum bisa dimainkan hanya dengan pembaca layar."
       ],
       [
         "Apakah gratis?",
@@ -2289,7 +2289,7 @@ module.exports = {
     "padH2": "Leikjastýripinni og sjónvarpsfjarstýring",
     "padP": "Með leikjastýripinna — Xbox, PlayStation, Switch Pro og flestum Bluetooth-pinnum — er hægt að spila allan leikinn: hnappar fyrir hverja aðgerð, gikkir til að stilla veðmálið og leiðsagnarhamur til að fara um skjáina, spjallið og valmyndirnar. Hann titrar þegar þú átt leik. Á Android TV og Google TV virkar fjarstýringin á sama hátt, og fjarstýringar með litahnöppunum fjórum nota þá fyrir Fold, Check/Call, Bet/Raise og All-In.",
     "hearH2": "Að heyra og finna leikinn",
-    "hearP": "Raddtilkynningar lesa atburði leiksins upphátt með röddum tækisins sjálfs, á þínu tungumáli þar sem kerfið hefur rödd fyrir það. Í Android-símum gefur stuttur titringur til kynna að þú eigir leik. Hljóð leiksins skiptast í fjóra flokka — aðgerðir, spjall, nettilkynningar og hækkanir blindanna — og kveikja má eða slökkva á hverjum fyrir sig, með einum hljóðstyrkssleða.",
+    "hearP": "Leiktilkynningar lesa atburði leiksins upphátt, annaðhvort með röddum tækisins sjálfs, á þínu tungumáli þar sem kerfið hefur rödd fyrir það, eða í gegnum skjálesarann þinn (NVDA, JAWS, VoiceOver eða TalkBack), án þess að raddirnar tali hvor ofan í aðra; þú velur í Aðgengi-glugganum. Í Android-símum gefur stuttur titringur til kynna að þú eigir leik. Hljóð leiksins skiptast í fjóra flokka — aðgerðir, spjall, nettilkynningar og hækkanir blindanna — og kveikja má eða slökkva á hverjum fyrir sig, með einum hljóðstyrkssleða.",
     "calmH2": "Færri óvæntar uppákomur",
     "calmP": "Þegar kerfið þitt biður um minni hreyfingu dregur biðlarinn úr hreyfimyndum sínum. Gægjuvörnin heldur þínum eigin spilum földum þar til þú ýtir á þau, og vörnin gegn Call af slysni lokar Call-hnappinum stutta stund strax eftir stórt Raise, svo snerting sem ætluð var minna Call geti ekki greitt hækkuðu upphæðina fyrir mistök.",
     "langH2": "Á þínu tungumáli, með leiðsögn",
@@ -2310,7 +2310,7 @@ module.exports = {
       ],
       [
         "Virkar það með skjálesara?",
-        "Ekki að fullu enn. Raddtilkynningar lesa atburði leiksins upphátt og valmyndirnar eru merktar, en pókerborðið sjálft er sjónrænt viðmót og enn er ekki hægt að spila við það með skjálesara einum saman."
+        "Að hluta. Hægt er að senda leiktilkynningar í skjálesarann þinn í stað innbyggðu raddarinnar og valmyndirnar eru merktar, en pókerborðið sjálft er sjónrænt viðmót og enn er ekki hægt að spila við það með skjálesara einum saman."
       ],
       [
         "Er það ókeypis?",
@@ -2355,7 +2355,7 @@ module.exports = {
     "padH2": "Controller e telecomando TV",
     "padP": "Un controller — Xbox, PlayStation, Switch Pro e la maggior parte dei controller Bluetooth — gestisce l’intera partita: pulsanti per ogni azione, grilletti per regolare la puntata e una modalità di navigazione per muoversi tra le schermate, la chat e i menu. Vibra quando arriva il tuo turno. Su Android TV e Google TV il telecomando funziona allo stesso modo, e i telecomandi con i quattro tasti colorati li usano per Fold, Check/Call, Bet/Raise e All-In.",
     "hearH2": "Sentire e percepire il gioco",
-    "hearP": "Gli annunci vocali leggono ad alta voce gli eventi di gioco con le voci del tuo dispositivo, nella tua lingua se il sistema ne ha una. Sui telefoni Android una breve vibrazione segnala il tuo turno. I suoni di gioco sono divisi in quattro gruppi — azioni, chat, notifiche di rete e aumento dei bui — attivabili separatamente, con un unico cursore del volume.",
+    "hearP": "Gli annunci di gioco leggono ad alta voce gli eventi di gioco, con le voci del tuo dispositivo, nella tua lingua se il sistema ne ha una, oppure tramite il tuo screen reader (NVDA, JAWS, VoiceOver o TalkBack) senza parlare due volte; si sceglie nella finestra Accessibilità. Sui telefoni Android una breve vibrazione segnala il tuo turno. I suoni di gioco sono divisi in quattro gruppi — azioni, chat, notifiche di rete e aumento dei bui — attivabili separatamente, con un unico cursore del volume.",
     "calmH2": "Meno sorprese",
     "calmP": "Quando il sistema chiede di ridurre il movimento, il client attenua le sue animazioni. L’anti-sbirciata tiene coperte le tue carte finché non le tocchi, e la guardia anti-Call accidentale blocca brevemente il pulsante Call subito dopo un grosso rilancio, così un tocco pensato per un Call più piccolo non può pagare per sbaglio l’importo rilanciato.",
     "langH2": "Nella tua lingua, con una guida",
@@ -2376,7 +2376,7 @@ module.exports = {
       ],
       [
         "Funziona con uno screen reader?",
-        "Non ancora del tutto. Gli annunci vocali leggono ad alta voce gli eventi di gioco e i menu hanno etichette, ma il tavolo da poker in sé è un’interfaccia visiva e non si può ancora giocare con il solo screen reader."
+        "In parte. Gli annunci di gioco possono essere inviati al tuo screen reader invece che alla voce integrata, e i menu hanno etichette, ma il tavolo da poker in sé è un’interfaccia visiva e non si può ancora giocare con il solo screen reader."
       ],
       [
         "È gratis?",
@@ -2421,7 +2421,7 @@ module.exports = {
     "padH2": "ゲームパッドとテレビのリモコン",
     "padP": "ゲームコントローラー（Xbox、PlayStation、Switch Pro、ほとんどの Bluetooth パッド）でゲーム全体をプレイできます。すべてのアクションにボタンがあり、トリガーでベット額を調整し、ナビゲーションモードで画面、チャット、メニューを移動します。自分の番になると振動します。Android TV と Google TV ではリモコンも同じように使え、4つのカラーボタンがあるリモコンでは、それらが Fold、Check/Call、Bet/Raise、All-In になります。",
     "hearH2": "ゲームを聞く・感じる",
-    "hearP": "音声アナウンスは、端末に入っている音声でゲームの出来事を読み上げます。システムにあなたの言語の音声があれば、その言語で読み上げます。Android スマートフォンでは、短い振動で自分の番を知らせます。ゲーム音はアクション、チャット、ネットワーク通知、ブラインド上昇の4グループに分かれ、それぞれ個別にオン・オフでき、音量は1つのスライダーで調整します。",
+    "hearP": "ゲームアナウンスは、ゲームの出来事を端末に入っている音声で読み上げるか（システムにあなたの言語の音声があれば、その言語で）、スクリーンリーダー（NVDA、JAWS、VoiceOver、TalkBack）を通じて二重に読み上げることなく伝えます。どちらにするかはアクセシビリティウィンドウで選べます。Android スマートフォンでは、短い振動で自分の番を知らせます。ゲーム音はアクション、チャット、ネットワーク通知、ブラインド上昇の4グループに分かれ、それぞれ個別にオン・オフでき、音量は1つのスライダーで調整します。",
     "calmH2": "驚きを少なく",
     "calmP": "システムで「視差効果を減らす」などの動きを減らす設定がオンになっていると、クライアントはアニメーションを控えめにします。のぞき見防止は、タップするまで自分のカードを伏せたままにします。誤コール防止は大きなレイズの直後に Call ボタンを一時的にロックするので、小さいコールのつもりのタップでレイズ後の額を誤って払うことはありません。",
     "langH2": "あなたの言語で、ガイド付き",
@@ -2442,7 +2442,7 @@ module.exports = {
       ],
       [
         "スクリーンリーダーで使えますか？",
-        "まだ完全には対応していません。音声アナウンスがゲームの出来事を読み上げ、メニューにはラベルが付いていますが、ポーカーテーブル自体は視覚的なインターフェースで、スクリーンリーダーだけではまだプレイできません。"
+        "一部対応しています。ゲームアナウンスを内蔵音声の代わりにスクリーンリーダーへ送ることができ、メニューにはラベルが付いていますが、ポーカーテーブル自体は視覚的なインターフェースで、スクリーンリーダーだけではまだプレイできません。"
       ],
       [
         "無料ですか？",
@@ -2487,7 +2487,7 @@ module.exports = {
     "padH2": "გეიმპადი და ტელევიზორის პულტი",
     "padP": "სათამაშო კონტროლერი — Xbox, PlayStation, Switch Pro და Bluetooth-კონტროლერების უმეტესობა — მთელ თამაშს თამაშობს: ღილაკები ყველა მოქმედებისთვის, ტრიგერები ფსონის დასაყენებლად და ნავიგაციის რეჟიმი ეკრანებში, ჩატსა და მენიუებში გადასაადგილებლად. თქვენი სვლისას ის ვიბრირებს. Android TV-სა და Google TV-ზე პულტი იმავენაირად მუშაობს, ხოლო ოთხი ფერადი ღილაკის მქონე პულტები მათ Fold-ისთვის, Check/Call-ისთვის, Bet/Raise-ისა და All-In-ისთვის იყენებს.",
     "hearH2": "თამაშის მოსმენა და შეგრძნება",
-    "hearP": "ხმოვანი განცხადებები თამაშის მოვლენებს ხმამაღლა კითხულობს თქვენი მოწყობილობის საკუთარი ხმებით, თქვენს ენაზე, თუ სისტემას ასეთი ხმა აქვს. Android ტელეფონებზე თქვენს სვლას მოკლე ვიბრაცია აღნიშნავს. თამაშის ხმები ოთხ ჯგუფადაა დაყოფილი — მოქმედებები, ჩატი, ქსელის შეტყობინებები და ბლაინდების ზრდა — რომელთა ჩართვა ან გამორთვა ცალ-ცალკე შეიძლება, ხმის ერთი სლაიდერით.",
+    "hearP": "თამაშის განცხადებები თამაშის მოვლენებს ხმამაღლა კითხულობს — ან თქვენი მოწყობილობის საკუთარი ხმებით, თქვენს ენაზე, თუ სისტემას ასეთი ხმა აქვს, ან თქვენი ეკრანის წამკითხველის (NVDA, JAWS, VoiceOver ან TalkBack) მეშვეობით, ორჯერ ლაპარაკის გარეშე; არჩევანი კეთდება ფანჯარაში „ხელმისაწვდომობა“. Android ტელეფონებზე თქვენს სვლას მოკლე ვიბრაცია აღნიშნავს. თამაშის ხმები ოთხ ჯგუფადაა დაყოფილი — მოქმედებები, ჩატი, ქსელის შეტყობინებები და ბლაინდების ზრდა — რომელთა ჩართვა ან გამორთვა ცალ-ცალკე შეიძლება, ხმის ერთი სლაიდერით.",
     "calmH2": "ნაკლები მოულოდნელობა",
     "calmP": "როცა თქვენი სისტემა შემცირებულ მოძრაობას ითხოვს, კლიენტი ანიმაციებს ამცირებს. Anti-peek თქვენს კარტებს დამალულს ტოვებს, სანამ მათ არ შეეხებით, ხოლო შემთხვევითი Call-ის დაცვა დიდი Raise-ის შემდეგ Call ღილაკს მცირე ხნით ბლოკავს, რათა მცირე Call-ზე გათვლილმა შეხებამ შეცდომით გაზრდილი თანხა არ გადაიხადოს.",
     "langH2": "თქვენს ენაზე, მეგზურით",
@@ -2508,7 +2508,7 @@ module.exports = {
       ],
       [
         "მუშაობს თუ არა ეკრანის წამკითხველთან?",
-        "ჯერ სრულად არა. ხმოვანი განცხადებები თამაშის მოვლენებს ხმამაღლა კითხულობს და მენიუებს წარწერები აქვს, მაგრამ თავად პოკერის მაგიდა ვიზუალური ინტერფეისია და მხოლოდ ეკრანის წამკითხველით მისი თამაში ჯერ შეუძლებელია."
+        "ნაწილობრივ. თამაშის განცხადებების გაგზავნა ჩაშენებული ხმის ნაცვლად თქვენს ეკრანის წამკითხველზეც შეიძლება და მენიუებს წარწერები აქვს, მაგრამ თავად პოკერის მაგიდა ვიზუალური ინტერფეისია და მხოლოდ ეკრანის წამკითხველით მისი თამაში ჯერ შეუძლებელია."
       ],
       [
         "უფასოა?",
@@ -2553,7 +2553,7 @@ module.exports = {
     "padH2": "Геймпад және теледидар пульті",
     "padP": "Ойын контроллерімен — Xbox, PlayStation, Switch Pro және Bluetooth пульттерінің көбімен — бүкіл ойынды ойнауға болады: әр әрекетке арналған батырмалар, ставканы орнататын триггерлер және экрандар, чат пен мәзірлер бойынша жылжуға арналған Навигация режимі. Кезегіңіз келгенде ол дірілдейді. Android TV мен Google TV-де пульт дәл солай жұмыс істейді, ал төрт түсті пернесі бар пульттер оларды Fold, Check/Call, Bet/Raise және All-In үшін қолданады.",
     "hearH2": "Ойынды есту және сезу",
-    "hearP": "Дауыстық хабарландырулар ойын оқиғаларын құрылғыңыздың өз дауыстарымен, жүйеде болса, өз тіліңізде дауыстап оқиды. Android телефондарында қысқа діріл кезегіңізді білдіреді. Ойын дыбыстары төрт топқа бөлінген — әрекеттер, чат, желілік хабарландырулар және блайндтың көтерілуі — оларды бөлек қосуға не өшіруге болады, дыбыс деңгейінің бір жүгірткісімен.",
+    "hearP": "Ойын хабарландырулары ойын оқиғаларын не құрылғыңыздың өз дауыстарымен (жүйеде болса, өз тіліңізде), не экран оқу құралыңыз (NVDA, JAWS, VoiceOver немесе TalkBack) арқылы, екі дауыс қабаттаспай дауыстап оқиды; таңдау «Арнайы мүмкіндіктер» терезесінде жасалады. Android телефондарында қысқа діріл кезегіңізді білдіреді. Ойын дыбыстары төрт топқа бөлінген — әрекеттер, чат, желілік хабарландырулар және блайндтың көтерілуі — оларды бөлек қосуға не өшіруге болады, дыбыс деңгейінің бір жүгірткісімен.",
     "calmH2": "Тосын жағдайлар азырақ",
     "calmP": "Жүйеңіз қозғалысты азайтуды сұраса, клиент анимацияларын бәсеңдетеді. Сығалаудан қорғау өз карталарыңызды оларды түрткенше жасырын ұстайды, ал кездейсоқ Call-дан қорғау үлкен Raise-ден кейін бірден Call түймесін қысқа уақытқа бұғаттайды, сонда кішірек Call-ға арналған түрту көтерілген соманы байқаусызда төлеп жібермейді.",
     "langH2": "Өз тіліңізде, нұсқаушымен",
@@ -2574,7 +2574,7 @@ module.exports = {
       ],
       [
         "Экран оқу құралымен жұмыс істей ме?",
-        "Әзірге толық емес. Дауыстық хабарландырулар ойын оқиғаларын дауыстап оқиды және мәзірлерде белгілер бар, бірақ покер үстелінің өзі визуалды интерфейс, оны әзірге тек экран оқу құралымен ойнау мүмкін емес."
+        "Ішінара. Ойын хабарландыруларын кірістірілген дауыстың орнына экран оқу құралыңызға жіберуге болады және мәзірлерде белгілер бар, бірақ покер үстелінің өзі визуалды интерфейс, оны әзірге тек экран оқу құралымен ойнау мүмкін емес."
       ],
       [
         "Бұл тегін бе?",
@@ -2619,7 +2619,7 @@ module.exports = {
     "padH2": "ហ្គេមផេដ និងរីម៉ូតទូរទស្សន៍",
     "padP": "ឧបករណ៍បញ្ជាហ្គេម — Xbox, PlayStation, Switch Pro និងផេដ Bluetooth ភាគច្រើន — លេងហ្គេមទាំងមូលបាន៖ ប៊ូតុងសម្រាប់សកម្មភាពនីមួយៗ ប៊ូតុងកៃសម្រាប់កំណត់ការភ្នាល់ និងរបៀបរុករកដើម្បីផ្លាស់ទីតាមអេក្រង់ ការជជែក និងម៉ឺនុយ។ វាញ័រនៅពេលដល់វេនអ្នក។ នៅលើ Android TV និង Google TV រីម៉ូតដំណើរការដូចគ្នា ហើយរីម៉ូតដែលមានគ្រាប់ចុចពណ៌ទាំងបួនប្រើវាសម្រាប់ Fold, Check/Call, Bet/Raise និង All-In។",
     "hearH2": "ស្ដាប់ និងមានអារម្មណ៍ពីហ្គេម",
-    "hearP": "ការប្រកាសសំឡេងអានព្រឹត្តិការណ៍ហ្គេមឮៗ ដោយប្រើសំឡេងរបស់ឧបករណ៍អ្នកផ្ទាល់ ជាភាសារបស់អ្នក ប្រសិនបើប្រព័ន្ធមាន។ នៅលើទូរស័ព្ទ Android រំញ័រខ្លីមួយសម្គាល់វេនរបស់អ្នក។ សំឡេងហ្គេមចែកជាបួនក្រុម — សកម្មភាព ការជជែក ការជូនដំណឹងបណ្ដាញ និងការដំឡើង blind — ដែលអាចបើក ឬបិទដោយឡែកពីគ្នា ជាមួយរបាររំកិលកម្រិតសំឡេងតែមួយ។",
+    "hearP": "ការប្រកាសហ្គេមអានព្រឹត្តិការណ៍ហ្គេមឮៗ ដោយប្រើសំឡេងរបស់ឧបករណ៍អ្នកផ្ទាល់ ជាភាសារបស់អ្នក ប្រសិនបើប្រព័ន្ធមាន ឬតាមរយៈកម្មវិធីអានអេក្រង់របស់អ្នក (NVDA, JAWS, VoiceOver ឬ TalkBack) ដោយមិននិយាយពីរដង ដោយជ្រើសរើសនៅក្នុងបង្អួច ភាពងាយស្រួលប្រើ។ នៅលើទូរស័ព្ទ Android រំញ័រខ្លីមួយសម្គាល់វេនរបស់អ្នក។ សំឡេងហ្គេមចែកជាបួនក្រុម — សកម្មភាព ការជជែក ការជូនដំណឹងបណ្ដាញ និងការដំឡើង blind — ដែលអាចបើក ឬបិទដោយឡែកពីគ្នា ជាមួយរបាររំកិលកម្រិតសំឡេងតែមួយ។",
     "calmH2": "ការភ្ញាក់ផ្អើលតិចជាង",
     "calmP": "នៅពេលប្រព័ន្ធរបស់អ្នកស្នើឱ្យកាត់បន្ថយចលនា កម្មវិធីបន្ថយចលនាគំនូរជីវចលរបស់វា។ ការការពារលួចមើលរក្សាបៀផ្ទាល់ខ្លួនរបស់អ្នកឱ្យលាក់ រហូតដល់អ្នកចុចលើវា ហើយការការពារ Call ចៃដន្យរាំងខ្ទប់ប៊ូតុង Call មួយភ្លែតភ្លាមៗបន្ទាប់ពី raise ធំ ដើម្បីកុំឱ្យការចុចសម្រាប់ call តូចជាង បង់ចំនួនដែលបាន raise ដោយច្រឡំ។",
     "langH2": "ជាភាសារបស់អ្នក ជាមួយអ្នកណែនាំ",
@@ -2640,7 +2640,7 @@ module.exports = {
       ],
       [
         "តើវាដំណើរការជាមួយកម្មវិធីអានអេក្រង់ទេ?",
-        "មិនទាន់ពេញលេញនៅឡើយទេ។ ការប្រកាសសំឡេងអានព្រឹត្តិការណ៍ហ្គេមឮៗ ហើយម៉ឺនុយមានស្លាក ប៉ុន្តែតុបៀខ្លួនវាជាចំណុចប្រទាក់សម្រាប់មើល ហើយមិនទាន់អាចលេងដោយប្រើតែកម្មវិធីអានអេក្រង់បាននៅឡើយទេ។"
+        "ដោយផ្នែក។ ការប្រកាសហ្គេមអាចបញ្ជូនទៅកម្មវិធីអានអេក្រង់របស់អ្នកជំនួសឱ្យសំឡេងភ្ជាប់មកជាមួយ ហើយម៉ឺនុយមានស្លាក ប៉ុន្តែតុបៀខ្លួនវាជាចំណុចប្រទាក់សម្រាប់មើល ហើយមិនទាន់អាចលេងដោយប្រើតែកម្មវិធីអានអេក្រង់បាននៅឡើយទេ។"
       ],
       [
         "តើវាឥតគិតថ្លៃទេ?",
@@ -2685,7 +2685,7 @@ module.exports = {
     "padH2": "ಗೇಮ್‌ಪ್ಯಾಡ್ ಮತ್ತು ಟಿವಿ ರಿಮೋಟ್",
     "padP": "ಗೇಮ್ ಕಂಟ್ರೋಲರ್‌ನಿಂದ — Xbox, PlayStation, Switch Pro ಮತ್ತು ಹೆಚ್ಚಿನ Bluetooth ಪ್ಯಾಡ್‌ಗಳು — ಇಡೀ ಆಟವನ್ನು ಆಡಬಹುದು: ಪ್ರತಿ ಕ್ರಿಯೆಗೆ ಬಟನ್‌ಗಳು, ಬೆಟ್ ಹೊಂದಿಸಲು ಟ್ರಿಗರ್‌ಗಳು, ಮತ್ತು ಪರದೆಗಳು, ಚಾಟ್ ಮತ್ತು ಮೆನುಗಳಲ್ಲಿ ಚಲಿಸಲು ನ್ಯಾವಿಗೇಶನ್ ಮೋಡ್. ನಿಮ್ಮ ಸರದಿ ಬಂದಾಗ ಅದು ಕಂಪಿಸುತ್ತದೆ. Android TV ಮತ್ತು Google TV ಯಲ್ಲಿ ರಿಮೋಟ್ ಇದೇ ರೀತಿ ಕೆಲಸ ಮಾಡುತ್ತದೆ, ಮತ್ತು ನಾಲ್ಕು ಬಣ್ಣದ ಕೀಗಳಿರುವ ರಿಮೋಟ್‌ಗಳು ಅವುಗಳನ್ನು Fold, Check/Call, Bet/Raise ಮತ್ತು All-In ಗಾಗಿ ಬಳಸುತ್ತವೆ.",
     "hearH2": "ಆಟವನ್ನು ಕೇಳುವುದು ಮತ್ತು ಅನುಭವಿಸುವುದು",
-    "hearP": "ಧ್ವನಿ ಘೋಷಣೆಗಳು ನಿಮ್ಮ ಸಾಧನದ ಸ್ವಂತ ಧ್ವನಿಗಳಿಂದ ಆಟದ ಘಟನೆಗಳನ್ನು ಜೋರಾಗಿ ಓದುತ್ತವೆ, ಸಿಸ್ಟಂನಲ್ಲಿ ನಿಮ್ಮ ಭಾಷೆಯ ಧ್ವನಿ ಇದ್ದರೆ ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲೇ. Android ಫೋನ್‌ಗಳಲ್ಲಿ ಒಂದು ಚಿಕ್ಕ ವೈಬ್ರೇಶನ್ ನಿಮ್ಮ ಸರದಿಯನ್ನು ಸೂಚಿಸುತ್ತದೆ. ಆಟದ ಶಬ್ದಗಳು ನಾಲ್ಕು ಗುಂಪುಗಳಲ್ಲಿವೆ — ಕ್ರಿಯೆಗಳು, ಚಾಟ್, ನೆಟ್‌ವರ್ಕ್ ಸೂಚನೆಗಳು ಮತ್ತು ಬ್ಲೈಂಡ್ ಏರಿಕೆಗಳು — ಇವುಗಳನ್ನು ಪ್ರತ್ಯೇಕವಾಗಿ ಆನ್ ಅಥವಾ ಆಫ್ ಮಾಡಬಹುದು, ಒಂದೇ ವಾಲ್ಯೂಮ್ ಸ್ಲೈಡರ್‌ನೊಂದಿಗೆ.",
+    "hearP": "ಆಟದ ಘೋಷಣೆಗಳು ಆಟದ ಘಟನೆಗಳನ್ನು ಜೋರಾಗಿ ಓದುತ್ತವೆ — ನಿಮ್ಮ ಸಾಧನದ ಸ್ವಂತ ಧ್ವನಿಗಳಿಂದ, ಸಿಸ್ಟಂನಲ್ಲಿ ನಿಮ್ಮ ಭಾಷೆಯ ಧ್ವನಿ ಇದ್ದರೆ ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲೇ, ಅಥವಾ ನಿಮ್ಮ ಸ್ಕ್ರೀನ್ ರೀಡರ್ (NVDA, JAWS, VoiceOver ಅಥವಾ TalkBack) ಮೂಲಕ ಎರಡು ಬಾರಿ ಮಾತನಾಡದೆ; ಇದನ್ನು ಪ್ರವೇಶಸಾಧ್ಯತೆ ವಿಂಡೋದಲ್ಲಿ ಆಯ್ಕೆಮಾಡಿ. Android ಫೋನ್‌ಗಳಲ್ಲಿ ಒಂದು ಚಿಕ್ಕ ವೈಬ್ರೇಶನ್ ನಿಮ್ಮ ಸರದಿಯನ್ನು ಸೂಚಿಸುತ್ತದೆ. ಆಟದ ಶಬ್ದಗಳು ನಾಲ್ಕು ಗುಂಪುಗಳಲ್ಲಿವೆ — ಕ್ರಿಯೆಗಳು, ಚಾಟ್, ನೆಟ್‌ವರ್ಕ್ ಸೂಚನೆಗಳು ಮತ್ತು ಬ್ಲೈಂಡ್ ಏರಿಕೆಗಳು — ಇವುಗಳನ್ನು ಪ್ರತ್ಯೇಕವಾಗಿ ಆನ್ ಅಥವಾ ಆಫ್ ಮಾಡಬಹುದು, ಒಂದೇ ವಾಲ್ಯೂಮ್ ಸ್ಲೈಡರ್‌ನೊಂದಿಗೆ.",
     "calmH2": "ಕಡಿಮೆ ಅಚ್ಚರಿಗಳು",
     "calmP": "ನಿಮ್ಮ ಸಿಸ್ಟಂ ಕಡಿಮೆ ಚಲನೆಯನ್ನು ಕೇಳಿದಾಗ, ಕ್ಲೈಂಟ್ ತನ್ನ ಅನಿಮೇಶನ್‌ಗಳನ್ನು ತಗ್ಗಿಸುತ್ತದೆ. ಇಣುಕುನೋಟ ತಡೆ ನೀವು ಟ್ಯಾಪ್ ಮಾಡುವವರೆಗೆ ನಿಮ್ಮ ಸ್ವಂತ ಕಾರ್ಡ್‌ಗಳನ್ನು ಮರೆಯಲ್ಲಿಡುತ್ತದೆ, ಮತ್ತು ಆಕಸ್ಮಿಕ Call ರಕ್ಷಣೆ ದೊಡ್ಡ Raise ನಂತರ ತಕ್ಷಣ Call ಬಟನ್ ಅನ್ನು ಸ್ವಲ್ಪ ಹೊತ್ತು ನಿರ್ಬಂಧಿಸುತ್ತದೆ; ಹೀಗೆ ಚಿಕ್ಕ Call ಗಾಗಿ ಮಾಡಿದ ಟ್ಯಾಪ್ ತಪ್ಪಾಗಿ ಹೆಚ್ಚಿಸಿದ ಮೊತ್ತವನ್ನು ಪಾವತಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ.",
     "langH2": "ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ, ಮಾರ್ಗದರ್ಶಿಯೊಂದಿಗೆ",
@@ -2706,7 +2706,7 @@ module.exports = {
       ],
       [
         "ಸ್ಕ್ರೀನ್ ರೀಡರ್‌ನೊಂದಿಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆಯೇ?",
-        "ಇನ್ನೂ ಸಂಪೂರ್ಣವಾಗಿ ಇಲ್ಲ. ಧ್ವನಿ ಘೋಷಣೆಗಳು ಆಟದ ಘಟನೆಗಳನ್ನು ಜೋರಾಗಿ ಓದುತ್ತವೆ ಮತ್ತು ಮೆನುಗಳಿಗೆ ಲೇಬಲ್‌ಗಳಿವೆ, ಆದರೆ ಪೋಕರ್ ಟೇಬಲ್ ಸ್ವತಃ ದೃಶ್ಯ ಇಂಟರ್‌ಫೇಸ್ ಆಗಿದ್ದು, ಕೇವಲ ಸ್ಕ್ರೀನ್ ರೀಡರ್‌ನಿಂದ ಅದನ್ನು ಇನ್ನೂ ಆಡಲು ಸಾಧ್ಯವಿಲ್ಲ."
+        "ಭಾಗಶಃ. ಆಟದ ಘೋಷಣೆಗಳನ್ನು ಅಂತರ್ಗತ ಧ್ವನಿಯ ಬದಲು ನಿಮ್ಮ ಸ್ಕ್ರೀನ್ ರೀಡರ್‌ಗೆ ಕಳುಹಿಸಬಹುದು, ಮತ್ತು ಮೆನುಗಳಿಗೆ ಲೇಬಲ್‌ಗಳಿವೆ, ಆದರೆ ಪೋಕರ್ ಟೇಬಲ್ ಸ್ವತಃ ದೃಶ್ಯ ಇಂಟರ್‌ಫೇಸ್ ಆಗಿದ್ದು, ಕೇವಲ ಸ್ಕ್ರೀನ್ ರೀಡರ್‌ನಿಂದ ಅದನ್ನು ಇನ್ನೂ ಆಡಲು ಸಾಧ್ಯವಿಲ್ಲ."
       ],
       [
         "ಇದು ಉಚಿತವೇ?",
@@ -2751,7 +2751,7 @@ module.exports = {
     "padH2": "게임패드와 TV 리모컨",
     "padP": "게임 컨트롤러 — Xbox, PlayStation, Switch Pro 및 대부분의 Bluetooth 패드 — 로 게임 전체를 플레이할 수 있습니다. 모든 액션에 버튼이 있고, 트리거로 베팅 금액을 정하며, 탐색 모드로 화면, 채팅, 메뉴 사이를 이동합니다. 내 차례가 오면 진동합니다. Android TV와 Google TV에서는 리모컨이 같은 방식으로 작동하며, 네 가지 색 버튼이 있는 리모컨은 이를 Fold, Check/Call, Bet/Raise, All-In에 사용합니다.",
     "hearH2": "게임을 듣고 느끼기",
-    "hearP": "음성 안내는 기기 자체의 음성으로 게임 이벤트를 소리 내어 읽어 주며, 시스템에 해당 언어의 음성이 있으면 내 언어로 읽습니다. Android 휴대폰에서는 짧은 진동이 내 차례를 알립니다. 게임 소리는 액션, 채팅, 네트워크 알림, 블라인드 인상의 네 그룹으로 나뉘어 각각 켜고 끌 수 있으며, 음량 슬라이더 하나로 조절합니다.",
+    "hearP": "게임 안내는 게임 이벤트를 소리 내어 읽어 줍니다. 기기 자체의 음성으로 — 시스템에 해당 언어의 음성이 있으면 내 언어로 — 읽거나, 스크린 리더(NVDA, JAWS, VoiceOver 또는 TalkBack)를 통해 두 번 말하지 않고 읽게 할 수 있으며, 접근성 창에서 선택합니다. Android 휴대폰에서는 짧은 진동이 내 차례를 알립니다. 게임 소리는 액션, 채팅, 네트워크 알림, 블라인드 인상의 네 그룹으로 나뉘어 각각 켜고 끌 수 있으며, 음량 슬라이더 하나로 조절합니다.",
     "calmH2": "놀랄 일은 줄이고",
     "calmP": "시스템에서 동작 줄이기를 요청하면 클라이언트가 애니메이션을 줄입니다. 훔쳐보기 방지는 터치할 때까지 내 카드를 덮어 두고, 실수 Call 보호는 큰 레이즈 직후 Call 버튼을 잠깐 잠가서, 작은 콜을 하려던 탭이 레이즈된 금액을 실수로 지불하지 않게 합니다.",
     "langH2": "내 언어로, 안내와 함께",
@@ -2772,7 +2772,7 @@ module.exports = {
       ],
       [
         "스크린 리더로 쓸 수 있나요?",
-        "아직 완전하지는 않습니다. 음성 안내가 게임 이벤트를 소리 내어 읽고 메뉴에는 레이블이 붙어 있지만, 포커 테이블 자체는 시각적 인터페이스라서 아직 스크린 리더만으로는 플레이할 수 없습니다."
+        "부분적으로 됩니다. 게임 안내를 내장 음성 대신 스크린 리더로 보낼 수 있고 메뉴에는 레이블이 붙어 있지만, 포커 테이블 자체는 시각적 인터페이스라서 아직 스크린 리더만으로는 플레이할 수 없습니다."
       ],
       [
         "무료인가요?",
@@ -2817,7 +2817,7 @@ module.exports = {
     "padH2": "Геймпад жана ТВ пульту",
     "padP": "Оюн контроллери — Xbox, PlayStation, Switch Pro жана көпчүлүк Bluetooth геймпаддар — менен бүт оюнду ойносо болот: ар бир аракет үчүн баскычтар, ставканы коюу үчүн триггерлер жана экрандар, чат жана менюлар боюнча жылуу үчүн навигация режими. Кезегиңиз келгенде ал титирейт. Android TV жана Google TV'де пульт ушундай эле иштейт, ал эми төрт түстүү баскычы бар пульттар аларды Fold, Check/Call, Bet/Raise жана All-In үчүн колдонот.",
     "hearH2": "Оюнду угуу жана сезүү",
-    "hearP": "Үн менен кабарлоо оюн окуяларын түзмөгүңүздүн өз үндөрү менен, система колдосо сиздин тилиңизде үн чыгарып окуйт. Android телефондорунда кыска титирөө кезегиңизди билдирет. Оюн үндөрү төрт топко бөлүнөт — аракеттер, чат, тармак билдирүүлөрү жана блайнддардын көтөрүлүшү — аларды бир үн көлөмү сыдырмасы менен өз-өзүнчө күйгүзүп же өчүрсө болот.",
+    "hearP": "Оюн кабарлары оюн окуяларын же түзмөгүңүздүн өз үндөрү менен (система колдосо сиздин тилиңизде), же экран окугучуңуз (NVDA, JAWS, VoiceOver же TalkBack) аркылуу, эки үн бири-бирин баспай үн чыгарып окуйт; тандоо Жеткиликтүүлүк терезесинде жасалат. Android телефондорунда кыска титирөө кезегиңизди билдирет. Оюн үндөрү төрт топко бөлүнөт — аракеттер, чат, тармак билдирүүлөрү жана блайнддардын көтөрүлүшү — аларды бир үн көлөмү сыдырмасы менен өз-өзүнчө күйгүзүп же өчүрсө болот.",
     "calmH2": "Күтүлбөгөн нерселер азыраак",
     "calmP": "Системаңыз кыймылды азайтууну сураганда, кардар анимацияларын басаңдатат. «Карап коюудан коргоо» өз карталарыңызды аларды басканыңызга чейин жашырып турат, ал эми кокустан call'дан коргоо чоң raise'тен кийин дароо Call баскычын кыска убакытка бөгөттөйт, кичи call үчүн болгон басуу көтөрүлгөн сумманы жаңылыштык менен төлөп салбашы үчүн.",
     "langH2": "Өз тилиңизде, жол көрсөткүч менен",
@@ -2838,7 +2838,7 @@ module.exports = {
       ],
       [
         "Экран окугуч менен иштейби?",
-        "Азырынча толук эмес. Үн менен кабарлоо оюн окуяларын үн чыгарып окуйт жана менюлардын белгилери бар, бирок покер үстөлүнүн өзү визуалдык интерфейс, аны азырынча экран окугуч менен гана ойноого болбойт."
+        "Жарым-жартылай. Оюн кабарларын орнотулган үндүн ордуна экран окугучуңузга жөнөтсө болот жана менюлардын белгилери бар, бирок покер үстөлүнүн өзү визуалдык интерфейс, аны азырынча экран окугуч менен гана ойноого болбойт."
       ],
       [
         "Акысызбы?",
@@ -2883,7 +2883,7 @@ module.exports = {
     "padH2": "Žaidimų pultelis ir TV pultas",
     "padP": "Žaidimų pultelis — Xbox, PlayStation, Switch Pro ir dauguma Bluetooth pultelių — valdo visą žaidimą: mygtukai kiekvienam veiksmui, gaidukai statymui nustatyti ir naršymo režimas judėti po ekranus, pokalbius ir meniu. Kai ateina jūsų eilė, jis suvibruoja. Android TV ir Google TV pultas veikia taip pat, o pultai su keturiais spalvotais klavišais naudoja juos Fold, Check/Call, Bet/Raise ir All-In.",
     "hearH2": "Girdėti ir jausti žaidimą",
-    "hearP": "Balso pranešimai garsiai skaito žaidimo įvykius jūsų įrenginio balsais, jūsų kalba, jei sistema ją turi. Android telefonuose trumpa vibracija pažymi jūsų eilę. Žaidimo garsai suskirstyti į keturias grupes — veiksmai, pokalbiai, tinklo pranešimai ir blindų kilimas, — kurias galima įjungti ar išjungti atskirai, su vienu garsumo šliaužikliu.",
+    "hearP": "Žaidimo pranešimai garsiai skaito žaidimo įvykius jūsų įrenginio balsais, jūsų kalba, jei sistema ją turi, arba per jūsų ekrano skaitytuvą (NVDA, JAWS, VoiceOver ar TalkBack), nekalbėdami dukart; pasirinkti galima lange Pritaikymas neįgaliesiems. Android telefonuose trumpa vibracija pažymi jūsų eilę. Žaidimo garsai suskirstyti į keturias grupes — veiksmai, pokalbiai, tinklo pranešimai ir blindų kilimas, — kurias galima įjungti ar išjungti atskirai, su vienu garsumo šliaužikliu.",
     "calmH2": "Mažiau staigmenų",
     "calmP": "Kai jūsų sistema prašo sumažinti judesį, klientas prislopina animacijas. Apsauga nuo žvilgčiojimo laiko jūsų kortas uždengtas, kol jų nepaliečiate, o apsauga nuo atsitiktinio Call trumpam užrakina mygtuką Call iškart po didelio kėlimo, kad mažesniam Call skirtas palietimas per klaidą nesumokėtų pakeltos sumos.",
     "langH2": "Jūsų kalba, su gidu",
@@ -2904,7 +2904,7 @@ module.exports = {
       ],
       [
         "Ar veikia su ekrano skaitytuvu?",
-        "Kol kas ne visiškai. Balso pranešimai garsiai skaito žaidimo įvykius, o meniu turi etiketes, tačiau pats pokerio stalas yra vizuali sąsaja, ir jo kol kas negalima žaisti vien su ekrano skaitytuvu."
+        "Iš dalies. Žaidimo pranešimus galima siųsti į jūsų ekrano skaitytuvą vietoj įtaisytojo balso, o meniu turi etiketes, tačiau pats pokerio stalas yra vizuali sąsaja, ir jo kol kas negalima žaisti vien su ekrano skaitytuvu."
       ],
       [
         "Ar tai nemokama?",
@@ -2949,7 +2949,7 @@ module.exports = {
     "padH2": "Spēļu pults un TV pults",
     "padP": "Ar spēļu pulti — Xbox, PlayStation, Switch Pro un lielāko daļu Bluetooth pultu — var nospēlēt visu spēli: pogas katrai darbībai, trigeri likmes iestatīšanai un navigācijas režīms, lai pārvietotos pa ekrāniem, tērzēšanu un izvēlnēm. Kad pienāk tavs gājiens, pults novibrē. Android TV un Google TV pults darbojas tāpat, un pultis ar četriem krāsainajiem taustiņiem izmanto tos Fold, Check/Call, Bet/Raise un All-In.",
     "hearH2": "Dzirdēt un sajust spēli",
-    "hearP": "Balss paziņojumi nolasa spēles notikumus ar tavas ierīces balsīm, tavā valodā, ja sistēmā tāda ir. Android telefonos īsa vibrācija atzīmē tavu gājienu. Spēles skaņas ir sadalītas četrās grupās — darbības, tērzēšana, tīkla paziņojumi un aklo likmju paaugstināšana —, ko var ieslēgt vai izslēgt atsevišķi, ar vienu skaļuma slīdni.",
+    "hearP": "Spēles paziņojumi nolasa spēles notikumus vai nu ar tavas ierīces balsīm, tavā valodā, ja sistēmā tāda ir, vai ar tavu ekrāna lasītāju (NVDA, JAWS, VoiceOver vai TalkBack), nerunājot divreiz; izvēli veic logā „Pieejamība”. Android telefonos īsa vibrācija atzīmē tavu gājienu. Spēles skaņas ir sadalītas četrās grupās — darbības, tērzēšana, tīkla paziņojumi un aklo likmju paaugstināšana —, ko var ieslēgt vai izslēgt atsevišķi, ar vienu skaļuma slīdni.",
     "calmH2": "Mazāk pārsteigumu",
     "calmP": "Ja tava sistēma pieprasa samazinātu kustību, klients mazina savas animācijas. Aizsardzība pret ieskatīšanos patur tavas kārtis slēptas, līdz tām pieskaries, bet nejauša Call aizsardzība uz brīdi bloķē pogu Call tūlīt pēc liela paaugstinājuma, lai pieskāriens, kas bija domāts mazākam Call, nejauši nesamaksātu paaugstināto summu.",
     "langH2": "Tavā valodā, ar gidu",
@@ -2970,7 +2970,7 @@ module.exports = {
       ],
       [
         "Vai tas darbojas ar ekrāna lasītāju?",
-        "Vēl ne pilnībā. Balss paziņojumi nolasa spēles notikumus, un izvēlnēm ir etiķetes, taču pats pokera galds ir vizuāla saskarne, un to vēl nevar spēlēt tikai ar ekrāna lasītāju."
+        "Daļēji. Spēles paziņojumus var sūtīt tavam ekrāna lasītājam iebūvētās balss vietā, un izvēlnēm ir etiķetes, taču pats pokera galds ir vizuāla saskarne, un to vēl nevar spēlēt tikai ar ekrāna lasītāju."
       ],
       [
         "Vai tas ir bez maksas?",
@@ -3015,7 +3015,7 @@ module.exports = {
     "padH2": "Гејмпед и ТВ далечински",
     "padP": "Контролер за игри — Xbox, PlayStation, Switch Pro и повеќето Bluetooth гејмпедови — ја игра целата игра: копчиња за секој потег, тригери за висината на влогот и режим Навигација за движење низ екраните, разговорот и менијата. Вибрира кога ќе дојде твојот ред. На Android TV и Google TV далечинскиот работи на ист начин, а далечинските со четирите копчиња во боја ги користат за Fold, Check/Call, Bet/Raise и All-In.",
     "hearH2": "Слушни ја и почувствувај ја играта",
-    "hearP": "Гласовните најави на глас ги читаат настаните од играта со гласовите на самиот уред, на твојот јазик ако системот има таков глас. На Android телефони кратка вибрација го означува твојот потег. Звуците од играта се поделени во четири групи — потези, разговор, мрежни известувања и зголемување на блајндовите — што може посебно да се вклучат или исклучат, со еден лизгач за јачина.",
+    "hearP": "Најавите од играта на глас ги читаат настаните од играта, или со гласовите на самиот уред, на твојот јазик ако системот има таков глас, или преку твојот читач на екран (NVDA, JAWS, VoiceOver или TalkBack) без да зборуваат двапати; избери во прозорецот Пристапност. На Android телефони кратка вибрација го означува твојот потег. Звуците од играта се поделени во четири групи — потези, разговор, мрежни известувања и зголемување на блајндовите — што може посебно да се вклучат или исклучат, со еден лизгач за јачина.",
     "calmH2": "Помалку изненадувања",
     "calmP": "Кога системот бара намалено движење, клиентот ги ублажува своите анимации. Заштитата од шпионирање ги држи твоите карти скриени додека не ги допреш, а заштитата од случаен Call накратко го блокира копчето Call веднаш по големо зголемување, така што допир наменет за помал Call не може по грешка да го плати зголемениот износ.",
     "langH2": "На твојот јазик, со водич",
@@ -3036,7 +3036,7 @@ module.exports = {
       ],
       [
         "Дали работи со читач на екран?",
-        "Сè уште не целосно. Гласовните најави на глас ги читаат настаните од играта и менијата имаат ознаки, но самата покер-маса е визуелен интерфејс и сè уште не може да се игра само со читач на екран."
+        "Делумно. Најавите од играта може да се испраќаат до твојот читач на екран наместо до вградениот глас, а менијата имаат ознаки, но самата покер-маса е визуелен интерфејс и сè уште не може да се игра само со читач на екран."
       ],
       [
         "Дали е бесплатно?",
@@ -3081,7 +3081,7 @@ module.exports = {
     "padH2": "ഗെയിംപാഡും ടിവി റിമോട്ടും",
     "padP": "ഒരു ഗെയിം കൺട്രോളർ — Xbox, PlayStation, Switch Pro, മിക്ക Bluetooth പാഡുകളും — കൊണ്ട് മുഴുവൻ കളിയും കളിക്കാം: ഓരോ പ്രവൃത്തിക്കും ബട്ടണുകൾ, ബെറ്റ് തുക നിശ്ചയിക്കാൻ ട്രിഗറുകൾ, സ്ക്രീനുകളിലൂടെയും ചാറ്റിലൂടെയും മെനുകളിലൂടെയും നീങ്ങാൻ ഒരു നാവിഗേഷൻ മോഡ്. നിങ്ങളുടെ ഊഴം വരുമ്പോൾ അത് വൈബ്രേറ്റ് ചെയ്യും. Android TV യിലും Google TV യിലും റിമോട്ട് ഇതേ രീതിയിൽ പ്രവർത്തിക്കുന്നു, നാല് നിറ കീകളുള്ള റിമോട്ടുകൾ അവ Fold, Check/Call, Bet/Raise, All-In എന്നിവയ്ക്കായി ഉപയോഗിക്കുന്നു.",
     "hearH2": "കളി കേൾക്കാനും അനുഭവിക്കാനും",
-    "hearP": "ശബ്ദ അറിയിപ്പുകൾ നിങ്ങളുടെ ഉപകരണത്തിന്റെ സ്വന്തം ശബ്ദങ്ങൾ ഉപയോഗിച്ച് ഗെയിം സംഭവങ്ങൾ ഉറക്കെ വായിക്കുന്നു, സിസ്റ്റത്തിൽ ഉണ്ടെങ്കിൽ നിങ്ങളുടെ ഭാഷയിൽ. Android ഫോണുകളിൽ ഒരു ചെറിയ വൈബ്രേഷൻ നിങ്ങളുടെ ഊഴം അറിയിക്കുന്നു. ഗെയിം ശബ്ദങ്ങൾ നാല് ഗ്രൂപ്പുകളിലാണ് — പ്രവൃത്തികൾ, ചാറ്റ്, നെറ്റ്‌വർക്ക് അറിയിപ്പുകൾ, ബ്ലൈൻഡ് വർദ്ധന — ഇവ വെവ്വേറെ ഓണാക്കുകയോ ഓഫാക്കുകയോ ചെയ്യാം, ഒരൊറ്റ വോളിയം സ്ലൈഡറോടെ.",
+    "hearP": "ഗെയിം അറിയിപ്പുകൾ ഗെയിം സംഭവങ്ങൾ ഉറക്കെ വായിക്കുന്നു — ഒന്നുകിൽ നിങ്ങളുടെ ഉപകരണത്തിന്റെ സ്വന്തം ശബ്ദങ്ങൾ ഉപയോഗിച്ച്, സിസ്റ്റത്തിൽ ഉണ്ടെങ്കിൽ നിങ്ങളുടെ ഭാഷയിൽ, അല്ലെങ്കിൽ നിങ്ങളുടെ സ്ക്രീൻ റീഡർ (NVDA, JAWS, VoiceOver അല്ലെങ്കിൽ TalkBack) വഴി, രണ്ട് ശബ്ദങ്ങൾ ഒരേസമയം സംസാരിക്കാതെ; പ്രവേശനക്ഷമത വിൻഡോയിൽ തിരഞ്ഞെടുക്കാം. Android ഫോണുകളിൽ ഒരു ചെറിയ വൈബ്രേഷൻ നിങ്ങളുടെ ഊഴം അറിയിക്കുന്നു. ഗെയിം ശബ്ദങ്ങൾ നാല് ഗ്രൂപ്പുകളിലാണ് — പ്രവൃത്തികൾ, ചാറ്റ്, നെറ്റ്‌വർക്ക് അറിയിപ്പുകൾ, ബ്ലൈൻഡ് വർദ്ധന — ഇവ വെവ്വേറെ ഓണാക്കുകയോ ഓഫാക്കുകയോ ചെയ്യാം, ഒരൊറ്റ വോളിയം സ്ലൈഡറോടെ.",
     "calmH2": "അപ്രതീക്ഷിതങ്ങൾ കുറവ്",
     "calmP": "നിങ്ങളുടെ സിസ്റ്റം കുറഞ്ഞ ചലനം ആവശ്യപ്പെടുമ്പോൾ ക്ലയന്റ് അതിന്റെ ആനിമേഷനുകൾ മയപ്പെടുത്തുന്നു. ഒളിഞ്ഞുനോട്ട തടയൽ നിങ്ങൾ തൊടുന്നത് വരെ നിങ്ങളുടെ സ്വന്തം കാർഡുകൾ മറച്ചുവെക്കുന്നു, അബദ്ധ Call സംരക്ഷണം ഒരു വലിയ Raise ന് തൊട്ടുപിന്നാലെ Call ബട്ടൺ അൽപനേരം തടയുന്നു, അതിനാൽ ചെറിയ ഒരു Call നായി ഉദ്ദേശിച്ച ടാപ്പ് അബദ്ധത്തിൽ ഉയർത്തിയ തുക അടയ്ക്കില്ല.",
     "langH2": "നിങ്ങളുടെ ഭാഷയിൽ, ഒരു വഴികാട്ടിയോടൊപ്പം",
@@ -3102,7 +3102,7 @@ module.exports = {
       ],
       [
         "സ്ക്രീൻ റീഡറിനൊപ്പം പ്രവർത്തിക്കുമോ?",
-        "ഇതുവരെ പൂർണ്ണമായില്ല. ശബ്ദ അറിയിപ്പുകൾ ഗെയിം സംഭവങ്ങൾ ഉറക്കെ വായിക്കുന്നു, മെനുകൾക്ക് ലേബലുകളുമുണ്ട്, പക്ഷേ പോക്കർ ടേബിൾ തന്നെ ഒരു ദൃശ്യ ഇന്റർഫേസാണ്, സ്ക്രീൻ റീഡർ മാത്രം ഉപയോഗിച്ച് ഇപ്പോഴും അത് കളിക്കാനാവില്ല."
+        "ഭാഗികമായി. ഗെയിം അറിയിപ്പുകൾ ബിൽറ്റ്-ഇൻ ശബ്ദത്തിന് പകരം നിങ്ങളുടെ സ്ക്രീൻ റീഡറിലേക്ക് അയയ്ക്കാം, മെനുകൾക്ക് ലേബലുകളുമുണ്ട്, പക്ഷേ പോക്കർ ടേബിൾ തന്നെ ഒരു ദൃശ്യ ഇന്റർഫേസാണ്, സ്ക്രീൻ റീഡർ മാത്രം ഉപയോഗിച്ച് ഇപ്പോഴും അത് കളിക്കാനാവില്ല."
       ],
       [
         "ഇത് സൗജന്യമാണോ?",
@@ -3147,7 +3147,7 @@ module.exports = {
     "padH2": "Геймпад ба ТВ-ийн алсын удирдлага",
     "padP": "Тоглоомын удирдлага — Xbox, PlayStation, Switch Pro болон ихэнх Bluetooth геймпад — тоглоомыг бүхэлд нь тоглуулна: үйлдэл бүрт товч, бооцоо тохируулах гохууд, дэлгэц, чат, цэсээр шилжих навигацийн горим. Таны ээлж ирэхэд чичирнэ. Android TV болон Google TV дээр алсын удирдлага яг адил ажиллах ба дөрвөн өнгөт товчтой удирдлагууд тэдгээрийг Fold, Check/Call, Bet/Raise болон All-In-д ашиглана.",
     "hearH2": "Тоглолтыг сонсож, мэдрэх",
-    "hearP": "Дуут мэдэгдэл тоглолтын үйл явдлыг таны төхөөрөмжийн өөрийн дуу хоолойгоор, систем дэмжвэл таны хэлээр чангаар уншина. Android утсан дээр богино чичиргээ таны ээлжийг тэмдэглэнэ. Тоглоомын дуу дөрвөн бүлэгт хуваагдана — үйлдэл, чат, сүлжээний мэдэгдэл, блайндын өсөлт — тус бүрийг тусад нь асааж, унтрааж болох ба нэг дууны түвшний гулсууртай.",
+    "hearP": "Тоглоомын мэдэгдэл тоглолтын үйл явдлыг таны төхөөрөмжийн өөрийн дуу хоолойгоор, систем дэмжвэл таны хэлээр, эсвэл таны дэлгэц уншигчаар (NVDA, JAWS, VoiceOver эсвэл TalkBack) давхардуулж ярилгүйгээр чангаар уншина; Хүртээмж цонхонд сонгоно уу. Android утсан дээр богино чичиргээ таны ээлжийг тэмдэглэнэ. Тоглоомын дуу дөрвөн бүлэгт хуваагдана — үйлдэл, чат, сүлжээний мэдэгдэл, блайндын өсөлт — тус бүрийг тусад нь асааж, унтрааж болох ба нэг дууны түвшний гулсууртай.",
     "calmH2": "Гэнэтийн зүйл бага",
     "calmP": "Систем тань хөдөлгөөнийг багасгахыг хүсвэл клиент хөдөлгөөнт дүрсээ зөөлрүүлнэ. «Харахаас хамгаалах» нь таны хөзрийг хүрэх хүртэл нууж, санамсаргүй call-аас хамгаалах нь том raise-ийн дараа Call товчийг богино хугацаанд хаадаг тул бага call хийх гэсэн хүрэлт өсгөсөн дүнг андуурч төлөхгүй.",
     "langH2": "Таны хэлээр, хөтөчтэй",
@@ -3168,7 +3168,7 @@ module.exports = {
       ],
       [
         "Дэлгэц уншигчтай ажилладаг уу?",
-        "Одоогоор бүрэн биш. Дуут мэдэгдэл тоглолтын үйл явдлыг чангаар уншиж, цэсүүд шошготой ч покерын ширээ өөрөө харааны интерфейс тул одоохондоо зөвхөн дэлгэц уншигчаар тоглох боломжгүй."
+        "Хэсэгчлэн. Тоглоомын мэдэгдлийг суурилагдсан дуу хоолойн оронд таны дэлгэц уншигч руу илгээж болох ба цэсүүд шошготой ч покерын ширээ өөрөө харааны интерфейс тул одоохондоо зөвхөн дэлгэц уншигчаар тоглох боломжгүй."
       ],
       [
         "Үнэгүй юу?",
@@ -3213,7 +3213,7 @@ module.exports = {
     "padH2": "गेमपॅड आणि टीव्ही रिमोट",
     "padP": "गेम कंट्रोलर — Xbox, PlayStation, Switch Pro आणि बहुतेक Bluetooth पॅड — संपूर्ण खेळ खेळू देतो: प्रत्येक कृतीसाठी बटणं, बेट ठरवण्यासाठी ट्रिगर्स, आणि स्क्रीन, चॅट आणि मेनूंमध्ये फिरण्यासाठी नेव्हिगेशन मोड. तुमची पाळी आली की तो व्हायब्रेट होतो. Android TV आणि Google TV वर रिमोट याच पद्धतीने चालतो, आणि चार रंगीत कीज असलेले रिमोट त्या Fold, Check/Call, Bet/Raise आणि All-In साठी वापरतात.",
     "hearH2": "खेळ ऐकणं आणि अनुभवणं",
-    "hearP": "आवाजी घोषणा तुमच्या उपकरणाच्या स्वतःच्या आवाजांनी खेळातल्या घटना मोठ्याने वाचतात, सिस्टममध्ये तुमच्या भाषेचा आवाज असेल तर तुमच्या भाषेत. Android फोनवर एक लहान व्हायब्रेशन तुमची पाळी दर्शवतं. खेळाचे आवाज चार गटांत आहेत — कृती, चॅट, नेटवर्क सूचना आणि ब्लाइंड्सची वाढ — जे वेगवेगळे चालू किंवा बंद करता येतात, एकाच व्हॉल्यूम स्लायडरसह.",
+    "hearP": "खेळाच्या घोषणा खेळातल्या घटना मोठ्याने वाचतात — एकतर तुमच्या उपकरणाच्या स्वतःच्या आवाजांनी, सिस्टममध्ये तुमच्या भाषेचा आवाज असेल तर तुमच्या भाषेत, किंवा तुमच्या स्क्रीन रीडरमार्फत (NVDA, JAWS, VoiceOver किंवा TalkBack) दोनदा न बोलता; निवड सुलभता विंडोमध्ये करा. Android फोनवर एक लहान व्हायब्रेशन तुमची पाळी दर्शवतं. खेळाचे आवाज चार गटांत आहेत — कृती, चॅट, नेटवर्क सूचना आणि ब्लाइंड्सची वाढ — जे वेगवेगळे चालू किंवा बंद करता येतात, एकाच व्हॉल्यूम स्लायडरसह.",
     "calmH2": "कमी अनपेक्षित धक्के",
     "calmP": "तुमची सिस्टम कमी हालचाल मागते तेव्हा क्लायंट आपले ॲनिमेशन सौम्य करतो. डोकावण्यापासून संरक्षण तुम्ही टॅप करेपर्यंत तुमची स्वतःची कार्ड्स लपवून ठेवतं, आणि चुकीच्या Call पासून संरक्षण मोठ्या Raise नंतर लगेच Call बटण थोड्या वेळासाठी ब्लॉक करतं, जेणेकरून लहान Call साठी केलेला टॅप चुकून वाढवलेली रक्कम भरू शकत नाही.",
     "langH2": "तुमच्या भाषेत, मार्गदर्शकासह",
@@ -3234,7 +3234,7 @@ module.exports = {
       ],
       [
         "स्क्रीन रीडरसोबत चालतं का?",
-        "अजून पूर्णपणे नाही. आवाजी घोषणा खेळातल्या घटना मोठ्याने वाचतात आणि मेनूंना लेबल्स आहेत, पण पोकर टेबल स्वतः एक दृश्य इंटरफेस आहे आणि ते अजून फक्त स्क्रीन रीडरने खेळता येत नाही."
+        "अंशतः. खेळाच्या घोषणा अंगभूत आवाजाऐवजी तुमच्या स्क्रीन रीडरकडे पाठवता येतात आणि मेनूंना लेबल्स आहेत, पण पोकर टेबल स्वतः एक दृश्य इंटरफेस आहे आणि ते अजून फक्त स्क्रीन रीडरने खेळता येत नाही."
       ],
       [
         "हे मोफत आहे का?",
@@ -3279,7 +3279,7 @@ module.exports = {
     "padH2": "Gamepad dan alat kawalan jauh TV",
     "padP": "Pengawal permainan — Xbox, PlayStation, Switch Pro dan kebanyakan pad Bluetooth — boleh memainkan seluruh permainan: butang untuk setiap tindakan, picu untuk menetapkan taruhan, dan mod navigasi untuk bergerak melalui skrin, sembang dan menu. Ia bergetar apabila tiba giliran anda. Pada Android TV dan Google TV, alat kawalan jauh berfungsi dengan cara yang sama, dan alat kawalan jauh yang mempunyai empat kekunci warna menggunakannya untuk Fold, Check/Call, Bet/Raise dan All-In.",
     "hearH2": "Mendengar dan merasai permainan",
-    "hearP": "Pengumuman suara membacakan peristiwa permainan dengan suara peranti anda sendiri, dalam bahasa anda jika sistem menyediakannya. Pada telefon Android, getaran pendek menandakan giliran anda. Bunyi permainan terbahagi kepada empat kumpulan — tindakan, sembang, notis rangkaian dan kenaikan blind — yang boleh dihidupkan atau dimatikan secara berasingan, dengan satu peluncur kelantangan.",
+    "hearP": "Pengumuman permainan membacakan peristiwa permainan, sama ada dengan suara peranti anda sendiri, dalam bahasa anda jika sistem menyediakannya, atau melalui pembaca skrin anda (NVDA, JAWS, VoiceOver atau TalkBack) tanpa bercakap dua kali; pilih dalam tetingkap Aksesibilitas. Pada telefon Android, getaran pendek menandakan giliran anda. Bunyi permainan terbahagi kepada empat kumpulan — tindakan, sembang, notis rangkaian dan kenaikan blind — yang boleh dihidupkan atau dimatikan secara berasingan, dengan satu peluncur kelantangan.",
     "calmH2": "Kurang kejutan",
     "calmP": "Apabila sistem anda meminta gerakan dikurangkan, klien mengurangkan animasinya. Anti-intip menyembunyikan kad anda sendiri sehingga anda mengetuknya, dan penjaga call tak sengaja menyekat butang Call seketika sejurus selepas raise besar, supaya ketukan untuk call yang lebih kecil tidak tersilap membayar jumlah yang dinaikkan.",
     "langH2": "Dalam bahasa anda, dengan pemandu",
@@ -3300,7 +3300,7 @@ module.exports = {
       ],
       [
         "Adakah ia berfungsi dengan pembaca skrin?",
-        "Belum sepenuhnya. Pengumuman suara membacakan peristiwa permainan dan menu mempunyai label, tetapi meja poker itu sendiri ialah antarmuka visual dan belum boleh dimainkan dengan pembaca skrin sahaja."
+        "Sebahagiannya. Pengumuman permainan boleh dihantar ke pembaca skrin anda dan bukannya suara terbina dalam, dan menu mempunyai label, tetapi meja poker itu sendiri ialah antarmuka visual dan belum boleh dimainkan dengan pembaca skrin sahaja."
       ],
       [
         "Adakah ia percuma?",
@@ -3345,7 +3345,7 @@ module.exports = {
     "padH2": "ဂိမ်းပက်ဒ်နှင့် တီဗီ အဝေးထိန်း",
     "padP": "ဂိမ်းထိန်းချုပ်ကိရိယာ — Xbox, PlayStation, Switch Pro နှင့် Bluetooth ပက်ဒ်အများစု — ဖြင့် ဂိမ်းတစ်ခုလုံး ကစားနိုင်သည်: လုပ်ဆောင်ချက်တိုင်းအတွက် ခလုတ်များ၊ လောင်းကြေး သတ်မှတ်ရန် trigger များနှင့် မျက်နှာပြင်များ၊ ချတ်နှင့် မီနူးများအတွင်း ရွှေ့ရန် လမ်းညွှန်မုဒ်။ သင့်အလှည့်ရောက်သောအခါ တုန်ခါသည်။ Android TV နှင့် Google TV တွင် အဝေးထိန်းသည် ထိုနည်းအတိုင်း အလုပ်လုပ်ပြီး အရောင်ခလုတ် လေးခုပါသော အဝေးထိန်းများသည် ၎င်းတို့ကို Fold, Check/Call, Bet/Raise နှင့် All-In အတွက် အသုံးပြုသည်။",
     "hearH2": "ဂိမ်းကို ကြားခြင်းနှင့် ခံစားခြင်း",
-    "hearP": "အသံထွက်ကြေညာချက်များသည် ဂိမ်းဖြစ်ရပ်များကို သင့်စက်၏ ကိုယ်ပိုင်အသံများဖြင့် အသံထွက် ဖတ်ပြပြီး စနစ်တွင် သင့်ဘာသာစကား အသံရှိလျှင် သင့်ဘာသာစကားဖြင့် ဖတ်သည်။ Android ဖုန်းများတွင် တုန်ခါမှုတိုတစ်ခုက သင့်အလှည့်ကို အမှတ်အသားပြုသည်။ ဂိမ်းအသံများကို အုပ်စု လေးခု — လုပ်ဆောင်ချက်များ၊ ချတ်၊ ကွန်ရက် အသိပေးချက်များနှင့် ဘလိုင်း မြှင့်ခြင်း — ခွဲထားပြီး တစ်ခုချင်း ဖွင့်ပိတ်နိုင်ကာ အသံအတိုးအကျယ် ဆလိုက်ဒါ တစ်ခုတည်း ရှိသည်။",
+    "hearP": "ဂိမ်းကြေညာချက်များသည် ဂိမ်းဖြစ်ရပ်များကို သင့်စက်၏ ကိုယ်ပိုင်အသံများဖြင့် (စနစ်တွင် သင့်ဘာသာစကား အသံရှိလျှင် သင့်ဘာသာစကားဖြင့်) သို့မဟုတ် သင့်မျက်နှာပြင်ဖတ်စနစ် (NVDA၊ JAWS၊ VoiceOver သို့မဟုတ် TalkBack) မှတစ်ဆင့် အသံနှစ်ခု ထပ်မပြောဘဲ အသံထွက် ဖတ်ပြသည်; အသုံးပြုရလွယ်ကူမှု ဝင်းဒိုးတွင် ရွေးချယ်နိုင်သည်။ Android ဖုန်းများတွင် တုန်ခါမှုတိုတစ်ခုက သင့်အလှည့်ကို အမှတ်အသားပြုသည်။ ဂိမ်းအသံများကို အုပ်စု လေးခု — လုပ်ဆောင်ချက်များ၊ ချတ်၊ ကွန်ရက် အသိပေးချက်များနှင့် ဘလိုင်း မြှင့်ခြင်း — ခွဲထားပြီး တစ်ခုချင်း ဖွင့်ပိတ်နိုင်ကာ အသံအတိုးအကျယ် ဆလိုက်ဒါ တစ်ခုတည်း ရှိသည်။",
     "calmH2": "အံ့အားသင့်စရာ နည်းစေရန်",
     "calmP": "သင့်စနစ်က လှုပ်ရှားမှု လျှော့ချရန် တောင်းဆိုသည့်အခါ ကလိုင်းယင့်သည် ၎င်း၏ လှုပ်ရှားသက်ဝင်ပုံများကို လျှော့ပေးသည်။ ခိုးကြည့်ကာကွယ်ရေးသည် သင် မနှိပ်မချင်း သင့်ကိုယ်ပိုင်ဖဲများကို ဝှက်ထားပြီး မတော်တဆ call ကာကွယ်ရေးသည် raise အကြီးတစ်ခုအပြီး ချက်ချင်း Call ခလုတ်ကို ခဏ ပိတ်ထားသဖြင့် ပိုသေးသော call အတွက် ရည်ရွယ်သော နှိပ်ချက်က တိုးထားသော ပမာဏကို မတော်တဆ မပေးမိနိုင်ပါ။",
     "langH2": "သင့်ဘာသာစကားဖြင့်၊ လမ်းပြနှင့်အတူ",
@@ -3366,7 +3366,7 @@ module.exports = {
       ],
       [
         "မျက်နှာပြင်ဖတ်စနစ် (screen reader) ဖြင့် အလုပ်လုပ်သလား။",
-        "အပြည့်အဝ မလုပ်သေးပါ။ အသံထွက်ကြေညာချက်များသည် ဂိမ်းဖြစ်ရပ်များကို အသံထွက် ဖတ်ပြပြီး မီနူးများတွင် တံဆိပ်များ ပါရှိသော်လည်း ပိုကာစားပွဲကိုယ်တိုင်မှာ မြင်ကွင်းအခြေပြု မျက်နှာပြင် ဖြစ်သဖြင့် မျက်နှာပြင်ဖတ်စနစ် တစ်ခုတည်းဖြင့် မကစားနိုင်သေးပါ။"
+        "တစ်စိတ်တစ်ပိုင်းသာ။ ဂိမ်းကြေညာချက်များကို စက်တွင်ပါသော အသံအစား သင့်မျက်နှာပြင်ဖတ်စနစ်သို့ ပို့နိုင်ပြီး မီနူးများတွင် တံဆိပ်များ ပါရှိသော်လည်း ပိုကာစားပွဲကိုယ်တိုင်မှာ မြင်ကွင်းအခြေပြု မျက်နှာပြင် ဖြစ်သဖြင့် မျက်နှာပြင်ဖတ်စနစ် တစ်ခုတည်းဖြင့် မကစားနိုင်သေးပါ။"
       ],
       [
         "အခမဲ့လား။",
@@ -3411,7 +3411,7 @@ module.exports = {
     "padH2": "Spillkontroller og TV-fjernkontroll",
     "padP": "En spillkontroller — Xbox, PlayStation, Switch Pro og de fleste Bluetooth-kontrollere — styrer hele spillet: knapper for hver handling, avtrekkere for å stille inn innsatsen, og en navigasjonsmodus for å bevege seg gjennom skjermene, chatten og menyene. Den vibrerer når det blir din tur. På Android TV og Google TV fungerer fjernkontrollen på samme måte, og fjernkontroller med de fire fargetastene bruker dem til Fold, Check/Call, Bet/Raise og All-In.",
     "hearH2": "Hør og kjenn spillet",
-    "hearP": "Stemmeannonseringer leser spillhendelsene høyt med enhetens egne stemmer, på ditt språk der systemet har en slik stemme. På Android-telefoner markerer en kort vibrasjon turen din. Spillydene er delt i fire grupper — handlinger, chat, nettverksvarsler og blindhøyninger — som kan slås på og av hver for seg, med én volumglidebryter.",
+    "hearP": "Spillannonseringer leser spillhendelsene høyt, enten med enhetens egne stemmer, på ditt språk der systemet har en slik stemme, eller via skjermleseren din (NVDA, JAWS, VoiceOver eller TalkBack) uten at noe blir sagt to ganger; du velger i Tilgjengelighet-vinduet. På Android-telefoner markerer en kort vibrasjon turen din. Spillydene er delt i fire grupper — handlinger, chat, nettverksvarsler og blindhøyninger — som kan slås på og av hver for seg, med én volumglidebryter.",
     "calmH2": "Færre overraskelser",
     "calmP": "Når systemet ditt ber om redusert bevegelse, demper klienten animasjonene sine. Kikkebeskyttelsen holder dine egne kort skjult til du trykker på dem, og vernet mot utilsiktet Call låser Call-knappen et øyeblikk rett etter en stor høyning, slik at et trykk ment for en mindre Call ikke ved et uhell betaler det høynede beløpet.",
     "langH2": "På ditt språk, med en guide",
@@ -3432,7 +3432,7 @@ module.exports = {
       ],
       [
         "Fungerer det med skjermleser?",
-        "Ikke fullt ut ennå. Stemmeannonseringer leser spillhendelsene høyt og menyene har etiketter, men selve pokerbordet er et visuelt grensesnitt og kan ennå ikke spilles med bare en skjermleser."
+        "Delvis. Spillannonseringer kan sendes til skjermleseren din i stedet for den innebygde stemmen, og menyene har etiketter, men selve pokerbordet er et visuelt grensesnitt og kan ennå ikke spilles med bare en skjermleser."
       ],
       [
         "Er det gratis?",
@@ -3477,7 +3477,7 @@ module.exports = {
     "padH2": "गेमप्याड र टिभी रिमोट",
     "padP": "गेम कन्ट्रोलर — Xbox, PlayStation, Switch Pro र अधिकांश Bluetooth प्याड — बाट पूरा खेल खेल्न सकिन्छ: हरेक चालका लागि बटन, बाजी मिलाउन ट्रिगर, र स्क्रिन, च्याट र मेनुहरूमा घुम्न नेभिगेसन मोड। तपाईंको पालो आउँदा यो कम्पन हुन्छ। Android TV र Google TV मा रिमोटले पनि यसरी नै काम गर्छ, र चार रङका की भएका रिमोटले तिनलाई Fold, Check/Call, Bet/Raise र All-In का लागि प्रयोग गर्छन्।",
     "hearH2": "खेल सुन्ने र महसुस गर्ने",
-    "hearP": "आवाज घोषणाले तपाईंको उपकरणकै आवाजमा खेलका घटनाहरू ठूलो स्वरमा पढ्छ, प्रणालीमा तपाईंको भाषाको आवाज भए त्यही भाषामा। Android फोनमा छोटो कम्पनले तपाईंको पालो जनाउँछ। खेलका आवाजहरू चार समूहमा छन् — चाल, च्याट, नेटवर्क सूचना र ब्लाइन्ड वृद्धि — जसलाई छुट्टाछुट्टै खोल्न वा बन्द गर्न सकिन्छ, एउटै भोल्युम स्लाइडरसहित।",
+    "hearP": "खेलका घोषणाहरूले खेलका घटनाहरू ठूलो स्वरमा पढ्छन् — कि त तपाईंको उपकरणकै आवाजमा, प्रणालीमा तपाईंको भाषाको आवाज भए त्यही भाषामा, कि त तपाईंको स्क्रिन रिडर (NVDA, JAWS, VoiceOver वा TalkBack) मार्फत दोहोर्‍याएर नबोली; यो पहुँचयोग्यता विन्डोमा छान्नुहोस्। Android फोनमा छोटो कम्पनले तपाईंको पालो जनाउँछ। खेलका आवाजहरू चार समूहमा छन् — चाल, च्याट, नेटवर्क सूचना र ब्लाइन्ड वृद्धि — जसलाई छुट्टाछुट्टै खोल्न वा बन्द गर्न सकिन्छ, एउटै भोल्युम स्लाइडरसहित।",
     "calmH2": "कम आश्चर्य",
     "calmP": "तपाईंको प्रणालीले कम गति माग्दा क्लाइन्टले आफ्ना एनिमेसन घटाउँछ। Anti-peek ले तपाईंका कार्ड तपाईंले नछोएसम्म लुकाएर राख्छ, र गल्तीको call बाट सुरक्षाले ठूलो raise लगत्तै केही बेर Call बटन रोक्छ, ताकि सानो call का लागि गरिएको छुवाइले गल्तीले बढेको रकम तिर्न नसकोस्।",
     "langH2": "तपाईंको भाषामा, मार्गदर्शकसहित",
@@ -3498,7 +3498,7 @@ module.exports = {
       ],
       [
         "के यो स्क्रिन रिडरसँग चल्छ?",
-        "अहिलेसम्म पूर्ण रूपमा चल्दैन। आवाज घोषणाले खेलका घटनाहरू ठूलो स्वरमा पढ्छ र मेनुहरूमा लेबल छन्, तर पोकर टेबल आफैँ दृश्य इन्टरफेस हो र अझै स्क्रिन रिडरको मात्र भरमा खेल्न सकिँदैन।"
+        "आंशिक रूपमा। खेलका घोषणाहरू अन्तर्निर्मित आवाजको सट्टा तपाईंको स्क्रिन रिडरमा पठाउन सकिन्छ र मेनुहरूमा लेबल छन्, तर पोकर टेबल आफैँ दृश्य इन्टरफेस हो र अझै स्क्रिन रिडरको मात्र भरमा खेल्न सकिँदैन।"
       ],
       [
         "के यो निःशुल्क हो?",
@@ -3543,7 +3543,7 @@ module.exports = {
     "padH2": "Gamepad en tv-afstandsbediening",
     "padP": "Een gamecontroller — Xbox, PlayStation, Switch Pro en de meeste Bluetooth-controllers — speelt het hele spel: knoppen voor elke actie, triggers om de inzet te bepalen, en een navigatiemodus om door de schermen, de chat en de menu’s te gaan. Hij trilt als je aan de beurt bent. Op Android TV en Google TV werkt de afstandsbediening op dezelfde manier, en afstandsbedieningen met de vier gekleurde toetsen gebruiken die voor Fold, Check/Call, Bet/Raise en All-In.",
     "hearH2": "Het spel horen en voelen",
-    "hearP": "Gesproken aankondigingen lezen de spelgebeurtenissen voor met de stemmen van je eigen apparaat, in je eigen taal als het systeem die heeft. Op Android-telefoons markeert een korte trilling je beurt. De spelgeluiden zijn verdeeld in vier groepen — acties, chat, netwerkmeldingen en blindverhogingen — die je apart aan of uit kunt zetten, met één volumeschuif.",
+    "hearP": "Spelaankondigingen lezen de spelgebeurtenissen voor, ofwel met de stemmen van je eigen apparaat, in je eigen taal als het systeem die heeft, ofwel via je schermlezer (NVDA, JAWS, VoiceOver of TalkBack) zonder dat er dubbel gesproken wordt; je kiest in het venster Toegankelijkheid. Op Android-telefoons markeert een korte trilling je beurt. De spelgeluiden zijn verdeeld in vier groepen — acties, chat, netwerkmeldingen en blindverhogingen — die je apart aan of uit kunt zetten, met één volumeschuif.",
     "calmH2": "Minder verrassingen",
     "calmP": "Als je systeem om minder beweging vraagt, tempert de client zijn animaties. De anti-gluurmodus houdt je eigen kaarten verborgen tot je ze aanraakt, en de bescherming tegen een per-ongeluk-Call blokkeert de Call-knop kort na een grote verhoging, zodat een tik bedoeld voor een kleinere Call niet per ongeluk het verhoogde bedrag betaalt.",
     "langH2": "In je eigen taal, met een gids",
@@ -3564,7 +3564,7 @@ module.exports = {
       ],
       [
         "Werkt het met een schermlezer?",
-        "Nog niet volledig. Gesproken aankondigingen lezen de spelgebeurtenissen voor en de menu’s hebben labels, maar de pokertafel zelf is een visuele interface en kan nog niet met alleen een schermlezer worden gespeeld."
+        "Gedeeltelijk. Spelaankondigingen kunnen naar je schermlezer worden gestuurd in plaats van naar de ingebouwde stem, en de menu’s hebben labels, maar de pokertafel zelf is een visuele interface en kan nog niet met alleen een schermlezer worden gespeeld."
       ],
       [
         "Is het gratis?",
@@ -3609,7 +3609,7 @@ module.exports = {
     "padH2": "ਗੇਮਪੈਡ ਅਤੇ ਟੀਵੀ ਰਿਮੋਟ",
     "padP": "ਗੇਮ ਕੰਟਰੋਲਰ — Xbox, PlayStation, Switch Pro ਅਤੇ ਜ਼ਿਆਦਾਤਰ Bluetooth ਪੈਡ — ਨਾਲ ਪੂਰੀ ਖੇਡ ਖੇਡੀ ਜਾ ਸਕਦੀ ਹੈ: ਹਰ ਕਾਰਵਾਈ ਲਈ ਬਟਨ, ਦਾਅ ਤੈਅ ਕਰਨ ਲਈ ਟ੍ਰਿਗਰ, ਅਤੇ ਸਕ੍ਰੀਨਾਂ, ਗੱਲਬਾਤ ਤੇ ਮੀਨੂਆਂ ਵਿੱਚ ਘੁੰਮਣ ਲਈ ਨੈਵੀਗੇਸ਼ਨ ਮੋਡ। ਤੁਹਾਡੀ ਵਾਰੀ ਆਉਣ ’ਤੇ ਇਹ ਵਾਈਬ੍ਰੇਟ ਕਰਦਾ ਹੈ। Android TV ਅਤੇ Google TV ’ਤੇ ਰਿਮੋਟ ਇਸੇ ਤਰ੍ਹਾਂ ਕੰਮ ਕਰਦਾ ਹੈ, ਅਤੇ ਚਾਰ ਰੰਗੀਨ ਕੁੰਜੀਆਂ ਵਾਲੇ ਰਿਮੋਟ ਉਹਨਾਂ ਨੂੰ Fold, Check/Call, Bet/Raise ਅਤੇ All-In ਲਈ ਵਰਤਦੇ ਹਨ।",
     "hearH2": "ਖੇਡ ਨੂੰ ਸੁਣਨਾ ਅਤੇ ਮਹਿਸੂਸ ਕਰਨਾ",
-    "hearP": "ਆਵਾਜ਼ ਐਲਾਨ ਤੁਹਾਡੇ ਯੰਤਰ ਦੀਆਂ ਆਪਣੀਆਂ ਆਵਾਜ਼ਾਂ ਨਾਲ ਖੇਡ ਦੀਆਂ ਘਟਨਾਵਾਂ ਉੱਚੀ ਪੜ੍ਹਦੇ ਹਨ, ਜੇ ਸਿਸਟਮ ਵਿੱਚ ਹੋਵੇ ਤਾਂ ਤੁਹਾਡੀ ਭਾਸ਼ਾ ਵਿੱਚ। Android ਫੋਨਾਂ ’ਤੇ ਇੱਕ ਛੋਟੀ ਵਾਈਬ੍ਰੇਸ਼ਨ ਤੁਹਾਡੀ ਵਾਰੀ ਦੱਸਦੀ ਹੈ। ਖੇਡ ਦੀਆਂ ਆਵਾਜ਼ਾਂ ਚਾਰ ਸਮੂਹਾਂ ਵਿੱਚ ਹਨ — ਕਾਰਵਾਈਆਂ, ਗੱਲਬਾਤ, ਨੈੱਟਵਰਕ ਸੂਚਨਾਵਾਂ ਅਤੇ ਬਲਾਇੰਡ ਵਾਧਾ — ਜਿਨ੍ਹਾਂ ਨੂੰ ਵੱਖ-ਵੱਖ ਚਾਲੂ ਜਾਂ ਬੰਦ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ, ਇੱਕੋ ਵਾਲੀਅਮ ਸਲਾਈਡਰ ਨਾਲ।",
+    "hearP": "ਖੇਡ ਐਲਾਨ ਖੇਡ ਦੀਆਂ ਘਟਨਾਵਾਂ ਉੱਚੀ ਪੜ੍ਹਦੇ ਹਨ, ਜਾਂ ਤਾਂ ਤੁਹਾਡੇ ਯੰਤਰ ਦੀਆਂ ਆਪਣੀਆਂ ਆਵਾਜ਼ਾਂ ਨਾਲ (ਜੇ ਸਿਸਟਮ ਵਿੱਚ ਹੋਵੇ ਤਾਂ ਤੁਹਾਡੀ ਭਾਸ਼ਾ ਵਿੱਚ), ਜਾਂ ਤੁਹਾਡੇ ਸਕ੍ਰੀਨ ਰੀਡਰ (NVDA, JAWS, VoiceOver ਜਾਂ TalkBack) ਰਾਹੀਂ, ਦੋ ਆਵਾਜ਼ਾਂ ਇੱਕੋ ਵੇਲੇ ਬੋਲੇ ਬਿਨਾਂ; ਚੋਣ ਪਹੁੰਚਯੋਗਤਾ ਵਿੰਡੋ ਵਿੱਚ ਕਰੋ। Android ਫੋਨਾਂ ’ਤੇ ਇੱਕ ਛੋਟੀ ਵਾਈਬ੍ਰੇਸ਼ਨ ਤੁਹਾਡੀ ਵਾਰੀ ਦੱਸਦੀ ਹੈ। ਖੇਡ ਦੀਆਂ ਆਵਾਜ਼ਾਂ ਚਾਰ ਸਮੂਹਾਂ ਵਿੱਚ ਹਨ — ਕਾਰਵਾਈਆਂ, ਗੱਲਬਾਤ, ਨੈੱਟਵਰਕ ਸੂਚਨਾਵਾਂ ਅਤੇ ਬਲਾਇੰਡ ਵਾਧਾ — ਜਿਨ੍ਹਾਂ ਨੂੰ ਵੱਖ-ਵੱਖ ਚਾਲੂ ਜਾਂ ਬੰਦ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ, ਇੱਕੋ ਵਾਲੀਅਮ ਸਲਾਈਡਰ ਨਾਲ।",
     "calmH2": "ਘੱਟ ਹੈਰਾਨੀਆਂ",
     "calmP": "ਜਦੋਂ ਤੁਹਾਡਾ ਸਿਸਟਮ ਘੱਟ ਹਿਲਜੁਲ ਮੰਗਦਾ ਹੈ, ਤਾਂ ਕਲਾਇਂਟ ਆਪਣੀਆਂ ਐਨੀਮੇਸ਼ਨਾਂ ਹਲਕੀਆਂ ਕਰ ਦਿੰਦਾ ਹੈ। ਐਂਟੀ-ਪੀਕ ਤੁਹਾਡੇ ਆਪਣੇ ਪੱਤੇ ਉਦੋਂ ਤੱਕ ਲੁਕਾ ਕੇ ਰੱਖਦਾ ਹੈ ਜਦੋਂ ਤੱਕ ਤੁਸੀਂ ਉਹਨਾਂ ਨੂੰ ਟੈਪ ਨਾ ਕਰੋ, ਅਤੇ ਗ਼ਲਤੀ-ਨਾਲ-Call ਗਾਰਡ ਵੱਡੇ ਰੇਜ਼ ਤੋਂ ਤੁਰੰਤ ਬਾਅਦ Call ਬਟਨ ਨੂੰ ਥੋੜ੍ਹੀ ਦੇਰ ਲਈ ਬਲੌਕ ਕਰਦਾ ਹੈ, ਤਾਂ ਜੋ ਛੋਟੇ call ਲਈ ਕੀਤਾ ਟੈਪ ਗ਼ਲਤੀ ਨਾਲ ਵਧੀ ਹੋਈ ਰਕਮ ਨਾ ਭਰ ਦੇਵੇ।",
     "langH2": "ਤੁਹਾਡੀ ਭਾਸ਼ਾ ਵਿੱਚ, ਇੱਕ ਗਾਈਡ ਨਾਲ",
@@ -3630,7 +3630,7 @@ module.exports = {
       ],
       [
         "ਕੀ ਇਹ ਸਕ੍ਰੀਨ ਰੀਡਰ ਨਾਲ ਕੰਮ ਕਰਦਾ ਹੈ?",
-        "ਅਜੇ ਪੂਰੀ ਤਰ੍ਹਾਂ ਨਹੀਂ। ਆਵਾਜ਼ ਐਲਾਨ ਖੇਡ ਦੀਆਂ ਘਟਨਾਵਾਂ ਉੱਚੀ ਪੜ੍ਹਦੇ ਹਨ ਅਤੇ ਮੀਨੂਆਂ ’ਤੇ ਲੇਬਲ ਹਨ, ਪਰ ਪੋਕਰ ਟੇਬਲ ਆਪਣੇ ਆਪ ਵਿੱਚ ਇੱਕ ਦ੍ਰਿਸ਼ਟੀਗਤ ਇੰਟਰਫੇਸ ਹੈ ਅਤੇ ਅਜੇ ਸਿਰਫ਼ ਸਕ੍ਰੀਨ ਰੀਡਰ ਨਾਲ ਨਹੀਂ ਖੇਡਿਆ ਜਾ ਸਕਦਾ।"
+        "ਅੰਸ਼ਕ ਤੌਰ ’ਤੇ। ਖੇਡ ਐਲਾਨ ਬਿਲਟ-ਇਨ ਆਵਾਜ਼ ਦੀ ਥਾਂ ਤੁਹਾਡੇ ਸਕ੍ਰੀਨ ਰੀਡਰ ਨੂੰ ਭੇਜੇ ਜਾ ਸਕਦੇ ਹਨ ਅਤੇ ਮੀਨੂਆਂ ’ਤੇ ਲੇਬਲ ਹਨ, ਪਰ ਪੋਕਰ ਟੇਬਲ ਆਪਣੇ ਆਪ ਵਿੱਚ ਇੱਕ ਦ੍ਰਿਸ਼ਟੀਗਤ ਇੰਟਰਫੇਸ ਹੈ ਅਤੇ ਅਜੇ ਸਿਰਫ਼ ਸਕ੍ਰੀਨ ਰੀਡਰ ਨਾਲ ਨਹੀਂ ਖੇਡਿਆ ਜਾ ਸਕਦਾ।"
       ],
       [
         "ਕੀ ਇਹ ਮੁਫ਼ਤ ਹੈ?",
@@ -3675,7 +3675,7 @@ module.exports = {
     "padH2": "Pad i pilot TV",
     "padP": "Kontroler do gier — Xbox, PlayStation, Switch Pro i większość padów Bluetooth — obsługuje całą grę: przyciski do każdej akcji, spusty do ustawiania stawki i tryb nawigacji do poruszania się po ekranach, czacie i menu. Wibruje, gdy nadchodzi twoja kolej. Na Android TV i Google TV pilot działa tak samo, a piloty z czterema kolorowymi przyciskami używają ich do Fold, Check/Call, Bet/Raise i All-In.",
     "hearH2": "Słyszeć i czuć grę",
-    "hearP": "Zapowiedzi głosowe czytają na głos wydarzenia gry głosami twojego urządzenia, w twoim języku, jeśli system go ma. Na telefonach z Androidem krótka wibracja oznacza twoją kolej. Dźwięki gry dzielą się na cztery grupy — akcje, czat, komunikaty sieciowe i podnoszenie ciemnych — które można włączać i wyłączać osobno, z jednym suwakiem głośności.",
+    "hearP": "Zapowiedzi gry czytają na głos wydarzenia gry głosami twojego urządzenia, w twoim języku, jeśli system go ma, albo przez twój czytnik ekranu (NVDA, JAWS, VoiceOver lub TalkBack), bez mówienia dwa razy; wybierasz to w oknie Ułatwienia dostępu. Na telefonach z Androidem krótka wibracja oznacza twoją kolej. Dźwięki gry dzielą się na cztery grupy — akcje, czat, komunikaty sieciowe i podnoszenie ciemnych — które można włączać i wyłączać osobno, z jednym suwakiem głośności.",
     "calmH2": "Mniej niespodzianek",
     "calmP": "Gdy system prosi o ograniczenie ruchu, klient wycisza swoje animacje. Tryb antypodglądowy trzyma twoje karty zakryte, dopóki ich nie dotkniesz, a ochrona przed przypadkowym Call na chwilę blokuje przycisk Call tuż po dużym przebiciu, żeby dotknięcie przeznaczone dla mniejszego Call nie zapłaciło przez pomyłkę przebitej kwoty.",
     "langH2": "W twoim języku, z przewodnikiem",
@@ -3696,7 +3696,7 @@ module.exports = {
       ],
       [
         "Czy działa z czytnikiem ekranu?",
-        "Jeszcze nie w pełni. Zapowiedzi głosowe czytają na głos wydarzenia gry, a menu mają etykiety, ale sam stół pokerowy jest interfejsem wizualnym i nie da się jeszcze przy nim grać wyłącznie z czytnikiem ekranu."
+        "Częściowo. Zapowiedzi gry można kierować do twojego czytnika ekranu zamiast do wbudowanego głosu, a menu mają etykiety, ale sam stół pokerowy jest interfejsem wizualnym i nie da się jeszcze przy nim grać wyłącznie z czytnikiem ekranu."
       ],
       [
         "Czy to jest darmowe?",
@@ -3741,7 +3741,7 @@ module.exports = {
     "padH2": "Controle e controle remoto da TV",
     "padP": "Um controle de jogo — Xbox, PlayStation, Switch Pro e a maioria dos controles Bluetooth — joga a partida inteira: botões para cada ação, gatilhos para definir a aposta e um modo de navegação para percorrer as telas, o chat e os menus. Ele vibra quando chega a sua vez. No Android TV e no Google TV o controle remoto funciona do mesmo jeito, e os controles com as quatro teclas coloridas as usam para Fold, Check/Call, Bet/Raise e All-In.",
     "hearH2": "Ouvir e sentir o jogo",
-    "hearP": "Os anúncios de voz leem em voz alta os eventos do jogo com as vozes do próprio dispositivo, no seu idioma quando o sistema tem uma. Em celulares Android, uma vibração curta marca a sua vez. Os sons do jogo vêm em quatro grupos — ações, chat, avisos de rede e aumentos dos blinds — que podem ser ligados ou desligados separadamente, com um único controle de volume.",
+    "hearP": "Os anúncios do jogo leem em voz alta os eventos da partida, seja com as vozes do próprio dispositivo, no seu idioma quando o sistema tem uma, seja pelo seu leitor de tela (NVDA, JAWS, VoiceOver ou TalkBack), sem falar duas vezes; a escolha é feita na janela Acessibilidade. Em celulares Android, uma vibração curta marca a sua vez. Os sons do jogo vêm em quatro grupos — ações, chat, avisos de rede e aumentos dos blinds — que podem ser ligados ou desligados separadamente, com um único controle de volume.",
     "calmH2": "Menos surpresas",
     "calmP": "Quando o sistema pede movimento reduzido, o cliente suaviza as animações. A antiespiada mantém suas cartas escondidas até você tocá-las, e a guarda contra Call acidental bloqueia por um instante o botão Call logo após um aumento grande, para que um toque destinado a um Call menor não possa pagar por engano o valor aumentado.",
     "langH2": "No seu idioma, com um guia",
@@ -3762,7 +3762,7 @@ module.exports = {
       ],
       [
         "Funciona com leitor de tela?",
-        "Ainda não totalmente. Os anúncios de voz leem em voz alta os eventos do jogo e os menus têm rótulos, mas a mesa de pôquer em si é uma interface visual e ainda não pode ser jogada só com um leitor de tela."
+        "Em parte. Os anúncios do jogo podem ser enviados ao seu leitor de tela em vez da voz integrada, e os menus têm rótulos, mas a mesa de pôquer em si é uma interface visual e ainda não pode ser jogada só com um leitor de tela."
       ],
       [
         "É grátis?",
@@ -3807,7 +3807,7 @@ module.exports = {
     "padH2": "Comando de jogo e comando da TV",
     "padP": "Um comando de jogo — Xbox, PlayStation, Switch Pro e a maioria dos comandos Bluetooth — joga a partida inteira: botões para cada ação, gatilhos para definir a aposta e um modo de navegação para percorrer os ecrãs, o chat e os menus. Vibra quando chega a sua vez. No Android TV e no Google TV o comando da TV funciona da mesma forma, e os comandos com as quatro teclas coloridas usam-nas para Fold, Check/Call, Bet/Raise e All-In.",
     "hearH2": "Ouvir e sentir o jogo",
-    "hearP": "Os anúncios de voz leem em voz alta os eventos do jogo com as vozes do próprio dispositivo, na sua língua quando o sistema a tem. Nos telemóveis Android, uma vibração curta assinala a sua vez. Os sons do jogo dividem-se em quatro grupos — ações, chat, avisos de rede e subidas de blinds — que se ligam ou desligam em separado, com um único cursor de volume.",
+    "hearP": "Os anúncios do jogo leem em voz alta os eventos do jogo, seja com as vozes do próprio dispositivo, na sua língua quando o sistema a tem, seja através do seu leitor de ecrã (NVDA, JAWS, VoiceOver ou TalkBack) sem falar duas vezes; a escolha faz-se na janela Acessibilidade. Nos telemóveis Android, uma vibração curta assinala a sua vez. Os sons do jogo dividem-se em quatro grupos — ações, chat, avisos de rede e subidas de blinds — que se ligam ou desligam em separado, com um único cursor de volume.",
     "calmH2": "Menos surpresas",
     "calmP": "Quando o sistema pede movimento reduzido, o cliente suaviza as animações. A antiespreitadela mantém as suas cartas tapadas até lhes tocar, e a guarda contra Call acidental bloqueia por instantes o botão Call logo após uma grande subida, para que um toque destinado a um Call mais pequeno não pague por engano o montante subido.",
     "langH2": "Na sua língua, com um guia",
@@ -3828,7 +3828,7 @@ module.exports = {
       ],
       [
         "Funciona com um leitor de ecrã?",
-        "Ainda não totalmente. Os anúncios de voz leem em voz alta os eventos do jogo e os menus têm etiquetas, mas a mesa de póquer em si é uma interface visual e ainda não pode ser jogada só com um leitor de ecrã."
+        "Em parte. Os anúncios do jogo podem ser enviados para o seu leitor de ecrã em vez da voz integrada, e os menus têm etiquetas, mas a mesa de póquer em si é uma interface visual e ainda não pode ser jogada só com um leitor de ecrã."
       ],
       [
         "É grátis?",
@@ -3873,7 +3873,7 @@ module.exports = {
     "padH2": "Gamepad și telecomandă TV",
     "padP": "Un controler de joc — Xbox, PlayStation, Switch Pro și majoritatea gamepadurilor Bluetooth — joacă tot jocul: butoane pentru fiecare acțiune, trăgaciuri pentru a stabili miza și un mod de navigare pentru a te deplasa prin ecrane, chat și meniuri. Vibrează când îți vine rândul. Pe Android TV și Google TV telecomanda funcționează la fel, iar telecomenzile cu cele patru taste colorate le folosesc pentru Fold, Check/Call, Bet/Raise și All-In.",
     "hearH2": "Să auzi și să simți jocul",
-    "hearP": "Anunțurile vocale citesc cu voce tare evenimentele jocului cu vocile propriului dispozitiv, în limba ta acolo unde sistemul are una. Pe telefoanele Android, o vibrație scurtă îți marchează rândul. Sunetele jocului sunt împărțite în patru grupuri — acțiuni, chat, notificări de rețea și creșterea blindurilor — care pot fi pornite sau oprite separat, cu un singur cursor de volum.",
+    "hearP": "Anunțurile de joc citesc cu voce tare evenimentele jocului, fie cu vocile propriului dispozitiv, în limba ta acolo unde sistemul are una, fie prin cititorul tău de ecran (NVDA, JAWS, VoiceOver sau TalkBack), fără ca vocile să se suprapună; alegerea se face în fereastra Accesibilitate. Pe telefoanele Android, o vibrație scurtă îți marchează rândul. Sunetele jocului sunt împărțite în patru grupuri — acțiuni, chat, notificări de rețea și creșterea blindurilor — care pot fi pornite sau oprite separat, cu un singur cursor de volum.",
     "calmH2": "Mai puține surprize",
     "calmP": "Când sistemul tău cere mișcare redusă, clientul își atenuează animațiile. Protecția anti-tras cu ochiul îți ține cărțile acoperite până le atingi, iar protecția anti-Call accidental blochează pentru o clipă butonul Call imediat după o mărire mare, ca o atingere destinată unui Call mai mic să nu poată plăti din greșeală suma mărită.",
     "langH2": "În limba ta, cu un ghid",
@@ -3894,7 +3894,7 @@ module.exports = {
       ],
       [
         "Funcționează cu un cititor de ecran?",
-        "Nu complet, încă. Anunțurile vocale citesc cu voce tare evenimentele jocului, iar meniurile au etichete, dar masa de poker în sine este o interfață vizuală și încă nu poate fi jucată doar cu un cititor de ecran."
+        "Parțial. Anunțurile de joc pot fi trimise cititorului tău de ecran în locul vocii integrate, iar meniurile au etichete, dar masa de poker în sine este o interfață vizuală și încă nu poate fi jucată doar cu un cititor de ecran."
       ],
       [
         "Este gratuit?",
@@ -3939,7 +3939,7 @@ module.exports = {
     "padH2": "Геймпад и пульт ТВ",
     "padP": "Игровой контроллер — Xbox, PlayStation, Switch Pro и большинство Bluetooth-геймпадов — управляет всей игрой: кнопки для каждого действия, триггеры для выбора ставки и режим навигации для перемещения по экранам, чату и меню. Он вибрирует, когда наступает ваш ход. На Android TV и Google TV пульт работает так же, а пульты с четырьмя цветными кнопками используют их для Fold, Check/Call, Bet/Raise и All-In.",
     "hearH2": "Слышать и чувствовать игру",
-    "hearP": "Голосовые объявления читают вслух события игры голосами вашего устройства — на вашем языке, если он есть в системе. На телефонах Android короткая вибрация отмечает ваш ход. Звуки игры делятся на четыре группы — действия, чат, сетевые уведомления и повышение блайндов, — которые включаются и выключаются отдельно, с одним ползунком громкости.",
+    "hearP": "Игровые объявления читают вслух события игры — голосами вашего устройства, на вашем языке, если он есть в системе, или через ваш скринридер (NVDA, JAWS, VoiceOver или TalkBack), без двойного озвучивания; выбор делается в окне «Специальные возможности». На телефонах Android короткая вибрация отмечает ваш ход. Звуки игры делятся на четыре группы — действия, чат, сетевые уведомления и повышение блайндов, — которые включаются и выключаются отдельно, с одним ползунком громкости.",
     "calmH2": "Меньше неожиданностей",
     "calmP": "Когда система просит уменьшить движение, клиент приглушает анимации. Защита от подглядывания держит ваши карты закрытыми, пока вы их не коснётесь, а защита от случайного Call ненадолго блокирует кнопку Call сразу после крупного повышения, чтобы касание, предназначенное для меньшего Call, не оплатило по ошибке повышенную сумму.",
     "langH2": "На вашем языке, с гидом",
@@ -3960,7 +3960,7 @@ module.exports = {
       ],
       [
         "Работает ли он со скринридером?",
-        "Пока не полностью. Голосовые объявления читают события игры вслух, а у меню есть подписи, но сам покерный стол — визуальный интерфейс, и играть за ним только со скринридером пока нельзя."
+        "Частично. Игровые объявления можно направлять в ваш скринридер вместо встроенного голоса, а у меню есть подписи, но сам покерный стол — визуальный интерфейс, и играть за ним только со скринридером пока нельзя."
       ],
       [
         "Это бесплатно?",
@@ -4005,7 +4005,7 @@ module.exports = {
     "padH2": "ගේම්පෑඩ් සහ TV දුරස්ථ පාලකය",
     "padP": "ක්‍රීඩා පාලකයකින් — Xbox, PlayStation, Switch Pro සහ බොහෝ Bluetooth පෑඩ් — සම්පූර්ණ ක්‍රීඩාවම ක්‍රීඩා කළ හැක: සෑම ක්‍රියාවකටම බොත්තම්, ඔට්ටුව සැකසීමට ට්‍රිගර්, සහ තිර, චැට් සහ මෙනු හරහා ගමන් කිරීමට සංචලන ප්‍රකාරයක්. ඔබේ වාරය පැමිණි විට එය කම්පනය වේ. Android TV සහ Google TV මත දුරස්ථ පාලකයද එලෙසම ක්‍රියා කරන අතර, වර්ණ යතුරු හතර ඇති දුරස්ථ පාලක ඒවා Fold, Check/Call, Bet/Raise සහ All-In සඳහා භාවිත කරයි.",
     "hearH2": "ක්‍රීඩාව ඇසීම සහ දැනීම",
-    "hearP": "හඬ නිවේදන ඔබේ උපාංගයේම හඬවලින් ක්‍රීඩා සිදුවීම් හඬ නගා කියවයි, පද්ධතියේ ඔබේ භාෂාවෙන් හඬක් ඇත්නම් එම භාෂාවෙන්. Android දුරකථනවල කෙටි කම්පනයක් ඔබේ වාරය සලකුණු කරයි. ක්‍රීඩා ශබ්ද කාණ්ඩ හතරකට බෙදී ඇත — ක්‍රියා, චැට්, ජාල දැනුම්දීම් සහ බ්ලයින්ඩ් ඉහළ නැංවීම් — ඒවා වෙන වෙනම සක්‍රිය හෝ අක්‍රිය කළ හැකි අතර, එක් හඬ පරිමා ස්ලයිඩරයක් ඇත.",
+    "hearP": "ක්‍රීඩා නිවේදන ක්‍රීඩා සිදුවීම් හඬ නගා කියවයි — ඔබේ උපාංගයේම හඬවලින්, පද්ධතියේ ඔබේ භාෂාවෙන් හඬක් ඇත්නම් එම භාෂාවෙන්, නැතහොත් ඔබේ තිර කියවනය (NVDA, JAWS, VoiceOver හෝ TalkBack) හරහා දෙවරක් කතා නොකර; ප්‍රවේශ්‍යතාව කවුළුවේ තෝරන්න. Android දුරකථනවල කෙටි කම්පනයක් ඔබේ වාරය සලකුණු කරයි. ක්‍රීඩා ශබ්ද කාණ්ඩ හතරකට බෙදී ඇත — ක්‍රියා, චැට්, ජාල දැනුම්දීම් සහ බ්ලයින්ඩ් ඉහළ නැංවීම් — ඒවා වෙන වෙනම සක්‍රිය හෝ අක්‍රිය කළ හැකි අතර, එක් හඬ පරිමා ස්ලයිඩරයක් ඇත.",
     "calmH2": "අනපේක්ෂිත දේ අඩුවෙන්",
     "calmP": "ඔබේ පද්ධතිය අඩු චලනයක් ඉල්ලන විට, සේවාලාභියා එහි සජීවිකරණ මෘදු කරයි. එබී බැලීම් විරෝධී ආරක්ෂාව ඔබ තට්ටු කරන තුරු ඔබේම කාඩ් සඟවා තබයි, සහ අහම්බෙන් Call වීමේ ආරක්ෂකය විශාල Raise එකකට පසු වහාම Call බොත්තම මොහොතකට අවහිර කරයි; එවිට කුඩා Call එකක් සඳහා කළ තට්ටුවකින් වැඩි කළ මුදල අහම්බෙන් ගෙවිය නොහැක.",
     "langH2": "ඔබේ භාෂාවෙන්, මඟපෙන්වන්නෙකු සමඟ",
@@ -4026,7 +4026,7 @@ module.exports = {
       ],
       [
         "එය තිර කියවනයක් සමඟ ක්‍රියා කරයිද?",
-        "තවමත් සම්පූර්ණයෙන් නොවේ. හඬ නිවේදන ක්‍රීඩා සිදුවීම් හඬ නගා කියවන අතර මෙනුවලට ලේබල ඇත, නමුත් පෝකර් මේසයම දෘශ්‍ය අතුරුමුහුණතක් වන අතර තවමත් තිර කියවනයකින් පමණක් ක්‍රීඩා කළ නොහැක."
+        "අර්ධ වශයෙන්. ක්‍රීඩා නිවේදන අන්තර්ගත හඬ වෙනුවට ඔබේ තිර කියවනය වෙත යැවිය හැකි අතර මෙනුවලට ලේබල ඇත, නමුත් පෝකර් මේසයම දෘශ්‍ය අතුරුමුහුණතක් වන අතර තවමත් තිර කියවනයකින් පමණක් ක්‍රීඩා කළ නොහැක."
       ],
       [
         "එය නොමිලේද?",
@@ -4071,7 +4071,7 @@ module.exports = {
     "padH2": "Gamepad a diaľkový ovládač TV",
     "padP": "Herný ovládač — Xbox, PlayStation, Switch Pro a väčšina Bluetooth ovládačov — zvládne celú hru: tlačidlá pre každú akciu, spúšte na nastavenie stávky a režim Navigácia na pohyb po obrazovkách, chate a menu. Keď prídete na ťah, zavibruje. Na Android TV a Google TV funguje diaľkový ovládač rovnako a ovládače so štyrmi farebnými tlačidlami ich používajú na Fold, Check/Call, Bet/Raise a All-In.",
     "hearH2": "Počuť a cítiť hru",
-    "hearP": "Hlasové oznámenia predčítavajú herné udalosti hlasmi vášho zariadenia, vo vašom jazyku, ak ho systém má. Na telefónoch s Androidom označí váš ťah krátka vibrácia. Herné zvuky sú v štyroch skupinách — akcie, chat, sieťové upozornenia a zvyšovanie blindov —, ktoré sa dajú zapnúť alebo vypnúť samostatne, s jedným posuvníkom hlasitosti.",
+    "hearP": "Herné oznámenia predčítavajú herné udalosti buď hlasmi vášho zariadenia, vo vašom jazyku, ak ho systém má, alebo prostredníctvom vašej čítačky obrazovky (NVDA, JAWS, VoiceOver či TalkBack), pričom nič neodznie dvakrát; vyberiete si v okne Prístupnosť. Na telefónoch s Androidom označí váš ťah krátka vibrácia. Herné zvuky sú v štyroch skupinách — akcie, chat, sieťové upozornenia a zvyšovanie blindov —, ktoré sa dajú zapnúť alebo vypnúť samostatne, s jedným posuvníkom hlasitosti.",
     "calmH2": "Menej prekvapení",
     "calmP": "Keď váš systém žiada obmedzený pohyb, klient stlmí svoje animácie. Ochrana proti nakúkaniu drží vaše karty zakryté, kým sa ich nedotknete, a poistka proti náhodnému Callu krátko zablokuje tlačidlo Call hneď po veľkom navýšení, aby ťuknutie mierené na menší Call nemohlo omylom zaplatiť navýšenú sumu.",
     "langH2": "Vo vašom jazyku, so sprievodcom",
@@ -4092,7 +4092,7 @@ module.exports = {
       ],
       [
         "Funguje to s čítačkou obrazovky?",
-        "Zatiaľ nie úplne. Hlasové oznámenia predčítavajú herné udalosti a menu majú popisy, ale samotný pokrový stôl je vizuálne rozhranie a zatiaľ sa nedá hrať iba s čítačkou obrazovky."
+        "Čiastočne. Herné oznámenia možno namiesto vstavaného hlasu posielať do vašej čítačky obrazovky a menu majú popisy, ale samotný pokrový stôl je vizuálne rozhranie a zatiaľ sa nedá hrať iba s čítačkou obrazovky."
       ],
       [
         "Je to zadarmo?",
@@ -4137,7 +4137,7 @@ module.exports = {
     "padH2": "Igralni plošček in daljinski upravljalnik TV",
     "padP": "Z igralnim ploščkom — Xbox, PlayStation, Switch Pro in večina ploščkov Bluetooth — odigraš celotno igro: gumbi za vsako potezo, sprožilci za nastavitev stave in način Navigacija za premikanje po zaslonih, klepetu in menijih. Ko pride tvoja poteza, zavibrira. Na Android TV in Google TV daljinski upravljalnik deluje enako, upravljalniki s štirimi barvnimi tipkami pa jih uporabijo za Fold, Check/Call, Bet/Raise in All-In.",
     "hearH2": "Slišati in čutiti igro",
-    "hearP": "Glasovna obvestila na glas preberejo dogodke igre z lastnimi glasovi tvoje naprave, v tvojem jeziku, če ga sistem ima. Na telefonih Android kratko vibriranje označi tvojo potezo. Zvoki igre so v štirih skupinah — poteze, klepet, omrežna obvestila in zvišanja blindov — ki jih lahko ločeno vklopiš ali izklopiš, z enim drsnikom za glasnost.",
+    "hearP": "Obvestila igre na glas preberejo dogodke igre, bodisi z lastnimi glasovi tvoje naprave, v tvojem jeziku, če ga sistem ima, bodisi prek tvojega bralnika zaslona (NVDA, JAWS, VoiceOver ali TalkBack), ne da bi se glasova prekrivala; izbereš v oknu Dostopnost. Na telefonih Android kratko vibriranje označi tvojo potezo. Zvoki igre so v štirih skupinah — poteze, klepet, omrežna obvestila in zvišanja blindov — ki jih lahko ločeno vklopiš ali izklopiš, z enim drsnikom za glasnost.",
     "calmH2": "Manj presenečenj",
     "calmP": "Ko tvoj sistem zahteva manj gibanja, odjemalec umiri svoje animacije. Zaščita pred pokukanjem skrije tvoje karte, dokler jih ne tapneš, zaščita pred nenamernim klicem pa za kratek čas blokira gumb Call takoj po veliki zvišani stavi, da tap, namenjen manjšemu klicu, po pomoti ne plača zvišanega zneska.",
     "langH2": "V tvojem jeziku, z vodnikom",
@@ -4158,7 +4158,7 @@ module.exports = {
       ],
       [
         "Ali deluje z bralnikom zaslona?",
-        "Še ne v celoti. Glasovna obvestila na glas preberejo dogodke igre in meniji imajo oznake, vendar je sama poker miza vizualni vmesnik in je še ni mogoče igrati samo z bralnikom zaslona."
+        "Delno. Obvestila igre lahko namesto vgrajenemu glasu pošlješ svojemu bralniku zaslona in meniji imajo oznake, vendar je sama poker miza vizualni vmesnik in je še ni mogoče igrati samo z bralnikom zaslona."
       ],
       [
         "Ali je brezplačno?",
@@ -4203,7 +4203,7 @@ module.exports = {
     "padH2": "Kontrolleri i lojës dhe telekomanda e TV-së",
     "padP": "Një kontroller loje — Xbox, PlayStation, Switch Pro dhe shumica e kontrollerëve Bluetooth — luan gjithë lojën: butona për çdo veprim, këmbëza për të caktuar bastin, dhe një mënyrë navigimi për të lëvizur nëpër ekrane, bisedë dhe meny. Dridhet kur të vjen radha. Në Android TV dhe Google TV telekomanda punon njësoj, dhe telekomandat me katër tastet me ngjyra i përdorin ato për Fold, Check/Call, Bet/Raise dhe All-In.",
     "hearH2": "Ta dëgjosh dhe ta ndiesh lojën",
-    "hearP": "Njoftimet me zë i lexojnë me zë ngjarjet e lojës me zërat e vetë pajisjes tënde, në gjuhën tënde kur sistemi e ka. Në telefonat Android një vibrim i shkurtër shënon radhën tënde. Tingujt e lojës ndahen në katër grupe — veprimet, biseda, njoftimet e rrjetit dhe rritjet e blindeve — që aktivizohen ose çaktivizohen veçmas, me një rrëshqitës të vetëm volumi.",
+    "hearP": "Njoftimet e lojës i lexojnë me zë ngjarjet e lojës, ose me zërat e vetë pajisjes tënde, në gjuhën tënde kur sistemi e ka, ose përmes lexuesit tënd të ekranit (NVDA, JAWS, VoiceOver ose TalkBack) pa folur dy herë; zgjedhja bëhet te dritarja Aksesueshmëria. Në telefonat Android një vibrim i shkurtër shënon radhën tënde. Tingujt e lojës ndahen në katër grupe — veprimet, biseda, njoftimet e rrjetit dhe rritjet e blindeve — që aktivizohen ose çaktivizohen veçmas, me një rrëshqitës të vetëm volumi.",
     "calmH2": "Më pak befasi",
     "calmP": "Kur sistemi yt kërkon lëvizje të reduktuar, klienti i zbut animacionet e veta. Mbrojtja kundër vëzhgimit i mban letrat e tua të fshehta derisa t’i prekësh, dhe mbrojtja e call-it aksidental bllokon shkurtimisht butonin Call menjëherë pas një rritjeje të madhe, që një prekje e menduar për një call më të vogël të mos paguajë gabimisht shumën e rritur.",
     "langH2": "Në gjuhën tënde, me një udhërrëfyes",
@@ -4224,7 +4224,7 @@ module.exports = {
       ],
       [
         "A funksionon me lexues ekrani?",
-        "Jo plotësisht ende. Njoftimet me zë i lexojnë me zë ngjarjet e lojës dhe menytë kanë etiketa, por vetë tavolina e pokerit është një ndërfaqe vizuale dhe ende nuk mund të luhet vetëm me një lexues ekrani."
+        "Pjesërisht. Njoftimet e lojës mund të dërgohen te lexuesi yt i ekranit në vend të zërit të integruar, dhe menytë kanë etiketa, por vetë tavolina e pokerit është një ndërfaqe vizuale dhe ende nuk mund të luhet vetëm me një lexues ekrani."
       ],
       [
         "A është falas?",
@@ -4269,7 +4269,7 @@ module.exports = {
     "padH2": "Гејмпед и ТВ даљински",
     "padP": "Гејмпедом — Xbox, PlayStation, Switch Pro и већина Bluetooth гејмпедова — игра се цела игра: дугмад за сваку радњу, окидачи за подешавање улога и режим навигације за кретање кроз екране, ћаскање и меније. Завибрира када дођете на потез. На Android TV и Google TV даљински ради на исти начин, а даљински са четири тастера у боји користе их за Fold, Check/Call, Bet/Raise и All-In.",
     "hearH2": "Чути и осетити игру",
-    "hearP": "Гласовне најаве наглас читају догађаје у игри гласовима вашег уређаја, на вашем језику где га систем има. На Android телефонима кратка вибрација означава ваш потез. Звуци игре подељени су у четири групе — радње, ћаскање, мрежна обавештења и раст блајндова — које се могу засебно укључити или искључити, уз један клизач за јачину звука.",
+    "hearP": "Најаве игре наглас читају догађаје у игри, било гласовима вашег уређаја, на вашем језику где га систем има, било преко вашег читача екрана (NVDA, JAWS, VoiceOver или TalkBack), без двоструког изговарања; бирате у прозору Приступачност. На Android телефонима кратка вибрација означава ваш потез. Звуци игре подељени су у четири групе — радње, ћаскање, мрежна обавештења и раст блајндова — које се могу засебно укључити или искључити, уз један клизач за јачину звука.",
     "calmH2": "Мање изненађења",
     "calmP": "Када систем тражи смањено кретање, клијент ублажава своје анимације. Заштита од вирења држи ваше карте затвореним док их не додирнете, а заштита од случајног Call-а накратко закључава дугме Call одмах после великог повишења, тако да додир намењен мањем Call-у не може грешком да плати повишени износ.",
     "langH2": "На вашем језику, уз водича",
@@ -4290,7 +4290,7 @@ module.exports = {
       ],
       [
         "Да ли ради са читачем екрана?",
-        "Још не у потпуности. Гласовне најаве наглас читају догађаје у игри и менији имају ознаке, али сам покер сто је визуелни интерфејс и још се не може играти само уз читач екрана."
+        "Делимично. Најаве игре могу да се шаљу вашем читачу екрана уместо уграђеном гласу, а менији имају ознаке, али сам покер сто је визуелни интерфејс и још се не може играти само уз читач екрана."
       ],
       [
         "Да ли је бесплатно?",
@@ -4335,7 +4335,7 @@ module.exports = {
     "padH2": "Handkontroll och TV-fjärrkontroll",
     "padP": "En handkontroll — Xbox, PlayStation, Switch Pro och de flesta Bluetooth-kontroller — spelar hela spelet: knappar för varje handling, avtryckare för att ställa in insatsen och ett navigeringsläge för att röra dig mellan skärmarna, chatten och menyerna. Den vibrerar när det blir din tur. På Android TV och Google TV fungerar fjärrkontrollen på samma sätt, och fjärrkontroller med de fyra färgknapparna använder dem för Fold, Check/Call, Bet/Raise och All-In.",
     "hearH2": "Höra och känna spelet",
-    "hearP": "Röstmeddelanden läser upp spelhändelserna med enhetens egna röster, på ditt språk om systemet har en sådan röst. På Android-telefoner markerar en kort vibration din tur. Spelljuden är indelade i fyra grupper — handlingar, chatt, nätverksaviseringar och mörkhöjningar — som kan slås på eller av var för sig, med ett enda volymreglage.",
+    "hearP": "Spelmeddelanden läser upp spelhändelserna, antingen med enhetens egna röster, på ditt språk om systemet har en sådan röst, eller via din skärmläsare (NVDA, JAWS, VoiceOver eller TalkBack) utan att något sägs två gånger; du väljer i fönstret Tillgänglighet. På Android-telefoner markerar en kort vibration din tur. Spelljuden är indelade i fyra grupper — handlingar, chatt, nätverksaviseringar och mörkhöjningar — som kan slås på eller av var för sig, med ett enda volymreglage.",
     "calmH2": "Färre överraskningar",
     "calmP": "När systemet ber om minskad rörelse tonar klienten ner sina animationer. Tjuvkiksskyddet håller dina egna kort dolda tills du trycker på dem, och skyddet mot oavsiktlig Call låser Call-knappen ett kort ögonblick direkt efter en stor höjning, så att en tryckning avsedd för en mindre Call inte råkar betala det höjda beloppet.",
     "langH2": "På ditt språk, med en guide",
@@ -4356,7 +4356,7 @@ module.exports = {
       ],
       [
         "Fungerar det med en skärmläsare?",
-        "Inte fullt ut ännu. Röstmeddelanden läser upp spelhändelserna och menyerna har etiketter, men själva pokerbordet är ett visuellt gränssnitt och kan ännu inte spelas med enbart en skärmläsare."
+        "Delvis. Spelmeddelanden kan skickas till din skärmläsare i stället för till den inbyggda rösten, och menyerna har etiketter, men själva pokerbordet är ett visuellt gränssnitt och kan ännu inte spelas med enbart en skärmläsare."
       ],
       [
         "Är det gratis?",
@@ -4401,7 +4401,7 @@ module.exports = {
     "padH2": "Kidhibiti cha mchezo na rimoti ya TV",
     "padP": "Kidhibiti cha mchezo — Xbox, PlayStation, Switch Pro na vidhibiti vingi vya Bluetooth — huendesha mchezo mzima: vitufe kwa kila hatua, vifyatulio vya kuweka dau, na hali ya uelekezaji ya kusogea kwenye skrini, chati na menyu. Hutetemeka zamu yako inapofika. Kwenye Android TV na Google TV rimoti hufanya kazi kwa njia ileile, na rimoti zenye vitufe vinne vya rangi huvitumia kwa Fold, Check/Call, Bet/Raise na All-In.",
     "hearH2": "Kuusikia na kuuhisi mchezo",
-    "hearP": "Matangazo ya sauti husoma kwa sauti matukio ya mchezo kwa sauti za kifaa chako chenyewe, kwa lugha yako pale mfumo una sauti ya lugha hiyo. Kwenye simu za Android, mtetemo mfupi huashiria zamu yako. Sauti za mchezo ziko katika makundi manne — hatua, chati, taarifa za mtandao na kupanda kwa dau za kulazimishwa — yanayoweza kuwashwa au kuzimwa kila moja peke yake, kwa kitelezi kimoja cha sauti.",
+    "hearP": "Matangazo ya mchezo husoma kwa sauti matukio ya mchezo, ama kwa sauti za kifaa chako chenyewe, kwa lugha yako pale mfumo una sauti ya lugha hiyo, ama kupitia kisoma skrini chako (NVDA, JAWS, VoiceOver au TalkBack), bila sauti mbili kuingiliana; chagua kwenye dirisha la Ufikivu. Kwenye simu za Android, mtetemo mfupi huashiria zamu yako. Sauti za mchezo ziko katika makundi manne — hatua, chati, taarifa za mtandao na kupanda kwa dau za kulazimishwa — yanayoweza kuwashwa au kuzimwa kila moja peke yake, kwa kitelezi kimoja cha sauti.",
     "calmH2": "Mishangao michache",
     "calmP": "Mfumo wako unapoomba mwendo uliopunguzwa, programu hupunguza michoro yake inayosonga. Kinga ya kuchungulia huficha karata zako mwenyewe hadi uziguse, na kizuizi cha call ya bahati mbaya huzuia kitufe cha Call kwa muda mfupi mara tu baada ya raise kubwa, ili kugusa kulikokusudiwa call ndogo kusiweze kulipa kiasi kilichopandishwa kwa bahati mbaya.",
     "langH2": "Kwa lugha yako, pamoja na kiongozi",
@@ -4422,7 +4422,7 @@ module.exports = {
       ],
       [
         "Je, inafanya kazi na kisoma skrini?",
-        "Bado si kikamilifu. Matangazo ya sauti husoma kwa sauti matukio ya mchezo na menyu zina lebo, lakini meza ya poka yenyewe ni kiolesura cha kuona na bado haiwezi kuchezwa kwa kisoma skrini pekee."
+        "Kwa sehemu. Matangazo ya mchezo yanaweza kutumwa kwa kisoma skrini chako badala ya sauti ya ndani ya kifaa, na menyu zina lebo, lakini meza ya poka yenyewe ni kiolesura cha kuona na bado haiwezi kuchezwa kwa kisoma skrini pekee."
       ],
       [
         "Je, ni bure?",
@@ -4467,7 +4467,7 @@ module.exports = {
     "padH2": "கேம்பேடும் டிவி ரிமோட்டும்",
     "padP": "ஒரு விளையாட்டுக் கட்டுப்படுத்தி — Xbox, PlayStation, Switch Pro மற்றும் பெரும்பாலான Bluetooth கேம்பேடுகள் — முழு ஆட்டத்தையும் விளையாடும்: ஒவ்வொரு செயலுக்கும் பொத்தான்கள், பந்தயத் தொகையை அமைக்க ட்ரிகர்கள், திரைகள், அரட்டை, மெனுக்களில் நகர ஒரு வழிசெலுத்தல் முறைமை. உங்கள் முறை வரும்போது அது அதிரும். Android TV, Google TV-யில் ரிமோட்டும் அதே போல இயங்கும்; நான்கு வண்ண விசைகள் உள்ள ரிமோட்டுகள் அவற்றை Fold, Check/Call, Bet/Raise, All-In ஆகியவற்றுக்குப் பயன்படுத்தும்.",
     "hearH2": "ஆட்டத்தைக் கேட்டல், உணர்தல்",
-    "hearP": "குரல் அறிவிப்புகள் உங்கள் சாதனத்தின் சொந்தக் குரல்களில், அமைப்பில் உங்கள் மொழி இருந்தால் அந்த மொழியில், ஆட்ட நிகழ்வுகளை உரக்கப் படிக்கும். Android கைபேசிகளில் ஒரு குறுகிய அதிர்வு உங்கள் முறையைக் குறிக்கும். ஆட்ட ஒலிகள் நான்கு குழுக்களாக உள்ளன — செயல்கள், அரட்டை, வலையமைப்பு அறிவிப்புகள், பிளைண்டு உயர்வுகள் — அவற்றைத் தனித்தனியே இயக்கவோ அணைக்கவோ முடியும், ஒரே ஒலியளவு நழுவியுடன்.",
+    "hearP": "ஆட்ட அறிவிப்புகள் ஆட்ட நிகழ்வுகளை உரக்கப் படிக்கும் — உங்கள் சாதனத்தின் சொந்தக் குரல்களில், அமைப்பில் உங்கள் மொழி இருந்தால் அந்த மொழியில், அல்லது உங்கள் திரை வாசிப்பான் (NVDA, JAWS, VoiceOver அல்லது TalkBack) வழியாக இருமுறை பேசாமல்; அணுகல்தன்மை சாளரத்தில் தேர்ந்தெடுக்கலாம். Android கைபேசிகளில் ஒரு குறுகிய அதிர்வு உங்கள் முறையைக் குறிக்கும். ஆட்ட ஒலிகள் நான்கு குழுக்களாக உள்ளன — செயல்கள், அரட்டை, வலையமைப்பு அறிவிப்புகள், பிளைண்டு உயர்வுகள் — அவற்றைத் தனித்தனியே இயக்கவோ அணைக்கவோ முடியும், ஒரே ஒலியளவு நழுவியுடன்.",
     "calmH2": "குறைவான திடீர் நிகழ்வுகள்",
     "calmP": "உங்கள் அமைப்பு குறைந்த இயக்கத்தைக் கோரும்போது, கிளையண்ட் தன் அசைவூட்டங்களைக் குறைக்கும். எட்டிப்பார்ப்புப் பாதுகாப்பு நீங்கள் தொடும் வரை உங்கள் சீட்டுகளை மூடியே வைக்கும்; தற்செயல் Call பாதுகாப்பு பெரிய உயர்வுக்குப் பிறகு உடனே Call பொத்தானைச் சிறிது நேரம் பூட்டும், அதனால் சிறிய Call-க்காகச் செய்த தொடுதல் தவறுதலாக உயர்த்தப்பட்ட தொகையைச் செலுத்தாது.",
     "langH2": "உங்கள் மொழியில், ஒரு வழிகாட்டியுடன்",
@@ -4488,7 +4488,7 @@ module.exports = {
       ],
       [
         "திரை வாசிப்பானுடன் இது இயங்குமா?",
-        "இன்னும் முழுமையாக இல்லை. குரல் அறிவிப்புகள் ஆட்ட நிகழ்வுகளை உரக்கப் படிக்கின்றன, மெனுக்களுக்கு லேபிள்கள் உள்ளன; ஆனால் போக்கர் மேசையே ஒரு காட்சி இடைமுகம், அதைத் திரை வாசிப்பான் மட்டும் கொண்டு இன்னும் விளையாட முடியாது."
+        "பகுதியளவில். ஆட்ட அறிவிப்புகளை உள்ளமைந்த குரலுக்குப் பதிலாக உங்கள் திரை வாசிப்பானுக்கு அனுப்பலாம், மெனுக்களுக்கு லேபிள்கள் உள்ளன; ஆனால் போக்கர் மேசையே ஒரு காட்சி இடைமுகம், அதைத் திரை வாசிப்பான் மட்டும் கொண்டு இன்னும் விளையாட முடியாது."
       ],
       [
         "இது இலவசமா?",
@@ -4533,7 +4533,7 @@ module.exports = {
     "padH2": "గేమ్‌ప్యాడ్ మరియు టీవీ రిమోట్",
     "padP": "గేమ్ కంట్రోలర్‌తో — Xbox, PlayStation, Switch Pro మరియు చాలా Bluetooth ప్యాడ్‌లు — మొత్తం ఆటను ఆడవచ్చు: ప్రతి చర్యకు బటన్‌లు, బెట్ మొత్తాన్ని సెట్ చేయడానికి ట్రిగ్గర్‌లు, స్క్రీన్‌లు, చాట్, మెనూల గుండా కదలడానికి నావిగేషన్ మోడ్. మీ వంతు వచ్చినప్పుడు అది వైబ్రేట్ అవుతుంది. Android TV మరియు Google TV లో రిమోట్ కూడా అదే విధంగా పనిచేస్తుంది, నాలుగు రంగుల కీలు ఉన్న రిమోట్‌లు వాటిని Fold, Check/Call, Bet/Raise, All-In కోసం వాడతాయి.",
     "hearH2": "ఆటను వినడం, అనుభూతి చెందడం",
-    "hearP": "వాయిస్ ప్రకటనలు మీ పరికరం సొంత గొంతులతో ఆట సంఘటనలను చదివి వినిపిస్తాయి, సిస్టమ్‌లో మీ భాష గొంతు ఉంటే మీ భాషలోనే. Android ఫోన్‌లలో ఒక చిన్న వైబ్రేషన్ మీ వంతును సూచిస్తుంది. ఆట ధ్వనులు నాలుగు సమూహాలుగా ఉంటాయి — చర్యలు, చాట్, నెట్‌వర్క్ నోటిఫికేషన్‌లు, బ్లైండ్ పెంపులు — వాటిని విడివిడిగా ఆన్ లేదా ఆఫ్ చేయవచ్చు, ఒకే వాల్యూమ్ స్లైడర్‌తో.",
+    "hearP": "ఆట ప్రకటనలు ఆట సంఘటనలను చదివి వినిపిస్తాయి — మీ పరికరం సొంత గొంతులతో, సిస్టమ్‌లో మీ భాష గొంతు ఉంటే మీ భాషలోనే, లేదా మీ స్క్రీన్ రీడర్ (NVDA, JAWS, VoiceOver లేదా TalkBack) ద్వారా రెండుసార్లు మాట్లాడకుండా; యాక్సెసిబిలిటీ విండోలో ఎంచుకోండి. Android ఫోన్‌లలో ఒక చిన్న వైబ్రేషన్ మీ వంతును సూచిస్తుంది. ఆట ధ్వనులు నాలుగు సమూహాలుగా ఉంటాయి — చర్యలు, చాట్, నెట్‌వర్క్ నోటిఫికేషన్‌లు, బ్లైండ్ పెంపులు — వాటిని విడివిడిగా ఆన్ లేదా ఆఫ్ చేయవచ్చు, ఒకే వాల్యూమ్ స్లైడర్‌తో.",
     "calmH2": "తక్కువ ఆశ్చర్యాలు",
     "calmP": "మీ సిస్టమ్ తగ్గిన కదలికను కోరినప్పుడు, క్లయింట్ తన యానిమేషన్‌లను తగ్గిస్తుంది. తొంగిచూపు నిరోధం మీరు నొక్కే వరకు మీ సొంత కార్డులను దాచి ఉంచుతుంది, పొరపాటు Call రక్షణ పెద్ద Raise వచ్చిన వెంటనే Call బటన్‌ను కొద్దిసేపు బ్లాక్ చేస్తుంది, తద్వారా చిన్న Call కోసం ఉద్దేశించిన ట్యాప్ పొరపాటున పెరిగిన మొత్తాన్ని చెల్లించదు.",
     "langH2": "మీ భాషలో, ఒక గైడ్‌తో",
@@ -4554,7 +4554,7 @@ module.exports = {
       ],
       [
         "ఇది స్క్రీన్ రీడర్‌తో పనిచేస్తుందా?",
-        "ఇంకా పూర్తిగా కాదు. వాయిస్ ప్రకటనలు ఆట సంఘటనలను చదివి వినిపిస్తాయి, మెనూలకు లేబుల్‌లు ఉన్నాయి, కానీ పోకర్ టేబుల్ స్వయంగా దృశ్య ఇంటర్‌ఫేస్, దీన్ని ఇంకా స్క్రీన్ రీడర్‌తో మాత్రమే ఆడలేరు."
+        "పాక్షికంగా. ఆట ప్రకటనలను అంతర్నిర్మిత వాయిస్‌కు బదులుగా మీ స్క్రీన్ రీడర్‌కు పంపవచ్చు, మెనూలకు లేబుల్‌లు ఉన్నాయి, కానీ పోకర్ టేబుల్ స్వయంగా దృశ్య ఇంటర్‌ఫేస్, దీన్ని ఇంకా స్క్రీన్ రీడర్‌తో మాత్రమే ఆడలేరు."
       ],
       [
         "ఇది ఉచితమా?",
@@ -4599,7 +4599,7 @@ module.exports = {
     "padH2": "Геймпад ва пульти телевизор",
     "padP": "Контроллери бозӣ — Xbox, PlayStation, Switch Pro ва аксари геймпадҳои Bluetooth — тамоми бозиро пеш мебарад: тугмаҳо барои ҳар амал, триггерҳо барои муайян кардани гарав ва реҷаи Паймоиш барои ҳаракат дар экранҳо, чат ва менюҳо. Вақте навбати шумо мерасад, он меларзад. Дар Android TV ва Google TV пульт ҳамин тавр кор мекунад ва пультҳое, ки чор тугмаи ранга доранд, онҳоро барои Fold, Check/Call, Bet/Raise ва All-In истифода мебаранд.",
     "hearH2": "Шунидан ва ҳис кардани бозӣ",
-    "hearP": "Эълонҳои овозӣ рӯйдодҳои бозиро бо овозҳои худи дастгоҳатон баланд мехонанд, ба забони шумо, агар система чунин овоз дошта бошад. Дар телефонҳои Android ларзиши кӯтоҳ навбати шуморо қайд мекунад. Садоҳои бозӣ ба чор гурӯҳ тақсим шудаанд — амалҳо, чат, огоҳиҳои шабака ва баландшавии блайндҳо — ки онҳоро ҷудогона фаъол ё хомӯш кардан мумкин аст, бо як лағжандаи баландии садо.",
+    "hearP": "Эълонҳои бозӣ рӯйдодҳои бозиро баланд мехонанд — ё бо овозҳои худи дастгоҳатон, ба забони шумо, агар система чунин овоз дошта бошад, ё тавассути хонандаи экрани шумо (NVDA, JAWS, VoiceOver ё TalkBack), бе ду бор гуфтан; интихоб дар равзанаи «Дастрасӣ» анҷом дода мешавад. Дар телефонҳои Android ларзиши кӯтоҳ навбати шуморо қайд мекунад. Садоҳои бозӣ ба чор гурӯҳ тақсим шудаанд — амалҳо, чат, огоҳиҳои шабака ва баландшавии блайндҳо — ки онҳоро ҷудогона фаъол ё хомӯш кардан мумкин аст, бо як лағжандаи баландии садо.",
     "calmH2": "Ногаҳониҳои камтар",
     "calmP": "Вақте ки системаи шумо ҳаракати камтарро талаб мекунад, клиент аниматсияҳояшро коҳиш медиҳад. «Ҳифз аз дидан» кортҳои шуморо то ламс кардан пинҳон нигоҳ медорад, ва ҳифз аз call-и тасодуфӣ тугмаи Call-ро пас аз raise-и калон кӯтоҳмуддат мебандад, то ламсе, ки барои call-и хурдтар буд, тасодуфан маблағи raise-ро напардозад.",
     "langH2": "Ба забони шумо, бо роҳнамо",
@@ -4620,7 +4620,7 @@ module.exports = {
       ],
       [
         "Оё бо хонандаи экран кор мекунад?",
-        "Ҳоло пурра не. Эълонҳои овозӣ рӯйдодҳои бозиро баланд мехонанд ва менюҳо тамға доранд, аммо худи мизи покер интерфейси визуалӣ аст ва ҳоло танҳо бо хонандаи экран бозӣ кардани он имконнопазир аст."
+        "Қисман. Эълонҳои бозиро ба ҷои овози дарунсохт ба хонандаи экрани шумо фиристодан мумкин аст ва менюҳо тамға доранд, аммо худи мизи покер интерфейси визуалӣ аст ва ҳоло танҳо бо хонандаи экран бозӣ кардани он имконнопазир аст."
       ],
       [
         "Оё ройгон аст?",
@@ -4665,7 +4665,7 @@ module.exports = {
     "padH2": "เกมแพดและรีโมททีวี",
     "padP": "จอยเกม — Xbox, PlayStation, Switch Pro และแพด Bluetooth ส่วนใหญ่ — เล่นได้ตลอดทั้งเกม: มีปุ่มสำหรับทุกการกระทำ ไกสำหรับกำหนดเดิมพัน และโหมดนำทางสำหรับเลื่อนไปตามหน้าจอ แชท และเมนู จอยจะสั่นเมื่อถึงตาคุณ บน Android TV และ Google TV รีโมทใช้งานได้แบบเดียวกัน และรีโมทที่มีปุ่มสีสี่ปุ่มจะใช้ปุ่มเหล่านั้นสำหรับ Fold, Check/Call, Bet/Raise และ All-In",
     "hearH2": "ได้ยินและรู้สึกถึงเกม",
-    "hearP": "ประกาศเสียงอ่านเหตุการณ์ในเกมออกเสียงด้วยเสียงพูดของอุปกรณ์คุณเอง เป็นภาษาของคุณหากระบบมี บนมือถือ Android การสั่นสั้น ๆ จะบอกว่าถึงตาคุณ เสียงในเกมแบ่งเป็นสี่กลุ่ม — การกระทำ แชท การแจ้งเตือนเครือข่าย และการเพิ่มบลายน์ — ซึ่งเปิดหรือปิดแยกกันได้ โดยมีแถบปรับระดับเสียงเพียงแถบเดียว",
+    "hearP": "ประกาศในเกมจะอ่านเหตุการณ์ในเกมออกเสียง ด้วยเสียงพูดของอุปกรณ์คุณเอง เป็นภาษาของคุณหากระบบมี หรือผ่านโปรแกรมอ่านหน้าจอของคุณ (NVDA, JAWS, VoiceOver หรือ TalkBack) โดยไม่มีเสียงพูดซ้อนกัน เลือกได้ในหน้าต่างการช่วยการเข้าถึง บนมือถือ Android การสั่นสั้น ๆ จะบอกว่าถึงตาคุณ เสียงในเกมแบ่งเป็นสี่กลุ่ม — การกระทำ แชท การแจ้งเตือนเครือข่าย และการเพิ่มบลายน์ — ซึ่งเปิดหรือปิดแยกกันได้ โดยมีแถบปรับระดับเสียงเพียงแถบเดียว",
     "calmH2": "ลดเรื่องไม่คาดคิด",
     "calmP": "เมื่อระบบของคุณขอให้ลดการเคลื่อนไหว ไคลเอนต์จะลดแอนิเมชันลง กันแอบดูจะซ่อนไพ่ของคุณไว้จนกว่าคุณจะแตะ และตัวกัน call พลาดจะบล็อกปุ่ม Call ชั่วครู่ทันทีหลัง raise ใหญ่ เพื่อไม่ให้การแตะที่ตั้งใจจะ call จำนวนน้อยกว่าไปจ่ายจำนวนที่ถูกเพิ่มโดยไม่ตั้งใจ",
     "langH2": "ในภาษาของคุณ พร้อมผู้ช่วยนำทาง",
@@ -4686,7 +4686,7 @@ module.exports = {
       ],
       [
         "ใช้กับโปรแกรมอ่านหน้าจอได้ไหม?",
-        "ยังไม่สมบูรณ์ ประกาศเสียงจะอ่านเหตุการณ์ในเกมออกเสียงและเมนูมีป้ายกำกับ แต่ตัวโต๊ะโป๊กเกอร์เองเป็นอินเทอร์เฟซแบบภาพ และยังไม่สามารถเล่นด้วยโปรแกรมอ่านหน้าจอเพียงอย่างเดียวได้"
+        "ได้บางส่วน ประกาศในเกมสามารถส่งไปยังโปรแกรมอ่านหน้าจอของคุณแทนเสียงพูดในตัวได้ และเมนูมีป้ายกำกับ แต่ตัวโต๊ะโป๊กเกอร์เองเป็นอินเทอร์เฟซแบบภาพ และยังไม่สามารถเล่นด้วยโปรแกรมอ่านหน้าจอเพียงอย่างเดียวได้"
       ],
       [
         "ฟรีไหม?",
@@ -4731,7 +4731,7 @@ module.exports = {
     "padH2": "Geýmpad we telewizor pulty",
     "padP": "Oýun kontrolleri — Xbox, PlayStation, Switch Pro we Bluetooth geýmpadlaryň köpüsi — tutuş oýny oýnaýar: her hereket üçin düwmeler, stawkany bellemek üçin tetikler we ekranlarda, çatda we menýularda hereket etmek üçin nawigasiýa tertibi. Nobatyňyz gelende titreýär. Android TV we Google TV-de pult edil şonuň ýaly işleýär, dört reňkli düwmesi bolan pultlar bolsa olary Fold, Check/Call, Bet/Raise we All-In üçin ulanýar.",
     "hearH2": "Oýny eşitmek we duýmak",
-    "hearP": "Ses bilen habar bermek oýun wakalaryny enjamyňyzyň öz sesleri bilen, ulgamda bar bolsa siziň diliňizde gaty okaýar. Android telefonlarynda gysga titreme nobatyňyzy belleýär. Oýun sesleri dört topara bölünýär — hereketler, çat, tor habarnamalary we blaýndlaryň ýokarlanmagy — olary aýratynlykda açyp ýa-da öçürip bolýar, bir ses güýji süýşgüji bilen.",
+    "hearP": "Oýun habarlary oýun wakalaryny ýa enjamyňyzyň öz sesleri bilen, ulgamda bar bolsa siziň diliňizde, ýa-da ekran okaýjyňyz (NVDA, JAWS, VoiceOver ýa-da TalkBack) arkaly iki gezek gürlemezden gaty okaýar; saýlawy Elýeterlilik penjiresinde edip bolýar. Android telefonlarynda gysga titreme nobatyňyzy belleýär. Oýun sesleri dört topara bölünýär — hereketler, çat, tor habarnamalary we blaýndlaryň ýokarlanmagy — olary aýratynlykda açyp ýa-da öçürip bolýar, bir ses güýji süýşgüji bilen.",
     "calmH2": "Az garaşylmadyk ýagdaý",
     "calmP": "Ulgamyňyz hereketi azaltmagy soranda, müşderi animasiýalaryny ýuwaşadýar. «Göz aýlamakdan gorag» kartlaryňyzy olara degýänçäňiz gizleýär, tötänleýin call-dan gorag bolsa uly raise-den soň Call düwmesini gysga wagtlyk petikleýär, kiçi call üçin niýetlenen degme ýokarlandyrylan mukdary ýalňyşlyk bilen tölemez ýaly.",
     "langH2": "Öz diliňizde, ýol görkeziji bilen",
@@ -4752,7 +4752,7 @@ module.exports = {
       ],
       [
         "Ekran okaýjy bilen işleýärmi?",
-        "Entek doly däl. Ses bilen habar bermek oýun wakalaryny gaty okaýar we menýularyň bellikleri bar, ýöne poker stolunyň özi wizual interfeýsdir we ony entek diňe ekran okaýjy bilen oýnap bolmaýar."
+        "Bölekleýin. Oýun habarlaryny içki sesiň ýerine ekran okaýjyňyza ugradyp bolýar we menýularyň bellikleri bar, ýöne poker stolunyň özi wizual interfeýsdir we ony entek diňe ekran okaýjy bilen oýnap bolmaýar."
       ],
       [
         "Mugtmy?",
@@ -4797,7 +4797,7 @@ module.exports = {
     "padH2": "Oyun kumandası ve TV kumandası",
     "padP": "Bir oyun kumandasıyla — Xbox, PlayStation, Switch Pro ve çoğu Bluetooth kumanda — oyunun tamamı oynanır: her eylem için düğmeler, bahsi ayarlamak için tetikler ve ekranlar, sohbet ve menüler arasında dolaşmak için bir gezinme modu. Sıra size geldiğinde kumanda titrer. Android TV ve Google TV’de kumanda aynı şekilde çalışır; dört renkli tuşu olan kumandalar bunları Fold, Check/Call, Bet/Raise ve All-In için kullanır.",
     "hearH2": "Oyunu duymak ve hissetmek",
-    "hearP": "Sesli anonslar oyun olaylarını cihazınızın kendi sesleriyle, sistemde varsa kendi dilinizde yüksek sesle okur. Android telefonlarda kısa bir titreşim sıranızı bildirir. Oyun sesleri dört gruba ayrılır — eylemler, sohbet, ağ bildirimleri ve kör artışları — ve her biri ayrı ayrı açılıp kapatılabilir; ses düzeyi için tek bir kaydırıcı vardır.",
+    "hearP": "Oyun anonsları oyun olaylarını yüksek sesle okur: ya cihazınızın kendi sesleriyle, sistemde varsa kendi dilinizde, ya da ekran okuyucunuz (NVDA, JAWS, VoiceOver veya TalkBack) aracılığıyla, iki kez konuşmadan; seçimi Erişilebilirlik penceresinden yaparsınız. Android telefonlarda kısa bir titreşim sıranızı bildirir. Oyun sesleri dört gruba ayrılır — eylemler, sohbet, ağ bildirimleri ve kör artışları — ve her biri ayrı ayrı açılıp kapatılabilir; ses düzeyi için tek bir kaydırıcı vardır.",
     "calmH2": "Daha az sürpriz",
     "calmP": "Sisteminiz hareketin azaltılmasını istediğinde istemci animasyonlarını yumuşatır. Gizli bakış koruması kendi kartlarınızı siz dokunana kadar kapalı tutar; yanlışlıkla Call koruması da büyük bir yükseltmenin hemen ardından Call düğmesini kısa süre kilitler, böylece daha küçük bir Call için yapılan dokunuş yükseltilmiş tutarı yanlışlıkla ödeyemez.",
     "langH2": "Kendi dilinizde, bir rehberle",
@@ -4818,7 +4818,7 @@ module.exports = {
       ],
       [
         "Ekran okuyucuyla çalışıyor mu?",
-        "Henüz tam olarak değil. Sesli anonslar oyun olaylarını yüksek sesle okur ve menülerde etiketler vardır, ancak poker masasının kendisi görsel bir arayüzdür ve henüz yalnızca bir ekran okuyucuyla oynanamaz."
+        "Kısmen. Oyun anonsları yerleşik ses yerine ekran okuyucunuza gönderilebilir ve menülerde etiketler vardır, ancak poker masasının kendisi görsel bir arayüzdür ve henüz yalnızca bir ekran okuyucuyla oynanamaz."
       ],
       [
         "Ücretsiz mi?",
@@ -4863,7 +4863,7 @@ module.exports = {
     "padH2": "Геймпад і пульт ТБ",
     "padP": "Ігровий контролер — Xbox, PlayStation, Switch Pro та більшість Bluetooth-геймпадів — дає змогу зіграти всю гру: кнопки для кожної дії, тригери для вибору ставки та режим навігації для переміщення екранами, чатом і меню. Коли настає ваш хід, він вібрує. На Android TV і Google TV пульт працює так само, а пульти з чотирма кольоровими кнопками використовують їх для Fold, Check/Call, Bet/Raise і All-In.",
     "hearH2": "Чути й відчувати гру",
-    "hearP": "Голосові оголошення читають ігрові події вголос власними голосами вашого пристрою — вашою мовою, якщо вона є в системі. На телефонах Android коротка вібрація позначає ваш хід. Звуки гри поділено на чотири групи — дії, чат, мережеві сповіщення та зростання блайндів, — які можна вмикати й вимикати окремо, з одним повзунком гучності.",
+    "hearP": "Ігрові оголошення читають ігрові події вголос — або власними голосами вашого пристрою, вашою мовою, якщо вона є в системі, або через вашу програму зчитування з екрана (NVDA, JAWS, VoiceOver чи TalkBack), без подвійного озвучення; вибір робиться у вікні «Спеціальні можливості». На телефонах Android коротка вібрація позначає ваш хід. Звуки гри поділено на чотири групи — дії, чат, мережеві сповіщення та зростання блайндів, — які можна вмикати й вимикати окремо, з одним повзунком гучності.",
     "calmH2": "Менше несподіванок",
     "calmP": "Коли система просить зменшити рух, клієнт приглушує анімації. Захист від підглядання тримає ваші карти закритими, доки ви їх не торкнетеся, а захист від випадкового Call на мить блокує кнопку Call одразу після великого підвищення, щоб дотик, призначений меншому Call, не сплатив помилково підвищену суму.",
     "langH2": "Вашою мовою, з провідником",
@@ -4884,7 +4884,7 @@ module.exports = {
       ],
       [
         "Чи працює це з програмою зчитування з екрана?",
-        "Поки що не повністю. Голосові оголошення читають ігрові події вголос, а меню мають підписи, але сам покерний стіл — це візуальний інтерфейс, і грати на ньому лише за допомогою програми зчитування з екрана поки що неможливо."
+        "Частково. Ігрові оголошення можна надсилати до програми зчитування з екрана замість вбудованого голосу, а меню мають підписи, але сам покерний стіл — це візуальний інтерфейс, і грати на ньому лише за допомогою програми зчитування з екрана поки що неможливо."
       ],
       [
         "Це безкоштовно?",
@@ -4929,7 +4929,7 @@ module.exports = {
     "padH2": "گیم پیڈ اور ٹی وی ریموٹ",
     "padP": "گیم کنٹرولر — Xbox، PlayStation، Switch Pro اور زیادہ تر Bluetooth پیڈ — سے پورا کھیل کھیلا جا سکتا ہے: ہر حرکت کے لیے بٹن، شرط طے کرنے کے لیے ٹریگر، اور اسکرینوں، چیٹ اور مینوز میں گھومنے کے لیے نیویگیشن موڈ۔ آپ کی باری آنے پر یہ وائبریٹ کرتا ہے۔ Android TV اور Google TV پر ریموٹ اسی طرح کام کرتا ہے، اور جن ریموٹس پر چار رنگین کلیدیں ہوں وہ انہیں Fold، Check/Call، Bet/Raise اور All-In کے لیے استعمال کرتے ہیں۔",
     "hearH2": "کھیل کو سننا اور محسوس کرنا",
-    "hearP": "صوتی اعلانات آپ کے آلے کی اپنی آوازوں سے کھیل کے واقعات بلند آواز میں پڑھتے ہیں، اور جہاں سسٹم میں آپ کی زبان کی آواز ہو وہاں آپ کی زبان میں۔ Android فونز پر ایک مختصر وائبریشن آپ کی باری کی نشان دہی کرتی ہے۔ کھیل کی آوازیں چار گروپوں میں ہیں — حرکات، چیٹ، نیٹ ورک اطلاعات اور بلائنڈز میں اضافہ — جنہیں ایک ہی والیوم سلائیڈر کے ساتھ الگ الگ آن یا آف کیا جا سکتا ہے۔",
+    "hearP": "کھیل کے اعلانات کھیل کے واقعات بلند آواز میں پڑھتے ہیں، یا تو آپ کے آلے کی اپنی آوازوں سے (جہاں سسٹم میں آپ کی زبان کی آواز ہو وہاں آپ کی زبان میں)، یا آپ کے اسکرین ریڈر (NVDA، JAWS، VoiceOver یا TalkBack) کے ذریعے، بغیر اس کے کہ دو آوازیں ایک ساتھ بولیں؛ انتخاب رسائی کی ونڈو میں کریں۔ Android فونز پر ایک مختصر وائبریشن آپ کی باری کی نشان دہی کرتی ہے۔ کھیل کی آوازیں چار گروپوں میں ہیں — حرکات، چیٹ، نیٹ ورک اطلاعات اور بلائنڈز میں اضافہ — جنہیں ایک ہی والیوم سلائیڈر کے ساتھ الگ الگ آن یا آف کیا جا سکتا ہے۔",
     "calmH2": "کم حیرانیاں",
     "calmP": "جب آپ کا سسٹم کم حرکت کی درخواست کرتا ہے تو کلائنٹ اپنی اینیمیشنز دھیمی کر دیتا ہے۔ اینٹی پِیک آپ کے اپنے کارڈ اس وقت تک چھپائے رکھتا ہے جب تک آپ ان پر ٹیپ نہ کریں، اور غلط کال کا محافظ بڑے اضافے کے فوراً بعد Call بٹن کو لمحہ بھر روک دیتا ہے، تاکہ چھوٹی کال کے لیے کی گئی ٹیپ غلطی سے بڑھی ہوئی رقم ادا نہ کر دے۔",
     "langH2": "آپ کی زبان میں، رہنما کے ساتھ",
@@ -4950,7 +4950,7 @@ module.exports = {
       ],
       [
         "کیا یہ اسکرین ریڈر کے ساتھ کام کرتا ہے؟",
-        "ابھی پوری طرح نہیں۔ صوتی اعلانات کھیل کے واقعات بلند آواز میں پڑھتے ہیں اور مینوز پر لیبل ہیں، لیکن پوکر کی میز خود ایک بصری انٹرفیس ہے اور ابھی صرف اسکرین ریڈر سے نہیں کھیلی جا سکتی۔"
+        "جزوی طور پر۔ کھیل کے اعلانات بلٹ اِن آواز کی بجائے آپ کے اسکرین ریڈر کو بھیجے جا سکتے ہیں اور مینوز پر لیبل ہیں، لیکن پوکر کی میز خود ایک بصری انٹرفیس ہے اور ابھی صرف اسکرین ریڈر سے نہیں کھیلی جا سکتی۔"
       ],
       [
         "کیا یہ مفت ہے؟",
@@ -4995,7 +4995,7 @@ module.exports = {
     "padH2": "Geympad va televizor pulti",
     "padP": "Oʻyin kontrolleri — Xbox, PlayStation, Switch Pro va aksariyat Bluetooth geympadlar — butun oʻyinni boshqaradi: har bir harakat uchun tugmalar, stavkani belgilash uchun triggerlar va ekranlar, chat hamda menyular boʻylab harakatlanish uchun navigatsiya rejimi. Navbatingiz kelganda u tebranadi. Android TV va Google TV da pult xuddi shunday ishlaydi, toʻrtta rangli tugmasi bor pultlar esa ulardan Fold, Check/Call, Bet/Raise va All-In uchun foydalanadi.",
     "hearH2": "Oʻyinni eshitish va his qilish",
-    "hearP": "Ovozli eʼlonlar oʻyin voqealarini qurilmangizning oʻz ovozlari bilan, tizimda boʻlsa, oʻz tilingizda ovoz chiqarib oʻqib beradi. Android telefonlarda qisqa tebranish navbatingizni bildiradi. Oʻyin ovozlari toʻrt guruhga boʻlingan — harakatlar, chat, tarmoq bildirishnomalari va blaynd oshishi — ularni alohida yoqish yoki oʻchirish mumkin, hammasi uchun bitta balandlik slayderi bor.",
+    "hearP": "Oʻyin eʼlonlari oʻyin voqealarini yo qurilmangizning oʻz ovozlari bilan, tizimda boʻlsa, oʻz tilingizda, yoki ekran oʻquvchi dasturingiz (NVDA, JAWS, VoiceOver yoki TalkBack) orqali ikki marta gapirmasdan ovoz chiqarib oʻqib beradi; tanlov Maxsus imkoniyatlar oynasida qilinadi. Android telefonlarda qisqa tebranish navbatingizni bildiradi. Oʻyin ovozlari toʻrt guruhga boʻlingan — harakatlar, chat, tarmoq bildirishnomalari va blaynd oshishi — ularni alohida yoqish yoki oʻchirish mumkin, hammasi uchun bitta balandlik slayderi bor.",
     "calmH2": "Kamroq kutilmagan holatlar",
     "calmP": "Tizimingiz harakatni kamaytirishni soʻrasa, mijoz animatsiyalarini yumshatadi. Moʻralashdan himoya oʻz kartalaringizni ularga bosmaguningizcha yashirin saqlaydi, tasodifiy call’dan himoya esa katta raise’dan soʻng darhol Call tugmasini qisqa muddatga bloklaydi, shunda kichikroq call’ga moʻljallangan bosish xato bilan oshirilgan miqdorni toʻlab yubormaydi.",
     "langH2": "Oʻz tilingizda, yoʻlboshchi bilan",
@@ -5016,7 +5016,7 @@ module.exports = {
       ],
       [
         "Ekran oʻquvchi dastur bilan ishlaydimi?",
-        "Hozircha toʻliq emas. Ovozli eʼlonlar oʻyin voqealarini ovoz chiqarib oʻqiydi va menyularda yorliqlar bor, lekin poker stolining oʻzi vizual interfeys boʻlib, uni hozircha faqat ekran oʻquvchi dastur bilan oʻynab boʻlmaydi."
+        "Qisman. Oʻyin eʼlonlarini ichki ovoz oʻrniga ekran oʻquvchi dasturingizga yuborish mumkin va menyularda yorliqlar bor, lekin poker stolining oʻzi vizual interfeys boʻlib, uni hozircha faqat ekran oʻquvchi dastur bilan oʻynab boʻlmaydi."
       ],
       [
         "Bu bepulmi?",
@@ -5061,7 +5061,7 @@ module.exports = {
     "padH2": "Tay cầm và điều khiển TV",
     "padP": "Với một tay cầm chơi game — Xbox, PlayStation, Switch Pro và hầu hết tay cầm Bluetooth — bạn chơi được toàn bộ ván đấu: nút cho mọi hành động, cò để đặt mức cược, và một chế độ điều hướng để di chuyển qua các màn hình, khung trò chuyện và menu. Tay cầm rung khi đến lượt bạn. Trên Android TV và Google TV, điều khiển từ xa hoạt động theo cùng cách, và những điều khiển có bốn phím màu dùng chúng cho Fold, Check/Call, Bet/Raise và All-In.",
     "hearH2": "Nghe và cảm nhận ván bài",
-    "hearP": "Thông báo bằng giọng nói đọc to các sự kiện trong ván bằng chính giọng đọc của thiết bị, bằng ngôn ngữ của bạn nếu hệ thống có. Trên điện thoại Android, một rung ngắn báo đến lượt bạn. Âm thanh trong ván chia thành bốn nhóm — hành động, trò chuyện, thông báo mạng và blind tăng — có thể bật tắt riêng, với một thanh trượt âm lượng duy nhất.",
+    "hearP": "Thông báo trò chơi đọc to các sự kiện trong ván, hoặc bằng chính giọng đọc của thiết bị, bằng ngôn ngữ của bạn nếu hệ thống có, hoặc qua trình đọc màn hình của bạn (NVDA, JAWS, VoiceOver hoặc TalkBack) mà không bị đọc hai lần; bạn chọn trong cửa sổ Trợ năng. Trên điện thoại Android, một rung ngắn báo đến lượt bạn. Âm thanh trong ván chia thành bốn nhóm — hành động, trò chuyện, thông báo mạng và blind tăng — có thể bật tắt riêng, với một thanh trượt âm lượng duy nhất.",
     "calmH2": "Ít bất ngờ hơn",
     "calmP": "Khi hệ thống của bạn yêu cầu giảm chuyển động, ứng dụng sẽ làm dịu các hiệu ứng động. Chống nhìn trộm giữ bài của bạn úp cho đến khi bạn chạm vào, còn chống Call nhầm khóa nút Call trong chốc lát ngay sau một lần nâng lớn, để cú chạm định dành cho một Call nhỏ hơn không thể vô tình trả số tiền đã nâng.",
     "langH2": "Bằng ngôn ngữ của bạn, có người hướng dẫn",
@@ -5082,7 +5082,7 @@ module.exports = {
       ],
       [
         "Có dùng được với trình đọc màn hình không?",
-        "Chưa hoàn toàn. Thông báo bằng giọng nói đọc to các sự kiện trong ván và các menu đều có nhãn, nhưng bản thân bàn poker là giao diện trực quan và hiện chưa thể chơi chỉ bằng trình đọc màn hình."
+        "Một phần. Thông báo trò chơi có thể được gửi tới trình đọc màn hình của bạn thay cho giọng tích hợp, và các menu đều có nhãn, nhưng bản thân bàn poker là giao diện trực quan và hiện chưa thể chơi chỉ bằng trình đọc màn hình."
       ],
       [
         "Có miễn phí không?",
@@ -5127,7 +5127,7 @@ module.exports = {
     "padH2": "Ẹ̀rọ ìdarí eré àti rìmóòtù TV",
     "padP": "Ẹ̀rọ ìdarí eré — Xbox, PlayStation, Switch Pro àti ọ̀pọ̀ ẹ̀rọ ìdarí Bluetooth — ń ṣe gbogbo eré náà: bọ́tìnì fún ìgbésẹ̀ kọ̀ọ̀kan, trigger láti ṣètò tẹ́tẹ́, àti ipò Ìrìnkiri láti rìn kiri nínú àwọn ojú, ìjíròrò àti àwọn àkójọ. Ó ń gbọ̀n nígbà tí ó bá kàn ọ́. Lórí Android TV àti Google TV, rìmóòtù ń ṣiṣẹ́ lọ́nà kan náà, àwọn rìmóòtù tó ní kọ́kọ́rọ́ àwọ̀ mẹ́rin sì ń lò wọ́n fún Fold, Check/Call, Bet/Raise àti All-In.",
     "hearH2": "Gbígbọ́ àti mímọ̀ eré lára",
-    "hearP": "Ìkéde ohùn ń ka àwọn ìṣẹ̀lẹ̀ eré sókè pẹ̀lú àwọn ohùn ẹ̀rọ rẹ fúnra rẹ̀, ní èdè rẹ bí ètò náà bá ní i. Lórí fóònù Android, ìgbọ̀nrìrì kúkúrú ń sàmì sí àkókò rẹ. Ohùn eré pín sí ẹgbẹ́ mẹ́rin — ìgbésẹ̀, ìjíròrò, ìkìlọ̀ nẹ́tíwọ̀ọ̀kì àti ìgbéga blind — tí a lè tàn tàbí pa lọ́tọ̀ọ̀tọ̀, pẹ̀lú atọ́ka ìwọ̀n ohùn kan ṣoṣo.",
+    "hearP": "Ìkéde eré ń ka àwọn ìṣẹ̀lẹ̀ eré sókè, yálà pẹ̀lú àwọn ohùn ẹ̀rọ rẹ fúnra rẹ̀, ní èdè rẹ bí ètò náà bá ní i, tàbí nípasẹ̀ ẹ̀rọ olùkàwé ojú-ìbòjú rẹ (NVDA, JAWS, VoiceOver tàbí TalkBack) láìsọ̀rọ̀ lẹ́ẹ̀mejì; yan nínú fèrèsé Ìráyèsí. Lórí fóònù Android, ìgbọ̀nrìrì kúkúrú ń sàmì sí àkókò rẹ. Ohùn eré pín sí ẹgbẹ́ mẹ́rin — ìgbésẹ̀, ìjíròrò, ìkìlọ̀ nẹ́tíwọ̀ọ̀kì àti ìgbéga blind — tí a lè tàn tàbí pa lọ́tọ̀ọ̀tọ̀, pẹ̀lú atọ́ka ìwọ̀n ohùn kan ṣoṣo.",
     "calmH2": "Ìyàlẹ́nu díẹ̀",
     "calmP": "Nígbà tí ètò rẹ bá béèrè fún ìṣípòpadà díẹ̀, oníbàárà ń dín ìṣípòpadà àwòrán rẹ̀ kù. Ààbò wíwò ń pa káàdì rẹ mọ́ títí o fi fọwọ́ kàn wọ́n, ààbò Call àìròtẹ́lẹ̀ sì ń dí bọ́tìnì Call fún ìgbà kúkúrú lẹ́yìn raise ńlá, kí ìfọwọ́kàn tí a pinnu fún call kékeré má bàa san iye raise náà láìròtẹ́lẹ̀.",
     "langH2": "Ní èdè rẹ, pẹ̀lú amọ̀nà",
@@ -5148,7 +5148,7 @@ module.exports = {
       ],
       [
         "Ṣé ó ń ṣiṣẹ́ pẹ̀lú ẹ̀rọ olùkàwé ojú-ìbòjú?",
-        "Kì í ṣe pátápátá síbẹ̀. Ìkéde ohùn ń ka àwọn ìṣẹ̀lẹ̀ eré sókè, àwọn àkójọ sì ní àmì-orúkọ, ṣùgbọ́n tábìlì poker fúnra rẹ̀ jẹ́ ojú olùlò tí a ń fi ojú rí, a kò sì tíì lè ṣe é pẹ̀lú ẹ̀rọ olùkàwé ojú-ìbòjú nìkan."
+        "Ní apá kan. A lè fi ìkéde eré ránṣẹ́ sí ẹ̀rọ olùkàwé ojú-ìbòjú rẹ dípò ohùn inú ẹ̀rọ, àwọn àkójọ sì ní àmì-orúkọ, ṣùgbọ́n tábìlì poker fúnra rẹ̀ jẹ́ ojú olùlò tí a ń fi ojú rí, a kò sì tíì lè ṣe é pẹ̀lú ẹ̀rọ olùkàwé ojú-ìbòjú nìkan."
       ],
       [
         "Ṣé ọ̀fẹ́ ni?",
@@ -5193,7 +5193,7 @@ module.exports = {
     "padH2": "游戏手柄和电视遥控器",
     "padP": "游戏手柄 — Xbox、PlayStation、Switch Pro 以及大多数 Bluetooth 手柄 — 可以玩完整个游戏：每个动作都有按键，扳机键调整下注额，导航模式可在各个界面、聊天和菜单之间移动。轮到你时手柄会震动。在 Android TV 和 Google TV 上，遥控器的用法相同，带四个彩色键的遥控器会用它们执行 Fold、Check/Call、Bet/Raise 和 All-In。",
     "hearH2": "听见并感受牌局",
-    "hearP": "语音播报用你设备自带的语音朗读游戏事件，系统支持时使用你的语言。在 Android 手机上，一次短振动提示轮到你。游戏音效分为四组 — 动作、聊天、网络通知和盲注提升 — 可分别开关，并共用一个音量滑块。",
+    "hearP": "游戏播报会朗读游戏事件：可以用你设备自带的语音（系统支持时使用你的语言），也可以通过你的屏幕阅读器（NVDA、JAWS、VoiceOver 或 TalkBack）朗读，不会重复播报；在无障碍功能窗口中选择。在 Android 手机上，一次短振动提示轮到你。游戏音效分为四组 — 动作、聊天、网络通知和盲注提升 — 可分别开关，并共用一个音量滑块。",
     "calmH2": "减少意外",
     "calmP": "当你的系统要求减少动态效果时，客户端会减弱自己的动画。防偷看让你自己的牌保持盖住，直到你点按它们；防误跟注保护会在大幅加注后短暂锁定 Call 按钮，避免本想跟小注的点按误付加注后的金额。",
     "langH2": "用你的语言，还有向导",
@@ -5214,7 +5214,7 @@ module.exports = {
       ],
       [
         "支持屏幕阅读器吗？",
-        "尚未完全支持。语音播报会朗读游戏事件，菜单也带有标签，但扑克牌桌本身是可视化界面，目前还无法仅靠屏幕阅读器来玩。"
+        "部分支持。游戏播报可以改为发送到你的屏幕阅读器，而不使用内置语音，菜单也带有标签，但扑克牌桌本身是可视化界面，目前还无法仅靠屏幕阅读器来玩。"
       ],
       [
         "免费吗？",
@@ -5259,7 +5259,7 @@ module.exports = {
     "padH2": "遊戲手掣與電視遙控",
     "padP": "遊戲手掣 — Xbox、PlayStation、Switch Pro 及大部分 Bluetooth 手掣 — 可以玩整個遊戲：每個動作都有按鈕，用扳機鍵調整注額，還有導覽模式在畫面、聊天和選單之間移動。輪到你時它會震動。在 Android TV 和 Google TV 上，遙控的用法相同，有四個顏色鍵的遙控會用它們來 Fold、Check/Call、Bet/Raise 和 All-In。",
     "hearH2": "聽到和感受牌局",
-    "hearP": "語音播報用你裝置本身的語音朗讀遊戲事件，系統有你的語言時就用你的語言。在 Android 手機上，一次短震動提示輪到你。遊戲音效分為四組 — 動作、聊天、網絡通知和盲注上升 — 可分別開關，並共用一個音量滑桿。",
+    "hearP": "遊戲播報會朗讀遊戲事件：可以用你裝置本身的語音（系統有你的語言時就用你的語言），也可以透過你的屏幕閱讀器（NVDA、JAWS、VoiceOver 或 TalkBack），兩把聲音不會重疊；在無障礙功能視窗中選擇。在 Android 手機上，一次短震動提示輪到你。遊戲音效分為四組 — 動作、聊天、網絡通知和盲注上升 — 可分別開關，並共用一個音量滑桿。",
     "calmH2": "更少意外",
     "calmP": "當你的系統要求減少動態效果時，客戶端會減弱動畫。防偷看讓你自己的牌保持蓋住，直到你點按它們；防誤跟注保護會在大幅加注後短暫鎖定 Call 按鈕，避免本想跟小注的點按誤付加注後的金額。",
     "langH2": "用你的語言，還有嚮導",
@@ -5280,7 +5280,7 @@ module.exports = {
       ],
       [
         "可以配合屏幕閱讀器使用嗎？",
-        "暫時未完全可以。語音播報會朗讀遊戲事件，選單也有標籤，但撲克牌桌本身是視覺介面，目前還不能只靠屏幕閱讀器來玩。"
+        "部分可以。遊戲播報可以改為傳送到你的屏幕閱讀器，而不用內置語音，選單也有標籤，但撲克牌桌本身是視覺介面，目前還不能只靠屏幕閱讀器來玩。"
       ],
       [
         "是免費的嗎？",
@@ -5325,7 +5325,7 @@ module.exports = {
     "padH2": "遊戲手把與電視遙控器",
     "padP": "遊戲手把——Xbox、PlayStation、Switch Pro 及大多數 Bluetooth 手把——可以玩完整場遊戲：每個動作都有按鈕，用扳機鍵設定下注金額，還有導覽模式可在各畫面、聊天和選單間移動。輪到你時手把會震動。在 Android TV 和 Google TV 上，遙控器的用法相同；有四個彩色按鍵的遙控器會用它們來 Fold、Check/Call、Bet/Raise 和 All-In。",
     "hearH2": "聽見與感受牌局",
-    "hearP": "語音播報會用你裝置本身的語音朗讀遊戲事件，系統有你的語言時就用你的語言。在 Android 手機上，一次短震動會提示輪到你。遊戲音效分成四組——動作、聊天、網路通知和盲注上升——可分別開關，並共用一個音量滑桿。",
+    "hearP": "遊戲播報會朗讀遊戲事件：可用你裝置本身的語音（系統有你的語言時就用你的語言），也可透過你的螢幕閱讀器（NVDA、JAWS、VoiceOver 或 TalkBack）朗讀，不會重複播報；在「無障礙功能」視窗中選擇。在 Android 手機上，一次短震動會提示輪到你。遊戲音效分成四組——動作、聊天、網路通知和盲注上升——可分別開關，並共用一個音量滑桿。",
     "calmH2": "減少意外",
     "calmP": "當系統要求減少動態效果時，用戶端會減弱動畫。防偷看讓你自己的牌保持蓋住，直到你點按它們；防誤跟注保護會在大幅加注後短暫鎖定 Call 按鈕，避免本想跟小注的點按誤付加注後的金額。",
     "langH2": "用你的語言，還有嚮導",
@@ -5346,7 +5346,7 @@ module.exports = {
       ],
       [
         "能搭配螢幕閱讀器使用嗎？",
-        "目前還不能完全支援。語音播報會朗讀遊戲事件，選單也有標籤，但撲克牌桌本身是視覺介面，目前還無法只靠螢幕閱讀器來玩。"
+        "部分支援。遊戲播報可以改為傳送到你的螢幕閱讀器，而不使用內建語音，選單也有標籤，但撲克牌桌本身是視覺介面，目前還無法只靠螢幕閱讀器來玩。"
       ],
       [
         "免費嗎？",
@@ -5391,7 +5391,7 @@ module.exports = {
     "padH2": "I-gamepad nerimothi ye-TV",
     "padP": "Isilawuli somdlalo — Xbox, PlayStation, Switch Pro neziningi izilawuli ze-Bluetooth — sidlala umdlalo wonke: izinkinobho zesenzo ngasinye, ama-trigger okusetha ukubheja, nemodi yokuzulazula ukuze uhambe ezikrinini, engxoxweni nasemamenyu. Siyadlidliza lapho kufika ithuba lakho. Ku-Android TV naku-Google TV irimothi isebenza ngendlela efanayo, futhi amarimothi anokhiye abanemibala emine abasebenzisela i-Fold, Check/Call, Bet/Raise ne-All-In.",
     "hearH2": "Ukuzwa nokuzizwa umdlalo",
-    "hearP": "Izimemezelo zezwi zifunda izehlakalo zomdlalo ngokuzwakalayo ngamazwi edivayisi yakho, ngolimi lwakho uma isistimu inalo. Kumafoni e-Android ukudlidliza okufushane kumaka ithuba lakho. Imisindo yomdlalo iza ngamaqembu amane — izenzo, ingxoxo, izaziso zenethiwekhi nokukhushulwa kwama-blinds — angavulwa noma avalwe ngokwehlukana, ngesilayida sevolumu esisodwa.",
+    "hearP": "Izimemezelo zomdlalo zifunda izehlakalo zomdlalo ngokuzwakalayo, kungaba ngamazwi edivayisi yakho, ngolimi lwakho uma isistimu inalo, noma ngesifundi sakho sesikrini (i-NVDA, i-JAWS, i-VoiceOver noma i-TalkBack) ngaphandle kokukhuluma kabili; khetha ewindini elithi Ukufinyeleleka. Kumafoni e-Android ukudlidliza okufushane kumaka ithuba lakho. Imisindo yomdlalo iza ngamaqembu amane — izenzo, ingxoxo, izaziso zenethiwekhi nokukhushulwa kwama-blinds — angavulwa noma avalwe ngokwehlukana, ngesilayida sevolumu esisodwa.",
     "calmH2": "Izimanga ezimbalwa",
     "calmP": "Uma isistimu yakho icela ukunciphisa ukunyakaza, iklayenti linciphisa opopayi balo. Ukuvikela ekulunguzeni kugcina amakhadi akho efihliwe uze uwathephe, futhi ukuvikela i-call engahlosiwe kuvimba inkinobho ethi Call isikhashana ngemuva kwe-raise enkulu, ukuze ukuthepha okuhloselwe i-call encane kungakhokhi inani le-raise ngephutha.",
     "langH2": "Ngolimi lwakho, nomhlahlandlela",
@@ -5412,7 +5412,7 @@ module.exports = {
       ],
       [
         "Ingabe iyasebenza nesifundi sesikrini?",
-        "Hhayi ngokuphelele okwamanje. Izimemezelo zezwi zifunda izehlakalo zomdlalo ngokuzwakalayo futhi amamenyu anamalebula, kodwa itafula le-poker ngokwalo liyisixhumi esibonakalayo esibukwayo futhi alikakwazi ukudlalwa ngesifundi sesikrini sodwa."
+        "Ngokwengxenye. Izimemezelo zomdlalo zingathunyelwa esifundini sakho sesikrini esikhundleni sezwi elakhelwe ngaphakathi, futhi amamenyu anamalebula, kodwa itafula le-poker ngokwalo liyisixhumi esibonakalayo esibukwayo futhi alikakwazi ukudlalwa ngesifundi sesikrini sodwa."
       ],
       [
         "Ingabe imahhala?",

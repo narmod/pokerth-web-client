@@ -60,7 +60,7 @@ S._voiceEnabled = false;
 ok(M.speak('rien') === undefined && S._speakQ.length === 0, 'speak inerte quand voix désactivée');
 
 // ponts window
-ok(window.speak === M.speak && window.toggleVoice === M.toggleVoice
+ok(window.speak === M.speak && M.toggleVoice === undefined
    && window.hapticBuzz === M.hapticBuzz, 'ponts window en place');
 
 console.log(fail ? `FAIL ${fail}/${n}` : `PASS ${n}/${n}`);

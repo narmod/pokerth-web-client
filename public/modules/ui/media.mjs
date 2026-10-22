@@ -40,8 +40,8 @@ function toggleHaptic() {
   return S._hapticEnabled;
 }
 
-// Speaks game events (player actions, your turn, winner) in the active
-// language. Opt-in (default OFF), persisted, toggled from the ••• menu.
+// Built-in voice output of the game announcements (ui/announcer.mjs chooses
+// between off / this voice / the screen reader, in the Accessibility window).
 // No-ops gracefully where speechSynthesis is unavailable.
 // Maps a UI language code (i18n catalogue key, e.g. 'fr', 'pt-BR',
 // 'zh-TW') onto a BCP-47 tag for the speech engine, so each of the 36
@@ -135,33 +135,20 @@ function voiceActionPhrase(action, pid, bet) {
   var amt = (action >= 3 && bet) ? ' ' + fmtChipsVoice(bet) : '';   // call/bet/raise/all-in carry the amount
   return window.getPlayerName(pid) + ' ' + verb + amt;
 }
-function toggleVoice() {
-  S._voiceEnabled = !S._voiceEnabled;
-  try { localStorage.setItem('pth_voice', S._voiceEnabled ? '1' : '0'); } catch(e) {}
-  var label = S._voiceEnabled ? t('voiceOn') : t('voiceOff');
-  if (typeof window.showKeyHint === 'function') window.showKeyHint(label);
-  // Direct header twin (tablet/desktop): icon-only.
-  var vd = document.getElementById('voice-toggle-btn');
-  if (vd) vd.textContent = (S._voiceEnabled ? '🗣️' : '🤐');
-  // Spoken confirmation (also primes the engine on first user gesture).
-  if (S._voiceEnabled) speak(t('voiceOn'));
-  else if ('speechSynthesis' in window) { S._speakQ = []; S._curU = null; S._speaking = false; try { window.speechSynthesis.cancel(); } catch(e) {} }
-  return S._voiceEnabled;
-}
-// Sync the direct (tablet/desktop) header toggle icons with the persisted
-// state on load, so 📳/📴 and 🗣️/🤐 reflect reality before any toggle.
+// toggleVoice and the choice of output (off / built-in voice / screen
+// reader) live in ./announcer.mjs: speak() here is the built-in-voice output.
+// Sync the direct (tablet/desktop) header toggle icon with the persisted
+// state on load, so 📳/📴 reflects reality before any toggle (🗣️/🤐: announcer.mjs).
 function _syncMediaToggleButtons() {
   try {
     var hb = document.getElementById('haptic-toggle-btn');
     if (hb) hb.textContent = (S._hapticEnabled ? '📳' : '📴');
-    var vb = document.getElementById('voice-toggle-btn');
-    if (vb) vb.textContent = (S._voiceEnabled ? '🗣️' : '🤐');
   } catch(e) {}
 }
 _syncMediaToggleButtons();
 
 export { hapticBuzz, toggleHaptic, _voiceLangTag, _loadVoices, _pickVoice,
-         _voiceUtterance, _speakNext, speak, voiceActionPhrase, toggleVoice,
+         _voiceUtterance, _speakNext, speak, voiceActionPhrase,
          _syncMediaToggleButtons };
 
 window.hapticBuzz = hapticBuzz;
@@ -173,5 +160,4 @@ window._voiceUtterance = _voiceUtterance;
 window._speakNext = _speakNext;
 window.speak = speak;
 window.voiceActionPhrase = voiceActionPhrase;
-window.toggleVoice = toggleVoice;
 window._syncMediaToggleButtons = _syncMediaToggleButtons;

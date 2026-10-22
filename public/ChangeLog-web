@@ -1,3 +1,7 @@
+2026-10-22 version 2.1.10-web.280:
+- new: game announcements now work with screen readers: in the Accessibility window choose Off, Built-in voice or Screen reader; with Screen reader, NVDA, JAWS, VoiceOver or TalkBack read the actions, your turn and the winner in their own voice, without two voices talking at once
+- improvement: the voice option moved from Advanced options to the Accessibility window; if you had it on, nothing changes for you
+
 2026-10-22 version 2.1.10-web.279:
 - improvement: the rules, FAQ and guide pages now wear the PokerTH colours of the app and the pokerth.net forum: slate background, the start screen's flames behind the title, forum-style section bars and a red Play button
 

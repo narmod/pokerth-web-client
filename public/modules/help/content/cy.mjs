@@ -393,7 +393,7 @@ export const help = {
         { id: "voice",
           t: "Cyhoeddiadau llais a dirgryniad",
           b: [
-            "Gall dwy sianel ychwanegol roi gwybod i chi heb edrych ar y sgrin: mae cyhoeddiadau llais yn darllen digwyddiadau'r gêm gyda synthesis lleferydd eich dyfais, ac ar ffonau gall dirgryniad byr nodi eich tro. Estyniadau gwe yw'r ddau, ymlaen neu i ffwrdd yn ddiofyn yn dibynnu ar y ddyfais, yn Dewisiadau uwch → Betiau a thro."],
+            "Gall dwy sianel ychwanegol roi gwybod i chi heb edrych ar y sgrin. Mae cyhoeddiadau'r gêm yn darllen digwyddiadau'r gêm — gweithredoedd, eich tro, yr enillydd — ac mae'r ffenestr Hygyrchedd yn pennu sut: I ffwrdd, Llais adeiledig (synthesis lleferydd eich dyfais) neu Darllenydd sgrin (mae NVDA, JAWS, VoiceOver neu TalkBack yn eu darllen yn eu llais eu hunain, heb siarad ddwywaith). Ar ffonau gall dirgryniad byr nodi eich tro; fe'i ceir yn Dewisiadau uwch → Betiau a thro."],
           note: "Mae dirgryniad yn gweithio ar Android (porwyr Chromium); nid yw Apple yn darparu API dirgryniad i wefannau, felly ni all iPhones ddirgrynu. Mae cyhoeddiadau llais yn gweithio ym mhobman, ond mae'r lleisiau a'r ieithoedd sydd ar gael yn dibynnu ar eich system — mae'r cleient yn defnyddio'r gyfatebiaeth orau y mae'n ei chanfod." }
       ]
     },

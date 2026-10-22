@@ -8197,8 +8197,9 @@ function seoStartPage(res, method, lang) {
 // "poker with keyboard / gamepad", "poker for visually impaired". Only what
 // the client does: modules/ui/accessibility.mjs (Interface size, High
 // contrast), the four-colour decks (cards/*-4c), the table magnifier, keyboard shortcuts,
-// gamepad and TV remote (ui/ctl-*.mjs, ui/remote.mjs), voice announcements
-// and vibration (ui/media.mjs), reduced motion, anti-peek and the
+// gamepad and TV remote (ui/ctl-*.mjs, ui/remote.mjs), game announcements
+// (built-in voice or screen reader, ui/announcer.mjs) and vibration
+// (ui/media.mjs), reduced motion, anti-peek and the
 // accidental-call guard. It says plainly what is not supported yet (play
 // with a screen reader alone). Translations: seo-i18n/a11y.js.
 var _SEO_A11Y = {
@@ -8223,7 +8224,7 @@ var _SEO_A11Y = {
   "padH2": "Gamepad and TV remote",
   "padP": "A game controller — Xbox, PlayStation, Switch Pro and most Bluetooth pads — plays the whole game: buttons for every action, triggers to set the bet, and a navigation mode to move through the screens, the chat and the menus. It vibrates when your turn comes. On Android TV and Google TV the remote works the same way, and remotes with the four colour keys use them for Fold, Check/Call, Bet/Raise and All-In.",
   "hearH2": "Hearing and feeling the game",
-  "hearP": "Voice announcements read the game events aloud with your device’s own voices, in your language where the system has one. On Android phones a short vibration marks your turn. Game sounds come in four groups — actions, chat, network notices and blind raises — that can be turned on or off separately, with one volume slider.",
+  "hearP": "Game announcements read the game events aloud, either with your device’s own voices, in your language where the system has one, or through your screen reader (NVDA, JAWS, VoiceOver or TalkBack) without speaking twice; choose in the Accessibility window. On Android phones a short vibration marks your turn. Game sounds come in four groups — actions, chat, network notices and blind raises — that can be turned on or off separately, with one volume slider.",
   "calmH2": "Fewer surprises",
   "calmP": "When your system asks for reduced motion, the client tones down its animations. Anti-peek keeps your own cards hidden until you tap them, and the accidental-call guard briefly blocks the Call button right after a big raise, so a tap meant for a smaller call cannot pay the raised amount by mistake.",
   "langH2": "In your language, with a guide",
@@ -8237,7 +8238,7 @@ var _SEO_A11Y = {
     ["Can I play without a mouse or a touch screen?",
      "Yes, entirely with the keyboard, with a gamepad, or with an Android TV remote."],
     ["Does it work with a screen reader?",
-     "Not fully yet. Voice announcements read the game events aloud and the menus carry labels, but the poker table itself is a visual interface and cannot yet be played with a screen reader alone."],
+     "Partly. Game announcements can be sent to your screen reader instead of the built-in voice, and the menus carry labels, but the poker table itself is a visual interface and cannot yet be played with a screen reader alone."],
     ["Is it free?",
      "Yes. PokerTH is free and open-source software, with no ads and no in-app purchases; all chips are play money."]
   ]

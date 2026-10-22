@@ -393,7 +393,7 @@ export const help = {
         { id: "voice",
           t: "Ahots-iragarpenak eta bibrazioa",
           b: [
-            "Beste bi kanalek informa zaitzakete pantailari begiratu gabe: ahots-iragarpenek jokoaren gertaerak irakurtzen dituzte zure gailuaren hizketa-sintesiarekin, eta telefonoetan bibrazio labur batek zure txanda adieraz dezake. Biak web hedapenak dira, lehenespenez gaituta edo desgaituta gailuaren arabera, Aukera aurreratuak → Apustuak eta txanda atalean."],
+            "Beste bi kanalek informa zaitzakete pantailari begiratu gabe. Jokoaren iragarpenek jokoaren gertaerak ozen irakurtzen dituzte — ekintzak, zure txanda, irabazlea —, eta Irisgarritasuna leihoan zehazten da nola: Desgaituta, Ahots integratua (zure gailuaren hizketa-sintesia) edo Pantaila-irakurgailua (NVDA, JAWS, VoiceOver edo TalkBack-ek beren ahotsarekin irakurtzen dituzte, ahotsak gainjarri gabe). Telefonoetan bibrazio labur batek zure txanda adieraz dezake; Aukera aurreratuak → Apustuak eta txanda atalean dago."],
           note: "Bibrazioak Android-en funtzionatzen du (Chromium nabigatzaileak); Apple-k ez die bibrazio-APIa eskaintzen webguneei, beraz iPhone-ek ezin dute bibratu. Ahots-iragarpenek edonon funtzionatzen dute, baina ahots eta hizkuntza erabilgarriak zure sistemaren araberakoak dira — bezeroak aurkitzen duen egokiena erabiltzen du." }
       ]
     },

@@ -21,7 +21,8 @@ import { S } from '../game/state.mjs';
 import { t } from '../i18n.mjs';
 import { esc } from './misc.mjs';
 import { fmtChips } from './fmt.mjs';
-import { hapticBuzz, speak } from './media.mjs';
+import { hapticBuzz } from './media.mjs';
+import { announce } from './announcer.mjs';
 import { stopTurnTimer } from '../game/turn-timer.mjs';
 import { MSG } from '../net/messages.mjs';
 import { send } from '../net/session.mjs';
@@ -90,7 +91,7 @@ function _closePreActionPanel() {
 function notifyMyTurnVisuals() {
   var msg = t('notifTurnTitle');
   var sub = t('notifTurnBody');
-  speak(t('voiceYourTurn'), { interrupt: true });
+  announce(t('voiceYourTurn'), { urgent: true });
   // App-icon badge (installed PWA) — feature-detected global helper.
   window._badgeTurn = true;
   if (window.refreshAppBadge) window.refreshAppBadge();

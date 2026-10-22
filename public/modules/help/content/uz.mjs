@@ -392,7 +392,7 @@ export const help = {
         { id: "voice",
           t: "Ovozli eʼlonlar va tebranish",
           b: [
-            "Ikkita qoʻshimcha kanal sizni ekranga qaramasdan xabardor qilib turishi mumkin: ovozli eʼlonlar qurilmangizning nutq sintezi yordamida oʻyin voqealarini oʻqib beradi, telefonlarda esa qisqa tebranish navbatingiz kelganini bildirishi mumkin. Ikkalasi ham veb-qoʻshimcha boʻlib, qurilmaga qarab standart holatda yoqilgan yoki oʻchirilgan; ular Kengaytirilgan sozlamalar → Stavkalar va navbat boʻlimida."],
+            "Ikkita qoʻshimcha kanal sizni ekranga qaramasdan xabardor qilib turishi mumkin. Oʻyin eʼlonlari oʻyin voqealarini — harakatlar, navbatingiz, gʻolib — oʻqib beradi, qanday oʻqilishini esa Maxsus imkoniyatlar oynasi belgilaydi: Oʻchirilgan, Ichki ovoz (qurilmangizning nutq sintezi) yoki Ekran oʻquvchi dastur (NVDA, JAWS, VoiceOver yoki TalkBack ularni oʻz ovozi bilan, ikki marta gapirmasdan oʻqiydi). Telefonlarda qisqa tebranish navbatingiz kelganini bildirishi mumkin; u Kengaytirilgan sozlamalar → Stavkalar va navbat boʻlimida."],
           note: "Tebranish Android’da (Chromium brauzerlarida) ishlaydi; Apple veb-saytlarga tebranish API’sini bermaydi, shuning uchun iPhone’lar tebrana olmaydi. Ovozli eʼlonlar hamma joyda ishlaydi, lekin mavjud ovozlar va tillar tizimingizga bogʻliq — mijoz topgan eng mos variantdan foydalanadi." }
       ]
     },

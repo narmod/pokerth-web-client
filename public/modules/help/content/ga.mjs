@@ -393,7 +393,7 @@ export const help = {
         { id: "voice",
           t: "Fógraí gutha agus creathadh",
           b: [
-            "Is féidir le dhá chainéal bhreise eolas a thabhairt duit gan féachaint ar an scáileán: léann fógraí gutha imeachtaí an chluiche le sintéis urlabhra do ghléis, agus ar fhóin is féidir le creathadh gairid do shealsa a chur in iúl. Is breiseáin ghréasáin an dá cheann, ar siúl nó múchta de réir réamhshocraithe ag brath ar an ngléas, in Ardroghanna → Geallta agus seal."],
+            "Is féidir le dhá chainéal bhreise eolas a thabhairt duit gan féachaint ar an scáileán. Léann fógraí an chluiche imeachtaí an chluiche — bearta, do shealsa, an buaiteoir — agus socraíonn an fhuinneog Inrochtaineacht conas: Múchta, Guth ionsuite (sintéis urlabhra do ghléis) nó Léitheoir scáileáin (léann NVDA, JAWS, VoiceOver nó TalkBack iad lena nguth féin, gan labhairt faoi dhó). Ar fhóin is féidir le creathadh gairid do shealsa a chur in iúl; tá sé in Ardroghanna → Geallta agus seal."],
           note: "Oibríonn creathadh ar Android (brabhsálaithe Chromium); ní sholáthraíonn Apple API creathaidh do shuíomhanna gréasáin, mar sin ní féidir le iPhone creathadh. Oibríonn fógraí gutha i ngach áit, ach braitheann na guthanna agus na teangacha atá ar fáil ar do chóras — úsáideann an cliant an meaitseáil is fearr a aimsíonn sé." }
       ]
     },

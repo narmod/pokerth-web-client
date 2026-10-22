@@ -392,7 +392,7 @@ export const help = {
         { id: "voice",
           t: "Raddtilkynningar og titringur",
           b: [
-            "Tvær leiðir í viðbót til að láta þig vita án þess að þú horfir á skjáinn: raddtilkynningar lesa atburði leiksins upphátt með talgervli tækisins, og í símum getur stuttur titringur gefið til kynna að þú eigir leik. Hvort tveggja eru vefviðbætur, sjálfgefið af eða á eftir tæki, í Ítarlegir valkostir → Veðmál og umferð."],
+            "Tvær leiðir í viðbót til að láta þig vita án þess að þú horfir á skjáinn. Leiktilkynningar lesa atburði leiksins upphátt — aðgerðir, þegar þú átt leik, sigurvegarann — og í Aðgengi-glugganum velurðu hvernig: Af, Innbyggð rödd (talgervill tækisins) eða Skjálesari (NVDA, JAWS, VoiceOver eða TalkBack lesa þá með eigin rödd, án þess að raddirnar tali hvor ofan í aðra). Í símum getur stuttur titringur gefið til kynna að þú eigir leik; hann er í Ítarlegir valkostir → Veðmál og umferð."],
           note: "Titringur virkar á Android (Chromium-vafrar); Apple veitir vefsíðum ekki aðgang að titrings-API, svo iPhone getur ekki titrað. Raddtilkynningar virka alls staðar, en raddir og tungumál í boði fara eftir kerfinu þínu — biðlarinn notar bestu samsvörun sem hann finnur." },
       ]
     },

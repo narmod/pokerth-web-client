@@ -393,7 +393,7 @@ export const help = {
         { id: "voice",
           t: "Sanarwar murya da girgiza",
           b: [
-            "Ƙarin hanyoyi biyu za su iya sanar da kai ba tare da ka kalli allo ba: sanarwar murya tana karanta abubuwan da ke faruwa a wasa da muryar na'urarka, kuma a wayoyi ɗan girgiza zai iya nuna lokacinka. Duka biyun ƙarin yanar gizo ne, a kunne ko a kashe ta asali bisa na'ura, a Zaɓuɓɓuka na ci gaba → Caca da lokaci."],
+            "Ƙarin hanyoyi biyu za su iya sanar da kai ba tare da ka kalli allo ba. Sanarwar wasa tana karanta abubuwan da ke faruwa a wasa — motsi, lokacinka, wanda ya ci — kuma tagar Samun dama ce ke tsara yadda: A kashe, Muryar na'ura (haɗa magana ta na'urarka) ko Mai karanta allo (NVDA, JAWS, VoiceOver ko TalkBack suna karanta su da muryarsu, ba tare da an faɗa sau biyu ba). A wayoyi ɗan girgiza zai iya nuna lokacinka; yana a Zaɓuɓɓuka na ci gaba → Caca da lokaci."],
           note: "Girgiza tana aiki a Android (burauzojin Chromium); Apple ba ta ba shafukan yanar gizo API na girgiza ba, don haka iPhone ba za su iya girgiza ba. Sanarwar murya tana aiki a ko'ina, amma muryoyi da harsunan da ake da su sun dogara da tsarinka — abokin ciniki yana amfani da mafi dacewa da ya samu." }
       ]
     },

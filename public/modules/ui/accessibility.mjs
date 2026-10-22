@@ -51,6 +51,8 @@ function syncControls(preferences) {
     if (browserZoom) browserZoom.checked = preferences.browserZoom;
     const advancedBrowserZoom = document.getElementById('adv-browserzoom');
     if (advancedBrowserZoom) advancedBrowserZoom.checked = preferences.browserZoom;
+    // Game announcements (off / built-in voice / screen reader): ui/announcer.mjs.
+    if (typeof window.syncAnnounceControls === 'function') window.syncAnnounceControls();
   } catch (_error) {}
 }
 
@@ -210,6 +212,9 @@ function setBrowserZoom(value) {
 function resetAccessibilityPreferences() {
   write(SIZE_KEY, 'standard');
   write(CONTRAST_KEY, '0');
+  try {
+    if (typeof window.setAnnounceMode === 'function') window.setAnnounceMode('off', { silent: true });
+  } catch (_error) {}
   applyAccessibilityPreferences();
   markChanged('interface_size');
   markChanged('high_contrast');

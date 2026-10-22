@@ -393,7 +393,7 @@ export const help = {
         { id: "voice",
           t: "Izwi nokudlidliza",
           b: [
-            "Iziteshi ezimbili ezengeziwe zingakwazisa ngaphandle kokubheka isikrini: izimemezelo zezwi zifunda izehlakalo zomdlalo ngokuzwakalayo zisebenzisa ukuhlanganiswa kwenkulumo kwedivayisi yakho, futhi kumafoni ukudlidliza okufushane kungamaka ithuba lakho. Kokubili kuyizengezo zewebhu, kuvaliwe noma kuvuliwe ngokuzenzakalelayo kuya ngedivayisi, ku-Izinketho ezithuthukisiwe → Ukubheja nethuba."],
+            "Iziteshi ezimbili ezengeziwe zingakwazisa ngaphandle kokubheka isikrini. Izimemezelo zomdlalo zifunda izehlakalo zomdlalo ngokuzwakalayo — izenzo, ithuba lakho, owinile — futhi iwindi elithi Ukufinyeleleka linquma ukuthi kanjani: Kuvaliwe, Izwi elakhelwe ngaphakathi (ukuhlanganiswa kwenkulumo kwedivayisi yakho) noma Isifundi sesikrini (i-NVDA, i-JAWS, i-VoiceOver noma i-TalkBack ziwafunda ngezwi lazo, ngaphandle kokukhuluma kabili). Kumafoni ukudlidliza okufushane kungamaka ithuba lakho; kutholakala ku-Izinketho ezithuthukisiwe → Ukubheja nethuba."],
           note: "Ukudlidliza kusebenza ku-Android (iziphequluli ze-Chromium); i-Apple ayiyinikezi i-API yokudlidliza kumawebhusayithi, ngakho ama-iPhone awakwazi ukudlidliza. Izimemezelo zezwi zisebenza yonke indawo, kodwa amazwi nezilimi ezitholakalayo kuncike ohlelweni lwakho — iklayenti lisebenzisa elifanele kakhulu elilitholayo." }
       ]
     },
