@@ -39,6 +39,13 @@ const tabs = html.match(/<button class="ab-tab[^"]*"[^>]*><span class="ab-tab-lb
 // 7 since web.243 (Guides tab).
 ok(tabs.length === 7, 'les 7 onglets portent le span interne .ab-tab-lbl (' + tabs.length + ')');
 
+// web.261: when the seven tabs do not fit, the bar scrolls sideways with whole
+// names (abFitTabs in pokerth.js) instead of clamping them to two lines.
+ok(/\.ab-tabs\.ab-scroll \{ overflow-x:auto;/.test(css) && /\.ab-tabs\.ab-scroll \.ab-tab \{ flex:0 0 auto; padding:8px 14px; white-space:nowrap; \}/.test(css)
+   && /\.ab-tabs\.ab-scroll \.ab-tab-lbl \{ display:inline; -webkit-line-clamp:unset;/.test(css), 'barre trop etroite : defilement horizontal, noms entiers');
+const js = readFileSync('public/pokerth.js', 'utf8');
+ok(/function abFitTabs\(\)\{[\s\S]*?bar\.classList\.add\('ab-scroll'\);\s*if \(bar\.scrollWidth <= bar\.clientWidth \+ 1\) bar\.classList\.remove\('ab-scroll'\);/.test(js), 'mode defilement seulement si les onglets ne tiennent pas');
+
 console.log('.cf label:');
 const cf = (css.match(/\.cf label \{[^}]*\}/) || [''])[0];
 ok(cf.length > 0, 'regle presente');

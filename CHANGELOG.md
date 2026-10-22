@@ -132,6 +132,11 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **About: the tab bar scrolls sideways when it does not fit** (`web.261`) — on a phone the seven tabs were clamped to
+  two lines and cut mid-word (« A prop… », « Journa / l des… »). When they do not fit, the bar now scrolls
+  horizontally with each name whole on one line, a fade on the side where tabs remain, and the active tab brought
+  into view; when they fit (desktop) the usual row of equal tabs stays. `abFitTabs` in `pokerth.js`, re-measured on
+  resize and language change.
 - **About › « Poker guides » tab** (`web.243`, SEO audit of 2026-10-21, point 5) — of the 14 content pages only
   /rules and /faq were linked visibly from the home page; the rest only from the off-screen crawler block. The About
   window gets a « Poker guides » tab listing the 12 guide pages. The list is written into the served HTML by

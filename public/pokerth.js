@@ -12050,12 +12050,48 @@ function renderPlayersList() {
 /* ── Page « À propos de PokerTH » (parité AboutPage QML) ── */
 ;(function(){
   function $(id){ return document.getElementById(id); }
+  // Onglets trop larges pour la fenêtre (téléphone, langues longues) : au lieu
+  // de libellés coupés sur deux lignes (« Journa / l des… »), une barre qui
+  // défile horizontalement avec les noms entiers (demande narmod 22/10/2026).
+  // Mesuré en mode défilement : s'ils tiennent tous, la barre redevient la
+  // rangée d'onglets égaux habituelle.
+  function abFitTabs(){
+    var bar = document.querySelector('#about-page .ab-tabs'), p = $('about-page');
+    if (!bar || !p || p.style.display === 'none') return;
+    bar.classList.add('ab-scroll');
+    if (bar.scrollWidth <= bar.clientWidth + 1) bar.classList.remove('ab-scroll');
+    abShowActiveTab();
+  }
+  function abShowActiveTab(){
+    var bar = document.querySelector('#about-page .ab-tabs');
+    var a = bar && bar.classList.contains('ab-scroll') && bar.querySelector('.ab-tab.active');
+    if (a) {
+      var bl = bar.getBoundingClientRect(), al = a.getBoundingClientRect();
+      if (al.left < bl.left) bar.scrollLeft -= (bl.left - al.left) + 12;
+      else if (al.right > bl.right) bar.scrollLeft += (al.right - bl.right) + 28;
+    }
+    abTabsEdge();
+  }
+  // Un fondu sur chaque bord derrière lequel il reste des onglets (mesuré sur
+  // les positions réelles : vaut aussi de droite à gauche).
+  function abTabsEdge(){
+    var bar = document.querySelector('#about-page .ab-tabs');
+    if (!bar) return;
+    var on = bar.classList.contains('ab-scroll'), b = bar.getBoundingClientRect(), l = false, r = false;
+    if (on) Array.prototype.forEach.call(bar.children, function (t) { var x = t.getBoundingClientRect(); if (x.left < b.left - 1) l = true; if (x.right > b.right + 1) r = true; });
+    bar.classList.toggle('ab-fl', l); bar.classList.toggle('ab-fr', r);
+  }
+  (function(){ var bar = document.querySelector('#about-page .ab-tabs'); if (bar) bar.addEventListener('scroll', abTabsEdge, { passive: true }); })();
+  window.addEventListener('resize', abFitTabs);
+  if (window._onLangChange) window._onLangChange(abFitTabs);
+  else document.addEventListener('DOMContentLoaded', function(){ if (window._onLangChange) window._onLangChange(abFitTabs); });
   window.openAboutPage = function(){
     var p = $('about-page'); if (!p) return;
     p.style.display = 'flex';
     var v = $('ab-version');
     if (v) v.textContent = 'PokerTH Web Client ' + (window.BUILD_VERSION || '');
     window.abShowTab(0);
+    abFitTabs();
   };
   window.closeAboutPage = function(){ var p = $('about-page'); if (p) p.style.display = 'none'; };
   window.abShowTab = function(i){
@@ -12068,6 +12104,7 @@ function renderPlayersList() {
     // Onglet Guides du poker : liste servie dans la langue de la page,
     // relue dans la langue de l'interface si elle diffère (web.243).
     if (i === 6) import('/modules/seo/about-guides.mjs').then(function (m) { m.refreshAboutGuides(window._lang); }).catch(function () {});
+    abShowActiveTab();
   };
   // Onglet Changelog (demande sp0ck 12/08/2026, parité widget/QML) : le
   // fichier ChangeLog upstream, embarqué dans /ChangeLog (épinglé à la
@@ -12397,7 +12434,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.260'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.261'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

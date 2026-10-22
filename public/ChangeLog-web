@@ -1,3 +1,6 @@
+2026-10-22 version 2.1.10-web.261:
+- improvement: About window: on a phone the tabs show their full names and scroll sideways instead of being cut
+
 2026-10-22 version 2.1.10-web.260:
 - bugfix: after an update, a mix of old and new files no longer leaves the gamepad or another feature broken: the app reloads once on its own at startup
 

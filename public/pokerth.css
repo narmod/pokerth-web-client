@@ -10473,6 +10473,17 @@ html.reduce-fx .seat-action-badge {
    tiennent sur la ligne avant de recourir à la césure. */
 @media (max-width: 560px) { .ab-tab { font-size:var(--fs-sm); } }
 .ab-tab.active { background:var(--panel-hi); font-weight:600; }
+/* Barre trop étroite pour les sept onglets (abFitTabs dans pokerth.js, demande
+   narmod 22/10/2026) : défilement horizontal, chaque onglet à sa largeur
+   naturelle, nom entier sur une ligne ; un fondu au bord indique la suite. */
+.ab-tabs.ab-scroll { overflow-x:auto; overflow-y:hidden; scrollbar-width:none; -webkit-overflow-scrolling:touch; --fl:0px; --fr:0px;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 var(--fl),#000 calc(100% - var(--fr)),transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0,#000 var(--fl),#000 calc(100% - var(--fr)),transparent 100%); }
+.ab-tabs.ab-scroll.ab-fl { --fl:28px; }
+.ab-tabs.ab-scroll.ab-fr { --fr:28px; }
+.ab-tabs.ab-scroll::-webkit-scrollbar { display:none; }
+.ab-tabs.ab-scroll .ab-tab { flex:0 0 auto; padding:8px 14px; white-space:nowrap; }
+.ab-tabs.ab-scroll .ab-tab-lbl { display:inline; -webkit-line-clamp:unset; overflow:visible; hyphens:manual; }
 :root[data-theme="pokerth-light"] .ab-tab { background:#dfe3ea; }
 :root[data-theme="pokerth-light"] .ab-tab.active { background:#a9b2c6; }
 .ab-body { flex:1 1 auto; padding:14px 16px 28px; }
