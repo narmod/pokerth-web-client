@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.10-web.259';
+const CACHE_VERSION = 'pokerth-v2.1.10-web.260';
 // Build id the page puts on the card back URL (deck.mjs _deckBack →
 // flipside.<ext>?v=<BUILD_VERSION>): CACHE_VERSION without its prefix.
 const BUILD_ID = CACHE_VERSION.replace(/^pokerth-v/, '');
@@ -735,8 +735,12 @@ function handleCode(e) {
       // edge and the origin last a few seconds), not a verdict on the file:
       // answering with it fails the <script type=module> just like a cut
       // connection would. Serve this version's precached copy when there is
-      // one — same build, so no version skew — and pass the error through
-      // otherwise. A 404 is passed through untouched (real "not here").
+      // one — same build as long as this worker is current — and pass the
+      // error through otherwise. A 404 is passed through untouched (real
+      // "not here"). If this worker is OLDER than the server (update not
+      // applied yet), that copy can mismatch its fresh neighbours: the page
+      // detects the resulting link error and reloads once (pokerth-client.html,
+      // "Module skew", web.260).
       if (response && response.status >= 500) {
         return cache.match(e.request).then(function (cached) {
           return cached || response;

@@ -212,6 +212,35 @@
     push({ msg: String(ev.message || 'error'), src: String(ev.filename || ''),
            line: ev.lineno || 0, col: ev.colno || 0,
            stack: stk });
+    // Module version skew (web.260): a fresh module linked against a STALE
+    // neighbour ("does not provide an export named …" — Chrome; Firefox says
+    // "doesn't provide" / "import not found", Safari "Importing binding name
+    // … is not found"). Seen when an old service worker is still in control
+    // and one code request falls back to ITS cache (network blip / 5xx) while
+    // the others come fresh from the network: the file arrives as a 200, so
+    // the load-failure retry above never fires. Recover once per session:
+    // let a waiting service worker take over, then reload. Only before the
+    // first connect (window._swReadyOnce, same gate as coldBootSelfHeal), so
+    // a live session or a game is never cut.
+    try {
+      var em = String(ev.message || ''), fn = String(ev.filename || '');
+      if (/(?:does not|doesn't) provide an export named|import not found|Importing binding name .* is not found/i.test(em) &&
+          (!fn || fn.indexOf(location.origin + '/') === 0) &&
+          !window._swReadyOnce && !sessionStorage.getItem('pth_skewreload')) {
+        sessionStorage.setItem('pth_skewreload', '1');
+        push({ msg: 'Module skew: reloading', src: fn, line: 0, col: 0, stack: '' });
+        try {
+          if (navigator.serviceWorker && navigator.serviceWorker.getRegistration) {
+            navigator.serviceWorker.getRegistration().then(function (r) {
+              if (r && r.waiting && !window._swReadyOnce) r.waiting.postMessage({ type: 'SKIP_WAITING' });
+            }).catch(function () {});
+          }
+        } catch (_) {}
+        setTimeout(function () {
+          try { if (!window._swReadyOnce) location.reload(); } catch (_) {}
+        }, 1800);
+      }
+    } catch (_) {}
   }, true);
   window.addEventListener('unhandledrejection', function (ev) {
     var r = ev && ev.reason;

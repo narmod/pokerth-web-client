@@ -24,6 +24,8 @@
 // their own budget of 8, outside the 5: a burst of three failed module tags
 // used to fill the five slots with "Failed to load" + two probes, so the
 // line saying whether the player got the file in the end never left.
+// The « Module skew: reloading » line (version-skew recovery, web.260) shares
+// that budget.
 
 import { featureOff } from './feature-off.mjs';
 
@@ -33,7 +35,7 @@ const MIN_GAP_MS = 10000;    // délai minimum entre deux envois
 const MAX_STACK = 600;       // caractères de pile conservés
 const MAX_OUTCOMES = 8;      // load-failure probes/outcomes, outside MAX_SIGS
 
-const _OUTCOME_RE = /^(?:Load-failure (?:probe:|retry #\d+ )|Lang load (?:retry recovered|failed, giving up))/;
+const _OUTCOME_RE = /^(?:Load-failure (?:probe:|retry #\d+ )|Lang load (?:retry recovered|failed, giving up)|Module skew: )/;
 const _seen = new Set();
 const _seenOut = new Set();
 let _lastSent = 0;

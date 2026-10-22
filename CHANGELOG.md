@@ -234,6 +234,16 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Version skew between modules recovers on its own** (`web.260`) — a player's error log showed
+  `ctl-nav.mjs` (fresh) failing to link against a `keynav.mjs` older than `web.72` (« does not provide an export
+  named 'openSurfaces' »). An old service worker still in control falls back to ITS cache when one code request
+  fails or gets a 5xx, while the neighbours arrive fresh from the network: the stale file comes back as a 200, so
+  the load-failure retry never fired and the gamepad stayed broken for the session. The inline error collector
+  (`pokerth-client.html`) now recognises the link error (Chrome, Firefox and Safari wordings) on our origin and,
+  once per session (`sessionStorage` `pth_skewreload`) and only before the first connect (`window._swReadyOnce`),
+  activates a waiting service worker and reloads. A « Module skew: reloading » line reaches the admin log
+  (outcome budget in `modules/errreport.mjs`). The `handleCode` comment in `sw.js` no longer claims the cache
+  fallback can never skew.
 - **Community cards no longer flicker on iPhone** (`web.259`) — on iOS Safari the board faces went blank for one or
   two frames, in pairs ~150 ms apart, with nothing else changing on screen. `autoScaleTable()` (`modules/game/seats.mjs`),
   called by every `renderSeats` then again 150 ms later, set the scaler to `scale(1)` and `--comm-scale` to 1 to
