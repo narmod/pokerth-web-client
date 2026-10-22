@@ -368,6 +368,13 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Help menu paths and the Serbian script** (`web.281`) — in 49 languages the help named settings sections
+  (Advanced options → Seats / Log messages / Assistance / Local game / Betting & turn…) differently from the
+  labels the options window shows; 337 help fields now use the exact catalogue labels (es-419 re-derived). The
+  Serbian catalogue mixed scripts (≈560 strings and the language name « Srpski » in Latin): now Serbian Cyrillic
+  throughout (« Српски »), action terms, brands, acronyms and placeholders kept as they are. `es-419` was
+  hand-edited away from `derive(es)` on four strings: the edits are folded into `scripts/es-419-rules.mjs`
+  (« ¡Ganaste! » now also for the other win messages), so `test-es-419-derivation` passes again.
 - **iPad app: no band under the screen either** (`web.271`, to be confirmed on a device) — the `web.248`/`web.249`
   height correction was iPhone-only because an iPad app can run in a window; the same band was reported on an iPad.
   `fullH()` now also applies on an iPad home-screen app (iPadOS sends a Mac user agent, detected by touch support),

@@ -1,3 +1,8 @@
+2026-10-22 version 2.1.10-web.281:
+- bugfix: the help now names the settings sections exactly as the options window shows them, in every language
+- bugfix: Serbian is now written entirely in Cyrillic, including the language name in the language list
+- improvement: Latin-American Spanish: « ¡Ganaste! » at the end of a won game
+
 2026-10-22 version 2.1.10-web.280:
 - new: game announcements now work with screen readers: in the Accessibility window choose Off, Built-in voice or Screen reader; with Screen reader, NVDA, JAWS, VoiceOver or TalkBack read the actions, your turn and the winner in their own voice, without two voices talking at once
 - improvement: the voice option moved from Advanced options to the Accessibility window; if you had it on, nothing changes for you

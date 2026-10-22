@@ -80,6 +80,12 @@ export const RULES = [
   [/\bhoras de conexión\b/g, 'horarios de conexión'],
   [/\btal como describe esa política\b/g, 'tal como lo describe esa política'],
   [/\bgestor de contraseñas\b/g, 'administrador de contraseñas'],
+  // Waiting-room notice, Ace Runner rules, mini-game win and achievement
+  // texts, hand-edited in es-419 (web.270–275) and folded back here.
+  [/¡Tu mesa empieza!/g, '¡Tu mesa está empezando!'],
+  [/\bquédate en el suelo\b/g, 'quédate en el piso'],
+  [/^¡Has ganado!$/g, '¡Ganaste!'],
+  [/\bGanar al As\b/g, 'Vencer al As'],
 ];
 export function derive(text) {
   let t = String(text);
