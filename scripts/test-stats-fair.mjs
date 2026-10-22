@@ -66,8 +66,8 @@ ok(/cur: visitWindow\(P, E \|\| 1\), prev: visitWindow\(P, \(E \|\| 1\) \+ P\)/.
 ok(/todayKey: visitDayKey\(now\)/.test(sum) && /musicSinceKey/.test(sum), 'and the server\'s own day keys');
 ok(/tile\('Last 7 days',d\.week,pv\.week,'the 7 days before \(complete days\)',fu\.week,cv\.week\)/.test(admin), 'the 7-day tile compares complete days and says so');
 const ins = fn(admin, '_trafInsights');
-ok(/if\(n>2 && live\)\{ s=s\.slice\(0,-1\); n=s\.length; \}/.test(ins), 'mean, slope and halves leave the day in progress out');
-ok(/if\(_fit\.length>2 && \(d\.h24\|\|!d\.periodEnd\)\) _fit=_fit\.slice\(0,-1\);/.test(admin), 'so does the trend line of the chart');
+ok(/if\(n>=1 && live\)\{ s=s\.slice\(0,-1\); n=s\.length; \}/.test(ins), 'mean, slope and halves leave the day in progress out, even on a 1- or 2-day range');
+ok(/if\(_fit\.length && \(d\.h24\|\|!d\.periodEnd\)\) _fit=_fit\.slice\(0,-1\);/.test(admin), 'so does the trend line of the chart');
 
 // ── Server day keys, request order ────────────────────────────────────────
 const mt = fn(admin, '_musTrendWin') + fn(admin, '_musDays');
@@ -77,7 +77,7 @@ ok(/var _seq=\+\+_trafSeq;/.test(lt) && /if\(_seq!==_trafSeq\) return;/.test(lt)
 
 // The point in progress is left out of means, slope and halves, only when there
 // is one: always for 24 h, never for a past custom range (audit 2026-10-20, B6).
-ok(/var sAll=s, live=d\.h24 \|\| !d\.periodEnd;\n\s+if\(n>2 && live\)\{ s=s\.slice\(0,-1\); n=s\.length; \}/.test(admin),
+ok(/var sAll=s, live=d\.h24 \|\| !d\.periodEnd;\n\s+if\(n>=1 && live\)\{ s=s\.slice\(0,-1\); n=s\.length; \}/.test(admin),
   'a window ending now drops its day (hour) in progress; a past range keeps every day');
 
 // ── Devices against devices (audit 2026-10-22) ────────────────────────────
@@ -144,6 +144,27 @@ ok(!/x\.rt\b|\.rt\|\||month\.rt/.test(fn(admin, '_trafInsights') + fn(admin, 'lo
   const o = vm.runInContext('_profMeans(P)', Object.assign(ctx, { P: { v: Array(24).fill(10), nw: Array(24).fill(0), days: 2 } }));
   ok(o.v[0] === 5, 'an older proxy without dh keeps the single divisor');
   ok(/pm=_profMeans\(prof\)/.test(fn(admin, '_tsActivity')) && /var pm=_profMeans\(prof\)/.test(fn(admin, '_trafHours')), 'Busiest hour, Visits per hour, the quiet stretch and the newcomer index all read the means');
+}
+
+// World and Activity: every « vs before » compares complete days (hours) too (lot 1).
+{
+  const ctx = { visitList: function (h24, n, off) { return { h24: h24, n: n, off: off || 0 }; } };
+  vm.createContext(ctx);
+  vm.runInContext(fn(proxy, 'visitFullLists'), ctx);
+  const a = vm.runInContext('visitFullLists(false, 14, 0)', ctx), b = vm.runInContext('visitFullLists(false, 14, 5)', ctx), c = vm.runInContext('visitFullLists(true, 1, 0)', ctx);
+  ok(a.cur.off === 1 && a.prev.off === 15 && a.cur.n === 14, 'a window ending now: the 14 days ending yesterday against the 14 before');
+  ok(b.cur.off === 5 && b.prev.off === 19, 'a past range as it stands, against the range before');
+  ok(c.cur.h24 && c.cur.off === 1 && c.prev.off === 25, '24 h: the 24 complete hours against the 24 before');
+  const sumSrc = fn(proxy, 'visitsSummaryRead'), cube = fn(proxy, 'visitCubeSummary');
+  ok(/full: visitFullSum\(h24, P, E, 'lo'\)/.test(sumSrc) && /full: visitFullSum\(h24, P, E, 'ls'\)/.test(sumSrc), 'logins and LAN servers carry their like-for-like pair');
+  ok(/loginsFull: visitCovered\(h24 \? 2 : \(E \|\| 1\) \+ 2 \* P - 1/.test(sumSrc) && /lanFull: visitCovered/.test(sumSrc), 'with a cover for the window one day further back');
+  ok(/const FL = visitFullLists\(h24, P, E\);/.test(cube) && /fullPrevCovered: visitCovered\(h24 \? 2 : \(E \|\| 1\) \+ 2 \* P - 1/.test(cube), 'and so does the narrowing cube');
+  const w = fn(admin, '_worldInet') + fn(admin, '_worldLan') + fn(admin, '_worldConn') + fn(admin, '_wLogins');
+  ok(!/_wDelta\(cur,prv,cov\)/.test(w) && /_wDelta\(F\.cur,F\.prev,F\.cov\)/.test(fn(admin, '_worldInet')) && /_wDelta\(F\.cur,F\.prev,F\.cov\)/.test(fn(admin, '_worldLan')), 'the Internet and LAN cards set complete days against complete days');
+  ok(/c=lc\[id\]\|\|0, b=lb\[id\]\|\|0/.test(fn(admin, '_worldLan')), 'each LAN server too');
+  ok(/Math\.round\(\(tc-tp\)\/tp\*100\)/.test(fn(admin, '_wLogins')), 'and the logins');
+  ok(/_wFullM\(d,keys\)/.test(fn(admin, '_worldConn')) && /_wFullCube\(NB,m\.k\)/.test(fn(admin, '_worldConn')), 'and the connections-per-day note, plain or narrowed');
+  ok(/_hourInstants\(24, 1\)/.test(fn(proxy, 'visitHourProfile24')), 'the 24-hour average day leaves the hour in progress out');
 }
 console.log(fail ? 'FAIL ' + fail + '/' + n : 'OK ' + n + '/' + n);
 process.exit(fail ? 1 : 0);

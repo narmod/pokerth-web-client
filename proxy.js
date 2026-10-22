@@ -9506,6 +9506,8 @@ function visitCubeSummary(query) {
       for (let i = E + 2 * P - 1; i >= E + P; i--) { const d = new Date(now); d.setDate(now.getDate() - i); prev.push(visitDay(visitDayKey(d))); }
     }
     const qc = CUBE_STATS.query(cur, type, f, by), qp = CUBE_STATS.query(prev, type, f, by);
+    const FL = visitFullLists(h24, P, E);
+    const fc = CUBE_STATS.query(FL.cur, type, f, by), fp = CUBE_STATS.query(FL.prev, type, f, by);
     const series = cur.map(function (b, i) {
       const q = CUBE_STATS.query([b], type, f, by);
       return { date: keys[i], n: CUBE_STATS.maskN(q.total, fDims), by: by ? CUBE_STATS.mask(q.by, cellDims) : undefined };
@@ -9519,6 +9521,12 @@ function visitCubeSummary(query) {
       periodDays: P, periodEnd: E, range: R ? { from: R.from, to: R.to } : null,
       period: { total: CUBE_STATS.maskN(qc.total, fDims), by: CUBE_STATS.mask(qc.by, cellDims), overflow: qc.overflow },
       prev: { total: CUBE_STATS.maskN(qp.total, fDims), by: CUBE_STATS.mask(qp.by, cellDims), overflow: qp.overflow },
+      // « vs before » on complete days (hours): see visitFullLists.
+      full: {
+        cur: { total: CUBE_STATS.maskN(fc.total, fDims), by: CUBE_STATS.mask(fc.by, cellDims) },
+        prev: { total: CUBE_STATS.maskN(fp.total, fDims), by: CUBE_STATS.mask(fp.by, cellDims) }
+      },
+      fullPrevCovered: visitCovered(h24 ? 2 : (E || 1) + 2 * P - 1, visitsStore.cubeSince || 0),
       series: series, prevSeries: prevSeries, prevSeriesBy: prevSeriesBy,
       values: CUBE_STATS.values(cur, type), lanNames: names,
       masked: cellDims >= 2, small: CUBE_STATS.SMALL,
@@ -10133,7 +10141,9 @@ function visitHourProfile24() {
   const v = new Array(24).fill(0), nw = new Array(24).fill(0);
   const now = new Date(), top = new Date(now); top.setMinutes(0, 0, 0);
   let days = 0;
-  const hrs = _hourInstants(24);
+  // The 24 complete hours: each hour of the day still appears once, and the
+  // hour in progress (a few minutes' worth) is not taken for a quiet one.
+  const hrs = _hourInstants(24, 1);
   for (let i = 0; i < hrs.length; i++) {
     const d = hrs[i];
     const b = visitDay(visitDayKey(d));
@@ -10348,6 +10358,18 @@ function visitCountedFrom(oldest) {
   if (oldest === undefined) oldest = visitOldestBack();
   return oldest >= 0 ? visitDayKeyFromIndex(visitDayIndex() - oldest + 1) : '';
 }
+// Like-for-like « vs before » for a per-key counter: the window as shown
+// includes the day (hour) in progress, set against as many complete ones it
+// read a drop every morning. `cur` = the last P complete days (24 complete
+// hours; a past range as it stands), `prev` = the P before — as full.period.
+function visitFullLists(h24, P, E) {
+  if (h24) return { cur: visitList(true, 24, 1), prev: visitList(true, 24, 25) };
+  return { cur: visitList(false, P, E || 1), prev: visitList(false, P, (E || 1) + P) };
+}
+function visitFullSum(h24, P, E, f) {
+  const L = visitFullLists(h24, P, E);
+  return { cur: visitSumKey(L.cur, f), prev: visitSumKey(L.prev, f) };
+}
 function visitsSummaryRead(periodDays, h24, range) {
   const R = (!h24 && range) || null;
   const P = h24 ? 1 : (R ? R.P : visitPeriodDays(periodDays)), E = R ? R.E : 0;
@@ -10422,11 +10444,12 @@ function visitsSummaryRead(periodDays, h24, range) {
       const prev = visitSumKey(h24 ? visitList(true, 24, 24) : visitList(false, P, E + P), 'ls');
       const names = {};
       try { LAN_DIR.entries().forEach(function (e) { names[e.id] = e.name || e.host; }); } catch (e) {}
-      return { period: cur, prev: prev, names: names, since: visitsStore.lanSrvSince || 0 };
+      return { period: cur, prev: prev, full: visitFullSum(h24, P, E, 'ls'), names: names, since: visitsStore.lanSrvSince || 0 };
     })(),
     logins: {
       period: visitSumKey(h24 ? visitList(true, 24) : visitList(false, P, E), 'lo'),
       prev: visitSumKey(h24 ? visitList(true, 24, 24) : visitList(false, P, E + P), 'lo'),
+      full: visitFullSum(h24, P, E, 'lo'),
       since: visitsStore.loginSince || 0
     },
     hours48: visitHourSeries(48),
@@ -10443,7 +10466,10 @@ function visitsSummaryRead(periodDays, h24, range) {
       return {
         today: visitCovered(1, 0, o), week: visitCovered(14, 0, o), month: visitCovered(60, 0, o),
         period: visitCovered(h24 ? 2 : (E || 1) + 2 * P - 1, 0, o), prev: visitCovered(pb, 0, o),
-        logins: visitCovered(pb, visitsStore.loginSince || 0, o), lan: visitCovered(pb, visitsStore.lanSrvSince || 0, o)
+        logins: visitCovered(pb, visitsStore.loginSince || 0, o), lan: visitCovered(pb, visitsStore.lanSrvSince || 0, o),
+        // The like-for-like windows (full.*) end one day (hour) earlier.
+        loginsFull: visitCovered(h24 ? 2 : (E || 1) + 2 * P - 1, visitsStore.loginSince || 0, o),
+        lanFull: visitCovered(h24 ? 2 : (E || 1) + 2 * P - 1, visitsStore.lanSrvSince || 0, o)
       };
     })(),
     cohorts: h24 ? null : visitCohorts(P, E),

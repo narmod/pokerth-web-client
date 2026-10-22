@@ -368,6 +368,15 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Admin › Statistics › World and Activity: « vs before » like for like** (`web.285`) — the arrows on the
+  Internet and LAN connection cards, each LAN server, the logins and the « Connections per day » note set the
+  period including today so far against as many complete days before: about −11 % in red every morning on flat
+  traffic. They now compare the last complete days (24 complete hours) with as many before, as Summary does:
+  `visitFullLists` / `visitFullSum` give `logins.full` and `lanServers.full`, connections read `full.period.m`,
+  the narrowing cube carries `full` and `fullPrevCovered`, with covers `loginsFull` / `lanFull`. The figures
+  shown are unchanged. The 24-hour « average day » (Busiest hour, Visits per hour, quietest stretch) reads the
+  24 complete hours, without the hour in progress. On a 1- or 2-day custom range ending today, Summary means and
+  halves now leave the day in progress out too. `scripts/test-stats-fair.mjs`.
 - **Malay was largely Indonesian** (`web.284`) — the `ms` catalogue had been derived from `id`: ~900 of 1857
   strings rewritten in Malaysian Malay with one glossary (tetapan, tetingkap, kata laluan, pelayan, hantar,
   Pilihan lanjutan, Kebolehcapaian, « anda »…), then a consistency pass; 219 help fields, 113 Ace's Help texts

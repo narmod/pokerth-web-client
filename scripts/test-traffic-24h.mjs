@@ -58,7 +58,7 @@ try {
   ok(h.guidePeriod.days === 1 && h.guidePeriod.summary.acceptance.offered === 1, 'Ace’s Help from the hour cells');
   ok(h.langTrend && h.langTrend.h24 === true && h.langTrend.win === 24 && h.langTrend.curN === 3, 'language trend: last 24 hours vs the 24 before');
   ok(h.cohorts === null, 'cohorts are not computed over 24 hours');
-  ok(h.hourProfile && h.hourProfile.v.reduce((a, b) => a + b, 0) === 3, 'time-of-day profile over the sliding 24 hours');
+  ok(h.hourProfile && h.hourProfile.v.length === 24 && h.hourProfile.v.reduce((a, b) => a + b, 0) === 0, 'time-of-day profile over the 24 complete hours: the visits of the hour in progress are not in it yet');
   ok(h.pth && h.pth.h24 === true && h.pth.days.length === 24 && /T\d\d$/.test(h.pth.days[0].date), 'pokerth.net share: one row per hour');
   const d14 = await get('days=14');
   ok(d14 && d14.h24 === false && d14.periodDays === 14 && d14.series.length === 14 && d14.cohorts && typeof d14.cohorts === 'object', 'days mode unchanged (14 days, cohorts present)');

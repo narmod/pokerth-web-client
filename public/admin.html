@@ -5412,7 +5412,7 @@
         var _v0=lines[0].vals, _t0=0, _cf=(!d.h24&&d.countedFrom)||'';
         if(_cf) while(_t0<s.length && String(s[_t0].date||'')<_cf) _t0++;
         var _fit=_v0.slice(_t0);
-        if(_fit.length>2 && (d.h24||!d.periodEnd)) _fit=_fit.slice(0,-1);
+        if(_fit.length && (d.h24||!d.periodEnd)) _fit=_fit.slice(0,-1);
         var _rg=_linreg(_fit);
         if(_fit.length>=4){
           lines.push({k:'trend',n:'Trend',c:'#9aa7bd',dash:true,vals:s.map(function(_,i){ return i<_t0?null:Math.max(0,_rg.a*(i-_t0)+_rg.b); })});
@@ -5723,8 +5723,24 @@
   function _wFmt(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
   // Sum of one mode (or of the modes on show) over a list of {m:{}} points.
   function _wSum(list,keys){ var t=0; (list||[]).forEach(function(x){ var m=(x&&x.m)||x||{}; keys.forEach(function(k){ t+=m[k]||0; }); }); return t; }
+  // « vs before » like for like: the figure shown includes today (the hour)
+  // so far, the arrow compares the last complete days (hours) with as many
+  // before — d.full.period (connections), logins.full, lanServers.full and
+  // the cube's full, with their own cover. An older proxy: the old pair.
+  function _wFullM(d,keys){
+    var F=d&&d.full&&d.full.period;
+    if(!F||!F.cur||!F.cur.m) return {cur:_wSum(d&&d.series,keys),prev:_wSum(d&&d.prevM,keys),cov:((d&&d.cover)||{}).prev};
+    return {cur:_wSum([F.cur.m],keys),prev:_wSum([F.prev.m],keys),cov:((d&&d.cover)||{}).period};
+  }
+  function _wFullCube(Q,k){
+    var F=Q&&Q.full;
+    if(!F) return {cur:_cv(k?Q.period.by[k]:Q.period.total),prev:_cv(k?Q.prev.by[k]:Q.prev.total),cov:Q.prevCovered};
+    return {cur:_cv(k?(F.cur.by||{})[k]:F.cur.total),prev:_cv(k?(F.prev.by||{})[k]:F.prev.total),cov:Q.fullPrevCovered};
+  }
   // cov false: the period before was not counted from its first day.
   var W_INCOMPLETE='<i>previous period incomplete</i>';
+  // « +12% vs before (complete days) » in plain text, for the chart notes.
+  function _wPct(c,p){ var x=Math.round((c-p)/p*100); return (x>0?'+':(x<0?'\u2212':'\u2248 '))+Math.abs(x)+'% vs before ('+(_isH24()?'complete hours':'complete days')+')'; }
   function _wDelta(cur,prev,cov){
     if(cov===false) return W_INCOMPLETE;
     if(!prev) return '';
@@ -5735,21 +5751,24 @@
   function _wLogins(d){
     var L=d&&d.logins;
     var E=_cube&&_cube.E&&_cube.E.ok?_cube.E:null;
-    var cov=(d&&d.cover||{}).logins;
-    if(E){ var eb=E.period.by||{}, ep=E.prev.by||{}; L={period:{g:_cv(eb.guest),a:_cv(eb.auth)}, prev:{g:_cv(ep.guest),a:_cv(ep.auth)}, since:E.since}; cov=E.prevCovered; }
+    var cov=(d&&d.cover||{}).logins, fc=null, fp=null;
+    if(L&&L.full){ fc=L.full.cur||{}; fp=L.full.prev||{}; cov=(d.cover||{}).loginsFull; }
+    if(E){ var eb=E.period.by||{}, ep=E.prev.by||{}; L={period:{g:_cv(eb.guest),a:_cv(eb.auth)}, prev:{g:_cv(ep.guest),a:_cv(ep.auth)}, since:E.since}; cov=E.prevCovered;
+      if(E.full){ var gf=_wFullCube(E,'guest'), af=_wFullCube(E,'auth'); fc={g:gf.cur,a:af.cur}; fp={g:gf.prev,a:af.prev}; cov=E.fullPrevCovered; } }
     if(!L) return '';
-    var p=L.period||{}, q=L.prev||{}, g=p.g||0, a=p.a||0, t=g+a, tp=(q.g||0)+(q.a||0);
+    var p=L.period||{}, q=fp||L.prev||{}, g=p.g||0, a=p.a||0, t=g+a, tp=(q.g||0)+(q.a||0);
+    var tc=fc?((fc.g||0)+(fc.a||0)):t;
     if(!t) return L.since?'<span>No login counted over this period</span>':'<span>Guests and accounts are counted from 2.1.10-web.123</span>';
     var pc=function(x){ return Math.round(100*x/t); };
-    var dl=(tp&&cov!==false)?Math.round((t-tp)/tp*100):null;
+    var dl=(tp&&cov!==false)?Math.round((tc-tp)/tp*100):null;
     return '<span>Logins <b>'+_wFmt(t)+'</b>'+(dl===null?'':' ('+(dl>=0?'+':'\u2212')+Math.abs(dl)+'%)')+'</span><span>Guests <b>'+pc(g)+' %</b></span><span>Accounts <b>'+pc(a)+' %</b></span>';
   }
   function _worldInet(d){
     var box=$('wInet'), nt=$('wInetNote'); if(!box) return;
-    var p=d.pth, nw=p&&p.now, cur=_wSum(d.series,['pokerthnet']), prv=_wSum(d.prevM,['pokerthnet']);
-    var B=_cube&&_cube.B&&_cube.B.ok?_cube.B:null, cb=B?B.period.by.pokerthnet:null, cov=(d.cover||{}).prev;
-    if(B){ cur=_cv(cb); prv=_cv(B.prev.by.pokerthnet); cov=B.prevCovered; }
-    var k3='<div><span>Connections, '+_annEsc(_perLabel(_trafPeriod))+(B?' \u00b7 narrowed':'')+'</span><b>'+(B?_cf(cb||0):_wFmt(cur))+'</b>'+(_wDelta(cur,prv,cov)||'<i>through this client</i>')+'</div>';
+    var p=d.pth, nw=p&&p.now, cur=_wSum(d.series,['pokerthnet']);
+    var B=_cube&&_cube.B&&_cube.B.ok?_cube.B:null, cb=B?B.period.by.pokerthnet:null;
+    var F=B?_wFullCube(B,'pokerthnet'):_wFullM(d,['pokerthnet']);
+    var k3='<div><span>Connections, '+_annEsc(_perLabel(_trafPeriod))+(B?' \u00b7 narrowed':'')+'</span><b>'+(B?_cf(cb||0):_wFmt(cur))+'</b>'+(_wDelta(F.cur,F.prev,F.cov)||'<i>through this client</i>')+'</div>';
     if(p===undefined || !nw){
       box.innerHTML=(_wLogins(d)?'<div class="wfoot" style="margin:0 0 8px">'+_wLogins(d)+'</div>':'')+'<div class="wkpis"><div><span>Online on the server</span><b>—</b><i>'+(p&&p.on===false?'live figures switched off':'no sample yet')+'</i></div><div><span>On the web client</span><b>—</b><i></i></div>'+k3+'</div>';
       if(nt) nt.textContent='';
@@ -5768,17 +5787,16 @@
   var _wLd=null;
   function _worldLan(d){
     var box=$('wLan'), nt=$('wLanNote'); if(!box) return;
-    var cur=_wSum(d&&d.series,['lan']), prv=_wSum(d&&d.prevM,['lan']);
+    var cur=_wSum(d&&d.series,['lan']);
     var NB=_cube&&_cube.B&&_cube.B.ok?_cube.B:null, NC=_cube&&_cube.C&&_cube.C.ok?_cube.C:null;
-    var cov=((d&&d.cover)||{}).prev;
-    if(NB){ cur=_cv(NB.period.by.lan); prv=_cv(NB.prev.by.lan); cov=NB.prevCovered; }
+    var F=NB?_wFullCube(NB,'lan'):_wFullM(d,['lan']);
     var ld=_wLd, E=(ld&&ld.ok&&ld.entries)||[];
     var on=E.filter(function(e){ return e.status&&e.status.online; }), now=0;
     on.forEach(function(e){ now+=(e.status.players||0); });
     if(nt) nt.textContent=ld&&ld.ok ? (E.length+' listed · '+on.length+' online') : '';
     var h='<div class="wkpis"><div><span>Online now</span><b>'+(ld&&ld.ok?_wFmt(now):'—')+'</b><i>players on listed servers</i></div>'
       +'<div><span>Servers up</span><b>'+(ld&&ld.ok?on.length+' / '+E.length:'—')+'</b><i>checked by the proxy</i></div>'
-      +'<div><span>Connections, '+_annEsc(_perLabel(_trafPeriod))+(NB?' \u00b7 narrowed':'')+'</span><b>'+(NB?_cf(NB.period.by.lan||0):_wFmt(cur))+'</b>'+(_wDelta(cur,prv,cov)||'<i>through this client</i>')+'</div></div>';
+      +'<div><span>Connections, '+_annEsc(_perLabel(_trafPeriod))+(NB?' \u00b7 narrowed':'')+'</span><b>'+(NB?_cf(NB.period.by.lan||0):_wFmt(cur))+'</b>'+(_wDelta(F.cur,F.prev,F.cov)||'<i>through this client</i>')+'</div></div>';
     if(!ld){ box.innerHTML=h+'<div class="empty">Loading…</div>'; return; }
     if(!ld.ok){ box.innerHTML=h+'<div class="empty err">Could not read the LAN directory.</div>'; return; }
     if(!E.length){ box.innerHTML=h+'<div class="empty">No LAN server is listed yet.</div>'; return; }
@@ -5788,14 +5806,18 @@
     });
     var shown;
     var LS=(d&&d.lanServers)||null;
-    var lcov=((d&&d.cover)||{}).lan;
-    if(NC){ LS={period:NC.period.by||{}, prev:NC.prev.by||{}, since:NC.since}; lcov=NC.prevCovered; }
+    var lcov=((d&&d.cover)||{}).lan, lf=null, lg=null;
+    if(LS&&LS.full){ lf=LS.full.cur||{}; lg=LS.full.prev||{}; lcov=((d&&d.cover)||{}).lanFull; }
+    if(NC){ LS={period:NC.period.by||{}, prev:NC.prev.by||{}, since:NC.since}; lcov=NC.prevCovered; lf=null; lg=null;
+      if(NC.full){ lf=NC.full.cur.by||{}; lg=NC.full.prev.by||{}; lcov=NC.fullPrevCovered; } }
     var lp=(LS&&LS.period)||{}, lq=(LS&&LS.prev)||{};
+    // The arrow: complete days against as many before (lf / lg); the count shown: the period.
+    var lc=lf||lp, lb=lg||lq;
     // Busiest first once there are counts (the sort is stable: online first among equals).
     if(LS) rows.sort(function(a,b){ return _cv(lp[b.id])-_cv(lp[a.id]); });
     shown=rows.slice(0,8);
     h+='<div class="wlan"><span class="wh">Server</span><span class="wh">Status</span><span class="wh wr">Now</span><span class="wh wr wl">Connections</span>';
-    var cnt=function(id){ if(!LS) return '\u2014'; var c=lp[id]||0, b=lq[id]||0; if(typeof c==='string'||typeof b==='string') return _cf(c); return _wFmt(c)+((b&&lcov!==false)?(' <i class="'+(c>=b*1.1?'up':(c<=b*0.9?'dn':''))+'">'+(c>=b?'+':'\u2212')+Math.abs(Math.round((c-b)/b*100))+'%</i>'):''); };
+    var cnt=function(id){ if(!LS) return '\u2014'; var n=lp[id]||0, c=lc[id]||0, b=lb[id]||0; if(typeof n==='string'||typeof c==='string'||typeof b==='string') return _cf(n); return _wFmt(n)+((b&&lcov!==false)?(' <i class="'+(c>=b*1.1?'up':(c<=b*0.9?'dn':''))+'">'+(c>=b?'+':'\u2212')+Math.abs(Math.round((c-b)/b*100))+'%</i>'):''); };
     shown.forEach(function(e){
       var st=e.status||{}, known=typeof st.online==='boolean';
       var cls=e.visible===false||e.autoHidden||!known?'hid':(st.online?'on':'off');
@@ -5806,7 +5828,7 @@
         +'<span class="wr wl" title="'+(e.lastSeen?'Last seen '+_annEsc(_wAgo(Date.now()-e.lastSeen)):'')+'">'+cnt(e.id)+'</span>';
     });
     // Games opened on a server that is not in the directory (local server, typed address).
-    if(LS && (lp.other||lq.other)) h+='<span class="wn hid">Not listed (local, typed)</span><span class="hid">\u2014</span><span class="wr">\u2014</span><span class="wr wl">'+cnt('other')+'</span>';
+    if(LS && (lp.other||lb.other)) h+='<span class="wn hid">Not listed (local, typed)</span><span class="hid">\u2014</span><span class="wr">\u2014</span><span class="wr wl">'+cnt('other')+'</span>';
     h+='</div>'+(LS&&!LS.since?'<p class="muted note">Connections per server are counted from 2.1.10-web.123.</p>':'')+(rows.length>8?'<p class="muted note">and '+(rows.length-8)+' more in the LAN directory</p>':'');
     box.innerHTML=h;
   }
@@ -5820,7 +5842,8 @@
       if(!tot && !totp){ box.innerHTML='<div class="empty">No connection matches the narrowing over this period.</div>'; if(nt) nt.textContent='narrowed'; return; }
       var prevBy2={}; on2.forEach(function(m){ prevBy2[m.k]=s2.map(function(_,i){ return _cv(pb[i]&&pb[i][m.k]); }); });
       _chartMount(box,s2.map(_sLab),on2.map(function(m){ return {k:m.k,n:m.n,c:m.c,vals:s2.map(function(x){ return _cv(x.by&&x.by[m.k]); })}; }),190,'stack',{prevBy:prevBy2});
-      if(nt) nt.textContent='narrowed \u00b7 '+_wFmt(tot)+' connections'+(NB.prevCovered===false?' \u00b7 previous period incomplete':(totp?' \u00b7 '+_wFmt(totp)+' before':''))+' \u00b7 dashed: the period before'+(NB.masked?' \u00b7 cells under 3 drawn as 1':'');
+      var fc2=0, fp2=0, fcov2=NB.full?NB.fullPrevCovered:NB.prevCovered; on2.forEach(function(m){ var F2=_wFullCube(NB,m.k); fc2+=F2.cur; fp2+=F2.prev; });
+      if(nt) nt.textContent='narrowed \u00b7 '+_wFmt(tot)+' connections'+(fcov2===false?' \u00b7 previous period incomplete':(fp2?' \u00b7 '+_wPct(fc2,fp2):''))+' \u00b7 dashed: the period before'+(NB.masked?' \u00b7 cells under 3 drawn as 1':'');
       return;
     }
     var s=d.series||[], pm=d.prevM||[], on=_modesOn();
@@ -5829,7 +5852,8 @@
     if(!cur && !prv){ box.innerHTML='<div class="empty">No connection counted over this period yet'+(s.some(function(x){ return x.m; })?'':' — per-day counts by mode start with 2.1.10-web.118')+'.</div>'; if(nt) nt.textContent=''; return; }
     var prevBy={}; on.forEach(function(m){ prevBy[m.k]=s.map(function(_,i){ var x=pm[i]; return (x&&x[m.k])||0; }); });
     _chartMount(box,s.map(_sLab),on.map(function(m){ return {k:m.k,n:m.n,c:m.c,vals:s.map(function(x){ return (x.m&&x.m[m.k])||0; })}; }),190,'stack',{prevBy:prevBy});
-    if(nt) nt.textContent=_wFmt(cur)+' connections'+((d.cover||{}).prev===false?' · previous period incomplete':prv?(' · '+_wFmt(prv)+' before ('+(cur>=prv?'+':'−')+Math.abs(Math.round((cur-prv)/prv*100))+'%)'):'')+' · dashed: the period before';
+    var FF=_wFullM(d,keys);
+    if(nt) nt.textContent=_wFmt(cur)+' connections'+(FF.cov===false?' · previous period incomplete':(FF.prev?' · '+_wPct(FF.cur,FF.prev):''))+' · dashed: the period before';
   }
   function _worldCards(d){
     _worldInet(d); _worldConn(d); _worldLan(d);
@@ -6068,7 +6092,7 @@
     // reading down each morning. The charts still draw it. A past custom
     // range (periodEnd > 0) has no day in progress: all of it is kept.
     var sAll=s, live=d.h24 || !d.periodEnd;
-    if(n>2 && live){ s=s.slice(0,-1); n=s.length; }
+    if(n>=1 && live){ s=s.slice(0,-1); n=s.length; }
     // Days before counting began (store young or reset) are no measure, not
     // zero visits: left out, or a 60-day mean over 20 counted days reads a
     // third of the truth (proxy.js visitCountedFrom).

@@ -191,10 +191,10 @@ ok(/cover: \(function \(\) \{/.test(src) && /prevCovered: visitCovered\(h24 \? 2
 const adm = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'admin.html'), 'utf8');
 ok(/function tile\(lbl,o,ref,refLbl,cmp,cov\)\{\n\s+var dl=cov===false\?null:/.test(adm) && /previous period incomplete<\/div>/.test(adm),
   'Summary: an incomplete period before gives no percentage, it says so');
-ok((adm.match(/_wDelta\(cur,prv,cov\)/g) || []).length === 2 && /if\(cov===false\) return W_INCOMPLETE;/.test(adm),
+ok((adm.match(/_wDelta\(F\.cur,F\.prev,F\.cov\)/g) || []).length === 2 && /if\(cov===false\) return W_INCOMPLETE;/.test(adm) && /cov:Q\.fullPrevCovered/.test(adm),
   'World: the Internet and LAN cards follow the cover (the cube one when narrowed)');
 ok(/\(tp&&cov!==false\)\?Math\.round/.test(adm) && /\(b&&lcov!==false\)\?/.test(adm), 'no percentage either on logins or per LAN server');
-ok(/NB\.prevCovered===false\?' \\u00b7 previous period incomplete'/.test(adm) && /\(d\.cover\|\|\{\}\)\.prev===false\?' · previous period incomplete'/.test(adm),
+ok(/fcov2===false\?' \\u00b7 previous period incomplete'/.test(adm) && /FF\.cov===false\?' · previous period incomplete'/.test(adm),
   'connections per day: the note says it, narrowed or not');
 
 // -- Wiping means wiping ---------------------------------------------------
