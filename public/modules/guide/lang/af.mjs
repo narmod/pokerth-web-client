@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Maak die bladsy oop om ’n tafel te skep.',
   hsStart: 'Begin die spel nou met die spelers by die tafel.',
   hsInvite: 'Kopieer of deel ’n skakel wat jou vriende reguit na hierdie tafel bring.',
+  hsNotify: '**🔔 Laat weet my**: jou blaaier vra een keer of PokerTH kennisgewings mag wys. Sê ja, en jy hoor wanneer jou tafel amper begin en wanneer dit begin — en wanneer dit jou beurt is — selfs in ’n ander oortjie.',
   hsLeaveTable: 'Verlaat hierdie tafel en gaan terug na die lys.',
   hsFillBots: 'Wanneer gemerk, word die leë plekke by die begin met rekenaarspelers gevul.',
   hsGameType: 'Die speltipe: Normaal, slegs geregistreerde spelers, slegs genooide spelers, of Ranglysspel (spelers met ’n rekening).',

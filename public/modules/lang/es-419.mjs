@@ -426,6 +426,7 @@ export const strings = {
     wpStartHumansTip: 'Empezar solo con humanos',
     wpFillBotsTip: 'Rellenar asientos vacíos con bots',
     notifTurnTitle: '⚡ ¡TU TURNO!',
+    notifStartTitle:'🃏 ¡Tu mesa está empezando!', notifStartBody:'La partida empieza ahora en PokerTH: vuelve a jugar.', notifAlmostTitle:'⏳ ¡Falta un jugador!', notifAlmostBody:'{n}/{max} en tu mesa de PokerTH: empieza en cuanto se llene.', wpNotify:'🔔 Avísame', wpNotifyTip:'Recibe una notificación cuando empiece tu mesa, aunque cambies de pestaña.',
     notifTurnBody: 'Te toca jugar en PokerTH',
     wsLostAction: 'Conexión perdida — acción no enviada',
     wsSendFailed: 'Fallo al enviar (WS cerrado)',

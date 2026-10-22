@@ -19,6 +19,7 @@ import { Proto } from '../net/proto.mjs';
 import { MSG } from '../net/messages.mjs';
 import { _ccToFlag, _avatarChipHtml } from './player-popup.mjs';
 import { bindLobbyKeynav } from './lobby-keynav.mjs';
+import { notifState } from './wait-alert.mjs';
 import { bindLobbyTypeChat } from './lobby-typechat.mjs';
 
 // ──────────────────────────────────────────────────────────────
@@ -320,12 +321,22 @@ function _renderLobbyWaitActions() {
   var inviteBtn = (!window._offlineMode && !S._amSpectator && (!window._advGet || window._advGet('invite_link', true)))
     ? '<button class="wp-btn wp-btn-invite" onclick="App.shareTableLink()">' + t('wpInvite') + '</button>'
     : '';
+  // « 🔔 Notify me » (web.270): a seated player who waits (not the host, not
+  // a spectator, online) and has not answered the browser's question yet —
+  // asked on this click (modules/ui/wait-alert.mjs), never cold. A small pill
+  // at the end of the waiting hint, so Leave / Invite keep their width; on a
+  // narrow phone the bell alone (pokerth.css), the label stays in aria-label.
+  var _nl = String(t('wpNotify')).replace(/^\s*\uD83D\uDD14\s*/, '');
+  var notifyBtn = (!isHost && !S._amSpectator && !window._offlineMode && notifState() === 'default')
+    ? ' <button type="button" class="wp-notify" onclick="window.askNotify && window.askNotify()" title="' + esc(t('wpNotifyTip')) + '" aria-label="' + esc(_nl) + '">'
+      + '<span aria-hidden="true">\uD83D\uDD14</span><span class="wp-notify-lbl"> ' + esc(_nl) + '</span></button>'
+    : '';
   var startBtn = isHost
     ? '<button class="wp-btn wp-btn-start" onclick="App.startFromWait()"' + (canStart ? '' : ' disabled') + ' title="' + t('wpStartHumansTip') + '">' + t('wpStartGame') + '</button>'
     : '';
   // Table classée (type 4) : pas de lancement par un admin, la partie part
   // seule quand la table est pleine → hint dédié au lieu de waitingHintGuest.
-  var hint = isHost ? '' : '<div class="lfb-waithint">' + t(S._amSpectator ? 'waitingHintSpectator' : (isRank ? 'waitingHintRanked' : 'waitingHintGuest')) + '</div>';
+  var hint = isHost ? '' : '<div class="lfb-waithint">' + t(S._amSpectator ? 'waitingHintSpectator' : (isRank ? 'waitingHintRanked' : 'waitingHintGuest')) + notifyBtn + '</div>';
   bar.innerHTML = fillRow + '<div class="wp-actions">' + leaveBtn + inviteBtn + startBtn + '</div>' + hint;
   bar.style.display = 'flex';
   if (create) create.style.display = 'none';

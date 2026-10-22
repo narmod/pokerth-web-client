@@ -235,6 +235,7 @@ export const strings = {
     wpStartHumansTip:'Alusta ainult inimmängijatega', wpFillBotsTip:'Täida tühjad kohad bottidega',
     // ── Notifications ──
     notifTurnTitle:'⚡ SINU KORD!', notifTurnBody:"PokerTH-s on sinu käik",
+    notifStartTitle:'🃏 Sinu laud algab!', notifStartBody:'Mäng algab nüüd PokerTH-s — tule tagasi mängima.', notifAlmostTitle:'⏳ Veel üks mängija!', notifAlmostBody:'{n}/{max} sinu laua taga PokerTH-s: algab kohe, kui laud täis saab.', wpNotify:'🔔 Teavita mind', wpNotifyTip:'Saa teade, kui su laud algab, ka siis, kui oled teisel vahelehel.',
     // ── WS closed ──
     wsLostAction:'Ühendus katkes — käiku ei saadetud', wsSendFailed:'Saatmine ebaõnnestus (WS suletud)',
     reauthBanner:'Ühendatud — uuesti autentimine…',

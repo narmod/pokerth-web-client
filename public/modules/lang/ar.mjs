@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'البدء بالبشر فقط', wpFillBotsTip:'ملء المقاعد الفارغة بالروبوتات',
     // ── Notifications ──
     notifTurnTitle:'⚡ دورك!', notifTurnBody:'حان دورك في PokerTH',
+    notifStartTitle:'🃏 طاولتك تبدأ!', notifStartBody:'تبدأ اللعبة الآن على PokerTH — عُد لتلعب.', notifAlmostTitle:'⏳ بقي لاعب واحد!', notifAlmostBody:'{n}/{max} على طاولتك في PokerTH: تبدأ فور اكتمالها.', wpNotify:'🔔 نبّهني', wpNotifyTip:'تلقَّ إشعارًا عند بدء طاولتك، حتى لو انتقلت إلى علامة تبويب أخرى.',
     // ── WS closed ──
     wsLostAction:'انقطع الاتصال — لم تُرسل الحركة', wsSendFailed:'فشل الإرسال (WS مغلق)',
     reauthBanner:'متصل — إعادة المصادقة…',

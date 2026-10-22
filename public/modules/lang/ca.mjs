@@ -414,6 +414,7 @@ export const strings = {
     wpStartHumansTip: 'Comença només amb humans',
     wpFillBotsTip: 'Omple els llocs buits amb bots',
     notifTurnTitle: '⚡ ÉS EL TEU TORN!',
+    notifStartTitle:'🃏 La teva taula comença!', notifStartBody:'La partida comença ara a PokerTH — torna per jugar.', notifAlmostTitle:'⏳ Falta un jugador!', notifAlmostBody:'{n}/{max} a la teva taula de PokerTH: comença tan bon punt sigui plena.', wpNotify:'🔔 Avisa’m', wpNotifyTip:'Rep un avís quan comenci la teva taula, encara que canviïs de pestanya.',
     notifTurnBody: 'És el teu torn a PokerTH',
     wsLostAction: 'Connexió perduda — acció no enviada',
     wsSendFailed: 'L\'enviament ha fallat (WS tancat)',

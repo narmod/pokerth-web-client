@@ -233,6 +233,7 @@ export const strings = {
     wpStartHumansTip:'ចាប់ផ្ដើមតែជាមួយមនុស្ស', wpFillBotsTip:'បំពេញកៅអីទំនេរដោយបូត',
     // ── Notifications ──
     notifTurnTitle:'⚡ វេនរបស់អ្នក!', notifTurnBody:"ដល់វេនអ្នកនៅលើ PokerTH",
+    notifStartTitle:'🃏 តុរបស់អ្នកកំពុងចាប់ផ្ដើម!', notifStartBody:'ល្បែងចាប់ផ្ដើមឥឡូវនេះនៅលើ PokerTH — ត្រឡប់មកលេងវិញ។', notifAlmostTitle:'⏳ នៅសល់អ្នកលេងម្នាក់ទៀត!', notifAlmostBody:'{n}/{max} នៅតុរបស់អ្នកលើ PokerTH៖ នឹងចាប់ផ្ដើមភ្លាមៗពេលពេញ។', wpNotify:'🔔 ជូនដំណឹងខ្ញុំ', wpNotifyTip:'ទទួលការជូនដំណឹងពេលតុរបស់អ្នកចាប់ផ្ដើម ទោះបីអ្នកទៅផ្ទាំងផ្សេងក៏ដោយ។',
     // ── WS closed ──
     wsLostAction:'បាត់បង់ការភ្ជាប់ — សកម្មភាពមិនបានផ្ញើ', wsSendFailed:'ការផ្ញើបរាជ័យ (WS បិទ)',
     reauthBanner:'បានភ្ជាប់ — កំពុងផ្ទៀងផ្ទាត់ឡើងវិញ…',

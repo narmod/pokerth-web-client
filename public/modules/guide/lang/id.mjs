@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Membuka halaman untuk membuat meja.',
   hsStart: 'Memulai permainan sekarang dengan pemain yang ada di meja.',
   hsInvite: 'Menyalin atau membagikan tautan yang membawa teman Anda langsung ke meja ini.',
+  hsNotify: '**🔔 Beri tahu saya**: browser Anda bertanya sekali apakah PokerTH boleh menampilkan notifikasi. Setujui, dan Anda akan tahu saat meja Anda hampir dimulai dan saat dimulai — juga saat giliran Anda — bahkan di tab lain.',
   hsLeaveTable: 'Meninggalkan meja ini dan kembali ke daftar.',
   hsFillBots: 'Jika dicentang, kursi kosong diisi pemain komputer saat permainan dimulai.',
   hsGameType: 'Jenis permainan: Normal, hanya pemain terdaftar, hanya pemain yang diundang, atau berperingkat (pemain dengan akun).',

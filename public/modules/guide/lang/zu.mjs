@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Ivula ikhasi lokudala itafula.',
   hsStart: 'Iqala umdlalo manje nabadlali abasetafuleni.',
   hsInvite: 'Ikopisha noma yabelane ngesixhumanisi esiletha abangani bakho ngqo kuleli tafula.',
+  hsNotify: '**🔔 Ngazise**: isiphequluli sakho sibuza kanye ukuthi i-PokerTH ingabonisa yini izaziso. Vuma, uzokwazi uma ithebula lakho seliseduze nokuqala nalapho liqala — nalapho kuyithuba lakho — ngisho nakwenye ithebhu.',
   hsLeaveTable: 'Ishiya leli tafula bese ibuyela ohlwini.',
   hsFillBots: 'Uma kumakiwe, izihlalo ezingenalutho zigcwaliswa ngabadlali bekhompyutha ekuqaleni.',
   hsGameType: 'Uhlobo lomdlalo: Okujwayelekile, abadlali ababhalisiwe kuphela, abadlali abamenyiwe kuphela, noma Umdlalo wezinga (abadlali abane-akhawunti).',

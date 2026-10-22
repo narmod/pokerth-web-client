@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Malfermas la paĝon por krei tablon.',
   hsStart: 'Komencas la ludon nun kun la ludantoj ĉe la tablo.',
   hsInvite: 'Kopias aŭ kunhavigas ligilon, kiu kondukas viajn amikojn rekte al ĉi tiu tablo.',
+  hsNotify: '**🔔 Sciigu min**: via retumilo demandas unufoje ĉu PokerTH rajtas montri sciigojn. Diru jes kaj vi ekscios kiam via tablo baldaŭ komenciĝos kaj kiam ĝi komenciĝas — kaj kiam estas via vico — eĉ en alia langeto.',
   hsLeaveTable: 'Forlasas ĉi tiun tablon kaj revenas al la listo.',
   hsFillBots: 'Se markita, la malplenaj sidlokoj pleniĝas per komputilaj ludantoj ĉe la komenco.',
   hsGameType: 'La ludtipo: Normala, nur registritaj ludantoj, nur invititaj ludantoj, aŭ Rangiga (ludantoj kun konto).',

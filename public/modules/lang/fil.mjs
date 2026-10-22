@@ -235,6 +235,7 @@ export const strings = {
     wpStartHumansTip:'Simulan nang mga tao lang', wpFillBotsTip:'Punan ng mga bot ang mga bakanteng upuan',
     // ── Notifications ──
     notifTurnTitle:'⚡ TURN MO NA!', notifTurnBody:"Ikaw na ang gagalaw sa PokerTH",
+    notifStartTitle:'🃏 Nagsisimula na ang mesa mo!', notifStartBody:'Nagsisimula na ang laro sa PokerTH — bumalik ka para maglaro.', notifAlmostTitle:'⏳ Isang manlalaro na lang!', notifAlmostBody:'{n}/{max} sa mesa mo sa PokerTH: magsisimula ito kapag puno na.', wpNotify:'🔔 Abisuhan ako', wpNotifyTip:'Makatanggap ng abiso kapag nagsimula ang mesa mo, kahit lumipat ka sa ibang tab.',
     // ── WS closed ──
     wsLostAction:'Nawala ang koneksyon — hindi naipadala ang aksyon', wsSendFailed:'Nabigo ang pagpapadala (sarado ang WS)',
     reauthBanner:'Nakakonekta — muling nagve-verify…',

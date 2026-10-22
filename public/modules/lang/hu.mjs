@@ -414,6 +414,7 @@ export const strings = {
     wpStartHumansTip: 'Csak emberekkel kezdés',
     wpFillBotsTip: 'Üres helyek feltöltése botokkal',
     notifTurnTitle: '⚡ TE JÖSSZ!',
+    notifStartTitle:'🃏 Indul az asztalod!', notifStartBody:'A játék most kezdődik a PokerTH-n — gyere vissza játszani.', notifAlmostTitle:'⏳ Még egy játékos!', notifAlmostBody:'{n}/{max} az asztalodnál a PokerTH-n: amint megtelik, indul.', wpNotify:'🔔 Értesíts', wpNotifyTip:'Kapj értesítést, amikor az asztalod indul, akkor is, ha másik lapra váltasz.',
     notifTurnBody: 'Te jössz a PokerTH-n',
     wsLostAction: 'Kapcsolat megszakadt — a művelet nem lett elküldve',
     wsSendFailed: 'A küldés sikertelen (WS lezárva)',

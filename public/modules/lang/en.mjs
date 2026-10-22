@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'Start with humans only', wpFillBotsTip:'Fill empty seats with bots',
     // ── Notifications ──
     notifTurnTitle:'⚡ YOUR TURN!', notifTurnBody:"It's your move on PokerTH",
+    notifStartTitle:'🃏 Your table is starting!', notifStartBody:'The game starts now on PokerTH — come back to play.', notifAlmostTitle:'⏳ One more player!', notifAlmostBody:'{n}/{max} at your table on PokerTH: it starts as soon as it is full.', wpNotify:'🔔 Notify me', wpNotifyTip:'Get a notification when your table starts, even if you switch to another tab.',
     // ── WS closed ──
     wsLostAction:'Connection lost — action not sent', wsSendFailed:'Send failed (WS closed)',
     reauthBanner:'Connected — re-authenticating…',

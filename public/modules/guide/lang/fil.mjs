@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Binubuksan ang page para gumawa ng mesa.',
   hsStart: 'Sinisimulan na ngayon ang laro kasama ang mga manlalaro sa mesa.',
   hsInvite: 'Kinokopya o ibinabahagi ang link na magdadala sa mga kaibigan mo diretso sa mesang ito.',
+  hsNotify: '**🔔 Abisuhan ako**: minsang itatanong ng browser mo kung puwedeng magpakita ng abiso ang PokerTH. Pumayag ka at malalaman mo kapag malapit nang magsimula ang mesa mo at kapag nagsimula na — at kapag turno mo na — kahit nasa ibang tab ka.',
   hsLeaveTable: 'Umaalis sa mesang ito at bumabalik sa listahan.',
   hsFillBots: 'Kapag naka-check, pupunuin ng mga computer player ang mga bakanteng upuan sa simula.',
   hsGameType: 'Ang uri ng laro: Normal, mga rehistradong manlalaro lang, mga inimbitahang manlalaro lang, o Ranking (mga manlalarong may account).',

@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Odpre stran za ustvarjanje mize.',
   hsStart: 'Začne igro takoj z igralci za mizo.',
   hsInvite: 'Kopira ali deli povezavo, ki tvoje prijatelje pripelje naravnost za to mizo.',
+  hsNotify: '**🔔 Obvesti me**: brskalnik te enkrat vpraša, ali sme PokerTH prikazovati obvestila. Strinjaj se in izvedel boš, ko se bo miza kmalu začela in ko se začne — in ko si na potezi — tudi v drugem zavihku.',
   hsLeaveTable: 'Zapusti to mizo in se vrne na seznam.',
   hsFillBots: 'Ko je označeno, se prazna mesta ob začetku zapolnijo z računalniškimi igralci.',
   hsGameType: 'Vrsta igre: Navadna, samo registrirani igralci, samo povabljeni igralci ali Igra z uvrstitvijo (igralci z računom).',

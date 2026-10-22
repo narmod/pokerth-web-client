@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'დაწყება მხოლოდ ადამიანებით', wpFillBotsTip:'ცარიელი ადგილების ბოტებით შევსება',
     // ── Notifications ──
     notifTurnTitle:'⚡ თქვენი სვლაა!', notifTurnBody:'თქვენი სვლაა PokerTH-ში',
+    notifStartTitle:'🃏 თქვენი მაგიდა იწყება!', notifStartBody:'თამაში ახლა იწყება PokerTH-ზე — დაბრუნდით სათამაშოდ.', notifAlmostTitle:'⏳ კიდევ ერთი მოთამაშე!', notifAlmostBody:'{n}/{max} თქვენს მაგიდასთან PokerTH-ზე: დაიწყება, როგორც კი შეივსება.', wpNotify:'🔔 შემატყობინე', wpNotifyTip:'მიიღეთ შეტყობინება, როცა მაგიდა დაიწყება, თუნდაც სხვა ჩანართზე იყოთ.',
     // ── WS closed ──
     wsLostAction:'კავშირი დაიკარგა — მოქმედება არ გაიგზავნა', wsSendFailed:'გაგზავნა ვერ მოხერხდა (WS დახურულია)',
     reauthBanner:'დაკავშირებულია — ხელახალი ავტორიზაცია…',

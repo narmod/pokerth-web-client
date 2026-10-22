@@ -235,6 +235,7 @@ export const strings = {
     wpStartHumansTip:'Sākt tikai ar cilvēkiem', wpFillBotsTip:'Aizpildīt tukšās vietas ar botiem',
     // ── Notifications ──
     notifTurnTitle:'⚡ TAVS GĀJIENS!', notifTurnBody:"PokerTH ir tavs gājiens",
+    notifStartTitle:'🃏 Tavs galds sākas!', notifStartBody:'Spēle tagad sākas PokerTH — atgriezies spēlēt.', notifAlmostTitle:'⏳ Vēl viens spēlētājs!', notifAlmostBody:'{n}/{max} pie tava galda PokerTH: tā sāksies, tiklīdz būs pilna.', wpNotify:'🔔 Paziņo man', wpNotifyTip:'Saņem paziņojumu, kad tavs galds sākas, pat ja pārslēdzies uz citu cilni.',
     // ── WS closed ──
     wsLostAction:'Savienojums zaudēts — darbība netika nosūtīta', wsSendFailed:'Nosūtīšana neizdevās (WS aizvērts)',
     reauthBanner:'Savienots — autentificējas atkārtoti…',

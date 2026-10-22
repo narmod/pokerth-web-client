@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Opnar síðuna til að búa til borð.',
   hsStart: 'Hefur leikinn núna með leikmönnunum við borðið.',
   hsInvite: 'Afritar eða deilir tengli sem færir vini þína beint að þessu borði.',
+  hsNotify: '**🔔 Láttu mig vita**: vafrinn spyr einu sinni hvort PokerTH megi sýna tilkynningar. Segðu já og þú færð að vita þegar borðið er um það bil að byrja og þegar það byrjar — og þegar þú átt leik — jafnvel í öðrum flipa.',
   hsLeaveTable: 'Yfirgefur þetta borð og fer aftur á listann.',
   hsFillBots: 'Ef hakað er við eru auð sæti fyllt með tölvuleikmönnum í upphafi.',
   hsGameType: 'Tegund leiks: Venjulegur, aðeins skráðir leikmenn, aðeins boðnir leikmenn, eða Stigaleikur (leikmenn með aðgang).',

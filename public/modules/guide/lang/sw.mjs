@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Hufungua ukurasa wa kuunda meza.',
   hsStart: 'Huanza mchezo sasa hivi na wachezaji waliopo mezani.',
   hsInvite: 'Hunakili au hushiriki kiungo kinachowaleta marafiki zako moja kwa moja kwenye meza hii.',
+  hsNotify: '**🔔 Nijulishe**: kivinjari chako kinauliza mara moja kama PokerTH inaweza kuonyesha arifa. Kubali, na utajua meza yako inapokaribia kuanza na inapoanza — na zamu yako inapofika — hata ukiwa kwenye kichupo kingine.',
   hsLeaveTable: 'Huondoka kwenye meza hii na kurudi kwenye orodha.',
   hsFillBots: 'Kikiwekwa alama, viti vitupu hujazwa na wachezaji wa kompyuta mwanzoni.',
   hsGameType: 'Aina ya mchezo: Kawaida, wachezaji waliosajiliwa pekee, wachezaji walioalikwa pekee, au Viwango (wachezaji wenye akaunti).',

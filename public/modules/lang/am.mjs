@@ -233,6 +233,7 @@ export const strings = {
     wpStartHumansTip:'በሰዎች ብቻ ጀምር', wpFillBotsTip:'ባዶ መቀመጫዎችን በቦቶች ሙላ',
     // ── Notifications ──
     notifTurnTitle:'⚡ ተራዎ ነው!', notifTurnBody:"በ PokerTH ላይ የእርስዎ እርምጃ ነው",
+    notifStartTitle:'🃏 ጠረጴዛዎ እየጀመረ ነው!', notifStartBody:'ጨዋታው አሁን በPokerTH ላይ ይጀምራል — ለመጫወት ይመለሱ።', notifAlmostTitle:'⏳ አንድ ተጫዋች ብቻ ቀረ!', notifAlmostBody:'በPokerTH ጠረጴዛዎ ላይ {n}/{max}፦ ሲሞላ ወዲያውኑ ይጀምራል።', wpNotify:'🔔 አሳውቀኝ', wpNotifyTip:'ጠረጴዛዎ ሲጀምር ማሳወቂያ ያግኙ፣ ወደ ሌላ ትር ቢሄዱም።',
     // ── WS closed ──
     wsLostAction:'ግንኙነት ተቋርጧል — እርምጃው አልተላከም', wsSendFailed:'መላክ አልተሳካም (WS ተዘግቷል)',
     reauthBanner:'ተገናኝቷል — እንደገና በማረጋገጥ ላይ…',

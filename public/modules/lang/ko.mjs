@@ -317,6 +317,7 @@ export const strings = {
     wpReady:'플레이 준비 완료 — 시작 방식을 선택하세요', wpStart:'시작',
     wpStartHumansTip:'사람끼리만 시작', wpFillBotsTip:'빈 자리를 봇으로 채우기',
     notifTurnTitle:'⚡ 당신 차례!', notifTurnBody:'PokerTH에서 당신이 행동할 차례입니다',
+    notifStartTitle:'🃏 테이블이 시작돼요!', notifStartBody:'PokerTH에서 게임이 지금 시작돼요. 돌아와서 플레이하세요.', notifAlmostTitle:'⏳ 한 명만 더!', notifAlmostBody:'PokerTH의 내 테이블 {n}/{max}: 꽉 차면 바로 시작돼요.', wpNotify:'🔔 알려 주세요', wpNotifyTip:'다른 탭에 있어도 테이블이 시작되면 알림을 받아요.',
     wsLostAction:'연결 끊김 — 액션이 전송되지 않음', wsSendFailed:'전송 실패 (WS 닫힘)',
     reauthBanner:'접속됨 — 재인증 중…',
     kickNoPlayers:'테이블에 플레이어 없음', kickThisPlayer:'이 플레이어를 추방할까요?',

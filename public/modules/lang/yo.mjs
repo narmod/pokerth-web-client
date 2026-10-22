@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'Bẹ̀rẹ̀ pẹ̀lú ènìyàn nìkan', wpFillBotsTip:'Fi bot kún àwọn ìjókòó òfìfo',
     // ── Notifications ──
     notifTurnTitle:'⚡ ÀKÓKÒ RẸ NI!', notifTurnBody:'Ìgbésẹ̀ rẹ ni nínú PokerTH',
+    notifStartTitle:'🃏 Tábìlì rẹ ń bẹ̀rẹ̀!', notifStartBody:'Eré ń bẹ̀rẹ̀ báyìí lórí PokerTH — padà wá ṣeré.', notifAlmostTitle:'⏳ Ẹnì kan péré ló kù!', notifAlmostBody:'{n}/{max} ní tábìlì rẹ lórí PokerTH: yóò bẹ̀rẹ̀ ní kété tí ó bá kún.', wpNotify:'🔔 Sọ fún mi', wpNotifyTip:'Gba ìfitónilétí nígbà tí tábìlì rẹ bá bẹ̀rẹ̀, kódà bí o bá lọ sí táàbù míì.',
     // ── WS closed ──
     wsLostAction:'Ìsopọ̀ ti bàjẹ́ — a kò fi ìgbésẹ̀ ránṣẹ́', wsSendFailed:'Ìfiránṣẹ́ kùnà (WS ti tì)',
     reauthBanner:'Ti sopọ̀ — à ń tún ṣe ìjẹ́rìísí…',

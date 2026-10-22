@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Ouvre la page de création d’une table.',
   hsStart: 'Démarre la partie maintenant avec les joueurs présents à la table.',
   hsInvite: 'Copie ou partage un lien qui amène tes amis directement à cette table.',
+  hsNotify: '**🔔 Préviens-moi** : ton navigateur demande une fois si PokerTH peut afficher des notifications. Accepte, et tu es prévenu quand ta table va démarrer et quand elle démarre — et quand c’est ton tour — même dans un autre onglet.',
   hsLeaveTable: 'Quitte cette table et revient à la liste.',
   hsFillBots: 'Si c’est coché, les places vides sont complétées par des joueurs ordinateur au démarrage.',
   hsGameType: 'Le type de partie : Normale, joueurs enregistrés uniquement, joueurs invités uniquement, ou Classée (joueurs avec un compte).',

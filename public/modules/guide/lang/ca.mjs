@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Obre la pàgina per crear una taula.',
   hsStart: 'Inicia la partida ara amb els jugadors de la taula.',
   hsInvite: 'Copia o comparteix un enllaç que porta els teus amics directament a aquesta taula.',
+  hsNotify: '**🔔 Avisa’m**: el navegador et pregunta una vegada si PokerTH pot mostrar notificacions. Digues que sí i sabràs quan la teva taula està a punt de començar i quan comença — i quan és el teu torn — fins i tot en una altra pestanya.',
   hsLeaveTable: 'Abandona aquesta taula i torna a la llista.',
   hsFillBots: 'Si està marcat, els seients buits s’omplen amb jugadors d’ordinador en començar.',
   hsGameType: 'El tipus de partida: Normal, només jugadors registrats, només jugadors convidats, o de classificació (jugadors amb compte).',

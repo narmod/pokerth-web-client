@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Otevře stránku pro vytvoření stolu.',
   hsStart: 'Spustí hru hned s hráči, kteří sedí u stolu.',
   hsInvite: 'Zkopíruje nebo sdílí odkaz, který přivede tvé přátele rovnou k tomuto stolu.',
+  hsNotify: '**🔔 Upozornit mě**: prohlížeč se jednou zeptá, zda smí PokerTH zobrazovat oznámení. Souhlas a dozvíš se, až tvůj stůl bude těsně před startem a až začne — a když budeš na tahu — i v jiné kartě.',
   hsLeaveTable: 'Opustí tento stůl a vrátí se na seznam.',
   hsFillBots: 'Když je zaškrtnuto, volná místa se na začátku doplní počítačovými hráči.',
   hsGameType: 'Typ hry: Normální, pouze registrovaní hráči, pouze pozvaní hráči nebo hodnocená hra (hráči s účtem).',

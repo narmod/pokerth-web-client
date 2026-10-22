@@ -279,10 +279,9 @@ function onInitAck(sub) {
     // LAN / dedicated server notice: same trigger, gated on LAN/dedicated mode
     // inside the function itself (see window._amLanMode).
     try { if (window.maybeShowLanNotice) window.maybeShowLanNotice(); } catch (eLw) {}
-    // Demander la permission pour les notifications
-    if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission().catch(function(){});
-    }
+    // Notifications: no longer asked cold on entering the lobby (browsers
+    // silence such prompts or hold them against the site) — the player asks
+    // with « 🔔 Notify me » in the waiting room (modules/ui/wait-alert.mjs, web.270).
     const cfName = document.getElementById('cf-name');
     if (cfName) cfName.value = window._defaultNameForMode();  // nom par défaut (mode courant / admin)
     return;

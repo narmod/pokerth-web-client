@@ -235,6 +235,7 @@ export const strings = {
     wpStartHumansTip:'Anza na binadamu pekee', wpFillBotsTip:'Jaza viti vitupu kwa boti',
     // ── Notifications ──
     notifTurnTitle:'⚡ ZAMU YAKO!', notifTurnBody:"Ni zamu yako kucheza kwenye PokerTH",
+    notifStartTitle:'🃏 Meza yako inaanza!', notifStartBody:'Mchezo unaanza sasa kwenye PokerTH — rudi ucheze.', notifAlmostTitle:'⏳ Mchezaji mmoja zaidi!', notifAlmostBody:'{n}/{max} kwenye meza yako ya PokerTH: itaanza mara tu itakapojaa.', wpNotify:'🔔 Nijulishe', wpNotifyTip:'Pata arifa meza yako inapoanza, hata ukihamia kichupo kingine.',
     // ── WS closed ──
     wsLostAction:'Muunganisho umepotea — hatua haikutumwa', wsSendFailed:'Kutuma kumeshindikana (WS imefungwa)',
     reauthBanner:'Imeunganishwa — inathibitisha upya…',

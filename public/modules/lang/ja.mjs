@@ -413,6 +413,7 @@ export const strings = {
     wpStartHumansTip: '人間のみで開始',
     wpFillBotsTip: '空席をボットで埋める',
     notifTurnTitle: '⚡ あなたの番です！',
+    notifStartTitle:'🃏 テーブルが始まります！', notifStartBody:'PokerTH でゲームが今始まります。戻ってプレイしましょう。', notifAlmostTitle:'⏳ あと1人！', notifAlmostBody:'PokerTH のあなたのテーブルは {n}/{max}：満席になるとすぐ始まります。', wpNotify:'🔔 知らせて', wpNotifyTip:'別のタブにいても、テーブルが始まったら通知を受け取れます。',
     notifTurnBody: 'PokerTHであなたの番です',
     wsLostAction: '接続が切れました — アクションは送信されませんでした',
     wsSendFailed: '送信失敗（WSは閉じています）',

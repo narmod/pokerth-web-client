@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Yn agor y dudalen i greu bwrdd.',
   hsStart: 'Yn dechrau’r gêm nawr gyda’r chwaraewyr wrth y bwrdd.',
   hsInvite: 'Yn copïo neu’n rhannu dolen sy’n dod â’ch ffrindiau’n syth i’r bwrdd hwn.',
+  hsNotify: '**🔔 Rhowch wybod i mi**: mae eich porwr yn gofyn unwaith a gaiff PokerTH ddangos hysbysiadau. Dywedwch ie a chewch wybod pan fydd eich bwrdd ar fin dechrau a phan fydd yn dechrau — a phan fydd yn eich tro — hyd yn oed mewn tab arall.',
   hsLeaveTable: 'Yn gadael y bwrdd hwn ac yn mynd yn ôl i’r rhestr.',
   hsFillBots: 'Os yw wedi’i dicio, caiff y seddi gwag eu llenwi â chwaraewyr cyfrifiadur ar y dechrau.',
   hsGameType: 'Math y gêm: Arferol, chwaraewyr cofrestredig yn unig, chwaraewyr wedi’u gwahodd yn unig, neu gêm gyda safle (chwaraewyr â chyfrif).',

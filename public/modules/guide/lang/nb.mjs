@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Åpner siden for å opprette et bord.',
   hsStart: 'Starter spillet nå med spillerne ved bordet.',
   hsInvite: 'Kopierer eller deler en lenke som tar vennene dine rett til dette bordet.',
+  hsNotify: '**🔔 Gi meg beskjed**: nettleseren spør én gang om PokerTH kan vise varsler. Si ja, så får du vite når bordet snart starter og når det starter — og når det er din tur — selv i en annen fane.',
   hsLeaveTable: 'Forlater dette bordet og går tilbake til listen.',
   hsFillBots: 'Når det er krysset av, fylles de tomme plassene med dataspillere ved start.',
   hsGameType: 'Spilltypen: Normal, kun registrerte spillere, kun inviterte spillere eller Rangeringsspill (spillere med konto).',

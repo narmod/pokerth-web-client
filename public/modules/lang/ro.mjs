@@ -414,6 +414,7 @@ export const strings = {
     wpStartHumansTip: 'Începe doar cu oameni',
     wpFillBotsTip: 'Completează locurile goale cu boți',
     notifTurnTitle: '⚡ E RÂNDUL TĂU!',
+    notifStartTitle:'🃏 Masa ta începe!', notifStartBody:'Jocul începe acum pe PokerTH — revino să joci.', notifAlmostTitle:'⏳ Încă un jucător!', notifAlmostBody:'{n}/{max} la masa ta pe PokerTH: începe imediat ce se umple.', wpNotify:'🔔 Anunță-mă', wpNotifyTip:'Primește o notificare când masa ta începe, chiar dacă treci pe altă filă.',
     notifTurnBody: 'E rândul tău pe PokerTH',
     wsLostAction: 'Conexiune pierdută — acțiune netrimisă',
     wsSendFailed: 'Trimitere eșuată (WS închis)',

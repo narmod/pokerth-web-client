@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Atidaro stalo kūrimo puslapį.',
   hsStart: 'Iškart pradeda žaidimą su prie stalo esančiais žaidėjais.',
   hsInvite: 'Nukopijuoja arba pasidalija nuoroda, kuri atveda tavo draugus tiesiai prie šio stalo.',
+  hsNotify: '**🔔 Pranešk man**: naršyklė vieną kartą paklaus, ar PokerTH gali rodyti pranešimus. Sutik ir sužinosi, kai tavo stalas tuoj prasidės ir kai prasidės — ir kai bus tavo ėjimas — net kitame skirtuke.',
   hsLeaveTable: 'Palieka šį stalą ir grįžta į sąrašą.',
   hsFillBots: 'Pažymėjus, tuščios vietos pradžioje užpildomos kompiuteriniais žaidėjais.',
   hsGameType: 'Žaidimo tipas: Įprastas, tik registruoti žaidėjai, tik pakviesti žaidėjai arba Reitinguojamas žaidimas (žaidėjai su paskyra).',

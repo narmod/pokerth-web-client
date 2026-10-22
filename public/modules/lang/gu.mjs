@@ -233,6 +233,7 @@ export const strings = {
     wpStartHumansTip:'ફક્ત માણસો સાથે શરૂ કરો', wpFillBotsTip:'ખાલી સીટ્સ બોટ્સથી ભરો',
     // ── Notifications ──
     notifTurnTitle:'⚡ તમારો વારો!', notifTurnBody:'PokerTH માં હવે તમારી ચાલ છે',
+    notifStartTitle:'🃏 તમારું ટેબલ શરૂ થઈ રહ્યું છે!', notifStartBody:'PokerTH પર રમત હવે શરૂ થાય છે — રમવા પાછા આવો.', notifAlmostTitle:'⏳ હજી એક ખેલાડી!', notifAlmostBody:'PokerTH પર તમારા ટેબલ પર {n}/{max}: ભરાતાં જ શરૂ થશે.', wpNotify:'🔔 મને જણાવો', wpNotifyTip:'બીજા ટૅબ પર જાઓ તો પણ, તમારું ટેબલ શરૂ થાય ત્યારે સૂચના મેળવો.',
     // ── WS closed ──
     wsLostAction:'કનેક્શન તૂટી ગયું — ક્રિયા મોકલાઈ નથી', wsSendFailed:'મોકલવું નિષ્ફળ (WS બંધ)',
     reauthBanner:'કનેક્ટ થયું — ફરી પ્રમાણીકરણ થઈ રહ્યું છે…',

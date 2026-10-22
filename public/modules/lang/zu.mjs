@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'Qala nabantu kuphela', wpFillBotsTip:'Gcwalisa izihlalo ezingenalutho ngamabhothi',
     // ── Notifications ──
     notifTurnTitle:'⚡ ITHUBA LAKHO!', notifTurnBody:'Yithuba lakho ku-PokerTH',
+    notifStartTitle:'🃏 Ithebula lakho liyaqala!', notifStartBody:'Umdlalo uqala manje ku-PokerTH — buya uzodlala.', notifAlmostTitle:'⏳ Kusele umdlali oyedwa!', notifAlmostBody:'{n}/{max} etafuleni lakho ku-PokerTH: liqala ngokushesha uma ligcwele.', wpNotify:'🔔 Ngazise', wpNotifyTip:'Thola isaziso uma ithebula lakho liqala, noma ngabe uya kwenye ithebhu.',
     // ── WS closed ──
     wsLostAction:'Uxhumano lulahlekile — isenzo asithunyelwanga', wsSendFailed:'Ukuthumela kuhlulekile (i-WS ivaliwe)',
     reauthBanner:'Kuxhunyiwe — kuqinisekiswa futhi…',

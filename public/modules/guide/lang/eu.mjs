@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Mahai bat sortzeko orria irekitzen du.',
   hsStart: 'Partida orain hasten du mahaian dauden jokalariekin.',
   hsInvite: 'Zure lagunak zuzenean mahai honetara ekartzen dituen esteka bat kopiatu edo partekatzen du.',
+  hsNotify: '**🔔 Jakinarazi**: nabigatzaileak behin galdetzen du PokerTH-k jakinarazpenak erakuts ditzakeen. Baietz esan, eta jakingo duzu zure mahaia hastear dagoenean eta hasten denean —eta zure txanda denean—, beste fitxa batean egonda ere.',
   hsLeaveTable: 'Mahai honetatik irten eta zerrendara itzultzen da.',
   hsFillBots: 'Markatuta dagoenean, eserleku hutsak ordenagailuko jokalariekin betetzen dira hasieran.',
   hsGameType: 'Partida mota: Arrunta, erregistratutako jokalariak soilik, gonbidatutako jokalariak soilik, edo Sailkapenekoa (kontua duten jokalariak).',

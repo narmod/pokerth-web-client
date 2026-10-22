@@ -415,6 +415,7 @@ export const strings = {
     wpStartHumansTip: 'Tòisich le daoine a-mhàin',
     wpFillBotsTip: 'Lìon na h-àiteachan falamh le bots',
     notifTurnTitle: '⚡ \'S E DO CHAR A TH\' ANN!',
+    notifStartTitle:'🃏 Tha am bòrd agad a’ tòiseachadh!', notifStartBody:'Tha an geama a’ tòiseachadh a-nis air PokerTH — till gus cluich.', notifAlmostTitle:'⏳ Aon chluicheadair eile!', notifAlmostBody:'{n}/{max} aig a’ bhòrd agad air PokerTH: tòisichidh e cho luath ’s a bhios e làn.', wpNotify:'🔔 Leig fios dhomh', wpNotifyTip:'Faigh brath nuair a thòisicheas am bòrd agad, fiù ma thèid thu gu taba eile.',
     notifTurnBody: '\'S e do char a th\' ann air PokerTH',
     wsLostAction: 'Chaidh an ceangal a chall — cha deach an gnìomh a chur',
     wsSendFailed: 'Dh\'fhàillig an cur (WS dùinte)',

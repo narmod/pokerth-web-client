@@ -413,6 +413,7 @@ export const strings = {
     wpStartHumansTip: 'Aloita vain ihmisten kanssa',
     wpFillBotsTip: 'Täytä tyhjät paikat boteilla',
     notifTurnTitle: '⚡ SINUN VUOROSI!',
+    notifStartTitle:'🃏 Pöytäsi alkaa!', notifStartBody:'Peli alkaa nyt PokerTH:ssa — palaa pelaamaan.', notifAlmostTitle:'⏳ Vielä yksi pelaaja!', notifAlmostBody:'{n}/{max} pöydässäsi PokerTH:ssa: peli alkaa heti, kun pöytä on täynnä.', wpNotify:'🔔 Ilmoita minulle', wpNotifyTip:'Saat ilmoituksen, kun pöytäsi alkaa, vaikka siirtyisit toiseen välilehteen.',
     notifTurnBody: 'On vuorosi PokerTH:ssä',
     wsLostAction: 'Yhteys katkesi — toimintoa ei lähetetty',
     wsSendFailed: 'Lähetys epäonnistui (WS suljettu)',

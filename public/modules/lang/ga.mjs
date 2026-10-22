@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'Tosaigh le daoine amháin', wpFillBotsTip:'Líon suíocháin fholmha le róbónna',
     // ── Notifications ──
     notifTurnTitle:'⚡ DO SHEALSA!', notifTurnBody:'Is é do bheart é in PokerTH',
+    notifStartTitle:'🃏 Tá do bhord ag tosú!', notifStartBody:'Tá an cluiche ag tosú anois ar PokerTH — fill le himirt.', notifAlmostTitle:'⏳ Imreoir amháin eile!', notifAlmostBody:'{n}/{max} ag do bhord ar PokerTH: tosóidh sé chomh luath is a bheidh sé lán.', wpNotify:'🔔 Cuir in iúl dom', wpNotifyTip:'Faigh fógra nuair a thosaíonn do bhord, fiú má théann tú chuig cluaisín eile.',
     // ── WS closed ──
     wsLostAction:'Cailleadh an ceangal — níor seoladh an beart', wsSendFailed:'Theip ar sheoladh (WS dúnta)',
     reauthBanner:'Ceangailte — á fhíordheimhniú arís…',

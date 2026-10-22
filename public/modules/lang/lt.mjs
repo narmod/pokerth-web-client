@@ -414,6 +414,7 @@ export const strings = {
     wpStartHumansTip: 'Pradėti tik su žmonėmis',
     wpFillBotsTip: 'Užpildyti laisvas vietas botais',
     notifTurnTitle: '⚡ JŪSŲ EILĖ!',
+    notifStartTitle:'🃏 Tavo stalas prasideda!', notifStartBody:'Žaidimas dabar prasideda PokerTH — grįžk žaisti.', notifAlmostTitle:'⏳ Dar vienas žaidėjas!', notifAlmostBody:'{n}/{max} prie tavo stalo PokerTH: prasidės, kai tik prisipildys.', wpNotify:'🔔 Pranešk man', wpNotifyTip:'Gauk pranešimą, kai tavo stalas prasidės, net jei pereisi į kitą skirtuką.',
     notifTurnBody: 'Jūsų eilė PokerTH',
     wsLostAction: 'Ryšys nutrūko — veiksmas neišsiųstas',
     wsSendFailed: 'Nepavyko išsiųsti (WS uždarytas)',

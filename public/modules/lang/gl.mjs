@@ -414,6 +414,7 @@ export const strings = {
     wpStartHumansTip: 'Comeza só con humanos',
     wpFillBotsTip: 'Enche os postos baleiros con bots',
     notifTurnTitle: '⚡ É A TÚA QUENDA!',
+    notifStartTitle:'🃏 A túa mesa comeza!', notifStartBody:'A partida comeza agora en PokerTH — volve xogar.', notifAlmostTitle:'⏳ Falta un xogador!', notifAlmostBody:'{n}/{max} na túa mesa de PokerTH: comeza en canto estea chea.', wpNotify:'🔔 Avísame', wpNotifyTip:'Recibe un aviso cando comece a túa mesa, aínda que cambies de lapela.',
     notifTurnBody: 'É a túa quenda en PokerTH',
     wsLostAction: 'Conexión perdida — acción non enviada',
     wsSendFailed: 'O envío fallou (WS pechado)',

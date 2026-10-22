@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Öppnar sidan för att skapa ett bord.',
   hsStart: 'Startar spelet nu med spelarna vid bordet.',
   hsInvite: 'Kopierar eller delar en länk som tar dina vänner direkt till det här bordet.',
+  hsNotify: '**🔔 Meddela mig**: webbläsaren frågar en gång om PokerTH får visa aviseringar. Säg ja så får du veta när ditt bord snart startar och när det startar — och när det är din tur — även i en annan flik.',
   hsLeaveTable: 'Lämnar det här bordet och går tillbaka till listan.',
   hsFillBots: 'När den är ikryssad fylls de tomma platserna med datorspelare vid start.',
   hsGameType: 'Speltypen: Normal, endast registrerade spelare, endast inbjudna spelare eller Rankingspel (spelare med ett konto).',

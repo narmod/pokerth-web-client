@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Stol döretmek sahypasyny açýar.',
   hsStart: 'Stoldaky oýunçylar bilen oýny häzir başlaýar.',
   hsInvite: 'Dostlaryňyzy göni şu stola getirýän salgyny göçürýär ýa-da paýlaşýar.',
+  hsNotify: '**🔔 Maňa habar ber**: brauzer PokerTH bildiriş görkezip bilermi diýip bir gezek soraýar. Razy bolsaňyz, stol başlajak bolanda we başlanda — hem-de nobatyňyz gelende — başga goýmada bolsaňyz-da bilersiňiz.',
   hsLeaveTable: 'Bu stoldan çykýar we sanawa dolanýar.',
   hsFillBots: 'Bellenen bolsa, başlanda boş orunlar kompýuter oýunçylary bilen doldurylýar.',
   hsGameType: 'Oýun görnüşi: adaty, diňe hasaba alnan oýunçylar, diňe çagyrylan oýunçylar ýa-da reýting oýny (hasaby bolan oýunçylar).',

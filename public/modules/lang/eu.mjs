@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'Hasi gizakiekin soilik', wpFillBotsTip:'Bete eserleku hutsak botekin',
     // ── Notifications ──
     notifTurnTitle:'⚡ ZURE TXANDA!', notifTurnBody:'Zure jokaldia da PokerTH-n',
+    notifStartTitle:'🃏 Zure mahaia hasten ari da!', notifStartBody:'Partida orain hasten da PokerTH-n — itzuli jokatzera.', notifAlmostTitle:'⏳ Jokalari bat falta da!', notifAlmostBody:'{n}/{max} zure mahaian PokerTH-n: beteta dagoenean hasiko da.', wpNotify:'🔔 Jakinarazi', wpNotifyTip:'Jaso jakinarazpen bat zure mahaia hastean, beste fitxa batera joanda ere.',
     // ── WS closed ──
     wsLostAction:'Konexioa galdu da — jokaldia ez da bidali', wsSendFailed:'Bidaltzeak huts egin du (WS itxita)',
     reauthBanner:'Konektatuta — berriro autentifikatzen…',

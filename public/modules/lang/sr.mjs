@@ -414,6 +414,7 @@ export const strings = {
     wpStartHumansTip: 'Počni samo sa ljudima',
     wpFillBotsTip: 'Popuni prazna mesta botovima',
     notifTurnTitle: '⚡ VI STE NA REDU!',
+    notifStartTitle:'🃏 Твој сто почиње!', notifStartBody:'Игра сада почиње на PokerTH-у — врати се да играш.', notifAlmostTitle:'⏳ Још један играч!', notifAlmostBody:'{n}/{max} за твојим столом на PokerTH-у: почиње чим се попуни.', wpNotify:'🔔 Обавести ме', wpNotifyTip:'Добиј обавештење када твој сто почне, чак и ако пређеш на другу картицу.',
     notifTurnBody: 'Vi ste na potezu u PokerTH-u',
     wsLostAction: 'Veza prekinuta — akcija nije poslata',
     wsSendFailed: 'Slanje nije uspelo (WS zatvoren)',

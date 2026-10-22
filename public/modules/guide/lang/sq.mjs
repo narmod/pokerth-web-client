@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Hap faqen për të krijuar një tavolinë.',
   hsStart: 'Nis lojën tani me lojtarët në tavolinë.',
   hsInvite: 'Kopjon ose ndan një lidhje që i sjell miqtë e tu drejt e në këtë tavolinë.',
+  hsNotify: '**🔔 Më njofto**: shfletuesi të pyet një herë nëse PokerTH mund të shfaqë njoftime. Prano dhe do ta dish kur tryeza jote është gati të fillojë dhe kur fillon — dhe kur është radha jote — edhe në një skedë tjetër.',
   hsLeaveTable: 'Largohet nga kjo tavolinë dhe kthehet te lista.',
   hsFillBots: 'Kur është i shënuar, vendet bosh plotësohen me lojtarë kompjuterikë në fillim.',
   hsGameType: 'Lloji i lojës: Normale, vetëm lojtarë të regjistruar, vetëm lojtarë të ftuar ose Lojë me renditje (lojtarë me llogari).',

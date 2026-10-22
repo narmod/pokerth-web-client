@@ -414,6 +414,7 @@ export const strings = {
     wpStartHumansTip: 'Започни само с хора',
     wpFillBotsTip: 'Допълни празните места с ботове',
     notifTurnTitle: '⚡ ВАШ РЕД Е!',
+    notifStartTitle:'🃏 Масата ти започва!', notifStartBody:'Играта започва сега в PokerTH — върни се да играеш.', notifAlmostTitle:'⏳ Още един играч!', notifAlmostBody:'{n}/{max} на масата ти в PokerTH: започва щом се напълни.', wpNotify:'🔔 Уведоми ме', wpNotifyTip:'Получи известие, когато масата ти започне, дори ако си в друг раздел.',
     notifTurnBody: 'Ваш ред е в PokerTH',
     wsLostAction: 'Връзката прекъсна — действието не е изпратено',
     wsSendFailed: 'Изпращането се провали (WS затворен)',

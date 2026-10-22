@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'လူများဖြင့်သာ စတင်ရန်', wpFillBotsTip:'လွတ်နေသော ထိုင်ခုံများကို ဘော့များဖြင့် ဖြည့်ရန်',
     // ── Notifications ──
     notifTurnTitle:'⚡ သင့်အလှည့်!', notifTurnBody:'PokerTH တွင် သင့်အလှည့် ရောက်ပြီ',
+    notifStartTitle:'🃏 သင့်စားပွဲ စတင်နေပါပြီ!', notifStartBody:'PokerTH တွင် ဂိမ်းယခု စတင်ပါပြီ — ကစားရန် ပြန်လာပါ။', notifAlmostTitle:'⏳ ကစားသမား တစ်ယောက်သာ လိုပါတော့သည်!', notifAlmostBody:'PokerTH ရှိ သင့်စားပွဲတွင် {n}/{max}- ပြည့်သည်နှင့် စတင်ပါမည်။', wpNotify:'🔔 အသိပေးပါ', wpNotifyTip:'အခြားတက်ဘ်သို့ ပြောင်းသွားလည်း သင့်စားပွဲစတင်သောအခါ အသိပေးချက် ရယူပါ။',
     // ── WS closed ──
     wsLostAction:'ချိတ်ဆက်မှု ပြတ်သွားသည် — လှုပ်ရှားမှုကို မပို့ရသေးပါ', wsSendFailed:'ပို့ခြင်း မအောင်မြင်ပါ (WS ပိတ်သွားသည်)',
     reauthBanner:'ချိတ်ဆက်ပြီး — အထောက်အထား ပြန်စိစစ်နေသည်…',

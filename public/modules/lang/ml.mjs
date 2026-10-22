@@ -233,6 +233,7 @@ export const strings = {
     wpStartHumansTip:'മനുഷ്യരെ മാത്രം വെച്ച് തുടങ്ങുക', wpFillBotsTip:'ഒഴിഞ്ഞ സീറ്റുകൾ ബോട്ടുകളെക്കൊണ്ട് നിറയ്ക്കുക',
     // ── Notifications ──
     notifTurnTitle:'⚡ നിങ്ങളുടെ ഊഴം!', notifTurnBody:'PokerTH ൽ ഇപ്പോൾ നിങ്ങളുടെ നീക്കം',
+    notifStartTitle:'🃏 നിങ്ങളുടെ മേശ ആരംഭിക്കുന്നു!', notifStartBody:'PokerTH-ൽ കളി ഇപ്പോൾ ആരംഭിക്കുന്നു — കളിക്കാൻ തിരികെ വരൂ.', notifAlmostTitle:'⏳ ഒരാൾ കൂടി!', notifAlmostBody:'PokerTH-ലെ നിങ്ങളുടെ മേശയിൽ {n}/{max}: നിറഞ്ഞാലുടൻ ആരംഭിക്കും.', wpNotify:'🔔 എന്നെ അറിയിക്കൂ', wpNotifyTip:'മറ്റൊരു ടാബിലേക്ക് മാറിയാലും, നിങ്ങളുടെ മേശ ആരംഭിക്കുമ്പോൾ അറിയിപ്പ് നേടൂ.',
     // ── WS closed ──
     wsLostAction:'കണക്ഷൻ നഷ്ടപ്പെട്ടു — പ്രവൃത്തി അയച്ചില്ല', wsSendFailed:'അയയ്ക്കൽ പരാജയപ്പെട്ടു (WS അടഞ്ഞു)',
     reauthBanner:'ബന്ധിപ്പിച്ചു — വീണ്ടും പ്രാമാണീകരിക്കുന്നു…',

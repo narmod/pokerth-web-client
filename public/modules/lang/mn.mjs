@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'Зөвхөн хүмүүстэй эхлэх', wpFillBotsTip:'Хоосон суудлыг ботоор дүүргэх',
     // ── Notifications ──
     notifTurnTitle:'⚡ ТАНЫ ЭЭЛЖ!', notifTurnBody:'PokerTH дээр таны ээлж',
+    notifStartTitle:'🃏 Таны ширээ эхэлж байна!', notifStartBody:'Тоглоом одоо PokerTH дээр эхэлж байна — тоглохоор буцаарай.', notifAlmostTitle:'⏳ Ганц тоглогч дутуу!', notifAlmostBody:'PokerTH дээрх таны ширээнд {n}/{max}: дүүрмэгц эхэлнэ.', wpNotify:'🔔 Надад мэдэгдээрэй', wpNotifyTip:'Өөр таб руу шилжсэн ч ширээ тань эхлэхэд мэдэгдэл аваарай.',
     // ── WS closed ──
     wsLostAction:'Холболт тасарлаа — үйлдэл илгээгдсэнгүй', wsSendFailed:'Илгээж чадсангүй (WS хаалттай)',
     reauthBanner:'Холбогдлоо — дахин баталгаажуулж байна…',

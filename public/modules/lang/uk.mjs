@@ -413,6 +413,7 @@ export const strings = {
     wpStartHumansTip: 'Почати лише з людьми',
     wpFillBotsTip: 'Заповнити вільні місця ботами',
     notifTurnTitle: '⚡ ВАШ ХІД!',
+    notifStartTitle:'🃏 Твій стіл починається!', notifStartBody:'Гра починається в PokerTH — повертайся грати.', notifAlmostTitle:'⏳ Ще один гравець!', notifAlmostBody:'{n}/{max} за твоїм столом у PokerTH: гра почнеться, щойно стіл заповниться.', wpNotify:'🔔 Сповісти мене', wpNotifyTip:'Отримай сповіщення, коли твій стіл почнеться, навіть якщо ти на іншій вкладці.',
     notifTurnBody: 'Ваш хід у PokerTH',
     wsLostAction: 'З’єднання втрачено — дію не надіслано',
     wsSendFailed: 'Не вдалося надіслати (WS закрито)',

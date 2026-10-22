@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'Оғоз танҳо бо одамон', wpFillBotsTip:'Пур кардани ҷойҳои холӣ бо ботҳо',
     // ── Notifications ──
     notifTurnTitle:'⚡ НАВБАТИ ШУМО!', notifTurnBody:'Дар PokerTH навбати шумост',
+    notifStartTitle:'🃏 Мизи шумо оғоз мешавад!', notifStartBody:'Бозӣ ҳозир дар PokerTH оғоз мешавад — барои бозӣ баргардед.', notifAlmostTitle:'⏳ Боз як бозингар!', notifAlmostBody:'{n}/{max} дар мизи шумо дар PokerTH: ҳамин ки пур шуд, оғоз мешавад.', wpNotify:'🔔 Ба ман хабар деҳ', wpNotifyTip:'Ҳатто агар ба варақаи дигар гузаред, ҳангоми оғози миз огоҳинома гиред.',
     // ── WS closed ──
     wsLostAction:'Пайваст қатъ шуд — амал фиристода нашуд', wsSendFailed:'Фиристодан ноком шуд (WS баста аст)',
     reauthBanner:'Пайваст шуд — аутентификатсияи дубора…',

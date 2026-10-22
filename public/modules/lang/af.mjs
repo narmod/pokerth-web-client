@@ -414,6 +414,7 @@ export const strings = {
     wpStartHumansTip: 'Begin net met mense',
     wpFillBotsTip: 'Vul leë plekke met bots',
     notifTurnTitle: '⚡ DIS JOU BEURT!',
+    notifStartTitle:'🃏 Jou tafel begin!', notifStartBody:'Die spel begin nou op PokerTH — kom terug om te speel.', notifAlmostTitle:'⏳ Nog een speler!', notifAlmostBody:'{n}/{max} by jou tafel op PokerTH: dit begin sodra dit vol is.', wpNotify:'🔔 Laat weet my', wpNotifyTip:'Kry ’n kennisgewing wanneer jou tafel begin, selfs as jy na ’n ander oortjie gaan.',
     notifTurnBody: 'Dis jou beurt by PokerTH',
     wsLostAction: 'Verbinding verloor — aksie nie gestuur nie',
     wsSendFailed: 'Stuur het misluk (WS gesluit)',

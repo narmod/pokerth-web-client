@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Mở trang tạo bàn.',
   hsStart: 'Bắt đầu ván ngay với những người chơi đang ở bàn.',
   hsInvite: 'Sao chép hoặc chia sẻ liên kết đưa bạn bè của bạn thẳng đến bàn này.',
+  hsNotify: '**🔔 Báo cho mình**: trình duyệt sẽ hỏi một lần xem PokerTH có được hiển thị thông báo không. Đồng ý, bạn sẽ biết khi bàn sắp bắt đầu và khi bắt đầu — cả khi đến lượt bạn — ngay cả ở thẻ khác.',
   hsLeaveTable: 'Rời bàn này và quay lại danh sách.',
   hsFillBots: 'Khi được đánh dấu, các ghế trống sẽ được bổ sung người chơi máy tính lúc bắt đầu.',
   hsGameType: 'Loại ván: Thường, chỉ người chơi đã đăng ký, chỉ người chơi được mời, hoặc Xếp hạng (người chơi có tài khoản).',

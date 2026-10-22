@@ -415,6 +415,7 @@ export const strings = {
     wpStartHumansTip: '仅与真人开始',
     wpFillBotsTip: '用机器人填补空位',
     notifTurnTitle: '⚡ 轮到你了！',
+    notifStartTitle:'🃏 你的牌桌开始了！', notifStartBody:'PokerTH 的牌局现在开始——快回来玩。', notifAlmostTitle:'⏳ 还差一位玩家！', notifAlmostBody:'你在 PokerTH 的牌桌 {n}/{max}：一坐满就开始。', wpNotify:'🔔 通知我', wpNotifyTip:'即使切换到其他标签页，牌桌开始时也会收到通知。',
     notifTurnBody: '在 PokerTH 该你行动了',
     wsLostAction: '连接断开 — 操作未发送',
     wsSendFailed: '发送失败（WS 已关闭）',

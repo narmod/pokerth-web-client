@@ -416,6 +416,7 @@ export const strings = {
     wpStartHumansTip: 'Sadece insanlarla başla',
     wpFillBotsTip: 'Boş koltukları botlarla doldur',
     notifTurnTitle: '⚡ SIRA SENDE!',
+    notifStartTitle:'🃏 Masan başlıyor!', notifStartBody:'Oyun şimdi PokerTH’de başlıyor — oynamak için geri dön.', notifAlmostTitle:'⏳ Bir oyuncu kaldı!', notifAlmostBody:'PokerTH’deki masanda {n}/{max}: dolar dolmaz başlar.', wpNotify:'🔔 Bana haber ver', wpNotifyTip:'Başka bir sekmeye geçsen bile masan başladığında bildirim al.',
     notifTurnBody: 'PokerTH’de hamle sırası sende',
     wsLostAction: 'Bağlantı koptu — hamle gönderilmedi',
     wsSendFailed: 'Gönderim başarısız (WS kapalı)',

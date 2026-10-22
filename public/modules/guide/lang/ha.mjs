@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Yana buɗe shafin ƙirƙirar tebur.',
   hsStart: 'Yana fara wasan yanzu tare da ’yan wasan da ke kan tebur.',
   hsInvite: 'Yana kwafa ko raba hanyar haɗi da ke kawo abokanka kai tsaye zuwa wannan tebur.',
+  hsNotify: '**🔔 Sanar da ni**: burauzarka za ta tambaya sau ɗaya ko PokerTH zai iya nuna sanarwa. Ka amince, za a sanar da kai lokacin da teburinka ke shirin farawa da lokacin da ya fara — da lokacin da lokacinka ya yi — ko a wani shafi.',
   hsLeaveTable: 'Yana barin wannan tebur kuma ya koma jerin.',
   hsFillBots: 'Idan an yi alama, za a cika kujerun da babu kowa da ’yan wasan kwamfuta a farko.',
   hsGameType: 'Nau’in wasa: Na al’ada, ’yan wasa masu rajista kawai, ’yan wasan da aka gayyata kawai, ko Wasan matsayi (’yan wasa masu asusu).',

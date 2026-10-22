@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Öffnet die Seite zum Erstellen eines Tisches.',
   hsStart: 'Startet das Spiel sofort mit den Spielern am Tisch.',
   hsInvite: 'Kopiert oder teilt einen Link, der deine Freunde direkt an diesen Tisch bringt.',
+  hsNotify: '**🔔 Benachrichtige mich**: Dein Browser fragt einmal, ob PokerTH Benachrichtigungen anzeigen darf. Sag ja, und du erfährst, wenn dein Tisch gleich startet und wenn er startet — und wenn du dran bist — auch in einem anderen Tab.',
   hsLeaveTable: 'Verlässt diesen Tisch und kehrt zur Liste zurück.',
   hsFillBots: 'Wenn angehakt, werden freie Plätze beim Start mit Computerspielern aufgefüllt.',
   hsGameType: 'Der Spieltyp: Normal, nur registrierte Spieler, nur eingeladene Spieler oder Ranglistenspiel (Spieler mit Konto).',

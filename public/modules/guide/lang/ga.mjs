@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Osclaíonn sé an leathanach chun bord a chruthú.',
   hsStart: 'Tosaíonn sé an cluiche anois leis na himreoirí atá ag an mbord.',
   hsInvite: 'Cóipeálann nó comhroinneann sé nasc a thugann do chairde díreach chuig an mbord seo.',
+  hsNotify: '**🔔 Cuir in iúl dom**: fiafraíonn do bhrabhsálaí uair amháin an féidir le PokerTH fógraí a thaispeáint. Abair tá agus cuirfear in iúl duit nuair atá do bhord ar tí tosú agus nuair a thosaíonn sé — agus nuair is é do sheal é — fiú i gcluaisín eile.',
   hsLeaveTable: 'Fágann sé an bord seo agus filleann sé ar an liosta.',
   hsFillBots: 'Nuair atá sé ticeáilte, líontar na suíocháin fholmha le himreoirí ríomhaire ag an tús.',
   hsGameType: 'Cineál an chluiche: Gnáth, imreoirí cláraithe amháin, imreoirí le cuireadh amháin, nó Cluiche rangaithe (imreoirí a bhfuil cuntas acu).',

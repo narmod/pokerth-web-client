@@ -232,6 +232,7 @@ export const strings = {
     wpStartHumansTip:'Byrja aðeins með fólki', wpFillBotsTip:'Fylla auð sæti með bottum',
     // ── Notifications ──
     notifTurnTitle:'⚡ Þú átt leik!', notifTurnBody:'Nú er komið að þér í PokerTH',
+    notifStartTitle:'🃏 Borðið þitt er að byrja!', notifStartBody:'Leikurinn byrjar núna á PokerTH — komdu aftur að spila.', notifAlmostTitle:'⏳ Einn leikmaður í viðbót!', notifAlmostBody:'{n}/{max} við borðið þitt á PokerTH: það byrjar um leið og það fyllist.', wpNotify:'🔔 Láttu mig vita', wpNotifyTip:'Fáðu tilkynningu þegar borðið þitt byrjar, jafnvel þótt þú farir á annan flipa.',
     // ── WS closed ──
     wsLostAction:'Tenging rofnaði — aðgerð ekki send', wsSendFailed:'Sending mistókst (WS lokað)',
     reauthBanner:'Tengt — auðkenni aftur…',

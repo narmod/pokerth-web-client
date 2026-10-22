@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'僅與真人開始', wpFillBotsTip:'用機器人填補空位',
     // ── Notifications ──
     notifTurnTitle:'⚡ 輪到你了！', notifTurnBody:'在 PokerTH 該你行動了',
+    notifStartTitle:'🃏 你的牌桌開始了！', notifStartBody:'PokerTH 的牌局現在開始——快回來玩。', notifAlmostTitle:'⏳ 還差一位玩家！', notifAlmostBody:'你在 PokerTH 的牌桌 {n}/{max}：一滿座就開始。', wpNotify:'🔔 通知我', wpNotifyTip:'即使切換到其他分頁，牌桌開始時也會收到通知。',
     // ── WS closed ──
     wsLostAction:'連線斷開 — 操作未傳送', wsSendFailed:'傳送失敗（WS 已關閉）',
     reauthBanner:'已連線 — 正在重新驗證…',

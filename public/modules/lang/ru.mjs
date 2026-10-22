@@ -419,6 +419,7 @@ export const strings = {
     wpStartHumansTip: 'Начать только с людьми',
     wpFillBotsTip: 'Заполнить свободные места ботами',
     notifTurnTitle: '⚡ ВАШ ХОД!',
+    notifStartTitle:'🃏 Твой стол начинается!', notifStartBody:'Игра начинается в PokerTH — возвращайся играть.', notifAlmostTitle:'⏳ Ещё один игрок!', notifAlmostBody:'{n}/{max} за твоим столом в PokerTH: игра начнётся, как только стол заполнится.', wpNotify:'🔔 Сообщить мне', wpNotifyTip:'Получи уведомление, когда твой стол начнётся, даже если ты на другой вкладке.',
     notifTurnBody: 'Ваш ход в PokerTH',
     wsLostAction: 'Соединение потеряно — действие не отправлено',
     wsSendFailed: 'Не удалось отправить (WS закрыт)',

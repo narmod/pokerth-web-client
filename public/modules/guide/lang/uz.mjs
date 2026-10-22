@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Stol yaratish sahifasini ochadi.',
   hsStart: 'Oʻyinni hozir stoldagi oʻyinchilar bilan boshlaydi.',
   hsInvite: 'Doʻstlaringizni toʻgʻridan-toʻgʻri shu stolga olib keladigan havolani nusxalaydi yoki ulashadi.',
+  hsNotify: '**🔔 Menga xabar ber**: brauzer PokerTH bildirishnoma koʻrsata oladimi, deb bir marta soʻraydi. Rozi boʻlsangiz, stol boshlanish arafasida va boshlanganda — navbatingiz kelganda ham — boshqa varaqda boʻlsangiz ham bilib olasiz.',
   hsLeaveTable: 'Bu stolni tark etadi va roʻyxatga qaytadi.',
   hsFillBots: 'Belgilangan boʻlsa, boʻsh oʻrinlar boshida kompyuter oʻyinchilari bilan toʻldiriladi.',
   hsGameType: 'Oʻyin turi: Oddiy, faqat roʻyxatdan oʻtgan oʻyinchilar, faqat taklif qilingan oʻyinchilar yoki Reyting oʻyini (hisobi bor oʻyinchilar).',

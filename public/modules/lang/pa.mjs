@@ -233,6 +233,7 @@ export const strings = {
     wpStartHumansTip:'ਸਿਰਫ਼ ਮਨੁੱਖਾਂ ਨਾਲ ਸ਼ੁਰੂ ਕਰੋ', wpFillBotsTip:'ਖਾਲੀ ਸੀਟਾਂ ਬੋਟਾਂ ਨਾਲ ਭਰੋ',
     // ── Notifications ──
     notifTurnTitle:'⚡ ਤੁਹਾਡੀ ਵਾਰੀ!', notifTurnBody:"PokerTH \u2019ਤੇ ਤੁਹਾਡੀ ਚਾਲ ਹੈ",
+    notifStartTitle:'🃏 ਤੁਹਾਡਾ ਮੇਜ਼ ਸ਼ੁਰੂ ਹੋ ਰਿਹਾ ਹੈ!', notifStartBody:'PokerTH ’ਤੇ ਖੇਡ ਹੁਣ ਸ਼ੁਰੂ ਹੋ ਰਹੀ ਹੈ — ਖੇਡਣ ਲਈ ਵਾਪਸ ਆਓ।', notifAlmostTitle:'⏳ ਬੱਸ ਇੱਕ ਖਿਡਾਰੀ ਹੋਰ!', notifAlmostBody:'PokerTH ’ਤੇ ਤੁਹਾਡੇ ਮੇਜ਼ ’ਤੇ {n}/{max}: ਭਰਦੇ ਹੀ ਸ਼ੁਰੂ ਹੋ ਜਾਵੇਗਾ।', wpNotify:'🔔 ਮੈਨੂੰ ਦੱਸੋ', wpNotifyTip:'ਕਿਸੇ ਹੋਰ ਟੈਬ ’ਤੇ ਜਾਓ ਤਾਂ ਵੀ, ਮੇਜ਼ ਸ਼ੁਰੂ ਹੋਣ ’ਤੇ ਸੂਚਨਾ ਪਾਓ।',
     // ── WS closed ──
     wsLostAction:'ਕਨੈਕਸ਼ਨ ਟੁੱਟਿਆ — ਕਾਰਵਾਈ ਨਹੀਂ ਭੇਜੀ ਗਈ', wsSendFailed:'ਭੇਜਣਾ ਅਸਫਲ (WS ਬੰਦ)',
     reauthBanner:'ਜੁੜਿਆ — ਮੁੜ-ਪ੍ਰਮਾਣੀਕਰਨ ਹੋ ਰਿਹਾ ਹੈ…',

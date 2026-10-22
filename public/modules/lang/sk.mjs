@@ -414,6 +414,7 @@ export const strings = {
     wpStartHumansTip: 'Začať len s ľuďmi',
     wpFillBotsTip: 'Doplniť prázdne miesta botmi',
     notifTurnTitle: '⚡ STE NA RADE!',
+    notifStartTitle:'🃏 Tvoj stôl začína!', notifStartBody:'Hra práve začína na PokerTH — vráť sa hrať.', notifAlmostTitle:'⏳ Ešte jeden hráč!', notifAlmostBody:'{n}/{max} pri tvojom stole na PokerTH: začne, len čo bude plný.', wpNotify:'🔔 Upozorni ma', wpNotifyTip:'Dostaň upozornenie, keď tvoj stôl začne, aj keď prepneš na inú kartu.',
     notifTurnBody: 'Ste na ťahu v PokerTH',
     wsLostAction: 'Spojenie stratené — akcia neodoslaná',
     wsSendFailed: 'Odoslanie zlyhalo (WS zatvorený)',

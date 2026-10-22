@@ -235,6 +235,7 @@ export const strings = {
     wpStartHumansTip:'Започни само со луѓе', wpFillBotsTip:'Пополни ги празните места со ботови',
     // ── Notifications ──
     notifTurnTitle:'⚡ ТВОЈ РЕД Е!', notifTurnBody:"На ред си во PokerTH",
+    notifStartTitle:'🃏 Твојата маса почнува!', notifStartBody:'Играта сега почнува на PokerTH — врати се да играш.', notifAlmostTitle:'⏳ Уште еден играч!', notifAlmostBody:'{n}/{max} на твојата маса на PokerTH: почнува штом се наполни.', wpNotify:'🔔 Извести ме', wpNotifyTip:'Добиј известување кога ќе почне твојата маса, дури и ако преминеш на друго јазиче.',
     // ── WS closed ──
     wsLostAction:'Врската е изгубена — потегот не е испратен', wsSendFailed:'Праќањето не успеа (WS затворен)',
     reauthBanner:'Поврзан — повторна автентикација…',

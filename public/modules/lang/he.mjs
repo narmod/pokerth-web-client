@@ -233,6 +233,7 @@ export const strings = {
     wpStartHumansTip:'התחלה עם בני אדם בלבד', wpFillBotsTip:'מילוי מושבים ריקים בבוטים',
     // ── Notifications ──
     notifTurnTitle:'⚡ תורך!', notifTurnBody:'תורך לשחק ב-PokerTH',
+    notifStartTitle:'🃏 השולחן שלכם מתחיל!', notifStartBody:'המשחק מתחיל עכשיו ב-PokerTH — חזרו לשחק.', notifAlmostTitle:'⏳ עוד שחקן אחד!', notifAlmostBody:'{n}/{max} בשולחן שלכם ב-PokerTH: הוא מתחיל ברגע שהוא מתמלא.', wpNotify:'🔔 הודיעו לי', wpNotifyTip:'קבלו התראה כשהשולחן שלכם מתחיל, גם אם עברתם ללשונית אחרת.',
     // ── WS closed ──
     wsLostAction:'החיבור אבד — הפעולה לא נשלחה', wsSendFailed:'השליחה נכשלה (WS סגור)',
     reauthBanner:'מחובר — מאמת מחדש…',

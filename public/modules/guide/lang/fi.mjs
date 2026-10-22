@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Avaa pöydän luontisivun.',
   hsStart: 'Aloittaa pelin nyt pöydässä olevien pelaajien kanssa.',
   hsInvite: 'Kopioi tai jakaa linkin, joka tuo ystäväsi suoraan tähän pöytään.',
+  hsNotify: '**🔔 Ilmoita minulle**: selaimesi kysyy kerran, saako PokerTH näyttää ilmoituksia. Vastaa kyllä, niin kuulet, kun pöytäsi on alkamassa ja kun se alkaa — ja kun on vuorosi — myös toisessa välilehdessä.',
   hsLeaveTable: 'Poistuu tästä pöydästä ja palaa listaan.',
   hsFillBots: 'Kun valittu, tyhjät paikat täytetään alussa tietokonepelaajilla.',
   hsGameType: 'Pelityyppi: Normaali, vain rekisteröityneet pelaajat, vain kutsutut pelaajat tai Ranking-peli (pelaajat, joilla on tili).',

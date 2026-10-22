@@ -318,6 +318,7 @@ export const strings = {
     wpReady:'खेलने को तैयार — शुरू करने का तरीका चुनें', wpStart:'शुरू',
     wpStartHumansTip:'केवल मानव के साथ शुरू', wpFillBotsTip:'खाली सीटें बॉट्स से भरें',
     notifTurnTitle:'⚡ आपकी बारी!', notifTurnBody:'PokerTH पर आपकी चाल है',
+    notifStartTitle:'🃏 आपकी टेबल शुरू हो रही है!', notifStartBody:'PokerTH पर खेल अभी शुरू हो रहा है — खेलने लौट आइए।', notifAlmostTitle:'⏳ बस एक खिलाड़ी और!', notifAlmostBody:'PokerTH पर आपकी टेबल पर {n}/{max}: भरते ही शुरू हो जाएगी।', wpNotify:'🔔 मुझे सूचित करें', wpNotifyTip:'दूसरे टैब पर जाने पर भी, टेबल शुरू होने पर सूचना पाएँ।',
     wsLostAction:'कनेक्शन टूटा — क्रिया नहीं भेजी गई', wsSendFailed:'भेजना विफल (WS बंद)',
     reauthBanner:'कनेक्टेड — पुनः प्रमाणित हो रहा है…',
     kickNoPlayers:'टेबल पर कोई खिलाड़ी नहीं', kickThisPlayer:'इस खिलाड़ी को निकालें?',

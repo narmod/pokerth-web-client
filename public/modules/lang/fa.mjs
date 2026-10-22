@@ -233,6 +233,7 @@ export const strings = {
     wpStartHumansTip:'شروع فقط با انسان‌ها', wpFillBotsTip:'پرکردن صندلی‌های خالی با ربات',
     // ── Notifications ──
     notifTurnTitle:'⚡ نوبت شماست!', notifTurnBody:'در PokerTH نوبت شماست',
+    notifStartTitle:'🃏 میز شما در حال شروع است!', notifStartBody:'بازی الان در PokerTH شروع می‌شود — برای بازی برگردید.', notifAlmostTitle:'⏳ فقط یک بازیکن دیگر!', notifAlmostBody:'{n}/{max} سر میز شما در PokerTH: به‌محض پر شدن شروع می‌شود.', wpNotify:'🔔 خبرم کن', wpNotifyTip:'وقتی میزتان شروع شد اعلان بگیرید، حتی اگر به زبانه‌ای دیگر رفته باشید.',
     // ── WS closed ──
     wsLostAction:'اتصال قطع شد — حرکت ارسال نشد', wsSendFailed:'ارسال ناموفق (WS بسته است)',
     reauthBanner:'متصل — احراز هویت دوباره…',

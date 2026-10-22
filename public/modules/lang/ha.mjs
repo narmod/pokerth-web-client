@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'Fara da mutane kawai', wpFillBotsTip:'Cika kujerun da babu kowa da bots',
     // ── Notifications ──
     notifTurnTitle:'⚡ LOKACINKA NE!', notifTurnBody:'Lokacin motsinka ne a PokerTH',
+    notifStartTitle:'🃏 Teburinka yana farawa!', notifStartBody:'Wasan yana farawa yanzu a PokerTH — dawo ka yi wasa.', notifAlmostTitle:'⏳ Sauran ɗan wasa ɗaya!', notifAlmostBody:'{n}/{max} a teburinka a PokerTH: zai fara da zarar ya cika.', wpNotify:'🔔 Sanar da ni', wpNotifyTip:'Sami sanarwa idan teburinka ya fara, ko da ka koma wani shafi.',
     // ── WS closed ──
     wsLostAction:'Haɗi ya katse — ba a aika motsi ba', wsSendFailed:'Aikawa ta kasa (WS a rufe)',
     reauthBanner:'An haɗa — ana sake tantancewa…',

@@ -235,6 +235,7 @@ export const strings = {
     wpStartHumansTip:'Nis vetëm me njerëz', wpFillBotsTip:'Plotëso vendet bosh me botë',
     // ── Notifications ──
     notifTurnTitle:'⚡ ËSHTË RADHA JOTE!', notifTurnBody:"Është radha jote në PokerTH",
+    notifStartTitle:'🃏 Tryeza jote po fillon!', notifStartBody:'Loja po fillon tani në PokerTH — kthehu të luash.', notifAlmostTitle:'⏳ Edhe një lojtar!', notifAlmostBody:'{n}/{max} në tryezën tënde në PokerTH: fillon sapo të mbushet.', wpNotify:'🔔 Më njofto', wpNotifyTip:'Merr një njoftim kur fillon tryeza jote, edhe nëse kalon në një skedë tjetër.',
     // ── WS closed ──
     wsLostAction:'Lidhja u humb — veprimi nuk u dërgua', wsSendFailed:'Dërgimi dështoi (WS i mbyllur)',
     reauthBanner:'I lidhur — po vërtetohesh sërish…',

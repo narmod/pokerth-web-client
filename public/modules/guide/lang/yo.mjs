@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Ó ń ṣí ojú-ìwé láti ṣẹ̀dá tábìlì.',
   hsStart: 'Ó ń bẹ̀rẹ̀ eré náà nísinsìnyí pẹ̀lú àwọn òṣèré tó wà ní tábìlì.',
   hsInvite: 'Ó ń ṣe àdàkọ tàbí pín ìjápọ̀ tó ń mú àwọn ọ̀rẹ́ rẹ wá tààrà sí tábìlì yìí.',
+  hsNotify: '**🔔 Sọ fún mi**: aṣàwákiri rẹ yóò béèrè lẹ́ẹ̀kan bóyá PokerTH lè fi ìfitónilétí hàn. Gbà, wàá sì mọ̀ nígbà tí tábìlì rẹ fẹ́ bẹ̀rẹ̀ àti nígbà tí ó bẹ̀rẹ̀ — àti nígbà tí ó kàn ọ́ — kódà ní táàbù míì.',
   hsLeaveTable: 'Ó ń kúrò ní tábìlì yìí, ó sì ń padà sí àkójọ.',
   hsFillBots: 'Tí o bá fi àmì sí i, àwọn òṣèré kọ̀ǹpútà máa kún àwọn ìjókòó òfo nígbà ìbẹ̀rẹ̀.',
   hsGameType: 'Irú eré: Déédéé, àwọn òṣèré tí a forúkọ wọn sílẹ̀ nìkan, àwọn òṣèré tí a pè nìkan, tàbí Eré ipò (àwọn òṣèré tó ní àkáǹtì).',

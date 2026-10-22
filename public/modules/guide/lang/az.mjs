@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Masa yaratma səhifəsini açır.',
   hsStart: 'Oyunu masadakı oyunçularla dərhal başladır.',
   hsInvite: 'Dostlarınızı birbaşa bu masaya gətirən linki kopyalayır və ya paylaşır.',
+  hsNotify: '**🔔 Mənə xəbər ver**: brauzeriniz bir dəfə PokerTH-in bildiriş göstərə biləcəyini soruşur. Razı olsanız, masanız başlamağa yaxınlaşanda və başlayanda — həm də növbəniz çatanda — başqa vərəqədə olsanız belə xəbər tutacaqsınız.',
   hsLeaveTable: 'Bu masanı tərk edir və siyahıya qayıdır.',
   hsFillBots: 'İşarələnibsə, boş yerlər başlanğıcda kompüter oyunçuları ilə doldurulur.',
   hsGameType: 'Oyun növü: Normal, yalnız qeydiyyatlı oyunçular, yalnız dəvət olunmuş oyunçular və ya Reytinq oyunu (hesabı olan oyunçular).',

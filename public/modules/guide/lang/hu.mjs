@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Megnyitja az asztallétrehozó oldalt.',
   hsStart: 'Azonnal elindítja a játékot az asztalnál ülő játékosokkal.',
   hsInvite: 'Kimásol vagy megoszt egy linket, amely a barátaidat egyenesen ehhez az asztalhoz hozza.',
+  hsNotify: '**🔔 Értesíts**: a böngésződ egyszer megkérdezi, mutathat-e a PokerTH értesítéseket. Mondj igent, és megtudod, mikor indulni készül és mikor indul az asztalod — és mikor te jössz — akkor is, ha másik lapon vagy.',
   hsLeaveTable: 'Elhagyja ezt az asztalt, és visszalép a listához.',
   hsFillBots: 'Ha be van jelölve, induláskor az üres helyeket számítógépes játékosok töltik fel.',
   hsGameType: 'A játék típusa: Normál, csak regisztrált játékosok, csak meghívott játékosok vagy ranglistás játék (fiókkal rendelkező játékosok).',

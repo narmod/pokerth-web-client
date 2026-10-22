@@ -415,6 +415,7 @@ export const strings = {
     wpStartHumansTip: 'மனிதர்களுடன் மட்டும் தொடங்கு',
     wpFillBotsTip: 'காலி இடங்களை பாட்களால் நிரப்பு',
     notifTurnTitle: '⚡ இது உங்கள் முறை!',
+    notifStartTitle:'🃏 உங்கள் மேசை தொடங்குகிறது!', notifStartBody:'PokerTH இல் ஆட்டம் இப்போது தொடங்குகிறது — விளையாடத் திரும்புங்கள்.', notifAlmostTitle:'⏳ இன்னும் ஒரு வீரர்!', notifAlmostBody:'PokerTH இல் உங்கள் மேசையில் {n}/{max}: நிரம்பியவுடன் தொடங்கும்.', wpNotify:'🔔 எனக்குத் தெரிவி', wpNotifyTip:'வேறு தாவலுக்குச் சென்றாலும், உங்கள் மேசை தொடங்கும்போது அறிவிப்பு பெறுங்கள்.',
     notifTurnBody: 'PokerTH இல் இது உங்கள் முறை',
     wsLostAction: 'இணைப்பு துண்டிக்கப்பட்டது — செயல் அனுப்பப்படவில்லை',
     wsSendFailed: 'அனுப்புதல் தோல்வி (WS மூடப்பட்டது)',

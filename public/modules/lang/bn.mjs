@@ -235,6 +235,7 @@ export const strings = {
     wpStartHumansTip:'শুধু মানুষ নিয়ে শুরু করুন', wpFillBotsTip:'খালি আসন বট দিয়ে পূরণ করুন',
     // ── Notifications ──
     notifTurnTitle:'⚡ আপনার পালা!', notifTurnBody:"PokerTH-এ আপনার খেলার পালা",
+    notifStartTitle:'🃏 আপনার টেবিল শুরু হচ্ছে!', notifStartBody:'PokerTH-এ খেলা এখন শুরু হচ্ছে — খেলতে ফিরে আসুন।', notifAlmostTitle:'⏳ আর একজন খেলোয়াড়!', notifAlmostBody:'PokerTH-এ আপনার টেবিলে {n}/{max}: পূর্ণ হলেই শুরু হবে।', wpNotify:'🔔 আমাকে জানান', wpNotifyTip:'অন্য ট্যাবে গেলেও, আপনার টেবিল শুরু হলে নোটিফিকেশন পান।',
     // ── WS closed ──
     wsLostAction:'সংযোগ হারিয়ে গেছে — অ্যাকশন পাঠানো হয়নি', wsSendFailed:'পাঠানো ব্যর্থ (WS বন্ধ)',
     reauthBanner:'সংযুক্ত — পুনরায় যাচাই হচ্ছে…',

@@ -233,6 +233,7 @@ export const strings = {
     wpStartHumansTip:'మనుషులతో మాత్రమే ప్రారంభించు', wpFillBotsTip:'ఖాళీ సీట్లను బాట్‌లతో నింపు',
     // ── Notifications ──
     notifTurnTitle:'⚡ మీ వంతు!', notifTurnBody:'PokerTH లో ఇప్పుడు మీ ఎత్తు',
+    notifStartTitle:'🃏 మీ టేబుల్ ప్రారంభమవుతోంది!', notifStartBody:'PokerTH లో ఆట ఇప్పుడు ప్రారంభమవుతోంది — ఆడటానికి తిరిగి రండి.', notifAlmostTitle:'⏳ ఇంకా ఒక్క ఆటగాడు!', notifAlmostBody:'PokerTH లో మీ టేబుల్‌పై {n}/{max}: నిండగానే ప్రారంభమవుతుంది.', wpNotify:'🔔 నాకు తెలియజేయి', wpNotifyTip:'వేరే ట్యాబ్‌కి వెళ్లినా, మీ టేబుల్ ప్రారంభమైనప్పుడు నోటిఫికేషన్ పొందండి.',
     // ── WS closed ──
     wsLostAction:'కనెక్షన్ తెగిపోయింది — చర్య పంపబడలేదు', wsSendFailed:'పంపడం విఫలమైంది (WS మూసివేయబడింది)',
     reauthBanner:'కనెక్ట్ అయింది — మళ్లీ ప్రామాణీకరిస్తోంది…',

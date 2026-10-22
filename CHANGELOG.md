@@ -32,6 +32,15 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Added
+- **Waiting room alerts when the tab is in the background** (`web.270`) — a Ranking table only starts with 10/10;
+  the player went to another tab, the game started without him and, at 5 s per action, he was folded hand after
+  hand: the sounds existed (QML parity), nothing visible. `modules/ui/wait-alert.mjs`: with `document.hidden`, a
+  Ranking table at max-1 → « One more player! » (once per table), the StartEvent → « Your table is starting! »,
+  each a system notification (service worker first, Android) when allowed AND a blinking tab title. The
+  permission is now asked on « 🔔 Notify me » in the waiting room (seated, not host, not spectator, online,
+  not answered yet) instead of cold on entering the lobby (`msg-lobby.mjs`); it also serves the « your turn »
+  notification. Keys `notifStartTitle`, `notifStartBody`, `notifAlmostTitle`, `notifAlmostBody`, `wpNotify`,
+  `wpNotifyTip` (83 catalogues), `hsNotify` for « ? » mode (83 guide catalogues); precached.
 - **The Ace offers to install the app after a finished game** (`web.269`) — admin (2026-10-22): the installed app
   holds 4 % of the sessions, 77 % of them from returning players against 47 % in the browser, and installing
   was never proposed. Back in the lobby or on the login screen after a game played, tips on or off, never at a

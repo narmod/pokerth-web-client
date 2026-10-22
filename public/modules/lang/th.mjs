@@ -235,6 +235,7 @@ export const strings = {
     wpStartHumansTip:'เริ่มด้วยผู้เล่นจริงเท่านั้น', wpFillBotsTip:'เติมที่นั่งว่างด้วยบอต',
     // ── Notifications ──
     notifTurnTitle:'⚡ ตาคุณแล้ว!', notifTurnBody:"ถึงตาคุณเล่นใน PokerTH",
+    notifStartTitle:'🃏 โต๊ะของคุณกำลังเริ่ม!', notifStartBody:'เกมกำลังเริ่มบน PokerTH — กลับมาเล่นกัน', notifAlmostTitle:'⏳ อีกแค่คนเดียว!', notifAlmostBody:'{n}/{max} ที่โต๊ะของคุณบน PokerTH: เริ่มทันทีที่เต็ม', wpNotify:'🔔 แจ้งเตือนฉัน', wpNotifyTip:'รับการแจ้งเตือนเมื่อโต๊ะของคุณเริ่ม แม้จะสลับไปแท็บอื่น',
     // ── WS closed ──
     wsLostAction:'การเชื่อมต่อหลุด — การกระทำไม่ถูกส่ง', wsSendFailed:'ส่งไม่สำเร็จ (WS ปิด)',
     reauthBanner:'เชื่อมต่อแล้ว — กำลังยืนยันตัวตนใหม่…',

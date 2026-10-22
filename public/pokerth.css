@@ -11031,6 +11031,14 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 #lobby-wait-actions .wp-fillbots { flex:1 1 100%; justify-content:center; padding:var(--sp-0); }
 #lobby-wait-actions .wp-actions { flex:1 1 auto; display:flex; gap:var(--sp-4); width:100%; }
 #lobby-wait-actions .wp-actions .wp-btn { flex:1 1 auto; }
+/* « 🔔 Notify me » (web.270): a pill at the end of the waiting hint; on a
+   narrow phone the bell alone (the label stays in aria-label; « ? » mode explains it). */
+#lobby-wait-actions .lfb-waithint .wp-notify { font:inherit; font-style:normal; font-weight:600; color:var(--text); background:var(--inset); border:1px solid var(--border); border-radius:999px; padding:1px 10px; margin-left:6px; cursor:pointer; vertical-align:baseline; white-space:nowrap; }
+#lobby-wait-actions .lfb-waithint .wp-notify:hover { border-color:var(--gold-dim); }
+@media (max-width: 480px) {
+  #lobby-wait-actions .lfb-waithint .wp-notify { padding:1px 7px; }
+  #lobby-wait-actions .lfb-waithint .wp-notify .wp-notify-lbl { display:none; }
+}
 #lobby-wait-actions .lfb-waithint { flex:1 1 100%; font-size:var(--fs-xs); color:var(--gold-dim); font-style:italic; text-align:center; }
 .lgi-prow { display:flex; align-items:center; gap:var(--sp-3); padding:6px 8px; border-radius:var(--r-sm); background:var(--inset); border:1px solid var(--border); }
 .lgi-pname { flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:var(--fs-base); color:var(--text); }

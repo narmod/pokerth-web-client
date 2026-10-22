@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'Yalnız insanlarla başla', wpFillBotsTip:'Boş yerləri botlarla doldur',
     // ── Notifications ──
     notifTurnTitle:'⚡ SİZİN NÖVBƏNİZ!', notifTurnBody:'PokerTH-də sizin gedişinizdir',
+    notifStartTitle:'🃏 Masanız başlayır!', notifStartBody:'Oyun indi PokerTH-də başlayır — oynamaq üçün qayıdın.', notifAlmostTitle:'⏳ Bir oyunçu qaldı!', notifAlmostBody:'PokerTH-də masanızda {n}/{max}: dolan kimi başlayır.', wpNotify:'🔔 Mənə xəbər ver', wpNotifyTip:'Başqa vərəqəyə keçsəniz belə, masanız başlayanda bildiriş alın.',
     // ── WS closed ──
     wsLostAction:'Bağlantı itdi — hərəkət göndərilmədi', wsSendFailed:'Göndərmə alınmadı (WS bağlıdır)',
     reauthBanner:'Qoşuldu — yenidən kimlik doğrulanır…',

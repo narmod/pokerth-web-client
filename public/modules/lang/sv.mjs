@@ -413,6 +413,7 @@ export const strings = {
     wpStartHumansTip: 'Starta endast med människor',
     wpFillBotsTip: 'Fyll tomma platser med bottar',
     notifTurnTitle: '⚡ DIN TUR!',
+    notifStartTitle:'🃏 Ditt bord startar!', notifStartBody:'Spelet startar nu på PokerTH — kom tillbaka och spela.', notifAlmostTitle:'⏳ En spelare till!', notifAlmostBody:'{n}/{max} vid ditt bord på PokerTH: det startar så fort det är fullt.', wpNotify:'🔔 Meddela mig', wpNotifyTip:'Få en avisering när ditt bord startar, även om du byter till en annan flik.',
     notifTurnBody: 'Det är din tur på PokerTH',
     wsLostAction: 'Anslutning förlorad — åtgärd skickades inte',
     wsSendFailed: 'Sändning misslyckades (WS stängd)',

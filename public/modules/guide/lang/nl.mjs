@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Opent de pagina om een tafel te maken.',
   hsStart: 'Start het spel nu met de spelers aan tafel.',
   hsInvite: 'Kopieert of deelt een link die je vrienden direct naar deze tafel brengt.',
+  hsNotify: '**🔔 Laat het me weten**: je browser vraagt één keer of PokerTH meldingen mag tonen. Zeg ja en je hoort het wanneer je tafel bijna begint en wanneer hij begint — en wanneer je aan de beurt bent — zelfs in een ander tabblad.',
   hsLeaveTable: 'Verlaat deze tafel en gaat terug naar de lijst.',
   hsFillBots: 'Als dit is aangevinkt, worden de lege plaatsen bij de start aangevuld met computerspelers.',
   hsGameType: 'Het speltype: Normaal, alleen geregistreerde spelers, alleen uitgenodigde spelers, of Rankingspel (spelers met een account).',

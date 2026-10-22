@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Atver galda izveides lapu.',
   hsStart: 'Sāk spēli tūlīt ar spēlētājiem, kas sēž pie galda.',
   hsInvite: 'Nokopē vai kopīgo saiti, kas atved tavus draugus tieši pie šī galda.',
+  hsNotify: '**🔔 Paziņo man**: pārlūks vienreiz pajautās, vai PokerTH drīkst rādīt paziņojumus. Piekrīti, un uzzināsi, kad galds tūlīt sāksies un kad tas sākas — un kad ir tavs gājiens — pat citā cilnē.',
   hsLeaveTable: 'Pamet šo galdu un atgriežas sarakstā.',
   hsFillBots: 'Ja atzīmēts, sākumā tukšās vietas aizpilda datora spēlētāji.',
   hsGameType: 'Spēles veids: Parasta, tikai reģistrētiem spēlētājiem, tikai uzaicinātiem spēlētājiem, vai Reitinga spēle (spēlētāji ar kontu).',

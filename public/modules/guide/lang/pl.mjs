@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Otwiera stronę tworzenia stołu.',
   hsStart: 'Rozpoczyna grę od razu z graczami przy stole.',
   hsInvite: 'Kopiuje lub udostępnia link, który przyprowadzi twoich znajomych prosto do tego stołu.',
+  hsNotify: '**🔔 Powiadom mnie**: przeglądarka raz zapyta, czy PokerTH może pokazywać powiadomienia. Zgódź się, a dowiesz się, kiedy twój stół zaraz ruszy i kiedy ruszy — i kiedy jest twoja kolej — nawet w innej karcie.',
   hsLeaveTable: 'Opuszcza ten stół i wraca do listy.',
   hsFillBots: 'Po zaznaczeniu puste miejsca są na starcie zajmowane przez graczy komputerowych.',
   hsGameType: 'Typ gry: normalna, tylko zarejestrowani gracze, tylko zaproszeni gracze lub gra rankingowa (gracze z kontem).',

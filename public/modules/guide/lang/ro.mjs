@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Deschide pagina de creare a unei mese.',
   hsStart: 'Pornește jocul acum cu jucătorii de la masă.',
   hsInvite: 'Copiază sau distribuie un link care îți aduce prietenii direct la această masă.',
+  hsNotify: '**🔔 Anunță-mă**: browserul te întreabă o dată dacă PokerTH poate afișa notificări. Acceptă și vei afla când masa ta e pe cale să înceapă și când începe — și când e rândul tău — chiar și în altă filă.',
   hsLeaveTable: 'Părăsește această masă și revine la listă.',
   hsFillBots: 'Dacă e bifat, locurile goale sunt completate cu jucători computer la pornire.',
   hsGameType: 'Tipul jocului: Normal, doar jucători înregistrați, doar jucători invitați sau Joc clasat (jucători cu cont).',

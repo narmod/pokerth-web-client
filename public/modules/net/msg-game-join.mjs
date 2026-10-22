@@ -26,6 +26,7 @@ import { updateLobbyPill, openGameInfoPopup } from '../ui/game-info.mjs';
 import { stopTurnTimer } from '../game/turn-timer.mjs';
 import { dismissWinner, showEndGameOverlay } from '../game/showdown.mjs';
 import { autoScaleTable } from '../game/seats.mjs';
+import { waitPlayerJoined, waitGameReady } from '../ui/wait-alert.mjs';
 
 const T = MSG.T;
 
@@ -340,6 +341,7 @@ function onGamePlayerJoined(sub) {
     // Son « joueur connecté » (playerconnected.wav) — parties réseau seulement
     if (pid !== S.myId && !window._offlineMode) {
       try { if (typeof window.notifyPlayerConnected === 'function') window.notifyPlayerConnected(); } catch (_e) {}
+      try { waitPlayerJoined(); } catch (_e) {}         // tab in the background: « One more player! » at max-1 (web.270)
     }
     // Ask the server for this player's name if we don't have it yet,
     // so the waiting panel can display a real pseudo rather than '#42'.
@@ -425,6 +427,7 @@ function onStartEvent(sub) {
     // Son « partie prête » (onlinegameready.wav) — parties réseau seulement
     if (!window._offlineMode) {
       try { if (typeof window.notifyGameReady === 'function') window.notifyGameReady(); } catch (_e) {}
+      try { waitGameReady(); } catch (_e) {}            // tab in the background: « Your table is starting! » (web.270)
     }
     S._eliminatedLogged.clear();
     return;

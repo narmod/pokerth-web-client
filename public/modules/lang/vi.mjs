@@ -414,6 +414,7 @@ export const strings = {
     wpStartHumansTip: 'Chỉ bắt đầu với người',
     wpFillBotsTip: 'Thêm bot vào chỗ trống',
     notifTurnTitle: '⚡ ĐẾN LƯỢT BẠN!',
+    notifStartTitle:'🃏 Bàn của bạn sắp bắt đầu!', notifStartBody:'Ván đấu bắt đầu ngay trên PokerTH — quay lại chơi nhé.', notifAlmostTitle:'⏳ Chỉ còn một người chơi!', notifAlmostBody:'{n}/{max} ở bàn của bạn trên PokerTH: bắt đầu ngay khi đủ người.', wpNotify:'🔔 Báo cho mình', wpNotifyTip:'Nhận thông báo khi bàn của bạn bắt đầu, kể cả khi bạn chuyển sang thẻ khác.',
     notifTurnBody: 'Đến lượt bạn trên PokerTH',
     wsLostAction: 'Mất kết nối — chưa gửi hành động',
     wsSendFailed: 'Gửi thất bại (WS đã đóng)',

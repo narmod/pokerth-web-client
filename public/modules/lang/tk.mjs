@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'Diňe adamlar bilen başla', wpFillBotsTip:'Boş orunlary botlar bilen doldur',
     // ── Notifications ──
     notifTurnTitle:'⚡ SIZIŇ NOBATYŇYZ!', notifTurnBody:'PokerTH-de siziň nobatyňyz',
+    notifStartTitle:'🃏 Stolyňyz başlaýar!', notifStartBody:'Oýun häzir PokerTH-de başlaýar — oýnamaga gaýdyp geliň.', notifAlmostTitle:'⏳ Ýene bir oýunçy!', notifAlmostBody:'PokerTH-däki stolyňyzda {n}/{max}: dolan badyna başlar.', wpNotify:'🔔 Maňa habar ber', wpNotifyTip:'Başga goýma geçseňiz-de, stolyňyz başlanda bildiriş alyň.',
     // ── WS closed ──
     wsLostAction:'Birikme kesildi — hereket ugradylmady', wsSendFailed:'Ugratmak başartmady (WS ýapyk)',
     reauthBanner:'Birikdi — täzeden tanalýar…',

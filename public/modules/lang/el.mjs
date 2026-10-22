@@ -414,6 +414,7 @@ export const strings = {
     wpStartHumansTip: 'Έναρξη μόνο με ανθρώπους',
     wpFillBotsTip: 'Συμπλήρωση κενών θέσεων με μποτ',
     notifTurnTitle: '⚡ ΣΕΙΡΑ ΣΑΣ!',
+    notifStartTitle:'🃏 Το τραπέζι σου ξεκινά!', notifStartBody:'Το παιχνίδι ξεκινά τώρα στο PokerTH — γύρνα να παίξεις.', notifAlmostTitle:'⏳ Ένας παίκτης ακόμα!', notifAlmostBody:'{n}/{max} στο τραπέζι σου στο PokerTH: ξεκινά μόλις γεμίσει.', wpNotify:'🔔 Ειδοποίησέ με', wpNotifyTip:'Λάβε ειδοποίηση όταν ξεκινά το τραπέζι σου, ακόμη κι αν πας σε άλλη καρτέλα.',
     notifTurnBody: 'Είναι η σειρά σας στο PokerTH',
     wsLostAction: 'Η σύνδεση χάθηκε — η ενέργεια δεν στάλθηκε',
     wsSendFailed: 'Η αποστολή απέτυχε (το WS έκλεισε)',

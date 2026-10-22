@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Fosglaidh e an duilleag gus bòrd a chruthachadh.',
   hsStart: 'Tòisichidh e an geama an-dràsta leis na cluicheadairean aig a’ bhòrd.',
   hsInvite: 'Dèanaidh e lethbhreac no co-roinneadh de cheangal a bheir do charaidean dìreach chun a’ bhùird seo.',
+  hsNotify: '**🔔 Leig fios dhomh**: faighnichidh am brabhsair agad aon turas am faod PokerTH brathan a shealltainn. Abair tha agus gheibh thu fios nuair a bhios am bòrd agad gu bhith a’ tòiseachadh agus nuair a thòisicheas e — agus nuair a bhios an t-àm agad — fiù ann an taba eile.',
   hsLeaveTable: 'Fàgaidh e am bòrd seo agus tillidh e dhan liosta.',
   hsFillBots: 'Ma tha cromag ris, thèid na h-àiteachan falamh a lìonadh le cluicheadairean coimpiutair aig an toiseach.',
   hsGameType: 'Seòrsa a’ gheama: Àbhaisteach, cluicheadairean clàraichte a-mhàin, cluicheadairean le cuireadh a-mhàin, no Rangachadh (cluicheadairean le cunntas).',

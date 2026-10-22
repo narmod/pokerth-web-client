@@ -419,6 +419,7 @@ export const strings = {
     wpStartHumansTip: 'Alleen met mensen beginnen',
     wpFillBotsTip: 'Lege plaatsen met bots aanvullen',
     notifTurnTitle: '⚡ JOUW BEURT!',
+    notifStartTitle:'🃏 Je tafel begint!', notifStartBody:'Het spel begint nu op PokerTH — kom terug om te spelen.', notifAlmostTitle:'⏳ Nog één speler!', notifAlmostBody:'{n}/{max} aan je tafel op PokerTH: het begint zodra hij vol is.', wpNotify:'🔔 Laat het me weten', wpNotifyTip:'Krijg een melding als je tafel begint, ook als je naar een ander tabblad gaat.',
     notifTurnBody: 'Je bent aan zet op PokerTH',
     wsLostAction: 'Verbinding verloren — actie niet verzonden',
     wsSendFailed: 'Verzenden mislukt (WS gesloten)',

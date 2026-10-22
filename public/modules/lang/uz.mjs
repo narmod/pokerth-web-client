@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'Faqat odamlar bilan boshlash', wpFillBotsTip:'Boʻsh oʻrinlarni botlar bilan toʻldirish',
     // ── Notifications ──
     notifTurnTitle:'⚡ NAVBAT SIZDA!', notifTurnBody:'PokerTH’da yurish navbati sizda',
+    notifStartTitle:'🃏 Stolingiz boshlanmoqda!', notifStartBody:'Oʻyin hozir PokerTH’da boshlanmoqda — oʻynash uchun qayting.', notifAlmostTitle:'⏳ Yana bitta oʻyinchi!', notifAlmostBody:'PokerTH’dagi stolingizda {n}/{max}: toʻlishi bilan boshlanadi.', wpNotify:'🔔 Menga xabar ber', wpNotifyTip:'Boshqa varaqqa oʻtsangiz ham, stolingiz boshlanganda bildirishnoma oling.',
     // ── WS closed ──
     wsLostAction:'Ulanish uzildi — harakat yuborilmadi', wsSendFailed:'Yuborib boʻlmadi (WS yopiq)',
     reauthBanner:'Ulandi — qayta autentifikatsiya qilinmoqda…',

@@ -420,6 +420,7 @@ export const strings = {
     wpStartHumansTip: 'Zacznij tylko z ludźmi',
     wpFillBotsTip: 'Uzupełnij wolne miejsca botami',
     notifTurnTitle: '⚡ TWOJA KOLEJ!',
+    notifStartTitle:'🃏 Twój stół startuje!', notifStartBody:'Gra właśnie się zaczyna w PokerTH — wróć i graj.', notifAlmostTitle:'⏳ Jeszcze jeden gracz!', notifAlmostBody:'{n}/{max} przy twoim stole w PokerTH: ruszy, gdy tylko się zapełni.', wpNotify:'🔔 Powiadom mnie', wpNotifyTip:'Dostań powiadomienie, gdy twój stół wystartuje, nawet jeśli przejdziesz do innej karty.',
     notifTurnBody: 'Twój ruch na PokerTH',
     wsLostAction: 'Utracono połączenie — akcja niewysłana',
     wsSendFailed: 'Wysyłanie nieudane (WS zamknięty)',

@@ -237,6 +237,7 @@ export const strings = {
     wpStartHumansTip:'Démarrer avec les humains présents uniquement', wpFillBotsTip:'Remplir les sièges vides avec des bots',
     // ── Notifications ──
     notifTurnTitle:'⚡ TON TOUR !', notifTurnBody:"C'est à toi de jouer sur PokerTH",
+    notifStartTitle:'🃏 Ta table démarre !', notifStartBody:'La partie commence maintenant sur PokerTH — reviens jouer.', notifAlmostTitle:'⏳ Plus qu’un joueur !', notifAlmostBody:'{n}/{max} à ta table sur PokerTH : elle démarre dès qu’elle est pleine.', wpNotify:'🔔 Préviens-moi', wpNotifyTip:'Reçois une notification quand ta table démarre, même si tu passes sur un autre onglet.',
     // ── WS fermé ──
     wsLostAction:'Connexion perdue — action non envoyée', wsSendFailed:'Envoi impossible (WS fermé)',
     reauthBanner:'Connecté — ré-authentification…',

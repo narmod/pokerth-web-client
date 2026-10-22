@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'Пачаць толькі з людзьмі', wpFillBotsTip:'Запоўніць пустыя месцы ботамі',
     // ── Notifications ──
     notifTurnTitle:'⚡ ВАШ ХОД!', notifTurnBody:'Ваш ход у PokerTH',
+    notifStartTitle:'🃏 Ваш стол пачынаецца!', notifStartBody:'Гульня пачынаецца ў PokerTH — вяртайцеся гуляць.', notifAlmostTitle:'⏳ Застаўся адзін гулец!', notifAlmostBody:'{n}/{max} за вашым сталом у PokerTH: гульня пачнецца, як толькі стол запоўніцца.', wpNotify:'🔔 Паведаміць мне', wpNotifyTip:'Атрымайце апавяшчэнне, калі ваш стол пачнецца, нават калі вы на іншай укладцы.',
     // ── WS closed ──
     wsLostAction:'Злучэнне страчана — дзеянне не адпраўлена', wsSendFailed:'Адпраўка не ўдалася (WS закрыты)',
     reauthBanner:'Падключана — паўторная аўтэнтыфікацыя…',

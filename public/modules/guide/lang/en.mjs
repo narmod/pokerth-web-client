@@ -156,6 +156,7 @@ export default {
   hsCreate: 'Opens the page to create a table.',
   hsStart: 'Starts the game now with the players at the table.',
   hsInvite: 'Copies or shares a link that brings your friends straight to this table.',
+  hsNotify: '**🔔 Notify me**: your browser asks once whether PokerTH may show notifications. Say yes and you are told when your table is about to start and when it starts — and when it is your turn — even in another tab.',
   hsLeaveTable: 'Leaves this table and goes back to the list.',
   hsFillBots: 'When ticked, the empty seats are filled with computer players at the start.',
   hsGameType: 'The game type: Normal, registered players only, invited players only, or Ranking (players with an account).',

@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'මිනිසුන් පමණක් සමඟ අරඹන්න', wpFillBotsTip:'හිස් ආසන බොට්වලින් පුරවන්න',
     // ── Notifications ──
     notifTurnTitle:'⚡ ඔබේ වාරය!', notifTurnBody:'PokerTH හි දැන් ඔබේ වාරයයි',
+    notifStartTitle:'🃏 ඔබේ මේසය ආරම්භ වෙමින්!', notifStartBody:'PokerTH හි ක්‍රීඩාව දැන් ආරම්භ වේ — ක්‍රීඩා කිරීමට ආපසු එන්න.', notifAlmostTitle:'⏳ තවත් එක් ක්‍රීඩකයෙක්!', notifAlmostBody:'PokerTH හි ඔබේ මේසයේ {n}/{max}: පිරුණු වහාම ආරම්භ වේ.', wpNotify:'🔔 මට දන්වන්න', wpNotifyTip:'වෙනත් ටැබයකට ගියත්, ඔබේ මේසය ආරම්භ වූ විට දැනුම්දීමක් ලබන්න.',
     // ── WS closed ──
     wsLostAction:'සම්බන්ධතාව බිඳ වැටිණි — ක්‍රියාව යැවුණේ නැත', wsSendFailed:'යැවීම අසාර්ථකයි (WS වසා ඇත)',
     reauthBanner:'සම්බන්ධයි — නැවත සත්‍යාපනය වෙමින්…',

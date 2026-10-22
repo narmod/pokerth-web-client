@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Avab laua loomise lehe.',
   hsStart: 'Alustab mängu kohe laua taga olevate mängijatega.',
   hsInvite: 'Kopeerib või jagab linki, mis viib sinu sõbrad otse selle laua juurde.',
+  hsNotify: '**🔔 Teavita mind**: brauser küsib korra, kas PokerTH tohib teateid näidata. Nõustu ja saad teada, kui su laud kohe algab ja kui see algab — ning kui on sinu käik — ka teisel vahelehel.',
   hsLeaveTable: 'Lahkub sellest lauast ja naaseb loendisse.',
   hsFillBots: 'Kui see on märgitud, täidetakse tühjad kohad alguses arvutimängijatega.',
   hsGameType: 'Mängu tüüp: tavaline, ainult registreeritud mängijad, ainult kutsutud mängijad või edetabelimäng (kontoga mängijad).',

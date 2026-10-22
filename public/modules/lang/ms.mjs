@@ -235,6 +235,7 @@ export const strings = {
     wpStartHumansTip:'Mulai hanya dengan manusia', wpFillBotsTip:'Isi kursi kosong dengan bot',
     // ── Notifications ──
     notifTurnTitle:'⚡ GILIRAN ANDA!', notifTurnBody:"Giliran Anda di PokerTH",
+    notifStartTitle:'🃏 Meja anda bermula!', notifStartBody:'Permainan bermula sekarang di PokerTH — kembali untuk bermain.', notifAlmostTitle:'⏳ Seorang pemain lagi!', notifAlmostBody:'{n}/{max} di meja anda di PokerTH: bermula sebaik sahaja penuh.', wpNotify:'🔔 Beritahu saya', wpNotifyTip:'Terima pemberitahuan apabila meja anda bermula, walaupun anda beralih ke tab lain.',
     // ── WS closed ──
     wsLostAction:'Koneksi terputus — aksi tidak terkirim', wsSendFailed:'Pengiriman gagal (WS tertutup)',
     reauthBanner:'Tersambung — mengautentikasi ulang…',

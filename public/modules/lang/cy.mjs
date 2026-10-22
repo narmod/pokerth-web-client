@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'Dechrau gyda phobl yn unig', wpFillBotsTip:'Llenwi seddi gwag â botiaid',
     // ── Notifications ──
     notifTurnTitle:'⚡ EICH TRO CHI!', notifTurnBody:'Eich symudiad chi ydy hi yn PokerTH',
+    notifStartTitle:'🃏 Mae eich bwrdd yn dechrau!', notifStartBody:'Mae’r gêm yn dechrau nawr ar PokerTH — dewch yn ôl i chwarae.', notifAlmostTitle:'⏳ Un chwaraewr arall!', notifAlmostBody:'{n}/{max} wrth eich bwrdd ar PokerTH: mae’n dechrau cyn gynted ag y bydd yn llawn.', wpNotify:'🔔 Rhowch wybod i mi', wpNotifyTip:'Cael hysbysiad pan fydd eich bwrdd yn dechrau, hyd yn oed os ewch i dab arall.',
     // ── WS closed ──
     wsLostAction:'Collwyd y cysylltiad — ni anfonwyd y symudiad', wsSendFailed:'Methwyd ag anfon (WS ar gau)',
     reauthBanner:'Wedi cysylltu — yn dilysu eto…',

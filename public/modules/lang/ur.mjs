@@ -233,6 +233,7 @@ export const strings = {
     wpStartHumansTip:'صرف انسانوں کے ساتھ شروع کریں', wpFillBotsTip:'خالی نشستیں بوٹس سے پُر کریں',
     // ── Notifications ──
     notifTurnTitle:'⚡ آپ کی باری!', notifTurnBody:'PokerTH میں آپ کی چال ہے',
+    notifStartTitle:'🃏 آپ کی میز شروع ہو رہی ہے!', notifStartBody:'PokerTH پر کھیل اب شروع ہو رہا ہے — کھیلنے واپس آئیں۔', notifAlmostTitle:'⏳ بس ایک کھلاڑی اور!', notifAlmostBody:'PokerTH پر آپ کی میز پر {n}/{max}: بھرتے ہی شروع ہو جائے گی۔', wpNotify:'🔔 مجھے بتائیں', wpNotifyTip:'دوسرے ٹیب پر جانے پر بھی، میز شروع ہونے پر اطلاع پائیں۔',
     // ── WS closed ──
     wsLostAction:'کنکشن ٹوٹ گیا — حرکت نہیں بھیجی گئی', wsSendFailed:'بھیجنا ناکام (WS بند)',
     reauthBanner:'جڑ گئے — دوبارہ توثیق…',

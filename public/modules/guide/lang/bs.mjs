@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Otvara stranicu za stvaranje stola.',
   hsStart: 'Odmah pokreće igru s igračima za stolom.',
   hsInvite: 'Kopira ili dijeli link koji tvoje prijatelje dovodi pravo za ovaj stol.',
+  hsNotify: '**🔔 Obavijesti me**: preglednik te jednom pita smije li PokerTH prikazivati obavještenja. Reci da i saznat ćeš kad tvoj sto samo što nije počeo i kad počne — i kad si na redu — čak i u drugoj kartici.',
   hsLeaveTable: 'Napušta ovaj stol i vraća se na popis.',
   hsFillBots: 'Kad je označeno, prazna mjesta se na početku popunjavaju računarskim igračima.',
   hsGameType: 'Vrsta igre: normalna, samo registrirani igrači, samo pozvani igrači ili rang igra (igrači s računom).',

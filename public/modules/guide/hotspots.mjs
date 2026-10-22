@@ -101,6 +101,7 @@ export const HOTSPOTS = [
   ['#lobby-wait-actions .wp-btn-start', 'hsStart', true, 'lobby:create'],
   ['#lobby-wait-actions .wp-btn-invite', 'hsInvite', true, 'lobby:invites'],
   ['#lobby-wait-actions .wp-btn-leave', 'hsLeaveTable', true],
+  ['#lobby-wait-actions .wp-notify', 'hsNotify', true],   // web.270
   ['#lobby-wait-actions .wp-fillbots', 'hsFillBots', true, 'offline:setup'],
   // ── game creation page ──
   ['#cf-gtype-btn, #cf-game-type', 'hsGameType', false, 'pthnet:ranked'],

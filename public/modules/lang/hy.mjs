@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'Սկսել միայն մարդկանցով', wpFillBotsTip:'Լրացնել դատարկ տեղերը բոտերով',
     // ── Notifications ──
     notifTurnTitle:'⚡ ՁԵՐ ՀԵՐԹՆ Է։', notifTurnBody:'PokerTH-ում ձեր քայլն է',
+    notifStartTitle:'🃏 Ձեր սեղանը սկսվում է։', notifStartBody:'Խաղը հիմա սկսվում է PokerTH-ում — վերադարձեք խաղալու։', notifAlmostTitle:'⏳ Եվս մեկ խաղացող։', notifAlmostBody:'{n}/{max} ձեր սեղանին PokerTH-ում՝ կսկսվի հենց լցվի։', wpNotify:'🔔 Տեղեկացրու ինձ', wpNotifyTip:'Ստացեք ծանուցում, երբ ձեր սեղանը սկսվի, նույնիսկ եթե այլ ներդիրում եք։',
     // ── WS closed ──
     wsLostAction:'Կապը կորավ — քայլը չուղարկվեց', wsSendFailed:'Ուղարկումը ձախողվեց (WS-ը փակ է)',
     reauthBanner:'Միացված է — կրկին նույնականացում…',

@@ -142,6 +142,7 @@ export default {
   hsCreate: 'Abre a página para criar uma mesa.',
   hsStart: 'Inicia a partida agora com os jogadores que estão à mesa.',
   hsInvite: 'Copia ou partilha um link que leva os teus amigos diretamente a esta mesa.',
+  hsNotify: '**🔔 Avisa-me**: o navegador pergunta uma vez se o PokerTH pode mostrar notificações. Aceita e ficas a saber quando a tua mesa está prestes a começar e quando começa — e quando é a tua vez — mesmo noutro separador.',
   hsLeaveTable: 'Sai desta mesa e volta à lista.',
   hsFillBots: 'Quando assinalado, os lugares vazios são preenchidos com jogadores de computador no início.',
   hsGameType: 'O tipo de jogo: Normal, apenas jogadores registados, apenas jogadores convidados ou Jogo de Classificação (jogadores com conta).',

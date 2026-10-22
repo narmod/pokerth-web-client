@@ -236,6 +236,7 @@ export const strings = {
     wpStartHumansTip:'Komenci nur kun homoj', wpFillBotsTip:'Plenigi malplenajn sidlokojn per robotoj',
     // ── Notifications ──
     notifTurnTitle:'⚡ VIA VICO!', notifTurnBody:'Estas via movo en PokerTH',
+    notifStartTitle:'🃏 Via tablo komenciĝas!', notifStartBody:'La ludo komenciĝas nun ĉe PokerTH — revenu por ludi.', notifAlmostTitle:'⏳ Ankoraŭ unu ludanto!', notifAlmostBody:'{n}/{max} ĉe via tablo ĉe PokerTH: ĝi komenciĝas tuj kiam ĝi pleniĝas.', wpNotify:'🔔 Sciigu min', wpNotifyTip:'Ricevu sciigon kiam via tablo komenciĝas, eĉ se vi iras al alia langeto.',
     // ── WS closed ──
     wsLostAction:'Konekto perdita — ago ne sendita', wsSendFailed:'Sendo malsukcesis (WS fermita)',
     reauthBanner:'Konektita — reaŭtentigado…',
