@@ -132,6 +132,14 @@ highlights below.
   shown, Ranking games. Data: MySQL mirror, visits stored, devices known, whether this browser is counted.
 
 ### Changed
+- **Backup offer: why a Create / Restore did not succeed is counted** (`web.267`) — the admin showed 23
+  restores tapped and 0 restored, 86 creates tapped and 11 created, with no way to tell a bug from a closed
+  picker. A new Chromium end-to-end test (`scripts/test-backup-restore-browser.mjs`, the folder picker handing
+  out an Origin Private File System folder) shows the restore works: the settings come back after the
+  reload and `backup.restored` is posted. The failures are now counted by reason, from the Ace's bubble and
+  from the fallback banner (`backup-autosave.mjs` `failEv`): `create_abort` / `_exists` / `_noperm` / `_bad`,
+  `restore_abort` / `_nofile` / `_noperm` / `_empty` / `_bad` (`server/guide-stats.js`, admin rows « not
+  created » / « not restored »). Nothing changes for players.
 - **A quick tour of the game creation page, the full one on demand** (`web.266`) — admin counters
   (2026-10-22): the tour of every field (up to 16 steps) was shown 1,221 times, finished 254 times and put
   off 623 times (« Later » brings it back at every visit). `create-game` is now a quick tour — intro, game

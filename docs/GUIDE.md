@@ -29,6 +29,11 @@ tables, with no tutorial mode and no fake data.
   (`pth_bak_offer_next`), and *I already play* shows it at once, asking *"Had a backup of your
   settings? I can restore it."* with *Restore* first (`backup.returning`). When a backup folder is
   remembered, the restore offer still comes first, as before.
+- **Why a Create / Restore did not succeed** is counted (web.267): `backup.create_abort` /
+  `_exists` / `_noperm` / `_bad` and `backup.restore_abort` / `_nofile` / `_noperm` / `_empty` /
+  `_bad` (the picker closed, no file in the folder, access refused…), from the Ace's bubble and
+  from the fallback banner. `scripts/test-backup-restore-browser.mjs` checks the whole path in
+  Chromium: the settings come back after the reload and `backup.restored` is posted.
 - **Turned on and off** from a button on the login screen, an entry in the header menus
   (lobby, create, table, next to *Help*) and *Advanced options → Assistance*.
 - **Unobtrusive.** There is no dark overlay. A highlight is a pulsing gold outline. Each

@@ -1143,6 +1143,11 @@ function endBak() {
   if (!state.isOn()) leave(); else schedule();
   maybeOffer();                                        // the first-launch offer waited for this one
 }
+function bakFail(o, create, why) {
+  let ev = '';
+  try { ev = typeof o.failEv === 'function' ? o.failEv(create ? 'create' : 'restore', why) : ''; } catch (e) { ev = ''; }
+  if (ev) beacon('backup', ev);
+}
 function onBakButton(id) {
   const o = bak();
   if (!o || bakBusy) return;
@@ -1201,10 +1206,12 @@ function onBakButton(id) {
       noteTimer = setTimeout(() => { noteTimer = 0; endBak(); }, 2200);
       return;
     }
+    bakFail(o, create, why);                           // web.267: why it did not work, counted
     bakMsg = why === 'abort' ? null : { text: o.why(why), err: true };
     renderBak(true);
   }).catch((e) => {
     bakBusy = false;
+    bakFail(o, create, 'bad');
     const d = e && (e.name || e.message) ? String(e.name || e.message) : '';
     bakMsg = { text: o.why('bad') + (d ? ' — ' + d : ''), err: true };
     renderBak(true);

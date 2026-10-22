@@ -415,6 +415,15 @@ function _count(ev) {
   try { import('./guide/beacons.mjs').then((m) => { try { m.beacon('backup', ev); } catch (_e) {} }).catch(() => {}); } catch (_e) {}
 }
 function _offerPending() { return !!(_offer && !_offer.done && !_offer.banner); }
+// web.267 — why a Create / Restore did not succeed, counted (admin): before,
+// only « tapped » and « done » were, and 23 restores tapped / 0 restored could
+// not tell a closed picker from a missing file or a refused access.
+// 'nofolder' is a missing file too; anything unknown is 'bad'.
+const _FAIL = { create: ['abort', 'exists', 'noperm', 'bad'], restore: ['abort', 'nofile', 'noperm', 'empty', 'bad'] };
+function _failEv(kind, why) {
+  const w = why === 'nofolder' ? 'nofile' : why;
+  return kind + '_' + (_FAIL[kind].indexOf(w) >= 0 ? w : 'bad');
+}
 // web.265 — on a first visit the Ace asks « First time on PokerTH? » before
 // this offer. While that question waits he keeps this one (keep: no fallback
 // banner after WATCH_MS); a newcomer (« Show me ») gets it at a later visit
@@ -592,7 +601,7 @@ function _showRestoreBanner() {
     }
 
     let busy = false;
-    function run(fn, busyText, onOk) {
+    function run(fn, busyText, onOk, kind) {
       if (busy) return;
       busy = true; bCreate.disabled = true; bRestore.disabled = true;
       setMsg(busyText || '', false);
@@ -602,12 +611,14 @@ function _showRestoreBanner() {
       try { p = fn(); } catch (e) { p = Promise.reject(e); }
       Promise.resolve(p).then((why) => {
         if (why === 'ok') { onOk(); return; }
+        _count(_failEv(kind, why));                     // web.267
         busy = false; bCreate.disabled = false; bRestore.disabled = false;
         setSub();
         if (why === 'abort') { setMsg('', false); return; }
         const k = _WHY[why] || _WHY.bad;
         setMsg(_t(k[0], k[1]), true);
       }).catch((e) => {
+        _count(_failEv(kind, 'bad'));
         busy = false; bCreate.disabled = false; bRestore.disabled = false;
         const d = (e && (e.name || e.message)) ? String(e.name || e.message) : '';
         setMsg(_t('backupImportErr', 'Import failed') + (d ? ' — ' + d : ''), true);
@@ -621,11 +632,11 @@ function _showRestoreBanner() {
       _offerDone(false);
       _toast(_t('bakBannerCreated', 'Backup created.'));
       try { el.remove(); } catch (_e) {}
-    }); });
+    }, 'create'); });
     bRestore.addEventListener('click', () => { _count('restore'); run(doRestore, _t('bakRestoreBusy', 'Restoring…'), () => {
       _count('restored');
       setMsg(_t('backupImported', 'Backup imported'), false);
-    }); });
+    }, 'restore'); });
     // Explicit dismissal: the player starts fresh, automatic writing may
     // resume.
     function dismiss() {
@@ -815,6 +826,7 @@ if (typeof window !== 'undefined') {
       _offer.shown = true;
       _setNext(false);                                  // shown once: no more « next visit » (web.265)
     },
+    failEv: _failEv,                                    // web.267: the counter of a failed Create / Restore
     keep: _offerKeep,
     defer: _offerDefer,
     known: () => !!_state.dirName,                      // a folder is remembered: a backup exists, its question comes first

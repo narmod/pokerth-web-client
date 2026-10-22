@@ -4798,7 +4798,9 @@
     h+='<h4 style="margin:14px 0 4px">Local backup offer</h4>';
     h+='<div class="srow"><span>Offered</span><b>'+bkN('shown')+' by the Ace · '+bkN('banner')+' by the fallback banner · '+bkN('returning')+' after « I already play »</b></div>';
     h+='<div class="srow"><span>Create a backup</span><b>'+bkN('create')+' tapped · '+bkN('created')+' created</b></div>';
+    h+='<div class="srow"><span>&nbsp;&nbsp;not created</span><b>'+bkN('create_abort')+' picker closed · '+bkN('create_exists')+' file already there · '+bkN('create_noperm')+' access refused · '+bkN('create_bad')+' error</b></div>';
     h+='<div class="srow"><span>Restore a backup</span><b>'+bkN('restore')+' tapped · '+bkN('restored')+' restored</b></div>';
+    h+='<div class="srow"><span>&nbsp;&nbsp;not restored</span><b>'+bkN('restore_abort')+' picker closed · '+bkN('restore_nofile')+' no file · '+bkN('restore_noperm')+' access refused · '+bkN('restore_empty')+' empty file · '+bkN('restore_bad')+' error</b></div>';
     h+='<div class="srow"><span>Later</span><b>'+bkN('dismissed')+' · then « Show me » '+bkN('showme')+'</b></div>';
     h+='<div class="srow"><span>Firefox — protect my settings</span><b>'+bkN('persist_shown')+' offered · '+bkN('persist')+' tapped · '+bkN('persisted')+' granted · '+bkN('persist_no')+' refused · '+bkN('persist_later')+' later</b></div>';
     h+='<div class="muted" style="margin-top:4px">Shown on a browser whose storage comes up blank (desktop Chrome, Edge, Opera), even with the tips off. Counted since 2.1.10-web.27; « Offered » once per page load. Firefox cannot write to a folder: the Ace offers there to protect the settings (persistent storage, since web.31), at most 3 times per device; « tapped » includes the button of Advanced options, « Show me » counts both offers.</div>';

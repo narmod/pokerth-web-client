@@ -68,7 +68,10 @@ const EVENTS = Object.freeze({
   'more-help': ['shown', 'section', 'search', 'window'],
   // web.27 — the local backup offer on a blank browser storage (backup-autosave.mjs)
   // returning (web.265): « I already play » on a blank browser — the offer asks « Had a backup? »
+  // create_* / restore_* (web.267): why a Create / Restore did not succeed (picker closed, no file…)
   backup: ['shown', 'banner', 'create', 'created', 'restore', 'restored', 'dismissed', 'showme', 'returning',
+    'create_abort', 'create_exists', 'create_noperm', 'create_bad',
+    'restore_abort', 'restore_nofile', 'restore_noperm', 'restore_empty', 'restore_bad',
     'persist_shown', 'persist', 'persisted', 'persist_no', 'persist_later'],   // Firefox (web.31)
 });
 
