@@ -1390,7 +1390,7 @@
         </div>
       <div class="card">
           <div class="boardhead"><h2>Coming back</h2><span id="trafRetNote" class="headnote"></span></div>
-          <p class="muted xpl">Of the devices seen for the very first time in the <span class="perN">last 14 days</span>, how many returned afterwards — and on how many separate days they showed up. A cohort only counts once it has had the time to come back, so the three rates are measured against different totals, and that is deliberate. Devices already known before this build carry no first-seen date; they are left out of the rates and serve as the established-base comparison instead.</p>
+          <p class="muted xpl">Of the devices seen for the very first time in the <span class="perN">last 14 days</span>, how many returned afterwards — and on how many separate days of their first week they showed up. A cohort only counts once its whole return window is over, on complete days (today is not finished), so the three rates are measured against different totals, and that is deliberate. Devices already known before this build, or first seen on the day counting began (or restarted after a reset), are left out of the rates and serve as the established base, read over its last 7 complete days — the same length of time as a newcomer's first week.</p>
           <div id="trafRet" class="hourduo"><div class="empty">Loading…</div></div>
         </div>
       </div>
@@ -5253,7 +5253,10 @@
     var o=d.period||d.week||{}, C=d.cohorts||{}, c=C.d7||null, L=_tsPerLbl();
     // No rate: say why — hours, no newcomer at all, a window too short for a
     // 7-day return inside it, or newcomers too recent (proxy.js visitCohorts).
-    var why=d.h24?'needs whole days':(!C.newTotal?'no new device in the window':((d.periodDays||0)<=7?'needs a window of 8 days or more':'too recent to tell'));
+    // A 7-day return is judged on complete days: the last one is yesterday for
+    // a window ending now (9 days needed), the range end for a past range (8).
+    var need=d.periodEnd?8:9;
+    var why=d.h24?'needs whole days':(!C.newTotal?'no new device in the window':((d.periodDays||0)<need?'needs a window of '+need+' days or more':'too recent to tell'));
     _tsTiles('audience',[
       ['Visits',_tsN(o.v),_tsN(o.u)+' unique · '+L,'var(--accent)'],
       ['New devices',_tsN(o.nw),'seen for the first time · '+L,'var(--warn-text)'],
@@ -6047,29 +6050,35 @@
       var o=r[1]||{n:0,back:0};
       return '<div class="srow"><span>'+r[0]+'</span><b>'+(o.n? pc(o.back,o.n)+'% ('+fmt(o.back)+'/'+fmt(o.n)+')' : '\u2014 <span class="muted" style="font-size:.72rem">too recent</span>')+'</b></div>';
     }).join('');
-    var newAvg=c.newTotal? c.newDays/c.newTotal : 0;
+    // Same exposure on both sides (proxy.js visitCohorts): a newcomer's first
+    // W days, the base's last W complete days. An older proxy: no actTotal.
+    var W=c.exposure||0, aT=W?(c.actTotal||0):c.newTotal;
+    var newAvg=aT? c.newDays/aT : 0;
     var estAvg=c.estTotal? c.estDays/c.estTotal : 0;
+    var xl=act.map(function(_,i){ return String(i+1)+(!W&&i===act.length-1?'+':''); });
     box.innerHTML=
       '<div><h3>Return rate of new devices</h3>'+left
-      +'<p class="muted">'+fmt(c.newTotal)+' first seen in the window'+(c.first?(', the earliest on '+_annEsc(_stDate(c.first))):'')+'.</p></div>'
-      +'<div><h3>Active days of newcomers</h3>'
+      +'<p class="muted">'+fmt(c.newTotal)+' first seen in the window'+(c.first?(', the earliest on '+_annEsc(_stDate(c.first))):'')+'. Judged on complete days'+(c.last?(', up to '+_annEsc(_stDate(c.last))):'')+'.</p></div>'
+      +'<div><h3>Active days of newcomers'+(W?' (first '+W+' days)':'')+'</h3>'
       +'<div id="trafRetAct"></div>'
-      +'<p class="muted">'+(newAvg? ('avg '+_round1(newAvg)+' days'):'\u2014')
-      +(estAvg? (' \u00b7 established base '+_round1(estAvg)+' days over the same window'):'')+'</p></div>';
-    _chartMount($('trafRetAct'),['1 day','2 days','3 days','4 days','5 days','6 days','7 days','8+ days'],
-      [{k:'act',n:'Devices',c:'#e0a03a',vals:act}],150,'bar',{ c:'#e0a03a', xl:['1','2','3','4','5','6','7','8+'] });
-    if(nt) nt.textContent=fmt(c.known)+' devices dated \u00b7 window '+(c.window||30)+((c.window||30)===1?' day':' days')+(_trafBots?' \u00b7 people only (robots do not come back)':'');
+      +'<p class="muted">'+(newAvg? ('avg '+_round1(newAvg)+(W?' of their first '+W+' days':' days')+' ('+fmt(aT)+' devices with a full '+(W||7)+' days behind them)'):(W?'no newcomer has '+W+' complete days behind them yet':'\u2014'))
+      +(estAvg? (' \u00b7 established base '+_round1(estAvg)+(W?' of the last '+W+' days':' days over the same window')):'')+'</p></div>';
+    _chartMount($('trafRetAct'),xl.map(function(x,i){ return x+(i?' days':' day'); }),
+      [{k:'act',n:'Devices',c:'#e0a03a',vals:act}],150,'bar',{ c:'#e0a03a', xl:xl });
+    if(nt) nt.textContent=fmt(c.known)+' devices dated \u00b7 window '+(c.window||30)+((c.window||30)===1?' day':' days')
+      +(c.countedFrom&&d.series&&d.series.length&&c.countedFrom>String(d.series[0].date||'')?' \u00b7 devices of the day counting began are the base, not newcomers':'')
+      +(_trafBots?' \u00b7 people only (robots do not come back)':'');
     var oneDay=act.length? act[0] : 0;
-    if(!c.newTotal) return '';
+    if(!aT) return '';
     // Tant qu'aucune cohorte n'a sept jours derriere elle, la question « faut-il
     // aller chercher du monde ou garder celui qui vient » n'a pas de reponse
     // mesuree : on enonce les faits et on se tait sur le verdict, plutot que de
     // le tirer d'un denominateur vide.
     var d7=c.d7||{n:0,back:0};
     _retVerdict=!!d7.n;
-    return 'Of the <span class="nu">'+fmt(c.newTotal)+'</span> devices first seen in the window, '
-      +'<span class="nu">'+pc(oneDay,c.newTotal)+'%</span> showed up on a single day and never again'
-      +(estAvg? (', against <span class="nu">'+_round1(estAvg)+'</span> active days for the established base'):'')
+    return 'Of the <span class="nu">'+fmt(aT)+'</span> devices first seen in the window'+(W?' with '+W+' complete days behind them':'')+', '
+      +'<span class="nu">'+pc(oneDay,aT)+'%</span> '+(W?'came on a single one of those '+W+' days':'showed up on a single day and never again')
+      +(estAvg? (', against <span class="nu">'+_round1(estAvg)+'</span> active days'+(W?' of the last '+W:'')+' for the established base'):'')
       +(_retVerdict? (' \u2014 the lever is <b>'+(pc(d7.back,d7.n)<40?'retention':'acquisition')+'</b>.') : '.');
   }
   function _trafInsights(d,s){

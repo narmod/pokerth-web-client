@@ -131,7 +131,7 @@ ok(/Math\.floor\(Date\.UTC\(d\.getFullYear\(\), d\.getMonth\(\), d\.getDate\(\)\
   'the day index is built from local parts in UTC arithmetic, so a DST shift adds no day');
 
 const cohortScope = new Function('visitsStore', 'VISIT_FIRST_UNKNOWN',
-  fn('visitDayIndex') + '\n' + fn('visitDayKeyFromIndex') + '\n' + fn('visitCohorts') +
+  'const VISIT_COHORT_W = 7;\n' + fn('visitDayIndex') + '\n' + fn('visitDayKeyFromIndex') + '\n' + fn('visitOldestBack') + '\n' + fn('visitCohorts') +
   '\nreturn { visitDayIndex, visitDayKeyFromIndex, visitCohorts };');
 const store2 = { days: {}, allU: {} };
 const co = cohortScope(store2, 1000);
@@ -143,6 +143,8 @@ const put = (idx, ids) => {
 };
 ok(co.visitDayKeyFromIndex(today) === visitDayKey(new Date()),
   'the index and the string key name the same day');
+// Counting began long ago (an empty bucket 60 days back): no cohort is cut by it.
+store2.days[co.visitDayKeyFromIndex(today - 60)] = { v: 0, ids: {} };
 // Three devices from before the measurement, active four days in the window.
 for (let i = 1; i <= 3; i++) { store2.allU['h' + i] = 1; for (let d = 0; d < 4; d++) put(today - d, [i]); }
 store2.allU.h10 = today - 10; put(today - 10, [10]); put(today - 9, [10]);   // back next day
@@ -152,19 +154,30 @@ store2.allU.h13 = today - 1;  put(today - 1, [13]);                           //
 store2.allU.h14 = today;      put(today, [14]);                               // nothing is due
 const c = co.visitCohorts(30);
 ok(c.known === 5, 'only dated devices are counted as known');
-ok(c.d1.n === 4 && c.d1.back === 1, 'the next-day rate excludes today\u2019s arrivals');
+ok(c.d1.n === 3 && c.d1.back === 1, 'the next-day rate waits for a complete next day: yesterday\u2019s arrivals are not judged on today so far');
 ok(c.d3.n === 3 && c.d3.back === 1, 'a return on day 5 is not a return within 3');
 ok(c.d7.n === 3 && c.d7.back === 2, 'but it is one within 7');
-ok(c.d1.n > c.d7.n, 'the denominators shrink with the lag, which is the whole point');
-ok(c.active[0] === 3 && c.active[1] === 2, 'active days land in the right buckets');
-ok(c.estTotal === 3 && c.estDays / c.estTotal === 4,
-  'pre-measurement devices serve as the established-base comparison instead of being dropped');
+ok(c.newTotal === 5 && c.actTotal === 3, 'five newcomers in the window, three with seven complete days behind them');
+ok(c.active.length === 7 && c.active[0] === 1 && c.active[1] === 2, 'active days over each newcomer\u2019s first seven days land in the right buckets');
+ok(c.estTotal === 3 && c.estDays / c.estTotal === 3,
+  'the established base is read over the last seven complete days (3 of them active), not the whole window');
 ok(c.since === co.visitDayKeyFromIndex(today - 10), 'the earliest dated first visit is reported');
 store2.allU.h20 = today - 40; put(today - 40, [20]);                          // dated, before the window
 const c7 = co.visitCohorts(7);
 ok(c7.since === co.visitDayKeyFromIndex(today - 40) && c7.first === co.visitDayKeyFromIndex(today - 1),
   'since is the earliest dated device ever, first the earliest inside the window (what the card says)');
 ok(co.visitCohorts(30).first === co.visitDayKeyFromIndex(today - 10), 'a device before the window never sets first');
+{
+  // After a reset (or on a fresh store) every regular gets the first day's date:
+  // they are the base, not a cohort of newcomers with remarkable returns.
+  const st = { days: {}, allU: {} }, cr = cohortScope(st, 1000), t = cr.visitDayIndex();
+  const pt = (idx, ids) => { const k = cr.visitDayKeyFromIndex(idx); st.days[k] = st.days[k] || { v: 0, ids: {} }; ids.forEach(i => { st.days[k].ids['r' + i] = 1; }); };
+  for (let i = 0; i < 5; i++) { st.allU['r' + i] = t - 12; for (let d = 12; d >= 1; d--) pt(t - d, [i]); }
+  st.allU.r9 = t - 10; pt(t - 10, [9]);
+  const r = cr.visitCohorts(30);
+  ok(r.newTotal === 1 && r.d7.n === 1 && r.d7.back === 0 && r.estTotal === 5, 'devices of the day counting began are the base; only the real newcomer is a cohort');
+  ok(r.countedFrom === cr.visitDayKeyFromIndex(t - 11), 'and the cohorts say from which day they count');
+}
 const none = cohortScope({ days: {}, allU: {} }, 1000).visitCohorts(30);
 ok(none.known === 0 && none.d1.n === 0 && none.newTotal === 0 && none.first === 0,
   'an empty store answers with zeros, not with a rate over nothing');

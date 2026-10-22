@@ -368,6 +368,15 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Admin › Statistics › Audience: honest return rates** (`web.287`) — `visitCohorts` judged yesterday's newcomers
+  on today so far (their next-day window), and the last day of every 3- and 7-day window too, so the rates read
+  low; it now stops at the last complete day (`last`: yesterday, or the end of a past range). « Active days of
+  newcomers » set a device first seen yesterday (one day to be active) against regulars with the whole window:
+  both sides are now read over 7 days — a newcomer's first 7 days (`actTotal` devices with 7 complete days behind
+  them, buckets 1–7) and the established base's last 7 complete days. Devices first seen on the day counting
+  began (or restarted after a reset), which includes every regular of that day, are the base, not newcomers
+  (`countedFrom`). « Back within 7 days » asks for a 9-day window when it ends today (8 for a past range).
+  `scripts/test-visit-hours.mjs`.
 - **« Assistance » no longer reads « Help »** (`web.286`) — in 49 languages the Advanced options section that holds
   the play aids (Assistance pane, odds, hands button, HUD, Ace's Help) was labelled with the word for « Help »
   (Aide, Hilfe, ヘルプ…), easy to confuse with the Help menu. `advSecHelp` now carries the language's assistance

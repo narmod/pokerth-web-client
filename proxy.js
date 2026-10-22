@@ -10236,29 +10236,50 @@ function visitMusicPeriod(daysBack, list) {
   return out;
 }
 // `offset`: a past window (custom range) is judged as it stood at its last day.
+// Three rules keep the rates honest (audit 2026-10-22):
+// - a cohort counts only once its whole return window is over: the last day
+//   judged is the last COMPLETE one (`last` = yesterday for a window ending
+//   now, the range end for a past range) — today's partial traffic is not yet
+//   a « did not come back »;
+// - devices first seen on the day counting began (or restarted after a reset)
+//   are not newcomers: every regular got that date, they are the base;
+// - active days are read over the same exposure for both sides: a newcomer's
+//   first VISIT_COHORT_W days, the base's last VISIT_COHORT_W complete days.
+//   Over the window, a device first seen yesterday had one day to be active
+//   and an old regular all of them: the gap was exposure, not behaviour.
+const VISIT_COHORT_W = 7;
 function visitCohorts(windowDays, offset) {
   const today = visitDayIndex() - (offset || 0);
+  const last = offset ? today : today - 1;
   const from = today - windowDays + 1;
+  const ob = visitOldestBack();
+  const start = ob >= 0 ? visitDayIndex() - ob + 1 : Infinity;   // first complete counted day
+  const W = VISIT_COHORT_W;
   const firsts = visitsStore.allU || {};
   const seen = {};            // index de jour -> identifiants vus ce jour-la
-  const activeIn = {};        // identifiant -> jours actifs dans la fenetre
-  for (let i = from - 7; i <= today; i++) {
+  for (let i = from - W; i <= today; i++) {
     const b = visitsStore.days[visitDayKeyFromIndex(i)];
     if (!b || !b.ids) continue;
     seen[i] = b.ids;
-    if (i >= from) for (const k in b.ids) activeIn[k] = (activeIn[k] || 0) + 1;
   }
   function cameBack(h, a, b2) {
     for (let i = a; i <= b2; i++) { const d = seen[i]; if (d && d[h]) return true; }
     return false;
   }
+  function activeDays(h, a, b2) {
+    let n = 0;
+    for (let i = a; i <= b2; i++) { const d = seen[i]; if (d && d[h]) n++; }
+    return n;
+  }
   const out = {
     // since: earliest dated first visit ever (when dating started);
     // first: earliest first visit inside this window (the cohort's start).
-    window: windowDays, known: 0, since: 0, first: 0,
+    window: windowDays, known: 0, since: 0, first: 0, last: visitDayKeyFromIndex(last), exposure: W,
     d1: { n: 0, back: 0 }, d3: { n: 0, back: 0 }, d7: { n: 0, back: 0 },
-    active: [0, 0, 0, 0, 0, 0, 0, 0],
-    newTotal: 0, newDays: 0, estTotal: 0, estDays: 0
+    // active[k] = newcomers active on k+1 of their first W days (actTotal of them).
+    active: new Array(W).fill(0),
+    newTotal: 0, actTotal: 0, newDays: 0, estTotal: 0, estDays: 0,
+    countedFrom: isFinite(start) ? visitDayKeyFromIndex(start) : ''
   };
   for (const h in firsts) {
     const f = firsts[h];
@@ -10269,16 +10290,19 @@ function visitCohorts(windowDays, offset) {
       out.known++;
       if (!out.since || f < out.since) out.since = f;
     }
-    if (dated && f >= from && f <= today) {
+    if (dated && f >= from && f <= today && f >= start) {
       if (!out.first || f < out.first) out.first = f;
-      if (f <= today - 1) { out.d1.n++; if (cameBack(h, f + 1, f + 1)) out.d1.back++; }
-      if (f <= today - 3) { out.d3.n++; if (cameBack(h, f + 1, f + 3)) out.d3.back++; }
-      if (f <= today - 7) { out.d7.n++; if (cameBack(h, f + 1, f + 7)) out.d7.back++; }
-      const d = activeIn[h] || 1;
-      out.active[Math.min(d, 8) - 1]++;
-      out.newTotal++; out.newDays += d;
-    } else {
-      const d = activeIn[h] || 0;
+      if (f <= last - 1) { out.d1.n++; if (cameBack(h, f + 1, f + 1)) out.d1.back++; }
+      if (f <= last - 3) { out.d3.n++; if (cameBack(h, f + 1, f + 3)) out.d3.back++; }
+      if (f <= last - 7) { out.d7.n++; if (cameBack(h, f + 1, f + 7)) out.d7.back++; }
+      out.newTotal++;
+      if (f <= last - W + 1) {
+        const d = Math.max(1, activeDays(h, f, f + W - 1));
+        out.active[Math.min(d, W) - 1]++;
+        out.actTotal++; out.newDays += d;
+      }
+    } else if (!(dated && f > last)) {
+      const d = activeDays(h, last - W + 1, last);
       if (d) { out.estTotal++; out.estDays += d; }
     }
   }

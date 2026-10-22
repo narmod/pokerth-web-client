@@ -68,7 +68,7 @@ ok(!/over the last 30 days/.test(admin) && !/in the last 30 days, how many/.test
 ok(/\(c\.window\|\|30\)===1\?' day':' days'/.test(admin), 'a one-day window reads « window 1 day »');
 ok(/n<2 \? 'a single '\+U\.one\+': no halves to compare'/.test(admin) && /n<2\?'devices seen on an earlier '\+U\.one\+' \\u00b7 a single '\+U\.one\+': no halves to compare':'devices seen on an earlier '\+U\.one\+' \\u00b7 first half '/.test(admin)
   && /\(n===1\?U\.one:U\.many\)/.test(admin), 'a single day or hour has no halves to compare, and no plural');
-ok(/var why=d\.h24\?'needs whole days':\(!C\.newTotal\?'no new device in the window':\(\(d\.periodDays\|\|0\)<=7\?'needs a window of 8 days or more':'too recent to tell'\)\);/.test(body(admin, '_tsAudience')),
+ok(/var need=d\.periodEnd\?8:9;/.test(body(admin, '_tsAudience')) && /var why=d\.h24\?'needs whole days':\(!C\.newTotal\?'no new device in the window':\(\(d\.periodDays\|\|0\)<need\?'needs a window of '\+need\+' days or more':'too recent to tell'\)\);/.test(body(admin, '_tsAudience')),
   'Back within 7 days says why there is no rate, not « too recent » for an old empty window');
 ok(/\(d\.h24\?' \\u00b7 server time, ':' \\u00b7 server days, '\)\+d\.tz/.test(admin), 'the 24-hour window reads server time, not server days');
 // One date format across Statistics: « 7 Oct 2026 » (audit 2026-10-20, S6).
