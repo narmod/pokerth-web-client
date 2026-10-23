@@ -72,6 +72,12 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Tournaments: the players' page** (`web.303`, service `0.4.0`) — the web client relays the tournament pages
+  (`/tournament` for players, `/tournament/organize`, `/tournament/t/<key>`, language files) and, without a token,
+  the players' API `/tournament/api/*` (list, a tournament, register, unregister, files) to the service, with the
+  player's address in a header it sets itself (the service's per-address limits) and bodies capped at 8 KB.
+  `scripts/test-lang-count.mjs` now requires a tournament catalogue (`tournament/public/lang/`) for every language
+  of the app; `docs/ADDING_A_LANGUAGE.md` says so. Details in `tournament/CHANGELOG.md`.
 - **Tournaments: the director opens the table** (`web.299`, service `0.2.0`) — from a tournament with its LAN server
   and at least two players, « Open the table »: the director creates an invite-only table with the tournament's table
   settings (new: stack, first small blind, blinds every N hands or minutes, after the last level, time to act, pause

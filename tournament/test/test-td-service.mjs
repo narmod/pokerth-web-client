@@ -163,7 +163,7 @@ ok((statSync(join(dir, 'td-key.pem')).mode & 0o077) === 0, 'key file is private 
   ok(srv.servers.length === 1 && srv.servers[0].ref === 'local', 'http: servers from TD_SERVERS');
   const lob = await (await fetch(base + '/admin/tournaments/lobby', { method: 'POST', headers: Object.assign({ 'Content-Type': 'application/json' }, H), body: '{"ref":"local"}' })).json();
   ok(lob.ok && lob.games.length === 1, 'http: lobby read');
-  const page = await fetch(base + '/tournament');
+  const page = await fetch(base + '/tournament/organize');
   const html = await page.text();
   ok(page.status === 200 && /Tournament director/.test(html) && !/__TD_VERSION__/.test(html) && /0\.\d+\.\d+/.test(html), 'page: served with the version filled in');
   ok((await fetch(base + '/tournament/organizer.mjs')).status === 200 && (await fetch(base + '/tournament/manifest.json')).status === 200, 'page: its files');

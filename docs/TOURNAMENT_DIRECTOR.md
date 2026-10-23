@@ -340,6 +340,39 @@ director for it.
 Routes: `POST /admin/tournaments/t/table/open {id}`, `…/t/table/go {id}`,
 `…/t/table/reinvite {id}`, `…/t/table/say {id, text}`, `…/t/table/close {id}`.
 
+## The players' page (`/tournament`, service `0.4.0`)
+
+- `/tournament`: the public tournaments — playing now, open for
+  registration, coming up, finished. `/tournament/t/<key>`: one tournament;
+  the key is random (`publicKey`, 12 bytes), so an unlisted tournament is
+  reached by its link only, and a private one answers as if it did not exist
+  until its invitation code is given (`?invite=`). noindex while in beta.
+- A tournament page: date, server, table settings, how it works (with the time
+  the table opens when it opens by itself), the players, the table to join
+  once the director has opened it (its name; « waiting for the admin »; « hand
+  N »), the ranking, corrections, the signature check and the journal / signed
+  result to download.
+- **Registration** by the players when « Players can register themselves »
+  is on (default): a PokerTH nickname the server would accept (2 to 64 bytes,
+  first byte a plain printable character), once per tournament in any case.
+  Closed when the table is full (10), once the director has opened the table,
+  or when the tournament is over. Each registration returns a **personal
+  code** (8 characters, no 0/O/1/I), shown once and kept in the browser
+  (`pth_td_regs`); unregistering needs it; only a SHA-256 of it is stored.
+  The same code will serve the check-in of the Official profile.
+- Limits per player address (set by the web client, `x-td-client`): six
+  registrations and twelve unregistration attempts in ten minutes.
+- Every language of the app: the list comes from the web client's
+  `/modules/lang-meta.mjs`, the texts from `tournament/public/lang/<code>.mjs`
+  (falling back to English, then the key); the choice is the app's
+  (`pth_lang`); Arabic, Persian, Hebrew and Urdu read right to left, as on the
+  public pages. The organizer tools stay in English, at `/tournament/organize`.
+- API, without a token, relayed by the web client: `GET /tournament/api/list`,
+  `GET …/t/<key>[?invite=]`, `POST …/t/<key>/register {nick, invite?}`,
+  `POST …/t/<key>/unregister {nick, code, invite?}`,
+  `GET …/t/<key>/file?which=journal|result`. Errors carry a `code` the page
+  translates.
+
 ## A service of its own (`tournament/`, decided and done 2026-10-23)
 
 The tournament director has its own audience (organizers), lifecycle,

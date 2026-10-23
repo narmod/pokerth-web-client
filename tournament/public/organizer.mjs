@@ -9,9 +9,9 @@
 // ═══════════════════════════════════════════════════════════════════
 
 import { createTournamentsView } from './tournaments-ui.mjs';
+import { initTheme } from './theme.mjs';
 
 const TOKK = 'pth_admin_tok';
-const THEMEK = 'pth_td_theme';
 const VIEWK = 'pth_td_view';
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -37,27 +37,8 @@ function api(path, body) {
   }));
 }
 
-// ── theme ──────────────────────────────────────────────────────────
-function applyTheme(t) {
-  if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
-  else document.documentElement.removeAttribute('data-theme');
-  // Browser / installed-app bar: follows the forced theme, else the system's.
-  const metas = document.querySelectorAll('meta[name="theme-color"]');
-  metas.forEach((m, i) => {
-    const light = t === 'light' || (t === 'auto' && i === 1);
-    m.setAttribute('content', light ? '#ebe6da' : '#12161d');
-    if (t === 'auto') m.setAttribute('media', i === 1 ? '(prefers-color-scheme: light)' : '(prefers-color-scheme: dark)');
-    else m.removeAttribute('media');
-  });
-  $('themeBtn').textContent = 'Theme: ' + t;
-}
-$('themeBtn').addEventListener('click', () => {
-  const order = ['auto', 'dark', 'light'];
-  const next = order[(order.indexOf(load(THEMEK) || 'auto') + 1) % order.length];
-  store(THEMEK, next === 'auto' ? null : next);
-  applyTheme(next);
-});
-applyTheme(load(THEMEK) || 'auto');
+// ── theme (theme.mjs, shared with the players' page) ───────────────
+initTheme($('themeBtn'));
 
 // ── views: Tournaments | Table check ────────────────────────────────
 function setView(v) {

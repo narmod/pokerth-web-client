@@ -29,6 +29,11 @@ const N = langs.length;
 console.log('  (catalogue on disk: ' + N + ' languages)');
 
 check('every UI catalogue has a help corpus', help.length === N);
+// The tournament pages (tournament/public/lang/, docs/TOURNAMENT_DIRECTOR.md):
+// a language of the app is also a language of /tournament, from its first push.
+const tdLang = fs.readdirSync(path.join(root, 'tournament', 'public', 'lang')).filter(f => f.endsWith('.mjs'));
+const missingTd = langs.filter(f => !tdLang.includes(f.toLowerCase()));
+check('every UI catalogue has a tournament catalogue' + (missingTd.length ? ' (missing: ' + missingTd.join(', ') + ')' : ''), missingTd.length === 0);
 check('english is present', langs.includes('en.mjs'));
 
 // Files that describe the client as it is now. The CHANGELOG is deliberately

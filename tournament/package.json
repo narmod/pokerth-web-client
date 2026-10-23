@@ -1,6 +1,6 @@
 {
   "name": "pokerth-tournament-director",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "Tournament director for PokerTH LAN servers: opens Sit & Go tables for registered players, watches tables as a spectator, sealed and signed results, tournaments. Launched by the PokerTH web client.",
   "private": true,
   "type": "module",
@@ -11,6 +11,7 @@
   },
   "scripts": {
     "start": "node server.mjs",
-    "test": "node test/test-td-core.mjs && node test/test-td-spectator.mjs && node test/test-td-tournaments.mjs && node test/test-td-host.mjs && node test/test-td-service.mjs && node test/test-td-route.mjs"
+    "test:browser": "node test/test-td-public-browser.mjs",
+    "test": "node test/test-td-core.mjs && node test/test-td-spectator.mjs && node test/test-td-tournaments.mjs && node test/test-td-host.mjs && node test/test-td-public.mjs && node test/test-td-service.mjs && node test/test-td-route.mjs"
   }
 }

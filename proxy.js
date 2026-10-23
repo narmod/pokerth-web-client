@@ -15176,7 +15176,7 @@ const httpServer = http.createServer((req, res) => {
   // (off by default: a plain 404 until Admin › Community › Tournaments turns
   // it on, the .html and its files included).
   if (reqPathOnly === '/tournament' || reqPathOnly === '/tournament.html' || reqPathOnly.indexOf('/tournament/') === 0) {
-    return TD_LIB.handleTournamentPage(TD, req, res, reqPathOnly);
+    return TD_LIB.handleTournamentPage(TD, req, res, reqPathOnly, clientIp(req));
   }
   // ── /live — embedded spectator mode, successor to the pokerth-live tool.
   // Same client, same themes/decks/seats/layout, so every table improvement

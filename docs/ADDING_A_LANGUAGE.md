@@ -69,6 +69,11 @@ skipped halfway through.
 `note`) with the same list lengths. Compare the two structures before
 committing, not just `node --check`.
 
+The tournament pages too: `tournament/public/lang/<code lower-cased>.mjs`, the
+same keys and placeholders as `tournament/public/lang/en.mjs` (about 95 short
+strings). `scripts/test-lang-count.mjs` requires it for every UI catalogue, and
+`tournament/test/test-td-public.mjs` checks its keys and placeholders.
+
 Then, in a single commit:
 
 - `public/modules/lang-meta.mjs` — regenerate it with

@@ -82,7 +82,7 @@ export function createTournamentsView(deps) {
     if ($('tDate').value) { const ts = new Date($('tDate').value).getTime(); if (ts > 0) body.startsAt = ts; }
     if ($('tVis').value) body.visibility = $('tVis').value;
     body.table = readTable('tt_');
-    body.run = { autoOpen: $('tAuto').checked, openBefore: Number($('tBefore').value), announce: $('tAnnounce').checked };
+    body.run = { autoOpen: $('tAuto').checked, openBefore: Number($('tBefore').value), announce: $('tAnnounce').checked, selfRegister: $('tSelfReg').checked };
     if (body.profile === 'custom') {
       body.settings = {};
       for (const k of Object.keys(CHOICES)) body.settings[k] = $('tc_' + k).value;
@@ -111,7 +111,8 @@ export function createTournamentsView(deps) {
   function runFields(r) {
     r = Object.assign({ autoOpen: false, openBefore: 10, announce: true }, r || {});
     return '<div class="row"><label class="ck"><input type="checkbox" id="te_auto"' + (r.autoOpen ? ' checked' : '') + '> Open the table by itself</label><div><label for="te_before">minutes before the start</label><input id="te_before" type="number" inputmode="numeric" min="0" max="120" value="' + esc(r.openBefore) + '"></div></div>' +
-      '<label class="ck"><input type="checkbox" id="te_announce"' + (r.announce ? ' checked' : '') + '> Announcements in the table chat</label>';
+      '<label class="ck"><input type="checkbox" id="te_announce"' + (r.announce ? ' checked' : '') + '> Announcements in the table chat</label>' +
+      '<label class="ck"><input type="checkbox" id="te_selfreg"' + (r.selfRegister !== false ? ' checked' : '') + '> Players can register themselves on the public page</label>';
   }
   function readTable(prefix) {
     const o = {};
@@ -194,6 +195,12 @@ export function createTournamentsView(deps) {
     let h = '<p>' + chip(t.status) + ' <span class="tname">' + esc(t.name) + '</span><br><span class="muted small">Sit &amp; Go · ' + esc(t.profile) + ' · ' + esc(st.visibility) +
       (t.server ? ' · ' + esc(t.server.name) + ' (' + esc(t.server.host) + ':' + esc(t.server.port) + ')' : '') + (t.startsAt ? ' · ' + esc(when(t.startsAt)) : '') + '</span></p>';
     if (t.inviteCode) h += '<p class="small">Invitation code <span class="mono">' + esc(t.inviteCode) + '</span></p>';
+    if (t.publicKey) {
+      // Its page for the players: listed when public; the link is the way in
+      // when unlisted; with the invitation code when private.
+      const link = window.location.origin + '/tournament/t/' + t.publicKey + (st.visibility === 'private' && t.inviteCode ? '?invite=' + encodeURIComponent(t.inviteCode) : '');
+      h += '<p class="small">Players\' page (' + esc(st.visibility) + ', registration ' + ((t.run || {}).selfRegister === false ? 'by you only' : 'open to players') + '): <a class="mono" href="' + esc(link) + '" target="_blank" rel="noopener">' + esc(link) + '</a> <button type="button" class="mini" data-act="copyLink" data-link="' + esc(link) + '">Copy</button></p>';
+    }
     h += '<p class="small muted">' + Object.keys(SETTING_LABEL).map((k) => esc(SETTING_LABEL[k].replace(/ \(.*\)/, '')) + ': ' + esc(k === 'archiveDays' ? (st[k] ? st[k] + ' days' : 'for good') : st[k])).join(' · ') +
       '<br>Identity, witnesses and the collusion check are recorded now; they apply once registration and witnesses arrive.</p>';
     h += '<div class="msg' + (flash && flash.bad ? ' bad' : flash ? ' ok' : '') + '" id="tMsg" role="status">' + esc(flash ? flash.text : '') + '</div>';
@@ -202,7 +209,7 @@ export function createTournamentsView(deps) {
     // Players.
     h += '<h3>Players (' + t.players.length + '/10)</h3>';
     if (!t.result && !(t.host && t.host.status === 'open')) {
-      h += t.players.length ? '<ul class="rank">' + t.players.map((p) => '<li><span class="nk">' + esc(p.nick) + '</span><button type="button" data-act="rm" data-nick="' + esc(p.nick) + '" aria-label="Remove ' + esc(p.nick) + '">Remove</button></li>').join('') + '</ul>'
+      h += t.players.length ? '<ul class="rank">' + t.players.map((p) => '<li><span class="nk">' + esc(p.nick) + (p.self ? ' <span class="chip">self</span>' : '') + '</span><button type="button" data-act="rm" data-nick="' + esc(p.nick) + '" aria-label="Remove ' + esc(p.nick) + '">Remove</button></li>').join('') + '</ul>'
         : '<p class="empty">No player yet — add them here, or let the result bring them (Table check or log).</p>';
       if (t.players.length < 10) h += '<div class="row"><div><label for="tPlayerIn">PokerTH nickname</label><input id="tPlayerIn" maxlength="64" autocomplete="off" enterkeyhint="done"></div><button type="button" data-act="add">Add</button></div>';
     } else {
@@ -418,9 +425,9 @@ export function createTournamentsView(deps) {
         if (TABLE_FIELDS.some((f) => String(tb[f[0]]) !== String(was[f[0]]))) patch.table = tb;
       }
       if ($('te_auto')) {
-        const run = { autoOpen: $('te_auto').checked, openBefore: Number($('te_before').value), announce: $('te_announce').checked };
-        const r0 = Object.assign({ autoOpen: false, openBefore: 10, announce: true }, cur.run || {});
-        if (run.autoOpen !== r0.autoOpen || run.openBefore !== r0.openBefore || run.announce !== r0.announce) patch.run = run;
+        const run = { autoOpen: $('te_auto').checked, openBefore: Number($('te_before').value), announce: $('te_announce').checked, selfRegister: $('te_selfreg').checked };
+        const r0 = Object.assign({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true }, cur.run || {});
+        if (run.autoOpen !== r0.autoOpen || run.openBefore !== r0.openBefore || run.announce !== r0.announce || run.selfRegister !== r0.selfRegister) patch.run = run;
       }
       if (!Object.keys(patch).length) return msg('tMsg', 'Nothing changed.');
       return call('/admin/tournaments/t/update', { patch }, 'Saved.');
@@ -436,6 +443,7 @@ export function createTournamentsView(deps) {
       if (!window.confirm('Start without ' + (absent.join(', ') || 'the absent') + '? They will be marked absent and not ranked.')) return;
       return call('/admin/tournaments/t/table/go', {}, 'Going without the absent: the director hands the table over.');
     }
+    if (a === 'copyLink') { try { navigator.clipboard.writeText(b.dataset.link); b.textContent = 'Copied'; } catch (e) {} return; }
     if (a === 'tSay') {
       const text = ($('tSay').value || '').trim();
       if (!text) return;

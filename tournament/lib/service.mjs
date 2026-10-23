@@ -20,8 +20,14 @@ const PUBLIC = path.join(HERE, '..', 'public');
 const STATIC = {
   'organizer.mjs': 'text/javascript; charset=utf-8',
   'tournaments-ui.mjs': 'text/javascript; charset=utf-8',
+  'public.mjs': 'text/javascript; charset=utf-8',
+  'theme.mjs': 'text/javascript; charset=utf-8',
+  'td.css': 'text/css; charset=utf-8',
   'manifest.json': 'application/manifest+json; charset=utf-8',
 };
+const LANG_RE = /^lang\/([a-z]{2,3}(?:-[a-z0-9]{2,4})?)\.mjs$/;
+// Public endpoints: per address, a few registrations and code attempts.
+const RATE = { register: [6, 10 * 60 * 1000], unregister: [12, 10 * 60 * 1000] };
 const MAX_JSON = 64 * 1024;
 const MAX_PDB = 10 * 1024 * 1024;
 
@@ -152,9 +158,9 @@ export function createService(o) {
     return null;
   }
 
-  function sendPage(res) {
+  function sendPage(res, file) {
     let html;
-    try { html = fs.readFileSync(path.join(PUBLIC, 'index.html'), 'utf8'); } catch (e) { res.writeHead(500); return res.end('page missing'); }
+    try { html = fs.readFileSync(path.join(PUBLIC, file || 'index.html'), 'utf8'); } catch (e) { res.writeHead(500); return res.end('page missing'); }
     html = html.split('__TD_VERSION__').join(o.version || '');
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' });
     res.end(html);
@@ -226,14 +232,79 @@ export function createService(o) {
     }
   }
 
+  // ── public side: no token; the web client passes the player's address ──
+  const hits = new Map();
+  function limited(kind, ip) {
+    const [max, win] = RATE[kind];
+    const k = kind + '|' + ip, at = Date.now();
+    const arr = (hits.get(k) || []).filter((x) => at - x < win);
+    if (arr.length >= max) { hits.set(k, arr); return true; }
+    arr.push(at); hits.set(k, arr);
+    if (hits.size > 5000) for (const [kk, v] of hits) if (!v.some((x) => at - x < win)) hits.delete(kk);
+    return false;
+  }
+  // What players see of an open table: its name and state, not the log.
+  function liveOf(t) {
+    if (!t.host || t.host.status !== 'open') return null;
+    const w = td.info(t.host.watchId);
+    if (!w) return null;
+    const H = w.state.host || {};
+    return { status: w.state.status, hand: w.state.hand || 0, tableName: H.tableName || w.state.gameName || null, phase: H.phase || null, admin: H.admin || null };
+  }
+  async function publicApi(req, res, sub, query) {
+    const ip = String(req.headers['x-td-client'] || req.socket.remoteAddress || '').slice(0, 64);
+    const send = (p) => Promise.resolve().then(p).then((v) => json(res, 200, Object.assign({ ok: true }, Array.isArray(v) ? { tournaments: v } : v)))
+      .catch((e) => (e instanceof T.Refusal ? json(res, e.code === 'notFound' || e.code === 'private' ? 404 : 400, { ok: false, code: e.code || 'refused', error: e.message })
+        : json(res, 500, { ok: false, code: 'error', error: 'error' })));
+    if (sub === '/list' && req.method === 'GET') return send(() => T.publicList());
+    const m = /^\/t\/([A-Za-z0-9_-]{8,40})(?:\/(register|unregister|file))?$/.exec(sub);
+    if (!m) return json(res, 404, { ok: false, code: 'notFound' });
+    const key = m[1], op = m[2] || '';
+    if (!op && req.method === 'GET') {
+      // Its table, once open: sync first so a finished game shows at once.
+      return send(async () => {
+        const v = T.publicGet(key, query.invite, null);
+        for (const h of T.openHosts()) await syncHost(h.id, h.watchId);
+        return T.publicGet(key, query.invite, liveOf);
+      });
+    }
+    if (op === 'file' && req.method === 'GET') {
+      const which = String(query.which || '');
+      const buf = T.publicFile(key, query.invite, which);
+      if (!buf) return json(res, 404, { ok: false, code: 'notFound' });
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store',
+        'Content-Disposition': 'attachment; filename="tournament-' + key.slice(0, 8) + '.' + which + '.json"' });
+      return res.end(buf);
+    }
+    if (req.method !== 'POST' || (op !== 'register' && op !== 'unregister')) return json(res, 405, { ok: false, code: 'method' });
+    if (limited(op, ip)) return json(res, 429, { ok: false, code: 'tooMany', error: 'too many attempts, try again later' });
+    const b = await readJson(req);
+    if (!b) return json(res, 400, { ok: false, code: 'badRequest' });
+    return send(() => (op === 'register' ? T.register(key, b) : T.unregister(key, b)));
+  }
+
   function handler(req, res) {
     const u = new URL(req.url, 'http://td.local');
     const p = u.pathname;
     const query = Object.fromEntries(u.searchParams);
     if (p === '/healthz') return json(res, 200, { ok: true, version: o.version });
-    if (p === '/tournament' || p === '/tournament/' || p === '/tournament.html') return sendPage(res);
+    // /tournament: the players' page (list, a tournament, registration);
+    // /tournament/organize: the organizer's tools.
+    if (p === '/tournament' || p === '/tournament/' || p === '/tournament.html' || /^\/tournament\/t\/[A-Za-z0-9_-]{8,40}\/?$/.test(p)) return sendPage(res, 'public.html');
+    if (p === '/tournament/organize' || p === '/tournament/organize/') return sendPage(res, 'index.html');
+    if (p.indexOf('/tournament/api/') === 0) {
+      return publicApi(req, res, p.slice('/tournament/api'.length), query)
+        .catch(() => { if (!res.headersSent) json(res, 500, { ok: false, code: 'error' }); });
+    }
     if (p.indexOf('/tournament/') === 0) {
       const name = p.slice('/tournament/'.length);
+      const lm = LANG_RE.exec(name);
+      if (lm) {
+        const f = path.join(PUBLIC, 'lang', lm[1] + '.mjs');
+        if (!fs.existsSync(f)) { res.writeHead(404); return res.end('Not found'); }
+        res.writeHead(200, { 'Content-Type': 'text/javascript; charset=utf-8', 'Cache-Control': 'no-cache' });
+        return fs.createReadStream(f).on('error', () => res.end()).pipe(res);
+      }
       if (!Object.prototype.hasOwnProperty.call(STATIC, name)) { res.writeHead(404); return res.end('Not found'); }
       res.writeHead(200, { 'Content-Type': STATIC[name], 'Cache-Control': 'no-cache' });
       return fs.createReadStream(path.join(PUBLIC, name)).on('error', () => res.end()).pipe(res);

@@ -29,137 +29,14 @@
     }
   })();
 </script>
-<style>
-/* Same face, palette and chrome as the public pages (/rules, /faq): Inter from
-   /fonts, the QML slate, the yellow accent and the red PokerTH chip. Plus a
-   light variant: system preference by default, or the header switch. */
-@font-face{font-family:'Inter';src:url(/fonts/inter-latin-wght-normal.woff2) format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
-@font-face{font-family:'Inter';src:url(/fonts/inter-latin-ext-wght-normal.woff2) format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+20A0-20AA,U+20AC-20C0,U+2C60-2C7F,U+A720-A7FF}
-@font-face{font-family:'Inter';src:url(/fonts/InterVariable.woff2) format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0370-03FF,U+0400-052F,U+1EA0-1EF9}
-@font-face{font-family:'Inter Fallback';src:local('Arial'),local('Helvetica'),local('Liberation Sans');size-adjust:107.4%;ascent-override:90.2%;descent-override:22.48%;line-gap-override:0%}
-:root{--bg:#161b23;--felt:#1d222b;--felt-lo:#12161d;--ink:#a0acc4;--ivory:#eff1f5;--brass:#e3c800;--brass-ink:#161b23;--muted:#8792a8;
-  --line:rgba(160,172,196,.16);--chip:#c0392b;--chip-ink:#fff;--panel:#1d222b;--field:#12161d;--ok:#5cc28a;--warn:#e3a400;--bad:#ef6a5a;color-scheme:dark}
-@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f4f1ea;--felt:#ffffff;--felt-lo:#ebe6da;--ink:#3a4252;--ivory:#161b23;--brass:#8a6d00;--brass-ink:#fff;--muted:#6a7386;
-  --line:rgba(22,27,35,.14);--panel:#ffffff;--field:#faf8f3;--ok:#1f7a4a;--warn:#8a5a00;--bad:#b3261e;color-scheme:light}}
-:root[data-theme="light"]{--bg:#f4f1ea;--felt:#ffffff;--felt-lo:#ebe6da;--ink:#3a4252;--ivory:#161b23;--brass:#8a6d00;--brass-ink:#fff;--muted:#6a7386;
-  --line:rgba(22,27,35,.14);--panel:#ffffff;--field:#faf8f3;--ok:#1f7a4a;--warn:#8a5a00;--bad:#b3261e;color-scheme:light}
-:root[data-theme="dark"]{color-scheme:dark}
-*{box-sizing:border-box}
-html{background:var(--bg)}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,'Inter Fallback',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-text-size-adjust:100%}
-a{color:var(--brass)}
-.in{max-width:68rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
-.top{background:var(--felt-lo);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
-.top .in{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;padding-top:10px;padding-bottom:10px}
-.brand{display:inline-flex;align-items:center;gap:10px;color:var(--ivory);font-weight:700;font-size:1.05em;text-decoration:none;min-width:0}
-.brand img{width:34px;height:34px;display:block;flex:none}
-.brand span{font-weight:400;color:var(--muted)}
-.sp{flex:1}
-.beta{display:inline-block;flex:none;padding:1px 8px;border-radius:999px;border:1px solid var(--brass);color:var(--brass);font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1.5;vertical-align:middle}
-h1 .beta{font-size:.36em;margin-left:8px;vertical-align:.5em}
-h1{color:var(--ivory);font-size:1.6em;line-height:1.25;margin:22px 0 4px}
-h2{color:var(--ivory);font-size:1.15em;margin:0 0 8px}
-/* Hero as on the public pages (/rules, /faq): the start screen's chips and
-   flames under a slate veil that fades into the page, the four suits, the
-   title in heavy Inter. Dark in both themes, like the app's start screen. */
-.hero{background:linear-gradient(180deg,rgba(14,18,24,.55) 0%,rgba(14,18,24,.8) 62%,rgba(14,18,24,.86) 84%,var(--bg) 100%),url(/img/pokerth-login-bg.webp) center 40%/cover no-repeat #12161d}
-.hero .in{padding-top:44px;padding-bottom:52px}
-.suits{display:flex;gap:6px;font-size:1.1em;line-height:1;margin:0 0 .7em;color:#a0acc4}.suits i{font-style:normal}
-.suits .s::before{content:"\2660"}.suits .h::before{content:"\2665"}.suits .d::before{content:"\2666"}.suits .c::before{content:"\2663"}
-.suits .h,.suits .d{color:#e74c3c}
-.hero h1{font-weight:800;font-size:clamp(1.85rem,1.1rem + 3vw,3rem);text-shadow:0 2px 12px rgba(0,0,0,.6);line-height:1.15;letter-spacing:-.01em;color:#fff;margin:0 0 .45em;text-wrap:balance;overflow-wrap:break-word}
-.hero p{font-size:1.08em;line-height:1.65;color:#e3e7ef;margin:0;max-width:40em;text-shadow:0 1px 6px rgba(0,0,0,.7)}
-.hero .beta{color:#e3c800;border-color:#e3c800;text-shadow:none}
-.body{padding-top:18px}
-/* Card titles as the section bars of the public pages (the pokerth.net
-   forum's category bars): grey-blue to navy, white text. */
-.card h2{color:#fff;font-weight:600;font-size:1.05em;padding:.5em .75em;border-radius:6px;margin:0 0 12px;background:linear-gradient(90deg,#6b7780 0%,#3a4458 55%,#262c45 100%)}
-@media (max-width:480px){.hero .in{padding-top:28px;padding-bottom:40px}.top .beta{display:none}.top .in{flex-wrap:nowrap}.theme{padding:6px 8px;font-size:.78em}}
-h3{color:var(--ivory);font-size:1em;margin:14px 0 6px}
-.lead{color:var(--muted);margin:0 0 18px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin:0 0 16px}
-.grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
-@media (min-width:900px){.grid{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}}
-label{display:block;font-size:.9em;color:var(--muted);margin:10px 0 4px}
-input,select{width:100%;font:inherit;color:var(--ivory);background:var(--field);border:1px solid var(--line);border-radius:8px;padding:9px 10px;min-width:0}
-input:focus,select:focus,button:focus-visible{outline:2px solid var(--brass);outline-offset:1px}
-.row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
-.row>*{flex:1 1 12rem;min-width:0}
-.row>button{flex:0 0 auto}
-button{font:inherit;font-weight:600;border-radius:8px;border:1px solid var(--line);background:var(--felt-lo);color:var(--ivory);padding:9px 14px;cursor:pointer;min-height:44px;touch-action:manipulation}
-button.primary{background:var(--chip);border-color:var(--chip);color:var(--chip-ink)}
-button.accent{background:var(--brass);border-color:var(--brass);color:var(--brass-ink)}
-button:disabled{opacity:.5;cursor:not-allowed}
-button.ghost{background:transparent}
-.theme{flex:none;padding:6px 10px;font-weight:500;font-size:.85em;min-height:40px}
-input,select{min-height:44px}
-html,body{overflow-x:hidden}
-@media (max-width:480px){h1{font-size:1.35em;margin-top:16px}.lead{font-size:.95em}.card{padding:14px 12px;border-radius:10px}.brand span{display:none}th,td{padding:6px 5px}}
-.muted{color:var(--muted)}
-.small{font-size:.85em}
-.msg{min-height:1.4em;font-size:.9em;margin-top:8px}
-.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
-.tables{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
-.tables li label{display:flex;gap:10px;align-items:flex-start;margin:0;padding:10px;border:1px solid var(--line);border-radius:10px;cursor:pointer;color:var(--ink);font-size:1em;background:var(--field)}
-.tables li input{width:auto;margin-top:4px;flex:none}
-.tables li.off label{opacity:.55;cursor:not-allowed}
-.tname{color:var(--ivory);font-weight:600;overflow-wrap:anywhere}
-.chip{display:inline-block;font-size:.75em;font-weight:600;padding:1px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
-.chip.live{color:var(--ok);border-color:var(--ok)}
-.chip.warn{color:var(--warn);border-color:var(--warn)}
-.chip.bad{color:var(--bad);border-color:var(--bad)}
-.chip.done{color:var(--brass);border-color:var(--brass)}
-.watches{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
-.watches button{width:100%;text-align:left;display:flex;gap:8px;align-items:center;justify-content:space-between;font-weight:500;background:var(--field)}
-.watches button[aria-current="true"]{border-color:var(--brass)}
-.watches .wt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-table{width:100%;border-collapse:collapse;font-size:.92em}
-th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
-th{color:var(--muted);font-weight:600;font-size:.85em}
-td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
-tr.out td{color:var(--muted)}
-.tablewrap{overflow-x:auto}
-.checks{list-style:none;padding:0;margin:6px 0 0;display:grid;gap:4px}
-.checks li::before{content:'✓ ';color:var(--ok);font-weight:700}
-.checks li.no::before{content:'✗ ';color:var(--bad)}
-code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.85em;overflow-wrap:anywhere}
-.log{background:var(--field);border:1px solid var(--line);border-radius:8px;padding:8px 10px;max-height:12rem;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.8em;white-space:pre-wrap;margin:6px 0 0}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.empty{color:var(--muted);font-style:italic}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-footer{color:var(--muted);font-size:.85em;padding-top:12px;padding-bottom:calc(28px + env(safe-area-inset-bottom))}
-textarea{width:100%;font:inherit;color:var(--ivory);background:var(--field);border:1px solid var(--line);border-radius:8px;padding:9px 10px;min-width:0;resize:vertical}
-textarea:focus{outline:2px solid var(--brass);outline-offset:1px}
-.tabs{display:flex;gap:4px;margin:6px 0 14px;border-bottom:1px solid var(--line);overflow-x:auto;-webkit-overflow-scrolling:touch}
-.tabs button{flex:none;background:transparent;border:0;border-bottom:3px solid transparent;border-radius:0;color:var(--muted);padding:8px 14px}
-.tabs button[aria-selected="true"]{border-bottom-color:var(--brass);color:var(--ivory)}
-.rank{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-direction:column;gap:6px}
-.rank li{display:flex;align-items:center;gap:8px;padding:4px 4px 4px 10px;border:1px solid var(--line);border-radius:8px;background:var(--field)}
-.rank .pl{flex:none;min-width:1.6em;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
-.rank .nk{flex:1;min-width:0;color:var(--ivory);overflow-wrap:anywhere}
-.rank button{flex:none;min-width:44px;padding:4px 10px}
-.seg{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}
-.seg label{display:inline-flex;gap:6px;align-items:center;margin:0;padding:8px 12px;min-height:44px;border:1px solid var(--line);border-radius:999px;background:var(--field);cursor:pointer;color:var(--ink);font-size:.9em}
-.seg input{width:auto;min-height:0;margin:0}
-.seg label:has(input:checked){border-color:var(--brass);color:var(--ivory)}
-details.sub{margin-top:14px;border-top:1px solid var(--line);padding-top:8px}
-details.sub summary{cursor:pointer;color:var(--ivory);font-weight:600;min-height:32px}
-.history{font-size:.85em;padding-left:1.4em;margin:6px 0 0}
-.hostbox{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--field);margin-top:8px}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0;padding:0;list-style:none}
-.chips li{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:.85em;color:var(--ivory);background:var(--panel)}
-.ck{display:flex;gap:8px;align-items:center;color:var(--ink);font-size:.95em;margin:10px 0 4px;min-height:44px}
-.ck input{width:auto;min-height:0;flex:none;margin:0}
-button.danger{border-color:var(--bad);color:var(--bad);background:transparent}
-input[type="file"]{padding:7px}
-[hidden]{display:none!important}
-</style>
+<link rel="stylesheet" href="/tournament/td.css">
 </head>
 <body>
 <header class="top"><div class="in">
   <a class="brand" href="/"><img src="/logo-chip-68.png" alt="" width="34" height="34">PokerTH <span>Tournaments</span></a>
   <span class="beta" title="Beta: still being built — results are kept, but things will change">beta</span>
   <span class="sp"></span>
+  <a class="theme ghost" href="/tournament">Players' page</a>
   <button type="button" class="theme ghost" id="themeBtn" aria-label="Colour theme">Theme: auto</button>
   <button type="button" class="theme ghost" id="signOut" hidden>Sign out</button>
 </div></header>
@@ -207,6 +84,7 @@ input[type="file"]{padding:7px}
           <div class="row" id="tCustom" hidden></div>
           <div class="row"><label class="ck"><input type="checkbox" id="tAuto"> Open the table by itself</label><div><label for="tBefore">minutes before the start</label><input id="tBefore" type="number" inputmode="numeric" min="0" max="120" value="10"></div></div>
           <label class="ck"><input type="checkbox" id="tAnnounce" checked> Announcements in the table chat (players out, heads-up, winner)</label>
+          <label class="ck"><input type="checkbox" id="tSelfReg" checked> Players can register themselves on the public page</label>
           <details class="sub"><summary>Table settings</summary><p class="small muted">Used when the director opens the table. PokerTH defaults.</p><div class="row" id="tTable"></div></details>
           <p class="small muted">Format: Sit &amp; Go, one table, up to 10 players.</p>
           <div class="actions"><button type="submit" class="primary">Create</button></div>

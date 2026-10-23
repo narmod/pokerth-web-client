@@ -8,6 +8,30 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.4.0 — 2026-10-23 (web client `2.1.10-web.303`)
+
+### Added
+- **The players' page**, `/tournament`, in every language of the app (83):
+  public tournaments (playing now, open for registration, coming up,
+  finished), each with its own page `/tournament/t/<key>` (a random key: an
+  unlisted tournament is reached by its link only; a private one asks for its
+  invitation code). How it works, the players, the table to join once the
+  director has opened it, the ranking with its signature and the journal to
+  download.
+- **Registration by the players**, with their PokerTH nickname (checked as
+  the server would), per tournament (« Players can register themselves », on
+  by default); closed when the table is full (10), once the director has
+  opened the table, or when the tournament is over. Each registration gives a
+  personal code (kept in the browser too), needed to unregister; only its hash
+  is stored. Six registrations and twelve unregistration attempts per address
+  in ten minutes. noindex while in beta.
+- The organizer tools move to `/tournament/organize`; each tournament shows
+  its players' link (with the invitation code when private) and marks the
+  players who registered themselves.
+- Language files under `tournament/public/lang/`, one per language of the app
+  (`scripts/test-lang-count.mjs` requires them); the shared style
+  (`td.css`) and theme switch (`theme.mjs`) of both pages.
+
 ## 0.3.3 — 2026-10-23
 
 ### Changed

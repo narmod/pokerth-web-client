@@ -45,7 +45,12 @@ function codeKey() {
 function diskVersion() {
   try { return JSON.parse(fs.readFileSync(path.join(TD_ROOT, 'package.json'), 'utf8')).version || null; } catch (e) { return null; }
 }
-const PAGE_RE = /^\/tournament(?:\.html|\/|\/[A-Za-z0-9_-]+\.(?:mjs|json))?$/;
+// The pages and their files: /tournament (players), /tournament/organize,
+// /tournament/t/<key> (one tournament), the page files and the language files.
+const PAGE_RE = /^\/tournament(?:\.html|\/|\/organize\/?|\/t\/[A-Za-z0-9_-]{8,40}\/?|\/[A-Za-z0-9_-]+\.(?:mjs|json|css)|\/lang\/[a-z]{2,3}(?:-[a-z0-9]{2,4})?\.mjs)?$/;
+// The players' API, without a token: list, one tournament, (un)register, files.
+const API_RE = /^\/tournament\/api\/(?:list|t\/[A-Za-z0-9_-]{8,40}(?:\/(?:register|unregister|file))?)$/;
+const API_MAX_BODY = 8 * 1024;
 // Only these reach the service; the rest of the environment (admin token,
 // database passwords…) stays with the web client.
 const ENV_KEEP = ['PATH', 'HOME', 'LANG', 'LC_ALL', 'TZ', 'TMPDIR', 'NODE_EXTRA_CA_CERTS', 'SSL_CERT_FILE'];
@@ -181,7 +186,7 @@ function createTournamentHost(deps) {
     return r;
   }
   // Relay a request as is; `author` set = an authenticated API call.
-  function relay(req, res, pathAndQuery, author) {
+  function relay(req, res, pathAndQuery, author, extra) {
     return ready(8000).then((ok) => {
       if (!ok) {
         res.writeHead(503, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'Retry-After': '5' });
@@ -190,6 +195,7 @@ function createTournamentHost(deps) {
       const headers = {};
       ['content-type', 'content-length', 'accept', 'if-none-match'].forEach((k) => { if (req.headers[k]) headers[k] = req.headers[k]; });
       if (author) { headers['x-td-secret'] = secret; headers['x-td-author'] = author; }
+      if (extra) Object.assign(headers, extra);
       request(req.method, pathAndQuery, headers, req.method === 'GET' || req.method === 'HEAD' ? null : req, (err, pr) => {
         if (err) {
           if (!res.headersSent) { res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' }); res.end(JSON.stringify({ ok: false, error: 'tournament service: ' + err.message })); }
@@ -263,9 +269,22 @@ function handleTournamentAdmin(host, h, req, res, reqPathOnly, query) {
 }
 
 // ── /tournament and its files (no token: the page asks for it) ──
-function handleTournamentPage(host, req, res, reqPathOnly) {
-  if (!host.enabled() || !PAGE_RE.test(reqPathOnly) || (req.method !== 'GET' && req.method !== 'HEAD')) { res.writeHead(404); res.end('Not found'); return; }
+function handleTournamentPage(host, req, res, reqPathOnly, clientIp) {
+  const nf = () => { res.writeHead(404); res.end('Not found'); };
+  if (!host.enabled()) return nf();
+  if (API_RE.test(reqPathOnly)) {
+    if (req.method !== 'GET' && req.method !== 'POST') return nf();
+    if (req.method === 'POST' && !(Number(req.headers['content-length']) <= API_MAX_BODY)) {
+      res.writeHead(413, { 'Content-Type': 'application/json; charset=utf-8' }); return res.end('{"ok":false,"code":"tooLarge"}');
+    }
+    // The query (an invitation code, a file name) goes along; the player's
+    // address too, for the service's per-address limits. Never a token.
+    const qi = String(req.url || '').indexOf('?');
+    const qs = qi >= 0 ? String(req.url).slice(qi).slice(0, 300) : '';
+    return host.relay(req, res, reqPathOnly + qs, null, { 'x-td-client': String(clientIp || '').slice(0, 64) });
+  }
+  if (!PAGE_RE.test(reqPathOnly) || (req.method !== 'GET' && req.method !== 'HEAD')) return nf();
   return host.relay(req, res, reqPathOnly, null);
 }
 
-module.exports = { createTournamentHost, handleTournamentAdmin, handleTournamentPage, PAGE_RE };
+module.exports = { createTournamentHost, handleTournamentAdmin, handleTournamentPage, PAGE_RE, API_RE };

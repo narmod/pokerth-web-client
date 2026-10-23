@@ -72,11 +72,14 @@ try {
   ok(s1.ok && s1.enabled && s1.key && s1.key.publicKeyRaw, 'enabling starts the service, which creates the install key');
   ok(s1.service && s1.service.status === 'running' && /^0\.\d+\.\d+/.test(s1.service.version) && s1.running === 0 && s1.maxRunning === 4, 'settings: the service is running, with its own version');
   ok(fs.existsSync(F('td/td-key.pem')), 'the key lives in TD_DIR');
-  const page = await get('/tournament', {});
+  const page = await get('/tournament/organize', {});
   const html = await page.text();
-  ok(page.status === 200 && /Table check/.test(html) && /noindex/.test(html), 'on: /tournament served, noindex');
+  ok(page.status === 200 && /Table check/.test(html) && /noindex/.test(html), 'on: /tournament/organize served, noindex');
+  const pubPage = await get('/tournament', {});
+  ok(pubPage.status === 200 && /public\.mjs/.test(await pubPage.text()), 'on: /tournament is the players\' page');
+  const css = await (await get('/tournament/td.css', {})).text();
   ok(/no-store/.test(page.headers.get('cache-control') || ''), 'served no-store');
-  ok(/viewport-fit=cover/.test(html) && /env\(safe-area-inset-top\)/.test(html) && /rel="manifest" href="\/tournament\/manifest\.json"/.test(html), 'page: phone notch safe areas and its own app manifest');
+  ok(/viewport-fit=cover/.test(html) && /env\(safe-area-inset-top\)/.test(css) && /rel="manifest" href="\/tournament\/manifest\.json"/.test(html), 'page: phone notch safe areas and its own app manifest');
   ok(html.indexOf(s1.service.version) >= 0, 'page: shows the service version');
   ok((await get('/tournament/..%2F..%2Fadmin%2Ftournaments%2Ft%2Flist', {})).status === 404 && (await get('/tournament/proxy.js', {})).status === 404, 'page: only the page and its files are relayed');
   const man = await (await get('/tournament/manifest.json', {})).json();
@@ -92,7 +95,20 @@ try {
   ok(cfg.tournaments && cfg.tournaments.enabled === true, 'the setting is saved in admin-config.json');
 
   // ── the page, in jsdom, against this proxy ──
-  const dom = new JSDOM(html, { url: base + '/tournament', pretendToBeVisual: true });
+  // ── the players' API through the web client: no token, the address set by the proxy ──
+  {
+    const t = await (await post('/admin/tournaments/t/create', { name: 'Proxy cup', profile: 'club' })).json();
+    const reg = (nick, spoof) => fetch(base + '/tournament/api/t/' + t.publicKey + '/register', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-td-client': spoof }, body: JSON.stringify({ nick }) });
+    const st = [];
+    for (let i = 0; i < 7; i++) st.push((await reg('N' + i, '198.51.100.' + i)).status);
+    ok(st.slice(0, 6).every((x) => x === 200) && st[6] === 429, 'public API: relayed without a token; a spoofed address header does not dodge the limit');
+    const big = await fetch(base + '/tournament/api/t/' + t.publicKey + '/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nick: 'x'.repeat(9000) }) });
+    ok(big.status === 413, 'public API: a large body is refused by the web client');
+    ok((await get('/tournament/api/secret', {})).status === 404 && (await get('/tournament/api/list', {})).status === 200, 'public API: only its routes');
+    await post('/admin/tournaments/t/player', { id: t.id, action: 'remove', nick: 'N0' });
+  }
+
+  const dom = new JSDOM(html, { url: base + '/tournament/organize', pretendToBeVisual: true });
   const w = dom.window;
   for (const k of ['window', 'document', 'localStorage', 'HTMLElement', 'Node', 'Event', 'URL']) {
     try { Object.defineProperty(globalThis, k, { value: k === 'window' ? w : w[k], configurable: true, writable: true }); } catch (e) {}
@@ -221,7 +237,7 @@ try {
   const fp = await get('/admin/tournaments/t/file?id=' + cr.id + '&which=pdb');
   ok(fp.status === 200 && Buffer.from(await fp.arrayBuffer()).equals(Buffer.from(pdbBuf)), 'routes: the log is kept and downloadable');
   const lst = await (await get('/admin/tournaments/t/list')).json();
-  ok(lst.ok && lst.tournaments.length === 4, 'routes: four tournaments listed');
+  ok(lst.ok && lst.tournaments.length === 5, 'routes: five tournaments listed');
   ok(fs.existsSync(F('td/tournaments/' + cr.id + '/journal.json')) && fs.existsSync(F('td/tournaments/' + cr.id + '/result.json')), 'routes: stored in TD_DIR');
 
   // ── new code on disk: the service alone restarts ──
@@ -248,7 +264,7 @@ try {
   let s2 = null;
   for (let i = 0; i < 60; i++) { await wait(200); s2 = await (await get('/admin/tournaments/settings')).json(); if (s2.service.status === 'running' && s2.service.pid !== pid1) break; }
   ok(s2 && s2.service.status === 'running' && s2.service.pid !== pid1 && s2.service.restarts === 1, 'a killed service is started again');
-  ok((await (await get('/admin/tournaments/t/list')).json()).tournaments.length === 4, 'and finds its tournaments');
+  ok((await (await get('/admin/tournaments/t/list')).json()).tournaments.length === 5, 'and finds its tournaments');
 
   // ── off again: page gone, service stopped, files kept ──
   const off = await (await post('/admin/tournaments/settings', { enabled: false })).json();

@@ -305,8 +305,9 @@ use too. Items are grouped by status rather than fixed phases.
   from a `.pdb` log, validated, corrected, signed), and the move to a service of its own in this repository
   (`web.297`: `tournament/`, own `package.json` and version, launched and relayed by the web client), and the
   director opening the table (`web.299`: invite-only table, seat check, hand-over to the first player, result recorded
-  by itself). Service `0.3.0`: opening by itself before the start, announcements, messages to the table. Next: the
-  chat language, the public page and registration, then witnesses.
+  by itself). Service `0.3.0`: opening by itself before the start, announcements, messages to the table. Service `0.4.0`:
+  the players' page `/tournament` in every language, with registration and a personal code. Next: the chat
+  language, check-in for the Official profile, then witnesses.
 
 ## ⏭️ Next
 

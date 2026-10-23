@@ -21,7 +21,7 @@
 
 import { readFileSync, writeFileSync, renameSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { randomBytes } from 'node:crypto';
+import { randomBytes, createHash, timingSafeEqual } from 'node:crypto';
 import { Journal, verifyJournal, signPayload, verifyPayload, publicKeyFromPrivate, publicKeyRawB64 } from './journal.mjs';
 import { listPdbGames, rankPdbGame, isPdb } from './pdb.mjs';
 
@@ -47,7 +47,7 @@ export const TABLE_DEFAULTS = Object.freeze({
 });
 // How the director runs the table: opening by itself before the start, and
 // its announcements in the table chat.
-export const RUN_DEFAULTS = Object.freeze({ autoOpen: false, openBefore: 10, announce: true });
+export const RUN_DEFAULTS = Object.freeze({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true });
 export function cleanRun(r, base) {
   const b = Object.assign({}, RUN_DEFAULTS, base || {});
   r = r || {};
@@ -56,6 +56,7 @@ export function cleanRun(r, base) {
     autoOpen: typeof r.autoOpen === 'boolean' ? r.autoOpen : b.autoOpen,
     openBefore: Number.isInteger(m) && m >= 0 && m <= 120 ? m : b.openBefore,
     announce: typeof r.announce === 'boolean' ? r.announce : b.announce,
+    selfRegister: typeof r.selfRegister === 'boolean' ? r.selfRegister : b.selfRegister,
   };
 }
 // A table opened by itself is not opened any more this long after the start.
@@ -151,6 +152,7 @@ export function createTournaments(o) {
   function view(t, journal) {
     const sealed = readJson(join(tdir(t.id), 'result.json'));
     const out = Object.assign({}, t);
+    out.players = (t.players || []).map((p) => { const q = Object.assign({}, p); delete q.codeHash; return q; });
     if (journal) {
       const chain = verifyJournal(journal.entries);
       out.checks = { chain: chain.ok, badSeq: chain.badSeq, entries: journal.entries.length };
@@ -171,6 +173,8 @@ export function createTournaments(o) {
       case 'updated': return 'changed ' + Object.keys(d.changes || {}).join(', ');
       case 'playerAdded': return 'added ' + d.nick;
       case 'playerRemoved': return 'removed ' + d.nick;
+      case 'playerRegistered': return d.nick + ' registered (public page)';
+      case 'playerUnregistered': return d.nick + ' unregistered (public page)';
       case 'pdbImported': return 'imported a log (' + d.games + ' game' + (d.games === 1 ? '' : 's') + ', sha256 ' + String(d.sha256).slice(0, 12) + '…)';
       case 'resultSet': return 'result from ' + d.source + (d.watchId ? ' ' + d.watchId : '') + (d.uniqueGameId != null ? ' game ' + d.uniqueGameId : '');
       case 'validated': return 'validated and signed';
@@ -220,6 +224,9 @@ export function createTournaments(o) {
       id, name, format, profile, settings, server, startsAt, mode: 'manual', table, run, host: null,
       status: 'draft', players: [], result: null, corrections: [],
       inviteCode: settings.visibility === 'private' ? randomBytes(6).toString('base64url') : null,
+      // The public address (/tournament/t/<publicKey>): random, so an
+      // unlisted tournament cannot be found by guessing.
+      publicKey: randomBytes(12).toString('base64url'),
       createdAt: now(), updatedAt: now(),
     };
     const journal = new Journal({ now });
@@ -283,6 +290,124 @@ export function createTournaments(o) {
       if (i < 0) refuse(nick + ' is not in');
       t.players.splice(i, 1);
     });
+  }
+
+  // ── public page: list, tournament, registration ──
+  // Errors here carry a code the page translates (`code`), the English text
+  // stays for logs and the organizer side.
+  const prefuse = (code, msg) => { const e = new Refusal(msg); e.code = code; throw e; };
+  const hashCode = (c) => createHash('sha256').update('ptd-reg:' + String(c || '').trim().toUpperCase()).digest('hex');
+  const sameHash = (a, b) => { const x = Buffer.from(String(a || ''), 'hex'), y = Buffer.from(String(b || ''), 'hex'); return x.length === 32 && x.length === y.length && timingSafeEqual(x, y); };
+  // A personal code: 8 characters, no 0/O or 1/I to mix up.
+  function newCode() {
+    const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const b = randomBytes(8);
+    let s = '';
+    for (let i = 0; i < 8; i++) s += A[b[i] % A.length];
+    return s;
+  }
+  function allTournaments() {
+    let ids = [];
+    try { ids = readdirSync(root).filter((x) => ID_RE.test(x)); } catch (e) {}
+    const out = [];
+    for (const x of ids) {
+      const t = readJson(join(tdir(x), 'tournament.json'));
+      if (!t) continue;
+      if (!t.publicKey) { t.publicKey = randomBytes(12).toString('base64url'); try { writeAtomic(join(tdir(t.id), 'tournament.json'), t); } catch (e) {} }
+      out.push(t);
+    }
+    return out;
+  }
+  function byKey(key) {
+    if (!/^[A-Za-z0-9_-]{8,40}$/.test(String(key || ''))) return null;
+    return allTournaments().find((t) => t.publicKey === key) || null;
+  }
+  // Why registration is closed, or null when it is open.
+  function regClosed(t) {
+    if (!t.run || t.run.selfRegister === false) return 'organizer';
+    if (t.result || t.status === 'finished' || t.status === 'validated') return 'finished';
+    if (hostOpen(t)) return 'tableOpen';
+    if (t.players.length >= MAX_PLAYERS) return 'full';
+    return null;
+  }
+  function phaseOf(t) {
+    if (t.status === 'validated') return 'validated';
+    if (t.result) return 'finished';
+    if (hostOpen(t)) return 'table';
+    return 'upcoming';
+  }
+  function publicCard(t) {
+    const w = t.result && t.result.ranking && t.result.ranking.find((r) => r.place === 1);
+    return {
+      key: t.publicKey, name: t.name, format: t.format, profile: t.profile, startsAt: t.startsAt,
+      server: t.server ? t.server.name : null, players: t.players.length, maxPlayers: MAX_PLAYERS,
+      phase: phaseOf(t), registration: regClosed(t) ? 'closed' : 'open', winner: w ? w.nick : null,
+    };
+  }
+  // Public tournaments only; unlisted and private ones never appear here.
+  function publicList() {
+    return allTournaments().filter((t) => t.settings && t.settings.visibility === 'public')
+      .sort((a, b) => (b.startsAt || b.createdAt) - (a.startsAt || a.createdAt)).map(publicCard);
+  }
+  // A private tournament answers as if it did not exist without its code.
+  function visible(t, invite) {
+    if (!t) return false;
+    if (t.settings.visibility !== 'private') return true;
+    const a = Buffer.from(String(invite || '')), b = Buffer.from(String(t.inviteCode || ''));
+    return a.length > 0 && a.length === b.length && timingSafeEqual(a, b);
+  }
+  function publicGet(key, invite, live) {
+    const t = byKey(key);
+    if (!t) prefuse('notFound', 'unknown tournament');
+    if (!visible(t, invite)) prefuse(t.settings.visibility === 'private' ? 'private' : 'notFound', 'this tournament is private');
+    const sealed = readJson(join(tdir(t.id), 'result.json'));
+    const card = publicCard(t);
+    const out = Object.assign(card, {
+      visibility: t.settings.visibility, identity: t.settings.identity, validation: t.settings.validation,
+      table: t.table || null, autoOpen: !!(t.run && t.run.autoOpen), openBefore: t.run ? t.run.openBefore : null,
+      closedBecause: regClosed(t),
+      playerList: t.players.map((p) => ({ nick: p.nick, absent: !!p.absent })),
+      result: t.result ? { status: t.result.status, byDirector: !!t.result.byDirector, corrected: !!t.result.corrected, absent: t.result.absent || [],
+        ranking: t.result.ranking.map((r) => ({ place: r.place, nick: r.nick, winner: !!r.winner, elimHand: r.elimHand, tie: !!r.tie })) } : null,
+      corrections: (t.corrections || []).map((c) => ({ at: c.at, reason: c.reason, before: c.before, after: c.after })),
+      sealed: sealed ? { head: sealed.payload.head, signedBy: sealed.publicKeyPem ? publicKeyRawB64(sealed.publicKeyPem) : null,
+        signature: !!(sealed.signature && sealed.publicKeyPem && verifyPayload(sealed.payload, sealed.signature, sealed.publicKeyPem)) } : null,
+    });
+    if (live) out.table_live = live(t);
+    return out;
+  }
+  function register(key, input) {
+    const t0 = byKey(key);
+    if (!t0 || !visible(t0, input && input.invite)) prefuse('notFound', 'unknown tournament');
+    const nick = cleanNick(input && input.nick);
+    if (Buffer.byteLength(nick, 'utf8') < 2 || !/^[\x21-\x7e]/.test(nick)) prefuse('badNick', 'nickname: 2 to 64 bytes, starting with a plain character');
+    const code = newCode();
+    act(t0.id, 'player', 'playerRegistered', { nick }, (t) => {
+      const why = regClosed(t);
+      if (why) prefuse('closed_' + why, 'registration is closed (' + why + ')');
+      if (t.players.some((p) => sameNick(p.nick, nick))) prefuse('taken', nick + ' is already registered');
+      t.players.push({ nick, addedAt: now(), self: true, codeHash: hashCode(code) });
+      if (t.status === 'draft') t.status = 'registration';
+    });
+    return { nick, code, tournament: publicGet(key, input && input.invite) };
+  }
+  function unregister(key, input) {
+    const t0 = byKey(key);
+    if (!t0 || !visible(t0, input && input.invite)) prefuse('notFound', 'unknown tournament');
+    const nick = cleanNick(input && input.nick);
+    act(t0.id, 'player', 'playerUnregistered', { nick }, (t) => {
+      if (t.result) prefuse('closed_finished', 'the result is set');
+      if (hostOpen(t)) prefuse('closed_tableOpen', 'the table is open');
+      const i = t.players.findIndex((p) => sameNick(p.nick, nick));
+      if (i < 0 || !t.players[i].codeHash || !sameHash(t.players[i].codeHash, hashCode(input && input.code))) prefuse('badCode', 'nickname or code not recognised');
+      t.players.splice(i, 1);
+    });
+    return { nick, tournament: publicGet(key, input && input.invite) };
+  }
+  function publicFile(key, invite, which) {
+    const t = byKey(key);
+    if (!t || !visible(t, invite) || (which !== 'journal' && which !== 'result')) return null;
+    return file(t.id, which);
   }
 
   // ── result ──
@@ -488,6 +613,7 @@ export function createTournaments(o) {
   }
 
   return { list, get, create, update, addPlayer, removePlayer, setResult: setResultP, validate, correct, importPdb, file,
+    publicList, publicGet, register, unregister, publicFile,
     hostOpened, hostCheck, hostNote, hostEnded, hostResultRefused, openHosts, autoOpenDue, autoOpenNote, Refusal };
 }
 
