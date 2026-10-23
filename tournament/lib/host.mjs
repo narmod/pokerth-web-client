@@ -14,8 +14,8 @@
 //   watch    it reminds the new admin in the chat to start, then follows the
 //            game to the end exactly like a Table check: sealed journal,
 //            ranking, signature. With announcements on (default), it tells
-//            the table when the blinds rise, who is out and how many are
-//            left, heads-up, and the winner. The organizer can also send a
+//            the table who is out and how many are left, heads-up, and the
+//            winner (not the blinds: every client already shows them). The organizer can also send a
 //            line to the table from /tournament (command « say »).
 //
 // Server facts relied on (pokerth/pokerth, src/net/servergame*.cpp):
@@ -234,7 +234,14 @@ export class HostDirector extends SpectatorDirector {
     }
     if (m.playerListMessage) {
       const p = m.playerListMessage, id = n(p.playerId);
-      if (p.playerListNotification === pb.PlayerListMessage.PlayerListNotification.playerListLeft) { this.lobby.delete(id); this._changed(); }
+      if (p.playerListNotification === pb.PlayerListMessage.PlayerListNotification.playerListLeft) {
+        // Gone from the server: its invitation went with its player id. When
+        // it comes back (new id), it is invited again by itself.
+        this.lobby.delete(id);
+        const k = low(this.names.get(id));
+        if (k && this.expected.has(k)) { this.invited.delete(k); this.declined.delete(k); this._record('playerDisconnected', { nick: this.names.get(id) }); }
+        this._changed();
+      }
       else { this.lobby.set(id, true); if (this.names.has(id)) this._onName(id); else this._ask([id]); }
       return;
     }
@@ -301,7 +308,13 @@ export class HostDirector extends SpectatorDirector {
         const nick = this.seated.get(id);
         this.seated.delete(id);
         this._record('seatLeft', { playerId: id, nick: nick || this.names.get(id) || null });
-        if (nick) this.emit('log', nick + ' left the table');
+        if (nick) {
+          this.emit('log', nick + ' left the table');
+          // Left by mistake or dropped: invited again as soon as it is back in
+          // the lobby (now if it already is).
+          this.invited.delete(low(nick)); this.declined.delete(low(nick));
+          if (this.lobby.has(id)) this._invite(id);
+        }
         this._changed();
         return;
       }
@@ -328,6 +341,7 @@ export class HostDirector extends SpectatorDirector {
     if (this.phase === 'handover') {
       if (m.removedFromGameMessage) {
         this._record('leftSeat', {});
+        this.table = new Set();
         this.phase = 'watch';
         this.joined = false;
         this._join();                               // straight back, as a spectator
@@ -338,6 +352,14 @@ export class HostDirector extends SpectatorDirector {
     }
 
     if (this.phase === 'watch') {
+      if (m.gamePlayerJoinedMessage) this.table.add(n(m.gamePlayerJoinedMessage.playerId));
+      if (m.gamePlayerLeftMessage && !this.tracker.started) {
+        const id = n(m.gamePlayerLeftMessage.playerId), k = low(this.names.get(id));
+        this.table.delete(id);
+        this.seated.delete(id);
+        this._changed();
+        if (k && this.expected.has(k)) { this.invited.delete(k); this.declined.delete(k); if (this.lobby.has(id)) this._invite(id); }
+      }
       if (m.gamePlayerJoinedMessage && m.gamePlayerJoinedMessage.isGameAdmin) {
         this.adminId = n(m.gamePlayerJoinedMessage.playerId);
         this._ask([this.adminId]);
@@ -382,7 +404,11 @@ export class HostDirector extends SpectatorDirector {
   }
   _invite(id) {
     const name = this.names.get(id), k = low(name);
-    if (this.phase !== 'seated' || !this.expected.has(k) || this.invited.has(k) || [...this.seated.values()].some((x) => low(x) === k)) return;
+    // Before the start only: seated (admin), or watching once handed over (the
+    // server takes an invitation from anyone at the table).
+    const open = this.phase === 'seated' || (this.phase === 'watch' && this.joined && !this.tracker.started);
+    if (!open || !this.expected.has(k) || this.invited.has(k) || [...this.seated.values()].some((x) => low(x) === k)) return;
+    if (this.phase === 'watch' && this.table.has(id)) return;
     this.invited.add(k);
     this._send(hostBuild.invite(this.gameId, id));
     this._record('invited', { nick: name, playerId: id });
@@ -393,6 +419,7 @@ export class HostDirector extends SpectatorDirector {
       if (this.lobby.has(id) && !this.table.has(id)) this._invite(id);
       if (this.table.has(id) && !this.seated.has(id)) this._checkSeat(id);
     }
+    if (this.phase === 'watch' && this.lobby.has(id) && !this.table.has(id)) this._invite(id);
     if (this.phase === 'watch' && id === this.adminId) this._remindAdmin();
     this._changed();
   }
@@ -485,10 +512,6 @@ export class HostDirector extends SpectatorDirector {
       const who = out.map((id) => this._nm(id));
       this._say((who.length === 1 ? who[0] + ' is out' : who.slice(0, -1).join(', ') + ' and ' + who[who.length - 1] + ' are out') + ', ' + left.length + ' players left.');
       if (left.length === 2) this._say('heads-up: ' + this._nm(left[0]) + ' against ' + this._nm(left[1]) + '.');
-    }
-    if (smallBlind > 0) {
-      if (this.blind != null && smallBlind > this.blind) this._say('blinds are now ' + smallBlind + '/' + smallBlind * 2 + '.');
-      this.blind = smallBlind;
     }
   }
   _announceEnd(winnerId) {

@@ -1,3 +1,6 @@
+2026-10-23 version 2.1.10-web.301:
+- bugfix: in the waiting room before a game starts, messages written in the table chat (by players of the official client, or by a tournament director) now appear in the chat; until now only their sound played
+
 2026-10-23 version 2.1.10-web.291:
 - bugfix: Logs › « Analyse on pokerth.net » now opens the analysis of the game you picked (or the last one of the session), not always the first game of the log
 - improvement: after the upload the analysis link appears under the buttons with « Copy link », ready to paste in the BBC or WEC shoutbox; changing the game updates the link without a new upload

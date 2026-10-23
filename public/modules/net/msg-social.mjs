@@ -103,7 +103,12 @@ function onChat(sub) {
       return;
     }
     const toGame = ctype === 1 || ctype === 3 || (ctype === 2 && gid > 0);
-    const toLobby = !toGame || ctype === 3;
+    // Waiting room (seated or watching a table that has not started): the
+    // visible chat is the lobby panel, as on the QML GameWaitPage. A line
+    // written in that table's chat (a QML player, a tournament director) used
+    // to land only in the hidden game panel — its sound played, nothing showed.
+    const waitingHere = ctype === 1 && !!S.gId && !S._gameStarted && (!gid || gid === S.gId);
+    const toLobby = !toGame || ctype === 3 || waitingHere;
     if (toGame && typeof window.addGameChat === 'function') window.addGameChat(who, text, cls);
     if (toLobby) addChat(who, text, cls);
   }

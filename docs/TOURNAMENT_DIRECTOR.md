@@ -315,8 +315,15 @@ every 2 minutes; a start more than an hour past is not opened (said once).
 Opening by hand, then closing, does not make it reopen for the same start.
 The sweep reads the tournaments from disk, so a restart changes nothing.
 
-**Announcements** (per tournament, on by default): blinds rising, who is out
-and how many are left, heads-up, the winner and the second. **Message to the
+**Announcements** (per tournament, on by default): who is out and how many
+are left, heads-up, the winner and the second (not the blinds: every client
+shows them, service `0.3.1`).
+
+**Invited again by itself** (service `0.3.1`): an invitation belongs to a
+player id, and a reconnection brings a new one. A registered player who drops
+from the server is invited again when back; one who leaves the table before
+the start is invited again at once — before and after the hand-over, until the
+game starts. **Message to the
 table** from the page while the director runs it (« say »); a line with a link
 or mostly capitals is refused, as the server's chat filter would mute the
 director for it.

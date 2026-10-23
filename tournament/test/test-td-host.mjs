@@ -31,7 +31,7 @@ async function until(fn, ms) {
 }
 
 const GID = 50, ME = 99;
-const NAMES = { 21: 'Alice', 22: 'Bob', 23: 'Mallory', 24: 'Carol', 25: 'Dave', [ME]: 'TD-x' };
+const NAMES = { 21: 'Alice', 22: 'Bob', 23: 'Mallory', 24: 'Carol', 25: 'Dave', 26: 'Bob', 27: 'Alice', [ME]: 'TD-x' };
 const info = (id) => msg(0, 'playerInfoReplyMessage', { playerId: id, playerInfoData: { playerName: NAMES[id], isHuman: true, playerRights: 1 } });
 const M = {
   announce: () => msg(0, 'announceMessage', { protocolVersion: { majorVersion: 5, minorVersion: 1 }, latestGameVersion: { majorVersion: 2, minorVersion: 1 }, latestBetaRevision: 0, serverType: 1, numPlayersOnServer: 5 }),
@@ -171,7 +171,7 @@ function director(f, registered, extra) {
   ok(st.chats.every((c) => !/https?:|www\./i.test(c) && c.replace(/[^A-Z]/g, '').length <= 2), 'chat: no links, no capitals (chatcleaner)');
   ok(new Set(st.chats).size === st.chats.length, 'chat: never the same line twice');
   ok(st.chats.some((c) => c === 'Bob is out, 2 players left.') && st.chats.some((c) => c === 'heads-up: Alice against Carol.'), 'announces: who is out, players left, heads-up');
-  ok(st.chats.some((c) => c === 'blinds are now 20/40.'), 'announces: the blinds rising');
+  ok(!st.chats.some((c) => /blinds/.test(c)), 'announces: not the blinds (every client shows them)');
   ok(st.chats.some((c) => /^Alice wins the tournament, Carol second\. congratulations/.test(c)), 'announces: the winner and the second');
   ok(sealed && sealed.payload.result.status === 'complete' && sealed.payload.result.ranking.map((r) => r.name).join() === 'Alice,Carol,Bob', 'result: sealed ranking of the registered players');
   ok(sealed && verifyPayload(sealed.payload, sealed.signature, sealed.publicKeyPem), 'result: signed');
@@ -204,6 +204,28 @@ function director(f, registered, extra) {
   ok(sealed && sealed.payload.result.ranking.length === 2, 'go: the game of the two present players');
   const h = d.journal.entries.find((e) => e.type === 'handover');
   ok(h && h.data.reason === 'organizer' && h.data.absent.join() === 'Dave', 'journal: who decided, who was absent');
+  f.server.close();
+}
+
+// ── disconnections: invited again by itself ──
+{
+  // Bob drops before sitting and comes back with a new id (26); Alice sits,
+  // leaves the table by mistake while still connected, and is invited again.
+  const f = await tableServer({
+    lobbyIds: [21, 22], game: false,
+    onInvite: (id, ctx) => {
+      const n = ctx.state.invites.filter((x) => x === id).length;
+      if (id === 22) setTimeout(() => { ctx.w(M.lobby(22, true)); setTimeout(() => ctx.w(M.lobby(26)), 60); }, 30);
+      if (id === 21 && n === 1) { sit(21, ctx); setTimeout(() => { ctx.state.seats = ctx.state.seats.filter((x) => x !== 21); ctx.w(M.left(21, 0)); }, 120); }
+    },
+  });
+  const d = director(f, ['Alice', 'Bob']);
+  d.start();
+  await until(() => f.state.invites.indexOf(26) >= 0 && f.state.invites.filter((x) => x === 21).length === 2, 3000);
+  ok(f.state.invites.indexOf(26) >= 0, 'a player who dropped is invited again when back (new id)');
+  ok(f.state.invites.filter((x) => x === 21).length === 2, 'a player who left the table before the start is invited again');
+  ok(d.journal.entries.some((e) => e.type === 'playerDisconnected' && e.data.nick === 'Bob'), 'journal: the drop is recorded');
+  d.stop('test');
   f.server.close();
 }
 

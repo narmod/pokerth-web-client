@@ -8,6 +8,21 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.3.1 — 2026-10-23
+
+### Added
+- Invited again by itself: a registered player who drops from the server is
+  invited again as soon as they are back (a new connection has a new player
+  id, so the old invitation is gone); one who leaves the table before the
+  start is invited again at once. Also after the hand-over, until the start.
+
+### Changed
+- No more announcement when the blinds rise: every client already shows it.
+
+### Fixed
+- The director's lines before the start were not shown in the web client's
+  waiting room (only their sound): fixed in the web client `2.1.10-web.301`.
+
 ## 0.3.0 — 2026-10-23
 
 ### Added

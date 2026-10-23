@@ -453,6 +453,11 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Waiting room: the table chat was silent** (`web.301`) — before the start, the visible chat is the lobby panel
+  (as on the QML GameWaitPage), but a line written in the table's chat (`chatTypeGame`: an official-client player, a
+  tournament director) only went to the hidden game panel, so its sound played and nothing showed (seen with the
+  tournament director's welcome and hand-over lines). It now also shows in the visible chat while the table has not
+  started (`public/modules/net/msg-social.mjs`, `scripts/test-msg-social.mjs`).
 - **Logs › « Analyse on pokerth.net » linked the wrong game** (`web.291`) — the client opened
   `logfile-analysis.pokerth.net/?ID=<hash>`, which redirects to `www.pokerth.net/gamelog?game_id=1&pdb=<hash>`:
   in a session holding several games, always the first one (the official clients share this; it is why the BBC
