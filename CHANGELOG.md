@@ -32,6 +32,14 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Added
+- **Tournament director, prototype** (after `web.291`, not wired into the app) — `server/tournament/`:
+  a spectator that joins one table (`JoinExistingGame` spectate-only), never acts, turns what the server sends
+  into events, keeps them in a hash-chained journal (`journal.mjs`), ranks the table with the BBC rule (later
+  elimination first, then bigger stack at the start of the hand; ties flagged — `tracker.mjs`) and signs head and
+  ranking with the install's Ed25519 key. Keeps its session alive on `TimeoutWarning`, reconnects and resyncs on
+  `GameStartRejoin` (missed hands reported), waits for late player names. `scripts/td-spectate.mjs` writes and
+  `--verify`s the files; tests `test:td-core`, `test:td-spectator` (scripted fake server over TCP). Design and the
+  remaining steps: `docs/TOURNAMENT_DIRECTOR.md`.
 - **Game announcements for screen readers** (`web.280`) — the « Voice » checkbox (Advanced options → Betting &
   turn) becomes a three-way choice in the Accessibility window: Off, Built-in voice (speech synthesis, as before)
   or Screen reader. New `modules/ui/announcer.mjs`: one `announce(text, {urgent})` for every game event (actions,

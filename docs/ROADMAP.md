@@ -296,6 +296,12 @@ use too. Items are grouped by status rather than fixed phases.
   untick « manual address entry » on pokerth.net once servers are listed; serverlist XML export
   for the QML client to discuss with sp0ck.
 
+- **Tournament director** — an automatic organizer for games and tournaments on the LAN servers
+  of the directory (scheduled Sit & Go, multi-table rounds, leagues), off by default, with a sealed,
+  signed journal of every table and the operator's consent required before touching a server. Design and
+  status: `docs/TOURNAMENT_DIRECTOR.md`. Step 1 of 12 done: a spectator prototype that watches one table
+  and writes its journal and ranking (`scripts/td-spectate.mjs`), not wired into the app yet.
+
 ## ⏭️ Next
 
 - **Translating `/faq`** — `/rules` and `/faq` are done in all 83 languages
@@ -330,7 +336,6 @@ use too. Items are grouped by status rather than fixed phases.
   QR-code signalling, no server needed.
 - **Voice chat** at the table (WebRTC).
 - Alternative table shapes (e.g. a D-shaped / trapezoidal table).
-- Tournaments / multi-table.
 - Native translation passes for languages currently falling back to English.
 - Continued polish toward a wider community release (regular tagged releases).
 

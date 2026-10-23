@@ -28,6 +28,8 @@
     "test:admin-scopes": "node scripts/test-admin-scopes.mjs",
     "test:admin-ergonomics": "node scripts/test-admin-ergonomics.mjs",
     "test:db-dialects": "node scripts/test-db-dialects.mjs",
+    "test:td-core": "node scripts/test-td-core.mjs",
+    "test:td-spectator": "node scripts/test-td-spectator.mjs",
     "test:admin-infra": "node scripts/test-admin-infra.mjs",
     "test:admin-ops": "node scripts/test-admin-ops.mjs",
     "test:admin-security": "node scripts/test-admin-security.mjs",
