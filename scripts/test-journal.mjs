@@ -148,5 +148,29 @@ for (const k of ['jrSelect', 'jrSelectCancel', 'jrSelectHint', 'jrDeleteN', 'jrC
   ok(new RegExp('\\b' + k + '\\s*:').test(en), 'en.mjs carries ' + k);
 }
 
+// ── 4. Analysis link: exact game, not the ?ID= redirect (game_id=1) ──────
+ok(!/['\"]https:\/\/logfile-analysis\.pokerth\.net\/\?ID=/.test(src),
+  'no ?ID= link left (its redirect pins game_id=1)');
+ok(/const PTHNET_GAMELOG = 'https:\/\/www\.pokerth\.net\/gamelog';/.test(src),
+  'the link targets the per-game analysis page');
+{
+  // Behaviour of _linkGame/_linkUrl with a stubbed session of two games.
+  const games = [{ uniqueGameID: 2, gameID: 811 }, { uniqueGameID: 1, gameID: 802 }];
+  const mk = (selGame) => new Function('_sessionTables', '_all', '_sel', '_selGame', 'PTHNET_GAMELOG',
+    'function _linkGame()' + body('_linkGame') + '\nfunction _linkUrl(hash, g)' + body('_linkUrl') +
+    '\nreturn { g: _linkGame(), url: _linkUrl("ab12cd", _linkGame()) };')(
+    () => ({ games: games.slice() }), {}, 's1', selGame, 'https://www.pokerth.net/gamelog');
+  const last = mk(0), first = mk(1);
+  ok(last.g && last.g.uniqueGameID === 2, '"All games" links the last game of the session');
+  ok(first.g && first.g.uniqueGameID === 1, 'a chosen game is linked as such');
+  ok(first.url === 'https://www.pokerth.net/gamelog?pdb=ab12cd&game_id=1', 'link carries pdb and game_id');
+  ok(mk(9).g === null, 'an unknown game gives no link');
+}
+const up = body('_uploadAnalysis');
+ok(/_upHash = \{ sid: _sel, hash: String\(j\.id\) \}/.test(up), 'the upload keeps the hash for the session');
+ok(/_renderLink\(\)/.test(up) && /_renderLink\(\)/.test(body('_renderRight')),
+  'the link row follows the upload and every game change');
+ok(/window\.open\('', '_blank'\)/.test(up), 'the analysis tab still opens in the click (popup blockers)');
+
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);

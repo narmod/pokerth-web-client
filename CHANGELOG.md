@@ -368,6 +368,13 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Logs › « Analyse on pokerth.net » linked the wrong game** (`web.291`) — the client opened
+  `logfile-analysis.pokerth.net/?ID=<hash>`, which redirects to `www.pokerth.net/gamelog?game_id=1&pdb=<hash>`:
+  in a session holding several games, always the first one (the official clients share this; it is why the BBC
+  rules say « make sure the correct Game ID is displayed »). The link now targets `gamelog?pdb=<hash>&game_id=<n>`
+  for the game picked in « Game: », or the last game of the session — the format the BBC/WEC sites read when a
+  result is recorded. After the upload the link shows under the buttons (`#jr-link`) with « Copy link » and ↗;
+  picking another game rewrites it from the same hash, without a second upload. The tab still opens in the click.
 - **Admin › Statistics: stale « now », empty samples, filters applied alike** (`web.290`) — pokerth.net « online
   now » kept the last sample forever: with the live figures switched off or the upstream silent, an hours-old
   figure read as current on World, Activity and the World tiles; it now expires after two missed samples

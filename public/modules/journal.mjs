@@ -397,6 +397,7 @@ function _download(name, mime, content) {
 let _all = null;
 let _sel = null;        // sessionId sélectionné
 let _selGame = 0;       // uniqueGameID filtré (0 = toutes)
+let _upHash = null;     // last pokerth.net upload: { sid, hash } (analysis link)
 let _analyze = false;   // mode analyseur
 let _anHand = 0;        // handID courant en analyse
 
@@ -494,6 +495,9 @@ const CSS = `
 #jr-modal .jr-btns{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;align-items:center}
 #jr-modal .jr-btns button[disabled]{opacity:.45;cursor:default}
 #jr-modal .jr-spacer{flex:1}
+#jr-modal .jr-link{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;align-items:center;font-size:.8rem}
+#jr-modal .jr-link input{flex:1 1 220px;min-width:0;font:inherit;font-size:.78rem;padding:4px 6px;border:1px solid var(--border,#39415066);border-radius:4px;background:var(--panel-bg,rgba(0,0,0,.14));color:var(--text,#cdd3e0)}
+#jr-modal .jr-link a{text-decoration:none;font-size:1rem;line-height:1;padding:2px 4px;color:var(--gold,#E3C800)}
 #jr-modal .jr-foot{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;align-items:center;font-size:.8rem;opacity:.9}
 #jr-modal .jr-an-nav{display:flex;gap:6px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
 #jr-modal .jr-search{min-width:110px;flex:0 1 170px}
@@ -545,6 +549,7 @@ function _ensureModal() {
         '<button type="button" class="btn-sm" id="jr-analyze"></button>' +
         '<button type="button" class="btn-sm" id="jr-upload"></button>' +
       '</div>' +
+      '<div class="jr-link" id="jr-link" style="display:none"></div>' +
       '<div class="jr-foot">' +
         '<span id="jr-keep-lbl"></span>' +
         '<div class="sel-wrap adv-sel"><select id="jr-keep">' +
@@ -804,6 +809,7 @@ function _handsOfScope(tb) {
 }
 
 function _renderRight() {
+  _renderLink();
   const $ = (id) => document.getElementById(id);
   const prev = $('jr-prev');
   const nav = $('jr-an-nav');
@@ -921,7 +927,55 @@ async function _saveAsPdb() {
 // upload.php n'envoie aucun en-tête CORS : le navigateur pourrait émettre la
 // requête mais pas lire la réponse, donc pas de hash, donc pas de lien.
 const PTHNET_PDB_API = '/pdb-analyse';
-const PTHNET_GAMELOG = 'https://logfile-analysis.pokerth.net/?ID=';
+// Analysis page of ONE game. logfile-analysis.pokerth.net/?ID=<hash> (what
+// the official clients open) redirects here with game_id=1 hard-coded: in a
+// session holding several games that is not always the right one, so the
+// wanted game is targeted directly. It is also the format the BBC/WEC sites
+// read when a result is recorded (?pdb=…&game_id=…).
+const PTHNET_GAMELOG = 'https://www.pokerth.net/gamelog';
+
+// Game the link points to: the one picked in « Game: », otherwise the last
+// game of the session (the one just played, in the usual case).
+function _linkGame() {
+  if (!_sel || !_all) return null;
+  const games = _sessionTables(_all, _sel).games.slice().sort((a, b) => a.uniqueGameID - b.uniqueGameID);
+  if (!games.length) return null;
+  if (_selGame) return games.find((g) => g.uniqueGameID === _selGame) || null;
+  return games[games.length - 1];
+}
+
+function _linkUrl(hash, g) {
+  return PTHNET_GAMELOG + '?pdb=' + encodeURIComponent(hash) + '&game_id=' + (g ? g.uniqueGameID : 1);
+}
+
+// Row « Game N [link] [Copy link] [↗] » under the buttons, after a successful
+// upload of the displayed session. Picking another game rewrites the link
+// without a second upload (same hash, other game_id).
+function _renderLink() {
+  const box = document.getElementById('jr-link');
+  if (!box) return;
+  const g = (_upHash && _upHash.sid === _sel) ? _linkGame() : null;
+  if (!g) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  const url = _linkUrl(_upHash.hash, g);
+  box.innerHTML = '';
+  const lbl = document.createElement('span');
+  lbl.textContent = T('jrGameN', 'Game {n}').replace('{n}', String(g.gameID));
+  const inp = document.createElement('input');
+  inp.type = 'text'; inp.readOnly = true; inp.value = url; inp.setAttribute('aria-label', url);
+  inp.addEventListener('focus', () => { try { inp.select(); } catch (_e) {} });
+  const cp = document.createElement('button');
+  cp.type = 'button'; cp.className = 'btn-sm';
+  cp.textContent = T('invCopyLink', 'Copy link');
+  cp.addEventListener('click', () => {
+    if (window.App && typeof window.App._copyInviteUrl === 'function') window.App._copyInviteUrl(url);
+    else { try { inp.focus(); inp.select(); document.execCommand('copy'); } catch (_e) {} }
+  });
+  const a = document.createElement('a');
+  a.href = url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = '\u2197';
+  a.title = url; a.setAttribute('aria-label', url);
+  box.appendChild(lbl); box.appendChild(inp); box.appendChild(cp); box.appendChild(a);
+  box.style.display = '';
+}
 
 async function _uploadAnalysis() {
   if (!_sel) return;
@@ -945,7 +999,9 @@ async function _uploadAnalysis() {
     });
     const j = await r.json();
     if (!j || j.ok !== true || !j.id) throw new Error('bad response');
-    const url = PTHNET_GAMELOG + encodeURIComponent(j.id);
+    _upHash = { sid: _sel, hash: String(j.id) };
+    const url = _linkUrl(_upHash.hash, _linkGame());
+    _renderLink();
     if (tab && !tab.closed) {
       try { tab.opener = null; } catch (_e2) {}
       tab.location = url;
