@@ -43,7 +43,7 @@ const shellJs = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..',
 // classes, so the handlers that open a panel are the same as before.
 const GROUPS = {
   overview: ['overview'],
-  live: ['sessions', 'livemap'], stats: ['traffic/overview', 'traffic/world', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace'], community: ['board', 'polls', 'broadcast', 'landir'],
+  live: ['sessions', 'livemap'], stats: ['traffic/overview', 'traffic/world', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace'], community: ['board', 'polls', 'broadcast', 'tournaments', 'landir'],
   content: ['packages', 'music'], players: ['login', 'lobby', 'firstvisit', 'features'], infra: ['servers', 'proxy', 'database', 'identity'],
   ops: ['server', 'errors', 'deploy', 'backup'], security: ['keys', 'audit', 'blocked'],
 };
@@ -69,7 +69,7 @@ for (const [g, tabs] of Object.entries(GROUPS)) {
     tabs.length === 1 ? 'a one-section group opens its section directly' : 'a group of several unfolds its list');
   all = all.concat(got);
 }
-ok(all.length === 31 && new Set(all).size === 31, 'every one of the thirty-one sections is reachable, once');
+ok(all.length === 32 && new Set(all).size === 32, 'every one of the thirty-two sections is reachable, once');
 for (const sc of ['packages', 'music', 'broadcast', 'polls', 'leaderboard']) {
   ok(new RegExp('data-scope="' + sc + '"').test(admin), 'scope ' + sc + ' survived the move');
 }

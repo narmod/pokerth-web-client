@@ -32,6 +32,19 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Added
+- **Tournaments: « Table check » on `/tournament`** (`web.292`, off by default) — first organizer tool of the
+  tournament director. Admin › Community › Tournaments turns the module on (until then `/tournament` and
+  `/tournament.html` answer 404), shows the install's Ed25519 public key (created on first enable) and how many
+  watches run; a second switch allows servers with accounts (pokerth.net), off. On `/tournament` (master token,
+  same browser key as `/admin`; English for now, like the admin): pick a server this install already knows (game
+  servers, LAN directory, local server — never a free address), read its lobby, watch a table as a spectator, follow
+  hands and eliminations live, then the sealed ranking with its checks (chain, signed head, signature, replay) and the
+  journal / result downloads. Each watch runs in its own detached process (`server/tournament/worker.mjs`) that
+  survives an update, talks back through files in `TD_DIR` (`/data/tournament` in the image) and refuses a server
+  with accounts by itself when the option is off; at most 4 at once. Light and dark themes (system choice or the
+  header switch). Proxy side: `server/tournament-manager.js` (routes `/admin/tournaments/*`), `server/tournament/lobby.mjs`;
+  the service worker leaves `/tournament` alone like `/admin`. Tests `test:td-manager`, `test:td-route` (real proxy,
+  fake game server, the page driven in jsdom).
 - **Tournament director, prototype** (after `web.291`, not wired into the app) — `server/tournament/`:
   a spectator that joins one table (`JoinExistingGame` spectate-only), never acts, turns what the server sends
   into events, keeps them in a hash-chained journal (`journal.mjs`), ranks the table with the BBC rule (later

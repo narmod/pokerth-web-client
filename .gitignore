@@ -71,3 +71,5 @@ monthly-cups.json
 td-key.pem
 td-out.journal.json
 td-out.result.json
+# Its folder on a running install: watches, journals, results and the key.
+/tournament-data/

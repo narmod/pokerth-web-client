@@ -99,6 +99,7 @@ export class SpectatorDirector extends EventEmitter {
    * @param {string} [o.gamePassword]
    * @param {string} [o.privateKeyPem]     install key; without it the result is unsigned
    * @param {string} [o.version]           web client version (build id)
+   * @param {boolean} [o.refuseAuthServer] stop if the server announces authenticated logins
    * @param {number} [o.reconnects]        attempts after a drop (default 5)
    * @param {number} [o.reconnectDelayMs]  first delay, doubled each time (default 2000)
    * @param {() => number} [o.now]
@@ -223,6 +224,10 @@ export class SpectatorDirector extends EventEmitter {
   _onMessage(m) {
     if (m.announceMessage) {
       const v = m.announceMessage.protocolVersion || {};
+      // Servers with accounts (pokerth.net) only with the operator's option.
+      if (this.o.refuseAuthServer && m.announceMessage.serverType === pb.AnnounceMessage.ServerType.serverTypeInternetAuth) {
+        return this._fail('authServerRefused', {});
+      }
       const login = this.o.login === 'auth' ? LOGIN.authenticatedLogin : this.o.login === 'guest' ? LOGIN.guestLogin : LOGIN.unauthenticatedLogin;
       this._send(build.init({
         major: v.majorVersion, minor: v.minorVersion, nick: this.o.nick, login,

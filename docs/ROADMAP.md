@@ -299,8 +299,9 @@ use too. Items are grouped by status rather than fixed phases.
 - **Tournament director** — an automatic organizer for games and tournaments on the LAN servers
   of the directory (scheduled Sit & Go, multi-table rounds, leagues), off by default, with a sealed,
   signed journal of every table and the operator's consent required before touching a server. Design and
-  status: `docs/TOURNAMENT_DIRECTOR.md`. Step 1 of 12 done: a spectator prototype that watches one table
-  and writes its journal and ranking (`scripts/td-spectate.mjs`), not wired into the app yet.
+  status: `docs/TOURNAMENT_DIRECTOR.md`. Done: the spectator that watches one table and seals its journal and
+  ranking, and the « Table check » tool on `/tournament` (`web.292`, off by default) to run it against a server
+  the install knows. Next: storage layer, manual mode, witnesses.
 
 ## ⏭️ Next
 

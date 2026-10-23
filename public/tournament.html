@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="dark light">
+<title>Tournaments · PokerTH</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32">
+<script>
+  // Theme before first paint: saved choice, else the system's.
+  (function () {
+    var t = 'auto';
+    try { t = localStorage.getItem('pth_td_theme') || 'auto'; } catch (e) {}
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+<style>
+/* Same face, palette and chrome as the public pages (/rules, /faq): Inter from
+   /fonts, the QML slate, the yellow accent and the red PokerTH chip. Plus a
+   light variant: system preference by default, or the header switch. */
+@font-face{font-family:'Inter';src:url(/fonts/inter-latin-wght-normal.woff2) format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Inter';src:url(/fonts/inter-latin-ext-wght-normal.woff2) format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+20A0-20AA,U+20AC-20C0,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Inter';src:url(/fonts/InterVariable.woff2) format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0370-03FF,U+0400-052F,U+1EA0-1EF9}
+@font-face{font-family:'Inter Fallback';src:local('Arial'),local('Helvetica'),local('Liberation Sans');size-adjust:107.4%;ascent-override:90.2%;descent-override:22.48%;line-gap-override:0%}
+:root{--bg:#161b23;--felt:#1d222b;--felt-lo:#12161d;--ink:#a0acc4;--ivory:#eff1f5;--brass:#e3c800;--brass-ink:#161b23;--muted:#8792a8;
+  --line:rgba(160,172,196,.16);--chip:#c0392b;--chip-ink:#fff;--panel:#1d222b;--field:#12161d;--ok:#5cc28a;--warn:#e3a400;--bad:#ef6a5a;color-scheme:dark}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f4f1ea;--felt:#ffffff;--felt-lo:#ebe6da;--ink:#3a4252;--ivory:#161b23;--brass:#8a6d00;--brass-ink:#fff;--muted:#6a7386;
+  --line:rgba(22,27,35,.14);--panel:#ffffff;--field:#faf8f3;--ok:#1f7a4a;--warn:#8a5a00;--bad:#b3261e;color-scheme:light}}
+:root[data-theme="light"]{--bg:#f4f1ea;--felt:#ffffff;--felt-lo:#ebe6da;--ink:#3a4252;--ivory:#161b23;--brass:#8a6d00;--brass-ink:#fff;--muted:#6a7386;
+  --line:rgba(22,27,35,.14);--panel:#ffffff;--field:#faf8f3;--ok:#1f7a4a;--warn:#8a5a00;--bad:#b3261e;color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,'Inter Fallback',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-text-size-adjust:100%}
+a{color:var(--brass)}
+.in{max-width:68rem;margin:0 auto;padding:0 16px}
+.top{background:var(--felt-lo);border-bottom:1px solid var(--line)}
+.top .in{display:flex;align-items:center;gap:12px;padding-top:12px;padding-bottom:12px}
+.brand{display:inline-flex;align-items:center;gap:10px;color:var(--ivory);font-weight:700;font-size:1.05em;text-decoration:none;min-width:0}
+.brand img{width:34px;height:34px;display:block;flex:none}
+.brand span{font-weight:400;color:var(--muted)}
+.sp{flex:1}
+h1{color:var(--ivory);font-size:1.6em;line-height:1.25;margin:22px 0 4px}
+h2{color:var(--ivory);font-size:1.15em;margin:0 0 8px}
+h3{color:var(--ivory);font-size:1em;margin:14px 0 6px}
+.lead{color:var(--muted);margin:0 0 18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin:0 0 16px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+@media (min-width:900px){.grid{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}}
+label{display:block;font-size:.9em;color:var(--muted);margin:10px 0 4px}
+input,select{width:100%;font:inherit;color:var(--ivory);background:var(--field);border:1px solid var(--line);border-radius:8px;padding:9px 10px;min-width:0}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--brass);outline-offset:1px}
+.row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
+.row>*{flex:1 1 12rem;min-width:0}
+.row>button{flex:0 0 auto}
+button{font:inherit;font-weight:600;border-radius:8px;border:1px solid var(--line);background:var(--felt-lo);color:var(--ivory);padding:9px 14px;cursor:pointer}
+button.primary{background:var(--chip);border-color:var(--chip);color:var(--chip-ink)}
+button.accent{background:var(--brass);border-color:var(--brass);color:var(--brass-ink)}
+button:disabled{opacity:.5;cursor:not-allowed}
+button.ghost{background:transparent}
+.theme{flex:none;padding:6px 10px;font-weight:500;font-size:.85em}
+.muted{color:var(--muted)}
+.small{font-size:.85em}
+.msg{min-height:1.4em;font-size:.9em;margin-top:8px}
+.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+.tables{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.tables li label{display:flex;gap:10px;align-items:flex-start;margin:0;padding:10px;border:1px solid var(--line);border-radius:10px;cursor:pointer;color:var(--ink);font-size:1em;background:var(--field)}
+.tables li input{width:auto;margin-top:4px;flex:none}
+.tables li.off label{opacity:.55;cursor:not-allowed}
+.tname{color:var(--ivory);font-weight:600;overflow-wrap:anywhere}
+.chip{display:inline-block;font-size:.75em;font-weight:600;padding:1px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.chip.live{color:var(--ok);border-color:var(--ok)}
+.chip.warn{color:var(--warn);border-color:var(--warn)}
+.chip.bad{color:var(--bad);border-color:var(--bad)}
+.chip.done{color:var(--brass);border-color:var(--brass)}
+.watches{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.watches button{width:100%;text-align:left;display:flex;gap:8px;align-items:center;justify-content:space-between;font-weight:500;background:var(--field)}
+.watches button[aria-current="true"]{border-color:var(--brass)}
+.watches .wt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+table{width:100%;border-collapse:collapse;font-size:.92em}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:.85em}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.out td{color:var(--muted)}
+.tablewrap{overflow-x:auto}
+.checks{list-style:none;padding:0;margin:6px 0 0;display:grid;gap:4px}
+.checks li::before{content:'✓ ';color:var(--ok);font-weight:700}
+.checks li.no::before{content:'✗ ';color:var(--bad)}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.85em;overflow-wrap:anywhere}
+.log{background:var(--field);border:1px solid var(--line);border-radius:8px;padding:8px 10px;max-height:12rem;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.8em;white-space:pre-wrap;margin:6px 0 0}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.empty{color:var(--muted);font-style:italic}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+footer{color:var(--muted);font-size:.85em;padding:12px 0 28px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="/"><img src="/logo-chip-68.png" alt="" width="34" height="34">PokerTH <span>Tournaments</span></a>
+  <span class="sp"></span>
+  <button type="button" class="theme ghost" id="themeBtn" aria-label="Colour theme">Theme: auto</button>
+  <button type="button" class="theme ghost" id="signOut" hidden>Sign out</button>
+</div></header>
+
+<main class="in">
+  <h1>Table check</h1>
+  <p class="lead">Organizer tool. Pick a server this install knows, choose a table, and a director watches it as a spectator until the end: every event goes into a sealed journal and the ranking is signed. Nothing is created, kicked or posted on the game server.</p>
+
+  <section class="card" id="signIn" hidden aria-labelledby="signInH">
+    <h2 id="signInH">Organizer sign-in</h2>
+    <p class="muted small">For now, the admin master token. Keys limited to one server come later.</p>
+    <form id="signInForm" class="row">
+      <div><label for="tokIn">Token</label><input id="tokIn" type="password" autocomplete="current-password" required></div>
+      <button type="submit" class="primary">Sign in</button>
+    </form>
+    <div class="msg" id="signInMsg" role="status"></div>
+  </section>
+
+  <div class="grid" id="app" hidden>
+    <div>
+      <section class="card" aria-labelledby="pickH">
+        <h2 id="pickH">1 · Server and table</h2>
+        <div class="row">
+          <div><label for="srvSel">Server</label><select id="srvSel"></select></div>
+          <button type="button" id="lobbyBtn" class="accent">Read the lobby</button>
+        </div>
+        <div class="msg" id="lobbyMsg" role="status"></div>
+        <ul class="tables" id="tables" aria-label="Tables on this server"></ul>
+        <div id="watchForm" hidden>
+          <div class="row">
+            <div id="pwBox" hidden><label for="gamePw">Table password</label><input id="gamePw" type="password" autocomplete="off" maxlength="64"></div>
+            <div><label for="nickIn">Director name <span class="muted">(optional)</span></label><input id="nickIn" maxlength="24" placeholder="TD-test-…" autocomplete="off" pattern="[A-Za-z0-9][A-Za-z0-9_\-]{2,23}"></div>
+          </div>
+          <div class="actions"><button type="button" id="watchBtn" class="primary">Watch this table</button></div>
+          <div class="msg" id="watchMsg" role="status"></div>
+        </div>
+      </section>
+      <section class="card" aria-labelledby="listH">
+        <h2 id="listH">2 · Watches</h2>
+        <ul class="watches" id="watches"><li class="empty">None yet.</li></ul>
+      </section>
+    </div>
+    <section class="card" id="detail" aria-labelledby="detailH" aria-live="polite">
+      <h2 id="detailH">3 · Watch</h2>
+      <p class="empty" id="detailEmpty">Pick a watch, or start one.</p>
+      <div id="detailBody" hidden></div>
+    </section>
+  </div>
+  <p class="msg bad" id="fatal" role="alert"></p>
+</main>
+<footer class="in">PokerTH Web Client · tournament director (first step). Design: <code>docs/TOURNAMENT_DIRECTOR.md</code>.</footer>
+<script type="module" src="/modules/tournament/organizer.mjs"></script>
+</body>
+</html>

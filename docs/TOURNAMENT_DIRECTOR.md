@@ -4,10 +4,10 @@ An automatic organizer for games and tournaments on the LAN servers of the
 directory, with an optional, off-by-default bridge to pokerth.net. This page
 is the design reference and the status of the work.
 
-**Status (2026-10-23): prototype, step 1 of 12.** A spectator that watches
-one table and writes its sealed journal and signed ranking. Nothing is
-wired into `proxy.js`, `/admin` or the player client yet: nothing changes
-for players or operators.
+**Status (2026-10-23, `2.1.10-web.292`):** the spectator that watches one
+table and seals its journal and ranking, and the **« Table check »** tool on
+`/tournament` to run it against a server this install knows. Off by
+default; nothing changes for players.
 
 ## Ground rules
 
@@ -181,6 +181,38 @@ or mute in-game, results stored by the server); a BBC API to post results;
 QML clients sending witness reports automatically. Nothing in the design
 depends on them.
 
+## Table check (`/tournament`, first organizer tool)
+
+- **Admin › Community › Tournaments** — settings only: the module switch
+  (off by default; while off `/tournament` and `/tournament.html` answer
+  404), servers with accounts (pokerth.net, off), the install's public key
+  (created on first enable), the number of running watches.
+- **`/tournament`** — master token for now (the browser key of `/admin`, so a
+  signed-in admin lands straight in). English for now, like the admin; the
+  public views will come in every language. Light and dark themes (system
+  choice or the header switch), same face and colours as `/rules`.
+  1. pick a server the install knows (game servers, LAN directory, local
+     server — never a free address), read its lobby;
+  2. pick a table (spectators allowed), optional table password and
+     director name, « Watch this table »;
+  3. follow hands and eliminations; at the end the sealed ranking, its flags
+     (tie, unknown hand, missed hands), the checks (chain, signed head,
+     signature, replay) and the journal / result downloads. « Stop watching »
+     keeps the journal.
+- Each watch is a **detached process** (`server/tournament/worker.mjs`): the
+  task (table password included) is handed over once through IPC, never
+  written to disk; then the process lives on its own, survives an update of
+  the web client, and writes `state.json`, `journal.json`, `result.json` in
+  `TD_DIR/watches/<id>/` (`/data/tournament` in the Docker image; the key is
+  `TD_DIR/td-key.pem`, mode 600). At most 4 watches at once.
+- A server announcing authenticated logins is refused **by the worker
+  itself** unless the option is on — the browser's word is never taken.
+- Routes (`server/tournament-manager.js`), all behind the admin token:
+  `GET/POST /admin/tournaments/settings`, `GET …/servers`,
+  `POST …/lobby {ref}`, `POST …/watch {ref, gameId, gamePassword?, nick?}`,
+  `GET …/watches`, `GET …/watch?id=`, `POST …/watch/stop {id}`,
+  `GET …/watch/file?id=&which=journal|result`.
+
 ## The prototype (step 1)
 
 | File | Role |
@@ -191,12 +223,17 @@ depends on them.
 | `scripts/td-spectate.mjs` | Command line: watch a table, write `<out>.journal.json` and `<out>.result.json`; `--verify` checks chain, signature and replay. |
 | `scripts/test-td-core.mjs` | Journal, signatures and ranking cases (normal game, ties, late join, reconnect, id change). |
 | `scripts/test-td-spectator.mjs` | End to end against a scripted fake server over TCP, and the command line. |
+| `server/tournament/lobby.mjs` | Lobby reader (guest login, tables, server type) for the Table check. |
+| `server/tournament/worker.mjs` | One watch in a detached process, state and files on disk. |
+| `server/tournament-manager.js` | Proxy side: settings, key, known servers, watches, routes. |
+| `public/tournament.html`, `public/modules/tournament/organizer.mjs` | The Table check page. |
+| `scripts/test-td-manager.mjs`, `scripts/test-td-route.mjs` | Manager with real worker processes; real proxy plus the page in jsdom. |
 
 ```sh
 node scripts/td-spectate.mjs --host 192.168.1.20 --port 7234 \
      --nick TD-test-T1 --game-name "Friday SnG"
 node scripts/td-spectate.mjs --verify td-out.result.json td-out.journal.json
-npm run test:td-core && npm run test:td-spectator
+npm run test:td-core && npm run test:td-spectator && npm run test:td-manager && npm run test:td-route
 ```
 
 The install key (`td-key.pem`, created on first use, mode 600) and the
@@ -205,7 +242,7 @@ operator's agreement.
 
 ## Order of work
 
-1. Spectator prototype (this step).
+1. Spectator prototype, and the Table check on `/tournament` (done).
 2. Storage layer (JSON and SQL) and migrations.
 3. Manual mode on `/tournament`.
 4. Witness reports from the web client, compared with the journal.

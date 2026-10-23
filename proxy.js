@@ -369,7 +369,7 @@ const ADMIN_CONFIG_KEYS = Object.freeze([
   'communityEvents', 'bannedIps', 'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
   'musicEnabled', 'musicHidden', 'musicOrder', 'musicVotesPublic', 'seo', 'servers', 'activeServerId',
   'pokerthnetSource', 'internetTransport', 'liveTransport', 'proxyProtocol', 'serverlistUrl', 'autoUpdate',
-  'lanDirectory'
+  'lanDirectory', 'tournaments'
 ]);
 // Secrets and personal data removed from an export unless asked for. Returns
 // what was removed, as paths, for the file's "redacted" list.
@@ -450,6 +450,39 @@ const LAN_BOARDS = require('./server/lan-boards.js').createLanBoards({
 });
 setTimeout(function () { LAN_BOARDS.rotate(); }, 5000).unref();
 setInterval(function () { LAN_BOARDS.rotate(); }, 60 * 60 * 1000).unref();
+
+// ── Tournament director (server/tournament-manager.js) ──────────────────────
+// First brick: the « Table check » of /tournament — watch one table of a
+// server this install already knows, as a spectator, and seal its result.
+// Off by default (admin › Community › Tournaments). Watches run in detached
+// processes and keep their files in TD_DIR (with the install's signing key).
+const TD_DIR = process.env.TD_DIR || path.join(__dirname, 'tournament-data');
+const TD_LIB = require('./server/tournament-manager.js');
+function _tdServers() {
+  var out = [];
+  _serversList().forEach(function (e) {
+    if (!e || !e.host || !e.port) return;
+    var t = _serverTlsOpts(e.host, e.port);
+    out.push({ ref: 'srv:' + (e.id || (e.host + ':' + e.port)), kind: 'registry', name: e.name || e.host, host: e.host, port: parseInt(e.port, 10),
+      tls: !!e.tls, sni: t.sni, noverify: t.noverify, pins: e.tls ? _tlsPinsFor(e.host) : [] });
+  });
+  try {
+    LAN_DIR.entries().forEach(function (e) {
+      var t = LAN_DIR.tlsOpts(e.host, e.port) || {};
+      out.push({ ref: 'lan:' + e.id, kind: 'lan', name: e.name || e.host, host: e.host, port: e.port, tls: !!e.tls, sni: t.sni || '', noverify: !!t.noverify, pins: [] });
+    });
+  } catch (e) {}
+  var L = _loginDefaults(false);
+  out.push({ ref: 'local', kind: 'local', name: 'Local server', host: L.host || '127.0.0.1', port: L.lanPort || 7234, tls: !!L.lanTls, sni: '', noverify: true, pins: [] });
+  return out;
+}
+const TD = TD_LIB.createTournamentManager({
+  dir: TD_DIR,
+  getConfig: function () { return (_adminConfig && _adminConfig.tournaments) || {}; },
+  setConfig: function (c) { _adminConfig.tournaments = c; saveAdminConfig(); },
+  listServers: _tdServers,
+  version: function () { try { return require('./package.json').version; } catch (e) { return ''; } }
+});
 
 // ── Verbosité des logs (quiet | normal | verbose) ──────────────────────────
 // Par défaut le proxy loggue CHAQUE message relayé ([S→C]/[C→S] + dump hex),
@@ -12241,6 +12274,9 @@ function handleAdmin(req, res, reqPathOnly, query) {
     var _m = /^\s*Bearer\s+(.+?)\s*$/i.exec(req.headers['authorization'] || '');
     if (_m) query.token = _m[1];
   }
+  if (reqPathOnly === '/admin/tournaments' || reqPathOnly.indexOf('/admin/tournaments/') === 0) {
+    return TD_LIB.handleTournamentAdmin(TD, { adminAuthed: adminAuthed, adminJson: adminJson, readJsonBody: readJsonBody }, req, res, reqPathOnly, query);
+  }
   if (reqPathOnly === '/admin' || reqPathOnly === '/admin.html') {
     const p = path.join(PUBLIC_DIR, 'admin.html');
     if (fs.existsSync(p)) return sendFile(req, res, p, 'text/html; charset=utf-8', 'no-store');
@@ -15120,6 +15156,9 @@ const httpServer = http.createServer((req, res) => {
       if (req.method === 'GET' && (reqPathOnly === '/admin/status' || reqPathOnly === '/admin/logs'
           || reqPathOnly === '/admin/sessions' || reqPathOnly === '/admin/broadcasts'
           || reqPathOnly === '/admin/clock')) res._rlNoPenalty = true;
+      // The /tournament page polls its watches the same way.
+      if (req.method === 'GET' && (reqPathOnly === '/admin/tournaments/watch'
+          || reqPathOnly === '/admin/tournaments/watches')) res._rlNoPenalty = true;
       _rlAdminFail.get(ip).then(function (r) {
         if (r && r.remainingPoints <= 0 && r.msBeforeNext > 0) {
           res.writeHead(429, { 'Content-Type': 'application/json; charset=utf-8', 'Retry-After': String(Math.ceil(r.msBeforeNext / 1000)), 'Cache-Control': 'no-store' });
@@ -15128,6 +15167,12 @@ const httpServer = http.createServer((req, res) => {
       }).catch(function () { handleAdmin(req, res, reqPathOnly, q); });
     } else handleAdmin(req, res, reqPathOnly, q);
     return;
+  }
+  // ── /tournament — tournament director pages (off by default: a plain 404
+  // until Admin › Community › Tournaments turns them on, the .html included).
+  if (reqPathOnly === '/tournament' || reqPathOnly === '/tournament/' || reqPathOnly === '/tournament.html') {
+    if (!TD.settings().enabled) { res.writeHead(404); res.end('Not found'); return; }
+    return sendFile(req, res, path.join(PUBLIC_DIR, 'tournament.html'), 'text/html; charset=utf-8', 'no-store');
   }
   // ── /live — embedded spectator mode, successor to the pokerth-live tool.
   // Same client, same themes/decks/seats/layout, so every table improvement
