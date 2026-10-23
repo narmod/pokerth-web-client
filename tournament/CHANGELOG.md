@@ -8,6 +8,14 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.3.3 — 2026-10-23
+
+### Changed
+- `/tournament` dressed like the public pages (/rules, /faq): the start
+  screen's chips and flames behind the title, the four suits, the title in
+  heavy Inter, card titles as the forum's section bars; light and dark themes
+  kept, phone header on one line.
+
 ## 0.3.2 — 2026-10-23
 
 ### Changed

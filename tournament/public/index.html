@@ -56,9 +56,25 @@ a{color:var(--brass)}
 .brand span{font-weight:400;color:var(--muted)}
 .sp{flex:1}
 .beta{display:inline-block;flex:none;padding:1px 8px;border-radius:999px;border:1px solid var(--brass);color:var(--brass);font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1.5;vertical-align:middle}
-h1 .beta{font-size:.45em;margin-left:6px;vertical-align:.35em}
+h1 .beta{font-size:.36em;margin-left:8px;vertical-align:.5em}
 h1{color:var(--ivory);font-size:1.6em;line-height:1.25;margin:22px 0 4px}
 h2{color:var(--ivory);font-size:1.15em;margin:0 0 8px}
+/* Hero as on the public pages (/rules, /faq): the start screen's chips and
+   flames under a slate veil that fades into the page, the four suits, the
+   title in heavy Inter. Dark in both themes, like the app's start screen. */
+.hero{background:linear-gradient(180deg,rgba(14,18,24,.55) 0%,rgba(14,18,24,.8) 62%,rgba(14,18,24,.86) 84%,var(--bg) 100%),url(/img/pokerth-login-bg.webp) center 40%/cover no-repeat #12161d}
+.hero .in{padding-top:44px;padding-bottom:52px}
+.suits{display:flex;gap:6px;font-size:1.1em;line-height:1;margin:0 0 .7em;color:#a0acc4}.suits i{font-style:normal}
+.suits .s::before{content:"\2660"}.suits .h::before{content:"\2665"}.suits .d::before{content:"\2666"}.suits .c::before{content:"\2663"}
+.suits .h,.suits .d{color:#e74c3c}
+.hero h1{font-weight:800;font-size:clamp(1.85rem,1.1rem + 3vw,3rem);text-shadow:0 2px 12px rgba(0,0,0,.6);line-height:1.15;letter-spacing:-.01em;color:#fff;margin:0 0 .45em;text-wrap:balance;overflow-wrap:break-word}
+.hero p{font-size:1.08em;line-height:1.65;color:#e3e7ef;margin:0;max-width:40em;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.hero .beta{color:#e3c800;border-color:#e3c800;text-shadow:none}
+.body{padding-top:18px}
+/* Card titles as the section bars of the public pages (the pokerth.net
+   forum's category bars): grey-blue to navy, white text. */
+.card h2{color:#fff;font-weight:600;font-size:1.05em;padding:.5em .75em;border-radius:6px;margin:0 0 12px;background:linear-gradient(90deg,#6b7780 0%,#3a4458 55%,#262c45 100%)}
+@media (max-width:480px){.hero .in{padding-top:28px;padding-bottom:40px}.top .beta{display:none}.top .in{flex-wrap:nowrap}.theme{padding:6px 8px;font-size:.78em}}
 h3{color:var(--ivory);font-size:1em;margin:14px 0 6px}
 .lead{color:var(--muted);margin:0 0 18px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin:0 0 16px}
@@ -148,8 +164,13 @@ input[type="file"]{padding:7px}
   <button type="button" class="theme ghost" id="signOut" hidden>Sign out</button>
 </div></header>
 
-<main class="in">
+<main>
+<div class="hero"><div class="in">
+  <div class="suits" aria-hidden="true"><i class="s"></i><i class="h"></i><i class="d"></i><i class="c"></i></div>
   <h1>Tournament director <span class="beta">beta</span></h1>
+  <p>Sit &amp; Go tournaments on the LAN servers of this install: the director opens the table for the registered players, follows the game to the end and seals a signed result.</p>
+</div></div>
+<div class="in body">
 
   <section class="card" id="signIn" hidden aria-labelledby="signInH">
     <h2 id="signInH">Organizer sign-in</h2>
@@ -185,7 +206,7 @@ input[type="file"]{padding:7px}
           <p class="small muted" id="tProfileNote"></p>
           <div class="row" id="tCustom" hidden></div>
           <div class="row"><label class="ck"><input type="checkbox" id="tAuto"> Open the table by itself</label><div><label for="tBefore">minutes before the start</label><input id="tBefore" type="number" inputmode="numeric" min="0" max="120" value="10"></div></div>
-          <label class="ck"><input type="checkbox" id="tAnnounce" checked> Announcements in the table chat (blinds, players out, heads-up, winner)</label>
+          <label class="ck"><input type="checkbox" id="tAnnounce" checked> Announcements in the table chat (players out, heads-up, winner)</label>
           <details class="sub"><summary>Table settings</summary><p class="small muted">Used when the director opens the table. PokerTH defaults.</p><div class="row" id="tTable"></div></details>
           <p class="small muted">Format: Sit &amp; Go, one table, up to 10 players.</p>
           <div class="actions"><button type="submit" class="primary">Create</button></div>
@@ -239,6 +260,7 @@ input[type="file"]{padding:7px}
   </div>
   </div>
   <p class="msg bad" id="fatal" role="alert"></p>
+</div>
 </main>
 <footer class="in">PokerTH tournament director <span class="mono">__TD_VERSION__</span> · launched by the web client. Design: <code>docs/TOURNAMENT_DIRECTOR.md</code>.</footer>
 <script type="module" src="/tournament/organizer.mjs"></script>
