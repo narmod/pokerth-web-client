@@ -306,8 +306,9 @@ use too. Items are grouped by status rather than fixed phases.
   (`web.297`: `tournament/`, own `package.json` and version, launched and relayed by the web client), and the
   director opening the table (`web.299`: invite-only table, seat check, hand-over to the first player, result recorded
   by itself). Service `0.3.0`: opening by itself before the start, announcements, messages to the table. Service `0.4.0`:
-  the players' page `/tournament` in every language, with registration and a personal code. Next: the chat
-  language, check-in for the Official profile, then witnesses.
+  the players' page `/tournament` in every language, with registration and a personal code. Service `0.5.0`: check-in
+  for the Official profile (only the players who confirmed with their code are invited). Next: the chat language, then
+  witnesses.
 
 ## ⏭️ Next
 

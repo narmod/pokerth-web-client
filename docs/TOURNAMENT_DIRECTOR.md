@@ -359,9 +359,10 @@ Routes: `POST /admin/tournaments/t/table/open {id}`, `…/t/table/go {id}`,
   or when the tournament is over. Each registration returns a **personal
   code** (8 characters, no 0/O/1/I), shown once and kept in the browser
   (`pth_td_regs`); unregistering needs it; only a SHA-256 of it is stored.
-  The same code will serve the check-in of the Official profile.
+  The same code serves the check-in of the Official profile (below).
 - Limits per player address (set by the web client, `x-td-client`): six
-  registrations and twelve unregistration attempts in ten minutes.
+  registrations, twelve unregistration attempts and twelve check-in attempts
+  in ten minutes.
 - Every language of the app: the list comes from the web client's
   `/modules/lang-meta.mjs`, the texts from `tournament/public/lang/<code>.mjs`
   (falling back to English, then the key); the choice is the app's
@@ -370,8 +371,32 @@ Routes: `POST /admin/tournaments/t/table/open {id}`, `…/t/table/go {id}`,
 - API, without a token, relayed by the web client: `GET /tournament/api/list`,
   `GET …/t/<key>[?invite=]`, `POST …/t/<key>/register {nick, invite?}`,
   `POST …/t/<key>/unregister {nick, code, invite?}`,
+  `POST …/t/<key>/checkin {nick, code, invite?}`,
   `GET …/t/<key>/file?which=journal|result`. Errors carry a `code` the page
-  translates.
+  translates. The web client relays `…/t/<key>/<word>` (lowercase letters),
+  so a new player action needs no web client release.
+
+## Check-in (identity « Personal code », Official; service `0.5.0`)
+
+- Proves that the player at the table is the one who registered: in a window
+  before the start, each player confirms on the players' page with their
+  nickname and **personal code** (one click when the code is kept in the
+  browser). Applies when the identity is *Personal code* (Official profile,
+  or Custom).
+- The window opens `checkInBefore` minutes before the start (5 to 240, 30 by
+  default, « Edit » on the organizer page); at once when the tournament has no
+  date. It closes when the table opens or a result is set.
+- A player added by the organizer also gets a personal code, shown once to
+  the organizer (to hand over); « New code » replaces a lost one (the old one
+  stops working); « Check in » lets the organizer check a player in himself
+  (seen in the room). Each is in the journal (`codeIssued`, `checkedIn` with
+  `by: organizer`).
+- Opening the table (by hand or by itself) invites **only the players
+  checked in** and refuses with fewer than two; the others are marked absent
+  at once (journal `notCheckedIn`) and are not ranked.
+- Errors for the page: `noCheckIn`, `checkInNotYet`, `checkInClosed`,
+  `badCode`, `alreadyIn`. Organizer routes: `POST /admin/tournaments/t/code
+  {id, nick}`, `…/t/checkin {id, nick}`.
 
 ## A service of its own (`tournament/`, decided and done 2026-10-23)
 

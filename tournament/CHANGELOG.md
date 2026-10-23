@@ -8,6 +8,25 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.5.0 — 2026-10-23 (web client `2.1.10-web.304`)
+
+### Added
+- **Check-in** for the identity « Personal code » (Official profile): in a
+  window before the start (30 minutes by default, 5 to 240, « Check-in
+  opens » in Edit; at once without a date), each player confirms on the
+  players' page with their nickname and personal code — one click when the
+  code is kept in the browser. The page shows the window, who checked in and
+  the count; « How it works » gets the step.
+- Only the players checked in are invited when the table opens (by hand or by
+  itself), at least two; the others are marked absent at once, in the journal.
+- A player added by the organizer gets a personal code too, shown once to the
+  organizer; « New code » replaces a lost one; « Check in » lets the organizer
+  check a player in himself. All in the journal.
+- Twelve check-in attempts per address in ten minutes.
+
+### Changed
+- The players' page no longer refreshes while a player is typing in a form.
+
 ## 0.4.0 — 2026-10-23 (web client `2.1.10-web.303`)
 
 ### Added

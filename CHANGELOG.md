@@ -72,6 +72,10 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Tournaments: check-in** (`web.304`, service `0.5.0`) — the web client relays any players' action of a tournament
+  (`/tournament/api/t/<key>/<word>`, lowercase letters) instead of a fixed list, starting with the check-in of the
+  Official profile: only the players who confirmed with their personal code are invited to the table. Details in
+  `tournament/CHANGELOG.md`.
 - **Tournaments: the players' page** (`web.303`, service `0.4.0`) — the web client relays the tournament pages
   (`/tournament` for players, `/tournament/organize`, `/tournament/t/<key>`, language files) and, without a token,
   the players' API `/tournament/api/*` (list, a tournament, register, unregister, files) to the service, with the

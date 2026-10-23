@@ -3,7 +3,8 @@
 // /tournament pages and language files, the public list (public only), one
 // tournament by its key (unlisted by link, private with its invitation code),
 // registration and unregistration with the personal code, when registration
-// closes, the per-address limits, and the files of a validated result.
+// closes, the per-address limits, the check-in of an Official tournament,
+// and the files of a validated result.
 // Run: node tournament/test/test-td-public.mjs
 import { mkdtempSync, rmSync, writeFileSync, readFileSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -128,6 +129,55 @@ let aliceCode;
   for (let i = 0; i < 8; i++) res.push((await pub('/t/' + t.publicKey + '/register', { nick: 'F' + i }, '10.9.9.9')).status);
   ok(res.slice(0, 6).every((s) => s === 200) && res[6] === 429 && res[7] === 429, 'six registrations per address in ten minutes, then 429');
   ok((await pub('/t/' + t.publicKey + '/register', { nick: 'Other' }, '10.9.9.8')).ok, 'another address is not affected');
+}
+
+// ── check-in (identity « code », Official) ─────────────────────────
+{
+  const off = await admin('/t/create', { name: 'Official cup', profile: 'official', server: { ref: 'local', name: 'Local', host: '127.0.0.1', port: 7234 }, startsAt: Date.now() + 2 * 3600e3, run: { checkInBefore: 30 } });
+  ok(off.run.checkInBefore === 30 && (await admin('/t/create', { name: 'Short check-in', profile: 'club', run: { checkInBefore: 3 } })).run.checkInBefore === 30, 'check-in: 5 to 240 minutes before the start, 30 by default');
+  const ann = await pub('/t/' + off.publicKey + '/register', { nick: 'Ann' }, '10.1.0.1');
+  const added = await admin('/t/player', { id: off.id, nick: 'Ben' });
+  ok(added.issuedCode && added.issuedCode.nick === 'Ben' && /^[A-HJ-NP-Z2-9]{8}$/.test(added.issuedCode.code) && !('codeHash' in added.players[1]), 'a player added by the organizer gets a personal code, shown once to the organizer');
+  const clubAdd = await admin('/t/player', { id: pubT.id, nick: 'Eve' });
+  ok(!clubAdd.issuedCode, 'no code shown without check-in (identity « simple »)');
+  let g = await pub('/t/' + off.publicKey);
+  ok(g.checkIn.needed && !g.checkIn.open && Math.abs(g.checkIn.opensAt - (off.startsAt - 30 * 60000)) < 1000 && g.checkIn.count === 0, 'check-in: shown with its opening time, not open yet');
+  ok((await pub('/t/' + off.publicKey + '/checkin', { nick: 'Ann', code: ann.code }, '10.1.0.1')).code === 'checkInNotYet', 'check-in: refused before its window');
+  ok((await pub('/t/' + pubT.publicKey + '/checkin', { nick: 'Alice', code: 'X' }, '10.1.0.1')).code === 'noCheckIn', 'check-in: none for a club tournament');
+  // Open the window: a start in 20 minutes.
+  await admin('/t/update', { id: off.id, patch: { startsAt: Date.now() + 20 * 60000 } });
+  g = await pub('/t/' + off.publicKey);
+  ok(g.checkIn.open, 'check-in: open inside its window');
+  ok((await pub('/t/' + off.publicKey + '/checkin', { nick: 'Ann', code: 'ABCDEFGH' }, '10.1.0.1')).code === 'badCode', 'check-in: a wrong code is refused');
+  const c1 = await pub('/t/' + off.publicKey + '/checkin', { nick: 'ann', code: ann.code.toLowerCase() }, '10.1.0.1');
+  ok(c1.ok && c1.nick === 'Ann' && c1.tournament.playerList.find((p) => p.nick === 'Ann').checkedIn && c1.tournament.checkIn.count === 1, 'check-in: with the personal code (any case)');
+  ok((await pub('/t/' + off.publicKey + '/checkin', { nick: 'Ann', code: ann.code }, '10.1.0.1')).code === 'alreadyIn', 'check-in: once');
+  const nw = await admin('/t/code', { id: off.id, nick: 'Ben' });
+  ok(nw.issuedCode && nw.issuedCode.code !== added.issuedCode.code && (await pub('/t/' + off.publicKey + '/checkin', { nick: 'Ben', code: added.issuedCode.code }, '10.1.0.2')).code === 'badCode', 'a new code replaces the old one');
+  ok((await pub('/t/' + off.publicKey + '/checkin', { nick: 'Ben', code: nw.issuedCode.code }, '10.1.0.2')).ok, 'the organizer\'s player checks in with the code he was given');
+  await admin('/t/player', { id: off.id, nick: 'Cat' });
+  await admin('/t/player', { id: off.id, nick: 'Dan' });
+  const byOrg = await admin('/t/checkin', { id: off.id, nick: 'Cat' });
+  ok(byOrg.players.find((p) => p.nick === 'Cat').checkedIn && byOrg.history.some((h) => h.type === 'checkedIn' && /by the organizer/.test(h.summary)), 'the organizer can check a player in; the journal says so');
+  ok((await admin('/t/checkin', { id: pubT.id, nick: 'Dave' })).ok === false, 'no organizer check-in without identity « code »');
+  // Opening the table: only the players checked in are invited; Dan is absent.
+  let started = null;
+  const real = svc.manager.startHost;
+  svc.manager.startHost = async (o) => { started = o; return { ok: true, id: 'fakehostck01' }; };
+  const op = await admin('/t/table/open', { id: off.id });
+  svc.manager.startHost = real;
+  ok(op.ok && started && started.registered.join() === 'Ann,Ben,Cat', 'table: only the checked-in players are invited (' + (started && started.registered.join()) + ')');
+  ok(op.players.find((p) => p.nick === 'Dan').absent && op.history.some((h) => h.type === 'notCheckedIn'), 'table: who did not check in is marked absent, in the journal');
+  g = await pub('/t/' + off.publicKey);
+  ok(g.checkIn.closed && !g.checkIn.open && (await pub('/t/' + off.publicKey + '/checkin', { nick: 'Dan', code: 'ABCDEFGH' }, '10.1.0.3')).code === 'checkInClosed', 'check-in: closed once the table is open');
+  // Fewer than two checked in: the table does not open.
+  const few = await admin('/t/create', { name: 'Few', profile: 'official', server: { ref: 'local', name: 'Local', host: '127.0.0.1', port: 7234 } });
+  for (const n of ['A', 'B', 'C']) await admin('/t/player', { id: few.id, nick: 'Few' + n });
+  await admin('/t/checkin', { id: few.id, nick: 'FewA' });
+  const r = await admin('/t/table/open', { id: few.id });
+  ok(!r.ok && /fewer than two players have checked in/.test(r.error), 'table: refused with fewer than two players checked in');
+  const noDate = await pub('/t/' + few.publicKey);
+  ok(noDate.checkIn.open && noDate.checkIn.opensAt === null, 'check-in: open at once without a start date');
 }
 
 // ── result files ───────────────────────────────────────────────────

@@ -49,7 +49,7 @@ function diskVersion() {
 // /tournament/t/<key> (one tournament), the page files and the language files.
 const PAGE_RE = /^\/tournament(?:\.html|\/|\/organize\/?|\/t\/[A-Za-z0-9_-]{8,40}\/?|\/[A-Za-z0-9_-]+\.(?:mjs|json|css)|\/lang\/[a-z]{2,3}(?:-[a-z0-9]{2,4})?\.mjs)?$/;
 // The players' API, without a token: list, one tournament, (un)register, files.
-const API_RE = /^\/tournament\/api\/(?:list|t\/[A-Za-z0-9_-]{8,40}(?:\/(?:register|unregister|file))?)$/;
+const API_RE = /^\/tournament\/api\/(?:list|t\/[A-Za-z0-9_-]{8,40}(?:\/[a-z]{2,16})?)$/;
 const API_MAX_BODY = 8 * 1024;
 // Only these reach the service; the rest of the environment (admin token,
 // database passwords…) stays with the web client.

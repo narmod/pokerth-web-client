@@ -47,16 +47,19 @@ export const TABLE_DEFAULTS = Object.freeze({
 });
 // How the director runs the table: opening by itself before the start, and
 // its announcements in the table chat.
-export const RUN_DEFAULTS = Object.freeze({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true });
+export const RUN_DEFAULTS = Object.freeze({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30 });
 export function cleanRun(r, base) {
   const b = Object.assign({}, RUN_DEFAULTS, base || {});
   r = r || {};
   const m = parseInt(r.openBefore, 10);
+  const ci = parseInt(r.checkInBefore, 10);
   return {
     autoOpen: typeof r.autoOpen === 'boolean' ? r.autoOpen : b.autoOpen,
     openBefore: Number.isInteger(m) && m >= 0 && m <= 120 ? m : b.openBefore,
     announce: typeof r.announce === 'boolean' ? r.announce : b.announce,
     selfRegister: typeof r.selfRegister === 'boolean' ? r.selfRegister : b.selfRegister,
+    // Check-in (identity « code »): opens this long before the start.
+    checkInBefore: Number.isInteger(ci) && ci >= 5 && ci <= 240 ? ci : b.checkInBefore,
   };
 }
 // A table opened by itself is not opened any more this long after the start.
@@ -175,6 +178,9 @@ export function createTournaments(o) {
       case 'playerRemoved': return 'removed ' + d.nick;
       case 'playerRegistered': return d.nick + ' registered (public page)';
       case 'playerUnregistered': return d.nick + ' unregistered (public page)';
+      case 'codeIssued': return 'new personal code for ' + d.nick;
+      case 'checkedIn': return d.nick + ' checked in' + (d.by === 'organizer' ? ' (by the organizer)' : '');
+      case 'notCheckedIn': return 'not checked in, marked absent: ' + (d.nicks || []).join(', ');
       case 'pdbImported': return 'imported a log (' + d.games + ' game' + (d.games === 1 ? '' : 's') + ', sha256 ' + String(d.sha256).slice(0, 12) + '…)';
       case 'resultSet': return 'result from ' + d.source + (d.watchId ? ' ' + d.watchId : '') + (d.uniqueGameId != null ? ' game ' + d.uniqueGameId : '');
       case 'validated': return 'validated and signed';
@@ -269,17 +275,58 @@ export function createTournaments(o) {
   }
 
   // ── players ──
+  // A player added by the organizer gets a personal code too: with the
+  // identity « code » (Official) the organizer hands it over, for the check-in.
   function addPlayer(id, nickIn, author) {
     const nick = cleanNick(nickIn);
-    return act(id, author, 'playerAdded', { nick }, (t) => {
+    const code = newCode();
+    let needs = false;
+    const v = act(id, author, 'playerAdded', { nick }, (t) => {
+      needs = needsCheckIn(t);
       if (!nick) refuse('nickname missing');
       if (t.result) refuse('the result is set: players can no longer change');
       if (hostOpen(t)) refuse('the table is open: players can no longer change');
       if (t.players.some((p) => sameNick(p.nick, nick))) refuse(nick + ' is already in');
       if (t.players.length >= MAX_PLAYERS) refuse('a Sit & Go seats ' + MAX_PLAYERS + ' players at most');
-      t.players.push({ nick, addedAt: now() });
+      t.players.push({ nick, addedAt: now(), codeHash: hashCode(code) });
       if (t.status === 'draft') t.status = 'registration';
     });
+    if (needs) v.issuedCode = { nick, code };
+    return v;
+  }
+  // A new personal code for a player (lost, or added before codes existed).
+  function issueCode(id, nickIn, author) {
+    const nick = cleanNick(nickIn);
+    const code = newCode();
+    const v = act(id, author, 'codeIssued', { nick }, (t) => {
+      if (t.result) refuse('the result is set');
+      const p = t.players.find((x) => sameNick(x.nick, nick));
+      if (!p) refuse(nick + ' is not in');
+      p.codeHash = hashCode(code);
+    });
+    v.issuedCode = { nick, code };
+    return v;
+  }
+  // The organizer checks a player in himself (seen in the room, say).
+  function organizerCheckIn(id, nickIn, author) {
+    const nick = cleanNick(nickIn);
+    return act(id, author, 'checkedIn', { nick, by: 'organizer' }, (t) => {
+      if (!needsCheckIn(t)) refuse('this tournament has no check-in (identity « code » only)');
+      if (t.result || hostOpen(t)) refuse('too late: the table is open or the result is set');
+      const p = t.players.find((x) => sameNick(x.nick, nick));
+      if (!p) refuse(nick + ' is not in');
+      if (p.checkedIn) refuse(nick + ' is already checked in');
+      p.checkedIn = now();
+    });
+  }
+  // When the director opens the table of a check-in tournament: whoever has
+  // not checked in is marked absent (not invited, not ranked).
+  function markNotCheckedIn(id) {
+    const { t } = load(id);
+    if (!needsCheckIn(t)) return null;
+    const nicks = t.players.filter((p) => !p.checkedIn && !p.absent).map((p) => p.nick);
+    if (!nicks.length) return null;
+    return act(id, 'director', 'notCheckedIn', { nicks }, (tt) => { for (const p of tt.players) if (!p.checkedIn) p.absent = true; });
   }
   function removePlayer(id, nickIn, author) {
     const nick = cleanNick(nickIn);
@@ -323,6 +370,35 @@ export function createTournaments(o) {
     return allTournaments().find((t) => t.publicKey === key) || null;
   }
   // Why registration is closed, or null when it is open.
+  // Check-in: only with the identity « code » (Official); from checkInBefore
+  // minutes before the start (at once without a date) until the table opens.
+  function needsCheckIn(t) { return !!(t.settings && t.settings.identity === 'code'); }
+  function checkInState(t) {
+    if (!needsCheckIn(t)) return { needed: false };
+    const before = (t.run && t.run.checkInBefore) || RUN_DEFAULTS.checkInBefore;
+    const opensAt = t.startsAt ? t.startsAt - before * 60000 : null;
+    const closed = !!(t.result || hostOpen(t) || t.status === 'validated');
+    return { needed: true, opensAt, open: !closed && (!opensAt || now() >= opensAt), closed,
+      count: t.players.filter((p) => p.checkedIn).length, of: t.players.length };
+  }
+  function checkIn(key, input) {
+    const t0 = byKey(key);
+    if (!t0 || !visible(t0, input && input.invite)) prefuse('notFound', 'unknown tournament');
+    const data = { nick: cleanNick(input && input.nick) };
+    const nick = data.nick;
+    act(t0.id, 'player', 'checkedIn', data, (t) => {
+      const st = checkInState(t);
+      if (!st.needed) prefuse('noCheckIn', 'this tournament has no check-in');
+      if (st.closed) prefuse('checkInClosed', 'check-in is closed');
+      if (!st.open) prefuse('checkInNotYet', 'check-in is not open yet');
+      const p = t.players.find((x) => sameNick(x.nick, nick));
+      if (!p || !p.codeHash || !sameHash(p.codeHash, hashCode(input && input.code))) prefuse('badCode', 'nickname or code not recognised');
+      if (p.checkedIn) prefuse('alreadyIn', 'already checked in');
+      p.checkedIn = now();
+      data.nick = p.nick;   // as registered, in the journal too
+    });
+    return { nick: data.nick, tournament: publicGet(key, input && input.invite) };
+  }
   function regClosed(t) {
     if (!t.run || t.run.selfRegister === false) return 'organizer';
     if (t.result || t.status === 'finished' || t.status === 'validated') return 'finished';
@@ -366,7 +442,8 @@ export function createTournaments(o) {
       visibility: t.settings.visibility, identity: t.settings.identity, validation: t.settings.validation,
       table: t.table || null, autoOpen: !!(t.run && t.run.autoOpen), openBefore: t.run ? t.run.openBefore : null,
       closedBecause: regClosed(t),
-      playerList: t.players.map((p) => ({ nick: p.nick, absent: !!p.absent })),
+      playerList: t.players.map((p) => ({ nick: p.nick, absent: !!p.absent, checkedIn: !!p.checkedIn })),
+      checkIn: checkInState(t),
       result: t.result ? { status: t.result.status, byDirector: !!t.result.byDirector, corrected: !!t.result.corrected, absent: t.result.absent || [],
         ranking: t.result.ranking.map((r) => ({ place: r.place, nick: r.nick, winner: !!r.winner, elimHand: r.elimHand, tie: !!r.tie })) } : null,
       corrections: (t.corrections || []).map((c) => ({ at: c.at, reason: c.reason, before: c.before, after: c.after })),
@@ -613,7 +690,7 @@ export function createTournaments(o) {
   }
 
   return { list, get, create, update, addPlayer, removePlayer, setResult: setResultP, validate, correct, importPdb, file,
-    publicList, publicGet, register, unregister, publicFile,
+    publicList, publicGet, register, unregister, publicFile, checkIn, issueCode, organizerCheckIn, markNotCheckedIn, needsCheckIn: (id) => needsCheckIn(load(id).t),
     hostOpened, hostCheck, hostNote, hostEnded, hostResultRefused, openHosts, autoOpenDue, autoOpenNote, Refusal };
 }
 

@@ -27,7 +27,7 @@ const STATIC = {
 };
 const LANG_RE = /^lang\/([a-z]{2,3}(?:-[a-z0-9]{2,4})?)\.mjs$/;
 // Public endpoints: per address, a few registrations and code attempts.
-const RATE = { register: [6, 10 * 60 * 1000], unregister: [12, 10 * 60 * 1000] };
+const RATE = { register: [6, 10 * 60 * 1000], unregister: [12, 10 * 60 * 1000], checkin: [12, 10 * 60 * 1000] };
 const MAX_JSON = 64 * 1024;
 const MAX_PDB = 10 * 1024 * 1024;
 
@@ -103,11 +103,14 @@ export function createService(o) {
     if (t.result || t.status === 'validated') throw new T.Refusal('the result is set');
     if (t.host && t.host.status === 'open') throw new T.Refusal('the table is already open');
     if (!t.server || !t.server.ref) throw new T.Refusal('choose the LAN server of the tournament first (Edit)');
-    const registered = t.players.filter((p) => !p.absent).map((p) => p.nick);
-    if (registered.length < 2) throw new T.Refusal('add at least two players first');
+    // Check-in (identity « code »): only the players who checked in are invited.
+    const checkIn = T.needsCheckIn(id);
+    const registered = t.players.filter((p) => !p.absent && (!checkIn || p.checkedIn)).map((p) => p.nick);
+    if (registered.length < 2) throw new T.Refusal(checkIn ? 'fewer than two players have checked in' : 'add at least two players first');
     const r = await td.startHost({ ref: t.server.ref, tournamentId: id, tableName: t.name, table: t.table, registered, nick: b.nick, announce: !t.run || t.run.announce !== false });
     if (!r.ok) throw new T.Refusal(r.error);
     try { T.hostOpened(id, r.id, { server: t.server.name }, who); } catch (e) { td.stop(r.id); throw e; }
+    if (checkIn) T.markNotCheckedIn(id);
     return withHost(T.get(id));
   }
   // A line from the organizer to the table: the server's chat filter
@@ -220,6 +223,8 @@ export function createService(o) {
       case '/t/create': return send(() => T.create(b, who));
       case '/t/update': return send(() => T.update(id, b.patch || {}, who));
       case '/t/player': return send(() => (b.action === 'remove' ? T.removePlayer(id, b.nick, who) : T.addPlayer(id, b.nick, who)));
+      case '/t/code': return send(() => T.issueCode(id, b.nick, who));
+      case '/t/checkin': return send(() => T.organizerCheckIn(id, b.nick, who));
       case '/t/result': return send(() => T.setResult(id, b, who));
       case '/t/validate': return send(() => T.validate(id, who));
       case '/t/correct': return send(() => T.correct(id, b, who));
@@ -257,7 +262,7 @@ export function createService(o) {
       .catch((e) => (e instanceof T.Refusal ? json(res, e.code === 'notFound' || e.code === 'private' ? 404 : 400, { ok: false, code: e.code || 'refused', error: e.message })
         : json(res, 500, { ok: false, code: 'error', error: 'error' })));
     if (sub === '/list' && req.method === 'GET') return send(() => T.publicList());
-    const m = /^\/t\/([A-Za-z0-9_-]{8,40})(?:\/(register|unregister|file))?$/.exec(sub);
+    const m = /^\/t\/([A-Za-z0-9_-]{8,40})(?:\/(register|unregister|checkin|file))?$/.exec(sub);
     if (!m) return json(res, 404, { ok: false, code: 'notFound' });
     const key = m[1], op = m[2] || '';
     if (!op && req.method === 'GET') {
@@ -276,11 +281,11 @@ export function createService(o) {
         'Content-Disposition': 'attachment; filename="tournament-' + key.slice(0, 8) + '.' + which + '.json"' });
       return res.end(buf);
     }
-    if (req.method !== 'POST' || (op !== 'register' && op !== 'unregister')) return json(res, 405, { ok: false, code: 'method' });
+    if (req.method !== 'POST' || (op !== 'register' && op !== 'unregister' && op !== 'checkin')) return json(res, 405, { ok: false, code: 'method' });
     if (limited(op, ip)) return json(res, 429, { ok: false, code: 'tooMany', error: 'too many attempts, try again later' });
     const b = await readJson(req);
     if (!b) return json(res, 400, { ok: false, code: 'badRequest' });
-    return send(() => (op === 'register' ? T.register(key, b) : T.unregister(key, b)));
+    return send(() => (op === 'register' ? T.register(key, b) : op === 'checkin' ? T.checkIn(key, b) : T.unregister(key, b)));
   }
 
   function handler(req, res) {

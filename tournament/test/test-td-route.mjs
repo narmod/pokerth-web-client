@@ -187,7 +187,14 @@ try {
     $('tPlayerIn').value = nick; act('add').click();
     await until(() => new RegExp(nick + ' added').test(det()));
   }
-  ok(/Players \(2\/10\)/.test(det()), 'tournaments: two players added by hand');
+  ok(/Players \(2\/10\) · checked in 0\/2/.test(det()), 'tournaments: two players added by hand, check-in count (Official)');
+  ok(/Personal code of Yann: [A-HJ-NP-Z2-9]{8}/.test(det()) && w.document.querySelectorAll('#tDetailBody [data-act="ckin"]').length === 2 && w.document.querySelectorAll('#tDetailBody [data-act="code"]').length === 2 && /open now: no start date/.test(det()), 'check-in: the code shown once to the organizer, « Check in » and « New code » per player');
+  w.document.querySelector('#tDetailBody [data-act="ckin"][data-nick="Zoe"]').click();
+  ok(await until(() => /Zoe checked in\./.test(det()) && /checked in 1\/2/.test(det())), 'check-in: the organizer checks a player in');
+  w.confirm = () => true;
+  w.document.querySelector('#tDetailBody [data-act="code"][data-nick="Yann"]').click();
+  ok(await until(() => /Personal code of Yann/.test(det())), 'check-in: a new code for a player');
+  ok($('te_checkin') && $('te_checkin').value === '30', 'check-in: its window in Edit (30 minutes)');
   act('mdown', 0).click();
   const order = [...w.document.querySelectorAll('#tDetailBody .rank .nk')].slice(-2).map((x) => x.textContent);
   ok(order.join(',') === 'Yann,Zoe', 'tournaments: the typed ranking is arranged');

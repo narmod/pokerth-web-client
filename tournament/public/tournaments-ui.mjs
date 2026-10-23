@@ -109,10 +109,11 @@ export function createTournamentsView(deps) {
     }).join('');
   }
   function runFields(r) {
-    r = Object.assign({ autoOpen: false, openBefore: 10, announce: true }, r || {});
+    r = Object.assign({ autoOpen: false, openBefore: 10, announce: true, checkInBefore: 30 }, r || {});
     return '<div class="row"><label class="ck"><input type="checkbox" id="te_auto"' + (r.autoOpen ? ' checked' : '') + '> Open the table by itself</label><div><label for="te_before">minutes before the start</label><input id="te_before" type="number" inputmode="numeric" min="0" max="120" value="' + esc(r.openBefore) + '"></div></div>' +
       '<label class="ck"><input type="checkbox" id="te_announce"' + (r.announce ? ' checked' : '') + '> Announcements in the table chat</label>' +
-      '<label class="ck"><input type="checkbox" id="te_selfreg"' + (r.selfRegister !== false ? ' checked' : '') + '> Players can register themselves on the public page</label>';
+      '<label class="ck"><input type="checkbox" id="te_selfreg"' + (r.selfRegister !== false ? ' checked' : '') + '> Players can register themselves on the public page</label>' +
+      '<div class="row"><div><label for="te_checkin">Check-in opens, minutes before the start (identity « code »)</label><input id="te_checkin" type="number" inputmode="numeric" min="5" max="240" value="' + esc(r.checkInBefore) + '"></div></div>';
   }
   function readTable(prefix) {
     const o = {};
@@ -207,13 +208,26 @@ export function createTournamentsView(deps) {
     flash = null;
 
     // Players.
-    h += '<h3>Players (' + t.players.length + '/10)</h3>';
+    // Check-in (identity « code », Official): who confirmed with their code.
+    const ci = st.identity === 'code';
+    const nIn = t.players.filter((p) => p.checkedIn).length;
+    h += '<h3>Players (' + t.players.length + '/10)' + (ci ? ' · checked in ' + nIn + '/' + t.players.length : '') + '</h3>';
+    if (ci && !t.result) {
+      const before = (t.run && t.run.checkInBefore) || 30;
+      h += '<p class="small muted">Check-in: each player confirms on the players\' page with their personal code' +
+        (t.startsAt ? ', from ' + esc(new Date(t.startsAt - before * 60000).toLocaleString()) + ' (' + esc(before) + ' min before the start)' : ' (open now: no start date)') +
+        '. Only the players checked in are invited; the others are marked absent when the table opens. Players you add get a code here; « New code » replaces a lost one.</p>';
+    }
+    const ciChip = (p) => (ci ? (p.checkedIn ? ' <span class="chip live">checked in</span>' : ' <span class="chip">not checked in</span>') : '');
     if (!t.result && !(t.host && t.host.status === 'open')) {
-      h += t.players.length ? '<ul class="rank">' + t.players.map((p) => '<li><span class="nk">' + esc(p.nick) + (p.self ? ' <span class="chip">self</span>' : '') + '</span><button type="button" data-act="rm" data-nick="' + esc(p.nick) + '" aria-label="Remove ' + esc(p.nick) + '">Remove</button></li>').join('') + '</ul>'
+      h += t.players.length ? '<ul class="rank">' + t.players.map((p) => '<li><span class="nk">' + esc(p.nick) + (p.self ? ' <span class="chip">self</span>' : '') + ciChip(p) + '</span>' +
+        (ci && !p.checkedIn ? '<button type="button" data-act="ckin" data-nick="' + esc(p.nick) + '" aria-label="Check ' + esc(p.nick) + ' in">Check in</button>' : '') +
+        (ci ? '<button type="button" data-act="code" data-nick="' + esc(p.nick) + '" aria-label="New code for ' + esc(p.nick) + '">New code</button>' : '') +
+        '<button type="button" data-act="rm" data-nick="' + esc(p.nick) + '" aria-label="Remove ' + esc(p.nick) + '">Remove</button></li>').join('') + '</ul>'
         : '<p class="empty">No player yet — add them here, or let the result bring them (Table check or log).</p>';
       if (t.players.length < 10) h += '<div class="row"><div><label for="tPlayerIn">PokerTH nickname</label><input id="tPlayerIn" maxlength="64" autocomplete="off" enterkeyhint="done"></div><button type="button" data-act="add">Add</button></div>';
     } else {
-      h += '<p class="small">' + t.players.map((p) => esc(p.nick)).join(', ') + '</p>';
+      h += '<p class="small">' + t.players.map((p) => esc(p.nick) + (ci && !t.result ? (p.checkedIn ? ' ✓' : '') : '')).join(', ') + '</p>';
     }
 
     // The table on the server.
@@ -364,6 +378,8 @@ export function createTournamentsView(deps) {
     msg('tMsg', 'Working…');
     return api(path, Object.assign({ id: cur.id }, body)).then((d) => {
       if (!d.ok) return msg('tMsg', d.error || 'Refused', true);
+      // A personal code is shown once: the organizer hands it to the player.
+      if (d.issuedCode) okText = (okText ? okText + ' ' : '') + 'Personal code of ' + d.issuedCode.nick + ': ' + d.issuedCode.code + ' — give it to them for the check-in; it is not shown again.';
       show(d, okText);
       refresh();
     }).catch((e) => msg('tMsg', e.message === 'forbidden' ? '' : 'Network error', true));
@@ -393,6 +409,11 @@ export function createTournamentsView(deps) {
       return call('/admin/tournaments/t/player', { action: 'add', nick }, nick + ' added.').then(() => { const el = $('tPlayerIn'); if (el) el.focus(); });
     }
     if (a === 'rm') return call('/admin/tournaments/t/player', { action: 'remove', nick: b.dataset.nick }, b.dataset.nick + ' removed.');
+    if (a === 'ckin') return call('/admin/tournaments/t/checkin', { nick: b.dataset.nick }, b.dataset.nick + ' checked in.');
+    if (a === 'code') {
+      if (!window.confirm('A new personal code for ' + b.dataset.nick + '? The old one stops working.')) return;
+      return call('/admin/tournaments/t/code', { nick: b.dataset.nick }, '');
+    }
     if (a === 'setManual') {
       const ranking = cur.players.length ? order.slice() : ($('tManualTa').value || '').split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
       if (!ranking.length) return msg('tMsg', 'Type the ranking first.', true);
@@ -425,9 +446,9 @@ export function createTournamentsView(deps) {
         if (TABLE_FIELDS.some((f) => String(tb[f[0]]) !== String(was[f[0]]))) patch.table = tb;
       }
       if ($('te_auto')) {
-        const run = { autoOpen: $('te_auto').checked, openBefore: Number($('te_before').value), announce: $('te_announce').checked, selfRegister: $('te_selfreg').checked };
-        const r0 = Object.assign({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true }, cur.run || {});
-        if (run.autoOpen !== r0.autoOpen || run.openBefore !== r0.openBefore || run.announce !== r0.announce || run.selfRegister !== r0.selfRegister) patch.run = run;
+        const run = { autoOpen: $('te_auto').checked, openBefore: Number($('te_before').value), announce: $('te_announce').checked, selfRegister: $('te_selfreg').checked, checkInBefore: Number($('te_checkin').value) };
+        const r0 = Object.assign({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30 }, cur.run || {});
+        if (Object.keys(run).some((k) => run[k] !== r0[k])) patch.run = run;
       }
       if (!Object.keys(patch).length) return msg('tMsg', 'Nothing changed.');
       return call('/admin/tournaments/t/update', { patch }, 'Saved.');

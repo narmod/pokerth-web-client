@@ -2,7 +2,8 @@
 // The players' page (/tournament) in a real browser, through a real proxy
 // that runs the tournament service: the list, a tournament, registration with
 // the personal code kept in the browser, unregistration, a private tournament
-// opened with its invitation code, the language picker.
+// opened with its invitation code, the language picker, the check-in of an
+// Official tournament.
 // Needs Chromium (Playwright). PW_CHROMIUM=<path> picks a binary; without a
 // browser the test says so and stops without failing.
 // Run: node tournament/test/test-td-public-browser.mjs   (SHOTS=<dir> keeps screenshots)
@@ -101,6 +102,19 @@ try {
     if (shots) await pg.screenshot({ path: path.join(shots, 'pub-ar.png'), fullPage: true });
     await pg.selectOption('#langSel', 'en');
   }
+  // Official: check-in with the code kept in this browser, one click.
+  const off = await admin('/t/create', { name: 'Official night', profile: 'official' });
+  await pg.goto(base + '/tournament/t/' + off.publicKey);
+  await pg.waitForSelector('#regForm', { timeout: 8000 });
+  ok(/Confirm your presence below/.test(await pg.textContent('.how')) && /0 of 0 players checked in/.test(await pg.textContent('#ckCard')), 'Official: how it works has the check-in step; the check-in card');
+  await pg.fill('#regNick', 'Zoe');
+  await pg.click('#regForm button');
+  await pg.waitForSelector('[data-ckin="Zoe"]', { timeout: 8000 });
+  ok(/check in before the start/.test(await pg.textContent('#view')), 'Official: the code is needed for the check-in, the page says so');
+  await pg.click('[data-ckin="Zoe"]');
+  await pg.waitForFunction(() => /Zoe is checked in/.test(document.getElementById('view').textContent), null, { timeout: 8000 });
+  ok(/Zoe\s*checked in/.test(await pg.textContent('.chips')) && /1 of 1 players checked in/.test(await pg.textContent('#ckCard')) && !(await pg.$('[data-ckin]')), 'check-in: one click, the list shows « checked in »');
+  if (shots) await pg.screenshot({ path: path.join(shots, 'pub-checkin.png'), fullPage: true });
   ok(errors.length === 0, 'no script error' + (errors.length ? ': ' + errors[0] : ''));
 
   // Phone.

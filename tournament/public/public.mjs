@@ -6,7 +6,9 @@
 //                          a private one asks for its invitation code)
 //
 // Registration with a PokerTH nickname; the personal code it returns is kept
-// in this browser (pth_td_regs) and is what unregistering asks for.
+// in this browser (pth_td_regs) and is what unregistering asks for — and the
+// check-in, with the identity « code » (Official): in a window before the
+// start each player confirms with that code; only they are invited.
 // Every language of the app: the list comes from /modules/lang-meta.mjs (the
 // web client's), the texts from /tournament/lang/<code>.mjs, falling back
 // to English, then to the key. Talks to /tournament/api/* (no token).
@@ -111,7 +113,13 @@ async function showOne(key) {
   cur = d;
   renderOne();
   clearTimeout(pollTimer);
-  if (d.phase === 'table' || d.phase === 'upcoming') pollTimer = setTimeout(() => { if (curKey === key) showOne(key); }, d.phase === 'table' ? 5000 : 30000);
+  if (d.phase === 'table' || d.phase === 'upcoming') pollTimer = setTimeout(function tick() {
+    if (curKey !== key) return;
+    // Not while the player is typing in a form: try again a bit later.
+    const a = document.activeElement;
+    if (a && a.tagName === 'INPUT' && $('view').contains(a) && a.value) { pollTimer = setTimeout(tick, 5000); return; }
+    showOne(key);
+  }, d.phase === 'table' ? 5000 : 30000);
 }
 function renderPrivate(key, tried) {
   $('view').innerHTML = '<p><a href="/tournament" data-go>← ' + T('allTournaments') + '</a></p><section class="card"><h2>' + T('privateTitle') + '</h2>' +
@@ -141,15 +149,34 @@ function renderOne() {
 
   if (c.phase === 'upcoming' || c.phase === 'table') {
     const at = c.autoOpen && c.startsAt ? c.startsAt - (c.openBefore || 0) * 60000 : null;
-    h += '<section class="card"><h2>' + T('howTitle') + '</h2><ol class="how"><li>' + T('how1') + '</li><li>' +
+    const ck = c.checkIn && c.checkIn.needed ? '<li>' + (c.checkIn.opensAt ? T('checkInHow', { time: fmtTime(c.checkIn.opensAt) }) : T('checkInHowNoTime')) + '</li>' : '';
+    h += '<section class="card"><h2>' + T('howTitle') + '</h2><ol class="how"><li>' + T('how1') + '</li>' + ck + '<li>' +
       (at ? T('how2At', { time: fmtTime(at) }) : T('how2')) + '</li><li>' + T('how3') + '</li><li>' + T('how4') + '</li></ol></section>';
   }
 
   // Players.
   h += '<section class="card"><h2>' + T('playersTitle') + ' <span class="muted small">' + T('players', { n: c.players, max: c.maxPlayers }) + '</span></h2>';
+  const ckOn = !!(c.checkIn && c.checkIn.needed && !c.result);
   h += c.playerList.length ? '<ul class="chips">' + c.playerList.map((p) => '<li>' + esc(p.nick) + (p.absent ? ' <span class="chip bad">' + T('absent') + '</span>' : '') +
+    (ckOn && p.checkedIn && !p.absent ? ' <span class="chip live">' + T('checkedIn') + '</span>' : '') +
     (mineSet.has(p.nick.toLowerCase()) ? ' <span class="chip done">' + T('you') + '</span>' : '') + '</li>').join('') + '</ul>' : '<p class="empty">' + T('noPlayers') + '</p>';
   h += '</section>';
+
+  // Check-in (identity « code »): a window before the start, then closed.
+  if (ckOn && !c.checkIn.closed) {
+    const ci = c.checkIn;
+    h += '<section class="card" id="ckCard"><h2>' + T('checkInTitle') + ' <span class="muted small">' + T('checkInCount', { n: ci.count, of: ci.of }) + '</span></h2>';
+    if (!ci.open) h += '<p>' + T('checkInOpensAt', { date: fmtDate(ci.opensAt) }) + '</p>';
+    else {
+      h += '<p>' + T('checkInOpen') + '</p>';
+      const todo = mine.filter((r) => c.playerList.some((p) => p.nick.toLowerCase() === r.nick.toLowerCase() && !p.checkedIn));
+      if (todo.length) h += '<div class="actions">' + todo.map((r) => '<button type="button" class="primary" data-ckin="' + esc(r.nick) + '">' + T('checkIn') + ' · ' + esc(r.nick) + '</button>').join('') + '</div>';
+      h += '<form id="ckForm" class="row"><div><label for="ckNick">' + T('nickname') + '</label><input id="ckNick" maxlength="64" autocomplete="nickname" required></div>' +
+        '<div><label for="ckCode">' + T('code') + '</label><input id="ckCode" maxlength="16" autocomplete="off" required></div>' +
+        '<button type="submit"' + (todo.length ? '' : ' class="primary"') + '>' + T('checkIn') + '</button></form><p class="small muted">' + T('checkInCodeHint') + '</p>';
+    }
+    h += '</section>';
+  }
 
   // Registration.
   if (!c.result) {
@@ -192,7 +219,7 @@ function renderOne() {
   wire();
 }
 function invQs(sep) { const i = inviteFromUrl(); return i ? sep + 'invite=' + encodeURIComponent(i) : ''; }
-function errText(d) { return T('err_' + (['badNick', 'taken', 'badCode', 'tooMany', 'notFound'].indexOf(d.code) >= 0 ? d.code : 'error')); }
+function errText(d) { return T('err_' + (['badNick', 'taken', 'badCode', 'tooMany', 'notFound', 'checkInNotYet', 'checkInClosed', 'noCheckIn', 'alreadyIn'].indexOf(d.code) >= 0 ? d.code : 'error')); }
 function wire() {
   const reg = $('regForm');
   if (reg) reg.addEventListener('submit', async (ev) => {
@@ -204,7 +231,7 @@ function wire() {
     if (!d.ok) { flash = { bad: true, html: /^closed_/.test(d.code || '') ? T(d.code) : errText(d) }; renderOne(); return; }
     regsSave(cur.key, regsFor(cur.key).filter((r) => r.nick.toLowerCase() !== d.nick.toLowerCase()).concat([{ nick: d.nick, code: d.code }]));
     cur = d.tournament;
-    flash = { html: T('registered', { nick: d.nick }) + '<br><b>' + T('yourCode', { code: d.code }) + '</b> <button type="button" class="mini" data-copy="' + esc(d.code) + '">' + T('copy') + '</button><br><span class="small">' + T('codeKeep') + '</span>' };
+    flash = { html: T('registered', { nick: d.nick }) + '<br><b>' + T('yourCode', { code: d.code }) + '</b> <button type="button" class="mini" data-copy="' + esc(d.code) + '">' + T('copy') + '</button><br><span class="small">' + T(cur.checkIn && cur.checkIn.needed ? 'codeKeepCheckIn' : 'codeKeep') + '</span>' };
     renderOne();
   });
   const doUnreg = async (nick, code) => {
@@ -219,6 +246,19 @@ function wire() {
     const r = regsFor(cur.key).find((x) => x.nick === b.dataset.unreg);
     if (r) doUnreg(r.nick, r.code);
   }));
+  const doCheckIn = async (nick, code) => {
+    const d = await api('/t/' + cur.key + '/checkin', { nick, code, invite: inviteFromUrl() || undefined });
+    if (!d.ok) { flash = { bad: true, html: errText(d) }; renderOne(); return; }
+    cur = d.tournament;
+    flash = { html: T('checkedInDone', { nick: d.nick }) };
+    renderOne();
+  };
+  document.querySelectorAll('[data-ckin]').forEach((b) => b.addEventListener('click', () => {
+    const r = regsFor(cur.key).find((x) => x.nick === b.dataset.ckin);
+    if (r) { b.disabled = true; doCheckIn(r.nick, r.code); }
+  }));
+  const ck = $('ckForm');
+  if (ck) ck.addEventListener('submit', (ev) => { ev.preventDefault(); doCheckIn($('ckNick').value.trim(), $('ckCode').value.trim()); });
   const un = $('unregForm');
   if (un) un.addEventListener('submit', (ev) => { ev.preventDefault(); doUnreg($('unNick').value.trim(), $('unCode').value.trim()); });
 }
