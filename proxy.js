@@ -12271,7 +12271,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (_m) query.token = _m[1];
   }
   if (reqPathOnly === '/admin/tournaments' || reqPathOnly.indexOf('/admin/tournaments/') === 0) {
-    return TD_LIB.handleTournamentAdmin(TD, { adminAuthed: adminAuthed, adminJson: adminJson, readJsonBody: readJsonBody }, req, res, reqPathOnly, query);
+    return TD_LIB.handleTournamentAdmin(TD, { adminAuthed: adminAuthed, adminJson: adminJson, readJsonBody: readJsonBody, readRawBody: readRawBody }, req, res, reqPathOnly, query);
   }
   if (reqPathOnly === '/admin' || reqPathOnly === '/admin.html') {
     const p = path.join(PUBLIC_DIR, 'admin.html');

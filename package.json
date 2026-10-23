@@ -1,6 +1,6 @@
 {
   "name": "pokerth-web-client",
-  "version": "2.1.10-web.295",
+  "version": "2.1.10-web.296",
   "description": "Experimental modern web client for PokerTH using a WebSocket-to-TCP proxy.",
   "main": "proxy.js",
   "private": false,
@@ -32,6 +32,7 @@
     "test:td-spectator": "node scripts/test-td-spectator.mjs",
     "test:td-manager": "node scripts/test-td-manager.mjs",
     "test:td-route": "node scripts/test-td-route.mjs",
+    "test:td-tournaments": "node scripts/test-td-tournaments.mjs",
     "test:admin-infra": "node scripts/test-admin-infra.mjs",
     "test:admin-ops": "node scripts/test-admin-ops.mjs",
     "test:admin-security": "node scripts/test-admin-security.mjs",

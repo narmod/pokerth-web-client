@@ -12,6 +12,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { JSDOM } from 'jsdom';
 import { freePort } from './lib/free-port.mjs';
 import { S, fakeServer, answerNames, wait } from './lib/td-fake-server.mjs';
+import { buildPdb, sampleGames } from './lib/td-pdb-fixture.mjs';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 let n = 0, fail = 0;
@@ -102,6 +103,9 @@ try {
   $('signInForm').dispatchEvent(new w.Event('submit', { cancelable: true }));
   for (let i = 0; i < 30 && $('app').hidden; i++) await wait(100);
   ok(!$('app').hidden && $('srvSel').options.length >= 1, 'page: signed in, servers listed');
+  ok(!$('viewTour').hidden && $('viewCheck').hidden && $('tabTour').getAttribute('aria-selected') === 'true', 'page: opens on the Tournaments view');
+  $('tabCheck').click();
+  ok($('viewTour').hidden && !$('viewCheck').hidden, 'page: Table check tab');
   ok(w.localStorage.getItem('pth_admin_tok') === TOKEN, 'page: shares the admin token key');
   $('srvSel').value = 'local';
   $('lobbyBtn').click();
@@ -127,7 +131,68 @@ try {
   ok(w.document.documentElement.getAttribute('data-theme') === 'light', 'page: then light');
   $('themeBtn').click();
   ok(!w.document.documentElement.hasAttribute('data-theme'), 'page: then back to the system choice');
+
+  // ── Tournaments view (manual mode) ──
+  const until = async (cond, n) => { for (let i = 0; i < (n || 60) && !cond(); i++) await wait(100); return cond(); };
+  const det = () => $('tDetailBody').textContent;
+  const act = (a, i) => w.document.querySelector('#tDetailBody [data-act="' + a + '"]' + (i != null ? '[data-i="' + i + '"]' : ''));
+  $('tabTour').click();
+  ok(!$('viewTour').hidden && w.localStorage.getItem('pth_td_view') === null, 'tournaments: back on the Tournaments tab');
+  ok([...$('tSrv').options].some((o) => o.value === 'local'), 'tournaments: the LAN servers are offered');
+  $('tName').value = 'Friday cup'; $('tSrv').value = 'local';
+  $('tCreateForm').dispatchEvent(new w.Event('submit', { cancelable: true }));
+  ok(await until(() => /Friday cup/.test(det()) && /Friday cup/.test($('tList').textContent)), 'tournaments: created from the form, listed and opened');
+  ok(/club/.test(det()) && /Local server|local/i.test(det()), 'tournaments: club profile and the server recorded');
+  const wSrc = w.document.querySelector('input[name="tSource"][value="watch"]');
+  wSrc.checked = true; wSrc.dispatchEvent(new w.Event('change', { bubbles: true }));
+  ok(await until(() => $('tWatchSel') && $('tWatchSel').value), 'tournaments: the finished Table check is offered');
+  act('setWatch').click();
+  ok(await until(() => /validated/.test(det()) && /Signature valid/.test(det())), 'tournaments: result from the Table check, validated and signed (club)');
+  const d1 = det();
+  ok(d1.indexOf('Alice') < d1.indexOf('Bob') && d1.indexOf('Bob') < d1.indexOf('Carol') && w.document.querySelectorAll('#tDetailBody .checks li.no').length === 0, 'tournaments: ranking shown, every check passes');
+  act('cdown', 1).click();
+  $('tReason').value = 'Bob and Carol swapped, appeal';
+  act('correct').click();
+  ok(await until(() => /Corrections/.test(det()) && /appeal/.test(det())), 'tournaments: correction recorded with its reason');
+  const rows = [...w.document.querySelectorAll('#tDetailBody tbody tr')].map((tr) => tr.children[1].textContent);
+  ok(rows.join(',') === 'Alice,Carol,Bob,Dave' && /Signature valid/.test(det()), 'tournaments: corrected ranking, signed again');
+
+  // Official, players by hand, typed ranking, organizer validation.
+  $('tName').value = 'Official night'; $('tProfile').value = 'official'; $('tProfile').dispatchEvent(new w.Event('change'));
+  ok(/second organizer/.test($('tProfileNote').textContent), 'tournaments: the profile is explained');
+  $('tCreateForm').dispatchEvent(new w.Event('submit', { cancelable: true }));
+  ok(await until(() => /Official night/.test(det()) && $('tPlayerIn')), 'tournaments: official tournament created');
+  for (const nick of ['Zoe', 'Yann']) {
+    $('tPlayerIn').value = nick; act('add').click();
+    await until(() => new RegExp(nick + ' added').test(det()));
+  }
+  ok(/Players \(2\/10\)/.test(det()), 'tournaments: two players added by hand');
+  act('mdown', 0).click();
+  const order = [...w.document.querySelectorAll('#tDetailBody .rank .nk')].slice(-2).map((x) => x.textContent);
+  ok(order.join(',') === 'Yann,Zoe', 'tournaments: the typed ranking is arranged');
+  act('setManual').click();
+  ok(await until(() => /to validate/.test(det()) && act('validate')), 'tournaments: official — waits for an organizer');
+  act('validate').click();
+  ok(await until(() => /Validated and signed/.test(det())), 'tournaments: validated by hand');
+  ok(/second organizer/.test(det()) && !act('correct'), 'tournaments: official — no correction without a second organizer');
   w.close();
+
+  // .pdb through the routes.
+  const cr = await (await post('/admin/tournaments/t/create', { name: 'From a log', profile: 'friendly' })).json();
+  ok(cr.ok && cr.id, 'routes: create');
+  const pdbBuf = await buildPdb(sampleGames());
+  const upl = await (await fetch(base + '/admin/tournaments/t/pdb?id=' + cr.id, { method: 'POST', headers: Object.assign({ 'Content-Type': 'application/octet-stream' }, H), body: pdbBuf })).json();
+  ok(upl.ok && upl.pdbGames.length === 2, 'routes: .pdb uploaded, its games listed');
+  ok((await fetch(base + '/admin/tournaments/t/pdb?id=' + cr.id, { method: 'POST', body: pdbBuf })).status === 403, 'routes: upload needs the token');
+  const bad = await post('/admin/tournaments/t/result', { id: cr.id, source: 'pdb', uniqueGameId: 99 });
+  ok(bad.status === 400, 'routes: a game that is not in the log → 400');
+  const rp = await (await post('/admin/tournaments/t/result', { id: cr.id, source: 'pdb', uniqueGameId: 2 })).json();
+  ok(rp.ok && rp.status === 'validated' && rp.result.ranking.map((r) => r.nick).join(',') === 'Alice,Bob,Carol,Dave', 'routes: ranked from the log (BBC rule), validated');
+  const fp = await get('/admin/tournaments/t/file?id=' + cr.id + '&which=pdb');
+  ok(fp.status === 200 && Buffer.from(await fp.arrayBuffer()).equals(Buffer.from(pdbBuf)), 'routes: the log is kept and downloadable');
+  const lst = await (await get('/admin/tournaments/t/list')).json();
+  ok(lst.ok && lst.tournaments.length === 3, 'routes: three tournaments listed');
+  ok(fs.existsSync(F('td/tournaments/' + cr.id + '/journal.json')) && fs.existsSync(F('td/tournaments/' + cr.id + '/result.json')), 'routes: stored in TD_DIR');
 
   // ── off again: page gone, files kept ──
   await post('/admin/tournaments/settings', { enabled: false });

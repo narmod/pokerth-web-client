@@ -110,6 +110,24 @@ code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font
 .empty{color:var(--muted);font-style:italic}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 footer{color:var(--muted);font-size:.85em;padding-top:12px;padding-bottom:calc(28px + env(safe-area-inset-bottom))}
+textarea{width:100%;font:inherit;color:var(--ivory);background:var(--field);border:1px solid var(--line);border-radius:8px;padding:9px 10px;min-width:0;resize:vertical}
+textarea:focus{outline:2px solid var(--brass);outline-offset:1px}
+.tabs{display:flex;gap:4px;margin:6px 0 14px;border-bottom:1px solid var(--line);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tabs button{flex:none;background:transparent;border:0;border-bottom:3px solid transparent;border-radius:0;color:var(--muted);padding:8px 14px}
+.tabs button[aria-selected="true"]{border-bottom-color:var(--brass);color:var(--ivory)}
+.rank{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-direction:column;gap:6px}
+.rank li{display:flex;align-items:center;gap:8px;padding:4px 4px 4px 10px;border:1px solid var(--line);border-radius:8px;background:var(--field)}
+.rank .pl{flex:none;min-width:1.6em;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.rank .nk{flex:1;min-width:0;color:var(--ivory);overflow-wrap:anywhere}
+.rank button{flex:none;min-width:44px;padding:4px 10px}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}
+.seg label{display:inline-flex;gap:6px;align-items:center;margin:0;padding:8px 12px;min-height:44px;border:1px solid var(--line);border-radius:999px;background:var(--field);cursor:pointer;color:var(--ink);font-size:.9em}
+.seg input{width:auto;min-height:0;margin:0}
+.seg label:has(input:checked){border-color:var(--brass);color:var(--ivory)}
+details.sub{margin-top:14px;border-top:1px solid var(--line);padding-top:8px}
+details.sub summary{cursor:pointer;color:var(--ivory);font-weight:600;min-height:32px}
+.history{font-size:.85em;padding-left:1.4em;margin:6px 0 0}
+input[type="file"]{padding:7px}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -122,8 +140,7 @@ footer{color:var(--muted);font-size:.85em;padding-top:12px;padding-bottom:calc(2
 </div></header>
 
 <main class="in">
-  <h1>Table check</h1>
-  <p class="lead">Organizer tool, LAN servers only. Pick a server of the LAN directory (or the local server), choose a table, and a director watches it as a spectator until the end: every event goes into a sealed journal and the ranking is signed. Nothing is created, kicked or posted on the game server.</p>
+  <h1>Tournament director</h1>
 
   <section class="card" id="signIn" hidden aria-labelledby="signInH">
     <h2 id="signInH">Organizer sign-in</h2>
@@ -135,7 +152,49 @@ footer{color:var(--muted);font-size:.85em;padding-top:12px;padding-bottom:calc(2
     <div class="msg" id="signInMsg" role="status"></div>
   </section>
 
-  <div class="grid" id="app" hidden>
+  <div id="app" hidden>
+  <div class="tabs" role="tablist" aria-label="Organizer tools">
+    <button type="button" role="tab" id="tabTour" aria-controls="viewTour" aria-selected="true">Tournaments</button>
+    <button type="button" role="tab" id="tabCheck" aria-controls="viewCheck" aria-selected="false">Table check</button>
+  </div>
+  <div id="viewTour" role="tabpanel" aria-labelledby="tabTour">
+  <p class="lead">Manual mode, LAN only: create the tournament, add the players, then set the result — typed in, taken from a Table check, or from a PokerTH log. Every action goes into the tournament’s sealed journal; the validated result is signed. Nothing is done on the game server.</p>
+  <div class="grid">
+    <div>
+      <section class="card" aria-labelledby="tNewH">
+        <h2 id="tNewH">New tournament</h2>
+        <form id="tCreateForm">
+          <label for="tName">Name</label><input id="tName" maxlength="60" minlength="2" required autocomplete="off">
+          <div class="row">
+            <div><label for="tSrv">LAN server <span class="muted">(for the record)</span></label><select id="tSrv"></select></div>
+            <div><label for="tDate">Date</label><input id="tDate" type="datetime-local"></div>
+          </div>
+          <div class="row">
+            <div><label for="tProfile">Profile</label><select id="tProfile"><option value="friendly">Friendly</option><option value="club" selected>Club</option><option value="official">Official</option><option value="custom">Custom</option></select></div>
+            <div><label for="tVis">Visibility</label><select id="tVis"><option value="">As the profile says</option><option value="public">public</option><option value="unlisted">unlisted</option><option value="private">private (invitation code)</option></select></div>
+          </div>
+          <p class="small muted" id="tProfileNote"></p>
+          <div class="row" id="tCustom" hidden></div>
+          <p class="small muted">Format: Sit &amp; Go, one table, up to 10 players.</p>
+          <div class="actions"><button type="submit" class="primary">Create</button></div>
+          <div class="msg" id="tCreateMsg" role="status"></div>
+        </form>
+      </section>
+      <section class="card" aria-labelledby="tListH">
+        <h2 id="tListH">Tournaments</h2>
+        <ul class="watches" id="tList"><li class="empty">None yet.</li></ul>
+      </section>
+    </div>
+    <section class="card" aria-labelledby="tDetailH" aria-live="polite">
+      <h2 id="tDetailH">Tournament</h2>
+      <p class="empty" id="tDetailEmpty">Pick a tournament, or create one.</p>
+      <div id="tDetailBody" hidden></div>
+    </section>
+  </div>
+  </div>
+  <div id="viewCheck" role="tabpanel" aria-labelledby="tabCheck" hidden>
+  <p class="lead">Pick a server of the LAN directory (or the local server), choose a table, and a director watches it as a spectator until the end: every event goes into a sealed journal and the ranking is signed. Nothing is created, kicked or posted on the game server.</p>
+  <div class="grid">
     <div>
       <section class="card" aria-labelledby="pickH">
         <h2 id="pickH">1 · Server and table</h2>
@@ -165,9 +224,11 @@ footer{color:var(--muted);font-size:.85em;padding-top:12px;padding-bottom:calc(2
       <div id="detailBody" hidden></div>
     </section>
   </div>
+  </div>
+  </div>
   <p class="msg bad" id="fatal" role="alert"></p>
 </main>
-<footer class="in">PokerTH Web Client · tournament director (first step). Design: <code>docs/TOURNAMENT_DIRECTOR.md</code>.</footer>
+<footer class="in">PokerTH Web Client · tournament director (manual mode). Design: <code>docs/TOURNAMENT_DIRECTOR.md</code>.</footer>
 <script type="module" src="/modules/tournament/organizer.mjs"></script>
 </body>
 </html>

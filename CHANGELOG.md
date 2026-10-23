@@ -49,6 +49,20 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Tournaments: manual mode on `/tournament`** (`web.296`, off by default) — a « Tournaments » tab next to the
+  Table check: create a Sit & Go tournament (name, LAN server for the record, date, Friendly / Club / Official /
+  Custom profile, visibility — a private one gets an invitation code), add the players by hand (up to 10), then set
+  the result one of three ways: typed in (arrange the players, winner first), the sealed result of a finished Table
+  check (its signature is checked first), or a PokerTH log (`.pdb`) uploaded with the game picked, ranked by the BBC
+  site's rule (`server/tournament/pdb.mjs`: « wins game », then last hand played, then the stack at its start; same
+  hand and stack = same place). Every action goes into the tournament's own hash-chained journal with its author;
+  a complete result is validated at once on Friendly / Club, waits for an organizer on Official or when flagged
+  (tie, unknown hand, unfinished game); validation seals and signs it with the install key. A correction is added
+  with its reason and the result signed again, never written over (Official: needs a second organizer, so not yet).
+  Stored as JSON in `TD_DIR/tournaments/<id>/` (the log kept as evidence); routes under `/admin/tournaments/t/*`;
+  `server/tournament/tournaments.mjs`, `public/modules/tournament/tournaments-ui.mjs`,
+  `scripts/test-td-tournaments.mjs`. Decided the same day: the tournament director becomes a service of its own in
+  this repository (own process, port and version), the proxy only relaying `/tournament`.
 - **Tournaments: « Table check » on `/tournament`** (`web.292`, off by default) — first organizer tool of the
   tournament director. Admin › Community › Tournaments turns the module on (until then `/tournament` and
   `/tournament.html` answer 404), shows the install's Ed25519 public key (created on first enable) and how many

@@ -228,6 +228,53 @@ depends on them.
   `GET …/watches`, `GET …/watch?id=`, `POST …/watch/stop {id}`,
   `GET …/watch/file?id=&which=journal|result`.
 
+## Tournaments, manual mode (`/tournament`, « Tournaments » tab)
+
+- **Create**: name, LAN server (for the record: nothing is done on it), date,
+  Sit & Go (one table, up to 10 players), profile (Friendly, Club, Official,
+  Custom), visibility (a private tournament gets an invitation code). Identity,
+  witnesses and the collusion check are recorded now and apply once
+  registration and witnesses exist.
+- **Players** are added and removed by hand until a result is set; with no
+  player yet, the result brings them.
+- **Result**, three sources:
+  1. *typed in* — the players arranged, winner first;
+  2. *a Table check* — the sealed result of a finished watch, its signature
+     checked before use; its head and signature go into the tournament's
+     journal;
+  3. *a PokerTH log* (`.pdb`, ≤ 10 MB) — uploaded and kept as evidence (with
+     its SHA-256), the organizer picks the game; ranked by the BBC site's rule
+     (`server/tournament/pdb.mjs`, read in memory with sql.js).
+  A ranking must place every player once and no one else.
+- **Validation**: automatic on Friendly / Club when the result is complete;
+  by an organizer on Official, or when the result is flagged (tie, unknown
+  hand, game not finished). Validating seals and signs (`result.json`:
+  tournament id, journal head and length, result, corrections).
+- **Corrections**: only on a validated result, with a reason; added to the
+  journal (before and after) and signed again. Official: a second organizer
+  must approve, so none until organizer accounts exist.
+- **Journal**: every action, with its author, in a hash chain
+  (`journal.mjs`); a tampered journal is refused on load. `tournament.json`
+  is only a convenience copy.
+- Storage: `TD_DIR/tournaments/<id>/` — `tournament.json`, `journal.json`,
+  `result.json`, `log.pdb`.
+- Routes, behind the admin token: `GET /admin/tournaments/t/list`,
+  `GET …/t/get?id=`, `GET …/t/file?id=&which=journal|result|pdb`,
+  `POST …/t/create`, `…/t/update {id, patch}`, `…/t/player {id, action, nick}`,
+  `…/t/result {id, source, ranking | watchId | uniqueGameId}`,
+  `…/t/validate {id}`, `…/t/correct {id, ranking, reason}`, and
+  `POST …/t/pdb?id=` (raw body).
+
+## A service of its own (decided 2026-10-23)
+
+The tournament director has its own audience (organizers), lifecycle,
+storage, accounts and processes. It moves out of `proxy.js` into a separate
+service **in this repository**: its own process and port, its own
+`package.json` and version, its own entry in Docker / PM2. The web client's
+proxy only relays `/tournament` to it and serves it the LAN directory. A
+separate repository stays possible later. `server/tournament/*` is already
+standalone; `server/tournament-manager.js` is the part to rework.
+
 ## The prototype (step 1)
 
 | File | Role |
@@ -243,12 +290,15 @@ depends on them.
 | `server/tournament-manager.js` | Proxy side: settings, key, known servers, watches, routes. |
 | `public/tournament.html`, `public/modules/tournament/organizer.mjs` | The Table check page. |
 | `scripts/test-td-manager.mjs`, `scripts/test-td-route.mjs` | Manager with real worker processes; real proxy plus the page in jsdom. |
+| `server/tournament/pdb.mjs`, `server/tournament/tournaments.mjs` | PokerTH log reader (BBC rule); tournaments in manual mode. |
+| `public/modules/tournament/tournaments-ui.mjs` | The « Tournaments » tab. |
+| `scripts/test-td-tournaments.mjs`, `scripts/lib/td-pdb-fixture.mjs` | Manual mode, journal, signatures; a `.pdb` built for the tests. |
 
 ```sh
 node scripts/td-spectate.mjs --host 192.168.1.20 --port 7234 \
      --nick TD-test-T1 --game-name "Friday SnG"
 node scripts/td-spectate.mjs --verify td-out.result.json td-out.journal.json
-npm run test:td-core && npm run test:td-spectator && npm run test:td-manager && npm run test:td-route
+npm run test:td-core && npm run test:td-spectator && npm run test:td-manager && npm run test:td-route && npm run test:td-tournaments
 ```
 
 The install key (`td-key.pem`, created on first use, mode 600) and the
@@ -259,7 +309,8 @@ operator's agreement.
 
 1. Spectator prototype, and the Table check on `/tournament` (done).
 2. Storage layer (JSON and SQL) and migrations.
-3. Manual mode on `/tournament`.
+3. Manual mode on `/tournament` (done, `web.296`). Then: the director as a
+   service of its own (see above).
 4. Witness reports from the web client, compared with the journal.
 5. Persistent state machine, separate service, resume after restart.
 6. Admin › Tournaments (settings) and per-server `tournaments` keys.

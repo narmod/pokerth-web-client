@@ -1,5 +1,6 @@
 // ═══════════════════════════════════════════════════════════════════
-// /tournament — « Table check », the first organizer tool (2026-10-23).
+// /tournament — organizer page: « Tournaments » (manual mode,
+// tournaments-ui.mjs) and « Table check » (this file) (2026-10-23).
 //
 // Talks to /admin/tournaments/* with the admin token (the same browser key as
 // /admin, so a signed-in admin lands straight in). English only for now, like
@@ -7,8 +8,11 @@
 // Design: docs/TOURNAMENT_DIRECTOR.md.
 // ═══════════════════════════════════════════════════════════════════
 
+import { createTournamentsView } from './tournaments-ui.mjs';
+
 const TOKK = 'pth_admin_tok';
 const THEMEK = 'pth_td_theme';
+const VIEWK = 'pth_td_view';
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const LIVE = ['connecting', 'waiting', 'running'];
@@ -55,6 +59,24 @@ $('themeBtn').addEventListener('click', () => {
 });
 applyTheme(load(THEMEK) || 'auto');
 
+// ── views: Tournaments | Table check ────────────────────────────────
+function setView(v) {
+  const check = v === 'check';
+  $('viewTour').hidden = check; $('viewCheck').hidden = !check;
+  $('tabTour').setAttribute('aria-selected', String(!check)); $('tabCheck').setAttribute('aria-selected', String(check));
+  $('tabTour').tabIndex = check ? -1 : 0; $('tabCheck').tabIndex = check ? 0 : -1;
+  store(VIEWK, check ? 'check' : null);
+}
+$('tabTour').addEventListener('click', () => { setView('tour'); tours.refresh(); });
+$('tabCheck').addEventListener('click', () => { setView('check'); refreshList(); });
+document.querySelector('.tabs').addEventListener('keydown', (ev) => {
+  if (ev.key !== 'ArrowLeft' && ev.key !== 'ArrowRight') return;
+  const next = $('tabTour').getAttribute('aria-selected') === 'true' ? 'tabCheck' : 'tabTour';
+  $(next).click(); $(next).focus();
+});
+setView(load(VIEWK) === 'check' ? 'check' : 'tour');
+const tours = createTournamentsView({ api, esc, tok, servers: () => servers });
+
 // ── sign-in ────────────────────────────────────────────────────────
 function signedOut(msg) {
   clearInterval(listTimer); clearTimeout(detailTimer);
@@ -79,6 +101,7 @@ function start() {
     servers = d.servers || [];
     $('srvSel').innerHTML = servers.map((s) => '<option value="' + esc(s.ref) + '">' + esc(s.name) + ' — ' + esc(s.host) + ':' + esc(s.port) + (s.tls ? ' (TLS)' : '') + ' · ' + esc({ registry: 'game server', lan: 'LAN directory', local: 'local' }[s.kind] || s.kind) + '</option>').join('');
     refreshList();
+    tours.refresh();
     clearInterval(listTimer);
     listTimer = setInterval(refreshList, 5000);
   }).catch(() => {});

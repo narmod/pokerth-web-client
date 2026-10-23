@@ -44,7 +44,8 @@ function createTournamentManager(deps) {
         import(pathToFileURL(path.join(__dirname, 'tournament', 'lobby.mjs')).href),
         import(pathToFileURL(path.join(__dirname, 'tournament', 'journal.mjs')).href),
         import(pathToFileURL(path.join(__dirname, 'tournament', 'spectator.mjs')).href),
-      ]).then(([lobby, journal, spectator]) => ({ lobby, journal, spectator }));
+        import(pathToFileURL(path.join(__dirname, 'tournament', 'tournaments.mjs')).href),
+      ]).then(([lobby, journal, spectator, tournaments]) => ({ lobby, journal, spectator, tournaments }));
     }
     return esm;
   }
@@ -241,7 +242,23 @@ function createTournamentManager(deps) {
     try { return fs.readFileSync(path.join(wdir(id), which + '.json')); } catch (e) { return null; }
   }
 
-  return { settings, setSettings, keyInfo, servers, lobby, start, stop, list, detail, file, MAX_RUNNING };
+  // ── tournaments, manual mode (server/tournament/tournaments.mjs) ──
+  let tourP = null;
+  function tournaments() {
+    if (!tourP) {
+      tourP = loadEsm().then((m) => {
+        ensureKey();
+        return m.tournaments.createTournaments({
+          dir, keyFile,
+          // A Table check's sealed result, reused as a tournament result.
+          readWatch: (id) => (ID_RE.test(id) ? readJson(path.join(wdir(id), 'result.json')) : null),
+        });
+      });
+    }
+    return tourP;
+  }
+
+  return { settings, setSettings, keyInfo, servers, lobby, start, stop, list, detail, file, tournaments, MAX_RUNNING };
 }
 
 // ── HTTP routes, under /admin/tournaments (auth and rate limit by handleAdmin) ──
@@ -280,6 +297,50 @@ function handleTournamentAdmin(td, h, req, res, reqPathOnly, query) {
     const r = td.stop(String(b.id || ''));
     return h.adminJson(res, r.ok ? 200 : 400, r);
   });
+  // ── tournaments (manual mode) ──
+  if (sub.indexOf('/t/') === 0) {
+    const op = sub.slice(3);
+    const send = (p) => p.then((v) => h.adminJson(res, 200, Object.assign({ ok: true }, Array.isArray(v) ? { tournaments: v } : v)))
+      .catch((e) => h.adminJson(res, e && e.constructor && e.constructor.name === 'Refusal' ? 400 : 500, { ok: false, error: (e && e.message) || 'error' }));
+    const withTour = (fn) => send(td.tournaments().then(fn));
+    if (op === 'pdb' && req.method === 'POST') {
+      if (!authed()) return deny();
+      if (!td.settings().enabled) return off();
+      return h.readRawBody(req, 10 * 1024 * 1024, (buf) => {
+        if (!buf || !buf.length) return h.adminJson(res, 413, { ok: false, error: 'empty, or larger than 10 MB' });
+        withTour((T) => T.importPdb(String(query.id || ''), buf, 'admin'));
+      });
+    }
+    if (op === 'file') {
+      if (!authed()) return deny();
+      const which = String(query.which || '');
+      return td.tournaments().then((T) => {
+        const buf = T.file(String(query.id || ''), which);
+        if (!buf) return h.adminJson(res, 404, { ok: false, error: 'not available' });
+        res.writeHead(200, { 'Content-Type': which === 'pdb' ? 'application/octet-stream' : 'application/json; charset=utf-8', 'Cache-Control': 'no-store',
+          'Content-Disposition': 'attachment; filename="tournament-' + String(query.id) + (which === 'pdb' ? '.pdb' : '.' + which + '.json') + '"' });
+        res.end(buf);
+      });
+    }
+    if (req.method === 'GET') {
+      if (!authed()) return deny();
+      if (op === 'list') return withTour((T) => T.list());
+      if (op === 'get') return withTour((T) => T.get(String(query.id || '')));
+      return h.adminJson(res, 404, { ok: false, error: 'not found' });
+    }
+    return h.readJsonBody(req, (b) => {
+      if (!b || !authed(b)) return deny();
+      if (!td.settings().enabled) return off();
+      const id = String(b.id || '');
+      if (op === 'create') return withTour((T) => T.create(b, 'admin'));
+      if (op === 'update') return withTour((T) => T.update(id, b.patch || {}, 'admin'));
+      if (op === 'player') return withTour((T) => (b.action === 'remove' ? T.removePlayer(id, b.nick, 'admin') : T.addPlayer(id, b.nick, 'admin')));
+      if (op === 'result') return withTour((T) => T.setResult(id, b, 'admin'));
+      if (op === 'validate') return withTour((T) => T.validate(id, 'admin'));
+      if (op === 'correct') return withTour((T) => T.correct(id, b, 'admin'));
+      return h.adminJson(res, 404, { ok: false, error: 'not found' });
+    });
+  }
   if (sub === '/watches') {
     if (!authed()) return deny();
     return h.adminJson(res, 200, { ok: true, watches: td.list() });

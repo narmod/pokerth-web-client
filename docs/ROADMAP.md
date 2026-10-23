@@ -301,7 +301,10 @@ use too. Items are grouped by status rather than fixed phases.
   signed journal of every table and the operator's consent required before touching a server. Design and
   status: `docs/TOURNAMENT_DIRECTOR.md`. Done: the spectator that watches one table and seals its journal and
   ranking, and the « Table check » tool on `/tournament` (`web.292`, off by default) to run it against a server
-  the install knows. Next: storage layer, manual mode, witnesses.
+  the install knows; manual mode (`web.296`: tournaments created by hand, result typed in, from a Table check or
+  from a `.pdb` log, validated, corrected, signed). Decided 2026-10-23: it becomes a separate service in this
+  repository (own process, port, `package.json` and version; the proxy only relays `/tournament`). Next: that
+  move, then witnesses.
 
 ## ⏭️ Next
 
