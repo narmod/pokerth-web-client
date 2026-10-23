@@ -210,9 +210,16 @@ try {
   $('tName').value = 'Hosted night'; $('tProfile').value = 'club'; $('tSrv').value = 'local';
   $('tt_startMoney').value = '2500';
   $('tAnnounce').checked = false;
+  // The web client's language list cannot load here (no web server for
+  // /modules): English only, as when it has not loaded yet. The browser test
+  // checks the full list.
+  ok($('tChatLang').value === 'en', 'host: the chat language, English by default');
+  $('tChatLang').insertAdjacentHTML('beforeend', '<option value="fr">Français</option>');
+  $('tChatLang').value = 'fr';
   $('tCreateForm').dispatchEvent(new w.Event('submit', { cancelable: true }));
   ok(await until(() => /Hosted night/.test(det()) && $('tPlayerIn')), 'host: tournament created with its LAN server');
   ok(/stack 2500/.test(det()), 'host: the table settings are shown');
+  ok(/writes in the chat in (fr|.*\(fr\)) \(announcements off\)/.test(det()) && $('te_chatlang').value === 'fr', 'host: the chat language recorded, shown, in Edit');
   ok($('te_announce') && !$('te_announce').checked && $('te_auto') && !$('te_auto').checked, 'host: run choices kept (announcements off, no opening by itself)');
   ok(/Add at least two players/.test(det()) && !act('tOpen'), 'host: two players needed before opening');
   for (const nick of ['Ann', 'Ben']) { $('tPlayerIn').value = nick; act('add').click(); await until(() => new RegExp(nick + ' added').test(det())); }

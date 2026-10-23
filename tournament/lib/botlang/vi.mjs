@@ -1,0 +1,16 @@
+// What the director writes in the chat — Vietnamese.
+export const strings = {
+  welcome: 'chào mừng {nick}, bạn đã vào chỗ ({n}/{of}). trò chơi bắt đầu khi mọi người đã đăng ký có mặt.',
+  notRegistered: 'bạn chưa đăng ký giải đấu này: bàn của giải chỉ dành cho người chơi của giải.',
+  youAdmin: 'giờ bạn là quản trị bàn: hãy bắt đầu trò chơi khi mọi người đã sẵn sàng. chúc may mắn!',
+  newAdmin: '{nick} giờ là quản trị bàn và sẽ bắt đầu trò chơi. chúc may mắn!',
+  waiting: 'mọi người đang chờ: trò chơi bắt đầu khi bạn nhấn start.',
+  reminder: 'nhắc nhở: chỉ quản trị bàn mới có thể bắt đầu trò chơi.',
+  started: 'trò chơi đã bắt đầu. người điều hành sẽ theo dõi đến cuối và ghi nhận kết quả. chúc may mắn!',
+  outOne: '{nick} bị loại, còn lại {n} người chơi.',
+  outMany: '{list} bị loại, còn lại {n} người chơi.',
+  listAnd: '{list} và {last}',
+  headsUp: 'heads-up: {a} đấu với {b}.',
+  wins: '{nick} vô địch giải đấu. chúc mừng tất cả, kết quả đã được ghi nhận.',
+  winsSecond: '{nick} vô địch giải đấu, {second} về nhì. chúc mừng tất cả, kết quả đã được ghi nhận.',
+};

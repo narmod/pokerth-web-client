@@ -1,0 +1,16 @@
+// What the director writes in the chat — Uzbek.
+export const strings = {
+  welcome: 'xush kelibsiz, {nick}, siz oʻtirdingiz ({n}/{of}). roʻyxatdan oʻtgan barcha oʻyinchilar kelgach, oʻyin boshlanadi.',
+  notRegistered: 'siz bu turnirda roʻyxatdan oʻtmagansiz: uning stoli oʻz oʻyinchilari uchun saqlanadi.',
+  youAdmin: 'endi siz stol administratorisiz: hamma tayyor boʻlgach, oʻyinni boshlang. omad!',
+  newAdmin: '{nick} endi stol administratori va oʻyinni boshlaydi. omad!',
+  waiting: 'oʻyinchilar kutmoqda: start tugmasini bossangiz, oʻyin boshlanadi.',
+  reminder: 'eslatma: faqat stol administratori oʻyinni boshlay oladi.',
+  started: 'oʻyin boshlandi. direktor uni oxirigacha kuzatadi va natijani qayd etadi. omad!',
+  outOne: '{nick} chiqib ketdi, {n} oʻyinchi qoldi.',
+  outMany: '{list} chiqib ketdi, {n} oʻyinchi qoldi.',
+  listAnd: '{list} va {last}',
+  headsUp: 'heads-up: {a} va {b} yuzma-yuz.',
+  wins: 'turnir gʻolibi: {nick}. hammani tabriklaymiz, natija qayd etildi.',
+  winsSecond: 'turnir gʻolibi: {nick}, ikkinchi oʻrin: {second}. hammani tabriklaymiz, natija qayd etildi.',
+};

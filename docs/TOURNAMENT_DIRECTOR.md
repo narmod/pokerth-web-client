@@ -319,6 +319,24 @@ The sweep reads the tournaments from disk, so a restart changes nothing.
 are left, heads-up, the winner and the second (not the blinds: every client
 shows them, service `0.3.1`).
 
+**Chat language** (per tournament, service `0.6.0`): the director writes its
+lines — welcome, kick reason, admin notices, start, players out, heads-up,
+winner — in one of the app's 83 languages, English by default (« Language of
+the director in the chat », in the form and in Edit). The lines live in
+`tournament/lib/botlang/<code>.mjs` (13 keys, `en.mjs` the reference, English
+filling any gap); the manager loads them and hands them to the director with
+its task. They start in lowercase: the server's chat filter mutes capitals.
+The organizer's own messages go out as typed.
+
+**128 bytes a line** (service `0.6.0`): the server takes a chat line or a
+private message of 1 to 128 bytes (UTF-8, `netpacketvalidator.cpp`); a longer
+one is an invalid packet and the server **closes the session** — the director
+would drop off its table. Every line is split into parts of at most 118 bytes
+(room for the « (hh:mm) » added to a line repeated word for word): after a
+sentence when it can, else between words — found by `Intl.Segmenter` for
+languages written without spaces (Thai, Chinese, Japanese…) — never inside a
+character (`lib/botchat.mjs`).
+
 **Where its lines go** (service `0.3.2`): before the start, a waiting
 player reads the lobby chat and private messages (QML GameWaitPage « Lobby
 Chat »; the web client the same), not the table chat. So until the game runs
@@ -496,7 +514,8 @@ operator's agreement.
 7. `/tournament`: public and organizer views, scheduled Sit & Go end to end
    (table creation, seat check and hand-over done in `web.299`; opening at
    the scheduled time, announcements and messages to the table in service
-   `0.3.0`; next: the chat language).
+   `0.3.0`; check-in in `0.5.0`; the chat language in `0.6.0`; next:
+   witnesses).
 8. Collusion check.
 9. Organizer and player accounts.
 10. Requests to organize.

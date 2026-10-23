@@ -1,0 +1,16 @@
+// What the director writes in the chat — Catalan.
+export const strings = {
+  welcome: 'benvingut {nick}, estàs assegut ({n} de {of}). la partida comença quan tots els inscrits hi siguin.',
+  notRegistered: 'no estàs inscrit en aquest torneig: la seva taula està reservada als seus jugadors.',
+  youAdmin: 'ara ets l’administrador de la taula: inicia la partida quan tothom estigui a punt. bona sort!',
+  newAdmin: '{nick} és ara l’administrador de la taula i inicia la partida. bona sort!',
+  waiting: 'els jugadors esperen: la partida comença quan premis start.',
+  reminder: 'recordatori: només l’administrador de la taula pot iniciar la partida.',
+  started: 'la partida ha començat. el director la segueix fins al final i registra el resultat. bona sort!',
+  outOne: '{nick} és eliminat, queden {n} jugadors.',
+  outMany: '{list} són eliminats, queden {n} jugadors.',
+  listAnd: '{list} i {last}',
+  headsUp: 'heads-up: {a} contra {b}.',
+  wins: '{nick} guanya el torneig. felicitats a tothom, el resultat queda registrat.',
+  winsSecond: '{nick} guanya el torneig, {second} segon. felicitats a tothom, el resultat queda registrat.',
+};

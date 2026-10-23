@@ -1,0 +1,16 @@
+// What the director writes in the chat — Italian.
+export const strings = {
+  welcome: 'benvenuto {nick}, sei seduto ({n} su {of}). la partita inizia quando tutti gli iscritti sono presenti.',
+  notRegistered: 'non sei iscritto a questo torneo: il suo tavolo è riservato ai suoi giocatori.',
+  youAdmin: 'ora sei l’amministratore del tavolo: avvia la partita quando tutti sono pronti. buona fortuna!',
+  newAdmin: '{nick} è ora l’amministratore del tavolo e avvia la partita. buona fortuna!',
+  waiting: 'i giocatori aspettano: la partita inizia quando premi start.',
+  reminder: 'promemoria: solo l’amministratore del tavolo può avviare la partita.',
+  started: 'la partita è iniziata. il direttore la segue fino alla fine e registra il risultato. buona fortuna!',
+  outOne: '{nick} è eliminato, restano {n} giocatori.',
+  outMany: '{list} sono eliminati, restano {n} giocatori.',
+  listAnd: '{list} e {last}',
+  headsUp: 'heads-up: {a} contro {b}.',
+  wins: '{nick} vince il torneo. complimenti a tutti, il risultato è registrato.',
+  winsSecond: '{nick} vince il torneo, {second} secondo. complimenti a tutti, il risultato è registrato.',
+};

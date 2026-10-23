@@ -1,0 +1,16 @@
+// What the director writes in the chat — Azerbaijani.
+export const strings = {
+  welcome: 'xoş gəldiniz, {nick}, siz masaya oturdunuz ({n}/{of}). oyun bütün qeydiyyatlı oyunçular gələndə başlayır.',
+  notRegistered: 'siz bu turnirdə qeydiyyatda deyilsiniz: onun masası yalnız öz oyunçuları üçündür.',
+  youAdmin: 'indi siz masanın adminisiniz: hamı hazır olanda oyunu başladın. uğurlar!',
+  newAdmin: '{nick} indi masanın adminidir və oyunu başladır. uğurlar!',
+  waiting: 'oyunçular gözləyir: start düyməsini basanda oyun başlayır.',
+  reminder: 'xatırlatma: oyunu yalnız masanın admini başlada bilər.',
+  started: 'oyun başladı. direktor onu sona qədər izləyir və nəticəni qeyd edir. uğurlar!',
+  outOne: '{nick} oyundan çıxdı, {n} oyunçu qaldı.',
+  outMany: '{list} oyundan çıxdılar, {n} oyunçu qaldı.',
+  listAnd: '{list} və {last}',
+  headsUp: 'heads-up: {a} və {b} üz-üzə.',
+  wins: 'turniri {nick} qazandı. hamını təbrik edirik, nəticə qeyd olundu.',
+  winsSecond: 'turniri {nick} qazandı, ikinci {second}. hamını təbrik edirik, nəticə qeyd olundu.',
+};

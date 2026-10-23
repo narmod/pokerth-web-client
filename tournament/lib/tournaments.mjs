@@ -24,6 +24,7 @@ import { join } from 'node:path';
 import { randomBytes, createHash, timingSafeEqual } from 'node:crypto';
 import { Journal, verifyJournal, signPayload, verifyPayload, publicKeyFromPrivate, publicKeyRawB64 } from './journal.mjs';
 import { listPdbGames, rankPdbGame, isPdb } from './pdb.mjs';
+import { isBotLang } from './botchat.mjs';
 
 // Profiles (design « Tournament settings », decided 2026-10-23).
 export const PROFILES = Object.freeze({
@@ -47,7 +48,7 @@ export const TABLE_DEFAULTS = Object.freeze({
 });
 // How the director runs the table: opening by itself before the start, and
 // its announcements in the table chat.
-export const RUN_DEFAULTS = Object.freeze({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30 });
+export const RUN_DEFAULTS = Object.freeze({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30, chatLang: 'en' });
 export function cleanRun(r, base) {
   const b = Object.assign({}, RUN_DEFAULTS, base || {});
   r = r || {};
@@ -60,6 +61,8 @@ export function cleanRun(r, base) {
     selfRegister: typeof r.selfRegister === 'boolean' ? r.selfRegister : b.selfRegister,
     // Check-in (identity « code »): opens this long before the start.
     checkInBefore: Number.isInteger(ci) && ci >= 5 && ci <= 240 ? ci : b.checkInBefore,
+    // The language the director writes in, in the chat (botlang/<code>.mjs).
+    chatLang: isBotLang(r.chatLang) ? String(r.chatLang).toLowerCase() : (b.chatLang || 'en'),
   };
 }
 // A table opened by itself is not opened any more this long after the start.

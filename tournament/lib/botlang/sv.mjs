@@ -1,0 +1,16 @@
+// What the director writes in the chat — Swedish.
+export const strings = {
+  welcome: 'välkommen {nick}, du har satt dig ({n} av {of}). spelet börjar när alla anmälda spelare är här.',
+  notRegistered: 'du är inte anmäld till den här turneringen: bordet är reserverat för dess spelare.',
+  youAdmin: 'du är nu bordsadmin: starta spelet när alla är redo. lycka till!',
+  newAdmin: '{nick} är nu bordsadmin och startar spelet. lycka till!',
+  waiting: 'spelarna väntar: spelet börjar när du trycker på start.',
+  reminder: 'påminnelse: bara bordsadmin kan starta spelet.',
+  started: 'spelet har börjat. turneringsledaren följer det till slutet och registrerar resultatet. lycka till!',
+  outOne: '{nick} är ute, {n} spelare kvar.',
+  outMany: '{list} är ute, {n} spelare kvar.',
+  listAnd: '{list} och {last}',
+  headsUp: 'heads-up: {a} mot {b}.',
+  wins: '{nick} vinner turneringen. grattis alla, resultatet är registrerat.',
+  winsSecond: '{nick} vinner turneringen, {second} blir tvåa. grattis alla, resultatet är registrerat.',
+};

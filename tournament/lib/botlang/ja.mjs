@@ -1,0 +1,16 @@
+// What the director writes in the chat — Japanese.
+export const strings = {
+  welcome: 'ようこそ {nick} さん、着席しました（{n}/{of}）。登録者全員がそろうとゲームが始まります。',
+  notRegistered: 'このトーナメントに登録されていません。このテーブルは登録プレイヤー専用です。',
+  youAdmin: 'あなたがテーブル管理者です。全員そろったらゲームを開始してください。がんばってください！',
+  newAdmin: '{nick} がテーブル管理者になり、ゲームを開始します。がんばってください！',
+  waiting: 'プレイヤーが待っています。start を押すとゲームが始まります。',
+  reminder: '注意：ゲームを開始できるのはテーブル管理者だけです。',
+  started: 'ゲームが始まりました。ディレクターが最後まで見届け、結果を記録します。がんばってください！',
+  outOne: '{nick} が脱落、残り {n} 人。',
+  outMany: '{list} が脱落、残り {n} 人。',
+  listAnd: '{list} と {last}',
+  headsUp: 'ヘッズアップ：{a} 対 {b}。',
+  wins: '{nick} がトーナメント優勝。皆さんおめでとう、結果を記録しました。',
+  winsSecond: '{nick} がトーナメント優勝、{second} が2位。皆さんおめでとう、結果を記録しました。',
+};

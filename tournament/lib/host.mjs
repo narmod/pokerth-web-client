@@ -42,6 +42,7 @@
 
 import * as pb from '../../public/proto/pokerth-bundle.mjs';
 import { SpectatorDirector, frame } from './spectator.mjs';
+import { BOT_EN, fill, splitChat } from './botchat.mjs';
 
 const T = pb.PokerTHMessage.PokerTHMessageType;
 const MAX_SEATS = 10;
@@ -131,6 +132,8 @@ export class HostDirector extends SpectatorDirector {
     this.leaveEarlyAt = nReg + 1 > MAX_SEATS ? MAX_SEATS - 2 : null;
     this.startedAt = null;
     this.announce = o.announce !== false;
+    // The chat language's lines (from the manager), English filling any gap.
+    this.chat = Object.assign({}, BOT_EN, o.chat || {});
     this.announced = new Set();    // playerIds whose elimination was told
     this.blind = null;
   }
@@ -179,20 +182,23 @@ export class HostDirector extends SpectatorDirector {
   }
 
   // ── chat ──
-  // A line for the table chat (once the game runs).
+  // A line of the chat language, its {x} filled in.
+  _t(key, vars) { return fill(this.chat[key] != null ? this.chat[key] : BOT_EN[key], vars); }
+  // A line for the table chat (once the game runs). The server takes at most
+  // 128 bytes a line (more closes the session): longer ones go in parts.
   _say(text, now) {
     if (this.gameId == null) return;
-    const t = String(text).slice(0, 200);
-    if (now) { this._sendChat({ text: t }); return; }
-    this.chatQueue.push({ text: t });
+    const parts = splitChat(text);
+    if (now) { for (const t of parts) this._sendChat({ text: t }); return; }
+    for (const t of parts) this.chatQueue.push({ text: t });
     this._pumpChat();
   }
   // A line for some players: private before the start (they read the lobby
   // chat then), the table chat once the game runs.
   _tell(ids, text) {
     if (this.tracker.started) return this._say(text);
-    const t = String(text).slice(0, 200);
-    for (const id of ids || []) if (id != null && id !== this.myId) this.chatQueue.push({ text: t, to: id });
+    const parts = splitChat(text);
+    for (const id of ids || []) if (id != null && id !== this.myId) for (const t of parts) this.chatQueue.push({ text: t, to: id });
     this._pumpChat();
   }
   _sendChat(e) {
@@ -414,7 +420,7 @@ export class HostDirector extends SpectatorDirector {
         this._checkStartSeats();
         for (const k of ['_remind0', '_remind1', '_remind2']) if (this[k]) { clearTimeout(this[k]); this[k] = null; }
         this.chatQueue = this.chatQueue.filter((e) => e.to == null);   // private lines no longer reach a running table
-        this._say('the game has started. the director follows it to the end and records the result. good luck!');
+        this._say(this._t('started'));
         this._changed();
         return;
       }
@@ -463,7 +469,7 @@ export class HostDirector extends SpectatorDirector {
       this.seated.set(id, reg);
       this._record('seated', { nick: reg, playerId: id });
       this.emit('log', reg + ' is seated (' + this.seated.size + ' of ' + this.expected.size + ')');
-      this._tell([id], 'welcome ' + reg + ', you are seated (' + this.seated.size + ' of ' + this.expected.size + '). the game starts once every registered player is here.');
+      this._tell([id], this._t('welcome', { nick: reg, n: this.seated.size, of: this.expected.size }));
       this._changed();
       this._maybeHandover();
     } else {
@@ -472,7 +478,7 @@ export class HostDirector extends SpectatorDirector {
       this.kicked.push(name);
       this._record('kicked', { nick: name, playerId: id });
       this.emit('log', name + ' is not registered: kicked');
-      this._tell([id], 'you are not registered for this tournament: its table is kept for its players.');
+      this._tell([id], this._t('notRegistered'));
       this._changed();
     }
   }
@@ -526,11 +532,11 @@ export class HostDirector extends SpectatorDirector {
       if (this.tracker.started || this._reminded) return;
       const admin = this.adminId, name = this.names.get(admin);
       this._reminded = true;
-      this._tell([admin], 'you are the table admin now: please start the game when everyone is ready. good luck!');
-      this._tell([...this.table].filter((id) => id !== admin), name + ' is now the table admin and starts the game. good luck!');
+      this._tell([admin], this._t('youAdmin'));
+      this._tell([...this.table].filter((id) => id !== admin), this._t('newAdmin', { nick: name }));
       const [a, b] = this.o.remindAfterMs || [120000, 300000];
-      this._remind1 = setTimeout(() => { this._remind1 = null; if (!this.tracker.started) this._tell([admin], 'the players are waiting: the game starts when you press start.'); }, a);
-      this._remind2 = setTimeout(() => { this._remind2 = null; if (!this.tracker.started) this._tell([admin], 'reminder: only the table admin can start the game.'); }, b);
+      this._remind1 = setTimeout(() => { this._remind1 = null; if (!this.tracker.started) this._tell([admin], this._t('waiting')); }, a);
+      this._remind2 = setTimeout(() => { this._remind2 = null; if (!this.tracker.started) this._tell([admin], this._t('reminder')); }, b);
     }, this.o.adminNoticeDelayMs != null ? this.o.adminNoticeDelayMs : 600);
   }
 
@@ -544,17 +550,18 @@ export class HostDirector extends SpectatorDirector {
     const left = t.seats.filter((id) => !t.elim.has(id));
     if (out.length && left.length >= 2) {
       const who = out.map((id) => this._nm(id));
-      this._say((who.length === 1 ? who[0] + ' is out' : who.slice(0, -1).join(', ') + ' and ' + who[who.length - 1] + ' are out') + ', ' + left.length + ' players left.');
-      if (left.length === 2) this._say('heads-up: ' + this._nm(left[0]) + ' against ' + this._nm(left[1]) + '.');
+      this._say(who.length === 1 ? this._t('outOne', { nick: who[0], n: left.length })
+        : this._t('outMany', { list: this._t('listAnd', { list: who.slice(0, -1).join(', '), last: who[who.length - 1] }), n: left.length }));
+      if (left.length === 2) this._say(this._t('headsUp', { a: this._nm(left[0]), b: this._nm(left[1]) }));
     }
   }
   _announceEnd(winnerId) {
     if (!this.announce || winnerId == null) return;
     const t = this.tracker;
     const second = t.seats.filter((id) => id !== winnerId && !t.elim.has(id));
-    const line = this._nm(winnerId) + ' wins the tournament' + (second.length === 1 ? ', ' + this._nm(second[0]) + ' second' : '') + '. congratulations to all, the result is recorded.';
+    const line = second.length === 1 ? this._t('winsSecond', { nick: this._nm(winnerId), second: this._nm(second[0]) }) : this._t('wins', { nick: this._nm(winnerId) });
     this.chatQueue = [];
-    this._sendChat(line);
+    this._say(line, true);
   }
 
   // The seats at the start against the registered list: a stranger means the

@@ -1,0 +1,16 @@
+// What the director writes in the chat — Finnish.
+export const strings = {
+  welcome: 'tervetuloa {nick}, istut pöydässä ({n}/{of}). peli alkaa, kun kaikki ilmoittautuneet ovat paikalla.',
+  notRegistered: 'et ole ilmoittautunut tähän turnaukseen: sen pöytä on varattu sen pelaajille.',
+  youAdmin: 'olet nyt pöydän ylläpitäjä: aloita peli, kun kaikki ovat valmiita. onnea!',
+  newAdmin: '{nick} on nyt pöydän ylläpitäjä ja aloittaa pelin. onnea!',
+  waiting: 'pelaajat odottavat: peli alkaa, kun painat start.',
+  reminder: 'muistutus: vain pöydän ylläpitäjä voi aloittaa pelin.',
+  started: 'peli on alkanut. johtaja seuraa sitä loppuun asti ja kirjaa tuloksen. onnea!',
+  outOne: '{nick} putosi, pelaajia jäljellä {n}.',
+  outMany: '{list} putosivat, pelaajia jäljellä {n}.',
+  listAnd: '{list} ja {last}',
+  headsUp: 'heads-up: {a} vastaan {b}.',
+  wins: '{nick} voitti turnauksen. onnittelut kaikille, tulos on kirjattu.',
+  winsSecond: '{nick} voitti turnauksen, toiseksi {second}. onnittelut kaikille, tulos on kirjattu.',
+};

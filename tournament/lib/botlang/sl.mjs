@@ -1,0 +1,16 @@
+// What the director writes in the chat — Slovenian.
+export const strings = {
+  welcome: 'živjo {nick}, sediš za mizo ({n} od {of}). igra se začne, ko so tu vsi prijavljeni igralci.',
+  notRegistered: 'tvojega vzdevka ni med prijavljenimi na ta turnir: njegova miza je rezervirana za njegove igralce.',
+  youAdmin: 'zdaj si skrbnik mize: začni igro, ko so vsi pripravljeni. srečno!',
+  newAdmin: '{nick} je zdaj skrbnik mize in začne igro. srečno!',
+  waiting: 'igralci čakajo: igra se začne, ko pritisneš start.',
+  reminder: 'opomnik: igro lahko začne samo skrbnik mize.',
+  started: 'igra se je začela. direktor jo spremlja do konca in zabeleži rezultat. srečno!',
+  outOne: '{nick} izpade, preostali igralci: {n}.',
+  outMany: 'iz igre: {list}. preostali igralci: {n}.',
+  listAnd: '{list} in {last}',
+  headsUp: 'heads-up: {a} proti {b}.',
+  wins: '{nick} zmaga na turnirju. čestitke vsem, rezultat je zabeležen.',
+  winsSecond: '{nick} zmaga na turnirju, drugo mesto: {second}. čestitke vsem, rezultat je zabeležen.',
+};

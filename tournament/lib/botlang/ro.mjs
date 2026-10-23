@@ -1,0 +1,16 @@
+// What the director writes in the chat — Romanian.
+export const strings = {
+  welcome: 'bun venit, {nick}, ai loc la masă ({n} din {of}). jocul începe când sunt aici toți jucătorii înscriși.',
+  notRegistered: 'nu ești înscris la acest turneu: masa lui este rezervată jucătorilor săi.',
+  youAdmin: 'acum ești administratorul mesei: pornește jocul când toată lumea e gata. succes!',
+  newAdmin: '{nick} este acum administratorul mesei și pornește jocul. succes!',
+  waiting: 'jucătorii așteaptă: jocul începe când apeși start.',
+  reminder: 'reamintire: doar administratorul mesei poate porni jocul.',
+  started: 'jocul a început. directorul îl urmărește până la final și înregistrează rezultatul. succes!',
+  outOne: '{nick} iese din joc, mai rămân {n} jucători.',
+  outMany: '{list} ies din joc, mai rămân {n} jucători.',
+  listAnd: '{list} și {last}',
+  headsUp: 'heads-up: {a} contra {b}.',
+  wins: '{nick} câștigă turneul. felicitări tuturor, rezultatul este înregistrat.',
+  winsSecond: '{nick} câștigă turneul, {second} pe locul doi. felicitări tuturor, rezultatul este înregistrat.',
+};

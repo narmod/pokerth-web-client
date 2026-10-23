@@ -1,0 +1,16 @@
+// What the director writes in the chat — Czech.
+export const strings = {
+  welcome: 'vítejte, {nick}, sedíte u stolu ({n} z {of}). hra začne, až dorazí všichni registrovaní hráči.',
+  notRegistered: 'nejste zaregistrováni do tohoto turnaje: jeho stůl je vyhrazen jeho hráčům.',
+  youAdmin: 'teď jste správcem stolu: spusťte hru, až budou všichni připraveni. hodně štěstí!',
+  newAdmin: '{nick} je teď správcem stolu a spustí hru. hodně štěstí!',
+  waiting: 'hráči čekají: hra začne, až stisknete start.',
+  reminder: 'připomínka: hru může spustit jen správce stolu.',
+  started: 'hra začala. ředitel ji sleduje až do konce a zaznamená výsledek. hodně štěstí!',
+  outOne: '{nick} končí, ve hře zbývá hráčů: {n}.',
+  outMany: '{list} končí, ve hře zbývá hráčů: {n}.',
+  listAnd: '{list} a {last}',
+  headsUp: 'heads-up: {a} proti {b}.',
+  wins: '{nick} vyhrává turnaj. gratulujeme všem, výsledek je zaznamenán.',
+  winsSecond: '{nick} vyhrává turnaj, druhé místo: {second}. gratulujeme všem, výsledek je zaznamenán.',
+};

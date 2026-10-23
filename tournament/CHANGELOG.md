@@ -8,6 +8,24 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.6.0 — 2026-10-24
+
+### Added
+- **Chat language** per tournament: the director writes its lines (welcome,
+  kick reason, admin notices, start, players out, heads-up, winner) in one of
+  the app's 83 languages, English by default — « Language of the director in
+  the chat » in the form and in Edit; the tournament's page says which.
+  Lines in `lib/botlang/<code>.mjs`; `scripts/test-lang-count.mjs` requires
+  one for every language of the app.
+
+### Fixed
+- The server takes at most 128 bytes per chat line or private message and
+  closes the connection of whoever sends more: a long nickname in a welcome,
+  or an organizer's message of up to 200 characters, could make the director
+  drop off its table. Every line is now split into parts the server accepts,
+  between sentences or words (also in languages written without spaces),
+  never inside a character.
+
 ## 0.5.1 — 2026-10-24
 
 ### Changed

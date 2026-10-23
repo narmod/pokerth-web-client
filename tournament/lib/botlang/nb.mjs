@@ -1,0 +1,16 @@
+// What the director writes in the chat — Norwegian Bokmål.
+export const strings = {
+  welcome: 'velkommen {nick}, du har satt deg ({n} av {of}). spillet starter når alle påmeldte spillere er her.',
+  notRegistered: 'du er ikke påmeldt denne turneringen: bordet er forbeholdt turneringens spillere.',
+  youAdmin: 'du er nå bordadministrator: start spillet når alle er klare. lykke til!',
+  newAdmin: '{nick} er nå bordadministrator og starter spillet. lykke til!',
+  waiting: 'spillerne venter: spillet starter når du trykker på start.',
+  reminder: 'påminnelse: bare bordadministratoren kan starte spillet.',
+  started: 'spillet har startet. direktøren følger det til slutten og registrerer resultatet. lykke til!',
+  outOne: '{nick} er ute, {n} spillere igjen.',
+  outMany: '{list} er ute, {n} spillere igjen.',
+  listAnd: '{list} og {last}',
+  headsUp: 'heads-up: {a} mot {b}.',
+  wins: '{nick} vinner turneringen. gratulerer til alle, resultatet er registrert.',
+  winsSecond: '{nick} vinner turneringen, {second} på andreplass. gratulerer til alle, resultatet er registrert.',
+};

@@ -1,0 +1,16 @@
+// What the director writes in the chat — Turkish.
+export const strings = {
+  welcome: 'hoş geldin {nick}, yerine oturdun ({n}/{of}). kayıtlı tüm oyuncular gelince oyun başlar.',
+  notRegistered: 'bu turnuvaya kayıtlı değilsin: masası yalnızca kendi oyuncularına ayrılmış.',
+  youAdmin: 'artık masa yöneticisi sensin: herkes hazır olunca oyunu başlat. bol şans!',
+  newAdmin: 'masa yöneticisi artık {nick}, oyunu o başlatacak. bol şans!',
+  waiting: 'oyuncular bekliyor: start düğmesine bastığında oyun başlar.',
+  reminder: 'hatırlatma: oyunu yalnızca masa yöneticisi başlatabilir.',
+  started: 'oyun başladı. direktör oyunu sonuna kadar izleyip sonucu kaydedecek. bol şans!',
+  outOne: '{nick} elendi, {n} oyuncu kaldı.',
+  outMany: '{list} elendi, {n} oyuncu kaldı.',
+  listAnd: '{list} ve {last}',
+  headsUp: 'heads-up: {a} ile {b} karşı karşıya.',
+  wins: 'turnuvayı {nick} kazandı. herkesi tebrik ederiz, sonuç kaydedildi.',
+  winsSecond: 'turnuvayı {nick} kazandı, ikinci {second}. herkesi tebrik ederiz, sonuç kaydedildi.',
+};

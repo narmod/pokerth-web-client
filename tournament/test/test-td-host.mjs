@@ -7,12 +7,13 @@
 // tournament, the director in its own process, the result carried into the
 // tournament by itself.
 // Run: node tournament/test/test-td-host.mjs
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, rmSync, writeFileSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import http from 'node:http';
 import * as pb from '../../public/proto/pokerth-bundle.mjs';
 import { HostDirector, gameInfoFor, safeTableName } from '../lib/host.mjs';
+import { botLangs, isBotLang, loadBotStrings, splitChat, BOT_EN, CHAT_MAX_BYTES, CHAT_PART_BYTES } from '../lib/botchat.mjs';
 import { generateKeys, verifyJournal, verifyPayload } from '../lib/journal.mjs';
 import { replayJournal } from '../lib/spectator.mjs';
 import { createService } from '../lib/service.mjs';
@@ -193,6 +194,57 @@ function director(f, registered, extra) {
   const sc = entries.find((e) => e.type === 'seatCheck');
   ok(sc && sc.data.ok === true, 'seat check at the start: only registered players');
   ok(!entries.some((e) => e.type === 'game' && e.data.type === 'playerName' && e.data.name === 'Mallory'), 'journal: names of players who never played stay out of the game facts');
+  f.server.close();
+}
+
+// ── chat language and the server's 128-byte limit ─────────────────
+{
+  const fr = await loadBotStrings('fr');
+  ok(fr.welcome !== BOT_EN.welcome && (await loadBotStrings('xx')).welcome === BOT_EN.welcome && (await loadBotStrings()).wins === BOT_EN.wins, 'chat language: its lines, English for an unknown one');
+  const langs = botLangs();
+  {
+    // Every language of the players' page has its chat lines: same keys, same
+    // placeholders, lowercase at the start of a line (the chat filter).
+    const here = new URL('../lib/botlang/', import.meta.url);
+    const pages = readdirSync(new URL('../public/lang/', import.meta.url)).filter((x) => x.endsWith('.mjs')).map((x) => x.slice(0, -4));
+    const bad = [];
+    for (const c of pages) {
+      if (langs.indexOf(c) < 0) { bad.push(c + ' missing'); continue; }
+      const L = (await import(new URL(c + '.mjs', here).href)).strings;
+      for (const k of Object.keys(BOT_EN)) {
+        const ph = (x) => (String(x).match(/\{\w+\}/g) || []).sort().join();
+        if (typeof L[k] !== 'string' || !L[k].trim()) bad.push(c + '.' + k + ' missing');
+        else if (ph(L[k]) !== ph(BOT_EN[k])) bad.push(c + '.' + k + ' placeholders');
+        else if (/^[A-Z\u00c0-\u00de\u0391-\u03a9\u0410-\u042f]/.test(L[k])) bad.push(c + '.' + k + ' capital');
+      }
+      for (const k of Object.keys(L)) if (!(k in BOT_EN)) bad.push(c + '.' + k + ' unknown');
+    }
+    ok(bad.length === 0, 'chat catalogues: ' + pages.length + ' languages, every line, same placeholders, lowercase' + (bad.length ? ' — ' + bad.slice(0, 6).join(' | ') : ''));
+  }
+  ok(langs.indexOf('en') >= 0 && langs.indexOf('fr') >= 0 && isBotLang('FR') && !isBotLang('../en') && !isBotLang('xx'), 'chat languages: the catalogues there are, nothing else');
+  const long = 'welcome ' + 'X'.repeat(64) + ', you are seated (10 of 10). the game starts once every registered player is here.';
+  const parts = splitChat(long);
+  ok(parts.length === 2 && parts.every((x) => Buffer.byteLength(x) <= CHAT_PART_BYTES) && parts.join(' ') === long, 'a line over the limit is split after a sentence, nothing lost');
+  const th = splitChat('การแข่งขันเริ่มแล้ว ผู้อำนวยการติดตามจนจบและบันทึกผลการแข่งขัน ขอให้โชคดี การแข่งขันเริ่มแล้ว ผู้อำนวยการติดตามจนจบ');
+  const zh = splitChat('比赛已经开始。主持人会一直跟进到结束并记录结果。祝你好运！比赛已经开始。主持人会一直跟进到结束并记录结果。祝你好运！');
+  ok(th.length > 1 && zh.length > 1 && th.concat(zh).every((x) => Buffer.byteLength(x) <= CHAT_PART_BYTES) && zh[0].endsWith('。'), 'languages without spaces: split between words, after a sentence when it can');
+  ok(splitChat('é'.repeat(200)).every((x) => Buffer.byteLength(x) <= CHAT_PART_BYTES && !x.includes('\ufffd')), 'never inside a character');
+  // A whole run in French.
+  const f = await tableServer({ lobbyIds: [21, 22, 24], onInvite: (id, ctx) => sit(id, ctx) });
+  const d = director(f, ['Alice', 'Bob', 'Carol'], { chat: fr });
+  let sealed = null;
+  d.on('result', (s) => { sealed = s; });
+  d.start();
+  await until(() => sealed, 5000);
+  const st = f.state;
+  const all = st.chats.concat(st.pms.map((p) => p.text));
+  ok(all.length > 0 && all.every((c) => Buffer.byteLength(c, 'utf8') <= CHAT_MAX_BYTES), 'every line the server gets is at most 128 bytes (' + Math.max(...all.map((c) => Buffer.byteLength(c))) + ')');
+  ok(st.pms.some((p) => /^bienvenue Alice, vous êtes assis \(1 sur 3\)/.test(p.text)) && st.chats.some((c) => /^la partie a commencé/.test(c)), 'French: welcome and start in the chat language');
+  ok(st.chats.some((c) => /^Alice gagne le tournoi/.test(c)) || st.chats.some((c) => /gagne le tournoi/.test(c)), 'French: the winner');
+  const d2 = director(f, ['Alice', 'Bob'], { chat: fr });
+  d2._chatTimer = 1;   // keep the queue as it is
+  d2._tell([21, 22], 'merci à tous d’être venus ce soir, le prochain tournoi aura lieu vendredi prochain à vingt heures, même serveur, mêmes réglages, inscriptions ouvertes dès demain matin sur la page.');
+  ok(d2.chatQueue.length === 4 && d2.chatQueue.every((e) => Buffer.byteLength(e.text) <= CHAT_PART_BYTES) && d2.chatQueue.filter((e) => e.to === 21).map((e) => e.text).join(' ').endsWith('sur la page.'), 'a long line goes in parts, to each player, nothing lost');
   f.server.close();
 }
 

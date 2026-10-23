@@ -1,0 +1,16 @@
+// What the director writes in the chat — Lithuanian.
+export const strings = {
+  welcome: 'sveiki, {nick}, jūs prie stalo ({n} iš {of}). žaidimas prasidės, kai susirinks visi užsiregistravę žaidėjai.',
+  notRegistered: 'jūs neužsiregistravote šiam turnyrui: jo stalas skirtas jo žaidėjams.',
+  youAdmin: 'dabar jūs esate stalo administratorius: pradėkite žaidimą, kai visi pasiruošę. sėkmės!',
+  newAdmin: '{nick} dabar yra stalo administratorius ir pradeda žaidimą. sėkmės!',
+  waiting: 'žaidėjai laukia: žaidimas prasidės, kai paspausite start.',
+  reminder: 'priminimas: tik stalo administratorius gali pradėti žaidimą.',
+  started: 'žaidimas prasidėjo. direktorius stebės jį iki galo ir įrašys rezultatą. sėkmės!',
+  outOne: '{nick} iškrito, liko žaidėjų: {n}.',
+  outMany: '{list} iškrito, liko žaidėjų: {n}.',
+  listAnd: '{list} ir {last}',
+  headsUp: 'heads-up: {a} ir {b} akis į akį.',
+  wins: 'turnyrą laimėjo {nick}. sveikiname visus, rezultatas įrašytas.',
+  winsSecond: 'turnyrą laimėjo {nick}, antras – {second}. sveikiname visus, rezultatas įrašytas.',
+};

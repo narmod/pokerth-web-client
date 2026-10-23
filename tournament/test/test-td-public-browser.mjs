@@ -117,6 +117,15 @@ try {
   if (shots) await pg.screenshot({ path: path.join(shots, 'pub-checkin.png'), fullPage: true });
   ok(errors.length === 0, 'no script error' + (errors.length ? ': ' + errors[0] : ''));
 
+  // Organizer: the director's chat language, every language of the app.
+  const og = await ctx.newPage();
+  await og.addInitScript((t) => { try { localStorage.setItem('pth_admin_tok', t); } catch (e) {} }, TOKEN);
+  await og.goto(base + '/tournament/organize');
+  await og.waitForFunction(() => document.getElementById('tChatLang') && document.getElementById('tChatLang').options.length > 1, null, { timeout: 8000 });
+  const cl = await og.$$eval('#tChatLang option', (o) => o.map((x) => x.value));
+  ok(cl.length >= 80 && cl.indexOf('fr') >= 0 && cl.indexOf('pt-br') >= 0 && cl.indexOf('en') >= 0, 'organizer: the chat language offers every language of the app (' + cl.length + ')');
+  await og.close();
+
   // Phone.
   const ph = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, colorScheme: 'light' });
   const pp = await ph.newPage();

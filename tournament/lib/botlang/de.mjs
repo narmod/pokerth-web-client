@@ -1,0 +1,16 @@
+// What the director writes in the chat — German.
+export const strings = {
+  welcome: 'willkommen {nick}, du sitzt ({n} von {of}). das Spiel beginnt, sobald alle angemeldeten Spieler da sind.',
+  notRegistered: 'du bist für dieses Turnier nicht angemeldet: sein Tisch ist seinen Spielern vorbehalten.',
+  youAdmin: 'du bist jetzt Tisch-Admin: bitte starte das Spiel, wenn alle bereit sind. viel Glück!',
+  newAdmin: '{nick} ist jetzt Tisch-Admin und startet das Spiel. viel Glück!',
+  waiting: 'die Spieler warten: das Spiel beginnt, wenn du auf Start drückst.',
+  reminder: 'erinnerung: nur der Tisch-Admin kann das Spiel starten.',
+  started: 'das Spiel hat begonnen. der Turnierleiter verfolgt es bis zum Ende und erfasst das Ergebnis. viel Glück!',
+  outOne: '{nick} ist ausgeschieden, noch {n} Spieler.',
+  outMany: '{list} sind ausgeschieden, noch {n} Spieler.',
+  listAnd: '{list} und {last}',
+  headsUp: 'heads-up: {a} gegen {b}.',
+  wins: '{nick} gewinnt das Turnier. glückwunsch an alle, das Ergebnis ist erfasst.',
+  winsSecond: '{nick} gewinnt das Turnier, {second} wird Zweiter. glückwunsch an alle, das Ergebnis ist erfasst.',
+};

@@ -1,0 +1,16 @@
+// What the director writes in the chat — Zulu.
+export const strings = {
+  welcome: 'siyakwamukela {nick}, usuhlezi ({n}/{of}). umdlalo uqala uma bonke abadlali ababhalisile sebefikile.',
+  notRegistered: 'awubhalisile kulo mqhudelwano: itafula lawo ligcinelwe abadlali bawo.',
+  youAdmin: 'manje usungumphathi wetafula: sicela uqale umdlalo uma wonke umuntu esekulungele. inhlanhla enhle!',
+  newAdmin: '{nick} manje ungumphathi wetafula futhi uqala umdlalo. inhlanhla enhle!',
+  waiting: 'abadlali bayalinda: umdlalo uqala uma ucindezela inkinobho ethi start.',
+  reminder: 'isikhumbuzo: umphathi wetafula kuphela ongaqala umdlalo.',
+  started: 'umdlalo usuqalile. umqondisi uwulandela kuze kube sekugcineni futhi arekhode umphumela. inhlanhla enhle!',
+  outOne: '{nick} uphumile, kusele abadlali: {n}.',
+  outMany: '{list} baphumile, kusele abadlali: {n}.',
+  listAnd: '{list} kanye no-{last}',
+  headsUp: 'heads-up: {a} ubhekene no-{b}.',
+  wins: '{nick} uwina umqhudelwano. halala kubo bonke, umphumela urekhodiwe.',
+  winsSecond: '{nick} uwina umqhudelwano, {second} ungowesibili. halala kubo bonke, umphumela urekhodiwe.',
+};

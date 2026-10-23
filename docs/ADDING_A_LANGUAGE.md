@@ -72,7 +72,11 @@ committing, not just `node --check`.
 The tournament pages too: `tournament/public/lang/<code lower-cased>.mjs`, the
 same keys and placeholders as `tournament/public/lang/en.mjs` (about 95 short
 strings). `scripts/test-lang-count.mjs` requires it for every UI catalogue, and
-`tournament/test/test-td-public.mjs` checks its keys and placeholders.
+`tournament/test/test-td-public.mjs` checks its keys and placeholders. And the
+lines the tournament director writes in the chat: `tournament/lib/botlang/<code
+lower-cased>.mjs`, the same 13 keys and placeholders as `botlang/en.mjs`,
+starting in lowercase (the server's chat filter mutes capitals);
+`tournament/test/test-td-host.mjs` checks them.
 
 Then, in a single commit:
 

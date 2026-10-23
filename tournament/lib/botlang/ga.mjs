@@ -1,0 +1,16 @@
+// What the director writes in the chat — Irish.
+export const strings = {
+  welcome: 'fáilte {nick}, tá tú i do shuí ({n} as {of}). tosóidh an cluiche nuair a bheidh gach imreoir cláraithe anseo.',
+  notRegistered: 'níl tú cláraithe don chomórtas seo: tá a bhord curtha in áirithe dá imreoirí.',
+  youAdmin: 'is tusa riarthóir an bhoird anois: tosaigh an cluiche nuair a bheidh gach duine réidh. ádh mór!',
+  newAdmin: 'riarthóir nua an bhoird: {nick}, a thosóidh an cluiche. ádh mór!',
+  waiting: 'tá na himreoirí ag fanacht: tosóidh an cluiche nuair a bhrúnn tú start.',
+  reminder: 'meabhrúchán: ní féidir ach le riarthóir an bhoird an cluiche a thosú.',
+  started: 'tá an cluiche tosaithe. leanann an stiúrthóir é go dtí an deireadh agus taifeadann sé an toradh. ádh mór!',
+  outOne: 'tá {nick} amuigh, imreoirí fágtha: {n}.',
+  outMany: 'tá {list} amuigh, imreoirí fágtha: {n}.',
+  listAnd: '{list} agus {last}',
+  headsUp: 'heads-up: {a} in aghaidh {b}.',
+  wins: 'buann {nick} an comórtas. comhghairdeas le cách, tá an toradh taifeadta.',
+  winsSecond: 'buann {nick} an comórtas, {second} sa dara háit. comhghairdeas le cách, tá an toradh taifeadta.',
+};

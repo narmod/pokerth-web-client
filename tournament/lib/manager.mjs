@@ -24,6 +24,7 @@ import { listGames } from './lobby.mjs';
 import { verifyJournal, verifyPayload, canonical, publicKeyRawB64 } from './journal.mjs';
 import { replayJournal } from './spectator.mjs';
 import { createTournaments } from './tournaments.mjs';
+import { loadBotStrings, isBotLang } from './botchat.mjs';
 
 export const MAX_RUNNING = 4;
 export const LIVE = ['connecting', 'waiting', 'running'];
@@ -125,8 +126,10 @@ export function createManager(deps) {
     if (!s) return { ok: false, error: 'unknown server: pick a LAN server in the tournament' };
     const registered = (body.registered || []).map(String).filter(Boolean);
     if (registered.length < 2) return { ok: false, error: 'at least two players' };
+    const chat = await loadBotStrings(body.chatLang);   // the lines of the chat language
     return launch(s, body, { gameId: null, gameName: String(body.tableName || '').slice(0, 64), mode: 'host', tournamentId: body.tournamentId || null }, (nick) => ({
       nick, login: 'unauth', refuseAuthServer: true, tableName: String(body.tableName || ''), table: body.table || {}, registered, announce: body.announce !== false,
+      chat, chatLang: isBotLang(body.chatLang) ? String(body.chatLang).toLowerCase() : 'en',
     }), { mode: 'host', tournamentId: body.tournamentId || null });
   }
 

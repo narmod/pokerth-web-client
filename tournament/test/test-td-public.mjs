@@ -134,6 +134,7 @@ let aliceCode;
 // ── check-in (identity « code », Official) ─────────────────────────
 {
   const off = await admin('/t/create', { name: 'Official cup', profile: 'official', server: { ref: 'local', name: 'Local', host: '127.0.0.1', port: 7234 }, startsAt: Date.now() + 2 * 3600e3, run: { checkInBefore: 30 } });
+  ok(off.run.chatLang === 'en' && (await admin('/t/create', { name: 'Chat fr', profile: 'club', run: { chatLang: 'FR' } })).run.chatLang === 'fr' && (await admin('/t/create', { name: 'Chat xx', profile: 'club', run: { chatLang: '../en' } })).run.chatLang === 'en', 'chat language: English by default, a known language only');
   ok(off.run.checkInBefore === 30 && (await admin('/t/create', { name: 'Short check-in', profile: 'club', run: { checkInBefore: 3 } })).run.checkInBefore === 30, 'check-in: 5 to 240 minutes before the start, 30 by default');
   const ann = await pub('/t/' + off.publicKey + '/register', { nick: 'Ann' }, '10.1.0.1');
   const added = await admin('/t/player', { id: off.id, nick: 'Ben' });

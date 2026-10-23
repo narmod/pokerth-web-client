@@ -1,0 +1,16 @@
+// What the director writes in the chat — Scottish Gaelic.
+export const strings = {
+  welcome: 'fàilte, {nick}, tha thu nad shuidhe ({n} à {of}). tòisichidh an geama nuair a bhios gach cluicheadair clàraichte an-seo.',
+  notRegistered: 'chan eil thu clàraichte sa cho-fharpais seo: tha am bòrd glèidhte dha na cluicheadairean aice.',
+  youAdmin: 'is tusa rianaire a’ bhùird a-nis: tòisich an geama nuair a bhios a h-uile duine deiseil. gur math a thèid leat!',
+  newAdmin: 'tha {nick} na rianaire a’ bhùird a-nis agus tòisichidh e an geama. gur math a thèid leibh!',
+  waiting: 'tha na cluicheadairean a’ feitheamh: tòisichidh an geama nuair a bhrùthas tu start.',
+  reminder: 'cuimhneachan: chan urrainn ach do rianaire a’ bhùird an geama a thòiseachadh.',
+  started: 'tha an geama air tòiseachadh. leanaidh an stiùiriche e gu deireadh is clàraichidh e an toradh. gur math a thèid leibh!',
+  outOne: 'tha {nick} a-mach. cluicheadairean air fhàgail: {n}.',
+  outMany: 'tha {list} a-mach. cluicheadairean air fhàgail: {n}.',
+  listAnd: '{list} agus {last}',
+  headsUp: 'heads-up: {a} an aghaidh {b}.',
+  wins: 'bhuannaich {nick} a’ cho-fharpais. meal an naidheachd oirbh uile, tha an toradh clàraichte.',
+  winsSecond: 'bhuannaich {nick} a’ cho-fharpais, {second} san dàrna àite. meal an naidheachd oirbh uile, tha an toradh clàraichte.',
+};

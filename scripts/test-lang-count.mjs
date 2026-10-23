@@ -34,6 +34,10 @@ check('every UI catalogue has a help corpus', help.length === N);
 const tdLang = fs.readdirSync(path.join(root, 'tournament', 'public', 'lang')).filter(f => f.endsWith('.mjs'));
 const missingTd = langs.filter(f => !tdLang.includes(f.toLowerCase()));
 check('every UI catalogue has a tournament catalogue' + (missingTd.length ? ' (missing: ' + missingTd.join(', ') + ')' : ''), missingTd.length === 0);
+// …and a language the tournament director can write in, in the chat.
+const botLang = fs.readdirSync(path.join(root, 'tournament', 'lib', 'botlang')).filter(f => f.endsWith('.mjs'));
+const missingBot = langs.filter(f => !botLang.includes(f.toLowerCase()));
+check('every UI catalogue has a director chat catalogue' + (missingBot.length ? ' (missing: ' + missingBot.join(', ') + ')' : ''), missingBot.length === 0);
 check('english is present', langs.includes('en.mjs'));
 
 // Files that describe the client as it is now. The CHANGELOG is deliberately

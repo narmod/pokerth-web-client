@@ -56,6 +56,21 @@ export function createTournamentsView(deps) {
   let source = 'manual';
   let flash = null;          // { text, bad } shown once in the detail
 
+  // The director's chat language: every language of the app (the web
+  // client's list), English until it has loaded.
+  let LANGS = [['en', 'English']];
+  const langName = (c) => { const x = LANGS.find((l) => l[0] === c); return x ? x[1] + ' (' + c + ')' : c; };
+  const langOptions = (sel) => (sel && !LANGS.some((l) => l[0] === sel) ? LANGS.concat([[sel, sel]]) : LANGS).map((l) => '<option value="' + esc(l[0]) + '"' + (l[0] === sel ? ' selected' : '') + '>' + esc(l[1]) + ' (' + esc(l[0]) + ')</option>').join('');
+  import('/modules/lang-meta.mjs').then((m) => {
+    const meta = m.LANG_META || {};
+    const all = Object.keys(meta).map((c) => [c.toLowerCase(), meta[c].label || c]);
+    if (!all.length) return;
+    LANGS = all;
+    const sel = $('tChatLang'); const keep = sel.value || 'en';
+    sel.innerHTML = langOptions(keep);
+    if (cur) render();
+  }).catch(() => {});
+
   // ── create form ──────────────────────────────────────────────────
   function fillServers() {
     const sel = $('tSrv');
@@ -82,7 +97,7 @@ export function createTournamentsView(deps) {
     if ($('tDate').value) { const ts = new Date($('tDate').value).getTime(); if (ts > 0) body.startsAt = ts; }
     if ($('tVis').value) body.visibility = $('tVis').value;
     body.table = readTable('tt_');
-    body.run = { autoOpen: $('tAuto').checked, openBefore: Number($('tBefore').value), announce: $('tAnnounce').checked, selfRegister: $('tSelfReg').checked };
+    body.run = { autoOpen: $('tAuto').checked, openBefore: Number($('tBefore').value), announce: $('tAnnounce').checked, selfRegister: $('tSelfReg').checked, chatLang: $('tChatLang').value || 'en' };
     if (body.profile === 'custom') {
       body.settings = {};
       for (const k of Object.keys(CHOICES)) body.settings[k] = $('tc_' + k).value;
@@ -109,9 +124,10 @@ export function createTournamentsView(deps) {
     }).join('');
   }
   function runFields(r) {
-    r = Object.assign({ autoOpen: false, openBefore: 10, announce: true, checkInBefore: 30 }, r || {});
+    r = Object.assign({ autoOpen: false, openBefore: 10, announce: true, checkInBefore: 30, chatLang: 'en' }, r || {});
     return '<div class="row"><label class="ck"><input type="checkbox" id="te_auto"' + (r.autoOpen ? ' checked' : '') + '> Open the table by itself</label><div><label for="te_before">minutes before the start</label><input id="te_before" type="number" inputmode="numeric" min="0" max="120" value="' + esc(r.openBefore) + '"></div></div>' +
       '<label class="ck"><input type="checkbox" id="te_announce"' + (r.announce ? ' checked' : '') + '> Announcements in the table chat</label>' +
+      '<div class="row"><div><label for="te_chatlang">Language of the director in the chat</label><select id="te_chatlang">' + langOptions(r.chatLang) + '</select></div></div>' +
       '<label class="ck"><input type="checkbox" id="te_selfreg"' + (r.selfRegister !== false ? ' checked' : '') + '> Players can register themselves on the public page</label>' +
       '<div class="row"><div><label for="te_checkin">Check-in opens, minutes before the start (identity « code »)</label><input id="te_checkin" type="number" inputmode="numeric" min="5" max="240" value="' + esc(r.checkInBefore) + '"></div></div>';
   }
@@ -204,6 +220,7 @@ export function createTournamentsView(deps) {
     }
     h += '<p class="small muted">' + Object.keys(SETTING_LABEL).map((k) => esc(SETTING_LABEL[k].replace(/ \(.*\)/, '')) + ': ' + esc(k === 'archiveDays' ? (st[k] ? st[k] + ' days' : 'for good') : st[k])).join(' · ') +
       '<br>Identity, witnesses and the collusion check are recorded now; they apply once registration and witnesses arrive.</p>';
+    h += '<p class="small">The director writes in the chat in ' + esc(langName((t.run && t.run.chatLang) || 'en')) + (t.run && t.run.announce === false ? ' (announcements off)' : '') + '.</p>';
     h += '<div class="msg' + (flash && flash.bad ? ' bad' : flash ? ' ok' : '') + '" id="tMsg" role="status">' + esc(flash ? flash.text : '') + '</div>';
     flash = null;
 
@@ -446,8 +463,8 @@ export function createTournamentsView(deps) {
         if (TABLE_FIELDS.some((f) => String(tb[f[0]]) !== String(was[f[0]]))) patch.table = tb;
       }
       if ($('te_auto')) {
-        const run = { autoOpen: $('te_auto').checked, openBefore: Number($('te_before').value), announce: $('te_announce').checked, selfRegister: $('te_selfreg').checked, checkInBefore: Number($('te_checkin').value) };
-        const r0 = Object.assign({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30 }, cur.run || {});
+        const run = { autoOpen: $('te_auto').checked, openBefore: Number($('te_before').value), announce: $('te_announce').checked, selfRegister: $('te_selfreg').checked, checkInBefore: Number($('te_checkin').value), chatLang: $('te_chatlang').value };
+        const r0 = Object.assign({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30, chatLang: 'en' }, cur.run || {});
         if (Object.keys(run).some((k) => run[k] !== r0[k])) patch.run = run;
       }
       if (!Object.keys(patch).length) return msg('tMsg', 'Nothing changed.');

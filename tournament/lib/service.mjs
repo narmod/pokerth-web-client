@@ -107,7 +107,7 @@ export function createService(o) {
     const checkIn = T.needsCheckIn(id);
     const registered = t.players.filter((p) => !p.absent && (!checkIn || p.checkedIn)).map((p) => p.nick);
     if (registered.length < 2) throw new T.Refusal(checkIn ? 'fewer than two players have checked in' : 'add at least two players first');
-    const r = await td.startHost({ ref: t.server.ref, tournamentId: id, tableName: t.name, table: t.table, registered, nick: b.nick, announce: !t.run || t.run.announce !== false });
+    const r = await td.startHost({ ref: t.server.ref, tournamentId: id, tableName: t.name, table: t.table, registered, nick: b.nick, announce: !t.run || t.run.announce !== false, chatLang: (t.run && t.run.chatLang) || 'en' });
     if (!r.ok) throw new T.Refusal(r.error);
     try { T.hostOpened(id, r.id, { server: t.server.name }, who); } catch (e) { td.stop(r.id); throw e; }
     if (checkIn) T.markNotCheckedIn(id);
