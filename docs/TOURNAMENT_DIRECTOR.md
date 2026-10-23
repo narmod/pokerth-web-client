@@ -210,6 +210,18 @@ depends on them.
   **by the worker itself** — the browser's word is never taken.
 - A watch that fails or crashes shows why: the error in `state.json`, and
   the end of its process output (`worker.log`) on the page.
+- **Login rate limit.** With `ServerBruteForceProtection` on (the default),
+  the game server accepts 5 logins in a row per address, then one every
+  30 s. Every web client player, every lobby read and every director comes
+  from the proxy's address, so a refused login (`initBlocked`) is treated as
+  temporary: the director waits 31 s and tries again (5 times), and the page
+  says so. On your own server, add the proxy's address to
+  `ServerBruteForceProtectionExempt` (the upstream setup guide already asks
+  for it when players share an address).
+- **Any device.** The page works from a phone to a desktop (one column under
+  900 px, 44 px touch targets, safe areas of notched phones, no sideways
+  scroll), and installs as its own app (`/tournament-manifest.json`, scope
+  `/tournament`, standalone), like `/admin`.
 - Routes (`server/tournament-manager.js`), all behind the admin token:
   `GET/POST /admin/tournaments/settings`, `GET …/servers`,
   `POST …/lobby {ref}`, `POST …/watch {ref, gameId, gamePassword?, nick?}`,

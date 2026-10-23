@@ -12,6 +12,7 @@ const THEMEK = 'pth_td_theme';
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const LIVE = ['connecting', 'waiting', 'running'];
+const RATE_LIMIT_TEXT = 'The server refused the login for now: too many logins from this proxy’s address in a short time (ServerBruteForceProtection: 5 in a row, then one every 30 s). Wait a little and retry — or, on your own server, add this proxy’s address to ServerBruteForceProtectionExempt, as every web client player connects through it.';
 
 let servers = [];
 let lobbyData = null;
@@ -36,6 +37,14 @@ function api(path, body) {
 function applyTheme(t) {
   if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
   else document.documentElement.removeAttribute('data-theme');
+  // Browser / installed-app bar: follows the forced theme, else the system's.
+  const metas = document.querySelectorAll('meta[name="theme-color"]');
+  metas.forEach((m, i) => {
+    const light = t === 'light' || (t === 'auto' && i === 1);
+    m.setAttribute('content', light ? '#ebe6da' : '#12161d');
+    if (t === 'auto') m.setAttribute('media', i === 1 ? '(prefers-color-scheme: light)' : '(prefers-color-scheme: dark)');
+    else m.removeAttribute('media');
+  });
   $('themeBtn').textContent = 'Theme: ' + t;
 }
 $('themeBtn').addEventListener('click', () => {
@@ -81,7 +90,11 @@ $('lobbyBtn').addEventListener('click', () => {
   $('lobbyMsg').className = 'msg'; $('lobbyMsg').textContent = 'Reading the lobby…';
   $('tables').innerHTML = ''; $('watchForm').hidden = true; lobbyData = null;
   api('/admin/tournaments/lobby', { ref }).then((d) => {
-    if (!d.ok) { $('lobbyMsg').className = 'msg bad'; $('lobbyMsg').textContent = 'Could not read the lobby: ' + (d.error || 'error'); return; }
+    if (!d.ok) {
+      $('lobbyMsg').className = 'msg bad';
+      $('lobbyMsg').textContent = /initBlocked/.test(d.error || '') ? RATE_LIMIT_TEXT : 'Could not read the lobby: ' + (d.error || 'error');
+      return;
+    }
     lobbyData = d;
     const type = { lan: 'LAN server', internetNoAuth: 'server without accounts', internetAuth: 'server with accounts' }[d.serverType] || d.serverType;
     let note = type + ' · ' + (d.players != null ? d.players + ' connected' : '') + ' · ' + d.games.length + ' table' + (d.games.length === 1 ? '' : 's');
@@ -202,7 +215,7 @@ function errorText(e) {
   const map = {
     joinFailed: 'The server refused the spectator', authServerRefused: 'Server with accounts (pokerth.net): LAN servers only for now',
     serverError: 'The server closed the session', gaveUp: 'Connection lost, gave up after several retries',
-    removedFromGame: 'Removed from the table', tlsPinMismatch: 'TLS key does not match the pin', startFailed: 'Could not start',
+    rateLimited: 'Login kept being refused: too many logins from this proxy’s address. Add it to ServerBruteForceProtectionExempt in the server config', removedFromGame: 'Removed from the table', tlsPinMismatch: 'TLS key does not match the pin', startFailed: 'Could not start',
     uncaughtException: 'The director stopped on an error', unhandledRejection: 'The director stopped on an error',
   };
   return (map[e.code] || e.code) + (e.data && e.data.reason ? ' (' + e.data.reason + ')' : '');

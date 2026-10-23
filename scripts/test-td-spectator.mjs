@@ -147,6 +147,37 @@ function runDirector(port, extra) {
   server.close();
 }
 
+// ── 4b. the server's login rate limit (initBlocked) ───────────────
+{
+  const { server, port, seen } = await fakeServer((conn, n) => {
+    answerNames(conn);
+    conn.sock.write(S.announce());
+    conn.after = async (m) => {
+      if (m.initMessage && n === 0) { conn.sock.write(msg(0, 'errorMessage', { errorReason: 7 })); setTimeout(() => conn.sock.destroy(), 10); return; }
+      if (m.initMessage) conn.sock.write(S.initAck());
+      if (m.joinExistingGameMessage) {
+        conn.sock.write(S.joinAck());
+        await wait(20);
+        conn.sock.write(Buffer.concat([S.start(), S.hand([0, 0, 0, 0]), S.act(14, 0), S.act(12, 600), S.act(13, 400), S.show([[11, 2000], [14, 0]]),
+          S.hand([0, 0, 0, 2]), S.act(12, 0), S.act(13, 0), S.hide(11, 4000), S.end(11)]));
+      }
+    };
+  });
+  const r = await runDirector(port, { gameId: GAME, rateLimitDelayMs: 100 });
+  ok(seen.length === 2 && r.sealed && r.sealed.payload.result.status === 'complete', 'rate limit: waits, logs in again, then watches to the end');
+  ok(r.d.journal.entries.some((e) => e.type === 'rateLimited') && !r.d.journal.entries.some((e) => e.type === 'game' && e.data.type === 'disconnected'), 'rate limit: journaled, and not counted as a drop of the game');
+  server.close();
+}
+{
+  const { server, port, seen } = await fakeServer((conn) => {
+    conn.sock.write(S.announce());
+    conn.onMsg = (m) => { if (m.initMessage) { conn.sock.write(msg(0, 'errorMessage', { errorReason: 7 })); setTimeout(() => conn.sock.destroy(), 10); } };
+  });
+  const r = await runDirector(port, { gameId: GAME, rateLimitDelayMs: 30, reconnects: 2 });
+  ok(r.failed === 'rateLimited' && seen.length === 3, 'rate limit for good: gives up after its retries, says why');
+  server.close();
+}
+
 // ── 5. command line: watch, write files, then --verify ────────────
 {
   const cli = join(dirname(fileURLToPath(import.meta.url)), 'td-spectate.mjs');

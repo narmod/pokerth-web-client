@@ -72,6 +72,10 @@ try {
   const html = await page.text();
   ok(page.status === 200 && /Table check/.test(html) && /noindex/.test(html), 'on: /tournament served, noindex');
   ok(/no-store/.test(page.headers.get('cache-control') || ''), 'served no-store');
+  ok(/viewport-fit=cover/.test(html) && /env\(safe-area-inset-top\)/.test(html) && /rel="manifest" href="\/tournament-manifest\.json"/.test(html), 'page: phone notch safe areas and its own app manifest');
+  const man = await (await get('/tournament-manifest.json', {})).json();
+  ok(man.start_url === '/tournament' && man.scope === '/tournament' && man.display === 'standalone', 'manifest: installable on its own, scoped to /tournament');
+  ok(man.icons.every((i) => fs.existsSync(path.join(root, 'public', i.src))), 'manifest: every icon exists');
   const srv = await (await get('/admin/tournaments/servers')).json();
   const local = srv.servers && srv.servers.find((x) => x.ref === 'local');
   ok(local && local.port === game.port, 'servers: the local server from the login defaults');
@@ -118,6 +122,7 @@ try {
   // Theme switch.
   $('themeBtn').click();
   ok(w.document.documentElement.getAttribute('data-theme') === 'dark' && w.localStorage.getItem('pth_td_theme') === 'dark', 'page: theme switch to dark, remembered');
+  ok([...w.document.querySelectorAll('meta[name="theme-color"]')].every((m) => m.getAttribute('content') === '#12161d' && !m.hasAttribute('media')), 'page: the app bar follows the forced theme');
   $('themeBtn').click();
   ok(w.document.documentElement.getAttribute('data-theme') === 'light', 'page: then light');
   $('themeBtn').click();

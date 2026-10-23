@@ -102,6 +102,7 @@ export class SpectatorDirector extends EventEmitter {
    * @param {boolean} [o.refuseAuthServer] stop if the server announces authenticated logins (the manager always sets it)
    * @param {number} [o.reconnects]        attempts after a drop (default 5)
    * @param {number} [o.reconnectDelayMs]  first delay, doubled each time (default 2000)
+   * @param {number} [o.rateLimitDelayMs]  wait after a login refused as rate-limited (default 31000)
    * @param {() => number} [o.now]
    * @param {(o: object) => import('node:net').Socket} [o.connect]  socket factory (tests)
    */
@@ -166,11 +167,17 @@ export class SpectatorDirector extends EventEmitter {
   _onClose() {
     if (this.done) return;
     if (this.tracker.finished) return this.stop('finished');
-    this._emitEvent({ type: 'disconnected' });
-    if (this.attempt >= this.o.reconnects) return this._fail('gaveUp', { attempts: this.attempt });
-    const delay = this.o.reconnectDelayMs * Math.pow(2, this.attempt);
+    // A drop only matters to the ranking once the game is being followed.
+    if (this.tracker.started) this._emitEvent({ type: 'disconnected' });
+    const limited = this._rateLimited;
+    this._rateLimited = false;
+    if (this.attempt >= this.o.reconnects) return this._fail(limited ? 'rateLimited' : 'gaveUp', { attempts: this.attempt });
+    let delay = this.o.reconnectDelayMs * Math.pow(2, this.attempt);
+    // The server's login limit (ServerBruteForceProtection) refills one login
+    // every 30 s per address: wait at least that long before trying again.
+    if (limited) delay = Math.max(delay, this.o.rateLimitDelayMs != null ? this.o.rateLimitDelayMs : 31000);
     this.attempt += 1;
-    this.emit('log', 'connection lost, retry ' + this.attempt + ' in ' + delay + ' ms');
+    this.emit('log', (limited ? 'login refused for now (too many logins from this address), retry ' : 'connection lost, retry ') + this.attempt + ' in ' + Math.round(delay / 1000) + ' s');
     this._timer = setTimeout(() => { if (!this.done) this._connect(); }, delay);
   }
 
@@ -300,6 +307,15 @@ export class SpectatorDirector extends EventEmitter {
       if (!this.tracker.finished) this._fail('removedFromGame', {});
     } else if (m.errorMessage) {
       const reason = m.errorMessage.errorReason;
+      if (reason === pb.ErrorMessage.ErrorReason.initBlocked) {
+        // Login rate limit per address — every web client player and every
+        // lobby read through this proxy share its address. Temporary: wait for
+        // the server to refill a login, then try again (see _onClose).
+        this._record('rateLimited', { attempt: this.attempt });
+        this._rateLimited = true;
+        try { this.sock.destroy(); } catch (e) {}
+        return;
+      }
       this._fail('serverError', { reason: pb.ErrorMessage.ErrorReason[reason] || reason });
     }
   }

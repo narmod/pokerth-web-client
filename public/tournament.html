@@ -2,18 +2,31 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="color-scheme" content="dark light">
 <title>Tournaments · PokerTH</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/favicon-180.png">
+<link rel="manifest" href="/tournament-manifest.json">
+<meta name="theme-color" content="#12161d" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ebe6da" media="(prefers-color-scheme: light)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Tournaments">
 <script>
-  // Theme before first paint: saved choice, else the system's.
+  // Theme before first paint: saved choice, else the system's. A forced choice
+  // also sets the browser / installed-app bar colour.
   (function () {
     var t = 'auto';
     try { t = localStorage.getItem('pth_td_theme') || 'auto'; } catch (e) {}
-    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    if (t === 'light' || t === 'dark') {
+      document.documentElement.setAttribute('data-theme', t);
+      var ms = document.querySelectorAll('meta[name="theme-color"]');
+      for (var i = 0; i < ms.length; i++) { ms[i].setAttribute('content', t === 'light' ? '#ebe6da' : '#12161d'); ms[i].removeAttribute('media'); }
+    }
   })();
 </script>
 <style>
@@ -35,9 +48,9 @@
 html{background:var(--bg)}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,'Inter Fallback',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-text-size-adjust:100%}
 a{color:var(--brass)}
-.in{max-width:68rem;margin:0 auto;padding:0 16px}
-.top{background:var(--felt-lo);border-bottom:1px solid var(--line)}
-.top .in{display:flex;align-items:center;gap:12px;padding-top:12px;padding-bottom:12px}
+.in{max-width:68rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+.top{background:var(--felt-lo);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+.top .in{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;padding-top:10px;padding-bottom:10px}
 .brand{display:inline-flex;align-items:center;gap:10px;color:var(--ivory);font-weight:700;font-size:1.05em;text-decoration:none;min-width:0}
 .brand img{width:34px;height:34px;display:block;flex:none}
 .brand span{font-weight:400;color:var(--muted)}
@@ -55,12 +68,15 @@ input:focus,select:focus,button:focus-visible{outline:2px solid var(--brass);out
 .row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
 .row>*{flex:1 1 12rem;min-width:0}
 .row>button{flex:0 0 auto}
-button{font:inherit;font-weight:600;border-radius:8px;border:1px solid var(--line);background:var(--felt-lo);color:var(--ivory);padding:9px 14px;cursor:pointer}
+button{font:inherit;font-weight:600;border-radius:8px;border:1px solid var(--line);background:var(--felt-lo);color:var(--ivory);padding:9px 14px;cursor:pointer;min-height:44px;touch-action:manipulation}
 button.primary{background:var(--chip);border-color:var(--chip);color:var(--chip-ink)}
 button.accent{background:var(--brass);border-color:var(--brass);color:var(--brass-ink)}
 button:disabled{opacity:.5;cursor:not-allowed}
 button.ghost{background:transparent}
-.theme{flex:none;padding:6px 10px;font-weight:500;font-size:.85em}
+.theme{flex:none;padding:6px 10px;font-weight:500;font-size:.85em;min-height:40px}
+input,select{min-height:44px}
+html,body{overflow-x:hidden}
+@media (max-width:480px){h1{font-size:1.35em;margin-top:16px}.lead{font-size:.95em}.card{padding:14px 12px;border-radius:10px}.brand span{display:none}th,td{padding:6px 5px}}
 .muted{color:var(--muted)}
 .small{font-size:.85em}
 .msg{min-height:1.4em;font-size:.9em;margin-top:8px}
@@ -93,7 +109,7 @@ code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .empty{color:var(--muted);font-style:italic}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-footer{color:var(--muted);font-size:.85em;padding:12px 0 28px}
+footer{color:var(--muted);font-size:.85em;padding-top:12px;padding-bottom:calc(28px + env(safe-area-inset-bottom))}
 [hidden]{display:none!important}
 </style>
 </head>
