@@ -2212,10 +2212,9 @@
         <div class="boardhead"><h2>Tournaments</h2><span class="muted" id="tdState"></span></div>
         <p class="muted">Turns on <a id="tdLink" href="/tournament" target="_blank" rel="noopener">/tournament</a>: its <b>Table check</b> watches a table of a known server as a spectator and seals the result. Off by default (404 while off).</p>
         <label class="ck"><input type="checkbox" id="tdEnabled"> Enable tournaments and the <code>/tournament</code> page</label>
-        <label class="ck"><input type="checkbox" id="tdAuth"> Also allow servers with accounts (pokerth.net) — only with their maintainers’ agreement</label>
         <div id="tdKey" class="muted" style="margin-top:10px"></div>
         <div id="tdMsg" class="msg"></div>
-        <details class="more"><summary>Where it runs, what it keeps</summary><p class="muted">The director keeps every event in a sealed (hash-chained) journal and signs the ranking with this install’s key. It watches only servers this install already knows (game servers, LAN directory, local server) and never creates, kicks or posts anything.</p><p class="muted">Each watch is a separate process that survives an update of the web client. Its files (state, journal, result) and the install’s signing key live in <code>TD_DIR</code> (<code>/data/tournament</code> in the Docker image). Design and next steps: <code>docs/TOURNAMENT_DIRECTOR.md</code>.</p></details>
+        <details class="more"><summary>Where it runs, what it keeps</summary><p class="muted">The director keeps every event in a sealed (hash-chained) journal and signs the ranking with this install’s key. LAN only for now: it watches only the servers of the LAN directory and the local server (never pokerth.net or the Internet-mode game servers), and never creates, kicks or posts anything.</p><p class="muted">Each watch is a separate process that survives an update of the web client. Its files (state, journal, result) and the install’s signing key live in <code>TD_DIR</code> (<code>/data/tournament</code> in the Docker image). Design and next steps: <code>docs/TOURNAMENT_DIRECTOR.md</code>.</p></details>
       </div>
     </div>
     <div id="panel-landir" style="display:none">
@@ -3427,7 +3426,7 @@
   // tournaments (settings only — the tools live on /tournament)
   function _tdRender(d){
     if(!d||!d.ok){ if($('tdMsg')) $('tdMsg').textContent=(d&&d.error)||'Could not load'; return; }
-    $('tdEnabled').checked=!!d.enabled; $('tdAuth').checked=!!d.allowAuthServers; $('tdAuth').disabled=!d.enabled;
+    $('tdEnabled').checked=!!d.enabled;
     $('tdState').textContent=d.enabled?('On · '+(d.running||0)+' watch'+((d.running||0)===1?'':'es')+' running'):'Off';
     var k=d.key;
     $('tdKey').innerHTML=k?('Install public key (Ed25519, raw, base64): <code style="user-select:all">'+srvEsc(k.publicKeyRaw)+'</code> <span class="muted">— what a DNS TXT <code>k=</code> carries; results signed with it can be checked by anyone.</span>'):'The install key is created when tournaments are first enabled.';
@@ -3440,7 +3439,6 @@
     api('/admin/tournaments/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(patch)}).then(function(r){return r.json();}).then(function(d){ _tdRender(d); if($('tdMsg')) $('tdMsg').textContent=d&&d.ok?'Saved.':''; }).catch(function(){ if($('tdMsg')) $('tdMsg').textContent='Network error'; });
   }
   if($('tdEnabled')) $('tdEnabled').addEventListener('change',function(ev){ _tdSave({enabled:ev.target.checked}); });
-  if($('tdAuth')) $('tdAuth').addEventListener('change',function(ev){ _tdSave({allowAuthServers:ev.target.checked}); });
 
   // packages
   var kind='table';

@@ -54,12 +54,16 @@ const td = createTournamentManager({
   dir,
   getConfig: () => cfg,
   setConfig: (c) => { cfg = c; },
-  listServers: () => [{ ref: 'local', kind: 'local', name: 'Fake', host: '127.0.0.1', port, tls: false, pins: [] }],
+  listServers: () => [
+    { ref: 'local', kind: 'local', name: 'Fake', host: '127.0.0.1', port, tls: false, pins: [] },
+    { ref: 'srv:inet', kind: 'registry', name: 'Internet server', host: '127.0.0.1', port, tls: false, pins: [] },
+  ],
   version: () => '2.1.10-web.292',
 });
 
 // ── settings and key ───────────────────────────────────────────────
 ok(td.settings().enabled === false, 'off by default');
+ok(JSON.stringify(td.settings()) === '{"enabled":false}', 'one setting only: no pokerth.net option');
 ok(td.start({ ref: 'local', gameId: 7 }).error === 'tournaments are off', 'no watch while off');
 ok(td.keyInfo() === null, 'no key before the first enable');
 td.setSettings({ enabled: true });
@@ -78,6 +82,8 @@ ok((statSync(join(dir, 'td-key.pem')).mode & 0o077) === 0, 'key file is private 
   ok(f.seen[0].got.some((m) => m.initMessage && m.initMessage.login === 0), 'lobby: read with a guest login');
   ok(!f.seen[0].got.some((m) => m.joinExistingGameMessage), 'lobby: joins nothing');
   ok((await td.lobby('nope')).error === 'unknown server', 'lobby: only servers this install knows');
+  ok(td.servers().map((x) => x.ref).join(',') === 'local', 'LAN only: the Internet-mode registry is not offered');
+  ok((await td.lobby('srv:inet')).error === 'unknown server' && td.start({ ref: 'srv:inet', gameId: 7 }).error === 'unknown server', 'LAN only: a registry server can be neither read nor watched');
 
   // ── a full watch in its own process ──
   ok(td.start({ ref: 'local', gameId: 7, nick: 'bad name!' }).ok === false, 'watch: director name checked');
@@ -117,10 +123,25 @@ ok((statSync(join(dir, 'td-key.pem')).mode & 0o077) === 0, 'key file is private 
   const f = await scriptedServer({ serverType: 2 });
   port = f.port;
   const r = await td.lobby('local');
-  ok(r.ok && r.serverType === 'internetAuth' && r.watchable === false && r.refusal === 'authServer', 'auth server: listed but not watchable while the option is off');
+  ok(r.ok && r.serverType === 'internetAuth' && r.watchable === false && r.refusal === 'authServer', 'server with accounts: read, never watchable');
   const s = td.start({ ref: 'local', gameId: 7 });
   const failed = await until(async () => { const d = await td.detail(s.id); return d && d.state.status === 'failed' ? d : null; }, 10000);
-  ok(failed && failed.state.error.code === 'authServerRefused', 'auth server: the worker itself refuses it');
+  ok(failed && failed.state.error.code === 'authServerRefused', 'server with accounts: the worker itself refuses it');
+  ok(failed && /\[td-worker\] started/.test(failed.processLog || ''), 'a failed watch shows its process output');
+  f.server.close();
+}
+
+// ── a worker killed outright ───────────────────────────────────────
+{
+  const f = await scriptedServer({ ending: false });
+  port = f.port;
+  const s = td.start({ ref: 'local', gameId: 7 });
+  const running = await until(async () => { const d = await td.detail(s.id); return d && d.state.status === 'running' ? d : null; }, 10000);
+  ok(!!running, 'kill: watch running');
+  try { process.kill(running.state.pid, 'SIGKILL'); } catch (e) {}
+  const crashed = await until(async () => { const d = await td.detail(s.id); return d && d.state.status === 'crashed' ? d : null; }, 10000);
+  ok(!!crashed && /\[td-worker\] started, node /.test(crashed.processLog || ''), 'kill: reported as crashed, with its process output');
+  ok(crashed && crashed.checks && crashed.checks.chain, 'kill: the journal written so far is intact');
   f.server.close();
 }
 
@@ -143,7 +164,7 @@ ok((await call('GET', '/admin/tournaments/settings', { token: 'master' })).body.
 ok((await call('POST', '/admin/tournaments/watch', { body: { token: 'nope', ref: 'local', gameId: 7 } })).code === 403, 'http: watch needs the master token');
 td.setSettings({ enabled: false });
 ok((await call('GET', '/admin/tournaments/servers', { token: 'master' })).code === 409, 'http: tools answer 409 while off');
-ok((await call('GET', '/admin/tournaments/watches', { token: 'master' })).body.watches.length === 3, 'http: past watches still listed while off');
+ok((await call('GET', '/admin/tournaments/watches', { token: 'master' })).body.watches.length === 4, 'http: past watches still listed while off');
 
 rmSync(dir, { recursive: true, force: true });
 console.log(fails ? `\n${fails} FAILED` : '\nall td-manager tests passed');

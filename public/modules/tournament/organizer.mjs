@@ -85,7 +85,7 @@ $('lobbyBtn').addEventListener('click', () => {
     lobbyData = d;
     const type = { lan: 'LAN server', internetNoAuth: 'server without accounts', internetAuth: 'server with accounts' }[d.serverType] || d.serverType;
     let note = type + ' · ' + (d.players != null ? d.players + ' connected' : '') + ' · ' + d.games.length + ' table' + (d.games.length === 1 ? '' : 's');
-    if (!d.watchable) note += ' — not watchable: servers with accounts need the option in Admin › Community › Tournaments';
+    if (!d.watchable) note += ' — not watchable: LAN servers only (no server with accounts such as pokerth.net)';
     $('lobbyMsg').className = 'msg' + (d.watchable ? '' : ' bad'); $('lobbyMsg').textContent = note;
     if (!d.games.length) { $('tables').innerHTML = '<li class="empty">No table open right now.</li>'; return; }
     $('tables').innerHTML = d.games.map((g) => {
@@ -169,7 +169,8 @@ function renderDetail(d) {
   const live = LIVE.indexOf(st.status) >= 0;
   let h = '<p>' + statusChip(st.status, d.result && d.result.status) + ' <span class="tname">' + esc(st.gameName || d.gameName || ('#' + d.gameId)) + '</span>' +
     ' <span class="muted small">on ' + esc(d.server.name) + ' (' + esc(d.server.host) + ':' + esc(d.server.port) + ') · director ' + esc(d.nick) + (st.hand ? ' · hand ' + st.hand : '') + '</span></p>';
-  if (st.error) h += '<p class="msg bad">' + esc(errorText(st.error)) + '</p>';
+  if (st.error) h += '<p class="msg bad">' + esc(errorText(st.error)) + (st.error.data && st.error.data.message ? ': ' + esc(st.error.data.message) : '') + '</p>';
+  if (st.status === 'crashed') h += '<p class="msg bad">The director process stopped without saying why (killed, or out of memory). Its output is below.</p>';
   if (st.gaps && st.gaps.length) h += '<p class="msg bad">Hands not seen: ' + st.gaps.map((g) => g.fromHand + '–' + g.toHand).join(', ') + '</p>';
 
   if (d.result) {
@@ -190,6 +191,7 @@ function renderDetail(d) {
     if (d.head) h += '<p class="small muted">Head <span class="mono">' + esc(d.head) + '</span>' + (c.signedBy ? '<br>Signed by <span class="mono">' + esc(c.signedBy) + '</span>' : '') + '</p>';
   }
   if (st.logs && st.logs.length) h += '<h3>Log</h3><div class="log">' + st.logs.map(esc).join('\n') + '</div>';
+  if (d.processLog) h += '<details' + (st.status === 'crashed' ? ' open' : '') + '><summary class="small muted">Process output (worker.log)</summary><div class="log">' + esc(d.processLog) + '</div></details>';
   h += '<div class="actions">' + (live ? '<button type="button" class="primary" data-act="stop">Stop watching</button>' : '') +
     (d.entries ? '<button type="button" data-act="journal">Download journal</button>' : '') + (d.result ? '<button type="button" data-act="result">Download result</button>' : '') + '</div>';
   $('detailEmpty').hidden = true;
@@ -198,9 +200,10 @@ function renderDetail(d) {
 }
 function errorText(e) {
   const map = {
-    joinFailed: 'The server refused the spectator', authServerRefused: 'Server with accounts: not allowed by the settings',
+    joinFailed: 'The server refused the spectator', authServerRefused: 'Server with accounts (pokerth.net): LAN servers only for now',
     serverError: 'The server closed the session', gaveUp: 'Connection lost, gave up after several retries',
     removedFromGame: 'Removed from the table', tlsPinMismatch: 'TLS key does not match the pin', startFailed: 'Could not start',
+    uncaughtException: 'The director stopped on an error', unhandledRejection: 'The director stopped on an error',
   };
   return (map[e.code] || e.code) + (e.data && e.data.reason ? ' (' + e.data.reason + ')' : '');
 }

@@ -31,6 +31,13 @@ highlights below.
   `themeExport` / `sectionAdvanced` strings in every language. Tables, decks, seats and the Green Casino table
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
+### Changed
+- **Tournaments: LAN only** (`web.293`, decided 2026-10-23) — the « Table check » offers the LAN directory and the
+  local server only, no longer the Internet-mode game servers; the « servers with accounts (pokerth.net) » option of
+  `web.292` is withdrawn (a saved value is dropped) and such a server is always refused, by the director process
+  itself. A watch that fails or crashes now says why: uncaught errors are written to its state with the journal
+  kept, and the page shows the end of the process output (`worker.log`).
+
 ### Added
 - **Tournaments: « Table check » on `/tournament`** (`web.292`, off by default) — first organizer tool of the
   tournament director. Admin › Community › Tournaments turns the module on (until then `/tournament` and

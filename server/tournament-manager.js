@@ -14,9 +14,10 @@
 // The install's Ed25519 key (<dir>/td-key.pem, mode 600) signs results.
 //
 // Off by default (admin › Community › Tournaments). Master token only for
-// now; per-server delegate keys come later. Servers announcing an
-// authenticated login (pokerth.net) are refused unless « pokerth.net
-// servers » is ticked — and that option waits for its maintainers' go.
+// now; per-server delegate keys come later. LAN only for now (decided
+// 2026-10-23): the LAN directory and the local server are offered, never
+// the game-server registry of Internet mode, and a server announcing
+// authenticated logins (pokerth.net) is always refused, by the worker itself.
 // Design: docs/TOURNAMENT_DIRECTOR.md.
 // ═══════════════════════════════════════════════════════════════════
 
@@ -51,12 +52,12 @@ function createTournamentManager(deps) {
   // ── settings ─────────────────────────────────────────────────────
   function settings() {
     const s = deps.getConfig() || {};
-    return { enabled: s.enabled === true, allowAuthServers: s.allowAuthServers === true };
+    return { enabled: s.enabled === true };
   }
   function setSettings(patch) {
     const cur = Object.assign({}, deps.getConfig() || {});
     if (typeof patch.enabled === 'boolean') cur.enabled = patch.enabled;
-    if (typeof patch.allowAuthServers === 'boolean') cur.allowAuthServers = patch.allowAuthServers;
+    delete cur.allowAuthServers;   // option of web.292, withdrawn: LAN only
     deps.setConfig(cur);
     if (cur.enabled) ensureKey();
     return settings();
@@ -85,11 +86,15 @@ function createTournamentManager(deps) {
   }
 
   // ── servers this install knows ───────────────────────────────────
+  // LAN only: the LAN directory and the local server.
+  function known() {
+    return (deps.listServers() || []).filter((s) => s && (s.kind === 'lan' || s.kind === 'local'));
+  }
   function servers() {
-    return (deps.listServers() || []).map((s) => ({ ref: s.ref, kind: s.kind, name: s.name, host: s.host, port: s.port, tls: !!s.tls }));
+    return known().map((s) => ({ ref: s.ref, kind: s.kind, name: s.name, host: s.host, port: s.port, tls: !!s.tls }));
   }
   function resolve(ref) {
-    return (deps.listServers() || []).filter((s) => s.ref === ref)[0] || null;
+    return known().filter((s) => s.ref === ref)[0] || null;
   }
   function connOpts(s) {
     return { host: s.host, port: s.port, tls: !!s.tls, servername: s.sni || undefined, insecure: !!s.noverify, pins: s.pins || [] };
@@ -100,7 +105,7 @@ function createTournamentManager(deps) {
     if (!s) return Promise.resolve({ ok: false, error: 'unknown server' });
     return loadEsm().then((m) => m.lobby.listGames(Object.assign(connOpts(s), { version: deps.version() }))).then((r) => {
       r.server = { ref: s.ref, name: s.name, host: s.host, port: s.port, tls: !!s.tls };
-      if (r.ok && r.serverType === 'internetAuth' && !settings().allowAuthServers) r.watchable = false, r.refusal = 'authServer';
+      if (r.ok && r.serverType === 'internetAuth') { r.watchable = false; r.refusal = 'authServer'; }
       else r.watchable = !!r.ok;
       return r;
     });
@@ -164,7 +169,7 @@ function createTournamentManager(deps) {
     child.send({
       id, dir: d, keyFile, version: deps.version(),
       opts: Object.assign(connOpts(s), {
-        nick, login: 'unauth', gameId, refuseAuthServer: !settings().allowAuthServers, gamePassword: body.gamePassword ? String(body.gamePassword).slice(0, 64) : undefined,
+        nick, login: 'unauth', gameId, refuseAuthServer: true, gamePassword: body.gamePassword ? String(body.gamePassword).slice(0, 64) : undefined,
       }),
     });
     child.on('error', () => {});
@@ -191,6 +196,9 @@ function createTournamentManager(deps) {
     const journal = readJson(path.join(wdir(id), 'journal.json'));
     const out = Object.assign({}, w, { result: sealed ? sealed.payload.result : null, head: sealed ? sealed.payload.head : null,
       entries: journal && journal.entries ? journal.entries.length : 0 });
+    // A watch that ended badly shows the end of its process output (worker.log):
+    // a stack trace there says why it stopped.
+    if (w.state.status === 'crashed' || w.state.status === 'failed') out.processLog = logTail(id);
     if (!journal || !journal.entries) return Promise.resolve(out);
     return loadEsm().then((m) => {
       const chain = m.journal.verifyJournal(journal.entries);
@@ -203,6 +211,16 @@ function createTournamentManager(deps) {
       }
       return out;
     });
+  }
+
+  function logTail(id) {
+    try {
+      const p = path.join(wdir(id), 'worker.log');
+      const size = fs.statSync(p).size, len = Math.min(size, 4000);
+      const fd = fs.openSync(p, 'r'), buf = Buffer.alloc(len);
+      try { fs.readSync(fd, buf, 0, len, size - len); } finally { fs.closeSync(fd); }
+      return buf.toString('utf8');
+    } catch (e) { return ''; }
   }
 
   function file(id, which) {
@@ -231,7 +249,7 @@ function handleTournamentAdmin(td, h, req, res, reqPathOnly, query) {
   if (sub === '/servers') {
     if (!authed()) return deny();
     if (!td.settings().enabled) return off();
-    return h.adminJson(res, 200, { ok: true, servers: td.servers(), allowAuthServers: td.settings().allowAuthServers });
+    return h.adminJson(res, 200, { ok: true, servers: td.servers() });
   }
   if (sub === '/lobby' && req.method === 'POST') return h.readJsonBody(req, (b) => {
     if (!b || !authed(b)) return deny();

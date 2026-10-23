@@ -1,8 +1,9 @@
 # Tournament director
 
 An automatic organizer for games and tournaments on the LAN servers of the
-directory, with an optional, off-by-default bridge to pokerth.net. This page
-is the design reference and the status of the work.
+directory. **LAN only for now** (decided 2026-10-23): nothing for
+pokerth.net or the Internet-mode game servers. This page is the design
+reference and the status of the work.
 
 **Status (2026-10-23, `2.1.10-web.292`):** the spectator that watches one
 table and seals its journal and ranking, and the **« Table check »** tool on
@@ -87,8 +88,8 @@ director must make nothing easier than today:
   - **C — no proof, admin's decision, for tests only:** the install's own
     server and private / loopback addresses (checked on the resolved
     address), tables tagged `[TEST]`, never pokerth.net;
-- pokerth.net only with a dedicated director account granted, and revocable,
-  by its maintainers;
+- nothing for pokerth.net for now; servers with accounts are refused by the
+  director itself;
 - honest names (`TD-…`) and a chat line saying who organizes.
 
 **Collusion (players in the same place).** The proxy knows web players' real
@@ -185,14 +186,14 @@ depends on them.
 
 - **Admin › Community › Tournaments** — settings only: the module switch
   (off by default; while off `/tournament` and `/tournament.html` answer
-  404), servers with accounts (pokerth.net, off), the install's public key
+  404), the install's public key
   (created on first enable), the number of running watches.
 - **`/tournament`** — master token for now (the browser key of `/admin`, so a
   signed-in admin lands straight in). English for now, like the admin; the
   public views will come in every language. Light and dark themes (system
   choice or the header switch), same face and colours as `/rules`.
-  1. pick a server the install knows (game servers, LAN directory, local
-     server — never a free address), read its lobby;
+  1. pick a LAN server: the LAN directory or the local server (never the
+     Internet-mode game servers, never a free address), read its lobby;
   2. pick a table (spectators allowed), optional table password and
      director name, « Watch this table »;
   3. follow hands and eliminations; at the end the sealed ranking, its flags
@@ -205,8 +206,10 @@ depends on them.
   the web client, and writes `state.json`, `journal.json`, `result.json` in
   `TD_DIR/watches/<id>/` (`/data/tournament` in the Docker image; the key is
   `TD_DIR/td-key.pem`, mode 600). At most 4 watches at once.
-- A server announcing authenticated logins is refused **by the worker
-  itself** unless the option is on — the browser's word is never taken.
+- A server announcing authenticated logins (pokerth.net) is always refused,
+  **by the worker itself** — the browser's word is never taken.
+- A watch that fails or crashes shows why: the error in `state.json`, and
+  the end of its process output (`worker.log`) on the page.
 - Routes (`server/tournament-manager.js`), all behind the admin token:
   `GET/POST /admin/tournaments/settings`, `GET …/servers`,
   `POST …/lobby {ref}`, `POST …/watch {ref, gameId, gamePassword?, nick?}`,
@@ -254,4 +257,5 @@ operator's agreement.
 9. Organizer and player accounts.
 10. Requests to organize.
 11. Multi-table rounds, then leagues.
-12. pokerth.net option, with its maintainers' agreement.
+Not planned for now: anything for pokerth.net (it would need its
+maintainers' agreement).

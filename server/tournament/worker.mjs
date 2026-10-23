@@ -83,6 +83,20 @@ export function runWatch(task) {
     setTimeout(() => process.exit(0), 50);
   });
   process.on('SIGTERM', () => { log('stopped by the organizer'); d.stop('stopped by the organizer'); });
+  // Anything unexpected: say so in state.json (and the stack in worker.log),
+  // keep the journal, then leave. Without this a crash left no trace but an
+  // empty « crashed » watch.
+  const die = (kind) => (e) => {
+    console.error('[td-worker] ' + kind + ':', e && e.stack ? e.stack : e);
+    state.status = 'failed';
+    state.error = { code: kind, data: { message: String((e && e.message) || e).slice(0, 300) } };
+    log(kind + ': ' + state.error.data.message);
+    try { saveJournal(); } catch (e2) {}
+    try { snapshot(); } catch (e2) {}
+    setTimeout(() => process.exit(1), 50);
+  };
+  process.on('uncaughtException', die('uncaughtException'));
+  process.on('unhandledRejection', die('unhandledRejection'));
   snapshot();
   d.start();
   return d;
@@ -90,6 +104,7 @@ export function runWatch(task) {
 
 // Entry point when forked by the manager.
 if (process.send) {
+  console.error('[td-worker] started, node ' + process.version + ', pid ' + process.pid);
   process.once('message', (task) => {
     try { process.disconnect(); } catch (e) {}
     try { runWatch(task); } catch (e) {

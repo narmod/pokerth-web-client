@@ -458,14 +458,10 @@ setInterval(function () { LAN_BOARDS.rotate(); }, 60 * 60 * 1000).unref();
 // processes and keep their files in TD_DIR (with the install's signing key).
 const TD_DIR = process.env.TD_DIR || path.join(__dirname, 'tournament-data');
 const TD_LIB = require('./server/tournament-manager.js');
+// LAN only for now (2026-10-23): the LAN directory and the local server —
+// never the game-server registry of Internet mode, nothing for pokerth.net.
 function _tdServers() {
   var out = [];
-  _serversList().forEach(function (e) {
-    if (!e || !e.host || !e.port) return;
-    var t = _serverTlsOpts(e.host, e.port);
-    out.push({ ref: 'srv:' + (e.id || (e.host + ':' + e.port)), kind: 'registry', name: e.name || e.host, host: e.host, port: parseInt(e.port, 10),
-      tls: !!e.tls, sni: t.sni, noverify: t.noverify, pins: e.tls ? _tlsPinsFor(e.host) : [] });
-  });
   try {
     LAN_DIR.entries().forEach(function (e) {
       var t = LAN_DIR.tlsOpts(e.host, e.port) || {};
