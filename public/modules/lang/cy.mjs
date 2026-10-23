@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Twrnameintiau: wrth fwrdd cyfarwyddwr twrnameintiau’r wefan hon, anfon crynodeb o’r gêm ato i wirio’r canlyniad (pentyrrau ac enillydd, byth fy nghardiau)',
+  tdWitnessNotice: 'Bwrdd twrnamaint: mae eich cleient yn anfon crynodeb o’r gêm hon at gyfarwyddwr y twrnameintiau (y pentyrrau ym mhob llaw a’r enillydd, byth eich cardiau) i wirio’r canlyniad. Gallwch ddiffodd hyn yn Dewisiadau uwch › Rhwydwaith.',
+  pvSrvTd: 'Tystion twrnamaint: wrth fwrdd a agorwyd gan gyfarwyddwr twrnameintiau’r wefan hon, mae eich cleient yn anfon eich llysenw a chrynodeb o’r gêm at y cyfarwyddwr pan fydd yn dod i ben, pan fyddwch allan neu pan fyddwch yn gadael: pentyrrau’r chwaraewyr ar ddechrau pob llaw a’r enillydd — byth eich cardiau. Os gwnaethoch gofrestru ar gyfer y twrnamaint yn y porwr hwn, mae eich cod personol yn mynd gydag ef. Cedwir y crynodeb gyda’r twrnamaint i wirio ei ganlyniad. Gallwch ei ddiffodd yn y Dewisiadau uwch (Rhwydwaith).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Cyhoeddiadau'r gêm", announceOff: "I ffwrdd", announceVoice: "Llais adeiledig", announceScreenReader: "Darllenydd sgrin", announceHint: "Mae'r llais adeiledig yn darllen digwyddiadau'r gêm gyda lleisiau eich dyfais. Dewiswch Darllenydd sgrin os ydych chi'n defnyddio NVDA, JAWS, VoiceOver neu TalkBack: mae'n eu darllen yn ei lais ei hun, heb siarad ddwywaith.", announceSrOn: "Mae cyhoeddiadau'r gêm yn mynd i'ch darllenydd sgrin",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Gasanni: a teburin daraktan gasar wannan shafi, aika masa taƙaitaccen bayanin wasan don tantance sakamakon (tari da wanda ya ci, ba katunana ba ko kaɗan)',
+  tdWitnessNotice: 'Teburin gasa: abokin cinikinka yana aika wa daraktan gasar taƙaitaccen bayanin wannan wasan (tarin kowane ɗan wasa a kowane hannu da wanda ya ci, ba katunanka ba ko kaɗan) don tantance sakamakon. Kana iya kashe wannan a Zaɓuɓɓuka na ci gaba › Hanyar sadarwa.',
+  pvSrvTd: 'Shaidun gasa: a teburin da daraktan gasar wannan shafi ya buɗe, abokin cinikinka yana aika wa darakta laƙabinka da taƙaitaccen bayanin wasan idan ya ƙare, idan an fitar da kai ko idan ka tafi: tarin \'yan wasa a farkon kowane hannu da wanda ya ci — ba katunanka ba ko kaɗan. Idan ka yi rajista a gasar a wannan burauza, lambar sirrinka tana tafiya tare da shi. Ana adana taƙaitaccen bayanin tare da gasar don tantance sakamakonta. Kana iya kashe shi a cikin Zaɓuɓɓuka na ci gaba (Hanyar sadarwa).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Sanarwar wasa", announceOff: "A kashe", announceVoice: "Muryar na'ura", announceScreenReader: "Mai karanta allo", announceHint: "Muryar na'ura tana karanta abubuwan da ke faruwa a wasa da muryoyin na'urarka. Zaɓi Mai karanta allo idan kana amfani da NVDA, JAWS, VoiceOver ko TalkBack: zai karanta su da muryarsa, ba tare da an faɗa sau biyu ba.", announceSrOn: "Sanarwar wasa za ta tafi zuwa mai karanta allonka",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

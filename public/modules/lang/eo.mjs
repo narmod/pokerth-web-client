@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Turniroj: ĉe tablo de la turnira direktoro de ĉi tiu retejo, sendi al ĝi resumon de la ludo por kontroli la rezulton (stakoj kaj gajninto, neniam miaj kartoj)',
+  tdWitnessNotice: 'Turnira tablo: via kliento sendas al la turnira direktoro resumon de ĉi tiu ludo (la stakoj ĉe ĉiu mano kaj la gajninto, neniam viaj kartoj) por kontroli la rezulton. Vi povas malŝalti tion en Altnivelaj opcioj › Reto.',
+  pvSrvTd: 'Turniraj atestantoj: ĉe tablo malfermita de la turnira direktoro de ĉi tiu retejo, via kliento sendas al la direktoro vian kaŝnomon kaj resumon de la ludo kiam ĝi finiĝas, kiam vi estas eliminita aŭ kiam vi foriras: la stakojn de la ludantoj komence de ĉiu mano kaj la gajninton — neniam viajn kartojn. Se vi aliĝis al la turniro en ĉi tiu retumilo, via persona kodo iras kun ĝi. La resumo estas konservata kun la turniro por kontroli ĝian rezulton. Vi povas malŝalti ĝin en Altnivelaj opcioj (Reto).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Ludaj anoncoj", announceOff: "Malŝaltite", announceVoice: "Integrita voĉo", announceScreenReader: "Ekranlegilo", announceHint: "La integrita voĉo legas la ludokazaĵojn per la voĉoj de via aparato. Elektu Ekranlegilo, se vi uzas NVDA, JAWS, VoiceOver aŭ TalkBack: ĝi legas ilin per sia propra voĉo, sen paroli dufoje.", announceSrOn: "Ludaj anoncoj iras al via ekranlegilo",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

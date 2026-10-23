@@ -11,6 +11,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Co-fharpaisean: aig bòrd aig stiùiriche co-fharpais na làraich seo, cuir geàrr-chunntas air a’ gheama thuige gus an toradh a sgrùdadh (an calpa is am buannaiche, ach chan ann na cairtean agam idir)',
+  tdWitnessNotice: 'Bòrd co-fharpais: cuiridh an cliant agad geàrr-chunntas air a’ gheama seo gu stiùiriche na co-fharpais (an calpa aig gach làimh agus am buannaiche, ach chan ann na cairtean agad idir) gus an toradh a sgrùdadh. ’S urrainn dhut seo a chur dheth ann an Roghainnean adhartach › Lìonra.',
+  pvSrvTd: 'Fianaisean co-fharpais: aig bòrd a dh’fhosgail stiùiriche co-fharpais na làraich seo, cuiridh an cliant agad am far-ainm agad agus geàrr-chunntas air a’ gheama chun an stiùiriche nuair a thig e gu crìoch, nuair a bhios tu a-mach no nuair a dh’fhàgas tu: calpa nan cluicheadairean aig toiseach gach làimh agus am buannaiche — ach chan ann na cairtean agad idir. Ma chlàraich thu airson na co-fharpais sa bhrabhsair seo, thèid an còd pearsanta agad còmhla ris. Thèid an geàrr-chunntas a chumail còmhla ris a’ cho-fharpais gus an toradh aice a sgrùdadh. ’S urrainn dhut a chur dheth sna roghainnean adhartach (Lìonra).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Brathan a’ gheama", announceOff: "Dheth", announceVoice: "Guth an uidheim", announceScreenReader: "Leughadair-sgrìn", announceHint: "Leughaidh guth an uidheim tachartasan a’ gheama a-mach àrd le guthan an uidheim agad. Tagh Leughadair-sgrìn ma chleachdas tu NVDA, JAWS, VoiceOver no TalkBack: leughaidh e iad na ghuth fhèin, gun bhruidhinn dà thuras.", announceSrOn: "Thèid brathan a’ gheama dhan leughadair-sgrìn agad",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

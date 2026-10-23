@@ -151,7 +151,8 @@ function renderOne() {
     const at = c.autoOpen && c.startsAt ? c.startsAt - (c.openBefore || 0) * 60000 : null;
     const ck = c.checkIn && c.checkIn.needed ? '<li>' + (c.checkIn.opensAt ? T('checkInHow', { time: fmtTime(c.checkIn.opensAt) }) : T('checkInHowNoTime')) + '</li>' : '';
     h += '<section class="card"><h2>' + T('howTitle') + '</h2><ol class="how"><li>' + T('how1') + '</li>' + ck + '<li>' +
-      (at ? T('how2At', { time: fmtTime(at) }) : T('how2')) + '</li><li>' + T('how3') + '</li><li>' + T('how4') + '</li></ol></section>';
+      (at ? T('how2At', { time: fmtTime(at) }) : T('how2')) + '</li><li>' + T('how3') + '</li><li>' + T('how4') + '</li>' +
+      (c.witnesses ? '<li>' + T('howWitness') + '</li>' : '') + '</ol></section>';
   }
 
   // Players.
@@ -195,6 +196,18 @@ function renderOne() {
         '<div><label for="unCode">' + T('code') + '</label><input id="unCode" maxlength="16" autocomplete="off" required></div>' +
         '<button type="submit">' + T('unregister') + '</button></form></details>';
     }
+    h += '</section>';
+  }
+
+  // Witnesses: what the web clients at the table saw, against the director.
+  const W = c.witnesses;
+  if (W && (W.total || c.result || c.phase === 'table')) {
+    const VK = { agrees: ['wAgrees', 'live'], disagrees: ['wDisagrees', 'bad'], nothing: ['wNothing', ''], pending: ['wPending', 'warn'] };
+    h += '<section class="card"><h2>' + T('witnessTitle') + (W.total ? ' <span class="muted small">' + T('witnessCount', { agree: W.agree, disagree: W.disagree }) + '</span>' : '') + '</h2>';
+    h += W.list.length ? '<ul class="chips">' + W.list.map((w) => { const v = VK[w.verdict] || [w.verdict, '']; return '<li>' + esc(w.nick) + ' <span class="chip ' + v[1] + '">' + T(v[0]) + '</span>' + (w.counts ? '' : ' <span class="chip">' + T('wNoCode') + '</span>') + '</li>'; }).join('') + '</ul>'
+      : '<p class="empty">' + T('witnessNone') + '</p>';
+    if (W.mode === 'required' && !W.override && c.phase !== 'validated') h += '<p class="small muted">' + T('witnessRequired') + '</p>';
+    if (W.override) h += '<p class="small">' + T('witnessOverride', { reason: esc(W.override.reason) }) + '</p>';
     h += '</section>';
   }
 
@@ -249,6 +262,9 @@ function wire() {
   const doCheckIn = async (nick, code) => {
     const d = await api('/t/' + cur.key + '/checkin', { nick, code, invite: inviteFromUrl() || undefined });
     if (!d.ok) { flash = { bad: true, html: errText(d) }; renderOne(); return; }
+    // The code typed here is kept too: the web client sends it with its
+    // witness report, so that the report counts.
+    if (!regsFor(cur.key).some((r) => r.nick.toLowerCase() === d.nick.toLowerCase())) regsSave(cur.key, regsFor(cur.key).concat([{ nick: d.nick, code: String(code).toUpperCase() }]));
     cur = d.tournament;
     flash = { html: T('checkedInDone', { nick: d.nick }) };
     renderOne();

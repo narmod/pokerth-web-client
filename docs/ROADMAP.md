@@ -308,7 +308,9 @@ use too. Items are grouped by status rather than fixed phases.
   by itself). Service `0.3.0`: opening by itself before the start, announcements, messages to the table. Service `0.4.0`:
   the players' page `/tournament` in every language, with registration and a personal code. Service `0.5.0`: check-in
   for the Official profile (only the players who confirmed with their code are invited). Service `0.6.0`: the director
-  writes in the tournament's chat language (83 languages), every line within the server's 128 bytes. Next: witnesses.
+  writes in the tournament's chat language (83 languages), every line within the server's 128 bytes. Service `0.7.0`
+  (`web.305`): witnesses — the web clients at the table send what they saw, compared with the director's journal;
+  Official needs one that agrees and none that disagrees. Next: QML players as witnesses by their `.pdb` log.
 
 ## ⏭️ Next
 

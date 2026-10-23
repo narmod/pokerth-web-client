@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Turneringar: vid ett bord hos den här webbplatsens turneringsledare, skicka en sammanfattning av spelet till den för att kontrollera resultatet (stackar och vinnare, aldrig mina kort)',
+  tdWitnessNotice: 'Turneringsbord: din klient skickar en sammanfattning av det här spelet till turneringsledaren (stackarna vid varje hand och vinnaren, aldrig dina kort) för att kontrollera resultatet. Du kan stänga av det under Avancerade alternativ › Nätverk.',
+  pvSrvTd: 'Turneringsvittnen: vid ett bord som öppnats av den här webbplatsens turneringsledare skickar din klient ditt smeknamn och en sammanfattning av spelet till turneringsledaren när det tar slut, när du åker ut eller när du lämnar: spelarnas stackar i början av varje hand och vinnaren — aldrig dina kort. Om du anmälde dig till turneringen i den här webbläsaren skickas din personliga kod med. Sammanfattningen sparas med turneringen för att kontrollera dess resultat. Du kan stänga av det i de avancerade alternativen (Nätverk).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Spelmeddelanden", announceOff: "Av", announceVoice: "Inbyggd röst", announceScreenReader: "Skärmläsare", announceHint: "Den inbyggda rösten läser upp spelhändelserna med enhetens röster. Välj Skärmläsare om du använder NVDA, JAWS, VoiceOver eller TalkBack: den läser upp dem med sin egen röst, utan att något sägs två gånger.", announceSrOn: "Spelmeddelanden skickas till din skärmläsare",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

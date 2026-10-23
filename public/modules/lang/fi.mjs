@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Turnaukset: lähetä tämän sivuston turnausjohtajan pöydässä johtajalle yhteenveto pelistä tuloksen tarkistamiseksi (pinot ja voittaja, ei koskaan korttejani)',
+  tdWitnessNotice: 'Turnauspöytä: asiakasohjelmasi lähettää turnausjohtajalle yhteenvedon tästä pelistä (pinot joka kädessä ja voittajan, ei koskaan korttejasi) tuloksen tarkistamiseksi. Voit poistaa tämän käytöstä kohdassa Lisäasetukset › Verkko.',
+  pvSrvTd: 'Turnaustodistajat: tämän sivuston turnausjohtajan avaamassa pöydässä asiakasohjelmasi lähettää johtajalle nimimerkkisi ja yhteenvedon pelistä, kun peli päättyy, kun putoat tai kun poistut: pelaajien pinot kunkin käden alussa ja voittajan – ei koskaan korttejasi. Jos ilmoittauduit turnaukseen tällä selaimella, henkilökohtainen koodisi lähetetään mukana. Yhteenveto säilytetään turnauksen yhteydessä sen tuloksen tarkistamiseksi. Voit poistaa tämän käytöstä lisäasetuksista (Verkko).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Peli-ilmoitukset", announceOff: "Pois", announceVoice: "Sisäänrakennettu puhe", announceScreenReader: "Ruudunlukija", announceHint: "Sisäänrakennettu puhe lukee pelitapahtumat ääneen laitteesi äänillä. Valitse Ruudunlukija, jos käytät NVDA:ta, JAWSia, VoiceOveria tai TalkBackia: se lukee ne omalla äänellään, eikä mitään puhuta kahteen kertaan.", announceSrOn: "Peli-ilmoitukset ohjataan ruudunlukijaasi",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

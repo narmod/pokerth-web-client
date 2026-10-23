@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Imiqhudelwano: etafuleni lomqondisi wemiqhudelwano wale sayithi, mthumelele isifinyezo somdlalo ukuze kuhlolwe umphumela (izitaki nowinile, hhayi amakhadi ami neze)',
+  tdWitnessNotice: 'Itafula lomqhudelwano: iklayenti lakho lithumela kumqondisi wemiqhudelwano isifinyezo salo mdlalo (izitaki esandleni ngasinye nowinile, hhayi amakhadi akho neze) ukuze kuhlolwe umphumela. Ungakuvala lokhu ku-Izinketho ezithuthukisiwe › Inethiwekhi.',
+  pvSrvTd: 'Ofakazi bemiqhudelwano: etafuleni elivulwe ngumqondisi wemiqhudelwano wale sayithi, iklayenti lakho lithumela kumqondisi isiteketiso sakho nesifinyezo somdlalo lapho uphela, lapho usuphumile noma lapho uhamba: izitaki zabadlali ekuqaleni kwesandla ngasinye nowinile — hhayi amakhadi akho neze. Uma ubhalisele umqhudelwano kulesi siphequluli, ikhodi yakho yomuntu siqu ihamba nawo. Isifinyezo sigcinwa nomqhudelwano ukuze kuhlolwe umphumela wawo. Ungakuvala lokhu ezinketho ezithuthukisiwe (Inethiwekhi).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Izimemezelo zomdlalo", announceOff: "Kuvaliwe", announceVoice: "Izwi elakhelwe ngaphakathi", announceScreenReader: "Isifundi sesikrini", announceHint: "Izwi elakhelwe ngaphakathi lifunda izehlakalo zomdlalo ngamazwi edivayisi yakho. Khetha Isifundi sesikrini uma usebenzisa i-NVDA, i-JAWS, i-VoiceOver noma i-TalkBack: sizifunda ngezwi laso, ngaphandle kokukhuluma kabili.", announceSrOn: "Izimemezelo zomdlalo ziya esifundini sakho sesikrini",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

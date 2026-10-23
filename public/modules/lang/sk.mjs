@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Turnaje: pri stole riaditeľa turnajov tejto stránky mu posielať zhrnutie hry na overenie výsledku (stacky a víťaz, nikdy nie moje karty)',
+  tdWitnessNotice: 'Turnajový stôl: váš klient posiela riaditeľovi turnajov zhrnutie tejto hry (stacky v každom rozdaní a víťaza, nikdy nie vaše karty) na overenie výsledku. Môžete to vypnúť v Pokročilé možnosti › Sieť.',
+  pvSrvTd: 'Turnajoví svedkovia: pri stole, ktorý otvoril riaditeľ turnajov tejto stránky, váš klient posiela riaditeľovi vašu prezývku a zhrnutie hry, keď sa skončí, keď vypadnete alebo keď odídete: stacky hráčov na začiatku každého rozdania a víťaza — nikdy nie vaše karty. Ak ste sa na turnaj zaregistrovali v tomto prehliadači, posiela sa s ním aj váš osobný kód. Zhrnutie sa uchováva s turnajom na overenie jeho výsledku. Môžete to vypnúť v pokročilých možnostiach (Sieť).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Herné oznámenia", announceOff: "Vypnuté", announceVoice: "Vstavaný hlas", announceScreenReader: "Čítačka obrazovky", announceHint: "Vstavaný hlas predčítava herné udalosti hlasmi vášho zariadenia. Ak používate NVDA, JAWS, VoiceOver alebo TalkBack, zvoľte Čítačka obrazovky: predčíta ich vlastným hlasom a nič neodznie dvakrát.", announceSrOn: "Herné oznámenia idú do vašej čítačky obrazovky",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Turnirlər: bu saytın turnir direktorunun masasında nəticəni yoxlamaq üçün ona oyunun xülasəsini göndər (fişkalar və qalib; kartlarım heç vaxt göndərilmir)',
+  tdWitnessNotice: 'Turnir masası: klientiniz nəticəni yoxlamaq üçün turnir direktoruna bu oyunun xülasəsini (hər əldəki fişkalar və qalib; kartlarınız heç vaxt göndərilmir) göndərir. Bunu Əlavə seçimlər › Şəbəkə bölməsində söndürə bilərsiniz.',
+  pvSrvTd: 'Turnir şahidləri: bu saytın turnir direktorunun açdığı masada klientiniz oyun bitəndə, siz oyundan çıxanda və ya masanı tərk edəndə direktora ləqəbinizi və oyunun xülasəsini göndərir: hər əlin əvvəlində oyunçuların fişkaları və qalib — kartlarınız isə heç vaxt göndərilmir. Turnirə bu brauzerdə qeydiyyatdan keçmisinizsə, şəxsi kodunuz da onunla birlikdə göndərilir. Xülasə nəticəni yoxlamaq üçün turnirlə birlikdə saxlanılır. Bunu əlavə seçimlərdə (Şəbəkə) söndürə bilərsiniz.',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Oyun elanları", announceOff: "Deaktiv", announceVoice: "Daxili səs", announceScreenReader: "Ekran oxuyucusu", announceHint: "Daxili səs oyun hadisələrini cihazınızın səsləri ilə oxuyur. NVDA, JAWS, VoiceOver və ya TalkBack istifadə edirsinizsə, Ekran oxuyucusu seçin: o, hadisələri öz səsi ilə, ikiqat səsləndirmə olmadan oxuyur.", announceSrOn: "Oyun elanları ekran oxuyucunuza göndərilir",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

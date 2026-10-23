@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Mga tournament: sa mesa ng tournament director ng site na ito, padalhan ito ng buod ng laro para masuri ang resulta (mga stack at nanalo, hindi kailanman ang aking mga baraha)',
+  tdWitnessNotice: 'Mesa ng tournament: nagpapadala ang iyong client sa tournament director ng buod ng larong ito (ang mga stack sa bawat kamay at ang nanalo, hindi kailanman ang iyong mga baraha) para masuri ang resulta. Maaari mo itong i-off sa Mga advanced na option › Network.',
+  pvSrvTd: 'Mga saksi sa tournament: sa mesang binuksan ng tournament director ng site na ito, ipinapadala ng iyong client sa director ang iyong palayaw at ang buod ng laro kapag natapos ito, kapag na-out ka o kapag umalis ka: ang mga stack ng mga manlalaro sa simula ng bawat kamay at ang nanalo — hindi kailanman ang iyong mga baraha. Kung nagparehistro ka sa tournament sa browser na ito, kasama ring ipinapadala ang iyong personal na code. Itinatago ang buod kasama ng tournament para masuri ang resulta nito. Maaari mo itong i-off sa mga advanced na option (Network).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Mga announcement ng laro", announceOff: "Naka-off", announceVoice: "Built-in na boses", announceScreenReader: "Screen reader", announceHint: "Binabasa ng built-in na boses ang mga pangyayari sa laro gamit ang mga boses ng device mo. Piliin ang Screen reader kung gumagamit ka ng NVDA, JAWS, VoiceOver o TalkBack: babasahin nito ang mga ito sa sarili nitong boses, nang hindi nagsasalita nang dalawang beses.", announceSrOn: "Ipinapadala na sa screen reader mo ang mga announcement ng laro",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

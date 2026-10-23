@@ -27,7 +27,7 @@ const STATIC = {
 };
 const LANG_RE = /^lang\/([a-z]{2,3}(?:-[a-z0-9]{2,4})?)\.mjs$/;
 // Public endpoints: per address, a few registrations and code attempts.
-const RATE = { register: [6, 10 * 60 * 1000], unregister: [12, 10 * 60 * 1000], checkin: [12, 10 * 60 * 1000] };
+const RATE = { register: [6, 10 * 60 * 1000], unregister: [12, 10 * 60 * 1000], checkin: [12, 10 * 60 * 1000], witness: [60, 10 * 60 * 1000] };
 const MAX_JSON = 64 * 1024;
 const MAX_PDB = 10 * 1024 * 1024;
 
@@ -226,7 +226,7 @@ export function createService(o) {
       case '/t/code': return send(() => T.issueCode(id, b.nick, who));
       case '/t/checkin': return send(() => T.organizerCheckIn(id, b.nick, who));
       case '/t/result': return send(() => T.setResult(id, b, who));
-      case '/t/validate': return send(() => T.validate(id, who));
+      case '/t/validate': return send(() => T.validate(id, who, { override: b.override }));
       case '/t/correct': return send(() => T.correct(id, b, who));
       case '/t/table/open': return send(() => openTable(id, b, who));
       case '/t/table/go': return send(() => tableCommand(id, 'go', 'tableGo', who));
@@ -248,6 +248,31 @@ export function createService(o) {
     if (hits.size > 5000) for (const [kk, v] of hits) if (!v.some((x) => at - x < win)) hits.delete(kk);
     return false;
   }
+  // The director's table as the server named it: game id and table name.
+  function hostTable(watchId) {
+    const w = td.info(watchId);
+    const H = w && w.state && w.state.host;
+    return H && H.gameId != null ? { gameId: H.gameId, tableName: H.tableName || '' } : null;
+  }
+  function tableLookup(q) {
+    const game = Number(q.game), name = String(q.name || '');
+    if (!Number.isInteger(game) || game < 1 || !name) throw Object.assign(new T.Refusal('game and name'), { code: 'notFound' });
+    for (const h of T.openHosts()) {
+      const x = hostTable(h.watchId);
+      if (x && x.gameId === game && x.tableName === name) {
+        const v = T.get(h.id);
+        return { key: v.publicKey, name: v.name, witnesses: v.settings.witnesses, identity: v.settings.identity };
+      }
+    }
+    throw Object.assign(new T.Refusal('not a tournament table'), { code: 'notFound' });
+  }
+  // A report from a player at the director's table: accepted for a private
+  // tournament too (the player has no invitation code in the client).
+  function atTable(key, b) {
+    const h = T.keyHost(key);
+    const x = h && hostTable(h.watchId);
+    return !!(x && b && Number(b.game) === x.gameId && String(b.name || '') === x.tableName);
+  }
   // What players see of an open table: its name and state, not the log.
   function liveOf(t) {
     if (!t.host || t.host.status !== 'open') return null;
@@ -262,7 +287,10 @@ export function createService(o) {
       .catch((e) => (e instanceof T.Refusal ? json(res, e.code === 'notFound' || e.code === 'private' ? 404 : 400, { ok: false, code: e.code || 'refused', error: e.message })
         : json(res, 500, { ok: false, code: 'error', error: 'error' })));
     if (sub === '/list' && req.method === 'GET') return send(() => T.publicList());
-    const m = /^\/t\/([A-Za-z0-9_-]{8,40})(?:\/(register|unregister|checkin|file))?$/.exec(sub);
+    // A web client at a table: is it a tournament's? (game id and table name,
+    // as the server told the client.) Only tables the director opened.
+    if (sub === '/table' && req.method === 'GET') return send(() => tableLookup(query));
+    const m = /^\/t\/([A-Za-z0-9_-]{8,40})(?:\/(register|unregister|checkin|witness|file))?$/.exec(sub);
     if (!m) return json(res, 404, { ok: false, code: 'notFound' });
     const key = m[1], op = m[2] || '';
     if (!op && req.method === 'GET') {
@@ -281,10 +309,11 @@ export function createService(o) {
         'Content-Disposition': 'attachment; filename="tournament-' + key.slice(0, 8) + '.' + which + '.json"' });
       return res.end(buf);
     }
-    if (req.method !== 'POST' || (op !== 'register' && op !== 'unregister' && op !== 'checkin')) return json(res, 405, { ok: false, code: 'method' });
+    if (req.method !== 'POST' || ['register', 'unregister', 'checkin', 'witness'].indexOf(op) < 0) return json(res, 405, { ok: false, code: 'method' });
     if (limited(op, ip)) return json(res, 429, { ok: false, code: 'tooMany', error: 'too many attempts, try again later' });
     const b = await readJson(req);
     if (!b) return json(res, 400, { ok: false, code: 'badRequest' });
+    if (op === 'witness') return send(() => T.witnessReport(key, b, { atTable: atTable(key, b) }));
     return send(() => (op === 'register' ? T.register(key, b) : op === 'checkin' ? T.checkIn(key, b) : T.unregister(key, b)));
   }
 

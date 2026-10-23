@@ -239,6 +239,7 @@ export function createManager(deps) {
     dir, keyFile,
     // A Table check's sealed result, reused as a tournament result.
     readWatch: (id) => (ID_RE.test(id) ? readJson(path.join(wdir(id), 'result.json')) : null),
+    readWatchJournal: (id) => (ID_RE.test(id) ? readJson(path.join(wdir(id), 'journal.json')) : null),
   });
 
   return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, MAX_RUNNING };

@@ -80,8 +80,9 @@ const off = await T.create({ name: 'Official cup', profile: 'official' }, 'admin
 for (const n of ['A1', 'B1']) await T.addPlayer(off.id, n, 'admin');
 const o1 = await T.setResult(off.id, { source: 'manual', ranking: ['B1', 'A1'] }, 'admin');
 ok(o1.status === 'finished' && !o1.sealedHead, 'official: result waits for an organizer');
-const o2 = await T.validate(off.id, 'admin');
-ok(o2.status === 'validated' && o2.checks.signature, 'official: validated by hand, then signed');
+await refused(Promise.resolve().then(() => T.validate(off.id, 'admin')), /witnesses required/, 'official: witnesses required — no validation without one, or a reason');
+const o2 = await T.validate(off.id, 'admin', { override: 'played at the club, seen by the organizer' });
+ok(o2.status === 'validated' && o2.checks.signature && o2.witnessOverride.reason === 'played at the club, seen by the organizer', 'official: validated by hand with a reason, then signed');
 await refused(Promise.resolve().then(() => T.correct(off.id, { ranking: ['A1', 'B1'], reason: 'appeal accepted' }, 'admin')), /second organizer/, 'official: a correction needs a second organizer');
 
 // ── result from a Table check ──────────────────────────────────────

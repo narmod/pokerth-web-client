@@ -8,6 +8,28 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.7.0 — 2026-10-24 (web client `2.1.10-web.305`)
+
+### Added
+- **Witnesses.** The web clients at the director's table send what they saw
+  (stacks at the start of each hand, the winner — never cards); each report
+  is compared hand by hand with the director's journal, or — in manual mode —
+  with the ranking set: « agrees », « disagrees » (with where), « nothing to
+  compare ». Only the tournament's players are witnesses; with the identity
+  « Personal code » only reports carrying it count. Reports of a player add
+  up (a reloaded client). Every report is in the journal with its
+  fingerprint. `GET /tournament/api/table?game=&name=` (is this table a
+  tournament's?), `POST /tournament/api/t/<key>/witness` (60 per address in
+  ten minutes; a private tournament's report is taken from its table).
+- **Witnesses required** (Official): validating needs one witness that
+  agrees and none that disagrees, or a reason from the organizer, kept in the
+  journal and shown on the players' page. An automatic validation waits for
+  its witnesses (Custom).
+- Organizer page: the witnesses, their verdicts and differences; players'
+  page: how it works, the witnesses and the verdicts.
+- A code typed for the check-in is kept in the browser too, so that the web
+  client's report carries it.
+
 ## 0.6.0 — 2026-10-24
 
 ### Added

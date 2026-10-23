@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Turnirji: za mizo direktorja turnirjev te strani mu pošlji povzetek igre za preverjanje rezultata (žetoni in zmagovalec, nikoli moje karte)',
+  tdWitnessNotice: 'Turnirska miza: tvoj odjemalec pošlje direktorju turnirjev povzetek te igre (žetone v vsaki roki in zmagovalca, nikoli tvojih kart) za preverjanje rezultata. To lahko izklopiš v Napredne možnosti › Omrežje.',
+  pvSrvTd: 'Turnirske priče: za mizo, ki jo je odprl direktor turnirjev te strani, tvoj odjemalec direktorju pošlje tvoj vzdevek in povzetek igre, ko se konča, ko izpadeš ali ko odideš: žetone igralcev na začetku vsake roke in zmagovalca — nikoli tvojih kart. Če je bila prijava na turnir opravljena v tem brskalniku, se pošlje tudi tvoja osebna koda. Povzetek se hrani skupaj s turnirjem za preverjanje njegovega rezultata. Izklopiš ga lahko v naprednih možnostih (Omrežje).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Obvestila igre", announceOff: "Izklopljeno", announceVoice: "Vgrajeni glas", announceScreenReader: "Bralnik zaslona", announceHint: "Vgrajeni glas prebere dogodke igre z glasovi tvoje naprave. Če uporabljaš NVDA, JAWS, VoiceOver ali TalkBack, izberi Bralnik zaslona: prebere jih s svojim glasom, ne da bi se glasova prekrivala.", announceSrOn: "Obvestila igre gredo v tvoj bralnik zaslona",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

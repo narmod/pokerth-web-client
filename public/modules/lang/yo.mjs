@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Ìdíje: ní tábìlì olùdarí ìdíje ojú-òpó yìí, fi àkópọ̀ eré ránṣẹ́ sí i láti ṣàyẹ̀wò àbájáde (àkójọ chips àti ẹni tó borí, kì í ṣe káàdì mi láé)',
+  tdWitnessNotice: 'Tábìlì ìdíje: oníbàárà rẹ ń fi àkópọ̀ eré yìí ránṣẹ́ sí olùdarí ìdíje (àkójọ chips ní ọwọ́ kọ̀ọ̀kan àti ẹni tó borí, kì í ṣe káàdì rẹ láé) láti ṣàyẹ̀wò àbájáde. O lè pa èyí nínú Àṣàyàn ìlọsíwájú › Nẹ́tíwọ̀ọ̀kì.',
+  pvSrvTd: 'Àwọn ẹlẹ́rìí ìdíje: ní tábìlì tí olùdarí ìdíje ojú-òpó yìí ṣí, oníbàárà rẹ ń fi orúkọ ìnagijẹ rẹ àti àkópọ̀ eré ránṣẹ́ sí olùdarí nígbà tí eré bá parí, nígbà tí o bá jáde nínú eré tàbí nígbà tí o bá kúrò: àkójọ chips àwọn òṣèré ní ìbẹ̀rẹ̀ ọwọ́ kọ̀ọ̀kan àti ẹni tó borí — kì í ṣe káàdì rẹ láé. Tí o bá forúkọ sílẹ̀ fún ìdíje náà nínú aṣàwákiri yìí, kóòdù àdáni rẹ yóò lọ pẹ̀lú rẹ̀. A ń tọ́jú àkópọ̀ náà pẹ̀lú ìdíje náà láti ṣàyẹ̀wò àbájáde rẹ̀. O lè pa á nínú àṣàyàn ìlọsíwájú (Nẹ́tíwọ̀ọ̀kì).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Ìkéde eré", announceOff: "Pa", announceVoice: "Ohùn inú ẹ̀rọ", announceScreenReader: "Ẹ̀rọ olùkàwé ojú-ìbòjú", announceHint: "Ohùn inú ẹ̀rọ ń ka àwọn ìṣẹ̀lẹ̀ eré pẹ̀lú àwọn ohùn ẹ̀rọ rẹ. Yan Ẹ̀rọ olùkàwé ojú-ìbòjú bí o bá ń lo NVDA, JAWS, VoiceOver tàbí TalkBack: yóò kà wọ́n pẹ̀lú ohùn tirẹ̀, láìsọ̀rọ̀ lẹ́ẹ̀mejì.", announceSrOn: "Ìkéde eré ń lọ sí ẹ̀rọ olùkàwé ojú-ìbòjú rẹ",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

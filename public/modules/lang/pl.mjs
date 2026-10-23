@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Turnieje: przy stole dyrektora turniejów tej strony wysyłaj mu podsumowanie gry, aby sprawdzić wynik (stacki i zwycięzca, nigdy moje karty)',
+  tdWitnessNotice: 'Stół turniejowy: twój klient wysyła dyrektorowi turniejów podsumowanie tej gry (stacki w każdym rozdaniu i zwycięzcę, nigdy twoich kart), aby sprawdzić wynik. Możesz to wyłączyć w: Opcje zaawansowane › Sieć.',
+  pvSrvTd: 'Świadkowie turniejowi: przy stole otwartym przez dyrektora turniejów tej strony twój klient wysyła dyrektorowi twój pseudonim i podsumowanie gry, gdy się kończy, gdy odpadasz lub gdy wychodzisz: stacki graczy na początku każdego rozdania i zwycięzcę — nigdy twoich kart. Jeśli zapisu na turniej dokonano w tej przeglądarce, dołączany jest też twój kod osobisty. Podsumowanie jest przechowywane razem z turniejem, aby sprawdzić jego wynik. Możesz to wyłączyć w: Opcje zaawansowane (Sieć).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Zapowiedzi gry", announceOff: "Wyłączone", announceVoice: "Wbudowany głos", announceScreenReader: "Czytnik ekranu", announceHint: "Wbudowany głos czyta wydarzenia gry głosami twojego urządzenia. Wybierz Czytnik ekranu, jeśli używasz NVDA, JAWS, VoiceOver lub TalkBack: przeczyta je własnym głosem, bez mówienia dwa razy.", announceSrOn: "Zapowiedzi gry trafiają do twojego czytnika ekranu",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

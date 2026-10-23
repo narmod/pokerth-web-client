@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Giải đấu: tại bàn của người điều hành giải đấu của trang này, gửi cho người điều hành bản tóm tắt trò chơi để kiểm tra kết quả (chip và người thắng, không bao giờ có bài của tôi)',
+  tdWitnessNotice: 'Bàn giải đấu: ứng dụng của bạn gửi cho người điều hành giải đấu bản tóm tắt trò chơi này (chip ở mỗi ván và người thắng, không bao giờ có bài của bạn) để kiểm tra kết quả. Bạn có thể tắt trong Tùy chọn nâng cao › Mạng.',
+  pvSrvTd: 'Nhân chứng giải đấu: tại bàn do người điều hành giải đấu của trang này mở, ứng dụng của bạn gửi cho người điều hành biệt danh của bạn và bản tóm tắt trò chơi khi trò chơi kết thúc, khi bạn bị loại hoặc khi bạn rời đi: số chip của người chơi đầu mỗi ván và người thắng — không bao giờ có bài của bạn. Nếu bạn đã đăng ký giải đấu trên trình duyệt này, mã cá nhân của bạn được gửi kèm. Bản tóm tắt được lưu cùng giải đấu để kiểm tra kết quả. Bạn có thể tắt trong tùy chọn nâng cao (Mạng).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Thông báo trò chơi", announceOff: "Tắt", announceVoice: "Giọng tích hợp", announceScreenReader: "Trình đọc màn hình", announceHint: "Giọng tích hợp đọc các sự kiện trong ván bằng giọng đọc của thiết bị. Hãy chọn Trình đọc màn hình nếu bạn dùng NVDA, JAWS, VoiceOver hoặc TalkBack: trình này đọc bằng giọng của chính nó, không bị đọc hai lần.", announceSrOn: "Thông báo trò chơi được gửi tới trình đọc màn hình của bạn",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Txapelketak: gune honetako txapelketa-zuzendariaren mahai batean, bidali hari partidaren laburpen bat emaitza egiaztatzeko (txanponak eta irabazlea, inoiz ez nire kartak)',
+  tdWitnessNotice: 'Txapelketa-mahaia: zure bezeroak partida honen laburpen bat bidaltzen dio txapelketa-zuzendariari (esku bakoitzeko txanponak eta irabazlea, inoiz ez zure kartak) emaitza egiaztatzeko. Hau desgai dezakezu hemen: Aukera aurreratuak › Sarea.',
+  pvSrvTd: 'Txapelketako lekukoak: gune honetako txapelketa-zuzendariak irekitako mahai batean, zure bezeroak zure ezizena eta partidaren laburpen bat bidaltzen dizkio zuzendariari partida amaitzean, kanporatzen zaituztenean edo irteten zarenean: jokalarien txanponak esku bakoitzaren hasieran eta irabazlea — inoiz ez zure kartak. Nabigatzaile honetan txapelketan izena eman baduzu, zure kode pertsonala ere bidaltzen da. Laburpena txapelketarekin batera gordetzen da haren emaitza egiaztatzeko. Aukera aurreratuetan desgai dezakezu (Sarea).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Jokoaren iragarpenak", announceOff: "Desgaituta", announceVoice: "Ahots integratua", announceScreenReader: "Pantaila-irakurgailua", announceHint: "Ahots integratuak jokoaren gertaerak zure gailuaren ahotsekin irakurtzen ditu. NVDA, JAWS, VoiceOver edo TalkBack erabiltzen baduzu, aukeratu Pantaila-irakurgailua: bere ahotsarekin irakurriko ditu, ahotsak gainjarri gabe.", announceSrOn: "Jokoaren iragarpenak zure pantaila-irakurgailura doaz",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

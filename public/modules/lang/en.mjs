@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: "Tournaments: at a table of this site's tournament director, send it a summary of the game to check the result (stacks and winner, never my cards)",
+  tdWitnessNotice: 'Tournament table: your client sends the tournament director a summary of this game (the stacks at each hand and the winner, never your cards) to check the result. You can turn this off in Advanced options › Network.',
+  pvSrvTd: "Tournament witnesses: at a table opened by this site's tournament director, your client sends the director your nickname and a summary of the game when it ends, when you are out or when you leave: the stacks of the players at the start of each hand and the winner — never your cards. If you registered for the tournament in this browser, your personal code goes with it. The summary is kept with the tournament to check its result. You can turn it off in the advanced options (Network).",
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Game announcements", announceOff: "Off", announceVoice: "Built-in voice", announceScreenReader: "Screen reader", announceHint: "The built-in voice reads the game events with your device’s voices. Choose Screen reader if you use NVDA, JAWS, VoiceOver or TalkBack: it reads them in its own voice, without speaking twice.", announceSrOn: "Game announcements go to your screen reader",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

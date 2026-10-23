@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Turnīri: pie šīs vietnes turnīru direktora galda nosūtīt tam spēles kopsavilkumu rezultāta pārbaudei (žetoni un uzvarētājs, nekad manas kārtis)',
+  tdWitnessNotice: 'Turnīra galds: tavs klients nosūta turnīru direktoram šīs spēles kopsavilkumu (žetonus katrā partijā un uzvarētāju, nekad tavas kārtis), lai pārbaudītu rezultātu. To vari izslēgt sadaļā Papildu opcijas › Tīkls.',
+  pvSrvTd: 'Turnīru liecinieki: pie galda, ko atvēris šīs vietnes turnīru direktors, tavs klients nosūta direktoram tavu segvārdu un spēles kopsavilkumu, kad spēle beidzas, kad tu izkrīti vai kad aizej: spēlētāju žetonus katras partijas sākumā un uzvarētāju — nekad tavas kārtis. Ja reģistrējies turnīram šajā pārlūkā, līdzi tiek nosūtīts arī tavs personīgais kods. Kopsavilkums tiek glabāts kopā ar turnīru, lai pārbaudītu tā rezultātu. To vari izslēgt papildu opcijās (Tīkls).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Spēles paziņojumi", announceOff: "Izslēgti", announceVoice: "Iebūvētā balss", announceScreenReader: "Ekrāna lasītājs", announceHint: "Iebūvētā balss nolasa spēles notikumus ar tavas ierīces balsīm. Izvēlies „Ekrāna lasītājs”, ja lieto NVDA, JAWS, VoiceOver vai TalkBack: tas tos nolasa savā balsī, nerunājot divreiz.", announceSrOn: "Spēles paziņojumi tiek sūtīti tavam ekrāna lasītājam",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

@@ -250,6 +250,9 @@ export function createTournamentsView(deps) {
     // The table on the server.
     h += hostSection(t);
 
+    // Witnesses: what the web clients at the table saw.
+    h += witnessSection(t);
+
     // Result.
     if (t.result) {
       const r = t.result;
@@ -259,8 +262,14 @@ export function createTournamentsView(deps) {
       if (r.absent && r.absent.length) h += '<p class="small">Absent (not ranked): ' + r.absent.map(esc).join(', ') + '</p>';
       h += '<p class="small muted">From: ' + (r.byDirector ? 'the director, who ran the table · ' : '') + esc(SOURCE[r.source] || r.source) + (r.watchId ? ' ' + esc(r.watchId) : '') + (r.uniqueGameId != null ? ', game ' + esc(r.uniqueGameId) : '') + ' · <b>' + esc(r.status) + '</b>' + (r.corrected ? ' · corrected' : '') + '</p>';
       if (t.status === 'finished') {
-        h += '<p class="small">' + (r.status !== 'complete' ? 'Look at the flags above (tie, unknown hand, game not finished) before validating. ' : st.validation === 'organizer' ? 'This profile wants an organizer to validate. ' : '') + 'Validating seals and signs the result.</p>' +
-          '<div class="actions"><button type="button" class="primary" data-act="validate">Validate and sign</button></div>';
+        const ws = t.witnessState || {};
+        const needReason = st.witnesses === 'required' && !ws.ok;
+        h += '<p class="small">' + (r.status !== 'complete' ? 'Look at the flags above (tie, unknown hand, game not finished) before validating. ' : st.validation === 'organizer' ? 'This profile wants an organizer to validate. ' : '') + 'Validating seals and signs the result.</p>';
+        if (needReason) {
+          h += '<p class="msg bad">Witnesses required: ' + (ws.disagree ? esc(ws.disagree) + ' disagree' : 'no witness agrees yet') + '. To validate anyway, say why — the reason is kept in the journal and shown on the players\' page.</p>' +
+            '<div class="row"><div><label for="tOverride">Reason</label><input id="tOverride" maxlength="200" autocomplete="off"></div></div>';
+        }
+        h += '<div class="actions"><button type="button" class="primary" data-act="validate">' + (needReason ? 'Validate anyway and sign' : 'Validate and sign') + '</button></div>';
       }
     }
     if (t.status !== 'validated' && !(t.host && t.host.status === 'open')) h += sourcePanel(t);
@@ -306,6 +315,29 @@ export function createTournamentsView(deps) {
   }
 
   // ── the director at the table ──
+  // Witnesses (service 0.7.0): reports of the web clients at the table,
+  // compared with the director's journal (or the ranking set by hand).
+  const VERDICT = { agrees: ['agrees', 'live'], disagrees: ['disagrees', 'bad'], nothing: ['nothing to compare', ''], pending: ['waiting for the result', 'warn'] };
+  function witnessSection(t) {
+    const st = t.settings || {};
+    if (st.witnesses === 'off') return '';
+    const ws = t.witnessState || {};
+    const list = t.witnesses || [];
+    let h = '<h3>Witnesses <span class="muted small">' + esc(st.witnesses) + (list.length ? ' · ' + esc(ws.agree) + ' agree, ' + esc(ws.disagree) + ' disagree' : '') + '</span></h3>';
+    if (t.witnessOverride) h += '<p class="small">Validated despite the witnesses (' + esc(t.witnessOverride.author) + '): ' + esc(t.witnessOverride.reason) + '</p>';
+    if (!list.length) return h + '<p class="small muted">No report yet. Players with the web client send one when the game ends or when they leave the table: the stacks at the start of each hand and the winner, never their cards. ' +
+      (st.witnesses === 'required' ? 'Validating needs one that agrees and none that disagrees (or a reason).' : 'Informative: they never block the result.') + '</p>';
+    h += '<ul class="rank">' + list.map((w) => {
+      const v = VERDICT[w.verdict] || [w.verdict, ''];
+      const d = w.diff;
+      const diff = !d ? '' : d.winner ? ' — winner: ' + esc(d.witness) + ' (director: ' + esc(d.director) + ')'
+        : d.order ? ' — saw ' + esc(d.before) + ' out before ' + esc(d.after)
+        : ' — hand ' + esc(d.hand) + ', ' + esc(d.nick) + ': ' + esc(d.witness == null ? 'absent' : d.witness) + ' (director: ' + esc(d.director == null ? 'absent' : d.director) + ')';
+      return '<li><span class="nk">' + esc(w.nick) + ' <span class="chip ' + v[1] + '">' + esc(v[0]) + '</span>' + (st.identity === 'code' ? (w.verified ? ' <span class="chip">code</span>' : ' <span class="chip warn">no code: does not count</span>') : '') +
+        '<br><span class="small muted">hands ' + esc(w.from == null ? '—' : w.from + '–' + w.to) + ' (' + esc(w.common) + ' compared)' + (w.winner ? ' · winner ' + esc(w.winner) : '') + diff + '</span></span></li>';
+    }).join('') + '</ul>';
+    return h;
+  }
   function hostSection(t) {
     if (t.status === 'validated' || (t.result && !(t.host && t.host.status === 'open'))) {
       return t.host ? '<p class="small muted">Table run by the director: ' + esc(t.host.status) + '.</p>' : '';
@@ -447,7 +479,7 @@ export function createTournamentsView(deps) {
       return call('/admin/tournaments/t/result', { source: 'pdb', uniqueGameId: Number(r.value) }, 'Result taken from the log.');
     }
     if (a === 'upload') return upload();
-    if (a === 'validate') return call('/admin/tournaments/t/validate', {}, 'Validated and signed.');
+    if (a === 'validate') return call('/admin/tournaments/t/validate', $('tOverride') ? { override: ($('tOverride').value || '').trim() } : {}, 'Validated and signed.');
     if (a === 'correct') return call('/admin/tournaments/t/correct', { ranking: corrOrder.slice(), reason: ($('tReason').value || '').trim() }, 'Correction recorded and signed.');
     if (a === 'save') {
       const patch = {};

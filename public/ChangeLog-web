@@ -1,3 +1,6 @@
+2026-10-24 version 2.1.10-web.305:
+- new: tournaments (beta): at a table opened by this site's tournament director, your client sends the director a summary of the game (the stacks at each hand and the winner, never your cards) so that the result can be checked; a line in the chat says so the first time, and Advanced options › Network lets you turn it off
+
 2026-10-23 version 2.1.10-web.302:
 - improvement: the waiting room works exactly like the official client again: it shows the lobby chat and private messages, while table chat lines wait for the game screen, without a sound in the meantime
 

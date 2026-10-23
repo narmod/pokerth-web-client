@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Versenyek: az oldal versenyigazgatójának asztalánál összefoglaló küldése neki a játékról az eredmény ellenőrzéséhez (zsetonok és győztes, a lapjaim soha)',
+  tdWitnessNotice: 'Versenyasztal: a kliensed összefoglalót küld a versenyigazgatónak erről a játékról (a zsetonok minden leosztásnál és a győztes, a lapjaid soha) az eredmény ellenőrzéséhez. Ezt kikapcsolhatod itt: Speciális beállítások › Hálózat.',
+  pvSrvTd: 'Versenytanúk: az oldal versenyigazgatója által nyitott asztalnál a kliensed elküldi az igazgatónak a beceneved és egy összefoglalót a játékról, amikor véget ér, amikor kiesel vagy amikor távozol: a játékosok zsetonjait minden leosztás elején és a győztest — a lapjaidat soha. Ha ebben a böngészőben regisztráltál a versenyre, a személyes kódod is vele megy. Az összefoglalót a versennyel együtt őrizzük az eredmény ellenőrzéséhez. Kikapcsolhatod itt: Speciális beállítások (Hálózat).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Játékbemondás", announceOff: "Ki", announceVoice: "Beépített hang", announceScreenReader: "Képernyőolvasó", announceHint: "A beépített hang az eszközöd hangjaival olvassa fel a játékeseményeket. Válaszd a Képernyőolvasót, ha NVDA-t, JAWS-t, VoiceOvert vagy TalkBacket használsz: az a saját hangján olvassa fel őket, kétszeres bemondás nélkül.", announceSrOn: "A játékbemondás a képernyőolvasódhoz kerül",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

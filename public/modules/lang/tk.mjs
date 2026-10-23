@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Ýaryşlar: bu saýtyň ýaryş direktorynyň stolunda netijäni barlamak üçin oňa oýnuň gysgaça mazmunyny iber (stekler we ýeňiji, meniň kartlarym hiç haçan däl)',
+  tdWitnessNotice: 'Ýaryş stoly: müşderiňiz netijäni barlamak üçin ýaryş direktoryna bu oýnuň gysgaça mazmunyny iberýär (her eldäki stekler we ýeňiji, kartlaryňyz hiç haçan däl). Muny Giňişleýin sazlamalar › Tor bölüminde öçürip bilersiňiz.',
+  pvSrvTd: 'Ýaryş şaýatlary: bu saýtyň ýaryş direktorynyň açan stolunda oýun gutaranda, siz oýundan çykarylanyňyzda ýa-da gideniňizde müşderiňiz direktora lakamyňyzy we oýnuň gysgaça mazmunyny iberýär: her eliň başynda oýunçylaryň stekleri we ýeňiji — kartlaryňyz hiç haçan däl. Eger ýaryşa şu brauzerde hasaba duran bolsaňyz, şahsy koduňyz hem onuň bilen bile iberilýär. Gysgaça mazmun ýaryşyň netijesini barlamak üçin ýaryş bilen bile saklanýar. Muny Giňişleýin sazlamalarda (Tor) öçürip bilersiňiz.',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Oýun habarlary", announceOff: "Öçük", announceVoice: "Içki ses", announceScreenReader: "Ekran okaýjy", announceHint: "Içki ses oýun wakalaryny enjamyňyzyň sesleri bilen okaýar. NVDA, JAWS, VoiceOver ýa-da TalkBack ulanýan bolsaňyz, Ekran okaýjyny saýlaň: ol olary öz sesi bilen, iki gezek gürlemezden okaýar.", announceSrOn: "Oýun habarlary ekran okaýjyňyza iberilýär",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

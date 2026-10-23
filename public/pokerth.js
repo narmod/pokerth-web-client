@@ -510,6 +510,7 @@ function openAdvancedOptions() {
   sync('adv-autoleave', 'auto_leave', false);
   sync('adv-nickretry', 'nick_retry', true);   // réessai auto quand le pseudo est encore occupé
   sync('adv-errreport', 'err_report', true);
+  sync('adv-tdwitness', 'td_witness', true);   // témoin de tournoi (modules/td-witness.mjs, web)
   sync('adv-invitelink', 'invite_link', true); // bouton \u00ab Inviter des amis \u00bb du salon d'attente (web)   // remontée des erreurs JS à l'admin du serveur (web) — ON par défaut, décochable
   // Barre d'état de jeu (pot-strip : H#/G#, pot+bets, phase) masquable
   try {
@@ -12439,7 +12440,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.304'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.305'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

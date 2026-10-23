@@ -15,6 +15,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Turniere: An einem Tisch des Turnierleiters dieser Seite ihm eine Zusammenfassung des Spiels schicken, um das Ergebnis zu prüfen (Stacks und Gewinner, nie meine Karten)',
+  tdWitnessNotice: 'Turniertisch: Dein Client schickt dem Turnierleiter eine Zusammenfassung dieses Spiels (die Stacks in jeder Hand und den Gewinner, nie deine Karten), um das Ergebnis zu prüfen. Du kannst das unter Erweiterte Optionen › Netzwerk abschalten.',
+  pvSrvTd: 'Turnierzeugen: An einem Tisch, den der Turnierleiter dieser Seite eröffnet hat, schickt dein Client dem Turnierleiter deinen Spitznamen und eine Zusammenfassung des Spiels, wenn es endet, wenn du ausscheidest oder wenn du gehst: die Stacks der Spieler zu Beginn jeder Hand und den Gewinner – nie deine Karten. Hast du dich in diesem Browser für das Turnier angemeldet, wird dein persönlicher Code mitgeschickt. Die Zusammenfassung wird beim Turnier aufbewahrt, um sein Ergebnis zu prüfen. Du kannst das in den erweiterten Optionen (Netzwerk) abschalten.',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Spielansagen", announceOff: "Aus", announceVoice: "Integrierte Stimme", announceScreenReader: "Screenreader", announceHint: "Die integrierte Stimme liest die Spielereignisse mit den Stimmen deines Geräts vor. Wähle Screenreader, wenn du NVDA, JAWS, VoiceOver oder TalkBack nutzt: Er liest sie mit seiner eigenen Stimme vor, ohne doppelte Ansage.", announceSrOn: "Spielansagen gehen an deinen Screenreader",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

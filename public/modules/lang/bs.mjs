@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Turniri: za stolom direktora turnira ove stranice pošalji mu sažetak igre radi provjere rezultata (stanje čipova i pobjednik, nikada moje karte)',
+  tdWitnessNotice: 'Turnirski sto: tvoj klijent šalje direktoru turnira sažetak ove igre (stanje čipova u svakoj ruci i pobjednika, nikada tvoje karte) radi provjere rezultata. To možeš isključiti u Napredne opcije › Mreža.',
+  pvSrvTd: 'Svjedoci turnira: za stolom koji je otvorio direktor turnira ove stranice, tvoj klijent šalje direktoru tvoj nadimak i sažetak igre kada se završi, kada ispadneš ili kada odeš: stanje čipova igrača na početku svake ruke i pobjednika — nikada tvoje karte. Ako si se na turnir prijavio u ovom pregledaču, uz to ide i tvoj lični kod. Sažetak se čuva uz turnir radi provjere njegovog rezultata. Možeš ga isključiti u naprednim opcijama (Mreža).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Najave igre", announceOff: "Isključeno", announceVoice: "Ugrađeni glas", announceScreenReader: "Čitač ekrana", announceHint: "Ugrađeni glas čita događaje igre glasovima tvog uređaja. Odaberi Čitač ekrana ako koristiš NVDA, JAWS, VoiceOver ili TalkBack: on ih čita svojim glasom, bez dvostrukog izgovaranja.", announceSrOn: "Najave igre šalju se tvom čitaču ekrana",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

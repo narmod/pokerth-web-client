@@ -207,7 +207,17 @@ function onGameStartInitial(sub) {
         });
       }
     } catch (_e) {}
+    if (isFirstDeal) _tdwGame();
     return;
+}
+
+function _tdwGame() {
+  // Tournament witness (modules/td-witness.mjs): is this a director's table?
+  try {
+    if (!window._tdWitness || !S.gId) return;
+    var g = S.games && S.games[S.gId];
+    window._tdWitness.onGameStart({ gameId: S.gId, name: g && g.name, say: function (k) { addChat(null, t(k), 'sys', { key: k }); } });
+  } catch (_e) {}
 }
 
 function onGameStartRejoin(sub) {
@@ -237,6 +247,7 @@ function onGameStartRejoin(sub) {
     // handNum serveur = main courante ; la reprise prend effet a la main
     // suivante (comme le client officiel) : le prochain onHandStart fera ++.
     S.handNum   = Proto.u32(sub, 3);
+    _tdwGame();
 
     // Sieges + stacks reels depuis rejoinPlayerData (ordre serveur).
     const newSeats = [];
@@ -389,6 +400,17 @@ function onHandStart(sub) {
           bbSeat: _hlSeatOf(_hlBbPid), bbAmount: (S.smallBlind || 0) * 2,
           stacks: _hlStacks
         });
+      }
+    } catch (_e) {}
+    // Tournament witness: the stacks of the players still in, by name.
+    try {
+      if (window._tdWitness) {
+        var _twS = {};
+        for (var _twi = 0; _twi < S.seats.length; _twi++) {
+          var _twp = S.seats[_twi], _twv = S._seatStackAtHandStart[_twp];
+          if (_twv != null && _twv > 0) _twS[window.getPlayerName(_twp)] = _twv;
+        }
+        window._tdWitness.onHandStart({ hand: S.handNum, stacks: _twS });
       }
     } catch (_e) {}
     // N° de main seul : le Game ID vit dans le popup d'info de table
@@ -1272,6 +1294,7 @@ function onEndOfGame(sub) {
     try { _setCanShow(false); } catch (_e) {}
     showEndGameOverlay(winnerPid, { eliminated: _egElim, place: _egPlace });
     try { if (window._handlog) window._handlog.onGameOver(winnerPid); } catch (_e) {}
+    try { if (window._tdWitness) window._tdWitness.onGameOver(window.getPlayerName(winnerPid)); } catch (_e) {}
     // Retour automatique au lobby (parité NetAutoLeaveGameAfterFinish,
     // bible §15) — OPT-IN, parties réseau seulement. 12 s pour laisser
     // lire l'écran de fin ; annulé si l'utilisateur quitte avant

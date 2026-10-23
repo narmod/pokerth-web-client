@@ -25,6 +25,7 @@ import { randomBytes, createHash, timingSafeEqual } from 'node:crypto';
 import { Journal, verifyJournal, signPayload, verifyPayload, publicKeyFromPrivate, publicKeyRawB64 } from './journal.mjs';
 import { listPdbGames, rankPdbGame, isPdb } from './pdb.mjs';
 import { isBotLang } from './botchat.mjs';
+import { cleanReport, directorFacts, compareWithDirector, compareWithRanking, MAX_HANDS } from './witness.mjs';
 
 // Profiles (design « Tournament settings », decided 2026-10-23).
 export const PROFILES = Object.freeze({
@@ -159,6 +160,7 @@ export function createTournaments(o) {
     const sealed = readJson(join(tdir(t.id), 'result.json'));
     const out = Object.assign({}, t);
     out.players = (t.players || []).map((p) => { const q = Object.assign({}, p); delete q.codeHash; return q; });
+    out.witnessState = witnessState(t);
     if (journal) {
       const chain = verifyJournal(journal.entries);
       out.checks = { chain: chain.ok, badSeq: chain.badSeq, entries: journal.entries.length };
@@ -182,6 +184,7 @@ export function createTournaments(o) {
       case 'playerRegistered': return d.nick + ' registered (public page)';
       case 'playerUnregistered': return d.nick + ' unregistered (public page)';
       case 'codeIssued': return 'new personal code for ' + d.nick;
+      case 'witnessReport': return 'witness ' + d.nick + (d.verified ? ' (code)' : '') + ': ' + d.hands + ' hands' + (d.winner ? ', winner ' + d.winner : '') + ' — ' + d.verdict;
       case 'checkedIn': return d.nick + ' checked in' + (d.by === 'organizer' ? ' (by the organizer)' : '');
       case 'notCheckedIn': return 'not checked in, marked absent: ' + (d.nicks || []).join(', ');
       case 'pdbImported': return 'imported a log (' + d.games + ' game' + (d.games === 1 ? '' : 's') + ', sha256 ' + String(d.sha256).slice(0, 12) + '…)';
@@ -447,6 +450,8 @@ export function createTournaments(o) {
       closedBecause: regClosed(t),
       playerList: t.players.map((p) => ({ nick: p.nick, absent: !!p.absent, checkedIn: !!p.checkedIn })),
       checkIn: checkInState(t),
+      witnesses: t.settings.witnesses === 'off' ? null : Object.assign(witnessState(t), { list: (t.witnesses || []).map((w) => ({ nick: w.nick, verdict: w.verdict, counts: countsW(t, w) })),
+        override: t.witnessOverride ? { at: t.witnessOverride.at, reason: t.witnessOverride.reason } : null }),
       result: t.result ? { status: t.result.status, byDirector: !!t.result.byDirector, corrected: !!t.result.corrected, absent: t.result.absent || [],
         ranking: t.result.ranking.map((r) => ({ place: r.place, nick: r.nick, winner: !!r.winner, elimHand: r.elimHand, tie: !!r.tie })) } : null,
       corrections: (t.corrections || []).map((c) => ({ at: c.at, reason: c.reason, before: c.before, after: c.after })),
@@ -484,6 +489,90 @@ export function createTournaments(o) {
     });
     return { nick, tournament: publicGet(key, input && input.invite) };
   }
+  // ── witnesses (service 0.7.0) ──
+  // A web client at the table sends what it saw; it is compared with the
+  // director's journal, or with the ranking set without a director. Only the
+  // tournament's players are witnesses; with the identity « code » only those
+  // whose report carries their personal code count.
+  const lowN = (x) => String(x == null ? '' : x).toLowerCase();
+  function witnessFile(id, nick) { return join(tdir(id), 'witness', createHash('sha256').update(lowN(nick)).digest('hex').slice(0, 24) + '.json'); }
+  function directorOf(t) {
+    const w = (t.result && t.result.watchId) || (t.host && t.host.watchId);
+    if (!w || !o.readWatchJournal) return null;
+    const j = o.readWatchJournal(w);
+    return j && Array.isArray(j.entries) ? directorFacts(j.entries) : null;
+  }
+  function judge(t, rep, f) {
+    if (f && f.hands.size) return compareWithDirector(rep, f);
+    if (t.result) return compareWithRanking(rep, t.result.ranking);
+    return { verdict: 'pending', common: 0 };
+  }
+  function countsW(t, w) {
+    const p = t.players.find((x) => sameNick(x.nick, w.nick));
+    return !!p && !p.absent && (t.settings.identity !== 'code' || !!w.verified);
+  }
+  function witnessState(t) {
+    const all = t.witnesses || [];
+    const ws = all.filter((w) => countsW(t, w));
+    const agree = ws.filter((w) => w.verdict === 'agrees').length, disagree = ws.filter((w) => w.verdict === 'disagrees').length;
+    return { mode: (t.settings && t.settings.witnesses) || 'off', total: all.length, counting: ws.length, agree, disagree, ok: agree >= 1 && disagree === 0 };
+  }
+  // Verdicts again, against what is known now (the director's journal grows
+  // until the end; a manual result may come after the reports).
+  function refreshWitnesses(t) {
+    if (!t.witnesses || !t.witnesses.length) return;
+    const f = directorOf(t);
+    for (const w of t.witnesses) {
+      const rep = readJson(witnessFile(t.id, w.nick));
+      if (!rep) continue;
+      const j = judge(t, rep, f);
+      w.verdict = j.verdict; w.common = j.common; w.diff = j.diff || null;
+    }
+  }
+  function witnessReport(key, input, opts) {
+    const t0 = byKey(key);
+    if (!t0 || !(visible(t0, input && input.invite) || (opts && opts.atTable))) prefuse('notFound', 'unknown tournament');
+    if (t0.settings.witnesses === 'off') prefuse('noWitness', 'this tournament takes no witness reports');
+    let rep;
+    try { rep = cleanReport(input && input.report); } catch (e) { prefuse('badReport', 'report: ' + e.message); }
+    if (!rep.hands.length && !rep.winner) prefuse('badReport', 'an empty report');
+    const nick0 = cleanNick(input && input.nick);
+    const data = { nick: nick0 };
+    act(t0.id, 'witness', 'witnessReport', data, (t) => {
+      if (t.status === 'validated') prefuse('closed_finished', 'the result is validated');
+      if (!t.host && !t.result) prefuse('noTable', 'no table yet');
+      const p = t.players.find((x) => sameNick(x.nick, nick0));
+      if (!p) prefuse('notPlayer', 'not a player of this tournament');
+      const code = input && input.code;
+      const verified = !!(code && p.codeHash && sameHash(p.codeHash, hashCode(code)));
+      if (code && !verified) prefuse('badCode', 'nickname or code not recognised');
+      // A later report adds to the earlier one (a client reloaded in the
+      // middle of the game only knows the hands since): same hand, the later wins.
+      const old = readJson(witnessFile(t.id, p.nick));
+      if (old && Array.isArray(old.hands)) {
+        const m = new Map(old.hands.map((x) => [x.h, x]));
+        for (const x of rep.hands) m.set(x.h, x);
+        rep = { hands: [...m.values()].sort((a, b) => a.h - b.h).slice(-MAX_HANDS), winner: rep.winner || old.winner || null, complete: rep.complete || !!old.complete };
+      }
+      mkdirSync(join(tdir(t.id), 'witness'), { recursive: true });
+      writeAtomic(witnessFile(t.id, p.nick), rep);
+      const j = judge(t, rep, directorOf(t));
+      const hs = rep.hands.map((x) => x.h);
+      const w = { nick: p.nick, at: now(), verified, hands: hs.length, from: hs.length ? hs[0] : null, to: hs.length ? hs[hs.length - 1] : null,
+        winner: rep.winner, complete: rep.complete, verdict: j.verdict, common: j.common, diff: j.diff || null };
+      t.witnesses = (t.witnesses || []).filter((x) => !sameNick(x.nick, p.nick)).concat([w]);
+      Object.assign(data, { nick: p.nick, verified, hands: w.hands, from: w.from, to: w.to, winner: rep.winner, verdict: j.verdict, common: j.common,
+        digest: createHash('sha256').update(JSON.stringify(rep)).digest('hex') });
+    });
+    // A result that waited for its witnesses to validate by itself.
+    const { t } = load(t0.id);
+    if (t.status === 'finished' && t.settings.validation === 'auto' && t.settings.witnesses === 'required' && t.result && t.result.status === 'complete' && witnessState(t).ok) {
+      try { validate(t.id, 'witnesses'); } catch (e) { if (!(e instanceof Refusal)) throw e; }
+    }
+    return { nick: data.nick, verdict: data.verdict };
+  }
+  // The director's table of a tournament (by its public key), for the service.
+  function keyHost(key) { const t = byKey(key); return t && t.host ? { watchId: t.host.watchId, status: t.host.status } : null; }
   function publicFile(key, invite, which) {
     const t = byKey(key);
     if (!t || !visible(t, invite) || (which !== 'journal' && which !== 'result')) return null;
@@ -557,13 +646,15 @@ export function createTournaments(o) {
         absent: tt.players.filter((p) => p.absent).map((p) => p.nick), byDirector: !!data.byDirector };
       data.ranking = fitted;
       tt.status = 'finished';
+      refreshWitnesses(tt);
     });
   }
   function afterResult(id, author) {
     const { t } = load(id);
     // Automatic validation, unless the profile wants an organizer to do it,
     // or the result has a flag (tie, unknown hand, unfinished game) to look at.
-    if (t.settings.validation === 'auto' && t.result && t.result.status === 'complete') return validate(id, author);
+    // With witnesses required, it waits until one agrees and none disagrees.
+    if (t.settings.validation === 'auto' && t.result && t.result.status === 'complete' && (t.settings.witnesses !== 'required' || witnessState(t).ok)) return validate(id, author);
     return get(id);
   }
 
@@ -574,11 +665,23 @@ export function createTournaments(o) {
     writeAtomic(join(tdir(t.id), 'result.json'), sealed);
   }
 
-  function validate(id, author) {
+  function validate(id, author, opts) {
     const { t, journal } = load(id);
     if (!t.result) refuse('no result to validate');
     if (t.status === 'validated') refuse('already validated');
-    journal.append('validated', { author: author || 'admin', result: t.result });
+    // Witnesses required: one agrees and none disagrees — or the organizer
+    // says why he validates anyway (in the journal, on the public page).
+    refreshWitnesses(t);
+    let override = null;
+    if (t.settings.witnesses === 'required') {
+      const s = witnessState(t);
+      if (!s.ok) {
+        override = cleanText(opts && opts.override, 200);
+        if (override.length < 3) refuse('witnesses required: ' + (s.disagree ? s.disagree + ' disagree' : 'no witness agrees yet') + ' — give a reason to validate anyway');
+        t.witnessOverride = { at: now(), author: author || 'admin', reason: override, agree: s.agree, disagree: s.disagree };
+      }
+    }
+    journal.append('validated', Object.assign({ author: author || 'admin', result: t.result }, override ? { witnessOverride: override } : {}));
     t.status = 'validated';
     t.validatedAt = now();
     seal(t, journal);
@@ -693,7 +796,7 @@ export function createTournaments(o) {
   }
 
   return { list, get, create, update, addPlayer, removePlayer, setResult: setResultP, validate, correct, importPdb, file,
-    publicList, publicGet, register, unregister, publicFile, checkIn, issueCode, organizerCheckIn, markNotCheckedIn, needsCheckIn: (id) => needsCheckIn(load(id).t),
+    publicList, publicGet, register, unregister, publicFile, witnessReport, keyHost, checkIn, issueCode, organizerCheckIn, markNotCheckedIn, needsCheckIn: (id) => needsCheckIn(load(id).t),
     hostOpened, hostCheck, hostNote, hostEnded, hostResultRefused, openHosts, autoOpenDue, autoOpenNote, Refusal };
 }
 

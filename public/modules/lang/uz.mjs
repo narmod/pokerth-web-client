@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Turnirlar: shu saytning turnir direktori stolida natijani tekshirish uchun unga oʻyin xulosasini yuborish (steklar va gʻolib, hech qachon mening kartalarim emas)',
+  tdWitnessNotice: 'Turnir stoli: mijozingiz natijani tekshirish uchun turnir direktoriga ushbu oʻyin xulosasini yuboradi (har bir qoʻldagi steklar va gʻolib, hech qachon kartalaringiz emas). Buni Kengaytirilgan sozlamalar › Tarmoq boʻlimida oʻchirishingiz mumkin.',
+  pvSrvTd: 'Turnir guvohlari: shu saytning turnir direktori ochgan stolda oʻyin tugaganda, oʻyindan chiqarilganingizda yoki chiqib ketganingizda mijozingiz direktorga taxallusingizni va oʻyin xulosasini yuboradi: har bir qoʻl boshida oʻyinchilarning steklari va gʻolib — hech qachon kartalaringiz emas. Agar turnirga shu brauzerda roʻyxatdan oʻtgan boʻlsangiz, shaxsiy kodingiz ham birga yuboriladi. Xulosa turnir natijasini tekshirish uchun turnir bilan birga saqlanadi. Buni Kengaytirilgan sozlamalarda (Tarmoq) oʻchirishingiz mumkin.',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Oʻyin eʼlonlari", announceOff: "Oʻchirilgan", announceVoice: "Ichki ovoz", announceScreenReader: "Ekran oʻquvchi dastur", announceHint: "Ichki ovoz oʻyin voqealarini qurilmangiz ovozlari bilan oʻqib beradi. Agar NVDA, JAWS, VoiceOver yoki TalkBack’dan foydalansangiz, Ekran oʻquvchi dasturni tanlang: u ularni oʻz ovozi bilan, ikki marta gapirmasdan oʻqiydi.", announceSrOn: "Oʻyin eʼlonlari ekran oʻquvchi dasturingizga yuboriladi",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

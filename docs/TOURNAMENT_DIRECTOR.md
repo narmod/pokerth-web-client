@@ -416,6 +416,48 @@ Routes: `POST /admin/tournaments/t/table/open {id}`, `…/t/table/go {id}`,
   `badCode`, `alreadyIn`. Organizer routes: `POST /admin/tournaments/t/code
   {id, nick}`, `…/t/checkin {id, nick}`.
 
+## Witnesses (service `0.7.0`, web client `2.1.10-web.305`)
+
+Witnesses check a result, they never decide it.
+
+- **Who.** A web client seated at a table opened by the director. At the
+  start of the game it asks `GET /tournament/api/table?game=<id>&name=<table>`
+  (the game id and table name the server gave it; only tables the director
+  opened answer). Through this site's LAN servers only — never on
+  pokerth.net, never in training. Option `td_witness` (Advanced options ›
+  Network), on by default; a line in the chat the first time
+  (`tdWitnessNotice`); the privacy notice says what is sent (`pvSrvTd`).
+- **What.** For each hand, the stack of every player still in at its start,
+  by nickname, and the winner — never cards — in a compact form
+  (`{players, hands: [[h, stack…]]}`, under 60 KB so that it fits a keepalive
+  request), with the player's nickname and, when `/tournament` kept it in this
+  browser (registration or check-in), the personal code.
+- **When.** Every 10 hands, when the player is out, at the end, and when the
+  page is hidden (`sendBeacon`). Reports of one player add up on the director
+  (a reloaded client only knows the hands since).
+- **Compared** (`tournament/lib/witness.mjs`): with the director's journal,
+  hand by hand — same players, same stacks — and the winner; without a
+  director (manual result, log), with the ranking: the winner, and no one
+  ranked above a player the witness saw outlast him. Verdict « agrees »,
+  « disagrees » (the first difference: hand, player, both values), « nothing
+  to compare » or « waiting for the result »; again when the result arrives
+  and at validation. Each report goes in the journal (`witnessReport`, with a
+  SHA-256 of the report); the report itself in `witness/`.
+- **Who counts:** a player of the tournament, not absent; with the identity
+  « Personal code », only a report carrying the right code. Others are shown,
+  not counted. Anyone else is refused (`notPlayer`); a wrong code too.
+- **Witnesses** setting: *Off* (no report taken), *Informative* (shown,
+  never blocks), *Required* (Official): validating needs one counting witness
+  that agrees and none that disagrees — or the organizer's reason (3 to 200
+  characters), kept in the journal (`validated.witnessOverride`) and shown on
+  the players' page. With automatic validation (Custom) the result waits and
+  validates itself when a witness agrees.
+- **API:** `POST /tournament/api/t/<key>/witness {nick, code?, game, name,
+  report}` — 60 per address in ten minutes; a private tournament takes a
+  report from its own table (game id and table name) without the invitation
+  code. The web client relays it up to 64 KB (other requests: 8 KB).
+- QML players: by sending their `.pdb` log, later (off by default).
+
 ## A service of its own (`tournament/`, decided and done 2026-10-23)
 
 The tournament director has its own audience (organizers), lifecycle,
@@ -508,14 +550,14 @@ operator's agreement.
 2. Storage layer (JSON and SQL) and migrations.
 3. Manual mode on `/tournament` (done, `web.296`), then the director as a
    service of its own (done, `web.297`, service `0.1.0`).
-4. Witness reports from the web client, compared with the journal.
+4. Witness reports from the web client, compared with the journal (done in service `0.7.0`).
 5. Persistent state machine, resume after restart.
 6. Admin › Tournaments (settings) and per-server `tournaments` keys.
 7. `/tournament`: public and organizer views, scheduled Sit & Go end to end
    (table creation, seat check and hand-over done in `web.299`; opening at
    the scheduled time, announcements and messages to the table in service
-   `0.3.0`; check-in in `0.5.0`; the chat language in `0.6.0`; next:
-   witnesses).
+   `0.3.0`; check-in in `0.5.0`; the chat language in `0.6.0`; witnesses
+   in `0.7.0`; next: QML witnesses by their log).
 8. Collusion check.
 9. Organizer and player accounts.
 10. Requests to organize.

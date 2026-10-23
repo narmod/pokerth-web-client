@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Torneios: em uma mesa do diretor de torneios deste site, enviar a ele um resumo do jogo para conferir o resultado (fichas e vencedor, nunca minhas cartas)',
+  tdWitnessNotice: 'Mesa de torneio: seu cliente envia ao diretor de torneios um resumo deste jogo (as fichas em cada mão e o vencedor, nunca suas cartas) para conferir o resultado. Você pode desativar isso em Opções avançadas › Rede.',
+  pvSrvTd: 'Testemunhas de torneio: em uma mesa aberta pelo diretor de torneios deste site, seu cliente envia ao diretor seu apelido e um resumo do jogo quando ele termina, quando você é eliminado ou quando você sai: as fichas dos jogadores no início de cada mão e o vencedor — nunca suas cartas. Se você se inscreveu no torneio neste navegador, seu código pessoal vai junto. O resumo é mantido com o torneio para conferir o resultado. Você pode desativar isso nas opções avançadas (Rede).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Anúncios do jogo", announceOff: "Desligados", announceVoice: "Voz integrada", announceScreenReader: "Leitor de tela", announceHint: "A voz integrada lê os eventos do jogo com as vozes do seu dispositivo. Escolha Leitor de tela se você usa NVDA, JAWS, VoiceOver ou TalkBack: ele lê os eventos com a própria voz, sem falar duas vezes.", announceSrOn: "Os anúncios do jogo vão para o seu leitor de tela",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

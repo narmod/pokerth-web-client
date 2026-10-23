@@ -72,6 +72,15 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Tournaments: witnesses** (`web.305`, service `0.7.0`) — at a table opened by the tournament director, the web
+  client is a witness (`public/modules/td-witness.mjs`, hooked in `modules/game/msg-hand.mjs`): it recognises the
+  table (`GET /tournament/api/table?game=&name=`), records the stacks of the players still in at the start of each
+  hand and the winner — never cards — and sends them (`POST /tournament/api/t/<key>/witness`, keepalive, under 60 KB)
+  every 10 hands, when the player is out, at the end and when the page is hidden, with the personal code kept by
+  `/tournament` in this browser. LAN servers through this site only (not pokerth.net, not training). A line in the
+  chat the first time; Advanced options › Network › « Tournaments: … send it a summary » (on by default) turns it off;
+  the privacy notice says what is sent. The web client relays `/tournament/api/table` and witness reports up to 64 KB.
+  Details in `tournament/CHANGELOG.md`.
 - **Tournaments: check-in** (`web.304`, service `0.5.0`) — the web client relays any players' action of a tournament
   (`/tournament/api/t/<key>/<word>`, lowercase letters) instead of a fixed list, starting with the check-in of the
   Official profile: only the players who confirmed with their personal code are invited to the table. Details in

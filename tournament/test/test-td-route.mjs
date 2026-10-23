@@ -105,6 +105,14 @@ try {
     const big = await fetch(base + '/tournament/api/t/' + t.publicKey + '/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nick: 'x'.repeat(9000) }) });
     ok(big.status === 413, 'public API: a large body is refused by the web client');
     ok((await get('/tournament/api/secret', {})).status === 404 && (await get('/tournament/api/list', {})).status === 200, 'public API: only its routes');
+    // Witnesses: the table lookup, and a report larger than other requests.
+    const lk = await fetch(base + '/tournament/api/table?game=5&name=Proxy%20cup');
+    ok(lk.status === 404 && (await lk.json()).code === 'notFound', 'witness: the table lookup is relayed (no such table: 404 from the director)');
+    const wit = (size) => fetch(base + '/tournament/api/t/' + t.publicKey + '/witness', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-td-client': '198.51.100.99' },
+      body: JSON.stringify({ nick: 'N1', pad: 'x'.repeat(size), report: { players: ['N1'], hands: [[1, 5]] } }) });
+    const w1 = await wit(20000);
+    ok(w1.status === 400 && (await w1.json()).code === 'noTable', 'witness: a 20 KB report passes the web client (the director answers)');
+    ok((await wit(70000)).status === 413, 'witness: over 64 KB, refused by the web client');
     await post('/admin/tournaments/t/player', { id: t.id, action: 'remove', nick: 'N0' });
   }
 
@@ -200,8 +208,13 @@ try {
   ok(order.join(',') === 'Yann,Zoe', 'tournaments: the typed ranking is arranged');
   act('setManual').click();
   ok(await until(() => /to validate/.test(det()) && act('validate')), 'tournaments: official — waits for an organizer');
+  ok(/Witnesses required\b/.test(det()) && /No report yet/.test(det()) && $('tOverride'), 'witnesses: required (official), none yet — a reason is asked');
   act('validate').click();
-  ok(await until(() => /Validated and signed/.test(det())), 'tournaments: validated by hand');
+  ok(await until(() => /give a reason/.test(det())), 'witnesses: no validation without a reason');
+  $('tOverride').value = 'played in the club room, seen by the organizer';
+  act('validate').click();
+  ok(await until(() => /Validated and signed/.test(det())), 'tournaments: validated by hand, with a reason');
+  ok(/Validated despite the witnesses \(admin\): played in the club room/.test(det()), 'witnesses: the reason is shown');
   ok(/second organizer/.test(det()) && !act('correct'), 'tournaments: official — no correction without a second organizer');
 
   // The director opens the table (the fake server here never answers the

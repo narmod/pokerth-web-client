@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: '錦標賽：在本網站賽事主管的牌桌上，向其傳送比賽摘要以核對結果（籌碼和勝出者，絕不包括我的手牌）',
+  tdWitnessNotice: '錦標賽牌桌：你的客戶端會向賽事主管傳送這場比賽的摘要（每手牌的籌碼和勝出者，絕不包括你的手牌）以核對結果。你可在「進階選項 › 網絡」中關閉此功能。',
+  pvSrvTd: '錦標賽見證人：在本網站賽事主管開設的牌桌上，你的客戶端會在比賽結束、你出局或你離開時，向賽事主管傳送你的暱稱和比賽摘要：每手牌開始時各玩家的籌碼和勝出者——絕不包括你的手牌。如果你在這個瀏覽器報名參加錦標賽，你的個人代碼亦會一併傳送。摘要會與錦標賽一同保存，以核對其結果。你可在進階選項（網絡）中關閉。',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "遊戲播報", announceOff: "關閉", announceVoice: "內置語音", announceScreenReader: "屏幕閱讀器", announceHint: "內置語音用你裝置的語音朗讀遊戲事件。如果你使用 NVDA、JAWS、VoiceOver 或 TalkBack，請選擇「屏幕閱讀器」：它會用自己的聲音朗讀，兩把聲音不會重疊。", announceSrOn: "遊戲播報會傳送到你的屏幕閱讀器",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

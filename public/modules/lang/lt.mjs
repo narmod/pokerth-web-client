@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Turnyrai: prie šios svetainės turnyrų direktoriaus stalo siųsti jam žaidimo santrauką rezultatui patikrinti (žetonai ir laimėtojas, niekada ne mano kortos)',
+  tdWitnessNotice: 'Turnyro stalas: jūsų klientas siunčia turnyrų direktoriui šio žaidimo santrauką (žaidėjų žetonus kiekvienoje partijoje ir laimėtoją, niekada ne jūsų kortas) rezultatui patikrinti. Tai galite išjungti skiltyje „Išplėstinės parinktys › Tinklas“.',
+  pvSrvTd: 'Turnyrų liudytojai: prie stalo, kurį atidarė šios svetainės turnyrų direktorius, jūsų klientas siunčia direktoriui jūsų slapyvardį ir žaidimo santrauką, kai žaidimas baigiasi, kai iškrentate arba kai išeinate: žaidėjų žetonus kiekvienos partijos pradžioje ir laimėtoją — niekada ne jūsų kortas. Jei turnyrui užsiregistravote šioje naršyklėje, kartu siunčiamas ir jūsų asmeninis kodas. Santrauka saugoma kartu su turnyru jo rezultatui patikrinti. Tai galite išjungti skiltyje „Išplėstinės parinktys“ (Tinklas).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Žaidimo pranešimai", announceOff: "Išjungta", announceVoice: "Įtaisytasis balsas", announceScreenReader: "Ekrano skaitytuvas", announceHint: "Įtaisytasis balsas skaito žaidimo įvykius jūsų įrenginio balsais. Pasirinkite Ekrano skaitytuvas, jei naudojate NVDA, JAWS, VoiceOver ar TalkBack: jis skaito juos savo balsu, nekalbėdamas dukart.", announceSrOn: "Žaidimo pranešimai siunčiami į jūsų ekrano skaitytuvą",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

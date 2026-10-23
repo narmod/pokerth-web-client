@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Turniirid: selle saidi turniiridirektori laua taga saada talle mängu kokkuvõte tulemuse kontrollimiseks (virnad ja võitja, mitte kunagi minu kaardid)',
+  tdWitnessNotice: 'Turniirilaud: sinu klient saadab turniiridirektorile selle mängu kokkuvõtte (virnad igas käes ja võitja, mitte kunagi sinu kaarte), et tulemust kontrollida. Selle saad välja lülitada: Täpsemad valikud › Võrk.',
+  pvSrvTd: 'Turniiri tunnistajad: selle saidi turniiridirektori avatud laua taga saadab sinu klient direktorile sinu hüüdnime ja mängu kokkuvõtte, kui mäng lõpeb, kui sa välja langed või kui lahkud: mängijate virnad iga käe alguses ja võitja — mitte kunagi sinu kaarte. Kui registreerusid turniirile selles brauseris, saadetakse kaasa ka sinu isiklik kood. Kokkuvõtet hoitakse koos turniiriga, et selle tulemust kontrollida. Selle saab välja lülitada täpsemates valikutes (Võrk).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Mänguteated", announceOff: "Väljas", announceVoice: "Sisseehitatud hääl", announceScreenReader: "Ekraanilugeja", announceHint: "Sisseehitatud hääl loeb mängusündmused ette sinu seadme häältega. Vali Ekraanilugeja, kui kasutad NVDA-d, JAWS-i, VoiceOverit või TalkBacki: see loeb need ette oma häälega, ilma et midagi kaks korda räägitaks.", announceSrOn: "Mänguteated suunatakse sinu ekraanilugejale",
     // Gamepad (modules/ui/gamepad.mjs, web addition)

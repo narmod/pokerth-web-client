@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+  advTdWitness: 'Turnetë: në një tavolinë të drejtorit të turneve të kësaj faqeje, dërgoji një përmbledhje të lojës për të verifikuar rezultatin (stack-et dhe fituesi, kurrë letrat e mia)',
+  tdWitnessNotice: 'Tavolinë turneu: klienti yt i dërgon drejtorit të turneve një përmbledhje të kësaj loje (stack-et në çdo dorë dhe fituesin, kurrë letrat e tua) për të verifikuar rezultatin. Mund ta çaktivizosh te Opsionet e avancuara › Rrjeti.',
+  pvSrvTd: 'Dëshmitarët e turneve: në një tavolinë të hapur nga drejtori i turneve i kësaj faqeje, klienti yt i dërgon drejtorit pseudonimin tënd dhe një përmbledhje të lojës kur ajo mbaron, kur eliminohesh ose kur largohesh: stack-et e lojtarëve në fillim të çdo dore dhe fituesin — kurrë letrat e tua. Nëse je regjistruar në turne në këtë shfletues, bashkë me të shkon edhe kodi yt personal. Përmbledhja ruhet bashkë me turneun për të verifikuar rezultatin e tij. Mund ta çaktivizosh në Opsionet e avancuara (Rrjeti).',
     // Game announcements (modules/ui/announcer.mjs, web addition)
     announceLegend: "Njoftimet e lojës", announceOff: "Joaktive", announceVoice: "Zëri i integruar", announceScreenReader: "Lexues ekrani", announceHint: "Zëri i integruar i lexon ngjarjet e lojës me zërat e pajisjes tënde. Zgjidh Lexues ekrani nëse përdor NVDA, JAWS, VoiceOver ose TalkBack: ai i lexon me zërin e vet, pa folur dy herë.", announceSrOn: "Njoftimet e lojës shkojnë te lexuesi yt i ekranit",
     // Gamepad (modules/ui/gamepad.mjs, web addition)
