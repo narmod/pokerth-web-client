@@ -126,16 +126,16 @@ export function createManager(deps) {
     const registered = (body.registered || []).map(String).filter(Boolean);
     if (registered.length < 2) return { ok: false, error: 'at least two players' };
     return launch(s, body, { gameId: null, gameName: String(body.tableName || '').slice(0, 64), mode: 'host', tournamentId: body.tournamentId || null }, (nick) => ({
-      nick, login: 'unauth', refuseAuthServer: true, tableName: String(body.tableName || ''), table: body.table || {}, registered,
+      nick, login: 'unauth', refuseAuthServer: true, tableName: String(body.tableName || ''), table: body.table || {}, registered, announce: body.announce !== false,
     }), { mode: 'host', tournamentId: body.tournamentId || null });
   }
 
   // Organizer command for a host watch: one line in commands.jsonl, read by the worker.
-  function command(id, cmd, author) {
+  function command(id, cmd, author, extra) {
     const w = info(id);
     if (!w || w.mode !== 'host') return { ok: false, error: 'unknown table' };
     if (LIVE.indexOf(w.state.status) < 0) return { ok: false, error: 'the director is no longer at the table' };
-    fs.appendFileSync(path.join(wdir(id), 'commands.jsonl'), JSON.stringify({ cmd, author: author || null, at: Date.now() }) + '\n');
+    fs.appendFileSync(path.join(wdir(id), 'commands.jsonl'), JSON.stringify(Object.assign({ cmd, author: author || null, at: Date.now() }, extra || {})) + '\n');
     return { ok: true };
   }
 

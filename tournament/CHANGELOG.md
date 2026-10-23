@@ -8,6 +8,20 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.3.0 — 2026-10-23
+
+### Added
+- The director opens the table by itself: « Open the table by itself, N
+  minutes before the start » (needs a start date). If it cannot (server
+  unknown, fewer than two players…), the page says why and it tries again
+  every 2 minutes; a start more than an hour past is not opened.
+- Announcements in the table chat, on by default and per tournament: blinds
+  rising, who is out and how many are left, heads-up, the winner and the
+  second.
+- Message to the table from `/tournament` while the director runs it; lines
+  with links or in capitals are refused (the server's chat filter would mute
+  the director).
+
 ## 0.2.1 — 2026-10-23
 
 ### Changed

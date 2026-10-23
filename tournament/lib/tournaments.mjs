@@ -45,6 +45,22 @@ export const TABLE_DEFAULTS = Object.freeze({
   startMoney: 3000, firstSmallBlind: 10, raiseMode: 'hands', raiseEvery: 7,
   endRaiseMode: 'double', endRaiseValue: 0, actionTimeout: 30, delayBetweenHands: 7,
 });
+// How the director runs the table: opening by itself before the start, and
+// its announcements in the table chat.
+export const RUN_DEFAULTS = Object.freeze({ autoOpen: false, openBefore: 10, announce: true });
+export function cleanRun(r, base) {
+  const b = Object.assign({}, RUN_DEFAULTS, base || {});
+  r = r || {};
+  const m = parseInt(r.openBefore, 10);
+  return {
+    autoOpen: typeof r.autoOpen === 'boolean' ? r.autoOpen : b.autoOpen,
+    openBefore: Number.isInteger(m) && m >= 0 && m <= 120 ? m : b.openBefore,
+    announce: typeof r.announce === 'boolean' ? r.announce : b.announce,
+  };
+}
+// A table opened by itself is not opened any more this long after the start.
+const AUTO_OPEN_GRACE_MS = 60 * 60 * 1000;
+const AUTO_OPEN_RETRY_MS = 2 * 60 * 1000;
 export function cleanTable(t, base) {
   const b = Object.assign({}, TABLE_DEFAULTS, base || {});
   t = t || {};
@@ -162,7 +178,10 @@ export function createTournaments(o) {
       case 'tableOpened': return 'the director opens the table on ' + (d.server || 'the server') + ' (' + d.watchId + ')';
       case 'tableGo': return 'go without the absent';
       case 'tableReinvite': return 'invitations sent again';
+      case 'tableMessage': return 'message sent to the table';
       case 'tableEnded': return 'table ' + d.status + (d.error ? ': ' + d.error : '');
+      case 'autoOpenFailed': return 'could not open the table by itself: ' + d.reason;
+      case 'autoOpenMissed': return 'the start time passed without the table being opened';
       case 'tableResultRefused': return 'the director\'s result needs an organizer: ' + d.reason;
       default: return e.type;
     }
@@ -195,14 +214,16 @@ export function createTournaments(o) {
     const id = now().toString(36) + randomBytes(4).toString('hex');
     mkdirSync(tdir(id));
     const table = cleanTable(input.table);
+    const run = cleanRun(input.run);
+    if (run.autoOpen && startsAt == null) refuse('opening by itself needs a start date');
     const t = {
-      id, name, format, profile, settings, server, startsAt, mode: 'manual', table, host: null,
+      id, name, format, profile, settings, server, startsAt, mode: 'manual', table, run, host: null,
       status: 'draft', players: [], result: null, corrections: [],
       inviteCode: settings.visibility === 'private' ? randomBytes(6).toString('base64url') : null,
       createdAt: now(), updatedAt: now(),
     };
     const journal = new Journal({ now });
-    journal.append('created', { author: author || 'admin', name, format, profile, settings, server, startsAt, table });
+    journal.append('created', { author: author || 'admin', name, format, profile, settings, server, startsAt, table, run });
     return save(t, journal);
   }
 
@@ -227,11 +248,16 @@ export function createTournaments(o) {
         const sv = patch.server;
         changes.server = t.server = sv && sv.ref ? { ref: String(sv.ref), name: cleanText(sv.name, 80), host: cleanText(sv.host, 253), port: Number(sv.port) || null } : null;
       }
+      if (patch.run) {
+        changes.run = t.run = cleanRun(patch.run, t.run || RUN_DEFAULTS);
+        t.autoTry = null;
+      }
       if (patch.table) {
         if (hostOpen(t)) refuse('the table is open: close it first');
         changes.table = t.table = cleanTable(patch.table, t.table || TABLE_DEFAULTS);
       }
       if (!Object.keys(changes).length) refuse('nothing to change');
+      if (t.run && t.run.autoOpen && t.startsAt == null) refuse('opening by itself needs a start date');
     });
   }
 
@@ -389,7 +415,8 @@ export function createTournaments(o) {
     return act(id, author, 'tableOpened', Object.assign({ watchId }, info || {}), (t) => {
       if (t.status === 'validated' || t.result) refuse('the result is set');
       if (hostOpen(t)) refuse('the table is already open');
-      t.host = { watchId, status: 'open', openedAt: now() };
+      t.host = { watchId, status: 'open', openedAt: now(), by: author || 'admin' };
+      t.autoTry = null;
       t.status = 'running';
     });
   }
@@ -411,6 +438,35 @@ export function createTournaments(o) {
   function hostResultRefused(id, reason) {
     return act(id, 'director', 'tableResultRefused', { reason }, (t) => { t.host = Object.assign({}, t.host, { resultError: reason }); });
   }
+  // Tournaments whose table the director should open by itself now.
+  function autoOpenDue() {
+    let ids = [];
+    try { ids = readdirSync(root).filter((x) => ID_RE.test(x)); } catch (e) {}
+    const at = now();
+    const due = [];
+    for (const x of ids) {
+      const t = readJson(join(tdir(x), 'tournament.json'));
+      if (!t || !t.run || !t.run.autoOpen || !t.startsAt || t.result || hostOpen(t)) continue;
+      if (t.status !== 'draft' && t.status !== 'registration') continue;
+      if (t.host && t.host.openedAt && t.host.openedAt >= t.startsAt - t.run.openBefore * 60000) continue;   // already opened for this start
+      if (at < t.startsAt - t.run.openBefore * 60000) continue;
+      if (t.autoTry && t.autoTry.missed) continue;
+      if (at > t.startsAt + AUTO_OPEN_GRACE_MS) { due.push({ id: t.id, missed: true }); continue; }
+      if (t.autoTry && at - t.autoTry.at < AUTO_OPEN_RETRY_MS) continue;
+      due.push({ id: t.id });
+    }
+    return due;
+  }
+  // A failed or missed automatic opening: said once in the journal (not at
+  // every retry), kept on the tournament for the page.
+  function autoOpenNote(id, reason, missed) {
+    const { t, journal } = load(id);
+    const same = t.autoTry && t.autoTry.reason === reason;
+    t.autoTry = { at: now(), reason, missed: !!missed };
+    if (!same) journal.append(missed ? 'autoOpenMissed' : 'autoOpenFailed', { author: 'scheduler', reason });
+    return save(t, journal);
+  }
+
   // Open host tables, for the service's sweep.
   function openHosts() {
     let ids = [];
@@ -432,7 +488,7 @@ export function createTournaments(o) {
   }
 
   return { list, get, create, update, addPlayer, removePlayer, setResult: setResultP, validate, correct, importPdb, file,
-    hostOpened, hostCheck, hostNote, hostEnded, hostResultRefused, openHosts, Refusal };
+    hostOpened, hostCheck, hostNote, hostEnded, hostResultRefused, openHosts, autoOpenDue, autoOpenNote, Refusal };
 }
 
 export { Refusal };

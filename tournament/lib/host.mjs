@@ -13,7 +13,10 @@
 //            spectator (option A, design §2);
 //   watch    it reminds the new admin in the chat to start, then follows the
 //            game to the end exactly like a Table check: sealed journal,
-//            ranking, signature.
+//            ranking, signature. With announcements on (default), it tells
+//            the table when the blinds rise, who is out and how many are
+//            left, heads-up, and the winner. The organizer can also send a
+//            line to the table from /tournament (command « say »).
 //
 // Server facts relied on (pokerth/pokerth, src/net/servergame*.cpp):
 //   - only the admin starts a table, and kicks only before the start;
@@ -120,6 +123,9 @@ export class HostDirector extends SpectatorDirector {
     // the table is full (the last two invited players then sit).
     this.leaveEarlyAt = nReg + 1 > MAX_SEATS ? MAX_SEATS - 2 : null;
     this.startedAt = null;
+    this.announce = o.announce !== false;
+    this.announced = new Set();    // playerIds whose elimination was told
+    this.blind = null;
   }
 
   // ── public state, for the worker / the page ──
@@ -148,6 +154,12 @@ export class HostDirector extends SpectatorDirector {
       if (this.phase !== 'seated') return this.emit('log', 'go: the table is no longer waiting');
       if (this.seated.size < 2) return this.emit('log', 'go: at least two registered players must be seated');
       this._handover('organizer', c.author);
+    } else if (c.cmd === 'say') {
+      const text = String(c.text || '').replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 200);
+      if (!text) return;
+      if (this.gameId == null || this.phase === 'create') return this.emit('log', 'message not sent: no table yet');
+      this._record('organizerMessage', { author: c.author || null });
+      this._say(text);
     } else if (c.cmd === 'reinvite') {
       this.declined.clear();
       this.invited.clear();
@@ -336,6 +348,15 @@ export class HostDirector extends SpectatorDirector {
         this._remindAdmin();
         return;
       }
+      if (m.handStartMessage) {
+        super._onMessage(m);
+        this._announceHand(n(m.handStartMessage.smallBlind));
+        return;
+      }
+      if (m.endOfGameMessage) {
+        this._announceEnd(n(m.endOfGameMessage.winnerPlayerId));
+        return super._onMessage(m);
+      }
       if (m.gameStartInitialMessage) {
         super._onMessage(m);
         this.startedAt = this.now();
@@ -450,6 +471,33 @@ export class HostDirector extends SpectatorDirector {
     const [a, b] = this.o.remindAfterMs || [120000, 300000];
     this._remind1 = setTimeout(() => { this._remind1 = null; if (!this.tracker.started) this._say(name + ', the players are waiting: the game starts when you press start.'); }, a);
     this._remind2 = setTimeout(() => { this._remind2 = null; if (!this.tracker.started) this._say('reminder for ' + name + ': only the table admin can start the game.'); }, b);
+  }
+
+  // ── announcements (watch phase) ──
+  _nm(id) { return this.names.get(id) || this.tracker.names.get(id) || ('player ' + id); }
+  _announceHand(smallBlind) {
+    if (!this.announce) return;
+    const t = this.tracker;
+    const out = t.seats.filter((id) => t.elim.has(id) && !this.announced.has(id));
+    out.forEach((id) => this.announced.add(id));
+    const left = t.seats.filter((id) => !t.elim.has(id));
+    if (out.length && left.length >= 2) {
+      const who = out.map((id) => this._nm(id));
+      this._say((who.length === 1 ? who[0] + ' is out' : who.slice(0, -1).join(', ') + ' and ' + who[who.length - 1] + ' are out') + ', ' + left.length + ' players left.');
+      if (left.length === 2) this._say('heads-up: ' + this._nm(left[0]) + ' against ' + this._nm(left[1]) + '.');
+    }
+    if (smallBlind > 0) {
+      if (this.blind != null && smallBlind > this.blind) this._say('blinds are now ' + smallBlind + '/' + smallBlind * 2 + '.');
+      this.blind = smallBlind;
+    }
+  }
+  _announceEnd(winnerId) {
+    if (!this.announce || winnerId == null) return;
+    const t = this.tracker;
+    const second = t.seats.filter((id) => id !== winnerId && !t.elim.has(id));
+    const line = this._nm(winnerId) + ' wins the tournament' + (second.length === 1 ? ', ' + this._nm(second[0]) + ' second' : '') + '. congratulations to all, the result is recorded.';
+    this.chatQueue = [];
+    this._sendChat(line);
   }
 
   // The seats at the start against the registered list: a stranger means the

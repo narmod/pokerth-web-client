@@ -60,7 +60,22 @@ export function createService(o) {
       console.error('[td] table of ' + id + ': ' + (e && e.message));
     } finally { syncing.delete(id); }
   }
-  function sweep() { for (const h of T.openHosts()) syncHost(h.id, h.watchId); }
+  function sweep() {
+    for (const h of T.openHosts()) syncHost(h.id, h.watchId);
+    for (const d of T.autoOpenDue()) autoOpen(d);
+  }
+  // Opening by itself N minutes before the start (tournament « run » settings).
+  const opening = new Set();
+  async function autoOpen(d) {
+    if (opening.has(d.id)) return;
+    opening.add(d.id);
+    try {
+      if (d.missed) T.autoOpenNote(d.id, 'the start time passed more than an hour ago', true);
+      else await openTable(d.id, {}, 'scheduler');
+    } catch (e) {
+      try { T.autoOpenNote(d.id, (e && e.message) || 'error'); } catch (e2) {}
+    } finally { opening.delete(d.id); }
+  }
   const sweepTimer = setInterval(sweep, o.sweepMs || 5000);
   if (sweepTimer.unref) sweepTimer.unref();
   // The live side of an open table, for the tournament page.
@@ -84,14 +99,24 @@ export function createService(o) {
     if (!t.server || !t.server.ref) throw new T.Refusal('choose the LAN server of the tournament first (Edit)');
     const registered = t.players.filter((p) => !p.absent).map((p) => p.nick);
     if (registered.length < 2) throw new T.Refusal('add at least two players first');
-    const r = await td.startHost({ ref: t.server.ref, tournamentId: id, tableName: t.name, table: t.table, registered, nick: b.nick });
+    const r = await td.startHost({ ref: t.server.ref, tournamentId: id, tableName: t.name, table: t.table, registered, nick: b.nick, announce: !t.run || t.run.announce !== false });
     if (!r.ok) throw new T.Refusal(r.error);
     try { T.hostOpened(id, r.id, { server: t.server.name }, who); } catch (e) { td.stop(r.id); throw e; }
     return withHost(T.get(id));
   }
-  function tableCommand(id, cmd, type, who) {
+  // A line from the organizer to the table: the server's chat filter
+  // (chatcleaner) mutes for links and capitals, the director with it.
+  function checkLine(text) {
+    const t = String(text || '').replace(/\s+/g, ' ').trim();
+    if (t.length < 2 || t.length > 200) throw new T.Refusal('a message of 2 to 200 characters');
+    if (/https?:\/\/|www\.|\b[a-z0-9-]+\.(com|net|org|fr|de|io|eu)\b/i.test(t)) throw new T.Refusal('no links: the server\'s chat filter would mute the director');
+    const letters = t.replace(/[^A-Za-z]/g, '');
+    if (letters.length >= 6 && letters.replace(/[^A-Z]/g, '').length / letters.length > 0.5) throw new T.Refusal('no capitals: the server\'s chat filter would mute the director');
+    return t;
+  }
+  function tableCommand(id, cmd, type, who, extra) {
     const watchId = T.hostCheck(id);
-    const r = td.command(watchId, cmd, who);
+    const r = td.command(watchId, cmd, who, extra);
     if (!r.ok) throw new T.Refusal(r.error);
     T.hostNote(id, type, who);
     return withHost(T.get(id));
@@ -195,6 +220,7 @@ export function createService(o) {
       case '/t/table/open': return send(() => openTable(id, b, who));
       case '/t/table/go': return send(() => tableCommand(id, 'go', 'tableGo', who));
       case '/t/table/reinvite': return send(() => tableCommand(id, 'reinvite', 'tableReinvite', who));
+      case '/t/table/say': return send(() => tableCommand(id, 'say', 'tableMessage', who, { text: checkLine(b.text) }));
       case '/t/table/close': return send(() => closeTable(id, who));
       default: return json(res, 404, { ok: false, error: 'not found' });
     }

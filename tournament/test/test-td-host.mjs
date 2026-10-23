@@ -47,7 +47,7 @@ const M = {
   adminChanged: (id) => msg(0, 'gameListAdminChangedMessage', { gameId: GID, newAdminPlayerId: id }),
   specAck: (gi) => msg(0, 'joinGameAckMessage', { gameId: GID, areYouGameAdmin: false, gameInfo: gi, spectateOnly: true }),
   start: (seats) => msg(0, 'gameStartInitialMessage', { gameId: GID, startDealerPlayerId: seats[0], playerSeats: seats }),
-  hand: (states) => msg(0, 'handStartMessage', { gameId: GID, smallBlind: 10, seatStates: states }),
+  hand: (states, sb) => msg(0, 'handStartMessage', { gameId: GID, smallBlind: sb || 10, seatStates: states }),
   act: (id, money) => msg(0, 'playersActionDoneMessage', { gameId: GID, playerId: id, gameState: 0, playerAction: 6, totalPlayerBet: 0, playerMoney: money, highestSet: 0, minimumRaise: 0 }),
   hide: (id, money) => msg(0, 'endOfHandHideCardsMessage', { gameId: GID, playerId: id, moneyWon: 100, playerMoney: money }),
   end: (id) => msg(0, 'endOfGameMessage', { gameId: GID, winnerPlayerId: id }),
@@ -104,11 +104,11 @@ function tableServer({ lobbyIds, onInvite, startWith, nameInUse = 0, game = true
           // One player out per hand, from the last seat; the first seat wins.
           const out = new Set();
           for (let i = seats.length - 1; i >= 1; i--) {
-            w(M.hand(seats.map((id) => (out.has(id) ? 2 : 0))));
+            w(M.hand(seats.map((id) => (out.has(id) ? 2 : 0)), 10 * (seats.length - i)));
             w(M.act(seats[i], 0));
             out.add(seats[i]);
             w(M.hide(seats[0], i === 1 ? total : state.gi.startMoney));
-            await wait(30);
+            await wait(150);
           }
           w(M.end(seats[0]));
         }
@@ -170,6 +170,9 @@ function director(f, registered, extra) {
   ok(st.chats.some((c) => /^Alice, you are the table admin now: please start the game/.test(c)), 'chat: the new admin is asked to start');
   ok(st.chats.every((c) => !/https?:|www\./i.test(c) && c.replace(/[^A-Z]/g, '').length <= 2), 'chat: no links, no capitals (chatcleaner)');
   ok(new Set(st.chats).size === st.chats.length, 'chat: never the same line twice');
+  ok(st.chats.some((c) => c === 'Bob is out, 2 players left.') && st.chats.some((c) => c === 'heads-up: Alice against Carol.'), 'announces: who is out, players left, heads-up');
+  ok(st.chats.some((c) => c === 'blinds are now 20/40.'), 'announces: the blinds rising');
+  ok(st.chats.some((c) => /^Alice wins the tournament, Carol second\. congratulations/.test(c)), 'announces: the winner and the second');
   ok(sealed && sealed.payload.result.status === 'complete' && sealed.payload.result.ranking.map((r) => r.name).join() === 'Alice,Carol,Bob', 'result: sealed ranking of the registered players');
   ok(sealed && verifyPayload(sealed.payload, sealed.signature, sealed.publicKeyPem), 'result: signed');
   const entries = d.journal.entries;
@@ -192,6 +195,9 @@ function director(f, registered, extra) {
   await until(() => d.seated.size === 2, 3000);
   ok(d.phase === 'seated' && d.hostState().registered.find((r) => r.nick === 'Dave').status === 'offline', 'waits for Dave, who is not connected');
   ok(f.state.creates.length === 2 && d.tableName === 'Friday cup #2', 'table name in use: a second name');
+  d.command({ cmd: 'say', text: 'we start in five minutes, please stay close', author: 'admin' });
+  await until(() => f.state.chats.indexOf('we start in five minutes, please stay close') >= 0, 2000);
+  ok(f.state.chats.indexOf('we start in five minutes, please stay close') >= 0 && d.journal.entries.some((e) => e.type === 'organizerMessage'), 'say: the organizer\'s line reaches the table');
   d.command({ cmd: 'go', author: 'admin' });
   await until(() => sealed, 5000);
   ok(d.absent.join() === 'Dave' && d.hostState().registered.find((r) => r.nick === 'Dave').status === 'absent', 'go: Dave absent');
@@ -244,6 +250,50 @@ function director(f, registered, extra) {
   ok(!!done && done.result.byDirector && done.result.ranking.map((r) => r.nick).join() === 'Alice,Bob' && done.host.status === 'finished', 'the director\'s result reaches the tournament, validated (club)');
   ok(done && done.checks.signature && done.history.some((h) => /opens the table/.test(h.summary)) && done.history.some((h) => /table finished/.test(h.summary)), 'tournament journal: opened, finished, signed');
   ok(f.state.gi.startMoney === 1500, 'the table had the tournament\'s stack');
+  // A line to the table goes through the chat filter's rules.
+  const t3 = await post('/t/create', { name: 'Talk', profile: 'club', server: { ref: 'local', name: 'Fake', host: '127.0.0.1', port: f.port } });
+  for (const nick of ['Alice', 'Bob']) await post('/t/player', { id: t3.id, nick });
+  ok(!(await post('/t/table/say', { id: t3.id, text: 'hello' })).ok, 'say: only while the table is open');
+  svc.close(); srv.close(); f.server.close();
+  rmSync(dir, { recursive: true, force: true });
+}
+
+// ── the director opens the table by itself before the start ──
+{
+  const f = await tableServer({ lobbyIds: [21, 22], onInvite: (id, ctx) => sit(id, ctx) });
+  const dir = mkdtempSync(join(tmpdir(), 'td-auto-'));
+  writeFileSync(join(dir, 'td-key.pem'), keys.privateKeyPem);
+  const svc = createService({ dir, adminToken: 'master', version: '0.0.0', clientVersion: () => '2.1.10-web.300', sweepMs: 200,
+    servers: async () => [{ ref: 'local', kind: 'local', name: 'Fake', host: '127.0.0.1', port: f.port }] });
+  const srv = http.createServer(svc.handler);
+  await new Promise((r) => srv.listen(0, '127.0.0.1', r));
+  const base = 'http://127.0.0.1:' + srv.address().port;
+  const post = async (p, b) => (await fetch(base + '/admin/tournaments' + p, { method: 'POST', headers: { Authorization: 'Bearer master', 'Content-Type': 'application/json' }, body: JSON.stringify(b) })).json();
+  const get = async (p) => (await fetch(base + '/admin/tournaments' + p, { headers: { Authorization: 'Bearer master' } })).json();
+  const srvLocal = { ref: 'local', name: 'Fake', host: '127.0.0.1', port: f.port };
+  ok(!(await post('/t/create', { name: 'No date', run: { autoOpen: true } })).ok, 'auto: needs a start date');
+  // Starts in an hour, opens 10 min before: not yet.
+  const later = await post('/t/create', { name: 'Later', profile: 'club', server: srvLocal, startsAt: Date.now() + 3600000, run: { autoOpen: true, openBefore: 10 } });
+  // Starts in 5 min, opens 10 min before: now.
+  const soon = await post('/t/create', { name: 'Soon', profile: 'club', server: srvLocal, startsAt: Date.now() + 300000, run: { autoOpen: true, openBefore: 10, announce: false } });
+  // An unknown server: it fails, says so once, tries again later.
+  const bad = await post('/t/create', { name: 'Nowhere', profile: 'club', server: { ref: 'lan:gone', name: 'Gone', host: 'x', port: 1 }, startsAt: Date.now() + 60000, run: { autoOpen: true } });
+  // Long past: never opened, said once.
+  const past = await post('/t/create', { name: 'Past', profile: 'club', server: srvLocal, startsAt: Date.now() - 2 * 3600000, run: { autoOpen: true } });
+  for (const t of [later, soon, bad, past]) for (const nick of ['Alice', 'Bob']) await post('/t/player', { id: t.id, nick });
+  ok(soon.run.autoOpen === true && soon.run.openBefore === 10 && soon.run.announce === false, 'auto: run settings kept');
+  const opened = await until(async () => { const v = await get('/t/get?id=' + soon.id); return v.host ? v : null; }, 5000);
+  ok(opened && opened.host.by === 'scheduler' && opened.history.some((h) => h.type === 'tableOpened' && h.author === 'scheduler'), 'auto: opened by itself in its window, by « scheduler »');
+  const done = await until(async () => { const v = await get('/t/get?id=' + soon.id); return v.status === 'validated' ? v : null; }, 15000);
+  ok(!!done && done.result.byDirector, 'auto: played and recorded');
+  ok(!f.state.chats.some((c) => /is out|wins the tournament/.test(c)), 'auto: announcements off when the organizer said so');
+  await wait(1200);
+  const l = await get('/t/get?id=' + later.id), b = await get('/t/get?id=' + bad.id), p = await get('/t/get?id=' + past.id);
+  ok(!l.host, 'auto: not before its window');
+  ok(!b.host && b.autoTry && /unknown server/.test(b.autoTry.reason) && b.history.filter((h) => h.type === 'autoOpenFailed').length === 1, 'auto: a failure said once, kept for the page');
+  ok(!p.host && p.autoTry && p.autoTry.missed && p.history.filter((h) => h.type === 'autoOpenMissed').length === 1, 'auto: a start long past is not opened, said once');
+  const ed = await post('/t/update', { id: later.id, patch: { run: { autoOpen: false } } });
+  ok(ed.ok && ed.run.autoOpen === false && ed.run.openBefore === 10, 'auto: switched off in Edit');
   svc.close(); srv.close(); f.server.close();
   rmSync(dir, { recursive: true, force: true });
 }

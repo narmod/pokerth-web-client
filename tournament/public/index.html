@@ -132,6 +132,8 @@ details.sub summary{cursor:pointer;color:var(--ivory);font-weight:600;min-height
 .hostbox{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--field);margin-top:8px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0;padding:0;list-style:none}
 .chips li{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:.85em;color:var(--ivory);background:var(--panel)}
+.ck{display:flex;gap:8px;align-items:center;color:var(--ink);font-size:.95em;margin:10px 0 4px;min-height:44px}
+.ck input{width:auto;min-height:0;flex:none;margin:0}
 button.danger{border-color:var(--bad);color:var(--bad);background:transparent}
 input[type="file"]{padding:7px}
 [hidden]{display:none!important}
@@ -182,6 +184,8 @@ input[type="file"]{padding:7px}
           </div>
           <p class="small muted" id="tProfileNote"></p>
           <div class="row" id="tCustom" hidden></div>
+          <div class="row"><label class="ck"><input type="checkbox" id="tAuto"> Open the table by itself</label><div><label for="tBefore">minutes before the start</label><input id="tBefore" type="number" inputmode="numeric" min="0" max="120" value="10"></div></div>
+          <label class="ck"><input type="checkbox" id="tAnnounce" checked> Announcements in the table chat (blinds, players out, heads-up, winner)</label>
           <details class="sub"><summary>Table settings</summary><p class="small muted">Used when the director opens the table. PokerTH defaults.</p><div class="row" id="tTable"></div></details>
           <p class="small muted">Format: Sit &amp; Go, one table, up to 10 players.</p>
           <div class="actions"><button type="submit" class="primary">Create</button></div>

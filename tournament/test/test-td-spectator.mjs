@@ -52,6 +52,7 @@ function runDirector(port, extra) {
     };
   });
   const r = await runDirector(port, { gameName: 'Friday SnG', privateKeyPem: keys.privateKeyPem });
+  await wait(150);   // let the fake server read the director's last frames
   const got = seen[0].got;
   const init = got.find((m) => m.initMessage);
   ok(!r.timeout && !r.failed, 'full game: director finished');

@@ -82,6 +82,7 @@ export function createTournamentsView(deps) {
     if ($('tDate').value) { const ts = new Date($('tDate').value).getTime(); if (ts > 0) body.startsAt = ts; }
     if ($('tVis').value) body.visibility = $('tVis').value;
     body.table = readTable('tt_');
+    body.run = { autoOpen: $('tAuto').checked, openBefore: Number($('tBefore').value), announce: $('tAnnounce').checked };
     if (body.profile === 'custom') {
       body.settings = {};
       for (const k of Object.keys(CHOICES)) body.settings[k] = $('tc_' + k).value;
@@ -106,6 +107,11 @@ export function createTournamentsView(deps) {
         : '<input id="' + id + '" type="number" inputmode="numeric" min="' + f[2] + '" max="' + f[3] + '" value="' + esc(v[f[0]]) + '">';
       return '<div><label for="' + id + '">' + esc(f[1]) + '</label>' + ctl + '</div>';
     }).join('');
+  }
+  function runFields(r) {
+    r = Object.assign({ autoOpen: false, openBefore: 10, announce: true }, r || {});
+    return '<div class="row"><label class="ck"><input type="checkbox" id="te_auto"' + (r.autoOpen ? ' checked' : '') + '> Open the table by itself</label><div><label for="te_before">minutes before the start</label><input id="te_before" type="number" inputmode="numeric" min="0" max="120" value="' + esc(r.openBefore) + '"></div></div>' +
+      '<label class="ck"><input type="checkbox" id="te_announce"' + (r.announce ? ' checked' : '') + '> Announcements in the table chat</label>';
   }
   function readTable(prefix) {
     const o = {};
@@ -238,6 +244,7 @@ export function createTournamentsView(deps) {
         (t.host && t.host.status === 'open' ? '' : '<div class="row"><div><label for="tESrv">LAN server</label><select id="tESrv"><option value="">— not said —</option>' +
           (deps.servers() || []).map((sv) => '<option value="' + esc(sv.ref) + '"' + (t.server && t.server.ref === sv.ref ? ' selected' : '') + '>' + esc(sv.name) + ' — ' + esc(sv.host) + ':' + esc(sv.port) + '</option>').join('') + '</select></div></div>' +
           '<p class="small muted">Table settings</p><div class="row">' + tableFields('te_', t.table) + '</div>') +
+        runFields(t.run) +
         '<div class="actions"><button type="button" data-act="save">Save</button></div></details>';
     }
 
@@ -266,7 +273,16 @@ export function createTournamentsView(deps) {
       return t.host ? '<p class="small muted">Table run by the director: ' + esc(t.host.status) + '.</p>' : '';
     }
     let h = '<h3>Table on the server</h3><p class="small muted">' + esc(tableSummary(t.table)) + '</p>';
-    if (t.host && t.host.status === 'open') return h + '<div class="hostbox" id="tHostBox" aria-live="polite">' + hostLive(t) + '</div>';
+    if (t.host && t.host.status === 'open') {
+      return h + '<div class="hostbox" id="tHostBox" aria-live="polite">' + hostLive(t) + '</div>' +
+        '<div class="row"><div><label for="tSay">Message to the table</label><input id="tSay" maxlength="200" autocomplete="off" enterkeyhint="send" placeholder="no links, no capitals"></div><button type="button" data-act="tSay">Send</button></div>';
+    }
+    const run = t.run || {};
+    if (run.autoOpen && t.startsAt) {
+      const at = t.startsAt - (run.openBefore || 0) * 60000;
+      h += '<p class="small">The director opens the table by itself at ' + esc(new Date(at).toLocaleString()) + ' (' + esc(run.openBefore) + ' min before the start).</p>';
+      if (t.autoTry && t.autoTry.reason) h += '<p class="msg bad">' + (t.autoTry.missed ? 'Not opened: ' : 'It could not open the table, it tries again every 2 minutes: ') + esc(t.autoTry.reason) + '</p>';
+    }
     if (t.host && t.host.resultError) h += '<p class="msg bad">The director’s result could not be used by itself: ' + esc(t.host.resultError) + '. Set the result below — « From a Table check » offers its sealed result.</p>';
     else if (t.host) h += '<p class="small muted">Last table: ' + esc(t.host.status) + (t.host.error ? ' (' + esc(t.host.error) + ')' : '') + '.</p>';
     if (!t.server) return h + '<p class="small">Choose the tournament’s LAN server (Edit) so that the director can open the table.</p>';
@@ -354,6 +370,7 @@ export function createTournamentsView(deps) {
     if (ev.target.name === 'tSource') { source = ev.target.value; render(); }
   });
   $('tDetailBody').addEventListener('keydown', (ev) => {
+    if (ev.key === 'Enter' && ev.target.id === 'tSay') { ev.preventDefault(); $('tDetailBody').querySelector('[data-act="tSay"]').click(); return; }
     if (ev.key === 'Enter' && ev.target.id === 'tPlayerIn') { ev.preventDefault(); $('tDetailBody').querySelector('[data-act="add"]').click(); }
   });
   $('tDetailBody').addEventListener('click', (ev) => {
@@ -400,6 +417,11 @@ export function createTournamentsView(deps) {
         const was = Object.assign({}, TABLE_DEFAULTS, cur.table || {});
         if (TABLE_FIELDS.some((f) => String(tb[f[0]]) !== String(was[f[0]]))) patch.table = tb;
       }
+      if ($('te_auto')) {
+        const run = { autoOpen: $('te_auto').checked, openBefore: Number($('te_before').value), announce: $('te_announce').checked };
+        const r0 = Object.assign({ autoOpen: false, openBefore: 10, announce: true }, cur.run || {});
+        if (run.autoOpen !== r0.autoOpen || run.openBefore !== r0.openBefore || run.announce !== r0.announce) patch.run = run;
+      }
       if (!Object.keys(patch).length) return msg('tMsg', 'Nothing changed.');
       return call('/admin/tournaments/t/update', { patch }, 'Saved.');
     }
@@ -413,6 +435,11 @@ export function createTournamentsView(deps) {
       const absent = ((cur.hostLive && cur.hostLive.host && cur.hostLive.host.registered) || []).filter((r) => r.status !== 'seated').map((r) => r.nick);
       if (!window.confirm('Start without ' + (absent.join(', ') || 'the absent') + '? They will be marked absent and not ranked.')) return;
       return call('/admin/tournaments/t/table/go', {}, 'Going without the absent: the director hands the table over.');
+    }
+    if (a === 'tSay') {
+      const text = ($('tSay').value || '').trim();
+      if (!text) return;
+      return call('/admin/tournaments/t/table/say', { text }, 'Message sent to the table.');
     }
     if (a === 'tReinvite') return call('/admin/tournaments/t/table/reinvite', {}, 'Invitations sent again.');
     if (a === 'tClose') {

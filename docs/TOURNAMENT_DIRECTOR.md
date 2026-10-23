@@ -307,8 +307,22 @@ the service. Chat: English for now (the per-tournament language comes with
 the public pages), never capitals, links or the same line twice, spaced out
 (the server's `chatcleaner`).
 
+**Opening by itself** (service `0.3.0`): « Open the table by itself, N
+minutes before the start » (0 to 120, default 10; needs a start date). The
+service's sweep (every 5 s) opens it in that window, as « scheduler » in the
+journal. A failure is said once and kept on the tournament, then tried again
+every 2 minutes; a start more than an hour past is not opened (said once).
+Opening by hand, then closing, does not make it reopen for the same start.
+The sweep reads the tournaments from disk, so a restart changes nothing.
+
+**Announcements** (per tournament, on by default): blinds rising, who is out
+and how many are left, heads-up, the winner and the second. **Message to the
+table** from the page while the director runs it (« say »); a line with a link
+or mostly capitals is refused, as the server's chat filter would mute the
+director for it.
+
 Routes: `POST /admin/tournaments/t/table/open {id}`, `…/t/table/go {id}`,
-`…/t/table/reinvite {id}`, `…/t/table/close {id}`.
+`…/t/table/reinvite {id}`, `…/t/table/say {id, text}`, `…/t/table/close {id}`.
 
 ## A service of its own (`tournament/`, decided and done 2026-10-23)
 
@@ -406,9 +420,9 @@ operator's agreement.
 5. Persistent state machine, resume after restart.
 6. Admin › Tournaments (settings) and per-server `tournaments` keys.
 7. `/tournament`: public and organizer views, scheduled Sit & Go end to end
-   (table creation, seat check and hand-over done in `web.299`; next: opening
-   at the scheduled time, announcements, message to all tables, the chat
-   language).
+   (table creation, seat check and hand-over done in `web.299`; opening at
+   the scheduled time, announcements and messages to the table in service
+   `0.3.0`; next: the chat language).
 8. Collusion check.
 9. Organizer and player accounts.
 10. Requests to organize.

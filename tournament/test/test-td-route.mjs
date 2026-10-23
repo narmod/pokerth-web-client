@@ -186,14 +186,20 @@ try {
   w.confirm = () => true;
   $('tName').value = 'Hosted night'; $('tProfile').value = 'club'; $('tSrv').value = 'local';
   $('tt_startMoney').value = '2500';
+  $('tAnnounce').checked = false;
   $('tCreateForm').dispatchEvent(new w.Event('submit', { cancelable: true }));
   ok(await until(() => /Hosted night/.test(det()) && $('tPlayerIn')), 'host: tournament created with its LAN server');
   ok(/stack 2500/.test(det()), 'host: the table settings are shown');
+  ok($('te_announce') && !$('te_announce').checked && $('te_auto') && !$('te_auto').checked, 'host: run choices kept (announcements off, no opening by itself)');
   ok(/Add at least two players/.test(det()) && !act('tOpen'), 'host: two players needed before opening');
   for (const nick of ['Ann', 'Ben']) { $('tPlayerIn').value = nick; act('add').click(); await until(() => new RegExp(nick + ' added').test(det())); }
   ok(!!act('tOpen'), 'host: « Open the table » offered');
   act('tOpen').click();
   ok(await until(() => $('tHostBox') && act('tClose'), 80), 'host: the director is at work, its block is live');
+  ok(!!$('tSay') && !!act('tSay'), 'host: a message box for the table');
+  $('tSay').value = 'PLEASE COME NOW';
+  act('tSay').click();
+  ok(await until(() => /no capitals/.test(det()), 40), 'host: a line in capitals is refused (chat filter)');
   ok(/table open/.test($('tList').textContent), 'host: listed as « table open »');
   ok(!$('tPlayerIn') && !w.document.querySelector('input[name="tSource"]'), 'host: players and the result are locked while it runs');
   act('tClose').click();
