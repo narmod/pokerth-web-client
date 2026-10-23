@@ -32,6 +32,10 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Admin › Community › Tournaments in the style of the other sections** (`web.298`) — four tiles at the top (module,
+  service state and version, watches running, install key), a « Tournament director » card with the shared On/Off
+  switch, « Open /tournament » and « Refresh », the « Where it runs » details, and the install key in a card of its
+  own; saving says whether the service started. `scripts/test-admin-boot.mjs` covers the panel.
 - **Tournaments: a service of its own** (`web.297`, decided 2026-10-23) — the tournament director moves out of the web
   client into `tournament/` with its own `package.json` and version (`0.1.0`, shown at the foot of `/tournament`):
   `tournament/server.mjs` (HTTP on 127.0.0.1, IPC), `tournament/lib/` (manager, routes, journal, spectator, worker,
