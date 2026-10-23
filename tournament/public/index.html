@@ -127,6 +127,10 @@ textarea:focus{outline:2px solid var(--brass);outline-offset:1px}
 details.sub{margin-top:14px;border-top:1px solid var(--line);padding-top:8px}
 details.sub summary{cursor:pointer;color:var(--ivory);font-weight:600;min-height:32px}
 .history{font-size:.85em;padding-left:1.4em;margin:6px 0 0}
+.hostbox{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--field);margin-top:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0;padding:0;list-style:none}
+.chips li{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:.85em;color:var(--ivory);background:var(--panel)}
+button.danger{border-color:var(--bad);color:var(--bad);background:transparent}
 input[type="file"]{padding:7px}
 [hidden]{display:none!important}
 </style>
@@ -158,7 +162,7 @@ input[type="file"]{padding:7px}
     <button type="button" role="tab" id="tabCheck" aria-controls="viewCheck" aria-selected="false">Table check</button>
   </div>
   <div id="viewTour" role="tabpanel" aria-labelledby="tabTour">
-  <p class="lead">Manual mode, LAN only: create the tournament, add the players, then set the result — typed in, taken from a Table check, or from a PokerTH log. Every action goes into the tournament’s sealed journal; the validated result is signed. Nothing is done on the game server.</p>
+  <p class="lead">LAN only. Create the tournament and add the players. Then either let the director open the table on the LAN server (invitations, seat check, hand-over to the first player, result recorded by itself), or set the result yourself — typed in, taken from a Table check, or from a PokerTH log. Every action goes into the tournament’s sealed journal; the validated result is signed.</p>
   <div class="grid">
     <div>
       <section class="card" aria-labelledby="tNewH">
@@ -166,7 +170,7 @@ input[type="file"]{padding:7px}
         <form id="tCreateForm">
           <label for="tName">Name</label><input id="tName" maxlength="60" minlength="2" required autocomplete="off">
           <div class="row">
-            <div><label for="tSrv">LAN server <span class="muted">(for the record)</span></label><select id="tSrv"></select></div>
+            <div><label for="tSrv">LAN server <span class="muted">(where the director opens the table)</span></label><select id="tSrv"></select></div>
             <div><label for="tDate">Date</label><input id="tDate" type="datetime-local"></div>
           </div>
           <div class="row">
@@ -175,6 +179,7 @@ input[type="file"]{padding:7px}
           </div>
           <p class="small muted" id="tProfileNote"></p>
           <div class="row" id="tCustom" hidden></div>
+          <details class="sub"><summary>Table settings</summary><p class="small muted">Used when the director opens the table. PokerTH defaults.</p><div class="row" id="tTable"></div></details>
           <p class="small muted">Format: Sit &amp; Go, one table, up to 10 players.</p>
           <div class="actions"><button type="submit" class="primary">Create</button></div>
           <div class="msg" id="tCreateMsg" role="status"></div>

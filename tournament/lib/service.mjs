@@ -37,6 +37,72 @@ export function createService(o) {
   const td = createManager({ dir: o.dir, servers: o.servers, clientVersion: o.clientVersion });
   const T = td.tournaments;
 
+  // ── tables opened by the director: carry their end into the tournament ──
+  const syncing = new Set();
+  async function syncHost(id, watchId) {
+    if (syncing.has(id)) return;
+    const w = td.info(watchId);
+    if (!w || LIVE.indexOf(w.state.status) >= 0) return;
+    syncing.add(id);
+    try {
+      if (w.state.status === 'finished') {
+        try {
+          await T.setResult(id, { source: 'watch', watchId, absent: (w.state.host && w.state.host.absent) || [], byDirector: true }, 'director');
+        } catch (e) {
+          if (!(e instanceof T.Refusal)) throw e;
+          T.hostResultRefused(id, e.message);
+        }
+        T.hostEnded(id, 'finished');
+      } else {
+        T.hostEnded(id, w.state.status, w.state.error ? { error: w.state.error.code } : {});
+      }
+    } catch (e) {
+      console.error('[td] table of ' + id + ': ' + (e && e.message));
+    } finally { syncing.delete(id); }
+  }
+  function sweep() { for (const h of T.openHosts()) syncHost(h.id, h.watchId); }
+  const sweepTimer = setInterval(sweep, o.sweepMs || 5000);
+  if (sweepTimer.unref) sweepTimer.unref();
+  // The live side of an open table, for the tournament page.
+  function withHost(v) {
+    if (v && v.host && v.host.watchId) {
+      const w = td.info(v.host.watchId);
+      if (w) v.hostLive = { status: w.state.status, hand: w.state.hand || 0, host: w.state.host || null, logs: (w.state.logs || []).slice(-12),
+        error: w.state.error || null, nick: w.nick, gameId: w.state.gameId, gameName: w.state.gameName || '' };
+    }
+    return v;
+  }
+  async function getTournament(id) {
+    const v = T.get(id);
+    if (v.host && v.host.status === 'open') { await syncHost(id, v.host.watchId); return withHost(T.get(id)); }
+    return withHost(v);
+  }
+  async function openTable(id, b, who) {
+    const t = T.get(id);
+    if (t.result || t.status === 'validated') throw new T.Refusal('the result is set');
+    if (t.host && t.host.status === 'open') throw new T.Refusal('the table is already open');
+    if (!t.server || !t.server.ref) throw new T.Refusal('choose the LAN server of the tournament first (Edit)');
+    const registered = t.players.filter((p) => !p.absent).map((p) => p.nick);
+    if (registered.length < 2) throw new T.Refusal('add at least two players first');
+    const r = await td.startHost({ ref: t.server.ref, tournamentId: id, tableName: t.name, table: t.table, registered, nick: b.nick });
+    if (!r.ok) throw new T.Refusal(r.error);
+    try { T.hostOpened(id, r.id, { server: t.server.name }, who); } catch (e) { td.stop(r.id); throw e; }
+    return withHost(T.get(id));
+  }
+  function tableCommand(id, cmd, type, who) {
+    const watchId = T.hostCheck(id);
+    const r = td.command(watchId, cmd, who);
+    if (!r.ok) throw new T.Refusal(r.error);
+    T.hostNote(id, type, who);
+    return withHost(T.get(id));
+  }
+  function closeTable(id, who) {
+    const watchId = T.hostCheck(id);
+    td.stop(watchId);
+    T.hostEnded(id, 'stopped', { by: who });
+    return withHost(T.get(id));
+  }
+
   function json(res, code, obj) {
     res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
     res.end(JSON.stringify(obj));
@@ -95,8 +161,8 @@ export function createService(o) {
         'Content-Disposition': 'attachment; filename="td-' + String(query.id) + '.' + which + '.json"' });
       return res.end(buf);
     }
-    if (sub === '/t/list' && get) return send(() => T.list());
-    if (sub === '/t/get' && get) return send(() => T.get(String(query.id || '')));
+    if (sub === '/t/list' && get) { sweep(); return send(() => T.list()); }
+    if (sub === '/t/get' && get) return send(() => getTournament(String(query.id || '')));
     if (sub === '/t/file' && get) {
       const which = String(query.which || '');
       const buf = T.file(String(query.id || ''), which);
@@ -126,6 +192,10 @@ export function createService(o) {
       case '/t/result': return send(() => T.setResult(id, b, who));
       case '/t/validate': return send(() => T.validate(id, who));
       case '/t/correct': return send(() => T.correct(id, b, who));
+      case '/t/table/open': return send(() => openTable(id, b, who));
+      case '/t/table/go': return send(() => tableCommand(id, 'go', 'tableGo', who));
+      case '/t/table/reinvite': return send(() => tableCommand(id, 'reinvite', 'tableReinvite', who));
+      case '/t/table/close': return send(() => closeTable(id, who));
       default: return json(res, 404, { ok: false, error: 'not found' });
     }
   }
@@ -149,5 +219,5 @@ export function createService(o) {
     res.writeHead(404); res.end('Not found');
   }
 
-  return { handler, manager: td, status, LIVE };
+  return { handler, manager: td, status, LIVE, sweep, close: () => clearInterval(sweepTimer) };
 }

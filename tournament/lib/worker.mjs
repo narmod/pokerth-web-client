@@ -14,7 +14,9 @@
 
 import { readFileSync, writeFileSync, renameSync } from 'node:fs';
 import { join } from 'node:path';
+import { readFileSync as readF, existsSync } from 'node:fs';
 import { SpectatorDirector } from './spectator.mjs';
+import { HostDirector } from './host.mjs';
 
 function writeAtomic(path, obj) {
   const tmp = path + '.' + process.pid + '.tmp';
@@ -26,12 +28,16 @@ export function runWatch(task) {
   const dir = task.dir;
   let privateKeyPem = null;
   try { if (task.keyFile) privateKeyPem = readFileSync(task.keyFile, 'utf8'); } catch (e) {}
-  const d = new SpectatorDirector(Object.assign({}, task.opts, { privateKeyPem, version: task.version }));
+  const host = task.mode === 'host';
+  const d = host
+    ? new HostDirector(Object.assign({}, task.opts, { privateKeyPem, version: task.version }))
+    : new SpectatorDirector(Object.assign({}, task.opts, { privateKeyPem, version: task.version }));
   const logs = [];
   const state = {
     id: task.id, pid: process.pid, status: 'connecting', startedAt: Date.now(), updatedAt: Date.now(),
     gameId: task.opts.gameId != null ? task.opts.gameId : null, gameName: task.opts.gameName || '',
     hand: 0, players: [], error: null, signed: !!privateKeyPem, logs,
+    mode: host ? 'host' : 'watch', tournamentId: task.tournamentId || null, host: host ? d.hostState() : null,
   };
   let dirty = false, timer = null;
   function snapshot() {
@@ -44,6 +50,7 @@ export function runWatch(task) {
       const e = t.elim.get(id);
       return { id, name: t.names.get(id) || '', money: t.money.has(id) ? t.money.get(id) : null, out: e ? { hand: e.hand, unknown: !!e.unknown } : null };
     });
+    if (host) { state.host = d.hostState(); if (state.host.gameId != null && state.gameId == null) state.gameId = state.host.gameId; state.gameName = state.gameName || state.host.tableName; }
     state.updatedAt = Date.now();
     writeAtomic(join(dir, 'state.json'), state);
     dirty = false;
@@ -53,8 +60,27 @@ export function runWatch(task) {
   function saveJournal() { writeAtomic(join(dir, 'journal.json'), d.journal.toJSON()); }
 
   d.on('log', log);
+  d.on('host', () => soon());
+  // Organizer commands (host mode): lines appended to commands.jsonl by the
+  // service, read here once a second — the channel survives a restart of the
+  // service, unlike IPC.
+  if (host) {
+    const cmdFile = join(dir, 'commands.jsonl');
+    let seen = 0;
+    const poll = setInterval(() => {
+      if (!existsSync(cmdFile)) return;
+      let lines;
+      try { lines = readF(cmdFile, 'utf8').split('\n').filter(Boolean); } catch (e) { return; }
+      for (; seen < lines.length; seen++) {
+        let c = null;
+        try { c = JSON.parse(lines[seen]); } catch (e) {}
+        if (c) { log('organizer: ' + c.cmd); d.command(c); }
+      }
+    }, task.commandPollMs || 1000);
+    poll.unref();
+  }
   d.on('event', (ev) => {
-    if (ev.type === 'gameInfo') { state.status = 'waiting'; log('joined table « ' + ev.name + ' » as spectator'); }
+    if (ev.type === 'gameInfo') { state.status = 'waiting'; if (!host || d.phase === 'watch') log('joined table « ' + ev.name + ' » as spectator'); }
     else if (ev.type === 'gameStart') { state.status = 'running'; log('game started, ' + ev.seats.length + ' players'); }
     else if (ev.type === 'rejoin') { state.status = 'running'; log('synchronised at hand ' + ev.handNum); }
     else if (ev.type === 'handStart') { state.status = 'running'; saveJournal(); }
@@ -109,7 +135,7 @@ if (process.send) {
   const idle = setTimeout(() => { console.error('[td-worker] no task received, leaving'); process.exit(1); }, 30000);
   process.once('message', (task) => {
     clearTimeout(idle);
-    console.error('[td-worker] task ' + task.id + ' received: ' + task.opts.host + ':' + task.opts.port + ' game ' + task.opts.gameId);
+    console.error('[td-worker] task ' + task.id + ' received: ' + task.opts.host + ':' + task.opts.port + (task.mode === 'host' ? ' open table « ' + task.opts.tableName + ' »' : ' game ' + task.opts.gameId));
     try { process.disconnect(); } catch (e) {}
     try { runWatch(task); } catch (e) {
       try { writeAtomic(join(task.dir, 'state.json'), { id: task.id, pid: process.pid, status: 'failed', error: { code: 'startFailed', data: { message: e.message } }, updatedAt: Date.now(), logs: [] }); } catch (e2) {}

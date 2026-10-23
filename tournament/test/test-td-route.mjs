@@ -180,6 +180,25 @@ try {
   act('validate').click();
   ok(await until(() => /Validated and signed/.test(det())), 'tournaments: validated by hand');
   ok(/second organizer/.test(det()) && !act('correct'), 'tournaments: official — no correction without a second organizer');
+
+  // The director opens the table (the fake server here never answers the
+  // table creation: enough to see the page drive it, then close it).
+  w.confirm = () => true;
+  $('tName').value = 'Hosted night'; $('tProfile').value = 'club'; $('tSrv').value = 'local';
+  $('tt_startMoney').value = '2500';
+  $('tCreateForm').dispatchEvent(new w.Event('submit', { cancelable: true }));
+  ok(await until(() => /Hosted night/.test(det()) && $('tPlayerIn')), 'host: tournament created with its LAN server');
+  ok(/stack 2500/.test(det()), 'host: the table settings are shown');
+  ok(/Add at least two players/.test(det()) && !act('tOpen'), 'host: two players needed before opening');
+  for (const nick of ['Ann', 'Ben']) { $('tPlayerIn').value = nick; act('add').click(); await until(() => new RegExp(nick + ' added').test(det())); }
+  ok(!!act('tOpen'), 'host: « Open the table » offered');
+  act('tOpen').click();
+  ok(await until(() => $('tHostBox') && act('tClose'), 80), 'host: the director is at work, its block is live');
+  ok(/table open/.test($('tList').textContent), 'host: listed as « table open »');
+  ok(!$('tPlayerIn') && !w.document.querySelector('input[name="tSource"]'), 'host: players and the result are locked while it runs');
+  act('tClose').click();
+  ok(await until(() => /Table closed by the organizer/.test(det()) && act('tOpen'), 80), 'host: closed by the organizer, can be opened again');
+  ok(/Last table: stopped/.test(det()), 'host: the last table is reported');
   w.close();
 
   // .pdb through the routes.
@@ -196,7 +215,7 @@ try {
   const fp = await get('/admin/tournaments/t/file?id=' + cr.id + '&which=pdb');
   ok(fp.status === 200 && Buffer.from(await fp.arrayBuffer()).equals(Buffer.from(pdbBuf)), 'routes: the log is kept and downloadable');
   const lst = await (await get('/admin/tournaments/t/list')).json();
-  ok(lst.ok && lst.tournaments.length === 3, 'routes: three tournaments listed');
+  ok(lst.ok && lst.tournaments.length === 4, 'routes: four tournaments listed');
   ok(fs.existsSync(F('td/tournaments/' + cr.id + '/journal.json')) && fs.existsSync(F('td/tournaments/' + cr.id + '/result.json')), 'routes: stored in TD_DIR');
 
   // ── the service stops: the web client starts it again ──
@@ -205,7 +224,7 @@ try {
   let s2 = null;
   for (let i = 0; i < 60; i++) { await wait(200); s2 = await (await get('/admin/tournaments/settings')).json(); if (s2.service.status === 'running' && s2.service.pid !== pid1) break; }
   ok(s2 && s2.service.status === 'running' && s2.service.pid !== pid1 && s2.service.restarts === 1, 'a killed service is started again');
-  ok((await (await get('/admin/tournaments/t/list')).json()).tournaments.length === 3, 'and finds its tournaments');
+  ok((await (await get('/admin/tournaments/t/list')).json()).tournaments.length === 4, 'and finds its tournaments');
 
   // ── off again: page gone, service stopped, files kept ──
   const off = await (await post('/admin/tournaments/settings', { enabled: false })).json();
@@ -217,7 +236,7 @@ try {
   ok((await get('/admin/tournaments/watches')).status === 409, 'off again: the tools answer 409');
   await post('/admin/tournaments/settings', { enabled: true });
   const ws = await (await get('/admin/tournaments/watches')).json();
-  ok(ws.ok && ws.watches.length === 1, 'on again: past watches kept');
+  ok(ws.ok && ws.watches.length === 2, 'on again: past watches (and the closed table) kept');
   await post('/admin/tournaments/settings', { enabled: false });
 } finally {
   proxy.kill('SIGTERM');

@@ -66,6 +66,16 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Tournaments: the director opens the table** (`web.299`, service `0.2.0`) — from a tournament with its LAN server
+  and at least two players, « Open the table »: the director creates an invite-only table with the tournament's table
+  settings (new: stack, first small blind, blinds every N hands or minutes, after the last level, time to act, pause
+  between hands), invites each registered player as soon as they are in the lobby, kicks anyone seated who is not
+  registered, and once everyone is seated — or when the organizer chooses « Start without the absent » — leaves its
+  seat so that the first player becomes admin, comes back as a spectator, asks the new admin to start, follows the game
+  and seals the result, which reaches the tournament by itself. Never stays seated at a full table (a non-LAN server
+  would start it 6 s later). The page shows each player's state live (seated, invited, connected, absent…), the kicks,
+  the admin and the director's log; « Invite again », « Close the table ». Players and the result are locked while
+  the table is open. `tournament/lib/host.mjs`, `tournament/test/test-td-host.mjs`.
 - **Tournaments: manual mode on `/tournament`** (`web.296`, off by default) — a « Tournaments » tab next to the
   Table check: create a Sit & Go tournament (name, LAN server for the record, date, Friendly / Club / Official /
   Custom profile, visibility — a private one gets an invitation code), add the players by hand (up to 10), then set

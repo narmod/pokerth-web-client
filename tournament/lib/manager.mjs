@@ -102,7 +102,7 @@ export function createManager(deps) {
     try { ids = fs.readdirSync(watchesDir).filter((x) => ID_RE.test(x)); } catch (e) {}
     return ids.map(info).filter(Boolean).sort((a, b) => b.startedAt - a.startedAt).map((w) => ({
       id: w.id, server: w.server, gameName: w.state.gameName || w.gameName || '', gameId: w.state.gameId != null ? w.state.gameId : w.gameId,
-      nick: w.nick, startedAt: w.startedAt, status: w.state.status, hand: w.state.hand || 0,
+      nick: w.nick, startedAt: w.startedAt, status: w.state.status, hand: w.state.hand || 0, mode: w.mode || 'watch', tournamentId: w.tournamentId || null,
       resultStatus: w.state.resultStatus || null, updatedAt: w.state.updatedAt || w.startedAt,
     }));
   }
@@ -113,18 +113,45 @@ export function createManager(deps) {
     if (!s) return { ok: false, error: 'unknown server' };
     const gameId = parseInt(body.gameId, 10);
     if (!(gameId > 0)) return { ok: false, error: 'pick a table' };
-    if (running().length >= MAX_RUNNING) return { ok: false, error: 'at most ' + MAX_RUNNING + ' watches at once' };
+    return launch(s, body, { gameId, gameName: String(body.gameName || '').slice(0, 64) }, (nick) => ({
+      nick, login: 'unauth', gameId, refuseAuthServer: true, gamePassword: body.gamePassword ? String(body.gamePassword).slice(0, 64) : undefined,
+    }));
+  }
+
+  // The director OPENS the table of a tournament (host.mjs), then follows it.
+  // body: { ref, tournamentId, tableName, table, registered, nick? }
+  async function startHost(body) {
+    const s = await resolve(body && body.ref);
+    if (!s) return { ok: false, error: 'unknown server: pick a LAN server in the tournament' };
+    const registered = (body.registered || []).map(String).filter(Boolean);
+    if (registered.length < 2) return { ok: false, error: 'at least two players' };
+    return launch(s, body, { gameId: null, gameName: String(body.tableName || '').slice(0, 64), mode: 'host', tournamentId: body.tournamentId || null }, (nick) => ({
+      nick, login: 'unauth', refuseAuthServer: true, tableName: String(body.tableName || ''), table: body.table || {}, registered,
+    }), { mode: 'host', tournamentId: body.tournamentId || null });
+  }
+
+  // Organizer command for a host watch: one line in commands.jsonl, read by the worker.
+  function command(id, cmd, author) {
+    const w = info(id);
+    if (!w || w.mode !== 'host') return { ok: false, error: 'unknown table' };
+    if (LIVE.indexOf(w.state.status) < 0) return { ok: false, error: 'the director is no longer at the table' };
+    fs.appendFileSync(path.join(wdir(id), 'commands.jsonl'), JSON.stringify({ cmd, author: author || null, at: Date.now() }) + '\n');
+    return { ok: true };
+  }
+
+  function launch(s, body, metaExtra, optsFor, taskExtra) {
+    if (running().length >= MAX_RUNNING) return { ok: false, error: 'at most ' + MAX_RUNNING + ' directors at once' };
     let nick = String(body.nick || '').trim();
-    if (!nick) nick = 'TD-test-' + crypto.randomBytes(3).toString('hex');
+    if (!nick) nick = (taskExtra && taskExtra.mode === 'host' ? 'TD-' : 'TD-test-') + crypto.randomBytes(3).toString('hex');
     if (!NICK_RE.test(nick)) return { ok: false, error: 'director name: 3 to 24 letters, digits, - or _' };
     ensureKey();
     const id = Date.now().toString(36) + crypto.randomBytes(3).toString('hex');
     const d = wdir(id);
     fs.mkdirSync(d, { recursive: true });
-    const meta = {
-      id, startedAt: Date.now(), nick, gameId, gameName: String(body.gameName || '').slice(0, 64),
+    const meta = Object.assign({
+      id, startedAt: Date.now(), nick,
       server: { ref: s.ref, kind: s.kind, name: s.name, host: s.host, port: s.port, tls: !!s.tls },
-    };
+    }, metaExtra);
     const logPath = path.join(d, 'worker.log');
     // The manager's own lines in worker.log say whether the process started at
     // all, and how it ended (exit code, signal) while this service runs.
@@ -146,12 +173,10 @@ export function createManager(deps) {
     if (!child.pid) mlog('no pid: the process did not start');
     meta.pid = child.pid;
     fs.writeFileSync(path.join(d, 'meta.json'), JSON.stringify(meta));
-    child.send({
+    child.send(Object.assign({
       id, dir: d, keyFile, version: deps.clientVersion(),
-      opts: Object.assign(connOpts(s), {
-        nick, login: 'unauth', gameId, refuseAuthServer: true, gamePassword: body.gamePassword ? String(body.gamePassword).slice(0, 64) : undefined,
-      }),
-    });
+      opts: Object.assign(connOpts(s), optsFor(nick)),
+    }, taskExtra || {}));
     child.unref();
     // The worker closes the IPC channel itself once it has the task.
     return { ok: true, id };
@@ -213,7 +238,7 @@ export function createManager(deps) {
     readWatch: (id) => (ID_RE.test(id) ? readJson(path.join(wdir(id), 'result.json')) : null),
   });
 
-  return { keyInfo, servers, lobby, start, stop, list, running, detail, file, tournaments, MAX_RUNNING };
+  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, MAX_RUNNING };
 }
 
 /** Public part of the install key, read from its PEM file (null if none yet). */

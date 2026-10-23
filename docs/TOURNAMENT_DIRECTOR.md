@@ -266,6 +266,50 @@ depends on them.
   `…/t/validate {id}`, `…/t/correct {id, ranking, reason}`, and
   `POST …/t/pdb?id=` (raw body).
 
+## The director opens the table (`web.299`, service `0.2.0`)
+
+From a tournament on `/tournament` (« Table on the server »), with its LAN
+server chosen and at least two players: **Open the table**
+(`tournament/lib/host.mjs`, `HostDirector`, in its own detached process like
+a watch).
+
+1. The director logs in and creates an **invite-only** table named after the
+   tournament (a second name `… #2` if it is in use), with the tournament's
+   **table settings** (stack, first small blind, blinds every N hands or N
+   minutes, after the last level, time to act, pause between hands; PokerTH
+   defaults), spectators allowed, one seat more than the players. It is
+   seated and is the table admin.
+2. It invites every registered player as soon as it sees them in the lobby
+   (again when a busy player comes back from another game; « Invite again »
+   on the page), welcomes each one who sits, and **kicks** anyone seated who
+   is not registered (the server allows it only to the admin, before the
+   start).
+3. When every registered player is seated, or when the organizer clicks
+   **Start without the absent** (at least two seated; the others are marked
+   absent and not ranked), it **leaves its seat** (decided design, option A):
+   the server makes the first player admin. It comes straight back as a
+   spectator and asks the new admin in the chat to start (reminders after 2
+   and 5 minutes).
+4. It follows the game like a Table check and seals the result. The service
+   carries it into the tournament by itself (validated or waiting for an
+   organizer, as the profile says). Strangers seated at the start (a player
+   can invite someone once the director has left) are recorded in a seat
+   check: the result then needs an organizer.
+
+Safeguards: on a non-LAN server a full table starts by itself 6 s later, so
+the director never stays seated at a full table — it leaves at once, which
+cancels that start (ten registered players: it leaves when eight are seated
+to make room). Players and the result are locked while the table is open;
+**Close the table** stops the director (a running game goes on without it).
+The page refreshes the director's block every 2 s; commands reach the
+director through `commands.jsonl` in its folder, which survives a restart of
+the service. Chat: English for now (the per-tournament language comes with
+the public pages), never capitals, links or the same line twice, spaced out
+(the server's `chatcleaner`).
+
+Routes: `POST /admin/tournaments/t/table/open {id}`, `…/t/table/go {id}`,
+`…/t/table/reinvite {id}`, `…/t/table/close {id}`.
+
 ## A service of its own (`tournament/`, decided and done 2026-10-23)
 
 The tournament director has its own audience (organizers), lifecycle,
@@ -309,11 +353,12 @@ at the foot of `/tournament`).
 | `tournament/lib/tracker.mjs` | Ranking of one table from normalized spectator events. Pure. |
 | `tournament/lib/spectator.mjs` | Network client: login, spectator join, protobuf → events → journal + tracker, timeout keep-alive, reconnect with resync, late player names, sealing. Reads only: never sits, acts, acks a start or chats. |
 | `tournament/lib/lobby.mjs` | Lobby reader (guest login, tables, server type). |
+| `tournament/lib/host.mjs` | The director that opens a tournament table: create, invite, kick, hand over, then watch. |
 | `tournament/lib/worker.mjs` | One watch in a detached process, state and files on disk. |
 | `tournament/lib/pdb.mjs`, `tournament/lib/tournaments.mjs` | PokerTH log reader (BBC rule); tournaments in manual mode. |
 | `tournament/public/` | The page: `index.html`, `organizer.mjs` (Table check), `tournaments-ui.mjs` (Tournaments), `manifest.json`. |
 | `tournament/bin/td-spectate.mjs` | Command line: watch a table, write `<out>.journal.json` and `<out>.result.json`; `--verify` checks chain, signature and replay. |
-| `tournament/test/` | `test-td-core` (journal, ranking cases), `test-td-spectator` (fake server over TCP, command line), `test-td-tournaments` (manual mode, `.pdb`), `test-td-service` (workers, the service on its own), `test-td-route` (real proxy launching the service, the page in jsdom). |
+| `tournament/test/` | `test-td-core` (journal, ranking cases), `test-td-spectator` (fake server over TCP, command line), `test-td-tournaments` (manual mode, `.pdb`), `test-td-host` (opening a table against a fake server that behaves like the real one, then through the service), `test-td-service` (workers, the service on its own), `test-td-route` (real proxy launching the service, the page in jsdom). |
 | `server/tournament-host.js` | Web client side: the setting, launching and relaying. |
 
 The service shares the repository's protobuf bundle (`public/proto/`) and
@@ -340,7 +385,9 @@ operator's agreement.
 5. Persistent state machine, resume after restart.
 6. Admin › Tournaments (settings) and per-server `tournaments` keys.
 7. `/tournament`: public and organizer views, scheduled Sit & Go end to end
-   (table creation, seat check, announcements, message to all tables).
+   (table creation, seat check and hand-over done in `web.299`; next: opening
+   at the scheduled time, announcements, message to all tables, the chat
+   language).
 8. Collusion check.
 9. Organizer and player accounts.
 10. Requests to organize.

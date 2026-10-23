@@ -1,10 +1,12 @@
 // ═══════════════════════════════════════════════════════════════════
-// /tournament — « Tournaments » view, manual mode (2026-10-23).
+// /tournament — « Tournaments » view (2026-10-23).
 //
-// Create a tournament, add the players by hand, then set the result in one
-// of three ways: typed (ordered list), a finished Table check's sealed
-// result, or a PokerTH log (.pdb) with the game picked. Validation signs it;
-// a correction is added to the journal, never written over.
+// Create a tournament, add the players by hand, then either let the director
+// open the table on the LAN server (invitations, seat check, hand-over,
+// result recorded by itself) or set the result in one of three ways: typed
+// (ordered list), a finished Table check's sealed result, or a PokerTH log
+// (.pdb) with the game picked. Validation signs it; a correction is added to
+// the journal, never written over.
 // Talks to /admin/tournaments/t/*; server: tournament/lib/tournaments.mjs.
 // English only for now, like the rest of the organizer side.
 // ═══════════════════════════════════════════════════════════════════
@@ -23,7 +25,25 @@ const CHOICES = {
   collusion: ['off', 'report', 'separate', 'forbid'],
 };
 const SETTING_LABEL = { identity: 'Identity', witnesses: 'Witnesses', validation: 'Validation', corrections: 'Corrections', visibility: 'Visibility', archiveDays: 'Kept (days, 0 = for good)', collusion: 'Collusion check' };
-const STATUS = { draft: 'draft', registration: 'players', finished: 'to validate', validated: 'validated' };
+const STATUS = { draft: 'draft', registration: 'players', running: 'table open', finished: 'to validate', validated: 'validated' };
+// Table settings (tournament/lib/tournaments.mjs TABLE_DEFAULTS).
+const TABLE_DEFAULTS = { startMoney: 3000, firstSmallBlind: 10, raiseMode: 'hands', raiseEvery: 7, endRaiseMode: 'double', endRaiseValue: 0, actionTimeout: 30, delayBetweenHands: 7 };
+const TABLE_FIELDS = [
+  ['startMoney', 'Starting stack', 100, 1000000],
+  ['firstSmallBlind', 'First small blind', 1, 500000],
+  ['raiseMode', 'Blinds rise', [['hands', 'every N hands'], ['minutes', 'every N minutes']]],
+  ['raiseEvery', 'N (hands or minutes)', 1, 100],
+  ['endRaiseMode', 'After the last level', [['double', 'double the blinds'], ['value', 'raise by a fixed value'], ['keep', 'keep the last blinds']]],
+  ['endRaiseValue', 'Fixed raise (small blind)', 0, 1000000],
+  ['actionTimeout', 'Time to act (s)', 5, 120],
+  ['delayBetweenHands', 'Pause between hands (s)', 3, 20],
+];
+const HOST_PHASE = {
+  create: 'Opening the table…', seated: 'Table open: inviting the registered players and checking every seat',
+  handover: 'Handing the table over…', watch: 'Handed over: the director watches as a spectator',
+};
+const PLAYER_STATUS = { seated: ['seated', 'done'], invited: ['invited', 'live'], online: ['connected', ''], offline: ['not connected', 'warn'],
+  absent: ['absent', 'bad'], 'declined-no': ['declined', 'bad'], 'declined-busy': ['in another game', 'warn'] };
 const SOURCE = { manual: 'typed in', watch: 'Table check', pdb: 'log (.pdb)' };
 
 export function createTournamentsView(deps) {
@@ -61,6 +81,7 @@ export function createTournamentsView(deps) {
     if (srv) body.server = { ref: srv.ref, name: srv.name, host: srv.host, port: srv.port };
     if ($('tDate').value) { const ts = new Date($('tDate').value).getTime(); if (ts > 0) body.startsAt = ts; }
     if ($('tVis').value) body.visibility = $('tVis').value;
+    body.table = readTable('tt_');
     if (body.profile === 'custom') {
       body.settings = {};
       for (const k of Object.keys(CHOICES)) body.settings[k] = $('tc_' + k).value;
@@ -70,17 +91,39 @@ export function createTournamentsView(deps) {
     api('/admin/tournaments/t/create', body).then((d) => {
       if (!d.ok) return msg('tCreateMsg', d.error || 'Refused', true);
       msg('tCreateMsg', 'Created.', false, 'ok');
-      $('tName').value = ''; $('tDate').value = '';
+      $('tName').value = ''; $('tDate').value = ''; $('tTable').innerHTML = tableFields('tt_', TABLE_DEFAULTS);
       show(d, 'Created. Add the players, then set the result.');
       refresh();
     }).catch((e) => msg('tCreateMsg', e.message === 'forbidden' ? '' : 'Network error', true));
   });
 
+  function tableFields(prefix, v) {
+    v = Object.assign({}, TABLE_DEFAULTS, v || {});
+    return TABLE_FIELDS.map((f) => {
+      const id = prefix + f[0];
+      const ctl = Array.isArray(f[2])
+        ? '<select id="' + id + '">' + f[2].map((o) => '<option value="' + o[0] + '"' + (o[0] === v[f[0]] ? ' selected' : '') + '>' + esc(o[1]) + '</option>').join('') + '</select>'
+        : '<input id="' + id + '" type="number" inputmode="numeric" min="' + f[2] + '" max="' + f[3] + '" value="' + esc(v[f[0]]) + '">';
+      return '<div><label for="' + id + '">' + esc(f[1]) + '</label>' + ctl + '</div>';
+    }).join('');
+  }
+  function readTable(prefix) {
+    const o = {};
+    for (const f of TABLE_FIELDS) { const el = $(prefix + f[0]); if (el) o[f[0]] = Array.isArray(f[2]) ? el.value : Number(el.value); }
+    return o;
+  }
+  function tableSummary(t) {
+    t = Object.assign({}, TABLE_DEFAULTS, t || {});
+    const end = { double: 'then doubled', value: 'then +' + t.endRaiseValue, keep: 'then kept' }[t.endRaiseMode] || '';
+    return 'stack ' + t.startMoney + ' · blinds ' + t.firstSmallBlind + '/' + (t.firstSmallBlind * 2) + ', doubled every ' + t.raiseEvery + (t.raiseMode === 'minutes' ? ' min' : ' hands') + ' (' + end + ') · ' + t.actionTimeout + ' s to act · ' + t.delayBetweenHands + ' s between hands';
+  }
+  $('tTable').innerHTML = tableFields('tt_', TABLE_DEFAULTS);
+
   function msg(id, text, bad, cls) { const el = $(id); if (!el) return; el.className = 'msg' + (bad ? ' bad' : cls ? ' ' + cls : ''); el.textContent = text || ''; }
 
   // ── list ─────────────────────────────────────────────────────────
   function chip(st) {
-    const cls = st === 'validated' ? 'done' : st === 'finished' ? 'warn' : st === 'registration' ? 'live' : '';
+    const cls = st === 'validated' ? 'done' : st === 'finished' ? 'warn' : st === 'registration' || st === 'running' ? 'live' : '';
     return '<span class="chip ' + cls + '">' + esc(STATUS[st] || st) + '</span>';
   }
   function when(ts) { return ts ? new Date(ts).toLocaleString() : ''; }
@@ -98,16 +141,34 @@ export function createTournamentsView(deps) {
     const b = ev.target.closest('button[data-id]');
     if (b) open(b.dataset.id);
   });
-  function open(id) {
+  let pollTimer = null;
+  function open(id, quiet) {
+    clearTimeout(pollTimer);
     api('/admin/tournaments/t/get?id=' + encodeURIComponent(id)).then((d) => {
       if (!d.ok) { $('tDetailEmpty').hidden = false; $('tDetailEmpty').textContent = d.error || 'Unknown tournament'; $('tDetailBody').hidden = true; return; }
-      show(d);
-    }).catch(() => {});
+      // While the director runs the table, refresh only its block, so what
+      // the organizer is typing elsewhere stays put.
+      if (quiet && cur && cur.id === d.id && cur.status === d.status && $('tHostBox')) {
+        cur = d;
+        $('tHostBox').innerHTML = hostLive(d);
+      } else if (!quiet || !cur || cur.id === d.id) {
+        show(d, quiet && cur && cur.status !== d.status ? statusNote(d) : null);
+        if (quiet) refresh();
+      }
+      if (d.host && d.host.status === 'open' && cur && cur.id === d.id) pollTimer = setTimeout(() => open(d.id, true), 2000);
+    }).catch(() => { if (quiet) pollTimer = setTimeout(() => open(id, true), 5000); });
+  }
+  function statusNote(d) {
+    if (d.status === 'validated') return 'The director recorded the result; it is validated and signed.';
+    if (d.status === 'finished') return 'The director recorded the result: look at it and validate.';
+    if (d.host && d.host.resultError) return 'The director could not record the result by itself — see below.';
+    return null;
   }
 
   // ── detail ───────────────────────────────────────────────────────
   function show(t, note, bad) {
     const changed = !cur || cur.id !== t.id;
+    if (changed) clearTimeout(pollTimer);
     cur = t;
     if (changed) source = t.pdb ? 'pdb' : 'manual';
     order = t.players.map((p) => p.nick);
@@ -134,7 +195,7 @@ export function createTournamentsView(deps) {
 
     // Players.
     h += '<h3>Players (' + t.players.length + '/10)</h3>';
-    if (!t.result) {
+    if (!t.result && !(t.host && t.host.status === 'open')) {
       h += t.players.length ? '<ul class="rank">' + t.players.map((p) => '<li><span class="nk">' + esc(p.nick) + '</span><button type="button" data-act="rm" data-nick="' + esc(p.nick) + '" aria-label="Remove ' + esc(p.nick) + '">Remove</button></li>').join('') + '</ul>'
         : '<p class="empty">No player yet — add them here, or let the result bring them (Table check or log).</p>';
       if (t.players.length < 10) h += '<div class="row"><div><label for="tPlayerIn">PokerTH nickname</label><input id="tPlayerIn" maxlength="64" autocomplete="off" enterkeyhint="done"></div><button type="button" data-act="add">Add</button></div>';
@@ -142,19 +203,23 @@ export function createTournamentsView(deps) {
       h += '<p class="small">' + t.players.map((p) => esc(p.nick)).join(', ') + '</p>';
     }
 
+    // The table on the server.
+    h += hostSection(t);
+
     // Result.
     if (t.result) {
       const r = t.result;
       h += '<h3>Result</h3><div class="tablewrap"><table><thead><tr><th class="num">#</th><th>Player</th><th class="num">Out in hand</th><th class="num">Stack at start of that hand</th><th></th></tr></thead><tbody>' +
         r.ranking.map((x) => '<tr><td class="num">' + x.place + '</td><td>' + esc(x.nick) + '</td><td class="num">' + (x.winner ? '—' : x.elimHand != null ? x.elimHand : '') + '</td><td class="num">' + (x.stack != null ? x.stack : '') + '</td><td>' +
           (x.winner ? '<span class="chip done">winner</span>' : '') + (x.tie ? '<span class="chip warn">tie</span>' : '') + (x.unknown ? '<span class="chip warn">hand unknown</span>' : '') + '</td></tr>').join('') + '</tbody></table></div>';
-      h += '<p class="small muted">From: ' + esc(SOURCE[r.source] || r.source) + (r.watchId ? ' ' + esc(r.watchId) : '') + (r.uniqueGameId != null ? ', game ' + esc(r.uniqueGameId) : '') + ' · <b>' + esc(r.status) + '</b>' + (r.corrected ? ' · corrected' : '') + '</p>';
+      if (r.absent && r.absent.length) h += '<p class="small">Absent (not ranked): ' + r.absent.map(esc).join(', ') + '</p>';
+      h += '<p class="small muted">From: ' + (r.byDirector ? 'the director, who ran the table · ' : '') + esc(SOURCE[r.source] || r.source) + (r.watchId ? ' ' + esc(r.watchId) : '') + (r.uniqueGameId != null ? ', game ' + esc(r.uniqueGameId) : '') + ' · <b>' + esc(r.status) + '</b>' + (r.corrected ? ' · corrected' : '') + '</p>';
       if (t.status === 'finished') {
         h += '<p class="small">' + (r.status !== 'complete' ? 'Look at the flags above (tie, unknown hand, game not finished) before validating. ' : st.validation === 'organizer' ? 'This profile wants an organizer to validate. ' : '') + 'Validating seals and signs the result.</p>' +
           '<div class="actions"><button type="button" class="primary" data-act="validate">Validate and sign</button></div>';
       }
     }
-    if (t.status !== 'validated') h += sourcePanel(t);
+    if (t.status !== 'validated' && !(t.host && t.host.status === 'open')) h += sourcePanel(t);
     else if (st.corrections === 'second') h += '<h3>Correction</h3><p class="small muted">This profile needs a second organizer to approve a correction. Organizer accounts come later.</p>';
     else {
       h += '<details class="sub"><summary>Correct the result</summary><p class="small muted">The validated result stays in the journal; the correction is added with your reason, and the result is signed again.</p>' +
@@ -170,6 +235,9 @@ export function createTournamentsView(deps) {
       h += '<details class="sub"><summary>Edit</summary><div class="row"><div><label for="tEName">Name</label><input id="tEName" maxlength="60" value="' + esc(t.name) + '"></div>' +
         '<div><label for="tEDate">Date</label><input id="tEDate" type="datetime-local" value="' + esc(localInput(t.startsAt)) + '"></div>' +
         '<div><label for="tEVis">Visibility</label><select id="tEVis">' + ['public', 'unlisted', 'private'].map((v) => '<option' + (v === st.visibility ? ' selected' : '') + '>' + v + '</option>').join('') + '</select></div></div>' +
+        (t.host && t.host.status === 'open' ? '' : '<div class="row"><div><label for="tESrv">LAN server</label><select id="tESrv"><option value="">— not said —</option>' +
+          (deps.servers() || []).map((sv) => '<option value="' + esc(sv.ref) + '"' + (t.server && t.server.ref === sv.ref ? ' selected' : '') + '>' + esc(sv.name) + ' — ' + esc(sv.host) + ':' + esc(sv.port) + '</option>').join('') + '</select></div></div>' +
+          '<p class="small muted">Table settings</p><div class="row">' + tableFields('te_', t.table) + '</div>') +
         '<div class="actions"><button type="button" data-act="save">Save</button></div></details>';
     }
 
@@ -190,6 +258,39 @@ export function createTournamentsView(deps) {
     $('tDetailBody').hidden = false;
     $('tDetailBody').innerHTML = h;
     if (t.status !== 'validated' && source === 'watch') loadWatches();
+  }
+
+  // ── the director at the table ──
+  function hostSection(t) {
+    if (t.status === 'validated' || (t.result && !(t.host && t.host.status === 'open'))) {
+      return t.host ? '<p class="small muted">Table run by the director: ' + esc(t.host.status) + '.</p>' : '';
+    }
+    let h = '<h3>Table on the server</h3><p class="small muted">' + esc(tableSummary(t.table)) + '</p>';
+    if (t.host && t.host.status === 'open') return h + '<div class="hostbox" id="tHostBox" aria-live="polite">' + hostLive(t) + '</div>';
+    if (t.host && t.host.resultError) h += '<p class="msg bad">The director’s result could not be used by itself: ' + esc(t.host.resultError) + '. Set the result below — « From a Table check » offers its sealed result.</p>';
+    else if (t.host) h += '<p class="small muted">Last table: ' + esc(t.host.status) + (t.host.error ? ' (' + esc(t.host.error) + ')' : '') + '.</p>';
+    if (!t.server) return h + '<p class="small">Choose the tournament’s LAN server (Edit) so that the director can open the table.</p>';
+    if (t.players.length < 2) return h + '<p class="small">Add at least two players: the director invites them to the table.</p>';
+    return h + '<p class="small">The director opens an invite-only table on ' + esc(t.server.name) + ', invites each player as soon as they are connected, removes anyone who is not registered, then leaves its seat once everyone is seated: the first player becomes table admin and starts the game. It follows the game to the end and records the result here.</p>' +
+      '<div class="actions"><button type="button" class="accent" data-act="tOpen">Open the table</button></div>';
+  }
+  function hostLive(t) {
+    const L = t.hostLive || {}, H = L.host || {};
+    const phase = L.status === 'running' ? 'Game running' + (L.hand ? ', hand ' + L.hand : '') : (HOST_PHASE[H.phase] || L.status || 'starting');
+    let h = '<p><span class="chip live">' + esc(L.status || 'connecting') + '</span> ' + esc(phase) + '</p>';
+    if (H.tableName) h += '<p class="small muted">Table « ' + esc(H.tableName) + ' »' + (H.gameId != null ? ' #' + esc(H.gameId) : '') + ' · director ' + esc(L.nick || '') + (H.admin ? ' · table admin ' + esc(H.admin) : '') + '</p>';
+    if (H.registered && H.registered.length) {
+      h += '<ul class="chips">' + H.registered.map((r) => { const s = PLAYER_STATUS[r.status] || [r.status, '']; return '<li>' + esc(r.nick) + ' <span class="chip ' + s[1] + '">' + esc(s[0]) + '</span></li>'; }).join('') + '</ul>';
+    }
+    if (H.kicked && H.kicked.length) h += '<p class="small">Removed (not registered): ' + H.kicked.map(esc).join(', ') + '</p>';
+    if (L.error) h += '<p class="msg bad">' + esc(L.error.code) + (L.error.data && L.error.data.reason ? ' (' + esc(L.error.data.reason) + ')' : '') + '</p>';
+    if (L.logs && L.logs.length) h += '<details class="sub"><summary>Director log</summary><div class="log">' + L.logs.map(esc).join('\n') + '</div></details>';
+    const seated = (H.registered || []).filter((r) => r.status === 'seated').length;
+    h += '<div class="actions">' +
+      (H.phase === 'seated' ? '<button type="button" class="primary" data-act="tGo"' + (seated >= 2 ? '' : ' disabled') + '>Start without the absent</button><button type="button" data-act="tReinvite">Invite again</button>' : '') +
+      '<button type="button" class="danger" data-act="tClose">Close the table</button></div>';
+    if (H.phase === 'seated') h += '<p class="small muted">« Start without the absent »: the players not seated are marked absent and not ranked; the director hands the table over. At least two seated players.</p>';
+    return h;
   }
 
   function sourcePanel(t) {
@@ -292,8 +393,31 @@ export function createTournamentsView(deps) {
       const dv = $('tEDate').value; const ts = dv ? new Date(dv).getTime() : null;
       if ((ts || null) !== (cur.startsAt || null)) patch.startsAt = ts;
       const v = $('tEVis').value; if (v !== cur.settings.visibility) patch.visibility = v;
+      if ($('tESrv')) {
+        const ref = $('tESrv').value;
+        if (ref !== ((cur.server && cur.server.ref) || '')) { const sv = (deps.servers() || []).find((x) => x.ref === ref); patch.server = sv ? { ref: sv.ref, name: sv.name, host: sv.host, port: sv.port } : null; }
+        const tb = readTable('te_');
+        const was = Object.assign({}, TABLE_DEFAULTS, cur.table || {});
+        if (TABLE_FIELDS.some((f) => String(tb[f[0]]) !== String(was[f[0]]))) patch.table = tb;
+      }
       if (!Object.keys(patch).length) return msg('tMsg', 'Nothing changed.');
       return call('/admin/tournaments/t/update', { patch }, 'Saved.');
+    }
+    if (a === 'tOpen') {
+      b.disabled = true;
+      return call('/admin/tournaments/t/table/open', {}, 'The director is opening the table.').then(() => {
+        if (cur && cur.host && cur.host.status === 'open') { clearTimeout(pollTimer); pollTimer = setTimeout(() => open(cur.id, true), 1500); } else b.disabled = false;
+      });
+    }
+    if (a === 'tGo') {
+      const absent = ((cur.hostLive && cur.hostLive.host && cur.hostLive.host.registered) || []).filter((r) => r.status !== 'seated').map((r) => r.nick);
+      if (!window.confirm('Start without ' + (absent.join(', ') || 'the absent') + '? They will be marked absent and not ranked.')) return;
+      return call('/admin/tournaments/t/table/go', {}, 'Going without the absent: the director hands the table over.');
+    }
+    if (a === 'tReinvite') return call('/admin/tournaments/t/table/reinvite', {}, 'Invitations sent again.');
+    if (a === 'tClose') {
+      if (!window.confirm('Close the table? The director leaves; a game already running goes on without it.')) return;
+      return call('/admin/tournaments/t/table/close', {}, 'Table closed by the organizer.');
     }
     if (a.indexOf('f-') === 0) return download(a.slice(2));
   });

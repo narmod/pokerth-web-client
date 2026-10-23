@@ -40,6 +40,26 @@ export const CHOICES = Object.freeze({
   collusion: ['off', 'report', 'separate', 'forbid'],
 });
 const FORMATS = ['sitngo'];
+// Table settings when the director opens the table (PokerTH NetGameInfo).
+export const TABLE_DEFAULTS = Object.freeze({
+  startMoney: 3000, firstSmallBlind: 10, raiseMode: 'hands', raiseEvery: 7,
+  endRaiseMode: 'double', endRaiseValue: 0, actionTimeout: 30, delayBetweenHands: 7,
+});
+export function cleanTable(t, base) {
+  const b = Object.assign({}, TABLE_DEFAULTS, base || {});
+  t = t || {};
+  const int = (v, min, max, d) => { const x = parseInt(v, 10); return Number.isInteger(x) && x >= min && x <= max ? x : d; };
+  const o = {};
+  o.startMoney = int(t.startMoney, 100, 1000000, b.startMoney);
+  o.firstSmallBlind = int(t.firstSmallBlind, 1, Math.max(1, Math.floor(o.startMoney / 2)), Math.min(b.firstSmallBlind, Math.max(1, Math.floor(o.startMoney / 2))));
+  o.raiseMode = ['hands', 'minutes'].indexOf(t.raiseMode) >= 0 ? t.raiseMode : b.raiseMode;
+  o.raiseEvery = int(t.raiseEvery, 1, o.raiseMode === 'minutes' ? 60 : 100, Math.min(b.raiseEvery, o.raiseMode === 'minutes' ? 60 : 100));
+  o.endRaiseMode = ['double', 'value', 'keep'].indexOf(t.endRaiseMode) >= 0 ? t.endRaiseMode : b.endRaiseMode;
+  o.endRaiseValue = o.endRaiseMode === 'value' ? int(t.endRaiseValue, 1, 1000000, b.endRaiseValue || o.firstSmallBlind * 2) : 0;
+  o.actionTimeout = int(t.actionTimeout, 5, 120, b.actionTimeout);
+  o.delayBetweenHands = int(t.delayBetweenHands, 3, 20, b.delayBetweenHands);
+  return o;
+}
 const ID_RE = /^[a-z0-9]{8,32}$/;
 const NICK_MAX = 64;
 const MAX_PLAYERS = 10;   // one table (Sit & Go)
@@ -54,6 +74,7 @@ export function cleanNick(s) {
   return n;
 }
 const sameNick = (a, b) => String(a).toLowerCase() === String(b).toLowerCase();
+const hostOpen = (t) => !!(t.host && t.host.status === 'open');
 
 function settingsFor(profile, custom) {
   if (profile !== 'custom') return Object.assign({}, PROFILES[profile]);
@@ -138,6 +159,11 @@ export function createTournaments(o) {
       case 'resultSet': return 'result from ' + d.source + (d.watchId ? ' ' + d.watchId : '') + (d.uniqueGameId != null ? ' game ' + d.uniqueGameId : '');
       case 'validated': return 'validated and signed';
       case 'corrected': return 'corrected: ' + d.reason;
+      case 'tableOpened': return 'the director opens the table on ' + (d.server || 'the server') + ' (' + d.watchId + ')';
+      case 'tableGo': return 'go without the absent';
+      case 'tableReinvite': return 'invitations sent again';
+      case 'tableEnded': return 'table ' + d.status + (d.error ? ': ' + d.error : '');
+      case 'tableResultRefused': return 'the director\'s result needs an organizer: ' + d.reason;
       default: return e.type;
     }
   }
@@ -149,7 +175,7 @@ export function createTournaments(o) {
     return ids.map((id) => readJson(join(tdir(id), 'tournament.json'))).filter(Boolean)
       .sort((a, b) => (b.startsAt || b.createdAt) - (a.startsAt || a.createdAt))
       .map((t) => ({ id: t.id, name: t.name, status: t.status, profile: t.profile, visibility: t.settings.visibility, startsAt: t.startsAt,
-        players: t.players.length, server: t.server ? t.server.name : null, resultStatus: t.result ? t.result.status : null }));
+        players: t.players.length, server: t.server ? t.server.name : null, resultStatus: t.result ? t.result.status : null, host: t.host ? t.host.status : null }));
   }
 
   function get(id) { const { t, journal } = load(id); return view(t, journal); }
@@ -168,14 +194,15 @@ export function createTournaments(o) {
     mkdirSync(root, { recursive: true });
     const id = now().toString(36) + randomBytes(4).toString('hex');
     mkdirSync(tdir(id));
+    const table = cleanTable(input.table);
     const t = {
-      id, name, format, profile, settings, server, startsAt, mode: 'manual',
+      id, name, format, profile, settings, server, startsAt, mode: 'manual', table, host: null,
       status: 'draft', players: [], result: null, corrections: [],
       inviteCode: settings.visibility === 'private' ? randomBytes(6).toString('base64url') : null,
       createdAt: now(), updatedAt: now(),
     };
     const journal = new Journal({ now });
-    journal.append('created', { author: author || 'admin', name, format, profile, settings, server, startsAt });
+    journal.append('created', { author: author || 'admin', name, format, profile, settings, server, startsAt, table });
     return save(t, journal);
   }
 
@@ -195,6 +222,15 @@ export function createTournaments(o) {
         t.settings.visibility = patch.visibility; changes.visibility = patch.visibility;
         if (patch.visibility === 'private' && !t.inviteCode) t.inviteCode = randomBytes(6).toString('base64url');
       }
+      if (patch.server !== undefined) {
+        if (hostOpen(t)) refuse('the table is open: close it first');
+        const sv = patch.server;
+        changes.server = t.server = sv && sv.ref ? { ref: String(sv.ref), name: cleanText(sv.name, 80), host: cleanText(sv.host, 253), port: Number(sv.port) || null } : null;
+      }
+      if (patch.table) {
+        if (hostOpen(t)) refuse('the table is open: close it first');
+        changes.table = t.table = cleanTable(patch.table, t.table || TABLE_DEFAULTS);
+      }
       if (!Object.keys(changes).length) refuse('nothing to change');
     });
   }
@@ -205,6 +241,7 @@ export function createTournaments(o) {
     return act(id, author, 'playerAdded', { nick }, (t) => {
       if (!nick) refuse('nickname missing');
       if (t.result) refuse('the result is set: players can no longer change');
+      if (hostOpen(t)) refuse('the table is open: players can no longer change');
       if (t.players.some((p) => sameNick(p.nick, nick))) refuse(nick + ' is already in');
       if (t.players.length >= MAX_PLAYERS) refuse('a Sit & Go seats ' + MAX_PLAYERS + ' players at most');
       t.players.push({ nick, addedAt: now() });
@@ -215,6 +252,7 @@ export function createTournaments(o) {
     const nick = cleanNick(nickIn);
     return act(id, author, 'playerRemoved', { nick }, (t) => {
       if (t.result) refuse('the result is set: players can no longer change');
+      if (hostOpen(t)) refuse('the table is open: players can no longer change');
       const i = t.players.findIndex((p) => sameNick(p.nick, nick));
       if (i < 0) refuse(nick + ' is not in');
       t.players.splice(i, 1);
@@ -233,8 +271,9 @@ export function createTournaments(o) {
     if (!t.players.length) {
       t.players = nicks.map((nick) => ({ nick, addedAt: now(), fromResult: true }));
     } else {
+      // An absent player (the organizer went without him) is not ranked.
       const unknown = nicks.filter((n) => !t.players.some((p) => sameNick(p.nick, n)));
-      const missing = t.players.filter((p) => !nicks.some((n) => sameNick(p.nick, n))).map((p) => p.nick);
+      const missing = t.players.filter((p) => !p.absent && !nicks.some((n) => sameNick(p.nick, n))).map((p) => p.nick);
       if (unknown.length || missing.length) {
         refuse((unknown.length ? 'not in the tournament: ' + unknown.join(', ') : '') + (unknown.length && missing.length ? ' · ' : '') + (missing.length ? 'not in the result: ' + missing.join(', ') : ''));
       }
@@ -252,6 +291,7 @@ export function createTournaments(o) {
   async function setResult(id, input, author) {
     const { t } = load(id);
     if (t.status === 'validated') refuse('already validated: use a correction');
+    if (hostOpen(t) && !input.byDirector) refuse('the director is running the table: its result comes by itself (or close the table first)');
     let ranking, data = { source: input.source };
     if (input.source === 'manual') {
       ranking = (input.ranking || []).map((nick, i) => ({ nick: typeof nick === 'string' ? nick : nick && nick.nick, place: i + 1 }));
@@ -268,6 +308,8 @@ export function createTournaments(o) {
       data.watchId = String(input.watchId); data.status = res.status;
       data.watchHead = sealed.payload.head; data.watchSignature = sealed.signature || null;
       data.watchSignedBy = sealed.publicKeyPem ? publicKeyRawB64(sealed.publicKeyPem) : null;
+      if (Array.isArray(input.absent) && input.absent.length) data.absent = input.absent.map(cleanNick).filter(Boolean);
+      if (input.byDirector) data.byDirector = true;
     } else if (input.source === 'pdb') {
       const p = join(tdir(id), 'log.pdb');
       if (!existsSync(p)) refuse('import a log first');
@@ -278,8 +320,10 @@ export function createTournaments(o) {
       data.pdbSha256 = (t.pdb || {}).sha256 || null;
     } else refuse('unknown source');
     act(id, author, 'resultSet', data, (tt) => {
+      if (data.absent) for (const p of tt.players) if (data.absent.some((x) => sameNick(x, p.nick))) p.absent = true;
       const fitted = fitRanking(tt, ranking);
-      tt.result = { source: data.source, status: data.status, ranking: fitted, setAt: now(), watchId: data.watchId, uniqueGameId: data.uniqueGameId };
+      tt.result = { source: data.source, status: data.status, ranking: fitted, setAt: now(), watchId: data.watchId, uniqueGameId: data.uniqueGameId,
+        absent: tt.players.filter((p) => p.absent).map((p) => p.nick), byDirector: !!data.byDirector };
       data.ranking = fitted;
       tt.status = 'finished';
     });
@@ -340,6 +384,40 @@ export function createTournaments(o) {
     return Object.assign({}, v, { pdbGames: info.games, pdbSession: info.session });
   }
 
+  // ── the director opens the table (host mode) ──
+  function hostOpened(id, watchId, info, author) {
+    return act(id, author, 'tableOpened', Object.assign({ watchId }, info || {}), (t) => {
+      if (t.status === 'validated' || t.result) refuse('the result is set');
+      if (hostOpen(t)) refuse('the table is already open');
+      t.host = { watchId, status: 'open', openedAt: now() };
+      t.status = 'running';
+    });
+  }
+  function hostCheck(id) {
+    const { t } = load(id);
+    if (!hostOpen(t)) refuse('the table is not open');
+    return t.host.watchId;
+  }
+  function hostNote(id, type, author) {
+    return act(id, author, type, {}, (t) => { if (!hostOpen(t)) refuse('the table is not open'); });
+  }
+  function hostEnded(id, status, extra) {
+    return act(id, 'director', 'tableEnded', Object.assign({ status }, extra || {}), (t) => {
+      if (!t.host) refuse('no table');
+      t.host = Object.assign({}, t.host, { status, endedAt: now() }, extra && extra.error ? { error: extra.error } : {});
+      if (t.status === 'running') t.status = t.players.length ? 'registration' : 'draft';
+    });
+  }
+  function hostResultRefused(id, reason) {
+    return act(id, 'director', 'tableResultRefused', { reason }, (t) => { t.host = Object.assign({}, t.host, { resultError: reason }); });
+  }
+  // Open host tables, for the service's sweep.
+  function openHosts() {
+    let ids = [];
+    try { ids = readdirSync(root).filter((x) => ID_RE.test(x)); } catch (e) {}
+    return ids.map((x) => readJson(join(tdir(x), 'tournament.json'))).filter((t) => t && hostOpen(t)).map((t) => ({ id: t.id, watchId: t.host.watchId }));
+  }
+
   function file(id, which) {
     if (!ID_RE.test(String(id || ''))) return null;
     const name = { journal: 'journal.json', result: 'result.json', pdb: 'log.pdb' }[which];
@@ -353,7 +431,8 @@ export function createTournaments(o) {
     return afterResult(id, author);
   }
 
-  return { list, get, create, update, addPlayer, removePlayer, setResult: setResultP, validate, correct, importPdb, file, Refusal };
+  return { list, get, create, update, addPlayer, removePlayer, setResult: setResultP, validate, correct, importPdb, file,
+    hostOpened, hostCheck, hostNote, hostEnded, hostResultRefused, openHosts, Refusal };
 }
 
 export { Refusal };

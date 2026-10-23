@@ -303,8 +303,9 @@ use too. Items are grouped by status rather than fixed phases.
   ranking, and the « Table check » tool on `/tournament` (`web.292`, off by default) to run it against a server
   the install knows; manual mode (`web.296`: tournaments created by hand, result typed in, from a Table check or
   from a `.pdb` log, validated, corrected, signed), and the move to a service of its own in this repository
-  (`web.297`: `tournament/`, own `package.json` and version, launched and relayed by the web client). Next: table
-  creation (scheduled Sit & Go end to end), then witnesses.
+  (`web.297`: `tournament/`, own `package.json` and version, launched and relayed by the web client), and the
+  director opening the table (`web.299`: invite-only table, seat check, hand-over to the first player, result recorded
+  by itself). Next: opening at the scheduled time, announcements and the chat language, then witnesses.
 
 ## ⏭️ Next
 
