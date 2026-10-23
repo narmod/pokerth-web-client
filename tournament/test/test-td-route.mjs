@@ -1,20 +1,21 @@
 #!/usr/bin/env node
-// Live test of /tournament and /admin/tournaments/* on a real proxy, with the
-// scripted fake PokerTH server standing in as the install's local server.
-// Then the « Table check » page itself (public/modules/tournament/organizer.mjs)
-// is driven in jsdom against that proxy: sign-in, lobby, watch, result.
-// Run: node scripts/test-td-route.mjs
+// Live test of /tournament and /admin/tournaments/* on a real proxy, which
+// launches the tournament service (tournament/server.mjs) and relays to it,
+// with the scripted fake PokerTH server standing in as the install's local
+// server. Then the page itself (tournament/public/organizer.mjs) is driven in
+// jsdom against that proxy: sign-in, lobby, watch, result, tournaments.
+// Run: node tournament/test/test-td-route.mjs
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { JSDOM } from 'jsdom';
-import { freePort } from './lib/free-port.mjs';
+import { freePort } from '../../scripts/lib/free-port.mjs';
 import { S, fakeServer, answerNames, wait } from './lib/td-fake-server.mjs';
 import { buildPdb, sampleGames } from './lib/td-pdb-fixture.mjs';
 
-const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
+const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 let n = 0, fail = 0;
 function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); } else console.log('  ✓', msg); }
 
@@ -66,15 +67,19 @@ try {
   ok(s0.ok && s0.enabled === false && s0.key === null, 'off by default, no key yet');
   ok((await get('/admin/tournaments/servers')).status === 409, 'tools answer 409 while off');
   // ── on ──
+  ok(!/\[td\] tournament director/.test(plog), 'off: the service is not running');
   const s1 = await (await post('/admin/tournaments/settings', { enabled: true })).json();
-  ok(s1.ok && s1.enabled && s1.key && s1.key.publicKeyRaw, 'enabling creates the install key');
+  ok(s1.ok && s1.enabled && s1.key && s1.key.publicKeyRaw, 'enabling starts the service, which creates the install key');
+  ok(s1.service && s1.service.status === 'running' && /^0\.\d+\.\d+/.test(s1.service.version) && s1.running === 0 && s1.maxRunning === 4, 'settings: the service is running, with its own version');
   ok(fs.existsSync(F('td/td-key.pem')), 'the key lives in TD_DIR');
   const page = await get('/tournament', {});
   const html = await page.text();
   ok(page.status === 200 && /Table check/.test(html) && /noindex/.test(html), 'on: /tournament served, noindex');
   ok(/no-store/.test(page.headers.get('cache-control') || ''), 'served no-store');
-  ok(/viewport-fit=cover/.test(html) && /env\(safe-area-inset-top\)/.test(html) && /rel="manifest" href="\/tournament-manifest\.json"/.test(html), 'page: phone notch safe areas and its own app manifest');
-  const man = await (await get('/tournament-manifest.json', {})).json();
+  ok(/viewport-fit=cover/.test(html) && /env\(safe-area-inset-top\)/.test(html) && /rel="manifest" href="\/tournament\/manifest\.json"/.test(html), 'page: phone notch safe areas and its own app manifest');
+  ok(html.indexOf(s1.service.version) >= 0, 'page: shows the service version');
+  ok((await get('/tournament/..%2F..%2Fadmin%2Ftournaments%2Ft%2Flist', {})).status === 404 && (await get('/tournament/proxy.js', {})).status === 404, 'page: only the page and its files are relayed');
+  const man = await (await get('/tournament/manifest.json', {})).json();
   ok(man.start_url === '/tournament' && man.scope === '/tournament' && man.display === 'standalone', 'manifest: installable on its own, scoped to /tournament');
   ok(man.icons.every((i) => fs.existsSync(path.join(root, 'public', i.src))), 'manifest: every icon exists');
   const srv = await (await get('/admin/tournaments/servers')).json();
@@ -95,7 +100,7 @@ try {
   const nativeFetch = globalThis.fetch;
   globalThis.fetch = (u, o) => nativeFetch(new URL(u, base), o);
   w.URL.createObjectURL = () => 'blob:x'; w.URL.revokeObjectURL = () => {};
-  await import(pathToFileURL(path.join(root, 'public', 'modules', 'tournament', 'organizer.mjs')).href + '?t=' + Date.now());
+  await import(pathToFileURL(path.join(root, 'tournament', 'public', 'organizer.mjs')).href + '?t=' + Date.now());
   const $ = (id) => w.document.getElementById(id);
   await wait(200);
   ok(!$('signIn').hidden && $('app').hidden, 'page: asks for the token first');
@@ -194,11 +199,26 @@ try {
   ok(lst.ok && lst.tournaments.length === 3, 'routes: three tournaments listed');
   ok(fs.existsSync(F('td/tournaments/' + cr.id + '/journal.json')) && fs.existsSync(F('td/tournaments/' + cr.id + '/result.json')), 'routes: stored in TD_DIR');
 
-  // ── off again: page gone, files kept ──
-  await post('/admin/tournaments/settings', { enabled: false });
-  ok((await get('/tournament', {})).status === 404, 'off again: 404');
+  // ── the service stops: the web client starts it again ──
+  const pid1 = s1.service.pid;
+  process.kill(pid1, 'SIGKILL');
+  let s2 = null;
+  for (let i = 0; i < 60; i++) { await wait(200); s2 = await (await get('/admin/tournaments/settings')).json(); if (s2.service.status === 'running' && s2.service.pid !== pid1) break; }
+  ok(s2 && s2.service.status === 'running' && s2.service.pid !== pid1 && s2.service.restarts === 1, 'a killed service is started again');
+  ok((await (await get('/admin/tournaments/t/list')).json()).tournaments.length === 3, 'and finds its tournaments');
+
+  // ── off again: page gone, service stopped, files kept ──
+  const off = await (await post('/admin/tournaments/settings', { enabled: false })).json();
+  ok(off.service.status === 'off', 'off again: the service is stopped');
+  let gone = false;
+  for (let i = 0; i < 30 && !gone; i++) { await wait(100); try { process.kill(s2.service.pid, 0); } catch (e) { gone = true; } }
+  ok(gone, 'off again: its process has ended');
+  ok((await get('/tournament', {})).status === 404 && (await get('/tournament/organizer.mjs', {})).status === 404, 'off again: 404');
+  ok((await get('/admin/tournaments/watches')).status === 409, 'off again: the tools answer 409');
+  await post('/admin/tournaments/settings', { enabled: true });
   const ws = await (await get('/admin/tournaments/watches')).json();
-  ok(ws.ok && ws.watches.length === 1, 'past watches kept');
+  ok(ws.ok && ws.watches.length === 1, 'on again: past watches kept');
+  await post('/admin/tournaments/settings', { enabled: false });
 } finally {
   proxy.kill('SIGTERM');
   game.server.close();

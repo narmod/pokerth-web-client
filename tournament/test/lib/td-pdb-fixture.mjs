@@ -6,7 +6,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
-const VENDOR = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'public', 'vendor');
+const VENDOR = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', 'public', 'vendor');
 
 // games: [{ uniqueGameId, gameId, startMoney, seats: [nick…], hands: [{ cash: {seat: cash}, actions: [[seat, 'action']] }] }]
 export async function buildPdb(games) {

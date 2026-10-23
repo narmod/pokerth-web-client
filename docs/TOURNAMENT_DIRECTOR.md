@@ -151,7 +151,7 @@ Profiles pre-fill independent settings; « Custom » sets each by hand.
   organize; an organizer view opened with a `tournaments` key or an
   organizer account. Same stylesheet and poker colours as `/rules` and
   `/faq`. All the app's languages: catalogues in
-  `public/modules/tournament/lang/`, the list read from `lang-meta.mjs`, and
+  `tournament/public/lang/`, the list read from `lang-meta.mjs`, and
   `test-lang-count` requiring one catalogue per language.
 - **Approval:** each server's operator approves its tournaments or delegates
   to the install's admin. A delegate `tournaments` key is bound to **one**
@@ -186,7 +186,7 @@ depends on them.
 
 - **Admin › Community › Tournaments** — settings only: the module switch
   (off by default; while off `/tournament` and `/tournament.html` answer
-  404), the install's public key
+  404), the service's state and version, the install's public key
   (created on first enable), the number of running watches.
 - **`/tournament`** — master token for now (the browser key of `/admin`, so a
   signed-in admin lands straight in). English for now, like the admin; the
@@ -200,10 +200,10 @@ depends on them.
      (tie, unknown hand, missed hands), the checks (chain, signed head,
      signature, replay) and the journal / result downloads. « Stop watching »
      keeps the journal.
-- Each watch is a **detached process** (`server/tournament/worker.mjs`): the
+- Each watch is a **detached process** (`tournament/lib/worker.mjs`): the
   task (table password included) is handed over once through IPC, never
   written to disk; then the process lives on its own, survives an update of
-  the web client, and writes `state.json`, `journal.json`, `result.json` in
+  the web client and of the tournament service, and writes `state.json`, `journal.json`, `result.json` in
   `TD_DIR/watches/<id>/` (`/data/tournament` in the Docker image; the key is
   `TD_DIR/td-key.pem`, mode 600). At most 4 watches at once.
 - A server announcing authenticated logins (pokerth.net) is always refused,
@@ -220,10 +220,11 @@ depends on them.
   for it when players share an address).
 - **Any device.** The page works from a phone to a desktop (one column under
   900 px, 44 px touch targets, safe areas of notched phones, no sideways
-  scroll), and installs as its own app (`/tournament-manifest.json`, scope
+  scroll), and installs as its own app (`/tournament/manifest.json`, scope
   `/tournament`, standalone), like `/admin`.
-- Routes (`server/tournament-manager.js`), all behind the admin token:
-  `GET/POST /admin/tournaments/settings`, `GET …/servers`,
+- Routes (`tournament/lib/service.mjs`), all behind the admin token:
+  `GET/POST /admin/tournaments/settings` (answered by the web client),
+  `GET …/status`, `GET …/servers`,
   `POST …/lobby {ref}`, `POST …/watch {ref, gameId, gamePassword?, nick?}`,
   `GET …/watches`, `GET …/watch?id=`, `POST …/watch/stop {id}`,
   `GET …/watch/file?id=&which=journal|result`.
@@ -265,40 +266,64 @@ depends on them.
   `…/t/validate {id}`, `…/t/correct {id, ranking, reason}`, and
   `POST …/t/pdb?id=` (raw body).
 
-## A service of its own (decided 2026-10-23)
+## A service of its own (`tournament/`, decided and done 2026-10-23)
 
 The tournament director has its own audience (organizers), lifecycle,
-storage, accounts and processes. It moves out of `proxy.js` into a separate
-service **in this repository**: its own process and port, its own
-`package.json` and version, its own entry in Docker / PM2. The web client's
-proxy only relays `/tournament` to it and serves it the LAN directory. A
-separate repository stays possible later. `server/tournament/*` is already
-standalone; `server/tournament-manager.js` is the part to rework.
+storage, accounts and processes, so it is a separate service **in this
+repository**, with its own `package.json` and version (`0.1.0` first, shown
+at the foot of `/tournament`).
 
-## The prototype (step 1)
+- **Launched by the web client.** While Admin › Community › Tournaments is
+  on, the proxy (`server/tournament-host.js`) forks `tournament/server.mjs`,
+  restarts it if it stops (1 s, 2 s, … up to 30 s), and stops it when the
+  switch goes off. Nothing changes for Docker, PM2, the admin page's update
+  or pokerth.net. The admin panel shows the service state and version. When
+  the proxy goes away (restart, update), the service leaves with it and the
+  next proxy starts a new one. Watches are detached processes of their own
+  and keep running throughout.
+- **Talking.** The service listens on `127.0.0.1` on a port it picks and
+  reports over IPC (`ready`). The proxy relays `/tournament` and its files
+  (strict path pattern, no token) and `/admin/tournaments/*` (after checking
+  the admin token with the admin brute-force limit) to it. A secret made at
+  each launch (`X-TD-Secret`) and the author (`X-TD-Author`) tell the service
+  the request is genuine. The service asks the proxy which servers it may use
+  (IPC `servers`: the LAN directory and the local server) each time.
+- **What it gets.** Only `TD_DIR`, `TD_SECRET`, `TD_CLIENT_VERSION` (the
+  web client's version: the PokerTH release the director speaks), `TD_HOST`,
+  `TD_PORT` and a few system variables. Not the admin token, nor database
+  passwords.
+- **On its own** (development, tests): `TD_ADMIN_TOKEN=… TD_SERVERS='[…]'
+  TD_PORT=8091 node tournament/server.mjs`, Bearer token.
+- Accounts of its own come with the « organizer accounts » step; until
+  then the web client's admin token is the way in. A separate repository
+  stays possible later.
+
+## Files
 
 | File | Role |
 |---|---|
-| `server/tournament/journal.mjs` | Canonical JSON, hash-chained journal, verification, Ed25519 keys and signatures. Pure. |
-| `server/tournament/tracker.mjs` | Ranking of one table from normalized spectator events. Pure. |
-| `server/tournament/spectator.mjs` | Network client: login, spectator join, protobuf → events → journal + tracker, timeout keep-alive, reconnect with resync, late player names, sealing. Reads only: never sits, acts, acks a start or chats. |
-| `scripts/td-spectate.mjs` | Command line: watch a table, write `<out>.journal.json` and `<out>.result.json`; `--verify` checks chain, signature and replay. |
-| `scripts/test-td-core.mjs` | Journal, signatures and ranking cases (normal game, ties, late join, reconnect, id change). |
-| `scripts/test-td-spectator.mjs` | End to end against a scripted fake server over TCP, and the command line. |
-| `server/tournament/lobby.mjs` | Lobby reader (guest login, tables, server type) for the Table check. |
-| `server/tournament/worker.mjs` | One watch in a detached process, state and files on disk. |
-| `server/tournament-manager.js` | Proxy side: settings, key, known servers, watches, routes. |
-| `public/tournament.html`, `public/modules/tournament/organizer.mjs` | The Table check page. |
-| `scripts/test-td-manager.mjs`, `scripts/test-td-route.mjs` | Manager with real worker processes; real proxy plus the page in jsdom. |
-| `server/tournament/pdb.mjs`, `server/tournament/tournaments.mjs` | PokerTH log reader (BBC rule); tournaments in manual mode. |
-| `public/modules/tournament/tournaments-ui.mjs` | The « Tournaments » tab. |
-| `scripts/test-td-tournaments.mjs`, `scripts/lib/td-pdb-fixture.mjs` | Manual mode, journal, signatures; a `.pdb` built for the tests. |
+| `tournament/server.mjs` | Service entry: HTTP on 127.0.0.1, IPC with the web client. |
+| `tournament/lib/service.mjs` | HTTP side: page, API routes, auth by secret (or standalone token). |
+| `tournament/lib/manager.mjs` | Install key, known servers, lobby, watches (detached workers). |
+| `tournament/lib/journal.mjs` | Canonical JSON, hash-chained journal, verification, Ed25519 keys and signatures. Pure. |
+| `tournament/lib/tracker.mjs` | Ranking of one table from normalized spectator events. Pure. |
+| `tournament/lib/spectator.mjs` | Network client: login, spectator join, protobuf → events → journal + tracker, timeout keep-alive, reconnect with resync, late player names, sealing. Reads only: never sits, acts, acks a start or chats. |
+| `tournament/lib/lobby.mjs` | Lobby reader (guest login, tables, server type). |
+| `tournament/lib/worker.mjs` | One watch in a detached process, state and files on disk. |
+| `tournament/lib/pdb.mjs`, `tournament/lib/tournaments.mjs` | PokerTH log reader (BBC rule); tournaments in manual mode. |
+| `tournament/public/` | The page: `index.html`, `organizer.mjs` (Table check), `tournaments-ui.mjs` (Tournaments), `manifest.json`. |
+| `tournament/bin/td-spectate.mjs` | Command line: watch a table, write `<out>.journal.json` and `<out>.result.json`; `--verify` checks chain, signature and replay. |
+| `tournament/test/` | `test-td-core` (journal, ranking cases), `test-td-spectator` (fake server over TCP, command line), `test-td-tournaments` (manual mode, `.pdb`), `test-td-service` (workers, the service on its own), `test-td-route` (real proxy launching the service, the page in jsdom). |
+| `server/tournament-host.js` | Web client side: the setting, launching and relaying. |
+
+The service shares the repository's protobuf bundle (`public/proto/`) and
+sql.js (`public/vendor/`) rather than copying them.
 
 ```sh
-node scripts/td-spectate.mjs --host 192.168.1.20 --port 7234 \
+node tournament/bin/td-spectate.mjs --host 192.168.1.20 --port 7234 \
      --nick TD-test-T1 --game-name "Friday SnG"
-node scripts/td-spectate.mjs --verify td-out.result.json td-out.journal.json
-npm run test:td-core && npm run test:td-spectator && npm run test:td-manager && npm run test:td-route && npm run test:td-tournaments
+node tournament/bin/td-spectate.mjs --verify td-out.result.json td-out.journal.json
+npm run test:td        # every tournament test (npm --prefix tournament test)
 ```
 
 The install key (`td-key.pem`, created on first use, mode 600) and the
@@ -309,10 +334,10 @@ operator's agreement.
 
 1. Spectator prototype, and the Table check on `/tournament` (done).
 2. Storage layer (JSON and SQL) and migrations.
-3. Manual mode on `/tournament` (done, `web.296`). Then: the director as a
-   service of its own (see above).
+3. Manual mode on `/tournament` (done, `web.296`), then the director as a
+   service of its own (done, `web.297`, service `0.1.0`).
 4. Witness reports from the web client, compared with the journal.
-5. Persistent state machine, separate service, resume after restart.
+5. Persistent state machine, resume after restart.
 6. Admin › Tournaments (settings) and per-server `tournaments` keys.
 7. `/tournament`: public and organizer views, scheduled Sit & Go end to end
    (table creation, seat check, announcements, message to all tables).

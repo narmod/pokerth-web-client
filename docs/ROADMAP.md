@@ -302,9 +302,9 @@ use too. Items are grouped by status rather than fixed phases.
   status: `docs/TOURNAMENT_DIRECTOR.md`. Done: the spectator that watches one table and seals its journal and
   ranking, and the « Table check » tool on `/tournament` (`web.292`, off by default) to run it against a server
   the install knows; manual mode (`web.296`: tournaments created by hand, result typed in, from a Table check or
-  from a `.pdb` log, validated, corrected, signed). Decided 2026-10-23: it becomes a separate service in this
-  repository (own process, port, `package.json` and version; the proxy only relays `/tournament`). Next: that
-  move, then witnesses.
+  from a `.pdb` log, validated, corrected, signed), and the move to a service of its own in this repository
+  (`web.297`: `tournament/`, own `package.json` and version, launched and relayed by the web client). Next: table
+  creation (scheduled Sit & Go end to end), then witnesses.
 
 ## ⏭️ Next
 

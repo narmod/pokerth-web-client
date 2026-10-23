@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 // Tests of the tournament director's manual mode
-// (server/tournament/tournaments.mjs, server/tournament/pdb.mjs): profiles,
+// (tournament/lib/tournaments.mjs, tournament/lib/pdb.mjs): profiles,
 // players, the three result sources (typed, a Table check's sealed result,
 // a .pdb log), validation, corrections, the sealed journal and its checks.
-// Run: node scripts/test-td-tournaments.mjs
+// Run: node tournament/test/test-td-tournaments.mjs
 import { mkdtempSync, rmSync, writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { createTournaments, PROFILES, cleanNick } from '../server/tournament/tournaments.mjs';
-import { listPdbGames, rankPdbGame } from '../server/tournament/pdb.mjs';
-import { generateKeys, signPayload, verifyJournal } from '../server/tournament/journal.mjs';
+import { createTournaments, PROFILES, cleanNick } from '../lib/tournaments.mjs';
+import { listPdbGames, rankPdbGame } from '../lib/pdb.mjs';
+import { generateKeys, signPayload, verifyJournal } from '../lib/journal.mjs';
 import { buildPdb, sampleGames } from './lib/td-pdb-fixture.mjs';
 
 let fails = 0;

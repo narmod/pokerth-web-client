@@ -5,7 +5,7 @@
 // (JoinExistingGame spectateOnly) and turns what the server sends into
 // normalized events. Every event goes, in this order, into the sealed
 // journal and into the game tracker; replaying the journal through a fresh
-// tracker therefore gives back the same ranking (scripts/test-td-*.mjs).
+// tracker therefore gives back the same ranking (tournament/test/test-td-*.mjs).
 //
 // The director never sits at the table and never acts: it only reads.
 // Wire framing as the web client and the proxy's lobby probe: 4-byte

@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 // End-to-end test of the tournament director spectator client
-// (server/tournament/spectator.mjs) against a scripted fake PokerTH server
+// (tournament/lib/spectator.mjs) against a scripted fake PokerTH server
 // on localhost: real TCP, real framing, real protobuf bundle. Checks the
 // login type, the spectator join, name requests, ResetTimeout, the ranking,
 // the signature, the journal replay, and a reconnect in the middle of the
-// game. Run: node scripts/test-td-spectator.mjs
+// game. Run: node tournament/test/test-td-spectator.mjs
 import { spawn } from 'node:child_process';
 import { mkdtempSync, readFileSync, writeFileSync, existsSync, statSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import * as pb from '../public/proto/pokerth-bundle.mjs';
-import { SpectatorDirector, replayJournal, buildIdFor } from '../server/tournament/spectator.mjs';
+import * as pb from '../../public/proto/pokerth-bundle.mjs';
+import { SpectatorDirector, replayJournal, buildIdFor } from '../lib/spectator.mjs';
 import { GAME, NAMES, msg, S, fakeServer, answerNames, wait } from './lib/td-fake-server.mjs';
-import { generateKeys, verifyJournal, verifyPayload, canonical } from '../server/tournament/journal.mjs';
+import { generateKeys, verifyJournal, verifyPayload, canonical } from '../lib/journal.mjs';
 
 let fails = 0;
 function ok(cond, label) {
@@ -180,7 +180,7 @@ function runDirector(port, extra) {
 
 // ── 5. command line: watch, write files, then --verify ────────────
 {
-  const cli = join(dirname(fileURLToPath(import.meta.url)), 'td-spectate.mjs');
+  const cli = join(dirname(fileURLToPath(import.meta.url)), '..', 'bin', 'td-spectate.mjs');
   const dir = mkdtempSync(join(tmpdir(), 'td-'));
   const run = (argv) => new Promise((res) => {
     const p = spawn(process.execPath, [cli, ...argv], { cwd: dir });

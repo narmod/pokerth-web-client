@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 // Deterministic tests for the tournament director core (prototype):
-// server/tournament/journal.mjs (sealed journal, Ed25519) and
-// server/tournament/tracker.mjs (ranking from spectator events).
-// No I/O, fixed clock. Run: node scripts/test-td-core.mjs
-import { Journal, verifyJournal, canonical, generateKeys, signPayload, verifyPayload, publicKeyFromPrivate, publicKeyRawB64, GENESIS } from '../server/tournament/journal.mjs';
-import { GameTracker } from '../server/tournament/tracker.mjs';
+// tournament/lib/journal.mjs (sealed journal, Ed25519) and
+// tournament/lib/tracker.mjs (ranking from spectator events).
+// No I/O, fixed clock. Run: node tournament/test/test-td-core.mjs
+import { Journal, verifyJournal, canonical, generateKeys, signPayload, verifyPayload, publicKeyFromPrivate, publicKeyRawB64, GENESIS } from '../lib/journal.mjs';
+import { GameTracker } from '../lib/tracker.mjs';
 
 let fails = 0;
 function ok(cond, label) {

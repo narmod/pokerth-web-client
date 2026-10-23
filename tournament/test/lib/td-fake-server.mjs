@@ -2,8 +2,8 @@
 // real 4-byte framing, real protobuf bundle. Shared by test-td-spectator.mjs
 // and test-td-manager.mjs.
 import net from 'node:net';
-import * as pb from '../../public/proto/pokerth-bundle.mjs';
-import { frame } from '../../server/tournament/spectator.mjs';
+import * as pb from '../../../public/proto/pokerth-bundle.mjs';
+import { frame } from '../../lib/spectator.mjs';
 
 export const T = pb.PokerTHMessage.PokerTHMessageType;
 export const GAME = 7;

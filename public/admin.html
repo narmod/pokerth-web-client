@@ -2214,7 +2214,7 @@
         <label class="ck"><input type="checkbox" id="tdEnabled"> Enable tournaments and the <code>/tournament</code> page</label>
         <div id="tdKey" class="muted" style="margin-top:10px"></div>
         <div id="tdMsg" class="msg"></div>
-        <details class="more"><summary>Where it runs, what it keeps</summary><p class="muted">The director keeps every event in a sealed (hash-chained) journal and signs the ranking with this install’s key. LAN only for now: it watches only the servers of the LAN directory and the local server (never pokerth.net or the Internet-mode game servers), and never creates, kicks or posts anything.</p><p class="muted">Each watch is a separate process that survives an update of the web client. Its files (state, journal, result) and the install’s signing key live in <code>TD_DIR</code> (<code>/data/tournament</code> in the Docker image). Design and next steps: <code>docs/TOURNAMENT_DIRECTOR.md</code>.</p></details>
+        <details class="more"><summary>Where it runs, what it keeps</summary><p class="muted">The director keeps every event in a sealed (hash-chained) journal and signs the ranking with this install’s key. LAN only for now: it watches only the servers of the LAN directory and the local server (never pokerth.net or the Internet-mode game servers), and never creates, kicks or posts anything.</p><p class="muted">The tournament director is a service of its own (<code>tournament/</code> in the repository, with its own version): the web client starts it while this switch is on, restarts it if it stops, stops it when you turn the switch off, and relays <code>/tournament</code> to it after checking the admin token. Each watch is a separate process that survives an update of the web client. Their files, the tournaments and the install’s signing key live in <code>TD_DIR</code> (<code>/data/tournament</code> in the Docker image). Design and next steps: <code>docs/TOURNAMENT_DIRECTOR.md</code>.</p></details>
       </div>
     </div>
     <div id="panel-landir" style="display:none">
@@ -3427,7 +3427,9 @@
   function _tdRender(d){
     if(!d||!d.ok){ if($('tdMsg')) $('tdMsg').textContent=(d&&d.error)||'Could not load'; return; }
     $('tdEnabled').checked=!!d.enabled;
-    $('tdState').textContent=d.enabled?('On · '+(d.running||0)+' watch'+((d.running||0)===1?'':'es')+' running'):'Off';
+    var sv=d.service||{};
+    var svTxt={running:'service running',starting:'service starting',restarting:'service restarting',failed:'service failed',off:'service stopped'}[sv.status]||('service '+(sv.status||'?'));
+    $('tdState').textContent=d.enabled?('On · '+svTxt+(sv.version?' '+sv.version:'')+(d.running!=null?' · '+d.running+' watch'+(d.running===1?'':'es')+' running':'')+(sv.lastError&&sv.status!=='running'?' · '+sv.lastError:'')):'Off';
     var k=d.key;
     $('tdKey').innerHTML=k?('Install public key (Ed25519, raw, base64): <code style="user-select:all">'+srvEsc(k.publicKeyRaw)+'</code> <span class="muted">— what a DNS TXT <code>k=</code> carries; results signed with it can be checked by anyone.</span>'):'The install key is created when tournaments are first enabled.';
   }

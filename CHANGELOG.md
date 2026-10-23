@@ -32,6 +32,19 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Tournaments: a service of its own** (`web.297`, decided 2026-10-23) — the tournament director moves out of the web
+  client into `tournament/` with its own `package.json` and version (`0.1.0`, shown at the foot of `/tournament`):
+  `tournament/server.mjs` (HTTP on 127.0.0.1, IPC), `tournament/lib/` (manager, routes, journal, spectator, worker,
+  `.pdb` reader, tournaments), `tournament/public/` (the page, now served by the service: its files under
+  `/tournament/…`, the manifest at `/tournament/manifest.json`), `tournament/bin/td-spectate.mjs` and
+  `tournament/test/` (`npm run test:td`). The web client keeps `server/tournament-host.js` only: while Admin ›
+  Community › Tournaments is on it launches the service, restarts it if it stops (1 s … 30 s) and stops it when
+  turned off; it relays `/tournament` and `/admin/tournaments/*` after checking the admin token, with a secret made
+  at each launch, and tells the service which servers it may use (LAN directory, local server). The service gets no
+  admin token and no database password. Nothing to change for Docker, PM2, the admin page's update or pokerth.net;
+  the admin panel shows the service state and version. Replaces `server/tournament-manager.js`,
+  `server/tournament/`, `public/tournament.html`, `public/tournament-manifest.json`, `public/modules/tournament/` and
+  `scripts/*td*` (moved, same behaviour).
 - **Tournaments: the server's login limit, and any device** (`web.295`) — a director whose login is refused with
   `initBlocked` (the game server's `ServerBruteForceProtection`: 5 logins in a row per address, then one every
   30 s — and every web player, lobby read and director shares the proxy's address) now waits 31 s and tries again,

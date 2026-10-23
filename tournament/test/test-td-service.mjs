@@ -1,18 +1,17 @@
 #!/usr/bin/env node
-// Tests of the tournament director manager (server/tournament-manager.js):
-// settings off by default, install key, lobby listing, a watch run in its own
+// Tests of the tournament director service (tournament/lib/manager.mjs,
+// tournament/server.mjs): install key, lobby listing, a watch run in its own
 // detached process until the sealed result, stop, refusal of servers with
-// accounts, and the HTTP routes' auth. Uses the scripted fake PokerTH server
-// on localhost. Run: node scripts/test-td-manager.mjs
-import { mkdtempSync, rmSync, statSync, existsSync } from 'node:fs';
+// accounts, a killed worker; then the service run on its own over HTTP (auth,
+// page, files). Uses the scripted fake PokerTH server on localhost.
+// Run: node tournament/test/test-td-service.mjs
+import { mkdtempSync, rmSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { EventEmitter } from 'node:events';
-import { createRequire } from 'node:module';
+import { join, dirname } from 'node:path';
+import { spawn } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+import { createManager } from '../lib/manager.mjs';
 import { S, msg, fakeServer, answerNames, wait } from './lib/td-fake-server.mjs';
-
-const require = createRequire(import.meta.url);
-const { createTournamentManager, handleTournamentAdmin } = require('../server/tournament-manager.js');
 
 let fails = 0;
 function ok(cond, label) {
@@ -48,27 +47,20 @@ async function until(fn, ms) {
 }
 
 const dir = mkdtempSync(join(tmpdir(), 'td-mgr-'));
-let cfg = {};
 let port = 0;
-const td = createTournamentManager({
+const td = createManager({
   dir,
-  getConfig: () => cfg,
-  setConfig: (c) => { cfg = c; },
-  listServers: () => [
+  // Asked each time, as from the web client over IPC.
+  servers: async () => [
     { ref: 'local', kind: 'local', name: 'Fake', host: '127.0.0.1', port, tls: false, pins: [] },
     { ref: 'srv:inet', kind: 'registry', name: 'Internet server', host: '127.0.0.1', port, tls: false, pins: [] },
   ],
-  version: () => '2.1.10-web.292',
+  clientVersion: () => '2.1.10-web.292',
 });
 
-// ── settings and key ───────────────────────────────────────────────
-ok(td.settings().enabled === false, 'off by default');
-ok(JSON.stringify(td.settings()) === '{"enabled":false}', 'one setting only: no pokerth.net option');
-ok(td.start({ ref: 'local', gameId: 7 }).error === 'tournaments are off', 'no watch while off');
-ok(td.keyInfo() === null, 'no key before the first enable');
-td.setSettings({ enabled: true });
+// ── key ────────────────────────────────────────────────────────────
 const key = td.keyInfo();
-ok(key && Buffer.from(key.publicKeyRaw, 'base64').length === 32, 'enabling creates the install key');
+ok(key && Buffer.from(key.publicKeyRaw, 'base64').length === 32, 'the service creates the install key');
 ok((statSync(join(dir, 'td-key.pem')).mode & 0o077) === 0, 'key file is private (600)');
 
 // ── lobby ──────────────────────────────────────────────────────────
@@ -82,13 +74,13 @@ ok((statSync(join(dir, 'td-key.pem')).mode & 0o077) === 0, 'key file is private 
   ok(f.seen[0].got.some((m) => m.initMessage && m.initMessage.login === 0), 'lobby: read with a guest login');
   ok(!f.seen[0].got.some((m) => m.joinExistingGameMessage), 'lobby: joins nothing');
   ok((await td.lobby('nope')).error === 'unknown server', 'lobby: only servers this install knows');
-  ok(td.servers().map((x) => x.ref).join(',') === 'local', 'LAN only: the Internet-mode registry is not offered');
-  ok((await td.lobby('srv:inet')).error === 'unknown server' && td.start({ ref: 'srv:inet', gameId: 7 }).error === 'unknown server', 'LAN only: a registry server can be neither read nor watched');
+  ok((await td.servers()).map((x) => x.ref).join(',') === 'local', 'LAN only: the Internet-mode registry is not offered');
+  ok((await td.lobby('srv:inet')).error === 'unknown server' && (await td.start({ ref: 'srv:inet', gameId: 7 })).error === 'unknown server', 'LAN only: a registry server can be neither read nor watched');
 
   // ── a full watch in its own process ──
-  ok(td.start({ ref: 'local', gameId: 7, nick: 'bad name!' }).ok === false, 'watch: director name checked');
-  ok(td.start({ ref: 'elsewhere', gameId: 7 }).error === 'unknown server', 'watch: free addresses refused');
-  const s = td.start({ ref: 'local', gameId: 7, gameName: 'Friday SnG' });
+  ok((await td.start({ ref: 'local', gameId: 7, nick: 'bad name!' })).ok === false, 'watch: director name checked');
+  ok((await td.start({ ref: 'elsewhere', gameId: 7 })).error === 'unknown server', 'watch: free addresses refused');
+  const s = await td.start({ ref: 'local', gameId: 7, gameName: 'Friday SnG' });
   ok(s.ok && s.id, 'watch: started');
   const done = await until(async () => { const d = await td.detail(s.id); return d && d.state.status === 'finished' ? d : null; }, 15000);
   ok(!!done, 'watch: finished in its own process');
@@ -109,7 +101,7 @@ ok((statSync(join(dir, 'td-key.pem')).mode & 0o077) === 0, 'key file is private 
 {
   const f = await scriptedServer({ ending: false });
   port = f.port;
-  const s = td.start({ ref: 'local', gameId: 7 });
+  const s = await td.start({ ref: 'local', gameId: 7 });
   const running = await until(async () => { const d = await td.detail(s.id); return d && d.state.status === 'running' && d.state.hand === 1 ? d : null; }, 10000);
   ok(!!running && running.state.players.length === 4, 'stop: watch running with live players');
   ok(td.stop(s.id).ok, 'stop: signal sent');
@@ -124,7 +116,7 @@ ok((statSync(join(dir, 'td-key.pem')).mode & 0o077) === 0, 'key file is private 
   port = f.port;
   const r = await td.lobby('local');
   ok(r.ok && r.serverType === 'internetAuth' && r.watchable === false && r.refusal === 'authServer', 'server with accounts: read, never watchable');
-  const s = td.start({ ref: 'local', gameId: 7 });
+  const s = await td.start({ ref: 'local', gameId: 7 });
   const failed = await until(async () => { const d = await td.detail(s.id); return d && d.state.status === 'failed' ? d : null; }, 10000);
   ok(failed && failed.state.error.code === 'authServerRefused', 'server with accounts: the worker itself refuses it');
   ok(failed && /\[td-worker\] started/.test(failed.processLog || ''), 'a failed watch shows its process output');
@@ -135,7 +127,7 @@ ok((statSync(join(dir, 'td-key.pem')).mode & 0o077) === 0, 'key file is private 
 {
   const f = await scriptedServer({ ending: false });
   port = f.port;
-  const s = td.start({ ref: 'local', gameId: 7 });
+  const s = await td.start({ ref: 'local', gameId: 7 });
   const running = await until(async () => { const d = await td.detail(s.id); return d && d.state.status === 'running' ? d : null; }, 10000);
   ok(!!running, 'kill: watch running');
   try { process.kill(running.state.pid, 'SIGKILL'); } catch (e) {}
@@ -147,27 +139,40 @@ ok((statSync(join(dir, 'td-key.pem')).mode & 0o077) === 0, 'key file is private 
   f.server.close();
 }
 
-// ── HTTP routes ────────────────────────────────────────────────────
-function call(method, path, { body, token, query = {} } = {}) {
-  return new Promise((resolve) => {
-    const req = new EventEmitter();
-    req.method = method;
-    const res = { writeHead(code) { this.code = code; }, end(b) { resolve({ code: this.code, body: (() => { try { return JSON.parse(String(b)); } catch (e) { return String(b); } })() }); } };
-    const h = {
-      adminAuthed: (q, bt) => (q.token || bt) === 'master',
-      adminJson: (r, code, obj) => { r.writeHead(code); r.end(JSON.stringify(obj)); },
-      readJsonBody: (rq, cb) => cb(body || {}),
-    };
-    handleTournamentAdmin(td, h, req, res, path, Object.assign({ token }, query));
-  });
+// ── the service on its own, over HTTP ─────────────────────────────
+{
+  const f = await scriptedServer();
+  const entry = join(dirname(fileURLToPath(import.meta.url)), '..', 'server.mjs');
+  const env = Object.assign({}, process.env, { TD_DIR: dir, TD_ADMIN_TOKEN: 'master', TD_PORT: '0',
+    TD_SERVERS: JSON.stringify([{ ref: 'local', kind: 'local', name: 'Fake', host: '127.0.0.1', port: f.port }]) });
+  const noTok = spawn(process.execPath, [entry], { env: Object.assign({}, env, { TD_ADMIN_TOKEN: '' }), stdio: 'ignore' });
+  ok(await new Promise((r) => noTok.on('exit', (c) => r(c === 2))), 'service: refuses to start with neither secret nor token');
+  const svc = spawn(process.execPath, [entry], { env, stdio: ['ignore', 'pipe', 'pipe'] });
+  let out = '';
+  svc.stdout.on('data', (d) => { out += d; }); svc.stderr.on('data', (d) => { out += d; });
+  const m = await until(async () => /http:\/\/127\.0\.0\.1:(\d+)/.exec(out), 8000);
+  ok(!!m && /tournament director 0\.\d+\.\d+/.test(out), 'service: listens on 127.0.0.1 and says its version');
+  const base = 'http://127.0.0.1:' + (m && m[1]);
+  const H = { Authorization: 'Bearer master' };
+  ok((await fetch(base + '/admin/tournaments/watches')).status === 403, 'http: no token → 403');
+  ok((await fetch(base + '/admin/tournaments/watches', { headers: { 'X-TD-Secret': 'guess', 'X-TD-Author': 'mallory' } })).status === 403, 'http: a wrong secret → 403');
+  const st = await (await fetch(base + '/admin/tournaments/status', { headers: H })).json();
+  ok(st.ok && st.key.publicKeyRaw === key.publicKeyRaw && st.maxRunning === 4, 'http: status, same install key');
+  ok((await (await fetch(base + '/admin/tournaments/watches', { headers: H })).json()).watches.length === 4, 'http: past watches listed');
+  const srv = await (await fetch(base + '/admin/tournaments/servers', { headers: H })).json();
+  ok(srv.servers.length === 1 && srv.servers[0].ref === 'local', 'http: servers from TD_SERVERS');
+  const lob = await (await fetch(base + '/admin/tournaments/lobby', { method: 'POST', headers: Object.assign({ 'Content-Type': 'application/json' }, H), body: '{"ref":"local"}' })).json();
+  ok(lob.ok && lob.games.length === 1, 'http: lobby read');
+  const page = await fetch(base + '/tournament');
+  const html = await page.text();
+  ok(page.status === 200 && /Tournament director/.test(html) && !/__TD_VERSION__/.test(html) && /0\.\d+\.\d+/.test(html), 'page: served with the version filled in');
+  ok((await fetch(base + '/tournament/organizer.mjs')).status === 200 && (await fetch(base + '/tournament/manifest.json')).status === 200, 'page: its files');
+  ok((await fetch(base + '/tournament/server.mjs')).status === 404 && (await fetch(base + '/tournament/..%2Flib%2Fmanager.mjs')).status === 404, 'page: nothing else');
+  svc.kill('SIGTERM');
+  ok(await new Promise((r) => svc.on('exit', () => r(true))), 'service: stops on SIGTERM');
+  f.server.close();
 }
-ok((await call('GET', '/admin/tournaments/settings')).code === 403, 'http: no token → 403');
-ok((await call('GET', '/admin/tournaments/settings', { token: 'master' })).body.enabled === true, 'http: settings with the master token');
-ok((await call('POST', '/admin/tournaments/watch', { body: { token: 'nope', ref: 'local', gameId: 7 } })).code === 403, 'http: watch needs the master token');
-td.setSettings({ enabled: false });
-ok((await call('GET', '/admin/tournaments/servers', { token: 'master' })).code === 409, 'http: tools answer 409 while off');
-ok((await call('GET', '/admin/tournaments/watches', { token: 'master' })).body.watches.length === 4, 'http: past watches still listed while off');
 
 rmSync(dir, { recursive: true, force: true });
-console.log(fails ? `\n${fails} FAILED` : '\nall td-manager tests passed');
+console.log(fails ? `\n${fails} FAILED` : '\nall td-service tests passed');
 process.exit(fails ? 1 : 0);

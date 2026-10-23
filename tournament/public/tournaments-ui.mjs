@@ -5,7 +5,7 @@
 // of three ways: typed (ordered list), a finished Table check's sealed
 // result, or a PokerTH log (.pdb) with the game picked. Validation signs it;
 // a correction is added to the journal, never written over.
-// Talks to /admin/tournaments/t/*; server: server/tournament/tournaments.mjs.
+// Talks to /admin/tournaments/t/*; server: tournament/lib/tournaments.mjs.
 // English only for now, like the rest of the organizer side.
 // ═══════════════════════════════════════════════════════════════════
 

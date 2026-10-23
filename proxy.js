@@ -451,13 +451,14 @@ const LAN_BOARDS = require('./server/lan-boards.js').createLanBoards({
 setTimeout(function () { LAN_BOARDS.rotate(); }, 5000).unref();
 setInterval(function () { LAN_BOARDS.rotate(); }, 60 * 60 * 1000).unref();
 
-// ── Tournament director (server/tournament-manager.js) ──────────────────────
-// First brick: the « Table check » of /tournament — watch one table of a
-// server this install already knows, as a spectator, and seal its result.
-// Off by default (admin › Community › Tournaments). Watches run in detached
-// processes and keep their files in TD_DIR (with the install's signing key).
+// ── Tournament director (a service of its own: tournament/) ─────────────────
+// Off by default (admin › Community › Tournaments). While on, the proxy runs
+// the service (server/tournament-host.js), relays /tournament and
+// /admin/tournaments/* to it after checking the admin token, and tells it
+// which servers it may use. Its files (watches, tournaments, the install's
+// signing key) live in TD_DIR.
 const TD_DIR = process.env.TD_DIR || path.join(__dirname, 'tournament-data');
-const TD_LIB = require('./server/tournament-manager.js');
+const TD_LIB = require('./server/tournament-host.js');
 // LAN only for now (2026-10-23): the LAN directory and the local server —
 // never the game-server registry of Internet mode, nothing for pokerth.net.
 function _tdServers() {
@@ -472,13 +473,15 @@ function _tdServers() {
   out.push({ ref: 'local', kind: 'local', name: 'Local server', host: L.host || '127.0.0.1', port: L.lanPort || 7234, tls: !!L.lanTls, sni: '', noverify: true, pins: [] });
   return out;
 }
-const TD = TD_LIB.createTournamentManager({
+const TD = TD_LIB.createTournamentHost({
   dir: TD_DIR,
   getConfig: function () { return (_adminConfig && _adminConfig.tournaments) || {}; },
   setConfig: function (c) { _adminConfig.tournaments = c; saveAdminConfig(); },
   listServers: _tdServers,
-  version: function () { try { return require('./package.json').version; } catch (e) { return ''; } }
+  clientVersion: function () { try { return require('./package.json').version; } catch (e) { return ''; } },
+  log: function (line) { console.log(line); }
 });
+setImmediate(function () { TD.sync(); });
 
 // ── Verbosité des logs (quiet | normal | verbose) ──────────────────────────
 // Par défaut le proxy loggue CHAQUE message relayé ([S→C]/[C→S] + dump hex),
@@ -12271,7 +12274,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (_m) query.token = _m[1];
   }
   if (reqPathOnly === '/admin/tournaments' || reqPathOnly.indexOf('/admin/tournaments/') === 0) {
-    return TD_LIB.handleTournamentAdmin(TD, { adminAuthed: adminAuthed, adminJson: adminJson, readJsonBody: readJsonBody, readRawBody: readRawBody }, req, res, reqPathOnly, query);
+    return TD_LIB.handleTournamentAdmin(TD, { adminAuthed: adminAuthed, adminJson: adminJson, readJsonBody: readJsonBody }, req, res, reqPathOnly, query);
   }
   if (reqPathOnly === '/admin' || reqPathOnly === '/admin.html') {
     const p = path.join(PUBLIC_DIR, 'admin.html');
@@ -15164,11 +15167,11 @@ const httpServer = http.createServer((req, res) => {
     } else handleAdmin(req, res, reqPathOnly, q);
     return;
   }
-  // ── /tournament — tournament director pages (off by default: a plain 404
-  // until Admin › Community › Tournaments turns them on, the .html included).
-  if (reqPathOnly === '/tournament' || reqPathOnly === '/tournament/' || reqPathOnly === '/tournament.html') {
-    if (!TD.settings().enabled) { res.writeHead(404); res.end('Not found'); return; }
-    return sendFile(req, res, path.join(PUBLIC_DIR, 'tournament.html'), 'text/html; charset=utf-8', 'no-store');
+  // ── /tournament — the tournament director's page, served by its own service
+  // (off by default: a plain 404 until Admin › Community › Tournaments turns
+  // it on, the .html and its files included).
+  if (reqPathOnly === '/tournament' || reqPathOnly === '/tournament.html' || reqPathOnly.indexOf('/tournament/') === 0) {
+    return TD_LIB.handleTournamentPage(TD, req, res, reqPathOnly);
   }
   // ── /live — embedded spectator mode, successor to the pokerth-live tool.
   // Same client, same themes/decks/seats/layout, so every table improvement

@@ -3,13 +3,13 @@
 // Tournament director prototype — watch ONE table as a spectator and write
 // its sealed journal and signed ranking.
 //
-//   node scripts/td-spectate.mjs --host 192.168.1.20 --port 7234 \
+//   node tournament/bin/td-spectate.mjs --host 192.168.1.20 --port 7234 \
 //        --nick TD-test-T1 --game-name "Friday SnG" [--game-password x] \
 //        [--tls] [--insecure] [--pin <base64>] [--server-password x] \
 //        [--login unauth|guest|auth] [--password x] \
 //        [--key td-key.pem] [--out td-out]
 //
-//   node scripts/td-spectate.mjs --verify td-out.result.json td-out.journal.json
+//   node tournament/bin/td-spectate.mjs --verify td-out.result.json td-out.journal.json
 //
 // Writes <out>.journal.json (every event, hash-chained) and
 // <out>.result.json (ranking + head hash + Ed25519 signature). The key
@@ -20,10 +20,11 @@
 import { readFileSync, writeFileSync, existsSync, chmodSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { SpectatorDirector, replayJournal } from '../server/tournament/spectator.mjs';
-import { generateKeys, verifyJournal, verifyPayload, publicKeyRawB64, canonical } from '../server/tournament/journal.mjs';
+import { SpectatorDirector, replayJournal } from '../lib/spectator.mjs';
+import { generateKeys, verifyJournal, verifyPayload, publicKeyRawB64, canonical } from '../lib/journal.mjs';
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+// The web client's version: the PokerTH release the director says it speaks.
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 function args(argv) {
   const o = { _: [] };

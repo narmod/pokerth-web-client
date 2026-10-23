@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════════════════
 // Tournament director — one watch, in its own detached process.
 //
-// Started by server/tournament-manager.js with an IPC channel used ONCE to
+// Started by tournament/lib/manager.mjs with an IPC channel used ONCE to
 // hand over the task (so the table password never touches the disk), then
 // disconnected: the process lives on its own and survives a restart of the
 // proxy (admin « Update »). Everything it knows goes to files in its own
