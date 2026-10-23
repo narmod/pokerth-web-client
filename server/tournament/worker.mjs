@@ -105,7 +105,11 @@ export function runWatch(task) {
 // Entry point when forked by the manager.
 if (process.send) {
   console.error('[td-worker] started, node ' + process.version + ', pid ' + process.pid);
+  // No task within 30 s (the manager went away): leave instead of lingering.
+  const idle = setTimeout(() => { console.error('[td-worker] no task received, leaving'); process.exit(1); }, 30000);
   process.once('message', (task) => {
+    clearTimeout(idle);
+    console.error('[td-worker] task ' + task.id + ' received: ' + task.opts.host + ':' + task.opts.port + ' game ' + task.opts.gameId);
     try { process.disconnect(); } catch (e) {}
     try { runWatch(task); } catch (e) {
       try { writeAtomic(join(task.dir, 'state.json'), { id: task.id, pid: process.pid, status: 'failed', error: { code: 'startFailed', data: { message: e.message } }, updatedAt: Date.now(), logs: [] }); } catch (e2) {}

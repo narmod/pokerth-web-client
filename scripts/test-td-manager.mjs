@@ -142,6 +142,8 @@ ok((statSync(join(dir, 'td-key.pem')).mode & 0o077) === 0, 'key file is private 
   const crashed = await until(async () => { const d = await td.detail(s.id); return d && d.state.status === 'crashed' ? d : null; }, 10000);
   ok(!!crashed && /\[td-worker\] started, node /.test(crashed.processLog || ''), 'kill: reported as crashed, with its process output');
   ok(crashed && crashed.checks && crashed.checks.chain, 'kill: the journal written so far is intact');
+  ok(crashed && /\[manager\] .*spawning /.test(crashed.processLog) && /worker exited, code null, signal SIGKILL/.test(crashed.processLog), 'kill: the manager logged the start and the signal that ended it');
+  ok(crashed && /\[td-worker\] task \w+ received: 127\.0\.0\.1:\d+ game 7/.test(crashed.processLog), 'kill: the worker logged the task it got');
   f.server.close();
 }
 

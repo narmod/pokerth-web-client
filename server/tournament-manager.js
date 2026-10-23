@@ -159,11 +159,25 @@ function createTournamentManager(deps) {
       id, startedAt: Date.now(), nick, gameId, gameName: String(body.gameName || '').slice(0, 64),
       server: { ref: s.ref, kind: s.kind, name: s.name, host: s.host, port: s.port, tls: !!s.tls },
     };
-    const logFd = fs.openSync(path.join(d, 'worker.log'), 'a');
+    const logPath = path.join(d, 'worker.log');
+    // The manager's own lines in worker.log say whether the process started at
+    // all, and how it ended (exit code, signal) while this proxy runs.
+    const mlog = (line) => { try { fs.appendFileSync(logPath, '[manager] ' + new Date().toISOString() + ' ' + line + '\n'); } catch (e) {} };
+    mlog('spawning ' + process.execPath + ' ' + workerPath + ' (node ' + process.version + ')');
+    const logFd = fs.openSync(logPath, 'a');
     let child;
     try {
       child = childProcess.spawn(process.execPath, [workerPath], { detached: true, stdio: ['ignore', logFd, logFd, 'ipc'] });
+    } catch (e) {
+      mlog('spawn failed: ' + e.message);
+      return { ok: false, error: 'could not start the director: ' + e.message };
     } finally { try { fs.closeSync(logFd); } catch (e) {} }
+    child.on('error', (e) => {
+      mlog('process error: ' + ((e && e.code) || '') + ' ' + ((e && e.message) || e));
+      try { fs.writeFileSync(path.join(d, 'state.json'), JSON.stringify({ id, status: 'failed', error: { code: 'startFailed', data: { message: String((e && e.message) || e) } }, updatedAt: Date.now(), logs: [] })); } catch (e2) {}
+    });
+    child.on('exit', (code, signal) => mlog('worker exited, code ' + code + (signal ? ', signal ' + signal : '')));
+    if (!child.pid) { mlog('no pid: the process did not start'); }
     meta.pid = child.pid;
     fs.writeFileSync(path.join(d, 'meta.json'), JSON.stringify(meta));
     child.send({
@@ -172,9 +186,8 @@ function createTournamentManager(deps) {
         nick, login: 'unauth', gameId, refuseAuthServer: true, gamePassword: body.gamePassword ? String(body.gamePassword).slice(0, 64) : undefined,
       }),
     });
-    child.on('error', () => {});
     child.unref();
-    try { child.disconnect && child.connected && setTimeout(() => { try { child.disconnect(); } catch (e) {} }, 200); } catch (e) {}
+    // The worker closes the IPC channel itself once it has the task.
     return { ok: true, id };
   }
 

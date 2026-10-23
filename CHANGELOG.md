@@ -36,7 +36,10 @@ highlights below.
   local server only, no longer the Internet-mode game servers; the « servers with accounts (pokerth.net) » option of
   `web.292` is withdrawn (a saved value is dropped) and such a server is always refused, by the director process
   itself. A watch that fails or crashes now says why: uncaught errors are written to its state with the journal
-  kept, and the page shows the end of the process output (`worker.log`).
+  kept, and the page shows the end of the process output (`worker.log`). `web.294`: that output also carries the
+  manager's lines — the process being started (Node binary and version), the task it received, and how it ended
+  (exit code or signal) — so a watch that dies at once is no longer a blank « crashed »; a worker with no task
+  leaves after 30 s.
 
 ### Added
 - **Tournaments: « Table check » on `/tournament`** (`web.292`, off by default) — first organizer tool of the
