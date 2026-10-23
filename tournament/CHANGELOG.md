@@ -8,6 +8,19 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.3.2 — 2026-10-23
+
+### Changed
+- Before the start, the director writes to the players **privately**: the
+  waiting room of the official client (and of the web client, `2.1.10-web.302`)
+  shows the lobby chat and private messages, not the table chat. Welcome when
+  a player sits, the reason of a kick, the new admin asked to start (and
+  reminded), the others told who starts, the organizer's messages. Once the
+  game runs (the server refuses private messages to its players), the table
+  chat as before: start, players out, heads-up, winner, organizer's messages.
+- No more line in the chat when the director leaves its seat: the private
+  messages above say what matters.
+
 ## 0.3.1 — 2026-10-23
 
 ### Added

@@ -56,7 +56,7 @@ const M = {
 // A server for one hosted table. `lobbyIds` are connected; `plan` reacts to
 // the director's invitations (who sits, who is busy, who is not registered).
 function tableServer({ lobbyIds, onInvite, startWith, nameInUse = 0, game = true }) {
-  const state = { gi: null, seats: [], admin: ME, chats: [], invites: [], kicks: [], leaves: 0, specJoin: 0, creates: [] };
+  const state = { gi: null, seats: [], admin: ME, chats: [], pms: [], invites: [], kicks: [], leaves: 0, specJoin: 0, creates: [] };
   return fakeServer((conn) => {
     const w = (b) => conn.sock.write(b);
     let inUse = nameInUse;
@@ -83,7 +83,11 @@ function tableServer({ lobbyIds, onInvite, startWith, nameInUse = 0, game = true
         state.seats = state.seats.filter((x) => x !== id);
         w(M.left(id, 1));
       }
-      if (m.chatRequestMessage) state.chats.push(m.chatRequestMessage.chatText);
+      if (m.chatRequestMessage) {
+        const c = m.chatRequestMessage;
+        if (c.targetPlayerId) state.pms.push({ to: c.targetPlayerId, text: c.chatText, started: !!state.started });
+        else state.chats.push(c.chatText);
+      }
       if (m.leaveGameRequestMessage) {
         state.leaves += 1;
         if (!state.specJoin) state.leavesBeforeSpec = state.leaves;
@@ -100,6 +104,7 @@ function tableServer({ lobbyIds, onInvite, startWith, nameInUse = 0, game = true
           await wait(80);
           const seats = startWith || state.seats;
           const total = state.gi.startMoney * seats.length;
+          state.started = true;
           w(M.start(seats));
           // One player out per hand, from the last seat; the first seat wins.
           const out = new Set();
@@ -136,7 +141,7 @@ const table = cleanTable({ startMoney: 2000, firstSmallBlind: 20, raiseMode: 'mi
 function director(f, registered, extra) {
   return new HostDirector(Object.assign({
     host: '127.0.0.1', port: f.port, nick: 'TD-x', tableName: 'Friday cup', table, registered,
-    privateKeyPem: keys.privateKeyPem, version: '2.1.10-web.298', handoverDelayMs: 0, nameWaitMs: 0, reconnects: 0, chatGapMs: 20,
+    privateKeyPem: keys.privateKeyPem, version: '2.1.10-web.298', handoverDelayMs: 0, nameWaitMs: 0, reconnects: 0, chatGapMs: 20, pmGapMs: 5, adminNoticeDelayMs: 20,
   }, extra || {}));
 }
 
@@ -166,9 +171,15 @@ function director(f, registered, extra) {
   ok(st.invites.filter((x) => x === 24).length === 2, 'a busy player is invited again once back in the lobby');
   ok(st.leavesBeforeSpec === 1 && st.specJoin === 1, 'all seated: leaves its seat, comes back as a spectator');
   ok(states.indexOf('seated') >= 0 && states.indexOf('handover') >= 0 && states.indexOf('watch') >= 0, 'phases: seated → handover → watch');
-  ok(st.chats.some((c) => /^welcome Alice, seated 1 of 3\.$/.test(c)) && st.chats.some((c) => /mallory is not registered/i.test(c)), 'chat: welcome and the reason of the kick');
-  ok(st.chats.some((c) => /^Alice, you are the table admin now: please start the game/.test(c)), 'chat: the new admin is asked to start');
-  ok(st.chats.every((c) => !/https?:|www\./i.test(c) && c.replace(/[^A-Z]/g, '').length <= 2), 'chat: no links, no capitals (chatcleaner)');
+  const pm = (to, re) => st.pms.some((p) => p.to === to && re.test(p.text));
+  ok(pm(21, /^welcome Alice, you are seated \(1 of 3\)/) && pm(23, /^you are not registered for this tournament/), 'before the start: welcome and the reason of the kick as private messages (the waiting room shows the lobby chat)');
+  ok(pm(21, /^you are the table admin now: please start the game/) && pm(24, /^Alice is now the table admin/) && pm(22, /^Alice is now the table admin/), 'hand-over: the new admin asked to start, the others told who starts, privately');
+  {
+    const es = d.journal.entries, iStart = es.findIndex((e) => e.type === 'game' && e.data.type === 'gameStart');
+    ok(iStart > 0 && !es.slice(iStart).some((e) => e.type === 'chat' && e.data.to != null), 'no private message once the director sees the game running (the server refuses them)');
+  }
+  ok(!st.chats.some((c) => /welcome|registered|table admin/.test(c)), 'nothing for the waiting room goes to the table chat');
+  ok(st.chats.concat(st.pms.map((p) => p.text)).every((c) => !/https?:|www\./i.test(c) && c.replace(/[^A-Z]/g, '').length <= 2), 'chat: no links, no capitals (chatcleaner)');
   ok(new Set(st.chats).size === st.chats.length, 'chat: never the same line twice');
   ok(st.chats.some((c) => c === 'Bob is out, 2 players left.') && st.chats.some((c) => c === 'heads-up: Alice against Carol.'), 'announces: who is out, players left, heads-up');
   ok(!st.chats.some((c) => /blinds/.test(c)), 'announces: not the blinds (every client shows them)');
@@ -196,8 +207,9 @@ function director(f, registered, extra) {
   ok(d.phase === 'seated' && d.hostState().registered.find((r) => r.nick === 'Dave').status === 'offline', 'waits for Dave, who is not connected');
   ok(f.state.creates.length === 2 && d.tableName === 'Friday cup #2', 'table name in use: a second name');
   d.command({ cmd: 'say', text: 'we start in five minutes, please stay close', author: 'admin' });
-  await until(() => f.state.chats.indexOf('we start in five minutes, please stay close') >= 0, 2000);
-  ok(f.state.chats.indexOf('we start in five minutes, please stay close') >= 0 && d.journal.entries.some((e) => e.type === 'organizerMessage'), 'say: the organizer\'s line reaches the table');
+  const sayTo = () => f.state.pms.filter((p) => p.text === 'we start in five minutes, please stay close').map((p) => p.to).sort().join();
+  await until(() => sayTo() === '21,22', 2000);
+  ok(sayTo() === '21,22' && d.journal.entries.some((e) => e.type === 'organizerMessage'), 'say: before the start, the organizer\'s line reaches each seated player privately');
   d.command({ cmd: 'go', author: 'admin' });
   await until(() => sealed, 5000);
   ok(d.absent.join() === 'Dave' && d.hostState().registered.find((r) => r.nick === 'Dave').status === 'absent', 'go: Dave absent');

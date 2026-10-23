@@ -1,3 +1,6 @@
+2026-10-23 version 2.1.10-web.302:
+- improvement: the waiting room works exactly like the official client again: it shows the lobby chat and private messages, while table chat lines wait for the game screen, without a sound in the meantime
+
 2026-10-23 version 2.1.10-web.301:
 - bugfix: in the waiting room before a game starts, messages written in the table chat (by players of the official client, or by a tournament director) now appear in the chat; until now only their sound played
 

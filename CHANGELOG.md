@@ -453,11 +453,15 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
-- **Waiting room: the table chat was silent** (`web.301`) — before the start, the visible chat is the lobby panel
-  (as on the QML GameWaitPage), but a line written in the table's chat (`chatTypeGame`: an official-client player, a
-  tournament director) only went to the hidden game panel, so its sound played and nothing showed (seen with the
-  tournament director's welcome and hand-over lines). It now also shows in the visible chat while the table has not
-  started (`public/modules/net/msg-social.mjs`, `scripts/test-msg-social.mjs`).
+- **Waiting room: the table chat played a sound with nothing to read** (`web.301`, settled in `web.302`) — before
+  the start, the visible chat is the lobby chat, as on the QML GameWaitPage (`Lobby.chatLog`, « Lobby Chat »); a
+  table-chat line (`chatTypeGame`) goes to the game chat only (QML `GameHandler::appendChat`, no sound). The web client
+  played its game-chat sound for it, with nothing on screen (seen with the tournament director's lines). `web.301`
+  showed such lines in the lobby panel; `web.302` returns to QML's behaviour — the line waits in the game panel and
+  makes no sound while waiting (`public/pokerth.js` addGameChat, `public/modules/net/msg-social.mjs`). The tournament
+  director now writes to waiting players privately (service `0.3.2`).
+- **Admin: « Tournamentsbeta »** (`web.302`) — the page title read the menu entry with its badge glued on; the badge
+  is left out of the title text and shown apart (`public/modules/admin/shell.mjs`).
 - **Logs › « Analyse on pokerth.net » linked the wrong game** (`web.291`) — the client opened
   `logfile-analysis.pokerth.net/?ID=<hash>`, which redirects to `www.pokerth.net/gamelog?game_id=1&pdb=<hash>`:
   in a session holding several games, always the first one (the official clients share this; it is why the BBC

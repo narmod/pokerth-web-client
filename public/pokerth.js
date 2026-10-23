@@ -9308,7 +9308,11 @@ function addGameChat(sender, text, cls, spec) {
     window._chatFlashTimer = setTimeout(function(){
       if (!cPan || cPan.style.display === 'none') { cBtn.style.color=''; cBtn.style.borderColor=''; }
     }, 3000);
-    if (typeof notifyChat === 'function' && (typeof isGameChatSoundMuted !== 'function' || !isGameChatSoundMuted())) notifyChat();
+    // Not in the waiting room: the game panel is not on screen yet and QML
+    // plays nothing for the table chat there — a sound with nothing to read.
+    var _ps = window.PthState || {};
+    var _waitRoom = !!(_ps.gId && !_ps._gameStarted);
+    if (!_waitRoom && typeof notifyChat === 'function' && (typeof isGameChatSoundMuted !== 'function' || !isGameChatSoundMuted())) notifyChat();
   }
 }
 
@@ -12435,7 +12439,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.301'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.302'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

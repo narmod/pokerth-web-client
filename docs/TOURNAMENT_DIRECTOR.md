@@ -319,6 +319,15 @@ The sweep reads the tournaments from disk, so a restart changes nothing.
 are left, heads-up, the winner and the second (not the blinds: every client
 shows them, service `0.3.1`).
 
+**Where its lines go** (service `0.3.2`): before the start, a waiting
+player reads the lobby chat and private messages (QML GameWaitPage « Lobby
+Chat »; the web client the same), not the table chat. So until the game runs
+the director writes privately: welcome to the player who sits, the reason of a
+kick to the kicked player, « you are the table admin now » (and reminders) to
+the new admin, « X is now the table admin » to the others, the organizer's
+messages to everyone seated. Once the game runs — the server refuses private
+messages to its players — everything goes to the table chat.
+
 **Invited again by itself** (service `0.3.1`): an invitation belongs to a
 player id, and a reconnection brings a new one. A registered player who drops
 from the server is invited again when back; one who leaves the table before

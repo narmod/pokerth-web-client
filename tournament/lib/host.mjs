@@ -33,6 +33,10 @@
 //     seated players.
 // The director's chat follows the chatcleaner's rules: no capitals, no
 // links, never the same line twice in a row, spaced out.
+// Before the start, a waiting player sees the LOBBY chat (QML GameWaitPage,
+// and the web client the same way), not the table's: the director's lines
+// for the players then go as private messages to them; once the game runs
+// (the server refuses private messages to its players) they go to the table.
 // Design: docs/TOURNAMENT_DIRECTOR.md.
 // ═══════════════════════════════════════════════════════════════════
 
@@ -62,6 +66,9 @@ export const hostBuild = {
   },
   chat(gameId, chatText) {
     return encode(T.Type_ChatRequestMessage, 'chatRequestMessage', pb.ChatRequestMessage.create({ targetGameId: gameId, chatText }));
+  },
+  pm(playerId, chatText) {
+    return encode(T.Type_ChatRequestMessage, 'chatRequestMessage', pb.ChatRequestMessage.create({ targetPlayerId: playerId, chatText }));
   },
 };
 
@@ -159,7 +166,9 @@ export class HostDirector extends SpectatorDirector {
       if (!text) return;
       if (this.gameId == null || this.phase === 'create') return this.emit('log', 'message not sent: no table yet');
       this._record('organizerMessage', { author: c.author || null });
-      this._say(text);
+      if (this.tracker.started) this._say(text);
+      else if (!this.table.size) this.emit('log', 'message not sent: nobody at the table yet');
+      else this._tell([...this.table], text);
     } else if (c.cmd === 'reinvite') {
       this.declined.clear();
       this.invited.clear();
@@ -170,14 +179,31 @@ export class HostDirector extends SpectatorDirector {
   }
 
   // ── chat ──
+  // A line for the table chat (once the game runs).
   _say(text, now) {
     if (this.gameId == null) return;
     const t = String(text).slice(0, 200);
-    if (now) { this._sendChat(t); return; }
-    this.chatQueue.push(t);
+    if (now) { this._sendChat({ text: t }); return; }
+    this.chatQueue.push({ text: t });
     this._pumpChat();
   }
-  _sendChat(t) {
+  // A line for some players: private before the start (they read the lobby
+  // chat then), the table chat once the game runs.
+  _tell(ids, text) {
+    if (this.tracker.started) return this._say(text);
+    const t = String(text).slice(0, 200);
+    for (const id of ids || []) if (id != null && id !== this.myId) this.chatQueue.push({ text: t, to: id });
+    this._pumpChat();
+  }
+  _sendChat(e) {
+    if (typeof e === 'string') e = { text: e };
+    let t = e.text;
+    if (e.to != null) {
+      this.lastPmAt = this.now();
+      this._send(hostBuild.pm(e.to, t));
+      this._record('chat', { to: e.to, text: t });
+      return;
+    }
     if (t === this.lastChat) t = t + ' (' + new Date(this.now()).toISOString().slice(11, 16) + ')';
     this.lastChat = t;
     this.lastChatAt = this.now();
@@ -186,21 +212,23 @@ export class HostDirector extends SpectatorDirector {
   }
   _pumpChat() {
     if (this._chatTimer || !this.chatQueue.length) return;
-    const gap = this.o.chatGapMs != null ? this.o.chatGapMs : CHAT_GAP_MS;
-    const wait = Math.max(0, (this.lastChatAt || 0) + gap - this.now());
+    const pm = this.chatQueue[0].to != null;
+    const gap = pm ? (this.o.pmGapMs != null ? this.o.pmGapMs : 300) : (this.o.chatGapMs != null ? this.o.chatGapMs : CHAT_GAP_MS);
+    const wait = Math.max(0, ((pm ? this.lastPmAt : this.lastChatAt) || 0) + gap - this.now());
     this._chatTimer = setTimeout(() => {
       this._chatTimer = null;
       if (this.done || !this.chatQueue.length) return;
       // Between leaving the seat and coming back as a spectator the session
-      // is in the lobby: hold the lines until it is at the table again.
-      if (!this.joined) { this._chatTimer = setTimeout(() => { this._chatTimer = null; this._pumpChat(); }, 1000); return; }
+      // is in the lobby: a table line waits until it is at the table again
+      // (a private message does not).
+      if (!this.joined && this.chatQueue[0].to == null) { this._chatTimer = setTimeout(() => { this._chatTimer = null; this._pumpChat(); }, 1000); return; }
       this._sendChat(this.chatQueue.shift());
       this._pumpChat();
     }, wait);
   }
 
   stop(reason) {
-    for (const k of ['_chatTimer', '_handTimer', '_unknownTimer', '_remind1', '_remind2']) if (this[k]) { clearTimeout(this[k]); this[k] = null; }
+    for (const k of ['_chatTimer', '_handTimer', '_unknownTimer', '_remind0', '_remind1', '_remind2']) if (this[k]) { clearTimeout(this[k]); this[k] = null; }
     super.stop(reason);
   }
 
@@ -384,7 +412,8 @@ export class HostDirector extends SpectatorDirector {
         this.startedAt = this.now();
         for (const id of this.tracker.seats) this._nameSeat(id);
         this._checkStartSeats();
-        for (const k of ['_remind1', '_remind2']) if (this[k]) { clearTimeout(this[k]); this[k] = null; }
+        for (const k of ['_remind0', '_remind1', '_remind2']) if (this[k]) { clearTimeout(this[k]); this[k] = null; }
+        this.chatQueue = this.chatQueue.filter((e) => e.to == null);   // private lines no longer reach a running table
         this._say('the game has started. the director follows it to the end and records the result. good luck!');
         this._changed();
         return;
@@ -434,7 +463,7 @@ export class HostDirector extends SpectatorDirector {
       this.seated.set(id, reg);
       this._record('seated', { nick: reg, playerId: id });
       this.emit('log', reg + ' is seated (' + this.seated.size + ' of ' + this.expected.size + ')');
-      this._say('welcome ' + reg + ', seated ' + this.seated.size + ' of ' + this.expected.size + '.');
+      this._tell([id], 'welcome ' + reg + ', you are seated (' + this.seated.size + ' of ' + this.expected.size + '). the game starts once every registered player is here.');
       this._changed();
       this._maybeHandover();
     } else {
@@ -443,7 +472,7 @@ export class HostDirector extends SpectatorDirector {
       this.kicked.push(name);
       this._record('kicked', { nick: name, playerId: id });
       this.emit('log', name + ' is not registered: kicked');
-      this._say(name + ' is not registered for this tournament: the seats are kept for its players.');
+      this._tell([id], 'you are not registered for this tournament: its table is kept for its players.');
       this._changed();
     }
   }
@@ -481,23 +510,28 @@ export class HostDirector extends SpectatorDirector {
     this.phase = 'handover';
     this._record('handover', { reason, author: author || null, seated: seatedNicks, absent: this.absent.slice() });
     this.emit('log', 'handing over (' + reason + '): the director leaves its seat');
-    this._sendChat(reason === 'makeRoom'
-      ? 'the director leaves its seat to make room for the last players and keeps watching the table.'
-      : 'the director leaves its seat now and keeps watching the table: the new table admin starts the game.');
     this._send(hostBuild.leaveSeat(this.gameId));
     this.joined = false;
     this._changed();
   }
 
+  // Back as a spectator: the new admin is asked (privately) to start, the
+  // others are told who starts. A short pause first, so that every player of
+  // the table has been announced (GamePlayerJoined) to the spectator.
   _remindAdmin() {
-    if (this.phase !== 'watch' || this.tracker.started || this._reminded || this.adminId == null || !this.joined) return;
-    const name = this.names.get(this.adminId);
-    if (!name) return;
-    this._reminded = true;
-    this._say(name + ', you are the table admin now: please start the game when everyone is ready. good luck to all!');
-    const [a, b] = this.o.remindAfterMs || [120000, 300000];
-    this._remind1 = setTimeout(() => { this._remind1 = null; if (!this.tracker.started) this._say(name + ', the players are waiting: the game starts when you press start.'); }, a);
-    this._remind2 = setTimeout(() => { this._remind2 = null; if (!this.tracker.started) this._say('reminder for ' + name + ': only the table admin can start the game.'); }, b);
+    if (this.phase !== 'watch' || this.tracker.started || this._reminded || this._remind0 || this.adminId == null || !this.joined) return;
+    if (!this.names.get(this.adminId)) return;
+    this._remind0 = setTimeout(() => {
+      this._remind0 = null;
+      if (this.tracker.started || this._reminded) return;
+      const admin = this.adminId, name = this.names.get(admin);
+      this._reminded = true;
+      this._tell([admin], 'you are the table admin now: please start the game when everyone is ready. good luck!');
+      this._tell([...this.table].filter((id) => id !== admin), name + ' is now the table admin and starts the game. good luck!');
+      const [a, b] = this.o.remindAfterMs || [120000, 300000];
+      this._remind1 = setTimeout(() => { this._remind1 = null; if (!this.tracker.started) this._tell([admin], 'the players are waiting: the game starts when you press start.'); }, a);
+      this._remind2 = setTimeout(() => { this._remind2 = null; if (!this.tracker.started) this._tell([admin], 'reminder: only the table admin can start the game.'); }, b);
+    }, this.o.adminNoticeDelayMs != null ? this.o.adminNoticeDelayMs : 600);
   }
 
   // ── announcements (watch phase) ──

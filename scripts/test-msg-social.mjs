@@ -96,16 +96,15 @@ ok(els['chat'].children.length === beforeR, 'onChat : /emoji intercepté (aucune
 M.onChat(chatSub(5, 1, '[R]🔥'));
 ok(els['chat'].children.length === beforeR, 'onChat : écho [R] de ma réaction ignoré');
 
-// ── Salle d'attente : le chat de la table (ctype 1) s'affiche dans le chat
-// visible (panneau lobby), en plus du panneau de partie — avant, seul le son
-// passait (directeur de tournoi, joueurs QML).
+// ── Salle d'attente (parité QML GameWaitPage) : le chat visible est celui du
+// lobby ; une ligne du chat de table (ctype 1) reste dans le panneau de partie.
 function gameChatSub(gid, pid, text) {
   return subOf([[1, 0, gid], [2, 0, pid], [3, 0, 1], [4, 2, new TextEncoder().encode(text)]]);
 }
 S.gId = 3; S._gameStarted = false; S.players[9] = 'Bob';
 let lb = els['chat'].children.length, gb = gameChats.length;
 M.onChat(gameChatSub(3, 9, 'welcome narmod, seated 1 of 2.'));
-ok(els['chat'].children.length === lb + 1 && gameChats.length === gb + 1, 'onChat : salle d\'attente, ligne de table visible dans le chat (et gardée pour la partie)');
+ok(els['chat'].children.length === lb && gameChats.length === gb + 1, 'onChat : salle d\'attente, ligne de table gardée pour la partie, pas dans le chat lobby (QML)');
 lb = els['chat'].children.length;
 M.onChat(gameChatSub(8, 9, 'autre table'));
 ok(els['chat'].children.length === lb, 'onChat : ligne d\'une autre table : pas dans le chat visible');

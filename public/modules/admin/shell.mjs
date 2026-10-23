@@ -46,7 +46,7 @@ if (NARROW.addEventListener) NARROW.addEventListener('change', onWidth); else if
 function label(el) {
   if (!el) return '';
   const c = el.cloneNode(true);
-  c.querySelectorAll('.tbadge,.gbadge,svg').forEach((x) => x.remove());
+  c.querySelectorAll('.tbadge,.tbeta,.gbadge,svg').forEach((x) => x.remove());
   return (c.textContent || '').trim();
 }
 function paintTitle(tab) {
@@ -55,7 +55,12 @@ function paintTitle(tab) {
   const gb = grp && grp.querySelector('.gtab');
   const t = label(tab), g = label(gb);
   const h = $('pageTitle'), e = $('pageGroup');
-  if (h) h.textContent = t;
+  if (h) {
+    h.textContent = t;
+    // A section still being built keeps its « beta » badge in the title too.
+    const beta = tab.querySelector('.tbeta');
+    if (beta) h.appendChild(beta.cloneNode(true));
+  }
   // A section alone in its group (Overview) would only repeat its own name.
   if (e) e.textContent = g && g !== t ? g : 'PokerTH Admin';
   document.title = t ? t + ' · ' + BASE_TITLE : BASE_TITLE;

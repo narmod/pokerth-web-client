@@ -143,6 +143,9 @@ ok(/\.main \.top \.tophost\{display:none\}/.test(narrow), 'on a phone the menu s
 ok(/<p class="eyebrow" id="pageGroup">PokerTH Admin<\/p><h1 id="pageTitle">Overview<\/h1>/.test(admin),
   'the page header names the section, Overview at load');
 ok(/g && g !== t \? g : 'PokerTH Admin'/.test(shellJs), 'a section alone in its group does not repeat its name above itself');
+// web.302: « Tournaments » carries a « beta » badge; the title read it as
+// « Tournamentsbeta ». The label leaves the badge out, the title shows it apart.
+ok(/querySelectorAll\('\.tbadge,\.tbeta,\.gbadge,svg'\)/.test(shellJs) && /h\.appendChild\(beta\.cloneNode\(true\)\)/.test(shellJs), 'a beta badge is never glued to the section title');
 ok(/id="sideVer"/.test(admin) && /\$\('sideVer'\)/.test(admin), 'the menu shows the running build');
 ok(/id="sideWho"/.test(admin) && /\$\('sideWho'\)/.test(admin), 'and which key is signed in');
 ok(/<button id="themeBtn"/.test(admin) && /<button id="logoutBtn"/.test(admin), 'theme and log-out sit at the foot of the menu, ids unchanged');
