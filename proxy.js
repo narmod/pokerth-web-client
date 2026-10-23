@@ -479,6 +479,7 @@ const TD = TD_LIB.createTournamentHost({
   setConfig: function (c) { _adminConfig.tournaments = c; saveAdminConfig(); },
   listServers: _tdServers,
   clientVersion: function () { try { return require('./package.json').version; } catch (e) { return ''; } },
+  codePollMs: Number(process.env.TD_CODE_POLL_MS) || undefined,
   log: function (line) { console.log(line); }
 });
 setImmediate(function () { TD.sync(); });
@@ -11353,6 +11354,10 @@ function _pathNeedsRestart(f) {
   // scripts/ holds the tests and the manifest builders (spawned afresh each
   // time), install.sh the host CLI: none of it is code the running proxy holds.
   if (/^(scripts\/|install\.sh$)/.test(f)) return false;
+  // tournament/ is the tournament director, a service of its own: the web
+  // client restarts that service alone when its code changes on disk
+  // (server/tournament-host.js), never itself.
+  if (/^tournament\//.test(f)) return false;
   return !/^(docs\/|claude\/|\.github\/|README|CHANGELOG|LICENSE|\.gitignore|\.editorconfig)/.test(f);
 }
 // package.json changes on every deploy (the version bump), which made every

@@ -342,6 +342,27 @@ at the foot of `/tournament`).
   then the web client's admin token is the way in. A separate repository
   stays possible later.
 
+## Updating the director (`web.300`, service `0.2.1`)
+
+The director has its own version (`tournament/package.json`) and changelog
+(`tournament/CHANGELOG.md`). A change that only touches `tournament/` bumps
+that version only: the web client's version, its service worker and its
+« new version » banner do not move.
+
+- The web client's update check counts `tournament/` as code that needs no
+  restart of the web client, so the update is a static one (the admin's
+  « Update without restart », or the automatic one), with no player cut off.
+- The web client (`server/tournament-host.js`) checks every 15 s whether the
+  service's files on disk (entry, `package.json`, `lib/`, `public/`) differ
+  from those it started, and restarts **the service alone** if so. Watches and
+  tables in progress are processes of their own and go on.
+- Admin › Tournaments shows the running version and, if different, the one on
+  disk; « Restart the service » restarts it by hand.
+- A change to `server/tournament-host.js` (the launcher, in the web client)
+  is a web client change, with its version bump and restart.
+- An install without git (Docker image baked) is still updated with a new
+  image.
+
 ## Files
 
 | File | Role |

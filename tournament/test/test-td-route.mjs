@@ -46,7 +46,7 @@ const env = Object.assign({}, process.env, {
   STATS_META_FILE: F('stats.meta.json'), BROADCASTS_FILE: F('broadcasts.json'), POLLS_FILE: F('polls.json'),
   DB_CONFIG_FILE: F('db-config.json'), DEPLOY_HISTORY_FILE: F('deploy-history.json'),
   SCOPED_TOKENS_FILE: F('scoped-tokens.json'), AUDIT_FILE: F('admin-audit.json'), LAN_BOARDS_FILE: F('lan-boards.json'),
-  TD_DIR: F('td'),
+  TD_DIR: F('td'), TD_CODE_POLL_MS: '300',
 });
 const proxy = spawn(process.execPath, [path.join(root, 'proxy.js'), '--notls'], { cwd: root, stdio: ['ignore', 'pipe', 'pipe'], env });
 let plog = '';
@@ -217,6 +217,24 @@ try {
   const lst = await (await get('/admin/tournaments/t/list')).json();
   ok(lst.ok && lst.tournaments.length === 4, 'routes: four tournaments listed');
   ok(fs.existsSync(F('td/tournaments/' + cr.id + '/journal.json')) && fs.existsSync(F('td/tournaments/' + cr.id + '/result.json')), 'routes: stored in TD_DIR');
+
+  // ── new code on disk: the service alone restarts ──
+  const sNow = await (await get('/admin/tournaments/settings')).json();
+  ok(sNow.service.diskVersion === sNow.service.version, 'settings: the version on disk is the one running');
+  const entry = path.join(root, 'tournament', 'server.mjs');
+  const st0 = fs.statSync(entry);
+  const pid0 = sNow.service.pid;
+  fs.utimesSync(entry, st0.atime, new Date(Date.now() + 5000));
+  let sRe = null;
+  for (let i = 0; i < 60; i++) { await wait(200); sRe = await (await get('/admin/tournaments/settings')).json(); if (sRe.service.status === 'running' && sRe.service.pid !== pid0) break; }
+  fs.utimesSync(entry, st0.atime, st0.mtime);
+  ok(sRe && sRe.service.status === 'running' && sRe.service.pid !== pid0 && sRe.service.restarts === 0, 'new tournament code on disk: the service restarts by itself');
+  ok((await (await fetch(base + '/admin/whoami', { headers: H })).json()).ok && /new code on disk/.test(plog), 'the web client itself keeps running, and says why');
+  await wait(600);
+  const rs = await (await post('/admin/tournaments/restart', {})).json();
+  ok(rs.ok && rs.service.status === 'running' && rs.service.pid !== sRe.service.pid, 'Restart the service: a new process, at once');
+  ok((await post('/admin/tournaments/restart', {}, {})).status === 403, 'restart needs the token');
+  s1.service.pid = rs.service.pid;
 
   // ── the service stops: the web client starts it again ──
   const pid1 = s1.service.pid;

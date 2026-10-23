@@ -12,7 +12,12 @@
 //     limit); the service is told the request is genuine by a secret made at
 //     each launch (header X-TD-Secret) and who sent it (X-TD-Author);
 //   - answering its questions over IPC: which servers it may use (the LAN
-//     directory and the local server — never pokerth.net).
+//     directory and the local server — never pokerth.net);
+//   - restarting it ALONE when its code changes on disk (an update that only
+//     touches tournament/ needs no restart of the web client: the update check
+//     says so, the static update pulls it, and the new code is picked up here
+//     within CODE_POLL_MS). The service has its own version
+//     (tournament/package.json); the web client's does not move for it.
 // Watches run in detached processes started by the service: they survive
 // the service and the web client.
 // Design: docs/TOURNAMENT_DIRECTOR.md.
@@ -24,7 +29,22 @@ const http = require('http');
 const crypto = require('crypto');
 const childProcess = require('child_process');
 
-const ENTRY = path.join(__dirname, '..', 'tournament', 'server.mjs');
+const TD_ROOT = path.join(__dirname, '..', 'tournament');
+const ENTRY = path.join(TD_ROOT, 'server.mjs');
+const CODE_POLL_MS = 15000;
+
+// What the running service is made of: its entry, package.json, lib/ and
+// public/ (not its tests). Size and mtime are enough to notice an update.
+function codeKey() {
+  const files = [ENTRY, path.join(TD_ROOT, 'package.json')];
+  for (const sub of ['lib', 'public']) {
+    try { fs.readdirSync(path.join(TD_ROOT, sub)).sort().forEach((f) => files.push(path.join(TD_ROOT, sub, f))); } catch (e) {}
+  }
+  return files.map((f) => { try { const st = fs.statSync(f); return f + ':' + st.size + ':' + st.mtimeMs; } catch (e) { return f + ':-'; } }).join('|');
+}
+function diskVersion() {
+  try { return JSON.parse(fs.readFileSync(path.join(TD_ROOT, 'package.json'), 'utf8')).version || null; } catch (e) { return null; }
+}
 const PAGE_RE = /^\/tournament(?:\.html|\/|\/[A-Za-z0-9_-]+\.(?:mjs|json))?$/;
 // Only these reach the service; the rest of the environment (admin token,
 // database passwords…) stays with the web client.
@@ -34,6 +54,7 @@ function createTournamentHost(deps) {
   const log = deps.log || ((s) => console.log(s));
   let child = null, port = null, version = null, status = 'off', lastError = null;
   let restarts = 0, timer = null, stableTimer = null, startedAt = null, secret = null;
+  let runningKey = null, reloading = false, codeTimer = null;
   let readyWaiters = [];
 
   function enabled() { return (deps.getConfig() || {}).enabled === true; }
@@ -47,6 +68,36 @@ function createTournamentHost(deps) {
     return settings();
   }
   function sync() { if (enabled()) start(); else stop(); }
+
+  // New code on disk while the service runs: restart it, and only it.
+  function watchCode() {
+    if (codeTimer) return;
+    codeTimer = setInterval(() => {
+      if (!child || !port || reloading) return;
+      const k = codeKey();
+      if (runningKey && k !== runningKey) {
+        log('[td] new code on disk (version ' + (version || '?') + ' → ' + (diskVersion() || '?') + '): restarting the tournament service only');
+        restart('code updated');
+      }
+    }, deps.codePollMs || CODE_POLL_MS);
+    if (codeTimer.unref) codeTimer.unref();
+  }
+  // Stop and start again at once (not counted as a failure). Watches are
+  // processes of their own: they go on meanwhile.
+  function restart(why) {
+    if (!enabled()) return Promise.resolve(false);
+    const c = child;
+    if (!c) { start(); return ready(10000); }
+    reloading = true;
+    status = 'restarting';
+    lastError = null;
+    return new Promise((resolve) => {
+      c.once('exit', () => { reloading = false; restarts = 0; start(); ready(10000).then(resolve); });
+      try { c.kill('SIGTERM'); } catch (e) { reloading = false; resolve(false); }
+      setTimeout(() => { try { c.kill('SIGKILL'); } catch (e) {} }, 5000).unref();
+      log('[td] restarting the service' + (why ? ' (' + why + ')' : ''));
+    });
+  }
 
   function settle(ok) { const w = readyWaiters; readyWaiters = []; w.forEach((f) => f(ok)); }
   function start() {
@@ -64,6 +115,8 @@ function createTournamentHost(deps) {
       return;
     }
     child = c; startedAt = Date.now();
+    runningKey = codeKey();
+    watchCode();
     const lines = (stream) => {
       let buf = '';
       stream.on('data', (d) => { buf += d; let i; while ((i = buf.indexOf('\n')) >= 0) { const l = buf.slice(0, i); buf = buf.slice(i + 1); if (l.trim()) log(l.indexOf('[td]') === 0 ? l : '[td] ' + l); } });
@@ -87,6 +140,7 @@ function createTournamentHost(deps) {
       if (child !== c) return;
       child = null; port = null; clearTimeout(stableTimer);
       settle(false);
+      if (reloading) return;              // restart(): it starts the new one
       if (!enabled()) { status = 'off'; return; }
       lastError = 'stopped (code ' + code + (signal ? ', signal ' + signal : '') + ')';
       restarts++;
@@ -115,7 +169,7 @@ function createTournamentHost(deps) {
     });
   }
   function info() {
-    return { status, version, pid: child ? child.pid : null, restarts, lastError, since: port ? startedAt : null };
+    return { status, version, diskVersion: diskVersion(), pid: child ? child.pid : null, restarts, lastError, since: port ? startedAt : null };
   }
 
   // ── talking to the service ──
@@ -170,7 +224,7 @@ function createTournamentHost(deps) {
     } catch (e) { return null; }
   }
 
-  return { settings, setSettings, sync, start, stop, ready, info, relay, serviceStatus, keyInfo, enabled, PAGE_RE };
+  return { settings, setSettings, sync, start, stop, restart, ready, info, relay, serviceStatus, keyInfo, enabled, PAGE_RE };
 }
 
 // ── HTTP, under /admin/tournaments (auth and rate limit by handleAdmin) ──
@@ -195,6 +249,11 @@ function handleTournamentAdmin(host, h, req, res, reqPathOnly, query) {
     if (!h.adminAuthed(query)) return deny();
     return answerSettings();
   }
+  if (sub === '/restart' && req.method === 'POST') return h.readJsonBody(req, (b) => {
+    if (!b || !h.adminAuthed(query, b.token)) return deny();
+    if (!host.enabled()) return h.adminJson(res, 409, { ok: false, error: 'tournaments are off' });
+    return host.restart('asked by the admin').then(() => answerSettings());
+  });
   // Everything else is the service's: token checked here, then relayed.
   if (!h.adminAuthed(query)) return deny();
   if (!host.enabled()) return h.adminJson(res, 409, { ok: false, error: 'tournaments are off (Admin › Community › Tournaments)' });

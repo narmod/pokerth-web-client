@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="color-scheme" content="dark light">
-<title>Tournaments · PokerTH</title>
+<title>Tournaments (beta) · PokerTH</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="/favicon-180.png">
@@ -55,6 +55,8 @@ a{color:var(--brass)}
 .brand img{width:34px;height:34px;display:block;flex:none}
 .brand span{font-weight:400;color:var(--muted)}
 .sp{flex:1}
+.beta{display:inline-block;flex:none;padding:1px 8px;border-radius:999px;border:1px solid var(--brass);color:var(--brass);font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1.5;vertical-align:middle}
+h1 .beta{font-size:.45em;margin-left:6px;vertical-align:.35em}
 h1{color:var(--ivory);font-size:1.6em;line-height:1.25;margin:22px 0 4px}
 h2{color:var(--ivory);font-size:1.15em;margin:0 0 8px}
 h3{color:var(--ivory);font-size:1em;margin:14px 0 6px}
@@ -138,13 +140,14 @@ input[type="file"]{padding:7px}
 <body>
 <header class="top"><div class="in">
   <a class="brand" href="/"><img src="/logo-chip-68.png" alt="" width="34" height="34">PokerTH <span>Tournaments</span></a>
+  <span class="beta" title="Beta: still being built — results are kept, but things will change">beta</span>
   <span class="sp"></span>
   <button type="button" class="theme ghost" id="themeBtn" aria-label="Colour theme">Theme: auto</button>
   <button type="button" class="theme ghost" id="signOut" hidden>Sign out</button>
 </div></header>
 
 <main class="in">
-  <h1>Tournament director</h1>
+  <h1>Tournament director <span class="beta">beta</span></h1>
 
   <section class="card" id="signIn" hidden aria-labelledby="signInH">
     <h2 id="signInH">Organizer sign-in</h2>

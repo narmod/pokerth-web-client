@@ -32,6 +32,12 @@ highlights below.
   render exactly as before (`scripts/test-theme-legacy.mjs` compares with web.142).
 
 ### Changed
+- **Tournaments: updated on their own, « beta »** (`web.300`, service `0.2.1`) — the tournament director now has its own
+  version and changelog (`tournament/CHANGELOG.md`): a change that only touches `tournament/` bumps the service's
+  version, not the web client's. The update check no longer asks to restart the web client for it (static update),
+  and the web client restarts the tournament service alone once its new code is on disk (checked every 15 s); Admin ›
+  Tournaments shows the running and the on-disk version and gets « Restart the service ». A « beta » badge in the admin
+  menu, the panel and on `/tournament`.
 - **Admin › Community › Tournaments in the style of the other sections** (`web.298`) — four tiles at the top (module,
   service state and version, watches running, install key), a « Tournament director » card with the shared On/Off
   switch, « Open /tournament » and « Refresh », the « Where it runs » details, and the install key in a card of its

@@ -1,5 +1,5 @@
 {
-  "name": "PokerTH Tournaments",
+  "name": "PokerTH Tournaments (beta)",
   "short_name": "Tournaments",
   "description": "Organizer tools of a PokerTH web client: watch a LAN table and seal its result.",
   "id": "/tournament",
