@@ -69,6 +69,7 @@ function chip(c) {
   if (c.phase === 'table') return '<span class="chip live">' + T('stTable') + '</span>';
   return c.registration === 'open' ? '<span class="chip live">' + T('stRegOpen') + '</span>' : '<span class="chip">' + T('stRegClosed') + '</span>';
 }
+function cupKeyFromPath() { const m = /^\/tournament\/c\/([A-Za-z0-9_-]{8,40})\/?$/.exec(location.pathname); return m ? m[1] : null; }
 function keyFromPath() { const m = /^\/tournament\/t\/([A-Za-z0-9_-]{8,40})\/?$/.exec(location.pathname); return m ? m[1] : null; }
 function inviteFromUrl() { try { return new URLSearchParams(location.search).get('invite') || ''; } catch (e) { return ''; } }
 function go(path) { history.pushState(null, '', path); route(); }
@@ -83,9 +84,10 @@ function card(c) {
 }
 async function showList() {
   $('view').innerHTML = '<p class="empty">' + T('loading') + '</p>';
-  const d = await api('/list');
+  const [d, dc] = await Promise.all([api('/list'), api('/cups')]);
   if (!d.ok) { $('view').innerHTML = '<p class="msg bad">' + T('err_error') + '</p>'; return; }
   const all = d.tournaments || [];
+  const cupList = (dc && dc.ok && dc.cups) || [];
   const groups = [
     ['secLive', all.filter((c) => c.phase === 'table')],
     ['secOpen', all.filter((c) => c.phase === 'upcoming' && c.registration === 'open')],
@@ -94,8 +96,11 @@ async function showList() {
   ].filter((g) => g[1].length);
   // Coming soonest first; finished ones, latest first (as sent).
   for (const g of groups) if (g[0] !== 'secDone') g[1].sort((a, b) => (a.startsAt || Infinity) - (b.startsAt || Infinity));
-  $('view').innerHTML = groups.length ? groups.map((g) => '<section class="card"><h2>' + T(g[0]) + '</h2><ul class="tlist">' + g[1].map(card).join('') + '</ul></section>').join('')
-    : '<section class="card"><p class="empty">' + T('none') + '</p></section>';
+  const cupsHtml = cupList.length ? '<section class="card"><h2>' + T('secCups') + '</h2><ul class="tlist">' + cupList.map((c) => '<li><a class="tcard" href="/tournament/c/' + esc(c.key) + '" data-go>' +
+    '<span class="tc-top"><span class="tname">' + esc(c.name) + '</span><span class="chip ' + (c.status === 'closed' ? 'done' : 'live') + '">' + T(c.status === 'closed' ? 'cupStatusClosed' : 'cupStatusOpen') + '</span></span>' +
+    '<span class="muted small">' + T('cupEvents', { n: c.events }) + (c.leader ? ' · ' + T('cupLeader', { nick: esc(c.leader) }) : '') + '</span></a></li>').join('') + '</ul></section>' : '';
+  $('view').innerHTML = (groups.length ? groups.map((g) => '<section class="card"><h2>' + T(g[0]) + '</h2><ul class="tlist">' + g[1].map(card).join('') + '</ul></section>').join('')
+    : '<section class="card"><p class="empty">' + T('none') + '</p></section>') + cupsHtml;
 }
 
 // ── one tournament ─────────────────────────────────────────────────
@@ -121,11 +126,11 @@ async function showOne(key) {
     showOne(key);
   }, d.phase === 'table' ? 5000 : 30000);
 }
-function renderPrivate(key, tried) {
+function renderPrivate(key, tried, base) {
   $('view').innerHTML = '<p><a href="/tournament" data-go>← ' + T('allTournaments') + '</a></p><section class="card"><h2>' + T('privateTitle') + '</h2>' +
     '<p>' + T('privateText') + '</p>' + (tried ? '<p class="msg bad">' + T('err_notFound') + '</p>' : '') +
     '<form id="invForm" class="row"><div><label for="invIn">' + T('inviteCode') + '</label><input id="invIn" autocomplete="off" required></div><button type="submit" class="primary">' + T('open') + '</button></form></section>';
-  $('invForm').addEventListener('submit', (ev) => { ev.preventDefault(); go('/tournament/t/' + key + '?invite=' + encodeURIComponent($('invIn').value.trim())); });
+  $('invForm').addEventListener('submit', (ev) => { ev.preventDefault(); go((base || '/tournament/t/') + key + '?invite=' + encodeURIComponent($('invIn').value.trim())); });
 }
 function tableLine(tb) {
   if (!tb) return '';
@@ -138,6 +143,7 @@ function renderOne() {
   h += '<section class="card"><h2>' + esc(c.name) + '</h2><p>' + chip(c) + '</p><p class="small">' +
     (c.startsAt ? T('startsAt', { date: fmtDate(c.startsAt) }) : T('noDate')) + (c.server ? ' · ' + T('onServer', { server: c.server }) : '') + '<br>' +
     T('format') + ' · ' + T('players', { n: c.players, max: c.maxPlayers }) + (c.table ? '<br>' + tableLine(c.table) : '') + '</p>';
+  for (const cp of c.cups || []) h += '<p class="small"><a href="/tournament/c/' + esc(cp.key) + '" data-go>' + T('partOfCup', { name: esc(cp.name) }) + '</a></p>';
   if (c.parent) h += '<p class="small"><a href="/tournament/t/' + esc(c.parent.key) + invQs('?') + '" data-go>' + (c.stage && c.stage.kind === 'final' ? T('finalOf', { name: esc(c.parent.name) }) : T('tableOf', { n: c.stage ? c.stage.index : '', name: esc(c.parent.name) })) + '</a></p>';
   if (flash) { h += '<div class="msg ' + (flash.bad ? 'bad' : 'ok') + '" role="status">' + flash.html + '</div>'; flash = null; }
   // The table, once the director has opened it.
@@ -322,13 +328,57 @@ function wire() {
   if (un) un.addEventListener('submit', (ev) => { ev.preventDefault(); doUnreg($('unNick').value.trim(), $('unCode').value.trim()); });
 }
 
+// ── a cup ──────────────────────────────────────────────────────────
+// Its tournaments (each with its page), how the points are counted, the
+// standings (points per tournament, the ones not counted in brackets).
+async function showCup(key) {
+  curKey = key;
+  const inv = inviteFromUrl();
+  const d = await api('/c/' + key + (inv ? '?invite=' + encodeURIComponent(inv) : ''));
+  if (curKey !== key) return;
+  if (!d.ok) {
+    if (d.code === 'private') return renderPrivate(key, !!inv, '/tournament/c/');
+    $('view').innerHTML = '<p><a href="/tournament" data-go>← ' + T('allTournaments') + '</a></p><section class="card"><p class="msg bad">' + T('err_notFound') + '</p></section>';
+    return;
+  }
+  const fmt = (x) => (Math.round(x * 10) / 10).toLocaleString(lang);
+  let h = '<p><a href="/tournament" data-go>← ' + T('allTournaments') + '</a></p>';
+  h += '<section class="card"><h2>' + esc(d.name) + '</h2><p><span class="chip ' + (d.status === 'closed' ? 'done' : 'live') + '">' + T(d.status === 'closed' ? 'cupStatusClosed' : 'cupStatusOpen') + '</span></p>' +
+    (d.description ? '<p>' + esc(d.description) + '</p>' : '') +
+    '<p class="small">' + T('cupRulesPoints') + ' ' + (d.bestOf ? T('cupBest', { n: d.bestOf }) : T('cupAll')) + ' ' + T('cupTies') + '</p></section>';
+  // Its tournaments.
+  h += '<section class="card"><h2>' + T('cupTournaments') + '</h2><ul class="tlist">' + d.events.map((e) => {
+    const extra = [];
+    if (e.qualify && e.next != null && d.events[e.next]) extra.push(T('cupGoOn', { n: e.qualify, name: esc(d.events[e.next].label) }));
+    if (e.final) extra.push(T('cupFinal') + (e.fromStandings ? ' · ' + T('cupFromStandings', { n: e.fromStandings }) : ''));
+    if (!e.counts) extra.push(T('notCounted'));
+    return '<li><a class="tcard" href="/tournament/t/' + esc(e.key) + invQs('?') + '" data-go><span class="tc-top"><span class="tname">' + esc(e.label) + '</span>' +
+      '<span class="chip ' + (e.validated ? 'done' : e.status === 'running' ? 'live' : '') + '">' + T(e.validated ? 'stValidated' : e.status === 'running' ? 'stTable' : 'cupStatusOpen') + '</span></span>' +
+      '<span class="muted small">' + T('cupPlayers', { n: e.players }) + (extra.length ? ' · ' + extra.join(' · ') : '') + '</span></a></li>';
+  }).join('') + '</ul></section>';
+  // Standings.
+  const evs = d.events.filter((e) => e.counts);
+  h += '<section class="card"><h2>' + T('cupStandings') + '</h2>';
+  if (d.standings.length) {
+    h += '<div class="tablewrap"><table><thead><tr><th class="num">' + T('colPlace') + '</th><th>' + T('colPlayer') + '</th><th class="num">' + T('colPoints') + '</th>' +
+      evs.map((e) => '<th class="num" title="' + esc(e.label) + '">' + (e.index + 1) + '</th>').join('') + '</tr></thead><tbody>' +
+      d.standings.map((r) => '<tr><td class="num">' + r.place + (r.tie ? '=' : '') + '</td><td>' + esc(r.nick) + (r.place === 1 && d.status === 'closed' ? ' <span class="chip done">♛</span>' : '') + (r.final != null ? ' <span class="chip">' + T('cupFinal') + ' ' + r.final + '</span>' : '') + '</td><td class="num"><b>' + fmt(r.total) + '</b></td>' +
+        evs.map((e) => { const x = r.results.find((y) => y.event === e.index); return '<td class="num">' + (x ? (x.counted ? fmt(x.points) : '<span class="muted" title="' + T('notCounted') + '">(' + fmt(x.points) + ')</span>') : '') + '</td>'; }).join('') + '</tr>').join('') +
+      '</tbody></table></div><p class="small muted">' + evs.map((e) => (e.index + 1) + ' = ' + esc(e.label)).join(' · ') + '</p>';
+  } else h += '<p class="empty">' + T('cupNoResult') + '</p>';
+  if (d.sealed) h += '<p class="small">' + T('cupClosed') + ' <span class="mono">' + T('signedBy', { key: d.sealed.signedBy || '—' }) + ' (' + T(d.sealed.signature ? 'sigOk' : 'sigBad') + ')</span></p>';
+  h += '</section>';
+  $('view').innerHTML = h;
+  $('heroTitle').textContent = d.name;
+}
+
 // ── routing ────────────────────────────────────────────────────────
 function route() {
   clearTimeout(pollTimer);
   curKey = null; cur = null;
   $('heroTitle').textContent = t('title');
-  const key = keyFromPath();
-  if (key) showOne(key); else showList();
+  const key = keyFromPath(), ckey = cupKeyFromPath();
+  if (key) showOne(key); else if (ckey) showCup(ckey); else showList();
   window.scrollTo(0, 0);
 }
 document.addEventListener('click', (ev) => {

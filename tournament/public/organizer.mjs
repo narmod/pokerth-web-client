@@ -9,6 +9,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 import { createTournamentsView } from './tournaments-ui.mjs';
+import { createCupsView } from './cups-ui.mjs';
 import { initTheme } from './theme.mjs';
 
 const TOKK = 'pth_admin_tok';
@@ -41,23 +42,29 @@ function api(path, body) {
 initTheme($('themeBtn'));
 
 // ── views: Tournaments | Table check ────────────────────────────────
+const VIEWS = [['tour', 'tabTour', 'viewTour'], ['check', 'tabCheck', 'viewCheck'], ['cups', 'tabCup', 'viewCup']];
 function setView(v) {
-  const check = v === 'check';
-  $('viewTour').hidden = check; $('viewCheck').hidden = !check;
-  $('tabTour').setAttribute('aria-selected', String(!check)); $('tabCheck').setAttribute('aria-selected', String(check));
-  $('tabTour').tabIndex = check ? -1 : 0; $('tabCheck').tabIndex = check ? 0 : -1;
-  store(VIEWK, check ? 'check' : null);
+  for (const [k, tab, view] of VIEWS) {
+    const on = k === v;
+    $(view).hidden = !on;
+    $(tab).setAttribute('aria-selected', String(on));
+    $(tab).tabIndex = on ? 0 : -1;
+  }
+  store(VIEWK, v === 'tour' ? null : v);
 }
 $('tabTour').addEventListener('click', () => { setView('tour'); tours.refresh(); });
 $('tabCheck').addEventListener('click', () => { setView('check'); refreshList(); });
+$('tabCup').addEventListener('click', () => { setView('cups'); cups.refresh(); });
 document.querySelector('.tabs').addEventListener('keydown', (ev) => {
   if (ev.key !== 'ArrowLeft' && ev.key !== 'ArrowRight') return;
-  const next = $('tabTour').getAttribute('aria-selected') === 'true' ? 'tabCheck' : 'tabTour';
+  const i = VIEWS.findIndex((x) => $(x[1]).getAttribute('aria-selected') === 'true');
+  const next = VIEWS[(i + (ev.key === 'ArrowRight' ? 1 : VIEWS.length - 1)) % VIEWS.length][1];
   $(next).click(); $(next).focus();
 });
-setView(load(VIEWK) === 'check' ? 'check' : 'tour');
+setView(['check', 'cups'].indexOf(load(VIEWK)) >= 0 ? load(VIEWK) : 'tour');
 let you = '';   // who is signed in: « admin » (master key) or an organizer's key name
 const tours = createTournamentsView({ api, esc, tok, servers: () => servers, you: () => you });
+const cups = createCupsView({ api, esc });
 
 // ── the director's avatar ──────────────────────────────────────────
 // Resized here to 96×96 (PNG, or JPEG when the PNG is over the server's
@@ -127,6 +134,7 @@ function start() {
     $('srvSel').innerHTML = servers.map((s) => '<option value="' + esc(s.ref) + '">' + esc(s.name) + ' — ' + esc(s.host) + ':' + esc(s.port) + (s.tls ? ' (TLS)' : '') + ' · ' + esc({ registry: 'game server', lan: 'LAN directory', local: 'local' }[s.kind] || s.kind) + '</option>').join('');
     refreshList();
     tours.refresh();
+    cups.refresh();
     clearInterval(listTimer);
     listTimer = setInterval(refreshList, 5000);
   }).catch(() => {});

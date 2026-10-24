@@ -63,6 +63,7 @@
   <div class="tabs" role="tablist" aria-label="Organizer tools">
     <button type="button" role="tab" id="tabTour" aria-controls="viewTour" aria-selected="true">Tournaments</button>
     <button type="button" role="tab" id="tabCheck" aria-controls="viewCheck" aria-selected="false">Table check</button>
+    <button type="button" role="tab" id="tabCup" aria-controls="viewCup" aria-selected="false">Cups</button>
   </div>
   <div id="viewTour" role="tabpanel" aria-labelledby="tabTour">
   <p class="lead">LAN only. Create the tournament and add the players. Then either let the director open the table on the LAN server (invitations, seat check, hand-over to the first player, result recorded by itself), or set the result yourself — typed in, taken from a Table check, or from a PokerTH log. Every action goes into the tournament’s sealed journal; the validated result is signed.</p>
@@ -145,6 +146,33 @@
       <h2 id="detailH">3 · Watch</h2>
       <p class="empty" id="detailEmpty">Pick a watch, or start one.</p>
       <div id="detailBody" hidden></div>
+    </section>
+  </div>
+  </div>
+  <div id="viewCup" role="tabpanel" aria-labelledby="tabCup" hidden>
+  <p class="lead">A cup gathers tournaments. <b>Points:</b> each counted tournament gives every player the number of players finished behind him, plus one (a shared place: the average); the standings add up each player's best results. <b>Stages:</b> the first of a tournament go on to the next one, up to a final — which may also take the top of the points standings. Only validated results count; closing the cup signs its standings.</p>
+  <div class="grid">
+    <div>
+      <section class="card" aria-labelledby="cNewH">
+        <h2 id="cNewH">New cup</h2>
+        <form id="cCreateForm">
+          <div class="row"><div><label for="cName">Name</label><input id="cName" maxlength="60" required></div>
+            <div><label for="cBest">Results counted per player (0 = all)</label><input id="cBest" type="number" inputmode="numeric" min="0" max="50" value="0"></div>
+            <div><label for="cVis">Visibility</label><select id="cVis"><option value="public">public</option><option value="unlisted">unlisted</option><option value="private">private (invitation code)</option></select></div></div>
+          <label for="cDesc">Description (for the players)</label><input id="cDesc" maxlength="300">
+          <div class="actions"><button type="submit" class="primary">Create</button></div>
+        </form>
+        <div class="msg" id="cMsg" role="status"></div>
+      </section>
+      <section class="card" aria-labelledby="cListH">
+        <h2 id="cListH">Cups</h2>
+        <ul class="watches" id="cList"><li class="empty">None yet.</li></ul>
+      </section>
+    </div>
+    <section class="card" aria-labelledby="cDetailH" aria-live="polite">
+      <h2 id="cDetailH">Cup</h2>
+      <p class="empty" id="cDetailEmpty">Pick a cup, or create one.</p>
+      <div id="cDetailBody" hidden></div>
     </section>
   </div>
   </div>

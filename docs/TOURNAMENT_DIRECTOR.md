@@ -416,6 +416,42 @@ Routes: `POST /admin/tournaments/t/table/open {id}`, `…/t/table/go {id}`,
   `badCode`, `alreadyIn`. Organizer routes: `POST /admin/tournaments/t/code
   {id, nick}`, `…/t/checkin {id, nick}`.
 
+## Cups (service `0.13.0`, web client `2.1.10-web.310`)
+
+A cup gathers tournaments of this install (`tournament/lib/cups.mjs`).
+
+- **Points** (decided 2026-10-24, « fair and checkable »): a counted
+  tournament gives each ranked player `players behind + 1` — the last gets 1,
+  the winner as many points as there were players. It grows with the field
+  by itself (winning among 10 is worth more than among 4) and needs no table.
+  A place shared by k players gives each the average of the k positions
+  (3rd–4th of 5 → 2.5). Absent players are not ranked, so get nothing.
+- **Best N** (`bestOf`, 0 = all): only each player's N best results count;
+  the others are shown in brackets.
+- **Stages**: an event may send its first `qualify` players to the `next`
+  event — added by « cup » as soon as the tournament is validated (the
+  service's sweep, once; refusals noted in the cup's journal). Several events
+  may feed one. A **final** (`final: true`) may also take the top
+  `fromStandings` of the points standings (« Qualify the top K »), and may
+  count for points or not (`counts`).
+- **Ranking of the cup**: the final's places first (once validated), then the
+  furthest stage reached, then the points, then the best single results one
+  by one; still equal: the same place. Only validated (signed) results count;
+  the standings are recomputed from the tournaments each time, so a
+  correction flows in by itself.
+- **Closing** signs the standings (`result.json`, the install key) with the
+  sealed head of each tournament; nothing can be added after.
+- Organizer page: « Cups » tab (create, add tournaments with their role,
+  standings, qualify, close). Players' page: the public cups on the start page,
+  `/tournament/c/<key>` (rules, tournaments, standings with points per
+  tournament), and « Part of the cup … » on each tournament's page.
+- Routes: `GET /admin/tournaments/cups/list`, `…/cups/get?id=`,
+  `POST …/cups/create {name, bestOf, visibility, description}`,
+  `…/cups/update {id, patch}`, `…/cups/event {id, tournamentId, label?,
+  counts?, qualify?, next?, final?, fromStandings?}`, `…/cups/event/remove
+  {id, index}`, `…/cups/qualify {id, index}`, `…/cups/close {id}`;
+  public `GET /tournament/api/cups`, `…/c/<key>[?invite=]`.
+
 ## Several tables (service `0.12.0`, web client `2.1.10-web.309`)
 
 PokerTH cannot move a player from one game to another while it runs, so

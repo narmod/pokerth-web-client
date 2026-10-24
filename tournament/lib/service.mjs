@@ -20,6 +20,7 @@ const PUBLIC = path.join(HERE, '..', 'public');
 const STATIC = {
   'organizer.mjs': 'text/javascript; charset=utf-8',
   'tournaments-ui.mjs': 'text/javascript; charset=utf-8',
+  'cups-ui.mjs': 'text/javascript; charset=utf-8',
   'public.mjs': 'text/javascript; charset=utf-8',
   'theme.mjs': 'text/javascript; charset=utf-8',
   'td.css': 'text/css; charset=utf-8',
@@ -43,6 +44,7 @@ function same(a, b) {
 export function createService(o) {
   const td = createManager({ dir: o.dir, servers: o.servers, clientVersion: o.clientVersion });
   const T = td.tournaments;
+  const C = td.cups;
 
   // ── tables opened by the director: carry their end into the tournament ──
   const syncing = new Set();
@@ -71,6 +73,8 @@ export function createService(o) {
     for (const h of T.openHosts()) syncHost(h.id, h.watchId);
     for (const d of T.autoOpenDue()) autoOpen(d);
     for (const id of T.multiParents()) stagesSweep(id);
+    // Cups: the first Q of a validated tournament go on to the next one.
+    try { C.tick(); } catch (e) { if (!(e instanceof T.Refusal)) console.error('[td] cups: ' + (e && e.message)); }
   }
   // Several tables: once every table is validated, the final table (opened by
   // itself when the tournament opens by itself); once the final is validated,
@@ -246,6 +250,8 @@ export function createService(o) {
     }
     if (sub === '/t/list' && get) { sweep(); return send(() => T.list()); }
     if (sub === '/t/get' && get) return send(() => getTournament(String(query.id || '')));
+    if (sub === '/cups/list' && get) return send(() => ({ cups: C.list() }));
+    if (sub === '/cups/get' && get) return send(() => C.get(String(query.id || '')));
     if (sub === '/t/file' && get) {
       const which = String(query.which || '');
       const buf = T.file(String(query.id || ''), which);
@@ -278,6 +284,12 @@ export function createService(o) {
       case '/t/validate': return send(() => T.validate(id, who, { override: b.override }));
       case '/t/correct': return send(() => T.correct(id, b, who));
       case '/t/collusion': return send(() => T.checkCollusion(id, who));
+      case '/cups/create': return send(() => C.create(b, who));
+      case '/cups/update': return send(() => C.update(id, b.patch || {}, who));
+      case '/cups/event': return send(() => C.addEvent(id, b, who));
+      case '/cups/event/remove': return send(() => C.removeEvent(id, b.index, who));
+      case '/cups/qualify': return send(() => C.qualifyFromStandings(id, b.index, who));
+      case '/cups/close': return send(() => C.close(id, who));
       case '/t/draw': return send(() => T.drawTables(id, who));
       case '/t/stages/open': return send(() => openStages(id, b, who));
       case '/t/final': return send(async () => { const fin = T.makeFinal(id, who); if (b.open !== false) { try { await openTable(fin.id, {}, who); } catch (e) { const v = T.get(id); v.openErrors = ['final table: ' + e.message]; return v; } } return withHost(T.get(id)); });
@@ -343,6 +355,9 @@ export function createService(o) {
       .catch((e) => (e instanceof T.Refusal ? json(res, e.code === 'notFound' || e.code === 'private' ? 404 : 400, { ok: false, code: e.code || 'refused', error: e.message })
         : json(res, 500, { ok: false, code: 'error', error: 'error' })));
     if (sub === '/list' && req.method === 'GET') return send(() => T.publicList());
+    if (sub === '/cups' && req.method === 'GET') return send(() => ({ cups: C.publicList() }));
+    const cm = /^\/c\/([A-Za-z0-9_-]{8,40})$/.exec(sub);
+    if (cm && req.method === 'GET') return send(() => C.publicGet(cm[1], query.invite));
     // A web client at a table: is it a tournament's? (game id and table name,
     // as the server told the client.) Only tables the director opened.
     if (sub === '/table' && req.method === 'GET') return send(() => tableLookup(query));
@@ -354,7 +369,10 @@ export function createService(o) {
       return send(async () => {
         const v = T.publicGet(key, query.invite, null);
         for (const h of T.openHosts()) await syncHost(h.id, h.watchId);
-        return T.publicGet(key, query.invite, liveOf);
+        const out = T.publicGet(key, query.invite, liveOf);
+        const own = T.idOfKey ? T.idOfKey(key) : null;
+        if (own) out.cups = C.cupsOf(own);
+        return out;
       });
     }
     if (op === 'file' && req.method === 'GET') {
@@ -381,7 +399,7 @@ export function createService(o) {
     if (p === '/healthz') return json(res, 200, { ok: true, version: o.version });
     // /tournament: the players' page (list, a tournament, registration);
     // /tournament/organize: the organizer's tools.
-    if (p === '/tournament' || p === '/tournament/' || p === '/tournament.html' || /^\/tournament\/t\/[A-Za-z0-9_-]{8,40}\/?$/.test(p)) return sendPage(res, 'public.html');
+    if (p === '/tournament' || p === '/tournament/' || p === '/tournament.html' || /^\/tournament\/[tc]\/[A-Za-z0-9_-]{8,40}\/?$/.test(p)) return sendPage(res, 'public.html');
     if (p === '/tournament/organize' || p === '/tournament/organize/') return sendPage(res, 'index.html');
     if (p.indexOf('/tournament/api/') === 0) {
       return publicApi(req, res, p.slice('/tournament/api'.length), query)

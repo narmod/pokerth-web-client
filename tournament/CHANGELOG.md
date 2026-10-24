@@ -8,6 +8,23 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.13.0 — 2026-10-24 (web client `2.1.10-web.310`)
+
+### Added
+- **Cups**, by points, by stages, or both. Points: each counted tournament
+  gives every player the number of players finished behind him, plus one (a
+  shared place: the average) — it grows with the field by itself and anyone
+  can check it; the standings add up each player's best N results (0 = all).
+  Stages: the first Q of a validated tournament go on to the next one by
+  themselves (several tournaments may feed the same one), up to a final; a
+  final may also take the top K of the points standings. Ranking of the cup:
+  the final's places, then the furthest stage, the points, the best single
+  results one by one. Only validated results count; a corrected tournament
+  changes the standings by itself. Closing the cup signs its standings.
+  Organizer page: a « Cups » tab. Players' page: the cups on the start page,
+  a page per cup (`/tournament/c/<key>`: rules, tournaments, standings), and
+  a link from each tournament to its cups.
+
 ## 0.12.0 — 2026-10-24 (web client `2.1.10-web.309`)
 
 ### Added

@@ -306,6 +306,19 @@ try {
   ok(/↳ Big cup — table 2/.test($('tList').textContent), 'the tables are listed under their tournament');
   w.document.querySelector('#tDetailBody [data-act="goto"]').click();
   ok(await until(() => /Table 1 of/.test(det()) && /its players come from the draw/.test(det()) && !$('tPlayerIn')), 'a table: its tournament linked, players fixed by the draw');
+
+  // Cups: created, a validated tournament added, its points in the standings.
+  $('tabCup').click();
+  ok(!$('viewCup').hidden && w.localStorage.getItem('pth_td_view') === 'cups', 'cups: their own tab, remembered');
+  $('cName').value = 'Winter cup'; $('cBest').value = '3';
+  $('cCreateForm').dispatchEvent(new w.Event('submit', { cancelable: true }));
+  const cdet = () => $('cDetailBody').textContent;
+  ok(await until(() => /Winter cup/.test(cdet()) && /best 3 results per player/.test(cdet()) && /Winter cup/.test($('cList').textContent)), 'cups: created, listed, opened');
+  await until(() => $('ceT') && [...$('ceT').options].some((o) => /Friday cup/.test(o.textContent)));
+  $('ceT').value = [...$('ceT').options].find((o) => /Friday cup/.test(o.textContent)).value;
+  w.document.querySelector('#cDetailBody [data-cact="add"]').click();
+  ok(await until(() => /Tournament added/.test(cdet()) && /Standings/.test(cdet()) && /Alice/.test(cdet())), 'cups: a validated tournament added, its players in the standings');
+  $('tabTour').click();
   w.close();
 
   // .pdb through the routes.

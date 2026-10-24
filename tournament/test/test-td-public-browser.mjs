@@ -153,6 +153,26 @@ try {
     if (shots) await pg.screenshot({ path: path.join(shots, 'pub-table.png'), fullPage: true });
   }
 
+  // A cup: listed on the start page, its standings with the points.
+  {
+    const c1 = await admin('/t/create', { name: 'League night', profile: 'club' });
+    for (const nk of ['Lia', 'Max', 'Noa']) await admin('/t/player', { id: c1.id, nick: nk });
+    await admin('/t/result', { id: c1.id, source: 'manual', ranking: ['Max', 'Lia', 'Noa'] });
+    const cup = await admin('/cups/create', { name: 'Winter league', bestOf: 4, description: 'Every Friday' });
+    await admin('/cups/event', { id: cup.id, tournamentId: c1.id });
+    await pg.goto(base + '/tournament');
+    await pg.waitForSelector('a.tcard[href*="/tournament/c/"]', { timeout: 8000 });
+    ok(/Cups/.test(await pg.textContent('#view')) && /Winter league/.test(await pg.textContent('#view')), 'start page: the cups');
+    await pg.click('a.tcard[href*="/tournament/c/"]');
+    await pg.waitForFunction(() => /Standings/.test(document.getElementById('view').textContent), null, { timeout: 8000 });
+    const ct = await pg.textContent('#view');
+    ok(/Only the 4 best results/.test(ct) && /Max\s*3/.test(ct) && /Lia\s*2/.test(ct) && /League night/.test(ct), 'cup page: the rules, the standings (Max 3, Lia 2), its tournaments');
+    if (shots) await pg.screenshot({ path: path.join(shots, 'pub-cup.png'), fullPage: true });
+    await pg.click('a.tcard[href*="/tournament/t/"]');
+    await pg.waitForFunction(() => /Part of the cup « Winter league »/.test(document.getElementById('view').textContent), null, { timeout: 8000 });
+    ok(true, 'a tournament\'s page links to its cup');
+  }
+
   // Organizer: the director's chat language, every language of the app.
   const og = await ctx.newPage();
   await og.addInitScript((t) => { try { localStorage.setItem('pth_admin_tok', t); } catch (e) {} }, TOKEN);

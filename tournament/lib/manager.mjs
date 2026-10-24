@@ -24,6 +24,7 @@ import { listGames } from './lobby.mjs';
 import { verifyJournal, verifyPayload, canonical, publicKeyRawB64 } from './journal.mjs';
 import { replayJournal, avatarOf } from './spectator.mjs';
 import { createTournaments } from './tournaments.mjs';
+import { createCups } from './cups.mjs';
 import { loadBotStrings, isBotLang } from './botchat.mjs';
 
 export const MAX_RUNNING = 4;
@@ -265,7 +266,10 @@ export function createManager(deps) {
     readWatchJournal: (id) => (ID_RE.test(id) ? readJson(path.join(wdir(id), 'journal.json')) : null),
   });
 
-  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, avatar, setAvatar, resetAvatar, MAX_RUNNING };
+  // Cups: tournaments of this install gathered (points, stages).
+  const cups = createCups({ dir, keyFile, tournaments, Refusal: tournaments.Refusal });
+
+  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, cups, avatar, setAvatar, resetAvatar, MAX_RUNNING };
 }
 
 /** Public part of the install key, read from its PEM file (null if none yet). */
