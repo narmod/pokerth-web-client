@@ -23,6 +23,7 @@ const STATIC = {
   'tournaments-ui.mjs': 'text/javascript; charset=utf-8',
   'cups-ui.mjs': 'text/javascript; charset=utf-8',
   'table-form.mjs': 'text/javascript; charset=utf-8',
+  'image-pick.mjs': 'text/javascript; charset=utf-8',
   'public.mjs': 'text/javascript; charset=utf-8',
   'theme.mjs': 'text/javascript; charset=utf-8',
   'td.css': 'text/css; charset=utf-8',
@@ -33,6 +34,8 @@ const LANG_RE = /^lang\/([a-z]{2,3}(?:-[a-z0-9]{2,4})?)\.mjs$/;
 const RATE = { register: [6, 10 * 60 * 1000], unregister: [12, 10 * 60 * 1000], checkin: [12, 10 * 60 * 1000], witness: [60, 10 * 60 * 1000], witnesslog: [6, 10 * 60 * 1000] };
 const MAX_JSON = 64 * 1024;
 const MAX_LOG_JSON = 14 * 1024 * 1024;   // a .pdb of 10 MB, in base64
+// An image added to the library: two JPEGs in base64 (400 KB + 48 KB at most).
+const MAX_IMAGE_JSON = 640 * 1024;
 const MAX_PDB = 10 * 1024 * 1024;
 
 function same(a, b) {
@@ -218,12 +221,30 @@ export function createService(o) {
     return null;
   }
 
-  function sendPage(res, file) {
+  function sendPage(res, file, meta) {
     let html;
     try { html = fs.readFileSync(path.join(PUBLIC, file || 'index.html'), 'utf8'); } catch (e) { res.writeHead(500); return res.end('page missing'); }
     html = html.split('__TD_VERSION__').join(o.version || '');
+    if (meta) html = html.replace('</head>', meta + '\n</head>');
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' });
     res.end(html);
+  }
+
+  // The picture of a shared link (og:image) for a tournament's or a cup's
+  // page: built from the address the web client was reached at (x-td-origin,
+  // set by the relay). Private ones say nothing.
+  const escAttr = (v) => String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  function shareMeta(req, p) {
+    const m = /^\/tournament\/([tc])\/([A-Za-z0-9_-]{8,40})\/?$/.exec(p);
+    if (!m) return '';
+    let d = null;
+    try { d = m[1] === 't' ? T.publicGet(m[2]) : C.publicGet(m[2]); } catch (e) { return ''; }
+    if (!d || !d.name) return '';
+    const origin = String(req.headers['x-td-origin'] || '');
+    const abs = /^https?:\/\/[A-Za-z0-9.:[\]-]{1,255}$/.test(origin) ? origin : '';
+    let h = '<meta property="og:type" content="website">\n<meta property="og:site_name" content="PokerTH">\n<meta property="og:title" content="' + escAttr(d.name) + '">';
+    if (abs && d.image) h += '\n<meta property="og:image" content="' + escAttr(abs + d.image) + '">\n<meta property="og:url" content="' + escAttr(abs + p) + '">\n<meta name="twitter:card" content="summary_large_image">';
+    return h;
   }
 
   function status() {
@@ -241,6 +262,14 @@ export function createService(o) {
     if (sub === '/servers' && get) return json(res, 200, { ok: true, servers: await td.servers() });
     // The web client's create-game lists and limits (public/modules/create-presets.mjs), for the table settings.
     if (sub === '/table-presets' && get) return json(res, 200, Object.assign({ ok: true }, tablePresets()));
+    // Images of tournaments and cups: the library; any organizer may add one.
+    if (sub === '/images' && get) return json(res, 200, { ok: true, images: td.images.list() });
+    if (sub === '/images/add' && !get) {
+      const b = await readJsonMax(req, MAX_IMAGE_JSON);
+      const r = td.images.add(b || {}, who);
+      if (r.ok) console.log('[td] image « ' + r.image.name + ' » added by ' + who);
+      return json(res, r.ok ? 200 : 400, r);
+    }
     // The director's avatar: any organizer may change it (tables opened afterwards).
     // One of the shipped robots ({preset}) or the default ({reset}); no image of one's own.
     // ?images=1 adds the robots themselves (data: URLs), for the organizer's picker.
@@ -427,7 +456,15 @@ export function createService(o) {
     if (p === '/healthz') return json(res, 200, { ok: true, version: o.version });
     // /tournament: the players' page (list, a tournament, registration);
     // /tournament/organize: the organizer's tools.
-    if (p === '/tournament' || p === '/tournament/' || p === '/tournament.html' || /^\/tournament\/[tc]\/[A-Za-z0-9_-]{8,40}\/?$/.test(p) || /^\/tournament\/p\/[^/]{1,200}$/.test(p)) return sendPage(res, 'public.html');
+    if (p === '/tournament' || p === '/tournament/' || p === '/tournament.html' || /^\/tournament\/[tc]\/[A-Za-z0-9_-]{8,40}\/?$/.test(p) || /^\/tournament\/p\/[^/]{1,200}$/.test(p)) return sendPage(res, 'public.html', shareMeta(req, p));
+    // The images of tournaments and cups (the picture, or its thumbnail).
+    const im = /^\/tournament\/img\/([a-z0-9_-]{1,40})(\.t)?\.jpg$/.exec(p);
+    if (im) {
+      const b = td.images.file(im[1], !!im[2]);
+      if (!b) { res.writeHead(404); return res.end('Not found'); }
+      res.writeHead(200, { 'Content-Type': 'image/jpeg', 'Cache-Control': 'public, max-age=86400', 'Access-Control-Allow-Origin': '*' });
+      return res.end(b);
+    }
     if (p === '/tournament/organize' || p === '/tournament/organize/') return sendPage(res, 'index.html');
     if (p.indexOf('/tournament/api/') === 0) {
       return publicApi(req, res, p.slice('/tournament/api'.length), query)

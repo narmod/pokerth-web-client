@@ -173,6 +173,21 @@ try {
     ok(true, 'a tournament\'s page links to its cup');
   }
 
+  // Images: the thumbnail on the cards, the picture at the top of the page.
+  {
+    await pg.goto(base + '/tournament');
+    await pg.waitForSelector('a.tcard.has-img img.tc-img', { timeout: 8000 });
+    const th = await pg.$$eval('a.tcard.has-img img.tc-img', (l) => l.map((i) => ({ src: i.getAttribute('src'), ok: i.complete && i.naturalWidth > 0 })));
+    ok(th.length > 0 && th.every((x) => x.ok) && th.some((x) => /tournament\.t\.jpg/.test(x.src)) && th.some((x) => /cup\.t\.jpg/.test(x.src)), 'start page: tournaments and cups with their thumbnail');
+    await pg.click('a.tcard[href*="/tournament/c/"]');
+    await pg.waitForFunction(() => document.getElementById('heroImg').classList.contains('evimg') && /cup\.jpg/.test(document.getElementById('heroImg').src) && document.getElementById('heroImg').naturalWidth === 800, null, { timeout: 8000 });
+    ok(true, 'a cup\'s page: its picture at the top');
+    if (shots) await pg.screenshot({ path: path.join(shots, 'pub-cup-img.png') });
+    await pg.click('a[href="/tournament"]');
+    await pg.waitForFunction(() => !document.getElementById('heroImg').classList.contains('evimg') && /\/tournament\/avatar/.test(document.getElementById('heroImg').src), null, { timeout: 8000 });
+    ok(true, 'back to the list: the director\'s avatar again');
+  }
+
   // Medals: after the nicknames of a ranking, and a page per player.
   {
     const m = await admin('/t/create', { name: 'Medal night', profile: 'club' });
@@ -211,6 +226,21 @@ try {
   await og.click('#tTable .tf-chip[data-mbdel="25000"]');
   ok(await og.$$eval('#tTable .tf-chip', (l) => l.length) === 29 && await og.$eval('#tt_tpl', (e) => e.value) === '', 'organizer: a level removed by hand: « Custom settings »');
   if (shots) await og.locator('#tTable').screenshot({ path: path.join(shots, 'org-table.png') });
+
+  // Images: picked in the form, added to the library by an organizer.
+  await og.evaluate(() => { const d = document.getElementById('tImg').closest('details'); if (d) d.open = true; });
+  await og.waitForFunction(() => document.querySelectorAll('#tImg .ip-opt').length >= 2, null, { timeout: 8000 });
+  ok(await og.$eval('#tImg .ip-opt.on', (b) => b.dataset.img) === 'tournament', 'organizer: the tournament image chosen by default');
+  await og.evaluate(() => { const d = document.querySelector('#tImg .ip-add'); if (d) d.open = true; });
+  await og.fill('#tim_new_n', 'Felt night');
+  await og.setInputFiles('#tim_new_f', path.join(root, 'tournament', 'public', 'img', 'director-avatar.png'));
+  await og.click('#tImg [data-ipadd]');
+  await og.waitForFunction(() => /Image added/.test((document.querySelector('#tImg [data-ipmsg]') || {}).textContent || ''), null, { timeout: 8000 });
+  const lib = await (await fetch(base + '/admin/tournaments/images', { headers: A })).json();
+  const felt = lib.images.find((x) => x.name === 'Felt night');
+  ok(felt && await og.$eval('#tImg .ip-opt.on', (b) => b.dataset.img) === felt.id, 'organizer: an image added (made into a JPEG in the page) and chosen');
+  ok(await og.$$eval('#tImg .ip-opt img', (l) => l.every((i) => i.complete && i.naturalWidth > 0)), 'organizer: every thumbnail shows');
+  if (shots) await og.locator('#tImg').screenshot({ path: path.join(shots, 'org-images.png') });
 
   // The director's avatar: one of the robots, no image of one's own.
   ok(!(await og.$('#avFile')), 'organizer: no upload of an avatar of one\'s own');

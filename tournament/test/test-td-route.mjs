@@ -135,6 +135,11 @@ try {
     ok(st.slice(0, 6).every((x) => x === 200) && st[6] === 429, 'public API: relayed without a token; a spoofed address header does not dodge the limit');
     const big = await fetch(base + '/tournament/api/t/' + t.publicKey + '/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nick: 'x'.repeat(9000) }) });
     ok(big.status === 413, 'public API: a large body is refused by the web client');
+    // Images of tournaments: relayed, and the picture of a shared link from this address.
+    const im = await fetch(base + '/tournament/img/tournament.t.jpg');
+    ok(im.status === 200 && im.headers.get('content-type') === 'image/jpeg' && /max-age/.test(im.headers.get('cache-control') || ''), 'images: relayed by the web client');
+    const share = await (await fetch(base + '/tournament/t/' + t.publicKey)).text();
+    ok(share.includes('<meta property="og:image" content="' + base + '/tournament/img/tournament.jpg">'), 'a tournament\'s page: og:image with this site\'s address');
     ok((await get('/tournament/api/secret', {})).status === 404 && (await get('/tournament/api/list', {})).status === 200, 'public API: only its routes');
     // Witnesses: the table lookup, and a report larger than other requests.
     const lk = await fetch(base + '/tournament/api/table?game=5&name=Proxy%20cup');

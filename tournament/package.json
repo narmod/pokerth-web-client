@@ -1,6 +1,6 @@
 {
   "name": "pokerth-tournament-director",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "description": "Tournament director for PokerTH LAN servers: opens Sit & Go tables for registered players, watches tables as a spectator, sealed and signed results, tournaments. Launched by the PokerTH web client.",
   "private": true,
   "type": "module",
@@ -12,6 +12,6 @@
   "scripts": {
     "start": "node server.mjs",
     "test:browser": "node test/test-td-public-browser.mjs",
-    "test": "node test/test-td-core.mjs && node test/test-td-spectator.mjs && node test/test-td-tournaments.mjs && node test/test-td-host.mjs && node test/test-td-public.mjs && node test/test-td-witness.mjs && node test/test-td-collusion.mjs && node test/test-td-avatar.mjs && node test/test-td-stages.mjs && node test/test-td-cups.mjs && node test/test-td-badges.mjs && node test/test-td-table.mjs && node test/test-td-service.mjs && node test/test-td-route.mjs"
+    "test": "node test/test-td-core.mjs && node test/test-td-spectator.mjs && node test/test-td-tournaments.mjs && node test/test-td-host.mjs && node test/test-td-public.mjs && node test/test-td-witness.mjs && node test/test-td-collusion.mjs && node test/test-td-avatar.mjs && node test/test-td-stages.mjs && node test/test-td-cups.mjs && node test/test-td-badges.mjs && node test/test-td-table.mjs && node test/test-td-images.mjs && node test/test-td-service.mjs && node test/test-td-route.mjs"
   }
 }

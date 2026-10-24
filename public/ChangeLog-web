@@ -1,3 +1,6 @@
+2026-10-24 version 2.1.10-web.314:
+- new: tournaments (beta): every tournament and cup has an image, shown at the top of its page, on its card in the list and when its link is shared
+
 2026-10-24 version 2.1.10-web.313:
 - bugfix: « Create a table »: a manual blinds order is limited to 30 levels of at most 1 000 000, and « raise blinds by » to 1 000 000, as the game server requires (above that, the server refused the table and closed the connection)
 - improvement: tournaments (beta): the tournament director opens its tables with the same choices as « Create a table »: game styles, community templates (BBC, Monthly Cup, WEC) and manual blinds order

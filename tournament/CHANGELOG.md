@@ -8,6 +8,22 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.17.0 — 2026-10-24 (web client `2.1.10-web.314`)
+
+### Added
+- **Images of tournaments and cups.** A library: two shipped images
+  (« Tournament », the default of a tournament; « Cup », the default of a
+  cup) and the ones organizers add — any organizer, from the organizer page:
+  the image is made in the browser into a JPEG of 800 px at most and a
+  192 px thumbnail; images are added, never replaced or removed. A
+  tournament or a cup picks one when created or later (also once validated
+  or closed); the tables of a tournament on several tables take its image.
+  Players' page: the picture at the top of the tournament's or cup's page,
+  the thumbnail on its card. A shared link shows it (og:image, built from the
+  address the web client is reached at; private ones say nothing). Public
+  API: `image` and `thumb` on every tournament and cup; the images at
+  `/tournament/img/<id>.jpg` and `<id>.t.jpg` (any origin).
+
 ## 0.16.0 — 2026-10-24 (web client `2.1.10-web.313`)
 
 ### Changed

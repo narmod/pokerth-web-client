@@ -23,6 +23,7 @@ import { fileURLToPath } from 'node:url';
 import { listGames } from './lobby.mjs';
 import { verifyJournal, verifyPayload, canonical, publicKeyRawB64 } from './journal.mjs';
 import { replayJournal, avatarOf } from './spectator.mjs';
+import { createImages } from './images.mjs';
 import { createTournaments } from './tournaments.mjs';
 import { createCups } from './cups.mjs';
 import { createBadges } from './badges.mjs';
@@ -278,19 +279,21 @@ export function createManager(deps) {
 
   // ── tournaments, manual mode (tournaments.mjs) ──
   ensureKey();
+  // Images of tournaments and cups: the shipped ones and the organizers' (images.mjs).
+  const images = createImages({ dir, builtinDir: path.join(IMG, 'events') });
   const tournaments = createTournaments({
-    dir, keyFile,
+    dir, keyFile, imageOk: images.has,
     // A Table check's sealed result, reused as a tournament result.
     readWatch: (id) => (ID_RE.test(id) ? readJson(path.join(wdir(id), 'result.json')) : null),
     readWatchJournal: (id) => (ID_RE.test(id) ? readJson(path.join(wdir(id), 'journal.json')) : null),
   });
 
   // Cups: tournaments of this install gathered (points, stages).
-  const cups = createCups({ dir, keyFile, tournaments, Refusal: tournaments.Refusal });
+  const cups = createCups({ dir, keyFile, tournaments, Refusal: tournaments.Refusal, imageOk: images.has });
   // Medals: the first three of tournaments and cups, from the signed results.
   const badges = createBadges({ tournaments: tournaments.allRaw, cups: cups.allRaw, stamp: () => tournaments.generation() + ':' + cups.generation() });
 
-  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, cups, badges, avatar, resetAvatar, avatarPreset, setAvatarPreset, avatarPresets: () => Object.keys(AVATAR_PRESETS).map(Number), avatarDefaultPreset: AVATAR_DEFAULT_PRESET, MAX_RUNNING };
+  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, cups, badges, images, avatar, resetAvatar, avatarPreset, setAvatarPreset, avatarPresets: () => Object.keys(AVATAR_PRESETS).map(Number), avatarDefaultPreset: AVATAR_DEFAULT_PRESET, MAX_RUNNING };
 }
 
 /** Public part of the install key, read from its PEM file (null if none yet). */

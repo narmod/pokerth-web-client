@@ -24,6 +24,8 @@ import { readFileSync, writeFileSync, renameSync, mkdirSync, readdirSync } from 
 import { join } from 'node:path';
 import { randomBytes, timingSafeEqual } from 'node:crypto';
 import { Journal, verifyJournal, signPayload, verifyPayload, publicKeyFromPrivate, publicKeyRawB64 } from './journal.mjs';
+import { IMG_RE, DEFAULT_IMAGE, imageUrl } from './images.mjs';
+
 
 const ID_RE = /^[a-z0-9]{6,32}$/;
 const MAX_EVENTS = 60;
@@ -58,6 +60,12 @@ export function createCups(o) {
   const root = join(o.dir, 'cups');
   const now = o.now || (() => Date.now());
   const T = o.tournaments;
+  // The cup's image (images.mjs): one of the library, or null for the default.
+  const imageOf = (v) => {
+    if (v == null || v === '') return null;
+    if (!IMG_RE.test(String(v)) || (o.imageOk && !o.imageOk(String(v)))) refuse('unknown image');
+    return String(v);
+  };
   const cdir = (id) => join(root, id);
   function writeAtomic(p, obj) { const tmp = p + '.' + process.pid + '.tmp'; writeFileSync(tmp, JSON.stringify(obj)); renameSync(tmp, p); }
   function readJson(p) { try { return JSON.parse(readFileSync(p, 'utf8')); } catch (e) { return null; } }
@@ -188,7 +196,8 @@ export function createCups(o) {
     mkdirSync(root, { recursive: true });
     const id = 'c' + now().toString(36) + randomBytes(3).toString('hex');
     mkdirSync(cdir(id));
-    const c = { id, name, description: clean(input.description, 300), bestOf, visibility, events: [], status: 'open',
+    const image = imageOf(input.image);
+    const c = { id, name, description: clean(input.description, 300), bestOf, visibility, image, events: [], status: 'open',
       inviteCode: visibility === 'private' ? randomBytes(6).toString('base64url') : null, publicKey: randomBytes(12).toString('base64url'), createdAt: now(), updatedAt: now() };
     const journal = new Journal({ now });
     journal.append('cupCreated', { author: author || 'admin', name, bestOf, visibility });
@@ -197,7 +206,9 @@ export function createCups(o) {
   function update(id, patch, author) {
     const data = { changes: {} };
     return act(id, author, 'cupUpdated', data, (c) => {
-      if (c.status === 'closed') refuse('the cup is closed');
+      // The image may change at any time; the rest only while the cup is open.
+      if (patch.image !== undefined) c.image = data.changes.image = imageOf(patch.image);
+      if (c.status === 'closed' && Object.keys(patch).some((k) => k !== 'image')) refuse('the cup is closed');
       if (patch.name != null) { const n = clean(patch.name, 60); if (n.length < 2) refuse('name: 2 to 60 characters'); c.name = data.changes.name = n; }
       if (patch.description != null) c.description = data.changes.description = clean(patch.description, 300);
       if (patch.bestOf != null) c.bestOf = data.changes.bestOf = Math.max(0, Math.min(50, parseInt(patch.bestOf, 10) || 0));
@@ -311,7 +322,8 @@ export function createCups(o) {
   }
   function card(c) {
     const st = standings(c);
-    return { key: c.publicKey, name: c.name, status: c.status, events: st.events.length, validated: st.validated, leader: st.rows[0] ? st.rows[0].nick : null };
+    return { key: c.publicKey, name: c.name, status: c.status, events: st.events.length, validated: st.validated, leader: st.rows[0] ? st.rows[0].nick : null,
+      image: imageUrl(c.image || DEFAULT_IMAGE.cup), thumb: imageUrl(c.image || DEFAULT_IMAGE.cup, true) };
   }
   function publicList() { return all().filter((c) => c.visibility === 'public').sort((a, b) => b.createdAt - a.createdAt).map(card); }
   function publicGet(key, invite) {

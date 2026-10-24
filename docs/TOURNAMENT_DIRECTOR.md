@@ -266,6 +266,34 @@ depends on them.
   `…/t/validate {id}`, `…/t/correct {id, ranking, reason}`, and
   `POST …/t/pdb?id=` (raw body).
 
+## Images of tournaments and cups (service `0.17.0`, web client `2.1.10-web.314`)
+
+`tournament/lib/images.mjs`, decided 2026-10-24 (any organizer adds images;
+shown at the top of the page, on the cards, as og:image).
+
+- Library: `tournament` and `cup` shipped (`tournament/public/img/events/`,
+  `<id>.jpg` 800 px and `<id>.t.jpg` 192 px), plus the organizers' in
+  `TD_DIR/images/` (`u<10 hex>.jpg`, `.t.jpg`, index `images.json` with name,
+  who added it and when). Added, never replaced or removed: an id always
+  shows the same picture. JPEG only, picture ≤ 400 KB and 1600 px, thumbnail
+  ≤ 48 KB and 400 px, 200 images at most. The organizer page makes both
+  JPEGs in the browser (800 / 192 px).
+- `image` on a tournament or a cup: a library id, or null for the default
+  (`tournament`, `cup`); unknown ids are refused. It may change at any time,
+  also once validated or closed. The tables of a tournament on several tables
+  take its image.
+- Players' page: the picture at the top of the tournament's or cup's page
+  (the director's avatar elsewhere), the thumbnail on the cards. Public API:
+  `image` and `thumb` (paths) on every tournament and cup.
+- Shared links: the page of a tournament or a cup carries `og:title`,
+  `og:image` (absolute), `og:url` and `twitter:card`, built from
+  `x-td-origin`, which the web client sets from Admin › SEO's public address,
+  else from the request's host; private ones carry nothing.
+- Routes: `GET /admin/tournaments/images`, `POST …/images/add {name, full,
+  thumb}` (base64 JPEGs), `POST …/t/update` and `…/cups/update` with
+  `{patch: {image}}`, public `GET /tournament/img/<id>.jpg` and
+  `/tournament/img/<id>.t.jpg` (cached a day, any origin).
+
 ## Table settings (service `0.16.0`, web client `2.1.10-web.313`)
 
 The director opens its tables with the same choices as the web client's
@@ -731,6 +759,7 @@ that version only: the web client's version, its service worker and its
 | `tournament/lib/lobby.mjs` | Lobby reader (guest login, tables, server type). |
 | `tournament/lib/host.mjs` | The director that opens a tournament table: create, invite, kick, hand over, then watch. |
 | `tournament/lib/worker.mjs` | One watch in a detached process, state and files on disk. |
+| `tournament/lib/table.mjs`, `tournament/lib/images.mjs` | Table settings (the web client's create-game lists, `public/modules/create-presets.mjs`); images of tournaments and cups. |
 | `tournament/lib/cups.mjs`, `tournament/lib/badges.mjs` | Cups (points, stages, signed standings); medals (derived from the signed results, open API). |
 | `tournament/lib/pdb.mjs`, `tournament/lib/tournaments.mjs` | PokerTH log reader (BBC rule); tournaments in manual mode. |
 | `tournament/public/` | The page: `index.html`, `organizer.mjs` (Table check), `tournaments-ui.mjs` (Tournaments), `manifest.json`. |

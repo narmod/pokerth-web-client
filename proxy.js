@@ -15193,7 +15193,11 @@ const httpServer = http.createServer((req, res) => {
   // (off by default: a plain 404 until Admin › Community › Tournaments turns
   // it on, the .html and its files included).
   if (reqPathOnly === '/tournament' || reqPathOnly === '/tournament.html' || reqPathOnly.indexOf('/tournament/') === 0) {
-    return TD_LIB.handleTournamentPage(TD, req, res, reqPathOnly, clientIp(req));
+    // The public address (Admin › SEO, else this request's host): the
+    // director builds the picture of a shared link (og:image) from it.
+    const tdHost = String(req.headers.host || '');
+    const tdOrigin = seoPublicUrl() || (/^[A-Za-z0-9.:[\]-]{1,255}$/.test(tdHost) ? ((req.socket && req.socket.encrypted) || String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim() === 'https' ? 'https://' : 'http://') + tdHost : '');
+    return TD_LIB.handleTournamentPage(TD, req, res, reqPathOnly, clientIp(req), tdOrigin);
   }
   // ── /live — embedded spectator mode, successor to the pokerth-live tool.
   // Same client, same themes/decks/seats/layout, so every table improvement

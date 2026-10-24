@@ -174,3 +174,18 @@ a.nick:hover{border-bottom-style:solid}
 .tf-mb{margin:6px 0 0 4px;padding-left:10px;border-left:2px solid var(--line)}
 .tf-chips{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 6px}
 .tf-chip{cursor:pointer;font:inherit;font-size:.85em}
+
+/* Image picker (tournaments, cups) */
+.ip-grid{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 8px}
+.ip-opt{display:flex;flex-direction:column;align-items:center;gap:3px;width:96px;padding:4px;border-radius:10px;border:2px solid transparent;background:var(--panel);color:inherit;cursor:pointer;font:inherit;font-size:.8em}
+.ip-opt img{width:84px;height:64px;object-fit:cover;border-radius:6px;background:#000}
+.ip-opt span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ip-opt:hover{border-color:var(--line)}
+.ip-opt.on{border-color:var(--brass)}
+
+/* Images of tournaments and cups (players' page) */
+.tcard.has-img{flex-direction:row;align-items:center;gap:12px}
+.tc-body{display:flex;flex-direction:column;gap:4px;flex:1 1 auto;min-width:0}
+.tc-img{width:64px;height:64px;object-fit:cover;border-radius:8px;flex:none;background:#000}
+.hero .tdav.evimg{width:auto;height:96px;max-width:40vw;border-radius:12px;object-fit:contain;background:none;box-shadow:0 4px 18px rgba(0,0,0,.5)}
+@media (max-width:520px){.hero .tdav.evimg{height:72px}}

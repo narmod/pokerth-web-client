@@ -28,6 +28,7 @@ import { isBotLang } from './botchat.mjs';
 import { cleanReport, directorFacts, compareWithDirector, compareWithRanking, MAX_HANDS } from './witness.mjs';
 import { analyzeCollusion } from './collusion.mjs';
 import { TABLE_DEFAULTS, cleanTable } from './table.mjs';
+import { IMG_RE, DEFAULT_IMAGE, imageUrl } from './images.mjs';
 
 // Profiles (design « Tournament settings », decided 2026-10-23).
 export const PROFILES = Object.freeze({
@@ -114,6 +115,12 @@ const refuse = (msg) => { throw new Refusal(msg); };
 export function createTournaments(o) {
   const root = join(o.dir, 'tournaments');
   const now = o.now || (() => Date.now());
+  // The tournament's image (images.mjs): one of the library, or null for the default.
+  const imageOf = (v) => {
+    if (v == null || v === '') return null;
+    if (!IMG_RE.test(String(v)) || (o.imageOk && !o.imageOk(String(v)))) refuse('unknown image');
+    return String(v);
+  };
 
   function tdir(id) { return join(root, id); }
   function writeAtomic(p, obj) {
@@ -239,9 +246,10 @@ export function createTournaments(o) {
     mkdirSync(tdir(id));
     const table = cleanTable(input.table);
     const run = cleanRun(input.run);
+    const image = imageOf(input.image);
     if (run.autoOpen && startsAt == null) refuse('opening by itself needs a start date');
     const t = {
-      id, name, format, profile, settings, server, startsAt, mode: 'manual', table, run, host: null,
+      id, name, format, profile, settings, server, startsAt, mode: 'manual', table, run, host: null, image,
       status: 'draft', players: [], result: null, corrections: [],
       inviteCode: settings.visibility === 'private' ? randomBytes(6).toString('base64url') : null,
       // The public address (/tournament/t/<publicKey>): random, so an
@@ -257,8 +265,10 @@ export function createTournaments(o) {
   function update(id, patch, author) {
     const data = { changes: {} };
     return act(id, author, 'updated', data, (t) => {
-      if (t.status === 'validated') refuse('already validated: use a correction');
+      // The image may change at any time; the rest only before validation.
+      if (t.status === 'validated' && Object.keys(patch).some((k) => k !== 'image')) refuse('already validated: use a correction');
       const changes = data.changes;
+      if (patch.image !== undefined) changes.image = t.image = imageOf(patch.image);
       if (patch.name != null) { const n = cleanText(patch.name, 60); if (n.length < 2) refuse('name: 2 to 60 characters'); changes.name = t.name = n; }
       if (patch.startsAt !== undefined) { const s = patch.startsAt === null || patch.startsAt === '' ? null : Number(patch.startsAt); if (s !== null && !(s > 0)) refuse('start date not understood'); changes.startsAt = t.startsAt = s; }
       if (patch.profile) {
@@ -436,6 +446,7 @@ export function createTournaments(o) {
       key: t.publicKey, name: t.name, format: t.format, profile: t.profile, startsAt: t.startsAt,
       server: t.server ? t.server.name : null, players: t.players.length, maxPlayers: maxPlayersOf(t),
       phase: phaseOf(t), registration: regClosed(t) ? 'closed' : 'open', winner: w ? w.nick : null,
+      image: imageUrl(t.image || DEFAULT_IMAGE.tournament), thumb: imageUrl(t.image || DEFAULT_IMAGE.tournament, true),
     };
   }
   // Public tournaments only; unlisted and private ones never appear here.
@@ -539,7 +550,7 @@ export function createTournaments(o) {
     const run = Object.assign({}, parent.run, { autoOpen: false, selfRegister: false });
     const t = {
       id, name: parent.name + (kind === 'final' ? ' — final table' : ' — table ' + index), format: 'sitngo', profile: parent.profile,
-      settings: JSON.parse(JSON.stringify(parent.settings)), server: parent.server, startsAt: null, mode: 'manual', table: parent.table, run, host: null,
+      settings: JSON.parse(JSON.stringify(parent.settings)), server: parent.server, startsAt: null, mode: 'manual', table: parent.table, run, host: null, image: parent.image || null,
       status: 'registration', players: players.map((p) => ({ nick: p.nick, addedAt: now(), codeHash: p.codeHash, checkedIn: p.checkedIn || now(), self: p.self || undefined })),
       result: null, corrections: [], inviteCode: parent.inviteCode || null, publicKey: randomBytes(12).toString('base64url'),
       parentId: parent.id, stage: { kind, index }, createdAt: now(), updatedAt: now(),

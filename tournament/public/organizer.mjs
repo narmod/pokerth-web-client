@@ -10,6 +10,7 @@
 
 import { createTournamentsView } from './tournaments-ui.mjs';
 import { createCupsView } from './cups-ui.mjs';
+import { createImagePicker } from './image-pick.mjs';
 import { initTheme } from './theme.mjs';
 
 const TOKK = 'pth_admin_tok';
@@ -63,8 +64,10 @@ document.querySelector('.tabs').addEventListener('keydown', (ev) => {
 });
 setView(['check', 'cups'].indexOf(load(VIEWK)) >= 0 ? load(VIEWK) : 'tour');
 let you = '';   // who is signed in: « admin » (master key) or an organizer's key name
-const tours = createTournamentsView({ api, esc, tok, servers: () => servers, you: () => you });
-const cups = createCupsView({ api, esc });
+// The images of tournaments and cups: one library, shared by both views.
+const images = createImagePicker({ api, esc });
+const tours = createTournamentsView({ api, esc, tok, servers: () => servers, you: () => you, images });
+const cups = createCupsView({ api, esc, images });
 
 // ── the director's avatar ──────────────────────────────────────────
 // One of the robots shipped with the service (no image of one's own).

@@ -72,6 +72,10 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Tournaments: images of tournaments and cups** (`web.314`, service `0.17.0`) — the web client relays
+  `/tournament/img/<id>.jpg` and passes the site's public address (Admin › SEO, else the request's host) to the
+  director, which builds the picture of a shared link (og:image) of a tournament's or cup's page. Details in
+  `tournament/CHANGELOG.md`.
 - **One source for the « Create a table » choices** (`web.313`, service `0.16.0`) — the game styles, the community
   templates and the field limits move to `public/modules/create-presets.mjs`, read by the form (`pokerth.js`,
   `botsuggest.mjs`) and by the tournament director's table settings (served to its organizer page by

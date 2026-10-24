@@ -10,12 +10,20 @@
 
 export function createCupsView(deps) {
   const { api, esc } = deps;
+  const IP = deps.images;
+  // The image of the open cup: a click saves it (also once closed).
+  IP.setPick('cim_cur', (img) => {
+    if (!cur) return;
+    api('/admin/tournaments/cups/update', { id: cur.id, patch: { image: img } }).then((d) => { if (d.ok) show(d, 'Image changed.'); else msg('cDMsg', d.error || 'Refused', true); }).catch(() => msg('cDMsg', 'Network error', true));
+  });
   const $ = (id) => document.getElementById(id);
   let cur = null, tournaments = [];
   const fmt = (x) => (Math.round(x * 10) / 10).toString();
   const msg = (el, text, bad) => { const m = $(el); if (m) { m.textContent = text || ''; m.className = 'msg' + (text ? (bad ? ' bad' : ' ok') : ''); } };
 
   function refresh() {
+    if (!IP.ready()) IP.load().then(() => { if (!IP.ready()) return; $('cImg').innerHTML = IP.html('cim_new', 'cup', null); if (cur) show(cur); }).catch(() => {});
+    else if (!$('cImg').firstChild) $('cImg').innerHTML = IP.html('cim_new', 'cup', null);
     api('/admin/tournaments/t/list').then((d) => { if (d.ok) tournaments = (d.tournaments || []).filter((t) => !t.parentId); }).catch(() => {});
     return api('/admin/tournaments/cups/list').then((d) => {
       if (!d.ok) return;
@@ -28,9 +36,9 @@ export function createCupsView(deps) {
   $('cList').addEventListener('click', (ev) => { const b = ev.target.closest('button[data-cid]'); if (b) open(b.dataset.cid); });
   $('cCreateForm').addEventListener('submit', (ev) => {
     ev.preventDefault();
-    api('/admin/tournaments/cups/create', { name: $('cName').value.trim(), bestOf: Number($('cBest').value) || 0, visibility: $('cVis').value, description: $('cDesc').value.trim() }).then((d) => {
+    api('/admin/tournaments/cups/create', { name: $('cName').value.trim(), bestOf: Number($('cBest').value) || 0, visibility: $('cVis').value, description: $('cDesc').value.trim(), image: IP.value('cim_new') || undefined }).then((d) => {
       if (!d.ok) return msg('cMsg', d.error || 'Refused', true);
-      msg('cMsg', 'Cup created.'); $('cName').value = ''; $('cDesc').value = '';
+      msg('cMsg', 'Cup created.'); $('cName').value = ''; $('cDesc').value = ''; $('cImg').innerHTML = IP.html('cim_new', 'cup', null);
       show(d); refresh();
     }).catch(() => msg('cMsg', 'Network error', true));
   });
@@ -45,6 +53,7 @@ export function createCupsView(deps) {
     const closed = c.status === 'closed';
     let h = '<p><span class="chip ' + (closed ? 'done' : 'live') + '">' + esc(c.status) + '</span> <span class="tname">' + esc(c.name) + '</span><br><span class="muted small">' + (c.bestOf ? 'best ' + esc(c.bestOf) + ' results per player' : 'every result counts') + ' · ' + esc(c.visibility) + '</span></p>';
     if (c.description) h += '<p class="small">' + esc(c.description) + '</p>';
+    h += '<details class="sub"><summary>Image</summary>' + IP.html('cim_cur', 'cup', c.image || null) + '</details>';
     h += '<p class="small">Players\' page: <a class="mono" href="' + esc(link) + '" target="_blank" rel="noopener">' + esc(link) + '</a></p>';
     h += '<div class="msg' + (note ? (bad ? ' bad' : ' ok') : '') + '" id="cDMsg" role="status">' + esc(note || '') + '</div>';
     // Tournaments of the cup.

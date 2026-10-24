@@ -47,7 +47,7 @@ function diskVersion() {
 }
 // The pages and their files: /tournament (players), /tournament/organize,
 // /tournament/t/<key> (one tournament), the page files and the language files.
-const PAGE_RE = /^\/tournament(?:\.html|\/|\/organize\/?|\/[tc]\/[A-Za-z0-9_-]{8,40}\/?|\/[A-Za-z0-9_-]+\.(?:mjs|json|css)|\/lang\/[a-z]{2,3}(?:-[a-z0-9]{2,4})?\.mjs|\/avatar|\/p\/[^/?#]{1,200})?$/;
+const PAGE_RE = /^\/tournament(?:\.html|\/|\/organize\/?|\/[tc]\/[A-Za-z0-9_-]{8,40}\/?|\/[A-Za-z0-9_-]+\.(?:mjs|json|css)|\/lang\/[a-z]{2,3}(?:-[a-z0-9]{2,4})?\.mjs|\/avatar|\/p\/[^/?#]{1,200}|\/img\/[a-z0-9_-]{1,40}(?:\.t)?\.jpg)?$/;
 // The players' API, without a token: list, one tournament, (un)register, files.
 const API_RE = /^\/tournament\/api\/(?:list|table|cups|badges|players\/[^/?#]{1,200}|c\/[A-Za-z0-9_-]{8,40}|t\/[A-Za-z0-9_-]{8,40}(?:\/[a-z]{2,16})?)$/;
 const API_MAX_BODY = 8 * 1024;
@@ -273,7 +273,7 @@ function handleTournamentAdmin(host, h, req, res, reqPathOnly, query) {
 }
 
 // ── /tournament and its files (no token: the page asks for it) ──
-function handleTournamentPage(host, req, res, reqPathOnly, clientIp) {
+function handleTournamentPage(host, req, res, reqPathOnly, clientIp, origin) {
   const nf = () => { res.writeHead(404); res.end('Not found'); };
   if (!host.enabled()) return nf();
   if (API_RE.test(reqPathOnly)) {
@@ -288,7 +288,7 @@ function handleTournamentPage(host, req, res, reqPathOnly, clientIp) {
     return host.relay(req, res, reqPathOnly + qs, null, { 'x-td-client': String(clientIp || '').slice(0, 64) });
   }
   if (!PAGE_RE.test(reqPathOnly) || (req.method !== 'GET' && req.method !== 'HEAD')) return nf();
-  return host.relay(req, res, reqPathOnly, null);
+  return host.relay(req, res, reqPathOnly, null, origin ? { 'x-td-origin': String(origin).slice(0, 300) } : null);
 }
 
 module.exports = { createTournamentHost, handleTournamentAdmin, handleTournamentPage, PAGE_RE, API_RE };

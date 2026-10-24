@@ -76,12 +76,21 @@ function inviteFromUrl() { try { return new URLSearchParams(location.search).get
 function go(path) { history.pushState(null, '', path); route(); }
 
 // ── list ───────────────────────────────────────────────────────────
+// The image of a tournament or a cup: its thumbnail on the cards, the
+// picture at the top of its page (the director's avatar elsewhere).
+const thumb = (c) => (c.thumb ? '<img class="tc-img" src="' + esc(c.thumb) + '" alt="" loading="lazy" width="64" height="64">' : '');
+function heroImage(url) {
+  const i = $('heroImg');
+  if (!i) return;
+  if (url) { if (i.getAttribute('src') !== url) i.src = url; i.classList.add('evimg'); }
+  else { if (i.getAttribute('src') !== '/tournament/avatar') i.src = '/tournament/avatar'; i.classList.remove('evimg'); }
+}
 function card(c) {
-  return '<li><a class="tcard" href="/tournament/t/' + esc(c.key) + '" data-go>' +
+  return '<li><a class="tcard' + (c.thumb ? ' has-img' : '') + '" href="/tournament/t/' + esc(c.key) + '" data-go>' + thumb(c) + '<span class="tc-body">' +
     '<span class="tc-top"><span class="tname">' + esc(c.name) + '</span>' + chip(c) + '</span>' +
     '<span class="muted small">' + (c.startsAt ? T('startsAt', { date: fmtDate(c.startsAt) }) : T('noDate')) +
     (c.server ? ' · ' + T('onServer', { server: c.server }) : '') + ' · ' + T('players', { n: c.players, max: c.maxPlayers }) +
-    (c.winner ? ' · ' + T('winner', { nick: c.winner }) : '') + '</span></a></li>';
+    (c.winner ? ' · ' + T('winner', { nick: c.winner }) : '') + '</span></span></a></li>';
 }
 async function showList() {
   $('view').innerHTML = '<p class="empty">' + T('loading') + '</p>';
@@ -97,9 +106,9 @@ async function showList() {
   ].filter((g) => g[1].length);
   // Coming soonest first; finished ones, latest first (as sent).
   for (const g of groups) if (g[0] !== 'secDone') g[1].sort((a, b) => (a.startsAt || Infinity) - (b.startsAt || Infinity));
-  const cupsHtml = cupList.length ? '<section class="card"><h2>' + T('secCups') + '</h2><ul class="tlist">' + cupList.map((c) => '<li><a class="tcard" href="/tournament/c/' + esc(c.key) + '" data-go>' +
+  const cupsHtml = cupList.length ? '<section class="card"><h2>' + T('secCups') + '</h2><ul class="tlist">' + cupList.map((c) => '<li><a class="tcard' + (c.thumb ? ' has-img' : '') + '" href="/tournament/c/' + esc(c.key) + '" data-go>' + thumb(c) + '<span class="tc-body">' +
     '<span class="tc-top"><span class="tname">' + esc(c.name) + '</span><span class="chip ' + (c.status === 'closed' ? 'done' : 'live') + '">' + T(c.status === 'closed' ? 'cupStatusClosed' : 'cupStatusOpen') + '</span></span>' +
-    '<span class="muted small">' + T('cupEvents', { n: c.events }) + (c.leader ? ' · ' + T('cupLeader', { nick: esc(c.leader) }) : '') + '</span></a></li>').join('') + '</ul></section>' : '';
+    '<span class="muted small">' + T('cupEvents', { n: c.events }) + (c.leader ? ' · ' + T('cupLeader', { nick: esc(c.leader) }) : '') + '</span></span></a></li>').join('') + '</ul></section>' : '';
   $('view').innerHTML = (groups.length ? groups.map((g) => '<section class="card"><h2>' + T(g[0]) + '</h2><ul class="tlist">' + g[1].map(card).join('') + '</ul></section>').join('')
     : '<section class="card"><p class="empty">' + T('none') + '</p></section>') + cupsHtml;
 }
@@ -256,6 +265,7 @@ function renderOne() {
   }
   $('view').innerHTML = h;
   $('heroTitle').textContent = c.name;
+  heroImage(c.image);
   fillMedals();
   wire();
 }
@@ -416,6 +426,7 @@ async function showCup(key) {
   h += '</section>';
   $('view').innerHTML = h;
   $('heroTitle').textContent = d.name;
+  heroImage(d.image);
   fillMedals();
 }
 
@@ -424,6 +435,7 @@ function route() {
   clearTimeout(pollTimer);
   curKey = null; cur = null;
   $('heroTitle').textContent = t('title');
+  heroImage(null);
   const key = keyFromPath(), ckey = cupKeyFromPath(), pnick = playerFromPath();
   if (key) showOne(key); else if (ckey) showCup(ckey); else if (pnick) showPlayer(pnick); else showList();
   window.scrollTo(0, 0);

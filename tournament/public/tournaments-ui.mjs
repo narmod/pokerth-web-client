@@ -40,6 +40,9 @@ const SOURCE = { manual: 'typed in', watch: 'Table check', pdb: 'log (.pdb)' };
 export function createTournamentsView(deps) {
   const { api, esc, tok } = deps;
   const TF = createTableForm({ esc });
+  const IP = deps.images;
+  // The image of the open tournament: a click saves it (also once validated).
+  IP.setPick('tim_cur', (img) => { if (cur) call('/admin/tournaments/t/update', { patch: { image: img } }, 'Image changed.'); });
   const $ = (id) => document.getElementById(id);
   let list = [];
   let cur = null;            // the open tournament (server view)
@@ -92,6 +95,7 @@ export function createTournamentsView(deps) {
     if ($('tDate').value) { const ts = new Date($('tDate').value).getTime(); if (ts > 0) body.startsAt = ts; }
     if ($('tVis').value) body.visibility = $('tVis').value;
     body.table = readTable('tt_');
+    const img = IP.value('tim_new'); if (img) body.image = img;
     body.run = { autoOpen: $('tAuto').checked, openBefore: Number($('tBefore').value), announce: $('tAnnounce').checked, selfRegister: $('tSelfReg').checked, chatLang: $('tChatLang').value || 'en', qmlWitnesses: $('tQmlWit').checked, finalists: Number($('tFinalists').value) || 2 };
     if (body.profile === 'custom') {
       body.settings = {};
@@ -102,7 +106,7 @@ export function createTournamentsView(deps) {
     api('/admin/tournaments/t/create', body).then((d) => {
       if (!d.ok) return msg('tCreateMsg', d.error || 'Refused', true);
       msg('tCreateMsg', 'Created.', false, 'ok');
-      $('tName').value = ''; $('tDate').value = ''; $('tTable').innerHTML = TF.html('tt_');
+      $('tName').value = ''; $('tDate').value = ''; $('tTable').innerHTML = TF.html('tt_'); $('tImg').innerHTML = IP.html('tim_new', 'tournament', null);
       show(d, 'Created. Add the players, then set the result.');
       refresh();
     }).catch((e) => msg('tCreateMsg', e.message === 'forbidden' ? '' : 'Network error', true));
@@ -134,6 +138,7 @@ export function createTournamentsView(deps) {
     fillServers();
     // The create-game lists, once (from the web client, through the service).
     if (!TF.ready()) TF.load(api).then(() => { if (!TF.ready()) return; $('tTable').innerHTML = TF.html('tt_'); if (cur) show(cur); }).catch(() => {});
+    if (!IP.ready()) IP.load().then(() => { if (!IP.ready()) return; $('tImg').innerHTML = IP.html('tim_new', 'tournament', null); if (cur) show(cur); }).catch(() => {});
     return api('/admin/tournaments/t/list').then((d) => {
       if (!d.ok) return;
       list = d.tournaments || [];
@@ -282,6 +287,8 @@ export function createTournamentsView(deps) {
       h += '<h3>Corrections</h3><ul class="small">' + t.corrections.map((c) => '<li>' + esc(when(c.at)) + ' · ' + esc(c.author) + (c.approvedBy ? ', approved by ' + esc(c.approvedBy) : '') + ' — ' + esc(c.reason) + '<br><span class="muted">' + esc(c.before.join(' > ')) + ' → ' + esc(c.after.join(' > ')) + '</span></li>').join('') + '</ul>';
     }
 
+    // Image (any time; the tables of a tournament on several tables take its image).
+    if (!t.parentId) h += '<details class="sub"><summary>Image</summary>' + IP.html('tim_cur', 'tournament', t.image || null) + '</details>';
     // Edit (until validated).
     if (t.status !== 'validated') {
       h += '<details class="sub"><summary>Edit</summary><div class="row"><div><label for="tEName">Name</label><input id="tEName" maxlength="60" value="' + esc(t.name) + '"></div>' +
