@@ -88,19 +88,25 @@ try {
   await pg.waitForSelector('#regForm', { timeout: 8000 });
   ok(/Members only/.test(await pg.textContent('#view')), 'private: open with its code');
 
-  // Languages: the app's list, the page follows.
-  const opts = await pg.$$eval('#langSel option', (o) => o.map((x) => x.value));
-  ok(opts.length >= 80 && opts.indexOf('fr') >= 0, 'language picker: every language of the app (' + opts.length + ')');
+  // Languages: the app's list, each with its flag (service 0.30.0), the page follows.
+  const pickLang = async (c) => { await pg.click('#langBtn'); await pg.click('#langList li[data-lang="' + c + '"]'); };
+  await pg.click('#langBtn');
+  const opts = await pg.$$eval('#langList li[data-lang]', (o) => o.map((x) => x.dataset.lang));
+  const flags = await pg.$$eval('#langList li[data-lang] .lp-flag svg', (o) => o.length);
+  ok(opts.length >= 80 && opts.indexOf('fr') >= 0 && flags >= 80, 'language picker: every language of the app, with its flag (' + opts.length + ')');
+  await pg.fill('#langFind', 'franç');
+  ok((await pg.$$eval('#langList li[data-lang]', (o) => o.map((x) => x.dataset.lang))).join() === 'fr', 'language picker: the search finds Français');
+  await pg.keyboard.press('Escape');
   const fr = fs.existsSync(path.join(root, 'arena', 'public', 'lang', 'fr.mjs')) ? (await import(path.join(root, 'arena', 'public', 'lang', 'fr.mjs'))).strings : null;
   if (fr) {
-    await pg.selectOption('#langSel', 'fr');
+    await pickLang('fr');
     await pg.waitForFunction((tt) => document.getElementById('heroTitle').textContent === 'Members only' && document.documentElement.lang === 'fr', fr.title, { timeout: 8000 });
     ok((await pg.textContent('#view')).indexOf(fr.howTitle) >= 0 && await pg.evaluate(() => localStorage.getItem('pth_lang')) === 'fr', 'French: the page and the app share the choice');
-    await pg.selectOption('#langSel', 'ar');
+    await pickLang('ar');
     await pg.waitForFunction(() => document.documentElement.dir === 'rtl', null, { timeout: 8000 });
     ok(true, 'Arabic: right to left');
     if (shots) await pg.screenshot({ path: path.join(shots, 'pub-ar.png'), fullPage: true });
-    await pg.selectOption('#langSel', 'en');
+    await pickLang('en');
   }
   // Official: check-in with the code kept in this browser, one click.
   const off = await admin('/t/create', { name: 'Official night', profile: 'official' });
@@ -183,9 +189,9 @@ try {
     await pg.waitForFunction(() => document.getElementById('heroImg').classList.contains('evimg') && /cup\.jpg/.test(document.getElementById('heroImg').src) && document.getElementById('heroImg').naturalWidth === 800, null, { timeout: 8000 });
     ok(true, 'a cup\'s page: its picture at the top');
     if (shots) await pg.screenshot({ path: path.join(shots, 'pub-cup-img.png') });
-    await pg.click('a[href="/arena"]');
+    await pg.click('#view a[href="/arena/cups"]');
     await pg.waitForFunction(() => !document.getElementById('heroImg').classList.contains('evimg') && /\/arena\/avatar/.test(document.getElementById('heroImg').src), null, { timeout: 8000 });
-    ok(true, 'back to the list: the director\'s avatar again');
+    ok(true, 'back to the cups: the director\'s avatar again');
   }
 
   // Medals: after the nicknames of a ranking, and a page per player.

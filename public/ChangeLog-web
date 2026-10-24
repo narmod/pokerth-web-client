@@ -1,3 +1,6 @@
+2026-10-24 version 2.1.10-web.320:
+- new: Arena is now an app you can install on a phone or a computer: a menu (Home, Tournaments, Cups, Groups, Sign in or My account), a bar at the bottom on phones, a language list with flags and a search, a sign-in page and a « My account » page
+
 2026-10-24 version 2.1.10-web.316:
 - improvement: the tournaments page is now called Arena (tournaments, cups and medals) and lives at /arena
 

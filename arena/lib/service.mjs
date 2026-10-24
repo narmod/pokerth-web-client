@@ -16,6 +16,7 @@ import { createManager, MAX_RUNNING, LIVE } from './manager.mjs';
 import { tablePresets } from './table.mjs';
 import { cleanAbsence } from './tournaments.mjs';
 import { createAccounts, allowed, SESSION_PREFIX } from './accounts.mjs';
+import { LANG_META_FILE } from './platform.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.join(HERE, '..', 'public');
@@ -37,7 +38,17 @@ const STATIC = {
   'theme.mjs': 'text/javascript; charset=utf-8',
   'arena.css': 'text/css; charset=utf-8',
   'manifest.json': 'application/manifest+json; charset=utf-8',
+  // The app's own icons (service 0.30.0).
+  'icons/icon.svg': 'image/svg+xml',
+  'icons/icon-32.png': 'image/png',
+  'icons/icon-180.png': 'image/png',
+  'icons/icon-192.png': 'image/png',
+  'icons/icon-512.png': 'image/png',
+  'icons/icon-maskable-192.png': 'image/png',
+  'icons/icon-maskable-512.png': 'image/png',
 };
+// The pages of the app (service 0.30.0): one page, the menu's views.
+const APP_RE = /^\/arena(?:\/|\.html|\/(?:tournaments|cups|groups|login|account)\/?|\/[tc]\/[A-Za-z0-9_-]{8,40}\/?|\/p\/[^/]{1,200})?$/;
 const LANG_RE = /^lang\/([a-z]{2,3}(?:-[a-z0-9]{2,4})?)\.mjs$/;
 // Public endpoints: per address, a few registrations and code attempts.
 const RATE = { register: [6, 10 * 60 * 1000], unregister: [12, 10 * 60 * 1000], checkin: [12, 10 * 60 * 1000], tablepass: [12, 10 * 60 * 1000], player: [30, 10 * 60 * 1000], witness: [60, 10 * 60 * 1000], witnesslog: [6, 10 * 60 * 1000] };
@@ -682,7 +693,21 @@ export function createService(o) {
     if (p.indexOf('/arena') === 0) res.setHeader('X-Robots-Tag', 'noindex, nofollow, noimageindex');
     // /arena: the players' page (list, a tournament, registration);
     // /arena/organize: the organizer's tools.
-    if (p === '/arena' || p === '/arena/' || p === '/arena.html' || /^\/arena\/[tc]\/[A-Za-z0-9_-]{8,40}\/?$/.test(p) || /^\/arena\/p\/[^/]{1,200}$/.test(p)) return sendPage(res, 'public.html', shareMeta(req, p));
+    if (APP_RE.test(p)) return sendPage(res, 'public.html', shareMeta(req, p));
+    // The service worker of the app (scope /arena/): its cache named after this version.
+    if (p === '/arena/sw.js') {
+      let js = '';
+      try { js = fs.readFileSync(path.join(PUBLIC, 'sw.js'), 'utf8').split('__ARENA_VERSION__').join(String(o.version || '0')); } catch (e) { res.writeHead(404); return res.end('Not found'); }
+      res.writeHead(200, { 'Content-Type': 'text/javascript; charset=utf-8', 'Cache-Control': 'no-cache', 'Service-Worker-Allowed': '/arena/' });
+      return res.end(js);
+    }
+    // The languages, their names and flags (platform.mjs: the web client's list).
+    if (p === '/arena/lang-meta.mjs') {
+      let js;
+      try { js = fs.readFileSync(LANG_META_FILE, 'utf8'); } catch (e) { js = 'export const LANG_META = { en: { label: "English", dir: "ltr", flag: "" } };\n'; }
+      res.writeHead(200, { 'Content-Type': 'text/javascript; charset=utf-8', 'Cache-Control': 'no-cache' });
+      return res.end(js);
+    }
     // The images of tournaments and cups (the picture, or its thumbnail).
     const im = /^\/arena\/img\/([a-z0-9_-]{1,40})(\.t)?\.jpg$/.exec(p);
     if (im) {

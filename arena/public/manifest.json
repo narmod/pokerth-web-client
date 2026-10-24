@@ -1,18 +1,25 @@
 {
   "name": "PokerTH Arena (beta)",
   "short_name": "Arena",
-  "description": "Tournaments, cups and medals of a PokerTH web client: registration, tables run by the tournament director, signed results.",
-  "id": "/arena",
-  "start_url": "/arena",
-  "scope": "/arena",
+  "description": "Tournaments, cups and medals of the PokerTH networks: what is on, results, registration, tables run by the tournament director, signed results.",
+  "id": "/arena/",
+  "start_url": "/arena/",
+  "scope": "/arena/",
   "display": "standalone",
   "background_color": "#161b23",
   "theme_color": "#12161d",
   "orientation": "any",
+  "categories": ["games", "sports"],
   "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "/arena/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/arena/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/arena/icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/arena/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/arena/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "Tournaments", "url": "/arena/tournaments", "icons": [{ "src": "/arena/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Cups", "url": "/arena/cups", "icons": [{ "src": "/arena/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "My account", "url": "/arena/account", "icons": [{ "src": "/arena/icons/icon-192.png", "sizes": "192x192" }] }
   ]
 }

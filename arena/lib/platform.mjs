@@ -14,9 +14,12 @@
 //   SQL_VENDOR_DIR     sql.js (WASM) to read PokerTH .pdb logs, public/vendor
 //   webClientVersion() the release the director tells the server it speaks
 //   DEFAULT_DATA_DIR   where the data goes when ARENA_DIR is not set
+//   LANG_META_FILE     the languages (name, direction, flag), the web client's
+//                      public/modules/lang-meta.mjs — served to the pages as
+//                      /arena/lang-meta.mjs (service 0.30.0)
 //
 // Each one that can come from the environment does: ARENA_SQL_DIR,
-// ARENA_CLIENT_VERSION, ARENA_DIR.
+// ARENA_CLIENT_VERSION, ARENA_DIR, ARENA_LANG_META.
 // ═══════════════════════════════════════════════════════════════════
 
 import fs from 'node:fs';
@@ -33,6 +36,8 @@ export const WEB_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), 
 export const SQL_VENDOR_DIR = process.env.ARENA_SQL_DIR || path.join(WEB_ROOT, 'public', 'vendor');
 
 export const DEFAULT_DATA_DIR = path.join(WEB_ROOT, 'arena-data');
+
+export const LANG_META_FILE = process.env.ARENA_LANG_META || path.join(WEB_ROOT, 'public', 'modules', 'lang-meta.mjs');
 
 // « 2.1.10-web.319 »: the director derives the PokerTH release from it.
 export function webClientVersion() {

@@ -233,3 +233,47 @@ body[data-role="referee"] .org-only, body[data-role="viewer"] .org-only{display:
 .glist .gname{min-width:0;flex:1 1 220px}
 .glist form{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .glist form input{width:9em;min-width:0}
+/* ── The app (service 0.30.0): the menu, the language picker, offline ── */
+.pub .top{position:sticky;top:0;z-index:30}
+.pub .top .in{flex-wrap:nowrap;gap:8px 10px}
+.mainnav{display:flex;align-items:center;gap:2px;margin-inline-start:10px;min-width:0}
+.mainnav a{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:8px;color:var(--ink);text-decoration:none;font-weight:600;font-size:.92em;white-space:nowrap;min-height:40px}
+.mainnav a svg{width:18px;height:18px;fill:currentColor;flex:none}
+.mainnav a:hover{color:var(--ivory);background:var(--line)}
+.mainnav a[aria-current="page"]{color:var(--brass);background:color-mix(in srgb,var(--brass) 12%,transparent)}
+.mainnav #navAcct{margin-inline-start:6px;border:1px solid var(--line);max-width:12rem}
+.mainnav #navAcct span{overflow:hidden;text-overflow:ellipsis}
+.langpick{position:relative;flex:none}
+#langBtn{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:6px 10px;font-size:.88em;font-weight:600}
+.lp-flag{display:inline-flex;flex:none;width:24px;height:16px;border-radius:3px;overflow:hidden;box-shadow:0 0 0 1px var(--line)}
+.lp-flag svg{width:100%;height:100%;display:block}
+.lp-name{max-width:9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lp-caret{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.4}
+.lp-pop{position:absolute;inset-inline-end:0;top:calc(100% + 6px);width:min(18rem,calc(100vw - 24px));background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.35);padding:8px;z-index:40}
+.lp-pop input{margin:0 0 6px}
+.lp-pop ul{list-style:none;margin:0;padding:0;max-height:min(60vh,22rem);overflow:auto;overscroll-behavior:contain}
+.lp-pop li{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:7px;cursor:pointer;color:var(--ivory);min-height:40px}
+.lp-pop li:hover,.lp-pop li:focus{background:var(--line);outline:none}
+.lp-pop li[aria-selected="true"]{color:var(--brass);font-weight:700}
+.offline{background:var(--warn);color:#161b23;text-align:center;font-weight:600;font-size:.9em;padding:6px 12px}
+.pub.inner .hero .in{padding-top:22px;padding-bottom:30px}
+.pub.inner .hero p#heroText{display:none}
+.pub.inner .hero .tdav{width:44px;height:44px}
+.pub.inner .hero h1{font-size:clamp(1.5rem,1rem + 2vw,2.2rem);margin:0}
+.card.narrow{max-width:30rem}
+.actions a.btn{margin-inline-end:8px}
+@media (max-width:1000px){.mainnav a span{display:none}.mainnav a{padding:8px}.mainnav #navAcct span{display:inline}}
+/* Phones: the menu becomes the bar at the bottom, as an app. */
+@media (max-width:760px){
+  .pub .brand{font-size:0;gap:0}
+  .pub .top .beta{display:none}
+  .mainnav{position:fixed;left:0;right:0;bottom:0;z-index:35;margin:0;gap:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:var(--felt-lo);border-top:1px solid var(--line);padding:4px max(4px,env(safe-area-inset-left)) calc(4px + env(safe-area-inset-bottom)) max(4px,env(safe-area-inset-right));box-shadow:0 -4px 18px rgba(0,0,0,.25)}
+  .mainnav a,.mainnav #navAcct{flex-direction:column;gap:2px;padding:6px 2px;font-size:.68em;min-height:52px;justify-content:center;border:0;margin:0;max-width:none;border-radius:8px}
+  .mainnav a span,.mainnav #navAcct span{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mainnav a svg{width:22px;height:22px}
+  .pub footer{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+  .lp-name{display:none}
+  #langBtn{padding:6px 8px}
+  .lp-pop{position:fixed;left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));top:calc(env(safe-area-inset-top) + 62px);width:auto}
+  .lp-pop ul{max-height:calc(100vh - 230px)}
+}

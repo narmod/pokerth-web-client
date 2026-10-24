@@ -513,8 +513,9 @@ Routes: `POST /admin/arena/t/table/open {id}`, `…/t/table/go {id}`,
 - Limits per player address (set by the web client, `x-td-client`): six
   registrations, twelve unregistration attempts and twelve check-in attempts
   in ten minutes.
-- Every language of the app: the list comes from the web client's
-  `/modules/lang-meta.mjs`, the texts from `arena/public/lang/<code>.mjs`
+- Every language of the app: the list and the flags come from
+  `/arena/lang-meta.mjs` (served by the Arena, the web client's list through
+  `platform.mjs`), the texts from `arena/public/lang/<code>.mjs`
   (falling back to English, then the key); the choice is the app's
   (`pth_lang`); Arabic, Persian, Hebrew and Urdu read right to left, as on the
   public pages. The organizer tools stay in English, at `/arena/organize`.
@@ -779,6 +780,35 @@ Code: `arena/lib/groups.mjs`, `arena/public/groups-ui.mjs`; tests:
 - A member added without an account can be impersonated on a LAN server:
   combine with the identity « account » or « verified » when it matters.
 - Reset: the part `groups` archives `groups.json`.
+
+## The players' app (service `0.30.0`)
+
+Step 1 of the redesign decided 2026-10-24 (showcase home page, sign-in
+screen, account page, one account with roles: see the steps to come).
+
+- One page, `public.html` + `public.mjs`, with a menu: Home (`/arena/`),
+  Tournaments (`/arena/tournaments`), Cups (`/arena/cups`), Groups
+  (`/arena/groups`), then Sign in (`/arena/login`) or the player's nickname
+  (`/arena/account`). In the top bar on a computer (labels hidden under
+  1000 px), as a bar at the bottom on a phone (under 760 px). A tournament,
+  a cup or a player's page lights its section of the menu.
+- `/arena/login`: sign in, make an account (when the super admin opened
+  sign-up), choose the password of an invitation link (`#pinvite=`; the old
+  `/arena#pinvite=` links are sent there). `?next=/arena/…` comes back where
+  the player was (only paths under `/arena/`). `/arena/account`: the
+  nickname, my page, sign out, change the password, the nickname verified on
+  a game server, my groups.
+- The language list: each language with its flag (`lang-meta`, SVG) and a
+  search field; arrows, Enter, Escape. A full-width sheet on phones.
+- Installable: `manifest.json` (id, start and scope `/arena/`, shortcuts),
+  `arena/public/icons/` (SVG source and the PNG sizes, maskable included),
+  `sw.js` served by the service with its version in the cache name
+  (`Service-Worker-Allowed: /arena/`): network first, the cache only when the
+  network is gone; `/arena/api/…` and `/arena/organize` never cached. An
+  offline strip while the device has no network.
+- The relay (`server/arena-host.js`, web.320) passes `/arena/<view>` (one
+  lowercase segment), `/arena/organize/…`, `sw.js`, `icons/…` and the
+  `showcase` API (step 2).
 
 ## A nickname proved on a game server (service `0.28.0`)
 
@@ -1145,7 +1175,9 @@ Links still to cut (tick them off as the code is touched):
   `public/modules/create-presets.mjs` (later: read from the web client's API
   with a copy as fallback), the root `package.json` version (or
   `ARENA_CLIENT_VERSION`).
-- Pages: `/modules/lang-meta.mjs`, the web client's logo and favicons.
+- Pages: the web client's fonts (`/fonts`) and hero picture
+  (`/img/pokerth-login-bg.webp`). Done in 0.30.0: the language list
+  (`/arena/lang-meta.mjs`, via `platform.mjs`) and the Arena's own icons.
 - Running: launched and supervised by `server/arena-host.js`; servers over
   IPC; super admin = the web client's master key and its brute-force limit;
   `x-td-origin`, `x-td-client` and noindex set by the relay; the switch and
@@ -1200,6 +1232,8 @@ that version only: the web client's version, its service worker and its
 | `arena/lib/lobby.mjs` | Lobby reader (guest login, tables, server type). |
 | `arena/lib/host.mjs` | The director that opens a tournament table: create, invite, kick, hand over, then watch. |
 | `arena/lib/worker.mjs` | One watch in a detached process, state and files on disk. |
+| `arena/public/sw.js` | The app's service worker (network first, offline fallback). |
+| `arena/public/icons/` | The app's icons (SVG source, PNG sizes). |
 | `arena/lib/groups.mjs` | Groups: clubs, teams, lists; the four ways in; members for the access conditions. |
 | `arena/public/groups-ui.mjs` | Organizer side, Players › Groups. |
 | `arena/lib/verifier.mjs` | A nickname proved on a game server: codes, the lobby bot, the account marked verified. |

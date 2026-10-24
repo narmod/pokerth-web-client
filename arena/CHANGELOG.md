@@ -10,6 +10,30 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.30.0 — 2026-10-24
+
+### Added
+- **The players' page becomes an app** (step 1 of the redesign, decided
+  2026-10-24): a menu — Home, Tournaments, Cups, Groups, then Sign in or the
+  player's nickname (My account) — in the top bar, and a bar at the bottom on
+  phones, as an app. Views `/arena/tournaments`, `/arena/cups`,
+  `/arena/groups`, `/arena/login` (sign in, make an account, an invitation
+  link: old `/arena#pinvite=…` links go there) and `/arena/account`
+  (password, the nickname verified, my groups, sign out). The account panel
+  above every view is gone; a page that needs an account links to the
+  sign-in page and comes back afterwards (`?next=`).
+- **Languages with their flags**: a list with each language's flag and a
+  search field, in place of the plain select; keyboard: arrows, Enter, Escape.
+- **Installable (PWA)**: its own manifest (`/arena/`, shortcuts), its own
+  icons (`/arena/icons/`, also on the organizer's page) and a service worker
+  (`/arena/sw.js`, scope `/arena/`): network first, the cache only when the
+  network is gone (the app still opens and says it is offline); the API and
+  the organizer's tools never cached.
+- `/arena/lang-meta.mjs`: the languages (name, direction, flag) served by the
+  Arena (`platform.mjs`, `ARENA_LANG_META`): the pages no longer load the web
+  client's `/modules/lang-meta.mjs`.
+- 10 strings in the 83 languages.
+
 ## 0.29.0 — 2026-10-24
 
 ### Added

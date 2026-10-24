@@ -72,6 +72,10 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Arena: an installable app** (`web.320`, service `0.30.0`) — the relay (`server/arena-host.js`) lets through the
+  app's views (`/arena/<view>`, one lowercase segment, and `/arena/organize/…`), its service worker (`/arena/sw.js`),
+  its own icons (`/arena/icons/…`) and the `showcase` API to come. The Arena serves the language list with flags
+  itself (`/arena/lang-meta.mjs`, read through `arena/lib/platform.mjs`).
 - **Arena: no more organizer keys** (`web.319`, service `0.21.1`) — the « Arena (organizer) » category of Admin › Keys
   is removed (`ADMIN_SCOPES`, `install.sh token add`): organizers sign in with their Arena account; the master key stays
   the super admin's.

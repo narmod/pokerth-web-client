@@ -44,6 +44,7 @@ for (const p of list) {
 ok(P.pb && P.pb.PokerTHMessage && typeof P.pb.PokerTHMessage.encode === 'function', 'platform: the PokerTH protocol');
 ok(Array.isArray(P.STYLES) && P.STYLES.length > 0 && P.LIMITS && P.LIMITS.players && typeof P.createPresets === 'function', 'platform: the create-table lists and limits');
 ok(existsSync(join(P.SQL_VENDOR_DIR, 'sql-wasm.js')) && existsSync(join(P.SQL_VENDOR_DIR, 'sql-wasm.wasm')), 'platform: sql.js found');
+ok(existsSync(P.LANG_META_FILE), 'platform: the languages and their flags');
 ok(/^\d+\.\d+\.\d+/.test(P.webClientVersion()), 'platform: the web client version (' + P.webClientVersion() + ')');
 process.env.ARENA_CLIENT_VERSION = '9.9.9-web.0';
 ok(P.webClientVersion() === '9.9.9-web.0', 'platform: ARENA_CLIENT_VERSION wins');

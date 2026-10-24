@@ -1,17 +1,25 @@
 // ═══════════════════════════════════════════════════════════════════
-// /arena — the players' page (2026-10-23).
+// /arena — the players' app (2026-10-23; an installable app with its menu,
+// service 0.30.0).
 //
-//   /arena            public tournaments: open, playing, coming, finished
+//   /arena/               home
+//   /arena/tournaments    public tournaments: open, playing, coming, finished
+//   /arena/cups           the cups
+//   /arena/groups         the groups (join, ask, leave)
+//   /arena/login          sign in, make an account, an invitation link
+//   /arena/account        my account (password, nickname verified…)
 //   /arena/t/<key>    one tournament (also unlisted ones, by their link;
 //                          a private one asks for its invitation code)
+//   /arena/c/<key>, /arena/p/<nick>   a cup, a player
 //
 // Registration with a PokerTH nickname; the personal code it returns is kept
 // in this browser (pth_td_regs) and is what unregistering asks for — and the
 // check-in, with the identity « code » (Official): in a window before the
 // start each player confirms with that code; only they are invited.
-// Every language of the app: the list comes from /modules/lang-meta.mjs (the
-// web client's), the texts from /arena/lang/<code>.mjs, falling back
-// to English, then to the key. Talks to /arena/api/* (no token).
+// Every language of the app: the list and the flags come from
+// /arena/lang-meta.mjs (served by the Arena: the web client's list), the
+// texts from /arena/lang/<code>.mjs, falling back to English, then to the
+// key. Talks to /arena/api/* (no token). Installable: manifest.json, sw.js.
 // ═══════════════════════════════════════════════════════════════════
 
 import { initTheme } from './theme.mjs';
@@ -111,6 +119,9 @@ async function loadLang(code) {
   document.title = 'Arena (' + t('beta') + ') · PokerTH';
   document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t(el.dataset.t); });
   document.querySelectorAll('[data-t-title]').forEach((el) => { el.title = t(el.dataset.tTitle); });
+  document.querySelectorAll('[data-t-aria]').forEach((el) => { el.setAttribute('aria-label', t(el.dataset.tAria)); });
+  document.querySelectorAll('[data-t-ph]').forEach((el) => { el.placeholder = t(el.dataset.tPh); el.setAttribute('aria-label', t(el.dataset.tPh)); });
+  langButton();
   theme && theme.refresh();
 }
 
@@ -155,9 +166,14 @@ function card(c) {
     (c.server ? ' · ' + T('onServer', { server: c.server }) : '') + ' · ' + T('players', { n: c.players, max: c.maxPlayers }) +
     (c.winner ? ' · ' + T('winner', { nick: c.winner }) : '') + '</span></span></a></li>';
 }
-async function showList() {
+// which: 'home' (all of it), 'tournaments', 'cups' or 'groups' — the menu's views.
+async function showList(which) {
+  which = which || 'home';
+  const mine = 'list:' + which;
+  curKey = mine;
   $('view').innerHTML = '<p class="empty">' + T('loading') + '</p>';
-  const [d, dc] = await Promise.all([api('/list'), api('/cups')]);
+  const [d, dc] = await Promise.all([which === 'cups' || which === 'groups' ? Promise.resolve({ ok: true, tournaments: [] }) : api('/list'), which === 'tournaments' || which === 'groups' ? Promise.resolve({ ok: true, cups: [] }) : api('/cups')]);
+  if (curKey !== mine) return;
   if (!d.ok) { $('view').innerHTML = '<p class="msg bad">' + T('err_error') + '</p>'; return; }
   const all = d.tournaments || [];
   const cupList = (dc && dc.ok && dc.cups) || [];
@@ -172,8 +188,13 @@ async function showList() {
   const cupsHtml = cupList.length ? '<section class="card"><h2>' + T('secCups') + '</h2><ul class="tlist">' + cupList.map((c) => '<li><a class="tcard' + (c.thumb ? ' has-img' : '') + '" href="/arena/c/' + esc(c.key) + '" data-go>' + thumb(c) + '<span class="tc-body">' +
     '<span class="tc-top"><span class="tname">' + esc(c.name) + '</span><span class="chip ' + (c.status === 'closed' ? 'done' : 'live') + '">' + T(c.status === 'closed' ? 'cupStatusClosed' : 'cupStatusOpen') + '</span></span>' +
     '<span class="muted small">' + T('cupEvents', { n: c.events }) + (c.leader ? ' · ' + T('cupLeader', { nick: esc(c.leader) }) : '') + '</span></span></a></li>').join('') + '</ul></section>' : '';
-  $('view').innerHTML = (groups.length ? groups.map((g) => '<section class="card"><h2>' + T(g[0]) + '</h2><ul class="tlist">' + g[1].map(card).join('') + '</ul></section>').join('')
-    : '<section class="card"><p class="empty">' + T('none') + '</p></section>') + cupsHtml + '<div id="grBox">' + groupsHtml() + '</div>';
+  const tourHtml = groups.length ? groups.map((g) => '<section class="card"><h2>' + T(g[0]) + '</h2><ul class="tlist">' + g[1].map(card).join('') + '</ul></section>').join('')
+    : '<section class="card"><p class="empty">' + T('none') + '</p></section>';
+  const grHtml = '<div id="grBox">' + groupsHtml() + '</div>';
+  if (which === 'tournaments') $('view').innerHTML = tourHtml;
+  else if (which === 'cups') $('view').innerHTML = cupsHtml || '<section class="card"><p class="empty">' + T('none') + '</p></section>';
+  else if (which === 'groups') $('view').innerHTML = grAll.length ? grHtml : '<section class="card"><p class="empty">' + T('grHint') + '</p></section>';
+  else $('view').innerHTML = tourHtml + cupsHtml + grHtml;
   wireGroups();
 }
 
@@ -183,7 +204,7 @@ function groupsHtml() {
   if (!grAll.length) return '';
   let h = '<section class="card"><h2>' + T('grTitle') + '</h2><p class="small muted">' + T('grHint') + '</p>';
   if (grFlash) { h += '<div class="msg ' + (grFlash.bad ? 'bad' : 'ok') + '" role="status">' + grFlash.html + '</div>'; grFlash = null; }
-  if (!me && grAll.some((g) => g.join !== 'invite')) h += '<p class="small">' + T('grSignIn') + '</p>';
+  if (!me && grAll.some((g) => g.join !== 'invite')) h += '<p class="small">' + T('grSignIn') + ' <a href="' + loginHref() + '" data-go>' + T('navSignIn') + '</a></p>';
   h += '<ul class="glist">' + grAll.map((g) => {
     const id = esc(g.id), isIn = grMine.member.indexOf(g.id) >= 0, asked = grMine.requested.indexOf(g.id) >= 0;
     let a = '';
@@ -235,7 +256,7 @@ async function showOne(key) {
   if (curKey !== key) return;
   if (!d.ok) {
     if (d.code === 'private') return renderPrivate(key, !!inv);
-    $('view').innerHTML = '<p><a href="/arena" data-go>← ' + T('allTournaments') + '</a></p><section class="card"><p class="msg bad">' + T('err_' + (d.code === 'notFound' ? 'notFound' : 'error')) + '</p></section>';
+    $('view').innerHTML = '<p><a href="/arena/tournaments" data-go>← ' + T('allTournaments') + '</a></p><section class="card"><p class="msg bad">' + T('err_' + (d.code === 'notFound' ? 'notFound' : 'error')) + '</p></section>';
     return;
   }
   cur = d;
@@ -250,7 +271,7 @@ async function showOne(key) {
   }, d.phase === 'table' ? 5000 : 30000);
 }
 function renderPrivate(key, tried, base) {
-  $('view').innerHTML = '<p><a href="/arena" data-go>← ' + T('allTournaments') + '</a></p><section class="card"><h2>' + T('privateTitle') + '</h2>' +
+  $('view').innerHTML = '<p><a href="/arena/tournaments" data-go>← ' + T('allTournaments') + '</a></p><section class="card"><h2>' + T('privateTitle') + '</h2>' +
     '<p>' + T('privateText') + '</p>' + (tried ? '<p class="msg bad">' + T('err_notFound') + '</p>' : '') +
     '<form id="invForm" class="row"><div><label for="invIn">' + T('inviteCode') + '</label><input id="invIn" autocomplete="off" required></div><button type="submit" class="primary">' + T('open') + '</button></form></section>';
   $('invForm').addEventListener('submit', (ev) => { ev.preventDefault(); go((base || '/arena/t/') + key + '?invite=' + encodeURIComponent($('invIn').value.trim())); });
@@ -262,7 +283,7 @@ function tableLine(tb) {
 function renderOne() {
   const c = cur, mine = myRegs(c.key);
   const mineSet = new Set(mine.map((r) => r.nick.toLowerCase()));
-  let h = '<p><a href="/arena" data-go>← ' + T('allTournaments') + '</a></p>';
+  let h = '<p><a href="/arena/tournaments" data-go>← ' + T('allTournaments') + '</a></p>';
   h += '<section class="card"><h2>' + esc(c.name) + '</h2><p>' + chip(c) + '</p><p class="small">' +
     (c.startsAt ? T('startsAt', { date: fmtDate(c.startsAt) }) : T('noDate')) + (c.server ? ' · ' + T('onServer', { server: c.server }) : '') + '<br>' +
     T('format') + ' · ' + T('players', { n: c.players, max: c.maxPlayers }) + (c.table ? '<br>' + tableLine(c.table) : '') + '</p>';
@@ -354,7 +375,7 @@ function renderOne() {
     const viaCup = (c.cups || []).find((cp) => cp.register);
     if (c.closedBecause === 'organizer' && viaCup) h += '<p><a href="/arena/c/' + esc(viaCup.key) + '" data-go>' + T('regViaCup', { name: viaCup.name }) + '</a></p>';
     else if (c.closedBecause) h += '<p>' + T('closed_' + c.closedBecause) + '</p>';
-    else if (c.identity === 'accounts' && !me) h += '<p>' + T('accNeeded') + '</p>';
+    else if (c.identity === 'accounts' && !me) h += '<p>' + T('accNeededLogin') + ' <a class="btn" href="' + loginHref() + '" data-go>' + T('navSignIn') + '</a></p>';
     else if (me) {
       if (!c.playerList.some((p) => p.nick.toLowerCase() === me.nick.toLowerCase())) h += '<form id="regForm" class="row"><p>' + T('accRegisterAs', { nick: me.nick }) + '</p><button type="submit" class="primary">' + T('register') + '</button></form>';
     } else {
@@ -534,7 +555,7 @@ async function showPlayer(nick) {
   if (!d.ok) { $('view').innerHTML = '<p class="msg bad">' + T('err_error') + '</p>'; return; }
   const day = (ts) => { try { return new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(new Date(ts)); } catch (e) { return new Date(ts).toLocaleDateString(); } };
   const link = (x) => (x.key ? '<a href="/arena/' + (x.kind === 'cup' ? 'c/' : 't/') + esc(x.key) + '" data-go>' + esc(x.name) + '</a>' : esc(x.name));
-  let h = '<p><a href="/arena" data-go>← ' + T('allTournaments') + '</a>' + (d.account ? ' <span class="chip done" title="' + T('accBadgeTitle') + '">✓ ' + T('accBadge') + '</span>' : '') + (d.verified || []).map((v) => ' <span class="chip live">✓ ' + T('vfBadge', { server: v.server }) + '</span>').join('') + '</p>';
+  let h = '<p><a href="/arena/tournaments" data-go>← ' + T('allTournaments') + '</a>' + (d.account ? ' <span class="chip done" title="' + T('accBadgeTitle') + '">✓ ' + T('accBadge') + '</span>' : '') + (d.verified || []).map((v) => ' <span class="chip live">✓ ' + T('vfBadge', { server: v.server }) + '</span>').join('') + '</p>';
   h += '<section class="card"><h2>' + T('medalsTitle') + '</h2>';
   h += '<p class="medals">' + ['gold', 'silver', 'bronze'].map((k) => '<span class="medal ' + k + '"><span aria-hidden="true">' + MEDAL[k] + '</span> ' + T('medal_' + k) + ' <b>' + d.counts[k] + '</b></span>').join('') + '</p>';
   h += d.medals.length ? '<ul class="tlist">' + d.medals.map((m) => '<li class="medalrow"><span class="big" aria-hidden="true">' + MEDAL[m.medal] + '</span><span><b>' + link(m) + '</b><br><span class="muted small">' + T(m.kind === 'cup' ? 'kindCup' : 'kindTournament') + ' · ' + T('placeOf', { place: m.place, of: m.of }) + (m.at ? ' · ' + day(m.at) : '') + '</span></span></li>').join('') + '</ul>'
@@ -560,11 +581,11 @@ async function showCup(key) {
   if (curKey !== key) return;
   if (!d.ok) {
     if (d.code === 'private') return renderPrivate(key, !!inv, '/arena/c/');
-    $('view').innerHTML = '<p><a href="/arena" data-go>← ' + T('allTournaments') + '</a></p><section class="card"><p class="msg bad">' + T('err_notFound') + '</p></section>';
+    $('view').innerHTML = '<p><a href="/arena/cups" data-go>← ' + T('navCups') + '</a></p><section class="card"><p class="msg bad">' + T('err_notFound') + '</p></section>';
     return;
   }
   const fmt = (x) => (Math.round(x * 10) / 10).toLocaleString(lang);
-  let h = '<p><a href="/arena" data-go>← ' + T('allTournaments') + '</a></p>';
+  let h = '<p><a href="/arena/cups" data-go>← ' + T('navCups') + '</a></p>';
   h += '<section class="card"><h2>' + esc(d.name) + '</h2><p><span class="chip ' + (d.status === 'closed' ? 'done' : 'live') + '">' + T(d.status === 'closed' ? 'cupStatusClosed' : 'cupStatusOpen') + '</span></p>' +
     (d.description ? '<p>' + esc(d.description) + '</p>' : '') +
     '<p class="small">' + T('cupRulesPoints') + ' ' + (d.bestOf ? T('cupBest', { n: d.bestOf }) : T('cupAll')) + ' ' + T('cupTies') + '</p></section>';
@@ -729,37 +750,81 @@ function wireCup(d, key) {
   });
 }
 
-// ── the player's account panel (above every view) ───────────────────
+// ── the player's account: the sign-in page and « My account » (0.30.0) ──
 function pinviteFromHash() { const m = /[#&]pinvite=([A-Za-z0-9_-]{20,80})/.exec(location.hash || ''); return m ? m[1] : null; }
 function acctMsg() { if (!acctFlash) return ''; const h = '<div class="msg ' + (acctFlash.bad ? 'bad' : 'ok') + '" role="status">' + acctFlash.html + '</div>'; acctFlash = null; return h; }
+// The sign-in page, coming back here afterwards.
+function loginHref() {
+  const here = location.pathname + location.search;
+  return '/arena/login' + (/^\/arena\/(?:login|account)/.test(here) || here === '/arena/' || here === '/arena' ? '' : '?next=' + encodeURIComponent(here));
+}
+function nextAfterLogin() {
+  let n = null;
+  try { n = new URLSearchParams(location.search).get('next'); } catch (e) {}
+  return n && /^\/arena\/[A-Za-z0-9/_%.@-]*$/.test(n) && n.indexOf('//') < 0 ? n : '/arena/account';
+}
+// The menu: who is signed in, which view is open.
+function navKey() {
+  const p = location.pathname.replace(/\/+$/, '');
+  if (p === '/arena' || p === '/arena.html') return 'home';
+  const m = /^\/arena\/(tournaments|cups|groups|login|account|t|c|p)(?:\/|$)/.exec(location.pathname);
+  if (!m) return '';
+  const map = { t: 'tournaments', c: 'cups', p: '', login: 'account' };
+  return Object.prototype.hasOwnProperty.call(map, m[1]) ? map[m[1]] : m[1];
+}
+function updateNav() {
+  const a = $('navAcct'), s = $('navAcctTxt');
+  if (a) a.setAttribute('href', me ? '/arena/account' : '/arena/login');
+  if (s) { if (me) { delete s.dataset.t; s.textContent = me.nick; } else { s.dataset.t = 'navSignIn'; s.textContent = t('navSignIn'); } }
+  const k = navKey();
+  document.querySelectorAll('#mainNav a[data-nav]').forEach((x) => { if (x.dataset.nav === k) x.setAttribute('aria-current', 'page'); else x.removeAttribute('aria-current'); });
+}
+let acctView = null;   // 'login' | 'account' while one of them is shown
 function renderAcct() {
-  const box = $('acct');
+  updateNav();
+  if (acctView) renderAcctView();
+}
+function renderAcctView() {
+  const box = $('view');
   if (!box) return;
+  if (acctView === 'login' && me && !pinviteFromHash()) return go(nextAfterLogin());
+  if (acctView === 'account' && !me) return go('/arena/login');
   const inv = pinviteFromHash();
   let h = '';
-  if (inv && !me) {
-    h = '<section class="card"><h2>' + T('accInviteTitle') + '</h2><p class="small">' + T('accInviteHint') + '</p>' + acctMsg() +
-      '<form id="accInvForm" class="row"><div><label for="accInvPw">' + T('accPassword') + '</label><input id="accInvPw" type="password" autocomplete="new-password" minlength="8" required></div>' +
-      '<button type="submit" class="primary">' + T('accChoose') + '</button></form></section>';
-  } else if (me) {
-    h = '<div class="acctbar">' + acctMsg() + '<span>' + T('accSignedIn', { nick: me.nick }) + '</span> <a href="/arena/p/' + encodeURIComponent(me.nick) + '" data-go>' + T('accMyPage') + '</a>' +
-      ' <details class="sub inl"><summary>' + T('accChangePw') + '</summary><form id="accPwForm" class="row"><div><label for="accPwOld">' + T('accCurPassword') + '</label><input id="accPwOld" type="password" autocomplete="current-password" required></div>' +
-      '<div><label for="accPwNew">' + T('accNewPassword') + '</label><input id="accPwNew" type="password" autocomplete="new-password" minlength="8" required></div><button type="submit">' + T('accChangePw') + '</button></form></details>' +
-      ' <button type="button" class="ghost mini" id="accOut">' + T('accSignOut') + '</button></div>' + vfHtml();
+  if (acctView === 'login') {
+    $('heroTitle').textContent = t('navSignIn');
+    if (inv) {
+      h = '<section class="card"><h2>' + T('accInviteTitle') + '</h2><p class="small">' + T('accInviteHint') + '</p>' + acctMsg() +
+        '<form id="accInvForm" class="row"><div><label for="accInvPw">' + T('accPassword') + '</label><input id="accInvPw" type="password" autocomplete="new-password" minlength="8" required></div>' +
+        '<button type="submit" class="primary">' + T('accChoose') + '</button></form></section>';
+    } else {
+      h = '<section class="card narrow"><h2>' + T('accSignIn') + '</h2>' + acctMsg() +
+        '<form id="accInForm"><label for="accNick">' + T('nickname') + '</label><input id="accNick" maxlength="64" autocomplete="username" autocapitalize="none" spellcheck="false" required>' +
+        '<label for="accPw">' + T('accPassword') + '</label><input id="accPw" type="password" autocomplete="current-password" required><div class="actions"><button type="submit" class="primary">' + T('accSignIn') + '</button></div></form></section>' +
+        (signupMode === 'open'
+          ? '<section class="card narrow"><h2>' + T('accCreateTitle') + '</h2><p class="small muted">' + T('accCreateHint') + '</p><form id="accUpForm"><label for="accUpNick">' + T('nickname') + '</label><input id="accUpNick" maxlength="64" autocomplete="nickname" autocapitalize="none" spellcheck="false" required>' +
+            '<label for="accUpPw">' + T('accPassword') + '</label><input id="accUpPw" type="password" autocomplete="new-password" minlength="8" required><div class="actions"><button type="submit">' + T('accCreate') + '</button></div></form></section>'
+          : '<section class="card narrow"><p class="small muted">' + T('accInviteOnly') + '</p></section>');
+    }
   } else {
-    h = '<details class="sub acctbox"' + (acctFlash ? ' open' : '') + '><summary>' + T('accTitle') + '</summary>' + acctMsg() +
-      '<form id="accInForm" class="row"><div><label for="accNick">' + T('nickname') + '</label><input id="accNick" maxlength="64" autocomplete="username" required></div>' +
-      '<div><label for="accPw">' + T('accPassword') + '</label><input id="accPw" type="password" autocomplete="current-password" required></div><button type="submit" class="primary">' + T('accSignIn') + '</button></form>' +
-      (signupMode === 'open'
-        ? '<details class="sub"><summary>' + T('accCreateTitle') + '</summary><p class="small muted">' + T('accCreateHint') + '</p><form id="accUpForm" class="row"><div><label for="accUpNick">' + T('nickname') + '</label><input id="accUpNick" maxlength="64" autocomplete="nickname" required></div>' +
-          '<div><label for="accUpPw">' + T('accPassword') + '</label><input id="accUpPw" type="password" autocomplete="new-password" minlength="8" required></div><button type="submit">' + T('accCreate') + '</button></form></details>'
-        : '<p class="small muted">' + T('accInviteOnly') + '</p>') + '</details>';
+    $('heroTitle').textContent = t('navAccount');
+    const mineG = grAll.filter((g) => grMine.member.indexOf(g.id) >= 0);
+    h = '<section class="card"><h2>' + T('navAccount') + '</h2>' + acctMsg() + '<p>' + T('accSignedIn', { nick: me.nick }) + '</p>' +
+      '<div class="actions"><a class="btn" href="/arena/p/' + encodeURIComponent(me.nick) + '" data-go>' + T('accMyPage') + '</a><button type="button" class="ghost" id="accOut">' + T('accSignOut') + '</button></div></section>' +
+      '<section class="card"><h2>' + T('accChangePw') + '</h2><form id="accPwForm"><div class="row"><div><label for="accPwOld">' + T('accCurPassword') + '</label><input id="accPwOld" type="password" autocomplete="current-password" required></div>' +
+      '<div><label for="accPwNew">' + T('accNewPassword') + '</label><input id="accPwNew" type="password" autocomplete="new-password" minlength="8" required></div></div><div class="actions"><button type="submit">' + T('accChangePw') + '</button></div></form></section>' +
+      vfHtml() +
+      '<section class="card"><h2>' + T('grTitle') + '</h2>' + (mineG.length ? '<ul class="chips">' + mineG.map((g) => '<li>' + esc(g.name) + '</li>').join('') + '</ul>' : '<p class="small muted">' + T('grHint') + '</p>') +
+      '<p class="small"><a href="/arena/groups" data-go>' + T('navGroups') + ' →</a></p></section>';
   }
   box.innerHTML = h;
-  const signedIn = (d) => { me = { token: d.token, nick: d.player.nick }; acctSave(me); acctFlash = { html: T('accWelcome', { nick: d.player.nick }) }; if (pinviteFromHash()) history.replaceState(null, '', location.pathname + location.search); renderAcct(); route();
-    // My groups, for the groups card.
-    api('/players/me', { session: d.token }).then((w) => { if (w && w.ok) { grMine = w.groups || grMine; const b = $('grBox'); if (b) { b.innerHTML = groupsHtml(); fillMedals(); } } }).catch(() => {}); };
-  const bad = (d) => { acctFlash = { bad: true, html: errText(d) }; renderAcct(); };
+  const signedIn = (d) => {
+    me = { token: d.token, nick: d.player.nick }; acctSave(me); acctFlash = { html: T('accWelcome', { nick: d.player.nick }) };
+    if (pinviteFromHash()) history.replaceState(null, '', location.pathname + location.search);
+    // My groups, then where I was going.
+    api('/players/me', { session: d.token }).then((w) => { if (w && w.ok) grMine = w.groups || grMine; }).catch(() => {}).then(() => { if (vfServers.length) vfPoll(); go(nextAfterLogin()); });
+  };
+  const bad = (d) => { acctFlash = { bad: true, html: errText(d) }; renderAcctView(); };
   const f1 = $('accInForm');
   if (f1) f1.addEventListener('submit', async (ev) => { ev.preventDefault(); const d = await api('/players/login', { nick: $('accNick').value.trim(), password: $('accPw').value }); if (d.ok) signedIn(d); else bad(d); });
   const f2 = $('accUpForm');
@@ -767,18 +832,18 @@ function renderAcct() {
   const f3 = $('accInvForm');
   if (f3) f3.addEventListener('submit', async (ev) => { ev.preventDefault(); const d = await api('/players/invite', { token: pinviteFromHash(), password: $('accInvPw').value }); if (d.ok) signedIn(d); else bad(d); });
   const f4 = $('accPwForm');
-  if (f4) f4.addEventListener('submit', async (ev) => { ev.preventDefault(); const d = await api('/players/password', { session: me.token, old: $('accPwOld').value, password: $('accPwNew').value }); acctFlash = d.ok ? { html: T('accPwChanged') } : { bad: true, html: errText(d) }; renderAcct(); });
+  if (f4) f4.addEventListener('submit', async (ev) => { ev.preventDefault(); const d = await api('/players/password', { session: me.token, old: $('accPwOld').value, password: $('accPwNew').value }); acctFlash = d.ok ? { html: T('accPwChanged') } : { bad: true, html: errText(d) }; renderAcctView(); });
   const vg = $('vfForm');
-  if (vg) vg.addEventListener('submit', async (ev) => { ev.preventDefault(); const d = await api('/players/verify', { session: me.token, ref: $('vfSrv').value }); if (!d.ok) { acctFlash = { bad: true, html: errText(d) }; return renderAcct(); } vf = { pending: Object.assign({ done: false }, d), verified: (vf && vf.verified) || [] }; renderAcct(); vfPoll(); });
+  if (vg) vg.addEventListener('submit', async (ev) => { ev.preventDefault(); const d = await api('/players/verify', { session: me.token, ref: $('vfSrv').value }); if (!d.ok) { acctFlash = { bad: true, html: errText(d) }; return renderAcctView(); } vf = { pending: Object.assign({ done: false }, d), verified: (vf && vf.verified) || [] }; renderAcctView(); vfPoll(); });
   const o = $('accOut');
-  if (o) o.addEventListener('click', async () => { const tk = me && me.token; me = null; acctSave(null); grMine = { member: [], requested: [] }; if (tk) api('/players/logout', { session: tk }).catch(() => {}); renderAcct(); route(); });
+  if (o) o.addEventListener('click', async () => { const tk = me && me.token; me = null; acctSave(null); grMine = { member: [], requested: [] }; vf = null; if (tk) api('/players/logout', { session: tk }).catch(() => {}); go('/arena/'); });
 }
 
 // ── proving the nickname on a game server (service 0.28.0) ──────────
 function vfHtml() {
   if (!me || !vfServers.length) return '';
   const p = vf && vf.pending, done = vf && vf.verified && vf.verified.length;
-  let h = '<details class="sub acctbox"' + (p && !p.done ? ' open' : '') + '><summary>' + T('vfTitle') + (done ? ' ✓' : '') + '</summary>';
+  let h = '<section class="card"><h2>' + T('vfTitle') + (done ? ' ✓' : '') + '</h2>';
   if (done) h += '<p class="small">' + T('vfList', { list: vf.verified.map((v) => v.server).join(', ') }) + '</p>';
   if (p && p.done) h += '<p class="msg ok">' + T('vfOk', { server: p.server }) + '</p>';
   else if (p && p.error) h += '<p class="msg bad">' + T('vfError', { error: p.error }) + '</p>';
@@ -788,7 +853,7 @@ function vfHtml() {
   }
   h += '<p class="small muted">' + T('vfHint') + '</p><form id="vfForm" class="row"><div><label for="vfSrv">' + T('vfServer') + '</label><select id="vfSrv">' +
     vfServers.map((s) => '<option value="' + esc(s.ref) + '">' + esc(s.name) + '</option>').join('') + '</select></div><button type="submit">' + T('vfGet') + '</button></form>';
-  return h + '</details>';
+  return h + '</section>';
 }
 function vfPoll() {
   clearTimeout(vfTimer);
@@ -803,13 +868,24 @@ function vfPoll() {
 }
 
 // ── routing ────────────────────────────────────────────────────────
+const VIEW_TITLE = { tournaments: 'navTournaments', cups: 'navCups', groups: 'navGroups' };
 function route() {
   clearTimeout(pollTimer);
-  curKey = null; cur = null;
+  curKey = null; cur = null; acctView = null;
+  closeLangPop();
+  // An old invitation link (/arena#pinvite=…): the sign-in page takes it.
+  if (pinviteFromHash() && !/^\/arena\/login\/?$/.test(location.pathname)) { history.replaceState(null, '', '/arena/login' + location.hash); }
   $('heroTitle').textContent = t('title');
   heroImage(null);
+  const vm = /^\/arena\/(tournaments|cups|groups|login|account)\/?$/.exec(location.pathname);
+  const view = vm ? vm[1] : null;
+  document.body.classList.toggle('inner', navKey() !== 'home');
+  updateNav();
   const key = keyFromPath(), ckey = cupKeyFromPath(), pnick = playerFromPath();
-  if (key) showOne(key); else if (ckey) showCup(ckey); else if (pnick) showPlayer(pnick); else showList();
+  if (key) showOne(key); else if (ckey) showCup(ckey); else if (pnick) showPlayer(pnick);
+  else if (view === 'login' || view === 'account') { acctView = view; renderAcctView(); }
+  else if (view) { $('heroTitle').textContent = t(VIEW_TITLE[view]); showList(view); }
+  else showList('home');
   window.scrollTo(0, 0);
 }
 document.addEventListener('click', (ev) => {
@@ -824,15 +900,12 @@ window.addEventListener('popstate', route);
 let theme = null;
 (async function start() {
   try { EN = (await import('/arena/lang/en.mjs')).strings || {}; } catch (e) { EN = {}; }
-  try { meta = (await import('/modules/lang-meta.mjs')).LANG_META || meta; } catch (e) {}
+  try { meta = (await import('/arena/lang-meta.mjs')).LANG_META || meta; } catch (e) {}
   const avail = Object.keys(meta);
   const code = pickLang(avail);
-  const sel = $('langSel');
-  sel.innerHTML = avail.map((c) => '<option value="' + esc(c) + '">' + esc(meta[c].label || c) + '</option>').join('');
-  sel.value = code;
-  sel.addEventListener('change', async () => {
-    lsSet('pth_lang', sel.value);   // the same choice as the app's
-    await loadLang(sel.value);
+  initLangPick(avail, async (c) => {
+    lsSet('pth_lang', c);   // the same choice as the app's
+    await loadLang(c);
     renderAcct();
     if (cur) renderOne(); else route();
   });
@@ -848,4 +921,54 @@ let theme = null;
   renderAcct();
   if (me) vfPoll();
   route();
+  // Installable, and still opens without the network (sw.js, scope /arena/).
+  try { if ('serviceWorker' in navigator) navigator.serviceWorker.register('/arena/sw.js', { scope: '/arena/' }).catch(() => {}); } catch (e) {}
+  const net = () => { const o = $('offline'); if (o) o.hidden = navigator.onLine !== false; };
+  window.addEventListener('online', () => { net(); route(); });
+  window.addEventListener('offline', net);
+  net();
 })();
+
+// ── the language picker: each language with its flag (lang-meta) ──
+let langAvail = [], langPicked = null;
+function langButton() {
+  const m = meta[lang] || {};
+  if ($('langFlag')) $('langFlag').innerHTML = m.flag || '';
+  if ($('langName')) $('langName').textContent = m.label || lang;
+  if ($('langBtn')) $('langBtn').setAttribute('aria-label', t('language') + ': ' + (m.label || lang));
+}
+function langListHtml(q) {
+  const f = String(q || '').trim().toLowerCase();
+  return langAvail.filter((c) => !f || c.toLowerCase().indexOf(f) === 0 || String((meta[c] || {}).label || '').toLowerCase().indexOf(f) >= 0)
+    .map((c) => '<li role="option" tabindex="-1" data-lang="' + esc(c) + '"' + (c === lang ? ' aria-selected="true"' : '') + '><span class="lp-flag">' + ((meta[c] || {}).flag || '') + '</span><span>' + esc((meta[c] || {}).label || c) + '</span></li>').join('');
+}
+function closeLangPop() {
+  const p = $('langPop'); if (!p || p.hidden) return;
+  p.hidden = true; $('langBtn').setAttribute('aria-expanded', 'false');
+}
+function initLangPick(avail, onPick) {
+  langAvail = avail; langPicked = onPick;
+  const btn = $('langBtn'), pop = $('langPop'), list = $('langList'), find = $('langFind');
+  if (!btn) return;
+  const open = () => {
+    find.value = ''; list.innerHTML = langListHtml('');
+    pop.hidden = false; btn.setAttribute('aria-expanded', 'true');
+    const cur = list.querySelector('[aria-selected="true"]');
+    if (cur) cur.scrollIntoView({ block: 'center' });
+    if (window.matchMedia && window.matchMedia('(pointer: fine)').matches) find.focus(); else if (cur) cur.focus();
+  };
+  btn.addEventListener('click', () => (pop.hidden ? open() : closeLangPop()));
+  find.addEventListener('input', () => { list.innerHTML = langListHtml(find.value); });
+  const pick = (li) => { if (!li) return; closeLangPop(); btn.focus(); if (li.dataset.lang !== lang) langPicked(li.dataset.lang); };
+  list.addEventListener('click', (ev) => pick(ev.target.closest('li[data-lang]')));
+  pop.addEventListener('keydown', (ev) => {
+    const items = [...list.querySelectorAll('li[data-lang]')];
+    const i = items.indexOf(document.activeElement);
+    if (ev.key === 'Escape') { ev.preventDefault(); closeLangPop(); btn.focus(); }
+    else if (ev.key === 'ArrowDown') { ev.preventDefault(); (items[i + 1] || items[0] || find).focus(); }
+    else if (ev.key === 'ArrowUp') { ev.preventDefault(); (i > 0 ? items[i - 1] : find).focus(); }
+    else if (ev.key === 'Enter' && i >= 0) { ev.preventDefault(); pick(items[i]); }
+    else if (ev.key === 'Enter' && document.activeElement === find && items.length === 1) { ev.preventDefault(); pick(items[0]); }
+  });
+  document.addEventListener('click', (ev) => { if (!pop.hidden && !ev.target.closest('#langPick')) closeLangPop(); });
+}

@@ -90,8 +90,9 @@ try {
   ok(html.indexOf(s1.service.version) >= 0, 'page: shows the service version');
   ok((await get('/arena/..%2F..%2Fadmin%2Ftournaments%2Ft%2Flist', {})).status === 404 && (await get('/arena/proxy.js', {})).status === 404, 'page: only the page and its files are relayed');
   const man = await (await get('/arena/manifest.json', {})).json();
-  ok(man.start_url === '/arena' && man.scope === '/arena' && man.display === 'standalone', 'manifest: installable on its own, scoped to /arena');
-  ok(man.icons.every((i) => fs.existsSync(path.join(root, 'public', i.src))), 'manifest: every icon exists');
+  ok(man.start_url === '/arena/' && man.scope === '/arena/' && man.display === 'standalone', 'manifest: installable on its own, scoped to /arena/');
+  ok(man.icons.every((i) => fs.existsSync(path.join(root, 'arena', 'public', i.src.replace(/^\/arena\//, '')))), 'manifest: every icon exists (the Arena\'s own)');
+  for (const u of ['/arena/sw.js', '/arena/lang-meta.mjs', '/arena/icons/icon-192.png', '/arena/tournaments', '/arena/login', '/arena/account']) ok((await get(u, {})).status === 200, 'relayed: ' + u);
   const srv = await (await get('/admin/arena/servers')).json();
   const local = srv.servers && srv.servers.find((x) => x.ref === 'local');
   ok(local && local.port === game.port, 'servers: the local server from the login defaults');

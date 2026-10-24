@@ -6,9 +6,9 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="color-scheme" content="dark light">
 <title>Arena (beta) · PokerTH</title>
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="icon" href="/favicon-32.png" sizes="32x32">
-<link rel="apple-touch-icon" href="/favicon-180.png">
+<link rel="icon" href="/arena/icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="/arena/icons/icon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/arena/icons/icon-180.png">
 <link rel="manifest" href="/arena/manifest.json">
 <meta name="theme-color" content="#12161d" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#ebe6da" media="(prefers-color-scheme: light)">
@@ -31,14 +31,26 @@
 </head>
 <body class="pub">
 <header class="top"><div class="in">
-  <a class="brand" href="/"><img src="/logo-chip-68.png" alt="" width="34" height="34">PokerTH <span>Arena</span></a>
+  <a class="brand" href="/arena/" data-go><img src="/arena/icons/icon-192.png" alt="" width="34" height="34">PokerTH <span>Arena</span></a>
   <span class="beta" data-t="beta" data-t-title="betaTitle">beta</span>
+  <nav class="mainnav" id="mainNav" aria-label="Main menu" data-t-aria="navLabel">
+    <a href="/arena/" data-go data-nav="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span data-t="navHome">Home</span></a>
+    <a href="/arena/tournaments" data-go data-nav="tournaments"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v3h3v2a5 5 0 0 1-4.6 5A5 5 0 0 1 13 15.9V18h3v3H8v-3h3v-2.1A5 5 0 0 1 8.6 13 5 5 0 0 1 4 8V6h3zm0 5V8H6a3 3 0 0 0 1.4 2.5A6 6 0 0 1 7 8zm10 0a6 6 0 0 1-.4 2.5A3 3 0 0 0 18 8z"/></svg><span data-t="navTournaments">Tournaments</span></a>
+    <a href="/arena/cups" data-go data-nav="cups"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2h8l-2 6h-4zM12 9a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13zm0 3l1.2 2.5 2.8.4-2 2 .5 2.7L12 18.3l-2.5 1.3.5-2.7-2-2 2.8-.4z"/></svg><span data-t="navCups">Cups</span></a>
+    <a href="/arena/groups" data-go data-nav="groups"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm8 0a3 3 0 1 1 0-6 3 3 0 0 1 0 6zM2 20c0-3.9 3.1-7 7-7s7 3.1 7 7zm15.5 0c0-2.1-.8-4-2.1-5.4A5.5 5.5 0 0 1 22 20z"/></svg><span data-t="navGroups">Groups</span></a>
+    <a href="/arena/login" data-go data-nav="account" id="navAcct"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm-9 10c0-5 4-8 9-8s9 3 9 8z"/></svg><span id="navAcctTxt" data-t="navSignIn">Sign in</span></a>
+  </nav>
   <span class="sp"></span>
-  <label class="sr" for="langSel" data-t="language">Language</label>
-  <select id="langSel" class="langsel"></select>
+  <div class="langpick" id="langPick">
+    <button type="button" class="ghost" id="langBtn" aria-haspopup="listbox" aria-expanded="false" aria-controls="langPop"><span class="lp-flag" id="langFlag"></span><span class="lp-name" id="langName">English</span><svg class="lp-caret" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="lp-pop" id="langPop" hidden>
+      <input id="langFind" type="search" autocomplete="off" spellcheck="false" placeholder="Search a language" data-t-ph="langSearch" aria-label="Search a language">
+      <ul role="listbox" id="langList" aria-label="Language" data-t-aria="language"></ul>
+    </div>
+  </div>
   <button type="button" class="theme ghost" id="themeBtn">Theme: auto</button>
-  <a class="theme ghost orglink" href="/arena/organize" data-t="organizer">Organizer</a>
 </div></header>
+<div class="offline" id="offline" hidden data-t="offline">You are offline: what you see may be out of date.</div>
 
 <main>
 <div class="hero"><div class="in">
@@ -46,7 +58,6 @@
   <h1><img class="tdav" id="heroImg" src="/arena/avatar" alt="" width="64" height="64"><span id="heroTitle" data-t="title">Tournaments</span> <span class="beta" data-t="beta">beta</span></h1>
   <p id="heroText" data-t="intro">Free poker tournaments on the LAN servers of this site: register with your PokerTH nickname, then take your seat when the director invites you.</p>
 </div></div>
-<div class="in acct" id="acct"></div>
 <div class="in body" id="view" aria-live="polite"><p class="empty" data-t="loading">Loading…</p></div>
 </main>
 <footer class="in"><span data-t="footer">PokerTH tournament director · beta</span> · <a class="orgfoot" href="/arena/organize" data-t="organizer">Organizer</a></footer>

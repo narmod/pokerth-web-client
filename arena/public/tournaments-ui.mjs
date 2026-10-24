@@ -81,7 +81,7 @@ export function createTournamentsView(deps) {
   let LANGS = [['en', 'English']];
   const langName = (c) => { const x = LANGS.find((l) => l[0] === c); return x ? x[1] + ' (' + c + ')' : c; };
   const langOptions = (sel) => (sel && !LANGS.some((l) => l[0] === sel) ? LANGS.concat([[sel, sel]]) : LANGS).map((l) => '<option value="' + esc(l[0]) + '"' + (l[0] === sel ? ' selected' : '') + '>' + esc(l[1]) + ' (' + esc(l[0]) + ')</option>').join('');
-  import('/modules/lang-meta.mjs').then((m) => {
+  import('/arena/lang-meta.mjs').then((m) => {
     const meta = m.LANG_META || {};
     const all = Object.keys(meta).map((c) => [c.toLowerCase(), meta[c].label || c]);
     if (!all.length) return;
