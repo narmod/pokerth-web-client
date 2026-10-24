@@ -84,6 +84,8 @@ try {
   ok(page.status === 200 && /Table check/.test(html) && /noindex/.test(html), 'on: /tournament/organize served, noindex');
   const pubPage = await get('/tournament', {});
   ok(pubPage.status === 200 && /public\.mjs/.test(await pubPage.text()), 'on: /tournament is the players\' page');
+  const av = await fetch(base + '/tournament/avatar');
+  ok(av.status === 200 && av.headers.get('content-type') === 'image/png', 'on: the director\'s avatar is served');
   const css = await (await get('/tournament/td.css', {})).text();
   ok(/no-store/.test(page.headers.get('cache-control') || ''), 'served no-store');
   ok(/viewport-fit=cover/.test(html) && /env\(safe-area-inset-top\)/.test(css) && /rel="manifest" href="\/tournament\/manifest\.json"/.test(html), 'page: phone notch safe areas and its own app manifest');

@@ -144,6 +144,13 @@ try {
   await og.goto(base + '/tournament/organize');
   await og.waitForFunction(() => document.getElementById('tChatLang') && document.getElementById('tChatLang').options.length > 1, null, { timeout: 8000 });
   const cl = await og.$$eval('#tChatLang option', (o) => o.map((x) => x.value));
+  // The director's avatar: any image, made 96×96 under 30 KB in the page.
+  await og.setInputFiles('#avFile', path.join(root, 'public', 'logo-chip-68.png'));
+  await og.waitForFunction(() => /New avatar saved/.test(document.getElementById('avMsg').textContent), null, { timeout: 8000 });
+  const avInfo = await (await fetch(base + '/admin/tournaments/avatar', { headers: A })).json();
+  ok(avInfo.custom === true && avInfo.size > 32 && avInfo.size <= 30720, 'organizer: a new avatar, resized in the page (' + avInfo.size + ' bytes)');
+  await og.click('#avReset');
+  await og.waitForFunction(() => /Back to the robot/.test(document.getElementById('avMsg').textContent), null, { timeout: 8000 });
   ok(cl.length >= 80 && cl.indexOf('fr') >= 0 && cl.indexOf('pt-br') >= 0 && cl.indexOf('en') >= 0, 'organizer: the chat language offers every language of the app (' + cl.length + ')');
   await og.close();
 

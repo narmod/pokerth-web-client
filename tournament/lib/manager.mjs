@@ -22,7 +22,7 @@ import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { listGames } from './lobby.mjs';
 import { verifyJournal, verifyPayload, canonical, publicKeyRawB64 } from './journal.mjs';
-import { replayJournal } from './spectator.mjs';
+import { replayJournal, avatarOf } from './spectator.mjs';
 import { createTournaments } from './tournaments.mjs';
 import { loadBotStrings, isBotLang } from './botchat.mjs';
 
@@ -142,6 +142,29 @@ export function createManager(deps) {
     return { ok: true };
   }
 
+  // The director's avatar: the one set by an organizer (in TD_DIR), else the
+  // default robot (public/img/director-avatar.png). Tables opened afterwards use it.
+  const AVATAR_DEFAULT = path.join(HERE, '..', 'public', 'img', 'director-avatar.png');
+  const avatarFile = path.join(dir, 'director-avatar.img');
+  function avatarBytes() {
+    for (const f of [avatarFile, AVATAR_DEFAULT]) { try { const b = fs.readFileSync(f); if (avatarOf({ bytes: b })) return { bytes: b, custom: f === avatarFile }; } catch (e) {} }
+    return null;
+  }
+  function avatarOpt() { const a = avatarBytes(); return a ? { b64: a.bytes.toString('base64') } : null; }
+  function avatar() {
+    const a = avatarBytes();
+    if (!a) return null;
+    const v = avatarOf({ bytes: a.bytes });
+    return { bytes: a.bytes, type: v.type, custom: a.custom, size: a.bytes.length, md5: v.md5.toString('hex') };
+  }
+  function setAvatar(b64) {
+    const v = avatarOf({ b64 });
+    if (!v) return { ok: false, error: 'a PNG, JPEG or GIF image of 32 bytes to 30 KB (the server\'s limit)' };
+    fs.writeFileSync(avatarFile, v.bytes);
+    return { ok: true };
+  }
+  function resetAvatar() { try { fs.unlinkSync(avatarFile); } catch (e) {} return { ok: true }; }
+
   function launch(s, body, metaExtra, optsFor, taskExtra) {
     if (running().length >= MAX_RUNNING) return { ok: false, error: 'at most ' + MAX_RUNNING + ' directors at once' };
     let nick = String(body.nick || '').trim();
@@ -178,7 +201,7 @@ export function createManager(deps) {
     fs.writeFileSync(path.join(d, 'meta.json'), JSON.stringify(meta));
     child.send(Object.assign({
       id, dir: d, keyFile, version: deps.clientVersion(),
-      opts: Object.assign(connOpts(s), optsFor(nick)),
+      opts: Object.assign(connOpts(s), { avatar: avatarOpt() }, optsFor(nick)),
     }, taskExtra || {}));
     child.unref();
     // The worker closes the IPC channel itself once it has the task.
@@ -242,7 +265,7 @@ export function createManager(deps) {
     readWatchJournal: (id) => (ID_RE.test(id) ? readJson(path.join(wdir(id), 'journal.json')) : null),
   });
 
-  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, MAX_RUNNING };
+  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, avatar, setAvatar, resetAvatar, MAX_RUNNING };
 }
 
 /** Public part of the install key, read from its PEM file (null if none yet). */

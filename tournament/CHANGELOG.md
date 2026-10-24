@@ -8,6 +8,16 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.11.0 — 2026-10-24 (web client `2.1.10-web.308`)
+
+### Added
+- **The director's avatar:** a robot of its own, so that players tell it from
+  the others in every PokerTH client — announced by its MD5 at login and sent
+  when the server asks for it (PNG, within the server's 30 KB). Any organizer
+  can change it on the organizer page (« The director's avatar »: any image,
+  made 96×96 in the page) or go back to the robot; tables opened afterwards
+  use it. Also shown on the players' page (`/tournament/avatar`).
+
 ## 0.10.0 — 2026-10-24
 
 ### Added

@@ -416,6 +416,20 @@ Routes: `POST /admin/tournaments/t/table/open {id}`, `…/t/table/go {id}`,
   `badCode`, `alreadyIn`. Organizer routes: `POST /admin/tournaments/t/code
   {id, nick}`, `…/t/checkin {id, nick}`.
 
+## The director's avatar (service `0.11.0`, web client `2.1.10-web.308`)
+
+- The director logs in with an avatar so that players tell it from the
+  others: its MD5 in the Init (`avatarHash`), then, when the server asks
+  (`AvatarRequest`), header, blocks of 256 bytes, end — like any client; an
+  unknown hash gets `UnknownAvatar`. The server takes PNG, JPEG or GIF of
+  32 B to 30 KB (`MAX_AVATAR_FILE_SIZE`); the director checks the same.
+- Default: the robot (`tournament/public/img/director-avatar.png`, 96×96).
+  Any organizer can set another on the organizer page — any image, cut to a
+  square and made 96×96 in the browser (PNG, or JPEG under the limit) —
+  stored as `TD_DIR/director-avatar.img`, or go back to the robot. Tables
+  opened afterwards use it. Routes: `GET /tournament/avatar` (public, the
+  current image), `GET|POST /admin/tournaments/avatar {image: base64} | {reset: true}`.
+
 ## Collusion check (service `0.10.0`)
 
 Signals for an organizer, never a sanction (`tournament/lib/collusion.mjs`).

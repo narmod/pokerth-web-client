@@ -59,6 +59,44 @@ setView(load(VIEWK) === 'check' ? 'check' : 'tour');
 let you = '';   // who is signed in: « admin » (master key) or an organizer's key name
 const tours = createTournamentsView({ api, esc, tok, servers: () => servers, you: () => you });
 
+// ── the director's avatar ──────────────────────────────────────────
+// Resized here to 96×96 (PNG, or JPEG when the PNG is over the server's
+// 30 KB limit), then sent; the service checks it again.
+function avShow(msg, bad) { $('avMsg').textContent = msg || ''; $('avMsg').className = 'msg' + (msg ? (bad ? ' bad' : ' ok') : ''); }
+function avRefresh() { $('avImg').src = '/tournament/avatar?ts=' + Date.now(); }
+function avEncode(img) {
+  const c = document.createElement('canvas');
+  c.width = 96; c.height = 96;
+  const g = c.getContext('2d');
+  const side = Math.min(img.naturalWidth, img.naturalHeight);
+  g.drawImage(img, (img.naturalWidth - side) / 2, (img.naturalHeight - side) / 2, side, side, 0, 0, 96, 96);
+  for (const [type, q] of [['image/png'], ['image/jpeg', 0.9], ['image/jpeg', 0.8], ['image/jpeg', 0.65]]) {
+    const b64 = c.toDataURL(type, q).replace(/^data:[^,]*,/, '');
+    if (b64.length * 3 / 4 <= 30000) return b64;
+  }
+  return null;
+}
+$('avFile').addEventListener('change', () => {
+  const f = $('avFile').files && $('avFile').files[0];
+  if (!f) return;
+  const url = URL.createObjectURL(f);
+  const img = new Image();
+  img.onload = () => {
+    URL.revokeObjectURL(url);
+    const b64 = avEncode(img);
+    if (!b64) return avShow('This image cannot be made small enough.', true);
+    api('/admin/tournaments/avatar', { image: b64 }).then((d) => {
+      if (!d.ok) return avShow(d.error || 'Refused', true);
+      avShow('New avatar saved: tables opened from now on show it.'); avRefresh(); $('avFile').value = '';
+    }).catch(() => avShow('Network error', true));
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); avShow('Not an image.', true); };
+  img.src = url;
+});
+$('avReset').addEventListener('click', () => {
+  api('/admin/tournaments/avatar', { reset: true }).then((d) => { if (d.ok) { avShow('Back to the robot.'); avRefresh(); } else avShow(d.error || 'Refused', true); }).catch(() => avShow('Network error', true));
+});
+
 // ── sign-in ────────────────────────────────────────────────────────
 function signedOut(msg) {
   clearInterval(listTimer); clearTimeout(detailTimer);

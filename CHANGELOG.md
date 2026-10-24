@@ -72,6 +72,8 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Tournaments: the director's avatar** (`web.308`, service `0.11.0`) — the web client serves `/tournament/avatar`
+  (the image the director shows on the server). Details in `tournament/CHANGELOG.md`.
 - **Tournaments: organizer keys** (`web.307`, service `0.9.0`) — a new key category, « Tournaments (organizer) »
   (`ADMIN_SCOPES`, Admin › Keys, `pokerth-web token add NAME tournaments`): such a key signs in to
   `/tournament/organize` and the web client passes its name to the tournament service, which records it in the

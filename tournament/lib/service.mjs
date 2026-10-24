@@ -194,6 +194,9 @@ export function createService(o) {
 
     if (sub === '/status' && get) return json(res, 200, Object.assign({ ok: true, you: who }, status()));
     if (sub === '/servers' && get) return json(res, 200, { ok: true, servers: await td.servers() });
+    // The director's avatar: any organizer may change it (tables opened afterwards).
+    if (sub === '/avatar' && get) { const a = td.avatar(); return json(res, 200, { ok: true, custom: !!(a && a.custom), size: a ? a.size : 0, md5: a ? a.md5 : null }); }
+    if (sub === '/avatar' && !get) { const b = await readJson(req); const r = b && b.reset ? td.resetAvatar() : td.setAvatar(b && b.image); if (r.ok) console.log('[td] director avatar ' + (b.reset ? 'reset' : 'changed') + ' by ' + who); return json(res, r.ok ? 200 : 400, r); }
     if (sub === '/watches' && get) return json(res, 200, { ok: true, watches: td.list() });
     if (sub === '/watch' && get) {
       const d = td.detail(String(query.id || ''));
@@ -345,6 +348,13 @@ export function createService(o) {
     if (p.indexOf('/tournament/api/') === 0) {
       return publicApi(req, res, p.slice('/tournament/api'.length), query)
         .catch(() => { if (!res.headersSent) json(res, 500, { ok: false, code: 'error' }); });
+    }
+    // The director's avatar (the one it shows on the server), for the pages.
+    if (p === '/tournament/avatar') {
+      const a = td.avatar();
+      if (!a) { res.writeHead(404); return res.end('Not found'); }
+      res.writeHead(200, { 'Content-Type': ['', 'image/png', 'image/jpeg', 'image/gif'][a.type], 'Cache-Control': 'no-cache', ETag: '"' + a.md5 + '"' });
+      return res.end(a.bytes);
     }
     if (p.indexOf('/tournament/') === 0) {
       const name = p.slice('/tournament/'.length);

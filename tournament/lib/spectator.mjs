@@ -50,12 +50,36 @@ function encode(messageType, field, value) {
   return pb.PokerTHMessage.encode(pb.PokerTHMessage.create({ messageType, [field]: value })).finish();
 }
 
+// { b64 | bytes, type? } → { bytes, type (1 PNG, 2 JPEG, 3 GIF), md5 } or null.
+export function avatarOf(a) {
+  if (!a) return null;
+  let bytes = a.bytes ? Buffer.from(a.bytes) : a.b64 ? Buffer.from(String(a.b64), 'base64') : null;
+  if (!bytes || bytes.length < 32 || bytes.length > 30720) return null;
+  const type = bytes[0] === 0x89 && bytes[1] === 0x50 ? 1 : bytes[0] === 0xff && bytes[1] === 0xd8 ? 2 : bytes.subarray(0, 3).toString('latin1') === 'GIF' ? 3 : 0;
+  if (!type) return null;
+  return { bytes, type, md5: createHash('md5').update(bytes).digest() };
+}
+
 export const build = {
-  init({ major, minor, nick, login, password, serverPassword, buildId }) {
+  init({ major, minor, nick, login, password, serverPassword, buildId, avatarHash }) {
     const init = { requestedVersion: { majorVersion: major, minorVersion: minor }, buildId, login, nickName: nick };
+    if (avatarHash && login !== LOGIN.guestLogin) init.avatarHash = avatarHash;
     if (serverPassword) init.authServerPassword = serverPassword;
     if (login === LOGIN.authenticatedLogin && password) init.clientUserData = Buffer.from(password, 'utf8').subarray(0, 256);
     return encode(T.Type_InitMessage, 'initMessage', pb.InitMessage.create(init));
+  },
+  // The director's avatar, when the server asks for it (it knows it by its
+  // MD5 from the Init): header, 256-byte blocks, end — as every client does.
+  avatarUpload(requestId, avatar) {
+    const out = [encode(T.Type_AvatarHeaderMessage, 'avatarHeaderMessage', pb.AvatarHeaderMessage.create({ requestId, avatarType: avatar.type, avatarSize: avatar.bytes.length }))];
+    for (let o = 0; o < avatar.bytes.length; o += 256) {
+      out.push(encode(T.Type_AvatarDataMessage, 'avatarDataMessage', pb.AvatarDataMessage.create({ requestId, avatarBlock: avatar.bytes.subarray(o, Math.min(o + 256, avatar.bytes.length)) })));
+    }
+    out.push(encode(T.Type_AvatarEndMessage, 'avatarEndMessage', pb.AvatarEndMessage.create({ requestId })));
+    return out;
+  },
+  unknownAvatar(requestId) {
+    return encode(T.Type_UnknownAvatarMessage, 'unknownAvatarMessage', pb.UnknownAvatarMessage.create({ requestId }));
   },
   joinSpectator(gameId, password) {
     const j = { gameId, spectateOnly: true };
@@ -112,6 +136,9 @@ export class SpectatorDirector extends EventEmitter {
     this.now = this.o.now || (() => Date.now());
     this.journal = new Journal({ now: this.now });
     this.tracker = new GameTracker();
+    // Its avatar (PNG/JPEG/GIF, 32 B to 30 KB like the server checks), sent
+    // when the server asks for it: the director stands out in the lobby.
+    this.avatar = avatarOf(this.o.avatar);
     this.gameId = this.o.gameId != null ? Number(this.o.gameId) : null;
     this.myId = null;
     this.sock = null;
@@ -239,6 +266,13 @@ export class SpectatorDirector extends EventEmitter {
   // ── protocol ─────────────────────────────────────────────────────
 
   _onMessage(m) {
+    if (m.avatarRequestMessage) {
+      const q = m.avatarRequestMessage;
+      const want = q.avatarHash ? Buffer.from(q.avatarHash) : null;
+      if (this.avatar && want && want.equals(this.avatar.md5)) { for (const f of build.avatarUpload(n(q.requestId), this.avatar)) this._send(f); this._record('avatarSent', { size: this.avatar.bytes.length }); }
+      else this._send(build.unknownAvatar(n(q.requestId)));
+      return;
+    }
     if (m.announceMessage) {
       const v = m.announceMessage.protocolVersion || {};
       // LAN only for now: a server with accounts (pokerth.net) is refused.
@@ -249,6 +283,7 @@ export class SpectatorDirector extends EventEmitter {
       this._send(build.init({
         major: v.majorVersion, minor: v.minorVersion, nick: this.o.nick, login,
         password: this.o.password, serverPassword: this.o.serverPassword, buildId: buildIdFor(this.o.version),
+        avatarHash: this.avatar ? this.avatar.md5 : null,
       }));
     } else if (m.initAckMessage) {
       this.myId = n(m.initAckMessage.yourPlayerId);
