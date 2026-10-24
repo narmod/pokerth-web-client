@@ -80,9 +80,9 @@ function createLanBoards(deps) {
   }
   /** Upsert one player's snapshot. false when the board does not exist. */
   function upsert(id, name, raw) {
-    if (!entry(id)) return false;
+    if (!entry(id) || name === '__proto__') return false;
     const b = board(id, true);
-    if (!(name in b.players) && Object.keys(b.players).length >= MAX_PLAYERS) return false;
+    if (!Object.prototype.hasOwnProperty.call(b.players, name) && Object.keys(b.players).length >= MAX_PLAYERS) return false;
     b.players[name] = deps.merge(b.players[name], deps.sanitize(raw || {}));
     save();
     return true;

@@ -16,6 +16,21 @@ release. Per-build detail is on the
 highlights below.
 
 ### Fixed
+- **Server hardening from an audit** (`web.330`):
+  - *Pack upload could publish any file the server can read* — `unzip -j` stops path traversal on write but still
+    recreates symlink members; a `felt.png` pointing at `admin-config.json` or `/etc/passwd` was followed by
+    `copyFileSync` and served from `/table/<id>/`. Reachable with a delegate key holding the `packages` scope.
+    `importPackage` now keeps regular files only. Test: `scripts/test-pkg-symlink.mjs` (runs from a scratch copy).
+  - *Unbounded historical leaderboard* — `POST /stats` needs no token; endless new names grew the store and
+    `stats.json` (rewritten on each save) without limit. A new name is refused (409 « board full ») past
+    `STATS_MAX_PLAYERS` (50000 by default, env override), a known name is still updated; `__proto__` is refused here
+    and on LAN boards. Test: `scripts/test-stats-cap.mjs`.
+  - *« Music off » and `/admin.html` bypassed by an encoded path* — the gates tested the raw URL while the static
+    branch serves the decoded one (`/%6Dusic/tracks.json`, `//music/…`, `/%61dmin.html`). The static branch applies
+    them again on the resolved file. Test: `scripts/test-static-gates.mjs`.
+  - *Upstream socket leak* — a browser that left while its dial waited for the anti-throttle gap had its session
+    destroyed with nothing to close; the deferred dial then opened a socket nobody owned. `_openUpstream` now gives
+    up when the session is gone (checked again after the DNS lookup). Test: `scripts/test-upstream-defer-leak.mjs`.
 - **A rejected WebSocket could crash the whole proxy** (`web.329`) — a connection turned away by the bridge (host or
   port not in the allowlist, server at capacity, LAN per-IP cap) returned before `_attachWs`, where the `'error'`
   listener was added. The socket stays open during the close handshake, so one frame over `maxPayload` (64 KiB) or an

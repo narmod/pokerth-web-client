@@ -277,6 +277,8 @@ function describeMsg(payload) {
 // there is no double counting and last-write-wins per name is correct.
 const STATS_FILE = process.env.STATS_FILE || path.join(__dirname, 'stats.json');
 let statsStore = {};
+// Ceiling on distinct players on the historical board (LAN boards: 5000, server/lan-boards.js).
+const STATS_MAX_PLAYERS = Math.max(1, parseInt(process.env.STATS_MAX_PLAYERS || '50000', 10) || 50000);
 try { statsStore = JSON.parse(fs.readFileSync(STATS_FILE, 'utf8')) || {}; } catch (e) { statsStore = {}; }
 let _statsSaveTimer = null;
 function saveStatsSoon() {
@@ -12061,6 +12063,11 @@ function importPackage(kind, idHint, zipBuf, cb) {
   // -j flattens (junks paths) → neutralises zip-slip; we then pick files by basename
   const un = spawnSync('unzip', ['-j', '-o', '-qq', zipPath, '-d', exDir], { stdio: 'ignore' });
   if (un.status !== 0) return done('not a valid .zip archive');
+  // -j stops path traversal on write, but unzip still recreates symlink entries:
+  // a member « felt.png » pointing at admin-config.json or /etc/passwd would be
+  // followed by copyFileSync / convert below and published under /table, /cards
+  // or /seats. Keep regular files only (scripts/test-pkg-symlink.mjs).
+  try { fs.readdirSync(exDir).forEach(function (f) { const fp = path.join(exDir, f); let st; try { st = fs.lstatSync(fp); } catch (e) { return; } if (!st.isFile()) fs.rmSync(fp, { recursive: true, force: true }); }); } catch (e) { return done('extract failed'); }
   const has = function (n) { return fs.existsSync(path.join(exDir, n)); };
   const cp = function (src, dst) { try { fs.copyFileSync(path.join(exDir, src), dst); return true; } catch (e) { return false; } };
   let id = slugId(idHint);
@@ -15766,6 +15773,8 @@ const httpServer = http.createServer((req, res) => {
           res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' }); res.end('{"ok":false}'); return;
         }
         const name = d.name.trim().slice(0, 32);
+        // '__proto__' would replace the store's prototype instead of adding a player.
+        if (name === '__proto__') { res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' }); res.end('{"ok":false}'); return; }
         if (d._delete) {
           return _statsAdminGate(req, res, query, 'leaderboard/delete', function () {
             if (!hasScope('leaderboard', query, d && d.token)) {
@@ -15778,6 +15787,12 @@ const httpServer = http.createServer((req, res) => {
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
             res.end('{"ok":true}');
           });
+        }
+        // The upsert needs no token: without a ceiling, endless new names would grow
+        // the store (and stats.json, rewritten on every save) without limit.
+        if (!Object.prototype.hasOwnProperty.call(statsStore, name) && Object.keys(statsStore).length >= STATS_MAX_PLAYERS) {
+          res.writeHead(409, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+          res.end('{"ok":false,"error":"board full"}'); return;
         }
         statsStore[name] = mergeSnapshot(statsStore[name], sanitizeSnapshot(d));
         saveStatsSoon();
@@ -15803,6 +15818,13 @@ const httpServer = http.createServer((req, res) => {
   const candidate = path.normalize(path.join(publicRoot, urlPath));
   if (!candidate.startsWith(publicRoot + path.sep) && candidate !== publicRoot) {
     res.writeHead(403); res.end('Forbidden'); return;
+  }
+  // The route gates above test the raw path; '/%6Dusic/…', '/music//…' or
+  // '/%61dmin.html' reach this point decoded. Apply them again on the resolved
+  // file (scripts/test-static-gates.mjs).
+  const candRel = path.relative(publicRoot, candidate).split(path.sep).join('/');
+  if (candRel === 'admin.html' || (candRel.indexOf('music/') === 0 && !musicEnabled())) {
+    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); res.end('Not found'); return;
   }
   const candSt = statCached(candidate);
   if (candSt && candSt.isFile()) {
@@ -16127,7 +16149,12 @@ function _lookupPreferV4(host, cb) {
 // Ouvre la connexion TCP/TLS amont vers PokerTH pour la session S.
 function _openUpstream(S) {
   _scheduleConn(() => {
+    // The dial can be deferred (anti-throttle gap) and the lookup is async: if the
+    // browser left meanwhile, _destroySession already ran with no socket to
+    // close, and dialling now would leave an upstream socket nobody owns.
+    if (!_liveSessions.has(S)) return;
     _lookupPreferV4(S.host, (addr) => {
+      if (!_liveSessions.has(S)) return;
       // Réglages TLS de l'entrée de registre correspondante (voir _serverTlsOpts).
       const tOpt = _serverTlsOpts(S.host, S.port);
       // Le SNI se déduit du host DEMANDÉ, pas de l'adresse résolue : `addr` est
