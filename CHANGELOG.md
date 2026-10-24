@@ -72,6 +72,10 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Arena: only the new names; cups deleted by the super admin** (`web.317`, service `0.20.0`) — the compatibility kept
+  for the old « tournaments » names is gone (redirects from `/tournament…`, `/admin/tournaments`, the `tournaments` scope
+  and config key, `TD_DIR`, the data move): a fresh start. The master key can delete a cup and all its data (Arena
+  › Cups › Delete this cup). Details in `arena/CHANGELOG.md`.
 - **Tournaments renamed « Arena »** (`web.316`, service `0.19.0`) — the module holds tournaments, cups and medals:
   `tournament/` → `arena/`, `server/tournament-host.js` → `server/arena-host.js`, `/tournament…` → `/arena…` (the old
   addresses answer 301/308, query kept), `/admin/tournaments/*` → `/admin/arena/*` (old path kept), key scope

@@ -20,7 +20,7 @@
 // Design: docs/ARENA.md (Cups).
 // ═══════════════════════════════════════════════════════════════════
 
-import { readFileSync, writeFileSync, renameSync, mkdirSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, renameSync, mkdirSync, readdirSync, rmSync, appendFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { randomBytes, timingSafeEqual } from 'node:crypto';
 import { Journal, verifyJournal, signPayload, verifyPayload, publicKeyFromPrivate, publicKeyRawB64 } from './journal.mjs';
@@ -314,6 +314,21 @@ export function createCups(o) {
     return save(c, journal);
   }
 
+  // Deleting a cup (the super admin only — the service checks who asks): its
+  // folder goes, journal and signed standings included, and its medals with
+  // it. The name must be typed again. A line is kept in cups/deleted.jsonl
+  // (who, when, what the cup was), the only trace left.
+  function remove(id, author, confirmName) {
+    const { c } = load(id);
+    if (String(confirmName || '').trim() !== c.name) refuse('type the cup\'s name exactly to delete it');
+    const st = standings(c);
+    const line = { at: now(), by: author || 'admin', id: c.id, name: c.name, status: c.status, events: st.events.map((e) => e.label), winner: c.final && c.final[0] ? c.final[0].nick : null };
+    appendFileSync(join(root, 'deleted.jsonl'), JSON.stringify(line) + '\n');
+    rmSync(cdir(c.id), { recursive: true, force: true });
+    gen++;
+    return { deleted: c.id, name: c.name };
+  }
+
   // ── public ──
   function visible(c, invite) {
     if (c.visibility !== 'private') return true;
@@ -341,7 +356,7 @@ export function createCups(o) {
   return {
     list: () => all().sort((a, b) => b.createdAt - a.createdAt).map((c) => ({ id: c.id, name: c.name, status: c.status, events: c.events.length, visibility: c.visibility, bestOf: c.bestOf })),
     get: (id) => { const { c, journal } = load(id); return view(c, journal); },
-    create, update, addEvent, removeEvent, tick, qualifyFromStandings, close, publicList, publicGet, Refusal, allRaw: () => all(), generation: () => gen,
+    create, update, addEvent, removeEvent, tick, qualifyFromStandings, close, remove, publicList, publicGet, Refusal, allRaw: () => all(), generation: () => gen,
     // The (non-private) cups a tournament belongs to, for its page.
     cupsOf: (tournamentId) => all().filter((c) => c.visibility !== 'private' && c.events.some((e) => e.tournamentId === tournamentId)).map((c) => ({ key: c.publicKey, name: c.name })),
   };

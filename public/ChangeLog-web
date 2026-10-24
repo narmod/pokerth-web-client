@@ -1,5 +1,5 @@
 2026-10-24 version 2.1.10-web.316:
-- improvement: the tournaments page is now called Arena (tournaments, cups and medals) and lives at /arena; old /tournament links still work
+- improvement: the tournaments page is now called Arena (tournaments, cups and medals) and lives at /arena
 
 2026-10-24 version 2.1.10-web.314:
 - new: tournaments (beta): every tournament and cup has an image, shown at the top of its page, on its card in the list and when its link is shared

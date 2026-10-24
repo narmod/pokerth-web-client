@@ -67,7 +67,7 @@ let you = '';   // who is signed in: « admin » (master key) or an organizer's 
 // The images of tournaments and cups: one library, shared by both views.
 const images = createImagePicker({ api, esc });
 const tours = createTournamentsView({ api, esc, tok, servers: () => servers, you: () => you, images });
-const cups = createCupsView({ api, esc, images });
+const cups = createCupsView({ api, esc, images, you: () => you });
 
 // ── the director's avatar ──────────────────────────────────────────
 // One of the robots shipped with the service (no image of one's own).

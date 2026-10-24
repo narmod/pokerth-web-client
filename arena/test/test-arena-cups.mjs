@@ -5,7 +5,7 @@
 // one), a final from the points standings; the cup's ranking; closing and
 // signing; what players see.
 // Run: node arena/test/test-arena-cups.mjs
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, rmSync, writeFileSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import http from 'node:http';
@@ -136,6 +136,24 @@ const row = (cup, nick) => cup.standings.rows.find((r) => r.nick === nick);
   const c = await admin('/cups/create', { name: 'Club only', visibility: 'private' });
   ok((await pub('/c/' + c.publicKey)).status === 404 && (await pub('/c/' + c.publicKey + '?invite=' + c.inviteCode)).ok, 'private: with its invitation code only');
   ok(!(await pub('/cups')).cups.some((x) => x.name === 'Club only'), 'private: not listed');
+}
+
+// ── deleting a cup (super admin) ───────────────────────────────────
+{
+  const t1 = await admin('/t/create', { name: 'Del 1', profile: 'club' });
+  const t2 = await admin('/t/create', { name: 'Del 2', profile: 'club' });
+  for (const t of [t1, t2]) { for (const n of ['Dee', 'Eli', 'Fay', 'Gus']) await admin('/t/player', { id: t.id, nick: n }); await admin('/t/result', { id: t.id, source: 'manual', ranking: ['Dee', 'Eli', 'Fay', 'Gus'] }); }
+  const c = await admin('/cups/create', { name: 'To delete' });
+  await admin('/cups/event', { id: c.id, tournamentId: t1.id }); await admin('/cups/event', { id: c.id, tournamentId: t2.id });
+  await admin('/cups/close', { id: c.id });
+  const medals = async () => (await (await fetch(base + '/arena/api/players/Dee')).json()).medals.filter((m) => m.kind === 'cup' && m.name === 'To delete').length;
+  ok(await medals() === 1, 'before: a cup medal');
+  ok(!(await admin('/cups/delete', { id: c.id, confirm: 'to delete' })).ok, 'the name must be typed exactly');
+  const d = await admin('/cups/delete', { id: c.id, confirm: 'To delete' });
+  ok(d.ok && d.deleted === c.id && !(await admin('/cups/get?id=' + c.id)).ok && (await pub('/c/' + c.publicKey)).status === 404, 'deleted: gone for the organizer and the players');
+  ok(await medals() === 0 && (await admin('/t/get?id=' + t1.id)).status === 'validated', 'its medals gone, its tournaments kept');
+  const log = readFileSync(join(dir, 'cups', 'deleted.jsonl'), 'utf8').trim().split('\n').map((l) => JSON.parse(l));
+  ok(log.some((x) => x.id === c.id && x.name === 'To delete' && x.by === 'admin' && x.events.length === 2), 'a line kept in cups/deleted.jsonl (who, when, what)');
 }
 
 svc.close(); srv.close();

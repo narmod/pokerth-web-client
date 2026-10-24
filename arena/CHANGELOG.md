@@ -10,6 +10,20 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.20.0 — 2026-10-24 (web client `2.1.10-web.317`)
+
+### Added
+- **Deleting a cup** — the super admin only (master key; an organizer key is
+  refused), with the cup's name typed again: the cup and all its data go
+  (journal, signed standings, medals); its tournaments stay. A line is kept in
+  `cups/deleted.jsonl`. Organizer page: « Delete this cup » in the cup.
+
+### Removed
+- Everything kept for the old « tournaments » names (fresh start, decided
+  2026-10-24): the redirects from `/tournament…`, the `/admin/tournaments`
+  path, the `tournaments` key scope and config key, `TD_DIR`, the move of the
+  old data folder.
+
 ## 0.19.0 — 2026-10-24 (web client `2.1.10-web.316`)
 
 ### Changed

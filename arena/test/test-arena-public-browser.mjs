@@ -26,7 +26,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'arena-pubb-'));
 const F = (x) => path.join(tmp, x);
-fs.writeFileSync(F('admin-config.json'), JSON.stringify({ tournaments: { enabled: true } }));
+fs.writeFileSync(F('admin-config.json'), JSON.stringify({ arena: { enabled: true } }));
 const PORT = await freePort(), TOKEN = 'pubb-token';
 const env = Object.assign({}, process.env, {
   PORT: String(PORT), ADMIN_ENABLED: '1', STATS_ADMIN_TOKEN: TOKEN, RATE_LIMIT_DISABLED: '1',

@@ -2,27 +2,20 @@
 
 Called « tournaments » until 2.1.10-web.315 (module `tournament/`, page
 `/tournament`); renamed **Arena** on 2026-10-24 (web.316, service 0.19.0)
-because it holds more than tournaments: cups, medals, players' pages.
-
-| Before | Now |
-|---|---|
-| `tournament/` (service), `server/tournament-host.js` | `arena/`, `server/arena-host.js` |
-| `/tournament…` (players' page, organizer page, API, images) | `/arena…` — the old addresses answer **301** (GET/HEAD) or **308** (other methods) to the new ones, query kept, so shared links and the medals API keep working |
-| `/admin/tournaments/*` | `/admin/arena/*` (the old path still answers, same handler) |
-| key scope `tournaments` | `arena` (keys with the old scope keep working; `install.sh token add NAME arena`) |
-| `admin-config.json` › `tournaments` | `arena` (the old key is read, then replaced on the next save) |
-| `TD_DIR` (`/data/tournament` in Docker, `tournament-data/` beside the proxy) | `ARENA_DIR` (`/data/arena`, `arena-data/`); `TD_DIR` is still honoured; without it, the old folder is moved to the new name once at start |
-| `TD_SECRET`, `TD_PORT`, `TD_HOST`, `TD_ADMIN_TOKEN`, `TD_SERVERS`, `TD_CLIENT_VERSION`, `TD_CODE_POLL_MS` | `ARENA_…` |
-| `public/modules/td-witness.mjs`, `td.css`, `test-td-*.mjs`, `bin/td-spectate.mjs` | `arena-witness.mjs`, `arena.css`, `test-arena-*.mjs`, `bin/arena-spectate.mjs` |
-| Admin › Community › Tournaments | Admin › Community › Arena |
+because it holds more than tournaments: cups, medals, players' pages. Since
+web.317 (service 0.20.0) only the new names exist (decided 2026-10-24: a
+fresh start, no redirect from `/tournament`, no old scope, config key,
+environment variable or data folder): `arena/`, `server/arena-host.js`,
+`/arena…`, `/admin/arena/*`, key scope `arena`, `admin-config.json` › `arena`,
+`ARENA_DIR` (`/data/arena` in Docker, `arena-data/` beside the proxy),
+`ARENA_*`, Admin › Community › Arena.
 
 Unchanged on purpose: the concept files (`lib/tournaments.mjs`, `cups.mjs`,
 `badges.mjs`, `host.mjs` — a tournament is still a tournament), the
-director's name on the servers (`TD-…`), the data inside the folder
-(`td-key.pem`, `tournaments/`, `cups/`), the browser keys of players and
-organizers (`pth_td_*`, `td_witness`: nobody loses a personal code or a
-setting) and the internal headers between the web client and the service
-(`X-TD-*`).
+director's name on the servers (`TD-…`), the files inside the data folder
+(`td-key.pem`, `tournaments/`, `cups/`), the browser keys (`pth_td_*`,
+`td_witness`) and the internal headers between the web client and the
+service (`X-TD-*`).
 
 ## Tournament director
 
@@ -619,6 +612,11 @@ A cup gathers tournaments of this install (`arena/lib/cups.mjs`).
   correction flows in by itself.
 - **Closing** signs the standings (`result.json`, the install key) with the
   sealed head of each tournament; nothing can be added after.
+- **Deleting** (service `0.20.0`): the super admin only (the master key;
+  an organizer key gets 403), the cup's name typed again; its folder goes
+  (journal, signed standings) and its medals with it, the tournaments stay.
+  A line is kept in `cups/deleted.jsonl` (who, when, name, tournaments,
+  winner). Route `POST /admin/arena/cups/delete {id, confirm}`.
 - Organizer page: « Cups » tab (create, add tournaments with their role,
   standings, qualify, close). Players' page: the public cups on the start page,
   `/arena/c/<key>` (rules, tournaments, standings with points per

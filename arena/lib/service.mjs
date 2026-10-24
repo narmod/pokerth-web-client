@@ -342,6 +342,9 @@ export function createService(o) {
       case '/cups/event/remove': return send(() => C.removeEvent(id, b.index, who));
       case '/cups/qualify': return send(() => C.qualifyFromStandings(id, b.index, who));
       case '/cups/close': return send(() => C.close(id, who));
+      // Deleting a cup: the super admin (master key) only.
+      case '/cups/delete': if (who !== 'admin') return json(res, 403, { ok: false, error: 'only the super admin (the master key) can delete a cup' });
+        return send(() => { const r = C.remove(id, who, b.confirm); console.log('[arena] cup « ' + r.name + ' » deleted by ' + who); return r; });
       case '/t/draw': return send(() => T.drawTables(id, who));
       case '/t/stages/open': return send(() => openStages(id, b, who));
       case '/t/final': return send(async () => { const fin = T.makeFinal(id, who); if (b.open !== false) { try { await openTable(fin.id, {}, who); } catch (e) { const v = T.get(id); v.openErrors = ['final table: ' + e.message]; return v; } } return withHost(T.get(id)); });

@@ -90,6 +90,12 @@ export function createCupsView(deps) {
     if (!closed && st.events.length) h += '<div class="actions"><button type="button" data-cact="close">Close the cup and sign the standings</button></div>';
     if (closed) h += '<p class="small">Closed ' + esc(new Date(c.closedAt).toLocaleString()) + (c.checks && c.checks.signature ? ' · standings signed' : '') + '.</p>';
     h += '<details class="sub"><summary>Journal</summary><ul class="small">' + (c.history || []).map((x) => '<li>' + esc(new Date(x.ts).toLocaleString()) + ' · ' + esc(x.author || '') + ' — ' + esc(x.summary) + '</li>').join('') + '</ul></details>';
+    // The super admin (master key) may delete the cup and all its data.
+    if (deps.you && deps.you() === 'admin') {
+      h += '<details class="sub"><summary>Delete this cup</summary><p class="small">Deletes the cup and all its data: its tournaments list, standings, journal, signed standings and the medals it gave. The tournaments themselves stay. This cannot be undone.</p>' +
+        '<div class="row"><div><label for="cDelName">Type the name of the cup to confirm</label><input id="cDelName" autocomplete="off" placeholder="' + esc(c.name) + '"></div>' +
+        '<button type="button" class="danger" data-cact="delete">Delete the cup</button></div></details>';
+    }
     $('cDetailBody').innerHTML = h;
   }
   function call(path, body, okText) {
@@ -109,6 +115,15 @@ export function createCupsView(deps) {
     }
     if (a === 'rm') return call('/admin/arena/cups/event/remove', { index: Number(b.dataset.i) }, 'Removed.');
     if (a === 'qualify') return call('/admin/arena/cups/qualify', { index: Number(b.dataset.i) }, 'Qualified: added to the final.');
+    if (a === 'delete') {
+      const name = ($('cDelName') && $('cDelName').value || '').trim();
+      if (name !== cur.name) return msg('cDMsg', 'Type the name of the cup exactly to delete it.', true);
+      return api('/admin/arena/cups/delete', { id: cur.id, confirm: name }).then((d) => {
+        if (!d.ok) return msg('cDMsg', d.error || 'Refused', true);
+        cur = null; $('cDetailBody').hidden = true; $('cDetailEmpty').hidden = false;
+        msg('cMsg', 'Cup « ' + d.name + ' » deleted.'); refresh();
+      }).catch(() => msg('cDMsg', 'Network error', true));
+    }
     if (a === 'close') { if (!window.confirm('Close the cup? Its standings are signed and no tournament can be added.')) return; return call('/admin/arena/cups/close', {}, 'Cup closed, standings signed.'); }
   });
   return { refresh, open };

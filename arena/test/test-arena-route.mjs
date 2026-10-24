@@ -40,10 +40,10 @@ const F = (x) => path.join(tmp, x);
 fs.writeFileSync(F('admin-config.json'), JSON.stringify({ loginDefaults: { lanMode: 'forced', host: '127.0.0.1', lanPort: game.port, lanTls: false } }));
 // Organizer keys (Admin › Keys): two organizers, a key for another section.
 fs.writeFileSync(F('scoped-tokens.json'), JSON.stringify([
-  { name: 'Élise', token: 'org-elise-key', scopes: ['tournaments'] },
-  { name: 'Bruno', token: 'org-bruno-key', scopes: ['arena', 'music'] },   // Élise keeps the old scope name « tournaments »
+  { name: 'Élise', token: 'org-elise-key', scopes: ['arena'] },
+  { name: 'Bruno', token: 'org-bruno-key', scopes: ['arena', 'music'] },
   { name: 'Musician', token: 'music-only-key', scopes: ['music'] },
-  { name: 'admin', token: 'org-fake-admin', scopes: ['tournaments'] },
+  { name: 'admin', token: 'org-fake-admin', scopes: ['arena'] },
 ]));
 const PORT = await freePort();
 const TOKEN = 'arena-route-token';
@@ -102,15 +102,9 @@ try {
   ok((await post('/admin/arena/watch', { ref: 'local', gameId: 7 }, {})).status === 403, 'watch needs the token');
   const cfg = JSON.parse(fs.readFileSync(F('admin-config.json'), 'utf8'));
   ok(cfg.arena && cfg.arena.enabled === true && !cfg.tournaments, 'the setting is saved in admin-config.json (« arena »)');
-  // The old addresses (before web.316) lead to the Arena.
-  {
-    const r1 = await fetch(base + '/tournament', { redirect: 'manual' });
-    const r2 = await fetch(base + '/tournament/api/badges?nicks=Ann,Bob', { redirect: 'manual' });
-    const r3 = await fetch(base + '/tournament/api/t/abcdefgh/register', { method: 'POST', redirect: 'manual', headers: { 'Content-Type': 'application/json' }, body: '{}' });
-    ok(r1.status === 301 && r1.headers.get('location') === '/arena' && r2.status === 301 && r2.headers.get('location') === '/arena/api/badges?nicks=Ann,Bob' && r3.status === 308 && /noindex/.test(r1.headers.get('x-robots-tag') || ''), 'old /tournament addresses: sent on to /arena (301, 308 for a POST, query kept)');
-    const old = await (await get('/admin/tournaments/settings')).json();
-    ok(old.ok && old.enabled === true, 'old /admin/tournaments API: still answers (the Arena\'s)');
-  }
+  // No old address: /tournament and /admin/tournaments are not the Arena's.
+  ok((await fetch(base + '/tournament', { redirect: 'manual' })).status === 404 && (await get('/admin/tournaments/settings')).status === 404, 'no old address (/tournament, /admin/tournaments)');
+
 
   // ── organizer keys: who acts is in the journal; corrections by two organizers ──
   {
@@ -120,6 +114,11 @@ try {
     ok((await get('/admin/arena/status', { Authorization: 'Bearer music-only-key' })).status === 403, 'a key for another section: refused');
     ok((await get('/admin/arena/settings', E)).status === 403 && (await post('/admin/arena/restart', {}, E)).status === 403, 'organizer key: not the module settings (master key only)');
     ok((await (await get('/admin/arena/status', { Authorization: 'Bearer org-fake-admin' })).json()).you === 'org:admin', 'a key named « admin » is not the master key');
+    // Deleting a cup: the super admin only.
+    const cupE = await (await post('/admin/arena/cups/create', { name: 'Elise cup' }, E)).json();
+    const delE = await post('/admin/arena/cups/delete', { id: cupE.id, confirm: 'Elise cup' }, E);
+    const delM = await (await post('/admin/arena/cups/delete', { id: cupE.id, confirm: 'Elise cup' })).json();
+    ok(delE.status === 403 && delM.ok && delM.deleted === cupE.id, 'deleting a cup: refused to an organizer key, done with the master key');
     const t = await (await post('/admin/arena/t/create', { name: 'Two organizers', profile: 'official' }, E)).json();
     for (const n of ['Ann', 'Ben']) await post('/admin/arena/t/player', { id: t.id, nick: n }, E);
     await post('/admin/arena/t/result', { id: t.id, source: 'manual', ranking: ['Ann', 'Ben'] }, E);

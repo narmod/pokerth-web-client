@@ -369,7 +369,7 @@ const ADMIN_CONFIG_KEYS = Object.freeze([
   'communityEvents', 'bannedIps', 'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
   'musicEnabled', 'musicHidden', 'musicOrder', 'musicVotesPublic', 'seo', 'servers', 'activeServerId',
   'pokerthnetSource', 'internetTransport', 'liveTransport', 'proxyProtocol', 'serverlistUrl', 'autoUpdate',
-  'lanDirectory', 'arena', 'tournaments'   // 'tournaments': the Arena's settings before 2.1.10-web.316
+  'lanDirectory', 'arena'
 ]);
 // Secrets and personal data removed from an export unless asked for. Returns
 // what was removed, as paths, for the file's "redacted" list.
@@ -452,26 +452,12 @@ setTimeout(function () { LAN_BOARDS.rotate(); }, 5000).unref();
 setInterval(function () { LAN_BOARDS.rotate(); }, 60 * 60 * 1000).unref();
 
 // ── Arena: tournaments, cups, medals and the tournament director ────────────
-// A service of its own (arena/), called « tournaments » until web.315. Off by
-// default (Admin › Community › Arena). While on, the proxy runs the service
-// (server/arena-host.js), relays /arena and /admin/arena/* to it after
-// checking the admin token, and tells it which servers it may use. Its files
-// (watches, tournaments, cups, images, the install's signing key) live in
-// ARENA_DIR. The old addresses (/tournament…, /admin/tournaments…) still work.
-function _arenaDir() {
-  const want = process.env.ARENA_DIR || process.env.TD_DIR || path.join(__dirname, 'arena-data');
-  // Data kept under the old names (TD_DIR=/data/tournament in the Docker image
-  // before web.316, tournament-data/ beside the proxy): moved once, in place.
-  if (!process.env.TD_DIR && !fs.existsSync(want)) {
-    for (const old of [path.join(path.dirname(want), 'tournament'), path.join(__dirname, 'tournament-data')]) {
-      if (old === want || !fs.existsSync(old)) continue;
-      try { fs.renameSync(old, want); console.log('[arena] data moved from ' + old + ' to ' + want); return want; }
-      catch (e) { console.log('[arena] could not move ' + old + ' (' + e.code + '): using it as it is'); return old; }
-    }
-  }
-  return want;
-}
-const ARENA_DIR = _arenaDir();
+// A service of its own (arena/). Off by default (Admin › Community › Arena).
+// While on, the proxy runs the service (server/arena-host.js), relays /arena
+// and /admin/arena/* to it after checking the admin token, and tells it which
+// servers it may use. Its files (watches, tournaments, cups, images, the
+// install's signing key) live in ARENA_DIR.
+const ARENA_DIR = process.env.ARENA_DIR || path.join(__dirname, 'arena-data');
 const ARENA_LIB = require('./server/arena-host.js');
 // LAN only for now (2026-10-23): the LAN directory and the local server —
 // never the game-server registry of Internet mode, nothing for pokerth.net.
@@ -489,8 +475,8 @@ function _arenaServers() {
 }
 const ARENA = ARENA_LIB.createArenaHost({
   dir: ARENA_DIR,
-  getConfig: function () { return (_adminConfig && (_adminConfig.arena || _adminConfig.tournaments)) || {}; },
-  setConfig: function (c) { _adminConfig.arena = c; delete _adminConfig.tournaments; saveAdminConfig(); },
+  getConfig: function () { return (_adminConfig && _adminConfig.arena) || {}; },
+  setConfig: function (c) { _adminConfig.arena = c; saveAdminConfig(); },
   listServers: _arenaServers,
   clientVersion: function () { try { return require('./package.json').version; } catch (e) { return ''; } },
   codePollMs: Number(process.env.ARENA_CODE_POLL_MS) || undefined,
@@ -11686,8 +11672,6 @@ function _loadScopedTokens() {
     _scopedTokens = Array.isArray(arr) ? arr.filter(function (r) {
       return r && typeof r.token === 'string' && r.token && Array.isArray(r.scopes);
     }) : [];
-    // « tournaments » keys (before web.316) are « arena » keys.
-    _scopedTokens.forEach(function (r) { r.scopes = r.scopes.map(function (s) { return s === 'tournaments' ? 'arena' : s; }); });
   } catch (e) { _scopedTokens = []; }
   _scopedMtime = mt;
   return _scopedTokens;
@@ -12311,10 +12295,8 @@ function handleAdmin(req, res, reqPathOnly, query) {
     var _m = /^\s*Bearer\s+(.+?)\s*$/i.exec(req.headers['authorization'] || '');
     if (_m) query.token = _m[1];
   }
-  // The Arena's API; /admin/tournaments… is its old address (before web.316).
-  if (reqPathOnly === '/admin/arena' || reqPathOnly.indexOf('/admin/arena/') === 0 || reqPathOnly === '/admin/tournaments' || reqPathOnly.indexOf('/admin/tournaments/') === 0) {
-    const arenaPath = reqPathOnly.indexOf('/admin/tournaments') === 0 ? '/admin/arena' + reqPathOnly.slice('/admin/tournaments'.length) : reqPathOnly;
-    return ARENA_LIB.handleArenaAdmin(ARENA, { adminAuthed: adminAuthed, adminJson: adminJson, readJsonBody: readJsonBody, author: _arenaAuthor }, req, res, arenaPath, query);
+  if (reqPathOnly === '/admin/arena' || reqPathOnly.indexOf('/admin/arena/') === 0) {
+    return ARENA_LIB.handleArenaAdmin(ARENA, { adminAuthed: adminAuthed, adminJson: adminJson, readJsonBody: readJsonBody, author: _arenaAuthor }, req, res, reqPathOnly, query);
   }
   if (reqPathOnly === '/admin' || reqPathOnly === '/admin.html') {
     const p = path.join(PUBLIC_DIR, 'admin.html');
@@ -15196,7 +15178,7 @@ const httpServer = http.createServer((req, res) => {
           || reqPathOnly === '/admin/sessions' || reqPathOnly === '/admin/broadcasts'
           || reqPathOnly === '/admin/clock')) res._rlNoPenalty = true;
       // The /arena page polls its watches the same way.
-      if (req.method === 'GET' && /^\/admin\/(arena|tournaments)\/watch(es)?$/.test(reqPathOnly)) res._rlNoPenalty = true;
+      if (req.method === 'GET' && /^\/admin\/arena\/watch(es)?$/.test(reqPathOnly)) res._rlNoPenalty = true;
       _rlAdminFail.get(ip).then(function (r) {
         if (r && r.remainingPoints <= 0 && r.msBeforeNext > 0) {
           res.writeHead(429, { 'Content-Type': 'application/json; charset=utf-8', 'Retry-After': String(Math.ceil(r.msBeforeNext / 1000)), 'Cache-Control': 'no-store' });
@@ -15205,15 +15187,6 @@ const httpServer = http.createServer((req, res) => {
       }).catch(function () { handleAdmin(req, res, reqPathOnly, q); });
     } else handleAdmin(req, res, reqPathOnly, q);
     return;
-  }
-  // ── /tournament… — the Arena's old address (before web.316): sent on to
-  // /arena…, so shared links and the badges API keep working. GET/HEAD: 301;
-  // anything else: 308 (method and body kept).
-  if (reqPathOnly === '/tournament' || reqPathOnly === '/tournament.html' || reqPathOnly.indexOf('/tournament/') === 0) {
-    const rest = reqPathOnly === '/tournament.html' ? '' : reqPathOnly.slice('/tournament'.length);
-    const qi = String(req.url || '').indexOf('?');
-    res.writeHead(req.method === 'GET' || req.method === 'HEAD' ? 301 : 308, { Location: '/arena' + rest + (qi >= 0 ? String(req.url).slice(qi) : ''), 'Cache-Control': 'public, max-age=86400', 'X-Robots-Tag': 'noindex, nofollow, noimageindex' });
-    return res.end();
   }
   // ── /arena — tournaments, cups and medals, served by the Arena's service
   // (off by default: a plain 404 until Admin › Community › Arena turns it on,

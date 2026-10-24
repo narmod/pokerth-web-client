@@ -72,5 +72,4 @@ td-key.pem
 arena-out.journal.json
 arena-out.result.json
 # Its folder on a running install: watches, journals, results and the key.
-/tournament-data/
 /arena-data/
