@@ -490,6 +490,14 @@ highlights below.
   « Update & restart » installs it. An idle connection lost by the server is recorded, never fatal.
 
 ### Fixed
+- **Boot stall overlay could stay hidden** (`web.312`) — when a tap reached an inline `App.*` handler before the app
+  existed, the safety net (`web.263`) put the boot overlay back but left it hidden: the production report
+  (Android · Chrome 121) showed it computed `display:none` / opacity 0 with none of our classes, i.e. a stylesheet
+  we do not serve. `window.__pthBootStall` now pins `display`, `opacity` and `visibility` inline with `!important`;
+  `reveal()` releases the pinned opacity / pointer-events so the fade and click-through still work.
+- **Client error log: injected-script noise** (`web.312`) — the inline collector also drops the scripts Firefox for
+  iOS (`window.__firefox__`) and the Dark Reader extension inject at `/:1`, and the benign
+  « ResizeObserver loop … » notice. Covered by `scripts/test-errcollect.mjs` and `scripts/test-bootgate.mjs`.
 - **Waiting room: the table chat played a sound with nothing to read** (`web.301`, settled in `web.302`) — before
   the start, the visible chat is the lobby chat, as on the QML GameWaitPage (`Lobby.chatLog`, « Lobby Chat »); a
   table-chat line (`chatTypeGame`) goes to the game chat only (QML `GameHandler::appendChat`, no sound). The web client

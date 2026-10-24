@@ -1,3 +1,6 @@
+2026-10-24 version 2.1.10-web.312:
+- bugfix: if the page is still loading when you tap a button, the loading screen with « Retry » now reliably comes back instead of a form that ignores your taps
+
 2026-10-24 version 2.1.10-web.311:
 - new: tournaments (beta): medals for the first three of a tournament (Club or Official, at least 4 players) and of a cup; each player has a page on /tournament with their medals and results, and medals show next to the names in rankings
 

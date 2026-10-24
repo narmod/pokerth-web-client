@@ -113,6 +113,11 @@ const UC = ORIGIN + '/u.c.b.r.o.w.s.e.r/ucbrowser_script.js?UCFontSizeWebScriptD
   ['an iOS wallet browser emitting on window.ethereum', { message: "TypeError: undefined is not an object (evaluating 'window.ethereum.emit')", filename: ORIGIN + '/', error: { stack: 'global code@' + ORIGIN + '/:1:16' } }],
   ['an iOS wallet browser writing window.ethereum', { message: "TypeError: undefined is not an object (evaluating 'window.ethereum.selectedAddress = undefined')", filename: ORIGIN + '/', error: { stack: 'global code@' + ORIGIN + '/:1:16' } }],
   ['the Facebook/Instagram in-app browser logger', { message: 'Uncaught Error: Error invoking postMessage: Java object is gone', filename: 'iabjs://navigation_performance_logger_android', error: { stack: 'Error: Error invoking postMessage: Java object is gone\n    at sendDataToNative (iabjs://navigation_performance_logger_android:1:11722)' } }],
+  ['Firefox for iOS reader-mode script', { message: "ReferenceError: Can't find variable: __firefox__", filename: ORIGIN + '/', error: { stack: 'global code@' + ORIGIN + '/:1:12' } }],
+  ['Firefox for iOS reading window.__firefox__.reader', { message: "TypeError: undefined is not an object (evaluating 'window.__firefox__.reader')", filename: ORIGIN + '/', error: { stack: 'global code@' + ORIGIN + '/:1:19' } }],
+  ['the Dark Reader extension', { message: "ReferenceError: Can't find variable: DarkReader", filename: ORIGIN + '/', error: { stack: 'global code@' + ORIGIN + '/:1:11' } }],
+  ['the benign ResizeObserver loop notice', { message: 'ResizeObserver loop completed with undelivered notifications.', filename: ORIGIN + '/' }],
+  ['the older ResizeObserver wording', { message: 'ResizeObserver loop limit exceeded', filename: ORIGIN + '/' }],
 ].forEach(([label, ev]) => {
   q().length = 0;
   listeners.error(ev);

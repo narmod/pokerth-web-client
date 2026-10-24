@@ -58,6 +58,10 @@ const net = (html.match(/window\.__pthBootStall = function \(\) \{[\s\S]*?\n  \}
 ok(!!net, 'the boot gate exposes window.__pthBootStall');
 ok(/fail\(\)/.test(net) && /classList\.remove\('bs-hide'\)/.test(net) && /pointerEvents = 'auto'/.test(net),
    'it puts the overlay back on top in its Retry state');
+ok(/setProperty\('display', 'flex', 'important'\)/.test(net) && /setProperty\('opacity', '1', 'important'\)/.test(net),
+   'it forces the overlay visible even when a foreign stylesheet hid it');
+ok(/removeProperty\('opacity'\)/.test(html) && /removeProperty\('pointer-events'\)/.test(html),
+   'reveal releases the pinned inline styles so the fade and click-through still work');
 ok(/reveal\(\)/.test(net), 'and still reveals if the app starts after all');
 ok(/window\.__pthBootStall\(\)/.test(html), 'the error collector calls it');
 
