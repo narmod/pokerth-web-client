@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Msimbo wako binafsi: {code}',
   codeKeep: 'Uhifadhi: unakuwezesha kufuta usajili wako. Pia umehifadhiwa kwenye kivinjari hiki.',
   copy: 'Nakili',
+  playWebClient: 'Cheza kwa kiteja cha wavuti',
   copied: 'Imenakiliwa',
   unregTitle: 'Futa usajili',
   unregister: 'Futa usajili',

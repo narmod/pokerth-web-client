@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'A személyes kódod: {code}',
   codeKeep: 'Őrizd meg: ezzel tudod visszavonni a regisztrációt. Ebben a böngészőben is el van mentve.',
   copy: 'Másolás',
+  playWebClient: 'Játék a webklienssel',
   copied: 'Másolva',
   unregTitle: 'Regisztráció visszavonása',
   unregister: 'Visszavonás',

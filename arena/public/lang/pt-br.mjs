@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Seu código pessoal: {code}',
   codeKeep: 'Guarde-o: ele permite cancelar sua inscrição. Ele também fica salvo neste navegador.',
   copy: 'Copiar',
+  playWebClient: 'Jogar com o cliente web',
   copied: 'Copiado',
   unregTitle: 'Cancelar inscrição',
   unregister: 'Cancelar inscrição',

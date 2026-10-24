@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Jou persoonlike kode: {code}',
   codeKeep: 'Hou dit: daarmee kan jy jou registrasie kanselleer. Dit word ook in hierdie blaaier bewaar.',
   copy: 'Kopieer',
+  playWebClient: 'Speel met die webkliënt',
   copied: 'Gekopieer',
   unregTitle: 'Kanselleer registrasie',
   unregister: 'Kanselleer registrasie',

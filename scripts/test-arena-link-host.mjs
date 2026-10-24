@@ -119,8 +119,16 @@ ok(r.ok && host.settings().link.keyHint.indexOf(KEY2.slice(0, 8)) === 0, 'the ne
 // /arena sent to the Arena; the organizer API not relayed here
 let x = await fetch(wcUrl + '/arena/tournaments', { redirect: 'manual' });
 ok(x.status === 302 && x.headers.get('location') === arenaUrl + '/arena/tournaments', '/arena pages: sent to the Arena (302)');
-x = await fetch(wcUrl + '/arena/api/t/abcdefgh12/witness', { method: 'POST', redirect: 'manual', headers: { 'Content-Type': 'application/json' }, body: '{}' });
-ok(x.status === 307 && x.headers.get('location') === arenaUrl + '/arena/api/t/abcdefgh12/witness', 'witness reports: 307 to the Arena\'s API, a POST stays a POST');
+// The witness's requests stay on this site and are relayed to the Arena (web.325).
+x = await fetch(wcUrl + '/arena/api/table?game=7&name=Friday', { redirect: 'manual' });
+let xb = await x.json().catch(() => null);
+ok(x.status !== 302 && x.status !== 307 && xb && xb.ok === false && xb.code, 'witness table lookup: relayed to the Arena, its answer comes back (no redirect)');
+const wbody = JSON.stringify({ nick: 'Bob', code: 'ABCD2345', game: 7, name: 'Friday', report: { players: ['Bob'], hands: [[1, 1000]], winner: null, complete: false } });
+x = await fetch(wcUrl + '/arena/api/t/abcdefgh12/witness', { method: 'POST', redirect: 'manual', headers: { 'Content-Type': 'application/json' }, body: wbody });
+xb = await x.json().catch(() => null);
+ok(x.status === 404 && xb && xb.code === 'notFound', 'witness report: relayed as a POST, the Arena answers (unknown tournament here)');
+x = await fetch(wcUrl + '/arena/api/t/abcdefgh12/witness', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': String(70 * 1024) }, body: 'x'.repeat(70 * 1024) });
+ok(x.status === 413, 'a witness report over 64 KB: refused here, not relayed');
 x = await fetch(wcUrl + '/admin/arena/tournaments');
 const xj = await x.json();
 ok(x.status === 409 && xj.code === 'external' && xj.url === arenaUrl + '/arena/organize', 'organizer API: refused here, pointing to the Arena\'s organizer page');

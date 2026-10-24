@@ -1295,15 +1295,28 @@ exposes nothing for it and only sends.
    first, then the link.
 
 In « its own app » mode the web client starts no service, `/arena` pages answer
-302 to the Arena, the players' API — witness reports included — 307 (a POST
-stays a POST), and `/admin/arena/*` other than its settings answers 409 with
-the Arena's organizer page. Ten wrong keys from one address block it for ten
+302 to the Arena, and `/admin/arena/*` other than its settings answers 409 with
+the Arena's organizer page.
+
+**The witness across sites** (service `0.36.0`, web client `2.1.10-web.325`).
+The players' API on the web client's site (`/arena/api/…`: the witness's
+table lookup and reports) is relayed server-side to the Arena's own API, with
+the link key (`x-arena-link`) and the player's address (`x-td-client`): the
+browser stays on the game's site (no CORS, `sendBeacon` works). The Arena
+believes a told address only from a genuine relay (launched by the web
+client, or carrying the link key). The personal codes are kept by the
+Arena's pages, on the Arena's site: its tournament page shows **Play on the
+web client** when it is linked and this browser keeps a code for one of the
+players; the link carries the codes in its fragment
+(`#arena=<base64url JSON { v: 1, regs: { <key>: [{ nick, code }] } }>`, never
+sent to a server), and the web client's `arena-witness.mjs` files them under
+`pth_td_regs` and removes them from the address at once. Ten wrong keys from one address block it for ten
 minutes on the Arena. The key is never sent back to the web client's admin page
 (a hint only). A new key on the Arena cuts the link: the web client's next send
 fails and its admin card says so until the new key is pasted.
 
-Next steps: the witness on another domain (CORS on the Arena, the personal
-code), a link from the web client to the Arena, then the repository of its own
+Next steps: a link from the web client to the Arena, the player accounts'
+witness (a signed-in player has no code to hand over), then the repository of its own
 (`git subtree split`), its Dockerfile and install script, and the removal of the
 embedded Arena from the web client once the app runs.
 

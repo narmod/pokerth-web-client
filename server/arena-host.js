@@ -30,14 +30,19 @@
 // servers the Arena may use (LAN directory and local server) and the
 // community events — POST /arena/api/link/sync at « Test and save », then
 // every minute (events every five). Nothing is exposed here for the Arena;
-// /arena on this site sends visitors to the Arena's address, and the
-// players' witness reports go to the Arena's own API as before.
+// /arena pages on this site send visitors to the Arena's address, and the
+// players' API on this site (/arena/api/…: the witness's table lookup and
+// reports) is relayed server-side to the Arena's own API with the link key
+// and the player's address (web.325) — the browser stays on this site, no
+// CORS, sendBeacon works. The personal codes come from the Arena's « Play on
+// the web client » button (#arena=… in the link, arena-witness.mjs).
 // Design: docs/ARENA.md.
 // ═══════════════════════════════════════════════════════════════════
 
 const fs = require('fs');
 const path = require('path');
 const http = require('http');
+const https = require('https');
 const crypto = require('crypto');
 const childProcess = require('child_process');
 
@@ -183,6 +188,29 @@ function createArenaHost(deps) {
   // « Test and save »: send the Arena who we are, the servers and the events,
   // with its key. Given an address and a key, they are saved when the Arena
   // accepts them. → { ok, arena?, servers?, error? }
+  // A player's request to the Arena's API, relayed as is (web.325).
+  function relayLink(req, res, pathAndQuery, clientIp) {
+    const NOIDX = 'noindex, nofollow, noimageindex';
+    const fail = (code, error) => { if (res.headersSent) return; res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': NOIDX }); res.end(JSON.stringify({ ok: false, error })); };
+    const base = linkUrl(), key = linkKey();
+    if (!base || !key) return fail(503, 'the Arena is not linked');
+    let u;
+    try { u = new URL(base + pathAndQuery); } catch (e) { return fail(400, 'bad request'); }
+    const headers = { 'x-arena-link': key, 'x-td-client': String(clientIp || '').slice(0, 64) };
+    ['content-type', 'content-length', 'accept', 'if-none-match'].forEach((k) => { if (req.headers[k]) headers[k] = req.headers[k]; });
+    const mod = u.protocol === 'https:' ? https : http;
+    const r = mod.request({ protocol: u.protocol, hostname: u.hostname.replace(/^\[|\]$/g, ''), port: u.port || undefined, method: req.method, path: u.pathname + u.search, headers }, (pr) => {
+      const out = {};
+      ['content-type', 'content-length', 'cache-control', 'content-disposition', 'retry-after', 'etag'].forEach((k) => { if (pr.headers[k]) out[k] = pr.headers[k]; });
+      out['x-robots-tag'] = NOIDX;
+      res.writeHead(pr.statusCode, out);
+      pr.pipe(res);
+    });
+    r.setTimeout(deps.relayMs || 60000, () => r.destroy(new Error('timeout')));
+    r.on('error', (e) => fail(502, 'the Arena cannot be reached (' + ((e && e.code) || (e && e.message) || 'error') + ')'));
+    if (req.method === 'GET' || req.method === 'HEAD') r.end(); else req.pipe(r);
+  }
+
   function linkTest(o) {
     const url = o.url !== undefined ? cleanOrigin(o.url) : linkUrl();
     const key = o.key !== undefined ? String(o.key || '').trim() : linkKey();
@@ -366,7 +394,7 @@ function createArenaHost(deps) {
     } catch (e) { return null; }
   }
 
-  return { settings, setSettings, sync, start, stop, restart, ready, info, relay, serviceStatus, keyInfo, enabled, mode, external, linkUrl, linkTest, push, PAGE_RE };
+  return { settings, setSettings, sync, start, stop, restart, ready, info, relay, relayLink, serviceStatus, keyInfo, enabled, mode, external, linkUrl, linkTest, push, PAGE_RE };
 }
 
 // ── HTTP, under /admin/arena (auth and rate limit by handleAdmin) ──
@@ -422,14 +450,21 @@ function handleArenaAdmin(host, h, req, res, reqPathOnly, query) {
 function handleArenaPage(host, req, res, reqPathOnly, clientIp, origin) {
   const nf = () => { res.writeHead(404, { 'X-Robots-Tag': 'noindex, nofollow, noimageindex' }); res.end('Not found'); };
   if (!host.enabled()) return nf();
-  // « Its own app »: /arena on this site sends visitors to the Arena's address
-  // (pages 302; the players' API 307, so a POST stays a POST).
+  // « Its own app »: /arena pages on this site send visitors to the Arena's
+  // address (302); the players' API (the witness) is relayed server-side to
+  // the Arena with the link key and the player's address (web.325).
   if (host.mode() === 'external') {
     const base = host.linkUrl();
     if (!base) return nf();
     const qi = String(req.url || '').indexOf('?');
     const qs = qi >= 0 ? String(req.url).slice(qi).slice(0, 300) : '';
-    if (API_RE.test(reqPathOnly)) { res.writeHead(307, { Location: base + reqPathOnly + qs, 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow, noimageindex' }); return res.end(); }
+    if (API_RE.test(reqPathOnly)) {
+      if (req.method !== 'GET' && req.method !== 'POST') return nf();
+      if (req.method === 'POST' && !(Number(req.headers['content-length']) <= (/\/witnesslog$/.test(reqPathOnly) ? API_MAX_LOG : /\/witness$/.test(reqPathOnly) ? API_MAX_WITNESS : API_MAX_BODY))) {
+        res.writeHead(413, { 'Content-Type': 'application/json; charset=utf-8' }); return res.end('{"ok":false,"code":"tooLarge"}');
+      }
+      return host.relayLink(req, res, reqPathOnly + qs, clientIp);
+    }
     if (!PAGE_RE.test(reqPathOnly) || (req.method !== 'GET' && req.method !== 'HEAD')) return nf();
     res.writeHead(302, { Location: base + reqPathOnly + qs, 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow, noimageindex' });
     return res.end();

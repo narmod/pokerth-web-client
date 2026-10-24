@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'あなたの個人コード：{code}',
   codeKeep: '大切に保管してください。登録の取り消しに必要です。このブラウザにも保存されています。',
   copy: 'コピー',
+  playWebClient: 'ウェブクライアントでプレイ',
   copied: 'コピーしました',
   unregTitle: '登録の取り消し',
   unregister: '登録を取り消す',

@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Sinu isiklik kood: {code}',
   codeKeep: 'Hoia see alles: sellega saad registreerimise tühistada. See on salvestatud ka selles brauseris.',
   copy: 'Kopeeri',
+  playWebClient: 'Mängi veebikliendiga',
   copied: 'Kopeeritud',
   unregTitle: 'Tühista registreerimine',
   unregister: 'Tühista registreerimine',

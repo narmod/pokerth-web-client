@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'הקוד האישי שלכם: {code}',
   codeKeep: 'שמרו אותו: הוא מאפשר לבטל את ההרשמה. הוא נשמר גם בדפדפן הזה.',
   copy: 'העתקה',
+  playWebClient: 'שחקו עם לקוח הרשת',
   copied: 'הועתק',
   unregTitle: 'ביטול הרשמה',
   unregister: 'ביטול הרשמה',

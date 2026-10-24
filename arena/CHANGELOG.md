@@ -10,6 +10,27 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.36.0 — 2026-10-24
+
+### Added
+- **« Play on the web client »** on a tournament's page, when the Arena runs
+  on its own and is linked to a web client (`playAt` in the tournament's
+  public answer) and this browser keeps a personal code for one of its
+  players: the button opens the linked web client with the codes of this
+  tournament (and of the tournament it is a table of) in the link's fragment
+  (`#arena=<base64url JSON { v: 1, regs }>`, never sent to a server), so the
+  web client's witness reports are checked. Not shown once the game is over.
+  The string in the 83 languages.
+- `test/test-arena-play-browser.mjs` (in `npm run test:browser`).
+
+### Changed
+- **The player's address** told by a relay (`x-td-client`) is believed only
+  from a genuine relay: launched by the web client (listening on 127.0.0.1
+  behind it, as before) or, run on its own, a request carrying the link key
+  (`x-arena-link`) — the web client relays its players' requests to the
+  Arena's API that way. Otherwise the connection's own address counts (a
+  told address could dodge the per-address limits).
+
 ## 0.35.0 — 2026-10-24
 
 ### Changed

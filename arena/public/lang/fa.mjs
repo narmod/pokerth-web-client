@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'کد شخصی شما: {code}',
   codeKeep: 'آن را نگه دارید: با آن می‌توانید ثبت‌نام را لغو کنید. در این مرورگر هم ذخیره شده است.',
   copy: 'کپی',
+  playWebClient: 'با کلاینت وب بازی کنید',
   copied: 'کپی شد',
   unregTitle: 'لغو ثبت‌نام',
   unregister: 'لغو ثبت‌نام',

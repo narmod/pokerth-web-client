@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'An còd pearsanta agad: {code}',
   codeKeep: 'Glèidh e: leigidh e leat do chlàradh a thoirt air falbh. Tha e air a ghleidheadh sa bhrabhsair seo cuideachd.',
   copy: 'Dèan lethbhreac',
+  playWebClient: 'Cluich leis a’ chliant-lìn',
   copied: 'Lethbhreac air a dhèanamh',
   unregTitle: 'Thoir air falbh an clàradh',
   unregister: 'Thoir air falbh an clàradh',

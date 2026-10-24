@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Lambar sirrinka: {code}',
   codeKeep: 'Ka adana ta: tana ba ka damar soke rajistarka. An kuma adana ta a wannan burauza.',
   copy: 'Kwafi',
+  playWebClient: 'Yi wasa da abokin ciniki na yanar gizo',
   copied: 'An kwafa',
   unregTitle: 'Soke rajista',
   unregister: 'Soke rajista',

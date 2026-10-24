@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Şahsy koduňyz: {code}',
   codeKeep: 'Ony saklaň: ol hasapdan çykmaga mümkinçilik berýär. Ol bu brauzerde hem saklanýar.',
   copy: 'Göçür',
+  playWebClient: 'Web müşderi bilen oýna',
   copied: 'Göçürildi',
   unregTitle: 'Hasapdan çykmak',
   unregister: 'Hasapdan çyk',

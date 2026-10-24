@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Ikhodi yakho yomuntu siqu: {code}',
   codeKeep: 'Yigcine: ikuvumela ukuthi ukhansele ukubhalisa. Iphinde igcinwe kule bhrawuza.',
   copy: 'Kopisha',
+  playWebClient: 'Dlala ngeklayenti lewebhu',
   copied: 'Kukopishiwe',
   unregTitle: 'Ukukhansela ukubhalisa',
   unregister: 'Khansela ukubhalisa',

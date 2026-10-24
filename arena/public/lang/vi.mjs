@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Mã cá nhân của bạn: {code}',
   codeKeep: 'Hãy giữ lại: mã này cho phép bạn hủy đăng ký. Mã cũng được lưu trong trình duyệt này.',
   copy: 'Sao chép',
+  playWebClient: 'Chơi bằng ứng dụng web',
   copied: 'Đã sao chép',
   unregTitle: 'Hủy đăng ký',
   unregister: 'Hủy đăng ký',

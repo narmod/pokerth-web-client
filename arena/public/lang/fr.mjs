@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Votre code personnel : {code}',
   codeKeep: 'Conservez-le : il permet de vous désinscrire. Il est aussi gardé dans ce navigateur.',
   copy: 'Copier',
+  playWebClient: 'Jouer avec le webclient',
   copied: 'Copié',
   unregTitle: 'Désinscription',
   unregister: 'Se désinscrire',

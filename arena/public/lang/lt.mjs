@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Jūsų asmeninis kodas: {code}',
   codeKeep: 'Išsaugokite jį: su juo galėsite atšaukti registraciją. Jis taip pat išsaugomas šioje naršyklėje.',
   copy: 'Kopijuoti',
+  playWebClient: 'Žaisti su žiniatinklio klientu',
   copied: 'Nukopijuota',
   unregTitle: 'Atšaukti registraciją',
   unregister: 'Atšaukti registraciją',

@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Tavs personīgais kods: {code}',
   codeKeep: 'Saglabā to: ar to vari atteikt reģistrāciju. Tas tiek saglabāts arī šajā pārlūkā.',
   copy: 'Kopēt',
+  playWebClient: 'Spēlēt ar tīmekļa klientu',
   copied: 'Nokopēts',
   unregTitle: 'Atteikt reģistrāciju',
   unregister: 'Atteikt reģistrāciju',

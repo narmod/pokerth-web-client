@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Dein persönlicher Code: {code}',
   codeKeep: 'Bewahre ihn auf: Damit kannst du dich abmelden. Er wird auch in diesem Browser gespeichert.',
   copy: 'Kopieren',
+  playWebClient: 'Mit dem Web-Client spielen',
   copied: 'Kopiert',
   unregTitle: 'Abmelden',
   unregister: 'Abmelden',

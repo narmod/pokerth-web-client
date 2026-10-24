@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'તમારો વ્યક્તિગત કોડ: {code}',
   codeKeep: 'તેને સાચવી રાખો: તેનાથી તમે નોંધણી રદ કરી શકો છો. તે આ બ્રાઉઝરમાં પણ સાચવેલો છે.',
   copy: 'કૉપિ કરો',
+  playWebClient: 'વેબ ક્લાયન્ટથી રમો',
   copied: 'કૉપિ થયું',
   unregTitle: 'નોંધણી રદ કરો',
   unregister: 'નોંધણી રદ કરો',

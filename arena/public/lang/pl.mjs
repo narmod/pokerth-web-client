@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Twój kod osobisty: {code}',
   codeKeep: 'Zachowaj go: pozwala wypisać się z turnieju. Jest też zapisany w tej przeglądarce.',
   copy: 'Kopiuj',
+  playWebClient: 'Graj w kliencie webowym',
   copied: 'Skopiowano',
   unregTitle: 'Wypisz się',
   unregister: 'Wypisz się',

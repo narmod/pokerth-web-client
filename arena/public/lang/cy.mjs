@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Eich cod personol: {code}',
   codeKeep: 'Cadwch ef: mae’n gadael i chi ddad-gofrestru. Caiff ei gadw yn y porwr hwn hefyd.',
   copy: 'Copïo',
+  playWebClient: 'Chwarae gyda’r cleient gwe',
   copied: 'Wedi’i gopïo',
   unregTitle: 'Dad-gofrestru',
   unregister: 'Dad-gofrestru',

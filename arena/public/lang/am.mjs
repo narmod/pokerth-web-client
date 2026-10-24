@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'የግል ኮድዎ፦ {code}',
   codeKeep: 'ያስቀምጡት፦ ምዝገባዎን ለመሰረዝ ያስችልዎታል። በዚህ አሳሽ ውስጥም ተቀምጧል።',
   copy: 'ቅዳ',
+  playWebClient: 'በድር ደንበኛው ይጫወቱ',
   copied: 'ተቀድቷል',
   unregTitle: 'ምዝገባ ሰርዝ',
   unregister: 'ምዝገባ ሰርዝ',

@@ -50,6 +50,7 @@ export const strings = {
   yourCode: '你的个人代码：{code}',
   codeKeep: '请妥善保存：凭它可以取消报名。它也已保存在此浏览器中。',
   copy: '复制',
+  playWebClient: '使用网页客户端参赛',
   copied: '已复制',
   unregTitle: '取消报名',
   unregister: '取消报名',

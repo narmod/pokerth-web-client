@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Kişisel kodun: {code}',
   codeKeep: 'Sakla: kaydını iptal etmeni sağlar. Bu tarayıcıda da saklanır.',
   copy: 'Kopyala',
+  playWebClient: 'Web istemcisiyle oyna',
   copied: 'Kopyalandı',
   unregTitle: 'Kaydı iptal et',
   unregister: 'Kaydı iptal et',

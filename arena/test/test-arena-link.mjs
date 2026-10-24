@@ -117,6 +117,14 @@ x = await jget('/admin/arena/servers');
 ok(x.status === 200 && x.body.servers.length === 1 && x.body.servers[0].ref === 'lan:7', 'servers now come from what the web client sent');
 x = await jget('/admin/arena/link');
 ok(x.body.webClient === 'http://127.0.0.1:9999' && x.body.webClientVersion === '2.1.10-web.323' && x.body.lastSync > 0, '/admin/arena/link: linked web client and last sync');
+// The player's address: x-td-client only from the relay with the link key (0.36.0).
+const reg = (ip, withKey) => fetch(base + '/arena/api/t/abcdefgh12/register', { method: 'POST', headers: Object.assign({ 'Content-Type': 'application/json', 'x-td-client': ip }, withKey ? { 'x-arena-link': linkKey } : {}), body: '{}' }).then((r) => r.status);
+const direct = [];
+for (let i = 0; i < 7; i++) direct.push(await reg('203.0.113.' + i, false));
+ok(direct[6] === 429, 'without the link key, a told address is not believed (one address, limited)');
+const relayed = [];
+for (let i = 0; i < 7; i++) relayed.push(await reg('198.51.100.' + i, true));
+ok(relayed.every((st) => st !== 429), 'with the link key, each player\'s own address counts');
 x = await jpost('/admin/arena/link/rotate', {});
 ok(x.status === 200 && x.body.key !== linkKey && x.body.webClient === null, 'rotate over HTTP: new key, link cut');
 ok((await jget('/admin/arena/servers')).body.servers.length === 0, 'after a new key: no servers until the web client sends again');

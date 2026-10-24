@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Tvoja osebna koda: {code}',
   codeKeep: 'Shrani jo: z njo se lahko odjaviš. Shranjena je tudi v tem brskalniku.',
   copy: 'Kopiraj',
+  playWebClient: 'Igraj s spletnim odjemalcem',
   copied: 'Kopirano',
   unregTitle: 'Odjava',
   unregister: 'Odjavi se',

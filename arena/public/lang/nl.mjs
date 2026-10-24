@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Je persoonlijke code: {code}',
   codeKeep: 'Bewaar hem: daarmee kun je je uitschrijven. Hij wordt ook in deze browser bewaard.',
   copy: 'Kopiëren',
+  playWebClient: 'Spelen met de webclient',
   copied: 'Gekopieerd',
   unregTitle: 'Uitschrijven',
   unregister: 'Uitschrijven',

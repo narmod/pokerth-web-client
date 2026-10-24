@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Persónulegi kóðinn þinn: {code}',
   codeKeep: 'Geymdu hann: með honum getur þú afskráð þig. Hann er líka geymdur í þessum vafra.',
   copy: 'Afrita',
+  playWebClient: 'Spila með vefbiðlaranum',
   copied: 'Afritað',
   unregTitle: 'Afskráning',
   unregister: 'Afskrá mig',

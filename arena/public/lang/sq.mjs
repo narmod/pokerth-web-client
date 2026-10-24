@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Kodi juaj personal: {code}',
   codeKeep: 'Ruajeni: ju lejon të çregjistroheni. Ruhet edhe në këtë shfletues.',
   copy: 'Kopjo',
+  playWebClient: 'Luaj me klientin web',
   copied: 'U kopjua',
   unregTitle: 'Çregjistrimi',
   unregister: 'Çregjistrohu',

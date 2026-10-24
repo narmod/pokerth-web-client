@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Kode pribadi Anda: {code}',
   codeKeep: 'Simpan kode ini: kode ini memungkinkan Anda membatalkan pendaftaran. Kode juga disimpan di peramban ini.',
   copy: 'Salin',
+  playWebClient: 'Main dengan klien web',
   copied: 'Disalin',
   unregTitle: 'Batalkan pendaftaran',
   unregister: 'Batalkan pendaftaran',

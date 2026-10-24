@@ -604,8 +604,18 @@ export function createService(o) {
     if (!b || !b.session) return null;
     return P.session(String(b.session)) || false;
   }
+  // The player's address: the one the web client's relay says (x-td-client)
+  // only when the relay is genuine — launched by the web client (no link
+  // object: it listens on 127.0.0.1 behind the web client, as before) or, run
+  // on its own (service 0.36.0), a request carrying the link key
+  // (x-arena-link); else the connection's own address.
+  function clientIp(req) {
+    const told = req.headers['x-td-client'];
+    const relayed = told && (!o.link || same(req.headers['x-arena-link'], o.link.key()));
+    return String((relayed ? told : '') || req.socket.remoteAddress || '').slice(0, 64);
+  }
   async function publicApi(req, res, sub, query) {
-    const ip = String(req.headers['x-td-client'] || req.socket.remoteAddress || '').slice(0, 64);
+    const ip = clientIp(req);
     const send = (p) => Promise.resolve().then(p).then((v) => json(res, 200, Object.assign({ ok: true }, Array.isArray(v) ? { tournaments: v } : v)))
       .catch((e) => (e instanceof T.Refusal ? json(res, e.code === 'notFound' || e.code === 'private' ? 404 : 400, Object.assign({ ok: false, code: e.code || 'refused', error: e.message }, e.missing ? { missing: e.missing } : {}))
         : json(res, 500, { ok: false, code: 'error', error: 'error' })));
@@ -709,6 +719,9 @@ export function createService(o) {
         const own = T.idOfKey ? T.idOfKey(key) : null;
         if (own) out.cups = C.cupsOf(own);
         if (out.tickets) out.ticketInfo = ticketInfo(out.tickets);
+        // Run on its own and linked to a web client: where « Play on the web
+        // client » leads (it carries this browser's codes, service 0.36.0).
+        if (o.link && o.link.linked() && o.link.url()) out.playAt = o.link.url();
         return out;
       });
     }

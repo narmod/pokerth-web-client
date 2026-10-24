@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Henkilökohtainen koodisi: {code}',
   codeKeep: 'Säilytä se: sillä voit perua ilmoittautumisesi. Se tallennetaan myös tähän selaimeen.',
   copy: 'Kopioi',
+  playWebClient: 'Pelaa web-asiakasohjelmalla',
   copied: 'Kopioitu',
   unregTitle: 'Peru ilmoittautuminen',
   unregister: 'Peru ilmoittautuminen',

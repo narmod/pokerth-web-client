@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Via persona kodo: {code}',
   codeKeep: 'Konservu ĝin: ĝi permesas malaliĝi. Ĝi estas ankaŭ konservita en ĉi tiu retumilo.',
   copy: 'Kopii',
+  playWebClient: 'Ludi per la retkliento',
   copied: 'Kopiita',
   unregTitle: 'Malaliĝi',
   unregister: 'Malaliĝi',

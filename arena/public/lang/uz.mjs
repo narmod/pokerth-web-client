@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Shaxsiy kodingiz: {code}',
   codeKeep: 'Uni saqlab qoʻying: u roʻyxatdan chiqishga imkon beradi. U ushbu brauzerda ham saqlanadi.',
   copy: 'Nusxalash',
+  playWebClient: 'Veb-mijoz bilan oʻynash',
   copied: 'Nusxalandi',
   unregTitle: 'Roʻyxatdan chiqish',
   unregister: 'Roʻyxatdan chiqish',

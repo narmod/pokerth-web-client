@@ -72,6 +72,15 @@ highlights below.
   leaves after 30 s.
 
 ### Changed
+- **Arena « its own app »: the witness works across sites** (`web.325`, service `0.36.0`, step 2) — the players' API on
+  this site (`/arena/api/…`: the witness's table lookup and reports) is no longer redirected (a cross-site redirect
+  broke `fetch` and `sendBeacon`) but relayed server-side to the Arena's own API with the link key (`x-arena-link`) and
+  the player's address (`x-td-client`); the browser stays on this site, no CORS; bodies over the limits are refused
+  here (413). The personal codes, kept by the Arena's pages on the Arena's site, come back through the Arena's new
+  « Play on the web client » button: `#arena=<base64url JSON>` in the link (a fragment, never sent to a server), which
+  `arena-witness.mjs` (`takeHandoff`) files under `pth_td_regs` and removes from the address at once (an invite link's
+  `#join=` in the same fragment is kept). Tests: `scripts/test-arena-witness-client.mjs` (+7),
+  `scripts/test-arena-link-host.mjs` (relay), `arena/test/test-arena-play-browser.mjs`.
 - **Arena « its own app »: only the Arena has an API** (`web.324`, service `0.35.0`, Arnaud's decision of
   2026-10-24) — the web client no longer exposes `/api/arena-link/*` (removed with `handleArenaLink`). It now SENDS
   the Arena, with the key the Arena made, its public address, its version, the servers the Arena may use (LAN

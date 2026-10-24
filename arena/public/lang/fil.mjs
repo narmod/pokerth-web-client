@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Ang iyong personal na code: {code}',
   codeKeep: 'Itago ito: magagamit mo ito para umalis sa rehistrasyon. Nakatago rin ito sa browser na ito.',
   copy: 'Kopyahin',
+  playWebClient: 'Maglaro gamit ang web client',
   copied: 'Nakopya',
   unregTitle: 'Umalis sa rehistrasyon',
   unregister: 'Umalis sa rehistrasyon',

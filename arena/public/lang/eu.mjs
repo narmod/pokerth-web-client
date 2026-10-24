@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Zure kode pertsonala: {code}',
   codeKeep: 'Gorde ezazu: horrekin izen-ematea bertan behera utz dezakezu. Nabigatzaile honetan ere gordetzen da.',
   copy: 'Kopiatu',
+  playWebClient: 'Jokatu web bezeroarekin',
   copied: 'Kopiatuta',
   unregTitle: 'Utzi izen-ematea',
   unregister: 'Utzi izen-ematea',

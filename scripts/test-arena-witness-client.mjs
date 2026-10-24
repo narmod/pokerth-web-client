@@ -5,7 +5,7 @@
 // at the end, when the page is hidden), the personal code kept by
 // /arena, the option and the modes where nothing is sent.
 // Run: node scripts/test-arena-witness-client.mjs
-import { createWitness } from '../public/modules/arena-witness.mjs';
+import { createWitness, takeHandoff } from '../public/modules/arena-witness.mjs';
 
 let n = 0, fail = 0;
 function ok(c, m) { n++; if (!c) { fail++; console.error('  ✗ ' + m); } else console.log('  ✓ ' + m); }
@@ -114,6 +114,30 @@ const game = (id, name) => ({ gameId: id, name, say: (k) => said.push(k) });
   R.w.onGameOver('Player_with_a_long_name_0');
   const big = R.posts()[R.posts().length - 1].o.body;
   ok(big.length <= 60000 && JSON.parse(big).report.hands[JSON.parse(big).report.hands.length - 1][0] === 2500, 'a long game: the latest hands, under 60 KB (' + big.length + ' bytes)');
+}
+
+// ── the codes handed over by the Arena (#arena=…, web.325) ──────────
+{
+  const store = new Map([['pth_td_regs', JSON.stringify({ KEY123456789: [{ nick: 'bob', code: 'OLD12345' }, { nick: 'Zoe', code: 'ZZZZ1111' }] })]]);
+  const storage = { getItem: (k) => (store.has(k) ? store.get(k) : null), setItem: (k, v) => store.set(k, String(v)) };
+  const enc = (o) => Buffer.from(JSON.stringify(o), 'utf8').toString('base64url');
+  ok(takeHandoff('#join=Friday&s=lan.example', storage) === null, 'a hash without arena: left alone');
+  const r = takeHandoff('#join=Friday%20cup&s=lan.example&arena=' + enc({ v: 1, regs: { KEY123456789: [{ nick: 'Bob', code: 'ABCD2345' }], PARENT1234: [{ nick: 'Bob', code: 'ABCD2345' }, { nick: 'Évé', code: 'EEEE2222' }] } }), storage);
+  const regs = JSON.parse(store.get('pth_td_regs'));
+  ok(r && r.taken === 3 && r.rest === '#join=Friday+cup&s=lan.example', 'codes taken; the invite link kept in the fragment, the codes gone from it');
+  ok(regs.KEY123456789.length === 2 && regs.KEY123456789.find((x) => x.nick === 'Bob').code === 'ABCD2345' && regs.KEY123456789.find((x) => x.nick === 'Zoe'), 'same nickname replaced (any case), other ones kept');
+  ok(regs.PARENT1234.length === 2 && regs.PARENT1234[1].nick === 'Évé', 'the tournament a table belongs to, and accented nicknames');
+  const bad = takeHandoff('#arena=' + enc({ v: 1, regs: { 'bad key!': [{ nick: 'x', code: 'A1' }], OKKEY12345: [{ nick: '', code: 'A1' }, { nick: 'y', code: 'not a code' }] } }), storage);
+  ok(bad && bad.taken === 0 && bad.rest === '' && !JSON.parse(store.get('pth_td_regs')).OKKEY12345, 'bad keys, nicknames and codes: dropped; the fragment cleared');
+  ok(takeHandoff('#arena=%%%', storage).taken === 0 && takeHandoff('#arena=' + enc({ v: 2, regs: {} }), storage).taken === 0, 'unreadable or unknown versions: nothing taken');
+  const R = rig({ store: { pth_td_regs: store.get('pth_td_regs') } });
+  R.w.onGameStart(game(9, 'Friday cup'));
+  await tick(); await tick();
+  R.w.onGameOver('Bob');
+  R.w.onHandStart({ hand: 1, stacks: { Bob: 1000, Ann: 1000 } });
+  R.w.onGameOver('Bob');
+  const last = R.posts().length ? JSON.parse(R.posts()[R.posts().length - 1].o.body) : null;
+  ok(last && last.code === 'ABCD2345', 'the witness sends the code handed over');
 }
 
 console.log((n - fail) + '/' + n + ' passed');

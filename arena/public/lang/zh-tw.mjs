@@ -50,6 +50,7 @@ export const strings = {
   yourCode: '你的個人代碼：{code}',
   codeKeep: '請妥善保存：憑它可以取消報名。它也已儲存在這個瀏覽器中。',
   copy: '複製',
+  playWebClient: '使用網頁用戶端遊戲',
   copied: '已複製',
   unregTitle: '取消報名',
   unregister: '取消報名',

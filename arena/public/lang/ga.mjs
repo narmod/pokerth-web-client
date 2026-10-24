@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Do chód pearsanta: {code}',
   codeKeep: 'Coinnigh é: ligeann sé duit díchlárú. Coinnítear sa bhrabhsálaí seo é freisin.',
   copy: 'Cóipeáil',
+  playWebClient: 'Imir leis an gcliant gréasáin',
   copied: 'Cóipeáilte',
   unregTitle: 'Díchlárú',
   unregister: 'Díchláraigh',

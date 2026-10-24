@@ -52,6 +52,7 @@ export const strings = {
   yourCode: 'Your personal code: {code}',
   codeKeep: 'Keep it: it lets you unregister. It is also kept in this browser.',
   copy: 'Copy',
+  playWebClient: 'Play on the web client',
   copied: 'Copied',
   unregTitle: 'Unregister',
   unregister: 'Unregister',

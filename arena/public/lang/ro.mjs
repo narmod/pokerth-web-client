@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Codul tău personal: {code}',
   codeKeep: 'Păstrează-l: îți permite să te retragi. Este păstrat și în acest browser.',
   copy: 'Copiază',
+  playWebClient: 'Joacă cu clientul web',
   copied: 'Copiat',
   unregTitle: 'Retragere',
   unregister: 'Retrage-te',

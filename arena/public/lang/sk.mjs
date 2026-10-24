@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Váš osobný kód: {code}',
   codeKeep: 'Uschovajte si ho: umožní vám zrušiť registráciu. Uloží sa aj v tomto prehliadači.',
   copy: 'Kopírovať',
+  playWebClient: 'Hrať cez webového klienta',
   copied: 'Skopírované',
   unregTitle: 'Zrušenie registrácie',
   unregister: 'Zrušiť registráciu',

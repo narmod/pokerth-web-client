@@ -17,11 +17,61 @@
 //
 // Module AUTONOME: msg-hand.mjs only calls window._tdWitness hooks; without
 // this module the game runs exactly as before.
+//
+// Arena « its own app » (web.325): the Arena is on another site, so its
+// pages keep the personal codes in that site's browser storage. Its « Play
+// on the web client » button opens this site with them in the fragment
+// (#arena=<base64url JSON { v: 1, regs: { <key>: [{ nick, code }] } }>):
+// takeHandoff() files them under pth_td_regs, as /arena does on the same
+// site, and the fragment loses that part at once. The requests below stay on
+// this site: the proxy relays them to the Arena.
 
 const EVERY = 10;              // hands between two summaries
 const MAX_BYTES = 60000;       // a keepalive request carries at most 64 KB
 const TOLD = 'pth_td_witness_told';
 const REGS = 'pth_td_regs';    // personal codes kept by /arena
+
+// ── the codes handed over by the Arena (#arena=…) ──
+const KEY_RE = /^[A-Za-z0-9_-]{8,40}$/;
+const CODE_RE = /^[A-Za-z0-9-]{1,16}$/;
+function fromB64url(v) {
+  const b = String(v).replace(/-/g, '+').replace(/_/g, '/');
+  const bin = atob(b + '==='.slice((b.length + 3) % 4));
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+// hash: location.hash. Files the codes in storage; returns
+// { taken: number of codes, rest: the hash without « arena » } or null when
+// there is nothing for us.
+export function takeHandoff(hash, storage) {
+  let hp;
+  try { hp = new URLSearchParams(String(hash || '').replace(/^#/, '')); } catch (e) { return null; }
+  const raw = hp.get('arena');
+  if (raw === null) return null;
+  hp.delete('arena');
+  const restS = hp.toString();
+  const out = { taken: 0, rest: restS ? '#' + restS : '' };
+  let data = null;
+  try { data = raw.length <= 8000 ? JSON.parse(fromB64url(raw)) : null; } catch (e) { data = null; }
+  if (!data || data.v !== 1 || !data.regs || typeof data.regs !== 'object') return out;
+  let regs = {};
+  try { regs = JSON.parse((storage && storage.getItem(REGS)) || '{}') || {}; } catch (e) { regs = {}; }
+  for (const key of Object.keys(data.regs).slice(0, 20)) {
+    if (!KEY_RE.test(key) || !Array.isArray(data.regs[key])) continue;
+    let list = Array.isArray(regs[key]) ? regs[key].slice() : [];
+    for (const r of data.regs[key].slice(0, 10)) {
+      const nick = r && typeof r.nick === 'string' ? r.nick.trim().slice(0, 64) : '';
+      const code = r && typeof r.code === 'string' ? r.code.trim() : '';
+      if (!nick || !CODE_RE.test(code)) continue;
+      list = list.filter((x) => String(x.nick).toLowerCase() !== nick.toLowerCase()).concat([{ nick, code }]);
+      out.taken++;
+    }
+    if (list.length) regs[key] = list;
+  }
+  if (out.taken) { try { if (storage) storage.setItem(REGS, JSON.stringify(regs)); } catch (e) {} }
+  return out;
+}
 
 export function createWitness(deps) {
   const d = Object.assign({
@@ -132,6 +182,15 @@ if (typeof window !== 'undefined' && !window._tdWitness) {
     origin: (typeof location !== 'undefined' && location.origin) || '',
   });
   window._tdWitness = w;
+  // The codes handed over by the Arena's « Play on the web client » button.
+  const handoff = () => {
+    try {
+      const r = takeHandoff(location.hash, typeof localStorage !== 'undefined' ? localStorage : null);
+      if (r) history.replaceState(history.state, '', location.pathname + location.search + r.rest);
+    } catch (e) {}
+  };
+  handoff();
+  try { window.addEventListener('hashchange', handoff); } catch (e) {}
   try {
     window.addEventListener('pagehide', () => w.onHide());
     document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') w.onHide(); });

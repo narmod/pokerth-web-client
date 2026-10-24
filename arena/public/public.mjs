@@ -293,6 +293,23 @@ function renderPrivate(key, tried, base) {
     '<form id="invForm" class="row"><div><label for="invIn">' + T('inviteCode') + '</label><input id="invIn" autocomplete="off" required></div><button type="submit" class="primary">' + T('open') + '</button></form></section>';
   $('invForm').addEventListener('submit', (ev) => { ev.preventDefault(); go((base || '/arena/t/') + key + '?invite=' + encodeURIComponent($('invIn').value.trim())); });
 }
+// « Play on the web client » (service 0.36.0): the Arena runs on its own,
+// the web client on another site. The personal codes kept in this browser
+// for this tournament (and the one it is a table of) go along in the link's
+// fragment — never sent to a server — so the web client's witness reports
+// are checked (#arena=<base64url JSON>, read by its arena-witness.mjs).
+function b64url(s) { const b = new TextEncoder().encode(s); let x = ''; for (const c of b) x += String.fromCharCode(c); return btoa(x).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+function playLink(c) {
+  if (!c.playAt || c.phase === 'finished' || c.phase === 'validated') return null;
+  const inT = (r) => c.playerList.some((p) => p.nick.toLowerCase() === r.nick.toLowerCase() && !p.absent);
+  const regs = {};
+  for (const k of [c.key].concat(c.parent ? [c.parent.key] : [])) {
+    const l = regsFor(k).filter((r) => r.code && inT(r)).map((r) => ({ nick: r.nick, code: r.code }));
+    if (l.length) regs[k] = l;
+  }
+  if (!Object.keys(regs).length) return null;
+  return c.playAt + '/#arena=' + b64url(JSON.stringify({ v: 1, regs }));
+}
 function tableLine(tb) {
   if (!tb) return '';
   return T(tb.raiseMode === 'minutes' ? 'tableSettingsMin' : 'tableSettings', { stack: tb.startMoney, sb: tb.firstSmallBlind, bb: tb.firstSmallBlind * 2, n: tb.raiseEvery, t: tb.actionTimeout });
@@ -313,6 +330,8 @@ function renderOne() {
     h += '<p class="live">' + (lv.status === 'running' ? T('liveRunning', { hand: lv.hand || 1 })
       : lv.phase === 'watch' ? T('liveWait') : T('liveOpen', { table: lv.tableName || c.name, server: c.server || '' })) + '</p>';
   }
+  const play = playLink(c);
+  if (play) h += '<div class="actions"><a class="btn primary" href="' + esc(play) + '" target="_blank" rel="noopener">' + T('playWebClient') + '</a></div>';
   h += '</section>';
 
   // The table password (service 0.24.0): only to a registered player, with

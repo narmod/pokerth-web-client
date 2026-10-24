@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Din personlige kode: {code}',
   codeKeep: 'Ta vare på den: med den kan du melde deg av. Den lagres også i denne nettleseren.',
   copy: 'Kopier',
+  playWebClient: 'Spill med webklienten',
   copied: 'Kopiert',
   unregTitle: 'Meld av',
   unregister: 'Meld av',

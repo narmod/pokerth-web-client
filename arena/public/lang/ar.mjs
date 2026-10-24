@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'رمزك الشخصي: {code}',
   codeKeep: 'احتفظ به: يتيح لك إلغاء تسجيلك. وهو محفوظ أيضًا في هذا المتصفح.',
   copy: 'نسخ',
+  playWebClient: 'العب بعميل الويب',
   copied: 'تم النسخ',
   unregTitle: 'إلغاء التسجيل',
   unregister: 'إلغاء التسجيل',

@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Şəxsi kodunuz: {code}',
   codeKeep: 'Onu saxlayın: qeydiyyatı ləğv etmək üçün lazımdır. O, bu brauzerdə də saxlanılır.',
   copy: 'Kopyala',
+  playWebClient: 'Veb klientlə oyna',
   copied: 'Kopyalandı',
   unregTitle: 'Qeydiyyatı ləğv et',
   unregister: 'Qeydiyyatı ləğv et',

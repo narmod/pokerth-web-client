@@ -50,6 +50,7 @@ export const strings = {
   yourCode: 'Kóòdù àdáni rẹ: {code}',
   codeKeep: 'Pa á mọ́: ó jẹ́ kí o lè yọ orúkọ rẹ kúrò. A tún pa á mọ́ sínú aṣàwákiri yìí.',
   copy: 'Ṣẹ̀dà',
+  playWebClient: 'Ṣeré pẹ̀lú oníbàárà wẹ́ẹ̀bù',
   copied: 'Ti ṣẹ̀dà',
   unregTitle: 'Yíyọ orúkọ kúrò',
   unregister: 'Yọ orúkọ kúrò',
