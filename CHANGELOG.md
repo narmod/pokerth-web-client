@@ -15,6 +15,20 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Fixed
+- **A rejected WebSocket could crash the whole proxy** (`web.329`) — a connection turned away by the bridge (host or
+  port not in the allowlist, server at capacity, LAN per-IP cap) returned before `_attachWs`, where the `'error'`
+  listener was added. The socket stays open during the close handshake, so one frame over `maxPayload` (64 KiB) or an
+  unmasked frame raised an unhandled `'error'` event and killed the process, dropping every game on the instance, with
+  no login needed. The connection handler now listens for `'error'` before any early return. Test:
+  `scripts/test-ws-reject-crash.mjs` (new).
+- **Serbian SEO pages fully Cyrillic** (`web.329`) — `/hand-rankings`, `/how-to-play` and `/glossary` were still in
+  Latin script after the catalogue moved to Cyrillic (`web.281`), so the hand names on `/hand-rankings` no longer
+  matched the game (`scripts/test-seo-hands-i18n.mjs` failed). Transliterated; action terms, brands, domains and card notation
+  kept. Page dates moved in `seo-i18n/article-dates.json` for the seven pages whose text changed.
+- **es-419 tournament-witness strings** (`web.329`) — three strings hand-edited away from `derive(es)`; re-derived so
+  `scripts/test-es-419-derivation.mjs` passes again.
+
 ### Changed
 - **Admin › Overview: the client errors card follows how serious the errors are** (`web.328`) — it used to count every
   group not seen from robots only, retries that recovered and diagnostics included, and turned red as soon as one was

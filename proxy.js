@@ -16384,6 +16384,11 @@ wss.on('connection', (ws, req) => {
   ws.isAlive = true;
   ws._hbMisses = 0;
   ws.on('pong', _heartbeat);
+  // Listen for 'error' before any early return: a socket turned away below
+  // (host/port not allowed, at capacity, LAN per-IP cap) stays open during the
+  // close handshake, and an oversized or unmasked frame on it would otherwise
+  // raise an unhandled 'error' and kill the process (scripts/test-ws-reject-crash.mjs).
+  ws.on('error', function () {});
   const params = new URLSearchParams(url.parse(req.url).query);
   const host   = params.get('host') || 'pokerth.net';
   const port   = parseInt(params.get('port') || '7234', 10);

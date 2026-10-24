@@ -1,3 +1,7 @@
+2026-10-25 version 2.1.10-web.329:
+- bugfix: the web client's server could stop for everyone when a connection it refused sent a malformed message; it now keeps running
+- bugfix: Serbian: the hand rankings, how-to-play and glossary pages are now in Cyrillic like the rest of the app
+
 2026-10-24 version 2.1.10-web.327:
 - improvement: the Arena (tournaments, cups and medals) is now an app of its own: when this site is linked to one, /arena opens it, and « Play on the web client » on a tournament's page brings your personal code here so your witness reports count
 

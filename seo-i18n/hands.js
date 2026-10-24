@@ -1674,38 +1674,38 @@ var PARTS = {
   },
 
   sr: {
-    title: "Jačina kombinacija u pokeru — redosled ruku u Teksas Holdemu",
-    desc: "Svih deset poker kombinacija u Teksas Holdemu, od rojal fleša do visoke karte, sa primerima, verovatnoćom svake i pravilima za kiker i izjednačene ruke.",
-    ldHeadline: "Jačina kombinacija u pokeru — Teksas Holdem",
-    ldDesc: "Deset kombinacija Teksas Holdema redom, sa primerima, učestalošću i pravilima kod izjednačenja.",
-    h1: "Jačina kombinacija u pokeru",
-    lead: "U Teksas Holdemu ruke se rangiraju od najjače do najslabije ovako. Ruka je uvek tačno pet karata, izabranih između sedam koje vidite: vaše dve zatvorene i pet zajedničkih. Ne morate da koristite svoje karte — ako sam sto čini najboljih pet, to je takođe vaša ruka.",
-    names: ["Rojal fleš", "Skala u boji", "Kare", "Ful", "Fleš", "Kenta", "Triling", "Dva para", "Par", "Visoka karta"],
+    title: "Јачина комбинација у покеру — редослед руку у Тексас Холдему",
+    desc: "Свих десет покер комбинација у Тексас Холдему, од ројал флеша до високе карте, са примерима, вероватноћом сваке и правилима за кикер и изједначене руке.",
+    ldHeadline: "Јачина комбинација у покеру — Тексас Холдем",
+    ldDesc: "Десет комбинација Тексас Холдема редом, са примерима, учесталошћу и правилима код изједначења.",
+    h1: "Јачина комбинација у покеру",
+    lead: "У Тексас Холдему руке се рангирају од најјаче до најслабије овако. Рука је увек тачно пет карата, изабраних између седам које видите: ваше две затворене и пет заједничких. Не морате да користите своје карте — ако сам сто чини најбољих пет, то је такође ваша рука.",
+    names: ["Ројал флеш", "Скала у боји", "Каре", "Фул", "Флеш", "Кента", "Трилинг", "Два пара", "Пар", "Висока карта"],
     texts: [
-      "A K Q J 10 u istoj boji. Najbolja moguća ruka: ne može se pobediti, samo izjednačiti.",
-      "Pet uzastopnih karata u istoj boji. Između dve skale u boji pobeđuje ona sa višom gornjom kartom.",
-      "Četiri karte iste vrednosti. Peta karta (kiker) rešava redak slučaj u kome kare leži na samom stolu.",
-      "Triling uz par. Prvo se poredi triling, zatim par.",
-      "Pet karata iste boje, ali ne uzastopnih. Porede se jedna po jedna odozgo; nijedna boja nije jača od druge.",
-      "Pet uzastopnih karata u mešanim bojama. As igra gore (10-J-Q-K-A) ili dole (A-2-3-4-5), nikada oboje istovremeno.",
-      "Tri karte iste vrednosti, uz dve nepovezane karte.",
-      "Dva različita para uz petu kartu. Prvo se poredi viši par, zatim niži, pa kiker.",
-      "Dve karte iste vrednosti uz tri nepovezane karte, koje se porede redom.",
-      "Ništa od navedenog. Odlučuje najviša karta, zatim sledeća, i tako dalje."
+      "A K Q J 10 у истој боји. Најбоља могућа рука: не може се победити, само изједначити.",
+      "Пет узастопних карата у истој боји. Између две скале у боји побеђује она са вишом горњом картом.",
+      "Четири карте исте вредности. Пета карта (кикер) решава редак случај у коме каре лежи на самом столу.",
+      "Трилинг уз пар. Прво се пореди трилинг, затим пар.",
+      "Пет карата исте боје, али не узастопних. Пореде се једна по једна одозго; ниједна боја није јача од друге.",
+      "Пет узастопних карата у мешаним бојама. Ас игра горе (10-J-Q-K-A) или доле (A-2-3-4-5), никада обоје истовремено.",
+      "Три карте исте вредности, уз две неповезане карте.",
+      "Два различита пара уз пету карту. Прво се пореди виши пар, затим нижи, па кикер.",
+      "Две карте исте вредности уз три неповезане карте, које се пореде редом.",
+      "Ништа од наведеног. Одлучује највиша карта, затим следећа, и тако даље."
     ],
-    dealt: "pojavljuje se u %s ruku od sedam karata",
-    tiesH2: "Kako se rešava izjednačenje",
-    tiesP: "Prvo se poredi kategorija: bilo koji fleš pobeđuje bilo koju kentu, kakve god karte bile. Unutar iste kategorije poredi se vrednost po vrednost odozgo. Ono što ostane posle kombinacije zove se <em>kiker</em> i odlučuje mnogo više ruku nego što početnici očekuju: na stolu A-9-4 i A♠ K♦ i A♣ 7♥ daju par asova, ali kralj nadjačava sedmicu. U Holdemu boje nikada ne rešavaju izjednačenje — dva igrača sa istih pet vrednosti dele pot do poslednjeg žetona.",
-    wrongH2: "Šta se najčešće pogrešno shvata",
+    dealt: "појављује се у %s руку од седам карата",
+    tiesH2: "Како се решава изједначење",
+    tiesP: "Прво се пореди категорија: било који флеш побеђује било коју кенту, какве год карте биле. Унутар исте категорије пореди се вредност по вредност одозго. Оно што остане после комбинације зове се <em>кикер</em> и одлучује много више руку него што почетници очекују: на столу A-9-4 и A♠ K♦ и A♣ 7♥ дају пар асова, али краљ надјачава седмицу. У Холдему боје никада не решавају изједначење — два играча са истих пет вредности деле пот до последњег жетона.",
+    wrongH2: "Шта се најчешће погрешно схвата",
     wrong: [
-      "As je za kentu istovremeno i najviša i najniža karta: A-K-Q-J-10 je najbolja, A-2-3-4-5 (takozvani <em>wheel</em>) najslabija. Niz se ne zatvara u krug — Q-K-A-2-3 nije baš ništa.",
-      "Fleš je pet karata iste boje, ne četiri. Četiri herca između vaše ruke i stola sama po sebi ne vrede ništa.",
-      "Triling složen od para u ruci i jedne karte na stolu zove se <em>set</em>; složen od jedne karte u ruci i para na stolu zove se <em>trips</em>. Isti rang, veoma različita snaga, jer triling na stolu vide svi.",
-      "Broji se samo najboljih pet karata. Dva para u ruci i treći par na stolu i dalje su dva para, ne tri.",
-      "Procenti iznad govore koliko često se svaka ruka uopšte sastavi do rivera od sedam karata, a ne koliko često pobeđuje. Dva para deluju obično, a ipak su ispred većine onoga na šta naiđu."
+      "Ас је за кенту истовремено и највиша и најнижа карта: A-K-Q-J-10 је најбоља, A-2-3-4-5 (такозвани <em>wheel</em>) најслабија. Низ се не затвара у круг — Q-K-A-2-3 није баш ништа.",
+      "Флеш је пет карата исте боје, не четири. Четири херца између ваше руке и стола сама по себи не вреде ништа.",
+      "Трилинг сложен од пара у руци и једне карте на столу зове се <em>сет</em>; сложен од једне карте у руци и пара на столу зове се <em>трипс</em>. Исти ранг, веома различита снага, јер трилинг на столу виде сви.",
+      "Броји се само најбољих пет карата. Два пара у руци и трећи пар на столу и даље су два пара, не три.",
+      "Проценти изнад говоре колико често се свака рука уопште састави до ривера од седам карата, а не колико често побеђује. Два пара делују обично, а ипак су испред већине онога на шта наиђу."
     ],
-    seeH2: "Kako to izgleda za stolom",
-    seeP: "U PokerTH-u kartica Šanse imenuje vašu trenutno najbolju ruku i vašu šansu za pobedu kako karte izlaze, pa je nikada ne morate slagati u glavi dok vreme ističe, a pri otvaranju karata pobednička kombinacija imenovana je ispod zajedničkih karata. Vežbanje u režimu Lokalno / vežbanje protiv računarskih protivnika najbrži je način da vam redosled uđe u prste."
+    seeH2: "Како то изгледа за столом",
+    seeP: "У PokerTH-у картица Шансе именује вашу тренутно најбољу руку и вашу шансу за победу како карте излазе, па је никада не морате слагати у глави док време истиче, а при отварању карата победничка комбинација именована је испод заједничких карата. Вежбање у режиму Локално / вежбање против рачунарских противника најбржи је начин да вам редослед уђе у прсте."
   },
 
   ca: {

@@ -1379,32 +1379,32 @@ var PARTS = {
 
   sr: {
 
-    title: "Kako besplatno igrati poker onlajn — PokerTH Web",
-    desc: "Korak po korak: igrajte Teksas Holdem besplatno u pregledaču, bez preuzimanja i naloga — protiv botova, na pokerth.net ili za privatnim stolom sa prijateljima.",
-    ldHeadline: "Kako besplatno igrati Teksas Holdem poker u pregledaču",
-    ldDesc: "Vodič korak po korak za besplatnu igru Teksas Holdema u PokerTH veb klijentu.",
-    h1: "Kako besplatno igrati poker onlajn, direktno u pregledaču",
-    lead: function (h, c) { return "Ovo je kratka verzija: od prazne kartice do vaše prve ruke Teksas Holdema u PokerTH-u. Ako tražite sama pravila — mali i veliki ulog, krugove klađenja, šta šta pobeđuje — krenite radije od <a href=\"{rules}\">stranice sa pravilima</a> i <a href=\"{hands}\">jačine kombinacija</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    title: "Како бесплатно играти покер онлајн — PokerTH Web",
+    desc: "Корак по корак: играјте Тексас Холдем бесплатно у прегледачу, без преузимања и налога — против ботова, на pokerth.net или за приватним столом са пријатељима.",
+    ldHeadline: "Како бесплатно играти Тексас Холдем покер у прегледачу",
+    ldDesc: "Водич корак по корак за бесплатну игру Тексас Холдема у PokerTH веб клијенту.",
+    h1: "Како бесплатно играти покер онлајн, директно у прегледачу",
+    lead: function (h, c) { return "Ово је кратка верзија: од празне картице до ваше прве руке Тексас Холдема у PokerTH-у. Ако тражите сама правила — мали и велики улог, кругове клађења, шта шта побеђује — крените радије од <a href=\"{rules}\">странице са правилима</a> и <a href=\"{hands}\">јачине комбинација</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      ["Otvorite sajt — nema šta da se instalira",
-       "PokerTH radi u pregledaču. Bez preuzimanja, bez dodataka, a za vežbanje i gostujuće igre i bez naloga. Možete ga instalirati kao aplikaciju — Podeli → Dodaj na početni ekran na iPhone-u i iPad-u, meni pregledača ili dugme za instalaciju drugde — i otvara se preko celog ekrana, uz rad i bez veze. Ako želite, Pomoć keca, Kec u uglu, objašnjava svaki ekran."],
-      ["Izaberite gde želite da igrate",
-       "Tri načina. <strong>Lokalno / vežbanje</strong> vas odmah posadi za sto sa računarskim protivnicima i uopšte ne traži vezu — tu se uči. <strong>pokerth.net</strong> je zvanična mreža: pravi protivnici, normalne igre otvorene za goste i rangirane igre sa sezonskim listama za igrače sa besplatnim nalogom. <strong>LAN / privatni server</strong> vas povezuje na namenski PokerTH server, vaš ili tuđi."],
-      ["Sedite za sto",
-       "U predvorju se pridružujete stolu sa spiska, gledate igru u toku ili pravite svoj. Pri pravljenju birate vrstu igre (Normalna, Samo registrovani igrači, Samo pozvani igrači ili Rangirana igra) i određujete broj mesta, početni stek, koliko brzo rastu ulozi, vreme za potez, smeju li gledaoci da prate i da li sto ima lozinku. Podelite pozivnu vezu i prijatelj sleti pravo za vaš sto, u svom pregledaču — u normalnoj igri bez ikakve registracije."],
-      ["Odigrajte ruku",
-       "Dobijate dve zatvorene karte. Kladi se ukrug pre flopa, pa ponovo posle flopa, terna i rivera. Kada dođete na red, traka radnji zasvetli i nudi samo ono što je dozvoljeno: Fold, Check ili Call, Raise ili All-In. Iznos možete upisati, povući klizačem ili jednim dodirom postaviti na trećinu pota, pola pota ili ceo pot."],
-      ["Čitajte sto",
-       "Kartica Šanse imenuje vašu trenutno najbolju kombinaciju i vašu šansu za pobedu kako karte izlaze. Pot, svaki stek i nivo uloga stalno su na ekranu, dugme delioca pokazuje ko govori poslednji, a odbrojavanje koliko vam je vremena ostalo. Pri otvaranju karata pobednička kombinacija imenovana je ispod zajedničkih karata."],
-      ["Pobedite na turniru",
-       "Igre u PokerTH-u su turniri: svi počinju sa istim stekom, ulozi rastu na svakih nekoliko ruku ili minuta, a igrači ispadaju dok jedan ne ostane sa svim žetonima. Ništa ne košta novca i žetoni se ne mogu kupiti — sve je igrački novac, pa je na kocki samo sama igra."]
+      ["Отворите сајт — нема шта да се инсталира",
+       "PokerTH ради у прегледачу. Без преузимања, без додатака, а за вежбање и гостујуће игре и без налога. Можете га инсталирати као апликацију — Подели → Додај на почетни екран на iPhone-у и iPad-у, мени прегледача или дугме за инсталацију другде — и отвара се преко целог екрана, уз рад и без везе. Ако желите, Помоћ кеца, Кец у углу, објашњава сваки екран."],
+      ["Изаберите где желите да играте",
+       "Три начина. <strong>Локално / вежбање</strong> вас одмах посади за сто са рачунарским противницима и уопште не тражи везу — ту се учи. <strong>pokerth.net</strong> је званична мрежа: прави противници, нормалне игре отворене за госте и рангиране игре са сезонским листама за играче са бесплатним налогом. <strong>LAN / приватни сервер</strong> вас повезује на наменски PokerTH сервер, ваш или туђи."],
+      ["Седите за сто",
+       "У предворју се придружујете столу са списка, гледате игру у току или правите свој. При прављењу бирате врсту игре (Нормална, Само регистровани играчи, Само позвани играчи или Рангирана игра) и одређујете број места, почетни стек, колико брзо расту улози, време за потез, смеју ли гледаоци да прате и да ли сто има лозинку. Поделите позивну везу и пријатељ слети право за ваш сто, у свом прегледачу — у нормалној игри без икакве регистрације."],
+      ["Одиграјте руку",
+       "Добијате две затворене карте. Клади се укруг пре флопа, па поново после флопа, терна и ривера. Када дођете на ред, трака радњи засветли и нуди само оно што је дозвољено: Fold, Check или Call, Raise или All-In. Износ можете уписати, повући клизачем или једним додиром поставити на трећину пота, пола пота или цео пот."],
+      ["Читајте сто",
+       "Картица Шансе именује вашу тренутно најбољу комбинацију и вашу шансу за победу како карте излазе. Пот, сваки стек и ниво улога стално су на екрану, дугме делиоца показује ко говори последњи, а одбројавање колико вам је времена остало. При отварању карата победничка комбинација именована је испод заједничких карата."],
+      ["Победите на турниру",
+       "Игре у PokerTH-у су турнири: сви почињу са истим стеком, улози расту на сваких неколико руку или минута, а играчи испадају док један не остане са свим жетонима. Ништа не кошта новца и жетони се не могу купити — све је играчки новац, па је на коцки само сама игра."]
     ],
-    phoneH2: "Igranje na telefonu",
-    phoneP: "Sto je podjednako pravljen za dodirni ekran kao i za računar: dodir na polje uloga otvara brojčanu tastaturu unutar trake radnji umesto sistemske, pa sto nikada ne poskakuje, a klizač se pomera istim koracima kao u desktop klijentu. Obaveštenja da ste na redu mogu stići sa dugmadima Fold i Check/Call na sebi, pa se ruka može odigrati bez vraćanja u karticu.",
-    friendsH2: "Igranje sa prijateljima",
-    friendsP: "Napravite sto, stavite lozinku ako želite da bude privatan, i pošaljite pozivnu vezu. Ona otvara sto direktno — u instaliranoj aplikaciji ako su je dodali na početni ekran, inače u kartici pregledača. Niko ne mora ništa da instalira niti da daje adresu e-pošte.",
-    faqH2: "Česta pitanja",
-    faqP: function (h, c) { return "Ni u jednom režimu nema pravog novca. Vaša podešavanja, paketi stilova i napredak u vežbanju ostaju na vašem uređaju i prate vas na druge uređaje kada se prijavite pokerth.net nalogom. Interfejs je dostupan na 83 jezika, dok pet reči za radnje — Fold, Check, Call, Raise, All-In — ostaju na engleskom, kao za svakim stolom na svetu. Više u <a href=\"{faq}\">čestim pitanjima</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    phoneH2: "Играње на телефону",
+    phoneP: "Сто је подједнако прављен за додирни екран као и за рачунар: додир на поље улога отвара бројчану тастатуру унутар траке радњи уместо системске, па сто никада не поскакује, а клизач се помера истим корацима као у десктоп клијенту. Обавештења да сте на реду могу стићи са дугмадима Fold и Check/Call на себи, па се рука може одиграти без враћања у картицу.",
+    friendsH2: "Играње са пријатељима",
+    friendsP: "Направите сто, ставите лозинку ако желите да буде приватан, и пошаљите позивну везу. Она отвара сто директно — у инсталираној апликацији ако су је додали на почетни екран, иначе у картици прегледача. Нико не мора ништа да инсталира нити да даје адресу е-поште.",
+    faqH2: "Честа питања",
+    faqP: function (h, c) { return "Ни у једном режиму нема правог новца. Ваша подешавања, пакети стилова и напредак у вежбању остају на вашем уређају и прате вас на друге уређаје када се пријавите pokerth.net налогом. Интерфејс је доступан на 83 језика, док пет речи за радње — Fold, Check, Call, Raise, All-In — остају на енглеском, као за сваким столом на свету. Више у <a href=\"{faq}\">честим питањима</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   ca: {
