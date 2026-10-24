@@ -67,8 +67,7 @@ const tours = createTournamentsView({ api, esc, tok, servers: () => servers, you
 const cups = createCupsView({ api, esc });
 
 // ── the director's avatar ──────────────────────────────────────────
-// Resized here to 96×96 (PNG, or JPEG when the PNG is over the server's
-// 30 KB limit), then sent; the service checks it again.
+// One of the robots shipped with the service (no image of one's own).
 function avShow(msg, bad) { $('avMsg').textContent = msg || ''; $('avMsg').className = 'msg' + (msg ? (bad ? ' bad' : ' ok') : ''); }
 function avRefresh() { $('avImg').src = '/tournament/avatar?ts=' + Date.now(); avLoad(); }
 // The shipped robots: one click picks one; the current one is marked.
@@ -86,35 +85,6 @@ $('avPick').addEventListener('click', (e) => {
     if (!d.ok) return avShow(d.error || 'Refused', true);
     avShow('Robot ' + b.dataset.preset + ' chosen: tables opened from now on show it.'); avRefresh();
   }).catch(() => avShow('Network error', true));
-});
-function avEncode(img) {
-  const c = document.createElement('canvas');
-  c.width = 96; c.height = 96;
-  const g = c.getContext('2d');
-  const side = Math.min(img.naturalWidth, img.naturalHeight);
-  g.drawImage(img, (img.naturalWidth - side) / 2, (img.naturalHeight - side) / 2, side, side, 0, 0, 96, 96);
-  for (const [type, q] of [['image/png'], ['image/jpeg', 0.9], ['image/jpeg', 0.8], ['image/jpeg', 0.65]]) {
-    const b64 = c.toDataURL(type, q).replace(/^data:[^,]*,/, '');
-    if (b64.length * 3 / 4 <= 30000) return b64;
-  }
-  return null;
-}
-$('avFile').addEventListener('change', () => {
-  const f = $('avFile').files && $('avFile').files[0];
-  if (!f) return;
-  const url = URL.createObjectURL(f);
-  const img = new Image();
-  img.onload = () => {
-    URL.revokeObjectURL(url);
-    const b64 = avEncode(img);
-    if (!b64) return avShow('This image cannot be made small enough.', true);
-    api('/admin/tournaments/avatar', { image: b64 }).then((d) => {
-      if (!d.ok) return avShow(d.error || 'Refused', true);
-      avShow('New avatar saved: tables opened from now on show it.'); avRefresh(); $('avFile').value = '';
-    }).catch(() => avShow('Network error', true));
-  };
-  img.onerror = () => { URL.revokeObjectURL(url); avShow('Not an image.', true); };
-  img.src = url;
 });
 $('avReset').addEventListener('click', () => {
   api('/admin/tournaments/avatar', { reset: true }).then((d) => { if (d.ok) { avShow('Back to the default robot.'); avRefresh(); } else avShow(d.error || 'Refused', true); }).catch(() => avShow('Network error', true));

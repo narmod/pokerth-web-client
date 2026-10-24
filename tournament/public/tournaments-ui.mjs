@@ -11,6 +11,8 @@
 // English only for now, like the rest of the organizer side.
 // ═══════════════════════════════════════════════════════════════════
 
+import { createTableForm } from './table-form.mjs';
+
 const PROFILE_TEXT = {
   friendly: 'Friendly — validated at once, corrections free, unlisted, kept 30 days.',
   club: 'Club — validated at once, corrections free, public, kept one year.',
@@ -26,18 +28,7 @@ const CHOICES = {
 };
 const SETTING_LABEL = { identity: 'Identity', witnesses: 'Witnesses', validation: 'Validation', corrections: 'Corrections', visibility: 'Visibility', archiveDays: 'Kept (days, 0 = for good)', collusion: 'Collusion check' };
 const STATUS = { draft: 'draft', registration: 'players', running: 'table open', finished: 'to validate', validated: 'validated' };
-// Table settings (tournament/lib/tournaments.mjs TABLE_DEFAULTS).
-const TABLE_DEFAULTS = { startMoney: 3000, firstSmallBlind: 10, raiseMode: 'hands', raiseEvery: 7, endRaiseMode: 'double', endRaiseValue: 0, actionTimeout: 30, delayBetweenHands: 7 };
-const TABLE_FIELDS = [
-  ['startMoney', 'Starting stack', 100, 1000000],
-  ['firstSmallBlind', 'First small blind', 1, 500000],
-  ['raiseMode', 'Blinds rise', [['hands', 'every N hands'], ['minutes', 'every N minutes']]],
-  ['raiseEvery', 'N (hands or minutes)', 1, 100],
-  ['endRaiseMode', 'After the last level', [['double', 'double the blinds'], ['value', 'raise by a fixed value'], ['keep', 'keep the last blinds']]],
-  ['endRaiseValue', 'Fixed raise (small blind)', 0, 1000000],
-  ['actionTimeout', 'Time to act (s)', 5, 120],
-  ['delayBetweenHands', 'Pause between hands (s)', 3, 20],
-];
+// Table settings: ./table-form.mjs (the web client's create-game choices).
 const HOST_PHASE = {
   create: 'Opening the table…', seated: 'Table open: inviting the registered players and checking every seat',
   handover: 'Handing the table over…', watch: 'Handed over: the director watches as a spectator',
@@ -48,6 +39,7 @@ const SOURCE = { manual: 'typed in', watch: 'Table check', pdb: 'log (.pdb)' };
 
 export function createTournamentsView(deps) {
   const { api, esc, tok } = deps;
+  const TF = createTableForm({ esc });
   const $ = (id) => document.getElementById(id);
   let list = [];
   let cur = null;            // the open tournament (server view)
@@ -110,22 +102,13 @@ export function createTournamentsView(deps) {
     api('/admin/tournaments/t/create', body).then((d) => {
       if (!d.ok) return msg('tCreateMsg', d.error || 'Refused', true);
       msg('tCreateMsg', 'Created.', false, 'ok');
-      $('tName').value = ''; $('tDate').value = ''; $('tTable').innerHTML = tableFields('tt_', TABLE_DEFAULTS);
+      $('tName').value = ''; $('tDate').value = ''; $('tTable').innerHTML = TF.html('tt_');
       show(d, 'Created. Add the players, then set the result.');
       refresh();
     }).catch((e) => msg('tCreateMsg', e.message === 'forbidden' ? '' : 'Network error', true));
   });
 
-  function tableFields(prefix, v) {
-    v = Object.assign({}, TABLE_DEFAULTS, v || {});
-    return TABLE_FIELDS.map((f) => {
-      const id = prefix + f[0];
-      const ctl = Array.isArray(f[2])
-        ? '<select id="' + id + '">' + f[2].map((o) => '<option value="' + o[0] + '"' + (o[0] === v[f[0]] ? ' selected' : '') + '>' + esc(o[1]) + '</option>').join('') + '</select>'
-        : '<input id="' + id + '" type="number" inputmode="numeric" min="' + f[2] + '" max="' + f[3] + '" value="' + esc(v[f[0]]) + '">';
-      return '<div><label for="' + id + '">' + esc(f[1]) + '</label>' + ctl + '</div>';
-    }).join('');
-  }
+  const tableFields = (prefix, v) => TF.html(prefix, v);
   function runFields(r) {
     r = Object.assign({ autoOpen: false, openBefore: 10, announce: true, checkInBefore: 30, chatLang: 'en' }, r || {});
     return '<div class="row"><label class="ck"><input type="checkbox" id="te_auto"' + (r.autoOpen ? ' checked' : '') + '> Open the table by itself</label><div><label for="te_before">minutes before the start</label><input id="te_before" type="number" inputmode="numeric" min="0" max="120" value="' + esc(r.openBefore) + '"></div></div>' +
@@ -135,17 +118,9 @@ export function createTournamentsView(deps) {
       '<label class="ck"><input type="checkbox" id="te_qmlwit"' + (r.qmlWitnesses ? ' checked' : '') + '> Accept QML players as witnesses (their game log)</label>' +
       '<div class="row"><div><label for="te_checkin">Check-in opens, minutes before the start (identity « code »)</label><input id="te_checkin" type="number" inputmode="numeric" min="5" max="240" value="' + esc(r.checkInBefore) + '"></div></div>';
   }
-  function readTable(prefix) {
-    const o = {};
-    for (const f of TABLE_FIELDS) { const el = $(prefix + f[0]); if (el) o[f[0]] = Array.isArray(f[2]) ? el.value : Number(el.value); }
-    return o;
-  }
-  function tableSummary(t) {
-    t = Object.assign({}, TABLE_DEFAULTS, t || {});
-    const end = { double: 'then doubled', value: 'then +' + t.endRaiseValue, keep: 'then kept' }[t.endRaiseMode] || '';
-    return 'stack ' + t.startMoney + ' · blinds ' + t.firstSmallBlind + '/' + (t.firstSmallBlind * 2) + ', doubled every ' + t.raiseEvery + (t.raiseMode === 'minutes' ? ' min' : ' hands') + ' (' + end + ') · ' + t.actionTimeout + ' s to act · ' + t.delayBetweenHands + ' s between hands';
-  }
-  $('tTable').innerHTML = tableFields('tt_', TABLE_DEFAULTS);
+  const readTable = (prefix) => TF.read(prefix);
+  const tableSummary = (t) => TF.summary(t);
+  $('tTable').innerHTML = TF.html('tt_');
 
   function msg(id, text, bad, cls) { const el = $(id); if (!el) return; el.className = 'msg' + (bad ? ' bad' : cls ? ' ' + cls : ''); el.textContent = text || ''; }
 
@@ -157,6 +132,8 @@ export function createTournamentsView(deps) {
   function when(ts) { return ts ? new Date(ts).toLocaleString() : ''; }
   function refresh() {
     fillServers();
+    // The create-game lists, once (from the web client, through the service).
+    if (!TF.ready()) TF.load(api).then(() => { if (!TF.ready()) return; $('tTable').innerHTML = TF.html('tt_'); if (cur) show(cur); }).catch(() => {});
     return api('/admin/tournaments/t/list').then((d) => {
       if (!d.ok) return;
       list = d.tournaments || [];
@@ -312,7 +289,7 @@ export function createTournamentsView(deps) {
         '<div><label for="tEVis">Visibility</label><select id="tEVis">' + ['public', 'unlisted', 'private'].map((v) => '<option' + (v === st.visibility ? ' selected' : '') + '>' + v + '</option>').join('') + '</select></div></div>' +
         (t.host && t.host.status === 'open' ? '' : '<div class="row"><div><label for="tESrv">LAN server</label><select id="tESrv"><option value="">— not said —</option>' +
           (deps.servers() || []).map((sv) => '<option value="' + esc(sv.ref) + '"' + (t.server && t.server.ref === sv.ref ? ' selected' : '') + '>' + esc(sv.name) + ' — ' + esc(sv.host) + ':' + esc(sv.port) + '</option>').join('') + '</select></div></div>' +
-          '<p class="small muted">Table settings</p><div class="row">' + tableFields('te_', t.table) + '</div>') +
+          '<p class="small muted">Table settings</p>' + tableFields('te_', t.table)) +
         runFields(t.run) +
         '<div class="actions"><button type="button" data-act="save">Save</button></div></details>';
     }
@@ -569,8 +546,7 @@ export function createTournamentsView(deps) {
         const ref = $('tESrv').value;
         if (ref !== ((cur.server && cur.server.ref) || '')) { const sv = (deps.servers() || []).find((x) => x.ref === ref); patch.server = sv ? { ref: sv.ref, name: sv.name, host: sv.host, port: sv.port } : null; }
         const tb = readTable('te_');
-        const was = Object.assign({}, TABLE_DEFAULTS, cur.table || {});
-        if (TABLE_FIELDS.some((f) => String(tb[f[0]]) !== String(was[f[0]]))) patch.table = tb;
+        if (tb && (!TF.same(tb, cur.table) || (tb.preset || null) !== ((cur.table && cur.table.preset) || null))) patch.table = tb;
       }
       if ($('te_auto')) {
         const run = { autoOpen: $('te_auto').checked, openBefore: Number($('te_before').value), announce: $('te_announce').checked, selfRegister: $('te_selfreg').checked, checkInBefore: Number($('te_checkin').value), chatLang: $('te_chatlang').value, qmlWitnesses: $('te_qmlwit').checked };

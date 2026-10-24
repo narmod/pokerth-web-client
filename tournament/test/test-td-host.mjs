@@ -135,7 +135,7 @@ const table = cleanTable({ startMoney: 2000, firstSmallBlind: 20, raiseMode: 'mi
   const gi = gameInfoFor(table, 'Cup', 4);
   ok(gi.netGameType === 3 && gi.allowSpectators === true && gi.maxNumPlayers === 4, 'table: invite-only, spectators allowed');
   ok(gi.raiseIntervalMode === 2 && gi.raiseEveryMinutes === 5 && gi.raiseEveryHands === undefined && gi.startMoney === 2000 && gi.firstSmallBlind === 20 && gi.playerActionTimeout === 25, 'table: the tournament settings');
-  ok(cleanTable({ startMoney: 5, actionTimeout: 1, raiseMode: 'x' }).startMoney === TABLE_DEFAULTS.startMoney && cleanTable({ actionTimeout: 1 }).actionTimeout === 30 && cleanTable({ raiseMode: 'x' }).raiseMode === 'hands', 'table: values out of range fall back');
+  ok(cleanTable({ startMoney: 5, actionTimeout: 1, raiseMode: 'x' }).startMoney === TABLE_DEFAULTS.startMoney && cleanTable({ actionTimeout: 1 }).actionTimeout === TABLE_DEFAULTS.actionTimeout && cleanTable({ raiseMode: 'x' }).raiseMode === 'hands', 'table: values out of range fall back');
   ok(safeTableName('  \u0001 été cup') === 'Tournament été cup' && safeTableName('Friday') === 'Friday', 'table name: first byte printable, as the server checks');
 }
 

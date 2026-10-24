@@ -8,6 +8,25 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.16.0 — 2026-10-24 (web client `2.1.10-web.313`)
+
+### Changed
+- **Table settings = the web client's « Create a table » form.** The game
+  styles (Relaxed, Normal, Fast, Ranking, We Cup, BBC), the community
+  templates (BBC Step 1–4, Monthly Cup, WEC…), the blind increase interval,
+  the blinds order (always double, or a manual list and what comes after it),
+  time to act and pause between hands, with the same limits. Both read
+  `public/modules/create-presets.mjs`; the organizer page gets the lists from
+  `GET /admin/tournaments/table-presets`, so a change in the web client
+  reaches the tournaments by itself. The director now sends the manual blinds
+  order to the server. Defaults: the « Normal » style.
+- The limits are the game server's (`netpacketvalidator`): the old ones let
+  an organizer ask for 120 s to act or 3 s between hands, which the server
+  refuses (it closes the session); a table stored that way is brought back
+  inside the limits when the director opens it.
+- **The director's avatar: one of the four robots only.** Sending an image of
+  one's own is removed (an image left by 0.11–0.15 is ignored).
+
 ## 0.15.0 — 2026-10-24
 
 ### Changed

@@ -43,6 +43,7 @@
 import * as pb from '../../public/proto/pokerth-bundle.mjs';
 import { SpectatorDirector, frame } from './spectator.mjs';
 import { BOT_EN, fill, splitChat } from './botchat.mjs';
+import { cleanTable } from './table.mjs';
 
 const T = pb.PokerTHMessage.PokerTHMessageType;
 const MAX_SEATS = 10;
@@ -75,7 +76,9 @@ export const hostBuild = {
 
 // Table settings (NetGameInfo) from the tournament's « table » settings.
 export function gameInfoFor(table, name, maxPlayers) {
-  const t = table || {};
+  // Brought inside the server's limits first (a table stored with older,
+  // wider limits would make the server refuse the request and drop us).
+  const t = cleanTable(table || {}, table || {});
   const minutes = t.raiseMode === 'minutes';
   const end = { double: 1, value: 2, keep: 3 }[t.endRaiseMode] || 1;
   const info = {
@@ -86,6 +89,8 @@ export function gameInfoFor(table, name, maxPlayers) {
   };
   if (minutes) info.raiseEveryMinutes = t.raiseEvery; else info.raiseEveryHands = t.raiseEvery;
   if (end === 2) info.endRaiseSmallBlindValue = t.endRaiseValue;
+  // A manual blinds order (field 14): the server plays it, then « afterwards » (endRaiseMode).
+  if (t.manualBlinds && t.manualBlinds.length) info.manualBlinds = t.manualBlinds.slice();
   return info;
 }
 

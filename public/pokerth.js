@@ -8548,12 +8548,18 @@ const App = (() => {
       var inp = document.getElementById('cf-mb-val');
       var v = inp ? parseInt(inp.value, 10) : NaN;
       if (isNaN(v) || v <= 0) return;
+      // Bornes du serveur (netpacketvalidator ValidateGameInfo) : 30 niveaux
+      // au plus, valeurs ≤ 1 000 000 — au-delà, il ferme la session.
+      var L = (window._createPresets && window._createPresets.LIMITS) || {};
+      var maxN = (L.manualBlinds && L.manualBlinds.max) || 30, maxV = (L.blindValue && L.blindValue.max) || 1000000;
+      if (v > maxV) v = maxV;
       var list = this._getManualBlinds();
+      if (list.length >= maxN && list.indexOf(v) < 0) return;
       list.push(v);
       list = this._setManualBlinds(list);
       // Confort : pré-remplir la prochaine valeur (double de la dernière),
       // comme point de départ raisonnable pour une structure de tournoi.
-      if (inp && list.length) inp.value = Math.min(9999999, list[list.length - 1] * 2);
+      if (inp && list.length) inp.value = Math.min(maxV, list[list.length - 1] * 2);
     },
     removeManualBlind(v) {
       this._setManualBlinds(this._getManualBlinds().filter(function(n){ return n !== v; }));
@@ -8666,7 +8672,7 @@ const App = (() => {
       var rr = g(rmode === 2 ? 'cf-rm2' : 'cf-rm1'); if (rr) rr.checked = true;
       setv('cf-raise-every', p.raiseOnHands ? p.raiseEveryHands : p.raiseEveryMinutes);
       setv('cf-timeout', p.playerActionTimeout);
-      setv('cf-delay',   7);   // toutes les vorlagen : DelayBetweenHands = 7
+      setv('cf-delay',   (window._createPresets && window._createPresets.TEMPLATE_DELAY) || 7);   // toutes les vorlagen : DelayBetweenHands = 7
       if (p.blinds.length) {
         this._setManualBlinds(p.blinds.slice());
         this.setManualBlindsMode(true);
@@ -8822,15 +8828,9 @@ const App = (() => {
       //   BBC     = BBC Step 3 officiel (5000 / SB 25, hausse AU TEMPS
       //             toutes les 5 min, 10 s, délai 7 s).
       // raiseMode : 1 = mains (défaut), 2 = minutes.
-      var P = {
-        tranquille: { stack:5000,  blind:10, timeout:30, raiseEvery:15, delay:10 },
-        normal:     { stack:3000,  blind:10, timeout:20, raiseEvery:8,  delay:7  },
-        rapide:     { stack:1500,  blind:25, timeout:7,  raiseEvery:4,  delay:5  },   // délai min 5 (borne QML 5–20)
-        ranking:    { stack:10000, blind:50, timeout:5,  raiseEvery:11, delay:5  },
-        wecup:      { stack:10000, blind:50, timeout:12, raiseEvery:22, delay:7  },
-        bbc:        { stack:5000,  blind:25, timeout:10, raiseEvery:5,  delay:7, raiseMode:2 }
-      };
-      var v = P[name];
+      // Valeurs : modules/create-presets.mjs (STYLES), source partagée avec
+      // les réglages de table du directeur de tournoi.
+      var v = (window._createPresets && window._createPresets.style(name)) || null;
       if (!v) return;
       var set = function(id, val){ var e = document.getElementById(id); if (e) { e.value = val; e.dispatchEvent(new Event('input')); } };
       set('cf-stack',       v.stack);
@@ -12440,7 +12440,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.312'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.313'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

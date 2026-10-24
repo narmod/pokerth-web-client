@@ -266,6 +266,29 @@ depends on them.
   `…/t/validate {id}`, `…/t/correct {id, ranking, reason}`, and
   `POST …/t/pdb?id=` (raw body).
 
+## Table settings (service `0.16.0`, web client `2.1.10-web.313`)
+
+The director opens its tables with the same choices as the web client's
+« Create a table » form, from one source: `public/modules/create-presets.mjs`
+(`STYLES`, `TEMPLATES`, `LIMITS`, `TEMPLATE_DELAY`). The form reads it
+(`pokerth.js` `applyPreset`, `botsuggest.mjs` for the templates), the service
+imports it from disk (`tournament/lib/table.mjs`) and serves it to the
+organizer page (`GET /admin/tournaments/table-presets`: `{v, limits, styles,
+defaultStyle, templates, templateDelay, defaults}`); change a style, a
+template or a limit there and both follow (`scripts/test-create-presets.mjs`
+checks the form's min/max).
+
+- Table: `{startMoney, firstSmallBlind, raiseMode ('hands'|'minutes'),
+  raiseEvery, manualBlinds [ascending], endRaiseMode ('double'|'value'|'keep',
+  only after a manual list), endRaiseValue, actionTimeout, delayBetweenHands,
+  preset ('style:<id>'|'template:<name>'|null)}`. `preset` is a label, kept
+  while the values still match it. Default: the « Normal » style.
+- Limits = the game server's (`netpacketvalidator.cpp` `ValidateGameInfo`): a
+  request outside them is refused and the session closed. A table stored
+  with the older, wider limits (120 s to act, 3 s between hands) is brought
+  back inside them when the director opens it (`gameInfoFor`).
+- The manual blinds order goes to the server (NetGameInfo field 14).
+
 ## The director opens the table (`web.299`, service `0.2.0`)
 
 From a tournament on `/tournament` (« Table on the server »), with its LAN
@@ -523,7 +546,7 @@ tables are never merged or balanced: **qualifying tables, then a final table**.
   `…/t/final {id, open?}`. The witness lookup of a table answers
   `parentKey` too (the web client looks the personal code up under it).
 
-## The director's avatar (service `0.11.0`, web client `2.1.10-web.308`; four robots in `0.15.0`)
+## The director's avatar (service `0.11.0`, web client `2.1.10-web.308`; four robots in `0.15.0`, robots only in `0.16.0`)
 
 - The director logs in with an avatar so that players tell it from the
   others: its MD5 in the Init (`avatarHash`), then, when the server asks
@@ -534,14 +557,12 @@ tables are never merged or balanced: **qualifying tables, then a final table**.
   each under 20 KB): robot 1 `director-avatar-1.png`, 2 `director-avatar-2.png`,
   3 `director-avatar.png` (the default), 4 `director-avatar-4.png`. Any
   organizer picks one on the organizer page with a click (kept in
-  `TD_DIR/director-avatar.json`), or sends an image of his own — any image,
-  cut to a square and made 96×96 in the browser (PNG, or JPEG under the
-  limit) — stored as `TD_DIR/director-avatar.img`; an image of one's own wins
-  over the robot, picking a robot again drops it, « Back to the default »
-  drops both. Tables opened afterwards use it. Routes: `GET /tournament/avatar`
-  (public, the current image), `GET /admin/tournaments/avatar[?images=1]`
-  (state; the robots as `data:` URLs for the picker), `POST
-  /admin/tournaments/avatar {preset: 1–4} | {image: base64} | {reset: true}`.
+  `TD_DIR/director-avatar.json`); « Back to the default » returns to robot 3.
+  No image of one's own (decided 2026-10-24; a `director-avatar.img` left by
+  0.11–0.15 is ignored). Tables opened afterwards use it. Routes:
+  `GET /tournament/avatar` (public, the current image),
+  `GET /admin/tournaments/avatar[?images=1]` (state; the robots as `data:`
+  URLs for the picker), `POST /admin/tournaments/avatar {preset: 1–4} | {reset: true}`.
 
 ## Collusion check (service `0.10.0`)
 

@@ -13,6 +13,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { createManager, MAX_RUNNING, LIVE } from './manager.mjs';
+import { tablePresets } from './table.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.join(HERE, '..', 'public');
@@ -21,6 +22,7 @@ const STATIC = {
   'organizer.mjs': 'text/javascript; charset=utf-8',
   'tournaments-ui.mjs': 'text/javascript; charset=utf-8',
   'cups-ui.mjs': 'text/javascript; charset=utf-8',
+  'table-form.mjs': 'text/javascript; charset=utf-8',
   'public.mjs': 'text/javascript; charset=utf-8',
   'theme.mjs': 'text/javascript; charset=utf-8',
   'td.css': 'text/css; charset=utf-8',
@@ -237,8 +239,10 @@ export function createService(o) {
 
     if (sub === '/status' && get) return json(res, 200, Object.assign({ ok: true, you: who }, status()));
     if (sub === '/servers' && get) return json(res, 200, { ok: true, servers: await td.servers() });
+    // The web client's create-game lists and limits (public/modules/create-presets.mjs), for the table settings.
+    if (sub === '/table-presets' && get) return json(res, 200, Object.assign({ ok: true }, tablePresets()));
     // The director's avatar: any organizer may change it (tables opened afterwards).
-    // One of the shipped robots ({preset}), an image of its own ({image}), or the default ({reset}).
+    // One of the shipped robots ({preset}) or the default ({reset}); no image of one's own.
     // ?images=1 adds the robots themselves (data: URLs), for the organizer's picker.
     if (sub === '/avatar' && get) {
       const a = td.avatar();
@@ -248,8 +252,8 @@ export function createService(o) {
     }
     if (sub === '/avatar' && !get) {
       const b = (await readJson(req)) || {};
-      const r = b.reset ? td.resetAvatar() : b.preset != null ? td.setAvatarPreset(b.preset) : td.setAvatar(b.image);
-      if (r.ok) console.log('[td] director avatar ' + (b.reset ? 'reset' : b.preset != null ? 'set to robot ' + Number(b.preset) : 'changed') + ' by ' + who);
+      const r = b.reset ? td.resetAvatar() : b.preset != null ? td.setAvatarPreset(b.preset) : { ok: false, error: 'pick one of the robots' };
+      if (r.ok) console.log('[td] director avatar ' + (b.reset ? 'reset' : 'set to robot ' + Number(b.preset)) + ' by ' + who);
       return json(res, r.ok ? 200 : 400, r);
     }
     if (sub === '/watches' && get) return json(res, 200, { ok: true, watches: td.list() });

@@ -161,3 +161,16 @@ footer .orgfoot{color:var(--muted)}
 .md{white-space:nowrap}
 a.nick{color:inherit;text-decoration:none;border-bottom:1px dotted var(--muted)}
 a.nick:hover{border-bottom-style:solid}
+
+/* Table settings form (the web client's « Create a table » choices) */
+.tform{display:flex;flex-direction:column;gap:8px;margin:4px 0}
+.tf-lbl{margin:0}
+.tf-lbl2{display:block;font-size:.85em;color:var(--muted);margin:2px 0 4px}
+.tf-styles{display:flex;flex-wrap:wrap;gap:6px}
+.tf-style{padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:inherit;cursor:pointer;font:inherit;font-size:.9em}
+.tf-style.on{border-color:var(--brass);box-shadow:0 0 0 1px var(--brass) inset}
+.tf-inline{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+.tf-inline input[type=number]{width:8em;flex:0 0 auto}
+.tf-mb{margin:6px 0 0 4px;padding-left:10px;border-left:2px solid var(--line)}
+.tf-chips{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 6px}
+.tf-chip{cursor:pointer;font:inherit;font-size:.85em}

@@ -2350,7 +2350,7 @@ function _processAvatarFile(file) {
             <div class="cf-interval">
               <div class="cf-step cf-step-money">
                 <button type="button" class="cf-step-btn" onclick="App.stepField('cf-mb-val',-1)">&minus;</button>
-                <input id="cf-mb-val" class="cf-step-num" type="number" min="2" max="9999999" step="1" value="20" onchange="App.clampNum(this)">
+                <input id="cf-mb-val" class="cf-step-num" type="number" min="2" max="1000000" step="1" value="20" onchange="App.clampNum(this)">
                 <button type="button" class="cf-step-btn" onclick="App.stepField('cf-mb-val',1)">+</button>
               </div>
               <button type="button" class="btn-cf-reset" onclick="App.addManualBlind()"><span class="cf-reset-lbl" data-i18n="blindsAddBtn">+ Add</span></button>
@@ -2361,7 +2361,7 @@ function _processAvatarFile(file) {
               <label class="cf-radio"><input type="radio" name="cf-amb" id="cf-amb2" onchange="App.setAfterMB(2)"> <span data-i18n="blindsAfterRaiseBy">raise blinds by</span></label>
               <div class="cf-step cf-step-money" id="cf-amb2-step" style="display:none">
                 <button type="button" class="cf-step-btn" onclick="App.stepField('cf-end-raise-val',-1)">&minus;</button>
-                <input id="cf-end-raise-val" class="cf-step-num" type="number" min="1" max="9999999" step="1" value="200" onchange="App.clampNum(this)">
+                <input id="cf-end-raise-val" class="cf-step-num" type="number" min="1" max="1000000" step="1" value="200" onchange="App.clampNum(this)">
                 <button type="button" class="cf-step-btn" onclick="App.stepField('cf-end-raise-val',1)">+</button>
               </div>
               <label class="cf-radio"><input type="radio" name="cf-amb" id="cf-amb3" onchange="App.setAfterMB(3)"> <span data-i18n="blindsAfterKeep">keep last blind</span></label>
@@ -3051,6 +3051,7 @@ function _processAvatarFile(file) {
 <script type="module" src="modules/handlog.mjs"></script>
 <script type="module" src="modules/pdb-autosave.mjs"></script>
 <script type="module" src="modules/td-witness.mjs"></script>
+<script type="module" src="modules/create-presets.mjs"></script>
 <script type="module" src="modules/backup-autosave.mjs"></script>
 <script type="module" src="modules/journal.mjs"></script>
 <script type="module" src="modules/notes/index.mjs"></script>

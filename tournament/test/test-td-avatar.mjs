@@ -79,12 +79,10 @@ async function login(askHash) {
   ok(page.status === 200 && page.headers.get('content-type') === 'image/png' && Buffer.from(await page.arrayBuffer()).equals(ROBOT), 'players\' page: the robot by default');
   ok((await (await fetch(base + '/admin/tournaments/avatar', { headers: A })).json()).custom === false, 'organizer: the default');
   const jpg = Buffer.concat([Buffer.from([0xff, 0xd8, 0xff, 0xe0]), Buffer.alloc(500, 1)]);
-  const set = await (await fetch(base + '/admin/tournaments/avatar', { method: 'POST', headers: A, body: JSON.stringify({ image: jpg.toString('base64') }) })).json();
-  const now = await fetch(base + '/tournament/avatar');
-  ok(set.ok && now.headers.get('content-type') === 'image/jpeg' && Buffer.from(await now.arrayBuffer()).equals(jpg), 'an organizer\'s image replaces it');
-  ok(svc.manager.avatar().custom && svc.manager.avatar().bytes.equals(jpg), 'and the next directors take it');
-  const bad = await fetch(base + '/admin/tournaments/avatar', { method: 'POST', headers: A, body: JSON.stringify({ image: Buffer.alloc(31000, 0x89).toString('base64') }) });
-  ok(bad.status === 400 && /30 KB/.test((await bad.json()).error), 'over the server\'s limit: refused');
+  const own = await fetch(base + '/admin/tournaments/avatar', { method: 'POST', headers: A, body: JSON.stringify({ image: jpg.toString('base64') }) });
+  ok(own.status === 400 && !svc.manager.avatar().custom && Buffer.from(await (await fetch(base + '/tournament/avatar')).arrayBuffer()).equals(ROBOT), 'no image of one\'s own: refused, the robot stays');
+  writeFileSync(join(dir, 'director-avatar.img'), jpg);
+  ok(svc.manager.avatar().bytes.equals(ROBOT), 'an image left by an older service is ignored');
   ok((await fetch(base + '/admin/tournaments/avatar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reset: true }) })).status === 403, 'changing it needs a key');
   await fetch(base + '/admin/tournaments/avatar', { method: 'POST', headers: A, body: JSON.stringify({ reset: true }) });
   ok(Buffer.from(await (await fetch(base + '/tournament/avatar')).arrayBuffer()).equals(ROBOT), 'back to the robot');
@@ -98,10 +96,8 @@ async function login(askHash) {
   const pick = await (await fetch(base + '/admin/tournaments/avatar', { method: 'POST', headers: A, body: JSON.stringify({ preset: 1 }) })).json();
   ok(pick.ok && svc.manager.avatar().preset === 1 && svc.manager.avatar().bytes.equals(imgs[0]) && Buffer.from(await (await fetch(base + '/tournament/avatar')).arrayBuffer()).equals(imgs[0]), 'robot 1 picked: the director and the pages show it');
   ok((await fetch(base + '/admin/tournaments/avatar', { method: 'POST', headers: A, body: JSON.stringify({ preset: 7 }) })).status === 400, 'no such robot: refused');
-  await fetch(base + '/admin/tournaments/avatar', { method: 'POST', headers: A, body: JSON.stringify({ image: jpg.toString('base64') }) });
-  ok(svc.manager.avatar().custom && svc.manager.avatar().preset === null, 'an image of its own wins over the robot');
   await fetch(base + '/admin/tournaments/avatar', { method: 'POST', headers: A, body: JSON.stringify({ preset: 4 }) });
-  ok(!svc.manager.avatar().custom && svc.manager.avatar().bytes.equals(imgs[3]), 'picking a robot again drops the image');
+  ok(svc.manager.avatar().bytes.equals(imgs[3]), 'then robot 4');
   await fetch(base + '/admin/tournaments/avatar', { method: 'POST', headers: A, body: JSON.stringify({ reset: true }) });
   ok(svc.manager.avatar().preset === 3, 'back to the default: robot 3');
   svc.close(); srv.close();

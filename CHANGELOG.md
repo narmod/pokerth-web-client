@@ -72,6 +72,12 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **One source for the « Create a table » choices** (`web.313`, service `0.16.0`) — the game styles, the community
+  templates and the field limits move to `public/modules/create-presets.mjs`, read by the form (`pokerth.js`,
+  `botsuggest.mjs`) and by the tournament director's table settings (served to its organizer page by
+  `/admin/tournaments/table-presets`). Limits aligned with the server's `ValidateGameInfo`: manual blinds at most 30
+  levels of 1–1 000 000, « raise blinds by » at most 1 000 000 (the form allowed 9 999 999, which made the server close
+  the session). `scripts/test-create-presets.mjs` checks the form against the module.
 - **Tournaments: medals** (`web.311`, service `0.14.0`) — the web client relays the players' pages
   (`/tournament/p/<nick>`) and the open medals API (`/tournament/api/players/<nick>`, `/tournament/api/badges`),
   passing its `Access-Control-Allow-Origin: *` and `ETag` through so another client or site can read it. Details in

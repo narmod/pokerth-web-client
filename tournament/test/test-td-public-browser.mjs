@@ -198,11 +198,22 @@ try {
   await og.goto(base + '/tournament/organize');
   await og.waitForFunction(() => document.getElementById('tChatLang') && document.getElementById('tChatLang').options.length > 1, null, { timeout: 8000 });
   const cl = await og.$$eval('#tChatLang option', (o) => o.map((x) => x.value));
-  // The director's avatar: any image, made 96×96 under 30 KB in the page.
-  await og.setInputFiles('#avFile', path.join(root, 'public', 'logo-chip-68.png'));
-  await og.waitForFunction(() => /New avatar saved/.test(document.getElementById('avMsg').textContent), null, { timeout: 8000 });
-  const avInfo = await (await fetch(base + '/admin/tournaments/avatar', { headers: A })).json();
-  ok(avInfo.custom === true && avInfo.size > 32 && avInfo.size <= 30720, 'organizer: a new avatar, resized in the page (' + avInfo.size + ' bytes)');
+  // Table settings: the web client's create-game choices (styles, templates, manual blinds).
+  await og.waitForFunction(() => document.querySelector('#tTable .tform .tf-style'), null, { timeout: 8000 });
+  const styles = await og.$$eval('#tTable .tf-style', (l) => l.map((x) => x.textContent.trim()));
+  const tpls = await og.$$eval('#tt_tpl option', (l) => l.map((x) => x.textContent));
+  ok(styles.length === 6 && /Relaxed/.test(styles[0]) && /BBC/.test(styles[5]) && tpls.length === 10 && tpls[1] === 'BBC Step 1' && tpls[9] === 'WEC Grand Final', 'organizer: the six game styles and the nine community templates of the web client');
+  await og.evaluate(() => { const d = document.getElementById('tTable').closest('details'); if (d) d.open = true; });
+  await og.click('#tTable .tf-style[data-style="bbc"]');
+  ok(await og.$eval('#tt_startMoney', (e) => e.value) === '5000' && await og.$eval('input[name="tt_rm"][value="minutes"]', (e) => e.checked) && await og.$eval('#tt_raiseEvery', (e) => e.value) === '5', 'organizer: style « BBC » fills 5000, every 5 minutes');
+  await og.selectOption('#tt_tpl', 'BBC Step 3');
+  ok(await og.$$eval('#tTable .tf-chip', (l) => l.length) === 30 && await og.$eval('input[name="tt_mb"][value="1"]', (e) => e.checked) && await og.$eval('#tt_firstSmallBlind', (e) => e.value) === '25', 'organizer: template « BBC Step 3 » fills its 30 manual blinds');
+  await og.click('#tTable .tf-chip[data-mbdel="25000"]');
+  ok(await og.$$eval('#tTable .tf-chip', (l) => l.length) === 29 && await og.$eval('#tt_tpl', (e) => e.value) === '', 'organizer: a level removed by hand: « Custom settings »');
+  if (shots) await og.locator('#tTable').screenshot({ path: path.join(shots, 'org-table.png') });
+
+  // The director's avatar: one of the robots, no image of one's own.
+  ok(!(await og.$('#avFile')), 'organizer: no upload of an avatar of one\'s own');
   await og.click('#avReset');
   await og.waitForFunction(() => /Back to the default robot/.test(document.getElementById('avMsg').textContent), null, { timeout: 8000 });
   // The four robots: shown, the default marked; a click picks one.

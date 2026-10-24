@@ -27,6 +27,7 @@ import { listPdbGames, rankPdbGame, isPdb, pdbWitness } from './pdb.mjs';
 import { isBotLang } from './botchat.mjs';
 import { cleanReport, directorFacts, compareWithDirector, compareWithRanking, MAX_HANDS } from './witness.mjs';
 import { analyzeCollusion } from './collusion.mjs';
+import { TABLE_DEFAULTS, cleanTable } from './table.mjs';
 
 // Profiles (design « Tournament settings », decided 2026-10-23).
 export const PROFILES = Object.freeze({
@@ -43,11 +44,9 @@ export const CHOICES = Object.freeze({
   collusion: ['off', 'report', 'separate', 'forbid'],
 });
 const FORMATS = ['sitngo', 'multi'];
-// Table settings when the director opens the table (PokerTH NetGameInfo).
-export const TABLE_DEFAULTS = Object.freeze({
-  startMoney: 3000, firstSmallBlind: 10, raiseMode: 'hands', raiseEvery: 7,
-  endRaiseMode: 'double', endRaiseValue: 0, actionTimeout: 30, delayBetweenHands: 7,
-});
+// Table settings when the director opens the table: lib/table.mjs (the web
+// client's create-game lists and limits).
+export { TABLE_DEFAULTS, cleanTable };
 // How the director runs the table: opening by itself before the start, and
 // its announcements in the table chat.
 export const RUN_DEFAULTS = Object.freeze({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30, chatLang: 'en', qmlWitnesses: false, finalists: 2 });
@@ -75,21 +74,6 @@ export function cleanRun(r, base) {
 // A table opened by itself is not opened any more this long after the start.
 const AUTO_OPEN_GRACE_MS = 60 * 60 * 1000;
 const AUTO_OPEN_RETRY_MS = 2 * 60 * 1000;
-export function cleanTable(t, base) {
-  const b = Object.assign({}, TABLE_DEFAULTS, base || {});
-  t = t || {};
-  const int = (v, min, max, d) => { const x = parseInt(v, 10); return Number.isInteger(x) && x >= min && x <= max ? x : d; };
-  const o = {};
-  o.startMoney = int(t.startMoney, 100, 1000000, b.startMoney);
-  o.firstSmallBlind = int(t.firstSmallBlind, 1, Math.max(1, Math.floor(o.startMoney / 2)), Math.min(b.firstSmallBlind, Math.max(1, Math.floor(o.startMoney / 2))));
-  o.raiseMode = ['hands', 'minutes'].indexOf(t.raiseMode) >= 0 ? t.raiseMode : b.raiseMode;
-  o.raiseEvery = int(t.raiseEvery, 1, o.raiseMode === 'minutes' ? 60 : 100, Math.min(b.raiseEvery, o.raiseMode === 'minutes' ? 60 : 100));
-  o.endRaiseMode = ['double', 'value', 'keep'].indexOf(t.endRaiseMode) >= 0 ? t.endRaiseMode : b.endRaiseMode;
-  o.endRaiseValue = o.endRaiseMode === 'value' ? int(t.endRaiseValue, 1, 1000000, b.endRaiseValue || o.firstSmallBlind * 2) : 0;
-  o.actionTimeout = int(t.actionTimeout, 5, 120, b.actionTimeout);
-  o.delayBetweenHands = int(t.delayBetweenHands, 3, 20, b.delayBetweenHands);
-  return o;
-}
 const ID_RE = /^[a-z0-9]{8,32}$/;
 const NICK_MAX = 64;
 const MAX_PLAYERS = 10;   // one table (Sit & Go)

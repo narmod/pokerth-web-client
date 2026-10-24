@@ -15,6 +15,7 @@
 // from JS (see the relay in proxy.js).
 // ═══════════════════════════════════════════════════════════════════
 import { S } from '../game/state.mjs';
+import { TEMPLATES } from '../create-presets.mjs';
 
 const BASE = '/api/botfile?f=';
 const CACHE_TTL_MS = 15 * 60 * 1000;      // = cacheTtlMs du singleton QML
@@ -44,48 +45,9 @@ function isSuggestType(t) { return t === 'wec' || /^step[1-4]$/.test(t || ''); }
 // divergent au premier ajout de vorlage. Parite amont 422f5fe4, qui a fait
 // le meme deplacement vers Config.BotSuggest.
 // App._communityVorlagen (pokerth.js) n'est plus qu'une lecture de PRESETS.
-const PRESETS = [
-  { name: 'BBC Step 1', suggestType: 'step1', startCash: 3000, firstSmallBlind: 15,
-    raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
-    blinds: [20, 25, 30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500,
-             600, 800, 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000,
-             10000, 12000, 15000] },
-  { name: 'BBC Step 2', suggestType: 'step2', startCash: 4000, firstSmallBlind: 20,
-    raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
-    blinds: [25, 30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600,
-             800, 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000,
-             12000, 15000, 20000] },
-  { name: 'BBC Step 3', suggestType: 'step3', startCash: 5000, firstSmallBlind: 25,
-    raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
-    blinds: [30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600, 800,
-             1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000,
-             12000, 15000, 20000, 25000] },
-  { name: 'BBC Step 4', suggestType: 'step4', startCash: 10000, firstSmallBlind: 50,
-    raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
-    blinds: [60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600, 800, 1000, 1200,
-             1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000, 12000, 15000,
-             20000, 25000, 30000, 40000, 50000] },
-  { name: 'Monthly Cup', titleCommand: 'mcup', startCash: 10000, firstSmallBlind: 50,
-    raiseOnHands: true, raiseEveryHands: 16, raiseEveryMinutes: 5, playerActionTimeout: 10,
-    blinds: [] },
-  { name: 'Monthly Cup Final', titleCommand: 'mcupfinal', startCash: 10000, firstSmallBlind: 50,
-    raiseOnHands: true, raiseEveryHands: 22, raiseEveryMinutes: 5, playerActionTimeout: 12,
-    blinds: [] },
-  { name: 'WEC', suggestType: 'wec', startCash: 10000, firstSmallBlind: 50,
-    raiseOnHands: true, raiseEveryHands: 22, raiseEveryMinutes: 5, playerActionTimeout: 12,
-    blinds: [] },
-  // Ajouté par sp0ck dans le QML 2.1.4. Réglages officiels des finales
-  // mensuelles WeC (fil « WEC Monthly and Yearly Grand Finals », encore en
-  // vigueur pour les finales 2026) : 10 000 / SB 50 / action 15 s /
-  // doublement toutes les 25 mains. Le délai entre les mains (7 s) est posé
-  // pour toutes les vorlagen par applyVorlage().
-  { name: 'WEC Monthly Final', startCash: 10000, firstSmallBlind: 50,
-    raiseOnHands: true, raiseEveryHands: 25, raiseEveryMinutes: 5, playerActionTimeout: 15,
-    blinds: [] },
-  { name: 'WEC Grand Final', suggestType: 'wec', startCash: 10000, firstSmallBlind: 50,
-    raiseOnHands: true, raiseEveryHands: 35, raiseEveryMinutes: 5, playerActionTimeout: 25,
-    blinds: [] }
-];
+// The table itself lives in ../create-presets.mjs (TEMPLATES), shared with
+// the tournament director's table settings.
+const PRESETS = TEMPLATES;
 
 // ── Reconnaissance du type d'un tapis etranger ────────────────────────
 // Un joueur qui rejoint ne connait pas createdSuggestType : il ne vit que

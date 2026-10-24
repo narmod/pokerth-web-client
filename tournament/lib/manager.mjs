@@ -144,13 +144,13 @@ export function createManager(deps) {
     return { ok: true };
   }
 
-  // The director's avatar: an image sent by an organizer (in TD_DIR), else one
-  // of the four robots shipped with the service (public/img/, picked on the
-  // organizer page; robot 3 by default). Tables opened afterwards use it.
+  // The director's avatar: one of the four robots shipped with the service
+  // (public/img/, picked on the organizer page; robot 3 by default). No image
+  // of one's own (decided 2026-10-24): a director-avatar.img left in TD_DIR
+  // by service 0.11–0.15 is ignored. Tables opened afterwards use it.
   const IMG = path.join(HERE, '..', 'public', 'img');
   const AVATAR_PRESETS = { 1: 'director-avatar-1.png', 2: 'director-avatar-2.png', 3: 'director-avatar.png', 4: 'director-avatar-4.png' };
   const AVATAR_DEFAULT_PRESET = 3;
-  const avatarFile = path.join(dir, 'director-avatar.img');
   const avatarChoice = path.join(dir, 'director-avatar.json');
   const isPreset = (n) => Object.prototype.hasOwnProperty.call(AVATAR_PRESETS, String(n));
   function chosenPreset() {
@@ -162,7 +162,6 @@ export function createManager(deps) {
     try { const b = fs.readFileSync(path.join(IMG, AVATAR_PRESETS[n])); return avatarOf({ bytes: b }) ? b : null; } catch (e) { return null; }
   }
   function avatarBytes() {
-    try { const b = fs.readFileSync(avatarFile); if (avatarOf({ bytes: b })) return { bytes: b, custom: true, preset: null }; } catch (e) {}
     for (const n of [chosenPreset(), AVATAR_DEFAULT_PRESET]) { const b = presetBytes(n); if (b) return { bytes: b, custom: false, preset: n }; }
     return null;
   }
@@ -175,7 +174,6 @@ export function createManager(deps) {
   function setAvatarPreset(n) {
     if (!presetBytes(n)) return { ok: false, error: 'no such robot' };
     fs.writeFileSync(avatarChoice, JSON.stringify({ preset: Number(n) }));
-    try { fs.unlinkSync(avatarFile); } catch (e) {}
     return { ok: true };
   }
   function avatarOpt() { const a = avatarBytes(); return a ? { b64: a.bytes.toString('base64') } : null; }
@@ -185,14 +183,7 @@ export function createManager(deps) {
     const v = avatarOf({ bytes: a.bytes });
     return { bytes: a.bytes, type: v.type, custom: a.custom, preset: a.preset, size: a.bytes.length, md5: v.md5.toString('hex') };
   }
-  function setAvatar(b64) {
-    const v = avatarOf({ b64 });
-    if (!v) return { ok: false, error: 'a PNG, JPEG or GIF image of 32 bytes to 30 KB (the server\'s limit)' };
-    fs.writeFileSync(avatarFile, v.bytes);
-    try { fs.unlinkSync(avatarChoice); } catch (e) {}
-    return { ok: true };
-  }
-  function resetAvatar() { for (const f of [avatarFile, avatarChoice]) { try { fs.unlinkSync(f); } catch (e) {} } return { ok: true }; }
+  function resetAvatar() { try { fs.unlinkSync(avatarChoice); } catch (e) {} return { ok: true }; }
 
   function launch(s, body, metaExtra, optsFor, taskExtra) {
     if (running().length >= MAX_RUNNING) return { ok: false, error: 'at most ' + MAX_RUNNING + ' directors at once' };
@@ -299,7 +290,7 @@ export function createManager(deps) {
   // Medals: the first three of tournaments and cups, from the signed results.
   const badges = createBadges({ tournaments: tournaments.allRaw, cups: cups.allRaw, stamp: () => tournaments.generation() + ':' + cups.generation() });
 
-  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, cups, badges, avatar, setAvatar, resetAvatar, avatarPreset, setAvatarPreset, avatarPresets: () => Object.keys(AVATAR_PRESETS).map(Number), avatarDefaultPreset: AVATAR_DEFAULT_PRESET, MAX_RUNNING };
+  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, cups, badges, avatar, resetAvatar, avatarPreset, setAvatarPreset, avatarPresets: () => Object.keys(AVATAR_PRESETS).map(Number), avatarDefaultPreset: AVATAR_DEFAULT_PRESET, MAX_RUNNING };
 }
 
 /** Public part of the install key, read from its PEM file (null if none yet). */
