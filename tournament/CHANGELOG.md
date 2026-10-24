@@ -8,6 +8,24 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.14.0 — 2026-10-24 (web client `2.1.10-web.311`)
+
+### Added
+- **Medals**: gold, silver and bronze for the first three of a validated
+  tournament (Club, Official or Custom, at least 4 players ranked; not the
+  tables of a tournament on several tables) and of a closed cup (at least 2
+  validated tournaments). A shared place shares the medal. Derived from the
+  signed results each time, so a correction moves a medal by itself; private
+  tournaments and cups give none, unlisted ones give the medal without the
+  link.
+- **Players' page** `/tournament/p/<nick>`: medals, then every tournament and
+  cup with its place. Every nickname in a ranking or cup standings links to
+  it, with its medals after it.
+- **Open API** for other clients and sites (any origin, versioned `v: 1`):
+  `/tournament/api/players/<nick>`, `/tournament/api/badges?nicks=…` (up to
+  100 players), `/tournament/api/badges` (everyone with a medal). Format in
+  `docs/TOURNAMENT_DIRECTOR.md`, « Medals ».
+
 ## 0.13.0 — 2026-10-24 (web client `2.1.10-web.310`)
 
 ### Added

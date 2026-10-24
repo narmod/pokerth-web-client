@@ -173,6 +173,25 @@ try {
     ok(true, 'a tournament\'s page links to its cup');
   }
 
+  // Medals: after the nicknames of a ranking, and a page per player.
+  {
+    const m = await admin('/t/create', { name: 'Medal night', profile: 'club' });
+    for (const nk of ['Max', 'Lia', 'Noa', 'Zed']) await admin('/t/player', { id: m.id, nick: nk });
+    await admin('/t/result', { id: m.id, source: 'manual', ranking: ['Max', 'Lia', 'Noa', 'Zed'] });
+    await pg.goto(base + '/tournament/t/' + m.publicKey);
+    await pg.waitForFunction(() => { const s = document.querySelector('#view .md[data-nick="Max"]'); return s && /🥇/.test(s.textContent); }, null, { timeout: 8000 });
+    const zed = await pg.textContent('#view .md[data-nick="Zed"]');
+    ok(zed === '', 'ranking: a medal after the winner, none after the 4th');
+    await pg.click('#view a.nick[href$="/p/Max"]');
+    await pg.waitForFunction(() => /Medal night/.test(document.getElementById('view').textContent) && /Medals/.test(document.getElementById('view').textContent), null, { timeout: 8000 });
+    const pt = await pg.textContent('#view');
+    ok(new URL(pg.url()).pathname === '/tournament/p/Max' && /gold\s*1/.test(pt) && /1 of 4/.test(pt) && /League night/.test(pt), 'player page: the medal (1 of 4), and every result (League night, no medal: 3 players)');
+    if (shots) await pg.screenshot({ path: path.join(shots, 'pub-player.png'), fullPage: true });
+    const cors = await fetch(base + '/tournament/api/badges?nicks=Max,Zed', { headers: { Origin: 'https://example.org' } });
+    const cj = await cors.json();
+    ok(cors.headers.get('access-control-allow-origin') === '*' && cj.v === 1 && cj.players.Max && !cj.players.Zed, 'the medals API through the web client: any origin, versioned');
+  }
+
   // Organizer: the director's chat language, every language of the app.
   const og = await ctx.newPage();
   await og.addInitScript((t) => { try { localStorage.setItem('pth_admin_tok', t); } catch (e) {} }, TOKEN);

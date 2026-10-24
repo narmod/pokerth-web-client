@@ -25,6 +25,7 @@ import { verifyJournal, verifyPayload, canonical, publicKeyRawB64 } from './jour
 import { replayJournal, avatarOf } from './spectator.mjs';
 import { createTournaments } from './tournaments.mjs';
 import { createCups } from './cups.mjs';
+import { createBadges } from './badges.mjs';
 import { loadBotStrings, isBotLang } from './botchat.mjs';
 
 export const MAX_RUNNING = 4;
@@ -268,8 +269,10 @@ export function createManager(deps) {
 
   // Cups: tournaments of this install gathered (points, stages).
   const cups = createCups({ dir, keyFile, tournaments, Refusal: tournaments.Refusal });
+  // Medals: the first three of tournaments and cups, from the signed results.
+  const badges = createBadges({ tournaments: tournaments.allRaw, cups: cups.allRaw, stamp: () => tournaments.generation() + ':' + cups.generation() });
 
-  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, cups, avatar, setAvatar, resetAvatar, MAX_RUNNING };
+  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, cups, badges, avatar, setAvatar, resetAvatar, MAX_RUNNING };
 }
 
 /** Public part of the install key, read from its PEM file (null if none yet). */

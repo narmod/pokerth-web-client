@@ -72,6 +72,10 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Tournaments: medals** (`web.311`, service `0.14.0`) — the web client relays the players' pages
+  (`/tournament/p/<nick>`) and the open medals API (`/tournament/api/players/<nick>`, `/tournament/api/badges`),
+  passing its `Access-Control-Allow-Origin: *` and `ETag` through so another client or site can read it. Details in
+  `tournament/CHANGELOG.md`.
 - **Tournaments: cups** (`web.310`, service `0.13.0`) — the web client relays the cup pages (`/tournament/c/<key>`)
   and their API (`/tournament/api/cups`, `/tournament/api/c/<key>`). Details in `tournament/CHANGELOG.md`.
 - **Tournaments: several tables** (`web.309`, service `0.12.0`) — the web client's witness, at a table of a tournament

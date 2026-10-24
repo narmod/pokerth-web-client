@@ -316,6 +316,8 @@ use too. Items are grouped by status rather than fixed phases.
   no pressure, folds to one player, chip passing), signals for the organizer only. Service `0.11.0`: the director's avatar.
   Service `0.12.0` (`web.309`): several tables + final table (11 to 40 players). Service `0.13.0` (`web.310`): cups —
   points (players behind + 1, best N results), stages (the first Q go on), or both, standings signed at the end.
+  Service `0.14.0` (`web.311`): medals (top 3 of Club/Official tournaments of 4+ players and of closed cups), a page
+  per player (`/tournament/p/<nick>`) and an open, versioned API for other clients.
 
 ## ⏭️ Next
 

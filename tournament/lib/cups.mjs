@@ -70,7 +70,9 @@ export function createCups(o) {
     const j = readJson(join(cdir(id), 'journal.json')) || { entries: [] };
     return { c, journal: new Journal({ entries: j.entries, now }) };
   }
+  let gen = 0;   // bumped on every save (see tournaments.mjs)
   function save(c, journal) {
+    gen++;
     c.updatedAt = now();
     writeAtomic(join(cdir(c.id), 'journal.json'), journal.toJSON());
     writeAtomic(join(cdir(c.id), 'cup.json'), c);
@@ -294,6 +296,7 @@ export function createCups(o) {
     const top = st.rows[0];
     journal.append('cupClosed', { author: author || 'admin', winner: top ? top.nick : null, standings: st.rows.map((r) => ({ place: r.place, nick: r.nick, total: r.total, stage: r.stage })), events: st.events.map((e) => ({ label: e.label, tournamentId: e.tournamentId, head: e.head })) });
     c.status = 'closed'; c.closedAt = now(); c.final = st.rows.map((r) => ({ place: r.place, nick: r.nick, total: r.total, stage: r.stage }));
+    c.validatedCount = st.validated;
     const key = privateKey();
     const payload = { cupId: c.id, name: c.name, head: journal.head, entries: journal.entries.length, standings: c.final, events: st.events.map((e) => ({ label: e.label, head: e.head })) };
     writeAtomic(join(cdir(c.id), 'result.json'), { payload, signature: key ? signPayload(payload, key) : null, publicKeyPem: key ? publicKeyFromPrivate(key) : null });
@@ -326,7 +329,7 @@ export function createCups(o) {
   return {
     list: () => all().sort((a, b) => b.createdAt - a.createdAt).map((c) => ({ id: c.id, name: c.name, status: c.status, events: c.events.length, visibility: c.visibility, bestOf: c.bestOf })),
     get: (id) => { const { c, journal } = load(id); return view(c, journal); },
-    create, update, addEvent, removeEvent, tick, qualifyFromStandings, close, publicList, publicGet, Refusal,
+    create, update, addEvent, removeEvent, tick, qualifyFromStandings, close, publicList, publicGet, Refusal, allRaw: () => all(), generation: () => gen,
     // The (non-private) cups a tournament belongs to, for its page.
     cupsOf: (tournamentId) => all().filter((c) => c.visibility !== 'private' && c.events.some((e) => e.tournamentId === tournamentId)).map((c) => ({ key: c.publicKey, name: c.name })),
   };

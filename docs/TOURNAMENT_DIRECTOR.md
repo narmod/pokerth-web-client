@@ -416,6 +416,45 @@ Routes: `POST /admin/tournaments/t/table/open {id}`, `…/t/table/go {id}`,
   `badCode`, `alreadyIn`. Organizer routes: `POST /admin/tournaments/t/code
   {id, nick}`, `…/t/checkin {id, nick}`.
 
+## Medals (service `0.14.0`, web client `2.1.10-web.311`)
+
+Gold, silver and bronze for the first three (`tournament/lib/badges.mjs`),
+decided 2026-10-24. They are never stored: they are derived from the signed
+results (rebuilt as soon as a tournament or a cup is saved), so a correction
+moves a medal by itself.
+
+- **A tournament** gives medals when it is validated, its profile is Club,
+  Official or Custom (not Friendly), at least **4 players** are ranked, and
+  it is the tournament itself — the tables and the final table of a
+  tournament on several tables give none (the tournament's own ranking does).
+- **A cup** gives medals once closed (standings signed) and made of at least
+  **2 validated tournaments**.
+- A shared place gives each of its players the medal of that place (two 2nd:
+  two silver, no bronze for the 4th).
+- Private tournaments and cups give no public medal and are left out of the
+  results; unlisted ones give the medal without its link (`key: null`).
+- Players' page: `/tournament/p/<nick>` (medals, then every tournament and cup
+  with its place); every nickname in a ranking or cup standings links to it,
+  with its medals after it (one request per page).
+
+**Open API** — for the web client, the QML client or another site later.
+Read-only, no key, `Access-Control-Allow-Origin: *`,
+`Cache-Control: public, max-age=60`. Every answer carries `v: 1`; fields may
+be added, never renamed or removed without a new `v`. Nicknames match
+without case.
+
+| Route | Answer |
+|---|---|
+| `GET /tournament/api/players/<nick>` | `{ok, v, nick, counts: {gold, silver, bronze}, medals: [...], results: [...]}` — an unknown player gets empty lists. |
+| `GET /tournament/api/badges?nicks=a,b,c` | Up to 100 players (a lobby, a table): `{ok, v, players: {<nick>: {counts, latest: [{medal, kind, name, key}] (3 at most)}}}` — only those with a medal. |
+| `GET /tournament/api/badges` | Everyone with a medal, most gold first: `{ok, v, rules: {minPlayers, profiles, cupsMinTournaments}, players: [{nick, counts}]}`. |
+
+A medal or a result: `{medal ('gold'|'silver'|'bronze', medals only), kind
+('tournament'|'cup'), name, key (public key, or null), place, of (players
+ranked), at (ms, validated or closed), profile (tournaments) | points
+(cups)}`. Links: `/tournament/t/<key>`, `/tournament/c/<key>`. Medals are
+listed cups first, then the latest; results the latest first (200 at most).
+
 ## Cups (service `0.13.0`, web client `2.1.10-web.310`)
 
 A cup gathers tournaments of this install (`tournament/lib/cups.mjs`).
@@ -665,6 +704,7 @@ that version only: the web client's version, its service worker and its
 | `tournament/lib/lobby.mjs` | Lobby reader (guest login, tables, server type). |
 | `tournament/lib/host.mjs` | The director that opens a tournament table: create, invite, kick, hand over, then watch. |
 | `tournament/lib/worker.mjs` | One watch in a detached process, state and files on disk. |
+| `tournament/lib/cups.mjs`, `tournament/lib/badges.mjs` | Cups (points, stages, signed standings); medals (derived from the signed results, open API). |
 | `tournament/lib/pdb.mjs`, `tournament/lib/tournaments.mjs` | PokerTH log reader (BBC rule); tournaments in manual mode. |
 | `tournament/public/` | The page: `index.html`, `organizer.mjs` (Table check), `tournaments-ui.mjs` (Tournaments), `manifest.json`. |
 | `tournament/bin/td-spectate.mjs` | Command line: watch a table, write `<out>.journal.json` and `<out>.result.json`; `--verify` checks chain, signature and replay. |

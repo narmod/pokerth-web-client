@@ -146,3 +146,13 @@ footer .orgfoot{color:var(--muted)}
 .avrow{display:flex;gap:14px;align-items:center;margin:4px 0 10px}
 .avrow p{margin:0}
 .hero .tdav{width:64px;height:64px;vertical-align:middle;margin-inline-end:12px;box-shadow:0 2px 14px rgba(0,0,0,.5)}
+
+/* Medals (players' pages, rankings) */
+.medals{display:flex;flex-wrap:wrap;gap:8px 18px;margin:4px 0 12px}
+.medal{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 12px;background:var(--panel)}
+.medal.gold b{color:#c9a227}.medal.silver b{color:#9aa4ad}.medal.bronze b{color:#b5703a}
+.medalrow{display:flex;gap:12px;align-items:center;padding:6px 0}
+.medalrow .big{font-size:1.8em;line-height:1}
+.md{white-space:nowrap}
+a.nick{color:inherit;text-decoration:none;border-bottom:1px dotted var(--muted)}
+a.nick:hover{border-bottom-style:solid}

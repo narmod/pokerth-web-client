@@ -180,6 +180,11 @@ export function createService(o) {
     res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
     res.end(JSON.stringify(obj));
   }
+  // Medals: public, read-only, for any client or site (any origin).
+  function openJson(res, obj) {
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=60', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify(Object.assign({ ok: true }, obj)));
+  }
   function readBody(req, max) {
     return new Promise((resolve) => {
       const chunks = []; let len = 0, big = false;
@@ -356,6 +361,13 @@ export function createService(o) {
         : json(res, 500, { ok: false, code: 'error', error: 'error' })));
     if (sub === '/list' && req.method === 'GET') return send(() => T.publicList());
     if (sub === '/cups' && req.method === 'GET') return send(() => ({ cups: C.publicList() }));
+    // Medals (badges.mjs): one player, several (?nicks=a,b), or everyone.
+    const pm = /^\/players\/([^/]{1,200})$/.exec(sub);
+    if (pm && req.method === 'GET') { let nick = pm[1]; try { nick = decodeURIComponent(nick); } catch (e) {} return openJson(res, td.badges.player(nick.slice(0, 64))); }
+    if (sub === '/badges' && req.method === 'GET') {
+      if (query.nicks) return openJson(res, td.badges.many(String(query.nicks).split(',').map((x) => x.trim()).filter(Boolean)));
+      return openJson(res, td.badges.everyone());
+    }
     const cm = /^\/c\/([A-Za-z0-9_-]{8,40})$/.exec(sub);
     if (cm && req.method === 'GET') return send(() => C.publicGet(cm[1], query.invite));
     // A web client at a table: is it a tournament's? (game id and table name,
@@ -399,7 +411,7 @@ export function createService(o) {
     if (p === '/healthz') return json(res, 200, { ok: true, version: o.version });
     // /tournament: the players' page (list, a tournament, registration);
     // /tournament/organize: the organizer's tools.
-    if (p === '/tournament' || p === '/tournament/' || p === '/tournament.html' || /^\/tournament\/[tc]\/[A-Za-z0-9_-]{8,40}\/?$/.test(p)) return sendPage(res, 'public.html');
+    if (p === '/tournament' || p === '/tournament/' || p === '/tournament.html' || /^\/tournament\/[tc]\/[A-Za-z0-9_-]{8,40}\/?$/.test(p) || /^\/tournament\/p\/[^/]{1,200}$/.test(p)) return sendPage(res, 'public.html');
     if (p === '/tournament/organize' || p === '/tournament/organize/') return sendPage(res, 'index.html');
     if (p.indexOf('/tournament/api/') === 0) {
       return publicApi(req, res, p.slice('/tournament/api'.length), query)

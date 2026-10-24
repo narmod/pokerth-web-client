@@ -69,6 +69,7 @@ function chip(c) {
   if (c.phase === 'table') return '<span class="chip live">' + T('stTable') + '</span>';
   return c.registration === 'open' ? '<span class="chip live">' + T('stRegOpen') + '</span>' : '<span class="chip">' + T('stRegClosed') + '</span>';
 }
+function playerFromPath() { const m = /^\/tournament\/p\/([^/]{1,200})$/.exec(location.pathname); if (!m) return null; try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
 function cupKeyFromPath() { const m = /^\/tournament\/c\/([A-Za-z0-9_-]{8,40})\/?$/.exec(location.pathname); return m ? m[1] : null; }
 function keyFromPath() { const m = /^\/tournament\/t\/([A-Za-z0-9_-]{8,40})\/?$/.exec(location.pathname); return m ? m[1] : null; }
 function inviteFromUrl() { try { return new URLSearchParams(location.search).get('invite') || ''; } catch (e) { return ''; } }
@@ -241,7 +242,7 @@ function renderOne() {
   if (c.result) {
     const r = c.result;
     h += '<section class="card"><h2>' + T('resultTitle') + '</h2><div class="tablewrap"><table><thead><tr><th class="num">' + T('colPlace') + '</th><th>' + T('colPlayer') + '</th><th class="num">' + T('colOut') + '</th></tr></thead><tbody>' +
-      r.ranking.map((x) => '<tr><td class="num">' + x.place + '</td><td>' + esc(x.nick) + (x.winner ? ' <span class="chip done">♛</span>' : '') + '</td><td class="num">' + (x.winner ? '—' : x.elimHand != null ? x.elimHand : '') + '</td></tr>').join('') +
+      r.ranking.map((x) => '<tr><td class="num">' + x.place + '</td><td>' + nickLink(x.nick) + (x.winner ? ' <span class="chip done">♛</span>' : '') + '</td><td class="num">' + (x.winner ? '—' : x.elimHand != null ? x.elimHand : '') + '</td></tr>').join('') +
       '</tbody></table></div>';
     if (r.absent && r.absent.length) h += '<p class="small">' + T('absentList', { list: r.absent.map(esc).join(', ') }) + '</p>';
     h += '<p class="small">' + T(c.phase === 'validated' ? 'resValidated' : 'resWaiting') + (r.corrected ? ' ' + T('resCorrected') : '') + '</p>';
@@ -255,6 +256,7 @@ function renderOne() {
   }
   $('view').innerHTML = h;
   $('heroTitle').textContent = c.name;
+  fillMedals();
   wire();
 }
 // The invitation code, carried to the pages of a private tournament's tables.
@@ -328,6 +330,50 @@ function wire() {
   if (un) un.addEventListener('submit', (ev) => { ev.preventDefault(); doUnreg($('unNick').value.trim(), $('unCode').value.trim()); });
 }
 
+// ── medals ─────────────────────────────────────────────────────────
+// A nickname links to its player's page, with its medals after it (one
+// request per page for every name on it: /tournament/api/badges?nicks=…).
+const MEDAL = { gold: '🥇', silver: '🥈', bronze: '🥉' };
+function nickLink(nick) { return '<a class="nick" href="/tournament/p/' + encodeURIComponent(nick) + '" data-go>' + esc(nick) + '</a><span class="md" data-nick="' + esc(nick) + '"></span>'; }
+const medalCache = new Map();
+async function fillMedals() {
+  const slots = [...document.querySelectorAll('#view .md[data-nick]')];
+  const want = [...new Set(slots.map((s) => s.dataset.nick))].filter((n) => !medalCache.has(n.toLowerCase()));
+  if (want.length) {
+    const d = await api('/badges?nicks=' + encodeURIComponent(want.slice(0, 100).join(',')));
+    for (const n of want) medalCache.set(n.toLowerCase(), null);
+    if (d && d.ok) for (const [n, v] of Object.entries(d.players || {})) medalCache.set(n.toLowerCase(), v.counts);
+  }
+  for (const s of slots) {
+    const c = medalCache.get(s.dataset.nick.toLowerCase());
+    if (!c) continue;
+    const parts = ['gold', 'silver', 'bronze'].filter((k) => c[k]).map((k) => MEDAL[k] + (c[k] > 1 ? '×' + c[k] : ''));
+    s.textContent = parts.length ? ' ' + parts.join(' ') : '';
+    s.title = T('medalsOf', { gold: c.gold, silver: c.silver, bronze: c.bronze });
+  }
+}
+// A player's page: medals, then every tournament and cup with a place.
+async function showPlayer(nick) {
+  curKey = 'p:' + nick;
+  const d = await api('/players/' + encodeURIComponent(nick));
+  if (curKey !== 'p:' + nick) return;
+  if (!d.ok) { $('view').innerHTML = '<p class="msg bad">' + T('err_error') + '</p>'; return; }
+  const day = (ts) => { try { return new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(new Date(ts)); } catch (e) { return new Date(ts).toLocaleDateString(); } };
+  const link = (x) => (x.key ? '<a href="/tournament/' + (x.kind === 'cup' ? 'c/' : 't/') + esc(x.key) + '" data-go>' + esc(x.name) + '</a>' : esc(x.name));
+  let h = '<p><a href="/tournament" data-go>← ' + T('allTournaments') + '</a></p>';
+  h += '<section class="card"><h2>' + T('medalsTitle') + '</h2>';
+  h += '<p class="medals">' + ['gold', 'silver', 'bronze'].map((k) => '<span class="medal ' + k + '"><span aria-hidden="true">' + MEDAL[k] + '</span> ' + T('medal_' + k) + ' <b>' + d.counts[k] + '</b></span>').join('') + '</p>';
+  h += d.medals.length ? '<ul class="tlist">' + d.medals.map((m) => '<li class="medalrow"><span class="big" aria-hidden="true">' + MEDAL[m.medal] + '</span><span><b>' + link(m) + '</b><br><span class="muted small">' + T(m.kind === 'cup' ? 'kindCup' : 'kindTournament') + ' · ' + T('placeOf', { place: m.place, of: m.of }) + (m.at ? ' · ' + day(m.at) : '') + '</span></span></li>').join('') + '</ul>'
+    : '<p class="empty">' + T('noMedal') + '</p>';
+  h += '<p class="small muted">' + T('medalRules') + '</p></section>';
+  if (d.results.length) {
+    h += '<section class="card"><h2>' + T('resultsTitle') + '</h2><div class="tablewrap"><table><thead><tr><th>' + T('colDate') + '</th><th>' + T('colEvent') + '</th><th class="num">' + T('colPlace') + '</th></tr></thead><tbody>' +
+      d.results.map((x) => '<tr><td>' + (x.at ? day(x.at) : '') + '</td><td>' + link(x) + ' <span class="muted small">' + T(x.kind === 'cup' ? 'kindCup' : 'kindTournament') + '</span></td><td class="num">' + T('placeOf', { place: x.place, of: x.of }) + '</td></tr>').join('') + '</tbody></table></div></section>';
+  }
+  $('view').innerHTML = h;
+  $('heroTitle').textContent = d.nick;
+}
+
 // ── a cup ──────────────────────────────────────────────────────────
 // Its tournaments (each with its page), how the points are counted, the
 // standings (points per tournament, the ones not counted in brackets).
@@ -362,7 +408,7 @@ async function showCup(key) {
   if (d.standings.length) {
     h += '<div class="tablewrap"><table><thead><tr><th class="num">' + T('colPlace') + '</th><th>' + T('colPlayer') + '</th><th class="num">' + T('colPoints') + '</th>' +
       evs.map((e) => '<th class="num" title="' + esc(e.label) + '">' + (e.index + 1) + '</th>').join('') + '</tr></thead><tbody>' +
-      d.standings.map((r) => '<tr><td class="num">' + r.place + (r.tie ? '=' : '') + '</td><td>' + esc(r.nick) + (r.place === 1 && d.status === 'closed' ? ' <span class="chip done">♛</span>' : '') + (r.final != null ? ' <span class="chip">' + T('cupFinal') + ' ' + r.final + '</span>' : '') + '</td><td class="num"><b>' + fmt(r.total) + '</b></td>' +
+      d.standings.map((r) => '<tr><td class="num">' + r.place + (r.tie ? '=' : '') + '</td><td>' + nickLink(r.nick) + (r.place === 1 && d.status === 'closed' ? ' <span class="chip done">♛</span>' : '') + (r.final != null ? ' <span class="chip">' + T('cupFinal') + ' ' + r.final + '</span>' : '') + '</td><td class="num"><b>' + fmt(r.total) + '</b></td>' +
         evs.map((e) => { const x = r.results.find((y) => y.event === e.index); return '<td class="num">' + (x ? (x.counted ? fmt(x.points) : '<span class="muted" title="' + T('notCounted') + '">(' + fmt(x.points) + ')</span>') : '') + '</td>'; }).join('') + '</tr>').join('') +
       '</tbody></table></div><p class="small muted">' + evs.map((e) => (e.index + 1) + ' = ' + esc(e.label)).join(' · ') + '</p>';
   } else h += '<p class="empty">' + T('cupNoResult') + '</p>';
@@ -370,6 +416,7 @@ async function showCup(key) {
   h += '</section>';
   $('view').innerHTML = h;
   $('heroTitle').textContent = d.name;
+  fillMedals();
 }
 
 // ── routing ────────────────────────────────────────────────────────
@@ -377,8 +424,8 @@ function route() {
   clearTimeout(pollTimer);
   curKey = null; cur = null;
   $('heroTitle').textContent = t('title');
-  const key = keyFromPath(), ckey = cupKeyFromPath();
-  if (key) showOne(key); else if (ckey) showCup(ckey); else showList();
+  const key = keyFromPath(), ckey = cupKeyFromPath(), pnick = playerFromPath();
+  if (key) showOne(key); else if (ckey) showCup(ckey); else if (pnick) showPlayer(pnick); else showList();
   window.scrollTo(0, 0);
 }
 document.addEventListener('click', (ev) => {

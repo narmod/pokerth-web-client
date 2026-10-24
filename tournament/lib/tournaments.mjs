@@ -148,7 +148,9 @@ export function createTournaments(o) {
     const journal = new Journal({ entries: j.entries, now });
     return { t, journal };
   }
+  let gen = 0;   // bumped on every save: readers that derive from the results (medals) know when to recompute
   function save(t, journal) {
+    gen++;
     t.updatedAt = now();
     t.journalHead = journal.head;
     t.journalEntries = journal.entries.length;
@@ -1064,7 +1066,7 @@ export function createTournaments(o) {
   }
 
   return { list, get, create, update, addPlayer, removePlayer, setResult: setResultP, validate, correct, approveCorrection, rejectCorrection, importPdb, file,
-    publicList, publicGet, register, unregister, publicFile, witnessReport, witnessLog, keyHost, checkCollusion, idOfKey: (key) => { const t = byKey(key); return t ? t.id : null; }, drawTables, makeFinal, stagesTick, stagesRecompute, multiParents: () => allTournaments().filter((t) => t.format === 'multi' && t.stages && t.status !== 'validated').map((t) => t.id), checkIn, issueCode, organizerCheckIn, markNotCheckedIn, needsCheckIn: (id) => needsCheckIn(load(id).t),
+    publicList, publicGet, register, unregister, publicFile, witnessReport, witnessLog, keyHost, checkCollusion, allRaw: () => allTournaments(), generation: () => gen, idOfKey: (key) => { const t = byKey(key); return t ? t.id : null; }, drawTables, makeFinal, stagesTick, stagesRecompute, multiParents: () => allTournaments().filter((t) => t.format === 'multi' && t.stages && t.status !== 'validated').map((t) => t.id), checkIn, issueCode, organizerCheckIn, markNotCheckedIn, needsCheckIn: (id) => needsCheckIn(load(id).t),
     hostOpened, hostCheck, hostNote, hostEnded, hostResultRefused, openHosts, autoOpenDue, autoOpenNote, Refusal };
 }
 

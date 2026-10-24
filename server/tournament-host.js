@@ -47,9 +47,9 @@ function diskVersion() {
 }
 // The pages and their files: /tournament (players), /tournament/organize,
 // /tournament/t/<key> (one tournament), the page files and the language files.
-const PAGE_RE = /^\/tournament(?:\.html|\/|\/organize\/?|\/[tc]\/[A-Za-z0-9_-]{8,40}\/?|\/[A-Za-z0-9_-]+\.(?:mjs|json|css)|\/lang\/[a-z]{2,3}(?:-[a-z0-9]{2,4})?\.mjs|\/avatar)?$/;
+const PAGE_RE = /^\/tournament(?:\.html|\/|\/organize\/?|\/[tc]\/[A-Za-z0-9_-]{8,40}\/?|\/[A-Za-z0-9_-]+\.(?:mjs|json|css)|\/lang\/[a-z]{2,3}(?:-[a-z0-9]{2,4})?\.mjs|\/avatar|\/p\/[^/?#]{1,200})?$/;
 // The players' API, without a token: list, one tournament, (un)register, files.
-const API_RE = /^\/tournament\/api\/(?:list|table|cups|c\/[A-Za-z0-9_-]{8,40}|t\/[A-Za-z0-9_-]{8,40}(?:\/[a-z]{2,16})?)$/;
+const API_RE = /^\/tournament\/api\/(?:list|table|cups|badges|players\/[^/?#]{1,200}|c\/[A-Za-z0-9_-]{8,40}|t\/[A-Za-z0-9_-]{8,40}(?:\/[a-z]{2,16})?)$/;
 const API_MAX_BODY = 8 * 1024;
 const API_MAX_WITNESS = 64 * 1024;   // a witness report: every hand of a game
 const API_MAX_LOG = 14 * 1024 * 1024;   // a player's log (.pdb, 10 MB) in base64
@@ -204,7 +204,7 @@ function createTournamentHost(deps) {
           return;
         }
         const out = {};
-        ['content-type', 'content-length', 'cache-control', 'content-disposition', 'x-robots-tag', 'retry-after'].forEach((k) => { if (pr.headers[k]) out[k] = pr.headers[k]; });
+        ['content-type', 'content-length', 'cache-control', 'content-disposition', 'x-robots-tag', 'retry-after', 'access-control-allow-origin', 'etag'].forEach((k) => { if (pr.headers[k]) out[k] = pr.headers[k]; });
         res.writeHead(pr.statusCode, out);
         pr.pipe(res);
       });
