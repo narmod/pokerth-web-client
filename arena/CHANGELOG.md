@@ -10,6 +10,19 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.22.0 — 2026-10-24
+
+### Added
+- **Reset** tab on `/arena/organize`, for the super admin (the master key)
+  only: start again from zero by taking away any of the Table check watches,
+  the tournaments, the cups and the images organizers added. Type RESET to
+  confirm. Nothing is thrown away: it all moves to a dated folder
+  `reset-<date>/` in the Arena's data folder, one per reset, listed in
+  `resets.jsonl`. What is kept stays whole (a kept tournament keeps the watch
+  its result came from; a kept tournament or cup keeps its image); medals
+  follow by themselves. Refused while a table it would take is still open or
+  watched. Accounts, the install key and the settings never move.
+
 ## 0.21.2 — 2026-10-24
 
 ### Changed

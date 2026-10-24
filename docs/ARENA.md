@@ -750,6 +750,32 @@ password; four roles).
 - Players keep their nickname and personal code for now (player accounts:
   later).
 
+## Starting again from zero (service `0.22.0`)
+
+The super admin (the master key) has a **Reset** tab on `/arena/organize`
+(hidden for every account; `GET/POST /admin/arena/reset`, refused to every
+role, even to read). It takes away, in one go, any of: the Table check
+watches, the tournaments (with their tables, players, results, journals and
+witnesses), the cups, and the images organizers added (the two shipped images
+stay). Typing `RESET` confirms.
+
+- **Nothing is thrown away.** Everything moves (rename, same disk) to
+  `<ARENA_DIR>/reset-<YYYYMMDD-HHMMSS>/`, one folder per reset, never
+  overwritten; each reset is a line of `<ARENA_DIR>/resets.jsonl` (when, who,
+  what, how many, the folder). Fetching something back is a manual move on the
+  server, the service running or not.
+- **What is kept stays whole.** Watches only: a watch a kept tournament
+  stands on (its table, or the Table check its result came from) stays.
+  Images only: an image a kept tournament or cup shows stays.
+- **Refused while running**: a watch still connected, or a tournament table
+  still open, among what would go. Stop or close it first.
+- Medals are derived from the results: they follow at once. Accounts and
+  sessions, the install key (`td-key.pem`), the director's avatar and the
+  module settings never move.
+
+Code: `arena/lib/reset.mjs`, `arena/public/reset-ui.mjs`; tests:
+`arena/test/test-arena-reset.mjs`.
+
 ## Organizers (service `0.9.0`, web client `2.1.10-web.307`) — keys replaced by accounts in web.319
 
 *History: the organizer keys below were replaced by organizer accounts
@@ -946,6 +972,7 @@ that version only: the web client's version, its service worker and its
 | `arena/lib/lobby.mjs` | Lobby reader (guest login, tables, server type). |
 | `arena/lib/host.mjs` | The director that opens a tournament table: create, invite, kick, hand over, then watch. |
 | `arena/lib/worker.mjs` | One watch in a detached process, state and files on disk. |
+| `arena/lib/reset.mjs` | Starting again from zero (super admin): moves watches, tournaments, cups and added images to a dated folder, keeping what kept data still uses. |
 | `arena/lib/platform.mjs` | Everything taken from the web client, in one place (protocol, create-table lists, sql.js, version, default data folder). The only file of the service that reaches outside `arena/`. |
 | `arena/lib/table.mjs`, `arena/lib/images.mjs` | Table settings (the web client's create-game lists, `public/modules/create-presets.mjs`); images of tournaments and cups. |
 | `arena/lib/cups.mjs`, `arena/lib/badges.mjs` | Cups (points, stages, signed standings); medals (derived from the signed results, open API). |

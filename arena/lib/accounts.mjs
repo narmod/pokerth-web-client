@@ -211,7 +211,7 @@ export function createAccounts(o) {
 }
 
 // What each role may do on the organizer side (the master key: everything).
-// GET: every role reads. POST: the referee validates and handles corrections
+// GET: every role reads (not the reset summary). POST: the referee validates and handles corrections
 // and the collusion check; the organizer does everything else but accounts,
 // module settings and deletions, which are the super admin's.
 const REFEREE_POSTS = ['/t/validate', '/t/correct', '/t/correct/approve', '/t/correct/reject', '/t/collusion'];
@@ -220,6 +220,7 @@ export function allowed(role, method, sub) {
   if (role === 'admin') return true;
   if (sub === '/accounts' || sub.indexOf('/accounts/') === 0) return false;
   if (sub === '/me/password') return true;
+  if (sub === '/reset' || sub.indexOf('/reset/') === 0) return false;   // starting again from zero
   if (method === 'GET') return ROLES.indexOf(role) >= 0;
   if (ADMIN_ONLY.indexOf(sub) >= 0) return false;
   if (role === 'organizer') return true;

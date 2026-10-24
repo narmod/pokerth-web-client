@@ -27,6 +27,7 @@ const STATIC = {
   'table-form.mjs': 'text/javascript; charset=utf-8',
   'image-pick.mjs': 'text/javascript; charset=utf-8',
   'accounts-ui.mjs': 'text/javascript; charset=utf-8',
+  'reset-ui.mjs': 'text/javascript; charset=utf-8',
   'public.mjs': 'text/javascript; charset=utf-8',
   'theme.mjs': 'text/javascript; charset=utf-8',
   'arena.css': 'text/css; charset=utf-8',
@@ -293,6 +294,12 @@ export function createService(o) {
       if (!au.account) return json(res, 400, { ok: false, error: 'signed in with a key: no password to change' });
       const b = (await readJson(req)) || {};
       return send(() => A.changePassword(au.account.id, b.old, b.password));
+    }
+    // Start again from zero (the super admin only: allowed() above): what there is, then take it away.
+    if (sub === '/reset' && get) return json(res, 200, Object.assign({ ok: true }, td.reset.summary()));
+    if (sub === '/reset' && !get) {
+      const b = (await readJson(req)) || {};
+      return send(() => { const r = td.reset.run(b, who); console.log('[arena] reset by ' + who + ': ' + r.parts.join(', ') + ' → ' + r.archive); return Object.assign({ reset: r }, td.reset.summary()); });
     }
     if (sub === '/servers' && get) return json(res, 200, { ok: true, servers: await td.servers() });
     // The web client's create-game lists and limits (public/modules/create-presets.mjs), for the table settings.

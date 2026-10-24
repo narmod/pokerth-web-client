@@ -84,6 +84,22 @@
     <button type="button" role="tab" id="tabCheck" aria-controls="viewCheck" aria-selected="false">Table check</button>
     <button type="button" role="tab" id="tabCup" aria-controls="viewCup" aria-selected="false">Cups</button>
     <button type="button" role="tab" id="tabAcc" aria-controls="viewAcc" aria-selected="false">Accounts</button>
+    <button type="button" role="tab" id="tabReset" aria-controls="viewReset" aria-selected="false" hidden>Reset</button>
+  </div>
+  <div id="viewReset" role="tabpanel" aria-labelledby="tabReset" hidden>
+    <p class="lead">Start again from zero — for tests, or a new season. The super admin (the master key) only. Nothing is thrown away: what you take away moves to a dated folder on the server (<code>reset-&lt;date&gt;</code> in the Arena’s data folder) and can be fetched back by hand. Accounts, the install key and the settings never move.</p>
+    <section class="card" aria-labelledby="rH">
+      <h2 id="rH">Take away</h2>
+      <form id="rForm">
+        <div id="rParts" class="rparts"></div>
+        <p class="small muted">What you keep stays whole: a tournament you keep keeps the Table check its result came from, and a tournament or a cup you keep keeps its image.</p>
+        <p id="rRunning" class="msg bad" hidden></p>
+        <div class="row"><div><label for="rConfirm">Type RESET to confirm</label><input id="rConfirm" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="RESET"></div>
+          <button type="submit" class="danger">Take it away</button></div>
+      </form>
+      <div class="msg" id="rMsg" role="status"></div>
+      <p class="small muted" id="rLast"></p>
+    </section>
   </div>
   <div id="viewAcc" role="tabpanel" aria-labelledby="tabAcc" hidden>
     <div id="aAdmin" hidden>

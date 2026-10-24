@@ -27,6 +27,7 @@ import { createImages } from './images.mjs';
 import { createTournaments } from './tournaments.mjs';
 import { createCups } from './cups.mjs';
 import { createBadges } from './badges.mjs';
+import { createReset } from './reset.mjs';
 import { loadBotStrings, isBotLang } from './botchat.mjs';
 
 export const MAX_RUNNING = 4;
@@ -292,9 +293,11 @@ export function createManager(deps) {
   // Cups: tournaments of this install gathered (points, stages).
   const cups = createCups({ dir, keyFile, tournaments, Refusal: tournaments.Refusal, imageOk: images.has });
   // Medals: the first three of tournaments and cups, from the signed results.
-  const badges = createBadges({ tournaments: tournaments.allRaw, cups: cups.allRaw, stamp: () => tournaments.generation() + ':' + cups.generation() });
+  const badges = createBadges({ tournaments: tournaments.allRaw, cups: cups.allRaw, stamp: () => reset.count() + ':' + tournaments.generation() + ':' + cups.generation() });
+  // Start again from zero (the super admin): reset.mjs.
+  const reset = createReset({ dir, watches: list, live: LIVE, tournaments: tournaments.allRaw, cups: cups.allRaw, Refusal: tournaments.Refusal });
 
-  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, cups, badges, images, avatar, resetAvatar, avatarPreset, setAvatarPreset, avatarPresets: () => Object.keys(AVATAR_PRESETS).map(Number), avatarDefaultPreset: AVATAR_DEFAULT_PRESET, MAX_RUNNING };
+  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, cups, badges, images, reset, avatar, resetAvatar, avatarPreset, setAvatarPreset, avatarPresets: () => Object.keys(AVATAR_PRESETS).map(Number), avatarDefaultPreset: AVATAR_DEFAULT_PRESET, MAX_RUNNING };
 }
 
 /** Public part of the install key, read from its PEM file (null if none yet). */

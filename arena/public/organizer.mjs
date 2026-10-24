@@ -12,6 +12,7 @@ import { createTournamentsView } from './tournaments-ui.mjs';
 import { createCupsView } from './cups-ui.mjs';
 import { createImagePicker } from './image-pick.mjs';
 import { createAccountsView } from './accounts-ui.mjs';
+import { createResetView } from './reset-ui.mjs';
 import { initTheme } from './theme.mjs';
 
 const TOKK = 'pth_admin_tok';         // a key (master or organizer): shared with /admin
@@ -53,7 +54,7 @@ function pub(path, body) {
 initTheme($('themeBtn'));
 
 // ── views: Tournaments | Table check ────────────────────────────────
-const VIEWS = [['tour', 'tabTour', 'viewTour'], ['check', 'tabCheck', 'viewCheck'], ['cups', 'tabCup', 'viewCup'], ['acc', 'tabAcc', 'viewAcc']];
+const VIEWS = [['tour', 'tabTour', 'viewTour'], ['check', 'tabCheck', 'viewCheck'], ['cups', 'tabCup', 'viewCup'], ['acc', 'tabAcc', 'viewAcc'], ['reset', 'tabReset', 'viewReset']];
 function setView(v) {
   for (const [k, tab, view] of VIEWS) {
     const on = k === v;
@@ -67,6 +68,7 @@ $('tabTour').addEventListener('click', () => { setView('tour'); tours.refresh();
 $('tabCheck').addEventListener('click', () => { setView('check'); refreshList(); });
 $('tabCup').addEventListener('click', () => { setView('cups'); cups.refresh(); });
 $('tabAcc').addEventListener('click', () => { setView('acc'); accounts.refresh(); });
+$('tabReset').addEventListener('click', () => { setView('reset'); resetView.refresh(); });
 document.querySelector('.tabs').addEventListener('keydown', (ev) => {
   if (ev.key !== 'ArrowLeft' && ev.key !== 'ArrowRight') return;
   const vis = VIEWS.filter((x) => !$(x[1]).hidden);
@@ -82,6 +84,8 @@ const tours = createTournamentsView({ api, esc, tok, servers: () => servers, you
 const cups = createCupsView({ api, esc, images, you: () => you });
 let role = '', account = null;   // the signed-in role: admin (master key), organizer, referee, viewer
 const accounts = createAccountsView({ api, esc, me: () => ({ role, account }) });
+// Start again from zero: the super admin only (the tab shows for the master key).
+const resetView = createResetView({ api, esc, changed: () => { tours.refresh(); cups.refresh(); refreshList(); } });
 
 // ── the director's avatar ──────────────────────────────────────────
 // One of the robots shipped with the service (no image of one's own).
@@ -169,6 +173,8 @@ function start() {
       $('signOut').title = role === 'admin' ? 'Signed in with the master key (super admin)' : 'Signed in as « ' + you + ' », ' + roleName;
       $('tabAcc').textContent = role === 'admin' ? 'Accounts' : 'My account';
       if (document.querySelector('#tabAcc[aria-selected="true"]')) accounts.refresh();
+      $('tabReset').hidden = role !== 'admin';
+      if (role !== 'admin' && document.querySelector('#tabReset[aria-selected="true"]')) setView('tour');
     }).catch(() => {});
     $('srvSel').innerHTML = servers.map((s) => '<option value="' + esc(s.ref) + '">' + esc(s.name) + ' — ' + esc(s.host) + ':' + esc(s.port) + (s.tls ? ' (TLS)' : '') + ' · ' + esc({ registry: 'game server', lan: 'LAN directory', local: 'local' }[s.kind] || s.kind) + '</option>').join('');
     refreshList();
