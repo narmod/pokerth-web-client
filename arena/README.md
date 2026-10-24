@@ -1,5 +1,11 @@
 # PokerTH Arena
 
+> **Frozen here since service 0.37.0 (2026-10-24).** The Arena is now
+> developed in its own repository, `narmod/pokerth-arena` (private for now).
+> This folder stays as it is for the web client's « Inside this web client »
+> mode, with no new feature, until it is removed once the Arena runs on its
+> own. Changes go to `narmod/pokerth-arena`.
+
 Tournaments, cups and medals for PokerTH LAN servers. A tournament director
 opens Sit & Go tables for the registered players, watches them as a spectator
 and seals signed results; players register, check in and follow the

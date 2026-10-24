@@ -1323,8 +1323,14 @@ Arena's own), `lib/platform.mjs` looks there first, and the folder ships its
 its own repository: `git subtree split --prefix=arena`, push the result, then
 run `sync-shared` there and commit `shared/`.
 
-Next steps: the Arena's own repository (private at first), then the removal of
-the embedded Arena from the web client once the app runs; later a link from the
+**Its own repository** (2026-10-24): `narmod/pokerth-arena` (private for
+now), with the Arena's history since `tournament/` (web.297) and `shared/`
+copied from web client `2.1.10-web.326`. It is the Arena's source of truth from
+now on: `arena/` here is **frozen** at service `0.37.0` for the « Inside this
+web client » mode, with no new feature, until it is removed.
+
+Next steps: the removal of the embedded Arena from the web client once the app
+runs; later a link from the
 web client to the Arena and the player accounts' witness (a signed-in player
 has no code to hand over).
 
