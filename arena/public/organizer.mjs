@@ -11,9 +11,11 @@
 import { createTournamentsView } from './tournaments-ui.mjs';
 import { createCupsView } from './cups-ui.mjs';
 import { createImagePicker } from './image-pick.mjs';
+import { createAccountsView } from './accounts-ui.mjs';
 import { initTheme } from './theme.mjs';
 
-const TOKK = 'pth_admin_tok';
+const TOKK = 'pth_admin_tok';         // a key (master or organizer): shared with /admin
+const SESSK = 'pth_arena_session';    // an organizer account's session (as_…)
 const VIEWK = 'pth_td_view';
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -27,23 +29,31 @@ let detailTimer = null, listTimer = null, lastLive = null;
 
 function store(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
 function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
-function tok() { return (load(TOKK) || '').trim(); }
+function tok() { return (load(SESSK) || load(TOKK) || '').trim(); }
 
 function api(path, body) {
   const opts = { headers: { Authorization: 'Bearer ' + tok() }, cache: 'no-store' };
   if (body) { opts.method = 'POST'; opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
   return fetch(path, opts).then((r) => r.json().catch(() => ({ ok: false, error: 'HTTP ' + r.status })).then((d) => {
-    if (r.status === 403) { signedOut('Token refused.'); throw new Error('forbidden'); }
+    // A role that may not do this: said, not signed out.
+    if (r.status === 403 && d.code === 'role') throw new Error(d.error || 'your role cannot do this');
+    if (r.status === 401 && d.code === 'session') { store(SESSK, null); signedOut('Your session has ended: sign in again.'); throw new Error('forbidden'); }
+    if (r.status === 403) { signedOut(load(SESSK) ? 'Sign-in refused.' : 'Token refused.'); throw new Error('forbidden'); }
     if (r.status === 429) throw new Error(d.error || 'too many failed attempts, retry later');
     return d;
   }));
+}
+// The players' API (no token): sign in, the invitation link, sign out.
+function pub(path, body) {
+  return fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), cache: 'no-store' })
+    .then((r) => r.json().catch(() => ({ ok: false, error: 'HTTP ' + r.status })));
 }
 
 // ── theme (theme.mjs, shared with the players' page) ───────────────
 initTheme($('themeBtn'));
 
 // ── views: Tournaments | Table check ────────────────────────────────
-const VIEWS = [['tour', 'tabTour', 'viewTour'], ['check', 'tabCheck', 'viewCheck'], ['cups', 'tabCup', 'viewCup']];
+const VIEWS = [['tour', 'tabTour', 'viewTour'], ['check', 'tabCheck', 'viewCheck'], ['cups', 'tabCup', 'viewCup'], ['acc', 'tabAcc', 'viewAcc']];
 function setView(v) {
   for (const [k, tab, view] of VIEWS) {
     const on = k === v;
@@ -56,10 +66,12 @@ function setView(v) {
 $('tabTour').addEventListener('click', () => { setView('tour'); tours.refresh(); });
 $('tabCheck').addEventListener('click', () => { setView('check'); refreshList(); });
 $('tabCup').addEventListener('click', () => { setView('cups'); cups.refresh(); });
+$('tabAcc').addEventListener('click', () => { setView('acc'); accounts.refresh(); });
 document.querySelector('.tabs').addEventListener('keydown', (ev) => {
   if (ev.key !== 'ArrowLeft' && ev.key !== 'ArrowRight') return;
-  const i = VIEWS.findIndex((x) => $(x[1]).getAttribute('aria-selected') === 'true');
-  const next = VIEWS[(i + (ev.key === 'ArrowRight' ? 1 : VIEWS.length - 1)) % VIEWS.length][1];
+  const vis = VIEWS.filter((x) => !$(x[1]).hidden);
+  const i = vis.findIndex((x) => $(x[1]).getAttribute('aria-selected') === 'true');
+  const next = vis[(i + (ev.key === 'ArrowRight' ? 1 : vis.length - 1)) % vis.length][1];
   $(next).click(); $(next).focus();
 });
 setView(['check', 'cups'].indexOf(load(VIEWK)) >= 0 ? load(VIEWK) : 'tour');
@@ -68,6 +80,8 @@ let you = '';   // who is signed in: « admin » (master key) or an organizer's 
 const images = createImagePicker({ api, esc });
 const tours = createTournamentsView({ api, esc, tok, servers: () => servers, you: () => you, images });
 const cups = createCupsView({ api, esc, images, you: () => you });
+let role = '', account = null;   // the signed-in role: admin (master key), organizer, referee, viewer
+const accounts = createAccountsView({ api, esc, me: () => ({ role, account }) });
 
 // ── the director's avatar ──────────────────────────────────────────
 // One of the robots shipped with the service (no image of one's own).
@@ -102,13 +116,44 @@ function signedOut(msg) {
 }
 $('signInForm').addEventListener('submit', (ev) => {
   ev.preventDefault();
+  store(SESSK, null);
   store(TOKK, $('tokIn').value.trim());
   $('tokIn').value = '';
   start();
 });
-$('signOut').addEventListener('click', () => { store(TOKK, null); signedOut('Signed out.'); });
+// An organizer account: login + password → a session.
+$('loginForm').addEventListener('submit', (ev) => {
+  ev.preventDefault();
+  $('signInMsg').textContent = 'Signing in…'; $('signInMsg').className = 'msg';
+  pub('/arena/api/account/login', { login: $('loginIn').value.trim(), password: $('passIn').value }).then((d) => {
+    if (!d.ok) { $('signInMsg').textContent = d.error || 'Refused'; $('signInMsg').className = 'msg bad'; return; }
+    $('passIn').value = '';
+    store(SESSK, d.token);
+    start();
+  }).catch(() => { $('signInMsg').textContent = 'Network error'; $('signInMsg').className = 'msg bad'; });
+});
+// The invitation link (#invite=…): choose a password, then signed in.
+function inviteFromHash() { const m = /[#&]invite=([A-Za-z0-9_-]{20,80})/.exec(window.location.hash || ''); return m ? m[1] : null; }
+$('inviteForm').addEventListener('submit', (ev) => {
+  ev.preventDefault();
+  const say = (t, bad) => { $('inviteMsg').textContent = t; $('inviteMsg').className = 'msg' + (bad ? ' bad' : ''); };
+  if ($('invPass').value !== $('invPass2').value) return say('The two passwords differ.', true);
+  pub('/arena/api/account/invite', { token: inviteFromHash(), password: $('invPass').value }).then((d) => {
+    if (!d.ok) return say(d.error || 'Refused', true);
+    history.replaceState(null, '', window.location.pathname);
+    $('inviteCard').hidden = true;
+    store(SESSK, d.token);
+    start();
+  }).catch(() => say('Network error', true));
+});
+$('signOut').addEventListener('click', () => {
+  const s = load(SESSK);
+  if (s) pub('/arena/api/account/logout', { token: s }).catch(() => {});
+  store(SESSK, null); store(TOKK, null); signedOut('Signed out.');
+});
 
 function start() {
+  if (inviteFromHash()) { $('signIn').hidden = true; $('app').hidden = true; $('inviteCard').hidden = false; return; }
   if (!tok()) return signedOut('');
   api('/admin/arena/servers').then((d) => {
     if (!d.ok) { $('fatal').textContent = d.error || 'Not available.'; return; }
@@ -117,8 +162,13 @@ function start() {
     servers = d.servers || [];
     api('/admin/arena/status').then((st) => {
       you = (st && st.you) || '';
-      $('signOut').textContent = you ? 'Sign out (' + you + ')' : 'Sign out';
-      $('signOut').title = you === 'admin' ? 'Signed in with the master key' : 'Signed in as the organizer « ' + you + ' »';
+      role = (st && st.role) || 'organizer'; account = (st && st.account) || null;
+      document.body.dataset.role = role;
+      const roleName = { admin: 'super admin', organizer: 'organizer', referee: 'referee', viewer: 'read only' }[role] || role;
+      $('signOut').textContent = you ? 'Sign out (' + you + ' · ' + roleName + ')' : 'Sign out';
+      $('signOut').title = role === 'admin' ? 'Signed in with the master key (super admin)' : 'Signed in as « ' + you + ' », ' + roleName;
+      $('tabAcc').textContent = role === 'admin' ? 'Accounts' : 'My account';
+      if (document.querySelector('#tabAcc[aria-selected="true"]')) accounts.refresh();
     }).catch(() => {});
     $('srvSel').innerHTML = servers.map((s) => '<option value="' + esc(s.ref) + '">' + esc(s.name) + ' — ' + esc(s.host) + ':' + esc(s.port) + (s.tls ? ' (TLS)' : '') + ' · ' + esc({ registry: 'game server', lan: 'LAN directory', local: 'local' }[s.kind] || s.kind) + '</option>').join('');
     refreshList();

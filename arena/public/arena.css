@@ -189,3 +189,13 @@ a.nick:hover{border-bottom-style:solid}
 .tc-img{width:64px;height:64px;object-fit:cover;border-radius:8px;flex:none;background:#000}
 .hero .tdav.evimg{width:auto;height:96px;max-width:40vw;border-radius:12px;object-fit:contain;background:none;box-shadow:0 4px 18px rgba(0,0,0,.5)}
 @media (max-width:520px){.hero .tdav.evimg{height:72px}}
+
+/* Roles: what a referee or a read-only account does not get to use */
+body[data-role="referee"] .org-only, body[data-role="viewer"] .org-only{display:none}
+.roleTag{font-size:.8em;color:var(--muted);margin-inline-start:.4em}
+.accs li.acc{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-bottom:1px solid var(--line)}
+.accs li.acc .row{align-items:flex-end}
+.inv{margin-top:12px;padding:10px;border:1px dashed var(--brass);border-radius:8px}
+.inv input{width:100%}
+.accs{list-style:none;margin:0;padding:0}
+.accs .empty{padding:8px 0}

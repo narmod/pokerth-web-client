@@ -51,12 +51,31 @@
 
   <section class="card" id="signIn" hidden aria-labelledby="signInH">
     <h2 id="signInH">Organizer sign-in</h2>
-    <p class="muted small">The admin master key, or your organizer key: the admin creates one per organizer in Admin › Keys, category « Tournaments (organizer) ». The journal records who did what by the key's name.</p>
-    <form id="signInForm" class="row">
-      <div><label for="tokIn">Key</label><input id="tokIn" type="password" autocomplete="current-password" required></div>
+    <p class="muted small">With the account the admin made for you (login and password). The journals record who did what by your name.</p>
+    <form id="loginForm" class="row">
+      <div><label for="loginIn">Login</label><input id="loginIn" autocomplete="username" required maxlength="32" autocapitalize="none" spellcheck="false"></div>
+      <div><label for="passIn">Password</label><input id="passIn" type="password" autocomplete="current-password" required></div>
       <button type="submit" class="primary">Sign in</button>
     </form>
+    <details class="sub"><summary>Sign in with a key</summary>
+      <p class="muted small">The admin master key (super admin: accounts, module settings, deletions), or an organizer key of Admin › Keys, category « Arena (organizer) ».</p>
+      <form id="signInForm" class="row">
+        <div><label for="tokIn">Key</label><input id="tokIn" type="password" autocomplete="off" required></div>
+        <button type="submit">Sign in with the key</button>
+      </form>
+    </details>
     <div class="msg" id="signInMsg" role="status"></div>
+  </section>
+
+  <section class="card" id="inviteCard" hidden aria-labelledby="inviteH">
+    <h2 id="inviteH">Choose your password</h2>
+    <p class="muted small">The admin made you an organizer account. Choose a password (at least 10 characters) to finish; you then sign in with your login and this password.</p>
+    <form id="inviteForm" class="row">
+      <div><label for="invPass">Password</label><input id="invPass" type="password" autocomplete="new-password" required minlength="10"></div>
+      <div><label for="invPass2">Once more</label><input id="invPass2" type="password" autocomplete="new-password" required minlength="10"></div>
+      <button type="submit" class="primary">Save and sign in</button>
+    </form>
+    <div class="msg" id="inviteMsg" role="status"></div>
   </section>
 
   <div id="app" hidden>
@@ -64,12 +83,45 @@
     <button type="button" role="tab" id="tabTour" aria-controls="viewTour" aria-selected="true">Tournaments</button>
     <button type="button" role="tab" id="tabCheck" aria-controls="viewCheck" aria-selected="false">Table check</button>
     <button type="button" role="tab" id="tabCup" aria-controls="viewCup" aria-selected="false">Cups</button>
+    <button type="button" role="tab" id="tabAcc" aria-controls="viewAcc" aria-selected="false">Accounts</button>
+  </div>
+  <div id="viewAcc" role="tabpanel" aria-labelledby="tabAcc" hidden>
+    <div id="aAdmin" hidden>
+      <p class="lead">Organizer accounts: each one signs in with a login and a password, with a role. You (the master key) are the super admin: accounts, module settings and deletions are yours only.</p>
+      <div class="grid">
+        <section class="card" aria-labelledby="aNewH">
+          <h2 id="aNewH">New account</h2>
+          <form id="aCreateForm">
+            <div class="row"><div><label for="aLogin">Login</label><input id="aLogin" required maxlength="32" autocapitalize="none" spellcheck="false" placeholder="elise"></div>
+              <div><label for="aName">Name in the journals</label><input id="aName" maxlength="48" placeholder="Élise"></div></div>
+            <label for="aRole">Role</label><select id="aRole"><option value="organizer">Organizer — creates and runs tournaments and cups, validates, corrects</option><option value="referee">Referee — validates, handles corrections and the collusion check; creates nothing</option><option value="viewer">Read only — sees everything, changes nothing</option></select>
+            <div class="actions"><button type="submit" class="primary">Create the account</button></div>
+          </form>
+          <div id="aLink" class="inv" hidden></div>
+        </section>
+        <section class="card" aria-labelledby="aListH">
+          <h2 id="aListH">Accounts</h2>
+          <ul class="accs" id="aList"><li class="empty">None yet.</li></ul>
+        </section>
+      </div>
+    </div>
+    <section class="card" id="aMe" hidden aria-labelledby="aMeH">
+      <h2 id="aMeH">My account</h2>
+      <p id="aMeWho" class="small"></p>
+      <form id="aPwForm">
+        <div class="row"><div><label for="aPwOld">Current password</label><input id="aPwOld" type="password" autocomplete="current-password" required></div>
+          <div><label for="aPwNew">New password</label><input id="aPwNew" type="password" autocomplete="new-password" required minlength="10"></div>
+          <div><label for="aPwNew2">Once more</label><input id="aPwNew2" type="password" autocomplete="new-password" required minlength="10"></div></div>
+        <div class="actions"><button type="submit">Change my password</button></div>
+      </form>
+    </section>
+    <div class="msg" id="aMsg" role="status"></div>
   </div>
   <div id="viewTour" role="tabpanel" aria-labelledby="tabTour">
   <p class="lead">LAN only. Create the tournament and add the players. Then either let the director open the table on the LAN server (invitations, seat check, hand-over to the first player, result recorded by itself), or set the result yourself — typed in, taken from a Table check, or from a PokerTH log. Every action goes into the tournament’s sealed journal; the validated result is signed.</p>
   <div class="grid">
     <div>
-      <section class="card" aria-labelledby="tNewH">
+      <section class="card org-only" aria-labelledby="tNewH">
         <h2 id="tNewH">New tournament</h2>
         <form id="tCreateForm">
           <label for="tName">Name</label><input id="tName" maxlength="60" minlength="2" required autocomplete="off">
@@ -155,7 +207,7 @@
   <p class="lead">A cup gathers tournaments. <b>Points:</b> each counted tournament gives every player the number of players finished behind him, plus one (a shared place: the average); the standings add up each player's best results. <b>Stages:</b> the first of a tournament go on to the next one, up to a final — which may also take the top of the points standings. Only validated results count; closing the cup signs its standings.</p>
   <div class="grid">
     <div>
-      <section class="card" aria-labelledby="cNewH">
+      <section class="card org-only" aria-labelledby="cNewH">
         <h2 id="cNewH">New cup</h2>
         <form id="cCreateForm">
           <div class="row"><div><label for="cName">Name</label><input id="cName" maxlength="60" required></div>
@@ -183,7 +235,7 @@
   <p class="msg bad" id="fatal" role="alert"></p>
 </div>
 </main>
-<footer class="in">PokerTH tournament director <span class="mono">__TD_VERSION__</span> · launched by the web client. Design: <code>docs/ARENA.md</code>.</footer>
+<footer class="in">PokerTH Arena <span class="mono">__TD_VERSION__</span> · launched by the web client. Design: <code>docs/ARENA.md</code>.</footer>
 <script type="module" src="/arena/organizer.mjs"></script>
 </body>
 </html>

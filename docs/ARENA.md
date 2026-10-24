@@ -706,6 +706,48 @@ Signals for an organizer, never a sanction (`arena/lib/collusion.mjs`).
   never see it; the journal keeps the counts (`collusionChecked`: hands,
   flags, notes), not the names.
 
+## Organizer accounts and roles (service `0.21.0`, web client `2.1.10-web.318`)
+
+`arena/lib/accounts.mjs`, decided 2026-10-24 (organizers first; login and
+password; four roles).
+
+- **Super admin** = the web client's master key: everything, and alone for
+  accounts, the module's settings and deletions (tournaments, cups).
+- **Accounts** (Arena › Accounts, super admin): login (3–32 lowercase
+  letters, digits, `. _ -`), the name the journals record, a role. Creating
+  one gives a one-time **invitation link** (`/arena/organize#invite=…`, 7
+  days): the organizer chooses a password there (10 characters at least, not
+  the login or the name) and is signed in. Then: login + password on
+  `/arena/organize`. The super admin changes a role or a name, turns an
+  account off (its sessions end), makes a new link (the password is cleared,
+  the sessions end) or deletes it (the journals keep the name). An account
+  changes its own password (« My account »).
+- **Roles**: `organizer` (creates and runs tournaments and cups, validates,
+  corrects), `referee` (validates, proposes / approves / rejects corrections,
+  runs the collusion check — creates nothing), `viewer` (« read only »:
+  reads everything on the organizer side). Checked by the service on every
+  request (`allowed(role, method, sub)`); a refusal is 403 with `code: role`
+  and the page says so without signing out. The page hides the « New
+  tournament » and « New cup » forms from referees and read-only accounts.
+  Organizer keys of Admin › Keys (category Arena) still work, as organizers.
+- **Sessions**: `as_…` tokens (32 random bytes), 30 days, sent as
+  `Authorization: Bearer`; the web client lets them through to the service
+  (`X-Arena-Session`), which checks them; an unknown or ended one: 401
+  `code: session`. Sign out ends it.
+- **Stored** in `ARENA_DIR/accounts.json`, mode 600: passwords as scrypt
+  hashes (N 16384, r 8, p 1, a salt each), invitation and session tokens as
+  SHA-256 — the file gives neither a password nor a usable session.
+- **Sign-in limits**: 8 failures per address or per login, then a quarter of
+  an hour (429); the same work whether the login exists or not.
+- Routes: public `POST /arena/api/account/login {login, password}`,
+  `…/account/invite {token, password}`, `…/account/logout {token}`;
+  organizer side `GET /admin/arena/accounts`, `POST …/accounts/create {login,
+  name, role}`, `…/accounts/update {id, patch: {role, name, disabled}}`,
+  `…/accounts/reinvite {id}`, `…/accounts/delete {id}`, `…/me/password {old,
+  password}`; `GET …/status` gives `you`, `role`, `account`.
+- Players keep their nickname and personal code for now (player accounts:
+  later).
+
 ## Organizers (service `0.9.0`, web client `2.1.10-web.307`)
 
 - **One key per organizer.** The admin creates it in Admin › Keys with the

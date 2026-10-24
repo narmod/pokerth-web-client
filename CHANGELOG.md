@@ -72,6 +72,10 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Arena: organizer accounts and roles** (`web.318`, service `0.21.0`) — login + password accounts made by the super
+  admin (master key) with a one-time invitation link; roles organizer, referee, read only, checked by the service. The
+  web client relays the sign-in (`/arena/api/account/*`) and lets `as_…` session tokens through to the service
+  (`X-Arena-Session`). The super admin can also delete a tournament. Details in `arena/CHANGELOG.md`.
 - **Arena: only the new names; cups deleted by the super admin** (`web.317`, service `0.20.0`) — the compatibility kept
   for the old « tournaments » names is gone (redirects from `/tournament…`, `/admin/tournaments`, the `tournaments` scope
   and config key, `TD_DIR`, the data move): a fresh start. The master key can delete a cup and all its data (Arena

@@ -261,6 +261,30 @@ try {
   if (shots) await og.locator('section:has(#avH)').screenshot({ path: path.join(shots, 'org-avatar.png') });
   await og.click('#avReset');
   ok(cl.length >= 80 && cl.indexOf('fr') >= 0 && cl.indexOf('pt-br') >= 0 && cl.indexOf('en') >= 0, 'organizer: the chat language offers every language of the app (' + cl.length + ')');
+  // Accounts: the super admin creates one; the link opens the « choose your password » form; then signed in with that role.
+  await og.click('#tabAcc');
+  await og.waitForFunction(() => !document.getElementById('aAdmin').hidden, null, { timeout: 8000 });
+  await og.fill('#aLogin', 'gina'); await og.fill('#aName', 'Gina'); await og.selectOption('#aRole', 'referee');
+  await og.click('#aCreateForm button[type="submit"]');
+  await og.waitForFunction(() => !document.getElementById('aLink').hidden && /#invite=/.test((document.getElementById('aLinkIn') || {}).value || ''), null, { timeout: 8000 });
+  const link = await og.$eval('#aLinkIn', (e) => e.value);
+  ok(/\/arena\/organize#invite=ai_/.test(link) && /Gina/.test(await og.textContent('#aList')), 'accounts: created, its invitation link shown once, listed');
+  if (shots) await og.screenshot({ path: path.join(shots, 'org-accounts.png'), fullPage: true });
+  const ix = await browser.newContext({ viewport: { width: 1200, height: 900 } });
+  const ip = await ix.newPage();
+  await ip.goto(link.replace(/^https?:\/\/[^/]+/, base));
+  await ip.waitForSelector('#inviteCard:not([hidden])', { timeout: 8000 });
+  await ip.fill('#invPass', 'gina long password'); await ip.fill('#invPass2', 'gina long password');
+  await ip.click('#inviteForm button[type="submit"]');
+  await ip.waitForFunction(() => !document.getElementById('app').hidden && /Gina · referee/.test(document.getElementById('signOut').textContent), null, { timeout: 8000 });
+  ok(await ip.$eval('section[aria-labelledby="tNewH"]', (e) => getComputedStyle(e).display === 'none'), 'invitation: password chosen, signed in as a referee — no « New tournament » form');
+  await ip.click('#signOut');
+  await ip.waitForSelector('#signIn:not([hidden])', { timeout: 8000 });
+  await ip.fill('#loginIn', 'gina'); await ip.fill('#passIn', 'gina long password');
+  await ip.click('#loginForm button[type="submit"]');
+  await ip.waitForFunction(() => !document.getElementById('app').hidden, null, { timeout: 8000 });
+  ok(true, 'signed out, then in again with login and password');
+  await ix.close();
   await og.close();
 
   // Phone.

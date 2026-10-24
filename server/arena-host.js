@@ -50,7 +50,7 @@ function diskVersion() {
 // /arena/t/<key> (one tournament), the page files and the language files.
 const PAGE_RE = /^\/arena(?:\.html|\/|\/organize\/?|\/[tc]\/[A-Za-z0-9_-]{8,40}\/?|\/[A-Za-z0-9_-]+\.(?:mjs|json|css)|\/lang\/[a-z]{2,3}(?:-[a-z0-9]{2,4})?\.mjs|\/avatar|\/p\/[^/?#]{1,200}|\/img\/[a-z0-9_-]{1,40}(?:\.t)?\.jpg)?$/;
 // The players' API, without a token: list, one tournament, (un)register, files.
-const API_RE = /^\/arena\/api\/(?:list|table|cups|badges|players\/[^/?#]{1,200}|c\/[A-Za-z0-9_-]{8,40}|t\/[A-Za-z0-9_-]{8,40}(?:\/[a-z]{2,16})?)$/;
+const API_RE = /^\/arena\/api\/(?:list|account\/(?:login|invite|logout)|table|cups|badges|players\/[^/?#]{1,200}|c\/[A-Za-z0-9_-]{8,40}|t\/[A-Za-z0-9_-]{8,40}(?:\/[a-z]{2,16})?)$/;
 const API_MAX_BODY = 8 * 1024;
 const API_MAX_WITNESS = 64 * 1024;   // a witness report: every hand of a game
 const API_MAX_LOG = 14 * 1024 * 1024;   // a player's log (.pdb, 10 MB) in base64
@@ -268,12 +268,14 @@ function handleArenaAdmin(host, h, req, res, reqPathOnly, query) {
     return host.restart('asked by the admin').then(() => answerSettings());
   });
   // Everything else is the service's: token checked here, then relayed with
-  // who acts — the master key (« admin ») or an organizer's key (its name).
+  // who acts — the master key (« admin ») or an organizer's key (its name) —
+  // or an account's session token, which the service checks itself.
   const who = h.author ? h.author(query) : (h.adminAuthed(query) ? 'admin' : null);
   if (!who) return deny();
   if (!host.enabled()) return h.adminJson(res, 409, { ok: false, error: 'the Arena is off (Admin › Community › Arena)' });
   const qs = Object.keys(query).filter((k) => k !== 'token' && query[k] != null)
     .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(query[k])).join('&');
+  if (typeof who === 'object' && who.session) return host.relay(req, res, reqPathOnly + (qs ? '?' + qs : ''), 'session', { 'x-arena-session': who.session });
   return host.relay(req, res, reqPathOnly + (qs ? '?' + qs : ''), who);
 }
 

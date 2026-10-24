@@ -156,6 +156,30 @@ const row = (cup, nick) => cup.standings.rows.find((r) => r.nick === nick);
   ok(log.some((x) => x.id === c.id && x.name === 'To delete' && x.by === 'admin' && x.events.length === 2), 'a line kept in cups/deleted.jsonl (who, when, what)');
 }
 
+// ── deleting a tournament (super admin) ────────────────────────────
+{
+  const t1 = await admin('/t/create', { name: 'Gone night', profile: 'club' });
+  for (const n of ['Hal', 'Ivy', 'Jon', 'Kim']) await admin('/t/player', { id: t1.id, nick: n });
+  await admin('/t/result', { id: t1.id, source: 'manual', ranking: ['Hal', 'Ivy', 'Jon', 'Kim'] });
+  const c = await admin('/cups/create', { name: 'Uses it' });
+  await admin('/cups/event', { id: c.id, tournamentId: t1.id });
+  const medal = async () => (await (await fetch(base + '/arena/api/players/Hal')).json()).medals.some((m) => m.name === 'Gone night');
+  ok(await medal(), 'before: Hal has the medal');
+  ok(!(await admin('/t/delete', { id: t1.id, confirm: 'gone night' })).ok, 'the name must be typed exactly');
+  const d = await admin('/t/delete', { id: t1.id, confirm: 'Gone night' });
+  ok(d.ok && !(await admin('/t/get?id=' + t1.id)).ok && (await pub('/t/' + t1.publicKey)).status === 404 && !(await medal()), 'deleted: gone, its medal too');
+  const cv = await admin('/cups/get?id=' + c.id);
+  ok(cv.ok && cv.standings.events[0].status === 'missing', 'the cup shows it as missing');
+  const m = await admin('/t/create', { name: 'Big gone', profile: 'club', format: 'multi' });
+  for (let i = 1; i <= 12; i++) await admin('/t/player', { id: m.id, nick: 'Q' + i });
+  const dr = await admin('/t/draw', { id: m.id });
+  ok(!(await admin('/t/delete', { id: dr.stagesInfo.tables[0].id, confirm: dr.stagesInfo.tables[0].name })).ok, 'a table of a multi-table tournament: not alone');
+  const dm = await admin('/t/delete', { id: m.id, confirm: 'Big gone' });
+  ok(dm.ok && dm.tables === 2 && !(await admin('/t/get?id=' + dr.stagesInfo.tables[0].id)).ok, 'a multi-table tournament: its tables go with it');
+  const log = readFileSync(join(dir, 'tournaments', 'deleted.jsonl'), 'utf8').trim().split('\n').map((l) => JSON.parse(l));
+  ok(log.length === 2 && log[0].name === 'Gone night' && log[0].winner === 'Hal' && log[1].tables.length === 2, 'tournaments/deleted.jsonl: who, when, what');
+}
+
 svc.close(); srv.close();
 rmSync(dir, { recursive: true, force: true });
 console.log(fails ? `\n${fails} FAILED` : '\nall arena-cups tests passed');

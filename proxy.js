@@ -11708,6 +11708,8 @@ function _arenaAuthor(query) {
   if (adminAuthed(query)) return 'admin';
   var tok = (query && query.token) || '';
   if (!tok) return null;
+  // An organizer account's session (as_…): the Arena's service checks it.
+  if (/^as_[A-Za-z0-9_-]{40,60}$/.test(tok)) return { session: tok };
   var r = _loadScopedTokens().filter(function (x) { return x.token === tok; })[0];
   if (!r) return null;
   var sc = r.scopes || [];

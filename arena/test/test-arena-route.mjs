@@ -119,6 +119,19 @@ try {
     const delE = await post('/admin/arena/cups/delete', { id: cupE.id, confirm: 'Elise cup' }, E);
     const delM = await (await post('/admin/arena/cups/delete', { id: cupE.id, confirm: 'Elise cup' })).json();
     ok(delE.status === 403 && delM.ok && delM.deleted === cupE.id, 'deleting a cup: refused to an organizer key, done with the master key');
+    // Organizer accounts through the web client: sign in on the players' API, the session on the organizer API.
+    {
+      const acc = await (await post('/admin/arena/accounts/create', { login: 'remi', name: 'Rémi', role: 'referee' })).json();
+      const pj = (p, b) => fetch(base + '/arena/api' + p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) }).then((r) => r.json());
+      const inv = await pj('/account/invite', { token: acc.invite, password: 'a long password' });
+      const S = { Authorization: 'Bearer ' + inv.token };
+      const me = await (await get('/admin/arena/status', S)).json();
+      const cr = await post('/admin/arena/t/create', { name: 'No' }, S);
+      ok(inv.ok && me.you === 'Rémi' && me.role === 'referee' && cr.status === 403 && (await cr.json()).code === 'role', 'an account through the web client: signed in, its role applied');
+      ok((await get('/admin/arena/status', { Authorization: 'Bearer as_' + 'x'.repeat(43) })).status === 401 && (await get('/admin/arena/accounts', E)).status === 403, 'an unknown session: 401; accounts: not for an organizer key');
+    }
+    const tE = await (await post('/admin/arena/t/create', { name: 'Elise night' }, E)).json();
+    ok((await post('/admin/arena/t/delete', { id: tE.id, confirm: 'Elise night' }, E)).status === 403 && (await (await post('/admin/arena/t/delete', { id: tE.id, confirm: 'Elise night' })).json()).ok, 'deleting a tournament: the master key only');
     const t = await (await post('/admin/arena/t/create', { name: 'Two organizers', profile: 'official' }, E)).json();
     for (const n of ['Ann', 'Ben']) await post('/admin/arena/t/player', { id: t.id, nick: n }, E);
     await post('/admin/arena/t/result', { id: t.id, source: 'manual', ranking: ['Ann', 'Ben'] }, E);

@@ -10,6 +10,23 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.21.0 — 2026-10-24 (web client `2.1.10-web.318`)
+
+### Added
+- **Organizer accounts** with a login and a password. The super admin (the
+  master key) creates them in Arena › Accounts and hands over a one-time
+  invitation link (7 days) where the organizer chooses a password. Roles:
+  organizer (creates and runs tournaments and cups), referee (validates,
+  handles corrections and the collusion check, creates nothing), read only.
+  The service checks the role on every request; the page hides what a role
+  cannot use. Accounts can be turned off, given a new link (password
+  cleared) or deleted; each changes its own password. Passwords as scrypt
+  hashes, tokens as SHA-256; sign-in attempts limited.
+- **Deleting a tournament** — the super admin only, the name typed again
+  (with its tables for a tournament on several tables); its medals go, a cup
+  that used it shows it as missing. A line is kept in
+  `tournaments/deleted.jsonl`.
+
 ## 0.20.0 — 2026-10-24 (web client `2.1.10-web.317`)
 
 ### Added

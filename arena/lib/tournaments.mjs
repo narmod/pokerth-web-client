@@ -19,7 +19,7 @@
 // Design: docs/ARENA.md (Tournament settings, Trust).
 // ═══════════════════════════════════════════════════════════════════
 
-import { readFileSync, writeFileSync, renameSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, renameSync, mkdirSync, readdirSync, existsSync, rmSync, appendFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { randomBytes, createHash, timingSafeEqual } from 'node:crypto';
 import { Journal, verifyJournal, signPayload, verifyPayload, publicKeyFromPrivate, publicKeyRawB64 } from './journal.mjs';
@@ -400,6 +400,27 @@ export function createTournaments(o) {
     let s = '';
     for (let i = 0; i < 8; i++) s += A[b[i] % A.length];
     return s;
+  }
+  // Deleting a tournament (the super admin only — the service checks who
+  // asks): its folder goes (journal, signed result, witnesses, log), with the
+  // tables of a tournament on several tables, and its medals with it; a cup
+  // that used it shows it as missing (a closed cup keeps its signed
+  // standings). The name must be typed again; not while its table is open.
+  // A line is kept in tournaments/deleted.jsonl, the only trace left.
+  function remove(id, author, confirmName) {
+    const { t } = load(id);
+    if (t.parentId) refuse('a table of a tournament on several tables: delete the tournament itself');
+    if (String(confirmName || '').trim() !== t.name) refuse('type the tournament\'s name exactly to delete it');
+    const kids = allTournaments().filter((x) => x.parentId === t.id);
+    if (hostOpen(t) || kids.some(hostOpen)) refuse('a table is open: close it first');
+    const w = t.result && t.result.ranking && t.result.ranking.find((r) => r.place === 1);
+    const line = { at: now(), by: author || 'admin', id: t.id, name: t.name, status: t.status, players: t.players.length, winner: w ? w.nick : null, tables: kids.map((k) => k.id) };
+    mkdirSync(root, { recursive: true });
+    appendFileSync(join(root, 'deleted.jsonl'), JSON.stringify(line) + '\n');
+    for (const k of kids) rmSync(tdir(k.id), { recursive: true, force: true });
+    rmSync(tdir(t.id), { recursive: true, force: true });
+    gen++;
+    return { deleted: t.id, name: t.name, tables: kids.length };
   }
   function allTournaments() {
     let ids = [];
@@ -1083,7 +1104,7 @@ export function createTournaments(o) {
 
   return { list, get, create, update, addPlayer, removePlayer, setResult: setResultP, validate, correct, approveCorrection, rejectCorrection, importPdb, file,
     publicList, publicGet, register, unregister, publicFile, witnessReport, witnessLog, keyHost, checkCollusion, allRaw: () => allTournaments(), generation: () => gen, idOfKey: (key) => { const t = byKey(key); return t ? t.id : null; }, drawTables, makeFinal, stagesTick, stagesRecompute, multiParents: () => allTournaments().filter((t) => t.format === 'multi' && t.stages && t.status !== 'validated').map((t) => t.id), checkIn, issueCode, organizerCheckIn, markNotCheckedIn, needsCheckIn: (id) => needsCheckIn(load(id).t),
-    hostOpened, hostCheck, hostNote, hostEnded, hostResultRefused, openHosts, autoOpenDue, autoOpenNote, Refusal };
+    hostOpened, hostCheck, hostNote, hostEnded, hostResultRefused, openHosts, autoOpenDue, autoOpenNote, remove, Refusal };
 }
 
 export { Refusal };

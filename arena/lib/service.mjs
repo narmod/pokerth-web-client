@@ -15,6 +15,7 @@ import { fileURLToPath } from 'node:url';
 import { createManager, MAX_RUNNING, LIVE } from './manager.mjs';
 import { tablePresets } from './table.mjs';
 import { cleanAbsence } from './tournaments.mjs';
+import { createAccounts, allowed, SESSION_PREFIX } from './accounts.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.join(HERE, '..', 'public');
@@ -25,6 +26,7 @@ const STATIC = {
   'cups-ui.mjs': 'text/javascript; charset=utf-8',
   'table-form.mjs': 'text/javascript; charset=utf-8',
   'image-pick.mjs': 'text/javascript; charset=utf-8',
+  'accounts-ui.mjs': 'text/javascript; charset=utf-8',
   'public.mjs': 'text/javascript; charset=utf-8',
   'theme.mjs': 'text/javascript; charset=utf-8',
   'arena.css': 'text/css; charset=utf-8',
@@ -51,6 +53,8 @@ export function createService(o) {
   const td = createManager({ dir: o.dir, servers: o.servers, clientVersion: o.clientVersion });
   const T = td.tournaments;
   const C = td.cups;
+  // Organizer accounts (accounts.mjs): login + password, a role each.
+  const A = createAccounts({ dir: o.dir, Refusal: T.Refusal });
 
   // ── tables opened by the director: carry their end into the tournament ──
   const syncing = new Set();
@@ -210,18 +214,26 @@ export function createService(o) {
     if (!b) return null;
     try { return b.length ? JSON.parse(b.toString('utf8')) : {}; } catch (e) { return null; }
   }
-  function author(req) {
+  // Who asks, and with which role: the master key (« admin », the super
+  // admin), an organizer key of Admin › Keys (its name; role organizer), or
+  // an account's session (its display name and role). null: nobody;
+  // { expired: true }: a session token that is no longer valid.
+  function auth(req) {
+    const fromSession = (t) => { const s = A.session(t); return s ? { who: s.name, role: s.role, account: s } : { expired: true }; };
     if (o.secret && same(req.headers['x-td-secret'], o.secret)) {
+      if (req.headers['x-arena-session']) return fromSession(String(req.headers['x-arena-session']));
       // The web client sends who acts, URI-encoded (an organizer's key name).
       let w = String(req.headers['x-td-author'] || 'admin');
       try { w = decodeURIComponent(w); } catch (e) {}
-      w = w.replace(/[\u0000-\u001f\u007f]/g, '').trim().slice(0, 64);
-      return w || 'admin';
+      w = w.replace(/[\u0000-\u001f\u007f]/g, '').trim().slice(0, 64) || 'admin';
+      return { who: w, role: w === 'admin' ? 'admin' : 'organizer' };
     }
     const m = /^\s*Bearer\s+(.+?)\s*$/i.exec(req.headers.authorization || '');
-    if (o.adminToken && m && same(m[1], o.adminToken)) return 'admin';
+    if (o.adminToken && m && same(m[1], o.adminToken)) return { who: 'admin', role: 'admin' };
+    if (m && m[1].indexOf(SESSION_PREFIX) === 0) return fromSession(m[1]);
     return null;
   }
+  function author(req) { const a = auth(req); return a && a.who ? a.who : null; }
 
   function sendPage(res, file, meta) {
     let html;
@@ -254,13 +266,34 @@ export function createService(o) {
   }
 
   async function api(req, res, sub, query) {
-    const who = author(req);
-    if (!who) return json(res, 403, { ok: false, error: 'forbidden' });
+    const au = auth(req);
+    if (au && au.expired) return json(res, 401, { ok: false, code: 'session', error: 'your session has ended: sign in again' });
+    if (!au) return json(res, 403, { ok: false, error: 'forbidden' });
+    const who = au.who, role = au.role;
+    if (!allowed(role, req.method, sub)) return json(res, 403, { ok: false, code: 'role', error: 'your role (' + role + ') cannot do this' });
     const send = (p) => Promise.resolve().then(p).then((v) => json(res, 200, Object.assign({ ok: true }, Array.isArray(v) ? { tournaments: v } : v)))
       .catch((e) => json(res, e instanceof T.Refusal ? 400 : 500, { ok: false, error: (e && e.message) || 'error' }));
     const get = req.method === 'GET';
 
-    if (sub === '/status' && get) return json(res, 200, Object.assign({ ok: true, you: who }, status()));
+    if (sub === '/status' && get) return json(res, 200, Object.assign({ ok: true, you: who, role, account: au.account ? { login: au.account.login, name: au.account.name } : null }, status()));
+    // Accounts (the super admin only: allowed() above).
+    if (sub === '/accounts' && get) return json(res, 200, { ok: true, accounts: A.list() });
+    if (sub.indexOf('/accounts/') === 0 && !get) {
+      const b = (await readJson(req)) || {};
+      const sendA = (p) => Promise.resolve().then(p).then((v) => { console.log('[arena] accounts: ' + sub.slice(10) + ' by ' + who); json(res, 200, Object.assign({ ok: true }, v)); })
+        .catch((e) => json(res, e instanceof T.Refusal ? 400 : 500, { ok: false, error: (e && e.message) || 'error' }));
+      if (sub === '/accounts/create') return sendA(() => A.create(b, who));
+      if (sub === '/accounts/update') return sendA(() => A.update(b.id, b.patch, who));
+      if (sub === '/accounts/reinvite') return sendA(() => A.reinvite(b.id));
+      if (sub === '/accounts/delete') return sendA(() => A.remove(b.id));
+      return json(res, 404, { ok: false, error: 'unknown' });
+    }
+    // One's own password (an account).
+    if (sub === '/me/password' && !get) {
+      if (!au.account) return json(res, 400, { ok: false, error: 'signed in with a key: no password to change' });
+      const b = (await readJson(req)) || {};
+      return send(() => A.changePassword(au.account.id, b.old, b.password));
+    }
     if (sub === '/servers' && get) return json(res, 200, { ok: true, servers: await td.servers() });
     // The web client's create-game lists and limits (public/modules/create-presets.mjs), for the table settings.
     if (sub === '/table-presets' && get) return json(res, 200, Object.assign({ ok: true }, tablePresets()));
@@ -342,6 +375,9 @@ export function createService(o) {
       case '/cups/event/remove': return send(() => C.removeEvent(id, b.index, who));
       case '/cups/qualify': return send(() => C.qualifyFromStandings(id, b.index, who));
       case '/cups/close': return send(() => C.close(id, who));
+      // Deleting a tournament: the super admin (master key) only.
+      case '/t/delete': if (who !== 'admin') return json(res, 403, { ok: false, error: 'only the super admin (the master key) can delete a tournament' });
+        return send(() => { const r = T.remove(id, who, b.confirm); console.log('[arena] tournament « ' + r.name + ' » deleted by ' + who); return r; });
       // Deleting a cup: the super admin (master key) only.
       case '/cups/delete': if (who !== 'admin') return json(res, 403, { ok: false, error: 'only the super admin (the master key) can delete a cup' });
         return send(() => { const r = C.remove(id, who, b.confirm); console.log('[arena] cup « ' + r.name + ' » deleted by ' + who); return r; });
@@ -410,6 +446,15 @@ export function createService(o) {
       .catch((e) => (e instanceof T.Refusal ? json(res, e.code === 'notFound' || e.code === 'private' ? 404 : 400, { ok: false, code: e.code || 'refused', error: e.message })
         : json(res, 500, { ok: false, code: 'error', error: 'error' })));
     if (sub === '/list' && req.method === 'GET') return send(() => T.publicList());
+    // Organizer accounts: sign in, the invitation link (choose a password), sign out.
+    if (sub.indexOf('/account/') === 0 && req.method === 'POST') {
+      const b = (await readJson(req)) || {};
+      const out = (p) => Promise.resolve().then(p).then((v) => json(res, 200, Object.assign({ ok: true }, v)))
+        .catch((e) => (e instanceof T.Refusal ? json(res, e.code === 'tooMany' ? 429 : 400, { ok: false, code: e.code || 'refused', error: e.message }) : json(res, 500, { ok: false, code: 'error', error: 'error' })));
+      if (sub === '/account/login') return out(() => A.login(b.login, b.password, ip));
+      if (sub === '/account/invite') return out(() => A.acceptInvite(b.token, b.password, ip));
+      if (sub === '/account/logout') return out(() => A.logout(b.token));
+    }
     if (sub === '/cups' && req.method === 'GET') return send(() => ({ cups: C.publicList() }));
     // Medals (badges.mjs): one player, several (?nicks=a,b), or everyone.
     const pm = /^\/players\/([^/]{1,200})$/.exec(sub);

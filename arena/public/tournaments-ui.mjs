@@ -314,6 +314,12 @@ export function createTournamentsView(deps) {
 
     // Image (any time; the tables of a tournament on several tables take its image).
     if (!t.parentId) h += '<details class="sub"><summary>Image</summary>' + IP.html('tim_cur', 'tournament', t.image || null) + '</details>';
+    // The super admin (master key) may delete the tournament and all its data.
+    if (!t.parentId && deps.you && deps.you() === 'admin') {
+      h += '<details class="sub"><summary>Delete this tournament</summary><p class="small">Deletes the tournament and all its data: players, result, journal, signed result, witnesses' + (t.format === 'multi' ? ', its tables' : '') + ' and the medals it gave. A cup that uses it shows it as missing. This cannot be undone.' + (t.host && t.host.status === 'open' ? ' Close the table first.' : '') + '</p>' +
+        '<div class="row"><div><label for="tDelName">Type the name of the tournament to confirm</label><input id="tDelName" autocomplete="off" placeholder="' + esc(t.name) + '"></div>' +
+        '<button type="button" class="danger" data-act="tDelete">Delete the tournament</button></div></details>';
+    }
     // Edit (until validated).
     if (t.status !== 'validated') {
       h += '<details class="sub"><summary>Edit</summary><div class="row"><div><label for="tEName">Name</label><input id="tEName" maxlength="60" value="' + esc(t.name) + '"></div>' +
@@ -573,6 +579,15 @@ export function createTournamentsView(deps) {
     if (a === 'final') return call('/admin/arena/t/final', {}, 'The director opens the final table.');
     if (a === 'corrApprove') return call('/admin/arena/t/correct/approve', {}, 'Correction approved and signed.');
     if (a === 'corrReject') return call('/admin/arena/t/correct/reject', { reason: $('tRejWhy') ? ($('tRejWhy').value || '').trim() : '' }, 'Correction set aside.');
+    if (a === 'tDelete') {
+      const name = ($('tDelName') && $('tDelName').value || '').trim();
+      if (name !== cur.name) return msg('tMsg', 'Type the name of the tournament exactly to delete it.', true);
+      return api('/admin/arena/t/delete', { id: cur.id, confirm: name }).then((d) => {
+        if (!d.ok) return msg('tMsg', d.error || 'Refused', true);
+        cur = null; $('tDetailBody').hidden = true; $('tDetailEmpty').hidden = false;
+        msg('tCreateMsg', 'Tournament « ' + d.name + ' » deleted.', false, 'ok'); refresh();
+      }).catch(() => msg('tMsg', 'Network error', true));
+    }
     if (a === 'save') {
       const patch = {};
       const n = $('tEName').value.trim(); if (n && n !== cur.name) patch.name = n;
