@@ -10,6 +10,20 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.35.0 — 2026-10-24
+
+### Changed
+- **Only the Arena has an API** (Arnaud's decision): the link no longer reads
+  the web client. The web client sends, with the link key made here,
+  `POST /arena/api/link/sync` (replaces `/link/hello`): its public address,
+  its version, the servers (`servers`, cleaned: only the fields the director
+  uses, 200 at most) and the community events (`events`). The Arena keeps the
+  last ones in `ARENA_DIR/link.json` (a restart keeps working) and uses the
+  servers while they are under ten minutes old, the events under thirty. A
+  sync without an address keeps the known one. The « Web client » view shows
+  the last sync and the number of servers, and warns when nothing came for
+  over ten minutes. A new key forgets the web client and its servers.
+
 ## 0.34.0 — 2026-10-24
 
 ### Added

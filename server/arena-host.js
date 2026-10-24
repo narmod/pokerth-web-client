@@ -25,11 +25,13 @@
 // « Its own app » (web.323, 2026-10-24): the Arena can also run as an
 // application of its own, elsewhere. Admin › Community › Arena then keeps
 // its address and its link key (made by the Arena, /arena/organize › Web
-// client) instead of launching the service: « Test and save » calls the
-// Arena's POST /arena/api/link/hello with the key and this web client's
-// public address; the Arena then reads GET /api/arena-link/servers and
-// /api/arena-link/events here with the same key (handleArenaLink), and
-// /arena on this site sends visitors to the Arena's address.
+// client) instead of launching the service. Only the Arena has an API: this
+// web client SENDS it, with that key, its public address, its version, the
+// servers the Arena may use (LAN directory and local server) and the
+// community events — POST /arena/api/link/sync at « Test and save », then
+// every minute (events every five). Nothing is exposed here for the Arena;
+// /arena on this site sends visitors to the Arena's address, and the
+// players' witness reports go to the Arena's own API as before.
 // Design: docs/ARENA.md.
 // ═══════════════════════════════════════════════════════════════════
 
@@ -71,16 +73,13 @@ const ENV_KEEP = ['PATH', 'HOME', 'LANG', 'LC_ALL', 'TZ', 'TMPDIR', 'NODE_EXTRA_
 // « Its own app »: the Arena's link key (arena/lib/link.mjs) and address.
 const LINK_KEY_RE = /^alk_[A-Za-z0-9_-]{40,60}$/;
 const LINK_TEST_MS = 8000;
-const LINK_BAD_MAX = 10, LINK_BAD_WINDOW_MS = 10 * 60 * 1000;
+const PUSH_MS = 60 * 1000;     // servers, every minute
+const EVENTS_EVERY = 5;        // events, every fifth send
 // « https://arena.example.org » (an origin: scheme, host, port; no path).
 function cleanOrigin(v) {
   const s = String(v || '').trim().replace(/\/+$/, '');
   if (!/^https?:\/\/[A-Za-z0-9.:[\]-]{1,255}$/.test(s)) return null;
   try { const u = new URL(s); return u.origin === s ? s : null; } catch (e) { return null; }
-}
-function sameSecret(a, b) {
-  const x = Buffer.from(String(a || '')), y = Buffer.from(String(b || ''));
-  return x.length > 0 && x.length === y.length && crypto.timingSafeEqual(x, y);
 }
 
 function createArenaHost(deps) {
@@ -90,8 +89,7 @@ function createArenaHost(deps) {
   let runningKey = null, reloading = false, codeTimer = null;
   let readyWaiters = [];
 
-  let lastContact = null, lastTest = null;
-  const linkBad = new Map();   // address → [times] (wrong link keys)
+  let lastTest = null, lastPush = null, pushTimer = null, pushTick = 0, pushing = false;
 
   function cfg() { return deps.getConfig() || {}; }
   function enabled() { return cfg().enabled === true; }
@@ -99,11 +97,13 @@ function createArenaHost(deps) {
   function mode() { return cfg().mode === 'external' ? 'external' : 'embedded'; }
   function linkUrl() { return cleanOrigin(cfg().url) || null; }
   function linkKey() { const k = String(cfg().key || ''); return LINK_KEY_RE.test(k) ? k : null; }
+  // This web client's public address, as told to the Arena at « Test and save ».
+  function selfUrl() { return cleanOrigin(cfg().self) || null; }
   function external() { return enabled() && mode() === 'external' && !!linkUrl() && !!linkKey(); }
   function wantsChild() { return enabled() && mode() !== 'external'; }
   function linkInfo() {
     const k = linkKey();
-    return { mode: mode(), url: linkUrl(), keySet: !!k, keyHint: k ? k.slice(0, 8) + '…' + k.slice(-4) : null, lastContact, lastTest };
+    return { mode: mode(), url: linkUrl(), self: selfUrl(), keySet: !!k, keyHint: k ? k.slice(0, 8) + '…' + k.slice(-4) : null, lastTest, lastPush };
   }
   function settings() { return Object.assign({ enabled: enabled() }, { link: linkInfo() }); }
   function setSettings(patch) {
@@ -117,22 +117,72 @@ function createArenaHost(deps) {
       if (patch.key === '' || patch.key === null) delete cur.key;
       else { const k = String(patch.key).trim(); if (!LINK_KEY_RE.test(k)) throw new Error('this is not an Arena link key (alk_…)'); cur.key = k; }
     }
+    if (patch.self !== undefined) { const u = cleanOrigin(patch.self); if (u) cur.self = u; else delete cur.self; }
     if (patch.mode === 'embedded' || patch.mode === 'external') {
       if (patch.mode === 'external' && !(cleanOrigin(cur.url) && LINK_KEY_RE.test(String(cur.key || '')))) throw new Error('give the Arena\'s address and its link key first');
       cur.mode = patch.mode;
     }
     if (cur.mode !== 'external') delete cur.mode;
     delete cur.allowAuthServers;   // option of web.292, withdrawn: LAN only
-    if (cur.url !== cfg().url || cur.key !== cfg().key) lastTest = null;
+    if (cur.url !== cfg().url || cur.key !== cfg().key) { lastTest = null; lastPush = null; }
     deps.setConfig(cur);
     sync();
     return settings();
   }
-  function sync() { if (wantsChild()) start(); else stop(); }
+  function sync() { if (wantsChild()) start(); else stop(); pushLoop(); }
 
-  // « Test and save »: tell the Arena who we are, with its key. Given an
-  // address and a key, they are saved when the Arena accepts them.
-  // → { ok, arena?, error? }
+  // ── « Its own app »: send the Arena what it needs, with its key ──
+  function payload(withEvents, me) {
+    let list = [];
+    try { list = deps.listServers() || []; } catch (e) {}
+    const body = { url: me || selfUrl() || undefined, version: deps.clientVersion(), servers: list };
+    if (!withEvents) return Promise.resolve(body);
+    return Promise.resolve().then(() => (deps.communityEvents ? deps.communityEvents() : null)).catch(() => null)
+      .then((ev) => { body.events = ev && typeof ev === 'object' ? ev : null; return body; });
+  }
+  // POST <Arena>/arena/api/link/sync → { ok, arena?, servers?, error? }
+  function post(url, key, body) {
+    const fetchFn = deps.fetch || ((...a) => fetch(...a));
+    const ac = new AbortController();
+    const t = setTimeout(() => ac.abort(), deps.linkTestMs || LINK_TEST_MS);
+    return Promise.resolve()
+      .then(() => fetchFn(url + '/arena/api/link/sync', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key }, body: JSON.stringify(body), signal: ac.signal }))
+      .then((r) => r.json().catch(() => ({})).then((d) => ({ r, d })))
+      .then(({ r, d }) => {
+        if (r.status === 403) return { ok: false, error: 'the Arena refused the key' };
+        if (r.status === 429) return { ok: false, error: 'the Arena says: too many attempts, try again later' };
+        if (r.status === 404) return { ok: false, error: 'no Arena at this address (or it is launched by a web client, not on its own)' };
+        if (!r.ok || !d || !d.ok) return { ok: false, error: (d && d.error) || ('the Arena answered HTTP ' + r.status) };
+        return { ok: true, arena: String(d.arena || ''), servers: Number(d.servers) || 0 };
+      })
+      .catch((e) => ({ ok: false, error: e && e.name === 'AbortError' ? 'no answer from the Arena (timeout)' : 'cannot reach the Arena: ' + ((e && e.cause && e.cause.code) || (e && e.message) || 'error') }))
+      .finally(() => clearTimeout(t));
+  }
+  function push(withEvents) {
+    if (!external() || pushing) return Promise.resolve(null);
+    pushing = true;
+    const ev = withEvents || pushTick % EVENTS_EVERY === 0;
+    pushTick++;
+    return payload(ev).then((b) => post(linkUrl(), linkKey(), b)).then((r) => {
+      pushing = false;
+      if (lastPush && lastPush.ok && !r.ok) log('[arena] sending to the Arena failed: ' + r.error);
+      lastPush = { at: Date.now(), ok: r.ok, arena: r.arena || null, servers: r.servers || 0, events: ev, error: r.error || null };
+      return r;
+    }, () => { pushing = false; return null; });
+  }
+  function pushLoop() {
+    if (external()) {
+      if (pushTimer) return;
+      pushTick = 0;
+      pushTimer = setInterval(() => { push(false); }, deps.pushMs || PUSH_MS);
+      if (pushTimer.unref) pushTimer.unref();
+      setImmediate(() => { push(true); });
+    } else if (pushTimer) { clearInterval(pushTimer); pushTimer = null; }
+  }
+
+  // « Test and save »: send the Arena who we are, the servers and the events,
+  // with its key. Given an address and a key, they are saved when the Arena
+  // accepts them. → { ok, arena?, servers?, error? }
   function linkTest(o) {
     const url = o.url !== undefined ? cleanOrigin(o.url) : linkUrl();
     const key = o.key !== undefined ? String(o.key || '').trim() : linkKey();
@@ -140,38 +190,17 @@ function createArenaHost(deps) {
     if (!LINK_KEY_RE.test(String(key || ''))) return Promise.resolve({ ok: false, error: 'this is not an Arena link key (alk_…): copy it from the Arena, /arena/organize › Web client' });
     const me = cleanOrigin(o.origin);
     if (!me) return Promise.resolve({ ok: false, error: 'this web client\'s public address is unknown: set it in Admin › SEO' });
-    const fetchFn = deps.fetch || ((...a) => fetch(...a));
-    const ac = new AbortController();
-    const t = setTimeout(() => ac.abort(), deps.linkTestMs || LINK_TEST_MS);
-    return Promise.resolve()
-      .then(() => fetchFn(url + '/arena/api/link/hello', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key }, body: JSON.stringify({ url: me, version: deps.clientVersion() }), signal: ac.signal }))
-      .then((r) => r.json().catch(() => ({})).then((d) => ({ r, d })))
-      .then(({ r, d }) => {
-        if (r.status === 403) return { ok: false, error: 'the Arena refused the key' };
-        if (r.status === 429) return { ok: false, error: 'the Arena says: too many attempts, try again later' };
-        if (r.status === 404) return { ok: false, error: 'no Arena at this address (or it is launched by a web client, not on its own)' };
-        if (!r.ok || !d || !d.ok) return { ok: false, error: (d && d.error) || ('the Arena answered HTTP ' + r.status) };
-        return { ok: true, arena: String(d.arena || ''), webClient: d.webClient || me };
-      })
-      .catch((e) => ({ ok: false, error: e && e.name === 'AbortError' ? 'no answer from the Arena (timeout)' : 'cannot reach the Arena: ' + ((e && e.cause && e.cause.code) || (e && e.message) || 'error') }))
-      .finally(() => clearTimeout(t))
-      .then((res) => {
-        if (res.ok && (o.url !== undefined || o.key !== undefined)) setSettings({ url, key });
-        lastTest = { at: Date.now(), ok: res.ok, arena: res.arena || null, error: res.error || null };
-        return res;
-      });
+    return payload(true, me).then((b) => post(url, key, b)).then((res) => {
+      if (res.ok) {
+        const patch = { self: me };
+        if (o.url !== undefined || o.key !== undefined) Object.assign(patch, { url, key });
+        setSettings(patch);
+      }
+      lastTest = { at: Date.now(), ok: res.ok, arena: res.arena || null, error: res.error || null };
+      if (res.ok) lastPush = { at: lastTest.at, ok: true, arena: res.arena, servers: res.servers || 0, events: true, error: null };
+      return res;
+    });
   }
-  // A request of the Arena (GET /api/arena-link/…): the key, else refused.
-  function linkAuthorized(authHeader, ip) {
-    const t = Date.now();
-    const l = (linkBad.get(ip) || []).filter((x) => t - x < LINK_BAD_WINDOW_MS);
-    linkBad.set(ip, l);
-    if (l.length >= LINK_BAD_MAX) return 429;
-    const m = /^\s*Bearer\s+(.+?)\s*$/i.exec(String(authHeader || ''));
-    if (!m || !sameSecret(m[1], linkKey())) { l.push(t); return 403; }
-    return 200;
-  }
-  function noteContact(what) { lastContact = { at: Date.now(), what }; }
 
   // New code on disk while the service runs: restart it, and only it.
   function watchCode() {
@@ -337,7 +366,7 @@ function createArenaHost(deps) {
     } catch (e) { return null; }
   }
 
-  return { settings, setSettings, sync, start, stop, restart, ready, info, relay, serviceStatus, keyInfo, enabled, mode, external, linkUrl, linkTest, linkAuthorized, noteContact, listServers: () => deps.listServers(), communityEvents: () => (deps.communityEvents ? deps.communityEvents() : null), PAGE_RE };
+  return { settings, setSettings, sync, start, stop, restart, ready, info, relay, serviceStatus, keyInfo, enabled, mode, external, linkUrl, linkTest, push, PAGE_RE };
 }
 
 // ── HTTP, under /admin/arena (auth and rate limit by handleAdmin) ──
@@ -420,23 +449,4 @@ function handleArenaPage(host, req, res, reqPathOnly, clientIp, origin) {
   return host.relay(req, res, reqPathOnly, null, origin ? { 'x-td-origin': String(origin).slice(0, 300) } : null);
 }
 
-// ── /api/arena-link/* — what the Arena running as its own app reads here,
-// with its link key: the servers it may use, the community events.
-function handleArenaLink(host, req, res, reqPathOnly, clientIp) {
-  const send = (code, obj, extra) => { res.writeHead(code, Object.assign({ 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' }, extra || {})); res.end(JSON.stringify(obj)); };
-  const what = reqPathOnly.slice('/api/arena-link/'.length);
-  if ((what !== 'servers' && what !== 'events') || req.method !== 'GET' || !host.external()) return send(404, { ok: false, error: 'not found' });
-  const a = host.linkAuthorized(req.headers.authorization, String(clientIp || '').slice(0, 64));
-  if (a === 429) return send(429, { ok: false, error: 'too many attempts, try again later' }, { 'Retry-After': '600' });
-  if (a !== 200) return send(403, { ok: false, error: 'forbidden' });
-  host.noteContact(what);
-  if (what === 'servers') {
-    let list = [];
-    try { list = host.listServers() || []; } catch (e) {}
-    return send(200, { ok: true, servers: list });
-  }
-  return Promise.resolve().then(() => host.communityEvents()).catch(() => null)
-    .then((data) => send(200, { ok: true, events: data && typeof data === 'object' ? data : null }));
-}
-
-module.exports = { createArenaHost, handleArenaAdmin, handleArenaPage, handleArenaLink, PAGE_RE, API_RE, LINK_KEY_RE, cleanOrigin };
+module.exports = { createArenaHost, handleArenaAdmin, handleArenaPage, PAGE_RE, API_RE, LINK_KEY_RE, cleanOrigin };

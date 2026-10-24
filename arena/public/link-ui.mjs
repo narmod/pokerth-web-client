@@ -1,11 +1,11 @@
 // ═══════════════════════════════════════════════════════════════════
 // /arena/organize — « Web client » view (service 0.34.0), the super admin only.
 //
-// When the Arena runs as an application of its own, it gets the servers it
-// may use and the community events from a PokerTH web client it is linked
-// to (arena/lib/link.mjs). This view shows the link key to paste in the web
-// client (Admin › Community › Arena › « Its own app »), which web client is
-// linked, when it last answered, and renews the key.
+// When the Arena runs as an application of its own, the PokerTH web client
+// linked to it sends the servers it may use and the community events
+// (arena/lib/link.mjs). This view shows the link key, made here, to paste in
+// the web client (Admin › Community › Arena › « Its own app »), which web
+// client is linked, when it last sent, and renews the key.
 // Launched by the web client itself, there is nothing to link: it says so.
 // Talks to /admin/arena/link.
 // ═══════════════════════════════════════════════════════════════════
@@ -28,12 +28,13 @@ export function createLinkView(deps) {
     $('lkShow').textContent = shown ? 'Hide' : 'Show';
     $('lkRotate').hidden = !!data.keyFromEnv;
     $('lkKeyNote').textContent = data.keyFromEnv ? 'This key comes from ARENA_LINK_KEY: change it there.' : 'Made by this Arena and kept in its data folder.';
-    const linked = !!data.webClient;
+    const linked = !!data.lastSync;
     $('lkState').innerHTML = linked
-      ? 'Linked to <b>' + esc(data.webClient) + '</b>' + (data.webClientVersion ? ' (' + esc(data.webClientVersion) + ')' : '') + (data.fixed ? ' — fixed by ARENA_WEBCLIENT_URL' : '') + '.'
+      ? 'Linked to <b>' + esc(data.webClient || 'a web client (address unknown)') + '</b>' + (data.webClientVersion ? ' (' + esc(data.webClientVersion) + ')' : '') + (data.fixed ? ' — fixed by ARENA_WEBCLIENT_URL' : '') + '.'
       : 'Not linked yet. In the web client: Admin › Community › Arena › « Its own app », this Arena’s address and the key above, then « Test and save ».';
     $('lkPull').innerHTML = linked
-      ? 'Linked: ' + esc(when(data.linkedAt)) + ' · last answer from the web client: ' + esc(when(data.lastPull)) + (data.lastError ? ' · <span class="bad">last error: ' + esc(data.lastError) + '</span>' : '')
+      ? 'Linked since ' + esc(when(data.linkedAt)) + ' · last sent: ' + esc(when(data.lastSync)) + ' · ' + esc(String(data.servers || 0)) + ' server' + (data.servers === 1 ? '' : 's')
+        + (data.serversFresh ? '' : ' · <span class="bad">nothing sent for over ten minutes: the director has no servers</span>')
       : '';
   }
   function refresh() {

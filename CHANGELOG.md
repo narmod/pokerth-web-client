@@ -71,6 +71,15 @@ highlights below.
   (exit code or signal) — so a watch that dies at once is no longer a blank « crashed »; a worker with no task
   leaves after 30 s.
 
+### Changed
+- **Arena « its own app »: only the Arena has an API** (`web.324`, service `0.35.0`, Arnaud's decision of
+  2026-10-24) — the web client no longer exposes `/api/arena-link/*` (removed with `handleArenaLink`). It now SENDS
+  the Arena, with the key the Arena made, its public address, its version, the servers the Arena may use (LAN
+  directory and local server) and the community events: `POST /arena/api/link/sync` at « Test and save », then every
+  minute (events every fifth send) while the mode is on. The admin card shows the last send (servers, events, or the
+  error, e.g. a key renewed on the Arena). The players' witness reports keep going to the Arena's own API (`/arena/api`
+  on this site answers 307 to it).
+
 ### Added
 - **Arena: « its own app »** (`web.323`, service `0.34.0`) — first step of turning the Arena into an application of
   its own (decided 2026-10-24). Admin › Community › Arena › « Where the Arena runs »: inside this web client (as

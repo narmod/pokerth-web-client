@@ -11708,8 +11708,8 @@ function hasScope(scope, query, bodyToken) {
 }
 
 // This site's public address (Admin › SEO, else the request's host): the
-// Arena builds shared-link pictures from it, and « Its own app » tells it to
-// the Arena so that the Arena can read /api/arena-link/* here (web.323).
+// Arena builds shared-link pictures from it, and « Its own app » sends it to
+// the Arena with the servers and events (web.323).
 function _arenaPublicOrigin(req) {
   const h = String(req.headers.host || '');
   return seoPublicUrl() || (/^[A-Za-z0-9.:[\]-]{1,255}$/.test(h) ? ((req.socket && req.socket.encrypted) || String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim() === 'https' ? 'https://' : 'http://') + h : '');
@@ -15205,12 +15205,6 @@ const httpServer = http.createServer((req, res) => {
     // The public address (Admin › SEO, else this request's host): the
     // director builds the picture of a shared link (og:image) from it.
     return ARENA_LIB.handleArenaPage(ARENA, req, res, reqPathOnly, clientIp(req), _arenaPublicOrigin(req));
-  }
-  // ── /api/arena-link/* — the Arena running as its own app reads the servers
-  // it may use and the community events here, with its link key (web.323;
-  // a 404 unless Admin › Community › Arena is on and set to « Its own app »).
-  if (reqPathOnly.indexOf('/api/arena-link/') === 0) {
-    return ARENA_LIB.handleArenaLink(ARENA, req, res, reqPathOnly, clientIp(req));
   }
   // ── /live — embedded spectator mode, successor to the pokerth-live tool.
   // Same client, same themes/decks/seats/layout, so every table improvement

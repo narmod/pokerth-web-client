@@ -776,10 +776,11 @@ export function createService(o) {
       return res.end(b);
     }
     if (p === '/arena/organize' || p === '/arena/organize/') return sendPage(res, 'index.html');
-    // The web client linked to this Arena says who it is (link.mjs; standalone only).
-    if (p === '/arena/api/link/hello') {
+    // The web client linked to this Arena sends who it is, the servers and the
+    // events (link.mjs; standalone only — the web client exposes nothing).
+    if (p === '/arena/api/link/sync') {
       if (!o.link || req.method !== 'POST') return json(res, 404, { ok: false, error: 'not found' });
-      return readJson(req).then((b) => { const r = o.link.hello(req.headers.authorization, b, req.socket.remoteAddress); json(res, r.status, r.body); })
+      return readJson(req).then((b) => { const r = o.link.sync(req.headers.authorization, b, req.socket.remoteAddress); json(res, r.status, r.body); })
         .catch(() => { if (!res.headersSent) json(res, 400, { ok: false, error: 'bad request' }); });
     }
     if (p.indexOf('/arena/api/') === 0) {
