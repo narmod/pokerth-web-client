@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Ditt konto, dess sessioner och verifieringarna av ditt smeknamn försvinner; dina resultat och medaljer stannar kvar i turneringarna, och smeknamnet blir ledigt igen.',
   acctCloseBtn: 'Avsluta mitt konto för gott',
   acctClosed: 'Ditt konto är avslutat.',
+  navOrganize: 'Arrangera',
 };

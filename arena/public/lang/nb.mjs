@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Kontoen din, øktene og kallenavnbekreftelsene dine slettes; resultatene og medaljene dine blir værende i turneringene, og kallenavnet kan tas i bruk igjen.',
   acctCloseBtn: 'Avslutt kontoen min for godt',
   acctClosed: 'Kontoen din er avsluttet.',
+  navOrganize: 'Arranger',
 };

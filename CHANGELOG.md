@@ -72,6 +72,9 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Arena: one account for everything** (`web.322`, service `0.33.0`) — the relay lets a player account's session
+  (`ps_…`) through to `/admin/arena/*` as it does an organizer account's (`as_…`): the Arena checks it and the role the
+  super admin gave that account (organizer, referee, read only).
 - **Arena: the home page shows what is on** (`web.321`, service `0.31.0`) — the proxy hands the community events
   (the Events relay's cache: BBC, WEC, Monthly Cup) to the Arena over IPC (`events`, `server/arena-host.js` →
   `deps.communityEvents`) for its showcase home page; the relay lets `/arena/img/<name>.webp` through (the hero

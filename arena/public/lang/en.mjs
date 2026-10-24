@@ -346,4 +346,5 @@ export const strings = {
   acctCloseHint: 'Your account, its sessions and your nickname verifications go; your results and medals stay with the tournaments, and the nickname is free to claim again.',
   acctCloseBtn: 'Close my account for good',
   acctClosed: 'Your account is closed.',
+  navOrganize: 'Organize',
 };

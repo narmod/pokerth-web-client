@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Thèid an cunntas agad, na seiseanan aige agus dearbhaidhean an far-ainm agad às; fanaidh na toraidhean is na buinn agad leis na co-fharpaisean, agus faodar am far-ainm a thagradh a-rithist.',
   acctCloseBtn: 'Dùin an cunntas agam gu buan',
   acctClosed: 'Tha an cunntas agad dùinte.',
+  navOrganize: 'Eagraich',
 };

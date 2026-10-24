@@ -17,6 +17,7 @@ import { tablePresets } from './table.mjs';
 import { cleanAbsence } from './tournaments.mjs';
 import { createAccounts, allowed, SESSION_PREFIX } from './accounts.mjs';
 import { LANG_META_FILE, HERO_IMAGE_FILE } from './platform.mjs';
+import { PLAYER_SESSION_PREFIX } from './players.mjs';
 import { createShowcase } from './showcase.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -267,7 +268,16 @@ export function createService(o) {
   // an account's session (its display name and role). null: nobody;
   // { expired: true }: a session token that is no longer valid.
   function auth(req) {
-    const fromSession = (t) => { const s = A.session(t); return s ? { who: s.name, role: s.role, account: s } : { expired: true }; };
+    // An organizer account's session (as_…), or a player account's (ps_…)
+    // carrying a role (service 0.33.0: one account for everything).
+    const fromSession = (t) => {
+      if (t.indexOf(PLAYER_SESSION_PREFIX) === 0) {
+        const p = P.session(t);
+        if (!p) return { expired: true };
+        return p.role ? { who: p.nick, role: p.role, player: p } : null;
+      }
+      const s = A.session(t); return s ? { who: s.name, role: s.role, account: s } : { expired: true };
+    };
     if (o.secret && same(req.headers['x-td-secret'], o.secret)) {
       if (req.headers['x-arena-session']) return fromSession(String(req.headers['x-arena-session']));
       // The web client sends who acts, URI-encoded (an organizer's key name).
@@ -278,7 +288,7 @@ export function createService(o) {
     }
     const m = /^\s*Bearer\s+(.+?)\s*$/i.exec(req.headers.authorization || '');
     if (o.adminToken && m && same(m[1], o.adminToken)) return { who: 'admin', role: 'admin' };
-    if (m && m[1].indexOf(SESSION_PREFIX) === 0) return fromSession(m[1]);
+    if (m && (m[1].indexOf(SESSION_PREFIX) === 0 || m[1].indexOf(PLAYER_SESSION_PREFIX) === 0)) return fromSession(m[1]);
     return null;
   }
   function author(req) { const a = auth(req); return a && a.who ? a.who : null; }
@@ -323,7 +333,7 @@ export function createService(o) {
       .catch((e) => json(res, e instanceof T.Refusal ? 400 : 500, { ok: false, error: (e && e.message) || 'error' }));
     const get = req.method === 'GET';
 
-    if (sub === '/status' && get) return json(res, 200, Object.assign({ ok: true, you: who, role, account: au.account ? { login: au.account.login, name: au.account.name } : null }, status()));
+    if (sub === '/status' && get) return json(res, 200, Object.assign({ ok: true, you: who, role, account: au.account ? { login: au.account.login, name: au.account.name } : null, player: au.player ? { nick: au.player.nick } : null }, status()));
     // Accounts (the super admin only: allowed() above).
     if (sub === '/accounts' && get) return json(res, 200, { ok: true, accounts: A.list() });
     if (sub.indexOf('/accounts/') === 0 && !get) {
@@ -419,6 +429,7 @@ export function createService(o) {
       if (sub === '/players/removeaccount') return sendP(() => P.removeAccount(b.id));
       if (sub === '/players/remove') return sendP(() => P.remove(b.id));
       if (sub === '/players/note') return sendP(() => P.setNote(b.id, b.note));
+      if (sub === '/players/role') return sendP(() => P.setRole(b.id, b.role || null, who));
       if (sub === '/players/ban') return sendP(() => P.ban(b, who));
       if (sub === '/players/unban') return sendP(() => P.unban(b.id));
       return json(res, 404, { ok: false, error: 'unknown' });

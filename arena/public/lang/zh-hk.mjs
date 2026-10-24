@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: '你的帳戶、其登入時段及暱稱驗證將被刪除；你的成績及獎牌會保留在各錦標賽中，暱稱可再被認領。',
   acctCloseBtn: '永久關閉我的帳戶',
   acctClosed: '你的帳戶已關閉。',
+  navOrganize: '主辦',
 };

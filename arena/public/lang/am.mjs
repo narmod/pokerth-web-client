@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'መለያዎ፣ ክፍለ-ጊዜዎቹ እና የቅጽል ስም ማረጋገጫዎችዎ ይሰረዛሉ፤ ውጤቶችዎ እና ሜዳሊያዎችዎ ከውድድሮቹ ጋር ይቆያሉ፣ ቅጽል ስሙም እንደገና ሊወሰድ ይችላል።',
   acctCloseBtn: 'መለያዬን በቋሚነት ዝጋ',
   acctClosed: 'መለያዎ ተዘግቷል።',
+  navOrganize: 'ያደራጁ',
 };

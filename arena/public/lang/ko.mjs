@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: '계정, 세션, 닉네임 인증이 삭제됩니다. 결과와 메달은 토너먼트에 남고, 닉네임은 다시 등록할 수 있게 됩니다.',
   acctCloseBtn: '내 계정 영구 삭제',
   acctClosed: '계정이 삭제되었습니다.',
+  navOrganize: '주최',
 };

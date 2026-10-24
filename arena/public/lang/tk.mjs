@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Hasabyňyz, onuň sessiýalary we lakamyňyzyň tassyklamalary aýrylýar; netijeleriňiz we medallaryňyz ýaryşlarda galýar, lakam bolsa ýene boş bolýar.',
   acctCloseBtn: 'Hasabymy hemişelik ýap',
   acctClosed: 'Hasabyňyz ýapyldy.',
+  navOrganize: 'Gura',
 };

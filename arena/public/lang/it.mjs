@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Il tuo account, le sue sessioni e le verifiche del tuo nickname vengono eliminati; i tuoi risultati e le tue medaglie restano con i tornei, e il nickname torna libero.',
   acctCloseBtn: 'Chiudi definitivamente il mio account',
   acctClosed: 'Il tuo account è chiuso.',
+  navOrganize: 'Organizza',
 };

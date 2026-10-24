@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Via konto, ĝiaj seancoj kaj la kontroloj de via kaŝnomo malaperas; viaj rezultoj kaj medaloj restas ĉe la turniroj, kaj la kaŝnomo denove estas libera.',
   acctCloseBtn: 'Fermi mian konton por ĉiam',
   acctClosed: 'Via konto estas fermita.',
+  navOrganize: 'Organizi',
 };

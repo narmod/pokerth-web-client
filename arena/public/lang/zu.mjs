@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'I-akhawunti yakho, amaseshini ayo nokuqinisekiswa kwesiteketiso sakho kuyasuswa; imiphumela nezindondo zakho zihlala nemiqhudelwano, futhi isiteketiso singathathwa futhi.',
   acctCloseBtn: 'Vala i-akhawunti yami unomphela',
   acctClosed: 'I-akhawunti yakho ivaliwe.',
+  navOrganize: 'Hlela',
 };

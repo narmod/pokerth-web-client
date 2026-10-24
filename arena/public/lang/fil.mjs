@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Mabubura ang iyong account, ang mga session nito at ang mga verification ng iyong palayaw; mananatili sa mga tournament ang iyong mga resulta at medalya, at malaya nang makukuha muli ang palayaw.',
   acctCloseBtn: 'Isara nang tuluyan ang aking account',
   acctClosed: 'Sarado na ang iyong account.',
+  navOrganize: 'Mag-organisa',
 };

@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Mae eich cyfrif, ei sesiynau a dilysiadau eich llysenw yn diflannu; mae eich canlyniadau a’ch medalau yn aros gyda’r twrnameintiau, a gall rhywun arall hawlio’r llysenw eto.',
   acctCloseBtn: 'Cau fy nghyfrif am byth',
   acctClosed: 'Mae eich cyfrif wedi’i gau.',
+  navOrganize: 'Trefnu',
 };

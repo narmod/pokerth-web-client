@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'A fiókod, a munkamenetei és a beceneved igazolásai törlődnek; az eredményeid és érmeid a versenyeknél maradnak, a becenév pedig újra lefoglalható.',
   acctCloseBtn: 'Fiókom végleges megszüntetése',
   acctClosed: 'A fiókod megszűnt.',
+  navOrganize: 'Szervezés',
 };

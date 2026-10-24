@@ -10,6 +10,27 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.33.0 — 2026-10-24
+
+### Added
+- **One account for everything** (step 4 of the redesign, decided
+  2026-10-24: the role goes to a player account). The super admin gives a
+  player account a role on the organizer side — organizer, referee, read
+  only — in Players (`POST /admin/arena/players/role`, the super admin only).
+  That player signs in once, on the players' app, with his PokerTH nickname:
+  « Organize » appears in the menu (also in the bar at the bottom on phones)
+  and opens the organizer's tools already signed in (the same session,
+  `ps_…`, accepted on `/admin/arena/*` with the rights of the role); his
+  nickname goes in the journals. A role taken away, an account turned off or
+  closed: refused at once. Signing out on the organizer's page signs out of
+  the app.
+- The organizer's sign-in card leads to the app's sign-in page first; the
+  organizer accounts (login and password) and the master key are still
+  there, folded, until the super admin turns those accounts off.
+- The players list shows each account's role; the organizer's « My account »
+  tab points a player account to the app's « My account ».
+- The string « Organize » in the 83 languages.
+
 ## 0.32.0 — 2026-10-24
 
 ### Added

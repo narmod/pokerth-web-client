@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Tvoj račun, njegove seje in preverjanja tvojega vzdevka izginejo; tvoji rezultati in medalje ostanejo pri turnirjih, vzdevek pa je spet prost.',
   acctCloseBtn: 'Dokončno zapri moj račun',
   acctClosed: 'Tvoj račun je zaprt.',
+  navOrganize: 'Organizacija',
 };

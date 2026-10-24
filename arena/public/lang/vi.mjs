@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Tài khoản, các phiên và các lần xác minh biệt danh của bạn sẽ bị xóa; kết quả và huy chương của bạn vẫn ở lại với các giải đấu, và người khác có thể nhận lại biệt danh.',
   acctCloseBtn: 'Đóng vĩnh viễn tài khoản của tôi',
   acctClosed: 'Tài khoản của bạn đã được đóng.',
+  navOrganize: 'Tổ chức',
 };

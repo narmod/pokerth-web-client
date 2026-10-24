@@ -267,7 +267,7 @@ body[data-role="referee"] .org-only, body[data-role="viewer"] .org-only{display:
 @media (max-width:760px){
   .pub .brand{font-size:0;gap:0}
   .pub .top .beta{display:none}
-  .mainnav{position:fixed;left:0;right:0;bottom:0;z-index:35;margin:0;gap:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:var(--felt-lo);border-top:1px solid var(--line);padding:4px max(4px,env(safe-area-inset-left)) calc(4px + env(safe-area-inset-bottom)) max(4px,env(safe-area-inset-right));box-shadow:0 -4px 18px rgba(0,0,0,.25)}
+  .mainnav{position:fixed;left:0;right:0;bottom:0;z-index:35;margin:0;gap:0;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);background:var(--felt-lo);border-top:1px solid var(--line);padding:4px max(4px,env(safe-area-inset-left)) calc(4px + env(safe-area-inset-bottom)) max(4px,env(safe-area-inset-right));box-shadow:0 -4px 18px rgba(0,0,0,.25)}
   .mainnav a,.mainnav #navAcct{flex-direction:column;gap:2px;padding:6px 2px;font-size:.68em;min-height:52px;justify-content:center;border:0;margin:0;max-width:none;border-radius:8px}
   .mainnav a span,.mainnav #navAcct span{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .mainnav a svg{width:22px;height:22px}
@@ -301,3 +301,6 @@ a.evr:hover{background:var(--line);border-radius:8px}
 /* « My account » and the sign-in page (service 0.32.0) */
 .logingrid{display:grid;gap:0 16px;align-items:start}
 @media (min-width:760px){.logingrid{grid-template-columns:repeat(2,minmax(0,1fr))}.logingrid .card.narrow{max-width:none}}
+a.btn.primary{background:var(--chip);border-color:var(--chip);color:var(--chip-ink)}
+.mainnav a[hidden]{display:none!important}
+.plrole{width:auto;min-height:40px}

@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'アカウント、そのセッション、ニックネームの確認情報は削除されます。成績とメダルはトーナメントに残り、ニックネームは再び取得できるようになります。',
   acctCloseBtn: 'アカウントを完全に削除',
   acctClosed: 'アカウントを削除しました。',
+  navOrganize: '主催',
 };

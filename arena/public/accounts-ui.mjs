@@ -45,7 +45,8 @@ export function createAccountsView(deps) {
         : '<li class="empty">No account yet: create one above.</li>';
     } else {
       $('aAdmin').hidden = true; $('aMe').hidden = false;
-      $('aMeWho').textContent = me.account ? me.account.name + ' (' + me.account.login + ') — ' + (ROLE_TEXT[me.role] || me.role) : 'Signed in with an organizer key: no account, no password to change.';
+      if (me.player) $('aMeWho').innerHTML = 'Your player account <b>' + esc(me.player.nick) + '</b> — ' + esc(ROLE_TEXT[me.role] || me.role) + '. Its password, devices and preferences: <a href="/arena/account">My account</a>.';
+      else $('aMeWho').textContent = me.account ? me.account.name + ' (' + me.account.login + ') — ' + (ROLE_TEXT[me.role] || me.role) : 'Signed in with an organizer key: no account, no password to change.';
       $('aPwForm').hidden = !me.account;
     }
   }

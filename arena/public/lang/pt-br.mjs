@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Sua conta, suas sessões e as verificações do seu apelido são apagadas; seus resultados e medalhas ficam nos torneios, e o apelido fica livre para ser reivindicado de novo.',
   acctCloseBtn: 'Encerrar minha conta definitivamente',
   acctClosed: 'Sua conta foi encerrada.',
+  navOrganize: 'Organizar',
 };

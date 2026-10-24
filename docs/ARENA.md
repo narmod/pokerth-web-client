@@ -781,6 +781,27 @@ Code: `arena/lib/groups.mjs`, `arena/public/groups-ui.mjs`; tests:
   combine with the identity « account » or « verified » when it matters.
 - Reset: the part `groups` archives `groups.json`.
 
+## One account for everything (service `0.33.0`)
+
+Code: `arena/lib/players.mjs` (`PLAYER_ROLES`, `setRole`), `service.mjs`
+(`auth`), `public/organizer.mjs`, `public/players-ui.mjs`; tests:
+`arena/test/test-arena-roles.mjs`.
+
+- A player account may carry a role on the organizer side: `organizer`,
+  `referee` or `viewer` (read only), given by the super admin:
+  `POST /admin/arena/players/role { id, role | null }` (admin only). The
+  same rights as the organizer accounts (`accounts.mjs` `allowed()`).
+- The player's session (`ps_…`, the players' app) is accepted on
+  `/admin/arena/*` (`Authorization: Bearer`, or relayed by the web client
+  as `x-arena-session`, web.322): with a role, `who` is the nickname (the
+  journals), `/status` adds `player`; without one, 403. `/players/me` and the
+  sign-in answer carry the role: the app shows « Organize » (a link to
+  `/arena/organize`, a page of the same app, not rebuilt inside the menu's
+  page) and the organizer's page reads the same session from this browser.
+- The organizer accounts (`as_…`, login and password) keep working; the
+  super admin turns them off when their owners have player accounts with a
+  role (decided 2026-10-24: no automatic conversion).
+
 ## My account (service `0.32.0`)
 
 Code: `arena/lib/players.mjs` (profile, preferences, sessions, closing),

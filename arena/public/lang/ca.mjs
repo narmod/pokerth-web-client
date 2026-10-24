@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'El teu compte, les seves sessions i les verificacions del teu sobrenom desapareixen; els teus resultats i medalles es queden amb els tornejos, i el sobrenom es pot tornar a reclamar.',
   acctCloseBtn: 'Tanca el meu compte definitivament',
   acctClosed: 'El teu compte està tancat.',
+  navOrganize: 'Organitza',
 };

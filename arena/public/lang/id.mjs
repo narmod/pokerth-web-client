@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Akun Anda, sesinya, dan verifikasi nama panggilan Anda dihapus; hasil dan medali Anda tetap tercatat di turnamen, dan nama panggilan itu bebas diklaim lagi.',
   acctCloseBtn: 'Tutup akun saya selamanya',
   acctClosed: 'Akun Anda telah ditutup.',
+  navOrganize: 'Kelola',
 };

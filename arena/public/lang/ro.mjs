@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Contul tău, sesiunile lui și verificările pseudonimului se șterg; rezultatele și medaliile tale rămân la turnee, iar pseudonimul poate fi revendicat din nou.',
   acctCloseBtn: 'Închide-mi contul definitiv',
   acctClosed: 'Contul tău a fost închis.',
+  navOrganize: 'Organizare',
 };

@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Váš účet, jeho relácie a overenia vašej prezývky zmiznú; vaše výsledky a medaily zostanú pri turnajoch a prezývka bude znova voľná.',
   acctCloseBtn: 'Natrvalo zrušiť môj účet',
   acctClosed: 'Váš účet je zrušený.',
+  navOrganize: 'Organizovanie',
 };

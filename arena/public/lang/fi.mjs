@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Tilisi, sen istunnot ja nimimerkkisi vahvistukset poistetaan; tuloksesi ja mitalisi jäävät turnauksiin, ja nimimerkki vapautuu uudelleen varattavaksi.',
   acctCloseBtn: 'Sulje tilini pysyvästi',
   acctClosed: 'Tilisi on suljettu.',
+  navOrganize: 'Järjestä',
 };

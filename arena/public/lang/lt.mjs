@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Ištrinama jūsų paskyra, jos sesijos ir slapyvardžio patvirtinimai; jūsų rezultatai ir medaliai lieka turnyruose, o slapyvardį vėl galima užimti.',
   acctCloseBtn: 'Uždaryti paskyrą visam laikui',
   acctClosed: 'Jūsų paskyra uždaryta.',
+  navOrganize: 'Organizuoti',
 };

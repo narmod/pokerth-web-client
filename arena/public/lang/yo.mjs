@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Àkọọ́lẹ̀ rẹ, àwọn ìgbà ìwọlé rẹ̀ àti ìjẹ́rìísí orúkọ ìnagijẹ rẹ yóò lọ; àbájáde àti mẹ́dàlì rẹ yóò wà pẹ̀lú àwọn ìdíje, ẹlòmíràn sì lè gba orúkọ ìnagijẹ náà.',
   acctCloseBtn: 'Pa àkọọ́lẹ̀ mi dé títí láé',
   acctClosed: 'A ti pa àkọọ́lẹ̀ rẹ dé.',
+  navOrganize: 'Ṣètò',
 };

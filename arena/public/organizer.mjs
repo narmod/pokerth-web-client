@@ -20,6 +20,7 @@ import { initTheme } from './theme.mjs';
 
 const TOKK = 'pth_admin_tok';         // a key (master or organizer): shared with /admin
 const SESSK = 'pth_arena_session';    // an organizer account's session (as_…)
+const PSESS = 'pth_arena_player';     // the player account of the players' app (ps_…), with a role: the same sign-in (0.33.0)
 const VIEWK = 'pth_td_view';
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -33,7 +34,9 @@ let detailTimer = null, listTimer = null, lastLive = null;
 
 function store(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
 function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
-function tok() { return (load(SESSK) || load(TOKK) || '').trim(); }
+function playerTok() { try { const v = JSON.parse(load(PSESS) || 'null'); return v && v.token ? String(v.token) : ''; } catch (e) { return ''; } }
+function tok() { return (load(SESSK) || load(TOKK) || playerTok() || '').trim(); }
+const viaPlayer = () => !load(SESSK) && !load(TOKK) && !!playerTok();
 
 function api(path, body) {
   const opts = { headers: { Authorization: 'Bearer ' + tok() }, cache: 'no-store' };
@@ -41,8 +44,8 @@ function api(path, body) {
   return fetch(path, opts).then((r) => r.json().catch(() => ({ ok: false, error: 'HTTP ' + r.status })).then((d) => {
     // A role that may not do this: said, not signed out.
     if (r.status === 403 && d.code === 'role') throw new Error(d.error || 'your role cannot do this');
-    if (r.status === 401 && d.code === 'session') { store(SESSK, null); signedOut('Your session has ended: sign in again.'); throw new Error('forbidden'); }
-    if (r.status === 403) { signedOut(load(SESSK) ? 'Sign-in refused.' : 'Token refused.'); throw new Error('forbidden'); }
+    if (r.status === 401 && d.code === 'session') { if (viaPlayer()) store(PSESS, null); store(SESSK, null); signedOut('Your session has ended: sign in again.'); throw new Error('forbidden'); }
+    if (r.status === 403) { signedOut(viaPlayer() ? 'Your player account has no role on the organizer side: the super admin gives one (Players).' : load(SESSK) ? 'Sign-in refused.' : 'Token refused.'); throw new Error('forbidden'); }
     if (r.status === 429) throw new Error(d.error || 'too many failed attempts, retry later');
     return d;
   }));
@@ -87,8 +90,8 @@ let you = '';   // who is signed in: « admin » (master key) or an organizer's 
 const images = createImagePicker({ api, esc });
 const tours = createTournamentsView({ api, esc, tok, servers: () => servers, you: () => you, images });
 const cups = createCupsView({ api, esc, images, you: () => you, form: () => tours, openTournament: (id) => { setView('tour'); tours.open(id); } });
-let role = '', account = null;   // the signed-in role: admin (master key), organizer, referee, viewer
-const accounts = createAccountsView({ api, esc, me: () => ({ role, account }) });
+let role = '', account = null, player = null;   // the signed-in role: admin (master key), organizer, referee, viewer
+const accounts = createAccountsView({ api, esc, me: () => ({ role, account, player }) });
 // Start again from zero: the super admin only (the tab shows for the master key).
 const playersView = createPlayersView({ api, esc, role: () => role });
 const groupsView = createGroupsView({ api, esc, role: () => role });
@@ -161,6 +164,8 @@ $('inviteForm').addEventListener('submit', (ev) => {
 $('signOut').addEventListener('click', () => {
   const s = load(SESSK);
   if (s) pub('/arena/api/account/logout', { token: s }).catch(() => {});
+  // Signed in with the player account: signed out of the whole app.
+  if (viaPlayer()) { pub('/arena/api/players/logout', { session: playerTok() }).catch(() => {}); store(PSESS, null); }
   store(SESSK, null); store(TOKK, null); signedOut('Signed out.');
 });
 
@@ -174,11 +179,11 @@ function start() {
     servers = d.servers || [];
     api('/admin/arena/status').then((st) => {
       you = (st && st.you) || '';
-      role = (st && st.role) || 'organizer'; account = (st && st.account) || null;
+      role = (st && st.role) || 'organizer'; account = (st && st.account) || null; player = (st && st.player) || null;
       document.body.dataset.role = role;
       const roleName = { admin: 'super admin', organizer: 'organizer', referee: 'referee', viewer: 'read only' }[role] || role;
       $('signOut').textContent = you ? 'Sign out (' + you + ' · ' + roleName + ')' : 'Sign out';
-      $('signOut').title = role === 'admin' ? 'Signed in with the master key (super admin)' : 'Signed in as « ' + you + ' », ' + roleName;
+      $('signOut').title = role === 'admin' ? 'Signed in with the master key (super admin)' : 'Signed in as « ' + you + ' », ' + roleName + (player ? ' (player account)' : '');
       $('tabAcc').textContent = role === 'admin' ? 'Accounts' : 'My account';
       if (document.querySelector('#tabAcc[aria-selected="true"]')) accounts.refresh();
       if (document.querySelector('#tabPl[aria-selected="true"]')) { playersView.refresh(); groupsView.refresh(); }

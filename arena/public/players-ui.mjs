@@ -18,6 +18,8 @@ export function createPlayersView(deps) {
   const when = (ts) => (ts ? new Date(ts).toLocaleDateString() : '—');
   const linkOf = (t) => window.location.origin + '/arena#pinvite=' + encodeURIComponent(t);
   const ACC = { active: ['account', 'done'], invited: ['invited', 'live'], disabled: ['account off', 'bad'] };
+  // A role on the organizer side (service 0.33.0): the super admin gives it to a player account.
+  const ROLE = { organizer: 'organizer', referee: 'referee', viewer: 'read only' };
 
   function showLink(nick, t) {
     $('plLink').hidden = false;
@@ -42,6 +44,7 @@ export function createPlayersView(deps) {
       const a = r.account ? ACC[r.account] : null;
       const s = r.stats;
       let h = '<li class="acc"><div><b>' + esc(r.nick) + '</b> ' + (a ? '<span class="chip ' + a[1] + '">' + esc(a[0]) + '</span> ' : '') + (r.ban ? '<span class="chip bad">banned</span>' : '') +
+        (r.role ? ' <span class="chip done">' + esc(ROLE[r.role] || r.role) + '</span>' : '') +
         (r.groups && r.groups.length ? r.groups.map((g) => ' <span class="chip">' + esc(g) + '</span>').join('') : '') +
         (r.verified && r.verified.length ? r.verified.map((v) => ' <span class="chip live" title="' + esc(when(v.at)) + '">verified on ' + esc(v.server) + '</span>').join('') : '') +
         '<br><span class="small muted">' + (s ? s.tournaments + ' tournament' + (s.tournaments === 1 ? '' : 's') + ' · ' + s.wins + ' won · ' + s.podiums + ' podium' + (s.podiums === 1 ? '' : 's') + ' · last ' + esc(when(s.last)) : 'no validated result') +
@@ -58,6 +61,8 @@ export function createPlayersView(deps) {
           h += '<button type="button" class="ghost" data-plact="reinvite" data-id="' + k + '">New invitation link</button>';
           h += r.account === 'disabled' ? '<button type="button" class="ghost" data-plact="enable" data-id="' + k + '">Turn on</button>' : '<button type="button" class="ghost" data-plact="disable" data-id="' + k + '">Turn off</button>';
         }
+        if (admin && r.account) h += '<label class="sr" for="plRole_' + k + '">Role</label><select id="plRole_' + k + '" class="plrole" data-plrole="' + k + '" data-nick="' + n + '"><option value="">no role (player)</option>' +
+          Object.keys(ROLE).map((x) => '<option value="' + x + '"' + (r.role === x ? ' selected' : '') + '>' + ROLE[x] + '</option>').join('') + '</select>';
         h += r.ban ? '<button type="button" data-plact="unban" data-id="' + k + '">Lift the ban</button>' : '<button type="button" class="danger" data-plact="ban" data-nick="' + n + '">Ban…</button>';
         h += '</div>';
         if (banning === r.nick) h += '<form class="row pl-ban" data-nick="' + n + '" data-id="' + k + '"><div><label for="plBanWhy">Why (shown to him)</label><input id="plBanWhy" maxlength="200" required minlength="3"></div>' +
@@ -107,6 +112,12 @@ export function createPlayersView(deps) {
     if (a === 'tk') return api('/admin/arena/tickets/adjust', { nick, type: b.dataset.type, delta: Number(b.dataset.d) }).then(done('Tickets of ' + nick + ': ' + (Number(b.dataset.d) > 0 ? 'one given.' : 'one taken.'))).catch(fail);
     if (a === 'ban') { banning = nick; render(); const w = $('plBanWhy'); if (w) w.focus(); return; }
     if (a === 'bancancel') { banning = null; render(); }
+  });
+  $('plList').addEventListener('change', (ev) => {
+    const sel = ev.target.closest('select[data-plrole]');
+    if (!sel) return;
+    const label = sel.value ? ROLE[sel.value] : 'no role';
+    api('/admin/arena/players/role', { id: sel.dataset.plrole, role: sel.value || null }).then(done(sel.dataset.nick + ': ' + label + '.')).catch(fail);
   });
   $('plList').addEventListener('submit', (ev) => {
     const f = ev.target.closest('form.pl-ban');

@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Je account, de sessies en je bijnaamverificaties verdwijnen; je uitslagen en medailles blijven bij de toernooien, en de bijnaam is weer vrij.',
   acctCloseBtn: 'Mijn account definitief opheffen',
   acctClosed: 'Je account is opgeheven.',
+  navOrganize: 'Organiseren',
 };

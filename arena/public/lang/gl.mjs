@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'A túa conta, as súas sesións e as verificacións do teu alcume desaparecen; os teus resultados e medallas quedan cos torneos, e o alcume pode volver reclamarse.',
   acctCloseBtn: 'Pechar a miña conta definitivamente',
   acctClosed: 'A túa conta está pechada.',
+  navOrganize: 'Organizar',
 };

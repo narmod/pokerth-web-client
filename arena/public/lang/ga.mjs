@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Imíonn do chuntas, a sheisiúin agus fíoruithe do leasainm; fanann do thorthaí agus do bhoinn leis na comórtais, agus is féidir an leasainm a éileamh arís.',
   acctCloseBtn: 'Dún mo chuntas go buan',
   acctClosed: 'Tá do chuntas dúnta.',
+  navOrganize: 'Eagraigh',
 };

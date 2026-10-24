@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Jou rekening, sy sessies en jou bynaamverifikasies verdwyn; jou uitslae en medaljes bly by die toernooie, en die bynaam kan weer opgeëis word.',
   acctCloseBtn: 'Sluit my rekening permanent',
   acctClosed: 'Jou rekening is gesluit.',
+  navOrganize: 'Organiseer',
 };

@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Tiek dzēsts tavs konts, tā sesijas un segvārda apstiprinājumi; tavi rezultāti un medaļas paliek turnīros, un segvārdu atkal var pieteikt.',
   acctCloseBtn: 'Slēgt manu kontu pavisam',
   acctClosed: 'Tavs konts ir slēgts.',
+  navOrganize: 'Organizēt',
 };

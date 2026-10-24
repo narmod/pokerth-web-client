@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Akaun anda, sesinya dan pengesahan nama samaran anda dipadam; keputusan dan pingat anda kekal bersama kejohanan, dan nama samaran itu boleh dituntut semula.',
   acctCloseBtn: 'Tutup akaun saya selama-lamanya',
   acctClosed: 'Akaun anda telah ditutup.',
+  navOrganize: 'Anjur',
 };

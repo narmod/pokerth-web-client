@@ -51,12 +51,16 @@
 
   <section class="card" id="signIn" hidden aria-labelledby="signInH">
     <h2 id="signInH">Organizer sign-in</h2>
-    <p class="muted small">With the account the admin made for you (login and password). The journals record who did what by your name.</p>
+    <p>One account for everything: sign in on the players' app with your PokerTH nickname; when the super admin gave your account a role, « Organize » is in its menu and brings you here.</p>
+    <div class="actions"><a class="btn primary" href="/arena/login?next=%2Farena%2Forganize">Sign in with my player account</a></div>
+    <details class="sub"><summary>An organizer account (login and password)</summary>
+    <p class="muted small">The accounts made before player accounts had roles. The journals record who did what by your name.</p>
     <form id="loginForm" class="row">
       <div><label for="loginIn">Login</label><input id="loginIn" autocomplete="username" required maxlength="32" autocapitalize="none" spellcheck="false"></div>
       <div><label for="passIn">Password</label><input id="passIn" type="password" autocomplete="current-password" required></div>
-      <button type="submit" class="primary">Sign in</button>
+      <button type="submit">Sign in</button>
     </form>
+    </details>
     <details class="sub"><summary>Sign in with a key</summary>
       <p class="muted small">The admin master key: the super admin (accounts, module settings, deletions).</p>
       <form id="signInForm" class="row">
@@ -167,7 +171,7 @@
   </div>
   <div id="viewAcc" role="tabpanel" aria-labelledby="tabAcc" hidden>
     <div id="aAdmin" hidden>
-      <p class="lead">Organizer accounts: each one signs in with a login and a password, with a role. You (the master key) are the super admin: accounts, module settings and deletions are yours only.</p>
+      <p class="lead">One account for everything (service 0.33.0): give a role to a <b>player account</b> in Players — organizer, referee or read only — and that player signs in once, on the players' app, with his PokerTH nickname. The organizer accounts below (a login and a password) still work until you turn them off. You (the master key) are the super admin: accounts, module settings and deletions are yours only.</p>
       <div class="grid">
         <section class="card" aria-labelledby="aNewH">
           <h2 id="aNewH">New account</h2>

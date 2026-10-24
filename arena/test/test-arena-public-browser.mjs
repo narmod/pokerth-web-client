@@ -290,6 +290,8 @@ try {
   ok(await ip.$eval('section[aria-labelledby="tNewH"]', (e) => getComputedStyle(e).display === 'none'), 'invitation: password chosen, signed in as a referee — no « New tournament » form');
   await ip.click('#signOut');
   await ip.waitForSelector('#signIn:not([hidden])', { timeout: 8000 });
+  ok(/Sign in with my player account/.test(await ip.textContent('#signIn')), 'the sign-in card leads to the player account first (service 0.33.0)');
+  await ip.click('#loginForm >> xpath=ancestor::details/summary');
   await ip.fill('#loginIn', 'gina'); await ip.fill('#passIn', 'gina long password');
   await ip.click('#loginForm button[type="submit"]');
   await ip.waitForFunction(() => !document.getElementById('app').hidden, null, { timeout: 8000 });

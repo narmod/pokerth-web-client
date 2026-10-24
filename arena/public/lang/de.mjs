@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Dein Konto, seine Sitzungen und die Bestätigungen deines Spitznamens werden gelöscht; deine Ergebnisse und Medaillen bleiben bei den Turnieren, und der Spitzname ist wieder frei.',
   acctCloseBtn: 'Mein Konto endgültig schließen',
   acctClosed: 'Dein Konto ist geschlossen.',
+  navOrganize: 'Organisieren',
 };

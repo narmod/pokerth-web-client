@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Asusunka, zamansa da tabbatar da laƙabinka za su tafi; sakamakonka da lambobin yabonka za su zauna tare da gasannin, kuma za a iya sake neman laƙabin.',
   acctCloseBtn: 'Rufe asusuna har abada',
   acctClosed: 'An rufe asusunka.',
+  navOrganize: 'Shirya',
 };

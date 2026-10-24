@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Hisobingiz, uning seanslari va taxallusingiz tasdiqlari oʻchiriladi; natijalaringiz va medallaringiz turnirlarda qoladi, taxallus esa yana boʻsh boʻladi.',
   acctCloseBtn: 'Hisobimni butunlay yopish',
   acctClosed: 'Hisobingiz yopildi.',
+  navOrganize: 'Tashkil etish',
 };

@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Din konto, dens sessioner og bekræftelserne af dit kaldenavn forsvinder; dine resultater og medaljer bliver ved turneringerne, og kaldenavnet kan tages igen.',
   acctCloseBtn: 'Luk min konto for altid',
   acctClosed: 'Din konto er lukket.',
+  navOrganize: 'Arrangér',
 };

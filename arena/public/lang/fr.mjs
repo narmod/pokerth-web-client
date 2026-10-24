@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Votre compte, ses sessions et les vérifications de votre pseudo disparaissent ; vos résultats et médailles restent avec les tournois, et le pseudo peut de nouveau être réclamé.',
   acctCloseBtn: 'Fermer définitivement mon compte',
   acctClosed: 'Votre compte est fermé.',
+  navOrganize: 'Organiser',
 };

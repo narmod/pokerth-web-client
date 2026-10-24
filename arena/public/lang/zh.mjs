@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: '你的账号、其会话和昵称验证将被删除；你的成绩和奖牌保留在各锦标赛中，昵称可再次被认领。',
   acctCloseBtn: '永久注销我的账号',
   acctClosed: '你的账号已注销。',
+  navOrganize: '主办',
 };

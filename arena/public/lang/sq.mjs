@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Llogaria juaj, sesionet e saj dhe verifikimet e pseudonimit tuaj fshihen; rezultatet dhe medaljet tuaja mbeten me turnetë, dhe pseudonimi bëhet sërish i lirë.',
   acctCloseBtn: 'Mbyll përgjithmonë llogarinë time',
   acctClosed: 'Llogaria juaj u mbyll.',
+  navOrganize: 'Organizo',
 };

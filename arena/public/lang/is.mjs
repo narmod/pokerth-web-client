@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Aðgangurinn þinn, lotur hans og staðfestingar gælunafnsins hverfa; úrslit þín og verðlaunapeningar haldast með mótunum og gælunafnið er laust á ný.',
   acctCloseBtn: 'Loka aðganginum mínum endanlega',
   acctClosed: 'Aðganginum þínum hefur verið lokað.',
+  navOrganize: 'Skipuleggja',
 };

@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Sinu konto, selle seansid ja sinu hüüdnime kinnitused kaovad; sinu tulemused ja medalid jäävad turniiride juurde ning hüüdnime saab uuesti endale võtta.',
   acctCloseBtn: 'Sulge mu konto jäädavalt',
   acctClosed: 'Sinu konto on suletud.',
+  navOrganize: 'Korralda',
 };

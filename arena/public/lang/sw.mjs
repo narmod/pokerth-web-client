@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Akaunti yako, vipindi vyake na uthibitisho wa jina lako la utani vinafutwa; matokeo na medali zako zinabaki na mashindano, na jina la utani linakuwa huru tena.',
   acctCloseBtn: 'Funga akaunti yangu kabisa',
   acctClosed: 'Akaunti yako imefungwa.',
+  navOrganize: 'Andaa',
 };

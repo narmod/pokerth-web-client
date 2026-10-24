@@ -11714,7 +11714,9 @@ function hasScope(scope, query, bodyToken) {
 function _arenaAuthor(query) {
   if (adminAuthed(query)) return 'admin';
   var tok = (query && query.token) || '';
-  if (/^as_[A-Za-z0-9_-]{40,60}$/.test(tok)) return { session: tok };
+  // An organizer account's session (as_…), or a player account's (ps_…) —
+  // the Arena checks it and its role itself (one account for everything, web.322).
+  if (/^(?:as|ps)_[A-Za-z0-9_-]{40,60}$/.test(tok)) return { session: tok };
   return null;
 }
 

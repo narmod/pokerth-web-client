@@ -775,6 +775,8 @@ function loginHref() {
   const here = location.pathname + location.search;
   return '/arena/login' + (/^\/arena\/(?:login|account)/.test(here) || here === '/arena/' || here === '/arena' ? '' : '?next=' + encodeURIComponent(here));
 }
+// Where to go once signed in: a view of this app, or the organizer's page (a page of its own).
+function goNext() { const n = nextAfterLogin(); if (/^\/arena\/organize(?:\/|$)/.test(n)) location.href = n; else go(n); }
 function nextAfterLogin() {
   let n = null;
   try { n = new URLSearchParams(location.search).get('next'); } catch (e) {}
@@ -792,6 +794,9 @@ function navKey() {
 function updateNav() {
   const a = $('navAcct'), s = $('navAcctTxt');
   if (a) a.setAttribute('href', me ? '/arena/account' : '/arena/login');
+  // A role on the organizer side: « Organize » in the menu (a page of its own, same app).
+  const og = $('navOrg');
+  if (og) og.hidden = !(me && me.role);
   if (s) { if (me) { delete s.dataset.t; s.textContent = me.nick; } else { s.dataset.t = 'navSignIn'; s.textContent = t('navSignIn'); } }
   const k = navKey();
   document.querySelectorAll('#mainNav a[data-nav]').forEach((x) => { if (x.dataset.nav === k) x.setAttribute('aria-current', 'page'); else x.removeAttribute('aria-current'); });
@@ -804,7 +809,7 @@ function renderAcct() {
 function renderAcctView() {
   const box = $('view');
   if (!box) return;
-  if (acctView === 'login' && me && !pinviteFromHash()) return go(nextAfterLogin());
+  if (acctView === 'login' && me && !pinviteFromHash()) return goNext();
   if (acctView === 'account' && !me) return go('/arena/login');
   const inv = pinviteFromHash();
   let h = '';
@@ -830,10 +835,10 @@ function renderAcctView() {
   }
   box.innerHTML = h;
   const signedIn = (d) => {
-    me = { token: d.token, nick: d.player.nick }; acctSave(me); acctFlash = { html: T('accWelcome', { nick: d.player.nick }) };
+    me = { token: d.token, nick: d.player.nick, role: d.player.role || null }; acctSave(me); acctFlash = { html: T('accWelcome', { nick: d.player.nick }) };
     if (pinviteFromHash()) history.replaceState(null, '', location.pathname + location.search);
     // My groups and my preferences (language, theme), then where I was going.
-    api('/players/me', { session: d.token }).then(async (w) => { if (w && w.ok) { grMine = w.groups || grMine; await applyPrefs(w.prefs); } }).catch(() => {}).then(() => { if (vfServers.length) vfPoll(); go(nextAfterLogin()); });
+    api('/players/me', { session: d.token }).then(async (w) => { if (w && w.ok) { grMine = w.groups || grMine; await applyPrefs(w.prefs); } }).catch(() => {}).then(() => { if (vfServers.length) vfPoll(); goNext(); });
   };
   const bad = (d) => { acctFlash = { bad: true, html: errText(d) }; renderAcctView(); };
   const f1 = $('accInForm');
@@ -1014,7 +1019,7 @@ let theme = null;
   signupMode = (st && st.signup) || 'invite';
   vfServers = (st && st.servers) || [];
   grAll = (st && st.groups) || [];
-  if (saved && who && who.ok) { me = { token: saved.token, nick: who.player.nick }; grMine = who.groups || grMine; await applyPrefs(who.prefs); } else if (saved && who && who.code === 'session') acctSave(null);
+  if (saved && who && who.ok) { me = { token: saved.token, nick: who.player.nick, role: who.player.role || null }; grMine = who.groups || grMine; await applyPrefs(who.prefs); } else if (saved && who && who.code === 'session') acctSave(null);
   renderAcct();
   if (me) vfPoll();
   route();

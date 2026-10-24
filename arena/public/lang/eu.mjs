@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Zure kontua, haren saioak eta zure ezizenaren egiaztapenak ezabatzen dira; zure emaitzak eta dominak txapelketekin geratzen dira, eta ezizena berriro eska daiteke.',
   acctCloseBtn: 'Itxi nire kontua betiko',
   acctClosed: 'Zure kontua itxita dago.',
+  navOrganize: 'Antolatu',
 };

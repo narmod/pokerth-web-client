@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Hesabın, oturumları ve takma ad doğrulamaların silinir; sonuçların ve madalyaların turnuvalarda kalır, takma ad da yeniden alınabilir hâle gelir.',
   acctCloseBtn: 'Hesabımı kalıcı olarak kapat',
   acctClosed: 'Hesabın kapatıldı.',
+  navOrganize: 'Organize et',
 };

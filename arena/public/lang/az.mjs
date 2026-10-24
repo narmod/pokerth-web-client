@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Hesabınız, onun sessiyaları və ləqəb təsdiqləriniz silinir; nəticələriniz və medallarınız turnirlərdə qalır, ləqəb isə yenidən götürülə bilər.',
   acctCloseBtn: 'Hesabımı birdəfəlik bağla',
   acctClosed: 'Hesabınız bağlandı.',
+  navOrganize: 'Təşkil et',
 };

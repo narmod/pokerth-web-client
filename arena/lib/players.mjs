@@ -29,6 +29,10 @@ import crypto from 'node:crypto';
 
 export const PLAYER_SESSION_PREFIX = 'ps_';
 export const SIGNUP_MODES = Object.freeze(['invite', 'open']);
+// A player account may carry a role on the organizer side (service 0.33.0,
+// one account for everything): given by the super admin, checked by
+// accounts.mjs allowed() as for the organizer accounts.
+export const PLAYER_ROLES = Object.freeze(['organizer', 'referee', 'viewer']);
 const INVITE_MS = 7 * 24 * 3600 * 1000;
 const SESSION_MS = 30 * 24 * 3600 * 1000;
 const MIN_PASSWORD = 8;
@@ -80,7 +84,7 @@ export function createPlayers(o) {
     return { id: p.id, nick: p.nick, account: accountState(p), createdAt: p.createdAt, createdBy: p.createdBy || null,
       lastLoginAt: (p.account && p.account.lastLoginAt) || null, inviteExpires: p.account && !p.account.passHash ? p.account.inviteExpires || null : null,
       ban: banActive(p) ? { reason: p.ban.reason, until: p.ban.until || null, by: p.ban.by, at: p.ban.at } : null, note: p.note || null,
-      verified: (p.verified || []).map((v) => ({ server: v.server, at: v.at })) };
+      verified: (p.verified || []).map((v) => ({ server: v.server, at: v.at })), role: p.account && PLAYER_ROLES.indexOf(p.role) >= 0 ? p.role : null };
   }
   function entry(nick, by) {
     const n = playerNick(nick);
@@ -139,7 +143,7 @@ export function createPlayers(o) {
   function removeAccount(id) {
     const p = byId(String(id || ''));
     if (!p || !p.account) refuse('no account');
-    delete p.account;
+    delete p.account; delete p.role;
     dropSessions(p.id);
     write();
     return { player: view(p) };
@@ -152,6 +156,15 @@ export function createPlayers(o) {
     dropSessions(p.id);
     write();
     return { deleted: p.id, nick: p.nick };
+  }
+  // A role on the organizer side for a player account (the super admin), or none.
+  function setRole(id, role, by) {
+    const p = byId(String(id || ''));
+    if (!p || !p.account) refuse('a role goes to a player account: make the account first');
+    if (role && PLAYER_ROLES.indexOf(role) < 0) refuse('role: organizer, referee or viewer (or none)');
+    if (role) { p.role = role; p.roleBy = by || 'admin'; p.roleAt = now(); } else { delete p.role; delete p.roleBy; delete p.roleAt; }
+    write();
+    return { player: view(p) };
   }
   function setNote(id, note) {
     const p = byId(String(id || ''));
@@ -208,7 +221,7 @@ export function createPlayers(o) {
     write();
     return t;
   }
-  const me = (p) => ({ id: p.id, nick: p.nick, since: p.createdAt });
+  const me = (p) => ({ id: p.id, nick: p.nick, since: p.createdAt, role: PLAYER_ROLES.indexOf(p.role) >= 0 ? p.role : null });
   // His own account, when the super admin opened sign-up.
   async function signup(input, ip) {
     if (read().signup !== 'open') refuse('accounts are made by the organizers here: ask one for an invitation', 'signupClosed');
@@ -254,7 +267,7 @@ export function createPlayers(o) {
     if (!s || s.expires <= now()) return null;
     const p = byId(s.playerId);
     if (!p || !p.account || p.account.disabled || !p.account.passHash) return null;
-    return { id: p.id, nick: p.nick };
+    return { id: p.id, nick: p.nick, role: PLAYER_ROLES.indexOf(p.role) >= 0 ? p.role : null };
   }
   function logout(t) {
     const h = sha(String(t || ''));
@@ -317,7 +330,7 @@ export function createPlayers(o) {
     const p = mustSession(t);
     const k = await scrypt(String(password || ''), p.account.salt);
     if (!crypto.timingSafeEqual(k, Buffer.from(p.account.passHash, 'hex'))) refuse('the current password is wrong', 'badPassword');
-    delete p.account; delete p.verified; delete p.prefs;
+    delete p.account; delete p.verified; delete p.prefs; delete p.role; delete p.roleBy; delete p.roleAt;
     dropSessions(p.id);
     write();
     return { closed: true, nick: p.nick };
@@ -347,6 +360,6 @@ export function createPlayers(o) {
   const hasAccount = (nick) => { const p = byNick(nick); return !!(p && p.account && p.account.passHash && !p.account.disabled); };
   const banOf = (nick) => { const p = byNick(nick); return banActive(p) ? { reason: p.ban.reason, until: p.ban.until || null } : null; };
 
-  return { settings, setSettings, list, get, create, reinvite, setAccountDisabled, removeAccount, remove, setNote, ban, unban,
+  return { settings, setSettings, list, get, create, reinvite, setAccountDisabled, removeAccount, remove, setNote, setRole, ban, unban,
     signup, acceptInvite, login, session, logout, changePassword, profile, logoutOthers, setPrefs, deleteAccount, barrier, hasAccount, banOf, addVerification, isVerified, verifiedOf, clear: () => { db = null; } };
 }

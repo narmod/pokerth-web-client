@@ -344,4 +344,5 @@ export const strings = {
   acctCloseHint: 'Se eliminan tu cuenta, sus sesiones y las verificaciones de tu apodo; tus resultados y medallas se quedan con los torneos, y el apodo vuelve a estar libre.',
   acctCloseBtn: 'Cerrar mi cuenta definitivamente',
   acctClosed: 'Tu cuenta está cerrada.',
+  navOrganize: 'Organizar',
 };
