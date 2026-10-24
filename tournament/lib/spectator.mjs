@@ -219,6 +219,16 @@ export class SpectatorDirector extends EventEmitter {
     this.emit('event', ev);
   }
 
+  // One « handLog » event per hand, at its end: the actions and who won,
+  // with or without a showdown. The tracker ignores it (the ranking does not
+  // depend on it); the collusion check reads it from the journal.
+  _handLog(showdown, winners) {
+    if (!this._hand) return;
+    const h = this._hand;
+    this._hand = null;
+    this._emitEvent({ type: 'handLog', hand: this.tracker.hand, actions: h.actions, winners, showdown: !!showdown });
+  }
+
   _askNames(ids) {
     const want = (ids || []).map(Number).filter((id) => id && !this.askedNames.has(id) && id !== this.myId);
     if (!want.length) return;
@@ -276,16 +286,22 @@ export class SpectatorDirector extends EventEmitter {
     } else if (m.handStartMessage) {
       const seatStates = (m.handStartMessage.seatStates || []).map(Number);
       this._emitEvent({ type: 'handStart', seatStates });
+      this._hand = { actions: [] };
     } else if (m.playersActionDoneMessage) {
       const a = m.playersActionDoneMessage;
       this._emitEvent({ type: 'money', id: n(a.playerId), money: n(a.playerMoney) });
+      // Who did what in the hand (public: every client sees it), for the
+      // collusion check: [playerId, round 0–3, action 1 fold … 6 all-in, bet in the round].
+      if (this._hand && this._hand.actions.length < 400) this._hand.actions.push([n(a.playerId), n(a.gameState), n(a.playerAction), n(a.totalPlayerBet)]);
     } else if (m.endOfHandShowCardsMessage) {
       for (const r of m.endOfHandShowCardsMessage.playerResults || []) {
         this._emitEvent({ type: 'money', id: n(r.playerId), money: n(r.playerMoney) });
       }
+      this._handLog(true, (m.endOfHandShowCardsMessage.playerResults || []).filter((r) => n(r.moneyWon) > 0).map((r) => [n(r.playerId), n(r.moneyWon)]));
     } else if (m.endOfHandHideCardsMessage) {
       const h = m.endOfHandHideCardsMessage;
       this._emitEvent({ type: 'money', id: n(h.playerId), money: n(h.playerMoney) });
+      this._handLog(false, [[n(h.playerId), n(h.moneyWon)]]);
     } else if (m.playerIdChangedMessage) {
       const c = m.playerIdChangedMessage;
       this._emitEvent({ type: 'idChange', oldId: n(c.oldPlayerId), newId: n(c.newPlayerId) });

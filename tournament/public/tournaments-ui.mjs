@@ -253,6 +253,8 @@ export function createTournamentsView(deps) {
 
     // Witnesses: what the web clients at the table saw.
     h += witnessSection(t);
+    // Collusion check: signals from the director's journal (organizers only).
+    h += collusionSection(t);
 
     // Result.
     if (t.result) {
@@ -266,6 +268,7 @@ export function createTournamentsView(deps) {
         const ws = t.witnessState || {};
         const needReason = st.witnesses === 'required' && !ws.ok;
         h += '<p class="small">' + (r.status !== 'complete' ? 'Look at the flags above (tie, unknown hand, game not finished) before validating. ' : st.validation === 'organizer' ? 'This profile wants an organizer to validate. ' : '') + 'Validating seals and signs the result.</p>';
+        if (t.collusion && t.collusion.flags) h += '<p class="msg bad">The collusion check flags ' + esc(t.collusion.flags) + ' pair' + (t.collusion.flags === 1 ? '' : 's') + ' — see « Collusion check » above before validating.</p>';
         if (needReason) {
           h += '<p class="msg bad">Witnesses required: ' + (ws.disagree ? esc(ws.disagree) + ' disagree' : 'no witness agrees yet') + '. To validate anyway, say why — the reason is kept in the journal and shown on the players\' page.</p>' +
             '<div class="row"><div><label for="tOverride">Reason</label><input id="tOverride" maxlength="200" autocomplete="off"></div></div>';
@@ -322,6 +325,25 @@ export function createTournamentsView(deps) {
   }
 
   // ── the director at the table ──
+  // Collusion check (service 0.10.0): pairs who spare each other or pass chips,
+  // with the numbers behind each signal. It never decides: the organizer does.
+  function collusionSection(t) {
+    const st = t.settings || {};
+    if (st.collusion === 'off') return '';
+    const c = t.collusion;
+    const live = t.host && t.host.status === 'open';
+    let h = '<h3>Collusion check <span class="muted small">' + esc(st.collusion) + (c ? ' · ' + esc(c.hands) + ' hands read' : '') + '</span></h3>';
+    if (!c) h += '<p class="small muted">Done by itself when the director\'s result arrives; it reads what every player did in each hand (never their cards). ' + (live ? 'You can run it now on the hands played so far.' : '') + '</p>';
+    else if (!c.hands) h += '<p class="small muted">No hand to read: the director\'s journal has no actions (a table run before service 0.10.0, or no hand played).</p>';
+    else if (!c.pairs.length) h += '<p class="small">Nothing to signal (' + esc(c.hands) + ' hands, ' + esc(when(c.at)) + ').</p>';
+    else {
+      h += '<p class="small muted">Signals, not proof: look at the hands, ask the players. ' + (st.collusion === 'separate' ? '« Separate » will keep flagged pairs apart once tournaments have several tables. ' : '') + 'Read ' + esc(when(c.at)) + '.</p>';
+      h += '<ul class="rank">' + c.pairs.map((p) => '<li><span class="nk">' + esc(p.a) + ' — ' + esc(p.b) + ' <span class="chip ' + (p.level === 'flag' ? 'bad' : 'warn') + '">' + (p.level === 'flag' ? 'flagged' : 'note') + '</span>' +
+        p.signals.map((x) => '<br><span class="small muted">' + esc(x.text) + '</span>').join('') + '</span></li>').join('') + '</ul>';
+    }
+    if (live || (c && t.status !== 'validated')) h += '<div class="actions"><button type="button" data-act="collusion">Check again</button></div>';
+    return h;
+  }
   // Witnesses (service 0.7.0): reports of the web clients at the table,
   // compared with the director's journal (or the ranking set by hand).
   const VERDICT = { agrees: ['agrees', 'live'], disagrees: ['disagrees', 'bad'], nothing: ['nothing to compare', ''], pending: ['waiting for the result', 'warn'] };
@@ -489,6 +511,7 @@ export function createTournamentsView(deps) {
     if (a === 'upload') return upload();
     if (a === 'validate') return call('/admin/tournaments/t/validate', $('tOverride') ? { override: ($('tOverride').value || '').trim() } : {}, 'Validated and signed.');
     if (a === 'correct') return call('/admin/tournaments/t/correct', { ranking: corrOrder.slice(), reason: ($('tReason').value || '').trim() }, (cur.settings || {}).corrections === 'second' ? 'Correction proposed: a second organizer must approve it.' : 'Correction recorded and signed.');
+    if (a === 'collusion') return call('/admin/tournaments/t/collusion', {}, 'Collusion check done.');
     if (a === 'corrApprove') return call('/admin/tournaments/t/correct/approve', {}, 'Correction approved and signed.');
     if (a === 'corrReject') return call('/admin/tournaments/t/correct/reject', { reason: $('tRejWhy') ? ($('tRejWhy').value || '').trim() : '' }, 'Correction set aside.');
     if (a === 'save') {

@@ -8,6 +8,19 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.10.0 — 2026-10-24
+
+### Added
+- **Collusion check** (Club: report; Official: separate, which reports until
+  tournaments have several tables): from the director's journal, pairs who
+  spare each other or pass chips — soft play heads-up, no pressure, folds to
+  one player, chip passing — each signal with its numbers and a minimum
+  sample. On the organizer page only (« Check again » also while the table
+  runs; a warning above « Validate »); players never see it; the journal
+  keeps the counts, not the names. Never a sanction.
+- The director records one « hand log » per hand in its journal (actions and
+  winners, never hole cards); the ranking does not depend on it.
+
 ## 0.9.0 — 2026-10-24 (web client `2.1.10-web.307`)
 
 ### Added

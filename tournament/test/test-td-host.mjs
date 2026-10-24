@@ -191,6 +191,8 @@ function director(f, registered, extra) {
   ok(verifyJournal(entries).ok && JSON.stringify(replayJournal(entries)) === JSON.stringify(sealed.payload.result), 'journal: intact, replays to the same ranking');
   const types = entries.map((e) => e.type);
   ok(['tableCreated', 'invited', 'kicked', 'seated', 'handover', 'leftSeat', 'seatCheck'].every((t) => types.indexOf(t) >= 0), 'journal: every step of the table recorded');
+  const hl = entries.filter((e) => e.type === 'game' && e.data.type === 'handLog');
+  ok(hl.length >= 1 && hl.every((e) => Array.isArray(e.data.actions) && Array.isArray(e.data.winners) && e.data.hand >= 1) && hl.some((e) => e.data.actions.length > 0), 'journal: one hand log per hand (actions, winners) for the collusion check');
   const sc = entries.find((e) => e.type === 'seatCheck');
   ok(sc && sc.data.ok === true, 'seat check at the start: only registered players');
   ok(!entries.some((e) => e.type === 'game' && e.data.type === 'playerName' && e.data.name === 'Mallory'), 'journal: names of players who never played stay out of the game facts');

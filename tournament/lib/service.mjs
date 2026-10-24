@@ -240,6 +240,7 @@ export function createService(o) {
       case '/t/result': return send(() => T.setResult(id, b, who));
       case '/t/validate': return send(() => T.validate(id, who, { override: b.override }));
       case '/t/correct': return send(() => T.correct(id, b, who));
+      case '/t/collusion': return send(() => T.checkCollusion(id, who));
       case '/t/correct/approve': return send(() => T.approveCorrection(id, who));
       case '/t/correct/reject': return send(() => T.rejectCorrection(id, who, b.reason));
       case '/t/table/open': return send(() => openTable(id, b, who));

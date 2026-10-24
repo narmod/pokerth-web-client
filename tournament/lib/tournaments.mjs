@@ -26,6 +26,7 @@ import { Journal, verifyJournal, signPayload, verifyPayload, publicKeyFromPrivat
 import { listPdbGames, rankPdbGame, isPdb, pdbWitness } from './pdb.mjs';
 import { isBotLang } from './botchat.mjs';
 import { cleanReport, directorFacts, compareWithDirector, compareWithRanking, MAX_HANDS } from './witness.mjs';
+import { analyzeCollusion } from './collusion.mjs';
 
 // Profiles (design « Tournament settings », decided 2026-10-23).
 export const PROFILES = Object.freeze({
@@ -187,6 +188,7 @@ export function createTournaments(o) {
       case 'playerRegistered': return d.nick + ' registered (public page)';
       case 'playerUnregistered': return d.nick + ' unregistered (public page)';
       case 'codeIssued': return 'new personal code for ' + d.nick;
+      case 'collusionChecked': return 'collusion check: ' + d.hands + ' hands read, ' + d.flags + ' pair' + (d.flags === 1 ? '' : 's') + ' flagged, ' + d.notes + ' note' + (d.notes === 1 ? '' : 's');
       case 'witnessReport': return 'witness ' + d.nick + (d.source === 'log' ? ' (log)' : '') + (d.verified ? ' (code)' : '') + ': ' + d.hands + ' hands' + (d.winner ? ', winner ' + d.winner : '') + ' — ' + d.verdict;
       case 'checkedIn': return d.nick + ' checked in' + (d.by === 'organizer' ? ' (by the organizer)' : '');
       case 'notCheckedIn': return 'not checked in, marked absent: ' + (d.nicks || []).join(', ');
@@ -494,6 +496,26 @@ export function createTournaments(o) {
     });
     return { nick, tournament: publicGet(key, input && input.invite) };
   }
+  // ── collusion check (service 0.10.0) ──
+  // Signals for an organizer, never a sanction: from the director's journal
+  // (the actions of each hand). Shown on the organizer page only; the journal
+  // keeps how many pairs were flagged, not their names.
+  function collusionOf(t) {
+    if (!t.settings || t.settings.collusion === 'off') return null;
+    const w = (t.result && t.result.watchId) || (t.host && t.host.watchId);
+    if (!w || !o.readWatchJournal) return null;
+    const j = o.readWatchJournal(w);
+    if (!j || !Array.isArray(j.entries)) return null;
+    return Object.assign({ at: now(), watchId: w }, analyzeCollusion(j.entries));
+  }
+  function checkCollusion(id, author) {
+    const { t: t0 } = load(id);
+    if (t0.settings.collusion === 'off') refuse('the collusion check is off for this tournament');
+    const cc = collusionOf(t0);
+    if (!cc) refuse('no director\'s journal to read: the check needs a table run or watched by the director');
+    return act(id, author, 'collusionChecked', { hands: cc.hands, flags: cc.flags, notes: cc.pairs.length - cc.flags }, (t) => { t.collusion = cc; });
+  }
+
   // ── witnesses (service 0.7.0) ──
   // A web client at the table sends what it saw; it is compared with the
   // director's journal, or with the ranking set without a director. Only the
@@ -675,6 +697,9 @@ export function createTournaments(o) {
       data.ranking = fitted;
       tt.status = 'finished';
       refreshWitnesses(tt);
+      // The collusion check, from the director's journal (organizer only).
+      const cc = collusionOf(tt);
+      if (cc) { tt.collusion = cc; data.collusion = { hands: cc.hands, flags: cc.flags, notes: cc.pairs.length - cc.flags }; }
     });
   }
   function afterResult(id, author) {
@@ -859,7 +884,7 @@ export function createTournaments(o) {
   }
 
   return { list, get, create, update, addPlayer, removePlayer, setResult: setResultP, validate, correct, approveCorrection, rejectCorrection, importPdb, file,
-    publicList, publicGet, register, unregister, publicFile, witnessReport, witnessLog, keyHost, checkIn, issueCode, organizerCheckIn, markNotCheckedIn, needsCheckIn: (id) => needsCheckIn(load(id).t),
+    publicList, publicGet, register, unregister, publicFile, witnessReport, witnessLog, keyHost, checkCollusion, checkIn, issueCode, organizerCheckIn, markNotCheckedIn, needsCheckIn: (id) => needsCheckIn(load(id).t),
     hostOpened, hostCheck, hostNote, hostEnded, hostResultRefused, openHosts, autoOpenDue, autoOpenNote, Refusal };
 }
 

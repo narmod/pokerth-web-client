@@ -416,6 +416,34 @@ Routes: `POST /admin/tournaments/t/table/open {id}`, `…/t/table/go {id}`,
   `badCode`, `alreadyIn`. Organizer routes: `POST /admin/tournaments/t/code
   {id, nick}`, `…/t/checkin {id, nick}`.
 
+## Collusion check (service `0.10.0`)
+
+Signals for an organizer, never a sanction (`tournament/lib/collusion.mjs`).
+
+- **What it reads.** The director now records, at the end of each hand, one
+  `handLog` event in its journal: every action (player, round, fold … all-in,
+  bet in the round) and who won, with or without a showdown — what every
+  client sees, never hole cards. The ranking ignores it (`replayJournal` is
+  unchanged). Tables run before `0.10.0` have no hand logs.
+- **Signals, per pair A–B,** each with a minimum sample (`LIMITS`):
+  *soft play* — heads-up after the flop at least 3 times, checked down to the
+  end at least 80 % (flagged when they bet against the others: ≤ 50 %);
+  *no pressure* — A never raised B in at least 8 bets faced, but raised the
+  others at least 20 %; *folds to* — A folded to B at least 85 % of at least 6
+  bets faced, to the others at most 50 %; *chip passing* — A put at least 40 %
+  of his stack in, then folded to B, who took the pot without a showdown
+  (flagged at 60 %, or twice). A pair with two signals is flagged; one
+  « note » alone is not.
+- **When.** By itself when the director's result arrives, and on demand
+  (« Check again », `POST /admin/tournaments/t/collusion {id}`) — also while
+  the table runs. Setting « Collusion check »: *Off*, *Report* (Club),
+  *Separate* (Official) — which behaves as *Report* until tournaments have
+  several tables (it will keep flagged pairs apart).
+- **Who sees it.** The organizer page only, with the numbers behind each
+  signal, and a warning above « Validate » when pairs are flagged. Players
+  never see it; the journal keeps the counts (`collusionChecked`: hands,
+  flags, notes), not the names.
+
 ## Organizers (service `0.9.0`, web client `2.1.10-web.307`)
 
 - **One key per organizer.** The admin creates it in Admin › Keys with the
@@ -589,7 +617,8 @@ operator's agreement.
    the scheduled time, announcements and messages to the table in service
    `0.3.0`; check-in in `0.5.0`; the chat language in `0.6.0`; witnesses
    in `0.7.0`; QML witnesses by their log in `0.8.0`; organizer keys and
-   corrections by a second organizer in `0.9.0`).
+   corrections by a second organizer in `0.9.0`; the collusion check in
+   `0.10.0`).
 8. Collusion check.
 9. Organizer and player accounts.
 10. Requests to organize.
