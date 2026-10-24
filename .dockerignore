@@ -26,6 +26,6 @@ README.md
 Dockerfile
 docker-compose.yml
 
-# Tournament director: its tests and local data
-arena/test
+# Data left by the Arena that ran inside the web client until web.326
 arena-data
+arena

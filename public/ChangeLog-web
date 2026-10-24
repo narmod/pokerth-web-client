@@ -1,3 +1,6 @@
+2026-10-24 version 2.1.10-web.327:
+- improvement: the Arena (tournaments, cups and medals) is now an app of its own: when this site is linked to one, /arena opens it, and « Play on the web client » on a tournament's page brings your personal code here so your witness reports count
+
 2026-10-24 version 2.1.10-web.322:
 - new: Arena: one account for everything — the site's admin gives a role (organizer, referee, read only) to a player account; that player signs in once with his PokerTH nickname and finds « Organize » in the menu
 - new: Arena: « My account » shows my tournaments and cups, my tickets and groups, keeps my language and theme on every device, lists the devices signed in, and can close the account

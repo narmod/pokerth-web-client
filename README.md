@@ -564,7 +564,7 @@ pokerth-web-client/
 | Search engines | `POST /admin/seo/ping` (IndexNow submission), `GET /admin/seo/check` |
 | Delegate keys | `GET`/`POST` `/admin/tokens`, `POST /admin/tokens/delete` |
 
-Most sections require the master token; the **Broadcasts**, **Music**, **Packages** and **Leaderboard** routes (and the `/stats` reset / remove) also accept a matching **scoped delegate key** — see the **Keys** tab. Organizers of the Arena have their own accounts (login + password, a role each), created by the master key in `/arena/organize` › Accounts, and the tournament journal records its name with each action (the module's own settings stay master-only).
+Most sections require the master token; the **Broadcasts**, **Music**, **Packages** and **Leaderboard** routes (and the `/stats` reset / remove) also accept a matching **scoped delegate key** — see the **Keys** tab. The Arena (tournaments, cups, medals) is an application of its own (`narmod/pokerth-arena`): Admin › Community › Arena only links it (its address and link key); its organizers and settings live on the Arena.
 
 ---
 

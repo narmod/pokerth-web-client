@@ -1,8 +1,8 @@
 // ═══════════════════════════════════════════════════════════════════
 // Create-game settings: the one source for the lists and limits of the
 // « Create a table » form (pokerth-client.html, pokerth.js) and of the
-// tournament director's table settings (arena/lib/tournaments.mjs,
-// served to its organizer page by /admin/arena/table-presets).
+// tournament director's table settings (the Arena, an application of its
+// own since web.327, keeps a copy: its scripts/sync-shared.mjs).
 // Change a style, a community template or a limit here and both follow.
 //
 // Pure data, no import: the tournament service imports this file from disk,

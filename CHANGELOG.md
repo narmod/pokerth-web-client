@@ -16,6 +16,17 @@ release. Per-build detail is on the
 highlights below.
 
 ### Removed
+- **The Arena that ran inside the web client** (`web.327`) — the Arena is an application of its own
+  (`narmod/pokerth-arena`, with its history and its design notes, `docs/ARENA.md` there). Removed here: `arena/` (the
+  service, its pages, tests and tools), `server/arena-host.js` (launching and supervising it, the IPC, the relay to
+  it, its code watch), the « Inside this web client » option and the install-key card of Admin › Community › Arena,
+  `docs/ARENA.md`, the `test:arena-*` scripts that ran its tests, `ARENA_DIR` in the Docker image, the restart rule
+  for `arena/`, and the checks of its catalogues in `test-lang-count` / `test-create-presets`. Kept, in
+  `server/arena-link.js` (`docs/ARENA_LINK.md`): the link — the Arena's address and link key, « Test and save »,
+  the servers and events sent every minute, `/arena` sent to the Arena (302) with the players' API relayed (the
+  witness), `/admin/arena/settings` and `/link-test` (the rest points to the Arena's organizer page); the link key is
+  left out of configuration exports. Moving an install that used the embedded Arena: install it apart, copy
+  `arena-data/` into its `ARENA_DIR`, link it. Test: `scripts/test-arena-link-host.mjs` against a fake Arena.
 - **`POST /admin/servers/probe`** (`web.174`, audit of 2026-10-19, C9) — no screen called it since the game-server
   « Check » moved to `/admin/servers/lobby` (which also reads the lobby); removed with its README line.
 - **Theme packages** (`web.143`) — `public/themes/<id>/theme.json` packages (button colours/images, pucks, an

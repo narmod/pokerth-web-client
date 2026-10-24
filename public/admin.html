@@ -2209,31 +2209,17 @@
       </div>
     </div>
     <div id="panel-arena" style="display:none">
-      <section class="ovmodes" id="tdTiles" aria-label="Tournaments at a glance"><div class="empty">Loading…</div></section>
+      <section class="ovmodes" id="tdTiles" aria-label="The Arena at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
-        <div class="boardhead"><h2>Arena — tournaments, cups, medals<span class="tbeta" title="Beta: still being built">beta</span></h2><span id="tdState" class="headnote"></span><div class="bhact"><a id="tdLink" class="use" href="/arena" target="_blank" rel="noopener">Open /arena</a><button id="tdRestart" class="use" type="button">Restart the service</button><button id="tdRefresh" class="use" type="button">Refresh</button></div></div>
-        <p class="muted">Organizer tools on <code>/arena</code>: <b>Tournaments</b> (the director opens the table for the registered players, or the result is set by hand; sealed and signed) and <b>Table check</b> (watch a table as a spectator). LAN servers only. Off by default: <code>/arena</code> answers 404 while off.</p>
-        <details class="more"><summary>Where it runs, what it keeps</summary><p class="muted">The Arena (tournaments, cups, medals and the tournament director) is a service of its own (<code>arena/</code> in the repository, with its own version): the web client starts it while the switch is on, restarts it if it stops, stops it when you turn the switch off, and relays <code>/arena</code> to it after checking the admin token. It works only on the servers of the LAN directory and the local server (never pokerth.net or the Internet-mode game servers). It opens a table only when an organizer asks, for the registered players of a tournament: an invite-only table, players who are not registered removed before the start, a few lines in the table chat; then it hands the table over to the first player and watches.</p><p class="muted">Every event goes into a sealed (hash-chained) journal and results are signed with this install’s key. Each watch is a separate process that survives an update of the web client. Watches, tournaments and the key live in <code>ARENA_DIR</code> (<code>/data/arena</code> in the Docker image). Design and next steps: <code>docs/ARENA.md</code>.</p></details>
-        <div class="row ftrow" id="tdRow"><div class="nm"><b>Arena and the <code>/arena</code> page</b><span id="tdRowSub">Loading…</span></div><button type="button" class="toggle off" id="tdToggle" aria-pressed="false" disabled>Off</button></div>
+        <div class="boardhead"><h2>Arena — tournaments, cups, medals<span class="tbeta" title="Beta: still being built">beta</span></h2><span id="tdState" class="headnote"></span><div class="bhact"><a id="tdLink" class="use" href="/arena" target="_blank" rel="noopener">Open the Arena</a><a id="tdOrg" class="use" href="#" target="_blank" rel="noopener">Organizer page</a><button id="tdRefresh" class="use" type="button">Refresh</button></div></div>
+        <p class="muted">The Arena is an application of its own (<code>narmod/pokerth-arena</code>). Link it with its address and the key it made: this web client then sends it the servers it may use and the community events, and <code>/arena</code> sends visitors to it.</p>
+        <details class="more"><summary>How the link works</summary><p class="muted">Only the Arena has an API; this web client exposes nothing for it and makes no key. On the Arena: <code>/arena/organize</code> › <b>Web client</b> (super admin) shows the link key. Here: its address (like <code>https://arena.example.org</code>, no path) and that key, then <b>Test and save</b>. This web client then sends the Arena, with the key, its public address (Admin › SEO, else the address you use now), the servers it may use (the LAN directory and the local server) every minute, and the community events every five minutes. The players’ witness reports from the table are relayed to the Arena’s API through this site. A new key on the Arena cuts the link until it is pasted here. Tournaments, cups, accounts and the Arena’s settings are managed on the Arena’s organizer page.</p></details>
+        <div class="defrow fld"><span>Arena address</span><input id="tdUrl" type="url" maxlength="300" placeholder="https://arena.example.org" autocomplete="off" spellcheck="false"></div>
+        <div class="defrow fld"><span>Link key <span class="muted" id="tdKeyHint"></span></span><input id="tdKeyIn" type="password" maxlength="80" placeholder="alk_… (from the Arena)" autocomplete="off" spellcheck="false"></div>
+        <div class="rowtop"><button id="tdTest" class="use" type="button">Test and save</button></div>
+        <p class="muted hint" id="tdLinkState"></p>
+        <div class="row ftrow" id="tdRow"><div class="nm"><b>Link with the Arena</b><span id="tdRowSub">Loading…</span></div><button type="button" class="toggle off" id="tdToggle" aria-pressed="false" disabled>Off</button></div>
         <div id="tdMsg" class="msg"></div>
-      </div>
-      <div class="card" id="tdWhereCard">
-        <div class="boardhead"><h2>Where the Arena runs</h2><span id="tdWhereNote" class="headnote"></span></div>
-        <p class="muted">Inside this web client, or as <b>its own app</b> installed elsewhere, linked with the key the Arena made. This web client then sends it the servers it may use and the community events, and <code>/arena</code> on this site sends visitors to it.</p>
-        <details class="more"><summary>How the link works</summary><p class="muted">Only the Arena has an API; this web client exposes nothing for it. On the Arena: <code>/arena/organize</code> › <b>Web client</b> (super admin) makes and shows the link key. Here: its address (like <code>https://arena.example.org</code>, no path) and that key, then <b>Test and save</b>. This web client then sends the Arena, with the key, its public address (Admin › SEO, else the address you use now), the servers it may use (the LAN directory and the local server) every minute, and the community events every five minutes. The players’ witness reports go to the Arena’s own API, as before. A new key on the Arena cuts the link until it is pasted here.</p></details>
-        <div class="defrow fld"><span>Runs</span><select id="tdMode"><option value="embedded">Inside this web client</option><option value="external">As its own app (elsewhere)</option></select></div>
-        <div id="tdExt" style="display:none">
-          <div class="defrow fld"><span>Arena address</span><input id="tdUrl" type="url" maxlength="300" placeholder="https://arena.example.org" autocomplete="off" spellcheck="false"></div>
-          <div class="defrow fld"><span>Link key <span class="muted" id="tdKeyHint"></span></span><input id="tdKeyIn" type="password" maxlength="80" placeholder="alk_… (from the Arena)" autocomplete="off" spellcheck="false"></div>
-          <div class="rowtop"><button id="tdTest" class="use" type="button">Test and save</button></div>
-          <p class="muted hint" id="tdLinkState"></p>
-        </div>
-        <div id="tdLinkMsg" class="msg"></div>
-      </div>
-      <div class="card">
-        <div class="boardhead"><h2>Install key</h2><span id="tdKeyNote" class="headnote"></span></div>
-        <p class="muted">Ed25519 key of this install: it signs every sealed result, so anyone can check one. Its public part is what a DNS TXT <code>k=</code> record carries when a server operator consents to tournaments. Made when the Arena is first on, then kept.</p>
-        <div id="tdKey"><div class="empty">Loading…</div></div>
       </div>
     </div>
     <div id="panel-landir" style="display:none">
@@ -3442,93 +3428,53 @@
   }); });
 
 
-  // Arena (settings only — the tools live on /arena)
+  // Arena (web.327): the link with the Arena, an application of its own.
   var _td=null;
-  var ARENA_SV={running:['Running','var(--ok-text)'],starting:['Starting','var(--warn-text)'],restarting:['Restarting','var(--warn-text)'],failed:['Failed','var(--err-text)'],off:['Stopped','var(--muted)']};
+  function _tdMsg(t,bad){ var m=$('tdMsg'); if(m){ m.textContent=t||''; m.className='msg'+(t?(bad?' err':' ok'):''); } }
   function _tdRender(d){
-    if(!d||!d.ok){ var m=$('tdMsg'); if(m){ m.textContent=(d&&d.error)||'Could not load'; m.className='msg err'; } return; }
+    if(!d||!d.ok&&!d.link){ _tdMsg((d&&d.error)||'Could not load',true); return; }
     _td=d;
-    var on=!!d.enabled, sv=d.service||{}, st=ARENA_SV[sv.status]||[sv.status||'—','var(--muted)'], k=d.key;
-    var since=sv.since?'up since '+new Date(sv.since).toLocaleTimeString():'';
-    var lk=d.link||{}, ext=lk.mode==='external';
-    _tdRenderLink(lk,on);
-    var T=ext?[['Module',on?'On':'Off',on?'/arena sends to the Arena':'/arena answers 404',on?'var(--ok-text)':'var(--muted)'],
-           ['Arena','Own app',lk.url?srvEsc(lk.url):'no address yet','var(--accent)',' sm'],
-           ['Link',lk.lastTest?(lk.lastTest.ok?'OK':'Failed'):'Not tested',lk.lastTest?(lk.lastTest.ok?'Arena '+srvEsc(lk.lastTest.arena||'?')+' · '+new Date(lk.lastTest.at).toLocaleTimeString():srvEsc(lk.lastTest.error||'')):'Test and save below',lk.lastTest?(lk.lastTest.ok?'var(--ok-text)':'var(--err-text)'):'var(--muted)',' sm'],
-           ['Last sent',lk.lastPush?new Date(lk.lastPush.at).toLocaleTimeString():'—',lk.lastPush?(lk.lastPush.ok?lk.lastPush.servers+' server'+(lk.lastPush.servers===1?'':'s')+(lk.lastPush.events?' + events':''):srvEsc(lk.lastPush.error||'failed')):'sent every minute while on',lk.lastPush?(lk.lastPush.ok?'var(--m-lan)':'var(--err-text)'):'var(--muted)',' sm']]:[['Module',on?'On':'Off',on?'/arena is open':'/arena answers 404',on?'var(--ok-text)':'var(--muted)'],
-           ['Service',on?st[0]:'Stopped',on?(sv.lastError&&sv.status!=='running'?srvEsc(sv.lastError):(sv.version?'version '+srvEsc(sv.version)+(sv.diskVersion&&sv.diskVersion!==sv.version?' · '+srvEsc(sv.diskVersion)+' on disk':'')+(since?' · '+since:''):'starts with the module')):'version '+srvEsc(sv.diskVersion||'?')+' · starts when the module is on',on?st[1]:'var(--muted)',' sm'],
-           ['Watches',d.running!=null?String(d.running)+'<small class="ovof"> / '+(d.maxRunning||4)+'</small>':'—',d.running!=null?'Table checks running':'read from the service','var(--m-lan)'],
-           ['Install key',k?'Ed25519':'None',k?'created '+new Date(k.created).toLocaleDateString():'made on first enable',k?'var(--accent)':'var(--muted)',' sm']];
-    var box=$('tdTiles'); if(box) box.innerHTML=T.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn'+(t[4]||'')+'">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join('');
-    $('tdState').textContent=on?(ext?'On · its own app':'On · service '+st[0].toLowerCase()+(sv.version?' '+sv.version:'')):'Off';
-    var tg=$('tdToggle'); tg.disabled=false; tg.className='toggle '+(on?'on':'off'); tg.textContent=on?'On':'Off'; tg.setAttribute('aria-pressed',on?'true':'false');
-    tg.setAttribute('aria-label','Tournament director: '+(on?'on':'off'));
-    $('tdRow').className='row ftrow'+(on?'':' off');
-    $('tdRowSub').textContent=on&&ext?('Its own app at '+(lk.url||'?')+' · /arena on this site sends visitors there'):on?('Service '+st[0].toLowerCase()+(sv.restarts?' · restarted '+sv.restarts+' time'+(sv.restarts===1?'':'s'):'')+' · turning it off stops the service; watches already running go on'):'Off · nothing runs, /arena answers 404';
-    $('tdLink').style.display=on?'':'none';
-    $('tdRestart').style.display=on&&!ext?'':'none';
-    $('tdKeyNote').textContent=k?'created '+new Date(k.created).toLocaleString():'';
-    $('tdKey').innerHTML=k?('<p><span class="muted">Public key (raw, base64)</span><br><code style="user-select:all;overflow-wrap:anywhere">'+srvEsc(k.publicKeyRaw)+'</code></p>'):'<div class="empty">No key yet: it is created when the Arena is first enabled.</div>';
-  }
-  // « Its own app » (web.323): the Arena's address and link key.
-  function _tdRenderLink(lk,on){
-    var ext=lk.mode==='external', sel=$('tdMode'); if(!sel) return;
-    if(document.activeElement!==sel) sel.value=ext?'external':'embedded';
-    $('tdExt').style.display=(sel.value==='external')?'':'none';
+    var on=!!d.enabled, lk=d.link||{}, ok=!!d.linked, t=lk.lastTest, c=lk.lastPush;
+    var T=[['Link',ok?'On':(on?'Incomplete':'Off'),ok?'/arena sends visitors to the Arena':'/arena answers 404',ok?'var(--ok-text)':'var(--muted)'],
+           ['Arena',lk.url?'Linked':'None',lk.url?srvEsc(lk.url):'no address yet','var(--accent)',' sm'],
+           ['Last test',t?(t.ok?'OK':'Failed'):'—',t?(t.ok?'Arena '+srvEsc(t.arena||'?')+' · '+new Date(t.at).toLocaleTimeString():srvEsc(t.error||'')):'Test and save below',t?(t.ok?'var(--ok-text)':'var(--err-text)'):'var(--muted)',' sm'],
+           ['Last sent',c?new Date(c.at).toLocaleTimeString():'—',c?(c.ok?c.servers+' server'+(c.servers===1?'':'s')+(c.events?' + events':''):srvEsc(c.error||'failed')):'sent every minute while on',c?(c.ok?'var(--m-lan)':'var(--err-text)'):'var(--muted)',' sm']];
+    var box=$('tdTiles'); if(box) box.innerHTML=T.map(function(x){ return '<div class="ovmode" style="--mc:'+x[3]+'"><span class="ovmh"><span>'+x[0]+'</span></span><b class="ovmn'+(x[4]||'')+'">'+x[1]+'</b><span class="ovms ell">'+x[2]+'</span></div>'; }).join('');
+    $('tdState').textContent=ok?('On · '+(lk.url||'')):'Off';
     if(document.activeElement!==$('tdUrl')&&!$('tdUrl').dataset.dirty) $('tdUrl').value=lk.url||'';
     $('tdKeyHint').textContent=lk.keySet?'(saved: '+lk.keyHint+')':'';
     $('tdKeyIn').placeholder=lk.keySet?'leave empty to keep the saved key':'alk_… (from the Arena)';
-    var t=lk.lastTest, c=lk.lastPush;
-    $('tdLinkState').innerHTML=(t?(t.ok?'Last test OK: Arena '+srvEsc(t.arena||'?')+', '+srvEsc(new Date(t.at).toLocaleString()):'Last test failed: '+srvEsc(t.error||'?')):'Not tested since the web client started.')+(c?' · Last sent to the Arena: '+srvEsc(new Date(c.at).toLocaleString())+(c.ok?' ('+c.servers+' server'+(c.servers===1?'':'s')+(c.events?' and the events':'')+').':' — failed: '+srvEsc(c.error||'?')+'.'):'')+(lk.self?' · Address sent: '+srvEsc(lk.self)+'.':'');
-    $('tdWhereNote').textContent=ext?('its own app'+(on?'':' (module off)')):'inside this web client';
+    $('tdLinkState').innerHTML=(t?(t.ok?'Last test OK: Arena '+srvEsc(t.arena||'?')+', '+srvEsc(new Date(t.at).toLocaleString())+'.':'Last test failed: '+srvEsc(t.error||'?')+'.'):'Not tested since the web client started.')+(c?' Last sent to the Arena: '+srvEsc(new Date(c.at).toLocaleString())+(c.ok?' ('+c.servers+' server'+(c.servers===1?'':'s')+(c.events?' and the events':'')+').':' — failed: '+srvEsc(c.error||'?')+'.'):'')+(lk.self?' Address sent: '+srvEsc(lk.self)+'.':'');
+    var tg=$('tdToggle'); tg.disabled=!(lk.url&&lk.keySet); tg.className='toggle '+(on?'on':'off'); tg.textContent=on?'On':'Off'; tg.setAttribute('aria-pressed',on?'true':'false');
+    tg.setAttribute('aria-label','Link with the Arena: '+(on?'on':'off'));
+    $('tdRow').className='row ftrow'+(on?'':' off');
+    $('tdRowSub').textContent=!(lk.url&&lk.keySet)?'Give the Arena’s address and its key, then Test and save':on?'Sending the servers every minute · /arena sends visitors to the Arena':'Paused · nothing sent, /arena answers 404';
+    $('tdLink').style.display=ok?'':'none';
+    var org=$('tdOrg'); org.style.display=lk.url?'':'none'; if(lk.url) org.href=lk.url+'/arena/organize';
   }
-  function _tdLinkMsg(t,bad){ var m=$('tdLinkMsg'); if(m){ m.textContent=t||''; m.className='msg'+(t?(bad?' err':' ok'):''); } }
-  if($('tdMode')) $('tdMode').addEventListener('change',function(){
-    var v=this.value; $('tdExt').style.display=v==='external'?'':'none';
-    var lk=(_td&&_td.link)||{};
-    if(v==='external'&&!(lk.url&&lk.keySet)){ _tdLinkMsg('Give the Arena’s address and its link key, then Test and save: it switches to its own app when the Arena answers.'); return; }
-    _tdLinkMsg(v==='external'?'Switching to its own app…':'Switching back inside this web client…');
-    api('/admin/arena/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:v})}).then(function(r){return r.json();}).then(function(d){
-      if(!(d&&d.ok)){ var lk2=(d&&d.link)||((_td&&_td.link)||{}); $('tdMode').value=lk2.mode==='external'?'external':'embedded'; $('tdExt').style.display=$('tdMode').value==='external'?'':'none'; }
-      else _tdRender(d);
-      _tdLinkMsg(d&&d.ok?(v==='external'?'Saved — the Arena runs as its own app; the service here is stopped.':'Saved — the Arena runs inside this web client again.'):((d&&d.error)||'Not saved'),!(d&&d.ok));
-    }).catch(function(){ _tdLinkMsg('Not saved — network error.',true); });
+  function loadTournaments(){
+    api('/admin/arena/settings').then(function(r){return r.json();}).then(_tdRender).catch(function(){ _tdMsg('Network error',true); });
+  }
+  if($('tdToggle')) $('tdToggle').addEventListener('click',function(){
+    var want=!(_td&&_td.enabled), tg=this; tg.disabled=true; _tdMsg(want?'Turning the link on…':'Pausing the link…');
+    api('/admin/arena/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({enabled:want})}).then(function(r){return r.json();}).then(function(d){
+      _tdRender(d); _tdMsg(d&&d.ok?(want?'Saved — the link is on.':'Saved — the link is paused.'):((d&&d.error)||'Not saved'),!(d&&d.ok));
+    }).catch(function(){ tg.disabled=false; _tdMsg('Not saved — network error.',true); });
   });
   if($('tdUrl')) $('tdUrl').addEventListener('input',function(){ this.dataset.dirty='1'; });
   if($('tdTest')) $('tdTest').addEventListener('click',function(){
     var b={url:$('tdUrl').value.trim()}, k=$('tdKeyIn').value.trim(), btn=this;
     if(k) b.key=k;
-    btn.disabled=true; _tdLinkMsg('Calling the Arena…');
+    btn.disabled=true; _tdMsg('Calling the Arena…');
     api('/admin/arena/link-test',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(function(r){return r.json();}).then(function(d){
-      var t=d&&d.test;
-      if(!(t&&t.ok)){ btn.disabled=false; if(d&&d.link) _tdRenderLink(d.link,!!d.enabled); return _tdLinkMsg((t&&t.error)||(d&&d.error)||'Not linked',true); }
-      $('tdKeyIn').value=''; delete $('tdUrl').dataset.dirty;
-      // Linked: switch to « its own app » if that is what is picked.
-      var want=$('tdMode').value;
-      var next=want==='external'&&!(d.link&&d.link.mode==='external')?api('/admin/arena/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'external'})}).then(function(r){return r.json();}):Promise.resolve(d);
-      return next.then(function(d2){ btn.disabled=false; _tdRender(d2); _tdLinkMsg('Linked — Arena '+(t.arena||'?')+' accepted the key and received '+(t.servers||0)+' server'+(t.servers===1?'':'s')+' and the events'+(d2&&d2.link&&d2.link.mode==='external'?'; sent again every minute, and /arena on this site now sends visitors there.':'.')); });
-    }).catch(function(){ btn.disabled=false; _tdLinkMsg('Network error',true); });
+      btn.disabled=false; var t=d&&d.test;
+      if(d&&d.link) _tdRender(d);
+      if(!(t&&t.ok)) return _tdMsg((t&&t.error)||(d&&d.error)||'Not linked',true);
+      $('tdKeyIn').value=''; delete $('tdUrl').dataset.dirty; _tdRender(d);
+      _tdMsg('Linked — Arena '+(t.arena||'?')+' accepted the key and received '+(t.servers||0)+' server'+(t.servers===1?'':'s')+' and the events; sent again every minute, and /arena on this site now sends visitors there.');
+    }).catch(function(){ btn.disabled=false; _tdMsg('Network error',true); });
   });
-  function loadTournaments(){
-    api('/admin/arena/settings').then(function(r){return r.json();}).then(_tdRender).catch(function(){ var m=$('tdMsg'); if(m){ m.textContent='Network error'; m.className='msg err'; } });
-  }
-  function _tdSave(patch){
-    var m=$('tdMsg'), tg=$('tdToggle');
-    if(m){ m.textContent=patch.enabled?'Starting the service…':'Stopping the service…'; m.className='msg'; }
-    if(tg) tg.disabled=true;
-    api('/admin/arena/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(patch)}).then(function(r){return r.json();}).then(function(d){
-      _tdRender(d);
-      if(m){ if(d&&d.ok){ var sv=d.service||{}; m.textContent=d.enabled?(sv.status==='running'?'Saved — the service is running.':'Saved — the service is '+(sv.status||'starting')+(sv.lastError?' ('+sv.lastError+')':'')+'.'):'Saved — the service is stopped.'; m.className='msg '+(d.enabled&&sv.status!=='running'?'err':'ok'); } else { m.textContent=(d&&d.error)||'Not saved'; m.className='msg err'; } }
-    }).catch(function(){ if(m){ m.textContent='Not saved — network error.'; m.className='msg err'; } if(tg) tg.disabled=false; });
-  }
-  if($('tdToggle')) $('tdToggle').addEventListener('click',function(){ _tdSave({enabled:!(_td&&_td.enabled)}); });
   if($('tdRefresh')) $('tdRefresh').addEventListener('click',loadTournaments);
-  if($('tdRestart')) $('tdRestart').addEventListener('click',function(){
-    var m=$('tdMsg'); if(m){ m.textContent='Restarting the service…'; m.className='msg'; }
-    api('/admin/arena/restart',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}).then(function(r){return r.json();}).then(function(d){
-      _tdRender(d); if(m){ m.textContent=d&&d.ok?('Restarted — the service runs version '+((d.service&&d.service.version)||'?')+'.'):((d&&d.error)||'Not restarted'); m.className='msg '+(d&&d.ok?'ok':'err'); }
-    }).catch(function(){ if(m){ m.textContent='Network error'; m.className='msg err'; } });
-  });
 
   // packages
   var kind='table';

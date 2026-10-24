@@ -328,7 +328,8 @@ ok(!/class="defrow" style="display:flex/.test(admin), 'no settings row carries t
 // web.177: the leaderboard reset period became a settings row (75).
 // web.192: + the database Type row (76).
 // web.323: + the three rows of « Where the Arena runs » (79).
-ok((admin.match(/class="defrow fld/g) || []).length === 79, 'all 79 rows use it');
+// web.327: the Arena is its own app, only its address and key are left (78).
+ok((admin.match(/class="defrow fld/g) || []).length === 78, 'all 78 rows use it');
 ok(/\.fld\.left\{justify-content:flex-start\}/.test(admin), 'the left-aligned variant survives');
 ok(/\.fld\.gap\{margin:10px 0 5px\}/.test(admin), 'so does the wider-margin variant');
 ok(/\.fld>input\[type=number\]\{width:110px\}/.test(admin), 'short control widths live in the sheet');

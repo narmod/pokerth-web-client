@@ -296,10 +296,12 @@ use too. Items are grouped by status rather than fixed phases.
   untick « manual address entry » on pokerth.net once servers are listed; serverlist XML export
   for the QML client to discuss with sp0ck.
 
-- **Arena** (called « tournaments » until `web.315`; tournaments, cups, medals and the tournament director, `/arena`) — an automatic organizer for games and tournaments on the LAN servers
+- **Arena** — **an application of its own since `web.327`** (`narmod/pokerth-arena`, private for now); the web client
+  keeps only the link (Admin › Community › Arena: address and link key, servers and events sent, `/arena` sent to the
+  Arena, witness reports relayed; `docs/ARENA_LINK.md`). History while it lived here: (called « tournaments » until `web.315`; tournaments, cups, medals and the tournament director, `/arena`) — an automatic organizer for games and tournaments on the LAN servers
   of the directory (scheduled Sit & Go, multi-table rounds, leagues), off by default, with a sealed,
   signed journal of every table and the operator's consent required before touching a server. Design and
-  status: `docs/ARENA.md`. Done: the spectator that watches one table and seals its journal and
+  status: `docs/ARENA.md` in the Arena's repository. Done: the spectator that watches one table and seals its journal and
   ranking, and the « Table check » tool on `/arena` (`web.292`, off by default) to run it against a server
   the install knows; manual mode (`web.296`: tournaments created by hand, result typed in, from a Table check or
   from a `.pdb` log, validated, corrected, signed), and the move to a service of its own in this repository

@@ -69,14 +69,12 @@ skipped halfway through.
 `note`) with the same list lengths. Compare the two structures before
 committing, not just `node --check`.
 
-The tournament pages too: `arena/public/lang/<code lower-cased>.mjs`, the
-same keys and placeholders as `arena/public/lang/en.mjs` (about 95 short
-strings). `scripts/test-lang-count.mjs` requires it for every UI catalogue, and
-`arena/test/test-arena-public.mjs` checks its keys and placeholders. And the
-lines the tournament director writes in the chat: `arena/lib/botlang/<code
-lower-cased>.mjs`, the same 13 keys and placeholders as `botlang/en.mjs`,
-starting in lowercase (the server's chat filter mutes capitals);
-`arena/test/test-arena-host.mjs` checks them.
+The Arena (tournaments, cups, medals) is an application of its own since
+web.327 (`narmod/pokerth-arena`), but a language of the web client is a
+language of the Arena too: add it there in the same session — its
+`public/lang/<code lower-cased>.mjs` and `lib/botlang/<code lower-cased>.mjs`
+(see that repository's `docs/ARENA.md`), then its `scripts/sync-shared.mjs`
+so that its copy of `lang-meta.mjs` knows the new language.
 
 Then, in a single commit:
 

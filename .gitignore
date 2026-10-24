@@ -66,15 +66,11 @@ monthly-cups.json
 # Screenshots written by scripts/test-mobile-browser.mjs (local review only).
 /test-artifacts/
 
-# Tournament director prototype (arena/bin/arena-spectate.mjs): the install's
-# private signing key and the journals/results it writes. Never committed.
+# Left by the Arena that ran inside the web client until web.326 (now its own
+# application, narmod/pokerth-arena): its data folder (watches, journals,
+# results, the signing key — move it to the Arena's ARENA_DIR) and leftovers.
 td-key.pem
 arena-out.journal.json
 arena-out.result.json
-# Its folder on a running install: watches, journals, results and the key.
 /arena-data/
-
-# The Arena run on its own: its copy of the shared files (arena/scripts/sync-shared.mjs,
-# committed in the Arena's own repository, not here) and its default data folder.
-/arena/shared/
-/arena/data/
+/arena/

@@ -31,6 +31,5 @@ ok(/import \{ TEMPLATES \} from '\.\.\/create-presets\.mjs'/.test(bs) && !/start
 const iP = html.indexOf('src="modules/create-presets.mjs"'), iJ = html.indexOf('src="pokerth.js"');
 ok(iP > 0 && iJ > iP, 'the module is loaded before pokerth.js');
 ok(read('public/sw.js').includes("'/modules/create-presets.mjs'"), 'precached by the service worker');
-ok(read('arena/lib/table.mjs').includes("'../../public/modules/create-presets.mjs'"), 'the tournament director reads the same file');
 console.log((fail ? 'FAIL ' : 'OK ') + pass + '/' + (pass + fail));
 process.exit(fail ? 1 : 0);

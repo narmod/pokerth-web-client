@@ -35,7 +35,6 @@ ENV MC_CUPS_FILE=/data/monthly-cups.json
 ENV PREFS_DIR=/data/prefs
 ENV AUDIT_FILE=/data/admin-audit.json
 ENV DEPLOY_HISTORY_FILE=/data/deploy-history.json
-ENV ARENA_DIR=/data/arena
 
 # Live directory for the optional self-updating mode (SELF_UPDATE=1): the
 # entrypoint provisions a git checkout here and runs the app from it, so the

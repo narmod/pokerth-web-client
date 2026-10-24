@@ -29,15 +29,8 @@ const N = langs.length;
 console.log('  (catalogue on disk: ' + N + ' languages)');
 
 check('every UI catalogue has a help corpus', help.length === N);
-// The tournament pages (arena/public/lang/, docs/ARENA.md):
-// a language of the app is also a language of /arena, from its first push.
-const tdLang = fs.readdirSync(path.join(root, 'arena', 'public', 'lang')).filter(f => f.endsWith('.mjs'));
-const missingTd = langs.filter(f => !tdLang.includes(f.toLowerCase()));
-check('every UI catalogue has a tournament catalogue' + (missingTd.length ? ' (missing: ' + missingTd.join(', ') + ')' : ''), missingTd.length === 0);
-// …and a language the tournament director can write in, in the chat.
-const botLang = fs.readdirSync(path.join(root, 'arena', 'lib', 'botlang')).filter(f => f.endsWith('.mjs'));
-const missingBot = langs.filter(f => !botLang.includes(f.toLowerCase()));
-check('every UI catalogue has a director chat catalogue' + (missingBot.length ? ' (missing: ' + missingBot.join(', ') + ')' : ''), missingBot.length === 0);
+// The Arena's catalogues live in its own repository since web.327
+// (narmod/pokerth-arena; docs/ADDING_A_LANGUAGE.md).
 check('english is present', langs.includes('en.mjs'));
 
 // Files that describe the client as it is now. The CHANGELOG is deliberately

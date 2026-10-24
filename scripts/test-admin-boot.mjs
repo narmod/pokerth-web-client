@@ -58,9 +58,10 @@ const CANNED = {
       { id: 'lan_bbbbbb02', name: 'Old club', host: 'old.example.org', port: 7234, tls: true, country: 'NL', lang: 'nl', desc: '', visible: true, noverify: true, sni: '',
         addedAt: Date.now() - 30 * 864e5, lastSeen: Date.now() - 9 * 864e5, status: { online: false, players: null, error: 'ETIMEDOUT', at: Date.now() }, autoHidden: true }
     ] },
-  '/admin/arena/settings': { ok: true, enabled: true, running: 1, maxRunning: 4,
-    service: { status: 'running', version: '0.1.0', pid: 42, restarts: 0, lastError: null, since: Date.now() - 60000 },
-    key: { publicKeyRaw: 'AbCd<x>+/=', created: Date.now() - 864e5 } },
+  '/admin/arena/settings': { ok: true, enabled: true, linked: true,
+    link: { url: 'https://arena.example.org', self: 'https://web.example.org', keySet: true, keyHint: 'alk_abcd…wxyz',
+      lastTest: { at: Date.now() - 60000, ok: true, arena: '0.37.0', error: null },
+      lastPush: { at: Date.now() - 30000, ok: false, servers: 0, events: false, error: 'the Arena refused <the key>' } } },
 };
 const posts = [], gets = [];
 function canned(url) {
@@ -221,15 +222,17 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   ok(!pn.classList.contains('xpl-on'), 'and a second folds them again');
   ok(errors.length === 0, 'switching threw nothing' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
 }
-// ── Tournaments (Community › Tournaments) ───────────────────────────────────
+// ── Arena (Community › Arena): the link with the Arena, its own app (web.327) ──
 {
   doc.querySelector('.tab[data-t="arena"]').click();
   await new Promise((r) => setTimeout(r, 200));
   const tiles = [...doc.querySelectorAll('#tdTiles .ovmode')].map((t) => t.textContent);
-  ok(tiles.length === 4 && /Module.*On/.test(tiles[0]) && /Service.*Running.*0\.1\.0/.test(tiles[1]) && /Watches.*1.*\/ 4/.test(tiles[2]), 'arena: four tiles, like the other sections');
+  ok(tiles.length === 4 && /Link.*On/.test(tiles[0]) && /Arena.*arena\.example\.org/.test(tiles[1]) && /Last test.*OK.*0\.37\.0/.test(tiles[2]) && /Last sent.*refused/.test(tiles[3]), 'arena: four tiles, like the other sections');
   const tg = $('tdToggle');
   ok(tg && tg.classList.contains('toggle') && tg.classList.contains('on') && tg.getAttribute('aria-pressed') === 'true' && !tg.disabled, 'arena: the shared On/Off switch');
-  ok($('tdKey').querySelector('code') && !$('tdKey').innerHTML.includes('<x>'), 'arena: the key shown, escaped');
+  ok($('tdUrl').value === 'https://arena.example.org' && /alk_abcd/.test($('tdKeyHint').textContent) && !$('tdLinkState').innerHTML.includes('<the key>'), 'arena: the address, a hint of the key, the last error escaped');
+  ok($('tdOrg').getAttribute('href') === 'https://arena.example.org/arena/organize', 'arena: a link to the Arena\'s organizer page');
+  ok(!doc.getElementById('tdKey') && !doc.getElementById('tdRestart') && !doc.getElementById('tdMode'), 'arena: nothing left of the Arena that ran inside the web client');
   tg.click();
   await new Promise((r) => setTimeout(r, 100));
   const p = posts.filter((x) => /\/admin\/arena\/settings$/.test(x.url)).pop();

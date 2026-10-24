@@ -4,8 +4,10 @@
 // WITNESS: it sends the director a public summary of what it saw — for each
 // hand, the stack of every player still in at its start, and the winner.
 // Never its cards. The director compares it with its own journal; witnesses
-// check a result, they never decide it (arena/lib/witness.mjs,
-// docs/ARENA.md « Witnesses »).
+// check a result, they never decide it (the Arena's lib/witness.mjs and
+// docs/ARENA.md « Witnesses », narmod/pokerth-arena). The Arena is an
+// application of its own: these requests go to this site's /arena/api,
+// which relays them to it (server/arena-link.js, docs/ARENA_LINK.md).
 //
 // When: the director's table is recognised at the start of the game (game id
 // and table name, GET /arena/api/table). The summary goes out every 10

@@ -381,6 +381,8 @@ function _configRedact(cfg) {
     ld.pending.forEach(function (r) { if (r) delete r.contact; });
     out.push('lanDirectory.pending.contact');
   }
+  // The Arena's link key (web.327): a secret shared with the Arena.
+  if (cfg.arena && cfg.arena.key) { cfg.arena = Object.assign({}, cfg.arena); delete cfg.arena.key; out.push('arena.key'); }
   return out;
 }
 // On restore, a value the file says it left out keeps its current value rather
@@ -388,6 +390,7 @@ function _configRedact(cfg) {
 function _configKeepRedacted(next, redacted, current) {
   const r = Array.isArray(redacted) ? redacted : [];
   if (r.indexOf('discordChatWebhookUrl') >= 0 && current.discordChatWebhookUrl) next.discordChatWebhookUrl = current.discordChatWebhookUrl;
+  if (r.indexOf('arena.key') >= 0 && current.arena && current.arena.key && next.arena && !next.arena.key) next.arena = Object.assign({}, next.arena, { key: current.arena.key });
   if (r.indexOf('lanDirectory.pending.contact') >= 0 && next.lanDirectory && Array.isArray(next.lanDirectory.pending)) {
     const was = {};
     ((current.lanDirectory && current.lanDirectory.pending) || []).forEach(function (q) { if (q && q.id) was[q.id] = q.contact; });
@@ -451,16 +454,15 @@ const LAN_BOARDS = require('./server/lan-boards.js').createLanBoards({
 setTimeout(function () { LAN_BOARDS.rotate(); }, 5000).unref();
 setInterval(function () { LAN_BOARDS.rotate(); }, 60 * 60 * 1000).unref();
 
-// ── Arena: tournaments, cups, medals and the tournament director ────────────
-// A service of its own (arena/). Off by default (Admin › Community › Arena).
-// While on, the proxy runs the service (server/arena-host.js), relays /arena
-// and /admin/arena/* to it after checking the admin token, and tells it which
-// servers it may use. Its files (watches, tournaments, cups, images, the
-// install's signing key) live in ARENA_DIR.
-const ARENA_DIR = process.env.ARENA_DIR || path.join(__dirname, 'arena-data');
-const ARENA_LIB = require('./server/arena-host.js');
-// LAN only for now (2026-10-23): the LAN directory and the local server —
-// never the game-server registry of Internet mode, nothing for pokerth.net.
+// ── The link with a PokerTH Arena (tournaments, cups, medals) ───────────────
+// The Arena is an application of its own (narmod/pokerth-arena); the web
+// client no longer runs it (web.327). Admin › Community › Arena keeps its
+// address and its link key; while on, the web client sends it the servers it
+// may use and the community events, sends /arena visitors to it and relays
+// its players' API (server/arena-link.js, docs/ARENA_LINK.md). Off by default.
+const ARENA_LIB = require('./server/arena-link.js');
+// LAN only (2026-10-23): the LAN directory and the local server — never the
+// game-server registry of Internet mode, nothing for pokerth.net.
 function _arenaServers() {
   var out = [];
   try {
@@ -473,14 +475,12 @@ function _arenaServers() {
   out.push({ ref: 'local', kind: 'local', name: 'Local server', host: L.host || '127.0.0.1', port: L.lanPort || 7234, tls: !!L.lanTls, sni: '', noverify: true, pins: [] });
   return out;
 }
-const ARENA = ARENA_LIB.createArenaHost({
-  dir: ARENA_DIR,
+const ARENA = ARENA_LIB.createArenaLink({
   getConfig: function () { return (_adminConfig && _adminConfig.arena) || {}; },
   setConfig: function (c) { _adminConfig.arena = c; saveAdminConfig(); },
   listServers: _arenaServers,
   clientVersion: function () { try { return require('./package.json').version; } catch (e) { return ''; } },
-  codePollMs: Number(process.env.ARENA_CODE_POLL_MS) || undefined,
-  // The Arena's home page shows the community events (the Events relay's cache, web.321).
+  // The Arena's home page shows the community events (the Events relay's cache).
   communityEvents: function () {
     const cfg = _eventsCfg();
     if (!cfg.on) return Promise.resolve(null);
@@ -11360,10 +11360,6 @@ function _pathNeedsRestart(f) {
   // scripts/ holds the tests and the manifest builders (spawned afresh each
   // time), install.sh the host CLI: none of it is code the running proxy holds.
   if (/^(scripts\/|install\.sh$)/.test(f)) return false;
-  // arena/ is the Arena (tournament director), a service of its own: the web
-  // client restarts that service alone when its code changes on disk
-  // (server/arena-host.js), never itself.
-  if (/^arena\//.test(f)) return false;
   return !/^(docs\/|claude\/|\.github\/|README|CHANGELOG|LICENSE|\.gitignore|\.editorconfig)/.test(f);
 }
 // package.json changes on every deploy (the version bump), which made every
@@ -11707,25 +11703,11 @@ function hasScope(scope, query, bodyToken) {
   return false;
 }
 
-// This site's public address (Admin › SEO, else the request's host): the
-// Arena builds shared-link pictures from it, and « Its own app » sends it to
-// the Arena with the servers and events (web.323).
+// This site's public address (Admin › SEO, else the request's host): sent to
+// the linked Arena with the servers and events.
 function _arenaPublicOrigin(req) {
   const h = String(req.headers.host || '');
   return seoPublicUrl() || (/^[A-Za-z0-9.:[\]-]{1,255}$/.test(h) ? ((req.socket && req.socket.encrypted) || String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim() === 'https' ? 'https://' : 'http://') + h : '');
-}
-
-// Who acts in the Arena (organizer page): the master key is « admin », the
-// super admin; an organizer signs in with an account of the Arena (login +
-// password) and sends its session token (as_…), which the Arena's service
-// checks. There are no Arena keys in Admin › Keys (removed in web.319).
-function _arenaAuthor(query) {
-  if (adminAuthed(query)) return 'admin';
-  var tok = (query && query.token) || '';
-  // An organizer account's session (as_…), or a player account's (ps_…) —
-  // the Arena checks it and its role itself (one account for everything, web.322).
-  if (/^(?:as|ps)_[A-Za-z0-9_-]{40,60}$/.test(tok)) return { session: tok };
-  return null;
 }
 
 // Any valid admin key at all, whatever its scopes. Used only by read-only bits
@@ -12306,7 +12288,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (_m) query.token = _m[1];
   }
   if (reqPathOnly === '/admin/arena' || reqPathOnly.indexOf('/admin/arena/') === 0) {
-    return ARENA_LIB.handleArenaAdmin(ARENA, { adminAuthed: adminAuthed, adminJson: adminJson, readJsonBody: readJsonBody, author: _arenaAuthor, origin: _arenaPublicOrigin }, req, res, reqPathOnly, query);
+    return ARENA_LIB.handleArenaAdmin(ARENA, { adminAuthed: adminAuthed, adminJson: adminJson, readJsonBody: readJsonBody, origin: _arenaPublicOrigin }, req, res, reqPathOnly, query);
   }
   if (reqPathOnly === '/admin' || reqPathOnly === '/admin.html') {
     const p = path.join(PUBLIC_DIR, 'admin.html');
@@ -15187,8 +15169,6 @@ const httpServer = http.createServer((req, res) => {
       if (req.method === 'GET' && (reqPathOnly === '/admin/status' || reqPathOnly === '/admin/logs'
           || reqPathOnly === '/admin/sessions' || reqPathOnly === '/admin/broadcasts'
           || reqPathOnly === '/admin/clock')) res._rlNoPenalty = true;
-      // The /arena page polls its watches the same way.
-      if (req.method === 'GET' && /^\/admin\/arena\/watch(es)?$/.test(reqPathOnly)) res._rlNoPenalty = true;
       _rlAdminFail.get(ip).then(function (r) {
         if (r && r.remainingPoints <= 0 && r.msBeforeNext > 0) {
           res.writeHead(429, { 'Content-Type': 'application/json; charset=utf-8', 'Retry-After': String(Math.ceil(r.msBeforeNext / 1000)), 'Cache-Control': 'no-store' });
@@ -15198,13 +15178,10 @@ const httpServer = http.createServer((req, res) => {
     } else handleAdmin(req, res, reqPathOnly, q);
     return;
   }
-  // ── /arena — tournaments, cups and medals, served by the Arena's service
-  // (off by default: a plain 404 until Admin › Community › Arena turns it on,
-  // the .html and its files included).
+  // ── /arena — to the linked Arena: pages 302, the players' API relayed
+  // (a plain 404 until Admin › Community › Arena links one).
   if (reqPathOnly === '/arena' || reqPathOnly === '/arena.html' || reqPathOnly.indexOf('/arena/') === 0) {
-    // The public address (Admin › SEO, else this request's host): the
-    // director builds the picture of a shared link (og:image) from it.
-    return ARENA_LIB.handleArenaPage(ARENA, req, res, reqPathOnly, clientIp(req), _arenaPublicOrigin(req));
+    return ARENA_LIB.handleArenaPage(ARENA, req, res, reqPathOnly, clientIp(req));
   }
   // ── /live — embedded spectator mode, successor to the pokerth-live tool.
   // Same client, same themes/decks/seats/layout, so every table improvement

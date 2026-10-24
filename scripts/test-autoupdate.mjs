@@ -45,9 +45,8 @@ ok(mod._pathNeedsRestart('CHANGELOG.md')===false,'changelog: no restart');
 // scripts/ (tests, manifest builders) and install.sh are not code the running
 // proxy holds: no restart (proxy.js _pathNeedsRestart).
 ok(mod._pathNeedsRestart('scripts/test-boot.mjs')===false,'scripts: no restart');
-// The tournament director is restarted alone by the web client (server/arena-host.js).
-ok(mod._pathNeedsRestart('arena/lib/host.mjs')===false && mod._pathNeedsRestart('arena/package.json')===false,'tournament service: no web client restart');
-ok(mod._pathNeedsRestart('server/arena-host.js')===true,'its launcher in the web client: restart');
+// The link with the Arena (an application of its own since web.327) is server code.
+ok(mod._pathNeedsRestart('server/arena-link.js')===true,'the Arena link: restart');
 ok(mod._pathNeedsRestart('install.sh')===false,'install.sh: no restart');
 ok(mod._pathNeedsRestart('server/db-dialects.js')===true,'server/ code needs restart');
 // package.json: only the version bump or a `node scripts/…` entry → no restart.
