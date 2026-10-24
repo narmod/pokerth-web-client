@@ -750,6 +750,37 @@ password; four roles).
 - Players keep their nickname and personal code for now (player accounts:
   later).
 
+## Who may register (service `0.26.0`)
+
+Conditions an organizer puts on a tournament (`access`, create and update)
+or on a cup (`plan.access`, through its programme). Code:
+`arena/lib/access.mjs` (pure: `cleanAccess`, `playerFacts`, `missingFor`),
+`arena/public/access-form.mjs`; tests: `arena/test/test-arena-access.mjs`.
+
+| Condition | Field |
+|---|---|
+| A player account (signed in) | `identity: 'account'` |
+| At least N tournaments played here | `minTournaments` |
+| At most N (beginners) | `maxTournaments` |
+| At least X points here | `minPoints` |
+| A medal / a gold medal | `medal: 'any' \| 'gold'` |
+| No medal yet (beginners) | `noMedal` |
+| Within the first N of a cup's standings | `cup: { id, top, name }` |
+
+- **Facts**: this install's validated results only (decided 2026-10-24).
+  Tournaments played: validated tournaments (not the tables of a tournament
+  on several tables) where the player is ranked. Points: the cups' rule
+  (players finished behind + 1, shared places averaged), Friendly excluded.
+  Medals: as on the players' page.
+- **Checked** at every registration made on the players' page (tournament,
+  cup); a refusal is `code: 'access'` with `missing: [{ code, need, have,
+  name? }]`. `POST /arena/api/t/<key>/eligible` and the cup's `op:
+  'eligible'` answer the same without registering.
+- **Not held back**: a player the organizer adds, and the qualifiers of a
+  cup's steps or final. A cup's conditions go to the tournaments players
+  enter (series, single tournament, step 1), not to the later steps nor the
+  final.
+
 ## Players and their accounts (service `0.25.0`)
 
 The first step of player management (design: players, identity and access
@@ -1089,6 +1120,7 @@ that version only: the web client's version, its service worker and its
 | `arena/lib/lobby.mjs` | Lobby reader (guest login, tables, server type). |
 | `arena/lib/host.mjs` | The director that opens a tournament table: create, invite, kick, hand over, then watch. |
 | `arena/lib/worker.mjs` | One watch in a detached process, state and files on disk. |
+| `arena/lib/access.mjs` | Who may register: conditions, a player's facts from the results, what is missing. Pure. |
 | `arena/lib/players.mjs` | Players of the install: accounts (invitation or sign-up), sessions, nicknames claimed, bans. |
 | `arena/test/test-arena-tablepass.mjs` | The table password: default, given against the code, never shown nor stored. |
 | `arena/lib/cupplan.mjs` | A cup's programme: formats, dates, slots, the events and the tournaments it makes. Pure. |

@@ -10,6 +10,25 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.26.0 — 2026-10-24
+
+### Added
+- **Who may register**: conditions on a tournament or a cup, all holding
+  together — a player account, at least N tournaments played on this site,
+  at most N (beginners), at least X points, a medal (any, or gold), no medal
+  yet (beginners), a place within the first N of a given cup. Counted from
+  this site's validated results only; points as in cups (players finished
+  behind + 1, Friendly tournaments excluded).
+- A refusal says what is missing and what the player has (« 3 tournaments
+  played needed, you have 0 »); the players' page lists the conditions and,
+  for a signed-in player, whether they are met (`/t/<key>/eligible`, cup
+  `op: 'eligible'`).
+- A cup's conditions apply to its registration and to the tournaments
+  players enter, never to the steps after nor the final; the organizer
+  adding a player and the qualifiers are not held back.
+- Organizer side: « Who may register » on tournament creation and edit and
+  in a cup's programme. 16 strings in the 83 languages.
+
 ## 0.25.0 — 2026-10-24
 
 ### Added

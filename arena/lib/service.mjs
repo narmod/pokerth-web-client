@@ -30,6 +30,7 @@ const STATIC = {
   'accounts-ui.mjs': 'text/javascript; charset=utf-8',
   'reset-ui.mjs': 'text/javascript; charset=utf-8',
   'players-ui.mjs': 'text/javascript; charset=utf-8',
+  'access-form.mjs': 'text/javascript; charset=utf-8',
   'public.mjs': 'text/javascript; charset=utf-8',
   'theme.mjs': 'text/javascript; charset=utf-8',
   'arena.css': 'text/css; charset=utf-8',
@@ -516,7 +517,7 @@ export function createService(o) {
   async function publicApi(req, res, sub, query) {
     const ip = String(req.headers['x-td-client'] || req.socket.remoteAddress || '').slice(0, 64);
     const send = (p) => Promise.resolve().then(p).then((v) => json(res, 200, Object.assign({ ok: true }, Array.isArray(v) ? { tournaments: v } : v)))
-      .catch((e) => (e instanceof T.Refusal ? json(res, e.code === 'notFound' || e.code === 'private' ? 404 : 400, { ok: false, code: e.code || 'refused', error: e.message })
+      .catch((e) => (e instanceof T.Refusal ? json(res, e.code === 'notFound' || e.code === 'private' ? 404 : 400, Object.assign({ ok: false, code: e.code || 'refused', error: e.message }, e.missing ? { missing: e.missing } : {}))
         : json(res, 500, { ok: false, code: 'error', error: 'error' })));
     if (sub === '/list' && req.method === 'GET') return send(() => T.publicList());
     // Organizer accounts: sign in, the invitation link (choose a password), sign out.
@@ -558,18 +559,19 @@ export function createService(o) {
     if (cm && req.method === 'POST') {
       const b = await readJson(req);
       if (!b) return json(res, 400, { ok: false, code: 'badRequest' });
-      const op = { register: 'register', unregister: 'unregister', choose: 'unregister' }[b.op];
+      const op = { register: 'register', unregister: 'unregister', choose: 'unregister', eligible: 'player' }[b.op];
       if (!op) return json(res, 400, { ok: false, code: 'badRequest' });
       if (limited(op, ip)) return json(res, 429, { ok: false, code: 'tooMany', error: 'too many attempts, try again later' });
       const acc = accountOf(b);
       if (acc === false) return json(res, 401, { ok: false, code: 'session', error: 'your session has ended: sign in again' });
       const o2 = { account: acc };
+      if (b.op === 'eligible') return send(() => C.cupEligible(cm[1], b, o2));
       return send(() => (b.op === 'register' ? C.cupRegister(cm[1], b, o2) : b.op === 'unregister' ? C.cupUnregister(cm[1], b, o2) : C.cupChoose(cm[1], b, o2)));
     }
     // A web client at a table: is it a tournament's? (game id and table name,
     // as the server told the client.) Only tables the director opened.
     if (sub === '/table' && req.method === 'GET') return send(() => tableLookup(query));
-    const m = /^\/t\/([A-Za-z0-9_-]{8,40})(?:\/(register|unregister|checkin|tablepass|witness|witnesslog|file))?$/.exec(sub);
+    const m = /^\/t\/([A-Za-z0-9_-]{8,40})(?:\/(register|unregister|checkin|tablepass|eligible|witness|witnesslog|file))?$/.exec(sub);
     if (!m) return json(res, 404, { ok: false, code: 'notFound' });
     const key = m[1], op = m[2] || '';
     if (!op && req.method === 'GET') {
@@ -591,8 +593,8 @@ export function createService(o) {
         'Content-Disposition': 'attachment; filename="tournament-' + key.slice(0, 8) + '.' + which + '.json"' });
       return res.end(buf);
     }
-    if (req.method !== 'POST' || ['register', 'unregister', 'checkin', 'tablepass', 'witness', 'witnesslog'].indexOf(op) < 0) return json(res, 405, { ok: false, code: 'method' });
-    if (limited(op, ip)) return json(res, 429, { ok: false, code: 'tooMany', error: 'too many attempts, try again later' });
+    if (req.method !== 'POST' || ['register', 'unregister', 'checkin', 'tablepass', 'eligible', 'witness', 'witnesslog'].indexOf(op) < 0) return json(res, 405, { ok: false, code: 'method' });
+    if (limited(op === 'eligible' ? 'player' : op, ip)) return json(res, 429, { ok: false, code: 'tooMany', error: 'too many attempts, try again later' });
     const b = op === 'witnesslog' ? await readJsonMax(req, MAX_LOG_JSON) : await readJson(req);
     if (!b) return json(res, 400, { ok: false, code: 'badRequest' });
     if (op === 'witnesslog') return send(() => { const h = T.keyHost(key); const x = h && hostTable(h.watchId); return T.witnessLog(key, b, { gameId: x ? x.gameId : null }); });
@@ -602,6 +604,7 @@ export function createService(o) {
     if (acc === false) return json(res, 401, { ok: false, code: 'session', error: 'your session has ended: sign in again' });
     const o2 = { account: acc };
     if (op === 'tablepass') return send(() => T.tablePass(key, b, o2));
+    if (op === 'eligible') return send(() => T.eligible(key, b, o2));
     return send(() => (op === 'register' ? T.register(key, b, o2) : op === 'checkin' ? T.checkIn(key, b, o2) : T.unregister(key, b, o2)));
   }
 

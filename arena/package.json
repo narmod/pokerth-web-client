@@ -1,6 +1,6 @@
 {
   "name": "pokerth-arena",
-  "version": "0.25.0",
+  "version": "0.26.0",
   "description": "PokerTH Arena: tournaments, cups and medals on PokerTH LAN servers, with a tournament director that opens Sit & Go tables for registered players, watches tables as a spectator and seals signed results. Launched by the PokerTH web client.",
   "private": true,
   "type": "module",
@@ -12,6 +12,6 @@
   "scripts": {
     "start": "node server.mjs",
     "test:browser": "node test/test-arena-public-browser.mjs",
-    "test": "node test/test-arena-platform.mjs && node test/test-arena-core.mjs && node test/test-arena-spectator.mjs && node test/test-arena-tournaments.mjs && node test/test-arena-host.mjs && node test/test-arena-scenarios.mjs && node test/test-arena-public.mjs && node test/test-arena-witness.mjs && node test/test-arena-collusion.mjs && node test/test-arena-avatar.mjs && node test/test-arena-stages.mjs && node test/test-arena-cups.mjs && node test/test-arena-cupplan.mjs && node test/test-arena-badges.mjs && node test/test-arena-table.mjs && node test/test-arena-images.mjs && node test/test-arena-tablepass.mjs && node test/test-arena-accounts.mjs && node test/test-arena-players.mjs && node test/test-arena-reset.mjs && node test/test-arena-service.mjs && node test/test-arena-route.mjs"
+    "test": "node test/test-arena-platform.mjs && node test/test-arena-core.mjs && node test/test-arena-spectator.mjs && node test/test-arena-tournaments.mjs && node test/test-arena-host.mjs && node test/test-arena-scenarios.mjs && node test/test-arena-public.mjs && node test/test-arena-witness.mjs && node test/test-arena-collusion.mjs && node test/test-arena-avatar.mjs && node test/test-arena-stages.mjs && node test/test-arena-cups.mjs && node test/test-arena-cupplan.mjs && node test/test-arena-badges.mjs && node test/test-arena-table.mjs && node test/test-arena-images.mjs && node test/test-arena-tablepass.mjs && node test/test-arena-accounts.mjs && node test/test-arena-players.mjs && node test/test-arena-access.mjs && node test/test-arena-reset.mjs && node test/test-arena-service.mjs && node test/test-arena-route.mjs"
   }
 }

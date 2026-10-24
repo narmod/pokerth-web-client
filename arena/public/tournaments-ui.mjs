@@ -12,6 +12,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 import { createTableForm } from './table-form.mjs';
+import { accessHtml, readAccess, accessSummary, loadAccessCups } from './access-form.mjs';
 
 const PROFILE_TEXT = {
   friendly: 'Friendly — validated at once, corrections free, unlisted, kept 30 days.',
@@ -122,6 +123,7 @@ export function createTournamentsView(deps) {
     if ($('tDate').value) { const ts = new Date($('tDate').value).getTime(); if (ts > 0) body.startsAt = ts; }
     if ($('tVis').value) body.visibility = $('tVis').value;
     body.table = readTable('tt_');
+    const ac = readAccess('tac_'); if (ac && Object.keys(ac).length) body.access = ac;
     const img = IP.value('tim_new'); if (img) body.image = img;
     body.run = { autoOpen: $('tAuto').checked, openBefore: Number($('tBefore').value), announce: $('tAnnounce').checked, selfRegister: $('tSelfReg').checked, chatLang: $('tChatLang').value || 'en', qmlWitnesses: $('tQmlWit').checked, finalists: Number($('tFinalists').value) || 2, absence: readAbsence('ta_'), tablePassword: $('tTablePass').checked };
     if (body.profile === 'custom') {
@@ -168,6 +170,8 @@ export function createTournamentsView(deps) {
     fillServers();
     // The create-game lists, once (from the web client, through the service).
     if (!TF.ready()) TF.load(api).then(() => { if (!TF.ready()) return; $('tTable').innerHTML = TF.html('tt_'); if (cur) show(cur); }).catch(() => {});
+    // Who may register: the cups for « a place in a cup », then the form.
+    loadAccessCups(api).then(() => { if ($('tAccess') && !$('tac_min')) $('tAccess').innerHTML = accessHtml('tac_', null, esc); });
     if (!IP.ready()) IP.load().then(() => { if (!IP.ready()) return; $('tImg').innerHTML = IP.html('tim_new', 'tournament', null); if (cur) show(cur); }).catch(() => {});
     return api('/admin/arena/t/list').then((d) => {
       if (!d.ok) return;
@@ -235,6 +239,7 @@ export function createTournamentsView(deps) {
     const st = t.settings || {};
     let h = '<p>' + chip(t.status) + ' <span class="tname">' + esc(t.name) + '</span><br><span class="muted small">' + (t.format === 'multi' ? 'Several tables + final (' + esc((t.run || {}).finalists || 2) + ' per table)' : 'Sit &amp; Go') + ' · ' + esc(t.profile) + ' · ' + esc(st.visibility) +
       (t.server ? ' · ' + esc(t.server.name) + ' (' + esc(t.server.host) + ':' + esc(t.server.port) + ')' : '') + (t.startsAt ? ' · ' + esc(when(t.startsAt)) : '') + '</span></p>';
+    if (t.access) h += '<p class="small">Who may register: ' + esc(accessSummary(t.access)) + '</p>';
     if (t.inviteCode) h += '<p class="small">Invitation code <span class="mono">' + esc(t.inviteCode) + '</span></p>';
     if (t.publicKey) {
       // Its page for the players: listed when public; the link is the way in
@@ -334,6 +339,7 @@ export function createTournamentsView(deps) {
           (deps.servers() || []).map((sv) => '<option value="' + esc(sv.ref) + '"' + (t.server && t.server.ref === sv.ref ? ' selected' : '') + '>' + esc(sv.name) + ' — ' + esc(sv.host) + ':' + esc(sv.port) + '</option>').join('') + '</select></div></div>' +
           '<p class="small muted">Table settings</p>' + tableFields('te_', t.table)) +
         runFields(t.run) +
+        '<p class="small muted">Who may register</p>' + accessHtml('teac_', t.access, esc) +
         '<div class="actions"><button type="button" data-act="save">Save</button></div></details>';
     }
 
@@ -613,6 +619,8 @@ export function createTournamentsView(deps) {
         const absChanged = run.absence && (run.absence.mode !== a0.mode || (run.absence.mode === 'custom' && ['strikes', 'retrySec', 'graceMin'].some((k) => run.absence[k] !== a0[k])));
         if (Object.keys(run).some((k) => k !== 'absence' && run[k] !== r0[k]) || absChanged) patch.run = run;
       }
+      const ac = readAccess('teac_');
+      if (ac !== undefined && JSON.stringify(ac) !== JSON.stringify(Object.assign({}, cur.access || {}, cur.access && cur.access.cup ? { cup: { id: cur.access.cup.id, top: cur.access.cup.top, name: cur.access.cup.name } } : {}))) patch.access = ac;
       if (!Object.keys(patch).length) return msg('tMsg', 'Nothing changed.');
       return call('/admin/arena/t/update', { patch }, 'Saved.');
     }

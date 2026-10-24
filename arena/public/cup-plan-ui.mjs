@@ -11,6 +11,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 import { absenceFields, readAbsence } from './tournaments-ui.mjs';
+import { accessHtml, readAccess, loadAccessCups } from './access-form.mjs';
 
 export const FORMAT_TEXT = {
   series: ['Series', 'several tournaments, points for each player (best N results)'],
@@ -49,7 +50,7 @@ export function createCupPlan(deps) {
     const next = new Date(Date.now() + 7 * DAY); next.setHours(21, 0, 0, 0);
     const p = c.planView;
     if (!p) return { format: 'series', create: 'auto', registration: 'cup', stageEntry: 'all', tables: 'one', every: 'week', count: 4, from: next.getTime(),
-      series: [], final: { at: null, top: 10 }, steps: [{ dates: [], qualify: 3 }, { dates: [] }], single: { at: next.getTime() }, common: { profile: 'club', autoOpen: true, openBefore: 10, announce: true, chatLang: 'en' } };
+      series: [], final: { at: null, top: 10 }, steps: [{ dates: [], qualify: 3 }, { dates: [] }], single: { at: next.getTime() }, common: { profile: 'club', autoOpen: true, openBefore: 10, announce: true, chatLang: 'en' }, access: null };
     const per = (k) => p.slots.filter((s) => s.step === k && s.kind !== 'final');
     const fin = p.slots.find((s) => s.kind === 'final');
     const stepCount = p.format === 'stages' ? Math.max(...p.slots.map((s) => s.step)) : 2;
@@ -58,7 +59,7 @@ export function createCupPlan(deps) {
       series: p.format === 'series' || p.format === 'seriesFinal' ? per(1).map((s) => s.at) : [],
       final: { at: fin ? fin.at : null, top: p.top || 10 },
       steps: p.format === 'stages' ? Array.from({ length: stepCount }, (_, i) => (i === stepCount - 1 ? { dates: fin ? [fin.at] : [] } : { dates: per(i + 1).map((s) => s.at), qualify: (per(i + 1)[0] || {}).qualify || 3 })) : [{ dates: [], qualify: 3 }, { dates: [] }],
-      single: { at: (p.slots.find((s) => s.kind === 'single') || {}).at || next.getTime() }, common: Object.assign({}, p.common || {}) };
+      single: { at: (p.slots.find((s) => s.kind === 'single') || {}).at || next.getTime() }, common: Object.assign({}, p.common || {}), access: p.access || null };
   }
 
   const dateRow = (id, ts, key) => {
@@ -103,6 +104,7 @@ export function createCupPlan(deps) {
     // Settings every tournament of the cup gets.
     const c = ed.common || {};
     const servers = deps.servers();
+    h += '<details class="sub"' + (ed.access ? ' open' : '') + '><summary>Who may register</summary><p class="small muted">On the cup\'s registration and on the tournaments players enter; never on the steps after, nor on the final (qualifiers earned their seat).</p>' + accessHtml('pac_', ed.access, esc) + '</details>';
     h += '<details class="sub"' + (cup.planView ? '' : ' open') + '><summary>Settings of every tournament</summary>' +
       '<div class="row"><div><label for="pSrv">LAN server</label><select id="pSrv"><option value="">— not said —</option>' + servers.map((s) => '<option value="' + esc(s.ref) + '"' + (c.server && c.server.ref === s.ref ? ' selected' : '') + '>' + esc(s.name) + ' — ' + esc(s.host) + ':' + esc(s.port) + '</option>').join('') + '</select></div>' +
       '<div><label for="pProfile">Profile</label><select id="pProfile">' + ['friendly', 'club', 'official'].map((x) => '<option' + (x === (c.profile || 'club') ? ' selected' : '') + '>' + x + '</option>').join('') + '</select></div></div>' +
@@ -126,6 +128,7 @@ export function createCupPlan(deps) {
     if ($('pFinAt')) { ed.final.at = fromInput($('pFinAt').value); ed.final.top = Number($('pTop').value) || ed.final.top; }
     if ($('pSteps')) ed.steps.forEach((s, i) => { if (i === ed.steps.length - 1) s.dates = [fromInput($('pStepF').value)].filter(Boolean); else { s.dates = readList('pSt' + i); s.qualify = Number($('pQ' + i).value) || s.qualify; } });
     if ($('pOne')) ed.single.at = fromInput($('pOne').value);
+    const ac = readAccess('pac_'); if (ac !== undefined) ed.access = Object.keys(ac).length ? ac : null;
     const srv = deps.servers().find((s) => s.ref === ($('pSrv') && $('pSrv').value));
     ed.common = { profile: $('pProfile').value, server: srv ? { ref: srv.ref, name: srv.name, host: srv.host, port: srv.port } : null, autoOpen: $('pAuto').checked, openBefore: Number($('pBefore').value),
       announce: $('pAnn').checked, chatLang: $('pLang').value || 'en', absence: readAbsence('pa_'), table: deps.TF().read('pt_') };
@@ -133,7 +136,7 @@ export function createCupPlan(deps) {
   function render() { $('cPlanEd').innerHTML = html(); }
   function body() {
     const f = ed.format;
-    const b = { format: f, create: ed.create, registration: ed.registration, stageEntry: ed.stageEntry, tables: ed.tables, rule: { every: ed.every, count: ed.count, from: ed.from }, common: ed.common };
+    const b = { format: f, create: ed.create, registration: ed.registration, stageEntry: ed.stageEntry, tables: ed.tables, rule: { every: ed.every, count: ed.count, from: ed.from }, common: ed.common, access: ed.access || null };
     if (f === 'series' || f === 'seriesFinal') b.series = ed.series.filter(Boolean);
     if (f === 'seriesFinal') b.final = { at: ed.final.at, top: ed.final.top };
     if (f === 'stages') b.steps = ed.steps.map((s, i) => (i === ed.steps.length - 1 ? { dates: s.dates } : { dates: s.dates.filter(Boolean), qualify: s.qualify }));

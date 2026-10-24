@@ -33,6 +33,46 @@ function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return n
 function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 function regsAll() { try { return JSON.parse(lsGet(REGS) || '{}') || {}; } catch (e) { return {}; } }
 function regsFor(key) { return regsAll()[key] || []; }
+// ── who may register (service 0.26.0) ──
+// The organizer's conditions, as a list; what is missing for a player.
+function accessList(a) {
+  if (!a) return [];
+  const out = [];
+  if (a.identity === 'account') out.push(t('acc_account'));
+  if (a.minTournaments) out.push(t('acc_minTournaments', { n: a.minTournaments }));
+  if (a.maxTournaments != null) out.push(t('acc_maxTournaments', { n: a.maxTournaments }));
+  if (a.minPoints) out.push(t('acc_minPoints', { n: a.minPoints }));
+  if (a.medal === 'any') out.push(t('acc_medal'));
+  if (a.medal === 'gold') out.push(t('acc_gold'));
+  if (a.noMedal) out.push(t('acc_noMedal'));
+  if (a.cup) out.push(t('acc_cup', { n: a.cup.top, name: a.cup.name || '' }));
+  return out;
+}
+function missingText(miss) {
+  return (miss || []).map((m) => {
+    if (m.code === 'minTournaments' || m.code === 'maxTournaments' || m.code === 'minPoints' || m.code === 'noMedal') return t('miss_' + m.code, { need: m.need, have: m.have });
+    if (m.code === 'cup') return t('miss_cup', { need: m.need, name: m.name || '', have: m.have || '—' });
+    if (m.code === 'account' || m.code === 'medal' || m.code === 'gold') return t('acc_' + m.code);
+    return t('err_' + m.code);
+  });
+}
+function accessCard(a, elig) {
+  const list = accessList(a);
+  if (!list.length) return '';
+  let h = '<section class="card"><h2>' + T('accessTitle') + '</h2><ul class="how">' + list.map((x) => '<li>' + esc(x) + '</li>').join('') + '</ul>';
+  if (elig && me) h += elig.missing && elig.missing.length ? '<p class="msg bad">' + T('accessYouMiss') + ' ' + esc(missingText(elig.missing).join(' · ')) + '</p>' : '<p class="msg ok">' + T('accessYouOk') + '</p>';
+  return h + '</section>';
+}
+const eligCache = {};
+// Signed in: is this tournament or cup open to me? (asked once per view)
+function askEligible(path, body, key, then) {
+  if (!me) return;
+  const k = key + '|' + me.nick;
+  if (eligCache[k]) return;
+  eligCache[k] = 'pending';
+  api(path, Object.assign({ session: me.token, invite: inviteFromUrl() || undefined }, body)).then((d) => { eligCache[k] = d && d.ok ? d : null; then(); }).catch(() => {});
+}
+
 // ── the player's account (service 0.25.0) ──
 // Signed in: the session stands for the personal code on every tournament
 // and cup (kept in this browser under pth_arena_player).
@@ -241,6 +281,12 @@ function renderOne() {
     h += '</section>';
   }
 
+  // Who may register, and whether the signed-in player may.
+  if (!c.result && c.access) {
+    const ek = 't:' + c.key + '|' + (me ? me.nick : '');
+    h += accessCard(c.access, eligCache[ek] && eligCache[ek] !== 'pending' ? eligCache[ek] : null);
+    askEligible('/t/' + c.key + '/eligible', {}, 't:' + c.key, () => { if (cur && cur.key === c.key) renderOne(); });
+  }
   // Registration.
   if (!c.result) {
     h += '<section class="card"><h2>' + T('regTitle') + '</h2>';
@@ -310,7 +356,10 @@ function renderOne() {
 }
 // The invitation code, carried to the pages of a private tournament's tables.
 function invQs(sep) { const i = inviteFromUrl(); return i ? sep + 'invite=' + encodeURIComponent(i) : ''; }
-function errText(d) { return T('err_' + (['badNick', 'taken', 'badCode', 'tooMany', 'notFound', 'checkInNotYet', 'checkInClosed', 'noCheckIn', 'alreadyIn', 'notPdb', 'noGame', 'noLogWitness', 'notPlayer', 'tooLarge', 'noTablePass', 'tableNotOpen', 'absentPlayer', 'notCheckedIn', 'nickClaimed', 'banned', 'accountNeeded', 'session', 'signupClosed', 'badLogin', 'shortPassword', 'passwordIsNick', 'badInvite', 'badPassword'].indexOf(d.code) >= 0 ? d.code : 'error')); }
+function errText(d) {
+  if (d && d.code === 'access') return T('accessYouMiss') + ' ' + esc(missingText(d.missing).join(' · '));
+  return T('err_' + (['badNick', 'taken', 'badCode', 'tooMany', 'notFound', 'checkInNotYet', 'checkInClosed', 'noCheckIn', 'alreadyIn', 'notPdb', 'noGame', 'noLogWitness', 'notPlayer', 'tooLarge', 'noTablePass', 'tableNotOpen', 'absentPlayer', 'notCheckedIn', 'nickClaimed', 'banned', 'accountNeeded', 'session', 'signupClosed', 'badLogin', 'shortPassword', 'passwordIsNick', 'badInvite', 'badPassword'].indexOf(d.code) >= 0 ? d.code : 'error'));
+}
 // Table passwords already shown in this page (they stay through the refreshes).
 const shownPass = {};
 function wire() {
@@ -524,6 +573,12 @@ function cupPlanHtml(d, key) {
     return '<li>' + (tt ? '<a class="tcard" href="/arena/t/' + esc(tt.key) + invQs('?') + '" data-go>' + head + '</a>' : '<div class="tcard">' + head + '</div>') + '</li>';
   }).join('') + '</ul></section>';
   if (rs.mode !== 'cup') return h;
+  // Who may register, and whether the signed-in player may.
+  if (p.access && d.status !== 'closed') {
+    const ek = 'c:' + key + '|' + (me ? me.nick : '');
+    h += accessCard(p.access, eligCache[ek] && eligCache[ek] !== 'pending' ? eligCache[ek] : null);
+    askEligible('/c/' + key, { op: 'eligible' }, 'c:' + key, () => { if (curKey === key) showCup(key); });
+  }
   // Registering for the cup.
   cupCodesToTournaments(d, key);
   const mine = myRegs(cupRegKey(key)).filter((r) => (rs.players || []).some((n) => n.toLowerCase() === r.nick.toLowerCase()));

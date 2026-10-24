@@ -355,7 +355,7 @@ export function createCups(o) {
   // while it has not started): its date, and the cup's settings.
   function refreshTournament(c, plan, s, author) {
     const inp = tournamentInput(c, plan, s);
-    const patch = { startsAt: inp.startsAt, table: inp.table || {}, run: inp.run, profile: inp.profile, settings: inp.settings, visibility: inp.visibility };
+    const patch = { startsAt: inp.startsAt, table: inp.table || {}, run: inp.run, profile: inp.profile, settings: inp.settings, visibility: inp.visibility, access: inp.access };
     if (inp.server) patch.server = inp.server;
     if (s.auto) patch.name = inp.name;
     try { T.update(s.tournamentId, patch, author); } catch (e) { if (!/nothing to change/.test(e.message)) throw e; }
@@ -523,10 +523,22 @@ export function createCups(o) {
       if ((c.registrants || []).some((r) => lowN(r.nick) === lowN(nick))) prefuse('taken', nick + ' is already registered');
       const choice = checkChoice(c, input && input.choice);
       if (choice) data.choice = choice;
+      if (c.plan.access) T.accessOrRefuse(c.plan.access, nick, account);
       c.registrants = (c.registrants || []).concat([{ nick, codeHash: T.codeHash(code), at: now(), choice: choice || null, added: {} }]);
       syncRegistrants(c);
     });
     return { nick, code, cup: publicGet(key, input && input.invite) };
+  }
+  function cupEligible(key, input, opts) {
+    const c = cupByKey(key);
+    if (!c || !visible(c, input && input.invite)) prefuse('notFound', 'unknown cup');
+    const account = (opts && opts.account) || null;
+    const nick = account ? account.nick : String((input && input.nick) || '').trim();
+    const bar = PL && PL.barrier(nick, account);
+    const rules = c.plan && c.plan.access;
+    let miss = [];
+    if (rules) { try { T.accessOrRefuse(rules, nick, account); } catch (e) { miss = e.missing || []; } }
+    return { nick, access: rules || null, missing: (bar ? [{ code: bar.code }] : []).concat(miss) };
   }
   function cupUnregister(key, input, opts) {
     const c0 = cupByKey(key);
@@ -623,7 +635,7 @@ export function createCups(o) {
       return o;
     });
     const upcoming = slots.filter((s) => !(s.tournament && (s.tournament.status === 'validated' || s.tournament.started))).sort((a, b) => a.at - b.at);
-    const out = { format: p.format, create: p.create, registration: p.registration, stageEntry: p.stageEntry, tables: p.tables, top: p.top, slots,
+    const out = { format: p.format, create: p.create, registration: p.registration, stageEntry: p.stageEntry, tables: p.tables, top: p.top, slots, access: p.access || null,
       next: upcoming[0] ? upcoming[0].key : null, registrationState: regState(c) };
     if (organizer) { out.common = p.common; out.rule = p.rule; }
     return out;
@@ -644,7 +656,7 @@ export function createCups(o) {
   return {
     list: () => all().sort((a, b) => b.createdAt - a.createdAt).map((c) => ({ id: c.id, name: c.name, status: c.status, events: c.events.length, visibility: c.visibility, bestOf: c.bestOf, format: c.plan ? c.plan.format : null })),
     get: (id) => { const { c, journal } = load(id); return view(c, journal); },
-    create, update, addEvent, removeEvent, tick, setPlan, slotCreate, slotAttach, slotDetach, cupRegister, cupUnregister, cupChoose, qualifyFromStandings, close, remove, publicList, publicGet, Refusal, allRaw: () => all(), generation: () => gen,
+    create, update, addEvent, removeEvent, tick, setPlan, slotCreate, slotAttach, slotDetach, cupRegister, cupUnregister, cupChoose, cupEligible, qualifyFromStandings, close, remove, publicList, publicGet, Refusal, allRaw: () => all(), generation: () => gen,
     // Every tournament already in a cup (its events or its programme) → the cup's name.
     usedBy: () => { const m = new Map(); for (const c of all()) { for (const e of c.events) m.set(e.tournamentId, c.name); for (const s of (c.plan ? c.plan.slots : [])) if (s.tournamentId) m.set(s.tournamentId, c.name); } return m; },
     // The (non-private) cups a tournament belongs to, for its page.

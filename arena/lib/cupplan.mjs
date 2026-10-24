@@ -23,6 +23,8 @@
 // its date; taking it off the programme is refused.
 // ═══════════════════════════════════════════════════════════════════
 
+import { cleanAccess } from './access.mjs';
+
 export const PLAN_FORMATS = Object.freeze(['series', 'seriesFinal', 'stages', 'single']);
 export const ONE_TABLE = 10;
 export const SEVERAL_TABLES = 40;   // tournaments.mjs: 4 tables of 10
@@ -110,7 +112,7 @@ export function cleanPlan(input, old, isStarted, refuse) {
   const gone = [...before.values()].filter((s) => s.tournamentId);
   for (const s of gone) if (isStarted(s.tournamentId)) refuse('« ' + slotLabel(s) + ' » has started: it stays in the programme');
   return {
-    plan: { v: 1, format, create, registration, stageEntry, tables, rule, top, common: cleanCommon(input.common), slots },
+    plan: { v: 1, format, create, registration, stageEntry, tables, rule, top, common: cleanCommon(input.common), slots, access: cleanAccess(input.access) },
     gone,
   };
 }
@@ -182,6 +184,8 @@ export function tournamentInput(cup, plan, s) {
     // A private cup: its tournaments are reached by their link only.
     visibility: cup.visibility === 'private' ? 'unlisted' : cup.visibility,
     format: slotFormat(plan, s), server: c.server, table: c.table || undefined, image: cup.image || null, startsAt: s.at,
+    // Who may register: the cup's conditions on the tournaments players enter (not the steps after, nor the final).
+    access: entry ? plan.access || null : null,
     run: { autoOpen: !!c.autoOpen, openBefore: c.openBefore, announce: c.announce, chatLang: c.chatLang, absence: c.absence || undefined,
       selfRegister: entry && plan.registration === 'tournament' },
   };

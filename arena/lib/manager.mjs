@@ -29,6 +29,7 @@ import { createCups } from './cups.mjs';
 import { createBadges } from './badges.mjs';
 import { createReset } from './reset.mjs';
 import { createPlayers } from './players.mjs';
+import { playerFacts, missingFor } from './access.mjs';
 import { loadBotStrings, isBotLang } from './botchat.mjs';
 
 export const MAX_RUNNING = 4;
@@ -288,8 +289,14 @@ export function createManager(deps) {
   const images = createImages({ dir, builtinDir: path.join(IMG, 'events') });
   // The players of the install and their accounts (players.mjs).
   const players = createPlayers({ dir, Refusal: ArenaRefusal });
+  // Who may register (access.mjs): the facts of a player from the signed results.
+  const accessCheck = (rules, nick, account) => missingFor(rules, playerFacts(nick, {
+    tournaments: () => tournaments.allRaw(),
+    medals: (n) => badges.player(n).counts,
+    cupPlace: (cupId, n) => { try { const r = cups.get(cupId).standings.rows.find((x) => x.nick.toLowerCase() === String(n).toLowerCase()); return r ? r.place : null; } catch (e) { return null; } },
+  }), { account: !!account });
   const tournaments = createTournaments({
-    dir, keyFile, imageOk: images.has, players,
+    dir, keyFile, imageOk: images.has, players, accessCheck,
     // A Table check's sealed result, reused as a tournament result.
     readWatch: (id) => (ID_RE.test(id) ? readJson(path.join(wdir(id), 'result.json')) : null),
     readWatchJournal: (id) => (ID_RE.test(id) ? readJson(path.join(wdir(id), 'journal.json')) : null),
