@@ -298,3 +298,6 @@ a.evr:hover{background:var(--line);border-radius:8px}
 .hrow{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);padding:4px 0}
 .hrow .ck{margin:4px 0;align-items:flex-start}
 .hmove{display:flex;gap:4px;flex:none}
+/* « My account » and the sign-in page (service 0.32.0) */
+.logingrid{display:grid;gap:0 16px;align-items:start}
+@media (min-width:760px){.logingrid{grid-template-columns:repeat(2,minmax(0,1fr))}.logingrid .card.narrow{max-width:none}}

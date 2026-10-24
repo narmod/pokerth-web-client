@@ -781,6 +781,27 @@ Code: `arena/lib/groups.mjs`, `arena/public/groups-ui.mjs`; tests:
   combine with the identity « account » or « verified » when it matters.
 - Reset: the part `groups` archives `groups.json`.
 
+## My account (service `0.32.0`)
+
+Code: `arena/lib/players.mjs` (profile, preferences, sessions, closing),
+`tournaments.mjs` / `cups.mjs` (`registrationsOf`), `public/public.mjs`;
+tests: `arena/test/test-arena-myaccount.mjs`.
+
+- `POST /arena/api/players/profile { session }` → the player, `accountSince`,
+  `lastLoginAt`, `sessions` (created, expires, `current`), `prefs`.
+- `/players/logoutothers { session }`: every other session of the account
+  ends (`ended`).
+- `/players/prefs { session, lang?, theme? }`: a language code and `auto` /
+  `light` / `dark`, kept with the account; `/players/me` returns them and the
+  page applies them on sign-in and at start.
+- `/players/mine { session }` → `now` (coming, playing), `past` (the last ten
+  finished, with `place`), `cups` (registered for as a whole), `tickets`,
+  `season`, `groups` — unlisted and private tournaments included: they are
+  the player's own.
+- `/players/close { session, password }`: the account, its sessions, its
+  verifications and preferences go; the nickname and its results stay, free
+  to claim again.
+
 ## The home page, a showcase (service `0.31.0`)
 
 Code: `arena/lib/showcase.mjs`, `arena/public/home.mjs`,

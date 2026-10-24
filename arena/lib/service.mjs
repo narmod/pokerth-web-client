@@ -609,7 +609,7 @@ export function createService(o) {
     }
     // A player's own account (players.mjs): POST /arena/api/players/<op>, as
     // the web client already relays that address.
-    if (pm && req.method === 'POST' && ['signup', 'login', 'logout', 'invite', 'password', 'me', 'verify', 'verifystatus', 'groupjoin', 'groupleave'].indexOf(pm[1]) >= 0) {
+    if (pm && req.method === 'POST' && ['signup', 'login', 'logout', 'invite', 'password', 'me', 'verify', 'verifystatus', 'groupjoin', 'groupleave', 'profile', 'logoutothers', 'prefs', 'close', 'mine'].indexOf(pm[1]) >= 0) {
       if (limited('player', ip)) return json(res, 429, { ok: false, code: 'tooMany', error: 'too many attempts, try again later' });
       const b = (await readJson(req)) || {};
       const out = (p) => Promise.resolve().then(p).then((v) => json(res, 200, Object.assign({ ok: true }, v)))
@@ -626,13 +626,28 @@ export function createService(o) {
         if (pm[1] === 'verify') return out(() => td.verifier.request(s, String(b.ref || '')).catch((e) => { throw Object.assign(new T.Refusal(e.message), { code: e.code || 'refused' }); }));
         return out(() => ({ pending: td.verifier.status(s), verified: P.verifiedOf(s.nick) }));
       }
+      // « My account » (0.32.0): the profile, other devices signed out, the
+      // preferences, closing the account, my registrations and tickets.
+      if (pm[1] === 'profile') return out(() => P.profile(b.session));
+      if (pm[1] === 'logoutothers') return out(() => P.logoutOthers(b.session));
+      if (pm[1] === 'prefs') return out(() => P.setPrefs(b.session, b));
+      if (pm[1] === 'close') return out(() => P.deleteAccount(b.session, b.password));
+      if (pm[1] === 'mine') {
+        const s = P.session(b.session);
+        if (!s) return json(res, 401, { ok: false, code: 'session', error: 'your session has ended: sign in again' });
+        return out(() => {
+          const bal = td.tickets.balance(s.nick);
+          const tickets = Object.keys(bal).map((id) => { const k = td.tickets.typeOf(id); return k ? { name: k.name, count: bal[id] } : null; }).filter((x) => x && x.count);
+          return Object.assign({ cups: C.registrationsOf(s.nick), tickets, season: td.tickets.season().name, groups: td.groups.mine(s.nick) }, T.registrationsOf(s.nick));
+        });
+      }
       // Groups (groups.mjs): join (open, with the code, or ask), leave.
       if (pm[1] === 'groupjoin' || pm[1] === 'groupleave') {
         const s = P.session(b.session);
         if (!s) return json(res, 401, { ok: false, code: 'session', error: 'your session has ended: sign in again' });
         return out(() => Object.assign(pm[1] === 'groupjoin' ? td.groups.join(String(b.id || ''), s, b.code) : td.groups.leave(String(b.id || ''), s), { mine: td.groups.mine(s.nick) }));
       }
-      return out(() => { const s = P.session(b.session); if (!s) throw Object.assign(new T.Refusal('your session has ended: sign in again'), { code: 'session' }); return { player: s, signup: P.settings().signup, groups: td.groups.mine(s.nick) }; });
+      return out(() => { const s = P.session(b.session); if (!s) throw Object.assign(new T.Refusal('your session has ended: sign in again'), { code: 'session' }); return { player: s, signup: P.settings().signup, groups: td.groups.mine(s.nick), prefs: P.profile(b.session).prefs }; });
     }
     // How accounts are made, and the servers a nickname can be proved on (the LAN servers of this install).
     if (sub === '/players' && req.method === 'GET') return json(res, 200, { ok: true, signup: P.settings().signup, servers: (await td.servers()).map((s) => ({ ref: s.ref, name: s.name, host: s.host, port: s.port })), groups: td.groups.publicList() });

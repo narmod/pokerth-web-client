@@ -657,6 +657,8 @@ export function createCups(o) {
     list: () => all().sort((a, b) => b.createdAt - a.createdAt).map((c) => ({ id: c.id, name: c.name, status: c.status, events: c.events.length, visibility: c.visibility, bestOf: c.bestOf, format: c.plan ? c.plan.format : null })),
     get: (id) => { const { c, journal } = load(id); return view(c, journal); },
     create, update, addEvent, removeEvent, tick, setPlan, slotCreate, slotAttach, slotDetach, cupRegister, cupUnregister, cupChoose, cupEligible, qualifyFromStandings, close, remove, publicList, publicGet, Refusal, allRaw: () => all(), generation: () => gen,
+    // The cups a player registered for as a whole (« My account », 0.32.0).
+    registrationsOf: (nick) => all().filter((c) => (c.registrants || []).some((r) => lowN(r.nick) === lowN(nick))).map((c) => { const r = c.registrants.find((x) => lowN(x.nick) === lowN(nick)); return { key: c.publicKey, name: c.name, status: c.status, choice: r.choice || null, at: r.at }; }),
     // Every tournament already in a cup (its events or its programme) → the cup's name.
     usedBy: () => { const m = new Map(); for (const c of all()) { for (const e of c.events) m.set(e.tournamentId, c.name); for (const s of (c.plan ? c.plan.slots : [])) if (s.tournamentId) m.set(s.tournamentId, c.name); } return m; },
     // The (non-private) cups a tournament belongs to, for its page.

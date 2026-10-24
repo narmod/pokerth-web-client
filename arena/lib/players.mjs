@@ -276,6 +276,53 @@ export function createPlayers(o) {
     return { ok: true };
   }
 
+  // ── « My account » (service 0.32.0) ──
+  const LANG_RE = /^[a-z]{2,3}(?:-[a-z0-9]{2,4})?$/i;
+  const THEMES = ['auto', 'light', 'dark'];
+  function mustSession(t) { const s = session(t); if (!s) refuse('your session has ended: sign in again', 'session'); return byId(s.id); }
+  // What the account page shows: since when, the last sign-in, the devices
+  // signed in (this one marked), the preferences.
+  function profile(t) {
+    const p = mustSession(t);
+    const h = sha(String(t));
+    const mine = read().sessions.filter((s) => s.playerId === p.id && s.expires > now()).sort((a, b) => b.created - a.created);
+    return { player: me(p), accountSince: (p.account && p.account.createdAt) || p.createdAt, lastLoginAt: p.account.lastLoginAt || null,
+      sessions: mine.map((s) => ({ created: s.created, expires: s.expires, current: s.hash === h })), prefs: Object.assign({ lang: null, theme: null }, p.prefs || {}) };
+  }
+  // Signed out everywhere else: every session of the account but this one.
+  function logoutOthers(t) {
+    const p = mustSession(t);
+    const h = sha(String(t));
+    const d = read();
+    const n = d.sessions.length;
+    d.sessions = d.sessions.filter((s) => s.playerId !== p.id || s.hash === h);
+    write();
+    return { ended: n - d.sessions.length };
+  }
+  // The language and the theme, kept with the account: found again on any
+  // device once signed in.
+  function setPrefs(t, input) {
+    const p = mustSession(t);
+    const prefs = Object.assign({}, p.prefs || {});
+    if (input && input.lang !== undefined) prefs.lang = input.lang && LANG_RE.test(String(input.lang)) ? String(input.lang) : null;
+    if (input && input.theme !== undefined) prefs.theme = THEMES.indexOf(input.theme) >= 0 ? input.theme : null;
+    p.prefs = prefs;
+    write();
+    return { prefs: Object.assign({ lang: null, theme: null }, prefs) };
+  }
+  // The player closes his account (his password asked again): the account,
+  // its sessions and the nickname proved on servers go; the nickname, its
+  // results and medals stay (they belong to the tournaments), free to claim.
+  async function deleteAccount(t, password) {
+    const p = mustSession(t);
+    const k = await scrypt(String(password || ''), p.account.salt);
+    if (!crypto.timingSafeEqual(k, Buffer.from(p.account.passHash, 'hex'))) refuse('the current password is wrong', 'badPassword');
+    delete p.account; delete p.verified; delete p.prefs;
+    dropSessions(p.id);
+    write();
+    return { closed: true, nick: p.nick };
+  }
+
   // ── for the registrations (tournaments.mjs, cups.mjs) ──
   // Why this nickname may not register, or null: banned, or claimed by an
   // account the asker is not signed in to.
@@ -301,5 +348,5 @@ export function createPlayers(o) {
   const banOf = (nick) => { const p = byNick(nick); return banActive(p) ? { reason: p.ban.reason, until: p.ban.until || null } : null; };
 
   return { settings, setSettings, list, get, create, reinvite, setAccountDisabled, removeAccount, remove, setNote, ban, unban,
-    signup, acceptInvite, login, session, logout, changePassword, barrier, hasAccount, banOf, addVerification, isVerified, verifiedOf, clear: () => { db = null; } };
+    signup, acceptInvite, login, session, logout, changePassword, profile, logoutOthers, setPrefs, deleteAccount, barrier, hasAccount, banOf, addVerification, isVerified, verifiedOf, clear: () => { db = null; } };
 }

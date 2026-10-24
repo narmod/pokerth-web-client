@@ -10,6 +10,26 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.32.0 — 2026-10-24
+
+### Added
+- **« My account »** (step 3 of the redesign): member since; my tournaments
+  (coming and playing, with « checked in », then the last ten finished with
+  my place — unlisted and private ones too, they are mine); my cups; my
+  tickets of the season; my groups and my requests; the nickname verified;
+  **preferences kept with the account** (language, theme: applied on every
+  device once signed in, and saved when changed from the menu or the theme
+  button); **security**: change the password, the devices signed in (this
+  one marked), sign out everywhere else; **close my account** (the password
+  asked again: the account, its sessions and verifications go, the results
+  and medals stay, the nickname is free to claim again).
+- The sign-in page: why an account helps; what to do with a forgotten
+  password (no e-mail: a new invitation link from an organizer); its two
+  cards side by side on a computer.
+- `POST /arena/api/players/profile | logoutothers | prefs | close | mine`;
+  `/players/me` adds the preferences.
+- 23 strings in the 83 languages.
+
 ## 0.31.0 — 2026-10-24
 
 ### Added

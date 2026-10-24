@@ -815,31 +815,25 @@ function renderAcctView() {
         '<form id="accInvForm" class="row"><div><label for="accInvPw">' + T('accPassword') + '</label><input id="accInvPw" type="password" autocomplete="new-password" minlength="8" required></div>' +
         '<button type="submit" class="primary">' + T('accChoose') + '</button></form></section>';
     } else {
-      h = '<section class="card narrow"><h2>' + T('accSignIn') + '</h2>' + acctMsg() +
+      h = '<p class="lead">' + T('acctWhy') + '</p><div class="logingrid"><section class="card narrow"><h2>' + T('accSignIn') + '</h2>' + acctMsg() +
         '<form id="accInForm"><label for="accNick">' + T('nickname') + '</label><input id="accNick" maxlength="64" autocomplete="username" autocapitalize="none" spellcheck="false" required>' +
-        '<label for="accPw">' + T('accPassword') + '</label><input id="accPw" type="password" autocomplete="current-password" required><div class="actions"><button type="submit" class="primary">' + T('accSignIn') + '</button></div></form></section>' +
+        '<label for="accPw">' + T('accPassword') + '</label><input id="accPw" type="password" autocomplete="current-password" required><div class="actions"><button type="submit" class="primary">' + T('accSignIn') + '</button></div></form>' +
+        '<p class="small muted">' + T('acctForgot') + '</p></section>' +
         (signupMode === 'open'
           ? '<section class="card narrow"><h2>' + T('accCreateTitle') + '</h2><p class="small muted">' + T('accCreateHint') + '</p><form id="accUpForm"><label for="accUpNick">' + T('nickname') + '</label><input id="accUpNick" maxlength="64" autocomplete="nickname" autocapitalize="none" spellcheck="false" required>' +
             '<label for="accUpPw">' + T('accPassword') + '</label><input id="accUpPw" type="password" autocomplete="new-password" minlength="8" required><div class="actions"><button type="submit">' + T('accCreate') + '</button></div></form></section>'
-          : '<section class="card narrow"><p class="small muted">' + T('accInviteOnly') + '</p></section>');
+          : '<section class="card narrow"><p class="small muted">' + T('accInviteOnly') + '</p></section>') + '</div>';
     }
   } else {
     $('heroTitle').textContent = t('navAccount');
-    const mineG = grAll.filter((g) => grMine.member.indexOf(g.id) >= 0);
-    h = '<section class="card"><h2>' + T('navAccount') + '</h2>' + acctMsg() + '<p>' + T('accSignedIn', { nick: me.nick }) + '</p>' +
-      '<div class="actions"><a class="btn" href="/arena/p/' + encodeURIComponent(me.nick) + '" data-go>' + T('accMyPage') + '</a><button type="button" class="ghost" id="accOut">' + T('accSignOut') + '</button></div></section>' +
-      '<section class="card"><h2>' + T('accChangePw') + '</h2><form id="accPwForm"><div class="row"><div><label for="accPwOld">' + T('accCurPassword') + '</label><input id="accPwOld" type="password" autocomplete="current-password" required></div>' +
-      '<div><label for="accPwNew">' + T('accNewPassword') + '</label><input id="accPwNew" type="password" autocomplete="new-password" minlength="8" required></div></div><div class="actions"><button type="submit">' + T('accChangePw') + '</button></div></form></section>' +
-      vfHtml() +
-      '<section class="card"><h2>' + T('grTitle') + '</h2>' + (mineG.length ? '<ul class="chips">' + mineG.map((g) => '<li>' + esc(g.name) + '</li>').join('') + '</ul>' : '<p class="small muted">' + T('grHint') + '</p>') +
-      '<p class="small"><a href="/arena/groups" data-go>' + T('navGroups') + ' →</a></p></section>';
+    h = acctAccountHtml();
   }
   box.innerHTML = h;
   const signedIn = (d) => {
     me = { token: d.token, nick: d.player.nick }; acctSave(me); acctFlash = { html: T('accWelcome', { nick: d.player.nick }) };
     if (pinviteFromHash()) history.replaceState(null, '', location.pathname + location.search);
-    // My groups, then where I was going.
-    api('/players/me', { session: d.token }).then((w) => { if (w && w.ok) grMine = w.groups || grMine; }).catch(() => {}).then(() => { if (vfServers.length) vfPoll(); go(nextAfterLogin()); });
+    // My groups and my preferences (language, theme), then where I was going.
+    api('/players/me', { session: d.token }).then(async (w) => { if (w && w.ok) { grMine = w.groups || grMine; await applyPrefs(w.prefs); } }).catch(() => {}).then(() => { if (vfServers.length) vfPoll(); go(nextAfterLogin()); });
   };
   const bad = (d) => { acctFlash = { bad: true, html: errText(d) }; renderAcctView(); };
   const f1 = $('accInForm');
@@ -852,8 +846,92 @@ function renderAcctView() {
   if (f4) f4.addEventListener('submit', async (ev) => { ev.preventDefault(); const d = await api('/players/password', { session: me.token, old: $('accPwOld').value, password: $('accPwNew').value }); acctFlash = d.ok ? { html: T('accPwChanged') } : { bad: true, html: errText(d) }; renderAcctView(); });
   const vg = $('vfForm');
   if (vg) vg.addEventListener('submit', async (ev) => { ev.preventDefault(); const d = await api('/players/verify', { session: me.token, ref: $('vfSrv').value }); if (!d.ok) { acctFlash = { bad: true, html: errText(d) }; return renderAcctView(); } vf = { pending: Object.assign({ done: false }, d), verified: (vf && vf.verified) || [] }; renderAcctView(); vfPoll(); });
+  wireAccount();
   const o = $('accOut');
-  if (o) o.addEventListener('click', async () => { const tk = me && me.token; me = null; acctSave(null); grMine = { member: [], requested: [] }; vf = null; if (tk) api('/players/logout', { session: tk }).catch(() => {}); go('/arena/'); });
+  if (o) o.addEventListener('click', async () => { const tk = me && me.token; me = null; acctSave(null); grMine = { member: [], requested: [] }; vf = null; acctData = null; if (tk) api('/players/logout', { session: tk }).catch(() => {}); go('/arena/'); });
+}
+
+// ── « My account » (service 0.32.0): my tournaments, tickets, groups,
+// preferences kept with the account, devices, closing the account ──
+let acctData = null, acctLoading = false;   // { profile, mine } of the signed-in player
+function loadAccount() {
+  if (!me || acctLoading) return;
+  acctLoading = true;
+  const tk = me.token;
+  Promise.all([api('/players/profile', { session: tk }), api('/players/mine', { session: tk })]).then(([pr, mi]) => {
+    if (!me || me.token !== tk) return;
+    acctData = { profile: pr && pr.ok ? pr : null, mine: mi && mi.ok ? mi : null };
+    if (mi && mi.ok && mi.groups) grMine = mi.groups;
+    if (acctView === 'account') renderAcctView();
+  }).catch(() => {}).then(() => { acctLoading = false; });
+}
+// The language and the theme of the account, on this device too.
+async function applyPrefs(p) {
+  if (!p) return;
+  if (p.theme && theme && theme.get() !== p.theme) theme.set(p.theme, true);
+  if (p.lang && p.lang !== lang && meta[p.lang]) { lsSet('pth_lang', p.lang); await loadLang(p.lang); }
+}
+function savePrefs(patch) {
+  if (!me) return Promise.resolve(null);
+  return api('/players/prefs', Object.assign({ session: me.token }, patch)).then((d) => { if (d && d.ok && acctData && acctData.profile) acctData.profile.prefs = d.prefs; return d; }).catch(() => null);
+}
+function acctAccountHtml() {
+  const day = (ts) => { try { return new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(new Date(ts)); } catch (e) { return new Date(ts).toLocaleDateString(); } };
+  const pr = acctData && acctData.profile, mi = acctData && acctData.mine;
+  if (!acctData) loadAccount();
+  let h = '<section class="card"><h2>' + esc(me.nick) + '</h2>' + (acctData ? acctMsg() : '') +
+    (pr ? '<p class="small muted">' + T('acctSince', { date: day(pr.accountSince) }) + '</p>' : '') +
+    '<div class="actions"><a class="btn" href="/arena/p/' + encodeURIComponent(me.nick) + '" data-go>' + T('accMyPage') + '</a><button type="button" class="ghost" id="accOut">' + T('accSignOut') + '</button></div></section>';
+  // My tournaments: coming and playing, then the last ones finished; my cups.
+  h += '<section class="card"><h2>' + T('acctMyTournaments') + '</h2>';
+  if (!mi) h += '<p class="empty">' + T('loading') + '</p>';
+  else {
+    if (mi.now.length) h += '<h3>' + T('acctNow') + '</h3><ul class="tlist">' + mi.now.map((c) => card(c).replace('</span></span></a></li>', (c.checkedIn ? ' · <b>' + T('acctCheckedIn') + '</b>' : '') + '</span></span></a></li>')).join('') + '</ul>';
+    else h += '<p class="small muted">' + T('acctNoReg') + ' <a href="/arena/tournaments" data-go>' + T('allTournaments') + ' →</a></p>';
+    if (mi.past.length) h += '<h3>' + T('acctPast') + '</h3><ul class="evl">' + mi.past.map((c) => '<li><a class="evr" href="/arena/t/' + esc(c.key) + '" data-go><span class="evm"><span class="evt">' + esc(c.name) + '</span><span class="evs">' + esc(day(c.at)) + '</span></span><span class="evw">' +
+      (c.place ? T('placeOf', { place: c.place, of: c.players }) : c.absent ? '—' : '') + '</span></a></li>').join('') + '</ul>';
+    if (mi.cups.length) h += '<h3>' + T('acctCupsReg') + '</h3><ul class="evl">' + mi.cups.map((c) => '<li><a class="evr" href="/arena/c/' + esc(c.key) + '" data-go><span class="evm"><span class="evt">' + esc(c.name) + '</span></span><span class="evw"><span class="chip ' + (c.status === 'closed' ? 'done' : 'live') + '">' + T(c.status === 'closed' ? 'cupStatusClosed' : 'cupStatusOpen') + '</span></span></a></li>').join('') + '</ul>';
+  }
+  h += '</section>';
+  // Tickets of the season, my groups.
+  if (mi && mi.tickets.length) h += '<section class="card"><h2>' + T('tkMine', { season: mi.season || '' }) + '</h2><ul class="chips">' + mi.tickets.map((x) => '<li>' + esc(x.name) + ' <b>×' + esc(x.count) + '</b></li>').join('') + '</ul></section>';
+  const mineG = grAll.filter((g) => grMine.member.indexOf(g.id) >= 0), askedG = grAll.filter((g) => grMine.requested.indexOf(g.id) >= 0);
+  h += '<section class="card"><h2>' + T('grTitle') + '</h2>' + (mineG.length ? '<ul class="chips">' + mineG.map((g) => '<li>' + esc(g.name) + '</li>').join('') + '</ul>' : '<p class="small muted">' + T('grHint') + '</p>') +
+    (askedG.length ? '<p class="small">' + T('grAsked') + ' ' + askedG.map((g) => esc(g.name)).join(', ') + '</p>' : '') +
+    '<p class="small"><a href="/arena/groups" data-go>' + T('navGroups') + ' →</a></p></section>';
+  h += vfHtml();
+  // Preferences, kept with the account.
+  const pf = (pr && pr.prefs) || {};
+  h += '<section class="card"><h2>' + T('acctPrefs') + '</h2><p class="small muted">' + T('acctPrefsHint') + '</p><div class="row">' +
+    '<div><label for="acPfLang">' + T('language') + '</label><select id="acPfLang">' + langAvail.map((c) => '<option value="' + esc(c) + '"' + (c === (pf.lang || lang) ? ' selected' : '') + '>' + esc((meta[c] || {}).label || c) + '</option>').join('') + '</select></div>' +
+    '<div><label for="acPfTheme">' + T('acctTheme') + '</label><select id="acPfTheme">' + [['auto', 'themeAuto'], ['dark', 'themeDark'], ['light', 'themeLight']].map((o) => '<option value="' + o[0] + '"' + (o[0] === (pf.theme || (theme ? theme.get() : 'auto')) ? ' selected' : '') + '>' + T(o[1]) + '</option>').join('') + '</select></div></div></section>';
+  // Security: the password, the devices signed in, closing the account.
+  h += '<section class="card"><h2>' + T('acctSecurity') + '</h2>' +
+    '<form id="accPwForm"><h3>' + T('accChangePw') + '</h3><div class="row"><div><label for="accPwOld">' + T('accCurPassword') + '</label><input id="accPwOld" type="password" autocomplete="current-password" required></div>' +
+    '<div><label for="accPwNew">' + T('accNewPassword') + '</label><input id="accPwNew" type="password" autocomplete="new-password" minlength="8" required></div></div><div class="actions"><button type="submit">' + T('accChangePw') + '</button></div></form>';
+  if (pr) {
+    h += '<h3>' + T('acctDevices', { n: pr.sessions.length }) + '</h3><ul class="small">' + pr.sessions.map((x) => '<li>' + T('acctSignedInAt', { date: day(x.created) }) + (x.current ? ' — <b>' + T('acctThisDevice') + '</b>' : '') + '</li>').join('') + '</ul>' +
+      (pr.sessions.length > 1 ? '<div class="actions"><button type="button" class="ghost" id="acOthersOut">' + T('acctOthersOut') + '</button></div>' : '');
+  }
+  h += '<details class="sub"><summary>' + T('acctClose') + '</summary><p class="small">' + T('acctCloseHint') + '</p><form id="acCloseForm" class="row"><div><label for="acClosePw">' + T('accCurPassword') + '</label><input id="acClosePw" type="password" autocomplete="current-password" required></div>' +
+    '<button type="submit" class="danger">' + T('acctCloseBtn') + '</button></form></details></section>';
+  return h;
+}
+function wireAccount() {
+  const pl = $('acPfLang'), pt = $('acPfTheme');
+  if (pl) pl.addEventListener('change', async () => { await savePrefs({ lang: pl.value }); lsSet('pth_lang', pl.value); await loadLang(pl.value); acctFlash = { html: T('acctSaved') }; renderAcctView(); });
+  if (pt) pt.addEventListener('change', async () => { if (theme) theme.set(pt.value, true); await savePrefs({ theme: pt.value }); acctFlash = { html: T('acctSaved') }; renderAcctView(); });
+  const oo = $('acOthersOut');
+  if (oo) oo.addEventListener('click', async () => { const d = await api('/players/logoutothers', { session: me.token }); acctFlash = d.ok ? { html: T('acctOthersDone', { n: d.ended }) } : { bad: true, html: errText(d) }; acctData = null; renderAcctView(); });
+  const cf = $('acCloseForm');
+  if (cf) cf.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    if (!window.confirm(t('acctCloseHint'))) return;
+    const d = await api('/players/close', { session: me.token, password: $('acClosePw').value });
+    if (!d.ok) { acctFlash = { bad: true, html: errText(d) }; return renderAcctView(); }
+    me = null; acctSave(null); acctData = null; grMine = { member: [], requested: [] }; vf = null;
+    acctFlash = { html: T('acctClosed') }; go('/arena/login');
+  });
 }
 
 // ── proving the nickname on a game server (service 0.28.0) ──────────
@@ -901,7 +979,7 @@ function route() {
   updateNav();
   const key = keyFromPath(), ckey = cupKeyFromPath(), pnick = playerFromPath();
   if (key) showOne(key); else if (ckey) showCup(ckey); else if (pnick) showPlayer(pnick);
-  else if (view === 'login' || view === 'account') { acctView = view; renderAcctView(); }
+  else if (view === 'login' || view === 'account') { acctView = view; if (view === 'account') acctData = null; renderAcctView(); }
   else if (view) { $('heroTitle').textContent = t(VIEW_TITLE[view]); showList(view); }
   else showHome();
   window.scrollTo(0, 0);
@@ -923,11 +1001,12 @@ let theme = null;
   const code = pickLang(avail);
   initLangPick(avail, async (c) => {
     lsSet('pth_lang', c);   // the same choice as the app's
+    savePrefs({ lang: c });   // and the account's, when signed in
     await loadLang(c);
     renderAcct();
     if (cur) renderOne(); else route();
   });
-  theme = initTheme($('themeBtn'), (m) => t(m === 'dark' ? 'themeDark' : m === 'light' ? 'themeLight' : 'themeAuto'));
+  theme = initTheme($('themeBtn'), (m) => t(m === 'dark' ? 'themeDark' : m === 'light' ? 'themeLight' : 'themeAuto'), (m) => savePrefs({ theme: m }));
   await loadLang(code);
   // The account: the session kept here, still valid? How accounts are made.
   const saved = acctLoad();
@@ -935,7 +1014,7 @@ let theme = null;
   signupMode = (st && st.signup) || 'invite';
   vfServers = (st && st.servers) || [];
   grAll = (st && st.groups) || [];
-  if (saved && who && who.ok) { me = { token: saved.token, nick: who.player.nick }; grMine = who.groups || grMine; } else if (saved && who && who.code === 'session') acctSave(null);
+  if (saved && who && who.ok) { me = { token: saved.token, nick: who.player.nick }; grMine = who.groups || grMine; await applyPrefs(who.prefs); } else if (saved && who && who.code === 'session') acctSave(null);
   renderAcct();
   if (me) vfPoll();
   route();

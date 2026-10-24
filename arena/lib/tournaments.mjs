@@ -607,6 +607,20 @@ export function createTournaments(o) {
       image: imageUrl(t.image || DEFAULT_IMAGE.tournament), thumb: imageUrl(t.image || DEFAULT_IMAGE.tournament, true),
     };
   }
+  // A player's own tournaments, for « My account » (service 0.32.0): the
+  // ones coming or playing, then the last ten finished — his own, so the
+  // unlisted and private ones too (their page still asks for its code).
+  function registrationsOf(nick) {
+    const k = String(nick || '').toLowerCase();
+    const mine = allTournaments().filter((t) => !t.parentId && t.players.some((p) => p.nick.toLowerCase() === k)).map((t) => {
+      const p = t.players.find((x) => x.nick.toLowerCase() === k);
+      const r = t.result && Array.isArray(t.result.ranking) ? t.result.ranking.find((x) => x.nick.toLowerCase() === k) : null;
+      return Object.assign(publicCard(t), { visibility: t.settings.visibility, checkedIn: !!p.checkedIn, absent: !!p.absent, viaCup: !!p.viaCup, place: r ? r.place : null, at: t.validatedAt || (t.result && t.result.setAt) || t.startsAt || t.createdAt });
+    });
+    const now = mine.filter((c) => c.phase === 'upcoming' || c.phase === 'table').sort((a, b) => (a.startsAt || Infinity) - (b.startsAt || Infinity));
+    const past = mine.filter((c) => c.phase === 'finished' || c.phase === 'validated').sort((a, b) => b.at - a.at).slice(0, 10);
+    return { now, past };
+  }
   // Public tournaments only; unlisted and private ones never appear here.
   function publicList() {
     return allTournaments().filter((t) => t.settings && t.settings.visibility === 'public' && !t.parentId)
@@ -1229,7 +1243,7 @@ export function createTournaments(o) {
   return { list, get, create, update, addPlayer, removePlayer, setResult: setResultP, validate, correct, approveCorrection, rejectCorrection, importPdb, file,
     accessOrRefuse, eligible, passFor, passwordOn: (id) => { try { return passwordOn(load(id).t); } catch (e) { return false; } }, tablePass, tablePassOf: (id) => { try { const t = load(id).t; return hostOpen(t) && t.host.passNonce ? passFor(t.id, t.host.passNonce) : null; } catch (e) { return null; } },
     isStarted: (id) => { try { return isStarted(load(id).t); } catch (e) { return true; } }, discard, addRegistered, removeRegistered, codeHash: (c) => hashCode(c), newCode: () => newCode(), playersOf: (id) => { try { return load(id).t.players.map((p) => ({ nick: p.nick, viaCup: !!p.viaCup })); } catch (e) { return null; } },
-    publicList, publicGet, register, unregister, publicFile, witnessReport, witnessLog, keyHost, checkCollusion, allRaw: () => allTournaments(), generation: () => gen, idOfKey: (key) => { const t = byKey(key); return t ? t.id : null; }, drawTables, makeFinal, stagesTick, stagesRecompute, multiParents: () => allTournaments().filter((t) => t.format === 'multi' && t.stages && t.status !== 'validated').map((t) => t.id), checkIn, issueCode, organizerCheckIn, markNotCheckedIn, needsCheckIn: (id) => needsCheckIn(load(id).t),
+    publicList, publicGet, registrationsOf, register, unregister, publicFile, witnessReport, witnessLog, keyHost, checkCollusion, allRaw: () => allTournaments(), generation: () => gen, idOfKey: (key) => { const t = byKey(key); return t ? t.id : null; }, drawTables, makeFinal, stagesTick, stagesRecompute, multiParents: () => allTournaments().filter((t) => t.format === 'multi' && t.stages && t.status !== 'validated').map((t) => t.id), checkIn, issueCode, organizerCheckIn, markNotCheckedIn, needsCheckIn: (id) => needsCheckIn(load(id).t),
     hostOpened, hostCheck, hostNote, hostEnded, hostResultRefused, openHosts, autoOpenDue, autoOpenNote, remove, Refusal };
 }
 

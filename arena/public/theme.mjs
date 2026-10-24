@@ -19,14 +19,12 @@ export function applyTheme(t, btn, label) {
   if (btn) btn.textContent = label ? label(t) : 'Theme: ' + t;
 }
 
-/** Wires the header button; `label(t)` gives its text ('Theme: auto'…). */
-export function initTheme(btn, label) {
+/** Wires the header button; `label(t)` gives its text ('Theme: auto'…);
+ *  `changed(t)` hears the player's own changes (the account keeps them). */
+export function initTheme(btn, label, changed) {
   const cur = () => load() || 'auto';
-  btn.addEventListener('click', () => {
-    const next = ORDER[(ORDER.indexOf(cur()) + 1) % ORDER.length];
-    store(next === 'auto' ? null : next);
-    applyTheme(next, btn, label);
-  });
+  const set = (t, quiet) => { const v = ORDER.indexOf(t) >= 0 ? t : 'auto'; store(v === 'auto' ? null : v); applyTheme(v, btn, label); if (!quiet && changed) changed(v); };
+  btn.addEventListener('click', () => set(ORDER[(ORDER.indexOf(cur()) + 1) % ORDER.length]));
   applyTheme(cur(), btn, label);
-  return { refresh: () => applyTheme(cur(), btn, label) };
+  return { refresh: () => applyTheme(cur(), btn, label), get: cur, set };
 }
