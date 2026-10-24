@@ -10,6 +10,32 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.25.0 — 2026-10-24
+
+### Added
+- **Player accounts.** A player signs in on /arena with his PokerTH
+  nickname and a password; the account claims the nickname for the whole
+  install, in any case: nobody else registers it without signing in.
+  Accounts are made by an organizer with an invitation link (7 days), the
+  default, or by the players themselves when the super admin opens sign-up.
+  Signed in, a player registers, checks in, gets the table password and
+  leaves tournaments and cups without his personal code (one is still
+  issued, for the web client's witness). Sessions of 30 days; passwords as
+  scrypt hashes, tokens as SHA-256, sign-in attempts limited.
+- Identity « accounts » for tournaments: only signed-in players register.
+- **Players** tab on /arena/organize: every nickname of the install (player
+  accounts, players added, banned ones, everyone registered or in the
+  results, with tournaments played, wins and podiums). Organizers make an
+  account and hand over its link, turn an account off, make a new link, ban
+  (a reason, a number of days or until lifted) and lift a ban; the super
+  admin chooses how accounts are made.
+- **Bans**: a banned nickname is refused at every registration of the
+  install (tournaments, cups) and the organizer cannot add it until the ban
+  is lifted.
+- Players' page: the account panel (sign in, create an account when open,
+  the invitation link, change the password, sign out) and an « player
+  account » badge on a player's page. 32 strings in the 83 languages.
+
 ## 0.24.0 — 2026-10-24
 
 ### Added

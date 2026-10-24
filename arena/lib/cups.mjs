@@ -61,6 +61,7 @@ export function createCups(o) {
   const root = join(o.dir, 'cups');
   const now = o.now || (() => Date.now());
   const T = o.tournaments;
+  const PL = o.players || null;   // players.mjs: bans, nicknames claimed by an account
   // The cup's image (images.mjs): one of the library, or null for the default.
   const imageOf = (v) => {
     if (v == null || v === '') return null;
@@ -494,20 +495,25 @@ export function createCups(o) {
     if (ch.taken - (except === ch.key ? 1 : 0) >= ch.cap) prefuse('dateFull', 'this tournament is full');
     return ch.key;
   }
-  function findReg(c, input) {
-    const nick = String((input && input.nick) || '').trim();
+  function findReg(c, input, opts) {
+    const account = opts && opts.account;
+    const nick = account ? account.nick : String((input && input.nick) || '').trim();
     const r = (c.registrants || []).find((x) => lowN(x.nick) === lowN(nick));
+    if (r && account) return r;   // signed in to that nickname's account
     const h = T.codeHash(input && input.code);
     const a = Buffer.from(String((r && r.codeHash) || ''), 'hex'), b = Buffer.from(h, 'hex');
     if (!r || a.length !== 32 || a.length !== b.length || !timingSafeEqual(a, b)) prefuse('badCode', 'nickname or code not recognised');
     return r;
   }
-  function cupRegister(key, input) {
+  function cupRegister(key, input, opts) {
     const c0 = cupByKey(key);
     if (!c0 || !visible(c0, input && input.invite)) prefuse('notFound', 'unknown cup');
-    let nick = String((input && input.nick) || '').replace(/[\u0000-\u001f\u007f]/g, '').trim();
+    const account = (opts && opts.account) || null;
+    let nick = account ? account.nick : String((input && input.nick) || '').replace(/[\u0000-\u001f\u007f]/g, '').trim();
     while (Buffer.byteLength(nick, 'utf8') > 64) nick = nick.slice(0, -1);
     if (Buffer.byteLength(nick, 'utf8') < 2 || !/^[\x21-\x7e]/.test(nick)) prefuse('badNick', 'nickname: 2 to 64 bytes, starting with a plain character');
+    const bar = PL && PL.barrier(nick, account);
+    if (bar) prefuse(bar.code, bar.message);
     const code = T.newCode();
     const data = { nick };
     act(c0.id, 'player', 'cupRegistered', data, (c) => {
@@ -522,24 +528,24 @@ export function createCups(o) {
     });
     return { nick, code, cup: publicGet(key, input && input.invite) };
   }
-  function cupUnregister(key, input) {
+  function cupUnregister(key, input, opts) {
     const c0 = cupByKey(key);
     if (!c0 || !visible(c0, input && input.invite)) prefuse('notFound', 'unknown cup');
     const data = {};
     act(c0.id, 'player', 'cupUnregistered', data, (c) => {
-      const r = findReg(c, input);
+      const r = findReg(c, input, opts);
       data.nick = r.nick;
       for (const tid of Object.keys(r.added || {})) { try { T.removeRegistered(tid, r.nick, 'cup'); } catch (e) {} }
       c.registrants = c.registrants.filter((x) => x !== r);
     });
     return { nick: data.nick, cup: publicGet(key, input && input.invite) };
   }
-  function cupChoose(key, input) {
+  function cupChoose(key, input, opts) {
     const c0 = cupByKey(key);
     if (!c0 || !visible(c0, input && input.invite)) prefuse('notFound', 'unknown cup');
     const data = {};
     act(c0.id, 'player', 'cupChoice', data, (c) => {
-      const r = findReg(c, input);
+      const r = findReg(c, input, opts);
       const choice = checkChoice(c, input && input.choice, r.choice);
       if (!choice) prefuse('noChoice', 'nothing to choose in this cup');
       const old = r.choice ? c.plan.slots.find((s) => s.key === r.choice) : null;

@@ -13,6 +13,7 @@ import { createCupsView } from './cups-ui.mjs';
 import { createImagePicker } from './image-pick.mjs';
 import { createAccountsView } from './accounts-ui.mjs';
 import { createResetView } from './reset-ui.mjs';
+import { createPlayersView } from './players-ui.mjs';
 import { initTheme } from './theme.mjs';
 
 const TOKK = 'pth_admin_tok';         // a key (master or organizer): shared with /admin
@@ -54,7 +55,7 @@ function pub(path, body) {
 initTheme($('themeBtn'));
 
 // ── views: Tournaments | Table check ────────────────────────────────
-const VIEWS = [['tour', 'tabTour', 'viewTour'], ['check', 'tabCheck', 'viewCheck'], ['cups', 'tabCup', 'viewCup'], ['acc', 'tabAcc', 'viewAcc'], ['reset', 'tabReset', 'viewReset']];
+const VIEWS = [['tour', 'tabTour', 'viewTour'], ['check', 'tabCheck', 'viewCheck'], ['cups', 'tabCup', 'viewCup'], ['players', 'tabPl', 'viewPl'], ['acc', 'tabAcc', 'viewAcc'], ['reset', 'tabReset', 'viewReset']];
 function setView(v) {
   for (const [k, tab, view] of VIEWS) {
     const on = k === v;
@@ -69,6 +70,7 @@ $('tabCheck').addEventListener('click', () => { setView('check'); refreshList();
 $('tabCup').addEventListener('click', () => { setView('cups'); cups.refresh(); });
 $('tabAcc').addEventListener('click', () => { setView('acc'); accounts.refresh(); });
 $('tabReset').addEventListener('click', () => { setView('reset'); resetView.refresh(); });
+$('tabPl').addEventListener('click', () => { setView('players'); playersView.refresh(); });
 document.querySelector('.tabs').addEventListener('keydown', (ev) => {
   if (ev.key !== 'ArrowLeft' && ev.key !== 'ArrowRight') return;
   const vis = VIEWS.filter((x) => !$(x[1]).hidden);
@@ -76,7 +78,7 @@ document.querySelector('.tabs').addEventListener('keydown', (ev) => {
   const next = vis[(i + (ev.key === 'ArrowRight' ? 1 : vis.length - 1)) % vis.length][1];
   $(next).click(); $(next).focus();
 });
-setView(['check', 'cups'].indexOf(load(VIEWK)) >= 0 ? load(VIEWK) : 'tour');
+setView(['check', 'cups', 'players'].indexOf(load(VIEWK)) >= 0 ? load(VIEWK) : 'tour');
 let you = '';   // who is signed in: « admin » (master key) or an organizer's key name
 // The images of tournaments and cups: one library, shared by both views.
 const images = createImagePicker({ api, esc });
@@ -85,6 +87,7 @@ const cups = createCupsView({ api, esc, images, you: () => you, form: () => tour
 let role = '', account = null;   // the signed-in role: admin (master key), organizer, referee, viewer
 const accounts = createAccountsView({ api, esc, me: () => ({ role, account }) });
 // Start again from zero: the super admin only (the tab shows for the master key).
+const playersView = createPlayersView({ api, esc, role: () => role });
 const resetView = createResetView({ api, esc, changed: () => { tours.refresh(); cups.refresh(); refreshList(); } });
 
 // ── the director's avatar ──────────────────────────────────────────
@@ -173,6 +176,7 @@ function start() {
       $('signOut').title = role === 'admin' ? 'Signed in with the master key (super admin)' : 'Signed in as « ' + you + ' », ' + roleName;
       $('tabAcc').textContent = role === 'admin' ? 'Accounts' : 'My account';
       if (document.querySelector('#tabAcc[aria-selected="true"]')) accounts.refresh();
+      if (document.querySelector('#tabPl[aria-selected="true"]')) playersView.refresh();
       $('tabReset').hidden = role !== 'admin';
       if (role !== 'admin' && document.querySelector('#tabReset[aria-selected="true"]')) setView('tour');
     }).catch(() => {});

@@ -135,10 +135,16 @@ function settingsFor(profile, custom) {
 }
 
 class Refusal extends Error {}
+export { Refusal as ArenaRefusal };   // the service answers 400 for it (players.mjs takes it too)
 const refuse = (msg) => { throw new Refusal(msg); };
 
 export function createTournaments(o) {
   const root = join(o.dir, 'tournaments');
+  // The players of the install (players.mjs): bans, nicknames claimed by an account.
+  const PL = o.players || null;
+  // A registered player proves himself with his personal code, or by being
+  // signed in to the account of that nickname.
+  const proves = (p, input, opts) => !!(p && ((opts && opts.account && sameNick(opts.account.nick, p.nick)) || (p.codeHash && sameHash(p.codeHash, hashCode(input && input.code)))));
   const now = o.now || (() => Date.now());
   // The tournament's image (images.mjs): one of the library, or null for the default.
   const imageOf = (v) => {
@@ -214,7 +220,7 @@ export function createTournaments(o) {
       case 'updated': return 'changed ' + Object.keys(d.changes || {}).join(', ');
       case 'playerAdded': return 'added ' + d.nick;
       case 'playerRemoved': return 'removed ' + d.nick;
-      case 'playerRegistered': return d.nick + ' registered (public page)';
+      case 'playerRegistered': return d.nick + ' registered (' + (d.viaCup ? 'for the cup' : d.account ? 'public page, signed in' : 'public page') + ')';
       case 'playerUnregistered': return d.nick + ' unregistered (public page)';
       case 'codeIssued': return 'new personal code for ' + d.nick;
       case 'tablesDrawn': return 'tables drawn: ' + (d.tables || []).map((x, i) => 'table ' + (i + 1) + ' (' + x.length + ')').join(', ') + (d.separated != null ? ' — flagged pairs kept apart: ' + d.separated : '');
@@ -338,6 +344,8 @@ export function createTournaments(o) {
       if (t.result) refuse('the result is set: players can no longer change');
       if (hostOpen(t)) refuse('the table is open: players can no longer change');
       if (t.players.some((p) => sameNick(p.nick, nick))) refuse(nick + ' is already in');
+      const ban = PL && PL.banOf(nick);
+      if (ban) refuse(nick + ' is banned: ' + ban.reason + ' (lift the ban in Players first)');
       if (t.stages) refuse('the tables are drawn: players can no longer change');
       if (t.parentId) refuse('the draw set this table\'s players');
       if (t.players.length >= maxPlayersOf(t)) refuse(t.format === 'multi' ? 'at most ' + maxPlayersOf(t) + ' players (' + MAX_TABLES + ' tables)' : 'a Sit & Go seats ' + MAX_PLAYERS + ' players at most');
@@ -445,14 +453,14 @@ export function createTournaments(o) {
   // A player asks for it on the players' page: his nickname and his personal
   // code, registered (checked in when there is a check-in), not absent, the
   // table open. Each time it is shown, a line in the journal.
-  function tablePass(key, input) {
+  function tablePass(key, input, opts) {
     const t0 = byKey(key);
     if (!t0 || !visible(t0, input && input.invite)) prefuse('notFound', 'unknown tournament');
     if (!passwordOn(t0)) prefuse('noTablePass', 'this table has no password');
     if (!hostOpen(t0) || !t0.host.passNonce) prefuse('tableNotOpen', 'the table is not open');
-    const nick = cleanNick(input && input.nick);
+    const nick = opts && opts.account ? opts.account.nick : cleanNick(input && input.nick);
     const p = t0.players.find((x) => sameNick(x.nick, nick));
-    if (!p || !p.codeHash || !sameHash(p.codeHash, hashCode(input && input.code))) prefuse('badCode', 'nickname or code not recognised');
+    if (!proves(p, input, opts)) prefuse('badCode', 'nickname or code not recognised');
     if (p.absent) prefuse('absentPlayer', 'marked absent for this table');
     if (needsCheckIn(t0) && !t0.parentId && !p.checkedIn) prefuse('notCheckedIn', 'check in first');
     act(t0.id, 'player', 'tablePassShown', { nick: p.nick }, () => {});
@@ -535,10 +543,10 @@ export function createTournaments(o) {
     return { needed: true, opensAt, open: !closed && (!opensAt || now() >= opensAt), closed,
       count: t.players.filter((p) => p.checkedIn).length, of: t.players.length };
   }
-  function checkIn(key, input) {
+  function checkIn(key, input, opts) {
     const t0 = byKey(key);
     if (!t0 || !visible(t0, input && input.invite)) prefuse('notFound', 'unknown tournament');
-    const data = { nick: cleanNick(input && input.nick) };
+    const data = { nick: opts && opts.account ? opts.account.nick : cleanNick(input && input.nick) };
     const nick = data.nick;
     act(t0.id, 'player', 'checkedIn', data, (t) => {
       const st = checkInState(t);
@@ -546,7 +554,7 @@ export function createTournaments(o) {
       if (st.closed) prefuse('checkInClosed', 'check-in is closed');
       if (!st.open) prefuse('checkInNotYet', 'check-in is not open yet');
       const p = t.players.find((x) => sameNick(x.nick, nick));
-      if (!p || !p.codeHash || !sameHash(p.codeHash, hashCode(input && input.code))) prefuse('badCode', 'nickname or code not recognised');
+      if (!proves(p, input, opts)) prefuse('badCode', 'nickname or code not recognised');
       if (p.checkedIn) prefuse('alreadyIn', 'already checked in');
       p.checkedIn = now();
       data.nick = p.nick;   // as registered, in the journal too
@@ -622,30 +630,35 @@ export function createTournaments(o) {
     if (t.parentId) { try { const pt = load(t.parentId).t; out.parent = { key: pt.publicKey, name: pt.name }; out.stage = t.stage; } catch (e) {} }
     return out;
   }
-  function register(key, input) {
+  function register(key, input, opts) {
     const t0 = byKey(key);
     if (!t0 || !visible(t0, input && input.invite)) prefuse('notFound', 'unknown tournament');
-    const nick = cleanNick(input && input.nick);
+    const account = (opts && opts.account) || null;
+    const nick = account ? account.nick : cleanNick(input && input.nick);
     if (Buffer.byteLength(nick, 'utf8') < 2 || !/^[\x21-\x7e]/.test(nick)) prefuse('badNick', 'nickname: 2 to 64 bytes, starting with a plain character');
+    // Identity « accounts »: only a signed-in player registers.
+    if (t0.settings.identity === 'accounts' && !account) prefuse('accountNeeded', 'sign in to your player account to register');
+    const bar = PL && PL.barrier(nick, account);
+    if (bar) prefuse(bar.code, bar.message);
     const code = newCode();
-    act(t0.id, 'player', 'playerRegistered', { nick }, (t) => {
+    act(t0.id, 'player', 'playerRegistered', { nick, account: !!account }, (t) => {
       const why = regClosed(t);
       if (why) prefuse('closed_' + why, 'registration is closed (' + why + ')');
       if (t.players.some((p) => sameNick(p.nick, nick))) prefuse('taken', nick + ' is already registered');
-      t.players.push({ nick, addedAt: now(), self: true, codeHash: hashCode(code) });
+      t.players.push(Object.assign({ nick, addedAt: now(), self: true, codeHash: hashCode(code) }, account ? { accountId: account.id } : {}));
       if (t.status === 'draft') t.status = 'registration';
     });
     return { nick, code, tournament: publicGet(key, input && input.invite) };
   }
-  function unregister(key, input) {
+  function unregister(key, input, opts) {
     const t0 = byKey(key);
     if (!t0 || !visible(t0, input && input.invite)) prefuse('notFound', 'unknown tournament');
-    const nick = cleanNick(input && input.nick);
+    const nick = opts && opts.account ? opts.account.nick : cleanNick(input && input.nick);
     act(t0.id, 'player', 'playerUnregistered', { nick }, (t) => {
       if (t.result) prefuse('closed_finished', 'the result is set');
       if (hostOpen(t)) prefuse('closed_tableOpen', 'the table is open');
       const i = t.players.findIndex((p) => sameNick(p.nick, nick));
-      if (i < 0 || !t.players[i].codeHash || !sameHash(t.players[i].codeHash, hashCode(input && input.code))) prefuse('badCode', 'nickname or code not recognised');
+      if (i < 0 || !proves(t.players[i], input, opts)) prefuse('badCode', 'nickname or code not recognised');
       t.players.splice(i, 1);
     });
     return { nick, tournament: publicGet(key, input && input.invite) };

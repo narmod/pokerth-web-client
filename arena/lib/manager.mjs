@@ -24,10 +24,11 @@ import { listGames } from './lobby.mjs';
 import { verifyJournal, verifyPayload, canonical, publicKeyRawB64 } from './journal.mjs';
 import { replayJournal, avatarOf } from './spectator.mjs';
 import { createImages } from './images.mjs';
-import { createTournaments } from './tournaments.mjs';
+import { createTournaments, ArenaRefusal } from './tournaments.mjs';
 import { createCups } from './cups.mjs';
 import { createBadges } from './badges.mjs';
 import { createReset } from './reset.mjs';
+import { createPlayers } from './players.mjs';
 import { loadBotStrings, isBotLang } from './botchat.mjs';
 
 export const MAX_RUNNING = 4;
@@ -285,21 +286,23 @@ export function createManager(deps) {
   ensureKey();
   // Images of tournaments and cups: the shipped ones and the organizers' (images.mjs).
   const images = createImages({ dir, builtinDir: path.join(IMG, 'events') });
+  // The players of the install and their accounts (players.mjs).
+  const players = createPlayers({ dir, Refusal: ArenaRefusal });
   const tournaments = createTournaments({
-    dir, keyFile, imageOk: images.has,
+    dir, keyFile, imageOk: images.has, players,
     // A Table check's sealed result, reused as a tournament result.
     readWatch: (id) => (ID_RE.test(id) ? readJson(path.join(wdir(id), 'result.json')) : null),
     readWatchJournal: (id) => (ID_RE.test(id) ? readJson(path.join(wdir(id), 'journal.json')) : null),
   });
 
   // Cups: tournaments of this install gathered (points, stages).
-  const cups = createCups({ dir, keyFile, tournaments, Refusal: tournaments.Refusal, imageOk: images.has });
+  const cups = createCups({ dir, keyFile, tournaments, players, Refusal: tournaments.Refusal, imageOk: images.has });
   // Medals: the first three of tournaments and cups, from the signed results.
   const badges = createBadges({ tournaments: tournaments.allRaw, cups: cups.allRaw, stamp: () => reset.count() + ':' + tournaments.generation() + ':' + cups.generation() });
   // Start again from zero (the super admin): reset.mjs.
   const reset = createReset({ dir, watches: list, live: LIVE, tournaments: tournaments.allRaw, cups: cups.allRaw, Refusal: tournaments.Refusal });
 
-  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, cups, badges, images, reset, avatar, resetAvatar, avatarPreset, setAvatarPreset, avatarPresets: () => Object.keys(AVATAR_PRESETS).map(Number), avatarDefaultPreset: AVATAR_DEFAULT_PRESET, MAX_RUNNING };
+  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, cups, badges, images, reset, players, avatar, resetAvatar, avatarPreset, setAvatarPreset, avatarPresets: () => Object.keys(AVATAR_PRESETS).map(Number), avatarDefaultPreset: AVATAR_DEFAULT_PRESET, MAX_RUNNING };
 }
 
 /** Public part of the install key, read from its PEM file (null if none yet). */

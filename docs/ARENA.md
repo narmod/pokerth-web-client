@@ -750,6 +750,40 @@ password; four roles).
 - Players keep their nickname and personal code for now (player accounts:
   later).
 
+## Players and their accounts (service `0.25.0`)
+
+The first step of player management (design: players, identity and access
+conditions; next: access conditions, tickets and seasons, nickname
+verification, groups). Code: `arena/lib/players.mjs`,
+`arena/public/players-ui.mjs`; tests: `arena/test/test-arena-players.mjs`.
+
+- **The register** (`ARENA_DIR/players.json`, mode 600): the nicknames that
+  matter — with an account, added by an organizer, or banned. The organizer
+  list adds everyone registered somewhere or in a validated result, with
+  tournaments played, wins and podiums.
+- **Accounts**: nickname + password (8 characters at least, not the
+  nickname; scrypt), sessions `ps_` of 30 days (SHA-256 stored). Made by an
+  organizer with an invitation link (`/arena#pinvite=…`, 7 days, once), or by
+  the player himself when `signup` is `open` (the super admin's choice;
+  `invite` by default). An account claims its nickname in any case: a
+  registration of that nickname without the session is refused
+  (`nickClaimed`). A clash is the organizer's to settle (turn an account off,
+  new link, remove the account).
+- **Public API** under `/arena/api/players/<op>` (POST: `signup`, `login`,
+  `logout`, `invite`, `password`, `me`; GET `/players`: the sign-up mode) —
+  the web client already relays that address. Rate limited per address.
+- **The session stands for the personal code**: `session` in the body of
+  `/t/<key>/register|unregister|checkin|tablepass` and of the cup's
+  `register|unregister|choose`; a registration made signed in takes the
+  account's nickname and keeps `accountId`. An ended session answers 401
+  (`session`), never a silent fallback.
+- **Identity « accounts »**: only signed-in players register.
+- **Bans**: `{ reason, until | null, by, at }`; refused at every registration
+  (tournaments, cups) and when an organizer adds the player.
+- **Who**: organizers manage players (`/admin/arena/players/*`); the sign-up
+  mode is the super admin's (`/players/settings`); referees and read-only
+  accounts read.
+
 ## Table password (service `0.24.0`)
 
 On a LAN server nicknames are not checked: someone can connect as a
@@ -1055,6 +1089,7 @@ that version only: the web client's version, its service worker and its
 | `arena/lib/lobby.mjs` | Lobby reader (guest login, tables, server type). |
 | `arena/lib/host.mjs` | The director that opens a tournament table: create, invite, kick, hand over, then watch. |
 | `arena/lib/worker.mjs` | One watch in a detached process, state and files on disk. |
+| `arena/lib/players.mjs` | Players of the install: accounts (invitation or sign-up), sessions, nicknames claimed, bans. |
 | `arena/test/test-arena-tablepass.mjs` | The table password: default, given against the code, never shown nor stored. |
 | `arena/lib/cupplan.mjs` | A cup's programme: formats, dates, slots, the events and the tournaments it makes. Pure. |
 | `arena/lib/reset.mjs` | Starting again from zero (super admin): moves watches, tournaments, cups and added images to a dated folder, keeping what kept data still uses. |

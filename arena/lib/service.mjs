@@ -29,6 +29,7 @@ const STATIC = {
   'image-pick.mjs': 'text/javascript; charset=utf-8',
   'accounts-ui.mjs': 'text/javascript; charset=utf-8',
   'reset-ui.mjs': 'text/javascript; charset=utf-8',
+  'players-ui.mjs': 'text/javascript; charset=utf-8',
   'public.mjs': 'text/javascript; charset=utf-8',
   'theme.mjs': 'text/javascript; charset=utf-8',
   'arena.css': 'text/css; charset=utf-8',
@@ -36,7 +37,7 @@ const STATIC = {
 };
 const LANG_RE = /^lang\/([a-z]{2,3}(?:-[a-z0-9]{2,4})?)\.mjs$/;
 // Public endpoints: per address, a few registrations and code attempts.
-const RATE = { register: [6, 10 * 60 * 1000], unregister: [12, 10 * 60 * 1000], checkin: [12, 10 * 60 * 1000], tablepass: [12, 10 * 60 * 1000], witness: [60, 10 * 60 * 1000], witnesslog: [6, 10 * 60 * 1000] };
+const RATE = { register: [6, 10 * 60 * 1000], unregister: [12, 10 * 60 * 1000], checkin: [12, 10 * 60 * 1000], tablepass: [12, 10 * 60 * 1000], player: [30, 10 * 60 * 1000], witness: [60, 10 * 60 * 1000], witnesslog: [6, 10 * 60 * 1000] };
 const MAX_JSON = 64 * 1024;
 const MAX_LOG_JSON = 14 * 1024 * 1024;   // a .pdb of 10 MB, in base64
 // An image added to the library: two JPEGs in base64 (400 KB + 48 KB at most).
@@ -55,6 +56,24 @@ export function createService(o) {
   const td = createManager({ dir: o.dir, servers: o.servers, clientVersion: o.clientVersion });
   const T = td.tournaments;
   const C = td.cups;
+  const P = td.players;
+  // What the results of this install say of each player (validated ones only):
+  // tournaments played, places 1 to 3. Lower-cased nickname → counts.
+  function playerStats() {
+    const m = new Map();
+    for (const t of T.allRaw()) {
+      if (t.parentId || t.status !== 'validated' || !t.result || !Array.isArray(t.result.ranking)) continue;
+      for (const r of t.result.ranking) {
+        const k = String(r.nick || '').toLowerCase();
+        if (!k) continue;
+        const s = m.get(k) || { tournaments: 0, wins: 0, podiums: 0, last: 0 };
+        s.tournaments += 1; if (r.place === 1) s.wins += 1; if (r.place <= 3) s.podiums += 1;
+        s.last = Math.max(s.last, t.validatedAt || t.updatedAt || 0);
+        m.set(k, s);
+      }
+    }
+    return m;
+  }
   // Organizer accounts (accounts.mjs): login + password, a role each.
   const A = createAccounts({ dir: o.dir, Refusal: T.Refusal });
 
@@ -312,6 +331,36 @@ export function createService(o) {
     if (sub === '/table-presets' && get) return json(res, 200, Object.assign({ ok: true }, tablePresets()));
     // Images of tournaments and cups: the library; any organizer may add one.
     if (sub === '/images' && get) return json(res, 200, { ok: true, images: td.images.list() });
+    // The players of the install (players.mjs): accounts, bans; the counts from the results.
+    if (sub === '/players' && get) {
+      const st = playerStats();
+      const known = P.list();
+      const seen = new Set(known.map((p) => p.nick.toLowerCase()));
+      // Everyone registered somewhere or in a result, as well as the register.
+      const nickOf = new Map();
+      for (const t of T.allRaw()) for (const p of t.players || []) if (!nickOf.has(p.nick.toLowerCase())) nickOf.set(p.nick.toLowerCase(), p.nick);
+      for (const k of st.keys()) if (!nickOf.has(k)) nickOf.set(k, k);
+      const others = [...nickOf.keys()].filter((k) => !seen.has(k));
+      const rows = known.map((p) => Object.assign(p, { stats: st.get(p.nick.toLowerCase()) || null }))
+        .concat(others.map((k) => ({ id: null, nick: nickOf.get(k), account: null, ban: null, stats: st.get(k) || null })));
+      return json(res, 200, Object.assign({ ok: true, players: rows.sort((a, b) => a.nick.localeCompare(b.nick)) }, P.settings()));
+    }
+    if (sub.indexOf('/players/') === 0 && !get) {
+      const b = (await readJson(req)) || {};
+      const sendP = (p) => Promise.resolve().then(p).then((v) => { console.log('[arena] players: ' + sub.slice(9) + ' by ' + who); json(res, 200, Object.assign({ ok: true }, v)); })
+        .catch((e) => json(res, e instanceof T.Refusal ? 400 : 500, { ok: false, code: e.code || undefined, error: (e && e.message) || 'error' }));
+      if (sub === '/players/settings') return sendP(() => P.setSettings(b));
+      if (sub === '/players/create') return sendP(() => P.create(b, who));
+      if (sub === '/players/reinvite') return sendP(() => P.reinvite(b.id));
+      if (sub === '/players/disable') return sendP(() => P.setAccountDisabled(b.id, true));
+      if (sub === '/players/enable') return sendP(() => P.setAccountDisabled(b.id, false));
+      if (sub === '/players/removeaccount') return sendP(() => P.removeAccount(b.id));
+      if (sub === '/players/remove') return sendP(() => P.remove(b.id));
+      if (sub === '/players/note') return sendP(() => P.setNote(b.id, b.note));
+      if (sub === '/players/ban') return sendP(() => P.ban(b, who));
+      if (sub === '/players/unban') return sendP(() => P.unban(b.id));
+      return json(res, 404, { ok: false, error: 'unknown' });
+    }
     if (sub === '/images/add' && !get) {
       const b = await readJsonMax(req, MAX_IMAGE_JSON);
       const r = td.images.add(b || {}, who);
@@ -458,6 +507,12 @@ export function createService(o) {
     const H = w.state.host || {};
     return { status: w.state.status, hand: w.state.hand || 0, tableName: H.tableName || w.state.gameName || null, phase: H.phase || null, admin: H.admin || null };
   }
+  // The player account behind a request body's « session »: null without
+  // one, false when it is not valid any more.
+  function accountOf(b) {
+    if (!b || !b.session) return null;
+    return P.session(String(b.session)) || false;
+  }
   async function publicApi(req, res, sub, query) {
     const ip = String(req.headers['x-td-client'] || req.socket.remoteAddress || '').slice(0, 64);
     const send = (p) => Promise.resolve().then(p).then((v) => json(res, 200, Object.assign({ ok: true }, Array.isArray(v) ? { tournaments: v } : v)))
@@ -476,7 +531,22 @@ export function createService(o) {
     if (sub === '/cups' && req.method === 'GET') return send(() => ({ cups: C.publicList() }));
     // Medals (badges.mjs): one player, several (?nicks=a,b), or everyone.
     const pm = /^\/players\/([^/]{1,200})$/.exec(sub);
-    if (pm && req.method === 'GET') { let nick = pm[1]; try { nick = decodeURIComponent(nick); } catch (e) {} return openJson(res, td.badges.player(nick.slice(0, 64))); }
+    if (pm && req.method === 'GET') { let nick = pm[1]; try { nick = decodeURIComponent(nick); } catch (e) {} nick = nick.slice(0, 64); return openJson(res, Object.assign({}, td.badges.player(nick), { account: P.hasAccount(nick) })); }
+    // A player's own account (players.mjs): POST /arena/api/players/<op>, as
+    // the web client already relays that address.
+    if (pm && req.method === 'POST' && ['signup', 'login', 'logout', 'invite', 'password', 'me'].indexOf(pm[1]) >= 0) {
+      if (limited('player', ip)) return json(res, 429, { ok: false, code: 'tooMany', error: 'too many attempts, try again later' });
+      const b = (await readJson(req)) || {};
+      const out = (p) => Promise.resolve().then(p).then((v) => json(res, 200, Object.assign({ ok: true }, v)))
+        .catch((e) => (e instanceof T.Refusal ? json(res, e.code === 'tooMany' ? 429 : e.code === 'session' ? 401 : 400, { ok: false, code: e.code || 'refused', error: e.message }) : json(res, 500, { ok: false, code: 'error', error: 'error' })));
+      if (pm[1] === 'signup') return out(() => P.signup(b, ip));
+      if (pm[1] === 'login') return out(() => P.login(b.nick, b.password, ip));
+      if (pm[1] === 'logout') return out(() => P.logout(b.session));
+      if (pm[1] === 'invite') return out(() => P.acceptInvite(b.token, b.password, ip));
+      if (pm[1] === 'password') return out(() => P.changePassword(b.session, b.old, b.password));
+      return out(() => { const s = P.session(b.session); if (!s) throw Object.assign(new T.Refusal('your session has ended: sign in again'), { code: 'session' }); return { player: s, signup: P.settings().signup }; });
+    }
+    if (sub === '/players' && req.method === 'GET') return json(res, 200, { ok: true, signup: P.settings().signup });
     if (sub === '/badges' && req.method === 'GET') {
       if (query.nicks) return openJson(res, td.badges.many(String(query.nicks).split(',').map((x) => x.trim()).filter(Boolean)));
       return openJson(res, td.badges.everyone());
@@ -491,7 +561,10 @@ export function createService(o) {
       const op = { register: 'register', unregister: 'unregister', choose: 'unregister' }[b.op];
       if (!op) return json(res, 400, { ok: false, code: 'badRequest' });
       if (limited(op, ip)) return json(res, 429, { ok: false, code: 'tooMany', error: 'too many attempts, try again later' });
-      return send(() => (b.op === 'register' ? C.cupRegister(cm[1], b) : b.op === 'unregister' ? C.cupUnregister(cm[1], b) : C.cupChoose(cm[1], b)));
+      const acc = accountOf(b);
+      if (acc === false) return json(res, 401, { ok: false, code: 'session', error: 'your session has ended: sign in again' });
+      const o2 = { account: acc };
+      return send(() => (b.op === 'register' ? C.cupRegister(cm[1], b, o2) : b.op === 'unregister' ? C.cupUnregister(cm[1], b, o2) : C.cupChoose(cm[1], b, o2)));
     }
     // A web client at a table: is it a tournament's? (game id and table name,
     // as the server told the client.) Only tables the director opened.
@@ -524,8 +597,12 @@ export function createService(o) {
     if (!b) return json(res, 400, { ok: false, code: 'badRequest' });
     if (op === 'witnesslog') return send(() => { const h = T.keyHost(key); const x = h && hostTable(h.watchId); return T.witnessLog(key, b, { gameId: x ? x.gameId : null }); });
     if (op === 'witness') return send(() => T.witnessReport(key, b, { atTable: atTable(key, b) }));
-    if (op === 'tablepass') return send(() => T.tablePass(key, b));
-    return send(() => (op === 'register' ? T.register(key, b) : op === 'checkin' ? T.checkIn(key, b) : T.unregister(key, b)));
+    // Signed in to a player account: the session stands for the code.
+    const acc = accountOf(b);
+    if (acc === false) return json(res, 401, { ok: false, code: 'session', error: 'your session has ended: sign in again' });
+    const o2 = { account: acc };
+    if (op === 'tablepass') return send(() => T.tablePass(key, b, o2));
+    return send(() => (op === 'register' ? T.register(key, b, o2) : op === 'checkin' ? T.checkIn(key, b, o2) : T.unregister(key, b, o2)));
   }
 
   function handler(req, res) {

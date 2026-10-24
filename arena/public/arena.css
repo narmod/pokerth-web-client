@@ -214,3 +214,8 @@ body[data-role="referee"] .org-only, body[data-role="viewer"] .org-only{display:
 .pslots .pact{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .pslots .pact select{width:auto;max-width:220px;min-width:0}
 .pslots li.next{border-left:3px solid var(--brass);padding-left:8px}
+/* Player account panel (players' page) */
+.acct{margin-top:12px}
+.acctbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.95em}
+.acctbar details.inl{display:inline-block}
+.acctbox summary{font-weight:600}

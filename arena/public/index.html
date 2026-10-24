@@ -83,8 +83,38 @@
     <button type="button" role="tab" id="tabTour" aria-controls="viewTour" aria-selected="true">Tournaments</button>
     <button type="button" role="tab" id="tabCheck" aria-controls="viewCheck" aria-selected="false">Table check</button>
     <button type="button" role="tab" id="tabCup" aria-controls="viewCup" aria-selected="false">Cups</button>
+    <button type="button" role="tab" id="tabPl" aria-controls="viewPl" aria-selected="false">Players</button>
     <button type="button" role="tab" id="tabAcc" aria-controls="viewAcc" aria-selected="false">Accounts</button>
     <button type="button" role="tab" id="tabReset" aria-controls="viewReset" aria-selected="false" hidden>Reset</button>
+  </div>
+  <div id="viewPl" role="tabpanel" aria-labelledby="tabPl" hidden>
+    <p class="lead">Every nickname of this site: player accounts, players you added, banned players, and everyone in the results. A player account claims its nickname here, in any case: nobody else registers it without signing in. A ban refuses every registration, tournaments and cups.</p>
+    <div class="grid">
+      <div>
+        <section class="card" id="plSignup" hidden aria-labelledby="plSignupH">
+          <h2 id="plSignupH">Player accounts</h2>
+          <label for="plSignupSel">How accounts are made</label>
+          <select id="plSignupSel"><option value="invite">By invitation — an organizer makes the account and sends the link</option><option value="open">Open — players make their own account too</option></select>
+          <p class="small muted" id="plSignupNote"></p>
+        </section>
+        <section class="card pl-act" aria-labelledby="plNewH">
+          <h2 id="plNewH">Add a player</h2>
+          <form id="plCreateForm">
+            <div class="row"><div><label for="plNick">PokerTH nickname</label><input id="plNick" maxlength="64" required autocapitalize="none" spellcheck="false"></div>
+              <div><label for="plNote">Note (organizers only)</label><input id="plNote" maxlength="200"></div></div>
+            <label class="ck"><input type="checkbox" id="plWithAcc" checked> Make a player account: you get an invitation link to send</label>
+            <div class="actions"><button type="submit" class="primary">Add</button></div>
+          </form>
+          <div id="plLink" class="inv" hidden></div>
+        </section>
+      </div>
+      <section class="card" aria-labelledby="plListH">
+        <h2 id="plListH">Players <span class="muted small" id="plCount"></span></h2>
+        <input id="plSearch" type="search" placeholder="Search a nickname" aria-label="Search a nickname">
+        <ul class="accs" id="plList"><li class="empty">Loading…</li></ul>
+      </section>
+    </div>
+    <div class="msg" id="plMsg" role="status"></div>
   </div>
   <div id="viewReset" role="tabpanel" aria-labelledby="tabReset" hidden>
     <p class="lead">Start again from zero — for tests, or a new season. The super admin (the master key) only. Nothing is thrown away: what you take away moves to a dated folder on the server (<code>reset-&lt;date&gt;</code> in the Arena’s data folder) and can be fetched back by hand. Accounts, the install key and the settings never move.</p>

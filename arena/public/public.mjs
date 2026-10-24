@@ -33,6 +33,20 @@ function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return n
 function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 function regsAll() { try { return JSON.parse(lsGet(REGS) || '{}') || {}; } catch (e) { return {}; } }
 function regsFor(key) { return regsAll()[key] || []; }
+// ── the player's account (service 0.25.0) ──
+// Signed in: the session stands for the personal code on every tournament
+// and cup (kept in this browser under pth_arena_player).
+const PSESS = 'pth_arena_player';
+let me = null, signupMode = 'invite', acctFlash = null;
+function acctLoad() { try { const v = JSON.parse(lsGet(PSESS) || 'null'); return v && v.token ? v : null; } catch (e) { return null; } }
+function acctSave(v) { try { if (v) localStorage.setItem(PSESS, JSON.stringify(v)); else localStorage.removeItem(PSESS); } catch (e) {} }
+// What this browser can act with on a tournament: the codes kept here, and
+// the signed-in account.
+function myRegs(key) {
+  const list = regsFor(key).slice();
+  if (me && !list.some((r) => r.nick.toLowerCase() === me.nick.toLowerCase())) list.push({ nick: me.nick, code: null, session: me.token });
+  return list.map((r) => (me && r.nick.toLowerCase() === me.nick.toLowerCase() ? Object.assign({}, r, { session: me.token }) : r));
+}
 function regsSave(key, list) { const a = regsAll(); if (list.length) a[key] = list; else delete a[key]; lsSet(REGS, JSON.stringify(a)); }
 
 // ── language ───────────────────────────────────────────────────────
@@ -59,7 +73,11 @@ async function loadLang(code) {
 function api(path, body) {
   const o = { cache: 'no-store', headers: {} };
   if (body) { o.method = 'POST'; o.headers['Content-Type'] = 'application/json'; o.body = JSON.stringify(body); }
-  return fetch('/arena/api' + path, o).then((r) => r.json().catch(() => ({ ok: false, code: 'error' })));
+  return fetch('/arena/api' + path, o).then((r) => r.json().catch(() => ({ ok: false, code: 'error' }))).then((d) => {
+    // The account's session has ended: signed out here too.
+    if (d && d.code === 'session' && me) { me = null; acctSave(null); renderAcct(); }
+    return d;
+  });
 }
 const fmtDate = (ts) => { try { return new Intl.DateTimeFormat(lang, { dateStyle: 'full', timeStyle: 'short' }).format(new Date(ts)); } catch (e) { return new Date(ts).toLocaleString(); } };
 const fmtTime = (ts) => { try { return new Intl.DateTimeFormat(lang, { timeStyle: 'short' }).format(new Date(ts)); } catch (e) { return new Date(ts).toLocaleTimeString(); } };
@@ -147,7 +165,7 @@ function tableLine(tb) {
   return T(tb.raiseMode === 'minutes' ? 'tableSettingsMin' : 'tableSettings', { stack: tb.startMoney, sb: tb.firstSmallBlind, bb: tb.firstSmallBlind * 2, n: tb.raiseEvery, t: tb.actionTimeout });
 }
 function renderOne() {
-  const c = cur, mine = regsFor(c.key);
+  const c = cur, mine = myRegs(c.key);
   const mineSet = new Set(mine.map((r) => r.nick.toLowerCase()));
   let h = '<p><a href="/arena" data-go>← ' + T('allTournaments') + '</a></p>';
   h += '<section class="card"><h2>' + esc(c.name) + '</h2><p>' + chip(c) + '</p><p class="small">' +
@@ -167,7 +185,7 @@ function renderOne() {
   // The table password (service 0.24.0): only to a registered player, with
   // his personal code; never in the table chat.
   if (c.tablePassword && c.phase === 'table' && lv) {
-    const codes = mine.concat(c.parent ? regsFor(c.parent.key) : []).filter((r) => c.playerList.some((p) => p.nick.toLowerCase() === r.nick.toLowerCase() && !p.absent));
+    const codes = mine.concat(c.parent ? myRegs(c.parent.key) : []).filter((r) => c.playerList.some((p) => p.nick.toLowerCase() === r.nick.toLowerCase() && !p.absent));
     const uniq = codes.filter((r, i) => codes.findIndex((x) => x.nick.toLowerCase() === r.nick.toLowerCase()) === i);
     h += '<section class="card" id="tpCard"><h2>' + T('tpTitle') + '</h2><p>' + T('tpText') + '</p>';
     for (const r of uniq) {
@@ -229,7 +247,10 @@ function renderOne() {
     const viaCup = (c.cups || []).find((cp) => cp.register);
     if (c.closedBecause === 'organizer' && viaCup) h += '<p><a href="/arena/c/' + esc(viaCup.key) + '" data-go>' + T('regViaCup', { name: viaCup.name }) + '</a></p>';
     else if (c.closedBecause) h += '<p>' + T('closed_' + c.closedBecause) + '</p>';
-    else {
+    else if (c.identity === 'accounts' && !me) h += '<p>' + T('accNeeded') + '</p>';
+    else if (me) {
+      if (!c.playerList.some((p) => p.nick.toLowerCase() === me.nick.toLowerCase())) h += '<form id="regForm" class="row"><p>' + T('accRegisterAs', { nick: me.nick }) + '</p><button type="submit" class="primary">' + T('register') + '</button></form>';
+    } else {
       h += '<form id="regForm" class="row"><div><label for="regNick">' + T('nickname') + '</label><input id="regNick" maxlength="64" autocomplete="nickname" required></div>' +
         '<button type="submit" class="primary">' + T('register') + '</button></form><p class="small muted">' + T('nickHint') + '</p>';
     }
@@ -289,29 +310,29 @@ function renderOne() {
 }
 // The invitation code, carried to the pages of a private tournament's tables.
 function invQs(sep) { const i = inviteFromUrl(); return i ? sep + 'invite=' + encodeURIComponent(i) : ''; }
-function errText(d) { return T('err_' + (['badNick', 'taken', 'badCode', 'tooMany', 'notFound', 'checkInNotYet', 'checkInClosed', 'noCheckIn', 'alreadyIn', 'notPdb', 'noGame', 'noLogWitness', 'notPlayer', 'tooLarge', 'noTablePass', 'tableNotOpen', 'absentPlayer', 'notCheckedIn'].indexOf(d.code) >= 0 ? d.code : 'error')); }
+function errText(d) { return T('err_' + (['badNick', 'taken', 'badCode', 'tooMany', 'notFound', 'checkInNotYet', 'checkInClosed', 'noCheckIn', 'alreadyIn', 'notPdb', 'noGame', 'noLogWitness', 'notPlayer', 'tooLarge', 'noTablePass', 'tableNotOpen', 'absentPlayer', 'notCheckedIn', 'nickClaimed', 'banned', 'accountNeeded', 'session', 'signupClosed', 'badLogin', 'shortPassword', 'passwordIsNick', 'badInvite', 'badPassword'].indexOf(d.code) >= 0 ? d.code : 'error')); }
 // Table passwords already shown in this page (they stay through the refreshes).
 const shownPass = {};
 function wire() {
-  const getPass = async (nick, code) => {
-    const d = await api('/t/' + cur.key + '/tablepass', { nick, code, invite: inviteFromUrl() || undefined });
+  const getPass = async (nick, code, session) => {
+    const d = await api('/t/' + cur.key + '/tablepass', { nick, code, session, invite: inviteFromUrl() || undefined });
     if (!d.ok) { flash = { bad: true, html: errText(d) }; renderOne(); return; }
     shownPass[cur.key + '|' + d.nick.toLowerCase()] = d.password;
     renderOne();
   };
   document.querySelectorAll('[data-tpshow]').forEach((b) => b.addEventListener('click', () => {
     const lo = b.dataset.tpshow.toLowerCase();
-    const r = regsFor(cur.key).concat(cur.parent ? regsFor(cur.parent.key) : []).find((x) => x.nick.toLowerCase() === lo);
-    if (r) getPass(r.nick, r.code);
+    const r = myRegs(cur.key).concat(cur.parent ? myRegs(cur.parent.key) : []).find((x) => x.nick.toLowerCase() === lo);
+    if (r) getPass(r.nick, r.code, r.session);
   }));
   const tp = $('tpForm');
   if (tp) tp.addEventListener('submit', (ev) => { ev.preventDefault(); getPass($('tpNick').value.trim(), $('tpCode').value.trim().toUpperCase()); });
   const reg = $('regForm');
   if (reg) reg.addEventListener('submit', async (ev) => {
     ev.preventDefault();
-    const nick = $('regNick').value.trim();
+    const nick = $('regNick') ? $('regNick').value.trim() : undefined;
     const btn = reg.querySelector('button'); btn.disabled = true;
-    const d = await api('/t/' + cur.key + '/register', { nick, invite: inviteFromUrl() || undefined });
+    const d = await api('/t/' + cur.key + '/register', { nick, session: me ? me.token : undefined, invite: inviteFromUrl() || undefined });
     btn.disabled = false;
     if (!d.ok) { flash = { bad: true, html: /^closed_/.test(d.code || '') ? T(d.code) : errText(d) }; renderOne(); return; }
     regsSave(cur.key, regsFor(cur.key).filter((r) => r.nick.toLowerCase() !== d.nick.toLowerCase()).concat([{ nick: d.nick, code: d.code }]));
@@ -319,8 +340,8 @@ function wire() {
     flash = { html: T('registered', { nick: d.nick }) + '<br><b>' + T('yourCode', { code: d.code }) + '</b> <button type="button" class="mini" data-copy="' + esc(d.code) + '">' + T('copy') + '</button><br><span class="small">' + T(cur.checkIn && cur.checkIn.needed ? 'codeKeepCheckIn' : 'codeKeep') + '</span>' };
     renderOne();
   });
-  const doUnreg = async (nick, code) => {
-    const d = await api('/t/' + cur.key + '/unregister', { nick, code, invite: inviteFromUrl() || undefined });
+  const doUnreg = async (nick, code, session) => {
+    const d = await api('/t/' + cur.key + '/unregister', { nick, code, session, invite: inviteFromUrl() || undefined });
     if (!d.ok) { flash = { bad: true, html: /^closed_/.test(d.code || '') ? T(d.code) : errText(d) }; renderOne(); return; }
     regsSave(cur.key, regsFor(cur.key).filter((r) => r.nick.toLowerCase() !== d.nick.toLowerCase()));
     cur = d.tournament;
@@ -328,22 +349,22 @@ function wire() {
     renderOne();
   };
   document.querySelectorAll('[data-unreg]').forEach((b) => b.addEventListener('click', () => {
-    const r = regsFor(cur.key).find((x) => x.nick === b.dataset.unreg);
-    if (r) doUnreg(r.nick, r.code);
+    const r = myRegs(cur.key).find((x) => x.nick === b.dataset.unreg);
+    if (r) doUnreg(r.nick, r.code, r.session);
   }));
-  const doCheckIn = async (nick, code) => {
-    const d = await api('/t/' + cur.key + '/checkin', { nick, code, invite: inviteFromUrl() || undefined });
+  const doCheckIn = async (nick, code, session) => {
+    const d = await api('/t/' + cur.key + '/checkin', { nick, code, session, invite: inviteFromUrl() || undefined });
     if (!d.ok) { flash = { bad: true, html: errText(d) }; renderOne(); return; }
     // The code typed here is kept too: the web client sends it with its
     // witness report, so that the report counts.
-    if (!regsFor(cur.key).some((r) => r.nick.toLowerCase() === d.nick.toLowerCase())) regsSave(cur.key, regsFor(cur.key).concat([{ nick: d.nick, code: String(code).toUpperCase() }]));
+    if (code && !regsFor(cur.key).some((r) => r.nick.toLowerCase() === d.nick.toLowerCase())) regsSave(cur.key, regsFor(cur.key).concat([{ nick: d.nick, code: String(code).toUpperCase() }]));
     cur = d.tournament;
     flash = { html: T('checkedInDone', { nick: d.nick }) };
     renderOne();
   };
   document.querySelectorAll('[data-ckin]').forEach((b) => b.addEventListener('click', () => {
-    const r = regsFor(cur.key).find((x) => x.nick === b.dataset.ckin);
-    if (r) { b.disabled = true; doCheckIn(r.nick, r.code); }
+    const r = myRegs(cur.key).find((x) => x.nick === b.dataset.ckin);
+    if (r) { b.disabled = true; doCheckIn(r.nick, r.code, r.session); }
   }));
   const ck = $('ckForm');
   if (ck) ck.addEventListener('submit', (ev) => { ev.preventDefault(); doCheckIn($('ckNick').value.trim(), $('ckCode').value.trim()); });
@@ -403,7 +424,7 @@ async function showPlayer(nick) {
   if (!d.ok) { $('view').innerHTML = '<p class="msg bad">' + T('err_error') + '</p>'; return; }
   const day = (ts) => { try { return new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(new Date(ts)); } catch (e) { return new Date(ts).toLocaleDateString(); } };
   const link = (x) => (x.key ? '<a href="/arena/' + (x.kind === 'cup' ? 'c/' : 't/') + esc(x.key) + '" data-go>' + esc(x.name) + '</a>' : esc(x.name));
-  let h = '<p><a href="/arena" data-go>← ' + T('allTournaments') + '</a></p>';
+  let h = '<p><a href="/arena" data-go>← ' + T('allTournaments') + '</a>' + (d.account ? ' <span class="chip done" title="' + T('accBadgeTitle') + '">✓ ' + T('accBadge') + '</span>' : '') + '</p>';
   h += '<section class="card"><h2>' + T('medalsTitle') + '</h2>';
   h += '<p class="medals">' + ['gold', 'silver', 'bronze'].map((k) => '<span class="medal ' + k + '"><span aria-hidden="true">' + MEDAL[k] + '</span> ' + T('medal_' + k) + ' <b>' + d.counts[k] + '</b></span>').join('') + '</p>';
   h += d.medals.length ? '<ul class="tlist">' + d.medals.map((m) => '<li class="medalrow"><span class="big" aria-hidden="true">' + MEDAL[m.medal] + '</span><span><b>' + link(m) + '</b><br><span class="muted small">' + T(m.kind === 'cup' ? 'kindCup' : 'kindTournament') + ' · ' + T('placeOf', { place: m.place, of: m.of }) + (m.at ? ' · ' + day(m.at) : '') + '</span></span></li>').join('') + '</ul>'
@@ -505,7 +526,7 @@ function cupPlanHtml(d, key) {
   if (rs.mode !== 'cup') return h;
   // Registering for the cup.
   cupCodesToTournaments(d, key);
-  const mine = regsFor(cupRegKey(key)).filter((r) => (rs.players || []).some((n) => n.toLowerCase() === r.nick.toLowerCase()));
+  const mine = myRegs(cupRegKey(key)).filter((r) => (rs.players || []).some((n) => n.toLowerCase() === r.nick.toLowerCase()));
   const choices = rs.choose ? (rs.choices || []).filter((c) => !c.started) : [];
   const choiceSel = (id, sel) => '<div><label for="' + id + '">' + T('cupPickDate') + '</label><select id="' + id + '" required><option value="">—</option>' +
     choices.map((c) => '<option value="' + esc(c.key) + '"' + (c.key === sel ? ' selected' : '') + (c.taken >= c.cap && c.key !== sel ? ' disabled' : '') + '>' + esc(fmtDate(c.at)) + ' · ' + T('cupPlayers', { n: c.taken }) + '/' + esc(c.cap) + '</option>').join('') + '</select></div>';
@@ -517,7 +538,10 @@ function cupPlanHtml(d, key) {
     if (rs.choose && choices.length) h += '<form class="row" data-cupchoose="' + esc(r.nick) + '">' + choiceSel('cc_' + esc(r.nick), r.choice) + '<button type="submit">' + T('cupChange') + '</button></form>';
     h += '<div class="actions"><button type="button" data-cupleave="' + esc(r.nick) + '">' + T('cupLeave') + ' · ' + esc(r.nick) + '</button></div></div>';
   }
-  if (rs.open) {
+  if (rs.open && me && mine.some((r) => r.session)) { /* signed in and in the cup already */ }
+  else if (rs.open && me) {
+    h += '<form id="cupRegForm" class="row"><p>' + T('accRegisterAs', { nick: me.nick }) + '</p>' + (rs.choose ? choiceSel('cupChoice', '') : '') + '<button type="submit" class="primary">' + T('register') + '</button></form>';
+  } else if (rs.open) {
     h += '<form id="cupRegForm" class="row"><div><label for="cupNick">' + T('nickname') + '</label><input id="cupNick" maxlength="64" autocomplete="nickname" required></div>' +
       (rs.choose ? choiceSel('cupChoice', '') : '') + '<button type="submit" class="primary">' + T('register') + '</button></form><p class="small muted">' + T('nickHint') + '</p>';
   } else h += '<p>' + T('cupClosed_' + (rs.closed || 'started')) + '</p>';
@@ -548,7 +572,7 @@ function wireCup(d, key) {
   if (f) f.addEventListener('submit', async (ev) => {
     ev.preventDefault();
     const b = f.querySelector('button'); b.disabled = true;
-    const r = await post({ op: 'register', nick: $('cupNick').value.trim(), choice: $('cupChoice') ? $('cupChoice').value : undefined });
+    const r = await post({ op: 'register', nick: $('cupNick') ? $('cupNick').value.trim() : undefined, session: me ? me.token : undefined, choice: $('cupChoice') ? $('cupChoice').value : undefined });
     b.disabled = false;
     if (!r.ok) { cupFlash = { bad: true, html: cupErr(r) }; return again(); }
     regsSave(cupRegKey(key), regsFor(cupRegKey(key)).filter((x) => x.nick.toLowerCase() !== r.nick.toLowerCase()).concat([{ nick: r.nick, code: r.code, choice: $('cupChoice') ? $('cupChoice').value : null }]));
@@ -556,19 +580,19 @@ function wireCup(d, key) {
     again();
   });
   document.querySelectorAll('[data-cupleave]').forEach((b) => b.addEventListener('click', async () => {
-    const reg = regsFor(cupRegKey(key)).find((x) => x.nick === b.dataset.cupleave);
+    const reg = myRegs(cupRegKey(key)).find((x) => x.nick === b.dataset.cupleave);
     if (!reg) return;
-    const r = await post({ op: 'unregister', nick: reg.nick, code: reg.code });
+    const r = await post({ op: 'unregister', nick: reg.nick, code: reg.code, session: reg.session });
     if (!r.ok) { cupFlash = { bad: true, html: cupErr(r) }; return again(); }
     forget(reg.nick); cupFlash = { html: T('cupLeft', { nick: r.nick }) }; again();
   }));
   document.querySelectorAll('[data-cupchoose]').forEach((fm) => fm.addEventListener('submit', async (ev) => {
     ev.preventDefault();
     const nick = fm.dataset.cupchoose;
-    const reg = regsFor(cupRegKey(key)).find((x) => x.nick === nick);
+    const reg = myRegs(cupRegKey(key)).find((x) => x.nick === nick);
     const choice = fm.querySelector('select').value;
     if (!reg) return;
-    const r = await post({ op: 'choose', nick: reg.nick, code: reg.code, choice });
+    const r = await post({ op: 'choose', nick: reg.nick, code: reg.code, session: reg.session, choice });
     if (!r.ok) { cupFlash = { bad: true, html: cupErr(r) }; return again(); }
     // The code leaves the old tournament's list here, joins the new one.
     const old = d.plan.slots.find((s) => s.key === reg.choice);
@@ -585,6 +609,47 @@ function wireCup(d, key) {
     if (!r.ok) { cupFlash = { bad: true, html: cupErr(r) }; return again(); }
     forget(r.nick); cupFlash = { html: T('cupLeft', { nick: r.nick }) }; again();
   });
+}
+
+// ── the player's account panel (above every view) ───────────────────
+function pinviteFromHash() { const m = /[#&]pinvite=([A-Za-z0-9_-]{20,80})/.exec(location.hash || ''); return m ? m[1] : null; }
+function acctMsg() { if (!acctFlash) return ''; const h = '<div class="msg ' + (acctFlash.bad ? 'bad' : 'ok') + '" role="status">' + acctFlash.html + '</div>'; acctFlash = null; return h; }
+function renderAcct() {
+  const box = $('acct');
+  if (!box) return;
+  const inv = pinviteFromHash();
+  let h = '';
+  if (inv && !me) {
+    h = '<section class="card"><h2>' + T('accInviteTitle') + '</h2><p class="small">' + T('accInviteHint') + '</p>' + acctMsg() +
+      '<form id="accInvForm" class="row"><div><label for="accInvPw">' + T('accPassword') + '</label><input id="accInvPw" type="password" autocomplete="new-password" minlength="8" required></div>' +
+      '<button type="submit" class="primary">' + T('accChoose') + '</button></form></section>';
+  } else if (me) {
+    h = '<div class="acctbar">' + acctMsg() + '<span>' + T('accSignedIn', { nick: me.nick }) + '</span> <a href="/arena/p/' + encodeURIComponent(me.nick) + '" data-go>' + T('accMyPage') + '</a>' +
+      ' <details class="sub inl"><summary>' + T('accChangePw') + '</summary><form id="accPwForm" class="row"><div><label for="accPwOld">' + T('accCurPassword') + '</label><input id="accPwOld" type="password" autocomplete="current-password" required></div>' +
+      '<div><label for="accPwNew">' + T('accNewPassword') + '</label><input id="accPwNew" type="password" autocomplete="new-password" minlength="8" required></div><button type="submit">' + T('accChangePw') + '</button></form></details>' +
+      ' <button type="button" class="ghost mini" id="accOut">' + T('accSignOut') + '</button></div>';
+  } else {
+    h = '<details class="sub acctbox"' + (acctFlash ? ' open' : '') + '><summary>' + T('accTitle') + '</summary>' + acctMsg() +
+      '<form id="accInForm" class="row"><div><label for="accNick">' + T('nickname') + '</label><input id="accNick" maxlength="64" autocomplete="username" required></div>' +
+      '<div><label for="accPw">' + T('accPassword') + '</label><input id="accPw" type="password" autocomplete="current-password" required></div><button type="submit" class="primary">' + T('accSignIn') + '</button></form>' +
+      (signupMode === 'open'
+        ? '<details class="sub"><summary>' + T('accCreateTitle') + '</summary><p class="small muted">' + T('accCreateHint') + '</p><form id="accUpForm" class="row"><div><label for="accUpNick">' + T('nickname') + '</label><input id="accUpNick" maxlength="64" autocomplete="nickname" required></div>' +
+          '<div><label for="accUpPw">' + T('accPassword') + '</label><input id="accUpPw" type="password" autocomplete="new-password" minlength="8" required></div><button type="submit">' + T('accCreate') + '</button></form></details>'
+        : '<p class="small muted">' + T('accInviteOnly') + '</p>') + '</details>';
+  }
+  box.innerHTML = h;
+  const signedIn = (d) => { me = { token: d.token, nick: d.player.nick }; acctSave(me); acctFlash = { html: T('accWelcome', { nick: d.player.nick }) }; if (pinviteFromHash()) history.replaceState(null, '', location.pathname + location.search); renderAcct(); route(); };
+  const bad = (d) => { acctFlash = { bad: true, html: errText(d) }; renderAcct(); };
+  const f1 = $('accInForm');
+  if (f1) f1.addEventListener('submit', async (ev) => { ev.preventDefault(); const d = await api('/players/login', { nick: $('accNick').value.trim(), password: $('accPw').value }); if (d.ok) signedIn(d); else bad(d); });
+  const f2 = $('accUpForm');
+  if (f2) f2.addEventListener('submit', async (ev) => { ev.preventDefault(); const d = await api('/players/signup', { nick: $('accUpNick').value.trim(), password: $('accUpPw').value }); if (d.ok) signedIn(d); else bad(d); });
+  const f3 = $('accInvForm');
+  if (f3) f3.addEventListener('submit', async (ev) => { ev.preventDefault(); const d = await api('/players/invite', { token: pinviteFromHash(), password: $('accInvPw').value }); if (d.ok) signedIn(d); else bad(d); });
+  const f4 = $('accPwForm');
+  if (f4) f4.addEventListener('submit', async (ev) => { ev.preventDefault(); const d = await api('/players/password', { session: me.token, old: $('accPwOld').value, password: $('accPwNew').value }); acctFlash = d.ok ? { html: T('accPwChanged') } : { bad: true, html: errText(d) }; renderAcct(); });
+  const o = $('accOut');
+  if (o) o.addEventListener('click', async () => { const tk = me && me.token; me = null; acctSave(null); if (tk) api('/players/logout', { session: tk }).catch(() => {}); renderAcct(); route(); });
 }
 
 // ── routing ────────────────────────────────────────────────────────
@@ -618,9 +683,16 @@ let theme = null;
   sel.addEventListener('change', async () => {
     lsSet('pth_lang', sel.value);   // the same choice as the app's
     await loadLang(sel.value);
+    renderAcct();
     if (cur) renderOne(); else route();
   });
   theme = initTheme($('themeBtn'), (m) => t(m === 'dark' ? 'themeDark' : m === 'light' ? 'themeLight' : 'themeAuto'));
   await loadLang(code);
+  // The account: the session kept here, still valid? How accounts are made.
+  const saved = acctLoad();
+  const [st, who] = await Promise.all([api('/players').catch(() => ({})), saved ? api('/players/me', { session: saved.token }).catch(() => ({})) : Promise.resolve(null)]);
+  signupMode = (st && st.signup) || 'invite';
+  if (saved && who && who.ok) me = { token: saved.token, nick: who.player.nick }; else if (saved && who && who.code === 'session') acctSave(null);
+  renderAcct();
   route();
 })();

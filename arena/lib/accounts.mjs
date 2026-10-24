@@ -215,7 +215,7 @@ export function createAccounts(o) {
 // and the collusion check; the organizer does everything else but accounts,
 // module settings and deletions, which are the super admin's.
 const REFEREE_POSTS = ['/t/validate', '/t/correct', '/t/correct/approve', '/t/correct/reject', '/t/collusion'];
-const ADMIN_ONLY = ['/t/delete', '/cups/delete'];
+const ADMIN_ONLY = ['/t/delete', '/cups/delete', '/players/settings'];
 export function allowed(role, method, sub) {
   if (role === 'admin') return true;
   if (sub === '/accounts' || sub.indexOf('/accounts/') === 0) return false;
