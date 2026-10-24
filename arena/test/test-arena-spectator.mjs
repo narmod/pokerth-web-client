@@ -10,7 +10,7 @@ import { mkdtempSync, readFileSync, writeFileSync, existsSync, statSync, rmSync 
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import * as pb from '../../public/proto/pokerth-bundle.mjs';
+import { pb } from '../lib/platform.mjs';
 import { SpectatorDirector, replayJournal, buildIdFor } from '../lib/spectator.mjs';
 import { GAME, NAMES, msg, S, fakeServer, answerNames, wait } from './lib/arena-fake-server.mjs';
 import { generateKeys, verifyJournal, verifyPayload, canonical } from '../lib/journal.mjs';

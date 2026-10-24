@@ -2,7 +2,7 @@
 // real 4-byte framing, real protobuf bundle. Shared by test-arena-spectator.mjs
 // and test-arena-manager.mjs.
 import net from 'node:net';
-import * as pb from '../../../public/proto/pokerth-bundle.mjs';
+import { pb } from '../../lib/platform.mjs';
 import { frame } from '../../lib/spectator.mjs';
 
 export const T = pb.PokerTHMessage.PokerTHMessageType;

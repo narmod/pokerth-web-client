@@ -18,11 +18,10 @@
 
 import { createRequire } from 'node:module';
 import { readFileSync } from 'node:fs';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
+import { SQL_VENDOR_DIR as VENDOR } from './platform.mjs';
 
 const require = createRequire(import.meta.url);
-const VENDOR = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'public', 'vendor');
 let sqlPromise = null;
 function sql() {
   if (!sqlPromise) {

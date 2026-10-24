@@ -3,14 +3,14 @@
 //
 // The settings the director opens a table with (PokerTH NetGameInfo), with
 // the same lists and limits as the web client's « Create a table » form:
-// both read public/modules/create-presets.mjs (styles, community templates,
+// both read public/modules/create-presets.mjs, through platform.mjs (styles, community templates,
 // limits), so a change there reaches the organizer page by itself (served by
 // GET /admin/arena/table-presets). The limits stay inside what the game
 // server accepts (netpacketvalidator ValidateGameInfo), so a stored table
 // that was set with older, wider limits is brought back inside them.
 // ═══════════════════════════════════════════════════════════════════
 
-import { LIMITS, STYLES, TEMPLATES, TEMPLATE_DELAY, DEFAULT_STYLE, createPresets } from '../../public/modules/create-presets.mjs';
+import { LIMITS, STYLES, TEMPLATES, TEMPLATE_DELAY, DEFAULT_STYLE, createPresets } from './platform.mjs';
 
 const N = STYLES.find((s) => s.id === DEFAULT_STYLE) || STYLES[0];
 // The web client's default style (Normal), plus the blinds order.

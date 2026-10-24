@@ -7,7 +7,7 @@
 // Each scenario drives the server by hand and checks what the director did.
 // The absence rule runs on short times here (retry 120 ms, grace 0–300 ms).
 // Run: node arena/test/test-arena-scenarios.mjs
-import * as pb from '../../public/proto/pokerth-bundle.mjs';
+import { pb } from '../lib/platform.mjs';
 import { HostDirector, CLOSED_BY_ORGANIZER } from '../lib/host.mjs';
 import { cleanTable } from '../lib/table.mjs';
 import { generateKeys } from '../lib/journal.mjs';

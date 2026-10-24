@@ -11,7 +11,7 @@ import { mkdtempSync, rmSync, writeFileSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import http from 'node:http';
-import * as pb from '../../public/proto/pokerth-bundle.mjs';
+import { pb } from '../lib/platform.mjs';
 import { HostDirector, gameInfoFor, safeTableName } from '../lib/host.mjs';
 import { botLangs, isBotLang, loadBotStrings, splitChat, BOT_EN, CHAT_MAX_BYTES, CHAT_PART_BYTES } from '../lib/botchat.mjs';
 import { generateKeys, verifyJournal, verifyPayload } from '../lib/journal.mjs';

@@ -9,7 +9,7 @@
 
 import net from 'node:net';
 import tls from 'node:tls';
-import * as pb from '../../public/proto/pokerth-bundle.mjs';
+import { pb } from './platform.mjs';
 import { build, frame, spkiPin, buildIdFor } from './spectator.mjs';
 
 const LOGIN = pb.InitMessage.LoginType;

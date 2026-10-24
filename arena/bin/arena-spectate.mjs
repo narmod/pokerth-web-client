@@ -18,13 +18,11 @@
 // ═══════════════════════════════════════════════════════════════════
 
 import { readFileSync, writeFileSync, existsSync, chmodSync } from 'node:fs';
-import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SpectatorDirector, replayJournal } from '../lib/spectator.mjs';
 import { generateKeys, verifyJournal, verifyPayload, publicKeyRawB64, canonical } from '../lib/journal.mjs';
+import { webClientVersion } from '../lib/platform.mjs';
 
-// The web client's version: the PokerTH release the director says it speaks.
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 function args(argv) {
   const o = { _: [] };
@@ -73,8 +71,8 @@ if (a.help) usage(0);
 if (a.verify) verify(a._[0], a._[1]);
 if (!a.host || !a.port || !a.nick || (!a['game-id'] && !a['game-name'])) usage(2);
 
-let version = '';
-try { version = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')).version; } catch (e) {}
+// The web client's version: the PokerTH release the director says it speaks.
+const version = webClientVersion();
 const keyPem = loadKey(a.key || 'td-key.pem');
 const out = a.out || 'arena-out';
 

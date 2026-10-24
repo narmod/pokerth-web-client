@@ -20,12 +20,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createService } from './lib/service.mjs';
+import { webClientVersion, DEFAULT_DATA_DIR } from './lib/platform.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const readVersion = (p) => { try { return JSON.parse(fs.readFileSync(p, 'utf8')).version || ''; } catch (e) { return ''; } };
 const VERSION = readVersion(path.join(HERE, 'package.json'));
-const CLIENT_VERSION = process.env.ARENA_CLIENT_VERSION || readVersion(path.join(HERE, '..', 'package.json'));
-const DIR = process.env.ARENA_DIR || path.join(HERE, '..', 'arena-data');
+const CLIENT_VERSION = webClientVersion();
+const DIR = process.env.ARENA_DIR || DEFAULT_DATA_DIR;
 const SECRET = process.env.ARENA_SECRET || '';
 const ADMIN_TOKEN = process.env.ARENA_ADMIN_TOKEN || '';
 const HOST = process.env.ARENA_HOST || '127.0.0.1';

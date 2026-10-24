@@ -859,6 +859,59 @@ at the foot of `/arena`).
   then the web client's admin token is the way in. A separate repository
   stays possible later.
 
+## Ready to stand alone, step by step (service `0.21.2`, decided 2026-10-24)
+
+No split now. Each change to the Arena brings the day it becomes an
+application of its own (its own Docker image or install script) a little
+closer, without a project of its own.
+
+Rules for every change to `arena/`:
+
+1. **Nothing new outside `arena/`.** What the service takes from the web
+   client goes through `arena/lib/platform.mjs` only (the PokerTH protocol,
+   the create-table lists and limits, sql.js, the web client's version, the
+   default data folder). `test-arena-platform.mjs` fails if another file of
+   `arena/lib`, `arena/bin` or `arena/server.mjs` reaches outside.
+2. **Everything the proxy provides also works from an `ARENA_*` variable**
+   (public address, client address, servers, admin key, protocol version).
+3. **The Arena's pages load only files the Arena serves**: no new
+   `/modules/…` or `/logo…` of the web client.
+4. **New tests run without `proxy.js`** when they can (start the service
+   directly).
+5. **The web client talks to the Arena through its HTTP API only**: no shared
+   browser storage or file for a new feature.
+6. **All data stays in `ARENA_DIR`**, portable as is.
+7. **New Arena administration goes in `/arena/organize`**, not in the web
+   client's admin page.
+
+Links still to cut (tick them off as the code is touched):
+
+- Code, all in `platform.mjs`: `public/proto/pokerth-bundle.mjs`,
+  `public/vendor` (sql.js, or `ARENA_SQL_DIR`),
+  `public/modules/create-presets.mjs` (later: read from the web client's API
+  with a copy as fallback), the root `package.json` version (or
+  `ARENA_CLIENT_VERSION`).
+- Pages: `/modules/lang-meta.mjs`, the web client's logo and favicons.
+- Running: launched and supervised by `server/arena-host.js`; servers over
+  IPC; super admin = the web client's master key and its brute-force limit;
+  `x-td-origin`, `x-td-client` and noindex set by the relay; the switch and
+  the Admin › Community › Arena panel; updates through the web client's admin
+  page.
+- Web client ↔ Arena: the witness (`arena-witness.mjs`) calls `/arena/api` on
+  the same origin and reads the personal code from the same origin's browser
+  storage. On another domain: a configured Arena address, CORS, and another
+  way to link the personal code (the hardest point). A link from the web
+  client to the Arena.
+- Tooling: `test-arena-route` and `test-arena-public-browser` start
+  `proxy.js`; test dependencies (jsdom, Playwright) come from the root; a
+  Dockerfile, a compose file, an install script and a repository of its own
+  (`git subtree split` keeps the history) come on the day.
+
+Already done: own `package.json`, version and changelog; all data in
+`ARENA_DIR`; organizer accounts and sessions in the service; a standalone mode
+(`ARENA_ADMIN_TOKEN`, `ARENA_SERVERS`, `ARENA_HOST`/`ARENA_PORT`); the medals
+API open with CORS.
+
 ## Updating the director (`web.300`, service `0.2.1`)
 
 The director has its own version (`arena/package.json`) and changelog
@@ -893,6 +946,7 @@ that version only: the web client's version, its service worker and its
 | `arena/lib/lobby.mjs` | Lobby reader (guest login, tables, server type). |
 | `arena/lib/host.mjs` | The director that opens a tournament table: create, invite, kick, hand over, then watch. |
 | `arena/lib/worker.mjs` | One watch in a detached process, state and files on disk. |
+| `arena/lib/platform.mjs` | Everything taken from the web client, in one place (protocol, create-table lists, sql.js, version, default data folder). The only file of the service that reaches outside `arena/`. |
 | `arena/lib/table.mjs`, `arena/lib/images.mjs` | Table settings (the web client's create-game lists, `public/modules/create-presets.mjs`); images of tournaments and cups. |
 | `arena/lib/cups.mjs`, `arena/lib/badges.mjs` | Cups (points, stages, signed standings); medals (derived from the signed results, open API). |
 | `arena/lib/pdb.mjs`, `arena/lib/tournaments.mjs` | PokerTH log reader (BBC rule); tournaments in manual mode. |
@@ -901,8 +955,10 @@ that version only: the web client's version, its service worker and its
 | `arena/test/` | `test-arena-core` (journal, ranking cases), `test-arena-spectator` (fake server over TCP, command line), `test-arena-tournaments` (manual mode, `.pdb`), `test-arena-host` (opening a table against a fake server that behaves like the real one, then through the service), `test-arena-service` (workers, the service on its own), `test-arena-route` (real proxy launching the service, the page in jsdom). |
 | `server/arena-host.js` | Web client side: the setting, launching and relaying. |
 
-The service shares the repository's protobuf bundle (`public/proto/`) and
-sql.js (`public/vendor/`) rather than copying them.
+The service shares the repository's protobuf bundle (`public/proto/`), sql.js
+(`public/vendor/`) and the create-table lists
+(`public/modules/create-presets.mjs`) rather than copying them, all through
+`arena/lib/platform.mjs`.
 
 ```sh
 node arena/bin/arena-spectate.mjs --host 192.168.1.20 --port 7234 \

@@ -10,7 +10,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import http from 'node:http';
-import * as pb from '../../public/proto/pokerth-bundle.mjs';
+import { pb } from '../lib/platform.mjs';
 import { SpectatorDirector, avatarOf } from '../lib/spectator.mjs';
 import { createService } from '../lib/service.mjs';
 import { generateKeys } from '../lib/journal.mjs';

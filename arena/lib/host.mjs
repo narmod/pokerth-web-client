@@ -56,7 +56,7 @@
 // Design: docs/ARENA.md.
 // ═══════════════════════════════════════════════════════════════════
 
-import * as pb from '../../public/proto/pokerth-bundle.mjs';
+import { pb } from './platform.mjs';
 import { SpectatorDirector, frame } from './spectator.mjs';
 import { BOT_EN, fill, splitChat } from './botchat.mjs';
 import { cleanTable } from './table.mjs';

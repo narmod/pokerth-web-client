@@ -24,7 +24,7 @@ import { EventEmitter } from 'node:events';
 import net from 'node:net';
 import tls from 'node:tls';
 import { createHash } from 'node:crypto';
-import * as pb from '../../public/proto/pokerth-bundle.mjs';
+import { pb } from './platform.mjs';
 import { Journal, signPayload, publicKeyFromPrivate, JOURNAL_VERSION } from './journal.mjs';
 import { GameTracker } from './tracker.mjs';
 

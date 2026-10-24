@@ -10,6 +10,17 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.21.2 — 2026-10-24
+
+### Changed
+- Everything the service takes from the web client (the PokerTH protocol, the
+  create-table lists and limits, sql.js, the web client's version, the
+  default data folder) now goes through one file, `lib/platform.mjs`, so the
+  Arena can one day become an application of its own by changing that file
+  only. `ARENA_SQL_DIR` can point to sql.js elsewhere. No visible change.
+- New test `test-arena-platform.mjs`: no other file of the service reaches
+  outside `arena/`.
+
 ## 0.21.1 — 2026-10-24 (web client `2.1.10-web.319`)
 
 ### Removed
