@@ -106,6 +106,16 @@
           <form id="plSeasonForm" class="row pl-act"><div><label for="plSeasonName">New season</label><input id="plSeasonName" maxlength="40" placeholder="Season 2"></div><button type="submit" class="danger">Start it: every ticket from zero</button></form>
           <p class="small muted">A tournament needs a ticket to register, or gives one to its first (its Tickets settings). Give or take one by hand on a player below.</p>
         </section>
+        <section class="card" aria-labelledby="grH">
+          <h2 id="grH">Groups</h2>
+          <p class="small muted">Clubs, teams, lists of guests. Every group is public on the players' page (its name and its members). A tournament or a cup can be kept for the members of one of several groups (Who may register).</p>
+          <ul class="accs" id="grList"><li class="empty">Loading…</li></ul>
+          <form id="grForm" class="gr-act"><div class="row"><div><label for="grName">New group</label><input id="grName" maxlength="40" required placeholder="Thursday club"></div>
+            <div><label for="grJoin">How a player gets in</label><select id="grJoin"><option value="invite">by invitation — an organizer adds each member</option><option value="request">on request — a signed-in player asks, an organizer accepts</option><option value="code">with a code — a signed-in player types the group's code</option><option value="open">open — any signed-in player joins</option></select></div></div>
+            <label for="grAbout">About (public)</label><input id="grAbout" maxlength="200">
+            <div class="actions"><button type="submit">Make the group</button></div></form>
+          <div class="msg" id="grMsg" role="status"></div>
+        </section>
         <section class="card pl-act" aria-labelledby="plNewH">
           <h2 id="plNewH">Add a player</h2>
           <form id="plCreateForm">

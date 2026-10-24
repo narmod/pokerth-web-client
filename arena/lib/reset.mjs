@@ -8,6 +8,8 @@
 //                journals and witnesses
 //   cups         every cup and its standings
 //   images       the images organizers added (the shipped ones stay)
+//   tickets      the kinds of tickets, the balances, the seasons (0.27.0)
+//   groups       every group, its members and requests (0.29.0)
 // Nothing is thrown away: it all moves to <dir>/reset-<date>/ (one folder per
 // reset), where it can be fetched back by hand on the server.
 //
@@ -22,7 +24,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-export const RESET_PARTS = Object.freeze(['watches', 'tournaments', 'cups', 'images', 'tickets']);
+export const RESET_PARTS = Object.freeze(['watches', 'tournaments', 'cups', 'images', 'tickets', 'groups']);
 export const RESET_CONFIRM = 'RESET';
 const ID_RE = /^[a-z0-9]{6,32}$/;   // a watch (manager.mjs)
 const IMG_FILE_RE = /^(u[0-9a-f]{6,32})(\.t)?\.jpg$/;
@@ -42,6 +44,7 @@ export function createReset(o) {
   const readJson = (p) => { try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch (e) { return null; } };
   const ls = (d) => { try { return fs.readdirSync(d); } catch (e) { return []; } };
   const imgDir = path.join(dir, 'images');
+  const groupCount = () => { const g = readJson(path.join(dir, 'groups.json')); return g && Array.isArray(g.groups) ? g.groups.length : 0; };
   const imgIndex = () => { const a = readJson(path.join(imgDir, 'images.json')); return Array.isArray(a) ? a : []; };
 
   // What would go and what would stay, for a set of parts.
@@ -87,7 +90,7 @@ export function createReset(o) {
       ? (fs.readFileSync(path.join(dir, 'resets.jsonl'), 'utf8').trim().split('\n').filter(Boolean).slice(-1).map((l) => { try { return JSON.parse(l); } catch (e) { return null; } })[0] || null)
       : null;
     return {
-      counts: { watches: ws.length, tournaments: ts.filter((t) => !t.parentId).length, tables: ts.filter((t) => t.parentId).length, cups: cs.length, images: imgIndex().length, tickets: fs.existsSync(path.join(dir, 'tickets.json')) ? 1 : 0 },
+      counts: { watches: ws.length, tournaments: ts.filter((t) => !t.parentId).length, tables: ts.filter((t) => t.parentId).length, cups: cs.length, images: imgIndex().length, tickets: fs.existsSync(path.join(dir, 'tickets.json')) ? 1 : 0, groups: groupCount() },
       running: p.busy, archives: archives(), last, parts: RESET_PARTS, confirm: RESET_CONFIRM,
     };
   }
@@ -111,7 +114,7 @@ export function createReset(o) {
     const name = stampName();
     const arc = path.join(dir, name);
     fs.mkdirSync(arc, { recursive: true });
-    const done = { watches: 0, tournaments: 0, cups: 0, images: 0, tickets: 0 };
+    const done = { watches: 0, tournaments: 0, cups: 0, images: 0, tickets: 0, groups: 0 };
     // Tournaments and cups: their whole folder (tables, deletion logs) goes.
     for (const part of ['tournaments', 'cups']) {
       if (parts.indexOf(part) < 0) continue;
@@ -140,6 +143,8 @@ export function createReset(o) {
     }
     // Tickets and seasons (tickets.mjs): kinds, balances, seasons, log — all of it.
     if (parts.indexOf('tickets') >= 0 && fs.existsSync(path.join(dir, 'tickets.json'))) { move(path.join(dir, 'tickets.json'), path.join(arc, 'tickets.json')); done.tickets = 1; if (o.onTickets) o.onTickets(); }
+    // Groups (groups.mjs): every group, its members and requests.
+    if (parts.indexOf('groups') >= 0 && fs.existsSync(path.join(dir, 'groups.json'))) { done.groups = groupCount(); move(path.join(dir, 'groups.json'), path.join(arc, 'groups.json')); if (o.onGroups) o.onGroups(); }
     count++;
     const line = { at: now(), by: by || 'admin', parts, done, kept: p.kept, archive: name };
     fs.appendFileSync(path.join(dir, 'resets.jsonl'), JSON.stringify(line) + '\n');

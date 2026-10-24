@@ -30,6 +30,7 @@ import { createBadges } from './badges.mjs';
 import { createReset } from './reset.mjs';
 import { createPlayers } from './players.mjs';
 import { createTickets } from './tickets.mjs';
+import { createGroups } from './groups.mjs';
 import { createVerifier } from './verifier.mjs';
 import { playerFacts, missingFor } from './access.mjs';
 import { loadBotStrings, isBotLang } from './botchat.mjs';
@@ -307,11 +308,17 @@ export function createManager(deps) {
     const have = tickets.balance(nick)[need] || 0;
     return have - pending >= 1 ? [] : [{ code: 'ticket', name: ty.name, have, pending }];
   };
+  // Groups (groups.mjs): clubs, teams, lists. One a tournament not yet
+  // validated, or a cup not closed, still asks for cannot be deleted.
+  const groups = createGroups({ dir, Refusal: ArenaRefusal, banOf: (n) => players.banOf(n),
+    usedBy: (id) => tournaments.allRaw().filter((t) => !t.parentId && t.status !== 'validated' && t.access && (t.access.groups || []).some((g) => g.id === id)).map((t) => t.name)
+      .concat(cups.allRaw().filter((c) => c.status !== 'closed' && c.plan && c.plan.access && (c.plan.access.groups || []).some((g) => g.id === id)).map((c) => c.name)) });
   // Who may register (access.mjs): the facts of a player from the signed results.
   const accessCheck = (rules, nick, account) => missingFor(rules, playerFacts(nick, {
     tournaments: () => tournaments.allRaw(),
     medals: (n) => badges.player(n).counts,
     cupPlace: (cupId, n) => { try { const r = cups.get(cupId).standings.rows.find((x) => x.nick.toLowerCase() === String(n).toLowerCase()); return r ? r.place : null; } catch (e) { return null; } },
+    groupsOf: (n) => groups.groupsOf(n),
   }), { account: !!account, verified: !!(account && players.isVerified(account.id)) });
   const tournaments = createTournaments({
     dir, keyFile, imageOk: images.has, players, accessCheck, ticketCheck,
@@ -325,9 +332,9 @@ export function createManager(deps) {
   // Medals: the first three of tournaments and cups, from the signed results.
   const badges = createBadges({ tournaments: tournaments.allRaw, cups: cups.allRaw, stamp: () => reset.count() + ':' + tournaments.generation() + ':' + cups.generation() });
   // Start again from zero (the super admin): reset.mjs.
-  const reset = createReset({ dir, watches: list, live: LIVE, tournaments: tournaments.allRaw, cups: cups.allRaw, Refusal: tournaments.Refusal, onTickets: () => tickets.clear() });
+  const reset = createReset({ dir, watches: list, live: LIVE, tournaments: tournaments.allRaw, cups: cups.allRaw, Refusal: tournaments.Refusal, onTickets: () => tickets.clear(), onGroups: () => groups.clear() });
 
-  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, cups, badges, images, reset, players, tickets, verifier, avatar, resetAvatar, avatarPreset, setAvatarPreset, avatarPresets: () => Object.keys(AVATAR_PRESETS).map(Number), avatarDefaultPreset: AVATAR_DEFAULT_PRESET, MAX_RUNNING };
+  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, cups, badges, images, reset, players, tickets, groups, verifier, avatar, resetAvatar, avatarPreset, setAvatarPreset, avatarPresets: () => Object.keys(AVATAR_PRESETS).map(Number), avatarDefaultPreset: AVATAR_DEFAULT_PRESET, MAX_RUNNING };
 }
 
 /** Public part of the install key, read from its PEM file (null if none yet). */

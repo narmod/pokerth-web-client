@@ -30,6 +30,7 @@ const STATIC = {
   'accounts-ui.mjs': 'text/javascript; charset=utf-8',
   'reset-ui.mjs': 'text/javascript; charset=utf-8',
   'players-ui.mjs': 'text/javascript; charset=utf-8',
+  'groups-ui.mjs': 'text/javascript; charset=utf-8',
   'access-form.mjs': 'text/javascript; charset=utf-8',
   'ticket-form.mjs': 'text/javascript; charset=utf-8',
   'public.mjs': 'text/javascript; charset=utf-8',
@@ -351,6 +352,22 @@ export function createService(o) {
       if (sub === '/tickets/season') return sendK(() => ({ season: K.startSeason(b, who) }));
       return json(res, 404, { ok: false, error: 'unknown' });
     }
+    // Groups (groups.mjs): clubs, teams, lists.
+    if (sub === '/groups' && get) return json(res, 200, { ok: true, groups: td.groups.list() });
+    if (sub.indexOf('/groups/') === 0 && !get) {
+      const b = (await readJson(req)) || {};
+      const G = td.groups;
+      const sendG = (p) => Promise.resolve().then(p).then((v) => { console.log('[arena] groups: ' + sub.slice(8) + ' by ' + who); json(res, 200, Object.assign({ ok: true }, v)); })
+        .catch((e) => json(res, e instanceof T.Refusal ? 400 : 500, { ok: false, code: e.code || undefined, error: (e && e.message) || 'error' }));
+      if (sub === '/groups/create') return sendG(() => G.create(b, who));
+      if (sub === '/groups/update') return sendG(() => G.update(b.id, b.patch || {}, who));
+      if (sub === '/groups/remove') return sendG(() => G.remove(b.id, who));
+      if (sub === '/groups/add') return sendG(() => G.addMember(b.id, b.nick, who));
+      if (sub === '/groups/take') return sendG(() => G.removeMember(b.id, b.nick, who));
+      if (sub === '/groups/approve') return sendG(() => G.approve(b.id, b.nick, who));
+      if (sub === '/groups/decline') return sendG(() => G.decline(b.id, b.nick, who));
+      return json(res, 404, { ok: false, error: 'unknown' });
+    }
     // The players of the install (players.mjs): accounts, bans; the counts from the results.
     if (sub === '/players' && get) {
       const st = playerStats();
@@ -360,9 +377,11 @@ export function createService(o) {
       const nickOf = new Map();
       for (const t of T.allRaw()) for (const p of t.players || []) if (!nickOf.has(p.nick.toLowerCase())) nickOf.set(p.nick.toLowerCase(), p.nick);
       for (const k of st.keys()) if (!nickOf.has(k)) nickOf.set(k, k);
+      for (const g of td.groups.list()) for (const m of g.members) if (!nickOf.has(m.nick.toLowerCase())) nickOf.set(m.nick.toLowerCase(), m.nick);
       const others = [...nickOf.keys()].filter((k) => !seen.has(k));
       const rows = known.map((p) => Object.assign(p, { stats: st.get(p.nick.toLowerCase()) || null }))
         .concat(others.map((k) => ({ id: null, nick: nickOf.get(k), account: null, ban: null, stats: st.get(k) || null })));
+      for (const r of rows) r.groups = td.groups.namesOf(r.nick).map((g) => g.name);
       return json(res, 200, Object.assign({ ok: true, players: rows.sort((a, b) => a.nick.localeCompare(b.nick)) }, P.settings()));
     }
     if (sub.indexOf('/players/') === 0 && !get) {
@@ -561,11 +580,11 @@ export function createService(o) {
       let nick = pm[1]; try { nick = decodeURIComponent(nick); } catch (e) {} nick = nick.slice(0, 64);
       const bal = td.tickets.balance(nick);
       const tickets = Object.keys(bal).map((id) => { const t = td.tickets.typeOf(id); return t ? { name: t.name, count: bal[id] } : null; }).filter(Boolean);
-      return openJson(res, Object.assign({}, td.badges.player(nick), { account: P.hasAccount(nick), verified: P.verifiedOf(nick), tickets, season: td.tickets.season().name }));
+      return openJson(res, Object.assign({}, td.badges.player(nick), { account: P.hasAccount(nick), verified: P.verifiedOf(nick), tickets, season: td.tickets.season().name, groups: td.groups.namesOf(nick) }));
     }
     // A player's own account (players.mjs): POST /arena/api/players/<op>, as
     // the web client already relays that address.
-    if (pm && req.method === 'POST' && ['signup', 'login', 'logout', 'invite', 'password', 'me', 'verify', 'verifystatus'].indexOf(pm[1]) >= 0) {
+    if (pm && req.method === 'POST' && ['signup', 'login', 'logout', 'invite', 'password', 'me', 'verify', 'verifystatus', 'groupjoin', 'groupleave'].indexOf(pm[1]) >= 0) {
       if (limited('player', ip)) return json(res, 429, { ok: false, code: 'tooMany', error: 'too many attempts, try again later' });
       const b = (await readJson(req)) || {};
       const out = (p) => Promise.resolve().then(p).then((v) => json(res, 200, Object.assign({ ok: true }, v)))
@@ -582,10 +601,16 @@ export function createService(o) {
         if (pm[1] === 'verify') return out(() => td.verifier.request(s, String(b.ref || '')).catch((e) => { throw Object.assign(new T.Refusal(e.message), { code: e.code || 'refused' }); }));
         return out(() => ({ pending: td.verifier.status(s), verified: P.verifiedOf(s.nick) }));
       }
-      return out(() => { const s = P.session(b.session); if (!s) throw Object.assign(new T.Refusal('your session has ended: sign in again'), { code: 'session' }); return { player: s, signup: P.settings().signup }; });
+      // Groups (groups.mjs): join (open, with the code, or ask), leave.
+      if (pm[1] === 'groupjoin' || pm[1] === 'groupleave') {
+        const s = P.session(b.session);
+        if (!s) return json(res, 401, { ok: false, code: 'session', error: 'your session has ended: sign in again' });
+        return out(() => Object.assign(pm[1] === 'groupjoin' ? td.groups.join(String(b.id || ''), s, b.code) : td.groups.leave(String(b.id || ''), s), { mine: td.groups.mine(s.nick) }));
+      }
+      return out(() => { const s = P.session(b.session); if (!s) throw Object.assign(new T.Refusal('your session has ended: sign in again'), { code: 'session' }); return { player: s, signup: P.settings().signup, groups: td.groups.mine(s.nick) }; });
     }
     // How accounts are made, and the servers a nickname can be proved on (the LAN servers of this install).
-    if (sub === '/players' && req.method === 'GET') return json(res, 200, { ok: true, signup: P.settings().signup, servers: (await td.servers()).map((s) => ({ ref: s.ref, name: s.name, host: s.host, port: s.port })) });
+    if (sub === '/players' && req.method === 'GET') return json(res, 200, { ok: true, signup: P.settings().signup, servers: (await td.servers()).map((s) => ({ ref: s.ref, name: s.name, host: s.host, port: s.port })), groups: td.groups.publicList() });
     if (sub === '/badges' && req.method === 'GET') {
       if (query.nicks) return openJson(res, td.badges.many(String(query.nicks).split(',').map((x) => x.trim()).filter(Boolean)));
       return openJson(res, td.badges.everyone());

@@ -6,9 +6,13 @@
 // English only, like the rest of the organizer side.
 // ═══════════════════════════════════════════════════════════════════
 
-let cups = [];
+let cups = [], groups = [];
+// The cups and the groups (service 0.29.0) the conditions can name.
 export function loadAccessCups(api) {
-  return api('/admin/arena/cups/list').then((d) => { if (d && d.ok) cups = d.cups || []; }).catch(() => {});
+  return Promise.all([
+    api('/admin/arena/cups/list').then((d) => { if (d && d.ok) cups = d.cups || []; }).catch(() => {}),
+    api('/admin/arena/groups').then((d) => { if (d && d.ok) groups = (d.groups || []).map((g) => ({ id: g.id, name: g.name })); }).catch(() => {}),
+  ]);
 }
 
 export function accessHtml(p, a, esc) {
@@ -22,7 +26,16 @@ export function accessHtml(p, a, esc) {
     '<div class="row"><div><label for="' + p + 'medal">Medals</label><select id="' + p + 'medal">' +
       [['', 'no condition'], ['any', 'at least one medal'], ['gold', 'at least one gold medal'], ['none', 'no medal yet (beginners)']].map((o) => '<option value="' + o[0] + '"' + ((a.noMedal ? 'none' : a.medal || '') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select></div>' +
     '<div><label for="' + p + 'cup">A place in a cup</label><select id="' + p + 'cup">' + cupOpts + '</select></div>' + num('top', 'within the first …', a.cup ? a.cup.top : '', '8') + '</div>' +
+    groupsHtml(p, a, esc) +
     '<p class="small muted">Points: each validated tournament (not Friendly) gives the players finished behind + 1, as in cups. Counted from this site\'s validated results only. A player refused is told what is missing; you can still add him yourself.</p></div>';
+}
+
+// A member of one of these groups (any one is enough).
+function groupsHtml(p, a, esc) {
+  const chosen = (a.groups || []).map((g) => g.id);
+  const all = groups.concat((a.groups || []).filter((g) => !groups.some((x) => x.id === g.id)));
+  if (!all.length) return '<p class="small muted">Groups: none yet (Players › Groups).</p>';
+  return '<fieldset class="grpick"><legend>A member of one of these groups</legend>' + all.map((g) => '<label class="ck"><input type="checkbox" name="' + p + 'grp" value="' + esc(g.id) + '" data-name="' + esc(g.name) + '"' + (chosen.indexOf(g.id) >= 0 ? ' checked' : '') + '> ' + esc(g.name) + '</label>').join('') + '</fieldset>';
 }
 
 export function readAccess(p) {
@@ -35,6 +48,8 @@ export function readAccess(p) {
   const out = { identity: $('acct').value || undefined, minTournaments: n('min') || undefined, maxTournaments: n('max') == null ? undefined : n('max'), minPoints: n('pts') || undefined,
     medal: medal === 'any' || medal === 'gold' ? medal : undefined, noMedal: medal === 'none' ? true : undefined,
     cup: cupId ? { id: cupId, top: n('top') || 8, name: c ? c.name : '' } : undefined };
+  const gs = [...document.querySelectorAll('input[name="' + p + 'grp"]:checked')].map((x) => ({ id: x.value, name: x.dataset.name || '' }));
+  if (gs.length) out.groups = gs;
   Object.keys(out).forEach((k) => out[k] === undefined && delete out[k]);
   return out;
 }
@@ -52,5 +67,6 @@ export function accessSummary(a) {
   if (a.medal === 'gold') out.push('a gold medal');
   if (a.noMedal) out.push('no medal');
   if (a.cup) out.push('top ' + a.cup.top + ' of « ' + (a.cup.name || '?') + ' »');
+  if (a.groups && a.groups.length) out.push('group ' + a.groups.map((g) => '« ' + (g.name || '?') + ' »').join(' or '));
   return out.join(' · ') || 'anyone';
 }

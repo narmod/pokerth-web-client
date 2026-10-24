@@ -10,6 +10,25 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.29.0 — 2026-10-24
+
+### Added
+- **Groups**: clubs, teams, lists of guests. An organizer makes a group (a
+  name, a public line about it) and chooses how a player gets in: by
+  invitation (an organizer adds him), on request (a signed-in player asks,
+  an organizer accepts or declines), with a code (typed by a signed-in
+  player; a new code at any time) or open. An organizer can always add any
+  nickname, with or without an account, or take one out; a player leaves
+  when he likes. A banned player cannot join or ask. Players › Groups on the
+  organizer side; the group chips on each player in the Players list.
+- Every group is public: the players' page lists them with their members,
+  with Join / Ask to join / the code field / Leave for a signed-in player;
+  the player's page shows his groups.
+- « A member of one of these groups » in « Who may register », for
+  tournaments and cups; the refusal names the group. A group still asked for
+  by a tournament not validated or a cup not closed cannot be deleted.
+- Reset: « Groups » (archived like the rest). 22 strings in the 83 languages.
+
 ## 0.28.0 — 2026-10-24
 
 ### Added

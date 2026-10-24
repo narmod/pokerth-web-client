@@ -47,6 +47,7 @@ function accessList(a) {
   if (a.medal === 'gold') out.push(t('acc_gold'));
   if (a.noMedal) out.push(t('acc_noMedal'));
   if (a.cup) out.push(t('acc_cup', { n: a.cup.top, name: a.cup.name || '' }));
+  if (a.groups && a.groups.length) out.push(t('acc_group', { name: a.groups.map((g) => g.name).join(' / ') }));
   return out;
 }
 function missingText(miss) {
@@ -54,6 +55,7 @@ function missingText(miss) {
     if (m.code === 'minTournaments' || m.code === 'maxTournaments' || m.code === 'minPoints' || m.code === 'noMedal') return t('miss_' + m.code, { need: m.need, have: m.have });
     if (m.code === 'cup') return t('miss_cup', { need: m.need, name: m.name || '', have: m.have || '—' });
     if (m.code === 'account' || m.code === 'medal' || m.code === 'gold' || m.code === 'verified') return t('acc_' + m.code);
+    if (m.code === 'group') return t('acc_group', { name: m.name || '' });
     if (m.code === 'ticket') return t(m.pending ? 'miss_ticketPending' : 'miss_ticket', { name: m.name, have: m.have, pending: m.pending });
     return t('err_' + m.code);
   });
@@ -80,6 +82,7 @@ function askEligible(path, body, key, then) {
 // and cup (kept in this browser under pth_arena_player).
 const PSESS = 'pth_arena_player';
 let me = null, signupMode = 'invite', acctFlash = null, vfServers = [], vf = null, vfTimer = null;
+let grAll = [], grMine = { member: [], requested: [] }, grFlash = null, grOpen = null;   // groups (service 0.29.0)
 function acctLoad() { try { const v = JSON.parse(lsGet(PSESS) || 'null'); return v && v.token ? v : null; } catch (e) { return null; } }
 function acctSave(v) { try { if (v) localStorage.setItem(PSESS, JSON.stringify(v)); else localStorage.removeItem(PSESS); } catch (e) {} }
 // What this browser can act with on a tournament: the codes kept here, and
@@ -170,7 +173,57 @@ async function showList() {
     '<span class="tc-top"><span class="tname">' + esc(c.name) + '</span><span class="chip ' + (c.status === 'closed' ? 'done' : 'live') + '">' + T(c.status === 'closed' ? 'cupStatusClosed' : 'cupStatusOpen') + '</span></span>' +
     '<span class="muted small">' + T('cupEvents', { n: c.events }) + (c.leader ? ' · ' + T('cupLeader', { nick: esc(c.leader) }) : '') + '</span></span></a></li>').join('') + '</ul></section>' : '';
   $('view').innerHTML = (groups.length ? groups.map((g) => '<section class="card"><h2>' + T(g[0]) + '</h2><ul class="tlist">' + g[1].map(card).join('') + '</ul></section>').join('')
-    : '<section class="card"><p class="empty">' + T('none') + '</p></section>') + cupsHtml;
+    : '<section class="card"><p class="empty">' + T('none') + '</p></section>') + cupsHtml + '<div id="grBox">' + groupsHtml() + '</div>';
+  wireGroups();
+}
+
+// ── groups (service 0.29.0): every group is public; join, ask, leave ──
+const GR_MODE = { invite: 'grModeInvite', request: 'grModeRequest', code: 'grModeCode', open: 'grModeOpen' };
+function groupsHtml() {
+  if (!grAll.length) return '';
+  let h = '<section class="card"><h2>' + T('grTitle') + '</h2><p class="small muted">' + T('grHint') + '</p>';
+  if (grFlash) { h += '<div class="msg ' + (grFlash.bad ? 'bad' : 'ok') + '" role="status">' + grFlash.html + '</div>'; grFlash = null; }
+  if (!me && grAll.some((g) => g.join !== 'invite')) h += '<p class="small">' + T('grSignIn') + '</p>';
+  h += '<ul class="glist">' + grAll.map((g) => {
+    const id = esc(g.id), isIn = grMine.member.indexOf(g.id) >= 0, asked = grMine.requested.indexOf(g.id) >= 0;
+    let a = '';
+    if (me && isIn) a = '<span class="chip done">✓ ' + T('grMember') + '</span> <button type="button" class="ghost mini" data-grop="leave" data-id="' + id + '">' + T('grLeave') + '</button>';
+    else if (me && asked) a = '<span class="small muted">' + T('grAsked') + '</span> <button type="button" class="ghost mini" data-grop="leave" data-id="' + id + '">' + T('grCancelAsk') + '</button>';
+    else if (g.join === 'invite') a = '<span class="small muted">' + T('grInviteOnly') + '</span>';
+    else if (me && g.join === 'open') a = '<button type="button" data-grop="join" data-id="' + id + '">' + T('grJoin') + '</button>';
+    else if (me && g.join === 'request') a = '<button type="button" data-grop="join" data-id="' + id + '">' + T('grAsk') + '</button>';
+    else if (me && g.join === 'code') a = '<form data-grop="code" data-id="' + id + '"><label class="sr" for="grc_' + id + '">' + T('grCode') + '</label><input id="grc_' + id + '" maxlength="12" autocapitalize="characters" spellcheck="false" placeholder="' + T('grCode') + '" required><button type="submit">' + T('grJoin') + '</button></form>';
+    return '<li><div class="gname"><b>' + esc(g.name) + '</b> <span class="chip">' + T(GR_MODE[g.join] || 'grModeInvite') + '</span>' + (g.about ? '<br><span class="small">' + esc(g.about) + '</span>' : '') +
+      (g.members.length ? '<details class="sub"' + (grOpen === g.id ? ' open' : '') + ' data-grid="' + id + '"><summary class="small">' + T('grMembers', { n: g.members.length }) + '</summary><p class="small">' + g.members.map(nickLink).join(', ') + '</p></details>' : '<br><span class="small muted">' + T('grMembers', { n: 0 }) + '</span>') +
+      '</div><div>' + a + '</div></li>';
+  }).join('') + '</ul></section>';
+  return h;
+}
+function wireGroups() {
+  const box = $('grBox');
+  if (!box) return;
+  fillMedals();
+  const after = (d) => {
+    if (!d.ok) grFlash = { bad: true, html: errText(d) };
+    else {
+      grMine = d.mine || grMine;
+      const i = grAll.findIndex((g) => g.id === d.group.id); if (i >= 0) grAll[i] = d.group;
+      grFlash = { html: d.status === 'member' ? T('grJoined', { name: d.group.name }) : d.status === 'requested' ? T('grAsked') : T('grLeft', { name: d.group.name }) };
+    }
+    box.innerHTML = groupsHtml(); fillMedals();
+  };
+  box.onclick = (ev) => {
+    const b = ev.target.closest('button[data-grop]');
+    if (!b || !me) return;
+    api('/players/' + (b.dataset.grop === 'leave' ? 'groupleave' : 'groupjoin'), { session: me.token, id: b.dataset.id }).then(after).catch(() => {});
+  };
+  box.onsubmit = (ev) => {
+    const f = ev.target.closest('form[data-grop="code"]');
+    if (!f || !me) return;
+    ev.preventDefault();
+    api('/players/groupjoin', { session: me.token, id: f.dataset.id, code: $('grc_' + f.dataset.id).value.trim().toUpperCase() }).then(after).catch(() => {});
+  };
+  box.addEventListener('toggle', (ev) => { const d = ev.target; if (d.dataset && d.dataset.grid) grOpen = d.open ? d.dataset.grid : (grOpen === d.dataset.grid ? null : grOpen); }, true);
 }
 
 // ── one tournament ─────────────────────────────────────────────────
@@ -366,7 +419,7 @@ function renderOne() {
 function invQs(sep) { const i = inviteFromUrl(); return i ? sep + 'invite=' + encodeURIComponent(i) : ''; }
 function errText(d) {
   if (d && d.code === 'access') return T('accessYouMiss') + ' ' + esc(missingText(d.missing).join(' · '));
-  return T('err_' + (['badNick', 'taken', 'badCode', 'tooMany', 'notFound', 'checkInNotYet', 'checkInClosed', 'noCheckIn', 'alreadyIn', 'notPdb', 'noGame', 'noLogWitness', 'notPlayer', 'tooLarge', 'noTablePass', 'tableNotOpen', 'absentPlayer', 'notCheckedIn', 'nickClaimed', 'banned', 'accountNeeded', 'session', 'signupClosed', 'badLogin', 'shortPassword', 'passwordIsNick', 'badInvite', 'badPassword'].indexOf(d.code) >= 0 ? d.code : 'error'));
+  return T('err_' + (['badNick', 'taken', 'badCode', 'tooMany', 'notFound', 'checkInNotYet', 'checkInClosed', 'noCheckIn', 'alreadyIn', 'notPdb', 'noGame', 'noLogWitness', 'notPlayer', 'tooLarge', 'noTablePass', 'tableNotOpen', 'absentPlayer', 'notCheckedIn', 'nickClaimed', 'banned', 'accountNeeded', 'session', 'signupClosed', 'badLogin', 'shortPassword', 'passwordIsNick', 'badInvite', 'badPassword', 'groupUnknown', 'groupInvite', 'groupCode'].indexOf(d.code) >= 0 ? d.code : 'error'));
 }
 // Table passwords already shown in this page (they stay through the refreshes).
 const shownPass = {};
@@ -487,6 +540,7 @@ async function showPlayer(nick) {
   h += d.medals.length ? '<ul class="tlist">' + d.medals.map((m) => '<li class="medalrow"><span class="big" aria-hidden="true">' + MEDAL[m.medal] + '</span><span><b>' + link(m) + '</b><br><span class="muted small">' + T(m.kind === 'cup' ? 'kindCup' : 'kindTournament') + ' · ' + T('placeOf', { place: m.place, of: m.of }) + (m.at ? ' · ' + day(m.at) : '') + '</span></span></li>').join('') + '</ul>'
     : '<p class="empty">' + T('noMedal') + '</p>';
   h += '<p class="small muted">' + T('medalRules') + '</p></section>';
+  if (d.groups && d.groups.length) h += '<section class="card"><h2>' + T('grTitle') + '</h2><ul class="chips">' + d.groups.map((g) => '<li>' + esc(g.name) + '</li>').join('') + '</ul></section>';
   if (d.tickets && d.tickets.length) h += '<section class="card"><h2>' + T('tkMine', { season: d.season || '' }) + '</h2><ul class="chips">' + d.tickets.map((x) => '<li>' + esc(x.name) + ' <b>×' + esc(x.count) + '</b></li>').join('') + '</ul></section>';
   if (d.results.length) {
     h += '<section class="card"><h2>' + T('resultsTitle') + '</h2><div class="tablewrap"><table><thead><tr><th>' + T('colDate') + '</th><th>' + T('colEvent') + '</th><th class="num">' + T('colPlace') + '</th></tr></thead><tbody>' +
@@ -702,7 +756,9 @@ function renderAcct() {
         : '<p class="small muted">' + T('accInviteOnly') + '</p>') + '</details>';
   }
   box.innerHTML = h;
-  const signedIn = (d) => { me = { token: d.token, nick: d.player.nick }; acctSave(me); acctFlash = { html: T('accWelcome', { nick: d.player.nick }) }; if (pinviteFromHash()) history.replaceState(null, '', location.pathname + location.search); renderAcct(); route(); };
+  const signedIn = (d) => { me = { token: d.token, nick: d.player.nick }; acctSave(me); acctFlash = { html: T('accWelcome', { nick: d.player.nick }) }; if (pinviteFromHash()) history.replaceState(null, '', location.pathname + location.search); renderAcct(); route();
+    // My groups, for the groups card.
+    api('/players/me', { session: d.token }).then((w) => { if (w && w.ok) { grMine = w.groups || grMine; const b = $('grBox'); if (b) { b.innerHTML = groupsHtml(); fillMedals(); } } }).catch(() => {}); };
   const bad = (d) => { acctFlash = { bad: true, html: errText(d) }; renderAcct(); };
   const f1 = $('accInForm');
   if (f1) f1.addEventListener('submit', async (ev) => { ev.preventDefault(); const d = await api('/players/login', { nick: $('accNick').value.trim(), password: $('accPw').value }); if (d.ok) signedIn(d); else bad(d); });
@@ -715,7 +771,7 @@ function renderAcct() {
   const vg = $('vfForm');
   if (vg) vg.addEventListener('submit', async (ev) => { ev.preventDefault(); const d = await api('/players/verify', { session: me.token, ref: $('vfSrv').value }); if (!d.ok) { acctFlash = { bad: true, html: errText(d) }; return renderAcct(); } vf = { pending: Object.assign({ done: false }, d), verified: (vf && vf.verified) || [] }; renderAcct(); vfPoll(); });
   const o = $('accOut');
-  if (o) o.addEventListener('click', async () => { const tk = me && me.token; me = null; acctSave(null); if (tk) api('/players/logout', { session: tk }).catch(() => {}); renderAcct(); route(); });
+  if (o) o.addEventListener('click', async () => { const tk = me && me.token; me = null; acctSave(null); grMine = { member: [], requested: [] }; if (tk) api('/players/logout', { session: tk }).catch(() => {}); renderAcct(); route(); });
 }
 
 // ── proving the nickname on a game server (service 0.28.0) ──────────
@@ -787,7 +843,8 @@ let theme = null;
   const [st, who] = await Promise.all([api('/players').catch(() => ({})), saved ? api('/players/me', { session: saved.token }).catch(() => ({})) : Promise.resolve(null)]);
   signupMode = (st && st.signup) || 'invite';
   vfServers = (st && st.servers) || [];
-  if (saved && who && who.ok) me = { token: saved.token, nick: who.player.nick }; else if (saved && who && who.code === 'session') acctSave(null);
+  grAll = (st && st.groups) || [];
+  if (saved && who && who.ok) { me = { token: saved.token, nick: who.player.nick }; grMine = who.groups || grMine; } else if (saved && who && who.code === 'session') acctSave(null);
   renderAcct();
   if (me) vfPoll();
   route();

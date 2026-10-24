@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════
-// Arena — who may register (service 0.26.0, 2026-10-24).
+// Arena — who may register (service 0.26.0, 2026-10-24; groups 0.29.0).
 //
 // Conditions an organizer puts on a tournament or a cup, combined (all must
 // hold), checked at every registration made on the players' page. The
@@ -16,6 +16,7 @@
 //   medal           'any' | 'gold': at least one medal (of gold)
 //   noMedal         never a medal (beginners)
 //   cup             { id, top }: within the first `top` of that cup's standings
+//   groups          [{ id, name }]: a member of one of these groups (groups.mjs)
 //
 // The facts come from the signed results of this install only (decided
 // 2026-10-24). A refusal lists what is missing, with what the player has,
@@ -38,13 +39,19 @@ export function cleanAccess(a) {
   if (a.noMedal === true) out.noMedal = true;
   if (out.medal && out.noMedal) delete out.noMedal;
   if (a.cup && a.cup.id && /^[a-z0-9]{6,32}$/.test(String(a.cup.id))) { const top = int(a.cup.top, 1, 1000); if (top) out.cup = { id: String(a.cup.id), top, name: String(a.cup.name || '').slice(0, 60) }; }
+  if (Array.isArray(a.groups)) {
+    const seen = new Set();
+    const gs = a.groups.filter((g) => g && /^g[0-9a-f]{10}$/.test(String(g.id)) && !seen.has(g.id) && seen.add(g.id)).slice(0, 10).map((g) => ({ id: String(g.id), name: String(g.name || '').slice(0, 40) }));
+    if (gs.length) out.groups = gs;
+  }
   if (out.minTournaments != null && out.maxTournaments != null && out.minTournaments > out.maxTournaments) delete out.maxTournaments;
   return Object.keys(out).length ? out : null;
 }
 
 /**
  * What the results say of one player.
- * deps: { tournaments: () => [t], medals: (nick) => { gold, silver, bronze }, cupPlace: (cupId, nick) => place | null }
+ * deps: { tournaments: () => [t], medals: (nick) => { gold, silver, bronze }, cupPlace: (cupId, nick) => place | null,
+ *         groupsOf?: (nick) => [groupId] }
  */
 export function playerFacts(nick, deps) {
   const k = String(nick || '').toLowerCase();
@@ -58,7 +65,7 @@ export function playerFacts(nick, deps) {
     if (t.profile !== 'friendly') points += me.points;
   }
   const m = (deps.medals && deps.medals(nick)) || { gold: 0, silver: 0, bronze: 0 };
-  return { tournaments, points: Math.round(points * 10) / 10, medals: m, cupPlace: (id) => (deps.cupPlace ? deps.cupPlace(id, nick) : null) };
+  return { tournaments, points: Math.round(points * 10) / 10, medals: m, cupPlace: (id) => (deps.cupPlace ? deps.cupPlace(id, nick) : null), groups: deps.groupsOf ? deps.groupsOf(nick) : [] };
 }
 
 /**
@@ -82,6 +89,7 @@ export function missingFor(rules, facts, who) {
     const place = facts.cupPlace(rules.cup.id);
     if (!(place && place <= rules.cup.top)) miss.push({ code: 'cup', need: rules.cup.top, have: place || null, name: rules.cup.name || '' });
   }
+  if (rules.groups && !rules.groups.some((g) => (facts.groups || []).indexOf(g.id) >= 0)) miss.push({ code: 'group', name: rules.groups.map((g) => g.name).join(' / ') });
   return miss;
 }
 
@@ -97,6 +105,7 @@ export function describeMissing(miss) {
     gold: 'a gold medal',
     noMedal: 'no medal yet (you have ' + m.have + ')',
     cup: 'a place in the first ' + m.need + ' of the cup « ' + m.name + ' »' + (m.have ? ' (you are ' + m.have + ')' : ''),
+    group: 'a member of the group « ' + m.name + ' »',
     ticket: 'a « ' + m.name + ' » ticket (you have ' + m.have + (m.pending ? ', ' + m.pending + ' waiting on other registrations' : '') + ')',
   }[m.code] || m.code)).join('; ');
 }

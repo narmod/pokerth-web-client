@@ -42,6 +42,7 @@ export function createPlayersView(deps) {
       const a = r.account ? ACC[r.account] : null;
       const s = r.stats;
       let h = '<li class="acc"><div><b>' + esc(r.nick) + '</b> ' + (a ? '<span class="chip ' + a[1] + '">' + esc(a[0]) + '</span> ' : '') + (r.ban ? '<span class="chip bad">banned</span>' : '') +
+        (r.groups && r.groups.length ? r.groups.map((g) => ' <span class="chip">' + esc(g) + '</span>').join('') : '') +
         (r.verified && r.verified.length ? r.verified.map((v) => ' <span class="chip live" title="' + esc(when(v.at)) + '">verified on ' + esc(v.server) + '</span>').join('') : '') +
         '<br><span class="small muted">' + (s ? s.tournaments + ' tournament' + (s.tournaments === 1 ? '' : 's') + ' · ' + s.wins + ' won · ' + s.podiums + ' podium' + (s.podiums === 1 ? '' : 's') + ' · last ' + esc(when(s.last)) : 'no validated result') +
         (r.lastLoginAt ? ' · last sign-in ' + esc(when(r.lastLoginAt)) : '') + (r.account === 'invited' && r.inviteExpires ? ' · link valid until ' + esc(when(r.inviteExpires)) : '') + '</span>' +

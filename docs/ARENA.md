@@ -750,6 +750,36 @@ password; four roles).
 - Players keep their nickname and personal code for now (player accounts:
   later).
 
+## Groups (service `0.29.0`)
+
+Code: `arena/lib/groups.mjs`, `arena/public/groups-ui.mjs`; tests:
+`arena/test/test-arena-groups.mjs`.
+
+- Clubs, teams, lists of guests, made by organizers (Players › Groups):
+  a name (unique, any case), a public line, and how a player gets in —
+  `invite` (an organizer adds him), `request` (a signed-in player asks, an
+  organizer accepts or declines), `code` (8 characters, renewable) or
+  `open`. An organizer adds any nickname (an account or not) and takes one
+  out, whatever the way in. Stored in `groups.json` (mode 600).
+- Members are nicknames, any case. A player acts with his account:
+  `POST /arena/api/players/groupjoin { session, id, code? }` and
+  `/groupleave { session, id }` (also takes back a request); both answer
+  `{ status: member | requested | out, group, mine }`. A banned player is
+  refused (`banned`); other refusals: `groupUnknown`, `groupInvite`,
+  `groupCode`.
+- Public (decided 2026-10-24): `GET /arena/api/players` lists every group
+  with its members (never its code); `GET /arena/api/players/<nick>` adds his
+  groups; `/players/me` adds `{ member, requested }`.
+- Organizer API: `GET /admin/arena/groups`; `POST /admin/arena/groups/`
+  `create`, `update { id, patch: { name, about, join, newCode } }`,
+  `remove`, `add`, `take`, `approve`, `decline` (`{ id, nick }`).
+- Access: `groups: [{ id, name }]` — a member of any one of them; missing:
+  `{ code: 'group', name }`. A group asked for by a tournament not yet
+  validated or a cup not closed cannot be deleted (`usedBy`).
+- A member added without an account can be impersonated on a LAN server:
+  combine with the identity « account » or « verified » when it matters.
+- Reset: the part `groups` archives `groups.json`.
+
 ## A nickname proved on a game server (service `0.28.0`)
 
 Code: `arena/lib/verifier.mjs`; tests: `arena/test/test-arena-verify.mjs`.
@@ -1170,6 +1200,8 @@ that version only: the web client's version, its service worker and its
 | `arena/lib/lobby.mjs` | Lobby reader (guest login, tables, server type). |
 | `arena/lib/host.mjs` | The director that opens a tournament table: create, invite, kick, hand over, then watch. |
 | `arena/lib/worker.mjs` | One watch in a detached process, state and files on disk. |
+| `arena/lib/groups.mjs` | Groups: clubs, teams, lists; the four ways in; members for the access conditions. |
+| `arena/public/groups-ui.mjs` | Organizer side, Players › Groups. |
 | `arena/lib/verifier.mjs` | A nickname proved on a game server: codes, the lobby bot, the account marked verified. |
 | `arena/lib/tickets.mjs` | Tickets and seasons: kinds, balances, the moves of a validated tournament, seasons. |
 | `arena/lib/access.mjs` | Who may register: conditions, a player's facts from the results, what is missing. Pure. |
