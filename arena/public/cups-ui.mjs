@@ -8,6 +8,8 @@
 // Talks to /admin/arena/cups/* with the organizer's key.
 // ═══════════════════════════════════════════════════════════════════
 
+import { createCupPlan, FORMAT_TEXT } from './cup-plan-ui.mjs';
+
 export function createCupsView(deps) {
   const { api, esc } = deps;
   const IP = deps.images;
@@ -20,6 +22,10 @@ export function createCupsView(deps) {
   let cur = null, tournaments = [];
   const fmt = (x) => (Math.round(x * 10) / 10).toString();
   const msg = (el, text, bad) => { const m = $(el); if (m) { m.textContent = text || ''; m.className = 'msg' + (text ? (bad ? ' bad' : ' ok') : ''); } };
+  // The cup's programme (cup-plan-ui.mjs): how it runs, its dates, its tournaments.
+  const plan = createCupPlan({ api, esc, servers: () => (deps.form ? deps.form().servers() : []), langOptions: (s) => (deps.form ? deps.form().langOptions(s) : '<option value="en">English (en)</option>'),
+    TF: () => deps.form().TF, tournaments: () => tournaments, openTournament: deps.openTournament,
+    say: (t, bad) => msg('cDMsg', t, bad), shown: (d, note) => { show(d, note); refresh(); } });
 
   function refresh() {
     if (!IP.ready()) IP.load().then(() => { if (!IP.ready()) return; $('cImg').innerHTML = IP.html('cim_new', 'cup', null); if (cur) show(cur); }).catch(() => {});
@@ -29,7 +35,7 @@ export function createCupsView(deps) {
       if (!d.ok) return;
       const list = d.cups || [];
       $('cList').innerHTML = list.length ? list.map((c) => '<li><button type="button" data-cid="' + esc(c.id) + '"' + (cur && cur.id === c.id ? ' aria-current="true"' : '') + '><span class="wt">' + esc(c.name) +
-        ' <span class="muted small">· ' + c.events + ' tournament' + (c.events === 1 ? '' : 's') + ' · ' + (c.bestOf ? 'best ' + c.bestOf : 'every result') + ' · ' + esc(c.visibility) + '</span></span><span class="chip ' + (c.status === 'closed' ? 'done' : 'live') + '">' + esc(c.status) + '</span></button></li>').join('')
+        ' <span class="muted small">· ' + (c.format ? esc(FORMAT_TEXT[c.format][0].toLowerCase()) + ' · ' : '') + c.events + ' tournament' + (c.events === 1 ? '' : 's') + ' · ' + (c.bestOf ? 'best ' + c.bestOf : 'every result') + ' · ' + esc(c.visibility) + '</span></span><span class="chip ' + (c.status === 'closed' ? 'done' : 'live') + '">' + esc(c.status) + '</span></button></li>').join('')
         : '<li class="empty">None yet.</li>';
     }).catch(() => {});
   }
@@ -56,6 +62,8 @@ export function createCupsView(deps) {
     h += '<details class="sub"><summary>Image</summary>' + IP.html('cim_cur', 'cup', c.image || null) + '</details>';
     h += '<p class="small">Players\' page: <a class="mono" href="' + esc(link) + '" target="_blank" rel="noopener">' + esc(link) + '</a></p>';
     h += '<div class="msg' + (note ? (bad ? ' bad' : ' ok') : '') + '" id="cDMsg" role="status">' + esc(note || '') + '</div>';
+    h += plan.blockHtml(c);
+    const planned = !!c.planView;
     // Tournaments of the cup.
     h += '<h3>Tournaments</h3>';
     h += st.events.length ? '<ul class="rank">' + st.events.map((e) => '<li><span class="nk">' + esc(e.label) + ' <span class="chip ' + (e.validated ? 'done' : '') + '">' + esc(e.validated ? 'validated' : e.status) + '</span>' +
@@ -63,9 +71,9 @@ export function createCupsView(deps) {
       (e.qualify && e.next != null ? ' · first ' + esc(e.qualify) + ' → ' + esc((st.events[e.next] || {}).label || '?') + (e.advanced ? ' (done: ' + esc(e.advanced.nicks.join(', ')) + ')' : '') : '') +
       (e.final ? ' · final' + (e.fromStandings ? ', top ' + esc(e.fromStandings) + ' of the standings' + (e.advanced ? ' (done)' : '') : '') : '') + '</span></span>' +
       (e.final && e.fromStandings && !e.advanced && !closed ? '<button type="button" data-cact="qualify" data-i="' + e.index + '">Qualify the top ' + esc(e.fromStandings) + '</button>' : '') +
-      (!closed ? '<button type="button" data-cact="rm" data-i="' + e.index + '" aria-label="Remove ' + esc(e.label) + '">Remove</button>' : '') + '</li>').join('') + '</ul>'
-      : '<p class="empty">No tournament yet: add them below.</p>';
-    if (!closed) {
+      (!closed && !planned ? '<button type="button" data-cact="rm" data-i="' + e.index + '" aria-label="Remove ' + esc(e.label) + '">Remove</button>' : '') + '</li>').join('') + '</ul>'
+      : '<p class="empty">' + (planned ? 'No tournament yet: they come from the programme.' : 'No tournament yet: set a programme above, or add them below.') + '</p>';
+    if (!closed && !planned) {
       const inCup = new Set(st.events.map((e) => e.tournamentId));
       const opts = tournaments.filter((t) => !inCup.has(t.id)).map((t) => '<option value="' + esc(t.id) + '">' + esc(t.name) + ' (' + esc(t.status) + ')</option>').join('');
       h += '<details class="sub"><summary>Add a tournament</summary><div class="row"><div><label for="ceT">Tournament</label><select id="ceT">' + (opts || '<option value="">— none left —</option>') + '</select></div>' +
@@ -97,6 +105,7 @@ export function createCupsView(deps) {
         '<button type="button" class="danger" data-cact="delete">Delete the cup</button></div></details>';
     }
     $('cDetailBody').innerHTML = h;
+    plan.mount();
   }
   function call(path, body, okText) {
     return api(path, Object.assign({ id: cur.id }, body)).then((d) => {
@@ -104,6 +113,8 @@ export function createCupsView(deps) {
       show(d, okText); refresh();
     }).catch(() => msg('cDMsg', 'Network error', true));
   }
+  $('cDetailBody').addEventListener('click', (ev) => { if (cur) plan.onClick(ev); });
+  $('cDetailBody').addEventListener('change', (ev) => { if (cur) plan.onChange(ev); });
   $('cDetailBody').addEventListener('click', (ev) => {
     const b = ev.target.closest('button[data-cact]');
     if (!b || !cur) return;

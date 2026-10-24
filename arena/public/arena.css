@@ -203,3 +203,14 @@ body[data-role="referee"] .org-only, body[data-role="viewer"] .org-only{display:
 .rparts{display:grid;gap:10px;margin:4px 0 8px}
 .rparts .chk{display:block;padding:8px 10px;border:1px solid var(--line);border-radius:8px;cursor:pointer}
 .rparts .chk input{width:auto;min-height:0;margin:0 6px 0 0;vertical-align:middle}
+/* Cup programme (organizer) */
+.pdates{list-style:decimal;margin:6px 0 4px;padding-left:28px;display:grid;gap:6px}
+.pdate{display:flex;gap:8px;align-items:center}
+.pdate input{flex:1;min-width:0}
+.pstep{border-left:3px solid var(--line);padding:4px 0 4px 12px;margin:10px 0}
+.pgen{align-items:flex-end}
+.pslots li{flex-wrap:wrap}
+.pslots .nk{flex:1 1 260px}
+.pslots .pact{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.pslots .pact select{width:auto;max-width:220px;min-width:0}
+.pslots li.next{border-left:3px solid var(--brass);padding-left:8px}

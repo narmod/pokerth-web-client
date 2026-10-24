@@ -24,6 +24,7 @@ const STATIC = {
   'organizer.mjs': 'text/javascript; charset=utf-8',
   'tournaments-ui.mjs': 'text/javascript; charset=utf-8',
   'cups-ui.mjs': 'text/javascript; charset=utf-8',
+  'cup-plan-ui.mjs': 'text/javascript; charset=utf-8',
   'table-form.mjs': 'text/javascript; charset=utf-8',
   'image-pick.mjs': 'text/javascript; charset=utf-8',
   'accounts-ui.mjs': 'text/javascript; charset=utf-8',
@@ -340,7 +341,7 @@ export function createService(o) {
         'Content-Disposition': 'attachment; filename="td-' + String(query.id) + '.' + which + '.json"' });
       return res.end(buf);
     }
-    if (sub === '/t/list' && get) { sweep(); return send(() => T.list()); }
+    if (sub === '/t/list' && get) { sweep(); return send(() => { const used = C.usedBy(); return T.list().map((t) => Object.assign(t, { cup: used.get(t.id) || null })); }); }
     if (sub === '/t/get' && get) return send(() => getTournament(String(query.id || '')));
     if (sub === '/cups/list' && get) return send(() => ({ cups: C.list() }));
     if (sub === '/cups/get' && get) return send(() => C.get(String(query.id || '')));
@@ -376,7 +377,12 @@ export function createService(o) {
       case '/t/validate': return send(() => T.validate(id, who, { override: b.override }));
       case '/t/correct': return send(() => T.correct(id, b, who));
       case '/t/collusion': return send(() => T.checkCollusion(id, who));
-      case '/cups/create': return send(() => C.create(b, who));
+      case '/cups/create': return send(() => { const c = C.create(b, who); return b.plan ? C.setPlan(c.id, b.plan, who) : c; });
+      // A cup's programme (cupplan.mjs): how it runs, its dates, its tournaments.
+      case '/cups/plan': return send(() => C.setPlan(id, b.plan, who));
+      case '/cups/slot/create': return send(() => C.slotCreate(id, b.key, who));
+      case '/cups/slot/attach': return send(() => C.slotAttach(id, b.key, b.tournamentId, who));
+      case '/cups/slot/detach': return send(() => C.slotDetach(id, b.key, who));
       case '/cups/update': return send(() => C.update(id, b.patch || {}, who));
       case '/cups/event': return send(() => C.addEvent(id, b, who));
       case '/cups/event/remove': return send(() => C.removeEvent(id, b.index, who));
@@ -472,6 +478,16 @@ export function createService(o) {
     }
     const cm = /^\/c\/([A-Za-z0-9_-]{8,40})$/.exec(sub);
     if (cm && req.method === 'GET') return send(() => C.publicGet(cm[1], query.invite));
+    // Registering once for a cup (its programme says so): POST with « op »,
+    // as the web client relays /arena/api/c/<key> only.
+    if (cm && req.method === 'POST') {
+      const b = await readJson(req);
+      if (!b) return json(res, 400, { ok: false, code: 'badRequest' });
+      const op = { register: 'register', unregister: 'unregister', choose: 'unregister' }[b.op];
+      if (!op) return json(res, 400, { ok: false, code: 'badRequest' });
+      if (limited(op, ip)) return json(res, 429, { ok: false, code: 'tooMany', error: 'too many attempts, try again later' });
+      return send(() => (b.op === 'register' ? C.cupRegister(cm[1], b) : b.op === 'unregister' ? C.cupUnregister(cm[1], b) : C.cupChoose(cm[1], b)));
+    }
     // A web client at a table: is it a tournament's? (game id and table name,
     // as the server told the client.) Only tables the director opened.
     if (sub === '/table' && req.method === 'GET') return send(() => tableLookup(query));

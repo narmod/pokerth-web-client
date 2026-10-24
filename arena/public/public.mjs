@@ -210,7 +210,9 @@ function renderOne() {
   // Registration.
   if (!c.result) {
     h += '<section class="card"><h2>' + T('regTitle') + '</h2>';
-    if (c.closedBecause) h += '<p>' + T('closed_' + c.closedBecause) + '</p>';
+    const viaCup = (c.cups || []).find((cp) => cp.register);
+    if (c.closedBecause === 'organizer' && viaCup) h += '<p><a href="/arena/c/' + esc(viaCup.key) + '" data-go>' + T('regViaCup', { name: viaCup.name }) + '</a></p>';
+    else if (c.closedBecause) h += '<p>' + T('closed_' + c.closedBecause) + '</p>';
     else {
       h += '<form id="regForm" class="row"><div><label for="regNick">' + T('nickname') + '</label><input id="regNick" maxlength="64" autocomplete="nickname" required></div>' +
         '<button type="submit" class="primary">' + T('register') + '</button></form><p class="small muted">' + T('nickHint') + '</p>';
@@ -402,8 +404,9 @@ async function showCup(key) {
   h += '<section class="card"><h2>' + esc(d.name) + '</h2><p><span class="chip ' + (d.status === 'closed' ? 'done' : 'live') + '">' + T(d.status === 'closed' ? 'cupStatusClosed' : 'cupStatusOpen') + '</span></p>' +
     (d.description ? '<p>' + esc(d.description) + '</p>' : '') +
     '<p class="small">' + T('cupRulesPoints') + ' ' + (d.bestOf ? T('cupBest', { n: d.bestOf }) : T('cupAll')) + ' ' + T('cupTies') + '</p></section>';
-  // Its tournaments.
-  h += '<section class="card"><h2>' + T('cupTournaments') + '</h2><ul class="tlist">' + d.events.map((e) => {
+  if (d.plan) h += cupPlanHtml(d, key);
+  // Its tournaments (a cup with a programme shows them there).
+  if (!d.plan) h += '<section class="card"><h2>' + T('cupTournaments') + '</h2><ul class="tlist">' + d.events.map((e) => {
     const extra = [];
     if (e.qualify && e.next != null && d.events[e.next]) extra.push(T('cupGoOn', { n: e.qualify, name: esc(d.events[e.next].label) }));
     if (e.final) extra.push(T('cupFinal') + (e.fromStandings ? ' · ' + T('cupFromStandings', { n: e.fromStandings }) : ''));
@@ -428,6 +431,129 @@ async function showCup(key) {
   $('heroTitle').textContent = d.name;
   heroImage(d.image);
   fillMedals();
+  if (d.plan) wireCup(d, key);
+}
+
+// ── a cup's programme, and registering once for the whole cup ───────
+// The personal code of the cup is kept here under « c:<cup> » and under each
+// of its tournaments the player is in, so their pages (and the witness of
+// the web client) know it too.
+let cupFlash = null;
+const cupRegKey = (key) => 'c:' + key;
+function slotText(s) {
+  if (s.kind === 'final') return t('cupFinal');
+  if (s.kind === 'series') return '#' + s.n;
+  if (s.kind === 'step') return t('cupStepN', { step: s.step, n: s.n });
+  return '';
+}
+function entryKeys(d, choice) {
+  return d.plan.slots.filter((s) => s.tournament && (s.kind === 'series' || s.kind === 'single' || (s.kind === 'step' && s.step === 1)) &&
+    !(d.plan.stageEntry === 'choose' && d.plan.format === 'stages' && s.key !== choice)).map((s) => s.tournament.key);
+}
+// A code of the cup copied to its tournaments (made since, or picked since).
+function cupCodesToTournaments(d, key) {
+  for (const r of regsFor(cupRegKey(key))) {
+    for (const tk of entryKeys(d, r.choice)) {
+      if (!regsFor(tk).some((x) => x.nick.toLowerCase() === r.nick.toLowerCase())) regsSave(tk, regsFor(tk).concat([{ nick: r.nick, code: r.code }]));
+    }
+  }
+}
+function cupPlanHtml(d, key) {
+  const p = d.plan, rs = p.registrationState || {};
+  let h = '<section class="card"><h2>' + T('cupProgramme') + '</h2><p>' + T('cupFormat_' + p.format) + '</p>';
+  if (d.from) h += '<p class="small">' + (d.from === d.to ? T('startsAt', { date: fmtDate(d.from) }) : T('cupFromTo', { from: fmtDate(d.from), to: fmtDate(d.to) })) + '</p>';
+  const next = p.slots.find((s) => s.key === p.next);
+  if (next && d.status !== 'closed') h += '<p><b>' + T('cupNext', { date: fmtDate(next.at) }) + '</b></p>';
+  h += '<ul class="tlist">' + p.slots.map((s) => {
+    const tt = s.tournament;
+    const head = '<span class="tc-top"><span class="tname">' + esc(fmtDate(s.at)) + (slotText(s) ? ' · ' + esc(slotText(s)) : '') + '</span>' +
+      (tt && (tt.status === 'validated' || tt.started) ? '<span class="chip ' + (tt.status === 'validated' ? 'done' : 'live') + '">' + T(tt.status === 'validated' ? 'stValidated' : 'stTable') + '</span>' : '') + '</span>' +
+      '<span class="muted small">' + (tt ? T('cupPlayers', { n: tt.players }) : T('cupToCome')) + (s.qualify ? ' · ' + T('cupFirstGoOn', { n: s.qualify }) : '') + '</span>';
+    return '<li>' + (tt ? '<a class="tcard" href="/arena/t/' + esc(tt.key) + invQs('?') + '" data-go>' + head + '</a>' : '<div class="tcard">' + head + '</div>') + '</li>';
+  }).join('') + '</ul></section>';
+  if (rs.mode !== 'cup') return h;
+  // Registering for the cup.
+  cupCodesToTournaments(d, key);
+  const mine = regsFor(cupRegKey(key)).filter((r) => (rs.players || []).some((n) => n.toLowerCase() === r.nick.toLowerCase()));
+  const choices = rs.choose ? (rs.choices || []).filter((c) => !c.started) : [];
+  const choiceSel = (id, sel) => '<div><label for="' + id + '">' + T('cupPickDate') + '</label><select id="' + id + '" required><option value="">—</option>' +
+    choices.map((c) => '<option value="' + esc(c.key) + '"' + (c.key === sel ? ' selected' : '') + (c.taken >= c.cap && c.key !== sel ? ' disabled' : '') + '>' + esc(fmtDate(c.at)) + ' · ' + T('cupPlayers', { n: c.taken }) + '/' + esc(c.cap) + '</option>').join('') + '</select></div>';
+  h += '<section class="card"><h2>' + T('cupRegTitle') + ' <span class="muted small">' + T('cupRegCount', { n: rs.count, max: rs.cap }) + '</span></h2>';
+  if (cupFlash) { h += '<div class="msg ' + (cupFlash.bad ? 'bad' : 'ok') + '" role="status">' + cupFlash.html + '</div>'; cupFlash = null; }
+  h += '<p class="small">' + T('cupRegHint') + (rs.choose ? ' ' + T('cupRegHintChoose') : '') + '</p>';
+  for (const r of mine) {
+    h += '<div class="cupme"><p>' + T('cupRegistered', { nick: r.nick }) + '</p>';
+    if (rs.choose && choices.length) h += '<form class="row" data-cupchoose="' + esc(r.nick) + '">' + choiceSel('cc_' + esc(r.nick), r.choice) + '<button type="submit">' + T('cupChange') + '</button></form>';
+    h += '<div class="actions"><button type="button" data-cupleave="' + esc(r.nick) + '">' + T('cupLeave') + ' · ' + esc(r.nick) + '</button></div></div>';
+  }
+  if (rs.open) {
+    h += '<form id="cupRegForm" class="row"><div><label for="cupNick">' + T('nickname') + '</label><input id="cupNick" maxlength="64" autocomplete="nickname" required></div>' +
+      (rs.choose ? choiceSel('cupChoice', '') : '') + '<button type="submit" class="primary">' + T('register') + '</button></form><p class="small muted">' + T('nickHint') + '</p>';
+  } else h += '<p>' + T('cupClosed_' + (rs.closed || 'started')) + '</p>';
+  if (rs.players && rs.players.length) h += '<ul class="chips">' + rs.players.map((n) => '<li>' + esc(n) + '</li>').join('') + '</ul>';
+  if (rs.count) h += '<details class="sub"><summary>' + T('unregTitle') + '</summary><p class="small muted">' + T('unregHint') + '</p><form id="cupUnForm" class="row">' +
+    '<div><label for="cupUnNick">' + T('nickname') + '</label><input id="cupUnNick" maxlength="64" required></div>' +
+    '<div><label for="cupUnCode">' + T('code') + '</label><input id="cupUnCode" maxlength="16" autocomplete="off" required></div>' +
+    '<button type="submit">' + T('cupLeave') + '</button></form></details>';
+  return h + '</section>';
+}
+function cupErr(d) {
+  if (/^closed_/.test(d.code || '')) return T('cupClosed_' + d.code.slice(7));
+  if (['pickDate', 'dateFull', 'dateStarted'].indexOf(d.code) >= 0) return T('err_' + d.code);
+  return errText(d);
+}
+function wireCup(d, key) {
+  const inv = inviteFromUrl() || undefined;
+  const post = (b) => api('/c/' + key, Object.assign({ invite: inv }, b));
+  const again = () => showCup(key);
+  const forget = (nick) => {
+    const lo = nick.toLowerCase();
+    const cups = regsFor(cupRegKey(key));
+    const r = cups.find((x) => x.nick.toLowerCase() === lo);
+    regsSave(cupRegKey(key), cups.filter((x) => x !== r));
+    for (const s of d.plan.slots) if (s.tournament) regsSave(s.tournament.key, regsFor(s.tournament.key).filter((x) => !(x.nick.toLowerCase() === lo && r && x.code === r.code)));
+  };
+  const f = $('cupRegForm');
+  if (f) f.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const b = f.querySelector('button'); b.disabled = true;
+    const r = await post({ op: 'register', nick: $('cupNick').value.trim(), choice: $('cupChoice') ? $('cupChoice').value : undefined });
+    b.disabled = false;
+    if (!r.ok) { cupFlash = { bad: true, html: cupErr(r) }; return again(); }
+    regsSave(cupRegKey(key), regsFor(cupRegKey(key)).filter((x) => x.nick.toLowerCase() !== r.nick.toLowerCase()).concat([{ nick: r.nick, code: r.code, choice: $('cupChoice') ? $('cupChoice').value : null }]));
+    cupFlash = { html: T('cupRegistered', { nick: r.nick }) + '<br><b>' + T('yourCode', { code: r.code }) + '</b> <button type="button" class="mini" data-copy="' + esc(r.code) + '">' + T('copy') + '</button><br><span class="small">' + T('codeKeep') + '</span>' };
+    again();
+  });
+  document.querySelectorAll('[data-cupleave]').forEach((b) => b.addEventListener('click', async () => {
+    const reg = regsFor(cupRegKey(key)).find((x) => x.nick === b.dataset.cupleave);
+    if (!reg) return;
+    const r = await post({ op: 'unregister', nick: reg.nick, code: reg.code });
+    if (!r.ok) { cupFlash = { bad: true, html: cupErr(r) }; return again(); }
+    forget(reg.nick); cupFlash = { html: T('cupLeft', { nick: r.nick }) }; again();
+  }));
+  document.querySelectorAll('[data-cupchoose]').forEach((fm) => fm.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const nick = fm.dataset.cupchoose;
+    const reg = regsFor(cupRegKey(key)).find((x) => x.nick === nick);
+    const choice = fm.querySelector('select').value;
+    if (!reg) return;
+    const r = await post({ op: 'choose', nick: reg.nick, code: reg.code, choice });
+    if (!r.ok) { cupFlash = { bad: true, html: cupErr(r) }; return again(); }
+    // The code leaves the old tournament's list here, joins the new one.
+    const old = d.plan.slots.find((s) => s.key === reg.choice);
+    if (old && old.tournament) regsSave(old.tournament.key, regsFor(old.tournament.key).filter((x) => x.code !== reg.code));
+    regsSave(cupRegKey(key), regsFor(cupRegKey(key)).map((x) => (x === reg || (x.nick === reg.nick && x.code === reg.code) ? Object.assign({}, x, { choice }) : x)));
+    const now = (rs) => rs.find((c) => c.key === choice);
+    const c = now(d.plan.registrationState.choices || []);
+    cupFlash = { html: T('cupChanged', { nick: r.nick, date: c ? fmtDate(c.at) : '' }) }; again();
+  }));
+  const un = $('cupUnForm');
+  if (un) un.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const r = await post({ op: 'unregister', nick: $('cupUnNick').value.trim(), code: $('cupUnCode').value.trim().toUpperCase() });
+    if (!r.ok) { cupFlash = { bad: true, html: cupErr(r) }; return again(); }
+    forget(r.nick); cupFlash = { html: T('cupLeft', { nick: r.nick }) }; again();
+  });
 }
 
 // ── routing ────────────────────────────────────────────────────────

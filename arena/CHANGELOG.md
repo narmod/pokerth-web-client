@@ -10,6 +10,39 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.23.0 — 2026-10-24
+
+### Added
+- **A cup's programme.** When making a cup, the organizer says how it runs:
+  a series of tournaments (points, best of N), a series then a final for the
+  top K of the standings (more than 10: a final on several tables),
+  qualifying steps (2 to 4, the first Q of each tournament go on, up to the
+  final) or one tournament. The dates come from a repetition (every day,
+  week, two weeks or month, worked out in the organizer's own time), then
+  each can be moved, added or taken off. Settings shared by every
+  tournament: server, profile, table, opening by itself, chat language,
+  absence rule, one table or several.
+- **Tournaments made by the cup** (opened by the director at their time) or
+  **by the organizer** from each dated slot (« Make this tournament », or
+  attach one of his own; detach). Saving the programme again changes only
+  the tournaments that have not started; a date taken off takes away the
+  cup's own tournament if nothing has started; a started tournament keeps
+  its date.
+- **Registering once for the whole cup** (or per tournament, as the
+  organizer chooses): one personal code for every tournament of the cup,
+  kept in the browser for each of them; with steps, in every tournament of
+  step 1 or in the one the player picks (and may change until it starts).
+  A player who leaves one tournament is not put back in it. Tournament pages
+  send players to the cup's registration.
+- **What the cup does by itself**: registered players go into tournaments
+  made later; the top K of the standings go to the final once the series is
+  validated or an hour before the final at the latest (what was missing is
+  noted); the cup closes and signs its standings once every tournament is
+  validated.
+- Players' page of a cup: the programme (from … to …, next tournament, each
+  date with its tournament), the registration for the cup. 27 new strings in
+  the 83 languages.
+
 ## 0.22.0 — 2026-10-24
 
 ### Added

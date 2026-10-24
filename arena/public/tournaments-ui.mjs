@@ -39,7 +39,7 @@ const SOURCE = { manual: 'typed in', watch: 'Table check', pdb: 'log (.pdb)' };
 // Players who do not come to the table (arena/lib/tournaments.mjs ABSENCE_AUTO).
 const ABSENCE_AUTO = { mode: 'auto', strikes: 3, retrySec: 60, graceMin: 10 };
 const ABSENT_WHY = { failures: 'did not come', neverConnected: 'never connected', offline: 'not connected', notSeatedAtStart: 'not seated at the start' };
-function absenceFields(p, a, esc) {
+export function absenceFields(p, a, esc) {
   a = Object.assign({}, ABSENCE_AUTO, a || {});
   const num = (k, min, max, label) => '<div><label for="' + p + k + '">' + label + '</label><input id="' + p + k + '" type="number" inputmode="numeric" min="' + min + '" max="' + max + '" value="' + esc(a[k]) + '"></div>';
   return '<div class="row"><div><label for="' + p + 'mode">Players who do not come to the table</label><select id="' + p + 'mode" data-absmode="' + p + '">' +
@@ -48,7 +48,7 @@ function absenceFields(p, a, esc) {
     '<div class="row" id="' + p + 'custom"' + (a.mode === 'custom' ? '' : ' hidden') + '>' + num('strikes', 1, 10, 'Failures before absent') + num('retrySec', 20, 600, 'Seconds between invitations') + num('graceMin', 0, 120, 'Minutes after the start before anyone is absent') + '</div>' +
     '<p class="small muted">A refusal, an invitation left unanswered, « busy » in another game or a seat left before the start is a failure; a player who comes back to the server or leaves another game is invited at once. Not connected after the delay: absent too.</p>';
 }
-function readAbsence(p) {
+export function readAbsence(p) {
   const m = document.getElementById(p + 'mode');
   if (!m) return undefined;
   const o = { mode: m.value };
@@ -670,5 +670,6 @@ export function createTournamentsView(deps) {
       }).catch(() => msg('tMsg', 'Download failed', true));
   }
 
-  return { refresh, open, current: () => cur };
+  // Shared with the cups' programme: the table form, the chat languages, the servers.
+  return { refresh, open, current: () => cur, TF, langOptions: (sel) => langOptions(sel), servers: () => deps.servers() || [] };
 }

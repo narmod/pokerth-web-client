@@ -81,7 +81,7 @@ let you = '';   // who is signed in: « admin » (master key) or an organizer's 
 // The images of tournaments and cups: one library, shared by both views.
 const images = createImagePicker({ api, esc });
 const tours = createTournamentsView({ api, esc, tok, servers: () => servers, you: () => you, images });
-const cups = createCupsView({ api, esc, images, you: () => you });
+const cups = createCupsView({ api, esc, images, you: () => you, form: () => tours, openTournament: (id) => { setView('tour'); tours.open(id); } });
 let role = '', account = null;   // the signed-in role: admin (master key), organizer, referee, viewer
 const accounts = createAccountsView({ api, esc, me: () => ({ role, account }) });
 // Start again from zero: the super admin only (the tab shows for the master key).

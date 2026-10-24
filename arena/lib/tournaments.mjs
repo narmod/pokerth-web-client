@@ -422,6 +422,54 @@ export function createTournaments(o) {
     gen++;
     return { deleted: t.id, name: t.name, tables: kids.length };
   }
+  // ── a cup's programme (cupplan.mjs, service 0.23.0) ──
+  // Started: players seated, a table drawn or opened, a result — from then
+  // on the cup leaves the tournament alone.
+  function isStarted(t) {
+    return !!(t.result || hostOpen(t) || t.stages || t.parentId || (t.status !== 'draft' && t.status !== 'registration'));
+  }
+  // A tournament the cup made and no longer needs (a date taken off its
+  // programme): only while nothing has started; kept in deleted.jsonl.
+  function discard(id, author, why) {
+    const { t } = load(id);
+    if (isStarted(t)) refuse('« ' + t.name + ' » has started: it stays');
+    mkdirSync(root, { recursive: true });
+    appendFileSync(join(root, 'deleted.jsonl'), JSON.stringify({ at: now(), by: author || 'cup', id: t.id, name: t.name, status: t.status, players: t.players.length, why: why || 'taken off the cup\'s programme' }) + '\n');
+    rmSync(tdir(t.id), { recursive: true, force: true });
+    gen++;
+    return { deleted: t.id, name: t.name };
+  }
+  // A player registered for the whole cup: added with the cup's personal code
+  // (one code for every tournament of the cup), whatever the tournament's own
+  // registration says. « already » when he is in.
+  function addRegistered(id, nickIn, codeHash, author) {
+    const nick = cleanNick(nickIn);
+    let already = false;
+    const { t } = load(id);
+    if (t.players.some((p) => sameNick(p.nick, nick))) return { already: true };
+    act(id, author || 'cup', 'playerRegistered', { nick, viaCup: true }, (tt) => {
+      if (!nick) refuse('nickname missing');
+      if (isStarted(tt)) refuse('« ' + tt.name + ' » has started');
+      if (tt.players.some((p) => sameNick(p.nick, nick))) { already = true; return; }
+      if (tt.players.length >= maxPlayersOf(tt)) refuse('« ' + tt.name + ' » is full');
+      tt.players.push({ nick, addedAt: now(), self: true, viaCup: true, codeHash: String(codeHash || '') || null });
+      if (tt.status === 'draft') tt.status = 'registration';
+    });
+    return { already };
+  }
+  // Out of the cup: out of its tournaments that have not started.
+  function removeRegistered(id, nickIn, author) {
+    const nick = cleanNick(nickIn);
+    const { t } = load(id);
+    const i = t.players.findIndex((p) => sameNick(p.nick, nick));
+    if (i < 0 || isStarted(t)) return { removed: false };
+    act(id, author || 'cup', 'playerUnregistered', { nick, viaCup: true }, (tt) => {
+      const j = tt.players.findIndex((p) => sameNick(p.nick, nick));
+      if (j >= 0) tt.players.splice(j, 1);
+    });
+    return { removed: true };
+  }
+
   function allTournaments() {
     let ids = [];
     try { ids = readdirSync(root).filter((x) => ID_RE.test(x)); } catch (e) {}
@@ -1103,6 +1151,7 @@ export function createTournaments(o) {
   }
 
   return { list, get, create, update, addPlayer, removePlayer, setResult: setResultP, validate, correct, approveCorrection, rejectCorrection, importPdb, file,
+    isStarted: (id) => { try { return isStarted(load(id).t); } catch (e) { return true; } }, discard, addRegistered, removeRegistered, codeHash: (c) => hashCode(c), newCode: () => newCode(), playersOf: (id) => { try { return load(id).t.players.map((p) => ({ nick: p.nick, viaCup: !!p.viaCup })); } catch (e) { return null; } },
     publicList, publicGet, register, unregister, publicFile, witnessReport, witnessLog, keyHost, checkCollusion, allRaw: () => allTournaments(), generation: () => gen, idOfKey: (key) => { const t = byKey(key); return t ? t.id : null; }, drawTables, makeFinal, stagesTick, stagesRecompute, multiParents: () => allTournaments().filter((t) => t.format === 'multi' && t.stages && t.status !== 'validated').map((t) => t.id), checkIn, issueCode, organizerCheckIn, markNotCheckedIn, needsCheckIn: (id) => needsCheckIn(load(id).t),
     hostOpened, hostCheck, hostNote, hostEnded, hostResultRefused, openHosts, autoOpenDue, autoOpenNote, remove, Refusal };
 }

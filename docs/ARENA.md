@@ -750,6 +750,61 @@ password; four roles).
 - Players keep their nickname and personal code for now (player accounts:
   later).
 
+## A cup's programme (service `0.23.0`)
+
+A cup can say how it runs instead of gathering tournaments added by hand
+(a cup made the old way keeps its way; a programmed cup takes no tournament
+added by hand). Code: `arena/lib/cupplan.mjs` (pure: checks the programme,
+the slots, the events, what each tournament is made with), `cups.mjs`
+(stores it, makes and updates the tournaments, registration, the sweep),
+`arena/public/cup-plan-ui.mjs`; tests: `arena/test/test-arena-cupplan.mjs`.
+
+| Format | What it is | Events of the cup |
+|---|---|---|
+| `series` | N tournaments (1–30), points, best of N | each counts |
+| `seriesFinal` | the series, then a final for the top K (2–40) of the standings | series count; the final has `fromStandings: K`, no points; more than 10: several tables |
+| `stages` | 2–4 steps, the last the final; Q (1–10) go on from each tournament | tournament n of a step feeds tournament n mod k of the next; a tournament of one table may receive 10 at most, the final 40 |
+| `single` | one tournament (one table or several) | the final |
+
+- **Dates.** The page works the repetition out in the organizer's own time
+  (summer time kept) and sends plain dates; each date can be moved, added or
+  taken off. Dates follow one another; each step (and the final) comes after
+  the one before.
+- **Slots.** `{ key, kind, step, n, at, qualify, tournamentId, auto }`, key
+  `1-3`, `2-1`, `final`, `single`. A slot keeps its tournament when the
+  programme is saved again (matched by key). A tournament that has started
+  (players seated, a table drawn or opened, a result, or past
+  « registration ») keeps its date and cannot be taken off.
+- **Making the tournaments.** `auto`: the cup makes them all at once
+  (« Name #1 », « Name – step 2 #1 », « Name – final »), with the shared
+  settings and opening by itself; `organizer`: « Make this tournament » per
+  slot (the same settings, changed afterwards on the tournament if wished),
+  or attach a tournament of his own (it takes the slot's date); detach.
+  Saving again updates the tournaments that have not started (date,
+  settings, name of the cup's own); a date taken off discards the cup's own
+  tournament (`deleted.jsonl`) or detaches the organizer's.
+- **Visibility.** The tournaments of a public or unlisted cup take its
+  visibility; those of a private cup are unlisted (reached by their link).
+- **Registering for the cup** (`registration: 'cup'`): `POST
+  /arena/api/c/<key>` with `op` `register | unregister | choose` (the web
+  client relays this address already). One personal code for the cup, stored
+  as its hash in the cup and on each tournament the player goes into; the
+  page keeps it under `c:<key>` and under each tournament's key. Entry
+  tournaments: the series, the single tournament, step 1 (every tournament,
+  or the one picked: `stageEntry: 'choose'`, changeable until it starts).
+  Capacity: one table 10, several 40 (picking: per tournament). The
+  tournaments take no registration of their own and their page points to
+  the cup. A player put into a tournament and gone from it is not put back.
+- **By itself** (sweep, every 5 s): registered players into tournaments
+  made since; the final of a `seriesFinal` takes the top K once the series
+  is validated, or an hour before the final with at least one result (the
+  missing ones in the journal); steps go on as before; once every slot has
+  its tournament and all are validated, the cup closes (`cupClosed`,
+  `auto: true`) and signs its standings.
+- **Who**: organizers and the super admin (`/admin/arena/cups/plan`,
+  `/cups/slot/{create,attach,detach}`); a referee or read-only account
+  cannot.
+
 ## Starting again from zero (service `0.22.0`)
 
 The super admin (the master key) has a **Reset** tab on `/arena/organize`
@@ -972,6 +1027,7 @@ that version only: the web client's version, its service worker and its
 | `arena/lib/lobby.mjs` | Lobby reader (guest login, tables, server type). |
 | `arena/lib/host.mjs` | The director that opens a tournament table: create, invite, kick, hand over, then watch. |
 | `arena/lib/worker.mjs` | One watch in a detached process, state and files on disk. |
+| `arena/lib/cupplan.mjs` | A cup's programme: formats, dates, slots, the events and the tournaments it makes. Pure. |
 | `arena/lib/reset.mjs` | Starting again from zero (super admin): moves watches, tournaments, cups and added images to a dated folder, keeping what kept data still uses. |
 | `arena/lib/platform.mjs` | Everything taken from the web client, in one place (protocol, create-table lists, sql.js, version, default data folder). The only file of the service that reaches outside `arena/`. |
 | `arena/lib/table.mjs`, `arena/lib/images.mjs` | Table settings (the web client's create-game lists, `public/modules/create-presets.mjs`); images of tournaments and cups. |
