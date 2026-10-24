@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'organizator zamknął ten stół: ta gra nie liczy się do turnieju.',
   strangerSeated: '{nick} nie jest zapisany na ten turniej: usuń tego gracza przed rozpoczęciem gry.',
   strangersAtStart: 'niezapisani na ten turniej: {list}. organizator sprawdzi tę grę, zanim zostanie zaliczona.',
+  tablePassword: 'ten stół ma hasło: podaj swój kod osobisty na stronie turnieju, aby je zobaczyć.',
 };

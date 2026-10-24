@@ -20,4 +20,5 @@ export const strings = {
   closedByOrganizer: 'the organizer closed this table: this game does not count for the tournament.',
   strangerSeated: '{nick} is not registered for this tournament: please remove them before starting.',
   strangersAtStart: 'not registered for this tournament: {list}. an organizer checks this game before it counts.',
+  tablePassword: 'this table has a password: give your personal code on the tournament page to see it.',
 };

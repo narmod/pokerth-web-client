@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'organizatori e mbylli këtë tavolinë: kjo lojë nuk llogaritet për turneun.',
   strangerSeated: '{nick} nuk është regjistruar në këtë turne: ju lutemi hiqeni para se të nisni lojën.',
   strangersAtStart: 'të paregjistruar në këtë turne: {list}. një organizator e kontrollon këtë lojë para se të llogaritet.',
+  tablePassword: 'kjo tavolinë ka fjalëkalim: jepni kodin personal në faqen e turneut për ta parë.',
 };

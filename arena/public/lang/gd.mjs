@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Tha a’ cho-fharpais seo làn: tagh tè eile.',
   err_dateStarted: 'Tha a’ cho-fharpais seo air tòiseachadh.',
   regViaCup: 'Tha an clàradh airson a’ chupa gu lèir: clàraich air duilleag “{name}”.',
+  tpTitle: 'Facal-faire a’ bhùird',
+  tpText: 'Tha facal-faire aig a’ bhòrd seo: chan fhaigh ach cluicheadairean clàraichte e, leis a’ chòd phearsanta aca. Cuir a-steach e ann am PokerTH nuair a ghabhas tu ri cuireadh an stiùiriche.',
+  tpLater: 'Bidh facal-faire aig a’ bhòrd: nochdaidh e air an duilleag seo, leis a’ chòd phearsanta agad, nuair a bhios am bòrd fosgailte.',
+  tpShow: 'Seall facal-faire a’ bhùird',
+  tpIs: 'facal-faire: {password}',
+  err_noTablePass: 'Chan eil facal-faire aig a’ bhòrd seo.',
+  err_tableNotOpen: 'Chan eil am bòrd fosgailte fhathast.',
+  err_absentPlayer: 'Tha an cluicheadair seo comharraichte às làthair aig a’ bhòrd seo.',
+  err_notCheckedIn: 'Dearbhaich do làthaireachd an toiseach: chan fhaigh ach na cluicheadairean a dhearbh an làthaireachd am facal-faire.',
 };

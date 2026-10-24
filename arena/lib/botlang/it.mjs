@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'l’organizzatore ha chiuso questo tavolo: questa partita non conta per il torneo.',
   strangerSeated: '{nick} non è iscritto a questo torneo: per favore rimuovilo prima di avviare la partita.',
   strangersAtStart: 'non iscritti a questo torneo: {list}. un organizzatore controlla questa partita prima che conti.',
+  tablePassword: 'questo tavolo ha una password: inserisci il tuo codice personale sulla pagina del torneo per vederla.',
 };

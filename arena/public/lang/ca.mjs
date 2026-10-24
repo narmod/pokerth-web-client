@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Aquest torneig és ple: tria’n un altre.',
   err_dateStarted: 'Aquest torneig ha començat.',
   regViaCup: 'La inscripció és per a tota la copa: inscriu-te a la pàgina de «{name}».',
+  tpTitle: 'Contrasenya de la taula',
+  tpText: 'Aquesta taula té contrasenya: només l’obtenen els jugadors inscrits, amb el seu codi personal. Escriu-la a PokerTH quan acceptis la invitació del director.',
+  tpLater: 'La taula tindrà contrasenya: es mostrarà en aquesta pàgina, amb el teu codi personal, quan s’obri la taula.',
+  tpShow: 'Mostra la contrasenya de la taula',
+  tpIs: 'contrasenya: {password}',
+  err_noTablePass: 'Aquesta taula no té contrasenya.',
+  err_tableNotOpen: 'La taula encara no és oberta.',
+  err_absentPlayer: 'Aquest jugador consta com a absent per a aquesta taula.',
+  err_notCheckedIn: 'Fes primer el check-in: la contrasenya només es dona als jugadors que l’han fet.',
 };

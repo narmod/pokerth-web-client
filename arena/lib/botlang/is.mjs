@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'mótshaldarinn lokaði þessu borði: þessi leikur telur ekki í mótinu.',
   strangerSeated: '{nick} er ekki á skrá fyrir þetta mót: vinsamlegast fjarlægðu viðkomandi áður en leikurinn er ræstur.',
   strangersAtStart: 'ekki á skrá fyrir þetta mót: {list}. mótshaldari fer yfir leikinn áður en hann telur.',
+  tablePassword: 'þetta borð er með lykilorð: gefðu upp persónulega kóðann þinn á síðu mótsins til að sjá það.',
 };

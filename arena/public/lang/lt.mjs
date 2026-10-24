@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Šis turnyras pilnas: pasirinkite kitą.',
   err_dateStarted: 'Šis turnyras jau prasidėjo.',
   regViaCup: 'Registruojamasi į visą taurę: užsiregistruokite „{name}“ puslapyje.',
+  tpTitle: 'Stalo slaptažodis',
+  tpText: 'Šis stalas turi slaptažodį: jį gauna tik užsiregistravę žaidėjai, nurodę asmeninį kodą. Įveskite jį programoje PokerTH, kai priimsite direktoriaus kvietimą.',
+  tpLater: 'Stalas turės slaptažodį: kai stalas bus atidarytas, jis bus rodomas šiame puslapyje, nurodžius asmeninį kodą.',
+  tpShow: 'Rodyti stalo slaptažodį',
+  tpIs: 'slaptažodis: {password}',
+  err_noTablePass: 'Šis stalas neturi slaptažodžio.',
+  err_tableNotOpen: 'Stalas dar neatidarytas.',
+  err_absentPlayer: 'Šis žaidėjas prie šio stalo pažymėtas kaip nedalyvaujantis.',
+  err_notCheckedIn: 'Pirmiausia patvirtinkite dalyvavimą: slaptažodis rodomas tik dalyvavimą patvirtinusiems žaidėjams.',
 };

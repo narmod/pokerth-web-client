@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'a szervező lezárta ezt az asztalt: ez a játék nem számít bele a versenybe.',
   strangerSeated: '{nick} nincs regisztrálva erre a versenyre: kérlek, távolítsd el a játék indítása előtt.',
   strangersAtStart: 'nincsenek regisztrálva erre a versenyre: {list}. egy szervező ellenőrzi ezt a játékot, mielőtt beszámít.',
+  tablePassword: 'ennek az asztalnak jelszava van: a verseny oldalán a személyes kódoddal láthatod.',
 };

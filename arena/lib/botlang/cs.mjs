@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'organizátor tento stůl zavřel: tato hra se do turnaje nepočítá.',
   strangerSeated: '{nick} není zaregistrován do tohoto turnaje: před spuštěním hry ho prosím odeberte.',
   strangersAtStart: 'nezaregistrovaní do tohoto turnaje: {list}. organizátor hru zkontroluje, než se započítá.',
+  tablePassword: 'tento stůl má heslo: zadejte osobní kód na stránce turnaje a uvidíte ho.',
 };

@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'organizators slēdza šo galdu: šī spēle turnīrā netiek ieskaitīta.',
   strangerSeated: '{nick} nav reģistrēts šim turnīram: lūdzu, noņem viņu no galda pirms spēles sākšanas.',
   strangersAtStart: 'nav reģistrēti šim turnīram: {list}. organizators pārbauda šo spēli, pirms tā tiek ieskaitīta.',
+  tablePassword: 'šim galdam ir parole: lai to redzētu, ievadi savu personīgo kodu turnīra lapā.',
 };

@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'mae’r trefnydd wedi cau’r bwrdd hwn: nid yw’r gêm hon yn cyfrif ar gyfer y twrnamaint.',
   strangerSeated: 'nid yw {nick} wedi cofrestru ar gyfer y twrnamaint hwn: tynnwch nhw o’r bwrdd cyn dechrau’r gêm.',
   strangersAtStart: 'heb gofrestru ar gyfer y twrnamaint hwn: {list}. bydd trefnydd yn gwirio’r gêm hon cyn iddi gyfrif.',
+  tablePassword: 'mae cyfrinair gan y bwrdd hwn: rhowch eich cod personol ar dudalen y twrnamaint i’w weld.',
 };

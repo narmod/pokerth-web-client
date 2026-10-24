@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Ten turniej jest pełny: wybierz inny.',
   err_dateStarted: 'Ten turniej już się rozpoczął.',
   regViaCup: 'Zapisy obejmują cały puchar: zapisz się na stronie „{name}”.',
+  tpTitle: 'Hasło stołu',
+  tpText: 'Ten stół ma hasło: dostają je tylko zapisani gracze, po podaniu kodu osobistego. Wpisz je w PokerTH, gdy przyjmiesz zaproszenie dyrektora.',
+  tpLater: 'Stół będzie miał hasło: po otwarciu stołu pojawi się na tej stronie, po podaniu kodu osobistego.',
+  tpShow: 'Pokaż hasło stołu',
+  tpIs: 'hasło: {password}',
+  err_noTablePass: 'Ten stół nie ma hasła.',
+  err_tableNotOpen: 'Stół nie jest jeszcze otwarty.',
+  err_absentPlayer: 'Ten gracz jest oznaczony jako nieobecny przy tym stole.',
+  err_notCheckedIn: 'Najpierw potwierdź obecność: hasło otrzymują tylko gracze, którzy potwierdzili obecność.',
 };

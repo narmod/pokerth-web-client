@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Þetta mót er fullt: veldu annað.',
   err_dateStarted: 'Þetta mót er hafið.',
   regViaCup: 'Skráning gildir fyrir allan bikarinn: skráðu þig á síðu „{name}“.',
+  tpTitle: 'Lykilorð borðsins',
+  tpText: 'Þetta borð er með lykilorð: aðeins skráðir leikmenn fá það, með persónulega kóðanum sínum. Sláðu það inn í PokerTH þegar þú þiggur boð mótsstjórans.',
+  tpLater: 'Borðið verður með lykilorð: það birtist á þessari síðu, með persónulega kóðanum þínum, þegar borðið opnar.',
+  tpShow: 'Sýna lykilorð borðsins',
+  tpIs: 'lykilorð: {password}',
+  err_noTablePass: 'Þetta borð er ekki með lykilorð.',
+  err_tableNotOpen: 'Borðið er ekki enn opið.',
+  err_absentPlayer: 'Þessi leikmaður er skráður fjarverandi við þetta borð.',
+  err_notCheckedIn: 'Staðfestu mætingu fyrst: lykilorðið er aðeins gefið leikmönnum sem hafa staðfest mætingu.',
 };

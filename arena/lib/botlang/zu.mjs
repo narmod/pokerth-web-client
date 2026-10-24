@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'umhleli uvale leli tafula: lo mdlalo awubalwa emqhudelwaneni.',
   strangerSeated: '{nick} akabhalisile kulo mqhudelwano: sicela umkhiphe ngaphambi kokuqala umdlalo.',
   strangersAtStart: 'abangabhalisile kulo mqhudelwano: {list}. umhleli uzohlola lo mdlalo ngaphambi kokuthi ubalwe.',
+  tablePassword: 'leli tafula linephasiwedi: faka ikhodi yakho yomuntu siqu ekhasini lomqhudelwano ukuze uyibone.',
 };

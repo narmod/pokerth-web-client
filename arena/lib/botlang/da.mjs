@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'arrangøren har lukket dette bord: spillet tæller ikke med i turneringen.',
   strangerSeated: '{nick} er ikke tilmeldt denne turnering: fjern vedkommende, før spillet startes.',
   strangersAtStart: 'ikke tilmeldt denne turnering: {list}. en arrangør tjekker spillet, før det tæller.',
+  tablePassword: 'dette bord har en adgangskode: angiv din personlige kode på turneringssiden for at se den.',
 };

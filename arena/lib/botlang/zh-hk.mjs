@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: '主辦方已關閉這張牌桌：這局遊戲不計入錦標賽。',
   strangerSeated: '{nick} 未有報名參加這個錦標賽：開始遊戲前請先將對方移出。',
   strangersAtStart: '未有報名參加這個錦標賽：{list}。主辦方會先檢查這局遊戲，才計入結果。',
+  tablePassword: '這張牌桌設有密碼：請在錦標賽頁面輸入個人代碼查看。',
 };

@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Giải đấu này đã đủ người: hãy chọn giải khác.',
   err_dateStarted: 'Giải đấu này đã bắt đầu.',
   regViaCup: 'Đăng ký áp dụng cho cả cúp: hãy đăng ký trên trang của “{name}”.',
+  tpTitle: 'Mật khẩu bàn',
+  tpText: 'Bàn này có mật khẩu: chỉ người chơi đã đăng ký mới nhận được, bằng mã cá nhân của mình. Hãy nhập mật khẩu vào PokerTH khi chấp nhận lời mời của người điều hành.',
+  tpLater: 'Bàn sẽ có mật khẩu: mật khẩu sẽ hiện trên trang này, bằng mã cá nhân của bạn, khi bàn mở.',
+  tpShow: 'Xem mật khẩu bàn',
+  tpIs: 'mật khẩu: {password}',
+  err_noTablePass: 'Bàn này không có mật khẩu.',
+  err_tableNotOpen: 'Bàn chưa mở.',
+  err_absentPlayer: 'Người chơi này bị ghi nhận vắng mặt ở bàn này.',
+  err_notCheckedIn: 'Hãy xác nhận có mặt trước: mật khẩu chỉ được cấp cho người chơi đã xác nhận có mặt.',
 };

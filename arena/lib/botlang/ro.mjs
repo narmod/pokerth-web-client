@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'organizatorul a închis această masă: acest joc nu contează pentru turneu.',
   strangerSeated: '{nick} nu este înscris la acest turneu: te rugăm să-l scoți înainte de a porni jocul.',
   strangersAtStart: 'neînscriși la acest turneu: {list}. un organizator verifică jocul înainte să fie luat în calcul.',
+  tablePassword: 'această masă are parolă: introdu codul personal pe pagina turneului ca s-o vezi.',
 };

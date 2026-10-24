@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Bu turnuva dolu: başka birini seç.',
   err_dateStarted: 'Bu turnuva başladı.',
   regViaCup: 'Kayıt tüm kupa içindir: “{name}” sayfasından kaydol.',
+  tpTitle: 'Masa şifresi',
+  tpText: 'Bu masanın şifresi var: yalnızca kayıtlı oyuncular kişisel kodlarıyla alabilir. Direktörün davetini kabul ederken şifreyi PokerTH’e gir.',
+  tpLater: 'Masanın şifresi olacak: masa açıldığında, kişisel kodunla bu sayfada gösterilir.',
+  tpShow: 'Masa şifresini göster',
+  tpIs: 'şifre: {password}',
+  err_noTablePass: 'Bu masanın şifresi yok.',
+  err_tableNotOpen: 'Masa henüz açılmadı.',
+  err_absentPlayer: 'Bu oyuncu bu masa için gelmeyen olarak işaretlendi.',
+  err_notCheckedIn: 'Önce katılımını onayla: şifre yalnızca katılımını onaylayan oyunculara verilir.',
 };

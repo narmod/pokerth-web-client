@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'təşkilatçı bu masanı bağladı: bu oyun turnirdə nəzərə alınmır.',
   strangerSeated: '{nick} bu turnirdə qeydiyyatda deyil: oyunu başlatmazdan əvvəl onu masadan çıxarın.',
   strangersAtStart: 'bu turnirdə qeydiyyatda deyil: {list}. nəticə sayılmazdan əvvəl təşkilatçı bu oyunu yoxlayır.',
+  tablePassword: 'bu masanın parolu var: onu görmək üçün turnir səhifəsində şəxsi kodunuzu daxil edin.',
 };

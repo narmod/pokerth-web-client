@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Mashindano haya yamejaa: chagua mengine.',
   err_dateStarted: 'Mashindano haya yameanza.',
   regViaCup: 'Usajili ni kwa kombe zima: jisajili kwenye ukurasa wa “{name}”.',
+  tpTitle: 'Nenosiri la meza',
+  tpText: 'Meza hii ina nenosiri: wachezaji waliosajiliwa pekee ndio wanalipata, kwa msimbo wao binafsi. Liandike kwenye PokerTH unapokubali mwaliko wa mkurugenzi.',
+  tpLater: 'Meza itakuwa na nenosiri: litaonekana kwenye ukurasa huu, kwa msimbo wako binafsi, meza ikishafunguliwa.',
+  tpShow: 'Onyesha nenosiri la meza',
+  tpIs: 'nenosiri: {password}',
+  err_noTablePass: 'Meza hii haina nenosiri.',
+  err_tableNotOpen: 'Meza bado haijafunguliwa.',
+  err_absentPlayer: 'Mchezaji huyu amerekodiwa kuwa hayupo kwenye meza hii.',
+  err_notCheckedIn: 'Thibitisha mahudhurio kwanza: nenosiri hutolewa kwa wachezaji waliothibitisha mahudhurio pekee.',
 };

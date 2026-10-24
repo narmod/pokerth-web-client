@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Este torneio está cheio: escolha outro.',
   err_dateStarted: 'Este torneio já começou.',
   regViaCup: 'A inscrição é para toda a taça: inscreva-se na página de «{name}».',
+  tpTitle: 'Palavra-passe da mesa',
+  tpText: 'Esta mesa tem palavra-passe: só os jogadores inscritos a recebem, com o seu código pessoal. Escreva-a no PokerTH ao aceitar o convite do diretor.',
+  tpLater: 'A mesa terá palavra-passe: aparece nesta página, com o seu código pessoal, assim que a mesa abrir.',
+  tpShow: 'Mostrar a palavra-passe da mesa',
+  tpIs: 'palavra-passe: {password}',
+  err_noTablePass: 'Esta mesa não tem palavra-passe.',
+  err_tableNotOpen: 'A mesa ainda não está aberta.',
+  err_absentPlayer: 'Este jogador está marcado como ausente nesta mesa.',
+  err_notCheckedIn: 'Faça primeiro o check-in: a palavra-passe só é dada aos jogadores que fizeram check-in.',
 };

@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: '组织者关闭了此牌桌：本局游戏不计入锦标赛。',
   strangerSeated: '{nick} 没有报名这场锦标赛：请在开始游戏前将其移出。',
   strangersAtStart: '未报名这场锦标赛：{list}。组织者核查本局游戏后才计入。',
+  tablePassword: '此牌桌设有密码：请在锦标赛页面输入个人代码查看。',
 };

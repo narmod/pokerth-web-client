@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Mae’r twrnamaint hwn yn llawn: dewiswch un arall.',
   err_dateStarted: 'Mae’r twrnamaint hwn wedi dechrau.',
   regViaCup: 'Mae cofrestru ar gyfer y cwpan cyfan: cofrestrwch ar dudalen “{name}”.',
+  tpTitle: 'Cyfrinair y bwrdd',
+  tpText: 'Mae cyfrinair gan y bwrdd hwn: dim ond chwaraewyr sydd wedi cofrestru sy’n ei gael, gyda’u cod personol. Teipiwch ef yn PokerTH pan fyddwch yn derbyn gwahoddiad y cyfarwyddwr.',
+  tpLater: 'Bydd cyfrinair gan y bwrdd: bydd yn ymddangos ar y dudalen hon, gyda’ch cod personol, unwaith y bydd y bwrdd ar agor.',
+  tpShow: 'Dangos cyfrinair y bwrdd',
+  tpIs: 'cyfrinair: {password}',
+  err_noTablePass: 'Nid oes cyfrinair gan y bwrdd hwn.',
+  err_tableNotOpen: 'Nid yw’r bwrdd ar agor eto.',
+  err_absentPlayer: 'Mae’r chwaraewr hwn wedi’i nodi’n absennol ar gyfer y bwrdd hwn.',
+  err_notCheckedIn: 'Cadarnhewch eich presenoldeb yn gyntaf: dim ond chwaraewyr sydd wedi cadarnhau sy’n cael y cyfrinair.',
 };

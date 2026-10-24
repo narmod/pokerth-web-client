@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Puno na ang tournament na ito: pumili ng iba.',
   err_dateStarted: 'Nagsimula na ang tournament na ito.',
   regViaCup: 'Para sa buong cup ang rehistrasyon: magparehistro sa pahina ng “{name}”.',
+  tpTitle: 'Password ng mesa',
+  tpText: 'May password ang mesang ito: ang mga nakarehistrong manlalaro lang ang makakakuha nito, gamit ang kanilang personal na code. I-type ito sa PokerTH kapag tinanggap mo ang imbitasyon ng direktor.',
+  tpLater: 'Magkakaroon ng password ang mesa: lalabas ito sa pahinang ito, gamit ang iyong personal na code, kapag bukas na ang mesa.',
+  tpShow: 'Ipakita ang password ng mesa',
+  tpIs: 'password: {password}',
+  err_noTablePass: 'Walang password ang mesang ito.',
+  err_tableNotOpen: 'Hindi pa bukas ang mesa.',
+  err_absentPlayer: 'Minarkahang absent ang manlalarong ito para sa mesang ito.',
+  err_notCheckedIn: 'Mag-check-in muna: sa mga naka-check-in lang ibinibigay ang password.',
 };

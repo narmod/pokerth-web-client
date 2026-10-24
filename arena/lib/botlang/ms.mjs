@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'penganjur telah menutup meja ini: permainan ini tidak dikira untuk kejohanan.',
   strangerSeated: '{nick} tidak berdaftar untuk kejohanan ini: sila keluarkan dia sebelum memulakan permainan.',
   strangersAtStart: 'tidak berdaftar untuk kejohanan ini: {list}. penganjur akan menyemak permainan ini sebelum ia dikira.',
+  tablePassword: 'meja ini ada kata laluan: berikan kod peribadi anda di halaman kejohanan untuk melihatnya.',
 };

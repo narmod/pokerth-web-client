@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Ĉi tiu turniro estas plena: elektu alian.',
   err_dateStarted: 'Ĉi tiu turniro komenciĝis.',
   regViaCup: 'Aliĝo validas por la tuta pokalo: aliĝu en la paĝo de “{name}”.',
+  tpTitle: 'Pasvorto de la tablo',
+  tpText: 'Ĉi tiu tablo havas pasvorton: nur aliĝintaj ludantoj ricevas ĝin, per sia persona kodo. Tajpu ĝin en PokerTH, kiam vi akceptas la inviton de la direktoro.',
+  tpLater: 'La tablo havos pasvorton: ĝi aperos en ĉi tiu paĝo, per via persona kodo, kiam la tablo malfermiĝos.',
+  tpShow: 'Montri la pasvorton de la tablo',
+  tpIs: 'pasvorto: {password}',
+  err_noTablePass: 'Ĉi tiu tablo ne havas pasvorton.',
+  err_tableNotOpen: 'La tablo ankoraŭ ne estas malfermita.',
+  err_absentPlayer: 'Ĉi tiu ludanto estas markita kiel forestanta por ĉi tiu tablo.',
+  err_notCheckedIn: 'Unue konfirmu vian ĉeeston: la pasvorto estas donata nur al ludantoj, kiuj konfirmis.',
 };

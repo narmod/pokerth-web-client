@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: '這場錦標賽已額滿：請選擇另一場。',
   err_dateStarted: '這場錦標賽已開始。',
   regViaCup: '報名以整個盃賽為單位：請到「{name}」的頁面報名。',
+  tpTitle: '牌桌密碼',
+  tpText: '這張牌桌設有密碼：只有已報名的玩家才能憑個人代碼取得。接受賽事主管的邀請時，請在 PokerTH 輸入密碼。',
+  tpLater: '這張牌桌將設有密碼：牌桌開放後，憑你的個人代碼即可在本頁查看。',
+  tpShow: '顯示牌桌密碼',
+  tpIs: '密碼：{password}',
+  err_noTablePass: '這張牌桌沒有密碼。',
+  err_tableNotOpen: '牌桌尚未開放。',
+  err_absentPlayer: '這位玩家在這張牌桌已被記為缺席。',
+  err_notCheckedIn: '請先報到：密碼只提供給已報到的玩家。',
 };

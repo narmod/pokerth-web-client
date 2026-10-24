@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Este torneo está completo: escolle outro.',
   err_dateStarted: 'Este torneo xa comezou.',
   regViaCup: 'A inscrición é para toda a copa: inscríbete na páxina de «{name}».',
+  tpTitle: 'Contrasinal da mesa',
+  tpText: 'Esta mesa ten contrasinal: só o reciben os xogadores inscritos, co seu código persoal. Escríbeo en PokerTH ao aceptar o convite do director.',
+  tpLater: 'A mesa terá contrasinal: amosarase nesta páxina, co teu código persoal, unha vez aberta a mesa.',
+  tpShow: 'Amosar o contrasinal da mesa',
+  tpIs: 'contrasinal: {password}',
+  err_noTablePass: 'Esta mesa non ten contrasinal.',
+  err_tableNotOpen: 'A mesa aínda non está aberta.',
+  err_absentPlayer: 'Este xogador está marcado como ausente nesta mesa.',
+  err_notCheckedIn: 'Fai primeiro o check-in: o contrasinal só se dá aos xogadores que fixeron o check-in.',
 };

@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Ky turne është plot: zgjidhni një tjetër.',
   err_dateStarted: 'Ky turne ka filluar.',
   regViaCup: 'Regjistrimi bëhet për gjithë kupën: regjistrohuni në faqen e «{name}».',
+  tpTitle: 'Fjalëkalimi i tavolinës',
+  tpText: 'Kjo tavolinë ka fjalëkalim: e marrin vetëm lojtarët e regjistruar, me kodin e tyre personal. Shkruajeni në PokerTH kur pranoni ftesën e drejtorit.',
+  tpLater: 'Tavolina do të ketë fjalëkalim: do të shfaqet në këtë faqe, me kodin tuaj personal, sapo të hapet tavolina.',
+  tpShow: 'Shfaq fjalëkalimin e tavolinës',
+  tpIs: 'fjalëkalimi: {password}',
+  err_noTablePass: 'Kjo tavolinë nuk ka fjalëkalim.',
+  err_tableNotOpen: 'Tavolina nuk është hapur ende.',
+  err_absentPlayer: 'Ky lojtar është shënuar si mungues për këtë tavolinë.',
+  err_notCheckedIn: 'Konfirmoni fillimisht pjesëmarrjen: fjalëkalimi u jepet vetëm lojtarëve që e kanë konfirmuar.',
 };

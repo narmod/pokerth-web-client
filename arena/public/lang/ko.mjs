@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: '이 토너먼트는 정원이 찼습니다. 다른 토너먼트를 고르세요.',
   err_dateStarted: '이 토너먼트는 이미 시작되었습니다.',
   regViaCup: '등록은 컵 전체 단위로 합니다. “{name}” 페이지에서 등록하세요.',
+  tpTitle: '테이블 비밀번호',
+  tpText: '이 테이블에는 비밀번호가 있습니다. 등록한 플레이어만 개인 코드로 받을 수 있습니다. 디렉터의 초대를 수락할 때 PokerTH에 입력하세요.',
+  tpLater: '이 테이블에는 비밀번호가 설정됩니다. 테이블이 열리면 이 페이지에서 개인 코드로 확인할 수 있습니다.',
+  tpShow: '테이블 비밀번호 보기',
+  tpIs: '비밀번호: {password}',
+  err_noTablePass: '이 테이블에는 비밀번호가 없습니다.',
+  err_tableNotOpen: '테이블이 아직 열리지 않았습니다.',
+  err_absentPlayer: '이 플레이어는 이 테이블에서 불참으로 표시되었습니다.',
+  err_notCheckedIn: '먼저 체크인하세요. 비밀번호는 체크인한 플레이어에게만 제공됩니다.',
 };

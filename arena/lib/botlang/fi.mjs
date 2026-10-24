@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'järjestäjä sulki tämän pöydän: tätä peliä ei lasketa turnaukseen.',
   strangerSeated: '{nick} ei ole ilmoittautunut tähän turnaukseen: poista hänet ennen pelin aloittamista.',
   strangersAtStart: 'tähän turnaukseen ilmoittautumattomia: {list}. järjestäjä tarkistaa pelin ennen kuin se lasketaan.',
+  tablePassword: 'tällä pöydällä on salasana: näet sen turnauksen sivulla henkilökohtaisella koodillasi.',
 };

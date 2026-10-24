@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Turnamen ini sudah penuh: pilih yang lain.',
   err_dateStarted: 'Turnamen ini sudah dimulai.',
   regViaCup: 'Pendaftaran berlaku untuk seluruh piala: daftar di halaman “{name}”.',
+  tpTitle: 'Kata sandi meja',
+  tpText: 'Meja ini memakai kata sandi: hanya pemain terdaftar yang mendapatkannya, dengan kode pribadi mereka. Ketik kata sandi itu di PokerTH saat Anda menerima undangan direktur.',
+  tpLater: 'Meja ini akan memakai kata sandi: kata sandi muncul di halaman ini, dengan kode pribadi Anda, setelah meja dibuka.',
+  tpShow: 'Tampilkan kata sandi meja',
+  tpIs: 'kata sandi: {password}',
+  err_noTablePass: 'Meja ini tidak memakai kata sandi.',
+  err_tableNotOpen: 'Meja belum dibuka.',
+  err_absentPlayer: 'Pemain ini dicatat tidak hadir untuk meja ini.',
+  err_notCheckedIn: 'Lakukan check-in dulu: kata sandi hanya diberikan kepada pemain yang sudah check-in.',
 };

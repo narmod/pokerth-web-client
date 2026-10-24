@@ -750,6 +750,34 @@ password; four roles).
 - Players keep their nickname and personal code for now (player accounts:
   later).
 
+## Table password (service `0.24.0`)
+
+On a LAN server nicknames are not checked: someone can connect as a
+registered player before him and be invited in his place. With
+`run.tablePassword`, the director opens the table with a password. The game
+server (`HandleNetPacketJoinGame`) then asks an invite-only table for both
+the invitation and the password; a spectator joins without either, so the
+director comes back to watch as before.
+
+- **Given on the players' page only**: `POST /arena/api/t/<key>/tablepass`
+  with the nickname and the personal code; the player must be registered,
+  not absent, and checked in when the tournament has a check-in. A table of
+  a tournament on several tables takes the codes copied at the draw. Each
+  time it is shown: a `tablePassShown` line in the journal. Rate limited as
+  the check-in.
+- **Never in the chat**: a private line would go to whoever holds the
+  nickname. Each invited player is told once where to find it
+  (`tablePassword` line of the chat catalogues).
+- **Never stored**: HMAC-SHA256 of the install key over the tournament id and
+  a nonce kept with the open table (`host.passNonce`, never shown); 10
+  characters from `a–z 2–9` without look-alikes, typed by hand in the QML
+  client. It reaches the worker over IPC only. The organizer sees it on the
+  open table (`tablePasswordNow`).
+- **Default**: on with the identity « personal code » (Official, or Custom
+  with that identity), off otherwise; a checkbox on create and edit.
+- The web client could fill it in by itself when the player accepts the
+  invitation (it knows the code kept in the browser): later.
+
 ## A cup's programme (service `0.23.0`)
 
 A cup can say how it runs instead of gathering tournaments added by hand
@@ -1027,6 +1055,7 @@ that version only: the web client's version, its service worker and its
 | `arena/lib/lobby.mjs` | Lobby reader (guest login, tables, server type). |
 | `arena/lib/host.mjs` | The director that opens a tournament table: create, invite, kick, hand over, then watch. |
 | `arena/lib/worker.mjs` | One watch in a detached process, state and files on disk. |
+| `arena/test/test-arena-tablepass.mjs` | The table password: default, given against the code, never shown nor stored. |
 | `arena/lib/cupplan.mjs` | A cup's programme: formats, dates, slots, the events and the tournaments it makes. Pure. |
 | `arena/lib/reset.mjs` | Starting again from zero (super admin): moves watches, tournaments, cups and added images to a dated folder, keeping what kept data still uses. |
 | `arena/lib/platform.mjs` | Everything taken from the web client, in one place (protocol, create-table lists, sql.js, version, default data folder). The only file of the service that reaches outside `arena/`. |

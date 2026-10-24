@@ -134,6 +134,8 @@ export function createManager(deps) {
     return launch(s, body, { gameId: null, gameName: String(body.tableName || '').slice(0, 64), mode: 'host', tournamentId: body.tournamentId || null }, (nick) => ({
       nick, login: 'unauth', refuseAuthServer: true, tableName: String(body.tableName || ''), table: body.table || {}, registered, announce: body.announce !== false,
       startsAt: Number(body.startsAt) > 0 ? Number(body.startsAt) : null, absence: body.absence || null,
+      // The table password: handed over by IPC only, never on disk.
+      tablePassword: body.password ? String(body.password).slice(0, 64) : undefined, gamePassword: body.password ? String(body.password).slice(0, 64) : undefined,
       chat, chatLang: isBotLang(body.chatLang) ? String(body.chatLang).toLowerCase() : 'en',
     }), { mode: 'host', tournamentId: body.tournamentId || null });
   }

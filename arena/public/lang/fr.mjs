@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Ce tournoi est complet : choisissez-en un autre.',
   err_dateStarted: 'Ce tournoi a commencé.',
   regViaCup: 'L’inscription se fait pour toute la coupe : inscrivez-vous sur la page de « {name} ».',
+  tpTitle: 'Mot de passe de la table',
+  tpText: 'Cette table a un mot de passe : seuls les joueurs inscrits l’obtiennent, avec leur code personnel. Tapez-le dans PokerTH en acceptant l’invitation du directeur.',
+  tpLater: 'La table aura un mot de passe : il s’affichera sur cette page, avec votre code personnel, une fois la table ouverte.',
+  tpShow: 'Voir le mot de passe de la table',
+  tpIs: 'mot de passe : {password}',
+  err_noTablePass: 'Cette table n’a pas de mot de passe.',
+  err_tableNotOpen: 'La table n’est pas encore ouverte.',
+  err_absentPlayer: 'Ce joueur est noté absent pour cette table.',
+  err_notCheckedIn: 'Faites d’abord votre check-in : le mot de passe n’est donné qu’aux joueurs présents.',
 };

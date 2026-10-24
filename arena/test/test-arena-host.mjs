@@ -199,6 +199,23 @@ function director(f, registered, extra) {
   f.server.close();
 }
 
+// ── a table with a password (service 0.24.0) ──
+{
+  const f = await tableServer({ lobbyIds: [21, 22], onInvite: (id, ctx) => { if (!ctx.state.re) { ctx.state.re = true; ctx.w(M.rejectInv(id)); setTimeout(() => sit(id, ctx), 30); } else sit(id, ctx); } });
+  const d = director(f, ['Alice', 'Bob'], { tablePassword: 'k7m2pq9x3a', gamePassword: 'k7m2pq9x3a', absence: { mode: 'custom', strikes: 5, retrySec: 20, graceMin: 0 } });
+  let sealed = null;
+  d.on('result', (r) => { sealed = r; });
+  d.start();
+  await until(() => sealed, 6000);
+  const st = f.state;
+  ok(st.creates[0] && st.creates[0].password === 'k7m2pq9x3a', 'password: the table is created with it');
+  const told = (id) => st.pms.filter((p) => p.to === id && /^this table has a password: give your personal code on the tournament page/.test(p.text)).length;
+  ok(told(21) === 1 && told(22) === 1, 'password: each invited player told once where to find it — never the password itself');
+  ok(!st.pms.concat(st.chats.map((c) => ({ text: c }))).some((p) => /k7m2pq9x3a/.test(p.text)) && !JSON.stringify(d.journal.entries).includes('k7m2pq9x3a'), 'password: never in the chat nor in the journal');
+  ok(st.specJoin === 1 && !!sealed, 'password: the director still watches as a spectator (the server lets spectators in without it)');
+  f.server.close();
+}
+
 // ── chat language and the server's 128-byte limit ─────────────────
 {
   const fr = await loadBotStrings('fr');

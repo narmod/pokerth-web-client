@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Bu turnir doludur: başqasını seçin.',
   err_dateStarted: 'Bu turnir başlayıb.',
   regViaCup: 'Qeydiyyat bütün kubok üçündür: “{name}” səhifəsində qeydiyyatdan keçin.',
+  tpTitle: 'Masanın parolu',
+  tpText: 'Bu masanın parolu var: onu yalnız qeydiyyatdan keçmiş oyunçular şəxsi kodları ilə alır. Direktorun dəvətini qəbul edərkən onu PokerTH-də yazın.',
+  tpLater: 'Masanın parolu olacaq: masa açılanda o, şəxsi kodunuzla bu səhifədə görünəcək.',
+  tpShow: 'Masanın parolunu göstər',
+  tpIs: 'parol: {password}',
+  err_noTablePass: 'Bu masanın parolu yoxdur.',
+  err_tableNotOpen: 'Masa hələ açılmayıb.',
+  err_absentPlayer: 'Bu oyunçu bu masa üçün “yoxdur” kimi qeyd olunub.',
+  err_notCheckedIn: 'Əvvəlcə iştirakınızı təsdiqləyin: parol yalnız iştirakını təsdiqləyən oyunçulara verilir.',
 };

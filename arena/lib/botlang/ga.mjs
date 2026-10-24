@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'dhún an t-eagraí an bord seo: ní áirítear an cluiche seo don chomórtas.',
   strangerSeated: 'níl {nick} cláraithe don chomórtas seo: bain an t-imreoir sin den bhord sula dtosaíonn an cluiche.',
   strangersAtStart: 'níl siad cláraithe don chomórtas seo: {list}. seiceálfaidh eagraí an cluiche seo sula n-áireofar é.',
+  tablePassword: 'tá pasfhocal ag an mbord seo: tabhair do chód pearsanta ar leathanach an chomórtais chun é a fheiceáil.',
 };

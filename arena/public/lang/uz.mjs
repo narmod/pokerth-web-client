@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Bu turnir toʻlgan: boshqasini tanlang.',
   err_dateStarted: 'Bu turnir boshlangan.',
   regViaCup: 'Roʻyxatdan oʻtish butun kubok uchun: “{name}” sahifasida roʻyxatdan oʻting.',
+  tpTitle: 'Stol paroli',
+  tpText: 'Bu stolda parol bor: uni faqat roʻyxatdan oʻtgan oʻyinchilar shaxsiy kodi bilan oladi. Direktor taklifini qabul qilayotganda uni PokerTH dasturida kiriting.',
+  tpLater: 'Stolda parol boʻladi: stol ochilgach, u shaxsiy kodingiz bilan shu sahifada koʻrsatiladi.',
+  tpShow: 'Stol parolini koʻrsatish',
+  tpIs: 'parol: {password}',
+  err_noTablePass: 'Bu stolda parol yoʻq.',
+  err_tableNotOpen: 'Stol hali ochilmagan.',
+  err_absentPlayer: 'Bu oʻyinchi bu stolda kelmagan deb belgilangan.',
+  err_notCheckedIn: 'Avval ishtirokingizni tasdiqlang: parol faqat ishtirokini tasdiqlagan oʻyinchilarga beriladi.',
 };

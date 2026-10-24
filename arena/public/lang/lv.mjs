@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Šis turnīrs ir pilns: izvēlies citu.',
   err_dateStarted: 'Šis turnīrs ir sācies.',
   regViaCup: 'Reģistrācija notiek visam kausam: reģistrējies „{name}” lapā.',
+  tpTitle: 'Galda parole',
+  tpText: 'Šim galdam ir parole: to saņem tikai reģistrētie spēlētāji ar savu personīgo kodu. Ievadi to programmā PokerTH, kad pieņem direktora uzaicinājumu.',
+  tpLater: 'Galdam būs parole: kad galds tiks atvērts, tā būs redzama šajā lapā ar tavu personīgo kodu.',
+  tpShow: 'Rādīt galda paroli',
+  tpIs: 'parole: {password}',
+  err_noTablePass: 'Šim galdam nav paroles.',
+  err_tableNotOpen: 'Galds vēl nav atvērts.',
+  err_absentPlayer: 'Šis spēlētājs pie šī galda ir atzīmēts kā neieradies.',
+  err_notCheckedIn: 'Vispirms apstiprini dalību: parole tiek dota tikai spēlētājiem, kuri apstiprinājuši dalību.',
 };

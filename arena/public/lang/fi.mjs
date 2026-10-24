@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Tämä turnaus on täynnä: valitse toinen.',
   err_dateStarted: 'Tämä turnaus on alkanut.',
   regViaCup: 'Ilmoittautuminen koskee koko cupia: ilmoittaudu cupin ”{name}” sivulla.',
+  tpTitle: 'Pöydän salasana',
+  tpText: 'Tällä pöydällä on salasana: vain ilmoittautuneet pelaajat saavat sen henkilökohtaisella koodillaan. Kirjoita se PokerTH:hon, kun hyväksyt johtajan kutsun.',
+  tpLater: 'Pöydälle tulee salasana: se näkyy tällä sivulla henkilökohtaisella koodillasi, kun pöytä on auki.',
+  tpShow: 'Näytä pöydän salasana',
+  tpIs: 'salasana: {password}',
+  err_noTablePass: 'Tällä pöydällä ei ole salasanaa.',
+  err_tableNotOpen: 'Pöytä ei ole vielä auki.',
+  err_absentPlayer: 'Tämä pelaaja on merkitty poissaolevaksi tästä pöydästä.',
+  err_notCheckedIn: 'Vahvista ensin läsnäolosi: salasana annetaan vain läsnäolonsa vahvistaneille pelaajille.',
 };

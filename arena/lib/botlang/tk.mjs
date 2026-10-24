@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'guramaçy bu stoly ýapdy: bu oýun ýaryşda hasaba alynmaýar.',
   strangerSeated: '{nick} bu ýaryşa hasaba alynmadyk: oýny başlamazdan öň ony stoldan aýryň.',
   strangersAtStart: 'bu ýaryşa hasaba alynmadyklar: {list}. guramaçy bu oýny hasaba almazdan öň barlar.',
+  tablePassword: 'bu stoluň açar sözi bar: ony görmek üçin ýaryş sahypasynda şahsy kodyňyzy giriziň.',
 };

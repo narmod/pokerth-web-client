@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'organizator je zaprl to mizo: ta igra ne šteje za turnir.',
   strangerSeated: '{nick} ni prijavljen na ta turnir: prosim, odstrani ga, preden začneš igro.',
   strangersAtStart: 'niso prijavljeni na ta turnir: {list}. organizator preveri to igro, preden se šteje.',
+  tablePassword: 'ta miza ima geslo: vnesi osebno kodo na strani turnirja, da ga vidiš.',
 };

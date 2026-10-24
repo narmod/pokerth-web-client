@@ -10,6 +10,22 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.24.0 — 2026-10-24
+
+### Added
+- **Table password** against a nickname taken by someone else on a LAN
+  server (where nicknames are not checked). The director opens the table
+  with a password; the game server then asks for it as well as the
+  invitation (spectators, the director among them, need neither). It is
+  given only on the tournament's page, to a registered player who gives his
+  personal code (checked in, when there is a check-in), never in the chat:
+  invited players are told privately where to find it, once. Worked out
+  from the install key and a nonce kept with the open table, so it is never
+  written down; the organizer sees it on the open table; each time it is
+  shown is a line of the journal. On by default with the identity « personal
+  code » (Official), a choice on every tournament (create and edit). 1 chat
+  line and 9 strings of the players' page in the 83 languages.
+
 ## 0.23.0 — 2026-10-24
 
 ### Added

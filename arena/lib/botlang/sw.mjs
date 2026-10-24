@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'mratibu amefunga meza hii: mchezo huu hauhesabiwi kwenye mashindano.',
   strangerSeated: '{nick} hajasajiliwa kwenye mashindano haya: tafadhali mwondoe kabla ya kuanzisha mchezo.',
   strangersAtStart: 'hawajasajiliwa kwenye mashindano haya: {list}. mratibu atakagua mchezo huu kabla haujahesabiwa.',
+  tablePassword: 'meza hii ina nenosiri: weka msimbo wako binafsi kwenye ukurasa wa mashindano ili ulione.',
 };

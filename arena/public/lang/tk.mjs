@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Bu ýaryş doldy: başgasyny saýlaň.',
   err_dateStarted: 'Bu ýaryş başlandy.',
   regViaCup: 'Hasaba alyş tutuş kubok üçin: «{name}» sahypasynda hasaba duruň.',
+  tpTitle: 'Stoluň açar sözi',
+  tpText: 'Bu stoluň açar sözi bar: ony diňe hasaba alnan oýunçylar öz şahsy kody bilen alýarlar. Direktoryň çakylygyny kabul edeniňizde ony PokerTH-de giriziň.',
+  tpLater: 'Stoluň açar sözi bolar: stol açylandan soň, ol şahsy kodyňyz bilen şu sahypada görkeziler.',
+  tpShow: 'Stoluň açar sözüni görkez',
+  tpIs: 'açar söz: {password}',
+  err_noTablePass: 'Bu stoluň açar sözi ýok.',
+  err_tableNotOpen: 'Stol entek açylmady.',
+  err_absentPlayer: 'Bu oýunçy bu stolda gelmedik diýlip bellendi.',
+  err_notCheckedIn: 'Ilki gatnaşygyňyzy tassyklaň: açar söz diňe gatnaşygyny tassyklan oýunçylara berilýär.',
 };

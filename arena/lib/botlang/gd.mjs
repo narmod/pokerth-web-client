@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'dhùin an t-eagraiche am bòrd seo: chan eil an geama seo a’ cunntadh sa cho-fharpais.',
   strangerSeated: 'chan eil {nick} clàraichte sa cho-fharpais seo: cuir a-mach e mus tòisich thu an geama.',
   strangersAtStart: 'gun chlàradh sa cho-fharpais seo: {list}. nì eagraiche sgrùdadh air a’ gheama seo mus cunnt e.',
+  tablePassword: 'tha facal-faire aig a’ bhòrd seo: thoir seachad an còd pearsanta agad air duilleag na co-fharpais gus fhaicinn.',
 };

@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Acest turneu este complet: alege altul.',
   err_dateStarted: 'Acest turneu a început.',
   regViaCup: 'Înscrierea este pentru toată cupa: înscrie-te pe pagina „{name}”.',
+  tpTitle: 'Parola mesei',
+  tpText: 'Această masă are parolă: doar jucătorii înscriși o primesc, cu codul lor personal. Tasteaz-o în PokerTH când accepți invitația directorului.',
+  tpLater: 'Masa va avea parolă: va apărea pe această pagină, cu codul tău personal, după ce se deschide masa.',
+  tpShow: 'Arată parola mesei',
+  tpIs: 'parolă: {password}',
+  err_noTablePass: 'Această masă nu are parolă.',
+  err_tableNotOpen: 'Masa nu este încă deschisă.',
+  err_absentPlayer: 'Acest jucător este marcat absent la această masă.',
+  err_notCheckedIn: 'Confirmă-ți mai întâi prezența: parola se dă doar jucătorilor care și-au confirmat prezența.',
 };

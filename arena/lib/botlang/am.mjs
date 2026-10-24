@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'አዘጋጁ ይህን ጠረጴዛ ዘግቶታል፦ ይህ ጨዋታ ለውድድሩ አይቆጠርም።',
   strangerSeated: '{nick} ለዚህ ውድድር አልተመዘገበም፦ እባክዎ ጨዋታውን ከመጀመርዎ በፊት ያስወጡት።',
   strangersAtStart: 'ለዚህ ውድድር ያልተመዘገቡ፦ {list}። ጨዋታው ከመቆጠሩ በፊት አዘጋጅ ይፈትሸዋል።',
+  tablePassword: 'ጠረጴዛው የይለፍ ቃል አለው፦ ለማየት በውድድሩ ገጽ የግል ኮድዎን ያስገቡ።',
 };

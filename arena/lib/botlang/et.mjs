@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'korraldaja sulges selle laua: see mäng turniiri arvesse ei lähe.',
   strangerSeated: '{nick} ei ole sellele turniirile registreerunud: palun eemalda ta enne mängu alustamist.',
   strangersAtStart: 'turniirile registreerimata: {list}. korraldaja kontrollib mängu enne, kui see arvesse läheb.',
+  tablePassword: 'sellel laual on parool: sisesta turniiri lehel oma isiklik kood, et seda näha.',
 };

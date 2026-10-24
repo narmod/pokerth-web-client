@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Txapelketa hau beteta dago: aukeratu beste bat.',
   err_dateStarted: 'Txapelketa hau hasi da.',
   regViaCup: 'Izen-ematea kopa osorako da: eman izena «{name}» kopako orrian.',
+  tpTitle: 'Mahaiaren pasahitza',
+  tpText: 'Mahai honek pasahitza du: izena eman duten jokalariek bakarrik jasotzen dute, beren kode pertsonalarekin. Idatzi PokerTH-n zuzendariaren gonbidapena onartzean.',
+  tpLater: 'Mahaiak pasahitza izango du: orri honetan agertuko da, zure kode pertsonalarekin, mahaia irekitzen denean.',
+  tpShow: 'Erakutsi mahaiaren pasahitza',
+  tpIs: 'pasahitza: {password}',
+  err_noTablePass: 'Mahai honek ez du pasahitzik.',
+  err_tableNotOpen: 'Mahaia ez dago oraindik irekita.',
+  err_absentPlayer: 'Jokalari hau «ez dago» gisa markatuta dago mahai honetarako.',
+  err_notCheckedIn: 'Berretsi lehenik zure presentzia: presentzia berretsi duten jokalariei bakarrik ematen zaie pasahitza.',
 };

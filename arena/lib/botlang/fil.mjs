@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'isinara ng organizer ang mesang ito: hindi bibilang sa tournament ang larong ito.',
   strangerSeated: 'hindi nakarehistro si {nick} sa tournament na ito: pakitanggal siya bago simulan ang laro.',
   strangersAtStart: 'hindi nakarehistro sa tournament na ito: {list}. susuriin ng organizer ang laro bago ito bilangin.',
+  tablePassword: 'may password ang mesang ito: ibigay ang iyong personal na code sa pahina ng tournament para makita ito.',
 };

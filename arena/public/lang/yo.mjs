@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Ìdíje yìí ti kún: yan òmíràn.',
   err_dateStarted: 'Ìdíje yìí ti bẹ̀rẹ̀.',
   regViaCup: 'Ìforúkọsílẹ̀ wà fún gbogbo ife ẹ̀yẹ náà: forúkọ sílẹ̀ lórí ojú-ìwé “{name}”.',
+  tpTitle: 'Ọ̀rọ̀ aṣínà tábìlì',
+  tpText: 'Tábìlì yìí ní ọ̀rọ̀ aṣínà: àwọn òṣèré tí ó forúkọ sílẹ̀ nìkan ló ń gbà á, pẹ̀lú kóòdù àdáni wọn. Tẹ̀ ẹ́ sínú PokerTH nígbà tí o bá gba ìpè olùdarí.',
+  tpLater: 'Tábìlì náà yóò ní ọ̀rọ̀ aṣínà: yóò hàn lórí ojú-ìwé yìí, pẹ̀lú kóòdù àdáni rẹ, nígbà tí tábìlì bá ṣí.',
+  tpShow: 'Fi ọ̀rọ̀ aṣínà tábìlì hàn',
+  tpIs: 'ọ̀rọ̀ aṣínà: {password}',
+  err_noTablePass: 'Tábìlì yìí kò ní ọ̀rọ̀ aṣínà.',
+  err_tableNotOpen: 'Tábìlì náà kò tíì ṣí.',
+  err_absentPlayer: 'A ti kọ òṣèré yìí sílẹ̀ pé kò sí fún tábìlì yìí.',
+  err_notCheckedIn: 'Kọ́kọ́ ṣe check-in: àwọn òṣèré tí ó ti ṣe check-in nìkan ni a ń fún ní ọ̀rọ̀ aṣínà.',
 };

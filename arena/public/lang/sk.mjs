@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Tento turnaj je plný: vyberte iný.',
   err_dateStarted: 'Tento turnaj sa už začal.',
   regViaCup: 'Registrácia platí pre celý pohár: zaregistrujte sa na stránke „{name}“.',
+  tpTitle: 'Heslo stola',
+  tpText: 'Tento stôl má heslo: dostanú ho iba zaregistrovaní hráči, so svojím osobným kódom. Zadajte ho v PokerTH, keď prijmete pozvánku riaditeľa.',
+  tpLater: 'Stôl bude mať heslo: zobrazí sa na tejto stránke, s vaším osobným kódom, keď sa stôl otvorí.',
+  tpShow: 'Zobraziť heslo stola',
+  tpIs: 'heslo: {password}',
+  err_noTablePass: 'Tento stôl nemá heslo.',
+  err_tableNotOpen: 'Stôl ešte nie je otvorený.',
+  err_absentPlayer: 'Tento hráč je pri tomto stole zaznamenaný ako neprítomný.',
+  err_notCheckedIn: 'Najprv potvrďte účasť: heslo dostanú iba hráči, ktorí potvrdili účasť.',
 };

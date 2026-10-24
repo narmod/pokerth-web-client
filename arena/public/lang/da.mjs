@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Denne turnering er fuld: vælg en anden.',
   err_dateStarted: 'Denne turnering er startet.',
   regViaCup: 'Tilmeldingen gælder hele pokalen: tilmeld dig på siden for »{name}«.',
+  tpTitle: 'Bordets adgangskode',
+  tpText: 'Dette bord har en adgangskode: kun tilmeldte spillere får den, med deres personlige kode. Skriv den i PokerTH, når du accepterer turneringslederens invitation.',
+  tpLater: 'Bordet får en adgangskode: den vises på denne side, med din personlige kode, når bordet er åbent.',
+  tpShow: 'Vis bordets adgangskode',
+  tpIs: 'adgangskode: {password}',
+  err_noTablePass: 'Dette bord har ingen adgangskode.',
+  err_tableNotOpen: 'Bordet er ikke åbent endnu.',
+  err_absentPlayer: 'Denne spiller er markeret som fraværende ved dette bord.',
+  err_notCheckedIn: 'Check ind først: adgangskoden gives kun til spillere, der har checket ind.',
 };

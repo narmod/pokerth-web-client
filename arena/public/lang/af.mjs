@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Hierdie toernooi is vol: kies ’n ander een.',
   err_dateStarted: 'Hierdie toernooi het begin.',
   regViaCup: 'Registrasie is vir die hele beker: registreer op die bladsy van “{name}”.',
+  tpTitle: 'Tafelwagwoord',
+  tpText: 'Hierdie tafel het ’n wagwoord: slegs geregistreerde spelers kry dit, met hul persoonlike kode. Tik dit in PokerTH wanneer jy die direkteur se uitnodiging aanvaar.',
+  tpLater: 'Die tafel sal ’n wagwoord hê: dit verskyn op hierdie bladsy, met jou persoonlike kode, sodra die tafel oop is.',
+  tpShow: 'Wys die tafelwagwoord',
+  tpIs: 'wagwoord: {password}',
+  err_noTablePass: 'Hierdie tafel het geen wagwoord nie.',
+  err_tableNotOpen: 'Die tafel is nog nie oop nie.',
+  err_absentPlayer: 'Hierdie speler is vir hierdie tafel as afwesig gemerk.',
+  err_notCheckedIn: 'Meld eers aan: die wagwoord word slegs aan spelers gegee wat aangemeld het.',
 };

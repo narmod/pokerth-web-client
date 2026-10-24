@@ -140,6 +140,7 @@ export class HostDirector extends SpectatorDirector {
     this.table = new Set();        // playerIds seated, director excluded
     this.seated = new Map();       // playerId -> registered nickname
     this.invited = new Set();      // lowercased nicknames
+    this.passTold = new Set();     // lowercased nicknames told where the table password is
     this.declined = new Map();     // lowercased nickname -> 'no' | 'busy'
     this.kicked = [];              // nicknames
     this.absent = [];              // nicknames (organizer went without them)
@@ -499,7 +500,7 @@ export class HostDirector extends SpectatorDirector {
 
   _create() {
     this._record('createRequest', { name: this.tableName, maxPlayers: this.maxPlayers });
-    this._send(hostBuild.create(gameInfoFor(this.o.table, this.tableName, this.maxPlayers)));
+    this._send(hostBuild.create(gameInfoFor(this.o.table, this.tableName, this.maxPlayers), this.o.tablePassword));
   }
 
   _inviteAll() {
@@ -534,6 +535,10 @@ export class HostDirector extends SpectatorDirector {
     this.retryAt.delete(k);
     this.offlineSince.delete(k);
     this._send(hostBuild.invite(this.gameId, id));
+    // A table with a password: where to find it (once each). The line says
+    // nothing secret: the password is given on the players' page against the
+    // personal code, never in the chat (it would go to whoever has the name).
+    if (this.o.tablePassword && !this.passTold.has(k)) { this.passTold.add(k); this._tell([id], this._t('tablePassword')); }
     this._record('invited', { nick: name, playerId: id });
     this.emit('log', 'invited ' + name);
   }

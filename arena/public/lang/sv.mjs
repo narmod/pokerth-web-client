@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Den här turneringen är full: välj en annan.',
   err_dateStarted: 'Den här turneringen har börjat.',
   regViaCup: 'Anmälan gäller hela cupen: anmäl dig på sidan för ”{name}”.',
+  tpTitle: 'Bordets lösenord',
+  tpText: 'Det här bordet har ett lösenord: bara anmälda spelare får det, med sin personliga kod. Skriv det i PokerTH när du accepterar turneringsledarens inbjudan.',
+  tpLater: 'Bordet får ett lösenord: det visas på den här sidan, med din personliga kod, när bordet har öppnat.',
+  tpShow: 'Visa bordets lösenord',
+  tpIs: 'lösenord: {password}',
+  err_noTablePass: 'Det här bordet har inget lösenord.',
+  err_tableNotOpen: 'Bordet har inte öppnat än.',
+  err_absentPlayer: 'Den här spelaren är markerad som frånvarande vid det här bordet.',
+  err_notCheckedIn: 'Checka in först: lösenordet ges bara till incheckade spelare.',
 };

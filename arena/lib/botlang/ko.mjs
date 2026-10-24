@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: '주최자가 이 테이블을 닫았습니다. 이 게임은 토너먼트에 반영되지 않습니다.',
   strangerSeated: '{nick} 님은 이 토너먼트에 등록되지 않았습니다. 게임을 시작하기 전에 내보내 주세요.',
   strangersAtStart: '토너먼트 미등록 플레이어: {list}. 결과 반영 전에 주최자가 이 게임을 확인합니다.',
+  tablePassword: '이 테이블은 비밀번호가 있습니다. 토너먼트 페이지에서 개인 코드로 확인하세요.',
 };

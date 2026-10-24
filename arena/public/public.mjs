@@ -164,13 +164,29 @@ function renderOne() {
   }
   h += '</section>';
 
+  // The table password (service 0.24.0): only to a registered player, with
+  // his personal code; never in the table chat.
+  if (c.tablePassword && c.phase === 'table' && lv) {
+    const codes = mine.concat(c.parent ? regsFor(c.parent.key) : []).filter((r) => c.playerList.some((p) => p.nick.toLowerCase() === r.nick.toLowerCase() && !p.absent));
+    const uniq = codes.filter((r, i) => codes.findIndex((x) => x.nick.toLowerCase() === r.nick.toLowerCase()) === i);
+    h += '<section class="card" id="tpCard"><h2>' + T('tpTitle') + '</h2><p>' + T('tpText') + '</p>';
+    for (const r of uniq) {
+      const pw = shownPass[c.key + '|' + r.nick.toLowerCase()];
+      h += pw ? '<p>' + esc(r.nick) + ' — <b class="mono">' + esc(T('tpIs', { password: pw })) + '</b> <button type="button" class="mini" data-copy="' + esc(pw) + '">' + T('copy') + '</button></p>'
+        : '<div class="actions"><button type="button" class="primary" data-tpshow="' + esc(r.nick) + '">' + T('tpShow') + ' · ' + esc(r.nick) + '</button></div>';
+    }
+    h += '<form id="tpForm" class="row"><div><label for="tpNick">' + T('nickname') + '</label><input id="tpNick" maxlength="64" autocomplete="nickname" required></div>' +
+      '<div><label for="tpCode">' + T('code') + '</label><input id="tpCode" maxlength="16" autocomplete="off" required></div>' +
+      '<button type="submit"' + (uniq.length ? '' : ' class="primary"') + '>' + T('tpShow') + '</button></form></section>';
+  }
+
   if (c.phase === 'upcoming' || c.phase === 'table') {
     const at = c.autoOpen && c.startsAt ? c.startsAt - (c.openBefore || 0) * 60000 : null;
     const ck = c.checkIn && c.checkIn.needed ? '<li>' + (c.checkIn.opensAt ? T('checkInHow', { time: fmtTime(c.checkIn.opensAt) }) : T('checkInHowNoTime')) + '</li>' : '';
     const mt = c.multi ? '<li>' + T('howMulti', { n: c.multi.finalists }) + '</li>' : '';
     h += '<section class="card"><h2>' + T('howTitle') + '</h2><ol class="how"><li>' + T('how1') + '</li>' + ck + mt + '<li>' +
       (at ? T('how2At', { time: fmtTime(at) }) : T('how2')) + '</li><li>' + T('how3') + '</li><li>' + T('how4') + '</li>' +
-      (c.witnesses ? '<li>' + T('howWitness') + '</li>' : '') + '</ol></section>';
+      (c.witnesses ? '<li>' + T('howWitness') + '</li>' : '') + (c.tablePassword && c.phase === 'upcoming' ? '<li>' + T('tpLater') + '</li>' : '') + '</ol></section>';
   }
 
   // Several tables: the tables and the final, each with its own page.
@@ -273,8 +289,23 @@ function renderOne() {
 }
 // The invitation code, carried to the pages of a private tournament's tables.
 function invQs(sep) { const i = inviteFromUrl(); return i ? sep + 'invite=' + encodeURIComponent(i) : ''; }
-function errText(d) { return T('err_' + (['badNick', 'taken', 'badCode', 'tooMany', 'notFound', 'checkInNotYet', 'checkInClosed', 'noCheckIn', 'alreadyIn', 'notPdb', 'noGame', 'noLogWitness', 'notPlayer', 'tooLarge'].indexOf(d.code) >= 0 ? d.code : 'error')); }
+function errText(d) { return T('err_' + (['badNick', 'taken', 'badCode', 'tooMany', 'notFound', 'checkInNotYet', 'checkInClosed', 'noCheckIn', 'alreadyIn', 'notPdb', 'noGame', 'noLogWitness', 'notPlayer', 'tooLarge', 'noTablePass', 'tableNotOpen', 'absentPlayer', 'notCheckedIn'].indexOf(d.code) >= 0 ? d.code : 'error')); }
+// Table passwords already shown in this page (they stay through the refreshes).
+const shownPass = {};
 function wire() {
+  const getPass = async (nick, code) => {
+    const d = await api('/t/' + cur.key + '/tablepass', { nick, code, invite: inviteFromUrl() || undefined });
+    if (!d.ok) { flash = { bad: true, html: errText(d) }; renderOne(); return; }
+    shownPass[cur.key + '|' + d.nick.toLowerCase()] = d.password;
+    renderOne();
+  };
+  document.querySelectorAll('[data-tpshow]').forEach((b) => b.addEventListener('click', () => {
+    const lo = b.dataset.tpshow.toLowerCase();
+    const r = regsFor(cur.key).concat(cur.parent ? regsFor(cur.parent.key) : []).find((x) => x.nick.toLowerCase() === lo);
+    if (r) getPass(r.nick, r.code);
+  }));
+  const tp = $('tpForm');
+  if (tp) tp.addEventListener('submit', (ev) => { ev.preventDefault(); getPass($('tpNick').value.trim(), $('tpCode').value.trim().toUpperCase()); });
   const reg = $('regForm');
   if (reg) reg.addEventListener('submit', async (ev) => {
     ev.preventDefault();

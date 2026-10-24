@@ -21,7 +21,7 @@
 
 import { readFileSync, writeFileSync, renameSync, mkdirSync, readdirSync, existsSync, rmSync, appendFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { randomBytes, createHash, timingSafeEqual } from 'node:crypto';
+import { randomBytes, createHash, createHmac, timingSafeEqual } from 'node:crypto';
 import { Journal, verifyJournal, signPayload, verifyPayload, publicKeyFromPrivate, publicKeyRawB64 } from './journal.mjs';
 import { listPdbGames, rankPdbGame, isPdb, pdbWitness } from './pdb.mjs';
 import { isBotLang } from './botchat.mjs';
@@ -50,7 +50,7 @@ const FORMATS = ['sitngo', 'multi'];
 export { TABLE_DEFAULTS, cleanTable };
 // How the director runs the table: opening by itself before the start, and
 // its announcements in the table chat.
-export const RUN_DEFAULTS = Object.freeze({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30, chatLang: 'en', qmlWitnesses: false, finalists: 2, absence: null });
+export const RUN_DEFAULTS = Object.freeze({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30, chatLang: 'en', qmlWitnesses: false, finalists: 2, absence: null, tablePassword: false });
 // Players who do not come to the table (decided 2026-10-24). « auto »: a
 // connected player is invited again every minute when he refuses, does not
 // answer, is busy in another game or leaves the table (each one a failure;
@@ -91,6 +91,10 @@ export function cleanRun(r, base) {
     chatLang: isBotLang(r.chatLang) ? String(r.chatLang).toLowerCase() : (b.chatLang || 'en'),
     // Players who do not come to the table (ABSENCE_AUTO above).
     absence: cleanAbsence(r.absence, b.absence),
+    // A password on the table, given on the players' page against the
+    // personal code only (service 0.24.0): a nickname taken by someone else
+    // on a LAN server cannot sit.
+    tablePassword: typeof r.tablePassword === 'boolean' ? r.tablePassword : !!b.tablePassword,
   };
 }
 // A table opened by itself is not opened any more this long after the start.
@@ -226,7 +230,8 @@ export function createTournaments(o) {
       case 'corrected': return 'corrected: ' + d.reason + (d.proposedBy ? ' (proposed by ' + d.proposedBy + ', approved by ' + d.author + ')' : '');
       case 'correctionProposed': return 'correction proposed, waiting for a second organizer: ' + d.reason;
       case 'correctionRejected': return 'correction of ' + d.proposedBy + ' ' + (d.withdrawn ? 'withdrawn' : 'rejected') + (d.reason ? ': ' + d.reason : '');
-      case 'tableOpened': return 'the director opens the table on ' + (d.server || 'the server') + ' (' + d.watchId + ')';
+      case 'tableOpened': return 'the director opens the table on ' + (d.server || 'the server') + ' (' + d.watchId + ')' + (d.password ? ', with a password' : '');
+      case 'tablePassShown': return 'table password shown to ' + d.nick;
       case 'tableGo': return 'go without the absent';
       case 'tableReinvite': return 'invitations sent again';
       case 'tableMessage': return 'message sent to the table';
@@ -266,7 +271,8 @@ export function createTournaments(o) {
     const id = now().toString(36) + randomBytes(4).toString('hex');
     mkdirSync(tdir(id));
     const table = cleanTable(input.table);
-    const run = cleanRun(input.run);
+    // The table password: on by default with the identity « personal code » (Official).
+    const run = cleanRun(input.run, { tablePassword: settings.identity === 'code' });
     const image = imageOf(input.image);
     if (run.autoOpen && startsAt == null) refuse('opening by itself needs a start date');
     const t = {
@@ -422,6 +428,37 @@ export function createTournaments(o) {
     gen++;
     return { deleted: t.id, name: t.name, tables: kids.length };
   }
+  // ── the table password (service 0.24.0) ──
+  // Never stored: worked out from the install key and a nonce kept with the
+  // open table, so only this install can tell it. Lower case letters and
+  // digits, none that look alike: typed in the QML client by hand.
+  const PASS_ABC = 'abcdefghjkmnpqrstuvwxyz23456789';
+  function passFor(id, nonce) {
+    const key = privateKey();
+    if (!key || !nonce) return null;
+    const h = createHmac('sha256', key).update('arena-table:' + id + ':' + nonce).digest();
+    let s = '';
+    for (let i = 0; i < 10; i++) s += PASS_ABC[h[i] % PASS_ABC.length];
+    return s;
+  }
+  const passwordOn = (t) => !!(t && t.run && t.run.tablePassword);
+  // A player asks for it on the players' page: his nickname and his personal
+  // code, registered (checked in when there is a check-in), not absent, the
+  // table open. Each time it is shown, a line in the journal.
+  function tablePass(key, input) {
+    const t0 = byKey(key);
+    if (!t0 || !visible(t0, input && input.invite)) prefuse('notFound', 'unknown tournament');
+    if (!passwordOn(t0)) prefuse('noTablePass', 'this table has no password');
+    if (!hostOpen(t0) || !t0.host.passNonce) prefuse('tableNotOpen', 'the table is not open');
+    const nick = cleanNick(input && input.nick);
+    const p = t0.players.find((x) => sameNick(x.nick, nick));
+    if (!p || !p.codeHash || !sameHash(p.codeHash, hashCode(input && input.code))) prefuse('badCode', 'nickname or code not recognised');
+    if (p.absent) prefuse('absentPlayer', 'marked absent for this table');
+    if (needsCheckIn(t0) && !t0.parentId && !p.checkedIn) prefuse('notCheckedIn', 'check in first');
+    act(t0.id, 'player', 'tablePassShown', { nick: p.nick }, () => {});
+    return { nick: p.nick, password: passFor(t0.id, t0.host.passNonce) };
+  }
+
   // ── a cup's programme (cupplan.mjs, service 0.23.0) ──
   // Started: players seated, a table drawn or opened, a result — from then
   // on the cup leaves the tournament alone.
@@ -559,7 +596,7 @@ export function createTournaments(o) {
     const card = publicCard(t);
     const out = Object.assign(card, {
       visibility: t.settings.visibility, identity: t.settings.identity, validation: t.settings.validation,
-      table: t.table || null, autoOpen: !!(t.run && t.run.autoOpen), openBefore: t.run ? t.run.openBefore : null,
+      table: t.table || null, autoOpen: !!(t.run && t.run.autoOpen), openBefore: t.run ? t.run.openBefore : null, tablePassword: passwordOn(t),
       closedBecause: regClosed(t),
       playerList: t.players.map((p) => ({ nick: p.nick, absent: !!p.absent, checkedIn: !!p.checkedIn })),
       checkIn: checkInState(t),
@@ -1074,11 +1111,12 @@ export function createTournaments(o) {
   }
 
   // ── the director opens the table (host mode) ──
-  function hostOpened(id, watchId, info, author) {
-    return act(id, author, 'tableOpened', Object.assign({ watchId }, info || {}), (t) => {
+  function hostOpened(id, watchId, info, author, passNonce) {
+    return act(id, author, 'tableOpened', Object.assign({ watchId, password: !!passNonce }, info || {}), (t) => {
       if (t.status === 'validated' || t.result) refuse('the result is set');
       if (hostOpen(t)) refuse('the table is already open');
       t.host = { watchId, status: 'open', openedAt: now(), by: author || 'admin' };
+      if (passNonce) t.host.passNonce = String(passNonce);
       t.autoTry = null;
       t.status = 'running';
     });
@@ -1151,6 +1189,7 @@ export function createTournaments(o) {
   }
 
   return { list, get, create, update, addPlayer, removePlayer, setResult: setResultP, validate, correct, approveCorrection, rejectCorrection, importPdb, file,
+    passFor, passwordOn: (id) => { try { return passwordOn(load(id).t); } catch (e) { return false; } }, tablePass, tablePassOf: (id) => { try { const t = load(id).t; return hostOpen(t) && t.host.passNonce ? passFor(t.id, t.host.passNonce) : null; } catch (e) { return null; } },
     isStarted: (id) => { try { return isStarted(load(id).t); } catch (e) { return true; } }, discard, addRegistered, removeRegistered, codeHash: (c) => hashCode(c), newCode: () => newCode(), playersOf: (id) => { try { return load(id).t.players.map((p) => ({ nick: p.nick, viaCup: !!p.viaCup })); } catch (e) { return null; } },
     publicList, publicGet, register, unregister, publicFile, witnessReport, witnessLog, keyHost, checkCollusion, allRaw: () => allTournaments(), generation: () => gen, idOfKey: (key) => { const t = byKey(key); return t ? t.id : null; }, drawTables, makeFinal, stagesTick, stagesRecompute, multiParents: () => allTournaments().filter((t) => t.format === 'multi' && t.stages && t.status !== 'validated').map((t) => t.id), checkIn, issueCode, organizerCheckIn, markNotCheckedIn, needsCheckIn: (id) => needsCheckIn(load(id).t),
     hostOpened, hostCheck, hostNote, hostEnded, hostResultRefused, openHosts, autoOpenDue, autoOpenNote, remove, Refusal };

@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: '这场锦标赛已满员：请选择另一场。',
   err_dateStarted: '这场锦标赛已开始。',
   regViaCup: '报名以整个杯赛为单位：请到「{name}」的页面报名。',
+  tpTitle: '牌桌密码',
+  tpText: '此牌桌设有密码：只有已报名玩家才能凭个人代码获取。接受赛事主管的邀请时，请在 PokerTH 中输入密码。',
+  tpLater: '此牌桌将设有密码：牌桌开放后，凭你的个人代码即可在本页查看。',
+  tpShow: '显示牌桌密码',
+  tpIs: '密码：{password}',
+  err_noTablePass: '此牌桌没有密码。',
+  err_tableNotOpen: '牌桌尚未开放。',
+  err_absentPlayer: '该玩家在此牌桌已被记为缺席。',
+  err_notCheckedIn: '请先签到：密码只提供给已签到的玩家。',
 };

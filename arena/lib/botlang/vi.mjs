@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'ban tổ chức đã đóng bàn này: trò chơi này không được tính cho giải đấu.',
   strangerSeated: '{nick} chưa đăng ký giải đấu này: hãy mời người này rời bàn trước khi bắt đầu trò chơi.',
   strangersAtStart: 'chưa đăng ký giải đấu này: {list}. ban tổ chức sẽ kiểm tra trò chơi này trước khi tính.',
+  tablePassword: 'bàn này có mật khẩu: hãy nhập mã cá nhân trên trang giải đấu để xem.',
 };

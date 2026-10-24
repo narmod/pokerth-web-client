@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Ez a verseny megtelt: válassz másikat.',
   err_dateStarted: 'Ez a verseny már elkezdődött.',
   regViaCup: 'A regisztráció az egész kupára szól: regisztrálj ennek az oldalán: „{name}”.',
+  tpTitle: 'Az asztal jelszava',
+  tpText: 'Ennek az asztalnak jelszava van: csak a regisztrált játékosok kapják meg, a személyes kódjukkal. Írd be a PokerTH-ba, amikor elfogadod az igazgató meghívását.',
+  tpLater: 'Az asztalnak jelszava lesz: ezen az oldalon jelenik meg, a személyes kódoddal, amint az asztal megnyílik.',
+  tpShow: 'Mutasd az asztal jelszavát',
+  tpIs: 'jelszó: {password}',
+  err_noTablePass: 'Ennek az asztalnak nincs jelszava.',
+  err_tableNotOpen: 'Az asztal még nincs nyitva.',
+  err_absentPlayer: 'Ez a játékos hiányzóként van megjelölve ennél az asztalnál.',
+  err_notCheckedIn: 'Előbb erősítsd meg a jelenléted: a jelszót csak a jelenlétüket megerősítő játékosok kapják meg.',
 };

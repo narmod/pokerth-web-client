@@ -194,4 +194,13 @@ export const strings = {
   err_dateFull: 'This tournament is full: pick another one.',
   err_dateStarted: 'This tournament has started.',
   regViaCup: 'Registration is for the whole cup: register on the page of « {name} ».',
+  tpTitle: 'Table password',
+  tpText: 'This table has a password: only registered players get it, with their personal code. Type it in PokerTH when you accept the director’s invitation.',
+  tpLater: 'The table will have a password: it shows on this page, with your personal code, once the table is open.',
+  tpShow: 'Show the table password',
+  tpIs: 'password: {password}',
+  err_noTablePass: 'This table has no password.',
+  err_tableNotOpen: 'The table is not open yet.',
+  err_absentPlayer: 'This player is marked absent for this table.',
+  err_notCheckedIn: 'Check in first: the password is given to checked-in players only.',
 };

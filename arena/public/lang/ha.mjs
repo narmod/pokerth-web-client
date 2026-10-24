@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Wannan gasa ta cika: zaɓi wata.',
   err_dateStarted: 'Wannan gasa ta fara.',
   regViaCup: 'Rajista don dukan kofin ne: yi rajista a shafin “{name}”.',
+  tpTitle: 'Kalmar sirrin tebur',
+  tpText: 'Wannan tebur yana da kalmar sirri: \'yan wasan da suka yi rajista ne kaɗai ke samun ta, da lambar sirrinsu. Rubuta ta a PokerTH lokacin da ka karɓi gayyatar darakta.',
+  tpLater: 'Teburin zai kasance da kalmar sirri: za ta bayyana a wannan shafi, da lambar sirrinka, da zarar an buɗe teburin.',
+  tpShow: 'Nuna kalmar sirrin tebur',
+  tpIs: 'kalmar sirri: {password}',
+  err_noTablePass: 'Wannan tebur ba shi da kalmar sirri.',
+  err_tableNotOpen: 'Ba a buɗe teburin ba tukuna.',
+  err_absentPlayer: 'An rubuta wannan ɗan wasa a matsayin wanda ba ya nan a wannan tebur.',
+  err_notCheckedIn: 'Ka fara tabbatar da halarta: \'yan wasan da suka tabbatar da halartarsu ne kaɗai ke samun kalmar sirri.',
 };

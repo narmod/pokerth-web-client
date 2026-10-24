@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'olùṣètò ti tì tábìlì yìí: a kò ní ka eré yìí fún ìdíje náà.',
   strangerSeated: '{nick} kò forúkọ sílẹ̀ fún ìdíje yìí: jọ̀wọ́ yọ ọ́ kúrò kí o tó bẹ̀rẹ̀ eré.',
   strangersAtStart: 'wọn kò forúkọ sílẹ̀ fún ìdíje yìí: {list}. olùṣètò kan yóò ṣàyẹ̀wò eré yìí kí a tó kà á.',
+  tablePassword: 'tábìlì yìí ní ọ̀rọ̀ aṣínà: fi kóòdù àdáni rẹ sí ojú-ìwé ìdíje láti rí i.',
 };

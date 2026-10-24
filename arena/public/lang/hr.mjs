@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Ovaj je turnir popunjen: odaberite drugi.',
   err_dateStarted: 'Ovaj je turnir počeo.',
   regViaCup: 'Prijava vrijedi za cijeli kup: prijavite se na stranici „{name}”.',
+  tpTitle: 'Lozinka stola',
+  tpText: 'Ovaj stol ima lozinku: dobivaju je samo prijavljeni igrači, uz svoj osobni kôd. Upišite je u PokerTH kada prihvatite direktorov poziv.',
+  tpLater: 'Stol će imati lozinku: prikazat će se na ovoj stranici, uz vaš osobni kôd, kada se stol otvori.',
+  tpShow: 'Prikaži lozinku stola',
+  tpIs: 'lozinka: {password}',
+  err_noTablePass: 'Ovaj stol nema lozinku.',
+  err_tableNotOpen: 'Stol još nije otvoren.',
+  err_absentPlayer: 'Ovaj igrač vodi se kao odsutan za ovaj stol.',
+  err_notCheckedIn: 'Najprije potvrdite dolazak: lozinka se daje samo igračima koji su potvrdili dolazak.',
 };

@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Kejohanan ini sudah penuh: pilih yang lain.',
   err_dateStarted: 'Kejohanan ini sudah bermula.',
   regViaCup: 'Pendaftaran adalah untuk seluruh piala: daftar di halaman “{name}”.',
+  tpTitle: 'Kata laluan meja',
+  tpText: 'Meja ini ada kata laluan: hanya pemain berdaftar mendapatnya, dengan kod peribadi mereka. Taip kata laluan itu dalam PokerTH semasa menerima jemputan pengarah.',
+  tpLater: 'Meja ini akan ada kata laluan: ia dipaparkan di halaman ini, dengan kod peribadi anda, sebaik sahaja meja dibuka.',
+  tpShow: 'Tunjukkan kata laluan meja',
+  tpIs: 'kata laluan: {password}',
+  err_noTablePass: 'Meja ini tiada kata laluan.',
+  err_tableNotOpen: 'Meja belum dibuka.',
+  err_absentPlayer: 'Pemain ini ditanda tidak hadir untuk meja ini.',
+  err_notCheckedIn: 'Daftar masuk dahulu: kata laluan hanya diberikan kepada pemain yang telah mendaftar masuk.',
 };

@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'de organisator heeft deze tafel gesloten: dit spel telt niet mee voor het toernooi.',
   strangerSeated: '{nick} is niet ingeschreven voor dit toernooi: verwijder deze speler voordat je het spel start.',
   strangersAtStart: 'niet ingeschreven voor dit toernooi: {list}. een organisator controleert dit spel voordat het telt.',
+  tablePassword: 'deze tafel heeft een wachtwoord: geef je persoonlijke code op de toernooipagina om het te zien.',
 };

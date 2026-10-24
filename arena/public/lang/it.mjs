@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Questo torneo è al completo: scegline un altro.',
   err_dateStarted: 'Questo torneo è iniziato.',
   regViaCup: 'L’iscrizione vale per tutta la coppa: iscriviti dalla pagina di «{name}».',
+  tpTitle: 'Password del tavolo',
+  tpText: 'Questo tavolo ha una password: la ricevono solo i giocatori iscritti, con il loro codice personale. Inseriscila in PokerTH quando accetti l’invito del direttore.',
+  tpLater: 'Il tavolo avrà una password: comparirà su questa pagina, con il tuo codice personale, quando il tavolo sarà aperto.',
+  tpShow: 'Mostra la password del tavolo',
+  tpIs: 'password: {password}',
+  err_noTablePass: 'Questo tavolo non ha password.',
+  err_tableNotOpen: 'Il tavolo non è ancora aperto.',
+  err_absentPlayer: 'Questo giocatore è segnato assente per questo tavolo.',
+  err_notCheckedIn: 'Fai prima il check-in: la password viene data solo ai giocatori che hanno fatto il check-in.',
 };

@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Tá an comórtas seo lán: roghnaigh ceann eile.',
   err_dateStarted: 'Tá tús curtha leis an gcomórtas seo.',
   regViaCup: 'Is don chorn ar fad an clárú: cláraigh ar leathanach “{name}”.',
+  tpTitle: 'Pasfhocal an bhoird',
+  tpText: 'Tá pasfhocal ag an mbord seo: ní fhaigheann ach imreoirí cláraithe é, lena gcód pearsanta. Clóscríobh é in PokerTH nuair a ghlacann tú le cuireadh an stiúrthóra.',
+  tpLater: 'Beidh pasfhocal ag an mbord: taispeánfar é ar an leathanach seo, le do chód pearsanta, nuair a bheidh an bord oscailte.',
+  tpShow: 'Taispeáin pasfhocal an bhoird',
+  tpIs: 'pasfhocal: {password}',
+  err_noTablePass: 'Níl pasfhocal ag an mbord seo.',
+  err_tableNotOpen: 'Níl an bord oscailte fós.',
+  err_absentPlayer: 'Tá an t-imreoir seo marcáilte as láthair don bhord seo.',
+  err_notCheckedIn: 'Dearbhaigh do láithreacht ar dtús: ní thugtar an pasfhocal ach d’imreoirí a dhearbhaigh a láithreacht.',
 };

@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Lo mqhudelwano ugcwele: khetha omunye.',
   err_dateStarted: 'Lo mqhudelwano usuqalile.',
   regViaCup: 'Ukubhalisa kungokwendebe yonke: bhalisa ekhasini le-“{name}”.',
+  tpTitle: 'Iphasiwedi yetafula',
+  tpText: 'Leli tafula linephasiwedi: bayithola abadlali ababhalisile kuphela, ngekhodi yabo yomuntu siqu. Yifake ku-PokerTH lapho wamukela isimemo somqondisi.',
+  tpLater: 'Itafula lizoba nephasiwedi: izovela kuleli khasi, ngekhodi yakho yomuntu siqu, uma itafula selivuliwe.',
+  tpShow: 'Bonisa iphasiwedi yetafula',
+  tpIs: 'iphasiwedi: {password}',
+  err_noTablePass: 'Leli tafula alinayo iphasiwedi.',
+  err_tableNotOpen: 'Itafula alikavulwa.',
+  err_absentPlayer: 'Lo mdlali ubhalwe njengongekho kuleli tafula.',
+  err_notCheckedIn: 'Qala uqinisekise ukuba khona: iphasiwedi inikezwa kuphela abadlali abaqinisekise ukuba khona.',
 };

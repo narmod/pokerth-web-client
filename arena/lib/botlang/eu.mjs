@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'antolatzaileak mahai hau itxi du: partida honek ez du txapelketarako balio.',
   strangerSeated: '{nick} ez dago izena emanda txapelketa honetan: kendu mahaitik partida hasi aurretik, mesedez.',
   strangersAtStart: 'izena eman gabe txapelketa honetan: {list}. antolatzaile batek partida hau egiaztatuko du zenbatu aurretik.',
+  tablePassword: 'mahai honek pasahitza du: ikusteko, eman zure kode pertsonala txapelketaren orrian.',
 };

@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Ta turnir je poln: izberi drugega.',
   err_dateStarted: 'Ta turnir se je že začel.',
   regViaCup: 'Prijava velja za ves pokal: prijavi se na strani »{name}«.',
+  tpTitle: 'Geslo mize',
+  tpText: 'Ta miza ima geslo: dobijo ga samo prijavljeni igralci, s svojo osebno kodo. Vnesi ga v PokerTH, ko sprejmeš direktorjevo povabilo.',
+  tpLater: 'Miza bo imela geslo: prikazalo se bo na tej strani, s tvojo osebno kodo, ko se miza odpre.',
+  tpShow: 'Prikaži geslo mize',
+  tpIs: 'geslo: {password}',
+  err_noTablePass: 'Ta miza nima gesla.',
+  err_tableNotOpen: 'Miza še ni odprta.',
+  err_absentPlayer: 'Ta igralec je za to mizo označen kot odsoten.',
+  err_notCheckedIn: 'Najprej potrdi prisotnost: geslo dobijo samo igralci, ki so potrdili prisotnost.',
 };

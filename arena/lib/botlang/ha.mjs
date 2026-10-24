@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'mai shirya gasar ya rufe wannan tebur: wannan wasa ba zai ƙidaya a gasar ba.',
   strangerSeated: '{nick} bai yi rajista a wannan gasa ba: ka cire shi daga teburin kafin ka fara wasan.',
   strangersAtStart: 'ba su yi rajista a wannan gasa ba: {list}. mai shirya gasa zai duba wannan wasa kafin ya ƙidaya.',
+  tablePassword: 'wannan tebur yana da kalmar sirri: ba da lambar sirrinka a shafin gasar don ganin ta.',
 };

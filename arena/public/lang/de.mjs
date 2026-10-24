@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'Dieses Turnier ist voll: Wähle ein anderes.',
   err_dateStarted: 'Dieses Turnier hat begonnen.',
   regViaCup: 'Die Anmeldung gilt für den ganzen Pokal: Melde dich auf der Seite von „{name}“ an.',
+  tpTitle: 'Tisch-Passwort',
+  tpText: 'Dieser Tisch hat ein Passwort: Nur angemeldete Spieler erhalten es, mit ihrem persönlichen Code. Gib es in PokerTH ein, wenn du die Einladung des Turnierleiters annimmst.',
+  tpLater: 'Der Tisch bekommt ein Passwort: Es erscheint auf dieser Seite, mit deinem persönlichen Code, sobald der Tisch offen ist.',
+  tpShow: 'Tisch-Passwort anzeigen',
+  tpIs: 'Passwort: {password}',
+  err_noTablePass: 'Dieser Tisch hat kein Passwort.',
+  err_tableNotOpen: 'Der Tisch ist noch nicht offen.',
+  err_absentPlayer: 'Dieser Spieler ist für diesen Tisch als abwesend markiert.',
+  err_notCheckedIn: 'Checke zuerst ein: Das Passwort gibt es nur für eingecheckte Spieler.',
 };

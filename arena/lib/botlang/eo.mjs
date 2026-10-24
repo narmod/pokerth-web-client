@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'la organizanto fermis ĉi tiun tablon: ĉi tiu ludo ne kalkuliĝas por la turniro.',
   strangerSeated: '{nick} ne estas aliĝinta al ĉi tiu turniro: bonvolu forigi tiun ludanton antaŭ ol komenci.',
   strangersAtStart: 'ne aliĝintaj al ĉi tiu turniro: {list}. organizanto kontrolos ĉi tiun ludon antaŭ ol ĝi kalkuliĝos.',
+  tablePassword: 'ĉi tiu tablo havas pasvorton: donu vian personan kodon en la turnira paĝo por vidi ĝin.',
 };

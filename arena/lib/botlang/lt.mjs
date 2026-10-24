@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'organizatorius uždarė šį stalą: šis žaidimas turnyre neskaičiuojamas.',
   strangerSeated: '{nick} neužsiregistravo šiam turnyrui: prieš pradėdami žaidimą, pašalinkite šį žaidėją.',
   strangersAtStart: 'neužsiregistravę šiam turnyrui: {list}. prieš įskaitant rezultatą, organizatorius patikrins šį žaidimą.',
+  tablePassword: 'šis stalas turi slaptažodį: jį pamatysite turnyro puslapyje, nurodę asmeninį kodą.',
 };

@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'organizator je zatvorio ovaj stol: ova igra se ne računa za turnir.',
   strangerSeated: '{nick} nije prijavljen na ovaj turnir: molimo uklonite ga prije pokretanja igre.',
   strangersAtStart: 'nisu prijavljeni na ovaj turnir: {list}. organizator provjerava ovu igru prije nego što se uračuna.',
+  tablePassword: 'ovaj stol ima lozinku: unesite svoj osobni kôd na stranici turnira da biste je vidjeli.',
 };

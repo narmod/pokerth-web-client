@@ -103,7 +103,11 @@ export function createTournamentsView(deps) {
     const p = $('tProfile').value;
     $('tProfileNote').textContent = PROFILE_TEXT[p] || '';
     $('tCustom').hidden = p !== 'custom';
+    // The table password: on by default with the identity « personal code ».
+    const idc = p === 'official' || (p === 'custom' && $('tc_identity') && $('tc_identity').value === 'code');
+    $('tTablePass').checked = idc;
   }
+  document.addEventListener('change', (e) => { if (e.target && e.target.id === 'tc_identity') profileNote(); });
   $('tProfile').addEventListener('change', profileNote);
   const formatNote = () => { const m = $('tFormat').value === 'multi'; $('tFinalBox').hidden = !m; $('tFormatNote').hidden = !m; };
   $('tFormat').addEventListener('change', formatNote);
@@ -119,7 +123,7 @@ export function createTournamentsView(deps) {
     if ($('tVis').value) body.visibility = $('tVis').value;
     body.table = readTable('tt_');
     const img = IP.value('tim_new'); if (img) body.image = img;
-    body.run = { autoOpen: $('tAuto').checked, openBefore: Number($('tBefore').value), announce: $('tAnnounce').checked, selfRegister: $('tSelfReg').checked, chatLang: $('tChatLang').value || 'en', qmlWitnesses: $('tQmlWit').checked, finalists: Number($('tFinalists').value) || 2, absence: readAbsence('ta_') };
+    body.run = { autoOpen: $('tAuto').checked, openBefore: Number($('tBefore').value), announce: $('tAnnounce').checked, selfRegister: $('tSelfReg').checked, chatLang: $('tChatLang').value || 'en', qmlWitnesses: $('tQmlWit').checked, finalists: Number($('tFinalists').value) || 2, absence: readAbsence('ta_'), tablePassword: $('tTablePass').checked };
     if (body.profile === 'custom') {
       body.settings = {};
       for (const k of Object.keys(CHOICES)) body.settings[k] = $('tc_' + k).value;
@@ -142,6 +146,7 @@ export function createTournamentsView(deps) {
       '<label class="ck"><input type="checkbox" id="te_announce"' + (r.announce ? ' checked' : '') + '> Announcements in the table chat</label>' +
       '<div class="row"><div><label for="te_chatlang">Language of the director in the chat</label><select id="te_chatlang">' + langOptions(r.chatLang) + '</select></div></div>' +
       '<label class="ck"><input type="checkbox" id="te_selfreg"' + (r.selfRegister !== false ? ' checked' : '') + '> Players can register themselves on the public page</label>' +
+      '<label class="ck"><input type="checkbox" id="te_tablepass"' + (r.tablePassword ? ' checked' : '') + '> Table password, given on the players\' page against the personal code (a nickname taken by someone else cannot sit)</label>' +
       '<label class="ck"><input type="checkbox" id="te_qmlwit"' + (r.qmlWitnesses ? ' checked' : '') + '> Accept QML players as witnesses (their game log)</label>' +
       absenceFields('tea_', r.absence, esc) +
       '<div class="row"><div><label for="te_checkin">Check-in opens, minutes before the start (identity « code »)</label><input id="te_checkin" type="number" inputmode="numeric" min="5" max="240" value="' + esc(r.checkInBefore) + '"></div></div>';
@@ -451,6 +456,7 @@ export function createTournamentsView(deps) {
     const phase = L.status === 'running' ? 'Game running' + (L.hand ? ', hand ' + L.hand : '') : (HOST_PHASE[H.phase] || L.status || 'starting');
     let h = '<p><span class="chip live">' + esc(L.status || 'connecting') + '</span> ' + esc(phase) + '</p>';
     if (H.tableName) h += '<p class="small muted">Table « ' + esc(H.tableName) + ' »' + (H.gameId != null ? ' #' + esc(H.gameId) : '') + ' · director ' + esc(L.nick || '') + (H.admin ? ' · table admin ' + esc(H.admin) : '') + '</p>';
+    if (t.tablePasswordNow) h += '<p class="small">Table password: <b class="mono">' + esc(t.tablePasswordNow) + '</b> <span class="muted">— players get it on their page with their personal code; give it by hand only to a player you know.</span></p>';
     if (H.registered && H.registered.length) {
       h += '<ul class="chips">' + H.registered.map((r) => { const s = PLAYER_STATUS[r.status] || [r.status, ''];
         const why = r.status === 'absent' && r.absentWhy ? ' — ' + (ABSENT_WHY[r.absentWhy] || r.absentWhy) : '';
@@ -601,7 +607,7 @@ export function createTournamentsView(deps) {
         if (tb && (!TF.same(tb, cur.table) || (tb.preset || null) !== ((cur.table && cur.table.preset) || null))) patch.table = tb;
       }
       if ($('te_auto')) {
-        const run = { autoOpen: $('te_auto').checked, openBefore: Number($('te_before').value), announce: $('te_announce').checked, selfRegister: $('te_selfreg').checked, checkInBefore: Number($('te_checkin').value), chatLang: $('te_chatlang').value, qmlWitnesses: $('te_qmlwit').checked, absence: readAbsence('tea_') };
+        const run = { autoOpen: $('te_auto').checked, openBefore: Number($('te_before').value), announce: $('te_announce').checked, selfRegister: $('te_selfreg').checked, checkInBefore: Number($('te_checkin').value), chatLang: $('te_chatlang').value, qmlWitnesses: $('te_qmlwit').checked, absence: readAbsence('tea_'), tablePassword: $('te_tablepass').checked };
         const r0 = Object.assign({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30, chatLang: 'en', qmlWitnesses: false }, cur.run || {});
         const a0 = Object.assign({}, ABSENCE_AUTO, r0.absence || {});
         const absChanged = run.absence && (run.absence.mode !== a0.mode || (run.absence.mode === 'custom' && ['strikes', 'retrySec', 'graceMin'].some((k) => run.absence[k] !== a0[k])));

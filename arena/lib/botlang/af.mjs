@@ -17,4 +17,5 @@ export const strings = {
   closedByOrganizer: 'die organiseerder het hierdie tafel gesluit: hierdie spel tel nie vir die toernooi nie.',
   strangerSeated: '{nick} is nie vir hierdie toernooi geregistreer nie: verwyder die speler asseblief voor jy die spel begin.',
   strangersAtStart: 'nie vir hierdie toernooi geregistreer nie: {list}. die organiseerders kontroleer hierdie spel voordat dit tel.',
+  tablePassword: 'hierdie tafel het ’n wagwoord: gee jou persoonlike kode op die toernooibladsy om dit te sien.',
 };

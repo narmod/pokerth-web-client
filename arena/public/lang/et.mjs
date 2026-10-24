@@ -192,4 +192,13 @@ export const strings = {
   err_dateFull: 'See turniir on täis: vali mõni teine.',
   err_dateStarted: 'See turniir on alanud.',
   regViaCup: 'Registreerimine käib kogu karikale: registreeru karika „{name}“ lehel.',
+  tpTitle: 'Laua parool',
+  tpText: 'Sellel laual on parool: selle saavad ainult registreerunud mängijad oma isikliku koodiga. Sisesta see PokerTH-s, kui võtad direktori kutse vastu.',
+  tpLater: 'Laual tuleb parool: see kuvatakse sellel lehel koos sinu isikliku koodiga, kui laud on avatud.',
+  tpShow: 'Näita laua parooli',
+  tpIs: 'parool: {password}',
+  err_noTablePass: 'Sellel laual pole parooli.',
+  err_tableNotOpen: 'Laud pole veel avatud.',
+  err_absentPlayer: 'See mängija on selle laua juures märgitud puuduvaks.',
+  err_notCheckedIn: 'Kinnita esmalt oma kohalolu: parool antakse ainult kohalolu kinnitanud mängijatele.',
 };
