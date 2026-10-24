@@ -204,7 +204,15 @@ try {
   const avInfo = await (await fetch(base + '/admin/tournaments/avatar', { headers: A })).json();
   ok(avInfo.custom === true && avInfo.size > 32 && avInfo.size <= 30720, 'organizer: a new avatar, resized in the page (' + avInfo.size + ' bytes)');
   await og.click('#avReset');
-  await og.waitForFunction(() => /Back to the robot/.test(document.getElementById('avMsg').textContent), null, { timeout: 8000 });
+  await og.waitForFunction(() => /Back to the default robot/.test(document.getElementById('avMsg').textContent), null, { timeout: 8000 });
+  // The four robots: shown, the default marked; a click picks one.
+  await og.waitForFunction(() => document.querySelectorAll('#avPick img').length === 4 && [...document.querySelectorAll('#avPick img')].every((i) => i.complete && i.naturalWidth === 96), null, { timeout: 8000 });
+  ok(await og.$eval('#avPick .avopt.on', (b) => b.dataset.preset) === '3' && await og.$$eval('#avPick img', (l) => new Set(l.map((i) => i.src)).size) === 4, 'organizer: the four robots (four different images), robot 3 marked by default');
+  await og.click('#avPick button[data-preset="2"]');
+  await og.waitForFunction(() => /Robot 2 chosen/.test(document.getElementById('avMsg').textContent) && document.querySelector('#avPick .avopt.on[data-preset="2"]'), null, { timeout: 8000 });
+  ok((await (await fetch(base + '/admin/tournaments/avatar', { headers: A })).json()).preset === 2, 'organizer: robot 2 picked with a click');
+  if (shots) await og.locator('section:has(#avH)').screenshot({ path: path.join(shots, 'org-avatar.png') });
+  await og.click('#avReset');
   ok(cl.length >= 80 && cl.indexOf('fr') >= 0 && cl.indexOf('pt-br') >= 0 && cl.indexOf('en') >= 0, 'organizer: the chat language offers every language of the app (' + cl.length + ')');
   await og.close();
 

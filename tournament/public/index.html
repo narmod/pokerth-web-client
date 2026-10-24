@@ -103,9 +103,10 @@
       <section class="card" aria-labelledby="avH">
         <h2 id="avH">The director's avatar</h2>
         <div class="avrow"><img id="avImg" class="tdav" src="/tournament/avatar" alt="The director's avatar" width="72" height="72">
-          <p class="small muted">Shown next to the director in every PokerTH client, so that players tell it from the others; also on the players' page. Any image: it is cut to a circle-friendly square of 96×96 here. Tables opened afterwards use it.</p></div>
-        <div class="row"><div><label for="avFile">New image</label><input id="avFile" type="file" accept="image/*"></div>
-          <button type="button" id="avReset" class="ghost">Back to the robot</button></div>
+          <p class="small muted">Shown next to the director in every PokerTH client, so that players tell it from the others; also on the players' page. Pick one of the robots, or send an image of your own: it is cut to a square of 96×96 here. Tables opened afterwards use it.</p></div>
+        <div class="avpick" id="avPick" role="radiogroup" aria-label="The robots"></div>
+        <div class="row"><div><label for="avFile">Or an image of your own</label><input id="avFile" type="file" accept="image/*"></div>
+          <button type="button" id="avReset" class="ghost">Back to the default</button></div>
         <div class="msg" id="avMsg" role="status"></div>
       </section>
     </div>

@@ -70,7 +70,23 @@ const cups = createCupsView({ api, esc });
 // Resized here to 96×96 (PNG, or JPEG when the PNG is over the server's
 // 30 KB limit), then sent; the service checks it again.
 function avShow(msg, bad) { $('avMsg').textContent = msg || ''; $('avMsg').className = 'msg' + (msg ? (bad ? ' bad' : ' ok') : ''); }
-function avRefresh() { $('avImg').src = '/tournament/avatar?ts=' + Date.now(); }
+function avRefresh() { $('avImg').src = '/tournament/avatar?ts=' + Date.now(); avLoad(); }
+// The shipped robots: one click picks one; the current one is marked.
+function avLoad() {
+  api('/admin/tournaments/avatar?images=1').then((d) => {
+    if (!d || !d.ok) return;
+    $('avPick').innerHTML = (d.presets || []).map((n) => '<button type="button" class="avopt' + (d.preset === n ? ' on' : '') + '" role="radio" aria-checked="' + (d.preset === n) + '" data-preset="' + n + '" title="Robot ' + n + (n === d.defaultPreset ? ' (default)' : '') + '">' +
+      '<img src="' + esc((d.images || {})[n] || '') + '" alt="Robot ' + n + '" width="56" height="56"></button>').join('');
+  }).catch(() => {});
+}
+$('avPick').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-preset]');
+  if (!b) return;
+  api('/admin/tournaments/avatar', { preset: Number(b.dataset.preset) }).then((d) => {
+    if (!d.ok) return avShow(d.error || 'Refused', true);
+    avShow('Robot ' + b.dataset.preset + ' chosen: tables opened from now on show it.'); avRefresh();
+  }).catch(() => avShow('Network error', true));
+});
 function avEncode(img) {
   const c = document.createElement('canvas');
   c.width = 96; c.height = 96;
@@ -101,7 +117,7 @@ $('avFile').addEventListener('change', () => {
   img.src = url;
 });
 $('avReset').addEventListener('click', () => {
-  api('/admin/tournaments/avatar', { reset: true }).then((d) => { if (d.ok) { avShow('Back to the robot.'); avRefresh(); } else avShow(d.error || 'Refused', true); }).catch(() => avShow('Network error', true));
+  api('/admin/tournaments/avatar', { reset: true }).then((d) => { if (d.ok) { avShow('Back to the default robot.'); avRefresh(); } else avShow(d.error || 'Refused', true); }).catch(() => avShow('Network error', true));
 });
 
 // ── sign-in ────────────────────────────────────────────────────────
@@ -135,6 +151,7 @@ function start() {
     refreshList();
     tours.refresh();
     cups.refresh();
+    avLoad();
     clearInterval(listTimer);
     listTimer = setInterval(refreshList, 5000);
   }).catch(() => {});

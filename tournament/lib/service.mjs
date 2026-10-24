@@ -238,8 +238,20 @@ export function createService(o) {
     if (sub === '/status' && get) return json(res, 200, Object.assign({ ok: true, you: who }, status()));
     if (sub === '/servers' && get) return json(res, 200, { ok: true, servers: await td.servers() });
     // The director's avatar: any organizer may change it (tables opened afterwards).
-    if (sub === '/avatar' && get) { const a = td.avatar(); return json(res, 200, { ok: true, custom: !!(a && a.custom), size: a ? a.size : 0, md5: a ? a.md5 : null }); }
-    if (sub === '/avatar' && !get) { const b = await readJson(req); const r = b && b.reset ? td.resetAvatar() : td.setAvatar(b && b.image); if (r.ok) console.log('[td] director avatar ' + (b.reset ? 'reset' : 'changed') + ' by ' + who); return json(res, r.ok ? 200 : 400, r); }
+    // One of the shipped robots ({preset}), an image of its own ({image}), or the default ({reset}).
+    // ?images=1 adds the robots themselves (data: URLs), for the organizer's picker.
+    if (sub === '/avatar' && get) {
+      const a = td.avatar();
+      const out = { ok: true, custom: !!(a && a.custom), preset: a ? a.preset : null, presets: td.avatarPresets(), defaultPreset: td.avatarDefaultPreset, size: a ? a.size : 0, md5: a ? a.md5 : null };
+      if (query.images) out.images = Object.fromEntries(td.avatarPresets().map((n) => { const p = td.avatarPreset(n); return [n, p ? 'data:' + ['', 'image/png', 'image/jpeg', 'image/gif'][p.type] + ';base64,' + p.bytes.toString('base64') : null]; }));
+      return json(res, 200, out);
+    }
+    if (sub === '/avatar' && !get) {
+      const b = (await readJson(req)) || {};
+      const r = b.reset ? td.resetAvatar() : b.preset != null ? td.setAvatarPreset(b.preset) : td.setAvatar(b.image);
+      if (r.ok) console.log('[td] director avatar ' + (b.reset ? 'reset' : b.preset != null ? 'set to robot ' + Number(b.preset) : 'changed') + ' by ' + who);
+      return json(res, r.ok ? 200 : 400, r);
+    }
     if (sub === '/watches' && get) return json(res, 200, { ok: true, watches: td.list() });
     if (sub === '/watch' && get) {
       const d = td.detail(String(query.id || ''));

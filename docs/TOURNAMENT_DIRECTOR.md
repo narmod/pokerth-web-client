@@ -523,19 +523,25 @@ tables are never merged or balanced: **qualifying tables, then a final table**.
   `…/t/final {id, open?}`. The witness lookup of a table answers
   `parentKey` too (the web client looks the personal code up under it).
 
-## The director's avatar (service `0.11.0`, web client `2.1.10-web.308`)
+## The director's avatar (service `0.11.0`, web client `2.1.10-web.308`; four robots in `0.15.0`)
 
 - The director logs in with an avatar so that players tell it from the
   others: its MD5 in the Init (`avatarHash`), then, when the server asks
   (`AvatarRequest`), header, blocks of 256 bytes, end — like any client; an
   unknown hash gets `UnknownAvatar`. The server takes PNG, JPEG or GIF of
   32 B to 30 KB (`MAX_AVATAR_FILE_SIZE`); the director checks the same.
-- Default: the robot (`tournament/public/img/director-avatar.png`, 96×96).
-  Any organizer can set another on the organizer page — any image, cut to a
-  square and made 96×96 in the browser (PNG, or JPEG under the limit) —
-  stored as `TD_DIR/director-avatar.img`, or go back to the robot. Tables
-  opened afterwards use it. Routes: `GET /tournament/avatar` (public, the
-  current image), `GET|POST /admin/tournaments/avatar {image: base64} | {reset: true}`.
+- Four robots ship with the service (`tournament/public/img/`, 96×96 PNG,
+  each under 20 KB): robot 1 `director-avatar-1.png`, 2 `director-avatar-2.png`,
+  3 `director-avatar.png` (the default), 4 `director-avatar-4.png`. Any
+  organizer picks one on the organizer page with a click (kept in
+  `TD_DIR/director-avatar.json`), or sends an image of his own — any image,
+  cut to a square and made 96×96 in the browser (PNG, or JPEG under the
+  limit) — stored as `TD_DIR/director-avatar.img`; an image of one's own wins
+  over the robot, picking a robot again drops it, « Back to the default »
+  drops both. Tables opened afterwards use it. Routes: `GET /tournament/avatar`
+  (public, the current image), `GET /admin/tournaments/avatar[?images=1]`
+  (state; the robots as `data:` URLs for the picker), `POST
+  /admin/tournaments/avatar {preset: 1–4} | {image: base64} | {reset: true}`.
 
 ## Collusion check (service `0.10.0`)
 

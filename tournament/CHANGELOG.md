@@ -8,6 +8,15 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.15.0 — 2026-10-24
+
+### Changed
+- **The director's avatar: four robots to pick from.** New robots replace the
+  old one; robot 3 (chip and checklist) is the default. The organizer page
+  shows the four and picks one with a click; sending an image of one's own
+  still works and wins over the robot; « Back to the default » returns to
+  robot 3. Tables opened afterwards use the choice.
+
 ## 0.14.0 — 2026-10-24 (web client `2.1.10-web.311`)
 
 ### Added

@@ -88,6 +88,22 @@ async function login(askHash) {
   ok((await fetch(base + '/admin/tournaments/avatar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reset: true }) })).status === 403, 'changing it needs a key');
   await fetch(base + '/admin/tournaments/avatar', { method: 'POST', headers: A, body: JSON.stringify({ reset: true }) });
   ok(Buffer.from(await (await fetch(base + '/tournament/avatar')).arrayBuffer()).equals(ROBOT), 'back to the robot');
+  // The four shipped robots: each under 30 KB, shown by ?preset=N, one click picks one.
+  const st = await (await fetch(base + '/admin/tournaments/avatar?images=1', { headers: A })).json();
+  ok(JSON.stringify(st.presets) === '[1,2,3,4]' && st.preset === 3 && st.defaultPreset === 3, 'four robots, robot 3 by default');
+  const imgs = [];
+  for (const n of st.presets) { const u = st.images[n] || ''; imgs.push(/^data:image\/png;base64,/.test(u) ? Buffer.from(u.split(',')[1], 'base64') : null); }
+  ok(imgs.every((b) => b && avatarOf({ bytes: b }) && b.length <= 30720) && new Set(imgs.map((b) => b.toString('base64'))).size === 4, 'each robot given to the organizer\'s picker, valid for the server, all different');
+  ok(!(await (await fetch(base + '/admin/tournaments/avatar', { headers: A })).json()).images, 'the images only when asked');
+  const pick = await (await fetch(base + '/admin/tournaments/avatar', { method: 'POST', headers: A, body: JSON.stringify({ preset: 1 }) })).json();
+  ok(pick.ok && svc.manager.avatar().preset === 1 && svc.manager.avatar().bytes.equals(imgs[0]) && Buffer.from(await (await fetch(base + '/tournament/avatar')).arrayBuffer()).equals(imgs[0]), 'robot 1 picked: the director and the pages show it');
+  ok((await fetch(base + '/admin/tournaments/avatar', { method: 'POST', headers: A, body: JSON.stringify({ preset: 7 }) })).status === 400, 'no such robot: refused');
+  await fetch(base + '/admin/tournaments/avatar', { method: 'POST', headers: A, body: JSON.stringify({ image: jpg.toString('base64') }) });
+  ok(svc.manager.avatar().custom && svc.manager.avatar().preset === null, 'an image of its own wins over the robot');
+  await fetch(base + '/admin/tournaments/avatar', { method: 'POST', headers: A, body: JSON.stringify({ preset: 4 }) });
+  ok(!svc.manager.avatar().custom && svc.manager.avatar().bytes.equals(imgs[3]), 'picking a robot again drops the image');
+  await fetch(base + '/admin/tournaments/avatar', { method: 'POST', headers: A, body: JSON.stringify({ reset: true }) });
+  ok(svc.manager.avatar().preset === 3, 'back to the default: robot 3');
   svc.close(); srv.close();
   rmSync(dir, { recursive: true, force: true });
 }
