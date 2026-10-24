@@ -1111,6 +1111,13 @@
   .ov-ok{background:var(--ok-bg);border-color:var(--ok-line)} .ov-ok .ovai,.ov-ok .ovgo{color:var(--ok-text)}
   .ov-warn{background:var(--warn-bg);border-color:var(--warn-line)} .ov-warn .ovai,.ov-warn .ovgo{color:var(--warn-text)}
   .ov-err{background:var(--err-bg);border-color:var(--err-line)} .ov-err .ovai,.ov-err .ovgo{color:var(--err-text)}
+  /* Client errors card: share of each type, and a legend that opens Admin › Errors on that type. */
+  .ovebar{display:flex;gap:2px;height:6px;border-radius:3px;overflow:hidden;margin:8px 0 3px;background:var(--line)}
+  .ovebar i{display:block;min-width:4px;cursor:pointer}
+  .ovekinds{display:flex;flex-wrap:wrap;gap:0 12px}
+  .ovekinds button{display:inline-flex;align-items:center;gap:5px;min-height:24px;padding:0;border:0;background:none;font:inherit;font-size:.76rem;color:var(--muted);cursor:pointer;font-variant-numeric:tabular-nums}
+  .ovekinds button i{width:8px;height:8px;border-radius:50%;flex:none;background:var(--kc)}
+  .ovekinds button:hover,.ovekinds button:focus-visible{color:var(--cream)}
   .ovmodes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 14px}
   .ovmode{display:flex;flex-direction:column;gap:4px;padding:14px;border-radius:12px;background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--mc);min-width:0}
   .ovmh{display:flex;align-items:center;gap:7px;color:var(--mc)}
@@ -7786,6 +7793,12 @@
       try{ localStorage.setItem('pth_admin_err_kind',_erKindSel); }catch(x){}
       _erRender(0);
     });
+    // Overview › client errors: the bar, its legend and « Open » choose the
+    // type this section opens on (modules/admin/overview.mjs).
+    if(window.PthAdmin) window.PthAdmin.errKindPick=function(k){
+      if(k!=='all' && !ER_KINDS.some(function(x){ return x[0]===k; })) return;
+      _erKindSel=k; try{ localStorage.setItem('pth_admin_err_kind',k); }catch(x){}
+    };
     if(hb) hb.addEventListener('change',function(){ _erHideBots=hb.checked; try{ localStorage.setItem('pth_admin_err_hidebots',_erHideBots?'1':'0'); }catch(e){} _erRender(0); });
   })();
   (function(){

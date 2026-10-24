@@ -57,6 +57,29 @@ export function dailyByMode(series, todayKey) {
   });
 }
 
+// ── Client errors, by type ───────────────────────────────────────────────
+// The same five types as Admin › Errors (admin.html, ER_KINDS / _erKind; kept
+// in step by scripts/test-admin-overview.mjs), in the same order and colours.
+// Only the first three ask for something to be done: « Recovered » says an
+// in-page retry got the file in the end, « Diagnostics » are the probes that
+// answered 200 and the boot-stall page states.
+export const ERR_KINDS = [
+  { id: 'crash',  label: 'script',     color: 'var(--err-text)',  act: true },
+  { id: 'reject', label: 'rejection',  color: 'var(--warn-text)', act: true },
+  { id: 'load',   label: 'load',       color: 'var(--m-live)',    act: true },
+  { id: 'ok',     label: 'recovered',  color: 'var(--ok-text)',   act: false },
+  { id: 'diag',   label: 'diagnostic', color: 'var(--muted)',     act: false },
+];
+export function errKind(e) {
+  const m = String((e && e.msg) || '');
+  if (/^Unhandled rejection\b/.test(m)) return 'reject';
+  if (/^(Load-failure retry #\d+|Lang load retry) recovered\b/.test(m)) return 'ok';
+  if (/^Boot stall:/.test(m)) return 'diag';
+  if (/^Load-failure probe:/.test(m)) return /^Load-failure probe: HTTP [45]\d\d\b/.test(m) ? 'load' : 'diag';
+  if (/^(Failed to load |Load-failure retry #\d+ failed|Lang load failed)/.test(m)) return 'load';
+  return 'crash';
+}
+
 // ── What needs attention ─────────────────────────────────────────────────
 // Most urgent first. With nothing to report the row says so, rather than
 // leaving a gap the operator has to interpret.
@@ -91,12 +114,27 @@ export function alertsFrom(st) {
     // A group seen from robots only is a crawler's quirk, not a player's bug.
     const real = (e.groups || []).filter((g) => !(g.bots && g.uas && g.bots >= g.uas.length));
     if (real.length) {
-      const last = Math.max.apply(null, real.map((g) => g.last || 0));
-      const day = real.filter((g) => now - (g.last || 0) < 864e5).length;
-      out.push({ kind: day ? 'err' : 'info', glyph: 'warning',
-        title: real.length + ' client error' + (real.length === 1 ? '' : 's'),
-        sub: (day ? day + ' seen in the last 24 h' : 'none in the last 24 h') + (last ? ' · last ' + ago(now - last) : ''),
-        label: 'Open', t: 'errors' });
+      // The colour follows the worst type seen in the last 24 h: red for an
+      // exception or a rejection, amber for a file that never arrived; a
+      // retry that recovered, a diagnostic or anything older stays calm. The
+      // count is the groups that ask for something to be done.
+      const kinds = {}; ERR_KINDS.forEach((k) => { kinds[k.id] = 0; });
+      const act = [], fresh = {};
+      real.forEach((g) => {
+        const k = errKind(g); kinds[k]++;
+        if (ERR_KINDS.some((x) => x.id === k && x.act)) act.push(g);
+        if (now - (g.last || 0) < 864e5) fresh[k] = true;
+      });
+      const pool = act.length ? act : real;
+      const last = Math.max.apply(null, pool.map((g) => g.last || 0));
+      const day = act.filter((g) => now - (g.last || 0) < 864e5).length;
+      const sev = (fresh.crash || fresh.reject) ? 'err' : fresh.load ? 'warn' : 'info';
+      out.push({ kind: sev, glyph: 'warning', kinds,
+        title: act.length ? act.length + ' client error' + (act.length === 1 ? '' : 's') : 'No client error to act on',
+        sub: act.length
+          ? (day ? day + ' seen in the last 24 h' : 'none in the last 24 h') + (last ? ' · last ' + ago(now - last) : '')
+          : 'only retries that recovered and diagnostics' + (last ? ' · last ' + ago(now - last) : ''),
+        label: 'Open', t: 'errors', ek: 'all' });
     }
   }
   const rank = { err: 0, warn: 1, ok: 2, info: 3 };
@@ -158,10 +196,24 @@ export function proxyStale(s) {
 export function auditLabel(a) { return ACTIONS[a] || a || '?'; }
 
 // ── Rendering ────────────────────────────────────────────────────────────
+// The client errors card: one bar split by type, and a legend whose entries
+// open Admin › Errors already filtered on that type (data-ek).
+export function errKindsHtml(kinds) {
+  if (!kinds) return '';
+  const on = ERR_KINDS.filter((k) => kinds[k.id]);
+  if (!on.length) return '';
+  const tot = on.reduce((s, k) => s + kinds[k.id], 0);
+  const sum = on.map((k) => kinds[k.id] + ' ' + k.label).join(', ');
+  return '<div class="ovebar" role="img" aria-label="' + esc(tot + ' by type: ' + sum) + '">' +
+    on.map((k) => '<i data-go="errors" data-ek="' + k.id + '" style="flex:' + kinds[k.id] + ';background:' + k.color + '"></i>').join('') + '</div>' +
+    '<div class="ovekinds">' + on.map((k) => '<button type="button" data-go="errors" data-ek="' + k.id + '" style="--kc:' + k.color + '" title="Open the ' + esc(k.label) + ' errors"><i></i>' +
+      kinds[k.id] + ' ' + esc(k.label) + '</button>').join('') + '</div>';
+}
+
 function alertsHtml(list) {
   return list.map((a) => '<div class="ovalert ov-' + a.kind + '">' + icon(a.glyph, 'ovai') +
-    '<div class="ovat"><b>' + esc(a.title) + '</b><span>' + esc(a.sub) + '</span></div>' +
-    (a.t ? '<button type="button" class="ovgo" data-go="' + esc(a.t) + '">' + esc(a.label) + '</button>' : '') + '</div>').join('');
+    '<div class="ovat"><b>' + esc(a.title) + '</b><span>' + esc(a.sub) + '</span>' + errKindsHtml(a.kinds) + '</div>' +
+    (a.t ? '<button type="button" class="ovgo" data-go="' + esc(a.t) + '"' + (a.ek ? ' data-ek="' + esc(a.ek) + '"' : '') + '>' + esc(a.label) + '</button>' : '') + '</div>').join('');
 }
 
 function modesHtml(now, live) {
@@ -397,7 +449,11 @@ if (typeof document !== 'undefined' && document.getElementById('panel-overview')
   // A card's button leads to the section with the detail.
   document.getElementById('panel-overview').addEventListener('click', (e) => {
     const b = e.target && e.target.closest ? e.target.closest('[data-go]') : null;
-    if (b && window.PthAdmin) window.PthAdmin.open(b.getAttribute('data-go'));
+    if (!b || !window.PthAdmin) return;
+    // The client errors card picks the type Admin › Errors opens on.
+    const ek = b.getAttribute('data-ek');
+    if (ek && typeof window.PthAdmin.errKindPick === 'function') window.PthAdmin.errKindPick(ek);
+    window.PthAdmin.open(b.getAttribute('data-go'));
   });
   // Coming back to the tab: refresh at once rather than at the next tick.
   document.addEventListener('visibilitychange', () => { if (!document.hidden && _fast) { loadFast(_seq); loadSlow(_seq); } });

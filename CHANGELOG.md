@@ -15,6 +15,17 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Changed
+- **Admin › Overview: the client errors card follows how serious the errors are** (`web.328`) — it used to count every
+  group not seen from robots only, retries that recovered and diagnostics included, and turned red as soon as one was
+  seen in the last 24 h. It now reads each group with the same five types as Admin › Errors (`errKind` in
+  `modules/admin/overview.mjs`, kept in step with `_erKind` by the test): the title counts script errors, rejections
+  and load failures only; red when a script error or a rejection was seen in the last 24 h, amber when only a file
+  that never arrived was, calm otherwise (« No client error to act on » when only recoveries and diagnostics remain).
+  Under the title, a bar split by type in the colours of the Errors chips and a legend; a segment or a legend entry
+  opens Admin › Errors filtered on that type (`PthAdmin.errKindPick`), « Open » on all types. Test:
+  `scripts/test-admin-overview.mjs` (+18).
+
 ### Removed
 - **The Arena that ran inside the web client** (`web.327`) — the Arena is an application of its own
   (`narmod/pokerth-arena`, with its history and its design notes, `docs/ARENA.md` there). Removed here: `arena/` (the

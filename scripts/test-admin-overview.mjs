@@ -70,6 +70,44 @@ a = OV.alertsFrom({ now: T, status: { ok: true, version: 'a', runningVersion: 'a
 ok(a.length === 1 && a[0].title === 'All clear' && !a[0].t, 'nothing to do says so');
 ok(OV.alertsFrom({ status: { ok: false } }).length === 0, 'no "All clear" when the status could not be read');
 
+// ── Client errors: severity by type, bar and legend (web.328) ─────────────
+const ST = { ok: true, version: 'a', runningVersion: 'a', update: {} }, LD = { ok: true, pending: [] };
+const G = (msg, ago) => ({ msg, uas: ['x'], bots: 0, last: T - ago });
+const errAlert = (groups) => OV.alertsFrom({ now: T, status: ST, landir: LD, errors: { ok: true, groups } }).find(x => x.t === 'errors');
+ok(OV.errKind({ msg: 'Uncaught TypeError: x' }) === 'crash' && OV.errKind({ msg: 'Unhandled rejection: y' }) === 'reject'
+  && OV.errKind({ msg: 'Failed to load script' }) === 'load' && OV.errKind({ msg: 'Load-failure retry #1 recovered' }) === 'ok'
+  && OV.errKind({ msg: 'Load-failure probe: HTTP 200 online sw' }) === 'diag' && OV.errKind({ msg: 'Load-failure probe: HTTP 404 online sw' }) === 'load'
+  && OV.errKind({ msg: 'Boot stall: up=7s' }) === 'diag', 'the five types read as on Admin › Errors');
+{
+  // Same rules as admin.html _erKind: every regex literal of one is in the other.
+  const body = (txt, start) => { const i = txt.indexOf(start); return i < 0 ? '' : txt.slice(i, txt.indexOf('\n  }', i)); };
+  const rx = (t) => (t.match(/\/\^[^\n]*?\/(?=\.test)/g) || []).sort().join('\n');
+  const a1 = rx(body(admin, 'function _erKind(e){')), o1 = rx(body(src, 'export function errKind(e) {'));
+  ok(a1 && a1 === o1, 'Overview and Admin › Errors classify with the same rules');
+  ok(/\['crash',[^\]]*'var\(--err-text\)'[\s\S]*?\['reject',[^\]]*'var\(--warn-text\)'[\s\S]*?\['load',[^\]]*'var\(--m-live\)'[\s\S]*?\['ok',[^\]]*'var\(--ok-text\)'[\s\S]*?\['diag',[^\]]*'var\(--muted\)'/.test(admin)
+    && OV.ERR_KINDS.map(k => k.id + k.color).join() === 'crashvar(--err-text),rejectvar(--warn-text),loadvar(--m-live),okvar(--ok-text),diagvar(--muted)',
+    'same order and colours as the Admin › Errors chips');
+}
+let ea = errAlert([G('Uncaught ReferenceError: App is not defined', 1000), G('Failed to load script', 1000), G('Load-failure retry #1 recovered', 1000), G('Boot stall: up=7s', 1000)]);
+ok(ea.kind === 'err' && ea.title === '2 client errors', 'an exception in the last 24 h is red; recovered and diagnostics are not counted (' + ea.kind + ', ' + ea.title + ')');
+ok(ea.kinds.crash === 1 && ea.kinds.load === 1 && ea.kinds.ok === 1 && ea.kinds.diag === 1 && ea.kinds.reject === 0, 'the card carries the count of each type');
+ea = errAlert([G('Unhandled rejection: z', 1000)]);
+ok(ea.kind === 'err', 'a rejection in the last 24 h is red too');
+ea = errAlert([G('Failed to load script', 1000), G('Uncaught Error: old', 3 * 864e5)]);
+ok(ea.kind === 'warn' && ea.title === '2 client errors', 'only a file that never arrived in the last 24 h: amber');
+ea = errAlert([G('Load-failure retry #1 recovered', 1000), G('Load-failure probe: HTTP 200 online sw', 1000)]);
+ok(ea.kind === 'info' && ea.title === 'No client error to act on' && /recovered/.test(ea.sub), 'only recoveries and diagnostics: calm, and says so');
+ok(errAlert([G('Uncaught Error: a', 1000)]).ek === 'all', '« Open » shows every type');
+{
+  const h = OV.errKindsHtml({ crash: 2, reject: 0, load: 5, ok: 1, diag: 0 });
+  ok((h.match(/data-ek="(crash|load|ok)"/g) || []).length === 6 && !/data-ek="(reject|diag)"/.test(h), 'bar and legend show only the types present, each once in each');
+  ok(/flex:2;[^"]*var\(--err-text\)/.test(h) && /flex:5;[^"]*var\(--m-live\)/.test(h), 'each segment is sized by its count, in its type colour');
+  ok(/aria-label="8 by type: 2 script, 5 load, 1 recovered"/.test(h), 'the bar reads aloud');
+  ok(OV.errKindsHtml({ crash: 0, reject: 0, load: 0, ok: 0, diag: 0 }) === '' && OV.errKindsHtml(null) === '', 'nothing to split: no bar');
+}
+ok(/window\.PthAdmin\.errKindPick=function\(k\)\{/.test(admin) && /errKindPick\(ek\)/.test(src), 'a legend entry opens Admin › Errors on its type');
+ok(/\.ovebar\{/.test(admin) && /\.ovekinds button\{/.test(admin), 'the bar and the legend are styled');
+
 // ── Small helpers ─────────────────────────────────────────────────────────
 ok(OV.auditLabel('config') === 'Settings saved' && OV.auditLabel('weird-path') === 'weird-path', 'audit actions read as words, unknown ones as they are');
 ok(OV.fmtUptime(90061) === '1d 1h 1m', 'uptime in days, hours, minutes');
@@ -103,6 +141,15 @@ ok(doc.querySelector('#ovChart .ovchart').getAttribute('role') === 'img' && /Int
 ok(/docker · no self-update/.test(txt('ovHealth')) && /7 of 500/.test(txt('ovHealth')), 'the server card paints');
 ok(/20,000 · ~9,968 players/.test(txt('ovHealth')), 'open files read as a number');
 ok(/peak 5 a day/.test(txt('ovChart')), 'the chart states its scale');
+OV.render(panel, { now: T, status: { ok: true, version: 'v1', runningVersion: 'v1', update: {} }, landir: { ok: true, pending: [] },
+  errors: { ok: true, groups: [G('Failed to load script', 1000), G('Failed to load link', 1000), G('Load-failure retry #1 recovered', 1000)] } });
+{
+  const c = doc.querySelector('#ovAlerts .ovalert');
+  ok(c && c.classList.contains('ov-warn') && /2 client errors/.test(c.textContent), 'the painted card: amber, real errors only');
+  ok(c.querySelectorAll('.ovebar i[data-ek]').length === 2 && c.querySelectorAll('.ovekinds button[data-go="errors"]').length === 2
+    && /2 load/.test(c.textContent) && /1 recovered/.test(c.textContent), 'with its bar and its legend');
+  ok(c.querySelector('.ovgo[data-ek="all"]'), '« Open » carries the « all » type');
+}
 // Daily totals and the reading (2.1.10-web.146): a total on each bar, no
 // title (a phone never shows one), a tap or the mouse reads a day.
 ok(doc.querySelectorAll('#ovChart .ovbar .ovtot').length === 2 && !doc.querySelector('#ovChart .ovbar[title]'), 'each day carries its total, no title left');
