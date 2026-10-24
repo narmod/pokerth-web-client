@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: '本賽事不接受比賽記錄檔。',
   err_notPlayer: '這個暱稱不是本賽事的玩家。',
   err_tooLarge: '檔案太大（最多 10 MB）。',
+  howMulti: '玩家會以抽籤分配到每桌最多 10 人的牌桌，各桌同時進行；每桌的前 {n} 名進入決賽桌，由決賽桌決定排名。',
+  tablesTitle: '牌桌',
+  tableN: '第 {n} 桌',
+  finalTable: '決賽桌',
+  tableOf: '「{name}」第 {n} 桌',
+  finalOf: '「{name}」決賽桌',
+  qualified: '晉級決賽桌',
   footer: 'PokerTH 賽事主管 · beta',
 };

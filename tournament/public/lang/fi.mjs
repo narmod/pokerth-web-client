@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Tämä turnaus ei ota vastaan pelilokeja.',
   err_notPlayer: 'Tämä nimimerkki ei ole tämän turnauksen pelaaja.',
   err_tooLarge: 'Tiedosto on liian suuri (enintään 10 Mt).',
+  howMulti: 'Pelaajat arvotaan enintään 10 pelaajan pöytiin, joita pelataan samaan aikaan; kunkin pöydän sijoille 1–{n} sijoittuneet pelaavat finaalipöydän, joka ratkaisee sijoitukset.',
+  tablesTitle: 'Pöydät',
+  tableN: 'Pöytä {n}',
+  finalTable: 'Finaalipöytä',
+  tableOf: 'Turnauksen ”{name}” pöytä {n}',
+  finalOf: 'Turnauksen ”{name}” finaalipöytä',
+  qualified: 'päässyt finaalipöytään',
   footer: 'PokerTH-turnausjohtaja · beta',
 };

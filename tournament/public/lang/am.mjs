@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'ይህ ውድድር የጨዋታ ሎጎችን አይቀበልም።',
   err_notPlayer: 'ይህ ቅጽል ስም የዚህ ውድድር ተጫዋች አይደለም።',
   err_tooLarge: 'ፋይሉ በጣም ትልቅ ነው (ቢበዛ 10 MB)።',
+  howMulti: 'ተጫዋቾች በዕጣ ቢበዛ 10 ተጫዋቾች ባሏቸው ጠረጴዛዎች ይደለደላሉ፤ ጠረጴዛዎቹ በአንድ ጊዜ ይጫወታሉ፤ ከእያንዳንዱ ጠረጴዛ የመጀመሪያዎቹ {n} ተጫዋቾች የመጨረሻውን ጠረጴዛ ይጫወታሉ፣ እሱም ደረጃውን ይወስናል።',
+  tablesTitle: 'ጠረጴዛዎች',
+  tableN: 'ጠረጴዛ {n}',
+  finalTable: 'የመጨረሻ ጠረጴዛ',
+  tableOf: 'የ«{name}» ጠረጴዛ {n}',
+  finalOf: 'የ«{name}» የመጨረሻ ጠረጴዛ',
+  qualified: 'ለመጨረሻው ጠረጴዛ ያለፈ',
   footer: 'የPokerTH ውድድር ዳይሬክተር · beta',
 };

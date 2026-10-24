@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Dit toernooi accepteert geen spellogs.',
   err_notPlayer: 'Deze bijnaam hoort niet bij een speler van dit toernooi.',
   err_tooLarge: 'Het bestand is te groot (maximaal 10 MB).',
+  howMulti: 'De spelers worden geloot over tafels van hoogstens 10, die tegelijk worden gespeeld; de eerste {n} van elke tafel spelen de finaletafel, die de rangschikking bepaalt.',
+  tablesTitle: 'Tafels',
+  tableN: 'Tafel {n}',
+  finalTable: 'Finaletafel',
+  tableOf: 'Tafel {n} van ‘{name}’',
+  finalOf: 'Finaletafel van ‘{name}’',
+  qualified: 'gekwalificeerd voor de finaletafel',
   footer: 'PokerTH-toernooileider · beta',
 };

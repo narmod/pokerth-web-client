@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Šis turnyras nepriima žaidimų žurnalų.',
   err_notPlayer: 'Šis slapyvardis nėra šio turnyro žaidėjas.',
   err_tooLarge: 'Failas per didelis (daugiausia 10 MB).',
+  howMulti: 'Žaidėjai burtų keliu paskirstomi prie stalų (ne daugiau kaip 10 žaidėjų prie stalo), žaidžiamų vienu metu; kiekvieno stalo 1–{n} vietas užėmę žaidėjai žaidžia finaliniame stale, kuris nustato reitingą.',
+  tablesTitle: 'Stalai',
+  tableN: 'Stalas {n}',
+  finalTable: 'Finalinis stalas',
+  tableOf: '„{name}“: stalas {n}',
+  finalOf: '„{name}“: finalinis stalas',
+  qualified: 'pateko į finalinį stalą',
   footer: 'PokerTH turnyrų direktorius · beta',
 };

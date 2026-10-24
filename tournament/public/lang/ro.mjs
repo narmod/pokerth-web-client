@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Acest turneu nu acceptă log-uri de joc.',
   err_notPlayer: 'Acest pseudonim nu este al unui jucător din acest turneu.',
   err_tooLarge: 'Fișierul este prea mare (cel mult 10 MB).',
+  howMulti: 'Jucătorii sunt trași la sorți la mese de cel mult 10, jucate în același timp; primii {n} de la fiecare masă joacă masa finală, care stabilește clasamentul.',
+  tablesTitle: 'Mese',
+  tableN: 'Masa {n}',
+  finalTable: 'Masa finală',
+  tableOf: 'Masa {n} din „{name}”',
+  finalOf: 'Masa finală din „{name}”',
+  qualified: 'calificat la masa finală',
   footer: 'Directorul de turnee PokerTH · beta',
 };

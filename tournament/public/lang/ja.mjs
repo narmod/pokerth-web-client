@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'このトーナメントはゲームログを受け付けていません。',
   err_notPlayer: 'このニックネームはこのトーナメントのプレイヤーではありません。',
   err_tooLarge: 'ファイルが大きすぎます（最大 10 MB）。',
+  howMulti: 'プレイヤーは最大 10 人のテーブルに抽選で振り分けられ、各テーブルは同時に進行します。各テーブルの上位 {n} 人がファイナルテーブルに進み、そこで順位が決まります。',
+  tablesTitle: 'テーブル',
+  tableN: 'テーブル {n}',
+  finalTable: 'ファイナルテーブル',
+  tableOf: '「{name}」のテーブル {n}',
+  finalOf: '「{name}」のファイナルテーブル',
+  qualified: 'ファイナルテーブル進出',
   footer: 'PokerTH トーナメントディレクター · beta',
 };

@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Ní ghlacann an comórtas seo le logchomhaid chluiche.',
   err_notPlayer: 'Ní imreoir sa chomórtas seo é an leasainm seo.',
   err_tooLarge: 'Tá an comhad rómhór (10 MB ar a mhéad).',
+  howMulti: 'Tarraingítear na himreoirí go randamach isteach i mboird de 10 ar a mhéad, a imrítear ag an am céanna; imríonn na himreoirí sna háiteanna 1 go {n} ag gach bord an bord deiridh, a thugann an rangú.',
+  tablesTitle: 'Boird',
+  tableN: 'Bord {n}',
+  finalTable: 'Bord deiridh',
+  tableOf: 'Bord {n} de “{name}”',
+  finalOf: 'Bord deiridh de “{name}”',
+  qualified: 'cáilithe don bhord deiridh',
   footer: 'Stiúrthóir comórtais PokerTH · beta',
 };

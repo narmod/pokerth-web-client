@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Wannan gasa ba ta karɓar log ɗin wasanni.',
   err_notPlayer: 'Wannan laƙabin ba na ɗan wasan wannan gasa ba ne.',
   err_tooLarge: 'Fayil ɗin ya yi girma da yawa (10 MB a mafi yawa).',
+  howMulti: 'Ana raba \'yan wasa ta hanyar ƙuri\'a zuwa teburori masu \'yan wasa 10 a mafi yawa, waɗanda ake bugawa a lokaci guda; \'yan wasa {n} na farko na kowane tebur suna buga teburin ƙarshe, wanda ke ba da matsayi.',
+  tablesTitle: 'Teburori',
+  tableN: 'Tebur {n}',
+  finalTable: 'Teburin ƙarshe',
+  tableOf: 'Tebur {n} na “{name}”',
+  finalOf: 'Teburin ƙarshe na “{name}”',
+  qualified: 'ya cancanci teburin ƙarshe',
   footer: 'Daraktan gasar PokerTH · beta',
 };

@@ -54,6 +54,16 @@ const game = (id, name) => ({ gameId: id, name, say: (k) => said.push(k) });
   ok(R.w.state().key === 'KEY123456789' && R.calls.filter((c) => /api\/table/.test(c.url)).length === 1, 'a rejoin of the same game keeps it (no second lookup)');
 }
 
+// ── a table of a tournament on several tables: the code kept under the tournament's key ──
+{
+  const R = rig({ lookup: { ok: true, key: 'TABLEKEY0001', parentKey: 'PARENTKEY001', witnesses: 'required' }, store: { pth_td_regs: JSON.stringify({ PARENTKEY001: [{ nick: 'Bob', code: 'WXYZ2345' }] }) } });
+  R.w.onGameStart(game(21, 'Cup — table 2'));
+  await tick(); await tick();
+  for (let h = 1; h <= 10; h++) R.w.onHandStart({ hand: h, stacks: { Ann: 1000, Bob: 900 } });
+  const b = JSON.parse(R.posts()[0].o.body);
+  ok(/\/t\/TABLEKEY0001\/witness$/.test(R.posts()[0].url) && b.code === 'WXYZ2345', 'a table: the report goes to the table, with the code kept under its tournament');
+}
+
 // ── not a tournament table, the option, the modes ──────────────────
 {
   const R = rig({ lookup: null });

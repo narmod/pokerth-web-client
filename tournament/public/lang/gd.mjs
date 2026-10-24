@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Cha ghabh a’ cho-fharpais seo ri logaichean geama.',
   err_notPlayer: 'Chan eil am far-ainm seo na chluicheadair sa cho-fharpais seo.',
   err_tooLarge: 'Tha am faidhle ro mhòr (10 MB air a’ char as motha).',
+  howMulti: 'Thèid na cluicheadairean a chur air thuaiream aig bòrdan de 10 air a’ char as motha, a thèid a chluich aig an aon àm; cluichidh an fheadhainn suas gu àite {n} aig gach bòrd aig a’ bhòrd dheireannach, a bheir an rangachadh.',
+  tablesTitle: 'Bòrdan',
+  tableN: 'Bòrd {n}',
+  finalTable: 'Am bòrd deireannach',
+  tableOf: 'Bòrd {n} de “{name}”',
+  finalOf: 'Am bòrd deireannach de “{name}”',
+  qualified: 'a’ dol don bhòrd dheireannach',
   footer: 'Stiùiriche co-fharpais PokerTH · beta',
 };

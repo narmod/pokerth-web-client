@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: '이 토너먼트는 게임 로그를 받지 않습니다.',
   err_notPlayer: '이 닉네임은 이 토너먼트의 플레이어가 아닙니다.',
   err_tooLarge: '파일이 너무 큽니다(최대 10MB).',
+  howMulti: '플레이어는 추첨으로 최대 10명씩 테이블에 배정되며 모든 테이블은 동시에 진행됩니다. 각 테이블의 상위 {n}명이 파이널 테이블에서 겨루며, 그 결과가 순위가 됩니다.',
+  tablesTitle: '테이블',
+  tableN: '테이블 {n}',
+  finalTable: '파이널 테이블',
+  tableOf: '“{name}”의 테이블 {n}',
+  finalOf: '“{name}”의 파이널 테이블',
+  qualified: '파이널 테이블 진출',
   footer: 'PokerTH 토너먼트 디렉터 · beta',
 };

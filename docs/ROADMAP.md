@@ -313,7 +313,8 @@ use too. Items are grouped by status rather than fixed phases.
   Official needs one that agrees and none that disagrees. Service `0.8.0` (`web.306`): QML players as witnesses by their
   `.pdb` log, per tournament. Service `0.9.0` (`web.307`): one key per organizer (Admin › Keys, « Tournaments »), names
   in the journal, corrections approved by a second organizer (Official). Service `0.10.0`: the collusion check (soft play,
-  no pressure, folds to one player, chip passing), signals for the organizer only. Next: several tables.
+  no pressure, folds to one player, chip passing), signals for the organizer only. Service `0.11.0`: the director's avatar.
+  Service `0.12.0` (`web.309`): several tables + final table (11 to 40 players). Next: cups (points and stages).
 
 ## ⏭️ Next
 

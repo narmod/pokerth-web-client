@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Turnamen ini tidak menerima log permainan.',
   err_notPlayer: 'Nama panggilan ini bukan pemain turnamen ini.',
   err_tooLarge: 'File terlalu besar (maksimal 10 MB).',
+  howMulti: 'Para pemain diundi ke meja berisi paling banyak 10 orang yang dimainkan bersamaan; {n} pemain teratas dari setiap meja memainkan meja final, yang menentukan peringkat.',
+  tablesTitle: 'Meja',
+  tableN: 'Meja {n}',
+  finalTable: 'Meja final',
+  tableOf: 'Meja {n} dari “{name}”',
+  finalOf: 'Meja final dari “{name}”',
+  qualified: 'lolos ke meja final',
   footer: 'Direktur turnamen PokerTH · beta',
 };

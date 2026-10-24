@@ -72,6 +72,9 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Tournaments: several tables** (`web.309`, service `0.12.0`) — the web client's witness, at a table of a tournament
+  on several tables, finds the personal code kept under the tournament's key (`td-witness.mjs`). Details in
+  `tournament/CHANGELOG.md`.
 - **Tournaments: the director's avatar** (`web.308`, service `0.11.0`) — the web client serves `/tournament/avatar`
   (the image the director shows on the server). Details in `tournament/CHANGELOG.md`.
 - **Tournaments: organizer keys** (`web.307`, service `0.9.0`) — a new key category, « Tournaments (organizer) »

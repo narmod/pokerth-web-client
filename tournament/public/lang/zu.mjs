@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Lo mqhudelwano awamukeli amalogi emidlalo.',
   err_notPlayer: 'Lesi siteketiso asisona esomdlali walo mqhudelwano.',
   err_tooLarge: 'Ifayela likhulu kakhulu (hhayi ngaphezu kuka-10 MB).',
+  howMulti: 'Abadlali bahlukaniswa ngenkatho baye ematafuleni anabadlali abangeqile ku-10, adlalwa ngesikhathi esisodwa; abadlali abasezindaweni 1 kuya ku-{n} etafuleni ngalinye badlala itafula lokugcina, elinikeza ukulandelana.',
+  tablesTitle: 'Amatafula',
+  tableN: 'Itafula {n}',
+  finalTable: 'Itafula lokugcina',
+  tableOf: 'Itafula {n} ku-“{name}”',
+  finalOf: 'Itafula lokugcina ku-“{name}”',
+  qualified: 'ufinyelele etafuleni lokugcina',
   footer: 'Umqondisi wemiqhudelwano we-PokerTH · beta',
 };

@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Ĉi tiu turniro ne akceptas ludprotokolojn.',
   err_notPlayer: 'Ĉi tiu kaŝnomo ne estas ludanto de ĉi tiu turniro.',
   err_tooLarge: 'La dosiero estas tro granda (maksimume 10 MB).',
+  howMulti: 'La ludantoj estas lotumitaj al tabloj de maksimume 10, ludataj samtempe; la unuaj {n} de ĉiu tablo ludas la finan tablon, kiu donas la rangotabelon.',
+  tablesTitle: 'Tabloj',
+  tableN: 'Tablo {n}',
+  finalTable: 'Fina tablo',
+  tableOf: 'Tablo {n} de “{name}”',
+  finalOf: 'Fina tablo de “{name}”',
+  qualified: 'kvalifikiĝis por la fina tablo',
   footer: 'PokerTH-turnira direktoro · beta',
 };

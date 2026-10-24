@@ -138,6 +138,21 @@ try {
     if (shots) await pg.screenshot({ path: path.join(shots, 'pub-log.png'), fullPage: true });
   }
 
+  // Several tables: the tournament's page lists its tables, each with its page.
+  {
+    const m = await admin('/t/create', { name: 'Big night', profile: 'club', format: 'multi', run: { finalists: 2 } });
+    for (let i = 1; i <= 14; i++) await admin('/t/player', { id: m.id, nick: 'M' + i });
+    await admin('/t/draw', { id: m.id });
+    await pg.goto(base + '/tournament/t/' + m.publicKey);
+    await pg.waitForFunction(() => /Table 2/.test(document.getElementById('view').textContent), null, { timeout: 8000 });
+    const txt = await pg.textContent('#view');
+    ok(/Tables/.test(txt) && /Table 1/.test(txt) && /the first 2 of each table play the final table/.test(txt), 'several tables: the tables listed, how the final is made');
+    await pg.click('a.tcard[href*="/tournament/t/"]');
+    await pg.waitForFunction(() => /Table 1 of « Big night »/.test(document.getElementById('view').textContent), null, { timeout: 8000 });
+    ok(true, 'a table\'s page links back to « Big night »');
+    if (shots) await pg.screenshot({ path: path.join(shots, 'pub-table.png'), fullPage: true });
+  }
+
   // Organizer: the director's chat language, every language of the app.
   const og = await ctx.newPage();
   await og.addInitScript((t) => { try { localStorage.setItem('pth_admin_tok', t); } catch (e) {} }, TOKEN);

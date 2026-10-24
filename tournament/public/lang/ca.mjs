@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Aquest torneig no accepta registres de partida.',
   err_notPlayer: 'Aquest sobrenom no és de cap jugador d’aquest torneig.',
   err_tooLarge: 'El fitxer és massa gran (10 MB com a màxim).',
+  howMulti: 'Els jugadors es reparteixen per sorteig en taules de 10 com a màxim, que es juguen alhora; els {n} primers de cada taula juguen la taula final, que dona la classificació.',
+  tablesTitle: 'Taules',
+  tableN: 'Taula {n}',
+  finalTable: 'Taula final',
+  tableOf: 'Taula {n} de «{name}»',
+  finalOf: 'Taula final de «{name}»',
+  qualified: 'classificat per a la taula final',
   footer: 'Director de tornejos PokerTH · beta',
 };

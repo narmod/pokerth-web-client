@@ -50,7 +50,10 @@ export function createWitness(deps) {
     if (!cur) return null;
     const players = cur.players.slice(0, 10);
     let hands = cur.hands.map((x) => [x.h].concat(players.map((p) => (x.s[p] != null ? x.s[p] : null))));
-    const body = (hs) => JSON.stringify({ nick: d.myName(), code: codeFor(cur.key, d.myName()) || undefined, game: cur.gameId, name: cur.name,
+    // A table of a tournament on several tables: the code was kept under the
+    // tournament's key (registration, check-in), not the table's.
+    const code = codeFor(cur.key, d.myName()) || (cur.parentKey ? codeFor(cur.parentKey, d.myName()) : null);
+    const body = (hs) => JSON.stringify({ nick: d.myName(), code: code || undefined, game: cur.gameId, name: cur.name,
       report: { players, hands: hs, winner: cur.winner || null, complete: !!cur.winner } });
     let s = body(hands);
     while (s.length > MAX_BYTES && hands.length > 1) { hands = hands.slice(Math.ceil(hands.length / 10)); s = body(hands); }
@@ -84,7 +87,7 @@ export function createWitness(deps) {
     const url = d.origin + '/tournament/api/table?game=' + encodeURIComponent(g.gameId) + '&name=' + encodeURIComponent(c.name);
     d.fetch(url, { cache: 'no-store' }).then((r) => (r && r.ok ? r.json() : null)).then((j) => {
       if (cur !== c || !j || !j.ok || !j.key || j.witnesses === 'off') { if (cur === c) cur = null; return; }
-      c.key = j.key; c.witnesses = j.witnesses;
+      c.key = j.key; c.witnesses = j.witnesses; c.parentKey = j.parentKey || null;
       // Once per browser: say what is sent.
       if (!get(TOLD) && typeof g.say === 'function') { set(TOLD, '1'); try { g.say('tdWitnessNotice'); } catch (e) {} }
     }).catch(() => { if (cur === c) cur = null; });

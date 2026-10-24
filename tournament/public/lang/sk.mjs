@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Tento turnaj neprijíma herné logy.',
   err_notPlayer: 'Táto prezývka nepatrí žiadnemu hráčovi tohto turnaja.',
   err_tooLarge: 'Súbor je príliš veľký (najviac 10 MB).',
+  howMulti: 'Hráči sa žrebom rozdelia k stolom s najviac 10 miestami, ktoré sa hrajú súčasne; hráči na miestach 1 až {n} pri každom stole hrajú finálový stôl, ktorý určí poradie.',
+  tablesTitle: 'Stoly',
+  tableN: 'Stôl {n}',
+  finalTable: 'Finálový stôl',
+  tableOf: 'Stôl {n} turnaja „{name}“',
+  finalOf: 'Finálový stôl turnaja „{name}“',
+  qualified: 'postúpil k finálovému stolu',
   footer: 'Riaditeľ turnajov PokerTH · beta',
 };

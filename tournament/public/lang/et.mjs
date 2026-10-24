@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'See turniir ei võta mängulogisid vastu.',
   err_notPlayer: 'See hüüdnimi ei kuulu selle turniiri mängijale.',
   err_tooLarge: 'Fail on liiga suur (kuni 10 MB).',
+  howMulti: 'Mängijad loositakse kuni 10-kohalistesse laudadesse, mida mängitakse samal ajal; iga laua kohtadel 1–{n} lõpetanud mängijad mängivad finaallauas, mis annab paremusjärjestuse.',
+  tablesTitle: 'Lauad',
+  tableN: 'Laud {n}',
+  finalTable: 'Finaallaud',
+  tableOf: 'Turniiri „{name}“ laud {n}',
+  finalOf: 'Turniiri „{name}“ finaallaud',
+  qualified: 'pääses finaallauda',
   footer: 'PokerTH turniiridirektor · beta',
 };

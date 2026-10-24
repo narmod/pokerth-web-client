@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Bu turnuva oyun kayıtlarını kabul etmiyor.',
   err_notPlayer: 'Bu takma ad bu turnuvanın bir oyuncusu değil.',
   err_tooLarge: 'Dosya çok büyük (en fazla 10 MB).',
+  howMulti: 'Oyuncular kurayla en fazla 10 kişilik masalara dağıtılır ve masalar aynı anda oynanır; her masanın ilk {n} oyuncusu sıralamayı belirleyen final masasında oynar.',
+  tablesTitle: 'Masalar',
+  tableN: 'Masa {n}',
+  finalTable: 'Final masası',
+  tableOf: '“{name}” turnuvasının {n} numaralı masası',
+  finalOf: '“{name}” turnuvasının final masası',
+  qualified: 'final masasına kaldı',
   footer: 'PokerTH turnuva direktörü · beta',
 };

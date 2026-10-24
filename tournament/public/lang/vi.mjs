@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Giải đấu này không nhận tệp log trò chơi.',
   err_notPlayer: 'Biệt danh này không phải người chơi của giải đấu này.',
   err_tooLarge: 'Tệp quá lớn (tối đa 10 MB).',
+  howMulti: 'Người chơi được bốc thăm vào các bàn tối đa 10 người, diễn ra cùng lúc; {n} người đứng đầu mỗi bàn sẽ chơi bàn chung kết, nơi quyết định xếp hạng.',
+  tablesTitle: 'Các bàn',
+  tableN: 'Bàn {n}',
+  finalTable: 'Bàn chung kết',
+  tableOf: 'Bàn {n} của “{name}”',
+  finalOf: 'Bàn chung kết của “{name}”',
+  qualified: 'vào bàn chung kết',
   footer: 'Người điều hành giải đấu PokerTH · beta',
 };

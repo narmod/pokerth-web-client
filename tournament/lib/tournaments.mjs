@@ -42,7 +42,7 @@ export const CHOICES = Object.freeze({
   visibility: ['public', 'unlisted', 'private'],
   collusion: ['off', 'report', 'separate', 'forbid'],
 });
-const FORMATS = ['sitngo'];
+const FORMATS = ['sitngo', 'multi'];
 // Table settings when the director opens the table (PokerTH NetGameInfo).
 export const TABLE_DEFAULTS = Object.freeze({
   startMoney: 3000, firstSmallBlind: 10, raiseMode: 'hands', raiseEvery: 7,
@@ -50,7 +50,7 @@ export const TABLE_DEFAULTS = Object.freeze({
 });
 // How the director runs the table: opening by itself before the start, and
 // its announcements in the table chat.
-export const RUN_DEFAULTS = Object.freeze({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30, chatLang: 'en', qmlWitnesses: false });
+export const RUN_DEFAULTS = Object.freeze({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30, chatLang: 'en', qmlWitnesses: false, finalists: 2 });
 const MAX_LOG_BYTES = 10 * 1024 * 1024;
 export function cleanRun(r, base) {
   const b = Object.assign({}, RUN_DEFAULTS, base || {});
@@ -62,6 +62,8 @@ export function cleanRun(r, base) {
     openBefore: Number.isInteger(m) && m >= 0 && m <= 120 ? m : b.openBefore,
     announce: typeof r.announce === 'boolean' ? r.announce : b.announce,
     selfRegister: typeof r.selfRegister === 'boolean' ? r.selfRegister : b.selfRegister,
+    // Several tables: how many players of each table go to the final table.
+    finalists: Number.isInteger(parseInt(r.finalists, 10)) && parseInt(r.finalists, 10) >= 1 && parseInt(r.finalists, 10) <= 5 ? parseInt(r.finalists, 10) : (b.finalists || 2),
     // QML players witness by sending their log (.pdb) on the players' page.
     qmlWitnesses: typeof r.qmlWitnesses === 'boolean' ? r.qmlWitnesses : !!b.qmlWitnesses,
     // Check-in (identity « code »): opens this long before the start.
@@ -91,6 +93,8 @@ export function cleanTable(t, base) {
 const ID_RE = /^[a-z0-9]{8,32}$/;
 const NICK_MAX = 64;
 const MAX_PLAYERS = 10;   // one table (Sit & Go)
+const MAX_TABLES = 4;     // several tables (format « multi »): at most 40 players
+const maxPlayersOf = (t) => (t && t.format === 'multi' ? MAX_PLAYERS * MAX_TABLES : MAX_PLAYERS);
 
 function cleanText(s, max) {
   return String(s == null ? '' : s).replace(/[\u0000-\u001f\u007f-\u009f<>]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max);
@@ -165,6 +169,13 @@ export function createTournaments(o) {
     const out = Object.assign({}, t);
     out.players = (t.players || []).map((p) => { const q = Object.assign({}, p); delete q.codeHash; return q; });
     out.witnessState = witnessState(t);
+    if (t.stages) {
+      const st = stagesState(t);
+      out.stagesInfo = { N: st.N, allValidated: st.allValidated, finalists: st.finalists,
+        tables: st.tables.map((c) => ({ id: c.id, name: c.name, index: c.stage && c.stage.index, status: c.status, host: c.host ? c.host.status : null, players: c.players.map((p) => p.nick), winner: c.result ? (c.result.ranking.find((x) => x.place === 1) || {}).nick : null })),
+        final: st.final ? { id: st.final.id, name: st.final.name, status: st.final.status, host: st.final.host ? st.final.host.status : null, players: st.final.players.map((p) => p.nick), winner: st.final.result ? (st.final.result.ranking.find((x) => x.place === 1) || {}).nick : null } : null };
+    }
+    if (t.parentId) { try { const pt = load(t.parentId).t; out.parent = { id: pt.id, name: pt.name }; } catch (e) {} }
     if (journal) {
       const chain = verifyJournal(journal.entries);
       out.checks = { chain: chain.ok, badSeq: chain.badSeq, entries: journal.entries.length };
@@ -188,6 +199,9 @@ export function createTournaments(o) {
       case 'playerRegistered': return d.nick + ' registered (public page)';
       case 'playerUnregistered': return d.nick + ' unregistered (public page)';
       case 'codeIssued': return 'new personal code for ' + d.nick;
+      case 'tablesDrawn': return 'tables drawn: ' + (d.tables || []).map((x, i) => 'table ' + (i + 1) + ' (' + x.length + ')').join(', ') + (d.separated != null ? ' — flagged pairs kept apart: ' + d.separated : '');
+      case 'finalReady': return 'final table: ' + (d.finalists || []).join(', ');
+      case 'stagesRecomputed': return 'ranking recomputed from the tables (a table was corrected)';
       case 'collusionChecked': return 'collusion check: ' + d.hands + ' hands read, ' + d.flags + ' pair' + (d.flags === 1 ? '' : 's') + ' flagged, ' + d.notes + ' note' + (d.notes === 1 ? '' : 's');
       case 'witnessReport': return 'witness ' + d.nick + (d.source === 'log' ? ' (log)' : '') + (d.verified ? ' (code)' : '') + ': ' + d.hands + ' hands' + (d.winner ? ', winner ' + d.winner : '') + ' — ' + d.verdict;
       case 'checkedIn': return d.nick + ' checked in' + (d.by === 'organizer' ? ' (by the organizer)' : '');
@@ -217,7 +231,8 @@ export function createTournaments(o) {
     return ids.map((id) => readJson(join(tdir(id), 'tournament.json'))).filter(Boolean)
       .sort((a, b) => (b.startsAt || b.createdAt) - (a.startsAt || a.createdAt))
       .map((t) => ({ id: t.id, name: t.name, status: t.status, profile: t.profile, visibility: t.settings.visibility, startsAt: t.startsAt,
-        players: t.players.length, server: t.server ? t.server.name : null, resultStatus: t.result ? t.result.status : null, host: t.host ? t.host.status : null }));
+        players: t.players.length, server: t.server ? t.server.name : null, resultStatus: t.result ? t.result.status : null, host: t.host ? t.host.status : null,
+        format: t.format, parentId: t.parentId || null, stage: t.stage || null }));
   }
 
   function get(id) { const { t, journal } = load(id); return view(t, journal); }
@@ -300,7 +315,9 @@ export function createTournaments(o) {
       if (t.result) refuse('the result is set: players can no longer change');
       if (hostOpen(t)) refuse('the table is open: players can no longer change');
       if (t.players.some((p) => sameNick(p.nick, nick))) refuse(nick + ' is already in');
-      if (t.players.length >= MAX_PLAYERS) refuse('a Sit & Go seats ' + MAX_PLAYERS + ' players at most');
+      if (t.stages) refuse('the tables are drawn: players can no longer change');
+      if (t.parentId) refuse('the draw set this table\'s players');
+      if (t.players.length >= maxPlayersOf(t)) refuse(t.format === 'multi' ? 'at most ' + maxPlayersOf(t) + ' players (' + MAX_TABLES + ' tables)' : 'a Sit & Go seats ' + MAX_PLAYERS + ' players at most');
       t.players.push({ nick, addedAt: now(), codeHash: hashCode(code) });
       if (t.status === 'draft') t.status = 'registration';
     });
@@ -346,6 +363,7 @@ export function createTournaments(o) {
     return act(id, author, 'playerRemoved', { nick }, (t) => {
       if (t.result) refuse('the result is set: players can no longer change');
       if (hostOpen(t)) refuse('the table is open: players can no longer change');
+      if (t.stages || t.parentId) refuse('the tables are drawn: players can no longer change');
       const i = t.players.findIndex((p) => sameNick(p.nick, nick));
       if (i < 0) refuse(nick + ' is not in');
       t.players.splice(i, 1);
@@ -390,7 +408,7 @@ export function createTournaments(o) {
     if (!needsCheckIn(t)) return { needed: false };
     const before = (t.run && t.run.checkInBefore) || RUN_DEFAULTS.checkInBefore;
     const opensAt = t.startsAt ? t.startsAt - before * 60000 : null;
-    const closed = !!(t.result || hostOpen(t) || t.status === 'validated');
+    const closed = !!(t.result || hostOpen(t) || t.stages || t.status === 'validated');
     return { needed: true, opensAt, open: !closed && (!opensAt || now() >= opensAt), closed,
       count: t.players.filter((p) => p.checkedIn).length, of: t.players.length };
   }
@@ -415,27 +433,28 @@ export function createTournaments(o) {
   function regClosed(t) {
     if (!t.run || t.run.selfRegister === false) return 'organizer';
     if (t.result || t.status === 'finished' || t.status === 'validated') return 'finished';
-    if (hostOpen(t)) return 'tableOpen';
-    if (t.players.length >= MAX_PLAYERS) return 'full';
+    if (hostOpen(t) || t.stages) return 'tableOpen';
+    if (t.parentId) return 'organizer';
+    if (t.players.length >= maxPlayersOf(t)) return 'full';
     return null;
   }
   function phaseOf(t) {
     if (t.status === 'validated') return 'validated';
     if (t.result) return 'finished';
-    if (hostOpen(t)) return 'table';
+    if (hostOpen(t) || t.stages) return 'table';
     return 'upcoming';
   }
   function publicCard(t) {
     const w = t.result && t.result.ranking && t.result.ranking.find((r) => r.place === 1);
     return {
       key: t.publicKey, name: t.name, format: t.format, profile: t.profile, startsAt: t.startsAt,
-      server: t.server ? t.server.name : null, players: t.players.length, maxPlayers: MAX_PLAYERS,
+      server: t.server ? t.server.name : null, players: t.players.length, maxPlayers: maxPlayersOf(t),
       phase: phaseOf(t), registration: regClosed(t) ? 'closed' : 'open', winner: w ? w.nick : null,
     };
   }
   // Public tournaments only; unlisted and private ones never appear here.
   function publicList() {
-    return allTournaments().filter((t) => t.settings && t.settings.visibility === 'public')
+    return allTournaments().filter((t) => t.settings && t.settings.visibility === 'public' && !t.parentId)
       .sort((a, b) => (b.startsAt || b.createdAt) - (a.startsAt || a.createdAt)).map(publicCard);
   }
   // A private tournament answers as if it did not exist without its code.
@@ -466,6 +485,17 @@ export function createTournaments(o) {
         signature: !!(sealed.signature && sealed.publicKeyPem && verifyPayload(sealed.payload, sealed.signature, sealed.publicKeyPem)) } : null,
     });
     if (live) out.table_live = live(t);
+    if (t.format === 'multi') {
+      out.multi = { finalists: (t.stages && t.stages.finalists) || (t.run && t.run.finalists) || 2, maxTables: MAX_TABLES };
+      const st = t.stages ? stagesState(t) : null;
+      if (st) {
+        const card = (c) => Object.assign(publicCard(c), { index: c.stage && c.stage.index, live: live ? live(c) : null, playerList: c.players.map((p) => p.nick) });
+        out.multi.tables = st.tables.map(card);
+        out.multi.final = st.final ? card(st.final) : null;
+        out.multi.finalistsSoFar = st.finalists;
+      }
+    }
+    if (t.parentId) { try { const pt = load(t.parentId).t; out.parent = { key: pt.publicKey, name: pt.name }; out.stage = t.stage; } catch (e) {} }
     return out;
   }
   function register(key, input) {
@@ -496,6 +526,151 @@ export function createTournaments(o) {
     });
     return { nick, tournament: publicGet(key, input && input.invite) };
   }
+  // ── several tables (format « multi », service 0.12.0) ──
+  // The players are drawn into tables of at most 10, each played as a Sit &
+  // Go of its own (a « stage » tournament: its director, witnesses, result,
+  // validation); the first N of every table then play the final table, which
+  // gives the tournament's ranking. PokerTH cannot move a player from one game
+  // to another, so tables are never merged.
+  function stagePlayers(t) {
+    return t.players.filter((p) => !p.absent && (!needsCheckIn(t) || p.checkedIn));
+  }
+  // Pairs the collusion check flagged in earlier tournaments (any table of
+  // this install), lower-cased: with « separate », the draw keeps them apart.
+  function flaggedPairs() {
+    const out = new Set();
+    for (const t of allTournaments()) for (const pr of (t.collusion && t.collusion.pairs) || []) if (pr.level === 'flag') out.add([pr.a, pr.b].map((x) => String(x).toLowerCase()).sort().join('\u0000'));
+    return out;
+  }
+  function shuffle(arr, rnd) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); const x = a[i]; a[i] = a[j]; a[j] = x; }
+    return a;
+  }
+  function createStage(parent, kind, index, players) {
+    const id = now().toString(36) + randomBytes(4).toString('hex');
+    mkdirSync(tdir(id));
+    const run = Object.assign({}, parent.run, { autoOpen: false, selfRegister: false });
+    const t = {
+      id, name: parent.name + (kind === 'final' ? ' — final table' : ' — table ' + index), format: 'sitngo', profile: parent.profile,
+      settings: JSON.parse(JSON.stringify(parent.settings)), server: parent.server, startsAt: null, mode: 'manual', table: parent.table, run, host: null,
+      status: 'registration', players: players.map((p) => ({ nick: p.nick, addedAt: now(), codeHash: p.codeHash, checkedIn: p.checkedIn || now(), self: p.self || undefined })),
+      result: null, corrections: [], inviteCode: parent.inviteCode || null, publicKey: randomBytes(12).toString('base64url'),
+      parentId: parent.id, stage: { kind, index }, createdAt: now(), updatedAt: now(),
+    };
+    const journal = new Journal({ now });
+    journal.append('created', { author: 'director', name: t.name, format: t.format, profile: t.profile, settings: t.settings, parentId: parent.id, stage: t.stage, players: t.players.map((p) => p.nick) });
+    save(t, journal);
+    return t;
+  }
+  function drawTables(id, author) {
+    const { t: t0 } = load(id);
+    if (t0.format !== 'multi') refuse('only a tournament with several tables is drawn');
+    if (t0.stages) refuse('the tables are already drawn');
+    if (t0.result) refuse('the result is set');
+    const players = stagePlayers(t0);
+    if (players.length < 4) refuse(needsCheckIn(t0) ? 'fewer than four players have checked in' : 'at least four players');
+    const n = Math.min(MAX_TABLES, Math.ceil(players.length / MAX_PLAYERS));
+    if (n < 2) refuse('ten players or fewer: one table is enough — choose the format « Sit & Go, one table »');
+    const flagged = t0.settings.collusion === 'separate' ? flaggedPairs() : new Set();
+    const rnd = (k) => randomBytes(4).readUInt32BE(0) % k;
+    // Random seats; with « separate », the draw with the fewest flagged pairs
+    // at the same table, out of a few hundred.
+    let best = null, bestBad = Infinity;
+    for (let tries = 0; tries < (flagged.size ? 300 : 1) && bestBad > 0; tries++) {
+      const order = shuffle(players, rnd);
+      const tables = Array.from({ length: n }, () => []);
+      order.forEach((p, i) => tables[i % n].push(p));
+      let bad = 0;
+      for (const tb of tables) for (let i = 0; i < tb.length; i++) for (let j = i + 1; j < tb.length; j++) if (flagged.has([tb[i].nick, tb[j].nick].map((x) => x.toLowerCase()).sort().join('\u0000'))) bad++;
+      if (bad < bestBad) { best = tables; bestBad = bad; }
+    }
+    const children = best.map((tb, i) => createStage(t0, 'qualifier', i + 1, tb));
+    const data = { tables: best.map((tb) => tb.map((p) => p.nick)), childIds: children.map((c) => c.id) };
+    if (flagged.size) data.separated = bestBad === 0 ? 'all' : 'all but ' + bestBad;
+    return act(id, author, 'tablesDrawn', data, (t) => {
+      t.stages = { drawnAt: now(), tables: children.map((c) => c.id), final: null, finalists: t.run.finalists || 2 };
+      for (const p of t.players) if (!players.some((x) => sameNick(x.nick, p.nick))) p.absent = true;
+      t.status = 'running';
+    });
+  }
+  // Where the tables stand: { tables: [...], allValidated, finalists: [...], final }.
+  function stagesState(t) {
+    if (!t.stages) return null;
+    const rows = t.stages.tables.map((cid) => { try { return load(cid).t; } catch (e) { return null; } }).filter(Boolean);
+    const N = t.stages.finalists || 2;
+    const finalists = [];
+    for (const c of rows) if (c.status === 'validated' && c.result) for (const r of c.result.ranking) if (r.place <= N) finalists.push(r.nick);
+    let fin = null;
+    if (t.stages.final) { try { fin = load(t.stages.final).t; } catch (e) { fin = null; } }
+    return { tables: rows, allValidated: rows.length > 0 && rows.every((c) => c.status === 'validated'), finalists, final: fin, N };
+  }
+  // All tables validated: the final table, with the first N of each.
+  function makeFinal(id, author) {
+    const { t: t0 } = load(id);
+    const st = stagesState(t0);
+    if (!st) refuse('draw the tables first');
+    if (st.final) refuse('the final table exists');
+    if (!st.allValidated) refuse('every table must have its result validated first');
+    if (st.finalists.length < 2) refuse('fewer than two finalists');
+    const players = st.finalists.map((nick) => t0.players.find((p) => sameNick(p.nick, nick)) || { nick });
+    const fin = createStage(t0, 'final', 0, players.slice(0, MAX_PLAYERS));
+    act(id, author, 'finalReady', { finalists: players.map((p) => p.nick), childId: fin.id }, (t) => { t.stages.final = fin.id; });
+    return fin;
+  }
+  // The tournament's ranking: the final table's, then the others by their
+  // place at their table (the same place at different tables is shared).
+  function stagesRanking(t, st) {
+    const ranking = st.final.result.ranking.map((r) => ({ nick: r.nick, place: r.place, winner: r.place === 1, tie: !!r.tie, elimHand: r.elimHand, stack: r.stack }));
+    const finals = new Set(ranking.map((r) => r.nick.toLowerCase()));
+    const byPlace = new Map();
+    for (const c of st.tables) for (const r of c.result.ranking) {
+      if (finals.has(r.nick.toLowerCase())) continue;
+      if (!byPlace.has(r.place)) byPlace.set(r.place, []);
+      byPlace.get(r.place).push({ nick: r.nick, table: c.stage && c.stage.index });
+    }
+    let next = ranking.length + 1;
+    for (const p of [...byPlace.keys()].sort((a, b) => a - b)) {
+      const grp = byPlace.get(p);
+      for (const g of grp) ranking.push({ nick: g.nick, place: next, winner: false, tie: grp.length > 1, tablePlace: p, table: g.table });
+      next += grp.length;
+    }
+    return ranking;
+  }
+  // Called by the service's sweep for a « multi » tournament: the final
+  // table once every table is validated (when it opens by itself), the
+  // tournament's result once the final is validated. Returns what to open.
+  function stagesTick(id) {
+    const { t } = load(id);
+    if (t.format !== 'multi' || !t.stages || t.status === 'validated') return {};
+    const st = stagesState(t);
+    if (!st.final) return st.allValidated ? { finalReady: true } : {};
+    if (st.final.status !== 'validated' || !st.final.result) return {};
+    const ranking = stagesRanking(t, st);
+    const { t: tt, journal } = load(id);
+    tt.result = { source: 'stages', status: 'complete', ranking, setAt: now(), absent: tt.players.filter((p) => p.absent).map((p) => p.nick), tables: st.tables.map((c) => c.id), final: st.final.id };
+    tt.status = 'finished';
+    journal.append('resultSet', { author: 'director', source: 'stages', status: 'complete', ranking, tables: tt.result.tables, final: tt.result.final });
+    save(tt, journal);
+    // Every table was validated (with its witnesses, collusion check and
+    // corrections); the tournament's ranking follows from them: sealed now.
+    validate(id, 'director');
+    return { done: true };
+  }
+  // A table corrected after the tournament was validated: its ranking again.
+  function stagesRecompute(parentId) {
+    const { t, journal } = load(parentId);
+    if (t.status !== 'validated' || !t.stages) return null;
+    const st = stagesState(t);
+    if (!st.final || !st.final.result) return null;
+    const ranking = stagesRanking(t, st);
+    if (JSON.stringify(ranking.map((r) => r.nick)) === JSON.stringify(t.result.ranking.map((r) => r.nick))) return null;
+    t.result = Object.assign({}, t.result, { ranking, corrected: true });
+    journal.append('stagesRecomputed', { author: 'director', ranking });
+    seal(t, journal);
+    return save(t, journal);
+  }
+
   // ── collusion check (service 0.10.0) ──
   // Signals for an organizer, never a sanction: from the director's journal
   // (the actions of each hand). Shown on the organizer page only; the journal
@@ -634,7 +809,7 @@ export function createTournaments(o) {
   // result's names become the players.
   function fitRanking(t, ranking) {
     if (!Array.isArray(ranking) || !ranking.length) refuse('empty ranking');
-    if (ranking.length > MAX_PLAYERS) refuse('more than ' + MAX_PLAYERS + ' players');
+    if (ranking.length > maxPlayersOf(t)) refuse('more than ' + maxPlayersOf(t) + ' players');
     const nicks = ranking.map((r) => cleanNick(r.nick));
     if (nicks.some((n) => !n)) refuse('a name is missing in the ranking');
     if (new Set(nicks.map((n) => n.toLowerCase())).size !== nicks.length) refuse('a player is ranked twice');
@@ -726,7 +901,7 @@ export function createTournaments(o) {
     // says why he validates anyway (in the journal, on the public page).
     refreshWitnesses(t);
     let override = null;
-    if (t.settings.witnesses === 'required') {
+    if (t.settings.witnesses === 'required' && t.result.source !== 'stages') {
       const s = witnessState(t);
       if (!s.ok) {
         override = cleanText(opts && opts.override, 200);
@@ -746,6 +921,7 @@ export function createTournaments(o) {
     if (reason.length < 3) refuse('say why (3 to 200 characters)');
     const { t: t2, journal } = load(id);
     if (t2.status !== 'validated') refuse('only a validated result is corrected — before that, set the result again');
+    if (t2.result && t2.result.source === 'stages') refuse('this ranking comes from the tables: correct the table concerned, the ranking follows');
     const rankingIn = (input.ranking || []).map((nick, i) => ({ nick: typeof nick === 'string' ? nick : nick && nick.nick, place: i + 1 }));
     const before = t2.result.ranking.map((r) => r.nick);
     const fitted = fitRanking(t2, rankingIn);
@@ -763,7 +939,9 @@ export function createTournaments(o) {
     t2.result = Object.assign({}, t2.result, { ranking: fitted, corrected: true });
     journal.append('corrected', { author: author || 'admin', reason, before, after: fitted.map((r) => r.nick) });
     seal(t2, journal);
-    return save(t2, journal);
+    const out = save(t2, journal);
+    if (t2.parentId) stagesRecompute(t2.parentId);
+    return out;
   }
 
   // The second organizer approves (or anyone rejects; the one who proposed
@@ -779,7 +957,9 @@ export function createTournaments(o) {
     delete t.pendingCorrection;
     journal.append('corrected', { author: author || 'admin', proposedBy: p.by, reason: p.reason, before: p.before, after: p.after });
     seal(t, journal);
-    return save(t, journal);
+    const out = save(t, journal);
+    if (t.parentId) stagesRecompute(t.parentId);
+    return out;
   }
   function rejectCorrection(id, author, why) {
     const { t, journal } = load(id);
@@ -884,7 +1064,7 @@ export function createTournaments(o) {
   }
 
   return { list, get, create, update, addPlayer, removePlayer, setResult: setResultP, validate, correct, approveCorrection, rejectCorrection, importPdb, file,
-    publicList, publicGet, register, unregister, publicFile, witnessReport, witnessLog, keyHost, checkCollusion, checkIn, issueCode, organizerCheckIn, markNotCheckedIn, needsCheckIn: (id) => needsCheckIn(load(id).t),
+    publicList, publicGet, register, unregister, publicFile, witnessReport, witnessLog, keyHost, checkCollusion, drawTables, makeFinal, stagesTick, stagesRecompute, multiParents: () => allTournaments().filter((t) => t.format === 'multi' && t.stages && t.status !== 'validated').map((t) => t.id), checkIn, issueCode, organizerCheckIn, markNotCheckedIn, needsCheckIn: (id) => needsCheckIn(load(id).t),
     hostOpened, hostCheck, hostNote, hostEnded, hostResultRefused, openHosts, autoOpenDue, autoOpenNote, Refusal };
 }
 

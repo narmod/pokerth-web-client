@@ -138,6 +138,7 @@ function renderOne() {
   h += '<section class="card"><h2>' + esc(c.name) + '</h2><p>' + chip(c) + '</p><p class="small">' +
     (c.startsAt ? T('startsAt', { date: fmtDate(c.startsAt) }) : T('noDate')) + (c.server ? ' · ' + T('onServer', { server: c.server }) : '') + '<br>' +
     T('format') + ' · ' + T('players', { n: c.players, max: c.maxPlayers }) + (c.table ? '<br>' + tableLine(c.table) : '') + '</p>';
+  if (c.parent) h += '<p class="small"><a href="/tournament/t/' + esc(c.parent.key) + invQs('?') + '" data-go>' + (c.stage && c.stage.kind === 'final' ? T('finalOf', { name: esc(c.parent.name) }) : T('tableOf', { n: c.stage ? c.stage.index : '', name: esc(c.parent.name) })) + '</a></p>';
   if (flash) { h += '<div class="msg ' + (flash.bad ? 'bad' : 'ok') + '" role="status">' + flash.html + '</div>'; flash = null; }
   // The table, once the director has opened it.
   const lv = c.table_live;
@@ -150,9 +151,20 @@ function renderOne() {
   if (c.phase === 'upcoming' || c.phase === 'table') {
     const at = c.autoOpen && c.startsAt ? c.startsAt - (c.openBefore || 0) * 60000 : null;
     const ck = c.checkIn && c.checkIn.needed ? '<li>' + (c.checkIn.opensAt ? T('checkInHow', { time: fmtTime(c.checkIn.opensAt) }) : T('checkInHowNoTime')) + '</li>' : '';
-    h += '<section class="card"><h2>' + T('howTitle') + '</h2><ol class="how"><li>' + T('how1') + '</li>' + ck + '<li>' +
+    const mt = c.multi ? '<li>' + T('howMulti', { n: c.multi.finalists }) + '</li>' : '';
+    h += '<section class="card"><h2>' + T('howTitle') + '</h2><ol class="how"><li>' + T('how1') + '</li>' + ck + mt + '<li>' +
       (at ? T('how2At', { time: fmtTime(at) }) : T('how2')) + '</li><li>' + T('how3') + '</li><li>' + T('how4') + '</li>' +
       (c.witnesses ? '<li>' + T('howWitness') + '</li>' : '') + '</ol></section>';
+  }
+
+  // Several tables: the tables and the final, each with its own page.
+  if (c.multi && c.multi.tables) {
+    const fin = new Set((c.multi.finalistsSoFar || []).map((x) => x.toLowerCase()));
+    const row = (x, label) => '<li><a class="tcard" href="/tournament/t/' + esc(x.key) + invQs('?') + '" data-go><span class="tc-top"><span class="tname">' + label + '</span>' + chip(x) + '</span>' +
+      '<span class="muted small">' + x.playerList.map((n) => esc(n) + (fin.has(n.toLowerCase()) && !(c.multi.final && x.key === c.multi.final.key) ? ' ✓' : '')).join(', ') + (x.winner ? ' · ' + T('winner', { nick: esc(x.winner) }) : '') + '</span></a></li>';
+    h += '<section class="card"><h2>' + T('tablesTitle') + '</h2><ul class="tlist">' + c.multi.tables.map((x) => row(x, T('tableN', { n: x.index }))).join('') +
+      (c.multi.final ? row(c.multi.final, '<b>' + T('finalTable') + '</b>') : '') + '</ul>' +
+      (!c.multi.final ? '<p class="small muted">' + T('howMulti', { n: c.multi.finalists }) + ' ✓ = ' + T('qualified') + '</p>' : '') + '</section>';
   }
 
   // Players.
@@ -239,6 +251,7 @@ function renderOne() {
   $('heroTitle').textContent = c.name;
   wire();
 }
+// The invitation code, carried to the pages of a private tournament's tables.
 function invQs(sep) { const i = inviteFromUrl(); return i ? sep + 'invite=' + encodeURIComponent(i) : ''; }
 function errText(d) { return T('err_' + (['badNick', 'taken', 'badCode', 'tooMany', 'notFound', 'checkInNotYet', 'checkInClosed', 'noCheckIn', 'alreadyIn', 'notPdb', 'noGame', 'noLogWitness', 'notPlayer', 'tooLarge'].indexOf(d.code) >= 0 ? d.code : 'error')); }
 function wire() {

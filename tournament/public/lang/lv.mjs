@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Šis turnīrs nepieņem spēļu žurnālfailus.',
   err_notPlayer: 'Šis segvārds nav šī turnīra spēlētājs.',
   err_tooLarge: 'Fails ir pārāk liels (ne vairāk kā 10 MB).',
+  howMulti: 'Spēlētāji tiek izlozēti pie galdiem ar ne vairāk kā 10 spēlētājiem, kas notiek vienlaikus; katra galda spēlētāji līdz {n}. vietai spēlē pie fināla galda, kas nosaka rangu.',
+  tablesTitle: 'Galdi',
+  tableN: 'Galds {n}',
+  finalTable: 'Fināla galds',
+  tableOf: 'Turnīra „{name}” galds {n}',
+  finalOf: 'Turnīra „{name}” fināla galds',
+  qualified: 'vieta fināla galdā',
   footer: 'PokerTH turnīru direktors · beta',
 };

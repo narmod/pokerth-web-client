@@ -70,6 +70,38 @@ export function createService(o) {
   function sweep() {
     for (const h of T.openHosts()) syncHost(h.id, h.watchId);
     for (const d of T.autoOpenDue()) autoOpen(d);
+    for (const id of T.multiParents()) stagesSweep(id);
+  }
+  // Several tables: once every table is validated, the final table (opened by
+  // itself when the tournament opens by itself); once the final is validated,
+  // the tournament's ranking.
+  const progressing = new Set();
+  async function stagesSweep(id) {
+    if (progressing.has(id)) return;
+    progressing.add(id);
+    try {
+      const k = T.stagesTick(id);
+      const t = T.get(id);
+      if (k.finalReady && t.run && t.run.autoOpen) {
+        const fin = T.makeFinal(id, 'scheduler');
+        try { await openTable(fin.id, {}, 'scheduler'); } catch (e) { T.autoOpenNote(fin.id, (e && e.message) || 'error'); }
+      }
+    } catch (e) {
+      if (!(e instanceof T.Refusal)) console.error('[td] tables of ' + id + ': ' + (e && e.message));
+    } finally { progressing.delete(id); }
+  }
+  // Open every table of a « multi » tournament that is not open yet.
+  async function openStages(id, b, who) {
+    const t = T.get(id);
+    if (!t.stagesInfo) throw new T.Refusal('draw the tables first');
+    const errors = [];
+    for (const c of t.stagesInfo.tables) {
+      if (c.host === 'open' || c.status === 'finished' || c.status === 'validated') continue;
+      try { await openTable(c.id, b || {}, who); } catch (e) { errors.push('table ' + c.index + ': ' + ((e && e.message) || 'error')); }
+    }
+    const v = withHost(T.get(id));
+    if (errors.length) v.openErrors = errors;
+    return v;
   }
   // Opening by itself N minutes before the start (tournament « run » settings).
   const opening = new Set();
@@ -78,6 +110,7 @@ export function createService(o) {
     opening.add(d.id);
     try {
       if (d.missed) T.autoOpenNote(d.id, 'the start time passed more than an hour ago', true);
+      else if (T.get(d.id).format === 'multi') { T.drawTables(d.id, 'scheduler'); await openStages(d.id, {}, 'scheduler'); }
       else await openTable(d.id, {}, 'scheduler');
     } catch (e) {
       try { T.autoOpenNote(d.id, (e && e.message) || 'error'); } catch (e2) {}
@@ -101,6 +134,7 @@ export function createService(o) {
   }
   async function openTable(id, b, who) {
     const t = T.get(id);
+    if (t.format === 'multi') throw new T.Refusal('several tables: draw the tables, then open them');
     if (t.result || t.status === 'validated') throw new T.Refusal('the result is set');
     if (t.host && t.host.status === 'open') throw new T.Refusal('the table is already open');
     if (!t.server || !t.server.ref) throw new T.Refusal('choose the LAN server of the tournament first (Edit)');
@@ -244,6 +278,9 @@ export function createService(o) {
       case '/t/validate': return send(() => T.validate(id, who, { override: b.override }));
       case '/t/correct': return send(() => T.correct(id, b, who));
       case '/t/collusion': return send(() => T.checkCollusion(id, who));
+      case '/t/draw': return send(() => T.drawTables(id, who));
+      case '/t/stages/open': return send(() => openStages(id, b, who));
+      case '/t/final': return send(async () => { const fin = T.makeFinal(id, who); if (b.open !== false) { try { await openTable(fin.id, {}, who); } catch (e) { const v = T.get(id); v.openErrors = ['final table: ' + e.message]; return v; } } return withHost(T.get(id)); });
       case '/t/correct/approve': return send(() => T.approveCorrection(id, who));
       case '/t/correct/reject': return send(() => T.rejectCorrection(id, who, b.reason));
       case '/t/table/open': return send(() => openTable(id, b, who));
@@ -279,7 +316,8 @@ export function createService(o) {
       const x = hostTable(h.watchId);
       if (x && x.gameId === game && x.tableName === name) {
         const v = T.get(h.id);
-        return { key: v.publicKey, name: v.name, witnesses: v.settings.witnesses, identity: v.settings.identity };
+        const parent = v.parent ? T.get(v.parent.id) : null;
+        return { key: v.publicKey, name: v.name, witnesses: v.settings.witnesses, identity: v.settings.identity, parentKey: parent ? parent.publicKey : null };
       }
     }
     throw Object.assign(new T.Refusal('not a tournament table'), { code: 'notFound' });

@@ -8,6 +8,25 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.12.0 — 2026-10-24 (web client `2.1.10-web.309`)
+
+### Added
+- **Several tables + final table** (format « multi », 11 to 40 players): the
+  players (those who checked in, with the identity « code ») are drawn at
+  random into tables of at most 10 — keeping apart the pairs the collusion
+  check flagged before, with « separate » — each played as a Sit & Go of its
+  own (director, witnesses, collusion check, result, validation). Once every
+  table is validated, the first N of each (1 to 5, 2 by default) play the
+  final table — opened by itself when the tournament opens by itself, else
+  « Open the final table ». The final's ranking comes first, then the others
+  by their place at their table (the same place shared); the tournament's
+  result is then validated and signed; a table corrected later recomputes it.
+  Organizer page: format and finalists in the form, « Draw the tables »,
+  « Open the tables », the tables under their tournament in the list.
+  Players' page: the tables and the final, each with its own page.
+- The witness lookup of a table gives its tournament's key, where the
+  personal code was kept (web client `2.1.10-web.309`).
+
 ## 0.11.0 — 2026-10-24 (web client `2.1.10-web.308`)
 
 ### Added

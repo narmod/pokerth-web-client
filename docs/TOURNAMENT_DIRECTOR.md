@@ -416,6 +416,38 @@ Routes: `POST /admin/tournaments/t/table/open {id}`, `…/t/table/go {id}`,
   `badCode`, `alreadyIn`. Organizer routes: `POST /admin/tournaments/t/code
   {id, nick}`, `…/t/checkin {id, nick}`.
 
+## Several tables (service `0.12.0`, web client `2.1.10-web.309`)
+
+PokerTH cannot move a player from one game to another while it runs, so
+tables are never merged or balanced: **qualifying tables, then a final table**.
+
+- **Format « multi »** (« Several tables + final table »): 11 to 40 players
+  (4 tables of 10 at most — the manager runs 4 directors at once), and how
+  many of each table go to the final (`run.finalists`, 1 to 5, 2 by default).
+- **The draw** (« Draw the tables », or by itself with « open by itself »):
+  the players still in — with the identity « code », those who checked in;
+  the others are marked absent — are dealt at random into
+  `ceil(players / 10)` tables of balanced sizes. With the collusion setting
+  « separate », the draw keeps apart the pairs flagged by an earlier
+  collusion check of this install (the fewest such pairs at one table out of
+  300 draws). Journal: `tablesDrawn`.
+- **Each table is a tournament of its own** (`parentId`, `stage: {kind:
+  'qualifier'|'final', index}`): the settings, server, table settings,
+  personal codes and check-ins of its tournament; its own director, witnesses,
+  collusion check, result, validation, corrections. Not listed on its own;
+  its page links to its tournament. « Open the tables » opens them all.
+- **The final table**: once every table is validated, the first N of each
+  (`finalReady`) — opened by itself when the tournament opens by itself, else
+  « Open the final table ». The **tournament's ranking**: the final's places,
+  then the others by their place at their table, the same place shared by the
+  players of different tables. Set (`resultSet`, source `stages`) and
+  validated by the director once the final is validated: every guarantee was
+  applied at the tables. A table corrected afterwards recomputes it
+  (`stagesRecomputed`, signed again); the ranking is never corrected directly.
+- Routes: `POST /admin/tournaments/t/draw {id}`, `…/t/stages/open {id}`,
+  `…/t/final {id, open?}`. The witness lookup of a table answers
+  `parentKey` too (the web client looks the personal code up under it).
+
 ## The director's avatar (service `0.11.0`, web client `2.1.10-web.308`)
 
 - The director logs in with an avatar so that players tell it from the

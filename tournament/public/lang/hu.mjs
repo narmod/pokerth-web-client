@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Ez a verseny nem fogad játéknaplókat.',
   err_notPlayer: 'Ez a becenév nem játékosa ennek a versenynek.',
   err_tooLarge: 'A fájl túl nagy (legfeljebb 10 MB).',
+  howMulti: 'A játékosokat legfeljebb 10 fős asztalokra sorsoljuk, amelyeken egyszerre folyik a játék; minden asztal első {n} helyezettje a döntő asztalnál játszik, amely meghatározza a helyezéseket.',
+  tablesTitle: 'Asztalok',
+  tableN: '{n}. asztal',
+  finalTable: 'Döntő asztal',
+  tableOf: '„{name}” – {n}. asztal',
+  finalOf: '„{name}” – döntő asztal',
+  qualified: 'bejutott a döntő asztalhoz',
   footer: 'PokerTH versenyigazgató · beta',
 };

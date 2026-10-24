@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Ìdíje yìí kò gba àkọsílẹ̀ eré.',
   err_notPlayer: 'Ìnagijẹ yìí kì í ṣe ti òṣèré kankan nínú ìdíje yìí.',
   err_tooLarge: 'Fáìlì náà ti tóbi jù (10 MB ló pọ̀ jùlọ).',
+  howMulti: 'A ó fi gègé pín àwọn òṣèré sí àwọn tábìlì tí kò ju ènìyàn 10 lọ, tí a ń ṣe ní àkókò kan náà; òṣèré {n} àkọ́kọ́ ní tábìlì kọ̀ọ̀kan ni yóò ṣe tábìlì àṣekágbá, èyí tí yóò pinnu ipò.',
+  tablesTitle: 'Àwọn tábìlì',
+  tableN: 'Tábìlì {n}',
+  finalTable: 'Tábìlì àṣekágbá',
+  tableOf: 'Tábìlì {n} ti “{name}”',
+  finalOf: 'Tábìlì àṣekágbá ti “{name}”',
+  qualified: 'yege sí tábìlì àṣekágbá',
   footer: 'Olùdarí ìdíje PokerTH · beta',
 };

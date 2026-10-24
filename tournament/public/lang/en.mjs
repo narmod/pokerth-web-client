@@ -126,5 +126,12 @@ export const strings = {
   err_noLogWitness: 'This tournament does not take game logs.',
   err_notPlayer: 'This nickname is not a player of this tournament.',
   err_tooLarge: 'The file is too large (10 MB at most).',
+  howMulti: 'The players are drawn into tables of at most 10, played at the same time; the first {n} of each table play the final table, which gives the ranking.',
+  tablesTitle: 'Tables',
+  tableN: 'Table {n}',
+  finalTable: 'Final table',
+  tableOf: 'Table {n} of « {name} »',
+  finalOf: 'Final table of « {name} »',
+  qualified: 'qualified for the final table',
   footer: 'PokerTH tournament director · beta',
 };

@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Bu ýaryş oýun loglaryny kabul etmeýär.',
   err_notPlayer: 'Bu lakam bu ýaryşyň oýunçysy däl.',
   err_tooLarge: 'Faýl gaty uly (iň köp 10 MB).',
+  howMulti: 'Oýunçylar bije bilen iň köp 10 adamlyk stollara bölünýär, olar bir wagtda oýnalýar; her stoluň ilkinji {n} oýunçysy final stolunda oýnaýar, ol hem orunlary kesgitleýär.',
+  tablesTitle: 'Stollar',
+  tableN: 'Stol {n}',
+  finalTable: 'Final stoly',
+  tableOf: '«{name}» — stol {n}',
+  finalOf: '«{name}» — final stoly',
+  qualified: 'final stoluna çykdy',
   footer: 'PokerTH ýaryş direktory · beta',
 };

@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Kejohanan ini tidak menerima log permainan.',
   err_notPlayer: 'Nama samaran ini bukan pemain kejohanan ini.',
   err_tooLarge: 'Fail terlalu besar (maksimum 10 MB).',
+  howMulti: 'Pemain diundi ke meja yang memuatkan paling banyak 10 orang dan dimainkan serentak; {n} pemain teratas setiap meja bermain di meja akhir, yang menentukan kedudukan.',
+  tablesTitle: 'Meja',
+  tableN: 'Meja {n}',
+  finalTable: 'Meja akhir',
+  tableOf: 'Meja {n} bagi “{name}”',
+  finalOf: 'Meja akhir bagi “{name}”',
+  qualified: 'layak ke meja akhir',
   footer: 'Pengarah kejohanan PokerTH · beta',
 };

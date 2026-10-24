@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Este torneo no acepta logs de partida.',
   err_notPlayer: 'Este apodo no es de un jugador de este torneo.',
   err_tooLarge: 'El archivo es demasiado grande (10 MB como máximo).',
+  howMulti: 'Los jugadores se sortean en mesas de 10 como máximo, que se juegan al mismo tiempo; los {n} primeros de cada mesa juegan la mesa final, que define la clasificación.',
+  tablesTitle: 'Mesas',
+  tableN: 'Mesa {n}',
+  finalTable: 'Mesa final',
+  tableOf: 'Mesa {n} de «{name}»',
+  finalOf: 'Mesa final de «{name}»',
+  qualified: 'pasa a la mesa final',
   footer: 'Director de torneos PokerTH · beta',
 };

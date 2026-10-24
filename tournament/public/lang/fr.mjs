@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Ce tournoi n’accepte pas les logs de partie.',
   err_notPlayer: 'Ce pseudo n’est pas un joueur de ce tournoi.',
   err_tooLarge: 'Le fichier est trop gros (10 Mo au plus).',
+  howMulti: 'Les joueurs sont tirés au sort sur des tables de 10 au plus, jouées en même temps ; les {n} premiers de chaque table jouent la table finale, qui donne le classement.',
+  tablesTitle: 'Tables',
+  tableN: 'Table {n}',
+  finalTable: 'Table finale',
+  tableOf: 'Table {n} de « {name} »',
+  finalOf: 'Table finale de « {name} »',
+  qualified: 'qualifié pour la table finale',
   footer: 'Directeur de tournoi PokerTH · beta',
 };

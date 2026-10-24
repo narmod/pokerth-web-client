@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Denne turneringen tar ikke imot spillogger.',
   err_notPlayer: 'Dette kallenavnet er ikke en spiller i denne turneringen.',
   err_tooLarge: 'Filen er for stor (maks 10 MB).',
+  howMulti: 'Spillerne trekkes til bord med høyst 10 spillere, som spilles samtidig; de {n} første ved hvert bord spiller finalebordet, som gir rangeringen.',
+  tablesTitle: 'Bord',
+  tableN: 'Bord {n}',
+  finalTable: 'Finalebord',
+  tableOf: 'Bord {n} i «{name}»',
+  finalOf: 'Finalebord i «{name}»',
+  qualified: 'kvalifisert til finalebordet',
   footer: 'PokerTH-turneringsdirektør · beta',
 };

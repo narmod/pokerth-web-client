@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Bu turnir oyun log fayllarını qəbul etmir.',
   err_notPlayer: 'Bu ləqəb bu turnirin oyunçusu deyil.',
   err_tooLarge: 'Fayl çox böyükdür (ən çox 10 MB).',
+  howMulti: 'Oyunçular püşklə ən çox 10 nəfərlik masalara bölünür və bu masalar eyni vaxtda oynanılır; hər masanın ilk {n} oyunçusu reytinqi müəyyən edən final masasında oynayır.',
+  tablesTitle: 'Masalar',
+  tableN: 'Masa {n}',
+  finalTable: 'Final masası',
+  tableOf: '“{name}” turnirinin {n} nömrəli masası',
+  finalOf: '“{name}” turnirinin final masası',
+  qualified: 'final masasına vəsiqə qazandı',
   footer: 'PokerTH turnir direktoru · beta',
 };

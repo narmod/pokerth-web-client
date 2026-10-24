@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Bu turnir oʻyin loglarini qabul qilmaydi.',
   err_notPlayer: 'Bu taxallus ushbu turnir oʻyinchisi emas.',
   err_tooLarge: 'Fayl juda katta (koʻpi bilan 10 MB).',
+  howMulti: 'Oʻyinchilar qurʼa orqali koʻpi bilan 10 kishilik stollarga taqsimlanadi, ular bir vaqtda oʻynaladi; har bir stolning dastlabki {n} oʻyinchisi final stolida oʻynaydi, u oʻrinlarni belgilaydi.',
+  tablesTitle: 'Stollar',
+  tableN: 'Stol {n}',
+  finalTable: 'Final stoli',
+  tableOf: '“{name}” — stol {n}',
+  finalOf: '“{name}” — final stoli',
+  qualified: 'final stoliga chiqdi',
   footer: 'PokerTH turnir direktori · beta',
 };

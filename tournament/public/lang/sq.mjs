@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Ky turne nuk pranon log-e lojërash.',
   err_notPlayer: 'Ky pseudonim nuk është lojtar i këtij turneu.',
   err_tooLarge: 'Skedari është shumë i madh (maksimumi 10 MB).',
+  howMulti: 'Lojtarët ndahen me short në tavolina me jo më shumë se 10 lojtarë, që luhen në të njëjtën kohë; lojtarët në vendet 1–{n} të çdo tavoline luajnë tavolinën finale, e cila jep renditjen.',
+  tablesTitle: 'Tavolinat',
+  tableN: 'Tavolina {n}',
+  finalTable: 'Tavolina finale',
+  tableOf: 'Tavolina {n} e «{name}»',
+  finalOf: 'Tavolina finale e «{name}»',
+  qualified: 'kualifikim për tavolinën finale',
   footer: 'Drejtori i turneve PokerTH · beta',
 };

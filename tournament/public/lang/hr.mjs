@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Ovaj turnir ne prima logove igara.',
   err_notPlayer: 'Ovaj nadimak ne pripada igraču ovog turnira.',
   err_tooLarge: 'Datoteka je prevelika (najviše 10 MB).',
+  howMulti: 'Igrači se ždrijebom raspoređuju za stolove od najviše 10 igrača koji se igraju istodobno; igrači na mjestima od 1. do {n}. svakog stola igraju za finalnim stolom, koji određuje poredak.',
+  tablesTitle: 'Stolovi',
+  tableN: 'Stol {n}',
+  finalTable: 'Finalni stol',
+  tableOf: 'Stol {n} turnira „{name}”',
+  finalOf: 'Finalni stol turnira „{name}”',
+  qualified: 'plasman za finalni stol',
   footer: 'PokerTH turnirski direktor · beta',
 };

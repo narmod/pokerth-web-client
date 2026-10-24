@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Nid yw’r twrnamaint hwn yn derbyn logiau gêm.',
   err_notPlayer: 'Nid yw’r llysenw hwn yn chwaraewr yn y twrnamaint hwn.',
   err_tooLarge: 'Mae’r ffeil yn rhy fawr (10 MB ar y mwyaf).',
+  howMulti: 'Caiff y chwaraewyr eu tynnu ar hap i fyrddau o 10 ar y mwyaf, sy’n cael eu chwarae ar yr un pryd; mae’r chwaraewyr yn safleoedd 1 i {n} ar bob bwrdd yn chwarae’r bwrdd terfynol, sy’n rhoi’r safleoedd.',
+  tablesTitle: 'Byrddau',
+  tableN: 'Bwrdd {n}',
+  finalTable: 'Bwrdd terfynol',
+  tableOf: 'Bwrdd {n} yn “{name}”',
+  finalOf: 'Bwrdd terfynol yn “{name}”',
+  qualified: 'wedi cymhwyso ar gyfer y bwrdd terfynol',
   footer: 'Cyfarwyddwr twrnameintiau PokerTH · beta',
 };

@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Mashindano haya hayakubali logi za michezo.',
   err_notPlayer: 'Jina hili la utani si la mchezaji wa mashindano haya.',
   err_tooLarge: 'Faili ni kubwa mno (kiwango cha juu MB 10).',
+  howMulti: 'Wachezaji hupangwa kwa bahati nasibu kwenye meza zenye wachezaji 10 au chini, zinazochezwa kwa wakati mmoja; wachezaji {n} wa kwanza wa kila meza hucheza meza ya fainali, ambayo hutoa msimamo.',
+  tablesTitle: 'Meza',
+  tableN: 'Meza {n}',
+  finalTable: 'Meza ya fainali',
+  tableOf: 'Meza {n} ya “{name}”',
+  finalOf: 'Meza ya fainali ya “{name}”',
+  qualified: 'amefuzu kwa meza ya fainali',
   footer: 'Mkurugenzi wa mashindano wa PokerTH · beta',
 };

@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Þetta mót tekur ekki við leikjaskrám.',
   err_notPlayer: 'Þetta gælunafn tilheyrir engum leikmanni í þessu móti.',
   err_tooLarge: 'Skráin er of stór (mest 10 MB).',
+  howMulti: 'Leikmenn eru dregnir á borð með að hámarki 10 sætum, sem spiluð eru samtímis; leikmenn í sætum 1–{n} á hverju borði spila á lokaborðinu, sem ræður röðuninni.',
+  tablesTitle: 'Borð',
+  tableN: 'Borð {n}',
+  finalTable: 'Lokaborð',
+  tableOf: 'Borð {n} í „{name}“',
+  finalOf: 'Lokaborð í „{name}“',
+  qualified: 'kemst á lokaborðið',
   footer: 'PokerTH-mótsstjóri · beta',
 };

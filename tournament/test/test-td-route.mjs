@@ -290,6 +290,22 @@ try {
   act('tClose').click();
   ok(await until(() => /Table closed by the organizer/.test(det()) && act('tOpen'), 80), 'host: closed by the organizer, can be opened again');
   ok(/Last table: stopped/.test(det()), 'host: the last table is reported');
+
+  // Several tables: created from the form, drawn, a table opened from its tournament.
+  $('tName').value = 'Big cup'; $('tProfile').value = 'club'; $('tFormat').value = 'multi'; $('tFormat').dispatchEvent(new w.Event('change'));
+  ok(!$('tFinalBox').hidden, 'several tables: the number of finalists is asked');
+  $('tFinalists').value = '3';
+  $('tCreateForm').dispatchEvent(new w.Event('submit', { cancelable: true }));
+  ok(await until(() => /Big cup/.test(det()) && /Several tables \+ final \(3 per table\)/.test(det())), 'several tables: created, three per table at the final');
+  for (let i = 1; i <= 15; i++) await post('/admin/tournaments/t/player', { id: (await (await get('/admin/tournaments/t/list')).json()).tournaments.find((x) => x.name === 'Big cup').id, nick: 'B' + i });
+  $('tList').querySelector('button[data-id]') && [...$('tList').querySelectorAll('button[data-id]')].find((b) => /Big cup/.test(b.textContent)).click();
+  ok(await until(() => /Players \(15\/40\)/.test(det()) && act('draw') && !act('draw').disabled), 'several tables: 15 players of 40, « Draw the tables »');
+  act('draw').click();
+  ok(await until(() => /Table 1/.test(det()) && /Table 2/.test(det()) && act('stagesOpen')), 'drawn: two tables, « Open the tables »');
+  await until(() => /↳ Big cup — table 1/.test($('tList').textContent));
+  ok(/↳ Big cup — table 2/.test($('tList').textContent), 'the tables are listed under their tournament');
+  w.document.querySelector('#tDetailBody [data-act="goto"]').click();
+  ok(await until(() => /Table 1 of/.test(det()) && /its players come from the draw/.test(det()) && !$('tPlayerIn')), 'a table: its tournament linked, players fixed by the draw');
   w.close();
 
   // .pdb through the routes.
@@ -306,7 +322,7 @@ try {
   const fp = await get('/admin/tournaments/t/file?id=' + cr.id + '&which=pdb');
   ok(fp.status === 200 && Buffer.from(await fp.arrayBuffer()).equals(Buffer.from(pdbBuf)), 'routes: the log is kept and downloadable');
   const lst = await (await get('/admin/tournaments/t/list')).json();
-  ok(lst.ok && lst.tournaments.length === 6, 'routes: six tournaments listed');
+  ok(lst.ok && lst.tournaments.length === 9, 'routes: nine tournaments listed (with two tables)');
   ok(fs.existsSync(F('td/tournaments/' + cr.id + '/journal.json')) && fs.existsSync(F('td/tournaments/' + cr.id + '/result.json')), 'routes: stored in TD_DIR');
 
   // ── new code on disk: the service alone restarts ──
@@ -333,7 +349,7 @@ try {
   let s2 = null;
   for (let i = 0; i < 60; i++) { await wait(200); s2 = await (await get('/admin/tournaments/settings')).json(); if (s2.service.status === 'running' && s2.service.pid !== pid1) break; }
   ok(s2 && s2.service.status === 'running' && s2.service.pid !== pid1 && s2.service.restarts === 1, 'a killed service is started again');
-  ok((await (await get('/admin/tournaments/t/list')).json()).tournaments.length === 6, 'and finds its tournaments');
+  ok((await (await get('/admin/tournaments/t/list')).json()).tournaments.length === 9, 'and finds its tournaments');
 
   // ── off again: page gone, service stopped, files kept ──
   const off = await (await post('/admin/tournaments/settings', { enabled: false })).json();

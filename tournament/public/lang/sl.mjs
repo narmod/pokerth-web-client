@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Ta turnir ne sprejema logov iger.',
   err_notPlayer: 'Ta vzdevek ne pripada igralcu tega turnirja.',
   err_tooLarge: 'Datoteka je prevelika (največ 10 MB).',
+  howMulti: 'Igralci so z žrebom razporejeni za mize z največ 10 igralci, ki se igrajo hkrati; igralci na mestih od 1. do {n}. vsake mize igrajo za finalno mizo, ki določi uvrstitev.',
+  tablesTitle: 'Mize',
+  tableN: 'Miza {n}',
+  finalTable: 'Finalna miza',
+  tableOf: 'Miza {n} turnirja »{name}«',
+  finalOf: 'Finalna miza turnirja »{name}«',
+  qualified: 'uvrstitev za finalno mizo',
   footer: 'Direktor turnirjev PokerTH · beta',
 };

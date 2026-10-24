@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Ten turniej nie przyjmuje logów gier.',
   err_notPlayer: 'Ten pseudonim nie jest graczem tego turnieju.',
   err_tooLarge: 'Plik jest za duży (maksymalnie 10 MB).',
+  howMulti: 'Gracze są losowani do stołów liczących najwyżej 10 osób, rozgrywanych jednocześnie; gracze z miejsc 1–{n} każdego stołu grają przy stole finałowym, który ustala klasyfikację.',
+  tablesTitle: 'Stoły',
+  tableN: 'Stół {n}',
+  finalTable: 'Stół finałowy',
+  tableOf: '„{name}” – stół {n}',
+  finalOf: '„{name}” – stół finałowy',
+  qualified: 'awans do stołu finałowego',
   footer: 'Dyrektor turniejów PokerTH · beta',
 };

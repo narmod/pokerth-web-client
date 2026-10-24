@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: '此锦标赛不接受牌局日志。',
   err_notPlayer: '该昵称不是本锦标赛的玩家。',
   err_tooLarge: '文件过大（最大 10 MB）。',
+  howMulti: '玩家通过抽签分配到每桌最多 10 人的牌桌，各桌同时进行；每桌前 {n} 名进入决赛桌，由决赛桌决定排名。',
+  tablesTitle: '牌桌',
+  tableN: '第 {n} 桌',
+  finalTable: '决赛桌',
+  tableOf: '「{name}」第 {n} 桌',
+  finalOf: '「{name}」决赛桌',
+  qualified: '晋级决赛桌',
   footer: 'PokerTH 赛事主管 · beta',
 };

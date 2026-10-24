@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Dieses Turnier nimmt keine Spiel-Logs an.',
   err_notPlayer: 'Dieser Spitzname gehört keinem Spieler dieses Turniers.',
   err_tooLarge: 'Die Datei ist zu groß (höchstens 10 MB).',
+  howMulti: 'Die Spieler werden auf Tische mit höchstens 10 Plätzen ausgelost, die gleichzeitig gespielt werden; die ersten {n} jedes Tisches spielen den Finaltisch, der die Rangliste ergibt.',
+  tablesTitle: 'Tische',
+  tableN: 'Tisch {n}',
+  finalTable: 'Finaltisch',
+  tableOf: 'Tisch {n} von „{name}“',
+  finalOf: 'Finaltisch von „{name}“',
+  qualified: 'für den Finaltisch qualifiziert',
   footer: 'PokerTH-Turnierleiter · beta',
 };

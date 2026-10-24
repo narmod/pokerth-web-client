@@ -88,7 +88,9 @@
           <label class="ck"><input type="checkbox" id="tSelfReg" checked> Players can register themselves on the public page</label>
           <label class="ck"><input type="checkbox" id="tQmlWit"> Accept QML players as witnesses (they send their game log on the players' page)</label>
           <details class="sub"><summary>Table settings</summary><p class="small muted">Used when the director opens the table. PokerTH defaults.</p><div class="row" id="tTable"></div></details>
-          <p class="small muted">Format: Sit &amp; Go, one table, up to 10 players.</p>
+          <div class="row"><div><label for="tFormat">Format</label><select id="tFormat"><option value="sitngo" selected>Sit &amp; Go, one table (up to 10 players)</option><option value="multi">Several tables + final table (11 to 40 players)</option></select></div>
+            <div id="tFinalBox" hidden><label for="tFinalists">Players of each table at the final</label><input id="tFinalists" type="number" inputmode="numeric" min="1" max="5" value="2"></div></div>
+          <p class="small muted" id="tFormatNote">The players are drawn into tables of at most 10, played at the same time; the first of each table play the final table, which gives the ranking.</p>
           <div class="actions"><button type="submit" class="primary">Create</button></div>
           <div class="msg" id="tCreateMsg" role="status"></div>
         </form>

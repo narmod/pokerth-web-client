@@ -87,17 +87,20 @@ export function createTournamentsView(deps) {
     $('tCustom').hidden = p !== 'custom';
   }
   $('tProfile').addEventListener('change', profileNote);
+  const formatNote = () => { const m = $('tFormat').value === 'multi'; $('tFinalBox').hidden = !m; $('tFormatNote').hidden = !m; };
+  $('tFormat').addEventListener('change', formatNote);
+  formatNote();
   profileNote();
 
   $('tCreateForm').addEventListener('submit', (ev) => {
     ev.preventDefault();
     const srv = (deps.servers() || []).find((s) => s.ref === $('tSrv').value);
-    const body = { name: $('tName').value.trim(), profile: $('tProfile').value, format: 'sitngo' };
+    const body = { name: $('tName').value.trim(), profile: $('tProfile').value, format: $('tFormat').value === 'multi' ? 'multi' : 'sitngo' };
     if (srv) body.server = { ref: srv.ref, name: srv.name, host: srv.host, port: srv.port };
     if ($('tDate').value) { const ts = new Date($('tDate').value).getTime(); if (ts > 0) body.startsAt = ts; }
     if ($('tVis').value) body.visibility = $('tVis').value;
     body.table = readTable('tt_');
-    body.run = { autoOpen: $('tAuto').checked, openBefore: Number($('tBefore').value), announce: $('tAnnounce').checked, selfRegister: $('tSelfReg').checked, chatLang: $('tChatLang').value || 'en', qmlWitnesses: $('tQmlWit').checked };
+    body.run = { autoOpen: $('tAuto').checked, openBefore: Number($('tBefore').value), announce: $('tAnnounce').checked, selfRegister: $('tSelfReg').checked, chatLang: $('tChatLang').value || 'en', qmlWitnesses: $('tQmlWit').checked, finalists: Number($('tFinalists').value) || 2 };
     if (body.profile === 'custom') {
       body.settings = {};
       for (const k of Object.keys(CHOICES)) body.settings[k] = $('tc_' + k).value;
@@ -157,8 +160,12 @@ export function createTournamentsView(deps) {
     return api('/admin/tournaments/t/list').then((d) => {
       if (!d.ok) return;
       list = d.tournaments || [];
-      $('tList').innerHTML = list.length ? list.map((t) => '<li><button type="button" data-id="' + esc(t.id) + '"' + (cur && cur.id === t.id ? ' aria-current="true"' : '') + '>' +
-        '<span class="wt">' + esc(t.name) + ' <span class="muted small">· ' + esc(t.profile) + ' · ' + t.players + ' player' + (t.players === 1 ? '' : 's') + (t.startsAt ? ' · ' + esc(when(t.startsAt)) : '') + '</span></span>' + chip(t.status) + '</button></li>').join('')
+      // The tables of a tournament on several tables, under it.
+      const kids = (pid) => list.filter((x) => x.parentId === pid).sort((a, b) => ((a.stage && a.stage.kind === 'final') ? 99 : (a.stage || {}).index || 0) - ((b.stage && b.stage.kind === 'final') ? 99 : (b.stage || {}).index || 0));
+      const item = (t, sub) => '<li' + (sub ? ' class="sub"' : '') + '><button type="button" data-id="' + esc(t.id) + '"' + (cur && cur.id === t.id ? ' aria-current="true"' : '') + '>' +
+        '<span class="wt">' + (sub ? '↳ ' : '') + esc(t.name) + ' <span class="muted small">· ' + (t.format === 'multi' ? 'several tables · ' : '') + esc(t.profile) + ' · ' + t.players + ' player' + (t.players === 1 ? '' : 's') + (t.startsAt ? ' · ' + esc(when(t.startsAt)) : '') + '</span></span>' + chip(t.status) + '</button></li>';
+      const top = list.filter((x) => !x.parentId);
+      $('tList').innerHTML = top.length ? top.map((t) => item(t, false) + kids(t.id).map((k) => item(k, true)).join('')).join('')
         : '<li class="empty">None yet.</li>';
     }).catch(() => {});
   }
@@ -176,11 +183,15 @@ export function createTournamentsView(deps) {
       if (quiet && cur && cur.id === d.id && cur.status === d.status && $('tHostBox')) {
         cur = d;
         $('tHostBox').innerHTML = hostLive(d);
+      } else if (quiet && cur && cur.id === d.id && cur.status === d.status && $('tStagesBox')) {
+        cur = d;
+        $('tStagesBox').innerHTML = stagesBox(d);
       } else if (!quiet || !cur || cur.id === d.id) {
         show(d, quiet && cur && cur.status !== d.status ? statusNote(d) : null);
         if (quiet) refresh();
       }
       if (d.host && d.host.status === 'open' && cur && cur.id === d.id) pollTimer = setTimeout(() => open(d.id, true), 2000);
+      else if (d.stagesInfo && d.status !== 'validated' && cur && cur.id === d.id) pollTimer = setTimeout(() => open(d.id, true), 5000);
     }).catch(() => { if (quiet) pollTimer = setTimeout(() => open(id, true), 5000); });
   }
   function statusNote(d) {
@@ -210,7 +221,7 @@ export function createTournamentsView(deps) {
   function render() {
     const t = cur;
     const st = t.settings || {};
-    let h = '<p>' + chip(t.status) + ' <span class="tname">' + esc(t.name) + '</span><br><span class="muted small">Sit &amp; Go · ' + esc(t.profile) + ' · ' + esc(st.visibility) +
+    let h = '<p>' + chip(t.status) + ' <span class="tname">' + esc(t.name) + '</span><br><span class="muted small">' + (t.format === 'multi' ? 'Several tables + final (' + esc((t.run || {}).finalists || 2) + ' per table)' : 'Sit &amp; Go') + ' · ' + esc(t.profile) + ' · ' + esc(st.visibility) +
       (t.server ? ' · ' + esc(t.server.name) + ' (' + esc(t.server.host) + ':' + esc(t.server.port) + ')' : '') + (t.startsAt ? ' · ' + esc(when(t.startsAt)) : '') + '</span></p>';
     if (t.inviteCode) h += '<p class="small">Invitation code <span class="mono">' + esc(t.inviteCode) + '</span></p>';
     if (t.publicKey) {
@@ -229,7 +240,8 @@ export function createTournamentsView(deps) {
     // Check-in (identity « code », Official): who confirmed with their code.
     const ci = st.identity === 'code';
     const nIn = t.players.filter((p) => p.checkedIn).length;
-    h += '<h3>Players (' + t.players.length + '/10)' + (ci ? ' · checked in ' + nIn + '/' + t.players.length : '') + '</h3>';
+    if (t.parent) h += '<p class="small">' + (t.stage && t.stage.kind === 'final' ? 'The final table' : 'Table ' + esc(t.stage && t.stage.index)) + ' of <button type="button" class="mini" data-act="goto" data-id="' + esc(t.parent.id) + '">' + esc(t.parent.name) + '</button> — its players come from the draw.</p>';
+    h += '<h3>Players (' + t.players.length + '/' + (t.format === 'multi' ? 40 : 10) + ')' + (ci ? ' · checked in ' + nIn + '/' + t.players.length : '') + '</h3>';
     if (ci && !t.result) {
       const before = (t.run && t.run.checkInBefore) || 30;
       h += '<p class="small muted">Check-in: each player confirms on the players\' page with their personal code' +
@@ -237,7 +249,7 @@ export function createTournamentsView(deps) {
         '. Only the players checked in are invited; the others are marked absent when the table opens. Players you add get a code here; « New code » replaces a lost one.</p>';
     }
     const ciChip = (p) => (ci ? (p.checkedIn ? ' <span class="chip live">checked in</span>' : ' <span class="chip">not checked in</span>') : '');
-    if (!t.result && !(t.host && t.host.status === 'open')) {
+    if (!t.result && !(t.host && t.host.status === 'open') && !t.parent && !t.stagesInfo) {
       h += t.players.length ? '<ul class="rank">' + t.players.map((p) => '<li><span class="nk">' + esc(p.nick) + (p.self ? ' <span class="chip">self</span>' : '') + ciChip(p) + '</span>' +
         (ci && !p.checkedIn ? '<button type="button" data-act="ckin" data-nick="' + esc(p.nick) + '" aria-label="Check ' + esc(p.nick) + ' in">Check in</button>' : '') +
         (ci ? '<button type="button" data-act="code" data-nick="' + esc(p.nick) + '" aria-label="New code for ' + esc(p.nick) + '">New code</button>' : '') +
@@ -249,7 +261,7 @@ export function createTournamentsView(deps) {
     }
 
     // The table on the server.
-    h += hostSection(t);
+    h += t.format === 'multi' ? stagesSection(t) : hostSection(t);
 
     // Witnesses: what the web clients at the table saw.
     h += witnessSection(t);
@@ -327,6 +339,35 @@ export function createTournamentsView(deps) {
   // ── the director at the table ──
   // Collusion check (service 0.10.0): pairs who spare each other or pass chips,
   // with the numbers behind each signal. It never decides: the organizer does.
+  // Several tables: the draw, the tables (each a Sit & Go of its own, opened
+  // here or one by one), the final table, and where each stands.
+  function stagesSection(t) {
+    if (t.result) return '';
+    return '<h3>Tables</h3><div id="tStagesBox">' + stagesBox(t) + '</div>';
+  }
+  function stagesBox(t) {
+    const S = t.stagesInfo;
+    const N = (t.run && t.run.finalists) || 2;
+    if (!S) {
+      const code = (t.settings || {}).identity === 'code';
+      const n = t.players.filter((p) => !p.absent && (!code || p.checkedIn)).length;
+      const tables = Math.min(4, Math.ceil(n / 10));
+      return '<p class="small muted">' + (n < 11 ? 'Ten players or fewer: one table is enough (format « Sit &amp; Go »).' : 'The draw seats the players' + ((t.settings || {}).identity === 'code' ? ' who checked in' : '') + ' on ' + tables + ' tables, at random' + ((t.settings || {}).collusion === 'separate' ? ', keeping apart the pairs the collusion check flagged before' : '') + '; the first ' + N + ' of each table play the final table.') +
+        (t.run && t.run.autoOpen && t.startsAt ? ' The director draws and opens them by itself ' + esc(t.run.openBefore) + ' min before the start.' : '') + '</p>' +
+        '<div class="actions"><button type="button" class="primary" data-act="draw"' + (n >= 11 ? '' : ' disabled') + '>Draw the tables</button></div>';
+    }
+    const row = (c, label) => '<li><span class="nk">' + label + ' ' + chip(c.status) + (c.host === 'open' ? ' <span class="chip live">director at the table</span>' : '') +
+      '<br><span class="small muted">' + esc(c.players.join(', ')) + (c.winner ? ' · winner ' + esc(c.winner) : '') + '</span></span><button type="button" data-act="goto" data-id="' + esc(c.id) + '">Open</button></li>';
+    let h = '<ul class="rank">' + S.tables.map((c) => row(c, 'Table ' + esc(c.index))).join('') + (S.final ? row(S.final, '<b>Final table</b>') : '') + '</ul>';
+    const toOpen = S.tables.filter((c) => c.host !== 'open' && c.status !== 'finished' && c.status !== 'validated').length;
+    if (toOpen) h += '<div class="actions"><button type="button" class="primary" data-act="stagesOpen">Open the tables (' + toOpen + ')</button></div><p class="small muted">The director opens every table on the tournament\'s server, as for a Sit &amp; Go; each result is validated at its table.</p>';
+    if (!S.final) {
+      h += '<p class="small">Final table: the first ' + esc(S.N) + ' of each table — ' + (S.allValidated ? '<b>' + esc(S.finalists.join(', ')) + '</b>' : esc(S.finalists.length) + ' known so far (every table must be validated)') + '.</p>';
+      if (S.allValidated) h += '<div class="actions"><button type="button" class="primary" data-act="final">Open the final table</button></div>';
+    } else h += '<p class="small muted">The tournament\'s ranking follows from the final table once it is validated: the final first, then the others by their place at their table.</p>';
+    if (t.openErrors && t.openErrors.length) h += '<p class="msg bad">' + t.openErrors.map(esc).join('<br>') + '</p>';
+    return h;
+  }
   function collusionSection(t) {
     const st = t.settings || {};
     if (st.collusion === 'off') return '';
@@ -512,6 +553,10 @@ export function createTournamentsView(deps) {
     if (a === 'validate') return call('/admin/tournaments/t/validate', $('tOverride') ? { override: ($('tOverride').value || '').trim() } : {}, 'Validated and signed.');
     if (a === 'correct') return call('/admin/tournaments/t/correct', { ranking: corrOrder.slice(), reason: ($('tReason').value || '').trim() }, (cur.settings || {}).corrections === 'second' ? 'Correction proposed: a second organizer must approve it.' : 'Correction recorded and signed.');
     if (a === 'collusion') return call('/admin/tournaments/t/collusion', {}, 'Collusion check done.');
+    if (a === 'goto') return open(b.dataset.id);
+    if (a === 'draw') { if (!window.confirm('Draw the tables now? The players can no longer change.')) return; return call('/admin/tournaments/t/draw', {}, 'Tables drawn.'); }
+    if (a === 'stagesOpen') return call('/admin/tournaments/t/stages/open', {}, 'The director opens the tables.');
+    if (a === 'final') return call('/admin/tournaments/t/final', {}, 'The director opens the final table.');
     if (a === 'corrApprove') return call('/admin/tournaments/t/correct/approve', {}, 'Correction approved and signed.');
     if (a === 'corrReject') return call('/admin/tournaments/t/correct/reject', { reason: $('tRejWhy') ? ($('tRejWhy').value || '').trim() : '' }, 'Correction set aside.');
     if (a === 'save') {

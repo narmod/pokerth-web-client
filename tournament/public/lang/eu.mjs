@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Txapelketa honek ez du partida-erregistrorik onartzen.',
   err_notPlayer: 'Ezizen hau ez da txapelketa honetako jokalaria.',
   err_tooLarge: 'Fitxategia handiegia da (gehienez 10 MB).',
+  howMulti: 'Jokalariak zozketaz banatzen dira gehienez 10 jokalariko mahaietan, aldi berean jokatzen direnak; mahai bakoitzeko sailkatuek (lehen {n} postuak) azken mahaia jokatzen dute, eta horrek ematen du sailkapena.',
+  tablesTitle: 'Mahaiak',
+  tableN: '{n}. mahaia',
+  finalTable: 'Azken mahaia',
+  tableOf: '«{name}» txapelketako {n}. mahaia',
+  finalOf: '«{name}» txapelketako azken mahaia',
+  qualified: 'azken mahairako sailkatua',
   footer: 'PokerTH txapelketa-zuzendaria · beta',
 };

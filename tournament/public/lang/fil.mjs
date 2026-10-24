@@ -124,5 +124,12 @@ export const strings = {
   err_noLogWitness: 'Hindi tumatanggap ng mga game log ang tournament na ito.',
   err_notPlayer: 'Hindi manlalaro ng tournament na ito ang palayaw na ito.',
   err_tooLarge: 'Masyadong malaki ang file (10 MB ang pinakamarami).',
+  howMulti: 'Binubunot ang mga manlalaro sa mga mesang may hanggang 10 manlalaro, na sabay-sabay na nilalaro; ang unang {n} ng bawat mesa ay maglalaro sa huling mesa, na magbibigay ng ranggo.',
+  tablesTitle: 'Mga Mesa',
+  tableN: 'Mesa {n}',
+  finalTable: 'Huling mesa',
+  tableOf: 'Mesa {n} ng “{name}”',
+  finalOf: 'Huling mesa ng “{name}”',
+  qualified: 'pasok sa huling mesa',
   footer: 'PokerTH tournament director · beta',
 };
