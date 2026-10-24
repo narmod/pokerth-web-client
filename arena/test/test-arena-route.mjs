@@ -10,12 +10,14 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { JSDOM } from 'jsdom';
-import { freePort } from '../../scripts/lib/free-port.mjs';
 import { S, fakeServer, answerNames, wait } from './lib/arena-fake-server.mjs';
 import { buildPdb, sampleGames } from './lib/td-pdb-fixture.mjs';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+// The Arena on its own (its own repository): no web client around, nothing to relay.
+if (!fs.existsSync(path.join(root, 'proxy.js'))) { console.log('No web client around (proxy.js): skipped.'); process.exit(0); }
+const { JSDOM } = await import('jsdom');
+const { freePort } = await import('../../scripts/lib/free-port.mjs');
 let n = 0, fail = 0;
 function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); } else console.log('  ✓', msg); }
 

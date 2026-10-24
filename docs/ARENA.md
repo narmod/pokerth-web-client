@@ -1242,7 +1242,7 @@ Links still to cut (tick them off as the code is touched):
   `public/modules/create-presets.mjs` (later: read from the web client's API
   with a copy as fallback), the root `package.json` version (or
   `ARENA_CLIENT_VERSION`).
-- Pages: the web client's fonts (`/fonts`). Done: the language list
+- Pages: done — the Inter font (`/arena/fonts/`, 0.37.0), the language list
   (`/arena/lang-meta.mjs`, via `platform.mjs`) and the Arena's own icons
   (0.30.0), the hero picture (`/arena/img/hero.webp`, 0.31.0).
 - Running: launched and supervised by `server/arena-host.js`; servers over
@@ -1315,10 +1315,18 @@ minutes on the Arena. The key is never sent back to the web client's admin page
 (a hint only). A new key on the Arena cuts the link: the web client's next send
 fails and its admin card says so until the new key is pasted.
 
-Next steps: a link from the web client to the Arena, the player accounts'
-witness (a signed-in player has no code to hand over), then the repository of its own
-(`git subtree split`), its Dockerfile and install script, and the removal of the
-embedded Arena from the web client once the app runs.
+**Ready to stand alone** (service `0.37.0`). `arena/` runs away from the web
+client: `scripts/sync-shared.mjs <web client folder>` copies what it takes
+from it into `arena/shared/` (ignored in this repository, committed in the
+Arena's own), `lib/platform.mjs` looks there first, and the folder ships its
+`Dockerfile`, `docker-compose.yml`, `install.sh` and `README.md`. Moving it to
+its own repository: `git subtree split --prefix=arena`, push the result, then
+run `sync-shared` there and commit `shared/`.
+
+Next steps: the Arena's own repository (private at first), then the removal of
+the embedded Arena from the web client once the app runs; later a link from the
+web client to the Arena and the player accounts' witness (a signed-in player
+has no code to hand over).
 
 ## Updating the director (`web.300`, service `0.2.1`)
 

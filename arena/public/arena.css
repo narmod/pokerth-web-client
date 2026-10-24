@@ -1,11 +1,11 @@
 /* Shared style of /arena (players) and /arena/organize: the face,
    palette and chrome of the public pages (/rules, /faq), light and dark. */
 /* Same face, palette and chrome as the public pages (/rules, /faq): Inter from
-   /fonts, the QML slate, the yellow accent and the red PokerTH chip. Plus a
+   /arena/fonts, the QML slate, the yellow accent and the red PokerTH chip. Plus a
    light variant: system preference by default, or the header switch. */
-@font-face{font-family:'Inter';src:url(/fonts/inter-latin-wght-normal.woff2) format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
-@font-face{font-family:'Inter';src:url(/fonts/inter-latin-ext-wght-normal.woff2) format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+20A0-20AA,U+20AC-20C0,U+2C60-2C7F,U+A720-A7FF}
-@font-face{font-family:'Inter';src:url(/fonts/InterVariable.woff2) format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0370-03FF,U+0400-052F,U+1EA0-1EF9}
+@font-face{font-family:'Inter';src:url(/arena/fonts/inter-latin-wght-normal.woff2) format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Inter';src:url(/arena/fonts/inter-latin-ext-wght-normal.woff2) format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+20A0-20AA,U+20AC-20C0,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Inter';src:url(/arena/fonts/InterVariable.woff2) format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0370-03FF,U+0400-052F,U+1EA0-1EF9}
 @font-face{font-family:'Inter Fallback';src:local('Arial'),local('Helvetica'),local('Liberation Sans');size-adjust:107.4%;ascent-override:90.2%;descent-override:22.48%;line-gap-override:0%}
 :root{--bg:#161b23;--felt:#1d222b;--felt-lo:#12161d;--ink:#a0acc4;--ivory:#eff1f5;--brass:#e3c800;--brass-ink:#161b23;--muted:#8792a8;
   --line:rgba(160,172,196,.16);--chip:#c0392b;--chip-ink:#fff;--panel:#1d222b;--field:#12161d;--ok:#5cc28a;--warn:#e3a400;--bad:#ef6a5a;color-scheme:dark}

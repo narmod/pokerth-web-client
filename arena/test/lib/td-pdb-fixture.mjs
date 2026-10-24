@@ -2,11 +2,10 @@
 // public/modules/handlog.mjs) for the tournament director tests.
 import { createRequire } from 'node:module';
 import { readFileSync } from 'node:fs';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
+import { SQL_VENDOR_DIR as VENDOR } from '../../lib/platform.mjs';
 
 const require = createRequire(import.meta.url);
-const VENDOR = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', 'public', 'vendor');
 
 // games: [{ uniqueGameId, gameId, startMoney, seats: [nick…], hands: [{ cash: {seat: cash}, actions: [[seat, 'action']] }] }]
 export async function buildPdb(games) {

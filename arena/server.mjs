@@ -20,6 +20,10 @@
 //   ARENA_LINK_KEY        the link key (else made once, kept in ARENA_DIR)
 //   ARENA_WEBCLIENT_URL   the web client's address (else the one it sends)
 //   ARENA_KEEP_LOOPBACK=1 keep 127.0.0.1 servers as they are (same machine)
+//   ARENA_TRUST_PROXY=1   behind a reverse proxy: the player's address from
+//                         X-Forwarded-For (its last entry)
+//   ARENA_PUBLIC_URL      the Arena's public address (shared-link pictures)
+//   ARENA_HOST / _PORT    where it listens (127.0.0.1, any free port)
 // ═══════════════════════════════════════════════════════════════════
 
 import http from 'node:http';
@@ -91,7 +95,11 @@ if (viaProxy) {
   process.on('disconnect', () => { log('web client gone, stopping'); process.exit(0); });
 }
 
-const svc = createService({ dir: DIR, secret: SECRET, adminToken: ADMIN_TOKEN, servers, events, link, clientVersion: () => CLIENT_VERSION, version: VERSION });
+// The version the director tells the server it speaks: ARENA_CLIENT_VERSION,
+// else the one the linked web client sends, else platform.mjs's (0.37.0).
+const clientVersion = () => process.env.ARENA_CLIENT_VERSION || (link && link.info().webClientVersion) || CLIENT_VERSION;
+const PUBLIC_URL = (() => { const v = String(process.env.ARENA_PUBLIC_URL || '').trim().replace(/\/+$/, ''); return /^https?:\/\/[A-Za-z0-9.:[\]-]{1,255}$/.test(v) ? v : ''; })();
+const svc = createService({ dir: DIR, secret: SECRET, adminToken: ADMIN_TOKEN, servers, events, link, trustProxy: process.env.ARENA_TRUST_PROXY === '1', publicUrl: PUBLIC_URL, clientVersion, version: VERSION });
 const server = http.createServer(svc.handler);
 server.on('error', (e) => { console.error('[arena] ' + e.message); process.exit(1); });
 server.listen(PORT, HOST, () => {

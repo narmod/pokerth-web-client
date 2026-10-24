@@ -16,7 +16,7 @@ import { createManager, MAX_RUNNING, LIVE } from './manager.mjs';
 import { tablePresets } from './table.mjs';
 import { cleanAbsence } from './tournaments.mjs';
 import { createAccounts, allowed, SESSION_PREFIX } from './accounts.mjs';
-import { LANG_META_FILE, HERO_IMAGE_FILE } from './platform.mjs';
+import { LANG_META_FILE, HERO_IMAGE_FILE, FONTS_DIR } from './platform.mjs';
 import { PLAYER_SESSION_PREFIX } from './players.mjs';
 import { createShowcase } from './showcase.mjs';
 
@@ -69,7 +69,8 @@ function same(a, b) {
 }
 
 /**
- * o: { dir, secret?, adminToken?, servers: () => Promise<server[]>, events?, link? (link.mjs, standalone), clientVersion: () => string, version }
+ * o: { dir, secret?, adminToken?, servers: () => Promise<server[]>, events?, link? (link.mjs, standalone),
+ *      trustProxy? (ARENA_TRUST_PROXY: behind a reverse proxy), publicUrl? (ARENA_PUBLIC_URL), clientVersion: () => string, version }
  */
 export function createService(o) {
   const td = createManager({ dir: o.dir, servers: o.servers, clientVersion: o.clientVersion });
@@ -313,7 +314,7 @@ export function createService(o) {
     let d = null;
     try { d = m[1] === 't' ? T.publicGet(m[2]) : C.publicGet(m[2]); } catch (e) { return ''; }
     if (!d || !d.name) return '';
-    const origin = String(req.headers['x-td-origin'] || '');
+    const origin = String(req.headers['x-td-origin'] || o.publicUrl || '');
     const abs = /^https?:\/\/[A-Za-z0-9.:[\]-]{1,255}$/.test(origin) ? origin : '';
     let h = '<meta property="og:type" content="website">\n<meta property="og:site_name" content="PokerTH">\n<meta property="og:title" content="' + escAttr(d.name) + '">';
     if (abs && d.image) h += '\n<meta property="og:image" content="' + escAttr(abs + d.image) + '">\n<meta property="og:url" content="' + escAttr(abs + p) + '">\n<meta name="twitter:card" content="summary_large_image">';
@@ -612,7 +613,14 @@ export function createService(o) {
   function clientIp(req) {
     const told = req.headers['x-td-client'];
     const relayed = told && (!o.link || same(req.headers['x-arena-link'], o.link.key()));
-    return String((relayed ? told : '') || req.socket.remoteAddress || '').slice(0, 64);
+    if (relayed) return String(told).slice(0, 64);
+    // Behind a reverse proxy (ARENA_TRUST_PROXY, service 0.37.0): the address
+    // it saw, the last one of X-Forwarded-For.
+    if (o.trustProxy && req.headers['x-forwarded-for']) {
+      const last = String(req.headers['x-forwarded-for']).split(',').map((x) => x.trim()).filter(Boolean).pop();
+      if (last) return last.slice(0, 64);
+    }
+    return String(req.socket.remoteAddress || '').slice(0, 64);
   }
   async function publicApi(req, res, sub, query) {
     const ip = clientIp(req);
@@ -779,6 +787,14 @@ export function createService(o) {
       let b;
       try { b = fs.readFileSync(HERO_IMAGE_FILE); } catch (e) { res.writeHead(404); return res.end('Not found'); }
       res.writeHead(200, { 'Content-Type': 'image/webp', 'Cache-Control': 'public, max-age=86400' });
+      return res.end(b);
+    }
+    // The Inter font of the pages (platform.mjs: the Arena's copy, or the web client's).
+    const fm = /^\/arena\/fonts\/((?:inter-latin(?:-ext)?-wght-normal|InterVariable)\.woff2|Inter-OFL\.txt)$/.exec(p);
+    if (fm) {
+      let b;
+      try { b = fs.readFileSync(path.join(FONTS_DIR, fm[1])); } catch (e) { res.writeHead(404); return res.end('Not found'); }
+      res.writeHead(200, { 'Content-Type': /\.txt$/.test(fm[1]) ? 'text/plain; charset=utf-8' : 'font/woff2', 'Cache-Control': 'public, max-age=604800' });
       return res.end(b);
     }
     const im = /^\/arena\/img\/([a-z0-9_-]{1,40})(\.t)?\.jpg$/.exec(p);

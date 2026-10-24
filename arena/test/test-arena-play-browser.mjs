@@ -15,8 +15,10 @@ import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 
-const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
-const require = createRequire(path.join(root, 'package.json'));
+const ARENA = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
+// The web client around (its witness module), when the Arena still lives in its repository.
+const WITNESS = path.join(ARENA, '..', 'public', 'modules', 'arena-witness.mjs');
+const require = createRequire(import.meta.url);
 let chromium;
 try { ({ chromium } = require('playwright')); } catch (e) { console.log('No browser engine available (playwright missing): skipped.'); process.exit(0); }
 
@@ -27,7 +29,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'arena-play-'));
 const env = Object.assign({}, process.env, { ARENA_DIR: tmp, ARENA_ADMIN_TOKEN: 'play-admin', ARENA_PORT: '0', ARENA_HOST: '127.0.0.1' });
 for (const k of ['ARENA_SERVERS', 'ARENA_EVENTS_URL', 'ARENA_LINK_KEY', 'ARENA_WEBCLIENT_URL', 'ARENA_SECRET']) delete env[k];
-const arena = spawn(process.execPath, [path.join(root, 'arena', 'server.mjs')], { env, stdio: ['ignore', 'pipe', 'pipe'] });
+const arena = spawn(process.execPath, [path.join(ARENA, 'server.mjs')], { env, stdio: ['ignore', 'pipe', 'pipe'] });
 let out = '';
 arena.stdout.on('data', (d) => { out += d; }); arena.stderr.on('data', (d) => { out += d; });
 let port = 0;
@@ -69,12 +71,18 @@ try {
   const label = (await pg.textContent('a.btn.primary[href*="#arena="]')).trim();
   ok(href.indexOf('https://webclient.example.org/#arena=') === 0 && label === 'Play on the web client', 'linked: « Play on the web client » leads to the linked web client');
   ok(await pg.getAttribute('a.btn.primary[href*="#arena="]', 'target') === '_blank', 'it opens in a new tab');
-  const { takeHandoff } = await import(path.join(root, 'public', 'modules', 'arena-witness.mjs'));
-  const store = new Map();
-  const storage = { getItem: (k) => (store.has(k) ? store.get(k) : null), setItem: (k, v) => store.set(k, String(v)) };
-  const r = takeHandoff(new URL(href).hash, storage);
-  const regs = JSON.parse(store.get('pth_td_regs') || '{}');
-  ok(r && r.taken === 1 && r.rest === '' && regs[t.publicKey] && regs[t.publicKey][0].nick === 'Alice' && regs[t.publicKey][0].code === code, 'the web client files the code for this tournament, the fragment cleared');
+  if (fs.existsSync(WITNESS)) {
+    const { takeHandoff } = await import(WITNESS);
+    const store = new Map();
+    const storage = { getItem: (k) => (store.has(k) ? store.get(k) : null), setItem: (k, v) => store.set(k, String(v)) };
+    const r = takeHandoff(new URL(href).hash, storage);
+    const regs = JSON.parse(store.get('pth_td_regs') || '{}');
+    ok(r && r.taken === 1 && r.rest === '' && regs[t.publicKey] && regs[t.publicKey][0].nick === 'Alice' && regs[t.publicKey][0].code === code, 'the web client files the code for this tournament, the fragment cleared');
+  } else {
+    // On its own: the payload as the web client reads it (#arena=<base64url JSON>).
+    const data = JSON.parse(Buffer.from(new URLSearchParams(new URL(href).hash.slice(1)).get('arena'), 'base64url').toString('utf8'));
+    ok(data.v === 1 && data.regs[t.publicKey][0].nick === 'Alice' && data.regs[t.publicKey][0].code === code, 'the link carries the code for this tournament (v1)');
+  }
   ok(href.indexOf(code) < 0, 'the code is not readable as is in the link (encoded)');
 
   // Another browser, without the code: no button.
@@ -85,7 +93,7 @@ try {
   ok(!(await pg2.$('a.btn.primary[href*="#arena="]')), 'a browser without a code kept here: no button');
 
   // French: the label follows the language.
-  const fr = (await import(path.join(root, 'arena', 'public', 'lang', 'fr.mjs'))).strings;
+  const fr = (await import(path.join(ARENA, 'public', 'lang', 'fr.mjs'))).strings;
   await pg.click('#langBtn'); await pg.click('#langList li[data-lang="fr"]');
   await pg.waitForFunction(() => document.documentElement.lang === 'fr', null, { timeout: 8000 });
   await pg.waitForSelector('a.btn.primary[href*="#arena="]', { timeout: 8000 });

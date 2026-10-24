@@ -10,6 +10,47 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.37.0 — 2026-10-24
+
+### Added
+- **Ready for a repository of its own** (step 3 of the Arena as an
+  application of its own). Checked on a copy of this folder alone, away from
+  the web client: every test passes (the two that need the web client say
+  « skipped »), the service starts, serves its pages, its font and its
+  picture, and `install.sh` installs and updates it.
+  - `shared/`: the Arena's own copy of what it takes from the web client —
+    the PokerTH protocol (protobuf.js), the create-table lists, sql.js, the
+    languages and flags, the start-screen picture, the Inter font, the web
+    client's version. Filled by `node scripts/sync-shared.mjs <web client
+    folder>` (also `npm run sync-shared`); committed in the Arena's own
+    repository, ignored in the web client's.
+  - `lib/platform.mjs` looks for each of them in its `ARENA_*` variable,
+    then `shared/`, then the web client around (`STANDALONE` when there is
+    none: data in `data/` by default). New: `ARENA_FONTS_DIR`.
+  - `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `.env.example`
+    (the image refuses to build without `shared/`; data in `/data`, port
+    8091, health check on `/healthz`).
+  - `install.sh` (POSIX sh): installs or updates in `/opt/pokerth-arena`,
+    data in `/var/lib/pokerth-arena`, settings written once in
+    `/etc/pokerth-arena.env` with a new master key, systemd service
+    `pokerth-arena` (`KillMode=process`: watches survive a restart);
+    `./install.sh status`.
+  - `README.md` (running it, linking a web client, every setting, tests,
+    licences); `devDependencies` (jsdom, Playwright) for its tests.
+  - Behind a reverse proxy: `ARENA_TRUST_PROXY=1` (the player's address
+    from the last `X-Forwarded-For` entry) and `ARENA_PUBLIC_URL` (pictures
+    of shared links).
+
+### Changed
+- The pages load the Inter font from the Arena (`/arena/fonts/…`), not from
+  the web client's `/fonts`.
+- The version the director says it speaks: `ARENA_CLIENT_VERSION`, else the
+  one the linked web client sends, else `shared/client-version.json`.
+- `test-arena-platform` also checks the tests (an import that resolves
+  outside `arena/` fails, a path climbing out too); the .pdb test fixture
+  reads sql.js through `platform.mjs`; `test-arena-route` and
+  `test-arena-public-browser` skip without the web client around.
+
 ## 0.36.0 — 2026-10-24
 
 ### Added

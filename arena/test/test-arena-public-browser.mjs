@@ -13,9 +13,11 @@ import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
-import { freePort } from '../../scripts/lib/free-port.mjs';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+// The Arena on its own (its own repository): no web client around to run it.
+if (!fs.existsSync(path.join(root, 'proxy.js'))) { console.log('No web client around (proxy.js): skipped.'); process.exit(0); }
+const { freePort } = await import('../../scripts/lib/free-port.mjs');
 const require = createRequire(path.join(root, 'package.json'));
 let chromium;
 try { ({ chromium } = require('playwright')); } catch (e) { console.log('No browser engine available (playwright missing): skipped.'); process.exit(0); }

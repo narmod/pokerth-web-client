@@ -73,3 +73,8 @@ arena-out.journal.json
 arena-out.result.json
 # Its folder on a running install: watches, journals, results and the key.
 /arena-data/
+
+# The Arena run on its own: its copy of the shared files (arena/scripts/sync-shared.mjs,
+# committed in the Arena's own repository, not here) and its default data folder.
+/arena/shared/
+/arena/data/

@@ -72,6 +72,11 @@ highlights below.
   leaves after 30 s.
 
 ### Changed
+- **Arena ready to stand alone** (`web.326`, service `0.37.0`, step 3) — the relay lets the Arena's own font through
+  (`/arena/fonts/…`, the pages no longer load the web client's `/fonts`); `arena/shared/` (the Arena's copy of what it
+  takes from the web client, filled by `arena/scripts/sync-shared.mjs`) and `arena/data/` are ignored in this
+  repository. Everything else is in `arena/` (its own changelog): `platform.mjs` looks in `shared/` first, then here;
+  Dockerfile, compose file, `install.sh`, README; its tests run on their own.
 - **Arena « its own app »: the witness works across sites** (`web.325`, service `0.36.0`, step 2) — the players' API on
   this site (`/arena/api/…`: the witness's table lookup and reports) is no longer redirected (a cross-site redirect
   broke `fetch` and `sendBeacon`) but relayed server-side to the Arena's own API with the link key (`x-arena-link`) and
