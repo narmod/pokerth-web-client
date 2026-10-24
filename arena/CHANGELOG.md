@@ -10,6 +10,22 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.28.0 — 2026-10-24
+
+### Added
+- **A nickname proved on a game server.** A signed-in player asks, on the
+  players' page, for a code for one of this site's LAN servers; a small bot
+  (« TD-check-… ») waits in that server's lobby; the player, connected under
+  his nickname, sends the code in the lobby chat or as a private message to
+  the bot, and his account is marked « verified on <server> » (the bot thanks
+  him privately). The code from another nickname does nothing; a code lasts
+  10 minutes; one bot per server while codes are waiting; never a game
+  joined, never a server with accounts. pokerth.net is not offered (decided
+  2026-10-23: nothing for pokerth.net without sp0ck's agreement).
+- Identity « verified » in « Who may register »; « verified on … » on the
+  player's page and in the organizer's Players list. 11 strings in the 83
+  languages.
+
 ## 0.27.0 — 2026-10-24
 
 ### Added

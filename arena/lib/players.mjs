@@ -79,7 +79,8 @@ export function createPlayers(o) {
   function view(p) {
     return { id: p.id, nick: p.nick, account: accountState(p), createdAt: p.createdAt, createdBy: p.createdBy || null,
       lastLoginAt: (p.account && p.account.lastLoginAt) || null, inviteExpires: p.account && !p.account.passHash ? p.account.inviteExpires || null : null,
-      ban: banActive(p) ? { reason: p.ban.reason, until: p.ban.until || null, by: p.ban.by, at: p.ban.at } : null, note: p.note || null };
+      ban: banActive(p) ? { reason: p.ban.reason, until: p.ban.until || null, by: p.ban.by, at: p.ban.at } : null, note: p.note || null,
+      verified: (p.verified || []).map((v) => ({ server: v.server, at: v.at })) };
   }
   function entry(nick, by) {
     const n = playerNick(nick);
@@ -285,9 +286,20 @@ export function createPlayers(o) {
     if (p.account && p.account.passHash && !p.account.disabled && !(account && account.id === p.id)) return { code: 'nickClaimed', message: 'this nickname has an account: sign in to register it' };
     return null;
   }
+  // The nickname proved on a game server (verifier.mjs): kept with the
+  // account, one line per server (the latest).
+  function addVerification(id, v) {
+    const p = byId(String(id || ''));
+    if (!p || !p.account) return null;
+    p.verified = (p.verified || []).filter((x) => x.ref !== v.ref).concat([{ ref: String(v.ref), server: cleanText(v.server, 80), at: now() }]);
+    write();
+    return view(p);
+  }
+  const isVerified = (id) => { const p = byId(String(id || '')); return !!(p && p.verified && p.verified.length); };
+  const verifiedOf = (nick) => { const p = byNick(nick); return p && p.account && p.verified ? p.verified.map((v) => ({ server: v.server, at: v.at })) : []; };
   const hasAccount = (nick) => { const p = byNick(nick); return !!(p && p.account && p.account.passHash && !p.account.disabled); };
   const banOf = (nick) => { const p = byNick(nick); return banActive(p) ? { reason: p.ban.reason, until: p.ban.until || null } : null; };
 
   return { settings, setSettings, list, get, create, reinvite, setAccountDisabled, removeAccount, remove, setNote, ban, unban,
-    signup, acceptInvite, login, session, logout, changePassword, barrier, hasAccount, banOf, clear: () => { db = null; } };
+    signup, acceptInvite, login, session, logout, changePassword, barrier, hasAccount, banOf, addVerification, isVerified, verifiedOf, clear: () => { db = null; } };
 }

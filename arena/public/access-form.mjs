@@ -17,7 +17,7 @@ export function accessHtml(p, a, esc) {
   const cupOpts = '<option value="">— no cup —</option>' + cups.map((c) => '<option value="' + esc(c.id) + '"' + (a.cup && a.cup.id === c.id ? ' selected' : '') + '>' + esc(c.name) + '</option>').join('') +
     (a.cup && !cups.some((c) => c.id === a.cup.id) ? '<option value="' + esc(a.cup.id) + '" selected>' + esc(a.cup.name || a.cup.id) + '</option>' : '');
   return '<div class="accessf" data-access="' + esc(p) + '">' +
-    '<label class="ck"><input type="checkbox" id="' + p + 'acct"' + (a.identity === 'account' ? ' checked' : '') + '> A player account (signed in)</label>' +
+    '<div class="row"><div><label for="' + p + 'acct">Identity</label><select id="' + p + 'acct">' + [['', 'anyone'], ['account', 'a player account (signed in)'], ['verified', 'a player account with its nickname verified on a game server']].map((o) => '<option value="' + o[0] + '"' + ((a.identity || '') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select></div></div>' +
     '<div class="row">' + num('min', 'At least … tournaments played here', a.minTournaments || '', '0') + num('max', 'At most … (beginners; empty: no limit)', a.maxTournaments != null ? a.maxTournaments : '', '') + num('pts', 'At least … points here', a.minPoints || '', '0') + '</div>' +
     '<div class="row"><div><label for="' + p + 'medal">Medals</label><select id="' + p + 'medal">' +
       [['', 'no condition'], ['any', 'at least one medal'], ['gold', 'at least one gold medal'], ['none', 'no medal yet (beginners)']].map((o) => '<option value="' + o[0] + '"' + ((a.noMedal ? 'none' : a.medal || '') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select></div>' +
@@ -32,7 +32,7 @@ export function readAccess(p) {
   const medal = $('medal').value;
   const cupId = $('cup').value;
   const c = cups.find((x) => x.id === cupId);
-  const out = { identity: $('acct').checked ? 'account' : undefined, minTournaments: n('min') || undefined, maxTournaments: n('max') == null ? undefined : n('max'), minPoints: n('pts') || undefined,
+  const out = { identity: $('acct').value || undefined, minTournaments: n('min') || undefined, maxTournaments: n('max') == null ? undefined : n('max'), minPoints: n('pts') || undefined,
     medal: medal === 'any' || medal === 'gold' ? medal : undefined, noMedal: medal === 'none' ? true : undefined,
     cup: cupId ? { id: cupId, top: n('top') || 8, name: c ? c.name : '' } : undefined };
   Object.keys(out).forEach((k) => out[k] === undefined && delete out[k]);
@@ -44,6 +44,7 @@ export function accessSummary(a) {
   if (!a) return 'anyone';
   const out = [];
   if (a.identity === 'account') out.push('player account');
+  if (a.identity === 'verified') out.push('verified nickname');
   if (a.minTournaments) out.push('≥ ' + a.minTournaments + ' tournaments');
   if (a.maxTournaments != null) out.push('≤ ' + a.maxTournaments + ' tournaments');
   if (a.minPoints) out.push('≥ ' + a.minPoints + ' points');

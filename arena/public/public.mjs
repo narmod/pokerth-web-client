@@ -39,6 +39,7 @@ function accessList(a) {
   if (!a) return [];
   const out = [];
   if (a.identity === 'account') out.push(t('acc_account'));
+  if (a.identity === 'verified') out.push(t('acc_verified'));
   if (a.minTournaments) out.push(t('acc_minTournaments', { n: a.minTournaments }));
   if (a.maxTournaments != null) out.push(t('acc_maxTournaments', { n: a.maxTournaments }));
   if (a.minPoints) out.push(t('acc_minPoints', { n: a.minPoints }));
@@ -52,7 +53,7 @@ function missingText(miss) {
   return (miss || []).map((m) => {
     if (m.code === 'minTournaments' || m.code === 'maxTournaments' || m.code === 'minPoints' || m.code === 'noMedal') return t('miss_' + m.code, { need: m.need, have: m.have });
     if (m.code === 'cup') return t('miss_cup', { need: m.need, name: m.name || '', have: m.have || '—' });
-    if (m.code === 'account' || m.code === 'medal' || m.code === 'gold') return t('acc_' + m.code);
+    if (m.code === 'account' || m.code === 'medal' || m.code === 'gold' || m.code === 'verified') return t('acc_' + m.code);
     if (m.code === 'ticket') return t(m.pending ? 'miss_ticketPending' : 'miss_ticket', { name: m.name, have: m.have, pending: m.pending });
     return t('err_' + m.code);
   });
@@ -78,7 +79,7 @@ function askEligible(path, body, key, then) {
 // Signed in: the session stands for the personal code on every tournament
 // and cup (kept in this browser under pth_arena_player).
 const PSESS = 'pth_arena_player';
-let me = null, signupMode = 'invite', acctFlash = null;
+let me = null, signupMode = 'invite', acctFlash = null, vfServers = [], vf = null, vfTimer = null;
 function acctLoad() { try { const v = JSON.parse(lsGet(PSESS) || 'null'); return v && v.token ? v : null; } catch (e) { return null; } }
 function acctSave(v) { try { if (v) localStorage.setItem(PSESS, JSON.stringify(v)); else localStorage.removeItem(PSESS); } catch (e) {} }
 // What this browser can act with on a tournament: the codes kept here, and
@@ -480,7 +481,7 @@ async function showPlayer(nick) {
   if (!d.ok) { $('view').innerHTML = '<p class="msg bad">' + T('err_error') + '</p>'; return; }
   const day = (ts) => { try { return new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(new Date(ts)); } catch (e) { return new Date(ts).toLocaleDateString(); } };
   const link = (x) => (x.key ? '<a href="/arena/' + (x.kind === 'cup' ? 'c/' : 't/') + esc(x.key) + '" data-go>' + esc(x.name) + '</a>' : esc(x.name));
-  let h = '<p><a href="/arena" data-go>← ' + T('allTournaments') + '</a>' + (d.account ? ' <span class="chip done" title="' + T('accBadgeTitle') + '">✓ ' + T('accBadge') + '</span>' : '') + '</p>';
+  let h = '<p><a href="/arena" data-go>← ' + T('allTournaments') + '</a>' + (d.account ? ' <span class="chip done" title="' + T('accBadgeTitle') + '">✓ ' + T('accBadge') + '</span>' : '') + (d.verified || []).map((v) => ' <span class="chip live">✓ ' + T('vfBadge', { server: v.server }) + '</span>').join('') + '</p>';
   h += '<section class="card"><h2>' + T('medalsTitle') + '</h2>';
   h += '<p class="medals">' + ['gold', 'silver', 'bronze'].map((k) => '<span class="medal ' + k + '"><span aria-hidden="true">' + MEDAL[k] + '</span> ' + T('medal_' + k) + ' <b>' + d.counts[k] + '</b></span>').join('') + '</p>';
   h += d.medals.length ? '<ul class="tlist">' + d.medals.map((m) => '<li class="medalrow"><span class="big" aria-hidden="true">' + MEDAL[m.medal] + '</span><span><b>' + link(m) + '</b><br><span class="muted small">' + T(m.kind === 'cup' ? 'kindCup' : 'kindTournament') + ' · ' + T('placeOf', { place: m.place, of: m.of }) + (m.at ? ' · ' + day(m.at) : '') + '</span></span></li>').join('') + '</ul>'
@@ -690,7 +691,7 @@ function renderAcct() {
     h = '<div class="acctbar">' + acctMsg() + '<span>' + T('accSignedIn', { nick: me.nick }) + '</span> <a href="/arena/p/' + encodeURIComponent(me.nick) + '" data-go>' + T('accMyPage') + '</a>' +
       ' <details class="sub inl"><summary>' + T('accChangePw') + '</summary><form id="accPwForm" class="row"><div><label for="accPwOld">' + T('accCurPassword') + '</label><input id="accPwOld" type="password" autocomplete="current-password" required></div>' +
       '<div><label for="accPwNew">' + T('accNewPassword') + '</label><input id="accPwNew" type="password" autocomplete="new-password" minlength="8" required></div><button type="submit">' + T('accChangePw') + '</button></form></details>' +
-      ' <button type="button" class="ghost mini" id="accOut">' + T('accSignOut') + '</button></div>';
+      ' <button type="button" class="ghost mini" id="accOut">' + T('accSignOut') + '</button></div>' + vfHtml();
   } else {
     h = '<details class="sub acctbox"' + (acctFlash ? ' open' : '') + '><summary>' + T('accTitle') + '</summary>' + acctMsg() +
       '<form id="accInForm" class="row"><div><label for="accNick">' + T('nickname') + '</label><input id="accNick" maxlength="64" autocomplete="username" required></div>' +
@@ -711,8 +712,38 @@ function renderAcct() {
   if (f3) f3.addEventListener('submit', async (ev) => { ev.preventDefault(); const d = await api('/players/invite', { token: pinviteFromHash(), password: $('accInvPw').value }); if (d.ok) signedIn(d); else bad(d); });
   const f4 = $('accPwForm');
   if (f4) f4.addEventListener('submit', async (ev) => { ev.preventDefault(); const d = await api('/players/password', { session: me.token, old: $('accPwOld').value, password: $('accPwNew').value }); acctFlash = d.ok ? { html: T('accPwChanged') } : { bad: true, html: errText(d) }; renderAcct(); });
+  const vg = $('vfForm');
+  if (vg) vg.addEventListener('submit', async (ev) => { ev.preventDefault(); const d = await api('/players/verify', { session: me.token, ref: $('vfSrv').value }); if (!d.ok) { acctFlash = { bad: true, html: errText(d) }; return renderAcct(); } vf = { pending: Object.assign({ done: false }, d), verified: (vf && vf.verified) || [] }; renderAcct(); vfPoll(); });
   const o = $('accOut');
   if (o) o.addEventListener('click', async () => { const tk = me && me.token; me = null; acctSave(null); if (tk) api('/players/logout', { session: tk }).catch(() => {}); renderAcct(); route(); });
+}
+
+// ── proving the nickname on a game server (service 0.28.0) ──────────
+function vfHtml() {
+  if (!me || !vfServers.length) return '';
+  const p = vf && vf.pending, done = vf && vf.verified && vf.verified.length;
+  let h = '<details class="sub acctbox"' + (p && !p.done ? ' open' : '') + '><summary>' + T('vfTitle') + (done ? ' ✓' : '') + '</summary>';
+  if (done) h += '<p class="small">' + T('vfList', { list: vf.verified.map((v) => v.server).join(', ') }) + '</p>';
+  if (p && p.done) h += '<p class="msg ok">' + T('vfOk', { server: p.server }) + '</p>';
+  else if (p && p.error) h += '<p class="msg bad">' + T('vfError', { error: p.error }) + '</p>';
+  else if (p) {
+    const s = vfServers.find((x) => x.name === p.server) || {};
+    h += '<p>' + T('vfHow', { server: p.server, host: (s.host || '') + (s.port ? ':' + s.port : ''), nick: me.nick, code: p.code, bot: p.bot || 'TD-check' }) + '</p><p class="small muted">' + T('vfWaiting') + '</p>';
+  }
+  h += '<p class="small muted">' + T('vfHint') + '</p><form id="vfForm" class="row"><div><label for="vfSrv">' + T('vfServer') + '</label><select id="vfSrv">' +
+    vfServers.map((s) => '<option value="' + esc(s.ref) + '">' + esc(s.name) + '</option>').join('') + '</select></div><button type="submit">' + T('vfGet') + '</button></form>';
+  return h + '</details>';
+}
+function vfPoll() {
+  clearTimeout(vfTimer);
+  if (!me) return;
+  api('/players/verifystatus', { session: me.token }).then((d) => {
+    if (!d || !d.ok) return;
+    const was = vf && vf.pending && vf.pending.done;
+    vf = { pending: d.pending, verified: d.verified || [] };
+    if (!was) renderAcct();
+    if (d.pending && !d.pending.done && !d.pending.error) vfTimer = setTimeout(vfPoll, 3000);
+  }).catch(() => {});
 }
 
 // ── routing ────────────────────────────────────────────────────────
@@ -755,7 +786,9 @@ let theme = null;
   const saved = acctLoad();
   const [st, who] = await Promise.all([api('/players').catch(() => ({})), saved ? api('/players/me', { session: saved.token }).catch(() => ({})) : Promise.resolve(null)]);
   signupMode = (st && st.signup) || 'invite';
+  vfServers = (st && st.servers) || [];
   if (saved && who && who.ok) me = { token: saved.token, nick: who.player.nick }; else if (saved && who && who.code === 'session') acctSave(null);
   renderAcct();
+  if (me) vfPoll();
   route();
 })();

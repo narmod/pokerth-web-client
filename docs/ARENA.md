@@ -750,6 +750,29 @@ password; four roles).
 - Players keep their nickname and personal code for now (player accounts:
   later).
 
+## A nickname proved on a game server (service `0.28.0`)
+
+Code: `arena/lib/verifier.mjs`; tests: `arena/test/test-arena-verify.mjs`.
+
+- A signed-in player asks for a code: `POST /arena/api/players/verify
+  { session, ref }` (the servers: `GET /arena/api/players`, the LAN servers
+  of this install). 6 characters, 10 minutes, one per account at a time.
+- A bot `TD-check-xxxx` logs in (unauthenticated login, never a server with
+  accounts) to that server's lobby, learns the players' names, and reads the
+  lobby chat and its private messages. A line holding the code from the
+  player whose name is the account's nickname (any case) marks the account
+  verified on that server (`players.json`, one line per server, the latest)
+  and the bot thanks him privately. Anyone else's line does nothing. One
+  connection per server while codes wait; it answers the server's timeout
+  warnings; it leaves when nothing waits.
+- `POST /arena/api/players/verifystatus { session }`: the waiting code (done,
+  error) and the servers verified.
+- What it proves: the person behind the account could connect under that
+  nickname on that server at that time — strong on a server with accounts,
+  weaker on a LAN server, where nicknames are not checked.
+- Access: `identity: 'verified'` (an account verified on any server).
+- pokerth.net: not offered (decided 2026-10-23).
+
 ## Tickets and seasons (service `0.27.0`)
 
 After the BBC (Step 1 open; Steps 2 to 4 need a ticket won by the first two
@@ -1147,6 +1170,7 @@ that version only: the web client's version, its service worker and its
 | `arena/lib/lobby.mjs` | Lobby reader (guest login, tables, server type). |
 | `arena/lib/host.mjs` | The director that opens a tournament table: create, invite, kick, hand over, then watch. |
 | `arena/lib/worker.mjs` | One watch in a detached process, state and files on disk. |
+| `arena/lib/verifier.mjs` | A nickname proved on a game server: codes, the lobby bot, the account marked verified. |
 | `arena/lib/tickets.mjs` | Tickets and seasons: kinds, balances, the moves of a validated tournament, seasons. |
 | `arena/lib/access.mjs` | Who may register: conditions, a player's facts from the results, what is missing. Pure. |
 | `arena/lib/players.mjs` | Players of the install: accounts (invitation or sign-up), sessions, nicknames claimed, bans. |

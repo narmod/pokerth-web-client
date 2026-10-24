@@ -561,11 +561,11 @@ export function createService(o) {
       let nick = pm[1]; try { nick = decodeURIComponent(nick); } catch (e) {} nick = nick.slice(0, 64);
       const bal = td.tickets.balance(nick);
       const tickets = Object.keys(bal).map((id) => { const t = td.tickets.typeOf(id); return t ? { name: t.name, count: bal[id] } : null; }).filter(Boolean);
-      return openJson(res, Object.assign({}, td.badges.player(nick), { account: P.hasAccount(nick), tickets, season: td.tickets.season().name }));
+      return openJson(res, Object.assign({}, td.badges.player(nick), { account: P.hasAccount(nick), verified: P.verifiedOf(nick), tickets, season: td.tickets.season().name }));
     }
     // A player's own account (players.mjs): POST /arena/api/players/<op>, as
     // the web client already relays that address.
-    if (pm && req.method === 'POST' && ['signup', 'login', 'logout', 'invite', 'password', 'me'].indexOf(pm[1]) >= 0) {
+    if (pm && req.method === 'POST' && ['signup', 'login', 'logout', 'invite', 'password', 'me', 'verify', 'verifystatus'].indexOf(pm[1]) >= 0) {
       if (limited('player', ip)) return json(res, 429, { ok: false, code: 'tooMany', error: 'too many attempts, try again later' });
       const b = (await readJson(req)) || {};
       const out = (p) => Promise.resolve().then(p).then((v) => json(res, 200, Object.assign({ ok: true }, v)))
@@ -575,9 +575,17 @@ export function createService(o) {
       if (pm[1] === 'logout') return out(() => P.logout(b.session));
       if (pm[1] === 'invite') return out(() => P.acceptInvite(b.token, b.password, ip));
       if (pm[1] === 'password') return out(() => P.changePassword(b.session, b.old, b.password));
+      // Proving the nickname on a game server (verifier.mjs).
+      if (pm[1] === 'verify' || pm[1] === 'verifystatus') {
+        const s = P.session(b.session);
+        if (!s) return json(res, 401, { ok: false, code: 'session', error: 'your session has ended: sign in again' });
+        if (pm[1] === 'verify') return out(() => td.verifier.request(s, String(b.ref || '')).catch((e) => { throw Object.assign(new T.Refusal(e.message), { code: e.code || 'refused' }); }));
+        return out(() => ({ pending: td.verifier.status(s), verified: P.verifiedOf(s.nick) }));
+      }
       return out(() => { const s = P.session(b.session); if (!s) throw Object.assign(new T.Refusal('your session has ended: sign in again'), { code: 'session' }); return { player: s, signup: P.settings().signup }; });
     }
-    if (sub === '/players' && req.method === 'GET') return json(res, 200, { ok: true, signup: P.settings().signup });
+    // How accounts are made, and the servers a nickname can be proved on (the LAN servers of this install).
+    if (sub === '/players' && req.method === 'GET') return json(res, 200, { ok: true, signup: P.settings().signup, servers: (await td.servers()).map((s) => ({ ref: s.ref, name: s.name, host: s.host, port: s.port })) });
     if (sub === '/badges' && req.method === 'GET') {
       if (query.nicks) return openJson(res, td.badges.many(String(query.nicks).split(',').map((x) => x.trim()).filter(Boolean)));
       return openJson(res, td.badges.everyone());
@@ -690,5 +698,5 @@ export function createService(o) {
     res.writeHead(404); res.end('Not found');
   }
 
-  return { handler, manager: td, status, LIVE, sweep, close: () => clearInterval(sweepTimer) };
+  return { handler, manager: td, status, LIVE, sweep, close: () => { clearInterval(sweepTimer); td.verifier.stop(); } };
 }

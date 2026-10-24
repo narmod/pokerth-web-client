@@ -30,6 +30,7 @@ import { createBadges } from './badges.mjs';
 import { createReset } from './reset.mjs';
 import { createPlayers } from './players.mjs';
 import { createTickets } from './tickets.mjs';
+import { createVerifier } from './verifier.mjs';
 import { playerFacts, missingFor } from './access.mjs';
 import { loadBotStrings, isBotLang } from './botchat.mjs';
 
@@ -290,6 +291,9 @@ export function createManager(deps) {
   const images = createImages({ dir, builtinDir: path.join(IMG, 'events') });
   // The players of the install and their accounts (players.mjs).
   const players = createPlayers({ dir, Refusal: ArenaRefusal });
+  // A nickname proved on a game server (verifier.mjs): kept with the account.
+  const verifier = createVerifier({ resolve, connOpts, version: () => deps.clientVersion(), log: (s) => console.log('[arena] ' + s),
+    onVerified: (p) => players.addVerification(p.accountId, { ref: p.ref, server: p.serverName }) });
   // Tickets and seasons (tickets.mjs): a tournament that needs one asks for
   // one more than the player's registrations still waiting on that kind.
   const tickets = createTickets({ dir, Refusal: ArenaRefusal });
@@ -308,7 +312,7 @@ export function createManager(deps) {
     tournaments: () => tournaments.allRaw(),
     medals: (n) => badges.player(n).counts,
     cupPlace: (cupId, n) => { try { const r = cups.get(cupId).standings.rows.find((x) => x.nick.toLowerCase() === String(n).toLowerCase()); return r ? r.place : null; } catch (e) { return null; } },
-  }), { account: !!account });
+  }), { account: !!account, verified: !!(account && players.isVerified(account.id)) });
   const tournaments = createTournaments({
     dir, keyFile, imageOk: images.has, players, accessCheck, ticketCheck,
     // A Table check's sealed result, reused as a tournament result.
@@ -323,7 +327,7 @@ export function createManager(deps) {
   // Start again from zero (the super admin): reset.mjs.
   const reset = createReset({ dir, watches: list, live: LIVE, tournaments: tournaments.allRaw, cups: cups.allRaw, Refusal: tournaments.Refusal, onTickets: () => tickets.clear() });
 
-  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, cups, badges, images, reset, players, tickets, avatar, resetAvatar, avatarPreset, setAvatarPreset, avatarPresets: () => Object.keys(AVATAR_PRESETS).map(Number), avatarDefaultPreset: AVATAR_DEFAULT_PRESET, MAX_RUNNING };
+  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, cups, badges, images, reset, players, tickets, verifier, avatar, resetAvatar, avatarPreset, setAvatarPreset, avatarPresets: () => Object.keys(AVATAR_PRESETS).map(Number), avatarDefaultPreset: AVATAR_DEFAULT_PRESET, MAX_RUNNING };
 }
 
 /** Public part of the install key, read from its PEM file (null if none yet). */

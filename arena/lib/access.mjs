@@ -7,7 +7,8 @@
 // final, are not held back by them: the organizer decides, a qualification
 // is earned.
 //
-//   identity        'account': a signed-in player account
+//   identity        'account': a signed-in player account; 'verified': one
+//                   whose nickname was proved on a game server (verifier.mjs)
 //   minTournaments  at least N tournaments played here (validated results)
 //   maxTournaments  at most N (cups and tournaments for beginners)
 //   minPoints       at least X points: each validated tournament (not
@@ -29,7 +30,7 @@ const int = (v, min, max) => { const x = parseInt(v, 10); return Number.isIntege
 export function cleanAccess(a) {
   if (!a || typeof a !== 'object') return null;
   const out = {};
-  if (a.identity === 'account') out.identity = 'account';
+  if (a.identity === 'account' || a.identity === 'verified') out.identity = a.identity;
   const mn = int(a.minTournaments, 0, 1000); if (mn) out.minTournaments = mn;
   const mx = int(a.maxTournaments, 0, 1000); if (mx != null && a.maxTournaments !== '' && a.maxTournaments != null) out.maxTournaments = mx;
   const mp = int(a.minPoints, 0, 1000000); if (mp) out.minPoints = mp;
@@ -69,6 +70,7 @@ export function missingFor(rules, facts, who) {
   const miss = [];
   if (!rules) return miss;
   if (rules.identity === 'account' && !(who && who.account)) miss.push({ code: 'account' });
+  if (rules.identity === 'verified' && !(who && who.account && who.verified)) miss.push({ code: 'verified' });
   if (rules.minTournaments && facts.tournaments < rules.minTournaments) miss.push({ code: 'minTournaments', need: rules.minTournaments, have: facts.tournaments });
   if (rules.maxTournaments != null && facts.tournaments > rules.maxTournaments) miss.push({ code: 'maxTournaments', need: rules.maxTournaments, have: facts.tournaments });
   if (rules.minPoints && facts.points < rules.minPoints) miss.push({ code: 'minPoints', need: rules.minPoints, have: facts.points });
@@ -87,6 +89,7 @@ export function missingFor(rules, facts, who) {
 export function describeMissing(miss) {
   return miss.map((m) => ({
     account: 'a player account (sign in)',
+    verified: 'a player account with its nickname verified on a game server',
     minTournaments: m.need + ' tournaments played here (you have ' + m.have + ')',
     maxTournaments: 'at most ' + m.need + ' tournaments played (you have ' + m.have + ')',
     minPoints: m.need + ' points (you have ' + m.have + ')',
