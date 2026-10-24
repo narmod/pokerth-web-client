@@ -99,7 +99,7 @@ async function showList() {
 }
 
 // ── one tournament ─────────────────────────────────────────────────
-let cur = null, curKey = null, pollTimer = null, flash = null;
+let cur = null, curKey = null, pollTimer = null, flash = null, logOpen = false;
 async function showOne(key) {
   curKey = key;
   const inv = inviteFromUrl();
@@ -117,7 +117,7 @@ async function showOne(key) {
     if (curKey !== key) return;
     // Not while the player is typing in a form: try again a bit later.
     const a = document.activeElement;
-    if (a && a.tagName === 'INPUT' && $('view').contains(a) && a.value) { pollTimer = setTimeout(tick, 5000); return; }
+    if ((a && a.tagName === 'INPUT' && $('view').contains(a) && a.value) || ($('logBox') && $('logBox').open)) { pollTimer = setTimeout(tick, 5000); return; }
     showOne(key);
   }, d.phase === 'table' ? 5000 : 30000);
 }
@@ -204,10 +204,18 @@ function renderOne() {
   if (W && (W.total || c.result || c.phase === 'table')) {
     const VK = { agrees: ['wAgrees', 'live'], disagrees: ['wDisagrees', 'bad'], nothing: ['wNothing', ''], pending: ['wPending', 'warn'] };
     h += '<section class="card"><h2>' + T('witnessTitle') + (W.total ? ' <span class="muted small">' + T('witnessCount', { agree: W.agree, disagree: W.disagree }) + '</span>' : '') + '</h2>';
-    h += W.list.length ? '<ul class="chips">' + W.list.map((w) => { const v = VK[w.verdict] || [w.verdict, '']; return '<li>' + esc(w.nick) + ' <span class="chip ' + v[1] + '">' + T(v[0]) + '</span>' + (w.counts ? '' : ' <span class="chip">' + T('wNoCode') + '</span>') + '</li>'; }).join('') + '</ul>'
+    h += W.list.length ? '<ul class="chips">' + W.list.map((w) => { const v = VK[w.verdict] || [w.verdict, '']; return '<li>' + esc(w.nick) + ' <span class="chip ' + v[1] + '">' + T(v[0]) + '</span>' + (w.log ? ' <span class="chip">' + T('wLog') + '</span>' : '') + (w.counts ? '' : ' <span class="chip">' + T('wNoCode') + '</span>') + '</li>'; }).join('') + '</ul>'
       : '<p class="empty">' + T('witnessNone') + '</p>';
     if (W.mode === 'required' && !W.override && c.phase !== 'validated') h += '<p class="small muted">' + T('witnessRequired') + '</p>';
     if (W.override) h += '<p class="small">' + T('witnessOverride', { reason: esc(W.override.reason) }) + '</p>';
+    // QML players: their log (.pdb), after the game, when the tournament takes it.
+    if (W.logs && (c.phase === 'table' || c.phase === 'finished')) {
+      h += '<details class="sub" id="logBox"' + (logOpen ? ' open' : '') + '><summary>' + T('logTitle') + '</summary><p class="small">' + T('logText') + '</p><p class="small muted">' + T('logWhere') + '</p>' +
+        '<form id="logForm" class="row"><div><label for="logNick">' + T('nickname') + '</label><input id="logNick" maxlength="64" autocomplete="nickname" required></div>' +
+        (c.identity === 'code' ? '<div><label for="logCode">' + T('code') + '</label><input id="logCode" maxlength="16" autocomplete="off"></div>' : '') +
+        '<div><label for="logFile">' + T('logFile') + '</label><input id="logFile" type="file" accept=".pdb,application/octet-stream" required></div>' +
+        '<button type="submit">' + T('logSend') + '</button></form></details>';
+    }
     h += '</section>';
   }
 
@@ -232,7 +240,7 @@ function renderOne() {
   wire();
 }
 function invQs(sep) { const i = inviteFromUrl(); return i ? sep + 'invite=' + encodeURIComponent(i) : ''; }
-function errText(d) { return T('err_' + (['badNick', 'taken', 'badCode', 'tooMany', 'notFound', 'checkInNotYet', 'checkInClosed', 'noCheckIn', 'alreadyIn'].indexOf(d.code) >= 0 ? d.code : 'error')); }
+function errText(d) { return T('err_' + (['badNick', 'taken', 'badCode', 'tooMany', 'notFound', 'checkInNotYet', 'checkInClosed', 'noCheckIn', 'alreadyIn', 'notPdb', 'noGame', 'noLogWitness', 'notPlayer', 'tooLarge'].indexOf(d.code) >= 0 ? d.code : 'error')); }
 function wire() {
   const reg = $('regForm');
   if (reg) reg.addEventListener('submit', async (ev) => {
@@ -275,6 +283,28 @@ function wire() {
   }));
   const ck = $('ckForm');
   if (ck) ck.addEventListener('submit', (ev) => { ev.preventDefault(); doCheckIn($('ckNick').value.trim(), $('ckCode').value.trim()); });
+  const lf = $('logForm');
+  if (lf) lf.addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    const file = $('logFile').files && $('logFile').files[0];
+    if (!file) return;
+    logOpen = true;
+    if (file.size > 10 * 1024 * 1024) { flash = { bad: true, html: T('err_tooLarge') }; renderOne(); return; }
+    const btn = lf.querySelector('button'); btn.disabled = true;
+    const rd = new FileReader();
+    rd.onload = async () => {
+      const b64 = String(rd.result || '').replace(/^data:[^,]*,/, '');
+      const nick = $('logNick').value.trim(), code = $('logCode') ? $('logCode').value.trim() : '';
+      const known = regsFor(cur.key).find((r) => r.nick.toLowerCase() === nick.toLowerCase());
+      const d = await api('/t/' + cur.key + '/witnesslog', { nick, code: code || (known && known.code) || undefined, invite: inviteFromUrl() || undefined, log: b64 });
+      if (!d.ok) { flash = { bad: true, html: /^closed_/.test(d.code || '') ? T(d.code) : errText(d) }; renderOne(); return; }
+      const VK = { agrees: 'wAgrees', disagrees: 'wDisagrees', nothing: 'wNothing', pending: 'wPending' };
+      flash = { html: T('logSent', { nick: d.nick, verdict: T(VK[d.verdict] || 'wNothing') }) };
+      showOne(cur.key);
+    };
+    rd.onerror = () => { btn.disabled = false; flash = { bad: true, html: T('err_error') }; renderOne(); };
+    rd.readAsDataURL(file);
+  });
   const un = $('unregForm');
   if (un) un.addEventListener('submit', (ev) => { ev.preventDefault(); doUnreg($('unNick').value.trim(), $('unCode').value.trim()); });
 }

@@ -310,7 +310,8 @@ use too. Items are grouped by status rather than fixed phases.
   for the Official profile (only the players who confirmed with their code are invited). Service `0.6.0`: the director
   writes in the tournament's chat language (83 languages), every line within the server's 128 bytes. Service `0.7.0`
   (`web.305`): witnesses — the web clients at the table send what they saw, compared with the director's journal;
-  Official needs one that agrees and none that disagrees. Next: QML players as witnesses by their `.pdb` log.
+  Official needs one that agrees and none that disagrees. Service `0.8.0` (`web.306`): QML players as witnesses by their
+  `.pdb` log, per tournament.
 
 ## ⏭️ Next
 

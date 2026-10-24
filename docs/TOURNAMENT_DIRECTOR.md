@@ -456,7 +456,17 @@ Witnesses check a result, they never decide it.
   report}` — 60 per address in ten minutes; a private tournament takes a
   report from its own table (game id and table name) without the invitation
   code. The web client relays it up to 64 KB (other requests: 8 KB).
-- QML players: by sending their `.pdb` log, later (off by default).
+- **QML players** (service `0.8.0`), when the tournament accepts them
+  (« Accept QML players as witnesses », `run.qmlWitnesses`, off by default):
+  after the game, the player sends his game log (`.pdb`, 10 MB at most) from
+  the players' page with his nickname (and personal code) —
+  `POST /tournament/api/t/<key>/witnesslog {nick, code?, invite?, log: base64}`,
+  six per address in ten minutes; the web client relays up to 14 MB. The
+  game is the one the server numbered like the director's table (`Game.GameID`);
+  without a director, the log's game with the most of the tournament's
+  players. Only `Seat_N_Cash` per hand and « wins game » are read (never the
+  cards); the report is compared like a web client's and marked « log ». The
+  file is not kept: its SHA-256 goes in the journal (`logSha256`).
 
 ## A service of its own (`tournament/`, decided and done 2026-10-23)
 
@@ -557,7 +567,7 @@ operator's agreement.
    (table creation, seat check and hand-over done in `web.299`; opening at
    the scheduled time, announcements and messages to the table in service
    `0.3.0`; check-in in `0.5.0`; the chat language in `0.6.0`; witnesses
-   in `0.7.0`; next: QML witnesses by their log).
+   in `0.7.0`; QML witnesses by their log in `0.8.0`).
 8. Collusion check.
 9. Organizer and player accounts.
 10. Requests to organize.

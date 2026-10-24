@@ -8,6 +8,20 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.8.0 — 2026-10-24 (web client `2.1.10-web.306`)
+
+### Added
+- **QML players as witnesses**, per tournament (« Accept QML players as
+  witnesses », off by default, in the form and in Edit): after the game a
+  player of the official client sends his game log (`.pdb`, 10 MB at most)
+  from the players' page, with his nickname (and personal code). The
+  director's game is found by its server game id (without a director: the
+  game of the log with the tournament's players); only the stacks at the
+  start of each hand and the winner are read — never the cards — and compared
+  like a web client's report. The file is not kept; its SHA-256 goes in the
+  journal. The page says where the logs are. `POST /tournament/api/t/<key>/witnesslog`
+  (six per address in ten minutes).
+
 ## 0.7.0 — 2026-10-24 (web client `2.1.10-web.305`)
 
 ### Added

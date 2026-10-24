@@ -23,7 +23,7 @@ import { readFileSync, writeFileSync, renameSync, mkdirSync, readdirSync, exists
 import { join } from 'node:path';
 import { randomBytes, createHash, timingSafeEqual } from 'node:crypto';
 import { Journal, verifyJournal, signPayload, verifyPayload, publicKeyFromPrivate, publicKeyRawB64 } from './journal.mjs';
-import { listPdbGames, rankPdbGame, isPdb } from './pdb.mjs';
+import { listPdbGames, rankPdbGame, isPdb, pdbWitness } from './pdb.mjs';
 import { isBotLang } from './botchat.mjs';
 import { cleanReport, directorFacts, compareWithDirector, compareWithRanking, MAX_HANDS } from './witness.mjs';
 
@@ -49,7 +49,8 @@ export const TABLE_DEFAULTS = Object.freeze({
 });
 // How the director runs the table: opening by itself before the start, and
 // its announcements in the table chat.
-export const RUN_DEFAULTS = Object.freeze({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30, chatLang: 'en' });
+export const RUN_DEFAULTS = Object.freeze({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30, chatLang: 'en', qmlWitnesses: false });
+const MAX_LOG_BYTES = 10 * 1024 * 1024;
 export function cleanRun(r, base) {
   const b = Object.assign({}, RUN_DEFAULTS, base || {});
   r = r || {};
@@ -60,6 +61,8 @@ export function cleanRun(r, base) {
     openBefore: Number.isInteger(m) && m >= 0 && m <= 120 ? m : b.openBefore,
     announce: typeof r.announce === 'boolean' ? r.announce : b.announce,
     selfRegister: typeof r.selfRegister === 'boolean' ? r.selfRegister : b.selfRegister,
+    // QML players witness by sending their log (.pdb) on the players' page.
+    qmlWitnesses: typeof r.qmlWitnesses === 'boolean' ? r.qmlWitnesses : !!b.qmlWitnesses,
     // Check-in (identity « code »): opens this long before the start.
     checkInBefore: Number.isInteger(ci) && ci >= 5 && ci <= 240 ? ci : b.checkInBefore,
     // The language the director writes in, in the chat (botlang/<code>.mjs).
@@ -184,7 +187,7 @@ export function createTournaments(o) {
       case 'playerRegistered': return d.nick + ' registered (public page)';
       case 'playerUnregistered': return d.nick + ' unregistered (public page)';
       case 'codeIssued': return 'new personal code for ' + d.nick;
-      case 'witnessReport': return 'witness ' + d.nick + (d.verified ? ' (code)' : '') + ': ' + d.hands + ' hands' + (d.winner ? ', winner ' + d.winner : '') + ' — ' + d.verdict;
+      case 'witnessReport': return 'witness ' + d.nick + (d.source === 'log' ? ' (log)' : '') + (d.verified ? ' (code)' : '') + ': ' + d.hands + ' hands' + (d.winner ? ', winner ' + d.winner : '') + ' — ' + d.verdict;
       case 'checkedIn': return d.nick + ' checked in' + (d.by === 'organizer' ? ' (by the organizer)' : '');
       case 'notCheckedIn': return 'not checked in, marked absent: ' + (d.nicks || []).join(', ');
       case 'pdbImported': return 'imported a log (' + d.games + ' game' + (d.games === 1 ? '' : 's') + ', sha256 ' + String(d.sha256).slice(0, 12) + '…)';
@@ -450,7 +453,7 @@ export function createTournaments(o) {
       closedBecause: regClosed(t),
       playerList: t.players.map((p) => ({ nick: p.nick, absent: !!p.absent, checkedIn: !!p.checkedIn })),
       checkIn: checkInState(t),
-      witnesses: t.settings.witnesses === 'off' ? null : Object.assign(witnessState(t), { list: (t.witnesses || []).map((w) => ({ nick: w.nick, verdict: w.verdict, counts: countsW(t, w) })),
+      witnesses: t.settings.witnesses === 'off' ? null : Object.assign(witnessState(t), { logs: !!(t.run && t.run.qmlWitnesses), list: (t.witnesses || []).map((w) => ({ nick: w.nick, verdict: w.verdict, counts: countsW(t, w), log: w.source === 'log' })),
         override: t.witnessOverride ? { at: t.witnessOverride.at, reason: t.witnessOverride.reason } : null }),
       result: t.result ? { status: t.result.status, byDirector: !!t.result.byDirector, corrected: !!t.result.corrected, absent: t.result.absent || [],
         ranking: t.result.ranking.map((r) => ({ place: r.place, nick: r.nick, winner: !!r.winner, elimHand: r.elimHand, tie: !!r.tie })) } : null,
@@ -536,8 +539,31 @@ export function createTournaments(o) {
     let rep;
     try { rep = cleanReport(input && input.report); } catch (e) { prefuse('badReport', 'report: ' + e.message); }
     if (!rep.hands.length && !rep.winner) prefuse('badReport', 'an empty report');
+    return addWitness(t0, input, rep, 'web', {});
+  }
+  // A QML player's log (.pdb), when the tournament accepts them as witnesses:
+  // read in memory, only the stacks of the director's game (or of the game
+  // with the tournament's players) and its winner are kept — never the cards.
+  async function witnessLog(key, input, opts) {
+    const t0 = byKey(key);
+    if (!t0 || !visible(t0, input && input.invite)) prefuse('notFound', 'unknown tournament');
+    if (t0.settings.witnesses === 'off') prefuse('noWitness', 'this tournament takes no witness reports');
+    if (!(t0.run && t0.run.qmlWitnesses)) prefuse('noLogWitness', 'this tournament takes no log from the official client');
+    let buf;
+    try { buf = Buffer.from(String((input && input.log) || ''), 'base64'); } catch (e) { buf = null; }
+    if (!buf || !isPdb(buf)) prefuse('notPdb', 'not a PokerTH log (.pdb)');
+    if (buf.length > MAX_LOG_BYTES) prefuse('tooLarge', 'a log of at most 10 MB');
+    const gameId = opts && opts.gameId != null ? opts.gameId : null;
+    let got;
+    try { got = await pdbWitness(buf, { gameId, players: t0.players.map((p) => p.nick) }); } catch (e) { prefuse('noGame', e.message); }
+    let rep;
+    try { rep = cleanReport({ hands: got.hands, winner: got.winner, complete: got.complete }); } catch (e) { prefuse('badReport', 'report: ' + e.message); }
+    if (!rep.hands.length && !rep.winner) prefuse('noGame', 'this log has no hand of that game');
+    return addWitness(t0, input, rep, 'log', { logSha256: createHash('sha256').update(buf).digest('hex'), logGame: got.uniqueGameId });
+  }
+  function addWitness(t0, input, rep, source, extra) {
     const nick0 = cleanNick(input && input.nick);
-    const data = { nick: nick0 };
+    const data = { nick: nick0, source };
     act(t0.id, 'witness', 'witnessReport', data, (t) => {
       if (t.status === 'validated') prefuse('closed_finished', 'the result is validated');
       if (!t.host && !t.result) prefuse('noTable', 'no table yet');
@@ -558,11 +584,11 @@ export function createTournaments(o) {
       writeAtomic(witnessFile(t.id, p.nick), rep);
       const j = judge(t, rep, directorOf(t));
       const hs = rep.hands.map((x) => x.h);
-      const w = { nick: p.nick, at: now(), verified, hands: hs.length, from: hs.length ? hs[0] : null, to: hs.length ? hs[hs.length - 1] : null,
+      const w = { nick: p.nick, at: now(), verified, source, hands: hs.length, from: hs.length ? hs[0] : null, to: hs.length ? hs[hs.length - 1] : null,
         winner: rep.winner, complete: rep.complete, verdict: j.verdict, common: j.common, diff: j.diff || null };
       t.witnesses = (t.witnesses || []).filter((x) => !sameNick(x.nick, p.nick)).concat([w]);
       Object.assign(data, { nick: p.nick, verified, hands: w.hands, from: w.from, to: w.to, winner: rep.winner, verdict: j.verdict, common: j.common,
-        digest: createHash('sha256').update(JSON.stringify(rep)).digest('hex') });
+        digest: createHash('sha256').update(JSON.stringify(rep)).digest('hex') }, extra || {});
     });
     // A result that waited for its witnesses to validate by itself.
     const { t } = load(t0.id);
@@ -796,7 +822,7 @@ export function createTournaments(o) {
   }
 
   return { list, get, create, update, addPlayer, removePlayer, setResult: setResultP, validate, correct, importPdb, file,
-    publicList, publicGet, register, unregister, publicFile, witnessReport, keyHost, checkIn, issueCode, organizerCheckIn, markNotCheckedIn, needsCheckIn: (id) => needsCheckIn(load(id).t),
+    publicList, publicGet, register, unregister, publicFile, witnessReport, witnessLog, keyHost, checkIn, issueCode, organizerCheckIn, markNotCheckedIn, needsCheckIn: (id) => needsCheckIn(load(id).t),
     hostOpened, hostCheck, hostNote, hostEnded, hostResultRefused, openHosts, autoOpenDue, autoOpenNote, Refusal };
 }
 

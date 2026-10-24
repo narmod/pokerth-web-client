@@ -52,6 +52,7 @@ const PAGE_RE = /^\/tournament(?:\.html|\/|\/organize\/?|\/t\/[A-Za-z0-9_-]{8,40
 const API_RE = /^\/tournament\/api\/(?:list|table|t\/[A-Za-z0-9_-]{8,40}(?:\/[a-z]{2,16})?)$/;
 const API_MAX_BODY = 8 * 1024;
 const API_MAX_WITNESS = 64 * 1024;   // a witness report: every hand of a game
+const API_MAX_LOG = 14 * 1024 * 1024;   // a player's log (.pdb, 10 MB) in base64
 // Only these reach the service; the rest of the environment (admin token,
 // database passwords…) stays with the web client.
 const ENV_KEEP = ['PATH', 'HOME', 'LANG', 'LC_ALL', 'TZ', 'TMPDIR', 'NODE_EXTRA_CA_CERTS', 'SSL_CERT_FILE'];
@@ -275,7 +276,7 @@ function handleTournamentPage(host, req, res, reqPathOnly, clientIp) {
   if (!host.enabled()) return nf();
   if (API_RE.test(reqPathOnly)) {
     if (req.method !== 'GET' && req.method !== 'POST') return nf();
-    if (req.method === 'POST' && !(Number(req.headers['content-length']) <= (/\/witness$/.test(reqPathOnly) ? API_MAX_WITNESS : API_MAX_BODY))) {
+    if (req.method === 'POST' && !(Number(req.headers['content-length']) <= (/\/witnesslog$/.test(reqPathOnly) ? API_MAX_LOG : /\/witness$/.test(reqPathOnly) ? API_MAX_WITNESS : API_MAX_BODY))) {
       res.writeHead(413, { 'Content-Type': 'application/json; charset=utf-8' }); return res.end('{"ok":false,"code":"tooLarge"}');
     }
     // The query (an invitation code, a file name) goes along; the player's

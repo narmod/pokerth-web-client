@@ -5,13 +5,15 @@
 // private tournament reached from its table), who counts, and « witnesses
 // required »: one agrees and none disagrees, or the organizer gives a reason.
 // Run: node tournament/test/test-td-witness.mjs
-import { mkdtempSync, rmSync, writeFileSync, mkdirSync } from 'node:fs';
+import { mkdtempSync, rmSync, writeFileSync, mkdirSync, readFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import http from 'node:http';
 import { createService } from '../lib/service.mjs';
 import { generateKeys, Journal } from '../lib/journal.mjs';
 import { cleanReport, directorFacts, compareWithDirector, compareWithRanking } from '../lib/witness.mjs';
+import { pdbWitness } from '../lib/pdb.mjs';
+import { buildPdb } from './lib/td-pdb-fixture.mjs';
 
 let fails = 0;
 function ok(cond, label) {
@@ -170,6 +172,40 @@ function fakeWatch(wid, gameId, tableName, status) {
   ok(s.status === 'finished', 'automatic validation waits for a witness');
   await pub('/t/' + t.publicKey + '/witness', { nick: 'Bob', report: GOOD });
   ok((await admin('/t/get?id=' + t.id)).status === 'validated', 'then validates by itself when one agrees');
+}
+
+// QML players: their log (.pdb), when the tournament accepts it.
+{
+  // The game the director saw (game 7 on the server), and another one before.
+  const games = [
+    { uniqueGameId: 1, gameId: 3, startMoney: 500, seats: ['Ann', 'Bot'], hands: [{ cash: { 1: 500, 2: 500 }, actions: [[1, 'wins game']] }] },
+    { uniqueGameId: 2, gameId: 7, startMoney: 1000, seats: ['Ann', 'Bob', 'Cat'], hands: [
+      { cash: { 1: 1000, 2: 1000, 3: 1000 } }, { cash: { 1: 1500, 2: 500, 3: 1000 } }, { cash: { 1: 2000, 3: 1000 }, actions: [[1, 'wins game']] }] },
+  ];
+  const log = await buildPdb(games);
+  const got = await pdbWitness(log, { gameId: 7 });
+  ok(got.uniqueGameId === 2 && got.hands.length === 3 && got.hands[1].s.Bob === 500 && !('Bob' in got.hands[2].s) && got.winner === 'Ann', 'log: the director\'s game (by its server game id), stacks per hand, the winner');
+  ok((await pdbWitness(log, { players: ['Ann', 'Bob', 'Cat'] })).uniqueGameId === 2, 'log without a director: the game with the tournament\'s players');
+  const t = await admin('/t/create', { name: 'QML cup', profile: 'club' });
+  for (const n of ['Ann', 'Bob', 'Cat']) await admin('/t/player', { id: t.id, nick: n });
+  fakeWatch('wqml001', 7, 'QML cup');
+  svc.manager.tournaments.hostOpened(t.id, 'wqml001', {}, 'admin');
+  const send = (body) => pub('/t/' + t.publicKey + '/witnesslog', body, '10.3.3.3');
+  ok((await send({ nick: 'Bob', log: log.toString('base64') })).code === 'noLogWitness', 'off by default: no log taken');
+  const ed = await admin('/t/update', { id: t.id, patch: { run: { qmlWitnesses: true } } });
+  ok(ed.run.qmlWitnesses === true && (await pub('/t/' + t.publicKey)).witnesses.logs === true, 'switched on in Edit; the players\' page offers it');
+  ok((await send({ nick: 'Bob', log: Buffer.from('not a log at all, really not').toString('base64') })).code === 'notPdb', 'not a .pdb: refused');
+  const r = await send({ nick: 'Bob', log: log.toString('base64') });
+  ok(r.ok && r.nick === 'Bob' && r.verdict === 'agrees', 'the log, compared with the director: agrees');
+  const o = await admin('/t/get?id=' + t.id);
+  const w = o.witnesses.find((x) => x.nick === 'Bob');
+  ok(w.source === 'log' && w.hands === 3 && o.history.some((h) => h.type === 'witnessReport' && /Bob \(log\)/.test(h.summary)), 'kept as a log witness; the journal says so');
+  const j = JSON.parse(readFileSync(join(dir, 'tournaments', t.id, 'journal.json'), 'utf8'));
+  const e = j.entries.filter((x) => x.type === 'witnessReport').pop();
+  ok(/^[0-9a-f]{64}$/.test(e.data.logSha256) && !existsSync(join(dir, 'tournaments', t.id, 'log.pdb')), 'the log\'s fingerprint in the journal; the file itself is not kept');
+  ok((await pub('/t/' + t.publicKey)).witnesses.list.find((x) => x.nick === 'Bob').log === true, 'players\' page: marked « log »');
+  const other = await buildPdb([games[0]]);
+  ok((await send({ nick: 'Cat', log: other.toString('base64') })).code === 'noGame', 'a log without this table\'s game: refused');
 }
 
 // Rate limit.

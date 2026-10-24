@@ -27,8 +27,9 @@ const STATIC = {
 };
 const LANG_RE = /^lang\/([a-z]{2,3}(?:-[a-z0-9]{2,4})?)\.mjs$/;
 // Public endpoints: per address, a few registrations and code attempts.
-const RATE = { register: [6, 10 * 60 * 1000], unregister: [12, 10 * 60 * 1000], checkin: [12, 10 * 60 * 1000], witness: [60, 10 * 60 * 1000] };
+const RATE = { register: [6, 10 * 60 * 1000], unregister: [12, 10 * 60 * 1000], checkin: [12, 10 * 60 * 1000], witness: [60, 10 * 60 * 1000], witnesslog: [6, 10 * 60 * 1000] };
 const MAX_JSON = 64 * 1024;
+const MAX_LOG_JSON = 14 * 1024 * 1024;   // a .pdb of 10 MB, in base64
 const MAX_PDB = 10 * 1024 * 1024;
 
 function same(a, b) {
@@ -148,6 +149,11 @@ export function createService(o) {
       req.on('end', () => resolve(big ? null : Buffer.concat(chunks)));
       req.on('error', () => resolve(null));
     });
+  }
+  async function readJsonMax(req, max) {
+    const b = await readBody(req, max);
+    if (!b) return null;
+    try { return b.length ? JSON.parse(b.toString('utf8')) : {}; } catch (e) { return null; }
   }
   async function readJson(req) {
     const b = await readBody(req, MAX_JSON);
@@ -290,7 +296,7 @@ export function createService(o) {
     // A web client at a table: is it a tournament's? (game id and table name,
     // as the server told the client.) Only tables the director opened.
     if (sub === '/table' && req.method === 'GET') return send(() => tableLookup(query));
-    const m = /^\/t\/([A-Za-z0-9_-]{8,40})(?:\/(register|unregister|checkin|witness|file))?$/.exec(sub);
+    const m = /^\/t\/([A-Za-z0-9_-]{8,40})(?:\/(register|unregister|checkin|witness|witnesslog|file))?$/.exec(sub);
     if (!m) return json(res, 404, { ok: false, code: 'notFound' });
     const key = m[1], op = m[2] || '';
     if (!op && req.method === 'GET') {
@@ -309,10 +315,11 @@ export function createService(o) {
         'Content-Disposition': 'attachment; filename="tournament-' + key.slice(0, 8) + '.' + which + '.json"' });
       return res.end(buf);
     }
-    if (req.method !== 'POST' || ['register', 'unregister', 'checkin', 'witness'].indexOf(op) < 0) return json(res, 405, { ok: false, code: 'method' });
+    if (req.method !== 'POST' || ['register', 'unregister', 'checkin', 'witness', 'witnesslog'].indexOf(op) < 0) return json(res, 405, { ok: false, code: 'method' });
     if (limited(op, ip)) return json(res, 429, { ok: false, code: 'tooMany', error: 'too many attempts, try again later' });
-    const b = await readJson(req);
+    const b = op === 'witnesslog' ? await readJsonMax(req, MAX_LOG_JSON) : await readJson(req);
     if (!b) return json(res, 400, { ok: false, code: 'badRequest' });
+    if (op === 'witnesslog') return send(() => { const h = T.keyHost(key); const x = h && hostTable(h.watchId); return T.witnessLog(key, b, { gameId: x ? x.gameId : null }); });
     if (op === 'witness') return send(() => T.witnessReport(key, b, { atTable: atTable(key, b) }));
     return send(() => (op === 'register' ? T.register(key, b) : op === 'checkin' ? T.checkIn(key, b) : T.unregister(key, b)));
   }

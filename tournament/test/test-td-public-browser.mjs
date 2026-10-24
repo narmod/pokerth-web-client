@@ -117,6 +117,27 @@ try {
   if (shots) await pg.screenshot({ path: path.join(shots, 'pub-checkin.png'), fullPage: true });
   ok(errors.length === 0, 'no script error' + (errors.length ? ': ' + errors[0] : ''));
 
+  // A QML player sends his log after the game (manual result here).
+  {
+    const { buildPdb } = await import('./lib/td-pdb-fixture.mjs');
+    const q = await admin('/t/create', { name: 'Log night', profile: 'official', run: { qmlWitnesses: true } });   // an organizer validates: still open to witnesses
+    for (const nk of ['Ann', 'Bob', 'Cat']) await admin('/t/player', { id: q.id, nick: nk });
+    await admin('/t/result', { id: q.id, source: 'manual', ranking: ['Ann', 'Cat', 'Bob'] });
+    const lp = await buildPdb([{ uniqueGameId: 1, gameId: 7, startMoney: 1000, seats: ['Ann', 'Bob', 'Cat'], hands: [
+      { cash: { 1: 1000, 2: 1000, 3: 1000 } }, { cash: { 1: 1500, 2: 500, 3: 1000 } }, { cash: { 1: 2000, 3: 1000 }, actions: [[1, 'wins game']] }] }]);
+    const lf = path.join(tmp, 'pokerth-log.pdb');
+    fs.writeFileSync(lf, lp);
+    await pg.goto(base + '/tournament/t/' + q.publicKey);
+    await pg.waitForSelector('#logBox', { timeout: 8000 });
+    await pg.click('#logBox summary');
+    await pg.fill('#logNick', 'Bob');
+    await pg.setInputFiles('#logFile', lf);
+    await pg.click('#logForm button');
+    await pg.waitForFunction(() => /Log of Bob received: agrees/.test(document.getElementById('view').textContent), null, { timeout: 8000 });
+    ok(/Bob\s*agrees\s*log/.test(await pg.textContent('#view')), 'QML player: the log sent from the page, compared, listed as « log »');
+    if (shots) await pg.screenshot({ path: path.join(shots, 'pub-log.png'), fullPage: true });
+  }
+
   // Organizer: the director's chat language, every language of the app.
   const og = await ctx.newPage();
   await og.addInitScript((t) => { try { localStorage.setItem('pth_admin_tok', t); } catch (e) {} }, TOKEN);

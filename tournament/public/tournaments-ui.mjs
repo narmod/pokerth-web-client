@@ -97,7 +97,7 @@ export function createTournamentsView(deps) {
     if ($('tDate').value) { const ts = new Date($('tDate').value).getTime(); if (ts > 0) body.startsAt = ts; }
     if ($('tVis').value) body.visibility = $('tVis').value;
     body.table = readTable('tt_');
-    body.run = { autoOpen: $('tAuto').checked, openBefore: Number($('tBefore').value), announce: $('tAnnounce').checked, selfRegister: $('tSelfReg').checked, chatLang: $('tChatLang').value || 'en' };
+    body.run = { autoOpen: $('tAuto').checked, openBefore: Number($('tBefore').value), announce: $('tAnnounce').checked, selfRegister: $('tSelfReg').checked, chatLang: $('tChatLang').value || 'en', qmlWitnesses: $('tQmlWit').checked };
     if (body.profile === 'custom') {
       body.settings = {};
       for (const k of Object.keys(CHOICES)) body.settings[k] = $('tc_' + k).value;
@@ -129,6 +129,7 @@ export function createTournamentsView(deps) {
       '<label class="ck"><input type="checkbox" id="te_announce"' + (r.announce ? ' checked' : '') + '> Announcements in the table chat</label>' +
       '<div class="row"><div><label for="te_chatlang">Language of the director in the chat</label><select id="te_chatlang">' + langOptions(r.chatLang) + '</select></div></div>' +
       '<label class="ck"><input type="checkbox" id="te_selfreg"' + (r.selfRegister !== false ? ' checked' : '') + '> Players can register themselves on the public page</label>' +
+      '<label class="ck"><input type="checkbox" id="te_qmlwit"' + (r.qmlWitnesses ? ' checked' : '') + '> Accept QML players as witnesses (their game log)</label>' +
       '<div class="row"><div><label for="te_checkin">Check-in opens, minutes before the start (identity « code »)</label><input id="te_checkin" type="number" inputmode="numeric" min="5" max="240" value="' + esc(r.checkInBefore) + '"></div></div>';
   }
   function readTable(prefix) {
@@ -326,6 +327,7 @@ export function createTournamentsView(deps) {
     let h = '<h3>Witnesses <span class="muted small">' + esc(st.witnesses) + (list.length ? ' · ' + esc(ws.agree) + ' agree, ' + esc(ws.disagree) + ' disagree' : '') + '</span></h3>';
     if (t.witnessOverride) h += '<p class="small">Validated despite the witnesses (' + esc(t.witnessOverride.author) + '): ' + esc(t.witnessOverride.reason) + '</p>';
     if (!list.length) return h + '<p class="small muted">No report yet. Players with the web client send one when the game ends or when they leave the table: the stacks at the start of each hand and the winner, never their cards. ' +
+      ((t.run && t.run.qmlWitnesses) ? 'QML players can send their game log on the players\' page. ' : '') +
       (st.witnesses === 'required' ? 'Validating needs one that agrees and none that disagrees (or a reason).' : 'Informative: they never block the result.') + '</p>';
     h += '<ul class="rank">' + list.map((w) => {
       const v = VERDICT[w.verdict] || [w.verdict, ''];
@@ -333,7 +335,7 @@ export function createTournamentsView(deps) {
       const diff = !d ? '' : d.winner ? ' — winner: ' + esc(d.witness) + ' (director: ' + esc(d.director) + ')'
         : d.order ? ' — saw ' + esc(d.before) + ' out before ' + esc(d.after)
         : ' — hand ' + esc(d.hand) + ', ' + esc(d.nick) + ': ' + esc(d.witness == null ? 'absent' : d.witness) + ' (director: ' + esc(d.director == null ? 'absent' : d.director) + ')';
-      return '<li><span class="nk">' + esc(w.nick) + ' <span class="chip ' + v[1] + '">' + esc(v[0]) + '</span>' + (st.identity === 'code' ? (w.verified ? ' <span class="chip">code</span>' : ' <span class="chip warn">no code: does not count</span>') : '') +
+      return '<li><span class="nk">' + esc(w.nick) + ' <span class="chip ' + v[1] + '">' + esc(v[0]) + '</span>' + (w.source === 'log' ? ' <span class="chip">log</span>' : '') + (st.identity === 'code' ? (w.verified ? ' <span class="chip">code</span>' : ' <span class="chip warn">no code: does not count</span>') : '') +
         '<br><span class="small muted">hands ' + esc(w.from == null ? '—' : w.from + '–' + w.to) + ' (' + esc(w.common) + ' compared)' + (w.winner ? ' · winner ' + esc(w.winner) : '') + diff + '</span></span></li>';
     }).join('') + '</ul>';
     return h;
@@ -495,8 +497,8 @@ export function createTournamentsView(deps) {
         if (TABLE_FIELDS.some((f) => String(tb[f[0]]) !== String(was[f[0]]))) patch.table = tb;
       }
       if ($('te_auto')) {
-        const run = { autoOpen: $('te_auto').checked, openBefore: Number($('te_before').value), announce: $('te_announce').checked, selfRegister: $('te_selfreg').checked, checkInBefore: Number($('te_checkin').value), chatLang: $('te_chatlang').value };
-        const r0 = Object.assign({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30, chatLang: 'en' }, cur.run || {});
+        const run = { autoOpen: $('te_auto').checked, openBefore: Number($('te_before').value), announce: $('te_announce').checked, selfRegister: $('te_selfreg').checked, checkInBefore: Number($('te_checkin').value), chatLang: $('te_chatlang').value, qmlWitnesses: $('te_qmlwit').checked };
+        const r0 = Object.assign({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30, chatLang: 'en', qmlWitnesses: false }, cur.run || {});
         if (Object.keys(run).some((k) => run[k] !== r0[k])) patch.run = run;
       }
       if (!Object.keys(patch).length) return msg('tMsg', 'Nothing changed.');

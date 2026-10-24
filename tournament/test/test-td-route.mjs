@@ -113,6 +113,11 @@ try {
     const w1 = await wit(20000);
     ok(w1.status === 400 && (await w1.json()).code === 'noTable', 'witness: a 20 KB report passes the web client (the director answers)');
     ok((await wit(70000)).status === 413, 'witness: over 64 KB, refused by the web client');
+    const logPost = (size) => fetch(base + '/tournament/api/t/' + t.publicKey + '/witnesslog', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-td-client': '198.51.100.98' },
+      body: JSON.stringify({ nick: 'N1', log: 'A'.repeat(size) }) });
+    const l1 = await logPost(2 * 1024 * 1024);
+    ok(l1.status === 400 && (await l1.json()).code === 'noLogWitness', 'witness log: 2 MB passes the web client (the director answers)');
+    ok((await logPost(15 * 1024 * 1024)).status === 413, 'witness log: over 14 MB, refused by the web client');
     await post('/admin/tournaments/t/player', { id: t.id, action: 'remove', nick: 'N0' });
   }
 

@@ -112,3 +112,48 @@ export async function rankPdbGame(buf, uniqueGameId) {
     return { uniqueGameId: u, finished: !!winner, hands, ranking };
   } finally { db.close(); }
 }
+
+/**
+ * A witness report from a player's log (QML players, service 0.8.0): the
+ * stacks at the start of each hand (Seat_N_Cash) and the winner of ONE game.
+ * The game is the one the server numbered `gameId` (the director's table);
+ * without it (no director), the game of the log with the most of `players`.
+ * Only the stacks are read: the cards in the log are never looked at nor kept.
+ */
+export async function pdbWitness(buf, opts) {
+  if (!isPdb(buf)) throw new Error('not a .pdb file');
+  const o = opts || {};
+  const SQL = await sql();
+  const db = open(SQL, buf);
+  try {
+    const games = rows(db, 'SELECT UniqueGameID, GameID FROM Game ORDER BY UniqueGameID');
+    let pick = null;
+    if (o.gameId != null) pick = games.filter((g) => Number(g.GameID) === Number(o.gameId)).pop() || null;
+    else {
+      const want = new Set((o.players || []).map((x) => String(x).toLowerCase()));
+      let best = 0;
+      for (const g of games) {
+        const n = rows(db, 'SELECT Player FROM Player WHERE UniqueGameID = ?', [Number(g.UniqueGameID)]).filter((p) => want.has(String(p.Player).toLowerCase())).length;
+        if (n >= 2 && n >= best) { best = n; pick = g; }
+      }
+    }
+    if (!pick) throw new Error('this log has no game of this table');
+    const u = Number(pick.UniqueGameID);
+    const seats = new Map(rows(db, 'SELECT Seat, Player FROM Player WHERE UniqueGameID = ?', [u]).map((p) => [Number(p.Seat), String(p.Player)]));
+    const cols = [...seats.keys()].filter((s) => s >= 1 && s <= 10).map((s) => 'Seat_' + s + '_Cash');
+    const hands = [];
+    if (cols.length) {
+      for (const h of rows(db, 'SELECT HandID, ' + cols.join(', ') + ' FROM Hand WHERE UniqueGameID = ? ORDER BY HandID', [u])) {
+        const s = {};
+        for (const [seat, nick] of seats) {
+          const v = h['Seat_' + seat + '_Cash'];
+          if (v != null && Number(v) > 0) s[nick] = Number(v);
+        }
+        if (Object.keys(s).length) hands.push({ h: Number(h.HandID), s });
+      }
+    }
+    const w = rows(db, "SELECT Player FROM Action WHERE UniqueGameID = ? AND Action = 'wins game' LIMIT 1", [u])[0];
+    const winner = w ? seats.get(Number(w.Player)) || null : null;
+    return { uniqueGameId: u, gameId: Number(pick.GameID), hands, winner, complete: !!winner };
+  } finally { db.close(); }
+}

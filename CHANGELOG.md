@@ -72,6 +72,9 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Tournaments: QML players as witnesses** (`web.306`, service `0.8.0`) — the web client relays a player's game log
+  (`/tournament/api/t/<key>/witnesslog`, up to 14 MB: a 10 MB `.pdb` in base64) to the tournament service. Details in
+  `tournament/CHANGELOG.md`.
 - **Tournaments: witnesses** (`web.305`, service `0.7.0`) — at a table opened by the tournament director, the web
   client is a witness (`public/modules/td-witness.mjs`, hooked in `modules/game/msg-hand.mjs`): it recognises the
   table (`GET /tournament/api/table?game=&name=`), records the stacks of the players still in at the start of each
