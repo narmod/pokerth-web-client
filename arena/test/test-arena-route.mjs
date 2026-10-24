@@ -40,10 +40,8 @@ const F = (x) => path.join(tmp, x);
 fs.writeFileSync(F('admin-config.json'), JSON.stringify({ loginDefaults: { lanMode: 'forced', host: '127.0.0.1', lanPort: game.port, lanTls: false } }));
 // Organizer keys (Admin › Keys): two organizers, a key for another section.
 fs.writeFileSync(F('scoped-tokens.json'), JSON.stringify([
-  { name: 'Élise', token: 'org-elise-key', scopes: ['arena'] },
-  { name: 'Bruno', token: 'org-bruno-key', scopes: ['arena', 'music'] },
+  { name: 'Old organizer', token: 'org-old-key', scopes: ['arena'] },   // the Arena category of Admin › Keys is gone (web.319)
   { name: 'Musician', token: 'music-only-key', scopes: ['music'] },
-  { name: 'admin', token: 'org-fake-admin', scopes: ['arena'] },
 ]));
 const PORT = await freePort();
 const TOKEN = 'arena-route-token';
@@ -106,29 +104,26 @@ try {
   ok((await fetch(base + '/tournament', { redirect: 'manual' })).status === 404 && (await get('/admin/tournaments/settings')).status === 404, 'no old address (/tournament, /admin/tournaments)');
 
 
-  // ── organizer keys: who acts is in the journal; corrections by two organizers ──
+  // ── organizer accounts: who acts is in the journal; corrections by two organizers ──
   {
-    const E = { Authorization: 'Bearer org-elise-key' }, B = { Authorization: 'Bearer org-bruno-key' };
+    const pj = (p, b) => fetch(base + '/arena/api' + p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) }).then((r) => r.json());
+    const account = async (login, name, role) => { const a = await (await post('/admin/arena/accounts/create', { login, name, role })).json(); const i = await pj('/account/invite', { token: a.invite, password: 'a long password for ' + login }); return { Authorization: 'Bearer ' + i.token }; };
+    const E = await account('elise', 'Élise', 'organizer'), B = await account('bruno', 'Bruno', 'organizer');
     const st = await (await get('/admin/arena/status', E)).json();
-    ok(st.ok && st.you === 'Élise', 'organizer key: accepted, the service knows who (« ' + st.you + ' »)');
-    ok((await get('/admin/arena/status', { Authorization: 'Bearer music-only-key' })).status === 403, 'a key for another section: refused');
-    ok((await get('/admin/arena/settings', E)).status === 403 && (await post('/admin/arena/restart', {}, E)).status === 403, 'organizer key: not the module settings (master key only)');
-    ok((await (await get('/admin/arena/status', { Authorization: 'Bearer org-fake-admin' })).json()).you === 'org:admin', 'a key named « admin » is not the master key');
+    ok(st.ok && st.you === 'Élise' && st.role === 'organizer', 'organizer account: signed in through the web client, the service knows who (« ' + st.you + ' »)');
+    ok((await get('/admin/arena/status', { Authorization: 'Bearer music-only-key' })).status === 403 && (await get('/admin/arena/status', { Authorization: 'Bearer org-old-key' })).status === 403, 'a key of Admin › Keys (another section, or the old Arena category): refused');
+    ok((await get('/admin/arena/settings', E)).status === 403 && (await post('/admin/arena/restart', {}, E)).status === 403, 'organizer account: not the module settings (master key only)');
     // Deleting a cup: the super admin only.
     const cupE = await (await post('/admin/arena/cups/create', { name: 'Elise cup' }, E)).json();
     const delE = await post('/admin/arena/cups/delete', { id: cupE.id, confirm: 'Elise cup' }, E);
     const delM = await (await post('/admin/arena/cups/delete', { id: cupE.id, confirm: 'Elise cup' })).json();
-    ok(delE.status === 403 && delM.ok && delM.deleted === cupE.id, 'deleting a cup: refused to an organizer key, done with the master key');
-    // Organizer accounts through the web client: sign in on the players' API, the session on the organizer API.
+    ok(delE.status === 403 && delM.ok && delM.deleted === cupE.id, 'deleting a cup: refused to an organizer, done with the master key');
     {
-      const acc = await (await post('/admin/arena/accounts/create', { login: 'remi', name: 'Rémi', role: 'referee' })).json();
-      const pj = (p, b) => fetch(base + '/arena/api' + p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) }).then((r) => r.json());
-      const inv = await pj('/account/invite', { token: acc.invite, password: 'a long password' });
-      const S = { Authorization: 'Bearer ' + inv.token };
+      const S = await account('remi', 'Rémi', 'referee');
       const me = await (await get('/admin/arena/status', S)).json();
       const cr = await post('/admin/arena/t/create', { name: 'No' }, S);
-      ok(inv.ok && me.you === 'Rémi' && me.role === 'referee' && cr.status === 403 && (await cr.json()).code === 'role', 'an account through the web client: signed in, its role applied');
-      ok((await get('/admin/arena/status', { Authorization: 'Bearer as_' + 'x'.repeat(43) })).status === 401 && (await get('/admin/arena/accounts', E)).status === 403, 'an unknown session: 401; accounts: not for an organizer key');
+      ok(me.you === 'Rémi' && me.role === 'referee' && cr.status === 403 && (await cr.json()).code === 'role', 'a referee account: its role applied');
+      ok((await get('/admin/arena/status', { Authorization: 'Bearer as_' + 'x'.repeat(43) })).status === 401 && (await get('/admin/arena/accounts', E)).status === 403, 'an unknown session: 401; accounts: not for an organizer');
     }
     const tE = await (await post('/admin/arena/t/create', { name: 'Elise night' }, E)).json();
     ok((await post('/admin/arena/t/delete', { id: tE.id, confirm: 'Elise night' }, E)).status === 403 && (await (await post('/admin/arena/t/delete', { id: tE.id, confirm: 'Elise night' })).json()).ok, 'deleting a tournament: the master key only');

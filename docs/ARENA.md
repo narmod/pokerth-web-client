@@ -729,7 +729,9 @@ password; four roles).
   request (`allowed(role, method, sub)`); a refusal is 403 with `code: role`
   and the page says so without signing out. The page hides the « New
   tournament » and « New cup » forms from referees and read-only accounts.
-  Organizer keys of Admin › Keys (category Arena) still work, as organizers.
+  The « Arena (organizer) » category of Admin › Keys is gone (web.319,
+  decided 2026-10-24): an organizer signs in with an account only; the
+  master key stays the super admin's way in.
 - **Sessions**: `as_…` tokens (32 random bytes), 30 days, sent as
   `Authorization: Bearer`; the web client lets them through to the service
   (`X-Arena-Session`), which checks them; an unknown or ended one: 401
@@ -748,7 +750,11 @@ password; four roles).
 - Players keep their nickname and personal code for now (player accounts:
   later).
 
-## Organizers (service `0.9.0`, web client `2.1.10-web.307`)
+## Organizers (service `0.9.0`, web client `2.1.10-web.307`) — keys replaced by accounts in web.319
+
+*History: the organizer keys below were replaced by organizer accounts
+(« Organizer accounts and roles » above); the second-organizer rule for
+corrections is unchanged.*
 
 - **One key per organizer.** The admin creates it in Admin › Keys with the
   category « Tournaments (organizer) » (or `pokerth-web token add NAME

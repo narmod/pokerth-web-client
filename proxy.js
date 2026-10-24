@@ -11659,7 +11659,7 @@ function adminAuthed(query, bodyToken) {
 // The file is hot-reloaded (mtime check), so adding/revoking a key needs no
 // restart. To scope another section later (e.g. "music"): add it to ADMIN_SCOPES
 // and wrap that section's routes with hasScope('music', …) instead of adminAuthed.
-const ADMIN_SCOPES = ['broadcast', 'music', 'packages', 'leaderboard', 'polls', 'arena'];
+const ADMIN_SCOPES = ['broadcast', 'music', 'packages', 'leaderboard', 'polls'];
 const SCOPED_TOKENS_FILE = process.env.SCOPED_TOKENS_FILE || path.join(__dirname, 'scoped-tokens.json');
 let _scopedTokens = [], _scopedMtime = -1;
 function _loadScopedTokens() {
@@ -11701,23 +11701,15 @@ function hasScope(scope, query, bodyToken) {
   return false;
 }
 
-// Who acts in the Arena (organizer page): the master key is « admin »; a key
-// with the « arena » scope is an organizer, named after the key — the
-// journals record that name with every action.
+// Who acts in the Arena (organizer page): the master key is « admin », the
+// super admin; an organizer signs in with an account of the Arena (login +
+// password) and sends its session token (as_…), which the Arena's service
+// checks. There are no Arena keys in Admin › Keys (removed in web.319).
 function _arenaAuthor(query) {
   if (adminAuthed(query)) return 'admin';
   var tok = (query && query.token) || '';
-  if (!tok) return null;
-  // An organizer account's session (as_…): the Arena's service checks it.
   if (/^as_[A-Za-z0-9_-]{40,60}$/.test(tok)) return { session: tok };
-  var r = _loadScopedTokens().filter(function (x) { return x.token === tok; })[0];
-  if (!r) return null;
-  var sc = r.scopes || [];
-  if (sc.indexOf('arena') < 0 && sc.indexOf('*') < 0) return null;
-  var n = String(r.name || '').replace(/[\u0000-\u001f\u007f]/g, '').trim().slice(0, 48) || 'organizer';
-  // Names the director uses for itself stay its own.
-  if (/^(admin|director|scheduler|witness|witnesses|player)$/i.test(n)) n = 'org:' + n;
-  return n;
+  return null;
 }
 
 // Any valid admin key at all, whatever its scopes. Used only by read-only bits

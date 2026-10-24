@@ -1,6 +1,6 @@
 {
   "name": "pokerth-arena",
-  "version": "0.21.0",
+  "version": "0.21.1",
   "description": "PokerTH Arena: tournaments, cups and medals on PokerTH LAN servers, with a tournament director that opens Sit & Go tables for registered players, watches tables as a spectator and seals signed results. Launched by the PokerTH web client.",
   "private": true,
   "type": "module",

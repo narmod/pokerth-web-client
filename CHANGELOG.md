@@ -72,6 +72,9 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Arena: no more organizer keys** (`web.319`, service `0.21.1`) — the « Arena (organizer) » category of Admin › Keys
+  is removed (`ADMIN_SCOPES`, `install.sh token add`): organizers sign in with their Arena account; the master key stays
+  the super admin's.
 - **Arena: organizer accounts and roles** (`web.318`, service `0.21.0`) — login + password accounts made by the super
   admin (master key) with a one-time invitation link; roles organizer, referee, read only, checked by the service. The
   web client relays the sign-in (`/arena/api/account/*`) and lets `as_…` session tokens through to the service
