@@ -10,6 +10,28 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.31.0 — 2026-10-24
+
+### Added
+- **The home page, a showcase of what is on** (step 2 of the redesign):
+  `GET /arena/api/showcase` and `home.mjs`, rows after the web client's
+  Events window (a coloured badge, what, when in the player's language and
+  zone). Sections: a message from the site, the tables live on the LAN
+  servers (each lobby read at most once a minute; a private table without
+  its name), this site's tournaments, the community events (BBC steps with
+  their sign-ups, the WEC game of every evening at 22:00 Berlin time and its
+  finals, the Monthly Cup, the last winners, the champions of the day — the
+  web client's Events relay over IPC, or `ARENA_EVENTS_URL` standalone; only
+  links to `*.pokerth.net`), the latest results with their podium, the cups,
+  the groups. Refreshed every minute while open.
+- **/arena/organize › Home page** (the super admin): which sections show,
+  their order, the message, how many rows each (`/admin/arena/showcase`;
+  `showcase.json`).
+- The picture behind the titles (the chips and flames of PokerTH's start
+  screen) served by the Arena: `/arena/img/hero.webp` (`platform.mjs`,
+  `ARENA_HERO_IMAGE`).
+- 21 strings in the 83 languages.
+
 ## 0.30.0 — 2026-10-24
 
 ### Added

@@ -72,6 +72,10 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Arena: the home page shows what is on** (`web.321`, service `0.31.0`) — the proxy hands the community events
+  (the Events relay's cache: BBC, WEC, Monthly Cup) to the Arena over IPC (`events`, `server/arena-host.js` →
+  `deps.communityEvents`) for its showcase home page; the relay lets `/arena/img/<name>.webp` through (the hero
+  picture, now served by the Arena itself).
 - **Arena: an installable app** (`web.320`, service `0.30.0`) — the relay (`server/arena-host.js`) lets through the
   app's views (`/arena/<view>`, one lowercase segment, and `/arena/organize/…`), its service worker (`/arena/sw.js`),
   its own icons (`/arena/icons/…`) and the `showcase` API to come. The Arena serves the language list with flags

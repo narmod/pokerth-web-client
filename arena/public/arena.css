@@ -32,7 +32,7 @@ h2{color:var(--ivory);font-size:1.15em;margin:0 0 8px}
 /* Hero as on the public pages (/rules, /faq): the start screen's chips and
    flames under a slate veil that fades into the page, the four suits, the
    title in heavy Inter. Dark in both themes, like the app's start screen. */
-.hero{background:linear-gradient(180deg,rgba(14,18,24,.55) 0%,rgba(14,18,24,.8) 62%,rgba(14,18,24,.86) 84%,var(--bg) 100%),url(/img/pokerth-login-bg.webp) center 40%/cover no-repeat #12161d}
+.hero{background:linear-gradient(180deg,rgba(14,18,24,.55) 0%,rgba(14,18,24,.8) 62%,rgba(14,18,24,.86) 84%,var(--bg) 100%),url(/arena/img/hero.webp) center 40%/cover no-repeat #12161d}
 .hero .in{padding-top:44px;padding-bottom:52px}
 .suits{display:flex;gap:6px;font-size:1.1em;line-height:1;margin:0 0 .7em;color:#a0acc4}.suits i{font-style:normal}
 .suits .s::before{content:"\2660"}.suits .h::before{content:"\2665"}.suits .d::before{content:"\2666"}.suits .c::before{content:"\2663"}
@@ -277,3 +277,24 @@ body[data-role="referee"] .org-only, body[data-role="viewer"] .org-only{display:
   .lp-pop{position:fixed;left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));top:calc(env(safe-area-inset-top) + 62px);width:auto}
   .lp-pop ul{max-height:calc(100vh - 230px)}
 }
+/* ── The home page, a showcase (service 0.31.0): rows after the web client's Events window ── */
+.evl{list-style:none;margin:0;padding:0}
+.evl>li+li{border-top:1px solid var(--line)}
+.evr{display:flex;align-items:center;gap:12px;padding:10px 4px;color:var(--ink);text-decoration:none;min-height:52px}
+a.evr:hover{background:var(--line);border-radius:8px}
+.evb{--ec:201,143,31;flex:none;min-width:58px;max-width:96px;text-align:center;font-size:.68em;font-weight:700;letter-spacing:.07em;text-transform:uppercase;line-height:1.25;padding:3px 7px;border-radius:999px;border:1px solid rgba(var(--ec),.45);color:rgb(var(--ec));background:rgba(var(--ec),.12);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.evb.c0{--ec:201,143,31}.evb.c1{--ec:42,157,143}.evb.c3{--ec:192,57,43}.evb.c5{--ec:93,164,93}.evb.c7{--ec:120,140,190}
+.evm{display:flex;flex-direction:column;min-width:0;flex:1}
+.evt{color:var(--ivory);font-weight:600;overflow-wrap:anywhere}
+.evt a{color:inherit;text-decoration:none}
+.evs{font-size:.86em;color:var(--muted);overflow-wrap:anywhere}
+.evw{flex:none;font-size:.82em;color:var(--muted);text-align:end;max-width:42%}
+.pod{white-space:nowrap;margin-inline-end:8px}
+.evmore{margin:8px 0 0;font-size:.9em}
+.home-msg p{margin:.3em 0}
+.card h3{font-size:.95em;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 6px}
+@media (max-width:520px){.evr{flex-wrap:wrap;gap:6px 10px}.evw{max-width:none;flex-basis:100%;text-align:start;padding-inline-start:70px}.evb{min-width:56px}}
+.hlist{list-style:none;margin:0 0 12px;padding:0}
+.hrow{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);padding:4px 0}
+.hrow .ck{margin:4px 0;align-items:flex-start}
+.hmove{display:flex;gap:4px;flex:none}

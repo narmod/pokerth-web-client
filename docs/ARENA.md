@@ -781,6 +781,31 @@ Code: `arena/lib/groups.mjs`, `arena/public/groups-ui.mjs`; tests:
   combine with the identity « account » or « verified » when it matters.
 - Reset: the part `groups` archives `groups.json`.
 
+## The home page, a showcase (service `0.31.0`)
+
+Code: `arena/lib/showcase.mjs`, `arena/public/home.mjs`,
+`arena/public/home-ui.mjs`; tests: `arena/test/test-arena-showcase.mjs`.
+
+- `GET /arena/api/showcase` → `{ at, sections: [...] }`: the sections the
+  super admin turned on, in his order — `message` (title, text), `live`
+  (`servers` with their online count, `games`: server, name or null when
+  private, mode, players, max, spectators), `tournaments` (`playing`, `open`,
+  `coming`: public cards), `community` (`upcoming`, `results`, `champions`),
+  `results` (public validated tournaments with their podium), `cups` (running,
+  public), `groups` (count, the biggest). A section that fails is left out.
+- Lobbies: `lobby()` per LAN server at most once a minute (the first visit
+  waits 2.5 s at most). Community events: the web client's Events relay over
+  IPC (`{ type: 'events' }`, answered from the relay's cache), or
+  `ARENA_EVENTS_URL` (an `/api/events` address) standalone; read at most once
+  a minute; links kept only to `https://*.pokerth.net`. The WEC game of every
+  evening (22:00 Europe/Berlin, no registration) is added as the web client's
+  Events window does.
+- `GET /admin/arena/showcase` (every role) and `POST` (the super admin):
+  `{ sections: [{ id, on }], message: { title, text }, max }` → `showcase.json`.
+- The page refreshes every minute while open and visible.
+- `/arena/img/hero.webp`: the start screen's chips and flames, behind the
+  titles (`HERO_IMAGE_FILE`, `ARENA_HERO_IMAGE`).
+
 ## The players' app (service `0.30.0`)
 
 Step 1 of the redesign decided 2026-10-24 (showcase home page, sign-in
@@ -1175,9 +1200,9 @@ Links still to cut (tick them off as the code is touched):
   `public/modules/create-presets.mjs` (later: read from the web client's API
   with a copy as fallback), the root `package.json` version (or
   `ARENA_CLIENT_VERSION`).
-- Pages: the web client's fonts (`/fonts`) and hero picture
-  (`/img/pokerth-login-bg.webp`). Done in 0.30.0: the language list
-  (`/arena/lang-meta.mjs`, via `platform.mjs`) and the Arena's own icons.
+- Pages: the web client's fonts (`/fonts`). Done: the language list
+  (`/arena/lang-meta.mjs`, via `platform.mjs`) and the Arena's own icons
+  (0.30.0), the hero picture (`/arena/img/hero.webp`, 0.31.0).
 - Running: launched and supervised by `server/arena-host.js`; servers over
   IPC; super admin = the web client's master key and its brute-force limit;
   `x-td-origin`, `x-td-client` and noindex set by the relay; the switch and
@@ -1232,6 +1257,9 @@ that version only: the web client's version, its service worker and its
 | `arena/lib/lobby.mjs` | Lobby reader (guest login, tables, server type). |
 | `arena/lib/host.mjs` | The director that opens a tournament table: create, invite, kick, hand over, then watch. |
 | `arena/lib/worker.mjs` | One watch in a detached process, state and files on disk. |
+| `arena/lib/showcase.mjs` | The home page: its sections, the lobbies and community events it reads. |
+| `arena/public/home.mjs` | Draws the home page. |
+| `arena/public/home-ui.mjs` | Organizer side, Home page (super admin). |
 | `arena/public/sw.js` | The app's service worker (network first, offline fallback). |
 | `arena/public/icons/` | The app's icons (SVG source, PNG sizes). |
 | `arena/lib/groups.mjs` | Groups: clubs, teams, lists; the four ways in; members for the access conditions. |

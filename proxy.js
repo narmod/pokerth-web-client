@@ -480,6 +480,12 @@ const ARENA = ARENA_LIB.createArenaHost({
   listServers: _arenaServers,
   clientVersion: function () { try { return require('./package.json').version; } catch (e) { return ''; } },
   codePollMs: Number(process.env.ARENA_CODE_POLL_MS) || undefined,
+  // The Arena's home page shows the community events (the Events relay's cache, web.321).
+  communityEvents: function () {
+    const cfg = _eventsCfg();
+    if (!cfg.on) return Promise.resolve(null);
+    return RELAY.get('communityevents', cfg.sec * 1000, _eventsProduce, { swr: true }).then(function (out) { try { return JSON.parse(out.body); } catch (e) { return null; } });
+  },
   log: function (line) { console.log(line); }
 });
 setImmediate(function () { ARENA.sync(); });

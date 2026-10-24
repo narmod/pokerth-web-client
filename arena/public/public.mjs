@@ -2,7 +2,7 @@
 // /arena — the players' app (2026-10-23; an installable app with its menu,
 // service 0.30.0).
 //
-//   /arena/               home
+//   /arena/               home: the showcase of what is on (home.mjs)
 //   /arena/tournaments    public tournaments: open, playing, coming, finished
 //   /arena/cups           the cups
 //   /arena/groups         the groups (join, ask, leave)
@@ -23,6 +23,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 import { initTheme } from './theme.mjs';
+import { homeHtml } from './home.mjs';
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -166,6 +167,22 @@ function card(c) {
     (c.server ? ' · ' + T('onServer', { server: c.server }) : '') + ' · ' + T('players', { n: c.players, max: c.maxPlayers }) +
     (c.winner ? ' · ' + T('winner', { nick: c.winner }) : '') + '</span></span></a></li>';
 }
+// The home page: what is on (GET /arena/api/showcase, drawn by home.mjs),
+// again every minute while it is open.
+async function showHome() {
+  curKey = 'home';
+  $('heroTitle').textContent = 'PokerTH Arena';
+  $('heroText').textContent = t('homeIntro');
+  if (!$('view').querySelector('.card')) $('view').innerHTML = '<p class="empty">' + T('loading') + '</p>';
+  const d = await api('/showcase').catch(() => null);
+  if (curKey !== 'home') return;
+  if (!d || !d.ok) { $('view').innerHTML = '<p class="msg bad">' + T('err_error') + '</p>'; return; }
+  $('view').innerHTML = homeHtml(d, { esc, t, T, lang, card, nickLink });
+  fillMedals();
+  clearTimeout(pollTimer);
+  pollTimer = setTimeout(() => { if (curKey === 'home' && !document.hidden) showHome(); }, 60000);
+}
+
 // which: 'home' (all of it), 'tournaments', 'cups' or 'groups' — the menu's views.
 async function showList(which) {
   which = which || 'home';
@@ -876,6 +893,7 @@ function route() {
   // An old invitation link (/arena#pinvite=…): the sign-in page takes it.
   if (pinviteFromHash() && !/^\/arena\/login\/?$/.test(location.pathname)) { history.replaceState(null, '', '/arena/login' + location.hash); }
   $('heroTitle').textContent = t('title');
+  $('heroText').textContent = t('intro');
   heroImage(null);
   const vm = /^\/arena\/(tournaments|cups|groups|login|account)\/?$/.exec(location.pathname);
   const view = vm ? vm[1] : null;
@@ -885,7 +903,7 @@ function route() {
   if (key) showOne(key); else if (ckey) showCup(ckey); else if (pnick) showPlayer(pnick);
   else if (view === 'login' || view === 'account') { acctView = view; renderAcctView(); }
   else if (view) { $('heroTitle').textContent = t(VIEW_TITLE[view]); showList(view); }
-  else showList('home');
+  else showHome();
   window.scrollTo(0, 0);
 }
 document.addEventListener('click', (ev) => {

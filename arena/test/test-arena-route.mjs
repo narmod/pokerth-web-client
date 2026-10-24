@@ -92,7 +92,7 @@ try {
   const man = await (await get('/arena/manifest.json', {})).json();
   ok(man.start_url === '/arena/' && man.scope === '/arena/' && man.display === 'standalone', 'manifest: installable on its own, scoped to /arena/');
   ok(man.icons.every((i) => fs.existsSync(path.join(root, 'arena', 'public', i.src.replace(/^\/arena\//, '')))), 'manifest: every icon exists (the Arena\'s own)');
-  for (const u of ['/arena/sw.js', '/arena/lang-meta.mjs', '/arena/icons/icon-192.png', '/arena/tournaments', '/arena/login', '/arena/account']) ok((await get(u, {})).status === 200, 'relayed: ' + u);
+  for (const u of ['/arena/sw.js', '/arena/lang-meta.mjs', '/arena/icons/icon-192.png', '/arena/tournaments', '/arena/login', '/arena/account', '/arena/img/hero.webp', '/arena/api/showcase']) ok((await get(u, {})).status === 200, 'relayed: ' + u);
   const srv = await (await get('/admin/arena/servers')).json();
   const local = srv.servers && srv.servers.find((x) => x.ref === 'local');
   ok(local && local.port === game.port, 'servers: the local server from the login defaults');

@@ -10,7 +10,7 @@
 // a new release, a new cache, the old ones cleared.
 // ═══════════════════════════════════════════════════════════════════
 const CACHE = 'arena-__ARENA_VERSION__';
-const SHELL = ['/arena/', '/arena/arena.css', '/arena/public.mjs', '/arena/theme.mjs', '/arena/lang-meta.mjs', '/arena/lang/en.mjs', '/arena/icons/icon-192.png', '/arena/manifest.json'];
+const SHELL = ['/arena/', '/arena/arena.css', '/arena/public.mjs', '/arena/home.mjs', '/arena/theme.mjs', '/arena/lang-meta.mjs', '/arena/lang/en.mjs', '/arena/icons/icon-192.png', '/arena/manifest.json'];
 
 self.addEventListener('install', (ev) => {
   ev.waitUntil(caches.open(CACHE).then((c) => Promise.all(SHELL.map((u) => c.add(u).catch(() => {})))).then(() => self.skipWaiting()));

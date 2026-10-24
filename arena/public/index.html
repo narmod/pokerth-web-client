@@ -85,6 +85,7 @@
     <button type="button" role="tab" id="tabCup" aria-controls="viewCup" aria-selected="false">Cups</button>
     <button type="button" role="tab" id="tabPl" aria-controls="viewPl" aria-selected="false">Players</button>
     <button type="button" role="tab" id="tabAcc" aria-controls="viewAcc" aria-selected="false">Accounts</button>
+    <button type="button" role="tab" id="tabHome" aria-controls="viewHome" aria-selected="false" hidden>Home page</button>
     <button type="button" role="tab" id="tabReset" aria-controls="viewReset" aria-selected="false" hidden>Reset</button>
   </div>
   <div id="viewPl" role="tabpanel" aria-labelledby="tabPl" hidden>
@@ -134,6 +135,20 @@
       </section>
     </div>
     <div class="msg" id="plMsg" role="status"></div>
+  </div>
+  <div id="viewHome" role="tabpanel" aria-labelledby="tabHome" hidden>
+    <p class="lead">What the players' home page (<a href="/arena/">/arena</a>) shows, and in which order: everything public happening on the PokerTH networks. The super admin (the master key) only.</p>
+    <section class="card" aria-labelledby="hH">
+      <h2 id="hH">Sections</h2>
+      <form id="hForm">
+        <ul class="hlist" id="hList"><li class="empty">Loading…</li></ul>
+        <div class="row"><div><label for="hTitle">Message: title</label><input id="hTitle" maxlength="80" placeholder="Welcome to the Arena"></div>
+          <div><label for="hMax">Rows per section</label><input id="hMax" type="number" inputmode="numeric" min="3" max="12" value="6"></div></div>
+        <label for="hText">Message: a few lines (shown as written, no links)</label><textarea id="hText" maxlength="600" rows="3"></textarea>
+        <div class="actions"><button type="submit" class="primary">Save</button></div>
+        <div class="msg" id="hMsg" role="status"></div>
+      </form>
+    </section>
   </div>
   <div id="viewReset" role="tabpanel" aria-labelledby="tabReset" hidden>
     <p class="lead">Start again from zero — for tests, or a new season. The super admin (the master key) only. Nothing is thrown away: what you take away moves to a dated folder on the server (<code>reset-&lt;date&gt;</code> in the Arena’s data folder) and can be fetched back by hand. Accounts, the install key and the settings never move.</p>

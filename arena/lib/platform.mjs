@@ -17,9 +17,12 @@
 //   LANG_META_FILE     the languages (name, direction, flag), the web client's
 //                      public/modules/lang-meta.mjs — served to the pages as
 //                      /arena/lang-meta.mjs (service 0.30.0)
+//   HERO_IMAGE_FILE    the chips and flames of the start screen, behind the
+//                      page titles: public/img/pokerth-login-bg.webp, served
+//                      as /arena/img/hero.webp (service 0.31.0)
 //
 // Each one that can come from the environment does: ARENA_SQL_DIR,
-// ARENA_CLIENT_VERSION, ARENA_DIR, ARENA_LANG_META.
+// ARENA_CLIENT_VERSION, ARENA_DIR, ARENA_LANG_META, ARENA_HERO_IMAGE.
 // ═══════════════════════════════════════════════════════════════════
 
 import fs from 'node:fs';
@@ -38,6 +41,8 @@ export const SQL_VENDOR_DIR = process.env.ARENA_SQL_DIR || path.join(WEB_ROOT, '
 export const DEFAULT_DATA_DIR = path.join(WEB_ROOT, 'arena-data');
 
 export const LANG_META_FILE = process.env.ARENA_LANG_META || path.join(WEB_ROOT, 'public', 'modules', 'lang-meta.mjs');
+
+export const HERO_IMAGE_FILE = process.env.ARENA_HERO_IMAGE || path.join(WEB_ROOT, 'public', 'img', 'pokerth-login-bg.webp');
 
 // « 2.1.10-web.319 »: the director derives the PokerTH release from it.
 export function webClientVersion() {

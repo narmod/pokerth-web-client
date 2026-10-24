@@ -16,7 +16,8 @@ import { createManager, MAX_RUNNING, LIVE } from './manager.mjs';
 import { tablePresets } from './table.mjs';
 import { cleanAbsence } from './tournaments.mjs';
 import { createAccounts, allowed, SESSION_PREFIX } from './accounts.mjs';
-import { LANG_META_FILE } from './platform.mjs';
+import { LANG_META_FILE, HERO_IMAGE_FILE } from './platform.mjs';
+import { createShowcase } from './showcase.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.join(HERE, '..', 'public');
@@ -35,6 +36,8 @@ const STATIC = {
   'access-form.mjs': 'text/javascript; charset=utf-8',
   'ticket-form.mjs': 'text/javascript; charset=utf-8',
   'public.mjs': 'text/javascript; charset=utf-8',
+  'home.mjs': 'text/javascript; charset=utf-8',
+  'home-ui.mjs': 'text/javascript; charset=utf-8',
   'theme.mjs': 'text/javascript; charset=utf-8',
   'arena.css': 'text/css; charset=utf-8',
   'manifest.json': 'application/manifest+json; charset=utf-8',
@@ -71,6 +74,9 @@ export function createService(o) {
   const T = td.tournaments;
   const C = td.cups;
   const P = td.players;
+  // The home page (showcase.mjs): what is on, in the sections the super admin chose.
+  const SC = createShowcase({ dir: o.dir, Refusal: T.Refusal, servers: () => td.servers(), lobby: (ref) => td.lobby(ref),
+    tournaments: () => T.allRaw(), tournamentCards: () => T.publicList(), cups: () => C.publicList(), groups: () => td.groups.publicList(), events: o.events || null });
   // What the results of this install say of each player (validated ones only):
   // tournaments played, places 1 to 3. Lower-cased nickname → counts.
   function playerStats() {
@@ -337,6 +343,12 @@ export function createService(o) {
       return send(() => A.changePassword(au.account.id, b.old, b.password));
     }
     // Start again from zero (the super admin only: allowed() above): what there is, then take it away.
+    // The home page's sections (showcase.mjs): every role reads, the super admin changes.
+    if (sub === '/showcase' && get) return json(res, 200, Object.assign({ ok: true, community: !!o.events }, SC.settings()));
+    if (sub === '/showcase' && !get) {
+      const b = (await readJson(req)) || {};
+      return send(() => { const s = SC.setSettings(b, who); console.log('[arena] home page settings by ' + who); return s; });
+    }
     if (sub === '/reset' && get) return json(res, 200, Object.assign({ ok: true }, td.reset.summary()));
     if (sub === '/reset' && !get) {
       const b = (await readJson(req)) || {};
@@ -575,6 +587,8 @@ export function createService(o) {
       .catch((e) => (e instanceof T.Refusal ? json(res, e.code === 'notFound' || e.code === 'private' ? 404 : 400, Object.assign({ ok: false, code: e.code || 'refused', error: e.message }, e.missing ? { missing: e.missing } : {}))
         : json(res, 500, { ok: false, code: 'error', error: 'error' })));
     if (sub === '/list' && req.method === 'GET') return send(() => T.publicList());
+    // The home page: what is on (showcase.mjs).
+    if (sub === '/showcase' && req.method === 'GET') return send(() => SC.build());
     // Organizer accounts: sign in, the invitation link (choose a password), sign out.
     if (sub.indexOf('/account/') === 0 && req.method === 'POST') {
       const b = (await readJson(req)) || {};
@@ -709,6 +723,13 @@ export function createService(o) {
       return res.end(js);
     }
     // The images of tournaments and cups (the picture, or its thumbnail).
+    // The picture behind the page titles: the chips and flames of PokerTH's start screen (platform.mjs).
+    if (p === '/arena/img/hero.webp') {
+      let b;
+      try { b = fs.readFileSync(HERO_IMAGE_FILE); } catch (e) { res.writeHead(404); return res.end('Not found'); }
+      res.writeHead(200, { 'Content-Type': 'image/webp', 'Cache-Control': 'public, max-age=86400' });
+      return res.end(b);
+    }
     const im = /^\/arena\/img\/([a-z0-9_-]{1,40})(\.t)?\.jpg$/.exec(p);
     if (im) {
       const b = td.images.file(im[1], !!im[2]);

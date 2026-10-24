@@ -13,6 +13,7 @@ import { createCupsView } from './cups-ui.mjs';
 import { createImagePicker } from './image-pick.mjs';
 import { createAccountsView } from './accounts-ui.mjs';
 import { createResetView } from './reset-ui.mjs';
+import { createHomeView } from './home-ui.mjs';
 import { createPlayersView } from './players-ui.mjs';
 import { createGroupsView } from './groups-ui.mjs';
 import { initTheme } from './theme.mjs';
@@ -56,7 +57,7 @@ function pub(path, body) {
 initTheme($('themeBtn'));
 
 // ── views: Tournaments | Table check ────────────────────────────────
-const VIEWS = [['tour', 'tabTour', 'viewTour'], ['check', 'tabCheck', 'viewCheck'], ['cups', 'tabCup', 'viewCup'], ['players', 'tabPl', 'viewPl'], ['acc', 'tabAcc', 'viewAcc'], ['reset', 'tabReset', 'viewReset']];
+const VIEWS = [['tour', 'tabTour', 'viewTour'], ['check', 'tabCheck', 'viewCheck'], ['cups', 'tabCup', 'viewCup'], ['players', 'tabPl', 'viewPl'], ['acc', 'tabAcc', 'viewAcc'], ['home', 'tabHome', 'viewHome'], ['reset', 'tabReset', 'viewReset']];
 function setView(v) {
   for (const [k, tab, view] of VIEWS) {
     const on = k === v;
@@ -71,6 +72,7 @@ $('tabCheck').addEventListener('click', () => { setView('check'); refreshList();
 $('tabCup').addEventListener('click', () => { setView('cups'); cups.refresh(); });
 $('tabAcc').addEventListener('click', () => { setView('acc'); accounts.refresh(); });
 $('tabReset').addEventListener('click', () => { setView('reset'); resetView.refresh(); });
+$('tabHome').addEventListener('click', () => { setView('home'); homeView.refresh(); });
 $('tabPl').addEventListener('click', () => { setView('players'); playersView.refresh(); groupsView.refresh(); });
 document.querySelector('.tabs').addEventListener('keydown', (ev) => {
   if (ev.key !== 'ArrowLeft' && ev.key !== 'ArrowRight') return;
@@ -90,6 +92,7 @@ const accounts = createAccountsView({ api, esc, me: () => ({ role, account }) })
 // Start again from zero: the super admin only (the tab shows for the master key).
 const playersView = createPlayersView({ api, esc, role: () => role });
 const groupsView = createGroupsView({ api, esc, role: () => role });
+const homeView = createHomeView({ api, esc });
 const resetView = createResetView({ api, esc, changed: () => { tours.refresh(); cups.refresh(); refreshList(); } });
 
 // ── the director's avatar ──────────────────────────────────────────
@@ -180,7 +183,8 @@ function start() {
       if (document.querySelector('#tabAcc[aria-selected="true"]')) accounts.refresh();
       if (document.querySelector('#tabPl[aria-selected="true"]')) { playersView.refresh(); groupsView.refresh(); }
       $('tabReset').hidden = role !== 'admin';
-      if (role !== 'admin' && document.querySelector('#tabReset[aria-selected="true"]')) setView('tour');
+      $('tabHome').hidden = role !== 'admin';
+      if (role !== 'admin' && document.querySelector('#tabReset[aria-selected="true"], #tabHome[aria-selected="true"]')) setView('tour');
     }).catch(() => {});
     $('srvSel').innerHTML = servers.map((s) => '<option value="' + esc(s.ref) + '">' + esc(s.name) + ' — ' + esc(s.host) + ':' + esc(s.port) + (s.tls ? ' (TLS)' : '') + ' · ' + esc({ registry: 'game server', lan: 'LAN directory', local: 'local' }[s.kind] || s.kind) + '</option>').join('');
     refreshList();

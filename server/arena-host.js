@@ -50,7 +50,7 @@ function diskVersion() {
 // (/arena/tournaments, /arena/login…, one lowercase segment), /arena/organize
 // (and its views), /arena/t/<key> (one tournament), the page files (the
 // service worker sw.js, the manifest), the app's icons, the language files.
-const PAGE_RE = /^\/arena(?:\.html|\/|\/organize(?:\/[a-z0-9-]{1,30}){0,2}\/?|\/[a-z][a-z0-9-]{1,30}\/?|\/[tc]\/[A-Za-z0-9_-]{8,40}\/?|\/[A-Za-z0-9_-]+\.(?:mjs|js|json|css|webmanifest)|\/icons\/[a-z0-9-]{1,40}\.(?:png|svg)|\/lang\/[a-z]{2,3}(?:-[a-z0-9]{2,4})?\.mjs|\/avatar|\/p\/[^/?#]{1,200}|\/img\/[a-z0-9_-]{1,40}(?:\.t)?\.jpg)?$/;
+const PAGE_RE = /^\/arena(?:\.html|\/|\/organize(?:\/[a-z0-9-]{1,30}){0,2}\/?|\/[a-z][a-z0-9-]{1,30}\/?|\/[tc]\/[A-Za-z0-9_-]{8,40}\/?|\/[A-Za-z0-9_-]+\.(?:mjs|js|json|css|webmanifest)|\/icons\/[a-z0-9-]{1,40}\.(?:png|svg)|\/lang\/[a-z]{2,3}(?:-[a-z0-9]{2,4})?\.mjs|\/avatar|\/p\/[^/?#]{1,200}|\/img\/[a-z0-9_-]{1,40}(?:\.t)?\.(?:jpg|webp))?$/;
 // The players' API, without a token: list, one tournament, (un)register, files.
 const API_RE = /^\/arena\/api\/(?:list|showcase|account\/(?:login|invite|logout)|table|cups|badges|players\/[^/?#]{1,200}|c\/[A-Za-z0-9_-]{8,40}|t\/[A-Za-z0-9_-]{8,40}(?:\/[a-z]{2,16})?)$/;
 const API_MAX_BODY = 8 * 1024;
@@ -143,6 +143,10 @@ function createArenaHost(deps) {
         let list = [];
         try { list = deps.listServers() || []; } catch (e) {}
         try { c.send({ type: 'servers', id: m.id, servers: list }); } catch (e) {}
+      } else if (m.type === 'events') {
+        // The community sites' events for the Arena's home page (the Events relay's cache).
+        Promise.resolve().then(() => (deps.communityEvents ? deps.communityEvents() : null)).catch(() => null)
+          .then((data) => { try { c.send({ type: 'events', id: m.id, data: data || null }); } catch (e) {} });
       }
     });
     c.on('error', (e) => { lastError = e.message; log('[arena] process error: ' + e.message); });

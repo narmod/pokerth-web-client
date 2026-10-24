@@ -56,10 +56,12 @@ try {
   const pg = await ctx.newPage();
   const errors = [];
   pg.on('pageerror', (e) => errors.push(e.message));
+  // The home page (service 0.31.0): what is on, this site's tournaments among it.
   await pg.goto(base + '/arena');
   await pg.waitForSelector('.tcard', { timeout: 8000 });
   const list = await pg.textContent('#view');
-  ok(/Open for registration/.test(list) && /Friday night cup/.test(list) && !/Members only/.test(list), 'list: the public tournament under « Open for registration », not the private one');
+  ok(/This site’s tournaments/.test(list) && /Open for registration/.test(list) && /Friday night cup/.test(list) && !/Members only/.test(list), 'home page: the public tournament under « Open for registration », not the private one');
+  ok(await pg.evaluate(() => getComputedStyle(document.querySelector('.hero')).backgroundImage.indexOf('/arena/img/hero.webp') >= 0), 'home page: the chips and flames behind the title, served by the Arena');
   if (shots) await pg.screenshot({ path: path.join(shots, 'pub-list.png'), fullPage: true });
   await pg.click('.tcard');
   await pg.waitForSelector('#regForm', { timeout: 8000 });
@@ -166,9 +168,9 @@ try {
     await admin('/t/result', { id: c1.id, source: 'manual', ranking: ['Max', 'Lia', 'Noa'] });
     const cup = await admin('/cups/create', { name: 'Winter league', bestOf: 4, description: 'Every Friday' });
     await admin('/cups/event', { id: cup.id, tournamentId: c1.id });
-    await pg.goto(base + '/arena');
+    await pg.goto(base + '/arena/cups');
     await pg.waitForSelector('a.tcard[href*="/arena/c/"]', { timeout: 8000 });
-    ok(/Cups/.test(await pg.textContent('#view')) && /Winter league/.test(await pg.textContent('#view')), 'start page: the cups');
+    ok(/Cups/.test(await pg.textContent('#view')) && /Winter league/.test(await pg.textContent('#view')), 'the Cups view: the cups');
     await pg.click('a.tcard[href*="/arena/c/"]');
     await pg.waitForFunction(() => /Standings/.test(document.getElementById('view').textContent), null, { timeout: 8000 });
     const ct = await pg.textContent('#view');
@@ -181,10 +183,12 @@ try {
 
   // Images: the thumbnail on the cards, the picture at the top of the page.
   {
-    await pg.goto(base + '/arena');
-    await pg.waitForSelector('a.tcard.has-img img.tc-img', { timeout: 8000 });
-    const th = await pg.$$eval('a.tcard.has-img img.tc-img', (l) => l.map((i) => ({ src: i.getAttribute('src'), ok: i.complete && i.naturalWidth > 0 })));
-    ok(th.length > 0 && th.every((x) => x.ok) && th.some((x) => /tournament\.t\.jpg/.test(x.src)) && th.some((x) => /cup\.t\.jpg/.test(x.src)), 'start page: tournaments and cups with their thumbnail');
+    const thumbs = async () => { await pg.waitForSelector('a.tcard.has-img img.tc-img', { timeout: 8000 }); await pg.waitForFunction(() => [...document.querySelectorAll('a.tcard.has-img img.tc-img')].every((i) => i.complete), null, { timeout: 8000 }); return pg.$$eval('a.tcard.has-img img.tc-img', (l) => l.map((i) => ({ src: i.getAttribute('src'), ok: i.complete && i.naturalWidth > 0 }))); };
+    await pg.goto(base + '/arena/tournaments');
+    const th = await thumbs();
+    await pg.goto(base + '/arena/cups');
+    const tc = await thumbs();
+    ok(th.length > 0 && th.every((x) => x.ok) && th.some((x) => /tournament\.t\.jpg/.test(x.src)) && tc.every((x) => x.ok) && tc.some((x) => /cup\.t\.jpg/.test(x.src)), 'tournaments and cups with their thumbnail');
     await pg.click('a.tcard[href*="/arena/c/"]');
     await pg.waitForFunction(() => document.getElementById('heroImg').classList.contains('evimg') && /cup\.jpg/.test(document.getElementById('heroImg').src) && document.getElementById('heroImg').naturalWidth === 800, null, { timeout: 8000 });
     ok(true, 'a cup\'s page: its picture at the top');

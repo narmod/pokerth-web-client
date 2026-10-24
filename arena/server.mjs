@@ -52,15 +52,33 @@ function servers() {
     try { process.send({ type: 'servers', id }); } catch (e) { clearTimeout(t); pending.delete(id); resolve([]); }
   });
 }
+// The community sites' events (BBC, WEC, Monthly Cup), for the home page:
+// the web client's Events relay over IPC, or ARENA_EVENTS_URL (an /api/events
+// address) when standalone; none without either.
+const EVENTS_URL = process.env.ARENA_EVENTS_URL || '';
+function events() {
+  if (!viaProxy) {
+    if (!/^https?:\/\//.test(EVENTS_URL)) return Promise.resolve(null);
+    const ac = new AbortController(); const t = setTimeout(() => ac.abort(), 5000);
+    return fetch(EVENTS_URL, { signal: ac.signal }).then((r) => r.json()).catch(() => null).finally(() => clearTimeout(t));
+  }
+  return new Promise((resolve) => {
+    const id = ++seq;
+    const t = setTimeout(() => { pending.delete(id); resolve(null); }, 5000);
+    pending.set(id, (v) => { clearTimeout(t); resolve(v); });
+    try { process.send({ type: 'events', id }); } catch (e) { clearTimeout(t); pending.delete(id); resolve(null); }
+  });
+}
 if (viaProxy) {
   process.on('message', (m) => {
     if (m && m.type === 'servers' && pending.has(m.id)) { pending.get(m.id)(Array.isArray(m.servers) ? m.servers : []); pending.delete(m.id); }
+    if (m && m.type === 'events' && pending.has(m.id)) { pending.get(m.id)(m.data && typeof m.data === 'object' ? m.data : null); pending.delete(m.id); }
   });
   // The proxy is gone (restart, update): leave with it, it starts a new one.
   process.on('disconnect', () => { log('web client gone, stopping'); process.exit(0); });
 }
 
-const svc = createService({ dir: DIR, secret: SECRET, adminToken: ADMIN_TOKEN, servers, clientVersion: () => CLIENT_VERSION, version: VERSION });
+const svc = createService({ dir: DIR, secret: SECRET, adminToken: ADMIN_TOKEN, servers, events: viaProxy || EVENTS_URL ? events : null, clientVersion: () => CLIENT_VERSION, version: VERSION });
 const server = http.createServer(svc.handler);
 server.on('error', (e) => { console.error('[arena] ' + e.message); process.exit(1); });
 server.listen(PORT, HOST, () => {
