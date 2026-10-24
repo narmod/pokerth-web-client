@@ -31,6 +31,22 @@
 //     which ResetTimeout answers;
 //   - a spectator can write in the table chat; GameAdminChanged only goes to
 //     seated players.
+// Players who do not come (the tournament's « absence » rule, service 0.18.0):
+//   - every refusal, invitation left unanswered for retrySec, « busy » answer
+//     (in another game) and seat left before the start is a failure; the
+//     player is invited again retrySec later (a seat left: at once);
+//   - back on the server after a drop, or out of another game: invited again
+//     at once, no failure;
+//   - from graceMin past the start (the opening without a date) on, a player
+//     with `strikes` failures, or not connected for retrySec, is marked
+//     absent (told privately): not invited, not ranked; the table goes on as
+//     soon as the others are seated. Mode « manual »: none of this, the
+//     organizer decides (« go »). An absent player who sits before the start
+//     after all is welcome again.
+//   - when the admin starts with registered players missing (after the
+//     hand-over), those are marked absent at the start.
+// Nicknames: the server tells « Bob » from « bob »; a registered name matches
+// its exact spelling first, another case only when nobody online has it.
 // The director's chat follows the chatcleaner's rules: no capitals, no
 // links, never the same line twice in a row, spaced out.
 // Before the start, a waiting player sees the LOBBY chat (QML GameWaitPage,
@@ -47,6 +63,8 @@ import { cleanTable } from './table.mjs';
 
 const T = pb.PokerTHMessage.PokerTHMessageType;
 const MAX_SEATS = 10;
+// The reason the worker gives when the organizer closes the table.
+export const CLOSED_BY_ORGANIZER = 'stopped by the organizer';
 const CHAT_GAP_MS = 4000;
 const n = (v) => (v == null ? v : Number(v));
 const low = (s) => String(s || '').toLowerCase();
@@ -141,7 +159,24 @@ export class HostDirector extends SpectatorDirector {
     this.chat = Object.assign({}, BOT_EN, o.chat || {});
     this.announced = new Set();    // playerIds whose elimination was told
     this.blind = null;
+    // Absence rule (tournaments.mjs ABSENCE_AUTO); tests may give ms directly.
+    const a = Object.assign({ mode: 'auto', strikes: 3, retrySec: 60, graceMin: 10 }, o.absence || {});
+    this.policy = { mode: ['auto', 'custom', 'manual'].indexOf(a.mode) >= 0 ? a.mode : 'auto', strikes: Math.max(1, Number(a.strikes) || 3),
+      retryMs: a.retryMs != null ? Number(a.retryMs) : Math.max(1, Number(a.retrySec) || 60) * 1000,
+      graceMs: a.graceMs != null ? Number(a.graceMs) : Math.max(0, Number(a.graceMin) || 0) * 60000 };
+    this.startsAt = Number(o.startsAt) > 0 ? Number(o.startsAt) : null;
+    this.openedAt = null;
+    this.failures = new Map();     // lowercased nickname -> number of failures
+    this.lastFailure = new Map();  // lowercased nickname -> 'declined' | 'busy' | 'noAnswer' | 'left'
+    this.pending = new Map();      // lowercased nickname -> { id, at } invitation without an answer
+    this.retryAt = new Map();      // lowercased nickname -> when to invite again
+    this.offlineSince = new Map(); // lowercased nickname -> since when not on the server
+    this.invitedId = new Map();    // lowercased nickname -> the player id invited for it
+    this.absentWhy = new Map();    // lowercased nickname -> why marked absent
+    this.toldStranger = new Set(); // playerIds the admin was told about (watch phase)
   }
+  get auto() { return this.policy.mode !== 'manual'; }
+  deadline() { return (this.startsAt || this.openedAt || this.now()) + this.policy.graceMs; }
 
   // ── public state, for the worker / the page ──
   hostState() {
@@ -155,9 +190,10 @@ export class HostDirector extends SpectatorDirector {
         const k = low(nick);
         const status = seatedNicks.has(k) ? 'seated' : absent.has(k) ? 'absent' : this.declined.has(k) ? 'declined-' + this.declined.get(k)
           : this.invited.has(k) ? 'invited' : online.has(k) ? 'online' : 'offline';
-        return { nick, status };
+        return { nick, status, failures: this.failures.get(k) || 0, absentWhy: this.absentWhy.get(k) || null };
       }),
       kicked: this.kicked.slice(), absent: this.absent.slice(),
+      absence: { mode: this.policy.mode, strikes: this.policy.strikes, retrySec: Math.round(this.policy.retryMs / 1000), deadline: this.phase === 'create' ? null : this.deadline() },
     };
   }
   _changed() { this.emit('host', this.hostState()); }
@@ -180,6 +216,7 @@ export class HostDirector extends SpectatorDirector {
     } else if (c.cmd === 'reinvite') {
       this.declined.clear();
       this.invited.clear();
+      this.failures.clear(); this.lastFailure.clear(); this.pending.clear(); this.retryAt.clear();
       this._record('reinvite', { author: c.author || null });
       this._inviteAll();
       this._changed();
@@ -239,7 +276,21 @@ export class HostDirector extends SpectatorDirector {
   }
 
   stop(reason) {
+    if (this.done) return;
     for (const k of ['_chatTimer', '_handTimer', '_unknownTimer', '_remind0', '_remind1', '_remind2']) if (this[k]) { clearTimeout(this[k]); this[k] = null; }
+    if (this._tick) { clearInterval(this._tick); this._tick = null; }
+    // Closed by the organizer before the start: nobody keeps playing a game
+    // that would not count. Seated (admin), the director removes every player
+    // so that the table goes away; watching, it tells them.
+    if (reason === CLOSED_BY_ORGANIZER && this.gameId != null && !this.tracker.started && this.sock) {
+      const text = this._t('closedByOrganizer');
+      for (const id of this.table) {
+        if (id === this.myId) continue;
+        for (const t of splitChat(text)) this._send(hostBuild.pm(id, t));
+        if (this.phase === 'seated') this._send(hostBuild.kick(this.gameId, id));
+      }
+      this._record('closedByOrganizer', { phase: this.phase, players: [...this.table].map((id) => this.names.get(id) || ('#' + id)), kicked: this.phase === 'seated' });
+    }
     super.stop(reason);
   }
 
@@ -277,8 +328,12 @@ export class HostDirector extends SpectatorDirector {
         // Gone from the server: its invitation went with its player id. When
         // it comes back (new id), it is invited again by itself.
         this.lobby.delete(id);
-        const k = low(this.names.get(id));
-        if (k && this.expected.has(k)) { this.invited.delete(k); this.declined.delete(k); this._record('playerDisconnected', { nick: this.names.get(id) }); }
+        const k = this._keyOf(id);
+        if (k && this.expected.has(k)) {
+          this.invited.delete(k); this.declined.delete(k); this.pending.delete(k); this.retryAt.delete(k); this.invitedId.delete(k);
+          if (![...this.lobby.keys()].some((x) => this._keyOf(x) === k)) this.offlineSince.set(k, this.now());
+          this._record('playerDisconnected', { nick: this.names.get(id) });
+        }
         this._changed();
       }
       else { this.lobby.set(id, true); if (this.names.has(id)) this._onName(id); else this._ask([id]); }
@@ -287,15 +342,15 @@ export class HostDirector extends SpectatorDirector {
     if (m.gameListPlayerLeftMessage) {
       // A registered player back in the lobby after another game: invite again.
       const id = n(m.gameListPlayerLeftMessage.playerId);
-      if (n(m.gameListPlayerLeftMessage.gameId) !== this.gameId && this.phase === 'seated') {
-        const k = low(this.names.get(id));
-        if (this.declined.get(k) === 'busy') { this.declined.delete(k); this.invited.delete(k); this._invite(id); }
+      if (n(m.gameListPlayerLeftMessage.gameId) !== this.gameId && this._invitingOpen()) {
+        const k = this._keyOf(id);
+        if (k && (this.declined.get(k) === 'busy' || (this.auto && this.retryAt.has(k)))) { this.declined.delete(k); this.invited.delete(k); this.retryAt.delete(k); this.pending.delete(k); this._invite(id); }
       }
       return;
     }
     if (m.gameListAdminChangedMessage) {
       const a = m.gameListAdminChangedMessage;
-      if (n(a.gameId) === this.gameId) { this.adminId = n(a.newAdminPlayerId); this._ask([this.adminId]); this._record('adminChanged', { playerId: this.adminId }); this._changed(); }
+      if (n(a.gameId) === this.gameId) { this._setAdmin(n(a.newAdminPlayerId)); this._record('adminChanged', { playerId: this.adminId }); this._changed(); }
       return;
     }
     if (m.playerInfoReplyMessage) {
@@ -303,6 +358,8 @@ export class HostDirector extends SpectatorDirector {
       if (r.playerInfoData && r.playerInfoData.playerName) this.names.set(id, String(r.playerInfoData.playerName));
       this._nameSeat(id);
       this._onName(id);
+      // A name that was missing may decide another player's case (« Bob » / « bob »).
+      if (this._invitingOpen() && [...this.lobby.keys()].every((x) => this.names.has(x))) this._inviteAll();
       if (this._namesTimer && this._missingNames().length === 0) { clearTimeout(this._namesTimer); this._namesTimer = null; this._finish(); }
       return;
     }
@@ -325,7 +382,12 @@ export class HostDirector extends SpectatorDirector {
         this.phase = 'seated';
         this._record('tableCreated', { gameId: this.gameId, name: this.tableName, admin: !!m.joinGameAckMessage.areYouGameAdmin, maxPlayers: this.maxPlayers });
         this.emit('log', 'table « ' + this.tableName + ' » open (#' + this.gameId + '), waiting for ' + this.registered.length + ' players');
+        this.openedAt = this.now();
+        // Registered players not on the server yet: offline since the opening.
+        for (const k of this.expected) if (![...this.lobby.keys()].some((x) => this._keyOf(x) === k)) this.offlineSince.set(k, this.openedAt);
+        this._record('absenceRule', { mode: this.policy.mode, strikes: this.policy.strikes, retrySec: Math.round(this.policy.retryMs / 1000), deadline: this.deadline() });
         this._inviteAll();
+        this._startTick();
         this._changed();
         return;
       }
@@ -350,18 +412,17 @@ export class HostDirector extends SpectatorDirector {
         if (nick) {
           this.emit('log', nick + ' left the table');
           // Left by mistake or dropped: invited again as soon as it is back in
-          // the lobby (now if it already is).
-          this.invited.delete(low(nick)); this.declined.delete(low(nick));
-          if (this.lobby.has(id)) this._invite(id);
+          // the lobby (now if it already is). Leaving is a failure (the server
+          // refuses a seventh join at the same table).
+          const k = low(nick);
+          this.invited.delete(k); this.declined.delete(k); this.pending.delete(k);
+          if (this.lobby.has(id)) { this._fail_(k, 'left'); if (this.expected.has(k)) this._invite(id); }
         }
         this._changed();
         return;
       }
       if (m.rejectInvNotifyMessage) {
-        const r = m.rejectInvNotifyMessage, id = n(r.playerId), k = low(this.names.get(id));
-        const why = r.playerRejectReason === pb.RejectGameInvitationMessage.RejectGameInvReason.rejectReasonBusy ? 'busy' : 'no';
-        if (k) { this.declined.set(k, why); this._record('inviteDeclined', { nick: this.names.get(id), reason: why }); this.emit('log', this.names.get(id) + (why === 'busy' ? ' is busy (not in the lobby)' : ' declined the invitation')); }
-        this._changed();
+        this._onReject(m.rejectInvNotifyMessage);
         return;
       }
       if (m.startEventMessage) {
@@ -391,19 +452,20 @@ export class HostDirector extends SpectatorDirector {
     }
 
     if (this.phase === 'watch') {
+      if (m.rejectInvNotifyMessage) { this._onReject(m.rejectInvNotifyMessage); return; }
+      if (m.gamePlayerJoinedMessage && !this.tracker.started) {
+        const id = n(m.gamePlayerJoinedMessage.playerId);
+        if (id !== this.myId) { this.table.add(id); if (this.names.has(id)) this._watchSeat(id); }
+      }
       if (m.gamePlayerJoinedMessage) this.table.add(n(m.gamePlayerJoinedMessage.playerId));
       if (m.gamePlayerLeftMessage && !this.tracker.started) {
-        const id = n(m.gamePlayerLeftMessage.playerId), k = low(this.names.get(id));
+        const id = n(m.gamePlayerLeftMessage.playerId), k = this._keyOf(id);
         this.table.delete(id);
         this.seated.delete(id);
         this._changed();
-        if (k && this.expected.has(k)) { this.invited.delete(k); this.declined.delete(k); if (this.lobby.has(id)) this._invite(id); }
+        if (k && this.expected.has(k)) { this.invited.delete(k); this.declined.delete(k); this.pending.delete(k); if (this.lobby.has(id)) { this._fail_(k, 'left'); if (this.expected.has(k)) this._invite(id); } }
       }
-      if (m.gamePlayerJoinedMessage && m.gamePlayerJoinedMessage.isGameAdmin) {
-        this.adminId = n(m.gamePlayerJoinedMessage.playerId);
-        this._ask([this.adminId]);
-        this._remindAdmin();
-      }
+      if (m.gamePlayerJoinedMessage && m.gamePlayerJoinedMessage.isGameAdmin) this._setAdmin(n(m.gamePlayerJoinedMessage.playerId));
       if (m.joinGameAckMessage) {
         super._onMessage(m);
         this._remindAdmin();
@@ -422,6 +484,8 @@ export class HostDirector extends SpectatorDirector {
         super._onMessage(m);
         this.startedAt = this.now();
         for (const id of this.tracker.seats) this._nameSeat(id);
+        if (this._tick) { clearInterval(this._tick); this._tick = null; }
+        this._absentAtStart();
         this._checkStartSeats();
         for (const k of ['_remind0', '_remind1', '_remind2']) if (this[k]) { clearTimeout(this[k]); this[k] = null; }
         this.chatQueue = this.chatQueue.filter((e) => e.to == null);   // private lines no longer reach a running table
@@ -439,20 +503,167 @@ export class HostDirector extends SpectatorDirector {
   }
 
   _inviteAll() {
-    if (this.phase !== 'seated') return;
+    if (!this._invitingOpen()) return;
     for (const id of this.lobby.keys()) if (this.names.has(id)) this._onName(id);
   }
+  // Before the start only: seated (admin), or watching once handed over (the
+  // server takes an invitation from anyone at the table).
+  _invitingOpen() { return this.phase === 'seated' || (this.phase === 'watch' && this.joined && !this.tracker.started); }
+  // The registered nickname a server name stands for: its exact spelling, or
+  // another case when nobody online has the exact one (« Bob » and « bob »
+  // are two players for the server).
+  _regFor(name) {
+    if (!name) return null;
+    const exact = this.registered.find((x) => x === name);
+    if (exact) return exact;
+    const ci = this.registered.filter((x) => low(x) === low(name));
+    if (ci.length !== 1) return null;
+    // Only once every name on the server is known, and nobody has the exact one.
+    const ids = [...this.lobby.keys()];
+    if (ids.some((id) => !this.names.has(id)) || ids.some((id) => this.names.get(id) === ci[0])) return null;
+    return ci[0];
+  }
+  _keyOf(id) { const r = this._regFor(this.names.get(id)); return r ? low(r) : null; }
   _invite(id) {
-    const name = this.names.get(id), k = low(name);
-    // Before the start only: seated (admin), or watching once handed over (the
-    // server takes an invitation from anyone at the table).
-    const open = this.phase === 'seated' || (this.phase === 'watch' && this.joined && !this.tracker.started);
-    if (!open || !this.expected.has(k) || this.invited.has(k) || [...this.seated.values()].some((x) => low(x) === k)) return;
+    const name = this.names.get(id), reg = this._regFor(name), k = reg ? low(reg) : null;
+    if (!k || !this._invitingOpen() || !this.expected.has(k) || this.invited.has(k) || [...this.seated.values()].some((x) => low(x) === k)) return;
     if (this.phase === 'watch' && this.table.has(id)) return;
     this.invited.add(k);
+    this.invitedId.set(k, id);
+    this.pending.set(k, { id, at: this.now() });
+    this.retryAt.delete(k);
+    this.offlineSince.delete(k);
     this._send(hostBuild.invite(this.gameId, id));
     this._record('invited', { nick: name, playerId: id });
     this.emit('log', 'invited ' + name);
+  }
+  // An answer to an invitation: a failure, invited again later (auto modes).
+  _onReject(r) {
+    const id = n(r.playerId), k = this._keyOf(id);
+    const why = r.playerRejectReason === pb.RejectGameInvitationMessage.RejectGameInvReason.rejectReasonBusy ? 'busy' : 'no';
+    if (k) {
+      this.declined.set(k, why);
+      this.pending.delete(k);
+      this._record('inviteDeclined', { nick: this.names.get(id), reason: why });
+      this.emit('log', this.names.get(id) + (why === 'busy' ? ' is busy (not in the lobby)' : ' declined the invitation'));
+      if (this.expected.has(k) && this._fail_(k, why === 'busy' ? 'busy' : 'declined') && this.expected.has(k)) this.retryAt.set(k, this.now() + this.policy.retryMs);
+    }
+    this._changed();
+  }
+  // One failure more (auto modes only). True when counted.
+  _fail_(k, reason) {
+    if (!this.auto || !this.expected.has(k)) return false;
+    const f = (this.failures.get(k) || 0) + 1;
+    this.failures.set(k, f);
+    this.lastFailure.set(k, reason);
+    this._record('inviteFailed', { nick: this.registered.find((x) => low(x) === k) || k, reason, failures: f });
+    this._changed();
+    this._checkAbsent();
+    return true;
+  }
+  // Once a second before the start: unanswered invitations, invitations to
+  // send again, and the absence rule once past the deadline.
+  _startTick() {
+    if (this._tick) return;
+    this._tick = setInterval(() => this._onTick(), this.o.tickMs || 1000);
+    if (this._tick.unref) this._tick.unref();
+  }
+  _onTick() {
+    if (this.done || this.tracker.started) { if (this._tick) { clearInterval(this._tick); this._tick = null; } return; }
+    if (!this._invitingOpen()) return;
+    const now = this.now();
+    if (this.auto) {
+      for (const [k, p] of [...this.pending]) {
+        if (now - p.at < this.policy.retryMs) continue;
+        this.pending.delete(k);
+        this.invited.delete(k);
+        this._record('inviteUnanswered', { nick: this.names.get(p.id) || k });
+        if (this._fail_(k, 'noAnswer') && this.expected.has(k) && this.lobby.has(p.id)) this._invite(p.id);
+      }
+      for (const [k, at] of [...this.retryAt]) {
+        if (now < at) continue;
+        this.retryAt.delete(k);
+        if (!this.expected.has(k)) continue;
+        const id = [...this.lobby.keys()].find((x) => this._keyOf(x) === k);
+        if (id != null) { this.invited.delete(k); this.declined.delete(k); this._invite(id); }
+      }
+    }
+    this._checkAbsent();
+  }
+  // Past the deadline: `strikes` failures, or off the server for retryMs → absent.
+  _checkAbsent() {
+    if (!this.auto || this.tracker.started || !this._invitingOpen() || this.now() < this.deadline()) return;
+    // Seated: checked by the director (seated phase), or at the table (watching).
+    const seatedK = new Set([...this.seated.values()].map(low).concat([...this.table].map((id) => this._keyOf(id)).filter(Boolean)));
+    let any = false;
+    for (const k of [...this.expected]) {
+      if (seatedK.has(k)) continue;
+      const off = this.offlineSince.get(k);
+      const why = (this.failures.get(k) || 0) >= this.policy.strikes ? 'failures' : off != null && this.now() - off >= this.policy.retryMs ? (this.lastFailure.has(k) || this.invitedId.has(k) ? 'offline' : 'neverConnected') : null;
+      if (why) { this._markAbsent(k, why); any = true; }
+    }
+    if (any) {
+      if (this.phase === 'seated') this._maybeHandover();
+      const left = [...this.expected].length;
+      if (left < 2) this.emit('log', 'fewer than two players left for this table: the organizer decides');
+    }
+  }
+  _markAbsent(k, why) {
+    const nick = this.registered.find((x) => low(x) === k) || k;
+    this.expected.delete(k);
+    if (!this.absent.some((x) => low(x) === k)) this.absent.push(nick);
+    this.absentWhy.set(k, why);
+    this.pending.delete(k); this.retryAt.delete(k); this.invited.delete(k);
+    this._record('markedAbsent', { nick, reason: why, failures: this.failures.get(k) || 0 });
+    this.emit('log', nick + ' marked absent (' + why + ')');
+    const id = [...this.lobby.keys()].find((x) => this._keyOf(x) === k);
+    if (id != null && !this.tracker.started) this._tell([id], this._t('absentMarked'));
+    this._changed();
+  }
+  // An absent player who sits before the start after all: welcome again.
+  _absentBack(k) {
+    const nick = this.registered.find((x) => low(x) === k);
+    if (!nick || this.expected.has(k) || !this.absent.some((x) => low(x) === k) || this.tracker.started) return false;
+    this.expected.add(k);
+    this.absent = this.absent.filter((x) => low(x) !== k);
+    this.absentWhy.delete(k);
+    this._record('absentBack', { nick });
+    return true;
+  }
+  // The admin started with registered players missing (after the hand-over):
+  // they are absent (not ranked); absent players who did sit are back.
+  _absentAtStart() {
+    const seatNames = this.tracker.seats.map((id) => this.names.get(id)).filter(Boolean);
+    const seatK = new Set(seatNames.map((nm) => { const r = this._regFor(nm); return r ? low(r) : null; }).filter(Boolean));
+    for (const k of seatK) if (!this.expected.has(k)) this._absentBack(k);
+    for (const k of [...this.expected]) if (!seatK.has(k)) { const nick = this.registered.find((x) => low(x) === k) || k; this.expected.delete(k); if (!this.absent.some((x) => low(x) === k)) this.absent.push(nick); this.absentWhy.set(k, 'notSeatedAtStart'); this._record('markedAbsent', { nick, reason: 'notSeatedAtStart', failures: this.failures.get(k) || 0 }); }
+  }
+  // The table admin (after the hand-over): asked to start; a new admin (the
+  // previous one left or was timed out) is asked again.
+  _setAdmin(id) {
+    if (id == null) return;
+    const changed = this.adminId !== id;
+    this.adminId = id;
+    this._ask([id]);
+    if (changed && this.phase === 'watch' && !this.tracker.started && this._reminded) {
+      this._reminded = false;
+      for (const k of ['_remind0', '_remind1', '_remind2']) if (this[k]) { clearTimeout(this[k]); this[k] = null; }
+    }
+    this._remindAdmin();
+  }
+  // Watching before the start: a seat taken by someone not registered (the
+  // admin, a player, may invite anyone): the admin is asked to remove them.
+  _watchSeat(id) {
+    if (this.tracker.started || id === this.myId || !this.table.has(id)) return;
+    const name = this.names.get(id);
+    const reg = this._regFor(name);
+    if (reg) { const k = low(reg); if (!this.expected.has(k)) this._absentBack(k); this.pending.delete(k); this._changed(); return; }
+    if (this.toldStranger.has(id)) return;
+    this.toldStranger.add(id);
+    this._record('strangerSeated', { nick: name, playerId: id });
+    this.emit('log', name + ' sat down and is not registered: the admin is asked to remove them');
+    this._tell([id], this._t('notRegistered'));
+    if (this.adminId != null && this.adminId !== id) this._tell([this.adminId], this._t('strangerSeated', { nick: name }));
   }
   _onName(id) {
     if (this.phase === 'seated') {
@@ -460,6 +671,7 @@ export class HostDirector extends SpectatorDirector {
       if (this.table.has(id) && !this.seated.has(id)) this._checkSeat(id);
     }
     if (this.phase === 'watch' && this.lobby.has(id) && !this.table.has(id)) this._invite(id);
+    if (this.phase === 'watch' && this.table.has(id)) this._watchSeat(id);
     if (this.phase === 'watch' && id === this.adminId) this._remindAdmin();
     this._changed();
   }
@@ -469,8 +681,12 @@ export class HostDirector extends SpectatorDirector {
   _checkSeat(id) {
     const name = this.names.get(id);
     if (!name || this.seated.has(id) || !this.table.has(id)) return;
-    const reg = this.registered.find((x) => low(x) === low(name));
-    if (reg && this.expected.has(low(reg))) {
+    const reg = this._regFor(name);
+    // Another case than the registered spelling: only the player invited for it.
+    const okCase = reg && (reg === name || this.invitedId.get(low(reg)) === id);
+    if (reg && okCase && !this.expected.has(low(reg))) this._absentBack(low(reg));
+    if (reg && okCase && this.expected.has(low(reg))) {
+      this.pending.delete(low(reg)); this.retryAt.delete(low(reg));
       this.seated.set(id, reg);
       this._record('seated', { nick: reg, playerId: id });
       this.emit('log', reg + ' is seated (' + this.seated.size + ' of ' + this.expected.size + ')');
@@ -574,7 +790,12 @@ export class HostDirector extends SpectatorDirector {
   _checkStartSeats() {
     const strangers = this.tracker.seats.map((id) => this.names.get(id) || ('#' + id)).filter((name) => !this.registered.some((x) => low(x) === low(name)));
     this._record('seatCheck', { ok: strangers.length === 0, strangers });
-    if (strangers.length) this.emit('log', 'seat check: not registered at the start: ' + strangers.join(', '));
+    if (strangers.length) {
+      this.emit('log', 'seat check: not registered at the start: ' + strangers.join(', '));
+      // Computer players added at the start, or someone the admin let in: the
+      // table is told the result waits for an organizer.
+      this._say(this._t('strangersAtStart', { list: strangers.join(', ') }));
+    }
   }
 }
 

@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} an aghaidh {b}.',
   wins: 'bhuannaich {nick} a’ cho-fharpais. meal an naidheachd oirbh uile, tha an toradh clàraichte.',
   winsSecond: 'bhuannaich {nick} a’ cho-fharpais, {second} san dàrna àite. meal an naidheachd oirbh uile, tha an toradh clàraichte.',
+  absentMarked: 'cha deach thu chun a’ bhùird ann an àm: tha thu comharraichte as làthair sa cho-fharpais seo.',
+  closedByOrganizer: 'dhùin an t-eagraiche am bòrd seo: chan eil an geama seo a’ cunntadh sa cho-fharpais.',
+  strangerSeated: 'chan eil {nick} clàraichte sa cho-fharpais seo: cuir a-mach e mus tòisich thu an geama.',
+  strangersAtStart: 'gun chlàradh sa cho-fharpais seo: {list}. nì eagraiche sgrùdadh air a’ gheama seo mus cunnt e.',
 };

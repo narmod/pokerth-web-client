@@ -132,6 +132,7 @@ export function createManager(deps) {
     const chat = await loadBotStrings(body.chatLang);   // the lines of the chat language
     return launch(s, body, { gameId: null, gameName: String(body.tableName || '').slice(0, 64), mode: 'host', tournamentId: body.tournamentId || null }, (nick) => ({
       nick, login: 'unauth', refuseAuthServer: true, tableName: String(body.tableName || ''), table: body.table || {}, registered, announce: body.announce !== false,
+      startsAt: Number(body.startsAt) > 0 ? Number(body.startsAt) : null, absence: body.absence || null,
       chat, chatLang: isBotLang(body.chatLang) ? String(body.chatLang).toLowerCase() : 'en',
     }), { mode: 'host', tournamentId: body.tournamentId || null });
   }

@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} đấu với {b}.',
   wins: '{nick} vô địch giải đấu. chúc mừng tất cả, kết quả đã được ghi nhận.',
   winsSecond: '{nick} vô địch giải đấu, {second} về nhì. chúc mừng tất cả, kết quả đã được ghi nhận.',
+  absentMarked: 'bạn đã không vào bàn kịp giờ: bạn bị ghi nhận vắng mặt ở giải đấu này.',
+  closedByOrganizer: 'ban tổ chức đã đóng bàn này: trò chơi này không được tính cho giải đấu.',
+  strangerSeated: '{nick} chưa đăng ký giải đấu này: hãy mời người này rời bàn trước khi bắt đầu trò chơi.',
+  strangersAtStart: 'chưa đăng ký giải đấu này: {list}. ban tổ chức sẽ kiểm tra trò chơi này trước khi tính.',
 };

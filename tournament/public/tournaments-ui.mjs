@@ -36,6 +36,29 @@ const HOST_PHASE = {
 const PLAYER_STATUS = { seated: ['seated', 'done'], invited: ['invited', 'live'], online: ['connected', ''], offline: ['not connected', 'warn'],
   absent: ['absent', 'bad'], 'declined-no': ['declined', 'bad'], 'declined-busy': ['in another game', 'warn'] };
 const SOURCE = { manual: 'typed in', watch: 'Table check', pdb: 'log (.pdb)' };
+// Players who do not come to the table (tournament/lib/tournaments.mjs ABSENCE_AUTO).
+const ABSENCE_AUTO = { mode: 'auto', strikes: 3, retrySec: 60, graceMin: 10 };
+const ABSENT_WHY = { failures: 'did not come', neverConnected: 'never connected', offline: 'not connected', notSeatedAtStart: 'not seated at the start' };
+function absenceFields(p, a, esc) {
+  a = Object.assign({}, ABSENCE_AUTO, a || {});
+  const num = (k, min, max, label) => '<div><label for="' + p + k + '">' + label + '</label><input id="' + p + k + '" type="number" inputmode="numeric" min="' + min + '" max="' + max + '" value="' + esc(a[k]) + '"></div>';
+  return '<div class="row"><div><label for="' + p + 'mode">Players who do not come to the table</label><select id="' + p + 'mode" data-absmode="' + p + '">' +
+    [['auto', 'Automatic — 3 failures, invited again every minute, absent from 10 min after the start'], ['custom', 'Custom — your numbers'], ['manual', 'Manual — the organizer decides (« Start without the absent »)']]
+      .map((o) => '<option value="' + o[0] + '"' + (o[0] === a.mode ? ' selected' : '') + '>' + esc(o[1]) + '</option>').join('') + '</select></div></div>' +
+    '<div class="row" id="' + p + 'custom"' + (a.mode === 'custom' ? '' : ' hidden') + '>' + num('strikes', 1, 10, 'Failures before absent') + num('retrySec', 20, 600, 'Seconds between invitations') + num('graceMin', 0, 120, 'Minutes after the start before anyone is absent') + '</div>' +
+    '<p class="small muted">A refusal, an invitation left unanswered, « busy » in another game or a seat left before the start is a failure; a player who comes back to the server or leaves another game is invited at once. Not connected after the delay: absent too.</p>';
+}
+function readAbsence(p) {
+  const m = document.getElementById(p + 'mode');
+  if (!m) return undefined;
+  const o = { mode: m.value };
+  if (m.value === 'custom') for (const k of ['strikes', 'retrySec', 'graceMin']) o[k] = Number(document.getElementById(p + k).value);
+  return o;
+}
+document.addEventListener('change', (e) => {
+  const p = e.target && e.target.dataset && e.target.dataset.absmode;
+  if (p) { const c = document.getElementById(p + 'custom'); if (c) c.hidden = e.target.value !== 'custom'; }
+});
 
 export function createTournamentsView(deps) {
   const { api, esc, tok } = deps;
@@ -96,7 +119,7 @@ export function createTournamentsView(deps) {
     if ($('tVis').value) body.visibility = $('tVis').value;
     body.table = readTable('tt_');
     const img = IP.value('tim_new'); if (img) body.image = img;
-    body.run = { autoOpen: $('tAuto').checked, openBefore: Number($('tBefore').value), announce: $('tAnnounce').checked, selfRegister: $('tSelfReg').checked, chatLang: $('tChatLang').value || 'en', qmlWitnesses: $('tQmlWit').checked, finalists: Number($('tFinalists').value) || 2 };
+    body.run = { autoOpen: $('tAuto').checked, openBefore: Number($('tBefore').value), announce: $('tAnnounce').checked, selfRegister: $('tSelfReg').checked, chatLang: $('tChatLang').value || 'en', qmlWitnesses: $('tQmlWit').checked, finalists: Number($('tFinalists').value) || 2, absence: readAbsence('ta_') };
     if (body.profile === 'custom') {
       body.settings = {};
       for (const k of Object.keys(CHOICES)) body.settings[k] = $('tc_' + k).value;
@@ -120,11 +143,13 @@ export function createTournamentsView(deps) {
       '<div class="row"><div><label for="te_chatlang">Language of the director in the chat</label><select id="te_chatlang">' + langOptions(r.chatLang) + '</select></div></div>' +
       '<label class="ck"><input type="checkbox" id="te_selfreg"' + (r.selfRegister !== false ? ' checked' : '') + '> Players can register themselves on the public page</label>' +
       '<label class="ck"><input type="checkbox" id="te_qmlwit"' + (r.qmlWitnesses ? ' checked' : '') + '> Accept QML players as witnesses (their game log)</label>' +
+      absenceFields('tea_', r.absence, esc) +
       '<div class="row"><div><label for="te_checkin">Check-in opens, minutes before the start (identity « code »)</label><input id="te_checkin" type="number" inputmode="numeric" min="5" max="240" value="' + esc(r.checkInBefore) + '"></div></div>';
   }
   const readTable = (prefix) => TF.read(prefix);
   const tableSummary = (t) => TF.summary(t);
   $('tTable').innerHTML = TF.html('tt_');
+  $('tAbsence').innerHTML = absenceFields('ta_', null, esc);
 
   function msg(id, text, bad, cls) { const el = $(id); if (!el) return; el.className = 'msg' + (bad ? ' bad' : cls ? ' ' + cls : ''); el.textContent = text || ''; }
 
@@ -421,7 +446,12 @@ export function createTournamentsView(deps) {
     let h = '<p><span class="chip live">' + esc(L.status || 'connecting') + '</span> ' + esc(phase) + '</p>';
     if (H.tableName) h += '<p class="small muted">Table « ' + esc(H.tableName) + ' »' + (H.gameId != null ? ' #' + esc(H.gameId) : '') + ' · director ' + esc(L.nick || '') + (H.admin ? ' · table admin ' + esc(H.admin) : '') + '</p>';
     if (H.registered && H.registered.length) {
-      h += '<ul class="chips">' + H.registered.map((r) => { const s = PLAYER_STATUS[r.status] || [r.status, '']; return '<li>' + esc(r.nick) + ' <span class="chip ' + s[1] + '">' + esc(s[0]) + '</span></li>'; }).join('') + '</ul>';
+      h += '<ul class="chips">' + H.registered.map((r) => { const s = PLAYER_STATUS[r.status] || [r.status, ''];
+        const why = r.status === 'absent' && r.absentWhy ? ' — ' + (ABSENT_WHY[r.absentWhy] || r.absentWhy) : '';
+        const f = r.failures && r.status !== 'seated' ? ' <span class="small muted">' + esc(r.failures) + ' failure' + (r.failures === 1 ? '' : 's') + '</span>' : '';
+        return '<li>' + esc(r.nick) + ' <span class="chip ' + s[1] + '">' + esc(s[0] + why) + '</span>' + f + '</li>'; }).join('') + '</ul>';
+      if (H.absence && H.absence.mode !== 'manual' && H.absence.deadline) h += '<p class="small muted">Absent players: ' + (H.absence.mode === 'auto' ? 'automatic' : 'custom') + ' — after ' + esc(H.absence.strikes) + ' failure' + (H.absence.strikes === 1 ? '' : 's') + ', invited again every ' + esc(H.absence.retrySec) + ' s, from ' + esc(when(H.absence.deadline)) + '.</p>';
+      else if (H.absence && H.absence.mode === 'manual') h += '<p class="small muted">Absent players: manual — « Start without the absent » when you decide.</p>';
     }
     if (H.kicked && H.kicked.length) h += '<p class="small">Removed (not registered): ' + H.kicked.map(esc).join(', ') + '</p>';
     if (L.error) h += '<p class="msg bad">' + esc(L.error.code) + (L.error.data && L.error.data.reason ? ' (' + esc(L.error.data.reason) + ')' : '') + '</p>';
@@ -556,9 +586,11 @@ export function createTournamentsView(deps) {
         if (tb && (!TF.same(tb, cur.table) || (tb.preset || null) !== ((cur.table && cur.table.preset) || null))) patch.table = tb;
       }
       if ($('te_auto')) {
-        const run = { autoOpen: $('te_auto').checked, openBefore: Number($('te_before').value), announce: $('te_announce').checked, selfRegister: $('te_selfreg').checked, checkInBefore: Number($('te_checkin').value), chatLang: $('te_chatlang').value, qmlWitnesses: $('te_qmlwit').checked };
+        const run = { autoOpen: $('te_auto').checked, openBefore: Number($('te_before').value), announce: $('te_announce').checked, selfRegister: $('te_selfreg').checked, checkInBefore: Number($('te_checkin').value), chatLang: $('te_chatlang').value, qmlWitnesses: $('te_qmlwit').checked, absence: readAbsence('tea_') };
         const r0 = Object.assign({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30, chatLang: 'en', qmlWitnesses: false }, cur.run || {});
-        if (Object.keys(run).some((k) => run[k] !== r0[k])) patch.run = run;
+        const a0 = Object.assign({}, ABSENCE_AUTO, r0.absence || {});
+        const absChanged = run.absence && (run.absence.mode !== a0.mode || (run.absence.mode === 'custom' && ['strikes', 'retrySec', 'graceMin'].some((k) => run.absence[k] !== a0[k])));
+        if (Object.keys(run).some((k) => k !== 'absence' && run[k] !== r0[k]) || absChanged) patch.run = run;
       }
       if (!Object.keys(patch).length) return msg('tMsg', 'Nothing changed.');
       return call('/admin/tournaments/t/update', { patch }, 'Saved.');

@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} lòdì sí {b}.',
   wins: '{nick} ló borí ìdíje náà. oríire fún gbogbo yín, a ti kọ àbájáde sílẹ̀.',
   winsSecond: '{nick} ló borí ìdíje náà, {second} ló ṣe ipò kejì. oríire fún gbogbo yín, a ti kọ àbájáde sílẹ̀.',
+  absentMarked: 'o kò dé tábìlì ní àsìkò: a ti kọ ọ́ sílẹ̀ pé o kò sí fún ìdíje yìí.',
+  closedByOrganizer: 'olùṣètò ti tì tábìlì yìí: a kò ní ka eré yìí fún ìdíje náà.',
+  strangerSeated: '{nick} kò forúkọ sílẹ̀ fún ìdíje yìí: jọ̀wọ́ yọ ọ́ kúrò kí o tó bẹ̀rẹ̀ eré.',
+  strangersAtStart: 'wọn kò forúkọ sílẹ̀ fún ìdíje yìí: {list}. olùṣètò kan yóò ṣàyẹ̀wò eré yìí kí a tó kà á.',
 };

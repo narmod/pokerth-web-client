@@ -8,6 +8,32 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.18.0 — 2026-10-24
+
+### Added
+- **Players who do not come to the table** — a rule per tournament
+  (organizer page, « Players who do not come to the table »). Automatic (the
+  default): a refusal, an invitation left unanswered for a minute, « busy »
+  in another game or a seat left before the start is a failure, and the
+  player is invited again a minute later; coming back to the server or out
+  of another game, he is invited at once without a failure. From 10 min past
+  the start, 3 failures or not connected = absent (told privately, not
+  ranked) and the table goes on with the others. Custom: the organizer's
+  numbers. Manual: nothing automatic, as before.
+
+### Fixed (audit of the director's scenarios, `test-td-scenarios.mjs`)
+- The admin started before every registered player sat (ten players, or the
+  director lost its seat): the result was refused (« not in the result ») —
+  the missing players are now absent at the start.
+- Only the first admin was asked to start: each new admin is asked too.
+- Someone not registered let in after the hand-over: the admin is now asked
+  to remove them, and a start with strangers or computer players is said in
+  the table chat.
+- « Bob » and « bob » are two players for the server: the director could
+  invite the wrong one; the exact spelling now comes first.
+- Closing the table before the start left the players at a table nobody
+  followed: the director now tells them, removes them and leaves.
+
 ## 0.17.1 — 2026-10-24 (web client `2.1.10-web.315`)
 
 ### Changed

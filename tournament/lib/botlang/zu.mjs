@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} ubhekene no-{b}.',
   wins: '{nick} uwina umqhudelwano. halala kubo bonke, umphumela urekhodiwe.',
   winsSecond: '{nick} uwina umqhudelwano, {second} ungowesibili. halala kubo bonke, umphumela urekhodiwe.',
+  absentMarked: 'awuzange ujoyine itafula ngesikhathi: ubhalwe njengongekho kulo mqhudelwano.',
+  closedByOrganizer: 'umhleli uvale leli tafula: lo mdlalo awubalwa emqhudelwaneni.',
+  strangerSeated: '{nick} akabhalisile kulo mqhudelwano: sicela umkhiphe ngaphambi kokuqala umdlalo.',
+  strangersAtStart: 'abangabhalisile kulo mqhudelwano: {list}. umhleli uzohlola lo mdlalo ngaphambi kokuthi ubalwe.',
 };

@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} contra {b}.',
   wins: '{nick} guanya el torneig. felicitats a tothom, el resultat queda registrat.',
   winsSecond: '{nick} guanya el torneig, {second} segon. felicitats a tothom, el resultat queda registrat.',
+  absentMarked: 'no t’has unit a la taula a temps: consta com a absent en aquest torneig.',
+  closedByOrganizer: 'l’organitzador ha tancat aquesta taula: aquesta partida no compta per al torneig.',
+  strangerSeated: '{nick} no està inscrit en aquest torneig: expulsa’l abans d’iniciar la partida, si us plau.',
+  strangersAtStart: 'no inscrits en aquest torneig: {list}. un organitzador revisa aquesta partida abans que compti.',
 };

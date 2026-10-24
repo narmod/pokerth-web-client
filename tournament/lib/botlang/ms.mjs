@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} menentang {b}.',
   wins: '{nick} memenangi kejohanan. tahniah kepada semua, keputusan telah direkod.',
   winsSecond: '{nick} memenangi kejohanan, {second} kedua. tahniah kepada semua, keputusan telah direkod.',
+  absentMarked: 'anda tidak menyertai meja tepat pada masanya: anda ditanda tidak hadir untuk kejohanan ini.',
+  closedByOrganizer: 'penganjur telah menutup meja ini: permainan ini tidak dikira untuk kejohanan.',
+  strangerSeated: '{nick} tidak berdaftar untuk kejohanan ini: sila keluarkan dia sebelum memulakan permainan.',
+  strangersAtStart: 'tidak berdaftar untuk kejohanan ini: {list}. penganjur akan menyemak permainan ini sebelum ia dikira.',
 };

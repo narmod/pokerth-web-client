@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} 대 {b}.',
   wins: '{nick} 님 토너먼트 우승. 모두 축하드립니다. 결과가 기록되었습니다.',
   winsSecond: '{nick} 님 토너먼트 우승, {second} 님 2위. 모두 축하드립니다. 결과가 기록되었습니다.',
+  absentMarked: '제시간에 테이블에 참가하지 않아 이 토너먼트에서 불참으로 처리되었습니다.',
+  closedByOrganizer: '주최자가 이 테이블을 닫았습니다. 이 게임은 토너먼트에 반영되지 않습니다.',
+  strangerSeated: '{nick} 님은 이 토너먼트에 등록되지 않았습니다. 게임을 시작하기 전에 내보내 주세요.',
+  strangersAtStart: '토너먼트 미등록 플레이어: {list}. 결과 반영 전에 주최자가 이 게임을 확인합니다.',
 };

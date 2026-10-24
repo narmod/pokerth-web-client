@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} dhidi ya {b}.',
   wins: '{nick} ameshinda mashindano. hongera kwa wote, matokeo yamerekodiwa.',
   winsSecond: '{nick} ameshinda mashindano, {second} wa pili. hongera kwa wote, matokeo yamerekodiwa.',
+  absentMarked: 'hukujiunga na meza kwa wakati: umerekodiwa kuwa hukuhudhuria mashindano haya.',
+  closedByOrganizer: 'mratibu amefunga meza hii: mchezo huu hauhesabiwi kwenye mashindano.',
+  strangerSeated: '{nick} hajasajiliwa kwenye mashindano haya: tafadhali mwondoe kabla ya kuanzisha mchezo.',
+  strangersAtStart: 'hawajasajiliwa kwenye mashindano haya: {list}. mratibu atakagua mchezo huu kabla haujahesabiwa.',
 };

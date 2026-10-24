@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} da {b} fuska da fuska.',
   wins: '{nick} ya ci gasar. taya kowa murna, an rubuta sakamakon.',
   winsSecond: '{nick} ya ci gasar, {second} na biyu. taya kowa murna, an rubuta sakamakon.',
+  absentMarked: 'ba ka shiga teburin a kan lokaci ba: an rubuta ka a matsayin wanda bai halarci wannan gasa ba.',
+  closedByOrganizer: 'mai shirya gasar ya rufe wannan tebur: wannan wasa ba zai ƙidaya a gasar ba.',
+  strangerSeated: '{nick} bai yi rajista a wannan gasa ba: ka cire shi daga teburin kafin ka fara wasan.',
+  strangersAtStart: 'ba su yi rajista a wannan gasa ba: {list}. mai shirya gasa zai duba wannan wasa kafin ya ƙidaya.',
 };

@@ -13,4 +13,8 @@ export const strings = {
   headsUp: '單挑：{a} 對 {b}。',
   wins: '{nick} 贏得錦標賽。恭喜大家，結果已記錄。',
   winsSecond: '{nick} 贏得錦標賽，{second} 第二名。恭喜大家，結果已記錄。',
+  absentMarked: '你沒有及時加入牌桌：你在這個錦標賽已被記為缺席。',
+  closedByOrganizer: '主辦人已關閉這張牌桌：這場遊戲不計入錦標賽。',
+  strangerSeated: '{nick} 沒有報名這個錦標賽：請在開始遊戲前將他移出牌桌。',
+  strangersAtStart: '未報名這個錦標賽：{list}。主辦人會先檢查這場遊戲，才計入成績。',
 };

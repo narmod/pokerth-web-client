@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} og {b} eigast við.',
   wins: '{nick} vinnur mótið. til hamingju öll, úrslitin eru skráð.',
   winsSecond: '{nick} vinnur mótið, {second} í öðru sæti. til hamingju öll, úrslitin eru skráð.',
+  absentMarked: 'þú mættir ekki að borðinu í tæka tíð: fjarvera þín er skráð í þessu móti.',
+  closedByOrganizer: 'mótshaldarinn lokaði þessu borði: þessi leikur telur ekki í mótinu.',
+  strangerSeated: '{nick} er ekki á skrá fyrir þetta mót: vinsamlegast fjarlægðu viðkomandi áður en leikurinn er ræstur.',
+  strangersAtStart: 'ekki á skrá fyrir þetta mót: {list}. mótshaldari fer yfir leikinn áður en hann telur.',
 };

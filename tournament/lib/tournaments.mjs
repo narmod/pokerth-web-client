@@ -50,7 +50,26 @@ const FORMATS = ['sitngo', 'multi'];
 export { TABLE_DEFAULTS, cleanTable };
 // How the director runs the table: opening by itself before the start, and
 // its announcements in the table chat.
-export const RUN_DEFAULTS = Object.freeze({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30, chatLang: 'en', qmlWitnesses: false, finalists: 2 });
+export const RUN_DEFAULTS = Object.freeze({ autoOpen: false, openBefore: 10, announce: true, selfRegister: true, checkInBefore: 30, chatLang: 'en', qmlWitnesses: false, finalists: 2, absence: null });
+// Players who do not come to the table (decided 2026-10-24). « auto »: a
+// connected player is invited again every minute when he refuses, does not
+// answer, is busy in another game or leaves the table (each one a failure;
+// coming back to the server or out of another game: invited at once, no
+// failure); nobody is marked absent before 10 min past the start (or the
+// opening without a date); after that, 3 failures or not connected = absent,
+// and the table goes on with the others (2 at least). « custom »: the same
+// with the organizer's numbers. « manual »: nothing automatic — the organizer
+// decides (« Start without the absent »).
+export const ABSENCE_AUTO = Object.freeze({ mode: 'auto', strikes: 3, retrySec: 60, graceMin: 10 });
+export function cleanAbsence(a, base) {
+  const b = Object.assign({}, ABSENCE_AUTO, base || {});
+  a = a || {};
+  const mode = ['auto', 'custom', 'manual'].indexOf(a.mode) >= 0 ? a.mode : (['auto', 'custom', 'manual'].indexOf(b.mode) >= 0 ? b.mode : 'auto');
+  if (mode !== 'custom') return Object.assign({}, ABSENCE_AUTO, { mode });
+  // A number out of bounds is brought to the nearest bound; no number: the base.
+  const int = (v, min, max, d) => { const x = parseInt(v, 10); return Math.min(max, Math.max(min, Number.isInteger(x) ? x : (parseInt(d, 10) || min))); };
+  return { mode, strikes: int(a.strikes, 1, 10, b.strikes), retrySec: int(a.retrySec, 20, 600, b.retrySec), graceMin: int(a.graceMin, 0, 120, b.graceMin) };
+}
 const MAX_LOG_BYTES = 10 * 1024 * 1024;
 export function cleanRun(r, base) {
   const b = Object.assign({}, RUN_DEFAULTS, base || {});
@@ -70,6 +89,8 @@ export function cleanRun(r, base) {
     checkInBefore: Number.isInteger(ci) && ci >= 5 && ci <= 240 ? ci : b.checkInBefore,
     // The language the director writes in, in the chat (botlang/<code>.mjs).
     chatLang: isBotLang(r.chatLang) ? String(r.chatLang).toLowerCase() : (b.chatLang || 'en'),
+    // Players who do not come to the table (ABSENCE_AUTO above).
+    absence: cleanAbsence(r.absence, b.absence),
   };
 }
 // A table opened by itself is not opened any more this long after the start.

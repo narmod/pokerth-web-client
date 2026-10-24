@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} eta {b} aurrez aurre.',
   wins: 'txapelketaren irabazlea: {nick}. zorionak guztiei, emaitza erregistratuta dago.',
   winsSecond: 'txapelketaren irabazlea: {nick}, bigarrena: {second}. zorionak guztiei, emaitza erregistratuta dago.',
+  absentMarked: 'ez zara garaiz sartu mahaira: txapelketa honetan ez-etorritzat jo zaitugu.',
+  closedByOrganizer: 'antolatzaileak mahai hau itxi du: partida honek ez du txapelketarako balio.',
+  strangerSeated: '{nick} ez dago izena emanda txapelketa honetan: kendu mahaitik partida hasi aurretik, mesedez.',
+  strangersAtStart: 'izena eman gabe txapelketa honetan: {list}. antolatzaile batek partida hau egiaztatuko du zenbatu aurretik.',
 };

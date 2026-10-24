@@ -317,6 +317,60 @@ checks the form's min/max).
   back inside them when the director opens it (`gameInfoFor`).
 - The manual blinds order goes to the server (NetGameInfo field 14).
 
+## Players who do not come, and other cases at the table (service `0.18.0`)
+
+Audit of 2026-10-24 (`tournament/test/test-td-scenarios.mjs`, one scenario
+each, against a fake server that behaves like `servergamestate.cpp` /
+`serverlobbythread.cpp`). Server facts: an invitation to a player in another
+game is answered « busy » at once; a « no » removes the invitation, « busy »
+keeps it; an unanswered invitation stays valid, without any notice; the server
+refuses a 7th join of the same player at a table; nicknames are case
+sensitive (« Bob » and « bob » are two players); the admin may start with
+computer players (« fill with computer players »); before the start only the
+admin kicks; on a non-LAN server the admin is moved out after 30 min without
+starting and the next player becomes admin.
+
+- **Absence rule** (per tournament, `run.absence`, decided 2026-10-24):
+  - `auto` (default): every refusal, invitation unanswered for 60 s, « busy »
+    answer and seat left before the start is a **failure**; the player is
+    invited again 60 s later (a seat left: at once). Back on the server after
+    a drop, or out of another game: invited again at once, **no failure**.
+    Nobody is absent before **10 min past the start** (the opening when there
+    is no date); from then on, **3 failures**, or not connected for 60 s
+    (never connected included), = **absent**: told privately, not invited,
+    not ranked; the table goes on as soon as the others are seated (2 at
+    least; with fewer, the organizer decides). An absent player who sits
+    before the start after all (an invitation still valid) is welcome again.
+  - `custom`: the same with the organizer's numbers (failures 1–10, seconds
+    between invitations 20–600, minutes after the start 0–120).
+  - `manual`: nothing automatic (as before 0.18.0): a refusal stays, the
+    organizer clicks « Start without the absent ».
+  - Organizer page: the rule in the form and in Edit; at the table, each
+    player's failures and why an absent player is absent.
+- **The admin starts before every registered player is seated** (after the
+  hand-over: ten players, the director made room at eight; or the director
+  lost its seat): the missing players are marked absent at the start, so the
+  result fits the tournament.
+- **Each new admin is asked to start** (the previous one left or was timed
+  out), not only the first one.
+- **Someone not registered sits after the hand-over** (the admin, a player,
+  may invite anyone; the director cannot kick then): the admin is asked
+  privately to remove them, they are told; started anyway (or with computer
+  players): said in the table chat, the seat check fails and the result waits
+  for an organizer.
+- **Nicknames:** a registered name matches its exact spelling first; another
+  case only when every name on the server is known and nobody has the exact
+  one, and only the player invited for it may take the seat.
+- **Closed by the organizer before the start:** the director tells every
+  player privately, removes them (seated, as admin) and leaves, so the table
+  goes away instead of a game nobody follows; after the hand-over it can only
+  tell them.
+- Director lines (83 languages, `lib/botlang/`): `absentMarked`,
+  `closedByOrganizer`, `strangerSeated`, `strangersAtStart`.
+- Journal: `absenceRule`, `inviteFailed {nick, reason, failures}`,
+  `inviteUnanswered`, `markedAbsent {nick, reason}`, `absentBack`,
+  `strangerSeated`, `closedByOrganizer`.
+
 ## The director opens the table (`web.299`, service `0.2.0`)
 
 From a tournament on `/tournament` (« Table on the server »), with its LAN

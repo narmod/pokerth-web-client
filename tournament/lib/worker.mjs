@@ -16,7 +16,7 @@ import { readFileSync, writeFileSync, renameSync } from 'node:fs';
 import { join } from 'node:path';
 import { readFileSync as readF, existsSync } from 'node:fs';
 import { SpectatorDirector } from './spectator.mjs';
-import { HostDirector } from './host.mjs';
+import { HostDirector, CLOSED_BY_ORGANIZER } from './host.mjs';
 
 function writeAtomic(path, obj) {
   const tmp = path + '.' + process.pid + '.tmp';
@@ -108,7 +108,7 @@ export function runWatch(task) {
     snapshot();
     setTimeout(() => process.exit(0), 50);
   });
-  process.on('SIGTERM', () => { log('stopped by the organizer'); d.stop('stopped by the organizer'); });
+  process.on('SIGTERM', () => { log('stopped by the organizer'); d.stop(CLOSED_BY_ORGANIZER); });
   // Anything unexpected: say so in state.json (and the stack in worker.log),
   // keep the journal, then leave. Without this a crash left no trace but an
   // empty « crashed » watch.

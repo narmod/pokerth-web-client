@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} laban kay {b}.',
   wins: 'panalo si {nick} sa tournament. binabati namin ang lahat, naitala na ang resulta.',
   winsSecond: 'panalo si {nick} sa tournament, pangalawa si {second}. binabati namin ang lahat, naitala na ang resulta.',
+  absentMarked: 'hindi ka nakasali sa mesa sa takdang oras: minarkahan kang absent sa tournament na ito.',
+  closedByOrganizer: 'isinara ng organizer ang mesang ito: hindi bibilang sa tournament ang larong ito.',
+  strangerSeated: 'hindi nakarehistro si {nick} sa tournament na ito: pakitanggal siya bago simulan ang laro.',
+  strangersAtStart: 'hindi nakarehistro sa tournament na ito: {list}. susuriin ng organizer ang laro bago ito bilangin.',
 };

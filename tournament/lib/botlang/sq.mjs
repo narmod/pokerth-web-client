@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} kundër {b}.',
   wins: '{nick} fiton turneun. urime të gjithëve, rezultati u regjistrua.',
   winsSecond: '{nick} fiton turneun, {second} i dyti. urime të gjithëve, rezultati u regjistrua.',
+  absentMarked: 'nuk erdhët në tavolinë në kohë: jeni shënuar si mungues për këtë turne.',
+  closedByOrganizer: 'organizatori e mbylli këtë tavolinë: kjo lojë nuk llogaritet për turneun.',
+  strangerSeated: '{nick} nuk është regjistruar në këtë turne: ju lutemi hiqeni para se të nisni lojën.',
+  strangersAtStart: 'të paregjistruar në këtë turne: {list}. një organizator e kontrollon këtë lojë para se të llogaritet.',
 };

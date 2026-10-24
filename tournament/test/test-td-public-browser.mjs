@@ -227,6 +227,12 @@ try {
   ok(await og.$$eval('#tTable .tf-chip', (l) => l.length) === 29 && await og.$eval('#tt_tpl', (e) => e.value) === '', 'organizer: a level removed by hand: « Custom settings »');
   if (shots) await og.locator('#tTable').screenshot({ path: path.join(shots, 'org-table.png') });
 
+  // Players who do not come: automatic by default, custom shows its numbers.
+  ok(await og.$eval('#ta_mode', (e) => e.value) === 'auto' && await og.$eval('#ta_custom', (e) => e.hidden), 'organizer: absent players automatic by default');
+  await og.selectOption('#ta_mode', 'custom');
+  ok(!(await og.$eval('#ta_custom', (e) => e.hidden)) && await og.$eval('#ta_strikes', (e) => e.value) === '3', 'organizer: custom shows failures, seconds between invitations, minutes after the start');
+  await og.selectOption('#ta_mode', 'auto');
+
   // Images: picked in the form, added to the library by an organizer.
   await og.evaluate(() => { const d = document.getElementById('tImg').closest('details'); if (d) d.open = true; });
   await og.waitForFunction(() => document.querySelectorAll('#tImg .ip-opt').length >= 2, null, { timeout: 8000 });

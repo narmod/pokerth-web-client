@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} melawan {b}.',
   wins: '{nick} memenangkan turnamen. selamat untuk semua, hasilnya sudah dicatat.',
   winsSecond: '{nick} memenangkan turnamen, {second} kedua. selamat untuk semua, hasilnya sudah dicatat.',
+  absentMarked: 'karena tidak bergabung ke meja tepat waktu, Anda dicatat absen untuk turnamen ini.',
+  closedByOrganizer: 'penyelenggara menutup meja ini: permainan ini tidak dihitung untuk turnamen.',
+  strangerSeated: '{nick} tidak terdaftar di turnamen ini: silakan keluarkan dia sebelum memulai permainan.',
+  strangersAtStart: 'tidak terdaftar di turnamen ini: {list}. penyelenggara memeriksa permainan ini sebelum dihitung.',
 };

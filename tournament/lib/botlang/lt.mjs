@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} ir {b} akis į akį.',
   wins: 'turnyrą laimėjo {nick}. sveikiname visus, rezultatas įrašytas.',
   winsSecond: 'turnyrą laimėjo {nick}, antras – {second}. sveikiname visus, rezultatas įrašytas.',
+  absentMarked: 'laiku neprisijungėte prie stalo: šiame turnyre esate pažymėtas kaip nedalyvaujantis.',
+  closedByOrganizer: 'organizatorius uždarė šį stalą: šis žaidimas turnyre neskaičiuojamas.',
+  strangerSeated: '{nick} neužsiregistravo šiam turnyrui: prieš pradėdami žaidimą, pašalinkite šį žaidėją.',
+  strangersAtStart: 'neužsiregistravę šiam turnyrui: {list}. prieš įskaitant rezultatą, organizatorius patikrins šį žaidimą.',
 };

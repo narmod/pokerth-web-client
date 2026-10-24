@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} we {b} ýüzbe-ýüz.',
   wins: 'ýaryşyň ýeňijisi: {nick}. hemmäňizi gutlaýarys, netije ýazga alyndy.',
   winsSecond: 'ýaryşyň ýeňijisi: {nick}, ikinji: {second}. hemmäňizi gutlaýarys, netije ýazga alyndy.',
+  absentMarked: 'siz stola wagtynda gelmediňiz: bu ýaryşda gelmedik diýlip bellenildiňiz.',
+  closedByOrganizer: 'guramaçy bu stoly ýapdy: bu oýun ýaryşda hasaba alynmaýar.',
+  strangerSeated: '{nick} bu ýaryşa hasaba alynmadyk: oýny başlamazdan öň ony stoldan aýryň.',
+  strangersAtStart: 'bu ýaryşa hasaba alynmadyklar: {list}. guramaçy bu oýny hasaba almazdan öň barlar.',
 };

@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} va {b} yuzma-yuz.',
   wins: 'turnir gʻolibi: {nick}. hammani tabriklaymiz, natija qayd etildi.',
   winsSecond: 'turnir gʻolibi: {nick}, ikkinchi oʻrin: {second}. hammani tabriklaymiz, natija qayd etildi.',
+  absentMarked: 'siz stolga oʻz vaqtida kelmadingiz: bu turnirda kelmagan deb belgilandingiz.',
+  closedByOrganizer: 'tashkilotchi bu stolni yopdi: bu oʻyin turnirda hisobga olinmaydi.',
+  strangerSeated: '{nick} bu turnirda roʻyxatdan oʻtmagan: oʻyinni boshlashdan oldin uni stoldan chiqaring.',
+  strangersAtStart: 'bu turnirda roʻyxatdan oʻtmaganlar: {list}. tashkilotchi bu oʻyinni hisobga olishdan oldin tekshiradi.',
 };

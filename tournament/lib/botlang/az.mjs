@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} və {b} üz-üzə.',
   wins: 'turniri {nick} qazandı. hamını təbrik edirik, nəticə qeyd olundu.',
   winsSecond: 'turniri {nick} qazandı, ikinci {second}. hamını təbrik edirik, nəticə qeyd olundu.',
+  absentMarked: 'siz masaya vaxtında qoşulmadınız: bu turnirdə gəlməyən kimi qeyd olundunuz.',
+  closedByOrganizer: 'təşkilatçı bu masanı bağladı: bu oyun turnirdə nəzərə alınmır.',
+  strangerSeated: '{nick} bu turnirdə qeydiyyatda deyil: oyunu başlatmazdan əvvəl onu masadan çıxarın.',
+  strangersAtStart: 'bu turnirdə qeydiyyatda deyil: {list}. nəticə sayılmazdan əvvəl təşkilatçı bu oyunu yoxlayır.',
 };

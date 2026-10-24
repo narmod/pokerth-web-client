@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} ile {b} karşı karşıya.',
   wins: 'turnuvayı {nick} kazandı. herkesi tebrik ederiz, sonuç kaydedildi.',
   winsSecond: 'turnuvayı {nick} kazandı, ikinci {second}. herkesi tebrik ederiz, sonuç kaydedildi.',
+  absentMarked: 'masaya zamanında katılmadın: bu turnuvada gelmeyen olarak işaretlendin.',
+  closedByOrganizer: 'organizatör bu masayı kapattı: bu oyun turnuvada sayılmayacak.',
+  strangerSeated: '{nick} bu turnuvaya kayıtlı değil: oyunu başlatmadan önce onu masadan çıkar.',
+  strangersAtStart: 'bu turnuvaya kayıtlı değil: {list}. bu oyun sayılmadan önce bir organizatör kontrol edecek.',
 };

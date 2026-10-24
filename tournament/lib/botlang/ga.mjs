@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} in aghaidh {b}.',
   wins: 'buann {nick} an comórtas. comhghairdeas le cách, tá an toradh taifeadta.',
   winsSecond: 'buann {nick} an comórtas, {second} sa dara háit. comhghairdeas le cách, tá an toradh taifeadta.',
+  absentMarked: 'níor tháinig tú chuig an mbord in am: tá tú marcáilte as láthair don chomórtas seo.',
+  closedByOrganizer: 'dhún an t-eagraí an bord seo: ní áirítear an cluiche seo don chomórtas.',
+  strangerSeated: 'níl {nick} cláraithe don chomórtas seo: bain an t-imreoir sin den bhord sula dtosaíonn an cluiche.',
+  strangersAtStart: 'níl siad cláraithe don chomórtas seo: {list}. seiceálfaidh eagraí an cluiche seo sula n-áireofar é.',
 };

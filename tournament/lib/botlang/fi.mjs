@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} vastaan {b}.',
   wins: '{nick} voitti turnauksen. onnittelut kaikille, tulos on kirjattu.',
   winsSecond: '{nick} voitti turnauksen, toiseksi {second}. onnittelut kaikille, tulos on kirjattu.',
+  absentMarked: 'et liittynyt pöytään ajoissa: sinut on merkitty poissaolevaksi tästä turnauksesta.',
+  closedByOrganizer: 'järjestäjä sulki tämän pöydän: tätä peliä ei lasketa turnaukseen.',
+  strangerSeated: '{nick} ei ole ilmoittautunut tähän turnaukseen: poista hänet ennen pelin aloittamista.',
+  strangersAtStart: 'tähän turnaukseen ilmoittautumattomia: {list}. järjestäjä tarkistaa pelin ennen kuin se lasketaan.',
 };

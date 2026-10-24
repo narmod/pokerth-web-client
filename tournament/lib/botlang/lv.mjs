@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} pret {b}.',
   wins: '{nick} uzvar turnīrā. apsveicam visus, rezultāts ir ierakstīts.',
   winsSecond: '{nick} uzvar turnīrā, {second} otrais. apsveicam visus, rezultāts ir ierakstīts.',
+  absentMarked: 'tu laikus nepievienojies galdam: šim turnīram tu esi atzīmēts kā neieradies.',
+  closedByOrganizer: 'organizators slēdza šo galdu: šī spēle turnīrā netiek ieskaitīta.',
+  strangerSeated: '{nick} nav reģistrēts šim turnīram: lūdzu, noņem viņu no galda pirms spēles sākšanas.',
+  strangersAtStart: 'nav reģistrēti šim turnīram: {list}. organizators pārbauda šo spēli, pirms tā tiek ieskaitīta.',
 };

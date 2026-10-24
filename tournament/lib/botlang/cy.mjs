@@ -13,4 +13,8 @@ export const strings = {
   headsUp: 'heads-up: {a} yn erbyn {b}.',
   wins: 'mae {nick} yn ennill y twrnamaint. llongyfarchiadau i bawb, mae’r canlyniad wedi’i gofnodi.',
   winsSecond: 'mae {nick} yn ennill y twrnamaint, {second} yn ail. llongyfarchiadau i bawb, mae’r canlyniad wedi’i gofnodi.',
+  absentMarked: 'nid ymunoch â’r bwrdd mewn pryd: rydych wedi’ch nodi’n absennol ar gyfer y twrnamaint hwn.',
+  closedByOrganizer: 'mae’r trefnydd wedi cau’r bwrdd hwn: nid yw’r gêm hon yn cyfrif ar gyfer y twrnamaint.',
+  strangerSeated: 'nid yw {nick} wedi cofrestru ar gyfer y twrnamaint hwn: tynnwch nhw o’r bwrdd cyn dechrau’r gêm.',
+  strangersAtStart: 'heb gofrestru ar gyfer y twrnamaint hwn: {list}. bydd trefnydd yn gwirio’r gêm hon cyn iddi gyfrif.',
 };
