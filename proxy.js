@@ -11659,7 +11659,7 @@ function adminAuthed(query, bodyToken) {
 // The file is hot-reloaded (mtime check), so adding/revoking a key needs no
 // restart. To scope another section later (e.g. "music"): add it to ADMIN_SCOPES
 // and wrap that section's routes with hasScope('music', …) instead of adminAuthed.
-const ADMIN_SCOPES = ['broadcast', 'music', 'packages', 'leaderboard', 'polls'];
+const ADMIN_SCOPES = ['broadcast', 'music', 'packages', 'leaderboard', 'polls', 'tournaments'];
 const SCOPED_TOKENS_FILE = process.env.SCOPED_TOKENS_FILE || path.join(__dirname, 'scoped-tokens.json');
 let _scopedTokens = [], _scopedMtime = -1;
 function _loadScopedTokens() {
@@ -11699,6 +11699,23 @@ function hasScope(scope, query, bodyToken) {
     }
   }
   return false;
+}
+
+// Who acts on the tournaments (organizer page): the master key is « admin »;
+// a key with the « tournaments » scope is an organizer, named after the key —
+// the tournament journal records that name with every action.
+function _tdAuthor(query) {
+  if (adminAuthed(query)) return 'admin';
+  var tok = (query && query.token) || '';
+  if (!tok) return null;
+  var r = _loadScopedTokens().filter(function (x) { return x.token === tok; })[0];
+  if (!r) return null;
+  var sc = r.scopes || [];
+  if (sc.indexOf('tournaments') < 0 && sc.indexOf('*') < 0) return null;
+  var n = String(r.name || '').replace(/[\u0000-\u001f\u007f]/g, '').trim().slice(0, 48) || 'organizer';
+  // Names the director uses for itself stay its own.
+  if (/^(admin|director|scheduler|witness|witnesses|player)$/i.test(n)) n = 'org:' + n;
+  return n;
 }
 
 // Any valid admin key at all, whatever its scopes. Used only by read-only bits
@@ -12279,7 +12296,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (_m) query.token = _m[1];
   }
   if (reqPathOnly === '/admin/tournaments' || reqPathOnly.indexOf('/admin/tournaments/') === 0) {
-    return TD_LIB.handleTournamentAdmin(TD, { adminAuthed: adminAuthed, adminJson: adminJson, readJsonBody: readJsonBody }, req, res, reqPathOnly, query);
+    return TD_LIB.handleTournamentAdmin(TD, { adminAuthed: adminAuthed, adminJson: adminJson, readJsonBody: readJsonBody, author: _tdAuthor }, req, res, reqPathOnly, query);
   }
   if (reqPathOnly === '/admin' || reqPathOnly === '/admin.html') {
     const p = path.join(PUBLIC_DIR, 'admin.html');

@@ -416,6 +416,27 @@ Routes: `POST /admin/tournaments/t/table/open {id}`, `…/t/table/go {id}`,
   `badCode`, `alreadyIn`. Organizer routes: `POST /admin/tournaments/t/code
   {id, nick}`, `…/t/checkin {id, nick}`.
 
+## Organizers (service `0.9.0`, web client `2.1.10-web.307`)
+
+- **One key per organizer.** The admin creates it in Admin › Keys with the
+  category « Tournaments (organizer) » (or `pokerth-web token add NAME
+  tournaments`). With it, the organizer signs in to `/tournament/organize`;
+  the master key still works and acts as « admin ». The module's own settings
+  (on/off, restart) stay master-only.
+- **Who did what.** The web client passes the key's name to the service
+  (`X-TD-Author`, URI-encoded); every journal entry carries it. A key named
+  like one of the director's own authors (admin, director, scheduler,
+  witness, player) is recorded as `org:<name>`. The page shows who is signed
+  in (`GET /admin/tournaments/status` → `you`).
+- **Corrections approved by a second organizer** (Official, « Corrections:
+  second »): a correction is *proposed* (`correctionProposed`, the result
+  unchanged); another organizer approves it — then it is applied and signed
+  again (`corrected`, with `proposedBy`) — or rejects it with a reason
+  (`correctionRejected`); its author can withdraw it. One correction waits at
+  a time. Routes: `POST /admin/tournaments/t/correct {id, ranking, reason}`,
+  `…/t/correct/approve {id}`, `…/t/correct/reject {id, reason}`.
+- All organizers see and manage every tournament: there is no ownership yet.
+
 ## Witnesses (service `0.7.0`, web client `2.1.10-web.305`)
 
 Witnesses check a result, they never decide it.
@@ -567,7 +588,8 @@ operator's agreement.
    (table creation, seat check and hand-over done in `web.299`; opening at
    the scheduled time, announcements and messages to the table in service
    `0.3.0`; check-in in `0.5.0`; the chat language in `0.6.0`; witnesses
-   in `0.7.0`; QML witnesses by their log in `0.8.0`).
+   in `0.7.0`; QML witnesses by their log in `0.8.0`; organizer keys and
+   corrections by a second organizer in `0.9.0`).
 8. Collusion check.
 9. Organizer and player accounts.
 10. Requests to organize.

@@ -564,7 +564,7 @@ pokerth-web-client/
 | Search engines | `POST /admin/seo/ping` (IndexNow submission), `GET /admin/seo/check` |
 | Delegate keys | `GET`/`POST` `/admin/tokens`, `POST /admin/tokens/delete` |
 
-Most sections require the master token; the **Broadcasts**, **Music**, **Packages** and **Leaderboard** routes (and the `/stats` reset / remove) also accept a matching **scoped delegate key** — see the **Keys** tab.
+Most sections require the master token; the **Broadcasts**, **Music**, **Packages** and **Leaderboard** routes (and the `/stats` reset / remove) also accept a matching **scoped delegate key** — see the **Keys** tab. A key with the **Tournaments** category is a tournament organizer: it signs in to `/tournament/organize`, and the tournament journal records its name with each action (the module's own settings stay master-only).
 
 ---
 
@@ -962,7 +962,7 @@ pokerth-web status                   # show the PM2 status
 sudo pokerth-web set-period yearly   # leaderboard auto-reset: off | daily | weekly | monthly | yearly
 sudo pokerth-web reset-stats         # wipe the family leaderboard now
 sudo pokerth-web set-token SECRET    # admin token: unlocks the admin panel + remote reset (no token = both off)
-sudo pokerth-web token add NAME broadcast,music  # mint a scoped delegate key (categories: broadcast,music,packages,leaderboard)
+sudo pokerth-web token add NAME broadcast,music  # mint a scoped delegate key (categories: broadcast,music,packages,leaderboard,polls,tournaments)
 pokerth-web token list                           # list delegate keys (tokens masked)
 sudo pokerth-web token rm NAME                   # revoke a delegate key
 sudo pokerth-web admin off           # hide the admin panel (/admin returns 404); 'on' to show it again

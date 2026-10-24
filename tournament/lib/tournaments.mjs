@@ -193,7 +193,9 @@ export function createTournaments(o) {
       case 'pdbImported': return 'imported a log (' + d.games + ' game' + (d.games === 1 ? '' : 's') + ', sha256 ' + String(d.sha256).slice(0, 12) + '…)';
       case 'resultSet': return 'result from ' + d.source + (d.watchId ? ' ' + d.watchId : '') + (d.uniqueGameId != null ? ' game ' + d.uniqueGameId : '');
       case 'validated': return 'validated and signed';
-      case 'corrected': return 'corrected: ' + d.reason;
+      case 'corrected': return 'corrected: ' + d.reason + (d.proposedBy ? ' (proposed by ' + d.proposedBy + ', approved by ' + d.author + ')' : '');
+      case 'correctionProposed': return 'correction proposed, waiting for a second organizer: ' + d.reason;
+      case 'correctionRejected': return 'correction of ' + d.proposedBy + ' ' + (d.withdrawn ? 'withdrawn' : 'rejected') + (d.reason ? ': ' + d.reason : '');
       case 'tableOpened': return 'the director opens the table on ' + (d.server || 'the server') + ' (' + d.watchId + ')';
       case 'tableGo': return 'go without the absent';
       case 'tableReinvite': return 'invitations sent again';
@@ -719,16 +721,51 @@ export function createTournaments(o) {
     if (reason.length < 3) refuse('say why (3 to 200 characters)');
     const { t: t2, journal } = load(id);
     if (t2.status !== 'validated') refuse('only a validated result is corrected — before that, set the result again');
-    if (t2.settings.corrections === 'second') refuse('this profile needs a second organizer to approve corrections; organizer accounts come later');
     const rankingIn = (input.ranking || []).map((nick, i) => ({ nick: typeof nick === 'string' ? nick : nick && nick.nick, place: i + 1 }));
     const before = t2.result.ranking.map((r) => r.nick);
     const fitted = fitRanking(t2, rankingIn);
     if (fitted.map((r) => r.nick).join('\n') === before.join('\n')) refuse('same ranking as now');
+    // Corrections approved by a second organizer (Official): proposed now,
+    // applied when another organizer approves it.
+    if (t2.settings.corrections === 'second') {
+      if (t2.pendingCorrection) refuse('a correction is already waiting for a second organizer');
+      const after = fitted.map((r) => r.nick);
+      t2.pendingCorrection = { at: now(), by: author || 'admin', reason, before, after };
+      journal.append('correctionProposed', { author: author || 'admin', reason, before, after });
+      return save(t2, journal);
+    }
     t2.corrections.push({ at: now(), author: author || 'admin', reason, before, after: fitted.map((r) => r.nick) });
     t2.result = Object.assign({}, t2.result, { ranking: fitted, corrected: true });
     journal.append('corrected', { author: author || 'admin', reason, before, after: fitted.map((r) => r.nick) });
     seal(t2, journal);
     return save(t2, journal);
+  }
+
+  // The second organizer approves (or anyone rejects; the one who proposed
+  // it withdraws it).
+  function approveCorrection(id, author) {
+    const { t, journal } = load(id);
+    const p = t.pendingCorrection;
+    if (!p) refuse('no correction waiting');
+    if (String(p.by).toLowerCase() === String(author || 'admin').toLowerCase()) refuse('a second organizer must approve it — not the one who proposed it');
+    const fitted = fitRanking(t, p.after.map((nick, i) => ({ nick, place: i + 1 })));
+    t.corrections.push({ at: now(), author: p.by, approvedBy: author || 'admin', reason: p.reason, before: p.before, after: p.after });
+    t.result = Object.assign({}, t.result, { ranking: fitted, corrected: true });
+    delete t.pendingCorrection;
+    journal.append('corrected', { author: author || 'admin', proposedBy: p.by, reason: p.reason, before: p.before, after: p.after });
+    seal(t, journal);
+    return save(t, journal);
+  }
+  function rejectCorrection(id, author, why) {
+    const { t, journal } = load(id);
+    const p = t.pendingCorrection;
+    if (!p) refuse('no correction waiting');
+    const withdrawn = String(p.by).toLowerCase() === String(author || 'admin').toLowerCase();
+    const reason = cleanText(why, 200);
+    if (!withdrawn && reason.length < 3) refuse('say why you reject it (3 to 200 characters)');
+    delete t.pendingCorrection;
+    journal.append('correctionRejected', { author: author || 'admin', proposedBy: p.by, reason, withdrawn, before: p.before, after: p.after });
+    return save(t, journal);
   }
 
   // ── .pdb import ──
@@ -821,7 +858,7 @@ export function createTournaments(o) {
     return afterResult(id, author);
   }
 
-  return { list, get, create, update, addPlayer, removePlayer, setResult: setResultP, validate, correct, importPdb, file,
+  return { list, get, create, update, addPlayer, removePlayer, setResult: setResultP, validate, correct, approveCorrection, rejectCorrection, importPdb, file,
     publicList, publicGet, register, unregister, publicFile, witnessReport, witnessLog, keyHost, checkIn, issueCode, organizerCheckIn, markNotCheckedIn, needsCheckIn: (id) => needsCheckIn(load(id).t),
     hostOpened, hostCheck, hostNote, hostEnded, hostResultRefused, openHosts, autoOpenDue, autoOpenNote, Refusal };
 }

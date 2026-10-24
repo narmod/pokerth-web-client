@@ -196,7 +196,7 @@ function createTournamentHost(deps) {
       }
       const headers = {};
       ['content-type', 'content-length', 'accept', 'if-none-match'].forEach((k) => { if (req.headers[k]) headers[k] = req.headers[k]; });
-      if (author) { headers['x-td-secret'] = secret; headers['x-td-author'] = author; }
+      if (author) { headers['x-td-secret'] = secret; headers['x-td-author'] = encodeURIComponent(author); }
       if (extra) Object.assign(headers, extra);
       request(req.method, pathAndQuery, headers, req.method === 'GET' || req.method === 'HEAD' ? null : req, (err, pr) => {
         if (err) {
@@ -262,12 +262,14 @@ function handleTournamentAdmin(host, h, req, res, reqPathOnly, query) {
     if (!host.enabled()) return h.adminJson(res, 409, { ok: false, error: 'tournaments are off' });
     return host.restart('asked by the admin').then(() => answerSettings());
   });
-  // Everything else is the service's: token checked here, then relayed.
-  if (!h.adminAuthed(query)) return deny();
+  // Everything else is the service's: token checked here, then relayed with
+  // who acts — the master key (« admin ») or an organizer's key (its name).
+  const who = h.author ? h.author(query) : (h.adminAuthed(query) ? 'admin' : null);
+  if (!who) return deny();
   if (!host.enabled()) return h.adminJson(res, 409, { ok: false, error: 'tournaments are off (Admin › Community › Tournaments)' });
   const qs = Object.keys(query).filter((k) => k !== 'token' && query[k] != null)
     .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(query[k])).join('&');
-  return host.relay(req, res, reqPathOnly + (qs ? '?' + qs : ''), 'admin');
+  return host.relay(req, res, reqPathOnly + (qs ? '?' + qs : ''), who);
 }
 
 // ── /tournament and its files (no token: the page asks for it) ──

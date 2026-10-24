@@ -72,6 +72,10 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Tournaments: organizer keys** (`web.307`, service `0.9.0`) — a new key category, « Tournaments (organizer) »
+  (`ADMIN_SCOPES`, Admin › Keys, `pokerth-web token add NAME tournaments`): such a key signs in to
+  `/tournament/organize` and the web client passes its name to the tournament service, which records it in the
+  journal; the module's settings stay master-only. Details in `tournament/CHANGELOG.md`.
 - **Tournaments: QML players as witnesses** (`web.306`, service `0.8.0`) — the web client relays a player's game log
   (`/tournament/api/t/<key>/witnesslog`, up to 14 MB: a 10 MB `.pdb` in base64) to the tournament service. Details in
   `tournament/CHANGELOG.md`.

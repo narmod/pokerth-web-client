@@ -38,6 +38,13 @@ const game = await fakeServer((conn) => {
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'td-route-'));
 const F = (x) => path.join(tmp, x);
 fs.writeFileSync(F('admin-config.json'), JSON.stringify({ loginDefaults: { lanMode: 'forced', host: '127.0.0.1', lanPort: game.port, lanTls: false } }));
+// Organizer keys (Admin › Keys): two organizers, a key for another section.
+fs.writeFileSync(F('scoped-tokens.json'), JSON.stringify([
+  { name: 'Élise', token: 'org-elise-key', scopes: ['tournaments'] },
+  { name: 'Bruno', token: 'org-bruno-key', scopes: ['tournaments', 'music'] },
+  { name: 'Musician', token: 'music-only-key', scopes: ['music'] },
+  { name: 'admin', token: 'org-fake-admin', scopes: ['tournaments'] },
+]));
 const PORT = await freePort();
 const TOKEN = 'td-route-token';
 const env = Object.assign({}, process.env, {
@@ -93,6 +100,28 @@ try {
   ok((await post('/admin/tournaments/watch', { ref: 'local', gameId: 7 }, {})).status === 403, 'watch needs the token');
   const cfg = JSON.parse(fs.readFileSync(F('admin-config.json'), 'utf8'));
   ok(cfg.tournaments && cfg.tournaments.enabled === true, 'the setting is saved in admin-config.json');
+
+  // ── organizer keys: who acts is in the journal; corrections by two organizers ──
+  {
+    const E = { Authorization: 'Bearer org-elise-key' }, B = { Authorization: 'Bearer org-bruno-key' };
+    const st = await (await get('/admin/tournaments/status', E)).json();
+    ok(st.ok && st.you === 'Élise', 'organizer key: accepted, the service knows who (« ' + st.you + ' »)');
+    ok((await get('/admin/tournaments/status', { Authorization: 'Bearer music-only-key' })).status === 403, 'a key for another section: refused');
+    ok((await get('/admin/tournaments/settings', E)).status === 403 && (await post('/admin/tournaments/restart', {}, E)).status === 403, 'organizer key: not the module settings (master key only)');
+    ok((await (await get('/admin/tournaments/status', { Authorization: 'Bearer org-fake-admin' })).json()).you === 'org:admin', 'a key named « admin » is not the master key');
+    const t = await (await post('/admin/tournaments/t/create', { name: 'Two organizers', profile: 'official' }, E)).json();
+    for (const n of ['Ann', 'Ben']) await post('/admin/tournaments/t/player', { id: t.id, nick: n }, E);
+    await post('/admin/tournaments/t/result', { id: t.id, source: 'manual', ranking: ['Ann', 'Ben'] }, E);
+    await post('/admin/tournaments/t/validate', { id: t.id, override: 'tested on the bench' }, B);
+    const pc = await (await post('/admin/tournaments/t/correct', { id: t.id, ranking: ['Ben', 'Ann'], reason: 'appeal' }, E)).json();
+    ok(pc.ok && pc.pendingCorrection.by === 'Élise', 'Élise proposes a correction');
+    const self = await (await post('/admin/tournaments/t/correct/approve', { id: t.id }, E)).json();
+    ok(!self.ok && /second organizer/.test(self.error), 'Élise cannot approve her own');
+    const ap = await (await post('/admin/tournaments/t/correct/approve', { id: t.id }, B)).json();
+    ok(ap.ok && ap.result.ranking[0].nick === 'Ben' && ap.corrections[0].approvedBy === 'Bruno', 'Bruno approves: applied');
+    const h = ap.history;
+    ok(h.find((x) => x.type === 'created').author === 'Élise' && h.find((x) => x.type === 'validated').author === 'Bruno' && h.some((x) => x.type === 'corrected' && /proposed by Élise, approved by Bruno/.test(x.summary)), 'the journal says who did what');
+  }
 
   // ── the page, in jsdom, against this proxy ──
   // ── the players' API through the web client: no token, the address set by the proxy ──
@@ -220,7 +249,13 @@ try {
   act('validate').click();
   ok(await until(() => /Validated and signed/.test(det())), 'tournaments: validated by hand, with a reason');
   ok(/Validated despite the witnesses \(admin\): played in the club room/.test(det()), 'witnesses: the reason is shown');
-  ok(/second organizer/.test(det()) && !act('correct'), 'tournaments: official — no correction without a second organizer');
+  ok(/second organizer/.test(det()) && act('correct') && /Propose the correction/.test(det()), 'tournaments: official — a correction is proposed, for a second organizer');
+  act('cdown', 0).click();
+  $('tReason').value = 'appeal accepted';
+  act('correct').click();
+  ok(await until(() => /Correction waiting/.test(det()) && /A second organizer must approve it — not you/.test(det()) && act('corrReject') && !act('corrApprove')), 'tournaments: the correction waits; its author cannot approve it, only withdraw it');
+  act('corrReject').click();
+  ok(await until(() => /Correction set aside/.test(det()) && !/Correction waiting/.test(det())), 'tournaments: withdrawn');
 
   // The director opens the table (the fake server here never answers the
   // table creation: enough to see the page drive it, then close it).
@@ -269,7 +304,7 @@ try {
   const fp = await get('/admin/tournaments/t/file?id=' + cr.id + '&which=pdb');
   ok(fp.status === 200 && Buffer.from(await fp.arrayBuffer()).equals(Buffer.from(pdbBuf)), 'routes: the log is kept and downloadable');
   const lst = await (await get('/admin/tournaments/t/list')).json();
-  ok(lst.ok && lst.tournaments.length === 5, 'routes: five tournaments listed');
+  ok(lst.ok && lst.tournaments.length === 6, 'routes: six tournaments listed');
   ok(fs.existsSync(F('td/tournaments/' + cr.id + '/journal.json')) && fs.existsSync(F('td/tournaments/' + cr.id + '/result.json')), 'routes: stored in TD_DIR');
 
   // ── new code on disk: the service alone restarts ──
@@ -296,7 +331,7 @@ try {
   let s2 = null;
   for (let i = 0; i < 60; i++) { await wait(200); s2 = await (await get('/admin/tournaments/settings')).json(); if (s2.service.status === 'running' && s2.service.pid !== pid1) break; }
   ok(s2 && s2.service.status === 'running' && s2.service.pid !== pid1 && s2.service.restarts === 1, 'a killed service is started again');
-  ok((await (await get('/admin/tournaments/t/list')).json()).tournaments.length === 5, 'and finds its tournaments');
+  ok((await (await get('/admin/tournaments/t/list')).json()).tournaments.length === 6, 'and finds its tournaments');
 
   // ── off again: page gone, service stopped, files kept ──
   const off = await (await post('/admin/tournaments/settings', { enabled: false })).json();

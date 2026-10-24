@@ -311,7 +311,8 @@ use too. Items are grouped by status rather than fixed phases.
   writes in the tournament's chat language (83 languages), every line within the server's 128 bytes. Service `0.7.0`
   (`web.305`): witnesses — the web clients at the table send what they saw, compared with the director's journal;
   Official needs one that agrees and none that disagrees. Service `0.8.0` (`web.306`): QML players as witnesses by their
-  `.pdb` log, per tournament.
+  `.pdb` log, per tournament. Service `0.9.0` (`web.307`): one key per organizer (Admin › Keys, « Tournaments »), names
+  in the journal, corrections approved by a second organizer (Official).
 
 ## ⏭️ Next
 

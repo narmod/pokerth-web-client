@@ -83,7 +83,19 @@ ok(o1.status === 'finished' && !o1.sealedHead, 'official: result waits for an or
 await refused(Promise.resolve().then(() => T.validate(off.id, 'admin')), /witnesses required/, 'official: witnesses required — no validation without one, or a reason');
 const o2 = await T.validate(off.id, 'admin', { override: 'played at the club, seen by the organizer' });
 ok(o2.status === 'validated' && o2.checks.signature && o2.witnessOverride.reason === 'played at the club, seen by the organizer', 'official: validated by hand with a reason, then signed');
-await refused(Promise.resolve().then(() => T.correct(off.id, { ranking: ['A1', 'B1'], reason: 'appeal accepted' }, 'admin')), /second organizer/, 'official: a correction needs a second organizer');
+const pr = await T.correct(off.id, { ranking: ['A1', 'B1'], reason: 'appeal accepted' }, 'admin');
+ok(pr.pendingCorrection && pr.pendingCorrection.by === 'admin' && pr.result.ranking[0].nick === 'B1' && pr.history.some((h) => h.type === 'correctionProposed'), 'official: a correction is proposed, the result unchanged until approved');
+await refused(Promise.resolve().then(() => T.correct(off.id, { ranking: ['A1', 'B1'], reason: 'again' }, 'Alice')), /already waiting/, 'official: one correction waiting at a time');
+await refused(Promise.resolve().then(() => T.approveCorrection(off.id, 'ADMIN')), /second organizer must approve/, 'official: not approved by the one who proposed it');
+await refused(Promise.resolve().then(() => T.rejectCorrection(off.id, 'Alice', '')), /say why/, 'official: rejecting needs a reason');
+const ap = await T.approveCorrection(off.id, 'Alice');
+ok(!ap.pendingCorrection && ap.result.ranking[0].nick === 'A1' && ap.result.corrected && ap.corrections[0].approvedBy === 'Alice' && ap.checks.signature && ap.history.some((h) => h.type === 'corrected' && /proposed by admin, approved by Alice/.test(h.summary)), 'official: approved by a second organizer, applied and signed again');
+await T.correct(off.id, { ranking: ['B1', 'A1'], reason: 'second thoughts' }, 'Alice');
+const wd = await T.rejectCorrection(off.id, 'Alice');
+ok(!wd.pendingCorrection && wd.result.ranking[0].nick === 'A1' && wd.history.some((h) => h.type === 'correctionRejected' && /withdrawn/.test(h.summary)), 'official: the one who proposed it can withdraw it');
+await T.correct(off.id, { ranking: ['B1', 'A1'], reason: 'third try' }, 'Alice');
+const rj = await T.rejectCorrection(off.id, 'Bob', 'the log says otherwise');
+ok(!rj.pendingCorrection && rj.result.ranking[0].nick === 'A1' && rj.history.some((h) => h.type === 'correctionRejected' && /rejected: the log says otherwise/.test(h.summary)), 'official: another organizer can reject it, with a reason');
 
 // ── result from a Table check ──────────────────────────────────────
 const wPayload = { journalVersion: 1, head: 'ab'.repeat(32), entries: 40, result: { finished: true, status: 'complete', ranking: [

@@ -274,14 +274,20 @@ export function createTournamentsView(deps) {
       }
     }
     if (t.status !== 'validated' && !(t.host && t.host.status === 'open')) h += sourcePanel(t);
-    else if (st.corrections === 'second') h += '<h3>Correction</h3><p class="small muted">This profile needs a second organizer to approve a correction. Organizer accounts come later.</p>';
-    else {
-      h += '<details class="sub"><summary>Correct the result</summary><p class="small muted">The validated result stays in the journal; the correction is added with your reason, and the result is signed again.</p>' +
+    else if (t.pendingCorrection) {
+      // Official: a correction waits for a second organizer.
+      const pc = t.pendingCorrection, mine = String(pc.by).toLowerCase() === String(deps.you() || '').toLowerCase();
+      h += '<h3>Correction waiting</h3><p class="small">Proposed by <b>' + esc(pc.by) + '</b> (' + esc(when(pc.at)) + '): ' + esc(pc.reason) + '<br><span class="muted">' + esc(pc.before.join(' > ')) + ' → ' + esc(pc.after.join(' > ')) + '</span></p>' +
+        (mine ? '<p class="small muted">A second organizer must approve it — not you. Organizers sign in to this page with their own key (Admin › Keys, category « Tournaments »).</p><div class="actions"><button type="button" data-act="corrReject">Withdraw it</button></div>'
+          : '<div class="row"><div><label for="tRejWhy">Reason (to reject)</label><input id="tRejWhy" maxlength="200" autocomplete="off"></div></div><div class="actions"><button type="button" class="primary" data-act="corrApprove">Approve and sign</button><button type="button" data-act="corrReject">Reject</button></div>');
+    } else {
+      const second = st.corrections === 'second';
+      h += '<details class="sub"><summary>Correct the result</summary><p class="small muted">The validated result stays in the journal; the correction is added with your reason, and the result is signed again.' + (second ? ' This profile needs a second organizer: your correction waits until another organizer approves it.' : '') + '</p>' +
         '<ul class="rank">' + arrange(corrOrder, 'c') + '</ul><label for="tReason">Reason</label><input id="tReason" maxlength="200" autocomplete="off">' +
-        '<div class="actions"><button type="button" class="primary" data-act="correct">Record the correction</button></div></details>';
+        '<div class="actions"><button type="button" class="primary" data-act="correct">' + (second ? 'Propose the correction' : 'Record the correction') + '</button></div></details>';
     }
     if (t.corrections && t.corrections.length) {
-      h += '<h3>Corrections</h3><ul class="small">' + t.corrections.map((c) => '<li>' + esc(when(c.at)) + ' · ' + esc(c.author) + ' — ' + esc(c.reason) + '<br><span class="muted">' + esc(c.before.join(' > ')) + ' → ' + esc(c.after.join(' > ')) + '</span></li>').join('') + '</ul>';
+      h += '<h3>Corrections</h3><ul class="small">' + t.corrections.map((c) => '<li>' + esc(when(c.at)) + ' · ' + esc(c.author) + (c.approvedBy ? ', approved by ' + esc(c.approvedBy) : '') + ' — ' + esc(c.reason) + '<br><span class="muted">' + esc(c.before.join(' > ')) + ' → ' + esc(c.after.join(' > ')) + '</span></li>').join('') + '</ul>';
     }
 
     // Edit (until validated).
@@ -482,7 +488,9 @@ export function createTournamentsView(deps) {
     }
     if (a === 'upload') return upload();
     if (a === 'validate') return call('/admin/tournaments/t/validate', $('tOverride') ? { override: ($('tOverride').value || '').trim() } : {}, 'Validated and signed.');
-    if (a === 'correct') return call('/admin/tournaments/t/correct', { ranking: corrOrder.slice(), reason: ($('tReason').value || '').trim() }, 'Correction recorded and signed.');
+    if (a === 'correct') return call('/admin/tournaments/t/correct', { ranking: corrOrder.slice(), reason: ($('tReason').value || '').trim() }, (cur.settings || {}).corrections === 'second' ? 'Correction proposed: a second organizer must approve it.' : 'Correction recorded and signed.');
+    if (a === 'corrApprove') return call('/admin/tournaments/t/correct/approve', {}, 'Correction approved and signed.');
+    if (a === 'corrReject') return call('/admin/tournaments/t/correct/reject', { reason: $('tRejWhy') ? ($('tRejWhy').value || '').trim() : '' }, 'Correction set aside.');
     if (a === 'save') {
       const patch = {};
       const n = $('tEName').value.trim(); if (n && n !== cur.name) patch.name = n;

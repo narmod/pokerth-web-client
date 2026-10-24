@@ -8,6 +8,17 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.9.0 — 2026-10-24 (web client `2.1.10-web.307`)
+
+### Added
+- **Organizers.** One key per organizer, made by the admin in Admin › Keys
+  (category « Tournaments (organizer) »): it signs in to the organizer page,
+  whose sign-out button says who is signed in, and its name is recorded with
+  every action in the journal (the master key acts as « admin »).
+- **Corrections approved by a second organizer** (Official): a correction is
+  proposed; another organizer approves it (then it is applied and signed) or
+  rejects it with a reason; its author can withdraw it.
+
 ## 0.8.0 — 2026-10-24 (web client `2.1.10-web.306`)
 
 ### Added

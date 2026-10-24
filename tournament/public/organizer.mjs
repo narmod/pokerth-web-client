@@ -56,7 +56,8 @@ document.querySelector('.tabs').addEventListener('keydown', (ev) => {
   $(next).click(); $(next).focus();
 });
 setView(load(VIEWK) === 'check' ? 'check' : 'tour');
-const tours = createTournamentsView({ api, esc, tok, servers: () => servers });
+let you = '';   // who is signed in: « admin » (master key) or an organizer's key name
+const tours = createTournamentsView({ api, esc, tok, servers: () => servers, you: () => you });
 
 // ── sign-in ────────────────────────────────────────────────────────
 function signedOut(msg) {
@@ -80,6 +81,11 @@ function start() {
     $('fatal').textContent = '';
     $('signIn').hidden = true; $('app').hidden = false; $('signOut').hidden = false;
     servers = d.servers || [];
+    api('/admin/tournaments/status').then((st) => {
+      you = (st && st.you) || '';
+      $('signOut').textContent = you ? 'Sign out (' + you + ')' : 'Sign out';
+      $('signOut').title = you === 'admin' ? 'Signed in with the master key' : 'Signed in as the organizer « ' + you + ' »';
+    }).catch(() => {});
     $('srvSel').innerHTML = servers.map((s) => '<option value="' + esc(s.ref) + '">' + esc(s.name) + ' — ' + esc(s.host) + ':' + esc(s.port) + (s.tls ? ' (TLS)' : '') + ' · ' + esc({ registry: 'game server', lan: 'LAN directory', local: 'local' }[s.kind] || s.kind) + '</option>').join('');
     refreshList();
     tours.refresh();

@@ -8076,7 +8076,7 @@
   (function(){ var b=$('seRefresh'); if(b) b.addEventListener('click',function(){ var m=$('seMsg'); if(m){ m.textContent=''; m.className='msg'; } loadSessions(); }); })();
 
   // -- Delegate keys (master only): create scoped API keys per category --------
-  var _kySC={broadcast:'Broadcasts',music:'Music',packages:'Packages',leaderboard:'Leaderboard',polls:'Polls'};
+  var _kySC={broadcast:'Broadcasts',music:'Music',packages:'Packages',leaderboard:'Leaderboard',polls:'Polls',tournaments:'Tournaments (organizer)'};
   function _kyLabel(s){ return _kySC[s]||s; }
   function loadKeys(){
     api('/admin/tokens').then(function(r){return r.json();}).then(function(d){

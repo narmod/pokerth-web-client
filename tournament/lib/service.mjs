@@ -161,7 +161,13 @@ export function createService(o) {
     try { return b.length ? JSON.parse(b.toString('utf8')) : {}; } catch (e) { return null; }
   }
   function author(req) {
-    if (o.secret && same(req.headers['x-td-secret'], o.secret)) return String(req.headers['x-td-author'] || 'admin').slice(0, 64);
+    if (o.secret && same(req.headers['x-td-secret'], o.secret)) {
+      // The web client sends who acts, URI-encoded (an organizer's key name).
+      let w = String(req.headers['x-td-author'] || 'admin');
+      try { w = decodeURIComponent(w); } catch (e) {}
+      w = w.replace(/[\u0000-\u001f\u007f]/g, '').trim().slice(0, 64);
+      return w || 'admin';
+    }
     const m = /^\s*Bearer\s+(.+?)\s*$/i.exec(req.headers.authorization || '');
     if (o.adminToken && m && same(m[1], o.adminToken)) return 'admin';
     return null;
@@ -186,7 +192,7 @@ export function createService(o) {
       .catch((e) => json(res, e instanceof T.Refusal ? 400 : 500, { ok: false, error: (e && e.message) || 'error' }));
     const get = req.method === 'GET';
 
-    if (sub === '/status' && get) return json(res, 200, Object.assign({ ok: true }, status()));
+    if (sub === '/status' && get) return json(res, 200, Object.assign({ ok: true, you: who }, status()));
     if (sub === '/servers' && get) return json(res, 200, { ok: true, servers: await td.servers() });
     if (sub === '/watches' && get) return json(res, 200, { ok: true, watches: td.list() });
     if (sub === '/watch' && get) {
@@ -234,6 +240,8 @@ export function createService(o) {
       case '/t/result': return send(() => T.setResult(id, b, who));
       case '/t/validate': return send(() => T.validate(id, who, { override: b.override }));
       case '/t/correct': return send(() => T.correct(id, b, who));
+      case '/t/correct/approve': return send(() => T.approveCorrection(id, who));
+      case '/t/correct/reject': return send(() => T.rejectCorrection(id, who, b.reason));
       case '/t/table/open': return send(() => openTable(id, b, who));
       case '/t/table/go': return send(() => tableCommand(id, 'go', 'tableGo', who));
       case '/t/table/reinvite': return send(() => tableCommand(id, 'reinvite', 'tableReinvite', who));
