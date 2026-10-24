@@ -72,6 +72,16 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Arena: « its own app »** (`web.323`, service `0.34.0`) — first step of turning the Arena into an application of
+  its own (decided 2026-10-24). Admin › Community › Arena › « Where the Arena runs »: inside this web client (as
+  before) or as its own app elsewhere, linked with the Arena's address and its link key (`alk_…`, shown by the Arena
+  on `/arena/organize` › Web client). « Test and save » calls the Arena's `POST /arena/api/link/hello` with the key
+  and this web client's public address; the Arena then reads `GET /api/arena-link/servers` and
+  `/api/arena-link/events` here with the same key (`handleArenaLink`: GET only, ten wrong keys block an address for
+  ten minutes, a 404 unless the mode is on). In that mode no service is started here, `/arena` pages answer 302 to the
+  Arena (the players' API 307) and the organizer API is refused with a pointer to the Arena's organizer page. The
+  key is never sent back to the admin page (a hint only). Next: the witness and the web client's link on another
+  domain, then the Arena's own repository. Tests: `scripts/test-arena-link-host.mjs`, `arena/test/test-arena-link.mjs`.
 - **Arena: one account for everything** (`web.322`, service `0.33.0`) — the relay lets a player account's session
   (`ps_…`) through to `/admin/arena/*` as it does an organizer account's (`as_…`): the Arena checks it and the role the
   super admin gave that account (organizer, referee, read only).

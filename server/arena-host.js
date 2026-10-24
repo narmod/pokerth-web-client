@@ -21,6 +21,15 @@
 //     (arena/package.json); the web client's does not move for it.
 // Watches run in detached processes started by the service: they survive
 // the service and the web client.
+//
+// « Its own app » (web.323, 2026-10-24): the Arena can also run as an
+// application of its own, elsewhere. Admin › Community › Arena then keeps
+// its address and its link key (made by the Arena, /arena/organize › Web
+// client) instead of launching the service: « Test and save » calls the
+// Arena's POST /arena/api/link/hello with the key and this web client's
+// public address; the Arena then reads GET /api/arena-link/servers and
+// /api/arena-link/events here with the same key (handleArenaLink), and
+// /arena on this site sends visitors to the Arena's address.
 // Design: docs/ARENA.md.
 // ═══════════════════════════════════════════════════════════════════
 
@@ -59,6 +68,20 @@ const API_MAX_LOG = 14 * 1024 * 1024;   // a player's log (.pdb, 10 MB) in base6
 // Only these reach the service; the rest of the environment (admin token,
 // database passwords…) stays with the web client.
 const ENV_KEEP = ['PATH', 'HOME', 'LANG', 'LC_ALL', 'TZ', 'TMPDIR', 'NODE_EXTRA_CA_CERTS', 'SSL_CERT_FILE'];
+// « Its own app »: the Arena's link key (arena/lib/link.mjs) and address.
+const LINK_KEY_RE = /^alk_[A-Za-z0-9_-]{40,60}$/;
+const LINK_TEST_MS = 8000;
+const LINK_BAD_MAX = 10, LINK_BAD_WINDOW_MS = 10 * 60 * 1000;
+// « https://arena.example.org » (an origin: scheme, host, port; no path).
+function cleanOrigin(v) {
+  const s = String(v || '').trim().replace(/\/+$/, '');
+  if (!/^https?:\/\/[A-Za-z0-9.:[\]-]{1,255}$/.test(s)) return null;
+  try { const u = new URL(s); return u.origin === s ? s : null; } catch (e) { return null; }
+}
+function sameSecret(a, b) {
+  const x = Buffer.from(String(a || '')), y = Buffer.from(String(b || ''));
+  return x.length > 0 && x.length === y.length && crypto.timingSafeEqual(x, y);
+}
 
 function createArenaHost(deps) {
   const log = deps.log || ((s) => console.log(s));
@@ -67,17 +90,88 @@ function createArenaHost(deps) {
   let runningKey = null, reloading = false, codeTimer = null;
   let readyWaiters = [];
 
-  function enabled() { return (deps.getConfig() || {}).enabled === true; }
-  function settings() { return { enabled: enabled() }; }
+  let lastContact = null, lastTest = null;
+  const linkBad = new Map();   // address → [times] (wrong link keys)
+
+  function cfg() { return deps.getConfig() || {}; }
+  function enabled() { return cfg().enabled === true; }
+  // Where the Arena runs: « embedded » (launched here) or « external » (its own app).
+  function mode() { return cfg().mode === 'external' ? 'external' : 'embedded'; }
+  function linkUrl() { return cleanOrigin(cfg().url) || null; }
+  function linkKey() { const k = String(cfg().key || ''); return LINK_KEY_RE.test(k) ? k : null; }
+  function external() { return enabled() && mode() === 'external' && !!linkUrl() && !!linkKey(); }
+  function wantsChild() { return enabled() && mode() !== 'external'; }
+  function linkInfo() {
+    const k = linkKey();
+    return { mode: mode(), url: linkUrl(), keySet: !!k, keyHint: k ? k.slice(0, 8) + '…' + k.slice(-4) : null, lastContact, lastTest };
+  }
+  function settings() { return Object.assign({ enabled: enabled() }, { link: linkInfo() }); }
   function setSettings(patch) {
-    const cur = Object.assign({}, deps.getConfig() || {});
+    const cur = Object.assign({}, cfg());
     if (typeof patch.enabled === 'boolean') cur.enabled = patch.enabled;
+    if (patch.url !== undefined) {
+      if (patch.url === '' || patch.url === null) delete cur.url;
+      else { const u = cleanOrigin(patch.url); if (!u) throw new Error('the Arena\'s address must be like https://arena.example.org (no path)'); cur.url = u; }
+    }
+    if (patch.key !== undefined) {
+      if (patch.key === '' || patch.key === null) delete cur.key;
+      else { const k = String(patch.key).trim(); if (!LINK_KEY_RE.test(k)) throw new Error('this is not an Arena link key (alk_…)'); cur.key = k; }
+    }
+    if (patch.mode === 'embedded' || patch.mode === 'external') {
+      if (patch.mode === 'external' && !(cleanOrigin(cur.url) && LINK_KEY_RE.test(String(cur.key || '')))) throw new Error('give the Arena\'s address and its link key first');
+      cur.mode = patch.mode;
+    }
+    if (cur.mode !== 'external') delete cur.mode;
     delete cur.allowAuthServers;   // option of web.292, withdrawn: LAN only
+    if (cur.url !== cfg().url || cur.key !== cfg().key) lastTest = null;
     deps.setConfig(cur);
     sync();
     return settings();
   }
-  function sync() { if (enabled()) start(); else stop(); }
+  function sync() { if (wantsChild()) start(); else stop(); }
+
+  // « Test and save »: tell the Arena who we are, with its key. Given an
+  // address and a key, they are saved when the Arena accepts them.
+  // → { ok, arena?, error? }
+  function linkTest(o) {
+    const url = o.url !== undefined ? cleanOrigin(o.url) : linkUrl();
+    const key = o.key !== undefined ? String(o.key || '').trim() : linkKey();
+    if (!url) return Promise.resolve({ ok: false, error: 'the Arena\'s address must be like https://arena.example.org (no path)' });
+    if (!LINK_KEY_RE.test(String(key || ''))) return Promise.resolve({ ok: false, error: 'this is not an Arena link key (alk_…): copy it from the Arena, /arena/organize › Web client' });
+    const me = cleanOrigin(o.origin);
+    if (!me) return Promise.resolve({ ok: false, error: 'this web client\'s public address is unknown: set it in Admin › SEO' });
+    const fetchFn = deps.fetch || ((...a) => fetch(...a));
+    const ac = new AbortController();
+    const t = setTimeout(() => ac.abort(), deps.linkTestMs || LINK_TEST_MS);
+    return Promise.resolve()
+      .then(() => fetchFn(url + '/arena/api/link/hello', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key }, body: JSON.stringify({ url: me, version: deps.clientVersion() }), signal: ac.signal }))
+      .then((r) => r.json().catch(() => ({})).then((d) => ({ r, d })))
+      .then(({ r, d }) => {
+        if (r.status === 403) return { ok: false, error: 'the Arena refused the key' };
+        if (r.status === 429) return { ok: false, error: 'the Arena says: too many attempts, try again later' };
+        if (r.status === 404) return { ok: false, error: 'no Arena at this address (or it is launched by a web client, not on its own)' };
+        if (!r.ok || !d || !d.ok) return { ok: false, error: (d && d.error) || ('the Arena answered HTTP ' + r.status) };
+        return { ok: true, arena: String(d.arena || ''), webClient: d.webClient || me };
+      })
+      .catch((e) => ({ ok: false, error: e && e.name === 'AbortError' ? 'no answer from the Arena (timeout)' : 'cannot reach the Arena: ' + ((e && e.cause && e.cause.code) || (e && e.message) || 'error') }))
+      .finally(() => clearTimeout(t))
+      .then((res) => {
+        if (res.ok && (o.url !== undefined || o.key !== undefined)) setSettings({ url, key });
+        lastTest = { at: Date.now(), ok: res.ok, arena: res.arena || null, error: res.error || null };
+        return res;
+      });
+  }
+  // A request of the Arena (GET /api/arena-link/…): the key, else refused.
+  function linkAuthorized(authHeader, ip) {
+    const t = Date.now();
+    const l = (linkBad.get(ip) || []).filter((x) => t - x < LINK_BAD_WINDOW_MS);
+    linkBad.set(ip, l);
+    if (l.length >= LINK_BAD_MAX) return 429;
+    const m = /^\s*Bearer\s+(.+?)\s*$/i.exec(String(authHeader || ''));
+    if (!m || !sameSecret(m[1], linkKey())) { l.push(t); return 403; }
+    return 200;
+  }
+  function noteContact(what) { lastContact = { at: Date.now(), what }; }
 
   // New code on disk while the service runs: restart it, and only it.
   function watchCode() {
@@ -95,7 +189,7 @@ function createArenaHost(deps) {
   // Stop and start again at once (not counted as a failure). Watches are
   // processes of their own: they go on meanwhile.
   function restart(why) {
-    if (!enabled()) return Promise.resolve(false);
+    if (!wantsChild()) return Promise.resolve(false);
     const c = child;
     if (!c) { start(); return ready(10000); }
     reloading = true;
@@ -155,13 +249,13 @@ function createArenaHost(deps) {
       child = null; port = null; clearTimeout(stableTimer);
       settle(false);
       if (reloading) return;              // restart(): it starts the new one
-      if (!enabled()) { status = 'off'; return; }
+      if (!wantsChild()) { status = 'off'; return; }
       lastError = 'stopped (code ' + code + (signal ? ', signal ' + signal : '') + ')';
       restarts++;
       const delay = Math.min(30000, 1000 * Math.pow(2, Math.min(restarts - 1, 5)));
       status = 'restarting';
       log('[arena] service ' + lastError + ', restart in ' + Math.round(delay / 1000) + ' s');
-      timer = setTimeout(() => { timer = null; if (enabled()) start(); }, delay);
+      timer = setTimeout(() => { timer = null; if (wantsChild()) start(); }, delay);
       timer.unref();
     });
   }
@@ -243,7 +337,7 @@ function createArenaHost(deps) {
     } catch (e) { return null; }
   }
 
-  return { settings, setSettings, sync, start, stop, restart, ready, info, relay, serviceStatus, keyInfo, enabled, PAGE_RE };
+  return { settings, setSettings, sync, start, stop, restart, ready, info, relay, serviceStatus, keyInfo, enabled, mode, external, linkUrl, linkTest, linkAuthorized, noteContact, listServers: () => deps.listServers(), communityEvents: () => (deps.communityEvents ? deps.communityEvents() : null), PAGE_RE };
 }
 
 // ── HTTP, under /admin/arena (auth and rate limit by handleAdmin) ──
@@ -252,7 +346,7 @@ function handleArenaAdmin(host, h, req, res, reqPathOnly, query) {
   const sub = reqPathOnly.slice('/admin/arena'.length) || '/';
   const answerSettings = () => {
     const base = Object.assign({ ok: true }, host.settings(), { service: host.info(), key: host.keyInfo(), running: null, maxRunning: null });
-    if (!base.enabled) return h.adminJson(res, 200, base);
+    if (!base.enabled || host.mode() === 'external') return h.adminJson(res, 200, base);
     return host.serviceStatus().then((s) => {
       if (s && s.ok) Object.assign(base, { key: s.key || base.key, running: s.running, maxRunning: s.maxRunning, service: host.info() });
       else base.service = host.info();
@@ -262,15 +356,24 @@ function handleArenaAdmin(host, h, req, res, reqPathOnly, query) {
   if (sub === '/settings') {
     if (req.method === 'POST') return h.readJsonBody(req, (b) => {
       if (!b || !h.adminAuthed(query, b.token)) return deny();
-      host.setSettings(b);
+      try { host.setSettings(b); } catch (e) { return h.adminJson(res, 400, Object.assign({ ok: false, error: e.message }, host.settings())); }
       return answerSettings();
     });
     if (!h.adminAuthed(query)) return deny();
     return answerSettings();
   }
+  // « Its own app »: tell the Arena who we are, with its key (and save them when it accepts).
+  if (sub === '/link-test' && req.method === 'POST') return h.readJsonBody(req, (b) => {
+    if (!b || !h.adminAuthed(query, b.token)) return deny();
+    const o = { origin: h.origin ? h.origin(req) : '' };
+    if (b.url !== undefined) o.url = b.url;
+    if (b.key !== undefined) o.key = b.key;
+    return host.linkTest(o).then((r) => h.adminJson(res, 200, Object.assign({}, host.settings(), { ok: true, test: r })));
+  });
   if (sub === '/restart' && req.method === 'POST') return h.readJsonBody(req, (b) => {
     if (!b || !h.adminAuthed(query, b.token)) return deny();
     if (!host.enabled()) return h.adminJson(res, 409, { ok: false, error: 'the Arena is off' });
+    if (host.mode() === 'external') return h.adminJson(res, 409, { ok: false, error: 'the Arena runs as its own app: restart it there' });
     return host.restart('asked by the admin').then(() => answerSettings());
   });
   // Everything else is the service's: token checked here, then relayed with
@@ -279,6 +382,7 @@ function handleArenaAdmin(host, h, req, res, reqPathOnly, query) {
   const who = h.author ? h.author(query) : (h.adminAuthed(query) ? 'admin' : null);
   if (!who) return deny();
   if (!host.enabled()) return h.adminJson(res, 409, { ok: false, error: 'the Arena is off (Admin › Community › Arena)' });
+  if (host.mode() === 'external') return h.adminJson(res, 409, { ok: false, code: 'external', error: 'the Arena runs as its own app: use its organizer page', url: host.linkUrl() ? host.linkUrl() + '/arena/organize' : null });
   const qs = Object.keys(query).filter((k) => k !== 'token' && query[k] != null)
     .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(query[k])).join('&');
   if (typeof who === 'object' && who.session) return host.relay(req, res, reqPathOnly + (qs ? '?' + qs : ''), 'session', { 'x-arena-session': who.session });
@@ -289,6 +393,18 @@ function handleArenaAdmin(host, h, req, res, reqPathOnly, query) {
 function handleArenaPage(host, req, res, reqPathOnly, clientIp, origin) {
   const nf = () => { res.writeHead(404, { 'X-Robots-Tag': 'noindex, nofollow, noimageindex' }); res.end('Not found'); };
   if (!host.enabled()) return nf();
+  // « Its own app »: /arena on this site sends visitors to the Arena's address
+  // (pages 302; the players' API 307, so a POST stays a POST).
+  if (host.mode() === 'external') {
+    const base = host.linkUrl();
+    if (!base) return nf();
+    const qi = String(req.url || '').indexOf('?');
+    const qs = qi >= 0 ? String(req.url).slice(qi).slice(0, 300) : '';
+    if (API_RE.test(reqPathOnly)) { res.writeHead(307, { Location: base + reqPathOnly + qs, 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow, noimageindex' }); return res.end(); }
+    if (!PAGE_RE.test(reqPathOnly) || (req.method !== 'GET' && req.method !== 'HEAD')) return nf();
+    res.writeHead(302, { Location: base + reqPathOnly + qs, 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow, noimageindex' });
+    return res.end();
+  }
   if (API_RE.test(reqPathOnly)) {
     if (req.method !== 'GET' && req.method !== 'POST') return nf();
     if (req.method === 'POST' && !(Number(req.headers['content-length']) <= (/\/witnesslog$/.test(reqPathOnly) ? API_MAX_LOG : /\/witness$/.test(reqPathOnly) ? API_MAX_WITNESS : API_MAX_BODY))) {
@@ -304,4 +420,23 @@ function handleArenaPage(host, req, res, reqPathOnly, clientIp, origin) {
   return host.relay(req, res, reqPathOnly, null, origin ? { 'x-td-origin': String(origin).slice(0, 300) } : null);
 }
 
-module.exports = { createArenaHost, handleArenaAdmin, handleArenaPage, PAGE_RE, API_RE };
+// ── /api/arena-link/* — what the Arena running as its own app reads here,
+// with its link key: the servers it may use, the community events.
+function handleArenaLink(host, req, res, reqPathOnly, clientIp) {
+  const send = (code, obj, extra) => { res.writeHead(code, Object.assign({ 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' }, extra || {})); res.end(JSON.stringify(obj)); };
+  const what = reqPathOnly.slice('/api/arena-link/'.length);
+  if ((what !== 'servers' && what !== 'events') || req.method !== 'GET' || !host.external()) return send(404, { ok: false, error: 'not found' });
+  const a = host.linkAuthorized(req.headers.authorization, String(clientIp || '').slice(0, 64));
+  if (a === 429) return send(429, { ok: false, error: 'too many attempts, try again later' }, { 'Retry-After': '600' });
+  if (a !== 200) return send(403, { ok: false, error: 'forbidden' });
+  host.noteContact(what);
+  if (what === 'servers') {
+    let list = [];
+    try { list = host.listServers() || []; } catch (e) {}
+    return send(200, { ok: true, servers: list });
+  }
+  return Promise.resolve().then(() => host.communityEvents()).catch(() => null)
+    .then((data) => send(200, { ok: true, events: data && typeof data === 'object' ? data : null }));
+}
+
+module.exports = { createArenaHost, handleArenaAdmin, handleArenaPage, handleArenaLink, PAGE_RE, API_RE, LINK_KEY_RE, cleanOrigin };

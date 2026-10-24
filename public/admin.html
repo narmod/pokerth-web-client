@@ -2217,6 +2217,19 @@
         <div class="row ftrow" id="tdRow"><div class="nm"><b>Arena and the <code>/arena</code> page</b><span id="tdRowSub">Loading…</span></div><button type="button" class="toggle off" id="tdToggle" aria-pressed="false" disabled>Off</button></div>
         <div id="tdMsg" class="msg"></div>
       </div>
+      <div class="card" id="tdWhereCard">
+        <div class="boardhead"><h2>Where the Arena runs</h2><span id="tdWhereNote" class="headnote"></span></div>
+        <p class="muted">Inside this web client, or as <b>its own app</b> installed elsewhere, linked with its address and link key. The Arena then reads the servers it may use and the community events here, and <code>/arena</code> on this site sends visitors to it.</p>
+        <details class="more"><summary>How the link works</summary><p class="muted">Servers the Arena may use: the LAN directory and the local server, as inside the web client. On the Arena: <code>/arena/organize</code> › <b>Web client</b> (super admin) shows the link key. Here: its address (like <code>https://arena.example.org</code>, no path) and that key, then <b>Test and save</b>. This web client calls the Arena with the key and its own public address (Admin › SEO, else the address you use now); the Arena then reads <code>/api/arena-link/servers</code> and <code>/api/arena-link/events</code> here with the same key, nothing else. A wrong key is refused, ten in a row block that address for ten minutes. A new key on the Arena cuts the link until it is pasted here.</p></details>
+        <div class="defrow fld"><span>Runs</span><select id="tdMode"><option value="embedded">Inside this web client</option><option value="external">As its own app (elsewhere)</option></select></div>
+        <div id="tdExt" style="display:none">
+          <div class="defrow fld"><span>Arena address</span><input id="tdUrl" type="url" maxlength="300" placeholder="https://arena.example.org" autocomplete="off" spellcheck="false"></div>
+          <div class="defrow fld"><span>Link key <span class="muted" id="tdKeyHint"></span></span><input id="tdKeyIn" type="password" maxlength="80" placeholder="alk_… (from the Arena)" autocomplete="off" spellcheck="false"></div>
+          <div class="rowtop"><button id="tdTest" class="use" type="button">Test and save</button></div>
+          <p class="muted hint" id="tdLinkState"></p>
+        </div>
+        <div id="tdLinkMsg" class="msg"></div>
+      </div>
       <div class="card">
         <div class="boardhead"><h2>Install key</h2><span id="tdKeyNote" class="headnote"></span></div>
         <p class="muted">Ed25519 key of this install: it signs every sealed result, so anyone can check one. Its public part is what a DNS TXT <code>k=</code> record carries when a server operator consents to tournaments. Made when the Arena is first on, then kept.</p>
@@ -3437,21 +3450,65 @@
     _td=d;
     var on=!!d.enabled, sv=d.service||{}, st=ARENA_SV[sv.status]||[sv.status||'—','var(--muted)'], k=d.key;
     var since=sv.since?'up since '+new Date(sv.since).toLocaleTimeString():'';
-    var T=[['Module',on?'On':'Off',on?'/arena is open':'/arena answers 404',on?'var(--ok-text)':'var(--muted)'],
+    var lk=d.link||{}, ext=lk.mode==='external';
+    _tdRenderLink(lk,on);
+    var T=ext?[['Module',on?'On':'Off',on?'/arena sends to the Arena':'/arena answers 404',on?'var(--ok-text)':'var(--muted)'],
+           ['Arena','Own app',lk.url?srvEsc(lk.url):'no address yet','var(--accent)',' sm'],
+           ['Link',lk.lastTest?(lk.lastTest.ok?'OK':'Failed'):'Not tested',lk.lastTest?(lk.lastTest.ok?'Arena '+srvEsc(lk.lastTest.arena||'?')+' · '+new Date(lk.lastTest.at).toLocaleTimeString():srvEsc(lk.lastTest.error||'')):'Test and save below',lk.lastTest?(lk.lastTest.ok?'var(--ok-text)':'var(--err-text)'):'var(--muted)',' sm'],
+           ['Last contact',lk.lastContact?new Date(lk.lastContact.at).toLocaleTimeString():'—',lk.lastContact?'the Arena read '+srvEsc(lk.lastContact.what):'the Arena has not read anything yet','var(--m-lan)',' sm']]:[['Module',on?'On':'Off',on?'/arena is open':'/arena answers 404',on?'var(--ok-text)':'var(--muted)'],
            ['Service',on?st[0]:'Stopped',on?(sv.lastError&&sv.status!=='running'?srvEsc(sv.lastError):(sv.version?'version '+srvEsc(sv.version)+(sv.diskVersion&&sv.diskVersion!==sv.version?' · '+srvEsc(sv.diskVersion)+' on disk':'')+(since?' · '+since:''):'starts with the module')):'version '+srvEsc(sv.diskVersion||'?')+' · starts when the module is on',on?st[1]:'var(--muted)',' sm'],
            ['Watches',d.running!=null?String(d.running)+'<small class="ovof"> / '+(d.maxRunning||4)+'</small>':'—',d.running!=null?'Table checks running':'read from the service','var(--m-lan)'],
            ['Install key',k?'Ed25519':'None',k?'created '+new Date(k.created).toLocaleDateString():'made on first enable',k?'var(--accent)':'var(--muted)',' sm']];
     var box=$('tdTiles'); if(box) box.innerHTML=T.map(function(t){ return '<div class="ovmode" style="--mc:'+t[3]+'"><span class="ovmh"><span>'+t[0]+'</span></span><b class="ovmn'+(t[4]||'')+'">'+t[1]+'</b><span class="ovms ell">'+t[2]+'</span></div>'; }).join('');
-    $('tdState').textContent=on?('On · service '+st[0].toLowerCase()+(sv.version?' '+sv.version:'')):'Off';
+    $('tdState').textContent=on?(ext?'On · its own app':'On · service '+st[0].toLowerCase()+(sv.version?' '+sv.version:'')):'Off';
     var tg=$('tdToggle'); tg.disabled=false; tg.className='toggle '+(on?'on':'off'); tg.textContent=on?'On':'Off'; tg.setAttribute('aria-pressed',on?'true':'false');
     tg.setAttribute('aria-label','Tournament director: '+(on?'on':'off'));
     $('tdRow').className='row ftrow'+(on?'':' off');
-    $('tdRowSub').textContent=on?('Service '+st[0].toLowerCase()+(sv.restarts?' · restarted '+sv.restarts+' time'+(sv.restarts===1?'':'s'):'')+' · turning it off stops the service; watches already running go on'):'Off · nothing runs, /arena answers 404';
+    $('tdRowSub').textContent=on&&ext?('Its own app at '+(lk.url||'?')+' · /arena on this site sends visitors there'):on?('Service '+st[0].toLowerCase()+(sv.restarts?' · restarted '+sv.restarts+' time'+(sv.restarts===1?'':'s'):'')+' · turning it off stops the service; watches already running go on'):'Off · nothing runs, /arena answers 404';
     $('tdLink').style.display=on?'':'none';
-    $('tdRestart').style.display=on?'':'none';
+    $('tdRestart').style.display=on&&!ext?'':'none';
     $('tdKeyNote').textContent=k?'created '+new Date(k.created).toLocaleString():'';
     $('tdKey').innerHTML=k?('<p><span class="muted">Public key (raw, base64)</span><br><code style="user-select:all;overflow-wrap:anywhere">'+srvEsc(k.publicKeyRaw)+'</code></p>'):'<div class="empty">No key yet: it is created when the Arena is first enabled.</div>';
   }
+  // « Its own app » (web.323): the Arena's address and link key.
+  function _tdRenderLink(lk,on){
+    var ext=lk.mode==='external', sel=$('tdMode'); if(!sel) return;
+    if(document.activeElement!==sel) sel.value=ext?'external':'embedded';
+    $('tdExt').style.display=(sel.value==='external')?'':'none';
+    if(document.activeElement!==$('tdUrl')&&!$('tdUrl').dataset.dirty) $('tdUrl').value=lk.url||'';
+    $('tdKeyHint').textContent=lk.keySet?'(saved: '+lk.keyHint+')':'';
+    $('tdKeyIn').placeholder=lk.keySet?'leave empty to keep the saved key':'alk_… (from the Arena)';
+    var t=lk.lastTest, c=lk.lastContact;
+    $('tdLinkState').innerHTML=(t?(t.ok?'Last test OK: Arena '+srvEsc(t.arena||'?')+', '+srvEsc(new Date(t.at).toLocaleString()):'Last test failed: '+srvEsc(t.error||'?')):'Not tested since the web client started.')+(c?' · The Arena last read '+srvEsc(c.what)+' here at '+srvEsc(new Date(c.at).toLocaleString())+'.':'');
+    $('tdWhereNote').textContent=ext?('its own app'+(on?'':' (module off)')):'inside this web client';
+  }
+  function _tdLinkMsg(t,bad){ var m=$('tdLinkMsg'); if(m){ m.textContent=t||''; m.className='msg'+(t?(bad?' err':' ok'):''); } }
+  if($('tdMode')) $('tdMode').addEventListener('change',function(){
+    var v=this.value; $('tdExt').style.display=v==='external'?'':'none';
+    var lk=(_td&&_td.link)||{};
+    if(v==='external'&&!(lk.url&&lk.keySet)){ _tdLinkMsg('Give the Arena’s address and its link key, then Test and save: it switches to its own app when the Arena answers.'); return; }
+    _tdLinkMsg(v==='external'?'Switching to its own app…':'Switching back inside this web client…');
+    api('/admin/arena/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:v})}).then(function(r){return r.json();}).then(function(d){
+      if(!(d&&d.ok)){ var lk2=(d&&d.link)||((_td&&_td.link)||{}); $('tdMode').value=lk2.mode==='external'?'external':'embedded'; $('tdExt').style.display=$('tdMode').value==='external'?'':'none'; }
+      else _tdRender(d);
+      _tdLinkMsg(d&&d.ok?(v==='external'?'Saved — the Arena runs as its own app; the service here is stopped.':'Saved — the Arena runs inside this web client again.'):((d&&d.error)||'Not saved'),!(d&&d.ok));
+    }).catch(function(){ _tdLinkMsg('Not saved — network error.',true); });
+  });
+  if($('tdUrl')) $('tdUrl').addEventListener('input',function(){ this.dataset.dirty='1'; });
+  if($('tdTest')) $('tdTest').addEventListener('click',function(){
+    var b={url:$('tdUrl').value.trim()}, k=$('tdKeyIn').value.trim(), btn=this;
+    if(k) b.key=k;
+    btn.disabled=true; _tdLinkMsg('Calling the Arena…');
+    api('/admin/arena/link-test',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(function(r){return r.json();}).then(function(d){
+      var t=d&&d.test;
+      if(!(t&&t.ok)){ btn.disabled=false; if(d&&d.link) _tdRenderLink(d.link,!!d.enabled); return _tdLinkMsg((t&&t.error)||(d&&d.error)||'Not linked',true); }
+      $('tdKeyIn').value=''; delete $('tdUrl').dataset.dirty;
+      // Linked: switch to « its own app » if that is what is picked.
+      var want=$('tdMode').value;
+      var next=want==='external'&&!(d.link&&d.link.mode==='external')?api('/admin/arena/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'external'})}).then(function(r){return r.json();}):Promise.resolve(d);
+      return next.then(function(d2){ btn.disabled=false; _tdRender(d2); _tdLinkMsg('Linked — Arena '+(t.arena||'?')+' accepted the key and will read the servers and events here'+(d2&&d2.link&&d2.link.mode==='external'?'; /arena on this site now sends visitors there.':'.')); });
+    }).catch(function(){ btn.disabled=false; _tdLinkMsg('Network error',true); });
+  });
   function loadTournaments(){
     api('/admin/arena/settings').then(function(r){return r.json();}).then(_tdRender).catch(function(){ var m=$('tdMsg'); if(m){ m.textContent='Network error'; m.className='msg err'; } });
   }

@@ -1246,7 +1246,7 @@ Links still to cut (tick them off as the code is touched):
   (`/arena/lang-meta.mjs`, via `platform.mjs`) and the Arena's own icons
   (0.30.0), the hero picture (`/arena/img/hero.webp`, 0.31.0).
 - Running: launched and supervised by `server/arena-host.js`; servers over
-  IPC; super admin = the web client's master key and its brute-force limit;
+  IPC (or, as its own app, over HTTP from the linked web client — 0.34.0); super admin = the web client's master key and its brute-force limit;
   `x-td-origin`, `x-td-client` and noindex set by the relay; the switch and
   the Admin › Community › Arena panel; updates through the web client's admin
   page.
@@ -1264,6 +1264,44 @@ Already done: own `package.json`, version and changelog; all data in
 `ARENA_DIR`; organizer accounts and sessions in the service; a standalone mode
 (`ARENA_ADMIN_TOKEN`, `ARENA_SERVERS`, `ARENA_HOST`/`ARENA_PORT`); the medals
 API open with CORS.
+
+## Its own app: the link with a web client (service `0.34.0`, web client `2.1.10-web.323`)
+
+Decided 2026-10-24: the Arena becomes an application of its own, with its own
+(private at first) repository. Until it is ready, the web client keeps both
+ways: Admin › Community › Arena › « Where the Arena runs » — **inside this web
+client** (the service is launched here, as before) or **its own app**.
+
+The link, in three moves:
+
+1. The Arena, run on its own, holds a **link key** (`alk_…`):
+   `ARENA_LINK_KEY`, or made at the first start and kept in
+   `ARENA_DIR/link.json`. The super admin reads it on `/arena/organize` ›
+   **Web client** (show, copy, « New key »).
+2. In the web client, the Arena's address (an origin, no path) and that key,
+   then **Test and save**: `POST <Arena>/arena/api/link/hello`
+   (`Authorization: Bearer <key>`, body `{ url, version }` — the web client's
+   public address from Admin › SEO, else the address the admin uses). The
+   Arena keeps that address (`ARENA_WEBCLIENT_URL` fixes it instead). Address
+   and key are saved only when the Arena accepts them.
+3. The Arena reads `GET <web client>/api/arena-link/servers` and
+   `/api/arena-link/events` with the same key — the LAN directory and the
+   local server (moved to the web client's host when it is on its loopback;
+   `ARENA_KEEP_LOOPBACK=1` keeps it), and the community events. Precedence on
+   the Arena: `ARENA_SERVERS` / `ARENA_EVENTS_URL` first, then the link.
+
+In « its own app » mode the web client starts no service, `/arena` pages answer
+302 to the Arena (the players' API 307, a POST stays a POST), and
+`/admin/arena/*` other than its settings answers 409 with the Arena's organizer
+page. On both sides a wrong key counts: ten from one address block it for ten
+minutes. The key is never sent back to the web client's admin page (a hint
+only). A new key on the Arena cuts the link until it is pasted in the web
+client.
+
+Next steps: the witness and the web client's link to the Arena on another
+domain (CORS, the personal code), then the repository of its own
+(`git subtree split`), its Dockerfile and install script, and the removal of the
+embedded Arena from the web client once the app runs.
 
 ## Updating the director (`web.300`, service `0.2.1`)
 

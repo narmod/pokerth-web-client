@@ -10,6 +10,28 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.34.0 — 2026-10-24
+
+### Added
+- **The link with a web client** (`lib/link.mjs`), first step of the Arena as
+  an application of its own (decided 2026-10-24). Run on its own, the Arena
+  holds a link key (`ARENA_LINK_KEY`, or made at the first start and kept in
+  `ARENA_DIR/link.json`, mode 600). The web client (Admin › Community › Arena ›
+  « Its own app ») calls `POST /arena/api/link/hello` with the key and its
+  public address; the Arena keeps it (`ARENA_WEBCLIENT_URL` fixes it instead)
+  and reads `GET <web client>/api/arena-link/servers` and `/events` with the
+  same key. Precedence: `ARENA_SERVERS` / `ARENA_EVENTS_URL` first, then the
+  link. A server on the web client's loopback is moved to the web client's
+  host (`ARENA_KEEP_LOOPBACK=1` keeps it). The last good server list is kept
+  ten minutes while the web client is away. Ten wrong keys from one address:
+  refused for ten minutes.
+- **« Web client » view** on `/arena/organize` (super admin only,
+  `GET /admin/arena/link`, `POST /admin/arena/link/rotate`): the key (hidden,
+  show, copy), the linked web client, its version, the last answer and the
+  last error; « New key » cuts the link until the web client is given it.
+  Launched by a web client, the view says there is nothing to link.
+- `test/test-arena-link.mjs`.
+
 ## 0.33.0 — 2026-10-24
 
 ### Added

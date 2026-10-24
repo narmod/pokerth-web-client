@@ -201,6 +201,8 @@ body[data-role="referee"] .org-only, body[data-role="viewer"] .org-only{display:
 .accs .empty{padding:8px 0}
 /* Reset (super admin) */
 .rparts{display:grid;gap:10px;margin:4px 0 8px}
+.lkkey{display:inline-block;max-width:100%;overflow-wrap:anywhere;user-select:all;padding:6px 8px;border:1px solid var(--line);border-radius:6px}
+.lkpull .bad{color:var(--bad)}
 .rparts .chk{display:block;padding:8px 10px;border:1px solid var(--line);border-radius:8px;cursor:pointer}
 .rparts .chk input{width:auto;min-height:0;margin:0 6px 0 0;vertical-align:middle}
 /* Cup programme (organizer) */

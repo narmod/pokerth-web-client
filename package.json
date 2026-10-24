@@ -1,6 +1,6 @@
 {
   "name": "pokerth-web-client",
-  "version": "2.1.10-web.322",
+  "version": "2.1.10-web.323",
   "description": "Experimental modern web client for PokerTH using a WebSocket-to-TCP proxy.",
   "main": "proxy.js",
   "private": false,
@@ -36,6 +36,7 @@
     "test:arena-host": "node arena/test/test-arena-host.mjs",
     "test:arena-public": "node arena/test/test-arena-public.mjs",
     "test:arena-browser": "node arena/test/test-arena-public-browser.mjs",
+    "test:arena-link": "node arena/test/test-arena-link.mjs && node scripts/test-arena-link-host.mjs",
     "test:arena-witness": "node arena/test/test-arena-witness.mjs && node scripts/test-arena-witness-client.mjs",
     "test:arena": "npm --prefix arena test",
     "test:admin-infra": "node scripts/test-admin-infra.mjs",

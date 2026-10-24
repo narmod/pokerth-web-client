@@ -11707,6 +11707,14 @@ function hasScope(scope, query, bodyToken) {
   return false;
 }
 
+// This site's public address (Admin › SEO, else the request's host): the
+// Arena builds shared-link pictures from it, and « Its own app » tells it to
+// the Arena so that the Arena can read /api/arena-link/* here (web.323).
+function _arenaPublicOrigin(req) {
+  const h = String(req.headers.host || '');
+  return seoPublicUrl() || (/^[A-Za-z0-9.:[\]-]{1,255}$/.test(h) ? ((req.socket && req.socket.encrypted) || String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim() === 'https' ? 'https://' : 'http://') + h : '');
+}
+
 // Who acts in the Arena (organizer page): the master key is « admin », the
 // super admin; an organizer signs in with an account of the Arena (login +
 // password) and sends its session token (as_…), which the Arena's service
@@ -12298,7 +12306,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (_m) query.token = _m[1];
   }
   if (reqPathOnly === '/admin/arena' || reqPathOnly.indexOf('/admin/arena/') === 0) {
-    return ARENA_LIB.handleArenaAdmin(ARENA, { adminAuthed: adminAuthed, adminJson: adminJson, readJsonBody: readJsonBody, author: _arenaAuthor }, req, res, reqPathOnly, query);
+    return ARENA_LIB.handleArenaAdmin(ARENA, { adminAuthed: adminAuthed, adminJson: adminJson, readJsonBody: readJsonBody, author: _arenaAuthor, origin: _arenaPublicOrigin }, req, res, reqPathOnly, query);
   }
   if (reqPathOnly === '/admin' || reqPathOnly === '/admin.html') {
     const p = path.join(PUBLIC_DIR, 'admin.html');
@@ -15196,9 +15204,13 @@ const httpServer = http.createServer((req, res) => {
   if (reqPathOnly === '/arena' || reqPathOnly === '/arena.html' || reqPathOnly.indexOf('/arena/') === 0) {
     // The public address (Admin › SEO, else this request's host): the
     // director builds the picture of a shared link (og:image) from it.
-    const arenaHost = String(req.headers.host || '');
-    const arenaOrigin = seoPublicUrl() || (/^[A-Za-z0-9.:[\]-]{1,255}$/.test(arenaHost) ? ((req.socket && req.socket.encrypted) || String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim() === 'https' ? 'https://' : 'http://') + arenaHost : '');
-    return ARENA_LIB.handleArenaPage(ARENA, req, res, reqPathOnly, clientIp(req), arenaOrigin);
+    return ARENA_LIB.handleArenaPage(ARENA, req, res, reqPathOnly, clientIp(req), _arenaPublicOrigin(req));
+  }
+  // ── /api/arena-link/* — the Arena running as its own app reads the servers
+  // it may use and the community events here, with its link key (web.323;
+  // a 404 unless Admin › Community › Arena is on and set to « Its own app »).
+  if (reqPathOnly.indexOf('/api/arena-link/') === 0) {
+    return ARENA_LIB.handleArenaLink(ARENA, req, res, reqPathOnly, clientIp(req));
   }
   // ── /live — embedded spectator mode, successor to the pokerth-live tool.
   // Same client, same themes/decks/seats/layout, so every table improvement

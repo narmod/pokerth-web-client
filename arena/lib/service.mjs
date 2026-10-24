@@ -32,6 +32,7 @@ const STATIC = {
   'image-pick.mjs': 'text/javascript; charset=utf-8',
   'accounts-ui.mjs': 'text/javascript; charset=utf-8',
   'reset-ui.mjs': 'text/javascript; charset=utf-8',
+  'link-ui.mjs': 'text/javascript; charset=utf-8',
   'players-ui.mjs': 'text/javascript; charset=utf-8',
   'groups-ui.mjs': 'text/javascript; charset=utf-8',
   'access-form.mjs': 'text/javascript; charset=utf-8',
@@ -68,7 +69,7 @@ function same(a, b) {
 }
 
 /**
- * o: { dir, secret?, adminToken?, servers: () => Promise<server[]>, clientVersion: () => string, version }
+ * o: { dir, secret?, adminToken?, servers: () => Promise<server[]>, events?, link? (link.mjs, standalone), clientVersion: () => string, version }
  */
 export function createService(o) {
   const td = createManager({ dir: o.dir, servers: o.servers, clientVersion: o.clientVersion });
@@ -334,6 +335,17 @@ export function createService(o) {
     const get = req.method === 'GET';
 
     if (sub === '/status' && get) return json(res, 200, Object.assign({ ok: true, you: who, role, account: au.account ? { login: au.account.login, name: au.account.name } : null, player: au.player ? { nick: au.player.nick } : null }, status()));
+    // The link with a web client (link.mjs): the super admin only.
+    if (sub === '/link' || sub.indexOf('/link/') === 0) {
+      if (role !== 'admin') return json(res, 403, { ok: false, code: 'role', error: 'your role (' + role + ') cannot do this' });
+      if (!o.link) return json(res, 200, { ok: true, mode: 'embedded' });
+      if (sub === '/link' && get) return json(res, 200, Object.assign({ ok: true }, o.link.info()));
+      if (sub === '/link/rotate' && !get) {
+        try { const i = o.link.rotate(); console.log('[arena] link key renewed by ' + who); return json(res, 200, Object.assign({ ok: true }, i)); }
+        catch (e) { return json(res, 400, { ok: false, error: e.message }); }
+      }
+      return json(res, 404, { ok: false, error: 'unknown' });
+    }
     // Accounts (the super admin only: allowed() above).
     if (sub === '/accounts' && get) return json(res, 200, { ok: true, accounts: A.list() });
     if (sub.indexOf('/accounts/') === 0 && !get) {
@@ -764,6 +776,12 @@ export function createService(o) {
       return res.end(b);
     }
     if (p === '/arena/organize' || p === '/arena/organize/') return sendPage(res, 'index.html');
+    // The web client linked to this Arena says who it is (link.mjs; standalone only).
+    if (p === '/arena/api/link/hello') {
+      if (!o.link || req.method !== 'POST') return json(res, 404, { ok: false, error: 'not found' });
+      return readJson(req).then((b) => { const r = o.link.hello(req.headers.authorization, b, req.socket.remoteAddress); json(res, r.status, r.body); })
+        .catch(() => { if (!res.headersSent) json(res, 400, { ok: false, error: 'bad request' }); });
+    }
     if (p.indexOf('/arena/api/') === 0) {
       return publicApi(req, res, p.slice('/arena/api'.length), query)
         .catch(() => { if (!res.headersSent) json(res, 500, { ok: false, code: 'error' }); });

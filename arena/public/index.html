@@ -90,6 +90,7 @@
     <button type="button" role="tab" id="tabPl" aria-controls="viewPl" aria-selected="false">Players</button>
     <button type="button" role="tab" id="tabAcc" aria-controls="viewAcc" aria-selected="false">Accounts</button>
     <button type="button" role="tab" id="tabHome" aria-controls="viewHome" aria-selected="false" hidden>Home page</button>
+    <button type="button" role="tab" id="tabLink" aria-controls="viewLink" aria-selected="false" hidden>Web client</button>
     <button type="button" role="tab" id="tabReset" aria-controls="viewReset" aria-selected="false" hidden>Reset</button>
   </div>
   <div id="viewPl" role="tabpanel" aria-labelledby="tabPl" hidden>
@@ -152,6 +153,24 @@
         <div class="actions"><button type="submit" class="primary">Save</button></div>
         <div class="msg" id="hMsg" role="status"></div>
       </form>
+    </section>
+  </div>
+  <div id="viewLink" role="tabpanel" aria-labelledby="tabLink" hidden>
+    <p class="lead">The PokerTH web client this Arena works with: it tells the Arena which servers it may use (its LAN directory and its local server) and the community events of the home page. The super admin (the master key) only.</p>
+    <section class="card" id="lkEmbedded" hidden aria-labelledby="lkEH">
+      <h2 id="lkEH">Inside the web client</h2>
+      <p class="muted">This Arena is launched by the web client itself: servers and events come straight from it, there is nothing to link.</p>
+    </section>
+    <section class="card" id="lkStandalone" hidden aria-labelledby="lkSH">
+      <h2 id="lkSH">Link key</h2>
+      <p class="muted">Paste this key in the web client, Admin › Community › Arena › « Its own app », with this Arena’s address, then « Test and save ». Keep it secret: whoever has it can link a web client to this Arena.</p>
+      <p><code id="lkKey" class="lkkey">—</code></p>
+      <div class="actions"><button type="button" id="lkShow">Show</button><button type="button" id="lkCopy">Copy</button><button type="button" id="lkRotate" class="danger">New key</button></div>
+      <p class="small muted" id="lkKeyNote"></p>
+      <h2>Linked web client</h2>
+      <p id="lkState" class="muted"></p>
+      <p id="lkPull" class="small muted lkpull"></p>
+      <div class="msg" id="lkMsg" role="status"></div>
     </section>
   </div>
   <div id="viewReset" role="tabpanel" aria-labelledby="tabReset" hidden>

@@ -10,9 +10,15 @@
 // local server), and leaves when the proxy goes away. Watches are detached
 // processes of their own: they survive this service.
 //
-// Standalone (development, tests):
+// Standalone (its own application, development, tests):
 //   ARENA_ADMIN_TOKEN=… ARENA_SERVERS='[{"ref":"local","kind":"local","name":"Local","host":"127.0.0.1","port":7234}]' \
 //   ARENA_PORT=8091 node arena/server.mjs
+// or linked to a web client (service 0.34.0, lib/link.mjs): leave out
+// ARENA_SERVERS / ARENA_EVENTS_URL and give the web client the link key
+// (/arena/organize › Web client); servers and events then come from it.
+//   ARENA_LINK_KEY        the link key (else made once, kept in ARENA_DIR)
+//   ARENA_WEBCLIENT_URL   the web client's address (else the one it tells)
+//   ARENA_KEEP_LOOPBACK=1 keep 127.0.0.1 servers as they are (same machine)
 // ═══════════════════════════════════════════════════════════════════
 
 import http from 'node:http';
@@ -20,6 +26,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createService } from './lib/service.mjs';
+import { createLink } from './lib/link.mjs';
 import { webClientVersion, DEFAULT_DATA_DIR } from './lib/platform.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -39,12 +46,16 @@ if (!SECRET && !ADMIN_TOKEN) {
   process.exit(2);
 }
 
-// Servers: asked from the proxy each time (the LAN directory changes), or
-// fixed by ARENA_SERVERS when standalone.
+// Standalone: the link with a web client (servers and events over HTTP).
+const link = viaProxy ? null : createLink({ dir: DIR, key: process.env.ARENA_LINK_KEY || '', webClientUrl: process.env.ARENA_WEBCLIENT_URL || '', keepLoopback: process.env.ARENA_KEEP_LOOPBACK === '1', version: VERSION, log });
+const FIXED_SERVERS = (() => { try { const v = JSON.parse(process.env.ARENA_SERVERS || 'null'); return Array.isArray(v) ? v : null; } catch (e) { return null; } })();
+
+// Servers: asked from the proxy each time (the LAN directory changes), fixed
+// by ARENA_SERVERS when standalone, or else read from the linked web client.
 let seq = 0;
 const pending = new Map();
 function servers() {
-  if (!viaProxy) { try { return JSON.parse(process.env.ARENA_SERVERS || '[]'); } catch (e) { return []; } }
+  if (!viaProxy) return FIXED_SERVERS || link.servers();
   return new Promise((resolve) => {
     const id = ++seq;
     const t = setTimeout(() => { pending.delete(id); resolve([]); }, 3000);
@@ -54,11 +65,11 @@ function servers() {
 }
 // The community sites' events (BBC, WEC, Monthly Cup), for the home page:
 // the web client's Events relay over IPC, or ARENA_EVENTS_URL (an /api/events
-// address) when standalone; none without either.
+// address) when standalone, or else the linked web client.
 const EVENTS_URL = process.env.ARENA_EVENTS_URL || '';
 function events() {
   if (!viaProxy) {
-    if (!/^https?:\/\//.test(EVENTS_URL)) return Promise.resolve(null);
+    if (!/^https?:\/\//.test(EVENTS_URL)) return link.events();
     const ac = new AbortController(); const t = setTimeout(() => ac.abort(), 5000);
     return fetch(EVENTS_URL, { signal: ac.signal }).then((r) => r.json()).catch(() => null).finally(() => clearTimeout(t));
   }
@@ -78,12 +89,13 @@ if (viaProxy) {
   process.on('disconnect', () => { log('web client gone, stopping'); process.exit(0); });
 }
 
-const svc = createService({ dir: DIR, secret: SECRET, adminToken: ADMIN_TOKEN, servers, events: viaProxy || EVENTS_URL ? events : null, clientVersion: () => CLIENT_VERSION, version: VERSION });
+const svc = createService({ dir: DIR, secret: SECRET, adminToken: ADMIN_TOKEN, servers, events, link, clientVersion: () => CLIENT_VERSION, version: VERSION });
 const server = http.createServer(svc.handler);
 server.on('error', (e) => { console.error('[arena] ' + e.message); process.exit(1); });
 server.listen(PORT, HOST, () => {
   const port = server.address().port;
   log('arena ' + VERSION + ' on http://' + HOST + ':' + port + ' (data ' + DIR + ', node ' + process.version + ')');
+  if (link) log(link.linked() ? 'linked to the web client ' + link.url() : (FIXED_SERVERS ? 'servers from ARENA_SERVERS' : 'not linked to a web client yet: give it the link key (/arena/organize › Web client)'));
   if (viaProxy) process.send({ type: 'ready', port, version: VERSION });
 });
 for (const sig of ['SIGTERM', 'SIGINT']) {
