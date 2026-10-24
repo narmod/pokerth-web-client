@@ -27,5 +27,6 @@ Dockerfile
 docker-compose.yml
 
 # Tournament director: its tests and local data
-tournament/test
+arena/test
 tournament-data
+arena-data

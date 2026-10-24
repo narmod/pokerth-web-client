@@ -369,7 +369,7 @@ const ADMIN_CONFIG_KEYS = Object.freeze([
   'communityEvents', 'bannedIps', 'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
   'musicEnabled', 'musicHidden', 'musicOrder', 'musicVotesPublic', 'seo', 'servers', 'activeServerId',
   'pokerthnetSource', 'internetTransport', 'liveTransport', 'proxyProtocol', 'serverlistUrl', 'autoUpdate',
-  'lanDirectory', 'tournaments'
+  'lanDirectory', 'arena', 'tournaments'   // 'tournaments': the Arena's settings before 2.1.10-web.316
 ]);
 // Secrets and personal data removed from an export unless asked for. Returns
 // what was removed, as paths, for the file's "redacted" list.
@@ -451,17 +451,31 @@ const LAN_BOARDS = require('./server/lan-boards.js').createLanBoards({
 setTimeout(function () { LAN_BOARDS.rotate(); }, 5000).unref();
 setInterval(function () { LAN_BOARDS.rotate(); }, 60 * 60 * 1000).unref();
 
-// ── Tournament director (a service of its own: tournament/) ─────────────────
-// Off by default (admin › Community › Tournaments). While on, the proxy runs
-// the service (server/tournament-host.js), relays /tournament and
-// /admin/tournaments/* to it after checking the admin token, and tells it
-// which servers it may use. Its files (watches, tournaments, the install's
-// signing key) live in TD_DIR.
-const TD_DIR = process.env.TD_DIR || path.join(__dirname, 'tournament-data');
-const TD_LIB = require('./server/tournament-host.js');
+// ── Arena: tournaments, cups, medals and the tournament director ────────────
+// A service of its own (arena/), called « tournaments » until web.315. Off by
+// default (Admin › Community › Arena). While on, the proxy runs the service
+// (server/arena-host.js), relays /arena and /admin/arena/* to it after
+// checking the admin token, and tells it which servers it may use. Its files
+// (watches, tournaments, cups, images, the install's signing key) live in
+// ARENA_DIR. The old addresses (/tournament…, /admin/tournaments…) still work.
+function _arenaDir() {
+  const want = process.env.ARENA_DIR || process.env.TD_DIR || path.join(__dirname, 'arena-data');
+  // Data kept under the old names (TD_DIR=/data/tournament in the Docker image
+  // before web.316, tournament-data/ beside the proxy): moved once, in place.
+  if (!process.env.TD_DIR && !fs.existsSync(want)) {
+    for (const old of [path.join(path.dirname(want), 'tournament'), path.join(__dirname, 'tournament-data')]) {
+      if (old === want || !fs.existsSync(old)) continue;
+      try { fs.renameSync(old, want); console.log('[arena] data moved from ' + old + ' to ' + want); return want; }
+      catch (e) { console.log('[arena] could not move ' + old + ' (' + e.code + '): using it as it is'); return old; }
+    }
+  }
+  return want;
+}
+const ARENA_DIR = _arenaDir();
+const ARENA_LIB = require('./server/arena-host.js');
 // LAN only for now (2026-10-23): the LAN directory and the local server —
 // never the game-server registry of Internet mode, nothing for pokerth.net.
-function _tdServers() {
+function _arenaServers() {
   var out = [];
   try {
     LAN_DIR.entries().forEach(function (e) {
@@ -473,16 +487,16 @@ function _tdServers() {
   out.push({ ref: 'local', kind: 'local', name: 'Local server', host: L.host || '127.0.0.1', port: L.lanPort || 7234, tls: !!L.lanTls, sni: '', noverify: true, pins: [] });
   return out;
 }
-const TD = TD_LIB.createTournamentHost({
-  dir: TD_DIR,
-  getConfig: function () { return (_adminConfig && _adminConfig.tournaments) || {}; },
-  setConfig: function (c) { _adminConfig.tournaments = c; saveAdminConfig(); },
-  listServers: _tdServers,
+const ARENA = ARENA_LIB.createArenaHost({
+  dir: ARENA_DIR,
+  getConfig: function () { return (_adminConfig && (_adminConfig.arena || _adminConfig.tournaments)) || {}; },
+  setConfig: function (c) { _adminConfig.arena = c; delete _adminConfig.tournaments; saveAdminConfig(); },
+  listServers: _arenaServers,
   clientVersion: function () { try { return require('./package.json').version; } catch (e) { return ''; } },
-  codePollMs: Number(process.env.TD_CODE_POLL_MS) || undefined,
+  codePollMs: Number(process.env.ARENA_CODE_POLL_MS) || undefined,
   log: function (line) { console.log(line); }
 });
-setImmediate(function () { TD.sync(); });
+setImmediate(function () { ARENA.sync(); });
 
 // ── Verbosité des logs (quiet | normal | verbose) ──────────────────────────
 // Par défaut le proxy loggue CHAQUE message relayé ([S→C]/[C→S] + dump hex),
@@ -11354,10 +11368,10 @@ function _pathNeedsRestart(f) {
   // scripts/ holds the tests and the manifest builders (spawned afresh each
   // time), install.sh the host CLI: none of it is code the running proxy holds.
   if (/^(scripts\/|install\.sh$)/.test(f)) return false;
-  // tournament/ is the tournament director, a service of its own: the web
+  // arena/ is the Arena (tournament director), a service of its own: the web
   // client restarts that service alone when its code changes on disk
-  // (server/tournament-host.js), never itself.
-  if (/^tournament\//.test(f)) return false;
+  // (server/arena-host.js), never itself.
+  if (/^arena\//.test(f)) return false;
   return !/^(docs\/|claude\/|\.github\/|README|CHANGELOG|LICENSE|\.gitignore|\.editorconfig)/.test(f);
 }
 // package.json changes on every deploy (the version bump), which made every
@@ -11659,7 +11673,7 @@ function adminAuthed(query, bodyToken) {
 // The file is hot-reloaded (mtime check), so adding/revoking a key needs no
 // restart. To scope another section later (e.g. "music"): add it to ADMIN_SCOPES
 // and wrap that section's routes with hasScope('music', …) instead of adminAuthed.
-const ADMIN_SCOPES = ['broadcast', 'music', 'packages', 'leaderboard', 'polls', 'tournaments'];
+const ADMIN_SCOPES = ['broadcast', 'music', 'packages', 'leaderboard', 'polls', 'arena'];
 const SCOPED_TOKENS_FILE = process.env.SCOPED_TOKENS_FILE || path.join(__dirname, 'scoped-tokens.json');
 let _scopedTokens = [], _scopedMtime = -1;
 function _loadScopedTokens() {
@@ -11672,6 +11686,8 @@ function _loadScopedTokens() {
     _scopedTokens = Array.isArray(arr) ? arr.filter(function (r) {
       return r && typeof r.token === 'string' && r.token && Array.isArray(r.scopes);
     }) : [];
+    // « tournaments » keys (before web.316) are « arena » keys.
+    _scopedTokens.forEach(function (r) { r.scopes = r.scopes.map(function (s) { return s === 'tournaments' ? 'arena' : s; }); });
   } catch (e) { _scopedTokens = []; }
   _scopedMtime = mt;
   return _scopedTokens;
@@ -11701,17 +11717,17 @@ function hasScope(scope, query, bodyToken) {
   return false;
 }
 
-// Who acts on the tournaments (organizer page): the master key is « admin »;
-// a key with the « tournaments » scope is an organizer, named after the key —
-// the tournament journal records that name with every action.
-function _tdAuthor(query) {
+// Who acts in the Arena (organizer page): the master key is « admin »; a key
+// with the « arena » scope is an organizer, named after the key — the
+// journals record that name with every action.
+function _arenaAuthor(query) {
   if (adminAuthed(query)) return 'admin';
   var tok = (query && query.token) || '';
   if (!tok) return null;
   var r = _loadScopedTokens().filter(function (x) { return x.token === tok; })[0];
   if (!r) return null;
   var sc = r.scopes || [];
-  if (sc.indexOf('tournaments') < 0 && sc.indexOf('*') < 0) return null;
+  if (sc.indexOf('arena') < 0 && sc.indexOf('*') < 0) return null;
   var n = String(r.name || '').replace(/[\u0000-\u001f\u007f]/g, '').trim().slice(0, 48) || 'organizer';
   // Names the director uses for itself stay its own.
   if (/^(admin|director|scheduler|witness|witnesses|player)$/i.test(n)) n = 'org:' + n;
@@ -12295,8 +12311,10 @@ function handleAdmin(req, res, reqPathOnly, query) {
     var _m = /^\s*Bearer\s+(.+?)\s*$/i.exec(req.headers['authorization'] || '');
     if (_m) query.token = _m[1];
   }
-  if (reqPathOnly === '/admin/tournaments' || reqPathOnly.indexOf('/admin/tournaments/') === 0) {
-    return TD_LIB.handleTournamentAdmin(TD, { adminAuthed: adminAuthed, adminJson: adminJson, readJsonBody: readJsonBody, author: _tdAuthor }, req, res, reqPathOnly, query);
+  // The Arena's API; /admin/tournaments… is its old address (before web.316).
+  if (reqPathOnly === '/admin/arena' || reqPathOnly.indexOf('/admin/arena/') === 0 || reqPathOnly === '/admin/tournaments' || reqPathOnly.indexOf('/admin/tournaments/') === 0) {
+    const arenaPath = reqPathOnly.indexOf('/admin/tournaments') === 0 ? '/admin/arena' + reqPathOnly.slice('/admin/tournaments'.length) : reqPathOnly;
+    return ARENA_LIB.handleArenaAdmin(ARENA, { adminAuthed: adminAuthed, adminJson: adminJson, readJsonBody: readJsonBody, author: _arenaAuthor }, req, res, arenaPath, query);
   }
   if (reqPathOnly === '/admin' || reqPathOnly === '/admin.html') {
     const p = path.join(PUBLIC_DIR, 'admin.html');
@@ -15177,9 +15195,8 @@ const httpServer = http.createServer((req, res) => {
       if (req.method === 'GET' && (reqPathOnly === '/admin/status' || reqPathOnly === '/admin/logs'
           || reqPathOnly === '/admin/sessions' || reqPathOnly === '/admin/broadcasts'
           || reqPathOnly === '/admin/clock')) res._rlNoPenalty = true;
-      // The /tournament page polls its watches the same way.
-      if (req.method === 'GET' && (reqPathOnly === '/admin/tournaments/watch'
-          || reqPathOnly === '/admin/tournaments/watches')) res._rlNoPenalty = true;
+      // The /arena page polls its watches the same way.
+      if (req.method === 'GET' && /^\/admin\/(arena|tournaments)\/watch(es)?$/.test(reqPathOnly)) res._rlNoPenalty = true;
       _rlAdminFail.get(ip).then(function (r) {
         if (r && r.remainingPoints <= 0 && r.msBeforeNext > 0) {
           res.writeHead(429, { 'Content-Type': 'application/json; charset=utf-8', 'Retry-After': String(Math.ceil(r.msBeforeNext / 1000)), 'Cache-Control': 'no-store' });
@@ -15189,15 +15206,24 @@ const httpServer = http.createServer((req, res) => {
     } else handleAdmin(req, res, reqPathOnly, q);
     return;
   }
-  // ── /tournament — the tournament director's page, served by its own service
-  // (off by default: a plain 404 until Admin › Community › Tournaments turns
-  // it on, the .html and its files included).
+  // ── /tournament… — the Arena's old address (before web.316): sent on to
+  // /arena…, so shared links and the badges API keep working. GET/HEAD: 301;
+  // anything else: 308 (method and body kept).
   if (reqPathOnly === '/tournament' || reqPathOnly === '/tournament.html' || reqPathOnly.indexOf('/tournament/') === 0) {
+    const rest = reqPathOnly === '/tournament.html' ? '' : reqPathOnly.slice('/tournament'.length);
+    const qi = String(req.url || '').indexOf('?');
+    res.writeHead(req.method === 'GET' || req.method === 'HEAD' ? 301 : 308, { Location: '/arena' + rest + (qi >= 0 ? String(req.url).slice(qi) : ''), 'Cache-Control': 'public, max-age=86400', 'X-Robots-Tag': 'noindex, nofollow, noimageindex' });
+    return res.end();
+  }
+  // ── /arena — tournaments, cups and medals, served by the Arena's service
+  // (off by default: a plain 404 until Admin › Community › Arena turns it on,
+  // the .html and its files included).
+  if (reqPathOnly === '/arena' || reqPathOnly === '/arena.html' || reqPathOnly.indexOf('/arena/') === 0) {
     // The public address (Admin › SEO, else this request's host): the
     // director builds the picture of a shared link (og:image) from it.
-    const tdHost = String(req.headers.host || '');
-    const tdOrigin = seoPublicUrl() || (/^[A-Za-z0-9.:[\]-]{1,255}$/.test(tdHost) ? ((req.socket && req.socket.encrypted) || String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim() === 'https' ? 'https://' : 'http://') + tdHost : '');
-    return TD_LIB.handleTournamentPage(TD, req, res, reqPathOnly, clientIp(req), tdOrigin);
+    const arenaHost = String(req.headers.host || '');
+    const arenaOrigin = seoPublicUrl() || (/^[A-Za-z0-9.:[\]-]{1,255}$/.test(arenaHost) ? ((req.socket && req.socket.encrypted) || String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim() === 'https' ? 'https://' : 'http://') + arenaHost : '');
+    return ARENA_LIB.handleArenaPage(ARENA, req, res, reqPathOnly, clientIp(req), arenaOrigin);
   }
   // ── /live — embedded spectator mode, successor to the pokerth-live tool.
   // Same client, same themes/decks/seats/layout, so every table improvement

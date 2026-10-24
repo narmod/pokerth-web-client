@@ -1217,7 +1217,7 @@
           <button type="button" class="tab" data-t="board" data-scope="leaderboard">Leaderboard</button>
           <button type="button" class="tab" data-t="polls" data-scope="polls">Polls</button>
           <button type="button" class="tab" data-t="broadcast" data-scope="broadcast">Broadcasts</button>
-          <button type="button" class="tab" data-t="tournaments">Tournaments<span class="tbeta" title="Beta: still being built">beta</span></button>
+          <button type="button" class="tab" data-t="arena">Arena<span class="tbeta" title="Beta: still being built">beta</span></button>
           <button type="button" class="tab" data-t="landir">LAN directory<span class="tbadge" id="ldBadge" style="display:none" title="Requests waiting for approval"></span></button>
         </div>
       </div>
@@ -2208,18 +2208,18 @@
         <div id="srvAllow" class="muted" style="font-size:.82rem"><div class="empty">Loading…</div></div>
       </div>
     </div>
-    <div id="panel-tournaments" style="display:none">
+    <div id="panel-arena" style="display:none">
       <section class="ovmodes" id="tdTiles" aria-label="Tournaments at a glance"><div class="empty">Loading…</div></section>
       <div class="card">
-        <div class="boardhead"><h2>Tournament director<span class="tbeta" title="Beta: still being built">beta</span></h2><span id="tdState" class="headnote"></span><div class="bhact"><a id="tdLink" class="use" href="/tournament" target="_blank" rel="noopener">Open /tournament</a><button id="tdRestart" class="use" type="button">Restart the service</button><button id="tdRefresh" class="use" type="button">Refresh</button></div></div>
-        <p class="muted">Organizer tools on <code>/tournament</code>: <b>Tournaments</b> (the director opens the table for the registered players, or the result is set by hand; sealed and signed) and <b>Table check</b> (watch a table as a spectator). LAN servers only. Off by default: <code>/tournament</code> answers 404 while off.</p>
-        <details class="more"><summary>Where it runs, what it keeps</summary><p class="muted">The tournament director is a service of its own (<code>tournament/</code> in the repository, with its own version): the web client starts it while the switch is on, restarts it if it stops, stops it when you turn the switch off, and relays <code>/tournament</code> to it after checking the admin token. It works only on the servers of the LAN directory and the local server (never pokerth.net or the Internet-mode game servers). It opens a table only when an organizer asks, for the registered players of a tournament: an invite-only table, players who are not registered removed before the start, a few lines in the table chat; then it hands the table over to the first player and watches.</p><p class="muted">Every event goes into a sealed (hash-chained) journal and results are signed with this install’s key. Each watch is a separate process that survives an update of the web client. Watches, tournaments and the key live in <code>TD_DIR</code> (<code>/data/tournament</code> in the Docker image). Design and next steps: <code>docs/TOURNAMENT_DIRECTOR.md</code>.</p></details>
-        <div class="row ftrow" id="tdRow"><div class="nm"><b>Tournament director and the <code>/tournament</code> page</b><span id="tdRowSub">Loading…</span></div><button type="button" class="toggle off" id="tdToggle" aria-pressed="false" disabled>Off</button></div>
+        <div class="boardhead"><h2>Arena — tournaments, cups, medals<span class="tbeta" title="Beta: still being built">beta</span></h2><span id="tdState" class="headnote"></span><div class="bhact"><a id="tdLink" class="use" href="/arena" target="_blank" rel="noopener">Open /arena</a><button id="tdRestart" class="use" type="button">Restart the service</button><button id="tdRefresh" class="use" type="button">Refresh</button></div></div>
+        <p class="muted">Organizer tools on <code>/arena</code>: <b>Tournaments</b> (the director opens the table for the registered players, or the result is set by hand; sealed and signed) and <b>Table check</b> (watch a table as a spectator). LAN servers only. Off by default: <code>/arena</code> answers 404 while off.</p>
+        <details class="more"><summary>Where it runs, what it keeps</summary><p class="muted">The Arena (tournaments, cups, medals and the tournament director) is a service of its own (<code>arena/</code> in the repository, with its own version): the web client starts it while the switch is on, restarts it if it stops, stops it when you turn the switch off, and relays <code>/arena</code> to it after checking the admin token. It works only on the servers of the LAN directory and the local server (never pokerth.net or the Internet-mode game servers). It opens a table only when an organizer asks, for the registered players of a tournament: an invite-only table, players who are not registered removed before the start, a few lines in the table chat; then it hands the table over to the first player and watches.</p><p class="muted">Every event goes into a sealed (hash-chained) journal and results are signed with this install’s key. Each watch is a separate process that survives an update of the web client. Watches, tournaments and the key live in <code>ARENA_DIR</code> (<code>/data/arena</code> in the Docker image; data kept under the old name <code>/data/tournament</code> is moved there once). Design and next steps: <code>docs/ARENA.md</code>.</p></details>
+        <div class="row ftrow" id="tdRow"><div class="nm"><b>Arena and the <code>/arena</code> page</b><span id="tdRowSub">Loading…</span></div><button type="button" class="toggle off" id="tdToggle" aria-pressed="false" disabled>Off</button></div>
         <div id="tdMsg" class="msg"></div>
       </div>
       <div class="card">
         <div class="boardhead"><h2>Install key</h2><span id="tdKeyNote" class="headnote"></span></div>
-        <p class="muted">Ed25519 key of this install: it signs every sealed result, so anyone can check one. Its public part is what a DNS TXT <code>k=</code> record carries when a server operator consents to tournaments. Created when tournaments are first enabled, kept when they are turned off.</p>
+        <p class="muted">Ed25519 key of this install: it signs every sealed result, so anyone can check one. Its public part is what a DNS TXT <code>k=</code> record carries when a server operator consents to tournaments. Made when the Arena is first on, then kept.</p>
         <div id="tdKey"><div class="empty">Loading…</div></div>
       </div>
     </div>
@@ -3411,7 +3411,7 @@
     if(t==='traffic'){ if(_wasT!=='traffic') loadTraffic(); _trafSub(b.dataset.ts||'overview'); }
     if(t==='servers'){ loadServers(); loadStatus(!cfgAnyDirty()); loadLanDir(); }
     if(t==='landir') loadLanDir();
-    if(t==='tournaments') loadTournaments();
+    if(t==='arena') loadTournaments();
     if(t==='polls'){ loadPolls(); if(_isMaster) loadFeatureSwitches(); }
     if(t==='broadcast'){ loadBroadcasts(); if(_isMaster){ loadStatus(!cfgAnyDirty()); } }
     if(t==='login'){ if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); } }
@@ -3429,15 +3429,15 @@
   }); });
 
 
-  // tournaments (settings only — the tools live on /tournament)
+  // Arena (settings only — the tools live on /arena)
   var _td=null;
-  var TD_SV={running:['Running','var(--ok-text)'],starting:['Starting','var(--warn-text)'],restarting:['Restarting','var(--warn-text)'],failed:['Failed','var(--err-text)'],off:['Stopped','var(--muted)']};
+  var ARENA_SV={running:['Running','var(--ok-text)'],starting:['Starting','var(--warn-text)'],restarting:['Restarting','var(--warn-text)'],failed:['Failed','var(--err-text)'],off:['Stopped','var(--muted)']};
   function _tdRender(d){
     if(!d||!d.ok){ var m=$('tdMsg'); if(m){ m.textContent=(d&&d.error)||'Could not load'; m.className='msg err'; } return; }
     _td=d;
-    var on=!!d.enabled, sv=d.service||{}, st=TD_SV[sv.status]||[sv.status||'—','var(--muted)'], k=d.key;
+    var on=!!d.enabled, sv=d.service||{}, st=ARENA_SV[sv.status]||[sv.status||'—','var(--muted)'], k=d.key;
     var since=sv.since?'up since '+new Date(sv.since).toLocaleTimeString():'';
-    var T=[['Module',on?'On':'Off',on?'/tournament is open':'/tournament answers 404',on?'var(--ok-text)':'var(--muted)'],
+    var T=[['Module',on?'On':'Off',on?'/arena is open':'/arena answers 404',on?'var(--ok-text)':'var(--muted)'],
            ['Service',on?st[0]:'Stopped',on?(sv.lastError&&sv.status!=='running'?srvEsc(sv.lastError):(sv.version?'version '+srvEsc(sv.version)+(sv.diskVersion&&sv.diskVersion!==sv.version?' · '+srvEsc(sv.diskVersion)+' on disk':'')+(since?' · '+since:''):'starts with the module')):'version '+srvEsc(sv.diskVersion||'?')+' · starts when the module is on',on?st[1]:'var(--muted)',' sm'],
            ['Watches',d.running!=null?String(d.running)+'<small class="ovof"> / '+(d.maxRunning||4)+'</small>':'—',d.running!=null?'Table checks running':'read from the service','var(--m-lan)'],
            ['Install key',k?'Ed25519':'None',k?'created '+new Date(k.created).toLocaleDateString():'made on first enable',k?'var(--accent)':'var(--muted)',' sm']];
@@ -3446,20 +3446,20 @@
     var tg=$('tdToggle'); tg.disabled=false; tg.className='toggle '+(on?'on':'off'); tg.textContent=on?'On':'Off'; tg.setAttribute('aria-pressed',on?'true':'false');
     tg.setAttribute('aria-label','Tournament director: '+(on?'on':'off'));
     $('tdRow').className='row ftrow'+(on?'':' off');
-    $('tdRowSub').textContent=on?('Service '+st[0].toLowerCase()+(sv.restarts?' · restarted '+sv.restarts+' time'+(sv.restarts===1?'':'s'):'')+' · turning it off stops the service; watches already running go on'):'Off · nothing runs, /tournament answers 404';
+    $('tdRowSub').textContent=on?('Service '+st[0].toLowerCase()+(sv.restarts?' · restarted '+sv.restarts+' time'+(sv.restarts===1?'':'s'):'')+' · turning it off stops the service; watches already running go on'):'Off · nothing runs, /arena answers 404';
     $('tdLink').style.display=on?'':'none';
     $('tdRestart').style.display=on?'':'none';
     $('tdKeyNote').textContent=k?'created '+new Date(k.created).toLocaleString():'';
-    $('tdKey').innerHTML=k?('<p><span class="muted">Public key (raw, base64)</span><br><code style="user-select:all;overflow-wrap:anywhere">'+srvEsc(k.publicKeyRaw)+'</code></p>'):'<div class="empty">No key yet: it is created when tournaments are first enabled.</div>';
+    $('tdKey').innerHTML=k?('<p><span class="muted">Public key (raw, base64)</span><br><code style="user-select:all;overflow-wrap:anywhere">'+srvEsc(k.publicKeyRaw)+'</code></p>'):'<div class="empty">No key yet: it is created when the Arena is first enabled.</div>';
   }
   function loadTournaments(){
-    api('/admin/tournaments/settings').then(function(r){return r.json();}).then(_tdRender).catch(function(){ var m=$('tdMsg'); if(m){ m.textContent='Network error'; m.className='msg err'; } });
+    api('/admin/arena/settings').then(function(r){return r.json();}).then(_tdRender).catch(function(){ var m=$('tdMsg'); if(m){ m.textContent='Network error'; m.className='msg err'; } });
   }
   function _tdSave(patch){
     var m=$('tdMsg'), tg=$('tdToggle');
     if(m){ m.textContent=patch.enabled?'Starting the service…':'Stopping the service…'; m.className='msg'; }
     if(tg) tg.disabled=true;
-    api('/admin/tournaments/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(patch)}).then(function(r){return r.json();}).then(function(d){
+    api('/admin/arena/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(patch)}).then(function(r){return r.json();}).then(function(d){
       _tdRender(d);
       if(m){ if(d&&d.ok){ var sv=d.service||{}; m.textContent=d.enabled?(sv.status==='running'?'Saved — the service is running.':'Saved — the service is '+(sv.status||'starting')+(sv.lastError?' ('+sv.lastError+')':'')+'.'):'Saved — the service is stopped.'; m.className='msg '+(d.enabled&&sv.status!=='running'?'err':'ok'); } else { m.textContent=(d&&d.error)||'Not saved'; m.className='msg err'; } }
     }).catch(function(){ if(m){ m.textContent='Not saved — network error.'; m.className='msg err'; } if(tg) tg.disabled=false; });
@@ -3468,7 +3468,7 @@
   if($('tdRefresh')) $('tdRefresh').addEventListener('click',loadTournaments);
   if($('tdRestart')) $('tdRestart').addEventListener('click',function(){
     var m=$('tdMsg'); if(m){ m.textContent='Restarting the service…'; m.className='msg'; }
-    api('/admin/tournaments/restart',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}).then(function(r){return r.json();}).then(function(d){
+    api('/admin/arena/restart',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}).then(function(r){return r.json();}).then(function(d){
       _tdRender(d); if(m){ m.textContent=d&&d.ok?('Restarted — the service runs version '+((d.service&&d.service.version)||'?')+'.'):((d&&d.error)||'Not restarted'); m.className='msg '+(d&&d.ok?'ok':'err'); }
     }).catch(function(){ if(m){ m.textContent='Network error'; m.className='msg err'; } });
   });
@@ -8076,7 +8076,7 @@
   (function(){ var b=$('seRefresh'); if(b) b.addEventListener('click',function(){ var m=$('seMsg'); if(m){ m.textContent=''; m.className='msg'; } loadSessions(); }); })();
 
   // -- Delegate keys (master only): create scoped API keys per category --------
-  var _kySC={broadcast:'Broadcasts',music:'Music',packages:'Packages',leaderboard:'Leaderboard',polls:'Polls',tournaments:'Tournaments (organizer)'};
+  var _kySC={broadcast:'Broadcasts',music:'Music',packages:'Packages',leaderboard:'Leaderboard',polls:'Polls',arena:'Arena (organizer)'};
   function _kyLabel(s){ return _kySC[s]||s; }
   function loadKeys(){
     api('/admin/tokens').then(function(r){return r.json();}).then(function(d){

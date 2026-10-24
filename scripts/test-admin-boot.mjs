@@ -58,7 +58,7 @@ const CANNED = {
       { id: 'lan_bbbbbb02', name: 'Old club', host: 'old.example.org', port: 7234, tls: true, country: 'NL', lang: 'nl', desc: '', visible: true, noverify: true, sni: '',
         addedAt: Date.now() - 30 * 864e5, lastSeen: Date.now() - 9 * 864e5, status: { online: false, players: null, error: 'ETIMEDOUT', at: Date.now() }, autoHidden: true }
     ] },
-  '/admin/tournaments/settings': { ok: true, enabled: true, running: 1, maxRunning: 4,
+  '/admin/arena/settings': { ok: true, enabled: true, running: 1, maxRunning: 4,
     service: { status: 'running', version: '0.1.0', pid: 42, restarts: 0, lastError: null, since: Date.now() - 60000 },
     key: { publicKeyRaw: 'AbCd<x>+/=', created: Date.now() - 864e5 } },
 };
@@ -223,18 +223,18 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
 }
 // ── Tournaments (Community › Tournaments) ───────────────────────────────────
 {
-  doc.querySelector('.tab[data-t="tournaments"]').click();
+  doc.querySelector('.tab[data-t="arena"]').click();
   await new Promise((r) => setTimeout(r, 200));
   const tiles = [...doc.querySelectorAll('#tdTiles .ovmode')].map((t) => t.textContent);
-  ok(tiles.length === 4 && /Module.*On/.test(tiles[0]) && /Service.*Running.*0\.1\.0/.test(tiles[1]) && /Watches.*1.*\/ 4/.test(tiles[2]), 'tournaments: four tiles, like the other sections');
+  ok(tiles.length === 4 && /Module.*On/.test(tiles[0]) && /Service.*Running.*0\.1\.0/.test(tiles[1]) && /Watches.*1.*\/ 4/.test(tiles[2]), 'arena: four tiles, like the other sections');
   const tg = $('tdToggle');
-  ok(tg && tg.classList.contains('toggle') && tg.classList.contains('on') && tg.getAttribute('aria-pressed') === 'true' && !tg.disabled, 'tournaments: the shared On/Off switch');
-  ok($('tdKey').querySelector('code') && !$('tdKey').innerHTML.includes('<x>'), 'tournaments: the key shown, escaped');
+  ok(tg && tg.classList.contains('toggle') && tg.classList.contains('on') && tg.getAttribute('aria-pressed') === 'true' && !tg.disabled, 'arena: the shared On/Off switch');
+  ok($('tdKey').querySelector('code') && !$('tdKey').innerHTML.includes('<x>'), 'arena: the key shown, escaped');
   tg.click();
   await new Promise((r) => setTimeout(r, 100));
-  const p = posts.filter((x) => /\/admin\/tournaments\/settings$/.test(x.url)).pop();
-  ok(p && p.body.enabled === false, 'tournaments: the switch posts the opposite state');
-  ok(errors.length === 0, 'tournaments: nothing thrown' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
+  const p = posts.filter((x) => /\/admin\/arena\/settings$/.test(x.url)).pop();
+  ok(p && p.body.enabled === false, 'arena: the switch posts the opposite state');
+  ok(errors.length === 0, 'arena: nothing thrown' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
 }
 // ── LAN directory (Community › LAN directory) ───────────────────────────────
 {

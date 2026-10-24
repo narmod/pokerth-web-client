@@ -212,7 +212,7 @@ function onGameStartInitial(sub) {
 }
 
 function _tdwGame() {
-  // Tournament witness (modules/td-witness.mjs): is this a director's table?
+  // Tournament witness (modules/arena-witness.mjs): is this a director's table?
   try {
     if (!window._tdWitness || !S.gId) return;
     var g = S.games && S.games[S.gId];

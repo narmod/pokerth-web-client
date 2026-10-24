@@ -1,0 +1,893 @@
+# Arena — tournaments, cups, medals and the tournament director
+
+Called « tournaments » until 2.1.10-web.315 (module `tournament/`, page
+`/tournament`); renamed **Arena** on 2026-10-24 (web.316, service 0.19.0)
+because it holds more than tournaments: cups, medals, players' pages.
+
+| Before | Now |
+|---|---|
+| `tournament/` (service), `server/tournament-host.js` | `arena/`, `server/arena-host.js` |
+| `/tournament…` (players' page, organizer page, API, images) | `/arena…` — the old addresses answer **301** (GET/HEAD) or **308** (other methods) to the new ones, query kept, so shared links and the medals API keep working |
+| `/admin/tournaments/*` | `/admin/arena/*` (the old path still answers, same handler) |
+| key scope `tournaments` | `arena` (keys with the old scope keep working; `install.sh token add NAME arena`) |
+| `admin-config.json` › `tournaments` | `arena` (the old key is read, then replaced on the next save) |
+| `TD_DIR` (`/data/tournament` in Docker, `tournament-data/` beside the proxy) | `ARENA_DIR` (`/data/arena`, `arena-data/`); `TD_DIR` is still honoured; without it, the old folder is moved to the new name once at start |
+| `TD_SECRET`, `TD_PORT`, `TD_HOST`, `TD_ADMIN_TOKEN`, `TD_SERVERS`, `TD_CLIENT_VERSION`, `TD_CODE_POLL_MS` | `ARENA_…` |
+| `public/modules/td-witness.mjs`, `td.css`, `test-td-*.mjs`, `bin/td-spectate.mjs` | `arena-witness.mjs`, `arena.css`, `test-arena-*.mjs`, `bin/arena-spectate.mjs` |
+| Admin › Community › Tournaments | Admin › Community › Arena |
+
+Unchanged on purpose: the concept files (`lib/tournaments.mjs`, `cups.mjs`,
+`badges.mjs`, `host.mjs` — a tournament is still a tournament), the
+director's name on the servers (`TD-…`), the data inside the folder
+(`td-key.pem`, `tournaments/`, `cups/`), the browser keys of players and
+organizers (`pth_td_*`, `td_witness`: nobody loses a personal code or a
+setting) and the internal headers between the web client and the service
+(`X-TD-*`).
+
+## Tournament director
+
+An automatic organizer for games and tournaments on the LAN servers of the
+directory. **LAN only for now** (decided 2026-10-23): nothing for
+pokerth.net or the Internet-mode game servers. This page is the design
+reference and the status of the work.
+
+**Status (2026-10-23, `2.1.10-web.292`):** the spectator that watches one
+table and seals its journal and ranking, and the **« Table check »** tool on
+`/arena` to run it against a server this install knows. Off by
+default; nothing changes for players.
+
+## Ground rules
+
+- **Work with the PokerTH ecosystem, never against it.** Chat moderation is
+  the server's `chatcleaner`; kicks and bans stay the operator's tools (vote
+  kick, server bans, `GameNameBadWordList`); the official ranking, the BBC,
+  WEC and Monthly Cup sites and the log analysis stay the reference. The
+  director recreates none of them. Anything that would need the server or
+  the QML client to change is a proposal to the upstream maintainers, never
+  a workaround.
+- **Off by default.** Module and `/arena` page are enabled with the
+  master admin token only.
+- **A home install must not be able to harm anyone's server** (§ Abuse).
+- **Fair and tamper-evident** (§ Trust).
+
+## How a table is run
+
+The PokerTH server lets only a table's admin start it, and the creator of a
+table sits at it. A player who leaves a running game leaves his stack behind,
+eaten by the blinds. So the director:
+
+1. creates the table with the tournament settings (it is the admin);
+2. kicks anyone seated who is not a confirmed registrant — the admin may do
+   so before the start only, and never in a Ranking game;
+3. leaves its seat just before the start: admin passes to the first player,
+   who starts the game (the director reminds him in the chat);
+4. comes back as a **spectator** and watches until the end.
+
+A session can be in one game only, hence one director session per running
+table, named `TD-<tag>-T<n>` (`TD-<tag>-Final`). The server rate-limits
+logins per IP (5 back to back, then one every 30 s): sessions are opened
+early and spread out, or the operator exempts the proxy address
+(`ServerBruteForceProtectionExempt`).
+
+## Trust
+
+1. **One source of truth: the spectator.** What it records comes from the
+   server, never from a player. A spectator receives the seat order
+   (`GameStartInitial`), one seat state per seat at every hand
+   (`HandStart.seatStates`, `2` = no money: the server's own elimination
+   flag), every player's cash (`PlayersActionDone`, `EndOfHand*`), id changes
+   on rejoin (`PlayerIdChanged`) and the winner (`EndOfGame`). A spectator
+   joining a running game gets `GameStartRejoin` with the last hand number
+   and every seat's cash — that is how a dropped director resynchronises.
+2. **Sealed journal.** Every event is appended to a hash chain (each entry
+   carries the SHA-256 of the previous one). The final head and the ranking
+   are signed with the install's Ed25519 key. Anyone can recompute the chain,
+   check the signature and replay the journal to get the same ranking.
+3. **Witnesses check, never decide.** Web clients seated at the table send a
+   public summary (nicknames, stacks per hand, eliminations, winner — never
+   their own cards). Agreement → « confirmed »; disagreement → « disputed »,
+   for an organizer. QML players may witness by uploading their `.pdb` log,
+   when the tournament allows it (off by default).
+4. **Corrections are added, never overwritten,** with author and reason.
+5. **Ranking rule** — the one the BBC site applies to a log: the later a
+   player went out, the better; players out in the same hand are ordered by
+   their stack at the start of that hand. An exact tie is flagged for an
+   organizer.
+
+A result is `complete`, `incomplete` (hands the director missed, an
+unknown elimination hand, a tie) or `running`.
+
+## Abuse
+
+The code is open source, so the real protections are on the server
+(password, connection limits, kicks, bans, `chatcleaner`, accounts). The
+director must make nothing easier than today:
+
+- hard caps on tables per server, creation rate and how early sessions open;
+  no table without confirmed registrants; public requests rate-limited;
+- **the target server's operator must consent**, in one of three ways:
+  - **A — DNS TXT** on the server's name: `_pokerth-td.<host>` =
+    `v=ptd1; k=<base64 raw Ed25519 public key of the install>` (a generator
+    in the admin writes it; it is checked again before every tournament);
+  - **B — server password** (`ServerPassword`) handed over by the operator,
+    stored encrypted, never shown to players;
+  - **C — no proof, admin's decision, for tests only:** the install's own
+    server and private / loopback addresses (checked on the resolved
+    address), tables tagged `[TEST]`, never pokerth.net;
+- nothing for pokerth.net for now; servers with accounts are refused by the
+  director itself;
+- honest names (`TD-…`) and a chat line saying who organizes.
+
+**Collusion (players in the same place).** The proxy knows web players' real
+addresses (it forwards them to the active server only, with the PROXY
+protocol header); `/arena` sees every player's address at check-in.
+Without storing any address: an HMAC of the address and of its network
+prefix with a per-tournament salt; erased, salt included, when the result
+is validated; organizers only see « X and Y: same network ». Actions:
+report, separate at table draw, or forbid the same table. Never an automatic
+sanction (homes, clubs, mobile CGNAT, VPNs). Off for in-person events.
+
+## Chat
+
+The director's lines go through the server's `chatcleaner` like everyone
+else's: no repeated line, no capitals, **no links** (unless the operator
+listed the address as an exception), spaced out. It posts: welcome and
+rules, blind levels, players left, final table, end. Organizers can send one
+message to every table from `/arena`. One language per tournament,
+English by default.
+
+## Tournament settings
+
+Profiles pre-fill independent settings; « Custom » sets each by hand.
+
+| Setting | Friendly | Club | Official |
+|---|---|---|---|
+| Identity | Simple | Simple | Personal code |
+| Witnesses | Off | Informative | Required to validate |
+| Validation | Automatic | Automatic | By an organizer |
+| Corrections | Free, logged | Free, logged | Approved by a 2nd organizer |
+| Visibility | Unlisted (link) | Public | Public |
+| Archive | 30 days | 1 year | Permanent |
+| Collusion | Off | Report | Report + separate |
+
+- **Identity** on LAN servers without accounts: *Simple* (table password
+  shortly before the start, plus the seat check), *Personal code* (check-in
+  in the web client or on `/arena`, so QML players are covered), or
+  *Server accounts* where the server has them.
+- **Visibility:** public, unlisted (unguessable link, `noindex`), private
+  (invitation code or account).
+- **Manual mode, no director:** the organizer runs the tables; results are
+  typed in, confirmed by witnesses, or recomputed from an imported `.pdb`
+  log (the organizer picks the game inside the log). Every entry still goes
+  into the sealed journal, marked « manual ». No connection to the game
+  server, so no operator consent is needed.
+- **Personal data:** nickname and results kept per the archive setting;
+  contact erased at validation; codes and passwords at the end; network
+  fingerprints at validation; a deleted account's past results stay as
+  « deleted player ».
+
+## Interface
+
+- `/admin` › Tournaments: **settings only** — enable the module and the
+  page, public requests, formats, profiles, caps, per-server consent and
+  « do not offer this server », who approves on each server, storage,
+  delegate keys, director health.
+- `/arena`: **everything else** — public list, registration,
+  check-in, brackets, results, hashes and downloadable journal; requests to
+  organize; an organizer view opened with a `tournaments` key or an
+  organizer account. Same stylesheet and poker colours as `/rules` and
+  `/faq`. All the app's languages: catalogues in
+  `arena/public/lang/`, the list read from `lang-meta.mjs`, and
+  `test-lang-count` requiring one catalogue per language.
+- **Approval:** each server's operator approves its tournaments or delegates
+  to the install's admin. A delegate `tournaments` key is bound to **one**
+  server.
+
+## Storage and accounts
+
+JSON files by default; optionally a **dedicated** SQL database (MySQL /
+MariaDB or PostgreSQL, `ARENA_DB_*`, through `server/db-dialects.js`), which
+then holds the truth, with `td_`-prefixed tables and versioned migrations.
+Organizer accounts with per-server roles checked on every action; optional
+player accounts (PokerTH nickname, Argon2id or scrypt hash).
+
+## BBC
+
+For now the director only runs BBC tables (« usage 1 »): the BBC site keeps
+registrations, tickets, points and seasons, and the result goes through its
+current channel (result message plus a `.pdb` log sent to the log analysis
+through `/pdb-analyse`). To check when we get there: that the BBC site
+accepts a log written by the director. The site's code is MIT-licensed
+(`pokerth/bbc`); we never write into another application's database.
+
+## Hypothetical (not planned)
+
+These would need upstream changes and are not expected to be built:
+a « tournament director » server role (admin while spectating, able to kick
+or mute in-game, results stored by the server); a BBC API to post results;
+QML clients sending witness reports automatically. Nothing in the design
+depends on them.
+
+## Table check (`/arena`, first organizer tool)
+
+- **Admin › Community › Tournaments** — settings only: the module switch
+  (off by default; while off `/arena` and `/arena.html` answer
+  404), the service's state and version, the install's public key
+  (created on first enable), the number of running watches.
+- **`/arena`** — master token for now (the browser key of `/admin`, so a
+  signed-in admin lands straight in). English for now, like the admin; the
+  public views will come in every language. Light and dark themes (system
+  choice or the header switch), same face and colours as `/rules`.
+  1. pick a LAN server: the LAN directory or the local server (never the
+     Internet-mode game servers, never a free address), read its lobby;
+  2. pick a table (spectators allowed), optional table password and
+     director name, « Watch this table »;
+  3. follow hands and eliminations; at the end the sealed ranking, its flags
+     (tie, unknown hand, missed hands), the checks (chain, signed head,
+     signature, replay) and the journal / result downloads. « Stop watching »
+     keeps the journal.
+- Each watch is a **detached process** (`arena/lib/worker.mjs`): the
+  task (table password included) is handed over once through IPC, never
+  written to disk; then the process lives on its own, survives an update of
+  the web client and of the tournament service, and writes `state.json`, `journal.json`, `result.json` in
+  `ARENA_DIR/watches/<id>/` (`/data/tournament` in the Docker image; the key is
+  `ARENA_DIR/td-key.pem`, mode 600). At most 4 watches at once.
+- A server announcing authenticated logins (pokerth.net) is always refused,
+  **by the worker itself** — the browser's word is never taken.
+- A watch that fails or crashes shows why: the error in `state.json`, and
+  the end of its process output (`worker.log`) on the page.
+- **Login rate limit.** With `ServerBruteForceProtection` on (the default),
+  the game server accepts 5 logins in a row per address, then one every
+  30 s. Every web client player, every lobby read and every director comes
+  from the proxy's address, so a refused login (`initBlocked`) is treated as
+  temporary: the director waits 31 s and tries again (5 times), and the page
+  says so. On your own server, add the proxy's address to
+  `ServerBruteForceProtectionExempt` (the upstream setup guide already asks
+  for it when players share an address).
+- **Any device.** The page works from a phone to a desktop (one column under
+  900 px, 44 px touch targets, safe areas of notched phones, no sideways
+  scroll), and installs as its own app (`/arena/manifest.json`, scope
+  `/arena`, standalone), like `/admin`.
+- Routes (`arena/lib/service.mjs`), all behind the admin token:
+  `GET/POST /admin/arena/settings` (answered by the web client),
+  `GET …/status`, `GET …/servers`,
+  `POST …/lobby {ref}`, `POST …/watch {ref, gameId, gamePassword?, nick?}`,
+  `GET …/watches`, `GET …/watch?id=`, `POST …/watch/stop {id}`,
+  `GET …/watch/file?id=&which=journal|result`.
+
+## Tournaments, manual mode (`/arena`, « Tournaments » tab)
+
+- **Create**: name, LAN server (for the record: nothing is done on it), date,
+  Sit & Go (one table, up to 10 players), profile (Friendly, Club, Official,
+  Custom), visibility (a private tournament gets an invitation code). Identity,
+  witnesses and the collusion check are recorded now and apply once
+  registration and witnesses exist.
+- **Players** are added and removed by hand until a result is set; with no
+  player yet, the result brings them.
+- **Result**, three sources:
+  1. *typed in* — the players arranged, winner first;
+  2. *a Table check* — the sealed result of a finished watch, its signature
+     checked before use; its head and signature go into the tournament's
+     journal;
+  3. *a PokerTH log* (`.pdb`, ≤ 10 MB) — uploaded and kept as evidence (with
+     its SHA-256), the organizer picks the game; ranked by the BBC site's rule
+     (`server/tournament/pdb.mjs`, read in memory with sql.js).
+  A ranking must place every player once and no one else.
+- **Validation**: automatic on Friendly / Club when the result is complete;
+  by an organizer on Official, or when the result is flagged (tie, unknown
+  hand, game not finished). Validating seals and signs (`result.json`:
+  tournament id, journal head and length, result, corrections).
+- **Corrections**: only on a validated result, with a reason; added to the
+  journal (before and after) and signed again. Official: a second organizer
+  must approve, so none until organizer accounts exist.
+- **Journal**: every action, with its author, in a hash chain
+  (`journal.mjs`); a tampered journal is refused on load. `tournament.json`
+  is only a convenience copy.
+- Storage: `ARENA_DIR/tournaments/<id>/` — `tournament.json`, `journal.json`,
+  `result.json`, `log.pdb`.
+- Routes, behind the admin token: `GET /admin/arena/t/list`,
+  `GET …/t/get?id=`, `GET …/t/file?id=&which=journal|result|pdb`,
+  `POST …/t/create`, `…/t/update {id, patch}`, `…/t/player {id, action, nick}`,
+  `…/t/result {id, source, ranking | watchId | uniqueGameId}`,
+  `…/t/validate {id}`, `…/t/correct {id, ranking, reason}`, and
+  `POST …/t/pdb?id=` (raw body).
+
+## Images of tournaments and cups (service `0.17.0`, web client `2.1.10-web.314`)
+
+`arena/lib/images.mjs`, decided 2026-10-24 (any organizer adds images;
+shown at the top of the page, on the cards, as og:image).
+
+- Library: `tournament` and `cup` shipped (`arena/public/img/events/`,
+  `<id>.jpg` 800 px and `<id>.t.jpg` 192 px), plus the organizers' in
+  `ARENA_DIR/images/` (`u<10 hex>.jpg`, `.t.jpg`, index `images.json` with name,
+  who added it and when). Added, never replaced or removed: an id always
+  shows the same picture. JPEG only, picture ≤ 400 KB and 1600 px, thumbnail
+  ≤ 48 KB and 400 px, 200 images at most. The organizer page makes both
+  JPEGs in the browser (800 / 192 px).
+- `image` on a tournament or a cup: a library id, or null for the default
+  (`tournament`, `cup`); unknown ids are refused. It may change at any time,
+  also once validated or closed. The tables of a tournament on several tables
+  take its image.
+- Players' page: the picture at the top of the tournament's or cup's page
+  (the director's avatar elsewhere), the thumbnail on the cards. Public API:
+  `image` and `thumb` (paths) on every tournament and cup.
+- Shared links: the page of a tournament or a cup carries `og:title`,
+  `og:image` (absolute), `og:url` and `twitter:card`, built from
+  `x-td-origin`, which the web client sets from Admin › SEO's public address,
+  else from the request's host; private ones carry nothing.
+- Routes: `GET /admin/arena/images`, `POST …/images/add {name, full,
+  thumb}` (base64 JPEGs), `POST …/t/update` and `…/cups/update` with
+  `{patch: {image}}`, public `GET /arena/img/<id>.jpg` and
+  `/arena/img/<id>.t.jpg` (cached a day, any origin).
+
+## Table settings (service `0.16.0`, web client `2.1.10-web.313`)
+
+The director opens its tables with the same choices as the web client's
+« Create a table » form, from one source: `public/modules/create-presets.mjs`
+(`STYLES`, `TEMPLATES`, `LIMITS`, `TEMPLATE_DELAY`). The form reads it
+(`pokerth.js` `applyPreset`, `botsuggest.mjs` for the templates), the service
+imports it from disk (`arena/lib/table.mjs`) and serves it to the
+organizer page (`GET /admin/arena/table-presets`: `{v, limits, styles,
+defaultStyle, templates, templateDelay, defaults}`); change a style, a
+template or a limit there and both follow (`scripts/test-create-presets.mjs`
+checks the form's min/max).
+
+- Table: `{startMoney, firstSmallBlind, raiseMode ('hands'|'minutes'),
+  raiseEvery, manualBlinds [ascending], endRaiseMode ('double'|'value'|'keep',
+  only after a manual list), endRaiseValue, actionTimeout, delayBetweenHands,
+  preset ('style:<id>'|'template:<name>'|null)}`. `preset` is a label, kept
+  while the values still match it. Default: the « Normal » style.
+- Limits = the game server's (`netpacketvalidator.cpp` `ValidateGameInfo`): a
+  request outside them is refused and the session closed. A table stored
+  with the older, wider limits (120 s to act, 3 s between hands) is brought
+  back inside them when the director opens it (`gameInfoFor`).
+- The manual blinds order goes to the server (NetGameInfo field 14).
+
+## Players who do not come, and other cases at the table (service `0.18.0`)
+
+Audit of 2026-10-24 (`arena/test/test-arena-scenarios.mjs`, one scenario
+each, against a fake server that behaves like `servergamestate.cpp` /
+`serverlobbythread.cpp`). Server facts: an invitation to a player in another
+game is answered « busy » at once; a « no » removes the invitation, « busy »
+keeps it; an unanswered invitation stays valid, without any notice; the server
+refuses a 7th join of the same player at a table; nicknames are case
+sensitive (« Bob » and « bob » are two players); the admin may start with
+computer players (« fill with computer players »); before the start only the
+admin kicks; on a non-LAN server the admin is moved out after 30 min without
+starting and the next player becomes admin.
+
+- **Absence rule** (per tournament, `run.absence`, decided 2026-10-24):
+  - `auto` (default): every refusal, invitation unanswered for 60 s, « busy »
+    answer and seat left before the start is a **failure**; the player is
+    invited again 60 s later (a seat left: at once). Back on the server after
+    a drop, or out of another game: invited again at once, **no failure**.
+    Nobody is absent before **10 min past the start** (the opening when there
+    is no date); from then on, **3 failures**, or not connected for 60 s
+    (never connected included), = **absent**: told privately, not invited,
+    not ranked; the table goes on as soon as the others are seated (2 at
+    least; with fewer, the organizer decides). An absent player who sits
+    before the start after all (an invitation still valid) is welcome again.
+  - `custom`: the same with the organizer's numbers (failures 1–10, seconds
+    between invitations 20–600, minutes after the start 0–120).
+  - `manual`: nothing automatic (as before 0.18.0): a refusal stays, the
+    organizer clicks « Start without the absent ».
+  - Organizer page: the rule in the form and in Edit; at the table, each
+    player's failures and why an absent player is absent.
+- **The admin starts before every registered player is seated** (after the
+  hand-over: ten players, the director made room at eight; or the director
+  lost its seat): the missing players are marked absent at the start, so the
+  result fits the tournament.
+- **Each new admin is asked to start** (the previous one left or was timed
+  out), not only the first one.
+- **Someone not registered sits after the hand-over** (the admin, a player,
+  may invite anyone; the director cannot kick then): the admin is asked
+  privately to remove them, they are told; started anyway (or with computer
+  players): said in the table chat, the seat check fails and the result waits
+  for an organizer.
+- **Nicknames:** a registered name matches its exact spelling first; another
+  case only when every name on the server is known and nobody has the exact
+  one, and only the player invited for it may take the seat.
+- **Closed by the organizer before the start:** the director tells every
+  player privately, removes them (seated, as admin) and leaves, so the table
+  goes away instead of a game nobody follows; after the hand-over it can only
+  tell them.
+- Director lines (83 languages, `lib/botlang/`): `absentMarked`,
+  `closedByOrganizer`, `strangerSeated`, `strangersAtStart`.
+- Journal: `absenceRule`, `inviteFailed {nick, reason, failures}`,
+  `inviteUnanswered`, `markedAbsent {nick, reason}`, `absentBack`,
+  `strangerSeated`, `closedByOrganizer`.
+
+## The director opens the table (`web.299`, service `0.2.0`)
+
+From a tournament on `/arena` (« Table on the server »), with its LAN
+server chosen and at least two players: **Open the table**
+(`arena/lib/host.mjs`, `HostDirector`, in its own detached process like
+a watch).
+
+1. The director logs in and creates an **invite-only** table named after the
+   tournament (a second name `… #2` if it is in use), with the tournament's
+   **table settings** (stack, first small blind, blinds every N hands or N
+   minutes, after the last level, time to act, pause between hands; PokerTH
+   defaults), spectators allowed, one seat more than the players. It is
+   seated and is the table admin.
+2. It invites every registered player as soon as it sees them in the lobby
+   (again when a busy player comes back from another game; « Invite again »
+   on the page), welcomes each one who sits, and **kicks** anyone seated who
+   is not registered (the server allows it only to the admin, before the
+   start).
+3. When every registered player is seated, or when the organizer clicks
+   **Start without the absent** (at least two seated; the others are marked
+   absent and not ranked), it **leaves its seat** (decided design, option A):
+   the server makes the first player admin. It comes straight back as a
+   spectator and asks the new admin in the chat to start (reminders after 2
+   and 5 minutes).
+4. It follows the game like a Table check and seals the result. The service
+   carries it into the tournament by itself (validated or waiting for an
+   organizer, as the profile says). Strangers seated at the start (a player
+   can invite someone once the director has left) are recorded in a seat
+   check: the result then needs an organizer.
+
+Safeguards: on a non-LAN server a full table starts by itself 6 s later, so
+the director never stays seated at a full table — it leaves at once, which
+cancels that start (ten registered players: it leaves when eight are seated
+to make room). Players and the result are locked while the table is open;
+**Close the table** stops the director (a running game goes on without it).
+The page refreshes the director's block every 2 s; commands reach the
+director through `commands.jsonl` in its folder, which survives a restart of
+the service. Chat: English for now (the per-tournament language comes with
+the public pages), never capitals, links or the same line twice, spaced out
+(the server's `chatcleaner`).
+
+**Opening by itself** (service `0.3.0`): « Open the table by itself, N
+minutes before the start » (0 to 120, default 10; needs a start date). The
+service's sweep (every 5 s) opens it in that window, as « scheduler » in the
+journal. A failure is said once and kept on the tournament, then tried again
+every 2 minutes; a start more than an hour past is not opened (said once).
+Opening by hand, then closing, does not make it reopen for the same start.
+The sweep reads the tournaments from disk, so a restart changes nothing.
+
+**Announcements** (per tournament, on by default): who is out and how many
+are left, heads-up, the winner and the second (not the blinds: every client
+shows them, service `0.3.1`).
+
+**Chat language** (per tournament, service `0.6.0`): the director writes its
+lines — welcome, kick reason, admin notices, start, players out, heads-up,
+winner — in one of the app's 83 languages, English by default (« Language of
+the director in the chat », in the form and in Edit). The lines live in
+`arena/lib/botlang/<code>.mjs` (13 keys, `en.mjs` the reference, English
+filling any gap); the manager loads them and hands them to the director with
+its task. They start in lowercase: the server's chat filter mutes capitals.
+The organizer's own messages go out as typed.
+
+**128 bytes a line** (service `0.6.0`): the server takes a chat line or a
+private message of 1 to 128 bytes (UTF-8, `netpacketvalidator.cpp`); a longer
+one is an invalid packet and the server **closes the session** — the director
+would drop off its table. Every line is split into parts of at most 118 bytes
+(room for the « (hh:mm) » added to a line repeated word for word): after a
+sentence when it can, else between words — found by `Intl.Segmenter` for
+languages written without spaces (Thai, Chinese, Japanese…) — never inside a
+character (`lib/botchat.mjs`).
+
+**Where its lines go** (service `0.3.2`): before the start, a waiting
+player reads the lobby chat and private messages (QML GameWaitPage « Lobby
+Chat »; the web client the same), not the table chat. So until the game runs
+the director writes privately: welcome to the player who sits, the reason of a
+kick to the kicked player, « you are the table admin now » (and reminders) to
+the new admin, « X is now the table admin » to the others, the organizer's
+messages to everyone seated. Once the game runs — the server refuses private
+messages to its players — everything goes to the table chat.
+
+**Invited again by itself** (service `0.3.1`): an invitation belongs to a
+player id, and a reconnection brings a new one. A registered player who drops
+from the server is invited again when back; one who leaves the table before
+the start is invited again at once — before and after the hand-over, until the
+game starts. **Message to the
+table** from the page while the director runs it (« say »); a line with a link
+or mostly capitals is refused, as the server's chat filter would mute the
+director for it.
+
+Routes: `POST /admin/arena/t/table/open {id}`, `…/t/table/go {id}`,
+`…/t/table/reinvite {id}`, `…/t/table/say {id, text}`, `…/t/table/close {id}`.
+
+## The players' page (`/arena`, service `0.4.0`)
+
+- `/arena`: the public tournaments — playing now, open for
+  registration, coming up, finished. `/arena/t/<key>`: one tournament;
+  the key is random (`publicKey`, 12 bytes), so an unlisted tournament is
+  reached by its link only, and a private one answers as if it did not exist
+  until its invitation code is given (`?invite=`).
+- **Never indexed** (decided 2026-10-24, not only during the beta): the web
+  client's SEO leaves `/arena` out (no sitemap entry, nothing in
+  `robots.txt` or `llms.txt`), and every answer under `/arena` — pages,
+  images, API, errors — carries `X-Robots-Tag: noindex, nofollow,
+  noimageindex`, set by the service and forced again by the relay
+  (`server/arena-host.js`). It is not `Disallow`ed in `robots.txt`, so
+  that crawlers can read the noindex. Link previews (og:image) still work:
+  they do not index.
+- A tournament page: date, server, table settings, how it works (with the time
+  the table opens when it opens by itself), the players, the table to join
+  once the director has opened it (its name; « waiting for the admin »; « hand
+  N »), the ranking, corrections, the signature check and the journal / signed
+  result to download.
+- **Registration** by the players when « Players can register themselves »
+  is on (default): a PokerTH nickname the server would accept (2 to 64 bytes,
+  first byte a plain printable character), once per tournament in any case.
+  Closed when the table is full (10), once the director has opened the table,
+  or when the tournament is over. Each registration returns a **personal
+  code** (8 characters, no 0/O/1/I), shown once and kept in the browser
+  (`pth_td_regs`); unregistering needs it; only a SHA-256 of it is stored.
+  The same code serves the check-in of the Official profile (below).
+- Limits per player address (set by the web client, `x-td-client`): six
+  registrations, twelve unregistration attempts and twelve check-in attempts
+  in ten minutes.
+- Every language of the app: the list comes from the web client's
+  `/modules/lang-meta.mjs`, the texts from `arena/public/lang/<code>.mjs`
+  (falling back to English, then the key); the choice is the app's
+  (`pth_lang`); Arabic, Persian, Hebrew and Urdu read right to left, as on the
+  public pages. The organizer tools stay in English, at `/arena/organize`.
+- API, without a token, relayed by the web client: `GET /arena/api/list`,
+  `GET …/t/<key>[?invite=]`, `POST …/t/<key>/register {nick, invite?}`,
+  `POST …/t/<key>/unregister {nick, code, invite?}`,
+  `POST …/t/<key>/checkin {nick, code, invite?}`,
+  `GET …/t/<key>/file?which=journal|result`. Errors carry a `code` the page
+  translates. The web client relays `…/t/<key>/<word>` (lowercase letters),
+  so a new player action needs no web client release.
+
+## Check-in (identity « Personal code », Official; service `0.5.0`)
+
+- Proves that the player at the table is the one who registered: in a window
+  before the start, each player confirms on the players' page with their
+  nickname and **personal code** (one click when the code is kept in the
+  browser). Applies when the identity is *Personal code* (Official profile,
+  or Custom).
+- The window opens `checkInBefore` minutes before the start (5 to 240, 30 by
+  default, « Edit » on the organizer page); at once when the tournament has no
+  date. It closes when the table opens or a result is set.
+- A player added by the organizer also gets a personal code, shown once to
+  the organizer (to hand over); « New code » replaces a lost one (the old one
+  stops working); « Check in » lets the organizer check a player in himself
+  (seen in the room). Each is in the journal (`codeIssued`, `checkedIn` with
+  `by: organizer`).
+- Opening the table (by hand or by itself) invites **only the players
+  checked in** and refuses with fewer than two; the others are marked absent
+  at once (journal `notCheckedIn`) and are not ranked.
+- Errors for the page: `noCheckIn`, `checkInNotYet`, `checkInClosed`,
+  `badCode`, `alreadyIn`. Organizer routes: `POST /admin/arena/t/code
+  {id, nick}`, `…/t/checkin {id, nick}`.
+
+## Medals (service `0.14.0`, web client `2.1.10-web.311`)
+
+Gold, silver and bronze for the first three (`arena/lib/badges.mjs`),
+decided 2026-10-24. They are never stored: they are derived from the signed
+results (rebuilt as soon as a tournament or a cup is saved), so a correction
+moves a medal by itself.
+
+- **A tournament** gives medals when it is validated, its profile is Club,
+  Official or Custom (not Friendly), at least **4 players** are ranked, and
+  it is the tournament itself — the tables and the final table of a
+  tournament on several tables give none (the tournament's own ranking does).
+- **A cup** gives medals once closed (standings signed) and made of at least
+  **2 validated tournaments**.
+- A shared place gives each of its players the medal of that place (two 2nd:
+  two silver, no bronze for the 4th).
+- Private tournaments and cups give no public medal and are left out of the
+  results; unlisted ones give the medal without its link (`key: null`).
+- Players' page: `/arena/p/<nick>` (medals, then every tournament and cup
+  with its place); every nickname in a ranking or cup standings links to it,
+  with its medals after it (one request per page).
+
+**Open API** — for the web client, the QML client or another site later.
+Read-only, no key, `Access-Control-Allow-Origin: *`,
+`Cache-Control: public, max-age=60`. Every answer carries `v: 1`; fields may
+be added, never renamed or removed without a new `v`. Nicknames match
+without case.
+
+| Route | Answer |
+|---|---|
+| `GET /arena/api/players/<nick>` | `{ok, v, nick, counts: {gold, silver, bronze}, medals: [...], results: [...]}` — an unknown player gets empty lists. |
+| `GET /arena/api/badges?nicks=a,b,c` | Up to 100 players (a lobby, a table): `{ok, v, players: {<nick>: {counts, latest: [{medal, kind, name, key}] (3 at most)}}}` — only those with a medal. |
+| `GET /arena/api/badges` | Everyone with a medal, most gold first: `{ok, v, rules: {minPlayers, profiles, cupsMinTournaments}, players: [{nick, counts}]}`. |
+
+A medal or a result: `{medal ('gold'|'silver'|'bronze', medals only), kind
+('tournament'|'cup'), name, key (public key, or null), place, of (players
+ranked), at (ms, validated or closed), profile (tournaments) | points
+(cups)}`. Links: `/arena/t/<key>`, `/arena/c/<key>`. Medals are
+listed cups first, then the latest; results the latest first (200 at most).
+
+## Cups (service `0.13.0`, web client `2.1.10-web.310`)
+
+A cup gathers tournaments of this install (`arena/lib/cups.mjs`).
+
+- **Points** (decided 2026-10-24, « fair and checkable »): a counted
+  tournament gives each ranked player `players behind + 1` — the last gets 1,
+  the winner as many points as there were players. It grows with the field
+  by itself (winning among 10 is worth more than among 4) and needs no table.
+  A place shared by k players gives each the average of the k positions
+  (3rd–4th of 5 → 2.5). Absent players are not ranked, so get nothing.
+- **Best N** (`bestOf`, 0 = all): only each player's N best results count;
+  the others are shown in brackets.
+- **Stages**: an event may send its first `qualify` players to the `next`
+  event — added by « cup » as soon as the tournament is validated (the
+  service's sweep, once; refusals noted in the cup's journal). Several events
+  may feed one. A **final** (`final: true`) may also take the top
+  `fromStandings` of the points standings (« Qualify the top K »), and may
+  count for points or not (`counts`).
+- **Ranking of the cup**: the final's places first (once validated), then the
+  furthest stage reached, then the points, then the best single results one
+  by one; still equal: the same place. Only validated (signed) results count;
+  the standings are recomputed from the tournaments each time, so a
+  correction flows in by itself.
+- **Closing** signs the standings (`result.json`, the install key) with the
+  sealed head of each tournament; nothing can be added after.
+- Organizer page: « Cups » tab (create, add tournaments with their role,
+  standings, qualify, close). Players' page: the public cups on the start page,
+  `/arena/c/<key>` (rules, tournaments, standings with points per
+  tournament), and « Part of the cup … » on each tournament's page.
+- Routes: `GET /admin/arena/cups/list`, `…/cups/get?id=`,
+  `POST …/cups/create {name, bestOf, visibility, description}`,
+  `…/cups/update {id, patch}`, `…/cups/event {id, tournamentId, label?,
+  counts?, qualify?, next?, final?, fromStandings?}`, `…/cups/event/remove
+  {id, index}`, `…/cups/qualify {id, index}`, `…/cups/close {id}`;
+  public `GET /arena/api/cups`, `…/c/<key>[?invite=]`.
+
+## Several tables (service `0.12.0`, web client `2.1.10-web.309`)
+
+PokerTH cannot move a player from one game to another while it runs, so
+tables are never merged or balanced: **qualifying tables, then a final table**.
+
+- **Format « multi »** (« Several tables + final table »): 11 to 40 players
+  (4 tables of 10 at most — the manager runs 4 directors at once), and how
+  many of each table go to the final (`run.finalists`, 1 to 5, 2 by default).
+- **The draw** (« Draw the tables », or by itself with « open by itself »):
+  the players still in — with the identity « code », those who checked in;
+  the others are marked absent — are dealt at random into
+  `ceil(players / 10)` tables of balanced sizes. With the collusion setting
+  « separate », the draw keeps apart the pairs flagged by an earlier
+  collusion check of this install (the fewest such pairs at one table out of
+  300 draws). Journal: `tablesDrawn`.
+- **Each table is a tournament of its own** (`parentId`, `stage: {kind:
+  'qualifier'|'final', index}`): the settings, server, table settings,
+  personal codes and check-ins of its tournament; its own director, witnesses,
+  collusion check, result, validation, corrections. Not listed on its own;
+  its page links to its tournament. « Open the tables » opens them all.
+- **The final table**: once every table is validated, the first N of each
+  (`finalReady`) — opened by itself when the tournament opens by itself, else
+  « Open the final table ». The **tournament's ranking**: the final's places,
+  then the others by their place at their table, the same place shared by the
+  players of different tables. Set (`resultSet`, source `stages`) and
+  validated by the director once the final is validated: every guarantee was
+  applied at the tables. A table corrected afterwards recomputes it
+  (`stagesRecomputed`, signed again); the ranking is never corrected directly.
+- Routes: `POST /admin/arena/t/draw {id}`, `…/t/stages/open {id}`,
+  `…/t/final {id, open?}`. The witness lookup of a table answers
+  `parentKey` too (the web client looks the personal code up under it).
+
+## The director's avatar (service `0.11.0`, web client `2.1.10-web.308`; four robots in `0.15.0`, robots only in `0.16.0`)
+
+- The director logs in with an avatar so that players tell it from the
+  others: its MD5 in the Init (`avatarHash`), then, when the server asks
+  (`AvatarRequest`), header, blocks of 256 bytes, end — like any client; an
+  unknown hash gets `UnknownAvatar`. The server takes PNG, JPEG or GIF of
+  32 B to 30 KB (`MAX_AVATAR_FILE_SIZE`); the director checks the same.
+- Four robots ship with the service (`arena/public/img/`, 96×96 PNG,
+  each under 20 KB): robot 1 `director-avatar-1.png`, 2 `director-avatar-2.png`,
+  3 `director-avatar.png` (the default), 4 `director-avatar-4.png`. Any
+  organizer picks one on the organizer page with a click (kept in
+  `ARENA_DIR/director-avatar.json`); « Back to the default » returns to robot 3.
+  No image of one's own (decided 2026-10-24; a `director-avatar.img` left by
+  0.11–0.15 is ignored). Tables opened afterwards use it. Routes:
+  `GET /arena/avatar` (public, the current image),
+  `GET /admin/arena/avatar[?images=1]` (state; the robots as `data:`
+  URLs for the picker), `POST /admin/arena/avatar {preset: 1–4} | {reset: true}`.
+
+## Collusion check (service `0.10.0`)
+
+Signals for an organizer, never a sanction (`arena/lib/collusion.mjs`).
+
+- **What it reads.** The director now records, at the end of each hand, one
+  `handLog` event in its journal: every action (player, round, fold … all-in,
+  bet in the round) and who won, with or without a showdown — what every
+  client sees, never hole cards. The ranking ignores it (`replayJournal` is
+  unchanged). Tables run before `0.10.0` have no hand logs.
+- **Signals, per pair A–B,** each with a minimum sample (`LIMITS`):
+  *soft play* — heads-up after the flop at least 3 times, checked down to the
+  end at least 80 % (flagged when they bet against the others: ≤ 50 %);
+  *no pressure* — A never raised B in at least 8 bets faced, but raised the
+  others at least 20 %; *folds to* — A folded to B at least 85 % of at least 6
+  bets faced, to the others at most 50 %; *chip passing* — A put at least 40 %
+  of his stack in, then folded to B, who took the pot without a showdown
+  (flagged at 60 %, or twice). A pair with two signals is flagged; one
+  « note » alone is not.
+- **When.** By itself when the director's result arrives, and on demand
+  (« Check again », `POST /admin/arena/t/collusion {id}`) — also while
+  the table runs. Setting « Collusion check »: *Off*, *Report* (Club),
+  *Separate* (Official) — which behaves as *Report* until tournaments have
+  several tables (it will keep flagged pairs apart).
+- **Who sees it.** The organizer page only, with the numbers behind each
+  signal, and a warning above « Validate » when pairs are flagged. Players
+  never see it; the journal keeps the counts (`collusionChecked`: hands,
+  flags, notes), not the names.
+
+## Organizers (service `0.9.0`, web client `2.1.10-web.307`)
+
+- **One key per organizer.** The admin creates it in Admin › Keys with the
+  category « Tournaments (organizer) » (or `pokerth-web token add NAME
+  tournaments`). With it, the organizer signs in to `/arena/organize`;
+  the master key still works and acts as « admin ». The module's own settings
+  (on/off, restart) stay master-only.
+- **Who did what.** The web client passes the key's name to the service
+  (`X-TD-Author`, URI-encoded); every journal entry carries it. A key named
+  like one of the director's own authors (admin, director, scheduler,
+  witness, player) is recorded as `org:<name>`. The page shows who is signed
+  in (`GET /admin/arena/status` → `you`).
+- **Corrections approved by a second organizer** (Official, « Corrections:
+  second »): a correction is *proposed* (`correctionProposed`, the result
+  unchanged); another organizer approves it — then it is applied and signed
+  again (`corrected`, with `proposedBy`) — or rejects it with a reason
+  (`correctionRejected`); its author can withdraw it. One correction waits at
+  a time. Routes: `POST /admin/arena/t/correct {id, ranking, reason}`,
+  `…/t/correct/approve {id}`, `…/t/correct/reject {id, reason}`.
+- All organizers see and manage every tournament: there is no ownership yet.
+
+## Witnesses (service `0.7.0`, web client `2.1.10-web.305`)
+
+Witnesses check a result, they never decide it.
+
+- **Who.** A web client seated at a table opened by the director. At the
+  start of the game it asks `GET /arena/api/table?game=<id>&name=<table>`
+  (the game id and table name the server gave it; only tables the director
+  opened answer). Through this site's LAN servers only — never on
+  pokerth.net, never in training. Option `td_witness` (Advanced options ›
+  Network), on by default; a line in the chat the first time
+  (`tdWitnessNotice`); the privacy notice says what is sent (`pvSrvTd`).
+- **What.** For each hand, the stack of every player still in at its start,
+  by nickname, and the winner — never cards — in a compact form
+  (`{players, hands: [[h, stack…]]}`, under 60 KB so that it fits a keepalive
+  request), with the player's nickname and, when `/arena` kept it in this
+  browser (registration or check-in), the personal code.
+- **When.** Every 10 hands, when the player is out, at the end, and when the
+  page is hidden (`sendBeacon`). Reports of one player add up on the director
+  (a reloaded client only knows the hands since).
+- **Compared** (`arena/lib/witness.mjs`): with the director's journal,
+  hand by hand — same players, same stacks — and the winner; without a
+  director (manual result, log), with the ranking: the winner, and no one
+  ranked above a player the witness saw outlast him. Verdict « agrees »,
+  « disagrees » (the first difference: hand, player, both values), « nothing
+  to compare » or « waiting for the result »; again when the result arrives
+  and at validation. Each report goes in the journal (`witnessReport`, with a
+  SHA-256 of the report); the report itself in `witness/`.
+- **Who counts:** a player of the tournament, not absent; with the identity
+  « Personal code », only a report carrying the right code. Others are shown,
+  not counted. Anyone else is refused (`notPlayer`); a wrong code too.
+- **Witnesses** setting: *Off* (no report taken), *Informative* (shown,
+  never blocks), *Required* (Official): validating needs one counting witness
+  that agrees and none that disagrees — or the organizer's reason (3 to 200
+  characters), kept in the journal (`validated.witnessOverride`) and shown on
+  the players' page. With automatic validation (Custom) the result waits and
+  validates itself when a witness agrees.
+- **API:** `POST /arena/api/t/<key>/witness {nick, code?, game, name,
+  report}` — 60 per address in ten minutes; a private tournament takes a
+  report from its own table (game id and table name) without the invitation
+  code. The web client relays it up to 64 KB (other requests: 8 KB).
+- **QML players** (service `0.8.0`), when the tournament accepts them
+  (« Accept QML players as witnesses », `run.qmlWitnesses`, off by default):
+  after the game, the player sends his game log (`.pdb`, 10 MB at most) from
+  the players' page with his nickname (and personal code) —
+  `POST /arena/api/t/<key>/witnesslog {nick, code?, invite?, log: base64}`,
+  six per address in ten minutes; the web client relays up to 14 MB. The
+  game is the one the server numbered like the director's table (`Game.GameID`);
+  without a director, the log's game with the most of the tournament's
+  players. Only `Seat_N_Cash` per hand and « wins game » are read (never the
+  cards); the report is compared like a web client's and marked « log ». The
+  file is not kept: its SHA-256 goes in the journal (`logSha256`).
+
+## A service of its own (`tournament/`, decided and done 2026-10-23)
+
+The tournament director has its own audience (organizers), lifecycle,
+storage, accounts and processes, so it is a separate service **in this
+repository**, with its own `package.json` and version (`0.1.0` first, shown
+at the foot of `/arena`).
+
+- **Launched by the web client.** While Admin › Community › Tournaments is
+  on, the proxy (`server/arena-host.js`) forks `arena/server.mjs`,
+  restarts it if it stops (1 s, 2 s, … up to 30 s), and stops it when the
+  switch goes off. Nothing changes for Docker, PM2, the admin page's update
+  or pokerth.net. The admin panel shows the service state and version. When
+  the proxy goes away (restart, update), the service leaves with it and the
+  next proxy starts a new one. Watches are detached processes of their own
+  and keep running throughout.
+- **Talking.** The service listens on `127.0.0.1` on a port it picks and
+  reports over IPC (`ready`). The proxy relays `/arena` and its files
+  (strict path pattern, no token) and `/admin/arena/*` (after checking
+  the admin token with the admin brute-force limit) to it. A secret made at
+  each launch (`X-TD-Secret`) and the author (`X-TD-Author`) tell the service
+  the request is genuine. The service asks the proxy which servers it may use
+  (IPC `servers`: the LAN directory and the local server) each time.
+- **What it gets.** Only `ARENA_DIR`, `ARENA_SECRET`, `ARENA_CLIENT_VERSION` (the
+  web client's version: the PokerTH release the director speaks), `ARENA_HOST`,
+  `ARENA_PORT` and a few system variables. Not the admin token, nor database
+  passwords.
+- **On its own** (development, tests): `ARENA_ADMIN_TOKEN=… ARENA_SERVERS='[…]'
+  ARENA_PORT=8091 node arena/server.mjs`, Bearer token.
+- Accounts of its own come with the « organizer accounts » step; until
+  then the web client's admin token is the way in. A separate repository
+  stays possible later.
+
+## Updating the director (`web.300`, service `0.2.1`)
+
+The director has its own version (`arena/package.json`) and changelog
+(`arena/CHANGELOG.md`). A change that only touches `tournament/` bumps
+that version only: the web client's version, its service worker and its
+« new version » banner do not move.
+
+- The web client's update check counts `tournament/` as code that needs no
+  restart of the web client, so the update is a static one (the admin's
+  « Update without restart », or the automatic one), with no player cut off.
+- The web client (`server/arena-host.js`) checks every 15 s whether the
+  service's files on disk (entry, `package.json`, `lib/`, `public/`) differ
+  from those it started, and restarts **the service alone** if so. Watches and
+  tables in progress are processes of their own and go on.
+- Admin › Tournaments shows the running version and, if different, the one on
+  disk; « Restart the service » restarts it by hand.
+- A change to `server/arena-host.js` (the launcher, in the web client)
+  is a web client change, with its version bump and restart.
+- An install without git (Docker image baked) is still updated with a new
+  image.
+
+## Files
+
+| File | Role |
+|---|---|
+| `arena/server.mjs` | Service entry: HTTP on 127.0.0.1, IPC with the web client. |
+| `arena/lib/service.mjs` | HTTP side: page, API routes, auth by secret (or standalone token). |
+| `arena/lib/manager.mjs` | Install key, known servers, lobby, watches (detached workers). |
+| `arena/lib/journal.mjs` | Canonical JSON, hash-chained journal, verification, Ed25519 keys and signatures. Pure. |
+| `arena/lib/tracker.mjs` | Ranking of one table from normalized spectator events. Pure. |
+| `arena/lib/spectator.mjs` | Network client: login, spectator join, protobuf → events → journal + tracker, timeout keep-alive, reconnect with resync, late player names, sealing. Reads only: never sits, acts, acks a start or chats. |
+| `arena/lib/lobby.mjs` | Lobby reader (guest login, tables, server type). |
+| `arena/lib/host.mjs` | The director that opens a tournament table: create, invite, kick, hand over, then watch. |
+| `arena/lib/worker.mjs` | One watch in a detached process, state and files on disk. |
+| `arena/lib/table.mjs`, `arena/lib/images.mjs` | Table settings (the web client's create-game lists, `public/modules/create-presets.mjs`); images of tournaments and cups. |
+| `arena/lib/cups.mjs`, `arena/lib/badges.mjs` | Cups (points, stages, signed standings); medals (derived from the signed results, open API). |
+| `arena/lib/pdb.mjs`, `arena/lib/tournaments.mjs` | PokerTH log reader (BBC rule); tournaments in manual mode. |
+| `arena/public/` | The page: `index.html`, `organizer.mjs` (Table check), `tournaments-ui.mjs` (Tournaments), `manifest.json`. |
+| `arena/bin/arena-spectate.mjs` | Command line: watch a table, write `<out>.journal.json` and `<out>.result.json`; `--verify` checks chain, signature and replay. |
+| `arena/test/` | `test-arena-core` (journal, ranking cases), `test-arena-spectator` (fake server over TCP, command line), `test-arena-tournaments` (manual mode, `.pdb`), `test-arena-host` (opening a table against a fake server that behaves like the real one, then through the service), `test-arena-service` (workers, the service on its own), `test-arena-route` (real proxy launching the service, the page in jsdom). |
+| `server/arena-host.js` | Web client side: the setting, launching and relaying. |
+
+The service shares the repository's protobuf bundle (`public/proto/`) and
+sql.js (`public/vendor/`) rather than copying them.
+
+```sh
+node arena/bin/arena-spectate.mjs --host 192.168.1.20 --port 7234 \
+     --nick TD-test-T1 --game-name "Friday SnG"
+node arena/bin/arena-spectate.mjs --verify arena-out.result.json arena-out.journal.json
+npm run test:td        # every tournament test (npm --prefix arena test)
+```
+
+The install key (`td-key.pem`, created on first use, mode 600) and the
+output files are git-ignored. Use it only on a server you run, or with its
+operator's agreement.
+
+## Order of work
+
+1. Spectator prototype, and the Table check on `/arena` (done).
+2. Storage layer (JSON and SQL) and migrations.
+3. Manual mode on `/arena` (done, `web.296`), then the director as a
+   service of its own (done, `web.297`, service `0.1.0`).
+4. Witness reports from the web client, compared with the journal (done in service `0.7.0`).
+5. Persistent state machine, resume after restart.
+6. Admin › Tournaments (settings) and per-server `tournaments` keys.
+7. `/arena`: public and organizer views, scheduled Sit & Go end to end
+   (table creation, seat check and hand-over done in `web.299`; opening at
+   the scheduled time, announcements and messages to the table in service
+   `0.3.0`; check-in in `0.5.0`; the chat language in `0.6.0`; witnesses
+   in `0.7.0`; QML witnesses by their log in `0.8.0`; organizer keys and
+   corrections by a second organizer in `0.9.0`; the collusion check in
+   `0.10.0`).
+8. Collusion check.
+9. Organizer and player accounts.
+10. Requests to organize.
+11. Multi-table rounds, then leagues.
+Not planned for now: anything for pokerth.net (it would need its
+maintainers' agreement).

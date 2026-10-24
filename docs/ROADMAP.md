@@ -296,17 +296,17 @@ use too. Items are grouped by status rather than fixed phases.
   untick « manual address entry » on pokerth.net once servers are listed; serverlist XML export
   for the QML client to discuss with sp0ck.
 
-- **Tournament director** — an automatic organizer for games and tournaments on the LAN servers
+- **Arena** (called « tournaments » until `web.315`; tournaments, cups, medals and the tournament director, `/arena`) — an automatic organizer for games and tournaments on the LAN servers
   of the directory (scheduled Sit & Go, multi-table rounds, leagues), off by default, with a sealed,
   signed journal of every table and the operator's consent required before touching a server. Design and
-  status: `docs/TOURNAMENT_DIRECTOR.md`. Done: the spectator that watches one table and seals its journal and
-  ranking, and the « Table check » tool on `/tournament` (`web.292`, off by default) to run it against a server
+  status: `docs/ARENA.md`. Done: the spectator that watches one table and seals its journal and
+  ranking, and the « Table check » tool on `/arena` (`web.292`, off by default) to run it against a server
   the install knows; manual mode (`web.296`: tournaments created by hand, result typed in, from a Table check or
   from a `.pdb` log, validated, corrected, signed), and the move to a service of its own in this repository
   (`web.297`: `tournament/`, own `package.json` and version, launched and relayed by the web client), and the
   director opening the table (`web.299`: invite-only table, seat check, hand-over to the first player, result recorded
   by itself). Service `0.3.0`: opening by itself before the start, announcements, messages to the table. Service `0.4.0`:
-  the players' page `/tournament` in every language, with registration and a personal code. Service `0.5.0`: check-in
+  the players' page `/arena` in every language, with registration and a personal code. Service `0.5.0`: check-in
   for the Official profile (only the players who confirmed with their code are invited). Service `0.6.0`: the director
   writes in the tournament's chat language (83 languages), every line within the server's 128 bytes. Service `0.7.0`
   (`web.305`): witnesses — the web clients at the table send what they saw, compared with the director's journal;
@@ -317,7 +317,7 @@ use too. Items are grouped by status rather than fixed phases.
   Service `0.12.0` (`web.309`): several tables + final table (11 to 40 players). Service `0.13.0` (`web.310`): cups —
   points (players behind + 1, best N results), stages (the first Q go on), or both, standings signed at the end.
   Service `0.14.0` (`web.311`): medals (top 3 of Club/Official tournaments of 4+ players and of closed cups), a page
-  per player (`/tournament/p/<nick>`) and an open, versioned API for other clients.
+  per player (`/arena/p/<nick>`) and an open, versioned API for other clients.
 
 ## ⏭️ Next
 

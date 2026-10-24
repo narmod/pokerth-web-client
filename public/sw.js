@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.10-web.315';
+const CACHE_VERSION = 'pokerth-v2.1.10-web.316';
 // Build id the page puts on the card back URL (deck.mjs _deckBack →
 // flipside.<ext>?v=<BUILD_VERSION>): CACHE_VERSION without its prefix.
 const BUILD_ID = CACHE_VERSION.replace(/^pokerth-v/, '');
@@ -71,7 +71,7 @@ const ASSETS = [
   '/modules/lang-meta.mjs',
   '/modules/handlog.mjs',
   '/modules/pdb-autosave.mjs',
-  '/modules/td-witness.mjs',
+  '/modules/arena-witness.mjs',
   '/modules/backup-autosave.mjs',
   '/modules/journal.mjs',
   '/modules/seo/about-guides.mjs',
@@ -830,9 +830,9 @@ self.addEventListener('fetch', function(e) {
   // SW cache or serve them (otherwise the package list, status, logs… show stale
   // after a change). Network only — admin is an online-only tool.
   if (/^\/admin(?:\/|$)/.test(url.pathname)) return;
-  // Same for the tournament pages (organizer tools, online only, 404 while the
+  // Same for the Arena's pages (organizer tools, online only, 404 while the
   // admin keeps them off): a cached app shell must never stand in for them.
-  if (/^\/tournament(?:\.html|\/|$)/.test(url.pathname)) return;
+  if (/^\/arena(?:\.html|\/|$)/.test(url.pathname)) return;
   // Live state endpoints served by the proxy: never cached, never served from
   // Cache Storage. `cache:'no-store'` on the page and `Cache-Control: no-store`
   // on the response are both ignored once the SW answers from a cache entry, so

@@ -66,10 +66,11 @@ monthly-cups.json
 # Screenshots written by scripts/test-mobile-browser.mjs (local review only).
 /test-artifacts/
 
-# Tournament director prototype (tournament/bin/td-spectate.mjs): the install's
+# Tournament director prototype (arena/bin/arena-spectate.mjs): the install's
 # private signing key and the journals/results it writes. Never committed.
 td-key.pem
-td-out.journal.json
-td-out.result.json
+arena-out.journal.json
+arena-out.result.json
 # Its folder on a running install: watches, journals, results and the key.
 /tournament-data/
+/arena-data/

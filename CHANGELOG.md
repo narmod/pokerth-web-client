@@ -33,7 +33,7 @@ highlights below.
 
 ### Changed
 - **Tournaments: updated on their own, « beta »** (`web.300`, service `0.2.1`) — the tournament director now has its own
-  version and changelog (`tournament/CHANGELOG.md`): a change that only touches `tournament/` bumps the service's
+  version and changelog (`arena/CHANGELOG.md`): a change that only touches `tournament/` bumps the service's
   version, not the web client's. The update check no longer asks to restart the web client for it (static update),
   and the web client restarts the tournament service alone once its new code is on disk (checked every 15 s); Admin ›
   Tournaments shows the running and the on-disk version and gets « Restart the service ». A « beta » badge in the admin
@@ -44,10 +44,10 @@ highlights below.
   own; saving says whether the service started. `scripts/test-admin-boot.mjs` covers the panel.
 - **Tournaments: a service of its own** (`web.297`, decided 2026-10-23) — the tournament director moves out of the web
   client into `tournament/` with its own `package.json` and version (`0.1.0`, shown at the foot of `/tournament`):
-  `tournament/server.mjs` (HTTP on 127.0.0.1, IPC), `tournament/lib/` (manager, routes, journal, spectator, worker,
-  `.pdb` reader, tournaments), `tournament/public/` (the page, now served by the service: its files under
-  `/tournament/…`, the manifest at `/tournament/manifest.json`), `tournament/bin/td-spectate.mjs` and
-  `tournament/test/` (`npm run test:td`). The web client keeps `server/tournament-host.js` only: while Admin ›
+  `arena/server.mjs` (HTTP on 127.0.0.1, IPC), `arena/lib/` (manager, routes, journal, spectator, worker,
+  `.pdb` reader, tournaments), `arena/public/` (the page, now served by the service: its files under
+  `/tournament/…`, the manifest at `/tournament/manifest.json`), `arena/bin/arena-spectate.mjs` and
+  `arena/test/` (`npm run test:td`). The web client keeps `server/arena-host.js` only: while Admin ›
   Community › Tournaments is on it launches the service, restarts it if it stops (1 s … 30 s) and stops it when
   turned off; it relays `/tournament` and `/admin/tournaments/*` after checking the admin token, with a secret made
   at each launch, and tells the service which servers it may use (LAN directory, local server). The service gets no
@@ -72,13 +72,18 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **Tournaments renamed « Arena »** (`web.316`, service `0.19.0`) — the module holds tournaments, cups and medals:
+  `tournament/` → `arena/`, `server/tournament-host.js` → `server/arena-host.js`, `/tournament…` → `/arena…` (the old
+  addresses answer 301/308, query kept), `/admin/tournaments/*` → `/admin/arena/*` (old path kept), key scope
+  `tournaments` → `arena` (old keys mapped), admin config `tournaments` → `arena`, `TD_*` → `ARENA_*` (`TD_DIR` honoured;
+  the old data folder is moved once), Admin › Community › Arena. Mapping in `docs/ARENA.md`.
 - **`/tournament` never indexed** (`web.315`, service `0.17.1`) — the relay sets `X-Robots-Tag: noindex, nofollow,
   noimageindex` on every answer under `/tournament` (pages, images, API, errors), whatever the service sends; it stays
   out of the sitemap, `robots.txt` and `llms.txt`.
 - **Tournaments: images of tournaments and cups** (`web.314`, service `0.17.0`) — the web client relays
   `/tournament/img/<id>.jpg` and passes the site's public address (Admin › SEO, else the request's host) to the
   director, which builds the picture of a shared link (og:image) of a tournament's or cup's page. Details in
-  `tournament/CHANGELOG.md`.
+  `arena/CHANGELOG.md`.
 - **One source for the « Create a table » choices** (`web.313`, service `0.16.0`) — the game styles, the community
   templates and the field limits move to `public/modules/create-presets.mjs`, read by the form (`pokerth.js`,
   `botsuggest.mjs`) and by the tournament director's table settings (served to its organizer page by
@@ -88,40 +93,40 @@ highlights below.
 - **Tournaments: medals** (`web.311`, service `0.14.0`) — the web client relays the players' pages
   (`/tournament/p/<nick>`) and the open medals API (`/tournament/api/players/<nick>`, `/tournament/api/badges`),
   passing its `Access-Control-Allow-Origin: *` and `ETag` through so another client or site can read it. Details in
-  `tournament/CHANGELOG.md`.
+  `arena/CHANGELOG.md`.
 - **Tournaments: cups** (`web.310`, service `0.13.0`) — the web client relays the cup pages (`/tournament/c/<key>`)
-  and their API (`/tournament/api/cups`, `/tournament/api/c/<key>`). Details in `tournament/CHANGELOG.md`.
+  and their API (`/tournament/api/cups`, `/tournament/api/c/<key>`). Details in `arena/CHANGELOG.md`.
 - **Tournaments: several tables** (`web.309`, service `0.12.0`) — the web client's witness, at a table of a tournament
-  on several tables, finds the personal code kept under the tournament's key (`td-witness.mjs`). Details in
-  `tournament/CHANGELOG.md`.
+  on several tables, finds the personal code kept under the tournament's key (`arena-witness.mjs`). Details in
+  `arena/CHANGELOG.md`.
 - **Tournaments: the director's avatar** (`web.308`, service `0.11.0`) — the web client serves `/tournament/avatar`
-  (the image the director shows on the server). Details in `tournament/CHANGELOG.md`.
+  (the image the director shows on the server). Details in `arena/CHANGELOG.md`.
 - **Tournaments: organizer keys** (`web.307`, service `0.9.0`) — a new key category, « Tournaments (organizer) »
   (`ADMIN_SCOPES`, Admin › Keys, `pokerth-web token add NAME tournaments`): such a key signs in to
   `/tournament/organize` and the web client passes its name to the tournament service, which records it in the
-  journal; the module's settings stay master-only. Details in `tournament/CHANGELOG.md`.
+  journal; the module's settings stay master-only. Details in `arena/CHANGELOG.md`.
 - **Tournaments: QML players as witnesses** (`web.306`, service `0.8.0`) — the web client relays a player's game log
   (`/tournament/api/t/<key>/witnesslog`, up to 14 MB: a 10 MB `.pdb` in base64) to the tournament service. Details in
-  `tournament/CHANGELOG.md`.
+  `arena/CHANGELOG.md`.
 - **Tournaments: witnesses** (`web.305`, service `0.7.0`) — at a table opened by the tournament director, the web
-  client is a witness (`public/modules/td-witness.mjs`, hooked in `modules/game/msg-hand.mjs`): it recognises the
+  client is a witness (`public/modules/arena-witness.mjs`, hooked in `modules/game/msg-hand.mjs`): it recognises the
   table (`GET /tournament/api/table?game=&name=`), records the stacks of the players still in at the start of each
   hand and the winner — never cards — and sends them (`POST /tournament/api/t/<key>/witness`, keepalive, under 60 KB)
   every 10 hands, when the player is out, at the end and when the page is hidden, with the personal code kept by
   `/tournament` in this browser. LAN servers through this site only (not pokerth.net, not training). A line in the
   chat the first time; Advanced options › Network › « Tournaments: … send it a summary » (on by default) turns it off;
   the privacy notice says what is sent. The web client relays `/tournament/api/table` and witness reports up to 64 KB.
-  Details in `tournament/CHANGELOG.md`.
+  Details in `arena/CHANGELOG.md`.
 - **Tournaments: check-in** (`web.304`, service `0.5.0`) — the web client relays any players' action of a tournament
   (`/tournament/api/t/<key>/<word>`, lowercase letters) instead of a fixed list, starting with the check-in of the
   Official profile: only the players who confirmed with their personal code are invited to the table. Details in
-  `tournament/CHANGELOG.md`.
+  `arena/CHANGELOG.md`.
 - **Tournaments: the players' page** (`web.303`, service `0.4.0`) — the web client relays the tournament pages
   (`/tournament` for players, `/tournament/organize`, `/tournament/t/<key>`, language files) and, without a token,
   the players' API `/tournament/api/*` (list, a tournament, register, unregister, files) to the service, with the
   player's address in a header it sets itself (the service's per-address limits) and bodies capped at 8 KB.
-  `scripts/test-lang-count.mjs` now requires a tournament catalogue (`tournament/public/lang/`) for every language
-  of the app; `docs/ADDING_A_LANGUAGE.md` says so. Details in `tournament/CHANGELOG.md`.
+  `scripts/test-lang-count.mjs` now requires a tournament catalogue (`arena/public/lang/`) for every language
+  of the app; `docs/ADDING_A_LANGUAGE.md` says so. Details in `arena/CHANGELOG.md`.
 - **Tournaments: the director opens the table** (`web.299`, service `0.2.0`) — from a tournament with its LAN server
   and at least two players, « Open the table »: the director creates an invite-only table with the tournament's table
   settings (new: stack, first small blind, blinds every N hands or minutes, after the last level, time to act, pause
@@ -131,7 +136,7 @@ highlights below.
   and seals the result, which reaches the tournament by itself. Never stays seated at a full table (a non-LAN server
   would start it 6 s later). The page shows each player's state live (seated, invited, connected, absent…), the kicks,
   the admin and the director's log; « Invite again », « Close the table ». Players and the result are locked while
-  the table is open. `tournament/lib/host.mjs`, `tournament/test/test-td-host.mjs`.
+  the table is open. `arena/lib/host.mjs`, `arena/test/test-arena-host.mjs`.
 - **Tournaments: manual mode on `/tournament`** (`web.296`, off by default) — a « Tournaments » tab next to the
   Table check: create a Sit & Go tournament (name, LAN server for the record, date, Friendly / Club / Official /
   Custom profile, visibility — a private one gets an invitation code), add the players by hand (up to 10), then set
@@ -144,7 +149,7 @@ highlights below.
   with its reason and the result signed again, never written over (Official: needs a second organizer, so not yet).
   Stored as JSON in `TD_DIR/tournaments/<id>/` (the log kept as evidence); routes under `/admin/tournaments/t/*`;
   `server/tournament/tournaments.mjs`, `public/modules/tournament/tournaments-ui.mjs`,
-  `scripts/test-td-tournaments.mjs`. Decided the same day: the tournament director becomes a service of its own in
+  `scripts/test-arena-tournaments.mjs`. Decided the same day: the tournament director becomes a service of its own in
   this repository (own process, port and version), the proxy only relaying `/tournament`.
 - **Tournaments: « Table check » on `/tournament`** (`web.292`, off by default) — first organizer tool of the
   tournament director. Admin › Community › Tournaments turns the module on (until then `/tournament` and
@@ -164,9 +169,9 @@ highlights below.
   into events, keeps them in a hash-chained journal (`journal.mjs`), ranks the table with the BBC rule (later
   elimination first, then bigger stack at the start of the hand; ties flagged — `tracker.mjs`) and signs head and
   ranking with the install's Ed25519 key. Keeps its session alive on `TimeoutWarning`, reconnects and resyncs on
-  `GameStartRejoin` (missed hands reported), waits for late player names. `scripts/td-spectate.mjs` writes and
+  `GameStartRejoin` (missed hands reported), waits for late player names. `scripts/arena-spectate.mjs` writes and
   `--verify`s the files; tests `test:td-core`, `test:td-spectator` (scripted fake server over TCP). Design and the
-  remaining steps: `docs/TOURNAMENT_DIRECTOR.md`.
+  remaining steps: `docs/ARENA.md`.
 - **Game announcements for screen readers** (`web.280`) — the « Voice » checkbox (Advanced options → Betting &
   turn) becomes a three-way choice in the Accessibility window: Off, Built-in voice (speech synthesis, as before)
   or Screen reader. New `modules/ui/announcer.mjs`: one `announce(text, {urgent})` for every game event (actions,
