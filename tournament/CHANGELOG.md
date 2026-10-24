@@ -8,6 +8,13 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.17.1 — 2026-10-24 (web client `2.1.10-web.315`)
+
+### Changed
+- **Never indexed by search engines:** every answer under `/tournament`
+  (pages, images, API, errors) carries `X-Robots-Tag: noindex, nofollow,
+  noimageindex`; the web client forces it again when relaying.
+
 ## 0.17.0 — 2026-10-24 (web client `2.1.10-web.314`)
 
 ### Added

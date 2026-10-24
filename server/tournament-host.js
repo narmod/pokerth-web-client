@@ -188,10 +188,13 @@ function createTournamentHost(deps) {
     return r;
   }
   // Relay a request as is; `author` set = an authenticated API call.
+  // Nothing of /tournament is ever indexed by search engines (the web client's
+  // SEO leaves it out): every answer says noindex, whatever the service sends.
+  const NOINDEX = 'noindex, nofollow, noimageindex';
   function relay(req, res, pathAndQuery, author, extra) {
     return ready(8000).then((ok) => {
       if (!ok) {
-        res.writeHead(503, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'Retry-After': '5' });
+        res.writeHead(503, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'Retry-After': '5', 'X-Robots-Tag': NOINDEX });
         return res.end(JSON.stringify({ ok: false, error: 'the tournament service is not running (' + status + (lastError ? ': ' + lastError : '') + ')' }));
       }
       const headers = {};
@@ -200,11 +203,12 @@ function createTournamentHost(deps) {
       if (extra) Object.assign(headers, extra);
       request(req.method, pathAndQuery, headers, req.method === 'GET' || req.method === 'HEAD' ? null : req, (err, pr) => {
         if (err) {
-          if (!res.headersSent) { res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' }); res.end(JSON.stringify({ ok: false, error: 'tournament service: ' + err.message })); }
+          if (!res.headersSent) { res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'X-Robots-Tag': NOINDEX }); res.end(JSON.stringify({ ok: false, error: 'tournament service: ' + err.message })); }
           return;
         }
         const out = {};
-        ['content-type', 'content-length', 'cache-control', 'content-disposition', 'x-robots-tag', 'retry-after', 'access-control-allow-origin', 'etag'].forEach((k) => { if (pr.headers[k]) out[k] = pr.headers[k]; });
+        ['content-type', 'content-length', 'cache-control', 'content-disposition', 'retry-after', 'access-control-allow-origin', 'etag'].forEach((k) => { if (pr.headers[k]) out[k] = pr.headers[k]; });
+        out['x-robots-tag'] = NOINDEX;
         res.writeHead(pr.statusCode, out);
         pr.pipe(res);
       });
@@ -274,7 +278,7 @@ function handleTournamentAdmin(host, h, req, res, reqPathOnly, query) {
 
 // ── /tournament and its files (no token: the page asks for it) ──
 function handleTournamentPage(host, req, res, reqPathOnly, clientIp, origin) {
-  const nf = () => { res.writeHead(404); res.end('Not found'); };
+  const nf = () => { res.writeHead(404, { 'X-Robots-Tag': 'noindex, nofollow, noimageindex' }); res.end('Not found'); };
   if (!host.enabled()) return nf();
   if (API_RE.test(reqPathOnly)) {
     if (req.method !== 'GET' && req.method !== 'POST') return nf();

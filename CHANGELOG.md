@@ -72,6 +72,9 @@ highlights below.
   leaves after 30 s.
 
 ### Added
+- **`/tournament` never indexed** (`web.315`, service `0.17.1`) — the relay sets `X-Robots-Tag: noindex, nofollow,
+  noimageindex` on every answer under `/tournament` (pages, images, API, errors), whatever the service sends; it stays
+  out of the sitemap, `robots.txt` and `llms.txt`.
 - **Tournaments: images of tournaments and cups** (`web.314`, service `0.17.0`) — the web client relays
   `/tournament/img/<id>.jpg` and passes the site's public address (Admin › SEO, else the request's host) to the
   director, which builds the picture of a shared link (og:image) of a tournament's or cup's page. Details in

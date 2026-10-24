@@ -415,7 +415,15 @@ Routes: `POST /admin/tournaments/t/table/open {id}`, `…/t/table/go {id}`,
   registration, coming up, finished. `/tournament/t/<key>`: one tournament;
   the key is random (`publicKey`, 12 bytes), so an unlisted tournament is
   reached by its link only, and a private one answers as if it did not exist
-  until its invitation code is given (`?invite=`). noindex while in beta.
+  until its invitation code is given (`?invite=`).
+- **Never indexed** (decided 2026-10-24, not only during the beta): the web
+  client's SEO leaves `/tournament` out (no sitemap entry, nothing in
+  `robots.txt` or `llms.txt`), and every answer under `/tournament` — pages,
+  images, API, errors — carries `X-Robots-Tag: noindex, nofollow,
+  noimageindex`, set by the service and forced again by the relay
+  (`server/tournament-host.js`). It is not `Disallow`ed in `robots.txt`, so
+  that crawlers can read the noindex. Link previews (og:image) still work:
+  they do not index.
 - A tournament page: date, server, table settings, how it works (with the time
   the table opens when it opens by itself), the players, the table to join
   once the director has opened it (its name; « waiting for the admin »; « hand

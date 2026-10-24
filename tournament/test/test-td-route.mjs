@@ -140,6 +140,13 @@ try {
     ok(im.status === 200 && im.headers.get('content-type') === 'image/jpeg' && /max-age/.test(im.headers.get('cache-control') || ''), 'images: relayed by the web client');
     const share = await (await fetch(base + '/tournament/t/' + t.publicKey)).text();
     ok(share.includes('<meta property="og:image" content="' + base + '/tournament/img/tournament.jpg">'), 'a tournament\'s page: og:image with this site\'s address');
+    // Never indexed: every answer under /tournament says noindex; the site's robots.txt and sitemap leave it out.
+    const paths = ['/tournament', '/tournament/t/' + t.publicKey, '/tournament/p/Ann', '/tournament/organize', '/tournament/img/tournament.jpg', '/tournament/avatar', '/tournament/api/list', '/tournament/api/badges', '/tournament/public.mjs', '/tournament/nothing-here'];
+    const tags = [];
+    for (const q of paths) { const r = await fetch(base + q); tags.push(q + ' ' + r.status + ' ' + (r.headers.get('x-robots-tag') || '-')); await r.arrayBuffer(); }
+    ok(tags.every((x) => /noindex/.test(x) && /nofollow/.test(x)), 'never indexed: noindex on pages, images, API and 404s (' + tags.filter((x) => !/noindex/.test(x)).join('; ') + ')');
+    const rob = await (await fetch(base + '/robots.txt')).text(), smap = await (await fetch(base + '/sitemap.xml')).text();
+    ok(!/tournament/i.test(rob) && !/\/tournament/.test(smap), 'robots.txt and sitemap.xml never list /tournament');
     ok((await get('/tournament/api/secret', {})).status === 404 && (await get('/tournament/api/list', {})).status === 200, 'public API: only its routes');
     // Witnesses: the table lookup, and a report larger than other requests.
     const lk = await fetch(base + '/tournament/api/table?game=5&name=Proxy%20cup');

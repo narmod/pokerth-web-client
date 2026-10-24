@@ -226,7 +226,7 @@ export function createService(o) {
     try { html = fs.readFileSync(path.join(PUBLIC, file || 'index.html'), 'utf8'); } catch (e) { res.writeHead(500); return res.end('page missing'); }
     html = html.split('__TD_VERSION__').join(o.version || '');
     if (meta) html = html.replace('</head>', meta + '\n</head>');
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' });
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow, noimageindex' });
     res.end(html);
   }
 
@@ -454,6 +454,9 @@ export function createService(o) {
     const p = u.pathname;
     const query = Object.fromEntries(u.searchParams);
     if (p === '/healthz') return json(res, 200, { ok: true, version: o.version });
+    // Never indexed by search engines: pages, images, API (the link previews
+    // of shared links still work, they do not index).
+    if (p.indexOf('/tournament') === 0) res.setHeader('X-Robots-Tag', 'noindex, nofollow, noimageindex');
     // /tournament: the players' page (list, a tournament, registration);
     // /tournament/organize: the organizer's tools.
     if (p === '/tournament' || p === '/tournament/' || p === '/tournament.html' || /^\/tournament\/[tc]\/[A-Za-z0-9_-]{8,40}\/?$/.test(p) || /^\/tournament\/p\/[^/]{1,200}$/.test(p)) return sendPage(res, 'public.html', shareMeta(req, p));
