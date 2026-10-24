@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'calen {need} punts, en tens {have}',
   miss_noMedal: 'reservat als jugadors sense medalla, en tens {have}',
   miss_cup: 'cal una plaça entre els {need} primers de «{name}» (la teva plaça: {have})',
+  tkTitle: 'Tiquets',
+  tkNeed: 'Per inscriure’s: un tiquet «{name}», que es gasta quan el torneig es valida.',
+  tkKeep: 'Places que conserven el tiquet: {list}.',
+  tkEarn: 'Els {n} primers guanyen un tiquet «{name}».',
+  tkEnds: 'Aquest torneig tanca la temporada «{season}»: després tots els tiquets tornen a començar de zero.',
+  tkMine: 'Tiquets — {season}',
+  miss_ticket: 'cal un tiquet «{name}», en tens {have}',
+  miss_ticketPending: 'cal un tiquet «{name}»: en tens {have}, ja reservats per a {pending} altres inscripcions',
 };

@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: '{need} utuk gerek, sizde {have}',
   miss_noMedal: 'medalsyz oýunçylar üçin, sizde {have}',
   miss_cup: '«{name}» kubogynda ilkinji {need} oruna girmek gerek (siziň orunyňyz: {have})',
+  tkTitle: 'Biletler',
+  tkNeed: 'Hasaba durmak üçin: bir «{name}» bileti, ýaryş tassyklanandan soň harçlanýar.',
+  tkKeep: 'Biletini saklaýan orunlar: {list}.',
+  tkEarn: 'Ilkinji {n} oýunçy «{name}» biletini gazanýar.',
+  tkEnds: 'Bu ýaryş «{season}» möwsümini tamamlaýar: soňra ähli biletler ýene noldan başlaýar.',
+  tkMine: 'Biletler — {season}',
+  miss_ticket: '«{name}» bileti gerek, sizde {have}',
+  miss_ticketPending: '«{name}» bileti gerek: sizde {have}, eýýäm {pending} beýleki hasaba alyş garaşýar',
 };

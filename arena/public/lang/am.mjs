@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: '{need} ነጥብ ያስፈልጋል፣ እርስዎ {have} አለዎት',
   miss_noMedal: 'ሜዳሊያ ለሌላቸው ተጫዋቾች፣ እርስዎ {have} አለዎት',
   miss_cup: 'በ«{name}» ከመጀመሪያዎቹ {need} ውስጥ ቦታ ያስፈልጋል (የእርስዎ ቦታ፦ {have})',
+  tkTitle: 'ትኬቶች',
+  tkNeed: 'ለመመዝገብ፦ አንድ የ«{name}» ትኬት፣ ውድድሩ ሲጸድቅ ጥቅም ላይ ይውላል።',
+  tkKeep: 'ትኬታቸውን የሚይዙ ቦታዎች፦ {list}።',
+  tkEarn: 'የመጀመሪያዎቹ {n} የ«{name}» ትኬት ያሸንፋሉ።',
+  tkEnds: 'ይህ ውድድር የ«{season}» ወቅትን ያጠናቅቃል፦ ከዚያ ሁሉም ትኬቶች ከዜሮ እንደገና ይጀምራሉ።',
+  tkMine: 'ትኬቶች — {season}',
+  miss_ticket: 'የ«{name}» ትኬት ያስፈልጋል፣ እርስዎ {have} አለዎት',
+  miss_ticketPending: 'የ«{name}» ትኬት ያስፈልጋል፦ እርስዎ {have} አለዎት፣ ቀድሞውኑ ለ{pending} ሌላ ምዝገባ(ዎች) ተይዘዋል',
 };

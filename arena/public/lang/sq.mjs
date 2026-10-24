@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'duhen {need} pikë, ju keni {have}',
   miss_noMedal: 'vetëm për lojtarë pa medalje, ju keni {have}',
   miss_cup: 'duhet një vend në vendet 1–{need} të «{name}» (vendi juaj: {have})',
+  tkTitle: 'Bileta',
+  tkNeed: 'Për t’u regjistruar: një biletë «{name}», e shpenzuar sapo turneu të vërtetohet.',
+  tkKeep: 'Vendet që e mbajnë biletën: {list}.',
+  tkEarn: '{n} të parët fitojnë një biletë «{name}».',
+  tkEnds: 'Ky turne mbyll sezonin «{season}»: atëherë çdo biletë nis përsëri nga zero.',
+  tkMine: 'Bileta — {season}',
+  miss_ticket: 'duhet një biletë «{name}», ju keni {have}',
+  miss_ticketPending: 'duhet një biletë «{name}»: ju keni {have}, tashmë në pritje për {pending} regjistrime të tjera',
 };

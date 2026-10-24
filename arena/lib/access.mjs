@@ -94,5 +94,6 @@ export function describeMissing(miss) {
     gold: 'a gold medal',
     noMedal: 'no medal yet (you have ' + m.have + ')',
     cup: 'a place in the first ' + m.need + ' of the cup « ' + m.name + ' »' + (m.have ? ' (you are ' + m.have + ')' : ''),
+    ticket: 'a « ' + m.name + ' » ticket (you have ' + m.have + (m.pending ? ', ' + m.pending + ' waiting on other registrations' : '') + ')',
   }[m.code] || m.code)).join('; ');
 }

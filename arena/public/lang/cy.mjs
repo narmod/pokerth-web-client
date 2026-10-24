@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'angen {need} pwynt, mae gennych {have}',
   miss_noMedal: 'i chwaraewyr heb fedal, mae gennych {have}',
   miss_cup: 'angen lle ymhlith y {need} cyntaf yn “{name}” (eich lle: {have})',
+  tkTitle: 'Tocynnau',
+  tkNeed: 'I gofrestru: un tocyn “{name}”, a ddefnyddir pan fydd y twrnamaint wedi’i ddilysu.',
+  tkKeep: 'Lleoedd sy’n cadw eu tocyn: {list}.',
+  tkEarn: 'Mae’r {n} cyntaf yn ennill tocyn “{name}”.',
+  tkEnds: 'Mae’r twrnamaint hwn yn cau’r tymor “{season}”: wedyn mae pob tocyn yn dechrau eto o ddim.',
+  tkMine: 'Tocynnau — {season}',
+  miss_ticket: 'angen tocyn “{name}”, mae gennych {have}',
+  miss_ticketPending: 'angen tocyn “{name}”: mae gennych {have}, ac mae {pending} cofrestriad arall eisoes yn aros amdanynt',
 };

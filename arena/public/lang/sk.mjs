@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'potrebné body: {need}, máte {have}',
   miss_noMedal: 'iba pre hráčov bez medaily, vaše medaily: {have}',
   miss_cup: 'potrebné miesto 1 až {need} v „{name}“ (vaše miesto: {have})',
+  tkTitle: 'Lístky',
+  tkNeed: 'Na registráciu: jeden lístok „{name}“, minie sa po potvrdení turnaja.',
+  tkKeep: 'Miesta, ktoré si lístok ponechajú: {list}.',
+  tkEarn: 'Prví {n} získajú lístok „{name}“.',
+  tkEnds: 'Tento turnaj ukončuje sezónu „{season}“: všetky lístky sa potom začínajú opäť od nuly.',
+  tkMine: 'Lístky — {season}',
+  miss_ticket: 'potrebný lístok „{name}“, máte {have}',
+  miss_ticketPending: 'potrebný lístok „{name}“: máte {have}, ďalšie registrácie, ktoré naň už čakajú: {pending}',
 };

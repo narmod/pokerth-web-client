@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'potrebno bodova: {need}, vi imate {have}',
   miss_noMedal: 'samo za igrače bez medalje, vi imate {have}',
   miss_cup: 'potrebno mjesto od 1. do {need}. u „{name}” (vaše mjesto: {have})',
+  tkTitle: 'Ulaznice',
+  tkNeed: 'Za prijavu: jedna ulaznica „{name}”, koja se troši kad se turnir potvrdi.',
+  tkKeep: 'Mjesta koja zadržavaju ulaznicu: {list}.',
+  tkEarn: 'Prvih {n} osvaja ulaznicu „{name}”.',
+  tkEnds: 'Ovaj turnir završava sezonu „{season}”: nakon toga sve ulaznice kreću ispočetka od nule.',
+  tkMine: 'Ulaznice — {season}',
+  miss_ticket: 'potrebna ulaznica „{name}”, vi imate {have}',
+  miss_ticketPending: 'potrebna ulaznica „{name}”: vi imate {have}, drugih prijava koje je već čekaju: {pending}',
 };

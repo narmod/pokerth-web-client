@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: '{need} ochko kerak, sizda {have}',
   miss_noMedal: 'medalsiz oʻyinchilar uchun, sizda {have} ta',
   miss_cup: '“{name}” kubogida dastlabki {need} oʻrindan biri kerak (sizning oʻrningiz: {have})',
+  tkTitle: 'Chiptalar',
+  tkNeed: 'Roʻyxatdan oʻtish uchun: bitta “{name}” chiptasi, turnir tasdiqlangach sarflanadi.',
+  tkKeep: 'Chiptasini saqlab qoladigan oʻrinlar: {list}.',
+  tkEarn: 'Dastlabki {n} nafar “{name}” chiptasini yutadi.',
+  tkEnds: 'Bu turnir “{season}” mavsumini yakunlaydi: shundan soʻng barcha chiptalar yana noldan boshlanadi.',
+  tkMine: 'Chiptalar — {season}',
+  miss_ticket: '“{name}” chiptasi kerak, sizda {have} ta',
+  miss_ticketPending: '“{name}” chiptasi kerak: sizda {have} ta, {pending} ta boshqa roʻyxatdan oʻtish allaqachon kutmoqda',
 };

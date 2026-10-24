@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'perlu {need} poin, Anda punya {have}',
   miss_noMedal: 'untuk pemain tanpa medali, Anda punya {have}',
   miss_cup: 'perlu posisi di {need} teratas “{name}” (posisi Anda: {have})',
+  tkTitle: 'Tiket',
+  tkNeed: 'Untuk mendaftar: satu tiket “{name}”, terpakai setelah turnamen disahkan.',
+  tkKeep: 'Posisi yang tetap menyimpan tiketnya: {list}.',
+  tkEarn: '{n} teratas memenangkan tiket “{name}”.',
+  tkEnds: 'Turnamen ini mengakhiri musim “{season}”: setelah itu semua tiket dimulai lagi dari nol.',
+  tkMine: 'Tiket — {season}',
+  miss_ticket: 'perlu tiket “{name}”, Anda punya {have}',
+  miss_ticketPending: 'perlu tiket “{name}”: Anda punya {have}, sudah ditunggu {pending} pendaftaran lain',
 };

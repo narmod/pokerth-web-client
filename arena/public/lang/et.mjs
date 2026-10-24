@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'vaja {need} punkti, sul on {have}',
   miss_noMedal: 'medalita mängijatele, sul on {have}',
   miss_cup: 'vaja kohta 1–{need} karikas „{name}“ (sinu koht: {have})',
+  tkTitle: 'Piletid',
+  tkNeed: 'Registreerumiseks: üks pilet „{name}“, mis kulub turniiri kinnitamisel.',
+  tkKeep: 'Kohad, mis jätavad pileti alles: {list}.',
+  tkEarn: 'Esimesed {n} võidavad pileti „{name}“.',
+  tkEnds: 'See turniir lõpetab hooaja „{season}“: seejärel algavad kõik piletid uuesti nullist.',
+  tkMine: 'Piletid — {season}',
+  miss_ticket: 'vaja piletit „{name}“, sul on {have}',
+  miss_ticketPending: 'vaja piletit „{name}“: sul on {have}, neid ootab juba {pending} muud registreerumist',
 };

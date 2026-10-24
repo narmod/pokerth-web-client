@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'النقاط المطلوبة: {need}، ولديك {have}',
   miss_noMedal: 'مخصّص للاعبين بلا ميدالية، ولديك {have}',
   miss_cup: 'مطلوب مركز من 1 إلى {need} في «{name}» (مركزك: {have})',
+  tkTitle: 'التذاكر',
+  tkNeed: 'للتسجيل: تذكرة «{name}» واحدة، تُستهلك بعد اعتماد البطولة.',
+  tkKeep: 'المراكز التي تحتفظ بتذكرتها: {list}.',
+  tkEarn: 'يفوز أصحاب المراكز من 1 إلى {n} بتذكرة «{name}».',
+  tkEnds: 'تُنهي هذه البطولة موسم «{season}»: بعدها تبدأ كل التذاكر من الصفر من جديد.',
+  tkMine: 'التذاكر — {season}',
+  miss_ticket: 'مطلوبة تذكرة «{name}»، ولديك {have}',
+  miss_ticketPending: 'مطلوبة تذكرة «{name}»: لديك {have}، وهي محجوزة مسبقًا لتسجيلات أخرى عددها {pending}',
 };

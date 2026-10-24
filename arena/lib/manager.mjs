@@ -29,6 +29,7 @@ import { createCups } from './cups.mjs';
 import { createBadges } from './badges.mjs';
 import { createReset } from './reset.mjs';
 import { createPlayers } from './players.mjs';
+import { createTickets } from './tickets.mjs';
 import { playerFacts, missingFor } from './access.mjs';
 import { loadBotStrings, isBotLang } from './botchat.mjs';
 
@@ -289,6 +290,19 @@ export function createManager(deps) {
   const images = createImages({ dir, builtinDir: path.join(IMG, 'events') });
   // The players of the install and their accounts (players.mjs).
   const players = createPlayers({ dir, Refusal: ArenaRefusal });
+  // Tickets and seasons (tickets.mjs): a tournament that needs one asks for
+  // one more than the player's registrations still waiting on that kind.
+  const tickets = createTickets({ dir, Refusal: ArenaRefusal });
+  const ticketCheck = (t, nick) => {
+    const need = t.tickets && t.tickets.need;
+    const ty = need && tickets.typeOf(need);
+    if (!ty) return [];
+    const k = String(nick).toLowerCase();
+    const pending = tournaments.allRaw().filter((x) => x.id !== t.id && !x.parentId && !x.result && x.status !== 'validated' && x.tickets && x.tickets.need === need
+      && (x.players || []).some((p) => !p.absent && p.nick.toLowerCase() === k)).length;
+    const have = tickets.balance(nick)[need] || 0;
+    return have - pending >= 1 ? [] : [{ code: 'ticket', name: ty.name, have, pending }];
+  };
   // Who may register (access.mjs): the facts of a player from the signed results.
   const accessCheck = (rules, nick, account) => missingFor(rules, playerFacts(nick, {
     tournaments: () => tournaments.allRaw(),
@@ -296,7 +310,7 @@ export function createManager(deps) {
     cupPlace: (cupId, n) => { try { const r = cups.get(cupId).standings.rows.find((x) => x.nick.toLowerCase() === String(n).toLowerCase()); return r ? r.place : null; } catch (e) { return null; } },
   }), { account: !!account });
   const tournaments = createTournaments({
-    dir, keyFile, imageOk: images.has, players, accessCheck,
+    dir, keyFile, imageOk: images.has, players, accessCheck, ticketCheck,
     // A Table check's sealed result, reused as a tournament result.
     readWatch: (id) => (ID_RE.test(id) ? readJson(path.join(wdir(id), 'result.json')) : null),
     readWatchJournal: (id) => (ID_RE.test(id) ? readJson(path.join(wdir(id), 'journal.json')) : null),
@@ -307,9 +321,9 @@ export function createManager(deps) {
   // Medals: the first three of tournaments and cups, from the signed results.
   const badges = createBadges({ tournaments: tournaments.allRaw, cups: cups.allRaw, stamp: () => reset.count() + ':' + tournaments.generation() + ':' + cups.generation() });
   // Start again from zero (the super admin): reset.mjs.
-  const reset = createReset({ dir, watches: list, live: LIVE, tournaments: tournaments.allRaw, cups: cups.allRaw, Refusal: tournaments.Refusal });
+  const reset = createReset({ dir, watches: list, live: LIVE, tournaments: tournaments.allRaw, cups: cups.allRaw, Refusal: tournaments.Refusal, onTickets: () => tickets.clear() });
 
-  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, cups, badges, images, reset, players, avatar, resetAvatar, avatarPreset, setAvatarPreset, avatarPresets: () => Object.keys(AVATAR_PRESETS).map(Number), avatarDefaultPreset: AVATAR_DEFAULT_PRESET, MAX_RUNNING };
+  return { keyInfo, servers, lobby, start, startHost, command, stop, list, running, info, detail, file, tournaments, cups, badges, images, reset, players, tickets, avatar, resetAvatar, avatarPreset, setAvatarPreset, avatarPresets: () => Object.keys(AVATAR_PRESETS).map(Number), avatarDefaultPreset: AVATAR_DEFAULT_PRESET, MAX_RUNNING };
 }
 
 /** Public part of the install key, read from its PEM file (null if none yet). */

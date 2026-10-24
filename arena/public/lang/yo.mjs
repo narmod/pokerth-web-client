@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'a nílò àmì {need}, o ní {have}',
   miss_noMedal: 'fún àwọn òṣèré tí kò ní mẹ́dàlì, o ní {have}',
   miss_cup: 'a nílò ipò kan láàrin {need} àkọ́kọ́ ti “{name}” (ipò rẹ: {have})',
+  tkTitle: 'Tíkẹ́ẹ̀tì',
+  tkNeed: 'Láti forúkọ sílẹ̀: tíkẹ́ẹ̀tì “{name}” kan, tí a ń ná nígbà tí a bá jẹ́rìí sí ìdíje náà.',
+  tkKeep: 'Àwọn ipò tí ó ń pa tíkẹ́ẹ̀tì wọn mọ́: {list}.',
+  tkEarn: 'Àwọn {n} àkọ́kọ́ ń gba tíkẹ́ẹ̀tì “{name}” kan.',
+  tkEnds: 'Ìdíje yìí ń parí sáà “{season}”: lẹ́yìn náà gbogbo tíkẹ́ẹ̀tì yóò tún bẹ̀rẹ̀ láti òdo.',
+  tkMine: 'Tíkẹ́ẹ̀tì — {season}',
+  miss_ticket: 'a nílò tíkẹ́ẹ̀tì “{name}” kan, o ní {have}',
+  miss_ticketPending: 'a nílò tíkẹ́ẹ̀tì “{name}” kan: o ní {have}, ìforúkọsílẹ̀ mìíràn {pending} ti ń dúró dè é',
 };

@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: '{need} ポイントが必要、現在 {have}',
   miss_noMedal: 'メダルのないプレイヤー向け、現在 {have} 個',
   miss_cup: '「{name}」で上位 {need} 位以内が必要（あなたの順位：{have}）',
+  tkTitle: 'チケット',
+  tkNeed: '登録には「{name}」チケットが 1 枚必要です。トーナメントの結果確定時に消費されます。',
+  tkKeep: 'チケットが消費されない順位：{list}。',
+  tkEarn: '上位 {n} 人が「{name}」チケットを獲得します。',
+  tkEnds: 'このトーナメントでシーズン「{season}」が終了します。その後、すべてのチケットはゼロからやり直しになります。',
+  tkMine: 'チケット — {season}',
+  miss_ticket: '「{name}」チケットが必要、現在 {have} 枚',
+  miss_ticketPending: '「{name}」チケットが必要、現在 {have} 枚（他の {pending} 件の登録で使用待ち）',
 };

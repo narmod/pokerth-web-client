@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: '{need} pont kell, neked {have} van',
   miss_noMedal: 'érem nélküli játékosoknak, neked {have} van',
   miss_cup: 'hely kell az első {need} között itt: „{name}” (helyezésed: {have})',
+  tkTitle: 'Jegyek',
+  tkNeed: 'Regisztrációhoz: egy „{name}” jegy, amely a verseny jóváhagyásakor elhasználódik.',
+  tkKeep: 'Helyezések, amelyek megtartják a jegyüket: {list}.',
+  tkEarn: 'Az első {n} egy „{name}” jegyet nyer.',
+  tkEnds: 'Ez a verseny lezárja a(z) „{season}” szezont: ezután minden jegy újra nulláról indul.',
+  tkMine: 'Jegyek — {season}',
+  miss_ticket: 'egy „{name}” jegy kell, neked {have} van',
+  miss_ticketPending: 'egy „{name}” jegy kell: neked {have} van, és már {pending} másik regisztrációd vár rá',
 };

@@ -10,6 +10,28 @@ does not move for it, and the web client restarts the service alone when the
 new code lands (see `docs/TOURNAMENT_DIRECTOR.md`, « Updating the director »).
 The web client's own `CHANGELOG.md` keeps the history up to `2.1.10-web.299`.
 
+## 0.27.0 — 2026-10-24
+
+### Added
+- **Tickets and seasons**, after the BBC. Organizers make kinds of tickets
+  (« Step 2 »…), each with a most a player can hold (10 by default). A
+  tournament can need one to register (one more than the player's
+  registrations still waiting on that kind), earn its first N one, let some
+  places keep theirs (the BBC's 3rd), and end the season. Tickets move once
+  the tournament is validated (each tournament once): a ranked player spends
+  the ticket it needed unless his place keeps it, the first earn theirs; an
+  absent player spends nothing. Organizers give or take a ticket by hand
+  (Players tab) and start a new season by hand: every ticket from zero, the
+  old season kept with its balances.
+- Players' page: a tournament's ticket rules, the player's tickets of the
+  season on his page; a refusal names the missing ticket. 8 strings in the
+  83 languages.
+- Reset: « Tickets and seasons » can be taken away too.
+
+### Changed
+- A result typed by the organizer can name absent players (not ranked), as
+  the director's results do.
+
 ## 0.26.0 — 2026-10-24
 
 ### Added

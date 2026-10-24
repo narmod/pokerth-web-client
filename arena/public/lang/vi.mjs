@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'cần {need} điểm, bạn có {have}',
   miss_noMedal: 'dành cho người chơi chưa có huy chương, bạn có {have}',
   miss_cup: 'cần nằm trong {need} người đứng đầu “{name}” (hạng của bạn: {have})',
+  tkTitle: 'Vé',
+  tkNeed: 'Để đăng ký: một vé “{name}”, sẽ được dùng khi giải đấu được xác nhận.',
+  tkKeep: 'Các vị trí được giữ lại vé: {list}.',
+  tkEarn: '{n} người đứng đầu nhận được một vé “{name}”.',
+  tkEnds: 'Giải đấu này kết thúc mùa giải “{season}”: sau đó mọi vé đều bắt đầu lại từ số không.',
+  tkMine: 'Vé — {season}',
+  miss_ticket: 'cần một vé “{name}”, bạn có {have}',
+  miss_ticketPending: 'cần một vé “{name}”: bạn có {have}, đã có {pending} lượt đăng ký khác đang chờ',
 };

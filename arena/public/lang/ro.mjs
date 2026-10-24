@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'puncte necesare: {need}, tu ai {have}',
   miss_noMedal: 'pentru jucători fără medalie, tu ai {have}',
   miss_cup: 'e nevoie de un loc între primii {need} din „{name}” (locul tău: {have})',
+  tkTitle: 'Bilete',
+  tkNeed: 'Pentru înscriere: un bilet „{name}”, consumat după validarea turneului.',
+  tkKeep: 'Locuri care își păstrează biletul: {list}.',
+  tkEarn: 'Primii {n} câștigă un bilet „{name}”.',
+  tkEnds: 'Acest turneu încheie sezonul „{season}”: apoi toate biletele pornesc din nou de la zero.',
+  tkMine: 'Bilete — {season}',
+  miss_ticket: 'e nevoie de un bilet „{name}”, tu ai {have}',
+  miss_ticketPending: 'e nevoie de un bilet „{name}”: tu ai {have}, deja îl așteaptă alte înscrieri: {pending}',
 };

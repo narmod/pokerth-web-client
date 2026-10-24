@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: '{need} punte nodig, jy het {have}',
   miss_noMedal: 'vir spelers sonder ’n medalje, jy het {have}',
   miss_cup: '’n plek onder die eerste {need} van “{name}” nodig (jou plek: {have})',
+  tkTitle: 'Kaartjies',
+  tkNeed: 'Om te registreer: een “{name}”-kaartjie, bestee sodra die toernooi bekragtig is.',
+  tkKeep: 'Plekke wat hul kaartjie hou: {list}.',
+  tkEarn: 'Die eerste {n} wen ’n “{name}”-kaartjie.',
+  tkEnds: 'Hierdie toernooi sluit die seisoen “{season}” af: elke kaartjie begin dan weer van nul af.',
+  tkMine: 'Kaartjies — {season}',
+  miss_ticket: '’n “{name}”-kaartjie nodig, jy het {have}',
+  miss_ticketPending: '’n “{name}”-kaartjie nodig: jy het {have}, reeds gereserveer vir {pending} ander registrasie(s)',
 };

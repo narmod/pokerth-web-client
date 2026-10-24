@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'pisteitä vaaditaan {need}, sinulla {have}',
   miss_noMedal: 'vain pelaajille ilman mitalia, sinulla {have}',
   miss_cup: 'vaaditaan sija 1–{need} cupissa ”{name}” (sijasi: {have})',
+  tkTitle: 'Liput',
+  tkNeed: 'Ilmoittautumiseen tarvitaan yksi ”{name}”-lippu, joka kuluu, kun turnaus vahvistetaan.',
+  tkKeep: 'Sijat, jotka saavat pitää lippunsa: {list}.',
+  tkEarn: '{n} ensimmäistä voittaa ”{name}”-lipun.',
+  tkEnds: 'Tämä turnaus päättää kauden ”{season}”: kaikki liput alkavat sen jälkeen taas nollasta.',
+  tkMine: 'Liput — {season}',
+  miss_ticket: '”{name}”-lippu vaaditaan, sinulla {have}',
+  miss_ticketPending: '”{name}”-lippu vaaditaan: sinulla {have}, muita odottavia ilmoittautumisia jo {pending}',
 };

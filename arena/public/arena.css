@@ -219,3 +219,5 @@ body[data-role="referee"] .org-only, body[data-role="viewer"] .org-only{display:
 .acctbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.95em}
 .acctbar details.inl{display:inline-block}
 .acctbox summary{font-weight:600}
+.tkline{white-space:nowrap}
+.tkline .mini{min-width:28px;padding:0 6px;margin-left:2px}

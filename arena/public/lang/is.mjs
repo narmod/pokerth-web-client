@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'stig sem þarf: {need}, þú hefur {have}',
   miss_noMedal: 'fyrir leikmenn án verðlaunapenings, þú hefur {have}',
   miss_cup: 'sæti 1–{need} í „{name}“ þarf (þitt sæti: {have})',
+  tkTitle: 'Miðar',
+  tkNeed: 'Til að skrá sig: einn „{name}“-miði, sem notast þegar mótið hefur verið staðfest.',
+  tkKeep: 'Sæti sem halda miðanum sínum: {list}.',
+  tkEarn: 'Fyrstu {n} vinna „{name}“-miða.',
+  tkEnds: 'Þetta mót lýkur tímabilinu „{season}“: eftir það byrja allir miðar aftur frá núlli.',
+  tkMine: 'Miðar — {season}',
+  miss_ticket: '„{name}“-miða þarf, þú hefur {have}',
+  miss_ticketPending: '„{name}“-miða þarf: þú hefur {have}, aðrar skráningar sem bíða þegar: {pending}',
 };

@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'kailangan ng {need} puntos, mayroon kang {have}',
   miss_noMedal: 'para sa mga manlalarong walang medalya, mayroon kang {have}',
   miss_cup: 'kailangan ng puwesto sa unang {need} ng “{name}” (puwesto mo: {have})',
+  tkTitle: 'Mga Ticket',
+  tkNeed: 'Para magparehistro: isang “{name}” ticket, na gagamitin kapag napatunayan na ang tournament.',
+  tkKeep: 'Mga puwestong hindi nawawalan ng ticket: {list}.',
+  tkEarn: 'Ang unang {n} ay mananalo ng “{name}” ticket.',
+  tkEnds: 'Tinatapos ng tournament na ito ang season na “{season}”: lahat ng ticket ay magsisimula ulit sa zero.',
+  tkMine: 'Mga Ticket — {season}',
+  miss_ticket: 'kailangan ng “{name}” ticket, mayroon kang {have}',
+  miss_ticketPending: 'kailangan ng “{name}” ticket: mayroon kang {have}, may {pending} iba ka pang rehistrasyong naghihintay na rito',
 };

@@ -22,7 +22,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-export const RESET_PARTS = Object.freeze(['watches', 'tournaments', 'cups', 'images']);
+export const RESET_PARTS = Object.freeze(['watches', 'tournaments', 'cups', 'images', 'tickets']);
 export const RESET_CONFIRM = 'RESET';
 const ID_RE = /^[a-z0-9]{6,32}$/;   // a watch (manager.mjs)
 const IMG_FILE_RE = /^(u[0-9a-f]{6,32})(\.t)?\.jpg$/;
@@ -87,7 +87,7 @@ export function createReset(o) {
       ? (fs.readFileSync(path.join(dir, 'resets.jsonl'), 'utf8').trim().split('\n').filter(Boolean).slice(-1).map((l) => { try { return JSON.parse(l); } catch (e) { return null; } })[0] || null)
       : null;
     return {
-      counts: { watches: ws.length, tournaments: ts.filter((t) => !t.parentId).length, tables: ts.filter((t) => t.parentId).length, cups: cs.length, images: imgIndex().length },
+      counts: { watches: ws.length, tournaments: ts.filter((t) => !t.parentId).length, tables: ts.filter((t) => t.parentId).length, cups: cs.length, images: imgIndex().length, tickets: fs.existsSync(path.join(dir, 'tickets.json')) ? 1 : 0 },
       running: p.busy, archives: archives(), last, parts: RESET_PARTS, confirm: RESET_CONFIRM,
     };
   }
@@ -111,7 +111,7 @@ export function createReset(o) {
     const name = stampName();
     const arc = path.join(dir, name);
     fs.mkdirSync(arc, { recursive: true });
-    const done = { watches: 0, tournaments: 0, cups: 0, images: 0 };
+    const done = { watches: 0, tournaments: 0, cups: 0, images: 0, tickets: 0 };
     // Tournaments and cups: their whole folder (tables, deletion logs) goes.
     for (const part of ['tournaments', 'cups']) {
       if (parts.indexOf(part) < 0) continue;
@@ -138,6 +138,8 @@ export function createReset(o) {
       fs.renameSync(tmp, idx);
       done.images = gone.size;
     }
+    // Tickets and seasons (tickets.mjs): kinds, balances, seasons, log — all of it.
+    if (parts.indexOf('tickets') >= 0 && fs.existsSync(path.join(dir, 'tickets.json'))) { move(path.join(dir, 'tickets.json'), path.join(arc, 'tickets.json')); done.tickets = 1; if (o.onTickets) o.onTickets(); }
     count++;
     const line = { at: now(), by: by || 'admin', parts, done, kept: p.kept, archive: name };
     fs.appendFileSync(path.join(dir, 'resets.jsonl'), JSON.stringify(line) + '\n');

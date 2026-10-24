@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: '{need} poentoj necesaj, vi havas {have}',
   miss_noMedal: 'por ludantoj sen medalo, vi havas {have}',
   miss_cup: 'loko inter la unuaj {need} de “{name}” necesa (via loko: {have})',
+  tkTitle: 'Biletoj',
+  tkNeed: 'Por aliĝi: unu bileto “{name}”, elspezita kiam la turniro estas validigita.',
+  tkKeep: 'Lokoj, kiuj konservas sian bileton: {list}.',
+  tkEarn: 'La unuaj {n} gajnas bileton “{name}”.',
+  tkEnds: 'Ĉi tiu turniro finas la sezonon “{season}”: poste ĉiu bileto rekomenciĝas de nulo.',
+  tkMine: 'Biletoj — {season}',
+  miss_ticket: 'bileto “{name}” necesa, vi havas {have}',
+  miss_ticketPending: 'bileto “{name}” necesa: vi havas {have}, jam atendataj de {pending} aliaj aliĝoj',
 };

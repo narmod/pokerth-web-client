@@ -31,6 +31,7 @@ const STATIC = {
   'reset-ui.mjs': 'text/javascript; charset=utf-8',
   'players-ui.mjs': 'text/javascript; charset=utf-8',
   'access-form.mjs': 'text/javascript; charset=utf-8',
+  'ticket-form.mjs': 'text/javascript; charset=utf-8',
   'public.mjs': 'text/javascript; charset=utf-8',
   'theme.mjs': 'text/javascript; charset=utf-8',
   'arena.css': 'text/css; charset=utf-8',
@@ -107,6 +108,8 @@ export function createService(o) {
     for (const id of T.multiParents()) stagesSweep(id);
     // Cups: the first Q of a validated tournament go on to the next one.
     try { C.tick(); } catch (e) { if (!(e instanceof T.Refusal)) console.error('[arena] cups: ' + (e && e.message)); }
+    // Tickets: a validated tournament gives and takes them, once.
+    try { for (const r of td.tickets.sweep(T.allRaw())) console.log('[arena] tickets of ' + r.id + ': ' + r.moves.length + ' move(s)' + (r.season ? ', new season « ' + r.season.name + ' »' : '')); } catch (e) { console.error('[arena] tickets: ' + (e && e.message)); }
   }
   // Several tables: once every table is validated, the final table (opened by
   // itself when the tournament opens by itself); once the final is validated,
@@ -332,6 +335,22 @@ export function createService(o) {
     if (sub === '/table-presets' && get) return json(res, 200, Object.assign({ ok: true }, tablePresets()));
     // Images of tournaments and cups: the library; any organizer may add one.
     if (sub === '/images' && get) return json(res, 200, { ok: true, images: td.images.list() });
+    // Tickets and seasons (tickets.mjs).
+    if (sub === '/tickets' && get) {
+      const K = td.tickets;
+      return json(res, 200, { ok: true, types: K.types(), season: K.season(), seasons: K.seasons(), balances: K.all() });
+    }
+    if (sub.indexOf('/tickets/') === 0 && !get) {
+      const b = (await readJson(req)) || {};
+      const K = td.tickets;
+      const sendK = (p) => Promise.resolve().then(p).then((v) => { console.log('[arena] tickets: ' + sub.slice(9) + ' by ' + who); json(res, 200, Object.assign({ ok: true }, v)); })
+        .catch((e) => json(res, e instanceof T.Refusal ? 400 : 500, { ok: false, error: (e && e.message) || 'error' }));
+      if (sub === '/tickets/type/add') return sendK(() => K.addType(b, who));
+      if (sub === '/tickets/type/update') return sendK(() => K.updateType(b.id, b.patch || {}, who));
+      if (sub === '/tickets/adjust') return sendK(() => K.adjust(b, who));
+      if (sub === '/tickets/season') return sendK(() => ({ season: K.startSeason(b, who) }));
+      return json(res, 404, { ok: false, error: 'unknown' });
+    }
     // The players of the install (players.mjs): accounts, bans; the counts from the results.
     if (sub === '/players' && get) {
       const st = playerStats();
@@ -508,6 +527,12 @@ export function createService(o) {
     const H = w.state.host || {};
     return { status: w.state.status, hand: w.state.hand || 0, tableName: H.tableName || w.state.gameName || null, phase: H.phase || null, admin: H.admin || null };
   }
+  // A tournament's ticket rules with the names of the tickets (players' page).
+  function ticketInfo(r) {
+    const K = td.tickets;
+    const nm = (id) => { const t = K.typeOf(id); return t ? t.name : null; };
+    return { need: r.need ? nm(r.need) : null, earn: r.earn && nm(r.earn.type) ? { name: nm(r.earn.type), top: r.earn.top } : null, keep: r.keep || null, endsSeason: !!r.endsSeason, season: K.season().name };
+  }
   // The player account behind a request body's « session »: null without
   // one, false when it is not valid any more.
   function accountOf(b) {
@@ -532,7 +557,12 @@ export function createService(o) {
     if (sub === '/cups' && req.method === 'GET') return send(() => ({ cups: C.publicList() }));
     // Medals (badges.mjs): one player, several (?nicks=a,b), or everyone.
     const pm = /^\/players\/([^/]{1,200})$/.exec(sub);
-    if (pm && req.method === 'GET') { let nick = pm[1]; try { nick = decodeURIComponent(nick); } catch (e) {} nick = nick.slice(0, 64); return openJson(res, Object.assign({}, td.badges.player(nick), { account: P.hasAccount(nick) })); }
+    if (pm && req.method === 'GET') {
+      let nick = pm[1]; try { nick = decodeURIComponent(nick); } catch (e) {} nick = nick.slice(0, 64);
+      const bal = td.tickets.balance(nick);
+      const tickets = Object.keys(bal).map((id) => { const t = td.tickets.typeOf(id); return t ? { name: t.name, count: bal[id] } : null; }).filter(Boolean);
+      return openJson(res, Object.assign({}, td.badges.player(nick), { account: P.hasAccount(nick), tickets, season: td.tickets.season().name }));
+    }
     // A player's own account (players.mjs): POST /arena/api/players/<op>, as
     // the web client already relays that address.
     if (pm && req.method === 'POST' && ['signup', 'login', 'logout', 'invite', 'password', 'me'].indexOf(pm[1]) >= 0) {
@@ -582,6 +612,7 @@ export function createService(o) {
         const out = T.publicGet(key, query.invite, liveOf);
         const own = T.idOfKey ? T.idOfKey(key) : null;
         if (own) out.cups = C.cupsOf(own);
+        if (out.tickets) out.ticketInfo = ticketInfo(out.tickets);
         return out;
       });
     }

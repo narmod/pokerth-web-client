@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: '{need} poeng kreves, du har {have}',
   miss_noMedal: 'for spillere uten medalje, du har {have}',
   miss_cup: 'en plass blant de {need} første i «{name}» kreves (din plass: {have})',
+  tkTitle: 'Billetter',
+  tkNeed: 'For å melde deg på: én «{name}»-billett, brukt opp når turneringen er godkjent.',
+  tkKeep: 'Plasseringer som beholder billetten: {list}.',
+  tkEarn: 'De {n} første vinner en «{name}»-billett.',
+  tkEnds: 'Denne turneringen avslutter sesongen «{season}»: deretter starter alle billetter på null igjen.',
+  tkMine: 'Billetter — {season}',
+  miss_ticket: 'en «{name}»-billett kreves, du har {have}',
+  miss_ticketPending: 'en «{name}»-billett kreves: du har {have}, allerede holdt av for {pending} andre påmelding(er)',
 };

@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'ana buƙatar maki {need}, kana da {have}',
   miss_noMedal: 'don \'yan wasa marasa lambar yabo, kana da {have}',
   miss_cup: 'ana buƙatar matsayi a cikin {need} na farko na “{name}” (matsayinka: {have})',
+  tkTitle: 'Tikiti',
+  tkNeed: 'Don yin rajista: tikitin “{name}” ɗaya, wanda ake kashewa da zarar an tabbatar da gasar.',
+  tkKeep: 'Matsayoyin da ke riƙe da tikitinsu: {list}.',
+  tkEarn: '\'Yan wasa {n} na farko suna samun tikitin “{name}”.',
+  tkEnds: 'Wannan gasar tana kammala kakar “{season}”: daga nan kowane tikiti yana sake farawa daga sifili.',
+  tkMine: 'Tikiti — {season}',
+  miss_ticket: 'ana buƙatar tikitin “{name}”, kana da {have}',
+  miss_ticketPending: 'ana buƙatar tikitin “{name}”: kana da {have}, wasu rajista {pending} suna jiran sa tuni',
 };

@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'נדרשות {need} נקודות, לכם יש {have}',
   miss_noMedal: 'לשחקנים ללא מדליה, לכם יש {have}',
   miss_cup: 'נדרש מקום בין {need} הראשונים ב־“{name}” (המקום שלכם: {have})',
+  tkTitle: 'כרטיסים',
+  tkNeed: 'להרשמה: כרטיס “{name}” אחד, שמנוצל לאחר שהטורניר מאושר.',
+  tkKeep: 'מקומות ששומרים על הכרטיס: {list}.',
+  tkEarn: '{n} הראשונים זוכים בכרטיס “{name}”.',
+  tkEnds: 'טורניר זה מסיים את העונה “{season}”: לאחר מכן כל הכרטיסים מתחילים שוב מאפס.',
+  tkMine: 'כרטיסים — {season}',
+  miss_ticket: 'נדרש כרטיס “{name}”, לכם יש {have}',
+  miss_ticketPending: 'נדרש כרטיס “{name}”: לכם יש {have}, וכבר {pending} הרשמות אחרות ממתינות לו',
 };

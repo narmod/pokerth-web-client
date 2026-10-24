@@ -30,6 +30,7 @@ import { analyzeCollusion } from './collusion.mjs';
 import { TABLE_DEFAULTS, cleanTable } from './table.mjs';
 import { IMG_RE, DEFAULT_IMAGE, imageUrl } from './images.mjs';
 import { cleanAccess, describeMissing } from './access.mjs';
+import { cleanTicketRules } from './tickets.mjs';
 
 // Profiles (design « Tournament settings », decided 2026-10-23).
 export const PROFILES = Object.freeze({
@@ -283,7 +284,7 @@ export function createTournaments(o) {
     const image = imageOf(input.image);
     if (run.autoOpen && startsAt == null) refuse('opening by itself needs a start date');
     const t = {
-      id, name, format, profile, settings, server, startsAt, mode: 'manual', table, run, host: null, image, access: cleanAccess(input.access),
+      id, name, format, profile, settings, server, startsAt, mode: 'manual', table, run, host: null, image, access: cleanAccess(input.access), tickets: cleanTicketRules(input.tickets),
       status: 'draft', players: [], result: null, corrections: [],
       inviteCode: settings.visibility === 'private' ? randomBytes(6).toString('base64url') : null,
       // The public address (/arena/t/<publicKey>): random, so an
@@ -325,6 +326,8 @@ export function createTournaments(o) {
       }
       // Who may register (access.mjs): any time before validation.
       if (patch.access !== undefined) changes.access = t.access = cleanAccess(patch.access);
+      // Tickets (tickets.mjs): what it needs, what its first earn.
+      if (patch.tickets !== undefined) changes.tickets = t.tickets = cleanTicketRules(patch.tickets);
       if (patch.table) {
         if (hostOpen(t)) refuse('the table is open: close it first');
         changes.table = t.table = cleanTable(patch.table, t.table || TABLE_DEFAULTS);
@@ -446,13 +449,13 @@ export function createTournaments(o) {
     const account = (opts && opts.account) || null;
     const nick = account ? account.nick : cleanNick(input && input.nick);
     const bar = PL && PL.barrier(nick, account);
-    const miss = t0.access && o.accessCheck ? o.accessCheck(t0.access, nick, account) : [];
+    const miss = (t0.access && o.accessCheck ? o.accessCheck(t0.access, nick, account) : []).concat(t0.tickets && o.ticketCheck ? o.ticketCheck(t0, nick) : []);
     return { nick, access: t0.access || null, missing: (bar ? [{ code: bar.code }] : []).concat(miss) };
   }
   // Who may register (access.mjs): what is missing, or the registration goes on.
-  function accessOrRefuse(rules, nick, account) {
-    if (!rules || !o.accessCheck) return;
-    const miss = o.accessCheck(rules, nick, account);
+  // With a tournament, its ticket too (tickets.mjs).
+  function accessOrRefuse(rules, nick, account, t) {
+    const miss = (rules && o.accessCheck ? o.accessCheck(rules, nick, account) : []).concat(t && t.tickets && o.ticketCheck ? o.ticketCheck(t, nick) : []);
     if (miss.length) { const e = new Refusal('not open to you yet: ' + describeMissing(miss)); e.code = 'access'; e.missing = miss; throw e; }
   }
 
@@ -624,7 +627,7 @@ export function createTournaments(o) {
     const card = publicCard(t);
     const out = Object.assign(card, {
       visibility: t.settings.visibility, identity: t.settings.identity, validation: t.settings.validation,
-      table: t.table || null, autoOpen: !!(t.run && t.run.autoOpen), openBefore: t.run ? t.run.openBefore : null, tablePassword: passwordOn(t), access: t.access || null,
+      table: t.table || null, autoOpen: !!(t.run && t.run.autoOpen), openBefore: t.run ? t.run.openBefore : null, tablePassword: passwordOn(t), access: t.access || null, tickets: t.tickets || null,
       closedBecause: regClosed(t),
       playerList: t.players.map((p) => ({ nick: p.nick, absent: !!p.absent, checkedIn: !!p.checkedIn })),
       checkIn: checkInState(t),
@@ -660,7 +663,7 @@ export function createTournaments(o) {
     if (t0.settings.identity === 'accounts' && !account) prefuse('accountNeeded', 'sign in to your player account to register');
     const bar = PL && PL.barrier(nick, account);
     if (bar) prefuse(bar.code, bar.message);
-    accessOrRefuse(t0.access, nick, account);
+    accessOrRefuse(t0.access, nick, account, t0);
     const code = newCode();
     act(t0.id, 'player', 'playerRegistered', { nick, account: !!account }, (t) => {
       const why = regClosed(t);
@@ -1011,7 +1014,6 @@ export function createTournaments(o) {
       data.watchId = String(input.watchId); data.status = res.status;
       data.watchHead = sealed.payload.head; data.watchSignature = sealed.signature || null;
       data.watchSignedBy = sealed.publicKeyPem ? publicKeyRawB64(sealed.publicKeyPem) : null;
-      if (Array.isArray(input.absent) && input.absent.length) data.absent = input.absent.map(cleanNick).filter(Boolean);
       if (input.byDirector) data.byDirector = true;
     } else if (input.source === 'pdb') {
       const p = join(tdir(id), 'log.pdb');
@@ -1022,6 +1024,8 @@ export function createTournaments(o) {
       data.status = !r.finished ? 'incomplete' : ranking.some((x) => x.tie) ? 'incomplete' : 'complete';
       data.pdbSha256 = (t.pdb || {}).sha256 || null;
     } else refuse('unknown source');
+    // Players who did not come: not ranked (from the director, or typed by the organizer).
+    if (Array.isArray(input.absent) && input.absent.length) data.absent = input.absent.map(cleanNick).filter(Boolean);
     act(id, author, 'resultSet', data, (tt) => {
       if (data.absent) for (const p of tt.players) if (data.absent.some((x) => sameNick(x, p.nick))) p.absent = true;
       const fitted = fitRanking(tt, ranking);

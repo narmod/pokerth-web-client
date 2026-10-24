@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: '{need} xal tələb olunur, sizdə {have}',
   miss_noMedal: 'medalı olmayan oyunçular üçün, sizdə {have}',
   miss_cup: '“{name}” kubokunda ilk {need} yerdən biri tələb olunur (sizin yeriniz: {have})',
+  tkTitle: 'Biletlər',
+  tkNeed: 'Qeydiyyat üçün: bir “{name}” bileti, turnir təsdiqləndikdən sonra xərclənir.',
+  tkKeep: 'Biletini saxlayan yerlər: {list}.',
+  tkEarn: 'İlk {n} oyunçu “{name}” bileti qazanır.',
+  tkEnds: 'Bu turnir “{season}” mövsümünü bitirir: bundan sonra bütün biletlər yenidən sıfırdan başlayır.',
+  tkMine: 'Biletlər — {season}',
+  miss_ticket: '“{name}” bileti tələb olunur, sizdə {have}',
+  miss_ticketPending: '“{name}” bileti tələb olunur: sizdə {have}, digər {pending} qeydiyyatınız artıq onları gözləyir',
 };

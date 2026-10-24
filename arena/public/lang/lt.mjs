@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'reikia taškų: {need}, jūs turite {have}',
   miss_noMedal: 'žaidėjams be medalių, jūs turite {have}',
   miss_cup: 'reikia 1–{need} vietos „{name}“ (jūsų vieta: {have})',
+  tkTitle: 'Bilietai',
+  tkNeed: 'Norint užsiregistruoti: vienas „{name}“ bilietas, sunaudojamas patvirtinus turnyrą.',
+  tkKeep: 'Vietos, kurios išsaugo bilietą: {list}.',
+  tkEarn: 'Pirmieji {n} laimi „{name}“ bilietą.',
+  tkEnds: 'Šis turnyras baigia sezoną „{season}“: po jo visi bilietai vėl skaičiuojami nuo nulio.',
+  tkMine: 'Bilietai — {season}',
+  miss_ticket: 'reikia „{name}“ bilieto, jūs turite {have}',
+  miss_ticketPending: 'reikia „{name}“ bilieto: jūs turite {have}, jo jau laukia kitos registracijos: {pending}',
 };

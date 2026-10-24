@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: '{need} puntu behar dira, {have} dituzu',
   miss_noMedal: 'dominarik gabeko jokalarientzat, {have} dituzu',
   miss_cup: '«{name}» kopako lehen {need} postuetako bat behar da (zure postua: {have})',
+  tkTitle: 'Txartelak',
+  tkNeed: 'Izena emateko: «{name}» txartel bat, txapelketa baliozkotzean gastatzen dena.',
+  tkKeep: 'Txartela gordetzen duten postuak: {list}.',
+  tkEarn: 'Lehen {n} jokalariek «{name}» txartel bat irabazten dute.',
+  tkEnds: 'Txapelketa honek «{season}» denboraldia amaitzen du: ondoren txartel guztiak zerotik hasten dira berriro.',
+  tkMine: 'Txartelak — {season}',
+  miss_ticket: '«{name}» txartel bat behar da, {have} dituzu',
+  miss_ticketPending: '«{name}» txartel bat behar da: {have} dituzu, eta zure beste {pending} izen-ematek jada behar dituzte',
 };

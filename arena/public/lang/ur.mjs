@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'پوائنٹس درکار: {need}، آپ کے {have}',
   miss_noMedal: 'صرف بغیر تمغے والے کھلاڑیوں کے لیے، آپ کے {have}',
   miss_cup: '“{name}” کے پہلے {need} میں جگہ درکار (آپ کی جگہ: {have})',
+  tkTitle: 'ٹکٹ',
+  tkNeed: 'رجسٹر کرنے کے لیے: ایک “{name}” ٹکٹ، جو ٹورنامنٹ کی تصدیق کے بعد خرچ ہو جاتا ہے۔',
+  tkKeep: 'وہ پوزیشنیں جو اپنا ٹکٹ رکھتی ہیں: {list}۔',
+  tkEarn: 'پہلے {n} کو ایک “{name}” ٹکٹ ملتا ہے۔',
+  tkEnds: 'یہ ٹورنامنٹ سیزن “{season}” ختم کرتا ہے: اس کے بعد ہر ٹکٹ دوبارہ صفر سے شروع ہوتا ہے۔',
+  tkMine: 'ٹکٹ — {season}',
+  miss_ticket: '“{name}” ٹکٹ درکار، آپ کے {have}',
+  miss_ticketPending: '“{name}” ٹکٹ درکار: آپ کے {have}، پہلے سے منتظر دیگر رجسٹریشنز {pending}',
 };

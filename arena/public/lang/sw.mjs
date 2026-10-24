@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'pointi {need} zinahitajika, una {have}',
   miss_noMedal: 'kwa wachezaji wasio na medali, una {have}',
   miss_cup: 'nafasi kati ya {need} wa kwanza wa “{name}” inahitajika (nafasi yako: {have})',
+  tkTitle: 'Tiketi',
+  tkNeed: 'Ili kujisajili: tiketi moja ya “{name}”, inayotumika mashindano yakishathibitishwa.',
+  tkKeep: 'Nafasi zinazobaki na tiketi yao: {list}.',
+  tkEarn: '{n} wa kwanza wanashinda tiketi ya “{name}”.',
+  tkEnds: 'Mashindano haya yanamaliza msimu “{season}”: kisha kila tiketi inaanza tena kutoka sifuri.',
+  tkMine: 'Tiketi — {season}',
+  miss_ticket: 'tiketi ya “{name}” inahitajika, una {have}',
+  miss_ticketPending: 'tiketi ya “{name}” inahitajika: una {have}, tayari zinasubiriwa na usajili mwingine {pending}',
 };

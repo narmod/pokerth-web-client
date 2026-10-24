@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: '需 {need} 积分，你有 {have}',
   miss_noMedal: '仅限无奖牌的玩家，你有 {have} 枚',
   miss_cup: '需在「{name}」中排名前 {need}（你的名次：{have}）',
+  tkTitle: '门票',
+  tkNeed: '报名需持一张「{name}」门票，锦标赛结果确认后扣除。',
+  tkKeep: '保留门票的名次：{list}。',
+  tkEarn: '前 {n} 名可获得一张「{name}」门票。',
+  tkEnds: '本锦标赛结束「{season}」赛季：之后所有门票重新从零开始。',
+  tkMine: '门票 — {season}',
+  miss_ticket: '需一张「{name}」门票，你有 {have} 张',
+  miss_ticketPending: '需一张「{name}」门票：你有 {have} 张，已有 {pending} 个其他报名在等待使用',
 };

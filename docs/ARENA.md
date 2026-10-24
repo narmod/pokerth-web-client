@@ -750,6 +750,33 @@ password; four roles).
 - Players keep their nickname and personal code for now (player accounts:
   later).
 
+## Tickets and seasons (service `0.27.0`)
+
+After the BBC (Step 1 open; Steps 2 to 4 need a ticket won by the first two
+of the step before; the 3rd keeps his; the final starts a new season). Code:
+`arena/lib/tickets.mjs`, `arena/public/ticket-form.mjs`; tests:
+`arena/test/test-arena-tickets.mjs`. Stored in `ARENA_DIR/tickets.json`
+(kinds, balances, the tournaments applied, the seasons, a log of 5000 moves).
+
+- **Kinds** (`/admin/arena/tickets/type/add|update`): a name and a most per
+  player (1–100, 10 by default).
+- **A tournament's rules** (`tickets`, create and update): `need` (a kind),
+  `earn: { type, top }`, `keep: [places]`, `endsSeason`.
+- **Registering** (players' page) with `need`: the player must hold one more
+  ticket than his registrations still waiting on that kind in other
+  tournaments (not validated, not absent); else `code: 'access'` with
+  `missing: [{ code: 'ticket', name, have, pending }]`. The organizer adding
+  a player is not held back.
+- **Once validated** (the service's sweep, each tournament once): a ranked
+  player spends the ticket it needed unless his place is in `keep`; the
+  first `top` earn one (never above the most). An absent player is not
+  ranked and spends nothing. `endsSeason`: then a new season.
+- **By hand** (Players tab): give or take a ticket (`/tickets/adjust`); start
+  a new season (`/tickets/season`): every balance from zero, the old season
+  archived with its balances.
+- **Public**: the tournament's page shows its rules (`ticketInfo`), the
+  player's page his tickets of the season (`/arena/api/players/<nick>`).
+
 ## Who may register (service `0.26.0`)
 
 Conditions an organizer puts on a tournament (`access`, create and update)
@@ -1120,6 +1147,7 @@ that version only: the web client's version, its service worker and its
 | `arena/lib/lobby.mjs` | Lobby reader (guest login, tables, server type). |
 | `arena/lib/host.mjs` | The director that opens a tournament table: create, invite, kick, hand over, then watch. |
 | `arena/lib/worker.mjs` | One watch in a detached process, state and files on disk. |
+| `arena/lib/tickets.mjs` | Tickets and seasons: kinds, balances, the moves of a validated tournament, seasons. |
 | `arena/lib/access.mjs` | Who may register: conditions, a player's facts from the results, what is missing. Pure. |
 | `arena/lib/players.mjs` | Players of the install: accounts (invitation or sign-up), sessions, nicknames claimed, bans. |
 | `arena/test/test-arena-tablepass.mjs` | The table password: default, given against the code, never shown nor stored. |

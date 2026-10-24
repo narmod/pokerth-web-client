@@ -13,7 +13,7 @@
 export function createPlayersView(deps) {
   const { api, esc } = deps;
   const $ = (id) => document.getElementById(id);
-  let rows = [], signup = 'invite', filter = '', banning = null;
+  let rows = [], signup = 'invite', filter = '', banning = null, tk = { types: [], balances: [], season: null, seasons: [] };
   const msg = (text, bad) => { const m = $('plMsg'); if (m) { m.textContent = text || ''; m.className = 'msg' + (text ? (bad ? ' bad' : ' ok') : ''); } };
   const when = (ts) => (ts ? new Date(ts).toLocaleDateString() : '—');
   const linkOf = (t) => window.location.origin + '/arena#pinvite=' + encodeURIComponent(t);
@@ -31,6 +31,10 @@ export function createPlayersView(deps) {
     $('plSignupSel').value = signup;
     $('plSignupNote').textContent = signup === 'open' ? 'Players make their own account on the players\' page; organizers can still invite.' : 'Only organizers make accounts, with an invitation link.';
     document.querySelectorAll('.pl-act').forEach((e) => { e.hidden = !canAct; });
+    // Tickets and seasons.
+    if (tk.season) $('plSeason').innerHTML = 'Current season: <b>' + esc(tk.season.name) + '</b> since ' + esc(when(tk.season.startedAt)) + (tk.seasons.length ? ' · ' + tk.seasons.length + ' before' : '');
+    $('plKinds').innerHTML = tk.types.length ? tk.types.map((k) => '<li>' + esc(k.name) + ' <span class="muted">— ' + esc(k.max) + ' at most</span></li>').join('') : '<li class="muted">No kind of ticket yet.</li>';
+    const balOf = new Map(tk.balances.map((b) => [b.nick, b.tickets]));
     const f = filter.toLowerCase();
     const list = rows.filter((r) => !f || r.nick.toLowerCase().indexOf(f) >= 0);
     $('plCount').textContent = list.length + ' of ' + rows.length;
@@ -41,7 +45,9 @@ export function createPlayersView(deps) {
         '<br><span class="small muted">' + (s ? s.tournaments + ' tournament' + (s.tournaments === 1 ? '' : 's') + ' · ' + s.wins + ' won · ' + s.podiums + ' podium' + (s.podiums === 1 ? '' : 's') + ' · last ' + esc(when(s.last)) : 'no validated result') +
         (r.lastLoginAt ? ' · last sign-in ' + esc(when(r.lastLoginAt)) : '') + (r.account === 'invited' && r.inviteExpires ? ' · link valid until ' + esc(when(r.inviteExpires)) : '') + '</span>' +
         (r.ban ? '<br><span class="small">Banned ' + (r.ban.until ? 'until ' + esc(when(r.ban.until)) : 'until lifted') + ' by ' + esc(r.ban.by) + ': ' + esc(r.ban.reason) + '</span>' : '') +
-        (r.note ? '<br><span class="small muted">Note: ' + esc(r.note) + '</span>' : '') + '</div>';
+        (r.note ? '<br><span class="small muted">Note: ' + esc(r.note) + '</span>' : '') +
+        (tk.types.length ? '<br><span class="small">' + tk.types.map((k) => { const n = (balOf.get(r.nick.toLowerCase()) || {})[k.id] || 0;
+          return '<span class="tkline">' + esc(k.name) + ' <b>' + n + '</b>' + (canAct ? ' <button type="button" class="mini ghost" data-plact="tk" data-nick="' + esc(r.nick) + '" data-type="' + esc(k.id) + '" data-d="-1" aria-label="Take a ' + esc(k.name) + ' ticket">−</button><button type="button" class="mini ghost" data-plact="tk" data-nick="' + esc(r.nick) + '" data-type="' + esc(k.id) + '" data-d="1" aria-label="Give a ' + esc(k.name) + ' ticket">+</button>' : '') + '</span>'; }).join(' · ') + '</span>' : '') + '</div>';
       if (canAct) {
         const k = esc(r.id || ''), n = esc(r.nick);
         h += '<div class="row pl-row">';
@@ -60,11 +66,23 @@ export function createPlayersView(deps) {
     }).join('') : '<li class="empty">' + (rows.length ? 'Nobody matches.' : 'No player yet: they appear with their first registration or result.') + '</li>';
   }
   function refresh() {
-    return api('/admin/arena/players').then((d) => { if (d.ok) { rows = d.players || []; signup = d.signup || 'invite'; render(); } }).catch(() => {});
+    return Promise.all([api('/admin/arena/players'), api('/admin/arena/tickets').catch(() => null)]).then(([d, k]) => {
+      if (k && k.ok) tk = k;
+      if (d.ok) { rows = d.players || []; signup = d.signup || 'invite'; render(); }
+    }).catch(() => {});
   }
   const done = (text) => (d) => { if (!d.ok) return msg(d.error || 'Refused', true); msg(text); if (d.invite) showLink(d.player.nick, d.invite); refresh(); };
   const fail = (e) => msg(e.message || 'Network error', true);
 
+  $('plKindForm').addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    api('/admin/arena/tickets/type/add', { name: $('plKindName').value.trim(), max: Number($('plKindMax').value) || 10 }).then((d) => { if (d.ok) $('plKindName').value = ''; done('Kind of ticket added.')(d); }).catch(fail);
+  });
+  $('plSeasonForm').addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    if (!window.confirm('Start a new season? Every player\'s tickets go back to zero (the current season is kept in the history).')) return;
+    api('/admin/arena/tickets/season', { name: $('plSeasonName').value.trim() }).then((d) => { if (d.ok) $('plSeasonName').value = ''; done(d.ok ? 'Season « ' + d.season.name + ' » started.' : '')(d); }).catch(fail);
+  });
   $('plSearch').addEventListener('input', () => { filter = $('plSearch').value.trim(); render(); });
   $('plSignupSel').addEventListener('change', () => api('/admin/arena/players/settings', { signup: $('plSignupSel').value }).then(done('Sign-up: ' + $('plSignupSel').value + '.')).catch(fail));
   $('plCreateForm').addEventListener('submit', (ev) => {
@@ -84,6 +102,7 @@ export function createPlayersView(deps) {
     if (a === 'disable') return api('/admin/arena/players/disable', { id }).then(done('Account turned off: its sessions are ended.')).catch(fail);
     if (a === 'enable') return api('/admin/arena/players/enable', { id }).then(done('Account turned on.')).catch(fail);
     if (a === 'unban') return api('/admin/arena/players/unban', { id }).then(done('Ban lifted.')).catch(fail);
+    if (a === 'tk') return api('/admin/arena/tickets/adjust', { nick, type: b.dataset.type, delta: Number(b.dataset.d) }).then(done('Tickets of ' + nick + ': ' + (Number(b.dataset.d) > 0 ? 'one given.' : 'one taken.'))).catch(fail);
     if (a === 'ban') { banning = nick; render(); const w = $('plBanWhy'); if (w) w.focus(); return; }
     if (a === 'bancancel') { banning = null; render(); }
   });

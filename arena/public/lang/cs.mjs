@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'potřeba bodů: {need}, máte {have}',
   miss_noMedal: 'jen pro hráče bez medaile, máte {have}',
   miss_cup: 'potřeba umístění na 1. až {need}. místě v „{name}“ (vaše místo: {have})',
+  tkTitle: 'Vstupenky',
+  tkNeed: 'K registraci: jedna vstupenka „{name}“, spotřebuje se po potvrzení turnaje.',
+  tkKeep: 'Místa, která si vstupenku ponechají: {list}.',
+  tkEarn: 'Prvních {n} získá vstupenku „{name}“.',
+  tkEnds: 'Tento turnaj končí sezónu „{season}“: poté všechny vstupenky začínají znovu od nuly.',
+  tkMine: 'Vstupenky — {season}',
+  miss_ticket: 'potřeba vstupenka „{name}“, máte {have}',
+  miss_ticketPending: 'potřeba vstupenka „{name}“: máte {have}, na ni již čeká dalších registrací: {pending}',
 };

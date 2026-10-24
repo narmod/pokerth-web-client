@@ -53,6 +53,7 @@ function missingText(miss) {
     if (m.code === 'minTournaments' || m.code === 'maxTournaments' || m.code === 'minPoints' || m.code === 'noMedal') return t('miss_' + m.code, { need: m.need, have: m.have });
     if (m.code === 'cup') return t('miss_cup', { need: m.need, name: m.name || '', have: m.have || '—' });
     if (m.code === 'account' || m.code === 'medal' || m.code === 'gold') return t('acc_' + m.code);
+    if (m.code === 'ticket') return t(m.pending ? 'miss_ticketPending' : 'miss_ticket', { name: m.name, have: m.have, pending: m.pending });
     return t('err_' + m.code);
   });
 }
@@ -287,6 +288,12 @@ function renderOne() {
     h += accessCard(c.access, eligCache[ek] && eligCache[ek] !== 'pending' ? eligCache[ek] : null);
     askEligible('/t/' + c.key + '/eligible', {}, 't:' + c.key, () => { if (cur && cur.key === c.key) renderOne(); });
   }
+  // Tickets: what it needs, what its first earn, whether it ends the season.
+  const ti = c.ticketInfo;
+  if (ti && (ti.need || ti.earn || ti.endsSeason) && c.phase !== 'validated') {
+    h += '<section class="card"><h2>' + T('tkTitle') + '</h2><ul class="how">' + (ti.need ? '<li>' + T('tkNeed', { name: ti.need }) + (ti.keep && ti.keep.length ? ' ' + T('tkKeep', { list: ti.keep.join(', ') }) : '') + '</li>' : '') +
+      (ti.earn ? '<li>' + T('tkEarn', { n: ti.earn.top, name: ti.earn.name }) + '</li>' : '') + (ti.endsSeason ? '<li>' + T('tkEnds', { season: ti.season }) + '</li>' : '') + '</ul></section>';
+  }
   // Registration.
   if (!c.result) {
     h += '<section class="card"><h2>' + T('regTitle') + '</h2>';
@@ -479,6 +486,7 @@ async function showPlayer(nick) {
   h += d.medals.length ? '<ul class="tlist">' + d.medals.map((m) => '<li class="medalrow"><span class="big" aria-hidden="true">' + MEDAL[m.medal] + '</span><span><b>' + link(m) + '</b><br><span class="muted small">' + T(m.kind === 'cup' ? 'kindCup' : 'kindTournament') + ' · ' + T('placeOf', { place: m.place, of: m.of }) + (m.at ? ' · ' + day(m.at) : '') + '</span></span></li>').join('') + '</ul>'
     : '<p class="empty">' + T('noMedal') + '</p>';
   h += '<p class="small muted">' + T('medalRules') + '</p></section>';
+  if (d.tickets && d.tickets.length) h += '<section class="card"><h2>' + T('tkMine', { season: d.season || '' }) + '</h2><ul class="chips">' + d.tickets.map((x) => '<li>' + esc(x.name) + ' <b>×' + esc(x.count) + '</b></li>').join('') + '</ul></section>';
   if (d.results.length) {
     h += '<section class="card"><h2>' + T('resultsTitle') + '</h2><div class="tablewrap"><table><thead><tr><th>' + T('colDate') + '</th><th>' + T('colEvent') + '</th><th class="num">' + T('colPlace') + '</th></tr></thead><tbody>' +
       d.results.map((x) => '<tr><td>' + (x.at ? day(x.at) : '') + '</td><td>' + link(x) + ' <span class="muted small">' + T(x.kind === 'cup' ? 'kindCup' : 'kindTournament') + '</span></td><td class="num">' + T('placeOf', { place: x.place, of: x.of }) + '</td></tr>').join('') + '</tbody></table></div></section>';

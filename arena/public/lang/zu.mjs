@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'kudingeka amaphuzu {need}, unawo {have}',
   miss_noMedal: 'kwabadlali abangenayo indondo, unazo {have}',
   miss_cup: 'kudingeka indawo phakathi kwabangu-{need} bokuqala be-“{name}” (indawo yakho: {have})',
+  tkTitle: 'Amathikithi',
+  tkNeed: 'Ukuze ubhalise: ithikithi elilodwa le-“{name}”, elisetshenziswa uma umqhudelwano usuqinisekisiwe.',
+  tkKeep: 'Izindawo ezigcina ithikithi lazo: {list}.',
+  tkEarn: 'Abangu-{n} bokuqala bawina ithikithi le-“{name}”.',
+  tkEnds: 'Lo mqhudelwano uqeda isizini “{season}”: bese wonke amathikithi eqala kabusha kusukela kuziro.',
+  tkMine: 'Amathikithi — {season}',
+  miss_ticket: 'kudingeka ithikithi le-“{name}”, unawo {have}',
+  miss_ticketPending: 'kudingeka ithikithi le-“{name}”: unawo {have}, asevele elindwe ukubhalisa okunye okungu-{pending}',
 };

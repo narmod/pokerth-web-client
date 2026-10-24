@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'servono {need} punti, ne hai {have}',
   miss_noMedal: 'riservato ai giocatori senza medaglie, ne hai {have}',
   miss_cup: 'serve un posto tra i primi {need} di «{name}» (il tuo posto: {have})',
+  tkTitle: 'Ticket',
+  tkNeed: 'Per iscriversi: un ticket «{name}», speso una volta convalidato il torneo.',
+  tkKeep: 'Posti che conservano il ticket: {list}.',
+  tkEarn: 'I primi {n} vincono un ticket «{name}».',
+  tkEnds: 'Questo torneo chiude la stagione «{season}»: poi ogni ticket riparte da zero.',
+  tkMine: 'Ticket — {season}',
+  miss_ticket: 'serve un ticket «{name}», ne hai {have}',
+  miss_ticketPending: 'serve un ticket «{name}»: ne hai {have}, con {pending} altre iscrizioni già in attesa',
 };

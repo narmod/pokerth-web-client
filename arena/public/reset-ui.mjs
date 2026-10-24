@@ -13,6 +13,7 @@ const PART_TEXT = {
   tournaments: ['Tournaments', 'every tournament, with its tables, players, results, journals and witnesses — and the medals they gave'],
   cups: ['Cups', 'every cup and its standings — and the medals they gave'],
   images: ['Images added', 'the images organizers added (the two shipped images stay)'],
+  tickets: ['Tickets and seasons', 'the kinds of tickets, every player\'s tickets and the seasons'],
 };
 
 export function createResetView(deps) {
@@ -26,7 +27,7 @@ export function createResetView(deps) {
     if (!data) return;
     const c = data.counts || {};
     const n = { watches: plural(c.watches || 0, 'watch', 'watches'), tournaments: plural(c.tournaments || 0, 'tournament', 'tournaments') + (c.tables ? ' (+ ' + plural(c.tables, 'table', 'tables') + ')' : ''),
-      cups: plural(c.cups || 0, 'cup', 'cups'), images: plural(c.images || 0, 'image', 'images') };
+      cups: plural(c.cups || 0, 'cup', 'cups'), images: plural(c.images || 0, 'image', 'images'), tickets: c.tickets ? 'set up' : 'none yet' };
     $('rParts').innerHTML = (data.parts || []).map((p) => '<label class="chk"><input type="checkbox" name="rPart" value="' + esc(p) + '" checked> <b>' + esc(PART_TEXT[p][0]) + '</b> <span class="muted">(' + esc(n[p]) + ')</span><br><span class="small muted">' + esc(PART_TEXT[p][1]) + '</span></label>').join('');
     $('rRunning').hidden = !(data.running && data.running.length);
     $('rRunning').innerHTML = data.running && data.running.length ? '<b>Still running:</b> ' + data.running.map(esc).join(', ') + '. Stop or close it before taking it away.' : '';

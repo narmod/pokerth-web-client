@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'pointí ag teastáil: {need}, agatsa: {have}',
   miss_noMedal: 'd’imreoirí gan bonn, agatsa: {have}',
   miss_cup: 'ceann de na háiteanna 1 go {need} i “{name}” ag teastáil (d’áit: {have})',
+  tkTitle: 'Ticéid',
+  tkNeed: 'Chun clárú: ticéad “{name}” amháin, a chaitear nuair a bhailíochtaítear an comórtas.',
+  tkKeep: 'Áiteanna a choinníonn a dticéad: {list}.',
+  tkEarn: 'Buann an chéad {n} ticéad “{name}”.',
+  tkEnds: 'Críochnaíonn an comórtas seo an séasúr “{season}”: tosaíonn gach ticéad ó nialas arís ansin.',
+  tkMine: 'Ticéid — {season}',
+  miss_ticket: 'ticéad “{name}” ag teastáil, agatsa: {have}',
+  miss_ticketPending: 'ticéad “{name}” ag teastáil, agatsa: {have}, clárúcháin eile ag fanacht air cheana: {pending}',
 };

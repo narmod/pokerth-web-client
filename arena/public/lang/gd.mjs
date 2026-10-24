@@ -249,4 +249,12 @@ export const strings = {
   miss_minPoints: 'puingean a dhìth: {need}, agad-sa: {have}',
   miss_noMedal: 'do chluicheadairean gun bhonn, agad-sa: {have}',
   miss_cup: 'àite suas gu {need} ann an “{name}” a dhìth (d’ àite: {have})',
+  tkTitle: 'Tiocaidean',
+  tkNeed: 'Airson clàradh: aon tiocaid “{name}”, a thèid a chosg nuair a thèid a’ cho-fharpais a dhearbhadh.',
+  tkKeep: 'Àiteachan a chumas an tiocaid: {list}.',
+  tkEarn: 'Gheibh a’ chiad {n} tiocaid “{name}”.',
+  tkEnds: 'Cuiridh a’ cho-fharpais seo crìoch air an t-seusan “{season}”: tòisichidh gach tiocaid às ùr bho neoni an uairsin.',
+  tkMine: 'Tiocaidean — {season}',
+  miss_ticket: 'tiocaid “{name}” a dhìth, agad-sa: {have}',
+  miss_ticketPending: 'tiocaid “{name}” a dhìth, agad-sa: {have}, clàraidhean eile a’ feitheamh mu thràth: {pending}',
 };
