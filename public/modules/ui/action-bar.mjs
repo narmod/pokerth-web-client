@@ -107,14 +107,21 @@ function notifyMyTurnVisuals() {
     document.title = blink ? (msg + ' — PokerTH') : S._origTitle;
     blink = !blink;
   }, 900);
-  // Arrêter quand l'onglet est de nouveau actif
-  document.addEventListener('visibilitychange', function handler() {
+  // Arrêter quand l'onglet est de nouveau actif. One handler at a time: it is
+  // only removed when the tab becomes visible, so a handler per turn piled up
+  // while the tab stayed visible.
+  _dropTurnVisHandler();
+  S._turnVisHandler = function () {
     if (!document.hidden) {
       clearInterval(S._titleBlinkID);
       document.title = S._origTitle;
-      document.removeEventListener('visibilitychange', handler);
+      _dropTurnVisHandler();
     }
-  });
+  };
+  document.addEventListener('visibilitychange', S._turnVisHandler);
+}
+function _dropTurnVisHandler() {
+  if (S._turnVisHandler) { document.removeEventListener('visibilitychange', S._turnVisHandler); S._turnVisHandler = null; }
 }
 
 // La notification de tour porte deux boutons — Fold et Check/Call — pour jouer
@@ -190,6 +197,7 @@ try {
 
 function clearTurnNotif() {
   clearInterval(S._titleBlinkID);
+  _dropTurnVisHandler();
   document.title = S._origTitle;
   window._badgeTurn = false;
   if (window.refreshAppBadge) window.refreshAppBadge();
@@ -534,11 +542,11 @@ function renderMyTurnActions(preview) {
   document.getElementById('g-actions').innerHTML = h;
   window.updateBottomLayout(); // paysage : recalcule la reserve sous la table apres le rendu live
   _wireRaiseBtn();
-  // visual notification (they used to be one call, but the local function
-  // shadowed the audio one).
-  if (typeof window.notifyMyTurn === 'function') window.notifyMyTurn();
-  if (typeof notifyMyTurnVisuals === 'function') notifyMyTurnVisuals();
-  hapticBuzz([90, 50, 90]); // "your turn" double-buzz (mobile only)
+  // No turn alert here (sound, notification, title blink, vibration): the
+  // turn's start is signalled once, by onPlayersTurn (game/msg-hand.mjs).
+  // This function also re-renders the bar in the middle of a turn (BB display
+  // toggled, call guard, rejected action), and used to replay the full alert
+  // each time — twice at every turn start, since onPlayersTurn calls it too.
   // NO ResetTimeoutMessage here. This function runs on its own every time the
   // turn comes round, so answering "still here" from it told the server a
   // player was present when nobody was: an abandoned tab kept its seat for

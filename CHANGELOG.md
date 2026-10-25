@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Fixed
+- **« Your turn » alert once per turn** (`web.332`) — `renderMyTurnActions()` (live) played the chime, the
+  notification, the title blink, the badge and the vibration, and `onPlayersTurn` then played them all again: two
+  identical samples at once at every turn start, and the whole alert replayed on mid-turn re-renders (BB display
+  toggled, call guard, rejected action). The alert now comes from `onPlayersTurn` alone. The title-blink
+  `visibilitychange` listener is kept to one (it piled up while the tab stayed visible) and `clearTurnNotif` removes
+  it. Test: `scripts/test-action-bar.mjs` (+3).
 - **Client fixes from an audit** (`web.331`):
   - *One handler exception froze the session* (proxy mode) — `onRawData` removed a frame only after `handleMsg`
     returned; a throw left it at the head of the buffer, replayed on every chunk while later frames piled up, and the

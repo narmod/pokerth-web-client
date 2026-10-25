@@ -1,3 +1,6 @@
+2026-10-25 version 2.1.10-web.332:
+- bugfix: the « your turn » sound, notification and vibration now play once per turn, and no longer again in the middle of your turn (for example when switching the big-blind display)
+
 2026-10-25 version 2.1.10-web.331:
 - bugfix: a table or lobby could freeze after an unexpected error in a received message; the game now carries on
 - bugfix: after an automatic reconnection, server announcements, reactions and settings sync work again, and being removed by the server brings you back to the connection screen

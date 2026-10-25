@@ -12,7 +12,10 @@ function makeEl() { return { style: {}, children: [], textContent: '', innerHTML
   addEventListener(ev, fn) { this._handlers[ev] = fn; },
   querySelector: () => null, querySelectorAll: () => [] }; }
 const els = {};
-globalThis.document = { readyState: 'complete', addEventListener() {}, removeEventListener() {},
+const visL = new Set();   // live 'visibilitychange' listeners
+globalThis.document = { readyState: 'complete',
+  addEventListener(ev, fn) { if (ev === 'visibilitychange') visL.add(fn); },
+  removeEventListener(ev, fn) { if (ev === 'visibilitychange') visL.delete(fn); },
   hidden: false, title: 'PokerTH',
   querySelectorAll: () => [], querySelector: () => null,
   documentElement: { getAttribute: () => null },
@@ -35,7 +38,7 @@ const logged = []; window.logAction = (fn) => logged.push(typeof fn === 'functio
 let turnActive = null; window.setMyTurnActive = (v) => { turnActive = v; };
 window._lastCallSeen = -1; window._lastBoardCount = -1;
 window._callConfirmArmed = false; window._callConfirmTimer = null;
-window.notifyMyTurn = () => {};
+let turnChimes = 0; window.notifyMyTurn = () => { turnChimes++; };
 window.setUrgentMode = () => {}; // requis par stopTurnTimer (turn-timer.mjs)
 
 const { S } = await import('../public/modules/game/state.mjs');
@@ -59,6 +62,10 @@ const sent = [];
 S.ws.send = (d) => sent.push(d);
 A.renderMyTurnActions();
 const ga = els['g-actions'];
+// The turn alert belongs to onPlayersTurn alone: this function also re-renders
+// the bar mid-turn (BB toggle, call guard, rejected action) and used to replay
+// the chime, the title blink and the badge each time — twice at a turn start.
+ok(turnChimes === 0 && window._badgeTurn !== true, 'live : no turn alert from the render itself (onPlayersTurn signals the turn once)');
 ok(ga.innerHTML.includes('>Check<span') || ga.innerHTML.includes('Check'), 'live : bouton Check (rien à suivre)');
 ok(ga.innerHTML.includes('Fold') && ga.innerHTML.includes('All-In'), 'live : Fold + All-In présents');
 ok(ga.innerHTML.includes('mode-sel'), 'live : dropdown de mode présent');
@@ -236,10 +243,14 @@ ok(A._playAutoMode() === false, '_playAutoMode : mode manuel → false');
 
 // notifyMyTurnVisuals / clearTurnNotif : titre d'onglet + badge
 S._origTitle = 'PokerTH';
+const visBase = visL.size;   // other modules listen too
 A.notifyMyTurnVisuals();
 ok(window._badgeTurn === true && document.title.includes('PokerTH'), 'notifyMyTurnVisuals : badge + titre');
+A.notifyMyTurnVisuals(); A.notifyMyTurnVisuals();
+ok(visL.size - visBase === 1, 'notifyMyTurnVisuals : one visibilitychange listener, not one per turn (' + (visL.size - visBase) + ')');
 A.clearTurnNotif();
 ok(window._badgeTurn === false && document.title === 'PokerTH', 'clearTurnNotif : restaure le titre');
+ok(visL.size === visBase, 'clearTurnNotif : removes the listener too');
 clearInterval(S._titleBlinkID);
 
 // _applyAssistUI : off → _hsHide ; toggleAssist bascule
