@@ -25,11 +25,15 @@ function t(key, opts) {
   return (typeof window !== 'undefined' && window.t) ? window.t(key, opts) : key;
 }
 
+// '"' too: the result also goes into double-quoted attributes (title=,
+// data-nv-name=, aria-label=…), where a server-provided name holding a quote
+// could otherwise open a new attribute (scripts/test-esc-attr.mjs).
 function esc(s) {
   return String(s)
     .replace(/&/g,'&amp;')
     .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;');
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
 }
 // ── Reconnexion immédiate au retour au premier plan ───────────────────
 // iOS suspend la page en arrière-plan et FERME le WebSocket. Sans ça, on ne

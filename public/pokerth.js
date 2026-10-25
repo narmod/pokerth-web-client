@@ -2493,11 +2493,16 @@ window._linkifyChatHtml = _linkifyChatHtml;
 function _enlargeChatEmojis(html) {
   try {
     var RE = /(?:[#*0-9]\uFE0F?\u20E3|\p{Extended_Pictographic}[\uFE0F\u200D\u20E3\u{1F3FB}-\u{1F3FF}\u{E0020}-\u{E007F}]*)+/gu;
-    return String(html == null ? '' : html).replace(RE, function (m) {
-      var bare = m.replace(/\uFE0F/g, '');
-      if (bare === '\u00A9' || bare === '\u00AE' || bare === '\u2122') return m;
-      return '<span class="chat-emoji-lg">' + m + '</span>';
-    });
+    // Text between tags only: runs after linkify, and an emoji inside an
+    // href="…" wrapped in a <span> used to break the <a> tag (raw markup shown).
+    return String(html == null ? '' : html).split(/(<[^>]*>)/).map(function (part, i) {
+      if (i % 2) return part;
+      return part.replace(RE, function (m) {
+        var bare = m.replace(/\uFE0F/g, '');
+        if (bare === '\u00A9' || bare === '\u00AE' || bare === '\u2122') return m;
+        return '<span class="chat-emoji-lg">' + m + '</span>';
+      });
+    }).join('');
   } catch (e) { return html; }
 }
 window._enlargeChatEmojis = _enlargeChatEmojis;
@@ -4099,6 +4104,17 @@ document.addEventListener("DOMContentLoaded", function() {
     // Valeurs par défaut des champs serveur en LAN / dédié, dérivées de la
     // politique d'instance. Partagées par _lanFields() (remplissage) et
     // _pthLanRemember() (mémorisation) pour que les deux ne divergent jamais.
+    // A server address the player typed in the LAN form is marked (data-typed)
+    // so a later re-derive of the form keeps it: /app-config answering after
+    // the player had typed (slow network) used to put the saved address or
+    // port 7234 back (_lanFields, via _applyLoginDefaults). The pokerth.net
+    // modes, which write their own address, clear the mark.
+    try {
+      document.addEventListener('input', function (ev) {
+        var el = ev && ev.target;
+        if (el && (el.id === 'host' || el.id === 'port')) el.dataset.typed = '1';
+      }, true);
+    } catch (eT) {}
     window._pthLanDefaults = function () {
       var pol = window._pthLanPolicy || {};
       var hi = document.getElementById('host');
@@ -5094,9 +5110,85 @@ const App = (() => {
     while (S.rxBuf.length >= 4) {
       const len = new DataView(S.rxBuf.buffer, S.rxBuf.byteOffset).getUint32(0, false);
       if (S.rxBuf.length < 4 + len) break;
-      handleMsg(S.rxBuf.slice(4, 4 + len));
+      // Consume the frame BEFORE handling it: a handler that throws used to
+      // leave it at the head of the buffer, replayed (and throwing) on every
+      // later chunk while the frames behind it piled up — a frozen session the
+      // watchdog never saw, since _lastRxTime kept moving. The error is
+      // rethrown asynchronously so window.onerror still reports it.
+      const frame = S.rxBuf.slice(4, 4 + len);
       S.rxBuf = S.rxBuf.slice(4 + len);
+      try { handleMsg(frame); } catch (e) { setTimeout(function () { throw e; }, 0); }
     }
+  }
+
+  // Text frames from the proxy (control protocol). Shared by the first socket
+  // and the automatic-reconnect sockets: the latter used to pass text frames
+  // to onRawData, which drops them — NOTICE:/INFO: broadcasts, REACT: and the
+  // SYNCTOK: re-sent on reattach were lost after the first reconnection.
+  function _onProxyText(data) {
+    if (_handleCtrlFrame(data)) return;
+    // Jeton de sync des préférences (émis à l'InitAck d'un login authentifié)
+    if (data.startsWith('SYNCTOK:')) {
+      try { if (window._cfgSyncOnToken) window._cfgSyncOnToken(data.slice(8)); } catch (_e) {}
+      return;
+    }
+    // AVATAR:/AVATARIMG: (ancien relais d'avatar entre clients web) : plus
+    // émis ni affichés, le proxy les absorbe — l'avatar passe uniquement
+    // par le protocole PokerTH, comme pour le client QML. Une trame
+    // résiduelle tombe sur le « return » ci-dessous, sans effet.
+    if (data.startsWith('REACT:')) {
+      var parts = data.split(':');
+      var fromPid = parseInt(parts[1]);
+      var reactEmoji = parts[2];
+      if (fromPid !== S.myId) {
+        handleIncomingReaction(fromPid, reactEmoji, 'react');
+        // Pas d'affichage dans le chat — uniquement animation flottante
+      }
+    }
+  }
+
+  // Closes that must NOT lead to another reconnection attempt. Returns true
+  // when it handled the close. Shared by the first socket and the automatic-
+  // reconnect sockets, which used to skip it: a kick arriving after a
+  // reconnection left the player on a frozen lobby or table.
+  function _closeIsTerminal(e) {
+    // Annuaire LAN : ce serveur limite le nombre de joueurs par adresse IP
+    // (proxy, code 4430 « lan-ip-cap:N »). Pas de reconnexion automatique —
+    // elle buterait sur la même limite.
+    if (e && e.code === 4430) {
+      var _capN = parseInt(String(e.reason || '').split(':')[1], 10) || 0;
+      var _capMsg = t('lanErr_ipCap', { n: _capN });
+      S._intentionalDisconnect = true;
+      _closeNotifyWS();
+      _hideBanner();
+      try { show('s-connect'); } catch (e4) {}
+      setStatus(_capMsg, 'err');
+      try { window._connLostShow && window._connLostShow(_capMsg); } catch (e4) {}
+      return true;
+    }
+    // User asked to leave (clicked ✕ / disconnect): do NOT auto-reconnect.
+    // Without this guard, ws.close() from disconnect() falls through to the
+    // reconnect scheduler below and drops the user back into the lobby a few
+    // seconds after they returned to the home screen.
+    if (S._intentionalDisconnect) {
+      _closeNotifyWS();
+      _hideBanner();
+      // …sauf quand c'est le SERVEUR qui a rejeté la session (kick, ban,
+      // timeout d'inactivité) : onError pose le même drapeau pour couper le
+      // backoff, mais personne ne changeait d'écran — le lobby restait
+      // affiché et figé, le motif écrit par setStatus n'étant visible que
+      // sur l'écran de connexion. Parité QML (onConnectionFailed) : retour
+      // à l'écran de connexion + fenêtre « Connexion perdue ». Un départ
+      // volontaire n'a pas de motif et a déjà changé d'écran.
+      if (S._connLostReason) {
+        var _clr = S._connLostReason;
+        S._connLostReason = '';
+        try { show('s-connect'); } catch (e3) {}
+        try { window._connLostShow && window._connLostShow(_clr); } catch (e3) {}
+      }
+      return true;
+    }
+    return false;
   }
 
   // ── HANDLER DE MESSAGES ──
@@ -6113,8 +6205,8 @@ const App = (() => {
         // invitee's own saved server or the instance default \u2014 the guest would
         // land on the wrong server. Cleared when the player edits the fields.
         var st = window._shareLanTarget || null;
-        if (hostInput) hostInput.value = ((st && st.host) || lsGet('pth_lan_host') || d.host || hostInput.value);
-        if ($('port')) $('port').value = ((st && st.port) || lsGet('pth_lan_port') || d.port || '7234');
+        if (hostInput && hostInput.dataset.typed !== '1') hostInput.value = ((st && st.host) || lsGet('pth_lan_host') || d.host || hostInput.value);
+        if ($('port') && $('port').dataset.typed !== '1') $('port').value = ((st && st.port) || lsGet('pth_lan_port') || d.port || '7234');
         if ($('use-tls')) {
           if (st && (st.tls === '1' || st.tls === '0')) $('use-tls').checked = (st.tls === '1');
           else if (!st) {
@@ -6156,8 +6248,8 @@ const App = (() => {
         var _ps = window._pthNetServer;
         $('use-tls').checked = _ps ? !!_ps.tls : false;
         if (proxyInput) proxyInput.value = proto + '//' + (window.location.hostname||'localhost') + ':' + port;
-        if (hostInput) hostInput.value = _ps ? _ps.host : 'pokerth.net';
-        if ($('port')) $('port').value = String(_ps ? _ps.port : 7234);
+        if (hostInput) { hostInput.value = _ps ? _ps.host : 'pokerth.net'; delete hostInput.dataset.typed; }
+        if ($('port')) { $('port').value = String(_ps ? _ps.port : 7234); delete $('port').dataset.typed; }
         setStatus(t('guestHint'), '', 'guestHint');
       } else {
         // mode === 'auth'  (pokerth.net registered account)
@@ -6179,8 +6271,8 @@ const App = (() => {
         var _viaProxy2 = (window._pthNetTransport === 'proxy') || (_ps2 && String(_ps2.host).indexOf('pokerth.net') < 0);
         $('use-tls').checked = _viaProxy2 ? (_ps2 ? !!_ps2.tls : true) : true;
         if (proxyInput) proxyInput.value = proto + '//' + (window.location.hostname||'localhost') + ':' + port;
-        if (hostInput) hostInput.value = _ps2 ? _ps2.host : 'pokerth.net';
-        if ($('port')) $('port').value = String(_ps2 ? _ps2.port : 7234);
+        if (hostInput) { hostInput.value = _ps2 ? _ps2.host : 'pokerth.net'; delete hostInput.dataset.typed; }
+        if ($('port')) { $('port').value = String(_ps2 ? _ps2.port : 7234); delete $('port').dataset.typed; }
         setStatus(t('enterCredentials'), '', 'enterCredentials');
       }
 
@@ -6749,29 +6841,7 @@ const App = (() => {
       S.ws.onopen    = () => { S._lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); try { window._pthCountConnect && window._pthCountConnect(_cntMode(), host + ':' + port); } catch (e) {} };
       S.ws.onerror   = () => { S._lastConnectFailed = true; _endConnecting(); setStatus(t('wsError'), 'err', null, { local: true }); };
       S.ws.onmessage = function(e) {
-        if (typeof e.data === 'string') {
-          // Message texte = protocole proxy (réactions)
-          if (_handleCtrlFrame(e.data)) return;
-          // Jeton de sync des préférences (émis à l'InitAck d'un login authentifié)
-          if (e.data.startsWith('SYNCTOK:')) {
-            try { if (window._cfgSyncOnToken) window._cfgSyncOnToken(e.data.slice(8)); } catch (_e) {}
-            return;
-          }
-          // AVATAR:/AVATARIMG: (ancien relais d'avatar entre clients web) : plus
-          // émis ni affichés, le proxy les absorbe — l'avatar passe uniquement
-          // par le protocole PokerTH, comme pour le client QML. Une trame
-          // résiduelle tombe sur le « return » ci-dessous, sans effet.
-          if (e.data.startsWith('REACT:')) {
-            var parts = e.data.split(':');
-            var fromPid = parseInt(parts[1]);
-            var reactEmoji = parts[2];
-            if (fromPid !== S.myId) {
-              handleIncomingReaction(fromPid, reactEmoji, 'react');
-              // Pas d'affichage dans le chat — uniquement animation flottante
-            }
-          }
-          return;
-        }
+        if (typeof e.data === 'string') { _onProxyText(e.data); return; }
         onRawData(e.data);
       };
       S.ws.onclose = function(e) {
@@ -6789,41 +6859,7 @@ const App = (() => {
         clearTimeout(window._reconnectStableTimer);
         _hideBanner();
 
-        // Annuaire LAN : ce serveur limite le nombre de joueurs par adresse IP
-        // (proxy, code 4430 « lan-ip-cap:N »). Pas de reconnexion automatique —
-        // elle buterait sur la même limite.
-        if (e && e.code === 4430) {
-          var _capN = parseInt(String(e.reason || '').split(':')[1], 10) || 0;
-          var _capMsg = t('lanErr_ipCap', { n: _capN });
-          S._intentionalDisconnect = true;
-          _closeNotifyWS();
-          try { show('s-connect'); } catch (e4) {}
-          setStatus(_capMsg, 'err');
-          try { window._connLostShow && window._connLostShow(_capMsg); } catch (e4) {}
-          return;
-        }
-
-        // User asked to leave (clicked ✕ / disconnect): do NOT auto-reconnect.
-        // Without this guard, ws.close() from disconnect() falls through to the
-        // reconnect scheduler below and drops the user back into the lobby a few
-        // seconds after they returned to the home screen.
-        if (S._intentionalDisconnect) {
-          _closeNotifyWS();
-          // …sauf quand c'est le SERVEUR qui a rejeté la session (kick, ban,
-          // timeout d'inactivité) : onError pose le même drapeau pour couper le
-          // backoff, mais personne ne changeait d'écran — le lobby restait
-          // affiché et figé, le motif écrit par setStatus n'étant visible que
-          // sur l'écran de connexion. Parité QML (onConnectionFailed) : retour
-          // à l'écran de connexion + fenêtre « Connexion perdue ». Un départ
-          // volontaire n'a pas de motif et a déjà changé d'écran.
-          if (S._connLostReason) {
-            var _clr = S._connLostReason;
-            S._connLostReason = '';
-            try { show('s-connect'); } catch (e3) {}
-            try { window._connLostShow && window._connLostShow(_clr); } catch (e3) {}
-          }
-          return;
-        }
+        if (_closeIsTerminal(e)) return;
 
         // Mémoriser la table pour réclamer le siège à la reconnexion (sinon on
         // se ferait renommer au pseudo « déjà pris »).
@@ -6854,6 +6890,7 @@ const App = (() => {
           try {
             S.ws = new WebSocket(S._lastConnectParams.finalUrl);
             S.ws.binaryType = 'arraybuffer';
+            S.rxBuf = new Uint8Array(0);   // a partial frame from the dead socket would corrupt the stream
             S.ws.onopen = function() {
               _showBanner(t('reauthBanner'));
               _armReconnectStable();
@@ -6865,6 +6902,7 @@ const App = (() => {
               S.ws && S.ws.dispatchEvent(fakeClose);
             };
             S.ws.onmessage = function(e) {
+              if (typeof e.data === 'string') { _onProxyText(e.data); return; }
               onRawData(e.data);
               // Le compteur n'est PAS remis à zéro ici : voir _armReconnectStable.
               // La bannière, elle, disparaît toujours dès la première trame.
@@ -6875,9 +6913,10 @@ const App = (() => {
             // jetait une TypeError en mode strict (ESM) dès le déclenchement
             // du timer — le vrai handler ci-dessous n'était jamais assigné,
             // aucune reconnexion n'aboutissait ; rapport forum.)
-            S.ws.onclose = function() {
+            S.ws.onclose = function(ev) {
               S.ws = null;
               clearTimeout(window._reconnectTimer);
+              if (_closeIsTerminal(ev)) return;
               // Relancer le processus de reconnexion
               App && App.connect && App._reconnectContinue && App._reconnectContinue();
             };
@@ -6938,15 +6977,18 @@ const App = (() => {
         try {
           S.ws = new WebSocket(S._lastConnectParams.finalUrl);
           S.ws.binaryType = 'arraybuffer';
+          S.rxBuf = new Uint8Array(0);   // a partial frame from the dead socket would corrupt the stream
           S.ws.onopen = function() { _showBanner(t('reauthBanner')); _armReconnectStable(); };
           S.ws.onmessage = function(e) {
+            if (typeof e.data === 'string') { _onProxyText(e.data); return; }
             onRawData(e.data);
             // Idem : la remise à zéro vient de _armReconnectStable / InitAck.
             if (S._reconnectAttempts > 0) setTimeout(_hideBanner, 1500);
           };
-          S.ws.onclose = function() {
+          S.ws.onclose = function(ev) {
             S.ws = null;
             clearTimeout(window._reconnectTimer);
+            if (_closeIsTerminal(ev)) return;
             App && App._reconnectContinue && App._reconnectContinue();
           };
           S.ws.onerror = function() {};
@@ -7995,7 +8037,7 @@ const App = (() => {
         if (g && g.seats) g.seats.forEach(function(pid){
           if (pid && !S.players[pid] && !S._pendingNameRequests.has(pid)) {
             S._pendingNameRequests.add(pid);
-            try { send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e){}
+            try { send(Proto.encode([[1,0,MSG.T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e){ S._pendingNameRequests.delete(pid); }  // T exists only inside handleMsg
           }
         });
       }
@@ -12440,7 +12482,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.330'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.331'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

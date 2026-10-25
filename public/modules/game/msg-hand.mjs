@@ -871,7 +871,10 @@ function onDealTurn(sub) {
     _beginStreet(280);   // turn immédiat + fondu 260 ms
     // Fix : utiliser sub[2] pour détecter la présence du champ
     const tv = sub[2] !== undefined ? Proto.u32(sub, 2) : Proto.u32(sub, 1);
-    S.commCards.push(tv);
+    // By index, not push: after a mid-hand rejoin the board is 5 nulls (push went
+    // to slot 5, never drawn) and a spectator who joined after the flop starts
+    // from [] (push put the turn in slot 0).
+    S.commCards[3] = tv;
     try { if (window._handlog) window._handlog.onTurn(tv); } catch (_e) {}
     document.getElementById('g-round').textContent = t('turn');
     S.gameState = 2;
@@ -899,7 +902,7 @@ function onDealRiver(sub) {
     // Fix : sub[2] présent ? utiliser field 2 ; sinon field 1
     // rv || fallback est FAUX pour rv=0 (carte 2♦)
     const rv = sub[2] !== undefined ? Proto.u32(sub, 2) : Proto.u32(sub, 1);
-    S.commCards.push(rv);
+    S.commCards[4] = rv;   // by index, as the turn
     try { if (window._handlog) window._handlog.onRiver(rv); } catch (_e) {}
     document.getElementById('g-round').textContent = t('river');
     S.gameState = 3;

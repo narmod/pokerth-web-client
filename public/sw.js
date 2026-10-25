@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.10-web.330';
+const CACHE_VERSION = 'pokerth-v2.1.10-web.331';
 // Build id the page puts on the card back URL (deck.mjs _deckBack →
 // flipside.<ext>?v=<BUILD_VERSION>): CACHE_VERSION without its prefix.
 const BUILD_ID = CACHE_VERSION.replace(/^pokerth-v/, '');
@@ -651,7 +651,14 @@ self.addEventListener('message', function(e) {
 // Network-first, used for navigations (the HTML document). Prefers the preload
 // response when available, refreshes the cached shell, and falls back to cache
 // (then a tiny offline notice) when the network is down.
+// The cached app shell only stands in for the app itself: a first visit to
+// /live, /privacy, /faq, /studio… used to get the full client at that URL when
+// the network was slow or down.
+function isAppRoute(req) {
+  try { return /^\/(?:index\.html|pokerth-client\.html)?$/.test(new URL(req.url).pathname); } catch (e) { return false; }
+}
 function handleNavigation(e) {
+  var appRoute = isAppRoute(e.request);
   return (async function() {
     try {
       var preload = await e.preloadResponse;
@@ -670,7 +677,7 @@ function handleNavigation(e) {
             caches.open(CACHE_VERSION).then(function (c) { c.put(e.request, cl); });
           }
         }).catch(function () {});
-        var shellNow = await caches.match(e.request) || await caches.match(NAV_FALLBACK);
+        var shellNow = await caches.match(e.request) || (appRoute ? await caches.match(NAV_FALLBACK) : null);
         if (shellNow) return shellNow;
         response = await netP; // nothing cached yet (first visit) — wait it out
       }
@@ -682,7 +689,7 @@ function handleNavigation(e) {
     } catch (err) {
       var cached = await caches.match(e.request);
       if (cached) return cached;
-      var shell = await caches.match(NAV_FALLBACK);
+      var shell = appRoute ? await caches.match(NAV_FALLBACK) : null;
       if (shell) return shell;
       return new Response('Offline — reload when you are back online', {
         status: 503,
@@ -776,7 +783,12 @@ self.addEventListener('notificationclick', function(e) {
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(list) {
       var client = (list && list[0]) || null;
       if (!client) return self.clients.openWindow('/');
-      if (act) client.postMessage({ type: 'NOTIF_ACTION', action: act });
+      // The notification names the tab that posted it (data.tab): every window
+      // gets the action and only that tab plays it. Without a tab (a page from
+      // before web.331) the first window gets it, as before.
+      var tab = e.notification.data && e.notification.data.tab;
+      if (act && tab) list.forEach(function (c) { try { c.postMessage({ type: 'NOTIF_ACTION', action: act, tab: tab }); } catch (_e) {} });
+      else if (act) client.postMessage({ type: 'NOTIF_ACTION', action: act });
       return client.focus ? client.focus() : null;
     })
   );

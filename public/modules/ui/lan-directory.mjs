@@ -412,7 +412,11 @@ export function sync() {
   if (!wrap) return;
   const isLan = _isLan();
   const h = /** @type {HTMLInputElement|null} */ ($('host')), p = /** @type {HTMLInputElement|null} */ ($('port'));
-  const remembered = !!(_ls('pth_lan_host') || window._shareLanTarget);
+  // An address typed (or picked) in this page counts as chosen too: a sync()
+  // after /app-config or the directory answered late used to replace it with
+  // the first entry of the list (data-typed, see pokerth.js).
+  const typed = !!((h && h.dataset && h.dataset.typed === '1') || (p && p.dataset && p.dataset.typed === '1'));
+  const remembered = !!(_ls('pth_lan_host') || window._shareLanTarget || typed);
   const eff = _eff();
   const pl = plan({ cfg: eff, isLan, host: h ? h.value : '', port: p ? p.value : '', remembered });
   wrap.style.display = pl.show ? '' : 'none';
@@ -478,6 +482,9 @@ function onSelect() {
   // address fields does, see parseShareLink in pokerth.js).
   if (!s.invite) { try { window._shareLanTarget = null; } catch (e) {} }
   _applyEntry(s);
+  // The player's pick, like typed fields: a late re-derive of the LAN form
+  // (/app-config answering after this) keeps it (see data-typed in pokerth.js).
+  try { ['host', 'port'].forEach((id) => { const el = $(id); if (el) el.dataset.typed = '1'; }); } catch (e) {}
   try { document.body.classList.add('lan-dir-locked'); } catch (e) {}
   _renderDetail(eff, s.id);
 }

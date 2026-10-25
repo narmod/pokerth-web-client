@@ -65,7 +65,9 @@ const b = await chromium.launch();
 const screen = (pg) => pg.evaluate(() => (document.querySelector('.screen.active') || {}).id);
 const pick = (m) => async (pg) => { await pg.evaluate((mm) => { if (document.getElementById('login-step2').style.display !== 'none') loginBackToStep1(); loginPickMode(document.querySelector('.login-card[onclick*="\'' + mm + '\'"]'), mm); }, m); await sleep(800); };
 const nick = (n) => (pg) => pg.fill('#nick', n);
-const lanAddr = (pg) => pg.evaluate((p) => { document.getElementById('host').value = '127.0.0.1'; document.getElementById('port').value = String(p); document.getElementById('use-tls').checked = false; document.getElementById('proxy').value = location.origin.replace('http', 'ws'); }, LAN);
+// Typed as a player would (input events): a value set by script alone was
+// overwritten when /app-config answered late (« port=7234 », flaky first case).
+const lanAddr = (pg) => pg.evaluate((p) => { const ty = (id, v) => { const el = document.getElementById(id); el.value = v; el.dispatchEvent(new Event('input', { bubbles: true })); }; ty('host', '127.0.0.1'); ty('port', String(p)); document.getElementById('use-tls').checked = false; document.getElementById('proxy').value = location.origin.replace('http', 'ws'); }, LAN);
 const connect = (wait) => async (pg) => { await pg.evaluate(() => App.connect()); await sleep(wait); };
 const disc = async (pg) => { await pg.evaluate(() => App.disconnect()); await sleep(800); };
 const play = async (pg) => {

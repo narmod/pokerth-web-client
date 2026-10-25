@@ -137,10 +137,13 @@ function _turnNotifOptions() {
     { action: 'checkcall', title: second }
   ] };
 }
+// Identifies this tab in the notification, so the service worker's Fold /
+// Check-Call reaches the tab that posted it, not whichever window it lists first.
+var _notifTab = Math.random().toString(36).slice(2) + Date.now().toString(36);
 function _showTurnNotification(msg, sub) {
   var base = { body: sub, icon: '/icon-192.png', badge: '/icon-192.png',
                tag: 'pokerth-turn', renotify: true, silent: false,
-               vibrate: S._hapticEnabled ? [90, 50, 90] : [] };
+               vibrate: S._hapticEnabled ? [90, 50, 90] : [], data: { tab: _notifTab } };
   var sw = null;
   try { sw = navigator.serviceWorker; } catch (e) {}
   if (sw && sw.ready && typeof Notification !== 'undefined' && 'actions' in Notification.prototype) {
@@ -180,7 +183,7 @@ try {
   if (navigator.serviceWorker && navigator.serviceWorker.addEventListener) {
     navigator.serviceWorker.addEventListener('message', function (ev) {
       var d = ev && ev.data;
-      if (d && d.type === 'NOTIF_ACTION') _runNotifAction(d.action);
+      if (d && d.type === 'NOTIF_ACTION' && (!d.tab || d.tab === _notifTab)) _runNotifAction(d.action);
     });
   }
 } catch (e) {}

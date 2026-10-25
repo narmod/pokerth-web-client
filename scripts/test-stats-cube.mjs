@@ -108,11 +108,15 @@ ok(vv.cc.DE === 9 && vv.cc.FR === 2 && vv.lan.lan_a1 === 4 && vv.mode.pokerthnet
   for (let i = 0; i < 20; i++) store.days[back(i)] = { v: 1, fx: {
     'c|lan|DE|m|-|n|lan_aaaaaa01': 2, 'c|pokerthnet|FR|d|p|r|-': 5 + (i < 7 ? 0 : 1), 'c|lan|DE|d|-|r|other': 1,
     'l|guest|DE|m|-|n': 1, 'l|auth|FR|d|-|r': 3 }, bt: { v: 1, fx: { 'c|offline|US|d|-|-|-': 4 } } };
+  // By local hour LABEL, as the server reads them (see test-stats-world.mjs):
+  // stepping back by 3600000 ms merged two hours on the night clocks go back.
   const now = new Date();
   for (let h = 0; h < 48; h++) {
-    const d = new Date(now.getTime() - h * 3600000), b = store.days[key(d)];
+    const idx = now.getHours() - h, d = new Date(now);
+    d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + Math.floor(idx / 24));
+    const b = store.days[key(d)];
     b.hc = b.hc || {};
-    b.hc[d.getHours()] = { fx: { 'c|live|JP|m|-|-|-': 1 } };
+    b.hc[((idx % 24) + 24) % 24] = { fx: { 'c|live|JP|m|-|-|-': 1 } };
   }
   fs.writeFileSync(G('visits.json'), JSON.stringify(store));
   fs.writeFileSync(G('admin-config.json'), JSON.stringify({ lanDirectory: { settings: {}, pending: [], entries: [

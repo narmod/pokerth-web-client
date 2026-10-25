@@ -16,6 +16,30 @@ release. Per-build detail is on the
 highlights below.
 
 ### Fixed
+- **Client fixes from an audit** (`web.331`):
+  - *One handler exception froze the session* (proxy mode) — `onRawData` removed a frame only after `handleMsg`
+    returned; a throw left it at the head of the buffer, replayed on every chunk while later frames piled up, and the
+    watchdog never fired (`_lastRxTime` kept moving). The frame is now consumed first and the error rethrown
+    asynchronously (still reported by `window.onerror`).
+  - *Automatic-reconnect sockets lost the connection handling* — their `onmessage` dropped text frames (NOTICE:/INFO:
+    broadcasts, REACT:, the SYNCTOK: re-sent on reattach) and their `onclose` skipped the kick / LAN per-IP cap /
+    intentional-leave cases, so a kick after a reconnection left a frozen lobby or table. Shared `_onProxyText` and
+    `_closeIsTerminal`; the reconnect sockets also start from an empty receive buffer.
+  - *XSS through a player name* — `esc()` (`modules/ui/misc.mjs`) did not escape `"`, and the notes block builds
+    `data-nv-name="…"` from the server-provided name. It now escapes `"` (apostrophes left alone). Test:
+    `scripts/test-esc-attr.mjs`.
+  - *A typed LAN address could be replaced before connecting* — when `/app-config` or the LAN directory answered after
+    the player had typed, the form was re-derived and the directory applied its first entry (port 7234). A typed or
+    picked address is now kept (`data-typed`); this was also the cause of the flaky first case of
+    `scripts/test-offline-to-network-browser.mjs`, which now types like a player.
+  - Smaller ones: emoji in a chat link no longer break the link; opening a table's player list asks for missing names
+    again (`MSG.T`, `T` only exists in `handleMsg`); the street label follows a language switch; turn and river are
+    placed in slots 3 and 4 (after a mid-hand rejoin the turn went to an undrawn slot 5, a spectator's to slot 0); the
+    service worker's cached app shell no longer stands in for `/live`, `/privacy`, `/faq`… on a slow first visit; a
+    notification's Fold / Check-Call reaches the tab that posted it. Test: `scripts/test-client-audit-fixes.mjs`.
+  - Tests: `test-stats-cube` and `test-stats-world` seeded the hour cells by stepping back 3600000 ms while the
+    server reads local hour labels; on the night clocks go back two instants shared a cell and both failed on that
+    date only. They now seed by label.
 - **Server hardening from an audit** (`web.330`):
   - *Pack upload could publish any file the server can read* — `unzip -j` stops path traversal on write but still
     recreates symlink members; a `felt.png` pointing at `admin-config.json` or `/etc/passwd` was followed by

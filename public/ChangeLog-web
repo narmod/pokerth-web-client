@@ -1,3 +1,12 @@
+2026-10-25 version 2.1.10-web.331:
+- bugfix: a table or lobby could freeze after an unexpected error in a received message; the game now carries on
+- bugfix: after an automatic reconnection, server announcements, reactions and settings sync work again, and being removed by the server brings you back to the connection screen
+- bugfix: a server address typed in the LAN form is no longer replaced by the default one before you connect
+- bugfix: emoji inside a link in the chat no longer break the link
+- bugfix: the turn and river cards show in the right place after rejoining a hand or when watching from mid-hand
+- bugfix: the street name under the board follows a language change straight away
+- bugfix: Fold / Check from a « your turn » notification goes to the right tab when several are open
+
 2026-10-25 version 2.1.10-web.330:
 - bugfix: security fixes in the web client's server (uploaded table, deck and seat packs, the leaderboard, the music switch, connections left behind)
 

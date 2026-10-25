@@ -626,10 +626,13 @@ function _applyLang(l, persist) {
     }
   } catch(e) {}
   // Refresh game screen dynamic elements if in game
+  // The street lives in window.PthState (modules/game/state.mjs); the old test
+  // read a global « gameState » that no longer exists, so it never ran.
   var gRound = document.getElementById('g-round');
-  if (gRound && typeof gameState !== 'undefined') {
+  var _PS = (typeof window !== 'undefined') ? window.PthState : null;
+  if (gRound && _PS && _PS.gId && _PS.handNum > 0 && typeof _PS.gameState === 'number') {
     var rMap = [t('preflop'),t('flop'),t('turn'),t('river'),t('preflop')+' (SB)',t('preflop')+' (BB)'];
-    gRound.textContent = rMap[gameState] || gRound.textContent;
+    gRound.textContent = rMap[_PS.gameState] || gRound.textContent;
   }
   // Sync language-toggle buttons across all screens.
   // We use an SVG flag rather than a regional-indicator emoji because

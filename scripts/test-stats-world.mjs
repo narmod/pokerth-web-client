@@ -26,13 +26,17 @@ for (let i = 0; i < 20; i++) {
   const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() - i);
   store.days[key(d)] = { v: 10, m: { pokerthnet: i + 1, lan: 2 }, geo: { DE: { v: 1 } }, bt: { v: 3, m: { pokerthnet: 100 } } };
 }
-// Hour cells: 1 Training connection in each of the last 48 hours.
+// Hour cells: 1 Training connection in each of the last 48 hours. Cells are
+// keyed by local day + hour, and the server reads the last 24 / 48 LABELS:
+// stepping back by 3600000 ms put two instants in the same cell on the night
+// clocks go back (25-hour day), and the test failed on that date only.
 const now = new Date();
 for (let h = 0; h < 48; h++) {
-  const d = new Date(now.getTime() - h * 3600000);
+  const idx = now.getHours() - h, d = new Date(now);
+  d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + Math.floor(idx / 24));
   const b = store.days[key(d)] || (store.days[key(d)] = { v: 0 });
   b.hc = b.hc || {};
-  b.hc[d.getHours()] = { v: 1, m: { offline: 1 } };
+  b.hc[((idx % 24) + 24) % 24] = { v: 1, m: { offline: 1 } };
 }
 fs.writeFileSync(F('visits.json'), JSON.stringify(store));
 fs.writeFileSync(F('admin-config.json'), JSON.stringify({ lanDirectory: { settings: {}, pending: [], entries: [
