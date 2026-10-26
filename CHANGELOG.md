@@ -15,6 +15,12 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Changed
+- **Admin › Overview: « Update check failed »** (`web.336`) — when reading the upstream failed (`git fetch` refused,
+  network…), `update.available` stayed false and the Overview showed no card, or « All clear », while updates could be
+  waiting; the error was on Deployment only. An amber card now gives the error (120 characters) and when the check ran,
+  and leads to Deployment. Not shown on an install without git. Test: `scripts/test-admin-overview.mjs` (+4).
+
 ### Fixed
 - **Connect with no `#nick` field** (`web.335`) — `App.connect()` read `$('nick').value` unguarded; on Android 16 ·
   Xiaomi the field was gone while `#host` / `#port` were there (nothing in the client removes it), so every tap on

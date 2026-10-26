@@ -69,6 +69,16 @@ ok(a.length === 1 && a[0].kind === 'info', 'old errors stay visible, without ala
 a = OV.alertsFrom({ now: T, status: { ok: true, version: 'a', runningVersion: 'a', update: {} }, landir: { ok: true, pending: [] }, errors: { ok: true, groups: [] } });
 ok(a.length === 1 && a[0].title === 'All clear' && !a[0].t, 'nothing to do says so');
 ok(OV.alertsFrom({ status: { ok: false } }).length === 0, 'no "All clear" when the status could not be read');
+// A failed read of the upstream is shown, not hidden behind « All clear » (web.336).
+{
+  const st = (u, extra) => OV.alertsFrom({ now: T, status: Object.assign({ ok: true, version: 'a', runningVersion: 'a', update: u }, extra || {}), landir: { ok: true, pending: [] }, errors: { ok: true, groups: [] } });
+  let fa = st({ error: "fatal: unable to access 'https://github.com/x/y/': Could not resolve host", checkedAt: T - 5 * 60000 });
+  ok(fa.length === 1 && fa[0].kind === 'warn' && fa[0].title === 'Update check failed' && /Could not resolve host/.test(fa[0].sub)
+    && /checked 5 min ago/.test(fa[0].sub) && fa[0].t === 'deploy', 'a failed update check: amber card with the error and when, instead of « All clear »');
+  ok(st({ error: 'x'.repeat(300) })[0].sub.length === 120, 'a long error is cut');
+  ok(st({ error: 'no git checkout (docker)' }, { gitUpdatable: false })[0].title === 'All clear', 'an install without git says nothing about it');
+  ok(!st({ checkedAt: T }).some(x => x.title === 'Update check failed'), 'a check that worked says nothing');
+}
 
 // ── Client errors: severity by type, bar and legend (web.328) ─────────────
 const ST = { ok: true, version: 'a', runningVersion: 'a', update: {} }, LD = { ok: true, pending: [] };

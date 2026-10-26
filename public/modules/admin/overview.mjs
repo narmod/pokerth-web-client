@@ -93,6 +93,14 @@ export function alertsFrom(st) {
         sub: 'Files are ' + s.version + ', the proxy still runs ' + s.runningVersion, label: 'Deployment', t: 'deploy' });
     }
     const u = s.update || {};
+    // A failed read of the upstream (git fetch refused, network…) left
+    // `available` false: no card at all, or « All clear », while updates
+    // could be waiting unseen. The error itself was only on Deployment.
+    if (u.error && !u.available && s.gitUpdatable !== false) {
+      out.push({ kind: 'warn', glyph: 'download', title: 'Update check failed',
+        sub: String(u.error).slice(0, 120) + (u.checkedAt ? ' · checked ' + ago(now - u.checkedAt) : ''),
+        label: 'Deployment', t: 'deploy' });
+    }
     if (u.available) {
       out.push({ kind: 'ok', glyph: 'download', title: 'Update available',
         sub: (u.remote ? String(u.remote).slice(0, 8) + ' · ' : '') + (u.skipped ? 'left alone by the automatic updates' : (u.needsRestart ? 'needs a restart' : 'client files only, no restart'))
