@@ -74,7 +74,7 @@ export function errKind(e) {
   const m = String((e && e.msg) || '');
   if (/^Unhandled rejection\b/.test(m)) return 'reject';
   if (/^(Load-failure retry #\d+|Lang load retry) recovered\b/.test(m)) return 'ok';
-  if (/^(Boot stall|Module graph):/.test(m)) return 'diag';
+  if (/^(Boot stall|Module graph|Login form):/.test(m)) return 'diag';
   if (/^Load-failure probe:/.test(m)) return /^Load-failure probe: HTTP [45]\d\d\b/.test(m) ? 'load' : 'diag';
   if (/^(Failed to load |Load-failure retry #\d+ failed|Lang load failed)/.test(m)) return 'load';
   return 'crash';

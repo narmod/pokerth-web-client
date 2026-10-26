@@ -3618,6 +3618,35 @@ window._pthNick = {
   }
 };
 
+// One « Login form: … » diagnostic per page when App.connect() finds no #nick
+// (web.335). Only element ids, counts and page flags — never a value typed by
+// the player. Goes through the error queue (modules/errreport.mjs, opt-out
+// « report errors »), type Diagnostic on Admin › Errors.
+function _reportNickMissing() {
+  if (window.__pthNickDiagSent) return;
+  window.__pthNickDiagSent = 1;
+  var d = document, p = [];
+  function has(id) { return d.getElementById(id) ? 1 : 0; }
+  p.push('f-nick=' + has('f-nick'), 'label=' + has('nick-label'), 'form=' + has('login-form'), 'step1=' + has('login-step1'));
+  try {
+    var f = d.getElementById('login-form');
+    var ins = f ? f.querySelectorAll('input,select,textarea') : [];
+    var ids = [];
+    for (var i = 0; i < ins.length && ids.length < 8; i++) ids.push(String(ins[i].id || ins[i].name || ('<' + ins[i].tagName.toLowerCase() + '>')).slice(0, 24));
+    p.push('fields=' + ins.length + (ids.length ? '[' + ids.join(',') + ']' : ''));
+  } catch (e) {}
+  try { p.push('nickish=' + d.querySelectorAll('[id*="nick"]').length); } catch (e) {}
+  try {
+    var hc = String(d.documentElement.className || '') + ' ' + String((d.body && d.body.className) || '');
+    p.push('translated=' + (/\btranslated-(?:ltr|rtl)\b/.test(hc) || !!d.querySelector('font[style*="vertical-align"]') ? 1 : 0));
+  } catch (e) {}
+  try { p.push('rs=' + d.readyState); } catch (e) {}
+  try { p.push('sm=' + ((d.getElementById('server-mode') || {}).value || '?'), 'lm=' + ((d.getElementById('login-mode') || {}).value || '?')); } catch (e) {}
+  var q = window.__pthErrQ;
+  if (q && q.length < 20) q.push({ msg: 'Login form: nick missing ' + p.join(' '), src: '', line: 0, col: 0, stack: '' });
+  if (window.__pthErrFlush) { try { window.__pthErrFlush(); } catch (e) {} }
+}
+
 document.addEventListener("DOMContentLoaded", function() {
   // Auto-fill nick
   // One-time housekeeping: scrub the legacy 'pth_pass' key in case
@@ -6626,7 +6655,16 @@ const App = (() => {
       } catch (e) { S._lanBoardReady = null; }
       const loginMode = $('login-mode') ? $('login-mode').value : 'guest';
       const _off = !!($('server-mode') && $('server-mode').value === 'offline');
-      S.myName          = $('nick').value.trim();
+      // #nick missing from the page (web.335): seen on Android 16 · Xiaomi
+      // while #host and #port, read just above, were there — nothing in the
+      // client removes it. Connect() threw on every tap and the player was
+      // stuck. Fall back on the stored nickname (the guest branch below picks
+      // the Guest name), and send one diagnostic line describing the form so
+      // the cause can be found.
+      const _nickEl = $('nick');
+      if (!_nickEl) { try { _reportNickMissing(); } catch (e) {} }
+      S.myName          = _nickEl ? _nickEl.value.trim()
+                        : (loginMode === 'guest' ? '' : String((window._pthNick && window._pthNick.get()) || '').trim());
 
       if (!S.myName && loginMode === 'guest') {
         // Persistent Guest name: re-use the same identifier across tabs
@@ -6634,7 +6672,7 @@ const App = (() => {
         // from the same IP (a key trigger of the initBlocked behaviour).
         S.myName = (window.getOrCreateGuestName && window.getOrCreateGuestName())
                  || ('Guest' + String(Math.floor(10000 + Math.random()*90000)));
-        $('nick').value = S.myName;
+        if (_nickEl) _nickEl.value = S.myName;
       }
       if (!S.myName) { setStatus(t('enterNick'), 'err', null, { local: true }); return; }
       // Prépare l'avatar-upload du choix courant AVANT l'Init.
@@ -12482,7 +12520,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.334'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.335'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

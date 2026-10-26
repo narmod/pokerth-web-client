@@ -26,7 +26,8 @@
 // line saying whether the player got the file in the end never left.
 // The « Module skew: reloading » line (version-skew recovery, web.260) and the
 // « Boot stall: … » diagnostic (web.263) share that budget, as do the
-// « Module graph: … » recovery lines (web.334).
+// « Module graph: … » recovery lines (web.334) and the « Login form: … »
+// diagnostic (web.335).
 
 import { featureOff } from './feature-off.mjs';
 
@@ -36,7 +37,7 @@ const MIN_GAP_MS = 10000;    // délai minimum entre deux envois
 const MAX_STACK = 600;       // caractères de pile conservés
 const MAX_OUTCOMES = 8;      // load-failure probes/outcomes, outside MAX_SIGS
 
-const _OUTCOME_RE = /^(?:Load-failure (?:probe:|retry #\d+ )|Lang load (?:retry recovered|failed, giving up)|Module skew: |Module graph: |Boot stall: )/;
+const _OUTCOME_RE = /^(?:Load-failure (?:probe:|retry #\d+ )|Lang load (?:retry recovered|failed, giving up)|Module skew: |Module graph: |Login form: |Boot stall: )/;
 const _seen = new Set();
 const _seenOut = new Set();
 let _lastSent = 0;

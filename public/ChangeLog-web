@@ -1,3 +1,6 @@
+2026-10-26 version 2.1.10-web.335:
+- bugfix: on some phones the Connect button could do nothing at all; it now connects with your saved nickname
+
 2026-10-26 version 2.1.10-web.334:
 - bugfix: when part of the app fails to load (network hiccup), the page now reloads itself before you connect, or shows a « Reload » button once you are connected, instead of leaving buttons that do nothing
 

@@ -16,6 +16,11 @@ release. Per-build detail is on the
 highlights below.
 
 ### Fixed
+- **Connect with no `#nick` field** (`web.335`) — `App.connect()` read `$('nick').value` unguarded; on Android 16 ·
+  Xiaomi the field was gone while `#host` / `#port` were there (nothing in the client removes it), so every tap on
+  Connect threw `Cannot read properties of null (reading 'value')` and the player was stuck. It now falls back on the
+  stored nickname (Guest name in guest mode) and sends one `Login form: nick missing …` diagnostic per page (ids,
+  counts, translation flag, modes — never a typed value) to find the cause. Test: `scripts/test-connect-nick.mjs`.
 - **Poisoned module graph after a load failure** (`web.334`) — when a module's *import* fails, the browser keeps
   that failure in the page's module map: re-injecting the root with `?r=N` linked the same dead dependency again, so
   both in-page retries failed while the probe of the root answered 200 (`seat-render.mjs` dead after `layout.mjs`
