@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Daļa lietotnes netika ielādēta.", reloadNow: "Pārlādēt",
   advTdWitness: 'Turnīri: pie šīs vietnes turnīru direktora galda nosūtīt tam spēles kopsavilkumu rezultāta pārbaudei (žetoni un uzvarētājs, nekad manas kārtis)',
   tdWitnessNotice: 'Turnīra galds: tavs klients nosūta turnīru direktoram šīs spēles kopsavilkumu (žetonus katrā partijā un uzvarētāju, nekad tavas kārtis), lai pārbaudītu rezultātu. To vari izslēgt sadaļā Papildu opcijas › Tīkls.',
   pvSrvTd: 'Turnīru liecinieki: pie galda, ko atvēris šīs vietnes turnīru direktors, tavs klients nosūta direktoram tavu segvārdu un spēles kopsavilkumu, kad spēle beidzas, kad tu izkrīti vai kad aizej: spēlētāju žetonus katras partijas sākumā un uzvarētāju — nekad tavas kārtis. Ja reģistrējies turnīram šajā pārlūkā, līdzi tiek nosūtīts arī tavs personīgais kods. Kopsavilkums tiek glabāts kopā ar turnīru, lai pārbaudītu tā rezultātu. To vari izslēgt papildu opcijās (Tīkls).',

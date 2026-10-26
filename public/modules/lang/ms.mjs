@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Sebahagian aplikasi gagal dimuatkan.", reloadNow: "Muat semula",
   advTdWitness: 'Kejohanan: di meja pengarah kejohanan laman ini, hantar ringkasan permainan kepadanya untuk menyemak keputusan (stack dan pemenang, tidak sekali-kali kad saya)',
   tdWitnessNotice: 'Meja kejohanan: klien anda menghantar ringkasan permainan ini kepada pengarah kejohanan (stack pada setiap tangan dan pemenangnya, tidak sekali-kali kad anda) untuk menyemak keputusan. Anda boleh mematikannya dalam Pilihan lanjutan › Rangkaian.',
   pvSrvTd: 'Saksi kejohanan: di meja yang dibuka oleh pengarah kejohanan laman ini, klien anda menghantar kepada pengarah nama samaran anda dan ringkasan permainan apabila permainan tamat, apabila anda tersingkir atau apabila anda keluar: stack para pemain pada permulaan setiap tangan dan pemenangnya — tidak sekali-kali kad anda. Jika anda mendaftar untuk kejohanan dalam pelayar ini, kod peribadi anda turut dihantar. Ringkasan disimpan bersama kejohanan untuk menyemak keputusannya. Anda boleh mematikannya dalam pilihan lanjutan (Rangkaian).',

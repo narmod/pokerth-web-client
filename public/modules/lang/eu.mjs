@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Aplikazioaren zati bat ez da kargatu.", reloadNow: "Birkargatu",
   advTdWitness: 'Txapelketak: gune honetako txapelketa-zuzendariaren mahai batean, bidali hari partidaren laburpen bat emaitza egiaztatzeko (txanponak eta irabazlea, inoiz ez nire kartak)',
   tdWitnessNotice: 'Txapelketa-mahaia: zure bezeroak partida honen laburpen bat bidaltzen dio txapelketa-zuzendariari (esku bakoitzeko txanponak eta irabazlea, inoiz ez zure kartak) emaitza egiaztatzeko. Hau desgai dezakezu hemen: Aukera aurreratuak › Sarea.',
   pvSrvTd: 'Txapelketako lekukoak: gune honetako txapelketa-zuzendariak irekitako mahai batean, zure bezeroak zure ezizena eta partidaren laburpen bat bidaltzen dizkio zuzendariari partida amaitzean, kanporatzen zaituztenean edo irteten zarenean: jokalarien txanponak esku bakoitzaren hasieran eta irabazlea — inoiz ez zure kartak. Nabigatzaile honetan txapelketan izena eman baduzu, zure kode pertsonala ere bidaltzen da. Laburpena txapelketarekin batera gordetzen da haren emaitza egiaztatzeko. Aukera aurreratuetan desgai dezakezu (Sarea).',

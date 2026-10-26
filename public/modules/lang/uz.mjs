@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Ilovaning bir qismi yuklanmadi.", reloadNow: "Qayta yuklash",
   advTdWitness: 'Turnirlar: shu saytning turnir direktori stolida natijani tekshirish uchun unga oʻyin xulosasini yuborish (steklar va gʻolib, hech qachon mening kartalarim emas)',
   tdWitnessNotice: 'Turnir stoli: mijozingiz natijani tekshirish uchun turnir direktoriga ushbu oʻyin xulosasini yuboradi (har bir qoʻldagi steklar va gʻolib, hech qachon kartalaringiz emas). Buni Kengaytirilgan sozlamalar › Tarmoq boʻlimida oʻchirishingiz mumkin.',
   pvSrvTd: 'Turnir guvohlari: shu saytning turnir direktori ochgan stolda oʻyin tugaganda, oʻyindan chiqarilganingizda yoki chiqib ketganingizda mijozingiz direktorga taxallusingizni va oʻyin xulosasini yuboradi: har bir qoʻl boshida oʻyinchilarning steklari va gʻolib — hech qachon kartalaringiz emas. Agar turnirga shu brauzerda roʻyxatdan oʻtgan boʻlsangiz, shaxsiy kodingiz ham birga yuboriladi. Xulosa turnir natijasini tekshirish uchun turnir bilan birga saqlanadi. Buni Kengaytirilgan sozlamalarda (Tarmoq) oʻchirishingiz mumkin.',

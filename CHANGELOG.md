@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Fixed
+- **Poisoned module graph after a load failure** (`web.334`) — when a module's *import* fails, the browser keeps
+  that failure in the page's module map: re-injecting the root with `?r=N` linked the same dead dependency again, so
+  both in-page retries failed while the probe of the root answered 200 (`seat-render.mjs` dead after `layout.mjs`
+  recovered as `layout.mjs?r=1`; `forumnews.mjs` + `guide/index.mjs` dead together through `feature-off.mjs`, then
+  `toggleForumModal is not defined`). The page auto-reload only ran without `App`, so the client stayed half
+  broken all session. When a module retry gives up and the app is present: one silent reload per tab session before
+  the first connect (`pth_graphreload`), otherwise the update banner offers « Reload » (keeps the session, no
+  teardown). New report lines `Module graph: reloading / reload offered` (diagnostic type, outcome budget). New keys
+  `loadPartialFail`, `reloadNow` in all catalogues. Test: `scripts/test-errcollect.mjs`.
 - **Lost taps on bare inline globals during boot** (`web.333`) — the boot-stall safety net (web.263) only caught
   `App is not defined`; an inline handler calling a bare global (`onclick="toggleConnectOverflow(event)"`, seen on
   Android · Chrome 121) before `pokerth.js` ran threw a ReferenceError and the tap was silently lost. Any

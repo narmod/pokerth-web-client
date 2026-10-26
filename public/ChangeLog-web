@@ -1,3 +1,6 @@
+2026-10-26 version 2.1.10-web.334:
+- bugfix: when part of the app fails to load (network hiccup), the page now reloads itself before you connect, or shows a « Reload » button once you are connected, instead of leaving buttons that do nothing
+
 2026-10-26 version 2.1.10-web.333:
 - bugfix: tapping the settings gear on the connection screen before the app has finished loading now shows « Retry » instead of doing nothing
 

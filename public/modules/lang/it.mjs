@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Una parte dell'app non è stata caricata.", reloadNow: "Ricarica",
   advTdWitness: 'Tornei: a un tavolo del direttore di torneo di questo sito, inviargli un riepilogo della partita per verificare il risultato (stack e vincitore, mai le mie carte)',
   tdWitnessNotice: 'Tavolo di torneo: il tuo client invia al direttore di torneo un riepilogo di questa partita (gli stack a ogni mano e il vincitore, mai le tue carte) per verificare il risultato. Puoi disattivarlo in Opzioni avanzate › Rete.',
   pvSrvTd: 'Testimoni dei tornei: a un tavolo aperto dal direttore di torneo di questo sito, il tuo client invia al direttore il tuo nickname e un riepilogo della partita quando finisce, quando vieni eliminato o quando esci: gli stack dei giocatori all’inizio di ogni mano e il vincitore — mai le tue carte. Se ti sei iscritto al torneo da questo browser, lo accompagna il tuo codice personale. Il riepilogo è conservato con il torneo per verificarne il risultato. Puoi disattivarlo in Opzioni avanzate (Rete).',

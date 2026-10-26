@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Osa sovelluksesta jäi latautumatta.", reloadNow: "Lataa uudelleen",
   advTdWitness: 'Turnaukset: lähetä tämän sivuston turnausjohtajan pöydässä johtajalle yhteenveto pelistä tuloksen tarkistamiseksi (pinot ja voittaja, ei koskaan korttejani)',
   tdWitnessNotice: 'Turnauspöytä: asiakasohjelmasi lähettää turnausjohtajalle yhteenvedon tästä pelistä (pinot joka kädessä ja voittajan, ei koskaan korttejasi) tuloksen tarkistamiseksi. Voit poistaa tämän käytöstä kohdassa Lisäasetukset › Verkko.',
   pvSrvTd: 'Turnaustodistajat: tämän sivuston turnausjohtajan avaamassa pöydässä asiakasohjelmasi lähettää johtajalle nimimerkkisi ja yhteenvedon pelistä, kun peli päättyy, kun putoat tai kun poistut: pelaajien pinot kunkin käden alussa ja voittajan – ei koskaan korttejasi. Jos ilmoittauduit turnaukseen tällä selaimella, henkilökohtainen koodisi lähetetään mukana. Yhteenveto säilytetään turnauksen yhteydessä sen tuloksen tarkistamiseksi. Voit poistaa tämän käytöstä lisäasetuksista (Verkko).',

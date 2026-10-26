@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Uygulamanın bir kısmı yüklenemedi.", reloadNow: "Yeniden yükle",
   advTdWitness: 'Turnuvalar: bu sitenin turnuva direktörünün masasında, sonucu doğrulaması için ona oyunun bir özetini gönder (fişler ve kazanan; kartlarım asla gönderilmez)',
   tdWitnessNotice: 'Turnuva masası: istemcin, sonucu doğrulamak için turnuva direktörüne bu oyunun bir özetini (her eldeki fişler ve kazanan; kartların asla gönderilmez) gönderir. Bunu Gelişmiş seçenekler › Ağ bölümünden kapatabilirsin.',
   pvSrvTd: 'Turnuva tanıkları: bu sitenin turnuva direktörünün açtığı bir masada istemcin, oyun bittiğinde, elendiğinde ya da ayrıldığında direktöre takma adını ve oyunun bir özetini gönderir: her elin başında oyuncuların fişleri ve kazanan — kartların asla gönderilmez. Turnuvaya bu tarayıcıda kaydolduysan kişisel kodun da onunla birlikte gider. Özet, sonucunu doğrulamak için turnuvayla birlikte saklanır. Bunu gelişmiş seçeneklerden (Ağ) kapatabilirsin.',

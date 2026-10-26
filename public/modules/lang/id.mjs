@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Sebagian aplikasi gagal dimuat.", reloadNow: "Muat ulang",
   advTdWitness: 'Turnamen: di meja direktur turnamen situs ini, kirimkan ringkasan permainan kepadanya untuk memeriksa hasil (stack dan pemenang, tidak pernah kartu saya)',
   tdWitnessNotice: 'Meja turnamen: klien Anda mengirimkan ringkasan permainan ini kepada direktur turnamen (stack di setiap tangan dan pemenangnya, tidak pernah kartu Anda) untuk memeriksa hasilnya. Anda dapat mematikannya di Opsi lanjutan › Jaringan.',
   pvSrvTd: 'Saksi turnamen: di meja yang dibuka oleh direktur turnamen situs ini, klien Anda mengirimkan kepada direktur nama panggilan Anda dan ringkasan permainan saat permainan berakhir, saat Anda tersingkir, atau saat Anda pergi: stack para pemain di awal setiap tangan dan pemenangnya — tidak pernah kartu Anda. Jika Anda mendaftar turnamen di browser ini, kode pribadi Anda ikut dikirim. Ringkasan disimpan bersama turnamen untuk memeriksa hasilnya. Anda dapat mematikannya di opsi lanjutan (Jaringan).',

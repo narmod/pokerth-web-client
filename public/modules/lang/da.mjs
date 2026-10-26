@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "En del af appen blev ikke indlæst.", reloadNow: "Genindlæs",
   advTdWitness: 'Turneringer: ved et bord hos denne sides turneringsleder, send den et resumé af spillet for at kontrollere resultatet (stakke og vinder, aldrig mine kort)',
   tdWitnessNotice: 'Turneringsbord: din klient sender turneringslederen et resumé af dette spil (stakkene ved hver hånd og vinderen, aldrig dine kort) for at kontrollere resultatet. Du kan slå det fra under Avancerede indstillinger › Netværk.',
   pvSrvTd: 'Turneringsvidner: ved et bord åbnet af denne sides turneringsleder sender din klient turneringslederen dit kaldenavn og et resumé af spillet, når det slutter, når du er ude, eller når du forlader bordet: spillernes stakke ved starten af hver hånd og vinderen — aldrig dine kort. Hvis du har tilmeldt dig turneringen i denne browser, følger din personlige kode med. Resuméet opbevares sammen med turneringen for at kontrollere dens resultat. Du kan slå det fra i de avancerede indstillinger (Netværk).',

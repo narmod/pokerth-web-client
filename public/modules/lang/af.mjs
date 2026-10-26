@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Deel van die toepassing het nie gelaai nie.", reloadNow: "Herlaai",
   advTdWitness: 'Toernooie: by ’n tafel van hierdie webwerf se toernooidirekteur, stuur vir hom ’n opsomming van die spel om die uitslag na te gaan (fiches en wenner, nooit my kaarte nie)',
   tdWitnessNotice: 'Toernooitafel: jou kliënt stuur vir die toernooidirekteur ’n opsomming van hierdie spel (die fiches by elke hand en die wenner, nooit jou kaarte nie) om die uitslag na te gaan. Jy kan dit afskakel in Gevorderde opsies › Netwerk.',
   pvSrvTd: 'Toernooigetuies: by ’n tafel wat deur hierdie webwerf se toernooidirekteur oopgemaak is, stuur jou kliënt vir die direkteur jou bynaam en ’n opsomming van die spel wanneer dit eindig, wanneer jy uit is of wanneer jy vertrek: die fiches van die spelers aan die begin van elke hand en die wenner — nooit jou kaarte nie. As jy in hierdie blaaier vir die toernooi geregistreer het, gaan jou persoonlike kode saam. Die opsomming word by die toernooi gehou om die uitslag na te gaan. Jy kan dit afskakel in die gevorderde opsies (Netwerk).',

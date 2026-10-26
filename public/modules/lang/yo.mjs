@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Apá kan nínú àpù náà kò gbé wọlé.", reloadNow: "Tún gbé wọlé",
   advTdWitness: 'Ìdíje: ní tábìlì olùdarí ìdíje ojú-òpó yìí, fi àkópọ̀ eré ránṣẹ́ sí i láti ṣàyẹ̀wò àbájáde (àkójọ chips àti ẹni tó borí, kì í ṣe káàdì mi láé)',
   tdWitnessNotice: 'Tábìlì ìdíje: oníbàárà rẹ ń fi àkópọ̀ eré yìí ránṣẹ́ sí olùdarí ìdíje (àkójọ chips ní ọwọ́ kọ̀ọ̀kan àti ẹni tó borí, kì í ṣe káàdì rẹ láé) láti ṣàyẹ̀wò àbájáde. O lè pa èyí nínú Àṣàyàn ìlọsíwájú › Nẹ́tíwọ̀ọ̀kì.',
   pvSrvTd: 'Àwọn ẹlẹ́rìí ìdíje: ní tábìlì tí olùdarí ìdíje ojú-òpó yìí ṣí, oníbàárà rẹ ń fi orúkọ ìnagijẹ rẹ àti àkópọ̀ eré ránṣẹ́ sí olùdarí nígbà tí eré bá parí, nígbà tí o bá jáde nínú eré tàbí nígbà tí o bá kúrò: àkójọ chips àwọn òṣèré ní ìbẹ̀rẹ̀ ọwọ́ kọ̀ọ̀kan àti ẹni tó borí — kì í ṣe káàdì rẹ láé. Tí o bá forúkọ sílẹ̀ fún ìdíje náà nínú aṣàwákiri yìí, kóòdù àdáni rẹ yóò lọ pẹ̀lú rẹ̀. A ń tọ́jú àkópọ̀ náà pẹ̀lú ìdíje náà láti ṣàyẹ̀wò àbájáde rẹ̀. O lè pa á nínú àṣàyàn ìlọsíwájú (Nẹ́tíwọ̀ọ̀kì).',

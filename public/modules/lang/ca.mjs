@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Una part de l'aplicació no s'ha carregat.", reloadNow: "Torna a carregar",
   advTdWitness: 'Tornejos: en una taula del director de tornejos d’aquest lloc, enviar-li un resum de la partida per comprovar el resultat (fitxes i guanyador, mai les meves cartes)',
   tdWitnessNotice: 'Taula de torneig: el teu client envia al director de tornejos un resum d’aquesta partida (les fitxes a cada mà i el guanyador, mai les teves cartes) per comprovar el resultat. Ho pots desactivar a Opcions avançades › Xarxa.',
   pvSrvTd: 'Testimonis de torneig: en una taula oberta pel director de tornejos d’aquest lloc, el teu client envia al director el teu sobrenom i un resum de la partida quan s’acaba, quan quedes eliminat o quan te’n vas: les fitxes dels jugadors a l’inici de cada mà i el guanyador —mai les teves cartes—. Si et vas inscriure al torneig en aquest navegador, també s’hi envia el teu codi personal. El resum es conserva amb el torneig per comprovar-ne el resultat. Ho pots desactivar a les opcions avançades (Xarxa).',

@@ -220,6 +220,38 @@
         // sonde (celle de l'échec initial suffit), puis la récupération
         // par rechargement ci-dessous prend le relais.
         if (!canRetry) push({ msg: 'Load-failure retry #' + rn + ' failed, giving up', src: base, line: 0, col: 0, stack: '' });
+        // Poisoned module graph (web.334). When a module's IMPORT fails, the
+        // browser stores that failure in the page's module map for the rest
+        // of the page's life: re-injecting the root with ?r=N links the same
+        // failed dependency URL again, so both retries fail while the probe
+        // of the root answers 200 (seen: seat-render.mjs dead after
+        // layout.mjs recovered as layout.mjs?r=1; forumnews.mjs and
+        // guide/index.mjs dead together, both importing feature-off.mjs).
+        // Only a new page clears it. The auto-reload below needs !window.App
+        // and pokerth.js (classic) is usually there, so the app stayed half
+        // broken all session (toggleForumModal is not defined…). Before the
+        // first connect: one silent reload per tab session, same gate as the
+        // Module skew recovery. After it, never cut a session: offer the
+        // reload in the update banner (window.__pthReloadBanner).
+        try {
+          if (!canRetry && tag === 'SCRIPT' && String(t.type || '').toLowerCase() === 'module' &&
+              window.App && navigator.onLine !== false) {
+            if (!window._swReadyOnce && !sessionStorage.getItem('pth_graphreload')) {
+              sessionStorage.setItem('pth_graphreload', '1');
+              push({ msg: 'Module graph: reloading', src: base, line: 0, col: 0, stack: '' });
+              setTimeout(function () {
+                try {
+                  if (!window._swReadyOnce) location.reload();
+                  else if (typeof window.__pthReloadBanner === 'function') window.__pthReloadBanner();
+                } catch (_) {}
+              }, 1800);
+            } else if (!window.__pthGraphBanner) {
+              window.__pthGraphBanner = 1;
+              push({ msg: 'Module graph: reload offered', src: base, line: 0, col: 0, stack: '' });
+              if (typeof window.__pthReloadBanner === 'function') window.__pthReloadBanner();
+            }
+          }
+        } catch (_) {}
       } else {
         push({ msg: 'Failed to load ' + tag.toLowerCase(), src: url, line: 0, col: 0, stack: '' });
       }
@@ -3331,17 +3363,23 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     }).catch(function () {});
   }
 
-  function showBanner() {
+  // partial (web.334): part of the app failed to load for good (poisoned
+  // module graph, see the error beacon at the top) — same bar, « Reload »
+  // instead of « Update ». It keeps the session like the ↺ button: no
+  // teardown, the proxy rebinds the sid after the reload.
+  function showBanner(partial) {
     if (shown || document.getElementById('update-banner')) return;
     shown = true;
-    var tr = (typeof window.t === 'function') ? window.t : function (k) { return k; };
-    var msg = (typeof window.t === 'function') ? tr('updateAvailable') : 'Nouvelle version disponible';
-    var lbl = (typeof window.t === 'function') ? tr('updateNow') : 'Mettre à jour';
+    var hasT = (typeof window.t === 'function');
+    var kMsg = partial ? 'loadPartialFail' : 'updateAvailable';
+    var kBtn = partial ? 'reloadNow' : 'updateNow';
+    var msg = hasT ? window.t(kMsg) : (partial ? 'Part of the app did not load.' : 'Nouvelle version disponible');
+    var lbl = hasT ? window.t(kBtn) : (partial ? 'Reload' : 'Mettre à jour');
     var bar = document.createElement('div');
     bar.id = 'update-banner';
-    var span = document.createElement('span'); span.textContent = msg; span.setAttribute('data-i18n', 'updateAvailable');
-    var btn = document.createElement('button'); btn.textContent = lbl; btn.setAttribute('data-i18n', 'updateNow');
-    btn.onclick = function () {
+    var span = document.createElement('span'); span.textContent = msg; span.setAttribute('data-i18n', kMsg);
+    var btn = document.createElement('button'); btn.textContent = lbl; btn.setAttribute('data-i18n', kBtn);
+    btn.onclick = partial ? function () { btn.disabled = true; location.reload(); } : function () {
       btn.disabled = true;
       // Free the PokerTH player before reloading so the proxy doesn't keep a
       // server-side "zombie" alive during its reconnect grace. (The ↺ refresh
@@ -3366,12 +3404,15 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     x.style.cssText = 'background:transparent;border:0;color:var(--cream);font-weight:400;font-size:1.15rem;line-height:1;padding:0 2px;opacity:.7;cursor:pointer;';
     x.onclick = function () {
       // Dismiss without applying: stop nagging until an even newer version ships.
-      knownVer = latestVer; shown = false;
+      if (!partial) knownVer = latestVer;
+      shown = false;
       var b = document.getElementById('update-banner'); if (b) b.remove();
     };
     bar.appendChild(span); bar.appendChild(btn); bar.appendChild(x);
     document.body.appendChild(bar);
   }
+
+  window.__pthReloadBanner = function () { showBanner(true); };
 
   function check() {
     fetch('/__ver', { cache: 'no-store' })

@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Ein Teil der App wurde nicht geladen.", reloadNow: "Neu laden",
   advTdWitness: 'Turniere: An einem Tisch des Turnierleiters dieser Seite ihm eine Zusammenfassung des Spiels schicken, um das Ergebnis zu prüfen (Stacks und Gewinner, nie meine Karten)',
   tdWitnessNotice: 'Turniertisch: Dein Client schickt dem Turnierleiter eine Zusammenfassung dieses Spiels (die Stacks in jeder Hand und den Gewinner, nie deine Karten), um das Ergebnis zu prüfen. Du kannst das unter Erweiterte Optionen › Netzwerk abschalten.',
   pvSrvTd: 'Turnierzeugen: An einem Tisch, den der Turnierleiter dieser Seite eröffnet hat, schickt dein Client dem Turnierleiter deinen Spitznamen und eine Zusammenfassung des Spiels, wenn es endet, wenn du ausscheidest oder wenn du gehst: die Stacks der Spieler zu Beginn jeder Hand und den Gewinner – nie deine Karten. Hast du dich in diesem Browser für das Turnier angemeldet, wird dein persönlicher Code mitgeschickt. Die Zusammenfassung wird beim Turnier aufbewahrt, um sein Ergebnis zu prüfen. Du kannst das in den erweiterten Optionen (Netzwerk) abschalten.',

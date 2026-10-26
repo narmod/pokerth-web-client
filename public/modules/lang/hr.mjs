@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Dio aplikacije nije se učitao.", reloadNow: "Ponovno učitaj",
   advTdWitness: 'Turniri: za stolom turnirskog direktora ove stranice šalji mu sažetak igre radi provjere rezultata (stogovi i pobjednik, nikad moje karte)',
   tdWitnessNotice: 'Turnirski stol: tvoj klijent šalje turnirskom direktoru sažetak ove igre (stogove u svakoj ruci i pobjednika, nikad tvoje karte) radi provjere rezultata. To možeš isključiti u Napredne opcije › Mreža.',
   pvSrvTd: 'Turnirski svjedoci: za stolom koji je otvorio turnirski direktor ove stranice tvoj klijent direktoru šalje tvoj nadimak i sažetak igre kad završi, kad ispadneš ili kad odeš: stogove igrača na početku svake ruke i pobjednika — nikad tvoje karte. Ako je prijava na turnir obavljena u ovom pregledniku, šalje se i tvoj osobni kôd. Sažetak se čuva uz turnir radi provjere njegova rezultata. Možeš to isključiti u naprednim opcijama (Mreža).',

@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Níor lódáladh cuid den aip.", reloadNow: "Athlódáil",
   advTdWitness: 'Comórtais: ag bord de chuid stiúrthóir comórtais an tsuímh seo, achoimre ar an gcluiche a sheoladh chuige chun an toradh a sheiceáil (cruacha agus buaiteoir, ach ní mo chártaí riamh)',
   tdWitnessNotice: 'Bord comórtais: seolann do chliant achoimre ar an gcluiche seo chuig an stiúrthóir comórtais (na cruacha ag gach lámh agus an buaiteoir, ach ní do chártaí riamh) chun an toradh a sheiceáil. Is féidir leat é seo a mhúchadh in Ardroghanna › Líonra.',
   pvSrvTd: 'Finnéithe comórtais: ag bord a d’oscail stiúrthóir comórtais an tsuímh seo, seolann do chliant do leasainm agus achoimre ar an gcluiche chuig an stiúrthóir nuair a chríochnaíonn sé, nuair a bhíonn tú amuigh nó nuair a fhágann tú: cruacha na n-imreoirí ag tús gach láimhe agus an buaiteoir — ach ní do chártaí riamh. Má chláraigh tú don chomórtas sa bhrabhsálaí seo, téann do chód pearsanta leis. Coinnítear an achoimre leis an gcomórtas chun a thoradh a sheiceáil. Is féidir leat é a mhúchadh sna hArdroghanna (Líonra).',

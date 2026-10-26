@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Một phần của ứng dụng không tải được.", reloadNow: "Tải lại",
   advTdWitness: 'Giải đấu: tại bàn của người điều hành giải đấu của trang này, gửi cho người điều hành bản tóm tắt trò chơi để kiểm tra kết quả (chip và người thắng, không bao giờ có bài của tôi)',
   tdWitnessNotice: 'Bàn giải đấu: ứng dụng của bạn gửi cho người điều hành giải đấu bản tóm tắt trò chơi này (chip ở mỗi ván và người thắng, không bao giờ có bài của bạn) để kiểm tra kết quả. Bạn có thể tắt trong Tùy chọn nâng cao › Mạng.',
   pvSrvTd: 'Nhân chứng giải đấu: tại bàn do người điều hành giải đấu của trang này mở, ứng dụng của bạn gửi cho người điều hành biệt danh của bạn và bản tóm tắt trò chơi khi trò chơi kết thúc, khi bạn bị loại hoặc khi bạn rời đi: số chip của người chơi đầu mỗi ván và người thắng — không bao giờ có bài của bạn. Nếu bạn đã đăng ký giải đấu trên trình duyệt này, mã cá nhân của bạn được gửi kèm. Bản tóm tắt được lưu cùng giải đấu để kiểm tra kết quả. Bạn có thể tắt trong tùy chọn nâng cao (Mạng).',

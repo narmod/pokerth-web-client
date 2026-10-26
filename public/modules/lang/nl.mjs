@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Een deel van de app is niet geladen.", reloadNow: "Opnieuw laden",
   advTdWitness: 'Toernooien: aan een tafel van de toernooileider van deze site een samenvatting van het spel naar hem sturen om de uitslag te controleren (stacks en winnaar, nooit mijn kaarten)',
   tdWitnessNotice: 'Toernooitafel: je client stuurt de toernooileider een samenvatting van dit spel (de stacks bij elke hand en de winnaar, nooit je kaarten) om de uitslag te controleren. Je kunt dit uitzetten in Geavanceerde opties › Netwerk.',
   pvSrvTd: 'Toernooigetuigen: aan een tafel die de toernooileider van deze site heeft geopend, stuurt je client de toernooileider je bijnaam en een samenvatting van het spel wanneer het afloopt, wanneer je eruit ligt of wanneer je vertrekt: de stacks van de spelers aan het begin van elke hand en de winnaar — nooit je kaarten. Als je je in deze browser voor het toernooi hebt ingeschreven, gaat je persoonlijke code mee. De samenvatting wordt bij het toernooi bewaard om de uitslag ervan te controleren. Je kunt dit uitzetten in de geavanceerde opties (Netwerk).',

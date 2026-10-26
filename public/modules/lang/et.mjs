@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Osa rakendusest ei laadinud.", reloadNow: "Laadi uuesti",
   advTdWitness: 'Turniirid: selle saidi turniiridirektori laua taga saada talle mängu kokkuvõte tulemuse kontrollimiseks (virnad ja võitja, mitte kunagi minu kaardid)',
   tdWitnessNotice: 'Turniirilaud: sinu klient saadab turniiridirektorile selle mängu kokkuvõtte (virnad igas käes ja võitja, mitte kunagi sinu kaarte), et tulemust kontrollida. Selle saad välja lülitada: Täpsemad valikud › Võrk.',
   pvSrvTd: 'Turniiri tunnistajad: selle saidi turniiridirektori avatud laua taga saadab sinu klient direktorile sinu hüüdnime ja mängu kokkuvõtte, kui mäng lõpeb, kui sa välja langed või kui lahkud: mängijate virnad iga käe alguses ja võitja — mitte kunagi sinu kaarte. Kui registreerusid turniirile selles brauseris, saadetakse kaasa ka sinu isiklik kood. Kokkuvõtet hoitakse koos turniiriga, et selle tulemust kontrollida. Selle saab välja lülitada täpsemates valikutes (Võrk).',

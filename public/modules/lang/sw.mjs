@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Sehemu ya programu haikupakiwa.", reloadNow: "Pakia upya",
   advTdWitness: 'Mashindano: kwenye meza ya mkurugenzi wa mashindano wa tovuti hii, mtumie muhtasari wa mchezo ili kukagua matokeo (marundo na mshindi, kamwe si karata zangu)',
   tdWitnessNotice: 'Meza ya mashindano: kiteja chako kinamtumia mkurugenzi wa mashindano muhtasari wa mchezo huu (marundo katika kila mkono na mshindi, kamwe si karata zako) ili kukagua matokeo. Unaweza kuzima hili katika Chaguo za kina › Mtandao.',
   pvSrvTd: 'Mashahidi wa mashindano: kwenye meza iliyofunguliwa na mkurugenzi wa mashindano wa tovuti hii, kiteja chako kinamtumia mkurugenzi jina lako la utani na muhtasari wa mchezo unapoisha, unapotolewa au unapoondoka: marundo ya wachezaji mwanzoni mwa kila mkono na mshindi — kamwe si karata zako. Ikiwa ulijisajili kwa mashindano kwenye kivinjari hiki, msimbo wako binafsi hutumwa pamoja nao. Muhtasari huhifadhiwa pamoja na mashindano ili kukagua matokeo yake. Unaweza kuuzima katika chaguo za kina (Mtandao).',

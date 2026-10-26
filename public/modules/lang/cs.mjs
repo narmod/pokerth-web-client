@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Část aplikace se nenačetla.", reloadNow: "Načíst znovu",
   advTdWitness: 'Turnaje: u stolu ředitele turnajů tohoto webu mu posílat shrnutí hry kvůli ověření výsledku (stacky a vítěz, nikdy moje karty)',
   tdWitnessNotice: 'Turnajový stůl: váš klient posílá řediteli turnajů shrnutí této hry (stacky v každém rozdání a vítěze, nikdy vaše karty) kvůli ověření výsledku. Můžete to vypnout v Pokročilé možnosti › Síť.',
   pvSrvTd: 'Turnajoví svědci: u stolu, který otevřel ředitel turnajů tohoto webu, posílá váš klient řediteli vaši přezdívku a shrnutí hry, když skončí, když vypadnete nebo když odejdete: stacky hráčů na začátku každého rozdání a vítěze — nikdy vaše karty. Pokud jste se k turnaji zaregistrovali v tomto prohlížeči, odešle se s ním i váš osobní kód. Shrnutí se uchovává u turnaje kvůli ověření jeho výsledku. Můžete to vypnout v pokročilých možnostech (Síť).',

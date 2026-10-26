@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Ni lwythodd rhan o'r ap.", reloadNow: "Ail-lwytho",
   advTdWitness: 'Twrnameintiau: wrth fwrdd cyfarwyddwr twrnameintiau’r wefan hon, anfon crynodeb o’r gêm ato i wirio’r canlyniad (pentyrrau ac enillydd, byth fy nghardiau)',
   tdWitnessNotice: 'Bwrdd twrnamaint: mae eich cleient yn anfon crynodeb o’r gêm hon at gyfarwyddwr y twrnameintiau (y pentyrrau ym mhob llaw a’r enillydd, byth eich cardiau) i wirio’r canlyniad. Gallwch ddiffodd hyn yn Dewisiadau uwch › Rhwydwaith.',
   pvSrvTd: 'Tystion twrnamaint: wrth fwrdd a agorwyd gan gyfarwyddwr twrnameintiau’r wefan hon, mae eich cleient yn anfon eich llysenw a chrynodeb o’r gêm at y cyfarwyddwr pan fydd yn dod i ben, pan fyddwch allan neu pan fyddwch yn gadael: pentyrrau’r chwaraewyr ar ddechrau pob llaw a’r enillydd — byth eich cardiau. Os gwnaethoch gofrestru ar gyfer y twrnamaint yn y porwr hwn, mae eich cod personol yn mynd gydag ef. Cedwir y crynodeb gyda’r twrnamaint i wirio ei ganlyniad. Gallwch ei ddiffodd yn y Dewisiadau uwch (Rhwydwaith).',

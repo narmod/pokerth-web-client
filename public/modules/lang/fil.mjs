@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Hindi na-load ang bahagi ng app.", reloadNow: "I-reload",
   advTdWitness: 'Mga tournament: sa mesa ng tournament director ng site na ito, padalhan ito ng buod ng laro para masuri ang resulta (mga stack at nanalo, hindi kailanman ang aking mga baraha)',
   tdWitnessNotice: 'Mesa ng tournament: nagpapadala ang iyong client sa tournament director ng buod ng larong ito (ang mga stack sa bawat kamay at ang nanalo, hindi kailanman ang iyong mga baraha) para masuri ang resulta. Maaari mo itong i-off sa Mga advanced na option › Network.',
   pvSrvTd: 'Mga saksi sa tournament: sa mesang binuksan ng tournament director ng site na ito, ipinapadala ng iyong client sa director ang iyong palayaw at ang buod ng laro kapag natapos ito, kapag na-out ka o kapag umalis ka: ang mga stack ng mga manlalaro sa simula ng bawat kamay at ang nanalo — hindi kailanman ang iyong mga baraha. Kung nagparehistro ka sa tournament sa browser na ito, kasama ring ipinapadala ang iyong personal na code. Itinatago ang buod kasama ng tournament para masuri ang resulta nito. Maaari mo itong i-off sa mga advanced na option (Network).',

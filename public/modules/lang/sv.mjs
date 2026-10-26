@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "En del av appen laddades inte.", reloadNow: "Ladda om",
   advTdWitness: 'Turneringar: vid ett bord hos den här webbplatsens turneringsledare, skicka en sammanfattning av spelet till den för att kontrollera resultatet (stackar och vinnare, aldrig mina kort)',
   tdWitnessNotice: 'Turneringsbord: din klient skickar en sammanfattning av det här spelet till turneringsledaren (stackarna vid varje hand och vinnaren, aldrig dina kort) för att kontrollera resultatet. Du kan stänga av det under Avancerade alternativ › Nätverk.',
   pvSrvTd: 'Turneringsvittnen: vid ett bord som öppnats av den här webbplatsens turneringsledare skickar din klient ditt smeknamn och en sammanfattning av spelet till turneringsledaren när det tar slut, när du åker ut eller när du lämnar: spelarnas stackar i början av varje hand och vinnaren — aldrig dina kort. Om du anmälde dig till turneringen i den här webbläsaren skickas din personliga kod med. Sammanfattningen sparas med turneringen för att kontrollera dess resultat. Du kan stänga av det i de avancerade alternativen (Nätverk).',

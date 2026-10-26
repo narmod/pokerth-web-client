@@ -7626,7 +7626,7 @@
     // A probe answering 200 only says the network came back; a 404 or a 5xx
     // means the file itself is missing or broken, which is a load failure.
     // Page state sent with an « App is not defined » tap (web.263).
-    if(/^Boot stall:/.test(m)) return 'diag';
+    if(/^(Boot stall|Module graph):/.test(m)) return 'diag';
     if(/^Load-failure probe:/.test(m)) return /^Load-failure probe: HTTP [45]\d\d\b/.test(m)?'load':'diag';
     if(/^(Failed to load |Load-failure retry #\d+ failed|Lang load failed)/.test(m)) return 'load';
     return 'crash';

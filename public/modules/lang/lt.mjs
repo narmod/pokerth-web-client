@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Dalis programėlės neįsikėlė.", reloadNow: "Įkelti iš naujo",
   advTdWitness: 'Turnyrai: prie šios svetainės turnyrų direktoriaus stalo siųsti jam žaidimo santrauką rezultatui patikrinti (žetonai ir laimėtojas, niekada ne mano kortos)',
   tdWitnessNotice: 'Turnyro stalas: jūsų klientas siunčia turnyrų direktoriui šio žaidimo santrauką (žaidėjų žetonus kiekvienoje partijoje ir laimėtoją, niekada ne jūsų kortas) rezultatui patikrinti. Tai galite išjungti skiltyje „Išplėstinės parinktys › Tinklas“.',
   pvSrvTd: 'Turnyrų liudytojai: prie stalo, kurį atidarė šios svetainės turnyrų direktorius, jūsų klientas siunčia direktoriui jūsų slapyvardį ir žaidimo santrauką, kai žaidimas baigiasi, kai iškrentate arba kai išeinate: žaidėjų žetonus kiekvienos partijos pradžioje ir laimėtoją — niekada ne jūsų kortas. Jei turnyrui užsiregistravote šioje naršyklėje, kartu siunčiamas ir jūsų asmeninis kodas. Santrauka saugoma kartu su turnyru jo rezultatui patikrinti. Tai galite išjungti skiltyje „Išplėstinės parinktys“ (Tinklas).',

@@ -229,6 +229,45 @@ listeners.error({ message: 'Uncaught ReferenceError: foo is not defined', filena
 ok(stalls === 4, 'so does one from another origin');
 delete window.__pthBootStall; window.__pthBootStallSent = 0;
 
+// ── Poisoned module graph (web.334) ───────────────────────────────
+// A module whose IMPORT failed stays dead for the page (the browser keeps the
+// failure in its module map), so the two in-page retries cannot help even
+// though the probe answers 200. With the app present, the old reload never ran.
+const giveUp = (url, props) => {
+  window.__pthErrRetry = {}; window.__pthErrProbed = {}; timers.length = 0; injected.length = 0;
+  listeners.error(res('SCRIPT', url, props || { type: 'module' }));
+  runTimers(); listeners.error({ target: injected[0] });
+  runTimers(); listeners.error({ target: injected[1] });
+};
+const SEAT = ORIGIN + '/modules/game/seat-render.mjs';
+let banners = 0;
+window.__pthReloadBanner = () => { banners++; };
+window.App = {}; navigator.onLine = true; reloads = 0; q().length = 0;
+giveUp(SEAT);
+ok(session.pth_graphreload === '1' && q().some(e => e.msg === 'Module graph: reloading' && e.src === SEAT),
+   'module retries exhausted with the app present, before any connect: one reload is armed');
+runTimers();
+ok(reloads === 1 && banners === 0, 'and performed');
+q().length = 0;
+giveUp(ORIGIN + '/modules/ui/forumnews.mjs'); runTimers();
+ok(reloads === 1 && banners === 1 && q().some(e => e.msg === 'Module graph: reload offered'),
+   'a second time in the same tab session: the banner offers it instead (no reload loop)');
+q().length = 0;
+giveUp(ORIGIN + '/modules/guide/index.mjs'); runTimers();
+ok(banners === 1 && !q().some(e => /^Module graph/.test(e.msg)), 'offered once per page');
+window.__pthGraphBanner = 0; delete session.pth_graphreload; window._swReadyOnce = true; q().length = 0;
+giveUp(SEAT); runTimers();
+ok(reloads === 1 && banners === 2 && !session.pth_graphreload, 'once connected, the session is never cut: banner only');
+window.__pthGraphBanner = 0; window._swReadyOnce = false; q().length = 0;
+giveUp(ORIGIN + '/chat-emotes.js', {}); runTimers();
+ok(reloads === 1 && banners === 2 && !q().some(e => /^Module graph/.test(e.msg)), 'a classic script is not a module graph: nothing');
+navigator.onLine = false;
+giveUp(SEAT); runTimers();
+ok(reloads === 1 && banners === 2, 'offline: nothing (a reload would not help)');
+navigator.onLine = true;
+delete window.App; delete window.__pthReloadBanner; delete window._swReadyOnce; window.__pthGraphBanner = 0;
+await tick(); timers.length = 0;
+
 // ── Queue ceiling ─────────────────────────────────────────────────
 // Une page qui part en boucle ne doit pas faire gonfler la file sans fin.
 q().length = 0;

@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Ingxenye yohlelo lokusebenza ayilayishekanga.", reloadNow: "Layisha kabusha",
   advTdWitness: 'Imiqhudelwano: etafuleni lomqondisi wemiqhudelwano wale sayithi, mthumelele isifinyezo somdlalo ukuze kuhlolwe umphumela (izitaki nowinile, hhayi amakhadi ami neze)',
   tdWitnessNotice: 'Itafula lomqhudelwano: iklayenti lakho lithumela kumqondisi wemiqhudelwano isifinyezo salo mdlalo (izitaki esandleni ngasinye nowinile, hhayi amakhadi akho neze) ukuze kuhlolwe umphumela. Ungakuvala lokhu ku-Izinketho ezithuthukisiwe › Inethiwekhi.',
   pvSrvTd: 'Ofakazi bemiqhudelwano: etafuleni elivulwe ngumqondisi wemiqhudelwano wale sayithi, iklayenti lakho lithumela kumqondisi isiteketiso sakho nesifinyezo somdlalo lapho uphela, lapho usuphumile noma lapho uhamba: izitaki zabadlali ekuqaleni kwesandla ngasinye nowinile — hhayi amakhadi akho neze. Uma ubhalisele umqhudelwano kulesi siphequluli, ikhodi yakho yomuntu siqu ihamba nawo. Isifinyezo sigcinwa nomqhudelwano ukuze kuhlolwe umphumela wawo. Ungakuvala lokhu ezinketho ezithuthukisiwe (Inethiwekhi).',

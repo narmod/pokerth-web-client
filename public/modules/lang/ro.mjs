@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "O parte a aplicației nu s-a încărcat.", reloadNow: "Reîncarcă",
   advTdWitness: 'Turnee: la o masă a directorului de turnee al acestui site, trimite-i un rezumat al jocului pentru verificarea rezultatului (stack-uri și câștigător, niciodată cărțile mele)',
   tdWitnessNotice: 'Masă de turneu: clientul tău trimite directorului de turnee un rezumat al acestui joc (stack-urile la fiecare mână și câștigătorul, niciodată cărțile tale) pentru verificarea rezultatului. Poți dezactiva asta în Opțiuni avansate › Rețea.',
   pvSrvTd: 'Martori de turneu: la o masă deschisă de directorul de turnee al acestui site, clientul tău trimite directorului pseudonimul tău și un rezumat al jocului când se termină, când ești eliminat sau când pleci: stack-urile jucătorilor la începutul fiecărei mâini și câștigătorul — niciodată cărțile tale. Dacă te-ai înscris la turneu din acest browser, codul tău personal este trimis împreună cu el. Rezumatul este păstrat împreună cu turneul pentru verificarea rezultatului său. Îl poți dezactiva din opțiunile avansate (Rețea).',

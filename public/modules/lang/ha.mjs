@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Wani ɓangare na manhajar bai loda ba.", reloadNow: "Sake lodawa",
   advTdWitness: 'Gasanni: a teburin daraktan gasar wannan shafi, aika masa taƙaitaccen bayanin wasan don tantance sakamakon (tari da wanda ya ci, ba katunana ba ko kaɗan)',
   tdWitnessNotice: 'Teburin gasa: abokin cinikinka yana aika wa daraktan gasar taƙaitaccen bayanin wannan wasan (tarin kowane ɗan wasa a kowane hannu da wanda ya ci, ba katunanka ba ko kaɗan) don tantance sakamakon. Kana iya kashe wannan a Zaɓuɓɓuka na ci gaba › Hanyar sadarwa.',
   pvSrvTd: 'Shaidun gasa: a teburin da daraktan gasar wannan shafi ya buɗe, abokin cinikinka yana aika wa darakta laƙabinka da taƙaitaccen bayanin wasan idan ya ƙare, idan an fitar da kai ko idan ka tafi: tarin \'yan wasa a farkon kowane hannu da wanda ya ci — ba katunanka ba ko kaɗan. Idan ka yi rajista a gasar a wannan burauza, lambar sirrinka tana tafiya tare da shi. Ana adana taƙaitaccen bayanin tare da gasar don tantance sakamakonta. Kana iya kashe shi a cikin Zaɓuɓɓuka na ci gaba (Hanyar sadarwa).',

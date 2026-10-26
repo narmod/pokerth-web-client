@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Hluti forritsins hlóðst ekki.", reloadNow: "Endurhlaða",
   advTdWitness: 'Mót: við borð mótsstjóra þessa vefs, senda honum samantekt á leiknum til að sannreyna úrslitin (staflar og sigurvegari, aldrei spilin mín)',
   tdWitnessNotice: 'Mótsborð: biðlarinn þinn sendir mótsstjóranum samantekt á þessum leik (staflana í hverri hönd og sigurvegarann, aldrei spilin þín) til að sannreyna úrslitin. Þú getur slökkt á þessu í Ítarlegir valkostir › Net.',
   pvSrvTd: 'Mótsvitni: við borð sem mótsstjóri þessa vefs opnar sendir biðlarinn þinn mótsstjóranum gælunafnið þitt og samantekt á leiknum þegar honum lýkur, þegar þú dettur út eða þegar þú ferð: stafla leikmannanna í upphafi hverrar handar og sigurvegarann — aldrei spilin þín. Ef þú skráðir þig á mótið í þessum vafra fylgir persónulegi kóðinn þinn með. Samantektin er geymd með mótinu til að sannreyna úrslit þess. Þú getur slökkt á henni í ítarlegum valkostum (Net).',

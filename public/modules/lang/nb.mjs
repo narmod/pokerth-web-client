@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "En del av appen ble ikke lastet inn.", reloadNow: "Last inn på nytt",
   advTdWitness: 'Turneringer: ved et bord hos dette nettstedets turneringsdirektør, send den et sammendrag av spillet for å kontrollere resultatet (stacker og vinner, aldri kortene mine)',
   tdWitnessNotice: 'Turneringsbord: klienten din sender turneringsdirektøren et sammendrag av dette spillet (stackene i hver hånd og vinneren, aldri kortene dine) for å kontrollere resultatet. Du kan slå dette av under Avanserte alternativer › Nettverk.',
   pvSrvTd: 'Turneringsvitner: ved et bord som er åpnet av dette nettstedets turneringsdirektør, sender klienten din direktøren kallenavnet ditt og et sammendrag av spillet når det er slutt, når du er ute eller når du går: spillernes stacker ved starten av hver hånd og vinneren — aldri kortene dine. Hvis du meldte deg på turneringen i denne nettleseren, følger den personlige koden din med. Sammendraget lagres sammen med turneringen for å kontrollere resultatet. Du kan slå det av under Avanserte alternativer (Nettverk).',

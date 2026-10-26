@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  loadPartialFail: "Uma parte da aplicação não foi carregada.", reloadNow: "Recarregar",
   advTdWitness: 'Torneios: numa mesa do diretor de torneios deste site, enviar-lhe um resumo do jogo para verificar o resultado (fichas e vencedor, nunca as minhas cartas)',
   tdWitnessNotice: 'Mesa de torneio: o seu cliente envia ao diretor de torneios um resumo deste jogo (as fichas em cada mão e o vencedor, nunca as suas cartas) para verificar o resultado. Pode desativar isto em Opções avançadas › Rede.',
   pvSrvTd: 'Testemunhas de torneio: numa mesa aberta pelo diretor de torneios deste site, o teu cliente envia ao diretor a tua alcunha e um resumo do jogo quando termina, quando és eliminado ou quando sais: as fichas dos jogadores no início de cada mão e o vencedor — nunca as tuas cartas. Se te inscreveste no torneio neste navegador, o teu código pessoal segue com ele. O resumo é guardado com o torneio para verificar o seu resultado. Podes desativar isto nas opções avançadas (Rede).',
