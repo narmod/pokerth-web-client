@@ -298,9 +298,16 @@
     // overlay back in its « Retry » state (window.__pthBootStall, boot gate)
     // instead of leaving a form that silently ignores every tap. Chrome and
     // Firefox say "App is not defined", Safari "Can't find variable: App".
+    // Same for the bare globals some inline handlers call (onclick=
+    // "toggleConnectOverflow(event)", seen on Android · Chrome 121): any
+    // "X is not defined" raised by the page itself (not by one of our .js /
+    // .mjs files) while the app is absent is the same lost tap.
     try {
+      var bsMsg = String(ev.message || ''), bsSrc = String(ev.filename || '');
+      var bsInline = !bsSrc || (bsSrc.indexOf(location.origin + '/') === 0 && !/\.m?js(?:[?#]|$)/.test(bsSrc));
       if (!window.App && !window.__pthBootStallSent &&
-          /\bApp is not defined\b|Can't find variable: App\b/.test(String(ev.message || ''))) {
+          (/\bApp is not defined\b|Can't find variable: App\b/.test(bsMsg) ||
+           (bsInline && /\b[\w$]+ is not defined\b|Can't find variable: [\w$]+/.test(bsMsg)))) {
         window.__pthBootStallSent = 1;
         push({ msg: 'Boot stall: ' + bootState(), src: '', line: 0, col: 0, stack: '' });
         if (typeof window.__pthBootStall === 'function') window.__pthBootStall();

@@ -212,8 +212,21 @@ delete window.App; q().length = 0;
 listeners.error(appErr("ReferenceError: Can't find variable: App"));
 ok(stalls === 2 && q().some(e => /^Boot stall/.test(e.msg)), 'the Safari wording is recognised too');
 window.__pthBootStallSent = 0; q().length = 0;
-listeners.error(appErr('Uncaught ReferenceError: AppX is not defined'));
-ok(stalls === 2 && q().length === 1, 'another missing name is a plain error');
+// A bare global called by an inline handler (onclick="toggleConnectOverflow(event)",
+// Android · Chrome 121) is the same lost tap: the page itself raised it.
+listeners.error(appErr('Uncaught ReferenceError: toggleConnectOverflow is not defined'));
+ok(stalls === 3 && q().length === 2 && /^Boot stall/.test(q()[1].msg),
+   'a missing inline-handler global brings the overlay back too');
+window.__pthBootStallSent = 0; q().length = 0;
+listeners.error(appErr("ReferenceError: Can't find variable: toggleConnectOverflow"));
+ok(stalls === 4, 'Safari wording for a bare global too');
+window.__pthBootStallSent = 0; q().length = 0;
+listeners.error({ message: 'Uncaught ReferenceError: foo is not defined', filename: ORIGIN + '/modules/x.mjs',
+  lineno: 3, colno: 1, error: { stack: 'ReferenceError: foo is not defined\n    at ' + ORIGIN + '/modules/x.mjs:3:1' } });
+ok(stalls === 4 && q().length === 1, 'a missing name inside one of our scripts stays a plain error');
+listeners.error({ message: 'Uncaught ReferenceError: foo is not defined', filename: 'https://ads.example/x.html',
+  lineno: 3, colno: 1, error: { stack: 'ReferenceError: foo is not defined' } });
+ok(stalls === 4, 'so does one from another origin');
 delete window.__pthBootStall; window.__pthBootStallSent = 0;
 
 // ── Queue ceiling ─────────────────────────────────────────────────

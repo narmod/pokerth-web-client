@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Fixed
+- **Lost taps on bare inline globals during boot** (`web.333`) — the boot-stall safety net (web.263) only caught
+  `App is not defined`; an inline handler calling a bare global (`onclick="toggleConnectOverflow(event)"`, seen on
+  Android · Chrome 121) before `pokerth.js` ran threw a ReferenceError and the tap was silently lost. Any
+  `X is not defined` / `Can't find variable: X` raised by the page itself (not by one of our `.js`/`.mjs` files,
+  same origin) while the app is absent now sends the Boot stall line and brings the overlay back in its « Retry »
+  state. Test: `scripts/test-errcollect.mjs` (+4).
 - **« Your turn » alert once per turn** (`web.332`) — `renderMyTurnActions()` (live) played the chime, the
   notification, the title blink, the badge and the vibration, and `onPlayersTurn` then played them all again: two
   identical samples at once at every turn start, and the whole alert replayed on mid-turn re-renders (BB display
