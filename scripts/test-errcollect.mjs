@@ -126,6 +126,8 @@ const UC = ORIGIN + '/u.c.b.r.o.w.s.e.r/ucbrowser_script.js?UCFontSizeWebScriptD
 q().length = 0;
 listeners.unhandledrejection({ reason: { message: 'fail', stack: 'at moz-extension://abc/bg.js:2:2' } });
 ok(q().length === 0, 'so is a rejection coming from an extension');
+listeners.unhandledrejection({ reason: { message: 'Invalid call to runtime.sendMessage(). Tab not found.' } });
+ok(q().length === 0, 'and a Safari extension messaging rejection with no stack');
 listeners.error({ message: "TypeError: undefined is not an object (evaluating 'a.tagName.match')", filename: ORIGIN + '/pokerth.js', lineno: 10, error: { stack: 'x@' + ORIGIN + '/pokerth.js:10:5' } });
 ok(q().length === 1, 'the same TypeError raised by OUR code is still reported');
 

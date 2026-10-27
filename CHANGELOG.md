@@ -22,6 +22,9 @@ highlights below.
   and leads to Deployment. Not shown on an install without git. Test: `scripts/test-admin-overview.mjs` (+4).
 
 ### Fixed
+- **Safari extension rejection in the error journal** (`web.337`) — `Invalid call to runtime.sendMessage(). Tab not
+  found.` (iPhone · Safari 26) reached Admin › Client errors as an « Unhandled rejection »; the client never calls
+  `runtime.*`, so `isExtNoise` now drops any `runtime.sendMessage()` message. Test: `scripts/test-errcollect.mjs` (+1).
 - **Connect with no `#nick` field** (`web.335`) — `App.connect()` read `$('nick').value` unguarded; on Android 16 ·
   Xiaomi the field was gone while `#host` / `#port` were there (nothing in the client removes it), so every tap on
   Connect threw `Cannot read properties of null (reading 'value')` and the player was stuck. It now falls back on the

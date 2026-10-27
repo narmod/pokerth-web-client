@@ -109,6 +109,9 @@
     if (s.indexOf('ucbrowser_script') !== -1 || s.indexOf('/u.c.b.r.o.w.s.e.r/') !== -1) return true;
     if (s.indexOf('wrappedJSObject') !== -1) return true;
     if (/\b__firefox__\b|\bDarkReader\b/.test(String(msg || ''))) return true;
+    // WebExtension messaging (Safari: "Invalid call to runtime.sendMessage().
+    // Tab not found."): the client never calls runtime.* — always an extension.
+    if (/\bruntime\.sendMessage\(\)/.test(String(msg || ''))) return true;
     if (/^ResizeObserver loop (?:completed with undelivered notifications|limit exceeded)/.test(String(msg || ''))) return true;
     return false;
   }
