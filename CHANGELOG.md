@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **No Assistance on pokerth.net** (`web.338`) — the hand-strength assistance (web-only extra) was available at
+  every non-Ranking table on pokerth.net, BBC Steps and WEC games included. Connected to pokerth.net (guest or account)
+  it is now gone: no banner, no detached window, and its two rows (Assistance, Assistance display) are hidden in
+  Advanced options and left out of the options search. It stays in training and on LAN / dedicated servers (still
+  off at Ranking tables there); the player's choice is kept. The Odds tab (QML parity) is unchanged. Help updated in
+  all languages. Tests: `scripts/test-odds-panel.mjs` (+8).
 - **Admin › Overview: « Update check failed »** (`web.336`) — when reading the upstream failed (`git fetch` refused,
   network…), `update.available` stayed false and the Overview showed no card, or « All clear », while updates could be
   waiting; the error was on Deployment only. An amber card now gives the error (120 characters) and when the check ran,

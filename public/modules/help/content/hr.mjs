@@ -124,7 +124,7 @@ export const help = {
         { id: 'assist', t: 'Pomoćnik (snaga ruke)',
           b: ['Na vrhu kartice Izgledi traka pomoćnika čita tvoju ruku umjesto tebe. Prije flopa imenuje tvoju početnu ruku i ocjenjuje je zvjezdicama; od flopa nadalje prikazuje tvoju trenutnu najbolju kombinaciju i, nakon brze simulacije, procijenjenu vjerojatnost da dobiješ ruku u postocima, s indikatorom u boji od crvene (slaba) do zelene (jaka). Kao i monitor vjerojatnosti, koristi samo informacije koje možeš vidjeti.',
               'Dva stila prikaza nalaze se u Napredne opcije → Mjesta: Segmenti (deset blokova) ili klasična traka napretka. Cijeli se pomoćnik može isključiti u Napredne opcije → Asistencija.',
-              'Za stolovima poretka pomoć je uvijek isključena, kako bi svaki igrač imao iste informacije, kao u desktop klijentu. Monitor šansi ispod ostaje dostupan.'] },
+              'Na pokerth.net (kao gost ili s računom) pomoć nije dostupna, kako bi svaki igrač imao iste informacije, kao u desktop klijentu. Ostaje dostupna u treningu i na LAN / namjenskim poslužiteljima, osim za stolovima poretka. Monitor šansi ispod ostaje dostupan.'] },
         { id: 'assistwin', t: 'Pomoćnik kao plutajući widget',
           b: ['Blok pomoćnika može se otkinuti od ploče u vlastiti prozorčić koji je uvijek na vrhu: upotrijebi gumb za otkidanje na bloku, zatim ga pomiči i mijenjaj mu veličinu gdje god želiš iznad stola — praktično za praćenje snage ruke bez otvorene cijele ploče. Gumb za usidravanje vraća ga u karticu Izgledi, a položaj se pamti. Unutar ploče ručka za povlačenje između Pomoćnika i izgleda omogućuje da rasporediš prostor između njih.'] },
         { id: 'stats', t: 'Statistike',

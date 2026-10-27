@@ -126,7 +126,7 @@ export const help = {
         { id: 'assist', t: 'Abi (käe tugevus)',
           b: ['Vahekaardi Šansid ülaosas loeb abiriba sinu käe sinu eest ette. Enne floppi nimetab see sinu algkäe ja hindab seda tärnidega; alates flopist näitab see sinu praegust parimat kombinatsiooni ja pärast kiiret simulatsiooni hinnangulist käe võitmise tõenäosust protsentides koos värviskaalaga punasest (nõrk) roheliseni (tugev). Nagu šansside monitor, kasutab see ainult teavet, mida sa näed.',
               'Aknas Täpsemad valikud → Istekohad on saadaval kaks kuvamisstiili: segmendid (kümme plokki) või klassikaline edenemisriba. Kogu abifunktsiooni saab välja lülitada aknas Täpsemad valikud → Assistent.',
-              'Edetabeliga laudades on abi alati välja lülitatud, et kõigil mängijatel oleks sama teave, nagu töölauakliendis. Allpool olev tõenäosuste monitor jääb kättesaadavaks.'] },
+              'Saidil pokerth.net (külalisena või kontoga) ei ole abi saadaval, et kõigil mängijatel oleks sama teave, nagu töölauakliendis. See jääb kättesaadavaks treeningus ning LAN / pühendatud serverites, välja arvatud edetabeliga laudades. Allpool olev tõenäosuste monitor jääb kättesaadavaks.'] },
         { id: 'assistwin', t: 'Abi hõljuva vidinana',
           b: ['Abiploki saab paneelist lahti haakida omaette väikesesse alati pealmisse aknasse: kasuta ploki lahtihaakimise nuppu ning liiguta ja muuda selle suurust kus tahes laua kohal \u2014 mugav, kui tahad käe tugevusel silma peal hoida ilma tervet paneeli avamata. Dokkimisnupp paneb selle tagasi vahekaardile Šansid ja selle asukoht jäetakse meelde. Paneeli sees laseb abi ja šansside vaheline lohistuspide ruumi nende kahe vahel jagada.'] },
         { id: 'stats', t: 'Statistika',

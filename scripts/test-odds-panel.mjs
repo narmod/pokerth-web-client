@@ -171,6 +171,29 @@ window._offlineMode = true; S.gId = 7; S.games = { 7: { type: 4 } };
 ok(O._assistRankingBlocked() === false, 'Hors ligne : jamais bloquée');
 window._offlineMode = false; S.gId = 0; S.games = {};
 
+// pokerth.net (invité ou compte) : pas d'assistance du tout (web.338).
+S._assistOn = true; S.gId = 9; S.games = { 9: { type: 1 } };
+S.myCards = [12, 11]; S.commCards = [10, 2, 30, null, null];
+for (const m of ['guest', 'auth']) {
+  S._currentLoginMode = m;
+  els['hand-strength'].style.display = 'block';
+  O.renderHandStrength();
+  ok(O._assistNetBlocked() === true && O._assistShown() === false && window._assistAllowed() === false,
+     'pokerth.net (' + m + ') : assistance indisponible');
+  ok(els['hand-strength'].style.display === 'none' && els['gip-assist'].style.display === 'none',
+     'pokerth.net (' + m + ') : bandeau masqué, sans note');
+}
+S.commCards = [null, null, null, null, null];
+els['hand-strength'].style.display = 'block';
+O.renderPreFlopStrength();
+ok(els['hand-strength'].style.display === 'none', 'pokerth.net : préflop masqué aussi');
+ok(S._assistOn === true, 'pokerth.net : préférence du joueur intacte');
+window._offlineMode = true;
+ok(O._assistShown() === true && window._assistAllowed() === true, 'Entraînement (hors ligne) : assistance disponible');
+window._offlineMode = false; S._currentLoginMode = 'lan';
+ok(O._assistShown() === true && window._assistAllowed() === true, 'LAN / serveur dédié : assistance disponible');
+S._currentLoginMode = undefined; S.gId = 0; S.games = {};
+
 // Ponts window + alias
 ok(window.renderHandStrength === O.renderHandStrength &&
    window.renderOddsMonitor === O.renderOddsMonitor &&

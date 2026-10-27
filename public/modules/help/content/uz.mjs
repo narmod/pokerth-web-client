@@ -179,7 +179,8 @@ export const help = {
           t: "Yordamchi (qoʻl kuchi)",
           b: [
             "Imkoniyatlar yorligʻining yuqorisida yordamchi banneri qoʻlingizni siz uchun oʻqiydi. Flopdan oldin u boshlangʻich qoʻlingizni nomlaydi va yulduzchalar bilan baholaydi; flopdan boshlab esa joriy eng yaxshi kombinatsiyangizni va tezkor simulyatsiyadan soʻng qoʻlni yutish ehtimolingizni foizda, qizildan (kuchsiz) yashilgacha (kuchli) rangli shkala bilan koʻrsatadi. Ehtimollar monitori kabi, u faqat siz koʻra oladigan maʼlumotlardan foydalanadi.",
-            "Kengaytirilgan sozlamalar → Oʻrinlar boʻlimida ikkita koʻrinish uslubi mavjud: Segmentlar (oʻnta blok) yoki klassik jarayon chizigʻi. Butun yordamchi funksiyasini Kengaytirilgan sozlamalar → Yordamchi boʻlimida oʻchirish mumkin."] },
+            "Kengaytirilgan sozlamalar → Oʻrinlar boʻlimida ikkita koʻrinish uslubi mavjud: Segmentlar (oʻnta blok) yoki klassik jarayon chizigʻi. Butun yordamchi funksiyasini Kengaytirilgan sozlamalar → Yordamchi boʻlimida oʻchirish mumkin.",
+            "pokerth.net saytida (mehmon sifatida yoki hisob bilan) yordamchi mavjud emas, toki har bir oʻyinchi kompyuter mijozidagi kabi bir xil maʼlumotga ega boʻlsin. Mashgʻulotda va LAN / maxsus serverlarda u mavjud boʻlib qoladi, reyting stollaridan tashqari. Quyidagi ehtimollar monitori mavjud boʻlib qoladi."] },
         { id: "assistwin",
           t: "Yordamchi suzuvchi vidjet sifatida",
           b: [

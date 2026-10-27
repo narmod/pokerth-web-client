@@ -179,7 +179,8 @@ export const help = {
           t: "Mataimaki (ƙarfin hannu)",
           b: [
             "A saman shafin Dama, tutar mataimaki tana karanta maka hannunka. Kafin flop tana ambaton hannunka na farko kuma tana ba shi taurari; daga flop tana nuna mafi kyawun haɗuwarka ta yanzu kuma, bayan ɗan kwaikwayo, damarka ta cin hannun a kashi, da ma'auni mai launi daga ja (mai rauni) zuwa kore (mai ƙarfi). Kamar mai lura da yiwuwa, tana amfani da bayanan da kake iya gani ne kawai.",
-            "Salon nuni biyu suna samuwa a Zaɓuɓɓuka na ci gaba → Kujeru: Sassa (tubali goma) ko sandar ci gaba ta gargajiya. Ana iya kashe dukan fasalin mataimaki a Zaɓuɓɓuka na ci gaba → Mataimaki."] },
+            "Salon nuni biyu suna samuwa a Zaɓuɓɓuka na ci gaba → Kujeru: Sassa (tubali goma) ko sandar ci gaba ta gargajiya. Ana iya kashe dukan fasalin mataimaki a Zaɓuɓɓuka na ci gaba → Mataimaki.",
+            "A pokerth.net (a matsayin baƙo ko da asusu) ba a samun mataimaki, don kowane ɗan wasa ya sami bayanai iri ɗaya, kamar a manhajar kwamfuta. Ana samunsa a horo da kuma a sabobin LAN / keɓaɓɓu, sai dai a teburan matsayi. Mai lura da yiwuwa da ke ƙasa yana ci gaba da samuwa."] },
         { id: "assistwin",
           t: "Mataimaki a matsayin ɗan taga mai shawagi",
           b: [

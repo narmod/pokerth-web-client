@@ -124,7 +124,7 @@ export const help = {
         { id: 'assist', t: 'Asistencia (sila ruky)',
           b: ['Hore na karte Šance ti asistenčný pruh číta ruku za teba. Pred flopom pomenuje tvoju štartovú ruku a ohodnotí ju hviezdami; od flopu ukazuje tvoju aktuálnu najlepšiu kombináciu a po rýchlej simulácii odhadovanú šancu na výhru ruky v percentách, s farebným ukazovateľom od červenej (slabá) po zelenú (silná). Rovnako ako monitor pravdepodobností používa len informácie, ktoré vidíš.',
               'Dva štýly zobrazenia nájdeš v Pokročilé možnosti → Miesta: Segmenty (desať blokov) alebo klasický ukazovateľ priebehu. Celú asistenciu možno vypnúť v Pokročilé možnosti → Asistencia.',
-              'Pri rebríčkových stoloch je asistencia vždy vypnutá, aby mal každý hráč rovnaké informácie, ako v desktopovom klientovi. Monitor šancí pod ňou zostáva k dispozícii.'] },
+              'Na pokerth.net (ako hosť aj s účtom) nie je asistencia k dispozícii, aby mal každý hráč rovnaké informácie, ako v desktopovom klientovi. V tréningu a na LAN / vyhradených serveroch zostáva k dispozícii, okrem rebríčkových stolov. Monitor šancí pod ňou zostáva k dispozícii.'] },
         { id: 'assistwin', t: 'Asistencia ako plávajúci widget',
           b: ['Blok asistencie možno od panela odtrhnúť do vlastného okienka vždy navrchu: použi tlačidlo odtrhnutia na bloku, potom ho presúvaj a zväčšuj kdekoľvek nad stolom — praktické na sledovanie sily ruky bez otvoreného celého panela. Tlačidlo ukotvenia ho vráti do karty Šance a poloha sa pamätá. Vnútri panela ti úchyt medzi Asistenciou a šancami umožní rozdeliť priestor medzi obe časti.'] },
         { id: 'stats', t: 'Štatistiky',

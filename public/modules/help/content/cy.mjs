@@ -179,7 +179,8 @@ export const help = {
           t: "Cynorthwyydd (cryfder y llaw)",
           b: [
             "Ar frig y tab Siawns, mae baner y cynorthwyydd yn darllen eich llaw i chi. Cyn y flop mae'n enwi eich llaw gychwynnol ac yn rhoi sgôr iddi mewn sêr; o'r flop ymlaen mae'n dangos eich cyfuniad gorau presennol ac, ar ôl efelychiad byr, eich siawns amcangyfrifedig o ennill y llaw fel canran, gyda mesurydd lliw o goch (gwan) i wyrdd (cryf). Fel y monitor tebygolrwydd, dim ond gwybodaeth y gallwch chi ei gweld y mae'n ei defnyddio.",
-            "Mae dwy arddull arddangos ar gael yn Dewisiadau uwch → Seddi: Segmentau (deg bloc) neu far cynnydd clasurol. Gellir diffodd holl nodwedd y cynorthwyydd yn Dewisiadau uwch → Cynorthwyydd."] },
+            "Mae dwy arddull arddangos ar gael yn Dewisiadau uwch → Seddi: Segmentau (deg bloc) neu far cynnydd clasurol. Gellir diffodd holl nodwedd y cynorthwyydd yn Dewisiadau uwch → Cynorthwyydd.",
+            "Ar pokerth.net (fel gwestai neu gyda chyfrif) nid yw'r cynorthwyydd ar gael, fel bod gan bob chwaraewr yr un wybodaeth, fel yn y cleient bwrdd gwaith. Mae'n parhau ar gael wrth ymarfer ac ar weinyddion LAN / pwrpasol, ac eithrio wrth fyrddau gyda safle. Mae'r monitor tebygolrwydd isod yn parhau ar gael."] },
         { id: "assistwin",
           t: "Y cynorthwyydd fel teclyn arnofiol",
           b: [

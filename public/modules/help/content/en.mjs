@@ -128,7 +128,7 @@ export const help = {
         { id: 'assist', t: 'Assistance (hand strength)',
           b: ['At the top of the Odds tab, the assistance banner reads your hand for you. Before the flop it names your starting hand and rates it with stars; from the flop on it shows your current best combination and, after a quick simulation, your estimated chance of winning the hand as a percentage, with a color gauge from red (weak) to green (strong). Like the odds monitor, it only uses information you can see.',
               'Two display styles are available in Advanced options \u2192 Seats: Segments (ten blocks) or a classic progress bar. The whole assistance feature can be switched off in Advanced options \u2192 Assistance.',
-              'At Ranking tables the assistance is always off, so every player has the same information, as in the desktop client. The odds monitor below stays available.'] },
+              'On pokerth.net (as a guest or with an account) the assistance is not available, so every player has the same information, as in the desktop client. It stays available in training and on LAN / dedicated servers, except at Ranking tables. The odds monitor below stays available.'] },
         { id: 'assistwin', t: 'Assistance as a floating widget',
           b: ['The assistance block can be detached from the panel into its own small always-on-top window: use the detach button on the block, then move and resize it anywhere over the table \u2014 handy to keep an eye on your hand strength without the full panel open. The dock button puts it back into the Odds tab, and its position is remembered. Inside the panel, a drag handle between Assistance and the odds lets you share the space between the two.'] },
         { id: 'stats', t: 'Stats',

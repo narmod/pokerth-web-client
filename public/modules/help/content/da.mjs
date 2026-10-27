@@ -124,7 +124,7 @@ export const help = {
         { id: 'assist', t: 'Assistance (håndstyrke)',
           b: ['Øverst på fanen Chancer læser assistancebanneret din hånd for dig. Før floppet navngiver det din starthånd og bedømmer den med stjerner; fra floppet viser det din aktuelt bedste kombination og, efter en hurtig simulering, din anslåede chance for at vinde hånden i procent, med en farveindikator fra rød (svag) til grøn (stærk). Ligesom sandsynlighedsmonitoren bruger den kun information, du kan se.',
               'To visningsstile findes i Avancerede indstillinger → Pladser: Segmenter (ti blokke) eller en klassisk statuslinje. Hele assistancefunktionen kan slås fra i Avancerede indstillinger → Assistance.',
-              'Ved ranglisteborde er assistancen altid slået fra, så alle spillere har de samme oplysninger, som i desktopklienten. Odds-monitoren nedenunder er stadig tilgængelig.'] },
+              'På pokerth.net (som gæst eller med en konto) er assistancen ikke tilgængelig, så alle spillere har de samme oplysninger, som i desktopklienten. Den er stadig tilgængelig under træning og på LAN / dedikerede servere, undtagen ved ranglisteborde. Odds-monitoren nedenunder er stadig tilgængelig.'] },
         { id: 'assistwin', t: 'Assistancen som svævende widget',
           b: ['Assistanceblokken kan rives løs fra panelet til sit eget lille vindue, der altid ligger øverst: brug løsriv-knappen på blokken, og flyt og skalér den, hvor du vil over bordet — praktisk til at holde øje med håndstyrken uden hele panelet åbent. Dok-knappen sætter den tilbage i fanen Chancer, og positionen huskes. Inde i panelet lader et trækhåndtag mellem Assistance og odds dig fordele pladsen mellem de to.'] },
         { id: 'stats', t: 'Statistik',

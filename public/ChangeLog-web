@@ -1,3 +1,6 @@
+2026-10-27 version 2.1.10-web.338:
+- improvement: the Assistance (hand strength) is no longer available when you play on pokerth.net, so every player has the same information; it stays available in training and on LAN servers
+
 2026-10-26 version 2.1.10-web.335:
 - bugfix: on some phones the Connect button could do nothing at all; it now connects with your saved nickname
 

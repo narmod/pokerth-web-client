@@ -91,6 +91,7 @@ function buildIndex(modal) {
     const rows = panel.querySelectorAll(ROW_SEL);
     for (let j = 0; j < rows.length; j++) {
       const el = rows[j];
+      if (el.style && el.style.display === 'none') continue;   // option unavailable here (e.g. Assistance on pokerth.net)
       const label = rowLabel(el);
       if (!label) continue;
       const opts = el.querySelectorAll('option');

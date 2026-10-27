@@ -196,6 +196,20 @@ function _hsHide(el) {
   if (lbl) { lbl.style.display = 'none'; var txt = lbl.querySelector('.hs-txt'); if (txt) txt.textContent = ''; }
   _gipAssistSync();
 }
+// ── pokerth.net : pas d'assistance (web.338) ──
+// Connecté à pokerth.net (invité ou compte), l'assistance n'existe pas : ni
+// bloc, ni fenêtre détachée, ni option (BBC Steps, WEC, Ranking, parties
+// libres — tout le monde joue avec les mêmes informations, comme dans le
+// client de bureau). Elle reste en entraînement (hors ligne) et en LAN /
+// serveur dédié. Le choix du joueur (S._assistOn) n'est pas touché : il
+// s'applique de nouveau hors pokerth.net. L'onglet Chances (parité QML) reste.
+function _assistNetBlocked() {
+  if (window._offlineMode) return false;
+  var m = S._currentLoginMode;
+  return m === 'guest' || m === 'auth';
+}
+function _assistShown() { return !!S._assistOn && !_assistNetBlocked(); }
+
 // Visibilite du bloc d'assistance en tete de l'onglet « Chances » : la force de
 // la main ne s'affiche que si le panneau info est ouvert sur l'onglet Chances,
 // que l'assistance est active et qu'un resultat est disponible.
@@ -208,14 +222,14 @@ function _gipAssistSync() {
   // Mode détaché : l'assistance vit dans sa propre fenêtre flottante et reste
   // visible tant que l'assistance est active, indépendamment du panneau info.
   if (S._assistDetached) {
-    box.style.display = S._assistOn ? '' : 'none';
+    box.style.display = _assistShown() ? '' : 'none';
     // La fenêtre détachée ne s'affiche qu'EN JEU (écran #s-game actif) :
     // _gipAssistSync peut être appelé depuis n'importe quel écran (boot, i18n,
     // options) et ré-affichait la fenêtre sur la page de login (bug remonté).
     var ap = document.getElementById('g-assist-panel');
     var _sg = document.getElementById('s-game');
     var _inGame = !!(_sg && _sg.classList.contains('active'));
-    if (ap) ap.style.display = (S._assistOn && _inGame) ? '' : 'none';
+    if (ap) ap.style.display = (_assistShown() && _inGame) ? '' : 'none';
     try { if (typeof window._assistPaneSync === 'function') window._assistPaneSync(); } catch (e) {}
     return;
   }
@@ -223,7 +237,7 @@ function _gipAssistSync() {
   var open = !!(panel && panel.style.display !== 'none');
   var oddsTab = false;
   try { oddsTab = localStorage.getItem('pth_gip_tab') === 'odds'; } catch (e) {}
-  box.style.display = (S._assistOn && open && oddsTab && hasContent) ? '' : 'none';
+  box.style.display = (_assistShown() && open && oddsTab && hasContent) ? '' : 'none';
   try { if (typeof window._assistPaneSync === 'function') window._assistPaneSync(); } catch (e) {}
 }
 
@@ -254,7 +268,7 @@ function _hsRankingOff(el) {
 function renderPreFlopStrength() {
   var el = document.getElementById('hand-strength');
   if (!el) return;
-  if (!S._assistOn) { _hsHide(el); return; } // assistance désactivée
+  if (!_assistShown()) { _hsHide(el); return; } // assistance désactivée ou pokerth.net
   if (_assistRankingBlocked()) { _hsRankingOff(el); return; } // table Ranking
   if (S.commCards.filter(function(c){ return c!=null; }).length > 0) return;
   if (S.myCards[0] == null || S.myCards[1] == null) { _hsHide(el); return; }
@@ -278,7 +292,7 @@ var _hsSeq = 0; // passe calcWinProbAsync courante (les anciennes s'abandonnent)
 function renderHandStrength() {
   var el = document.getElementById('hand-strength');
   if (!el) return;
-  if (!S._assistOn) { _hsHide(el); return; } // assistance désactivée
+  if (!_assistShown()) { _hsHide(el); return; } // assistance désactivée ou pokerth.net
   if (_assistRankingBlocked()) { _hsRankingOff(el); return; } // table Ranking
   var validComm = S.commCards.filter(function(c){ return c != null; });
   if (S.myCards[0] == null || S.myCards[1] == null || validComm.length === 0) { _hsHide(el); return; }
@@ -367,7 +381,7 @@ function renderOddsMonitor() {
   }, function () { return seq !== window._oddsSeq; });
 }
 
-export { calcWinProb, calcWinProbAsync, _assistRankingBlocked, _hsPanelIsLight, _hsContrastCol, _hsSet, _hsHide,
+export { calcWinProb, calcWinProbAsync, _assistRankingBlocked, _assistNetBlocked, _assistShown, _hsPanelIsLight, _hsContrastCol, _hsSet, _hsHide,
          _gipAssistSync, renderPreFlopStrength, renderHandStrength,
          renderOddsMonitor };
 
@@ -375,3 +389,4 @@ for (const [k, v] of Object.entries({ calcWinProb, _hsPanelIsLight,
   _hsContrastCol, _hsSet, _hsHide, _gipAssistSync, renderPreFlopStrength,
   renderHandStrength, renderOddsMonitor })) window[k] = v;
 window._renderOdds = renderOddsMonitor;
+window._assistAllowed = function () { return !_assistNetBlocked(); };

@@ -174,7 +174,8 @@ function _isGameScreenActive() {
 function _syncAssistWinScreen() {
   var ap = document.getElementById('g-assist-panel');
   if (!ap) return;
-  ap.style.display = (S._assistDetached && S._assistOn !== false && _isGameScreenActive()) ? '' : 'none';
+  ap.style.display = (S._assistDetached && S._assistOn !== false && _isGameScreenActive()
+    && !(typeof window._assistAllowed === 'function' && !window._assistAllowed())) ? '' : 'none';
 }
 
 // ── Détacher : déplace #gip-assist dans la fenêtre flottante ──

@@ -179,7 +179,8 @@ export const help = {
           t: "Cúntóir (neart na láimhe)",
           b: [
             "Ag barr an chluaisín Seans, léann bratach an chúntóra do lámh duit. Roimh an flop ainmníonn sé do lámh tosaigh agus rátálann sé í le réaltaí; ón flop ar aghaidh taispeánann sé do theaglaim is fearr reatha agus, tar éis ionsamhlúcháin ghairid, an seans measta atá agat an lámh a bhuachan mar chéatadán, le méadar daite ó dhearg (lag) go glas (láidir). Cosúil leis an monatóir dóchúlachtaí, ní úsáideann sé ach an t-eolas atá le feiceáil agatsa.",
-            "Tá dhá stíl taispeána ar fáil in Ardroghanna → Suíocháin: Deighleáin (deich mbloc) nó barra dul chun cinn clasaiceach. Is féidir gné iomlán an chúntóra a mhúchadh in Ardroghanna → Cúntóir."] },
+            "Tá dhá stíl taispeána ar fáil in Ardroghanna → Suíocháin: Deighleáin (deich mbloc) nó barra dul chun cinn clasaiceach. Is féidir gné iomlán an chúntóra a mhúchadh in Ardroghanna → Cúntóir.",
+            "Ar pokerth.net (mar aoi nó le cuntas) níl an cúntóir ar fáil, ionas go mbeidh an t-eolas céanna ag gach imreoir, mar atá sa chliant deisce. Fanann sé ar fáil sa chleachtadh agus ar fhreastalaithe LAN / tiomnaithe, ach amháin ag na boird rangaithe. Fanann an monatóir dóchúlachtaí thíos ar fáil."] },
         { id: "assistwin",
           t: "An cúntóir mar ghiuirléid ar snámh",
           b: [

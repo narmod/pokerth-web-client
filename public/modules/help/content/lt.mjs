@@ -124,7 +124,7 @@ export const help = {
         { id: 'assist', t: 'Asistentas (rankos stiprumas)',
           b: ['Kortelės Tikimybės viršuje asistento juosta skaito tavo ranką už tave. Prieš flopą ji įvardija tavo pradinę ranką ir įvertina ją žvaigždutėmis; nuo flopo rodo tavo dabartinę geriausią kombinaciją ir po greitos simuliacijos — numatomą tikimybę laimėti ranką procentais, su spalvos indikatoriumi nuo raudonos (silpna) iki žalios (stipri). Kaip ir tikimybių monitorius, naudoja tik informaciją, kurią gali matyti.',
               'Du rodymo stiliai yra Išplėstinės parinktys → Vietos: Segmentai (dešimt blokų) arba klasikinė eigos juosta. Visą asistentą galima išjungti Išplėstinės parinktys → Asistentas.',
-              'Prie reitingo stalų pagalba visada išjungta, kad visi žaidėjai turėtų tą pačią informaciją, kaip ir kompiuterio kliente. Žemiau esantis tikimybių monitorius lieka prieinamas.'] },
+              'Žaidžiant pokerth.net (kaip svečiui ar su paskyra) pagalba neprieinama, kad visi žaidėjai turėtų tą pačią informaciją, kaip ir kompiuterio kliente. Ji lieka prieinama treniruotėse ir LAN / atskiruose serveriuose, išskyrus reitingo stalus. Žemiau esantis tikimybių monitorius lieka prieinamas.'] },
         { id: 'assistwin', t: 'Asistentas kaip plūduriuojantis valdiklis',
           b: ['Asistento bloką galima atplėšti nuo skydelio į savą, visada viršuje esantį langelį: naudok atplėšimo mygtuką ant bloko, tada perkelk ir keisk jo dydį bet kur virš stalo — patogu stebėti rankos stiprumą neatidarant viso skydelio. Pritvirtinimo mygtukas grąžina jį į kortelę Tikimybės, o padėtis įsimenama. Skydelio viduje tempimo rankenėlė tarp Asistento ir tikimybių leidžia paskirstyti erdvę tarp jų.'] },
         { id: 'stats', t: 'Statistika',

@@ -179,7 +179,8 @@ export const help = {
           t: "Laguntzailea (eskuaren indarra)",
           b: [
             "Aukerak fitxaren goialdean, laguntzailearen bandak zure eskua irakurtzen du zure ordez. Flop-aren aurretik, zure hasierako eskua izendatzen du eta izarrekin baloratzen; flop-etik aurrera, zure uneko konbinaziorik onena eta, simulazio labur baten ondoren, eskua irabazteko aukera estimatua erakusten ditu ehunekotan, gorritik (ahula) berdera (indartsua) doan kolore-neurgailu batekin. Probabilitateen monitorea bezala, zuk ikus dezakezun informazioa soilik erabiltzen du.",
-            "Aukera aurreratuak → Eserlekuak atalean bi bistaratze-estilo daude: Segmentuak (hamar bloke) edo aurrerapen-barra klasikoa. Laguntzailearen funtzio osoa Aukera aurreratuak → Laguntzailea atalean desgai daiteke."] },
+            "Aukera aurreratuak → Eserlekuak atalean bi bistaratze-estilo daude: Segmentuak (hamar bloke) edo aurrerapen-barra klasikoa. Laguntzailearen funtzio osoa Aukera aurreratuak → Laguntzailea atalean desgai daiteke.",
+            "pokerth.net-en (gonbidatu gisa edo kontu batekin) laguntzailea ez dago erabilgarri, jokalari guztiek informazio bera izan dezaten, mahaigaineko bezeroan bezala. Entrenamenduan eta LAN / zerbitzari dedikatuetan erabilgarri jarraitzen du, sailkapeneko mahaietan izan ezik. Beheko probabilitateen monitoreak erabilgarri jarraitzen du."] },
         { id: "assistwin",
           t: "Laguntzailea widget flotatzaile gisa",
           b: [

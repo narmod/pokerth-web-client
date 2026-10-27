@@ -179,7 +179,8 @@ export const help = {
           t: "Umsizi (amandla esandla)",
           b: [
             "Phezulu kwethebhu yamaThuba, isibhengezo somsizi sikufundela isandla sakho. Ngaphambi kwe-flop siqamba isandla sakho sokuqala futhi sisilinganise ngezinkanyezi; kusukela ku-flop sibonisa inhlanganisela yakho engcono kakhulu yamanje futhi, ngemuva kokulingisa okusheshayo, amathuba akho alinganisiwe okuwina isandla njengephesenti, nesilinganiso sombala kusukela kokubomvu (okubuthakathaka) kuya kokuluhlaza (okuqinile). Njengesiqapheli samathuba, sisebenzisa ulwazi ongalubona kuphela.",
-            "Kunezitayela ezimbili zokubonisa ku-Izinketho ezithuthukisiwe → Izihlalo: Izingxenye (amabhlogo ayishumi) noma ibha yenqubekelaphambili yakudala. Isici somsizi sonke singavalwa ku-Izinketho ezithuthukisiwe → Umsizi."] },
+            "Kunezitayela ezimbili zokubonisa ku-Izinketho ezithuthukisiwe → Izihlalo: Izingxenye (amabhlogo ayishumi) noma ibha yenqubekelaphambili yakudala. Isici somsizi sonke singavalwa ku-Izinketho ezithuthukisiwe → Umsizi.",
+            "Ku-pokerth.net (njengesivakashi noma nge-akhawunti) umsizi akatholakali, ukuze wonke umdlali abe nolwazi olufanayo, njengasohlelweni lwekhompyutha. Usatholakala ekuziqeqesheni nakumaseva e-LAN / ezinikele, ngaphandle kwasematafuleni ezinga. Isiqapheli samathuba esingezansi sisatholakala."] },
         { id: "assistwin",
           t: "Umsizi njengewijethi entantayo",
           b: [

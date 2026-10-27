@@ -124,7 +124,7 @@ export const help = {
         { id: 'assist', t: 'Asysta (siła ręki)',
           b: ['Na górze zakładki Szanse baner asysty czyta twoją rękę za ciebie. Przed flopem nazywa twoją rękę startową i ocenia ją gwiazdkami; od flopu pokazuje twoją bieżącą najlepszą kombinację i, po szybkiej symulacji, szacowaną szansę wygrania ręki w procentach, ze wskaźnikiem koloru od czerwieni (słabo) po zieleń (mocno). Jak monitor prawdopodobieństwa, korzysta tylko z informacji, które możesz zobaczyć.',
               'Dwa style wyświetlania są dostępne w Opcje zaawansowane → Miejsca: Segmenty (dziesięć bloków) albo klasyczny pasek postępu. Całą funkcję asysty wyłącza się w Opcje zaawansowane → Asysta.',
-              'Przy stołach rankingowych asystent jest zawsze wyłączony, aby każdy gracz miał te same informacje, jak w kliencie desktopowym. Monitor szans poniżej pozostaje dostępny.'] },
+              'Na pokerth.net (jako gość lub z kontem) asystent jest niedostępny, aby każdy gracz miał te same informacje, jak w kliencie desktopowym. Pozostaje dostępny w trybie treningu oraz na serwerach LAN / dedykowanych, z wyjątkiem stołów rankingowych. Monitor szans poniżej pozostaje dostępny.'] },
         { id: 'assistwin', t: 'Asysta jako pływający widżet',
           b: ['Blok asysty można oderwać od panelu do własnego małego okna zawsze na wierzchu: użyj przycisku odrywania na bloku, potem przesuwaj i skaluj je gdziekolwiek nad stołem — wygodne, by mieć siłę ręki na oku bez otwartego całego panelu. Przycisk dokowania przywraca go do zakładki Szanse, a pozycja jest zapamiętywana. W panelu uchwyt przeciągania między Asystą a szansami pozwala podzielić miejsce między nimi.'] },
         { id: 'stats', t: 'Statystyki',

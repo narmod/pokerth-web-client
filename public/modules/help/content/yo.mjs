@@ -179,7 +179,8 @@ export const help = {
           t: "Olùrànlọ́wọ́ (agbára ọwọ́)",
           b: [
             "Ní òkè ojú-ewé Àǹfààní, àsíá olùrànlọ́wọ́ ń ka ọwọ́ rẹ fún ọ. Ṣáájú flop ó ń dárúkọ ọwọ́ ìbẹ̀rẹ̀ rẹ, ó sì ń fún un ní ìràwọ̀; láti flop lọ ó ń fi àkópọ̀ tó dára jù lọ́wọ́lọ́wọ́ hàn, àti lẹ́yìn ìṣàfarawé kíákíá, àǹfààní rẹ láti borí ọwọ́ ní ìdá-ọgọ́rùn-ún, pẹ̀lú ìwọ̀n àwọ̀ láti pupa (aláìlágbára) dé ewé (alágbára). Bí olùṣàbójútó àǹfààní, ó ń lo ìsọfúnni tí o lè rí nìkan.",
-            "Ọ̀nà ìfihàn méjì wà nínú Àṣàyàn ìlọsíwájú → Àwọn ìjókòó: Àwọn apá (búlọ́ọ̀kù mẹ́wàá) tàbí ọ̀pá ìlọsíwájú àtijọ́. A lè pa gbogbo ẹ̀yà olùrànlọ́wọ́ nínú Àṣàyàn ìlọsíwájú → Olùrànlọ́wọ́."] },
+            "Ọ̀nà ìfihàn méjì wà nínú Àṣàyàn ìlọsíwájú → Àwọn ìjókòó: Àwọn apá (búlọ́ọ̀kù mẹ́wàá) tàbí ọ̀pá ìlọsíwájú àtijọ́. A lè pa gbogbo ẹ̀yà olùrànlọ́wọ́ nínú Àṣàyàn ìlọsíwájú → Olùrànlọ́wọ́.",
+            "Lórí pokerth.net (gẹ́gẹ́ bí àlejò tàbí pẹ̀lú àkáǹtì) olùrànlọ́wọ́ kò sí, kí gbogbo òṣèré lè ní ìsọfúnni kan náà, bí ó ti rí nínú ètò kọ̀ǹpútà orí tábìlì. Ó ṣì wà nínú ìdánrawò àti lórí àwọn olùpín LAN / àdáni, àyàfi ní àwọn tábìlì ipò. Olùṣàbójútó àǹfààní tó wà nísàlẹ̀ ṣì wà."] },
         { id: "assistwin",
           t: "Olùrànlọ́wọ́ gẹ́gẹ́ bí fèrèsé tí ń léfòó",
           b: [

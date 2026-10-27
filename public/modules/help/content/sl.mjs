@@ -126,7 +126,7 @@ export const help = {
         { id: 'assist', t: 'Pomoč (moč roke)',
           b: ['Na vrhu zavihka Kvote pasica pomoči prebere tvojo roko namesto tebe. Pred flopom poimenuje tvojo začetno roko in jo oceni z zvezdicami; od flopa dalje prikaže tvojo trenutno najboljšo kombinacijo in po hitri simulaciji tvojo ocenjeno možnost zmage v roki v odstotkih, z barvno lestvico od rdeče (šibko) do zelene (močno). Kot nadzor kvot uporablja samo informacije, ki jih lahko vidiš.',
               'V oknu Napredne možnosti → Mesta sta na voljo dva sloga prikaza: Segmenti (deset blokov) ali klasična vrstica napredka. Celotno funkcijo pomoči lahko izklopiš v oknu Napredne možnosti → Asistenca.',
-              'Za mizami z uvrstitvijo je pomoč vedno izklopljena, da imajo vsi igralci enake informacije, kot v namiznem odjemalcu. Prikaz verjetnosti pod njo ostane na voljo.'] },
+              'Na pokerth.net (kot gost ali z računom) pomoč ni na voljo, da imajo vsi igralci enake informacije, kot v namiznem odjemalcu. Na voljo ostane pri vadbi in na LAN / lastnih strežnikih, razen za mizami z uvrstitvijo. Prikaz verjetnosti pod njo ostane na voljo.'] },
         { id: 'assistwin', t: 'Pomoč kot plavajoč pripomoček',
           b: ['Blok pomoči lahko odpneš od plošče v svoje lastno majhno okno, ki je vedno na vrhu: uporabi gumb za odpenjanje na bloku, nato ga premakni in spremeni velikost kjer koli nad mizo — priročno za spremljanje moči svoje roke brez odprte celotne plošče. Gumb za pripenjanje ga vrne nazaj v zavihek Kvote, njegov položaj pa si zapomni. Znotraj plošče ročaj za vlečenje med Pomočjo in kvotami omogoča deljenje prostora med obema.'] },
         { id: 'stats', t: 'Statistika',

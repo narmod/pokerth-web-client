@@ -124,7 +124,7 @@ export const help = {
         { id: 'assist', t: 'Assistans (handstyrka)',
           b: ['Överst på fliken Chanser läser assistansbannern din hand åt dig. Före floppen namnger den din starthand och betygsätter den med stjärnor; från floppen visar den din nuvarande bästa kombination och, efter en snabb simulering, din uppskattade chans att vinna handen i procent, med en färgindikator från rött (svag) till grönt (stark). Precis som sannolikhetsmonitorn använder den bara information du kan se.',
               'Två visningsstilar finns i Avancerade alternativ → Platser: Segment (tio block) eller en klassisk förloppsindikator. Hela assistansfunktionen kan stängas av i Avancerade alternativ → Assistans.',
-              'Vid rankingbord är assistansen alltid avstängd, så att alla spelare har samma information, som i skrivbordsklienten. Oddsmonitorn nedanför finns kvar.'] },
+              'På pokerth.net (som gäst eller med ett konto) är assistansen inte tillgänglig, så att alla spelare har samma information, som i skrivbordsklienten. Den finns kvar i träning och på LAN / dedikerade servrar, utom vid rankingbord. Oddsmonitorn nedanför finns kvar.'] },
         { id: 'assistwin', t: 'Assistansen som svävande widget',
           b: ['Assistansblocket kan lossas från panelen till ett eget litet fönster som alltid ligger överst: använd lossningsknappen på blocket, flytta och skala det sedan var du vill över bordet — praktiskt för att hålla koll på handstyrkan utan hela panelen öppen. Dockningsknappen sätter tillbaka det i fliken Chanser, och positionen kommer ihåg. Inuti panelen låter ett draghandtag mellan Assistans och oddsen dig fördela utrymmet mellan de två.'] },
         { id: 'stats', t: 'Statistik',

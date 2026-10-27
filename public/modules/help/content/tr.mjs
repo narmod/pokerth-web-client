@@ -124,7 +124,7 @@ export const help = {
         { id: 'assist', t: 'Asistan (el gücü)',
           b: ['Şanslar sekmesinin en üstünde asistan afişi elini senin yerine okur. Floptan önce başlangıç elini adlandırır ve yıldızlarla puanlar; floptan itibaren mevcut en iyi kombinasyonunu ve hızlı bir simülasyondan sonra eli kazanma tahmini olasılığını yüzde olarak gösterir — kırmızıdan (zayıf) yeşile (güçlü) bir renk göstergesiyle. Olasılık monitörü gibi, yalnızca görebildiğin bilgiyi kullanır.',
               'Gelişmiş seçenekler → Koltuklar’da iki görüntü stili vardır: Bölmeler (on blok) veya klasik bir ilerleme çubuğu. Asistan özelliğinin tamamı Gelişmiş seçenekler → Asistan’dan kapatılabilir.',
-              'Sıralama masalarında yardım her zaman kapalıdır; böylece masaüstü istemcide olduğu gibi her oyuncu aynı bilgiye sahip olur. Altındaki olasılık monitörü kullanılabilir kalır.'] },
+              'pokerth.net’te (misafir olarak veya bir hesapla) asistan kullanılamaz; böylece masaüstü istemcide olduğu gibi her oyuncu aynı bilgiye sahip olur. Antrenmanda ve LAN / özel sunucularda, sıralama masaları hariç, kullanılabilir kalır. Altındaki olasılık monitörü kullanılabilir kalır.'] },
         { id: 'assistwin', t: 'Yüzen araç olarak asistan',
           b: ['Asistan bloğu panelden ayrılıp hep üstte duran kendi küçük penceresine dönüşebilir: bloktaki ayırma düğmesini kullan, sonra masanın üzerinde istediğin yere taşı ve boyutlandır — bütün paneli açmadan el gücünü izlemek için pratik. Kenetleme düğmesi onu Şanslar sekmesine geri koyar ve konumu hatırlanır. Panelin içinde, Asistan ile olasılıklar arasındaki sürükleme tutamacı ikisi arasında alanı paylaştırmanı sağlar.'] },
         { id: 'stats', t: 'İstatistikler',

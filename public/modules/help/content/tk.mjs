@@ -179,7 +179,8 @@ export const help = {
           t: "Kömekçi (eliň güýji)",
           b: [
             "Mümkinçilikler goýmasynyň ýokarsynda kömekçi banneri eliňizi siziň üçin okaýar. Flopdan öň ol başlangyç eliňizi atlandyrýar we ýyldyzlar bilen bahalandyrýar; flopdan başlap häzirki iň gowy utgaşmaňyzy we çalt modellemeden soň eli utmak mümkinçiligiňizi göterimde, gyzyldan (gowşak) ýaşyla (güýçli) çenli reňk şkalasy bilen görkezýär. Ähtimallyk monitory ýaly, ol diňe siziň görüp bilýän maglumatyňyzy ulanýar.",
-            "Giňişleýin sazlamalar → Orunlar bölüminde iki görkeziş stili bar: Segmentler (on blok) ýa-da klassiki öňegidiş zolagy. Kömekçi aýratynlygyny doly Giňişleýin sazlamalar → Kömekçi bölüminde öçürip bolýar."] },
+            "Giňişleýin sazlamalar → Orunlar bölüminde iki görkeziş stili bar: Segmentler (on blok) ýa-da klassiki öňegidiş zolagy. Kömekçi aýratynlygyny doly Giňişleýin sazlamalar → Kömekçi bölüminde öçürip bolýar.",
+            "pokerth.net-de (myhman hökmünde ýa-da hasap bilen) kömekçi elýeterli däl, şeýlelikde kompýuter programmasyndaky ýaly ähli oýunçylarda birmeňzeş maglumat bolýar. Ol türgenleşikde we LAN / aýratyn serwerlerde elýeterli bolup galýar, reýting stollaryndan başga. Aşakdaky ähtimallyk monitory elýeterli bolup galýar."] },
         { id: "assistwin",
           t: "Kömekçi ýüzýän widžet hökmünde",
           b: [

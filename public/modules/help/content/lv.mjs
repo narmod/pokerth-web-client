@@ -130,7 +130,7 @@ export const help = {
         { id: 'assist', t: 'Asistents (kombinācijas stiprums)',
           b: ['Cilnes Iespējas augšdaļā asistenta josla nolasa tavu kombināciju tavā vietā. Pirms flopa tā nosauc tavas sākuma kārtis un novērtē tās ar zvaigznēm; sākot ar flopu, tā rāda tavu pašreizējo labāko kombināciju un pēc ātras simulācijas — tavas aplēstās izredzes uzvarēt partijā procentos, ar krāsu skalu no sarkanas (vāja) līdz zaļai (stipra). Tāpat kā izredžu monitors, tas izmanto tikai to informāciju, ko redzi arī tu.',
               'Logā Papildu opcijas → Vietas ir pieejami divi attēlojuma stili: Segmenti (desmit bloki) vai klasiska progresa josla. Visu asistenta funkciju var izslēgt logā Papildu opcijas → Asistents.',
-              'Pie reitinga galdiem palīdzība vienmēr ir izslēgta, lai visiem spēlētājiem būtu vienāda informācija, kā datora klientā. Zemāk esošais iespēju monitors paliek pieejams.'] },
+              'Spēlējot pokerth.net serverī (kā viesis vai ar kontu), palīdzība nav pieejama, lai visiem spēlētājiem būtu vienāda informācija, kā datora klientā. Tā paliek pieejama treniņā un LAN / dedicētajos serveros, izņemot pie reitinga galdiem. Zemāk esošais iespēju monitors paliek pieejams.'] },
         { id: 'assistwin', t: 'Asistents kā peldošs logs',
           b: ['Asistenta bloku var atdalīt no paneļa savā mazā logā, kas vienmēr ir virspusē: izmanto bloka atdalīšanas pogu, tad pārvieto un maini tā izmēru jebkur virs galda — ērti, lai sekotu savas kombinācijas stiprumam, neturot atvērtu visu paneli. Piestiprināšanas poga to liek atpakaļ cilnē Iespējas, un tā novietojums tiek atcerēts. Paneļa iekšpusē vilkšanas rokturis starp Asistentu un izredzēm ļauj sadalīt vietu starp abiem.'] },
         { id: 'stats', t: 'Statistika',

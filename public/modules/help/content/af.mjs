@@ -124,7 +124,7 @@ export const help = {
         { id: 'assist', t: 'Hulp (handsterkte)',
           b: ['Bo-aan die Kanse-oortjie lees die hulpbanier jou hand vir jou. Voor die flop noem dit jou beginhand en gradeer dit met sterre; van die flop af wys dit jou huidige beste kombinasie en, ná \u2019n vinnige simulasie, jou geskatte kans om die hand te wen as \u2019n persentasie, met \u2019n kleuraanwyser van rooi (swak) tot groen (sterk). Soos die waarskynlikheidsmonitor gebruik dit slegs inligting wat jy kan sien.',
               'Twee vertoonstyle is in Gevorderde opsies → Sitplekke: Segmente (tien blokke) of ’n klassieke vorderingsbalk. Die hele hulpfunksie kan in Gevorderde opsies → Bystand afgeskakel word.',
-              'By ranglystafels is die bystand altyd af, sodat elke speler dieselfde inligting het, soos in die rekenaarkliënt. Die kanse-monitor daaronder bly beskikbaar.'] },
+              'Op pokerth.net (as gas of met ’n rekening) is die bystand nie beskikbaar nie, sodat elke speler dieselfde inligting het, soos in die rekenaarkliënt. Dit bly beskikbaar in oefening en op LAN / eie bedieners, behalwe by ranglystafels. Die kanse-monitor daaronder bly beskikbaar.'] },
         { id: 'assistwin', t: 'Die hulp as \u2019n swewende venstertjie',
           b: ['Die hulpblok kan van die paneel losgetrek word in sy eie klein venster wat altyd bo bly: gebruik die lostrekknoppie op die blok, skuif en skaal dit dan enige plek oor die tafel — handig om die handsterkte dop te hou sonder die hele paneel oop. Die dokknoppie sit dit terug in die Kanse-oortjie, en die posisie word onthou. Binne die paneel laat \u2019n sleephandvatsel tussen Hulp en die kanse jou die ruimte tussen die twee verdeel.'] },
         { id: 'stats', t: 'Statistieke',

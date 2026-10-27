@@ -179,7 +179,8 @@ export const help = {
           t: "Köməkçi (əlin gücü)",
           b: [
             "Şanslar vərəqinin yuxarısında köməkçi banneri əlinizi sizin üçün oxuyur. Flopdan əvvəl başlanğıc əlinizi adlandırır və ulduzlarla qiymətləndirir; flopdan etibarən cari ən yaxşı kombinasiyanızı və qısa simulyasiyadan sonra əli qazanma şansınızı faizlə göstərir, qırmızıdan (zəif) yaşıla (güclü) rəngli göstərici ilə. Ehtimal monitoru kimi, yalnız görə bildiyiniz məlumatdan istifadə edir.",
-            "Əlavə seçimlər → Oturacaqlar bölməsində iki görünüş üslubu mövcuddur: Seqmentlər (on blok) və ya klassik irəliləyiş zolağı. Bütün köməkçi funksiyası Əlavə seçimlər → Köməkçi bölməsində söndürülə bilər."] },
+            "Əlavə seçimlər → Oturacaqlar bölməsində iki görünüş üslubu mövcuddur: Seqmentlər (on blok) və ya klassik irəliləyiş zolağı. Bütün köməkçi funksiyası Əlavə seçimlər → Köməkçi bölməsində söndürülə bilər.",
+            "pokerth.net-də (qonaq kimi və ya hesabla) köməkçi əlçatan deyil ki, masaüstü klientdə olduğu kimi hər oyunçu eyni məlumata malik olsun. Məşqdə və LAN / xüsusi serverlərdə isə, reytinq masaları istisna olmaqla, əlçatan qalır. Aşağıdakı ehtimal monitoru əlçatan qalır."] },
         { id: "assistwin",
           t: "Üzən vidcet kimi köməkçi",
           b: [

@@ -179,7 +179,8 @@ export const help = {
           t: "Aðstoð (styrkur handar)",
           b: [
             "Efst á Líkur-flipanum les aðstoðarborðinn höndina fyrir þig. Fyrir flop nefnir hann upphafshöndina þína og gefur henni stjörnur; frá flop sýnir hann bestu núverandi samsetninguna þína og, eftir snögga hermun, áætlaðar líkur þínar á að vinna höndina í prósentum, með lituðum mæli frá rauðu (veik) yfir í grænt (sterk). Eins og líkindavaktin notar hann aðeins upplýsingar sem þú sérð.",
-            "Tveir birtingarstílar eru í boði í Ítarlegir valkostir → Sæti: bútar (tíu kubbar) eða sígild framvindustika. Hægt er að slökkva á allri aðstoðinni í Ítarlegir valkostir → Aðstoð."] },
+            "Tveir birtingarstílar eru í boði í Ítarlegir valkostir → Sæti: bútar (tíu kubbar) eða sígild framvindustika. Hægt er að slökkva á allri aðstoðinni í Ítarlegir valkostir → Aðstoð.",
+            "Á pokerth.net (sem gestur eða með aðgangi) er aðstoðin ekki í boði, svo allir spilarar hafi sömu upplýsingar, eins og í skjáborðsforritinu. Hún er áfram í boði í æfingu og á LAN / sérþjónum, nema við stigaborð. Líkindavaktin hér fyrir neðan er áfram í boði."] },
         { id: "assistwin",
           t: "Aðstoð sem fljótandi smágluggi",
           b: [

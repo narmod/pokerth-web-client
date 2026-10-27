@@ -456,6 +456,15 @@ function openAdvancedOptions() {
   sync('adv-avcreate', 'avatar_create', true);   // onglet « Créer » de la fenêtre avatar (studio matriciel, extension web)
   try { document.body.classList.toggle('chat-tr-always', _advGet('chat_tr_always', false)); } catch (e) {}
   sync('adv-assist', 'assist', true);
+  // Assistance: no such option on pokerth.net (web.338, odds-panel.mjs
+  // _assistNetBlocked) — its two rows are hidden there, shown elsewhere.
+  try {
+    var _aOk = !(typeof window._assistAllowed === 'function' && !window._assistAllowed());
+    ['adv-assist', 'adv-assiststyle'].forEach(function (id) {
+      var r = document.getElementById(id); r = r && r.closest('.adv-row');
+      if (r) r.style.display = _aOk ? '' : 'none';
+    });
+  } catch (e) {}
   sync('adv-showodds', 'show_odds', true);
   sync('adv-handsbtn', 'hands_btn', true);
   sync('adv-haptic', 'haptic', true);
@@ -12520,7 +12529,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.337'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.338'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

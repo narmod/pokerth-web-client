@@ -179,7 +179,8 @@ export const help = {
           t: "Asistanto (forto de la mano)",
           b: [
             "Supre de la langeto Ŝancoj, la asistanta rubando legas vian manon por vi. Antaŭ la flop ĝi nomas vian komencan manon kaj taksas ĝin per steloj; ekde la flop ĝi montras vian nunan plej bonan kombinaĵon kaj, post mallonga simulado, vian taksitan ŝancon gajni la manon en procentoj, kun kolora mezurilo de ruĝa (malforta) ĝis verda (forta). Kiel la probabla monitoro, ĝi uzas nur informojn, kiujn vi povas vidi.",
-            "Du montrostiloj disponeblas en Altnivelaj opcioj → Sidlokoj: Segmentoj (dek blokoj) aŭ klasika progresbreto. La tuta asistanta funkcio estas malŝaltebla en Altnivelaj opcioj → Asistanto."] },
+            "Du montrostiloj disponeblas en Altnivelaj opcioj → Sidlokoj: Segmentoj (dek blokoj) aŭ klasika progresbreto. La tuta asistanta funkcio estas malŝaltebla en Altnivelaj opcioj → Asistanto.",
+            "Ĉe pokerth.net (kiel gasto aŭ per konto) la asistanto ne disponeblas, por ke ĉiu ludanto havu la samajn informojn, kiel en la labortabla kliento. Ĝi restas disponebla dum trejnado kaj ĉe LAN / dediĉitaj serviloj, krom ĉe rangigaj tabloj. La probabla monitoro sube restas disponebla."] },
         { id: "assistwin",
           t: "La asistanto kiel flosanta fenestraĵo",
           b: [
