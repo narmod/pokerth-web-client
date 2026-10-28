@@ -28,6 +28,14 @@ highlights below.
   and leads to Deployment. Not shown on an install without git. Test: `scripts/test-admin-overview.mjs` (+4).
 
 ### Fixed
+- **Client errors, web.339 batch** (`web.339`) — three reports from Admin › Client errors:
+  `arena-witness.mjs` read the `localStorage` global unguarded as a default dependency, which throws a
+  `SecurityError` when site data is blocked (Windows · Edge 156): the module died, now it runs without storage;
+  training: leaving or re-creating the table within the 300 ms before the first hand made the paced start read a
+  null table (`Cannot read properties of null (reading 'start')`, ChromeOS · Chrome 156): only the table that call
+  created is started, if still current and the server not stopped; `Can't find variable: __gCrWeb` (the script
+  Chrome for iOS injects) is now filtered as browser noise. Tests: `scripts/test-offline-start-leave.mjs` (new),
+  `scripts/test-arena-witness-client.mjs` (+1), `scripts/test-errcollect.mjs` (+1).
 - **Safari extension rejection in the error journal** (`web.337`) — `Invalid call to runtime.sendMessage(). Tab not
   found.` (iPhone · Safari 26) reached Admin › Client errors as an « Unhandled rejection »; the client never calls
   `runtime.*`, so `isExtNoise` now drops any `runtime.sendMessage()` message. Test: `scripts/test-errcollect.mjs` (+1).

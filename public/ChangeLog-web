@@ -1,3 +1,7 @@
+2026-10-28 version 2.1.10-web.339:
+- bugfix: leaving a training table right after starting it no longer causes an error
+- bugfix: with site data blocked in the browser, part of the app no longer fails to load
+
 2026-10-27 version 2.1.10-web.338:
 - improvement: the Assistance (hand strength) is no longer available when you play on pokerth.net, so every player has the same information; it stays available in training and on LAN servers
 

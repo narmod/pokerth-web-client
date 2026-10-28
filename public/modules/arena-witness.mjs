@@ -78,7 +78,10 @@ export function takeHandoff(hash, storage) {
 export function createWitness(deps) {
   const d = Object.assign({
     fetch: (typeof fetch === 'function') ? fetch.bind(globalThis) : null,
-    storage: (typeof localStorage !== 'undefined') ? localStorage : null,
+    // Reading `localStorage` itself throws a SecurityError when storage is
+    // blocked for the site (Edge/Chrome « block third-party data », some
+    // privacy modes): no storage then, never a dead module (web.339).
+    storage: (function () { try { return (typeof localStorage !== 'undefined') ? localStorage : null; } catch (e) { return null; } })(),
     enabled: () => true,          // the player's option
     online: () => true,           // a LAN game through this site
     myName: () => '',

@@ -305,7 +305,12 @@ export class FakeServer {
         try { if (typeof window !== 'undefined' && window.dispatchEvent) window.dispatchEvent(new CustomEvent('pth-achievement', { detail: a })); } catch (e) {}
       } });
     } catch (e) { this._ach = null; }
-    this.pace(()=>this.table.start(), 300);
+    // The player may leave (or re-create) within the 300 ms: _closeAndReset
+    // sets this.table to null, and the paced start threw « Cannot read
+    // properties of null (reading 'start') » (web.339). Start only the table
+    // this call created, if it is still the current one.
+    const tb = this.table;
+    this.pace(()=>{ if(tb && this.table===tb && !this.stopped) tb.start(); }, 300);
   }
   _clearHumanTimer(){ if(this._humanTimer){ clearTimeout(this._humanTimer); this._humanTimer=null; } }
   // Reprise après une pause entre les mains. Idempotent : sans continuation

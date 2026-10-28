@@ -140,5 +140,16 @@ const game = (id, name) => ({ gameId: id, name, say: (k) => said.push(k) });
   ok(last && last.code === 'ABCD2345', 'the witness sends the code handed over');
 }
 
+// Storage blocked for the site (Edge: « Access is denied for this document »):
+// reading the global throws; the witness must still be created (web.339).
+{
+  const desc = Object.getOwnPropertyDescriptor(globalThis, 'localStorage');
+  Object.defineProperty(globalThis, 'localStorage', { configurable: true, get() { const e = new Error('Access is denied for this document.'); e.name = 'SecurityError'; throw e; } });
+  let w2 = null, err = null;
+  try { w2 = createWitness({ fetch: async () => ({ ok: true, json: async () => ({}) }) }); } catch (e) { err = e; }
+  ok(!err && w2 && typeof w2.onGameStart === 'function', 'blocked localStorage: the witness is still created');
+  if (desc) Object.defineProperty(globalThis, 'localStorage', desc); else delete globalThis.localStorage;
+}
+
 console.log((n - fail) + '/' + n + ' passed');
 process.exit(fail ? 1 : 0);

@@ -109,6 +109,9 @@
     if (s.indexOf('ucbrowser_script') !== -1 || s.indexOf('/u.c.b.r.o.w.s.e.r/') !== -1) return true;
     if (s.indexOf('wrappedJSObject') !== -1) return true;
     if (/\b__firefox__\b|\bDarkReader\b/.test(String(msg || ''))) return true;
+    // Chrome for iOS injects its own page script (__gCrWeb): « Can't find
+    // variable: __gCrWeb » at /:1 is that script, never the client.
+    if (/\b__gCrWeb\b/.test(String(msg || ''))) return true;
     // WebExtension messaging (Safari: "Invalid call to runtime.sendMessage().
     // Tab not found."): the client never calls runtime.* — always an extension.
     if (/\bruntime\.sendMessage\(\)/.test(String(msg || ''))) return true;
