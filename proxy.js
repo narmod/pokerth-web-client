@@ -257,6 +257,7 @@ function describeMsg(payload) {
       const ack = pbDecode(outer[7][0]);
       const pid = ack[2] ? ack[2][0] : '?';
       extra = ' ✓ CONNECTED! playerId=' + pid;
+      if (typeof pid === 'number') return { name, extra, pid };
     }
     if (msgType === 1 && outer[2] && outer[2][0]) { // Announce
       const ann = pbDecode(outer[2][0]);
@@ -303,7 +304,16 @@ function saveStatsSoon() {
 // Runtime admin config (reset period, ...) persisted next to stats; env is the fallback.
 const ADMIN_CONFIG_FILE = process.env.ADMIN_CONFIG_FILE || path.join(__dirname, 'admin-config.json');
 let _adminConfig = {};
-try { _adminConfig = JSON.parse(fs.readFileSync(ADMIN_CONFIG_FILE, 'utf8')) || {}; } catch (e) { _adminConfig = {}; }
+try { _adminConfig = JSON.parse(fs.readFileSync(ADMIN_CONFIG_FILE, 'utf8')) || {}; } catch (e) {
+  _adminConfig = {};
+  // A file that exists but does not parse (crash mid-write, full disk) used to
+  // be overwritten by the next save: every admin setting lost, silently.
+  if (e && e.code !== 'ENOENT') {
+    const _bad = ADMIN_CONFIG_FILE + '.corrupt-' + Date.now();
+    try { fs.copyFileSync(ADMIN_CONFIG_FILE, _bad); } catch (e2) {}
+    console.error('[admin] ' + ADMIN_CONFIG_FILE + ' unreadable (' + e.message + ') — kept as ' + _bad + ', starting from defaults');
+  }
+}
 // ── Interrupteurs d'arrêt de fonctionnalité (kill switches) ───────────────
 // Une fonctionnalité qui casse en production n'avait qu'une issue : redéployer.
 // L'admin peut ici forcer une option à OFF pour tout le monde, tout de suite,
@@ -421,7 +431,14 @@ function _stateFile(envName, name) {
   } catch (e) { console.error('[state] could not move ' + name + ': ' + e.message); return old; }
   return f;
 }
-function saveAdminConfig() { try { fs.writeFileSync(ADMIN_CONFIG_FILE, JSON.stringify(_adminConfig)); } catch (e) { console.error('[admin] config write failed:', e.message); } }
+// Written to a temp file then renamed (a crash mid-write no longer leaves a
+// truncated file), mode 0600: it holds the Discord webhook and the Arena key.
+function saveAdminConfig() {
+  const data = JSON.stringify(_adminConfig), tmp = ADMIN_CONFIG_FILE + '.tmp';
+  try { fs.writeFileSync(tmp, data, { mode: 0o600 }); fs.renameSync(tmp, ADMIN_CONFIG_FILE); return; }
+  catch (e) { try { fs.unlinkSync(tmp); } catch (e2) {} }
+  try { fs.writeFileSync(ADMIN_CONFIG_FILE, data, { mode: 0o600 }); } catch (e) { console.error('[admin] config write failed:', e.message); }
+}
 
 // ── LAN server directory (players propose, admin approves) ──────────────────
 // See server/lan-directory.js. Approved servers join the dial allowlist
@@ -12088,6 +12105,7 @@ function readRawBody(req, max, cb) {
   req.on('end', function () { cb(tooBig ? null : Buffer.concat(chunks)); });
   req.on('error', function () { cb(null); });
 }
+const PKG_MAX_ENTRIES = 400, PKG_MAX_UNZIPPED = 200 * 1024 * 1024;
 function importPackage(kind, idHint, zipBuf, cb) {
   let tmp;
   try { tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'pkg-')); } catch (e) { return cb('temp dir failed'); }
@@ -12095,7 +12113,13 @@ function importPackage(kind, idHint, zipBuf, cb) {
   const exDir = path.join(tmp, 'x'); const zipPath = path.join(tmp, 'in.zip');
   try { fs.writeFileSync(zipPath, zipBuf); fs.mkdirSync(exDir); } catch (e) { return done('write failed'); }
   // -j flattens (junks paths) → neutralises zip-slip; we then pick files by basename
-  const un = spawnSync('unzip', ['-j', '-o', '-qq', zipPath, '-d', exDir], { stdio: 'ignore' });
+  // Sizes from the central directory first: a 1.4 MB zip that unpacks to 1.5 GB
+  // froze every game for seconds (spawnSync) and filled the temp disk.
+  const zi = spawnSync('unzip', ['-Zt', zipPath], { encoding: 'utf8', timeout: 10000 });
+  const zm = /(\d+) files?, (\d+) bytes? uncompressed/.exec(String(zi.stdout || ''));
+  if (!zm) return done('not a valid .zip archive');
+  if (+zm[1] > PKG_MAX_ENTRIES || +zm[2] > PKG_MAX_UNZIPPED) return done('archive too large once unpacked (max ' + PKG_MAX_ENTRIES + ' files, ' + Math.round(PKG_MAX_UNZIPPED / 1048576) + ' MB)');
+  const un = spawnSync('unzip', ['-j', '-o', '-qq', zipPath, '-d', exDir], { stdio: 'ignore', timeout: 30000 });
   if (un.status !== 0) return done('not a valid .zip archive');
   // -j stops path traversal on write, but unzip still recreates symlink entries:
   // a member « felt.png » pointing at admin-config.json or /etc/passwd would be
@@ -14121,7 +14145,9 @@ function handleRanking(req, res, query) {
     res.end(JSON.stringify({ ok: false, error: 'unknown_source', allowed: Object.keys(RANKING_SOURCES) }));
     return;
   }
-  const cacheKey = key + '|' + (req.url.split('?')[1] || '');
+  // Keyed on the parameters the upstream call reads: any extra parameter
+  // (&x=1, &x=2…) used to make every request a miss and an upstream fetch.
+  const cacheKey = key + '|' + [String((query && query.season) || '').slice(0, 16), String((query && query.q) || '').trim().slice(0, 64), String((query && query.page) || '').slice(0, 8)].join('|');
   RELAY.get(cacheKey, RANKING_TTL_MS, function () { return rankingUpstream(src, query); }).then(function (out) {
     res.writeHead(out.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': out.status === 200 ? 'public, max-age=30' : 'no-store', 'X-Ranking-Cache': out.note });
     res.end(out.body);
@@ -14454,6 +14480,13 @@ const AWARD_FILE_RE = /^\/storage\/awards\/[A-Za-z0-9._-]+\.(png|jpe?g|gif|webp)
 const AWARD_CACHE = new Map();          // file url -> { at, status, type, buf }
 const AWARD_TTL_MS = 6 * 60 * 60 * 1000;
 const AWARD_CACHE_MAX = 200;
+// The two image relays serve another site's bytes from THIS origin, where
+// /admin keeps its token: only raster image types go through (an HTML page or
+// an SVG attachment on the forum would otherwise run here).
+function _relayImgType(t) {
+  const s = String(t || 'image/png').split(';')[0].trim().toLowerCase();
+  return /^image\/(?:png|jpe?g|gif|webp|avif|bmp|x-icon|vnd\.microsoft\.icon)$/i.test(s) ? s : null;
+}
 function handleAwardImg(req, res, query) {
   const src = PLAYER_SOURCES[String((query && query.src) || '').toLowerCase()];
   const file = String((query && query.file) || '');
@@ -14475,7 +14508,12 @@ function handleAwardImg(req, res, query) {
       res.end(JSON.stringify({ ok: false, error: 'upstream_' + r.status }));
       return null;
     }
-    const type = r.headers.get('content-type') || 'image/png';
+    const type = _relayImgType(r.headers.get('content-type'));
+    if (!type) {
+      res.writeHead(415, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+      res.end(JSON.stringify({ ok: false, error: 'not_an_image' }));
+      return null;
+    }
     return r.arrayBuffer().then(function (ab) {
       const buf = Buffer.from(ab);
       if (AWARD_CACHE.size >= AWARD_CACHE_MAX) AWARD_CACHE.clear();
@@ -14498,7 +14536,7 @@ function handlePlayer(req, res, query) {
     return;
   }
   const nick = String((query && query.nick) || '').trim();
-  if (!nick) {
+  if (!nick || nick.length > 64 || /[\u0000-\u001f\u007f]/.test(nick)) {
     res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
     res.end(JSON.stringify({ ok: false, error: 'missing_nick' }));
     return;
@@ -14647,7 +14685,12 @@ function handleForumImg(req, res, query) {
       res.end(JSON.stringify({ ok: false, error: 'upstream_' + r.status }));
       return null;
     }
-    const type = r.headers.get('content-type') || 'image/png';
+    const type = _relayImgType(r.headers.get('content-type'));
+    if (!type) {
+      res.writeHead(415, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+      res.end(JSON.stringify({ ok: false, error: 'not_an_image' }));
+      return null;
+    }
     return r.arrayBuffer().then(function (ab) {
       const buf = Buffer.from(ab);
       if (buf.length <= FORUMIMG_MAX_BYTES) {
@@ -15212,6 +15255,9 @@ const httpServer = http.createServer((req, res) => {
   // and 404'ing on a nonexistent file named "/?host=...".
   const reqPathOnly = req.url.split('?')[0];
   const query = _safeQuery(req.url);
+  // Real User-Agents are under 400 characters; the visit statistics run a dozen
+  // regexes over it, and a crafted 16 KB one cost ~29 ms of event loop each.
+  if (req.headers['user-agent'] && req.headers['user-agent'].length > 512) req.headers['user-agent'] = req.headers['user-agent'].slice(0, 512);
   if (reqPathOnly === '/admin' || reqPathOnly === '/admin.html' || reqPathOnly.indexOf('/admin/') === 0) {
     const q = _safeQuery(req.url);
     // Every write is logged, limiter or not (RATE_LIMIT_DISABLED=1, or
@@ -15445,9 +15491,11 @@ const httpServer = http.createServer((req, res) => {
   if (reqPathOnly === '/pdb-analyse') {
     if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
     function _paJson(code, obj) {
+      if (res.headersSent) return;
       res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
       res.end(JSON.stringify(obj));
     }
+    if (!_ipRateOk(_pdbRate, clientIp(req), PDB_RATE_MAX, PDB_RATE_WINDOW)) { req.resume(); return _paJson(429, { ok: false, error: 'too many analyses from this address, try again later' }); }
     return readRawBody(req, 10 * 1024 * 1024, function (buf) {
       if (!buf || !buf.length) return _paJson(413, { ok: false, error: 'empty upload or larger than 10 MB' });
       // Cheap sanity gate before bothering the upstream server.
@@ -15478,6 +15526,8 @@ const httpServer = http.createServer((req, res) => {
         var out = '';
         up.setEncoding('utf8');
         up.on('data', function (c) { out += c; if (out.length > 4096) up.destroy(); });
+        // destroy() above emits neither 'end' nor 'error': answer anyway.
+        up.on('close', function () { _paJson(502, { ok: false, error: 'bad response' }); });
         up.on('end', function () {
           var txt = String(out).trim();
           var head = txt.split(/\s+/)[0] || '';
@@ -15594,7 +15644,9 @@ const httpServer = http.createServer((req, res) => {
   // the id is a client-minted random token, hashed before storage. 204 reply.
   if (reqPathOnly === '/__visit') {
     if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
+    const _vOk = _beaconOk(req);
     readJsonBody(req, function (d) {
+      if (!_vOk) { res.writeHead(204, { 'Cache-Control': 'no-store' }); res.end(); return; }
       try {
         _pingStats.last = Date.now();
         // Automate (robot UA ou navigator.webdriver) : compte a part, cf. visitIsBot.
@@ -15637,9 +15689,10 @@ const httpServer = http.createServer((req, res) => {
   // key set can never grow past the catalogue. 204 reply, like /__visit.
   if (reqPathOnly === '/__music') {
     if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
+    const _mOk = _beaconOk(req);
     readJsonBody(req, function (d) {
       try {
-        if (musicEnabled() && d && d.id) { _pingStats.nMusic++; _pingStats.last = Date.now(); recordMusicPlay(d.id, visitIsBot(req, d)); }
+        if (_mOk && musicEnabled() && d && d.id) { _pingStats.nMusic++; _pingStats.last = Date.now(); recordMusicPlay(d.id, visitIsBot(req, d)); }
       } catch (e) { /* ignore a bad ping */ }
       res.writeHead(204, { 'Cache-Control': 'no-store' });
       res.end();
@@ -15656,6 +15709,7 @@ const httpServer = http.createServer((req, res) => {
     if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
     readJsonBody(req, function (d) {
       let okEv = false;
+      if (!_beaconOk(req)) { res.writeHead(204, { 'Cache-Control': 'no-store' }); res.end(); return; }
       try { okEv = !!(d && recordGuideEvent(d.ctx, d.ev, visitIsBot(req, d))); } catch (e) { okEv = false; }
       if (okEv) { _pingStats.nGuide++; _pingStats.last = Date.now(); }
       res.writeHead(okEv ? 204 : 400, { 'Cache-Control': 'no-store' });
@@ -15679,6 +15733,7 @@ const httpServer = http.createServer((req, res) => {
         res.end(JSON.stringify(obj));
       }
       if (!musicEnabled()) return j(404, { ok: false, error: 'music disabled' });
+      if (!_beaconOk(req)) return j(429, { ok: false, error: 'too many requests' });
       const id = (d && typeof d.id === 'string') ? d.id : '';
       const vid = (d && typeof d.vid === 'string') ? d.vid.slice(0, 128) : '';
       if (!id) return j(400, { ok: false, error: 'id required' });
@@ -15722,6 +15777,7 @@ const httpServer = http.createServer((req, res) => {
       const h = _pollVoterHash(p.id, vid);
       p.voters = p.voters || {};
       const already = p.voters[h] !== undefined;
+      if (!already && !_ipRateOk(_pollRate, clientIp(req), POLL_RATE_MAX, POLL_RATE_WINDOW)) return j(429, { ok: false, error: 'too many votes from this address' });
       if (!already) { p.voters[h] = choice; savePollsSoon(); }
       const t = _pollTally(p);
       return j(200, { ok: true, already: already, choice: p.voters[h], tally: t.tally, total: t.total });
@@ -15989,6 +16045,8 @@ const _allClients = new Set();
 // push a multi-MB payload that we'd fan out to every peer — a cheap
 // amplification/DoS vector.
 const MAX_RELAY_BYTES = 32 * 1024;
+const MAX_REACT_BYTES = 64;   // one emoji (with modifiers / ZWJ sequences)
+const MAX_UPSTREAM_QUEUE = 256 * 1024;   // browser → server bytes waiting on a stalled upstream
 
 // ── Throttle outbound TCP connections to PokerTH servers ──
 // Avoids tripping per-IP anti-brute-force when many clients connect to the
@@ -16046,6 +16104,35 @@ const _errGroups = new Map();            // signature → groupe
 // signatures par session, 10 s entre deux envois) ; ceci vise le navigateur
 // trafiqué ou le script qui viendrait marteler l'endpoint, ouvert à tous.
 const ERR_RATE_MAX = 30, ERR_RATE_WINDOW = 3600000;
+// Same counter for the other public endpoints: m = Map(ip → { n, reset }).
+function _ipRateOk(m, ip, max, windowMs) {
+  const now = Date.now();
+  let r = m.get(ip);
+  if (!r || r.reset < now) { r = { n: 0, reset: now + windowMs }; m.set(ip, r); }
+  if (m.size > 5000) m.forEach(function (v, k) { if (v.reset < now) m.delete(k); });
+  r.n++;
+  return r.n <= max;
+}
+// Anonymous beacons (/__visit, /__music, /__guide, /__music-vote): a normal
+// page sends a handful an hour; 300 000 random visitor ids in a few minutes
+// took visits.json to 20 MB and stalled the event loop on every save. Past the
+// limit a beacon is answered as usual and not counted.
+const BEACON_RATE_MAX = 600, BEACON_RATE_WINDOW = 600000;
+const _beaconRate = new Map();
+// The statistics routes never see the caller's address: the limit is kept here,
+// in memory, under a hash salted per process (never stored, never logged).
+const _BEACON_SALT = crypto.randomBytes(16);
+function _beaconOk(req) {
+  const k = crypto.createHash('sha256').update(_BEACON_SALT).update(String(clientIp(req))).digest('base64').slice(0, 16);
+  return _ipRateOk(_beaconRate, k, BEACON_RATE_MAX, BEACON_RATE_WINDOW);
+}
+// New answers to the product poll: one per device, deduped on a client-chosen
+// id only — 3000 votes in 2 s from one script. 30 new votes per hour per IP.
+const POLL_RATE_MAX = 30, POLL_RATE_WINDOW = 3600000;
+const _pollRate = new Map();
+// Log analysis relay: upload.php blocks THIS host after 4 errors, for everyone.
+const PDB_RATE_MAX = 10, PDB_RATE_WINDOW = 3600000;
+const _pdbRate = new Map();
 const _errRate = new Map();              // ip → { n, reset }
 function _errRateOk(ip) {
   const now = Date.now();
@@ -16281,6 +16368,7 @@ function _openUpstream(S) {
           S.rxBuf = S.rxBuf.slice(4 + msgLen);
           S.n++;
           const d = describeMsg(payload);
+          if (d.name === 'InitAck' && typeof d.pid === 'number') S.playerId = d.pid;
           if (d.name === 'InitAck' && S.isAuthLogin && S.chatNick) _issueSyncToken(S);
           const _ll = _logLevel();
           // quiet : rien par message, SAUF les trames d'erreur (toujours utiles).
@@ -16384,11 +16472,19 @@ function _attachWs(S, ws) {
           console.warn('[!] Dropped oversized relay frame (' + Buffer.byteLength(text) + 'b) from ' + (ws._relayKey || '?'));
           return;
         }
+        // Only a session the server has accepted (InitAck) may react, and only
+        // as itself: the sender id is the one the server gave this session, not
+        // the one in the frame (anyone could show text over any seat), and the
+        // reaction is one short emoji, not up to 32 KB of text.
+        if (typeof S.playerId !== 'number') return;
+        const _re = text.slice(text.indexOf(':', 6) + 1);
+        if (text.indexOf(':', 6) < 0 || !_re || Buffer.byteLength(_re) > MAX_REACT_BYTES || /[\u0000-\u001f<>]/.test(_re)) return;
+        const _out = 'REACT:' + S.playerId + ':' + _re;
         _allClients.forEach(client => {
           // Sauter les sockets engorgées (miroir pokerth#518) : les relais sont
           // cosmétiques — on les jette plutôt que d'empiler sur un client bloqué.
           if (client !== ws && client.readyState === 1 && client._relayKey === ws._relayKey &&
-              client.bufferedAmount <= MAX_WS_SEND_QUEUE) client.send(text);
+              client.bufferedAmount <= MAX_WS_SEND_QUEUE) client.send(_out);
         });
         return;
       }
@@ -16430,6 +16526,15 @@ function _attachWs(S, ws) {
         // server passes on without keeping.
         if (_ll >= 2 && _n <= 32 && d.name !== 'Init' && d.name !== 'AuthClientResponse') console.log('      hex: ' + buf.slice(4).toString('hex'));
       }
+    }
+    // An upstream that stops reading (slow or hostile LAN server) used to let
+    // this buffer grow without bound; the server→browser side already has a
+    // 1 MiB ceiling.
+    if (S.sock.writableLength > MAX_UPSTREAM_QUEUE) {
+      console.warn('[!] Upstream not reading (' + S.sock.writableLength + 'b queued) — closing');
+      try { ws.close(1008, 'upstream stalled'); } catch (_) {}
+      _destroySession(S);
+      return;
     }
     S.sock.write(buf);
   });

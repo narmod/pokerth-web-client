@@ -74,3 +74,13 @@ arena-out.journal.json
 arena-out.result.json
 /arena-data/
 /arena/
+
+# More server-owned runtime state (audit 2026-10-29): the database credentials
+# (install.sh db-config), admin broadcasts, per-account preference sync, LAN
+# leaderboards, and the temp / set-aside copies of atomic writes.
+db-config.json
+broadcasts.json
+lan-boards.json
+/prefs/
+*.json.tmp
+*.json.corrupt-*

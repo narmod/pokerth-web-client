@@ -139,9 +139,12 @@ function noiseMeta(frozenSince) {
     rule: 'automated User-Agent OR unusable Accept-Language (until 2.1.9-web.299)' };
 }
 
+// Own properties only: « Accept-Language: constructor » used to add 1 to
+// Object.prototype.constructor and store the string "function Object()…1".
 function bumpCapped(dst, key, cap) {
-  if (dst[key] === undefined && Object.keys(dst).length >= cap) key = OVERFLOW;
-  dst[key] = (dst[key] || 0) + 1;
+  const own = Object.prototype.hasOwnProperty;
+  if (!own.call(dst, key) && Object.keys(dst).length >= cap) key = OVERFLOW;
+  dst[key] = (own.call(dst, key) ? (+dst[key] || 0) : 0) + 1;
 }
 
 // The diagnostic maps, by name. The running totals live beside lang in
@@ -179,7 +182,7 @@ function period(lds) {
     out.days++;
     DIAG_KEYS.forEach(function (k) {
       const src = ld[k];
-      if (src) for (const x in src) out[k][x] = (out[k][x] || 0) + (src[x] || 0);
+      if (src) for (const x in src) out[k][x] = (Object.prototype.hasOwnProperty.call(out[k], x) ? (+out[k][x] || 0) : 0) + (+src[x] || 0);
     });
   });
   return out;

@@ -36,6 +36,17 @@ function createRelayCache(o) {
     return JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err).slice(0, 120) });
   }
 
+  // Between two purges (10 min) a stream of distinct keys used to grow both
+  // maps without limit: past `max`, the oldest unpinned entry goes at insert.
+  function _trim(m) {
+    if (m.size <= max) return;
+    for (const k of m.keys()) {
+      if (m.size <= max) break;
+      if (m === cache && pinned.has(k)) continue;
+      m.delete(k);
+    }
+  }
+
   function _run(key, produce, opts) {
     let job = inflight.get(key);
     if (!job) {
@@ -46,13 +57,16 @@ function createRelayCache(o) {
           cache.delete(key);                     // re-insert: Map order = write order (purge trims oldest)
           cache.set(key, { at: now(), status: 200, body: body });
           fails.delete(key);
+          _trim(cache);
         } else {
           fails.set(key, { at: now(), status: status, body: body });
+          _trim(fails);
         }
         return { status: status, body: body, note: status === 200 ? 'miss' : 'fail' };
       }, function (err) {
         const f = { at: now(), status: 502, body: _failBody(err, opts) };
         fails.set(key, f);
+        _trim(fails);
         return { status: f.status, body: f.body, note: 'fail' };
       }).finally(function () { inflight.delete(key); });
       inflight.set(key, job);

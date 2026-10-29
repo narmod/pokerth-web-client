@@ -28,6 +28,36 @@ highlights below.
   and leads to Deployment. Not shown on an install without git. Test: `scripts/test-admin-overview.mjs` (+4).
 
 ### Fixed
+- **Proxy hardening from an audit, part 3: abuse and robustness** (`web.342`):
+  - *LAN directory* — the private-address check knew only the dotted `::ffff:a.b.c.d` form: `::ffff:7f00:1`,
+    `::ffff:a00:5`, `0:0:0:0:0:0:0:1`, IPv4-compatible, 6to4 and Teredo spellings passed and the probe dialled them
+    (anonymous scan of the operator's network on the allowed ports). It now goes through `net.BlockList`, which
+    knows every spelling. A proposal starts a probe whether or not it is accepted: proposals now share the tests'
+    hourly budget per address (only accepted ones were counted).
+  - *REACT relay* — handled before any login, with a free sender id and up to 32 KB: anyone could show any text
+    over any seat to every player of the same server. Now only from a session the server accepted (InitAck), under
+    the player id the server gave it, one emoji (64 bytes) without markup characters.
+  - *Public beacons and relays* — `/__visit`, `/__music`, `/__guide`, `/__music-vote`: 600 per 10 min per address
+    (300 000 random visitor ids took `visits.json` to 20 MB and stalled the event loop on each save), counted in
+    memory under a per-process salted hash (the statistics routes still never read the address); poll answers:
+    30 new votes per hour per address (3000 in 2 s from one script); `/pdb-analyse`: 10 per hour per address
+    (pokerth.net blocks this host after 4 failed uploads, for everyone), and an oversized upstream answer now gets a
+    reply instead of a request left hanging. `/api/ranking` is cached on the parameters it uses (any `&x=N` was a
+    miss and an upstream fetch); `/api/player` refuses a nickname past 64 characters; the relay cache is bounded at
+    insert, not only at the 10-minute purge. User-Agents are cut to 512 characters (a 16 KB one cost ~29 ms of
+    event loop per beacon).
+  - *Image relays* — `/api/forumimg` and `/api/award-img` forwarded any content type from this origin; only raster
+    image types go through (415 otherwise).
+  - *Connections* — browser → server bytes stop at 256 KB queued on an upstream that does not read (the socket is
+    closed, like the 1 MiB guard the other way).
+  - *Packs* — a zip is checked from its central directory before extraction: at most 400 files and 200 MB
+    unpacked (a 1.4 MB zip unpacking to 1.5 GB froze every game); `unzip` gets a timeout.
+  - *State files* — `admin-config.json` (Discord webhook, Arena key) is written 0600 through a temp file and a
+    rename; `lan-boards.json` through a temp file too. A file that does not parse at boot is kept aside
+    (`.corrupt-<time>`) instead of being overwritten with defaults. « Accept-Language: constructor » stored the
+    string `function Object()…1` in the language counters; counters are own properties only. `.gitignore` and
+    `.dockerignore` now list every runtime state file (`db-config.json` held the database password).
+  - Test: `scripts/test-proxy-abuse.mjs` (new).
 - **Client hardening from an audit, part 2** (`web.341`):
   - *Any website could plant a script in the client* — the PWA's share target (`/share-target`) accepts a POST from
     any page, and the service worker cannot tell it from a real share from another app; the page imported a received

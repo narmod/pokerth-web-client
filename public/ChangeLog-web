@@ -1,3 +1,7 @@
+2026-10-29 version 2.1.10-web.342:
+- improvement: reactions shown above a seat now always come from the player sitting there
+- improvement: security and robustness hardening of the server (LAN directory, statistics, polls, image relays, card and table packs)
+
 2026-10-29 version 2.1.10-web.341:
 - improvement: a file shared to the app from another app or website is only imported after you confirm it
 - improvement: security hardening of the client (avatar, imported backups and .pdb logs); the admin token is no longer saved in player backups

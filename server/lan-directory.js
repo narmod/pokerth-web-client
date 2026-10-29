@@ -231,8 +231,27 @@ function normEntry(r) {
 // True for anything that is not a routable public unicast address: the
 // submit check must never let an anonymous visitor point this proxy at the
 // operator's own network.
+// BlockList knows every spelling of an IPv6 address (::ffff:7f00:1 is
+// 127.0.0.1, 0:0:0:0:0:0:0:1 is ::1): the textual tests below only knew the
+// dotted mapped form, so those reached the probe.
+var _PRIV = (function () {
+  var b = new net.BlockList();
+  [['0.0.0.0', 8], ['10.0.0.0', 8], ['127.0.0.0', 8], ['100.64.0.0', 10], ['169.254.0.0', 16],
+   ['172.16.0.0', 12], ['192.168.0.0', 16], ['192.0.0.0', 24], ['192.0.2.0', 24], ['198.18.0.0', 15],
+   ['198.51.100.0', 24], ['203.0.113.0', 24], ['224.0.0.0', 3]].forEach(function (r) { b.addSubnet(r[0], r[1], 'ipv4'); });
+  [['::', 96],          // unspecified, loopback, IPv4-compatible (::a.b.c.d)
+   ['100::', 64],       // discard
+   ['2001::', 32],      // Teredo (embeds an IPv4)
+   ['2001:db8::', 32],  // documentation
+   ['2002::', 16],      // 6to4 (embeds an IPv4)
+   ['64:ff9b::', 96],   // NAT64
+   ['fc00::', 7], ['fe80::', 10], ['ff00::', 8]].forEach(function (r) { b.addSubnet(r[0], r[1], 'ipv6'); });
+  return b;
+})();
 function isPrivateAddress(ip) {
   var s = String(ip || '').trim().toLowerCase();
+  var fam0 = net.isIP(s);
+  try { if (fam0 && _PRIV.check(s, fam0 === 6 ? 'ipv6' : 'ipv4')) return true; } catch (e) { return true; }
   var m = s.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/);
   if (m) s = m[1];
   var fam = net.isIP(s);
@@ -544,6 +563,10 @@ function createLanDirectory(deps) {
     if (pending().length >= LIMITS.pending) return cb({ ok: false, error: 'full' });
     var key = String(ip || '');
     if (!ipCanPropose(key, cfg)) return cb({ ok: false, error: 'limit' });
+    // Every proposal starts an outbound probe, accepted or not: they share the
+    // tests' hourly budget (only accepted proposals used to be counted, so a
+    // stream of unreachable targets cost nothing).
+    if (!ipCanTest(key)) return cb({ ok: false, error: 'limit' });
     checkCandidate(f, function (code, r) {
       if (code) return cb({ ok: false, error: code });
       if (!r.pokerth) return cb({ ok: false, error: r.reachable ? 'notpokerth' : 'unreachable', detail: r.error || '' });

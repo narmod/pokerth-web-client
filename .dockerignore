@@ -8,10 +8,27 @@ npm-debug.log*
 .gitignore
 .dockerignore
 
-# Local runtime config / state (never bake these into the image)
+# Local runtime config / state (never bake these into the image): a checkout
+# that has run bare-metal holds secrets here (db-config.json, scoped-tokens.json,
+# admin-config.json).
 .env
 .env.example
 stats.json
+stats.meta.json
+admin-config.json
+admin-audit.json
+deploy-history.json
+scoped-tokens.json
+db-config.json
+visits.json
+polls.json
+broadcasts.json
+lan-boards.json
+wec-finals.json
+monthly-cups.json
+prefs
+*.json.tmp
+*.json.corrupt-*
 
 # Dev-only / docs (not needed at runtime). scripts/ itself IS needed: the
 # admin panel spawns scripts/*-manifest.mjs when importing deck/theme/table

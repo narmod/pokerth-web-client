@@ -35,23 +35,37 @@ function createLanBoards(deps) {
   deps = deps || {};
   const now = deps.now || Date.now;
   let data = {};
-  try { data = JSON.parse(fs.readFileSync(deps.file, 'utf8')) || {}; } catch (e) { data = {}; }
+  try { data = JSON.parse(fs.readFileSync(deps.file, 'utf8')) || {}; } catch (e) {
+    data = {};
+    if (e && e.code !== 'ENOENT' && deps.file) {
+      const bad = deps.file + '.corrupt-' + now();
+      try { fs.copyFileSync(deps.file, bad); } catch (e2) {}
+      console.error('[lan-boards] ' + deps.file + ' unreadable (' + e.message + ') — kept as ' + bad);
+    }
+  }
   if (typeof data !== 'object' || Array.isArray(data)) data = {};
   let saveTimer = null;
 
+  // Temp file + rename, synchronous (the file is small): a crash or a full disk
+  // mid-write used to leave a truncated file, read back as {} at the next boot
+  // and saved over — every LAN leaderboard gone. A file that does not parse is
+  // kept aside instead.
+  function writeAtomic() {
+    const tmp = deps.file + '.tmp';
+    try { fs.writeFileSync(tmp, JSON.stringify(data)); fs.renameSync(tmp, deps.file); }
+    catch (e) { try { fs.unlinkSync(tmp); } catch (e2) {} console.error('[lan-boards] write failed:', e.message); }
+  }
   function save() {
     if (saveTimer) return;
     saveTimer = setTimeout(function () {
       saveTimer = null;
-      fs.writeFile(deps.file, JSON.stringify(data), function (err) {
-        if (err) console.error('[lan-boards] write failed:', err.message);
-      });
+      writeAtomic();
     }, 800);
     if (saveTimer.unref) saveTimer.unref();
   }
   function saveNow() {
     if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; }
-    try { fs.writeFileSync(deps.file, JSON.stringify(data)); } catch (e) { console.error('[lan-boards] write failed:', e.message); }
+    writeAtomic();
   }
   function entry(id) {
     if (!ID_RE.test(String(id || ''))) return null;
