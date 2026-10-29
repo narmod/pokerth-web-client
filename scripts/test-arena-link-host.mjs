@@ -62,7 +62,7 @@ const link = L.createArenaLink({
   log: () => {},
 });
 const wc = http.createServer((req, res) => {
-  const p = new URL(req.url, 'http://x').pathname;
+  const p = req.url.split('?')[0];   // raw path, as proxy.js passes it
   if (p === '/arena' || p.indexOf('/arena/') === 0) return L.handleArenaPage(link, req, res, p, '203.0.113.9');
   if (p.indexOf('/admin/arena') === 0) {
     const json = (r, c, o) => { r.writeHead(c, { 'Content-Type': 'application/json' }); r.end(JSON.stringify(o)); };
@@ -132,6 +132,18 @@ xb = await x.json().catch(() => null);
 ok(x.status === 200 && xb && xb.verdict === 'agrees' && seen.some((q) => q.method === 'POST' && q.body === wbody), 'witness report: relayed as a POST, body as is');
 x = await get('/arena/api/t/abcdefgh12/witness', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': String(70 * 1024) }, body: 'x'.repeat(70 * 1024) });
 ok(x.status === 413, 'a witness report over 64 KB: refused here, not relayed');
+
+// Paths that leave /arena/api/ once URL resolves them: never relayed with the key
+// (http.request keeps the path as written; fetch would normalise it first).
+const rawGet = (p) => new Promise((res) => http.get({ host: '127.0.0.1', port: wc.address().port, path: p }, (r) => { r.resume(); res(r.statusCode); }).on('error', () => res(0)));
+seen.length = 0;
+for (const p of ['/arena/api/players/..\\..\\..\\secret', '/arena/api/players/..\\link\\sync', '/arena/api/players/%2e%2e']) {
+  const st = await rawGet(p);
+  ok(st === 400 || st === 404, 'traversal ' + JSON.stringify(p) + ': refused (' + st + ')');
+}
+ok(seen.length === 0, 'none of them reached the Arena (link key never sent)');
+x = await get('/arena/api/players/' + encodeURIComponent('Zoé.B'));
+ok(seen.some((q) => q.path === '/arena/api/players/Zo%C3%A9.B'), 'an ordinary player name (accent, dot) is still relayed');
 
 // Pages to the Arena; its administration on the Arena.
 x = await get('/arena/tournaments?x=1');

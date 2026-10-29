@@ -28,6 +28,32 @@ highlights below.
   and leads to Deployment. Not shown on an install without git. Test: `scripts/test-admin-overview.mjs` (+4).
 
 ### Fixed
+- **Proxy hardening from an audit, part 1** (`web.340`):
+  - *One request could stop the proxy* — `url.parse()` throws on some request targets (`GET //%C0@x/`,
+    `GET http://[::1/`), on the HTTP handler and on the WebSocket upgrade; with no handler the process exited and
+    every game in progress dropped. The query is now read by `_safeQuery()`, which never throws. `wss` also gets an
+    `error` listener: `EADDRINUSE` killed the process before the listen retry could run. Close codes: the TLS pin
+    mismatch used the reserved 1015 (`ws` throws) and a long socket error message exceeded 123 bytes, so the
+    browser never got the reason; now 4495 and a 100-character reason.
+  - *Arena relay could carry the link key anywhere on the Arena* — the allowlist was tested on the raw path, then
+    `new URL()` resolved `..`, `%2e%2e` and `\`: `/arena/api/players/..\..\x` reached `/x` with `x-arena-link`.
+    The path is checked again after normalisation, and `\` is refused in a player name.
+  - *SVG from packs could run script on this origin* — deck/seat/table packs (imported with a `packages`
+    delegate key) are served same-origin, where `/admin` keeps its token; a `<script>` in `flipside.svg` ran when
+    the file was opened. Every SVG is now served with a sandboxing CSP (`default-src 'none'; sandbox`, inline
+    styles and `data:` images allowed); as an `<img>` nothing changes. `/admin` is sent with
+    `frame-ancestors 'none'`, and the service worker no longer caches `/admin.html`.
+  - *Music credit links* — `licenseUrl` / `sourceUrl` accepted any scheme; a `music` delegate could put a
+    `javascript:` link in front of every player. Only `http(s)` is kept (server and client).
+  - *Audit log* — every anonymous `POST /admin/*` (403/429) was logged: 500 of them pushed every real entry out.
+    Anonymous attempts are still shown, at most 50.
+  - *Memory* — the large admin bodies (config import 8 MB, config 2 MB…) are read in full before the token check;
+    60 anonymous ones at once took the process past 1 GB. Without an admin key in the header or query, at most two
+    are now read at a time (a key sent in the body, as older scripts do, still works); the others get the 16 KB cap.
+  - *Accented text corrupted* — admin saves and `/prefs` decoded each network chunk on its own; a character split
+    between two chunks became two `U+FFFD`. The body is decoded as a stream.
+  - Tests: `scripts/test-proxy-hardening.mjs` (new), `scripts/test-arena-link-host.mjs` (+4, now with raw paths
+    as `proxy.js` passes them).
 - **Client errors, web.339 batch** (`web.339`) — three reports from Admin › Client errors:
   `arena-witness.mjs` read the `localStorage` global unguarded as a default dependency, which throws a
   `SecurityError` when site data is blocked (Windows · Edge 156): the module died, now it runs without storage;

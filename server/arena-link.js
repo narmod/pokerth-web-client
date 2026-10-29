@@ -28,7 +28,7 @@ const https = require('https');
 const LINK_KEY_RE = /^alk_[A-Za-z0-9_-]{40,60}$/;
 // The players' API the witness uses (and the rest of the Arena's public
 // API, relayed as is): list, one tournament and its actions, files.
-const API_RE = /^\/arena\/api\/(?:list|showcase|account\/(?:login|invite|logout)|table|cups|badges|players\/[^/?#]{1,200}|c\/[A-Za-z0-9_-]{8,40}|t\/[A-Za-z0-9_-]{8,40}(?:\/[a-z]{2,16})?)$/;
+const API_RE = /^\/arena\/api\/(?:list|showcase|account\/(?:login|invite|logout)|table|cups|badges|players\/[^/?#\\]{1,200}|c\/[A-Za-z0-9_-]{8,40}|t\/[A-Za-z0-9_-]{8,40}(?:\/[a-z]{2,16})?)$/;
 const API_MAX_BODY = 8 * 1024;
 const API_MAX_WITNESS = 64 * 1024;       // a witness report: every hand of a game
 const API_MAX_LOG = 14 * 1024 * 1024;    // a player's log (.pdb, 10 MB) in base64
@@ -157,6 +157,10 @@ function createArenaLink(deps) {
     if (!base || !key) return fail(503, 'the Arena is not linked');
     let u;
     try { u = new URL(base + pathAndQuery); } catch (e) { return fail(400, 'bad request'); }
+    // The allowlist was tested on the raw path; URL resolves `..`, `%2e%2e` and
+    // `\` (as `/`), which used to carry the link key to any Arena path.
+    const rawPath = String(pathAndQuery).split('?')[0];
+    if (u.pathname !== rawPath || !API_RE.test(u.pathname)) return fail(400, 'bad request');
     const headers = { 'x-arena-link': key, 'x-td-client': String(clientIp || '').slice(0, 64) };
     ['content-type', 'content-length', 'accept', 'if-none-match'].forEach((k) => { if (req.headers[k]) headers[k] = req.headers[k]; });
     const mod = u.protocol === 'https:' ? https : http;

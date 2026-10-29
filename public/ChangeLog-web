@@ -1,3 +1,8 @@
+2026-10-29 version 2.1.10-web.340:
+- bugfix: the server could be stopped by a single malformed request, dropping every game in progress
+- bugfix: accented characters in server announcements could be saved as « �� »
+- improvement: security hardening of the server (Arena link, card and table packs, music credits, admin page)
+
 2026-10-28 version 2.1.10-web.339:
 - bugfix: leaving a training table right after starting it no longer causes an error
 - bugfix: with site data blocked in the browser, part of the app no longer fails to load

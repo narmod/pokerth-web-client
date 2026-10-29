@@ -950,7 +950,7 @@ function _render() {
   if (!plItems) plItems = '<li class="music-pl-empty" data-i18n="musicNoTracks">' + _esc(_t('musicNoTracks', 'No tracks available')) + '</li>';
 
   var credit = (cur && cur.credit)
-    ? '<div class="music-credit">' + (cur.licenseUrl
+    ? '<div class="music-credit">' + (cur.licenseUrl && /^https?:\/\//i.test(String(cur.licenseUrl))
         ? '<a href="' + _esc(cur.licenseUrl) + '" target="_blank" rel="noopener noreferrer">' + _esc(cur.credit) + '</a>'
         : _esc(cur.credit)) + '</div>'
     : '';

@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.10-web.339';
+const CACHE_VERSION = 'pokerth-v2.1.10-web.340';
 // Build id the page puts on the card back URL (deck.mjs _deckBack →
 // flipside.<ext>?v=<BUILD_VERSION>): CACHE_VERSION without its prefix.
 const BUILD_ID = CACHE_VERSION.replace(/^pokerth-v/, '');
@@ -841,7 +841,7 @@ self.addEventListener('fetch', function(e) {
   // The admin dashboard + its API are authenticated and no-store: never let the
   // SW cache or serve them (otherwise the package list, status, logs… show stale
   // after a change). Network only — admin is an online-only tool.
-  if (/^\/admin(?:\/|$)/.test(url.pathname)) return;
+  if (/^\/admin(?:\.html|\/|$)/.test(url.pathname)) return;
   // Same for /arena: sent to the linked Arena (or a 404): a cached app shell
   // must never stand in for it.
   if (/^\/arena(?:\.html|\/|$)/.test(url.pathname)) return;

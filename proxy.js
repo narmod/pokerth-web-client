@@ -25,6 +25,7 @@ const dns  = require('dns');
 const http = require('http');
 const https = require('https');
 const url  = require('url');
+const querystring = require('querystring');
 const fs   = require('fs');
 const path = require('path');
 const zlib = require('zlib');
@@ -10770,6 +10771,8 @@ async function dbClearTraffic() {
 }
 initDb();
 
+let _bigAnonBodies = 0;
+const _BIG_ANON_MAX = 2;
 function readJsonBody(req, cb, maxLen) {
   // Default 16 KB cap: fine for the many small, untrusted-input endpoints
   // (chat, votes, table names…). A couple of admin-only endpoints pass a
@@ -10778,8 +10781,23 @@ function readJsonBody(req, cb, maxLen) {
   // Past the cap the socket is destroyed with no response, which the browser
   // reports as a bare network error rather than a readable 4xx — keep limits
   // generous enough that trusted admin payloads never hit this path.
-  const limit = maxLen || 16384;
+  let limit = maxLen || 16384;
+  // Large admin payloads (config import 8 MB…) are buffered before the token
+  // check: dozens of anonymous ones at once used to exhaust memory. With no
+  // admin key in the header or query (the key may still be in the body, as
+  // older scripts send it), at most _BIG_ANON_MAX such bodies are read at a
+  // time; past that the 16 KB cap applies.
+  if (limit > 16384 && String(req.url || '').indexOf('/admin/') === 0) {
+    const _bm = /^\s*Bearer\s+(.+?)\s*$/i.exec(req.headers['authorization'] || '');
+    if (!_anyAdminKey({ token: _bm ? _bm[1] : _safeQuery(req.url).token })) {
+      if (_bigAnonBodies >= _BIG_ANON_MAX) limit = 16384;
+      else { _bigAnonBodies++; let _rel = false; req.once('close', function () { if (!_rel) { _rel = true; _bigAnonBodies--; } }); }
+    }
+  }
   let body = '';
+  // Decode as a stream: a multi-byte character split between two network
+  // chunks used to become two U+FFFD (« Bienvenue �� la table »).
+  req.setEncoding('utf8');
   req.on('data', function (c) { body += c; if (body.length > limit) req.destroy(); });
   req.on('end', function () {
     let p; try { p = JSON.parse(body || '{}'); } catch (e) { return cb(null); }
@@ -10900,8 +10918,15 @@ function _pipeFile(res, filePath, opts) {
   rs.pipe(res);
 }
 
+// SVG files are documents: opened directly (/cards/<pack>/0.svg) one could run
+// script on this origin, which also serves /admin and its stored token. Deck,
+// seat and table packs are imported by delegate keys, so their SVG is not
+// trusted. This policy only applies when an SVG is opened as a page; as an
+// <img> it changes nothing.
+const SVG_CSP = "default-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:; sandbox";
 function sendFile(req, res, filePath, type, cacheCtl, st, useEtag) {
   const headers = Object.assign({ 'Content-Type': type, 'Cache-Control': cacheCtl }, SECURITY_HEADERS);
+  if (/^image\/svg\+xml/i.test(type)) headers['Content-Security-Policy'] = SVG_CSP;
   // Validators for CSS/JS/MJS: 'no-cache' means "revalidate before reuse", but
   // without an ETag/Last-Modified there is nothing to revalidate against, so
   // an intermediary (notably Cloudflare in front of pokerth.net — already seen
@@ -10985,6 +11010,7 @@ function sendFile(req, res, filePath, type, cacheCtl, st, useEtag) {
     if (r.buf) { send(r.buf); return; }
     // compression failed — fall back to uncompressed
     const h = Object.assign({ 'Content-Type': type, 'Cache-Control': cacheCtl, 'Vary': 'Accept-Encoding' }, SECURITY_HEADERS);
+    if (headers['Content-Security-Policy']) h['Content-Security-Policy'] = headers['Content-Security-Policy'];
     res.writeHead(200, h);
     res.end(r.raw);
   });
@@ -11894,6 +11920,7 @@ function _auditActor(query, bodyToken) {
   }
   return { name: 'unauthenticated', master: false };
 }
+const AUDIT_ANON_MAX = 50;
 function auditRecord(req, res, reqPathOnly, query) {
   try {
     const body = req._jsonBody || null;
@@ -11907,6 +11934,13 @@ function auditRecord(req, res, reqPathOnly, query) {
       ok: (res.statusCode || 0) < 400,
       ip: _maskIp(res._rlIp || clientIp(req)),
     });
+    // Anonymous attempts stay visible but capped: 500 junk POSTs used to push
+    // every real entry out of the log.
+    if (!actor.master && actor.name === 'unauthenticated') {
+      for (let i = 0, n = 0; i < _audit.length; i++) {
+        if (_audit[i].actor === 'unauthenticated' && ++n > AUDIT_ANON_MAX) { _audit.splice(i, 1); break; }
+      }
+    }
     if (_audit.length > AUDIT_MAX) _audit.length = AUDIT_MAX;
     _saveAuditSoon();
   } catch (e) {}
@@ -12163,6 +12197,8 @@ function musicBuiltins() {
 function musicAdminTracks() { var a = _adminConfig && _adminConfig.musicTracks; return Array.isArray(a) ? a : []; }
 function musicHiddenSet()  { var a = _adminConfig && _adminConfig.musicHidden; return Array.isArray(a) ? a : []; }
 function musicStr(s, max) { return String(s == null ? '' : s).replace(/[\u0000-\u001f\u007f]+/g, ' ').trim().slice(0, max || 200); }
+// A link shown to players (credit, source): http(s) only, else dropped.
+function musicUrl(s) { s = musicStr(s, 300); return /^https?:\/\/[^\s"'<>]+$/i.test(s) ? s : ''; }
 function isMp3(buf) {
   if (!buf || buf.length < 3) return false;
   if (buf[0] === 0x49 && buf[1] === 0x44 && buf[2] === 0x33) return true;   // 'ID3' tag
@@ -12187,8 +12223,8 @@ function musicRegisterTrack(fields, buf) {
   var artist = musicStr(fields.artist, 120);
   var entry = {
     id: id, title: title, artist: artist, file: '/music/' + id + '.mp3',
-    license: musicStr(fields.license, 60), licenseUrl: musicStr(fields.licenseUrl, 300),
-    source: musicStr(fields.source, 120), sourceUrl: musicStr(fields.sourceUrl, 300),
+    license: musicStr(fields.license, 60), licenseUrl: musicUrl(fields.licenseUrl),
+    source: musicStr(fields.source, 120), sourceUrl: musicUrl(fields.sourceUrl),
     credit: musicStr(fields.credit, 300) || (title + (artist ? ' by ' + artist : '')),
     active: true
   };
@@ -12299,6 +12335,8 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin' || reqPathOnly === '/admin.html') {
     const p = path.join(PUBLIC_DIR, 'admin.html');
+    // Never framed: the panel signs in from stored credentials on load.
+    res.setHeader('Content-Security-Policy', "frame-ancestors 'none'");
     if (fs.existsSync(p)) return sendFile(req, res, p, 'text/html; charset=utf-8', 'no-store');
     res.writeHead(404); res.end('admin.html missing'); return;
   }
@@ -12448,6 +12486,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     }
     if (req.method === 'PUT' || req.method === 'POST') {
       let body = '';
+      req.setEncoding('utf8');
       req.on('data', function (c) { body += c; if (body.length > 400 * 1024) req.destroy(); });
       req.on('end', function () {
         if (body.indexOf('<PokerTH') < 0) return adminJson(res, 400, { ok: false, error: 'not a PokerTH config.xml' });
@@ -12482,6 +12521,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (!acctW) return adminJson(res, 403, { ok: false, error: 'not authenticated (registered account required)' });
     if (req.method === 'PUT' || req.method === 'POST') {
       let body = '';
+      req.setEncoding('utf8');
       req.on('data', function (c) { body += c; if (body.length > 64 * 1024) req.destroy(); });
       req.on('end', function () {
         let obj = null;
@@ -13020,8 +13060,8 @@ function handleAdmin(req, res, reqPathOnly, query) {
       var artist = musicStr(query.artist, 120);
       var entry = {
         id: id, title: _mTitle, artist: artist, file: '/music/' + id + '.mp3',
-        license: musicStr(query.license, 60), licenseUrl: musicStr(query.licenseUrl, 300),
-        source: musicStr(query.source, 120), sourceUrl: musicStr(query.sourceUrl, 300),
+        license: musicStr(query.license, 60), licenseUrl: musicUrl(query.licenseUrl),
+        source: musicStr(query.source, 120), sourceUrl: musicUrl(query.sourceUrl),
         credit: musicStr(query.credit, 300) || (_mTitle + (artist ? ' by ' + artist : '')),
         active: true
       };
@@ -13046,8 +13086,8 @@ function handleAdmin(req, res, reqPathOnly, query) {
       var artist = musicStr(d && d.artist, 120);
       var entry = {
         id: id, title: title, artist: artist, file: u, stream: true,
-        license: musicStr(d && d.license, 60), licenseUrl: musicStr(d && d.licenseUrl, 300),
-        source: musicStr(d && d.source, 120), sourceUrl: musicStr(d && d.sourceUrl, 300),
+        license: musicStr(d && d.license, 60), licenseUrl: musicUrl(d && d.licenseUrl),
+        source: musicStr(d && d.source, 120), sourceUrl: musicUrl(d && d.sourceUrl),
         credit: musicStr(d && d.credit, 300) || (title + (artist ? ' \u2014 ' + artist : '')),
         active: true
       };
@@ -13139,7 +13179,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
         if (!/^https:\/\/\S+$/i.test(_u) || _u.length > 500) return adminJson(res, 400, { ok: false, error: 'stream url must be https:// (max 500 chars)' });
         t.file = _u;
       }
-      t.licenseUrl = musicStr(d && d.licenseUrl, 300);
+      t.licenseUrl = musicUrl(d && d.licenseUrl);
       t.credit = musicStr(d && d.credit, 300) || (title + (t.artist ? ' by ' + t.artist : ''));
       _adminConfig.musicTracks = arr; saveAdminConfig();
       return adminJson(res, 200, { ok: true, id: id });
@@ -15150,6 +15190,19 @@ function handleTranslate(req, res) {
 }
 
 
+// Query string of a raw request target, never throwing. url.parse() throws on
+// some targets (`GET //%C0@x/`, `GET http://[::1/`): one such request from
+// anyone used to kill the process, and every game in progress with it. Same
+// result as url.parse(u, true).query (querystring.parse never throws).
+function _rawQueryString(rawUrl) {
+  const s = String(rawUrl || '');
+  const qi = s.indexOf('?');
+  if (qi < 0) return '';
+  const hi = s.indexOf('#', qi);
+  return hi < 0 ? s.slice(qi + 1) : s.slice(qi + 1, hi);
+}
+function _safeQuery(rawUrl) { return querystring.parse(_rawQueryString(rawUrl)); }
+
 const httpServer = http.createServer((req, res) => {
   // Serve the SPA shell for the root path. We strip the query string
   // before comparing so deep links like
@@ -15158,9 +15211,9 @@ const httpServer = http.createServer((req, res) => {
   // index HTML instead of falling through to the static-file branch
   // and 404'ing on a nonexistent file named "/?host=...".
   const reqPathOnly = req.url.split('?')[0];
-  const query = url.parse(req.url, true).query;
+  const query = _safeQuery(req.url);
   if (reqPathOnly === '/admin' || reqPathOnly === '/admin.html' || reqPathOnly.indexOf('/admin/') === 0) {
-    const q = url.parse(req.url, true).query;
+    const q = _safeQuery(req.url);
     // Every write is logged, limiter or not (RATE_LIMIT_DISABLED=1, or
     // rate-limiter-flexible missing, used to leave the Audit log empty).
     if (req.method === 'POST') res.on('finish', function () { auditRecord(req, res, reqPathOnly, q); });
@@ -16177,7 +16230,7 @@ function _openUpstream(S) {
           const pinErr = _verifyTlsPin(S.sock, tlsPins);
           if (pinErr) {
             console.error('[-] ' + pinErr + ' → ' + addr + ':' + S.port + ' — closing');
-            try { S.ws && S.ws.close(1015, 'tls pin mismatch'); } catch (_) {}
+            try { S.ws && S.ws.close(4495, 'tls pin mismatch'); } catch (_) {}
             _destroySession(S);
             return;
           }
@@ -16262,7 +16315,7 @@ function _openUpstream(S) {
                  : err.message.includes('wrong version') ? '  → server without TLS: uncheck TLS'
                  : err.code === 'ECONNRESET'             ? '  → connection abruptly cut' : '';
         console.error('[-] Socket error: ' + err.message + hint);
-        try { S.ws && S.ws.close(1011, err.message); } catch (_) {}
+        try { S.ws && S.ws.close(1011, String(err.message || 'socket error').slice(0, 100)); } catch (_) {}
         _destroySession(S);
       });
 
@@ -16416,7 +16469,7 @@ wss.on('connection', (ws, req) => {
   // close handshake, and an oversized or unmasked frame on it would otherwise
   // raise an unhandled 'error' and kill the process (scripts/test-ws-reject-crash.mjs).
   ws.on('error', function () {});
-  const params = new URLSearchParams(url.parse(req.url).query);
+  const params = new URLSearchParams(_rawQueryString(req.url));
   const host   = params.get('host') || 'pokerth.net';
   const port   = parseInt(params.get('port') || '7234', 10);
   const useTls = params.get('tls') !== '0' && !FORCE_NOTLS;
@@ -16593,6 +16646,9 @@ const _heartbeatTimer = setInterval(() => {
 wss.on('close', () => clearInterval(_heartbeatTimer));
 
 // ── Démarrage du serveur, résilient au port occupé (EADDRINUSE) ──────────
+// ws re-emits the HTTP server's 'error' on wss: without a listener there,
+// EADDRINUSE killed the process before the retry below could run.
+wss.on('error', function () {});
 // Lors d'un redémarrage rapide (pm2 restart), l'ancienne instance n'a parfois
 // pas encore libéré le port → EADDRINUSE. Plutôt que crasher en boucle, on
 // réessaie quelques fois ; si ça persiste (vraie instance concurrente), on sort
