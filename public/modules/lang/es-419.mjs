@@ -1170,6 +1170,7 @@ export const strings = {
     "bakBannerCreated": "Copia creada.",
     "bakBannerExists": "Ya existe un archivo de copia de seguridad en esta carpeta — usa Restaurar.",
     "bakRestoreQ": "Tu configuración parece vacía. ¿Restaurarla desde tu carpeta de copias de seguridad?",
+    "shareImportQ": "¿Importar el archivo recibido {name}?",
     "bakRestoreBtn": "Restaurar",
     "bakRestoreBusy": "Restaurando…",
     "bakRestoreNoFile": "No hay ningún archivo de copia de seguridad en esta carpeta.",

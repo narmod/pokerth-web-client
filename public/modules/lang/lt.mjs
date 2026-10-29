@@ -1161,6 +1161,7 @@ export const strings = {
     "bakBannerCreated": "Atsarginė kopija sukurta.",
     "bakBannerExists": "Šiame aplanke jau yra atsarginės kopijos failas — naudok Atkurti.",
     "bakRestoreQ": "Jūsų nustatymai atrodo tušti. Atkurti juos iš atsarginių kopijų aplanko?",
+    "shareImportQ": "Importuoti gautą failą {name}?",
     "bakRestoreBtn": "Atkurti",
     "bakRestoreBusy": "Atkuriama…",
     "bakRestoreNoFile": "Šiame aplanke nėra atsarginės kopijos failo.",

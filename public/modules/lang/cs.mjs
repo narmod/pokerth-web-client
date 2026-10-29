@@ -1162,6 +1162,7 @@ export const strings = {
     "bakBannerCreated": "Záloha vytvořena.",
     "bakBannerExists": "V této složce už je soubor zálohy — použij Obnovit.",
     "bakRestoreQ": "Vaše nastavení vypadá prázdné. Obnovit je ze složky se zálohou?",
+    "shareImportQ": "Importovat přijatý soubor {name}?",
     "bakRestoreBtn": "Obnovit",
     "bakRestoreBusy": "Obnovování…",
     "bakRestoreNoFile": "V této složce není žádný soubor zálohy.",

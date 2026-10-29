@@ -780,6 +780,7 @@ export const strings = {
     "bakBannerCreated": "Varukoopia loodud.",
     "bakBannerExists": "Selles kaustas on juba varukoopiafail — kasuta taastamist.",
     "bakRestoreQ": "Sinu seaded tunduvad tühjad. Kas taastada need varukoopia kaustast?",
+    "shareImportQ": "Kas importida saadud fail {name}?",
     "bakRestoreBtn": "Taasta",
     "bakRestoreBusy": "Taastamine…",
     "bakRestoreNoFile": "Selles kaustas ei ole varukoopiafaili.",

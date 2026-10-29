@@ -1157,6 +1157,7 @@ export const strings = {
     "bakBannerCreated": "バックアップを作成しました。",
     "bakBannerExists": "このフォルダーには既にバックアップファイルがあります — 復元を使ってください。",
     "bakRestoreQ": "設定が空のようです。バックアップフォルダーから復元しますか？",
+    "shareImportQ": "受け取ったファイル {name} をインポートしますか？",
     "bakRestoreBtn": "復元",
     "bakRestoreBusy": "復元中…",
     "bakRestoreNoFile": "このフォルダーにバックアップファイルがありません。",

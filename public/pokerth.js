@@ -1088,6 +1088,16 @@ var _BACKUP_SKIP = {
   pth_cfg_sync_dirty: 1, pth_cfg_sync_ts: 1, pth_cfg_sync_weblast: 1, pth_cfg_sync_webts: 1,
   pth_feature_off: 1   // the server's kill-switch list, not a player setting
 };
+// The admin panel shares this origin: its token (pth_admin_tok…) must never
+// travel in a player's backup file, nor be set by importing one.
+var _BACKUP_NEVER = /^pth_admin_/;
+// A backup file can come from anywhere (a shared file, a friend): the two
+// values that end up in markup are checked on the way in.
+function _backupValueOk(k, v) {
+  if (k === 'pth_avatar_img') return v === '' || /^data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+\/=]+$/.test(v);
+  if (k === 'pth_avatar') return v.length <= 64 && !/[<>&"'`]/.test(v);
+  return true;
+}
 // Construit l'enregistrement de sauvegarde sans le télécharger : partagé entre
 // l'export manuel ci-dessous et l'écriture automatique (backup-autosave.mjs).
 function _webBackupRecord() {
@@ -1095,7 +1105,7 @@ function _webBackupRecord() {
   try {
     for (var i = 0; i < localStorage.length; i++) {
       var k = localStorage.key(i);
-      if (!k || k.indexOf('pth_') !== 0 || _BACKUP_SKIP[k]) continue;
+      if (!k || k.indexOf('pth_') !== 0 || _BACKUP_SKIP[k] || _BACKUP_NEVER.test(k)) continue;
       var v = localStorage.getItem(k);
       if (v != null) { keys[k] = v; n++; }
     }
@@ -1137,10 +1147,10 @@ function _applyWebBackupRec(rec) {
   try { _achMergeIn(rec.keys); } catch (e) {}
   try {
     Object.keys(rec.keys).forEach(function (k) {
-      if (!/^pth_[A-Za-z0-9_]{1,60}$/.test(k) || _BACKUP_SKIP[k]) return;
+      if (!/^pth_[A-Za-z0-9_]{1,60}$/.test(k) || _BACKUP_SKIP[k] || _BACKUP_NEVER.test(k)) return;
       if (_ACH_SYNC_KEYS.indexOf(k) >= 0) return;            // déjà fusionné
       var v = rec.keys[k];
-      if (typeof v !== 'string') return;
+      if (typeof v !== 'string' || !_backupValueOk(k, v)) return;
       try { localStorage.setItem(k, v); n++; } catch (e) {}
     });
   } catch (e) { return -1; }
@@ -1401,6 +1411,13 @@ function _pthDrainShare() {
       seq = seq.then(function () {
         return C.match(f.path).then(function (rf) {
           if (!rf) return;
+          // Any website can submit a form to /share-target: the service worker
+          // cannot tell it from a real share from another app. A received
+          // file is therefore only imported once the player says so.
+          var _q = t('shareImportQ', { name: String(f.name || '').slice(0, 80) }) || ('Import ' + f.name + '?');
+          var _yes = false;
+          try { _yes = window.confirm(_q); } catch (e) {}
+          if (!_yes) return;
           return rf.blob().then(function (b) {
             return _pthHandleIncomingFile(new File([b], f.name, { type: f.type || b.type || '' }));
           });
@@ -3007,7 +3024,7 @@ window.refreshMyAvatar = function() {
   // stocke pas par compte — il le reçoit du client à la connexion). On laisse
   // donc l'utilisateur fournir sa propre image, stockée localement en data URL.
   var customImg = (stored === '__img__')
-    ? (function(){ try { return localStorage.getItem('pth_avatar_img') || null; } catch(e){ return null; } })()
+    ? (function(){ try { var v = localStorage.getItem('pth_avatar_img') || ''; return /^data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+\/=]+$/.test(v) ? v : null; } catch(e){ return null; } })()
     : null;
   // PokerTH avatar UPLOAD: render WHATEVER avatar was picked (custom image,
   // emoji, or initial letter) to a PNG so official clients see it. '__pth__'
@@ -3314,6 +3331,7 @@ window.refreshMyAvatar = function() {
       // pth_avatar_up). C'est ce qui garde le hash serveur stable.
       if (stored === '__img__') {
         var url = null; try { url = localStorage.getItem('pth_avatar_img') || null; } catch(e) {}
+        if (url && !/^data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+\/=]+$/.test(url)) url = null;
         if (!url) { _pthClearMyUpload(); return; }
         var ki = 'img:' + url;
         if (ki === _pthUploadKey && window._pthMyUpload) return;
@@ -12529,7 +12547,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.340'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.341'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

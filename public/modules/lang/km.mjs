@@ -787,6 +787,7 @@ export const strings = {
     "bakBannerCreated": "បានបង្កើតការបម្រុងទុក។",
     "bakBannerExists": "មានឯកសារបម្រុងទុករួចហើយក្នុងថតនេះ — ប្រើស្ដារ។",
     "bakRestoreQ": "ការកំណត់របស់អ្នកមើលទៅទទេ។ ស្ដារវាពីថតបម្រុងទុករបស់អ្នកឬ?",
+    "shareImportQ": "នាំចូលឯកសារដែលបានទទួល {name} ឬ?",
     "bakRestoreBtn": "ស្ដារ",
     "bakRestoreBusy": "កំពុងស្ដារ…",
     "bakRestoreNoFile": "គ្មានឯកសារបម្រុងទុកក្នុងថតនេះ។",

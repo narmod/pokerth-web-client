@@ -1162,6 +1162,7 @@ export const strings = {
     "bakBannerCreated": "Rugsteun geskep.",
     "bakBannerExists": "Daar is reeds 'n rugsteunlêer in hierdie gids — gebruik Herstel.",
     "bakRestoreQ": "Jou instellings lyk leeg. Herstel hulle uit jou rugsteungids?",
+    "shareImportQ": "Voer die ontvangde lêer {name} in?",
     "bakRestoreBtn": "Herstel",
     "bakRestoreBusy": "Herstel tans…",
     "bakRestoreNoFile": "Geen rugsteunlêer in hierdie vouer nie.",

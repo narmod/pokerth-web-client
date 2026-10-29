@@ -787,6 +787,7 @@ export const strings = {
     "bakBannerCreated": "ምትኬ ተፈጥሯል።",
     "bakBannerExists": "በዚህ አቃፊ ውስጥ አስቀድሞ የምትኬ ፋይል አለ — መልስን ይጠቀሙ።",
     "bakRestoreQ": "ቅንብሮችዎ ባዶ ይመስላሉ። ከምትኬ አቃፊዎ ይመለሱ?",
+    "shareImportQ": "የተቀበለውን ፋይል {name} ላስመጣ?",
     "bakRestoreBtn": "መልስ",
     "bakRestoreBusy": "በመመለስ ላይ…",
     "bakRestoreNoFile": "በዚህ አቃፊ ውስጥ የምትኬ ፋይል የለም።",

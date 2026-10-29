@@ -789,6 +789,7 @@ export const strings = {
     "bakBannerCreated": "Rezerves kopija izveidota.",
     "bakBannerExists": "Šajā mapē jau ir rezerves kopijas fails — izmanto “Atjaunot”.",
     "bakRestoreQ": "Tavi iestatījumi izskatās tukši. Vai atjaunot tos no rezerves kopijas mapes?",
+    "shareImportQ": "Importēt saņemto failu {name}?",
     "bakRestoreBtn": "Atjaunot",
     "bakRestoreBusy": "Atjauno…",
     "bakRestoreNoFile": "Šajā mapē nav rezerves kopijas faila.",

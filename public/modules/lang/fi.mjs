@@ -1161,6 +1161,7 @@ export const strings = {
     "bakBannerCreated": "Varmuuskopio luotu.",
     "bakBannerExists": "Tässä kansiossa on jo varmuuskopiotiedosto — käytä Palauta-toimintoa.",
     "bakRestoreQ": "Asetuksesi näyttävät tyhjiltä. Palautetaanko ne varmuuskopiokansiosta?",
+    "shareImportQ": "Tuodaanko vastaanotettu tiedosto {name}?",
     "bakRestoreBtn": "Palauta",
     "bakRestoreBusy": "Palautetaan…",
     "bakRestoreNoFile": "Tässä kansiossa ei ole varmuuskopiotiedostoa.",

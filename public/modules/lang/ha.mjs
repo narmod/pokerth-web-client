@@ -790,6 +790,7 @@ export const strings = {
     "bakBannerCreated": 'An ƙirƙiri ajiya.',
     "bakBannerExists": 'Wannan babban fayil ɗin yana da fayil ɗin ajiya tuni — yi amfani da Maido.',
     "bakRestoreQ": 'Saitunanka kamar babu komai. A maido da su daga babban fayil ɗin ajiyarka?',
+    "shareImportQ": "A shigo da fayil ɗin da aka karɓa {name}?",
     "bakRestoreBtn": 'Maido',
     "bakRestoreBusy": 'Ana maidowa…',
     "bakRestoreNoFile": 'Babu fayil ɗin ajiya a wannan babban fayil.',

@@ -1162,6 +1162,7 @@ export const strings = {
     "bakBannerCreated": "Backup criado.",
     "bakBannerExists": "Já existe um arquivo de backup nesta pasta — use Restaurar.",
     "bakRestoreQ": "Suas configurações parecem vazias. Restaurá-las da pasta de backup?",
+    "shareImportQ": "Importar o arquivo recebido {name}?",
     "bakRestoreBtn": "Restaurar",
     "bakRestoreBusy": "Restaurando…",
     "bakRestoreNoFile": "Nenhum arquivo de backup nesta pasta.",

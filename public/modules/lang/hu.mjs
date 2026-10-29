@@ -1162,6 +1162,7 @@ export const strings = {
     "bakBannerCreated": "Mentés létrehozva.",
     "bakBannerExists": "Ebben a mappában már van mentésfájl — használd a Visszaállítást.",
     "bakRestoreQ": "A beállításaid üresnek tűnnek. Visszaállítod őket a biztonsági mentés mappából?",
+    "shareImportQ": "Importálod a kapott fájlt ({name})?",
     "bakRestoreBtn": "Visszaállítás",
     "bakRestoreBusy": "Visszaállítás…",
     "bakRestoreNoFile": "Nincs mentésfájl ebben a mappában.",

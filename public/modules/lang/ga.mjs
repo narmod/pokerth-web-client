@@ -790,6 +790,7 @@ export const strings = {
     "bakBannerCreated": 'Cruthaíodh an cúltaca.',
     "bakBannerExists": 'Tá comhad cúltaca san fhillteán seo cheana — úsáid Athbhunaigh.',
     "bakRestoreQ": 'Is cosúil go bhfuil do shocruithe folamh. Iad a athbhunú ó d\'fhillteán cúltaca?',
+    "shareImportQ": "An bhfuil tú ag iarraidh an comhad a fuarthas, {name}, a iompórtáil?",
     "bakRestoreBtn": 'Athbhunaigh',
     "bakRestoreBusy": 'Á athbhunú…',
     "bakRestoreNoFile": 'Níl aon chomhad cúltaca san fhillteán seo.',

@@ -1160,6 +1160,7 @@ export const strings = {
     "bakBannerCreated": "Säkerhetskopia skapad.",
     "bakBannerExists": "Det finns redan en säkerhetskopiefil i den här mappen — använd Återställ.",
     "bakRestoreQ": "Dina inställningar ser tomma ut. Återställa dem från din säkerhetskopiemapp?",
+    "shareImportQ": "Importera den mottagna filen {name}?",
     "bakRestoreBtn": "Återställ",
     "bakRestoreBusy": "Återställer…",
     "bakRestoreNoFile": "Ingen säkerhetskopia i den här mappen.",

@@ -1157,6 +1157,7 @@ export const strings = {
     "bakBannerCreated": "備份已建立。",
     "bakBannerExists": "此資料夾中已有備份檔案 — 請使用還原。",
     "bakRestoreQ": "你的設定看起來是空的。要從備份資料夾還原嗎？",
+    "shareImportQ": "匯入收到的檔案 {name}？",
     "bakRestoreBtn": "還原",
     "bakRestoreBusy": "正在還原…",
     "bakRestoreNoFile": "此資料夾中沒有備份檔案。",

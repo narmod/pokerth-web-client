@@ -1162,6 +1162,7 @@ export const strings = {
     "bakBannerCreated": "Záloha vytvorená.",
     "bakBannerExists": "V tomto priečinku už je súbor zálohy — použi Obnoviť.",
     "bakRestoreQ": "Vaše nastavenia vyzerajú prázdne. Obnoviť ich z priečinka so zálohou?",
+    "shareImportQ": "Importovať prijatý súbor {name}?",
     "bakRestoreBtn": "Obnoviť",
     "bakRestoreBusy": "Obnovuje sa…",
     "bakRestoreNoFile": "V tomto priečinku nie je súbor zálohy.",

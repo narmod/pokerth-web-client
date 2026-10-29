@@ -786,6 +786,7 @@ export const strings = {
     "bakBannerCreated": 'Afrit búið til.',
     "bakBannerExists": 'Þessi mappa inniheldur þegar afritsskrá — notaðu Endurheimta.',
     "bakRestoreQ": 'Stillingarnar þínar virðast tómar. Endurheimta úr afritsmöppunni?',
+    "shareImportQ": "Flytja inn móttekna skrá {name}?",
     "bakRestoreBtn": 'Endurheimta',
     "bakRestoreBusy": 'Endurheimti…',
     "bakRestoreNoFile": 'Engin afritsskrá í þessari möppu.',

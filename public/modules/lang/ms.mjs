@@ -788,6 +788,7 @@ export const strings = {
     "bakBannerCreated": "Sandaran dicipta.",
     "bakBannerExists": "Fail sandaran sudah wujud dalam folder ini — gunakan Pulihkan.",
     "bakRestoreQ": "Tetapan anda kelihatan kosong. Pulihkan daripada folder sandaran anda?",
+    "shareImportQ": "Import fail yang diterima {name}?",
     "bakRestoreBtn": "Pulihkan",
     "bakRestoreBusy": "Memulihkan…",
     "bakRestoreNoFile": "Tiada fail sandaran dalam folder ini.",

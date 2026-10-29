@@ -1162,6 +1162,7 @@ export const strings = {
     "bakBannerCreated": "Copie creată.",
     "bakBannerExists": "Există deja un fișier de copie în acest dosar — folosește Restaurează.",
     "bakRestoreQ": "Setările tale par goale. Le restaurezi din dosarul de copii de rezervă?",
+    "shareImportQ": "Imporți fișierul primit {name}?",
     "bakRestoreBtn": "Restaurează",
     "bakRestoreBusy": "Se restaurează…",
     "bakRestoreNoFile": "Niciun fișier de rezervă în acest folder.",

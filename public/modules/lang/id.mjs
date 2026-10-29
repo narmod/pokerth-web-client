@@ -788,6 +788,7 @@ export const strings = {
     "bakBannerCreated": "Cadangan dibuat.",
     "bakBannerExists": "Sudah ada berkas cadangan di folder ini — gunakan Pulihkan.",
     "bakRestoreQ": "Pengaturan Anda tampak kosong. Pulihkan dari folder cadangan Anda?",
+    "shareImportQ": "Impor file yang diterima {name}?",
     "bakRestoreBtn": "Pulihkan",
     "bakRestoreBusy": "Memulihkan…",
     "bakRestoreNoFile": "Tidak ada berkas cadangan di folder ini.",

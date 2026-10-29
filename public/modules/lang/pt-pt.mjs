@@ -1161,6 +1161,7 @@ export const strings = {
     "bakBannerCreated": "Cópia criada.",
     "bakBannerExists": "Já existe um ficheiro de cópia nesta pasta — usa Restaurar.",
     "bakRestoreQ": "As tuas definições parecem vazias. Restaurá-las a partir da pasta de cópias de segurança?",
+    "shareImportQ": "Importar o ficheiro recebido {name}?",
     "bakRestoreBtn": "Restaurar",
     "bakRestoreBusy": "A restaurar…",
     "bakRestoreNoFile": "Não há ficheiro de cópia de segurança nesta pasta.",

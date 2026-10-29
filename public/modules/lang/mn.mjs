@@ -790,6 +790,7 @@ export const strings = {
     "bakBannerCreated": 'Нөөц хуулбар үүслээ.',
     "bakBannerExists": 'Энэ хавтаст нөөц файл аль хэдийн байна — «Сэргээх»-ийг ашиглана уу.',
     "bakRestoreQ": 'Таны тохиргоо хоосон бололтой. Нөөц хавтаснаасаа сэргээх үү?',
+    "shareImportQ": "Хүлээн авсан {name} файлыг импортлох уу?",
     "bakRestoreBtn": 'Сэргээх',
     "bakRestoreBusy": 'Сэргээж байна…',
     "bakRestoreNoFile": 'Энэ хавтаст нөөц файл алга.',

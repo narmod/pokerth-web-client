@@ -1159,6 +1159,7 @@ export const strings = {
     "bakBannerCreated": "Sikkerhetskopi opprettet.",
     "bakBannerExists": "Det finnes allerede en sikkerhetskopifil i denne mappen — bruk Gjenopprett.",
     "bakRestoreQ": "Innstillingene dine ser tomme ut. Gjenopprette dem fra sikkerhetskopimappen?",
+    "shareImportQ": "Importere den mottatte filen {name}?",
     "bakRestoreBtn": "Gjenopprett",
     "bakRestoreBusy": "Gjenoppretter…",
     "bakRestoreNoFile": "Ingen sikkerhetskopi i denne mappen.",

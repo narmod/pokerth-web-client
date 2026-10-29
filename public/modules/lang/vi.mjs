@@ -1162,6 +1162,7 @@ export const strings = {
     "bakBannerCreated": "Đã tạo bản sao lưu.",
     "bakBannerExists": "Đã có tệp sao lưu trong thư mục này — hãy dùng Khôi phục.",
     "bakRestoreQ": "Cài đặt của bạn có vẻ trống. Khôi phục từ thư mục sao lưu?",
+    "shareImportQ": "Nhập tệp đã nhận {name}?",
     "bakRestoreBtn": "Khôi phục",
     "bakRestoreBusy": "Đang khôi phục…",
     "bakRestoreNoFile": "Không có tệp sao lưu trong thư mục này.",

@@ -791,6 +791,7 @@ export const strings = {
     "bakBannerCreated": "Sauvegarde créée.",
     "bakBannerExists": "Un fichier de sauvegarde existe déjà dans ce dossier — utilise Restaurer.",
     "bakRestoreQ": "Tes réglages semblent vides. Les restaurer depuis ton dossier de sauvegarde ?",
+    "shareImportQ": "Importer le fichier reçu {name} ?",
     "bakRestoreBtn": "Restaurer",
     "bakRestoreBusy": "Restauration…",
     "bakRestoreNoFile": "Aucun fichier de sauvegarde dans ce dossier.",

@@ -786,6 +786,7 @@ export const strings = {
     "bakBannerCreated": "הגיבוי נוצר.",
     "bakBannerExists": "כבר קיים קובץ גיבוי בתיקייה הזו — השתמש בשחזור.",
     "bakRestoreQ": "ההגדרות שלך נראות ריקות. לשחזר אותן מתיקיית הגיבוי?",
+    "shareImportQ": "לייבא את הקובץ שהתקבל {name}?",
     "bakRestoreBtn": "שחזור",
     "bakRestoreBusy": "משחזר…",
     "bakRestoreNoFile": "אין קובץ גיבוי בתיקייה הזו.",

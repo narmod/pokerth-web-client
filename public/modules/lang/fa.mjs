@@ -786,6 +786,7 @@ export const strings = {
     "bakBannerCreated": "پشتیبان ایجاد شد.",
     "bakBannerExists": "در این پوشه از قبل یک فایل پشتیبان وجود دارد — از بازیابی استفاده کنید.",
     "bakRestoreQ": "تنظیمات شما خالی به نظر می‌رسد. آن‌ها را از پوشه پشتیبان بازیابی کنیم؟",
+    "shareImportQ": "فایل دریافت‌شده {name} وارد شود؟",
     "bakRestoreBtn": "بازیابی",
     "bakRestoreBusy": "در حال بازیابی…",
     "bakRestoreNoFile": "هیچ فایل پشتیبانی در این پوشه نیست.",

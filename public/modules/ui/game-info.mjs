@@ -244,7 +244,7 @@ function openGameInfoPopup() {
   var specRows = [];
   if (S._amSpectator && S.myId) {
     // Show ourselves first, marked as such.
-    var meName = (S.myName || ('#' + S.myId)) + ' ' +
+    var meName = esc(S.myName || ('#' + S.myId)) + ' ' +
                  '<span class="gim-spec-me">' +
                  t('piYou') +
                  '</span>';

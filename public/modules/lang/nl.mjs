@@ -1165,6 +1165,7 @@ export const strings = {
     "bakBannerCreated": "Back-up gemaakt.",
     "bakBannerExists": "In deze map staat al een back-upbestand — gebruik Herstellen.",
     "bakRestoreQ": "Je instellingen lijken leeg. Herstellen vanuit je back-upmap?",
+    "shareImportQ": "Het ontvangen bestand {name} importeren?",
     "bakRestoreBtn": "Herstellen",
     "bakRestoreBusy": "Bezig met herstellen…",
     "bakRestoreNoFile": "Geen back-upbestand in deze map.",

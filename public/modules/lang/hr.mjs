@@ -1160,6 +1160,7 @@ export const strings = {
     "bakBannerCreated": "Kopija stvorena.",
     "bakBannerExists": "U ovoj mapi već postoji datoteka sigurnosne kopije — koristi Vrati.",
     "bakRestoreQ": "Vaše postavke izgledaju prazne. Vratiti ih iz mape sigurnosnih kopija?",
+    "shareImportQ": "Uvesti primljenu datoteku {name}?",
     "bakRestoreBtn": "Vrati",
     "bakRestoreBusy": "Vraćanje…",
     "bakRestoreNoFile": "U ovoj mapi nema datoteke sigurnosne kopije.",

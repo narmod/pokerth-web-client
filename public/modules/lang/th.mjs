@@ -788,6 +788,7 @@ export const strings = {
     "bakBannerCreated": "สร้างข้อมูลสำรองแล้ว",
     "bakBannerExists": "มีไฟล์ข้อมูลสำรองอยู่ในโฟลเดอร์นี้แล้ว — ใช้กู้คืน",
     "bakRestoreQ": "การตั้งค่าของคุณดูว่างเปล่า กู้คืนจากโฟลเดอร์สำรองของคุณ?",
+    "shareImportQ": "นำเข้าไฟล์ที่ได้รับ {name} หรือไม่?",
     "bakRestoreBtn": "กู้คืน",
     "bakRestoreBusy": "กำลังกู้คืน…",
     "bakRestoreNoFile": "ไม่มีไฟล์สำรองข้อมูลในโฟลเดอร์นี้",

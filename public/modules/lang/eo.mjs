@@ -790,6 +790,7 @@ export const strings = {
     "bakBannerCreated": 'Savkopio kreita.',
     "bakBannerExists": 'Ĉi tiu dosierujo jam enhavas savkopian dosieron — uzu Restarigi.',
     "bakRestoreQ": 'Viaj agordoj ŝajnas malplenaj. Ĉu restarigi ilin el via savkopia dosierujo?',
+    "shareImportQ": "Ĉu importi la ricevitan dosieron {name}?",
     "bakRestoreBtn": 'Restarigi',
     "bakRestoreBusy": 'Restarigado…',
     "bakRestoreNoFile": 'Neniu savkopia dosiero en ĉi tiu dosierujo.',

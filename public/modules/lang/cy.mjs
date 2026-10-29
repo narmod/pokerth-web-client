@@ -790,6 +790,7 @@ export const strings = {
     "bakBannerCreated": 'Copi wrth gefn wedi\'i greu.',
     "bakBannerExists": 'Mae ffeil copi wrth gefn yn y ffolder hwn eisoes — defnyddiwch Adfer.',
     "bakRestoreQ": 'Mae\'n ymddangos bod eich gosodiadau\'n wag. Eu hadfer o\'ch ffolder copïau wrth gefn?',
+    "shareImportQ": "Mewnforio'r ffeil a dderbyniwyd {name}?",
     "bakRestoreBtn": 'Adfer',
     "bakRestoreBusy": 'Yn adfer…',
     "bakRestoreNoFile": 'Dim ffeil copi wrth gefn yn y ffolder hwn.',

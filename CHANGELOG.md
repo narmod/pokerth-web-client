@@ -28,6 +28,20 @@ highlights below.
   and leads to Deployment. Not shown on an install without git. Test: `scripts/test-admin-overview.mjs` (+4).
 
 ### Fixed
+- **Client hardening from an audit, part 2** (`web.341`):
+  - *Any website could plant a script in the client* — the PWA's share target (`/share-target`) accepts a POST from
+    any page, and the service worker cannot tell it from a real share from another app; the page imported a received
+    `.json` backup at boot, with no question. A backup could set `pth_avatar` / `pth_avatar_img` to markup, which
+    the avatar button (`innerHTML`) and the seats (`<img src>`) inserted on every load, on the origin that also holds
+    `/admin`'s token. A received file is now imported only after a confirm (« Import the received file {name}? »,
+    new key `shareImportQ` in all 83 languages); a backup import refuses markup in those two keys; the custom image
+    is used only when it is a `data:image/(png|jpeg|webp|gif);base64` URL, wherever it is read; the avatar button
+    sets the emoji as text; the seat initial and my name (seat bar, spectator list) are escaped.
+  - *The admin token in player backups* — `pth_admin_*` keys travelled in `pokerth-web-backup.json` and the
+    automatic backups. They are never exported, nor written by an import.
+  - *A crafted .pdb ran script in the Journal* — version, date/time, cash and action columns went raw into the
+    preview's `innerHTML`. They are escaped; on import, cash and cards are read as numbers.
+  - Test: `scripts/test-client-audit-1029.mjs` (new).
 - **Proxy hardening from an audit, part 1** (`web.340`):
   - *One request could stop the proxy* — `url.parse()` throws on some request targets (`GET //%C0@x/`,
     `GET http://[::1/`), on the HTTP handler and on the WebSocket upgrade; with no handler the process exited and

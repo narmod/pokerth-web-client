@@ -966,6 +966,7 @@ export const strings = {
     "bakBannerCreated": "백업을 만들었습니다.",
     "bakBannerExists": "이 폴더에 이미 백업 파일이 있습니다 — 복원을 사용하세요.",
     "bakRestoreQ": "설정이 비어 있는 것 같습니다. 백업 폴더에서 복원할까요?",
+    "shareImportQ": "받은 파일 {name}을(를) 가져올까요?",
     "bakRestoreBtn": "복원",
     "bakRestoreBusy": "복원 중…",
     "bakRestoreNoFile": "이 폴더에 백업 파일이 없습니다.",

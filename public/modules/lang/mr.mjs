@@ -787,6 +787,7 @@ export const strings = {
     "bakBannerCreated": 'बॅकअप तयार झाला.',
     "bakBannerExists": 'या फोल्डरमध्ये आधीच बॅकअप फाइल आहे — पूर्ववत करा वापरा.',
     "bakRestoreQ": 'तुमची सेटिंग्ज रिकामी दिसत आहेत. बॅकअप फोल्डरमधून पूर्ववत करायची?',
+    "shareImportQ": "मिळालेली फाइल {name} आयात करायची?",
     "bakRestoreBtn": 'पूर्ववत करा',
     "bakRestoreBusy": 'पूर्ववत होत आहे…',
     "bakRestoreNoFile": 'या फोल्डरमध्ये बॅकअप फाइल नाही.',

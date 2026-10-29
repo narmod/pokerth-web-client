@@ -1165,6 +1165,7 @@ export const strings = {
     "bakBannerCreated": "Backup creato.",
     "bakBannerExists": "In questa cartella esiste già un file di backup — usa Ripristina.",
     "bakRestoreQ": "Le tue impostazioni sembrano vuote. Ripristinarle dalla cartella di backup?",
+    "shareImportQ": "Importare il file ricevuto {name}?",
     "bakRestoreBtn": "Ripristina",
     "bakRestoreBusy": "Ripristino…",
     "bakRestoreNoFile": "Nessun file di backup in questa cartella.",

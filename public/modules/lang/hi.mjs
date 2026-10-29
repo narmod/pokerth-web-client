@@ -968,6 +968,7 @@ export const strings = {
     "bakBannerCreated": "बैकअप बन गया।",
     "bakBannerExists": "इस फ़ोल्डर में पहले से बैकअप फ़ाइल है — बहाल करें का उपयोग करें।",
     "bakRestoreQ": "आपकी सेटिंग्स खाली लग रही हैं। उन्हें बैकअप फ़ोल्डर से बहाल करें?",
+    "shareImportQ": "प्राप्त फ़ाइल {name} आयात करें?",
     "bakRestoreBtn": "बहाल करें",
     "bakRestoreBusy": "पुनर्स्थापित किया जा रहा है…",
     "bakRestoreNoFile": "इस फ़ोल्डर में कोई बैकअप फ़ाइल नहीं है।",

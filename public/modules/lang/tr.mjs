@@ -1162,6 +1162,7 @@ export const strings = {
     "bakBannerCreated": "Yedek oluşturuldu.",
     "bakBannerExists": "Bu klasörde zaten bir yedek dosyası var — Geri yükle'yi kullan.",
     "bakRestoreQ": "Ayarlarınız boş görünüyor. Yedek klasörünüzden geri yüklensin mi?",
+    "shareImportQ": "Alınan {name} dosyası içe aktarılsın mı?",
     "bakRestoreBtn": "Geri yükle",
     "bakRestoreBusy": "Geri yükleniyor…",
     "bakRestoreNoFile": "Bu klasörde yedek dosyası yok.",

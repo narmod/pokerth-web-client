@@ -1163,6 +1163,7 @@ export const strings = {
     "bakBannerCreated": "Còpia creada.",
     "bakBannerExists": "Ja hi ha un fitxer de còpia en aquesta carpeta — fes servir Restaura.",
     "bakRestoreQ": "La configuració sembla buida. Vols restaurar-la des de la carpeta de còpies de seguretat?",
+    "shareImportQ": "Vols importar el fitxer rebut {name}?",
     "bakRestoreBtn": "Restaura",
     "bakRestoreBusy": "S'està restaurant…",
     "bakRestoreNoFile": "No hi ha cap fitxer de còpia de seguretat en aquesta carpeta.",

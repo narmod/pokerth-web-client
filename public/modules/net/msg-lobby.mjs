@@ -158,6 +158,7 @@ function onAnnounce(sub) {
     try {
       var _sc = null, _si = null;
       try { _sc = localStorage.getItem('pth_avatar'); _si = localStorage.getItem('pth_avatar_img'); } catch (e) {}
+      if (_si && !/^data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+\/=]+$/.test(_si)) _si = null;
       S._sessAv = { choice: _sc, img: _si || null };
       S._sessUpload = window._pthMyUpload || null;
       S._myAvatarCache = (_sc && _sc !== '__pth__' && _sc !== '__img__') ? _sc : '';

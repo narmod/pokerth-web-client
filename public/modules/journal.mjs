@@ -219,7 +219,10 @@ export function renderLog(tables, opts) {
 
   // En-tête de session.
   const sess = tables.session || {};
-  let s = 'Log-File for PokerTH ' + (sess.pokerthVersion || 'web') + ' Session started on ' + (sess.date || '') + ' at ' + (sess.time || '');
+  // A .pdb is a file players pass around: every text column it carries is
+  // escaped before it reaches the preview's innerHTML.
+  const E = (v) => (html ? _esc(v) : (v == null ? '' : v));
+  let s = 'Log-File for PokerTH ' + E(sess.pokerthVersion || 'web') + ' Session started on ' + E(sess.date || '') + ' at ' + E(sess.time || '');
   if (modus === 1) out += '<h3><b>' + s + '</b></h3>\n';
   else if (modus === 3) out += '<h4><b>' + s + '</b></h4>';
   else out += s;
@@ -252,7 +255,7 @@ export function renderLog(tables, opts) {
         if (cash == null) continue;
         out += 'Seat ' + i + ': ';
         out += html ? '<b>' + nameOf(tables.players, ug, i) + '</b>' : nameOf(tables.players, ug, i);
-        out += ' ($' + cash + ')';
+        out += ' ($' + E(cash) + ')';
         out += modus === 1 ? '</br>' : (modus === 2 ? '\n' : '<br />');
       }
 
@@ -316,10 +319,10 @@ export function renderLog(tables, opts) {
           const nm = nameOf(tables.players, ug, a.seat);
           let as;
           if (a.action === 'wins (side pot)') {
-            as = nm + ' wins $' + a.amount + ' (side pot)';
+            as = nm + ' wins $' + E(a.amount) + ' (side pot)';
           } else {
-            as = nm + ' ' + a.action;
-            if (a.amount != null) as += ' $' + a.amount;
+            as = nm + ' ' + E(a.action);
+            if (a.amount != null) as += ' $' + E(a.amount);
           }
 
           if (a.action === 'wins game') {
@@ -1058,7 +1061,13 @@ function _parsePdb(db) {
       board: [],
     };
     for (let i = 1; i <= 5; i++) { const c = r['BoardCard_' + i]; h.board.push(c == null ? null : c | 0); }
-    for (const k in r) if (/^Seat_\d+_/.test(k) && r[k] != null) h[k] = r[k];
+    // Cash and cards are numbers; only the hand text stays a string.
+    for (const k in r) {
+      if (!/^Seat_\d+_/.test(k) || r[k] == null) continue;
+      if (/_Hand_text$/.test(k)) { h[k] = String(r[k]); continue; }
+      const nv = Number(r[k]);
+      if (Number.isFinite(nv)) h[k] = nv;
+    }
     return h;
   });
   const actions = _rows(db, 'SELECT * FROM Action ORDER BY ActionID').map((r) => ({

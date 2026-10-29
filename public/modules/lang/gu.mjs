@@ -787,6 +787,7 @@ export const strings = {
     "bakBannerCreated": 'બેકઅપ બન્યો.',
     "bakBannerExists": 'આ ફોલ્ડરમાં પહેલેથી બેકઅપ ફાઇલ છે — પુનઃસ્થાપિત કરો વાપરો.',
     "bakRestoreQ": 'તમારી સેટિંગ્સ ખાલી દેખાય છે. બેકઅપ ફોલ્ડરમાંથી પુનઃસ્થાપિત કરવી છે?',
+    "shareImportQ": "મળેલી ફાઇલ {name} આયાત કરવી છે?",
     "bakRestoreBtn": 'પુનઃસ્થાપિત કરો',
     "bakRestoreBusy": 'પુનઃસ્થાપિત થઈ રહ્યું છે…',
     "bakRestoreNoFile": 'આ ફોલ્ડરમાં કોઈ બેકઅપ ફાઇલ નથી.',

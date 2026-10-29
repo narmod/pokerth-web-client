@@ -1165,6 +1165,7 @@ export const strings = {
     "bakBannerCreated": "Chaidh an lethbhreac-glèidhidh a chruthachadh.",
     "bakBannerExists": "Tha faidhle lethbhreac-glèidhidh sa phasgan seo mu thràth — cleachd Aisig.",
     "bakRestoreQ": "Tha coltas falamh air na roghainnean agad. An aisig sinn iad on phasgan lethbhreac-glèidhidh agad?",
+    "shareImportQ": "A bheil thu airson am faidhle a fhuaradh, {name}, ion-phortadh?",
     "bakRestoreBtn": "Aisig",
     "bakRestoreBusy": "Ga aiseag…",
     "bakRestoreNoFile": "Chan eil faidhle lethbhreac-glèidhidh sa phasgan seo.",

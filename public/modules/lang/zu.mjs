@@ -790,6 +790,7 @@ export const strings = {
     "bakBannerCreated": 'Isipele sidaliwe.',
     "bakBannerExists": 'Le folda isivele inefayela lesipele — sebenzisa Buyisela.',
     "bakRestoreQ": 'Kubonakala sengathi izilungiselelo zakho azinalutho. Uzibuyisele kufolda yakho yesipele?',
+    "shareImportQ": "Ngabe ungenisa ifayela elitholiwe {name}?",
     "bakRestoreBtn": 'Buyisela',
     "bakRestoreBusy": 'Iyabuyisela…',
     "bakRestoreNoFile": 'Alikho ifayela lesipele kule folda.',

@@ -790,6 +790,7 @@ export const strings = {
     "bakBannerCreated": 'სარეზერვო ასლი შექმნილია.',
     "bakBannerExists": 'ამ საქაღალდეში სარეზერვო ფაილი უკვე არსებობს — გამოიყენეთ Restore.',
     "bakRestoreQ": 'თქვენი პარამეტრები ცარიელია. აღდგეს ისინი სარეზერვო საქაღალდიდან?',
+    "shareImportQ": "შემოვიტანო მიღებული ფაილი {name}?",
     "bakRestoreBtn": 'აღდგენა',
     "bakRestoreBusy": 'აღდგენა…',
     "bakRestoreNoFile": 'ამ საქაღალდეში სარეზერვო ფაილი არ არის.',

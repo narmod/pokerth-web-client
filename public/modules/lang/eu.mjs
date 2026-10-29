@@ -790,6 +790,7 @@ export const strings = {
     "bakBannerCreated": 'Babeskopia sortu da.',
     "bakBannerExists": 'Karpeta honek badu dagoeneko babeskopia-fitxategi bat — erabili Leheneratu.',
     "bakRestoreQ": 'Zure ezarpenak hutsik daudela dirudi. Leheneratu babeskopien karpetatik?',
+    "shareImportQ": "Jasotako {name} fitxategia inportatu?",
     "bakRestoreBtn": 'Leheneratu',
     "bakRestoreBusy": 'Leheneratzen…',
     "bakRestoreNoFile": 'Ez dago babeskopia-fitxategirik karpeta honetan.',

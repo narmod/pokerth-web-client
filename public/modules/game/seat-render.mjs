@@ -675,7 +675,7 @@ function renderSeatsImmediate() {
     // D + blind regroupés dans un seul conteneur inline-flex centré, pour
     // qu'ils soient parfaitement alignés entre eux (avant : deux <span> au
     // calage vertical différent — le jeton de blind avait un top:-1px).
-    pbName.innerHTML = S.myName
+    pbName.innerHTML = esc(S.myName)
       + ((myDealerBadge || myBlindBadge)
           ? '<span style="display:inline-flex;align-items:center;gap:4px;margin-left:6px;vertical-align:middle">'
             + myDealerBadge + myBlindBadge + '</span>'
@@ -903,7 +903,7 @@ function renderSeatsImmediate() {
     // 22×15 en bas-gauche de la zone info (wide) et pas du tout en portrait.
     h += '<div class="' + avCls2 + '" style="' + avatarStyle + '">'
       + pthImg
-      + '<span class="seat-initial">' + initial + '</span>'
+      + '<span class="seat-initial">' + esc(initial) + '</span>'
       + timerSvg
       + _avPucks
       + (_seatTr.flagInfo ? '' : flagBadge)

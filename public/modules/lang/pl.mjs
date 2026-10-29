@@ -1164,6 +1164,7 @@ export const strings = {
     "bakBannerCreated": "Kopia utworzona.",
     "bakBannerExists": "W tym folderze jest już plik kopii zapasowej — użyj Przywróć.",
     "bakRestoreQ": "Twoje ustawienia wyglądają na puste. Przywrócić je z folderu kopii zapasowych?",
+    "shareImportQ": "Zaimportować otrzymany plik {name}?",
     "bakRestoreBtn": "Przywróć",
     "bakRestoreBusy": "Przywracanie…",
     "bakRestoreNoFile": "Brak pliku kopii zapasowej w tym folderze.",

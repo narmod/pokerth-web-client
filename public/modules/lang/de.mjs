@@ -1165,6 +1165,7 @@ export const strings = {
     "bakBannerCreated": "Sicherung erstellt.",
     "bakBannerExists": "In diesem Ordner liegt bereits eine Sicherungsdatei — nutze Wiederherstellen.",
     "bakRestoreQ": "Deine Einstellungen scheinen leer zu sein. Aus dem Sicherungsordner wiederherstellen?",
+    "shareImportQ": "Empfangene Datei {name} importieren?",
     "bakRestoreBtn": "Wiederherstellen",
     "bakRestoreBusy": "Wird wiederhergestellt…",
     "bakRestoreNoFile": "Keine Sicherungsdatei in diesem Ordner.",

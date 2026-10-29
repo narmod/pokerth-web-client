@@ -1163,6 +1163,7 @@ export const strings = {
     "bakBannerCreated": "Copia creada.",
     "bakBannerExists": "Xa hai un ficheiro de copia neste cartafol — usa Restaurar.",
     "bakRestoreQ": "A túa configuración parece baleira. Restaurala desde o cartafol de copias de seguranza?",
+    "shareImportQ": "Importar o ficheiro recibido {name}?",
     "bakRestoreBtn": "Restaurar",
     "bakRestoreBusy": "Restaurando…",
     "bakRestoreNoFile": "Non hai ningún ficheiro de copia de seguranza neste cartafol.",

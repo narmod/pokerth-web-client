@@ -788,6 +788,7 @@ export const strings = {
     "bakBannerCreated": "Nagawa ang backup.",
     "bakBannerExists": "May backup file na sa folder na ito — gamitin ang Ibalik.",
     "bakRestoreQ": "Mukhang walang laman ang mga setting mo. I-restore mula sa iyong backup folder?",
+    "shareImportQ": "I-import ang natanggap na file na {name}?",
     "bakRestoreBtn": "I-restore",
     "bakRestoreBusy": "Ibinabalik…",
     "bakRestoreNoFile": "Walang backup file sa folder na ito.",

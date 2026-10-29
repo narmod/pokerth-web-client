@@ -789,6 +789,7 @@ export const strings = {
     "bakBannerCreated": "Varnostna kopija ustvarjena.",
     "bakBannerExists": "V tej mapi že obstaja datoteka varnostne kopije — uporabi Obnovi.",
     "bakRestoreQ": "Tvoje nastavitve so videti prazne. Jih obnovim iz mape varnostne kopije?",
+    "shareImportQ": "Želite uvoziti prejeto datoteko {name}?",
     "bakRestoreBtn": "Obnovi",
     "bakRestoreBusy": "Obnavljanje…",
     "bakRestoreNoFile": "V tej mapi ni datoteke varnostne kopije.",

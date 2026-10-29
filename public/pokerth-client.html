@@ -908,6 +908,7 @@ function selectAvatarPopup(emoji) {
       // Image perso choisie par l'utilisateur : afficher la vignette.
       var imgData = "";
       try { imgData = localStorage.getItem("pth_avatar_img") || ""; } catch(e) {}
+      if (imgData && !/^data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+\/=]+$/.test(imgData)) imgData = "";
       if (imgData) {
         trigger.innerHTML = "<img src=\"" + imgData + "\" alt=\"\" draggable=\"false\" style=\"width:38px;height:38px;object-fit:cover;border-radius:3px;pointer-events:none\">";
         trigger.classList.add("has-avatar");
@@ -920,7 +921,9 @@ function selectAvatarPopup(emoji) {
       // (when the previous choice was '__pth__') clears the image
       // cleanly. textContent on a node containing <img> would leave
       // the image element in the DOM beside the new text.
-      trigger.innerHTML = emoji || "\uD83C\uDFAD"; // fallback 🎭
+      // textContent replaces every child, an <img> included; the stored value
+      // can come from an imported backup, so it is never parsed as markup.
+      trigger.textContent = emoji || "\uD83C\uDFAD"; // fallback 🎭
       trigger.classList.toggle("has-avatar", !!emoji);
     }
   }

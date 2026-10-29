@@ -790,6 +790,7 @@ export const strings = {
     "bakBannerCreated": 'Zaxira nusxa yaratildi.',
     "bakBannerExists": 'Bu jildda zaxira fayli allaqachon bor — «Tiklash» dan foydalaning.',
     "bakRestoreQ": 'Sozlamalaringiz boʻsh koʻrinyapti. Ular zaxira jildingizdan tiklansinmi?',
+    "shareImportQ": "Qabul qilingan {name} fayli import qilinsinmi?",
     "bakRestoreBtn": 'Tiklash',
     "bakRestoreBusy": 'Tiklanmoqda…',
     "bakRestoreNoFile": 'Bu jildda zaxira fayli yoʻq.',

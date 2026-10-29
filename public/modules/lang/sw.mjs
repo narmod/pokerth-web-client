@@ -788,6 +788,7 @@ export const strings = {
     "bakBannerCreated": "Nakala imeundwa.",
     "bakBannerExists": "Tayari kuna faili la nakala kwenye folda hii — tumia Rejesha.",
     "bakRestoreQ": "Mipangilio yako inaonekana tupu. Urejeshe kutoka folda yako ya hifadhi?",
+    "shareImportQ": "Ungependa kuingiza faili iliyopokelewa {name}?",
     "bakRestoreBtn": "Rejesha",
     "bakRestoreBusy": "Inarejesha…",
     "bakRestoreNoFile": "Hakuna faili la nakala rudufu katika folda hii.",

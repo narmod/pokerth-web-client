@@ -1161,6 +1161,7 @@ export const strings = {
     "bakBannerCreated": "Sikkerhedskopi oprettet.",
     "bakBannerExists": "Der er allerede en sikkerhedskopifil i denne mappe — brug Gendan.",
     "bakRestoreQ": "Dine indstillinger ser tomme ud. Gendan dem fra din sikkerhedskopimappe?",
+    "shareImportQ": "Importér den modtagne fil {name}?",
     "bakRestoreBtn": "Gendan",
     "bakRestoreBusy": "Gendanner…",
     "bakRestoreNoFile": "Ingen sikkerhedskopi i denne mappe.",

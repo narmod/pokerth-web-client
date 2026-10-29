@@ -34,7 +34,7 @@ function _myAvChoice() {
 }
 function _myAvImg() {
   if (S._sessAv) return S._sessAv.img || null;
-  try { return localStorage.getItem('pth_avatar_img') || null; } catch (e) { return null; }
+  try { var v = localStorage.getItem('pth_avatar_img') || ''; return /^data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+\/=]+$/.test(v) ? v : null; } catch (e) { return null; }
 }
 
 // Avatar feature: returns the emoji to display for the local player,

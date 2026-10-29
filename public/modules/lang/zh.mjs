@@ -1157,6 +1157,7 @@ export const strings = {
     "bakBannerCreated": "备份已创建。",
     "bakBannerExists": "此文件夹中已有备份文件 — 请使用恢复。",
     "bakRestoreQ": "你的设置看起来是空的。要从备份文件夹恢复吗？",
+    "shareImportQ": "导入收到的文件 {name}？",
     "bakRestoreBtn": "恢复",
     "bakRestoreBusy": "正在恢复…",
     "bakRestoreNoFile": "此文件夹中没有备份文件。",

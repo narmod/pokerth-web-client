@@ -790,6 +790,7 @@ export const strings = {
     "bakBannerCreated": 'Ätiýaçlyk nusga döredildi.',
     "bakBannerExists": 'Bu bukjada eýýäm ätiýaçlyk faýly bar — «Dikelt» ulanyň.',
     "bakRestoreQ": 'Sazlamalaryňyz boş ýaly görünýär. Olary ätiýaçlyk bukjaňyzdan dikeldeliňmi?',
+    "shareImportQ": "Alnan {name} faýly import edilsinmi?",
     "bakRestoreBtn": 'Dikelt',
     "bakRestoreBusy": 'Dikeldilýär…',
     "bakRestoreNoFile": 'Bu bukjada ätiýaçlyk faýly ýok.',

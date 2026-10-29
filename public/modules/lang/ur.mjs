@@ -786,6 +786,7 @@ export const strings = {
     "bakBannerCreated": "بیک اپ بن گیا۔",
     "bakBannerExists": "اس فولڈر میں پہلے سے بیک اپ فائل موجود ہے — بحال کریں استعمال کریں۔",
     "bakRestoreQ": "آپ کی ترتیبات خالی لگ رہی ہیں۔ انہیں بیک اپ فولڈر سے بحال کریں؟",
+    "shareImportQ": "موصول شدہ فائل {name} درآمد کریں؟",
     "bakRestoreBtn": "بحال کریں",
     "bakRestoreBusy": "بحال کیا جا رہا ہے…",
     "bakRestoreNoFile": "اس فولڈر میں کوئی بیک اپ فائل نہیں ہے۔",

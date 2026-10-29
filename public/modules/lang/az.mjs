@@ -790,6 +790,7 @@ export const strings = {
     "bakBannerCreated": 'Ehtiyat nüsxə yaradıldı.',
     "bakBannerExists": 'Bu qovluqda artıq ehtiyat nüsxə faylı var — Bərpa et istifadə edin.',
     "bakRestoreQ": 'Parametrləriniz boş görünür. Onlar ehtiyat nüsxə qovluğunuzdan bərpa edilsin?',
+    "shareImportQ": "Alınan {name} faylı idxal edilsin?",
     "bakRestoreBtn": 'Bərpa et',
     "bakRestoreBusy": 'Bərpa edilir…',
     "bakRestoreNoFile": 'Bu qovluqda ehtiyat nüsxə faylı yoxdur.',

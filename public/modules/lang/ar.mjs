@@ -789,6 +789,7 @@ export const strings = {
     "bakBannerCreated": "تم إنشاء النسخة الاحتياطية.",
     "bakBannerExists": "يوجد بالفعل ملف نسخة احتياطية في هذا المجلد — استخدم الاستعادة.",
     "bakRestoreQ": "تبدو إعداداتك فارغة. هل تريد استعادتها من مجلد النسخ الاحتياطي؟",
+    "shareImportQ": "استيراد الملف المستلم {name}؟",
     "bakRestoreBtn": "استعادة",
     "bakRestoreBusy": "جارٍ الاستعادة…",
     "bakRestoreNoFile": "لا يوجد ملف نسخ احتياطي في هذا المجلد.",

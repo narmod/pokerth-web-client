@@ -789,6 +789,7 @@ export const strings = {
     "bakBannerCreated": "Kopja rezervë u krijua.",
     "bakBannerExists": "Ekziston tashmë një skedar kopjeje rezervë në këtë dosje — përdor Rivendos.",
     "bakRestoreQ": "Cilësimet e tua duken bosh. Të rivendosen nga dosja jote e kopjes rezervë?",
+    "shareImportQ": "Të importohet skedari i marrë {name}?",
     "bakRestoreBtn": "Rivendos",
     "bakRestoreBusy": "Duke rivendosur…",
     "bakRestoreNoFile": "Nuk ka skedar kopjeje rezervë në këtë dosje.",
