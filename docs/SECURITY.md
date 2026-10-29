@@ -35,6 +35,17 @@ on the open Internet. The proxy is designed primarily for LAN / private use.
 - **Bounded in-memory logging.** A capped ring buffer of recent log lines is kept
   and exposed only through the token-gated `/admin/logs` endpoint.
 
+- **Client address behind a reverse proxy.** Bans, per-IP caps, the admin
+  brute-force guard, the anti-abuse limits and the PROXY header sent to the game
+  server all use one address. With a public peer, the socket address. Behind a
+  local reverse proxy, the **rightmost** `X-Forwarded-For` entry (the one the
+  proxy appended; `$proxy_add_x_forwarded_for` in nginx), else `X-Real-IP`.
+  `CF-Connecting-IP` is used only when that hop is a Cloudflare edge address
+  (published ranges built in, `CLOUDFLARE_IPS` to override), so it cannot be
+  forged by reaching the origin directly. Configure the reverse proxy to append
+  or set one of these headers; if it forwards none, `CF-Connecting-IP` is
+  trusted as is.
+
 ## Additional hardening to add before public exposure
 
 The proxy does not do these itself; put it behind a reverse proxy and add:

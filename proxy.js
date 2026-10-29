@@ -11992,27 +11992,48 @@ const MAX_WS_PER_IP = (function () {
   return isNaN(v) ? 20 : v;
 })();
 const _ipConns = new Map();  // ip → nombre de sockets WS actuellement ouvertes
-// Client IP: trust the first X-Forwarded-For entry ONLY when the direct peer is
-// loopback/private (i.e. a local reverse proxy such as nginx). A public peer
-// could forge the header, so in that case its socket address wins.
+// Cloudflare's published edge ranges (https://www.cloudflare.com/ips/, list of
+// 2023-09-28). CLOUDFLARE_IPS="cidr,cidr,…" replaces them if they ever change.
+const CLOUDFLARE_IPS_DEFAULT = '173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/13,104.24.0.0/14,172.64.0.0/13,131.0.72.0/22,2400:cb00::/32,2606:4700::/32,2803:f800::/32,2405:b500::/32,2405:8100::/32,2a06:98c0::/29,2c0f:f248::/32';
+const _CF_NETS = (function () {
+  const b = new net.BlockList();
+  String(process.env.CLOUDFLARE_IPS || CLOUDFLARE_IPS_DEFAULT).split(',').forEach(function (c) {
+    const m = /^\s*([^/\s]+)\/(\d{1,3})\s*$/.exec(c), fam = m ? net.isIP(m[1]) : 0;
+    if (fam) { try { b.addSubnet(m[1], +m[2], fam === 6 ? 'ipv6' : 'ipv4'); } catch (e) {} }
+  });
+  return b;
+})();
+function _isCloudflare(ip) {
+  const fam = net.isIP(ip);
+  try { return !!fam && _CF_NETS.check(ip, fam === 6 ? 'ipv6' : 'ipv4'); } catch (e) { return false; }
+}
+// Client IP. A public peer could forge any header, so its socket address wins.
+// Behind a local reverse proxy (loopback/private peer, e.g. nginx):
+//  · the address that proxy saw is the RIGHTMOST X-Forwarded-For entry — nginx's
+//    $proxy_add_x_forwarded_for appends it, everything to its left is what the
+//    client sent (the first entry used to be trusted: anyone could pick their
+//    address, dodge bans and per-IP limits, or pin a ban on someone else through
+//    the PROXY header sent to the game server); X-Real-IP if there is no XFF;
+//  · CF-Connecting-IP counts only when that hop is a Cloudflare edge (pokerth.net
+//    sits behind Cloudflare, which overwrites the header). Sent straight to the
+//    origin, bypassing Cloudflare, it is ignored. When the reverse proxy passes
+//    no hop at all, it is still trusted, as before.
+// Every value is validated as a real IP.
 function clientIp(req) {
   const peer = String((req && req.socket && req.socket.remoteAddress) || '');
   const localPeer = /^(::1$|::ffff:127\.|127\.|::ffff:10\.|10\.|::ffff:192\.168\.|192\.168\.|::ffff:172\.(1[6-9]|2\d|3[01])\.|172\.(1[6-9]|2\d|3[01])\.)/.test(peer);
   if (localPeer) {
-    // Behind Cloudflare, CF-Connecting-IP is authoritative: Cloudflare always
-    // OVERWRITES it with the visitor address, so a client cannot forge it.
-    // X-Forwarded-For, by contrast, is APPENDED to — its first entry is
-    // client-controlled on such setups. Now that this address feeds the PROXY
-    // protocol header toward the game server (ranking same-IP check, IP bans),
-    // a forgeable value would let a player dodge the check or pin a ban on an
-    // arbitrary address; hence CF first, and both paths validated as real IPs.
-    const cf = req && req.headers && req.headers['cf-connecting-ip'];
-    if (cf && net.isIP(String(cf).trim())) return String(cf).trim();
-    const xff = req && req.headers && req.headers['x-forwarded-for'];
-    if (xff) {
-      const first = String(xff).split(',')[0].trim();
-      if (first && net.isIP(first)) return first;
+    const h = (req && req.headers) || {};
+    let hop = '';
+    if (h['x-forwarded-for']) {
+      const parts = String(h['x-forwarded-for']).split(',');
+      const last = parts[parts.length - 1].trim();
+      if (net.isIP(last)) hop = last;
     }
+    if (!hop && h['x-real-ip'] && net.isIP(String(h['x-real-ip']).trim())) hop = String(h['x-real-ip']).trim();
+    const cf = h['cf-connecting-ip'] ? String(h['cf-connecting-ip']).trim() : '';
+    if (cf && net.isIP(cf) && (!hop || _isCloudflare(hop))) return cf;
+    if (hop) return hop;
   }
   return peer || 'unknown';
 }

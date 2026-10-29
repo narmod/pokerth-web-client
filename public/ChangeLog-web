@@ -1,3 +1,6 @@
+2026-10-29 version 2.1.10-web.344:
+- improvement: bans and anti-abuse limits can no longer be dodged by faking one's address
+
 2026-10-29 version 2.1.10-web.343:
 - bugfix: importing a card deck, seat or table pack from the admin works again on Docker installs
 

@@ -28,6 +28,14 @@ highlights below.
   and leads to Deployment. Not shown on an install without git. Test: `scripts/test-admin-overview.mjs` (+4).
 
 ### Fixed
+- **Client address could be forged** (`web.344`) — `clientIp()` feeds bans, per-IP caps, the admin brute-force
+  guard, the anti-abuse limits of web.342 and the PROXY header sent to the game server. Behind a reverse proxy it
+  trusted the *first* `X-Forwarded-For` entry, which the client chooses under nginx's
+  `$proxy_add_x_forwarded_for`, and any `CF-Connecting-IP`, forgeable by reaching the origin without Cloudflare: a
+  player could dodge a ban or pin one on another address. It now takes the rightmost entry (the one the reverse
+  proxy appended), else `X-Real-IP`; `CF-Connecting-IP` counts only when that hop is a Cloudflare edge (published
+  ranges built in, `CLOUDFLARE_IPS` to override), or when the reverse proxy forwards no hop at all (as before).
+  `docs/SECURITY.md` and `.env.example` updated. Test: `scripts/test-client-ip.mjs` (new).
 - **Pack import on the Docker image; follow-ups of the audit** (`web.343`) — a review of web.340–342 found:
   - *Every pack upload refused in Docker* (`web.342` regression) — the size check before extraction called
     `unzip -Zt`; the image (`node:20-alpine`) has BusyBox unzip, which has no `-Z`, so every deck / seat / table
