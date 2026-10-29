@@ -1125,14 +1125,17 @@ function renderBak(focus) {
     M.say({ html: htmlP, buttons: buttonsP, onButton: onBakButton, focus: !!focus });
     return;
   }
-  // « I already play » (web.265): « Had a backup of your settings? » — Restore first
+  // « I already play » (web.265): asked whether a backup FILE is on this
+  // computer (web.345) — Restore answers yes (the file picker), Create, first
+  // in line, answers no. Before, Restore came first: 27 tapped, 27 abandoned,
+  // most of these players had never made a backup.
   const ret = bakReturning;
   const html = `<p class="ad-text"><b>${esc(ret ? gt('bakReturning') : tx.title)}</b></p><p class="ad-text ad-bak-body">${esc(tx.body)}</p>`
     + `<p class="ad-bak-path">${esc(o.path())}</p>${msg}`;
   const buttons = bakBusy ? [] : [
     { id: 'bakLater', label: tx.later },
-    { id: 'bakRestore', label: tx.restore, primary: ret },
-    { id: 'bakCreate', label: tx.create, primary: !ret },
+    { id: 'bakRestore', label: tx.restore, primary: false },
+    { id: 'bakCreate', label: tx.create, primary: true },
   ];
   M.say({ html, buttons, onButton: onBakButton, focus: !!focus });
 }

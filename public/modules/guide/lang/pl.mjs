@@ -22,7 +22,7 @@ export default {
   prev: 'Wstecz',
   close: 'Zamknij',
   welcome: 'Świetnie, zostanę tu na dole i pojawię się, gdy to pomoże. Dotknij mnie w każdej chwili, jeśli masz pytanie.',
-  bakReturning: 'Masz kopię zapasową ustawień? Mogę ją przywrócić.',
+  bakReturning: 'Masz już na tym komputerze plik kopii zapasowej ustawień?',
   menuOn: 'Pomoc Asa jest włączona. „Co to jest?”: dotknij go, potem dotknij czegokolwiek na ekranie, a powiem ci, co to robi (żółty „?” na moich dymkach robi to samo).',
   turnOff: 'Wyłącz',
   resetTips: 'Pokaż znów wszystkie wskazówki',

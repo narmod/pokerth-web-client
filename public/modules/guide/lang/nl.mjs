@@ -22,7 +22,7 @@ export default {
   prev: 'Vorige',
   close: 'Sluiten',
   welcome: 'Top, ik blijf hier onderin en verschijn als het helpt. Tik me aan wanneer je een vraag hebt.',
-  bakReturning: 'Had je een back-up van je instellingen? Ik kan die terugzetten.',
+  bakReturning: 'Heb je al een back-upbestand van je instellingen op deze computer?',
   menuOn: 'Hulp van de Aas staat aan. “Wat is dit?”: tik erop, tik daarna op iets op het scherm en ik vertel je wat het doet (het gele “?” op mijn tekstballonnen doet hetzelfde).',
   turnOff: 'Uitzetten',
   resetTips: 'Alle tips opnieuw tonen',

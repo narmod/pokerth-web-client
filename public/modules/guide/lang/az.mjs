@@ -22,7 +22,7 @@ export default {
   prev: 'Geri',
   close: 'Bağla',
   welcome: 'Əla, burada aşağıda qalıram və faydalı olanda görünürəm. Sualınız olsa, istənilən vaxt mənə toxunun.',
-  bakReturning: 'Ayarlarınızın ehtiyat nüsxəsi var idi? Onu bərpa edə bilərəm.',
+  bakReturning: 'Bu kompüterdə ayarlarınızın ehtiyat nüsxə faylı artıq var?',
   menuOn: 'Tuzun köməyi aktivdir. “Bu nədir?”: ona toxunun, sonra ekranda istənilən şeyə toxunun, mən də nə işə yaradığını deyim (balonlarımdakı sarı “?” də eyni işi görür).',
   turnOff: 'Söndür',
   resetTips: 'Bütün məsləhətləri yenidən göstər',

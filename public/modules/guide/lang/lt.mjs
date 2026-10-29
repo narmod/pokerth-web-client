@@ -22,7 +22,7 @@ export default {
   prev: 'Atgal',
   close: 'Uždaryti',
   welcome: 'Puiku, liksiu čia apačioje ir pasirodysiu, kai pravers. Paliesk mane bet kada, jei turi klausimą.',
-  bakReturning: 'Turėjai nustatymų atsarginę kopiją? Galiu ją atkurti.',
+  bakReturning: 'Ar šiame kompiuteryje jau turi nustatymų atsarginės kopijos failą?',
   menuOn: 'Tūzo pagalba įjungta. „Kas tai?“: bakstelėk jį, paskui bakstelėk bet ką ekrane, ir aš pasakysiu, ką tai daro (geltonas „?“ ant mano debesėlių daro tą patį).',
   turnOff: 'Išjungti',
   resetTips: 'Vėl rodyti visus patarimus',

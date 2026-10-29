@@ -22,7 +22,7 @@ export default {
   prev: 'Antaŭa',
   close: 'Fermi',
   welcome: 'Bonege, mi restos ĉi-sube kaj aperos kiam utilas. Tuŝu min iam ajn se vi havas demandon.',
-  bakReturning: 'Ĉu vi havis savkopion de viaj agordoj? Mi povas restarigi ĝin.',
+  bakReturning: 'Ĉu vi jam havas savkopian dosieron de viaj agordoj en ĉi tiu komputilo?',
   menuOn: 'Helpo de la Aso estas ŝaltita. “Kio estas tio?”: tuŝetu ĝin, poste tuŝetu ion ajn sur la ekrano kaj mi diros al vi kion ĝi faras (la flava “?” sur miaj bobeloj faras same).',
   turnOff: 'Malŝalti',
   resetTips: 'Montri ĉiujn konsilojn denove',

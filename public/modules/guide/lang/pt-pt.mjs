@@ -22,7 +22,7 @@ export default {
   prev: 'Anterior',
   close: 'Fechar',
   welcome: 'Ótimo, fico aqui em baixo e apareço quando for útil. Toca-me quando quiseres se tiveres alguma dúvida.',
-  bakReturning: 'Tinhas uma cópia de segurança das tuas definições? Posso restaurá-la.',
+  bakReturning: 'Já tens um ficheiro de cópia de segurança das tuas definições neste computador?',
   menuOn: 'A Ajuda do Ás está ativada. «O que é isto?»: toca nele, depois toca em qualquer coisa no ecrã e eu digo-te o que faz (o «?» amarelo nos meus balões faz o mesmo).',
   turnOff: 'Desativar',
   resetTips: 'Mostrar todas as dicas outra vez',

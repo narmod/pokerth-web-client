@@ -22,7 +22,7 @@ export default {
   prev: 'Air ais',
   close: 'Dùin',
   welcome: 'Sgoinneil, fuirichidh mi shìos an seo is nochdaidh mi nuair a chuidicheas e. Bean rium uair sam bith ma tha ceist agad.',
-  bakReturning: 'An robh lethbhreac-glèidhidh de na roghainnean agad? ’S urrainn dhomh aiseag.',
+  bakReturning: 'A bheil faidhle-glèidhidh de na roghainnean agad air a’ choimpiutair seo mu thràth?',
   menuOn: 'Tha Cobhair an Aoin air. “Dè tha seo?”: thoir gnogag air, an uair sin thoir gnogag air rud sam bith air an sgrìn agus innsidh mi dhut dè a nì e (bidh an “?” buidhe air na builgeanan-cainnte agam a’ dèanamh an aon rud).',
   turnOff: 'Cuir dheth',
   resetTips: 'Seall gach moladh a-rithist',

@@ -22,7 +22,7 @@ export default {
   prev: 'Anterior',
   close: 'Fechar',
   welcome: 'Ótimo, fico aqui embaixo e apareço quando for útil. Toque em mim quando quiser se tiver alguma dúvida.',
-  bakReturning: 'Você tinha um backup das suas configurações? Posso restaurá-lo.',
+  bakReturning: 'Você já tem um arquivo de backup das suas configurações neste computador?',
   menuOn: 'A Ajuda do Ás está ativada. “O que é isto?”: toque nele, depois toque em qualquer coisa na tela e eu digo o que ela faz (o “?” amarelo nos meus balões faz o mesmo).',
   turnOff: 'Desativar',
   resetTips: 'Mostrar todas as dicas de novo',

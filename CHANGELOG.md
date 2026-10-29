@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Restore picks the backup file** (`web.345`) — admin stats (2026-10-29): since `web.267` counted the outcomes,
+  27 restores tapped → 27 `restore_abort`, 0 `restored`; 22 backups created in all. The folder picker did not show
+  the `.json` the player was looking for (nor the one the manual export left in Downloads), and « I already play »
+  put Restore first to players who had never made a backup. Restore (Ace's bubble and fallback banner) now opens
+  `showOpenFilePicker` (`.json`, starts in Downloads, any file name), shared tail `_applyBackupFile()`; a remembered
+  folder is still read first. Restoring from a file does not remember a folder: automatic writing waits for one
+  (Create, or Advanced options). « I already play » now asks « Already have a backup file of your settings on this
+  computer? » (`bakReturning`, 83 languages) with Create first in line. Same events, server unchanged. Tests:
+  `scripts/test-backup-autosave.mjs` (+10), `scripts/test-guide-offer-order.mjs`, `scripts/test-backup-restore-browser.mjs`.
 - **No Assistance on pokerth.net** (`web.338`) — the hand-strength assistance (web-only extra) was available at
   every non-Ranking table on pokerth.net, BBC Steps and WEC games included. Connected to pokerth.net (guest or account)
   it is now gone: no banner, no detached window, and its two rows (Assistance, Assistance display) are hidden in

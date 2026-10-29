@@ -22,7 +22,7 @@ export default {
   prev: 'Rudi',
   close: 'Funga',
   welcome: 'Vizuri, nitabaki hapa chini na kujitokeza inaposaidia. Niguse wakati wowote ukiwa na swali.',
-  bakReturning: 'Ulikuwa na nakala rudufu ya mipangilio yako? Ninaweza kuirejesha.',
+  bakReturning: 'Je, tayari una faili ya nakala rudufu ya mipangilio yako kwenye kompyuta hii?',
   menuOn: 'Msaada wa Ekaa umewashwa. “Hiki ni nini?”: kiguse, kisha gusa chochote kwenye skrini nami nitakuambia kinafanya nini (alama ya “?” ya manjano kwenye viputo vyangu hufanya vivyo hivyo).',
   turnOff: 'Zima',
   resetTips: 'Onyesha madokezo yote tena',

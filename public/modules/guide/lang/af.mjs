@@ -22,7 +22,7 @@ export default {
   prev: 'Terug',
   close: 'Maak toe',
   welcome: 'Uitstekend, ek bly hier onder en verskyn wanneer dit help. Tik my enige tyd as jy ’n vraag het.',
-  bakReturning: 'Het jy ’n rugsteun van jou instellings gehad? Ek kan dit terugsit.',
+  bakReturning: 'Het jy reeds ’n rugsteunlêer van jou instellings op hierdie rekenaar?',
   menuOn: 'Die Aas se Hulp is aan. „Wat is dit?”: tik daarop, tik dan op enigiets op die skerm en ek sê vir jou wat dit doen (die geel „?” op my borrels doen dieselfde).',
   turnOff: 'Skakel af',
   resetTips: 'Wys alle wenke weer',

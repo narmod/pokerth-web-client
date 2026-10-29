@@ -22,7 +22,7 @@ export default {
   prev: 'Tilbage',
   close: 'Luk',
   welcome: 'Fint, jeg bliver hernede og dukker op, når det kan hjælpe. Tryk på mig når som helst, hvis du har et spørgsmål.',
-  bakReturning: 'Havde du en backup af dine indstillinger? Jeg kan gendanne den.',
+  bakReturning: 'Har du allerede en backupfil af dine indstillinger på denne computer?',
   menuOn: 'Essets hjælp er slået til. »Hvad er det?«: tryk på den, og tryk så på hvad som helst på skærmen, så fortæller jeg, hvad det gør (den gule »?« på mine bobler gør det samme).',
   turnOff: 'Slå fra',
   resetTips: 'Vis alle tips igen',

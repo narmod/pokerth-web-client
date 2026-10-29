@@ -22,7 +22,7 @@ export default {
   prev: 'Précédent',
   close: 'Fermer',
   welcome: 'Super, je reste en bas à droite et j’apparais quand c’est utile. Touche-moi si tu as une question.',
-  bakReturning: 'Tu avais une sauvegarde de tes réglages ? Je peux la restaurer.',
+  bakReturning: 'Tu as déjà un fichier de sauvegarde de tes réglages sur cet ordinateur ?',
   menuOn: 'L’Aide de l’As est activée. « C’est quoi ? » : touche-le, puis touche n’importe quoi à l’écran et je te dis ce que ça fait (le « ? » jaune sur mes bulles fait la même chose).',
   turnOff: 'Désactiver',
   resetTips: 'Revoir tous les conseils',

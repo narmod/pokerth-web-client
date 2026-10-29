@@ -22,7 +22,7 @@ export default {
   prev: 'Zurück',
   close: 'Schließen',
   welcome: 'Super, ich bleibe hier unten und melde mich, wenn es hilft. Tippe mich jederzeit an, wenn du eine Frage hast.',
-  bakReturning: 'Hattest du eine Sicherung deiner Einstellungen? Ich kann sie wiederherstellen.',
+  bakReturning: 'Hast du auf diesem Computer schon eine Sicherungsdatei deiner Einstellungen?',
   menuOn: 'Die Ass-Hilfe ist an. „Was ist das?“: tippe darauf, tippe dann auf irgendetwas auf dem Bildschirm, und ich sage dir, was es macht (das gelbe „?“ an meinen Sprechblasen macht dasselbe).',
   turnOff: 'Ausschalten',
   resetTips: 'Alle Tipps erneut zeigen',

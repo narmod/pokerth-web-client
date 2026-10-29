@@ -287,6 +287,12 @@ async function _restoreFromFolder() {
     const fh = await dir.getFileHandle(FILE_NAME);    // no create: missing → throw
     file = await fh.getFile();
   } catch (_e) { return 'nofile'; }
+  return _applyBackupFile(file);
+}
+
+// The backup file read, applied, then the page reloaded — shared by the
+// remembered folder and the file picker (web.345). Same codes as above.
+async function _applyBackupFile(file) {
   let rec = null;
   try { rec = JSON.parse(await file.text()); } catch (_e) { return 'bad'; }
   if (typeof window._applyWebBackupRec !== 'function') return 'bad';
@@ -327,6 +333,34 @@ async function pickForRestore() {
   try { await _saveHandle(h); } catch (_e) { /* the handle stays valid for this session */ }
   _ui();
   return _restoreFromFolder();
+}
+
+// web.345 — Restore picks the backup FILE, not a folder. Admin (2026-10-29):
+// since web.267, 27 restores tapped → 27 restore_abort, 0 restored. The
+// folder picker does not show the .json the player is looking for (nor
+// the one the manual export left in Downloads), so he closed it. The file
+// picker shows it; any name is accepted (« pokerth-web-backup (1).json »).
+// The folder is not remembered this way: automatic writing stays off until
+// one is picked (Advanced options, or Create). The remembered folder, when
+// there is one, is still read first (_offerRestore).
+async function pickFileForRestore() {
+  if (!_supported()) return 'nofolder';
+  if (typeof window.showOpenFilePicker !== 'function') return pickForRestore();
+  let hs;
+  try {
+    hs = await window.showOpenFilePicker({
+      id: 'pokerth-backup', startIn: 'downloads', multiple: false,
+      types: [{ description: 'PokerTH backup', accept: { 'application/json': ['.json'] } }],
+    });
+  } catch (e) {
+    if (e && e.name === 'AbortError') return 'abort';
+    return 'bad';
+  }
+  const fh = hs && hs[0];
+  if (!fh) return 'abort';
+  let file;
+  try { file = await fh.getFile(); } catch (_e) { return 'nofile'; }
+  return _applyBackupFile(file);
 }
 
 // Banner "Create a backup" path: pick a folder and write the first backup
@@ -373,13 +407,13 @@ const _WHY = {
 };
 
 // Restore tries the remembered folder first; after a folder-shaped failure
-// (gone, denied, no file) the next click opens the picker. Shared by the Ace's
+// (gone, denied, no file) the next click opens the file picker (web.345). Shared by the Ace's
 // bubble and the banner. Called in the click's own tick: no await before the
 // picker / permission prompt.
 let _pickNext = true;
 function _offerRestore() {
   let p;
-  try { p = _pickNext ? pickForRestore() : _restoreFromFolder(); } catch (e) { p = Promise.reject(e); }
+  try { p = _pickNext ? pickFileForRestore() : _restoreFromFolder(); } catch (e) { p = Promise.reject(e); }
   return Promise.resolve(p).then((why) => {
     if (why === 'nofolder' || why === 'noperm' || why === 'nofile') _pickNext = true;
     return why;
@@ -677,7 +711,7 @@ function _maybeOfferRestore() {
   if (!_supported() || !_enabled() || !(_FRESH_AT_BOOT || (next && !_state.dirName))) { _hold = false; return; }
   // Since 2.1.8-web.10 the offer also shows when NO folder is remembered
   // (brand-new browser): the player learns a local backup exists. Create
-  // picks a folder; Restore goes straight to the picker (_pickNext starts
+  // picks a folder; Restore goes straight to the file picker (_pickNext starts
   // true without a folder). _getHandle() already ran at _ready(), so
   // _state.dirName is populated before the offer is made.
   _pickNext = !_state.dirName;
@@ -853,4 +887,4 @@ if (typeof window !== 'undefined') {
 
 // ESM exports: for the deterministic tests only. In the browser the module
 // talks through window.* exclusively.
-export { save, pickFolder, pickForRestore, _supported, _enabled, _looksFresh, _sigOf, _writeNow, _state, _holdState };
+export { save, pickFolder, pickForRestore, pickFileForRestore, _supported, _enabled, _looksFresh, _sigOf, _writeNow, _state, _holdState };

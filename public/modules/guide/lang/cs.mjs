@@ -22,7 +22,7 @@ export default {
   prev: 'Zpět',
   close: 'Zavřít',
   welcome: 'Skvělé, zůstanu tady dole a ozvu se, když se to bude hodit. Kdykoli máš otázku, ťukni na mě.',
-  bakReturning: 'Měl jsi zálohu nastavení? Můžu ji obnovit.',
+  bakReturning: 'Máš už na tomto počítači soubor se zálohou nastavení?',
   menuOn: 'Nápověda od esa je zapnutá. „Co je to?“: klepni na to, pak klepni na cokoli na obrazovce a já ti řeknu, k čemu to je (žlutý „?“ na mých bublinách dělá totéž).',
   turnOff: 'Vypnout',
   resetTips: 'Znovu zobrazit všechny tipy',

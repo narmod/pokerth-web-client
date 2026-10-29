@@ -22,7 +22,7 @@ export default {
   prev: 'Geri',
   close: 'Kapat',
   welcome: 'Harika, burada aşağıda kalıp işe yaradığında ortaya çıkacağım. Merak ettiğin bir şey olursa istediğin zaman bana dokun.',
-  bakReturning: 'Ayarlarının bir yedeği var mıydı? Geri yükleyebilirim.',
+  bakReturning: 'Bu bilgisayarda ayarlarının bir yedek dosyası zaten var mı?',
   menuOn: 'As’ın yardımı açık. “Bu ne?”: ona dokun, sonra ekrandaki herhangi bir şeye dokun, ne işe yaradığını söyleyeyim (konuşma balonlarımdaki sarı “?” da aynı işi yapar).',
   turnOff: 'Devre dışı bırak',
   resetTips: 'Tüm ipuçlarını yeniden göster',

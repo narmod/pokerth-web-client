@@ -22,7 +22,7 @@ export default {
   prev: 'Sebelumnya',
   close: 'Tutup',
   welcome: 'Bagus, saya tetap di bawah sini dan muncul saat berguna. Ketuk saya kapan saja jika ada pertanyaan.',
-  bakReturning: 'Punya cadangan pengaturan Anda? Saya bisa memulihkannya.',
+  bakReturning: 'Sudah punya file cadangan pengaturan Anda di komputer ini?',
   menuOn: 'Bantuan si As aktif. “Apa ini?”: ketuk, lalu ketuk apa saja di layar dan saya beri tahu fungsinya (tanda “?” kuning di gelembung saya juga begitu).',
   turnOff: 'Matikan',
   resetTips: 'Tampilkan lagi semua tip',

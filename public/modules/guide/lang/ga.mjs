@@ -22,7 +22,7 @@ export default {
   prev: 'Siar',
   close: 'Dún',
   welcome: 'Togha, fanfaidh mé thíos anseo agus tiocfaidh mé nuair a chabhródh sé. Tadhaill orm am ar bith má tá ceist agat.',
-  bakReturning: 'An raibh cúltaca de do shocruithe agat? Is féidir liom é a athchóiriú.',
+  bakReturning: 'An bhfuil comhad cúltaca de do shocruithe agat ar an ríomhaire seo cheana?',
   menuOn: 'Tá Cabhair an Aoin ar siúl. “Cad é seo?”: tapáil é, ansin tapáil aon rud ar an scáileán agus inseoidh mé duit cad a dhéanann sé (déanann an “?” buí ar mo bholgáin chainte an rud céanna).',
   turnOff: 'Múch',
   resetTips: 'Taispeáin gach leid arís',

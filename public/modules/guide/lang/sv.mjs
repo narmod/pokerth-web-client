@@ -22,7 +22,7 @@ export default {
   prev: 'Tillbaka',
   close: 'Stäng',
   welcome: 'Toppen, jag stannar här nere och dyker upp när det hjälper. Tryck på mig när som helst om du har en fråga.',
-  bakReturning: 'Hade du en säkerhetskopia av dina inställningar? Jag kan återställa den.',
+  bakReturning: 'Har du redan en säkerhetskopiefil av dina inställningar på den här datorn?',
   menuOn: 'Essets hjälp är på. ”Vad är det här?”: tryck på den, tryck sedan på vad som helst på skärmen så säger jag vad det gör (den gula ”?” på mina pratbubblor gör samma sak).',
   turnOff: 'Stäng av',
   resetTips: 'Visa alla tips igen',

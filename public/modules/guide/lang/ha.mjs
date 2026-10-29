@@ -22,7 +22,7 @@ export default {
   prev: 'Baya',
   close: 'Rufe',
   welcome: 'Madalla, zan zauna a nan ƙasa in bayyana idan zai taimaka. Taɓa ni kowane lokaci idan kana da tambaya.',
-  bakReturning: 'Kana da ajiyar saitunanka? Zan iya dawo da ita.',
+  bakReturning: 'Kana da fayil ɗin ajiyar saitunanka a wannan kwamfutar tuni?',
   menuOn: 'Taimakon Aas yana kunne. “Mene ne wannan?”: ka taɓa shi, sannan ka taɓa kowane abu a kan allo in gaya maka abin da yake yi (alamar “?” mai rawaya a kan kumfunana ma tana yin haka).',
   turnOff: 'Kashe',
   resetTips: 'Sake nuna duk shawarwari',

@@ -22,7 +22,7 @@ export default {
   prev: 'Anterior',
   close: 'Tanca',
   welcome: 'Genial, em quedo aquí baix i apareixo quan sigui útil. Toca’m quan vulguis si tens cap pregunta.',
-  bakReturning: 'Tenies una còpia de seguretat de la configuració? La puc restaurar.',
+  bakReturning: 'Ja tens un fitxer de còpia de seguretat de la configuració en aquest ordinador?',
   menuOn: 'L’Ajuda de l’As està activada. «Què és això?»: toca-ho, després toca qualsevol cosa de la pantalla i t’explicaré què fa (el «?» groc de les meves bafarades fa el mateix).',
   turnOff: 'Desactiva',
   resetTips: 'Torna a mostrar tots els consells',

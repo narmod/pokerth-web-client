@@ -1,3 +1,7 @@
+2026-10-29 version 2.1.10-web.345:
+- improvement: restoring a backup now lets you pick the backup file itself (it was a folder, where the file did not show)
+- improvement: when you say you already play, the Ace first asks whether you have a backup file on this computer; creating one is now the main choice
+
 2026-10-29 version 2.1.10-web.344:
 - improvement: bans and anti-abuse limits can no longer be dodged by faking one's address
 

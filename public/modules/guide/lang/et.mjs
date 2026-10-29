@@ -22,7 +22,7 @@ export default {
   prev: 'Tagasi',
   close: 'Sulge',
   welcome: 'Suurepärane, ma jään siia alla ja ilmun, kui sellest on abi. Puuduta mind igal ajal, kui sul on küsimus.',
-  bakReturning: 'Kas sul oli seadetest varukoopia? Saan selle taastada.',
+  bakReturning: 'Kas sul on selles arvutis juba seadete varukoopiafail?',
   menuOn: 'Ässa abi on sees. „Mis see on?“: puuduta seda, seejärel puuduta ekraanil mida tahes ja ma ütlen, mida see teeb (kollane „?“ minu jutumullidel teeb sedasama).',
   turnOff: 'Lülita välja',
   resetTips: 'Näita kõiki näpunäiteid uuesti',

@@ -22,7 +22,7 @@ export default {
   prev: 'Aurrekoa',
   close: 'Itxi',
   welcome: 'Primeran, hemen behean geratuko naiz eta lagungarri denean agertuko naiz. Ukitu nazazu nahi duzunean galderaren bat baduzu.',
-  bakReturning: 'Zure ezarpenen babeskopiarik bazenuen? Leheneratu dezaket.',
+  bakReturning: 'Baduzu dagoeneko zure ezarpenen babeskopia-fitxategirik ordenagailu honetan?',
   menuOn: 'Batekoaren laguntza aktibatuta dago. «Zer da hau?»: saka ezazu, gero saka ezazu pantailako edozer eta zer egiten duen esango dizut (nire hizketa-globoetako «?» horiak gauza bera egiten du).',
   turnOff: 'Desaktibatu',
   resetTips: 'Erakutsi aholku guztiak berriro',

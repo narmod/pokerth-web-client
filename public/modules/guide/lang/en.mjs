@@ -27,7 +27,7 @@ export default {
   close: 'Close',
   // turning the help on / off, menu bubble
   welcome: 'Great, I’ll stay down here and pop up when it helps. Tap me any time if you have a question.',
-  bakReturning: 'Had a backup of your settings? I can restore it.',
+  bakReturning: 'Already have a backup file of your settings on this computer?',
   menuOn: 'Ace’s Help is on. « What’s this? »: tap it, then tap anything on the screen and I tell you what it does (the yellow « ? » on my bubbles does the same).',
   turnOff: 'Turn off',
   resetTips: 'Show all tips again',

@@ -96,8 +96,8 @@ ok(ids().join(',') === 'offerNo,offerYes' && /Je connais déjà/.test(bub().text
 if (SCENARIO === 'returning') {
   bub().querySelector('[data-ad-btn="offerNo"]').click();
   ok(await until(() => bub() && bub().querySelector('.ad-bak-path')), '« Je connais déjà » → the backup offer at once');
-  ok(/Tu avais une sauvegarde de tes réglages/.test(bub().textContent), 'asked as « Tu avais une sauvegarde de tes réglages ? »');
-  ok(ids().join(',') === 'bakLater,bakRestore,bakCreate' && bub().querySelector('.ad-primary').getAttribute('data-ad-btn') === 'bakRestore', 'Restore first in line');
+  ok(/Tu as déjà un fichier de sauvegarde de tes réglages sur cet ordinateur/.test(bub().textContent), 'asked as « Tu as déjà un fichier de sauvegarde… sur cet ordinateur ? » (web.345)');
+  ok(ids().join(',') === 'bakLater,bakRestore,bakCreate' && bub().querySelector('.ad-primary').getAttribute('data-ad-btn') === 'bakCreate', 'Create first in line: most have no backup file (web.345)');
   ok(!calls.includes('defer') && w.localStorage.getItem('pth_guide_on') !== '1', 'not put off, the tips stay off');
   await wait(100);
   const q = queue().map((e) => e.join('.'));

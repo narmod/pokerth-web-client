@@ -22,7 +22,7 @@ export default {
   prev: 'Vissza',
   close: 'Bezárás',
   welcome: 'Remek, itt maradok lent, és megjelenek, amikor hasznos. Koppints rám bármikor, ha kérdésed van.',
-  bakReturning: 'Volt mentésed a beállításaidról? Vissza tudom állítani.',
+  bakReturning: 'Van már mentésfájlod a beállításaidról ezen a számítógépen?',
   menuOn: 'Az ász súgója be van kapcsolva. „Mi ez?”: koppints rá, aztán koppints bármire a képernyőn, és megmondom, mire jó (a buborékjaimon lévő sárga „?” ugyanezt teszi).',
   turnOff: 'Kikapcsolás',
   resetTips: 'Az összes tipp újra',

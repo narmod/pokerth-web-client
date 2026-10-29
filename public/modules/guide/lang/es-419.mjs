@@ -22,7 +22,7 @@ export default {
   prev: 'Anterior',
   close: 'Cerrar',
   welcome: 'Genial, me quedo aquí abajo y aparezco cuando sirva. Tócame cuando quieras si tienes alguna pregunta.',
-  bakReturning: '¿Tenías una copia de seguridad de tu configuración? Puedo restaurarla.',
+  bakReturning: '¿Ya tienes un archivo de copia de seguridad de tu configuración en esta computadora?',
   menuOn: 'La Ayuda del As está activada. «¿Qué es esto?»: tócalo, luego toca cualquier cosa de la pantalla y te digo para qué sirve (el «?» amarillo de mis bocadillos hace lo mismo).',
   turnOff: 'Desactivar',
   resetTips: 'Volver a mostrar los consejos',

@@ -22,7 +22,7 @@ export default {
   prev: 'Quay lại',
   close: 'Đóng',
   welcome: 'Tuyệt, mình sẽ ở dưới này và xuất hiện khi có ích. Chạm vào mình bất cứ lúc nào nếu bạn có câu hỏi.',
-  bakReturning: 'Bạn từng có bản sao lưu cài đặt không? Mình có thể khôi phục nó.',
+  bakReturning: 'Bạn đã có tệp sao lưu cài đặt trên máy tính này chưa?',
   menuOn: 'Trợ giúp của quân Át đang bật. “Đây là gì?”: chạm vào đó, rồi chạm vào bất kỳ thứ gì trên màn hình, mình sẽ cho bạn biết nó làm gì (dấu “?” màu vàng trên bong bóng thoại của mình cũng vậy).',
   turnOff: 'Tắt',
   resetTips: 'Hiện lại tất cả mẹo',

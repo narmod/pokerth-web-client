@@ -22,7 +22,7 @@ export default {
   prev: 'Atpakaļ',
   close: 'Aizvērt',
   welcome: 'Lieliski, palikšu šeit apakšā un parādīšos, kad tas palīdzēs. Pieskaries man jebkurā laikā, ja tev ir jautājums.',
-  bakReturning: 'Vai tev bija iestatījumu dublējums? Varu to atjaunot.',
+  bakReturning: 'Vai šajā datorā tev jau ir iestatījumu dublējuma fails?',
   menuOn: 'Dūža palīdzība ir ieslēgta. „Kas tas ir?“: pieskaries tam, pēc tam pieskaries jebkam ekrānā, un es pateikšu, ko tas dara (dzeltenā „?“ uz maniem teksta burbuļiem dara to pašu).',
   turnOff: 'Izslēgt',
   resetTips: 'Rādīt visus padomus vēlreiz',

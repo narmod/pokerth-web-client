@@ -22,7 +22,7 @@ export default {
   prev: 'Til baka',
   close: 'Loka',
   welcome: 'Frábært, ég verð hérna niðri og birtist þegar það hjálpar. Snertu mig hvenær sem er ef þú ert með spurningu.',
-  bakReturning: 'Áttir þú afrit af stillingunum þínum? Ég get endurheimt það.',
+  bakReturning: 'Áttu nú þegar afritsskrá af stillingunum þínum á þessari tölvu?',
   menuOn: 'Kveikt er á Hjálp ássins. „Hvað er þetta?“: ýttu á það, ýttu síðan á hvað sem er á skjánum og ég segi þér hvað það gerir (guli „?“ á talblöðrunum mínum gerir það sama).',
   turnOff: 'Slökkva',
   resetTips: 'Sýna allar ábendingar aftur',

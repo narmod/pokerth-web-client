@@ -22,7 +22,7 @@ export default {
   prev: 'Nazaj',
   close: 'Zapri',
   welcome: 'Super, ostanem tukaj spodaj in se oglasim, ko pomaga. Dotakni se me kadar koli, če imaš vprašanje.',
-  bakReturning: 'Si imel varnostno kopijo nastavitev? Lahko jo obnovim.',
+  bakReturning: 'Imaš na tem računalniku že datoteko z varnostno kopijo nastavitev?',
   menuOn: 'Pomoč asa je vklopljena. „Kaj je to?“: tapni ga, nato tapni karkoli na zaslonu in ti povem, kaj to naredi (rumeni „?“ na mojih oblačkih naredi isto).',
   turnOff: 'Izklopi',
   resetTips: 'Znova prikaži vse nasvete',

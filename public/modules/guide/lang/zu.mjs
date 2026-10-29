@@ -22,7 +22,7 @@ export default {
   prev: 'Emuva',
   close: 'Vala',
   welcome: 'Kuhle, ngizohlala lapha phansi futhi ngivele uma kusiza. Ngithinte noma nini uma unombuzo.',
-  bakReturning: 'Ubunesipele sezilungiselelo zakho? Ngingasibuyisela.',
+  bakReturning: 'Usunalo yini ifayela lesipele sezilungiselelo zakho kule khompyutha?',
   menuOn: 'Usizo luka-Ace luvuliwe. “Kuyini lokhu?”: kuthephe, bese uthinta noma yini esikrinini ngikutshele ukuthi yenzani (uphawu “?” oluphuzi ezinhlamvwini zami nalo lwenza okufanayo).',
   turnOff: 'Cisha',
   resetTips: 'Bonisa zonke izeluleko futhi',

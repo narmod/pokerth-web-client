@@ -22,7 +22,7 @@ export default {
   prev: 'Bumalik',
   close: 'Isara',
   welcome: 'Ayos, nandito lang ako sa ibaba at lilitaw kapag makakatulong. Pindutin mo ako anumang oras kung may tanong ka.',
-  bakReturning: 'May backup ka ba ng mga setting mo? Maibabalik ko ito.',
+  bakReturning: 'May backup file ka na ba ng mga setting mo sa computer na ito?',
   menuOn: 'Naka-on ang Tulong ng Alas. “Ano ito?”: i-tap mo ito, pagkatapos ay i-tap mo ang kahit ano sa screen at sasabihin ko sa iyo kung ano ang ginagawa nito (ganoon din ang dilaw na “?” sa mga bubble ko).',
   turnOff: 'I-off',
   resetTips: 'Ipakita ulit ang lahat ng tip',

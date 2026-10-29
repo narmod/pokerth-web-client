@@ -22,7 +22,7 @@ export default {
   prev: 'Anterior',
   close: 'Pechar',
   welcome: 'Xenial, quedo aquí abaixo e aparezo cando sexa útil. Tócame cando queiras se tes algunha pregunta.',
-  bakReturning: 'Tiñas unha copia de seguranza da túa configuración? Podo restaurala.',
+  bakReturning: 'Xa tes un ficheiro de copia de seguranza da túa configuración neste ordenador?',
   menuOn: 'A Axuda do Ás está activada. «Que é isto?»: tócao, despois toca calquera cousa da pantalla e dígoche para que serve (o «?» amarelo dos meus bocadillos fai o mesmo).',
   turnOff: 'Desactivar',
   resetTips: 'Amosar de novo todos os consellos',

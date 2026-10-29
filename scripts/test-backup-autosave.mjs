@@ -186,5 +186,41 @@ check('restore: valid backup => ok', (await mod.pickForRestore()) === 'ok');
 globalThis.showDirectoryPicker = async () => { const e = new Error('x'); e.name = 'AbortError'; throw e; };
 check('restore: cancelled folder picker => abort', (await mod.pickForRestore()) === 'abort');
 
+// ── Restoring from a picked FILE (web.345) ─────────────────────────────────
+// The offer's Restore opens the file picker: the .json shows, whatever its
+// name. Same codes; the folder picker is not involved.
+let pickedText = null;                     // null = getFile() fails
+let filePickerOpts = null;
+globalThis.showOpenFilePicker = async (opts) => {
+  filePickerOpts = opts;
+  return [{ getFile: async () => { if (pickedText === null) throw new Error('gone'); return { text: async () => pickedText }; } }];
+};
+let dirPickerCalls = 0;
+globalThis.showDirectoryPicker = async () => { dirPickerCalls++; const e = new Error('x'); e.name = 'AbortError'; throw e; };
+
+check('file restore: unreadable picked file => nofile', (await mod.pickFileForRestore()) === 'nofile');
+check('file restore: .json filter, starts in Downloads', !!filePickerOpts && filePickerOpts.multiple === false && filePickerOpts.startIn === 'downloads'
+  && JSON.stringify(filePickerOpts.types).includes('.json'));
+pickedText = '{not json';
+check('file restore: unreadable JSON => bad', (await mod.pickFileForRestore()) === 'bad');
+pickedText = JSON.stringify({ format: 'pokerth-web-client', keys: {} });
+globalThis._applyWebBackupRec = () => -1;
+check('file restore: invalid record => bad', (await mod.pickFileForRestore()) === 'bad');
+globalThis._applyWebBackupRec = () => 0;
+check('file restore: empty backup => empty', (await mod.pickFileForRestore()) === 'empty');
+globalThis._applyWebBackupRec = () => 5;
+check('file restore: valid backup => ok', (await mod.pickFileForRestore()) === 'ok');
+check('file restore: the folder picker is never opened', dirPickerCalls === 0);
+globalThis.showOpenFilePicker = async () => { const e = new Error('x'); e.name = 'AbortError'; throw e; };
+check('file restore: cancelled file picker => abort', (await mod.pickFileForRestore()) === 'abort');
+globalThis.showOpenFilePicker = async () => { throw new TypeError('boom'); };
+check('file restore: picker error => bad', (await mod.pickFileForRestore()) === 'bad');
+// The offer's Restore (bubble and banner) goes to the file picker when no
+// folder is remembered.
+let offerPicked = 0;
+globalThis.showOpenFilePicker = async () => { offerPicked++; const e = new Error('x'); e.name = 'AbortError'; throw e; };
+check('offer Restore without a remembered folder => the file picker', typeof window._bakOffer.restore === 'function'
+  && (await window._bakOffer.restore()) === 'abort' && offerPicked === 1 && dirPickerCalls === 0);
+
 if (failures) { console.error(failures + ' failure(s)'); process.exit(1); }
 console.log('All backup-autosave tests passed.');

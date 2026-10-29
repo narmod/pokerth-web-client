@@ -22,7 +22,7 @@ export default {
   prev: 'Indietro',
   close: 'Chiudi',
   welcome: 'Ottimo, resto qui in basso e compaio quando serve. Toccami quando vuoi se hai una domanda.',
-  bakReturning: 'Avevi un backup delle tue impostazioni? Posso ripristinarlo.',
+  bakReturning: 'Hai già un file di backup delle tue impostazioni su questo computer?',
   menuOn: 'L’Aiuto dell’Asso è attivo. «Cos’è?»: toccalo, poi tocca qualsiasi cosa sullo schermo e ti dico cosa fa (anche il «?» giallo sui miei fumetti fa lo stesso).',
   turnOff: 'Disattiva',
   resetTips: 'Mostra di nuovo tutti i consigli',

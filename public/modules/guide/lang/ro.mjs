@@ -22,7 +22,7 @@ export default {
   prev: 'Înapoi',
   close: 'Închide',
   welcome: 'Super, rămân aici jos și apar când e util. Atinge-mă oricând dacă ai o întrebare.',
-  bakReturning: 'Aveai o copie de rezervă a setărilor? O pot restaura.',
+  bakReturning: 'Ai deja un fișier de rezervă al setărilor pe acest computer?',
   menuOn: 'Ajutorul Asului este activat. „Ce e asta?”: atinge-l, apoi atinge orice de pe ecran și îți spun ce face (semnul „?” galben de pe baloanele mele face la fel).',
   turnOff: 'Dezactivează',
   resetTips: 'Arată din nou toate sfaturile',

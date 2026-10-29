@@ -22,7 +22,7 @@ export default {
   prev: 'Edellinen',
   close: 'Sulje',
   welcome: 'Hienoa, pysyn täällä alhaalla ja ilmestyn, kun siitä on apua. Napauta minua milloin vain, jos sinulla on kysyttävää.',
-  bakReturning: 'Oliko sinulla varmuuskopio asetuksistasi? Voin palauttaa sen.',
+  bakReturning: 'Onko sinulla jo asetustesi varmuuskopiotiedosto tällä tietokoneella?',
   menuOn: 'Ässän apu on päällä. ”Mikä tämä on?”: napauta sitä, napauta sitten mitä tahansa näytöllä, niin kerron, mitä se tekee (puhekuplieni keltainen ”?” tekee saman).',
   turnOff: 'Poista käytöstä',
   resetTips: 'Näytä kaikki vinkit uudelleen',

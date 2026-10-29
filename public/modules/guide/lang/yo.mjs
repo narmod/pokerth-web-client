@@ -22,7 +22,7 @@ export default {
   prev: 'Padà',
   close: 'Pa á dé',
   welcome: 'Ó dára, màá dúró sí ìsàlẹ̀ yìí, màá sì yọ nígbà tó bá wúlò. Fọwọ́ kàn mí nígbàkígbà tí o bá ní ìbéèrè.',
-  bakReturning: 'Ṣé o ní ẹ̀dà ìpamọ́ àwọn ètò rẹ? Mo lè dá a padà.',
+  bakReturning: 'Ṣé o ti ní fáìlì ẹ̀dà ìpamọ́ àwọn ètò rẹ lórí kọ̀ǹpútà yìí?',
   menuOn: 'Ìrànlọ́wọ́ Ace ti tàn. “Kí ni èyí?”: tẹ̀ ẹ́, lẹ́yìn náà tẹ nǹkan kan lórí ojú-ìwé, màá sì sọ ohun tó ń ṣe fún ọ (àmì “?” aláwọ̀ ofeefee lórí àwọn àpò ọ̀rọ̀ mi náà ń ṣe bẹ́ẹ̀).',
   turnOff: 'Pa á',
   resetTips: 'Fi gbogbo ìmọ̀ràn hàn lẹ́ẹ̀kan sí i',

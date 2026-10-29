@@ -22,7 +22,7 @@ export default {
   prev: 'Natrag',
   close: 'Zatvori',
   welcome: 'Super, ostajem ovdje dolje i javljam se kad je korisno. Dodirni me kad god imaš pitanje.',
-  bakReturning: 'Imao si rezervnu kopiju postavki? Mogu je vratiti.',
+  bakReturning: 'Imaš li već datoteku rezervne kopije postavki na ovom računaru?',
   menuOn: 'Pomoć asa je uključena. „Šta je ovo?“: dodirni to, zatim dodirni bilo šta na ekranu i reći ću ti šta radi (žuti „?“ na mojim oblačićima radi isto).',
   turnOff: 'Isključi',
   resetTips: 'Ponovo prikaži sve savjete',

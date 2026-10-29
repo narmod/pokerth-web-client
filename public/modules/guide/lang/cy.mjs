@@ -22,7 +22,7 @@ export default {
   prev: 'Yn ôl',
   close: 'Cau',
   welcome: 'Gwych, arhosaf i lawr yma ac ymddangos pan fydd yn helpu. Cyffyrddwch â mi unrhyw bryd os oes gennych gwestiwn.',
-  bakReturning: 'Oedd gennych gopi wrth gefn o’ch gosodiadau? Gallaf ei adfer.',
+  bakReturning: 'Oes gennych chi ffeil wrth gefn o’ch gosodiadau ar y cyfrifiadur hwn yn barod?',
   menuOn: 'Mae Cymorth yr As ymlaen. “Beth yw hwn?”: tapiwch arno, yna tapiwch unrhyw beth ar y sgrin a dywedaf wrthych beth mae’n ei wneud (mae’r “?” melyn ar fy swigod yn gwneud yr un peth).',
   turnOff: 'Diffodd',
   resetTips: 'Dangos pob cyngor eto',

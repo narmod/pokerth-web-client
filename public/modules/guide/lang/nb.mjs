@@ -22,7 +22,7 @@ export default {
   prev: 'Tilbake',
   close: 'Lukk',
   welcome: 'Flott, jeg blir her nede og dukker opp når det hjelper. Trykk på meg når som helst hvis du har et spørsmål.',
-  bakReturning: 'Hadde du en sikkerhetskopi av innstillingene dine? Jeg kan gjenopprette den.',
+  bakReturning: 'Har du allerede en sikkerhetskopifil av innstillingene dine på denne datamaskinen?',
   menuOn: 'Essets hjelp er på. «Hva er dette?»: trykk på den, og trykk deretter på hva som helst på skjermen, så sier jeg hva det gjør (den gule «?» på boblene mine gjør det samme).',
   turnOff: 'Slå av',
   resetTips: 'Vis alle tips igjen',

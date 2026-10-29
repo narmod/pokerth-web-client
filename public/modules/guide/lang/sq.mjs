@@ -22,7 +22,7 @@ export default {
   prev: 'Mbrapa',
   close: 'Mbyll',
   welcome: 'Shkëlqyeshëm, rri këtu poshtë dhe shfaqem kur ndihmon. Më prek kurdo nëse ke një pyetje.',
-  bakReturning: 'Kishe një kopje rezervë të cilësimeve? Mund ta rikthej.',
+  bakReturning: 'A ke tashmë një skedar rezervë të cilësimeve në këtë kompjuter?',
   menuOn: 'Ndihma e Asit është aktive. «Çfarë është kjo?»: prek atë, pastaj prek çfarëdo gjëje në ekran dhe do të të them çfarë bën (shenja «?» e verdhë mbi flluskat e mia bën të njëjtën gjë).',
   turnOff: 'Çaktivizo',
   resetTips: 'Shfaq sërish të gjitha këshillat',

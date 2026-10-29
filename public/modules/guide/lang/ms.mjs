@@ -22,7 +22,7 @@ export default {
   prev: 'Sebelumnya',
   close: 'Tutup',
   welcome: 'Bagus, saya kekal di bawah sini dan muncul apabila berguna. Ketik saya bila-bila masa jika ada soalan.',
-  bakReturning: 'Ada sandaran tetapan anda? Saya boleh memulihkannya.',
+  bakReturning: 'Sudah ada fail sandaran tetapan anda pada komputer ini?',
   menuOn: 'Bantuan Sat dihidupkan. “Apakah ini?”: ketik padanya, kemudian ketik apa-apa sahaja pada skrin dan saya akan beritahu apa fungsinya (tanda “?” kuning pada gelembung saya pun berfungsi sama).',
   turnOff: 'Matikan',
   resetTips: 'Tunjukkan semua petua semula',

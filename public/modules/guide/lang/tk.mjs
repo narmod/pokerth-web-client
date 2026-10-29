@@ -22,7 +22,7 @@ export default {
   prev: 'Yza',
   close: 'Ýap',
   welcome: 'Ajaýyp, men şu ýerde aşakda galaryn we peýdaly bolanda peýda bolaryn. Soragyňyz bolsa, islän wagtyňyz maňa basyň.',
-  bakReturning: 'Sazlamalaryňyzyň ätiýaçlyk nusgasy bardy? Men ony dikeldip bilerin.',
+  bakReturning: 'Bu kompýuterde sazlamalaryňyzyň ätiýaçlyk faýly eýýäm barmy?',
   menuOn: 'Tuzuň kömegi açyk. “Bu näme?”: oňa basyň, soň ekranda islendik zada basyň, men onuň näme edýändigini aýdaryn (gepleşik bulutlarymdaky sary “?” belgisi hem şuny edýär).',
   turnOff: 'Öçür',
   resetTips: 'Ähli maslahatlary täzeden görkez',

@@ -22,7 +22,7 @@ export default {
   prev: 'Orqaga',
   close: 'Yopish',
   welcome: 'Ajoyib, men shu yerda pastda qolaman va foydali boʻlganda paydo boʻlaman. Savolingiz boʻlsa, istalgan vaqtda menga teging.',
-  bakReturning: 'Sozlamalaringizning zaxira nusxasi bormidi? Uni tiklay olaman.',
+  bakReturning: 'Bu kompyuterda sozlamalaringizning zaxira fayli allaqachon bormi?',
   menuOn: 'Tuzning yordami yoqilgan. “Bu nima?”: uni bosing, keyin ekrandagi istalgan narsani bosing, men u nima qilishini aytaman (pufakchalarimdagi sariq “?” belgisi ham shunday qiladi).',
   turnOff: 'Oʻchirish',
   resetTips: 'Barcha maslahatlarni qayta koʻrsatish',
