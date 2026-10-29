@@ -71,6 +71,10 @@ try {
   const rad = Array.isArray(list) ? list.find((t) => t && t.title === 'R' || t && t.name === 'R') : null;
   if (r.status === 200 && rad) {
     ok(rad.licenseUrl === '' && rad.sourceUrl === 'https://ok.example.org/', 'music: javascript: link dropped, https kept');
+    await adminPost('/admin/music-radio-add', { title: 'R2', url: 'https://radio.example.org/b.mp3', licenseUrl: 'creativecommons.org/licenses/by/4.0/' });
+    const t2 = await fetch(base + '/music/tracks.json').then((x) => x.json()).catch(() => null);
+    const r2 = (t2 && (t2.tracks || t2) || []).find((t) => t && t.title === 'R2');
+    ok(r2 && r2.licenseUrl === 'https://creativecommons.org/licenses/by/4.0/', 'music: a link typed without https:// is completed, not dropped');
   } else {
     // route shape changed: check the sanitiser directly
     ok(false, 'music radio-add reachable for the check (status ' + r.status + ')');
@@ -97,6 +101,7 @@ try {
   const bigs = await Promise.all(Array.from({ length: 8 }, bigOne));
   const cutN = bigs.filter((x) => x === 'cut').length;
   ok(cutN >= 6, 'eight anonymous 2 MB admin bodies at once: ' + cutN + ' cut after 16 KB');
+  await sleep(500);   // the two readers let through are released on 'close'
   r = await fetch(base + '/admin/polls', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: TOK, question: { l0: 'Q'.repeat(30000) }, options: [{ id: 'o1', label: { l0: 'a' } }, { id: 'o2', label: { l0: 'b' } }], default: 'l0' }) }).catch(() => ({ status: 0 }));
   ok(r.status !== 0, 'a large body with the key in the body only (older scripts) still gets an answer (' + r.status + ')');
 

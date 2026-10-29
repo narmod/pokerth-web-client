@@ -12106,22 +12106,66 @@ function readRawBody(req, max, cb) {
   req.on('error', function () { cb(null); });
 }
 const PKG_MAX_ENTRIES = 400, PKG_MAX_UNZIPPED = 200 * 1024 * 1024;
+// Pack archives are unpacked here, in JS, rather than by the system `unzip`:
+//  · the Docker image (node:20-alpine) has BusyBox unzip, which has no -Z to
+//    read sizes first, and sizes declared in an archive can be forged anyway;
+//    inflateRawSync's maxOutputLength stops at the real 200 MB budget;
+//  · only regular files are written, flat (basename only, like unzip -j): no
+//    symlink, no path from the archive ever reaches the disk.
+// Returns null, or an error message. buf = the whole .zip.
+function _unzipFlat(buf, exDir) {
+  const BAD = 'not a valid .zip archive';
+  const BIG = 'archive too large once unpacked (max ' + PKG_MAX_ENTRIES + ' files, ' + Math.round(PKG_MAX_UNZIPPED / 1048576) + ' MB)';
+  if (!Buffer.isBuffer(buf) || buf.length < 22) return BAD;
+  let eocd = -1;
+  for (let i = buf.length - 22, min = Math.max(0, buf.length - 65557); i >= min; i--) {
+    if (buf.readUInt32LE(i) === 0x06054b50) { eocd = i; break; }
+  }
+  if (eocd < 0) return BAD;
+  const count = buf.readUInt16LE(eocd + 10), cdOff = buf.readUInt32LE(eocd + 16);
+  if (count === 0xffff || cdOff === 0xffffffff) return 'zip64 archives are not supported';
+  if (count > PKG_MAX_ENTRIES) return BIG;
+  let p = cdOff, total = 0;
+  try {
+    for (let n = 0; n < count; n++) {
+      if (p + 46 > buf.length || buf.readUInt32LE(p) !== 0x02014b50) return BAD;
+      const flags = buf.readUInt16LE(p + 8), method = buf.readUInt16LE(p + 10), csize = buf.readUInt32LE(p + 20);
+      const nlen = buf.readUInt16LE(p + 28), xlen = buf.readUInt16LE(p + 30), clen = buf.readUInt16LE(p + 32);
+      const mode = (buf.readUInt32LE(p + 38) >>> 16) & 0xF000, lho = buf.readUInt32LE(p + 42);
+      const name = buf.toString((flags & 0x800) ? 'utf8' : 'latin1', p + 46, p + 46 + nlen);
+      p += 46 + nlen + xlen + clen;
+      if (/[\/\\]$/.test(name)) continue;                     // a folder
+      if (mode && mode !== 0x8000) continue;                    // symlink, device…: regular files only
+      const base = name.split(/[\/\\]/).pop();
+      if (!base || base === '.' || base === '..' || /[\u0000-\u001f]/.test(base)) continue;
+      if (flags & 1) return 'encrypted archives are not supported';
+      if (lho + 30 > buf.length || buf.readUInt32LE(lho) !== 0x04034b50) return BAD;
+      const ds = lho + 30 + buf.readUInt16LE(lho + 26) + buf.readUInt16LE(lho + 28);
+      if (ds + csize > buf.length) return BAD;
+      const raw = buf.subarray(ds, ds + csize), room = PKG_MAX_UNZIPPED - total;
+      let out;
+      if (method === 0) { if (raw.length > room) return BIG; out = raw; }
+      else if (method === 8) {
+        try { out = zlib.inflateRawSync(raw, { maxOutputLength: Math.max(1, room) }); }
+        catch (e) { return (e && e.code === 'ERR_BUFFER_TOO_LARGE') ? BIG : BAD; }
+        if (out.length > room) return BIG;
+      } else return 'unsupported compression in the archive';
+      total += out.length;
+      fs.writeFileSync(path.join(exDir, base), out);
+    }
+  } catch (e) { return 'extract failed'; }
+  return null;
+}
 function importPackage(kind, idHint, zipBuf, cb) {
   let tmp;
   try { tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'pkg-')); } catch (e) { return cb('temp dir failed'); }
   const done = function (err, info) { try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (e) {} cb(err, info); };
-  const exDir = path.join(tmp, 'x'); const zipPath = path.join(tmp, 'in.zip');
-  try { fs.writeFileSync(zipPath, zipBuf); fs.mkdirSync(exDir); } catch (e) { return done('write failed'); }
-  // -j flattens (junks paths) → neutralises zip-slip; we then pick files by basename
-  // Sizes from the central directory first: a 1.4 MB zip that unpacks to 1.5 GB
-  // froze every game for seconds (spawnSync) and filled the temp disk.
-  const zi = spawnSync('unzip', ['-Zt', zipPath], { encoding: 'utf8', timeout: 10000 });
-  const zm = /(\d+) files?, (\d+) bytes? uncompressed/.exec(String(zi.stdout || ''));
-  if (!zm) return done('not a valid .zip archive');
-  if (+zm[1] > PKG_MAX_ENTRIES || +zm[2] > PKG_MAX_UNZIPPED) return done('archive too large once unpacked (max ' + PKG_MAX_ENTRIES + ' files, ' + Math.round(PKG_MAX_UNZIPPED / 1048576) + ' MB)');
-  const un = spawnSync('unzip', ['-j', '-o', '-qq', zipPath, '-d', exDir], { stdio: 'ignore', timeout: 30000 });
-  if (un.status !== 0) return done('not a valid .zip archive');
-  // -j stops path traversal on write, but unzip still recreates symlink entries:
+  const exDir = path.join(tmp, 'x');
+  try { fs.mkdirSync(exDir); } catch (e) { return done('write failed'); }
+  // Flat (basename only) → neutralises zip-slip; we then pick files by basename.
+  const unErr = _unzipFlat(zipBuf, exDir);
+  if (unErr) return done(unErr);
+  // Kept from the unzip days (web.330): unzip -j recreated symlink entries:
   // a member « felt.png » pointing at admin-config.json or /etc/passwd would be
   // followed by copyFileSync / convert below and published under /table, /cards
   // or /seats. Keep regular files only (scripts/test-pkg-symlink.mjs).
@@ -12222,7 +12266,11 @@ function musicAdminTracks() { var a = _adminConfig && _adminConfig.musicTracks; 
 function musicHiddenSet()  { var a = _adminConfig && _adminConfig.musicHidden; return Array.isArray(a) ? a : []; }
 function musicStr(s, max) { return String(s == null ? '' : s).replace(/[\u0000-\u001f\u007f]+/g, ' ').trim().slice(0, max || 200); }
 // A link shown to players (credit, source): http(s) only, else dropped.
-function musicUrl(s) { s = musicStr(s, 300); return /^https?:\/\/[^\s"'<>]+$/i.test(s) ? s : ''; }
+function musicUrl(s) {
+  s = musicStr(s, 300);
+  if (/^[a-z0-9-]+(\.[a-z0-9-]+)+(\/[^\s]*)?$/i.test(s)) s = 'https://' + s;   // « creativecommons.org/licenses/by/4.0/ »
+  return /^https?:\/\/[^\s"'<>]+$/i.test(s) ? s : '';
+}
 function isMp3(buf) {
   if (!buf || buf.length < 3) return false;
   if (buf[0] === 0x49 && buf[1] === 0x44 && buf[2] === 0x33) return true;   // 'ID3' tag

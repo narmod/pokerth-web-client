@@ -28,6 +28,18 @@ highlights below.
   and leads to Deployment. Not shown on an install without git. Test: `scripts/test-admin-overview.mjs` (+4).
 
 ### Fixed
+- **Pack import on the Docker image; follow-ups of the audit** (`web.343`) — a review of web.340–342 found:
+  - *Every pack upload refused in Docker* (`web.342` regression) — the size check before extraction called
+    `unzip -Zt`; the image (`node:20-alpine`) has BusyBox unzip, which has no `-Z`, so every deck / seat / table
+    pack got « not a valid .zip archive ». The check could also be fooled: the sizes it read are declared by the
+    archive (a member declared 1000 bytes wrote 314 MB). Packs are now unpacked in JS (`_unzipFlat`): flat
+    (basename only, like `unzip -j`), regular files only (no symlink ever written), at most 400 entries, and
+    `inflateRawSync`'s `maxOutputLength` stops at the real 200 MB budget. No dependency on the system `unzip`
+    for packs any more.
+  - *Music links without a scheme* — `musicUrl` (`web.340`) dropped `creativecommons.org/licenses/by/4.0/`;
+    a bare domain is now completed with `https://`.
+  - `scripts/test-proxy-hardening.mjs` waits for the two held readers to close (failed about 1 run in 3).
+  - Tests: `scripts/test-pkg-unzip.mjs` (new), `scripts/test-proxy-hardening.mjs` (+1).
 - **Proxy hardening from an audit, part 3: abuse and robustness** (`web.342`):
   - *LAN directory* — the private-address check knew only the dotted `::ffff:a.b.c.d` form: `::ffff:7f00:1`,
     `::ffff:a00:5`, `0:0:0:0:0:0:0:1`, IPv4-compatible, 6to4 and Teredo spellings passed and the probe dialled them
