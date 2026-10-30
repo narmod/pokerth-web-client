@@ -172,7 +172,7 @@ export const help = {
           keys: [
             ["/msg <sobrenom> <missatge>", "Envia un missatge privat des del xat del vestíbul"],
             ["/msg \"<sobrenom>\" <missatge>", "El mateix, quan el sobrenom conté espais"]],
-          note: "Els missatges estan limitats a 128 caràcters. El servidor no lliura un missatge privat a un jugador assegut en una taula en curs, i l’historial només es desa en aquest navegador — no et segueix a un altre dispositiu." },
+          note: "Els missatges estan limitats a 128 caràcters. Un missatge a un jugador assegut en una taula en curs, o fora de línia (només des d’una conversa existent), el servidor el guarda i el lliura quan acaba la partida o en el proper inici de sessió. L’historial només es desa en aquest navegador — no et segueix a un altre dispositiu." },
         { id: 'reactions', t: 'Reaccions d\u2019emoji',
           b: ['El botó de reaccions obre un selector amb 30 reaccions animades (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) que es reprodueixen amb un efecte sobre el teu seient, visibles per a tota la taula — inclosos els jugadors del client d\u2019escriptori. Les reaccions es poden desactivar del tot a les Opcions avançades.'] },
         { id: 'translate', t: 'Entendre tothom',

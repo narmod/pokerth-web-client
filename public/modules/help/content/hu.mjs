@@ -172,7 +172,7 @@ export const help = {
           keys: [
             ["/msg <becenév> <üzenet>", "Privát üzenet küldése a lobbi csevegéséből"],
             ["/msg \"<becenév>\" <üzenet>", "Ugyanez, ha a becenév szóközöket tartalmaz"]],
-          note: "Az üzenetek legfeljebb 128 karakteresek. A kiszolgáló nem kézbesít privát üzenetet olyan játékosnak, aki futó asztalnál ül, és az előzmények csak ebben a böngészőben tárolódnak — nem követnek másik eszközre." },
+          note: "Az üzenetek legfeljebb 128 karakteresek. A futó asztalnál ülő vagy nem bejelentkezett játékosnak (csak meglévő beszélgetésből) küldött üzenetet a kiszolgáló megőrzi, és a játék végén vagy a következő bejelentkezéskor kézbesíti. Az előzmények csak ebben a böngészőben tárolódnak — nem követnek másik eszközre." },
         { id: 'reactions', t: 'Emodzsi-reakciók',
           b: ['A reakciógomb 30 animált reakció választóját nyitja meg (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), amelyek effekttel játszódnak le az ülésed fölött, az egész asztal számára láthatóan — az asztali kliens játékosait is beleértve. A reakciók teljesen kikapcsolhatók a Speciális beállításokban.'] },
         { id: 'translate', t: 'Érts meg mindenkit',

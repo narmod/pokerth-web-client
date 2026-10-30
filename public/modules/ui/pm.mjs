@@ -11,10 +11,12 @@
 // conversation, and reopening restores exactly what was on screen. The
 // history itself lives in ../pm/store.mjs (IndexedDB).
 //
-// Why the lobby only: the server refuses a private message whose target
-// sits at a running table (ServerLobbyThread::HandleNetPacketChatRequest),
-// so a conversation is by construction a lobby activity. The entry points
-// are therefore the lobby header, the player list and the player popup.
+// Writing is a lobby activity: at a running table of your own the dialogue
+// is closed on purpose (collusion prevention, as upstream). The PARTNER may
+// be playing or offline though: since upstream bc4dfb8a the server holds
+// such messages back and delivers them once the game is over or at the next
+// login; a notice above the input says so. An offline partner can only be
+// reached from an existing conversation, addressed by name.
 // ═══════════════════════════════════════════════════════════════════
 
 import { S } from '../game/state.mjs';
@@ -228,10 +230,12 @@ function _renderCounter() {
   const pguest = _partnerIsGuest(playerIdByName(_current));
   const note = $('pm-note');
   if (note) {
+    // The partner notice (playing / offline, upstream bc4dfb8a) informs but
+    // does not block: the server holds those messages back.
     const txt = mine ? _tt('pmAtTable', 'Private messages are not available at the table.')
               : guest ? _tt('pmGuest', 'Guests cannot send chat messages')
               : pguest ? _tt('pmPartnerGuest', 'Guests cannot receive private messages.')
-              : '';
+              : notice(_current);
     note.textContent = txt;
     note.style.display = txt ? '' : 'none';
   }
@@ -256,6 +260,18 @@ function _render() {
   if (off) off.style.display = (_current && !playerIdByName(_current)) ? '' : 'none';
   _renderCounter();
   refreshBadge();
+}
+
+// Player or game list changed: the partner may have sat down, finished, left
+// or come back. Only the status parts are redrawn, never the history (it
+// would lose its scroll position). Called from renderPlayersList.
+function refreshStatus() {
+  const modal = $('pm-modal');
+  if (!modal || modal.style.display === 'none') return;
+  const off = $('pm-offlbl');
+  if (off) off.style.display = (_current && !playerIdByName(_current)) ? '' : 'none';
+  _renderPartners();
+  _renderCounter();
 }
 
 // ── Open / close / select ──────────────────────────────────────────────
@@ -388,23 +404,63 @@ function _partnerIsGuest(pid) {
   try { return S._playerRights[pid] === 1; } catch (e) { return false; }
 }
 
-// Is that player sitting at a RUNNING table? The server refuses a private
-// message in exactly that case (ServerLobbyThread::HandleNetPacketChatRequest
-// checks `tmpGame->IsRunning()`), and its refusal carries no reason -- a bare
-// ChatRejectMessage looks the same whether the target is playing, gone, or we
-// are a guest. We know the game modes locally (netGameStarted = 2), so the
-// check is done here: the player gets the precise wording the desktop client
-// shows instead of a guess, and no message is written to the history that was
-// never going to arrive.
-function _atRunningTable(pid) {
+// The id of the RUNNING table (netGameStarted = 2) that player sits at, 0 if
+// none. The server holds a private message to such a player back until that
+// game is over (upstream bc4dfb8a); the id lets the "limit reached" notice end
+// with that very game (parity: m_privateLimitGame in LobbyHandler).
+function _runningGameOf(pid) {
+  if (!pid) return 0;
   try {
     const games = S.games || {};
     for (const id in games) {
       const g = games[id];
-      if (g && g.mode === 2 && g.seats && g.seats.indexOf(pid) !== -1) return true;
+      if (g && g.mode === 2 && g.seats && g.seats.indexOf(pid) !== -1) return Number(id) || 0;
     }
   } catch (e) {}
-  return false;
+  return 0;
+}
+
+function _hasThread(name) {
+  if (!name) return false;
+  try { return store.partners().some(function (p) { return p.name === name; }); }
+  catch (e) { return false; }
+}
+
+// Partners whose limit of held back messages was reached: playing ones with
+// the game they sit at (the notice ends with that game), offline ones until
+// they show up again (parity: m_privateLimitGame / m_privateLimitOffline).
+// Both are cleared lazily here, when the situation they describe is over.
+const _limitGame = new Map();
+const _limitOffline = new Set();
+
+// The notice for a partner at a running table or offline, as an i18n key
+// ('' when messages go out right away). Parity: privateMessageNotice().
+function noticeKey(name) {
+  if (!name || !store.owner()) return '';
+  const pid = playerIdByName(name);
+  if (!pid) {
+    // Offline: only an existing conversation can be continued.
+    if (!_hasThread(name)) return '';
+    return _limitOffline.has(name) ? 'pmLimitOffline' : 'pmNoticeOffline';
+  }
+  _limitOffline.delete(name);             // logged in: the waiting ones went out
+  const gid = _runningGameOf(pid);
+  if (_limitGame.has(name) && _limitGame.get(name) !== gid) _limitGame.delete(name);
+  if (!gid) return '';
+  return _limitGame.has(name) ? 'pmLimitPlaying' : 'pmNoticePlaying';
+}
+
+const _NOTICE_FB = {
+  pmNoticePlaying: '{name} is playing right now. Your messages will be delivered once {name} is back in the lobby.',
+  pmNoticeOffline: '{name} is offline. Your messages will be delivered at the next login.',
+  pmLimitPlaying: 'Not delivered: {name} is still playing and already has messages from you waiting. You can write again once {name} is back in the lobby.',
+  pmLimitOffline: 'Not delivered: {name} is offline and already has messages from you waiting. You can write again once {name} has logged in.'
+};
+
+function notice(name) {
+  const k = noticeKey(name);
+  if (!k) return '';
+  return _tt(k, _NOTICE_FB[k].replace(/\{name\}/g, name), { name: name });
 }
 
 // Messages sent but not yet known to have been accepted. The server stays
@@ -417,6 +473,40 @@ function _pendAdd(name, text) {
   // Anything older than 30 s was accepted (or the connection is long gone).
   const cut = Date.now() - 30000;
   while (_pending.length && _pending[0].at < cut) _pending.shift();
+}
+
+// Drop the optimistic line of a message the server did not take.
+function _dropPending(name, text) {
+  for (let i = _pending.length - 1; i >= 0; i--) {
+    if (_pending[i].text !== text || (name && _pending[i].name !== name)) continue;
+    const nm = _pending[i].name;
+    _pending.splice(i, 1);
+    store.dropLast(nm, text).then(function () {
+      if (_current === nm) _renderConversation();
+      _renderPartners();
+    });
+    return nm;
+  }
+  return '';
+}
+
+// ChatReject with rejectReasonPendingLimit (upstream bc4dfb8a): too many of
+// our messages already wait for that partner. The line was not delivered, so
+// it leaves the history as any rejected PM does; the notice turns into the
+// "not delivered" wording until the partner is back. Returns the notice as
+// { key, params, text } for the chat line (parity: onPrivateChatLimitReached
+// posts it with postLocalChatNote), or null when the partner is unknown.
+function onLimit(name, text) {
+  const nm = name || _dropPending('', text);
+  if (!nm) return null;
+  if (name) _dropPending(name, text);
+  const pid = playerIdByName(nm);
+  if (!pid) _limitOffline.add(nm);
+  else _limitGame.set(nm, _runningGameOf(pid));
+  _renderCounter();
+  const key = noticeKey(nm) || (pid ? 'pmLimitPlaying' : 'pmLimitOffline');
+  return { key: key, params: { name: nm },
+           text: _tt(key, _NOTICE_FB[key].replace(/\{name\}/g, nm), { name: nm }) };
 }
 
 // Called from onChatReject. Returns true when the rejected text was one of
@@ -444,7 +534,23 @@ function sendTo(name, text) {
   const msg = _fit(String(text || '').trim());
   if (!name || !msg) return 'empty';
   const pid = playerIdByName(name);
-  if (!pid) return 'notFound';
+  if (!pid) {
+    // Offline partner: reachable only from an existing conversation, by
+    // name; the server keeps the message until the next login (parity:
+    // sendOfflinePrivateMessage, upstream bc4dfb8a).
+    if (!_hasThread(name)) return 'notFound';
+    if (_amGuest()) return 'guest';
+    if (_meAtRunningTable()) return 'meAtTable';
+    let sent = false;
+    try { sent = send(MSG.buildPrivateChatToName(name, msg)); } catch (e) { sent = false; }
+    if (!sent) return 'offline';
+    _pendAdd(name, msg);
+    store.append(name, msg, true).then(function () {
+      if (_current === name) _renderConversation();
+      _renderPartners();
+    });
+    return '';
+  }
   if (pid === S.myId) {
     // The server would happily bounce it back to us, but a conversation
     // with oneself is not something the desktop client can produce.
@@ -453,7 +559,8 @@ function sendTo(name, text) {
   if (_amGuest()) return 'guest';
   if (_partnerIsGuest(pid)) return 'partnerGuest';
   if (_meAtRunningTable()) return 'meAtTable';
-  if (_atRunningTable(pid)) return 'atTable';
+  // A partner at a running table is no longer refused: the server holds the
+  // message back until that game is over (upstream bc4dfb8a).
   let ok = false;
   try { ok = send(MSG.buildPrivateChat(pid, msg)); } catch (e) { ok = false; }
   if (!ok) return 'offline';
@@ -616,10 +723,14 @@ if (typeof window !== 'undefined') {
   window._pmOnIncoming = onIncoming;
   window._pmSendTo     = sendTo;
   window._pmOnReject   = onReject;
+  window._pmOnLimit    = onLimit;
+  window._pmNoticeKey  = noticeKey;
+  window._pmRefresh    = refreshStatus;
   window._pmBadge      = refreshBadge;
   window._pmSetOwner   = setOwner;
   window._pmPlayerId   = playerIdByName;
 }
 
 export { open, close, toggle, select, setOwner, sendTo, onIncoming,
-         onReject, refreshBadge, playerIdByName, deleteCurrent };
+         onReject, onLimit, noticeKey, notice, refreshStatus, refreshBadge,
+         playerIdByName, deleteCurrent };

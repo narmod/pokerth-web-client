@@ -257,6 +257,20 @@ window._towGiveUp = _towGiveUp;
 
 function onChatReject(sub) {
   const rejText = Proto.str(sub, 1);
+  // rejectReasonPendingLimit (field 2 = 1, upstream bc4dfb8a): a private
+  // message to a partner at a running table or offline was not held back,
+  // too many of ours wait already. Fields 3/4 name the partner. The PM module
+  // drops the line and returns the notice; it goes to the lobby chat once
+  // (parity: onPrivateChatLimitReached -> postLocalChatNote).
+  if (Proto.u32(sub, 2) === 1) {
+    const tpid  = Proto.u32(sub, 3);
+    const tname = Proto.str(sub, 4) || (tpid ? (S.players[tpid] || '') : '');
+    let n = null;
+    try { if (typeof window._pmOnLimit === 'function') n = window._pmOnLimit(tname, rejText); } catch (_e) {}
+    if (n) addChat(null, n.text, 'sys', { force: true, key: n.key, params: n.params });
+    S._lastMsgWasReaction = false;
+    return;
+  }
   // Message privé refusé : le serveur renvoie un ChatReject NU (aucun motif),
   // identique à celui d'un chat lobby refusé. Le module PM sait s'il attendait
   // une réponse pour ce texte exact ; si oui il retire la ligne écrite en

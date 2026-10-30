@@ -172,7 +172,7 @@ export const help = {
           keys: [
             ["/msg <bijnaam> <bericht>", "Een privébericht sturen vanuit de lobbychat"],
             ["/msg \"<bijnaam>\" <bericht>", "Hetzelfde, wanneer de bijnaam spaties bevat"]],
-          note: "Berichten zijn beperkt tot 128 tekens. De server bezorgt geen privébericht aan een speler die aan een lopende tafel zit, en de geschiedenis wordt alleen in deze browser opgeslagen — ze volgt je niet naar een ander apparaat." },
+          note: "Berichten zijn beperkt tot 128 tekens. Een bericht aan een speler die aan een lopende tafel zit of offline is (alleen vanuit een bestaand gesprek) houdt de server vast en bezorgt het zodra het spel voorbij is of bij de volgende aanmelding. De geschiedenis wordt alleen in deze browser opgeslagen — ze volgt je niet naar een ander apparaat." },
         { id: 'reactions', t: 'Emoji-reacties',
           b: ['De reactieknop opent een kiezer met 30 geanimeerde reacties (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) die met een effect boven je stoel worden afgespeeld, zichtbaar voor de hele tafel — ook voor spelers op de desktopclient. Reacties zijn volledig uit te schakelen in de Geavanceerde opties.'] },
         { id: 'translate', t: 'Iedereen begrijpen',

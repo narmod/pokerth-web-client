@@ -172,7 +172,7 @@ export const help = {
           keys: [
             ["/msg <bynaam> <boodskap>", "Stuur ’n privaat boodskap vanuit die portaalklets"],
             ["/msg \"<bynaam>\" <boodskap>", "Dieselfde, wanneer die bynaam spasies bevat"]],
-          note: "Boodskappe is beperk tot 128 karakters. Die bediener lewer nie ’n privaat boodskap af aan ’n speler wat by ’n lopende tafel sit nie, en die geskiedenis word net in hierdie blaaier gestoor — dit volg jou nie na ’n ander toestel nie." },
+          note: "Boodskappe is beperk tot 128 karakters. ’n Boodskap aan ’n speler wat by ’n lopende tafel sit, of aflyn is (slegs vanuit ’n bestaande gesprek), word deur die bediener gehou en afgelewer sodra die spel verby is of by die volgende aanmelding. Die geskiedenis word net in hierdie blaaier gestoor — dit volg jou nie na ’n ander toestel nie." },
         { id: 'reactions', t: 'Emoji-reaksies',
           b: ['Die reaksieknoppie maak \u2019n kieser met 30 geanimeerde reaksies oop (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) wat met \u2019n effek bo jou sitplek speel, sigbaar vir die hele tafel — ook vir spelers op die werkskermkliënt. Reaksies kan heeltemal in Gevorderde opsies afgeskakel word.'] },
         { id: 'translate', t: 'Verstaan almal',

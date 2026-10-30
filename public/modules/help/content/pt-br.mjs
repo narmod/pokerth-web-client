@@ -172,7 +172,7 @@ export const help = {
           keys: [
             ["/msg <apelido> <mensagem>", "Enviar uma mensagem privada a partir do chat do lobby"],
             ["/msg \"<apelido>\" <mensagem>", "O mesmo, quando o apelido contém espaços"]],
-          note: "As mensagens são limitadas a 128 caracteres. O servidor não entrega uma mensagem privada a um jogador sentado em uma mesa em andamento, e o histórico fica armazenado apenas neste navegador — ele não acompanha você em outro dispositivo." },
+          note: "As mensagens são limitadas a 128 caracteres. Uma mensagem para um jogador sentado em uma mesa em andamento, ou offline (somente a partir de uma conversa existente), fica retida no servidor e é entregue quando a partida terminar ou no próximo login. O histórico fica armazenado apenas neste navegador — ele não acompanha você em outro dispositivo." },
         { id: 'reactions', t: 'Reações emoji',
           b: ['O botão de reação abre um seletor de 30 reações animadas (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) que tocam com um efeito sobre o seu assento, visíveis para a mesa inteira — inclusive jogadores do cliente de desktop. As reações são totalmente desativáveis nas Opções avançadas.'] },
         { id: 'translate', t: 'Entender todo mundo',

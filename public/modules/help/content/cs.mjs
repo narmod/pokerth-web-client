@@ -171,7 +171,7 @@ export const help = {
           keys: [
             ["/msg <přezdívka> <zpráva>", "Odeslat soukromou zprávu z chatu lobby"],
             ["/msg \"<přezdívka>\" <zpráva>", "Totéž, když přezdívka obsahuje mezery"]],
-          note: "Zprávy jsou omezeny na 128 znaků. Server nedoručí soukromou zprávu hráči, který sedí u běžícího stolu, a historie se ukládá pouze v tomto prohlížeči — na jiné zařízení vás nenásleduje." },
+          note: "Zprávy jsou omezeny na 128 znaků. Zprávu hráči, který sedí u běžícího stolu nebo je offline (jen z existující konverzace), server podrží a doručí po skončení hry nebo při příštím přihlášení. Historie se ukládá pouze v tomto prohlížeči — na jiné zařízení vás nenásleduje." },
         { id: 'reactions', t: 'Emoji reakce',
           b: ['Tlačítko reakcí otevře výběr 30 animovaných reakcí (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), které se s efektem přehrají nad tvým místem a vidí je celý stůl — včetně hráčů na desktopovém klientu. Reakce lze úplně vypnout v Pokročilých možnostech.'] },
         { id: 'translate', t: 'Rozumět všem',

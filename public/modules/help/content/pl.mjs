@@ -172,7 +172,7 @@ export const help = {
           keys: [
             ["/msg <nick> <wiadomość>", "Wyślij prywatną wiadomość z czatu lobby"],
             ["/msg \"<nick>\" <wiadomość>", "To samo, gdy pseudonim zawiera spacje"]],
-          note: "Wiadomości są ograniczone do 128 znaków. Serwer nie dostarcza prywatnej wiadomości graczowi siedzącemu przy trwającym stole, a historia jest zapisywana tylko w tej przeglądarce — nie przenosi się na inne urządzenie." },
+          note: "Wiadomości są ograniczone do 128 znaków. Wiadomość do gracza siedzącego przy trwającym stole lub będącego offline (tylko z istniejącej rozmowy) serwer przechowuje i dostarcza po zakończeniu gry lub przy następnym logowaniu. Historia jest zapisywana tylko w tej przeglądarce — nie przenosi się na inne urządzenie." },
         { id: 'reactions', t: 'Reakcje emoji',
           b: ['Przycisk reakcji otwiera wybór 30 animowanych reakcji (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), które odtwarzają się z efektem nad twoim miejscem, widoczne dla całego stołu — także dla graczy na kliencie desktopowym. Reakcje wyłącza się całkiem w Opcjach zaawansowanych.'] },
         { id: 'translate', t: 'Rozumieć wszystkich',

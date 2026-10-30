@@ -16,6 +16,17 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Held-back private messages** (`web.346`) — parity upstream `bc4dfb8a` (server holds PMs to players at a running
+  table or offline, `pending_private_message`, delivered at game end / next login; limits 2 per sender and target,
+  20 per target, 20 per sender, 30 days). The envelope stays on players at a running table and `sendTo` no longer
+  refuses them; an offline partner of an existing conversation is written to by name
+  (`MSG.buildPrivateChatToName`: `ChatRequestMessage.targetPlayerName` = field 4, explicit `targetPlayerId` 0 so an
+  older server rejects it). The dialogue shows the playing / offline notice above the input (`noticeKey`, parity
+  `privateMessageNotice`), `/msg` posts it once in the lobby chat; `ChatRejectMessage.rejectReason` = 1
+  (`rejectReasonPendingLimit`, fields 3/4 name the partner) drops the line and switches to the « not delivered »
+  wording until that game ends or the partner is back. 4 keys (`pmNoticePlaying`, `pmNoticeOffline`,
+  `pmLimitPlaying`, `pmLimitOffline`) in 83 languages (upstream `.ts` reused where present), help note updated.
+  Upstream `96ccd04c` (empty inbox after a same-nick reconnect) needs nothing here: the owner is reset per session.
 - **Restore picks the backup file** (`web.345`) — admin stats (2026-10-29): since `web.267` counted the outcomes,
   27 restores tapped → 27 `restore_abort`, 0 `restored`; 22 backups created in all. The folder picker did not show
   the `.json` the player was looking for (nor the one the manual export left in Downloads), and « I already play »

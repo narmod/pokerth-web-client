@@ -172,7 +172,7 @@ export const help = {
           keys: [
             ['/msg <nadimak> <tekst>', 'Pošalji privatnu poruku iz chata predvorja'],
             ['/msg "<nadimak sa razmacima>" <tekst>', 'Isto, kad nadimak sadrži razmake']],
-          note: 'Poruke su ograničene na 128 znakova. Server ne dostavlja privatnu poruku igraču koji sjedi za stolom gdje partija teče, a historija se čuva samo u ovom pregledaču — ne prati te na drugi uređaj.' },
+          note: "Poruke su ograničene na 128 znakova. Poruku igraču koji sjedi za stolom gdje partija teče, ili nije na mreži (samo iz postojećeg razgovora), server zadržava i isporučuje kad se partija završi ili pri sljedećoj prijavi. Historija se čuva samo u ovom pregledaču — ne prati te na drugi uređaj." },
         { id: 'reactions', t: 'Emoji reakcije',
           b: ['Gumb za reakcije otvara birač s 30 animiranih reakcija (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) koje se reproduciraju s efektom iznad tvog mjesta, vidljive cijelom stolu — uključujući igrače na desktop klijentu. Reakcije se mogu potpuno isključiti u Naprednim opcijama.'] },
         { id: 'translate', t: 'Razumij sve',

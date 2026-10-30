@@ -174,7 +174,7 @@ export const help = {
           keys: [
             ['/msg <hüüdnimi> <tekst>', 'Saada fuajee vestlusest privaatsõnum'],
             ['/msg "<tühikutega hüüdnimi>" <tekst>', 'Sama, kui hüüdnimes on tühikud']],
-          note: 'Sõnumid on piiratud 128 märgiga. Server ei toimeta privaatsõnumit kohale mängijale, kes istub käimasolevas lauas, ja ajalugu hoitakse ainult selles brauseris \u2014 see ei järgne sulle teise seadmesse.' },
+          note: "Sõnumid on piiratud 128 märgiga. Sõnumi mängijale, kes istub käimasolevas lauas või on võrguühenduseta (ainult olemasolevast vestlusest), hoiab server alles ja toimetab kohale mängu lõppedes või järgmisel sisselogimisel. Ajalugu hoitakse ainult selles brauseris — see ei järgne sulle teise seadmesse." },
         { id: 'reactions', t: 'Emoji-reaktsioonid',
           b: ['Reaktsiooninupp avab 30 animeeritud reaktsiooni valiku (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), mis esitatakse efektiga sinu istekoha kohal ja on nähtavad kõigile lauas \u2014 sealhulgas töölaua kliendi mängijatele. Reaktsioonid saab täpsemates valikutes täielikult välja lülitada.'] },
         { id: 'translate', t: 'Kõigist arusaamine',

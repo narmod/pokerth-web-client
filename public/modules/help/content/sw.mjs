@@ -174,7 +174,7 @@ export const help = {
           keys: [
             ["/msg <jina> <ujumbe>", "Tuma ujumbe wa faragha kutoka chati ya ukumbi"],
             ["/msg \"<jina>\" <ujumbe>", "Vivyo hivyo, jina la utani likiwa na nafasi"]],
-          note: "Ujumbe una kikomo cha herufi 128. Seva haipeleki ujumbe wa faragha kwa mchezaji aliyeketi kwenye meza inayoendelea, na historia huhifadhiwa kwenye kivinjari hiki pekee — haikufuati kwenye kifaa kingine." },
+          note: "Ujumbe una kikomo cha herufi 128. Ujumbe kwa mchezaji aliyeketi kwenye meza inayoendelea, au aliye nje ya mtandao (kutoka kwenye mazungumzo yaliyopo tu), huhifadhiwa na seva na kufikishwa mchezo ukiisha au wakati wa kuingia tena. Historia huhifadhiwa kwenye kivinjari hiki pekee — haikufuati kwenye kifaa kingine." },
         { id: 'reactions', t: 'Miitikio ya emoji',
           b: ['Kitufe cha miitikio hufungua kichagua cha miitikio 30 ya uhuishaji (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) inayocheza na athari juu ya kiti chako, ikionekana na wote mezani \u2014 pamoja na wachezaji kwenye kiteja cha kompyuta. Miitikio inaweza kuzimwa kabisa kwenye chaguo za kina.'] },
         { id: 'translate', t: 'Kuelewa kila mtu',

@@ -172,7 +172,7 @@ export const help = {
           keys: [
             ["/msg <nimimerkki> <viesti>", "Lähetä yksityisviesti aulan chatista"],
             ["/msg \"<nimimerkki>\" <viesti>", "Sama, kun nimimerkissä on välilyöntejä"]],
-          note: "Viestien enimmäispituus on 128 merkkiä. Palvelin ei toimita yksityisviestiä pelaajalle, joka istuu käynnissä olevassa pöydässä, ja historia tallennetaan vain tähän selaimeen — se ei seuraa sinua toiselle laitteelle." },
+          note: "Viestien enimmäispituus on 128 merkkiä. Viestin pelaajalle, joka istuu käynnissä olevassa pöydässä tai ei ole kirjautuneena (vain olemassa olevasta keskustelusta), palvelin pitää tallessa ja toimittaa pelin päätyttyä tai seuraavalla kirjautumiskerralla. Historia tallennetaan vain tähän selaimeen — se ei seuraa sinua toiselle laitteelle." },
         { id: 'reactions', t: 'Emoji-reaktiot',
           b: ['Reaktiopainike avaa valitsimen, jossa on 30 animoitua reaktiota (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026). Ne toistuvat tehosteella paikkasi yläpuolella koko pöydän nähden — myös työpöytäasiakkaan pelaajien. Reaktiot voi poistaa kokonaan käytöstä Lisäasetuksista.'] },
         { id: 'translate', t: 'Ymmärrä kaikkia',

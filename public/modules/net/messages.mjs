@@ -356,6 +356,15 @@ const MSG = (() => {
     return Proto.encode([[1,0,T.ChatRequest],[64,2,req]]);
   }
 
+  // Private message to an OFFLINE partner of an existing conversation, by
+  // name (ChatRequestMessage.targetPlayerName = field 4, upstream bc4dfb8a).
+  // targetPlayerId is sent as an explicit 0 so that an older server rejects
+  // the message instead of taking it for lobby chat.
+  function buildPrivateChatToName(playerName, text) {
+    const req = Proto.encode([[2,0,0],[3,2,text],[4,2,playerName]]);
+    return Proto.encode([[1,0,T.ChatRequest],[64,2,req]]);
+  }
+
   // Chat scoped to a specific table (targetGameId = field 1). The
   // server admin bot uses this scoping to know whether to interpret
   // a leading "/" as a game-admin command (notably /kick <name>).
@@ -573,7 +582,7 @@ const MSG = (() => {
     const msg = Proto.encode([[1,0,gameId],[2,0,playerId]]);
     return Proto.encode([[1,0,T.InvitePlayerToGame],[33,2,msg]]);
   }
-  return { T, parse, b64ToBytes: _scB64ToBytes, bytesToB64: _scBytesToB64, scramClientFirst, scramClientFinal, scramFindServerFirst, buildInit, buildChat, buildGameChat, buildPrivateChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildShowMyCards, buildAdminBanPlayer, buildAdminGlobalNotice, buildRejectInvite, buildInvitePlayer, buildReportAvatar, hexToMd5Bytes };
+  return { T, parse, b64ToBytes: _scB64ToBytes, bytesToB64: _scBytesToB64, scramClientFirst, scramClientFinal, scramFindServerFirst, buildInit, buildChat, buildGameChat, buildPrivateChat, buildPrivateChatToName, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildShowMyCards, buildAdminBanPlayer, buildAdminGlobalNotice, buildRejectInvite, buildInvitePlayer, buildReportAvatar, hexToMd5Bytes };
 })();
 
 // ─── Exports ES + alias legacy ───────────────────────────────────────────

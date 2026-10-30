@@ -172,7 +172,7 @@ export const help = {
           keys: [
             ["/msg <takma ad> <mesaj>", "Lobi sohbetinden özel mesaj gönder"],
             ["/msg \"<takma ad>\" <mesaj>", "Takma ad boşluk içerdiğinde de aynısı"]],
-          note: "Mesajlar 128 karakterle sınırlıdır. Sunucu, devam eden bir masada oturan oyuncuya özel mesaj iletmez ve geçmiş yalnızca bu tarayıcıda saklanır — sizi başka bir cihaza takip etmez." },
+          note: "Mesajlar 128 karakterle sınırlıdır. Devam eden bir masada oturan ya da çevrimdışı olan bir oyuncuya (yalnızca mevcut bir sohbetten) gönderilen mesajı sunucu bekletir ve oyun bittiğinde ya da bir sonraki girişte iletir. Geçmiş yalnızca bu tarayıcıda saklanır — sizi başka bir cihaza takip etmez." },
         { id: 'reactions', t: 'Emoji tepkileri',
           b: ['Tepki düğmesi, koltuğunun üzerinde efektle oynayan ve bütün masaya görünen 30 animasyonlu tepkiden (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) oluşan bir seçici açar — masaüstü istemcideki oyuncular dahil. Tepkiler Gelişmiş seçeneklerden tamamen kapatılabilir.'] },
         { id: 'translate', t: 'Herkesi anlamak',

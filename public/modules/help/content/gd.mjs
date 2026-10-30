@@ -172,7 +172,7 @@ export const help = {
           keys: [
             ["/msg <far-ainm> <teachdaireachd>", "Cuir teachdaireachd phrìobhaideach o chabadaich an lobaidh"],
             ["/msg \"<far-ainm>\" <teachdaireachd>", "An aon rud, nuair a tha beàrnan san fhar-ainm"]],
-          note: "Tha teachdaireachdan cuingichte gu 128 caractar. Cha lìbhrig am frithealaiche teachdaireachd phrìobhaideach gu cluicheadair a tha na shuidhe aig bòrd a tha a’ ruith, agus chan eil an eachdraidh ga stòradh ach sa bhrabhsair seo — cha lean i thu gu uidheam eile." },
+          note: "Tha teachdaireachdan cuingichte gu 128 caractar. Cumaidh am frithealaiche teachdaireachd gu cluicheadair a tha na shuidhe aig bòrd a tha a’ ruith no nach eil air loidhne (o chòmhradh a tha ann mu thràth a-mhàin) agus lìbhrigidh e i nuair a bhios an geama seachad no aig an ath chlàradh a-steach. Chan eil an eachdraidh ga stòradh ach sa bhrabhsair seo — cha lean i thu gu uidheam eile." },
         { id: 'reactions', t: 'Freagairtean emoji',
           b: ['Fosglaidh putan nam freagairtean taghadair le 30 freagairt bheòthaichte (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) a chluicheas le buaidh os cionn an t-suidheachain agad, ri fhaicinn don bhòrd gu lèir — a\u2019 gabhail a-steach cluicheadairean a\u2019 chliant deasg. Gabhaidh na freagairtean a chur dheth gu tur sna Roghainnean adhartach.'] },
         { id: 'translate', t: 'Tuig a h-uile duine',

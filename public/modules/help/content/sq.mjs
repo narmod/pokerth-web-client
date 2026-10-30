@@ -174,7 +174,7 @@ export const help = {
           keys: [
             ['/msg <pseudonimi> <tekst>', 'Dërgo një mesazh privat nga biseda e lobit'],
             ['/msg "<pseudonimi me hapësira>" <tekst>', 'Njësoj, kur pseudonimi përmban hapësira']],
-          note: 'Mesazhet janë të kufizuara në 128 karaktere. Serveri nuk e dorëzon një mesazh privat te një lojtar që është ulur në një tavolinë të zhvillimit e sipër, dhe historiku ruhet vetëm në këtë shfletues — nuk të ndjek në një pajisje tjetër.' },
+          note: "Mesazhet janë të kufizuara në 128 karaktere. Një mesazh për një lojtar që është ulur në një tavolinë të zhvillimit e sipër, ose jashtë linje (vetëm nga një bisedë ekzistuese), mbahet nga serveri dhe dorëzohet kur loja mbaron ose në hyrjen e ardhshme. Historiku ruhet vetëm në këtë shfletues — nuk të ndjek në një pajisje tjetër." },
         { id: 'reactions', t: 'Reagimet emoji',
           b: ['Butoni i reagimeve hap një zgjedhës me 30 reagime të animuara (🎉, 😂, 😱, 🔥…) që luhen me një efekt mbi vendin tënd, të dukshëm për të gjithë tavolinën — përfshirë lojtarët e klientit desktop. Reagimet mund të çaktivizohen plotësisht te Opsionet e avancuara.'] },
         { id: 'translate', t: 'Kupto të gjithë',

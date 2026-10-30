@@ -172,7 +172,7 @@ export const help = {
           keys: [
             ["/msg <prezývka> <správa>", "Odoslať súkromnú správu z chatu lobby"],
             ["/msg \"<prezývka>\" <správa>", "To isté, keď prezývka obsahuje medzery"]],
-          note: "Správy sú obmedzené na 128 znakov. Server nedoručí súkromnú správu hráčovi, ktorý sedí pri prebiehajúcom stole, a história sa ukladá iba v tomto prehliadači — na iné zariadenie vás nenasleduje." },
+          note: "Správy sú obmedzené na 128 znakov. Správu hráčovi, ktorý sedí pri prebiehajúcom stole alebo je offline (len z existujúcej konverzácie), server podrží a doručí po skončení hry alebo pri ďalšom prihlásení. História sa ukladá iba v tomto prehliadači — na iné zariadenie vás nenasleduje." },
         { id: 'reactions', t: 'Emoji reakcie',
           b: ['Tlačidlo reakcií otvorí výber 30 animovaných reakcií (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), ktoré sa s efektom prehrajú nad tvojím miestom a vidí ich celý stôl — vrátane hráčov na desktopovom klientovi. Reakcie možno úplne vypnúť v Pokročilých možnostiach.'] },
         { id: 'translate', t: 'Rozumieť všetkým',

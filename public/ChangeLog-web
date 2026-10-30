@@ -1,3 +1,8 @@
+2026-10-30 version 2.1.10-web.346:
+- new: you can send a private message to a player who is in a game; it is delivered once the game is over
+- new: you can keep writing to a partner who went offline, from your existing conversation; it is delivered at the next login
+- improvement: the private message window says when your messages are waiting, and when too many are already waiting
+
 2026-10-29 version 2.1.10-web.345:
 - improvement: restoring a backup now lets you pick the backup file itself (it was a folder, where the file did not show)
 - improvement: when you say you already play, the Ace first asks whether you have a backup file on this computer; creating one is now the main choice

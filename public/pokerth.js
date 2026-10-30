@@ -7817,14 +7817,24 @@ const App = (() => {
         var _pmErr = (typeof window._pmSendTo === 'function') ? window._pmSendTo(_pmTo, _pmBody) : 'offline';
         if (_pmErr === 'notFound')
           addChat(null, t('pmNotFound'), 'sys', { force: true, key: 'pmNotFound' });
-        else if (_pmErr === 'atTable')
+        else if (_pmErr === 'atTable' || _pmErr === 'meAtTable')
           addChat(null, t('pmAtTable'), 'sys', { force: true, key: 'pmAtTable' });
+        else if (_pmErr === 'guest')
+          addChat(null, t('pmGuest'), 'sys', { force: true, key: 'pmGuest' });
+        else if (_pmErr === 'partnerGuest')
+          addChat(null, t('pmPartnerGuest'), 'sys', { force: true, key: 'pmPartnerGuest' });
         else if (_pmErr === 'self')
           addChat(null, t('pmSelf'), 'sys', { force: true, key: 'pmSelf' });
         else if (_pmErr === 'offline')
           addChat(null, t('pmOffline'), 'sys', { force: true, key: 'pmOffline' });
-        else if (!_pmErr)
+        else if (!_pmErr) {
           addChat(_pmTo, _pmBody, 'mine pm');
+          // Held back for a playing / offline partner: said once in the chat,
+          // the dialogue shows it permanently (parity: sendChatMessage ->
+          // postLocalChatNote, upstream bc4dfb8a).
+          var _pmNk = window._pmNoticeKey ? window._pmNoticeKey(_pmTo) : '';
+          if (_pmNk) addChat(null, t(_pmNk, { name: _pmTo }), 'sys', { force: true, key: _pmNk, params: { name: _pmTo } });
+        }
         return;
       }
       if (text.charAt(0) === '/' && _chatLocalCmd(text, function (n, s2) { addChat(n, s2, 'mine'); })) return;
@@ -11771,17 +11781,16 @@ var _PL_TOGGLE_COLS = ['av','status','flag','star','acts']; // 'name' et 'inv' e
 // icône ✉ de la liste des joueurs connectés).
 var _PL_MAIL_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4.24-8 4.76-8-4.76V6l8 4.76L20 6v2.24Z"/></svg>';
 // Parite QML canSendPm (PlayerListItem.qml) : pas d'enveloppe sur ma propre
-// ligne, pas d'enveloppe si je suis invite (le serveur refuse tout chat des
-// invites), et pas d'enveloppe vers un joueur assis a une partie EN COURS
-// (isPlayerInRunningGame) -- le serveur ne lui delivrerait rien.
+// ligne ni si je suis invite (le serveur refuse tout chat des invites). Un
+// joueur assis a une partie EN COURS garde son enveloppe depuis upstream
+// bc4dfb8a : le serveur retient le message jusqu'a la fin de la partie.
 // NB : `S` est prive a l'IIFE App et n'existe PAS ici ; comme tout le reste
 // de renderPlayersList, on passe par les ponts window.* (un acces direct
 // levait un ReferenceError qui vidait la liste entiere).
 function _plCanSendPm(r) {
   if (r.isMe) return false;
   try { if (window._amGuestMode && window._amGuestMode()) return false; } catch (e) {}
-  try { return !(window._playerInRunningGame && window._playerInRunningGame(r.pid)); }
-  catch (e) { return true; }
+  return true;
 }
 // Marteau (gavel) : kickban total, parite QML canAdminModerate -- visible
 // seulement si JE suis admin serveur, jamais sur ma propre ligne ni sur un bot.
@@ -11877,6 +11886,8 @@ function _plColHeadHtml() {
 }
 
 function renderPlayersList() {
+  // The PM dialogue's partner notice follows who is playing / online.
+  try { if (window._pmRefresh) window._pmRefresh(); } catch (ePm) {}
   var body = document.getElementById('players-list-body');
   var countEl = document.getElementById('players-panel-count');
   var titleEl = document.getElementById('players-panel-title');
@@ -12547,7 +12558,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.345'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.346'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

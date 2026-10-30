@@ -172,7 +172,7 @@ export const help = {
           keys: [
             ["/msg <biệt danh> <tin nhắn>", "Gửi tin nhắn riêng từ trò chuyện sảnh"],
             ["/msg \"<biệt danh>\" <tin nhắn>", "Tương tự, khi biệt danh có dấu cách"]],
-          note: "Tin nhắn giới hạn 128 ký tự. Máy chủ không chuyển tin nhắn riêng đến người chơi đang ngồi ở bàn đang diễn ra, và lịch sử chỉ được lưu trong trình duyệt này — nó không theo bạn sang thiết bị khác." },
+          note: "Tin nhắn giới hạn 128 ký tự. Tin nhắn gửi đến người chơi đang ngồi ở bàn đang diễn ra, hoặc đang ngoại tuyến (chỉ từ một cuộc trò chuyện có sẵn), sẽ được máy chủ giữ lại và chuyển khi ván chơi kết thúc hoặc vào lần đăng nhập tiếp theo. Lịch sử chỉ được lưu trong trình duyệt này — nó không theo bạn sang thiết bị khác." },
         { id: 'reactions', t: 'Phản ứng emoji',
           b: ['Nút phản ứng mở bộ chọn gồm 30 phản ứng động (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) được phát kèm hiệu ứng phía trên chỗ ngồi của bạn, cả bàn đều thấy — kể cả người chơi trên ứng dụng máy tính. Phản ứng có thể tắt hoàn toàn trong Tùy chọn nâng cao.'] },
         { id: 'translate', t: 'Hiểu được mọi người',

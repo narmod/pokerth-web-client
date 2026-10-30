@@ -178,7 +178,7 @@ export const help = {
           keys: [
             ['/msg <segvārds> <teksts>', 'Nosūtīt privātu ziņu no vestibila tērzēšanas'],
             ['/msg "<segvārds ar atstarpēm>" <teksts>', 'Tas pats, ja segvārdā ir atstarpes']],
-          note: 'Ziņas nedrīkst pārsniegt 128 rakstzīmes. Serveris nepiegādā privātu ziņu spēlētājam, kurš sēž pie notiekošas spēles galda, un vēsture glabājas tikai šajā pārlūkā — uz citu ierīci tā tev līdzi neseko.' },
+          note: "Ziņas nedrīkst pārsniegt 128 rakstzīmes. Ziņu spēlētājam, kurš sēž pie notiekošas spēles galda vai ir bezsaistē (tikai no esošas sarunas), serveris patur un piegādā, kad spēle beigusies, vai nākamajā pieteikšanās reizē. Vēsture glabājas tikai šajā pārlūkā — uz citu ierīci tā tev līdzi neseko." },
         { id: 'reactions', t: 'Emocijzīmju reakcijas',
           b: ['Reakciju poga atver izvēlni ar 30 animētām reakcijām (🎉, 😂, 😱, 🔥…), kas ar efektu atskan virs tavas vietas un ir redzamas visiem pie galda — arī spēlētājiem darbvirsmas klientā. Reakcijas var pilnībā atspējot papildu opcijās.'] },
         { id: 'translate', t: 'Kā saprast visus',

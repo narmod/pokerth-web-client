@@ -172,7 +172,7 @@ export const help = {
           keys: [
             ["/msg <pseudonim> <mesaj>", "Trimite un mesaj privat din chatul lobby-ului"],
             ["/msg \"<pseudonim>\" <mesaj>", "La fel, când porecla conține spații"]],
-          note: "Mesajele sunt limitate la 128 de caractere. Serverul nu livrează un mesaj privat unui jucător așezat la o masă în desfășurare, iar istoricul este stocat doar în acest browser — nu te urmează pe alt dispozitiv." },
+          note: "Mesajele sunt limitate la 128 de caractere. Un mesaj către un jucător așezat la o masă în desfășurare sau offline (doar dintr-o conversație existentă) este păstrat de server și livrat la finalul jocului sau la următoarea conectare. Istoricul este stocat doar în acest browser — nu te urmează pe alt dispozitiv." },
         { id: 'reactions', t: 'Reacții emoji',
           b: ['Butonul de reacții deschide un selector cu 30 de reacții animate (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) care se redau cu efect deasupra locului tău, vizibile pentru toată masa — inclusiv jucătorii de pe clientul desktop. Reacțiile pot fi dezactivate complet în Opțiuni avansate.'] },
         { id: 'translate', t: 'Înțelege-i pe toți',

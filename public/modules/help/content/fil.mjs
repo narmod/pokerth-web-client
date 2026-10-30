@@ -174,7 +174,7 @@ export const help = {
           keys: [
             ["/msg <palayaw> <mensahe>", "Magpadala ng pribadong mensahe mula sa lobby chat"],
             ["/msg \"<palayaw>\" <mensahe>", "Gayundin, kapag may mga space ang palayaw"]],
-          note: "Limitado ang mga mensahe sa 128 character. Hindi inihahatid ng server ang pribadong mensahe sa manlalarong nakaupo sa tumatakbong mesa, at iniimbak ang history sa browser na ito lamang — hindi ito sumusunod sa iyo sa ibang device." },
+          note: "Limitado ang mga mensahe sa 128 character. Ang mensahe sa manlalarong nakaupo sa tumatakbong mesa, o offline (mula lamang sa umiiral na usapan), ay itinatabi ng server at inihahatid kapag tapos na ang laro o sa susunod na pag-login. Iniimbak ang history sa browser na ito lamang — hindi ito sumusunod sa iyo sa ibang device." },
         { id: 'reactions', t: 'Mga emoji reaction',
           b: ['Ang reaction button ay nagbubukas ng picker ng 30 animated na reaksyon (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) na naglalaro nang may effect sa ibabaw ng upuan mo, nakikita ng lahat sa mesa \u2014 kasama ang mga manlalaro sa desktop client. Maaaring ganap na i-disable ang mga reaksyon sa Advanced options.'] },
         { id: 'translate', t: 'Pag-unawa sa lahat',

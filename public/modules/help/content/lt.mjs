@@ -172,7 +172,7 @@ export const help = {
           keys: [
             ["/msg <slapyvardis> <žinutė>", "Siųsti privačią žinutę iš vestibiulio pokalbio"],
             ["/msg \"<slapyvardis>\" <žinutė>", "Tas pats, kai slapyvardyje yra tarpų"]],
-          note: "Žinutės ribojamos iki 128 simbolių. Serveris nepristato privačios žinutės žaidėjui, sėdinčiam prie vykstančio stalo, o istorija saugoma tik šioje naršyklėje — į kitą įrenginį ji nepersikelia." },
+          note: "Žinutės ribojamos iki 128 simbolių. Žinutę žaidėjui, sėdinčiam prie vykstančio stalo arba esančiam ne tinkle (tik iš esamo pokalbio), serveris sulaiko ir pristato pasibaigus žaidimui arba kito prisijungimo metu. Istorija saugoma tik šioje naršyklėje — į kitą įrenginį ji nepersikelia." },
         { id: 'reactions', t: 'Jaustukų reakcijos',
           b: ['Reakcijų mygtukas atidaro parinkiklį su 30 animuotų reakcijų (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), kurios su efektu paleidžiamos virš tavo vietos, matomos visam stalui — įskaitant darbalaukio kliento žaidėjus. Reakcijas galima visiškai išjungti Išplėstinėse parinktyse.'] },
         { id: 'translate', t: 'Suprask visus',

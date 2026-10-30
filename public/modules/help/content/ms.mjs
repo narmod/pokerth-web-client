@@ -174,7 +174,7 @@ export const help = {
           keys: [
             ['/msg <nama samaran> <teks>', 'Hantar mesej peribadi dari sembang lobi'],
             ['/msg "<nama samaran dengan ruang>" <teks>', 'Sama, apabila nama samaran mengandungi ruang']],
-          note: 'Mesej terhad kepada 128 aksara. Pelayan tidak menghantar mesej peribadi kepada pemain yang sedang duduk di meja yang berjalan, dan sejarah hanya disimpan dalam pelayar ini — ia tidak mengikuti anda ke peranti lain.' },
+          note: "Mesej terhad kepada 128 aksara. Mesej kepada pemain yang sedang duduk di meja yang berjalan, atau di luar talian (hanya daripada perbualan sedia ada), disimpan oleh pelayan dan dihantar apabila permainan tamat atau pada log masuk seterusnya. Sejarah hanya disimpan dalam pelayar ini — ia tidak mengikuti anda ke peranti lain." },
         { id: 'reactions', t: 'Reaksi emoji',
           b: ['Butang reaksi membuka pemilih 30 reaksi beranimasi (🎉, 😂, 😱, 🔥…) yang dimainkan dengan kesan di atas tempat duduk anda, kelihatan kepada semua orang di meja — termasuk pemain pada klien desktop. Reaksi boleh dinyahdayakan sepenuhnya dalam Pilihan lanjutan.'] },
         { id: 'translate', t: 'Memahami semua orang',

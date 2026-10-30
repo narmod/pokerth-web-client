@@ -174,7 +174,7 @@ export const help = {
           keys: [
             ['/msg <vzdevek> <besedilo>', 'Pošlje zasebno sporočilo iz klepeta predverja'],
             ['/msg "<vzdevek s presledki>" <besedilo>', 'Enako, ko vzdevek vsebuje presledke']],
-          note: 'Sporočila so omejena na 128 znakov. Strežnik ne dostavi zasebnega sporočila igralcu, ki sedi pri mizi, kjer igra teče, zgodovina pa je shranjena samo v tem brskalniku — ne sledi ti na drugo napravo.' },
+          note: "Sporočila so omejena na 128 znakov. Sporočilo igralcu, ki sedi pri mizi, kjer igra teče, ali ni povezan (samo iz obstoječega pogovora), strežnik zadrži in ga dostavi, ko se igra konča, ali ob naslednji prijavi. Zgodovina je shranjena samo v tem brskalniku — ne sledi ti na drugo napravo." },
         { id: 'reactions', t: 'Emoji reakcije',
           b: ['Gumb za reakcije odpre izbirnik 30 animiranih reakcij (🎉, 😂, 😱, 🔥…), ki se predvajajo z učinkom nad tvojim mestom, viden vsem pri mizi — vključno z igralci na namiznem odjemalcu. Reakcije je mogoče popolnoma onemogočiti v Naprednih možnostih.'] },
         { id: 'translate', t: 'Razumevanje vseh',

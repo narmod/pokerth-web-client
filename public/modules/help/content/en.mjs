@@ -176,7 +176,7 @@ export const help = {
           keys: [
             ['/msg <nickname> <text>', 'Send a private message from the lobby chat'],
             ['/msg "<nickname with spaces>" <text>', 'Same, when the nickname contains spaces']],
-          note: 'Messages are limited to 128 characters. The server does not deliver a private message to a player who is sitting at a running table, and history is stored in this browser only \u2014 it does not follow you to another device.' },
+          note: "Messages are limited to 128 characters. A message to a player sitting at a running table, or offline (only from an existing conversation), is held by the server and delivered once the game is over or at the next login. History is stored in this browser only — it does not follow you to another device." },
         { id: 'reactions', t: 'Emoji reactions',
           b: ['The reaction button opens a picker of 30 animated reactions (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) that play with an effect above your seat, visible to everyone at the table \u2014 including players on the desktop client. Reactions can be disabled entirely in Advanced options.'] },
         { id: 'translate', t: 'Understanding everyone',

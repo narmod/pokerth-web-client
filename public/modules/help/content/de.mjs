@@ -172,7 +172,7 @@ export const help = {
           keys: [
             ["/msg <Spielername> <Nachricht>", "Private Nachricht aus dem Lobby-Chat senden"],
             ["/msg \"<Spielername>\" <Nachricht>", "Dasselbe, wenn der Spitzname Leerzeichen enthält"]],
-          note: "Nachrichten sind auf 128 Zeichen begrenzt. Der Server stellt einem Spieler, der an einem laufenden Tisch sitzt, keine private Nachricht zu, und der Verlauf wird nur in diesem Browser gespeichert — er folgt dir nicht auf ein anderes Gerät." },
+          note: "Nachrichten sind auf 128 Zeichen begrenzt. Eine Nachricht an einen Spieler, der an einem laufenden Tisch sitzt oder offline ist (nur aus einem bestehenden Gespräch), hält der Server zurück und stellt sie nach dem Spiel oder beim nächsten Login zu. Der Verlauf wird nur in diesem Browser gespeichert — er folgt dir nicht auf ein anderes Gerät." },
         { id: 'reactions', t: 'Emoji-Reaktionen',
           b: ['Die Reaktions-Schaltfläche öffnet eine Auswahl von 30 animierten Reaktionen (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), die mit einem Effekt über deinem Sitz abgespielt werden, sichtbar für den ganzen Tisch — auch für Spieler am Desktop-Client. Reaktionen lassen sich in den Erweiterten Optionen komplett abschalten.'] },
         { id: 'translate', t: 'Alle verstehen',

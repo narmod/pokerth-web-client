@@ -172,7 +172,7 @@ export const help = {
           keys: [
             ["/msg <kallenavn> <melding>", "Send en privat melding fra lobbychatten"],
             ["/msg \"<kallenavn>\" <melding>", "Det samme, når kallenavnet inneholder mellomrom"]],
-          note: "Meldinger er begrenset til 128 tegn. Serveren leverer ikke en privat melding til en spiller som sitter ved et bord som er i gang, og historikken lagres bare i denne nettleseren — den følger deg ikke til en annen enhet." },
+          note: "Meldinger er begrenset til 128 tegn. En melding til en spiller som sitter ved et bord som er i gang, eller som er frakoblet (bare fra en eksisterende samtale), holdes tilbake av serveren og leveres når spillet er over eller ved neste innlogging. Historikken lagres bare i denne nettleseren — den følger deg ikke til en annen enhet." },
         { id: 'reactions', t: 'Emoji-reaksjoner',
           b: ['Reaksjonsknappen åpner en velger med 30 animerte reaksjoner (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) som spilles av med en effekt over plassen din, synlige for hele bordet — også spillere på skrivebordsklienten. Reaksjoner kan slås helt av i Avanserte innstillinger.'] },
         { id: 'translate', t: 'Forstå alle',

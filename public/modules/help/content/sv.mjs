@@ -172,7 +172,7 @@ export const help = {
           keys: [
             ["/msg <smeknamn> <meddelande>", "Skicka ett privat meddelande från lobbychatten"],
             ["/msg \"<smeknamn>\" <meddelande>", "Samma sak, när smeknamnet innehåller mellanslag"]],
-          note: "Meddelanden är begränsade till 128 tecken. Servern levererar inte ett privat meddelande till en spelare som sitter vid ett pågående bord, och historiken sparas bara i den här webbläsaren — den följer inte med till en annan enhet." },
+          note: "Meddelanden är begränsade till 128 tecken. Ett meddelande till en spelare som sitter vid ett pågående bord eller är offline (bara från en befintlig konversation) hålls kvar av servern och levereras när spelet är slut eller vid nästa inloggning. Historiken sparas bara i den här webbläsaren — den följer inte med till en annan enhet." },
         { id: 'reactions', t: 'Emojireaktioner',
           b: ['Reaktionsknappen öppnar en väljare med 30 animerade reaktioner (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) som spelas upp med en effekt över din plats, synliga för hela bordet — även spelare på skrivbordsklienten. Reaktioner kan stängas av helt i Avancerade inställningar.'] },
         { id: 'translate', t: 'Förstå alla',
