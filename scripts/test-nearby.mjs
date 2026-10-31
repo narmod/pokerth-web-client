@@ -319,6 +319,45 @@ const SDP = {
   ok(buildSdp(parseSdp(SDP.chrome)).includes('a=setup:actpass') && buildSdp(parseSdp(SDP.chrome)).endsWith('\r\n'), 'rebuilt SDP: CRLF lines, offer role actpass');
 }
 
+// ── 5c. handing codes over: links, paste, QR round trip, tab relay ───────
+{
+  const { codeLink, readCode, qrMatrix, LINK_KEY } = await mod('lan/codes.mjs');
+  const { decodeFrame } = await mod('lan/qr-scan.mjs');
+  const { listenForCodes, relayCode } = await mod('lan/link-relay.mjs');
+  const offerCode = encodePayload({ kind: KIND.offer, slot: 9, build: '2.1.10-web.349', label: 'Arnaud', sdp: SDP.safari });
+  const answerCode = encodePayload({ kind: KIND.answer, slot: 9, build: '2.1.10-web.349', sdp: SDP.firefox });
+  const base = 'https://webclient.pokerth.net/';
+  const link = codeLink(offerCode, 'offer', base);
+  ok(link === base + '#lan-offer=' + offerCode && LINK_KEY.answer === 'lan-answer', 'codeLink: client address + #lan-offer=<code>');
+  const r1 = readCode(link);
+  ok(r1.kind === 'offer' && r1.code === offerCode && r1.info.label === 'Arnaud', 'readCode: from the link');
+  ok(readCode(offerCode).kind === 'offer' && readCode(answerCode).kind === 'answer', 'readCode: from the bare code (kind read from the code)');
+  ok(readCode('Join me! ' + codeLink(answerCode, 'answer', base) + ' see you').code === answerCode, 'readCode: a link inside a message');
+  ok(readCode(answerCode.slice(0, 50) + '\n' + answerCode.slice(50)).code === answerCode, 'readCode: a bare code wrapped over two lines');
+  const err = (fn) => { try { fn(); return ''; } catch (e) { return e instanceof SignalError ? e.code : 'other'; } };
+  ok(err(() => readCode(base + '#lan-answer=' + offerCode)) === 'wrong-kind', 'readCode: an offer behind #lan-answer → wrong-kind');
+  ok(err(() => readCode('hello world')) === 'bad-code' && err(() => readCode(base + '#lan-offer=' + offerCode.slice(0, 70))) === 'bad-code', 'readCode: no code / damaged code → bad-code');
+  // QR: generate the link's QR, rasterize it like the canvas does, read it back with the vendored decoder.
+  const m = await qrMatrix(link);
+  const quiet = 4, px = 4, W = (m.size + quiet * 2) * px;
+  const data = new Uint8ClampedArray(W * W * 4).fill(255);
+  for (let r = 0; r < m.size; r++) for (let c = 0; c < m.size; c++) if (m.dark(r, c))
+    for (let y = 0; y < px; y++) for (let x = 0; x < px; x++) { const i = (((r + quiet) * px + y) * W + (c + quiet) * px + x) * 4; data[i] = data[i + 1] = data[i + 2] = 0; }
+  const back = await decodeFrame({ data, width: W, height: W });
+  ok(back === link, 'QR round trip: ' + link.length + '-character link, ' + m.size + '×' + m.size + ' modules, read back by jsQR');
+  // Tab relay over a real BroadcastChannel.
+  if (typeof globalThis.BroadcastChannel === 'function') {
+    let got = null;
+    const stop = listenForCodes((found) => { got = found; return found.kind === 'answer'; });
+    const took = await relayCode(readCode(codeLink(answerCode, 'answer', base)), 1500);
+    ok(took && got && got.code === answerCode, 'link relay: a link opened in another tab reaches the game tab, which confirms');
+    const notTaken = await relayCode(readCode(link), 400);
+    ok(notTaken === false, 'link relay: a code the game tab does not want is left to the new tab');
+    stop();
+    ok(await relayCode(readCode(link), 300) === false, 'link relay: no game tab → the new tab handles the code itself');
+  }
+}
+
 // ── 6. the host's own in-page socket ─────────────────────────────────────
 {
   const srv = new LocalServer({ botPool: BOTS });

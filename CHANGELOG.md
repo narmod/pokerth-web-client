@@ -16,6 +16,20 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **« Play nearby », step 3: handing the codes over** (`web.349`) — still no visible change (the UI is step 4); the
+  building blocks carry no player-facing text, step 4 brings it, translated. `lan/codes.mjs`: every code travels as a
+  link to the client (`#lan-offer=<code>` / `#lan-answer=<code>`), so the phone's own camera app works too;
+  `readCode()` takes the link, the bare code or any message containing either (wrapped lines included) and checks
+  it; `drawQr()` (vendored `qrcode-generator`, level M, black on white, quiet zone, sharp on dense screens) — an
+  offer link is about 175–200 characters, a 53×53 to 57×57 QR code; `shareLink()` uses the system share sheet
+  (AirDrop / Quick Share / messengers) and falls back to the clipboard. `lan/qr-scan.mjs`: in-app scanner, the
+  browser's BarcodeDetector where it exists, otherwise **jsQR** (`public/vendor/jsqr.mjs`, v1.4.0, Apache-2.0,
+  minified, loaded on demand and precached for offline use), clean error codes (`insecure`, `no-camera`,
+  `camera-denied`, `camera-error`). `lan/link-relay.mjs`: a code link opened in a NEW tab (camera app, AirDrop) is
+  handed to the game tab over a BroadcastChannel, which confirms. Tests: `scripts/test-nearby.mjs` (101: links,
+  paste, QR round trip through jsQR, tab relay) and `scripts/test-nearby-codes-browser.mjs` (14, two Chrome
+  browsers: the host's QR shown on screen is read by the guest's camera — Chrome's fake capture fed with the very
+  picture — the answer link opens in a new host tab and is relayed, the pairing completes over WebRTC).
 - **« Play nearby », step 2: the WebRTC link and seat recovery** (`web.348`) — still no visible change (the UI
   comes in step 4). `lan/signal.mjs`: the connection code exchanged by people (QR / share sheet / paste in step 3)
   — the host's offer, then the guest's answer, each about 130–180 characters instead of a 1–3 KB SDP: protocol

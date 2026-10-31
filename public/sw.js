@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.10-web.348';
+const CACHE_VERSION = 'pokerth-v2.1.10-web.349';
 // Build id the page puts on the card back URL (deck.mjs _deckBack →
 // flipside.<ext>?v=<BUILD_VERSION>): CACHE_VERSION without its prefix.
 const BUILD_ID = CACHE_VERSION.replace(/^pokerth-v/, '');
@@ -279,6 +279,9 @@ const ASSETS = [
   '/modules/ui/mini-board.mjs',
   '/modules/ui/sound-import.mjs',
   '/vendor/qrcode.mjs',
+  // QR reader for « Play nearby » where the browser has no BarcodeDetector
+  // (Safari / iOS, Firefox): scanning must work without a network.
+  '/vendor/jsqr.mjs',
   '/modules/ui/poll.mjs',
   '/modules/ui/live-stats.mjs',
   '/modules/ui/hold-tip.mjs',
@@ -414,6 +417,9 @@ const ASSETS = [
   '/modules/lan/protocol.mjs',
   '/modules/lan/signal.mjs',
   '/modules/lan/rtc-link.mjs',
+  '/modules/lan/codes.mjs',
+  '/modules/lan/qr-scan.mjs',
+  '/modules/lan/link-relay.mjs',
   // Achievements, imported by offline/server.mjs: without them the lazy
   // import of the offline mode fails with no network ("Offline init failed").
   '/modules/achievements/index.mjs',
