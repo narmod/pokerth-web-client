@@ -13803,6 +13803,10 @@ body.nb-on:not(.nb-host) .nb-host-only { display: none !important; }
 .nb-video { display: block; width: 100%; max-width: 280px; margin: 0 auto 10px; border-radius: 8px; background: #000; }
 .nb-paste { margin-bottom: 8px; }
 .nb-input { font-family: inherit; font-size: var(--fs-sm); outline: none; }
+/* A player joined (web.354): next one, or play. */
+.nb-ok { margin: 6px 0 14px; text-align: center; font-size: var(--fs-base); color: var(--text-hi); }
+.nb-more { display: block; width: 100%; margin: 0 0 10px; }
+.nb-done { display: block; margin: 0 auto 4px; }
 .nb-status { min-height: 1.3em; font-size: var(--fs-sm); color: var(--text-hi); line-height: 1.35; }
 .nb-status.err { color: var(--red); }
 .nb-notice { text-align: center; }

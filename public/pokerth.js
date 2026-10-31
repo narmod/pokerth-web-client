@@ -7979,6 +7979,8 @@ const App = (() => {
                ((tgt !== 'pokerth.net' && tls) ? '&tls=1' : ''), name: name, warnings: [] };
     },
     shareTableLink() {
+      // « Play nearby » (web.354): a server link is of no use there — the host adds the player by QR code.
+      if (window._nearbyMode) { if (window._nearbyMode === 'host' && window.NearbyUI) window.NearbyUI.addPlayer(); return; }
       var _il = this._inviteLink();
       if (!_il) { if (typeof showKeyHint === 'function') showKeyHint(t('noActiveTable')); return; }
       var name = _il.name, url = _il.url;
@@ -12588,7 +12590,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.353'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.354'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

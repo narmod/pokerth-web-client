@@ -1,3 +1,7 @@
+2026-10-31 version 2.1.10-web.354:
+- improvement: « Play nearby » — the host's invitation opens by itself, then offers to add another player or to start playing
+- improvement: « Play nearby » — in the waiting room, the host's « Invite friends » button adds a player by QR code
+
 2026-10-31 version 2.1.10-web.352:
 - bugfix: « Play nearby » — the in-app scanner now reads the other phone's QR code (higher camera resolution, sharper and larger code)
 

@@ -76,8 +76,8 @@ ok(await until(host, () => document.getElementById('s-lobby').classList.contains
 ok(await host.evaluate(() => document.body.classList.contains('nb-host') && window._nearbyMode === 'host'), 'host role set');
 ok(await visible(host, '#nb-add-btn') && await visible(host, '#nb-board-btn'), 'host header: Add a player + scoreboard');
 
-await host.click('#nb-add-btn');
-ok(await until(host, () => { const c = document.querySelector('#nb-dialog canvas.nb-qr'); return !!(c && c.width > 100); }, 20000), 'Add a player: the invitation QR code is drawn');
+ok(await until(host, () => { const c = document.querySelector('#nb-dialog canvas.nb-qr'); return !!(c && c.width > 100); }, 20000)
+  && /Add a player/.test(await host.evaluate(() => document.getElementById('nb-title').textContent)), 'in the lobby, « Add a player » opens by itself: the invitation QR code is drawn');
 await until(host, () => [...document.querySelectorAll('#nb-dialog .inv-sbtn')].some(b => /Copy/.test(b.textContent)));
 await host.evaluate(() => [...document.querySelectorAll('#nb-dialog .inv-sbtn')].find(b => /Copy/.test(b.textContent)).click());
 await host.waitForTimeout(300);
@@ -102,7 +102,11 @@ ok(/#lan-answer=/.test(answerLink), 'the answer link is on the guest\'s clipboar
 await host.fill('#nb-dialog .nb-input', answerLink);
 await host.press('#nb-dialog .nb-input', 'Enter');
 ok(await until(guest, () => document.getElementById('s-lobby').classList.contains('active'), 30000), 'paired: the guest is in the host\'s lobby');
-ok(await until(host, () => /Player connected|✓/.test((document.getElementById('nb-body') || {}).textContent || '') || document.getElementById('nb-dialog').style.display === 'none', 15000), 'the host sees the player connected');
+ok(await until(host, () => /Player connected/.test((document.getElementById('nb-body') || {}).textContent || ''), 15000), 'the host sees the player connected');
+ok(await visible(host, '#nb-dialog .nb-more') && await visible(host, '#nb-dialog .nb-done') && !(await host.evaluate(() => !!document.querySelector('#nb-dialog video, #nb-dialog canvas'))),
+  '…with « Add another player » and « Done, let\'s play » (no QR / camera left on screen)');
+await host.click('#nb-dialog .nb-done');
+ok(await host.evaluate(() => document.getElementById('nb-dialog').style.display === 'none'), '« Done, let\'s play » closes the window');
 ok(await guest.evaluate(() => window._nearbyMode === 'guest' && !document.body.classList.contains('nb-host')), 'guest role set');
 ok(!(await visible(guest, '#nb-add-btn')) && await visible(guest, '#nb-board-btn'), 'guest header: scoreboard only');
 ok(await until(host, () => Object.values(window.PthState.players || {}).includes('Guesty'), 15000), 'the host knows the guest by name');
@@ -122,9 +126,16 @@ await host.evaluate(() => { window.App.openCreatePage(); });
 await host.waitForTimeout(800);
 await host.evaluate(() => { const mp = document.getElementById('cf-players'); if (mp) mp.value = '3'; window.App.createGame(); });
 ok(await until(guest, () => Object.keys(window.PthState.games || {}).length === 1, 20000), 'the host creates a table: it shows in the guest\'s lobby');
+// The waiting room's « Invite friends »: the host adds a player by QR code; a guest has none.
+ok(await until(host, () => !!document.querySelector('.wp-btn-invite'), 15000), 'host\'s waiting room: « Invite friends » is there');
+await host.evaluate(() => document.querySelector('.wp-btn-invite').click());
+ok(await until(host, () => document.getElementById('nb-dialog').style.display !== 'none' && /Add a player/.test(document.getElementById('nb-title').textContent), 15000),
+  '…and opens « Add a player » (QR code), not a server link');
+await host.evaluate(() => window.NearbyUI.closeDialog());
 const gid = await guest.evaluate(() => +Object.keys(window.PthState.games)[0]);
 await guest.evaluate((id) => window.App.joinGame(id), gid);
 ok(await until(host, () => Object.values(window.PthState.seatData || {}).length >= 2 || (window.PthState.games[Object.keys(window.PthState.games)[0]] || {}).players >= 2, 20000), 'the guest joins the host\'s table');
+ok(await until(guest, () => !!document.querySelector('.wp-btn-leave'), 15000) && !(await guest.evaluate(() => !!document.querySelector('.wp-btn-invite'))), 'guest\'s waiting room: no « Invite friends » (only the host lets players in)');
 await host.evaluate(() => window.App.startWithBots());
 ok(await until(guest, () => window.PthState._gameStarted && Array.isArray(window.PthState.myCards) && window.PthState.myCards[0] != null, 30000), 'the game starts: the guest is dealt his own cards');
 ok(await until(host, () => window.PthState._gameStarted && Array.isArray(window.PthState.myCards) && window.PthState.myCards[0] != null, 30000), '…and so is the host');

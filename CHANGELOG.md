@@ -88,6 +88,11 @@ highlights below.
   for offline use. Tests: `scripts/test-nearby.mjs` (58, deterministic, plus real BroadcastChannels).
 
 ### Changed
+- **« Play nearby »: adding players without looking for a button** (`web.354`) — once the host is in his lobby,
+  « Add a player » opens by itself; when a player has joined, the window offers « ＋ Add another player » or « Done,
+  let's play » (keys `nbAddAnother`, `nbDone` × 83). In the waiting room, the host's « Invite friends » opens « Add a
+  player » instead of a useless server link (`App.shareTableLink`), and a guest no longer has that button.
+  `scripts/test-nearby-ui-browser.mjs` 30 → 35.
 - **« Play nearby » is off by default** (`web.353`) — the admin switch `nearby_play` is now unticked until an admin
   ticks it. Feature switches can be `defaultOff`: `featureOffList()` adds them to the list sent to the clients and to
   the dashboard unless they are in `_adminConfig.featureOn` (saved from the dashboard, kept by backup / restore). The

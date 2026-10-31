@@ -12,7 +12,7 @@ export const meta = {
 
 export const strings = {
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
-    nbEntry: "就近对战", nbSub: "无需互联网 · 同一 Wi-Fi", nbHost: "创建对局", nbJoin: "加入对局", nbAdd: "添加玩家", nbHostStep1: "对方在应用中或用手机相机扫描此码。", nbHostStep2: "然后扫描对方屏幕上出现的码。", nbGuestStep1: "扫描主持人的码，或粘贴到下方。", nbGuestStep2: "把此码给主持人看。", nbScan: "扫码", nbPaste: "在此粘贴代码", nbWait: "正在等待另一部手机…", nbConnected: "玩家已连接。", nbErrCode: "此代码无效。", nbErrVersion: "两部手机的应用版本不同。", nbErrCamera: "相机不可用：请改为粘贴代码。", nbErrLink: "无法连接。两部手机必须连接同一 Wi-Fi（访客网络常会阻止）。", nbLost: "与主持人的连接已断开。请在 2 分钟内重新配对以保留座位。", nbRelayed: "代码已发送到你的对局。可以关闭此标签页。", nbScoreboard: "今晚记分板", nbOneTable: "就近对战时一次只能有一张牌桌。",
+    nbEntry: "就近对战", nbSub: "无需互联网 · 同一 Wi-Fi", nbHost: "创建对局", nbJoin: "加入对局", nbAdd: "添加玩家", nbAddAnother: "再添加一位玩家", nbDone: "好了，开始玩", nbHostStep1: "对方在应用中或用手机相机扫描此码。", nbHostStep2: "然后扫描对方屏幕上出现的码。", nbGuestStep1: "扫描主持人的码，或粘贴到下方。", nbGuestStep2: "把此码给主持人看。", nbScan: "扫码", nbPaste: "在此粘贴代码", nbWait: "正在等待另一部手机…", nbConnected: "玩家已连接。", nbErrCode: "此代码无效。", nbErrVersion: "两部手机的应用版本不同。", nbErrCamera: "相机不可用：请改为粘贴代码。", nbErrLink: "无法连接。两部手机必须连接同一 Wi-Fi（访客网络常会阻止）。", nbLost: "与主持人的连接已断开。请在 2 分钟内重新配对以保留座位。", nbRelayed: "代码已发送到你的对局。可以关闭此标签页。", nbScoreboard: "今晚记分板", nbOneTable: "就近对战时一次只能有一张牌桌。",
   loadPartialFail: "应用的部分内容未能加载。", reloadNow: "重新加载",
   advTdWitness: '锦标赛：在本站赛事主管的牌桌上，向其发送比赛摘要以核对结果（筹码和获胜者，绝不包括我的底牌）',
   tdWitnessNotice: '锦标赛牌桌：你的客户端会向赛事主管发送本场比赛的摘要（每手牌的筹码和获胜者，绝不包括你的底牌），用于核对结果。可在“高级选项 › 网络”中关闭。',

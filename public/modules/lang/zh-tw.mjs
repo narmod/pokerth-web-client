@@ -12,7 +12,7 @@ export const meta = {
 
 export const strings = {
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
-    nbEntry: "就近對戰", nbSub: "免網際網路 · 同一 Wi-Fi", nbHost: "建立牌局", nbJoin: "加入牌局", nbAdd: "新增玩家", nbHostStep1: "對方在 App 中或用手機相機掃描此碼。", nbHostStep2: "接著掃描對方螢幕上出現的碼。", nbGuestStep1: "掃描主持人的碼，或貼到下方。", nbGuestStep2: "把此碼給主持人看。", nbScan: "掃描條碼", nbPaste: "在此貼上代碼", nbWait: "正在等待另一支手機…", nbConnected: "玩家已連線。", nbErrCode: "此代碼無效。", nbErrVersion: "兩支手機的 App 版本不同。", nbErrCamera: "無法使用相機：請改為貼上代碼。", nbErrLink: "無法連線。兩支手機必須連到同一個 Wi-Fi（訪客網路常會封鎖）。", nbLost: "與主持人的連線已中斷。請在 2 分鐘內重新配對以保留座位。", nbRelayed: "代碼已傳送到你的牌局。可以關閉此分頁。", nbScoreboard: "今晚計分板", nbOneTable: "就近對戰時一次只能有一張牌桌。",
+    nbEntry: "就近對戰", nbSub: "免網際網路 · 同一 Wi-Fi", nbHost: "建立牌局", nbJoin: "加入牌局", nbAdd: "新增玩家", nbAddAnother: "再新增一位玩家", nbDone: "好了，開始玩", nbHostStep1: "對方在 App 中或用手機相機掃描此碼。", nbHostStep2: "接著掃描對方螢幕上出現的碼。", nbGuestStep1: "掃描主持人的碼，或貼到下方。", nbGuestStep2: "把此碼給主持人看。", nbScan: "掃描條碼", nbPaste: "在此貼上代碼", nbWait: "正在等待另一支手機…", nbConnected: "玩家已連線。", nbErrCode: "此代碼無效。", nbErrVersion: "兩支手機的 App 版本不同。", nbErrCamera: "無法使用相機：請改為貼上代碼。", nbErrLink: "無法連線。兩支手機必須連到同一個 Wi-Fi（訪客網路常會封鎖）。", nbLost: "與主持人的連線已中斷。請在 2 分鐘內重新配對以保留座位。", nbRelayed: "代碼已傳送到你的牌局。可以關閉此分頁。", nbScoreboard: "今晚計分板", nbOneTable: "就近對戰時一次只能有一張牌桌。",
   loadPartialFail: "應用程式有部分內容無法載入。", reloadNow: "重新載入",
   advTdWitness: '錦標賽：在本站賽事主管的牌桌上，向其傳送牌局摘要以核對結果（籌碼與贏家，絕不包含我的牌）',
   tdWitnessNotice: '錦標賽牌桌：你的用戶端會向賽事主管傳送這局的摘要（每手牌的籌碼量與贏家，絕不包含你的牌）以核對結果。你可以在「進階選項 › 網路」中關閉此功能。',

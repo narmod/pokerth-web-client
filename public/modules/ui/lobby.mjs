@@ -318,7 +318,10 @@ function _renderLobbyWaitActions() {
   // \u2014 pour tout joueur assis d'une partie en ligne. Pas en entra\u00eenement
   // local (aucun destinataire possible) ni pour un spectateur. D\u00e9cochable
   // dans Options avanc\u00e9es (invite_link).
-  var inviteBtn = (!window._offlineMode && !S._amSpectator && (!window._advGet || window._advGet('invite_link', true)))
+  // « Play nearby » (web.354): the host adds players by QR code from here; a
+  // guest has no one to invite (only the host's phone can let a player in).
+  var inviteBtn = (!window._offlineMode && !S._amSpectator && (!window._advGet || window._advGet('invite_link', true))
+      && (!window._nearbyMode || window._nearbyMode === 'host'))
     ? '<button class="wp-btn wp-btn-invite" onclick="App.shareTableLink()">' + t('wpInvite') + '</button>'
     : '';
   // « 🔔 Notify me » (web.270): a seated player who waits (not the host, not

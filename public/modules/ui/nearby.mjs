@@ -219,6 +219,9 @@ export async function host() {
     st.srv = new m.ls.LocalServer({ botPool: pool, botSkill: skill });
   }
   _setRole('host');
+  // Once in the lobby, « Add a player » opens by itself (web.354): the host
+  // has nothing to look for before the first friend joins.
+  st.autoAdd = true;
   if (!st.relayStop) st.relayStop = m.relay.listenForCodes((found) => {
     if (found.kind !== 'answer' || st.dlgMode !== 'add' || !st.inv || found.info.slot !== st.inv.slot) return false;
     _acceptAnswer(found.code);
@@ -262,8 +265,8 @@ export async function addPlayer() {
       onState: (s, why) => {
         if (st.inv !== inv) return;
         if (s === 'open') {
-          if (_addStatus) _status(_addStatus, '✓ ' + _t('nbConnected', null, 'Player connected.'));
-          setTimeout(() => { if (st.dlgMode === 'add' && st.inv === inv) { st.inv = null; _closeDialog(true); } }, 1400);
+          st.inv = null;
+          if (st.dlgMode === 'add') _connectedPanel();
         } else if (s === 'closed' && !inv.open && why !== 'host' && why !== 'server' && _addStatus && st.dlgMode === 'add') {
           _status(_addStatus, _errText(why), true);
         }
@@ -275,6 +278,22 @@ export async function addPlayer() {
   wait.remove();
   await _codeBlock(body, m.codes.codeLink(inv.payload, 'offer'), '1. ' + _t('nbHostStep1', null, 'The player scans this code, in the app or with the phone\'s camera.'));
   _addStatus = _readerBlock(body, '2. ' + _t('nbHostStep2', null, 'Then scan the code that appears on their screen.'), 'answer', (t) => _acceptAnswer(t));
+}
+
+// A player just joined: invite the next one, or start playing (web.354).
+function _connectedPanel() {
+  const body = $('nb-body'); if (!body) return;
+  _stopScan();
+  body.textContent = '';
+  body.appendChild(el('p', 'nb-ok', '✓ ' + _t('nbConnected', null, 'Player connected.')));
+  const more = el('button', 'nb-btn nb-more', '＋ ' + _t('nbAddAnother', null, 'Add another player'));
+  more.type = 'button';
+  more.addEventListener('click', () => addPlayer());
+  const done = el('button', 'inv-sbtn nb-done', _t('nbDone', null, 'Done, let\u2019s play'));
+  done.type = 'button';
+  done.addEventListener('click', () => closeDialog());
+  body.appendChild(more); body.appendChild(done);
+  try { more.focus(); } catch (e) {}
 }
 
 // ── guest ─────────────────────────────────────────────────────────────────
@@ -372,6 +391,11 @@ export function onScoreboard(sub) {
     const S = /** @type {any} */ (window).PthState;
     if (S && !S.loaded) { S.loaded = true; if (typeof window.renderGames === 'function') window.renderGames(); }
   } catch (e) {}
+  // The host's first scoreboard: he is in his lobby — invite the first player.
+  if (st.autoAdd && st.role === 'host') {
+    st.autoAdd = false;
+    setTimeout(() => { if (st.role === 'host' && !st.dlgMode) addPlayer(); }, 400);
+  }
   try {
     if ($('nb-board-body') && st.dlgMode === 'board') window.renderBoard('nb-board-body');
     if ($('stats-board-body')) window.renderBoard('stats-board-body');
