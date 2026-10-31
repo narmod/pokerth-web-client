@@ -15,6 +15,20 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Added
+- **« Play nearby », step 1: the local server** (`web.347`) — groundwork for playing together in one room with no
+  Internet and no server (design: one phone hosts, the others connect peer-to-peer). No visible change yet: nothing
+  imports these modules until the UI step. `public/modules/lan/local-server.mjs` is a small PokerTH server that runs
+  in a tab: lobby (PlayerList, lobby / game / private chat, PlayerInfo), ONE table at a time (create, join, admin
+  hand-over, kick before the start, « + Bots » with the training bots, StartEvent acks), the training engine
+  untouched, HandStart carrying each player's OWN hole cards only, every frame checked (own seat, own turn, admin
+  rights), duplicate nicknames refused (`initPlayerNameInUse`), a dropped player folds out. No achievements, bot
+  reactions or easter eggs. `lan/scoreboard.mjs`: the evening scoreboard (LAN leaderboard columns), adding up while
+  the same humans play, wiped when the line-up changes, bots ignored, never stored; sent in a message of our own
+  (type 240, outside PokerTH's numbering). `lan/pipe-socket.mjs`: a WebSocket look-alike (in-page socket for the
+  host); `lan/bc-link.mjs`: a BroadcastChannel carrier between tabs, for tests and development only. Precached
+  for offline use. Tests: `scripts/test-nearby.mjs` (58, deterministic, plus real BroadcastChannels).
+
 ### Changed
 - **Held-back private messages** (`web.346`) — parity upstream `bc4dfb8a` (server holds PMs to players at a running
   table or offline, `pending_private_message`, delivered at game end / next login; limits 2 per sender and target,

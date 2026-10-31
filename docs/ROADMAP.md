@@ -296,6 +296,15 @@ use too. Items are grouped by status rather than fixed phases.
   untick « manual address entry » on pokerth.net once servers are listed; serverlist XML export
   for the QML client to discuss with sp0ck.
 
+- **« Play nearby »** — several players in the same room play together from the web client, with no Internet
+  and no server: one phone hosts a small PokerTH server in its tab (lobby, one table, bots for the empty seats,
+  an evening scoreboard), the others connect to it peer-to-peer over the local Wi-Fi (WebRTC), set up by QR code,
+  the system share sheet (AirDrop / Quick Share) or a pasted code. An entry « 👥 Play nearby » in the LAN server
+  list, behind an admin switch (`nearby_play`, on by default). Web addition, no QML counterpart. Steps: (1) the
+  local server — multi-human lobby, one table, private hole cards, checked frames, evening scoreboard
+  (`public/modules/lan/`, `scripts/test-nearby.mjs`) — **done** (`web.347`); (2) the WebRTC carrier and the compact
+  connection payload; (3) QR codes and the share sheet; (4) the UI, translations, Ace's Help and the admin switch.
+
 - **Arena** — **an application of its own since `web.327`** (`narmod/pokerth-arena`, private for now); the web client
   keeps only the link (Admin › Community › Arena: address and link key, servers and events sent, `/arena` sent to the
   Arena, witness reports relayed; `docs/ARENA_LINK.md`). History while it lived here: (called « tournaments » until `web.315`; tournaments, cups, medals and the tournament director, `/arena`) — an automatic organizer for games and tournaments on the LAN servers
