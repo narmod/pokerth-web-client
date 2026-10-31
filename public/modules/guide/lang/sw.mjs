@@ -1,6 +1,15 @@
 // Ace's Help — sw texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Hakuna haja ya Intaneti: simu moja **huandaa** mchezo, nyingine **hujiunga** kupitia Wi-Fi ileile. Kisha mwenyeji huongeza kila mchezaji kwa msimbo wa QR.",
+  c1NearbyHost: "Wewe ndiye mwenyeji. Gusa **Ongeza mchezaji** (juu kulia) kwa kila rafiki: anachanganua msimbo wako wa QR, kisha wewe unachanganua wake. Acha programu wazi — ukiondoka, mchezo unaisha.",
+  c1NearbyGuest: "Uko kwenye mchezo wa mwenyeji. Keti mezani itakapoundwa; **📊** huonyesha ubao wa alama wa jioni.",
+  hsNbEntry: "Cheza na watu walio chumba kimoja, bila Intaneti: simu moja huandaa, nyingine hujiunga kupitia Wi-Fi ileile.",
+  hsNbHost: "Huanzisha mchezo kwenye simu hii. Wengine hujiunga, na simu hii lazima ibaki imewashwa hadi mwisho.",
+  hsNbJoin: "Hujiunga na mchezo ulioandaliwa kwenye simu nyingine iliyo karibu: changanua msimbo wake (au ubandike), kisha onyesha wako.",
+  hsNbAdd: "Huonyesha msimbo wa QR kwa mchezaji mmoja zaidi, kisha husoma wake. Pia humrudisha mchezaji ambaye muunganisho wake ulikatika.",
+  hsNbBoard: "Ubao wa alama wa jioni: huongezeka mradi wachezaji walewale wanaendelea.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Teua seva kwenye orodha ya **Seva**: kitone cha kijani kinamaanisha iko mtandaoni, pamoja na idadi ya wachezaji walio humo sasa hivi. Seva yako mwenyewe haipo? **Pendekeza seva yangu**, chini kabisa ya orodha, inaituma kwa wasimamizi wa tovuti hii, na inaonekana kwenye orodha baada ya kuidhinishwa.",
   hsLanDir: "Seva za LAN zilizokaguliwa na wasimamizi wa tovuti hii: chagua moja ili uchezee humo. Kitone cha kijani kinamaanisha mtandaoni, pamoja na wachezaji wake kwa sasa.",

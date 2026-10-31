@@ -16,6 +16,13 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **« Play nearby », step 5: help and Ace's Help** (`web.351`) — a help section « Play nearby (no Internet) »
+  (`start.nearby`, in the 83 help corpora: host, guest, same Wi-Fi, seat kept 2 minutes); Ace's Help: `login-nearby`
+  (the entry picked → host or join), `lobby-nearby-host` (add each player with a QR code, keep the app open) and
+  `lobby-nearby-guest` (the evening scoreboard), in place of the LAN tips (`login-lan` / `lobby-lan` step aside);
+  world flags `nearby`, `nearbyHost`, `nearbySel`; « ? » mode on the list entry, Host / Join, Add a player and the
+  scoreboard → `start:nearby`. 8 guide keys × 83 catalogues (es-419 = derive(es)); `server/guide-stats.js` counts
+  the three contexts.
 - **« Play nearby », step 4: in the client** (`web.350`) — the feature is now visible. LAN mode → server list → an
   entry « 👥 Play nearby » after the servers (`ui/lan-directory.mjs`; also shown with no directory at all, i.e. offline),
   remembered per device (`pth_nearby_sel`); picking it swaps Connect for « Host a game » / « Join a game »

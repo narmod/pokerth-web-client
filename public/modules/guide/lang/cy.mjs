@@ -1,6 +1,15 @@
 // Ace's Help — cy texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Dim angen y Rhyngrwyd: mae un ffôn yn **cynnal** y gêm, a'r lleill yn **ymuno** dros yr un Wi-Fi. Yna mae'r gwesteiwr yn ychwanegu pob chwaraewr gyda chod QR.",
+  c1NearbyHost: "Chi yw'r gwesteiwr. Tapiwch **Ychwanegu chwaraewr** (ar y dde uchod) ar gyfer pob ffrind: mae'n sganio eich cod QR, yna chi ei god ef. Cadwch yr ap ar agor — os ewch chi, daw'r gêm i ben.",
+  c1NearbyGuest: "Rydych yng ngêm y gwesteiwr. Eisteddwch wrth y bwrdd pan gaiff ei greu; mae **📊** yn dangos sgorfwrdd y noson.",
+  hsNbEntry: "Chwarae gyda phobl yn yr un ystafell, heb y Rhyngrwyd: mae un ffôn yn cynnal, a'r lleill yn ymuno dros yr un Wi-Fi.",
+  hsNbHost: "Yn dechrau'r gêm ar y ffôn hwn. Mae'r lleill yn ymuno, a rhaid i'r ffôn hwn aros ymlaen tan y diwedd.",
+  hsNbJoin: "Yn ymuno â gêm a gynhelir ar ffôn arall gerllaw: sganiwch ei god (neu ei gludo), yna dangoswch eich un chi.",
+  hsNbAdd: "Yn dangos cod QR ar gyfer un chwaraewr arall, yna'n darllen ei god ef. Mae hefyd yn dod â chwaraewr a gollodd ei gysylltiad yn ôl.",
+  hsNbBoard: "Sgorfwrdd y noson: mae'n adio wrth i'r un chwaraewyr ddal ati.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Dewiswch weinydd yn y rhestr **Gweinydd**: mae dot gwyrdd yn golygu ei fod ar-lein, gyda nifer y chwaraewyr arno ar hyn o bryd. Dydy’ch gweinydd eich hun ddim yno? Mae **Cynnig fy ngweinydd**, ar waelod y rhestr, yn ei anfon at weinyddwyr y wefan hon, ac mae’n ymddangos yn y rhestr unwaith y caiff ei gymeradwyo.",
   hsLanDir: "Y gweinyddion LAN a wiriwyd gan weinyddwyr y wefan hon: dewiswch un i chwarae arno. Mae dot gwyrdd yn golygu ar-lein, gyda’i chwaraewyr ar hyn o bryd.",

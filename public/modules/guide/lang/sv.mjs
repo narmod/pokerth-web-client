@@ -1,6 +1,15 @@
 // Ace's Help — sv texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Inget internet behövs: en telefon är **värd** för spelet, de andra **ansluter** via samma Wi-Fi. Sedan lägger värden till varje spelare med en QR-kod.",
+  c1NearbyHost: "Du är värd. Tryck på **Lägg till en spelare** (uppe till höger) för varje vän: han skannar din QR-kod, sedan du hans. Håll appen öppen — om du går slutar spelet.",
+  c1NearbyGuest: "Du är i värdens spel. Sätt dig vid bordet när det har skapats; **📊** visar kvällens resultattavla.",
+  hsNbEntry: "Spela med personer i samma rum, utan internet: en telefon är värd, de andra ansluter via samma Wi-Fi.",
+  hsNbHost: "Startar spelet på den här telefonen. De andra ansluter, och den här telefonen måste vara på till slutet.",
+  hsNbJoin: "Går med i ett spel som en annan telefon i närheten är värd för: skanna dess kod (eller klistra in den) och visa sedan din.",
+  hsNbAdd: "Visar en QR-kod för ytterligare en spelare och läser sedan hans. Tar också tillbaka en spelare vars anslutning bröts.",
+  hsNbBoard: "Kvällens resultattavla: den summeras så länge samma spelare fortsätter.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "I listan **Server** väljer du en server: en grön prick betyder att den är online, med antalet spelare som är där just nu. Finns inte din egen server där? **Föreslå min server** längst ned i listan skickar den till administratörerna för den här webbplatsen, och den visas i listan när den har godkänts.",
   hsLanDir: "LAN-servrarna som administratörerna för den här webbplatsen har kontrollerat: välj en för att spela på den. En grön prick betyder online, med dess spelare just nu.",

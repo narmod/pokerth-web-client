@@ -3,6 +3,15 @@
 // (scripts/test-guide-lang.mjs). Keys are stable: statistics and a later QML
 // port refer to them (docs/GUIDE.md).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "No Internet needed: one phone **hosts** the game, the others **join** it over the same Wi-Fi. The host then adds each player with a QR code.",
+  c1NearbyHost: "You are the host. Tap **Add a player** (top right) for each friend: they scan your QR code, then you scan theirs. Keep the app open — if you leave, the game ends.",
+  c1NearbyGuest: "You are in the host’s game. Join the table when it is created; **📊** shows the evening scoreboard.",
+  hsNbEntry: "Play with people in the same room, without Internet: one phone hosts, the others join over the same Wi-Fi.",
+  hsNbHost: "Starts the game on this phone. The others join it, and this phone must stay on until the end.",
+  hsNbJoin: "Joins a game hosted on another phone nearby: scan its code (or paste it), then show yours.",
+  hsNbAdd: "Shows a QR code for one more player, then reads theirs. Also brings back a player whose connection dropped.",
+  hsNbBoard: "The evening scoreboard: it adds up while the same players play on.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Pick a server in the **Server** list: a green dot means it is online, with the number of players on it right now. Your own server is not there? **Propose my server**, at the bottom of the list, sends it to the admins of this site, and it appears in the list once approved.",
   hsLanDir: "The LAN servers checked by the admins of this site: pick one to play on it. A green dot means online, with its players right now.",

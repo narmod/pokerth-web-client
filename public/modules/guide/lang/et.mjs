@@ -1,6 +1,15 @@
 // Ace's Help — et texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Internetti pole vaja: üks telefon **võõrustab** mängu, teised **liituvad** sama Wi-Fi kaudu. Seejärel lisab võõrustaja iga mängija QR-koodiga.",
+  c1NearbyHost: "Sina oled võõrustaja. Puuduta iga sõbra jaoks **Lisa mängija** (üleval paremal): ta skannib sinu QR-koodi, siis sina tema oma. Hoia rakendus avatud — kui lahkud, mäng lõpeb.",
+  c1NearbyGuest: "Oled võõrustaja mängus. Istu lauda, kui see on loodud; **📊** näitab õhtu tulemustabelit.",
+  hsNbEntry: "Mängi samas toas olevate inimestega ilma internetita: üks telefon võõrustab, teised liituvad sama Wi-Fi kaudu.",
+  hsNbHost: "Käivitab mängu selles telefonis. Teised liituvad ja see telefon peab lõpuni sisse jääma.",
+  hsNbJoin: "Liitub mänguga, mida võõrustab teine lähedal olev telefon: skanni selle kood (või kleebi see) ja näita siis oma.",
+  hsNbAdd: "Näitab QR-koodi veel ühele mängijale ja loeb seejärel tema oma. Toob tagasi ka mängija, kelle ühendus katkes.",
+  hsNbBoard: "Õhtu tulemustabel: see liitub, kuni samad mängijad jätkavad.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Vali server loendist **Server**: roheline täpp tähendab, et see on võrgus, ja näed ka seal praegu olevate mängijate arvu. Sinu enda serverit pole seal? **Paku minu serverit**, mis on loendi lõpus, saadab selle selle saidi administraatoritele ning pärast heakskiitu ilmub see loendisse.",
   hsLanDir: "Selle saidi administraatorite kontrollitud LAN-serverid: vali üks, et seal mängida. Roheline täpp tähendab võrgus, koos selle praeguste mängijatega.",

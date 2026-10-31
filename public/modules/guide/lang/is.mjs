@@ -1,6 +1,15 @@
 // Ace's Help — is texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Ekkert internet þarf: einn sími **heldur** leikinn, hinir **tengjast** um sama Wi-Fi. Gestgjafinn bætir síðan hverjum leikmanni við með QR-kóða.",
+  c1NearbyHost: "Þú ert gestgjafinn. Ýttu á **Bæta við leikmanni** (efst til hægri) fyrir hvern vin: hann skannar QR-kóðann þinn og svo þú hans. Hafðu appið opið — ef þú ferð lýkur leiknum.",
+  c1NearbyGuest: "Þú ert í leik gestgjafans. Sestu við borðið þegar það er búið til; **📊** sýnir stigatöflu kvöldsins.",
+  hsNbEntry: "Spilaðu með fólki í sama herbergi, án internets: einn sími heldur leikinn, hinir tengjast um sama Wi-Fi.",
+  hsNbHost: "Ræsir leikinn í þessum síma. Hinir tengjast og þessi sími verður að vera kveiktur til enda.",
+  hsNbJoin: "Tengist leik sem annar sími í nágrenninu heldur: skannaðu kóðann hans (eða límdu hann) og sýndu svo þinn.",
+  hsNbAdd: "Sýnir QR-kóða fyrir einn leikmann til viðbótar og les svo hans. Kemur líka aftur með leikmann sem missti tenginguna.",
+  hsNbBoard: "Stigatafla kvöldsins: hún leggst saman meðan sömu leikmenn spila áfram.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Í listanum **Þjónn** skaltu velja þjón: grænn punktur þýðir að hann er tengdur, ásamt fjölda leikmanna á honum núna. Er þinn eigin þjónn ekki þar? **Leggja til þjóninn minn**, neðst á listanum, sendir hann til stjórnenda þessarar síðu og hann birtist á listanum þegar hann hefur verið samþykktur.",
   hsLanDir: "LAN-þjónarnir sem stjórnendur þessarar síðu hafa yfirfarið: veldu einn til að spila á honum. Grænn punktur þýðir tengdur, ásamt leikmönnum hans núna.",

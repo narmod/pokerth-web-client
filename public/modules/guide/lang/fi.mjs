@@ -1,6 +1,15 @@
 // Ace's Help — fi texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Internetiä ei tarvita: yksi puhelin **isännöi** peliä, muut **liittyvät** samassa Wi-Fi-verkossa. Sen jälkeen isäntä lisää jokaisen pelaajan QR-koodilla.",
+  c1NearbyHost: "Olet isäntä. Napauta **Lisää pelaaja** (oikealla ylhäällä) jokaiselle ystävälle: hän skannaa QR-koodisi, sitten sinä hänen koodinsa. Pidä sovellus auki — jos lähdet, peli päättyy.",
+  c1NearbyGuest: "Olet isännän pelissä. Istu pöytään, kun se on luotu; **📊** näyttää illan tulostaulun.",
+  hsNbEntry: "Pelaa samassa huoneessa olevien kanssa ilman internetiä: yksi puhelin isännöi, muut liittyvät samassa Wi-Fi-verkossa.",
+  hsNbHost: "Käynnistää pelin tässä puhelimessa. Muut liittyvät, ja tämän puhelimen on oltava päällä loppuun asti.",
+  hsNbJoin: "Liittyy peliin, jota toinen lähellä oleva puhelin isännöi: skannaa sen koodi (tai liitä se) ja näytä sitten omasi.",
+  hsNbAdd: "Näyttää QR-koodin yhdelle pelaajalle lisää ja lukee sitten hänen koodinsa. Tuo myös takaisin pelaajan, jonka yhteys katkesi.",
+  hsNbBoard: "Illan tulostaulu: se kertyy niin kauan kuin samat pelaajat jatkavat.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Valitse palvelin **Palvelin**-listalta: vihreä piste tarkoittaa, että se on verkossa, ja näet myös siellä juuri nyt olevien pelaajien määrän. Eikö oma palvelimesi ole siellä? Listan lopussa oleva **Ehdota palvelintani** lähettää sen tämän sivuston ylläpitäjille, ja se ilmestyy listalle hyväksynnän jälkeen.",
   hsLanDir: "Tämän sivuston ylläpitäjien tarkistamat LAN-palvelimet: valitse yksi pelataksesi siellä. Vihreä piste tarkoittaa verkossa, ja näet sen tämänhetkiset pelaajat.",

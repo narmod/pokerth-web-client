@@ -1,6 +1,15 @@
 // Ace's Help — hu texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Nem kell internet: egy telefon a **házigazda**, a többiek ugyanazon a Wi-Fin **csatlakoznak**. Ezután a házigazda QR-kóddal ad hozzá minden játékost.",
+  c1NearbyHost: "Te vagy a házigazda. Minden barátodnál koppints a **Játékos hozzáadása** gombra (jobbra fent): ő beolvassa a QR-kódodat, aztán te az övét. Hagyd nyitva az appot — ha kilépsz, a játék véget ér.",
+  c1NearbyGuest: "A házigazda játékában vagy. Ülj le az asztalhoz, amikor elkészül; a **📊** az este eredménytábláját mutatja.",
+  hsNbEntry: "Játék egy szobában lévőkkel, internet nélkül: egy telefon a házigazda, a többiek ugyanazon a Wi-Fin csatlakoznak.",
+  hsNbHost: "Elindítja a játékot ezen a telefonon. A többiek csatlakoznak, és ennek a telefonnak a végéig bekapcsolva kell maradnia.",
+  hsNbJoin: "Csatlakozik egy közeli telefonon futó játékhoz: olvasd be a kódját (vagy illeszd be), aztán mutasd meg a sajátodat.",
+  hsNbAdd: "QR-kódot mutat még egy játékosnak, aztán beolvassa az övét. Visszahoz egy játékost is, akinek megszakadt a kapcsolata.",
+  hsNbBoard: "Az este eredménytáblája: összeadódik, amíg ugyanazok játszanak.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Válassz egy szervert a **Szerver** listában: a zöld pötty azt jelenti, hogy online, mellette a rajta éppen játszók száma. Nincs ott a saját szervered? A lista alján található **Saját szerver ajánlása** elküldi az oldal adminisztrátorainak, és jóváhagyás után megjelenik a listán.",
   hsLanDir: "Az oldal adminisztrátorai által ellenőrzött LAN-szerverek: válassz egyet, hogy azon játssz. A zöld pötty azt jelenti: online, mellette a jelenlegi játékosai.",

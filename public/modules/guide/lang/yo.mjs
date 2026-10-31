@@ -1,6 +1,15 @@
 // Ace's Help — yo texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Kò sí ìdí fún Íńtánẹ́ẹ̀tì: fóònù kan ń **gbàlejò** eré, àwọn yòókù ń **darapọ̀** nípasẹ̀ Wi-Fi kan náà. Lẹ́yìn náà agbàlejò yóò fi òṣèré kọ̀ọ̀kan kún un pẹ̀lú kóòdù QR.",
+  c1NearbyHost: "Ìwọ ni agbàlejò. Tẹ **Fi òṣèré kún un** (òkè ọ̀tún) fún ọ̀rẹ́ kọ̀ọ̀kan: yóò ṣàyẹ̀wò kóòdù QR rẹ, lẹ́yìn náà ìwọ yóò ṣàyẹ̀wò tirẹ̀. Fi áàpù sílẹ̀ ní ṣíṣí — bí o bá lọ, eré parí.",
+  c1NearbyGuest: "O wà nínú eré agbàlejò. Jókòó sí tábìlì nígbà tí wọ́n bá ṣẹ̀dá rẹ̀; **📊** ń fi pátákó àmì ìrọ̀lẹ́ hàn.",
+  hsNbEntry: "Ṣeré pẹ̀lú àwọn ènìyàn inú yàrá kan náà, láìsí Íńtánẹ́ẹ̀tì: fóònù kan ń gbàlejò, àwọn yòókù ń darapọ̀ nípasẹ̀ Wi-Fi kan náà.",
+  hsNbHost: "Ó ń bẹ̀rẹ̀ eré lórí fóònù yìí. Àwọn mìíràn ń darapọ̀, fóònù yìí sì gbọ́dọ̀ wà ní títàn títí dé òpin.",
+  hsNbJoin: "Ó ń darapọ̀ mọ́ eré tí fóònù mìíràn nítòsí ń gbàlejò: ṣàyẹ̀wò kóòdù rẹ̀ (tàbí lẹ̀ ẹ́), lẹ́yìn náà fi tìrẹ hàn.",
+  hsNbAdd: "Ó ń fi kóòdù QR hàn fún òṣèré kan sí i, lẹ́yìn náà ó ń ka tirẹ̀. Ó tún ń mú òṣèré tí ìsopọ̀ rẹ̀ jábọ́ padà.",
+  hsNbBoard: "Pátákó àmì ìrọ̀lẹ́: ó ń kó jọ níwọ̀n ìgbà tí àwọn òṣèré kan náà bá ń bá a lọ.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Nínú àkójọ **Olùpín**, yan olùpín kan: àmì aláwọ̀ ewé túmọ̀ sí pé ó wà lórí ayélujára, pẹ̀lú iye òṣèré tó wà lórí rẹ̀ báyìí. Olùpín tìrẹ kò sí níbẹ̀? **Dábàá olùpín mi** ní ìsàlẹ̀ àkójọ ń fi ránṣẹ́ sí àwọn alábòójútó ojú-òpó yìí, yóò sì hàn nínú àkójọ ní kété tí wọ́n bá fọwọ́ sí i.",
   hsLanDir: "Àwọn olùpín LAN tí àwọn alábòójútó ojú-òpó yìí ti ṣàyẹ̀wò: yan ọ̀kan láti ṣeré lórí rẹ̀. Àmì aláwọ̀ ewé túmọ̀ sí lórí ayélujára, pẹ̀lú àwọn òṣèré rẹ̀ báyìí.",

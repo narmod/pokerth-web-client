@@ -1,6 +1,15 @@
 // Ace's Help — nl texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Geen internet nodig: één telefoon **host** het spel, de anderen **doen mee** via dezelfde wifi. De host voegt daarna elke speler toe met een QR-code.",
+  c1NearbyHost: "Jij bent de host. Tik op **Speler toevoegen** (rechtsboven) voor elke vriend: hij scant jouw QR-code, daarna scan jij de zijne. Laat de app open — als je weggaat, eindigt het spel.",
+  c1NearbyGuest: "Je zit in het spel van de host. Ga aan tafel zodra die is aangemaakt; **📊** toont het scorebord van de avond.",
+  hsNbEntry: "Spelen met mensen in dezelfde ruimte, zonder internet: één telefoon host, de anderen doen mee via dezelfde wifi.",
+  hsNbHost: "Start het spel op deze telefoon. De anderen doen mee, en deze telefoon moet tot het einde aan blijven.",
+  hsNbJoin: "Doet mee aan een spel dat een andere telefoon in de buurt host: scan de code (of plak hem) en laat dan de jouwe zien.",
+  hsNbAdd: "Toont een QR-code voor nog een speler en leest daarna de zijne. Haalt ook een speler terug van wie de verbinding wegviel.",
+  hsNbBoard: "Het scorebord van de avond: het telt door zolang dezelfde spelers blijven spelen.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Selecteer in de lijst **Server** een server: een groene stip betekent dat hij online is, met het aantal spelers dat er nu op zit. Staat je eigen server er niet bij? **Mijn server voorstellen**, onderaan de lijst, stuurt hem naar de beheerders van deze site, en na goedkeuring verschijnt hij in de lijst.",
   hsLanDir: "De LAN-servers die de beheerders van deze site hebben gecontroleerd: kies er een om erop te spelen. Een groene stip betekent online, met de spelers die er nu op zitten.",

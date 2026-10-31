@@ -1,3 +1,6 @@
+2026-10-31 version 2.1.10-web.351:
+- improvement: the help explains « Play nearby », and Ace's Help guides the host and the guests through it
+
 2026-10-31 version 2.1.10-web.350:
 - new: « Play nearby » — play together in the same room with no Internet: one phone hosts the game, the others join it over the same Wi-Fi (LAN mode, server list)
 - new: players join by scanning a QR code (in the app or with the phone's camera), with the share button, or by pasting a code

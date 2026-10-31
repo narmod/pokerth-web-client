@@ -1,6 +1,15 @@
 // Ace's Help — zu texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Ayidingeki i-inthanethi: ifoni eyodwa **iphatha** umdlalo, ezinye **zijoyina** nge-Wi-Fi efanayo. Bese umphathi engeza umdlali ngamunye ngekhodi ye-QR.",
+  c1NearbyHost: "Nguwe umphathi. Thepha **Engeza umdlali** (phezulu kwesokudla) kumngane ngamunye: uskena ikhodi yakho ye-QR, bese wena uskena eyakhe. Shiya i-app ivuliwe — uma uhamba, umdlalo uyaphela.",
+  c1NearbyGuest: "Usemdlalweni womphathi. Hlala etafuleni uma selidaliwe; **📊** ibonisa ibhodi lamaphuzu lakusihlwa.",
+  hsNbEntry: "Dlala nabantu abasegumbini elilodwa, ngaphandle kwe-inthanethi: ifoni eyodwa iyaphatha, ezinye zijoyina nge-Wi-Fi efanayo.",
+  hsNbHost: "Iqala umdlalo kule foni. Abanye bayajoyina, futhi le foni kufanele ihlale ivuliwe kuze kube sekupheleni.",
+  hsNbJoin: "Ijoyina umdlalo ophethwe ifoni enye eseduze: skena ikhodi yayo (noma uyinamathisele), bese ubonisa eyakho.",
+  hsNbAdd: "Ibonisa ikhodi ye-QR yomunye umdlali, bese ifunda eyakhe. Ibuyisa nomdlali onqamuke ukuxhumana.",
+  hsNbBoard: "Ibhodi lamaphuzu lakusihlwa: liyanqwabelana uma nje abadlali abafanayo beqhubeka.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Ohlwini oluthi **Iseva**, khetha iseva: ichashazi eliluhlaza lisho ukuthi ikhona ku-inthanethi, kanye nenani labadlali abakuyo njengamanje. Iseva yakho ayikho lapho? Okuthi **Phakamisa iseva yami** ezansi ohlwini kuyithumela kubalawuli bale sayithi, futhi izovela ohlwini uma isivunyiwe.",
   hsLanDir: "Amaseva e-LAN ahlolwe abalawuli bale sayithi: khetha eyodwa ukuze udlale kuyo. Ichashazi eliluhlaza lisho ukuthi ikhona ku-inthanethi, kanye nabadlali bayo njengamanje.",

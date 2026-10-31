@@ -1,6 +1,15 @@
 // Ace's Help — sq texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Nuk duhet internet: një telefon **pret** lojën, të tjerët **bashkohen** në të njëjtin Wi-Fi. Pastaj mikpritësi shton çdo lojtar me një kod QR.",
+  c1NearbyHost: "Ti je mikpritësi. Prek **Shto një lojtar** (lart djathtas) për çdo mik: ai skanon kodin tënd QR, pastaj ti të tijin. Mbaje aplikacionin hapur — nëse largohesh, loja mbaron.",
+  c1NearbyGuest: "Je në lojën e mikpritësit. Ulu në tavolinë kur të krijohet; **📊** tregon renditjen e mbrëmjes.",
+  hsNbEntry: "Luaj me njerëz në të njëjtën dhomë, pa internet: një telefon pret, të tjerët bashkohen në të njëjtin Wi-Fi.",
+  hsNbHost: "Nis lojën në këtë telefon. Të tjerët bashkohen dhe ky telefon duhet të mbetet ndezur deri në fund.",
+  hsNbJoin: "Bashkohet në një lojë që pritet në një telefon tjetër afër: skano kodin e tij (ose ngjite), pastaj trego tëndin.",
+  hsNbAdd: "Tregon një kod QR për një lojtar tjetër, pastaj lexon të tijin. Rikthen edhe një lojtar që i ra lidhja.",
+  hsNbBoard: "Renditja e mbrëmjes: mblidhet derisa luajnë të njëjtët lojtarë.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Përzgjidh një server në listën **Serveri**: një pikë e gjelbër do të thotë që është në linjë, me numrin e lojtarëve që janë aty tani. Serveri yt nuk është aty? **Propozo serverin tim**, në fund të listës, ua dërgon administratorëve të këtij sajti dhe shfaqet në listë pasi miratohet.",
   hsLanDir: "Serverët LAN të kontrolluar nga administratorët e këtij sajti: zgjidh një për të luajtur në të. Një pikë e gjelbër do të thotë në linjë, me lojtarët e tij tani.",

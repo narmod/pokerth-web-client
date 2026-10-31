@@ -1,6 +1,15 @@
 // Ace's Help — fr texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Pas besoin d’Internet : un téléphone **héberge** la partie, les autres la **rejoignent** sur le même Wi-Fi. L’hôte ajoute ensuite chaque joueur avec un QR code.",
+  c1NearbyHost: "Tu es l’hôte. Touche **Ajouter un joueur** (en haut à droite) pour chaque ami : il scanne ton QR code, puis tu scannes le sien. Garde l’appli ouverte — si tu pars, la partie s’arrête.",
+  c1NearbyGuest: "Tu es dans la partie de l’hôte. Rejoins la table quand elle est créée ; **📊** affiche le tableau des scores de la soirée.",
+  hsNbEntry: "Jouer avec des personnes dans la même pièce, sans Internet : un téléphone héberge, les autres le rejoignent sur le même Wi-Fi.",
+  hsNbHost: "Lance la partie sur ce téléphone. Les autres la rejoignent, et ce téléphone doit rester allumé jusqu’à la fin.",
+  hsNbJoin: "Rejoint une partie hébergée sur un autre téléphone à côté : scanne son code (ou colle-le), puis montre le tien.",
+  hsNbAdd: "Affiche un QR code pour un joueur de plus, puis lit le sien. Sert aussi à faire revenir un joueur dont la connexion est tombée.",
+  hsNbBoard: "Le tableau des scores de la soirée : il se cumule tant que les mêmes joueurs continuent.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Choisis un serveur dans la liste **Serveur** : un point vert indique qu’il est en ligne, avec le nombre de joueurs qui s’y trouvent en ce moment. Ton propre serveur n’y est pas ? **Proposer mon serveur**, en bas de la liste, l’envoie aux admins de ce site, et il apparaît dans la liste une fois approuvé.",
   hsLanDir: "Les serveurs LAN vérifiés par les admins de ce site : choisis-en un pour y jouer. Un point vert signifie en ligne, avec ses joueurs du moment.",

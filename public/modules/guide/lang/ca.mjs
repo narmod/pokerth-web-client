@@ -1,6 +1,15 @@
 // Ace's Help — ca texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "No cal Internet: un telèfon **organitza** la partida i els altres **s’hi uneixen** per la mateixa Wi-Fi. Després l’amfitrió afegeix cada jugador amb un codi QR.",
+  c1NearbyHost: "Ets l’amfitrió. Toca **Afegir un jugador** (a dalt a la dreta) per a cada amic: escaneja el teu codi QR i després tu el seu. Deixa l’app oberta — si marxes, la partida s’acaba.",
+  c1NearbyGuest: "Ets a la partida de l’amfitrió. Seu a la taula quan es creï; **📊** mostra el marcador de la vetllada.",
+  hsNbEntry: "Jugar amb persones de la mateixa sala, sense Internet: un telèfon organitza i els altres s’hi uneixen per la mateixa Wi-Fi.",
+  hsNbHost: "Inicia la partida en aquest telèfon. Els altres s’hi uneixen, i aquest telèfon ha de quedar encès fins al final.",
+  hsNbJoin: "S’uneix a una partida organitzada en un altre telèfon proper: escaneja’n el codi (o enganxa’l) i després mostra el teu.",
+  hsNbAdd: "Mostra un codi QR per a un jugador més i després llegeix el seu. També recupera un jugador que ha perdut la connexió.",
+  hsNbBoard: "El marcador de la vetllada: va sumant mentre juguin els mateixos jugadors.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Tria un servidor a la llista **Servidor**: un punt verd vol dir que està en línia, amb el nombre de jugadors que hi ha ara mateix. El teu servidor no hi és? **Proposa el meu servidor**, al final de la llista, l’envia als admins d’aquest lloc, i apareix a la llista un cop aprovat.",
   hsLanDir: "Els servidors LAN revisats pels admins d’aquest lloc: tria’n un per jugar-hi. Un punt verd vol dir en línia, amb els seus jugadors ara mateix.",

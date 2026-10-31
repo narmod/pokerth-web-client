@@ -1,6 +1,15 @@
 // Ace's Help — tr texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "İnternet gerekmez: bir telefon oyunu **kurar**, diğerleri aynı Wi-Fi üzerinden **katılır**. Ardından ev sahibi her oyuncuyu bir QR koduyla ekler.",
+  c1NearbyHost: "Ev sahibi sensin. Her arkadaş için **Oyuncu ekle**ye dokun (sağ üstte): o senin QR kodunu tarar, sonra sen onunkini. Uygulamayı açık tut — ayrılırsan oyun biter.",
+  c1NearbyGuest: "Ev sahibinin oyunundasın. Masa kurulunca otur; **📊** akşamın puan tablosunu gösterir.",
+  hsNbEntry: "Aynı odadaki kişilerle internetsiz oyna: bir telefon kurar, diğerleri aynı Wi-Fi üzerinden katılır.",
+  hsNbHost: "Oyunu bu telefonda başlatır. Diğerleri katılır ve bu telefon sona kadar açık kalmalıdır.",
+  hsNbJoin: "Yakındaki başka bir telefonda kurulan oyuna katılır: onun kodunu tara (ya da yapıştır), sonra kendininkini göster.",
+  hsNbAdd: "Bir oyuncu daha için QR kodu gösterir, sonra onunkini okur. Bağlantısı kopan bir oyuncuyu da geri getirir.",
+  hsNbBoard: "Akşamın puan tablosu: aynı oyuncular oynadıkça toplanır.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "**Sunucu** listesinden bir sunucu seç: yeşil nokta çevrimiçi olduğunu ve şu anda üzerindeki oyuncu sayısını gösterir. Kendi sunucun orada değil mi? Listenin en altındaki **Sunucumu öner** onu bu sitenin yöneticilerine gönderir; onaylandığında listede görünür.",
   hsLanDir: "Bu sitenin yöneticilerinin kontrol ettiği LAN sunucuları: üzerinde oynamak için birini seç. Yeşil nokta çevrimiçi demektir, yanında da şu anki oyuncuları.",

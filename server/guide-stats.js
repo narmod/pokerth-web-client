@@ -40,12 +40,15 @@ const EVENTS = Object.freeze({
   'lobby-flag': ['shown', 'done', 'dismissed', 'acted', 'profile'],  // no flag next to my name (web.66)
   'lobby-open': ['shown', 'done', 'dismissed', 'join'],     // tap on an open non-ranked table (web.67)
   'lobby-lan': ['shown', 'done', 'dismissed', 'acted'],     // the lobby of a LAN / dedicated server (web.272)
+  'lobby-nearby-host': ['shown', 'done', 'dismissed', 'acted'],   // « Play nearby » lobby, the host (web.351)
+  'lobby-nearby-guest': ['shown', 'done', 'dismissed', 'acted'],  // « Play nearby » lobby, a guest (web.351)
   'wait-ranking': ['shown', 'done', 'dismissed', 'started'],
   'ranked-result': ['shown', 'done', 'dismissed', 'acted'],
   // L4
   login: ['shown', 'done', 'dismissed', 'acted', 'signup', 'account'],
   'login-profile': ['shown', 'done', 'dismissed', 'acted'],
   'login-lan': ['shown', 'done', 'dismissed', 'acted'],   // LAN directory (web.43)
+  'login-nearby': ['shown', 'done', 'dismissed', 'acted'],   // « Play nearby » picked in the LAN list (web.351)
   'wait-normal': ['shown', 'done', 'dismissed', 'acted'],
   // L5 — game creation page and windows (first opening)
   'create-game': ['shown', 'done', 'dismissed', 'acted', 'full'],   // full (web.266): « Full tour » tapped

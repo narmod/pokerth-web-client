@@ -1,6 +1,15 @@
 // Ace's Help — cs texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Internet není potřeba: jeden telefon hru **hostuje**, ostatní se **připojí** přes stejnou Wi-Fi. Hostitel pak přidá každého hráče QR kódem.",
+  c1NearbyHost: "Jsi hostitel. Pro každého kamaráda klepni na **Přidat hráče** (vpravo nahoře): naskenuje tvůj QR kód, pak ty jeho. Nech aplikaci otevřenou — když odejdeš, hra skončí.",
+  c1NearbyGuest: "Jsi ve hře hostitele. Přisedni ke stolu, až bude vytvořen; **📊** ukazuje výsledky večera.",
+  hsNbEntry: "Hraní s lidmi ve stejné místnosti, bez internetu: jeden telefon hostuje, ostatní se připojí přes stejnou Wi-Fi.",
+  hsNbHost: "Spustí hru na tomto telefonu. Ostatní se připojí a tento telefon musí zůstat zapnutý až do konce.",
+  hsNbJoin: "Připojí se ke hře hostované na jiném telefonu poblíž: naskenuj jeho kód (nebo ho vlož) a pak ukaž svůj.",
+  hsNbAdd: "Zobrazí QR kód pro dalšího hráče a pak načte jeho. Vrátí také hráče, kterému vypadlo spojení.",
+  hsNbBoard: "Výsledky večera: sčítají se, dokud hrají stejní hráči.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Vyber si server v seznamu **Server**: zelená tečka znamená, že je online, spolu s počtem hráčů, kteří na něm právě jsou. Tvůj vlastní server tam není? **Navrhnout můj server** na konci seznamu ho pošle adminům tohoto webu a po schválení se v seznamu objeví.",
   hsLanDir: "LAN servery ověřené admini tohoto webu: vyber si jeden a hraj na něm. Zelená tečka znamená online, spolu s jeho aktuálními hráči.",

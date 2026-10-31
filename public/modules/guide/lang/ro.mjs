@@ -1,6 +1,15 @@
 // Ace's Help — ro texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Nu e nevoie de internet: un telefon **găzduiește** jocul, celelalte **se alătură** prin aceeași rețea Wi-Fi. Apoi gazda adaugă fiecare jucător cu un cod QR.",
+  c1NearbyHost: "Ești gazda. Atinge **Adaugă un jucător** (dreapta sus) pentru fiecare prieten: el scanează codul tău QR, apoi tu pe al lui. Ține aplicația deschisă — dacă pleci, jocul se termină.",
+  c1NearbyGuest: "Ești în jocul gazdei. Așază-te la masă când e creată; **📊** arată clasamentul serii.",
+  hsNbEntry: "Joacă cu oameni din aceeași cameră, fără internet: un telefon găzduiește, celelalte se alătură prin aceeași rețea Wi-Fi.",
+  hsNbHost: "Pornește jocul pe acest telefon. Ceilalți se alătură, iar acest telefon trebuie să rămână pornit până la final.",
+  hsNbJoin: "Intră într-un joc găzduit pe alt telefon din apropiere: scanează-i codul (sau lipește-l), apoi arată-l pe al tău.",
+  hsNbAdd: "Afișează un cod QR pentru încă un jucător, apoi îl citește pe al lui. Aduce înapoi și un jucător a cărui legătură a căzut.",
+  hsNbBoard: "Clasamentul serii: se adună cât timp joacă aceiași jucători.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Selectează un server din lista **Server**: un punct verde înseamnă că este online, cu numărul de jucători conectați chiar acum. Serverul tău nu e acolo? **Propune serverul meu**, în partea de jos a listei, îl trimite administratorilor acestui site și apare în listă după aprobare.",
   hsLanDir: "Serverele LAN verificate de administratorii acestui site: alege unul ca să joci pe el. Un punct verde înseamnă online, cu jucătorii lui de acum.",

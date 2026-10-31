@@ -1,6 +1,15 @@
 // Ace's Help — zh-hk texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "毋須上網：一部手機**建立**牌局，其他人經同一個 Wi-Fi **加入**。跟住主持用 QR 碼逐個新增玩家。",
+  c1NearbyHost: "你係主持。為每位朋友撳**新增玩家**（右上角）：對方掃描你嘅 QR 碼，再由你掃描對方嘅。保持 App 開住——你一離開牌局就結束。",
+  c1NearbyGuest: "你已經喺主持嘅牌局入面。牌枱建好就坐低；**📊** 顯示今晚計分板。",
+  hsNbEntry: "同同一房間嘅人離線對戰：一部手機做主持，其他人經同一個 Wi-Fi 加入。",
+  hsNbHost: "喺呢部手機開局。其他人加入，呢部手機要一直開住直到完結。",
+  hsNbJoin: "加入附近另一部手機建立嘅牌局：掃描（或貼上）佢嘅代碼，再出示你嘅。",
+  hsNbAdd: "為多一位玩家顯示 QR 碼，再讀取對方嘅。亦用嚟俾斷線嘅玩家返嚟。",
+  hsNbBoard: "今晚計分板：只要仲係同一班玩家，就會一直累計。",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "在**伺服器**清單中選一部伺服器：綠點表示它在線，旁邊是目前在上面的玩家人數。你自己的伺服器不在裡面？清單最底的**提交我的伺服器**會把它傳送給本網站的管理員，批准後便會出現在清單中。",
   hsLanDir: "經本網站管理員審核的區域網絡伺服器：選一部即可在上面遊玩。綠點表示在線，旁邊是它目前的玩家。",

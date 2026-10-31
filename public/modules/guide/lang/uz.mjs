@@ -1,6 +1,15 @@
 // Ace's Help — uz texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Internet kerak emas: bitta telefon oʻyinni **ochadi**, qolganlar oʻsha Wi-Fi orqali **qoʻshiladi**. Soʻng mezbon har bir oʻyinchini QR kod bilan qoʻshadi.",
+  c1NearbyHost: "Mezbon — sizsiz. Har bir doʻst uchun **Oʻyinchi qoʻshish** (yuqorida oʻngda) tugmasini bosing: u QR kodingizni skanerlaydi, soʻng siz uniki. Ilovani ochiq tuting — chiqib ketsangiz, oʻyin tugaydi.",
+  c1NearbyGuest: "Siz mezbonning oʻyinidasiz. Stol yaratilganda oʻtiring; **📊** kechaning hisob jadvalini koʻrsatadi.",
+  hsNbEntry: "Bir xonadagi odamlar bilan internetsiz oʻynang: bitta telefon ochadi, qolganlar oʻsha Wi-Fi orqali qoʻshiladi.",
+  hsNbHost: "Oʻyinni shu telefonda boshlaydi. Boshqalar qoʻshiladi va bu telefon oxirigacha yoniq turishi kerak.",
+  hsNbJoin: "Yaqindagi boshqa telefonda ochilgan oʻyinga qoʻshiladi: uning kodini skanerlang (yoki joylang), soʻng oʻzingiznikini koʻrsating.",
+  hsNbAdd: "Yana bitta oʻyinchi uchun QR kod koʻrsatadi, soʻng unikini oʻqiydi. Aloqasi uzilgan oʻyinchini ham qaytaradi.",
+  hsNbBoard: "Kechaning hisob jadvali: oʻsha oʻyinchilar oʻynayotgan ekan, qoʻshilib boradi.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "**Server** roʻyxatidan serverni tanlang: yashil nuqta uning onlayn ekanini va hozir unda nechta oʻyinchi borligini bildiradi. Oʻz serveringiz u yerda yoʻqmi? Roʻyxat oxiridagi **Serverimni taklif qilish** uni shu sayt adminlariga yuboradi, tasdiqlangach esa u roʻyxatda paydo boʻladi.",
   hsLanDir: "Shu sayt adminlari tekshirgan LAN serverlar: oʻynash uchun birini tanlang. Yashil nuqta onlayn degani, yonida esa hozirgi oʻyinchilari.",

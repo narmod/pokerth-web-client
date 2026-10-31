@@ -1,6 +1,15 @@
 // Ace's Help — az texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "İnternet lazım deyil: bir telefon oyunu **qurur**, digərləri eyni Wi-Fi ilə **qoşulur**. Sonra ev sahibi hər oyunçunu QR kodu ilə əlavə edir.",
+  c1NearbyHost: "Ev sahibi sənsən. Hər dost üçün **Oyunçu əlavə et** (yuxarıda sağda) düyməsinə toxun: o sənin QR kodunu skan edir, sonra sən onunkunu. Tətbiqi açıq saxla — çıxsan, oyun bitir.",
+  c1NearbyGuest: "Ev sahibinin oyunundasan. Masa yaradılanda otur; **📊** axşamın xal cədvəlini göstərir.",
+  hsNbEntry: "Eyni otaqdakı insanlarla internetsiz oyna: bir telefon qurur, digərləri eyni Wi-Fi ilə qoşulur.",
+  hsNbHost: "Oyunu bu telefonda başladır. Digərləri qoşulur və bu telefon sona qədər açıq qalmalıdır.",
+  hsNbJoin: "Yaxındakı başqa telefonda qurulmuş oyuna qoşulur: onun kodunu skan et (və ya yapışdır), sonra özününkünü göstər.",
+  hsNbAdd: "Daha bir oyunçu üçün QR kodu göstərir, sonra onunkunu oxuyur. Əlaqəsi kəsilmiş oyunçunu da geri qaytarır.",
+  hsNbBoard: "Axşamın xal cədvəli: eyni oyunçular oynadıqca toplanır.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "**Server** siyahısında server seçin: yaşıl nöqtə onun onlayn olduğunu, yanında da hazırda orada olan oyunçuların sayını göstərir. Öz serveriniz orada yoxdur? Siyahının sonundakı **Serverimi təklif et** onu bu saytın adminlərinə göndərir və təsdiqləndikdən sonra o, siyahıda görünür.",
   hsLanDir: "Bu saytın adminlərinin yoxladığı LAN serverləri: birində oynamaq üçün onu seçin. Yaşıl nöqtə onlayn deməkdir, yanında da hazırkı oyunçuları.",

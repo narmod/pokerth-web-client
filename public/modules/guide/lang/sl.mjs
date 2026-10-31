@@ -1,6 +1,15 @@
 // Ace's Help — sl texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Internet ni potreben: en telefon igro **gosti**, drugi se **pridružijo** prek istega Wi-Fi. Gostitelj nato vsakega igralca doda s kodo QR.",
+  c1NearbyHost: "Ti si gostitelj. Za vsakega prijatelja tapni **Dodaj igralca** (zgoraj desno): skenira tvojo kodo QR, nato ti njegovo. Pusti aplikacijo odprto — če odideš, se igra konča.",
+  c1NearbyGuest: "Si v igri gostitelja. Sedi za mizo, ko bo ustvarjena; **📊** pokaže lestvico večera.",
+  hsNbEntry: "Igra z ljudmi v istem prostoru, brez interneta: en telefon gosti, drugi se pridružijo prek istega Wi-Fi.",
+  hsNbHost: "Zažene igro na tem telefonu. Drugi se pridružijo, ta telefon pa mora ostati prižgan do konca.",
+  hsNbJoin: "Pridruži se igri, ki jo gosti drug telefon v bližini: skeniraj njegovo kodo (ali jo prilepi), nato pokaži svojo.",
+  hsNbAdd: "Prikaže kodo QR za še enega igralca, nato prebere njegovo. Vrne tudi igralca, ki mu je povezava padla.",
+  hsNbBoard: "Lestvica večera: sešteva se, dokler igrajo isti igralci.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Na seznamu **Strežnik** izberi enega: zelena pika pomeni, da je dosegljiv, poleg pa je število igralcev, ki so trenutno na njem. Tvojega strežnika ni tam? **Predlagaj moj strežnik** na dnu seznama ga pošlje administratorjem tega spletnega mesta in po odobritvi se prikaže na seznamu.",
   hsLanDir: "Strežniki LAN, ki so jih preverili administratorji tega spletnega mesta: izberi enega in igraj na njem. Zelena pika pomeni dosegljiv, poleg so njegovi trenutni igralci.",

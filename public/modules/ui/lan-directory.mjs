@@ -456,7 +456,7 @@ export function sync() {
   const eff = _eff() || (nearby ? NO_DIR : null);
   const pl = plan({ cfg: eff, isLan, host: h ? h.value : '', port: p ? p.value : '', remembered, nearby, nearbySel: _nearbySel() });
   wrap.style.display = pl.show ? '' : 'none';
-  try { document.body.classList.toggle('lan-nearby', !!(pl.show && pl.select === NEARBY)); } catch (e) {}
+  _setNearby(!!(pl.show && pl.select === NEARBY));
   const lw = $('lan-dir-sel-wrap'), em = $('lan-dir-empty'), pr = $('lan-dir-propose');
   if (lw) lw.style.display = (pl.list && !pl.empty) ? '' : 'none';
   if (em) em.style.display = pl.empty ? '' : 'none';
@@ -492,13 +492,21 @@ export function refresh() {
     .then(() => { _fetching = false; });
 }
 
+// body.lan-nearby on / off; a change is announced (pth:lanmode) so that Ace's
+// Help swaps the LAN list tip for the « Play nearby » one (web.351).
+function _setNearby(on) {
+  let was = false;
+  try { was = document.body.classList.contains('lan-nearby'); document.body.classList.toggle('lan-nearby', on); } catch (e) { return; }
+  if (was !== on) { try { document.dispatchEvent(new Event('pth:lanmode')); } catch (e) {} }
+}
+
 function onSelect() {
   const sel = /** @type {HTMLSelectElement|null} */ ($('lan-dir-sel'));
   const eff = _eff() || (_nearbyOk() ? NO_DIR : null);
   if (!sel || !eff) return;
   const nb = sel.value === NEARBY;
   try { if (window.NearbyUI && sel.value !== PROPOSE) window.NearbyUI.remember(nb); } catch (e) {}
-  try { document.body.classList.toggle('lan-nearby', nb); } catch (e) {}
+  _setNearby(nb);
   if (nb) {
     _lastSel = sel.value;
     _renderCombo(eff);

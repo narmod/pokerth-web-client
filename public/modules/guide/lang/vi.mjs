@@ -1,6 +1,15 @@
 // Ace's Help — vi texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Không cần Internet: một điện thoại **làm chủ phòng**, các máy khác **tham gia** qua cùng Wi-Fi. Sau đó chủ phòng thêm từng người chơi bằng mã QR.",
+  c1NearbyHost: "Bạn là chủ phòng. Chạm **Thêm người chơi** (góc trên bên phải) cho từng người bạn: họ quét mã QR của bạn, rồi bạn quét mã của họ. Để ứng dụng luôn mở — nếu bạn rời đi, ván chơi kết thúc.",
+  c1NearbyGuest: "Bạn đang ở trong ván của chủ phòng. Ngồi vào bàn khi bàn được tạo; **📊** hiển thị bảng điểm buổi tối.",
+  hsNbEntry: "Chơi với người trong cùng phòng, không cần Internet: một máy làm chủ phòng, các máy khác tham gia qua cùng Wi-Fi.",
+  hsNbHost: "Bắt đầu ván chơi trên điện thoại này. Người khác tham gia, và điện thoại này phải bật đến cuối.",
+  hsNbJoin: "Tham gia ván do một điện thoại khác gần đây tổ chức: quét mã của máy đó (hoặc dán), rồi cho xem mã của bạn.",
+  hsNbAdd: "Hiển thị mã QR cho thêm một người chơi, rồi đọc mã của họ. Cũng dùng để đưa người chơi bị rớt kết nối quay lại.",
+  hsNbBoard: "Bảng điểm buổi tối: cộng dồn chừng nào vẫn là những người chơi đó.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Chọn một máy chủ trong danh sách **Máy chủ**: chấm xanh lá nghĩa là máy chủ đang trực tuyến, kèm số người chơi trên đó lúc này. Máy chủ của bạn không có ở đó? **Đề xuất máy chủ của tôi** ở cuối danh sách sẽ gửi nó tới quản trị viên của trang này, và nó sẽ xuất hiện trong danh sách sau khi được phê duyệt.",
   hsLanDir: "Các máy chủ LAN đã được quản trị viên của trang này kiểm tra: chọn một máy chủ để chơi trên đó. Chấm xanh lá nghĩa là trực tuyến, kèm số người chơi hiện tại.",

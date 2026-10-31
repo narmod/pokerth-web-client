@@ -1,6 +1,15 @@
 // Ace's Help — lt texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Interneto nereikia: vienas telefonas **surengia** žaidimą, kiti **prisijungia** per tą patį Wi-Fi. Tada šeimininkas prideda kiekvieną žaidėją QR kodu.",
+  c1NearbyHost: "Tu – šeimininkas. Kiekvienam draugui bakstelėk **Pridėti žaidėją** (viršuje dešinėje): jis nuskaito tavo QR kodą, tada tu – jo. Laikyk programėlę atidarytą – jei išeisi, žaidimas baigsis.",
+  c1NearbyGuest: "Esi šeimininko žaidime. Sėskis prie stalo, kai jis bus sukurtas; **📊** rodo vakaro rezultatų lentelę.",
+  hsNbEntry: "Žaisk su žmonėmis tame pačiame kambaryje be interneto: vienas telefonas surengia, kiti prisijungia per tą patį Wi-Fi.",
+  hsNbHost: "Pradeda žaidimą šiame telefone. Kiti prisijungia, o šis telefonas turi likti įjungtas iki pabaigos.",
+  hsNbJoin: "Prisijungia prie žaidimo, kurį surengė kitas netoliese esantis telefonas: nuskaityk jo kodą (arba įklijuok), tada parodyk savo.",
+  hsNbAdd: "Parodo QR kodą dar vienam žaidėjui, tada nuskaito jo kodą. Taip pat grąžina žaidėją, kuriam nutrūko ryšys.",
+  hsNbBoard: "Vakaro rezultatų lentelė: ji sumuojasi, kol žaidžia tie patys žaidėjai.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Sąraše **Serveris** išsirink serverį: žalias taškas reiškia, kad jis prisijungęs, o šalia matyti, kiek žaidėjų jame yra dabar. Tavo serverio ten nėra? **Pasiūlyti savo serverį**, sąrašo apačioje, nusiunčia jį šios svetainės administratoriams, o patvirtintas jis atsiranda sąraše.",
   hsLanDir: "Šios svetainės administratorių patikrinti LAN serveriai: pasirink vieną ir žaisk jame. Žalias taškas reiškia, kad serveris prisijungęs, šalia — jo žaidėjai dabar.",

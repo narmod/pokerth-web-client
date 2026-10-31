@@ -1,6 +1,15 @@
 // Ace's Help — es texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "No hace falta Internet: un móvil **organiza** la partida y los demás **se unen** por la misma Wi-Fi. Luego el anfitrión añade a cada jugador con un código QR.",
+  c1NearbyHost: "Eres el anfitrión. Toca **Añadir un jugador** (arriba a la derecha) por cada amigo: escanea tu código QR y luego tú escaneas el suyo. Deja la app abierta: si te vas, la partida termina.",
+  c1NearbyGuest: "Estás en la partida del anfitrión. Únete a la mesa cuando se cree; **📊** muestra el marcador de la noche.",
+  hsNbEntry: "Jugar con personas en la misma sala, sin Internet: un móvil organiza y los demás se unen por la misma Wi-Fi.",
+  hsNbHost: "Inicia la partida en este móvil. Los demás se unen y este móvil debe seguir encendido hasta el final.",
+  hsNbJoin: "Se une a una partida organizada en otro móvil cercano: escanea su código (o pégalo) y luego muestra el tuyo.",
+  hsNbAdd: "Muestra un código QR para un jugador más y luego lee el suyo. También sirve para recuperar a un jugador cuya conexión se cortó.",
+  hsNbBoard: "El marcador de la noche: se acumula mientras sigan jugando los mismos jugadores.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Elige un servidor en la lista **Servidor**: un punto verde indica que está en línea, con el número de jugadores que hay en él ahora mismo. ¿Tu propio servidor no aparece? **Proponer mi servidor**, al final de la lista, lo envía a los administradores de este sitio, y aparece en la lista una vez aprobado.",
   hsLanDir: "Los servidores LAN revisados por los administradores de este sitio: elige uno para jugar en él. Un punto verde significa en línea, con sus jugadores de ahora mismo.",

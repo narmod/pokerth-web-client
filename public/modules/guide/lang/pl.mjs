@@ -1,6 +1,15 @@
 // Ace's Help — pl texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Internet niepotrzebny: jeden telefon **hostuje** grę, pozostałe **dołączają** przez tę samą sieć Wi-Fi. Host dodaje potem każdego gracza kodem QR.",
+  c1NearbyHost: "Jesteś hostem. Dotknij **Dodaj gracza** (prawy górny róg) dla każdego znajomego: on skanuje twój kod QR, potem ty skanujesz jego. Nie zamykaj aplikacji — jeśli wyjdziesz, gra się skończy.",
+  c1NearbyGuest: "Jesteś w grze hosta. Usiądź przy stole, gdy zostanie utworzony; **📊** pokazuje tabelę wyników wieczoru.",
+  hsNbEntry: "Granie z osobami w tym samym pokoju, bez internetu: jeden telefon hostuje, pozostałe dołączają przez tę samą sieć Wi-Fi.",
+  hsNbHost: "Uruchamia grę na tym telefonie. Inni dołączają, a ten telefon musi być włączony do końca.",
+  hsNbJoin: "Dołącza do gry hostowanej na innym telefonie w pobliżu: zeskanuj jego kod (lub wklej), potem pokaż swój.",
+  hsNbAdd: "Pokazuje kod QR dla kolejnego gracza, a potem odczytuje jego kod. Przywraca też gracza, któremu zerwało się połączenie.",
+  hsNbBoard: "Tabela wyników wieczoru: sumuje się, dopóki grają ci sami gracze.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Wskaż serwer na liście **Serwer**: zielona kropka oznacza, że jest online, a obok widać, ilu graczy jest na nim w tej chwili. Nie ma tam twojego serwera? **Zaproponuj mój serwer**, na dole listy, wysyła go do administratorów tej strony, a po zatwierdzeniu pojawia się on na liście.",
   hsLanDir: "Serwery LAN sprawdzone przez administratorów tej strony: wybierz jeden, aby na nim grać. Zielona kropka oznacza online, a obok jego gracze w tej chwili.",

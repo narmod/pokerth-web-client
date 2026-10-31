@@ -1,6 +1,15 @@
 // Ace's Help — lv texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Internets nav vajadzīgs: viens tālrunis **rīko** spēli, pārējie **pievienojas** caur to pašu Wi-Fi. Pēc tam saimnieks pievieno katru spēlētāju ar QR kodu.",
+  c1NearbyHost: "Tu esi saimnieks. Katram draugam pieskaries **Pievienot spēlētāju** (augšā pa labi): viņš noskenē tavu QR kodu, pēc tam tu — viņa. Turi lietotni atvērtu — ja aiziesi, spēle beigsies.",
+  c1NearbyGuest: "Tu esi saimnieka spēlē. Sēdies pie galda, kad tas būs izveidots; **📊** rāda vakara rezultātu tabulu.",
+  hsNbEntry: "Spēlē ar cilvēkiem tajā pašā telpā bez interneta: viens tālrunis rīko, pārējie pievienojas caur to pašu Wi-Fi.",
+  hsNbHost: "Sāk spēli šajā tālrunī. Pārējie pievienojas, un šim tālrunim jāpaliek ieslēgtam līdz beigām.",
+  hsNbJoin: "Pievienojas spēlei, ko rīko cits tuvumā esošs tālrunis: noskenē tā kodu (vai ielīmē) un pēc tam parādi savu.",
+  hsNbAdd: "Parāda QR kodu vēl vienam spēlētājam un pēc tam nolasa viņa kodu. Atgriež arī spēlētāju, kuram pārtrūka savienojums.",
+  hsNbBoard: "Vakara rezultātu tabula: tā summējas, kamēr spēlē tie paši spēlētāji.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Sarakstā **Serveris** atlasi serveri: zaļš punkts nozīmē, ka tas ir tiešsaistē, un blakus redzams, cik spēlētāju tajā ir pašlaik. Tava servera tur nav? **Piedāvāt savu serveri**, saraksta apakšā, nosūta to šīs vietnes administratoriem, un pēc apstiprināšanas tas parādās sarakstā.",
   hsLanDir: "Šīs vietnes administratoru pārbaudītie LAN serveri: izvēlies vienu, lai tajā spēlētu. Zaļš punkts nozīmē tiešsaistē, blakus — tā spēlētāji pašlaik.",

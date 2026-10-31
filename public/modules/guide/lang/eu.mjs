@@ -1,6 +1,15 @@
 // Ace's Help — eu texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Ez da Internetik behar: telefono batek partida **antolatzen** du, besteak Wi-Fi beretik **sartzen** dira. Gero ostalariak jokalari bakoitza QR kode batekin gehitzen du.",
+  c1NearbyHost: "Zu zara ostalaria. Sakatu **Jokalari bat gehitu** (goian eskuinean) lagun bakoitzeko: zure QR kodea eskaneatzen du, eta gero zuk harena. Utzi aplikazioa irekita — joaten bazara, partida amaitzen da.",
+  c1NearbyGuest: "Ostalariaren partidan zaude. Eseri mahaian sortzen denean; **📊**-k gaueko markagailua erakusten du.",
+  hsNbEntry: "Gela berean daudenekin jokatu, Internetik gabe: telefono batek antolatzen du, besteak Wi-Fi beretik sartzen dira.",
+  hsNbHost: "Partida telefono honetan abiarazten du. Besteak sartzen dira, eta telefono honek piztuta egon behar du amaiera arte.",
+  hsNbJoin: "Inguruko beste telefono batek antolatutako partidan sartzen da: eskaneatu haren kodea (edo itsatsi), gero erakutsi zurea.",
+  hsNbAdd: "Jokalari gehiago baterako QR kodea erakusten du, eta gero harena irakurtzen du. Konexioa galdu duen jokalari bat itzultzeko ere balio du.",
+  hsNbBoard: "Gaueko markagailua: jokalari berek jarraitzen duten bitartean batzen da.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Aukeratu zerbitzari bat **Zerbitzaria** zerrendan: puntu berde batek linean dagoela esan nahi du, une honetan bertan dauden jokalarien kopuruarekin. Zure zerbitzaria ez dago han? Zerrendaren amaieran dagoen **Proposatu nire zerbitzaria** aukerak gune honetako administratzaileei bidaltzen die, eta onartu ondoren zerrendan agertzen da.",
   hsLanDir: "Gune honetako administratzaileek egiaztatutako LAN zerbitzariak: aukeratu bat bertan jokatzeko. Puntu berdeak linean esan nahi du, une honetako jokalariekin.",

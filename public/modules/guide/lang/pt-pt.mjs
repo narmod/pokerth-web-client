@@ -1,6 +1,15 @@
 // Ace's Help — pt-pt texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Não é preciso Internet: um telemóvel **aloja** o jogo e os outros **juntam-se** pela mesma Wi-Fi. Depois o anfitrião adiciona cada jogador com um código QR.",
+  c1NearbyHost: "És o anfitrião. Toca em **Adicionar um jogador** (canto superior direito) para cada amigo: ele lê o teu código QR e depois tu lês o dele. Mantém a app aberta — se saíres, o jogo acaba.",
+  c1NearbyGuest: "Estás no jogo do anfitrião. Senta-te à mesa quando for criada; **📊** mostra a classificação da noite.",
+  hsNbEntry: "Jogar com pessoas na mesma sala, sem Internet: um telemóvel aloja e os outros juntam-se pela mesma Wi-Fi.",
+  hsNbHost: "Inicia o jogo neste telemóvel. Os outros juntam-se, e este telemóvel tem de ficar ligado até ao fim.",
+  hsNbJoin: "Entra num jogo alojado noutro telemóvel por perto: lê o código dele (ou cola-o) e depois mostra o teu.",
+  hsNbAdd: "Mostra um código QR para mais um jogador e depois lê o dele. Também traz de volta um jogador cuja ligação caiu.",
+  hsNbBoard: "A classificação da noite: vai somando enquanto os mesmos jogadores continuam.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Seleciona um servidor na lista **Servidor**: um ponto verde indica que está online, com o número de jogadores que lá estão neste momento. O teu servidor não está lá? **Propor o meu servidor**, no fim da lista, envia-o aos administradores deste site, e ele aparece na lista depois de aprovado.",
   hsLanDir: "Os servidores LAN verificados pelos administradores deste site: escolhe um para jogar nele. Um ponto verde significa online, com os jogadores que tem neste momento.",

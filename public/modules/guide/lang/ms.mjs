@@ -1,6 +1,15 @@
 // Ace's Help — ms texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Tiada Internet diperlukan: satu telefon **menjadi hos** permainan, yang lain **menyertai** melalui Wi-Fi yang sama. Kemudian hos menambah setiap pemain dengan kod QR.",
+  c1NearbyHost: "Anda hosnya. Ketik **Tambah pemain** (kanan atas) untuk setiap kawan: dia mengimbas kod QR anda, kemudian anda mengimbas kodnya. Biarkan aplikasi terbuka — jika anda pergi, permainan tamat.",
+  c1NearbyGuest: "Anda berada dalam permainan hos. Duduk di meja apabila ia dicipta; **📊** menunjukkan papan skor malam ini.",
+  hsNbEntry: "Bermain dengan orang di bilik yang sama, tanpa Internet: satu telefon menjadi hos, yang lain menyertai melalui Wi-Fi yang sama.",
+  hsNbHost: "Memulakan permainan pada telefon ini. Yang lain menyertai, dan telefon ini mesti kekal hidup hingga akhir.",
+  hsNbJoin: "Menyertai permainan yang dihoskan pada telefon lain berdekatan: imbas kodnya (atau tampal), kemudian tunjukkan kod anda.",
+  hsNbAdd: "Menunjukkan kod QR untuk seorang lagi pemain, kemudian membaca kodnya. Juga membawa kembali pemain yang sambungannya terputus.",
+  hsNbBoard: "Papan skor malam ini: terus bertambah selagi pemain yang sama bermain.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Pilih satu pelayan dalam senarai **Pelayan**: titik hijau bermaksud ia dalam talian, bersama bilangan pemain di dalamnya sekarang. Pelayan anda sendiri tiada di situ? **Cadangkan pelayan saya**, di bahagian bawah senarai, menghantarnya kepada admin laman ini, dan ia muncul dalam senarai sebaik sahaja diluluskan.",
   hsLanDir: "Pelayan LAN yang disemak oleh admin laman ini: pilih satu untuk bermain di dalamnya. Titik hijau bermaksud dalam talian, bersama pemainnya sekarang.",

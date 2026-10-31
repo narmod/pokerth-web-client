@@ -49,6 +49,12 @@ export const HOTSPOTS = [
   ['#nick, #nick-label', 'hsNick', false, 'start:avatar'],
   ['#pass', 'hsPass', false, 'pthnet:account'],
   ['#forgot-pw-link', 'hsForgotPw', false, 'pthnet:account'],
+  // « Play nearby » (web.351) — before the LAN list entry, whose selector also matches its item
+  ['.lan-dd-item.nearby', 'hsNbEntry', true, 'start:nearby'],
+  ['#nb-host-btn', 'hsNbHost', false, 'start:nearby'],
+  ['#nb-join-btn', 'hsNbJoin', false, 'start:nearby'],
+  ['#nb-add-btn, #nb-add-mob', 'hsNbAdd', false, 'start:nearby'],
+  ['#nb-board-btn, #nb-board-mob', 'hsNbBoard', false, 'start:nearby'],
   ['#conn-adv-btn', 'hsConnAdv', false, 'start:lan'],
   ['#lan-dir-btn, #lan-dir-sel-wrap label, .lan-dd-item:not(.propose)', 'hsLanDir', false, 'start:lan'],
   ['#lan-dir-propose, .lan-dd-item.propose', 'hsLanPropose', false, 'start:lan'],

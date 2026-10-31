@@ -1,6 +1,15 @@
 // Ace's Help — sk texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Internet netreba: jeden telefón hru **hostí**, ostatní sa **pripoja** cez rovnakú Wi-Fi. Hostiteľ potom pridá každého hráča QR kódom.",
+  c1NearbyHost: "Si hostiteľ. Pre každého kamaráta ťukni na **Pridať hráča** (vpravo hore): naskenuje tvoj QR kód, potom ty jeho. Nechaj aplikáciu otvorenú — ak odídeš, hra skončí.",
+  c1NearbyGuest: "Si v hre hostiteľa. Prisadni si k stolu, keď bude vytvorený; **📊** ukazuje výsledky večera.",
+  hsNbEntry: "Hranie s ľuďmi v tej istej miestnosti, bez internetu: jeden telefón hostí, ostatní sa pripoja cez rovnakú Wi-Fi.",
+  hsNbHost: "Spustí hru na tomto telefóne. Ostatní sa pripoja a tento telefón musí zostať zapnutý až do konca.",
+  hsNbJoin: "Pripojí sa k hre hostenej na inom telefóne nablízku: naskenuj jeho kód (alebo ho vlož) a potom ukáž svoj.",
+  hsNbAdd: "Zobrazí QR kód pre ďalšieho hráča a potom načíta jeho. Vráti aj hráča, ktorému vypadlo spojenie.",
+  hsNbBoard: "Výsledky večera: sčítavajú sa, kým hrajú tí istí hráči.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Zvoľ server v zozname **Server**: zelená bodka znamená, že je online, spolu s počtom hráčov, ktorí sú na ňom práve teraz. Tvoj vlastný server tam nie je? **Navrhnúť môj server** na konci zoznamu ho pošle správcom tejto stránky a po schválení sa objaví v zozname.",
   hsLanDir: "LAN servery overené správcami tejto stránky: vyber si jeden a hraj na ňom. Zelená bodka znamená online, spolu s jeho aktuálnymi hráčmi.",

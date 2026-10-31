@@ -1,6 +1,15 @@
 // Ace's Help — de texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Kein Internet nötig: Ein Handy **hostet** das Spiel, die anderen **treten** über dasselbe WLAN **bei**. Der Host fügt dann jeden Spieler per QR-Code hinzu.",
+  c1NearbyHost: "Du bist der Host. Tippe für jeden Freund auf **Spieler hinzufügen** (oben rechts): Er scannt deinen QR-Code, dann scannst du seinen. Lass die App offen — wenn du gehst, endet das Spiel.",
+  c1NearbyGuest: "Du bist im Spiel des Hosts. Setz dich an den Tisch, sobald er erstellt ist; **📊** zeigt die Punktetabelle des Abends.",
+  hsNbEntry: "Mit Leuten im selben Raum spielen, ohne Internet: Ein Handy hostet, die anderen treten über dasselbe WLAN bei.",
+  hsNbHost: "Startet das Spiel auf diesem Handy. Die anderen treten bei, und dieses Handy muss bis zum Ende an bleiben.",
+  hsNbJoin: "Tritt einem Spiel bei, das ein anderes Handy in der Nähe hostet: Scanne seinen Code (oder füge ihn ein) und zeig dann deinen.",
+  hsNbAdd: "Zeigt einen QR-Code für einen weiteren Spieler und liest dann seinen. Holt auch einen Spieler zurück, dessen Verbindung abgebrochen ist.",
+  hsNbBoard: "Die Punktetabelle des Abends: Sie zählt weiter, solange dieselben Spieler spielen.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Wähle einen Server in der Liste **Server**: Ein grüner Punkt bedeutet, dass er online ist, dazu die Zahl der Spieler, die gerade darauf sind. Dein eigener Server ist nicht dabei? **Meinen Server vorschlagen** ganz unten in der Liste schickt ihn an die Admins dieser Website, und nach der Freigabe erscheint er in der Liste.",
   hsLanDir: "Die von den Admins dieser Website geprüften LAN-Server: Wähle einen, um darauf zu spielen. Ein grüner Punkt bedeutet online, dazu seine aktuellen Spieler.",

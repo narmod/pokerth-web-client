@@ -1,6 +1,15 @@
 // Ace's Help — gd texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Chan fheum thu eadar-lìon: **cumaidh** aon fhòn an geama, is **thig** càch **a-steach** air an aon Wi-Fi. An uairsin cuiridh an t-òstair gach cluicheadair ris le còd QR.",
+  c1NearbyHost: "’S tusa an t-òstair. Thoir gnogag air **Cuir cluicheadair ris** (gu h-àrd air an taobh deas) airson gach caraid: sganaidh e do chòd QR, an uairsin sganaidh tusa a chòd-san. Cùm an aplacaid fosgailte — ma dh’fhalbhas tu, thig an geama gu crìoch.",
+  c1NearbyGuest: "Tha thu ann an geama an òstair. Suidh aig a’ bhòrd nuair a thèid a chruthachadh; seallaidh **📊** clàr-sgòraidh na h-oidhche.",
+  hsNbEntry: "Cluich le daoine san aon rùm, gun eadar-lìon: cumaidh aon fhòn an geama, thig càch a-steach air an aon Wi-Fi.",
+  hsNbHost: "Tòisichidh e an geama air an fhòn seo. Thig càch a-steach, is feumaidh am fòn seo fuireach air gus an deireadh.",
+  hsNbJoin: "Thèid e a-steach do gheama air fòn eile faisg air làimh: sganaich a chòd (no cuir a-steach e), an uairsin seall do chòd fhèin.",
+  hsNbAdd: "Seallaidh e còd QR airson aon chluicheadair eile, an uairsin leughaidh e a chòd-san. Bheir e air ais cluicheadair a chaill a cheangal cuideachd.",
+  hsNbBoard: "Clàr-sgòraidh na h-oidhche: cuiridh e ris fhad ’s a chumas na h-aon chluicheadairean a’ dol.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Tagh frithealaiche air an liosta **Frithealaiche**: tha dotag uaine a’ ciallachadh gu bheil e air loidhne, le àireamh nan cluicheadairean a th’ air an-dràsta fhèin. Nach eil am frithealaiche agad fhèin ann? Cuiridh **Mol am frithealaiche agam**, aig bonn na liosta, e gu rianairean na làraich seo, agus nochdaidh e air an liosta nuair a thèid aontachadh ris.",
   hsLanDir: "Na frithealaichean LAN a chaidh na rianairean aig an làrach seo thairis orra: tagh fear airson cluich air. Tha dotag uaine a’ ciallachadh air loidhne, leis na cluicheadairean a th’ air an-dràsta.",

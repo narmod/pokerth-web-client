@@ -5,6 +5,6 @@ export default {
   id: 'login-lan',
   priority: 19,
   screens: ['connect'],
-  when: (w) => w.loginStep === 2 && !!w.lanDir,
+  when: (w) => w.loginStep === 2 && !!w.lanDir && !w.nearbySel,     // « Play nearby » picked: its own tip (login-nearby.mjs)
   steps: [{ text: 'c3LanDir', target: ['#lan-dir-sel', '#lan-dir-propose'] }],
 };

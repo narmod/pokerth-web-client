@@ -7,7 +7,7 @@ export default {
   id: 'lobby-lan',
   priority: 30,
   screens: ['lobby'],
-  needs: { lan: true, gamesLoaded: true },
+  needs: { lan: true, nearby: false, gamesLoaded: true },     // « Play nearby »: lobby-nearby.mjs
   fold: 25000,
   steps: [{ text: 'c1Lan', buttons: ['later', 'gotIt'] }],
 };

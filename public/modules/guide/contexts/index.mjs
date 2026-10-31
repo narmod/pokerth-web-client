@@ -9,13 +9,15 @@ import lobbyCup from './lobby-cup.mjs';
 import lobbyFlag from './lobby-flag.mjs';
 import lobbyOpen from './lobby-open.mjs';
 import lobbyLan from './lobby-lan.mjs';
+import { lobbyNearbyHost, lobbyNearbyGuest } from './lobby-nearby.mjs';
 import waitRanking from './wait-ranking.mjs';
 import rankedResult from './ranked-result.mjs';
 import login from './login.mjs';
 import loginProfile from './login-profile.mjs';
 import loginLan from './login-lan.mjs';
+import loginNearby from './login-nearby.mjs';
 import waitNormal from './wait-normal.mjs';
 import createGame, { createGameFull } from './create.mjs';
 import windows from './windows.mjs';
 
-export const CONTEXTS = [...windows, rankedResult, createGame, createGameFull, lobbyRanking, lobbyRankingCreate, lobbyGuest, lobbyWatch, lobbyCup, lobbyOpen, lobbyFlag, lobbyLan, waitRanking, waitNormal, login, loginProfile, loginLan, welcome];
+export const CONTEXTS = [...windows, rankedResult, createGame, createGameFull, lobbyRanking, lobbyRankingCreate, lobbyGuest, lobbyWatch, lobbyCup, lobbyOpen, lobbyFlag, lobbyNearbyHost, lobbyNearbyGuest, lobbyLan, waitRanking, waitNormal, login, loginProfile, loginNearby, loginLan, welcome];

@@ -1,6 +1,15 @@
 // Ace's Help — fil texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Hindi kailangan ng Internet: isang phone ang **nagho-host** ng laro, ang iba ay **sumasali** sa parehong Wi-Fi. Pagkatapos ay idinadagdag ng host ang bawat manlalaro gamit ang QR code.",
+  c1NearbyHost: "Ikaw ang host. I-tap ang **Magdagdag ng manlalaro** (kanang itaas) para sa bawat kaibigan: ini-scan niya ang iyong QR code, pagkatapos ikaw ang sa kanya. Panatilihing bukas ang app — kapag umalis ka, tapos na ang laro.",
+  c1NearbyGuest: "Nasa laro ka ng host. Umupo sa mesa kapag nagawa na ito; ipinapakita ng **📊** ang scoreboard ngayong gabi.",
+  hsNbEntry: "Maglaro kasama ang mga tao sa iisang kuwarto, walang Internet: isang phone ang nagho-host, ang iba ay sumasali sa parehong Wi-Fi.",
+  hsNbHost: "Sinisimulan ang laro sa phone na ito. Sasali ang iba, at dapat manatiling bukas ang phone na ito hanggang dulo.",
+  hsNbJoin: "Sumasali sa larong naka-host sa ibang phone sa malapit: i-scan ang code nito (o i-paste), pagkatapos ay ipakita ang iyo.",
+  hsNbAdd: "Nagpapakita ng QR code para sa isa pang manlalaro, pagkatapos ay binabasa ang sa kanya. Ibinabalik din ang manlalarong naputol ang koneksyon.",
+  hsNbBoard: "Ang scoreboard ngayong gabi: nadaragdagan habang parehong mga manlalaro ang naglalaro.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Pumili ng server sa listahang **Server**: ang berdeng tuldok ay nangangahulugang online ito, kasama ang bilang ng mga manlalarong naroon ngayon. Wala roon ang sarili mong server? Ipinapadala ito ng **Imungkahi ang server ko**, na nasa dulo ng listahan, sa mga admin ng site na ito, at lalabas ito sa listahan kapag naaprubahan.",
   hsLanDir: "Ang mga LAN server na sinuri ng mga admin ng site na ito: pumili ng isa para maglaro roon. Ang berdeng tuldok ay nangangahulugang online, kasama ang mga manlalaro nito ngayon.",

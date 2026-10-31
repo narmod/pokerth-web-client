@@ -1,6 +1,15 @@
 // Ace's Help — af texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Geen internet nodig nie: een foon **bied** die spel **aan**, die ander **sluit aan** oor dieselfde Wi-Fi. Daarna voeg die gasheer elke speler met 'n QR-kode by.",
+  c1NearbyHost: "Jy is die gasheer. Tik **Voeg 'n speler by** (regs bo) vir elke vriend: hy skandeer jou QR-kode, dan jy syne. Hou die toep oop — as jy weggaan, eindig die spel.",
+  c1NearbyGuest: "Jy is in die gasheer se spel. Gaan sit by die tafel sodra dit geskep is; **📊** wys die aand se telbord.",
+  hsNbEntry: "Speel saam met mense in dieselfde vertrek, sonder internet: een foon bied aan, die ander sluit aan oor dieselfde Wi-Fi.",
+  hsNbHost: "Begin die spel op hierdie foon. Die ander sluit aan, en hierdie foon moet tot die einde aan bly.",
+  hsNbJoin: "Sluit aan by 'n spel wat 'n ander foon naby aanbied: skandeer sy kode (of plak dit), en wys dan joune.",
+  hsNbAdd: "Wys 'n QR-kode vir nog een speler en lees dan syne. Bring ook 'n speler terug wie se verbinding weggeval het.",
+  hsNbBoard: "Die aand se telbord: dit tel op solank dieselfde spelers aanhou.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Kies ’n bediener in die **Bediener**-lys: ’n groen kolletjie beteken dit is aanlyn, met die aantal spelers wat nou daarop is. Is jou eie bediener nie daar nie? **Stel my bediener voor**, onderaan die lys, stuur dit na die admins van hierdie werf, en dit verskyn in die lys sodra dit goedgekeur is.",
   hsLanDir: "Die LAN-bedieners wat deur die admins van hierdie werf nagegaan is: kies een om daarop te speel. ’n Groen kolletjie beteken aanlyn, met sy spelers op die oomblik.",

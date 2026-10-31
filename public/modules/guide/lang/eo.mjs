@@ -1,6 +1,15 @@
 // Ace's Help — eo texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Ne necesas interreto: unu telefono **gastigas** la ludon, la aliaj **aliĝas** per la sama Wi-Fi. Poste la gastiganto aldonas ĉiun ludanton per QR-kodo.",
+  c1NearbyHost: "Vi estas la gastiganto. Tuŝu **Aldoni ludanton** (supre dekstre) por ĉiu amiko: li skanas vian QR-kodon, poste vi la lian. Tenu la aplikaĵon malfermita — se vi foriras, la ludo finiĝas.",
+  c1NearbyGuest: "Vi estas en la ludo de la gastiganto. Sidiĝu ĉe la tablo kiam ĝi estos kreita; **📊** montras la poentotabulon de la vespero.",
+  hsNbEntry: "Ludi kun homoj en la sama ĉambro, sen interreto: unu telefono gastigas, la aliaj aliĝas per la sama Wi-Fi.",
+  hsNbHost: "Komencas la ludon en ĉi tiu telefono. La aliaj aliĝas, kaj ĉi tiu telefono devas resti ŝaltita ĝis la fino.",
+  hsNbJoin: "Aliĝas al ludo gastigata de alia proksima telefono: skanu ĝian kodon (aŭ algluu ĝin), poste montru la vian.",
+  hsNbAdd: "Montras QR-kodon por unu plia ludanto, poste legas la lian. Ankaŭ revenigas ludanton, kies konekto rompiĝis.",
+  hsNbBoard: "La poentotabulo de la vespero: ĝi sumiĝas dum la samaj ludantoj daŭrigas.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Elektu servilon en la listo **Servilo**: verda punkto signifas, ke ĝi estas enreta, kun la nombro de ludantoj nun sur ĝi. Via propra servilo ne estas tie? **Proponi mian servilon**, ĉe la fino de la listo, sendas ĝin al la administrantoj de ĉi tiu retejo, kaj ĝi aperas en la listo post aprobo.",
   hsLanDir: "La LAN-serviloj kontrolitaj de la administrantoj de ĉi tiu retejo: elektu unu por ludi sur ĝi. Verda punkto signifas enreta, kun ĝiaj nunaj ludantoj.",

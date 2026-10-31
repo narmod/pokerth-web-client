@@ -1,6 +1,15 @@
 // Ace's Help — nb texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Ikke behov for internett: én telefon er **vert** for spillet, de andre **blir med** via samme Wi-Fi. Deretter legger verten til hver spiller med en QR-kode.",
+  c1NearbyHost: "Du er verten. Trykk på **Legg til en spiller** (øverst til høyre) for hver venn: han skanner QR-koden din, deretter du hans. Hold appen åpen — hvis du går, slutter spillet.",
+  c1NearbyGuest: "Du er i vertens spill. Sett deg ved bordet når det er opprettet; **📊** viser kveldens resultattavle.",
+  hsNbEntry: "Spill med folk i samme rom, uten internett: én telefon er vert, de andre blir med via samme Wi-Fi.",
+  hsNbHost: "Starter spillet på denne telefonen. De andre blir med, og denne telefonen må være på til slutten.",
+  hsNbJoin: "Blir med i et spill som en annen telefon i nærheten er vert for: skann koden (eller lim den inn), og vis så din.",
+  hsNbAdd: "Viser en QR-kode for én spiller til og leser deretter hans. Henter også tilbake en spiller som mistet forbindelsen.",
+  hsNbBoard: "Kveldens resultattavle: den legges sammen så lenge de samme spillerne fortsetter.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "I **Server**-listen velger du en server: en grønn prikk betyr at den er online, med antall spillere på den akkurat nå. Er ikke din egen server der? **Foreslå serveren min**, nederst i listen, sender den til administratorene av dette nettstedet, og den vises i listen når den er godkjent.",
   hsLanDir: "LAN-serverne som administratorene av dette nettstedet har sjekket: velg én for å spille på den. En grønn prikk betyr online, med spillerne der akkurat nå.",

@@ -52,6 +52,11 @@ ok(pick({ screen: 'create' }) === 'create-game', 'game creation page → the typ
 ok(pick({ net: false, lan: true, rankPick: null }) === 'lobby-lan', 'LAN lobby → this server\'s tables, no ranking');
 ok(pick({ net: false, lan: true, rankPick: null }, ['lobby-lan']) === null, 'LAN lobby: said once');
 ok(pick({ net: true, lan: false }) !== 'lobby-lan', 'pokerth.net lobby: not the LAN tip');
+// web.351: « Play nearby »
+ok(pick({ net: false, lan: true, nearby: true, nearbyHost: true, rankPick: null }) === 'lobby-nearby-host', 'Play nearby, host → add each player with a QR code, keep the app open');
+ok(pick({ net: false, lan: true, nearby: true, nearbyHost: false, rankPick: null }) === 'lobby-nearby-guest', 'Play nearby, guest → the evening scoreboard');
+ok(pick({ net: false, lan: true, nearby: true, nearbyHost: true, rankPick: null }, ['lobby-nearby-host']) === null, 'Play nearby: said once, and never the LAN server tip');
+ok(pick({ net: false, lan: true, nearby: true, nearbyHost: false, rankPick: null }, ['lobby-nearby-guest']) === null, 'Play nearby guest: said once, no LAN server tip');
 {
   const CO = CONTEXTS.find((c) => c.id === 'lobby-open'), CC = CONTEXTS.find((c) => c.id === 'lobby-cup'), CT = CONTEXTS.find((c) => c.id === 'create-game');
   ok(CO.steps[0].text(W({ lan: true, net: false, openRanked: true })) === 'c1OpenLan' && CO.steps[0].text(W({ openRanked: true })) === 'c1OpenRanked', 'tap on a free table in LAN: no word about the ranking');
@@ -113,6 +118,7 @@ ok(pick({ screen: 'connect', net: false, online: false, loginStep: 1 }) === 'log
 ok(pick({ screen: 'connect', net: false, online: false, loginStep: 2 }) === 'login-profile', 'login form → C3 nickname + avatar');
 ok(pick({ screen: 'connect', net: false, online: false, loginStep: 2, lanDir: true }) === 'login-profile', 'LAN list shown: the nickname tip still comes first');
 ok(pick({ screen: 'connect', net: false, online: false, loginStep: 2, lanDir: true }, ['login-profile']) === 'login-lan', 'then the LAN directory tip');
+ok(pick({ screen: 'connect', net: false, online: false, loginStep: 2, lanDir: true, nearbySel: true }, ['login-profile']) === 'login-nearby', '« Play nearby » picked → host or join, not the server list tip');
 ok(pick({ screen: 'connect', net: false, online: false, loginStep: 2 }, ['login-profile']) === null, 'no LAN list: no LAN directory tip');
 ok(pick({ screen: 'connect', net: false, online: false, loginStep: 1 }, ['login']) === null, 'C3 told once');
 ok(pick({ screen: 'connect', loginStep: 1, helpOn: false }) === null, 'help off: silent on the login screen');

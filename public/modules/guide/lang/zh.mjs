@@ -1,6 +1,15 @@
 // Ace's Help — zh texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "无需互联网：一部手机**创建**对局，其他人通过同一 Wi-Fi **加入**。然后房主用二维码逐个添加玩家。",
+  c1NearbyHost: "你是房主。为每位朋友点**添加玩家**（右上角）：对方扫描你的二维码，再由你扫描对方的。保持应用打开——你离开则对局结束。",
+  c1NearbyGuest: "你已在房主的对局中。牌桌建好后就座；**📊** 显示今晚记分板。",
+  hsNbEntry: "与同一房间的人无网对战：一部手机当房主，其他人通过同一 Wi-Fi 加入。",
+  hsNbHost: "在这部手机上开局。其他人加入，这部手机必须一直开着直到结束。",
+  hsNbJoin: "加入附近另一部手机创建的对局：扫描（或粘贴）它的代码，再出示你的。",
+  hsNbAdd: "为再一位玩家显示二维码，然后读取对方的。也用于让断线的玩家回来。",
+  hsNbBoard: "今晚记分板：只要还是同一批玩家，就持续累计。",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "在**服务器**列表中选一台服务器：绿点表示它在线，旁边是当前在上面的玩家人数。你自己的服务器不在里面？列表底部的**提交我的服务器**会把它发送给本站管理员，批准后它就会出现在列表中。",
   hsLanDir: "经本站管理员审核的局域网服务器：选一台即可在上面游戏。绿点表示在线，旁边是它当前的玩家。",

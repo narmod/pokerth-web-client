@@ -214,6 +214,9 @@ export function where() {
     net,
     // a LAN / dedicated server (web.272): online, logged in, not pokerth.net (window._amLanMode)
     lan: screen !== 'connect' && !window._offlineMode && !net && !!s._currentLoginMode,
+    // « Play nearby » (web.351): a game hosted on a phone of the room (modules/ui/nearby.mjs)
+    nearby: screen !== 'connect' && !!window._nearbyMode,
+    nearbyHost: screen !== 'connect' && window._nearbyMode === 'host',
     spectator: !!s._amSpectator,
     gid: s.gId || 0,
     host: !!(s.gId && s.amGameAdmin && !s._amSpectator),
@@ -221,6 +224,8 @@ export function where() {
     loginStep: screen === 'connect' ? (shown('login-step2') ? 2 : 1) : 0,
     // the LAN directory block of the login form (modules/ui/lan-directory.mjs)
     lanDir: screen === 'connect' && shown('lan-dir'),
+    // « 👥 Play nearby » picked in that list (body.lan-nearby)
+    nearbySel: screen === 'connect' && shown('lan-dir') && document.body.classList.contains('lan-nearby'),
     gamesLoaded: !!s.loaded,
     rankPick: net && online && !guest && !s.gId ? pickRankingTable(games) : null,
     waitCount: s.gId ? presentCount(s) : 0,
@@ -1653,6 +1658,7 @@ function init() {
   window.addEventListener('online', schedule);
   window.addEventListener('offline', schedule);
   window.addEventListener('pth:games', onGames);
+  document.addEventListener('pth:lanmode', schedule);   // « Play nearby » picked or left in the LAN list (web.351)
   document.addEventListener('click', onListTap, true);
   // the local backup offer (web.20): claimed now if already made, or when it is
   document.addEventListener('pth:bakoffer', claimBak);

@@ -1,6 +1,15 @@
 // Ace's Help — tk texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Internet gerek däl: bir telefon oýny **gurnaýar**, beýlekiler şol bir Wi-Fi arkaly **goşulýar**. Soňra öý eýesi her oýunçyny QR kody bilen goşýar.",
+  c1NearbyHost: "Öý eýesi sen. Her dost üçin **Oýunçy goş** (ýokarda sagda) düwmesine bas: ol seniň QR koduňy skanirleýär, soňra sen onuňkyny. Programmany açyk sakla — gitseň, oýun tamamlanýar.",
+  c1NearbyGuest: "Sen öý eýesiniň oýnunda. Stol döredilende otur; **📊** agşamyň bal tablisasyny görkezýär.",
+  hsNbEntry: "Bir otagdaky adamlar bilen internetsiz oýna: bir telefon gurnaýar, beýlekiler şol bir Wi-Fi arkaly goşulýar.",
+  hsNbHost: "Oýny şu telefonda başlaýar. Beýlekiler goşulýar we bu telefon ahyryna çenli açyk durmaly.",
+  hsNbJoin: "Golaýdaky başga telefonda gurnalan oýuna goşulýar: onuň koduny skanirle (ýa-da goý), soňra özüňkini görkez.",
+  hsNbAdd: "Ýene bir oýunçy üçin QR kody görkezýär, soňra onuňkyny okaýar. Baglanyşygy kesilen oýunçyny hem yzyna getirýär.",
+  hsNbBoard: "Agşamyň bal tablisasy: şol oýunçylar oýnadygyça goşulýar.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "**Serwer** sanawyndan bir serwer saýlaň: ýaşyl nokat onuň onlaýndygyny we häzir onda näçe oýunçynyň bardygyny görkezýär. Öz serweriňiz ol ýerde ýokmy? Sanawyň iň aşagyndaky **Serwerimi teklip et** ony bu saýtyň administratorlaryna iberýär we tassyklanandan soň ol sanawda peýda bolýar.",
   hsLanDir: "Bu saýtyň administratorlary tarapyndan barlanan LAN serwerleri: oýnamak üçin birini saýlaň. Ýaşyl nokat onlaýndygyny aňladýar, ýanynda bolsa häzirki oýunçylary.",

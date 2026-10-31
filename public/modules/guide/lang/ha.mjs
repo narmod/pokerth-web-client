@@ -1,6 +1,15 @@
 // Ace's Help — ha texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Ba a bukatar Intanet: waya ɗaya tana **shirya** wasan, sauran suna **shiga** ta Wi-Fi iri ɗaya. Sannan mai masauki yana ƙara kowane ɗan wasa da lambar QR.",
+  c1NearbyHost: "Kai ne mai masauki. Taɓa **Ƙara ɗan wasa** (sama a dama) don kowane aboki: yana duba lambar QR ɗinka, sannan kai ka duba tasa. Bar manhajar a buɗe — idan ka tafi, wasan ya ƙare.",
+  c1NearbyGuest: "Kana cikin wasan mai masauki. Zauna a tebur idan an ƙirƙire shi; **📊** yana nuna allon maki na maraice.",
+  hsNbEntry: "Yi wasa da mutane a ɗaki ɗaya, ba Intanet: waya ɗaya tana shiryawa, sauran suna shiga ta Wi-Fi iri ɗaya.",
+  hsNbHost: "Yana fara wasan a wannan wayar. Sauran suna shiga, kuma dole wannan wayar ta kasance a kunne har ƙarshe.",
+  hsNbJoin: "Yana shiga wasan da wata waya da ke kusa ke shiryawa: duba lambarta (ko liƙa ta), sannan ka nuna taka.",
+  hsNbAdd: "Yana nuna lambar QR don ƙarin ɗan wasa ɗaya, sannan ya karanta tasa. Yana kuma dawo da ɗan wasan da haɗinsa ya yanke.",
+  hsNbBoard: "Allon maki na maraice: yana tarawa muddin 'yan wasa iri ɗaya suna ci gaba.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Zaɓi sabar a jerin **Sabar**: koren digo yana nufin tana kan layi, tare da adadin ’yan wasan da ke cikinta a yanzu. Sabarka ba ta nan? **Gabatar da sabata**, a ƙasan jerin, tana aika ta ga masu gudanar da wannan shafi, kuma za ta bayyana a jerin da zarar an amince.",
   hsLanDir: "Sabobin LAN da masu gudanar da wannan shafi suka duba: zaɓi ɗaya don yin wasa a cikinta. Koren digo yana nufin a kan layi, tare da ’yan wasanta na yanzu.",

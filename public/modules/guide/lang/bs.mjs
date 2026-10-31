@@ -1,6 +1,15 @@
 // Ace's Help — bs texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Internet nije potreban: jedan telefon je **domaćin** igre, ostali se **pridružuju** preko iste Wi-Fi mreže. Domaćin zatim dodaje svakog igrača QR kodom.",
+  c1NearbyHost: "Ti si domaćin. Za svakog prijatelja dodirni **Dodaj igrača** (gore desno): on skenira tvoj QR kod, zatim ti njegov. Ostavi aplikaciju otvorenu — ako odeš, igra se završava.",
+  c1NearbyGuest: "U igri si domaćina. Sjedni za sto kad bude napravljen; **📊** prikazuje tabelu večeri.",
+  hsNbEntry: "Igra s ljudima u istoj prostoriji, bez interneta: jedan telefon je domaćin, ostali se pridružuju preko iste Wi-Fi mreže.",
+  hsNbHost: "Pokreće igru na ovom telefonu. Ostali se pridružuju, a ovaj telefon mora ostati uključen do kraja.",
+  hsNbJoin: "Pridružuje se igri koju ugošćuje drugi telefon u blizini: skeniraj njegov kod (ili ga zalijepi), zatim pokaži svoj.",
+  hsNbAdd: "Prikazuje QR kod za još jednog igrača, zatim čita njegov. Vraća i igrača kojem je veza pala.",
+  hsNbBoard: "Tabela večeri: sabira se dok igraju isti igrači.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Izaberi server na listi **Server**: zelena tačka znači da je na mreži, uz broj igrača koji su trenutno na njemu. Tvog servera nema? **Predloži moj server**, na dnu liste, šalje ga adminima ove stranice, a on se pojavljuje na listi čim bude odobren.",
   hsLanDir: "LAN serveri koje su provjerili admini ove stranice: izaberi jedan da igraš na njemu. Zelena tačka znači na mreži, uz njegove trenutne igrače.",

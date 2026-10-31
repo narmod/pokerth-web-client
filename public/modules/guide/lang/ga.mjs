@@ -1,6 +1,15 @@
 // Ace's Help — ga texts (translated from lang/en.mjs; same keys and {placeholders},
 // checked by scripts/test-guide-lang.mjs).
 export default {
+  // Play nearby (LAN mode, no Internet; web.351)
+  c3Nearby: "Níl gá le hIdirlíon: **óstálann** fón amháin an cluiche, agus **téann** na cinn eile **isteach** ar an Wi-Fi céanna. Ansin cuireann an t-óstach gach imreoir leis le cód QR.",
+  c1NearbyHost: "Is tusa an t-óstach. Tapáil **Cuir imreoir leis** (ar dheis thuas) do gach cara: scanann sé do chód QR, ansin scanann tusa a chódsan. Coinnigh an aip ar oscailt — má imíonn tú, críochnaíonn an cluiche.",
+  c1NearbyGuest: "Tá tú i gcluiche an óstaigh. Suigh ag an mbord nuair a chruthaítear é; taispeánann **📊** clár scóir na hoíche.",
+  hsNbEntry: "Imir le daoine sa seomra céanna, gan Idirlíon: óstálann fón amháin, téann na cinn eile isteach ar an Wi-Fi céanna.",
+  hsNbHost: "Tosaíonn sé an cluiche ar an bhfón seo. Téann na cinn eile isteach, agus caithfidh an fón seo fanacht ar siúl go dtí an deireadh.",
+  hsNbJoin: "Téann sé isteach i gcluiche atá á óstáil ar fhón eile in aice láimhe: scan a chód (nó greamaigh é), ansin taispeáin do cheann féin.",
+  hsNbAdd: "Taispeánann sé cód QR d’imreoir eile, ansin léann sé a chódsan. Tugann sé ar ais imreoir ar thit a cheangal freisin.",
+  hsNbBoard: "Clár scóir na hoíche: méadaíonn sé fad a leanann na himreoirí céanna ar aghaidh.",
   // LAN directory (login, LAN mode; web.43)
   c3LanDir: "Roghnaigh freastalaí sa liosta **Freastalaí**: ciallaíonn ponc glas go bhfuil sé ar líne, le líon na n-imreoirí atá air faoi láthair. Níl do fhreastalaí féin ann? Seolann **Mol mo fhreastalaí**, ag bun an liosta, é chuig riarthóirí an tsuímh seo, agus beidh sé le feiceáil sa liosta nuair a cheadaítear é.",
   hsLanDir: "Na freastalaithe LAN a sheiceáil riarthóirí an tsuímh seo: roghnaigh ceann chun imirt air. Ciallaíonn ponc glas ar líne, lena imreoirí faoi láthair.",
