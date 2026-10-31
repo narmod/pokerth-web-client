@@ -81,10 +81,13 @@ let _qrMod = null;
  * @param {string} text
  * @returns {Promise<{ size: number, dark: (r: number, c: number) => boolean }>}
  */
-export async function qrMatrix(text) {
+export async function qrMatrix(text, ecc) {
   if (!_qrMod) _qrMod = import('../../vendor/qrcode.mjs');
   const qrcode = (await _qrMod).default;
-  const qr = qrcode(0, 'M');
+  // Level L by default: a code shown on one screen and read by another camera
+  // is never torn or stained, and L means fewer, larger modules (version 10
+  // instead of 11 for a usual link) — what a phone camera reads best (web.352).
+  const qr = qrcode(0, ecc === 'M' || ecc === 'Q' || ecc === 'H' ? ecc : 'L');
   qr.addData(String(text), 'Byte');
   qr.make();
   return { size: qr.getModuleCount(), dark: (r, c) => qr.isDark(r, c) };
@@ -92,17 +95,20 @@ export async function qrMatrix(text) {
 
 /**
  * Draw a QR code on a canvas: black on white whatever the theme (scanners need
- * the contrast), 4-module quiet zone, sharp on high-density screens.
- * @param {HTMLCanvasElement} canvas @param {string} text @param {number} [cssSize]
+ * the contrast), 4-module quiet zone, sharp on high-density screens: a whole
+ * number of device pixels per module, and the canvas shown at exactly its own
+ * size (no resampling that would blur the module edges; web.352).
+ * @param {HTMLCanvasElement} canvas @param {string} text @param {number} [cssSize] @param {string} [ecc]
  */
-export async function drawQr(canvas, text, cssSize) {
-  const m = await qrMatrix(text);
+export async function drawQr(canvas, text, cssSize, ecc) {
+  const m = await qrMatrix(text, ecc);
   const quiet = 4, css = cssSize || 240;
-  const dpr = Math.min((typeof devicePixelRatio === 'number' && devicePixelRatio) || 1, 3);
+  const dpr = (typeof devicePixelRatio === 'number' && devicePixelRatio > 0) ? devicePixelRatio : 1;
   const px = Math.max(1, Math.floor((css * dpr) / (m.size + quiet * 2)));
   const size = px * (m.size + quiet * 2);
   canvas.width = size; canvas.height = size;
-  canvas.style.width = css + 'px'; canvas.style.height = css + 'px';
+  canvas.style.width = (size / dpr) + 'px'; canvas.style.height = (size / dpr) + 'px';
+  canvas.style.imageRendering = 'pixelated';
   const ctx = canvas.getContext('2d');
   if (!ctx) return m;
   ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, size, size);

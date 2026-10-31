@@ -137,7 +137,9 @@ async function _codeBlock(box, link, caption) {
   if (caption) box.appendChild(el('p', 'nb-step', caption));
   const cv = /** @type {HTMLCanvasElement} */ (el('canvas', 'inv-qr nb-qr'));
   box.appendChild(cv);
-  try { await m.codes.drawQr(cv, link, 220); } catch (e) { cv.style.display = 'none'; }
+  // As large as the dialog allows: the other phone's camera reads it from further away (web.352).
+  const qs = Math.max(220, Math.min(300, ((window.innerWidth || 360) - 72)));
+  try { await m.codes.drawQr(cv, link, qs); } catch (e) { cv.style.display = 'none'; }
   const row = el('div', 'inv-share nb-share');
   const note = el('div', 'nb-note');
   const share = el('button', 'inv-sbtn', _t('invShareVia', null, 'Share…'));
@@ -169,6 +171,8 @@ function _readerBlock(box, caption, wantKind, onText) {
       accept: (t) => { try { return m.codes.readCode(t).kind === wantKind; } catch (e) { return false; } },
       onCode: (t) => { video.style.display = 'none'; onText(t); },
       onError: (c) => { video.style.display = 'none'; _status(status, _errText(c), true); },
+      // A QR code was read but is not the one awaited: say so instead of scanning in silence.
+      onSeen: (t) => { let c = 'bad-code'; try { m.codes.readCode(t); c = 'wrong-kind'; } catch (e) { c = (e && e.code) || 'bad-code'; } _status(status, _errText(c), true); },
     });
   });
   const row = el('div', 'inv-linkrow nb-paste');

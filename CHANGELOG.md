@@ -120,6 +120,14 @@ highlights below.
   and leads to Deployment. Not shown on an install without git. Test: `scripts/test-admin-overview.mjs` (+4).
 
 ### Fixed
+- **« Play nearby »: the in-app scanner did not read the connection QR code on a real phone** (`web.352`) — the
+  code (~210-character link, 61 modules at level M) gave the camera about 3 pixels per module: the camera was left at
+  its default resolution (often 640 × 480) and the fallback decoder (jsQR: Safari / iOS, Firefox) read a frame cut
+  down to 720 px wide. Now: the camera is asked for 1920 × 1080 with continuous autofocus; jsQR alternates the centre
+  square at full resolution with the whole frame (`frameRect`, ≤ 1080 px a side); the code is drawn at level L (53–57
+  modules), larger (up to 300 CSS px) and sharp (whole device pixels per module, no resampling); a QR code read but
+  not the one awaited now says so instead of scanning in silence. `scripts/test-nearby-scan-browser.mjs` (8: blurred,
+  low-contrast « photos » of the code through Chrome's fake camera).
 - **Client address could be forged** (`web.344`) — `clientIp()` feeds bans, per-IP caps, the admin brute-force
   guard, the anti-abuse limits of web.342 and the PROXY header sent to the game server. Behind a reverse proxy it
   trusted the *first* `X-Forwarded-For` entry, which the client chooses under nginx's

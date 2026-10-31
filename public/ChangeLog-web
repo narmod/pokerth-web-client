@@ -1,3 +1,6 @@
+2026-10-31 version 2.1.10-web.352:
+- bugfix: « Play nearby » — the in-app scanner now reads the other phone's QR code (higher camera resolution, sharper and larger code)
+
 2026-10-31 version 2.1.10-web.351:
 - improvement: the help explains « Play nearby », and Ace's Help guides the host and the guests through it
 
