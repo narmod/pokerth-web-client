@@ -88,6 +88,11 @@ highlights below.
   for offline use. Tests: `scripts/test-nearby.mjs` (58, deterministic, plus real BroadcastChannels).
 
 ### Changed
+- **« Play nearby » is off by default** (`web.353`) — the admin switch `nearby_play` is now unticked until an admin
+  ticks it. Feature switches can be `defaultOff`: `featureOffList()` adds them to the list sent to the clients and to
+  the dashboard unless they are in `_adminConfig.featureOn` (saved from the dashboard, kept by backup / restore). The
+  client offers the entry only once the site's switches are known (`/app-config` now, or the list kept from the last
+  visit). `scripts/test-admin-config-io.mjs` checks off by default, ticked, saved and unticked.
 - **Held-back private messages** (`web.346`) — parity upstream `bc4dfb8a` (server holds PMs to players at a running
   table or offline, `pending_private_message`, delivered at game end / next login; limits 2 per sender and target,
   20 per target, 20 per sender, 30 days). The envelope stays on players at a running table and `sendTo` no longer

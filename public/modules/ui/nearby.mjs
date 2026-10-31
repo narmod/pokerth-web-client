@@ -64,6 +64,10 @@ const st = {
 /** Can this page offer « Play nearby »? */
 export function available() {
   if (featureOff('nearby_play')) return false;
+  // Off by default (web.353): offered only once the site's switches are known,
+  // now or from the last visit — the server lists nearby_play as off unless an
+  // admin turned it on. A page with no admin settings at all does not offer it.
+  if (!window._pthFeatureKnown) { try { if (localStorage.getItem('pth_feature_off') === null) return false; } catch (e) { return false; } }
   return typeof /** @type {any} */ (globalThis).RTCPeerConnection === 'function';
 }
 export function remembered() { try { return localStorage.getItem(SEL_KEY) === '1'; } catch (e) { return false; } }

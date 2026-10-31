@@ -364,13 +364,18 @@ const FEATURE_SWITCHES = [
   { key: 'guide_on', label: 'Ace\u2019s Help tips (help on request stays)' },
   { key: 'pad_on', label: 'Gamepad (game controller)' },
   { key: 'remote_on', label: 'TV remote (Android TV)' },
-  // web.350
-  { key: 'nearby_play', label: '\u201cPlay nearby\u201d entry in the LAN server list (no Internet, same Wi-Fi)' },
+  // web.350 — off by default since web.353 (defaultOff: an admin turns it on)
+  { key: 'nearby_play', label: '\u201cPlay nearby\u201d entry in the LAN server list (no Internet, same Wi-Fi) \u2014 off by default', defaultOff: true },
 ];
+// A switch marked defaultOff stays off until an admin ticks it: the ones
+// ticked are kept in _adminConfig.featureOn (web.353), the others are added to
+// the list sent to the clients and to the admin page.
 function featureOffList() {
   const a = _adminConfig && _adminConfig.featureOff;
-  if (!Array.isArray(a)) return [];
-  return a.filter(function (k) { return FEATURE_SWITCHES.some(function (f) { return f.key === k; }); });
+  const on = (_adminConfig && Array.isArray(_adminConfig.featureOn)) ? _adminConfig.featureOn : [];
+  const out = Array.isArray(a) ? a.filter(function (k) { return FEATURE_SWITCHES.some(function (f) { return f.key === k; }); }) : [];
+  FEATURE_SWITCHES.forEach(function (f) { if (f.defaultOff && on.indexOf(f.key) < 0 && out.indexOf(f.key) < 0) out.push(f.key); });
+  return out;
 }
 // Every top-level key of _adminConfig. A config import REPLACES the whole
 // object and keeps only these keys, so a key missing here is silently wiped by
@@ -380,7 +385,7 @@ function featureOffList() {
 const ADMIN_CONFIG_KEYS = Object.freeze([
   'resetPeriod', 'modes', 'welcome', 'guestNotice', 'authNotice', 'lanNotice', 'defaultTheme', 'liveDefaults',
   'defaults', 'lookDefaults', 'loginDefaults', 'proxyCfg', 'tableDefaults', 'tableNames', 'serverName', 'serverTagline',
-  'clockZones', 'clockRef', 'discordChatWebhookUrl', 'showLoginTitle', 'lobbyClockTz', 'featureOff', 'liveStats',
+  'clockZones', 'clockRef', 'discordChatWebhookUrl', 'showLoginTitle', 'lobbyClockTz', 'featureOff', 'featureOn', 'liveStats',
   'communityEvents', 'bannedIps', 'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
   'musicEnabled', 'musicHidden', 'musicOrder', 'musicVotesPublic', 'seo', 'servers', 'activeServerId',
   'pokerthnetSource', 'internetTransport', 'liveTransport', 'proxyProtocol', 'serverlistUrl', 'autoUpdate',
@@ -12796,6 +12801,10 @@ function handleAdmin(req, res, reqPathOnly, query) {
             .map(function (k) { return String(k == null ? '' : k); })
             .filter(function (k) { return FEATURE_SWITCHES.some(function (f) { return f.key === k; }); })
             .slice(0, FEATURE_SWITCHES.length);
+          // Off-by-default switches the admin left ticked (web.353).
+          _adminConfig.featureOn = FEATURE_SWITCHES
+            .filter(function (f) { return f.defaultOff && _adminConfig.featureOff.indexOf(f.key) < 0; })
+            .map(function (f) { return f.key; });
         }
         if (d.loginDefaults && typeof d.loginDefaults === 'object') {
           var ld = d.loginDefaults, lout = {};

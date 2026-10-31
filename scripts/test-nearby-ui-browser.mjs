@@ -41,7 +41,9 @@ if (!browser) { console.log('  - no Chrome / Chromium available: skipped'); serv
 const errors = [];
 async function phone(nick) {
   const ctx = await browser.newContext({ permissions: ['clipboard-read', 'clipboard-write'], viewport: { width: 420, height: 860 } });
-  await ctx.addInitScript(() => { try { localStorage.setItem('pth_lang', 'en'); localStorage.setItem('pth_guide_offered', '1'); } catch (e) {} });
+  await ctx.addInitScript(() => { try { localStorage.setItem('pth_lang', 'en'); localStorage.setItem('pth_guide_offered', '1');
+    // « Play nearby » is off by default (web.353): this page has no proxy behind it, so play a site whose admin turned it on.
+    if (localStorage.getItem('pth_feature_off') === null) localStorage.setItem('pth_feature_off', '[]'); } catch (e) {} });
   const p = await ctx.newPage();
   p.on('pageerror', e => errors.push(nick + ': ' + e.message));
   await p.goto(base);

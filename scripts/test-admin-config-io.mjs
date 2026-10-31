@@ -111,6 +111,20 @@ try {
   const srv = await post('/admin/servers', { servers: [{ id: 'srv_b', name: 'B', host: 'b.example.org', port: 7236, tls: true, pins: [PIN, 'bad'] }], activeServerId: 'srv_b' });
   const list = await get('/admin/servers');
   ok(srv && srv.ok && list.servers[0].pins.length === 1 && list.servers[0].pins[0] === PIN, 'pins are stored and an invalid one is dropped');
+
+  // An off-by-default switch (« Play nearby », web.353): off until an admin ticks it, kept on through a restore.
+  const pub = () => fetch(base + '/app-config').then(r => r.json()).catch(() => null);
+  const c0 = await pub();
+  ok(c0 && c0.featureOff.includes('nearby_play') && !c0.featureOff.includes('polls'), 'off by default: nearby_play is listed off, the other switches are not');
+  const on = await post('/admin/config', { featureOff: ['polls'] });
+  const c1 = await pub();
+  ok(on && on.ok && !c1.featureOff.includes('nearby_play') && c1.featureOff.includes('polls') && !on.featureOff.includes('nearby_play'), 'ticked by the admin: on for the clients and on the dashboard');
+  const exp = await get('/admin/config/export');
+  const cfgOn = exp && (exp.config || exp);
+  ok(cfgOn && Array.isArray(cfgOn.featureOn) && cfgOn.featureOn.includes('nearby_play'), 'the choice is saved (featureOn)');
+  const off = await post('/admin/config', { featureOff: ['nearby_play'] });
+  const c2 = await pub();
+  ok(off && off.ok && c2.featureOff.includes('nearby_play'), 'unticked again: off');
 } finally {
   proxy.kill('SIGTERM');
   if (fail) console.error(plog.slice(-1500));

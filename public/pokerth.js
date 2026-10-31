@@ -4273,6 +4273,7 @@ document.addEventListener("DOMContentLoaded", function() {
       var map = {};
       for (var i = 0; i < list.length; i++) map[String(list[i])] = true;
       window._pthFeatureOff = map;
+      window._pthFeatureKnown = true;   // the switches are known (« Play nearby » is off by default, web.353)
       // Last known list, read back at boot by pokerth-client.html: what runs
       // once at startup (splash, back guard) is then already off next visit.
       try { localStorage.setItem('pth_feature_off', JSON.stringify(Object.keys(map))); } catch (e) {}
@@ -12587,7 +12588,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.352'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.353'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

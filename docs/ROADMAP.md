@@ -300,7 +300,7 @@ use too. Items are grouped by status rather than fixed phases.
   and no server: one phone hosts a small PokerTH server in its tab (lobby, one table, bots for the empty seats,
   an evening scoreboard), the others connect to it peer-to-peer over the local Wi-Fi (WebRTC), set up by QR code,
   the system share sheet (AirDrop / Quick Share) or a pasted code. An entry « 👥 Play nearby » in the LAN server
-  list, behind an admin switch (`nearby_play`, on by default). Web addition, no QML counterpart. Steps: (1) the
+  list, behind an admin switch (`nearby_play`, off by default since `web.353`). Web addition, no QML counterpart. Steps: (1) the
   local server — multi-human lobby, one table, private hole cards, checked frames, evening scoreboard
   (`public/modules/lan/`, `scripts/test-nearby.mjs`) — **done** (`web.347`); (2) the WebRTC carrier, the compact
   connection code and seat recovery after a drop — **done** (`web.348`, real DataChannels tested in Chrome);
