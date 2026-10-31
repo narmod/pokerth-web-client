@@ -10,7 +10,7 @@
 //   · createLocalSocket(server)  — the host's own page, in memory, to its
 //     LocalServer (like offline/index.mjs's FakeSocket for training);
 //   · lan/bc-link.mjs            — another tab of the same browser (tests);
-//   · the WebRTC DataChannel     — a guest's phone (step 2).
+//   · lan/rtc-link.mjs           — a guest's phone, over a WebRTC DataChannel.
 // Frames are the proxy's: [u32 BE length][PokerTHMessage], both directions.
 // Deliveries are asynchronous (one task each), as from a real socket.
 // ─────────────────────────────────────────────────────────────────────────
@@ -25,6 +25,7 @@ export class PipeSocket {
     /** @type {any} */ this.onerror = null;
     /** @type {any} */ this.onclose = null;
     this._out = out;
+    /** @type {ArrayBuffer[]} */ this._early = [];   // frames that arrived before onopen
     /** @type {(() => void) | null} */ this.onLocalClose = null;   // carrier hook: the client hung up
   }
   send(data) {
@@ -44,11 +45,21 @@ export class PipeSocket {
       if (this.readyState !== 0) return;
       this.readyState = 1;
       try { if (this.onopen) this.onopen({}); } catch (e) {}
+      // A carrier may hand frames over before the client saw onopen (the
+      // host's Announce racing the DataChannel 'open' on the guest side):
+      // they were kept, in order, and go out now.
+      const early = this._early; this._early = [];
+      for (const buf of early) this._emit(buf);
     }, 0);
   }
   /** @param {Uint8Array} u8 a frame from the server */
   _deliver(u8) {
     const buf = u8.buffer.slice(u8.byteOffset, u8.byteOffset + u8.byteLength);
+    if (this.readyState === 0) { this._early.push(buf); return; }
+    this._emit(buf);
+  }
+  /** @param {ArrayBuffer} buf */
+  _emit(buf) {
     setTimeout(() => {
       if (this.readyState !== 1) return;
       try { if (this.onmessage) this.onmessage({ data: buf }); } catch (e) {}

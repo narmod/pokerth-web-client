@@ -16,6 +16,23 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **« Play nearby », step 2: the WebRTC link and seat recovery** (`web.348`) — still no visible change (the UI
+  comes in step 4). `lan/signal.mjs`: the connection code exchanged by people (QR / share sheet / paste in step 3)
+  — the host's offer, then the guest's answer, each about 130–180 characters instead of a 1–3 KB SDP: protocol
+  version, slot (pairs an answer with its invitation), BUILD_VERSION (host and guests must match), the host's
+  nickname, ICE credentials, SHA-256 DTLS fingerprint, DTLS role and the UDP host candidates (IPv4, IPv6, mDNS
+  `<uuid>.local`); the SDP is rebuilt from a fixed template. `lan/rtc-link.mjs`: `hostInvite()` / `guestAnswer()`,
+  one private DataChannel per guest, no STUN / TURN / server, one PokerTH frame per message; a Wi-Fi hiccup is
+  tolerated for 15 s before the link is given up; an unfinished pairing is dropped after 3 minutes.
+  `lan/protocol.mjs`: the shared wire constants (a guest never loads the server). Seat recovery in
+  `local-server.mjs`: a player whose link drops during a game keeps his seat for 2 minutes (« away »: his turns are
+  checked or folded at once, seat state sessionInactive, nickname reserved), pairs again and logs in with the same
+  nickname + the session GUID of his InitAck (what the client already replays) → `InitAck.rejoinGameId`, his
+  `RejoinExistingGame` → `JoinGameAck` + `GameStartRejoin`, same player id, dealt in from the next hand.
+  `PipeSocket` keeps frames that arrive before `onopen`. Tests: `scripts/test-nearby.mjs` (90: codes from Chrome,
+  Firefox and Safari style SDPs, malformed codes, away / grace / recovery) and `scripts/test-nearby-rtc-browser.mjs`
+  (26, two Chrome contexts over real DataChannels: pairing, other build and wrong slot refused, lobby chat both
+  ways, a table across the link, drop mid-game and recovery after a new pairing).
 - **« Play nearby », step 1: the local server** (`web.347`) — groundwork for playing together in one room with no
   Internet and no server (design: one phone hosts, the others connect peer-to-peer). No visible change yet: nothing
   imports these modules until the UI step. `public/modules/lan/local-server.mjs` is a small PokerTH server that runs

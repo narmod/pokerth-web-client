@@ -7,9 +7,10 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const mod = (p) => import(path.join(root, 'public/modules', p));
-const { LocalServer, NEARBY_TYPE, cleanNick } = await mod('lan/local-server.mjs');
+const { LocalServer, NEARBY_TYPE, cleanNick, GRACE_MS } = await mod('lan/local-server.mjs');
+const { encodePayload, decodePayload, parseSdp, buildSdp, KIND, SignalError } = await mod('lan/signal.mjs');
 const { createScoreboard, lineupKey } = await mod('lan/scoreboard.mjs');
-const { createLocalSocket } = await mod('lan/pipe-socket.mjs');
+const { createLocalSocket, PipeSocket } = await mod('lan/pipe-socket.mjs');
 const { hostOverBroadcast, createBroadcastSocket } = await mod('lan/bc-link.mjs');
 const { encode, frame, readFields } = await mod('offline/proto.mjs');
 
@@ -49,7 +50,8 @@ function player(srv, nick, opts) {
   const P = { nick, got: [], closed: false, pid: 0 };
   P.h = srv.attach({ send: (u8) => { const m = decode(u8); P.got.push(m); if (m.type === 6) P.pid = num(m.f, 2); if (opts.onMsg) opts.onMsg(P, m); }, close: () => { P.closed = true; } });
   P.send = (type, spec) => P.h.receive(cmsg(type, spec));
-  P.init = (buildId) => P.send(2, [[1, 2, encode([[1, 0, 5], [2, 0, 1]])], [2, 0, buildId || 7], [5, 0, 2], [6, 2, nick]]);
+  P.init = (buildId, guid) => P.send(2, [[1, 2, encode([[1, 0, 5], [2, 0, 1]])], [2, 0, buildId || 7], guid ? [3, 2, guid] : [3, 0, undefined], [5, 0, 2], [6, 2, nick]]);
+  P.guid = () => { const a = P.of(6); const g = a.length && a[a.length - 1].f[1]; return g ? g[0] : null; };
   P.of = (type) => P.got.filter(m => m.type === type);
   P.last = (type) => { const a = P.of(type); return a[a.length - 1]; };
   P.clear = () => { P.got = []; };
@@ -110,9 +112,12 @@ const both = (...fs) => (P, m) => fs.forEach(fn => fn(P, m));
 }
 
 // ── 3. the table: create, refuse a second, join, start, private cards ────
-function setupTable(seed, nicks, max) {
-  const C = clock(); const srv = new LocalServer({ rng: mulberry32(seed), timers: C.timers, botPool: BOTS });
-  const ps = nicks.map(nk => player(srv, nk, { onMsg: both(ackStart, shover) }));
+let _g = 0;
+const seqGuid = () => { const g = new Uint8Array(16); g[15] = ++_g & 0xff; g[14] = (_g >> 8) & 0xff; return g; };
+function setupTable(seed, nicks, max, strategy) {
+  const C = clock(); _g = 0;
+  const srv = new LocalServer({ rng: mulberry32(seed), timers: C.timers, botPool: BOTS, newGuid: seqGuid });
+  const ps = nicks.map(nk => player(srv, nk, { onMsg: both(ackStart, strategy || shover) }));
   ps.forEach(p => p.init());
   return { C, srv, ps };
 }
@@ -204,16 +209,68 @@ function setupTable(seed, nicks, max) {
   ok(srv.table.admin === 2 && num(B.last(28).f, 2) === 2 && num(Cl.last(17).f, 2) === 2, 'the admin leaves: the next human becomes admin (table + lobby)');
   B.send(31, [[1, 0, 1]]);
   ok(!srv.table && num(A.last(14).f, 2) === 3, 'the last human leaves: the table closes');
-  // Drop during a game: the player folds out, the others go on.
-  A.send(22, [[1, 2, gameInfo('U', 3)]]); B.send(21, [[1, 0, 2]]); Cl.send(21, [[1, 0, 2]]);
-  A.send(36, [[1, 0, 2], [2, 0, 0], [3, 0, 0]]);
+}
+
+// ── 4b. drop during a game: away, seat kept, then given up or taken back ──
+// Long games: big stacks, blinds never rise, everybody just calls.
+const caller = (P, m) => { if (m.type === 41 && num(m.f, 2) === P.pid) P.send(42, [[1, 0, num(m.f, 1)], [2, 0, 0], [3, 0, num(m.f, 3)], [4, 0, 3], [5, 0, 0]]); };
+function longInfo(name, max) { return encode([[1, 2, name], [2, 0, 1], [3, 0, max || 3], [4, 0, 1], [5, 0, 1000], [7, 0, 1], [9, 0, 10], [10, 0, 1], [11, 0, 10], [12, 0, 10], [13, 0, 100000]]); }
+{
+  const { C, srv, ps: [A, B, Cl] } = setupTable(11, ['Alice', 'Bob', 'Cleo'], 3, caller);
+  A.send(22, [[1, 2, longInfo('U', 3)]]); B.send(21, [[1, 0, 1]]); Cl.send(21, [[1, 0, 1]]);
+  A.send(36, [[1, 0, 1], [2, 0, 0], [3, 0, 0]]);
   C.run(400);
   ok(srv.table && srv.table.engine, 'a three-human game is running');
+  const before27 = A.of(27).length;
   Cl.h.detach();
   const ep = srv.table.engine.players.find(p => p.id === 3);
-  ok(ep && !ep.in && num(A.last(27).f, 2) === 3, 'a dropped player is out of the game, the table is told');
-  const done = C.run(3600e3, () => !srv.table);
-  ok(done && A.of(53).length === 1, 'the game still reaches its end');
+  ok(ep && ep.in && A.of(27).length === before27 && num(A.last(12).f, 1) === 3 && num(A.last(12).f, 2) === 1,
+    'a player who drops mid-game keeps his seat (away): out of the lobby list, still at the table');
+  const D = player(srv, 'cleo'); D.init();
+  ok(num(D.last(73).f, 1) === 4, 'while away his nickname stays reserved');
+  A.clear();
+  C.run(30e3);
+  const hs = A.of(40);
+  const st = (m) => (m.f[5] || []).slice();
+  ok(hs.length > 0 && hs.every(m => st(m)[2] === 1), 'away: his seat shows sessionInactive in HandStart');
+  ok(!A.of(41).some(m => num(m.f, 2) === 3) || A.of(44).some(m => num(m.f, 2) === 3), 'away: his turns are played for him (check or fold), the game does not wait');
+  C.run(GRACE_MS);
+  ok(!srv.table.engine.players.find(p => p.id === 3).in && A.of(27).some(m => num(m.f, 2) === 3) && !srv.humans.has(3),
+    'after the grace period he leaves the table and his nickname is free');
+}
+{
+  const { C, srv, ps: [A, B] } = setupTable(12, ['Alice', 'Bob'], 3, caller);
+  A.send(22, [[1, 2, longInfo('V', 3)]]); B.send(21, [[1, 0, 1]]);
+  A.send(36, [[1, 0, 1], [2, 0, 0], [3, 0, 1]]);
+  C.run(5000);
+  const guid = B.guid(), gid = 1, handsB = B.of(40).length;
+  ok(guid && guid.length === 16, 'InitAck carries a 16-byte session GUID');
+  B.h.detach();
+  C.run(8000);
+  const W = player(srv, 'Bob', { onMsg: both(ackStart, caller) });
+  W.init(7, new Uint8Array(16));
+  ok(num(W.last(73).f, 1) === 4, 'same nickname with a wrong GUID → refused (initPlayerNameInUse)');
+  const B2 = player(srv, 'Bob', { onMsg: both(ackStart, caller) });
+  B2.init(7, guid);
+  const ack = B2.last(6);
+  ok(ack && num(ack.f, 2) === 2 && num(ack.f, 4) === gid, 'same nickname + GUID → his id back and InitAck.rejoinGameId');
+  ok(num(A.last(12).f, 1) === 2 && num(A.last(12).f, 2) === 0, 'the others see him back in the lobby');
+  B2.send(23, [[1, 0, gid]]);
+  const rj = B2.last(39);
+  ok(B2.last(24) && rj && num(rj.f, 1) === gid && (rj.f[4] || []).length === 3, 'RejoinExistingGame → JoinGameAck + GameStartRejoin (every seat and stack)');
+  const n44 = B2.of(44).length, n40 = B2.of(40).length;
+  ok(n40 === 0, 'after the rejoin: nothing from the hand in progress');
+  C.run(60e3);
+  const hsB = B2.of(40);
+  ok(hsB.length > 0 && hsB[0].f[2], 'from the next hand he gets his cards again');
+  ok(B2.of(44).some(m => num(m.f, 2) === 2) && srv.humans.get(2) && !srv.humans.get(2).away, 'he plays again (his own actions at the table)');
+  void n44; void handsB;
+  // Never asks for his seat → given up after the grace period.
+  B2.h.detach(); C.run(1000);
+  const B3 = player(srv, 'Bob'); B3.init(7, guid);
+  ok(num(B3.last(6).f, 4) === gid, 'second drop: the seat waits again');
+  C.run(GRACE_MS + 5000);
+  ok(!srv.table || !srv.table.engine.players.find(p => p.id === 2).in, 'logged back but never rejoined: the seat is given up after the grace period');
 }
 
 // ── 5. determinism ───────────────────────────────────────────────────────
@@ -227,6 +284,39 @@ function transcript(seed) {
   const a = transcript(123), b = transcript(123), c = transcript(124);
   ok(a === b && a.length > 1000, 'same seed → identical message stream (deterministic)');
   ok(a !== c, 'another seed → another game');
+}
+
+// ── 5b. connection codes (lan/signal.mjs) ────────────────────────────────
+const FP = 'A5:B9:55:E5:75:9A:0F:48:25:30:EC:34:63:12:74:43:DB:0F:93:A2:90:01:C7:31:F0:EA:45:DC:50:84:24:5D';
+const SDP = {
+  // Chrome 13x: one mDNS candidate (what headless Chrome gave in this container).
+  chrome: 'v=0\r\no=- 266631618896529175 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\nm=application 9 UDP/DTLS/SCTP webrtc-datachannel\r\nc=IN IP4 0.0.0.0\r\na=candidate:1058339852 1 udp 2113937151 fd74c431-28b5-499a-9447-6d85f8539f5a.local 49546 typ host generation 0 network-cost 999\r\na=ice-ufrag:RAf/\r\na=ice-pwd:ZHxia7n+gcrlgGEuQTAgPz6z\r\na=ice-options:trickle\r\na=fingerprint:sha-256 ' + FP + '\r\na=setup:actpass\r\na=mid:0\r\na=sctp-port:5000\r\na=max-message-size:262144\r\n',
+  // Firefox style: upper-case UDP, TCP candidates, 'active' answer, LF only.
+  firefox: 'v=0\no=mozilla...THIS_IS_SDPARTA-99.0 1 0 IN IP4 0.0.0.0\ns=-\nt=0 0\na=fingerprint:sha-256 ' + FP + '\na=group:BUNDLE 0\nm=application 9 UDP/DTLS/SCTP webrtc-datachannel\nc=IN IP4 0.0.0.0\na=candidate:0 1 UDP 2122252543 0e5f3c1a-1b2c-4d3e-8f90-0123456789ab.local 54321 typ host\na=candidate:1 1 TCP 2105524479 0e5f3c1a-1b2c-4d3e-8f90-0123456789ab.local 9 typ host tcptype active\na=sendrecv\na=end-of-candidates\na=ice-pwd:4c0f2f3c8e2a1c9d7b6e5f4a3b2c1d0e\na=ice-ufrag:9a8b7c6d\na=mid:0\na=setup:active\na=sctp-port:5000\na=max-message-size:1073741823\n',
+  // Safari / no mDNS: plain IPv4 and IPv6 host candidates, plus a srflx to drop.
+  safari: 'v=0\r\no=- 1 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\nm=application 9 UDP/DTLS/SCTP webrtc-datachannel\r\nc=IN IP4 0.0.0.0\r\na=candidate:1 1 udp 2122260223 192.168.1.42 61001 typ host generation 0\r\na=candidate:2 1 udp 2122194687 2a01:e0a:1f2:3::abcd 61002 typ host generation 0\r\na=candidate:3 1 udp 1686052607 82.65.1.2 61001 typ srflx raddr 192.168.1.42 rport 61001\r\na=ice-ufrag:Zx9q\r\na=ice-pwd:abcdefghijklmnopqrstuvwx\r\na=fingerprint:sha-256 ' + FP + '\r\na=setup:actpass\r\na=mid:0\r\na=sctp-port:5000\r\n',
+};
+{
+  for (const [who, sdp] of Object.entries(SDP)) {
+    const code = encodePayload({ kind: KIND.offer, slot: 7, build: '2.1.10-web.348', label: 'Arnaud', sdp });
+    const d = decodePayload(code);
+    const f0 = parseSdp(sdp), f1 = parseSdp(d.sdp);
+    ok(/^[A-Za-z0-9_-]+$/.test(code) && code.length <= 250, who + ': code is base64url, ' + code.length + ' characters');
+    ok(d.kind === KIND.offer && d.slot === 7 && d.build === '2.1.10-web.348' && d.label === 'Arnaud', who + ': header round-trips (kind, slot, build, label)');
+    ok(JSON.stringify(f0) === JSON.stringify(f1), who + ': the rebuilt SDP carries the same ICE credentials, fingerprint, setup and candidates');
+  }
+  ok(parseSdp(SDP.firefox).candidates.length === 1 && parseSdp(SDP.safari).candidates.length === 2, 'only UDP host candidates are kept (no TCP, no srflx)');
+  ok(parseSdp(SDP.firefox).setup === 1, 'DTLS role kept (active)');
+  ok(decodePayload(encodePayload({ kind: KIND.offer, slot: 1, build: 'b', sdp: SDP.safari })).fields.candidates[1].address === '2a01:e0a:1f2:3::abcd', 'IPv6 addresses survive (RFC 5952 text)');
+  const err = (fn) => { try { fn(); return ''; } catch (e) { return e instanceof SignalError ? e.code : 'other:' + e.message; } };
+  ok(err(() => decodePayload('not a code!')) === 'bad-code', 'garbage → SignalError bad-code');
+  const good = encodePayload({ kind: KIND.answer, slot: 3, build: 'b', sdp: SDP.chrome });
+  ok(err(() => decodePayload(good.slice(0, 40))) === 'bad-code', 'truncated code → bad-code');
+  const v2 = 'I' + good.slice(1);   // header byte 0x21 → protocol 2
+  ok(err(() => decodePayload(v2)) === 'unsupported', 'another protocol version → unsupported');
+  ok(err(() => encodePayload({ kind: 1, slot: 1, build: 'b', sdp: SDP.chrome.replace(/a=candidate:[^\r]*\r\n/, '') })) === 'no-candidates', 'no local address → no-candidates');
+  ok(err(() => encodePayload({ kind: 1, slot: 1, build: 'b', sdp: SDP.chrome.replace('sha-256', 'sha-1') })) === 'unsupported', 'non-SHA-256 fingerprint → unsupported');
+  ok(buildSdp(parseSdp(SDP.chrome)).includes('a=setup:actpass') && buildSdp(parseSdp(SDP.chrome)).endsWith('\r\n'), 'rebuilt SDP: CRLF lines, offer role actpass');
 }
 
 // ── 6. the host's own in-page socket ─────────────────────────────────────
@@ -244,6 +334,18 @@ function transcript(seed) {
   await new Promise(r => setTimeout(r, 10));
   ok(srv.humans.size === 0, 'closing the socket detaches the player');
   srv.stop();
+}
+
+{
+  // A frame handed over before the client saw onopen is kept and delivered after it.
+  const ps = new PipeSocket(() => {});
+  const seen = [];
+  ps.onopen = () => seen.push('open');
+  ps.onmessage = (ev) => seen.push('msg' + new Uint8Array(ev.data)[0]);
+  ps._deliver(new Uint8Array([1])); ps._deliver(new Uint8Array([2]));
+  ps._open();
+  await new Promise(r => setTimeout(r, 20));
+  ok(seen.join() === 'open,msg1,msg2', 'PipeSocket: frames arriving before open are delivered after onopen, in order');
 }
 
 // ── 7. two « tabs » over a real BroadcastChannel ─────────────────────────

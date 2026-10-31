@@ -10,8 +10,8 @@
 // work unchanged. The transport is not this module's business: a connection
 // is attached with attach({ send, close }) and fed with receive(frame). The
 // host uses an in-page pipe (lan/pipe-socket.mjs), the guests a WebRTC
-// DataChannel (step 2), the tests BroadcastChannel (lan/bc-link.mjs) or a
-// plain in-memory pipe.
+// DataChannel (lan/rtc-link.mjs), the tests BroadcastChannel (lan/bc-link.mjs)
+// or a plain in-memory pipe.
 //
 // What it reuses: the training engine (offline/engine.mjs, untouched), its
 // bots (offline/bots.mjs) and its protobuf codec (offline/proto.mjs). What it
@@ -31,8 +31,15 @@
 //     kicked once the game runs;
 //   · two players can never share a nickname (case-insensitive) — the
 //     scoreboard tells players apart by name;
-//   · a player whose connection drops leaves the table (fold, then out).
-//     Getting the seat back after a drop comes with the WebRTC transport.
+//   · a player whose connection drops DURING a game keeps his seat for
+//     GRACE_MS (« away »: he checks or folds at once when his turn comes, his
+//     nickname stays reserved). He takes it back by logging in again with the
+//     same nickname and the session GUID of his InitAck (InitMessage field 3,
+//     exactly what the client replays): InitAck.rejoinGameId, then his
+//     RejoinExistingGame is answered with JoinGameAck + GameStartRejoin, and
+//     he plays again from the next hand — the client's existing resume path.
+//     After GRACE_MS he leaves the table (fold, then out). Dropping in the
+//     lobby or the waiting room simply leaves.
 //
 // The scoreboard (lan/scoreboard.mjs) travels in a message of our own,
 // NEARBY_TYPE.Scoreboard (240, envelope field 241, a JSON string in field 1),
@@ -44,11 +51,8 @@ import { decide, pickArchetype } from '../offline/bots.mjs';
 import { encode, frame, packed, readFields, parseClientFrame } from '../offline/proto.mjs';
 import { createScoreboard } from './scoreboard.mjs';
 
-/** Wire version of everything « nearby » adds to PokerTH (custom messages, links). */
-export const NEARBY_PROTOCOL = 1;
-
-/** Messages of our own, outside PokerTH's type numbering (envelope field = type + 1). */
-export const NEARBY_TYPE = Object.freeze({ Scoreboard: 240 });
+import { NEARBY_PROTOCOL, NEARBY_TYPE } from './protocol.mjs';
+export { NEARBY_PROTOCOL, NEARBY_TYPE };
 
 // PokerTH message type ids (pokerth.proto). Envelope field is always type + 1.
 const T = Object.freeze({
@@ -78,6 +82,20 @@ const GAMEMODE = { created: 1, started: 2, closed: 3 };
 export const LIMITS = Object.freeze({ seats: 10, lobby: 16, nameLen: 32, chatLen: 512, gameInfoBytes: 2048 });
 const BOT_ID_BASE = 1000;          // humans get 1, 2, 3…; bots 1001, 1002…
 const START_ACK_WAIT_MS = 5000;    // start anyway if a player never acks StartEvent
+/** How long a dropped player's seat waits for him during a game. */
+export const GRACE_MS = 120000;
+
+function newGuid() {
+  const g = new Uint8Array(16);
+  try { /** @type {any} */ (globalThis).crypto.getRandomValues(g); return g; } catch (e) {}
+  for (let i = 0; i < 16; i++) g[i] = Math.floor(Math.random() * 256);
+  return g;
+}
+function sameBytes(a, b) {
+  if (!a || !b || a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+  return true;
+}
 
 function msg(type, spec) { return frame(encode([[1, 0, type], [type + 1, 2, encode(spec)]])); }
 function str(v) { try { return v instanceof Uint8Array ? new TextDecoder().decode(v) : (v == null ? '' : String(v)); } catch (e) { return ''; } }
@@ -148,6 +166,7 @@ export class LocalServer {
    * @param {string} [opts.botSkill] 'easy' | 'normal' | 'hard' | 'mixed'
    * @param {number} [opts.buildId]  when set, a player with another buildId is refused
    * @param {(snap: object) => void} [opts.onScoreboard] host-side hook, every board change
+   * @param {() => Uint8Array} [opts.newGuid] session GUIDs (16 bytes; crypto by default, tests inject)
    */
   constructor(opts) {
     opts = opts || {};
@@ -157,6 +176,7 @@ export class LocalServer {
     this.botSkill = opts.botSkill || 'mixed';
     this.buildId = opts.buildId || 0;
     this.onScoreboard = typeof opts.onScoreboard === 'function' ? opts.onScoreboard : null;
+    this.newGuid = typeof opts.newGuid === 'function' ? opts.newGuid : newGuid;
     /** @type {Map<number, any>} */ this.sessions = new Map();
     /** @type {Map<number, any>} */ this.humans = new Map();   // pid -> session
     /** @type {Map<number, any>} */ this.botInfo = new Map();  // pid -> { name, avatar }
@@ -186,6 +206,7 @@ export class LocalServer {
   /** The host leaves: every table stops, every player is hung up. */
   stop() {
     if (this.stopped) return;
+    for (const h of this.humans.values()) if (h.awayTimer) { this.timers.clear(h.awayTimer); h.awayTimer = null; }
     this._closeTable(false);
     for (const s of [...this.sessions.values()]) this._hangUp(s);
     this.stopped = true;
@@ -200,7 +221,7 @@ export class LocalServer {
   _lobby(type, spec, except) { for (const s of this.sessions.values()) if (s.state === 'lobby' && s !== except) this._to(s, type, spec); }
   _seated(type, spec, except) {
     const tb = this.table; if (!tb) return;
-    for (const pid of tb.seats) { const s = this.humans.get(pid); if (s && s !== except && s.gameId === tb.gameId) this._to(s, type, spec); }
+    for (const pid of tb.seats) { const s = this.humans.get(pid); if (s && s !== except && s.gameId === tb.gameId && !s.awaitHand) this._to(s, type, spec); }
   }
   _later(fn, ms) { return this.timers.set(() => { if (!this.stopped) fn(); }, ms || 0); }
   _hangUp(s) {
@@ -222,7 +243,7 @@ export class LocalServer {
       case T.PlayerInfoRequest: return this._onInfoReq(s, f);
       case T.JoinNew:           return this._onCreate(s, f);
       case T.JoinExisting:      return this._onJoin(s, f);
-      case T.RejoinExisting:    return this._to(s, T.JoinGameFailed, [[1, 0, u(f, 1, 0)], [2, 0, 11]]);
+      case T.RejoinExisting:    return this._onRejoin(s, f);
       case T.LeaveGame:         return this._onLeave(s);
       case T.KickPlayer:        return this._onKick(s, f);
       case T.StartEvent:        return this._onStartRequest(s, f);
@@ -239,12 +260,35 @@ export class LocalServer {
     const name = cleanNick(str(f[6] && f[6][0]));
     if (!name) return this._error(s, ERR.invalidName);
     const low = name.toLowerCase();
-    for (const h of this.humans.values()) if (h.name.toLowerCase() === low) return this._error(s, ERR.nameInUse);
-    if (this.humans.size >= LIMITS.lobby) return this._error(s, ERR.serverFull);
-    s.pid = this.nextPid++; s.name = name; s.state = 'lobby';
+    const last = (f[3] && f[3][0] instanceof Uint8Array) ? f[3][0] : null;
+    let back = null;
+    for (const h of this.humans.values()) {
+      if (h.name.toLowerCase() !== low) continue;
+      // His own seat, kept while he was away: same nickname AND same GUID.
+      if (h.away && sameBytes(last, h.guid)) { back = h; break; }
+      return this._error(s, ERR.nameInUse);
+    }
+    if (!back && this.humans.size >= LIMITS.lobby) return this._error(s, ERR.serverFull);
+    if (back) {
+      if (back.awayTimer) { this.timers.clear(back.awayTimer); back.awayTimer = null; }
+      s.pid = back.pid; s.name = back.name; s.guid = back.guid; s.rejoinGameId = back.gameId;
+      s.away = true;                                // auto-play goes on until his rejoin
+      // He must still ask for his seat (RejoinExistingGame); if he never
+      // does, the seat is given up like any expired one.
+      s.awayTimer = this._later(() => {
+        s.awayTimer = null;
+        if (!s.rejoinGameId || this.humans.get(s.pid) !== s) return;
+        s.gameId = s.rejoinGameId; s.rejoinGameId = 0; s.away = false;
+        this._leaveTable(s, LEFT.onRequest, false);
+      }, GRACE_MS);
+    } else {
+      s.pid = this.nextPid++; s.name = name; s.guid = this.newGuid();
+    }
+    s.state = 'lobby';
     this.humans.set(s.pid, s);
-    const guid = new Uint8Array(16); guid[0] = 0x4e; guid[1] = 0x42; guid[15] = s.pid & 0xff; guid[14] = (s.sid >> 8) & 0xff; guid[13] = s.sid & 0xff;
-    this._to(s, T.InitAck, [[1, 2, guid], [2, 0, s.pid]]);
+    const ack = [[1, 2, s.guid], [2, 0, s.pid]];
+    if (s.rejoinGameId) ack.push([4, 0, s.rejoinGameId]);
+    this._to(s, T.InitAck, ack);
     for (const h of this.humans.values()) this._to(s, T.PlayerList, [[1, 0, h.pid], [2, 0, 0]]);
     for (const o of this.sessions.values()) if (o !== s && o.state === 'lobby') this._to(o, T.PlayerList, [[1, 0, s.pid], [2, 0, 0]]);
     if (this.table) this._to(s, T.GameListNew, this._listNewSpec());
@@ -279,13 +323,62 @@ export class LocalServer {
   }
   _drop(s) {
     if (!this.sessions.has(s.sid)) return;
-    if (s.gameId) this._leaveTable(s, LEFT.onRequest, false);
     this.sessions.delete(s.sid);
     s.alive = false;
-    if (s.pid && this.humans.get(s.pid) === s) {
+    const mine = s.pid && this.humans.get(s.pid) === s;
+    const tb = this.table, gid = s.gameId || s.rejoinGameId;
+    const running = !!(mine && gid && tb && tb.gameId === gid && tb.started && !tb.over && tb.engine
+      && (tb.engine.players.find(x => x.id === s.pid) || { in: false }).in);
+    if (running) {
+      // Keep the seat for a while: away, nickname reserved (see the header).
+      s.away = true; s.awaitHand = false; s.gameId = gid; s.rejoinGameId = 0;
+      if (tb.engine.h && tb.engine.h._pendingId === s.pid) this._autoAct(tb, s.pid, 0);
+      s.awayTimer = this._later(() => this._awayExpired(s), GRACE_MS);
+      this._lobby(T.PlayerList, [[1, 0, s.pid], [2, 0, 1]]);
+      return;
+    }
+    if (s.gameId) this._leaveTable(s, LEFT.onRequest, false);
+    if (mine) {
       this.humans.delete(s.pid);
       this._lobby(T.PlayerList, [[1, 0, s.pid], [2, 0, 1]]);
     }
+  }
+  _awayExpired(s) {
+    s.awayTimer = null;
+    if (this.humans.get(s.pid) !== s) return;       // he came back meanwhile
+    this.humans.delete(s.pid);
+    s.away = false;
+    if (s.gameId) this._leaveTable(s, LEFT.onRequest, false);
+  }
+  // The away player's seat: check when free, else fold — after a short beat.
+  _autoAct(tb, pid, delay) {
+    const eng = tb.engine;
+    if (tb.turnTimer) { this.timers.clear(tb.turnTimer); tb.turnTimer = null; }
+    tb.turnTimer = this._later(() => {
+      tb.turnTimer = null;
+      if (this.table !== tb || tb.engine !== eng || tb.over || !eng.h || eng.h._pendingId !== pid) return;
+      const toCall = eng.h.currentBet - (eng.h.streetCommit[pid] || 0);
+      eng.act(pid, toCall > 0 ? ACT.FOLD : ACT.CHECK, 0);
+    }, delay || 0);
+  }
+  // RejoinExistingGame after a seat recovery: the table again, from the next hand.
+  _onRejoin(s, f) {
+    const gid = u(f, 1, 0), tb = this.table;
+    const ok = s.rejoinGameId && s.rejoinGameId === gid && tb && tb.gameId === gid && tb.started && !tb.over && tb.engine
+      && tb.seats.includes(s.pid) && (tb.engine.players.find(x => x.id === s.pid) || { in: false }).in;
+    if (!ok) { s.rejoinGameId = 0; s.away = false; return this._to(s, T.JoinGameFailed, [[1, 0, gid], [2, 0, 11]]); }
+    const eng = tb.engine;
+    if (s.awayTimer) { this.timers.clear(s.awayTimer); s.awayTimer = null; }
+    s.rejoinGameId = 0; s.gameId = gid; s.awaitHand = true;     // table messages resume with the next HandStart
+    this._to(s, T.JoinGameAck, [[1, 0, gid], [2, 0, tb.admin === s.pid ? 1 : 0], [3, 2, tb.info]]);
+    for (const pid of tb.seats) this._to(s, T.GamePlayerJoined, [[1, 0, gid], [2, 0, pid], [3, 0, pid === tb.admin ? 1 : 0]]);
+    const btn = eng.players[eng.button >= 0 ? eng.button : 0];
+    const spec = [[1, 0, gid], [2, 0, btn ? btn.id : tb.seats[0]], [3, 0, eng.handNum]];
+    for (const pid of tb.seats) {
+      const p = eng.players.find(x => x.id === pid);
+      spec.push([4, 2, encode([[1, 0, pid], [2, 0, p ? p.stack : 0]])]);
+    }
+    this._to(s, 39 /* GameStartRejoin */, spec);
   }
 
   // ── The table ──────────────────────────────────────────────────────────
@@ -453,7 +546,17 @@ export class LocalServer {
     tb.over = true;
     if (tb.turnTimer) { this.timers.clear(tb.turnTimer); tb.turnTimer = null; }
     if (tb.startTimer) { this.timers.clear(tb.startTimer); tb.startTimer = null; }
-    for (const pid of tb.seats) { const h = this.humans.get(pid); if (h && h.gameId === tb.gameId) h.gameId = 0; }
+    for (const pid of tb.seats) {
+      const h = this.humans.get(pid);
+      if (!h) continue;
+      if (h.gameId === tb.gameId) h.gameId = 0;
+      if (h.rejoinGameId === tb.gameId) { h.rejoinGameId = 0; h.away = false; }
+      h.awaitHand = false;
+      if (!h.alive) {                               // away when the game ended: his name is free again
+        if (h.awayTimer) { this.timers.clear(h.awayTimer); h.awayTimer = null; }
+        this.humans.delete(pid);
+      }
+    }
     this.table = null;
     if (tellLobby) this._lobby(T.GameListUpdate, [[1, 0, tb.gameId], [2, 0, GAMEMODE.closed]]);
   }
@@ -487,12 +590,20 @@ export class LocalServer {
         for (const st of ev.seats) tb.before[st.id] = st.stack + ((eng.h && eng.h.committed[st.id]) || 0);
         for (const pid of tb.seats) {
           const s = this.humans.get(pid);
+          if (s && s.alive && s.awaitHand && s.gameId === G) { s.awaitHand = false; s.away = false; }
+        }
+        for (const pid of tb.seats) {
+          const s = this.humans.get(pid);
           if (!s || s.gameId !== G) continue;
           const hole = ev.holeByPlayer[pid];
           const spec = [[1, 0, G]];
           if (hole) spec.push([2, 2, encode([[1, 0, hole[0]], [2, 0, hole[1]]])]);
           spec.push([4, 0, ev.sb]);
-          for (const p of tb.seats) spec.push([5, 0, (eng.players.find(x => x.id === p) || { in: false }).in ? 0 : 2]);
+          for (const p of tb.seats) {
+            const inGame = (eng.players.find(x => x.id === p) || { in: false }).in;
+            const hs = this.humans.get(p);
+            spec.push([5, 0, !inGame ? 2 : (hs && hs.away) ? 1 : 0]);
+          }
           spec.push([6, 0, ev.dealerId]);
           this._to(s, T.HandStart, spec);
         }
@@ -509,7 +620,10 @@ export class LocalServer {
         const gap = Math.max(450, 900 - sp * 45);
         const turnSpec = [[1, 0, G], [2, 0, ev.playerId], [3, 0, GS[ev.gameState]]];
         this._later(() => { if (this.table === tb && !tb.over) this._seated(T.PlayersTurn, turnSpec); }, gap);
-        if (ev.isBot) {
+        const who = ev.isBot ? null : this.humans.get(ev.playerId);
+        if (!ev.isBot && (!who || who.away || who.awaitHand || !who.alive)) {
+          this._autoAct(tb, ev.playerId, gap);       // away: check or fold, no waiting
+        } else if (ev.isBot) {
           const r = this.rng();
           const d = decide(ev, tb.botCfg[ev.playerId]);
           const base = Math.max(750, 1900 - sp * 100);

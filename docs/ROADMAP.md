@@ -302,8 +302,9 @@ use too. Items are grouped by status rather than fixed phases.
   the system share sheet (AirDrop / Quick Share) or a pasted code. An entry « 👥 Play nearby » in the LAN server
   list, behind an admin switch (`nearby_play`, on by default). Web addition, no QML counterpart. Steps: (1) the
   local server — multi-human lobby, one table, private hole cards, checked frames, evening scoreboard
-  (`public/modules/lan/`, `scripts/test-nearby.mjs`) — **done** (`web.347`); (2) the WebRTC carrier and the compact
-  connection payload; (3) QR codes and the share sheet; (4) the UI, translations, Ace's Help and the admin switch.
+  (`public/modules/lan/`, `scripts/test-nearby.mjs`) — **done** (`web.347`); (2) the WebRTC carrier, the compact
+  connection code and seat recovery after a drop — **done** (`web.348`, real DataChannels tested in Chrome);
+  (3) QR codes and the share sheet; (4) the UI, translations, Ace's Help and the admin switch.
 
 - **Arena** — **an application of its own since `web.327`** (`narmod/pokerth-arena`, private for now); the web client
   keeps only the link (Admin › Community › Arena: address and link key, servers and events sent, `/arena` sent to the
