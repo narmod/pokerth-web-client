@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // « Play nearby » (modules/ui/nearby.mjs, web.350)
+    nbEntry: "Igraj v bližini", nbSub: "Brez interneta · isti Wi-Fi", nbHost: "Gosti igro", nbJoin: "Pridruži se igri", nbAdd: "Dodaj igralca", nbHostStep1: "Igralec skenira to kodo v aplikaciji ali s kamero telefona.", nbHostStep2: "Nato skeniraj kodo, ki se prikaže na njegovem zaslonu.", nbGuestStep1: "Skeniraj kodo gostitelja ali jo prilepi spodaj.", nbGuestStep2: "Pokaži to kodo gostitelju.", nbScan: "Skeniraj kodo", nbPaste: "Sem prilepi kodo", nbWait: "Čakanje na drugi telefon…", nbConnected: "Igralec povezan.", nbErrCode: "Ta koda ni veljavna.", nbErrVersion: "Telefona nimata iste različice aplikacije.", nbErrCamera: "Kamera ni na voljo: namesto tega prilepi kodo.", nbErrLink: "Ni povezave. Oba telefona morata biti v istem omrežju Wi-Fi (omrežja za goste to pogosto blokirajo).", nbLost: "Povezava z gostiteljem je izgubljena. V 2 minutah se znova poveži, da obdržiš svoje mesto.", nbRelayed: "Koda poslana v tvojo igro. Ta zavihek lahko zapreš.", nbScoreboard: "Lestvica večera", nbOneTable: "Pri igri v bližini le ena miza naenkrat.",
   loadPartialFail: "Del aplikacije se ni naložil.", reloadNow: "Znova naloži",
   advTdWitness: 'Turnirji: za mizo direktorja turnirjev te strani mu pošlji povzetek igre za preverjanje rezultata (žetoni in zmagovalec, nikoli moje karte)',
   tdWitnessNotice: 'Turnirska miza: tvoj odjemalec pošlje direktorju turnirjev povzetek te igre (žetone v vsaki roki in zmagovalca, nikoli tvojih kart) za preverjanje rezultata. To lahko izklopiš v Napredne možnosti › Omrežje.',

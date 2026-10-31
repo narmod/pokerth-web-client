@@ -293,6 +293,9 @@ function onJoinGameFailed(sub) {
       11: t('errRejoinFailed')||'Rejoin failed',
       12: t('errNoSpectators')||'Spectators are not allowed'
     };
+    // « Play nearby »: one table at a time (lan/local-server.mjs refuses a
+    // second creation with invalidSettings).
+    if (window._nearbyMode && failCode === 9) errMsgs[9] = t('nbOneTable');
     const errMsg = errMsgs[failCode] || 'Join failed for game '+failedGameId+' (code '+failCode+')';
     setStatus('⚠ ' + errMsg, 'err');
     // Re-show password prompt if wrong password

@@ -133,7 +133,11 @@ export async function hostInvite(server, o) {
 /**
  * Guest side: answer the host's code; the returned socket is the client's S.ws.
  * @param {string} code the host's offer
- * @param {{ build: string, RTCPeerConnection?: any, gatherMs?: number, openMs?: number, lostMs?: number }} o
+ * With `deferOpen`, the socket stays CONNECTING once the link is up (frames
+ * from the host are kept) until `start()` is called — the UI calls it when it
+ * hands the socket to the client, so the client never misses the Announce.
+ * `onLinked()` tells the UI the link is up.
+ * @param {{ build: string, RTCPeerConnection?: any, gatherMs?: number, openMs?: number, lostMs?: number, deferOpen?: boolean, onLinked?: () => void }} o
  */
 export async function guestAnswer(code, o) {
   const cfg = Object.assign({}, RTC_DEFAULTS, o);
@@ -142,7 +146,7 @@ export async function guestAnswer(code, o) {
   if (o.build && off.build !== o.build) throw new SignalError('version', off.build);
   const pc = newPc(o);
   /** @type {any} */ let dc = null;
-  let ended = false, openTimer = null, unwatch = () => {};
+  let ended = false, openTimer = null, unwatch = () => {}, linked = false, started = false;
   const sock = new PipeSocket((u8) => { if (dc && dc.readyState === 'open') { try { dc.send(u8); } catch (e) {} } });
   const end = (why, local) => {
     if (ended) return; ended = true;
@@ -157,7 +161,11 @@ export async function guestAnswer(code, o) {
     dc = ev.channel; dc.binaryType = 'arraybuffer';
     dc.onmessage = (m) => { if (m.data) sock._deliver(new Uint8Array(m.data)); };
     dc.onclose = () => end('closed');
-    const opened = () => { clearTimeout(openTimer); sock._open(); };
+    const opened = () => {
+      clearTimeout(openTimer); linked = true;
+      if (!o.deferOpen || started) sock._open();
+      try { if (typeof o.onLinked === 'function') o.onLinked(); } catch (e) {}
+    };
     if (dc.readyState === 'open') opened(); else dc.onopen = opened;
   };
   unwatch = watch(pc, cfg.lostMs, (why) => end(why));
@@ -167,6 +175,12 @@ export async function guestAnswer(code, o) {
   let payload;
   try { payload = encodePayload({ kind: KIND.answer, slot: off.slot, build: o.build || off.build, label: '', sdp: pc.localDescription.sdp }); }
   catch (e) { end('error', true); throw e; }
-  openTimer = setTimeout(() => { if (sock.readyState === 0) end('timeout'); }, cfg.openMs);
-  return { payload, socket: sock, host: off.label, slot: off.slot, close() { sock.close(); } };
+  openTimer = setTimeout(() => { if (!linked) end('timeout'); }, cfg.openMs);
+  return {
+    payload, socket: sock, host: off.label, slot: off.slot,
+    get linked() { return linked && !ended; },
+    /** Hand the socket over: it opens now if the link is up, else as soon as it is. */
+    start() { started = true; if (linked && sock.readyState === 0) sock._open(); return sock; },
+    close() { sock.close(); },
+  };
 }

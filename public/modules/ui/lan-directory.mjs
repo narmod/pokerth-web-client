@@ -32,6 +32,11 @@
 // GET /api/lan-directory when the LAN form is shown and the copy is older
 // than a minute. An instance with an empty directory, manual entry on and
 // requests closed shows nothing new: the form is exactly as before.
+//   · « 👥 Play nearby » (ui/nearby.mjs, web.350) after the servers, unless the
+//     admin switch `nearby_play` is off or the browser has no WebRTC: picking
+//     it puts body.lan-nearby (CSS swaps Connect for Host / Join). It also
+//     shows the list when there is no directory at all (no network): playing
+//     nearby must work offline.
 // Markup: pokerth-client.html (#lan-dir, #lan-prop-dialog); strings: the UI
 // catalogues (lanDir* / lanProp* / lanErr_*); Ace's Help: guide/contexts/
 // login-lan.mjs and the hotspots.
@@ -41,6 +46,12 @@ const MANUAL = '__manual__';
 // « Propose my server » is the last line of the list (web.60), not a button
 // under it; picking it opens the dialog and keeps the current server.
 const PROPOSE = '__propose__';
+const NEARBY = '__nearby__';
+// The directory when the proxy sent none (offline, old proxy) but « Play
+// nearby » is on offer: an empty list with manual entry, as before.
+const NO_DIR = Object.freeze({ acceptRequests: false, manualEntry: true, localEntry: false, servers: [] });
+function _nearbyOk() { try { return !!(window.NearbyUI && window.NearbyUI.available()); } catch (e) { return false; } }
+function _nearbySel() { try { return !!(window.NearbyUI && window.NearbyUI.remembered()); } catch (e) { return false; } }
 let _lastSel = '';
 const REFRESH_MS = 60000;
 // ISO 3166 codes offered in the « Country » list (the flags the client ships),
@@ -175,16 +186,23 @@ export function matchEntry(servers, host, port) {
  * out: { show, list, propose, manual, empty, locked, select, apply }
  */
 export function plan(input) {
-  const cfg = input.cfg;
-  const out = { show: false, list: false, propose: false, manual: false, empty: false, locked: false, select: '', apply: null };
+  const nearby = !!input.nearby;
+  const cfg = input.cfg || (nearby ? NO_DIR : null);
+  const out = { show: false, list: false, propose: false, manual: false, empty: false, locked: false, select: '', apply: null, nearby };
   if (!input.isLan || !cfg) return out;
   const servers = cfg.servers;
-  out.list = servers.length > 0 || !cfg.manualEntry;
+  out.list = servers.length > 0 || !cfg.manualEntry || nearby;
   out.propose = !!cfg.acceptRequests;
   out.show = out.list || out.propose;
-  out.manual = !!cfg.manualEntry && servers.length > 0;
-  out.empty = !servers.length && !cfg.manualEntry;
-  if (!servers.length) { out.locked = !cfg.manualEntry; return out; }
+  out.manual = !!cfg.manualEntry && (servers.length > 0 || nearby);
+  out.empty = !servers.length && !cfg.manualEntry && !nearby;
+  // « Play nearby » picked (this visit or a previous one): no address applies.
+  if (nearby && input.nearbySel) { out.select = NEARBY; return out; }
+  if (!servers.length) {
+    out.locked = !cfg.manualEntry;
+    if (nearby) out.select = cfg.manualEntry ? MANUAL : NEARBY;
+    return out;
+  }
   const hit = matchEntry(servers, input.host, input.port);
   // The entry is the truth for its address: TLS included (the checkbox is
   // hidden while a listed server is selected, and may still hold the state
@@ -226,6 +244,11 @@ function _renderSelect(cfg, plan) {
     o.value = s.id; o.textContent = (s.invite ? '✉ ' : s.local ? '★ ' : s.online === true ? '● ' : s.online === false ? '○ ' : '◌ ') + _optionLabel(s);
     frag.appendChild(o);
   });
+  if (plan.nearby) {
+    const o = document.createElement('option');
+    o.value = NEARBY; o.textContent = '👥 ' + _t('nbEntry', null, 'Play nearby');
+    frag.appendChild(o);
+  }
   if (plan.manual) {
     const o = document.createElement('option');
     o.value = MANUAL; o.textContent = _t('lanDirManual', null, 'Enter an address…');
@@ -257,7 +280,8 @@ function _comboItems(cfg) {
   return [...sel.options].map((o) => {
     const s = cfg ? cfg.servers.filter((x) => x.id === o.value)[0] : null;
     return { val: o.value, server: s,
-             label: s ? _optionLabel(s) : o.value === MANUAL ? _t('lanDirManual', null, 'Enter an address…') : _t('lanDirPropose', null, 'Propose my server') };
+             label: s ? _optionLabel(s) : o.value === MANUAL ? _t('lanDirManual', null, 'Enter an address…')
+                  : o.value === NEARBY ? _t('nbEntry', null, 'Play nearby') : _t('lanDirPropose', null, 'Propose my server') };
   });
 }
 function _renderCombo(cfg) {
@@ -266,12 +290,12 @@ function _renderCombo(cfg) {
   if (!sel || !lbl || !list) return;
   const items = _comboItems(cfg);
   const cur = items.filter((x) => x.val === sel.value)[0];
-  lbl.textContent = cur ? cur.label : '';
+  lbl.textContent = cur ? (cur.val === NEARBY ? '👥 ' : '') + cur.label : '';
   if (dot) dot.className = cur && cur.server ? _dotClass(cur.server) : 'lan-dir-dot';
   list.textContent = '';
   items.forEach((it, i) => {
     const d = document.createElement('div');
-    d.className = 'gt-dd-item lan-dd-item' + (it.val === MANUAL ? ' manual' : it.val === PROPOSE ? ' propose' : '') + (it.val === sel.value ? ' sel' : '');
+    d.className = 'gt-dd-item lan-dd-item' + (it.val === MANUAL ? ' manual' : it.val === PROPOSE ? ' propose' : it.val === NEARBY ? ' nearby' : '') + (it.val === sel.value ? ' sel' : '');
     d.id = 'lan-dir-opt-' + i;
     d.setAttribute('role', 'option');
     d.setAttribute('tabindex', '-1');
@@ -280,7 +304,7 @@ function _renderCombo(cfg) {
     const ic = document.createElement('span');
     ic.setAttribute('aria-hidden', 'true');
     if (it.server) ic.className = _dotClass(it.server);
-    else { ic.className = 'lan-dd-plus'; ic.textContent = it.val === PROPOSE ? '+' : '…'; }
+    else { ic.className = 'lan-dd-plus'; ic.textContent = it.val === PROPOSE ? '+' : it.val === NEARBY ? '👥' : '…'; }
     d.appendChild(ic);
     const nm = document.createElement('span');
     nm.className = 'lan-dd-name';
@@ -343,6 +367,17 @@ function _renderDetail(cfg, id) {
   const box = $('lan-dir-detail');
   if (!box) return;
   box.textContent = '';
+  if (id === NEARBY) {
+    box.style.display = '';
+    const line = document.createElement('div');
+    line.className = 'lan-dir-line';
+    const ic = document.createElement('span');
+    ic.className = 'lan-dir-ic'; ic.setAttribute('aria-hidden', 'true'); ic.textContent = '📶';
+    line.appendChild(ic);
+    line.appendChild(document.createTextNode(_t('nbSub', null, 'No Internet · same Wi-Fi')));
+    box.appendChild(line);
+    return;
+  }
   const s = cfg.servers.filter((x) => x.id === id)[0];
   if (!s) { box.style.display = 'none'; return; }
   box.style.display = '';
@@ -417,9 +452,11 @@ export function sync() {
   // the first entry of the list (data-typed, see pokerth.js).
   const typed = !!((h && h.dataset && h.dataset.typed === '1') || (p && p.dataset && p.dataset.typed === '1'));
   const remembered = !!(_ls('pth_lan_host') || window._shareLanTarget || typed);
-  const eff = _eff();
-  const pl = plan({ cfg: eff, isLan, host: h ? h.value : '', port: p ? p.value : '', remembered });
+  const nearby = isLan && _nearbyOk();
+  const eff = _eff() || (nearby ? NO_DIR : null);
+  const pl = plan({ cfg: eff, isLan, host: h ? h.value : '', port: p ? p.value : '', remembered, nearby, nearbySel: _nearbySel() });
   wrap.style.display = pl.show ? '' : 'none';
+  try { document.body.classList.toggle('lan-nearby', !!(pl.show && pl.select === NEARBY)); } catch (e) {}
   const lw = $('lan-dir-sel-wrap'), em = $('lan-dir-empty'), pr = $('lan-dir-propose');
   if (lw) lw.style.display = (pl.list && !pl.empty) ? '' : 'none';
   if (em) em.style.display = pl.empty ? '' : 'none';
@@ -429,7 +466,7 @@ export function sync() {
   try { document.body.classList.toggle('lan-dir-locked', !!(pl.show && pl.locked)); } catch (e) {}
   if (!pl.show || !eff) return;
   if (pl.apply) _applyEntry(pl.apply);
-  if (eff.servers.length) {
+  if (eff.servers.length || pl.nearby) {
     _renderSelect(eff, pl);
     _renderDetail(eff, pl.select);
   }
@@ -457,8 +494,18 @@ export function refresh() {
 
 function onSelect() {
   const sel = /** @type {HTMLSelectElement|null} */ ($('lan-dir-sel'));
-  const eff = _eff();
+  const eff = _eff() || (_nearbyOk() ? NO_DIR : null);
   if (!sel || !eff) return;
+  const nb = sel.value === NEARBY;
+  try { if (window.NearbyUI && sel.value !== PROPOSE) window.NearbyUI.remember(nb); } catch (e) {}
+  try { document.body.classList.toggle('lan-nearby', nb); } catch (e) {}
+  if (nb) {
+    _lastSel = sel.value;
+    _renderCombo(eff);
+    try { document.body.classList.remove('lan-dir-locked'); } catch (e) {}
+    _renderDetail(eff, NEARBY);
+    return;
+  }
   if (sel.value === PROPOSE) {
     sel.value = _lastSel;
     _renderCombo(eff);

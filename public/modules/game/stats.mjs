@@ -146,8 +146,9 @@ function renderStats() {
   // réseau (LAN + serveur privé) : sur pokerth.net direct il n'y a ni stats
   // persistantes ni proxy de classement → seul SESSION a du sens.
   var eligible = S._statsEligible;       // SESSION + TOTAL available
-  var board    = S._boardEligible;       // CLASSEMENT (proxy) available — private/LAN only
-  if (!eligible && S._statsTab !== 'session') S._statsTab = 'session';
+  var nearby   = !!S._nearbyBoard;       // « Play nearby »: the host's evening scoreboard
+  var board    = S._boardEligible || nearby;   // CLASSEMENT (proxy, or the nearby host)
+  if (!eligible && S._statsTab === 'life') S._statsTab = 'session';
   if (!board && S._statsTab === 'board') S._statsTab = 'session';
   var titles = { session: t('statSession'), life: t('statTabLife'), board: t('statTabBoard') };
   function tb(id, label) {
@@ -155,8 +156,8 @@ function renderStats() {
   }
   // pokerth.net direct (not eligible) → no tab bar (session only). Training shows
   // SESSION + TOTAL but no CLASSEMENT. Private/LAN shows all three.
-  var tabs = eligible
-    ? '<div class="stats-tabs">'+tb('session',t('statTabSession'))+tb('life',t('statTabLife'))
+  var tabs = (eligible || nearby)
+    ? '<div class="stats-tabs">'+tb('session',t('statTabSession'))+(eligible ? tb('life',t('statTabLife')) : '')
       + (board ? tb('board',t('statTabBoard')) : '') + '</div>'
     : '';
   var body;
@@ -322,6 +323,7 @@ function _boardFold(s) { return String(s == null ? '' : s).toLowerCase().normali
 // Which LAN server this board belongs to, and when it resets (a listed
 // server's own board only; nothing for the historical board).
 function _boardCaption() {
+  if (S._nearbyBoard) return '<div class="board-caption"><b>' + esc(t('nbScoreboard')) + '</b></div>';
   if (!S._lanBoard || !window.LanDirUI || !window.LanDirUI.boardInfo) return '';
   var b = window.LanDirUI.boardInfo(S._lanBoard);
   if (!b) return '';
@@ -330,8 +332,9 @@ function _boardCaption() {
 }
 function renderBoard(targetId, filterNames) {
   var boxId = targetId || 'stats-board-body';
-  fetch('/stats' + _boardQS(), { cache:'no-store' })
-    .then(function(r){ return r.ok ? r.json() : {}; })
+  // « Play nearby »: the evening scoreboard the host sent (ui/nearby.mjs).
+  (S._nearbyBoard ? Promise.resolve(window._nearbyBoardData || {})
+    : fetch('/stats' + _boardQS(), { cache:'no-store' }).then(function(r){ return r.ok ? r.json() : {}; }))
     .then(function(data){
       var box = document.getElementById(boxId);
       if (!box) return;

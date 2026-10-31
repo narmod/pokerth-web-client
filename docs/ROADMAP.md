@@ -305,7 +305,8 @@ use too. Items are grouped by status rather than fixed phases.
   (`public/modules/lan/`, `scripts/test-nearby.mjs`) — **done** (`web.347`); (2) the WebRTC carrier, the compact
   connection code and seat recovery after a drop — **done** (`web.348`, real DataChannels tested in Chrome);
   (3) QR codes (shown and scanned), the share sheet, pasted codes and links opened in another tab — **done**
-  (`web.349`); (4) the UI, translations, Ace's Help and the admin switch.
+  (`web.349`); (4) the UI, the admin switch and the translations — **done** (`web.350`, played end to end in Chrome on
+  the real client); (5) the help page and Ace's Help.
 
 - **Arena** — **an application of its own since `web.327`** (`narmod/pokerth-arena`, private for now); the web client
   keeps only the link (Admin › Community › Arena: address and link key, servers and events sent, `/arena` sent to the

@@ -17,6 +17,8 @@ export const meta = {
 };
 
 export const strings = {
+    // « Play nearby » (modules/ui/nearby.mjs, web.350)
+    nbEntry: "Ṣeré nítòsí", nbSub: "Láìsí Íntánẹ́ẹ̀tì · Wi-Fi kan náà", nbHost: "Gbàlejò eré", nbJoin: "Darapọ̀ mọ́ eré", nbAdd: "Fi òṣèré kún un", nbHostStep1: "Òṣèré náà ṣàyẹ̀wò kóòdù yìí nínú áàpù tàbí pẹ̀lú kámẹ́rà fóònù.", nbHostStep2: "Lẹ́yìn náà, ṣàyẹ̀wò kóòdù tó yọ lórí ojú ìbòjú rẹ̀.", nbGuestStep1: "Ṣàyẹ̀wò kóòdù agbàlejò, tàbí lẹ̀ ẹ́ sí ìsàlẹ̀.", nbGuestStep2: "Fi kóòdù yìí han agbàlejò.", nbScan: "Ṣàyẹ̀wò kóòdù", nbPaste: "Lẹ kóòdù síbí", nbWait: "Ń dúró de fóònù kejì…", nbConnected: "Òṣèré ti sopọ̀.", nbErrCode: "Kóòdù yìí kò wúlò.", nbErrVersion: "Fóònù méjèèjì kò ní ẹ̀yà áàpù kan náà.", nbErrCamera: "Kámẹ́rà kò sí: lẹ kóòdù náà dípò rẹ̀.", nbErrLink: "Kò sí ìsopọ̀. Fóònù méjèèjì gbọ́dọ̀ wà lórí Wi-Fi kan náà (àwọn nẹ́tíwọ̀ọ̀kì àlejò máa ń dí i lọ́wọ́).", nbLost: "Ìsopọ̀ pẹ̀lú agbàlejò ti já. Tún so pọ̀ láàrin ìṣẹ́jú 2 kí o lè di ìjókòó rẹ mú.", nbRelayed: "A ti fi kóòdù ránṣẹ́ sí eré rẹ. O lè pa táàbù yìí.", nbScoreboard: "Pátákó àmì ìrọ̀lẹ́", nbOneTable: "Tábìlì kan ṣoṣo ní àkókò kan nígbà tí a bá ń ṣeré nítòsí.",
   loadPartialFail: "Apá kan nínú àpù náà kò gbé wọlé.", reloadNow: "Tún gbé wọlé",
   advTdWitness: 'Ìdíje: ní tábìlì olùdarí ìdíje ojú-òpó yìí, fi àkópọ̀ eré ránṣẹ́ sí i láti ṣàyẹ̀wò àbájáde (àkójọ chips àti ẹni tó borí, kì í ṣe káàdì mi láé)',
   tdWitnessNotice: 'Tábìlì ìdíje: oníbàárà rẹ ń fi àkópọ̀ eré yìí ránṣẹ́ sí olùdarí ìdíje (àkójọ chips ní ọwọ́ kọ̀ọ̀kan àti ẹni tó borí, kì í ṣe káàdì rẹ láé) láti ṣàyẹ̀wò àbájáde. O lè pa èyí nínú Àṣàyàn ìlọsíwájú › Nẹ́tíwọ̀ọ̀kì.',

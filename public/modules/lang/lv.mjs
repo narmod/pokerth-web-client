@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // « Play nearby » (modules/ui/nearby.mjs, web.350)
+    nbEntry: "Spēlēt tuvumā", nbSub: "Bez interneta · tas pats Wi-Fi", nbHost: "Rīkot spēli", nbJoin: "Pievienoties spēlei", nbAdd: "Pievienot spēlētāju", nbHostStep1: "Spēlētājs noskenē šo kodu lietotnē vai ar tālruņa kameru.", nbHostStep2: "Pēc tam noskenē kodu, kas parādās viņa ekrānā.", nbGuestStep1: "Noskenē saimnieka kodu vai ielīmē to zemāk.", nbGuestStep2: "Parādi šo kodu saimniekam.", nbScan: "Skenēt kodu", nbPaste: "Ielīmē kodu šeit", nbWait: "Gaida otru tālruni…", nbConnected: "Spēlētājs pievienots.", nbErrCode: "Šis kods nav derīgs.", nbErrVersion: "Abos tālruņos nav vienādas lietotnes versijas.", nbErrCamera: "Kamera nav pieejama: tā vietā ielīmē kodu.", nbErrLink: "Nav savienojuma. Abiem tālruņiem jābūt vienā Wi-Fi tīklā (viesu tīkli to bieži bloķē).", nbLost: "Savienojums ar saimnieku zudis. Savieno vēlreiz 2 minūšu laikā, lai saglabātu vietu.", nbRelayed: "Kods nosūtīts uz tavu spēli. Šo cilni vari aizvērt.", nbScoreboard: "Vakara rezultātu tabula", nbOneTable: "Spēlējot tuvumā, tikai viens galds vienlaikus.",
   loadPartialFail: "Daļa lietotnes netika ielādēta.", reloadNow: "Pārlādēt",
   advTdWitness: 'Turnīri: pie šīs vietnes turnīru direktora galda nosūtīt tam spēles kopsavilkumu rezultāta pārbaudei (žetoni un uzvarētājs, nekad manas kārtis)',
   tdWitnessNotice: 'Turnīra galds: tavs klients nosūta turnīru direktoram šīs spēles kopsavilkumu (žetonus katrā partijā un uzvarētāju, nekad tavas kārtis), lai pārbaudītu rezultātu. To vari izslēgt sadaļā Papildu opcijas › Tīkls.',

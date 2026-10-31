@@ -1,3 +1,9 @@
+2026-10-31 version 2.1.10-web.350:
+- new: « Play nearby » — play together in the same room with no Internet: one phone hosts the game, the others join it over the same Wi-Fi (LAN mode, server list)
+- new: players join by scanning a QR code (in the app or with the phone's camera), with the share button, or by pasting a code
+- new: an evening scoreboard for the players of a nearby game, which keeps adding up while the same players go on
+- new: a player whose connection drops during a nearby game keeps his seat for 2 minutes and gets it back by pairing again
+
 2026-10-30 version 2.1.10-web.346:
 - new: you can send a private message to a player who is in a game; it is delivered once the game is over
 - new: you can keep writing to a partner who went offline, from your existing conversation; it is delivered at the next login

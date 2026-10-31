@@ -17,6 +17,8 @@ export const meta = {
 };
 
 export const strings = {
+    // « Play nearby » (modules/ui/nearby.mjs, web.350)
+    nbEntry: "Yi wasa a kusa", nbSub: "Ba Intanet · Wi-Fi ɗaya", nbHost: "Shirya wasa", nbJoin: "Shiga wasa", nbAdd: "Ƙara ɗan wasa", nbHostStep1: "Ɗan wasan zai duba wannan lambar a manhajar ko da kyamarar waya.", nbHostStep2: "Sannan ka duba lambar da ta bayyana a allonsa.", nbGuestStep1: "Duba lambar mai masaukin baki, ko ka liƙa ta a ƙasa.", nbGuestStep2: "Nuna wa mai masaukin baki wannan lambar.", nbScan: "Duba lamba", nbPaste: "Liƙa lamba a nan", nbWait: "Ana jiran ɗayan wayar…", nbConnected: "Ɗan wasa ya haɗu.", nbErrCode: "Wannan lambar ba ta da inganci.", nbErrVersion: "Wayoyin biyu ba su da sigar manhaja iri ɗaya.", nbErrCamera: "Babu kyamara: ka liƙa lambar a maimakon haka.", nbErrLink: "Babu haɗi. Dole wayoyin biyu su kasance a Wi-Fi ɗaya (cibiyoyin baƙi kan toshe hakan).", nbLost: "Haɗi da mai masaukin baki ya yanke. Ka sake haɗawa cikin minti 2 don ka riƙe kujerarka.", nbRelayed: "An aika lambar zuwa wasanka. Za ka iya rufe wannan shafin.", nbScoreboard: "Allon maki na maraice", nbOneTable: "Tebur ɗaya kawai a lokaci guda idan ana wasa a kusa.",
   loadPartialFail: "Wani ɓangare na manhajar bai loda ba.", reloadNow: "Sake lodawa",
   advTdWitness: 'Gasanni: a teburin daraktan gasar wannan shafi, aika masa taƙaitaccen bayanin wasan don tantance sakamakon (tari da wanda ya ci, ba katunana ba ko kaɗan)',
   tdWitnessNotice: 'Teburin gasa: abokin cinikinka yana aika wa daraktan gasar taƙaitaccen bayanin wannan wasan (tarin kowane ɗan wasa a kowane hannu da wanda ya ci, ba katunanka ba ko kaɗan) don tantance sakamakon. Kana iya kashe wannan a Zaɓuɓɓuka na ci gaba › Hanyar sadarwa.',

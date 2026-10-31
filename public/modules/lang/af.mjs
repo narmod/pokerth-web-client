@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // « Play nearby » (modules/ui/nearby.mjs, web.350)
+    nbEntry: "Speel naby", nbSub: "Sonder internet · dieselfde Wi-Fi", nbHost: "Bied 'n spel aan", nbJoin: "Sluit by 'n spel aan", nbAdd: "Voeg 'n speler by", nbHostStep1: "Die speler skandeer hierdie kode, in die toep of met die foon se kamera.", nbHostStep2: "Skandeer dan die kode wat op sy skerm verskyn.", nbGuestStep1: "Skandeer die gasheer se kode, of plak dit hieronder.", nbGuestStep2: "Wys hierdie kode vir die gasheer.", nbScan: "Skandeer 'n kode", nbPaste: "Plak 'n kode hier", nbWait: "Wag vir die ander foon…", nbConnected: "Speler gekoppel.", nbErrCode: "Hierdie kode is ongeldig.", nbErrVersion: "Die twee fone het nie dieselfde weergawe van die toep nie.", nbErrCamera: "Kamera onbeskikbaar: plak eerder die kode.", nbErrLink: "Geen verbinding nie. Albei fone moet op dieselfde Wi-Fi wees (gastenetwerke blokkeer dit dikwels).", nbLost: "Verbinding met die gasheer verloor. Koppel binne 2 minute weer om jou plek te behou.", nbRelayed: "Kode na jou spel gestuur. Jy kan hierdie oortjie toemaak.", nbScoreboard: "Telbord van die aand", nbOneTable: "Net een tafel op 'n slag wanneer jy naby speel.",
   loadPartialFail: "Deel van die toepassing het nie gelaai nie.", reloadNow: "Herlaai",
   advTdWitness: 'Toernooie: by ’n tafel van hierdie webwerf se toernooidirekteur, stuur vir hom ’n opsomming van die spel om die uitslag na te gaan (fiches en wenner, nooit my kaarte nie)',
   tdWitnessNotice: 'Toernooitafel: jou kliënt stuur vir die toernooidirekteur ’n opsomming van hierdie spel (die fiches by elke hand en die wenner, nooit jou kaarte nie) om die uitslag na te gaan. Jy kan dit afskakel in Gevorderde opsies › Netwerk.',

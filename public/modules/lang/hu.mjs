@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // « Play nearby » (modules/ui/nearby.mjs, web.350)
+    nbEntry: "Játék a közelben", nbSub: "Internet nélkül · ugyanaz a Wi-Fi", nbHost: "Játék indítása", nbJoin: "Csatlakozás játékhoz", nbAdd: "Játékos hozzáadása", nbHostStep1: "A játékos beolvassa ezt a kódot az appban vagy a telefon kamerájával.", nbHostStep2: "Aztán olvasd be a kódot, ami megjelenik a képernyőjén.", nbGuestStep1: "Olvasd be a házigazda kódját, vagy illeszd be lent.", nbGuestStep2: "Mutasd meg ezt a kódot a házigazdának.", nbScan: "Kód beolvasása", nbPaste: "Illessz be ide egy kódot", nbWait: "Várakozás a másik telefonra…", nbConnected: "Játékos csatlakozott.", nbErrCode: "Ez a kód érvénytelen.", nbErrVersion: "A két telefonon nem ugyanaz az app-verzió fut.", nbErrCamera: "A kamera nem érhető el: illeszd be inkább a kódot.", nbErrLink: "Nincs kapcsolat. Mindkét telefonnak ugyanazon a Wi-Fin kell lennie (a vendéghálózatok gyakran tiltják).", nbLost: "Megszakadt a kapcsolat a házigazdával. Párosíts újra 2 percen belül, hogy megtartsd a helyed.", nbRelayed: "A kód elküldve a játékodnak. Ezt a lapot bezárhatod.", nbScoreboard: "Az este eredménytáblája", nbOneTable: "Közeli játékban egyszerre csak egy asztal lehet.",
   loadPartialFail: "Az alkalmazás egy része nem töltődött be.", reloadNow: "Újratöltés",
   advTdWitness: 'Versenyek: az oldal versenyigazgatójának asztalánál összefoglaló küldése neki a játékról az eredmény ellenőrzéséhez (zsetonok és győztes, a lapjaim soha)',
   tdWitnessNotice: 'Versenyasztal: a kliensed összefoglalót küld a versenyigazgatónak erről a játékról (a zsetonok minden leosztásnál és a győztes, a lapjaid soha) az eredmény ellenőrzéséhez. Ezt kikapcsolhatod itt: Speciális beállítások › Hálózat.',

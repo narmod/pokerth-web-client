@@ -364,6 +364,8 @@ const FEATURE_SWITCHES = [
   { key: 'guide_on', label: 'Ace\u2019s Help tips (help on request stays)' },
   { key: 'pad_on', label: 'Gamepad (game controller)' },
   { key: 'remote_on', label: 'TV remote (Android TV)' },
+  // web.350
+  { key: 'nearby_play', label: '\u201cPlay nearby\u201d entry in the LAN server list (no Internet, same Wi-Fi)' },
 ];
 function featureOffList() {
   const a = _adminConfig && _adminConfig.featureOff;

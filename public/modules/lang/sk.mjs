@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // « Play nearby » (modules/ui/nearby.mjs, web.350)
+    nbEntry: "Hrať nablízku", nbSub: "Bez internetu · rovnaká Wi-Fi", nbHost: "Hostiť hru", nbJoin: "Pripojiť sa k hre", nbAdd: "Pridať hráča", nbHostStep1: "Hráč naskenuje tento kód v aplikácii alebo fotoaparátom telefónu.", nbHostStep2: "Potom naskenuj kód, ktorý sa zobrazí na jeho obrazovke.", nbGuestStep1: "Naskenuj kód hostiteľa alebo ho vlož nižšie.", nbGuestStep2: "Ukáž tento kód hostiteľovi.", nbScan: "Naskenovať kód", nbPaste: "Sem vlož kód", nbWait: "Čaká sa na druhý telefón…", nbConnected: "Hráč pripojený.", nbErrCode: "Tento kód nie je platný.", nbErrVersion: "Oba telefóny nemajú rovnakú verziu aplikácie.", nbErrCamera: "Fotoaparát nie je dostupný: vlož radšej kód.", nbErrLink: "Žiadne spojenie. Oba telefóny musia byť na rovnakej Wi-Fi (siete pre hostí to často blokujú).", nbLost: "Spojenie s hostiteľom stratené. Spáruj sa znova do 2 minút, aby si si udržal miesto.", nbRelayed: "Kód odoslaný do tvojej hry. Túto kartu môžeš zavrieť.", nbScoreboard: "Výsledky večera", nbOneTable: "Pri hre nablízku len jeden stôl naraz.",
   loadPartialFail: "Časť aplikácie sa nenačítala.", reloadNow: "Znova načítať",
   advTdWitness: 'Turnaje: pri stole riaditeľa turnajov tejto stránky mu posielať zhrnutie hry na overenie výsledku (stacky a víťaz, nikdy nie moje karty)',
   tdWitnessNotice: 'Turnajový stôl: váš klient posiela riaditeľovi turnajov zhrnutie tejto hry (stacky v každom rozdaní a víťaza, nikdy nie vaše karty) na overenie výsledku. Môžete to vypnúť v Pokročilé možnosti › Sieť.',

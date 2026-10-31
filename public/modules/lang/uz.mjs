@@ -17,6 +17,8 @@ export const meta = {
 };
 
 export const strings = {
+    // « Play nearby » (modules/ui/nearby.mjs, web.350)
+    nbEntry: "Yaqin joyda oʻynash", nbSub: "Internetsiz · bitta Wi-Fi", nbHost: "Oʻyin ochish", nbJoin: "Oʻyinga qoʻshilish", nbAdd: "Oʻyinchi qoʻshish", nbHostStep1: "Oʻyinchi bu kodni ilovada yoki telefon kamerasida skanerlaydi.", nbHostStep2: "Soʻng uning ekranida chiqqan kodni skanerlang.", nbGuestStep1: "Mezbonning kodini skanerlang yoki pastga joylang.", nbGuestStep2: "Bu kodni mezbonga koʻrsating.", nbScan: "Kodni skanerlash", nbPaste: "Kodni shu yerga joylang", nbWait: "Ikkinchi telefon kutilmoqda…", nbConnected: "Oʻyinchi ulandi.", nbErrCode: "Bu kod yaroqsiz.", nbErrVersion: "Ikki telefonda ilovaning bir xil versiyasi yoʻq.", nbErrCamera: "Kamera mavjud emas: oʻrniga kodni joylang.", nbErrLink: "Ulanish yoʻq. Ikkala telefon ham bitta Wi-Fi tarmogʻida boʻlishi kerak (mehmon tarmoqlari buni koʻpincha bloklaydi).", nbLost: "Mezbon bilan aloqa uzildi. Oʻrningizni saqlash uchun 2 daqiqa ichida qayta ulaning.", nbRelayed: "Kod oʻyiningizga yuborildi. Bu varaqni yopishingiz mumkin.", nbScoreboard: "Kechaning hisob jadvali", nbOneTable: "Yaqin joyda oʻynaganda bir vaqtda faqat bitta stol.",
   loadPartialFail: "Ilovaning bir qismi yuklanmadi.", reloadNow: "Qayta yuklash",
   advTdWitness: 'Turnirlar: shu saytning turnir direktori stolida natijani tekshirish uchun unga oʻyin xulosasini yuborish (steklar va gʻolib, hech qachon mening kartalarim emas)',
   tdWitnessNotice: 'Turnir stoli: mijozingiz natijani tekshirish uchun turnir direktoriga ushbu oʻyin xulosasini yuboradi (har bir qoʻldagi steklar va gʻolib, hech qachon kartalaringiz emas). Buni Kengaytirilgan sozlamalar › Tarmoq boʻlimida oʻchirishingiz mumkin.',

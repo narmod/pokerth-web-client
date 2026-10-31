@@ -5208,6 +5208,17 @@ const App = (() => {
   // reconnect sockets, which used to skip it: a kick arriving after a
   // reconnection left the player on a frozen lobby or table.
   function _closeIsTerminal(e) {
+    // « Play nearby »: no proxy to dial again. A guest whose link dropped
+    // pairs again (the host keeps his seat 2 minutes; _armRejoin makes the
+    // next login ask for it); the host's own pipe only closes when he leaves.
+    if (window._nearbyMode && !S._intentionalDisconnect) {
+      try { _armRejoin(); } catch (eN) {}
+      _closeNotifyWS();
+      _hideBanner();
+      try { show('s-connect'); } catch (eN) {}
+      try { if (window.NearbyUI) window.NearbyUI.linkLost(); } catch (eN) {}
+      return true;
+    }
     // Annuaire LAN : ce serveur limite le nombre de joueurs par adresse IP
     // (proxy, code 4430 « lan-ip-cap:N »). Pas de reconnexion automatique —
     // elle buterait sur la même limite.
@@ -5402,6 +5413,10 @@ const App = (() => {
       case T.AfterHandShowCards: { onAfterHandShowCards(sub); break; } // [9g-C5b] → game/msg-hand.mjs
 
       case T.EndOfGame: { onEndOfGame(sub); break; } // [9g-C5b] → game/msg-hand.mjs
+
+      // « Play nearby » evening scoreboard (lan/local-server.mjs, type 240 —
+      // outside PokerTH's numbering) → modules/ui/nearby.mjs
+      case 240: { try { if (window.NearbyUI) window.NearbyUI.onScoreboard(sub); } catch (e) {} break; }
     }
   }
 
@@ -6519,7 +6534,7 @@ const App = (() => {
       // disconnect() replaces the held one instead of adding to it.
       // Training does not depend on the config and never waits.
       var _gateSm = $('server-mode') ? $('server-mode').value : '';
-      if (!window._appConfigSettled && !window._offlineMode && _gateSm !== 'offline') {
+      if (!window._appConfigSettled && !window._offlineMode && _gateSm !== 'offline' && !window._nearbyConnect) {
         var selfCfg = this;
         var tokCfg = window._cfgGateTok = (window._cfgGateTok || 0) + 1;
         (window._appConfigWaiters || (window._appConfigWaiters = [])).push(function () {
@@ -6539,7 +6554,7 @@ const App = (() => {
       const _modeChanged = (S._lastInitMode !== null) &&
                            (_curMode !== S._lastInitMode || _curNick !== S._lastInitNick);
       const _gapNow = Date.now() - S._lastInitTime;
-      if (_modeChanged && _gapNow < S.MODE_SWAP_MIN_GAP) {
+      if (_modeChanged && _gapNow < S.MODE_SWAP_MIN_GAP && !window._nearbyConnect) {
         const wait_ms = S.MODE_SWAP_MIN_GAP - _gapNow;
         const wait_s = Math.ceil(wait_ms / 1000);
         const that = this;
@@ -6705,7 +6720,7 @@ const App = (() => {
       // Prépare l'avatar-upload du choix courant AVANT l'Init.
       try { if (window.refreshMyAvatar) window.refreshMyAvatar(); } catch(e) {}
       if (S.myName.length < 3) { setStatus(t('nickTooShort'), 'err', null, { local: true }); return; }
-      if (!_off && (!effProxyUrl || !host)) { setStatus(t('fillFields'), 'err', null, { local: true }); return; }
+      if (!_off && !window._nearbyConnect && (!effProxyUrl || !host)) { setStatus(t('fillFields'), 'err', null, { local: true }); return; }
 
       if (!_off && loginMode === 'auth' && (!$('pass') || !$('pass').value.trim())) {
         setStatus(t('enterPassword'), 'err', null, { local: true });
@@ -6863,6 +6878,18 @@ const App = (() => {
             pauseGate: function () { return _advGet('pause_hands', false); } });
         } catch (e) {
           setStatus('Offline init failed: ' + e.message, 'err');
+          return;
+        }
+      } else if (window._nearbyConnect && typeof window._nearbyConnect.take === 'function') {
+        // ── « Play nearby » (modules/ui/nearby.mjs) ── the host's in-page
+        // socket to its local server, or the guest's WebRTC link: same
+        // WebSocket surface, no proxy. Taken once.
+        window.directWS = false;
+        try {
+          var _nbc = window._nearbyConnect; window._nearbyConnect = null;
+          S.ws = _nbc.take();
+        } catch (e) {
+          setStatus(t('nbErrLink'), 'err', null, { local: true });
           return;
         }
       } else {
@@ -7153,6 +7180,8 @@ const App = (() => {
         try { S.ws.close(4001, 'user disconnect'); } catch (e) {}
         S.ws = null;
       }
+      // « Play nearby »: the host stops its local server, a guest hangs up.
+      try { if (window.NearbyUI) window.NearbyUI.onDisconnect(); } catch (e) {}
       S.games = {};
       // Reset lobby counters so the next connect starts at 0 instead
       // of inheriting the previous session's tally.
@@ -12558,7 +12587,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.10-web.349'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.10-web.350'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

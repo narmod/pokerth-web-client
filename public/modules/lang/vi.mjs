@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // « Play nearby » (modules/ui/nearby.mjs, web.350)
+    nbEntry: "Chơi gần nhau", nbSub: "Không cần Internet · cùng Wi-Fi", nbHost: "Tổ chức ván chơi", nbJoin: "Tham gia ván chơi", nbAdd: "Thêm người chơi", nbHostStep1: "Người chơi quét mã này trong ứng dụng hoặc bằng camera điện thoại.", nbHostStep2: "Sau đó quét mã hiện trên màn hình của họ.", nbGuestStep1: "Quét mã của chủ phòng hoặc dán vào bên dưới.", nbGuestStep2: "Cho chủ phòng xem mã này.", nbScan: "Quét mã", nbPaste: "Dán mã vào đây", nbWait: "Đang chờ điện thoại kia…", nbConnected: "Người chơi đã kết nối.", nbErrCode: "Mã này không hợp lệ.", nbErrVersion: "Hai điện thoại không cùng phiên bản ứng dụng.", nbErrCamera: "Không dùng được camera: hãy dán mã thay thế.", nbErrLink: "Không có kết nối. Hai điện thoại phải dùng cùng Wi-Fi (mạng khách thường chặn việc này).", nbLost: "Mất kết nối với chủ phòng. Ghép nối lại trong 2 phút để giữ chỗ.", nbRelayed: "Đã gửi mã tới ván chơi của bạn. Bạn có thể đóng thẻ này.", nbScoreboard: "Bảng điểm buổi tối", nbOneTable: "Khi chơi gần nhau, mỗi lần chỉ một bàn.",
   loadPartialFail: "Một phần của ứng dụng không tải được.", reloadNow: "Tải lại",
   advTdWitness: 'Giải đấu: tại bàn của người điều hành giải đấu của trang này, gửi cho người điều hành bản tóm tắt trò chơi để kiểm tra kết quả (chip và người thắng, không bao giờ có bài của tôi)',
   tdWitnessNotice: 'Bàn giải đấu: ứng dụng của bạn gửi cho người điều hành giải đấu bản tóm tắt trò chơi này (chip ở mỗi ván và người thắng, không bao giờ có bài của bạn) để kiểm tra kết quả. Bạn có thể tắt trong Tùy chọn nâng cao › Mạng.',

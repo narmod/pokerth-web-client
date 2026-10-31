@@ -13758,3 +13758,52 @@ body.lan-dir-locked #tls-row { display: none !important; }
 /* Per-server LAN leaderboard (server/lan-boards.js): which server, when it resets. */
 .board-caption { font-size: var(--fs-sm); color: var(--text); margin: 0 0 6px; line-height: 1.35; }
 .board-caption b { color: var(--text-hi); }
+
+/* ══ « PLAY NEARBY » (modules/ui/nearby.mjs, lan/*) — web addition ══
+   The LAN list entry swaps Connect for Host / Join; the host gets « Add a
+   player » and everyone the evening scoreboard in the headers; one dialog
+   (#nb-dialog, same .ld-card / .inv-* family as the invite dialog) carries
+   the QR code, share / copy, the scanner and the paste field. */
+.nb-actions { display: none; }
+body.lan-nearby .nb-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 12px 0 4px; }
+body.lan-nearby #s-connect button.btn-primary[onclick="App.connect()"],
+body.lan-nearby #tls-row, body.lan-nearby #f-user-pass, body.lan-nearby #conn-adv-btn,
+body.lan-nearby #conn-advanced { display: none !important; }
+/* Same look as the Connect button they replace (.btn-primary). */
+.nb-btn {
+  flex: 1 1 150px; min-width: 0; padding: var(--sp-5);
+  background: #2b3444; color: #ffffff; border: none; border-radius: 2px;
+  font-family: var(--ff-display); font-size: var(--fs-base); font-weight: 700; letter-spacing: 0.08em;
+  cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.28);
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+}
+.nb-btn:hover { background: #384252; box-shadow: 0 6px 24px rgba(0,0,0,0.4); }
+.nb-btn:active { transform: scale(0.98); }
+.nb-btn:focus-visible { outline: 2px solid var(--text-hi); outline-offset: 2px; }
+.nb-only { display: none !important; }
+body.nb-on .nb-only { display: inline-flex !important; }
+body.nb-on #g-overflow-menu .nb-only { display: flex !important; }
+body.nb-on:not(.nb-host) .nb-host-only { display: none !important; }
+.lan-dd-item.nearby .lan-dd-plus { width: auto; font-weight: 400; }
+
+#nb-dialog {
+  position: fixed; inset: 0; z-index: 1300;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+  animation: ldFade 0.25s ease-out;
+}
+:root[data-pwa-iphone="1"] #nb-dialog { bottom: auto; height: var(--app-h, 100dvh); }
+.nb-card { max-height: calc(100% - 24px); overflow-y: auto; }
+.nb-step { margin: 4px 0 10px; font-size: var(--fs-sm); color: var(--cream); line-height: 1.4; }
+.nb-qr { margin-bottom: 10px; }
+.nb-share { margin-bottom: 4px; }
+.nb-note { min-height: 1.2em; font-size: var(--fs-sm); color: var(--cream); opacity: 0.8; margin-bottom: 10px; }
+.nb-scan { margin: 0 auto 10px; display: block; }
+.nb-video { display: block; width: 100%; max-width: 280px; margin: 0 auto 10px; border-radius: 8px; background: #000; }
+.nb-paste { margin-bottom: 8px; }
+.nb-input { font-family: inherit; font-size: var(--fs-sm); outline: none; }
+.nb-status { min-height: 1.3em; font-size: var(--fs-sm); color: var(--text-hi); line-height: 1.35; }
+.nb-status.err { color: var(--red); }
+.nb-notice { text-align: center; }
+.nb-board { text-align: left; max-height: 60vh; overflow-y: auto; }

@@ -16,6 +16,26 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **« Play nearby », step 4: in the client** (`web.350`) — the feature is now visible. LAN mode → server list → an
+  entry « 👥 Play nearby » after the servers (`ui/lan-directory.mjs`; also shown with no directory at all, i.e. offline),
+  remembered per device (`pth_nearby_sel`); picking it swaps Connect for « Host a game » / « Join a game »
+  (`body.lan-nearby`). `ui/nearby.mjs`: the host starts the local server and logs in through an in-page socket
+  (`window._nearbyConnect`, taken by a new branch of `App.connect`, which also skips the /app-config gate, the
+  mode-swap delay and the address check for it); « Add a player » (lobby header, game menu) shows the invitation QR /
+  Share / Copy and reads the answer (scanner, paste, or a link relayed from another tab); the guest scans / pastes /
+  opens the host's link, shows his answer, and is logged in when the link is up (`guestAnswer({ deferOpen })` +
+  `start()`, so the client never misses the Announce). Session treated as LAN except: no family leaderboard push, no
+  lifetime stats (`S._nearbyBoard`, `msg-lobby.mjs`), the stats overlay's leaderboard tab and a « 📊 Evening
+  scoreboard » window show the host's board (`renderBoard` reads it, message type 240 wired in `messages.mjs` /
+  `pokerth.js`), no automatic reconnection: a dropped guest gets the join dialog back with « pair again within 2
+  minutes » (`_closeIsTerminal`, `_armRejoin` so the next login reclaims the seat), `App.disconnect` stops the host's
+  server; « one table at a time » for JoinGameFailed 9; a host gets a leave warning and a screen wake lock; an offer
+  link opened at start-up selects LAN → Play nearby and opens the join dialog. Admin switch **`nearby_play`**
+  (Features, on by default). 21 keys (`nbEntry` … `nbOneTable`) in 83 languages. Tests:
+  `scripts/test-nearby-ui-browser.mjs` (30, two Chrome contexts on the real client, page served with no proxy and no
+  /app-config: entry, Host / Join, pairing by copy / paste, lobby chat, a table created with the usual form, joined,
+  started with bots, each player dealt his own cards, the host leaving, the admin switch). Still to come: the help
+  page and Ace's Help.
 - **« Play nearby », step 3: handing the codes over** (`web.349`) — still no visible change (the UI is step 4); the
   building blocks carry no player-facing text, step 4 brings it, translated. `lan/codes.mjs`: every code travels as a
   link to the client (`#lan-offer=<code>` / `#lan-answer=<code>`), so the phone's own camera app works too;

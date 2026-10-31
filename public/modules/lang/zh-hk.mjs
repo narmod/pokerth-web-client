@@ -17,6 +17,8 @@ export const meta = {
 };
 
 export const strings = {
+    // « Play nearby » (modules/ui/nearby.mjs, web.350)
+    nbEntry: "就近對戰", nbSub: "毋須互聯網 · 同一 Wi-Fi", nbHost: "建立牌局", nbJoin: "加入牌局", nbAdd: "新增玩家", nbHostStep1: "對方在 App 內或用手機相機掃描此碼。", nbHostStep2: "然後掃描對方畫面上出現的碼。", nbGuestStep1: "掃描主持人的碼，或貼到下方。", nbGuestStep2: "把此碼給主持人看。", nbScan: "掃描代碼", nbPaste: "在此貼上代碼", nbWait: "正在等候另一部手機…", nbConnected: "玩家已連線。", nbErrCode: "此代碼無效。", nbErrVersion: "兩部手機的 App 版本不同。", nbErrCamera: "無法使用相機：請改為貼上代碼。", nbErrLink: "無法連線。兩部手機必須連接同一個 Wi-Fi（訪客網絡常會封鎖）。", nbLost: "與主持人的連線已中斷。請在 2 分鐘內重新配對以保留座位。", nbRelayed: "代碼已傳送到你的牌局。可以關閉此分頁。", nbScoreboard: "今晚計分板", nbOneTable: "就近對戰時一次只可有一張牌枱。",
   loadPartialFail: "應用程式部分內容未能載入。", reloadNow: "重新載入",
   advTdWitness: '錦標賽：在本網站賽事主管的牌桌上，向其傳送比賽摘要以核對結果（籌碼和勝出者，絕不包括我的手牌）',
   tdWitnessNotice: '錦標賽牌桌：你的客戶端會向賽事主管傳送這場比賽的摘要（每手牌的籌碼和勝出者，絕不包括你的手牌）以核對結果。你可在「進階選項 › 網絡」中關閉此功能。',

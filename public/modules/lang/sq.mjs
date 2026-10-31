@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // « Play nearby » (modules/ui/nearby.mjs, web.350)
+    nbEntry: "Luaj afër", nbSub: "Pa internet · i njëjti Wi-Fi", nbHost: "Pret një lojë", nbJoin: "Bashkohu në një lojë", nbAdd: "Shto një lojtar", nbHostStep1: "Lojtari skanon këtë kod, në aplikacion ose me kamerën e telefonit.", nbHostStep2: "Pastaj skano kodin që shfaqet në ekranin e tij.", nbGuestStep1: "Skano kodin e mikpritësit ose ngjite më poshtë.", nbGuestStep2: "Tregoji këtë kod mikpritësit.", nbScan: "Skano një kod", nbPaste: "Ngjit një kod këtu", nbWait: "Në pritje të telefonit tjetër…", nbConnected: "Lojtari u lidh.", nbErrCode: "Ky kod nuk është i vlefshëm.", nbErrVersion: "Dy telefonat nuk kanë të njëjtin version të aplikacionit.", nbErrCamera: "Kamera nuk është e disponueshme: ngjit kodin në vend të saj.", nbErrLink: "Nuk ka lidhje. Të dy telefonat duhet të jenë në të njëjtin Wi-Fi (rrjetet për mysafirë shpesh e bllokojnë).", nbLost: "Lidhja me mikpritësin humbi. Lidhu sërish brenda 2 minutave për të mbajtur vendin.", nbRelayed: "Kodi u dërgua në lojën tënde. Mund ta mbyllësh këtë skedë.", nbScoreboard: "Renditja e mbrëmjes", nbOneTable: "Vetëm një tavolinë njëherësh kur luan afër.",
   loadPartialFail: "Një pjesë e aplikacionit nuk u ngarkua.", reloadNow: "Ringarko",
   advTdWitness: 'Turnetë: në një tavolinë të drejtorit të turneve të kësaj faqeje, dërgoji një përmbledhje të lojës për të verifikuar rezultatin (stack-et dhe fituesi, kurrë letrat e mia)',
   tdWitnessNotice: 'Tavolinë turneu: klienti yt i dërgon drejtorit të turneve një përmbledhje të kësaj loje (stack-et në çdo dorë dhe fituesin, kurrë letrat e tua) për të verifikuar rezultatin. Mund ta çaktivizosh te Opsionet e avancuara › Rrjeti.',

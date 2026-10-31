@@ -17,6 +17,8 @@ export const meta = {
 };
 
 export const strings = {
+    // « Play nearby » (modules/ui/nearby.mjs, web.350)
+    nbEntry: "Chwarae gerllaw", nbSub: "Heb y Rhyngrwyd · yr un Wi-Fi", nbHost: "Cynnal gêm", nbJoin: "Ymuno â gêm", nbAdd: "Ychwanegu chwaraewr", nbHostStep1: "Mae'r chwaraewr yn sganio'r cod hwn, yn yr ap neu gyda chamera'r ffôn.", nbHostStep2: "Yna sganiwch y cod sy'n ymddangos ar ei sgrin.", nbGuestStep1: "Sganiwch god y gwesteiwr, neu ei gludo isod.", nbGuestStep2: "Dangoswch y cod hwn i'r gwesteiwr.", nbScan: "Sganio cod", nbPaste: "Gludwch god yma", nbWait: "Yn aros am y ffôn arall…", nbConnected: "Chwaraewr wedi cysylltu.", nbErrCode: "Nid yw'r cod hwn yn ddilys.", nbErrVersion: "Nid oes gan y ddau ffôn yr un fersiwn o'r ap.", nbErrCamera: "Camera ddim ar gael: gludwch y cod yn lle hynny.", nbErrLink: "Dim cysylltiad. Rhaid i'r ddau ffôn fod ar yr un Wi-Fi (mae rhwydweithiau gwesteion yn aml yn ei rwystro).", nbLost: "Collwyd y cysylltiad â'r gwesteiwr. Parwch eto o fewn 2 funud i gadw'ch sedd.", nbRelayed: "Anfonwyd y cod i'ch gêm. Gallwch gau'r tab hwn.", nbScoreboard: "Sgorfwrdd y noson", nbOneTable: "Dim ond un bwrdd ar y tro wrth chwarae gerllaw.",
   loadPartialFail: "Ni lwythodd rhan o'r ap.", reloadNow: "Ail-lwytho",
   advTdWitness: 'Twrnameintiau: wrth fwrdd cyfarwyddwr twrnameintiau’r wefan hon, anfon crynodeb o’r gêm ato i wirio’r canlyniad (pentyrrau ac enillydd, byth fy nghardiau)',
   tdWitnessNotice: 'Bwrdd twrnamaint: mae eich cleient yn anfon crynodeb o’r gêm hon at gyfarwyddwr y twrnameintiau (y pentyrrau ym mhob llaw a’r enillydd, byth eich cardiau) i wirio’r canlyniad. Gallwch ddiffodd hyn yn Dewisiadau uwch › Rhwydwaith.',

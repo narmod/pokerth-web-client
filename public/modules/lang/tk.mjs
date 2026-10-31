@@ -17,6 +17,8 @@ export const meta = {
 };
 
 export const strings = {
+    // « Play nearby » (modules/ui/nearby.mjs, web.350)
+    nbEntry: "Golaýda oýna", nbSub: "Internetsiz · şol bir Wi-Fi", nbHost: "Oýun gurna", nbJoin: "Oýuna goşul", nbAdd: "Oýunçy goş", nbHostStep1: "Oýunçy bu kody programmada ýa-da telefonyň kamerasy bilen skanirleýär.", nbHostStep2: "Soňra onuň ekranynda peýda bolan kody skanirle.", nbGuestStep1: "Öý eýesiniň kodyny skanirle ýa-da aşakda goý.", nbGuestStep2: "Bu kody öý eýesine görkez.", nbScan: "Kody skanirle", nbPaste: "Kody şu ýere goý", nbWait: "Beýleki telefona garaşylýar…", nbConnected: "Oýunçy birikdi.", nbErrCode: "Bu kod nädogry.", nbErrVersion: "Iki telefonda programmanyň şol bir wersiýasy ýok.", nbErrCamera: "Kamera elýeterli däl: ýerine kody goý.", nbErrLink: "Baglanyşyk ýok. Iki telefon hem şol bir Wi-Fi-da bolmaly (myhman ulgamlary muny köplenç petikleýär).", nbLost: "Öý eýesi bilen baglanyşyk kesildi. Ýeriňi saklamak üçin 2 minudyň içinde täzeden birik.", nbRelayed: "Kod oýnuňa iberildi. Bu goýmany ýapyp bilersiň.", nbScoreboard: "Agşamyň bal tablisasy", nbOneTable: "Golaýda oýnanyňda bir wagtda diňe bir stol.",
   loadPartialFail: "Programmanyň bir bölegi ýüklenmedi.", reloadNow: "Täzeden ýükle",
   advTdWitness: 'Ýaryşlar: bu saýtyň ýaryş direktorynyň stolunda netijäni barlamak üçin oňa oýnuň gysgaça mazmunyny iber (stekler we ýeňiji, meniň kartlarym hiç haçan däl)',
   tdWitnessNotice: 'Ýaryş stoly: müşderiňiz netijäni barlamak üçin ýaryş direktoryna bu oýnuň gysgaça mazmunyny iberýär (her eldäki stekler we ýeňiji, kartlaryňyz hiç haçan däl). Muny Giňişleýin sazlamalar › Tor bölüminde öçürip bilersiňiz.',

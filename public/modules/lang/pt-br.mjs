@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // « Play nearby » (modules/ui/nearby.mjs, web.350)
+    nbEntry: "Jogar por perto", nbSub: "Sem Internet · mesmo Wi-Fi", nbHost: "Hospedar uma partida", nbJoin: "Entrar em uma partida", nbAdd: "Adicionar um jogador", nbHostStep1: "O jogador escaneia este código, no app ou com a câmera do celular.", nbHostStep2: "Depois escaneie o código que aparece na tela dele.", nbGuestStep1: "Escaneie o código do anfitrião ou cole-o abaixo.", nbGuestStep2: "Mostre este código ao anfitrião.", nbScan: "Escanear um código", nbPaste: "Cole um código aqui", nbWait: "Aguardando o outro celular…", nbConnected: "Jogador conectado.", nbErrCode: "Este código não é válido.", nbErrVersion: "Os dois celulares não têm a mesma versão do app.", nbErrCamera: "Câmera indisponível: cole o código no lugar.", nbErrLink: "Sem conexão. Os dois celulares precisam estar no mesmo Wi-Fi (redes de convidados costumam bloquear).", nbLost: "Conexão com o anfitrião perdida. Pareie de novo em até 2 minutos para manter seu lugar.", nbRelayed: "Código enviado para sua partida. Você pode fechar esta aba.", nbScoreboard: "Placar da noite", nbOneTable: "Só uma mesa por vez ao jogar por perto.",
   loadPartialFail: "Uma parte do app não carregou.", reloadNow: "Recarregar",
   advTdWitness: 'Torneios: em uma mesa do diretor de torneios deste site, enviar a ele um resumo do jogo para conferir o resultado (fichas e vencedor, nunca minhas cartas)',
   tdWitnessNotice: 'Mesa de torneio: seu cliente envia ao diretor de torneios um resumo deste jogo (as fichas em cada mão e o vencedor, nunca suas cartas) para conferir o resultado. Você pode desativar isso em Opções avançadas › Rede.',

@@ -91,7 +91,10 @@ function onAnnounce(sub) {
     //  • private server / LAN → shared leaderboard (push + seed) as before;
     //  • pokerth.net direct → session only.
     S._statsOffline  = !!window._offlineMode;
-    S._boardEligible = !S._statsOffline && (loginMode === 'unauth' || loginMode === 'lan');
+    // « Play nearby » (ui/nearby.mjs): nothing pushed, nothing kept — the
+    // leaderboard views show the host's evening scoreboard instead.
+    S._nearbyBoard   = !!window._nearbyMode;
+    S._boardEligible = !S._statsOffline && !S._nearbyBoard && (loginMode === 'unauth' || loginMode === 'lan');
     S._statsEligible = S._statsOffline || S._boardEligible;
     if (S._boardEligible) _lifeSeedFromServer();
     const typeLabel = ['LAN','Internet (no-auth)','Internet (auth)'][stype] || 'Serveur';
@@ -279,7 +282,7 @@ function onInitAck(sub) {
     try { if (window.maybeShowAuthNotice) window.maybeShowAuthNotice(); } catch (eAw) {}
     // LAN / dedicated server notice: same trigger, gated on LAN/dedicated mode
     // inside the function itself (see window._amLanMode).
-    try { if (window.maybeShowLanNotice) window.maybeShowLanNotice(); } catch (eLw) {}
+    try { if (window.maybeShowLanNotice && !window._nearbyMode) window.maybeShowLanNotice(); } catch (eLw) {}
     // Notifications: no longer asked cold on entering the lobby (browsers
     // silence such prompts or hold them against the site) — the player asks
     // with « 🔔 Notify me » in the waiting room (modules/ui/wait-alert.mjs, web.270).

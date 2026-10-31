@@ -12,6 +12,8 @@ export const meta = {
 };
 
 export const strings = {
+    // « Play nearby » (modules/ui/nearby.mjs, web.350)
+    nbEntry: "Yakında oyna", nbSub: "İnternetsiz · aynı Wi-Fi", nbHost: "Oyun kur", nbJoin: "Oyuna katıl", nbAdd: "Oyuncu ekle", nbHostStep1: "Oyuncu bu kodu uygulamada veya telefon kamerasıyla tarar.", nbHostStep2: "Sonra onun ekranında çıkan kodu tara.", nbGuestStep1: "Ev sahibinin kodunu tara veya aşağıya yapıştır.", nbGuestStep2: "Bu kodu ev sahibine göster.", nbScan: "Kod tara", nbPaste: "Kodu buraya yapıştır", nbWait: "Diğer telefon bekleniyor…", nbConnected: "Oyuncu bağlandı.", nbErrCode: "Bu kod geçerli değil.", nbErrVersion: "İki telefonda uygulamanın aynı sürümü yok.", nbErrCamera: "Kamera kullanılamıyor: bunun yerine kodu yapıştır.", nbErrLink: "Bağlantı yok. İki telefon da aynı Wi-Fi’da olmalı (misafir ağları bunu sıklıkla engeller).", nbLost: "Ev sahibiyle bağlantı koptu. Yerini korumak için 2 dakika içinde yeniden eşleş.", nbRelayed: "Kod oyununa gönderildi. Bu sekmeyi kapatabilirsin.", nbScoreboard: "Akşamın puan tablosu", nbOneTable: "Yakında oynarken aynı anda yalnızca bir masa.",
   loadPartialFail: "Uygulamanın bir kısmı yüklenemedi.", reloadNow: "Yeniden yükle",
   advTdWitness: 'Turnuvalar: bu sitenin turnuva direktörünün masasında, sonucu doğrulaması için ona oyunun bir özetini gönder (fişler ve kazanan; kartlarım asla gönderilmez)',
   tdWitnessNotice: 'Turnuva masası: istemcin, sonucu doğrulamak için turnuva direktörüne bu oyunun bir özetini (her eldeki fişler ve kazanan; kartların asla gönderilmez) gönderir. Bunu Gelişmiş seçenekler › Ağ bölümünden kapatabilirsin.',

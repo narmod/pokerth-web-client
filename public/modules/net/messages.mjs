@@ -45,6 +45,7 @@ const MSG = (() => {
     67:68, 68:69,                              // TimeoutWarning, ResetTimeout
     69:70, 70:71, 71:72, 72:73,               // Report Avatar/Game + Acks
     73:74,                                     // Error
+    240:241,                                   // « Play nearby » scoreboard (lan/protocol.mjs)
     76:77, 77:78,                              // AdminBanPlayer + Ack (kickban total)
     82:83, 83:84,                              // AdminGlobalNotice + Ack (durchsage serveur)
     78:79, 79:80, 80:81, 81:82, 55:56, 56:57, 57:58, 58:59, 59:60, 60:61, 61:62,              // Spectator*
