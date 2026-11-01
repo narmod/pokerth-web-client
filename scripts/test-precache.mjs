@@ -129,6 +129,10 @@ ok(dupes.length === 0, 'no duplicate ASSETS entry' + (dupes.length ? ': ' + dupe
   ok(!/url\('fonts\/InterVariable\.woff2'\)/.test(css), 'pokerth.css no longer loads the whole InterVariable.woff2');
   ok(urls.indexOf('fonts/inter-qml-latin.woff2') === urls.length - 1, 'Latin subset declared last (wins shared characters)');
   ok(assets.has('/fonts/inter-qml-latin.woff2') && assets.has('/fonts/inter-qml-symbols.woff2'), 'Latin + symbols subsets precached');
+  // web.6: the Google Fonts Inter subsets serve the SEO pages only.
+  const fcss = fs.readFileSync(path.join(PUB, 'fonts', 'fonts.css'), 'utf8');
+  ok(!/url\(\.\/inter-latin/.test(fcss) && !assets.has('/fonts/inter-latin-wght-normal.woff2') && !assets.has('/fonts/inter-latin-ext-wght-normal.woff2'), 'Google Inter subsets: not declared by the app, not precached');
+  ok(fs.existsSync(path.join(PUB, 'fonts', 'inter-latin-wght-normal.woff2')) && fs.existsSync(path.join(PUB, 'fonts', 'inter-latin-ext-wght-normal.woff2')), 'Google Inter subsets still on disk (SEO pages)');
 }
 
 // 2.1.11-web.1 (traffic audit 2026-11-01): code is revalidated (ETag → 304),

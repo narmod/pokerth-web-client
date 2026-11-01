@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.11-web.5';
+const CACHE_VERSION = 'pokerth-v2.1.11-web.6';
 // Build id the page puts on the card back URL (deck.mjs _deckBack →
 // flipside.<ext>?v=<BUILD_VERSION>): CACHE_VERSION without its prefix.
 const BUILD_ID = CACHE_VERSION.replace(/^pokerth-v/, '');
@@ -62,8 +62,6 @@ const ASSETS = [
   '/fonts/inconsolata-latin-ext-300-normal.woff2',
   '/fonts/inconsolata-latin-ext-400-normal.woff2',
   '/fonts/inconsolata-latin-ext-500-normal.woff2',
-  '/fonts/inter-latin-wght-normal.woff2',
-  '/fonts/inter-latin-ext-wght-normal.woff2',
   // Inter of the QML client, split by script (pokerth.css, 2.1.11-web.5):
   // Latin and the symbols every page shows are precached; the other scripts
   // join the cache the first time a page needs them (handleAsset).

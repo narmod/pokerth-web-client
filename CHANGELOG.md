@@ -16,6 +16,10 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Unused Inter faces out of the app** — `fonts/fonts.css` declared, and the service worker precached, the two
+  Google Fonts Inter subsets (`inter-latin-wght`, `inter-latin-ext-wght`, 133 kB); the app never loaded them, every
+  one of their characters being in the QML Inter declared after them. Both removed from `fonts.css` and the precache;
+  the files stay for the SEO pages (`web.6`).
 - **Inter split by script** — the QML client's `InterVariable.woff2` (342 kB, loaded whole) is served as nine
   `unicode-range` subsets (`fonts/inter-qml-*.woff2`, `scripts/build-inter-subsets.py`): a Latin page loads Latin +
   symbols, 196 kB instead of 342 kB; Cyrillic, Greek, Vietnamese and Latin-extended pages add their own part.
