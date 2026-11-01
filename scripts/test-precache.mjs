@@ -109,7 +109,7 @@ for (let n = 0; n < 52; n++) deck.push('/cards/pokerth-new/' + n + '.svg');
 deck.push('/cards/pokerth-new/flipside.svg', '/cards/pokerth-new/flipside.svg?v=' + BUILD_ID);
 const deckMiss = deck.filter(u => !assets.has(u));
 ok(deckMiss.length === 0, 'default deck precached (52 faces + back, plain and ?v=)' + (deckMiss.length ? ': ' + deckMiss.join(', ') : ''));
-const tbl = ['felt.png', 'dealerPuck.svg', 'smallblindPuck.svg', 'bigblindPuck.svg',
+const tbl = ['felt.webp', 'dealerPuck.svg', 'smallblindPuck.svg', 'bigblindPuck.svg',
   'actionFold.svg', 'actionCall.svg', 'actionRaise.svg', 'actionAllIn.svg'].map(f => '/table/pokerth-official-fs/' + f);
 const tblMiss = tbl.filter(u => !assets.has(u));
 ok(tblMiss.length === 0, 'default table style precached (felt, pucks, buttons)' + (tblMiss.length ? ': ' + tblMiss.join(', ') : ''));

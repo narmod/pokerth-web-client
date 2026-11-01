@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.11-web.6';
+const CACHE_VERSION = 'pokerth-v2.1.11-web.7';
 // Build id the page puts on the card back URL (deck.mjs _deckBack →
 // flipside.<ext>?v=<BUILD_VERSION>): CACHE_VERSION without its prefix.
 const BUILD_ID = CACHE_VERSION.replace(/^pokerth-v/, '');
@@ -297,7 +297,10 @@ const ASSETS = [
   ...Array.from({ length: 52 }, function (_, n) { return '/cards/pokerth-new/' + n + '.svg'; }),
   '/cards/pokerth-new/flipside.svg',
   '/cards/pokerth-new/flipside.svg?v=' + BUILD_ID,
-  '/table/pokerth-official-fs/felt.png',
+  // WebP q90 of the official felt.png (2.1.11-web.7): 92 kB instead of 1 MB,
+  // grain kept (approved by narmod on side-by-side screenshots). felt.png stays
+  // on disk: a table style saved in pth_table_css may still point at it.
+  '/table/pokerth-official-fs/felt.webp',
   '/table/pokerth-official-fs/dealerPuck.svg',
   '/table/pokerth-official-fs/smallblindPuck.svg',
   '/table/pokerth-official-fs/bigblindPuck.svg',

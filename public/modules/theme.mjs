@@ -62,7 +62,7 @@ const PALETTES = [
 // (--wallpaper, ovale transparent) · 'full' = image dans l'ovale (--table-img) ·
 // 'felt' = feutre ovale (--felt-img). id '' = PokerTH officiel fullscreen (defaut).
 const TABLES = [
-  { id: '',             name: "PokerTH default QML table style", key: 'tablePokerthOfficial', fallback: 'PokerTH default QML table style',      swatch: '#1d222b', feltUrl: '/table/pokerth-official-fs/felt.png', preview: '/table/pokerth-official-fs/preview.png', previewPortrait: '/table/pokerth-official-fs/preview_portrait.png', mode: 'fs',   dir: 'pokerth-official-fs', skin: true, puck: 'pokerth', btn: 'glossy' },
+  { id: '',             name: "PokerTH default QML table style", key: 'tablePokerthOfficial', fallback: 'PokerTH default QML table style',      swatch: '#1d222b', feltUrl: '/table/pokerth-official-fs/felt.webp', preview: '/table/pokerth-official-fs/preview.png', previewPortrait: '/table/pokerth-official-fs/preview_portrait.png', mode: 'fs',   dir: 'pokerth-official-fs', skin: true, puck: 'pokerth', btn: 'glossy' },
   { id: 'casino',       name: "Green Casino", key: 'tableCasino',          fallback: 'Green Casino', swatch: '#1e6b1e', feltUrl: '/table/casino/felt.png', preview: '/table/casino/preview.png', previewPortrait: '/table/casino/preview_portrait.png', mode: 'fs', skin: true, align: 'center', puck: 'casino',  btn: 'casino' },
   // Tapis par defaut du client QML (data/gfx/qml/table/*, AGPL-3.0) — plein ecran.
   { id: 'danuxi', name: "Danuxi Blue QML table style", key: 'tableDanuxi', fallback: "Danuxi Blue", swatch: '#1f3a5c', feltUrl: '/table/danuxi/felt.png', preview: '/table/danuxi/preview.png', previewPortrait: '/table/danuxi/preview_portrait.png', radius: 6.5, mode: 'fs', skin: true, align: 'center', zoom: 1.3 },

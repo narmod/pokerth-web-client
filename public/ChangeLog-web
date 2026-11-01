@@ -1,4 +1,7 @@
-2026-11-01 version 2.1.11-web.5 (current series):
+2026-11-01 version 2.1.11-web.7 (current series):
+- improvement: the default table loads ten times lighter (same felt, 92 kB instead of 1 MB)
+
+2026-11-01 version 2.1.11-web.5:
 - improvement: lighter start — the app's font now downloads only the alphabets the screen needs
 
 2026-11-01 version 2.1.11-web.4:

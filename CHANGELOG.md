@@ -16,6 +16,10 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Default table felt in WebP** — the official fullscreen felt (`table/pokerth-official-fs/felt.png`, 1,980 × 1,200,
+  1 MB) is served as `felt.webp` (quality 90, 92 kB): the felt's grain is kept, only slightly softer at 4× zoom
+  (approved on side-by-side screenshots of the same table). `theme.mjs`, the inline boot script and the precache point
+  at it; `felt.png` stays for table styles saved earlier in `pth_table_css` (`web.7`).
 - **Unused Inter faces out of the app** — `fonts/fonts.css` declared, and the service worker precached, the two
   Google Fonts Inter subsets (`inter-latin-wght`, `inter-latin-ext-wght`, 133 kB); the app never loaded them, every
   one of their characters being in the QML Inter declared after them. Both removed from `fonts.css` and the precache;
