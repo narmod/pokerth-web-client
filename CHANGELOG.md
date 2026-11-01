@@ -16,6 +16,11 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Blinds sounds loaded when a game starts** — the three « blinds raise » samples (178 kB of the 280 kB of game
+  sounds) are fetched at the start of a game (`resetBlindRaises`) or at first need, not at boot: a visitor who does
+  not play never downloads them. Offline they still come from the precache. A sample that failed to download is
+  tried again (game start, or one minute later at the next sound) instead of falling back to the synth for good
+  (`web.4`).
 - **No double requests at boot** — the splash's progress bar counts the critical files the app itself loads
   (`PerformanceObserver`, Resource Timing) instead of fetching them a second time: 67 fewer requests per launch.
   A critical file that fails (status ≥ 400) or has not arrived after 6 s is still fetched with retries, which warms

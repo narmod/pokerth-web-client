@@ -1,4 +1,7 @@
-2026-11-01 version 2.1.11-web.3 (current series):
+2026-11-01 version 2.1.11-web.4 (current series):
+- improvement: lighter start — the blinds-raise sounds load when a game begins, not when the app opens
+
+2026-11-01 version 2.1.11-web.3:
 - improvement: faster start — the loading screen no longer asks the server for the same files twice
 
 2026-11-01 version 2.1.11-web.2:

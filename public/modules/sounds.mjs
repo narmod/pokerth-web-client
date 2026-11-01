@@ -175,6 +175,13 @@ var _userMeta = {};     // nom logique -> { file, size, mime } (affichage UI)
 var _buffers = {};      // nom logique -> AudioBuffer decode
 var _decodeCtx = null;  // contexte ayant servi a decoder _buffers
 var _fetchStarted = false;
+var _fetched = {};      // nom logique -> telechargement lance
+// 2.1.11-web.4 (audit trafic 2026-11-01) : les 3 sons de montee des blinds
+// (178 Ko sur 280) ne sont plus telecharges au demarrage mais au debut d'une
+// partie (resetBlindRaises), bien avant la 1re montee — ou au 1er besoin
+// (jeu, bouton ▶ des options). Le visiteur qui ne joue pas ne les charge
+// jamais ; hors ligne ils viennent du precache comme avant.
+const LATE_SAMPLES = { blinds1: 1, blinds2: 1, blinds3: 1 };
 var _blindRaiseCount = 0;  // escalade montee de blinds (reset au GameStartInitial)
 
 // Decode UN sample (callback form : la seule supportee par les vieux Safari).
@@ -190,16 +197,25 @@ function _decodeOne(name) {
 }
 function _decodeAll() { Object.keys(SAMPLE_FILES).forEach(_decodeOne); }
 
-// Telecharge les octets des samples (reseau seul ; decodage differe au geste).
+// Telecharge les octets d'UN sample (reseau seul ; decodage differe au geste).
+// Apres un echec, un besoin en jeu ne retente qu'une minute plus tard (pas une
+// requete par son joue hors ligne) ; le debut d'une partie retente toujours.
+function _fetchOne(name, force) {
+  if (_rawBytes[name] || !SAMPLE_FILES[name]) return;
+  var st = _fetched[name];
+  if (st === true || (st && !force && Date.now() - st < 60000)) return;
+  _fetched[name] = true;
+  fetch(SOUND_DIR + SAMPLE_FILES[name] + '.mp3')
+    .then(function(r) { return r.ok ? r.arrayBuffer() : Promise.reject(new Error('http ' + r.status)); })
+    .then(function(buf) { _rawBytes[name] = buf; if (_audioCtx) _decodeOne(name); })
+    .catch(function() { _fetched[name] = Date.now(); /* sample indisponible -> repli synthe */ });
+}
+// Au chargement du module : tous les samples sauf LATE_SAMPLES.
 function _fetchSamples() {
   if (_fetchStarted) return; _fetchStarted = true;
-  Object.keys(SAMPLE_FILES).forEach(function(name) {
-    fetch(SOUND_DIR + SAMPLE_FILES[name] + '.mp3')
-      .then(function(r) { return r.ok ? r.arrayBuffer() : Promise.reject(new Error('http ' + r.status)); })
-      .then(function(buf) { _rawBytes[name] = buf; if (_audioCtx) _decodeOne(name); })
-      .catch(function() { /* sample indisponible -> repli synthe */ });
-  });
+  Object.keys(SAMPLE_FILES).forEach(function(name) { if (!LATE_SAMPLES[name]) _fetchOne(name); });
 }
+function _fetchLateSamples() { Object.keys(LATE_SAMPLES).forEach(function(n) { _fetchOne(n, true); }); }
 
 // Joue un sample s'il est pret. true si un son a demarre, false sinon (muet,
 // contexte absent, ou sample pas encore decode) -> l'appelant fait son repli.
@@ -208,7 +224,7 @@ function _playSample(name) {
   var ctx = getAudioCtx(); if (!ctx) return false;
   if (_decodeCtx !== ctx) { _buffers = {}; _decodeCtx = ctx; }
   var b = _buffers[name];
-  if (!b) { _decodeOne(name); return false; }
+  if (!b) { _fetchOne(name); _decodeOne(name); return false; }
   try {
     _resumeCtx(ctx);
     var src = ctx.createBufferSource();
@@ -302,7 +318,7 @@ function previewSample(name) {
   var ctx = _ensureRunning(); if (!ctx) return false;
   if (_decodeCtx !== ctx) { _buffers = {}; _decodeCtx = ctx; }
   var b = _buffers[name];
-  if (!b) { _decodeOne(name); return false; }
+  if (!b) { _fetchOne(name); _decodeOne(name); return false; }
   try {
     var s = ctx.createBufferSource();
     s.buffer = b; s.connect(_dest(ctx)); s.start(0);
@@ -485,7 +501,7 @@ function notifyLobbyChat() {
   playTone(880, 0.07, 0.10);
 }
 // Remet l'escalade de blinds a zero (appele au demarrage d'une partie).
-function resetBlindRaises() { _blindRaiseCount = 0; }
+function resetBlindRaises() { _blindRaiseCount = 0; _fetchLateSamples(); }
 function notifyBlindsUp() {
   // Montée des blinds : trois notes ascendantes "level up", brèves et
   // brillantes, distinctes du notifyRaise (qui n'en a que deux).

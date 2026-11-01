@@ -56,9 +56,11 @@ Object.defineProperty(globalThis, 'navigator', {
   configurable: true,
   value: { userActivation: { isActive: false, hasBeenActive: true } }
 });
-globalThis.fetch = () => Promise.reject(new Error('offline test'));  // samples unavailable → synth fallback
+const fetched = [];
+globalThis.fetch = (u) => { fetched.push(String(u)); return Promise.reject(new Error('offline test')); };  // samples unavailable → synth fallback
 
 const S = await import('../public/modules/sounds.mjs');
+const bootFetched = fetched.slice();
 
 let fails = 0;
 function ok(cond, label) {
@@ -113,6 +115,22 @@ localStorage.setItem('pth_snd_actions', '1');
 oscCount = 0;
 S.notifyCard();
 eq(oscCount, 1, 'actions category back on restores it');
+
+// ── Blinds sounds fetched at the start of a game, not at boot (2.1.11-web.4) ──
+{
+  const blinds = (list) => list.filter((u) => /blinds_raises_level[123]\.mp3$/.test(u));
+  const atBoot = bootFetched;
+  eq(blinds(atBoot).length, 0, 'boot: the 3 blinds sounds are not downloaded');
+  eq(atBoot.length, 11, 'boot: the 11 other samples are');
+  S.resetBlindRaises();
+  eq(blinds(fetched).length, 3, 'game start: the 3 blinds sounds are downloaded');
+  await new Promise((r) => setTimeout(r, 0));   // the stubbed fetches reject (offline)
+  S.resetBlindRaises();
+  eq(blinds(fetched).length, 6, 'a failed download is tried again at the next game');
+  const before = fetched.length;
+  S.notifyBlindsUp(); S.notifyBlindsUp();
+  eq(fetched.length, before, 'a failed sample is not fetched again at each sound (1 min pause)');
+}
 
 console.log(fails ? '\n' + fails + ' failure(s)' : '\nAll sound tests passed');
 process.exit(fails ? 1 : 0);
