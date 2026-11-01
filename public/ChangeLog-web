@@ -1,3 +1,6 @@
+2026-11-01 version 2.1.11-web.0 (current series):
+- improvement: the web client now follows PokerTH 2.1.11 and introduces itself to the server as version 2.1.11
+
 2026-10-31 version 2.1.10-web.354:
 - improvement: « Play nearby » — the host's invitation opens by itself, then offers to add another player or to start playing
 - improvement: « Play nearby » — in the waiting room, the host's « Invite friends » button adds a player by QR code
@@ -600,7 +603,7 @@
 2026-10-07 version 2.1.10-web.1:
 - bugfix: on older iPhones and iPads (iOS 16.3 and earlier) the Ace's Help loads again — it stopped with an error before showing anything
 
-2026-10-05 version 2.1.10-web.0 (current series):
+2026-10-05 version 2.1.10-web.0:
 - improvement: the web client now follows PokerTH 2.1.10 and introduces itself to the server as version 2.1.10
 
 2026-10-05 version 2.1.9-web.313:

@@ -8,6 +8,41 @@ web counter (`2.1.5` → `2.1.5-web.0`). Granular, per-build tags are published 
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 this file captures what matters to players and operators.
 
+## 2.1.11-web line (2026)
+
+Opened with `v2.1.11-web.0` (2026-11-01), following the upstream **2.1.11**
+release. Per-build detail is on the
+[GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
+highlights below.
+
+### Changed
+- **The client follows PokerTH 2.1.11** — the build ID sent to the server and the
+  build-ID fallbacks in `net/messages.mjs` and `proto/index.mjs` move to 2.1.11 (`web.0`).
+
+### Upstream 2.1.11 parity
+Every client-side item of the upstream 2.1.11 release was already in the 2.1.10-web line:
+- **Held-back private messages** — to a player at a running table or offline, and writing to offline partners
+  from an existing conversation (upstream `bc4dfb8`, `c3b75c2`; `web.346`).
+- **Empty inbox after a same-nick reconnect** (upstream `96ccd04`): nothing to port, the web client resets the
+  inbox owner on every session (noted with `web.346`).
+- **Connection watchdog** — notice on a stalled connection, faster drop of dead ones (upstream `934457e`;
+  `net/watchdog.mjs`, `web.107`).
+- **Invitations rejected as busy after a logout** (upstream `52661f2`): a pending invitation is declined with
+  its session (`web.106`).
+- **Ghost player in the lobby after a second rejoin login** (upstream `31c0166`): stale homonyms dropped,
+  running tables exempt (`web.105`); session GUID kept for the rejoin (upstream `fcd25c4`; `web.104`).
+- **Start game button for server admins who are not the table admin** (upstream `536c270`): already gated on
+  the game admin (`S.amGameAdmin`, from JoinGameAck / GameAdminChanged), never on the server-admin flag.
+- **Ace's Help finishing place counting players who left after being knocked out** (upstream `31ade1f`): the
+  web guide reads stacks from `S.seatData`, which keeps a player who left (`gone`) with his last stack.
+- **Ukrainian** (upstream `d018f0b`): the web client already ships `lang/uk.mjs`.
+
+Not applicable: the Android-only fixes (docked chat and log panels on tablets, chat input keyboard and the last
+word lost on send — a browser input already holds the word being typed), the widget 2.1.9.3 build, and the
+server-only changes (lobby chat log for moderation, logging of leaves, kicks, TLS handshakes and rejoin decisions,
+no server password in the log, idle-restart script). The server keeps accepting the web client at any version
+(`MIN_BUILD_ID_WEB` = 0.0.0); `MIN_BUILD_ID_QML` moves to 2.1.10.
+
 ## 2.1.10-web line (2026)
 
 Opened with `v2.1.10-web.0` (2026-10-05), following the upstream **2.1.10**
