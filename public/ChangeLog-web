@@ -1,4 +1,7 @@
-2026-11-01 version 2.1.11-web.2 (current series):
+2026-11-01 version 2.1.11-web.3 (current series):
+- improvement: faster start — the loading screen no longer asks the server for the same files twice
+
+2026-11-01 version 2.1.11-web.2:
 - improvement: first visit more than twice as light — offline play is ready much sooner, in your language (switching to a language never used on the device needs a connection)
 
 2026-11-01 version 2.1.11-web.1:

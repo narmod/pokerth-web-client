@@ -16,6 +16,10 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **No double requests at boot** — the splash's progress bar counts the critical files the app itself loads
+  (`PerformanceObserver`, Resource Timing) instead of fetching them a second time: 67 fewer requests per launch.
+  A critical file that fails (status ≥ 400) or has not arrived after 6 s is still fetched with retries, which warms
+  the cache for « Retry »; browsers without `PerformanceObserver` keep the former behaviour (`web.3`).
 - **A lighter first visit** — the service worker precaches English only for the interface, help and Ace's Help
   texts; the player's own language is cached at run time (`CACHE_LANG` message, `modules/sw-lang-cache.mjs`):
   after boot, on a language change and when a new worker takes over. Precache ≈ 10.1 → 4.3 MB (496 → 251 files),

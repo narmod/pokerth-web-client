@@ -69,5 +69,11 @@ ok(/window\.__pthBootStall\(\)/.test(html), 'the error collector calls it');
 const inline = (html.match(/on(?:click|change)="[^"]*\bApp\./g) || []).length;
 ok(inline > 0, 'the page still wires inline App.* handlers (' + inline + ' found)');
 
+// 2.1.11-web.3: the progress bar counts the app's own loads (Resource Timing)
+// instead of fetching the critical files a second time on every launch.
+ok(!/CRIT\.forEach\(function \(u\) \{ fetchRetry\(u\)/.test(html), 'splash: critical files are not fetched a second time');
+ok(/new PerformanceObserver\(/.test(html) && /observe\(\{ type: 'resource', buffered: true \}\)/.test(html), 'splash: progress follows Resource Timing');
+ok(/if \(!critObs\) CRIT\.forEach\(warm\)/.test(html) && /setTimeout\(function \(\) \{ if \(!gone\) CRIT\.forEach\(warm\); \}, 6000\)/.test(html), 'splash: retries kept (no observer, or still missing after 6 s)');
+
 console.log(fails ? '\nFAIL ' + fails : '\nALL OK');
 process.exit(fails ? 1 : 0);

@@ -1124,8 +1124,9 @@ function _processAvatarFile(file) {
 </div>
 <script>
 /* ── Boot gate ────────────────────────────────────────────────────────────
-   Précharge les briques critiques avec réessai (réchauffe le cache), remplit
-   la barre, puis ne révèle l'app que lorsque window.App est défini. Si l'app
+   Suit le chargement des briques critiques (réessai de celles qui échouent,
+   ce qui réchauffe le cache), remplit la barre, puis ne révèle l'app que
+   lorsque window.App est défini. Si l'app
    n'apparaît pas (un fichier n'a pas chargé), affiche « Réessayer » (reload) —
    le cache SW étant durci, le reload aboutit même en réseau instable.
    Autonome : ne dépend ni de pokerth.js, ni de pokerth.css, ni de i18n.mjs. */
@@ -1283,10 +1284,37 @@ function _processAvatarFile(file) {
         });
     })(1);
   }
-  CRIT.forEach(function (u) { fetchRetry(u).then(function (ok) { bump(ok); }); });
+  /* 2.1.11-web.3 (audit trafic 2026-11-01) : la barre compte les fichiers que
+     l'app charge elle-même (Resource Timing) au lieu de les télécharger une
+     seconde fois — 67 requêtes en double à chaque lancement. Un fichier
+     critique en erreur (statut ≥ 400), ou pas encore arrivé après 6 s, est
+     retéléchargé avec réessai comme avant (réchauffe le cache pour
+     « Réessayer »). Sans PerformanceObserver : ancien comportement. */
+  var critState = {};   // 0 attendu · 1 compté · 2 réessai en cours
+  CRIT.forEach(function (u) { critState[u] = 0; });
+  function settle(u, ok) { if (critState[u] === 1) return; critState[u] = 1; bump(ok); }
+  function warm(u) {
+    if (critState[u] !== 0) return;
+    critState[u] = 2;
+    fetchRetry(u).then(function (ok) { settle(u, ok); });
+  }
+  function onEntry(e) {
+    var p; try { p = new URL(e.name, location.href).pathname; } catch (x) { return; }
+    if (!(p in critState) || critState[p] === 1 || e.initiatorType === 'fetch') return;   // 'fetch' = nos propres réessais
+    if (typeof e.responseStatus === 'number' && e.responseStatus >= 400) { warm(p); return; }
+    settle(p, true);
+  }
+  var critObs = null;
+  try {
+    critObs = new PerformanceObserver(function (list) { list.getEntries().forEach(onEntry); });
+    critObs.observe({ type: 'resource', buffered: true });
+  } catch (x) { critObs = null; }
+  if (!critObs) CRIT.forEach(warm);
+  else setTimeout(function () { if (!gone) CRIT.forEach(warm); }, 6000);
 
   function reveal() {
     if (gone) return; gone = true;
+    try { if (critObs) critObs.disconnect(); } catch (e) {}
     // Démarrage réussi : réarmer la récupération automatique (voir beacon).
     try { sessionStorage.removeItem('pth_autoreload'); } catch (e) {}
     try { clearInterval(msgTimer); } catch (e) {}
