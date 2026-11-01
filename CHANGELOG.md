@@ -16,6 +16,11 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **A lighter first visit** — the service worker precaches English only for the interface, help and Ace's Help
+  texts; the player's own language is cached at run time (`CACHE_LANG` message, `modules/sw-lang-cache.mjs`):
+  after boot, on a language change and when a new worker takes over. Precache ≈ 10.1 → 4.3 MB (496 → 251 files),
+  so offline play is ready much sooner, still complete in the player's language. Offline, a language never used on
+  the device cannot be picked (the current one stays, with the usual error toast) (`web.2`).
 - **Lighter launches** — the service worker and the boot splash revalidate code with the proxy's ETag
   (`cache:'no-cache'`) instead of downloading it again (`cache:'reload'`). A returning player's launch drops from
   ≈ 2.2 MB / 240 full downloads to 304s only; the precache reuses what the first page load fetched. Freshness

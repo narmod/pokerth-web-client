@@ -1,4 +1,7 @@
-2026-11-01 version 2.1.11-web.1 (current series):
+2026-11-01 version 2.1.11-web.2 (current series):
+- improvement: first visit more than twice as light — offline play is ready much sooner, in your language (switching to a language never used on the device needs a connection)
+
+2026-11-01 version 2.1.11-web.1:
 - improvement: the app starts faster and uses much less data at each launch — files that did not change are no longer downloaded again (offline play unchanged)
 
 2026-11-01 version 2.1.11-web.0:

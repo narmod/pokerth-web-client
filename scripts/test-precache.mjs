@@ -67,11 +67,24 @@ const entries = [...html.matchAll(/<script\b[^>]*\bsrc="([^"]+)"/g)]
 ok(entries.includes('/pokerth.js'), 'pokerth-client.html loads pokerth.js');
 for (const e of entries) walk(e, 'pokerth-client.html');
 
-// Computed dynamic imports: one file per language.
-for (const dir of ['modules/lang', 'modules/help/content', 'modules/guide/lang']) {
+// Computed dynamic imports: one file per language. Since 2.1.11-web.2 only
+// English is precached; the player's language is cached at run time by the
+// CACHE_LANG message (modules/sw-lang-cache.mjs) — the other 82 were ≈ 6 MB.
+const LANG_DIRS = ['modules/lang', 'modules/help/content', 'modules/guide/lang'];
+const otherLangs = [];
+for (const dir of LANG_DIRS) {
   for (const f of fs.readdirSync(path.join(PUB, dir))) {
-    if (f.endsWith('.mjs')) seen.set('/' + dir + '/' + f, '(per-language import)');
+    if (!f.endsWith('.mjs')) continue;
+    if (f === 'en.mjs') seen.set('/' + dir + '/' + f, '(per-language import, English)');
+    else otherLangs.push('/' + dir + '/' + f);
   }
+}
+{
+  const precachedOthers = otherLangs.filter(u => assets.has(u));
+  ok(precachedOthers.length === 0, 'only English precached for lang / help / guide texts' + (precachedOthers.length ? ': ' + precachedOthers.slice(0, 5).join(', ') : ''));
+  const swc = stripComments(sw);
+  ok(LANG_DIRS.every(d => swc.includes("'/" + d + "/'")) && /type === 'CACHE_LANG'/.test(swc), 'sw.js caches the player\'s language (CACHE_LANG, the 3 folders)');
+  ok(entries.includes('/modules/sw-lang-cache.mjs'), 'pokerth-client.html loads modules/sw-lang-cache.mjs');
 }
 
 // The offline mode entry must be part of the graph (lazy import in pokerth.js).
