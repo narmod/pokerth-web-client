@@ -16,6 +16,13 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Inter split by script** — the QML client's `InterVariable.woff2` (342 kB, loaded whole) is served as nine
+  `unicode-range` subsets (`fonts/inter-qml-*.woff2`, `scripts/build-inter-subsets.py`): a Latin page loads Latin +
+  symbols, 196 kB instead of 342 kB; Cyrillic, Greek, Vietnamese and Latin-extended pages add their own part.
+  Glyphs, advances, axes (opsz, wght) and features are unchanged (checked glyph by glyph); screenshots in 8 languages
+  are pixel-identical except a sub-pixel kerning shift where two neighbouring letters fall in two subsets (Polish,
+  Turkish, Vietnamese). Latin and symbols are precached; `InterVariable.woff2` stays as the source and for the admin
+  page (`web.5`).
 - **Blinds sounds loaded when a game starts** — the three « blinds raise » samples (178 kB of the 280 kB of game
   sounds) are fetched at the start of a game (`resetBlindRaises`) or at first need, not at boot: a visitor who does
   not play never downloads them. Offline they still come from the precache. A sample that failed to download is

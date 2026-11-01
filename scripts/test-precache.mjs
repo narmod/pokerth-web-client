@@ -119,6 +119,18 @@ ok(bv && bv === BUILD_ID, 'sw.js BUILD_ID (' + BUILD_ID + ') equals pokerth.js B
 const dupes = ASSET_LIST.filter((v, i, a) => a.indexOf(v) !== i);
 ok(dupes.length === 0, 'no duplicate ASSETS entry' + (dupes.length ? ': ' + dupes.join(', ') : ''));
 
+// 2.1.11-web.5: Inter of the QML client split by script (unicode-range).
+{
+  const css = fs.readFileSync(path.join(PUB, 'pokerth.css'), 'utf8');
+  const urls = [...css.matchAll(/url\('(fonts\/inter-qml-[a-z-]+\.woff2)'\)/g)].map(m => m[1]);
+  ok(urls.length === 9, 'pokerth.css declares the 9 Inter subsets (' + urls.length + ')');
+  const gone = urls.filter(u => !fs.existsSync(path.join(PUB, u)));
+  ok(gone.length === 0, 'every Inter subset exists on disk' + (gone.length ? ': ' + gone.join(', ') : ''));
+  ok(!/url\('fonts\/InterVariable\.woff2'\)/.test(css), 'pokerth.css no longer loads the whole InterVariable.woff2');
+  ok(urls.indexOf('fonts/inter-qml-latin.woff2') === urls.length - 1, 'Latin subset declared last (wins shared characters)');
+  ok(assets.has('/fonts/inter-qml-latin.woff2') && assets.has('/fonts/inter-qml-symbols.woff2'), 'Latin + symbols subsets precached');
+}
+
 // 2.1.11-web.1 (traffic audit 2026-11-01): code is revalidated (ETag → 304),
 // never re-downloaded on every launch. 'reload' sent no validators: ≈ 2.2 MB per launch.
 {

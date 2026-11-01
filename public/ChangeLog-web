@@ -1,4 +1,7 @@
-2026-11-01 version 2.1.11-web.4 (current series):
+2026-11-01 version 2.1.11-web.5 (current series):
+- improvement: lighter start — the app's font now downloads only the alphabets the screen needs
+
+2026-11-01 version 2.1.11-web.4:
 - improvement: lighter start — the blinds-raise sounds load when a game begins, not when the app opens
 
 2026-11-01 version 2.1.11-web.3:
