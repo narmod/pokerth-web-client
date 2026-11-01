@@ -16,6 +16,10 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Lighter launches** — the service worker and the boot splash revalidate code with the proxy's ETag
+  (`cache:'no-cache'`) instead of downloading it again (`cache:'reload'`). A returning player's launch drops from
+  ≈ 2.2 MB / 240 full downloads to 304s only; the precache reuses what the first page load fetched. Freshness
+  (the origin answers every request) and offline play are unchanged (`web.1`).
 - **The client follows PokerTH 2.1.11** — the build ID sent to the server and the
   build-ID fallbacks in `net/messages.mjs` and `proto/index.mjs` move to 2.1.11 (`web.0`).
 

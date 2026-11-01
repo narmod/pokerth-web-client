@@ -1273,7 +1273,9 @@ function _processAvatarFile(file) {
   function fetchRetry(u, n) {
     n = n || 3;
     return (function attempt(i) {
-      return fetch(u, { cache: 'reload' })
+      // 'no-cache' (2.1.11-web.1): revalidated with the ETag (304) instead of
+      // downloaded again on every launch; still checked against the origin.
+      return fetch(u, { cache: 'no-cache' })
         .then(function (r) { if (r && r.ok) return true; throw 0; })
         .catch(function () {
           if (i < n) return new Promise(function (res) { setTimeout(res, 400 * i); }).then(function () { return attempt(i + 1); });

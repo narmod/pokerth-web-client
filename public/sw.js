@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.11-web.0';
+const CACHE_VERSION = 'pokerth-v2.1.11-web.1';
 // Build id the page puts on the card back URL (deck.mjs _deckBack →
 // flipside.<ext>?v=<BUILD_VERSION>): CACHE_VERSION without its prefix.
 const BUILD_ID = CACHE_VERSION.replace(/^pokerth-v/, '');
@@ -573,7 +573,10 @@ function precacheOne(cache, url, tries) {
   return (async function () {
     for (var i = 0; i < tries; i++) {
       try {
-        var res = await fetch(new Request(url, { cache: 'reload' }));
+        // 'no-cache' (web.1 of 2.1.11): always asks the origin, but with the
+        // validators of the HTTP cache — a file the page has just loaded comes
+        // back as a 304 instead of being downloaded a second time.
+        var res = await fetch(new Request(url, { cache: 'no-cache' }));
         if (res && res.status === 200) { await cache.put(url, res.clone()); return true; }
       } catch (e) { /* retry */ }
       await new Promise(function (r) { setTimeout(r, 400 * (i + 1)); });
@@ -739,7 +742,8 @@ function handleAsset(e) {
 }
 
 // True network-first for app CODE (.js/.mjs/.css): the network is always
-// tried FIRST (`cache:'reload'` bypasses the HTTP disk cache too), and only
+// tried FIRST (`cache:'no-cache'`: the origin is asked every time, so it
+// still decides which deploy is served), and only
 // a network failure (offline, origin down) falls back to the SW cache — so
 // two code files requested moments apart (e.g. pokerth.js + pokerth.css on
 // the same page load) can never end up served from two different deploys.
@@ -754,7 +758,14 @@ function handleAsset(e) {
 // still drives the full re-precache on activate).
 function handleCode(e) {
   return caches.open(CACHE_VERSION).then(function (cache) {
-    return fetch(e.request, { cache: 'reload' }).then(function (response) {
+    // 'no-cache', not 'reload' (2.1.11-web.1, traffic audit 2026-11-01): the
+    // request carries the ETag / Last-Modified the proxy sends for code, so an
+    // unchanged file is a ~200-byte 304 that the browser completes from its
+    // HTTP cache, still a 200 here. 'reload' sent no validators: every launch
+    // downloaded the whole app again (≈ 2.2 MB, 240 files). Freshness is the
+    // same — the origin answers every request — and offline is unchanged
+    // (a failed fetch still falls back to this cache).
+    return fetch(e.request, { cache: 'no-cache' }).then(function (response) {
       if (response && response.status === 200) {
         cache.put(e.request, response.clone());
         return response;

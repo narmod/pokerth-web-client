@@ -106,5 +106,15 @@ ok(bv && bv === BUILD_ID, 'sw.js BUILD_ID (' + BUILD_ID + ') equals pokerth.js B
 const dupes = ASSET_LIST.filter((v, i, a) => a.indexOf(v) !== i);
 ok(dupes.length === 0, 'no duplicate ASSETS entry' + (dupes.length ? ': ' + dupes.join(', ') : ''));
 
+// 2.1.11-web.1 (traffic audit 2026-11-01): code is revalidated (ETag → 304),
+// never re-downloaded on every launch. 'reload' sent no validators: ≈ 2.2 MB per launch.
+{
+  const swCode = stripComments(fs.readFileSync(path.join(PUB, 'sw.js'), 'utf8'));
+  const page = stripComments(fs.readFileSync(path.join(PUB, 'pokerth-client.html'), 'utf8'));
+  ok(!/cache:\s*'reload'/.test(swCode), "sw.js: no cache:'reload' (precache and code revalidate with 'no-cache')");
+  ok(/function handleCode[\s\S]{0,200}fetch\(e\.request, \{ cache: 'no-cache' \}\)/.test(swCode), "sw.js handleCode: network-first with cache:'no-cache'");
+  ok(!/fetch\(u, \{ cache: 'reload' \}\)/.test(page), "boot splash: critical files revalidated, not re-downloaded");
+}
+
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);
