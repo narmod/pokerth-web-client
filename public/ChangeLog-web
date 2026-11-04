@@ -1,4 +1,7 @@
-2026-11-04 version 2.1.11-web.9 (current series):
+2026-11-04 version 2.1.11-web.10 (current series):
+- bugfix: on some phones whose browser adds its own scripts to pages, the « Retry » screen no longer pops up while the app is still loading normally
+
+2026-11-04 version 2.1.11-web.9:
 - bugfix: on Firefox, some browser extensions could stop the keyboard and remote controls, keep a window from coming to the front, or make Ace stumble — the app now ignores them
 
 2026-11-04 version 2.1.11-web.8:

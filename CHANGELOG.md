@@ -66,6 +66,13 @@ highlights below.
   window opened in it stayed behind) and `guide/index.mjs` `installable()` (unhandled rejection from a timer). These
   reads are now guarded: not a TV, never one of our surfaces, desktop install steps. Regression cases added to
   `test-remote-browser`, `test-z-order` and `test-guide-install` (all three fail on the previous code) (`web.9`).
+- **No false Boot stall from browser-injected scripts** — the collector took any « X is not defined » raised by the
+  page while `App` was absent for a lost tap on an inline handler, and brought the boot overlay back in its « Retry »
+  state. Some browsers inject scripts that report the page as their file (Android 9 WebView: `processRandomSelector`,
+  `runCustomize` at `/?lang=zh:1:1`, the page still loading), so a page that was loading fine showed « Retry ». A
+  bare global now counts only when one of the page's `on*` attributes calls it (`inHandler()`, one scan per name, a
+  miss not remembered while the document is loading; no scan possible → the rule as before). `App is not defined`
+  is unchanged. Cases added to `test-errcollect` (`web.10`).
 
 ### Upstream 2.1.11 parity
 Every client-side item of the upstream 2.1.11 release was already in the 2.1.10-web line:

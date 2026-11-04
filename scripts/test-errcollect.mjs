@@ -217,6 +217,9 @@ ok(stalls === 2 && q().some(e => /^Boot stall/.test(e.msg)), 'the Safari wording
 window.__pthBootStallSent = 0; q().length = 0;
 // A bare global called by an inline handler (onclick="toggleConnectOverflow(event)",
 // Android · Chrome 121) is the same lost tap: the page itself raised it.
+const handlerEl = (name, value) => ({ attributes: [{ name: 'class', value: 'x' }, { name, value }] });
+document.querySelectorAll = () => [handlerEl('onclick', 'toggleConnectOverflow(event)'), handlerEl('onchange', 'App.setLang(this.value)')];
+document.readyState = 'interactive';
 listeners.error(appErr('Uncaught ReferenceError: toggleConnectOverflow is not defined'));
 ok(stalls === 3 && q().length === 2 && /^Boot stall/.test(q()[1].msg),
    'a missing inline-handler global brings the overlay back too');
@@ -230,6 +233,25 @@ ok(stalls === 4 && q().length === 1, 'a missing name inside one of our scripts s
 listeners.error({ message: 'Uncaught ReferenceError: foo is not defined', filename: 'https://ads.example/x.html',
   lineno: 3, colno: 1, error: { stack: 'ReferenceError: foo is not defined' } });
 ok(stalls === 4, 'so does one from another origin');
+// A script the browser injects into the page reports the page as its file
+// (Android 9 WebView, « processRandomSelector is not defined » at /?lang=zh:1:1
+// while the page was loading): no on* attribute calls it, so no Boot stall.
+const injectedErr = (name) => ({ message: 'Uncaught ReferenceError: ' + name + ' is not defined', filename: ORIGIN + '/?lang=zh',
+  lineno: 1, colno: 1, error: { stack: 'ReferenceError: ' + name + ' is not defined\n    at <anonymous>:1:1' } });
+q().length = 0; document.readyState = 'loading';
+listeners.error(injectedErr('processRandomSelector'));
+listeners.error(injectedErr('runCustomize'));
+ok(stalls === 4 && q().length === 2 && !q().some(e => /^Boot stall/.test(e.msg)),
+   'a name no on* attribute calls (browser-injected script): reported, no Boot stall, no overlay');
+listeners.error(injectedErr('setLang'));
+ok(stalls === 4, 'a name only reached as a member (App.setLang) is not a bare global of ours');
+listeners.error(appErr('Uncaught ReferenceError: toggleConnectOverflow is not defined'));
+ok(stalls === 5, 'while loading, a real handler name still brings the overlay back');
+window.__pthBootStallSent = 0; q().length = 0; document.readyState = 'interactive';
+document.querySelectorAll = () => { throw new Error('no DOM'); };
+listeners.error(appErr('Uncaught ReferenceError: otherHandler is not defined'));
+ok(stalls === 6, 'when the page cannot be scanned: the rule as before');
+delete document.querySelectorAll; delete document.readyState;
 delete window.__pthBootStall; window.__pthBootStallSent = 0;
 
 // ── Poisoned module graph (web.334) ───────────────────────────────

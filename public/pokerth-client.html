@@ -118,6 +118,27 @@
     if (/^ResizeObserver loop (?:completed with undelivered notifications|limit exceeded)/.test(String(msg || ''))) return true;
     return false;
   }
+  /* Is `name` called by one of the page's on* attributes? Scanned once per
+     name (a few thousand attributes, only while the app is absent). When the
+     page cannot be scanned, true: the Boot stall rule as before. */
+  var _hNames = {};
+  function inHandler(name) {
+    if (name in _hNames) return _hNames[name];
+    var found = false;
+    try {
+      var re = new RegExp('(?:^|[^\\w$.])' + name.replace(/\$/g, '\\$') + '(?![\\w$])');
+      var els = document.querySelectorAll('*');
+      for (var i = 0; i < els.length && !found; i++) {
+        var at = els[i].attributes;
+        for (var j = 0; at && j < at.length; j++) {
+          var n = at[j].name;
+          if (n.length > 2 && n.charCodeAt(0) === 111 && n.charCodeAt(1) === 110 && re.test(at[j].value)) { found = true; break; }
+        }
+      }
+    } catch (_) { found = true; }
+    try { if (!found && document.readyState === 'loading') return false; } catch (_) {}   // the rest of the page may still come: not remembered
+    return (_hNames[name] = found);
+  }
   /* Boot stall (web.263): one line describing the page at the moment a
      player's gesture reached an inline onclick="App.x()" while the app did
      not exist — the boot overlay should have held that gesture. Seen in
@@ -339,13 +360,19 @@
     // Same for the bare globals some inline handlers call (onclick=
     // "toggleConnectOverflow(event)", seen on Android · Chrome 121): any
     // "X is not defined" raised by the page itself (not by one of our .js /
-    // .mjs files) while the app is absent is the same lost tap.
+    // .mjs files) while the app is absent is the same lost tap — provided X is
+    // really called by one of the page's on* attributes. Some browsers inject
+    // their own scripts into the page, which report the page as their file
+    // (Android 9 WebView: « processRandomSelector / runCustomize is not
+    // defined » at /:1:1, while the page was still loading): not a tap of
+    // ours, so no Boot stall and no « Retry » screen over a page that loads.
     try {
       var bsMsg = String(ev.message || ''), bsSrc = String(ev.filename || '');
       var bsInline = !bsSrc || (bsSrc.indexOf(location.origin + '/') === 0 && !/\.m?js(?:[?#]|$)/.test(bsSrc));
+      var bsName = bsInline && /\b([\w$]+) is not defined\b|Can't find variable: ([\w$]+)/.exec(bsMsg);
       if (!window.App && !window.__pthBootStallSent &&
           (/\bApp is not defined\b|Can't find variable: App\b/.test(bsMsg) ||
-           (bsInline && /\b[\w$]+ is not defined\b|Can't find variable: [\w$]+/.test(bsMsg)))) {
+           (bsName && inHandler(bsName[1] || bsName[2])))) {
         window.__pthBootStallSent = 1;
         push({ msg: 'Boot stall: ' + bootState(), src: '', line: 0, col: 0, stack: '' });
         if (typeof window.__pthBootStall === 'function') window.__pthBootStall();
