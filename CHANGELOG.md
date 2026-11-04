@@ -52,6 +52,14 @@ highlights below.
 - **The client follows PokerTH 2.1.11** — the build ID sent to the server and the
   build-ID fallbacks in `net/messages.mjs` and `proto/index.mjs` move to 2.1.11 (`web.0`).
 
+### Fixed
+- **Ace's Help survives a failed load** — `modules/guide/index.mjs` imported `mascot/guide.mjs` once with no retry: a
+  transient failure surfaced as an unhandled rejection (« Failed to fetch dynamically imported module », seen in the
+  error journal) and Ace stayed silent all page. The import is now shared by concurrent callers and retried with a
+  cache-buster (`?r=1` after 700 ms, `?r=2` after 2 s, same cadence as the language catalogues); a final failure is
+  remembered for the page and `ensureDock()` resolves `null`, which every caller already handles. Outcome lines
+  (`Load-failure retry #N recovered` / `… failed, giving up`) go to the error journal (`web.8`).
+
 ### Upstream 2.1.11 parity
 Every client-side item of the upstream 2.1.11 release was already in the 2.1.10-web line:
 - **Held-back private messages** — to a player at a running table or offline, and writing to offline partners

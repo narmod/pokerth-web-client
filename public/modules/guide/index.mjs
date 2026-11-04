@@ -249,15 +249,53 @@ export function where() {
 }
 
 // ── The docked Ace ─────────────────────────────────────────────────
-async function mascot() {
-  if (!M) M = await import('../mascot/guide.mjs');
-  return M;
+// A failed import is retried with a cache-buster (?r=1 after 700 ms, ?r=2
+// after 2 s more), same cadence as the language catalogues (modules/i18n.mjs)
+// and the script retry of the error collector: the browser remembers a failed
+// module URL for the whole page, and the usual culprit (a short burst of
+// failed TLS handshakes between the CDN and the origin) is over within
+// seconds. This module is its only importer, so a ?r=N instance is the only
+// one. A final failure is remembered for the page: ensureDock() then resolves
+// null and every caller stops quietly, instead of an unhandled rejection
+// (seen: « Failed to fetch dynamically imported module …/mascot/guide.mjs »).
+let mLoad = null;             // in-flight import, shared by concurrent callers
+let mDead = false;            // every attempt failed on this page
+function mascot() {
+  if (M) return Promise.resolve(M);
+  if (mDead) return Promise.reject(new Error('mascot unavailable'));
+  if (mLoad) return mLoad;
+  const url = '../mascot/guide.mjs';
+  let got = 0;                // attempt that succeeded
+  const attempt = (n) => import(n ? url + '?r=' + n : url).then((mod) => { got = n; return mod; }, (e) => {
+    if (n >= 2) throw e;
+    return new Promise((res) => setTimeout(res, n === 0 ? 700 : 2000)).then(() => attempt(n + 1));
+  });
+  mLoad = attempt(0).then((mod) => {
+    M = mod; mLoad = null;
+    if (got) reportLoad('Load-failure retry #' + got + ' recovered');
+    return M;
+  }, (e) => {
+    mLoad = null; mDead = true;
+    reportLoad('Load-failure retry #2 failed, giving up');
+    throw e;
+  });
+  return mLoad;
+}
+// One line in the error journal (queue of the inline collector, flushed by
+// modules/errreport.mjs). Never throws.
+function reportLoad(msg) {
+  try {
+    const q = window.__pthErrQ;
+    if (q && q.length < 20) q.push({ msg, src: '/modules/mascot/guide.mjs', line: 0, col: 0, stack: '' });
+    if (window.__pthErrFlush) window.__pthErrFlush();
+  } catch (e) {}
 }
 
 function setBusy(on) { window._guideBusy = !!on; }
 
 async function ensureDock() {
-  const m = await mascot();
+  let m;
+  try { m = await mascot(); } catch (e) { return null; }   // could not load: the caller stops (it already handles null)
   await ready();
   if (out) await callBack();                          // out playing a scene: he comes back first
   await m.dock({ plain: motionOff(), label: gt('aceLabel'), onTap });

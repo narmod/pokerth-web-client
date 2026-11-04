@@ -1,4 +1,7 @@
-2026-11-01 version 2.1.11-web.7 (current series):
+2026-11-04 version 2.1.11-web.8 (current series):
+- bugfix: Ace's help comes back on its own after a brief network hiccup while loading, instead of staying silent
+
+2026-11-01 version 2.1.11-web.7:
 - improvement: the default table loads ten times lighter (same felt, 92 kB instead of 1 MB)
 
 2026-11-01 version 2.1.11-web.5:
