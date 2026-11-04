@@ -122,6 +122,18 @@ await page.evaluate(() => { localStorage.setItem('pth_remote_on', '0'); document
 await key('Enter');
 ok((await calls()).length === 0, 'remote_on = 0: OK ignored by the remote');
 
+// Firefox « can't access dead object »: navigator.userAgent itself throws once
+// an extension that replaced navigator is unloaded. With no option set the
+// remote asks detected() on every key: that threw on every key press.
+await page.evaluate(() => {
+  localStorage.removeItem('pth_remote_on');
+  Object.defineProperty(navigator, 'userAgent', { configurable: true, get() { throw new TypeError("can't access dead object"); } });
+});
+const errBefore = errors.length;
+await key('ArrowDown'); await key('ArrowUp');
+ok(errors.length === errBefore, 'navigator.userAgent throws: keys raise no error ' + JSON.stringify(errors.slice(errBefore, errBefore + 2)));
+ok(await page.evaluate(() => window.RemoteNav ? window.RemoteNav.enabled() === false : true), 'navigator.userAgent throws: not taken for a TV');
+
 ok(errors.length === 0, 'no page errors ' + JSON.stringify(errors.slice(0, 3)));
 await browser.close();
 server.close();

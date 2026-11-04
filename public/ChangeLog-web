@@ -1,4 +1,7 @@
-2026-11-04 version 2.1.11-web.8 (current series):
+2026-11-04 version 2.1.11-web.9 (current series):
+- bugfix: on Firefox, some browser extensions could stop the keyboard and remote controls, keep a window from coming to the front, or make Ace stumble — the app now ignores them
+
+2026-11-04 version 2.1.11-web.8:
 - bugfix: Ace's help comes back on its own after a brief network hiccup while loading, instead of staying silent
 
 2026-11-01 version 2.1.11-web.7:

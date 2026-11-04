@@ -51,12 +51,17 @@ const BASE = 300, TOP = 390;
 let _z = BASE;
 const stack = [];          // surfaces déjà remontées, de la plus ancienne à la plus récente
 
+// Firefox throws on merely reading a property of a node an extension added
+// from its own compartment (« Permission denied to access property
+// "nodeType" »): such a node is never one of ours. Caught here, or the throw
+// aborted the whole MutationObserver batch, so the windows it held were
+// never raised.
 function _matches(el) {
-  return !!(el && el.nodeType === 1 && el.matches && el.matches(SEL));
+  try { return !!(el && el.nodeType === 1 && el.matches && el.matches(SEL)); } catch (e) { return false; }
 }
 
 function _isHost(el) {
-  return !!(el && el.nodeType === 1 && el.matches && el.matches(HOSTS));
+  try { return !!(el && el.nodeType === 1 && el.matches && el.matches(HOSTS)); } catch (e) { return false; }
 }
 
 // Le conteneur héberge-t-il une fenêtre réellement flottante ?
@@ -182,8 +187,8 @@ export function raise(el) {
 // Sélection : toucher une surface la ramène devant (capture = avant les
 // handlers locaux, et même si l'un d'eux fait stopPropagation).
 function _onDown(e) {
-  if (!e.target || !e.target.closest) return;
-  const el = e.target.closest(SEL + ',' + HOSTS);
+  let el = null;
+  try { el = e.target && e.target.closest ? e.target.closest(SEL + ',' + HOSTS) : null; } catch (err) { return; }   // a foreign node (see _matches)
   if (el) raise(el);
 }
 

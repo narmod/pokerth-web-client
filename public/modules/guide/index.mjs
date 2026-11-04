@@ -647,10 +647,16 @@ function installKey(ua, touch) {
   if (/Android/.test(ua)) return 'instAndroid';
   return 'instDesktop';
 }
+// This device's key. Firefox can throw on navigator.userAgent itself (« can't
+// access dead object ») once an extension that replaced navigator is unloaded:
+// the desktop steps then, and installable() says no — never a rejection.
+function deviceInstallKey() {
+  try { return installKey(navigator.userAgent, navigator.maxTouchPoints || 0); } catch (e) { return 'instDesktop'; }
+}
 async function showInstall() {
   let prompt = false;
   try { prompt = typeof window.pwaCanPrompt === 'function' && !!window.pwaCanPrompt(); } catch (e) {}
-  const key = prompt ? 'instPrompt' : installKey(navigator.userAgent, navigator.maxTouchPoints || 0);
+  const key = prompt ? 'instPrompt' : deviceInstallKey();
   const buttons = prompt ? [btn('instNow', true), btn('moreAbout'), btn('close')] : [btn('moreAbout'), btn('close', true)];
   exitAsk(true);
   const m = await ensureDock();
@@ -1317,7 +1323,7 @@ function canPrompt() { try { return typeof window.pwaCanPrompt === 'function' &&
 function installable() {
   if (appStandalone()) return false;
   if (canPrompt()) return true;
-  const k = installKey(navigator.userAgent, navigator.maxTouchPoints || 0);
+  const k = deviceInstallKey();
   return k === 'instIos' || k === 'instAndroid';
 }
 function trackPlayed(w, prev) {

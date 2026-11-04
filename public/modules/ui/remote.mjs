@@ -29,10 +29,15 @@ export function isTV(ua, noPointer) {
   if (/Android/i.test(ua) && /\b(TV|AFT\w*|BRAVIA|GoogleTV|Chromecast|SHIELD|MiTV|SmartTV|Leanback|AndroidTV)\b/i.test(ua)) return true;
   return !!noPointer;
 }
+// Firefox can throw on navigator.userAgent itself (« can't access dead
+// object ») once an extension that replaced navigator is unloaded: that threw
+// on every key press. Not detected then (the remote_on option still forces it).
 function detected() {
   var np = false;
   try { np = !!(window.matchMedia && window.matchMedia('(any-pointer: none)').matches); } catch (e) {}
-  return isTV(navigator.userAgent || '', np);
+  var ua = '';
+  try { ua = navigator.userAgent || ''; } catch (e) { return !!np; }
+  return isTV(ua, np);
 }
 export function enabled() { return opt('remote_on', detected()); }
 

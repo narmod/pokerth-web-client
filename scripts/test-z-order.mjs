@@ -149,5 +149,29 @@ ovf.style.display = 'none'; await tick();
 ovf.style.display = 'block'; await tick();
 ok(z('g-overflow-menu') >= 300 && z('g-overflow-menu') <= 390, 'sans modale visible : le menu reste dans la bande 300–390');
 
+// ── Nœud étranger (Firefox) : lire une propriété d'un nœud ajouté par une
+// extension depuis son propre compartiment lève « Permission denied to access
+// property "nodeType" ». Il n'est jamais à nous : ignoré, et le lot de
+// mutations continue (sinon la surface ouverte dans le même lot restait
+// derrière).
+const foreign = w.document.createElement('div');
+Object.defineProperty(foreign, 'nodeType', { get() { throw new Error('Permission denied to access property "nodeType"'); } });
+Object.defineProperty(foreign, 'closest', { get() { throw new Error('Permission denied to access property "closest"'); } });
+let threw = false;
+try { ok(Z.raise(foreign) === false, 'nœud étranger : raise() répond false'); } catch (e) { threw = true; ok(false, 'nœud étranger : raise() répond false (' + e.message + ')'); }
+ok(!threw, 'nœud étranger : raise() ne lève pas');
+const errs = [];
+w.addEventListener('error', (e) => errs.push(String(e.message || e.error)));
+const vc = w.console.error; w.console.error = (...a) => errs.push(a.map(String).join(' '));
+const mp = $('music-panel');
+mp.style.display = 'none'; await tick();
+w.document.body.appendChild(foreign);
+mp.style.display = 'block';
+await tick();
+ok(['g-chat-panel', 'g-log-panel', 'players-panel'].every((id) => z('music-panel') > z(id)), 'même lot que le nœud étranger : la surface ouverte passe quand même devant');
+foreign.dispatchEvent(new w.Event('pointerdown', { bubbles: true }));
+w.console.error = vc;
+ok(!errs.some((m) => /Permission denied/.test(m)), 'nœud étranger : aucune erreur remontée (observateur, pointerdown)');
+
 console.log(fail ? `\nFAIL ${pass}/${pass + fail}` : `\nPASS ${pass}/${pass}`);
 process.exit(fail ? 1 : 0);

@@ -59,6 +59,13 @@ highlights below.
   cache-buster (`?r=1` after 700 ms, `?r=2` after 2 s, same cadence as the language catalogues); a final failure is
   remembered for the page and `ensureDock()` resolves `null`, which every caller already handles. Outcome lines
   (`Load-failure retry #N recovered` / `… failed, giving up`) go to the error journal (`web.8`).
+- **Firefox: objects left behind by an extension** — once an extension that replaced `navigator` is unloaded, reading
+  `navigator.userAgent` throws (« can't access dead object »); a node it added from its own compartment throws on any
+  property read (« Permission denied to access property "nodeType" »). Seen in the error journal from
+  `ui/remote.mjs` (on every key press), `ui/z-order.mjs` (the throw aborted the whole MutationObserver batch, so a
+  window opened in it stayed behind) and `guide/index.mjs` `installable()` (unhandled rejection from a timer). These
+  reads are now guarded: not a TV, never one of our surfaces, desktop install steps. Regression cases added to
+  `test-remote-browser`, `test-z-order` and `test-guide-install` (all three fail on the previous code) (`web.9`).
 
 ### Upstream 2.1.11 parity
 Every client-side item of the upstream 2.1.11 release was already in the 2.1.10-web line:

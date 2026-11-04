@@ -20,7 +20,7 @@ import { pathToFileURL, fileURLToPath } from 'url';
 const SCENARIO = process.argv[2];
 if (!SCENARIO) {
   let failed = 0;
-  for (const s of ['prompt', 'ios', 'twice', 'watcher', 'desktop']) {
+  for (const s of ['prompt', 'ios', 'twice', 'watcher', 'desktop', 'deadua']) {
     const r = spawnSync(process.execPath, [fileURLToPath(import.meta.url), s], { encoding: 'utf8', timeout: 120000 });
     process.stdout.write(`── ${s}\n` + (r.stdout || '') + (r.stderr || ''));
     if (r.status !== 0) failed++;
@@ -62,12 +62,19 @@ if (SCENARIO === 'twice') { w.localStorage.setItem('pth_inst_n', '2'); w.localSt
 const calls = [];
 w.PthState = { _currentLoginMode: 'guest', loaded: true, games: {}, seats: [], seatData: {} };
 w.pwaInstalled = () => false;
-w.pwaCanPrompt = () => SCENARIO !== 'ios' && SCENARIO !== 'desktop';
+w.pwaCanPrompt = () => SCENARIO !== 'ios' && SCENARIO !== 'desktop' && SCENARIO !== 'deadua';
 w.pwaInstall = () => calls.push('pwaInstall');
 for (const k of Object.getOwnPropertyNames(w)) { if (k === 'performance' || k in globalThis) continue; try { globalThis[k] = w[k]; } catch (e) {} }
 
 await import(pathToFileURL(path.resolve('public/modules/guide/index.mjs')).href);
 w.document.dispatchEvent(new w.Event('DOMContentLoaded'));
+// Firefox « can't access dead object »: navigator.userAgent itself throws once an extension
+// that replaced navigator is unloaded. installable() ran in a timer: an unhandled rejection.
+const rejections = [];
+if (SCENARIO === 'deadua') {
+  process.on('unhandledRejection', (e) => rejections.push(String(e && e.message || e)));
+  Object.defineProperty(w.navigator, 'userAgent', { get: () => { throw new TypeError("can't access dead object"); }, configurable: true });
+}
 const bub = () => w.document.querySelector('#ace-dock .ad-bubble.ad-open');
 const ids = () => (bub() ? [...bub().querySelectorAll('[data-ad-btn]')].map((x) => x.getAttribute('data-ad-btn')) : []);
 const queue = () => { try { return JSON.parse(w.localStorage.getItem('pth_guide_q') || '[]').map((e) => e.join('.')); } catch (e) { return []; } };
@@ -83,9 +90,10 @@ await wait(900);
 w.PthState._gameStarted = false;
 screen('s-lobby');
 
-if (SCENARIO === 'twice' || SCENARIO === 'watcher' || SCENARIO === 'desktop') {
+if (SCENARIO === 'twice' || SCENARIO === 'watcher' || SCENARIO === 'desktop' || SCENARIO === 'deadua') {
   await wait(3500);
-  ok(!asked() && !queue().includes('install.shown'), SCENARIO === 'twice' ? 'asked twice already: never again' : SCENARIO === 'watcher' ? 'a game only watched: no question' : 'a desktop browser that cannot install: no question');
+  ok(!asked() && !queue().includes('install.shown'), SCENARIO === 'twice' ? 'asked twice already: never again' : SCENARIO === 'watcher' ? 'a game only watched: no question' : SCENARIO === 'deadua' ? 'navigator.userAgent throws: no question' : 'a desktop browser that cannot install: no question');
+  if (SCENARIO === 'deadua') ok(!rejections.length, 'navigator.userAgent throws: no unhandled rejection ' + JSON.stringify(rejections.slice(0, 2)));
 } else {
   ok(await until(asked), 'back in the lobby after a game: « Tu veux PokerTH sur ton écran d’accueil ? »');
   ok(/plein écran/.test(bub().textContent), 'with the reasons (full screen, own icon, offline training)');
