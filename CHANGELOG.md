@@ -73,6 +73,11 @@ highlights below.
   bare global now counts only when one of the page's `on*` attributes calls it (`inHandler()`, one scan per name, a
   miss not remembered while the document is loading; no scan possible → the rule as before). `App is not defined`
   is unchanged. Cases added to `test-errcollect` (`web.10`).
+- **More injected-script noise out of the error journal** — `isExtNoise()` now also drops Safari extension frames
+  (`webkit-masked-url://`), AdGuard's extended CSS (`standardSelectors`), the Android WebView host scripts
+  (`processRandomSelector`, `runCustomize`, `property 'insertStyle'`), the Cloudflare analytics beacon
+  (`static.cloudflareinsights.com`) and an in-app ad SDK (« Ad loaded,but … »), errors and rejections alike. None of
+  these names exists in the client; the same error raised by our own files is still reported (`web.11`).
 
 ### Upstream 2.1.11 parity
 Every client-side item of the upstream 2.1.11 release was already in the 2.1.10-web line:

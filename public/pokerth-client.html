@@ -97,7 +97,16 @@
        window.__firefox__) and the Dark Reader extension inject at the top of
        the page (global code@/:1); the client never uses either name.
      - "ResizeObserver loop …": a benign browser notice (the remaining
-       notifications are delivered on the next frame), not an exception. */
+       notifications are delivered on the next frame), not an exception.
+     - webkit-masked-url:// frames: Safari's mask for extension scripts.
+     - standardSelectors: AdGuard's extended-CSS engine, injected into the
+       page (/:17:6302 on a 76-character line).
+     - processRandomSelector / runCustomize / property 'insertStyle': scripts
+       an Android WebView host injects (/?lang=zh:1:1).
+     - static.cloudflareinsights.com: the Cloudflare analytics beacon the CDN
+       adds to the page, not the client.
+     - "Ad loaded,but response or ad data is empty": an in-app browser's ad
+       SDK. None of these names exists in the client. */
   function isExtNoise(msg, src, stack) {
     var s = String(msg || '') + '\n' + String(src || '') + '\n' + String(stack || '');
     if (s.indexOf('-extension://') !== -1) return true;
@@ -116,6 +125,8 @@
     // Tab not found."): the client never calls runtime.* — always an extension.
     if (/\bruntime\.sendMessage\(\)/.test(String(msg || ''))) return true;
     if (/^ResizeObserver loop (?:completed with undelivered notifications|limit exceeded)/.test(String(msg || ''))) return true;
+    if (s.indexOf('webkit-masked-url://') !== -1 || s.indexOf('static.cloudflareinsights.com/') !== -1) return true;
+    if (/\bstandardSelectors\b|\bprocessRandomSelector\b|\brunCustomize\b|property 'insertStyle'|^Ad loaded,\s*but\b/.test(String(msg || ''))) return true;
     return false;
   }
   /* Is `name` called by one of the page's on* attributes? Scanned once per

@@ -1,4 +1,7 @@
-2026-11-04 version 2.1.11-web.10 (current series):
+2026-11-04 version 2.1.11-web.11 (current series):
+- improvement: error reports no longer include errors from ad blockers, browser add-ons and the scripts some browsers add to pages
+
+2026-11-04 version 2.1.11-web.10:
 - bugfix: on some phones whose browser adds its own scripts to pages, the « Retry » screen no longer pops up while the app is still loading normally
 
 2026-11-04 version 2.1.11-web.9:

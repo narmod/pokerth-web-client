@@ -119,6 +119,25 @@ const UC = ORIGIN + '/u.c.b.r.o.w.s.e.r/ucbrowser_script.js?UCFontSizeWebScriptD
   ['the Dark Reader extension', { message: "ReferenceError: Can't find variable: DarkReader", filename: ORIGIN + '/', error: { stack: 'global code@' + ORIGIN + '/:1:11' } }],
   ['the benign ResizeObserver loop notice', { message: 'ResizeObserver loop completed with undelivered notifications.', filename: ORIGIN + '/' }],
   ['the older ResizeObserver wording', { message: 'ResizeObserver loop limit exceeded', filename: ORIGIN + '/' }],
+  ['a Safari extension (webkit-masked-url)', { message: "null is not an object (evaluating 'e.classList')", filename: '', error: { stack: 'x5@webkit-masked-url://hidden/:5678:611' } }],
+  ['AdGuard extended CSS', { message: "undefined is not an object (evaluating 'n.standardSelectors')", filename: ORIGIN + '/', lineno: 17, colno: 6302 }],
+  ['an Android WebView host script (processRandomSelector)', { message: 'Uncaught ReferenceError: processRandomSelector is not defined', filename: ORIGIN + '/?lang=zh', lineno: 1, colno: 1, error: { stack: 'ReferenceError: processRandomSelector is not defined\n    at <anonymous>:1:1' } }],
+  ['an Android WebView host script (runCustomize)', { message: 'Uncaught ReferenceError: runCustomize is not defined', filename: ORIGIN + '/?lang=zh', lineno: 1, colno: 1 }],
+  ['an Android WebView host script (insertStyle)', { message: "Uncaught TypeError: Cannot set property 'insertStyle' of undefined", filename: ORIGIN + '/?lang=zh', lineno: 1, colno: 106618 }],
+  ['the Cloudflare analytics beacon', { message: "TypeError: can't access dead object", filename: 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092', lineno: 1, colno: 220, error: { stack: 'a@https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092:1:220' } }],
+].forEach(([label, ev]) => {
+  q().length = 0;
+  listeners.error(ev);
+  ok(q().length === 0, label + ' is ignored');
+});
+q().length = 0;
+listeners.unhandledrejection({ reason: { message: "null is not an object (evaluating 'e.classList')", stack: 'x5@webkit-masked-url://hidden/:5678:611' } });
+listeners.unhandledrejection({ reason: { message: "undefined is not an object (evaluating 'n.standardSelectors')", stack: '@' + ORIGIN + '/:17:6302' } });
+listeners.unhandledrejection({ reason: 'Ad loaded,but response or ad data is empty, and reqId is : 462243bc05c44b8d997313eefc5ccc57' });
+ok(q().length === 0, 'and their rejections (Safari extension, AdGuard, an ad SDK)');
+listeners.error({ message: "TypeError: can't access dead object", filename: ORIGIN + '/modules/ui/remote.mjs', lineno: 35, error: { stack: 'detected@' + ORIGIN + '/modules/ui/remote.mjs:35:15' } });
+ok(q().length === 1, 'the same dead-object error raised by OUR code is still reported');
+[
 ].forEach(([label, ev]) => {
   q().length = 0;
   listeners.error(ev);
@@ -239,8 +258,9 @@ ok(stalls === 4, 'so does one from another origin');
 const injectedErr = (name) => ({ message: 'Uncaught ReferenceError: ' + name + ' is not defined', filename: ORIGIN + '/?lang=zh',
   lineno: 1, colno: 1, error: { stack: 'ReferenceError: ' + name + ' is not defined\n    at <anonymous>:1:1' } });
 q().length = 0; document.readyState = 'loading';
-listeners.error(injectedErr('processRandomSelector'));
-listeners.error(injectedErr('runCustomize'));
+// (those two names are dropped as noise since web.11: two unknown ones stand in)
+listeners.error(injectedErr('hostPageHelper'));
+listeners.error(injectedErr('hostPageInit'));
 ok(stalls === 4 && q().length === 2 && !q().some(e => /^Boot stall/.test(e.msg)),
    'a name no on* attribute calls (browser-injected script): reported, no Boot stall, no overlay');
 listeners.error(injectedErr('setLang'));
