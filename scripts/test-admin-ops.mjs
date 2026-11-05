@@ -78,6 +78,14 @@ doc.querySelector('.tab[data-t="deploy"]').click();
 await tick(300);
 const d = tiles('dpTiles');
 ok(/Running 2\.1\.10-web\.132 docker · self-update/.test(d) && /Update Available 01234567 · needs a restart/.test(d), 'running build and the update waiting (' + d + ')');
+// A client-only deploy (web.12): files ahead, proxy code unchanged — the tile
+// shows what players get, the boot version underneath.
+CANNED['/admin/status'] = Object.assign({}, CANNED['/admin/status'], { codeStale: false });
+doc.querySelector('.tab[data-t="server"]').click(); await tick(300);
+doc.querySelector('.tab[data-t="deploy"]').click(); await tick(300);
+const d2 = tiles('dpTiles');
+ok(/Running 2\.1\.10-web\.133 proxy code from 2\.1\.10-web\.132 · docker · self-update/.test(d2), 'a client-only deploy shows the served build (' + d2 + ')');
+CANNED['/admin/status'] = Object.assign({}, CANNED['/admin/status'], { codeStale: undefined });
 ok(/Auto-update On notice 90 s before a restart/.test(d) && /Scheduled \d\d:\d\d restart only/.test(d), 'auto-update and the scheduled restart (' + d + ')');
 ok(!/rgba\(255,255,255,\.12\)/.test(html.slice(html.indexOf('<div id="panel-deploy"'), html.indexOf('<div id="panel-backup"'))), 'no fixed white separator left in Deployment');
 

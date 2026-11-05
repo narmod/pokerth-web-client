@@ -78,6 +78,10 @@ highlights below.
   (`processRandomSelector`, `runCustomize`, `property 'insertStyle'`), the Cloudflare analytics beacon
   (`static.cloudflareinsights.com`) and an in-app ad SDK (« Ad loaded,but … »), errors and rejections alike. None of
   these names exists in the client; the same error raised by our own files is still reported (`web.11`).
+- **Admin › Deployment: the Running tile shows the served build** — after a client-only deploy (no restart) it showed
+  the proxy's boot version (`2.1.11-web.7`) next to « Up to date », as if the update had not been applied. It now
+  shows the build players get, with « proxy code from … » underneath; the boot version stays the headline, in red,
+  only when the proxy's own code changed and a restart is needed (`web.12`).
 
 ### Upstream 2.1.11 parity
 Every client-side item of the upstream 2.1.11 release was already in the 2.1.10-web line:

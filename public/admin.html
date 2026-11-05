@@ -3970,7 +3970,12 @@
       ['Build',srvEsc(d.version||'—'),stale?'still running '+srvEsc(d.runningVersion)+' — restart needed':(d.runningVersion&&d.version&&d.runningVersion!==d.version?'proxy code unchanged since '+srvEsc(d.runningVersion):'served = running'),stale?'var(--err-text)':'var(--m-net)',' sm'],
       ['Open files',F.softN?F.softN.toLocaleString():'—',F.approxPlayers?'about '+F.approxPlayers.toLocaleString()+' players at once':'limit of this process','var(--info-text)']]);
     if(dp) dp.innerHTML=T([
-      ['Running',srvEsc(d.runningVersion||d.version||'—'),srvEsc(d.installKind||'?')+(d.gitUpdatable===false?' · no self-update':' · self-update'),stale?'var(--err-text)':'var(--accent)',' sm'],
+      // A client-only deploy moves the served files without restarting the
+      // proxy: players get d.version, the process keeps its boot version. The
+      // tile showed the latter (« 2.1.11-web.7 » next to « Up to date » at
+      // web.11); the boot version is now only the headline when its code is
+      // really behind (restart needed).
+      ['Running',srvEsc((stale?d.runningVersion:d.version)||d.runningVersion||d.version||'—'),(!stale&&d.runningVersion&&d.version&&d.runningVersion!==d.version?'proxy code from '+srvEsc(d.runningVersion)+' · ':'')+srvEsc(d.installKind||'?')+(d.gitUpdatable===false?' · no self-update':' · self-update'),stale?'var(--err-text)':'var(--accent)',' sm'],
       ['Update',U.error?'Error':(U.available?'Available':(U.checkedAt?'Up to date':'—')),U.error?srvEsc(U.error):(U.available?srvEsc((U.remote||'').slice(0,8))+(U.needsRestart?' · needs a restart':' · no restart'):(U.checkedAt?'checked '+new Date(U.checkedAt).toLocaleTimeString():'not checked yet')),U.error?'var(--err-text)':(U.available?'var(--warn-text)':'var(--ok-text)')],
       ['Auto-update',A.enabled?'On':'Off',A.enabled?'notice '+(A.noticeSec||60)+' s before a restart':'updates are applied by hand','var(--m-lan)'],
       ['Scheduled',d.restartAt?new Date(d.restartAt).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',hour12:false}):'None',d.restartAt?(d.restartKind==='restart'?'restart only':'update + restart'):'no restart planned',d.restartAt?'var(--warn-text)':'var(--muted)']]);
