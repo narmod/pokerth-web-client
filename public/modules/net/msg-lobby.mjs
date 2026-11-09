@@ -547,7 +547,8 @@ function onPlayerList(sub) {
       S._pendingNameRequests.delete(_pid_pl);
     }
     if (!S._hasStatistics) {
-      document.getElementById('h-players').textContent = S._lobbyPlayerCount + ' ' + t('playersOnline');
+      const _hp = document.getElementById('h-players');
+      if (_hp) _hp.textContent = S._lobbyPlayerCount + ' ' + t('playersOnline');
     }
     // Refresh the panel if it's open.
     var _pp = document.getElementById('players-panel');
@@ -574,7 +575,9 @@ function onStatistics(sub) {
         // updates stop overriding the header pill from below.
         S._hasStatistics = true;
         S._lobbyPlayerCount = Proto.u32(s,2);
-        document.getElementById('h-players').textContent = S._lobbyPlayerCount + ' ' + t('playersOnline');
+        // Guarded (2.1.11-web.13): seen null once in production (Chrome 156).
+        const _hp = document.getElementById('h-players');
+        if (_hp) _hp.textContent = S._lobbyPlayerCount + ' ' + t('playersOnline');
         updateLobbyStatsBar();
       }
     }

@@ -74,8 +74,8 @@ const er = fs.readFileSync(path.join(root, 'public', 'modules', 'errreport.mjs')
 const ov = fs.readFileSync(path.join(root, 'public', 'modules', 'admin', 'overview.mjs'), 'utf8');
 const ad = fs.readFileSync(path.join(root, 'public', 'admin.html'), 'utf8');
 ok(/_OUTCOME_RE = [^\n]*\|Login form: \|/.test(er), 'errreport counts it in the outcome budget');
-ok(/\(Boot stall\|Module graph\|Login form\):\/\.test\(m\)\) return 'diag'/.test(ov) &&
-   /\(Boot stall\|Module graph\|Login form\):\/\.test\(m\)\) return 'diag'/.test(ad), 'Admin › Errors shows it as a Diagnostic');
+ok(/\(Boot stall\|(?:Boot hold\|)?Module graph\|Login form\):\/\.test\(m\)\) return 'diag'/.test(ov) &&
+   /\(Boot stall\|(?:Boot hold\|)?Module graph\|Login form\):\/\.test\(m\)\) return 'diag'/.test(ad), 'Admin › Errors shows it as a Diagnostic');
 
 console.log(fails ? '\nFAIL ' + fails : '\nALL OK');
 process.exit(fails ? 1 : 0);

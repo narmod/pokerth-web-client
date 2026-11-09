@@ -53,6 +53,15 @@ highlights below.
   build-ID fallbacks in `net/messages.mjs` and `proto/index.mjs` move to 2.1.11 (`web.0`).
 
 ### Fixed
+- **A tap made before the app has started is no longer lost** — the boot overlay holds taps until `pokerth.js` has run,
+  but something outside the client can hide it (Android · Chrome 121: overlay `display:none` with none of our classes,
+  tap at 6–8 s → « App is not defined »; the web.263 « Retry » safety net cannot show a hidden overlay). The inline
+  error collector now holds, in capture phase, any gesture (click, change, input, keydown, mousedown, submit) whose
+  inline `on*` handler calls a global that does not exist yet, and replays those handlers once `window.App` appears
+  (newest per element, dropped after 20 s). `Boot hold:` diagnostic lines in Admin › Errors; test
+  `scripts/test-boot-hold.mjs` (`web.13`).
+- **Lobby player count** — `onStatistics` / player-list updates no longer throw when the `#h-players` pill is missing
+  (« Cannot set properties of null », seen once on Chrome 156) (`web.13`).
 - **Ace's Help survives a failed load** — `modules/guide/index.mjs` imported `mascot/guide.mjs` once with no retry: a
   transient failure surfaced as an unhandled rejection (« Failed to fetch dynamically imported module », seen in the
   error journal) and Ace stayed silent all page. The import is now shared by concurrent callers and retried with a

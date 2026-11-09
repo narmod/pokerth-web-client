@@ -87,7 +87,7 @@ const errAlert = (groups) => OV.alertsFrom({ now: T, status: ST, landir: LD, err
 ok(OV.errKind({ msg: 'Uncaught TypeError: x' }) === 'crash' && OV.errKind({ msg: 'Unhandled rejection: y' }) === 'reject'
   && OV.errKind({ msg: 'Failed to load script' }) === 'load' && OV.errKind({ msg: 'Load-failure retry #1 recovered' }) === 'ok'
   && OV.errKind({ msg: 'Load-failure probe: HTTP 200 online sw' }) === 'diag' && OV.errKind({ msg: 'Load-failure probe: HTTP 404 online sw' }) === 'load'
-  && OV.errKind({ msg: 'Boot stall: up=7s' }) === 'diag', 'the five types read as on Admin › Errors');
+  && OV.errKind({ msg: 'Boot stall: up=7s' }) === 'diag' && OV.errKind({ msg: 'Boot hold: replayed 1/1 after 3s' }) === 'diag', 'the five types read as on Admin › Errors');
 {
   // Same rules as admin.html _erKind: every regex literal of one is in the other.
   const body = (txt, start) => { const i = txt.indexOf(start); return i < 0 ? '' : txt.slice(i, txt.indexOf('\n  }', i)); };

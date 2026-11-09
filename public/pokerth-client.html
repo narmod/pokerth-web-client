@@ -390,6 +390,81 @@
       }
     } catch (_) {}
   }, true);
+  /* Boot hold (2.1.11-web.13). Until the app exists (window.App), a gesture
+     that would run an inline on* handler calling a global not defined yet
+     (onchange="App.x()", onclick="toggleConnectOverflow(event)"…) is held
+     here instead of raising « App is not defined » and being lost, then
+     replayed once the app is up. The boot overlay normally takes those taps,
+     but something outside the client can hide it: seen 2026-11 on Android ·
+     Chrome 121, overlay display:none with none of our classes (Boot stall
+     line), tap at 6–8 s while pokerth.js was still loading — and the
+     « Retry » safety net cannot show an overlay that is hidden. Capture phase
+     on window: runs before any inline handler of the path. Only the inline
+     handlers of the path are replayed (in bubbling order, stopping after one
+     that calls stopPropagation), with the original event; a gesture older
+     than 20 s is dropped. One « Boot hold: » line when the first gesture is
+     held, one when they are replayed. */
+  var HOLD_KW = /^(?:if|else|for|while|do|switch|case|return|typeof|instanceof|in|of|function|try|catch|new|void|delete|this|event|window|document|true|false|null|undefined)$/;
+  function holdDefined(id) {
+    if (id in window) return true;
+    try { return Function('return typeof ' + id + " !== 'undefined'")(); } catch (_) { return true; }
+  }
+  /* First global that the handler calls or reads a member of, and that does
+     not exist yet ('' if none). String literals are blanked first, so
+     loginPickMode(this,'internet') does not read « internet » as a name. */
+  function holdMissing(code) {
+    var s = String(code || '').replace(/'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|`(?:[^`\\]|\\.)*`/g, '""');
+    var re = /(^|[^\w$.])([A-Za-z_$][\w$]*)\s*(?=[(.])/g, mm;
+    while ((mm = re.exec(s))) {
+      if (HOLD_KW.test(mm[2])) continue;
+      if (!holdDefined(mm[2])) return mm[2];
+    }
+    return '';
+  }
+  var held = [], holdSent = 0, holdPoll = 0;
+  function holdLine(msg) { push({ msg: 'Boot hold: ' + msg, src: '', line: 0, col: 0, stack: '' }); }
+  function onHold(ev) {
+    try {
+      if (window.App || !ev || !ev.target) return;
+      var attr = 'on' + ev.type, path = [], miss = '';
+      for (var el = ev.target; el && el.nodeType === 1; el = el.parentNode) {
+        var code = el.getAttribute(attr);
+        if (code) { path.push(el); if (!miss) miss = holdMissing(code); }
+      }
+      if (!miss) return;
+      ev.stopImmediatePropagation();
+      // No default action for a held click/submit (a submit button, a link):
+      // it comes with the replay. A checkbox, radio, select or label keeps its
+      // own (the toggle the player made), its change is what gets held.
+      var tg = ev.target, tn = String(tg.tagName || '').toUpperCase(), ty = String(tg.type || '').toLowerCase();
+      if (ev.type === 'submit' || (ev.type === 'click' && tn !== 'SELECT' && tn !== 'LABEL' &&
+          !(tn === 'INPUT' && (ty === 'checkbox' || ty === 'radio')))) { try { ev.preventDefault(); } catch (_) {} }
+      for (var i = held.length - 1; i >= 0; i--) if (held[i].el === tg && held[i].type === ev.type) held.splice(i, 1);
+      if (held.length >= 10) held.shift();
+      held.push({ ev: ev, type: ev.type, el: tg, path: path, at: Date.now() });
+      if (!holdSent) { holdSent = 1; holdLine(ev.type + ' ' + miss + ' · ' + bootState()); }
+      if (!holdPoll) holdPoll = setInterval(flushHeld, 100);
+    } catch (_) {}
+  }
+  function flushHeld() {
+    if (!window.App) return;
+    clearInterval(holdPoll); holdPoll = 0;
+    var list = held.splice(0), now = Date.now(), n = 0, wait = 0;
+    list.forEach(function (h) {
+      if (now - h.at > 20000) return;   // the player has moved on
+      n++; wait = Math.max(wait, now - h.at);
+      for (var i = 0; i < h.path.length; i++) {
+        var el = h.path[i], fn = el['on' + h.type];
+        if (typeof fn !== 'function') continue;
+        try { fn.call(el, h.ev); } catch (e) { setTimeout(function () { throw e; }, 0); }
+        if (/stopPropagation|cancelBubble/.test(el.getAttribute('on' + h.type) || '')) break;
+      }
+    });
+    holdLine('replayed ' + n + '/' + list.length + ' after ' + Math.round(wait / 1000) + 's');
+  }
+  ['click', 'change', 'input', 'keydown', 'mousedown', 'submit'].forEach(function (t) {
+    window.addEventListener(t, onHold, true);
+  });
   window.addEventListener('unhandledrejection', function (ev) {
     var r = ev && ev.reason;
     var stk = (r && r.stack) ? String(r.stack) : '';

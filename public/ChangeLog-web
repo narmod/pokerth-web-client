@@ -1,4 +1,8 @@
-2026-11-04 version 2.1.11-web.11 (current series):
+2026-11-09 version 2.1.11-web.13 (current series):
+- bugfix: a tap made while the app is still starting is no longer lost — it is carried out as soon as the app is ready
+- bugfix: the online players counter in the lobby header no longer causes an error in rare cases
+
+2026-11-04 version 2.1.11-web.11:
 - improvement: error reports no longer include errors from ad blockers, browser add-ons and the scripts some browsers add to pages
 
 2026-11-04 version 2.1.11-web.10:
