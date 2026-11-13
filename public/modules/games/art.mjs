@@ -3,7 +3,7 @@
 // Cover pictures of the arcade's games (web extension, narmod 2026-10-16,
 // web.89) — one small SVG scene per game for its card on the arcade's home
 // (menu.mjs): the Ace on his run, at the top of his house of cards, beside
-// his solitaire grid. Painted with the games' own palette (common.mjs ink)
+// his solitaire grid, from behind on the three lanes of Ace Dash. Painted with the games' own palette (common.mjs ink)
 // so they follow the light / dark theme; no image file to load or cache.
 // art(id, light) → SVG markup (viewBox 320 × 140), '' for an unknown game.
 // ═══════════════════════════════════════════════════════════════════
@@ -247,7 +247,37 @@ function pokerdrop(c) {
   return s + ace(278, 128, 15, 'wave', limbOf(c));
 }
 
-const SCENES = { 'ace-runner': runner, house, solitaire, videopoker, whowins, hilo, bluff, pokerdrop };
+/** The Ace seen from behind (Ace Dash): his card back, arms and legs; feet at (x, y). */
+function aceBack(x, y, s, limb) {
+  const h = s * 1.4, top = y - h - s * 0.6, l = x - s / 2, hip = top + h, ay = top + h * 0.5;
+  return '<ellipse cx="' + x + '" cy="' + (y + 1) + '" rx="' + (s * 0.6) + '" ry="' + (s * 0.14) + '" fill="rgba(0,0,0,.3)"/>'
+    + '<path d="M' + (x - s * 0.18) + ' ' + hip + ' l' + (-s * 0.12) + ' ' + (s * 0.6) + ' M' + (x + s * 0.18) + ' ' + hip + ' l' + (s * 0.1) + ' ' + (s * 0.45)
+    + '" stroke="' + limb + '" stroke-width="' + (s * 0.09).toFixed(1) + '" stroke-linecap="round" fill="none"/>'
+    + [[l, ay, l - s * 0.38, ay + s * 0.3], [l + s, ay, l + s * 1.38, ay - s * 0.1]].map(([x1, y1, x2, y2]) => '<path d="M' + x1 + ' ' + y1 + ' L' + x2 + ' ' + y2
+      + '" stroke="' + limb + '" stroke-width="' + (s * 0.07).toFixed(1) + '" stroke-linecap="round"/><circle cx="' + x2 + '" cy="' + y2 + '" r="' + (s * 0.12).toFixed(1)
+      + '" fill="#fff" stroke="#1d222b" stroke-width="' + (s * 0.05).toFixed(1) + '"/>').join('')
+    + back(l, top, s);
+}
+
+function dash(c) {
+  // The felt runs to a vanishing point; three lanes, the rails on both sides.
+  const vy = 40, top = 30, bot = 140;   // half-width of the felt at the horizon and at the bottom
+  const at = (f, y) => 160 + f * (top + (bot - top) * (y - vy) / (140 - vy));   // f: -1 … 1 across the felt
+  const lamps = [60, 260].map((lx) => '<circle cx="' + lx + '" cy="22" r="30" fill="url(#adg)"/>').join('');
+  let s = '<defs><linearGradient id="ads" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + c.skyTop + '"/><stop offset="1" stop-color="' + c.skyBot + '"/></linearGradient>'
+    + '<radialGradient id="adg"><stop offset="0" stop-color="rgb(' + c.lamp + ')" stop-opacity=".45"/><stop offset="1" stop-color="rgb(' + c.lamp + ')" stop-opacity="0"/></radialGradient></defs>'
+    + '<rect width="320" height="140" fill="url(#ads)"/>' + lamps
+    + '<path d="M' + at(-1.25, vy) + ' ' + vy + ' L' + at(1.25, vy) + ' ' + vy + ' L' + at(1.25, 140) + ' 140 L' + at(-1.25, 140) + ' 140 Z" fill="' + c.rim + '"/>'
+    + '<path d="M' + at(-1, vy) + ' ' + vy + ' L' + at(1, vy) + ' ' + vy + ' L' + at(1, 140) + ' 140 L' + at(-1, 140) + ' 140 Z" fill="#2f7a52"/>';
+  for (const f of [-0.33, 0.33]) s += '<path d="M' + at(f, vy) + ' ' + vy + ' L' + at(f, 140) + ' 140" stroke="rgba(216,178,90,.55)" stroke-width="1.2" stroke-dasharray="7 6"/>';
+  s += stack(at(-0.66, 86) - 9, 86, 18, 5, '#2b6cb0');
+  s += back(at(0.66, 64) - 5, 50, 10, 90);
+  s += '<path d="M' + (at(0.66, 64) + 12) + ' 54 h8 M' + (at(0.66, 64) + 14) + ' 59 h7" stroke="rgba(245,240,227,.5)" stroke-width="1" stroke-linecap="round"/>';
+  [[60, 2.4], [72, 3.2], [87, 4.2], [104, 5.2]].forEach(([y, r]) => { s += chip(at(0, y), y, r, '#c62828'); });
+  return s + aceBack(160, 134, 20, limbOf(c));
+}
+
+const SCENES = { 'ace-runner': runner, 'ace-dash': dash, house, solitaire, videopoker, whowins, hilo, bluff, pokerdrop };
 
 /** The cover picture of game `id` for the light or dark theme. */
 export function art(id, light) {

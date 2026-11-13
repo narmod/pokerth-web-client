@@ -1,4 +1,8 @@
-2026-11-09 version 2.1.11-web.13 (current series):
+2026-11-13 version 2.1.11-web.15 (current series):
+- new: Ace Dash, a new mini-game: the Ace runs down the felt seen from behind, on three lanes — change lane, jump and duck, pick up chips and cards to make a poker hand
+- new: in Ace Dash, swipe left or right to change lane on a phone; ◀ ▶ buttons are added under the game
+
+2026-11-09 version 2.1.11-web.13:
 - bugfix: a tap made while the app is still starting is no longer lost — it is carried out as soon as the app is ready
 - bugfix: the online players counter in the lobby header no longer causes an error in rare cases
 

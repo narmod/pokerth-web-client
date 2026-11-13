@@ -69,7 +69,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   }));
   ok(st.open && st.ace && st.page && st.title === 'Mini-jeux', label + ': the mini-games page opens with the Ace');
   ok(st.back && st.menu, label + ': with the header of the other pages (back, ⚙ menu)');
-  const ALL = ['Ace Runner', 'Château de cartes', 'Poker Solitaire', 'Vidéo Poker', 'Qui gagne ?', 'Plus haut / Plus bas', 'Le Bluff de l\'As', 'Puissance Poker'];
+  const ALL = ['Ace Runner', 'Château de cartes', 'Poker Solitaire', 'Vidéo Poker', 'Qui gagne ?', 'Plus haut / Plus bas', 'Le Bluff de l\'As', 'Puissance Poker', 'Ace Dash'];
   ok(ALL.every((n) => st.tiles.indexOf(n) >= 0) && st.shelves === 0 && st.tiles.length === ALL.length, label + ': it lists the games, no category (' + st.tiles.join(', ') + ')');
   ok(st.arts === st.tiles.length, label + ': every game has its picture (' + st.arts + ')');
   ok(st.nick === 'Narmod' && st.stored === 'Narmod', label + ': the real nickname is back (field ' + st.nick + ', stored ' + st.stored + ')');
@@ -280,6 +280,41 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   }
   await pg.keyboard.press('Escape'); await sleep(200);
   await pg.keyboard.press('Escape'); await sleep(500);
+  // ── Ace Dash: three lanes, the Ace from behind, swipes on a phone ──
+  await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
+  await pick(pg, 'ace-dash');
+  await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Ace Dash', null, { timeout: 8000 }).catch(() => {});
+  ok(await pg.evaluate(() => window._pthPadOwner === 'ace-dash' && document.getElementById('pth-game').classList.contains('pg-lanes')), label + ': Ace Dash opens, a lane game');
+  await shot(pg, label + '-dash-title');
+  await pg.keyboard.press('Space');
+  await pg.waitForFunction(() => window.__pthDash && window.__pthDash.state() === 'run', null, { timeout: 4000 }).catch(() => {});
+  ok(await pg.evaluate(() => !!document.querySelector('#pth-game-ace.adash-back') && document.querySelector('#pth-game .pg-panel').hidden), label + ': Space starts the run, the Ace turned round');
+  await pg.keyboard.press('ArrowLeft'); await sleep(250);
+  const dl = await pg.evaluate(() => { const G = window.__pthDash.run(); return { lane: G.lane, x: G.x }; });
+  ok(dl.lane === 0 && dl.x < -1, label + ': ← moves him to the left lane (x ' + dl.x.toFixed(2) + ')');
+  await pg.keyboard.press('ArrowRight'); await pg.keyboard.press('ArrowRight'); await sleep(350);
+  ok(await pg.evaluate(() => window.__pthDash.run().lane === 2), label + ': → → to the right lane, and no further');
+  await pg.keyboard.press('Space'); await sleep(120);
+  ok(await pg.evaluate(() => window.__pthDash.run().y > 0.2), label + ': Space jumps');
+  if (label === 'phone') {
+    // A swipe to the left, drawn with the mouse on the stage (pointer events).
+    const r = await pg.evaluate(() => { const b = document.querySelector('#pth-game .pg-stage').getBoundingClientRect(); return { x: b.left + b.width / 2, y: b.top + b.height / 2 }; });
+    await sleep(700);
+    const before = await pg.evaluate(() => window.__pthDash.run().lane);
+    await pg.mouse.move(r.x, r.y); await pg.mouse.down(); await pg.mouse.move(r.x - 40, r.y, { steps: 4 }); await pg.mouse.up();
+    await sleep(100);
+    ok(await pg.evaluate((b) => window.__pthDash.run().lane === b - 1 && window.__pthDash.run().y === 0, before), label + ': a swipe to the left changes lane without jumping');
+    ok(await pg.evaluate(() => !!document.querySelector('#pth-game .pg-pad button[data-a="left"]') && getComputedStyle(document.querySelector('#pth-game .pg-pad button[data-a="left"]')).display !== 'none' || !matchMedia('(pointer: coarse)').matches), label + ': ◀ ▶ on the touch pad');
+  }
+  await shot(pg, label + '-dash-run');
+  // Nobody steers: a row ends the run, then the showdown and the score.
+  await pg.waitForSelector('#pth-game .ar-final', { timeout: 30000 }).catch(() => {});
+  const dOver = await pg.evaluate(() => ({ final: (document.querySelector('#pth-game .ar-final') || {}).textContent || '', best: localStorage.getItem('pth_game_best_ace-dash'),
+    front: !document.querySelector('#pth-game-ace.adash-back') }));
+  ok(/\) × \d+ = /.test(dOver.final) && dOver.best !== null && dOver.front, label + ': busted, he turns round, score saved (' + dOver.final.trim() + ')');
+  await shot(pg, label + '-dash-over');
+  await pg.keyboard.press('Escape'); await sleep(300);
+  ok(await pg.evaluate(() => !!document.querySelector('#pth-game .gm-card') && !document.getElementById('pth-game').classList.contains('pg-lanes')), label + ': back on the arcade page, the lanes mode is off');
   // ── Poker Drop: against the Ace, a drop falls to the bottom, the Ace answers ──
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
   await pick(pg, 'pokerdrop');

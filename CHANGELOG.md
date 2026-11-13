@@ -15,6 +15,20 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Added
+- **Ace Dash** (`web.15`) — a ninth mini-game in the arcade, unlocked at 33 trophies (`unlock`, for the future
+  Arcade mode): Ace Runner seen from behind, on three lanes. Pseudo-3D on the shell's 2D canvas (one perspective
+  camera, felt bands scrolling towards the Ace, rails, fog; the camera rises on a portrait stage so the three lanes
+  stay in view); the SVG Ace turned round (his card back shows), facing us again when he stops; what has passed him is
+  painted on a second canvas over him. Lane changes, a fixed-height jump with the landing buffer, duck held or a
+  short roll on a swipe; chip stacks, flying cards, card walls and the rolling dealer button; every row leaves a lane
+  free (from level 4 it may hold a stack or a card). Chips (10 points each), face-up cards whose best hand
+  multiplies distance + chips (`poker-hand.mjs`, Joker wild), Ace Runner's All-In, insurance, close calls, Blinds up
+  and showdown. `games/ace-dash.mjs`, a cover in `art.mjs`, `adHint` / `adRules` in the 83 catalogues (the rest
+  reuses Ace Runner's keys). The shell gets a lane mode (`shell.lanes(true)`): swipes on the stage (← → ↑ ↓, a tap
+  jumps once the finger is lifted) and ◀ ▶ on the touch pad — one row under the stage in portrait, ◀ ▶ on the left
+  and ▲ ▼ on the right in landscape; the other games are unchanged.
+
 ### Changed
 - **Default table felt in WebP** — the official fullscreen felt (`table/pokerth-official-fs/felt.png`, 1,980 × 1,200,
   1 MB) is served as `felt.webp` (quality 90, 92 kB): the felt's grain is kept, only slightly softer at 4× zoom

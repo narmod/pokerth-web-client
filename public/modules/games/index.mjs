@@ -5,7 +5,7 @@
 //
 // In training (server « Training vs bots »), typing the secret word as the
 // nickname and pressing Connect opens the mini-games page (menu.mjs: Ace Runner,
-// House of Cards, Poker Solitaire…) instead of a table (App.connect() in pokerth.js asks
+// House of Cards, Poker Solitaire… Ace Dash) instead of a table (App.connect() in pokerth.js asks
 // tryLaunch() first). The word is the translation of gameWordAce (« mascot »)
 // in the current language, plus the English word, which works in every
 // language. Matching ignores case,
@@ -42,6 +42,7 @@ export const GAMES = [
   { id: 'hilo', unlock: { trophies: 24 }, nameKey: 'hlName', icon: '↕️', rulesKey: 'hlRules', aspect: [0.6, 2.2], load: () => import('./hilo.mjs') },
   { id: 'bluff', unlock: { trophies: 27 }, nameKey: 'blName', icon: '🎭', rulesKey: 'blRules', aspect: [0.6, 2.2], load: () => import('./bluff.mjs') },
   { id: 'pokerdrop', unlock: { trophies: 30 }, nameKey: 'pdName', icon: '⬇️', rulesKey: 'pdRules', aspect: [0.6, 2.2], load: () => import('./pokerdrop.mjs') },
+  { id: 'ace-dash', unlock: { trophies: 33 }, name: 'Ace Dash', icon: '🏁', rulesKey: 'adRules', aspect: [0.6, 1.9], load: () => import('./ace-dash.mjs') },
 ];
 /**
  * Would game `g` be open in the future Arcade mode? have = { count, owned }:

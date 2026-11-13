@@ -80,6 +80,7 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'blName', 'blHint', 'blBets', 'blBluff', 'blTells', 'blChips', 'blRules', 'ach_bluff', 'ach_bluff_d',
   'pdName', 'pdHint', 'pdVsAce', 'pdTwo', 'pdPoints', 'pdSudden', 'pdSuddenGoal', 'pdYou', 'pdAce', 'pdPlayer', 'pdYourTurn', 'pdAceTurn',
   'pdTurn', 'pdYouWin', 'pdAceWins', 'pdWins', 'pdTie', 'pdRules', 'ach_pdrop', 'ach_pdrop_d',
+  'adHint', 'adRules',
   'gmTitle'];
 let missing = [], badRecord = [];
 for (const f of files) {
@@ -88,12 +89,13 @@ for (const f of files) {
   if (strings.arRecord && strings.arRecord.indexOf('{n}') < 0) badRecord.push(f);
   for (const k of ['pdPlayer', 'pdTurn', 'pdWins']) if (strings[k] && strings[k].indexOf('{n}') < 0) badRecord.push(f + ':' + k);
   if (strings.pdRules && strings.pdRules.split('\n').length !== 7) badRecord.push(f + ':pdRules lines');
+  if (strings.adRules && (strings.adRules.split('\n').length !== 7 || strings.adRules.indexOf('300') < 0 || strings.adRules.indexOf('← →') < 0)) badRecord.push(f + ':adRules');
   const tr = (k) => strings[k] || k;
   if (gameForNick(strings.gameWordAce, tr) !== 'arcade') missing.push(f + ': own word not recognised');
   if (gameForNick('mascot', tr) !== 'arcade') missing.push(f + ': English word not recognised');
 }
 ok(missing.length === 0, 'every language has the Ace Runner strings and a working word' + (missing.length ? ' — ' + missing.slice(0, 6).join(', ') : ''));
-ok(badRecord.length === 0, 'arRecord, pdPlayer, pdTurn, pdWins keep {n}, pdRules has 7 lines' + (badRecord.length ? ' — ' + badRecord.join(', ') : ''));
+ok(badRecord.length === 0, 'arRecord, pdPlayer, pdTurn, pdWins keep {n}, pdRules and adRules have 7 lines' + (badRecord.length ? ' — ' + badRecord.join(', ') : ''));
 const fr = (k) => ({ gameWordAce: 'mascotte' })[k] || k;
 ok(gameForNick('  MaScOtTe ', fr) === 'arcade', 'case and spaces ignored');
 ok(gameForNick('Mascóte', (k) => ({ gameWordAce: 'mascote' })[k] || k) === 'arcade', 'accents ignored');

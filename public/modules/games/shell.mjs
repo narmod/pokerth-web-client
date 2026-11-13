@@ -23,7 +23,10 @@
 // Input → actions: 'jump' (Space, Enter, ↑, W, tap, pad A / B / D-pad up),
 // 'duck' (↓, S, swipe down, pad D-pad down / stick down), 'left' / 'right'
 // (←/→, A/D, pad D-pad / stick); info tells where it came from ({ code } a
-// key, { x, y } a tap in world px, { pad }). The shell handles pause (P,
+// key, { x, y } a tap in world px, { pad }). A lane game (shell.lanes(true),
+// Ace Dash) reads the touch screen as swipes instead: ← → change lane, ↑ or a
+// tap jumps once the finger is lifted ({ x, y, tap }), ↓ ducks ({ swipe }); its
+// touch pad gets ◀ ▶ too. The shell handles pause (P,
 // Start; also a hidden tab, a lost focus or a window opened from the header)
 // and back — Esc outside a run, pad Select, the header arrow, Android's Back
 // (modules/ui/back-guard.mjs): rules sheet → the arcade's home → the screen
@@ -77,6 +80,16 @@ const CSS = `
 /* Landscape: beside the stage, as tall as it (easy to hit without looking). */
 #${ROOT_ID} .pg-land .pg-pad button{width:72px;height:auto;align-self:stretch;min-height:64px}
 #${ROOT_ID} .pg-pad button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+/* Lane games (shell.lanes): ◀ ▶ as well — one row under the stage in portrait,
+   ◀ ▶ on the left and ▲ ▼ on the right in landscape. */
+#${ROOT_ID} .pg-pad button.pg-lr{display:none}
+#${ROOT_ID}.pg-lanes .pg-pad button.pg-lr{display:block}
+#${ROOT_ID}.pg-lanes .pg-pad{gap:10px}
+#${ROOT_ID}.pg-lanes .pg-pad button{width:72px}
+#${ROOT_ID}.pg-lanes .pg-land .pg-pad button[data-a="left"]{order:-3}
+#${ROOT_ID}.pg-lanes .pg-land .pg-pad button[data-a="right"]{order:-2}
+#${ROOT_ID}.pg-lanes .pg-land .pg-pad button[data-a="jump"]{order:1}
+#${ROOT_ID}.pg-lanes .pg-land .pg-pad button[data-a="duck"]{order:2}
 #${ROOT_ID} .pg-view{position:absolute;inset:0;overflow:auto;padding:16px max(16px,env(safe-area-inset-right,0px)) calc(24px + var(--pth-sab,0px)) max(16px,env(safe-area-inset-left,0px))}
 #${ROOT_ID} .pg-rules{position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.45)}
 #${ROOT_ID} .pg-rules[hidden]{display:none}
@@ -160,7 +173,8 @@ export function run(def, gameMod, opts = {}) {
     root.innerHTML = '<div class="pg-play"><div class="pg-stage" tabindex="0"><canvas></canvas><div class="pg-layer"></div><div class="pg-hud"></div>'
       + '<div class="pg-panel" hidden><div></div></div><div class="pg-panel pg-pause" hidden><div><h2>' + esc(tr('arPause')) + '</h2>'
       + '<p class="pg-dim"><span class="pg-k">P</span> · <span class="pg-k">Esc</span></p></div></div></div>'
-      + '<div class="pg-pad"><button type="button" data-a="jump" aria-label="▲">▲</button><button type="button" data-a="duck" aria-label="▼">▼</button></div></div>'
+      + '<div class="pg-pad"><button type="button" class="pg-lr" data-a="left" aria-label="◀">◀</button><button type="button" data-a="jump" aria-label="▲">▲</button>'
+      + '<button type="button" data-a="duck" aria-label="▼">▼</button><button type="button" class="pg-lr" data-a="right" aria-label="▶">▶</button></div></div>'
       + '<div class="pg-view" hidden></div>'
       + '<div class="pg-rules" hidden><div class="pg-sheet" role="dialog" aria-modal="true"></div></div>';
     main.appendChild(root);
@@ -180,7 +194,7 @@ export function run(def, gameMod, opts = {}) {
     window._pthPadOwner = def.id;
 
     let cur = def;
-    let padOn = true;
+    let padOn = true, lanes = false;
     const grants = [];
     const bestKey = () => 'pth_game_best_' + cur.id;
     const shell = {
@@ -212,6 +226,8 @@ export function run(def, gameMod, opts = {}) {
       close,
       /** Show or hide the ▲ ▼ touch buttons (a game played by tapping hides them). */
       touchPad(on) { padOn = !!on; root.classList.toggle('pg-nopad', !on); layout(); },
+      /** A lane game: swipes on the stage (← → ↑ ↓, a tap jumps) and ◀ ▶ on the touch pad. */
+      lanes(on) { lanes = !!on; root.classList.toggle('pg-lanes', lanes); layout(); },
       /** Queue a secret trophy (granted once the arcade is left). */
       grant(id) { if (id && grants.indexOf(id) < 0) grants.push(id); },
       /** Switch to game `id` on the same page (needs opts.open). */
@@ -266,7 +282,7 @@ export function run(def, gameMod, opts = {}) {
       const land = aw > ah * 1.15;
       play.classList.toggle('pg-land', land);
       const [amin, amax] = cur.aspect || [4 / 3, 2.4];
-      const roomW = land && pad ? aw - 2 * PAD_W : aw;
+      const roomW = land && pad ? aw - (lanes ? 4 : 2) * PAD_W : aw;
       const roomH = !land && pad ? ah - PAD_H : ah;
       let w = Math.min(roomW, roomH * amax, 1100);
       const aspect = Math.max(amin, Math.min(amax, w / roomH));
@@ -305,6 +321,7 @@ export function run(def, gameMod, opts = {}) {
       rulesBox.hidden = true; rulesPaused = false;
       shell.layer.innerHTML = ''; shell.hud.innerHTML = ''; shell.hud.className = 'pg-hud'; view.innerHTML = '';
       shell.panel(null); shell.pause(false); padOn = true; root.classList.remove('pg-nopad');
+      lanes = false; root.classList.remove('pg-lanes');
       cur = d; window._pthPadOwner = d.id;
       if (titleEl) titleEl.textContent = d.id === opts.home ? (tr('gmTitle') || 'Mini-games') : (d.name || tr('gmTitle') || 'Mini-games');
       if (helpBtn) helpBtn.style.display = d.rulesKey ? '' : 'none';
@@ -346,18 +363,36 @@ export function run(def, gameMod, opts = {}) {
     window.addEventListener('keydown', onKey, true);
     window.addEventListener('keyup', onKey, true);
 
-    let pY = null, swiped = false;
+    let pX = null, pY = null, swiped = false, pResumed = false;
     stage.addEventListener('pointerdown', (e) => {
       if (e.target && /** @type {HTMLElement} */ (e.target).closest && /** @type {HTMLElement} */ (e.target).closest('button')) return;   // a button of a panel
-      e.preventDefault(); pY = e.clientY; swiped = false;
-      if (shell.paused) { shell.pause(false); return; }
+      e.preventDefault(); pX = e.clientX; pY = e.clientY; swiped = false; pResumed = false;
+      if (shell.paused) { shell.pause(false); pResumed = true; return; }
+      if (lanes) return;          // a lane game waits for the swipe or the lift
       const r = stage.getBoundingClientRect();
       send('jump', true, { x: (e.clientX - r.left) / (shell.k || 1), y: (e.clientY - r.top) / (shell.k || 1) });
     });
     stage.addEventListener('pointermove', (e) => {
-      if (pY != null && !swiped && e.clientY - pY > 28) { swiped = true; send('jump', false); send('duck', true); }
+      if (pY == null || swiped) return;
+      if (lanes) {
+        const dx = e.clientX - (pX || 0), dy = e.clientY - pY;
+        if (Math.max(Math.abs(dx), Math.abs(dy)) < 28 || pResumed) return;
+        swiped = true;
+        if (Math.abs(dx) > Math.abs(dy)) send(dx < 0 ? 'left' : 'right', true, { swipe: dx < 0 ? 'left' : 'right' });
+        else if (dy < 0) send('jump', true, { swipe: 'up' });
+        else send('duck', true, { swipe: 'down' });
+        return;
+      }
+      if (e.clientY - pY > 28) { swiped = true; send('jump', false); send('duck', true); }
     });
-    const lift = () => { if (pY == null) return; pY = null; send('jump', false); send('duck', false); };
+    const lift = (e) => {
+      if (pY == null) return;
+      if (lanes && !swiped && !pResumed && e && e.type === 'pointerup') {
+        const r = stage.getBoundingClientRect();
+        send('jump', true, { x: (e.clientX - r.left) / (shell.k || 1), y: (e.clientY - r.top) / (shell.k || 1), tap: true });
+      }
+      pX = pY = null; send('jump', false); send('duck', false);
+    };
     ['pointerup', 'pointercancel', 'pointerleave'].forEach((n) => stage.addEventListener(n, lift));
     root.querySelectorAll('.pg-pad button').forEach((b) => {
       const a = b.getAttribute('data-a');
