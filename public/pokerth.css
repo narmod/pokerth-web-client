@@ -1732,6 +1732,18 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 /* Mini-games mode (modules/ui/login-arcade.mjs): hidden until unlocked; a
    « NEW » pill until it is opened once. */
 .login-card[hidden], .lc-new[hidden] { display: none; }
+/* Its first appearance (modules/ui/backlight.mjs): hidden until the flash,
+   then it rises out of the light, white first, its colours coming back. */
+.login-card.lc-hide > * { visibility: hidden; }   /* the empty box stays, the light round it */
+.login-card.lc-mat { animation: lc-mat 1.5s cubic-bezier(.2,.7,.2,1) both; border-color: #f5d77a; box-shadow: 0 0 0 1px #f5d77a, 0 0 26px 6px rgba(255,236,170,.5); }
+.login-card.lc-fade { animation: lc-fade .8s ease-out both; }
+@keyframes lc-mat {
+  0% { opacity: 0; filter: brightness(6) saturate(0) blur(6px); transform: translateY(10px) scale(.86); }
+  25% { opacity: 1; filter: brightness(5) saturate(0) blur(3px); transform: translateY(-6px) scale(1.04); }
+  70% { filter: brightness(1.6) saturate(.8) blur(0); transform: translateY(-2px) scale(1.01); }
+  100% { opacity: 1; filter: none; transform: none; }
+}
+@keyframes lc-fade { from { opacity: 0; } to { opacity: 1; } }
 .lc-new { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 999px; background: #d8a93a; color: #1a1305;
   font-size: calc(10px * var(--interface-scale)); font-weight: 800; letter-spacing: .04em; vertical-align: 2px; line-height: 1.5; }
 .lc-tx { flex: 1; min-width: 0; }

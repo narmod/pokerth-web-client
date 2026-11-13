@@ -158,6 +158,7 @@ export const strings = {
     loginLanTitle:'LAN / Olùpín àdáni',
     loginLanDesc:'Olùpín àṣírí · nẹ́tíwọ̀ọ̀kì agbègbè',
     loginArcadeDesc:'Àwọn eré Ace · {n}/{t} ṣí sílẹ̀', loginArcadeNew:'TUNTUN',
+    arcadeToast:'A ti ṣí ipò tuntun!',
     liveTables:'Tábìlì {n} ń ṣeré', liveWaiting:'Òṣèré {n} ń dúró',
     liveOnline:'Òṣèré {n} lórí ayélujára', liveToday:'Eré {n} lónìí',
     loginChange:'Yí padà',

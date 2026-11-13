@@ -157,6 +157,7 @@ export const strings = {
     loginLanTitle:'LAN / наменски сервер',
     loginLanDesc:'Приватен сервер · локална мрежа',
     loginArcadeDesc:'Игрите на Асот · {n}/{t} отворени', loginArcadeNew:'НОВО',
+    arcadeToast:'Отклучен нов режим!',
     liveTables:'{n} маси во тек', liveWaiting:'{n} играчи чекаат',
     liveOnline:'{n} играчи онлајн', liveToday:'{n} игри денес',
     loginChange:'Смени',

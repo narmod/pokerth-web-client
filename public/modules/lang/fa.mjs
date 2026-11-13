@@ -155,6 +155,7 @@ export const strings = {
     loginLanTitle:'LAN / سرور اختصاصی',
     loginLanDesc:'سرور خصوصی · شبکهٔ محلی',
     loginArcadeDesc:'بازی‌های آس · {n}/{t} باز', loginArcadeNew:'جدید',
+    arcadeToast:'حالت جدید باز شد!',
     liveTables:'{n} میز فعال', liveWaiting:'{n} بازیکن در انتظار',
     liveOnline:'{n} بازیکن آنلاین', liveToday:'{n} بازی امروز',
     loginChange:'تغییر',

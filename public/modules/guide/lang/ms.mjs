@@ -82,6 +82,7 @@ export default {
   c5Trophies: "Trofi latihan anda. Satu rahsia kecil: menangi **semua** trofi dalam senarai ini dan pada akhirnya saya ada kejutan untuk anda!",
   arcadeReveal: "Semua trofi, syabas! Inilah kejutan saya, satu perkataan rahsia: dalam mod latihan, taip **{w}** sebagai nama samaran dan tekan Sambung. Ia membuka arked permainan tersembunyi saya. Biar ia kekal antara kita!",
   arcadePlay: "Main sekarang",
+  arcadeMode: "**Syabas!** Anda telah membuka **permainan mini**. Lebih banyak permainan misteri menanti anda… teruskan berlatih untuk menemuinya!",
   c5Events: 'Permainan piala yang akan datang. Ia dicipta oleh admin piala; pemain mendaftar di laman piala atau dalam utas forumnya — permainan WEC pada 22:00 (waktu pelayan) tidak memerlukan pendaftaran. Waktu dipaparkan dalam waktu pelayan dan waktu tempatan anda; ketik acara dan butang di bawah akan mengikutinya.',
   c5Posts: 'Kiriman terkini forum pokerth.net, satu baris bagi setiap topik, yang terbaharu di atas. Tag berwarna menunjukkan forum asalnya (General, BBC, WEC…). Ketik kiriman untuk membacanya di sini — ia kemudian ditandakan telah dibaca; ↗ membukanya di forum. Titik penuh bermaksud belum dibaca; lencana pada butang mengiranya, dan **Tandakan semua sebagai dibaca** mengosongkan semuanya.',
   c5Adv: 'Setiap pilihan, mengikut bahagian. Taip dalam kotak carian untuk mencari satu; setiap suis berkuat kuasa serta-merta. Pilihan bertanda **web** hanya wujud dalam klien web ini.',

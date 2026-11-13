@@ -82,6 +82,7 @@ export default {
   c5Trophies: "Viaj trejnaj trofeoj. Eta sekreto: gajnu **ĉiujn** trofeojn de ĉi tiu listo, kaj fine mi havos surprizon por vi!",
   arcadeReveal: "Ĉiuj trofeoj, brave! Jen mia surprizo, sekreta vorto: en trejna reĝimo tajpu **{w}** kiel kaŝnomon kaj premu Konekti. Ĝi malfermas mian arkadon de kaŝitaj ludoj. Restu inter ni!",
   arcadePlay: "Ludi nun",
+  arcadeMode: "**Brave!** Vi malŝlosis la **minilúdojn**. Pliaj misteraj ludoj atendas vin… daŭre trejniĝu por malkovri ilin!",
   c5Events: 'La venontaj pokalaj ludoj. Ilin kreas la pokalaj administrantoj; ludantoj aliĝas en la retejo de la pokalo aŭ en ĝia forumfadeno — la WEC-ludo je 22:00 (laŭ servila horo) ne bezonas aliĝon. La horoj estas montrataj laŭ servila horo kaj laŭ via loka horo; tuŝu eventon kaj la butono malsupre sekvas ĝin.',
   c5Posts: 'La lastaj afiŝoj de la forumo de pokerth.net, unu linio po temo, la plej novaj supre. La kolora etikedo montras la devenan forumon (General, BBC, WEC…). Tuŝu afiŝon por legi ĝin ĉi tie — ĝi tiam estas markita legita; ↗ malfermas ĝin en la forumo. Plena punkto signifas ankoraŭ ne legita; la insigno sur la butono nombras ilin, kaj **Marki ĉion legita** nuligas ilin ĉiujn.',
   c5Adv: 'Ĉiuj opcioj, laŭ sekcio. Tajpu en la serĉkampo por trovi unu; ĉiu ŝaltilo efikas tuj. Opcioj markitaj per **web** ekzistas nur en ĉi tiu reta kliento.',

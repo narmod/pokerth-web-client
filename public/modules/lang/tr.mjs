@@ -249,6 +249,7 @@ export const strings = {
     loginLanTitle:'LAN / Özel sunucu',
     loginLanDesc:'Özel sunucu · yerel ağ',
     loginArcadeDesc:'As\'ın oyunları · {n}/{t} açık', loginArcadeNew:'YENİ',
+    arcadeToast:'Yeni mod açıldı!',
     liveTables:'{n} masa oynanıyor', liveWaiting:'{n} oyuncu bekliyor',
     liveOnline:'{n} oyuncu çevrimiçi', liveToday:'bugün {n} oyun',
     loginChange:'Değiştir',

@@ -246,6 +246,7 @@ export const strings = {
     loginLanTitle:'LAN / Dedikeret server',
     loginLanDesc:'Privat server · lokalt netværk',
     loginArcadeDesc:'Essets spil · {n}/{t} åbne', loginArcadeNew:'NY',
+    arcadeToast:'Ny tilstand låst op!',
     liveTables:'{n} borde i gang', liveWaiting:'{n} spillere venter',
     liveOnline:'{n} spillere online', liveToday:'{n} spil i dag',
     loginChange:'Skift',

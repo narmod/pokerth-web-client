@@ -155,6 +155,7 @@ export const strings = {
     loginLanTitle:'LAN / ម៉ាស៊ីនមេឯកទេស',
     loginLanDesc:'ម៉ាស៊ីនមេឯកជន · បណ្ដាញមូលដ្ឋាន',
     loginArcadeDesc:'ល្បែងរបស់អាត់ · {n}/{t} បានបើក', loginArcadeNew:'ថ្មី',
+    arcadeToast:'បានដោះសោរបៀបថ្មី!',
     liveTables:'{n} តុកំពុងដំណើរការ', liveWaiting:'{n} អ្នកលេងកំពុងរង់ចាំ',
     liveOnline:'{n} អ្នកលេងអនឡាញ', liveToday:'{n} ហ្គេមថ្ងៃនេះ',
     loginChange:'ប្ដូរ',

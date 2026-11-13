@@ -157,6 +157,7 @@ export const strings = {
     loginLanTitle:'LAN / Pelayan khusus',
     loginLanDesc:'Pelayan peribadi · rangkaian tempatan',
     loginArcadeDesc:'Permainan Sat · {n}/{t} dibuka', loginArcadeNew:'BAHARU',
+    arcadeToast:'Mod baharu dibuka!',
     liveTables:'{n} meja sedang berjalan', liveWaiting:'{n} pemain menunggu',
     liveOnline:'{n} pemain dalam talian', liveToday:'{n} permainan hari ini',
     loginChange:'Tukar',

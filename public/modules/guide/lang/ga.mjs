@@ -82,6 +82,7 @@ export default {
   c5Trophies: "Do chorn traenála. Rún beag: buaigh **gach** corn sa liosta seo agus beidh iontas agam duit ag an deireadh!",
   arcadeReveal: "Gach corn, bravó! Seo é m’iontas, focal rúnda: sa mhód traenála, clóscríobh **{w}** mar leasainm agus brúigh Ceangail. Osclaíonn sé mo stuara cluichí folaithe. Fanann sé eadrainn!",
   arcadePlay: "Imir anois",
+  arcadeMode: "**Maith thú!** Dhíghlasáil tú na **mionchluichí**. Tá tuilleadh cluichí rúnda ag fanacht leat… lean ort ag traenáil chun iad a aimsiú!",
   c5Events: 'Na cluichí comórtais atá le teacht. Is iad riarthóirí na gcomórtas a chruthaíonn iad; cláraíonn imreoirí ar shuíomh an chomórtais nó ina shnáithe fóraim — níl gá le clárú don chluiche WEC ag 22:00 (am an fhreastalaí). Taispeántar na hamanna in am an fhreastalaí agus i d’am áitiúil; tapáil imeacht agus leanfaidh an cnaipe ag an mbun é.',
   c5Posts: 'Na postálacha is déanaí ar fhóram pokerth.net, líne amháin in aghaidh an ábhair, an ceann is nuaí ar dtús. Taispeánann an chlib dhaite an fóram as a dtagann sí (General, BBC, WEC…). Tapáil postáil chun í a léamh anseo — marcáiltear ansin mar léite í; osclaíonn ↗ ar an bhfóram í. Ciallaíonn ponc lán nach bhfuil sí léite fós; comhaireann an suaitheantas ar an gcnaipe iad, agus glanann **Marcáil gach rud mar léite** iad go léir.',
   c5Adv: 'Gach rogha, de réir rannóige. Clóscríobh sa bhosca cuardaigh chun ceann a aimsiú; cuirtear gach lasc i bhfeidhm láithreach. Ní bhíonn na roghanna a bhfuil **web** orthu ach sa chliant gréasáin seo.',

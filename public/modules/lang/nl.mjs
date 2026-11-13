@@ -252,6 +252,7 @@ export const strings = {
     loginLanTitle:'LAN / Toegewijde server',
     loginLanDesc:'Privéserver · lokaal netwerk',
     loginArcadeDesc:'De spellen van de Aas · {n}/{t} open', loginArcadeNew:'NIEUW',
+    arcadeToast:'Nieuwe modus ontgrendeld!',
     liveTables:'{n} tafels bezig', liveWaiting:'{n} spelers wachten',
     liveOnline:'{n} spelers online', liveToday:'{n} spellen vandaag',
     loginChange:'Wijzigen',

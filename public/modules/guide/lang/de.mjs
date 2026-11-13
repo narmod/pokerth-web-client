@@ -82,6 +82,7 @@ export default {
   c5Trophies: "Deine Trainings-Trophäen. Ein kleines Geheimnis: Gewinne **alle** Trophäen dieser Liste, dann habe ich am Ende eine Überraschung für dich!",
   arcadeReveal: "Alle Trophäen – bravo! Hier ist meine Überraschung, ein geheimes Wort: Gib im Trainingsmodus **{w}** als Nickname ein und drücke Verbinden. Es öffnet meine Arcade mit versteckten Spielen. Das bleibt unter uns!",
   arcadePlay: "Jetzt spielen",
+  arcadeMode: "**Bravo!** Du hast die **Minispiele** freigeschaltet. Weitere geheime Spiele warten auf dich … trainiere weiter, um sie zu entdecken!",
   c5Events: 'Die kommenden Cup-Spiele. Sie werden von den Cup-Admins erstellt; Spieler melden sich auf der Website des Cups oder in seinem Forumsthread an — das WEC-Spiel um 22:00 (Serverzeit) braucht keine Anmeldung. Die Zeiten stehen in Serverzeit und in deiner Ortszeit; tippe auf ein Ereignis, und die Schaltfläche unten folgt ihm.',
   c5Posts: 'Die neuesten Beiträge aus dem Forum von pokerth.net, eine Zeile pro Thema, die neuesten zuerst. Das farbige Tag zeigt, aus welchem Forum er stammt (General, BBC, WEC…). Tippe auf einen Beitrag, um ihn hier zu lesen — er gilt dann als gelesen; ↗ öffnet ihn im Forum. Ein gefüllter Punkt heißt: noch nicht gelesen; das Abzeichen auf der Schaltfläche zählt sie, und **Alles als gelesen markieren** löscht sie alle.',
   c5Adv: 'Alle Optionen, nach Abschnitten. Tippe ins Suchfeld, um eine zu finden; jeder Schalter wirkt sofort. Mit **web** markierte Optionen gibt es nur in diesem Webclient.',

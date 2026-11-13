@@ -82,6 +82,7 @@ export default {
   c5Trophies: "Məşq kubokların. Kiçik bir sirr: bu siyahıdakı **bütün** kubokları qazan, sonda səni sürpriz gözləyir!",
   arcadeReveal: "Bütün kuboklar, bravo! Budur mənim sürprizim, gizli söz: məşq rejimində ləqəb kimi **{w}** yaz və Qoşul düyməsinə bas. Gizli oyunlar arkadamı açır. Qoy aramızda qalsın!",
   arcadePlay: "İndi oyna",
+  arcadeMode: "**Bravo!** **Mini oyunları** açdın. Səni daha sirli oyunlar gözləyir… onları kəşf etmək üçün məşqə davam et!",
   c5Events: 'Qarşıdan gələn kubok oyunları. Onları kubok adminləri yaradır; oyunçular kubokun saytında və ya forumdakı mövzusunda qeydiyyatdan keçir — saat 22:00-dakı (server vaxtı) WEC oyunu qeydiyyat tələb etmir. Vaxtlar server vaxtı və yerli vaxtınızla göstərilir; tədbirə toxunun, aşağıdakı düymə ona uyğunlaşacaq.',
   c5Posts: 'pokerth.net forumunun son yazıları, hər mövzuya bir sətir, ən yeniləri yuxarıda. Rəngli etiket yazının gəldiyi forumdur (General, BBC, WEC…). Yazını burada oxumaq üçün ona toxunun — o, oxunmuş kimi qeyd olunur; ↗ onu forumda açır. Dolu nöqtə — hələ oxunmayıb; düymədəki nişan onları sayır, **Hamısını oxunmuş kimi qeyd et** isə hamısını təmizləyir.',
   c5Adv: 'Bütün seçimlər, bölmələr üzrə. Birini tapmaq üçün axtarış sahəsinə yazın; hər açar dərhal tətbiq olunur. **web** ilə işarələnmiş seçimlər yalnız bu veb klientdə mövcuddur.',

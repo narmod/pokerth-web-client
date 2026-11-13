@@ -158,6 +158,7 @@ export const strings = {
     loginLanTitle:'LAN / Gweinydd pwrpasol',
     loginLanDesc:'Gweinydd preifat · rhwydwaith lleol',
     loginArcadeDesc:'Gemau\'r As · {n}/{t} ar agor', loginArcadeNew:'NEWYDD',
+    arcadeToast:'Modd newydd wedi\'i ddatgloi!',
     liveTables:'{n} bwrdd yn chwarae', liveWaiting:'{n} chwaraewr yn aros',
     liveOnline:'{n} chwaraewr ar-lein', liveToday:'{n} gêm heddiw',
     loginChange:'Newid',

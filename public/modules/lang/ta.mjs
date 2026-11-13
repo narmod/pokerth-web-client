@@ -248,6 +248,7 @@ export const strings = {
     loginLanTitle:'LAN / பிரத்யேக சேவையகம்',
     loginLanDesc:'தனிப்பட்ட சேவையகம் · உள்ளூர் வலையமைப்பு',
     loginArcadeDesc:'சீட்டின் விளையாட்டுகள் · {n}/{t} திறந்தவை', loginArcadeNew:'புதிது',
+    arcadeToast:'புதிய பயன்முறை திறந்தது!',
     liveTables:'{n} மேசைகள் நடக்கின்றன', liveWaiting:'{n} வீரர்கள் காத்திருக்கிறார்கள்',
     liveOnline:'{n} வீரர்கள் ஆன்லைனில்', liveToday:'இன்று {n} ஆட்டங்கள்',
     loginChange:'மாற்று',

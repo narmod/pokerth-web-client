@@ -154,6 +154,7 @@ export const strings = {
     loginLanTitle:'LAN / sérþjónn',
     loginLanDesc:'Einkaþjónn · staðarnet',
     loginArcadeDesc:'Leikir Ássins · {n}/{t} opnir', loginArcadeNew:'NÝTT',
+    arcadeToast:'Nýr hamur opnaður!',
     liveTables:'{n} borð í gangi', liveWaiting:'{n} leikmenn bíða',
     liveOnline:'{n} leikmenn á netinu', liveToday:'{n} leikir í dag',
     loginChange:'Breyta',

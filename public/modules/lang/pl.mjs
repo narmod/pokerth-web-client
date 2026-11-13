@@ -253,6 +253,7 @@ export const strings = {
     loginLanTitle:'LAN / Serwer dedykowany',
     loginLanDesc:'Prywatny serwer · sieć lokalna',
     loginArcadeDesc:'Gry Asa · {n}/{t} otwarte', loginArcadeNew:'NOWE',
+    arcadeToast:'Odblokowano nowy tryb!',
     liveTables:'{n} stołów w grze', liveWaiting:'{n} graczy czeka',
     liveOnline:'{n} graczy online', liveToday:'{n} gier dzisiaj',
     loginChange:'Zmień',

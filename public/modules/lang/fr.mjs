@@ -159,6 +159,7 @@ export const strings = {
     loginLanTitle:'LAN / Serveur dédié',
     loginLanDesc:'Serveur privé · réseau local',
     loginArcadeDesc:'Les jeux de l\'As · {n}/{t} ouverts', loginArcadeNew:'NOUVEAU',
+    arcadeToast:'Nouveau mode débloqué !',
     liveTables:'{n} tables en cours', liveWaiting:'{n} joueurs en attente',
     liveOnline:'{n} joueurs en ligne', liveToday:'{n} parties aujourd’hui',
     loginChange:'Changer',

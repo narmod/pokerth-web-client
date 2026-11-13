@@ -158,6 +158,7 @@ export const strings = {
     loginLanTitle:'LAN / Iseva ezinikele',
     loginLanDesc:'Iseva yangasese · inethiwekhi yendawo',
     loginArcadeDesc:'Imidlalo ka-Ace · {n}/{t} ivuliwe', loginArcadeNew:'OKUSHA',
+    arcadeToast:'Imodi entsha ivuliwe!',
     liveTables:'Amatafula angu-{n} ayadlala', liveWaiting:'Abadlali abangu-{n} balindile',
     liveOnline:'Abadlali abangu-{n} ku-inthanethi', liveToday:'Imidlalo engu-{n} namuhla',
     loginChange:'Shintsha',

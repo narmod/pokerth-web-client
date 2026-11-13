@@ -82,6 +82,7 @@ export default {
   c5Trophies: "Trofetë e tua të stërvitjes. Një sekret i vogël: fito **të gjitha** trofetë e kësaj liste dhe në fund të pret një surprizë!",
   arcadeReveal: "Të gjitha trofetë, bravo! Ja surpriza ime, një fjalë e fshehtë: në modalitetin e stërvitjes, shkruaj **{w}** si pseudonim dhe shtyp Lidhu. Ajo hap arkadën time të lojërave të fshehura. Le të mbetet mes nesh!",
   arcadePlay: "Luaj tani",
+  arcadeMode: "**Bravo!** Ke zhbllokuar **mini-lojërat**. Të presin edhe lojëra misterioze… vazhdo stërvitjen për t'i zbuluar!",
   c5Events: 'Lojërat e ardhshme të kupave. I krijojnë administratorët e kupave; lojtarët regjistrohen në sajtin e kupës ose në temën e saj në forum — loja WEC e orës 22:00 (ora e serverit) nuk kërkon regjistrim. Oraret shfaqen sipas orës së serverit dhe orës tënde lokale; prek një ngjarje dhe butoni poshtë e ndjek atë.',
   c5Posts: 'Postimet më të fundit të forumit pokerth.net, një rresht për temë, më të rejat sipër. Etiketa me ngjyrë është forumi nga vjen postimi (General, BBC, WEC…). Prek një postim për ta lexuar këtu — atëherë shënohet si i lexuar; ↗ e hap në forum. Pika e mbushur do të thotë ende i palexuar; distinktivi te butoni i numëron, dhe **Shëno të gjitha si të lexuara** i pastron të gjitha.',
   c5Adv: 'Çdo opsion, sipas seksioneve. Shkruaj te kutia e kërkimit për të gjetur një; çdo çelës zbatohet menjëherë. Opsionet e shënuara **web** ekzistojnë vetëm në këtë klient web.',

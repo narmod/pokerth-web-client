@@ -158,6 +158,7 @@ export const strings = {
     loginLanTitle:'LAN / समर्पित सर्भर',
     loginLanDesc:'निजी सर्भर · स्थानीय नेटवर्क',
     loginArcadeDesc:'एक्काका खेलहरू · {n}/{t} खुला', loginArcadeNew:'नयाँ',
+    arcadeToast:'नयाँ मोड खुल्यो!',
     liveTables:'{n} टेबल चलिरहेका', liveWaiting:'{n} खेलाडी प्रतीक्षामा',
     liveOnline:'{n} खेलाडी अनलाइन', liveToday:'आज {n} खेल',
     loginChange:'बदल्नुहोस्',

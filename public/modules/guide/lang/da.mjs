@@ -82,6 +82,7 @@ export default {
   c5Trophies: "Dine træningstrofæer. En lille hemmelighed: vind **alle** trofæerne på denne liste, så har jeg en overraskelse til dig til sidst!",
   arcadeReveal: "Alle trofæerne, bravo! Her er min overraskelse, et hemmeligt ord: skriv **{w}** som kaldenavn i træningstilstand, og tryk på Forbind. Det åbner min arkade med skjulte spil. Det bliver mellem os!",
   arcadePlay: "Spil nu",
+  arcadeMode: "**Bravo!** Du har låst op for **minispillene**. Flere mystiske spil venter på dig … bliv ved med at træne for at opdage dem!",
   c5Events: 'De kommende turneringsspil. De oprettes af turneringsadministratorerne; spillerne tilmelder sig på turneringens websted eller i dens forumtråd — WEC-spillet kl. 22:00 (servertid) kræver ingen tilmelding. Tiderne vises i servertid og i din lokale tid; tryk på en begivenhed, så følger knappen nederst med.',
   c5Posts: 'De seneste indlæg fra pokerth.net-forummet, én linje pr. emne, nyeste først. Det farvede mærke viser, hvilket forum det kommer fra (General, BBC, WEC…). Tryk på et indlæg for at læse det her — det markeres så som læst; ↗ åbner det i forummet. En udfyldt prik betyder ikke læst endnu; tallet på knappen tæller dem, og **Markér alt som læst** rydder dem alle.',
   c5Adv: 'Alle indstillinger, sektion for sektion. Skriv i søgefeltet for at finde en; hver kontakt træder i kraft med det samme. Indstillinger mærket **web** findes kun i denne webklient.',

@@ -82,6 +82,7 @@ export default {
   c5Trophies: "Tvoji trofeji s treninga. Mala tajna: osvoji **sve** trofeje s ovog popisa i na kraju te čeka iznenađenje!",
   arcadeReveal: "Svi trofeji, bravo! Evo mog iznenađenja, tajne riječi: u načinu treninga upiši **{w}** kao nadimak i pritisni Spoji. Otvara moju igraonicu skrivenih igara. Neka ostane među nama!",
   arcadePlay: "Igraj sada",
+  arcadeMode: "**Bravo!** Otključao si **mini igre**. Čekaju te još tajanstvene igre… nastavi trenirati da ih otkriješ!",
   c5Events: 'Nadolazeće partije kupova. Stvaraju ih administratori kupova; igrači se prijavljuju na web-mjestu kupa ili u njegovoj temi na forumu — WEC partiji u 22:00 (po vremenu poslužitelja) prijava nije potrebna. Vremena su prikazana po vremenu poslužitelja i po tvom lokalnom vremenu; dodirni događaj i gumb na dnu će ga pratiti.',
   c5Posts: 'Najnovije objave s foruma pokerth.net, jedan redak po temi, najnovije na vrhu. Obojena oznaka je forum iz kojeg dolazi (General, BBC, WEC…). Dodirni objavu da je pročitaš ovdje — tada se označava kao pročitana; ↗ je otvara na forumu. Puna točka znači da još nije pročitana; značka na gumbu ih broji, a **Označi sve kao pročitano** ih sve briše.',
   c5Adv: 'Sve opcije, po odjeljcima. Upiši u okvir za pretraživanje da pronađeš neku; svaki prekidač djeluje odmah. Opcije označene s **web** postoje samo u ovom web klijentu.',

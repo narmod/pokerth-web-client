@@ -82,6 +82,7 @@ export default {
   c5Trophies: "Trofeele tale de antrenament. Un mic secret: câștigă **toate** trofeele din această listă și la final te așteaptă o surpriză!",
   arcadeReveal: "Toate trofeele, bravo! Iată surpriza mea, un cuvânt secret: în modul antrenament, scrie **{w}** ca pseudonim și apasă Conectare. Deschide sala mea de jocuri ascunse. Rămâne între noi!",
   arcadePlay: "Joacă acum",
+  arcadeMode: "**Bravo!** Ai deblocat **mini-jocurile**. Te așteaptă și alte jocuri misterioase… continuă antrenamentul ca să le descoperi!",
   c5Events: 'Următoarele partide de cupă. Sunt create de adminii cupelor; jucătorii se înscriu pe site-ul cupei sau în firul ei de forum — jocul WEC de la 22:00 (ora serverului) nu necesită înscriere. Orele sunt afișate în ora serverului și în ora ta locală; atinge un eveniment și butonul de jos îl urmează.',
   c5Posts: 'Cele mai noi postări de pe forumul pokerth.net, câte o linie pe subiect, cele mai recente sus. Eticheta colorată arată forumul de proveniență (General, BBC, WEC…). Atinge o postare ca s-o citești aici — este apoi marcată ca citită; ↗ o deschide pe forum. Un punct plin înseamnă necitită; insigna de pe buton le numără, iar **Marchează tot ca citit** le resetează pe toate.',
   c5Adv: 'Toate opțiunile, pe secțiuni. Scrie în caseta de căutare ca să găsești una; fiecare comutator se aplică imediat. Opțiunile marcate cu **web** există doar în acest client web.',

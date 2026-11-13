@@ -28,6 +28,15 @@ async function open(w, h, trophies, extra) {
       for (const k in ex) localStorage.setItem(k, ex[k]);
     } catch (e) {}
   }, [Object.fromEntries(normal.slice(0, trophies).map((id) => [id, 1])), extra || {}]);
+  // Watch for the light of the mode's first appearance (whenever it starts).
+  await ctx.addInitScript(() => {
+    window.__light = { canvas: false, hide: false };
+    new MutationObserver(() => {
+      if (document.querySelector('canvas.pth-backlight')) window.__light.canvas = true;
+      const c = document.getElementById('login-card-arcade');
+      if (c && c.classList.contains('lc-hide')) window.__light.hide = true;
+    }).observe(document, { subtree: true, childList: true, attributes: true, attributeFilter: ['class'] });
+  });
   const pg = await ctx.newPage();
   pg.on('pageerror', (e) => errors.push(String(e && e.message || e)));
   await pg.goto(base);
@@ -52,9 +61,20 @@ console.log('test-login-arcade-browser');
   const { ctx, pg } = await open(393, 852, 8);
   const c = await card(pg);
   ok(c.shown && c.last && c.desc === "Les jeux de l'As · 1/10 ouverts" && c.pill, '8 trophies: the fourth card, « 1/10 open », the NEW pill (' + c.desc + ')');
+  // The first time the unlocked mode is on screen it appears in the light, then the Ace speaks.
+  const anim = await pg.evaluate(() => window.__light);
+  ok(anim.canvas && anim.hide, 'its first appearance: the light (canvas) while the card waits for the flash');
+  await pg.waitForFunction(() => !document.querySelector('canvas.pth-backlight'), null, { timeout: 9000 }).catch(() => {});
+  await sleep(1200);
+  const after = await pg.evaluate(() => ({ canvas: !!document.querySelector('canvas.pth-backlight'), hide: document.getElementById('login-card-arcade').classList.contains('lc-hide'),
+    shown: localStorage.getItem('pth_arcade_shown'), bubble: (document.querySelector('.ad-bubble') || {}).textContent || '' }));
+  ok(!after.canvas && !after.hide && after.shown === '1' && /mini-jeux/i.test(after.bubble), 'then the card stays and the Ace congratulates (' + after.bubble.slice(0, 50) + '…)');
   await pg.click('#login-card-arcade');
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
-  await sleep(500);
+  await sleep(400);
+  const before = await pg.evaluate(() => document.querySelectorAll('#pth-game .gm-card.lock').length);
+  ok(before === 10, 'the menu first shows game 1 as a mystery game (' + before + ' mystery cards)…');
+  await sleep(4200);
   const m = await pg.evaluate(() => {
     const cards = [...document.querySelectorAll('#pth-game .gm-card')];
     const lock = cards.filter((c) => c.classList.contains('lock'));
@@ -69,7 +89,8 @@ console.log('test-login-arcade-browser');
     };
   });
   ok(m.open.join(',') === 'whowins' && m.steps === '1,2,3,4,5,6,7,8,9,10' && m.kind === '🎓 Progresser',
-    'a tap opens the mini-games page: game 1 open, numbered, with its kind (' + m.open.join(',') + ', ' + m.kind + ')');
+    '…then reveals it: game 1 open, numbered, with its kind (' + m.open.join(',') + ', ' + m.kind + ')');
+  ok(await pg.evaluate(() => JSON.parse(localStorage.getItem('pth_arcade_revealed') || '[]').join(',')) === 'whowins', 'the reveal is remembered (pth_arcade_revealed)');
   ok(m.lock === 9 && m.names.every((n) => n === 'Jeu mystère') && m.quiet,
     'the 9 others are mystery games: no name, icon, kind, rules or play button');
   ok(m.need === '🏆 Encore 2 trophées · 8/10' && m.count === '🕹️ 1/10 jeux ouverts · 9 jeux mystère à découvrir',
@@ -86,7 +107,24 @@ console.log('test-login-arcade-browser');
   await ctx.close();
 }
 {
-  const { ctx, pg } = await open(393, 852, 13, { pth_lang: 'en' });
+  // At the table: the trophy that unlocks the mode is followed by a toast.
+  const { ctx, pg } = await open(393, 852, 7);
+  const t = await pg.evaluate(async () => {
+    const seen = [];
+    const orig = window.showToast; window.showToast = (m) => { seen.push(m); try { orig && orig(m); } catch (e) {} };
+    document.getElementById('s-connect').classList.remove('active');
+    const m = await import('/modules/achievements/index.mjs');
+    const id = m.ACHIEVEMENTS.filter((d) => d.cat !== 'secret')[7].id;
+    const st = JSON.parse(localStorage.getItem('pth_ach_unlocked') || '{}'); st[id] = Date.now(); localStorage.setItem('pth_ach_unlocked', JSON.stringify(st));
+    window.dispatchEvent(new CustomEvent('pth-achievement', { detail: { id } }));
+    await new Promise((r) => setTimeout(r, 3300));
+    return { seen, flag: localStorage.getItem('pth_arcade_toast'), canvas: !!document.querySelector('canvas.pth-backlight') };
+  });
+  ok(t.seen.some((x) => /^🕹️ Nouveau mode débloqué/.test(x)) && t.flag === '1' && !t.canvas, 'at the table, the 8th trophy brings the toast « 🕹️ Nouveau mode débloqué ! », no light (' + t.seen.join(' | ') + ')');
+  await ctx.close();
+}
+{
+  const { ctx, pg } = await open(393, 852, 13, { pth_lang: 'en', pth_arcade_shown: '1' });
   const c = await card(pg);
   ok(c.shown && c.desc === "The Ace's games · 3/10 open", '13 trophies in English: « 3/10 open » (' + c.desc + ')');
   await pg.evaluate(() => window.setLang && window.setLang('de'));
@@ -96,7 +134,7 @@ console.log('test-login-arcade-browser');
   await ctx.close();
 }
 {
-  const { ctx, pg } = await open(393, 852, 0, { pth_arcade_all: '1' });
+  const { ctx, pg } = await open(393, 852, 0, { pth_arcade_all: '1', pth_arcade_shown: '1' });
   const c = await card(pg);
   ok(c.shown && /10\/10/.test(c.desc), 'the secret word (pth_arcade_all): the card with every game (' + c.desc + ')');
   await ctx.close();
@@ -114,7 +152,7 @@ console.log('test-login-arcade-browser');
   await ctx.close();
 }
 for (const [w, h] of [[852, 393], [740, 360], [375, 667], [1440, 900]]) {
-  const { ctx, pg } = await open(w, h, 12, { pth_arcade_seen: '1' });
+  const { ctx, pg } = await open(w, h, 12, { pth_arcade_seen: '1', pth_arcade_shown: '1' });
   const m = await pg.evaluate(() => {
     const r = (s) => document.querySelector(s).getBoundingClientRect();
     const hdr = r('#s-connect .connect-header'), cards = [...document.querySelectorAll('#login-step1 .login-card')].map((c) => c.getBoundingClientRect());

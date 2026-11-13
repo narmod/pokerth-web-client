@@ -155,6 +155,7 @@ export const strings = {
     loginLanTitle:'LAN / שרת ייעודי',
     loginLanDesc:'שרת פרטי · רשת מקומית',
     loginArcadeDesc:'המשחקים של האס · {n}/{t} פתוחים', loginArcadeNew:'חדש',
+    arcadeToast:'מצב חדש נפתח!',
     liveTables:'{n} שולחנות פעילים', liveWaiting:'{n} שחקנים ממתינים',
     liveOnline:'{n} שחקנים מחוברים', liveToday:'{n} משחקים היום',
     loginChange:'שינוי',

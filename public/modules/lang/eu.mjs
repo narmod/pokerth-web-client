@@ -158,6 +158,7 @@ export const strings = {
     loginLanTitle:'LAN / Zerbitzari dedikatua',
     loginLanDesc:'Zerbitzari pribatua · tokiko sarea',
     loginArcadeDesc:'Batekoaren jokoak · {n}/{t} irekita', loginArcadeNew:'BERRIA',
+    arcadeToast:'Modu berria desblokeatuta!',
     liveTables:'{n} mahai jokoan', liveWaiting:'{n} jokalari zain',
     liveOnline:'{n} jokalari linean', liveToday:'{n} partida gaur',
     loginChange:'Aldatu',

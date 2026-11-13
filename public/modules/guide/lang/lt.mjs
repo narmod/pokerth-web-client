@@ -82,6 +82,7 @@ export default {
   c5Trophies: "Tavo treniruočių trofėjai. Mažytė paslaptis: laimėk **visus** šio sąrašo trofėjus, ir pabaigoje turėsiu tau staigmeną!",
   arcadeReveal: "Visi trofėjai, bravo! Štai mano staigmena, slaptas žodis: treniruočių režimu įvesk **{w}** kaip slapyvardį ir spausk Prisijungti. Jis atveria mano paslėptų žaidimų arkadą. Tegul tai lieka tarp mūsų!",
   arcadePlay: "Žaisti dabar",
+  arcadeMode: "**Bravo!** Atrakinai **mini žaidimus**. Tavęs laukia dar paslaptingų žaidimų… treniruokis toliau, kad juos atrastum!",
   c5Events: 'Artėjantys taurių žaidimai. Juos kuria taurių administratoriai; žaidėjai registruojasi taurės svetainėje arba jos forumo temoje — WEC žaidimui 22:00 (serverio laiku) registruotis nereikia. Laikas rodomas serverio ir tavo vietos laiku; bakstelėk renginį, ir apačioje esantis mygtukas jį seks.',
   c5Posts: 'Naujausi pokerth.net forumo įrašai, po eilutę kiekvienai temai, naujausi viršuje. Spalvota žyma rodo, iš kurio forumo jis (General, BBC, WEC…). Bakstelėk įrašą, kad perskaitytum jį čia — tada jis pažymimas kaip skaitytas; ↗ atidaro jį forume. Užpildytas taškas reiškia, kad dar neskaityta; ženklelis ant mygtuko juos skaičiuoja, o **Pažymėti viską kaip skaityta** juos visus išvalo.',
   c5Adv: 'Visos parinktys, pagal skyrius. Rašyk paieškos lauke, kad rastum reikiamą; kiekvienas jungiklis įsigalioja iš karto. Parinktys, pažymėtos **web**, yra tik šiame žiniatinklio kliente.',

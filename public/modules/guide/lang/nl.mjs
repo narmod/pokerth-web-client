@@ -82,6 +82,7 @@ export default {
   c5Trophies: "Je trainingstrofeeën. Een geheimpje: win **alle** trofeeën in deze lijst en aan het eind heb ik een verrassing voor je!",
   arcadeReveal: "Alle trofeeën, bravo! Hier is mijn verrassing, een geheim woord: typ in de trainingsmodus **{w}** als bijnaam en druk op Verbinden. Het opent mijn arcade met verborgen spellen. Houd het onder ons!",
   arcadePlay: "Nu spelen",
+  arcadeMode: "**Bravo!** Je hebt de **minigames** ontgrendeld. Er wachten nog meer geheime spellen op je… blijf trainen om ze te ontdekken!",
   c5Events: 'De komende cupspellen. Ze worden aangemaakt door de cupadmins; spelers schrijven zich in op de site van de cup of in het forumdraadje ervan — het WEC-spel om 22:00 (servertijd) heeft geen inschrijving nodig. Tijden worden in servertijd en in je lokale tijd getoond; tik op een evenement en de knop onderaan volgt het.',
   c5Posts: 'De nieuwste berichten van het forum van pokerth.net, één regel per onderwerp, nieuwste bovenaan. Het gekleurde label is het forum waar het vandaan komt (General, BBC, WEC…). Tik op een bericht om het hier te lezen — het wordt dan als gelezen gemarkeerd; ↗ opent het op het forum. Een gevulde stip betekent nog niet gelezen; de badge op de knop telt ze, en **Alles als gelezen markeren** wist ze allemaal.',
   c5Adv: 'Alle opties, per sectie. Typ in het zoekveld om er een te vinden; elke schakelaar werkt meteen. Opties met het label **web** bestaan alleen in deze webclient.',

@@ -155,6 +155,7 @@ export const strings = {
     loginLanTitle:'LAN / डेडिकेटेड सर्व्हर',
     loginLanDesc:'खाजगी सर्व्हर · लोकल नेटवर्क',
     loginArcadeDesc:'एक्क्याचे खेळ · {n}/{t} खुले', loginArcadeNew:'नवीन',
+    arcadeToast:'नवीन मोड अनलॉक झाला!',
     liveTables:'{n} टेबल्स चालू आहेत', liveWaiting:'{n} खेळाडू वाट बघत आहेत',
     liveOnline:'{n} खेळाडू ऑनलाइन', liveToday:'आज {n} गेम्स',
     loginChange:'बदला',

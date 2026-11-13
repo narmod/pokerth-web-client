@@ -247,6 +247,7 @@ export const strings = {
     loginLanTitle:'LAN / Servidor dedicat',
     loginLanDesc:'Servidor privat · xarxa local',
     loginArcadeDesc:'Els jocs de l\'As · {n}/{t} oberts', loginArcadeNew:'NOU',
+    arcadeToast:'Nou mode desbloquejat!',
     liveTables:'{n} taules en joc', liveWaiting:'{n} jugadors esperant',
     liveOnline:'{n} jugadors en línia', liveToday:'{n} partides avui',
     loginChange:'Canvia',

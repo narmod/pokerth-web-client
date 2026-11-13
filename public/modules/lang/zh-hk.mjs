@@ -158,6 +158,7 @@ export const strings = {
     loginLanTitle:'區域網絡 / 專用伺服器',
     loginLanDesc:'私人伺服器 · 區域網絡',
     loginArcadeDesc:'A 牌嘅遊戲 · 已開放 {n}/{t}', loginArcadeNew:'新',
+    arcadeToast:'新模式已解鎖！',
     liveTables:'{n} 桌進行中', liveWaiting:'{n} 人等待中',
     liveOnline:'{n} 名玩家網上', liveToday:'今日 {n} 局',
     loginChange:'更改',

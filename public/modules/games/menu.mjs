@@ -13,6 +13,13 @@ import { GAMES, HOME, gameName, arcadeState, allUnlocked } from './index.mjs';
 import { createAchievements } from '../achievements/index.mjs';
 import { aceActor, fmt } from './common.mjs';
 import { art } from './art.mjs';
+import { backlight, motionOff } from '../ui/backlight.mjs';
+
+// The games already revealed on this device (a game newly opened by the
+// trophies is revealed once, in the light, the next time this page opens).
+const REVEALED_KEY = 'pth_arcade_revealed';
+function revealedSet() { try { return new Set(JSON.parse(localStorage.getItem(REVEALED_KEY) || '[]')); } catch (e) { return new Set(); } }
+function saveRevealed(set) { try { localStorage.setItem(REVEALED_KEY, JSON.stringify([...set])); } catch (e) {} }
 
 const CSS = `
 #pth-game .gm-hub{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
@@ -52,6 +59,16 @@ const CSS = `
 #pth-game .gm-need{display:flex;flex-direction:column;gap:5px;width:100%;font:600 13px 'Inter',system-ui,sans-serif;color:var(--text)}
 #pth-game .gm-bar{height:6px;border-radius:3px;background:var(--field-bg);box-shadow:inset 0 0 0 1px var(--border);overflow:hidden}
 #pth-game .gm-bar i{display:block;height:100%;background:var(--gold);border-radius:3px}
+#pth-game .gm-card.gm-rv .gm-art svg{animation:gm-rv-art 1.3s cubic-bezier(.2,.7,.2,1) both}
+#pth-game .gm-card.gm-rv{border-color:#f5d77a;box-shadow:0 0 0 1px #f5d77a,0 0 30px 8px rgba(255,236,170,.45)}
+#pth-game .gm-card.gm-rv .gm-kind,#pth-game .gm-card.gm-rv .gm-ico,#pth-game .gm-card.gm-rv .gm-btns>*{animation:gm-rv-in .45s cubic-bezier(.3,1.5,.5,1) both}
+#pth-game .gm-card.gm-rv .gm-kind{animation-delay:.9s}
+#pth-game .gm-card.gm-rv .gm-btns>*{animation-delay:1.2s}
+#pth-game .gm-card.gm-rv .gm-btns>*+*{animation-delay:1.3s}
+#pth-game .gm-card.gm-rv-soft{animation:gm-rv-fade .8s ease-out both}
+@keyframes gm-rv-art{from{filter:blur(9px) grayscale(.6) brightness(2.4);transform:scale(1.12)}to{filter:none;transform:none}}
+@keyframes gm-rv-in{from{opacity:0;transform:translateY(8px) scale(.7)}to{opacity:1;transform:none}}
+@keyframes gm-rv-fade{from{opacity:.3}to{opacity:1}}
 #pth-game .gm-keys{margin:0;color:var(--text);font-size:12px;opacity:.8}
 #pth-game .gm-keys .pg-k{color:var(--gold);border-color:var(--border-hi)}
 `;
@@ -78,6 +95,11 @@ export function create(shell) {
     return Object.assign({}, g, { name: gameName(g, t), locked: !!(s && !s.open), need: s ? s.need : 0 });
   });
   const count = st ? st.count : 0;
+  // Newly opened games are first shown as mystery games, then revealed one
+  // after the other (web.24). The secret word opens everything at once.
+  const revealed = revealedSet();
+  if (allUnlocked()) { games.forEach((g) => revealed.add(g.id)); saveRevealed(revealed); }
+  const pending = games.map((g, i) => (!g.locked && !revealed.has(g.id) ? i : -1)).filter((i) => i >= 0);
   const nOpen = games.filter((g) => !g.locked).length, nMyst = games.length - nOpen;
   let sel = 0;
   const best = (id) => { try { return parseInt(localStorage.getItem('pth_game_best_' + id) || '0', 10) || 0; } catch (e) { return 0; } };
@@ -93,33 +115,72 @@ export function create(shell) {
       + '<button type="button" class="pg-btn pg-ghost" data-rules="' + i + '">' + esc(t('gmRules')) + '</button></div></article>';
   }
   function lockedCard(g, i) {
-    const left = Math.max(1, g.need - count);
+    const left = g.need - count;
+    const need = left > 0 ? t(left === 1 ? 'gmNeedOne' : 'gmNeed', { n: left, c: count, t: g.need }) : Math.min(count, g.need) + '/' + g.need;
     return '<article class="gm-card lock" data-i="' + i + '">'
       + '<div class="gm-art gm-myst" aria-hidden="true"><div class="gm-dk" data-mart="' + esc(g.id) + '">' + art(g.id, shell.theme.light) + '</div><b class="gm-qm">?</b></div>'
       + '<h3><span class="gm-step">' + (i + 1) + '</span><span class="gm-q">' + esc(t('gmMystery')) + '</span></h3>'
-      + '<div class="gm-btns"><div class="gm-need"><span>🏆 ' + esc(t(left === 1 ? 'gmNeedOne' : 'gmNeed', { n: left, c: count, t: g.need })) + '</span>'
+      + '<div class="gm-btns"><div class="gm-need"><span>🏆 ' + esc(need) + '</span>'
       + '<div class="gm-bar"><i style="width:' + Math.min(100, Math.round(100 * count / Math.max(1, g.need))) + '%"></i></div></div></div></article>';
   }
 
   shell.view.innerHTML = '<div class="gm-hub"><div class="gm-head"><div class="gm-ace"></div><div><h2>' + esc(t('gmTitle')) + '</h2><p>' + esc(t('gmIntro')) + '</p>'
     + '<p class="gm-count">' + esc(countLine) + '</p></div></div>'
-    + '<div class="gm-grid">' + games.map((g, i) => (g.locked ? lockedCard(g, i) : openCard(g, i))).join('')
+    + '<div class="gm-grid">' + games.map((g, i) => (g.locked || pending.indexOf(i) >= 0 ? lockedCard(g, i) : openCard(g, i))).join('')
     + '</div>'
     + '<p class="gm-keys"><span class="pg-k">←</span> <span class="pg-k">→</span> · <span class="pg-k">Space</span> · <span class="pg-k">↓</span> ' + esc(t('gmRules')) + '</p></div>';
   const cards = Array.from(shell.view.querySelectorAll('.gm-card'));
   const mark = () => cards.forEach((c, i) => c.classList.toggle('on', i === sel));
   mark();
-  const play = (i) => { if (!games[i].locked) shell.open(games[i].id); };
-  const rules = (i) => { if (!games[i].locked) shell.rules(games[i], () => play(i)); };
-  shell.view.querySelectorAll('[data-play]').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); play(+(b.getAttribute('data-play') || 0)); }));
-  shell.view.querySelectorAll('[data-rules]').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); rules(+(b.getAttribute('data-rules') || 0)); }));
-  cards.forEach((c, i) => c.addEventListener('click', () => { sel = i; mark(); }));
-  // The cover picture plays too.
-  shell.view.querySelectorAll('.gm-art[data-art]').forEach((a) => a.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const c = a.closest('.gm-card');
-    play(+(c && c.getAttribute('data-i') || 0));
-  }));
+  const hidden = new Set(pending);   // shown as mystery games until revealed
+  const play = (i) => { if (!games[i].locked && !hidden.has(i)) shell.open(games[i].id); };
+  const rules = (i) => { if (!games[i].locked && !hidden.has(i)) shell.rules(games[i], () => play(i)); };
+  function bind(c, i) {
+    c.addEventListener('click', () => { sel = i; mark(); });
+    c.querySelectorAll('[data-play]').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); play(i); }));
+    c.querySelectorAll('[data-rules]').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); rules(i); }));
+    // The cover picture plays too.
+    c.querySelectorAll('.gm-art[data-art]').forEach((a) => a.addEventListener('click', (e) => { e.stopPropagation(); play(i); }));
+  }
+  cards.forEach((c, i) => bind(c, i));
+
+  // The reveal: in turn, each newly opened game is brought into view and
+  // appears in a light from behind its card; its cover clears, its name is
+  // written, its kind and buttons pop in.
+  let gone = false;
+  async function reveal() {
+    for (const i of pending) {
+      if (gone) return;
+      const g = games[i];
+      try { cards[i].scrollIntoView({ block: 'center', behavior: motionOff() ? 'auto' : 'smooth' }); } catch (e) {}
+      await new Promise((r) => setTimeout(r, 650));
+      if (gone) return;
+      await backlight(cards[i], { flashAt: 0.75, total: 2.6, veil: 0.65, onFlash: () => {
+        const box = document.createElement('div');
+        box.innerHTML = openCard(g, i);
+        const c = /** @type {HTMLElement} */ (box.firstElementChild);
+        const soft = motionOff();
+        c.classList.add(soft ? 'gm-rv-soft' : 'gm-rv');
+        const h3 = c.querySelector('h3');
+        const name = h3 && h3.lastChild && h3.lastChild.nodeType === 3 ? h3.lastChild : null;
+        if (name && !soft) {
+          const full = name.textContent || '';
+          name.textContent = '';
+          let k = 0;
+          const tick = setInterval(() => { k++; name.textContent = full.slice(0, k); if (k >= full.length) clearInterval(tick); }, 45);
+        }
+        cards[i].replaceWith(c);
+        cards[i] = c;
+        hidden.delete(i);
+        bind(c, i);
+        mark();
+        setTimeout(() => c.classList.remove('gm-rv', 'gm-rv-soft'), 2600);
+        revealed.add(g.id);
+        saveRevealed(revealed);
+      } });
+    }
+  }
+  if (pending.length) setTimeout(() => { reveal().catch(() => {}); }, 500);
   // Light / dark theme switched while on the page: repaint the covers (the
   // mystery ones under their blur too).
   function theme() {
@@ -139,5 +200,5 @@ export function create(shell) {
     else if (a === 'jump') play(sel);
     else if (a === 'duck') rules(sel);
   }
-  return { update() {}, draw() {}, input, theme, running: () => false, destroy() { ace.remove(); } };
+  return { update() {}, draw() {}, input, theme, running: () => false, destroy() { gone = true; ace.remove(); } };
 }

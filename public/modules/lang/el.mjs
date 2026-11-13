@@ -247,6 +247,7 @@ export const strings = {
     loginLanTitle:'LAN / Αποκλειστικός διακομιστής',
     loginLanDesc:'Ιδιωτικός διακομιστής · τοπικό δίκτυο',
     loginArcadeDesc:'Τα παιχνίδια του Άσου · {n}/{t} ανοιχτά', loginArcadeNew:'ΝΕΟ',
+    arcadeToast:'Ξεκλείδωσε νέα λειτουργία!',
     liveTables:'{n} ενεργά τραπέζια', liveWaiting:'{n} παίκτες περιμένουν',
     liveOnline:'{n} παίκτες συνδεδεμένοι', liveToday:'{n} παιχνίδια σήμερα',
     loginChange:'Αλλαγή',

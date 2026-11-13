@@ -247,6 +247,7 @@ export const strings = {
     loginLanTitle:'LAN / Server dedicat',
     loginLanDesc:'Server privat · rețea locală',
     loginArcadeDesc:'Jocurile Asului · {n}/{t} deschise', loginArcadeNew:'NOU',
+    arcadeToast:'Mod nou deblocat!',
     liveTables:'{n} mese în desfășurare', liveWaiting:'{n} jucători așteaptă',
     liveOnline:'{n} jucători online', liveToday:'{n} jocuri azi',
     loginChange:'Schimbă',

@@ -253,6 +253,7 @@ export const strings = {
     loginLanTitle:'LAN / Namjenski server',
     loginLanDesc:'Privatni server · lokalna mreža',
     loginArcadeDesc:'Asove igre · {n}/{t} otvoreno', loginArcadeNew:'NOVO',
+    arcadeToast:'Otključan novi način!',
     liveTables:'{n} stolova u tijeku', liveWaiting:'{n} igrača čeka',
     liveOnline:'{n} igrača na mreži', liveToday:'{n} igara danas',
     loginChange:'Promijeni',

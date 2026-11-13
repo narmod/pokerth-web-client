@@ -16,6 +16,19 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Mini-games mode — 4. the animations** (`web.24`) — `modules/ui/backlight.mjs`: a full-screen canvas where the
+  page darkens round an element, gold light spills round its edges and rays turn behind it (never over it), then
+  a white flash (`onFlash`, where the caller shows the element), sparks and twinkling stars; a short fanfare of our
+  own at the flash (`playTone`, so the sound settings apply); « Reduce animations » / `prefers-reduced-motion`: no
+  canvas, a fade. Used three times: (1) at the table, the trophy that unlocks the mode is followed by a toast
+  « 🕹️ New mode unlocked! » that does not say what it is (`arcadeToast`, `pth_arcade_toast`); (2) the first time
+  the unlocked mode is on the login (`pth_arcade_shown`, also after the secret word), its card waits as an empty
+  box in the light and rises out of the flash (`.lc-mat`), then the Ace congratulates — tips on or off — with
+  « Play now » (`window.guideArcadeMode`, key `arcadeMode` in the 83 guide catalogues; the bubble goes when the
+  card is tapped); (3) on the mini-games page, each game newly opened by the trophies is first shown as a mystery
+  game, then brought into view and revealed in the light — cover clearing, name written letter by letter, kind and
+  buttons popping in — one after the other (`pth_arcade_revealed`; the secret word reveals everything at once).
+  `test-login-arcade-browser.mjs` covers the toast, the light, the Ace and the reveal.
 - **Mini-games mode — 3. the mini-games page** (`web.23`) — `games/menu.mjs`: every card is numbered in the path
   (`.gm-step`) and the open ones carry their kind, « 🎓 Get better » / « 🎉 Just for fun » (`.gm-kind`, light-theme
   variants). A game its trophies have not opened is a « mystery game » (`.gm-card.lock`): its cover blurred,

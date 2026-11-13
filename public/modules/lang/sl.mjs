@@ -157,6 +157,7 @@ export const strings = {
     loginLanTitle:'LAN / lastni strežnik',
     loginLanDesc:'Zasebni strežnik · lokalno omrežje',
     loginArcadeDesc:'Asove igre · {n}/{t} odprtih', loginArcadeNew:'NOVO',
+    arcadeToast:'Odklenjen nov način!',
     liveTables:'{n} miz v teku', liveWaiting:'{n} igralcev čaka',
     liveOnline:'{n} igralcev na spletu', liveToday:'{n} iger danes',
     loginChange:'Spremeni',

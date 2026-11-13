@@ -246,6 +246,7 @@ export const strings = {
     loginLanTitle:'LAN / Oma palvelin',
     loginLanDesc:'Yksityinen palvelin · lähiverkko',
     loginArcadeDesc:'Ässän pelit · {n}/{t} auki', loginArcadeNew:'UUSI',
+    arcadeToast:'Uusi tila avattu!',
     liveTables:'{n} pöytää käynnissä', liveWaiting:'{n} pelaajaa odottaa',
     liveOnline:'{n} pelaajaa paikalla', liveToday:'{n} peliä tänään',
     loginChange:'Vaihda',

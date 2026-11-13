@@ -246,6 +246,7 @@ export const strings = {
     loginLanTitle:'LAN / 専用サーバー',
     loginLanDesc:'プライベートサーバー · ローカルネットワーク',
     loginArcadeDesc:'エースのゲーム · {n}/{t} 解放', loginArcadeNew:'NEW',
+    arcadeToast:'新しいモードが解放された！',
     liveTables:'進行中 {n} 卓', liveWaiting:'待機中 {n} 人',
     liveOnline:'オンライン {n} 人', liveToday:'本日 {n} ゲーム',
     loginChange:'変更',

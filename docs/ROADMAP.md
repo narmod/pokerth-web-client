@@ -285,7 +285,7 @@ use too. Items are grouped by status rather than fixed phases.
   one mini-game every 2 trophies (a game to learn, a game for fun), the next ones shown as blurred « mystery
   games »; revealed with a backlit light animation; the secret word opens everything on the device. Design note:
   `claude/CONCEPTION_MODE_ARCADE.md`. Five steps: 1. the rules (`web.21`) · 2. the login page (`web.22`) · 3. the
-  mini-games page (`web.23`) · 4. the animations · 5. the statistics.
+  mini-games page (`web.23`) · 4. the animations (`web.24`) · 5. the statistics.
 
 - **Official QML client fidelity** — ongoing pixel-and-behaviour alignment of the in-game
   screen with the official QML client (action bar, mobile layouts, seat geometry).

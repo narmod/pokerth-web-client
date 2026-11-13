@@ -247,6 +247,7 @@ export const strings = {
     loginLanTitle:'LAN / Máy chủ riêng',
     loginLanDesc:'Máy chủ riêng · mạng cục bộ',
     loginArcadeDesc:'Trò chơi của quân Át · đã mở {n}/{t}', loginArcadeNew:'MỚI',
+    arcadeToast:'Đã mở khóa chế độ mới!',
     liveTables:'{n} bàn đang chơi', liveWaiting:'{n} người chơi đang chờ',
     liveOnline:'{n} người chơi trực tuyến', liveToday:'{n} ván hôm nay',
     loginChange:'Thay đổi',

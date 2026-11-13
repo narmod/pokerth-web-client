@@ -158,6 +158,7 @@ export const strings = {
     loginLanTitle:'LAN / Выдзелены сервер',
     loginLanDesc:'Прыватны сервер · лакальная сетка',
     loginArcadeDesc:'Гульні Туза · адкрыта {n}/{t}', loginArcadeNew:'НОВАЕ',
+    arcadeToast:'Адкрыты новы рэжым!',
     liveTables:'Сталоў у гульні: {n}', liveWaiting:'Гульцоў чакае: {n}',
     liveOnline:'Гульцоў анлайн: {n}', liveToday:'Гульняў сёння: {n}',
     loginChange:'Змяніць',

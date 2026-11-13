@@ -155,6 +155,7 @@ export const strings = {
     loginLanTitle:'LAN / ਸਮਰਪਿਤ ਸਰਵਰ',
     loginLanDesc:'ਨਿੱਜੀ ਸਰਵਰ · ਲੋਕਲ ਨੈੱਟਵਰਕ',
     loginArcadeDesc:'ਯੱਕੇ ਦੀਆਂ ਖੇਡਾਂ · {n}/{t} ਖੁੱਲ੍ਹੀਆਂ', loginArcadeNew:'ਨਵਾਂ',
+    arcadeToast:'ਨਵਾਂ ਮੋਡ ਅਨਲੌਕ ਹੋਇਆ!',
     liveTables:'{n} ਟੇਬਲ ਚੱਲ ਰਹੇ ਹਨ', liveWaiting:'{n} ਖਿਡਾਰੀ ਉਡੀਕ ਵਿੱਚ',
     liveOnline:'{n} ਖਿਡਾਰੀ ਆਨਲਾਈਨ', liveToday:'{n} ਖੇਡਾਂ ਅੱਜ',
     loginChange:'ਬਦਲੋ',

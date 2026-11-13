@@ -158,6 +158,7 @@ export const strings = {
     loginLanTitle:'LAN / Атайын сервер',
     loginLanDesc:'Жеке сервер · локалдык тармак',
     loginArcadeDesc:'Тузанын оюндары · {n}/{t} ачык', loginArcadeNew:'ЖАҢЫ',
+    arcadeToast:'Жаңы режим ачылды!',
     liveTables:'{n} үстөл ойнолууда', liveWaiting:'{n} оюнчу күтүүдө',
     liveOnline:'{n} оюнчу онлайн', liveToday:'Бүгүн {n} оюн',
     loginChange:'Өзгөртүү',

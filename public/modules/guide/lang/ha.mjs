@@ -82,6 +82,7 @@ export default {
   c5Trophies: "Kofunanka na horo. Ƙaramin sirri: ci **dukan** kofunan da ke cikin wannan jerin, a ƙarshe ina da abin mamaki a gare ka!",
   arcadeReveal: "Dukan kofuna, madalla! Ga abin mamakina, kalmar sirri: a yanayin horo, rubuta **{w}** a matsayin laƙabi sannan ka danna Haɗa. Tana buɗe ɗakin wasannina na ɓoye. Ya zauna tsakaninmu!",
   arcadePlay: "Yi wasa yanzu",
+  arcadeMode: "**Madalla!** Ka buɗe **ƙananan wasanni**. Ƙarin wasannin asiri suna jiranka… ci gaba da horo don gano su!",
   c5Events: 'Wasannin gasa masu zuwa. Masu kula da gasa ne ke ƙirƙirar su; ’yan wasa suna yin rajista a shafin gasar ko a cikin zaren dandalinta — wasan WEC na 22:00 (lokacin sabar) baya buƙatar rajista. Ana nuna lokuta a lokacin sabar da kuma lokacinka na gida; taɓa wani abu mai faruwa, maɓallin da ke ƙasa zai bi shi.',
   c5Posts: 'Sabbin rubuce-rubuce na dandalin pokerth.net, layi ɗaya ga kowane batu, sabbi a sama. Alamar launi ita ce dandalin da ya fito (General, BBC, WEC…). Taɓa rubutu don karanta shi a nan — sai a yi masa alamar an karanta; ↗ yana buɗe shi a dandali. Ɗigo mai cike yana nufin ba a karanta ba tukuna; lambar da ke kan maɓallin tana ƙirga su, kuma **Yi wa duka alamar an karanta** yana share su duka.',
   c5Adv: 'Kowane zaɓi, bisa sashe. Rubuta a akwatin nema don samun ɗaya; kowane maɓallin kunnawa yana aiki nan take. Zaɓuɓɓukan da aka yi wa alamar **web** suna nan ne kawai a wannan manhajar yanar gizo.',

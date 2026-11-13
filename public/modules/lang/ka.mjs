@@ -158,6 +158,7 @@ export const strings = {
     loginLanTitle:'LAN / გამოყოფილი სერვერი',
     loginLanDesc:'კერძო სერვერი · ლოკალური ქსელი',
     loginArcadeDesc:'ტუზის თამაშები · {n}/{t} გახსნილი', loginArcadeNew:'ახალი',
+    arcadeToast:'ახალი რეჟიმი გაიხსნა!',
     liveTables:'მიმდინარეობს {n} მაგიდა', liveWaiting:'{n} მოთამაშე ელოდება',
     liveOnline:'{n} მოთამაშე ონლაინ', liveToday:'დღეს {n} თამაში',
     loginChange:'შეცვლა',

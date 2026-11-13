@@ -82,6 +82,7 @@ export default {
   c5Trophies: "Az edzés trófeáid. Egy kis titok: szerezd meg a lista **összes** trófeáját, és a végén meglepetéssel várlak!",
   arcadeReveal: "Az összes trófea, bravó! Íme a meglepetésem, egy titkos szó: edzés módban írd be becenévnek: **{w}**, majd nyomd meg a Csatlakozás gombot. Megnyitja a rejtett játékaim játéktermét. Maradjon köztünk!",
   arcadePlay: "Játék most",
+  arcadeMode: "**Bravó!** Feloldottad a **minijátékokat**. További titkos játékok várnak… gyakorolj tovább, hogy felfedezd őket!",
   c5Events: 'A közelgő kupajátékok. Ezeket a kupák adminjai hozzák létre; a játékosok a kupa webhelyén vagy a fórumtémájában jelentkeznek — a 22:00-s (szerveridő) WEC-játékhoz nem kell jelentkezni. Az időpontok szerveridőben és a helyi idődben is láthatók; koppints egy eseményre, és az alul lévő gomb követi.',
   c5Posts: 'A pokerth.net fórum legfrissebb bejegyzései, témánként egy sor, a legújabbak felül. A színes címke mutatja, melyik fórumból jön (General, BBC, WEC…). Koppints egy bejegyzésre, hogy itt olvasd el — ekkor olvasottnak jelölődik; a ↗ a fórumon nyitja meg. A teli pötty azt jelenti, még nem olvastad; a gombon lévő jelvény számolja őket, az **Összes megjelölése olvasottként** pedig mindet törli.',
   c5Adv: 'Minden beállítás, szakaszonként. Írj a keresőmezőbe, hogy megtalálj egyet; minden kapcsoló azonnal érvényes. A **web** jelölésű beállítások csak ebben a webes kliensben léteznek.',

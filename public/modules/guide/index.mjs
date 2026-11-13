@@ -1515,6 +1515,21 @@ async function revealArcade() {
   beacon('arcade', 'revealed');
 }
 
+// ── The Mini-games mode appears on the login (web.24) ───────────────
+// modules/ui/login-arcade.mjs, once its card has appeared in the light: the
+// Ace congratulates the player — tips on or off — and « Play now » opens the
+// mini-games page.
+let arcadeNote = false;
+async function arcadeMode() {
+  arcadeNote = true;
+  await note('arcadeMode', [btn('arcadePlay', true), btn('close')], (id) => {
+    arcadeNote = false;
+    endOnDemand();
+    if (id === 'arcadePlay') { try { if (typeof window.loginOpenArcade === 'function') window.loginOpenArcade(); } catch (e) {} }
+  });
+  try { if (M) M.react('wave'); } catch (e) {}
+}
+
 // ── Live game list (C1 / C2) ───────────────────────────────────────
 function onGames() {
   if (!available() || !state.isOn()) return;
@@ -1718,6 +1733,9 @@ window._guideApply = apply;
 // or folded, web.288): the step on screen is shown again.
 window._guideRefresh = () => { if (showing && showing.kind === 'ctx' && showing.run && showing.run.ctx.tour && M && M.bubbleOpen()) renderStep({ keepFold: true }); };
 window.guideToggle = toggle;
+window.guideArcadeMode = () => { arcadeMode().catch(() => {}); };
+// The mini-games opened another way (the login card): the bubble goes.
+window.guideArcadeModeClose = () => { if (arcadeNote && showing && showing.kind === 'note') { arcadeNote = false; endOnDemand(); } };
 /** « More help » (H1): the Help entries of the menus (modules/help/index.mjs). */
 window._guideMoreHelp = helpEntry;
 /** The Help entries of the menus (H4: the help window is gone, the Ace answers). */

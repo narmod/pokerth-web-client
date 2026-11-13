@@ -157,6 +157,7 @@ export const strings = {
     loginLanTitle:'LAN / เซิร์ฟเวอร์เฉพาะ',
     loginLanDesc:'เซิร์ฟเวอร์ส่วนตัว · เครือข่ายท้องถิ่น',
     loginArcadeDesc:'เกมของเอซ · เปิดแล้ว {n}/{t}', loginArcadeNew:'ใหม่',
+    arcadeToast:'ปลดล็อกโหมดใหม่แล้ว!',
     liveTables:'{n} โต๊ะกำลังเล่น', liveWaiting:'{n} คนกำลังรอ',
     liveOnline:'ผู้เล่นออนไลน์ {n} คน', liveToday:'วันนี้ {n} เกม',
     loginChange:'เปลี่ยน',

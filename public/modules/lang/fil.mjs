@@ -157,6 +157,7 @@ export const strings = {
     loginLanTitle:'LAN / Dedicated server',
     loginLanDesc:'Pribadong server · lokal na network',
     loginArcadeDesc:'Mga laro ng Alas · {n}/{t} bukas', loginArcadeNew:'BAGO',
+    arcadeToast:'Na-unlock ang bagong mode!',
     liveTables:'{n} mesa na tumatakbo', liveWaiting:'{n} manlalaro naghihintay',
     liveOnline:'{n} manlalaro online', liveToday:'{n} laro ngayon',
     loginChange:'Palitan',

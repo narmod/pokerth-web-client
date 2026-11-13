@@ -158,6 +158,7 @@ export const strings = {
     loginLanTitle:'LAN / သီးသန့်ဆာဗာ',
     loginLanDesc:'ကိုယ်ပိုင်ဆာဗာ · ဒေသတွင်းကွန်ရက်',
     loginArcadeDesc:'အေ့စ်၏ ဂိမ်းများ · {n}/{t} ဖွင့်ထား', loginArcadeNew:'အသစ်',
+    arcadeToast:'မုဒ်အသစ် ဖွင့်ပြီးပါပြီ!',
     liveTables:'စားပွဲ {n} ခု ကစားနေသည်', liveWaiting:'ကစားသမား {n} ဦး စောင့်နေသည်',
     liveOnline:'ကစားသမား {n} ဦး အွန်လိုင်း', liveToday:'ယနေ့ ဂိမ်း {n} ခု',
     loginChange:'ပြောင်းရန်',

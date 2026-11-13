@@ -158,6 +158,7 @@ export const strings = {
     loginLanTitle:'LAN / Aýratyn serwer',
     loginLanDesc:'Hususy serwer · ýerli tor',
     loginArcadeDesc:'Tuzuň oýunlary · {n}/{t} açyk', loginArcadeNew:'TÄZE',
+    arcadeToast:'Täze režim açyldy!',
     liveTables:'{n} stol oýnaýar', liveWaiting:'{n} oýunçy garaşýar',
     liveOnline:'{n} oýunçy onlaýn', liveToday:'Şu gün {n} oýun',
     loginChange:'Üýtget',

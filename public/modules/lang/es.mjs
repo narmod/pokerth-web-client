@@ -255,6 +255,7 @@ export const strings = {
     loginLanTitle:'LAN / Servidor dedicado',
     loginLanDesc:'Servidor privado · red local',
     loginArcadeDesc:'Los juegos del As · {n}/{t} abiertos', loginArcadeNew:'NUEVO',
+    arcadeToast:'¡Nuevo modo desbloqueado!',
     liveTables:'{n} mesas en juego', liveWaiting:'{n} jugadores esperando',
     liveOnline:'{n} jugadores conectados', liveToday:'{n} partidas hoy',
     loginChange:'Cambiar',

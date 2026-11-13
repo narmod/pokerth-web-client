@@ -1,4 +1,10 @@
-2026-11-13 version 2.1.11-web.23 (current series):
+2026-11-13 version 2.1.11-web.24 (current series):
+- new: when the Mini-games mode is unlocked, it appears on the login screen in a light coming from behind it, with a little fanfare, and the Ace congratulates you
+- new: at the table, the trophy that unlocks the mode is followed by « 🕹️ New mode unlocked! »
+- new: a newly opened mini-game is revealed in the same light the next time you open the Mini-games page
+- improvement: with « Reduce animations », these appear with a simple fade
+
+2026-11-13 version 2.1.11-web.23:
 - new: on the Mini-games page, each game shows its number in the path and whether it helps you get better at poker or is just for fun
 - new: the games still locked are mystery games, blurred under a « ? », with the trophies still to win; which one comes next stays a surprise
 

@@ -158,6 +158,7 @@ export const strings = {
     loginLanTitle:'LAN / Հատուկ սերվեր',
     loginLanDesc:'Մասնավոր սերվեր · տեղային ցանց',
     loginArcadeDesc:'Թուզի խաղերը · {n}/{t} բաց', loginArcadeNew:'ՆՈՐ',
+    arcadeToast:'Նոր ռեժիմ է բացվել:',
     liveTables:'{n} սեղան ընթացքում', liveWaiting:'{n} խաղացող սպասում է',
     liveOnline:'{n} խաղացող առցանց', liveToday:'այսօր {n} խաղ',
     loginChange:'Փոխել',

@@ -247,6 +247,7 @@ export const strings = {
     loginLanTitle:'LAN / Skirtasis serveris',
     loginLanDesc:'Privatus serveris · vietinis tinklas',
     loginArcadeDesc:'Tūzo žaidimai · atverta {n}/{t}', loginArcadeNew:'NAUJA',
+    arcadeToast:'Atrakintas naujas režimas!',
     liveTables:'{n} vykstantys stalai', liveWaiting:'{n} žaidėjų laukia',
     liveOnline:'{n} žaidėjų prisijungę', liveToday:'{n} žaidimų šiandien',
     loginChange:'Keisti',

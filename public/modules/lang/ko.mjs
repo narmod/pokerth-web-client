@@ -250,6 +250,7 @@ export const strings = {
     loginLanTitle:'LAN / 전용 서버',
     loginLanDesc:'개인 서버 · 로컬 네트워크',
     loginArcadeDesc:'에이스의 게임 · {n}/{t} 열림', loginArcadeNew:'NEW',
+    arcadeToast:'새 모드가 열렸어!',
     liveTables:'진행 중 {n}테이블', liveWaiting:'대기 중 {n}명',
     liveOnline:'접속자 {n}명', liveToday:'오늘 {n}게임',
     loginChange:'변경',
