@@ -331,6 +331,15 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.keyboard.down('ArrowLeft'); await sleep(450); await pg.keyboard.up('ArrowLeft');
   ok(await pg.evaluate(() => window.__pthRun.game().px < -0.15), label + ': ← held steers to the left (x ' + (await pg.evaluate(() => window.__pthRun.game().px.toFixed(2))) + ')');
   await shot(pg, label + '-prun-run');
+  // Gentle hills: along the course the road stays in sight up to the horizon.
+  let crests = 0;
+  const nSeg = await pg.evaluate(() => window.__pthRun.segs());
+  for (let i = 0; i < 24; i++) {
+    await pg.evaluate((z) => { window.__pthRun.setTime(99); window.__pthRun.setPos(z); }, Math.floor(40 + i * (nSeg - 400) / 24));
+    await sleep(60);
+    if ((await pg.evaluate(() => window.__pthRun.view())).hidden > 20) crests++;
+  }
+  ok(crests <= 4, label + ': the road is seen to the horizon (' + (24 - crests) + '/24 views without a crest hiding it)');
   // The clock runs out: the dealer completes the board, the showdown and the score.
   await pg.evaluate(() => window.__pthRun.setTime(0.2));
   await pg.waitForSelector('#pth-game .ar-final', { timeout: 15000 }).catch(() => {});

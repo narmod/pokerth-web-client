@@ -187,7 +187,8 @@ export function create(shell) {
       const start = segs.length, target = 740 + k * 40;
       while (segs.length - start < target) {
         const en = 25 + Math.floor(Math.random() * 25), ho = 30 + Math.floor(Math.random() * 60);
-        const hill = clamp((Math.random() * 2 - 1) * 1100 - lastY() * 0.5, -1400, 1400);
+        // Gentle hills: the road stays in sight up to the horizon, like what stands on it.
+        const hill = clamp((Math.random() * 2 - 1) * 420 - lastY() * 0.5, -560, 560);
         addRoad(en, ho, en, pick([0, 0, 1.5, -1.5, 2.4, -2.4, 3.2, -3.2]), hill);
       }
       // The fork: a flat straight, three branches, the gate, then the branch taken swings back to the middle.
@@ -257,6 +258,7 @@ export function create(shell) {
   let act = { a: '', t: 0, dur: 0, prio: 0 }, bub = { s: '', t: 0, d: 1 }, wasBoost = false, wasOff = false, lowSaid = false, offCd = 0, outroT = 0, outroWin = false;
   const keys = { l: false, r: false, n: false, b: false }, pulse = { l: 0, r: 0, n: 0, b: 0 };
   let W = 640, H = 360, cy = 160, ctx = shell.g;
+  const view = { hidden: 0, far: 0 };   // road segments hidden behind a crest, the farthest one drawn (tests)
 
   function reset() {
     buildTrack();
@@ -581,6 +583,7 @@ export function create(shell) {
     if (skyGate >= 0 && ps.i - skyGate < 80) { drawSky(TH[skyFrom], 1); drawSky(cur, clamp((ps.i - skyGate) / 80, 0, 1)); } else drawSky(cur, 1);
     const base = findSeg(pos), bp = (pos % SEG) / SEG;
     let dx = -(base.curve * bp), x = 0, maxy = H;
+    view.hidden = 0; view.far = 0;
     const last = Math.min(segs.length - 1, base.i + DRAW);
     for (let i = base.i; i <= Math.min(segs.length - 1, last + 1); i++) {
       const s = segs[i]; s.g = geom(s); s.T = themeOf(s.stage);
@@ -590,7 +593,8 @@ export function create(shell) {
       const s = segs[base.i + n];
       project(s.p1, px * ROAD - x, camY, pos); project(s.p2, px * ROAD - x - dx, camY, pos);
       x += dx; dx += s.curve; s.clip = maxy;
-      if (s.p1.c.z <= DEPTH || s.p2.s.y >= s.p1.s.y || s.p2.s.y >= maxy) continue;
+      if (s.p1.c.z <= DEPTH || s.p2.s.y >= s.p1.s.y || s.p2.s.y >= maxy) { if (s.p1.c.z > DEPTH) view.hidden++; continue; }
+      view.far = n;
       const a = s.p1.s, b = s.p2.s, alt = Math.floor(s.i / 3) % 2, fin = s.i >= finishSeg && s.i < finishSeg + 4;
       const nx = segs[s.i + 1] || s, g1 = s.g, g2 = nx.g || g1, T = s.T;
       const bl = s.Tp ? clamp((s.i - gates[s.stage - 1].seg) / 50, 0, 1) : 1;
@@ -867,7 +871,7 @@ export function create(shell) {
   reset();
   pos = (gates[0].seg - 150) * SEG; { const ps = findSeg(pos + PLAYER_Z); camY = CAMH + ps.p1.w.y; }
   titlePanel();
-  try { if (navigator.webdriver) window.__pthRun = { state: () => state, game: () => ({ pos, px, time, stack, board: board.slice(), gates, stageTheme: stageTheme.slice() }), segAt: () => findSeg(pos + PLAYER_Z).i, setTime: (x) => { time = x; } }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthRun = { state: () => state, game: () => ({ pos, px, time, stack, board: board.slice(), gates, stageTheme: stageTheme.slice() }), segAt: () => findSeg(pos + PLAYER_Z).i, setTime: (x) => { time = x; }, setPos: (z) => { pos = z * SEG; }, view: () => Object.assign({}, view), segs: () => segs.length }; } catch (e) {}
 
   return {
     update, draw, input,
