@@ -99,6 +99,12 @@ highlights below.
   and ▲ ▼ on the right in landscape; the other games are unchanged.
 
 ### Changed
+- **Who Wins? — the show, 1/3** (`web.30`, narmod's redesign: TV reveal, tables with stars, traps explained,
+  effects) — `games/whowins.mjs`: the hands are dealt face up and the board turned over (`REVEAL`: flop, turn, river,
+  card flips) before the clock starts (state `deal`; a tap turns the rest over without answering); a pot of chips
+  (3 + streak, up to 10) flies to the winning hand (half to each on a split); a wrong answer shakes the table;
+  « On fire » from `FEVER_STREAK` = 5 in a row: gold glow on the board, points doubled (`points()`), HUD label.
+  « Reduce animations »: board at once, no shake. Key `wwFever` × 83. Tests: `test-games`, `test-games-browser`.
 - **Mini-games: the login header folds like the other modes** (`web.27`) — `ui/login-arcade.mjs`: the card's tap
   folds the header (`loginHeaderFold(true)`, 0.38 s) before the page opens; back on the login, the header (unfolded
   at once by `loginBackToStep1`) is folded again for a frame without its transition, then unfolds in it. Nothing

@@ -726,6 +726,7 @@ export const strings = {
     "wwHint": "Ýttu á höndina sem vinnur – eða Skipt ef jafnt – áður en tíminn rennur út",
     "wwSplit": "Skipt",
     "wwTooSlow": "Of hægt!",
+    "wwFever": "Í ham ×2",
     "wwRules": "Tvær hendur, eitt borð: ýttu á höndina sem vinnur uppgjörið – eða „Skipt“ þegar báðar mynda sömu fimm bestu spilin.\nHver hönd spilar bestu fimm úr sínum tveimur spilum og fimm á borðinu; hliðarspilið ræður í tæpum tilvikum.\nSvaraðu áður en stikan klárast: því hraðar, því fleiri stig, og tíminn styttist eftir því sem líður á.\nRangt svar eða tími úti kostar hjarta; við það þriðja er leiknum lokið. Eftir hvert svar eru báðar hendur nefndar og vinningsspilin lýst upp.\n←: vinstri hönd · →: hægri hönd · ↓: Skipt · eða ýttu.",
     "ach_whowins": "Hver vinnur?",
     "ach_whowins_d": "20 rétt svör í einum leik af Hver vinnur?",

@@ -728,6 +728,7 @@ export const strings = {
     "wwHint": "Gusa mkono unaoshinda — au Gawana ikiwa sare — kabla muda haujaisha",
     "wwSplit": "Gawana",
     "wwTooSlow": "Polepole mno!",
+    "wwFever": "Moto ×2",
     "wwRules": "Mikono miwili, ubao mmoja: gusa mkono unaoshinda wakati wa kufunua — au «Gawana» wakati yote miwili inaunda karata tano bora zilezile.\nKila mkono unacheza karata tano bora kutoka karata zake mbili na tano za ubaoni; kicker inaamua hali zinazokaribiana.\nJibu kabla upau haujaisha: kadiri unavyokuwa haraka, ndivyo alama nyingi zaidi, na muda unapungua kadiri unavyoendelea.\nJibu baya au muda kuisha kunagharimu moyo mmoja; kwa wa tatu, mchezo unaisha. Baada ya kila jibu, mikono yote miwili inatajwa na karata zinazoshinda zinawaka.\n←: mkono wa kushoto · →: mkono wa kulia · ↓: Gawana · au gusa.",
     "ach_whowins": "Nani anashinda?",
     "ach_whowins_d": "Majibu 20 sahihi katika mchezo mmoja wa Nani anashinda?",

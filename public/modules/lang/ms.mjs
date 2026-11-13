@@ -728,6 +728,7 @@ export const strings = {
     "wwHint": "Ketik tangan yang menang — atau Kongsi jika seri — sebelum masa tamat",
     "wwSplit": "Kongsi",
     "wwTooSlow": "Terlalu perlahan!",
+    "wwFever": "Membara ×2",
     "wwRules": "Dua tangan, satu papan: ketik tangan yang menang semasa showdown — atau «Kongsi» apabila kedua-duanya membentuk lima kad terbaik yang sama.\nSetiap tangan memainkan lima terbaik daripada dua kadnya dan lima di papan; kicker menentukan kes yang rapat.\nJawab sebelum bar habis: lebih pantas, lebih banyak mata, dan masa semakin pendek.\nJawapan salah atau masa tamat kehilangan satu hati; pada yang ketiga permainan tamat. Selepas setiap jawapan kedua-dua tangan dinamakan dan kad pemenang menyala.\n←: tangan kiri · →: tangan kanan · ↓: Kongsi · atau ketik.",
     "ach_whowins": "Siapa menang?",
     "ach_whowins_d": "20 jawapan betul dalam satu permainan Siapa menang?",

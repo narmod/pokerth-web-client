@@ -728,6 +728,7 @@ export const strings = {
     "wwHint": "Ketuk tangan yang menang — atau Bagi jika seri — sebelum waktu habis",
     "wwSplit": "Bagi",
     "wwTooSlow": "Terlalu lambat!",
+    "wwFever": "Membara ×2",
     "wwRules": "Dua tangan, satu papan: ketuk tangan yang menang saat showdown — atau «Bagi» jika keduanya membentuk lima kartu terbaik yang sama.\nSetiap tangan memainkan lima terbaik dari dua kartunya dan lima kartu di papan; kicker menentukan kasus yang ketat.\nJawab sebelum bar habis: makin cepat, makin banyak poin, dan waktunya makin pendek.\nJawaban salah atau waktu habis memakan satu hati; di hati ketiga permainan berakhir. Setiap jawaban menyebut nama kedua tangan dan menyalakan kartu pemenang.\n←: tangan kiri · →: tangan kanan · ↓: Bagi · atau ketuk.",
     "ach_whowins": "Siapa menang?",
     "ach_whowins_d": "20 jawaban benar dalam satu permainan Siapa menang?",

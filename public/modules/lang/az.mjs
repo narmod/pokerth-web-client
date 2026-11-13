@@ -730,6 +730,7 @@ export const strings = {
     "wwHint": "Qalib ələ toxun — bərabərlikdə Bölgü — vaxt bitmədən",
     "wwSplit": "Bölgü",
     "wwTooSlow": "Çox yavaş!",
+    "wwFever": "Alovlanmısan ×2",
     "wwRules": "İki əl, bir masa: showdown-u qazanan ələ toxun — ya da hər ikisi eyni ən yaxşı beş kartı düzəldirsə «Bölgü»yə.\nHər əl öz iki kartı və masadakı beş kart arasından ən yaxşı beşini oynayır; yaxın halları kiker həll edir.\nZolaq bitmədən cavab ver: nə qədər tez, o qədər çox xal, və vaxt getdikcə qısalır.\nSəhv cavab və ya vaxtın bitməsi bir ürəyə başa gəlir; üçüncüdə oyun bitir. Hər cavabdan sonra hər iki əlin adı çəkilir və qalib kartlar yanır.\n←: sol əl · →: sağ əl · ↓: Bölgü · ya da toxun.",
     "ach_whowins": "Kim qalib gəlir?",
     "ach_whowins_d": "Bir «Kim qalib gəlir?» oyununda 20 düz cavab",

@@ -730,6 +730,7 @@ export const strings = {
     "wwHint": "Tuŝu la gajnantan manon — aŭ Egale se ili egalas — antaŭ ol la tempo finiĝas",
     "wwSplit": "Egale",
     "wwTooSlow": "Tro malrapide!",
+    "wwFever": "En fajro ×2",
     "wwRules": "Du manoj, unu tablo: tuŝu la manon, kiu gajnas la montradon — aŭ „Egale” kiam ambaŭ faras la samajn plej bonajn kvin kartojn.\nĈiu mano ludas la plej bonajn kvin el siaj du kartoj kaj la kvin sur la tablo; la piedkarto decidas la proksimajn kazojn.\nRespondu antaŭ ol la breto finiĝas: ju pli rapide, des pli da poentoj, kaj la tempo mallongiĝas laŭ la ludo.\nEraro aŭ fino de tempo kostas koron; ĉe la tria, la ludo finiĝas. Post ĉiu respondo ambaŭ manoj estas nomitaj kaj la gajnantaj kartoj lumas.\n←: maldekstra mano · →: dekstra mano · ↓: Egale · aŭ tuŝu.",
     "ach_whowins": "Kiu gajnas?",
     "ach_whowins_d": "20 ĝustaj respondoj en unu ludo de Kiu gajnas?",

@@ -720,6 +720,7 @@ export const strings = {
     "wwHint": "Puuduta võitvat kätt – või Jagatud viigi korral – enne kui aeg saab otsa",
     "wwSplit": "Jagatud",
     "wwTooSlow": "Liiga aeglane!",
+    "wwFever": "Leegis ×2",
     "wwRules": "Kaks kätt, üks laud: puuduta kätt, mis võidab showdowni – või „Jagatud“, kui mõlemad moodustavad samad viis parimat kaarti.\nIga käsi mängib parimad viis oma kahest kaardist ja laua viiest; kicker otsustab tasavägised juhud.\nVasta enne, kui riba otsa saab: mida kiiremini, seda rohkem punkte, ja aeg lüheneb mängu käigus.\nVale vastus või aja lõppemine maksab ühe südame; kolmandaga on mäng läbi. Pärast iga vastust nimetatakse mõlemad käed ja võitvad kaardid süttivad.\n←: vasak käsi · →: parem käsi · ↓: Jagatud · või puuduta.",
     "ach_whowins": "Kes võidab?",
     "ach_whowins_d": "20 õiget vastust ühes mängus Kes võidab?",

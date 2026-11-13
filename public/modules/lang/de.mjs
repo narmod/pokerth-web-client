@@ -1105,6 +1105,7 @@ export const strings = {
     "wwHint": "Tippe auf die gewinnende Hand – oder Split bei Gleichstand –, bevor die Zeit abläuft",
     "wwSplit": "Split",
     "wwTooSlow": "Zu langsam!",
+    "wwFever": "Im Fieber ×2",
     "wwRules": "Zwei Hände, ein Board: tippe auf die Hand, die den Showdown gewinnt – oder auf Split, wenn beide dieselben fünf besten Karten haben.\nJede Hand spielt die besten fünf aus ihren zwei Karten und den fünf auf dem Board; der Kicker entscheidet knappe Fälle.\nAntworte, bevor der Balken abläuft: je schneller, desto mehr Punkte, und die Zeit wird mit jeder Antwort kürzer.\nEine falsche Antwort oder Zeitablauf kostet ein Herz; beim dritten ist das Spiel vorbei. Nach jeder Antwort werden beide Hände genannt und die Gewinnkarten hervorgehoben.\n←: linke Hand · →: rechte Hand · ↓: Split · oder tippen.",
     "ach_whowins": "Wer gewinnt?",
     "ach_whowins_d": "20 richtige Antworten in einem Spiel „Wer gewinnt?“",

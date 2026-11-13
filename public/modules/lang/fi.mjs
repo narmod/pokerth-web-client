@@ -1101,6 +1101,7 @@ export const strings = {
     "wwHint": "Napauta voittavaa kättä – tai Jako tasapelissä – ennen kuin aika loppuu",
     "wwSplit": "Jako",
     "wwTooSlow": "Liian hidas!",
+    "wwFever": "Liekeissä ×2",
     "wwRules": "Kaksi kättä, yksi pöytä: napauta kättä, joka voittaa showdownin – tai ”Jako”, kun molemmat muodostavat samat viisi parasta korttia.\nJokainen käsi pelaa parhaat viisi kahdesta kortistaan ja pöydän viidestä; potkuri ratkaisee tiukat tapaukset.\nVastaa ennen kuin palkki loppuu: mitä nopeammin, sitä enemmän pisteitä, ja aika lyhenee edetessä.\nVäärä vastaus tai ajan loppuminen maksaa sydämen; kolmannella peli päättyy. Jokaisen vastauksen jälkeen molemmat kädet nimetään ja voittavat kortit syttyvät.\n←: vasen käsi · →: oikea käsi · ↓: Jako · tai napauta.",
     "ach_whowins": "Kuka voittaa?",
     "ach_whowins_d": "20 oikeaa vastausta yhdessä Kuka voittaa? -pelissä",

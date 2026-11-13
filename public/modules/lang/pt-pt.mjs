@@ -1101,6 +1101,7 @@ export const strings = {
     "wwHint": "Toca na mão vencedora — ou Empate se forem iguais — antes de o tempo acabar",
     "wwSplit": "Empate",
     "wwTooSlow": "Demasiado lento!",
+    "wwFever": "Em chamas ×2",
     "wwRules": "Duas mãos, uma mesa: toca na mão que ganha o showdown, ou em «Empate» quando ambas fazem as mesmas cinco melhores cartas.\nCada mão joga as cinco melhores entre as suas duas cartas e as cinco da mesa; o kicker decide os casos renhidos.\nResponde antes de a barra acabar: quanto mais rápido, mais pontos, e o tempo encurta à medida que avanças.\nUm erro ou o tempo esgotado custa um coração; ao terceiro, o jogo acaba. Depois de cada resposta, as duas mãos são nomeadas e as cartas vencedoras acendem-se.\n←: mão da esquerda · →: mão da direita · ↓: Empate · ou toca.",
     "ach_whowins": "Quem ganha?",
     "ach_whowins_d": "20 respostas certas num jogo de Quem ganha?",

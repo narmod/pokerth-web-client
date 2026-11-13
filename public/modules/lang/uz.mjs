@@ -730,6 +730,7 @@ export const strings = {
     "wwHint": "Yutuvchi qo'lga bos — teng bo'lsa «Bo'lish» — vaqt tugamasdan",
     "wwSplit": "Bo'lish",
     "wwTooSlow": "Juda sekin!",
+    "wwFever": "Olovda ×2",
     "wwRules": "Ikki qo'l, bitta stol: ochilishda yutadigan qo'lga bos — yoki ikkalasi bir xil eng yaxshi beshta karta tuzsa, «Bo'lish»ga.\nHar bir qo'l o'zining ikki kartasi va stoldagi beshtadan eng yaxshi beshtasini o'ynaydi; yaqin holatlarni kiker hal qiladi.\nChiziq tugamasdan javob ber: qancha tez bo'lsang, shuncha ko'p ball, vaqt esa asta-sekin qisqaradi.\nNoto'g'ri javob yoki vaqt tugashi bitta yurak turadi; uchinchisida o'yin tugaydi. Har bir javobdan keyin ikkala qo'l nomlanadi va yutgan kartalar yonadi.\n←: chap qo'l · →: o'ng qo'l · ↓: Bo'lish · yoki bos.",
     "ach_whowins": "Kim yutadi?",
     "ach_whowins_d": "«Kim yutadi?» o'yinida 20 to'g'ri javob",

@@ -729,6 +729,7 @@ export const strings = {
     "wwHint": "Prek dorën fituese — ose Ndarje në barazim — para se të mbarojë koha",
     "wwSplit": "Ndarje",
     "wwTooSlow": "Shumë ngadalë!",
+    "wwFever": "Në zjarr ×2",
     "wwRules": "Dy duar, një tavolinë: prek dorën që fiton showdown-in — ose «Ndarje» kur të dyja bëjnë të njëjtat pesë letrat më të mira.\nÇdo dorë luan pesë më të mirat nga dy letrat e saj dhe pesë në tavolinë; kicker-i vendos rastet e ngushta.\nPërgjigju para se të mbarojë shiriti: sa më shpejt, aq më shumë pikë, dhe koha shkurtohet ndërsa vazhdon.\nNjë gabim ose koha e mbaruar kushton një zemër; te e treta loja mbaron. Pas çdo përgjigjeje të dyja duart emërtohen dhe letrat fituese ndriçojnë.\n←: dora majtas · →: dora djathtas · ↓: Ndarje · ose prek.",
     "ach_whowins": "Kush fiton?",
     "ach_whowins_d": "20 përgjigje të sakta në një lojë Kush fiton?",

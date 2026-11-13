@@ -730,6 +730,7 @@ export const strings = {
     "wwHint": "Ukitu esku irabazlea —edo Berdinketa berdinak badira— denbora amaitu aurretik",
     "wwSplit": "Berdinketa",
     "wwTooSlow": "Motelegi!",
+    "wwFever": "Su-tan ×2",
     "wwRules": "Bi esku, mahai bat: ukitu showdowna irabazten duen eskua, edo «Berdinketa» biek bost karta onenak berdinak egiten dituztenean.\nEsku bakoitzak bere bi kartetako eta mahaiko bostetako bost onenak jokatzen ditu; kickerrak erabakitzen ditu kasu estuak.\nErantzun barra amaitu aurretik: zenbat eta azkarrago, orduan eta puntu gehiago, eta denbora laburtu egiten da aurrera egin ahala.\nAkats batek edo denbora agortzeak bihotz bat kostatzen du; hirugarrenean, partida amaitzen da. Erantzun bakoitzaren ondoren bi eskuak izendatzen dira eta karta irabazleak pizten dira.\n←: ezkerreko eskua · →: eskuineko eskua · ↓: Berdinketa · edo ukitu.",
     "ach_whowins": "Nork irabazten du?",
     "ach_whowins_d": "20 erantzun zuzen Nork irabazten du? partida batean",

@@ -729,6 +729,7 @@ export const strings = {
     "wwHint": "Pieskaries uzvarošajai rokai – vai Dalīts neizšķirta gadījumā – pirms beidzas laiks",
     "wwSplit": "Dalīts",
     "wwTooSlow": "Pārāk lēni!",
+    "wwFever": "Liesmās ×2",
     "wwRules": "Divas rokas, viens galds: pieskaries rokai, kas uzvar atklāšanā, – vai „Dalīts”, ja abām ir tās pašas piecas labākās kārtis.\nKatra roka spēlē labākās piecas no savām divām kārtīm un piecām uz galda; kikers izšķir līdzīgus gadījumus.\nAtbildi, pirms josla beidzas: jo ātrāk, jo vairāk punktu, un laiks spēles gaitā saīsinās.\nNepareiza atbilde vai beidzies laiks maksā sirdi; pie trešās spēle beidzas. Pēc katras atbildes abas rokas tiek nosauktas un uzvarošās kārtis iedegas.\n←: kreisā roka · →: labā roka · ↓: Dalīts · vai pieskaries.",
     "ach_whowins": "Kurš uzvar?",
     "ach_whowins_d": "20 pareizas atbildes vienā spēlē Kurš uzvar?",

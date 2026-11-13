@@ -730,6 +730,7 @@ export const strings = {
     "wwHint": "Tapia'r llaw sy'n ennill — neu Rhannu os yn gyfartal — cyn i'r amser ddod i ben",
     "wwSplit": "Rhannu",
     "wwTooSlow": "Rhy araf!",
+    "wwFever": "Ar dân ×2",
     "wwRules": "Dwy law, un bwrdd: tapia'r llaw sy'n ennill y showdown — neu « Rhannu » pan fo'r ddwy'n gwneud yr un pum cerdyn gorau.\nMae pob llaw'n chwarae'r pum gorau o'i dau gerdyn a'r pump ar y bwrdd; mae'r cicer yn penderfynu achosion agos.\nAtteba cyn i'r bar ddod i ben: po gyflymaf, mwyaf o bwyntiau, ac mae'r amser yn byrhau wrth i ti fynd.\nMae ateb anghywir neu amser ar ben yn costio calon; ar y drydedd, mae'r gêm drosodd. Ar ôl pob ateb mae'r ddwy law'n cael eu henwi a'r cardiau buddugol yn goleuo.\n←: llaw chwith · →: llaw dde · ↓: Rhannu · neu tapia.",
     "ach_whowins": "Pwy sy'n ennill?",
     "ach_whowins_d": "20 ateb cywir mewn un gêm Pwy sy'n ennill?",

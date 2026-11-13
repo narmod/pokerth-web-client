@@ -15,14 +15,31 @@
 //            now and then a split pot
 // Keys: ← left hand, → right hand, ↓ Split; Space goes on after an answer.
 // Secret trophy « Who Wins? »: TROPHY_RIGHT right answers in one game.
+//
+// The show (web.30, narmod 2026-11-14): the hands are dealt face up and the
+// board is turned over like on TV — the flop, the turn, the river — then the
+// clock starts (a tap during the deal turns the rest over at once). The pot
+// in the middle goes to the winning hand (half to each on a split), it grows
+// with the streak; a wrong answer shakes the table. From FEVER_STREAK right
+// answers in a row: « Fever », the board glows gold and points count double.
+// « Reduce animations »: the board is shown at once, no shaking.
 // ═══════════════════════════════════════════════════════════════════
 
 import { rankHand, compareHands, NAME_KEYS } from './poker-hand.mjs';
 import { shuffled } from './deal.mjs';
-import { fmt, imageCache, rr, drawFace, aceActor } from './common.mjs';
-import { felt, buttons, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont } from './ui.mjs';
+import { fmt, imageCache, rr, drawFace, aceActor, CHIP } from './common.mjs';
+import { felt, buttons, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont, drawBackCard } from './ui.mjs';
 
-export const LIVES = 3, TIME_MAX = 9, TIME_MIN = 3.5, TROPHY_RIGHT = 20;
+export const LIVES = 3, TIME_MAX = 9, TIME_MIN = 3.5, TROPHY_RIGHT = 20, FEVER_STREAK = 5;
+// The board turned over (s after the deal): the three flop cards, the turn,
+// the river; each card turns in FLIP s.
+export const FLIP = 0.28, REVEAL = [0.25, 0.37, 0.49, 1.15, 1.85];
+export const REVEAL_END = REVEAL[4] + FLIP;
+/** A right answer's points: speed, the streak bonus, doubled in Fever. */
+export function points(tLeft, streak) {
+  const p = 10 + 2 * Math.ceil(Math.max(0, tLeft)) + (streak >= 3 ? 5 : 0);
+  return streak >= FEVER_STREAK ? 2 * p : p;
+}
 
 /**
  * A showdown for `level` (0, 1, 2…): { board, a, b, ra, rb, win } — win 1
@@ -65,13 +82,15 @@ export function create(shell) {
   let state = 'title', G = null, time = 0, timer = 0;
   function newGame() {
     G = { score: 0, lives: LIVES, right: 0, streak: 0, bestStreak: 0, q: null, tMax: TIME_MAX, tLeft: TIME_MAX, answer: null, ok: false,
-      fx: [], say: null, yayUntil: 0, koUntil: 0, shown: 0 };
+      fx: [], say: null, yayUntil: 0, koUntil: 0, shown: 0, dealT: 0, snd: 0, pot: 3, fly: null, shake: 0 };
     renderHud();
   }
   function renderHud() {
     hScore.textContent = fmt(G.score);
     hLives.textContent = '❤'.repeat(Math.max(0, G.lives)) + '♡'.repeat(Math.max(0, LIVES - G.lives));
-    hStreak.textContent = G.streak >= 2 ? '×' + G.streak : '';
+    const fever = G.streak >= FEVER_STREAK;
+    hStreak.textContent = fever ? '🔥 ' + t('wwFever') : G.streak >= 2 ? '×' + G.streak : '';
+    hStreak.classList.toggle('ww-fever', fever);
   }
   const say = (s, life = 1.8) => { G.say = { s, t: 0, life }; };
 
@@ -96,25 +115,35 @@ export function create(shell) {
     G.q = makeDeal(Math.floor(G.right / 5));
     G.tMax = Math.max(TIME_MIN, TIME_MAX - 0.3 * G.right);
     G.tLeft = G.tMax; G.answer = null; G.shown = time;
-    state = 'ask';
+    G.fly = null; G.pot = 3 + Math.min(G.streak, 7);
+    // The board is turned over first (at once with « Reduce animations »).
+    G.dealT = shell.reduced ? REVEAL_END : 0; G.snd = 0;
+    state = shell.reduced ? 'ask' : 'deal';
     sound('notifyCard');
   }
+  /** The board is all turned over: the clock starts. */
+  function revealed() { G.dealT = REVEAL_END; state = 'ask'; G.tLeft = G.tMax; }
   function answer(pick) {
     if (state !== 'ask') return;
     const q = G.q;
     G.answer = pick;
     G.ok = pick === q.win;
     state = 'shown';
+    // The pot goes to the winning hand (half to each on a split).
+    G.fly = { t: 0, n: G.pot, win: q.win };
     if (G.ok) {
       G.right++; G.streak++; G.bestStreak = Math.max(G.bestStreak, G.streak);
-      const pts = 10 + 2 * Math.ceil(G.tLeft) + (G.streak >= 3 ? 5 : 0);
+      const pts = points(G.tLeft, G.streak);
       G.score += pts;
-      G.fx.push({ s: '+' + pts, x: shell.W / 2, y: L().boardY - L().ch / 2 - 16, t: 0, life: 1.1, gold: true });
+      const l = L();
+      G.fx.push({ s: '+' + pts, x: shell.W / 2, y: l.boardY - l.ch / 2 - 16, t: 0, life: 1.1, gold: true, big: G.streak >= FEVER_STREAK });
+      if (G.streak === FEVER_STREAK) G.fx.push({ s: '🔥 ' + t('wwFever'), x: shell.W / 2, y: l.boardY, t: 0, life: 1.6, gold: true, big: true });
       G.yayUntil = performance.now() + 700;
-      sound(G.streak >= 3 ? 'notifyRaise' : 'notifyAction');
+      sound(G.streak === FEVER_STREAK ? 'notifyBigWin' : G.streak >= 3 ? 'notifyRaise' : 'notifyAction');
       if (G.right === TROPHY_RIGHT) shell.grant('whowins');
     } else {
       G.lives--; G.streak = 0;
+      if (!shell.reduced) G.shake = 0.4;
       G.koUntil = performance.now() + 900;
       if (pick == null) say(t('wwTooSlow'));
       sound('notifyFold');
@@ -189,6 +218,8 @@ export function create(shell) {
     if (state === 'title') { if (a === 'jump') start(); return; }
     if (state === 'over') { if (a === 'jump') { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); titlePanel(); } return; }
     if (state === 'shown') { if (a === 'jump' && time - G.shownAt > 0.4) goOn(); return; }
+    // During the deal: a tap or a key turns the rest of the board over.
+    if (state === 'deal') { revealed(); return; }
     const l = L();
     layoutButtons(l);
     if (info.x != null) {
@@ -207,6 +238,15 @@ export function create(shell) {
     if (!G) return;
     stepFloaters(G.fx, dt);
     if (G.say) { G.say.t += dt; if (G.say.t > G.say.life) G.say = null; }
+    if (G.shake > 0) G.shake = Math.max(0, G.shake - dt);
+    if (G.fly) G.fly.t += dt;
+    if (state === 'deal') {
+      G.dealT += dt;
+      // A card sound for the flop, the turn, the river.
+      const at = [REVEAL[0], REVEAL[3], REVEAL[4]];
+      while (G.snd < 3 && G.dealT >= at[G.snd]) { G.snd++; sound('notifyCard'); }
+      if (G.dealT >= REVEAL_END) revealed();
+    }
     if (state === 'ask') {
       G.tLeft -= dt;
       if (G.tLeft <= 0) { G.tLeft = 0; answer(null); }
@@ -221,29 +261,71 @@ export function create(shell) {
   }
 
   // ── Drawing ───────────────────────────────────────────────────────
-  function card(g, n, x, y, w, h, lit, dim) {
+  function card(g, n, x, y, w, h, lit, dim, glow) {
     g.save(); g.translate(x, y); drawFace(g, img, n, w, h);
+    if (glow) { g.shadowColor = 'rgba(255,190,60,.9)'; g.shadowBlur = 10 + 6 * glow; rr(g, -w / 2 - 2, -h / 2 - 2, w + 4, h + 4, 5); g.strokeStyle = 'rgba(255,200,80,' + (0.5 + 0.5 * glow) + ')'; g.lineWidth = 2; g.stroke(); g.shadowBlur = 0; }
     if (lit) { rr(g, -w / 2 - 2.5, -h / 2 - 2.5, w + 5, h + 5, 5); g.strokeStyle = '#f5d77a'; g.lineWidth = 2; g.stroke(); }
     if (dim) { rr(g, -w / 2, -h / 2, w, h, Math.max(2, w * 0.1)); g.fillStyle = 'rgba(0,0,0,.4)'; g.fill(); }
     g.restore();
   }
+  /** A board card being turned over: p 0 (back) → 1 (face). */
+  function flipCard(g, n, x, y, w, h, p, lit, dim, glow) {
+    if (p >= 1) { card(g, n, x, y, w, h, lit, dim, glow); return; }
+    const sx = Math.abs(Math.cos(Math.PI * Math.max(0, p)));
+    g.save(); g.translate(x, y); g.scale(Math.max(0.02, sx), 1 + 0.06 * Math.sin(Math.PI * Math.max(0, p)));
+    if (p < 0.5) drawBackCard(g, img, 0, 0, w, h); else drawFace(g, img, n, w, h);
+    g.restore();
+  }
+  /** A casino chip seen from above. */
+  function chip(g, x, y, r, k) {
+    const [c, e] = CHIP[k % CHIP.length];
+    g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fillStyle = c; g.fill();
+    g.lineWidth = r * 0.28; g.strokeStyle = e; g.setLineDash([r * 0.5, r * 0.55]); g.beginPath(); g.arc(x, y, r * 0.8, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
+    g.beginPath(); g.arc(x, y, r * 0.42, 0, Math.PI * 2); g.fillStyle = c; g.fill();
+    g.lineWidth = 1; g.strokeStyle = 'rgba(0,0,0,.45)'; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.stroke();
+  }
+  /** Where the pot sits: under the board (phone: between the board and the hands). */
+  const potAt = (l) => (l.narrow ? { x: l.W / 2, y: (l.boardY + l.ch / 2 + l.handY - l.hch / 2) / 2 + 4 } : { x: l.W / 2, y: l.boardY + l.ch / 2 + 30 });
+  function drawPot(g, l) {
+    const P = potAt(l), r = l.narrow ? 7 : 8;
+    const ease = (u) => 1 - Math.pow(1 - Math.min(1, Math.max(0, u)), 3);
+    const n = G.fly ? G.fly.n : G.pot;
+    for (let i = 0; i < n; i++) {
+      // Two stacks, a chip of each colour in turn.
+      const sx = P.x + (i % 2 ? r * 1.1 : -r * 1.1), sy = P.y - Math.floor(i / 2) * r * 0.32;
+      let x = sx, y = sy;
+      if (G.fly) {
+        const to = G.fly.win === 0 ? (i % 2 ? l.bx : l.ax) : G.fly.win === 1 ? l.ax : l.bx;
+        const u = ease((G.fly.t - i * 0.03) / 0.55);
+        x = sx + (to - sx) * u;
+        y = sy + (l.handY - sy) * u - Math.sin(Math.PI * u) * 26;   // under the winning cards
+      }
+      chip(g, x, y, r, i);
+    }
+  }
   function draw(g) {
     const l = L(), W = l.W, H = l.H;
     felt(g, W, H, shell.theme.light);
+    g.save();
+    // A wrong answer shakes the table.
+    if (G && G.shake > 0) g.translate(Math.sin(time * 70) * 6 * (G.shake / 0.4), 0);
     if (state !== 'title' && G.q) {
       const q = G.q, shown = state === 'shown' || state === 'over';
+      const glow = G.streak >= FEVER_STREAK ? 0.5 + 0.5 * Math.sin(time * 6) : 0;
       // Winning five: the winner's (both on a split).
       const lit = shown ? new Set(q.win >= 0 ? q.ra.best : []) : new Set();
       if (shown && q.win <= 0) q.rb.best.forEach((c) => lit.add(c));
       // The clock.
-      const bw = Math.min(W - 24, 320), frac = Math.max(0, G.tLeft / G.tMax);
+      const bw = Math.min(W - 24, 320), frac = state === 'deal' ? 1 : Math.max(0, G.tLeft / G.tMax);
       rr(g, W / 2 - bw / 2, l.barY, bw, 6, 3); g.fillStyle = 'rgba(0,0,0,.3)'; g.fill();
       if (frac > 0) { rr(g, W / 2 - bw / 2, l.barY, bw * frac, 6, 3); g.fillStyle = frac > 0.5 ? '#3fae6a' : frac > 0.25 ? '#e0a33a' : '#d2453b'; g.fill(); }
       // The board.
       for (let i = 0; i < 5; i++) {
         const x = W / 2 + (i - 2) * (l.cw + l.gap);
-        card(g, q.board[i], x, l.boardY, l.cw, l.ch, shown && lit.has(q.board[i]), shown && !lit.has(q.board[i]));
+        const p = state === 'deal' ? (G.dealT - REVEAL[i]) / FLIP : 1;
+        flipCard(g, q.board[i], x, l.boardY, l.cw, l.ch, p, shown && lit.has(q.board[i]), shown && !lit.has(q.board[i]), shown ? 0 : glow);
       }
+      if (state !== 'over') drawPot(g, l);
       // The two hands, their names once answered.
       [[q.a, q.ra, l.ax, 1], [q.b, q.rb, l.bx, -1]].forEach(([hand, r, cx, side]) => {
         const xs = handXs(l, cx);
@@ -277,6 +359,7 @@ export function create(shell) {
       layoutButtons(l);
       btns.draw(g, keyboardFirst(), null);
     }
+    g.restore();
     // The Ace, a corner of the felt.
     const ax = l.narrow ? 24 : W - 28, ay = H - 4, s = l.narrow ? 0.2 : 0.26;
     ace.place(ax, ay, s, shell.k);
@@ -289,7 +372,7 @@ export function create(shell) {
 
   return {
     update, draw, input, resize: renderResult,
-    running: () => state === 'ask' || state === 'shown',
+    running: () => state === 'deal' || state === 'ask' || state === 'shown',
     destroy() { clearTimeout(timer); ace.remove(); },
   };
 }
@@ -300,6 +383,8 @@ function ensureCss() {
   st.textContent = '#pth-game .ww-box{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 18px;border-radius:12px;'
     + 'background:rgba(11,18,16,.9);box-shadow:0 0 0 1px rgba(216,178,90,.35),0 10px 30px rgba(0,0,0,.45);max-width:calc(100% - 16px)}'
     + '#pth-game .ww-box h2{color:#f5d77a}#pth-game .ww-lives{color:#ff8a80;letter-spacing:2px}'
+    + '#pth-game .ww-streak.ww-fever{color:#ffb84d;text-shadow:0 0 8px rgba(255,150,40,.8);animation:ww-fever 1s ease-in-out infinite alternate}'
+    + '@keyframes ww-fever{from{opacity:.75}to{opacity:1}}@media (prefers-reduced-motion:reduce){#pth-game .ww-streak.ww-fever{animation:none}}'
     + '#pth-game.pg-light .ww-box{background:rgba(250,247,240,.96);box-shadow:0 0 0 1px rgba(140,105,20,.4),0 10px 26px rgba(0,0,0,.18)}'
     + '#pth-game.pg-light .ww-box h2{color:#8a6510}#pth-game.pg-light .ww-box .ar-final{color:#1d222b}';
   document.head.appendChild(st);

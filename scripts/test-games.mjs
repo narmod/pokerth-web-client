@@ -75,7 +75,7 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'psName', 'psHint', 'psDaily', 'psFree', 'psCards', 'psFlushDraw', 'psStraightDraw', 'psBestLine', 'psAgain', 'ach_solitaire', 'ach_solitaire_d',
   'gmPlay', 'gmRules', 'gmIntro', 'arRules', 'hcRules', 'psRules',
   'vpName', 'vpHint', 'vpDeal', 'vpDraw', 'vpHeld', 'vpCredits', 'vpHands', 'vpJacks', 'vpDouble', 'vpCollect', 'vpPick', 'vpRules', 'ach_videopoker', 'ach_videopoker_d',
-  'wwName', 'wwHint', 'wwSplit', 'wwTooSlow', 'wwRules', 'ach_whowins', 'ach_whowins_d', 'gmAgain',
+  'wwName', 'wwHint', 'wwSplit', 'wwTooSlow', 'wwFever', 'wwRules', 'ach_whowins', 'ach_whowins_d', 'gmAgain',
   'hlName', 'hlHint', 'hlHigher', 'hlLower', 'hlCash', 'hlPot', 'hlRules', 'ach_hilo', 'ach_hilo_d',
   'blName', 'blHint', 'blBets', 'blBluff', 'blTells', 'blChips', 'blRules', 'ach_bluff', 'ach_bluff_d',
   'pdName', 'pdHint', 'pdVsAce', 'pdTwo', 'pdPoints', 'pdSudden', 'pdSuddenGoal', 'pdYou', 'pdAce', 'pdPlayer', 'pdYourTurn', 'pdAceTurn',
@@ -153,6 +153,10 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
     if (!lv && d.win === 0) early++;
   }
   ok(okDeals, 'Who Wins?: 300 deals, nine distinct cards each, the right answer every time');
+  const WW = await import('../public/modules/games/whowins.mjs');
+  ok(WW.points(9, 1) === 28 && WW.points(9, 3) === 33 && WW.points(9, 5) === 66 && WW.points(0, 0) === 10
+    && WW.REVEAL.every((x, i) => i === 0 || x >= WW.REVEAL[i - 1]) && WW.REVEAL_END < 2.5,
+    'Who Wins?: points (speed, streak, doubled in Fever from ' + WW.FEVER_STREAK + ' in a row); the board turned over in ' + WW.REVEAL_END.toFixed(2) + ' s');
   const { odds, mult } = await import('../public/modules/games/hilo.mjs');
   const shoe = []; for (let n = 0; n < 52; n++) if (n !== c(7, 0)) shoe.push(n);
   const o = odds(c(7, 0), shoe);

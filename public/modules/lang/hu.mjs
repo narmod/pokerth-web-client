@@ -997,6 +997,7 @@ export const strings = {
     "wwHint": "Koppints a nyerő kézre — vagy Osztozás döntetlennél — mielőtt lejár az idő",
     "wwSplit": "Osztozás",
     "wwTooSlow": "Túl lassú!",
+    "wwFever": "Lángol ×2",
     "wwRules": "Két kéz, egy asztal: koppints arra a kézre, amelyik megnyeri a leszámolást — vagy az „Osztozás”-ra, ha mindkettő ugyanazt az öt legjobb lapot adja.\nMinden kéz a két saját lapja és az asztal öt lapja közül a legjobb ötöt játssza; a kicker dönti el a szoros eseteket.\nVálaszolj, mielőtt a sáv kifogy: minél gyorsabb vagy, annál több pont, és az idő menet közben rövidül.\nRossz válasz vagy lejárt idő egy szívbe kerül; a harmadiknál vége a játéknak. Minden válasz után mindkét kéz neve megjelenik, a nyerő lapok kigyúlnak.\n←: bal kéz · →: jobb kéz · ↓: Osztozás · vagy koppints.",
     "ach_whowins": "Ki nyer?",
     "ach_whowins_d": "20 jó válasz egy Ki nyer? játékban",

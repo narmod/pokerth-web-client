@@ -1102,6 +1102,7 @@ export const strings = {
     "wwHint": "Ťukni na víťaznú ruku — alebo Delenie pri remíze — kým nevyprší čas",
     "wwSplit": "Delenie",
     "wwTooSlow": "Príliš pomaly!",
+    "wwFever": "V ohni ×2",
     "wwRules": "Dve ruky, jeden stôl: ťukni na ruku, ktorá vyhrá showdown — alebo na „Delenie“, keď obe tvoria rovnakých päť najlepších kariet.\nKaždá ruka hrá najlepších päť zo svojich dvoch kariet a piatich na stole; kicker rozhodne tesné prípady.\nOdpovedz, kým nevyprší lišta: čím rýchlejšie, tým viac bodov, a čas sa postupne skracuje.\nZlá odpoveď alebo vypršanie času stojí srdce; pri treťom hra končí. Po každej odpovedi sa obe ruky pomenujú a víťazné karty sa rozsvietia.\n←: ľavá ruka · →: pravá ruka · ↓: Delenie · alebo ťukni.",
     "ach_whowins": "Kto vyhrá?",
     "ach_whowins_d": "20 správnych odpovedí v jednej hre Kto vyhrá?",

@@ -997,6 +997,7 @@ export const strings = {
     "wwHint": "Chạm vào tay bài thắng — hoặc Chia khi hòa — trước khi hết giờ",
     "wwSplit": "Chia",
     "wwTooSlow": "Chậm quá!",
+    "wwFever": "Bùng cháy ×2",
     "wwRules": "Hai tay bài, một bàn: chạm vào tay bài thắng khi lật bài — hoặc «Chia» khi cả hai tạo cùng năm lá tốt nhất.\nMỗi tay dùng năm lá tốt nhất từ hai lá của mình và năm lá trên bàn; lá kicker phân định các trường hợp sát nút.\nTrả lời trước khi thanh thời gian hết: càng nhanh càng nhiều điểm, và thời gian ngắn dần.\nTrả lời sai hoặc hết giờ mất một trái tim; đến trái thứ ba là hết trò chơi. Sau mỗi câu trả lời, hai tay bài được gọi tên và các lá thắng sáng lên.\n←: tay trái · →: tay phải · ↓: Chia · hoặc chạm.",
     "ach_whowins": "Ai thắng?",
     "ach_whowins_d": "20 câu trả lời đúng trong một ván Ai thắng?",

@@ -730,6 +730,7 @@ export const strings = {
     "wwHint": "Tapáil an lámh a bhuann — nó Roinnt má tá siad cothrom — sula ritheann an t-am amach",
     "wwSplit": "Roinnt",
     "wwTooSlow": "Ró-mhall!",
+    "wwFever": "Trí thine ×2",
     "wwRules": "Dhá lámh, clár amháin: tapáil an lámh a bhuann an taispeántas — nó « Roinnt » nuair a dhéanann an dá cheann na cúig chárta is fearr céanna.\nImríonn gach lámh na cúig is fearr as a dhá chárta féin agus an cúig ar an gclár; socraíonn an ciceálaí cásanna gar.\nFreagair sula ritheann an barra amach: dá thapúla, is ea is mó pointí, agus giorraíonn an t-am de réir a chéile.\nCosnaíonn freagra mícheart nó deireadh ama croí; ag an tríú ceann, tá an cluiche thart. I ndiaidh gach freagra ainmnítear an dá lámh agus lasann na cártaí buacacha.\n←: lámh chlé · →: lámh dheas · ↓: Roinnt · nó tapáil.",
     "ach_whowins": "Cé a bhuann?",
     "ach_whowins_d": "20 freagra cearta i gcluiche amháin de Cé a bhuann?",

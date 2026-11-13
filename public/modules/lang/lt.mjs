@@ -996,6 +996,7 @@ export const strings = {
     "wwHint": "Paliesk laiminčią ranką – arba Dalybos lygiųjų atveju – kol nesibaigė laikas",
     "wwSplit": "Dalybos",
     "wwTooSlow": "Per lėtai!",
+    "wwFever": "Liepsnoji ×2",
     "wwRules": "Dvi rankos, vienas stalas: paliesk ranką, kuri laimi atidengimą, – arba „Dalybos“, kai abi sudaro tas pačias penkias geriausias kortas.\nKiekviena ranka žaidžia geriausias penkias iš savo dviejų kortų ir penkių ant stalo; kikeris išsprendžia artimus atvejus.\nAtsakyk, kol nesibaigė juosta: kuo greičiau, tuo daugiau taškų, o laikas eigoje trumpėja.\nKlaidingas atsakymas ar pasibaigęs laikas kainuoja širdį; ties trečia žaidimas baigiasi. Po kiekvieno atsakymo abi rankos įvardijamos, o laiminčios kortos nušvinta.\n←: kairė ranka · →: dešinė ranka · ↓: Dalybos · arba paliesk.",
     "ach_whowins": "Kas laimi?",
     "ach_whowins_d": "20 teisingų atsakymų viename žaidime Kas laimi?",

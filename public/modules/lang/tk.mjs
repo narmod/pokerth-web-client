@@ -730,6 +730,7 @@ export const strings = {
     "wwHint": "Utýan ele bas — deň bolsa «Bölüş» — wagt gutarmanka",
     "wwSplit": "Bölüş",
     "wwTooSlow": "Örän haýal!",
+    "wwFever": "Ot alyp ×2",
     "wwRules": "Iki el, bir stol: açylyşda utýan ele bas — ýa-da ikisi hem birmeňzeş iň gowy bäş kart düzýän bolsa «Bölüş»-e.\nHer el öz iki kartyndan we stoldaky bäş kartdan iň gowy bäşini oýnaýar; ýakyn ýagdaýlary kiker çözýär.\nZolak gutarmanka jogap ber: näçe çalt bolsaň, şonça köp bal, wagt bolsa kem-kemden gysgalýar.\nNädogry jogap ýa-da wagtyň gutarmagy bir ýürege düşýär; üçünjide oýun gutarýar. Her jogapdan soň iki eliň ady tutulýar we utan kartlar ýanýar.\n←: çep el · →: sag el · ↓: Bölüş · ýa-da bas.",
     "ach_whowins": "Kim utýar?",
     "ach_whowins_d": "«Kim utýar?» oýnunda 20 dogry jogap",

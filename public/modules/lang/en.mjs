@@ -730,6 +730,7 @@ export const strings = {
     "wwHint": "Tap the winning hand — or Split when they tie — before time runs out",
     "wwSplit": "Split",
     "wwTooSlow": "Too slow!",
+    "wwFever": "On fire ×2",
     "wwRules": "Two hands, one board: tap the hand that wins the showdown — or Split when both make the same best five cards.\nEach hand plays the best five of its two cards and the five on the board; kickers settle close calls.\nAnswer before the bar runs out: the faster, the more points, and the clock gets shorter as you go.\nA wrong answer or a timeout costs a heart; at three, the game is over. Each answer names both hands and lights the winning cards.\n←: left hand · →: right hand · ↓: Split · or tap.",
     "ach_whowins": "Who Wins?",
     "ach_whowins_d": "20 right answers in one game of Who Wins?",

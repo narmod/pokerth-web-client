@@ -1000,6 +1000,7 @@ export const strings = {
     "wwHint": "Tap an làmh a bhuannaicheas — no Roinn ma tha iad co-ionann — mus ruith an ùine a-mach",
     "wwSplit": "Roinn",
     "wwTooSlow": "Ro shlaodach!",
+    "wwFever": "Na theine ×2",
     "wwRules": "Dà làimh, aon bhòrd: tap an làmh a bhuannaicheas an taisbeanadh — no « Roinn » nuair a nì an dà làimh na h-aon chòig cairtean as fheàrr.\nCluichidh gach làmh na còig as fheàrr às an dà chairt aice fhèin agus na còig air a’ bhòrd; socraichidh an ciocair cùisean dlùth.\nFreagair mus ruith am bàr a-mach: mar as luaithe, ’s ann as motha phuingean, agus fàsaidh an ùine nas giorra mar a thèid thu.\nCosgaidh freagairt cheàrr no ùine seachad cridhe; aig an treas, tha an geama seachad. An dèidh gach freagairt, thèid an dà làimh ainmeachadh is lasaidh na cairtean buannachaidh.\n←: làmh chlì · →: làmh dheas · ↓: Roinn · no tap.",
     "ach_whowins": "Cò a bhuannaicheas?",
     "ach_whowins_d": "20 freagairt cheart ann an aon gheama de Cò a bhuannaicheas?",

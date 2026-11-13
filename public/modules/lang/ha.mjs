@@ -730,6 +730,7 @@ export const strings = {
     "wwHint": "Taɓa hannun da ke cin nasara — ko Raba idan sun yi kunnen doki — kafin lokaci ya ƙare",
     "wwSplit": "Raba",
     "wwTooSlow": "Ya yi jinkiri sosai!",
+    "wwFever": "Kana ci da wuta ×2",
     "wwRules": "Hannaye biyu, allo ɗaya: taɓa hannun da ke cin nasara a buɗewa — ko «Raba» idan duka biyun sun yi katuna biyar mafi kyau iri ɗaya.\nKowane hannu yana buga mafi kyau biyar daga katunansa biyu da biyar na allo; kicker ne ke yanke hukuncin abubuwan da suka kusa.\nAmsa kafin sandar ta ƙare: da sauri, da maki masu yawa, kuma lokaci yana raguwa yayin da kake ci gaba.\nAmsa mara kyau ko ƙarewar lokaci tana cin zuciya ɗaya; a ta uku, wasa ya ƙare. Bayan kowace amsa, ana faɗin sunayen hannayen biyu kuma katunan nasara suna haske.\n←: hannun hagu · →: hannun dama · ↓: Raba · ko taɓa.",
     "ach_whowins": "Wa ke cin nasara?",
     "ach_whowins_d": "Amsoshi 20 daidai a wasa ɗaya na Wa ke cin nasara?",

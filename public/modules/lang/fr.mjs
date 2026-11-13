@@ -731,6 +731,7 @@ export const strings = {
     "wwHint": "Touche la main gagnante — ou Partage en cas d'égalité — avant la fin du temps",
     "wwSplit": "Partage",
     "wwTooSlow": "Trop lent !",
+    "wwFever": "En feu ×2",
     "wwRules": "Deux mains, un tableau : touche la main qui gagne l'abattage — ou « Partage » quand les deux font les mêmes cinq meilleures cartes.\nChaque main joue les cinq meilleures cartes parmi ses deux cartes et les cinq du tableau ; le kicker départage les mains proches.\nRéponds avant la fin de la barre : plus tu es rapide, plus tu marques, et le temps raccourcit au fil des réponses.\nUne erreur ou un temps écoulé coûte un cœur ; au troisième, la partie est finie. Après chaque réponse, les deux mains sont nommées et les cartes gagnantes s'allument.\n← : main de gauche · → : main de droite · ↓ : Partage · ou touche.",
     "ach_whowins": "Qui gagne ?",
     "ach_whowins_d": "20 bonnes réponses dans une partie de Qui gagne ?",

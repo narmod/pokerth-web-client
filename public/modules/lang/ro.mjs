@@ -1102,6 +1102,7 @@ export const strings = {
     "wwHint": "Atinge mâna câștigătoare — sau Împărțire la egalitate — înainte să expire timpul",
     "wwSplit": "Împărțire",
     "wwTooSlow": "Prea încet!",
+    "wwFever": "În flăcări ×2",
     "wwRules": "Două mâini, o masă: atinge mâna care câștigă showdown-ul — sau „Împărțire” când amândouă fac aceleași cinci cărți cele mai bune.\nFiecare mână joacă cele mai bune cinci dintre cele două cărți ale sale și cele cinci de pe masă; kickerul decide cazurile strânse.\nRăspunde înainte să se termine bara: cu cât mai repede, cu atât mai multe puncte, iar timpul scade pe parcurs.\nUn răspuns greșit sau timpul expirat costă o inimă; la a treia, jocul se termină. După fiecare răspuns, ambele mâini sunt numite, iar cărțile câștigătoare se aprind.\n←: mâna din stânga · →: mâna din dreapta · ↓: Împărțire · sau atinge.",
     "ach_whowins": "Cine câștigă?",
     "ach_whowins_d": "20 de răspunsuri corecte într-un joc Cine câștigă?",

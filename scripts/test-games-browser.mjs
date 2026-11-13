@@ -203,6 +203,11 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(await pg.evaluate(() => window._pthPadOwner === 'whowins'), label + ': its card then Space opens Who Wins?');
   await pg.keyboard.press('Space');
   await sleep(300);
+  // The board is turned over like on TV (flop, turn, river), then the clock runs.
+  const d0 = await pg.evaluate(() => ({ st: window.__pthWW.state(), t: window.__pthWW.run().dealT }));
+  await pg.waitForFunction(() => window.__pthWW.state() === 'ask', null, { timeout: 4000 }).catch(() => {});
+  const d1 = await pg.evaluate(() => ({ st: window.__pthWW.state(), tl: window.__pthWW.run().tLeft, tm: window.__pthWW.run().tMax }));
+  ok(d0.st === 'deal' && d1.st === 'ask' && d1.tl > d1.tm - 0.5, label + ': the board is turned over first, then the clock starts (' + d0.st + ' → ' + d1.st + ')');
   const keyFor = (w) => (w === 1 ? 'ArrowLeft' : w === -1 ? 'ArrowRight' : 'ArrowDown');
   const w1 = await pg.evaluate(() => window.__pthWW.run().q.win);
   await shot(pg, label + '-ww-ask');
@@ -214,11 +219,18 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await sleep(600);
   await pg.keyboard.press('Space');               // go on
   await sleep(300);
+  // A key during the deal turns the rest over (no answer yet).
+  const s2 = await pg.evaluate(() => window.__pthWW.state());
+  await pg.keyboard.press('ArrowUp');
+  await sleep(120);
+  const s3 = await pg.evaluate(() => ({ st: window.__pthWW.state(), a: window.__pthWW.run().answer, pot: window.__pthWW.run().pot }));
+  ok(s2 === 'deal' && s3.st === 'ask' && s3.a == null && s3.pot === 4, label + ': a key during the deal turns the board over without answering; the pot grew with the streak (' + s3.pot + ' chips)');
   const w2 = await pg.evaluate(() => window.__pthWW.run().q.win);
   await pg.keyboard.press(keyFor(w2 === 1 ? -1 : 1));
   await sleep(250);
   const ww2 = await pg.evaluate(() => ({ ok: window.__pthWW.run().ok, lives: window.__pthWW.run().lives, hud: document.querySelector('#pth-game .ww-lives').textContent }));
-  ok(!ww2.ok && ww2.lives === 2 && ww2.hud === '❤❤♡', label + ': a wrong answer costs a heart (' + ww2.hud + ')');
+  const sh = await pg.evaluate(() => window.__pthWW.run().shake);
+  ok(!ww2.ok && ww2.lives === 2 && ww2.hud === '❤❤♡' && sh > 0, label + ': a wrong answer costs a heart and shakes the table (' + ww2.hud + ')');
   await pg.keyboard.press('Escape'); await sleep(200);
   await pg.keyboard.press('Escape'); await sleep(500);
   // ── Higher or Lower: a right guess grows the pot, Space banks it, a wrong one costs a heart ──

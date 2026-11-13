@@ -1102,6 +1102,7 @@ export const strings = {
     "wwHint": "Kazanan ele dokun — eşitlikte Bölüşüm — süre bitmeden",
     "wwSplit": "Bölüşüm",
     "wwTooSlow": "Çok yavaş!",
+    "wwFever": "Alev aldın ×2",
     "wwRules": "İki el, bir masa: showdown'u kazanan ele dokun — ya da ikisi de aynı en iyi beş kartı yapıyorsa “Bölüşüm”e.\nHer el kendi iki kartı ile masadaki beş kart arasından en iyi beşini oynar; yakın durumları kicker belirler.\nÇubuk bitmeden cevap ver: ne kadar hızlıysan o kadar puan, ve süre ilerledikçe kısalır.\nYanlış cevap ya da süre aşımı bir kalbe mal olur; üçüncüde oyun biter. Her cevaptan sonra iki elin adı verilir ve kazanan kartlar yanar.\n←: sol el · →: sağ el · ↓: Bölüşüm · ya da dokun.",
     "ach_whowins": "Kim kazanır?",
     "ach_whowins_d": "Bir Kim kazanır? oyununda 20 doğru cevap",

@@ -1105,6 +1105,7 @@ export const strings = {
     "wwHint": "Tocca la mano vincente — o Pareggio se sono uguali — prima che scada il tempo",
     "wwSplit": "Pareggio",
     "wwTooSlow": "Troppo lento!",
+    "wwFever": "In fiamme ×2",
     "wwRules": "Due mani, un board: tocca la mano che vince lo showdown, oppure «Pareggio» quando entrambe fanno le stesse cinque carte migliori.\nOgni mano gioca le cinque migliori tra le sue due carte e le cinque del board; il kicker decide i casi stretti.\nRispondi prima che la barra finisca: più sei veloce, più punti fai, e il tempo si accorcia man mano.\nUn errore o il tempo scaduto costa un cuore; al terzo, la partita è finita. Dopo ogni risposta le due mani vengono nominate e le carte vincenti si illuminano.\n←: mano a sinistra · →: mano a destra · ↓: Pareggio · o tocca.",
     "ach_whowins": "Chi vince?",
     "ach_whowins_d": "20 risposte giuste in una partita di Chi vince?",

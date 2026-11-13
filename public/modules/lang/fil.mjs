@@ -728,6 +728,7 @@ export const strings = {
     "wwHint": "I-tap ang panalong kamay — o Hati kapag tabla — bago maubos ang oras",
     "wwSplit": "Hati",
     "wwTooSlow": "Masyadong mabagal!",
+    "wwFever": "Nag-aapoy ×2",
     "wwRules": "Dalawang kamay, isang board: i-tap ang kamay na mananalo sa showdown — o «Hati» kapag pareho silang may parehong pinakamahusay na limang baraha.\nGinagamit ng bawat kamay ang pinakamahusay na lima mula sa dalawang baraha nito at sa lima sa board; ang kicker ang nagpapasya sa dikit na laban.\nSumagot bago maubos ang bar: mas mabilis, mas maraming puntos, at umiikli ang oras habang tumatagal.\nAng maling sagot o ubos na oras ay katumbas ng isang puso; sa ikatlo, tapos ang laro. Pagkatapos ng bawat sagot, pinapangalanan ang dalawang kamay at umiilaw ang panalong mga baraha.\n←: kaliwang kamay · →: kanang kamay · ↓: Hati · o i-tap.",
     "ach_whowins": "Sino ang panalo?",
     "ach_whowins_d": "20 tamang sagot sa isang laro ng Sino ang panalo?",

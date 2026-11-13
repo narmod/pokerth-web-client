@@ -1100,6 +1100,7 @@ export const strings = {
     "wwHint": "Tryck på den vinnande handen – eller Delad vid lika – innan tiden tar slut",
     "wwSplit": "Delad",
     "wwTooSlow": "För långsam!",
+    "wwFever": "I form ×2",
     "wwRules": "Två händer, ett bord: tryck på handen som vinner showdown – eller ”Delad” när båda gör samma fem bästa kort.\nVarje hand spelar de fem bästa av sina två kort och de fem på bordet; kickern avgör jämna fall.\nSvara innan stapeln tar slut: ju snabbare, desto fler poäng, och tiden blir kortare efter hand.\nEtt fel svar eller tiden ute kostar ett hjärta; vid det tredje är spelet slut. Efter varje svar namnges båda händerna och vinnarkorten lyser upp.\n←: vänster hand · →: höger hand · ↓: Delad · eller tryck.",
     "ach_whowins": "Vem vinner?",
     "ach_whowins_d": "20 rätta svar i ett spel Vem vinner?",

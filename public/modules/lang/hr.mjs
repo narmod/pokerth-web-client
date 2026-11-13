@@ -995,6 +995,7 @@ export const strings = {
     "wwHint": "Dodirni pobjedničku ruku — ili Dijeljenje kod neriješenog — prije nego istekne vrijeme",
     "wwSplit": "Dijeljenje",
     "wwTooSlow": "Presporo!",
+    "wwFever": "U plamenu ×2",
     "wwRules": "Dvije ruke, jedan stol: dodirni ruku koja pobjeđuje na showdownu — ili „Dijeljenje” kad obje čine istih pet najboljih karata.\nSvaka ruka igra najboljih pet od svoje dvije karte i pet na stolu; kicker odlučuje tijesne slučajeve.\nOdgovori prije nego traka istekne: što brže, to više bodova, a vrijeme se usput skraćuje.\nPogrešan odgovor ili isteklo vrijeme stoji srce; kod trećeg igra je gotova. Nakon svakog odgovora obje se ruke imenuju, a pobjedničke karte zasvijetle.\n←: lijeva ruka · →: desna ruka · ↓: Dijeljenje · ili dodirni.",
     "ach_whowins": "Tko pobjeđuje?",
     "ach_whowins_d": "20 točnih odgovora u jednoj igri Tko pobjeđuje?",

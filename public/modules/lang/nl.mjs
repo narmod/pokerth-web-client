@@ -1105,6 +1105,7 @@ export const strings = {
     "wwHint": "Tik op de winnende hand — of Gelijk bij een gelijkspel — voor de tijd op is",
     "wwSplit": "Gelijk",
     "wwTooSlow": "Te traag!",
+    "wwFever": "In vuur en vlam ×2",
     "wwRules": "Twee handen, één bord: tik op de hand die de showdown wint, of op „Gelijk” als beide dezelfde beste vijf kaarten maken.\nElke hand speelt de beste vijf uit haar twee kaarten en de vijf op het bord; de kicker beslist bij nipte gevallen.\nAntwoord voor de balk op is: hoe sneller, hoe meer punten, en de tijd wordt korter naarmate je verder komt.\nEen fout of tijd op kost een hart; bij het derde is het spel voorbij. Na elk antwoord worden beide handen benoemd en lichten de winnende kaarten op.\n←: linkerhand · →: rechterhand · ↓: Gelijk · of tik.",
     "ach_whowins": "Wie wint?",
     "ach_whowins_d": "20 goede antwoorden in één spel Wie wint?",

@@ -730,6 +730,7 @@ export const strings = {
     "wwHint": "Thepha isandla esiwinayo — noma Hlukanisa uma kulingana — ngaphambi kokuphela kwesikhathi",
     "wwSplit": "Hlukanisa",
     "wwTooSlow": "Kuhamba kancane kakhulu!",
+    "wwFever": "Uvuthe ×2",
     "wwRules": "Izandla ezimbili, ibhodi elilodwa: thepha isandla esiwina ku-showdown — noma «Hlukanisa» uma zombili zakha amakhadi amahlanu angcono afanayo.\nIsandla ngasinye sidlala amahlanu angcono emakhadini aso amabili nakwamahlanu asebhodini; i-kicker inquma izimo eziseduze.\nPhendula ngaphambi kokuthi ibha iphele: ngokushesha okukhulu, amaphuzu amaningi, futhi isikhathi siyancipha njengoba uqhubeka.\nImpendulo engalungile noma ukuphela kwesikhathi kubiza inhliziyo eyodwa; kweyesithathu, umdlalo uphelile. Ngemva kwempendulo ngayinye, izandla zombili ziyabizwa futhi amakhadi awinayo ayakhanya.\n←: isandla sobunxele · →: isandla sokudla · ↓: Hlukanisa · noma thepha.",
     "ach_whowins": "Ubani owinayo?",
     "ach_whowins_d": "Izimpendulo ezingu-20 ezilungile emdlalweni owodwa we-Ubani owinayo?",

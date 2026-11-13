@@ -998,6 +998,7 @@ export const strings = {
     "wwHint": "Toca la mà guanyadora —o Empat si són iguals— abans que s'acabi el temps",
     "wwSplit": "Empat",
     "wwTooSlow": "Massa lent!",
+    "wwFever": "Encès ×2",
     "wwRules": "Dues mans, una taula: toca la mà que guanya el showdown, o «Empat» quan totes dues fan les mateixes cinc millors cartes.\nCada mà juga les cinc millors entre les seves dues cartes i les cinc de la taula; el kicker decideix els casos ajustats.\nRespon abans que s'acabi la barra: com més ràpid, més punts, i el temps s'escurça a mesura que avances.\nUn error o el temps esgotat costa un cor; al tercer, s'acaba la partida. Després de cada resposta s'anomenen les dues mans i s'il·luminen les cartes guanyadores.\n←: mà esquerra · →: mà dreta · ↓: Empat · o toca.",
     "ach_whowins": "Qui guanya?",
     "ach_whowins_d": "20 respostes correctes en una partida de Qui guanya?",

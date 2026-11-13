@@ -997,6 +997,7 @@ export const strings = {
     "wwHint": "Tik op die hand wat wen — of Gedeel as dit gelyk is — voor die tyd om is",
     "wwSplit": "Gedeel",
     "wwTooSlow": "Te stadig!",
+    "wwFever": "Op dreef ×2",
     "wwRules": "Twee hande, een bord: tik op die hand wat die showdown wen — of „Gedeel” wanneer albei dieselfde beste vyf kaarte maak.\nElke hand speel die beste vyf uit sy twee kaarte en die vyf op die bord; die kicker besluit noue gevalle.\nAntwoord voor die balk opraak: hoe vinniger, hoe meer punte, en die tyd word korter soos jy aangaan.\n'n Verkeerde antwoord of tyd verby kos 'n hart; by die derde is die spel verby. Ná elke antwoord word albei hande genoem en die wenkaarte lig op.\n←: linkerhand · →: regterhand · ↓: Gedeel · of tik.",
     "ach_whowins": "Wie wen?",
     "ach_whowins_d": "20 regte antwoorde in een spel Wie wen?",

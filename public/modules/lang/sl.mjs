@@ -729,6 +729,7 @@ export const strings = {
     "wwHint": "Tapni zmagovalno roko — ali Delitev ob izenačenju — preden poteče čas",
     "wwSplit": "Delitev",
     "wwTooSlow": "Prepočasi!",
+    "wwFever": "V ognju ×2",
     "wwRules": "Dve roki, ena miza: tapni roko, ki zmaga na showdownu — ali »Delitev«, ko obe sestavita istih pet najboljših kart.\nVsaka roka igra najboljših pet iz svojih dveh kart in petih na mizi; kicker odloči tesne primere.\nOdgovori, preden poteče vrstica: hitreje ko odgovoriš, več točk dobiš, čas pa se sproti krajša.\nNapačen odgovor ali potek časa stane srce; pri tretjem je igre konec. Po vsakem odgovoru sta roki poimenovani, zmagovalne karte pa zasvetijo.\n←: leva roka · →: desna roka · ↓: Delitev · ali tapni.",
     "ach_whowins": "Kdo zmaga?",
     "ach_whowins_d": "20 pravilnih odgovorov v eni igri Kdo zmaga?",

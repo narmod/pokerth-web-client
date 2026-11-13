@@ -730,6 +730,7 @@ export const strings = {
     "wwHint": "Fọwọ́ kan ọwọ́ tó borí — tàbí Pín tí wọ́n bá dọ́gba — kí àkókò tó tán",
     "wwSplit": "Pín",
     "wwTooSlow": "O lọ́ra jù!",
+    "wwFever": "Iná ń jó ×2",
     "wwRules": "Ọwọ́ méjì, pákó kan: fọwọ́ kan ọwọ́ tó borí nígbà ìṣípayá — tàbí «Pín» nígbà tí méjèèjì bá ṣe káàdì márùn-ún tó dára jù kan náà.\nỌwọ́ kọ̀ọ̀kan ń ṣeré pẹ̀lú márùn-ún tó dára jù láti inú káàdì rẹ̀ méjì àti márùn-ún orí pákó; kicker ló ń pinnu àwọn ọ̀ràn tó súnmọ́.\nDáhùn kí ọ̀pá tó tán: bí o ṣe yára tó, bẹ́ẹ̀ ni àmì ṣe pọ̀ tó, àkókò sì ń kúrú bí o ṣe ń lọ.\nÌdáhùn tí kò tọ́ tàbí àkókò tó tán ń gba ọkàn kan; ní ìkẹta, eré parí. Lẹ́yìn ìdáhùn kọ̀ọ̀kan, a ń dárúkọ ọwọ́ méjèèjì, àwọn káàdì tó borí sì ń tàn.\n←: ọwọ́ òsì · →: ọwọ́ ọ̀tún · ↓: Pín · tàbí fọwọ́ kàn.",
     "ach_whowins": "Ta ló borí?",
     "ach_whowins_d": "Ìdáhùn tó tọ́ 20 nínú eré Ta ló borí? kan",

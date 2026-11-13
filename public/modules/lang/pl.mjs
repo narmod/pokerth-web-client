@@ -1104,6 +1104,7 @@ export const strings = {
     "wwHint": "Dotknij wygrywającej ręki — lub Podział przy remisie — zanim skończy się czas",
     "wwSplit": "Podział",
     "wwTooSlow": "Za wolno!",
+    "wwFever": "W ogniu ×2",
     "wwRules": "Dwie ręce, jeden stół: dotknij ręki, która wygrywa showdown — albo „Podział”, gdy obie tworzą te same pięć najlepszych kart.\nKażda ręka gra pięć najlepszych spośród swoich dwóch kart i pięciu na stole; kicker rozstrzyga wyrównane przypadki.\nOdpowiedz, zanim pasek się skończy: im szybciej, tym więcej punktów, a czas skraca się z każdą odpowiedzią.\nBłąd lub koniec czasu kosztuje serce; przy trzecim gra się kończy. Po każdej odpowiedzi obie ręce są nazwane, a zwycięskie karty podświetlone.\n←: lewa ręka · →: prawa ręka · ↓: Podział · lub dotknij.",
     "ach_whowins": "Kto wygrywa?",
     "ach_whowins_d": "20 dobrych odpowiedzi w jednej grze Kto wygrywa?",

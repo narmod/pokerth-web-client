@@ -1101,6 +1101,7 @@ export const strings = {
     "wwHint": "Tryk på den vindende hånd – eller Delt ved uafgjort – før tiden løber ud",
     "wwSplit": "Delt",
     "wwTooSlow": "For langsom!",
+    "wwFever": "I flammer ×2",
     "wwRules": "To hænder, ét bord: tryk på den hånd, der vinder showdown – eller „Delt“, når begge laver de samme fem bedste kort.\nHver hånd spiller de bedste fem af sine to kort og de fem på bordet; kickeren afgør tætte tilfælde.\nSvar før bjælken løber ud: jo hurtigere, jo flere point, og tiden bliver kortere undervejs.\nEt forkert svar eller tiden ude koster et hjerte; ved det tredje er spillet slut. Efter hvert svar nævnes begge hænder, og vinderkortene lyser op.\n←: venstre hånd · →: højre hånd · ↓: Delt · eller tryk.",
     "ach_whowins": "Hvem vinder?",
     "ach_whowins_d": "20 rigtige svar i ét spil Hvem vinder?",
