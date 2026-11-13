@@ -16,7 +16,7 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
-- **Poker Run** (`web.16`) — a tenth mini-game in the arcade, unlocked at 36 trophies (`unlock`, for the future
+- **Poker Run** (`web.16`; `web.17`: the car's body drawn over the Ace — the mascot kit's z-index kept him on top — and a smaller car) — a tenth mini-game in the arcade, unlocked at 36 trophies (`unlock`, for the future
   Arcade mode): the Ace drives his convertible on an OutRun-style road. A segment road in pseudo-3D (curves, hills)
   on the shell's canvas, the camera behind the car; six stages from Las Vegas, the first five ending in a fork into
   three branches: the branch taken deals that board card (flop ×3, turn, river) and leads to the next scene

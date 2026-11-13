@@ -1,4 +1,7 @@
-2026-11-13 version 2.1.11-web.16 (current series):
+2026-11-13 version 2.1.11-web.17 (current series):
+- bugfix: in Poker Run, the Ace now sits inside his car, his seat and the car in front of him, and the car is back to its intended size
+
+2026-11-13 version 2.1.11-web.16:
 - new: Poker Run, a new mini-game: the Ace drives his convertible on a road that forks five times into three branches — the branch you take deals a card of the board and leads to a new scene (Las Vegas, Saint-Tropez, Monument Valley, Chamonix, Monaco)
 - new: in Poker Run, steer, use the nitro and drift through tight bends; every fork adds time to the clock, and your best five-card hand multiplies the score
 

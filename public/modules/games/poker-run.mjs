@@ -95,7 +95,7 @@ const CSS = `
 #pth-game .prun-hud .prun-gap{width:6px;flex:none}
 #pth-game .prun-hud .ar-slot{display:flex;align-items:center;justify-content:center;font:600 10px 'Inconsolata',monospace;color:rgba(216,178,90,.6)}
 #pth-game .prun-b .pk{box-shadow:0 0 0 2px #d8b25a}
-#pth-game .prun-prev{position:absolute;left:8px;right:8px;top:64px;z-index:3;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;pointer-events:none}
+#pth-game .prun-prev{position:absolute;left:8px;right:8px;top:64px;z-index:397;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;pointer-events:none}
 #pth-game .prun-prev[hidden]{display:none}
 #pth-game .prun-prev .prun-tag{grid-column:1/-1;text-align:center;font:700 12px 'Inconsolata',monospace;letter-spacing:.08em;color:#d8b25a;text-shadow:0 1px 3px #000}
 #pth-game .prun-opt{min-width:0;background:rgba(13,17,23,.82);border:1.5px solid rgba(255,255,255,.14);border-radius:10px;padding:5px 3px;display:flex;flex-direction:column;align-items:center;gap:2px;color:#f5f0e3;text-align:center}
@@ -120,6 +120,8 @@ export function create(shell) {
   if (aceRoot) aceRoot.classList.add('prun-back');
   // The car's body, his seat and what flies over the road: a canvas over the Ace.
   const front = document.createElement('canvas');
+  // Over the Ace: the actor's root keeps the mascot kit's z-index (395).
+  front.style.zIndex = '396';
   shell.layer.appendChild(front);
   const gF = /** @type {CanvasRenderingContext2D} */ (front.getContext('2d'));
   const prev = document.createElement('div');
@@ -491,7 +493,7 @@ export function create(shell) {
   }
 
   // ── Drawing ────────────────────────────────────────────────────────
-  const carW = () => Math.min(W * 0.34, 130);
+  const carW = () => Math.min(W * 0.28, 100);
   function project(p, cx, cyw, cz) {
     p.c.x = -cx; p.c.y = p.w.y - cyw; p.c.z = p.w.z - cz; p.s.scale = DEPTH / p.c.z;
     p.s.x = W / 2 + p.s.scale * p.c.x * W / 2; p.s.y = cy - p.s.scale * p.c.y * H / 2; p.s.w = p.s.scale * ROAD * W / 2;
