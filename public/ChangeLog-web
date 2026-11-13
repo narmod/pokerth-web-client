@@ -1,4 +1,8 @@
-2026-11-13 version 2.1.11-web.22 (current series):
+2026-11-13 version 2.1.11-web.23 (current series):
+- new: on the Mini-games page, each game shows its number in the path and whether it helps you get better at poker or is just for fun
+- new: the games still locked are mystery games, blurred under a « ? », with the trophies still to win; which one comes next stays a surprise
+
+2026-11-13 version 2.1.11-web.22:
 - new: win enough trophies in training and a fourth mode appears on the login screen, the Mini-games; its games then open one by one as you win more trophies
 - improvement: on a phone in landscape, the login screen shows the logo on the left and every mode on the right, nothing cut off any more
 

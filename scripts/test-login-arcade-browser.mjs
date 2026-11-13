@@ -55,8 +55,30 @@ console.log('test-login-arcade-browser');
   await pg.click('#login-card-arcade');
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
   await sleep(500);
-  const tiles = await pg.evaluate(() => [...document.querySelectorAll('#pth-game .gm-card .gm-art')].map((a) => a.getAttribute('data-art')));
-  ok(tiles.join(',') === 'whowins', 'a tap opens the mini-games page with only the game already open (' + tiles.join(',') + ')');
+  const m = await pg.evaluate(() => {
+    const cards = [...document.querySelectorAll('#pth-game .gm-card')];
+    const lock = cards.filter((c) => c.classList.contains('lock'));
+    return {
+      open: cards.filter((c) => !c.classList.contains('lock')).map((c) => c.querySelector('.gm-art').getAttribute('data-art')),
+      steps: cards.map((c) => c.querySelector('.gm-step').textContent).join(','),
+      kind: (document.querySelector('#pth-game .gm-card:not(.lock) .gm-kind') || {}).textContent,
+      lock: lock.length, quiet: lock.every((c) => !c.querySelector('[data-play],[data-rules],.gm-kind,.gm-ico,[data-art]')),
+      names: lock.map((c) => c.querySelector('.gm-q').textContent),
+      need: (lock[0] && lock[0].querySelector('.gm-need span').textContent) || '',
+      count: document.querySelector('#pth-game .gm-count').textContent,
+    };
+  });
+  ok(m.open.join(',') === 'whowins' && m.steps === '1,2,3,4,5,6,7,8,9,10' && m.kind === '🎓 Progresser',
+    'a tap opens the mini-games page: game 1 open, numbered, with its kind (' + m.open.join(',') + ', ' + m.kind + ')');
+  ok(m.lock === 9 && m.names.every((n) => n === 'Jeu mystère') && m.quiet,
+    'the 9 others are mystery games: no name, icon, kind, rules or play button');
+  ok(m.need === '🏆 Encore 2 trophées · 8/10' && m.count === '🕹️ 1/10 jeux ouverts · 9 jeux mystère à découvrir',
+    'the trophies still to win and the count of mystery games (' + m.need + ' | ' + m.count + ')');
+  await pg.evaluate(() => { const c = document.querySelectorAll('#pth-game .gm-card')[1]; c.querySelector('.gm-art').click(); c.click(); });
+  for (let i = 0; i < 1; i++) await pg.keyboard.press('ArrowRight');
+  await pg.keyboard.press('Space');
+  await sleep(700);
+  ok(await pg.evaluate(() => !!document.querySelector('#pth-game .gm-hub')), 'a mystery game cannot be opened (tap, Space)');
   await pg.evaluate(() => window.PthGames && window.PthGames.back());
   await sleep(1200);
   const back = await card(pg);

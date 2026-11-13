@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Mini-games mode — 3. the mini-games page** (`web.23`) — `games/menu.mjs`: every card is numbered in the path
+  (`.gm-step`) and the open ones carry their kind, « 🎓 Get better » / « 🎉 Just for fun » (`.gm-kind`, light-theme
+  variants). A game its trophies have not opened is a « mystery game » (`.gm-card.lock`): its cover blurred,
+  greyed and darkened under a gold « ? » (`.gm-myst`, repainted with the theme), « Mystery game » instead of its
+  name, no icon, kind, rules or Play button (a tap, Space or ↓ does nothing), and « 🏆 2 more trophies · 12/14 »
+  with a progress bar. Under the page's intro, « 🕹️ 3/10 games open · 7 mystery games to discover » (« All 10
+  games are open » after the secret word). 8 keys (`gmKindLearn`, `gmKindFun`, `gmMystery`, `gmNeedOne`, `gmNeed`,
+  `gmCountOne`, `gmCount`, `gmCountAll`) in the 83 catalogues; `test-login-arcade-browser.mjs` checks the mystery
+  cards.
 - **Mini-games mode — 2. the login page** (`web.22`) — a fourth login card « 🕹️ Mini-games » (`#login-card-arcade`,
   `modules/ui/login-arcade.mjs`): hidden until the mode is unlocked (8 trophies or the secret word), it says how
   many games are open (`loginArcadeDesc`, « The Ace's games · 3/10 open », never which ones) and carries a « NEW »

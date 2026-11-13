@@ -31,6 +31,27 @@ const CSS = `
 #pth-game .gm-card h3{margin:0;font:700 19px/1.2 'Cinzel',Georgia,serif;letter-spacing:.02em;color:var(--text-hi)}
 #pth-game .gm-card .gm-rec{margin:0;font:500 12px 'Inconsolata',monospace;color:var(--text);min-height:1.2em}
 #pth-game .gm-card .gm-btns{display:flex;gap:8px;margin-top:auto;flex-wrap:wrap}
+#pth-game .gm-count{margin:6px 0 0;font:600 13px/1.35 'Inter',system-ui,sans-serif;color:var(--gold)}
+#pth-game .gm-card h3{display:flex;align-items:center;gap:8px}
+#pth-game .gm-card .gm-ico{margin-right:0}
+#pth-game .gm-step{flex:none;display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;
+  background:var(--field-bg);border:1px solid var(--border-hi);color:var(--gold);font:700 13px/1 'Inter',system-ui,sans-serif;letter-spacing:0}
+#pth-game .gm-kind{align-self:flex-start;display:inline-flex;align-items:center;gap:5px;padding:3px 10px 3px 8px;border-radius:999px;font:600 12px/1.2 'Inter',system-ui,sans-serif}
+#pth-game .gm-kind.learn{background:rgba(63,174,106,.16);color:#7ee2a0;box-shadow:inset 0 0 0 1px rgba(63,174,106,.45)}
+#pth-game .gm-kind.fun{background:rgba(216,178,90,.16);color:#f5d77a;box-shadow:inset 0 0 0 1px rgba(216,178,90,.45)}
+#pth-game.pg-light .gm-kind.learn{background:rgba(46,125,78,.12);color:#1f6b3e;box-shadow:inset 0 0 0 1px rgba(46,125,78,.4)}
+#pth-game.pg-light .gm-kind.fun{background:rgba(160,110,10,.12);color:#7a5408;box-shadow:inset 0 0 0 1px rgba(160,110,10,.4)}
+#pth-game .gm-card.lock{cursor:default}
+#pth-game .gm-card.lock h3{color:var(--text)}
+#pth-game .gm-myst{position:relative;background:#06080b}
+#pth-game .gm-myst .gm-dk{height:100%;filter:blur(9px) grayscale(1) brightness(.35);transform:scale(1.12)}
+#pth-game .gm-myst .gm-qm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 58px/1 'Cinzel',Georgia,serif;color:rgba(245,215,122,.9);text-shadow:0 2px 12px rgba(0,0,0,.9)}
+#pth-game.pg-light .gm-myst{background:#cfd3da}
+#pth-game.pg-light .gm-myst .gm-dk{filter:blur(9px) grayscale(1) brightness(.75) contrast(.8)}
+#pth-game.pg-light .gm-myst .gm-qm{color:#5a4410;text-shadow:0 1px 8px rgba(255,255,255,.8)}
+#pth-game .gm-need{display:flex;flex-direction:column;gap:5px;width:100%;font:600 13px 'Inter',system-ui,sans-serif;color:var(--text)}
+#pth-game .gm-bar{height:6px;border-radius:3px;background:var(--field-bg);box-shadow:inset 0 0 0 1px var(--border);overflow:hidden}
+#pth-game .gm-bar i{display:block;height:100%;background:var(--gold);border-radius:3px}
 #pth-game .gm-keys{margin:0;color:var(--text);font-size:12px;opacity:.8}
 #pth-game .gm-keys .pg-k{color:var(--gold);border-color:var(--border-hi)}
 `;
@@ -41,43 +62,69 @@ export function create(shell) {
     const st = document.createElement('style'); st.id = 'pth-game-hub-css'; st.textContent = CSS;
     document.head.appendChild(st);
   }
-  // Every game, in the registry's order.
-  // The Mini-games mode (web.22): only the games its trophies have opened —
-  // all of them after the secret word. The others are not listed yet (the
-  // « mystery games » come with the next step of the mode).
-  let open = null;
+  // Every game, in the registry's order: a numbered path that alternates a
+  // game to get better at poker (🎓) and a game for fun (🎉). The Mini-games
+  // mode (web.23, claude/CONCEPTION_MODE_ARCADE.md): a game its trophies have
+  // not opened yet is a « mystery game » — its cover blurred and darkened under
+  // a « ? », no name, icon, kind or rules, only its number and the trophies
+  // still to win. The secret word opens every game.
+  let st = null;
   try {
-    if (!allUnlocked()) {
-      const owned = new Set(createAchievements({}).snapshot().filter((a) => a.unlocked).map((a) => a.id));
-      open = new Set(arcadeState({ count: owned.size, owned }, false).games.filter((x) => x.open).map((x) => x.id));
-    }
-  } catch (e) { open = null; }
-  const games = GAMES.filter((g) => g.id !== HOME && (!open || open.has(g.id))).map((g) => Object.assign({}, g, { name: gameName(g, t) }));
+    const owned = new Set(createAchievements({}).snapshot().filter((a) => a.unlocked).map((a) => a.id));
+    st = arcadeState({ count: owned.size, owned }, allUnlocked());
+  } catch (e) { st = null; }
+  const games = GAMES.filter((g) => g.id !== HOME).map((g) => {
+    const s = st ? st.games.find((x) => x.id === g.id) : null;
+    return Object.assign({}, g, { name: gameName(g, t), locked: !!(s && !s.open), need: s ? s.need : 0 });
+  });
+  const count = st ? st.count : 0;
+  const nOpen = games.filter((g) => !g.locked).length, nMyst = games.length - nOpen;
   let sel = 0;
   const best = (id) => { try { return parseInt(localStorage.getItem('pth_game_best_' + id) || '0', 10) || 0; } catch (e) { return 0; } };
-
-  shell.view.innerHTML = '<div class="gm-hub"><div class="gm-head"><div class="gm-ace"></div><div><h2>' + esc(t('gmTitle')) + '</h2><p>' + esc(t('gmIntro')) + '</p></div></div>'
-    + '<div class="gm-grid">' + games.map((g, i) => '<article class="gm-card" data-i="' + i + '">'
+  const KIND = { learn: '🎓 ' + t('gmKindLearn'), fun: '🎉 ' + t('gmKindFun') };
+  const countLine = '🕹️ ' + (nMyst ? t(nMyst === 1 ? 'gmCountOne' : 'gmCount', { o: nOpen, all: games.length, m: nMyst }) : t('gmCountAll', { all: games.length }));
+  function openCard(g, i) {
+    return '<article class="gm-card" data-i="' + i + '">'
       + '<div class="gm-art" data-art="' + esc(g.id) + '">' + art(g.id, shell.theme.light) + '</div>'
-      + '<h3>' + '<span class="gm-ico" aria-hidden="true">' + g.icon + '</span>' + esc(g.name) + '</h3>'
+      + '<h3><span class="gm-step">' + (i + 1) + '</span><span class="gm-ico" aria-hidden="true">' + g.icon + '</span>' + esc(g.name) + '</h3>'
+      + (g.kind ? '<span class="gm-kind ' + g.kind + '">' + esc(KIND[g.kind]) + '</span>' : '')
       + '<p class="gm-rec">' + (best(g.id) ? esc(t('arRecord', { n: fmt(best(g.id)) })) : '&nbsp;') + '</p>'
       + '<div class="gm-btns"><button type="button" class="pg-btn" data-play="' + i + '">' + esc(t('gmPlay')) + '</button>'
-      + '<button type="button" class="pg-btn pg-ghost" data-rules="' + i + '">' + esc(t('gmRules')) + '</button></div></article>').join('')
+      + '<button type="button" class="pg-btn pg-ghost" data-rules="' + i + '">' + esc(t('gmRules')) + '</button></div></article>';
+  }
+  function lockedCard(g, i) {
+    const left = Math.max(1, g.need - count);
+    return '<article class="gm-card lock" data-i="' + i + '">'
+      + '<div class="gm-art gm-myst" aria-hidden="true"><div class="gm-dk" data-mart="' + esc(g.id) + '">' + art(g.id, shell.theme.light) + '</div><b class="gm-qm">?</b></div>'
+      + '<h3><span class="gm-step">' + (i + 1) + '</span><span class="gm-q">' + esc(t('gmMystery')) + '</span></h3>'
+      + '<div class="gm-btns"><div class="gm-need"><span>🏆 ' + esc(t(left === 1 ? 'gmNeedOne' : 'gmNeed', { n: left, c: count, t: g.need })) + '</span>'
+      + '<div class="gm-bar"><i style="width:' + Math.min(100, Math.round(100 * count / Math.max(1, g.need))) + '%"></i></div></div></div></article>';
+  }
+
+  shell.view.innerHTML = '<div class="gm-hub"><div class="gm-head"><div class="gm-ace"></div><div><h2>' + esc(t('gmTitle')) + '</h2><p>' + esc(t('gmIntro')) + '</p>'
+    + '<p class="gm-count">' + esc(countLine) + '</p></div></div>'
+    + '<div class="gm-grid">' + games.map((g, i) => (g.locked ? lockedCard(g, i) : openCard(g, i))).join('')
     + '</div>'
     + '<p class="gm-keys"><span class="pg-k">←</span> <span class="pg-k">→</span> · <span class="pg-k">Space</span> · <span class="pg-k">↓</span> ' + esc(t('gmRules')) + '</p></div>';
   const cards = Array.from(shell.view.querySelectorAll('.gm-card'));
   const mark = () => cards.forEach((c, i) => c.classList.toggle('on', i === sel));
   mark();
-  const play = (i) => shell.open(games[i].id);
-  const rules = (i) => shell.rules(games[i], () => play(i));
+  const play = (i) => { if (!games[i].locked) shell.open(games[i].id); };
+  const rules = (i) => { if (!games[i].locked) shell.rules(games[i], () => play(i)); };
   shell.view.querySelectorAll('[data-play]').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); play(+(b.getAttribute('data-play') || 0)); }));
   shell.view.querySelectorAll('[data-rules]').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); rules(+(b.getAttribute('data-rules') || 0)); }));
   cards.forEach((c, i) => c.addEventListener('click', () => { sel = i; mark(); }));
   // The cover picture plays too.
-  shell.view.querySelectorAll('.gm-art').forEach((a, i) => a.addEventListener('click', (e) => { e.stopPropagation(); play(i); }));
-  // Light / dark theme switched while on the page: repaint the covers.
+  shell.view.querySelectorAll('.gm-art[data-art]').forEach((a) => a.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const c = a.closest('.gm-card');
+    play(+(c && c.getAttribute('data-i') || 0));
+  }));
+  // Light / dark theme switched while on the page: repaint the covers (the
+  // mystery ones under their blur too).
   function theme() {
-    shell.view.querySelectorAll('.gm-art').forEach((a) => { a.innerHTML = art(a.getAttribute('data-art') || '', shell.theme.light); });
+    shell.view.querySelectorAll('.gm-art[data-art]').forEach((a) => { a.innerHTML = art(a.getAttribute('data-art') || '', shell.theme.light); });
+    shell.view.querySelectorAll('[data-mart]').forEach((a) => { a.innerHTML = art(a.getAttribute('data-mart') || '', shell.theme.light); });
   }
 
   // The Ace waves from the top of the page.
