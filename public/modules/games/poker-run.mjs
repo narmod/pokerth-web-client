@@ -24,6 +24,8 @@
 // card back turned to us; the car's body and his seat are painted over him
 // on a second canvas. He reacts to the road (arms, hops, a spin at the
 // finish) and speaks in the mascot's bubbles (emoji, or the hand's name).
+// Touch pad: ◀ NITRO ▶ (the shell's ▲ relabelled, ▼ hidden; ↓ still brakes);
+// in landscape ◀ left of the stage, NITRO and ▶ right of it.
 // Texts: prHint, prRules, prTimeUp plus shared keys (blChips, gameTimeLabel,
 // arLevel, arTapStart, arRecord, arNewRecord, gmAgain, mascotHello, mascotTada,
 // the hand names h1n…h10n).
@@ -104,6 +106,18 @@ const CSS = `
 #pth-game .prun-opt b{font:600 12px/1.1 'Inter',system-ui,sans-serif}
 #pth-game .prun-opt em{font:700 12px 'Inconsolata',monospace;font-style:normal;color:#d8b25a}
 #pth-game .prun-opt small{font:500 10px/1.1 'Inter',system-ui,sans-serif;color:#9bb0a3;letter-spacing:.02em}
+/* Touch pad as in the draft: ◀ NITRO ▶ under the stage; in landscape ◀ on the left, NITRO and ▶ on the right. */
+#pth-game.prun-pad .pg-pad button[data-a="duck"]{display:none}
+#pth-game.prun-pad .pg-pad button[data-a="jump"]{position:relative;overflow:hidden;width:120px;background:#3a2a10;color:#d8b25a;font:800 15px 'Inter',system-ui,sans-serif;letter-spacing:.08em}
+#pth-game.prun-pad .pg-pad button[data-a="jump"].prun-ready{background:#5a4214}
+#pth-game.prun-pad .pg-pad button[data-a="jump"].prun-burn{background:#d8b25a;color:#141414}
+#pth-game.prun-pad .pg-pad button[data-a="jump"] .prun-gauge{position:absolute;left:0;bottom:0;height:4px;width:0;background:#d8b25a;transition:width .15s}
+#pth-game.prun-pad .pg-play:not(.pg-land) .pg-pad{align-self:stretch}
+#pth-game.prun-pad .pg-play:not(.pg-land) .pg-pad button{flex:1 1 0;width:auto}
+#pth-game.prun-pad .pg-play:not(.pg-land) .pg-pad button[data-a="jump"]{flex-grow:1.3}
+#pth-game.prun-pad.pg-lanes .pg-land .pg-pad button[data-a="left"]{order:-3}
+#pth-game.prun-pad.pg-lanes .pg-land .pg-pad button[data-a="jump"]{order:1;width:72px;font-size:12px;letter-spacing:.04em}
+#pth-game.prun-pad.pg-lanes .pg-land .pg-pad button[data-a="right"]{order:3}
 #pth-game .prun-route{font:500 12px/1.3 'Inter',system-ui,sans-serif;color:#cfd8d2}
 #pth-game.pg-light .prun-route{color:#2b3138}
 @media (prefers-reduced-motion:reduce){#${ACE_ID}.prun-back.prun-spin .mc-card3d,#pth-game .prun-hud .ar-num.prun-ext{animation:none}}
@@ -128,6 +142,13 @@ export function create(shell) {
   prev.className = 'prun-prev'; prev.hidden = true;
   shell.layer.appendChild(prev);
   shell.lanes(true);
+  // The pad of this game: ◀ NITRO ▶ (the brake stays on ↓), with the nitro gauge; put back as it was on leaving.
+  shell.root.classList.add('prun-pad');
+  const nitroBtn = /** @type {HTMLElement|null} */ (shell.root.querySelector('.pg-pad button[data-a="jump"]'));
+  const nitroWas = nitroBtn ? { text: nitroBtn.textContent, label: nitroBtn.getAttribute('aria-label') } : null;
+  const gauge = document.createElement('i');
+  gauge.className = 'prun-gauge';
+  if (nitroBtn) { nitroBtn.textContent = 'NITRO'; nitroBtn.setAttribute('aria-label', 'Nitro'); nitroBtn.appendChild(gauge); }
   const buzz = (p) => { try { if (typeof window.hapticBuzz === 'function') window.hapticBuzz(p); } catch (e) {} };
   const img = imageCache();
   const bang = /^fr/.test(document.documentElement.lang || '') ? ' !' : '!';
@@ -257,6 +278,10 @@ export function create(shell) {
     hName.innerHTML = (ev.nameKey ? esc(t(ev.nameKey)) : '') + ' <b>×' + ev.mult + '</b>';
   }
   let lastStats = '';
+  function renderNitro() {
+    gauge.style.width = Math.round(nitro * 100) + '%';
+    if (nitroBtn) { nitroBtn.classList.toggle('prun-ready', nitro > 0.15 && !boost); nitroBtn.classList.toggle('prun-burn', boost); }
+  }
   function renderStats(force) {
     const key = stack + '|' + time.toFixed(1) + '|' + curStage;
     if (key === lastStats && !force) return;
@@ -437,6 +462,7 @@ export function create(shell) {
     if (time <= 0) { time = 0; outro(false); return; }
     stepFx(dt);
     renderStats(false);
+    renderNitro();
     renderPreview();
   }
   function stepParts(dt) {
@@ -852,6 +878,8 @@ export function create(shell) {
       clearTimeout(revealTimer);
       try { if (window.__pthRun) delete window.__pthRun; } catch (e) {}
       front.remove(); prev.remove(); ace.remove();
+      shell.root.classList.remove('prun-pad');
+      if (nitroBtn && nitroWas) { gauge.remove(); nitroBtn.textContent = nitroWas.text; if (nitroWas.label) nitroBtn.setAttribute('aria-label', nitroWas.label); nitroBtn.classList.remove('prun-ready', 'prun-burn'); }
     },
   };
 }

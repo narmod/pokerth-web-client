@@ -1,4 +1,7 @@
-2026-11-13 version 2.1.11-web.17 (current series):
+2026-11-13 version 2.1.11-web.18 (current series):
+- improvement: in Poker Run, the touch buttons are now ◀ NITRO ▶ with the nitro gauge; in landscape ◀ is on the left of the road, NITRO and ▶ on the right
+
+2026-11-13 version 2.1.11-web.17:
 - bugfix: in Poker Run, the Ace now sits inside his car, his seat and the car in front of him, and the car is back to its intended size
 
 2026-11-13 version 2.1.11-web.16:
