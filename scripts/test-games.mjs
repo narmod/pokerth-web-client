@@ -61,7 +61,7 @@ ok(NAME_KEYS.length === 10 && MULT.length === 10, 'ten categories');
 
 console.log('secret word');
 const { art } = await import('../public/modules/games/art.mjs');
-for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker', 'whowins', 'hilo', 'bluff', 'pokerdrop']) {
+for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker', 'whowins', 'hilo', 'bluff', 'pokerdrop', 'poker-run']) {
   const d = art(id, false), l = art(id, true);
   const ids = [...d.matchAll(/id="([^"]+)"/g)].map((m) => m[1]), idsL = [...l.matchAll(/id="([^"]+)"/g)].map((m) => m[1]);
   ok(/^<svg[^>]*viewBox="0 0 320 140"/.test(d) && d !== l && ids.every((x) => idsL.indexOf(x) < 0), id + ': a cover picture, one for each theme, ids that do not clash');
@@ -81,6 +81,7 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'pdName', 'pdHint', 'pdVsAce', 'pdTwo', 'pdPoints', 'pdSudden', 'pdSuddenGoal', 'pdYou', 'pdAce', 'pdPlayer', 'pdYourTurn', 'pdAceTurn',
   'pdTurn', 'pdYouWin', 'pdAceWins', 'pdWins', 'pdTie', 'pdRules', 'ach_pdrop', 'ach_pdrop_d',
   'adHint', 'adRules',
+  'prHint', 'prRules', 'prTimeUp',
   'gmTitle'];
 let missing = [], badRecord = [];
 for (const f of files) {
@@ -90,12 +91,13 @@ for (const f of files) {
   for (const k of ['pdPlayer', 'pdTurn', 'pdWins']) if (strings[k] && strings[k].indexOf('{n}') < 0) badRecord.push(f + ':' + k);
   if (strings.pdRules && strings.pdRules.split('\n').length !== 7) badRecord.push(f + ':pdRules lines');
   if (strings.adRules && (strings.adRules.split('\n').length !== 7 || strings.adRules.indexOf('300') < 0 || strings.adRules.indexOf('← →') < 0)) badRecord.push(f + ':adRules');
+  if (strings.prRules && (strings.prRules.split('\n').length !== 6 || !/22|۲۲/.test(strings.prRules) || strings.prRules.indexOf('◀ ▶') < 0 || !/flop/i.test(strings.prRules))) badRecord.push(f + ':prRules');
   const tr = (k) => strings[k] || k;
   if (gameForNick(strings.gameWordAce, tr) !== 'arcade') missing.push(f + ': own word not recognised');
   if (gameForNick('mascot', tr) !== 'arcade') missing.push(f + ': English word not recognised');
 }
 ok(missing.length === 0, 'every language has the Ace Runner strings and a working word' + (missing.length ? ' — ' + missing.slice(0, 6).join(', ') : ''));
-ok(badRecord.length === 0, 'arRecord, pdPlayer, pdTurn, pdWins keep {n}, pdRules and adRules have 7 lines' + (badRecord.length ? ' — ' + badRecord.join(', ') : ''));
+ok(badRecord.length === 0, 'arRecord, pdPlayer, pdTurn, pdWins keep {n}, pdRules and adRules have 7 lines, prRules 6' + (badRecord.length ? ' — ' + badRecord.join(', ') : ''));
 const fr = (k) => ({ gameWordAce: 'mascotte' })[k] || k;
 ok(gameForNick('  MaScOtTe ', fr) === 'arcade', 'case and spaces ignored');
 ok(gameForNick('Mascóte', (k) => ({ gameWordAce: 'mascote' })[k] || k) === 'arcade', 'accents ignored');
@@ -103,7 +105,7 @@ ok(gameForNick('Narmod', fr) === null && gameForNick('Ace', fr) === null && game
 ok(gameForNick('', fr) === null && gameForNick('mascottes', fr) === null, 'empty or longer words do not trigger');
 ok(norm('Éliminé') === 'elimine', 'norm strips accents');
 ok(GAMES.every((g) => typeof g.load === 'function' && g.id && (g.name || g.nameKey)), 'registry entries are complete');
-ok(['arcade', 'ace-runner', 'house', 'solitaire'].every((id) => GAMES.some((g) => g.id === id)), 'arcade menu, Ace Runner, House of Cards and Poker Solitaire registered');
+ok(['arcade', 'ace-runner', 'house', 'solitaire', 'ace-dash', 'poker-run'].every((id) => GAMES.some((g) => g.id === id)), 'arcade menu, Ace Runner, House of Cards, Poker Solitaire, Ace Dash and Poker Run registered');
 
 console.log('poker solitaire');
 const d1 = dealFor('pth-solitaire-2026-10-16'), d2 = dealFor('pth-solitaire-2026-10-16'), d3 = dealFor('pth-solitaire-2026-10-17');

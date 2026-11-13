@@ -3,7 +3,8 @@
 // Cover pictures of the arcade's games (web extension, narmod 2026-10-16,
 // web.89) — one small SVG scene per game for its card on the arcade's home
 // (menu.mjs): the Ace on his run, at the top of his house of cards, beside
-// his solitaire grid, from behind on the three lanes of Ace Dash. Painted with the games' own palette (common.mjs ink)
+// his solitaire grid, from behind on the three lanes of Ace Dash, at the wheel
+// of his convertible where the road of Poker Run forks. Painted with the games' own palette (common.mjs ink)
 // so they follow the light / dark theme; no image file to load or cache.
 // art(id, light) → SVG markup (viewBox 320 × 140), '' for an unknown game.
 // ═══════════════════════════════════════════════════════════════════
@@ -277,7 +278,52 @@ function dash(c) {
   return s + aceBack(160, 134, 20, limbOf(c));
 }
 
-const SCENES = { 'ace-runner': runner, 'ace-dash': dash, house, solitaire, videopoker, whowins, hilo, bluff, pokerdrop };
+function run(c) {
+  // Poker Run: a road at dusk forking into three branches under gold arches,
+  // a card on each; the Ace's red convertible from behind, his card back at the wheel.
+  const id = 'prn' + (c.light ? 'l' : 'd');
+  const sky = c.light ? ['#2e63a8', '#f3c98a'] : ['#0a1322', '#c8743a'];
+  const vy = 58, at = (f, y) => 160 + f * (14 + 150 * (y - vy) / (140 - vy));   // f: -1 … 1 across the road
+  let s = '<defs><linearGradient id="' + id + 's" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + sky[0] + '"/><stop offset="1" stop-color="' + sky[1] + '"/></linearGradient></defs>'
+    + '<rect width="320" height="' + vy + '" fill="url(#' + id + 's)"/>'
+    + '<rect y="' + vy + '" width="320" height="' + (140 - vy) + '" fill="' + (c.light ? '#3f8f5a' : '#1c5639') + '"/>';
+  // City skyline on the horizon, lit windows at night.
+  [[8, 22, 18], [34, 30, 26], [70, 26, 14], [102, 20, 22], [208, 28, 24], [242, 22, 16], [270, 34, 28], [300, 20, 18]].forEach(([x, w, h]) => {
+    s += '<rect x="' + x + '" y="' + (vy - h) + '" width="' + w + '" height="' + h + '" fill="' + (c.light ? '#5b6f8a' : '#101a2b') + '"/>';
+    if (!c.light) for (let k = 0; k < 3; k++) s += '<rect x="' + (x + 4 + k * 6) + '" y="' + (vy - h + 5) + '" width="2" height="3" fill="#e8b84a" opacity=".7"/>';
+  });
+  // The road, then its three branches spreading towards the horizon.
+  s += '<path d="M' + at(-1.1, 140) + ' 140 L' + at(-0.5, 96) + ' 96 L' + at(0.5, 96) + ' 96 L' + at(1.1, 140) + ' 140 Z" fill="#2b3038"/>';
+  for (const f of [-1, 0, 1]) {
+    const x0 = at(f * 0.62, 96), x1 = 160 + f * 46;
+    s += '<path d="M' + (x0 - 16) + ' 96 L' + (x1 - 5) + ' ' + vy + ' L' + (x1 + 5) + ' ' + vy + ' L' + (x0 + 16) + ' 96 Z" fill="#2b3038" stroke="#e8b84a" stroke-width="1"/>';
+    // Gold arch and its card.
+    const ax = 160 + f * 52, ay = 66;
+    s += '<path d="M' + (ax - 11) + ' ' + (ay + 16) + ' V' + ay + ' H' + (ax + 11) + ' V' + (ay + 16) + '" fill="none" stroke="#0d1117" stroke-width="1.6"/>'
+      + '<rect x="' + (ax - 12) + '" y="' + (ay - 4) + '" width="24" height="5" fill="#e8b84a"/>';
+    s += card(ax - 5, ay + 2, 10, ['A', 'K', '7'][f + 1], ['s', 'h', 'd'][f + 1]);
+  }
+  for (const y of [104, 118, 134]) for (const f of [-0.33, 0.33]) s += '<rect x="' + (at(f, y) - 1) + '" y="' + y + '" width="2" height="6" fill="#e9e4d6" opacity=".8"/>';
+  s += chip(at(-0.6, 112), 112, 4, '#e8b84a') + chip(at(-0.62, 102), 102, 3, '#e8b84a');
+  // The convertible from behind, the Ace's red card back in the driver's seat.
+  const cx = 168, by = 136, w = 64, h = 27;
+  s += '<ellipse cx="' + cx + '" cy="' + (by + 1) + '" rx="34" ry="4" fill="rgba(0,0,0,.4)"/>'
+    + '<rect x="' + (cx - 31) + '" y="' + (by - 16) + '" width="12" height="16" rx="5" fill="#0b0e12"/><rect x="' + (cx + 19) + '" y="' + (by - 16) + '" width="12" height="16" rx="5" fill="#0b0e12"/>'
+    + '<path d="M' + (cx - 20) + ' ' + (by - h) + ' L' + (cx - 17) + ' ' + (by - h - 20) + ' H' + (cx + 17) + ' L' + (cx + 20) + ' ' + (by - h) + '" fill="rgba(160,200,230,.25)" stroke="#d7dce2" stroke-width="1.2"/>'
+    + '<g transform="rotate(-6 ' + (cx - 11) + ' ' + (by - 30) + ')"><rect x="' + (cx - 19) + '" y="' + (by - 50) + '" width="16" height="23" rx="2.5" fill="#b3261e" stroke="#141414" stroke-width="1"/>'
+    + '<rect x="' + (cx - 17.5) + '" y="' + (by - 48.5) + '" width="13" height="20" rx="1.8" fill="none" stroke="#fbf7ee" stroke-width=".7"/>'
+    + '<circle cx="' + (cx - 11) + '" cy="' + (by - 38.5) + '" r="4.2" fill="#f5f0e3"/><circle cx="' + (cx - 11) + '" cy="' + (by - 38.5) + '" r="2.4" fill="#b3261e"/></g>'
+    + '<rect x="' + (cx - 20) + '" y="' + (by - 34) + '" width="17" height="10" rx="3" fill="#3a1c1e"/><rect x="' + (cx + 3) + '" y="' + (by - 38) + '" width="17" height="14" rx="3" fill="#3a1c1e"/>'
+    + '<path d="M' + (cx - w / 2) + ' ' + (by - 7) + ' C' + (cx - w / 2 - 3) + ' ' + (by - 20) + ' ' + (cx - w / 2) + ' ' + (by - h - 3) + ' ' + (cx - 22) + ' ' + (by - h - 3)
+    + ' Q' + cx + ' ' + (by - h + 1) + ' ' + (cx + 22) + ' ' + (by - h - 3) + ' C' + (cx + w / 2) + ' ' + (by - h - 3) + ' ' + (cx + w / 2 + 3) + ' ' + (by - 20) + ' ' + (cx + w / 2) + ' ' + (by - 7)
+    + ' Q' + (cx + w / 2 - 1) + ' ' + (by - 2) + ' ' + (cx + 20) + ' ' + (by - 2) + ' H' + (cx - 20) + ' Q' + (cx - w / 2 + 1) + ' ' + (by - 2) + ' ' + (cx - w / 2) + ' ' + (by - 7) + ' Z" fill="#c2303a"/>'
+    + '<circle cx="' + (cx - 20) + '" cy="' + (by - 17) + '" r="4.5" fill="#ff3b3f" stroke="#3a0d10" stroke-width="1"/><circle cx="' + (cx + 20) + '" cy="' + (by - 17) + '" r="4.5" fill="#ff3b3f" stroke="#3a0d10" stroke-width="1"/>'
+    + '<rect x="' + (cx - 7) + '" y="' + (by - 15) + '" width="14" height="6" rx="3" fill="#f4eedf"/>'
+    + '<rect x="' + (cx - 26) + '" y="' + (by - 8) + '" width="52" height="4.5" rx="2.2" fill="#262b32"/>';
+  return s;
+}
+
+const SCENES = { 'ace-runner': runner, 'ace-dash': dash, 'poker-run': run, house, solitaire, videopoker, whowins, hilo, bluff, pokerdrop };
 
 /** The cover picture of game `id` for the light or dark theme. */
 export function art(id, light) {

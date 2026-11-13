@@ -16,6 +16,18 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Poker Run** (`web.16`) — a tenth mini-game in the arcade, unlocked at 36 trophies (`unlock`, for the future
+  Arcade mode): the Ace drives his convertible on an OutRun-style road. A segment road in pseudo-3D (curves, hills)
+  on the shell's canvas, the camera behind the car; six stages from Las Vegas, the first five ending in a fork into
+  three branches: the branch taken deals that board card (flop ×3, turn, river) and leads to the next scene
+  (Las Vegas, Saint-Tropez, Monument Valley, Chamonix, Monaco — sky, ground, roadside and skyline of their own). The
+  car slows down before each fork and a preview names the hand each card makes; every fork adds 22 s to the clock,
+  a clock run out lets the dealer complete the board. Steer (held, a swipe nudges), nitro (▲ / Space, refilled by
+  chips and drifts), brake (▼), drifts in tight bends, traffic (a hit costs 20 % of the chips). Score: (chips + 5 per
+  second left) × the best five-card hand (`poker-hand.mjs`). The SVG Ace sits at the wheel with his card back to us,
+  the car's body and his seat painted over him on a second canvas; he reacts to the road (arms up, flails, shrugs,
+  waves at the cars he passes, a spin at the finish) with the mascot's bubbles. `games/poker-run.mjs`, a cover in
+  `art.mjs`, `prHint` / `prRules` / `prTimeUp` in the 83 catalogues (the rest reuses shared keys).
 - **Ace Dash** (`web.15`) — a ninth mini-game in the arcade, unlocked at 33 trophies (`unlock`, for the future
   Arcade mode): Ace Runner seen from behind, on three lanes. Pseudo-3D on the shell's 2D canvas (one perspective
   camera, felt bands scrolling towards the Ace, rails, fog; the camera rises on a portrait stage so the three lanes
