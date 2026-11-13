@@ -16,8 +16,13 @@ const normal = ACHIEVEMENTS.filter((d) => d.cat !== 'secret').map((d) => d.id);
 const { server, base } = await startServer();
 const b = await chromium.launch();
 const errors = [];
-async function open(w, h, trophies, extra) {
+async function open(w, h, trophies, extra, full) {
   const ctx = await b.newContext({ viewport: { width: w, height: h }, serviceWorkers: 'block', isMobile: w < 1000, hasTouch: w < 1000 });
+  // A storage that refuses the mode's flags (full, blocked).
+  if (full) await ctx.addInitScript(() => {
+    const o = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (k, v) { if (/^pth_arcade/.test(k)) throw new DOMException('full', 'QuotaExceededError'); return o.call(this, k, v); };
+  });
   await ctx.addInitScript(([u, ex]) => {
     try {
       if (sessionStorage.getItem('x')) return;
@@ -30,9 +35,13 @@ async function open(w, h, trophies, extra) {
   }, [Object.fromEntries(normal.slice(0, trophies).map((id) => [id, 1])), extra || {}]);
   // Watch for the light of the mode's first appearance (whenever it starts).
   await ctx.addInitScript(() => {
-    window.__light = { canvas: false, hide: false };
+    window.__light = { canvas: false, hide: false, n: 0 };
+    let lit = false;
     new MutationObserver(() => {
-      if (document.querySelector('canvas.pth-backlight')) window.__light.canvas = true;
+      const on = !!document.querySelector('canvas.pth-backlight');
+      if (on && !lit) window.__light.n++;
+      lit = on;
+      if (on) window.__light.canvas = true;
       const c = document.getElementById('login-card-arcade');
       if (c && c.classList.contains('lc-hide')) window.__light.hide = true;
     }).observe(document, { subtree: true, childList: true, attributes: true, attributeFilter: ['class'] });
@@ -164,6 +173,26 @@ for (const [w, h] of [[852, 393], [740, 360], [375, 667], [1440, 900]]) {
     return { ih: innerHeight, top: r('#s-connect > .card').top, hdr: hdr.bottom, last: cards[cards.length - 1].bottom, n: cards.filter((c) => c.height > 0).length };
   });
   ok(m.n === 4 && m.last <= m.ih && m.top >= m.hdr - 1, w + '×' + h + ': the four modes fit under the header (last card ' + Math.round(m.last) + '/' + m.ih + ', card top ' + Math.round(m.top) + ' ≥ ' + Math.round(m.hdr) + ')');
+  await ctx.close();
+}
+{
+  // web.26: a storage that refuses the flags never replays the light — not on
+  // the login, not in the menu, not after a game, not after a restart.
+  const { ctx, pg } = await open(393, 852, 12, {}, true);
+  await sleep(2500);
+  const c = await card(pg);
+  await pg.click('#login-card-arcade');
+  await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
+  await sleep(2500);
+  const m = await pg.evaluate(() => ({ open: document.querySelectorAll('#pth-game .gm-card:not(.lock)').length }));
+  await pg.click('#pth-game [data-play="0"]').catch(() => {});
+  await sleep(1500);
+  await pg.keyboard.press('Escape'); await sleep(2500);
+  await pg.keyboard.press('Escape'); await sleep(3000);
+  let n = await pg.evaluate(() => window.__light.n);   // login, menu, after the game, login again
+  await pg.reload(); await pg.waitForSelector('.login-card'); await sleep(3500);
+  n += await pg.evaluate(() => window.__light.n);
+  ok(c.shown && m.open === 3 && n === 0, 'storage refusing the flags: the card and the 3 open games are there, never in the light (' + n + ' lights, ' + m.open + ' open)');
   await ctx.close();
 }
 ok(!errors.length, 'no page error' + (errors.length ? ': ' + errors.join(' | ') : ''));

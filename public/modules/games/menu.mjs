@@ -19,8 +19,19 @@ import { arcadeStat } from './stats.mjs';
 // The games already revealed on this device (a game newly opened by the
 // trophies is revealed once, in the light, the next time this page opens).
 const REVEALED_KEY = 'pth_arcade_revealed';
-function revealedSet() { try { return new Set(JSON.parse(localStorage.getItem(REVEALED_KEY) || '[]')); } catch (e) { return new Set(); } }
-function saveRevealed(set) { try { localStorage.setItem(REVEALED_KEY, JSON.stringify([...set])); } catch (e) {} }
+// Also kept for the page's life: a storage that refuses them (full, blocked)
+// must not replay the reveals at every visit (web.26).
+const memRevealed = new Set();
+function revealedSet() {
+  const s = new Set(memRevealed);
+  try { JSON.parse(localStorage.getItem(REVEALED_KEY) || '[]').forEach((id) => s.add(id)); } catch (e) {}
+  return s;
+}
+/** Save the revealed games; true when this device keeps them. */
+function saveRevealed(set) {
+  set.forEach((id) => memRevealed.add(id));
+  try { const v = JSON.stringify([...set]); localStorage.setItem(REVEALED_KEY, v); return localStorage.getItem(REVEALED_KEY) === v; } catch (e) { return false; }
+}
 
 const CSS = `
 #pth-game .gm-hub{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
@@ -100,7 +111,10 @@ export function create(shell) {
   // after the other (web.24). The secret word opens everything at once.
   const revealed = revealedSet();
   if (allUnlocked()) { games.forEach((g) => revealed.add(g.id)); saveRevealed(revealed); }
-  const pending = games.map((g, i) => (!g.locked && !revealed.has(g.id) ? i : -1)).filter((i) => i >= 0);
+  let pending = games.map((g, i) => (!g.locked && !revealed.has(g.id) ? i : -1)).filter((i) => i >= 0);
+  // A device that cannot keep what was revealed: the games are simply open,
+  // with no light, rather than the same reveals at every visit.
+  if (pending.length && !saveRevealed(revealed)) { pending.forEach((i) => revealed.add(games[i].id)); saveRevealed(revealed); pending = []; }
   const nOpen = games.filter((g) => !g.locked).length, nMyst = games.length - nOpen;
   let sel = 0;
   const best = (id) => { try { return parseInt(localStorage.getItem('pth_game_best_' + id) || '0', 10) || 0; } catch (e) { return 0; } };

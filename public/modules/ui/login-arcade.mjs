@@ -24,15 +24,19 @@
 const SEEN_KEY = 'pth_arcade_seen';
 const SHOWN_KEY = 'pth_arcade_shown';
 const TOAST_KEY = 'pth_arcade_toast';
-const flag = (k) => { try { return localStorage.getItem(k) === '1'; } catch (e) { return false; } };
-const setFlag = (k) => { try { localStorage.setItem(k, '1'); } catch (e) {} };
+// The flags are also kept for the page's life: a storage that refuses them
+// (full, blocked) must not bring the light back at every visit (web.26).
+const mem = new Set();
+const flag = (k) => { if (mem.has(k)) return true; try { return localStorage.getItem(k) === '1'; } catch (e) { return false; } };
+/** Set a flag; true when this device keeps it. */
+const setFlag = (k) => { mem.add(k); try { localStorage.setItem(k, '1'); return localStorage.getItem(k) === '1'; } catch (e) { return false; } };
 
 // The mode's statistics (games/stats.mjs, server/arcade-stats.js), loaded
 // with the games registry.
 const stat = (ev) => { import('../games/stats.mjs').then((m) => m.arcadeStat(ev)).catch(() => {}); };
 
 const tr = (k, p) => { try { return typeof window.t === 'function' ? window.t(k, p) : k; } catch (e) { return k; } };
-const seen = () => { try { return localStorage.getItem(SEEN_KEY) === '1'; } catch (e) { return false; } };
+const seen = () => flag(SEEN_KEY);
 
 let last = null;   // the last state shown
 
@@ -65,8 +69,11 @@ async function celebrate(card) {
   const wait = 1800 - (typeof performance !== 'undefined' ? performance.now() : 0);
   if (wait > 0) await new Promise((r) => setTimeout(r, wait));
   if (!loginShown()) { celebrating = false; return; }
-  setFlag(SHOWN_KEY);
+  const kept = setFlag(SHOWN_KEY);
   setFlag(TOAST_KEY);   // seen on the login: no toast for it later
+  // Not kept on this device: no light at all rather than the same light at
+  // every start (the card is simply there).
+  if (!kept) { celebrating = false; return; }
   stat('celebrated');
   card.classList.add('lc-hide');
   try { card.scrollIntoView({ block: 'nearest' }); } catch (e) {}
@@ -96,7 +103,7 @@ function render() {
 
 /** The card's tap: the mini-games page. */
 export async function openArcade() {
-  try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) {}
+  setFlag(SEEN_KEY);
   stat('login_open');
   try { if (typeof window.guideArcadeModeClose === 'function') window.guideArcadeModeClose(); } catch (e) {}
   render();
@@ -119,7 +126,7 @@ if (typeof window !== 'undefined') {
   window.addEventListener('pth-achievement', async () => {
     const st = await refresh();
     if (st && st.mode && !flag(TOAST_KEY) && !loginShown()) {
-      setFlag(TOAST_KEY);
+      if (!setFlag(TOAST_KEY)) return;   // not kept: not at every trophy
       stat('toast');
       setTimeout(() => { try { if (typeof window.showToast === 'function') window.showToast('🕹️ ' + tr('arcadeToast')); } catch (e) {} }, 2600);
     }

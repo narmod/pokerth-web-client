@@ -136,6 +136,11 @@ highlights below.
   build-ID fallbacks in `net/messages.mjs` and `proto/index.mjs` move to 2.1.11 (`web.0`).
 
 ### Fixed
+- **Mini-games light replayed at every visit** (`web.26`) — when the browser refuses to keep the mode's flags
+  (storage full or blocked: `setItem` throws), the login appearance, the toast and the menu reveals were replayed on
+  every login, every menu visit and after every game. `ui/login-arcade.mjs` and `games/menu.mjs` now also keep the
+  flags for the page's life and check that a write was kept; when it is not, there is no light at all (the card and
+  the open games are simply shown) instead of a loop. Test: `test-login-arcade-browser` (storage refusing `pth_arcade*`).
 - **Sounds: no more « Unable to decode audio data » rejection** — Chrome's `decodeAudioData` returns a promise that
   rejects even when an error callback is given; both call sites in `sounds.mjs` now catch it (the synth fallback
   already played) (`web.14`).

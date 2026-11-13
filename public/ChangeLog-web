@@ -1,4 +1,7 @@
-2026-11-13 version 2.1.11-web.25 (current series):
+2026-11-13 version 2.1.11-web.26 (current series):
+- bugfix: on a device whose storage is full or blocked, the Mini-games light no longer comes back on every visit (login, Mini-games page, after a game); the mode and its games are simply there
+
+2026-11-13 version 2.1.11-web.25:
 - improvement: anonymous statistics on the Mini-games mode (how far players get, which games they play), to tune it; « Do not count my visits » still applies
 
 2026-11-13 version 2.1.11-web.24:
