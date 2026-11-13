@@ -202,6 +202,19 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
     && some.games.filter((g) => g.open).map((g) => g.id).join(',') === 'whowins,ace-runner,hilo'
     && word.mode && word.open === 10 && some.games[3].need === 14,
     'arcadeState(): hidden at 7 trophies, 3 games open at 12, everything with the secret word');
+  // Games already played before the mode (the secret word kept nothing then)
+  // stay open, the rest follows the trophies (choice B, 2026-11-14).
+  const old = reg.arcadeState({ count: 3, owned: new Set(), played: new Set(['house', 'poker-run']) }, false);
+  const mix = reg.arcadeState({ count: 9, owned: new Set(), played: new Set(['bluff']) }, false);
+  ok(old.mode && old.open === 2 && old.games.filter((g) => g.open).map((g) => g.id).join(',') === 'house,poker-run'
+    && mix.open === 2 && mix.games.filter((g) => g.open).map((g) => g.id).join(',') === 'whowins,bluff' && mix.games[8].played,
+    'arcadeState(): a game already played stays open, even below 8 trophies; the others follow the trophies');
+  const store = {}, prevLS = globalThis.localStorage;
+  globalThis.localStorage = { getItem: (k) => (k in store ? store[k] : null), setItem: (k, v) => { store[k] = String(v); }, removeItem: (k) => { delete store[k]; } };
+  store.pth_game_best_house = '42'; store['pth_game_best_ace-dash'] = '0';
+  const pl = reg.playedGames(new Set(['runner', 'pdrop', 'gold']));
+  if (prevLS === undefined) delete globalThis.localStorage; else globalThis.localStorage = prevLS;
+  ok([...pl].sort().join(',') === 'ace-runner,house,pokerdrop', 'playedGames(): a game\'s secret trophy or a best score above 0 (' + [...pl].join(',') + ')');
   // Poker Drop: the grid, its lines, a drop's score, the Ace's play.
   const P = await import('../public/modules/games/pokerdrop-rules.mjs');
   ok(P.WINDOWS.length === 44 && P.WINDOWS.every((w) => w.cells.length === 5), 'Poker Drop: 44 lines of five on the 7 × 6 grid (' + P.WINDOWS.length + ')');

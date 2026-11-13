@@ -9,7 +9,7 @@
 // The Ace waves from the top of the page.
 // ═══════════════════════════════════════════════════════════════════
 
-import { GAMES, HOME, gameName, arcadeState, allUnlocked } from './index.mjs';
+import { GAMES, HOME, gameName, arcadeState, allUnlocked, playedGames } from './index.mjs';
 import { createAchievements } from '../achievements/index.mjs';
 import { aceActor, fmt } from './common.mjs';
 import { art } from './art.mjs';
@@ -100,16 +100,17 @@ export function create(shell) {
   let st = null;
   try {
     const owned = new Set(createAchievements({}).snapshot().filter((a) => a.unlocked).map((a) => a.id));
-    st = arcadeState({ count: owned.size, owned }, allUnlocked());
+    st = arcadeState({ count: owned.size, owned, played: playedGames(owned) }, allUnlocked());
   } catch (e) { st = null; }
   const games = GAMES.filter((g) => g.id !== HOME).map((g) => {
     const s = st ? st.games.find((x) => x.id === g.id) : null;
-    return Object.assign({}, g, { name: gameName(g, t), locked: !!(s && !s.open), need: s ? s.need : 0 });
+    return Object.assign({}, g, { name: gameName(g, t), locked: !!(s && !s.open), played: !!(s && s.played), need: s ? s.need : 0 });
   });
   const count = st ? st.count : 0;
   // Newly opened games are first shown as mystery games, then revealed one
   // after the other (web.24). The secret word opens everything at once.
   const revealed = revealedSet();
+  games.forEach((g) => { if (g.played) revealed.add(g.id); });   // already played: nothing to reveal
   if (allUnlocked()) { games.forEach((g) => revealed.add(g.id)); saveRevealed(revealed); }
   let pending = games.map((g, i) => (!g.locked && !revealed.has(g.id) ? i : -1)).filter((i) => i >= 0);
   // A device that cannot keep what was revealed: the games are simply open,

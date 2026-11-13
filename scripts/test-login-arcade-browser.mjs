@@ -197,6 +197,20 @@ for (const [w, h] of [[852, 393], [740, 360], [375, 667], [1440, 900]]) {
   await ctx.close();
 }
 {
+  // web.28: a player who played games before the mode (the secret word kept
+  // nothing then) keeps them open — a game's trophy or its best score — even
+  // below 8 trophies, without the light; the others are mystery games.
+  const { ctx, pg } = await open(393, 852, 0, { pth_ach_unlocked: JSON.stringify({ [normal[0]]: 1, [normal[1]]: 1, runner: 1 }), pth_game_best_house: '5', pth_arcade_seen: '1', pth_arcade_shown: '1' });
+  const c = await card(pg);
+  await pg.click('#login-card-arcade');
+  await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
+  await sleep(3000);
+  const m = await pg.evaluate(() => ({ open: [...document.querySelectorAll('#pth-game .gm-card:not(.lock) h3')].map((h) => h.textContent), lock: document.querySelectorAll('#pth-game .gm-card.lock').length, n: window.__light.n }));
+  ok(c.shown && c.desc === "Les jeux de l'As · 2/10 ouverts" && m.open.length === 2 && /Runner/.test(m.open[0]) && m.lock === 8 && m.n === 0,
+    'games played before the mode stay open at 3 trophies, without the light (' + c.desc + ' · ' + m.open.join(' / ') + ' · ' + m.n + ' lights)');
+  await ctx.close();
+}
+{
   // web.26: a storage that refuses the flags never replays the light — not on
   // the login, not in the menu, not after a game, not after a restart.
   const { ctx, pg } = await open(393, 852, 12, {}, true);

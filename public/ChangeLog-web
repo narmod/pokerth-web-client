@@ -1,4 +1,7 @@
-2026-11-14 version 2.1.11-web.27 (current series):
+2026-11-14 version 2.1.11-web.28 (current series):
+- bugfix: the mini-games you already played with the secret word before the Mini-games mode stay open, whatever your number of trophies
+
+2026-11-14 version 2.1.11-web.27:
 - improvement: opening the Mini-games folds the login's title away like the other modes do, and it unfolds again when you come back
 
 2026-11-13 version 2.1.11-web.26:

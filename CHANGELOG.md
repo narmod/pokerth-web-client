@@ -140,6 +140,11 @@ highlights below.
   build-ID fallbacks in `net/messages.mjs` and `proto/index.mjs` move to 2.1.11 (`web.0`).
 
 ### Fixed
+- **Mini-games already played stay open** (`web.28`) — before the mode (`web.21`) the secret word opened every game
+  and kept nothing on the device, so those players fell back to the trophy thresholds and lost games they played.
+  `games/index.mjs`: `playedGames(owned)` — a game's own secret trophy (`GAME_TROPHY`) or a best score above 0 — and
+  `arcadeState()` keeps those games open (and shows the mode, even below 8 trophies); the menu does not reveal them in
+  the light. The others still follow the trophies (narmod, choice B). Tests: `test-games`, `test-login-arcade-browser`.
 - **Mini-games light replayed at every visit** (`web.26`) — when the browser refuses to keep the mode's flags
   (storage full or blocked: `setItem` throws), the login appearance, the toast and the menu reveals were replayed on
   every login, every menu visit and after every game. `ui/login-arcade.mjs` and `games/menu.mjs` now also keep the

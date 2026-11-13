@@ -77,18 +77,39 @@ export function countUnlock(how) {
   arcadeStat(how === 'word' ? 'unlock_word' : 'unlock_trophies');
 }
 
+// ── The games already played ──────────────────────────────────────
+// Before the mode (web.21) the secret word opened every game and kept
+// nothing on the device. A game already played there stays open (narmod
+// 2026-11-14, choice B): its own secret trophy or its best score says so.
+// Ace Dash and Poker Run have no trophy: their best score only.
+export const GAME_TROPHY = { 'ace-runner': 'runner', house: 'house', solitaire: 'solitaire', videopoker: 'videopoker',
+  whowins: 'whowins', hilo: 'hilo', bluff: 'bluff', pokerdrop: 'pdrop' };
+/** The games already played on this device (owned: the trophies won). */
+export function playedGames(owned) {
+  const s = new Set();
+  for (const g of GAMES) {
+    if (g.id === HOME) continue;
+    if (owned && GAME_TROPHY[g.id] && owned.has(GAME_TROPHY[g.id])) s.add(g.id);
+    try { if ((parseInt(localStorage.getItem('pth_game_best_' + g.id) || '0', 10) || 0) > 0) s.add(g.id); } catch (e) {}
+  }
+  return s;
+}
+
 /**
- * The mode from the trophies won (have, as for unlocked()) and the secret word
- * (all): { mode: shown on the login, open: games open, total, games: [{ id,
- * kind, open, need }] } — need: the trophies its threshold asks for.
+ * The mode from the trophies won (have, as for unlocked(), plus played: the
+ * games already played) and the secret word (all): { mode: shown on the
+ * login, open: games open, total, games: [{ id, kind, open, played, need }] }
+ * — need: the trophies its threshold asks for.
  */
 export function arcadeState(have, all) {
   const h = have || { count: 0, owned: new Set() };
+  const played = h.played || new Set();
   const games = GAMES.filter((g) => g.id !== HOME).map((g) => ({
-    id: g.id, kind: g.kind, open: !!all || unlocked(g, h), need: (g.unlock && g.unlock.trophies) || 0,
+    id: g.id, kind: g.kind, open: !!all || unlocked(g, h) || played.has(g.id), played: played.has(g.id),
+    need: (g.unlock && g.unlock.trophies) || 0,
   }));
   return {
-    mode: !!all || (h.count || 0) >= ARCADE_UNLOCK.trophies,
+    mode: !!all || (h.count || 0) >= ARCADE_UNLOCK.trophies || games.some((g) => g.played),
     open: games.filter((g) => g.open).length, total: games.length, count: h.count || 0, games,
   };
 }
@@ -97,8 +118,8 @@ export async function trophiesWon() {
   try {
     const m = await import('../achievements/index.mjs');
     const owned = new Set(m.createAchievements({}).snapshot().filter((a) => a.unlocked).map((a) => a.id));
-    return { count: owned.size, owned };
-  } catch (e) { return { count: 0, owned: new Set() }; }
+    return { count: owned.size, owned, played: playedGames(owned) };
+  } catch (e) { return { count: 0, owned: new Set(), played: new Set() }; }
 }
 /** The current state of the mode on this device (see arcadeState). */
 export async function currentState() { return arcadeState(await trophiesWon(), allUnlocked()); }
