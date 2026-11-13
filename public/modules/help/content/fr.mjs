@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Configurer une partie',
           b: ['Choisis le nombre d’adversaires, le tapis de départ, les blinds et leur progression, et la vitesse de jeu. La composition et la difficulté des bots se règlent dans Options avancées → Jeu local — d’adversaires doux à une table plus coriace et variée.'] },
         { id: 'trophies', t: 'Trophées',
-          b: ['Le mode entraînement a sa propre progression : 28 trophées répartis en six catégories (progression, technique, style, formats, fun et une secrète) se débloquent en jouant — mains jouées, parties gagnées, gros bluffs, mains spéciales et plus. Ta progression de trophées est cumulative et fusionne entre appareils quand la synchronisation des réglages de compte est active.'] },
+          b: ['Le mode entraînement a sa propre progression : 28 trophées répartis en six catégories (progression, technique, style, formats, fun et une secrète) se débloquent en jouant — mains jouées, parties gagnées, gros bluffs, mains spéciales et plus. Ta progression de trophées est cumulative et fusionne entre appareils quand la synchronisation des réglages de compte est active.', "Gagnes-en assez et un quatrième mode apparaît sur l'écran de connexion : les Mini-jeux. Ses jeux s'ouvrent ensuite un par un au fil des trophées — lequel arrive ensuite reste un mystère jusqu'à son ouverture."] },
         { id: 'learn', t: 'Un bon endroit pour apprendre',
           b: ['Tout ce qui est décrit dans les autres chapitres fonctionne ici aussi : le moniteur de probabilités, l\u2019affichage d\u2019assistance, la pré-sélection, les raccourcis clavier. Le mode entraînement est le meilleur endroit pour les essayer sans pression avant de partir sur pokerth.net.'] }
       ]

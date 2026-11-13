@@ -157,6 +157,7 @@ export const strings = {
     loginOfflineDesc:'Боттарға қарсы жеке ойын',
     loginLanTitle:'LAN / Арнайы сервер',
     loginLanDesc:'Жеке сервер · жергілікті желі',
+    loginArcadeDesc:'Тұздың ойындары · {n}/{t} ашық', loginArcadeNew:'ЖАҢА',
     liveTables:'{n} үстелде ойын жүріп жатыр', liveWaiting:'{n} ойыншы күтуде',
     liveOnline:'{n} ойыншы онлайн', liveToday:'Бүгін {n} ойын',
     loginChange:'Өзгерту',

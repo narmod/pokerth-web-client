@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Preparar unha partida',
           b: ['Escolle o número de rivais, a pila inicial, as cegas e a súa progresión, e a velocidade do xogo. A composición e a dificultade dos bots axústanse en Opcións avanzadas \u2192 Partida local — desde rivais suaves ata unha mesa máis dura e variada.'] },
         { id: 'trophies', t: 'Trofeos',
-          b: ['O modo adestramento ten a súa propia progresión: 28 trofeos en seis categorías (progresión, técnica, estilo, formatos, diversión e unha secreta) desbloquéanse xogando — mans xogadas, partidas gañadas, grandes bluffs, mans especiais e máis. A túa progresión de trofeos é acumulativa e fusiónase entre dispositivos cando a sincronización de axustes da conta está activa.'] },
+          b: ['O modo adestramento ten a súa propia progresión: 28 trofeos en seis categorías (progresión, técnica, estilo, formatos, diversión e unha secreta) desbloquéanse xogando — mans xogadas, partidas gañadas, grandes bluffs, mans especiais e máis. A túa progresión de trofeos é acumulativa e fusiónase entre dispositivos cando a sincronización de axustes da conta está activa.', "Gaña abondos e na pantalla de inicio de sesión aparece un cuarto modo: os Minixogos. Os seus xogos ábrense despois un a un a medida que gañas máis trofeos; cal virá despois segue a ser un misterio ata que se abre."] },
         { id: 'learn', t: 'Un bo sitio para aprender',
           b: ['Todo o que se describe nos outros capítulos tamén funciona aquí: o monitor de probabilidades, a visualización de asistencia, a preselección, os atallos de teclado. O modo adestramento é o mellor sitio para probalos sen presión antes de lanzarte a pokerth.net.'] }
       ]

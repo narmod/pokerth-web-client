@@ -157,6 +157,7 @@ export const strings = {
     loginOfflineDesc:'Yakka oʻzingiz botlarga qarshi',
     loginLanTitle:'LAN / Maxsus server',
     loginLanDesc:'Xususiy server · lokal tarmoq',
+    loginArcadeDesc:'Tuzning o\'yinlari · {n}/{t} ochiq', loginArcadeNew:'YANGI',
     liveTables:'{n} ta stol oʻynamoqda', liveWaiting:'{n} ta oʻyinchi kutmoqda',
     liveOnline:'{n} ta oʻyinchi onlayn', liveToday:'Bugun {n} ta oʻyin',
     loginChange:'Oʻzgartirish',

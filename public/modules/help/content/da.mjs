@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Opsæt et spil',
           b: ['Vælg antal modstandere, startstak, blinds og deres udvikling samt spilhastighed. Botternes sammensætning og sværhedsgrad justeres i Avancerede indstillinger \u2192 Lokalt spil — fra blide modstandere til et hårdere og mere varieret bord.'] },
         { id: 'trophies', t: 'Trofæer',
-          b: ['Træningstilstanden har sin egen progression: 28 trofæer fordelt på seks kategorier (progression, teknik, stil, formater, sjov og en hemmelig) låses op ved at spille — spillede hænder, vundne partier, store bluffs, særlige hænder og mere. Din trofæfremgang er kumulativ og flettes mellem enheder, når kontoens indstillingssynkronisering er aktiv.'] },
+          b: ['Træningstilstanden har sin egen progression: 28 trofæer fordelt på seks kategorier (progression, teknik, stil, formater, sjov og en hemmelig) låses op ved at spille — spillede hænder, vundne partier, store bluffs, særlige hænder og mere. Din trofæfremgang er kumulativ og flettes mellem enheder, når kontoens indstillingssynkronisering er aktiv.', "Vind nok af dem, og en fjerde tilstand dukker op på loginskærmen: Minispil. Spillene åbner derefter ét ad gangen, efterhånden som du vinder flere trofæer — hvilket der kommer næste gang, er et mysterium, indtil det åbner."] },
         { id: 'learn', t: 'Et godt sted at lære',
           b: ['Alt, hvad der er beskrevet i de andre kapitler, virker også her: sandsynlighedsmonitoren, assistancevisningen, forvalget, tastaturgenvejene. Træningstilstanden er det bedste sted at prøve dem uden pres, før du kaster dig ud på pokerth.net.'] }
       ]

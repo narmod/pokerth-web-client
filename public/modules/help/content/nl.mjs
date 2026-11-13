@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Een spel instellen',
           b: ['Kies het aantal tegenstanders, de startstack, de blinds en hun verloop, en het speltempo. De samenstelling en moeilijkheid van de bots stel je in via Geavanceerde opties \u2192 Lokaal spel — van milde tegenstanders tot een hardere, gevarieerde tafel.'] },
         { id: 'trophies', t: 'Trofeeën',
-          b: ['De trainingsmodus heeft zijn eigen voortgang: 28 trofeeën in zes categorieën (voortgang, techniek, stijl, formaten, plezier en een geheime) worden spelend ontgrendeld — gespeelde handen, gewonnen partijen, grote bluffs, bijzondere handen en meer. Je trofeevoortgang is cumulatief en wordt tussen apparaten samengevoegd wanneer de accountsynchronisatie van de instellingen actief is.'] },
+          b: ['De trainingsmodus heeft zijn eigen voortgang: 28 trofeeën in zes categorieën (voortgang, techniek, stijl, formaten, plezier en een geheime) worden spelend ontgrendeld — gespeelde handen, gewonnen partijen, grote bluffs, bijzondere handen en meer. Je trofeevoortgang is cumulatief en wordt tussen apparaten samengevoegd wanneer de accountsynchronisatie van de instellingen actief is.', "Win er genoeg en er verschijnt een vierde modus op het inlogscherm: de Minigames. De spellen gaan daarna een voor een open naarmate je meer trofeeën wint — welk spel als volgende komt, blijft een verrassing tot het opengaat."] },
         { id: 'learn', t: 'Een goede plek om te leren',
           b: ['Alles uit de andere hoofdstukken werkt hier ook: de waarschijnlijkheidsmonitor, de assistentieweergave, de voorkeuze, de sneltoetsen. De trainingsmodus is de beste plek om ze zonder druk uit te proberen voordat je naar pokerth.net gaat.'] }
       ]

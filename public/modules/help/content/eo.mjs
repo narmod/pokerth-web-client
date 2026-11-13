@@ -366,7 +366,7 @@ export const help = {
         { id: "trophies",
           t: "Trofeoj",
           b: [
-            "La trejna reĝimo havas sian propran progreson: 28 trofeoj en ses kategorioj (progreso, lerteco, stilo, formatoj, amuzo kaj unu sekreta) malŝlosiĝas dum vi ludas — luditaj manoj, gajnitaj ludoj, grandaj blufoj, specialaj manoj kaj pli. Via trofea progreso akumuliĝas kaj kunfandiĝas inter aparatoj kiam la sinkronigo de kontaj agordoj estas aktiva."] },
+            "La trejna reĝimo havas sian propran progreson: 28 trofeoj en ses kategorioj (progreso, lerteco, stilo, formatoj, amuzo kaj unu sekreta) malŝlosiĝas dum vi ludas — luditaj manoj, gajnitaj ludoj, grandaj blufoj, specialaj manoj kaj pli. Via trofea progreso akumuliĝas kaj kunfandiĝas inter aparatoj kiam la sinkronigo de kontaj agordoj estas aktiva.", "Gajnu sufiĉe da ili, kaj kvara reĝimo aperos sur la ensaluta ekrano: la Minilúdoj. Ĝiaj ludoj poste malfermiĝas unu post la alia, dum vi gajnas pliajn trofeojn — kiu venos poste restas mistero ĝis ĝi malfermiĝos."] },
         { id: "learn",
           t: "Bona loko por lerni",
           b: [

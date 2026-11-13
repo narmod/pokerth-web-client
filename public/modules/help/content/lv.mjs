@@ -259,7 +259,7 @@ export const help = {
         { id: 'setup', t: 'Spēles iestatīšana',
           b: ['Izvēlies pretinieku skaitu, sākuma žetonus, aklās likmes un to paaugstināšanas grafiku, kā arī spēles ātrumu. Botu sastāvu un grūtību var pielāgot logā Papildu opcijas → Lokālā spēle — no maigiem pretiniekiem līdz stingrākam, jauktam galdam.'] },
         { id: 'trophies', t: 'Trofejas',
-          b: ['Treniņa režīmam ir sava progresa sistēma: spēlējot atbloķējas 28 trofejas sešās kategorijās (progress, prasme, stils, formāti, izklaide un viena slepenā) — par nospēlētajām partijām, uzvarētajām spēlēm, lieliem blefiem, īpašām kombinācijām un vēl. Tavs trofeju progress uzkrājas un tiek apvienots starp ierīcēm, kad ir aktīva konta iestatījumu sinhronizācija.'] },
+          b: ['Treniņa režīmam ir sava progresa sistēma: spēlējot atbloķējas 28 trofejas sešās kategorijās (progress, prasme, stils, formāti, izklaide un viena slepenā) — par nospēlētajām partijām, uzvarētajām spēlēm, lieliem blefiem, īpašām kombinācijām un vēl. Tavs trofeju progress uzkrājas un tiek apvienots starp ierīcēm, kad ir aktīva konta iestatījumu sinhronizācija.', "Izcīni tās pietiekami daudz, un pieteikšanās ekrānā parādīsies ceturtais režīms: Minispēles. Tā spēles pēc tam atveras pa vienai, kad izcīni vairāk trofeju — kura būs nākamā, paliek noslēpums, līdz tā atveras."] },
         { id: 'learn', t: 'Laba vieta, kur mācīties',
           b: ['Šeit darbojas viss no pārējām nodaļām: izredžu monitors, asistenta attēlojums, darbību iepriekšēja izvēle, īsinājumtaustiņi. Treniņa režīms ir labākā vieta, kur tos izmēģināt bez spiediena, pirms dodies uz pokerth.net.'] }
       ]

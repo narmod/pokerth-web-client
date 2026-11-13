@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Játszma beállítása',
           b: ['Válaszd ki az ellenfelek számát, a kezdőstacket, a vakokat és emelkedésüket, valamint a játéksebességet. A botok összetétele és nehézsége a Speciális beállítások → Helyi játék alatt hangolható — a szelíd ellenfelektől a keményebb és változatosabb asztalig.'] },
         { id: 'trophies', t: 'Trófeák',
-          b: ['A gyakorlómódnak saját előrehaladása van: 28 trófea hat kategóriában (előrehaladás, technika, stílus, formátumok, móka és egy titkos) oldható fel játékkal — játszott leosztások, megnyert játszmák, nagy blöffök, különleges kezek és még sok más. A trófea-előrehaladásod halmozódik, és a fiók beállításszinkronizálásának bekapcsolásakor egyesül az eszközök között.'] },
+          b: ['A gyakorlómódnak saját előrehaladása van: 28 trófea hat kategóriában (előrehaladás, technika, stílus, formátumok, móka és egy titkos) oldható fel játékkal — játszott leosztások, megnyert játszmák, nagy blöffök, különleges kezek és még sok más. A trófea-előrehaladásod halmozódik, és a fiók beállításszinkronizálásának bekapcsolásakor egyesül az eszközök között.', "Szerezz eleget belőlük, és a bejelentkező képernyőn megjelenik egy negyedik mód: a Minijátékok. A játékai aztán egyenként nyílnak meg, ahogy újabb trófeákat szerzel — hogy melyik jön, titok marad, amíg meg nem nyílik."] },
         { id: 'learn', t: 'Jó hely a tanuláshoz',
           b: ['Minden, amit a többi fejezet leír, itt is működik: a valószínűség-figyelő, a segédkijelző, az előválasztás, a billentyűparancsok. A gyakorlómód a legjobb hely, hogy nyomás nélkül kipróbáld őket, mielőtt a pokerth.netre vetnéd magad.'] }
       ]

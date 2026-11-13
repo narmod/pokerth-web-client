@@ -156,6 +156,7 @@ export const strings = {
     loginOfflineDesc:'একা বনাম বট',
     loginLanTitle:'LAN / ডেডিকেটেড সার্ভার',
     loginLanDesc:'ব্যক্তিগত সার্ভার · স্থানীয় নেটওয়ার্ক',
+    loginArcadeDesc:'টেক্কার খেলা · {n}/{t} খোলা', loginArcadeNew:'নতুন',
     liveTables:'{n}টি টেবিল চলছে', liveWaiting:'{n} জন অপেক্ষায়',
     liveOnline:'{n} জন খেলোয়াড় অনলাইন', liveToday:'আজ {n}টি খেলা',
     loginChange:'পরিবর্তন',

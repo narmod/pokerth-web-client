@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Thiết lập ván đấu',
           b: ['Chọn số đối thủ, chồng phỉnh khởi đầu, các blind và cách chúng tăng, cùng tốc độ ván đấu. Thành phần và độ khó của bot được chỉnh ở Tùy chọn nâng cao \u2192 Ván cục bộ — từ những đối thủ hiền lành đến một bàn khó và đa dạng hơn.'] },
         { id: 'trophies', t: 'Cúp',
-          b: ['Chế độ luyện tập có tiến trình riêng: 28 cúp thuộc sáu nhóm (tiến trình, kỹ thuật, phong cách, thể thức, vui vẻ và một nhóm bí mật) được mở khóa khi bạn chơi — số ván bài đã chơi, ván đấu đã thắng, những cú bluff lớn, các bộ bài đặc biệt và hơn nữa. Tiến trình cúp là tích lũy và được hợp nhất giữa các thiết bị khi bật đồng bộ thiết lập tài khoản.'] },
+          b: ['Chế độ luyện tập có tiến trình riêng: 28 cúp thuộc sáu nhóm (tiến trình, kỹ thuật, phong cách, thể thức, vui vẻ và một nhóm bí mật) được mở khóa khi bạn chơi — số ván bài đã chơi, ván đấu đã thắng, những cú bluff lớn, các bộ bài đặc biệt và hơn nữa. Tiến trình cúp là tích lũy và được hợp nhất giữa các thiết bị khi bật đồng bộ thiết lập tài khoản.', "Giành đủ số cúp và một chế độ thứ tư sẽ xuất hiện trên màn hình đăng nhập: Trò chơi nhỏ. Các trò chơi trong đó sẽ mở lần lượt từng trò khi bạn giành thêm cúp — trò tiếp theo là gì vẫn là bí mật cho đến khi nó mở."] },
         { id: 'learn', t: 'Nơi tốt để học',
           b: ['Mọi thứ mô tả ở các chương khác đều chạy được ở đây: bộ theo dõi xác suất, phần hiển thị trợ lý, chọn trước hành động, phím tắt bàn phím. Chế độ luyện tập là nơi tốt nhất để thử chúng mà không áp lực, trước khi bước vào pokerth.net.'] }
       ]

@@ -247,6 +247,7 @@ export const strings = {
     loginOfflineDesc:'单人对战机器人',
     loginLanTitle:'局域网 / 专用服务器',
     loginLanDesc:'私人服务器 · 局域网',
+    loginArcadeDesc:'A 牌的游戏 · 已开放 {n}/{t}', loginArcadeNew:'新',
     liveTables:'{n} 桌进行中', liveWaiting:'{n} 人等待中',
     liveOnline:'{n} 名玩家在线', liveToday:'今日 {n} 局',
     loginChange:'更改',

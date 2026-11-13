@@ -246,6 +246,7 @@ export const strings = {
     loginOfflineDesc:'Singur contra boților',
     loginLanTitle:'LAN / Server dedicat',
     loginLanDesc:'Server privat · rețea locală',
+    loginArcadeDesc:'Jocurile Asului · {n}/{t} deschise', loginArcadeNew:'NOU',
     liveTables:'{n} mese în desfășurare', liveWaiting:'{n} jucători așteaptă',
     liveOnline:'{n} jucători online', liveToday:'{n} jocuri azi',
     loginChange:'Schimbă',

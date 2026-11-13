@@ -157,6 +157,7 @@ export const strings = {
     loginOfflineDesc:'Sola kontraŭ robotoj',
     loginLanTitle:'LAN / Dediĉita servilo',
     loginLanDesc:'Privata servilo · loka reto',
+    loginArcadeDesc:'La ludoj de la Aso · {n}/{t} malfermitaj', loginArcadeNew:'NOVA',
     liveTables:'{n} tabloj ludas', liveWaiting:'{n} ludantoj atendas',
     liveOnline:'{n} ludantoj enrete', liveToday:'{n} ludoj hodiaŭ',
     loginChange:'Ŝanĝi',

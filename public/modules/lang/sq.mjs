@@ -156,6 +156,7 @@ export const strings = {
     loginOfflineDesc:'Solo kundër botëve',
     loginLanTitle:'LAN / server i dedikuar',
     loginLanDesc:'Server privat · rrjet lokal',
+    loginArcadeDesc:'Lojërat e Asit · {n}/{t} të hapura', loginArcadeNew:'E RE',
     liveTables:'{n} tavolina në zhvillim e sipër', liveWaiting:'{n} lojtarë në pritje',
     liveOnline:'{n} lojtarë online', liveToday:'{n} lojëra sot',
     loginChange:'Ndrysho',

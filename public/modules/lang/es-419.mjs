@@ -258,6 +258,7 @@ export const strings = {
     loginOfflineDesc:'Solo contra bots',
     loginLanTitle:'LAN / Servidor dedicado',
     loginLanDesc:'Servidor privado · red local',
+    loginArcadeDesc:'Los juegos del As · {n}/{t} abiertos', loginArcadeNew:'NUEVO',
     liveTables:'{n} mesas en juego', liveWaiting:'{n} jugadores esperando',
     liveOnline:'{n} jugadores conectados', liveToday:'{n} partidas hoy',
     loginChange:'Cambiar',

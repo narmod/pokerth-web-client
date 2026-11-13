@@ -1568,11 +1568,11 @@ function _processAvatarFile(file) {
     document.addEventListener("keydown",function(e){ if(e.key==="Escape") d.open=false; }); })();
   </script>
   <div class="card">
-    <div class="card-logo" style="padding:18px 0 18px">
+    <div class="card-logo">
       <h1 class="card-brand-h1"><img class="card-chip" src="/favicon.svg" alt="PokerTH" width="126" height="126">
-      <span class="card-title-big cl-app-title" style="letter-spacing:0.18em;margin-top:10px">PokerTH</span>
-      <span class="card-suits-row" aria-hidden="true" style="letter-spacing:0.32em;margin-top:9px;opacity:0.85"><span>♠</span><span class="r">♥</span><span class="r">♦</span><span>♣</span></span>
-      <span class="card-subtitle" style="margin-top:8px">Web Client</span></h1>
+      <span class="card-title-big cl-app-title">PokerTH</span>
+      <span class="card-suits-row" aria-hidden="true"><span>♠</span><span class="r">♥</span><span class="r">♦</span><span>♣</span></span>
+      <span class="card-subtitle">Web Client</span></h1>
     </div>
 
     <!-- ÉTAPE 1 — choix du mode (cartes empilées). Chaque carte écrit la
@@ -1599,6 +1599,13 @@ function _processAvatarFile(file) {
         <button type="button" class="login-card" onclick="loginPickMode(this,'lan-dedi')">
           <span class="lc-ic">🖥️</span>
           <span class="lc-tx"><span class="lc-t" data-i18n="loginLanTitle">LAN / Dedicated server</span><span class="lc-d" data-i18n="loginLanDesc">Private server · local network</span></span>
+          <span class="lc-go">›</span>
+        </button>
+        <!-- Mini-games mode (modules/ui/login-arcade.mjs): hidden until enough
+             training trophies are won, or the secret word was typed. -->
+        <button type="button" class="login-card lc-arcade" id="login-card-arcade" onclick="window.loginOpenArcade&&window.loginOpenArcade()" hidden>
+          <span class="lc-ic">🕹️</span>
+          <span class="lc-tx"><span class="lc-t"><span data-i18n="gmTitle">Mini-games</span><span class="lc-new" id="lc-arcade-new" data-i18n="loginArcadeNew" hidden>NEW</span></span><span class="lc-d" id="lc-arcade-desc"></span></span>
           <span class="lc-go">›</span>
         </button>
       </div>
@@ -3285,6 +3292,7 @@ function _processAvatarFile(file) {
 <script type="module" src="modules/ui/lobby-clock.mjs"></script>
 <script type="module" src="modules/ui/header-title-fit.mjs"></script>
 <script type="module" src="modules/ui/login-flourish.mjs"></script>
+<script type="module" src="modules/ui/login-arcade.mjs"></script>
 <script type="module" src="modules/mascot/index.mjs"></script>
 <script type="module" src="modules/guide/index.mjs"></script>
 <script type="module" src="modules/ui/pm.mjs"></script>

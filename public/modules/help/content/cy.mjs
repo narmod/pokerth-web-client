@@ -366,7 +366,7 @@ export const help = {
         { id: "trophies",
           t: "Tlysau",
           b: [
-            "Mae gan y modd ymarfer ei gynnydd ei hun: mae 28 tlws mewn chwe chategori (cynnydd, sgil, arddull, fformatau, hwyl ac un cyfrinachol) yn datgloi wrth i chi chwarae — dwylo a chwaraewyd, gemau a enillwyd, blyffiau mawr, dwylo arbennig a mwy. Mae eich cynnydd tlysau'n cronni ac yn cael ei uno rhwng dyfeisiau pan fydd cysoni gosodiadau'r cyfrif yn weithredol."] },
+            "Mae gan y modd ymarfer ei gynnydd ei hun: mae 28 tlws mewn chwe chategori (cynnydd, sgil, arddull, fformatau, hwyl ac un cyfrinachol) yn datgloi wrth i chi chwarae — dwylo a chwaraewyd, gemau a enillwyd, blyffiau mawr, dwylo arbennig a mwy. Mae eich cynnydd tlysau'n cronni ac yn cael ei uno rhwng dyfeisiau pan fydd cysoni gosodiadau'r cyfrif yn weithredol.", "Enilla ddigon ohonyn nhw ac fe ymddangosa bedwerydd modd ar y sgrin mewngofnodi: Gemau bach. Mae ei gemau wedyn yn agor un ar ôl y llall wrth i ti ennill mwy o dlysau — mae'r un nesaf yn ddirgelwch nes iddo agor."] },
         { id: "learn",
           t: "Lle da i ddysgu",
           b: [

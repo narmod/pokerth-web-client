@@ -366,7 +366,7 @@ export const help = {
         { id: "trophies",
           t: "Baýraklar",
           b: [
-            "Türgenleşik režiminiň öz öňegidişligi bar: alty kategoriýadaky 28 baýrak (öňegidişlik, ussatlyk, stil, formatlar, güýmenje we bir syr) oýnadygyňyzça açylýar — oýnalan eller, utulan oýunlar, uly bleflar, ýörite kombinasiýalar we başgalar. Baýraklardaky öňegidişligiňiz toplanýar we hasap sazlamalaryny sinhronlamak işjeň bolanda enjamlaryň arasynda birleşdirilýär."] },
+            "Türgenleşik režiminiň öz öňegidişligi bar: alty kategoriýadaky 28 baýrak (öňegidişlik, ussatlyk, stil, formatlar, güýmenje we bir syr) oýnadygyňyzça açylýar — oýnalan eller, utulan oýunlar, uly bleflar, ýörite kombinasiýalar we başgalar. Baýraklardaky öňegidişligiňiz toplanýar we hasap sazlamalaryny sinhronlamak işjeň bolanda enjamlaryň arasynda birleşdirilýär.", "Ýeterlik kubok gazansaň, giriş ekranynda dördünji režim peýda bolar: Mini oýunlar. Soňra has köp kubok gazandygyňça onuň oýunlary birin-birin açylar — indikisiniň haýsydygy açylýança syr bolup galar."] },
         { id: "learn",
           t: "Öwrenmek üçin gowy ýer",
           b: [

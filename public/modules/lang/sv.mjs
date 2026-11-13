@@ -245,6 +245,7 @@ export const strings = {
     loginOfflineDesc:'Ensam mot bottar',
     loginLanTitle:'LAN / Dedikerad server',
     loginLanDesc:'Privat server · lokalt nätverk',
+    loginArcadeDesc:'Essets spel · {n}/{t} öppna', loginArcadeNew:'NY',
     liveTables:'{n} bord igång', liveWaiting:'{n} spelare väntar',
     liveOnline:'{n} spelare online', liveToday:'{n} spel i dag',
     loginChange:'Ändra',

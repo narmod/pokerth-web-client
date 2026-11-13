@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Configurare una partita',
           b: ['Scegli il numero di avversari, lo stack iniziale, i bui e la loro progressione, e la velocità di gioco. La composizione e la difficoltà dei bot si regolano in Opzioni avanzate \u2192 Partita locale — da avversari morbidi a un tavolo più duro e vario.'] },
         { id: 'trophies', t: 'Trofei',
-          b: ['La modalità allenamento ha la sua progressione: 28 trofei in sei categorie (progressione, tecnica, stile, formati, divertimento e una segreta) si sbloccano giocando — mani giocate, partite vinte, grandi bluff, mani speciali e altro. Il progresso dei trofei è cumulativo e si fonde tra dispositivi quando la sincronizzazione delle impostazioni dell\u2019account è attiva.'] },
+          b: ['La modalità allenamento ha la sua progressione: 28 trofei in sei categorie (progressione, tecnica, stile, formati, divertimento e una segreta) si sbloccano giocando — mani giocate, partite vinte, grandi bluff, mani speciali e altro. Il progresso dei trofei è cumulativo e si fonde tra dispositivi quando la sincronizzazione delle impostazioni dell\u2019account è attiva.', "Vincine abbastanza e nella schermata di accesso compare una quarta modalità: i Minigiochi. I suoi giochi si aprono poi uno alla volta man mano che vinci altri trofei — quale sarà il prossimo resta un mistero finché non si apre."] },
         { id: 'learn', t: 'Un buon posto per imparare',
           b: ['Tutto ciò che è descritto negli altri capitoli funziona anche qui: il monitor delle probabilità, la visualizzazione di assistenza, la preselezione, le scorciatoie da tastiera. La modalità allenamento è il posto migliore per provarli senza pressione prima di buttarti su pokerth.net.'] }
       ]

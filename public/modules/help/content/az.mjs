@@ -366,7 +366,7 @@ export const help = {
         { id: "trophies",
           t: "Kuboklar",
           b: [
-            "Məşq rejiminin öz irəliləyişi var: altı kateqoriya (irəliləyiş, bacarıq, üslub, formatlar, əyləncə və bir gizli) üzrə 28 kubok oynadıqca açılır — oynanılan əllər, qazanılan oyunlar, böyük bleflər, xüsusi kombinasiyalar və s. Kubok irəliləyişiniz toplanır və hesab parametrlərinin sinxronlaşdırılması aktiv olduqda cihazlar arasında birləşir."] },
+            "Məşq rejiminin öz irəliləyişi var: altı kateqoriya (irəliləyiş, bacarıq, üslub, formatlar, əyləncə və bir gizli) üzrə 28 kubok oynadıqca açılır — oynanılan əllər, qazanılan oyunlar, böyük bleflər, xüsusi kombinasiyalar və s. Kubok irəliləyişiniz toplanır və hesab parametrlərinin sinxronlaşdırılması aktiv olduqda cihazlar arasında birləşir.", "Kifayət qədər qazansan, giriş ekranında dördüncü rejim görünəcək: Mini oyunlar. Onun oyunları daha çox kubok qazandıqca bir-bir açılır — növbətinin hansı olacağı açılana qədər sirr olaraq qalır."] },
         { id: "learn",
           t: "Öyrənmək üçün yaxşı yer",
           b: [

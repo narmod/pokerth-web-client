@@ -157,6 +157,7 @@ export const strings = {
     loginOfflineDesc:'Kai kaɗai da bots',
     loginLanTitle:'LAN / Keɓaɓɓiyar sabar',
     loginLanDesc:'Sabar sirri · hanyar sadarwar gida',
+    loginArcadeDesc:'Wasannin Ace · {n}/{t} a buɗe', loginArcadeNew:'SABO',
     liveTables:'Teburi {n} suna wasa', liveWaiting:'\'Yan wasa {n} suna jira',
     liveOnline:'\'Yan wasa {n} a kan layi', liveToday:'Wasanni {n} yau',
     loginChange:'Canja',

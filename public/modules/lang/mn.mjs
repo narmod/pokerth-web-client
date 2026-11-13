@@ -157,6 +157,7 @@ export const strings = {
     loginOfflineDesc:'Ганцаараа боттой',
     loginLanTitle:'LAN / Тусгай сервер',
     loginLanDesc:'Хувийн сервер · дотоод сүлжээ',
+    loginArcadeDesc:'Тамганы тоглоомууд · {n}/{t} нээлттэй', loginArcadeNew:'ШИНЭ',
     liveTables:'{n} ширээ тоглож байна', liveWaiting:'{n} тоглогч хүлээж байна',
     liveOnline:'{n} тоглогч онлайн', liveToday:'Өнөөдөр {n} тоглолт',
     loginChange:'Солих',

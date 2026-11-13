@@ -9,7 +9,8 @@
 // The Ace waves from the top of the page.
 // ═══════════════════════════════════════════════════════════════════
 
-import { GAMES, HOME, gameName } from './index.mjs';
+import { GAMES, HOME, gameName, arcadeState, allUnlocked } from './index.mjs';
+import { createAchievements } from '../achievements/index.mjs';
 import { aceActor, fmt } from './common.mjs';
 import { art } from './art.mjs';
 
@@ -41,7 +42,17 @@ export function create(shell) {
     document.head.appendChild(st);
   }
   // Every game, in the registry's order.
-  const games = GAMES.filter((g) => g.id !== HOME).map((g) => Object.assign({}, g, { name: gameName(g, t) }));
+  // The Mini-games mode (web.22): only the games its trophies have opened —
+  // all of them after the secret word. The others are not listed yet (the
+  // « mystery games » come with the next step of the mode).
+  let open = null;
+  try {
+    if (!allUnlocked()) {
+      const owned = new Set(createAchievements({}).snapshot().filter((a) => a.unlocked).map((a) => a.id));
+      open = new Set(arcadeState({ count: owned.size, owned }, false).games.filter((x) => x.open).map((x) => x.id));
+    }
+  } catch (e) { open = null; }
+  const games = GAMES.filter((g) => g.id !== HOME && (!open || open.has(g.id))).map((g) => Object.assign({}, g, { name: gameName(g, t) }));
   let sel = 0;
   const best = (id) => { try { return parseInt(localStorage.getItem('pth_game_best_' + id) || '0', 10) || 0; } catch (e) { return 0; } };
 

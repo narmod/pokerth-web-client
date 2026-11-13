@@ -157,6 +157,7 @@ export const strings = {
     loginOfflineDesc:'Leat féin in aghaidh róbónna',
     loginLanTitle:'LAN / Freastalaí tiomnaithe',
     loginLanDesc:'Freastalaí príobháideach · líonra áitiúil',
+    loginArcadeDesc:'Cluichí an Aon · {n}/{t} oscailte', loginArcadeNew:'NUA',
     liveTables:'{n} bord ag imirt', liveWaiting:'{n} imreoir ag fanacht',
     liveOnline:'{n} imreoir ar líne', liveToday:'{n} cluiche inniu',
     loginChange:'Athraigh',

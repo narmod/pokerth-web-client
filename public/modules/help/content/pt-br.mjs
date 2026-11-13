@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Configurar uma partida',
           b: ['Escolha o número de adversários, o stack inicial, os blinds e sua progressão, e a velocidade do jogo. A composição e a dificuldade dos bots se ajustam em Opções avançadas → Jogo local — de adversários leves a uma mesa mais dura e variada.'] },
         { id: 'trophies', t: 'Troféus',
-          b: ['O modo treino tem sua própria progressão: 28 troféus em seis categorias (progressão, técnica, estilo, formatos, diversão e uma secreta) são desbloqueados jogando — mãos jogadas, partidas vencidas, grandes blefes, mãos especiais e mais. Seu progresso de troféus é acumulativo e se mescla entre dispositivos quando a sincronização de configurações da conta está ativa.'] },
+          b: ['O modo treino tem sua própria progressão: 28 troféus em seis categorias (progressão, técnica, estilo, formatos, diversão e uma secreta) são desbloqueados jogando — mãos jogadas, partidas vencidas, grandes blefes, mãos especiais e mais. Seu progresso de troféus é acumulativo e se mescla entre dispositivos quando a sincronização de configurações da conta está ativa.', "Ganhe troféus suficientes e um quarto modo aparece na tela de login: os Minijogos. Os jogos dele são liberados um a um conforme você ganha mais troféus — qual vem a seguir continua um mistério até ser liberado."] },
         { id: 'learn', t: 'Um bom lugar para aprender',
           b: ['Tudo o que está descrito nos outros capítulos também funciona aqui: o monitor de probabilidades, a tela de assistência, a pré-seleção, os atalhos de teclado. O modo treino é o melhor lugar para experimentá-los sem pressão antes de partir para o pokerth.net.'] }
       ]

@@ -157,6 +157,7 @@ export const strings = {
     loginOfflineDesc:'Танҳо бо ботҳо',
     loginLanTitle:'LAN / Сервери махсус',
     loginLanDesc:'Сервери хусусӣ · шабакаи маҳаллӣ',
+    loginArcadeDesc:'Бозиҳои Туз · {n}/{t} кушода', loginArcadeNew:'НАВ',
     liveTables:'{n} миз дар бозӣ', liveWaiting:'{n} бозингар интизор аст',
     liveOnline:'{n} бозингар онлайн', liveToday:'Имрӯз {n} бозӣ',
     loginChange:'Иваз кардан',

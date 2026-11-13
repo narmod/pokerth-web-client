@@ -366,7 +366,7 @@ export const help = {
         { id: "trophies",
           t: "Kofuna",
           b: [
-            "Yanayin horo yana da ci gabansa: kofuna 28 a rukunoni shida (ci gaba, ƙwarewa, salo, tsare-tsare, nishaɗi da ɗaya na sirri) suna buɗewa yayin da kake wasa — hannayen da aka buga, wasannin da aka ci, manyan bluff, hannaye na musamman da ƙari. Ci gaban kofunanka yana taruwa kuma ana haɗa shi tsakanin na'urori idan daidaita saitunan asusu yana aiki."] },
+            "Yanayin horo yana da ci gabansa: kofuna 28 a rukunoni shida (ci gaba, ƙwarewa, salo, tsare-tsare, nishaɗi da ɗaya na sirri) suna buɗewa yayin da kake wasa — hannayen da aka buga, wasannin da aka ci, manyan bluff, hannaye na musamman da ƙari. Ci gaban kofunanka yana taruwa kuma ana haɗa shi tsakanin na'urori idan daidaita saitunan asusu yana aiki.", "Ka ci isassun kofuna kuma wani yanayi na huɗu zai bayyana a allon shiga: Ƙananan wasanni. Daga nan wasanninsa za su riƙa buɗewa ɗaya bayan ɗaya yayin da kake cin ƙarin kofuna — wanda zai biyo baya zai kasance asiri har sai ya buɗe."] },
         { id: "learn",
           t: "Wuri mai kyau don koyo",
           b: [

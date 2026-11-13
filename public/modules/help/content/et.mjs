@@ -255,7 +255,7 @@ export const help = {
         { id: 'setup', t: 'Mängu seadistamine',
           b: ['Vali vastaste arv, algraha, blindid ja tõusugraafik ning mängu kiirus. Bottide koosseisu ja raskusastet saab kohandada aknas Täpsemad valikud → Kohalik mäng — leebetest vastastest karmima, segase koosseisuga lauani.'] },
         { id: 'trophies', t: 'Auhinnad',
-          b: ['Treeningrežiimil on oma edenemine: mängides avaneb 28 auhinda kuues kategoorias (edenemine, oskus, stiil, formaadid, lõbu ja üks salajane) \u2014 mängitud käed, võidetud mängud, suured blufid, erilised käed ja muu. Sinu auhindade edenemine on kumulatiivne ja liidetakse seadmete vahel, kui konto seadete sünkroonimine on aktiivne.'] },
+          b: ['Treeningrežiimil on oma edenemine: mängides avaneb 28 auhinda kuues kategoorias (edenemine, oskus, stiil, formaadid, lõbu ja üks salajane) \u2014 mängitud käed, võidetud mängud, suured blufid, erilised käed ja muu. Sinu auhindade edenemine on kumulatiivne ja liidetakse seadmete vahel, kui konto seadete sünkroonimine on aktiivne.', "Võida neid piisavalt ja sisselogimisekraanile ilmub neljas režiim: Minimängud. Selle mängud avanevad seejärel ükshaaval, kui võidad rohkem trofeesid — milline tuleb järgmisena, jääb saladuseks, kuni see avaneb."] },
         { id: 'learn', t: 'Hea koht õppimiseks',
           b: ['Kõik teistest peatükkidest töötab ka siin: šansside monitor, abi kuvamine, eelvalimine, kiirklahvid. Treeningrežiim on parim koht neid surveta proovida, enne kui suundud pokerth.net-i.'] }
       ]

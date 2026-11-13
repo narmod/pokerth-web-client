@@ -251,6 +251,7 @@ export const strings = {
     loginOfflineDesc:'Один против ботов',
     loginLanTitle:'LAN / Выделенный сервер',
     loginLanDesc:'Частный сервер · локальная сеть',
+    loginArcadeDesc:'Игры Туза · открыто {n}/{t}', loginArcadeNew:'НОВОЕ',
     liveTables:'{n} активных столов', liveWaiting:'{n} игроков ждут',
     liveOnline:'{n} игроков онлайн', liveToday:'{n} игр сегодня',
     loginChange:'Изменить',

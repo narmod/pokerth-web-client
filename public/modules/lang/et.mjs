@@ -156,6 +156,7 @@ export const strings = {
     loginOfflineDesc:'Üksi bottide vastu',
     loginLanTitle:'LAN / pühendatud server',
     loginLanDesc:'Privaatserver · kohtvõrk',
+    loginArcadeDesc:'Ässa mängud · {n}/{t} avatud', loginArcadeNew:'UUS',
     liveTables:'{n} lauda käimas', liveWaiting:'{n} mängijat ootel',
     liveOnline:'{n} mängijat võrgus', liveToday:'{n} mängu täna',
     loginChange:'Muuda',

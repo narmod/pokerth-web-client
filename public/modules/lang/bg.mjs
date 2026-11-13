@@ -246,6 +246,7 @@ export const strings = {
     loginOfflineDesc:'Сам срещу ботове',
     loginLanTitle:'LAN / Отделен сървър',
     loginLanDesc:'Частен сървър · локална мрежа',
+    loginArcadeDesc:'Игрите на Аса · {n}/{t} отворени', loginArcadeNew:'НОВО',
     liveTables:'{n} активни маси', liveWaiting:'{n} играчи чакат',
     liveOnline:'{n} играчи онлайн', liveToday:'{n} игри днес',
     loginChange:'Промяна',

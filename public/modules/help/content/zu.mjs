@@ -366,7 +366,7 @@ export const help = {
         { id: "trophies",
           t: "Izindondo",
           b: [
-            "Imodi yokuziqeqesha inenqubekelaphambili yayo: izindondo ezingu-28 ezigabeni eziyisithupha (intuthuko, ikhono, isitayela, amafomethi, ubumnandi neyimfihlo eyodwa) ziyavuleka njengoba udlala — izandla ezidlaliwe, imidlalo ewiniwe, ama-bluff amakhulu, izandla ezikhethekile nokunye. Inqubekelaphambili yakho yezindondo iyanqwabelana futhi ihlangana phakathi kwamadivayisi lapho ukuvumelaniswa kwezilungiselelo ze-akhawunti kusebenza."] },
+            "Imodi yokuziqeqesha inenqubekelaphambili yayo: izindondo ezingu-28 ezigabeni eziyisithupha (intuthuko, ikhono, isitayela, amafomethi, ubumnandi neyimfihlo eyodwa) ziyavuleka njengoba udlala — izandla ezidlaliwe, imidlalo ewiniwe, ama-bluff amakhulu, izandla ezikhethekile nokunye. Inqubekelaphambili yakho yezindondo iyanqwabelana futhi ihlangana phakathi kwamadivayisi lapho ukuvumelaniswa kwezilungiselelo ze-akhawunti kusebenza.", "Wina izindebe ezanele bese kuvela imodi yesine esikrinini sokungena: Imidlalo emincane. Bese imidlalo yayo ivuleka ngamunye ngamunye njengoba uwina izindebe eziningi — okulandelayo kuhlala kuyimfihlakalo kuze kuvuleke."] },
         { id: "learn",
           t: "Indawo enhle yokufunda",
           b: [

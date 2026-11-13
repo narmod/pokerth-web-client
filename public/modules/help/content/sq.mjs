@@ -255,7 +255,7 @@ export const help = {
         { id: 'setup', t: 'Vendosja e një loje',
           b: ['Zgjidh numrin e kundërshtarëve, stokun fillestar, blindet dhe orarin e rritjes, dhe shpejtësinë e lojës. Përbërja dhe vështirësia e botëve mund të përshtaten te Opsionet e avancuara → Lojë lokale — nga kundërshtarë të butë deri te një tavolinë e përzier dhe më e vështirë.'] },
         { id: 'trophies', t: 'Trofetë',
-          b: ['Modaliteti i stërvitjes ka përparimin e vet: 28 trofe në gjashtë kategori (përparim, aftësi, stil, formate, argëtim dhe një i fshehtë) zhbllokohen ndërsa luan — duar të luajtura, lojëra të fituara, blufe të mëdha, duar speciale dhe më shumë. Përparimi yt i trofeve është kumulativ dhe bashkohet mes pajisjeve kur sinkronizimi i cilësimeve të llogarisë është aktiv.'] },
+          b: ['Modaliteti i stërvitjes ka përparimin e vet: 28 trofe në gjashtë kategori (përparim, aftësi, stil, formate, argëtim dhe një i fshehtë) zhbllokohen ndërsa luan — duar të luajtura, lojëra të fituara, blufe të mëdha, duar speciale dhe më shumë. Përparimi yt i trofeve është kumulativ dhe bashkohet mes pajisjeve kur sinkronizimi i cilësimeve të llogarisë është aktiv.', "Fito mjaftueshëm prej tyre dhe në ekranin e hyrjes shfaqet një mënyrë e katërt: Mini-lojëra. Lojërat e saj hapen pastaj një nga një ndërsa fiton më shumë trofe — cila vjen më pas mbetet mister derisa të hapet."] },
         { id: 'learn', t: 'Vend i mirë për të mësuar',
           b: ['Gjithçka nga kapitujt e tjerë funksionon edhe këtu: monitori i shanseve, shfaqja e ndihmës, para-zgjedhja, shkurtoret e tastierës. Modaliteti i stërvitjes është vendi më i mirë për t\u2019i provuar pa presion para se të kalosh te pokerth.net.'] }
       ]

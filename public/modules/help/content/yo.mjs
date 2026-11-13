@@ -366,7 +366,7 @@ export const help = {
         { id: "trophies",
           t: "Àwọn ife ẹ̀yẹ",
           b: [
-            "Ọ̀nà ìdánrawò ní ìlọsíwájú tirẹ̀: ife ẹ̀yẹ 28 ní ẹ̀ka mẹ́fà (ìlọsíwájú, ọgbọ́n, ọ̀nà eré, àwọn ọ̀nà, ìgbádùn àti àṣírí kan) ń ṣí bí o ṣe ń ṣeré — àwọn ọwọ́ tí a ṣe, eré tí a borí, bluff ńlá, ọwọ́ àrà àti bẹ́ẹ̀ bẹ́ẹ̀ lọ. Ìlọsíwájú ife ẹ̀yẹ rẹ ń kójọ pọ̀, ó sì ń dapọ̀ láàárín ẹ̀rọ nígbà tí ìmúṣọ̀kan ètò àkáǹtì bá ń ṣiṣẹ́."] },
+            "Ọ̀nà ìdánrawò ní ìlọsíwájú tirẹ̀: ife ẹ̀yẹ 28 ní ẹ̀ka mẹ́fà (ìlọsíwájú, ọgbọ́n, ọ̀nà eré, àwọn ọ̀nà, ìgbádùn àti àṣírí kan) ń ṣí bí o ṣe ń ṣeré — àwọn ọwọ́ tí a ṣe, eré tí a borí, bluff ńlá, ọwọ́ àrà àti bẹ́ẹ̀ bẹ́ẹ̀ lọ. Ìlọsíwájú ife ẹ̀yẹ rẹ ń kójọ pọ̀, ó sì ń dapọ̀ láàárín ẹ̀rọ nígbà tí ìmúṣọ̀kan ètò àkáǹtì bá ń ṣiṣẹ́.", "Gba ife ẹ̀yẹ tó pọ̀ tó, ipò kẹrin yóò sì fara hàn lórí ojú ìwọlé: Àwọn eré kékeré. Àwọn eré rẹ̀ yóò ṣí lọ́kọ̀ọ̀kan bí o ṣe ń gba ife ẹ̀yẹ sí i — èwo ló kàn yóò jẹ́ àṣírí títí yóò fi ṣí."] },
         { id: "learn",
           t: "Ibi tó dára láti kẹ́kọ̀ọ́",
           b: [

@@ -246,6 +246,7 @@ export const strings = {
     loginOfflineDesc:'Sólo proti botům',
     loginLanTitle:'LAN / Vyhrazený server',
     loginLanDesc:'Soukromý server · místní síť',
+    loginArcadeDesc:'Esovy hry · {n}/{t} otevřeno', loginArcadeNew:'NOVÉ',
     liveTables:'{n} běžících stolů', liveWaiting:'{n} hráčů čeká',
     liveOnline:'{n} hráčů online', liveToday:'{n} her dnes',
     loginChange:'Změnit',

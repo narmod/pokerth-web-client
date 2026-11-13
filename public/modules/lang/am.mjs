@@ -154,6 +154,7 @@ export const strings = {
     loginOfflineDesc:'ብቻ ከቦቶች ጋር',
     loginLanTitle:'LAN / የተወሰነ አገልጋይ',
     loginLanDesc:'የግል አገልጋይ · አካባቢያዊ አውታረ መረብ',
+    loginArcadeDesc:'የኤሱ ጨዋታዎች · {n}/{t} ክፍት', loginArcadeNew:'አዲስ',
     liveTables:'{n} ጠረጴዛዎች እየሄዱ ነው', liveWaiting:'{n} ተጫዋቾች እየጠበቁ ነው',
     liveOnline:'{n} ተጫዋቾች በመስመር ላይ', liveToday:'{n} ጨዋታዎች ዛሬ',
     loginChange:'ቀይር',

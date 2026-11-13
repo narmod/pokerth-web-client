@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Sett opp et spill',
           b: ['Velg antall motstandere, startstakk, blinds og deres utvikling samt spillhastighet. Bottenes sammensetning og vanskelighetsgrad justeres i Avanserte alternativer → Lokalt spill — fra milde motstandere til et hardere og mer variert bord.'] },
         { id: 'trophies', t: 'Trofeer',
-          b: ['Treningsmodusen har sin egen progresjon: 28 trofeer fordelt på seks kategorier (progresjon, teknikk, stil, formater, moro og en hemmelig) låses opp ved å spille — spilte hender, vunne partier, store bløffer, spesielle hender og mer. Trofeprogresjonen din er kumulativ og flettes mellom enheter når kontoens innstillingssynkronisering er aktiv.'] },
+          b: ['Treningsmodusen har sin egen progresjon: 28 trofeer fordelt på seks kategorier (progresjon, teknikk, stil, formater, moro og en hemmelig) låses opp ved å spille — spilte hender, vunne partier, store bløffer, spesielle hender og mer. Trofeprogresjonen din er kumulativ og flettes mellom enheter når kontoens innstillingssynkronisering er aktiv.', "Vinn nok av dem, så dukker en fjerde modus opp på innloggingsskjermen: Minispill. Spillene åpnes så ett etter ett etter hvert som du vinner flere trofeer — hvilket som kommer neste gang, er et mysterium til det åpnes."] },
         { id: 'learn', t: 'Et godt sted å lære',
           b: ['Alt som er beskrevet i de andre kapitlene, fungerer også her: sannsynlighetsmonitoren, assistansevisningen, forhåndsvalget, hurtigtastene. Treningsmodusen er det beste stedet å prøve dem uten press før du kaster deg ut på pokerth.net.'] }
       ]

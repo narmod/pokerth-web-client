@@ -366,7 +366,7 @@ export const help = {
         { id: "trophies",
           t: "Garaikurrak",
           b: [
-            "Entrenamendu-moduak bere aurrerapena du: sei kategoriatako 28 garaikur (aurrerapena, trebetasuna, estiloa, formatuak, dibertsioa eta bat sekretua) desblokeatzen dira jokatu ahala — jokatutako eskuak, irabazitako partidak, farol handiak, esku bereziak eta gehiago. Zure garaikurren aurrerapena metatu egiten da eta gailuen artean batzen da kontuaren ezarpenen sinkronizazioa aktibo dagoenean."] },
+            "Entrenamendu-moduak bere aurrerapena du: sei kategoriatako 28 garaikur (aurrerapena, trebetasuna, estiloa, formatuak, dibertsioa eta bat sekretua) desblokeatzen dira jokatu ahala — jokatutako eskuak, irabazitako partidak, farol handiak, esku bereziak eta gehiago. Zure garaikurren aurrerapena metatu egiten da eta gailuen artean batzen da kontuaren ezarpenen sinkronizazioa aktibo dagoenean.", "Nahikoa irabazten badituzu, laugarren modu bat agertuko da saioa hasteko pantailan: Minijokoak. Haren jokoak banan-banan irekiko dira trofeo gehiago irabazi ahala; hurrengoa zein den misterio bat da ireki arte."] },
         { id: "learn",
           t: "Ikasteko toki ona",
           b: [

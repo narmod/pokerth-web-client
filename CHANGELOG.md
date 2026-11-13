@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Mini-games mode — 2. the login page** (`web.22`) — a fourth login card « 🕹️ Mini-games » (`#login-card-arcade`,
+  `modules/ui/login-arcade.mjs`): hidden until the mode is unlocked (8 trophies or the secret word), it says how
+  many games are open (`loginArcadeDesc`, « The Ace's games · 3/10 open », never which ones) and carries a « NEW »
+  pill (`loginArcadeNew`) until it is opened once (`pth_arcade_seen`); a tap opens the mini-games page. Refreshed
+  when the login comes back on screen, a trophy is won or the language changes. Until the mystery games come
+  (step 3), the page lists only the games already open (all of them after the secret word). Help › Trophies says
+  that enough trophies bring a fourth mode. 2 keys in the 83 catalogues, 1 paragraph in the 83 help corpora.
+  `scripts/test-login-arcade-browser.mjs`.
 - **Mini-games mode — 1. the rules** (`web.21`; design note `claude/CONCEPTION_MODE_ARCADE.md`) — the groundwork
   of a fourth login mode, « Mini-games », hidden until enough training trophies are won. `games/index.mjs`: the
   games in a new order that alternates a game to get better at poker (`kind: 'learn'`) and a game for fun
@@ -50,6 +58,12 @@ highlights below.
   and ▲ ▼ on the right in landscape; the other games are unchanged.
 
 ### Changed
+- **Login page in landscape** (`web.22`) — on a short landscape screen (≤ 540 px tall, phones) the brand block and
+  the Ace's Help button go to the left and the list of modes to the right, under the header bar
+  (`#login-step1` lends its children to the card's grid): the four modes fit even at 740 × 360, where the title and
+  the last mode used to be cut off. The form step now starts under the header bar too. The brand block's spacing
+  moves from inline styles to `pokerth.css`, so the short-screen steps no longer need `!important` (pixel-identical
+  on 8 screen sizes × 2 interface sizes, both steps).
 - **Default table felt in WebP** — the official fullscreen felt (`table/pokerth-official-fs/felt.png`, 1,980 × 1,200,
   1 MB) is served as `felt.webp` (quality 90, 92 kB): the felt's grain is kept, only slightly softer at 4× zoom
   (approved on side-by-side screenshots of the same table). `theme.mjs`, the inline boot script and the precache point

@@ -1,4 +1,8 @@
-2026-11-13 version 2.1.11-web.21 (current series):
+2026-11-13 version 2.1.11-web.22 (current series):
+- new: win enough trophies in training and a fourth mode appears on the login screen, the Mini-games; its games then open one by one as you win more trophies
+- improvement: on a phone in landscape, the login screen shows the logo on the left and every mode on the right, nothing cut off any more
+
+2026-11-13 version 2.1.11-web.21:
 - improvement: the mini-games are listed in a new order, a game to get better at poker then a game for fun, from the simplest to the most fun
 
 2026-11-13 version 2.1.11-web.20:

@@ -247,6 +247,7 @@ export const strings = {
     loginOfflineDesc:'Nad aonar an aghaidh bhotaichean',
     loginLanTitle:'LAN / Frithealadair sònraichte',
     loginLanDesc:'Frithealaiche prìobhaideach · lìonra ionadail',
+    loginArcadeDesc:'Geamannan an Aoin · {n}/{t} fosgailte', loginArcadeNew:'ÙR',
     liveTables:'{n} bùird a’ ruith', liveWaiting:'{n} cluicheadairean a’ feitheamh',
     liveOnline:'{n} cluicheadairean air-loidhne', liveToday:'{n} geamannan an-diugh',
     loginChange:'Atharraich',

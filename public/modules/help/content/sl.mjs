@@ -255,7 +255,7 @@ export const help = {
         { id: 'setup', t: 'Nastavitev igre',
           b: ['Izberi število nasprotnikov, začetni kapital, blinde in urnik zviševanja ter hitrost igre. Zasedbo in težavnost botov lahko prilagodiš v oknu Napredne možnosti → Lokalna igra — od nežnih nasprotnikov do zahtevnejše, mešane mize.'] },
         { id: 'trophies', t: 'Trofeje',
-          b: ['Vadbeni način ima svoj lasten napredek: 28 trofej v šestih kategorijah (napredek, spretnost, slog, formati, zabava in ena skrivnostna) se odklepa, kako igraš — odigrane roke, dobljene igre, veliki blefi, posebne roke in več. Tvoj napredek pri trofejah je kumulativen in se združi med napravami, ko je sinhronizacija nastavitev računa aktivna.'] },
+          b: ['Vadbeni način ima svoj lasten napredek: 28 trofej v šestih kategorijah (napredek, spretnost, slog, formati, zabava in ena skrivnostna) se odklepa, kako igraš — odigrane roke, dobljene igre, veliki blefi, posebne roke in več. Tvoj napredek pri trofejah je kumulativen in se združi med napravami, ko je sinhronizacija nastavitev računa aktivna.', "Osvoji jih dovolj in na zaslonu za prijavo se pojavi četrti način: Mini igre. Njegove igre se nato odpirajo ena za drugo, ko osvajaš nove trofeje — katera pride naslednja, ostane skrivnost, dokler se ne odpre."] },
         { id: 'learn', t: 'Dobro mesto za učenje',
           b: ['Vse iz drugih poglavij deluje tudi tukaj: nadzor kvot, prikaz pomoči, vnaprejšnja izbira, tipkovne bližnjice. Vadbeni način je najboljše mesto, da jih preizkusiš brez pritiska, preden greš na pokerth.net.'] }
       ]

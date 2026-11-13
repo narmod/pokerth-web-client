@@ -366,7 +366,7 @@ export const help = {
         { id: "trophies",
           t: "Verðlaun",
           b: [
-            "Æfingahamurinn hefur sína eigin framvindu: 28 verðlaun í sex flokkum (Framvinda, Færni, Stíll, Snið, Skemmtun og leynilegur flokkur) opnast eftir því sem þú spilar — spilaðar hendur, unnir leikir, stór blöff, sérstakar hendur og fleira. Verðlaunaframvindan safnast upp og sameinast milli tækja þegar samstilling stillinga aðgangsins er virk."] },
+            "Æfingahamurinn hefur sína eigin framvindu: 28 verðlaun í sex flokkum (Framvinda, Færni, Stíll, Snið, Skemmtun og leynilegur flokkur) opnast eftir því sem þú spilar — spilaðar hendur, unnir leikir, stór blöff, sérstakar hendur og fleira. Verðlaunaframvindan safnast upp og sameinast milli tækja þegar samstilling stillinga aðgangsins er virk.", "Vinndu nógu marga og fjórði hamurinn birtist á innskráningarskjánum: Smáleikir. Leikirnir opnast svo einn af öðrum eftir því sem þú vinnur fleiri bikara — hver kemur næst er leyndarmál þar til hann opnast."] },
         { id: "learn",
           t: "Góður staður til að læra",
           b: [

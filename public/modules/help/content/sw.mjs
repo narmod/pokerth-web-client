@@ -255,7 +255,7 @@ export const help = {
         { id: 'setup', t: 'Kusanidi mchezo',
           b: ['Chagua idadi ya wapinzani, pesa za kuanzia, blind na ratiba ya kupandisha, na kasi ya mchezo. Safu na ugumu wa boti vinaweza kurekebishwa kwenye Chaguo za kina → Mchezo wa ndani — kutoka wapinzani wapole hadi meza ngumu zaidi ya mchanganyiko.'] },
         { id: 'trophies', t: 'Vikombe',
-          b: ['Hali ya mazoezi ina maendeleo yake: vikombe 28 katika makundi sita (maendeleo, ujuzi, mtindo, miundo, burudani na moja ya siri) hufunguka unapocheza \u2014 mikono iliyochezwa, michezo iliyoshindwa, bluff kubwa, mikono maalum na zaidi. Maendeleo yako ya vikombe hujilimbikiza na kuunganishwa kati ya vifaa usawazishaji wa mipangilio ya akaunti ukiwa umewashwa.'] },
+          b: ['Hali ya mazoezi ina maendeleo yake: vikombe 28 katika makundi sita (maendeleo, ujuzi, mtindo, miundo, burudani na moja ya siri) hufunguka unapocheza \u2014 mikono iliyochezwa, michezo iliyoshindwa, bluff kubwa, mikono maalum na zaidi. Maendeleo yako ya vikombe hujilimbikiza na kuunganishwa kati ya vifaa usawazishaji wa mipangilio ya akaunti ukiwa umewashwa.', "Shinda vikombe vya kutosha na hali ya nne itatokea kwenye skrini ya kuingia: Michezo midogo. Michezo yake kisha hufunguka mmoja baada ya mwingine unaposhinda vikombe zaidi — upi unafuata hubaki kuwa siri hadi ufunguke."] },
         { id: 'learn', t: 'Mahali pazuri pa kujifunza',
           b: ['Kila kitu kutoka sura nyingine kinafanya kazi hapa pia: kifuatiliaji cha uwezekano, maonyesho ya msaidizi, uchaguzi wa mapema, njia za mkato za kibodi. Hali ya mazoezi ni mahali bora zaidi pa kuvijaribu bila shinikizo kabla ya kwenda pokerth.net.'] }
       ]

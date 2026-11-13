@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Ustawianie gry',
           b: ['Wybierz liczbę przeciwników, stack startowy, blindy i ich progresję oraz tempo gry. Skład i trudność botów ustawia się w Opcje zaawansowane \u2192 Gra lokalna — od łagodnych rywali po twardszy, zróżnicowany stół.'] },
         { id: 'trophies', t: 'Trofea',
-          b: ['Tryb treningowy ma własny postęp: 28 trofeów w sześciu kategoriach (postęp, technika, styl, formaty, zabawa i jedna sekretna) odblokowuje się grając — rozegrane ręce, wygrane partie, wielkie blefy, wyjątkowe ręce i więcej. Postęp trofeów jest kumulacyjny i scala się między urządzeniami, gdy synchronizacja ustawień konta jest aktywna.'] },
+          b: ['Tryb treningowy ma własny postęp: 28 trofeów w sześciu kategoriach (postęp, technika, styl, formaty, zabawa i jedna sekretna) odblokowuje się grając — rozegrane ręce, wygrane partie, wielkie blefy, wyjątkowe ręce i więcej. Postęp trofeów jest kumulacyjny i scala się między urządzeniami, gdy synchronizacja ustawień konta jest aktywna.', "Zdobądź ich wystarczająco dużo, a na ekranie logowania pojawi się czwarty tryb: Minigry. Gry otwierają się potem jedna po drugiej, gdy zdobywasz kolejne trofea — która będzie następna, pozostaje tajemnicą, dopóki się nie otworzy."] },
         { id: 'learn', t: 'Dobre miejsce do nauki',
           b: ['Wszystko opisane w pozostałych rozdziałach działa też tutaj: monitor prawdopodobieństwa, wyświetlacz asysty, wstępny wybór, skróty klawiszowe. Tryb treningowy to najlepsze miejsce, by wypróbować je bez presji, zanim ruszysz na pokerth.net.'] }
       ]

@@ -154,6 +154,7 @@ export const strings = {
     loginOfflineDesc:'એકલા બોટ્સ સામે',
     loginLanTitle:'LAN / ડેડિકેટેડ સર્વર',
     loginLanDesc:'ખાનગી સર્વર · લોકલ નેટવર્ક',
+    loginArcadeDesc:'એક્કાની રમતો · {n}/{t} ખુલ્લી', loginArcadeNew:'નવું',
     liveTables:'{n} ટેબલ્સ ચાલુ છે', liveWaiting:'{n} ખેલાડીઓ રાહ જોઈ રહ્યા છે',
     liveOnline:'{n} ખેલાડીઓ ઓનલાઇન', liveToday:'આજે {n} ગેમ્સ',
     loginChange:'બદલો',

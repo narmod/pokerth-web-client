@@ -156,6 +156,7 @@ export const strings = {
     loginOfflineDesc:'Viens pats pret botiem',
     loginLanTitle:'LAN / Dedicētais serveris',
     loginLanDesc:'Privāts serveris · lokālais tīkls',
+    loginArcadeDesc:'Dūža spēles · {n}/{t} atvērtas', loginArcadeNew:'JAUNS',
     liveTables:'{n} aktīvi galdi', liveWaiting:'{n} spēlētāji gaida',
     liveOnline:'{n} spēlētāji tiešsaistē', liveToday:'{n} spēles šodien',
     loginChange:'Mainīt',

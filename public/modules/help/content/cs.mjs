@@ -252,7 +252,7 @@ export const help = {
         { id: 'setup', t: 'Nastavení hry',
           b: ['Zvol počet soupeřů, počáteční stack, blindy a jejich růst a rychlost hry. Složení a obtížnost botů se ladí v Pokročilé možnosti \u2192 Místní hra — od mírných soupeřů po tvrdší a pestřejší stůl.'] },
         { id: 'trophies', t: 'Trofeje',
-          b: ['Tréninkový režim má vlastní postup: 28 trofejí v šesti kategoriích (postup, technika, styl, formáty, zábava a jedna tajná) se odemyká hraním — odehrané ruce, vyhrané partie, velké bluffy, zvláštní ruce a další. Postup trofejí je kumulativní a při zapnuté synchronizaci nastavení účtu se slučuje mezi zařízeními.'] },
+          b: ['Tréninkový režim má vlastní postup: 28 trofejí v šesti kategoriích (postup, technika, styl, formáty, zábava a jedna tajná) se odemyká hraním — odehrané ruce, vyhrané partie, velké bluffy, zvláštní ruce a další. Postup trofejí je kumulativní a při zapnuté synchronizaci nastavení účtu se slučuje mezi zařízeními.', "Získej jich dost a na přihlašovací obrazovce se objeví čtvrtý režim: Minihry. Jeho hry se pak otevírají jedna po druhé, jak získáváš další trofeje — která přijde jako další, zůstává tajemstvím, dokud se neotevře."] },
         { id: 'learn', t: 'Dobré místo k učení',
           b: ['Vše popsané v ostatních kapitolách funguje i tady: monitor pravděpodobností, asistenční zobrazení, předvolba, klávesové zkratky. Tréninkový režim je nejlepší místo, kde si je bez tlaku vyzkoušet, než vyrazíš na pokerth.net.'] }
       ]

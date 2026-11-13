@@ -153,6 +153,7 @@ export const strings = {
     loginOfflineDesc:'Ein(n) gegn bottum',
     loginLanTitle:'LAN / sérþjónn',
     loginLanDesc:'Einkaþjónn · staðarnet',
+    loginArcadeDesc:'Leikir Ássins · {n}/{t} opnir', loginArcadeNew:'NÝTT',
     liveTables:'{n} borð í gangi', liveWaiting:'{n} leikmenn bíða',
     liveOnline:'{n} leikmenn á netinu', liveToday:'{n} leikir í dag',
     loginChange:'Breyta',

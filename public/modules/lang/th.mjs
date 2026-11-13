@@ -156,6 +156,7 @@ export const strings = {
     loginOfflineDesc:'เล่นเดี่ยวกับบอต',
     loginLanTitle:'LAN / เซิร์ฟเวอร์เฉพาะ',
     loginLanDesc:'เซิร์ฟเวอร์ส่วนตัว · เครือข่ายท้องถิ่น',
+    loginArcadeDesc:'เกมของเอซ · เปิดแล้ว {n}/{t}', loginArcadeNew:'ใหม่',
     liveTables:'{n} โต๊ะกำลังเล่น', liveWaiting:'{n} คนกำลังรอ',
     liveOnline:'ผู้เล่นออนไลน์ {n} คน', liveToday:'วันนี้ {n} เกม',
     loginChange:'เปลี่ยน',

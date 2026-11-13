@@ -154,6 +154,7 @@ export const strings = {
     loginOfflineDesc:'ಒಬ್ಬರೇ ಬಾಟ್‌ಗಳ ವಿರುದ್ಧ',
     loginLanTitle:'LAN / ಡೆಡಿಕೇಟೆಡ್ ಸರ್ವರ್',
     loginLanDesc:'ಖಾಸಗಿ ಸರ್ವರ್ · ಲೋಕಲ್ ನೆಟ್‌ವರ್ಕ್',
+    loginArcadeDesc:'ಎಕ್ಕದ ಆಟಗಳು · {n}/{t} ತೆರೆದಿವೆ', loginArcadeNew:'ಹೊಸದು',
     liveTables:'{n} ಟೇಬಲ್‌ಗಳು ನಡೆಯುತ್ತಿವೆ', liveWaiting:'{n} ಆಟಗಾರರು ಕಾಯುತ್ತಿದ್ದಾರೆ',
     liveOnline:'{n} ಆಟಗಾರರು ಆನ್‌ಲೈನ್‌ನಲ್ಲಿ', liveToday:'ಇಂದು {n} ಗೇಮ್‌ಗಳು',
     loginChange:'ಬದಲಿಸಿ',

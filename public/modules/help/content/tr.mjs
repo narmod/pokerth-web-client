@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Oyun kurmak',
           b: ['Rakip sayısını, başlangıç yığınını, blindleri ve yükselme biçimini, oyun hızını seç. Botların bileşimi ve zorluğu Gelişmiş seçenekler \u2192 Yerel oyun\u2019dan ayarlanır — yumuşak rakiplerden daha sert ve çeşitli bir masaya kadar.'] },
         { id: 'trophies', t: 'Kupalar',
-          b: ['Antrenman modunun kendi ilerlemesi vardır: altı kategoride 28 kupa (ilerleme, teknik, stil, biçimler, eğlence ve bir gizli) oynayarak açılır — oynanan eller, kazanılan oyunlar, büyük blöfler, özel eller ve dahası. Kupa ilerlemen birikimlidir ve hesap ayar eşitlemesi açıkken cihazlar arasında birleştirilir.'] },
+          b: ['Antrenman modunun kendi ilerlemesi vardır: altı kategoride 28 kupa (ilerleme, teknik, stil, biçimler, eğlence ve bir gizli) oynayarak açılır — oynanan eller, kazanılan oyunlar, büyük blöfler, özel eller ve dahası. Kupa ilerlemen birikimlidir ve hesap ayar eşitlemesi açıkken cihazlar arasında birleştirilir.', "Yeterince kazanırsan giriş ekranında dördüncü bir mod belirir: Mini oyunlar. Oyunları sen kupa kazandıkça birer birer açılır — sıradakinin hangisi olduğu açılana kadar sır olarak kalır."] },
         { id: 'learn', t: 'Öğrenmek için iyi bir yer',
           b: ['Diğer bölümlerde anlatılan her şey burada da çalışır: olasılık monitörü, asistan görünümü, ön seçim, klavye kısayolları. pokerth.net\u2019e atılmadan önce bunları baskısız denemenin en iyi yeri antrenman modudur.'] }
       ]

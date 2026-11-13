@@ -157,6 +157,7 @@ export const strings = {
     loginOfflineDesc:'Botlar bilen ýeke özüňiz',
     loginLanTitle:'LAN / Aýratyn serwer',
     loginLanDesc:'Hususy serwer · ýerli tor',
+    loginArcadeDesc:'Tuzuň oýunlary · {n}/{t} açyk', loginArcadeNew:'TÄZE',
     liveTables:'{n} stol oýnaýar', liveWaiting:'{n} oýunçy garaşýar',
     liveOnline:'{n} oýunçy onlaýn', liveToday:'Şu gün {n} oýun',
     loginChange:'Üýtget',

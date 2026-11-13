@@ -366,7 +366,7 @@ export const help = {
         { id: "trophies",
           t: "Trófaithe",
           b: [
-            "Tá a dhul chun cinn féin ag an mód cleachtaidh: díghlasáiltear 28 trófaí i sé chatagóir (dul chun cinn, scil, stíl, formáidí, spraoi agus ceann rúnda) de réir mar a imríonn tú — lámha imeartha, cluichí buaite, blufanna móra, lámha speisialta agus tuilleadh. Carnann do dhul chun cinn trófaithe agus cumasctar é idir gléasanna nuair atá sioncronú socruithe an chuntais gníomhach."] },
+            "Tá a dhul chun cinn féin ag an mód cleachtaidh: díghlasáiltear 28 trófaí i sé chatagóir (dul chun cinn, scil, stíl, formáidí, spraoi agus ceann rúnda) de réir mar a imríonn tú — lámha imeartha, cluichí buaite, blufanna móra, lámha speisialta agus tuilleadh. Carnann do dhul chun cinn trófaithe agus cumasctar é idir gléasanna nuair atá sioncronú socruithe an chuntais gníomhach.", "Buaigh go leor acu agus feicfear an ceathrú mód ar an scáileán logála isteach: Mionchluichí. Osclaítear a chluichí ansin ceann i ndiaidh a chéile de réir mar a bhuann tú tuilleadh trófaithe — is rúndiamhair é cé acu atá le teacht go dtí go n-osclaítear é."] },
         { id: "learn",
           t: "Áit mhaith le foghlaim",
           b: [

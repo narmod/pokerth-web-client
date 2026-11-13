@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Partijos nustatymas',
           b: ['Pasirink varžovų skaičių, pradinę krūvą, blindus ir jų kilimą bei žaidimo greitį. Botų sudėtis ir sudėtingumas reguliuojami Išplėstinės parinktys → Vietinis žaidimas — nuo švelnių varžovų iki kietesnio ir įvairesnio stalo.'] },
         { id: 'trophies', t: 'Trofėjai',
-          b: ['Treniruotės režimas turi savą pažangą: 28 trofėjai šešiose kategorijose (pažanga, technika, stilius, formatai, pramoga ir viena slapta) atrakinami žaidžiant — sužaistos rankos, laimėtos partijos, dideli blefai, ypatingos rankos ir dar daugiau. Trofėjų pažanga kaupiama ir sujungiama tarp įrenginių, kai įjungtas paskyros nustatymų sinchronizavimas.'] },
+          b: ['Treniruotės režimas turi savą pažangą: 28 trofėjai šešiose kategorijose (pažanga, technika, stilius, formatai, pramoga ir viena slapta) atrakinami žaidžiant — sužaistos rankos, laimėtos partijos, dideli blefai, ypatingos rankos ir dar daugiau. Trofėjų pažanga kaupiama ir sujungiama tarp įrenginių, kai įjungtas paskyros nustatymų sinchronizavimas.', "Laimėk jų pakankamai, ir prisijungimo ekrane atsiras ketvirtas režimas: Mini žaidimai. Jo žaidimai atsiveria po vieną, kai laimi daugiau trofėjų — kuris bus kitas, lieka paslaptis, kol jis atsivers."] },
         { id: 'learn', t: 'Gera vieta mokytis',
           b: ['Viskas, kas aprašyta kituose skyriuose, veikia ir čia: tikimybių monitorius, asistento rodymas, išankstinis pasirinkimas, spartieji klavišai. Treniruotės režimas — geriausia vieta juos išbandyti be spaudimo, prieš neriant į pokerth.net.'] }
       ]

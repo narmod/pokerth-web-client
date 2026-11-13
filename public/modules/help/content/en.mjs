@@ -257,7 +257,7 @@ export const help = {
         { id: 'setup', t: 'Setting up a game',
           b: ['Choose the number of opponents, start cash, blinds and raise schedule, and game speed. The bot line-up and difficulty can be adjusted in Advanced options \u2192 Local game \u2014 from gentle opponents to a tougher, mixed table.'] },
         { id: 'trophies', t: 'Trophies',
-          b: ['Training mode has its own progression: 28 trophies across six categories (progress, skill, style, formats, fun and a secret one) unlock as you play \u2014 hands played, games won, big bluffs, special hands and more. Your trophy progress is cumulative and merges across devices when account settings sync is active.'] },
+          b: ['Training mode has its own progression: 28 trophies across six categories (progress, skill, style, formats, fun and a secret one) unlock as you play \u2014 hands played, games won, big bluffs, special hands and more. Your trophy progress is cumulative and merges across devices when account settings sync is active.', "Win enough of them and a fourth mode appears on the login screen: the Mini-games. Its games then open one by one as you win more trophies — which one comes next stays a mystery until it opens."] },
         { id: 'learn', t: 'A good place to learn',
           b: ['Everything from the other chapters works here too: the odds monitor, the assistance display, pre-selection, keyboard shortcuts. Training mode is the best place to try them without pressure before heading to pokerth.net.'] }
       ]

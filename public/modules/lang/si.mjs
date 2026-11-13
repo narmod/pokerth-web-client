@@ -157,6 +157,7 @@ export const strings = {
     loginOfflineDesc:'තනිව බොට්වලට එරෙහිව',
     loginLanTitle:'LAN / කැපවූ සේවාදායකය',
     loginLanDesc:'පෞද්ගලික සේවාදායකය · දේශීය ජාලය',
+    loginArcadeDesc:'ඒස්ගේ ක්‍රීඩා · {n}/{t} විවෘතයි', loginArcadeNew:'නව',
     liveTables:'මේස {n} ක් ක්‍රියාත්මකයි', liveWaiting:'ක්‍රීඩකයන් {n} ක් රැඳී සිටී',
     liveOnline:'ක්‍රීඩකයන් {n} ක් මාර්ගගතයි', liveToday:'අද ක්‍රීඩා {n}',
     loginChange:'වෙනස් කරන්න',

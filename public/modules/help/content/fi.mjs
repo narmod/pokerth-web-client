@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Pelin asetukset',
           b: ['Valitse vastustajien määrä, aloituspino, blindit ja niiden nousu sekä pelinopeus. Bottien kokoonpano ja vaikeustaso säädetään kohdasta Lisäasetukset \u2192 Paikallinen peli — lempeistä vastustajista kovempaan ja monipuolisempaan pöytään.'] },
         { id: 'trophies', t: 'Palkinnot',
-          b: ['Harjoittelutilalla on oma etenemisensä: 28 palkintoa kuudessa kategoriassa (eteneminen, tekniikka, tyyli, formaatit, hauskuus ja yksi salainen) avautuvat pelaamalla — pelatut kädet, voitetut pelit, isot bluffit, erikoiset kädet ja paljon muuta. Palkintoetenemisesi on kumulatiivista ja yhdistyy laitteiden välillä, kun tilin asetussynkronointi on käytössä.'] },
+          b: ['Harjoittelutilalla on oma etenemisensä: 28 palkintoa kuudessa kategoriassa (eteneminen, tekniikka, tyyli, formaatit, hauskuus ja yksi salainen) avautuvat pelaamalla — pelatut kädet, voitetut pelit, isot bluffit, erikoiset kädet ja paljon muuta. Palkintoetenemisesi on kumulatiivista ja yhdistyy laitteiden välillä, kun tilin asetussynkronointi on käytössä.', "Voita niitä tarpeeksi, niin kirjautumisruutuun ilmestyy neljäs tila: Minipelit. Sen pelit avautuvat sitten yksi kerrallaan, kun voitat lisää pokaaleja — seuraava peli pysyy arvoituksena, kunnes se avautuu."] },
         { id: 'learn', t: 'Hyvä paikka oppia',
           b: ['Kaikki muissa luvuissa kuvattu toimii täälläkin: todennäköisyysmonitori, avustinnäyttö, esivalinta, pikanäppäimet. Harjoittelutila on paras paikka kokeilla niitä ilman painetta ennen kuin syöksyt pokerth.netiin.'] }
       ]

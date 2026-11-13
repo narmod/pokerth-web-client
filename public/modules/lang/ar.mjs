@@ -157,6 +157,7 @@ export const strings = {
     loginOfflineDesc:'فردي ضد الروبوتات',
     loginLanTitle:'LAN / خادم مخصّص',
     loginLanDesc:'خادم خاص · شبكة محلية',
+    loginArcadeDesc:'ألعاب الآص · {n}/{t} مفتوحة', loginArcadeNew:'جديد',
     liveTables:'{n} طاولة نشطة', liveWaiting:'{n} لاعب في الانتظار',
     liveOnline:'{n} لاعب متصل', liveToday:'{n} لعبة اليوم',
     loginChange:'تغيير',

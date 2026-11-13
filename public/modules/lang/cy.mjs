@@ -157,6 +157,7 @@ export const strings = {
     loginOfflineDesc:'Ar eich pen eich hun yn erbyn botiaid',
     loginLanTitle:'LAN / Gweinydd pwrpasol',
     loginLanDesc:'Gweinydd preifat · rhwydwaith lleol',
+    loginArcadeDesc:'Gemau\'r As · {n}/{t} ar agor', loginArcadeNew:'NEWYDD',
     liveTables:'{n} bwrdd yn chwarae', liveWaiting:'{n} chwaraewr yn aros',
     liveOnline:'{n} chwaraewr ar-lein', liveToday:'{n} gêm heddiw',
     loginChange:'Newid',

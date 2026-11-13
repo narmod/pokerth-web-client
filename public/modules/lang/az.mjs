@@ -157,6 +157,7 @@ export const strings = {
     loginOfflineDesc:'Botlara qarşı tək',
     loginLanTitle:'LAN / Xüsusi server',
     loginLanDesc:'Şəxsi server · lokal şəbəkə',
+    loginArcadeDesc:'Tuzun oyunları · {n}/{t} açıq', loginArcadeNew:'YENİ',
     liveTables:'{n} masa oynanılır', liveWaiting:'{n} oyunçu gözləyir',
     liveOnline:'{n} oyunçu onlayn', liveToday:'bu gün {n} oyun',
     loginChange:'Dəyiş',

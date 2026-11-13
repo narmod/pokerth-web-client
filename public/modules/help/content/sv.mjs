@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Ställ in ett spel',
           b: ['Välj antal motståndare, startstack, mörkar och deras utveckling samt spelhastighet. Bottarnas sammansättning och svårighetsgrad justeras i Avancerade alternativ → Lokalt spel — från milda motståndare till ett tuffare och mer varierat bord.'] },
         { id: 'trophies', t: 'Troféer',
-          b: ['Träningsläget har sin egen progression: 28 troféer i sex kategorier (progression, teknik, stil, format, kul och en hemlig) låses upp genom att spela — spelade händer, vunna partier, stora bluffar, speciella händer och mer. Din troféprogression är kumulativ och slås samman mellan enheter när kontots inställningssynkronisering är aktiv.'] },
+          b: ['Träningsläget har sin egen progression: 28 troféer i sex kategorier (progression, teknik, stil, format, kul och en hemlig) låses upp genom att spela — spelade händer, vunna partier, stora bluffar, speciella händer och mer. Din troféprogression är kumulativ och slås samman mellan enheter när kontots inställningssynkronisering är aktiv.', "Vinn tillräckligt många så dyker ett fjärde läge upp på inloggningsskärmen: Minispel. Spelen öppnas sedan ett i taget allt eftersom du vinner fler troféer — vilket som kommer härnäst förblir ett mysterium tills det öppnas."] },
         { id: 'learn', t: 'En bra plats att lära sig på',
           b: ['Allt som beskrivs i de andra kapitlen fungerar även här: sannolikhetsmonitorn, assistansvisningen, förvalet, tangentbordsgenvägarna. Träningsläget är den bästa platsen att prova dem utan press innan du ger dig ut på pokerth.net.'] }
       ]

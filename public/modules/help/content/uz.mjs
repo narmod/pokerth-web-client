@@ -366,7 +366,7 @@ export const help = {
         { id: "trophies",
           t: "Sovrinlar",
           b: [
-            "Mashgʻulot rejimining oʻz rivojlanish tizimi bor: olti toifadagi (taraqqiyot, mahorat, uslub, formatlar, koʻngilochar va bitta sirli) 28 ta sovrin oʻynaganingiz sari ochiladi — oʻynalgan qoʻllar, yutilgan oʻyinlar, katta bleflar, maxsus qoʻllar va boshqalar. Sovrinlardagi taraqqiyotingiz jamlanib boradi va hisob sozlamalarini sinxronlash faol boʻlsa, qurilmalar oʻrtasida birlashtiriladi."] },
+            "Mashgʻulot rejimining oʻz rivojlanish tizimi bor: olti toifadagi (taraqqiyot, mahorat, uslub, formatlar, koʻngilochar va bitta sirli) 28 ta sovrin oʻynaganingiz sari ochiladi — oʻynalgan qoʻllar, yutilgan oʻyinlar, katta bleflar, maxsus qoʻllar va boshqalar. Sovrinlardagi taraqqiyotingiz jamlanib boradi va hisob sozlamalarini sinxronlash faol boʻlsa, qurilmalar oʻrtasida birlashtiriladi.", "Yetarlicha kubok yutsang, kirish ekranida to'rtinchi rejim paydo bo'ladi: Mini o'yinlar. Keyin ko'proq kubok yutgan sari uning o'yinlari birma-bir ochiladi — keyingisi qaysi ekani ochilguncha sir bo'lib qoladi."] },
         { id: "learn",
           t: "Oʻrganish uchun yaxshi joy",
           b: [

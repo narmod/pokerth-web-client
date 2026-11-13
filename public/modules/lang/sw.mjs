@@ -156,6 +156,7 @@ export const strings = {
     loginOfflineDesc:'Peke yako dhidi ya boti',
     loginLanTitle:'LAN / Seva maalum',
     loginLanDesc:'Seva binafsi · mtandao wa ndani',
+    loginArcadeDesc:'Michezo ya Ree · {n}/{t} imefunguliwa', loginArcadeNew:'MPYA',
     liveTables:'meza {n} zinaendelea', liveWaiting:'wachezaji {n} wanasubiri',
     liveOnline:'wachezaji {n} mtandaoni', liveToday:'michezo {n} leo',
     loginChange:'Badilisha',

@@ -245,6 +245,7 @@ export const strings = {
     loginOfflineDesc:'Alene mot bots',
     loginLanTitle:'LAN / Dedikert server',
     loginLanDesc:'Privat server · lokalt nettverk',
+    loginArcadeDesc:'Essets spill · {n}/{t} åpne', loginArcadeNew:'NY',
     liveTables:'{n} bord i gang', liveWaiting:'{n} spillere venter',
     liveOnline:'{n} spillere pålogget', liveToday:'{n} spill i dag',
     loginChange:'Endre',

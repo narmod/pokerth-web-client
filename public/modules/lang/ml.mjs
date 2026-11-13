@@ -154,6 +154,7 @@ export const strings = {
     loginOfflineDesc:'ഒറ്റയ്ക്ക് ബോട്ടുകൾക്കെതിരെ',
     loginLanTitle:'LAN / ഡെഡിക്കേറ്റഡ് സെർവർ',
     loginLanDesc:'സ്വകാര്യ സെർവർ · ലോക്കൽ നെറ്റ്‌വർക്ക്',
+    loginArcadeDesc:'ഏസിന്റെ കളികൾ · {n}/{t} തുറന്നു', loginArcadeNew:'പുതിയത്',
     liveTables:'{n} ടേബിളുകൾ നടക്കുന്നു', liveWaiting:'{n} കളിക്കാർ കാത്തിരിക്കുന്നു',
     liveOnline:'{n} കളിക്കാർ ഓൺലൈനിൽ', liveToday:'ഇന്ന് {n} ഗെയിമുകൾ',
     loginChange:'മാറ്റുക',

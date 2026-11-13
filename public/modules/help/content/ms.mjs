@@ -255,7 +255,7 @@ export const help = {
         { id: 'setup', t: 'Menyediakan permainan',
           b: ['Pilih bilangan lawan, wang permulaan, blind dan jadual kenaikan, serta kelajuan permainan. Susunan dan tahap kesukaran bot boleh dilaraskan dalam Pilihan lanjutan → Permainan tempatan — daripada lawan yang lembut hingga meja campuran yang lebih mencabar.'] },
         { id: 'trophies', t: 'Trofi',
-          b: ['Mod latihan mempunyai perkembangannya sendiri: 28 trofi dalam enam kategori (kemajuan, kemahiran, gaya, format, keseronokan dan satu rahsia) dibuka semasa anda bermain — tangan yang dimainkan, permainan yang dimenangi, gertakan besar, tangan istimewa dan banyak lagi. Kemajuan trofi anda bersifat kumulatif dan digabungkan merentas peranti apabila penyegerakan tetapan akaun aktif.'] },
+          b: ['Mod latihan mempunyai perkembangannya sendiri: 28 trofi dalam enam kategori (kemajuan, kemahiran, gaya, format, keseronokan dan satu rahsia) dibuka semasa anda bermain — tangan yang dimainkan, permainan yang dimenangi, gertakan besar, tangan istimewa dan banyak lagi. Kemajuan trofi anda bersifat kumulatif dan digabungkan merentas peranti apabila penyegerakan tetapan akaun aktif.', "Menangi cukup banyak trofi dan mod keempat akan muncul di skrin log masuk: Permainan mini. Permainannya kemudian dibuka satu demi satu apabila anda memenangi lebih banyak trofi — yang mana seterusnya kekal misteri sehingga ia dibuka."] },
         { id: 'learn', t: 'Tempat yang baik untuk belajar',
           b: ['Semua yang terdapat dalam bab lain juga berfungsi di sini: pemantau peluang, paparan bantuan, pra-pilih, pintasan papan kekunci. Mod latihan ialah tempat terbaik untuk mencubanya tanpa tekanan sebelum ke pokerth.net.'] }
       ]

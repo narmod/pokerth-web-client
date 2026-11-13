@@ -246,6 +246,7 @@ export const strings = {
     loginOfflineDesc:'Сам против ботова',
     loginLanTitle:'LAN / Наменски сервер',
     loginLanDesc:'Приватни сервер · локална мрежа',
+    loginArcadeDesc:'Асове игре · {n}/{t} отворено', loginArcadeNew:'НОВО',
     liveTables:'{n} активних столова', liveWaiting:'{n} играча чека',
     liveOnline:'{n} играча онлајн', liveToday:'{n} игара данас',
     loginChange:'Промени',

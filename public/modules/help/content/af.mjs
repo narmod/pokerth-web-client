@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Stel \u2019n spel op',
           b: ['Kies die aantal teenstanders, die beginstapel, die blinds en hulle styging, en die spelspoed. Die bots se samestelling en moeilikheidsgraad word in Gevorderde opsies \u2192 Plaaslike spel verstel — van sagte teenstanders tot \u2019n taaier en meer wisselende tafel.'] },
         { id: 'trophies', t: 'Trofeë',
-          b: ['Die oefenmodus het sy eie vordering: 28 trofeë in ses kategorieë (vordering, tegniek, styl, formate, pret en een geheime) word deur te speel ontsluit — hande gespeel, spelle gewen, groot bluf, spesiale hande en meer. Jou trofeëvordering is kumulatief en word tussen toestelle saamgevoeg wanneer die rekening se instellingsinchronisasie aan is.'] },
+          b: ['Die oefenmodus het sy eie vordering: 28 trofeë in ses kategorieë (vordering, tegniek, styl, formate, pret en een geheime) word deur te speel ontsluit — hande gespeel, spelle gewen, groot bluf, spesiale hande en meer. Jou trofeëvordering is kumulatief en word tussen toestelle saamgevoeg wanneer die rekening se instellingsinchronisasie aan is.', "Wen genoeg daarvan en 'n vierde modus verskyn op die aanmeldskerm: die Minispeletjies. Die speletjies gaan dan een vir een oop soos jy meer trofeë wen — watter een volgende kom, bly 'n raaisel totdat dit oopgaan."] },
         { id: 'learn', t: '\u2019n Goeie plek om te leer',
           b: ['Alles wat in die ander hoofstukke beskryf word, werk ook hier: die waarskynlikheidsmonitor, die hulpvertoning, die voorafkeuse, die sleutelbordkortpaaie. Die oefenmodus is die beste plek om hulle sonder druk te probeer voordat jy jou op pokerth.net werp.'] }
       ]

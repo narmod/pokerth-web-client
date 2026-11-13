@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Configurează o partidă',
           b: ['Alege numărul de adversari, stack-ul de start, blindurile și evoluția lor, și viteza jocului. Componența și dificultatea boților se reglează în Opțiuni avansate → Joc local — de la adversari blânzi la o masă mai dură și mai variată.'] },
         { id: 'trophies', t: 'Trofee',
-          b: ['Modul de antrenament are propria progresie: 28 de trofee în șase categorii (progresie, tehnică, stil, formate, distracție și una secretă) se deblochează jucând — mâini jucate, partide câștigate, cacealmale mari, mâini speciale și altele. Progresul trofeelor e cumulativ și se îmbină între dispozitive când sincronizarea setărilor contului e activă.'] },
+          b: ['Modul de antrenament are propria progresie: 28 de trofee în șase categorii (progresie, tehnică, stil, formate, distracție și una secretă) se deblochează jucând — mâini jucate, partide câștigate, cacealmale mari, mâini speciale și altele. Progresul trofeelor e cumulativ și se îmbină între dispozitive când sincronizarea setărilor contului e activă.', "Câștigă destule și pe ecranul de autentificare apare un al patrulea mod: Mini-jocuri. Jocurile lui se deschid apoi unul câte unul pe măsură ce câștigi mai multe trofee — care urmează rămâne un mister până se deschide."] },
         { id: 'learn', t: 'Un loc bun pentru a învăța',
           b: ['Tot ce e descris în celelalte capitole funcționează și aici: monitorul de probabilități, afișajul de asistență, preselecția, scurtăturile de tastatură. Modul de antrenament e cel mai bun loc să le încerci fără presiune, înainte să te arunci pe pokerth.net.'] }
       ]

@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Nastavenie hry',
           b: ['Zvoľ počet súperov, počiatočný stack, blindy a ich rast a rýchlosť hry. Zloženie a obtiažnosť botov sa ladí v Pokročilé možnosti → Miestna hra — od miernych súperov po tvrdší a pestrejší stôl.'] },
         { id: 'trophies', t: 'Trofeje',
-          b: ['Tréningový režim má vlastný postup: 28 trofejí v šiestich kategóriách (postup, technika, štýl, formáty, zábava a jedna tajná) sa odomyká hraním — odohrané ruky, vyhrané partie, veľké blafy, zvláštne ruky a ďalšie. Postup trofejí je kumulatívny a pri zapnutej synchronizácii nastavení účtu sa zlučuje medzi zariadeniami.'] },
+          b: ['Tréningový režim má vlastný postup: 28 trofejí v šiestich kategóriách (postup, technika, štýl, formáty, zábava a jedna tajná) sa odomyká hraním — odohrané ruky, vyhrané partie, veľké blafy, zvláštne ruky a ďalšie. Postup trofejí je kumulatívny a pri zapnutej synchronizácii nastavení účtu sa zlučuje medzi zariadeniami.', "Získaj ich dosť a na prihlasovacej obrazovke sa objaví štvrtý režim: Minihry. Jeho hry sa potom otvárajú jedna po druhej, ako získavaš ďalšie trofeje — ktorá príde ako ďalšia, zostáva tajomstvom, kým sa neotvorí."] },
         { id: 'learn', t: 'Dobré miesto na učenie',
           b: ['Všetko opísané v ostatných kapitolách funguje aj tu: monitor pravdepodobností, asistenčné zobrazenie, predvoľba, klávesové skratky. Tréningový režim je najlepšie miesto, kde si ich bez tlaku vyskúšať, kým vyrazíš na pokerth.net.'] }
       ]

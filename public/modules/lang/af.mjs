@@ -246,6 +246,7 @@ export const strings = {
     loginOfflineDesc:'Alleen teen bots',
     loginLanTitle:'LAN / Toegewyde bediener',
     loginLanDesc:'Privaat bediener · plaaslike netwerk',
+    loginArcadeDesc:'Die Aas se speletjies · {n}/{t} oop', loginArcadeNew:'NUUT',
     liveTables:'{n} tafels aan die gang', liveWaiting:'{n} spelers wag',
     liveOnline:'{n} spelers aanlyn', liveToday:'{n} spele vandag',
     loginChange:'Verander',

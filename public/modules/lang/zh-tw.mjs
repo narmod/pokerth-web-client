@@ -247,6 +247,7 @@ export const strings = {
     loginOfflineDesc:'單人對戰機器人',
     loginLanTitle:'區域網路 / 專用伺服器',
     loginLanDesc:'私人伺服器 · 區域網路',
+    loginArcadeDesc:'A 牌的遊戲 · 已開放 {n}/{t}', loginArcadeNew:'新',
     liveTables:'{n} 桌進行中', liveWaiting:'{n} 人等待中',
     liveOnline:'{n} 名玩家線上', liveToday:'今日 {n} 局',
     loginChange:'更改',

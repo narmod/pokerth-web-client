@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Preparar una partida',
           b: ['Tria el nombre de rivals, la pila inicial, les cegues i la seva progressió, i la velocitat del joc. La composició i la dificultat dels bots s\u2019ajusten a Opcions avançades \u2192 Partida local — des de rivals suaus fins a una taula més dura i variada.'] },
         { id: 'trophies', t: 'Trofeus',
-          b: ['El mode entrenament té la seva pròpia progressió: 28 trofeus en sis categories (progressió, tècnica, estil, formats, diversió i una de secreta) es desbloquegen jugant — mans jugades, partides guanyades, grans bluffs, mans especials i més. La teva progressió de trofeus és acumulativa i es fusiona entre dispositius quan la sincronització de paràmetres del compte està activa.'] },
+          b: ['El mode entrenament té la seva pròpia progressió: 28 trofeus en sis categories (progressió, tècnica, estil, formats, diversió i una de secreta) es desbloquegen jugant — mans jugades, partides guanyades, grans bluffs, mans especials i més. La teva progressió de trofeus és acumulativa i es fusiona entre dispositius quan la sincronització de paràmetres del compte està activa.', "Guanya'n prou i a la pantalla d'inici de sessió apareix un quart mode: els Minijocs. Els seus jocs s'obren després un per un a mesura que guanyes més trofeus; quin vindrà després és un misteri fins que s'obre."] },
         { id: 'learn', t: 'Un bon lloc per aprendre',
           b: ['Tot el que es descriu als altres capítols també funciona aquí: el monitor de probabilitats, la visualització d\u2019assistència, la preselecció, les dreceres de teclat. El mode entrenament és el millor lloc per provar-los sense pressió abans de llançar-te a pokerth.net.'] }
       ]

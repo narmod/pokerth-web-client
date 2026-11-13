@@ -255,7 +255,7 @@ export const help = {
         { id: 'setup', t: 'Menyiapkan permainan',
           b: ['Pilih jumlah lawan, uang awal, blind dan jadwal kenaikan, serta kecepatan permainan. Susunan dan kesulitan bot dapat disesuaikan di Opsi lanjutan \u2192 Permainan lokal \u2014 dari lawan yang lembut hingga meja campuran yang lebih tangguh.'] },
         { id: 'trophies', t: 'Trofi',
-          b: ['Mode latihan punya progresinya sendiri: 28 trofi dalam enam kategori (kemajuan, keahlian, gaya, format, seru-seruan, dan satu rahasia) terbuka seiring Anda bermain \u2014 tangan dimainkan, permainan dimenangkan, gertakan besar, tangan spesial, dan lainnya. Kemajuan trofi Anda bersifat kumulatif dan digabung antar perangkat saat sinkronisasi pengaturan akun aktif.'] },
+          b: ['Mode latihan punya progresinya sendiri: 28 trofi dalam enam kategori (kemajuan, keahlian, gaya, format, seru-seruan, dan satu rahasia) terbuka seiring Anda bermain \u2014 tangan dimainkan, permainan dimenangkan, gertakan besar, tangan spesial, dan lainnya. Kemajuan trofi Anda bersifat kumulatif dan digabung antar perangkat saat sinkronisasi pengaturan akun aktif.', "Raih cukup banyak trofi dan mode keempat akan muncul di layar masuk: Gim mini. Permainannya lalu terbuka satu per satu seiring kamu meraih lebih banyak trofi — mana yang berikutnya tetap jadi misteri sampai terbuka."] },
         { id: 'learn', t: 'Tempat yang baik untuk belajar',
           b: ['Semua dari bab lain juga berfungsi di sini: monitor peluang, tampilan bantuan, pra-pilih, pintasan keyboard. Mode latihan adalah tempat terbaik untuk mencobanya tanpa tekanan sebelum menuju pokerth.net.'] }
       ]

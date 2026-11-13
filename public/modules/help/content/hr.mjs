@@ -253,7 +253,7 @@ export const help = {
         { id: 'setup', t: 'Postavi partiju',
           b: ['Odaberi broj protivnika, početni stack, blindove i njihov rast te brzinu igre. Sastav i težina botova podešavaju se u Napredne opcije → Lokalna igra — od blagih protivnika do tvrđeg i raznolikijeg stola.'] },
         { id: 'trophies', t: 'Trofeji',
-          b: ['Trening način ima vlastiti napredak: 28 trofeja u šest kategorija (napredak, tehnika, stil, formati, zabava i jedna tajna) otključava se igranjem — odigrane ruke, dobivene partije, veliki blefovi, posebne ruke i još. Napredak trofeja je kumulativan i spaja se između uređaja kad je sinkronizacija postavki računa aktivna.'] },
+          b: ['Trening način ima vlastiti napredak: 28 trofeja u šest kategorija (napredak, tehnika, stil, formati, zabava i jedna tajna) otključava se igranjem — odigrane ruke, dobivene partije, veliki blefovi, posebne ruke i još. Napredak trofeja je kumulativan i spaja se između uređaja kad je sinkronizacija postavki računa aktivna.', "Osvoji ih dovoljno i na zaslonu za prijavu pojavit će se četvrti način: Mini igre. Njegove se igre zatim otvaraju jedna po jedna kako osvajaš nove trofeje — koja dolazi sljedeća, ostaje tajna dok se ne otvori."] },
         { id: 'learn', t: 'Dobro mjesto za učenje',
           b: ['Sve opisano u drugim poglavljima radi i ovdje: monitor vjerojatnosti, prikaz pomoćnika, predodabir, tipkovnički prečaci. Trening način najbolje je mjesto da ih isprobaš bez pritiska prije nego se baciš na pokerth.net.'] }
       ]

@@ -157,6 +157,7 @@ export const strings = {
     loginOfflineDesc:'Solo vs bots',
     loginLanTitle:'LAN / Dedicated server',
     loginLanDesc:'Private server · local network',
+    loginArcadeDesc:'The Ace\'s games · {n}/{t} open', loginArcadeNew:'NEW',
     liveTables:'{n} tables running', liveWaiting:'{n} players waiting',
     liveOnline:'{n} players online', liveToday:'{n} games today',
     loginChange:'Change',

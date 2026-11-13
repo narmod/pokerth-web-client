@@ -245,6 +245,7 @@ export const strings = {
     loginOfflineDesc:'Сам проти ботів',
     loginLanTitle:'LAN / Виділений сервер',
     loginLanDesc:'Приватний сервер · локальна мережа',
+    loginArcadeDesc:'Ігри Туза · відкрито {n}/{t}', loginArcadeNew:'НОВЕ',
     liveTables:'{n} активних столів', liveWaiting:'{n} гравців чекають',
     liveOnline:'{n} гравців онлайн', liveToday:'{n} ігор сьогодні',
     loginChange:'Змінити',

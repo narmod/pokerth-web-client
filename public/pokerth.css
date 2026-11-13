@@ -759,8 +759,8 @@ body {
   max-height: 480px; overflow: hidden;
   transition: max-height 0.38s ease, opacity 0.25s ease, padding 0.38s ease, margin 0.38s ease, border-color 0.25s ease;
 }
-.card.login-in-mode .card-logo {
-  max-height: 0; opacity: 0; padding: 0 !important; border-bottom-color: transparent;
+#s-connect .card.login-in-mode .card-logo {
+  max-height: 0; opacity: 0; padding: 0; border-bottom-color: transparent;
   margin-bottom: calc(-1 * var(--sp-3, 12px)); pointer-events: none; visibility: hidden;
   transition: max-height 0.38s ease, opacity 0.2s ease, padding 0.38s ease, margin 0.38s ease, border-color 0.2s ease, visibility 0s linear 0.38s;
 }
@@ -792,6 +792,12 @@ body {
 }
 .cl-app-title { --login-title-size: 2rem; font-size: calc(var(--login-title-size) * var(--interface-scale)); }
 .card-subtitle { --login-subtitle-size: .65rem; font-size: calc(var(--login-subtitle-size) * var(--interface-scale)); letter-spacing: 0.4em; text-transform: uppercase; color: var(--text); }
+/* The login brand block's spacing (inline styles in the markup until
+   web.22, which the short-screen steps below had to beat with !important). */
+#s-connect .card-logo { padding: 18px 0; }
+#s-connect .cl-app-title { letter-spacing: 0.18em; margin-top: 10px; }
+#s-connect .card-suits-row { letter-spacing: 0.32em; margin-top: 9px; opacity: 0.85; }
+#s-connect .card-subtitle { margin-top: 8px; }
 .card-chip {
   --login-brand-size: clamp(56px, 13vw, 126px);
   display: block;
@@ -817,12 +823,11 @@ body {
 @media (max-height: 760px) {
   #s-connect { padding: 8px 14px; }
   .card { gap: var(--sp-3); padding: 14px 18px; }
-  .card-logo { padding: 8px 0 10px !important; }
+  #s-connect .card-logo { padding: 8px 0 10px; }
   .card-chip { --login-brand-size: 54px; }
-  .card-title-big { font-size: 1.5rem !important; margin-top: 6px !important; }
-  .cl-app-title { --login-title-size: 1.5rem; font-size: calc(var(--login-title-size) * var(--interface-scale)) !important; }
-  .card-suits-row { font-size: var(--fs-md) !important; margin-top: 5px !important; }
-  .card-subtitle { --login-subtitle-size: var(--fs-source-3xs); font-size: calc(var(--login-subtitle-size) * var(--interface-scale)) !important; margin-top: 4px !important; }
+  #s-connect .cl-app-title { --login-title-size: 1.5rem; margin-top: 6px; }
+  #s-connect .card-suits-row { font-size: var(--fs-md); margin-top: 5px; }
+  #s-connect .card-subtitle { --login-subtitle-size: var(--fs-source-3xs); margin-top: 4px; }
   .f { gap: var(--sp-1); }
   .f input { padding: 7px 10px; font-size: var(--fs-base); }
   .sel-wrap select { padding: 7px 30px 7px 10px; }
@@ -831,11 +836,42 @@ body {
   .btn-primary { padding: var(--sp-4); }
   .tls-row { font-size: var(--fs-xs); }
 }
+/* Phones in landscape (any short landscape screen): the brand block and the
+   Ace's Help button on the left, the list of modes on the right, under the
+   header bar — four modes fit in 360 px of height. #login-step1 lends its
+   children to the card's grid (display: contents). Step 2 (the form) keeps
+   the column layout. */
+@media (orientation: landscape) and (max-height: 540px) {
+  #s-connect { padding-top: 54px; padding-bottom: 6px; }
+  #s-connect > .card:not(.login-in-mode) { width: min(720px, calc(100vw - 24px)); display: grid;
+    grid-template-columns: minmax(140px, 34%) minmax(0, 1fr);
+    grid-template-areas: "logo lead" "logo sub" "logo cards" "help cards";
+    column-gap: 18px; row-gap: 0; align-items: center; padding: 12px 16px; }
+  #s-connect > .card:not(.login-in-mode) > :not(.card-logo) { grid-column: 2; }
+  #s-connect > .card:not(.login-in-mode) > #login-step1 { display: contents; }
+  #s-connect > .card:not(.login-in-mode) > .card-logo { grid-area: logo; align-self: stretch; display: flex; flex-direction: column;
+    justify-content: center; border-bottom: 0; padding: 0; }
+  #s-connect > .card:not(.login-in-mode)::after { content: ''; grid-column: 1; grid-row: 1 / -1; justify-self: end;
+    width: 1px; height: 100%; margin-right: -9px; background: var(--border); }
+  #s-connect > .card:not(.login-in-mode) .login-lead { grid-area: lead; margin: 0; }
+  #s-connect > .card:not(.login-in-mode) .login-lead-sub { grid-area: sub; margin: 0 0 8px; }
+  #s-connect > .card:not(.login-in-mode) .login-cards { grid-area: cards; gap: 7px; }
+  #s-connect > .card:not(.login-in-mode) .guide-login-btn { grid-area: help; justify-self: center; align-self: end; margin: 10px 0 0; }
+  #s-connect > .card:not(.login-in-mode) .card-chip { --login-brand-size: clamp(52px, 18vh, 96px); }
+  #s-connect > .card:not(.login-in-mode) .card-suits-row { display: block; }
+  #s-connect > .card:not(.login-in-mode) .login-card { padding: 7px 12px; }
+  #s-connect > .card:not(.login-in-mode) .lc-ic { font-size: 1.5rem; }
+}
+@media (orientation: landscape) and (max-height: 400px) {
+  #s-connect > .card:not(.login-in-mode) .login-lead-sub { display: none; }
+  #s-connect > .card:not(.login-in-mode) .login-lead { margin: 0 0 6px; }
+  #s-connect > .card:not(.login-in-mode) .login-card { padding: 5px 12px; }
+  #s-connect > .card:not(.login-in-mode) .card-subtitle { display: none; }
+}
 @media (max-height: 640px) {
   .card-chip { --login-brand-size: 44px; }
-  .card-title-big { font-size: var(--fs-xl) !important; }
-  .cl-app-title { --login-title-size: var(--fs-source-xl); font-size: calc(var(--login-title-size) * var(--interface-scale)) !important; }
-  .card-suits-row { display: none !important; }
+  #s-connect .cl-app-title { --login-title-size: var(--fs-source-xl); }
+  #s-connect .card-suits-row { display: none; }
   .card { gap: var(--sp-2); }
   #login-step2 { gap: var(--sp-2); }
 }
@@ -1693,6 +1729,11 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    cadre, comme un ScrollView QML. */
 [data-kn-read]:focus { outline: none; }
 .lc-ic { font-size: 1.8rem; width: 40px; text-align: center; flex: 0 0 auto; }
+/* Mini-games mode (modules/ui/login-arcade.mjs): hidden until unlocked; a
+   « NEW » pill until it is opened once. */
+.login-card[hidden], .lc-new[hidden] { display: none; }
+.lc-new { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 999px; background: #d8a93a; color: #1a1305;
+  font-size: calc(10px * var(--interface-scale)); font-weight: 800; letter-spacing: .04em; vertical-align: 2px; line-height: 1.5; }
 .lc-tx { flex: 1; min-width: 0; }
 .lc-t { display: block; font-size: var(--fs-md); font-weight: 800; color: var(--text-hi); }
 .lc-d { display: block; font-size: var(--fs-xs); color: var(--text); margin-top: 3px;
