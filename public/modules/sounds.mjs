@@ -192,7 +192,11 @@ function _decodeOne(name) {
   if (_buffers[name] || !src) return;
   try {
     var copy = src.slice(0); // decodeAudioData DETACHE son entree
-    ctx.decodeAudioData(copy, function(b) { _buffers[name] = b; }, function() {});
+    // Chrome also returns a promise that rejects even with an error callback
+    // (« Unable to decode audio data », unhandled — web.14): swallow it, the
+    // synth fallback plays instead.
+    var pr = ctx.decodeAudioData(copy, function(b) { _buffers[name] = b; }, function() {});
+    if (pr && typeof pr.catch === 'function') pr.catch(function() {});
   } catch(e) {}
 }
 function _decodeAll() { Object.keys(SAMPLE_FILES).forEach(_decodeOne); }
@@ -280,7 +284,10 @@ function _decodeTest(ab) {
   var ctx = _ensureRunning();
   if (!ctx) return Promise.resolve(true);   // pas encore de contexte : on fait confiance
   return new Promise(function(res) {
-    try { ctx.decodeAudioData(ab.slice(0), function() { res(true); }, function() { res(false); }); }
+    try {
+      var pr = ctx.decodeAudioData(ab.slice(0), function() { res(true); }, function() { res(false); });
+      if (pr && typeof pr.catch === 'function') pr.catch(function() { res(false); });
+    }
     catch(e) { res(false); }
   });
 }

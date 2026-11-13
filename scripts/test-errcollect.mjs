@@ -135,6 +135,11 @@ listeners.unhandledrejection({ reason: { message: "null is not an object (evalua
 listeners.unhandledrejection({ reason: { message: "undefined is not an object (evaluating 'n.standardSelectors')", stack: '@' + ORIGIN + '/:17:6302' } });
 listeners.unhandledrejection({ reason: 'Ad loaded,but response or ad data is empty, and reqId is : 462243bc05c44b8d997313eefc5ccc57' });
 ok(q().length === 0, 'and their rejections (Safari extension, AdGuard, an ad SDK)');
+listeners.error({ message: "ReferenceError: Can't find variable: SCDynimacBridge", filename: ORIGIN + '/', lineno: 1, colno: 16, error: { stack: 'global code@' + ORIGIN + '/:1:16' } });
+listeners.unhandledrejection({ reason: { message: 'Object Not Found Matching Id:3, MethodName:update, ParamCount:4' } });
+listeners.unhandledrejection({ reason: 'Object Not Found Matching Id:1, MethodName:update, ParamCount:4' });
+listeners.unhandledrejection({ reason: { message: 'wallet must has at least one account' } });
+ok(q().length === 0, 'the Snapchat in-app bridge, the Outlook link scanner and a wallet extension are ignored (web.14)');
 listeners.error({ message: "TypeError: can't access dead object", filename: ORIGIN + '/modules/ui/remote.mjs', lineno: 35, error: { stack: 'detected@' + ORIGIN + '/modules/ui/remote.mjs:35:15' } });
 ok(q().length === 1, 'the same dead-object error raised by OUR code is still reported');
 [

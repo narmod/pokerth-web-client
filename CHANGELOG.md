@@ -53,6 +53,12 @@ highlights below.
   build-ID fallbacks in `net/messages.mjs` and `proto/index.mjs` move to 2.1.11 (`web.0`).
 
 ### Fixed
+- **Sounds: no more « Unable to decode audio data » rejection** — Chrome's `decodeAudioData` returns a promise that
+  rejects even when an error callback is given; both call sites in `sounds.mjs` now catch it (the synth fallback
+  already played) (`web.14`).
+- **Error log noise** — the inline collector ignores the Snapchat iOS in-app bridge (`SCDynimacBridge`), the Outlook
+  SafeLinks / CefSharp scanner (« Object Not Found Matching Id:… ») and a crypto-wallet extension (« wallet must has
+  at least one account ») (`web.14`).
 - **A tap made before the app has started is no longer lost** — the boot overlay holds taps until `pokerth.js` has run,
   but something outside the client can hide it (Android · Chrome 121: overlay `display:none` with none of our classes,
   tap at 6–8 s → « App is not defined »; the web.263 « Retry » safety net cannot show a hidden overlay). The inline

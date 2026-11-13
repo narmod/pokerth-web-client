@@ -127,6 +127,11 @@
     if (/^ResizeObserver loop (?:completed with undelivered notifications|limit exceeded)/.test(String(msg || ''))) return true;
     if (s.indexOf('webkit-masked-url://') !== -1 || s.indexOf('static.cloudflareinsights.com/') !== -1) return true;
     if (/\bstandardSelectors\b|\bprocessRandomSelector\b|\brunCustomize\b|property 'insertStyle'|^Ad loaded,\s*but\b/.test(String(msg || ''))) return true;
+    // web.14: the bridge the Snapchat iOS in-app browser injects; the Outlook
+    // SafeLinks / CefSharp link scanner (« Object Not Found Matching Id:3,
+    // MethodName:update, ParamCount:4 »); a crypto-wallet extension rejecting
+    // with « wallet must has at least one account ». The client calls none.
+    if (/\bSCDynimacBridge\b|^Object Not Found Matching Id:\d+, MethodName:|^wallet must has at least one account/.test(String(msg || ''))) return true;
     return false;
   }
   /* Is `name` called by one of the page's on* attributes? Scanned once per
