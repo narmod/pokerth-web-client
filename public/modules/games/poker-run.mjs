@@ -584,6 +584,7 @@ export function create(shell) {
     const base = findSeg(pos), bp = (pos % SEG) / SEG;
     let dx = -(base.curve * bp), x = 0, maxy = H;
     view.hidden = 0; view.far = 0;
+    const shown = [];
     const last = Math.min(segs.length - 1, base.i + DRAW);
     for (let i = base.i; i <= Math.min(segs.length - 1, last + 1); i++) {
       const s = segs[i]; s.g = geom(s); s.T = themeOf(s.stage);
@@ -595,11 +596,20 @@ export function create(shell) {
       x += dx; dx += s.curve; s.clip = maxy;
       if (s.p1.c.z <= DEPTH || s.p2.s.y >= s.p1.s.y || s.p2.s.y >= maxy) { if (s.p1.c.z > DEPTH) view.hidden++; continue; }
       view.far = n;
+      const alt = Math.floor(s.i / 3) % 2, bl = s.Tp ? clamp((s.i - gates[s.stage - 1].seg) / 50, 0, 1) : 1;
+      ctx.fillStyle = bl < 1 ? rgb(mixA(s.Tp.G[alt], s.T.G[alt], bl)) : rgb(s.T.G[alt]);
+      ctx.fillRect(0, s.p2.s.y, W, s.p1.s.y - s.p2.s.y + 1);
+      shown.push(n);
+      maxy = s.p2.s.y;
+    }
+    // The road over all the ground: far away a segment is thinner than a pixel,
+    // and the ground of the next one (drawn 1 px taller to hide seams) would cover it.
+    for (const n of shown) {
+      const s = segs[base.i + n];
       const a = s.p1.s, b = s.p2.s, alt = Math.floor(s.i / 3) % 2, fin = s.i >= finishSeg && s.i < finishSeg + 4;
       const nx = segs[s.i + 1] || s, g1 = s.g, g2 = nx.g || g1, T = s.T;
       const bl = s.Tp ? clamp((s.i - gates[s.stage - 1].seg) / 50, 0, 1) : 1;
       const col = (k) => bl < 1 ? rgb(mixA(s.Tp[k][alt], T[k][alt], bl)) : rgb(T[k][alt]);
-      ctx.fillStyle = col('G'); ctx.fillRect(0, b.y, W, a.y - b.y + 1);
       const U = (p, u) => p.x + p.w * u;
       const road = fin ? (s.i % 2 ? '#f4eedf' : '#0d1117') : col('D');
       const piece = (c1, h1, c2, h2, rw) => {
@@ -622,8 +632,7 @@ export function create(shell) {
         }
       } else for (let l = 0; l < 3; l++) { const q1 = g1.pcs[l], q2 = g2.pcs[l]; piece(q1.c, q1.hw, q2.c, q2.hw, 0.05 * Math.min(1, s.f * 4)); }
       const fogA = Math.min(0.18, Math.pow(n / DRAW, 3) * 0.25);
-      if (fogA > 0.02) { ctx.fillStyle = rgb(T.F, fogA); ctx.fillRect(0, b.y, W, a.y - b.y + 1); }
-      maxy = b.y;
+      if (fogA > 0.02) { ctx.fillStyle = rgb(T.F, fogA); ctx.fillRect(0, b.y, W, a.y - b.y); }
     }
     // Sprites, far to near, each clipped by the road in front of it.
     const bySeg = new Map();

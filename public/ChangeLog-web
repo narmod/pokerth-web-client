@@ -1,4 +1,7 @@
-2026-11-13 version 2.1.11-web.19 (current series):
+2026-11-13 version 2.1.11-web.20 (current series):
+- bugfix: in Poker Run, the road now runs all the way to the horizon, its far bends included — it used to vanish halfway, covered by the grass
+
+2026-11-13 version 2.1.11-web.19:
 - improvement: in Poker Run, gentler hills: the road can be seen all the way to the horizon, like the signs and chips along it
 
 2026-11-13 version 2.1.11-web.18:
