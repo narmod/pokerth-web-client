@@ -181,9 +181,27 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
     'Who Wins? is back and no lesson is left');
   ok(games.every((g) => !g.unlock.trophy || ids.has(g.unlock.trophy) || g.unlock.trophy.length), 'unlock trophies are named');
   const house = games.find((g) => g.id === 'house');
-  ok(reg.unlocked(house, { count: 12, owned: new Set() }) && !reg.unlocked(house, { count: 11, owned: new Set() })
+  ok(reg.unlocked(house, { count: 14, owned: new Set() }) && !reg.unlocked(house, { count: 13, owned: new Set() })
     && reg.unlocked({ unlock: { trophy: 'x' } }, { count: 0, owned: new Set(['x']) }) && !reg.unlocked({ unlock: { trophy: 'x' } }, { count: 30, owned: new Set() }),
     'unlocked(): a count of trophies, or one trophy in particular');
+  // The Mini-games mode (claude/CONCEPTION_MODE_ARCADE.md): a game to get better
+  // at poker, then a game for fun; 8 trophies open the mode and the first game,
+  // then one game every 2 trophies, the last at the number of trophies that
+  // are not secret (every game can be opened without the secret ones).
+  const { ACHIEVEMENTS } = await import('../public/modules/achievements/defs.mjs');
+  const normal = ACHIEVEMENTS.filter((d) => d.cat !== 'secret').length;
+  ok(games.map((g) => g.id).join(',') === 'whowins,ace-runner,hilo,house,videopoker,pokerdrop,solitaire,ace-dash,bluff,poker-run'
+    && games.every((g, i) => g.kind === (i % 2 ? 'fun' : 'learn')), 'Mini-games: the path alternates a game to learn and a game for fun');
+  const needs = games.map((g) => g.unlock.trophies);
+  ok(reg.ARCADE_UNLOCK.trophies === 8 && needs[0] === 8 && needs.slice(0, -1).every((n, i) => i === 0 || n === needs[i - 1] + 2)
+    && needs[needs.length - 1] === normal && normal === 27, 'Mini-games: 8 trophies, then every 2, the last at every normal trophy (' + needs.join(' ') + ' / ' + normal + ')');
+  const none = reg.arcadeState({ count: 7, owned: new Set() }, false);
+  const some = reg.arcadeState({ count: 12, owned: new Set() }, false);
+  const word = reg.arcadeState({ count: 0, owned: new Set() }, true);
+  ok(!none.mode && none.open === 0 && some.mode && some.open === 3 && some.total === 10
+    && some.games.filter((g) => g.open).map((g) => g.id).join(',') === 'whowins,ace-runner,hilo'
+    && word.mode && word.open === 10 && some.games[3].need === 14,
+    'arcadeState(): hidden at 7 trophies, 3 games open at 12, everything with the secret word');
   // Poker Drop: the grid, its lines, a drop's score, the Ace's play.
   const P = await import('../public/modules/games/pokerdrop-rules.mjs');
   ok(P.WINDOWS.length === 44 && P.WINDOWS.every((w) => w.cells.length === 5), 'Poker Drop: 44 lines of five on the 7 × 6 grid (' + P.WINDOWS.length + ')');

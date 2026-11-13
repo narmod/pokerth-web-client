@@ -281,6 +281,12 @@ use too. Items are grouped by status rather than fixed phases.
 
 ## 🔨 Now (in progress)
 
+- **« Mini-games » login mode** — a fourth mode on the login, hidden until 8 training trophies are won, then
+  one mini-game every 2 trophies (a game to learn, a game for fun), the next ones shown as blurred « mystery
+  games »; revealed with a backlit light animation; the secret word opens everything on the device. Design note:
+  `claude/CONCEPTION_MODE_ARCADE.md`. Five steps: 1. the rules (`web.21`) · 2. the login page · 3. the
+  mini-games page · 4. the animations · 5. the statistics.
+
 - **Official QML client fidelity** — ongoing pixel-and-behaviour alignment of the in-game
   screen with the official QML client (action bar, mobile layouts, seat geometry).
   Each upstream release gets its own pass, driven by the QML sources extracted from the
@@ -359,9 +365,6 @@ use too. Items are grouped by status rather than fixed phases.
 
 ## 🌅 Later / Ideas
 
-- **« Arcade » login mode** — a fourth card on the login, hidden at first, that appears once enough trophies
-  are won (`ARCADE_UNLOCK`); then each game opens by its own trophy or trophy count (`unlock` in
-  `games/index.mjs`, already filled in). The secret word « mascot » keeps opening everything.
 - **Replay your hands** — a lesson built from the player's own hand history: what to do at this spot,
   with pot odds and equity.
 - **Local multiplayer over WebRTC** — peer-to-peer play over a local Wi-Fi hotspot with

@@ -1,4 +1,7 @@
-2026-11-13 version 2.1.11-web.20 (current series):
+2026-11-13 version 2.1.11-web.21 (current series):
+- improvement: the mini-games are listed in a new order, a game to get better at poker then a game for fun, from the simplest to the most fun
+
+2026-11-13 version 2.1.11-web.20:
 - bugfix: in Poker Run, the road now runs all the way to the horizon, its far bends included — it used to vanish halfway, covered by the grass
 
 2026-11-13 version 2.1.11-web.19:

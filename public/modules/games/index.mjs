@@ -23,31 +23,37 @@
 // ═══════════════════════════════════════════════════════════════════
 
 export const HOME = 'arcade';
-// The home page (menu.mjs) lists the games in this order.
-// page: no stage (the home page); rulesKey:
-// the rules sheet (« ? » in the header, « Rules » on the home page); aspect:
-// the stage's width / height range.
-// unlock: what will open the game in the future « Arcade » mode of the login
-// (not active yet — the secret word opens everything): {} from the start,
-// { trophy: id } once that trophy is won, { trophies: n } with n trophies won
-// in all. The numbers are a first draft, to be tuned when the mode is built.
-export const ARCADE_UNLOCK = { trophies: 10 };
+// The « Mini-games » mode (design note claude/CONCEPTION_MODE_ARCADE.md,
+// narmod 2026-11-13). The home page (menu.mjs) lists the games in this order,
+// a path that alternates a game to get better at poker (kind 'learn') and a
+// game for fun (kind 'fun'): reading hands → odds → choosing → building →
+// playing an opponent, and one button → timing → light strategy → 3D → the car.
+// page: no stage (the home page); rulesKey: the rules sheet (« ? » in the
+// header, « Rules » on the home page); aspect: the stage's width / height range.
+// unlock: what opens the game in the Mini-games mode: {} from the start,
+// { trophy: id } once that trophy is won, { trophies: n } with n training
+// trophies won in all — the secret ones included (a mini-game's trophy brings
+// the next game closer). The mode itself appears at ARCADE_UNLOCK; then one
+// game every 2 trophies, the last at 27 = every trophy that is not secret, so
+// that all of them can be opened without the secret ones. The secret word
+// opens everything (ALL_KEY).
+export const ARCADE_UNLOCK = { trophies: 8 };
 export const GAMES = [
   { id: HOME, nameKey: 'gmTitle', name: 'Mini-games', page: true, load: () => import('./menu.mjs') },
-  { id: 'ace-runner', unlock: {}, name: 'Ace Runner', icon: '🏃', rulesKey: 'arRules', aspect: [4 / 3, 2.4], load: () => import('./ace-runner.mjs') },
-  { id: 'house', unlock: { trophies: 12 }, nameKey: 'hcName', icon: '🃏', rulesKey: 'hcRules', aspect: [4 / 3, 2.4], load: () => import('./house.mjs') },
-  { id: 'solitaire', unlock: { trophies: 15 }, nameKey: 'psName', icon: '♠', rulesKey: 'psRules', aspect: [1.25, 2.2], load: () => import('./solitaire.mjs') },
-  { id: 'videopoker', unlock: { trophies: 18 }, nameKey: 'vpName', icon: '🎰', rulesKey: 'vpRules', aspect: [0.6, 2.2], load: () => import('./videopoker.mjs') },
-  { id: 'whowins', unlock: { trophies: 21 }, nameKey: 'wwName', icon: '⚖️', rulesKey: 'wwRules', aspect: [0.6, 2.2], load: () => import('./whowins.mjs') },
-  { id: 'hilo', unlock: { trophies: 24 }, nameKey: 'hlName', icon: '↕️', rulesKey: 'hlRules', aspect: [0.6, 2.2], load: () => import('./hilo.mjs') },
-  { id: 'bluff', unlock: { trophies: 27 }, nameKey: 'blName', icon: '🎭', rulesKey: 'blRules', aspect: [0.6, 2.2], load: () => import('./bluff.mjs') },
-  { id: 'pokerdrop', unlock: { trophies: 30 }, nameKey: 'pdName', icon: '⬇️', rulesKey: 'pdRules', aspect: [0.6, 2.2], load: () => import('./pokerdrop.mjs') },
-  { id: 'ace-dash', unlock: { trophies: 33 }, name: 'Ace Dash', icon: '🏁', rulesKey: 'adRules', aspect: [0.6, 1.9], load: () => import('./ace-dash.mjs') },
-  { id: 'poker-run', unlock: { trophies: 36 }, name: 'Poker Run', icon: '🏎️', rulesKey: 'prRules', aspect: [0.6, 1.9], load: () => import('./poker-run.mjs') },
+  { id: 'whowins', kind: 'learn', unlock: { trophies: 8 }, nameKey: 'wwName', icon: '⚖️', rulesKey: 'wwRules', aspect: [0.6, 2.2], load: () => import('./whowins.mjs') },
+  { id: 'ace-runner', kind: 'fun', unlock: { trophies: 10 }, name: 'Ace Runner', icon: '🏃', rulesKey: 'arRules', aspect: [4 / 3, 2.4], load: () => import('./ace-runner.mjs') },
+  { id: 'hilo', kind: 'learn', unlock: { trophies: 12 }, nameKey: 'hlName', icon: '↕️', rulesKey: 'hlRules', aspect: [0.6, 2.2], load: () => import('./hilo.mjs') },
+  { id: 'house', kind: 'fun', unlock: { trophies: 14 }, nameKey: 'hcName', icon: '🃏', rulesKey: 'hcRules', aspect: [4 / 3, 2.4], load: () => import('./house.mjs') },
+  { id: 'videopoker', kind: 'learn', unlock: { trophies: 16 }, nameKey: 'vpName', icon: '🎰', rulesKey: 'vpRules', aspect: [0.6, 2.2], load: () => import('./videopoker.mjs') },
+  { id: 'pokerdrop', kind: 'fun', unlock: { trophies: 18 }, nameKey: 'pdName', icon: '⬇️', rulesKey: 'pdRules', aspect: [0.6, 2.2], load: () => import('./pokerdrop.mjs') },
+  { id: 'solitaire', kind: 'learn', unlock: { trophies: 20 }, nameKey: 'psName', icon: '♠', rulesKey: 'psRules', aspect: [1.25, 2.2], load: () => import('./solitaire.mjs') },
+  { id: 'ace-dash', kind: 'fun', unlock: { trophies: 22 }, name: 'Ace Dash', icon: '🏁', rulesKey: 'adRules', aspect: [0.6, 1.9], load: () => import('./ace-dash.mjs') },
+  { id: 'bluff', kind: 'learn', unlock: { trophies: 24 }, nameKey: 'blName', icon: '🎭', rulesKey: 'blRules', aspect: [0.6, 2.2], load: () => import('./bluff.mjs') },
+  { id: 'poker-run', kind: 'fun', unlock: { trophies: 27 }, name: 'Poker Run', icon: '🏎️', rulesKey: 'prRules', aspect: [0.6, 1.9], load: () => import('./poker-run.mjs') },
 ];
 /**
- * Would game `g` be open in the future Arcade mode? have = { count, owned }:
- * the number of trophies won and the set of their ids. Not used yet.
+ * Is game `g` open in the Mini-games mode? have = { count, owned }: the number
+ * of trophies won and the set of their ids.
  */
 export function unlocked(g, have) {
   const u = (g && g.unlock) || {};
@@ -55,6 +61,39 @@ export function unlocked(g, have) {
   if (u.trophies && (have.count || 0) < u.trophies) return false;
   return true;
 }
+
+// ── The state of the Mini-games mode ──────────────────────────────
+// The secret word opens the mode with every game, for good, on this device
+// only (not synced).
+export const ALL_KEY = 'pth_arcade_all';
+export function allUnlocked() { try { return localStorage.getItem(ALL_KEY) === '1'; } catch (e) { return false; } }
+export function unlockAll() { try { localStorage.setItem(ALL_KEY, '1'); } catch (e) {} }
+
+/**
+ * The mode from the trophies won (have, as for unlocked()) and the secret word
+ * (all): { mode: shown on the login, open: games open, total, games: [{ id,
+ * kind, open, need }] } — need: the trophies its threshold asks for.
+ */
+export function arcadeState(have, all) {
+  const h = have || { count: 0, owned: new Set() };
+  const games = GAMES.filter((g) => g.id !== HOME).map((g) => ({
+    id: g.id, kind: g.kind, open: !!all || unlocked(g, h), need: (g.unlock && g.unlock.trophies) || 0,
+  }));
+  return {
+    mode: !!all || (h.count || 0) >= ARCADE_UNLOCK.trophies,
+    open: games.filter((g) => g.open).length, total: games.length, count: h.count || 0, games,
+  };
+}
+/** The trophies won in training on this device: { count, owned }. */
+export async function trophiesWon() {
+  try {
+    const m = await import('../achievements/index.mjs');
+    const owned = new Set(m.createAchievements({}).snapshot().filter((a) => a.unlocked).map((a) => a.id));
+    return { count: owned.size, owned };
+  } catch (e) { return { count: 0, owned: new Set() }; }
+}
+/** The current state of the mode on this device (see arcadeState). */
+export async function currentState() { return arcadeState(await trophiesWon(), allUnlocked()); }
 // Secret words → what they open.
 export const TRIGGERS = [{ wordKey: 'gameWordAce', words: ['mascot'], open: HOME }];
 
@@ -136,6 +175,7 @@ export async function launch(id) {
 export function tryLaunch(nick) {
   const id = gameForNick(nick);
   if (!id) return false;
+  unlockAll();
   restoreNick();
   launch(id);
   return true;
@@ -148,7 +188,7 @@ export function back() { if (shellNow) shellNow.back(); }
 export function rules() { if (shellNow) shellNow.rules(); }
 
 if (typeof window !== 'undefined') {
-  window.PthGames = { tryLaunch, launch, gameForNick, isOpen, back, rules };
+  window.PthGames = { tryLaunch, launch, gameForNick, isOpen, back, rules, currentState };
   try {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watchNick);
     else watchNick();

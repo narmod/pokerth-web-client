@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Mini-games mode — 1. the rules** (`web.21`; design note `claude/CONCEPTION_MODE_ARCADE.md`) — the groundwork
+  of a fourth login mode, « Mini-games », hidden until enough training trophies are won. `games/index.mjs`: the
+  games in a new order that alternates a game to get better at poker (`kind: 'learn'`) and a game for fun
+  (`kind: 'fun'`) — Who Wins?, Ace Runner, Higher or Lower, House of Cards, Video Poker, Poker Drop, Poker
+  Solitaire, Ace Dash, The Ace's Bluff, Poker Run; `ARCADE_UNLOCK` 8 trophies, then one game every 2 trophies,
+  the last at 27 (every trophy that is not secret; the secret ones count too). `arcadeState()` /
+  `currentState()` / `trophiesWon()` give the mode's state; the secret word now also unlocks the mode with every
+  game, for good, on this device only (`pth_arcade_all`, not synced). Nothing new is shown yet besides the order.
 - **Poker Run** (`web.16`; `web.17`: the car's body drawn over the Ace — the mascot kit's z-index kept him on top — and a smaller car; `web.18`: the touch pad becomes ◀ NITRO ▶ — the shell's ▲ relabelled with a nitro gauge, ▼ hidden (↓ still brakes), in landscape ◀ left of the stage, NITRO and ▶ right of it; ▲ / ▼ dropped from the texts; `web.19`: gentler hills, ±420 instead of ±1100, so a crest no longer hides the far road while the signs and chips beyond it show — 22 views in 80 hid more than 20 segments, now about 3; `web.20`: the real cause of the road ending halfway — far away a segment is thinner than a pixel and the next one's ground, drawn 1 px taller to hide seams, covered it; the ground is now painted first and the road over all of it) — a tenth mini-game in the arcade, unlocked at 36 trophies (`unlock`, for the future
   Arcade mode): the Ace drives his convertible on an OutRun-style road. A segment road in pseudo-3D (curves, hills)
   on the shell's canvas, the camera behind the car; six stages from Las Vegas, the first five ending in a fork into
