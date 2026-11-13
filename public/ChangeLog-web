@@ -1,4 +1,7 @@
-2026-11-14 version 2.1.11-web.28 (current series):
+2026-11-14 version 2.1.11-web.29 (current series):
+- new: Advanced options › Reset & backup › Storage on this device: how much room the web client takes, its largest items, and whether saving still works (useful on iPhone, where a home-screen app has its own storage)
+
+2026-11-14 version 2.1.11-web.28:
 - bugfix: the mini-games you already played with the secret word before the Mini-games mode stay open, whatever your number of trophies
 
 2026-11-14 version 2.1.11-web.27:

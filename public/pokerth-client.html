@@ -3293,6 +3293,7 @@ function _processAvatarFile(file) {
 <script type="module" src="modules/ui/header-title-fit.mjs"></script>
 <script type="module" src="modules/ui/login-flourish.mjs"></script>
 <script type="module" src="modules/ui/login-arcade.mjs"></script>
+<script type="module" src="modules/ui/storage-usage.mjs"></script>
 <script type="module" src="modules/mascot/index.mjs"></script>
 <script type="module" src="modules/guide/index.mjs"></script>
 <script type="module" src="modules/ui/pm.mjs"></script>
@@ -4255,6 +4256,13 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
               <button type="button" class="btn-sm adv-export-btn" id="adv-persist-btn" onclick="if(window._bakPersist)window._bakPersist()"><span data-i18n="bakPersistBtn">Protect my settings</span></button>
             </div>
             <div class="adv-link-desc" id="adv-persist-status" style="display:none"></div>
+            <!-- Storage on this device (modules/ui/storage-usage.mjs, web.29). -->
+            <div class="adv-sec" data-i18n="advStorageSec">Storage on this device</div>
+            <div class="adv-ign-desc" data-i18n="advStorageDesc">What the web client keeps in this browser. An app added to the home screen has its own storage. If saving fails, new trophies and settings are not kept.</div>
+            <div class="adv-store" id="adv-storage" aria-live="polite"></div>
+            <div class="adv-row adv-export-row">
+              <button type="button" class="btn-sm adv-export-btn" id="adv-storage-refresh"><span data-i18n="advStorageRefresh">Refresh</span></button>
+            </div>
           </div>
         </section>
         <div class="help-body adv-results" id="adv-results" style="display:none"></div>

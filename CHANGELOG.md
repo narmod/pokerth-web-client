@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Storage on this device** (`web.29`) — Advanced options › Reset & backup: `ui/storage-usage.mjs` shows the size of
+  the `pth_*` localStorage entries (2 bytes a character) with the five largest groups (`pth_av_*`, `pth_game_best_*`…),
+  whether saving works (a probe written, read back, removed) and the other data from `navigator.storage.estimate()`.
+  Read only, measured when the section comes into view and on « Refresh ». To check devices where trophies and
+  settings are not kept (full or blocked storage; an iOS home-screen app has its own storage). 8 keys × 83 languages.
+  Test: `test-storage-usage`.
 - **Mini-games mode — 5. the statistics** (`web.25`) — `server/arcade-stats.js` (pure, like `guide-stats.js`): a
   closed list of events posted to `POST /__arcade { ev }` (no visitor id, no name; 400 for anything else), stored
   in `visits.json` (all time, day bucket `ar`, hour cell; bots apart). The unlocking funnel (`unlock_trophies` /
