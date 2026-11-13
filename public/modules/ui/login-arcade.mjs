@@ -101,6 +101,27 @@ function render() {
   if (n) n.hidden = seen();
 }
 
+// The login's header folds away as for the other modes (loginHeaderFold in
+// pokerth-client.html, 0.38 s), then the mini-games page opens; back on the
+// login, it unfolds again (web.27).
+const FOLD_MS = 380;
+let back = false;      // the mini-games page was opened from the login
+const soft = () => { try { return document.documentElement.classList.contains('reduce-fx') || window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
+/** Back on the login: the header, folded for a frame, unfolds in its transition. */
+function unfold() {
+  const card = document.querySelector('#s-connect .card'), logo = card && card.querySelector('.card-logo');
+  if (!card || !logo || typeof window.loginHeaderFold !== 'function' || soft()) return;
+  // The login has just come back (its header already unfolded at once): fold
+  // it again without the transition, then let it unfold in it.
+  requestAnimationFrame(() => {
+    logo.style.transition = 'none';
+    window.loginHeaderFold(true);
+    void logo.offsetHeight;
+    logo.style.transition = '';
+    requestAnimationFrame(() => { try { window.loginHeaderFold(false); } catch (e) {} });
+  });
+}
+
 /** The card's tap: the mini-games page. */
 export async function openArcade() {
   setFlag(SEEN_KEY);
@@ -109,8 +130,15 @@ export async function openArcade() {
   render();
   try {
     const g = await import('../games/index.mjs');
+    if (g.isOpen()) return;
+    if (loginShown() && typeof window.loginHeaderFold === 'function') {
+      window.loginHeaderFold(true);
+      if (!soft()) await new Promise((r) => setTimeout(r, FOLD_MS));
+      back = true;
+    }
     await g.launch(g.HOME);
   } catch (e) { try { console.warn('[arcade]', e); } catch (e2) {} }
+  back = false;
   refresh();
 }
 
@@ -140,7 +168,7 @@ if (typeof window !== 'undefined') {
         let was = sc.classList.contains('active');
         new MutationObserver(() => {
           const now = sc.classList.contains('active');
-          if (now && !was) refresh();
+          if (now && !was) { if (back) { back = false; unfold(); } refresh(); }
           was = now;
         }).observe(sc, { attributes: true, attributeFilter: ['class'] });
       }

@@ -93,6 +93,10 @@ highlights below.
   and ▲ ▼ on the right in landscape; the other games are unchanged.
 
 ### Changed
+- **Mini-games: the login header folds like the other modes** (`web.27`) — `ui/login-arcade.mjs`: the card's tap
+  folds the header (`loginHeaderFold(true)`, 0.38 s) before the page opens; back on the login, the header (unfolded
+  at once by `loginBackToStep1`) is folded again for a frame without its transition, then unfolds in it. Nothing
+  with « Reduce animations ». Test: `test-login-arcade-browser`.
 - **Login page in landscape** (`web.22`) — on a short landscape screen (≤ 540 px tall, phones) the brand block and
   the Ace's Help button go to the left and the list of modes to the right, under the header bar
   (`#login-step1` lends its children to the card's grid): the four modes fit even at 740 × 360, where the title and

@@ -176,6 +176,27 @@ for (const [w, h] of [[852, 393], [740, 360], [375, 667], [1440, 900]]) {
   await ctx.close();
 }
 {
+  // web.27: the header folds away as for the other modes before the page
+  // opens, and unfolds in its transition back on the login.
+  const { ctx, pg } = await open(393, 852, 12, { pth_arcade_seen: '1', pth_arcade_shown: '1', pth_arcade_revealed: '["whowins","ace-runner","hilo"]' });
+  const logoH = () => pg.evaluate(() => { const l = document.querySelector('#s-connect .card-logo'); return { h: l.getBoundingClientRect().height, fold: l.parentNode.classList.contains('login-in-mode'), game: !!document.getElementById('pth-game') }; });
+  const h0 = await logoH();
+  await pg.click('#login-card-arcade');
+  await sleep(150);
+  const mid = await logoH();
+  await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
+  await sleep(600);
+  await pg.keyboard.press('Escape');
+  await pg.waitForFunction(() => !document.getElementById('pth-game'), null, { timeout: 5000 }).catch(() => {});
+  await sleep(120);
+  const back1 = await logoH();
+  await sleep(900);
+  const back2 = await logoH();
+  ok(h0.h > 40 && mid.fold && !mid.game && mid.h < h0.h && mid.h > 0, 'the tap folds the header first, as the other modes do (' + Math.round(h0.h) + ' → ' + Math.round(mid.h) + ' px, page not open yet)');
+  ok(!back1.fold && back1.h < back2.h - 5 && Math.abs(back2.h - h0.h) < 2, 'back on the login, it unfolds in its transition (' + Math.round(back1.h) + ' → ' + Math.round(back2.h) + ' px)');
+  await ctx.close();
+}
+{
   // web.26: a storage that refuses the flags never replays the light — not on
   // the login, not in the menu, not after a game, not after a restart.
   const { ctx, pg } = await open(393, 852, 12, {}, true);

@@ -1,4 +1,7 @@
-2026-11-13 version 2.1.11-web.26 (current series):
+2026-11-14 version 2.1.11-web.27 (current series):
+- improvement: opening the Mini-games folds the login's title away like the other modes do, and it unfolds again when you come back
+
+2026-11-13 version 2.1.11-web.26:
 - bugfix: on a device whose storage is full or blocked, the Mini-games light no longer comes back on every visit (login, Mini-games page, after a game); the mode and its games are simply there
 
 2026-11-13 version 2.1.11-web.25:
