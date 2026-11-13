@@ -40,6 +40,8 @@
 // Sounds reuse modules/sounds.mjs. Best score: localStorage pth_game_best_<id>.
 // ═══════════════════════════════════════════════════════════════════
 
+import { arcadeStat } from './stats.mjs';
+
 export const H = 360;
 const ROOT_ID = 'pth-game';
 const PAD_W = 84, PAD_H = 78;      // room the touch buttons take beside / under the stage
@@ -196,6 +198,7 @@ export function run(def, gameMod, opts = {}) {
     let cur = def;
     let padOn = true, lanes = false;
     const grants = [];
+    let lastEnded = 0;
     const bestKey = () => 'pth_game_best_' + cur.id;
     const shell = {
       H, W: 640, k: 1, dpr: 1,
@@ -228,6 +231,13 @@ export function run(def, gameMod, opts = {}) {
       touchPad(on) { padOn = !!on; root.classList.toggle('pg-nopad', !on); layout(); },
       /** A lane game: swipes on the stage (← → ↑ ↓, a tap jumps) and ◀ ▶ on the touch pad. */
       lanes(on) { lanes = !!on; root.classList.toggle('pg-lanes', lanes); layout(); },
+      /** A round played to its end (the statistics of the Mini-games mode, web.25). */
+      ended() {
+        const now = Date.now();
+        if (now - lastEnded < 1500) return;
+        lastEnded = now;
+        arcadeStat('end_' + cur.id);
+      },
       /** Queue a secret trophy (granted once the arcade is left). */
       grant(id) { if (id && grants.indexOf(id) < 0) grants.push(id); },
       /** Switch to game `id` on the same page (needs opts.open). */

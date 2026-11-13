@@ -212,6 +212,7 @@ export function create(shell) {
   function result() {
     state = 'over'; G.overAt = performance.now();
     const score = G.score;
+    shell.ended();
     if (score >= TROPHY_SCORE) shell.grant('solitaire');
     let record = false, prev;
     if (G.daily) { prev = dailyBest(G.day); if (score > prev) { setDailyBest(G.day, score); record = prev > 0; } }

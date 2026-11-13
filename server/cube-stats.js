@@ -14,7 +14,7 @@
 // directory id), so a forged ping cannot write free text. A bucket holds at
 // most KEY_CAP keys; past it, new combinations go to the overflow key '*'.
 
-const MODES = ['pokerthnet', 'lan', 'offline', 'live'];
+const MODES = ['pokerthnet', 'lan', 'offline', 'live', 'arcade'];   // arcade: the Mini-games page (web.25)
 const ACCOUNTS = ['guest', 'auth'];
 const KEY_CAP = 2000;
 const OVERFLOW = '*';

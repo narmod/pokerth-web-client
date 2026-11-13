@@ -43,7 +43,7 @@ const shellJs = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..',
 // classes, so the handlers that open a panel are the same as before.
 const GROUPS = {
   overview: ['overview'],
-  live: ['sessions', 'livemap'], stats: ['traffic/overview', 'traffic/world', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace'], community: ['board', 'polls', 'broadcast', 'arena', 'landir'],
+  live: ['sessions', 'livemap'], stats: ['traffic/overview', 'traffic/world', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace', 'traffic/arcade'], community: ['board', 'polls', 'broadcast', 'arena', 'landir'],
   content: ['packages', 'music'], players: ['login', 'lobby', 'firstvisit', 'features'], infra: ['servers', 'proxy', 'database', 'identity'],
   ops: ['server', 'errors', 'deploy', 'backup'], security: ['keys', 'audit', 'blocked'],
 };
@@ -69,7 +69,7 @@ for (const [g, tabs] of Object.entries(GROUPS)) {
     tabs.length === 1 ? 'a one-section group opens its section directly' : 'a group of several unfolds its list');
   all = all.concat(got);
 }
-ok(all.length === 32 && new Set(all).size === 32, 'every one of the thirty-two sections is reachable, once');
+ok(all.length === 33 && new Set(all).size === 33, 'every one of the thirty-three sections is reachable, once');   // web.25: Mini-games
 for (const sc of ['packages', 'music', 'broadcast', 'polls', 'leaderboard']) {
   ok(new RegExp('data-scope="' + sc + '"').test(admin), 'scope ' + sc + ' survived the move');
 }
@@ -415,7 +415,7 @@ ok(traf.indexOf('id="trafRet"') > traf.indexOf('data-ts="audience" role="tabpane
 // Explanations switch. Every section stays in the DOM: loadTraffic fills them
 // all, the bar only chooses which one is visible.
 // web.184: Data is gone, its cards moved to Database, Backup, Summary and the side menu.
-const TS = ['overview', 'audience', 'activity', 'visitors', 'music', 'ace'];
+const TS = ['overview', 'audience', 'activity', 'visitors', 'music', 'ace', 'arcade'];
 const TS8 = ['world'].concat(TS);
 function tsub(k) {
   const i = traf.indexOf('<div class="tsub" data-ts="' + k + '"');
@@ -489,7 +489,7 @@ ok(cards('audience') === 3 && cards('activity') === 6 && cards('visitors') === 2
 for (const k of ['world', 'audience', 'activity', 'visitors', 'music', 'ace']) {
   ok(new RegExp('<div class="tsub" data-ts="' + k + '"[^>]*>\\n      <section class="ovmodes" id="tsT-' + k + '"').test(traf), k + ' opens on a row of tiles (web.182)');
 }
-ok(/_tsAudience\(d\); _tsActivity\(d\); _tsVisitors\(\); _tsMusic\(\); _tsAce\(\); _tsWorld\(\);/.test(admin), 'filled from the figures the page already has');
+ok(/_tsAudience\(d\); _tsActivity\(d\); _tsVisitors\(\); _tsMusic\(\); _tsAce\(\); _tsArcade\(\); _tsWorld\(\);/.test(admin), 'filled from the figures the page already has');
 ok(/<div class="card" id="srcSec">/.test(traf) && /<div class="card" id="guideSec">/.test(traf), 'a subject keeps its id on its card');
 for (const id of ['btnTrafReset', 'trafModes', 'trafEnv', 'trafMusic']) {
   ok(traf.includes('id="' + id + '"'), id + ' survived the split');

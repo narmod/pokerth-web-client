@@ -59,8 +59,8 @@ ok(/_trafPeriod=14/.test(reset) && /_trafBots=false/.test(reset) && /_narrow=\{\
   'Reset: 14 days, every mode, bots hidden, nothing narrowed — one reload');
 
 // ── Mode colours (narmod, web.140) ────────────────────────────────────────
-ok(/--m-net:#3DBE86;--m-lan:#E8A93B;--m-off:#B48AE8;--m-live:#5AA3F0;--m-all:#E879A6;/.test(admin), 'dark: Internet green, Live/spectator tool blue, all modes rose');
-ok(/--m-net:#1F8F5F;--m-lan:#B9770E;--m-off:#7A4FC0;--m-live:#2F6FC4;--m-all:#B83E78;/.test(admin), 'light: the same, darker');
+ok(/--m-net:#3DBE86;--m-lan:#E8A93B;--m-off:#B48AE8;--m-live:#5AA3F0;--m-arc:#E8D25A;--m-all:#E879A6;/.test(admin), 'dark: Internet green, Live/spectator tool blue, Mini-games gold, all modes rose');
+ok(/--m-net:#1F8F5F;--m-lan:#B9770E;--m-off:#7A4FC0;--m-live:#2F6FC4;--m-arc:#8A7A10;--m-all:#B83E78;/.test(admin), 'light: the same, darker');
 ok(/data-mk="all"[\s\S]{0,120}style="--mc:var\(--m-all\)"/.test(body(admin, '_paintModeSel')) && /All modes/.test(body(admin, '_paintModeSel')), 'the All modes tile wears the total colour');
 ok(/<span class="nrk">'\+x\[1\]\+'<span class="fsvh">: <\/span><\/span><span class="nrv">/.test(admin), 'a Narrow row still reads « Country: all » to a screen reader');
 

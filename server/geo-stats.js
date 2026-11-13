@@ -281,7 +281,7 @@ const TZ_COUNTRY = (function () {
 })();
 
 const UNKNOWN = 'ZZ';
-const MODES = Object.freeze(['pokerthnet', 'lan', 'offline', 'live']);
+const MODES = Object.freeze(['pokerthnet', 'lan', 'offline', 'live', 'arcade']);
 // Per-country fields of a visit ping: visits, first visits of a device,
 // installed PWA, phone or tablet. Mode connects are kept under `m`.
 const FIELDS = Object.freeze(['v', 'nw', 'pwa', 'mob']);

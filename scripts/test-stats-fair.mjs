@@ -169,7 +169,7 @@ ok(!/x\.rt\b|\.rt\|\||month\.rt/.test(fn(admin, '_trafInsights') + fn(admin, 'lo
 
 // Lot 3 — one unit on each side of every ratio.
 {
-  ok(/var ms=mt-\(m\.live\|\|0\);/.test(fn(admin, '_geoDetail')) && /game sessions per 100 visits '\+Math\.round\(100\*ms\/v\)/.test(fn(admin, '_geoDetail')), 'country card: /live spectators are not game sessions per 100 web-client visits');
+  ok(/var ms=mt-\(m\.live\|\|0\)-\(m\.arcade\|\|0\);/.test(fn(admin, '_geoDetail')) && /game sessions per 100 visits '\+Math\.round\(100\*ms\/v\)/.test(fn(admin, '_geoDetail')), 'country card: /live spectators are not game sessions per 100 web-client visits');
   ok(/% first visits<\/span>/.test(fn(admin, '_envNewRetBadge')) && !/% new<\/span>/.test(fn(admin, '_envNewRetBadge')), 'language badge says first visits, the share it is');
   // Share at the online peak: the web-client count of that very sample.
   const ctx = { visitsStore: { days: {} }, pruneVisitDays: function () {} };

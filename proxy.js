@@ -9182,6 +9182,7 @@ function emptyVisitsStore() {
     env: {}, envSince: 0, langDiagSince: 0, music: {}, musicSince: 0, hourSince: 0, modeHourSince: 0, pthSince: 0,
     musicVotes: {}, musicVotesSince: 0,
     guide: {}, guideSince: 0,
+    arcade: {}, arcadeSince: 0,
     refSince: 0, geoSince: 0
   };
 }
@@ -9214,6 +9215,8 @@ try {
     visitsStore.pthSince = (typeof _vs.pthSince === 'number') ? _vs.pthSince : 0;
     visitsStore.guide = (_vs.guide && typeof _vs.guide === 'object') ? _vs.guide : {};
     visitsStore.guideSince = (typeof _vs.guideSince === 'number') ? _vs.guideSince : 0;
+    visitsStore.arcade = (_vs.arcade && typeof _vs.arcade === 'object') ? _vs.arcade : {};
+    visitsStore.arcadeSince = (typeof _vs.arcadeSince === 'number') ? _vs.arcadeSince : 0;
     visitsStore.refSince = (typeof _vs.refSince === 'number') ? _vs.refSince : 0;
     visitsStore.geoSince = (typeof _vs.geoSince === 'number') ? _vs.geoSince : 0;
     // Since when connections per LAN server, logins and the cross-tabulated
@@ -9439,7 +9442,7 @@ function visitBotWindow(h24, n, offset) {
 // 'live' = a /live spectator session (embedded on pokerth.net). Counted apart
 // from 'pokerthnet' so spectators never inflate the players' share; sessions
 // opened before 2.1.8-web.100 stay under 'pokerthnet', they cannot be told apart.
-const VISIT_MODES = ['pokerthnet', 'lan', 'offline', 'live'];
+const VISIT_MODES = ['pokerthnet', 'lan', 'offline', 'live', 'arcade'];   // arcade: the Mini-games page (web.25)
 function recordModeConnect(mode, bot) {
   if (VISIT_MODES.indexOf(mode) < 0) return;
   const T = visitTarget(bot);
@@ -9534,6 +9537,7 @@ function recordMusicPlay(id, bot) {
 // server/guide-stats.js sont comptées : la cardinalité est bornée quoi qu'on
 // envoie. Même fichier, même rétention, même remise à zéro que la musique.
 const GUIDE_STATS = require('./server/guide-stats.js');
+const ARCADE_STATS = require('./server/arcade-stats.js');
 // Visitor language: header parsing, alias folding, diagnostic of "other".
 const LANG_STATS = require('./server/lang-stats.js');
 // Where visitors come from: referring domain, campaign tag, invite link.
@@ -9671,6 +9675,20 @@ function recordGuideEvent(ctx, ev, bot) {
   GUIDE_STATS.record({}, T.cell, ctx, ev, Date.now());   // case horaire seule : le cumul est deja compte
   saveVisitsSoon();
   return true;
+}
+// The Mini-games mode (server/arcade-stats.js, web.25): the same storage as
+// Ace's Help — all time, today's bucket, the hour cell.
+function recordArcadeEvent(ev, bot) {
+  if (!ARCADE_STATS.valid(ev)) return false;
+  const T = visitTarget(bot);
+  ARCADE_STATS.record(T.all, T.day, ev, Date.now());
+  ARCADE_STATS.record(null, T.cell, ev, Date.now());
+  saveVisitsSoon();
+  return true;
+}
+function visitArcadePeriod(daysBack, list) {
+  list = list || visitList(false, daysBack);
+  return ARCADE_STATS.period(list.length, function (i) { return list[i]; });
 }
 // One key per visit ping (server/ref-stats.js), in today's bucket: sources
 // for every visit, and for new visitors the source and the source x
@@ -10467,6 +10485,7 @@ function visitsSummary(periodDays, h24, bots, range) {
       for (const k in (B.allM || {})) a.m[k] = (a.m[k] || 0) + (B.allM[k] || 0);
       if (B.music) out.music = _visitAdd(out.music, B.music);
       if (B.env) out.env = Object.assign(LANG_STATS.foldEnv(_visitAdd(visitsStore.env || {}, B.env)), { noiseMeta: out.env.noiseMeta });
+      if (B.arcade) out.arcade = ARCADE_STATS.summary(_visitAdd(visitsStore.arcade || {}, B.arcade));
       if (B.guide) out.guide = visitGuideDevRate(GUIDE_STATS.summary(_visitAdd(visitsStore.guide || {}, B.guide)), Object.keys(visitsStore.days), visitGuideDevSinceKey());
     }
     return out;
@@ -10633,6 +10652,13 @@ function visitsSummaryRead(periodDays, h24, range) {
       return { days: p.days, counted: visitCountedIn(h24, P, E, visitsStore.guideSince || 0), summary: sum };
     })(),
     guideSince: visitsStore.guideSince || 0,
+    // Mini-games mode (web.25): totals since the start, and over the period.
+    arcade: ARCADE_STATS.summary(visitsStore.arcade || {}),
+    arcadePeriod: (function () {
+      const p = visitArcadePeriod(P, L);
+      return { days: p.days, counted: visitCountedIn(h24, P, E, visitsStore.arcadeSince || 0), summary: ARCADE_STATS.summary(p.arcade) };
+    })(),
+    arcadeSince: visitsStore.arcadeSince || 0,
     pings: { boot: _pingStats.boot, visits: _pingStats.n, bots: _pingStats.nBot || 0, modes: _pingStats.nMode, live: _pingStats.nLive, music: _pingStats.nMusic, guide: _pingStats.nGuide, last: _pingStats.last },
     db: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error, lastWrite: _dbStatus.lastWrite, source: _dbStatus.source, type: _dbStatus.type }
   };
@@ -15785,6 +15811,20 @@ const httpServer = http.createServer((req, res) => {
   // tip shown / done / dismissed, Join from the bubble, ranked game started).
   // No visitor id. Pairs outside server/guide-stats.js are refused with 400
   // and create no key; a counted event gets an empty 204, like /__music.
+  // ── Mini-games mode counters (server/arcade-stats.js, web.25) ──
+  // POST { ev } — one of a closed list of events, nothing else.
+  if (reqPathOnly === '/__arcade') {
+    if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
+    readJsonBody(req, function (d) {
+      let okEv = false;
+      if (!_beaconOk(req)) { res.writeHead(204, { 'Cache-Control': 'no-store' }); res.end(); return; }
+      try { okEv = !!(d && recordArcadeEvent(d.ev, visitIsBot(req, d))); } catch (e) { okEv = false; }
+      if (okEv) { _pingStats.nArcade = (_pingStats.nArcade || 0) + 1; _pingStats.last = Date.now(); }
+      res.writeHead(okEv ? 204 : 400, { 'Cache-Control': 'no-store' });
+      res.end();
+    }, 256);
+    return;
+  }
   if (reqPathOnly === '/__guide') {
     if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
     readJsonBody(req, function (d) {

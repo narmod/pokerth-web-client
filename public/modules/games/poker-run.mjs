@@ -494,6 +494,7 @@ export function create(shell) {
     state = 'over'; overAt = performance.now();
     for (const g of gates) if (g.picked < 0) takeGate(g, Math.floor(Math.random() * 3), false);
     renderHand(); renderStats(true);
+    shell.ended();
     const all = hole.concat(board), ev = evalCards(all), bonus = Math.ceil(Math.max(0, time)) * 5;
     const base = stack + bonus, score = base * ev.mult, prevBest = shell.best.get(), record = score > prevBest;
     if (record) shell.best.set(score);

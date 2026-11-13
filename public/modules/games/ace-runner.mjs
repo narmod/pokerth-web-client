@@ -327,6 +327,7 @@ export function create(shell) {
     state = 'over'; G.overAt = performance.now();
     setKing(false); setPose('ko'); setMood('mc-m-ko');
     sound('notifyFold'); buzz([60, 40, 90]);
+    shell.ended();
     const d = Math.floor(G.dist), score = d * G.ev.mult, prevBest = shell.best.get();
     const record = score > prevBest;
     if (record) shell.best.set(score);

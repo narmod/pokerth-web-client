@@ -22,6 +22,8 @@
 // connect() is synchronous; precached by the service worker (sw.js).
 // ═══════════════════════════════════════════════════════════════════
 
+import { arcadeStat } from './stats.mjs';
+
 export const HOME = 'arcade';
 // The « Mini-games » mode (design note claude/CONCEPTION_MODE_ARCADE.md,
 // narmod 2026-11-13). The home page (menu.mjs) lists the games in this order,
@@ -68,6 +70,12 @@ export function unlocked(g, have) {
 export const ALL_KEY = 'pth_arcade_all';
 export function allUnlocked() { try { return localStorage.getItem(ALL_KEY) === '1'; } catch (e) { return false; } }
 export function unlockAll() { try { localStorage.setItem(ALL_KEY, '1'); } catch (e) {} }
+// The mode's unlocking, counted once per device (server/arcade-stats.js).
+export const UNLOCK_SENT_KEY = 'pth_arcade_unl';
+export function countUnlock(how) {
+  try { if (localStorage.getItem(UNLOCK_SENT_KEY) === '1') return; localStorage.setItem(UNLOCK_SENT_KEY, '1'); } catch (e) { return; }
+  arcadeStat(how === 'word' ? 'unlock_word' : 'unlock_trophies');
+}
 
 /**
  * The mode from the trophies won (have, as for unlocked()) and the secret word
@@ -122,6 +130,7 @@ export function gameForNick(nick, translate = tr) {
 export async function loadGame(id) {
   const g = GAMES.find((x) => x.id === id);
   if (!g) throw new Error('unknown game ' + id);
+  if (id !== HOME) arcadeStat('open_' + id);
   return [Object.assign({}, g, { name: gameName(g) }), await g.load()];
 }
 
@@ -153,6 +162,12 @@ export async function launch(id) {
   const g = GAMES.find((x) => x.id === id);
   if (!g || open) return;
   open = true;
+  if (id === HOME) {
+    // A session of the Mini-games mode (the « Narrow to » cube, once per
+    // browser session) and the page opened, whatever the way in.
+    arcadeStat('menu_open');
+    try { if (typeof window._pthCountConnect === 'function') window._pthCountConnect('arcade'); } catch (e) {}
+  }
   try {
     const [shellMod, [def, gameMod]] = await Promise.all([import('./shell.mjs'), loadGame(id)]);
     const grants = await shellMod.run(def, gameMod, { open: loadGame, home: HOME, onShell: (s) => { shellNow = s; } });
@@ -175,6 +190,7 @@ export async function launch(id) {
 export function tryLaunch(nick) {
   const id = gameForNick(nick);
   if (!id) return false;
+  if (!allUnlocked()) countUnlock('word');
   unlockAll();
   restoreNick();
   launch(id);

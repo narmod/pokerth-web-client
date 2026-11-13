@@ -167,6 +167,7 @@ export function create(shell) {
   function finish() {
     clearTimeout(timer);
     state = 'over';
+    shell.ended();
     const score = G.chips, prev = shell.best.get(), record = score > prev;
     if (record) shell.best.set(score);
     if (record && prev) sound('notifyBigWin');

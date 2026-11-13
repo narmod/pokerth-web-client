@@ -616,6 +616,9 @@ export class FakeServer {
       }
       case 'gameOver': {
         this._clearHumanTimer();
+        // A training game ended: the Mini-games mode's statistics (web.25,
+        // modules/ui/login-arcade.mjs). Additive, no effect on the game.
+        try { if (typeof window !== 'undefined' && window.dispatchEvent) window.dispatchEvent(new CustomEvent('pth-training-over')); } catch (e) {}
         var _go=this._roAcc; this._roAcc = 0;
         if(this._meBusted){
           var _pl2=(this.table?this.table.players.filter(p=>p.in).length:0)+1;

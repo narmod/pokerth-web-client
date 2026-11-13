@@ -27,6 +27,10 @@ const TOAST_KEY = 'pth_arcade_toast';
 const flag = (k) => { try { return localStorage.getItem(k) === '1'; } catch (e) { return false; } };
 const setFlag = (k) => { try { localStorage.setItem(k, '1'); } catch (e) {} };
 
+// The mode's statistics (games/stats.mjs, server/arcade-stats.js), loaded
+// with the games registry.
+const stat = (ev) => { import('../games/stats.mjs').then((m) => m.arcadeStat(ev)).catch(() => {}); };
+
 const tr = (k, p) => { try { return typeof window.t === 'function' ? window.t(k, p) : k; } catch (e) { return k; } };
 const seen = () => { try { return localStorage.getItem(SEEN_KEY) === '1'; } catch (e) { return false; } };
 
@@ -39,6 +43,9 @@ export async function refresh() {
   let st = null;
   try { st = await (await import('../games/index.mjs')).currentState(); } catch (e) { st = null; }
   last = st;
+  // Unlocked by the trophies: counted once per device (the secret word is
+  // counted by games/index.mjs).
+  try { if (st && st.mode && st.count >= 8 && !(await import('../games/index.mjs')).allUnlocked()) (await import('../games/index.mjs')).countUnlock('trophies'); } catch (e) {}
   render();
   return st;
 }
@@ -60,6 +67,7 @@ async function celebrate(card) {
   if (!loginShown()) { celebrating = false; return; }
   setFlag(SHOWN_KEY);
   setFlag(TOAST_KEY);   // seen on the login: no toast for it later
+  stat('celebrated');
   card.classList.add('lc-hide');
   try { card.scrollIntoView({ block: 'nearest' }); } catch (e) {}
   try {
@@ -89,6 +97,7 @@ function render() {
 /** The card's tap: the mini-games page. */
 export async function openArcade() {
   try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) {}
+  stat('login_open');
   try { if (typeof window.guideArcadeModeClose === 'function') window.guideArcadeModeClose(); } catch (e) {}
   render();
   try {
@@ -102,10 +111,16 @@ if (typeof window !== 'undefined') {
   window.loginOpenArcade = openArcade;
   // A trophy won: the mode may have just been unlocked. At the table, a toast
   // after the trophy's own (the card waits for the login to appear).
+  // A training game ended (offline/server.mjs): with the mode unlocked or not
+  // yet — does the suspense bring more training games?
+  window.addEventListener('pth-training-over', async () => {
+    try { const st = await (await import('../games/index.mjs')).currentState(); stat(st && st.mode ? 'train_on' : 'train_off'); } catch (e) {}
+  });
   window.addEventListener('pth-achievement', async () => {
     const st = await refresh();
     if (st && st.mode && !flag(TOAST_KEY) && !loginShown()) {
       setFlag(TOAST_KEY);
+      stat('toast');
       setTimeout(() => { try { if (typeof window.showToast === 'function') window.showToast('🕹️ ' + tr('arcadeToast')); } catch (e) {} }, 2600);
     }
   });

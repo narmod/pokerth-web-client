@@ -16,6 +16,19 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Mini-games mode — 5. the statistics** (`web.25`) — `server/arcade-stats.js` (pure, like `guide-stats.js`): a
+  closed list of events posted to `POST /__arcade { ev }` (no visitor id, no name; 400 for anything else), stored
+  in `visits.json` (all time, day bucket `ar`, hour cell; bots apart). The unlocking funnel (`unlock_trophies` /
+  `unlock_word` once per device, `toast`, `celebrated`, `celebrate_play`, `login_open`, `menu_open`), the path
+  (`reveal_1…10`), the games (`open_<id>`, `end_<id>` — `shell.ended()` called once per round by the 10 games),
+  training games ended with or without the mode (`train_on` / `train_off`, from a `pth-training-over` event the
+  offline server now dispatches, additive). Client: `games/stats.mjs` (offline queue `pth_arcade_q`,
+  `pth_no_count` and /live respected). `arcade` is a fifth entry mode (`VISIT_MODES`, `cube-stats.js`,
+  `geo-stats.js`, `_pthCountConnect`): one per browser session when the page opens. Admin › Statistics ›
+  Mini-games: tiles (unlocked, pages opened, games played, furthest game), the funnel, the path game by game, the
+  games, training with / without the mode; the mode in the entry-mode charts and filters (`--m-arc`), left out of
+  « game sessions per 100 visits ». `scripts/test-arcade-stats.mjs`; the admin structure tests count the new
+  section and mode.
 - **Mini-games mode — 4. the animations** (`web.24`) — `modules/ui/backlight.mjs`: a full-screen canvas where the
   page darkens round an element, gold light spills round its edges and rays turn behind it (never over it), then
   a white flash (`onFlash`, where the caller shows the element), sparks and twinkling stars; a short fanfare of our

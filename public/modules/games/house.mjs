@@ -247,6 +247,7 @@ export function create(shell) {
     G.floors = []; G.cur = [];
     ace.king(false); ace.pose('ko'); ace.mood('mc-m-ko');
     sound('notifyFold');
+    shell.ended();
     const score = G.score, prevBest = shell.best.get(), record = score > prevBest;
     if (record) shell.best.set(score);
     const cards = G.best ? G.best.ev.best : [];

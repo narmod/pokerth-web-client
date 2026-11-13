@@ -208,6 +208,7 @@ export function create(shell) {
   function finish() {
     clearTimeout(timer);
     state = 'over';
+    shell.ended();
     const score = G.credits;
     let record = false, prev;
     if (G.daily) { prev = dailyBest(G.day); if (score > prev) { setDailyBest(G.day, score); record = prev > 0; } }

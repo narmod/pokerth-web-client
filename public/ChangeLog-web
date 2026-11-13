@@ -1,4 +1,7 @@
-2026-11-13 version 2.1.11-web.24 (current series):
+2026-11-13 version 2.1.11-web.25 (current series):
+- improvement: anonymous statistics on the Mini-games mode (how far players get, which games they play), to tune it; « Do not count my visits » still applies
+
+2026-11-13 version 2.1.11-web.24:
 - new: when the Mini-games mode is unlocked, it appears on the login screen in a light coming from behind it, with a little fanfare, and the Ace congratulates you
 - new: at the table, the trophy that unlocks the mode is followed by « 🕹️ New mode unlocked! »
 - new: a newly opened mini-game is revealed in the same light the next time you open the Mini-games page

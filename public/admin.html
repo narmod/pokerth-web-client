@@ -22,7 +22,7 @@
      body text, secondary text) so every panel follows the theme unchanged. */
   :root{--bg:#0E1319;--side:#11171F;--panel:#161D27;--line:rgba(160,172,196,.16);--gold:#E7ECF3;--cream:#E7ECF3;--text:#9AA6B8;--muted:#9AA6B8;
         --navfg:#C9D2DE;--hover:rgba(160,172,196,.08);--accent:#3DBE86;--accent-soft:#1E2A22;--accent-text:#7FD3AA;--sidew:256px;
-        --m-net:#3DBE86;--m-lan:#E8A93B;--m-off:#B48AE8;--m-live:#5AA3F0;--m-all:#E879A6;
+        --m-net:#3DBE86;--m-lan:#E8A93B;--m-off:#B48AE8;--m-live:#5AA3F0;--m-arc:#E8D25A;--m-all:#E879A6;
         --ok-bg:#172420;--ok-line:#2B4A3B;--ok-text:#7FD3AA;--warn-bg:#231F14;--warn-line:#4A3E20;--warn-text:#F1C46C;--err-bg:#241817;--err-line:#4E2C28;--err-text:#F4A296;--info-bg:#161D27;--info-line:rgba(160,172,196,.22);--info-text:#9AA6B8}
   *{box-sizing:border-box}
   body{margin:0;font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--cream);min-height:100vh}
@@ -670,7 +670,7 @@
   /* ── Light admin theme (data-admin-theme="light") ───────────── */
   :root[data-admin-theme="light"]{--bg:#F4F6F9;--side:#FFFFFF;--panel:#ffffff;--line:rgba(28,38,58,.14);--gold:#1d222b;--cream:#1b2230;--text:#566071;--muted:#5A6678;
         --navfg:#2C3644;--hover:rgba(29,34,43,.05);--accent:#187A50;--accent-soft:#E3F3EA;--accent-text:#13704A;
-        --m-net:#1F8F5F;--m-lan:#B9770E;--m-off:#7A4FC0;--m-live:#2F6FC4;--m-all:#B83E78;
+        --m-net:#1F8F5F;--m-lan:#B9770E;--m-off:#7A4FC0;--m-live:#2F6FC4;--m-arc:#8A7A10;--m-all:#B83E78;
         --ok-bg:#E8F5EE;--ok-line:#B9DFC9;--ok-text:#13704A;--warn-bg:#FDF4E2;--warn-line:#EDD3A0;--warn-text:#8A5A0B;--err-bg:#FCEBE8;--err-line:#F0C3BB;--err-text:#A3362A;--info-bg:#FFFFFF;--info-line:rgba(28,38,58,.14);--info-text:#5A6678}
   :root[data-admin-theme="light"] input[type=password],
   :root[data-admin-theme="light"] select,
@@ -1216,6 +1216,7 @@
           <button type="button" class="tab" data-t="traffic" data-ts="visitors">Visitors</button>
           <button type="button" class="tab" data-t="traffic" data-ts="music">Music</button>
           <button type="button" class="tab" data-t="traffic" data-ts="ace">Ace’s Help</button>
+          <button type="button" class="tab" data-t="traffic" data-ts="arcade">Mini-games</button>
         </div>
       </div>
       <div class="sgrp" data-g="community">
@@ -1486,6 +1487,14 @@
           <div class="boardhead"><h2>Offer, tips and Ranking funnel</h2><span id="guideSince" class="muted" style="margin:0"></span></div>
           <p class="muted xpl">The contextual assistant (the Ace). Anonymous counters: no visitor id, no name, no table — only which tips are shown, done (Got it or the button) or put off (Later), whether the first-launch offer is accepted, and the Ranking funnel: a table highlighted in the lobby → joined from the bubble → that game started (a Ranking game only starts when its 10 seats are full). Guests are counted apart: they cannot play Ranking games and only get the free-account bubble. Follows the period selected above.</p>
           <div id="trafGuide"><div class="empty">Loading…</div></div>
+        </div>
+      </div>
+      <div class="tsub" data-ts="arcade" role="tabpanel" aria-label="Mini-games" style="display:none">
+      <section class="ovmodes" id="tsT-arcade" aria-label="Mini-games at a glance"><div class="empty">Loading…</div></section>
+      <div class="card" id="arcadeSec">
+          <div class="boardhead"><h2>Mini-games mode</h2><span id="arcadeSince" class="muted" style="margin:0"></span></div>
+          <p class="muted xpl">The fourth login mode, hidden until 8 training trophies (or the secret word), then one mini-game every 2 trophies, the next ones shown as mystery games. Anonymous counters, no visitor id: the unlocking funnel, how far players get in the path of 10 games (to tune the thresholds), which games are opened and played to their end, and whether players who have the mode play more training games. Follows the period selected above.</p>
+          <div id="trafArcade"><div class="empty">Loading…</div></div>
         </div>
       </div>
       <div class="tsub" data-ts="world" role="tabpanel" aria-label="World" style="display:none">
@@ -4852,6 +4861,54 @@
     return '<div class="muted" style="margin:14px 0 4px">Plays per '+_perU().one+' \u2014 since '+_annEsc(_sFull(s[0]))+'</div>'
          + '<div id="musDayChart"></div>';
   }
+  // ── Mini-games mode (web.25, server/arcade-stats.js) — funnel, path, games ──
+  var _arcKnown=false, _arcData=null, _arcPeriodDays=0, _arcSince=0;
+  var ARC_GAMES={'whowins':'Who Wins?','ace-runner':'Ace Runner','hilo':'Higher or Lower','house':'House of Cards','videopoker':'Video Poker','pokerdrop':'Poker Drop','solitaire':'Poker Solitaire','ace-dash':'Ace Dash','bluff':'The Ace\u2019s Bluff','poker-run':'Poker Run'};
+  var ARC_KIND=['learn','fun','learn','fun','learn','fun','learn','fun','learn','fun'];
+  function renderArcade(){
+    var box=$('trafArcade'); if(!box) return;
+    var since=$('arcadeSince');
+    if(since) since.textContent=(_arcPeriodDays||_isH24())?(_perLabel(_trafPeriod)+_perCounted(_arcPeriodDays)):(_arcSince?('all time since '+_stDate(_arcSince)):'');
+    var a=_arcData, f=a&&a.funnel;
+    var any=a&&(a.unlocked||Object.keys(f||{}).some(function(k){ return f[k]; })||(a.games||[]).some(function(g){ return g.open||g.end; })||a.training.on||a.training.off);
+    if(!any){
+      box.innerHTML='<div class="empty">'+(!_arcKnown
+        ? 'This proxy is not recording it yet \u2014 the running process predates the feature. Restart it (Operations \u203a Deployment \u203a Restart); a static update alone swaps the served files, not the process.'
+        : 'Nothing recorded yet \u2014 the mode appears after 8 training trophies, and events start with it.')+'</div>';
+      return;
+    }
+    var C='var(--m-arc)', fmax=Math.max(1,f.unlock_trophies+f.unlock_word,f.toast,f.celebrated,f.celebrate_play,f.login_open,f.menu_open);
+    var h='<h4 style="margin:10px 0 4px">Unlocking funnel</h4>'
+      +_gBar('Unlocked by the trophies',f.unlock_trophies,fmax,'devices',C)
+      +_gBar('Unlocked by the secret word',f.unlock_word,fmax,'devices','var(--m-off)')
+      +_gBar('Toast at the table',f.toast,fmax,'',C)
+      +_gBar('Appeared on the login (the light)',f.celebrated,fmax,'',C)
+      +_gBar('\u00ab Play now \u00bb in the Ace\u2019s bubble',f.celebrate_play,fmax,_gPct(a.playRate)+' of the appearances','var(--ok-text)')
+      +_gBar('Login card tapped',f.login_open,fmax,'',C)
+      +_gBar('Mini-games page opened',f.menu_open,fmax,'every way in',C);
+    var rv=a.reveals||[], rmax=Math.max(1,rv[0]||0,Math.max.apply(null,rv.concat([0])));
+    h+='<h4 style="margin:14px 0 4px">How far players get \u2014 game revealed in the path</h4>'
+      +rv.map(function(n,i){ var id=Object.keys(ARC_GAMES)[i]; return _gBar((i+1)+'. '+ARC_GAMES[id]+' <span class="muted">'+(ARC_KIND[i]==='learn'?'\ud83c\udf93':'\ud83c\udf89')+' '+(i===0?8:i===9?27:8+2*i)+' trophies</span>',n,rmax,(i&&rv[0])?(_gPct(n/rv[0])+' of game 1'):'',C); }).join('');
+    var G=a.games||[], gmax=Math.max(1,Math.max.apply(null,G.map(function(g){ return g.open; }).concat([0])));
+    h+='<h4 style="margin:14px 0 4px">The games \u2014 opened \u00b7 played to the end</h4>'
+      +G.map(function(g,i){ return _gBar((i+1)+'. '+(ARC_GAMES[g.id]||g.id),g.open,gmax,g.end+' finished'+(g.open?' \u00b7 '+(g.end/g.open).toFixed(1)+' per opening':''),ARC_KIND[i]==='learn'?'var(--ok-text)':C); }).join('');
+    var tr=a.training||{on:0,off:0}, tt=tr.on+tr.off;
+    h+='<h4 style="margin:14px 0 4px">Training games ended</h4>'
+      +_gBar('By players who have the mode',tr.on,Math.max(1,tt),tt?_gPct(tr.on/tt):'',C)
+      +_gBar('By players who do not have it yet',tr.off,Math.max(1,tt),tt?_gPct(tr.off/tt):'','var(--m-off)')
+      +'<p class="muted note">Game counts, not players: set them against the devices that unlocked the mode ('+(a.unlocked||0)+') to see whether the suspense brings more training.</p>';
+    box.innerHTML=h;
+  }
+  function _tsArcade(){
+    var a=_arcData, f=a&&a.funnel, W=' \u00b7 '+((_arcPeriodDays||_isH24())?_tsPerLbl():'all time');
+    var open=a?(a.games||[]).reduce(function(s,g){ return s+g.open; },0):0, end=a?(a.games||[]).reduce(function(s,g){ return s+g.end; },0):0;
+    var rv=(a&&a.reveals)||[], last=0; rv.forEach(function(n,i){ if(n) last=i+1; });
+    _tsTiles('arcade',[
+      ['Unlocked',a?_tsN(a.unlocked):'\u2014',a?(_tsN(f.unlock_trophies)+' by trophies \u00b7 '+_tsN(f.unlock_word)+' by the word'+W):'nothing recorded yet','var(--m-arc)'],
+      ['Pages opened',f?_tsN(f.menu_open):'\u2014','the Mini-games page'+(a?W:''),'var(--accent)'],
+      ['Games played',a?_tsN(end):'\u2014',a?(_tsN(open)+' openings'+W):'nothing recorded yet','var(--ok-text)'],
+      ['Furthest game',last?String(last)+'/10':'\u2014',last?(_tsN(rv[last-1])+' reached it'+W):'no game revealed yet','var(--warn-text)']]);
+  }
   // ── Ace's Help (L3) — acceptance, tips, Ranking funnel ──
   var _guideKnown=false, _guideData=null, _guidePeriodDays=0, _guideSince=0;
   var GUIDE_CTX=[['welcome','Welcome (after saying yes)'],['lobby-ranking','Lobby — join a Ranking table'],['lobby-ranking-create','Lobby — create a Ranking table'],['lobby-guest','Lobby — guest: free account'],['lobby-watch','Lobby — tap on a running game: watch it',['shown','done','dismissed','watch']],['lobby-cup','Lobby — tap on a cup game not started: invited by the admins',['shown','done','dismissed','events']],['lobby-flag','Lobby — no flag: set the Country in the pokerth.net profile',['shown','done','dismissed','profile']],['lobby-lan','Lobby — LAN / dedicated server: this server\'s tables, no ranking'],['lobby-open','Lobby — tap on an open non-ranked table: join it',['shown','done','dismissed','join']],['wait-ranking','Ranked waiting room — the facts'],['ranked-result','After a ranked game — place & points'],['login','Login — the three modes, account vs guest'],['login-profile','Login — nickname & avatar'],['login-lan','Login — LAN server list & propose'],['wait-normal','Normal / training waiting room'],['create-game','Game creation page — quick tour · then « Full tour »',['shown','done','dismissed','acted','full']],['create-game-full','Game creation page — full tour (every field)',['shown','done','dismissed']],['w-ranking','Window — Ranking'],['w-events','Window — Forum events'],['w-posts','Window — Forum posts'],['w-adv','Window — Advanced options'],['w-theme','Window — Theme'],['w-music','Window — Music player'],['w-avatar','Window — Avatar'],['w-players','Window — Players online'],['w-profile','Window — Player card'],['w-logs','Window — Logs'],['w-trophies','Window — Trophies (win them all: a surprise)'],['arcade','Every trophy — the arcade\'s secret word · « Play now »',['revealed','play']],['ask','« ? » mode — entered · elements explained · left · « More about it »',['shown','explained','done','more']],['more-help','« More help » — opened · sections read · searches',['shown','section','search']],['install','Install the app, after a finished game — asked · later · install · how-to · installed',['shown','later','install','howto','installed']]];
@@ -5545,7 +5602,8 @@
       _musKnown=(d.music!==undefined); _musPeriodDays=(d.musicPeriod&&(d.musicPeriod.counted!=null?d.musicPeriod.counted:d.musicPeriod.days))||0; _musData=(_musPeriodDays||(d.h24&&d.musicPeriod))?(d.musicPeriod.plays||{}):(d.music||{}); _musTitles=d.musicTitles||{}; _musSince=d.musicSince||0; _musVotesKnown=(d.musicVotes!==undefined); _musVotes=d.musicVotes||{}; _musVoteTitles=d.musicVoteTitles||{}; _musVotesSince=d.musicVotesSince||0; renderMusic();
       _guideKnown=(d.guide!==undefined); _guidePeriodDays=(d.guidePeriod&&(d.guidePeriod.counted!=null?d.guidePeriod.counted:d.guidePeriod.days))||0; _guideData=(_guidePeriodDays||(d.h24&&d.guidePeriod))?(d.guidePeriod.summary||null):(d.guide||null); _guideSince=d.guideSince||0; renderGuide();
       _srcKnown=(d.srcPeriod!==undefined); _srcData=d.srcPeriod||null; _srcSince=d.refSince||0; renderSrc();
-      _tsAudience(d); _tsActivity(d); _tsVisitors(); _tsMusic(); _tsAce(); _tsWorld();
+      _arcKnown=(d.arcade!==undefined); _arcPeriodDays=(d.arcadePeriod&&(d.arcadePeriod.counted!=null?d.arcadePeriod.counted:d.arcadePeriod.days))||0; _arcData=(_arcPeriodDays||(d.h24&&d.arcadePeriod))?(d.arcadePeriod.summary||null):(d.arcade||null); _arcSince=d.arcadeSince||0; renderArcade();
+      _tsAudience(d); _tsActivity(d); _tsVisitors(); _tsMusic(); _tsAce(); _tsArcade(); _tsWorld();
     }).catch(function(){ var g=$('trafCards'); if(g) g.innerHTML='<div class="empty err">Could not load.</div>'; loadFail('panel-traffic','Could not load.'); });
   }
   // -- Lecture analytique du trafic ------------------------------------------
@@ -5563,7 +5621,8 @@
     {k:'pokerthnet',n:'Internet (pokerth.net)',s:'Internet',c:'var(--m-net)'},
     {k:'lan',n:'LAN / dedicated',s:'LAN',c:'var(--m-lan)'},
     {k:'offline',n:'Training (bots)',s:'Training',c:'var(--m-off)'},
-    {k:'live',n:'Live/spectator tool (/live)',s:'Live/spectator tool',c:'var(--m-live)'}
+    {k:'live',n:'Live/spectator tool (/live)',s:'Live/spectator tool',c:'var(--m-live)'},
+    {k:'arcade',n:'Mini-games (the Ace\u2019s games)',s:'Mini-games',c:'var(--m-arc)'}
   ];
   // Entry modes picked in the filter bar (all four by default). They apply to
   // connection counts only: a visit is counted before any mode is chosen.
@@ -5964,7 +6023,7 @@
     var md=$('trafModes'); if(!md) return;
     var fmt=function(n){ try{return Number(n||0).toLocaleString();}catch(e){return String(n||0);} };
     var tm=(d.today&&d.today.m)||{}, am=(d.allTime&&d.allTime.m)||{}, pm=(d.period&&d.period.m)||{}, pl=_tsPerLbl();
-    var rows=[['Internet (pokerth.net)','pokerthnet'],['LAN / dedicated','lan'],['Training (bots)','offline'],['Live/spectator tool (/live)','live']].filter(function(rw){ return _modeOn(rw[1]); });
+    var rows=[['Internet (pokerth.net)','pokerthnet'],['LAN / dedicated','lan'],['Training (bots)','offline'],['Live/spectator tool (/live)','live'],['Mini-games','arcade']].filter(function(rw){ return _modeOn(rw[1]); });
     md.innerHTML = rows.map(function(rw){ return '<div class="srow"><span>'+rw[0]+'</span><b>'+fmt(tm[rw[1]])+' today · '+fmt(pm[rw[1]])+' '+pl+' · '+fmt(am[rw[1]])+' total</b></div>'; }).join('');
   }
   function _trafModes48(d){
@@ -8698,8 +8757,8 @@
     // /live spectators are sessions without a visit of the web client (their
     // visit is counted apart, recordLiveVisit): set against the client's
     // visits they read 350 sessions per 100. They stay in the bars above.
-    var ms=mt-(m.live||0);
-    h+='<p class="muted note">'+(v?('Visits '+_geoFmt(v)+' · game sessions per 100 visits '+Math.round(100*ms/v)+(m.live?' (/live apart)':'')+' · first visits '+_geoPct(c.nw||0,v)+' % · installed app '+_geoPct(c.pwa||0,v)+' % · phone or tablet '+_geoPct(c.mob||0,v)+' %'):'No visit ping with a time zone from this country in the period; the bars count sessions only.')+'</p>';
+    var ms=mt-(m.live||0)-(m.arcade||0);   // Mini-games pages are not poker sessions either (web.25)
+    h+='<p class="muted note">'+(v?('Visits '+_geoFmt(v)+' · game sessions per 100 visits '+Math.round(100*ms/v)+(m.live||m.arcade?' (/live and Mini-games apart)':'')+' · first visits '+_geoPct(c.nw||0,v)+' % · installed app '+_geoPct(c.pwa||0,v)+' % · phone or tablet '+_geoPct(c.mob||0,v)+' %'):'No visit ping with a time zone from this country in the period; the bars count sessions only.')+'</p>';
     var bc=(d.botCountries||{})[_geoSel], bv=bc?(bc.v||0):0;
     if(!d.bots && bv) h+='<p class="muted note">'+_geoFmt(bv)+' bot visit'+(bv>1?'s':'')+' from this country hidden by “Bots hidden”.</p>';
     if(_geoLooksBot(c)) h+='<div class="geowarn" role="note">Looks automated: all '+_geoFmt(v)+' visits come from new devices and none opened a game. “Bots hidden” keeps them: it only takes out what announces itself as a robot.</div>';
@@ -8730,7 +8789,7 @@
   // filling all of them (charts are viewBox SVG, they need no width): the side
   // menu only chooses which one is on screen (.tab[data-t="traffic"][data-ts]).
   // The Explanations switch is remembered per browser, like the period.
-  var TRAF_SUBS=['overview','world','audience','activity','visitors','music','ace'];
+  var TRAF_SUBS=['overview','world','audience','activity','visitors','music','ace','arcade'];
   function _trafSub(k){
     if(k==='features') k='music';   // the former Features tab
     if(k==='summary'||k==='data') k='overview'; // its address (#traffic/summary); Data is gone (web.184)

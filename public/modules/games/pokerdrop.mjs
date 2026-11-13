@@ -212,6 +212,7 @@ export function create(shell) {
     if (G.winner < 0 && ps.length > 1) G.winner = ps[0].score > ps[1].score ? 0 : ps[1].score > ps[0].score ? 1 : 2;
     let record = false, prev = 0;
     const mine = ps[0].score;
+    shell.ended();
     if (G.m === 'daily') { prev = dailyBest(G.day); if (mine > prev) { setDailyBest(G.day, mine); record = prev > 0; } }
     else if (G.m === 'ace') {
       prev = shell.best.get();

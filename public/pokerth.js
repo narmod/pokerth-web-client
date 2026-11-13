@@ -12590,7 +12590,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.24'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.25'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
@@ -12748,7 +12748,7 @@ window._pthTimeZone = function () {
     // player opening pokerth.net.
     if (window.LIVE_MODE) mode = 'live';
     try {
-      if (['pokerthnet', 'lan', 'offline', 'live'].indexOf(mode) < 0) return;
+      if (['pokerthnet', 'lan', 'offline', 'live', 'arcade'].indexOf(mode) < 0) return;   // arcade: the Mini-games page (web.25)
       try { if (localStorage.getItem('pth_no_count') === '1') return; } catch (e) {}
       if (mode !== 'lan' || typeof srv !== 'string' || !srv || srv.length > 260) srv = '';
       var k = 'pth_conn_' + mode + (srv ? '@' + srv : '');

@@ -104,7 +104,7 @@ ok(visible().length === 1, 'exactly one panel is open at load, not ' + visible()
 ok(visible()[0] && visible()[0].id === 'panel-overview', 'and it is panel-overview, where a master key lands');
 
 const tabs = [...doc.querySelectorAll('.tab')];
-ok(tabs.length === 32, 'every section has a tab, found ' + tabs.length);
+ok(tabs.length === 33, 'every section has a tab, found ' + tabs.length);   // web.25: Statistics › Mini-games
 for (const t of tabs) {
   const id = 'panel-' + t.dataset.t;
   t.click();
@@ -154,7 +154,7 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   const subs = [...doc.querySelectorAll('#panel-traffic .tsub')];
   const shown = () => subs.filter((p) => p.style.display !== 'none').map((p) => p.dataset.ts);
   const tab = (k) => doc.querySelector('.tab[data-t="traffic"][data-ts="' + k + '"]');
-  ok(subs.length === 7, 'the seven sections are in the panel');
+  ok(subs.length === 8, 'the eight sections are in the panel');   // web.25: Mini-games
   doc.querySelector('.tab[data-t="server"]').click();
   const n0 = gets.filter((u) => u.startsWith('/admin/visits')).length;
   tab('world').click();
@@ -171,7 +171,7 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   ok(doc.querySelector('.subtabs[data-g="stats"]').style.display !== 'none', 'the Statistics group unfolds its list');
   // Entry modes: a chip narrows, All brings everything back, the choice is kept.
   const chips = () => [...doc.querySelectorAll('#trafModeSel [data-mk]')];
-  ok(chips().map((c) => c.dataset.mk).join() === 'all,pokerthnet,lan,offline,live', 'the filter bar offers All and the four entry modes');
+  ok(chips().map((c) => c.dataset.mk).join() === 'all,pokerthnet,lan,offline,live,arcade', 'the filter bar offers All and the five entry modes (web.25: Mini-games)');
   ok(chips()[0].getAttribute('aria-pressed') === 'true', 'All is on at first');
   doc.querySelector('#trafModeSel [data-mk="lan"]').click();
   ok(doc.querySelector('#trafModeSel [data-mk="lan"]').getAttribute('aria-pressed') === 'true' && doc.querySelector('#trafModeSel [data-mk="all"]').getAttribute('aria-pressed') === 'false',
@@ -179,7 +179,7 @@ ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ':
   doc.querySelector('#trafModeSel [data-mk="offline"]').click();
   ok(window.localStorage.getItem('pth_admin_modes') === '["lan","offline"]', 'a second one adds to it, and the choice is remembered');
   doc.querySelector('#trafModeSel [data-mk="all"]').click();
-  ok(window.localStorage.getItem('pth_admin_modes') === '["pokerthnet","lan","offline","live"]', 'All brings every mode back');
+  ok(window.localStorage.getItem('pth_admin_modes') === '["pokerthnet","lan","offline","live","arcade"]', 'All brings every mode back');
   // Custom range: the select opens two dates; Apply reads the figures for them.
   const sel = $('trafPeriod');
   sel.value = 'r'; sel.dispatchEvent(new window.Event('change', { bubbles: true }));

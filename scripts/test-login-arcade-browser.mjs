@@ -39,6 +39,8 @@ async function open(w, h, trophies, extra) {
   });
   const pg = await ctx.newPage();
   pg.on('pageerror', (e) => errors.push(String(e && e.message || e)));
+  pg.arcadeEvents = [];
+  pg.on('request', (r) => { if (r.url().endsWith('/__arcade')) { try { pg.arcadeEvents.push(JSON.parse(r.postData() || '{}').ev); } catch (e) {} } });
   await pg.goto(base);
   await pg.waitForSelector('.login-card');
   await pg.waitForFunction(() => window.loginOpenArcade, null, { timeout: 8000 }).catch(() => {});
@@ -91,6 +93,9 @@ console.log('test-login-arcade-browser');
   ok(m.open.join(',') === 'whowins' && m.steps === '1,2,3,4,5,6,7,8,9,10' && m.kind === '🎓 Progresser',
     '…then reveals it: game 1 open, numbered, with its kind (' + m.open.join(',') + ', ' + m.kind + ')');
   ok(await pg.evaluate(() => JSON.parse(localStorage.getItem('pth_arcade_revealed') || '[]').join(',')) === 'whowins', 'the reveal is remembered (pth_arcade_revealed)');
+  await sleep(300);
+  ok(['unlock_trophies', 'celebrated', 'login_open', 'menu_open', 'reveal_1'].every((e) => pg.arcadeEvents.includes(e)),
+    'the statistics follow (/__arcade: ' + pg.arcadeEvents.join(', ') + ')');
   ok(m.lock === 9 && m.names.every((n) => n === 'Jeu mystère') && m.quiet,
     'the 9 others are mystery games: no name, icon, kind, rules or play button');
   ok(m.need === '🏆 Encore 2 trophées · 8/10' && m.count === '🕹️ 1/10 jeux ouverts · 9 jeux mystère à découvrir',

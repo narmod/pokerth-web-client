@@ -373,6 +373,7 @@ export function create(shell) {
     state = 'over'; G.overAt = performance.now();
     ace.king(false); ace.pose('ko'); ace.mood('mc-m-ko'); turnBack(false);
     sound('notifyFold'); buzz([60, 40, 90]);
+    shell.ended();
     const d = Math.floor(G.dist + G.bonus), chipPts = G.chips * CHIP_PTS, mult = G.ev.mult;
     const score = (d + chipPts) * mult, prevBest = shell.best.get();
     const record = score > prevBest;

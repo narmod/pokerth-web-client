@@ -1525,7 +1525,10 @@ async function arcadeMode() {
   await note('arcadeMode', [btn('arcadePlay', true), btn('close')], (id) => {
     arcadeNote = false;
     endOnDemand();
-    if (id === 'arcadePlay') { try { if (typeof window.loginOpenArcade === 'function') window.loginOpenArcade(); } catch (e) {} }
+    if (id === 'arcadePlay') {
+      try { if (typeof window.arcadeStat === 'function') window.arcadeStat('celebrate_play'); } catch (e) {}
+      try { if (typeof window.loginOpenArcade === 'function') window.loginOpenArcade(); } catch (e) {}
+    }
   });
   try { if (M) M.react('wave'); } catch (e) {}
 }

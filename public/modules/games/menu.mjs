@@ -14,6 +14,7 @@ import { createAchievements } from '../achievements/index.mjs';
 import { aceActor, fmt } from './common.mjs';
 import { art } from './art.mjs';
 import { backlight, motionOff } from '../ui/backlight.mjs';
+import { arcadeStat } from './stats.mjs';
 
 // The games already revealed on this device (a game newly opened by the
 // trophies is revealed once, in the light, the next time this page opens).
@@ -177,6 +178,7 @@ export function create(shell) {
         setTimeout(() => c.classList.remove('gm-rv', 'gm-rv-soft'), 2600);
         revealed.add(g.id);
         saveRevealed(revealed);
+        arcadeStat('reveal_' + (i + 1));
       } });
     }
   }
