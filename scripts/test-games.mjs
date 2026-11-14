@@ -78,7 +78,7 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'wwName', 'wwHint', 'wwSplit', 'wwTooSlow', 'wwFever', 'wwT1', 'wwT2', 'wwT3', 'wwT4', 'wwT5', 'wwT6', 'wwModeEndless', 'wwModeEndlessD', 'wwLevel', 'wwLevelLab', 'wwModes', 'wwModeTv', 'wwModeTvD', 'wwQuestion', 'wwQLab', 'wwSafe', 'wwJSwap', 'wwJAce', 'wwJSave', 'wwJSaveSay', 'wwMillion', 'wwLost', 'wwKeep', 'wwModeDaily', 'wwModeDailyD', 'wwHandLab', 'wwDailyToday', 'wwDailyStreak', 'wwDailyDone', 'wwDailyPractice', 'wwDailyPracticeShort', 'wwTrap', 'wwTrapBoard', 'wwTrapCounterfeit', 'wwTrapWheel', 'wwTrapFlush', 'wwTrapKicker', 'wwTrapFive', 'wwRetry', 'wwRules', 'ach_whowins', 'ach_whowins_d', 'gmAgain',
   'hlName', 'hlHint', 'hlHigher', 'hlLower', 'hlCash', 'hlPot', 'hlRules', 'ach_hilo', 'ach_hilo_d',
   'hlModeHand', 'hlModeHandD', 'hlModeTourney', 'hlModeTourneyD', 'hlModeBoth', 'hlModeBothD', 'hlStack', 'hlLevel', 'hlBust', 'hlDone', 'hlShowdown', 'hlHandHint',
-  'blName', 'blHint', 'blBets', 'blBluff', 'blTells', 'blChips', 'blRules', 'ach_bluff', 'ach_bluff_d',
+  'blName', 'blHint', 'blBets', 'blBluff', 'blTells', 'blChips', 'blRules', 'blModeFreeD', 'blModeDailyD', 'blModeTourneyD', 'blTimer', 'blQuick', 'blNotebook', 'blRepTight', 'blRepLoose', 'blReplay', 'blWin', 'blLose', 'blP_ace', 'blP_cowboy', 'blP_gent', 'blP_trap', 'blP_joker', 'blP_king', 'blT_sweat', 'blT_fierce', 'blT_cool', 'blT_fidget', 'blT_wave', 'blT_grin', 'blT_whistle', 'blT_chips', 'blT_wink', 'blT_scratch', 'hlModeTourney', 'evMcTable', 'ach_bluff', 'ach_bluff_d',
   'pdName', 'pdHint', 'pdVsAce', 'pdTwo', 'pdPoints', 'pdSudden', 'pdSuddenGoal', 'pdYou', 'pdAce', 'pdPlayer', 'pdYourTurn', 'pdAceTurn',
   'pdTurn', 'pdYouWin', 'pdAceWins', 'pdWins', 'pdTie', 'pdRules', 'ach_pdrop', 'ach_pdrop_d',
   'adHint', 'adRules', 'adModeFree', 'adModeFreeD', 'adModeDailyD', 'adModeTime', 'adModeTimeD', 'adTime', 'adSalto', 'adStreak', 'adMagnet', 'adRebuy', 'adRebuyQ', 'adRebuyKeys', 'prTimeUp', 'psDaily',
@@ -244,7 +244,8 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
     ok(HL.levelAt(0) === 0 && HL.levelAt(4) === 0 && HL.levelAt(5) === 1 && HL.levelAt(999) === HL.BLINDS.length - 1 && HL.TOURNEY_CARDS === 60
       && HL.BLINDS.every((b, i) => b[1] === 2 * b[0] && (i === 0 || b[1] > HL.BLINDS[i - 1][1])), 'the tournament: 12 levels of 5 cards, the blinds go up');
   }
-  const { aceAction, tellFor, TELLS } = await import('../public/modules/games/bluff.mjs');
+  const BLM = await import('../public/modules/games/bluff.mjs');
+  const { aceAction, tellFor, TELLS } = BLM;
   const rb = rng('bluff-test');
   let bets = 0, bluffs = 0, checksAhead = 0, tellOnBluff = 0, tellOnBet = 0;
   for (let i = 0; i < 2000; i++) {
@@ -255,8 +256,32 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
   }
   ok(bets === 2000 && checksAhead === 0 && bluffs > 850 && bluffs < 1150 && aceAction(0, rb) === 'check',
     "The Ace's Bluff: he bets every better hand, bluffs about half his worse ones (" + bluffs + '/2000), checks a tie');
-  ok(tellOnBluff / bluffs > 0.75 && tellOnBet / 2000 < 0.25 && TELLS.length === 6,
+  ok(tellOnBluff / bluffs > 0.75 && tellOnBet / 2000 < 0.25 && TELLS.length === 10,
     "The Ace's Bluff: his tell shows on most bluffs (" + Math.round(100 * tellOnBluff / bluffs) + '%) and on few value bets (' + Math.round(100 * tellOnBet / 2000) + '%)');
+  {
+    const rs = rng('bluff-streets'), P = BLM.PERSONAS;
+    let flopBets = 0, riverBets = 0, gentBluffs = 0, cowBluffs = 0;
+    for (let i = 0; i < 2000; i++) {
+      if (BLM.streetAction(1, 0, P[0], rs) === 'bet') flopBets++;
+      if (BLM.streetAction(1, 2, P[0], rs) === 'bet') riverBets++;
+      if (BLM.streetAction(-1, 2, P[2], rs) === 'bluff') gentBluffs++;
+      if (BLM.streetAction(-1, 2, P[1], rs) === 'bluff') cowBluffs++;
+    }
+    ok(riverBets === 2000 && flopBets > 1000 && flopBets < 1400 && gentBluffs < cowBluffs / 2 && BLM.streetAction(0, 1, P[1], rs) === 'check',
+      "The Ace's Bluff: on the river he always bets a winner, sometimes checks it on the flop; the Cowboy bluffs far more than the Gentleman (" + cowBluffs + ' / ' + gentBluffs + ')');
+    let trapOnValue = 0;
+    for (let i = 0; i < 2000; i++) if (BLM.tellFor('bet', 'wink', rs, P[3].tb, P[3].tf) === 'wink') trapOnValue++;
+    ok(trapOnValue > 1350 && P.length === 6 && P[5].id === 'king', "The Ace's Bluff: the Trapper's tell means a real hand (" + Math.round(trapOnValue / 20) + '%), the King is the last character');
+    ok(BLM.callsYou(1, 0, rs) && BLM.callsYou(0, 0, rs) && BLM.repOf(2, 2) === 0.5 && BLM.repOf(0, 0) === 0, "The Ace's Bluff: he always pays your bet with the better hand; your image is your caught bluffs over (at least 4) bets");
+    let paysTight = 0, paysLoose = 0;
+    for (let i = 0; i < 2000; i++) { if (BLM.callsYou(-1, 0, rs)) paysTight++; if (BLM.callsYou(-1, 0.6, rs)) paysLoose++; }
+    ok(paysTight < 260 && paysLoose > 1100, "The Ace's Bluff: with the worse hand he folds to a solid player, pays a bluffer (" + paysTight + ' / ' + paysLoose + ')');
+    ok(BLM.anteAt(1, 'free') === 5 && BLM.anteAt(30, 'free') === 5 && BLM.anteAt(5, 'tourney') === 5 && BLM.anteAt(6, 'tourney') === 10 && BLM.anteAt(999, 'tourney') === BLM.T_ANTES[BLM.T_ANTES.length - 1],
+      "The Ace's Bluff: a fixed ante, rising every table in a tournament");
+    const tables = [0, 1, 2, 3].map((i) => BLM.personaAt(i, 'free', rs, -1));
+    ok(tables[0] === 0 && tables[3] === 5 && tables.slice(1, 3).every((x) => x >= 1 && x <= 4) && BLM.personaAt(4, 'tourney', rs, 0) === 5 && BLM.MODES.map((m) => m.id).join() === 'free,daily,tourney',
+      "The Ace's Bluff: the Ace at the first table, the King at the last (every 5th in a tournament); three modes");
+  }
   // The mini-games and their (future) unlocks; the lessons are gone.
   const reg = await import('../public/modules/games/index.mjs');
   const games = reg.GAMES.filter((g) => g.id !== reg.HOME);

@@ -1,4 +1,15 @@
-2026-11-14 version 2.1.11-web.52 (current series):
+2026-11-14 version 2.1.11-web.53 (current series):
+- new: The Ace's Bluff — a real hand: the flop, the turn and the river come one by one, and the Ace speaks first on each street (he checks, bets or bluffs)
+- new: The Ace's Bluff — you can bluff too: when he checks, Check, Bet or All-In; facing his bet, Fold, Call or Raise. He pays more often once you have been caught bluffing (your image)
+- new: The Ace's Bluff — a new character at every table: the Ace, the Cowboy (bluffs a lot), the Gentleman (rarely), the Trapper (his tell means a real hand), the Fool (unreadable) and the King at the last table, each in his own hat
+- new: The Ace's Bluff — four new tells (he whistles, plays with his chips, winks, scratches), all bigger and easier to see
+- new: The Ace's Bluff — the notebook: what each tell meant at this table (bluff or real hand), your own ★ guesses and your image; a new page at each table
+- new: The Ace's Bluff — three ways to play: Free game, Daily challenge (the same deals and tells for everyone today) and Tournament (the antes rise until one of you is broke)
+- new: The Ace's Bluff — the hourglass (option on the title): 8 s to answer a bet; a bluff caught within 3 s is a « Quick read », +10
+- improvement: The Ace's Bluff — the chips slide to the pot, the pot shows in stacks, his All-In shakes the table, and after a bluff a replay shows his tell again
+- improvement: The Ace's Bluff — a bigger Ace, fills a phone held upright, and the table's own Fold / Call / Raise buttons (your button theme)
+
+2026-11-14 version 2.1.11-web.52:
 - improvement: House of Cards — fills a phone held upright: the tower grows up the screen and the rail fits its width
 - new: House of Cards — the tower rises through the club: the card room at its foot, the ceiling and its chandeliers higher up, then the night sky and the moon (blue sky and clouds in the light theme); falling cards flutter and spin down, and the camera follows them to the table before the showdown
 - new: House of Cards — three ways to play: Free game, Daily challenge (the same cards for everyone today) and Zen (no collapse, no hazards, 10 floors)

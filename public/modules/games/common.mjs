@@ -230,6 +230,11 @@ export function aceActor(layer) {
       }
       return true;
     },
+    /** A hat of the mascot's wardrobe (cowboy, tophat, fedora, jester, crown…; '' none). */
+    hat(h) {
+      for (const c of [...pos.classList]) if (c.indexOf('mc-hat-') === 0) pos.classList.remove(c);
+      pos.classList.add('mc-hat-' + (h || 'none'));
+    },
     king(on, ending) {
       if (on !== king) {
         pos.classList.toggle('mc-hat-none', !on); pos.classList.toggle('mc-hat-crown', on);

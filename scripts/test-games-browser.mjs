@@ -466,33 +466,61 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pick(pg, 'bluff');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Le Bluff de l\'As', null, { timeout: 8000 }).catch(() => {});
   ok(await pg.evaluate(() => window._pthPadOwner === 'bluff'), label + ": its card then Space opens the Ace's Bluff");
+  ok(await pg.evaluate(() => document.querySelectorAll('#pth-game .pg-panel .gm-tile').length === 3 && !!document.querySelector('#pth-game .pg-panel .bl-timer')),
+    label + ": the Ace's Bluff: three modes and the hourglass on its title");
   await pg.keyboard.press('Space');
   const toDecide = async () => {
-    for (let i = 0; i < 12; i++) {
-      await pg.waitForFunction(() => ['decide', 'shown', 'over'].indexOf(window.__pthBL.state()) >= 0, null, { timeout: 5000 }).catch(() => {});
+    for (let i = 0; i < 40; i++) {
+      await pg.waitForFunction(() => ['decide', 'you', 'shown', 'over'].indexOf(window.__pthBL.state()) >= 0, null, { timeout: 8000 }).catch(() => {});
       const st = await pg.evaluate(() => window.__pthBL.state());
       if (st === 'decide' || st === 'over') return st;
-      await pg.keyboard.press('Space');            // a check: go on to the next hand
+      await pg.keyboard.press('Space');            // check, or the next hand
       await sleep(150);
     }
     return '';
   };
-  ok(await toDecide() === 'decide', label + ': the Ace bets and waits for an answer');
+  ok(await toDecide() === 'decide', label + ': the Ace bets on a street and waits for an answer');
+  ok(await pg.evaluate(() => { const b = [...document.querySelectorAll('#pth-game .bl-ui > button.btn-action')].filter((x) => x.style.display !== 'none').map((x) => x.textContent); return b.length === 3 && /^Fold/.test(b[0]) && /^Call/.test(b[1]) && /^Raise/.test(b[2]); }),
+    label + ': the table\'s buttons: Fold, Call, Raise');
   await shot(pg, label + '-bl-decide');
-  const bl0 = await pg.evaluate(() => ({ chips: window.__pthBL.run().chips, bet: window.__pthBL.run().bet }));
+  const bl0 = await pg.evaluate(() => ({ chips: window.__pthBL.run().chips, bet: window.__pthBL.run().bet, pot: window.__pthBL.run().pot, street: window.__pthBL.run().street }));
   await pg.keyboard.press('Space');
-  await sleep(300);
-  const bl1 = await pg.evaluate(() => ({ st: window.__pthBL.state(), called: window.__pthBL.run().called, net: window.__pthBL.run().net, chips: window.__pthBL.run().chips }));
-  ok(bl1.st === 'shown' && bl1.called && bl1.chips === bl0.chips - bl0.bet + (bl1.net + 5 + bl0.bet), label + ': Space calls, his cards are shown (net ' + bl1.net + ')');
+  await sleep(250);
+  const bl1 = await pg.evaluate(() => ({ st: window.__pthBL.state(), called: window.__pthBL.run().called, chips: window.__pthBL.run().chips, pot: window.__pthBL.run().pot, street: window.__pthBL.run().street }));
+  ok(bl1.called && bl1.chips === bl0.chips - Math.min(bl0.bet, bl0.chips) && (bl1.st === 'shown' || bl1.pot === bl0.pot + Math.min(bl0.bet, bl0.chips)),
+    label + ': Space calls: his bet is matched (street ' + bl0.street + ', ' + bl1.st + ')');
+  // To the end of the hand, then the next bet is folded.
+  for (let i = 0; i < 12 && (await pg.evaluate(() => window.__pthBL.state())) !== 'shown'; i++) {
+    await pg.waitForFunction(() => ['decide', 'you', 'shown'].indexOf(window.__pthBL.state()) >= 0, null, { timeout: 8000 }).catch(() => {});
+    if ((await pg.evaluate(() => window.__pthBL.state())) !== 'shown') { await pg.keyboard.press('Space'); await sleep(200); }
+  }
+  ok(await pg.evaluate(() => window.__pthBL.state() === 'shown' && window.__pthBL.run().streetTells.every((x) => !!window.__pthBL.run().book[x.tell])),
+    label + ': the hand is shown down; the notebook counts the tells he showed');
   await shot(pg, label + '-bl-shown');
   await pg.keyboard.press('Space');
-  await sleep(200);
   if (await toDecide() === 'decide') {
     const before = await pg.evaluate(() => window.__pthBL.run().chips);
     await pg.keyboard.press('ArrowDown');
     await sleep(300);
-    ok(await pg.evaluate((b) => window.__pthBL.state() === 'shown' && window.__pthBL.run().folded && window.__pthBL.run().chips === b, before), label + ': ↓ folds: only the ante is lost');
+    ok(await pg.evaluate((b) => window.__pthBL.state() === 'shown' && window.__pthBL.run().folded && window.__pthBL.run().chips === b, before), label + ': ↓ folds: what is in the pot stays there');
   }
+  // When he checks: Bet; the tournament gives him a stack.
+  await pg.evaluate(() => window.__pthBL.start('tourney'));
+  let you = '';
+  for (let i = 0; i < 40 && you !== 'you'; i++) {
+    await pg.waitForFunction(() => ['decide', 'you', 'shown'].indexOf(window.__pthBL.state()) >= 0, null, { timeout: 8000 }).catch(() => {});
+    you = await pg.evaluate(() => window.__pthBL.state());
+    if (you === 'decide') await pg.keyboard.press('ArrowDown'); else if (you === 'shown') await pg.keyboard.press('Space');
+    await sleep(150);
+  }
+  if (you === 'you') {
+    const y0 = await pg.evaluate(() => ({ chips: window.__pthBL.run().chips, his: window.__pthBL.run().his, yb: window.__pthBL.run().yb }));
+    await pg.evaluate(() => { const b = [...document.querySelectorAll('#pth-game .bl-ui > button.btn-action')]; b[1].click(); });   // a tap on Bet
+    await sleep(1300);
+    const y1 = await pg.evaluate(() => ({ chips: window.__pthBL.run().chips, his: window.__pthBL.run().his, yb: window.__pthBL.run().yb, st: window.__pthBL.state(), hud: (document.querySelector('#pth-game .bl-hisv') || {}).textContent }));
+    ok(y1.yb === y0.yb + 1 && y0.his !== null && y0.his < 200 && /\d/.test(y1.hud || ''), label + ': he checks, a tap on Bet: he answers (' + JSON.stringify([y0, y1]) + ')');
+  }
+  ok(await pg.evaluate(() => { const b = document.querySelector('#pth-game .bl-bookbtn'); return !!b; }), label + ': the notebook button is there');
   await pg.keyboard.press('Escape'); await sleep(200);
   await pg.keyboard.press('Escape'); await sleep(500);
   // ── Ace Dash: three lanes, the Ace from behind, swipes on a phone ──

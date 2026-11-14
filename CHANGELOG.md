@@ -16,6 +16,19 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **The Ace's Bluff — all nine proposals** (`web.53`, narmod: « all of them ») — `games/bluff.mjs` rewritten: streets
+  (flop / turn / river, `streetAction()` from who wins at the river: `STREET_VALUE`, `STREET_BLUFF` × the character's
+  bluff rate); your own bets (Check / Bet / All-In after his check, Fold / Call / Raise facing his bet; he answers with
+  `callsYou(cmp, repOf(bets, bluffs))`, a raise folds most of his bluffs); `PERSONAS` (ace, cowboy, gent, trap —
+  the tell on value, joker, king; hats through the new `aceActor().hat()`), `personaAt()`; ten `TELLS` drawn bigger
+  (sweat, whistle notes, riffled chips, scratch lines on the canvas; faces and poses on the actor); the notebook (HTML,
+  pinned on wide stages, 📓 / key 4 on a phone: counts per tell 🎭 / 💪, ★ guesses, your image) with a page turn per
+  table; `MODES` free / daily (`rng('bl-'+day)`, `pth_bl_daily`) / tourney (`T_START`, `T_ANTES`, his stack in the HUD,
+  `pth_bl_best.tourney`); hourglass `pth_bl_timer` (`DECIDE_S`, quick read within `QUICK_S`: +`QUICK_BONUS`);
+  chip flights, pot stacks, All-In shake; the tell's replay after a bluff; HTML buttons with the web client's
+  `.btn-action` classes; registry aspect `[0.5, 2.4]`. i18n: 27 new keys (`blMode*D`, `blTimer`, `blQuick`,
+  `blNotebook`, `blRep*`, `blReplay`, `blWin`, `blLose`, `blP_*`, `blT_*`) and new `blHint` / `blRules` (7 points)
+  in all 83 languages.
 - **House of Cards — all nine proposals** (`web.52`, narmod: « all of them ») — `games/house.mjs`: (1) portrait —
   registry aspect `[0.5, 2.4]`, `railAmp()` fits the rail to a narrow stage (speed scaled with it), the camera pans
   sideways (`G.pan`) when the top leans further than the rail reaches; (2) `drawBg()` — Ace Runner's club
