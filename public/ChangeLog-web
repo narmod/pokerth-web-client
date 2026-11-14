@@ -1,4 +1,10 @@
-2026-11-14 version 2.1.11-web.38 (current series):
+2026-11-14 version 2.1.11-web.39 (current series):
+- new: Ace Runner — six venues on the way: the local club, Las Vegas, the cruise, Monte-Carlo, Macao and the final table, a new one every 10 levels, with its name on the banner
+- new: Ace Runner — day and night: the sun goes down, the stars and the moon come out while you run
+- improvement: Ace Runner — the difficulty keeps climbing after level 20: the speed and the gaps go on getting harder, and each venue brings a new kind of obstacle (low and high cards together, the bouncing dealer button, triple stacks, a rain of cards, drifting cards)
+- improvement: Ace Runner — fairer score: distance + a bonus for your hand, from +20 % (a pair) to +300 % (a royal flush); a long run now always beats a short one. The old records are reset once, as they were counted another way
+
+2026-11-14 version 2.1.11-web.38:
 - improvement: Who Wins? — no more « Split » answer: the hands never tie, you just pick the left or the right one; the fifth level is now Strong hands (a full house or better)
 - improvement: Who Wins? — the Ace stands at the top right and reacts to your answers; the choice of mode uses the same tiles as the other mini-games
 

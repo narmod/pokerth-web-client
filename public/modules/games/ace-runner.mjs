@@ -16,6 +16,15 @@
 //   Insurance   the blue shield chip: it takes one hit for him (🛡️ in the HUD)
 //   Close call  skimming an obstacle without touching it: +CLOSE_BONUS metres
 //   Showdown    at the end the five cards of the hand are turned one by one
+// The long run (web.39, narmod 2026-11-14): the difficulty keeps growing to the
+// end — the speed eases up towards SPEED_CAP (no wall at level 20), obstacles
+// come a little closer at each level, and every VENUE_EVERY levels a new venue
+// (games/runner-scenery.mjs: the club, Las Vegas, the cruise, Monte-Carlo,
+// Macao, the final table) brings a new pattern (TIERS): low then high cards,
+// a bouncing dealer button, triple stacks, a rain of cards, wider drifts. The
+// day goes by (dawn, day, dusk, night). Score: the distance plus the hand's
+// bonus (RUN_BONUS: +20 % for a pair … +300 % for a royal flush), so the
+// distance counts — records restarted with it (games/index.mjs).
 // Fairness: a jump pressed just before landing is kept (JUMP_BUFFER_MS), and
 // obstacles are spaced by the time they reach the Ace (GAP), whatever the speed
 // or their own motion, so a jump always has room to land.
@@ -24,6 +33,7 @@
 
 import { evalCards, JOKER, rankOf, suitOf } from './poker-hand.mjs';
 import { SUITS, RANKS, CHIP, rlab, isRed, fmt, faceUrl, backUrl, cardHtml, newDeck, imageCache, rr, aceActor, ink } from './common.mjs';
+import { drawScenery, venueOf, dayAt, VENUES } from './runner-scenery.mjs';
 
 const GROUND_OFF = 74;        // ground line, from the bottom of the world
 const ACE_X = 120;            // the Ace's feet, from the left
@@ -42,7 +52,24 @@ const EASY_START = 1.0, EASY_STEP = 0.25;
 // little random offset (FLY_JITTER), all within reach of the hit boxes.
 const FLY_MID = 74, FLY_LOW = 22, FLY_HIGH = 110, FLY_JITTER = 4, FLY_DRIFT = 8;
 const FLY_LOW_LVL = 3, FLY_HIGH_LVL = 5, FLY_DRIFT_LVL = 7;
-const SPEED0 = 280, SPEED_LVL = 20, SPEED_T = 0.7, SPEED_MAX = 800, SPEED_EASE = 1.5;
+// Speed: from SPEED0 up towards SPEED_CAP, half of the way by level ~17 (SPEED_K),
+// plus a little with the time in the level (at most SPEED_T_MAX).
+const SPEED0 = 280, SPEED_CAP = 940, SPEED_K = 24, SPEED_T = 0.5, SPEED_T_MAX = 50, SPEED_EASE = 1.5;
+/** The speed aimed at, at level lvl after t seconds of running. */
+export function speedFor(lvl, t) { return SPEED0 + (SPEED_CAP - SPEED0) * (1 - Math.exp(-(lvl - 1) / SPEED_K)) + Math.min(SPEED_T_MAX, t * SPEED_T); }
+/** Seconds to the next obstacle: [min, spread] — closer and closer, no wall. */
+export function gapFor(lvl) {
+  const e = 1 - Math.exp(-(lvl - 1) / 35);
+  return [0.75 + Math.max(0, EASY_START - (lvl - 1) * EASY_STEP) - 0.3 * (1 - Math.exp(-(lvl - 1) / 5)) - 0.2 * e, 1.1 - 0.35 * e];
+}
+// A new pattern with each venue (tier = venue index): its chance per obstacle.
+export const TIERS = { combo: 1, bounce: 2, triple: 3, rain: 4, drift: 5 };
+// The hand's bonus on the distance, by category (high card … royal flush).
+export const RUN_BONUS = [0, 0.2, 0.4, 0.6, 0.9, 1.1, 1.4, 2, 2.5, 3];
+/** The bonus (0 … 3) of an evalCards() result. */
+export const bonusOf = (ev) => (ev && ev.cat >= 0 ? RUN_BONUS[ev.cat] : 0);
+/** The final score: the distance and the hand's bonus on it. */
+export function scoreOf(dist, ev) { const d = Math.floor(dist); return d + Math.round(d * bonusOf(ev)); }
 const JUMP_BUFFER_MS = 140;   // a jump pressed this long before landing still counts
 // Minimum time (s) between two obstacles reaching the Ace, by kind (previous → next).
 const GAP = { jump: { jump: 0.5, duck: 0.74 }, duck: { jump: 0.46, duck: 0.36 } };
@@ -55,6 +82,8 @@ export function create(shell) {
   const ace = aceActor(shell.layer);
   shell.grant('runner');   // found it: its secret trophy (granted on the way out)
 
+  // The venue paints its own sky, day or night: light text with a shadow, whatever the theme.
+  shell.hud.classList.add('on-felt', 'ar-sky');
   shell.hud.innerHTML = '<div class="ar-stats"><div><div class="ar-lab">' + esc(t('arDistance')) + '</div><div class="ar-num ar-d">0000</div></div>'
     + '<div><div class="ar-lab">' + esc(t('arLevel')) + '</div><div class="ar-num ar-lv">1</div></div>'
     + '<div class="ar-ins" hidden><div class="ar-lab">&nbsp;</div><div class="ar-num">🛡️</div></div></div>'
@@ -70,8 +99,6 @@ export function create(shell) {
   const img = imageCache();
   const back = backUrl();
 
-  const lights = [];
-  for (let i = 0; i < 22; i++) lights.push({ x: Math.random() * 1400, y: 20 + Math.random() * 150, r: 6 + Math.random() * 22, a: 0.08 + Math.random() * 0.16, h: Math.random() < 0.7 ? '216,178,90' : '179,38,30' });
 
   let state = 'title', G = null, revealTimer = 0;
 
@@ -80,7 +107,8 @@ export function create(shell) {
     G = { t: 0, dist: 0, level: 1, speed: SPEED0, y: 0, vy: 0, onGround: true, duck: false, holdJump: false,
       obs: [], items: [], fx: [], deck, hand: [], ev: evalCards([]), nextObs: 1.8, nextItem: 0.7,
       nextAllIn: 22 + Math.random() * 14, allInUntil: 0, allInWarned: false, scroll: 0, yayUntil: 0, coolUntil: 0, banner: null, overAt: 0,
-      jumpBufUntil: 0, lastArr: -9, lastKind: 'duck', ins: false, nextIns: 35 + Math.random() * 20, safeUntil: 0 };
+      jumpBufUntil: 0, lastArr: -9, lastKind: 'duck', ins: false, nextIns: 35 + Math.random() * 20, safeUntil: 0,
+      venue: 0, prevVenue: 0, venueT: 1 };
     renderHand(); renderStats();
   }
 
@@ -91,7 +119,7 @@ export function create(shell) {
     let h = '';
     for (let i = 0; i < 5; i++) h += ev.best[i] != null ? cardHtml(ev.best[i], 'sm') : '<div class="ar-slot"></div>';
     hSlots.innerHTML = h;
-    hName.innerHTML = (ev.nameKey ? esc(t(ev.nameKey)) : '') + ' <b>×' + ev.mult + '</b>';
+    hName.innerHTML = (ev.nameKey ? esc(t(ev.nameKey)) : '') + ' <b>+' + Math.round(bonusOf(ev) * 100) + '%</b>';
   }
 
   function renderStats() {
@@ -149,13 +177,36 @@ export function create(shell) {
     return x0 + shift;
   }
   function spawnObstacle() {
-    const gy = groundY(), roll = Math.random();
+    const gy = groundY(), roll = Math.random(), tier = venueOf(G.level);
     let x = W() + 40;
+    // The venues' patterns (one at a time, a fair chance each).
+    const pat = Math.random();
+    if (tier >= TIERS.combo && pat < 0.12) {
+      // A low card (jump) then a high one (stay down): GAP keeps room between them.
+      place([{ type: 'fly', x, y: gy - FLY_LOW, y0: gy - FLY_LOW, amp: 0, w: 38, h: 24, phase: Math.random() * 6, vx: 110 }], 'jump', 110);
+      x = place([{ type: 'fly', x: x + 60, y: gy - FLY_HIGH, y0: gy - FLY_HIGH, amp: 0, w: 38, h: 24, phase: Math.random() * 6, vx: 110 }], 'duck', 110);
+      return;
+    }
+    if (tier >= TIERS.bounce && pat < 0.22) {
+      x = place([{ type: 'dealer', x: x + 20, r: 13, vx: 120, rot: 0, bounce: 26, bp: Math.random() * 6 }], 'jump', 120) - 20;
+      return;
+    }
+    if (tier >= TIERS.triple && pat < 0.3) {
+      const group = [0, 1, 2].map((k) => { const n = 3 + Math.floor(Math.random() * 4); return { type: 'stack', x: x + k * 38, w: 30, n, h: n * 6 + 4, col: Math.floor(Math.random() * 4) }; });
+      place(group, 'jump', 0);
+      return;
+    }
+    if (tier >= TIERS.rain && pat < 0.38) {
+      // A rain of cards at mid height: stay down under all of them.
+      const y0 = gy - FLY_MID;
+      place([0, 1, 2].map((k) => ({ type: 'fly', x: x + k * 70, y: y0, y0, amp: 0, w: 38, h: 24, phase: Math.random() * 6, vx: 110 })), 'duck', 110);
+      return;
+    }
     if (G.dist > 250 && roll < 0.27) {
       const lv = G.level, r = Math.random();
       const band = lv >= FLY_HIGH_LVL ? (r < 0.3 ? 'low' : r < 0.55 ? 'high' : 'mid') : lv >= FLY_LOW_LVL ? (r < 0.35 ? 'low' : 'mid') : 'mid';
       const y0 = gy - (band === 'low' ? FLY_LOW : band === 'high' ? FLY_HIGH : FLY_MID) + (Math.random() * 2 - 1) * FLY_JITTER;
-      const amp = band !== 'low' && lv >= FLY_DRIFT_LVL ? FLY_DRIFT : 0;
+      const amp = band !== 'low' && lv >= FLY_DRIFT_LVL ? FLY_DRIFT * (tier >= TIERS.drift ? 1.6 : 1) : 0;
       x = place([{ type: 'fly', x, y: y0, y0, amp, w: 38, h: 24, phase: Math.random() * 6, vx: 110 }], band === 'low' ? 'jump' : 'duck', 110);
     } else if (G.dist > 450 && roll < 0.42) {
       x = place([{ type: 'dealer', x: x + 20, r: 13, vx: 150, rot: 0 }], 'jump', 150) - 20;
@@ -183,7 +234,7 @@ export function create(shell) {
   const hit = (a, b) => a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
   function obsBox(o, gy) {
     if (o.type === 'fly') return { l: o.x - o.w / 2 + 4, r: o.x + o.w / 2 - 4, t: o.y - o.h / 2 + 3, b: o.y + o.h / 2 - 3 };
-    if (o.type === 'dealer') return { l: o.x - o.r + 3, r: o.x + o.r - 3, t: gy - o.r * 2 + 3, b: gy };
+    if (o.type === 'dealer') { const by = o.by || 0; return { l: o.x - o.r + 3, r: o.x + o.r - 3, t: gy - by - o.r * 2 + 3, b: gy - by }; }
     return { l: o.x - o.w / 2 + 3, r: o.x + o.w / 2 - 3, t: gy - o.h + 3, b: gy };
   }
 
@@ -192,16 +243,26 @@ export function create(shell) {
     const now = performance.now();
     const king = now < G.allInUntil;
     G.t += dt;
-    const target = Math.min(SPEED_MAX, SPEED0 + (G.level - 1) * SPEED_LVL + G.t * SPEED_T);
+    const target = speedFor(G.level, G.t);
     G.speed += (target - G.speed) * Math.min(1, dt * SPEED_EASE);
     const dx = G.speed * dt;
     G.scroll += dx; G.dist += (dx / 10) * (king ? 2 : 1);
     const lvl = 1 + Math.floor(G.dist / BLIND_EVERY);
     if (lvl > G.level) {
       G.level = lvl;
-      G.banner = { s: t('arBlinds'), sub: String(lvl), t: 0 };
-      sound('notifyBlindsUp'); buzz(30); renderStats();
+      const v = venueOf(lvl);
+      if (v !== G.venue) {
+        // A new venue: it fades in, its name on the banner.
+        G.prevVenue = G.venue; G.venue = v; G.venueT = 0;
+        G.banner = { s: t(VENUES[v]), sub: String(lvl), t: 0 };
+        sound('notifyBigWin');
+      } else {
+        G.banner = { s: t('arBlinds'), sub: String(lvl), t: 0 };
+        sound('notifyBlindsUp');
+      }
+      buzz(30); renderStats();
     }
+    if (G.venueT < 1) G.venueT = Math.min(1, G.venueT + dt / 1.6);
     if (G.banner) { G.banner.t += dt; if (G.banner.t > 1.6) G.banner = null; }
     if (!G.onGround) {
       G.vy += (G.holdJump && G.vy < 0 ? 2100 : 2900) * dt;
@@ -217,7 +278,8 @@ export function create(shell) {
     G.nextObs -= dt;
     if (G.nextObs <= 0) {
       spawnObstacle();
-      G.nextObs = 0.75 + Math.random() * 1.1 + Math.max(0, EASY_START - (G.level - 1) * EASY_STEP) - Math.min(0.3, (G.level - 1) * 0.06);
+      const [g0, spread] = gapFor(G.level);
+      G.nextObs = g0 + Math.random() * spread;
     }
     G.nextItem -= dt;
     if (G.nextItem <= 0) { spawnItem(); G.nextItem = 1.6 + Math.random() * 1.6; }
@@ -235,7 +297,7 @@ export function create(shell) {
     for (let i = G.obs.length - 1; i >= 0; i--) {
       const o = G.obs[i];
       o.x -= dx + (o.vx || 0) * dt;
-      if (o.type === 'dealer') o.rot -= ((G.speed + o.vx) * dt) / o.r;
+      if (o.type === 'dealer') { o.rot -= ((G.speed + o.vx) * dt) / o.r; if (o.bounce) o.by = Math.abs(Math.sin(G.t * 4 + o.bp)) * o.bounce; }
       else if (o.amp) o.y = o.y0 + Math.sin(G.t * 1.7 + o.phase) * o.amp;
       if (o.x < -60) { G.obs.splice(i, 1); continue; }
       const ob = obsBox(o, gy);
@@ -316,8 +378,8 @@ export function create(shell) {
     G.yayUntil = performance.now() + 260;
     sound('notifyCard');
     G.fx.push({ type: 'txt', x: it.x, y: it.y - 20, s: '+' + rlab(it.c), red: isRed(it.c), t: 0, life: 0.8 });
-    if (G.ev.cat > prev && G.ev.mult > 1) {
-      G.fx.push({ type: 'txt', x: ACE_X + 30, y: groundY() - G.y - 120, s: t(G.ev.nameKey) + ' ×' + G.ev.mult, gold: true, t: 0, life: 1.2 });
+    if (G.ev.cat > prev && bonusOf(G.ev) > 0) {
+      G.fx.push({ type: 'txt', x: ACE_X + 30, y: groundY() - G.y - 120, s: t(G.ev.nameKey) + ' +' + Math.round(bonusOf(G.ev) * 100) + '%', gold: true, t: 0, life: 1.2 });
       if (G.ev.cat >= 5) G.coolUntil = performance.now() + 1600;   // a flush or better: sunglasses
     }
     if (!shell.reduced) for (let i = 0; i < 8; i++) G.fx.push({ type: 'spark', x: it.x, y: it.y, a: (i / 8) * Math.PI * 2, t: 0, life: 0.4 });
@@ -328,11 +390,12 @@ export function create(shell) {
     setKing(false); setPose('ko'); setMood('mc-m-ko');
     sound('notifyFold'); buzz([60, 40, 90]);
     shell.ended();
-    const d = Math.floor(G.dist), score = d * G.ev.mult, prevBest = shell.best.get();
+    const d = Math.floor(G.dist), score = scoreOf(G.dist, G.ev), prevBest = shell.best.get();
     const record = score > prevBest;
     if (record) shell.best.set(score);
     const cards = G.ev.best;
-    const tail = '<div class="ar-final">' + fmt(d) + ' × ' + G.ev.mult + ' = <em>' + fmt(score) + '</em></div>'
+    // The distance, the hand's bonus (+n %), the score.
+    const tail = '<div class="ar-final">' + fmt(d) + ' + ' + fmt(score - d) + ' <small>(+' + Math.round(bonusOf(G.ev) * 100) + '%)</small> = <em>' + fmt(score) + '</em></div>'
       + '<p class="pg-dim">' + esc(record && prevBest ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(score, prevBest)) })) + '</p>'
       + '<p class="pg-blink">' + esc(t('arAgain')) + '</p>';
     // Showdown: the cards come face down, then turn one by one.
@@ -357,30 +420,12 @@ export function create(shell) {
   function drawBg(g) {
     const gy = groundY(), w = W(), H = shell.H;
     const C = ink(shell.theme.light);
-    const sky = g.createLinearGradient(0, 0, 0, gy); sky.addColorStop(0, C.skyTop); sky.addColorStop(1, C.skyBot);
-    g.fillStyle = sky; g.fillRect(0, 0, w, gy);
-    if (!shell.reduced) {
-      const off = G.scroll * 0.08;
-      for (const l of lights) {
-        const x = (((l.x - off) % 1400) + 1400) % 1400 - 100;
-        if (x > w + 60) continue;
-        const gr = g.createRadialGradient(x, l.y, 0, x, l.y, l.r);
-        gr.addColorStop(0, 'rgba(' + l.h + ',' + l.a + ')'); gr.addColorStop(1, 'rgba(' + l.h + ',0)');
-        g.fillStyle = gr; g.beginPath(); g.arc(x, l.y, l.r, 0, Math.PI * 2); g.fill();
-      }
-    }
-    // Distant tables under their lamps.
-    const span = 330, off2 = G.scroll * 0.3;
-    for (let x = -(off2 % span); x < w + span; x += span) {
-      const cx = x + 120, ty = gy - 46;
-      const lamp = g.createRadialGradient(cx, ty - 40, 0, cx, ty - 10, 120);
-      lamp.addColorStop(0, 'rgba(' + C.lamp + ',.16)'); lamp.addColorStop(1, 'rgba(' + C.lamp + ',0)');
-      g.fillStyle = lamp; g.fillRect(cx - 130, ty - 120, 260, 170);
-      g.fillStyle = C.rim; g.beginPath(); g.ellipse(cx, ty + 4, 96, 20, 0, 0, Math.PI * 2); g.fill();
-      g.fillStyle = C.farFelt; g.beginPath(); g.ellipse(cx, ty, 86, 15, 0, 0, Math.PI * 2); g.fill();
-      g.strokeStyle = 'rgba(216,178,90,.35)'; g.lineWidth = 1; g.beginPath(); g.moveTo(cx, ty - 130); g.lineTo(cx, ty - 62); g.stroke();
-      g.fillStyle = C.shade; g.beginPath(); g.moveTo(cx - 18, ty - 50); g.lineTo(cx + 18, ty - 50); g.lineTo(cx + 9, ty - 63); g.lineTo(cx - 9, ty - 63); g.closePath(); g.fill();
-    }
+    // The venue (and the one before, fading out), the time of day.
+    const o = { w, gy, scroll: G.scroll, p: dayAt(state === 'run' ? G.t : 0), now: performance.now() / 1000, reduced: shell.reduced, C };
+    if (G.venueT < 1) {
+      drawScenery(g, Object.assign({}, o, { venue: G.prevVenue }));
+      g.save(); g.globalAlpha = G.venueT; drawScenery(g, Object.assign({}, o, { venue: G.venue })); g.restore();
+    } else drawScenery(g, Object.assign({}, o, { venue: G.venue }));
     const felt = g.createLinearGradient(0, gy, 0, H - 26); felt.addColorStop(0, '#24774e'); felt.addColorStop(1, '#174f34');
     g.fillStyle = felt; g.fillRect(0, gy, w, H - 26 - gy);
     g.strokeStyle = 'rgba(216,178,90,.55)'; g.setLineDash([7, 6]); g.lineWidth = 1.2;
@@ -406,8 +451,8 @@ export function create(shell) {
     g.strokeStyle = c[1]; g.lineWidth = 1.2; g.setLineDash([3, 3]); g.beginPath(); g.ellipse(o.x, ty, o.w / 2 - 4, 2.4, 0, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
   }
   function drawDealer(g, o) {
-    const gy = groundY(), cy = gy - o.r;
-    g.fillStyle = 'rgba(0,0,0,.3)'; g.beginPath(); g.ellipse(o.x, gy + 2, o.r + 2, 4, 0, 0, Math.PI * 2); g.fill();
+    const gy = groundY(), cy = gy - o.r - (o.by || 0);
+    g.fillStyle = 'rgba(0,0,0,.3)'; g.beginPath(); g.ellipse(o.x, gy + 2, (o.r + 2) * (1 - (o.by || 0) / 80), 4, 0, 0, Math.PI * 2); g.fill();
     g.save(); g.translate(o.x, cy); g.rotate(o.rot);
     g.fillStyle = '#f5f0e3'; g.beginPath(); g.arc(0, 0, o.r, 0, Math.PI * 2); g.fill();
     g.lineWidth = 1.5; g.strokeStyle = '#141414'; g.stroke();
@@ -540,6 +585,9 @@ export function create(shell) {
     ace.place(ACE_X, gy - G.y, S, shell.k);
     ace.fade(blink && Math.floor(performance.now() / 90) % 2 ? 0.35 : 1);
   }
+
+  // Test hook (automated browsers only): read the run, jump to a level or a time of day.
+  try { if (navigator.webdriver) window.__pthAR = { run: () => G, state: () => state }; } catch (e) {}
 
   return {
     update, draw, input,

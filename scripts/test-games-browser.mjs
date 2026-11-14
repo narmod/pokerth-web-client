@@ -85,6 +85,13 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   const run = await pg.evaluate(() => ({ hidden: document.querySelector('#pth-game .pg-panel').hidden, dist: document.querySelector('#pth-game .ar-num').textContent }));
   ok(run.hidden && +run.dist > 0, label + ': Space starts the run (distance ' + run.dist + ')');
   await shot(pg, label + '-run');
+  // Level 11: the second venue arrives with its name on the banner.
+  const jump = await pg.evaluate(async () => {
+    const G = window.__pthAR.run(); G.allInUntil = performance.now() + 1500; G.dist = 10 * 300 + 2;
+    await new Promise((r) => setTimeout(r, 250));
+    return { venue: G.venue, banner: G.banner && G.banner.s, level: G.level, hand: (document.querySelector('#pth-game .ar-hand') || {}).textContent || '' };
+  });
+  ok(jump.level === 11 && jump.venue === 1 && jump.banner === 'Las Vegas', label + ': level 11, a new venue and its name (' + jump.banner + ', level ' + jump.level + ')');
   // Nobody jumps: the first obstacle ends the run, then the showdown.
   await pg.waitForSelector('#pth-game .ar-final', { timeout: 20000 }).catch(() => {});
   const over = await pg.evaluate(() => ({
@@ -94,7 +101,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     backs: document.querySelectorAll('#pth-game .ar-show .pk.back').length,
     busted: (document.querySelector('#pth-game .pg-panel h2') || {}).textContent,
   }));
-  ok(/=/.test(over.final) && over.best !== null, label + ': busted, score shown and saved (' + over.final.trim() + ')');
+  ok(/ \+ .*%\) = /.test(over.final) && over.best !== null, label + ': busted, distance + hand bonus = score, saved (' + over.final.trim() + ')');
   ok(over.backs === 0, label + ': showdown cards all turned (' + over.cards + ')');
   ok(over.busted === 'Éliminé !', label + ': texts in the player\'s language');
   await shot(pg, label + '-over');

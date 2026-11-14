@@ -16,6 +16,17 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Ace Runner — venues, day and night, the climb, a fairer score** (`web.39`) — new `games/runner-scenery.mjs`
+  (precached): `VENUES` (club, Las Vegas, cruise, Monte-Carlo, Macao, final table), `venueOf(level)` one every
+  `VENUE_EVERY` = 10 levels, `skyAt(p)` / `dayAt(t)` a day/night cycle of `DAY_S` = 150 s (sun, moon, stars, lit
+  windows at night), `drawScenery()` with parallax; a new venue cross-fades in 1.6 s with its name on the banner.
+  `ace-runner.mjs`: `speedFor(level, t)` climbs with no plateau (exponential towards 940 px/s, was capped at 800
+  around level 18–20), `gapFor(level)` keeps closing; `TIERS` add an obstacle pattern per venue (combo, bouncing
+  dealer, triple stacks, rain, drift). Score: `scoreOf(d, ev) = d + d × RUN_BONUS[cat]` (+0 … +300 %) instead of
+  `d × MULT` (×1 … ×50), so the hand no longer outweighs the distance; `resetRunnerRecord()` (`index.mjs`, flag
+  `pth_ar_score2`) clears the old record once. HUD always light on the painted sky (`.ar-sky`); test hook
+  `window.__pthAR` (webdriver only). 6 venue keys + 2 rules lines × 83. Tests: `test-games` (climb, venues, sky,
+  score, reset), `test-games-browser` (venue at level 11, « d + bonus (+x %) = score »).
 - **Who Wins? — the traps explained** (`web.35`) — `games/whowins.mjs`: after a mistake (or a timeout) on a
   showdown `trapOf()` finds tricky, a card at the bottom of the felt explains it (`TRAP_KEYS`: board, counterfeit,
   wheel, flush, kicker, five; `wrapLines()` wraps by words, or by letters for scripts without spaces), in the three

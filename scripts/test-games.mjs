@@ -282,5 +282,35 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
   ok(same > 80 && splits > 2 && early === 0, 'Who Wins?: harder levels bring same-kind showdowns (' + same + '/200) and split pots (' + splits + '), none at first');
 }
 
+console.log('Ace Runner: the climb, the venues, the score');
+{
+  const R = await import('../public/modules/games/ace-runner.mjs');
+  const S = await import('../public/modules/games/runner-scenery.mjs');
+  const lv = [1, 5, 10, 18, 20, 25, 30, 40, 50, 60, 83, 100];
+  const sp = lv.map((l) => R.speedFor(l, 0));
+  ok(sp.every((v, i) => i === 0 || v > sp[i - 1]), 'speed keeps climbing past level 20 (' + sp.map(Math.round).join(' → ') + ')');
+  ok(R.speedFor(30, 0) - R.speedFor(20, 0) > 60 && R.speedFor(50, 0) - R.speedFor(30, 0) > 60, 'no plateau after level 20: still +60 px/s over each next 10–20 levels');
+  ok(R.speedFor(500, 1e6) <= 940 + 50, 'speed stays playable (under its cap even after a very long run)');
+  const gp = lv.map((l) => R.gapFor(l)[0]);
+  ok(gp.every((v, i) => i === 0 || v <= gp[i - 1]) && gp[gp.length - 1] < gp[3], 'obstacles keep coming closer after level 18 (' + gp.map((v) => v.toFixed(2)).join(' → ') + ')');
+  ok(R.TIERS.combo < R.TIERS.bounce && R.TIERS.bounce < R.TIERS.triple && R.TIERS.triple < R.TIERS.rain && R.TIERS.rain < R.TIERS.drift && R.TIERS.drift === 5, 'a new kind of obstacle in each of the five venues after the club');
+  ok(S.VENUES.length === 6 && S.VENUE_EVERY === 10 && S.venueOf(1) === 0 && S.venueOf(10) === 0 && S.venueOf(11) === 1 && S.venueOf(51) === 5 && S.venueOf(999) === 5, 'six venues, one every 10 levels, the final table stays');
+  const night = S.skyAt(0), noon = S.skyAt(0.5);
+  ok(night.light === 0 && noon.light === 1 && night.top !== noon.top && S.dayAt(0) === S.DAY_START && Math.abs(S.dayAt(S.DAY_S) - S.DAY_START) < 1e-9, 'day and night: dark sky at night, light at noon, a full cycle every ' + S.DAY_S + ' s');
+  ok(R.RUN_BONUS.length === 10 && R.RUN_BONUS[0] === 0 && R.RUN_BONUS[1] === 0.2 && R.RUN_BONUS[9] === 3 && R.RUN_BONUS.every((v, i) => i === 0 || v > R.RUN_BONUS[i - 1]), 'the hand bonus: +0 % for a high card, +20 % a pair … +300 % a royal flush');
+  const long = R.scoreOf(83 * 300, { cat: -1 }), short = R.scoreOf(19 * 300, { cat: 9 });
+  ok(long > short, 'a level-83 run with no hand beats a level-19 run with a royal flush (' + long + ' > ' + short + ')');
+  ok(R.scoreOf(1000, { cat: 1 }) === 1200 && R.scoreOf(1000.9, null) === 1000 && R.bonusOf({ cat: -1 }) === 0, 'score = distance + distance × bonus');
+  const mem = new Map();
+  globalThis.localStorage = { getItem: (k) => (mem.has(k) ? mem.get(k) : null), setItem: (k, v) => mem.set(k, String(v)), removeItem: (k) => mem.delete(k) };
+  const reg = await import('../public/modules/games/index.mjs');
+  mem.set('pth_game_best_ace-runner', '99999');
+  const first = reg.resetRunnerRecord();
+  mem.set('pth_game_best_ace-runner', '1234');
+  const again = reg.resetRunnerRecord();
+  ok(first && again === false && mem.get('pth_game_best_ace-runner') === '1234' && mem.get(reg.AR_SCORE_KEY) === '1', 'old Ace Runner record cleared once, the new one is kept');
+  delete globalThis.localStorage;
+}
+
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);

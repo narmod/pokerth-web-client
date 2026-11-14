@@ -51,6 +51,7 @@ const CSS = `
 #pth-game .ar-num{font:700 clamp(15px,2.4vw,20px)/1 'Inconsolata',monospace;font-variant-numeric:tabular-nums;color:#f5f0e3;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 #pth-game .ar-stats{display:flex;gap:16px}
 #pth-game .ar-hand{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+#pth-game .ar-sky .ar-lab{color:#e3ece6}#pth-game .ar-sky .ar-lab,#pth-game .ar-sky .ar-name{text-shadow:0 1px 2px rgba(0,0,0,.75),0 0 6px rgba(0,0,0,.35)}
 #pth-game .ar-slots{display:flex;gap:4px}
 #pth-game .ar-slots .pk{margin:0;flex:none}
 #pth-game .ar-slot{width:32px;height:46px;border-radius:4px;border:1px dashed rgba(216,178,90,.35);box-sizing:border-box}

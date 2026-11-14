@@ -24,6 +24,19 @@
 
 import { arcadeStat } from './stats.mjs';
 
+// Ace Runner's score changed (web.39: the distance plus the hand's bonus, no
+// more distance × hand): its records restart, once per device (narmod).
+export const AR_SCORE_KEY = 'pth_ar_score2';
+export function resetRunnerRecord() {
+  try {
+    if (localStorage.getItem(AR_SCORE_KEY)) return false;
+    localStorage.removeItem('pth_game_best_ace-runner');
+    localStorage.setItem(AR_SCORE_KEY, '1');
+    return true;
+  } catch (e) { return false; }
+}
+resetRunnerRecord();
+
 export const HOME = 'arcade';
 // The « Mini-games » mode (design note claude/CONCEPTION_MODE_ARCADE.md,
 // narmod 2026-11-13). The home page (menu.mjs) lists the games in this order,
