@@ -813,6 +813,8 @@ export const strings = {
     "hlDone": "Mashindano yamekwisha!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Mkono wako: karata 5 kwa showdown",
+    "hlOut": "Zilizotoka",
+    "hlYourHand": "Mkono wako",
     "ach_hilo": "Juu au chini",
     "ach_hilo_d": "Makisio 10 sahihi mfululizo kwenye chungu kimoja",
     "blName": "Hila ya Ree",

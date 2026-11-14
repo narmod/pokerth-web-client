@@ -1082,6 +1082,8 @@ export const strings = {
     "hlDone": "Vége a versenynek!",
     "hlShowdown": "Leosztás",
     "hlHandHint": "A kezed: 5 lap a leosztásig",
+    "hlOut": "Kijött",
+    "hlYourHand": "A kezed",
     "ach_hilo": "Nagyobb vagy kisebb",
     "ach_hilo_d": "10 jó tipp egymás után egy kasszán",
     "blName": "Az Ász blöffje",

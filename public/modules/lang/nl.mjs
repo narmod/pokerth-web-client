@@ -1190,6 +1190,8 @@ export const strings = {
     "hlDone": "Toernooi voorbij!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Je hand: 5 kaarten voor de showdown",
+    "hlOut": "Gespeeld",
+    "hlYourHand": "Jouw hand",
     "ach_hilo": "Hoger of lager",
     "ach_hilo_d": "10 goede gokken op rij op één pot",
     "blName": "De bluf van de Aas",

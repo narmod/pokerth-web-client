@@ -805,6 +805,8 @@ export const strings = {
     "hlDone": "Turniir läbi!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Su käsi: 5 kaarti showdowniks",
+    "hlOut": "Väljas",
+    "hlYourHand": "Sinu käsi",
     "ach_hilo": "Kõrgem või madalam",
     "ach_hilo_d": "10 õiget pakkumist järjest ühel potil",
     "blName": "Ässa bluff",

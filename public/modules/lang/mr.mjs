@@ -812,6 +812,8 @@ export const strings = {
     "hlDone": "स्पर्धा संपली!",
     "hlShowdown": "शोडाउन",
     "hlHandHint": "तुमचा हात: शोडाउनसाठी 5 पत्ते",
+    "hlOut": "निघालेले",
+    "hlYourHand": "तुमचा हात",
     "ach_hilo": "मोठा की लहान",
     "ach_hilo_d": "एका पॉटवर सलग 10 बरोबर अंदाज",
     "blName": "एक्क्याचा ब्लफ",

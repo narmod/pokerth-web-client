@@ -813,6 +813,8 @@ export const strings = {
     "hlDone": "টুর্নামেন্ট শেষ!",
     "hlShowdown": "শোডাউন",
     "hlHandHint": "তোমার হাত: শোডাউনের জন্য 5টি তাস",
+    "hlOut": "বেরিয়েছে",
+    "hlYourHand": "তোমার হাত",
     "ach_hilo": "বড় না ছোট",
     "ach_hilo_d": "একই পটে পরপর 10টি সঠিক অনুমান",
     "blName": "টেক্কার ব্লাফ",

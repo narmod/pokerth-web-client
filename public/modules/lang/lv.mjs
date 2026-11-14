@@ -814,6 +814,8 @@ export const strings = {
     "hlDone": "Turnīrs beidzies!",
     "hlShowdown": "Šovdauns",
     "hlHandHint": "Tava roka: 5 kārtis līdz šovdaunam",
+    "hlOut": "Izgājušas",
+    "hlYourHand": "Tava roka",
     "ach_hilo": "Augstāk vai zemāk",
     "ach_hilo_d": "10 pareizi minējumi pēc kārtas vienā bankā",
     "blName": "Dūža blefs",

@@ -815,6 +815,8 @@ export const strings = {
     "hlDone": "තරඟාවලිය අවසන්!",
     "hlShowdown": "ෂෝඩවුන්",
     "hlHandHint": "ඔබේ අත: ෂෝඩවුන් සඳහා කාඩ් 5",
+    "hlOut": "පිට වූ",
+    "hlYourHand": "ඔබේ අත",
     "ach_hilo": "ඉහළද පහළද",
     "ach_hilo_d": "එකම පොට් එකක අඛණ්ඩව නිවැරදි අනුමාන 10ක්",
     "blName": "ඒස්ගේ බ්ලෆ්",

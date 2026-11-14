@@ -1190,6 +1190,8 @@ export const strings = {
     "hlDone": "Torneo finito!",
     "hlShowdown": "Showdown",
     "hlHandHint": "La tua mano: 5 carte per lo showdown",
+    "hlOut": "Uscite",
+    "hlYourHand": "La tua mano",
     "ach_hilo": "Più alta o più bassa",
     "ach_hilo_d": "10 risposte giuste di fila sullo stesso piatto",
     "blName": "Il bluff dell'Asso",

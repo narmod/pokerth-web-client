@@ -814,6 +814,8 @@ export const strings = {
     "hlDone": "Turnirja je konec!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Tvoja roka: 5 kart do showdowna",
+    "hlOut": "Odigrane",
+    "hlYourHand": "Tvoja roka",
     "ach_hilo": "Višje ali nižje",
     "ach_hilo_d": "10 pravilnih ugibov zapored na en pot",
     "blName": "Asov blef",

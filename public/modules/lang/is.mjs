@@ -811,6 +811,8 @@ export const strings = {
     "hlDone": "Mótinu lokið!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Höndin þín: 5 spil fyrir showdown",
+    "hlOut": "Úti",
+    "hlYourHand": "Höndin þín",
     "ach_hilo": "Hærra eða lægra",
     "ach_hilo_d": "10 réttar ágiskanir í röð á einn pott",
     "blName": "Blekking ássins",

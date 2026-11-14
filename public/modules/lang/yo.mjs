@@ -815,6 +815,8 @@ export const strings = {
     "hlDone": "Ìdíje parí!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Ọwọ́ rẹ: káàdì 5 fún showdown",
+    "hlOut": "Ti jáde",
+    "hlYourHand": "Ọwọ́ rẹ",
     "ach_hilo": "Ga jù tàbí kéré jù",
     "ach_hilo_d": "Àmọ̀tán tó tọ́ 10 léraléra lórí ìkòkò kan",
     "blName": "Ẹ̀tàn Ace",

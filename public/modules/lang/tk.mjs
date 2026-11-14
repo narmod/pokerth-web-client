@@ -815,6 +815,8 @@ export const strings = {
     "hlDone": "Ýaryş gutardy!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Eliň: showdown üçin 5 kart",
+    "hlOut": "Çykanlar",
+    "hlYourHand": "Seniň eliň",
     "ach_hilo": "Uly ýa-da kiçi",
     "ach_hilo_d": "Bir bankda yzly-yzyna 10 dogry çaklama",
     "blName": "Tuzuň blefi",

@@ -430,6 +430,20 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.keyboard.press('Digit4');
   await pg.waitForFunction(() => window.__pthHL.state() === 'guess', null, { timeout: 3000 }).catch(() => {});
   ok(await pg.evaluate(() => window.__pthHL.run().stack === 1990 && window.__pthHL.run().cards === 2), label + ': Fold: the small blind, the next card');
+  // The table's buttons (web.51): HTML over the felt, the web client's classes; a tap plays.
+  const hb = await pg.evaluate(() => {
+    const vis = (sel) => [...document.querySelectorAll('#pth-game .hl-ui ' + sel)].filter((b) => b.style.display !== 'none' && b.getBoundingClientRect().width > 0).length;
+    return { ud: vis('.hl-ud'), fold: vis('.btn-action.btn-fold'), pct: vis('.btn-pct'), allin: vis('.btn-action.btn-allin'), cash: vis('[data-hl="cash"]') };
+  });
+  ok(hb.ud === 2 && hb.fold === 1 && hb.pct === 2 && hb.allin === 1 && hb.cash === 0, label + ': the table\'s buttons: ▼ ▲ in gold, Fold, Bet / Raise, All-In (' + JSON.stringify(hb) + ')');
+  await pg.click('#pth-game .hl-ui [data-hl="raise"]');
+  ok(await pg.evaluate(() => window.__pthHL.run().bet === 'raise'), label + ': a tap on Raise picks the bet');
+  await pg.evaluate(() => { const G = window.__pthHL.run(); G.cur = 1; G.shoe = G.shoe.filter((c) => c !== 1 && c !== 37); G.shoe.push(37); });
+  const st0 = await pg.evaluate(() => window.__pthHL.run().stack);
+  await pg.click('#pth-game .hl-ui [data-hl="hi"]');
+  await pg.waitForFunction(() => window.__pthHL.state() === 'guess', null, { timeout: 3000 }).catch(() => {});
+  ok(await pg.evaluate((s0) => window.__pthHL.run().stack > s0, st0), label + ': a tap on ▲ Plus haut plays the card (a 3, a K comes: the raise is won)');
+  await shot(pg, label + '-hl-buttons');
   await pg.keyboard.press('Escape'); await sleep(200);
   await pg.keyboard.press('Escape'); await sleep(500);
   // ── The Ace's Bluff: he bets, Call shows his cards; Fold gives up the ante ──

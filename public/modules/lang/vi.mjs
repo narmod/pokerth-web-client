@@ -1082,6 +1082,8 @@ export const strings = {
     "hlDone": "Giải đấu kết thúc!",
     "hlShowdown": "Lật bài",
     "hlHandHint": "Bộ bài của bạn: 5 lá để lật bài",
+    "hlOut": "Đã ra",
+    "hlYourHand": "Bài của bạn",
     "ach_hilo": "Cao hay thấp",
     "ach_hilo_d": "10 lần đoán đúng liên tiếp trên một pot",
     "blName": "Cú bluff của quân Át",

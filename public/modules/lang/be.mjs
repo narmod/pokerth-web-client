@@ -815,6 +815,8 @@ export const strings = {
     "hlDone": "Турнір скончаны!",
     "hlShowdown": "Шоўдаўн",
     "hlHandHint": "Твая рука: 5 карт да шоўдаўна",
+    "hlOut": "Выйшлі",
+    "hlYourHand": "Твая рука",
     "ach_hilo": "Больш ці менш",
     "ach_hilo_d": "10 трапленняў запар на адзін банк",
     "blName": "Блеф Туза",

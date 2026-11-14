@@ -1186,6 +1186,8 @@ export const strings = {
     "hlDone": "Turnaus päättyi!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Kätesi: 5 korttia showdowniin",
+    "hlOut": "Pelatut",
+    "hlYourHand": "Kätesi",
     "ach_hilo": "Isompi vai pienempi",
     "ach_hilo_d": "10 oikeaa arvausta peräkkäin samaan pottiin",
     "blName": "Ässän bluffi",

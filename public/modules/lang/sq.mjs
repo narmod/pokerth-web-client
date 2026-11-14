@@ -814,6 +814,8 @@ export const strings = {
     "hlDone": "Turneu mbaroi!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Dora jote: 5 letra për showdown",
+    "hlOut": "Dalë",
+    "hlYourHand": "Dora jote",
     "ach_hilo": "Më lart apo më poshtë",
     "ach_hilo_d": "10 hamendësime të sakta radhazi në një pot",
     "blName": "Blofi i Asit",

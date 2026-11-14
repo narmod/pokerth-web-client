@@ -815,6 +815,8 @@ export const strings = {
     "hlDone": "Turniro finita!",
     "hlShowdown": "Montrado",
     "hlHandHint": "Via mano: 5 kartoj por la montrado",
+    "hlOut": "Elirintaj",
+    "hlYourHand": "Via mano",
     "ach_hilo": "Pli alte aŭ pli malalte",
     "ach_hilo_d": "10 ĝustaj divenoj sinsekve sur unu poto",
     "blName": "La blufo de la Aso",

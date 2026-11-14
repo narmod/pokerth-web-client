@@ -811,6 +811,8 @@ export const strings = {
     "hlDone": "تورنمنت تمام شد!",
     "hlShowdown": "شوداون",
     "hlHandHint": "دست تو: ۵ کارت برای شوداون",
+    "hlOut": "بیرون‌آمده",
+    "hlYourHand": "دست تو",
     "ach_hilo": "بالاتر یا پایین‌تر",
     "ach_hilo_d": "۱۰ حدس درست پیاپی روی یک پات",
     "blName": "بلوف آس",

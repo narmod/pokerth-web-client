@@ -1083,6 +1083,8 @@ export const strings = {
     "hlDone": "Torneo rematado!",
     "hlShowdown": "Showdown",
     "hlHandHint": "A túa man: 5 cartas para o showdown",
+    "hlOut": "Saídas",
+    "hlYourHand": "A túa man",
     "ach_hilo": "Máis alta ou máis baixa",
     "ach_hilo_d": "10 acertos seguidos nun mesmo bote",
     "blName": "O farol do Ás",

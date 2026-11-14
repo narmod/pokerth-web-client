@@ -815,6 +815,8 @@ export const strings = {
     "hlDone": "Тэмцээн дууслаа!",
     "hlShowdown": "Шоудаун",
     "hlHandHint": "Таны гар: шоудаунд 5 хөзөр",
+    "hlOut": "Гарсан",
+    "hlYourHand": "Чиний гар",
     "ach_hilo": "Их үү, бага уу",
     "ach_hilo_d": "Нэг банкинд дараалан 10 зөв таамаг",
     "blName": "Тамганы блеф",

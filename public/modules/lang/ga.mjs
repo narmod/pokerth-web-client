@@ -815,6 +815,8 @@ export const strings = {
     "hlDone": "Comórtas thart!",
     "hlShowdown": "Taispeántas",
     "hlHandHint": "Do lámh: 5 chárta don taispeántas",
+    "hlOut": "Imithe",
+    "hlYourHand": "Do lámh",
     "ach_hilo": "Níos airde nó níos ísle",
     "ach_hilo_d": "10 buille ceart as a chéile ar phota amháin",
     "blName": "Bladhmann an Aoin",

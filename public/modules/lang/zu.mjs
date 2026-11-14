@@ -815,6 +815,8 @@ export const strings = {
     "hlDone": "Umqhudelwano uphelile!",
     "hlShowdown": "I-showdown",
     "hlHandHint": "Isandla sakho: amakhadi ama-5 e-showdown",
+    "hlOut": "Okuphumile",
+    "hlYourHand": "Isandla sakho",
     "ach_hilo": "Phezulu noma phansi",
     "ach_hilo_d": "Ukuqagela okulungile okungu-10 okulandelanayo ebhodweni elilodwa",
     "blName": "Ubuqili buka-Ace",

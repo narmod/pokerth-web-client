@@ -1085,6 +1085,8 @@ export const strings = {
     "hlDone": "Tha an fharpais seachad!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Do làmh: 5 cairtean airson an showdown",
+    "hlOut": "A-mach",
+    "hlYourHand": "Do làmh",
     "ach_hilo": "Nas àirde no nas ìsle",
     "ach_hilo_d": "10 tomhasan ceart an sreath air aon phoit",
     "blName": "Bluff an Aoin",

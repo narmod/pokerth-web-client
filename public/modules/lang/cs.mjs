@@ -1187,6 +1187,8 @@ export const strings = {
     "hlDone": "Turnaj skončil!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Tvoje ruka: 5 karet do showdownu",
+    "hlOut": "Odehrané",
+    "hlYourHand": "Tvoje ruka",
     "ach_hilo": "Výš, nebo níž",
     "ach_hilo_d": "10 správných tipů za sebou na jeden bank",
     "blName": "Esův blaf",

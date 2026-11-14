@@ -815,6 +815,8 @@ export const strings = {
     "hlDone": "Turnir tugadi!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Qo'lingiz: showdown uchun 5 karta",
+    "hlOut": "Chiqqanlar",
+    "hlYourHand": "Sening qoʻling",
     "ach_hilo": "Katta yoki kichik",
     "ach_hilo_d": "Bitta bankda ketma-ket 10 to'g'ri taxmin",
     "blName": "Tuzning blefi",

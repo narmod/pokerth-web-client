@@ -1187,6 +1187,8 @@ export const strings = {
     "hlDone": "Турнир окончен!",
     "hlShowdown": "Шоудаун",
     "hlHandHint": "Твоя рука: 5 карт до шоудауна",
+    "hlOut": "Вышли",
+    "hlYourHand": "Твоя рука",
     "ach_hilo": "Больше или меньше",
     "ach_hilo_d": "10 попаданий подряд на один банк",
     "blName": "Блеф Туза",

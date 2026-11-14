@@ -812,6 +812,8 @@ export const strings = {
     "hlDone": "ટુર્નામેન્ટ પૂરી!",
     "hlShowdown": "શોડાઉન",
     "hlHandHint": "તમારો હાથ: શોડાઉન માટે 5 પત્તાં",
+    "hlOut": "નીકળી ગયા",
+    "hlYourHand": "તમારો હાથ",
     "ach_hilo": "મોટું કે નાનું",
     "ach_hilo_d": "એક જ પોટ પર સતત 10 સાચા અંદાજ",
     "blName": "એક્કાનો બ્લફ",

@@ -1086,6 +1086,8 @@ export const strings = {
     "hlDone": "Turnir je završen!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Tvoja ruka: 5 karata za showdown",
+    "hlOut": "Izašle",
+    "hlYourHand": "Tvoja ruka",
     "ach_hilo": "Više ili niže",
     "ach_hilo_d": "10 tačnih pogodaka zaredom na jednom potu",
     "blName": "Asov blef",

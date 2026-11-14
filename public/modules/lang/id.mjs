@@ -813,6 +813,8 @@ export const strings = {
     "hlDone": "Turnamen selesai!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Tanganmu: 5 kartu untuk showdown",
+    "hlOut": "Sudah keluar",
+    "hlYourHand": "Tanganmu",
     "ach_hilo": "Lebih tinggi atau rendah",
     "ach_hilo_d": "10 tebakan benar berturut-turut dalam satu pot",
     "blName": "Gertakan As",

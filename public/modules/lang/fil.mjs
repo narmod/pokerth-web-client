@@ -813,6 +813,8 @@ export const strings = {
     "hlDone": "Tapos na ang torneo!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Ang kamay mo: 5 baraha para sa showdown",
+    "hlOut": "Lumabas na",
+    "hlYourHand": "Iyong kamay",
     "ach_hilo": "Mas mataas o mas mababa",
     "ach_hilo_d": "10 sunod-sunod na tamang hula sa isang pot",
     "blName": "Bluff ng Alas",

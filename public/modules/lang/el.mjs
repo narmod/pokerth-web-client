@@ -1082,6 +1082,8 @@ export const strings = {
     "hlDone": "Το τουρνουά τελείωσε!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Το χέρι σου: 5 φύλλα για το showdown",
+    "hlOut": "Βγήκαν",
+    "hlYourHand": "Το χέρι σου",
     "ach_hilo": "Μεγαλύτερο ή μικρότερο",
     "ach_hilo_d": "10 σωστές προβλέψεις στη σειρά σε ένα ποτ",
     "blName": "Η μπλόφα του Άσου",

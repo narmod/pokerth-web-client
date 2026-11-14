@@ -814,6 +814,8 @@ export const strings = {
     "hlDone": "انتهت البطولة!",
     "hlShowdown": "كشف الأوراق",
     "hlHandHint": "يدك: 5 أوراق لكشف الأوراق",
+    "hlOut": "خرجت",
+    "hlYourHand": "يدك",
     "ach_hilo": "أعلى أم أدنى",
     "ach_hilo_d": "10 تخمينات صحيحة متتالية على رهان واحد",
     "blName": "خدعة الآص",

@@ -1187,6 +1187,8 @@ export const strings = {
     "hlDone": "Turnuva bitti!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Elin: showdown için 5 kart",
+    "hlOut": "Çıkanlar",
+    "hlYourHand": "Elin",
     "ach_hilo": "Büyük mü küçük mü",
     "ach_hilo_d": "Tek potta üst üste 10 doğru tahmin",
     "blName": "As'ın blöfü",

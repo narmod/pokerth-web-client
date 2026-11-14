@@ -815,6 +815,8 @@ export const strings = {
     "hlDone": "錦標賽完咗！",
     "hlShowdown": "攤牌",
     "hlHandHint": "你嘅手牌：攤牌要 5 張",
+    "hlOut": "已出",
+    "hlYourHand": "你嘅手牌",
     "ach_hilo": "估大細",
     "ach_hilo_d": "同一個彩池連續估啱 10 次",
     "blName": "A 牌嘅詐唬",

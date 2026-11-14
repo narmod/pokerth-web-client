@@ -991,6 +991,8 @@ export const strings = {
     "hlDone": "토너먼트 종료!",
     "hlShowdown": "쇼다운",
     "hlHandHint": "내 핸드: 쇼다운까지 5장",
+    "hlOut": "나온 카드",
+    "hlYourHand": "내 패",
     "ach_hilo": "하이 앤 로우",
     "ach_hilo_d": "한 팟에서 10번 연속 정답",
     "blName": "에이스의 블러프",

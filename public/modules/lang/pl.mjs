@@ -1189,6 +1189,8 @@ export const strings = {
     "hlDone": "Koniec turnieju!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Twoja ręka: 5 kart do showdownu",
+    "hlOut": "Wyszły",
+    "hlYourHand": "Twoja ręka",
     "ach_hilo": "Wyżej czy niżej",
     "ach_hilo_d": "10 trafień z rzędu na jednej puli",
     "blName": "Blef Asa",

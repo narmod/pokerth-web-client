@@ -815,6 +815,8 @@ export const strings = {
     "hlDone": "Gasar ta ƙare!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Hannunka: katuna 5 don showdown",
+    "hlOut": "Sun fita",
+    "hlYourHand": "Hannunka",
     "ach_hilo": "Sama ko ƙasa",
     "ach_hilo_d": "Hasashe 10 daidai a jere a kan tukunya ɗaya",
     "blName": "Yaudarar Ace",

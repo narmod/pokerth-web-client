@@ -811,6 +811,8 @@ export const strings = {
     "hlDone": "הטורניר נגמר!",
     "hlShowdown": "שואודאון",
     "hlHandHint": "היד שלך: 5 קלפים לשואודאון",
+    "hlOut": "יצאו",
+    "hlYourHand": "היד שלך",
     "ach_hilo": "גבוה או נמוך",
     "ach_hilo_d": "10 ניחושים נכונים ברצף על קופה אחת",
     "blName": "הבלוף של האס",

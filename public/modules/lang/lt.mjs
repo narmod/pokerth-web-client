@@ -1081,6 +1081,8 @@ export const strings = {
     "hlDone": "Turnyras baigtas!",
     "hlShowdown": "Šoudaunas",
     "hlHandHint": "Tavo ranka: 5 kortos iki šoudauno",
+    "hlOut": "Išėjusios",
+    "hlYourHand": "Tavo ranka",
     "ach_hilo": "Aukščiau ar žemiau",
     "ach_hilo_d": "10 teisingų spėjimų iš eilės vienam bankui",
     "blName": "Tūzo blefas",

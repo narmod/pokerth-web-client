@@ -1,4 +1,8 @@
-2026-11-14 version 2.1.11-web.50 (current series):
+2026-11-14 version 2.1.11-web.51 (current series):
+- improvement: Higher or Lower — a cleaner page: the card and the shoe with the Ace sitting on it, your hand under them, a ladder of the ranks from A to 2 on the side showing where the card falls (higher in green, lower in red, ranks with no card left faded)
+- improvement: Higher or Lower — the table's buttons: Fold, All-In and Cash out look like the action buttons of a game (and follow your button theme), Bet and Raise like its quick bets; ▼ Lower and ▲ Higher are two big gold buttons side by side
+
+2026-11-14 version 2.1.11-web.50:
 - improvement: Ace Dash — the Ace is less stiff: his card sways from side to side as he runs, he stretches when he jumps, squashes when he lands, shivers after a close shave and wobbles when he is knocked
 - new: Ace Dash — he turns round to show his face at the big moments: a wink after a Salto, a grin when the Streak goes up, heart eyes for the Magnet, a fierce look for All-In, sunglasses for a flush or better, dizzy after a knock
 

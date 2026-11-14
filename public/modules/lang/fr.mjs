@@ -816,6 +816,8 @@ export const strings = {
     "hlDone": "Tournoi terminé !",
     "hlShowdown": "Abattage",
     "hlHandHint": "Ta main : 5 cartes pour l'abattage",
+    "hlOut": "Sortis",
+    "hlYourHand": "Ta main",
     "ach_hilo": "Plus haut / Plus bas",
     "ach_hilo_d": "10 bonnes réponses d'affilée sur un même pot",
     "blName": "Le Bluff de l'As",

@@ -1083,6 +1083,8 @@ export const strings = {
     "hlDone": "Torneig acabat!",
     "hlShowdown": "Showdown",
     "hlHandHint": "La teva mà: 5 cartes per al showdown",
+    "hlOut": "Sortides",
+    "hlYourHand": "La teva mà",
     "ach_hilo": "Més alta o més baixa",
     "ach_hilo_d": "10 encerts seguits en un mateix pot",
     "blName": "El farol de l'As",

@@ -815,6 +815,8 @@ export const strings = {
     "hlDone": "Txapelketa amaitu da!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Zure eskua: 5 karta showdownerako",
+    "hlOut": "Irtenak",
+    "hlYourHand": "Zure eskua",
     "ach_hilo": "Altuagoa edo baxuagoa",
     "ach_hilo_d": "10 asmatze jarraian pote berean",
     "blName": "Batekoaren faroa",

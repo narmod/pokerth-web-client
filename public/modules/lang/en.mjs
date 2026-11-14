@@ -815,6 +815,8 @@ export const strings = {
     "hlDone": "Tournament over!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Your hand: 5 cards for the showdown",
+    "hlOut": "Out",
+    "hlYourHand": "Your hand",
     "ach_hilo": "Higher or Lower",
     "ach_hilo_d": "10 right guesses in a row on one pot",
     "blName": "The Ace's Bluff",

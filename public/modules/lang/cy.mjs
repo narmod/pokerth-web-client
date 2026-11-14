@@ -815,6 +815,8 @@ export const strings = {
     "hlDone": "Twrnamaint drosodd!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Dy law: 5 cerdyn ar gyfer y showdown",
+    "hlOut": "Allan",
+    "hlYourHand": "Dy law",
     "ach_hilo": "Uwch neu is",
     "ach_hilo_d": "10 dyfaliad cywir yn olynol ar un pot",
     "blName": "Bluff yr As",

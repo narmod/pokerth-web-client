@@ -888,6 +888,8 @@ export const strings = {
     "hlDone": "टूर्नामेंट खत्म!",
     "hlShowdown": "शोडाउन",
     "hlHandHint": "तुम्हारा हाथ: शोडाउन के लिए 5 पत्ते",
+    "hlOut": "निकल चुके",
+    "hlYourHand": "आपका हाथ",
     "ach_hilo": "ऊँचा या नीचा",
     "ach_hilo_d": "एक पॉट पर लगातार 10 सही अनुमान",
     "blName": "इक्के का ब्लफ़",

@@ -1187,6 +1187,8 @@ export const strings = {
     "hlDone": "Torneio encerrado!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Sua mão: 5 cartas para o showdown",
+    "hlOut": "Saíram",
+    "hlYourHand": "Sua mão",
     "ach_hilo": "Maior ou menor",
     "ach_hilo_d": "10 acertos seguidos no mesmo pote",
     "blName": "O blefe do Ás",

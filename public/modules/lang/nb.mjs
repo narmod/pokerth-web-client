@@ -1184,6 +1184,8 @@ export const strings = {
     "hlDone": "Turneringen er over!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Hånden din: 5 kort til showdown",
+    "hlOut": "Ute",
+    "hlYourHand": "Din hånd",
     "ach_hilo": "Høyere eller lavere",
     "ach_hilo_d": "10 riktige gjetninger på rad på én pott",
     "blName": "Essets bløff",

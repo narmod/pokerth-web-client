@@ -812,6 +812,8 @@ export const strings = {
     "hlDone": "ውድድሩ አበቃ!",
     "hlShowdown": "ሾውዳውን",
     "hlHandHint": "እጅህ፦ ለሾውዳውን 5 ካርዶች",
+    "hlOut": "የወጡ",
+    "hlYourHand": "እጅህ",
     "ach_hilo": "ከፍ ወይስ ዝቅ",
     "ach_hilo_d": "በአንድ ገንዳ ላይ በተከታታይ 10 ትክክለኛ ግምቶች",
     "blName": "የኤሱ ማታለያ",

@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Higher or Lower — « épuré » with the ladder, the table's buttons** (`web.51`, narmod's picks after mockups:
+  layout 2, gold ▲ ▼) — `games/hilo.mjs`: new `L()` (phone: the ranks' ladder on the left, « Out » cards, the card
+  and the shoe with the Ace on it, the hand, the bets or the pot, ▼ / ▲ side by side, Fold or Cash out; wide: the
+  table on the left, a right column for the hand, bets and buttons, grown on short screens by `f`); `ladder()` (the
+  card's rank gold, higher green, lower red, ranks without a card left faded; the chances beside it on wide). The
+  buttons are HTML over the felt (`.hl-ui`) with the web client's classes: `.btn-action.btn-fold` / `.btn-allin`
+  / `.btn-raise` (Cash out) — the player's button theme, images included — and `.btn-pct` for Bet / Raise; ▲ ▼
+  are `.hl-ud` gold. Canvas buttons (`ui.mjs buttons()`) no longer used here. i18n: `hlOut`, `hlYourHand` in all
+  83 languages.
 - **Ace Dash — a livelier Ace** (`web.50`, narmod: « less stiff, faces for the events ») — `games/common.mjs`
   `aceActor()` gains `fx(kind)` (Web Animations over the poses: `land` squash, `jump` stretch, `hop`, `shiver`,
   `wobble`, `cheer`) and `look(mood, ms, fromDeg)` (the card turns from his back to us and back, the face held

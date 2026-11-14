@@ -1182,6 +1182,8 @@ export const strings = {
     "hlDone": "トーナメント終了！",
     "hlShowdown": "ショーダウン",
     "hlHandHint": "きみのハンド：ショーダウンまで5枚",
+    "hlOut": "出た札",
+    "hlYourHand": "あなたの手札",
     "ach_hilo": "ハイ＆ロー",
     "ach_hilo_d": "1つのポットで10連続正解",
     "blName": "エースのブラフ",

@@ -1187,6 +1187,8 @@ export const strings = {
     "hlDone": "Turneu încheiat!",
     "hlShowdown": "Showdown",
     "hlHandHint": "Mâna ta: 5 cărți pentru showdown",
+    "hlOut": "Ieșite",
+    "hlYourHand": "Mâna ta",
     "ach_hilo": "Mai mare sau mai mică",
     "ach_hilo_d": "10 ghiciri corecte la rând pe același pot",
     "blName": "Cacealmaua Asului",

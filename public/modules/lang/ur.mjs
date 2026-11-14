@@ -811,6 +811,8 @@ export const strings = {
     "hlDone": "ٹورنامنٹ ختم!",
     "hlShowdown": "شو ڈاؤن",
     "hlHandHint": "تمہارا ہاتھ: شو ڈاؤن کے لیے 5 پتے",
+    "hlOut": "نکل چکے",
+    "hlYourHand": "آپ کا ہاتھ",
     "ach_hilo": "اونچا یا نیچا",
     "ach_hilo_d": "ایک پاٹ پر لگاتار 10 درست اندازے",
     "blName": "اِکّے کا بلف",

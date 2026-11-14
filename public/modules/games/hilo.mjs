@@ -31,6 +31,8 @@
 //   both     « Hand + tournament »: the tournament, and the cards you won
 //            build a hand as in « The hand »; five cards: the showdown pays
 //            HAND_BB big blinds. A lost card or a fold starts a new hand.
+// The page (web.51, narmod: « épuré » + the ranks' ladder, the table's buttons,
+// ▲ ▼ in gold): see L() and layoutButtons().
 // Keys: ↑ higher, ↓ lower; hand: Space cash out; tournament: 1 2 3 the bet,
 // 4 Fold; ←/→ move between the buttons (Enter or pad A presses the one lit).
 // Secret trophy « Higher or Lower »: TROPHY_STREAK right guesses in a row.
@@ -39,7 +41,7 @@
 import { rankOf, evalCards, NAME_KEYS } from './poker-hand.mjs';
 import { shuffled } from './deal.mjs';
 import { fmt, imageCache, rr, drawFace, aceActor, CHIP } from './common.mjs';
-import { felt, drawBackCard, drawPlace, buttons, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont } from './ui.mjs';
+import { felt, drawBackCard, drawPlace, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont } from './ui.mjs';
 
 export const POT0 = 10, LIVES = 3, RESHUFFLE = 8, TROPHY_STREAK = 10, EDGE = 0.95;
 export const HAND_SIZE = 5;
@@ -96,7 +98,6 @@ export function create(shell) {
   const { t, esc, sound } = shell;
   const img = imageCache();
   const ace = aceActor(shell.layer);
-  const btns = buttons();
   shell.touchPad(false);
   shell.hud.classList.add('on-felt');
   ensureCss();
@@ -329,75 +330,124 @@ export function create(shell) {
   }
 
   // ── Layout (world px) ─────────────────────────────────────────────
+  // web.51 (narmod's pick: « épuré » + the ladder, the table's buttons, ▲ ▼ in
+  // gold): the ranks' ladder on the left, the card and the shoe (the Ace on
+  // it), the hand under them; at the bottom the bets (or the pot), ▼ Plus bas
+  // and ▲ Plus haut side by side, Fold (or Cash out) under them. On a wide
+  // stage the hand, the bets and the buttons go to a column on the right.
   function L() {
     const W = shell.W, H = shell.H;
     let top = 46;
     try { top = Math.max(40, shell.hud.offsetHeight / (shell.k || 1) + 6); } catch (e) {}
-    const narrow = W < 430, isT = tour();
-    const btnH = narrow ? 34 : 36, gap = 6;
-    const rows = isT ? (narrow ? 3 : 2) : narrow ? 2 : 1;
-    const btnTop = H - 8 - rows * btnH - (rows - 1) * gap;
-    const rowY = (r) => btnTop + btnH / 2 + r * (btnH + gap);
-    const histY = top + 12;
-    // The hand: five small places above the buttons, its name under them.
-    const sw = narrow ? Math.min(38, (W - 60) / 5 - 6) : 36, sh = sw * 1.4;
-    const handY = btnTop - 30 - sh / 2;
-    // On a phone the pot (or the bet) sits under the cards; on a wide screen, beside the shoe.
-    // The plain tournament has no hand: the cards take its room.
-    const zoneTop = histY + 24, zoneBot = (mode === 'tourney' ? btnTop - 8 : handY - sh / 2) - (narrow ? 40 : 12);
-    let cw = narrow ? Math.min(mode === 'tourney' ? 96 : 84, W * 0.3) : 84, ch = cw * 1.4;
-    if (ch > zoneBot - zoneTop) { ch = Math.max(60, zoneBot - zoneTop); cw = ch / 1.4; }
-    const cardY = (zoneTop + zoneBot) / 2;
-    const potY = narrow ? cardY + ch / 2 + 18 : cardY - 8;
-    const potX = narrow ? W / 2 : Math.min(W - 60, W / 2 + cw * 0.65 + cw / 2 + 74);
-    const tableY = (histY + handY + sh / 2) / 2 + 6, tableRy = (handY + sh / 2 + 16 - histY) / 2, tableRx = Math.min(W / 2 - 8, Math.max(cw * 2.4, W * 0.42));
-    return { W, H, narrow, isT, top, cw, ch, histY, cardX: W / 2 - cw * 0.65, shoeX: W / 2 + cw * 0.65, cardY, potX, potY,
-      btnH, rowY, sw, sh, handY, tableY, tableRx, tableRy };
+    const narrow = W < 430, isT = tour(), plain = mode === 'tourney';
+    if (narrow) {
+      const foldH = 26, bigH = 50, rowH = 25, x0 = 30, x1 = W - 4;
+      const foldY = H - 8 - foldH / 2, bigTop = foldY - foldH / 2 - 6 - bigH, bigY = bigTop + bigH / 2;
+      const rowY = bigTop - 8 - rowH / 2;
+      const lad = { x: 4, y: top + 2, w: 20, h: bigTop - 8 - top - 2 };
+      const hw = 26, hh = 36, handY = rowY - rowH / 2 - 8 - hh / 2, labelY = handY - hh / 2 - 8;
+      const histY = top + 9;
+      const zoneTop = histY + 12, zoneBot = plain ? rowY - rowH / 2 - 10 : labelY - 8;
+      let cw = plain ? 78 : 66, ch = cw * 1.4;
+      if (ch > zoneBot - zoneTop) { ch = zoneBot - zoneTop; cw = ch / 1.4; }
+      const cardY = (zoneTop + zoneBot) / 2, cardX = x0 + cw / 2 + 6;
+      const sw = Math.min(46, cw * 0.72), sh = sw * 1.4, shoeX = x1 - sw / 2 - 6, shoeY = cardY + 8;
+      return { W, H, narrow, isT, top, lad, x0, x1, histY, cw, ch, cardX, cardY, sw, sh, shoeX, shoeY, hw, hh, handY, labelY,
+        handX0: x0, rowY, rowH, rowX0: x0, rowX1: x1, bigY, bigH, bigX0: 6, bigX1: W - 6, foldY, foldH, foldW: Math.min(W - 40, 170), foldX: W / 2,
+        potX: (cardX + shoeX) / 2, tags: false, f: 1 };
+    }
+    // Wide: the table on the left, a column on the right.
+    const lad = { x: 8, y: top + 2, w: 22, h: H - 10 - top - 2 };
+    const split = Math.round(W * 0.52), lx0 = 66, rx0 = split + 8, rx1 = W - 10;
+    const histY = top + 9;
+    const zoneTop = histY + 16, zoneBot = H - 16;
+    let cw = Math.min(118, (split - lx0) * 0.44), ch = cw * 1.4;
+    if (ch > zoneBot - zoneTop - 30) { ch = zoneBot - zoneTop - 30; cw = ch / 1.4; }
+    const cardY = (zoneTop + zoneBot) / 2 + 10, cardX = lx0 + (split - lx0) * 0.3;
+    const sw = cw * 0.7, sh = sw * 1.4, shoeX = lx0 + (split - lx0) * 0.8, shoeY = cardY + 14;
+    // A short screen (a phone on its side) shows the world small: the column grows.
+    const f = Math.max(1, Math.min(1.35, 1.25 / (shell.k || 1)));
+    const hw = Math.min(38 * f, (rx1 - rx0 - 24) / 5), hh = hw * 1.4, rowH = 30 * f, bigH = 60 * f, foldH = 30 * f;
+    const total = 14 + hh + 14 + rowH + 14 + bigH + 10 + foldH;
+    const y0 = top + Math.max(4, (H - top - total) / 2);
+    const labelY = y0 + 6, handY = y0 + 14 + hh / 2, rowY = handY + hh / 2 + 14 + rowH / 2;
+    const bigY = rowY + rowH / 2 + 14 + bigH / 2, foldY = bigY + bigH / 2 + 10 + foldH / 2;
+    return { W, H, narrow, isT, top, lad, x0: lx0, x1: split, histY, cw, ch, cardX, cardY, sw, sh, shoeX, shoeY, hw, hh, handY, labelY,
+      handX0: rx0, rowY, rowH, rowX0: rx0, rowX1: rx1, bigY, bigH, bigX0: rx0, bigX1: rx1, foldY, foldH, foldW: Math.min(170, (rx1 - rx0) * 0.55), foldX: (rx0 + rx1) / 2,
+      potX: (cardX + shoeX) / 2, tags: true, f };
+  }
+
+  // ── The buttons: the web client's, in HTML over the felt ──────────
+  // Fold, All-In and Cash out wear the table's action buttons (.btn-action:
+  // the player's button theme, images included); Bet and Raise its quick-bet
+  // buttons (.btn-pct); ▲ Plus haut and ▼ Plus bas are gold (narmod's pick D).
+  const ui = document.createElement('div');
+  ui.className = 'hl-ui';
+  shell.layer.appendChild(ui);
+  const DEF = { lo: 'hl-ud', hi: 'hl-ud', fold: 'btn-action btn-fold', cash: 'btn-action btn-raise', bet: 'btn-pct', raise: 'btn-pct', allin: 'btn-action btn-allin' };
+  /** @type {Record<string, HTMLButtonElement>} */
+  const B = {};
+  for (const id of Object.keys(DEF)) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = DEF[id]; b.setAttribute('data-hl', id);
+    b.innerHTML = '<b></b><small></small><i class="hl-k"></i>';
+    b.addEventListener('click', (e) => { e.stopPropagation(); if (shell.paused) return; press(id); });
+    ui.appendChild(b); B[id] = b;
+  }
+  const cache = {};
+  /** Set one button: box (world px), texts, state — the DOM only when it changes. */
+  function setBtn(id, o) {
+    const b = B[id], k = shell.k || 1;
+    const key = o ? [o.x, o.y, o.w, o.h, o.label, o.sub || '', o.key || '', !!o.off, !!o.on, !!o.focus, o.fs, k].join('|') : 'hidden';
+    if (cache[id] === key) return;
+    cache[id] = key;
+    if (!o) { b.style.display = 'none'; return; }
+    const s = b.style;
+    s.display = ''; s.left = ((o.x - o.w / 2) * k) + 'px'; s.top = ((o.y - o.h / 2) * k) + 'px';
+    s.width = (o.w * k) + 'px'; s.height = (o.h * k) + 'px'; s.fontSize = (o.fs * k) + 'px';
+    /** @type {HTMLElement} */ (b.children[0]).textContent = o.label;
+    /** @type {HTMLElement} */ (b.children[1]).textContent = o.sub || '';
+    /** @type {HTMLElement} */ (b.children[1]).style.display = o.sub ? '' : 'none';
+    /** @type {HTMLElement} */ (b.children[2]).textContent = o.key || '';
+    b.disabled = !!o.off;
+    b.classList.toggle('hl-on', !!o.on);
+    b.classList.toggle('hl-focus', !!o.focus);
   }
   function layoutButtons(l) {
-    btns.reset();
-    if (state === 'title' || state === 'over') return;
+    const show = state !== 'title' && state !== 'over';
+    if (!show) { for (const id of Object.keys(B)) setBtn(id, null); return; }
+    const kb = keyboardFirst(), foc = (id) => kb && state === 'guess' && G.focus === id;
     const o = odds(G.cur, G.shoe);
-    const pct = (x) => Math.round((100 * x) / Math.max(1, o.n)) + '%';
+    const pct = (x) => Math.round((100 * x) / Math.max(1, o.n)) + ' %';
     const mHi = mult(o.hi, o.lo), mLo = mult(o.lo, o.hi);
     const off = state !== 'guess';
+    // ▼ Plus bas · ▲ Plus haut.
+    const bw = (l.bigX1 - l.bigX0 - 6) / 2, bfs = (l.narrow ? 12 : 15) * l.f;
+    const sub = (x, m) => pct(x) + (!l.isT && m ? ' · ×' + m.toFixed(2) : '');
+    setBtn('lo', { x: l.bigX0 + bw / 2, y: l.bigY, w: bw, h: l.bigH, label: '▼ ' + t('hlLower'), sub: sub(o.lo, mLo), key: kb ? '↓' : '', off: off || !mLo, fs: bfs, focus: foc('lo') });
+    setBtn('hi', { x: l.bigX1 - bw / 2, y: l.bigY, w: bw, h: l.bigH, label: '▲ ' + t('hlHigher'), sub: sub(o.hi, mHi), key: kb ? '↑' : '', off: off || !mHi, fs: bfs, focus: foc('hi') });
+    const ffs = (l.narrow ? 9.5 : 13) * l.f;
     if (!l.isT) {
-      const lab = (k, x, m) => t(k) + '  ' + pct(x) + (m ? ' ×' + m.toFixed(2) : '');
-      const x = handX(G.hand), cashLab = t('hlCash') + ' ' + fmt(Math.round(G.pot * x)) + (x > 1 ? ' (×' + x + ')' : '');
-      if (l.narrow) {
-        const w = (l.W - 24) / 2;
-        btns.add({ id: 'hi', x: 8 + w / 2, y: l.rowY(0), w, h: l.btnH, label: '▲ ' + lab('hlHigher', o.hi, mHi), key: '↑', off: off || !mHi });
-        btns.add({ id: 'lo', x: l.W - 8 - w / 2, y: l.rowY(0), w, h: l.btnH, label: '▼ ' + lab('hlLower', o.lo, mLo), key: '↓', off: off || !mLo });
-        btns.add({ id: 'cash', x: l.W / 2, y: l.rowY(1), w: l.W - 16, h: l.btnH, label: cashLab, kind: 'ghost', key: 'Space', off: off || !G.potWins });
-      } else {
-        const w = Math.min(190, (l.W - 48) / 3);
-        btns.add({ id: 'hi', x: l.W / 2 - w - 10, y: l.rowY(0), w, h: l.btnH, label: '▲ ' + lab('hlHigher', o.hi, mHi), key: '↑', off: off || !mHi });
-        btns.add({ id: 'cash', x: l.W / 2, y: l.rowY(0), w, h: l.btnH, label: cashLab, kind: 'ghost', key: 'Space', off: off || !G.potWins });
-        btns.add({ id: 'lo', x: l.W / 2 + w + 10, y: l.rowY(0), w, h: l.btnH, label: '▼ ' + lab('hlLower', o.lo, mLo), key: '↓', off: off || !mLo });
-      }
+      const x = handX(G.hand);
+      setBtn('cash', { x: l.foldX, y: l.foldY, w: l.foldW, h: l.foldH, label: t('hlCash') + ' ' + fmt(Math.round(G.pot * x)) + (x > 1 ? ' (×' + x + ')' : ''),
+        key: kb ? 'Space' : '', off: off || !G.potWins, fs: ffs, focus: foc('cash') });
+      setBtn('fold', null); setBtn('bet', null); setBtn('raise', null); setBtn('allin', null);
       return;
     }
-    // The tournament: the bet, then higher / lower, or Fold.
     const [sb, bb] = blindsAt(levelAt(G.cards));
-    const bets = [['bet', 'Bet', '1'], ['raise', 'Raise', '2'], ['allin', 'All-In', '3']];
-    const bw = Math.min(150, (l.W - 32) / 3);
-    bets.forEach(([id, name, k], i) => btns.add({ id, x: l.W / 2 + (i - 1) * (bw + 8), y: l.rowY(0), w: bw, h: l.btnH,
-      label: name + ' ' + fmt(betAmount(id, G.stack, bb)), kind: G.bet === id ? (id === 'allin' ? 'red' : 'gold') : 'ghost', key: k, off }));
-    const lab = (k, x) => t(k) + '  ' + pct(x);
-    const foldLab = 'Fold −' + fmt(Math.min(G.stack, sb));
-    if (l.narrow) {
-      const w = (l.W - 24) / 2;
-      btns.add({ id: 'hi', x: 8 + w / 2, y: l.rowY(1), w, h: l.btnH, label: '▲ ' + lab('hlHigher', o.hi), key: '↑', off: off || !mHi });
-      btns.add({ id: 'lo', x: l.W - 8 - w / 2, y: l.rowY(1), w, h: l.btnH, label: '▼ ' + lab('hlLower', o.lo), key: '↓', off: off || !mLo });
-      btns.add({ id: 'fold', x: l.W / 2, y: l.rowY(2), w: l.W - 16, h: l.btnH, label: foldLab, kind: 'ghost', key: '4', off });
-    } else {
-      const w = Math.min(190, (l.W - 48) / 3);
-      btns.add({ id: 'hi', x: l.W / 2 - w - 10, y: l.rowY(1), w, h: l.btnH, label: '▲ ' + lab('hlHigher', o.hi), key: '↑', off: off || !mHi });
-      btns.add({ id: 'fold', x: l.W / 2, y: l.rowY(1), w, h: l.btnH, label: foldLab, kind: 'ghost', key: '4', off });
-      btns.add({ id: 'lo', x: l.W / 2 + w + 10, y: l.rowY(1), w, h: l.btnH, label: '▼ ' + lab('hlLower', o.lo), key: '↓', off: off || !mLo });
-    }
+    setBtn('cash', null);
+    setBtn('fold', { x: l.foldX, y: l.foldY, w: l.foldW, h: l.foldH, label: 'Fold −' + fmt(Math.min(G.stack, sb)), key: kb ? '4' : '', off, fs: ffs, focus: foc('fold') });
+    // The bets, as the table's quick bets: Bet · Raise · All-In.
+    const ws = [1, 1.15, 0.95], tot = ws[0] + ws[1] + ws[2], gap = 5, avail = l.rowX1 - l.rowX0 - 2 * gap;
+    let x = l.rowX0;
+    [['bet', 'Bet', '1'], ['raise', 'Raise', '2'], ['allin', 'All-In', '3']].forEach(([id, name, k], i) => {
+      const w = (avail * ws[i]) / tot;
+      setBtn(id, { x: x + w / 2, y: l.rowY, w, h: l.rowH, label: name, sub: fmt(betAmount(id, G.stack, bb)), key: kb ? k : '', off, on: G.bet === id,
+        fs: (l.narrow ? 8.5 : 10.5) * l.f, focus: foc(id) });
+      x += w + gap;
+    });
   }
-  const order = () => (tour() ? ['bet', 'raise', 'allin', 'hi', 'fold', 'lo'] : ['hi', 'cash', 'lo']);
+  const order = () => (tour() ? ['bet', 'raise', 'allin', 'lo', 'hi', 'fold'] : ['lo', 'hi', 'cash']);
 
   // ── Input ─────────────────────────────────────────────────────────
   function input(a, down, info) {
@@ -412,9 +462,7 @@ export function create(shell) {
     if (state === 'over') { if (a === 'jump') { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); titlePanel(); } return; }
     if (state === 'show') { if (a === 'jump') { clearTimeout(timer); state = 'guess'; G.show = null; } return; }
     if (state !== 'guess') return;
-    const l = L();
-    layoutButtons(l);
-    if (info.x != null) { const b = btns.hit(info.x, info.y); if (b) press(b); return; }
+    if (info.x != null) return;            // taps go to the buttons (HTML)
     const up = a === 'jump' && (info.code === 'ArrowUp' || info.code === 'KeyW' || info.pad === 'up');
     if (up) guess(1);
     else if (a === 'duck') guess(-1);
@@ -456,33 +504,44 @@ export function create(shell) {
       g.strokeStyle = edge; g.globalAlpha = 0.7; g.lineWidth = 1; g.setLineDash([2, 3]); g.beginPath(); g.ellipse(x, yy, r * 0.75, r * 0.3, 0, 0, Math.PI * 2); g.stroke(); g.setLineDash([]); g.globalAlpha = 1;
     }
   }
-  /** The felt, printed as on a casino table (web.45, narmod's pick « C »): a double gold line round the
-   *  table, the two card places in dashes, « PokerTH » faintly where there is room. */
-  function backdrop(g, l) {
-    const W = l.W;
-    felt(g, W, l.H, shell.theme.light);
-    if (state === 'title') return;
+  const RANK_LAB = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+  /** The ranks' ladder (A at the top, 2 at the bottom): the card's rank in
+   *  gold, higher ranks green, lower ones red; a rank with no card left in the
+   *  shoe fades. On a wide stage the chances stand beside it. */
+  function ladder(g, l) {
+    const { x, y, w, h } = l.lad, n = 13, cell = h / n, cur = rankOf(G.cur);
+    const left = new Array(15).fill(0);
+    for (const c of G.shoe) left[rankOf(c)]++;
     g.save();
-    const top = l.histY - 8, bot = l.rowY(0) - l.btnH / 2 - 5;
-    g.strokeStyle = shell.theme.light ? 'rgba(255,246,214,.45)' : 'rgba(232,206,140,.32)'; g.lineWidth = 1.5;
-    rr(g, 10, top, W - 20, bot - top, 22); g.stroke();
-    rr(g, 15, top + 5, W - 30, bot - top - 10, 18); g.stroke();
-    g.setLineDash([4, 4]);
-    for (const x of [l.cardX, l.shoeX]) { rr(g, x - l.cw / 2 - 7, l.cardY - l.ch / 2 - 7, l.cw + 14, l.ch + 14, 10); g.stroke(); }
-    g.setLineDash([]);
-    // The name, between the cards and the hand (or the buttons), when it fits.
-    const y0 = l.cardY + l.ch / 2 + (l.narrow ? 34 : 8), y1 = mode === 'tourney' ? bot - 6 : l.handY - l.sh / 2 - 4;
-    const size = Math.min(W * 0.14, 90, (y1 - y0) * 0.9);
-    if (size >= 16) {
-      g.globalAlpha = 0.08; g.textAlign = 'center'; g.textBaseline = 'middle';
-      g.font = '900 ' + Math.round(size) + 'px Cinzel, Georgia, serif'; g.fillStyle = '#f5e7c0';
-      g.fillText('PokerTH', W / 2, (y0 + y1) / 2);
+    rr(g, x, y, w, h, 7); g.fillStyle = 'rgba(0,0,0,.18)'; g.fill();
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    for (let i = 0; i < n; i++) {
+      const r = 14 - i, cy = y + i * cell;
+      if (r === cur) { rr(g, x + 1, cy + 1, w - 2, cell - 2, 4); g.fillStyle = '#f0cf7a'; g.fill(); }
+      else { g.fillStyle = r > cur ? 'rgba(120,210,150,.24)' : 'rgba(232,120,100,.22)'; g.fillRect(x + 2, cy + 0.5, w - 4, cell - 1); }
+      g.globalAlpha = r === cur ? 1 : left[r] ? 0.95 : 0.3;
+      g.font = '700 ' + Math.min(11, cell * 0.62) + 'px Georgia, serif';
+      g.fillStyle = r === cur ? '#1d222b' : '#f5f0e3';
+      g.fillText(RANK_LAB[r - 2], x + w / 2, cy + cell / 2 + 0.5);
+      g.globalAlpha = 1;
+    }
+    if (l.tags) {
+      const o = odds(G.cur, G.shoe), p = (v) => Math.round((100 * v) / Math.max(1, o.n)) + ' %';
+      const tag = (s, ty, hi) => {
+        g.font = '700 10px Inconsolata, monospace';
+        const tw = g.measureText(s).width + 10;
+        rr(g, x + w + 5, ty - 8, tw, 16, 5); g.fillStyle = hi ? 'rgba(120,210,150,.32)' : 'rgba(232,120,100,.32)'; g.fill();
+        g.fillStyle = '#f5f0e3'; g.textAlign = 'left'; g.fillText(s, x + w + 10, ty + 0.5);
+      };
+      const ci = 14 - cur;
+      if (cur < 14) tag(p(o.hi), y + (ci * cell) / 2, true);
+      if (cur > 2) tag(p(o.lo), y + (ci + 1) * cell + ((n - ci - 1) * cell) / 2, false);
     }
     g.restore();
   }
   /** The shoe as a neat stack of backs, the cards left on a small badge. */
   function shoeStack(g, l) {
-    const x = l.shoeX, y = l.cardY, w = l.cw, h = l.ch;
+    const x = l.shoeX, y = l.shoeY, w = l.sw, h = l.sh;
     for (let k = 4; k >= 1; k--) drawBackCard(g, img, x + k * 1.5, y - k * 1.5, w, h);
     drawBackCard(g, img, x, y, w, h);
     const bx = x + w / 2 - 4, by = y + h / 2 - 4, txt = String(G.shoe.length);
@@ -493,43 +552,51 @@ export function create(shell) {
     g.restore();
   }
   function draw(g) {
-    const l = L(), W = l.W, H = l.H;
-    backdrop(g, l);
+    const l = L(), W = l.W;
+    felt(g, W, l.H, shell.theme.light);
     if (state !== 'title') {
-      // Cards already out, small, in a row (the last ones).
-      const sw = 16, sh = 22, max = Math.max(4, Math.floor((W - 24) / (sw + 3)));
+      ladder(g, l);
+      // Cards already out, small, in a row (the last ones), after « Out ».
+      g.save(); g.textAlign = 'left'; g.textBaseline = 'middle';
+      g.font = '600 7.5px Inter, system-ui, sans-serif'; g.fillStyle = 'rgba(207,226,215,.85)';
+      const lab = t('hlOut').toUpperCase(), lw = g.measureText(lab).width;
+      g.fillText(lab, l.x0, l.histY);
+      const sw = 11, sh = 15, hx0 = l.x0 + lw + 6 + sw / 2, max = Math.max(1, Math.floor((l.x1 - hx0) / (sw + 3)));
       const list = G.seen.slice(-max);
-      const x0 = W / 2 - ((list.length - 1) * (sw + 3)) / 2;
-      list.forEach((n, i) => { g.save(); g.globalAlpha = 0.85; g.translate(x0 + i * (sw + 3), l.histY + sh / 2); drawFace(g, img, n, sw, sh); g.restore(); });
+      list.forEach((n, i) => { g.save(); g.globalAlpha = 0.9; g.translate(hx0 + i * (sw + 3), l.histY); drawFace(g, img, n, sw, sh); g.restore(); });
+      g.restore();
       // The card face up, and the shoe with the next one.
       g.save(); g.translate(l.cardX, l.cardY); drawFace(g, img, G.cur, l.cw, l.ch); g.restore();
       shoeStack(g, l);
       if (G.next >= 0) {
+        // The next card comes out of the shoe onto the card's size, then turns.
         const p = Math.min(1, (time - G.flipAt) / 0.25);
-        g.save(); g.translate(l.shoeX, l.cardY); g.scale(Math.max(0.05, Math.abs(1 - 2 * p)), 1);
-        if (p < 0.5) { g.restore(); drawBackCard(g, img, l.shoeX, l.cardY, l.cw * Math.max(0.05, 1 - 2 * p), l.ch); }
-        else { drawFace(g, img, G.next, l.cw, l.ch); g.restore(); }
+        const nx = l.shoeX, ny = l.shoeY, nw = l.sw, nh = l.sh;
+        if (p < 0.5) drawBackCard(g, img, nx, ny, nw * Math.max(0.05, 1 - 2 * p), nh);
+        else { g.save(); g.translate(nx, ny); g.scale(Math.max(0.05, 2 * p - 1), 1); drawFace(g, img, G.next, nw, nh); g.restore(); }
         if (p >= 1) {
-          g.save(); rr(g, l.shoeX - l.cw / 2 - 3, l.cardY - l.ch / 2 - 3, l.cw + 6, l.ch + 6, 7);
+          g.save(); rr(g, nx - nw / 2 - 3, ny - nh / 2 - 3, nw + 6, nh + 6, 7);
           g.strokeStyle = G.res === 2 ? 'rgba(245,240,227,.5)' : G.res > 0 ? '#7ee2a0' : G.res < 0 ? '#ff8a80' : '#f5d77a'; g.lineWidth = 2.5; g.stroke(); g.restore();
         }
       }
-      // The pot (« The hand ») or the bet (tournament), in chips.
-      g.textAlign = 'center'; g.textBaseline = 'middle';
-      const amount = l.isT ? betAmount(G.bet, G.stack, blindsAt(levelAt(G.cards))[1]) : G.pot;
-      chips(g, l.potX - 38, l.potY + 12, amount);
-      g.font = '600 10px Inter, system-ui, sans-serif'; g.fillStyle = 'rgba(245,240,227,.75)';
-      g.fillText((l.isT ? G.bet === 'allin' ? 'All-In' : G.bet === 'raise' ? 'Raise' : 'Bet' : t('hlPot')).toUpperCase(), l.potX, l.potY - 2);
-      g.font = '700 18px Inconsolata, monospace'; g.fillStyle = '#f5d77a';
-      g.fillText(fmt(amount), l.potX, l.potY + 13);
-      if (G.streak) { g.font = '700 10px Inconsolata, monospace'; g.fillStyle = '#7ee2a0'; g.fillText('✓ ' + G.streak, l.potX + 44, l.potY + 13); }
-      // The hand: five places, the cards, its name.
+      // The hand (« The hand », « Hand + tournament »).
       if (mode !== 'tourney') drawHand(g, l);
-      layoutButtons(l);
-      btns.draw(g, keyboardFirst(), keyboardFirst() && state === 'guess' ? G.focus : null);
+      // The pot (« The hand »), in the bets' row.
+      if (!l.isT) {
+        g.textAlign = 'center'; g.textBaseline = 'middle';
+        const cx = (l.rowX0 + l.rowX1) / 2;
+        chips(g, cx - 40, l.rowY + 5, G.pot, l.narrow ? 7 : 9);
+        g.font = '600 ' + (l.narrow ? 8 : 9) + 'px Inter, system-ui, sans-serif'; g.fillStyle = 'rgba(245,240,227,.75)';
+        g.fillText(t('hlPot').toUpperCase(), cx - 12, l.rowY);
+        g.font = '700 ' + (l.narrow ? 15 : 18) + 'px Inconsolata, monospace'; g.fillStyle = '#f5d77a'; g.textAlign = 'left';
+        g.fillText(fmt(G.pot), cx + 2, l.rowY + 1);
+        if (G.streak) { g.font = '700 10px Inconsolata, monospace'; g.fillStyle = '#7ee2a0'; g.fillText('✓ ' + G.streak, cx + 44, l.rowY + 1); }
+      }
       if (G.show) drawShowdown(g, l);
     }
-    const ax = l.narrow ? 18 : Math.max(26, l.cardX - l.cw / 2 - 34), ay = l.narrow ? l.cardY + l.ch / 2 : l.cardY + l.ch / 2, s = l.narrow ? 0.17 : 0.28;
+    layoutButtons(l);
+    // The Ace sits on the shoe.
+    const s = l.narrow ? 0.17 : 0.24, ax = l.shoeX - 2, ay = l.shoeY - l.sh / 2 - 6;
     ace.place(ax, ay, s, shell.k);
     if (G && G.say && state !== 'title') {
       const a = G.say.t < 0.2 ? G.say.t / 0.2 : G.say.t > G.say.life - 0.4 ? Math.max(0, (G.say.life - G.say.t) / 0.4) : 1;
@@ -539,22 +606,29 @@ export function create(shell) {
   }
   function drawHand(g, l) {
     const cards = G.show ? G.show.cards : G.hand, best = G.show ? G.show.best : handOf(G.hand).best;
-    const gap = 6, x0 = l.W / 2 - (2 * (l.sw + gap));
+    const gap = l.narrow ? 4 : 6, w = l.hw, h = l.hh;
     for (let i = 0; i < HAND_SIZE; i++) {
-      const x = x0 + i * (l.sw + gap);
+      const x = l.handX0 + w / 2 + i * (w + gap);
       if (i < cards.length) {
         g.save(); g.translate(x, l.handY);
-        if (G.show && best && best.indexOf(cards[i]) >= 0 && handOf(cards).cat >= 1) { rr(g, -l.sw / 2 - 2, -l.sh / 2 - 2, l.sw + 4, l.sh + 4, 4); g.fillStyle = '#f5d77a'; g.fill(); }
-        drawFace(g, img, cards[i], l.sw, l.sh); g.restore();
-      } else drawPlace(g, x, l.handY, l.sw, l.sh);
+        if (G.show && best && best.indexOf(cards[i]) >= 0 && handOf(cards).cat >= 1) { rr(g, -w / 2 - 2, -h / 2 - 2, w + 4, h + 4, 4); g.fillStyle = '#f5d77a'; g.fill(); }
+        drawFace(g, img, cards[i], w, h); g.restore();
+      } else drawPlace(g, x, l.handY, w, h);
     }
-    const h = handOf(cards), cat = Math.max(0, h.cat);
+    // « Your hand · Pair ×1.2 » above the cards.
+    const hd = handOf(cards), cat = Math.max(0, hd.cat);
     const val = mode === 'hand' ? '×' + HAND_X[cat] : '+' + HAND_BB[cat] + ' BB';
-    g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.font = '600 11px Inter, system-ui, sans-serif'; g.fillStyle = cat >= 1 ? '#f5d77a' : 'rgba(245,240,227,.7)';
-    const name = cards.length >= 2 && h.nameKey ? t(NAME_KEYS[cat]) : t('hlHandHint');
-    fitFont(g, name + (cards.length >= 2 ? '  ' + val : ''), l.W - 24, 11, 600);
-    g.fillText(name + (cards.length >= 2 ? '  ' + val : ''), l.W / 2, l.handY + l.sh / 2 + 11);
+    const tail = cards.length >= 2 && hd.nameKey ? t(NAME_KEYS[cat]) + '  ' + val : t('hlHandHint');
+    const head = t('hlYourHand').toUpperCase() + ' · ';
+    g.save(); g.textAlign = 'left'; g.textBaseline = 'middle';
+    const maxW = (l.narrow ? l.x1 : l.rowX1) - l.handX0;
+    g.font = '600 ' + (l.narrow ? 7.5 : 9) + 'px Inter, system-ui, sans-serif';
+    const hw = g.measureText(head).width;
+    g.fillStyle = 'rgba(207,226,215,.85)'; g.fillText(head, l.handX0, l.labelY);
+    fitFont(g, tail, maxW - hw, l.narrow ? 8.5 : 10, 700);
+    g.fillStyle = cat >= 1 || cards.length < 2 ? '#f0cf7a' : 'rgba(245,240,227,.8)';
+    g.fillText(tail, l.handX0 + hw, l.labelY);
+    g.restore();
   }
   /** The showdown: a band over the table with the hand and what it paid. */
   function drawShowdown(g, l) {
@@ -577,7 +651,7 @@ export function create(shell) {
   return {
     update, draw, input, resize: renderResult,
     running: () => state === 'guess' || state === 'flip' || state === 'show',
-    destroy() { clearTimeout(timer); ace.remove(); },
+    destroy() { clearTimeout(timer); ace.remove(); ui.remove(); },
   };
 }
 
@@ -589,6 +663,24 @@ function ensureCss() {
     + '#pth-game .hl-box h2{color:#f5d77a}#pth-game .hl-lives{color:#ff8a80;letter-spacing:2px}'
     + '#pth-game .gm-tile .hl-rec{color:#d8b25a}#pth-game.pg-light .gm-tile .hl-rec{color:#8a6a10}'
     + '#pth-game.pg-light .hl-box{background:rgba(250,247,240,.96);box-shadow:0 0 0 1px rgba(140,105,20,.4),0 10px 26px rgba(0,0,0,.18)}'
-    + '#pth-game.pg-light .hl-box h2{color:#8a6510}#pth-game.pg-light .hl-box .ar-final{color:#1d222b}';
+    + '#pth-game.pg-light .hl-box h2{color:#8a6510}#pth-game.pg-light .hl-box .ar-final{color:#1d222b}'
+    // The buttons (web.51): the table's, positioned over the felt.
+    + '#pth-game .hl-ui{position:absolute;inset:0;pointer-events:none}'
+    + '#pth-game .hl-ui button{position:absolute;pointer-events:auto;box-sizing:border-box;margin:0;display:flex;flex-direction:column;align-items:center;'
+    + 'justify-content:center;gap:.12em;line-height:1.05;white-space:nowrap;overflow:hidden;min-height:0;min-width:0;cursor:pointer;-webkit-tap-highlight-color:transparent}'
+    + '#pth-game .hl-ui button b{font-weight:800}#pth-game .hl-ui button small{font:700 .72em/1 Inconsolata,monospace;opacity:.9}'
+    + '#pth-game .hl-ui .hl-k{position:absolute;right:.45em;top:.3em;font:600 .55em/1 Inconsolata,monospace;font-style:normal;opacity:.6}'
+    + '#pth-game .hl-ui .hl-ud{border-radius:9px;border:1.5px solid #ffe39a;background:linear-gradient(180deg,#f2cf6a,#b8862a);color:#3a2a06;'
+    + 'font-family:Inter,system-ui,sans-serif;box-shadow:0 2px 6px rgba(0,0,0,.3);text-shadow:0 1px 0 rgba(255,255,255,.25);padding:0 .4em}'
+    + '#pth-game .hl-ui .hl-ud:hover{filter:brightness(1.06)}#pth-game .hl-ui button:active{transform:scale(.97)}'
+    + '#pth-game .hl-ui .hl-ud:disabled{opacity:.35;filter:grayscale(.6);cursor:default}'
+    + '#pth-game .hl-ui .btn-action{padding:0 .5em;letter-spacing:.04em}'
+    + ':root[data-btn-img] #pth-game .hl-ui .btn-action{padding:0 2px !important;border-width:6px;border-image-width:6px}'
+    + '#pth-game .hl-ui .btn-pct small,#pth-game .hl-ui .btn-allin small{font-size:.9em;opacity:1}'
+    + '#pth-game .hl-ui .btn-pct{padding:0 .3em;font-family:Inter,system-ui,sans-serif}'
+    + '#pth-game .hl-ui .btn-pct.hl-on{background:#2e7d32;box-shadow:0 0 0 2px #7ad06a}'
+    + '#pth-game .hl-ui .btn-allin.hl-on{box-shadow:0 0 0 2px #ffd36a}'
+    + '#pth-game .hl-ui .btn-pct:disabled,#pth-game .hl-ui .btn-action:disabled{pointer-events:none}'
+    + '#pth-game .hl-ui .hl-focus{outline:2px solid #fff;outline-offset:2px}';
   document.head.appendChild(st);
 }

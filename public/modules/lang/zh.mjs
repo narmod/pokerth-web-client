@@ -1182,6 +1182,8 @@ export const strings = {
     "hlDone": "锦标赛结束！",
     "hlShowdown": "摊牌",
     "hlHandHint": "你的手牌：摊牌需要 5 张",
+    "hlOut": "已出",
+    "hlYourHand": "你的手牌",
     "ach_hilo": "猜大小",
     "ach_hilo_d": "同一个彩池连续猜对 10 次",
     "blName": "A 牌的诈唬",
