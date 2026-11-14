@@ -105,7 +105,7 @@ export function create(shell) {
   shell.hud.innerHTML = '<div class="ar-stats"><div><div class="ar-lab">' + esc(t('blChips')) + '</div><div class="ar-num bl-chips">0</div></div>'
     + '<div><div class="ar-lab">' + esc(t('vpHands')) + '</div><div class="ar-num bl-h">0</div></div>'
     + '<div class="bl-his"><div class="ar-lab bl-hisn"></div><div class="ar-num bl-hisv">0</div></div></div>'
-    + '<div class="ar-hand"><div class="ar-name bl-caught"></div></div>';
+    + '<div class="ar-hand"><button type="button" class="bl-pill">📓 <span>' + esc(t('blNotebook')) + '</span> <b>0</b></button><div class="ar-name bl-caught"></div></div>';
   const hChips = /** @type {HTMLElement} */ (shell.hud.querySelector('.bl-chips'));
   const hH = /** @type {HTMLElement} */ (shell.hud.querySelector('.bl-h'));
   const hCaught = /** @type {HTMLElement} */ (shell.hud.querySelector('.bl-caught'));
@@ -127,11 +127,11 @@ export function create(shell) {
     b.addEventListener('pointerdown', (e) => e.stopPropagation());
     ui.appendChild(b); B.push(b);
   }
-  const bookBtn = document.createElement('button');
-  bookBtn.type = 'button'; bookBtn.className = 'bl-bookbtn'; bookBtn.textContent = '📓';
+  // The notebook's pill, in the HUD (narmod's pick A).
+  const bookBtn = /** @type {HTMLElement} */ (shell.hud.querySelector('.bl-pill'));
+  const bookN = /** @type {HTMLElement} */ (bookBtn.querySelector('b'));
   bookBtn.addEventListener('pointerdown', (e) => e.stopPropagation());
-  bookBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleBook(); });
-  ui.appendChild(bookBtn);
+  bookBtn.addEventListener('click', (e) => { e.stopPropagation(); if (!shell.paused) toggleBook(); });
   const book = document.createElement('div');
   book.className = 'bl-book';
   book.addEventListener('animationend', () => book.classList.remove('bl-turn'));
@@ -199,7 +199,7 @@ export function create(shell) {
   // Browser tests only (navigator.webdriver).
   try {
     if (navigator.webdriver) window.__pthBL = { run: () => G, state: () => state, mode: () => mode,
-      start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); }, book: () => bookOpen };
+      start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); }, book: () => bookOpen, L: () => L() };
   } catch (e) {}
 
   function start() {
@@ -439,11 +439,8 @@ export function create(shell) {
     const l = lastL || L(), k = shell.k || 1;
     const pinned = l.wide;
     bookBtn.style.display = pinned ? 'none' : '';
-    if (!pinned) {
-      bookBtn.style.left = ((l.W - 30) * k) + 'px'; bookBtn.style.top = ((l.top + 2) * k) + 'px';
-      bookBtn.style.width = (24 * k) + 'px'; bookBtn.style.height = (24 * k) + 'px'; bookBtn.style.fontSize = (13 * k) + 'px';
-      bookBtn.classList.toggle('on', bookOpen);
-    }
+    bookN.textContent = String(Object.keys(G.book).length);
+    bookBtn.classList.toggle('on', bookOpen);
     if (!pinned && !bookOpen) { book.style.display = 'none'; return; }
     book.style.display = '';
     const bx = pinned ? l.bookX : 8, by = pinned ? l.top + 6 : l.top + 30, bw = pinned ? l.bookW : l.W - 16;
@@ -466,30 +463,40 @@ export function create(shell) {
     const W = shell.W, H = shell.H;
     let top = 46;
     try { top = Math.max(40, shell.hud.offsetHeight / (shell.k || 1) + 4); } catch (e) {}
-    const wide = W >= 560, narrow = W < 430, gap = narrow ? 4 : 5;
+    // narmod's pick (web.54): the Ace small on the left with his cards beside
+    // him, the community cards 3 + 1 + 1 like the table (QML: spacing 3, a gap
+    // after the flop and the turn), smaller cards.
+    const wide = W >= 480, narrow = W < 430, gap = 3, grp = narrow ? 7 : 9;
     const btnH = narrow ? 38 : 34, btnY = H - btnH / 2 - 8;
     const colW = wide ? Math.min(330, W * 0.46) : W;
     const cx = wide ? W * 0.47 : W / 2;
-    const cw = Math.min(narrow ? 40 : 52, (colW - 16 - 4 * gap) / 5), ch = cw * 1.4;
-    const mcw = narrow ? 42 : 52, mch = mcw * 1.4;
-    const hcw = narrow ? 30 : 36, hch = hcw * 1.4;
-    const meY = btnY - btnH / 2 - 20 - mch / 2;
-    const boardY = meY - mch / 2 - 22 - ch / 2;
-    let aceX, aceFeet, s, himX, himY, bookX = 0, bookW = 0;
+    const cw = Math.min(narrow ? 28 : 44, (colW - 16 - 4 * gap - 2 * grp) / 5), ch = cw * 1.4;
+    const mcw = narrow ? 34 : 44, mch = mcw * 1.4;
+    const hcw = narrow ? 22 : 30, hch = hcw * 1.4;
+    let aceX, aceFeet, s, himX, himY, boardY, meY, bookX = 0, bookW = 0;
     if (wide) {
+      meY = btnY - btnH / 2 - 28 - mch / 2;
+      boardY = meY - mch / 2 - 22 - ch / 2;
       aceFeet = boardY + ch / 2 + 4;
-      s = Math.max(0.3, Math.min(0.8, (aceFeet - top - 30) / 212));
+      s = Math.max(0.26, Math.min(0.4, (aceFeet - top - 30) / 212));
       aceX = Math.max(70 * s, (cx - colW / 2) / 2 + 4);
       himX = cx; himY = boardY - ch / 2 - 12 - hch / 2;
       bookX = cx + colW / 2 + 14; bookW = W - bookX - 8;
     } else {
-      aceFeet = boardY - ch / 2 - 10;
-      s = Math.max(0.28, Math.min(0.62, (aceFeet - top - 26) / 200));
-      aceX = W / 2 - Math.max(36, 76 * s);
-      himX = W / 2 + Math.max(34, 62 * s); himY = aceFeet - hch / 2 - 6;
+      s = narrow ? 0.26 : 0.32;
+      aceFeet = top + 44 + 212 * s;
+      aceX = 10 + 84 * s;
+      himX = aceX + 70 * s + 10 + hcw + 2; himY = aceFeet - hch / 2 - 2;
+      // The table centred between the Ace and the buttons.
+      const z0 = aceFeet + 10, z1 = btnY - btnH / 2 - 8, block = ch + 24 + mch + 16;
+      boardY = z0 + Math.max(0, (z1 - z0 - block) / 2) + ch / 2;
+      meY = boardY + ch / 2 + 24 + mch / 2;
     }
+    const span = 5 * cw + 4 * gap + 2 * grp;
+    /** Centre x of community card i (3 + 1 + 1). */
+    const bx = (i) => cx - span / 2 + cw / 2 + i * (cw + gap) + (i >= 3 ? grp : 0) + (i >= 4 ? grp : 0);
     const bw = Math.min(120, (colW - 16 - 12) / 3);
-    return { W, H, wide, narrow, top, gap, cw, ch, hcw, hch, mcw, mch, s, aceX, aceFeet, himX, himY, boardY, cx, colW,
+    return { bx, W, H, wide, narrow, top, gap, cw, ch, hcw, hch, mcw, mch, s, aceX, aceFeet, himX, himY, boardY, cx, colW,
       meX: cx, meY, potX: cx, potY: boardY + ch / 2 + 11, btnY, btnH, bw, bookX, bookW };
   }
   const cache = ['', '', ''];
@@ -621,7 +628,7 @@ export function create(shell) {
       }
       g.restore();
     } else if (tl === 'chips') {
-      const cx = x + 78 * s, cy = feet - 4;
+      const cx = l.himX + l.hcw + 16, cy = l.himY + l.hch / 2 - 2;
       for (let i = 0; i < 5; i++) chip(g, cx, cy - i * 2.4, i, 6);
       const p = (time * 3 * sp) % 1;
       chip(g, cx + Math.sin(p * Math.PI) * 4, cy - 14 - Math.sin(p * Math.PI) * 12, 3, 6);
@@ -664,7 +671,7 @@ export function create(shell) {
       // The board: three cards on the flop, four on the turn, five on the river.
       const nb = state === 'shown' ? 5 : 3 + G.street;
       for (let i = 0; i < 5; i++) {
-        const x = l.cx + (i - 2) * (l.cw + l.gap);
+        const x = l.bx(i);
         if (i < nb) card(g, G.board[i], x, l.boardY, l.cw, l.ch, shown && lit.has(G.board[i]), shown && !lit.has(G.board[i]));
         else { rr(g, x - l.cw / 2, l.boardY - l.ch / 2, l.cw, l.ch, Math.max(2, l.cw * 0.1)); g.fillStyle = 'rgba(0,0,0,.16)'; g.fill(); g.strokeStyle = 'rgba(245,240,227,.16)'; g.lineWidth = 1; g.stroke(); }
       }
@@ -740,8 +747,11 @@ function ensureCss() {
     + '#pth-game .bl-ui .bl-k,#pth-game .bl-timer .bl-k{position:absolute;right:.45em;top:.3em;font:600 .55em/1 Inconsolata,monospace;font-style:normal;opacity:.6}'
     + '#pth-game .bl-ui button:disabled{opacity:.45;cursor:default}#pth-game .bl-ui button:active:not(:disabled){transform:scale(.97)}'
     + '#pth-game .bl-ui .bl-focus{outline:2px solid #fff;outline-offset:2px}'
-    + '#pth-game .bl-ui .bl-bookbtn{display:block;padding:0;border-radius:7px;border:1px solid rgba(216,178,90,.55);background:rgba(0,0,0,.3);line-height:1}'
-    + '#pth-game .bl-ui .bl-bookbtn.on{background:rgba(216,178,90,.35)}'
+    + '#pth-game .bl-pill{pointer-events:auto;display:inline-flex;align-items:center;gap:.35em;padding:.4em .8em;border-radius:999px;cursor:pointer;'
+    + 'border:1px solid rgba(240,207,122,.6);background:rgba(0,0,0,.22);color:#f5e6b8;font:700 12px/1 Inter,system-ui,sans-serif;-webkit-tap-highlight-color:transparent}'
+    + '#pth-game .bl-pill b{font:700 11px/1 Inconsolata,monospace;background:#f0cf7a;color:#2a2116;border-radius:999px;padding:.15em .5em}'
+    + '#pth-game .bl-pill.on{background:rgba(240,207,122,.3)}'
+    + '#pth-game.pg-light .bl-pill{color:#5a4210;background:rgba(255,255,255,.6);border-color:rgba(140,105,20,.5)}'
     // The notebook: a page of the Ace's tells.
     + '#pth-game .bl-book{position:absolute;pointer-events:auto;box-sizing:border-box;display:flex;flex-direction:column;gap:.4em;padding:.7em .8em;border-radius:.8em;'
     + 'background:linear-gradient(180deg,#f7f0dc,#ece0bf);color:#2a2116;box-shadow:0 6px 18px rgba(0,0,0,.35),inset 3px 0 0 #b3261e;font-family:Inter,system-ui,sans-serif;overflow:hidden;transform-origin:left center}'

@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **The Ace's Bluff — the phone layout narmod picked** (`web.54`, mockups A + B, size 1) — `games/bluff.mjs` `L()`:
+  on a narrow stage the Ace at `s` 0.26 on the left (0.32 on medium widths, at most 0.4 on wide ones), his two cards
+  beside him with the bubble above, the table block (board, pot, your cards, your hand) centred between him and the
+  buttons; smaller cards (board ≤ 28 / 44 world px, yours 34 / 44); the community cards 3 + 1 + 1 like the table's
+  `.comm-row` (QML: spacing 3, an 8 px item after the flop and the turn) through `L().bx(i)`. The notebook's square
+  button is replaced by a `.bl-pill` « 📓 Notebook n » in the HUD (hidden where the notebook is pinned).
 - **The Ace's Bluff — all nine proposals** (`web.53`, narmod: « all of them ») — `games/bluff.mjs` rewritten: streets
   (flop / turn / river, `streetAction()` from who wins at the river: `STREET_VALUE`, `STREET_BLUFF` × the character's
   bluff rate); your own bets (Check / Bet / All-In after his check, Fold / Call / Raise facing his bet; he answers with

@@ -1,4 +1,9 @@
-2026-11-14 version 2.1.11-web.53 (current series):
+2026-11-14 version 2.1.11-web.54 (current series):
+- improvement: The Ace's Bluff — a new layout on a phone: the Ace smaller on the left with his two cards beside him, smaller cards, and the table centred on the screen
+- improvement: The Ace's Bluff — the community cards are laid out 3 + 1 + 1 (flop, turn, river) like at the table
+- improvement: The Ace's Bluff — the notebook opens from a « 📓 Notebook » pill at the top, with the number of tells noted
+
+2026-11-14 version 2.1.11-web.53:
 - new: The Ace's Bluff — a real hand: the flop, the turn and the river come one by one, and the Ace speaks first on each street (he checks, bets or bluffs)
 - new: The Ace's Bluff — you can bluff too: when he checks, Check, Bet or All-In; facing his bet, Fold, Call or Raise. He pays more often once you have been caught bluffing (your image)
 - new: The Ace's Bluff — a new character at every table: the Ace, the Cowboy (bluffs a lot), the Gentleman (rarely), the Trapper (his tell means a real hand), the Fool (unreadable) and the King at the last table, each in his own hat

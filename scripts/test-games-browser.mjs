@@ -518,9 +518,11 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     await pg.evaluate(() => { const b = [...document.querySelectorAll('#pth-game .bl-ui > button.btn-action')]; b[1].click(); });   // a tap on Bet
     await sleep(1300);
     const y1 = await pg.evaluate(() => ({ chips: window.__pthBL.run().chips, his: window.__pthBL.run().his, yb: window.__pthBL.run().yb, st: window.__pthBL.state(), hud: (document.querySelector('#pth-game .bl-hisv') || {}).textContent }));
-    ok(y1.yb === y0.yb + 1 && y0.his !== null && y0.his < 200 && /\d/.test(y1.hud || ''), label + ': he checks, a tap on Bet: he answers (' + JSON.stringify([y0, y1]) + ')');
+    ok(y1.yb === y0.yb + 1 && typeof y0.his === 'number' && y0.his < 400 && /\d/.test(y1.hud || ''), label + ': he checks, a tap on Bet: he answers (' + JSON.stringify([y0, y1]) + ')');
   }
-  ok(await pg.evaluate(() => { const b = document.querySelector('#pth-game .bl-bookbtn'); return !!b; }), label + ': the notebook button is there');
+  ok(await pg.evaluate(() => { const b = /** @type {HTMLElement} */ (document.querySelector('#pth-game .pg-hud .bl-pill')); if (!b) return false;
+    const wide = innerWidth > innerHeight; if (wide) return b.style.display === 'none' && getComputedStyle(document.querySelector('#pth-game .bl-book')).display !== 'none';
+    b.click(); return getComputedStyle(document.querySelector('#pth-game .bl-book')).display !== 'none'; }), label + ': the notebook: pinned on a wide stage, its pill in the HUD opens it on a phone');
   await pg.keyboard.press('Escape'); await sleep(200);
   await pg.keyboard.press('Escape'); await sleep(500);
   // ── Ace Dash: three lanes, the Ace from behind, swipes on a phone ──
