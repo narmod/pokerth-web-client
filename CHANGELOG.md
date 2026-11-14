@@ -16,6 +16,18 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **House of Cards — all nine proposals** (`web.52`, narmod: « all of them ») — `games/house.mjs`: (1) portrait —
+  registry aspect `[0.5, 2.4]`, `railAmp()` fits the rail to a narrow stage (speed scaled with it), the camera pans
+  sideways (`G.pan`) when the top leans further than the rail reaches; (2) `drawBg()` — Ace Runner's club
+  (`drawScenery` venue 0) at the foot (`ROOM_H`), a beamed ceiling with chandeliers up to `ROOF_Y`, then stars and
+  moon (clouds and sun in light); (3) `aceActor` `fx` / `look` on land, Perfect streak, hands, misses, bumps;
+  (4) Hold box left of the rail (← / → / 1 / tap), once per drop; (5) a goal per floor (`goalFor(level)`) paying
+  ×2 (`floorPay`), shown in the HUD; (6) the Joker always Perfect, gold cards (`GOLD_P`) ×2, the glue pot
+  (`GLUE`, from level 2) freezes the tilt for `GLUE_MS`; (7) hazards from `WIND_LV` (draught on the falling card)
+  and `BUMP_LV` (the waiter: ±0.1 tilt, shake); (8) modes `MODES` free / daily (`rng('hc-'+day)`, `pth_hc_daily`)
+  / zen (`ZEN_FLOORS`, `pth_hc_best.zen`) as title tiles; (9) collapse: fluttering, spinning cards that ride the
+  camera down (`camDy`) before the showdown. i18n: `hcModeFreeD`, `hcModeDailyD`, `hcModeZen`, `hcModeZenD`,
+  `hcGlue`, `hcWind`, `hcBump`, `hcGoalMet`, `hcGold`, `hcHold`, `hcHint` and `hcRules` (8 points) in all 83 languages.
 - **Higher or Lower — « épuré » with the ladder, the table's buttons** (`web.51`, narmod's picks after mockups:
   layout 2, gold ▲ ▼) — `games/hilo.mjs`: new `L()` (phone: the ranks' ladder on the left, « Out » cards, the card
   and the shoe with the Ace on it, the hand, the bets or the pot, ▼ / ▲ side by side, Fold or Cash out; wide: the

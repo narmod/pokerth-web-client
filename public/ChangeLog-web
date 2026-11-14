@@ -1,4 +1,14 @@
-2026-11-14 version 2.1.11-web.51 (current series):
+2026-11-14 version 2.1.11-web.52 (current series):
+- improvement: House of Cards — fills a phone held upright: the tower grows up the screen and the rail fits its width
+- new: House of Cards — the tower rises through the club: the card room at its foot, the ceiling and its chandeliers higher up, then the night sky and the moon (blue sky and clouds in the light theme); falling cards flutter and spin down, and the camera follows them to the table before the showdown
+- new: House of Cards — three ways to play: Free game, Daily challenge (the same cards for everyone today) and Zen (no collapse, no hazards, 10 floors)
+- new: House of Cards — Hold: ← / → or a tap on the box left of the rail keeps the hanging card aside (or swaps it), once per drop
+- new: House of Cards — each floor asks for a hand (🎯 Pair +, Three of a kind +…): make it and the floor pays double
+- new: House of Cards — bonuses: the Joker always lands Perfect, a gold card doubles its floor, the glue pot 🍯 holds the house still for 8 s
+- new: House of Cards — hazards at higher blinds: a draught pushes the falling card (level 3), the waiter bumps the table (level 4)
+- improvement: House of Cards — the Ace reacts: he squashes when a card lands, winks after Perfect drops in a row, grins or blows hearts at a hand, panics when it leans or when the table is bumped
+
+2026-11-14 version 2.1.11-web.51:
 - improvement: Higher or Lower — a cleaner page: the card and the shoe with the Ace sitting on it, your hand under them, a ladder of the ranks from A to 2 on the side showing where the card falls (higher in green, lower in red, ranks with no card left faded)
 - improvement: Higher or Lower — the table's buttons: Fold, All-In and Cash out look like the action buttons of a game (and follow your button theme), Bet and Raise like its quick bets; ▼ Lower and ▲ Higher are two big gold buttons side by side
 

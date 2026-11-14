@@ -133,6 +133,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pick(pg, 'house');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Château de cartes', null, { timeout: 8000 }).catch(() => {});
   ok(await pg.evaluate(() => window._pthPadOwner === 'house'), label + ': its card then Space opens the House of Cards');
+  ok(await pg.evaluate(() => document.querySelectorAll('#pth-game .pg-panel .gm-tile').length === 3), label + ': House of Cards: three modes on its title (free, daily, Zen)');
   await shot(pg, label + '-house-title');
   await pg.keyboard.press('Space');
   await sleep(500);
@@ -144,7 +145,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   const SLOT_X = [-36.5, -23.5, 23.5, 36.5, 0];
   for (let i = 0; i < 7; i++) {
     await pg.waitForFunction((X) => { const G = window.__pthHouse && window.__pthHouse.run();
-      return !!G && !G.fall && Math.abs(G.railX - (X[G.cur.length] + G.tilt * 5 * G.floors.length)) < 2; }, SLOT_X, { timeout: 8000, polling: 'raf' }).catch(() => {});
+      return !!G && !G.fall && Math.abs(G.railX - (X[G.cur.length] + G.tilt * 5 * G.floors.length - (G.pan || 0))) < 2; }, SLOT_X, { timeout: 8000, polling: 'raf' }).catch(() => {});
     await pg.keyboard.press('Space');
     await sleep(500);
     const s2 = await pg.evaluate(() => ({ c: document.querySelectorAll('#pth-game .ar-slots .pk').length, f: +(document.querySelector('#pth-game .hc-floors') || {}).textContent || 0 }));
@@ -160,6 +161,20 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(floors >= 1, label + ': cards land in the house (up to ' + placed + ' on a floor, ' + floors + ' floor(s))');
   ok(hOver.title === 'Tout s\'écroule !' && /·/.test(hOver.final), label + ': at full tilt it comes down, score saved (' + hOver.final.trim() + ')');
   await shot(pg, label + '-house-over');
+  // Zen: no collapse; ← keeps the hanging card aside, once per drop.
+  const c0 = await pg.evaluate(() => { const H = window.__pthHouse; H.start('zen'); return H.run().card.n; });
+  await pg.keyboard.press('ArrowLeft');
+  await sleep(150);
+  await pg.evaluate(() => { window.__pthHouse.run().tilt = 3; });
+  await pg.keyboard.press('Space');
+  await sleep(900);
+  const zen = await pg.evaluate((c) => { const H = window.__pthHouse, G = H.run();
+    return { held: !!G.hold && G.hold.n === c, state: H.state(), tilt: +G.tilt.toFixed(2), mode: H.mode() }; }, c0);
+  ok(zen.held && zen.mode === 'zen' && zen.state === 'run' && Math.abs(zen.tilt) < 1, label + ': House of Cards Zen: ← holds the card, full tilt does not bring it down (' + JSON.stringify(zen) + ')');
+  const daily = await pg.evaluate(() => { const H = window.__pthHouse; H.start('daily'); const a = H.run().deck.slice(-8).join(); H.start('daily'); return a === H.run().deck.slice(-8).join(); });
+  ok(daily, label + ': House of Cards daily challenge: the same cards every time today');
+  await pg.keyboard.press('Escape');
+  await sleep(300);
   await pg.keyboard.press('Escape');
   await sleep(500);
   // ── Poker Solitaire (daily challenge, keyboard only) ──
@@ -655,7 +670,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await sleep(200);
   const r = await pg.evaluate(() => ({ open: !document.querySelector('#pth-game .pg-rules').hidden,
     h: (document.querySelector('#pth-game .pg-sheet h3') || {}).textContent, li: document.querySelectorAll('#pth-game .pg-sheet li').length }));
-  ok(r.open && r.h === 'Château de cartes' && r.li === 6, 'page: « Rules » explains the game (' + r.h + ', ' + r.li + ' points)');
+  ok(r.open && r.h === 'Château de cartes' && r.li === 8, 'page: « Rules » explains the game (' + r.h + ', ' + r.li + ' points)');
   await shot(pg, 'page-rules');
   await pg.click('#pth-game .pg-sheet [data-r="play"]');
   await pg.waitForFunction(() => window._pthPadOwner === 'house', null, { timeout: 8000 }).catch(() => {});
