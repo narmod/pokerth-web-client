@@ -284,6 +284,36 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     label + ': a mistake at question 6: the show ends, you leave with the safe level (' + tv3.won + ')');
   await pg.click('#pth-game .pg-panel [data-do="modes"]');
   await sleep(300);
+  // The Daily challenge (web.34): the day's 10 hands, mistakes go on, the first game counts.
+  await pg.click('#pth-game .ww-tab[data-m="2"]');
+  await sleep(300);
+  await pg.waitForFunction(() => window.__pthWW.state() === 'ask', null, { timeout: 5000 }).catch(() => {});
+  const dy0 = await pg.evaluate(async () => {
+    const W = await import('/modules/games/whowins.mjs'), G = window.__pthWW.run();
+    const day = new Date().toISOString().slice(0, 10), q = W.dailyDeals(day)[0];
+    return { mode: window.__pthWW.mode(), same: q.board.join() === G.q.board.join() && q.a.join() === G.q.a.join(), counted: G.counted,
+      lab: document.querySelector('#pth-game .ww-tlab').textContent, n: document.querySelector('#pth-game .ww-prog').textContent, lives: document.querySelector('#pth-game .ww-lives').textContent };
+  });
+  ok(dy0.mode === 'daily' && dy0.same && dy0.counted && dy0.lab === 'Main' && dy0.n === '1/10' && dy0.lives === '', label + ': Daily challenge: the day\'s first hand, counted, hand 1/10, no hearts');
+  for (let k = 0; k < 10; k++) {
+    await pg.waitForFunction(() => ['ask', 'over'].includes(window.__pthWW.state()), null, { timeout: 5000 }).catch(() => {});
+    if (await pg.evaluate(() => window.__pthWW.state()) === 'over') break;
+    const w = await pg.evaluate(() => window.__pthWW.run().q.win);
+    await pg.keyboard.press(keyFor(k % 3 === 2 ? (w === 1 ? -1 : 1) : w)); await sleep(470); await pg.keyboard.press('Space');
+  }
+  await sleep(300);
+  const dy1 = await pg.evaluate(() => ({ st: window.__pthWW.state(), right: window.__pthWW.run().right, d: JSON.parse(localStorage.getItem('pth_ww_daily') || 'null'), txt: (document.querySelector('#pth-game .pg-panel') || {}).textContent || '' }));
+  ok(dy1.st === 'over' && dy1.right === 7 && dy1.d && dy1.d.right === 7 && dy1.d.streak === 1 && /Score du jour enregistré/.test(dy1.txt), label + ': three mistakes do not stop it; 7/10 saved as today\'s score');
+  await pg.click('#pth-game .pg-panel [data-do="again"]');
+  await sleep(300);
+  const dy2 = await pg.evaluate(() => ({ counted: window.__pthWW.run().counted, ban: (window.__pthWW.run().ban || {}).s || '' }));
+  ok(dy2.counted === false && /entraînement/.test(dy2.ban), label + ': played again the same day: practice (« ' + dy2.ban + ' »)');
+  await pg.keyboard.press('Escape'); await sleep(200);
+  await pg.keyboard.press('Escape'); await sleep(300);
+  await pick(pg, 'whowins');
+  await sleep(500);
+  const tl = await pg.evaluate(() => (document.querySelector('#pth-game .ww-tab[data-m="2"]') || {}).textContent || '');
+  ok(/Aujourd'hui/.test(tl), label + ': the Daily tile shows today\'s score (' + tl + ')');
   await pg.keyboard.press('Space');                // back in a game, as before the modes
   await sleep(300);
   await pg.keyboard.press('Escape'); await sleep(200);

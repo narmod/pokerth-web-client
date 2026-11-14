@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Who Wins? — the Daily challenge** (`web.34`) — `games/whowins.mjs`: mode `daily`: `DAILY_HANDS` = 10 hands
+  dealt by `dailyDeals(day)` (seed `pth-whowins-<UTC day>`, levels `DAILY_LEVEL`, from pairs to the Ace's), the same
+  for every player, no server; mistakes go on; points as in Endless; only the first game of the day counts
+  (`pth_ww_daily` { day, score, right, streak }, `dailyAfter()` / `dayBefore()`), later ones are practice. Tile:
+  today's score · 🔥 streak; phone portrait: one mode per line. 8 keys + a rules line × 83. Tests: `test-games`,
+  `test-games-browser`.
 - **Who Wins? — the TV show** (`web.33`) — `games/whowins.mjs`: mode `tv` (first on the title): 15 questions up
   `LADDER` (100 → 1 000 000 chips), dealt from `TV_LEVEL` (the Endless levels, harder as it climbs), clock
   `TV_EXTRA` = 3 s longer; one mistake or a timeout ends it with the last safe level passed (`SAFE` = questions 5

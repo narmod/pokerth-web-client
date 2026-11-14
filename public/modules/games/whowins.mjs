@@ -25,7 +25,13 @@
 //      clock is TV_EXTRA s longer. Three jokers, once each (buttons, keys
 //      1 2 3): 50/50 takes a wrong answer away, the Ace's help names both
 //      hands, +5 s.
-// (The Daily challenge comes next.) Secret trophy « Who Wins? »: the million.
+//   📅 The Daily challenge (web.34) — DAILY_HANDS hands, the same for every
+//      player on a given UTC day (seeded: rng('pth-whowins-' + day)), from
+//      the easy levels to the Ace's (DAILY_LEVEL); a mistake does not stop
+//      it; points as in Endless. Only the first game of the day counts (its
+//      score, the streak of days in a row: pth_ww_daily), the others are
+//      practice.
+// Secret trophy « Who Wins? »: the million.
 //
 // The show (web.30, narmod 2026-11-14): the hands are dealt face up and the
 // board is turned over like on TV — the flop, the turn, the river — then the
@@ -37,7 +43,8 @@
 // ═══════════════════════════════════════════════════════════════════
 
 import { rankHand, compareHands, NAME_KEYS, rankOf } from './poker-hand.mjs';
-import { shuffled } from './deal.mjs';
+import { shuffled, rng } from './deal.mjs';
+import { dayKey } from './solitaire-rules.mjs';
 import { fmt, imageCache, rr, drawFace, aceActor, CHIP } from './common.mjs';
 import { felt, buttons, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont, drawBackCard } from './ui.mjs';
 
@@ -109,11 +116,27 @@ export const LEVELS = [
 ];
 /** The level reached after `right` right answers. */
 export const levelOf = (right) => Math.min(LEVELS.length - 1, Math.floor(right / LEVEL_EVERY));
-// The ways to play, on the title (the Daily challenge comes next).
+// The ways to play, on the title.
 export const MODES = [
   { id: 'tv', icon: '📺', key: 'wwModeTv', desc: 'wwModeTvD' },
   { id: 'endless', icon: '♾️', key: 'wwModeEndless', desc: 'wwModeEndlessD' },
+  { id: 'daily', icon: '📅', key: 'wwModeDaily', desc: 'wwModeDailyD' },
 ];
+// The Daily challenge: its hands, the level of each.
+export const DAILY_HANDS = 10;
+export const DAILY_LEVEL = [0, 1, 1, 2, 2, 3, 3, 4, 4, 5];
+/** The day's deals, the same for every player (seeded by the UTC day). */
+export function dailyDeals(day) { const r = rng('pth-whowins-' + day); return DAILY_LEVEL.map((lv) => LEVELS[lv].deal(r)); }
+/** The day before `day` (YYYY-MM-DD, UTC). */
+export function dayBefore(day) { return new Date(Date.parse(day + 'T00:00:00Z') - 86400000).toISOString().slice(0, 10); }
+/** The record after a counted game on `day` (prev: { day, score, right, streak } or null). */
+export function dailyAfter(prev, day, score, right) {
+  const streak = prev && prev.day === dayBefore(day) ? (prev.streak || 1) + 1 : prev && prev.day === day ? prev.streak || 1 : 1;
+  return { day, score, right, streak };
+}
+const DAILY_KEY = 'pth_ww_daily';
+function loadDaily() { try { return JSON.parse(localStorage.getItem(DAILY_KEY) || 'null'); } catch (e) { return null; } }
+function saveDaily(d) { try { localStorage.setItem(DAILY_KEY, JSON.stringify(d)); } catch (e) {} }
 // The TV show: the chips of each question, its safe levels (indexes), the
 // level each question is dealt from, the extra seconds on its clock.
 export const LADDER = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 500000, 1000000];
@@ -175,12 +198,14 @@ export function create(shell) {
     renderHud();
   }
   const tv = () => mode === 'tv';
+  const daily = () => mode === 'daily';
   function renderHud() {
     const play = state !== 'title';
     hScore.textContent = fmt(tv() ? G.won : G.score);
-    hTab.textContent = !play ? '\u00a0' : tv() ? t('wwQLab') : t('wwLevelLab');
-    hProg.textContent = !play ? '' : tv() ? Math.min(G.right + 1, LADDER.length) + '/' + LADDER.length : String(G.level + 1);
-    hLives.textContent = tv() ? '' : '❤'.repeat(Math.max(0, G.lives)) + '♡'.repeat(Math.max(0, LIVES - G.lives));
+    hTab.textContent = !play ? '\u00a0' : tv() ? t('wwQLab') : daily() ? t('wwHandLab') : t('wwLevelLab');
+    hProg.textContent = !play ? '' : tv() ? Math.min(G.right + 1, LADDER.length) + '/' + LADDER.length
+      : daily() ? Math.max(1, Math.min(G.n, DAILY_HANDS)) + '/' + DAILY_HANDS : String(G.level + 1);
+    hLives.textContent = tv() || daily() ? '' : '❤'.repeat(Math.max(0, G.lives)) + '♡'.repeat(Math.max(0, LIVES - G.lives));
     const fever = !tv() && G.streak >= FEVER_STREAK;
     hStreak.textContent = fever ? '🔥 ' + t('wwFever') : G.streak >= 2 ? '×' + G.streak : '';
     hStreak.classList.toggle('ww-fever', fever);
@@ -188,13 +213,24 @@ export function create(shell) {
   const say = (s, life = 1.8) => { G.say = { s, t: 0, life }; };
   const levelName = (lv) => t('wwLevel', { n: lv + 1 }) + ' · ' + t(LEVELS[lv].key);
 
+  /** The Daily challenge on its tile: today's score, the streak. */
+  function dailyLine() {
+    const d = loadDaily(), day = dayKey();
+    if (!d) return '';
+    const alive = d.day === day || d.day === dayBefore(day);
+    const parts = [];
+    if (d.day === day) parts.push(esc(t('wwDailyToday', { n: fmt(d.score) })));
+    if (alive && d.streak > 1) parts.push('🔥 ' + esc(t('wwDailyStreak', { n: d.streak })));
+    return parts.join(' · ');
+  }
   /** The title: the ways to play, their records. */
   function titlePanel() {
     const best = loadBest();
     const tile = (m, i) => {
       const b = best[m.id] || {};
       const rec = m.id === 'endless' ? (shell.best.get() ? esc(t('arRecord', { n: fmt(shell.best.get()) })) + (b.level ? ' · ' + esc(t('wwLevel', { n: b.level })) : '') : '')
-        : m.id === 'tv' ? (b.best ? esc(t('arRecord', { n: fmt(b.best) })) : '') : '';
+        : m.id === 'tv' ? (b.best ? esc(t('arRecord', { n: fmt(b.best) })) : '')
+        : m.id === 'daily' ? dailyLine() : '';
       return '<button type="button" class="ww-tab' + (i === sel ? ' on' : '') + '" data-m="' + i + '">'
         + '<span class="ww-ic" aria-hidden="true">' + m.icon + '</span><b>' + esc(t(m.key)) + '</b>'
         + '<small class="ww-sub">' + esc(t(m.desc)) + '</small>'
@@ -216,10 +252,16 @@ export function create(shell) {
     clearTimeout(timer);
     mode = m || MODES[sel].id;
     newGame();
+    if (daily()) {
+      // The day's hands; only the first game of the day counts.
+      const day = dayKey(), d = loadDaily();
+      G.day = day; G.deals = dailyDeals(day); G.counted = !(d && d.day === day);
+    }
     state = 'ask'; shell.panel(null);
     ace.pose('idle'); ace.mood('mc-m-smile');
     next();
-    if (!tv()) banner(levelName(0));
+    if (daily()) banner('📅 ' + t('wwModeDaily') + (G.counted ? '' : ' · ' + t('wwDailyPracticeShort')));
+    else if (!tv()) banner(levelName(0));
   }
   /** A gold line over the board for a while (a new level). */
   function banner(s2) { G.ban = { s: s2, t: 0, life: 2.4 }; }
@@ -229,11 +271,13 @@ export function create(shell) {
       G.level = TV_LEVEL[Math.min(G.right, TV_LEVEL.length - 1)];
       banner(t('wwQuestion', { n: G.right + 1 }) + ' · ' + fmt(LADDER[G.right]));
       G.out = null; G.hint = false;
+    } else if (daily()) {
+      G.level = DAILY_LEVEL[Math.min(G.n, DAILY_LEVEL.length - 1)];
     } else {
       const lv = levelOf(G.right);
       if (lv > G.level) { G.level = lv; banner(levelName(lv)); sound('notifyRaise'); }
     }
-    G.q = LEVELS[G.level].deal(Math.random);
+    G.q = daily() ? G.deals[Math.min(G.n, G.deals.length - 1)] : LEVELS[G.level].deal(Math.random);
     G.n++;
     G.tMax = LEVELS[G.level].time + (tv() ? TV_EXTRA : 0);
     G.tLeft = G.tMax; G.answer = null; G.shown = time;
@@ -285,8 +329,9 @@ export function create(shell) {
       G.yayUntil = performance.now() + 700;
       sound(G.streak === FEVER_STREAK ? 'notifyBigWin' : G.streak >= 3 ? 'notifyRaise' : 'notifyAction');
     } else {
-      // The TV show: one mistake ends it, with the last safe level passed.
-      if (tv()) { G.lives = 0; G.won = keptAfter(G.right); } else G.lives--;
+      // The TV show: one mistake ends it, with the last safe level passed;
+      // the Daily challenge goes on.
+      if (tv()) { G.lives = 0; G.won = keptAfter(G.right); } else if (!daily()) G.lives--;
       G.streak = 0;
       if (!shell.reduced) G.shake = 0.4;
       G.koUntil = performance.now() + 900;
@@ -300,7 +345,7 @@ export function create(shell) {
   function goOn() {
     if (state !== 'shown') return;
     clearTimeout(timer);
-    if (G.lives <= 0 || (tv() && G.right >= LADDER.length)) finish(); else next();
+    if (G.lives <= 0 || (tv() && G.right >= LADDER.length) || (daily() && G.n >= DAILY_HANDS)) finish(); else next();
   }
   function finish() {
     state = 'over';
@@ -311,6 +356,17 @@ export function create(shell) {
       const top = G.right >= LADDER.length;
       ace.mood(top ? 'mc-m-yay' : 'mc-m-smile'); ace.pose(top ? 'wave' : 'idle');
       G.res = { tv: true, top, record: G.won > prevTv && prevTv > 0 };
+      renderHud();
+      renderResult();
+      return;
+    }
+    if (daily()) {
+      const prevD = loadDaily();
+      if (G.counted) saveDaily(dailyAfter(prevD, G.day, G.score, G.right));
+      const d = loadDaily() || prevD;
+      ace.mood(G.right >= 8 ? 'mc-m-yay' : 'mc-m-smile'); ace.pose(G.right >= 8 ? 'wave' : 'idle');
+      if (G.counted) sound(G.right === DAILY_HANDS ? 'notifyBigWin' : 'notifyWinner');
+      G.res = { daily: true, counted: G.counted, today: d && d.day === G.day ? d.score : G.score, streak: d && d.day === G.day ? d.streak || 1 : 0 };
       renderHud();
       renderResult();
       return;
@@ -330,7 +386,13 @@ export function create(shell) {
     if (state !== 'over' || !G.res) return;
     const btn = (id, label, ghost) => '<button type="button" class="pg-btn' + (ghost ? ' pg-ghost' : '') + '" data-do="' + id + '">' + esc(label) + '</button>';
     const btns2 = '<div class="ww-btns">' + btn('again', t('wwRetry')) + btn('modes', t('wwModes'), true) + '</div></div>';
-    if (G.res.tv) {
+    if (G.res.daily) {
+      const { counted, today, streak } = G.res;
+      shell.panel('<div class="ww-box"><p class="pg-dim">📅 ' + esc(t('wwModeDaily')) + ' · ' + esc(G.day) + '</p><h2>' + esc(fmt(G.score)) + '</h2>'
+        + '<p class="ar-final">✓ ' + fmt(G.right) + '/' + DAILY_HANDS + ' · <em>×' + fmt(G.bestStreak) + '</em></p>'
+        + '<p class="pg-dim">' + esc(counted ? t('wwDailyDone') : t('wwDailyPractice', { n: fmt(today) })) + '</p>'
+        + (streak > 1 ? '<p class="ww-streakd">🔥 ' + esc(t('wwDailyStreak', { n: streak })) + '</p>' : '') + btns2, true);
+    } else if (G.res.tv) {
       const { top, record } = G.res;
       shell.panel('<div class="ww-box"><p class="pg-dim">📺 ' + esc(t('wwModeTv')) + ' · ' + esc(t('wwQuestion', { n: Math.min(G.right + (top ? 0 : 1), LADDER.length) })) + '</p>'
         + '<h2>' + esc(top ? t('wwMillion') : t('wwLost')) + '</h2>'
@@ -607,7 +669,11 @@ function ensureCss() {
     + 'box-shadow:inset 0 0 0 1px rgba(216,178,90,.3);display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .15s}'
     + '#pth-game .ww-tab small{font:600 10px Inconsolata,monospace;color:#9bb0a3;letter-spacing:.06em;text-transform:uppercase}'
     + '#pth-game .ww-tab b{font:700 14px/1.15 Cinzel,Georgia,serif;overflow-wrap:anywhere;min-height:2.3em;display:flex;align-items:center}'
-    + '#pth-game .ww-tabs.ww-modes{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));max-width:540px}'
+    + '#pth-game .ww-tabs.ww-modes{grid-template-columns:repeat(3,minmax(0,1fr));max-width:560px}'
+    // Phone (portrait): one mode a line, its icon on the left.
+    + '@media (max-width:520px){#pth-game .ww-tabs.ww-modes{grid-template-columns:minmax(0,1fr)}'
+    + '#pth-game .ww-modes .ww-tab{display:grid;grid-template-columns:38px minmax(0,1fr);column-gap:10px;justify-items:start;text-align:left;padding:8px 12px}'
+    + '#pth-game .ww-modes .ww-tab .ww-ic{grid-row:1/4;align-self:center;justify-self:center}#pth-game .ww-modes .ww-tab b{min-height:0}}'
     + '#pth-game .ww-tab .ww-ic{font-size:26px;line-height:1.2}#pth-game .ww-tab .ww-rec{color:#f5d77a;text-transform:none;letter-spacing:0;min-height:1.2em}'
     + '#pth-game .ww-tab .ww-sub{text-transform:none;letter-spacing:0;min-height:1.2em}'
     + '#pth-game .ww-tab.on{box-shadow:inset 0 0 0 2px #d8b25a,0 0 16px rgba(216,178,90,.3);transform:translateY(-2px)}'
@@ -615,6 +681,7 @@ function ensureCss() {
     + '#pth-game .ww-tab:focus-visible{outline:2px solid #f5f0e3;outline-offset:2px}'
     + '#pth-game .ww-box{min-width:min(330px,100%)}#pth-game .ww-box h2{font-size:clamp(18px,3.4vw,24px);white-space:nowrap}'
     + '#pth-game .pg-panel .ww-won{font:700 26px Cinzel,Georgia,serif;color:#f5d77a;margin:0}#pth-game.pg-light .pg-panel .ww-won{color:#8a6a10}'
+    + '#pth-game .pg-panel .ww-streakd{color:#ffb84d;font-weight:700;margin:0}#pth-game.pg-light .pg-panel .ww-streakd{color:#b5521b}'
     + '#pth-game .ww-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;pointer-events:auto;margin-top:4px}'
     + '@media (max-height:420px){#pth-game .ww-tab b{min-height:0;font-size:13px}#pth-game .ww-tab{padding:5px 6px}#pth-game .ww-pick>p:not(.pg-blink){display:none}}'
     + '#pth-game.pg-light .ww-tab{background:rgba(255,252,246,.96);color:#1d222b;box-shadow:inset 0 0 0 1px rgba(140,105,20,.35)}'

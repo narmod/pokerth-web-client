@@ -1,4 +1,8 @@
-2026-11-14 version 2.1.11-web.33 (current series):
+2026-11-14 version 2.1.11-web.34 (current series):
+- new: Who Wins? — the Daily challenge: 10 hands, the same for every player each day; mistakes don't stop you, only your first game of the day counts, and playing every day builds your streak
+- improvement: Who Wins? — on a phone the three modes are shown one per line, with their records
+
+2026-11-14 version 2.1.11-web.33:
 - new: Who Wins? — the TV show: 15 questions from 100 chips to a million, harder as you climb; one mistake ends it, but questions 5 and 10 are safe levels you keep
 - new: Who Wins? — three jokers in the TV show, once each: 50/50, the Ace's help (names both hands) and +5 s (keys 1 2 3)
 - improvement: the secret trophy « Who Wins? » is won by reaching the million in the TV show (players who have it keep it)

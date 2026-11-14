@@ -75,7 +75,7 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'psName', 'psHint', 'psDaily', 'psFree', 'psCards', 'psFlushDraw', 'psStraightDraw', 'psBestLine', 'psAgain', 'ach_solitaire', 'ach_solitaire_d',
   'gmPlay', 'gmRules', 'gmIntro', 'arRules', 'hcRules', 'psRules',
   'vpName', 'vpHint', 'vpDeal', 'vpDraw', 'vpHeld', 'vpCredits', 'vpHands', 'vpJacks', 'vpDouble', 'vpCollect', 'vpPick', 'vpRules', 'ach_videopoker', 'ach_videopoker_d',
-  'wwName', 'wwHint', 'wwSplit', 'wwTooSlow', 'wwFever', 'wwT1', 'wwT2', 'wwT3', 'wwT4', 'wwT5', 'wwT6', 'wwModeEndless', 'wwModeEndlessD', 'wwLevel', 'wwLevelLab', 'wwModes', 'wwModeTv', 'wwModeTvD', 'wwQuestion', 'wwQLab', 'wwSafe', 'wwJ50', 'wwJAce', 'wwJTime', 'wwMillion', 'wwLost', 'wwKeep', 'wwRetry', 'wwRules', 'ach_whowins', 'ach_whowins_d', 'gmAgain',
+  'wwName', 'wwHint', 'wwSplit', 'wwTooSlow', 'wwFever', 'wwT1', 'wwT2', 'wwT3', 'wwT4', 'wwT5', 'wwT6', 'wwModeEndless', 'wwModeEndlessD', 'wwLevel', 'wwLevelLab', 'wwModes', 'wwModeTv', 'wwModeTvD', 'wwQuestion', 'wwQLab', 'wwSafe', 'wwJ50', 'wwJAce', 'wwJTime', 'wwMillion', 'wwLost', 'wwKeep', 'wwModeDaily', 'wwModeDailyD', 'wwHandLab', 'wwDailyToday', 'wwDailyStreak', 'wwDailyDone', 'wwDailyPractice', 'wwDailyPracticeShort', 'wwRetry', 'wwRules', 'ach_whowins', 'ach_whowins_d', 'gmAgain',
   'hlName', 'hlHint', 'hlHigher', 'hlLower', 'hlCash', 'hlPot', 'hlRules', 'ach_hilo', 'ach_hilo_d',
   'blName', 'blHint', 'blBets', 'blBluff', 'blTells', 'blChips', 'blRules', 'ach_bluff', 'ach_bluff_d',
   'pdName', 'pdHint', 'pdVsAce', 'pdTwo', 'pdPoints', 'pdSudden', 'pdSuddenGoal', 'pdYou', 'pdAce', 'pdPlayer', 'pdYourTurn', 'pdAceTurn',
@@ -181,6 +181,13 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
     ok(WW.LADDER.length === 15 && WW.LADDER[14] === 1000000 && WW.TV_LEVEL.length === 15 && WW.keptAfter(4) === 0 && WW.keptAfter(5) === 1000
       && WW.keptAfter(9) === 1000 && WW.keptAfter(10) === 32000 && WW.keptAfter(14) === 32000 && !outs.has(1) && outs.size === 2 && WW.MODES[0].id === 'tv',
       'TV show: 15 questions up to a million, safe levels at 1 000 and 32 000, the 50/50 never takes the right answer away');
+    const key = (l) => l.map((q) => q.board.join('.') + '|' + q.a.join('.') + '|' + q.b.join('.')).join(' ');
+    const d1 = WW.dailyDeals('2026-11-14'), d2 = WW.dailyDeals('2026-11-14'), d3 = WW.dailyDeals('2026-11-15');
+    ok(d1.length === WW.DAILY_HANDS && key(d1) === key(d2) && key(d1) !== key(d3) && d1.every(right),
+      'Daily challenge: 10 hands, the same for everyone on a day, others the next day');
+    const a1 = WW.dailyAfter(null, '2026-11-14', 300, 8), a2 = WW.dailyAfter(a1, '2026-11-15', 250, 7), a3 = WW.dailyAfter(a2, '2026-11-17', 400, 9);
+    ok(WW.dayBefore('2026-03-01') === '2026-02-28' && a1.streak === 1 && a2.streak === 2 && a3.streak === 1 && a3.score === 400,
+      'Daily challenge: the streak grows with each day in a row, back to 1 after a missed day');
   }
   ok(WW.points(9, 1) === 28 && WW.points(9, 3) === 33 && WW.points(9, 5) === 66 && WW.points(0, 0) === 10
     && WW.REVEAL.every((x, i) => i === 0 || x >= WW.REVEAL[i - 1]) && WW.REVEAL_END < 2.5,
