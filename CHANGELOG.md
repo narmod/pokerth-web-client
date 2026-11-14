@@ -117,6 +117,12 @@ highlights below.
   and ▲ ▼ on the right in landscape; the other games are unchanged.
 
 ### Changed
+- **Who Wins? — no Split, the Ace top right, arcade tiles** (`web.38`, narmod) — `games/whowins.mjs`: the Split
+  button and ↓ are gone; `find()` never returns a tie, `TRAPS` loses `board`, level 5 `wwT5` becomes Strong hands
+  (a full house or better, was Split pots), so the Daily hands change too. The Ace stands top right (in the HUD band,
+  the timer bar shortened on phones, the streak label padded), his bubble on his left; the trap card uses the freed
+  bottom-left corner. The modes' title uses the arcade's `.gm-tiles` / `.gm-tile` (as Video Poker); `.ww-tab` CSS
+  removed. `wwT5`, `wwHint` and rules lines 1 and 7 × 83. Tests updated.
 - **Who Wins? — new jokers** (`web.37`, narmod: the 50/50 was useless with three answers) — `JOKERS`: `jswap`
   New hand (another showdown of the question's level, turned over again, a fresh clock), `jace` the Ace's help
   (unchanged), `jsave` Second chance (armed for the question: a wrong answer is crossed out — hand or Split — and the

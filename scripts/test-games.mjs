@@ -165,8 +165,8 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
     ok(s.every((l) => l.every(right)) && s[0].every((q) => q.win !== 0 && q.ra.cat <= 2 && q.rb.cat <= 2)
       && s[1].every((q) => [q.ra.cat, q.rb.cat].some((c) => c === 4 || c === 5))
       && s[2].filter((q) => WW.trapOf(q) === 'kicker').length > 15 && s[3].filter((q) => WW.trapOf(q)).length >= 36
-      && s[4].filter((q) => q.win === 0).length >= 10 && WW.LEVELS[5].time < WW.LEVELS[0].time,
-      'Who Wins? levels: pairs & high card, flushes & straights, kickers, traps, split pots, the Ace\'s faster mix (right answers every time)');
+      && s[4].every((q) => Math.max(q.ra.cat, q.rb.cat) >= 6) && s.every((l) => l.every((q) => q.win !== 0)) && WW.LEVELS[5].time < WW.LEVELS[0].time,
+      'Who Wins? levels: pairs & high card, flushes & straights, kickers, traps, strong hands, the Ace\'s faster mix — never a tie (no Split answer)');
     const C = (r, s2) => 13 * s2 + r - 2;                       // rank 2..14, suit 0..3
     const deal = (board, a, b) => { const ra = P.rankHand(a.concat(board)), rb = P.rankHand(b.concat(board)); const c = P.compareHands(ra, rb); return { board, a, b, ra, rb, win: c > 0 ? 1 : c < 0 ? -1 : 0 }; };
     const cf = deal([C(13, 0), C(13, 1), C(10, 0), C(10, 1), C(5, 2)], [C(3, 2), C(3, 3)], [C(12, 1), C(7, 1)]);
@@ -191,7 +191,7 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
     for (let i = 0; i < 400; i++) { const tr = WW.trapOf(WW.LEVELS[3 + (i % 3)].deal(rnd)); if (tr) seen.add(tr); }
     const m = (x) => x.length * 7;
     const wl = WW.wrapLines(m, 'Only five cards count: the extra card in a hand changes nothing', 140), wc = WW.wrapLines(m, '只算五张牌手里多出来的牌不起作用所以平分底池', 70);
-    ok([...seen].every((tr) => WW.TRAP_KEYS[tr]) && seen.size >= 5 && wl.length > 2 && wl.every((l) => m(l) <= 140) && wc.length > 2 && wc.every((l) => m(l) <= 70),
+    ok([...seen].every((tr) => WW.TRAP_KEYS[tr]) && seen.size >= 4 && wl.length > 2 && wl.every((l) => m(l) <= 140) && wc.length > 2 && wc.every((l) => m(l) <= 70),
       'traps explained: every trap has its explanation (' + [...seen].join(', ') + '); lines wrap by words, or by letters without spaces');
   }
   ok(WW.points(9, 1) === 28 && WW.points(9, 3) === 33 && WW.points(9, 5) === 66 && WW.points(0, 0) === 10

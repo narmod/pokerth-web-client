@@ -210,7 +210,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.waitForFunction(() => window.__pthWW.state() === 'ask', null, { timeout: 4000 }).catch(() => {});
   const d1 = await pg.evaluate(() => ({ st: window.__pthWW.state(), tl: window.__pthWW.run().tLeft, tm: window.__pthWW.run().tMax }));
   ok(d0.st === 'deal' && d1.st === 'ask' && d1.tl > d1.tm - 0.5, label + ': the board is turned over first, then the clock starts (' + d0.st + ' → ' + d1.st + ')');
-  const keyFor = (w) => (w === 1 ? 'ArrowLeft' : w === -1 ? 'ArrowRight' : 'ArrowDown');
+  const keyFor = (w) => (w === 1 ? 'ArrowLeft' : 'ArrowRight');   // no Split answer (web.38)
   const w1 = await pg.evaluate(() => window.__pthWW.run().q.win);
   await shot(pg, label + '-ww-ask');
   await pg.keyboard.press(keyFor(w1));
@@ -256,10 +256,10 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(ov.st === 'over' && ov.best.endless && ov.best.endless.level === 2 && ov.btns === 'again,modes' && /Niveau 2/.test(ov.txt), label + ': out of hearts: the level reached is kept, again / modes');
   await pg.click('#pth-game .pg-panel [data-do="modes"]');
   await sleep(300);
-  const md = await pg.evaluate(() => [...document.querySelectorAll('#pth-game .ww-tab')].map((b) => b.textContent).join(' | '));
+  const md = await pg.evaluate(() => [...document.querySelectorAll('#pth-game .gm-tile')].map((b) => b.textContent).join(' | '));
   ok(/Sans fin/.test(md) && /Niveau 2/.test(md), label + ': the modes page: Endless with its record and level (' + md + ')');
   // The TV show (web.33): the jokers, a safe level, one mistake ends it.
-  await pg.click('#pth-game .ww-tab[data-m="0"]');
+  await pg.click('#pth-game .gm-tile[data-m="0"]');
   await sleep(300);
   await pg.waitForFunction(() => window.__pthWW.state() === 'ask', null, { timeout: 5000 }).catch(() => {});
   const tv0 = await pg.evaluate(() => ({ mode: window.__pthWW.mode(), lab: document.querySelector('#pth-game .ww-tlab').textContent, n: document.querySelector('#pth-game .ww-prog').textContent, tm: window.__pthWW.run().tMax, lives: document.querySelector('#pth-game .ww-lives').textContent }));
@@ -297,7 +297,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.click('#pth-game .pg-panel [data-do="modes"]');
   await sleep(300);
   // The Daily challenge (web.34): the day's 10 hands, mistakes go on, the first game counts.
-  await pg.click('#pth-game .ww-tab[data-m="2"]');
+  await pg.click('#pth-game .gm-tile[data-m="2"]');
   await sleep(300);
   await pg.waitForFunction(() => window.__pthWW.state() === 'ask', null, { timeout: 5000 }).catch(() => {});
   const dy0 = await pg.evaluate(async () => {
@@ -324,17 +324,17 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.keyboard.press('Escape'); await sleep(300);
   await pick(pg, 'whowins');
   await sleep(500);
-  const tl = await pg.evaluate(() => (document.querySelector('#pth-game .ww-tab[data-m="2"]') || {}).textContent || '');
+  const tl = await pg.evaluate(() => (document.querySelector('#pth-game .gm-tile[data-m="2"]') || {}).textContent || '');
   ok(/Aujourd'hui/.test(tl), label + ': the Daily tile shows today\'s score (' + tl + ')');
   // The traps explained (web.35): a mistake on a counterfeited pair, the Ace explains it.
-  await pg.click('#pth-game .ww-tab[data-m="1"]');
+  await pg.click('#pth-game .gm-tile[data-m="1"]');
   await pg.waitForFunction(() => window.__pthWW.state() === 'ask', null, { timeout: 5000 }).catch(() => {});
   const tp = await pg.evaluate(async () => {
     const W = await import('/modules/games/whowins.mjs'); let q;
     for (let i = 0; i < 400; i++) { q = W.LEVELS[3].deal(Math.random); if (W.trapOf(q) === 'counterfeit') break; }
     window.__pthWW.run().q = q; return { win: q.win, trap: W.trapOf(q) };
   });
-  await pg.keyboard.press(keyFor(tp.win === 1 ? -1 : tp.win === -1 ? 0 : 1));
+  await pg.keyboard.press(keyFor(-tp.win));
   await sleep(300);
   const tp2 = await pg.evaluate(() => ({ trap: window.__pthWW.run().trap, ok: window.__pthWW.run().ok }));
   ok(tp.trap === 'counterfeit' && !tp2.ok && tp2.trap === 'counterfeit', label + ': a mistake on a trap: the Ace explains it (' + tp2.trap + ')');

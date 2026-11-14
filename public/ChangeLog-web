@@ -1,4 +1,8 @@
-2026-11-14 version 2.1.11-web.37 (current series):
+2026-11-14 version 2.1.11-web.38 (current series):
+- improvement: Who Wins? — no more « Split » answer: the hands never tie, you just pick the left or the right one; the fifth level is now Strong hands (a full house or better)
+- improvement: Who Wins? — the Ace stands at the top right and reacts to your answers; the choice of mode uses the same tiles as the other mini-games
+
+2026-11-14 version 2.1.11-web.37:
 - improvement: Who Wins? — new jokers in the TV show: New hand (another hand for the same question) and Second chance (a wrong answer is crossed out and you answer again), with the Ace's help; the 50/50 and +5 s are gone
 
 2026-11-14 version 2.1.11-web.36:

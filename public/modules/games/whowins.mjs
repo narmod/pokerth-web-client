@@ -38,6 +38,9 @@
 // against flush, the kicker, only five cards count), the Ace explains it in a
 // card at the bottom of the felt, in every mode; the game waits until the
 // player goes on (« Continue ▶ »: a tap or Space, web.36).
+// No Split answer any more (web.38, narmod): the deals never tie; the fifth
+// level is Strong hands (a full house or better). The Ace stands top right
+// and reacts to the answers; the modes' title uses the arcade's tiles.
 // Secret trophy « Who Wins? »: the million.
 //
 // The show (web.30, narmod 2026-11-14): the hands are dealt face up and the
@@ -124,16 +127,17 @@ export function wrapLines(measure, s, maxW) {
 function find(rnd, ok, tries) {
   let q = null;
   for (let i = 0; i < tries; i++) { q = dealOnce(rnd); if (ok(q)) return q; }
+  while (q.win === 0) q = dealOnce(rnd);         // never a tie: no Split answer
   return q;
 }
-const TRAPS = ['counterfeit', 'wheel', 'flush', 'kicker', 'board'];
+const TRAPS = ['counterfeit', 'wheel', 'flush', 'kicker'];      // the ones that never tie
 // The six levels: their deals and their clock (s).
 export const LEVELS = [
   { key: 'wwT1', time: 9, deal: (rnd) => find(rnd, (q) => q.win !== 0 && q.ra.cat <= 2 && q.rb.cat <= 2, 400) },
   { key: 'wwT2', time: 9, deal: (rnd) => find(rnd, (q) => q.win !== 0 && (q.ra.cat === 4 || q.ra.cat === 5 || q.rb.cat === 4 || q.rb.cat === 5), 1500) },
   { key: 'wwT3', time: 8, deal: (rnd) => (rnd() < 0.65 ? find(rnd, (q) => trapOf(q) === 'kicker', 2000) : find(rnd, (q) => q.win !== 0 && q.ra.cat === q.rb.cat, 400)) },
-  { key: 'wwT4', time: 8, deal: (rnd) => { const want = TRAPS[Math.floor(rnd() * TRAPS.length)]; return find(rnd, (q) => trapOf(q) === want, 6000); } },
-  { key: 'wwT5', time: 8, deal: (rnd) => (rnd() < 0.5 ? find(rnd, (q) => q.win === 0, 3000) : find(rnd, (q) => q.win !== 0 && q.ra.cat === q.rb.cat, 400)) },
+  { key: 'wwT4', time: 8, deal: (rnd) => { const want = TRAPS[Math.floor(rnd() * TRAPS.length)]; return find(rnd, (q) => q.win !== 0 && trapOf(q) === want, 6000); } },
+  { key: 'wwT5', time: 8, deal: (rnd) => find(rnd, (q) => q.win !== 0 && Math.max(q.ra.cat, q.rb.cat) >= 6, 4000) },
   { key: 'wwT6', time: 5, deal: (rnd) => LEVELS[Math.floor(rnd() * 5)].deal(rnd) },
 ];
 /** The level reached after `right` right answers. */
@@ -245,7 +249,7 @@ export function create(shell) {
     if (alive && d.streak > 1) parts.push('🔥 ' + esc(t('wwDailyStreak', { n: d.streak })));
     return parts.join(' · ');
   }
-  /** The title: the ways to play, their records. */
+  /** The title: the ways to play, their records — the arcade's tiles (as Video Poker). */
   function titlePanel() {
     const best = loadBest();
     const tile = (m, i) => {
@@ -253,15 +257,11 @@ export function create(shell) {
       const rec = m.id === 'endless' ? (shell.best.get() ? esc(t('arRecord', { n: fmt(shell.best.get()) })) + (b.level ? ' · ' + esc(t('wwLevel', { n: b.level })) : '') : '')
         : m.id === 'tv' ? (b.best ? esc(t('arRecord', { n: fmt(b.best) })) : '')
         : m.id === 'daily' ? dailyLine() : '';
-      return '<button type="button" class="ww-tab' + (i === sel ? ' on' : '') + '" data-m="' + i + '">'
-        + '<span class="ww-ic" aria-hidden="true">' + m.icon + '</span><b>' + esc(t(m.key)) + '</b>'
-        + '<small class="ww-sub">' + esc(t(m.desc)) + '</small>'
-        + '<small class="ww-rec">' + (rec || '&nbsp;') + '</small></button>';
+      return '<button type="button" class="gm-tile' + (i === sel ? ' on' : '') + '" data-m="' + i + '"><i>' + m.icon + '</i><b>'
+        + esc(t(m.key)) + '</b><small>' + esc(t(m.desc)) + '</small><small class="ww-rec">' + (rec || '&nbsp;') + '</small></button>';
     };
-    shell.panel('<div class="ww-pick"><h2>' + esc(t('wwName')) + '</h2><p>' + esc(t('wwHint')) + '</p>'
-      + '<div class="ww-tabs ww-modes">' + MODES.map(tile).join('') + '</div>'
-      + '<p class="pg-blink">' + esc(t('arTapStart')) + '</p></div>');
-    shell.root.querySelectorAll('.pg-panel .ww-tab').forEach((b) => {
+    shell.panel('<h2>' + esc(t('wwName')) + '</h2><p>' + esc(t('wwHint')) + '</p><div class="gm-tiles">' + MODES.map(tile).join('') + '</div>');
+    shell.root.querySelectorAll('.pg-panel .gm-tile').forEach((b) => {
       b.addEventListener('pointerdown', (e) => e.stopPropagation());
       b.addEventListener('click', () => { sel = +(b.getAttribute('data-m') || 0); start(MODES[sel].id); });
     });
@@ -468,7 +468,7 @@ export function create(shell) {
       const cw = Math.min(46, (W - 16 - 4 * gap) / 5), ch = cw * 1.4;
       const hcw = Math.min(54, (W / 2 - 24 - gap) / 2), hch = hcw * 1.4;
       const barY = top + 4;
-      const total = ch + 34 + hch + 24, room = btnY - btnH / 2 - 16 - (top + 18) - (mode === 'tv' ? 40 : 0);
+      const total = ch + 34 + hch + 24, room = (mode === 'tv' ? btnY - btnH / 2 - 16 : H - 16) - (top + 18);
       const boardY = top + 18 + Math.max(0, (room - total) / 2) + ch / 2;
       const handY = boardY + ch / 2 + 34 + hch / 2;
       return { W, H, narrow, top, gap, cw, ch, hcw, hch, barY, boardY, handY, ax: W / 4, bx: (3 * W) / 4, btnY, btnH };
@@ -489,10 +489,9 @@ export function create(shell) {
   }
   function layoutButtons(l) {
     btns.reset();
-    if (state === 'ask') btns.add({ id: 'split', x: l.W / 2, y: l.btnY, w: Math.min(180, l.W - 120), h: l.btnH, label: t('wwSplit'), kind: 'ghost', key: '↓', off: tv() && G.out === 0 });
-    // The TV show's jokers, a row above.
+    // The TV show's jokers, the bottom row.
     if (tv() && (state === 'ask' || state === 'deal')) {
-      const w = Math.min(104, (l.W - 32) / 3), y = l.btnY - l.btnH - 8;
+      const w = Math.min(104, (l.W - 32) / 3), y = l.btnY;
       JOKERS.forEach(([id, key, k], i) =>
         btns.add({ id, x: l.W / 2 + (i - 1) * (w + 8), y, w, h: 28, label: t(key), kind: id === 'jsave' && G.save ? 'ghost' : 'gold', key: k, off: !G.jok[id] || state !== 'ask' }));
     }
@@ -517,7 +516,6 @@ export function create(shell) {
     layoutButtons(l);
     if (info.x != null) {
       const id = btns.hit(info.x, info.y);
-      if (id === 'split') { answer(0); return; }
       if (JOKERS.some((j) => j[0] === id)) { joker(id); return; }
       const h = handAt(l, info.x, info.y);
       if (h != null) answer(h);
@@ -528,7 +526,6 @@ export function create(shell) {
     else if (a === 'n3') joker('jsave');
     else if (a === 'left') answer(1);
     else if (a === 'right') answer(-1);
-    else if (a === 'duck') answer(0);
   }
 
   function update(dt) {
@@ -606,7 +603,7 @@ export function create(shell) {
   function drawTrap(g, l) {
     // Sizes in world px: the phone's world is scaled up, the text kept small.
     const fs = l.narrow ? 7.5 : 12, lh = l.narrow ? 9.5 : 16, pad = l.narrow ? 7 : 12;
-    const left = l.narrow ? 40 : 14, w = Math.min(l.W - left - 8, 460), x = l.narrow ? left : (l.W - w) / 2;
+    const left = l.narrow ? 8 : 14, w = Math.min(l.W - left - 8, 460), x = l.narrow ? left : (l.W - w) / 2;
     const title = '🪤 ' + t('wwTrap'), body = t(TRAP_KEYS[G.trap]);
     g.save();
     g.font = '500 ' + fs + 'px Inter, system-ui, sans-serif';
@@ -637,9 +634,10 @@ export function create(shell) {
       const lit = shown ? new Set(q.win >= 0 ? q.ra.best : []) : new Set();
       if (shown && q.win <= 0) q.rb.best.forEach((c) => lit.add(c));
       // The clock.
-      const bw = Math.min(W - 24, 320), frac = state === 'deal' ? 1 : Math.max(0, G.tLeft / G.tMax);
-      rr(g, W / 2 - bw / 2, l.barY, bw, 6, 3); g.fillStyle = 'rgba(0,0,0,.3)'; g.fill();
-      if (frac > 0) { rr(g, W / 2 - bw / 2, l.barY, bw * frac, 6, 3); g.fillStyle = frac > 0.5 ? '#3fae6a' : frac > 0.25 ? '#e0a33a' : '#d2453b'; g.fill(); }
+      const bw = Math.min(W - 24 - (l.narrow ? 40 : 0), 320), bx0 = (l.narrow ? (W - 40) / 2 : W / 2) - bw / 2;
+      const frac = state === 'deal' ? 1 : Math.max(0, G.tLeft / G.tMax);
+      rr(g, bx0, l.barY, bw, 6, 3); g.fillStyle = 'rgba(0,0,0,.3)'; g.fill();
+      if (frac > 0) { rr(g, bx0, l.barY, bw * frac, 6, 3); g.fillStyle = frac > 0.5 ? '#3fae6a' : frac > 0.25 ? '#e0a33a' : '#d2453b'; g.fill(); }
       // The board.
       for (let i = 0; i < 5; i++) {
         const x = W / 2 + (i - 2) * (l.cw + l.gap);
@@ -672,29 +670,25 @@ export function create(shell) {
           g.fillText(side === 1 ? '←' : '→', cx, l.handY + l.hch / 2 + 11);
         }
       });
-      // Split pot: the answer under the board.
-      if (shown && q.win === 0) {
-        g.fillStyle = '#f5d77a'; g.textAlign = 'center'; g.textBaseline = 'middle';
-        fitFont(g, t('wwSplit'), W - 40, 16, 700, 'Cinzel, Georgia, serif');
-        g.fillText(t('wwSplit'), W / 2, l.narrow ? l.boardY + l.ch / 2 + 14 : l.boardY + l.ch / 2 + 18);
-        if (G.answer === 0) { g.font = '700 16px Inter, system-ui, sans-serif'; g.fillStyle = '#3fae6a'; }
-      }
       if (shown) {
         g.font = '700 26px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
         g.fillStyle = G.ok ? '#7ee2a0' : '#ff8a80';
-        g.fillText(G.ok ? '✓' : '✗', W / 2, l.narrow ? (l.boardY + l.ch / 2 + l.handY - l.hch / 2) / 2 + (q.win === 0 ? 8 : 0) : l.handY + l.ch / 2 + 40);
+        g.fillText(G.ok ? '✓' : '✗', W / 2, l.narrow ? (l.boardY + l.ch / 2 + l.handY - l.hch / 2) / 2 : l.handY + l.ch / 2 + 40);
       }
       layoutButtons(l);
       btns.draw(g, keyboardFirst(), null);
       if (G.trap && (state === 'shown' || state === 'over')) drawTrap(g, l);
     }
     g.restore();
-    // The Ace, a corner of the felt.
-    const ax = l.narrow ? 24 : W - 28, ay = H - 4, s = l.narrow ? 0.2 : 0.26;
+    // The Ace, top right: he reacts to the answers (mood, pose).
+    const s = l.narrow ? 0.17 : 0.22, ax = W - (l.narrow ? 20 : 30), ay = l.top + (l.narrow ? 0 : 18);
     ace.place(ax, ay, s, shell.k);
     if (G && G.say && state !== 'title') {
       const a = G.say.t < 0.2 ? G.say.t / 0.2 : G.say.t > G.say.life - 0.4 ? Math.max(0, (G.say.life - G.say.t) / 0.4) : 1;
-      bubble(g, G.say.s, Math.min(ax + 6, W - 20), ay - 212 * s - 2, W, a);
+      // His bubble on his left, clear of him.
+      g.save(); g.font = '600 11px Inter, system-ui, sans-serif';
+      const tw = Math.min(170, g.measureText(G.say.s).width + 18); g.restore();
+      bubble(g, G.say.s, ax - 212 * s * 0.4 - 6 - tw / 2, ay - 212 * s * 0.45 + 30, W, a);
     }
     if (G) drawFloaters(g, G.fx);
     // The level's banner: fades in and out on the board, never wider than the felt.
@@ -723,33 +717,14 @@ function ensureCss() {
   st.textContent = '#pth-game .ww-box{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 18px;border-radius:12px;'
     + 'background:rgba(11,18,16,.9);box-shadow:0 0 0 1px rgba(216,178,90,.35),0 10px 30px rgba(0,0,0,.45);max-width:calc(100% - 16px)}'
     + '#pth-game .ww-box h2{color:#f5d77a}#pth-game .ww-lives{color:#ff8a80;letter-spacing:2px}'
-    // The tables page and the result.
-    + '#pth-game .ww-pick{display:flex;flex-direction:column;align-items:center;gap:8px;width:min(620px,100%);pointer-events:auto}'
-    + '#pth-game .ww-pick p{margin:0}'
-    + '#pth-game .ww-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%}'
-    + '@media (max-width:520px){#pth-game .ww-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}}'
-    + '#pth-game .ww-tab{appearance:none;border:0;cursor:pointer;min-width:0;padding:8px 6px 7px;border-radius:12px;background:rgba(11,18,16,.84);color:#f5f0e3;'
-    + 'box-shadow:inset 0 0 0 1px rgba(216,178,90,.3);display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .15s}'
-    + '#pth-game .ww-tab small{font:600 10px Inconsolata,monospace;color:#9bb0a3;letter-spacing:.06em;text-transform:uppercase}'
-    + '#pth-game .ww-tab b{font:700 14px/1.15 Cinzel,Georgia,serif;overflow-wrap:anywhere;min-height:2.3em;display:flex;align-items:center}'
-    + '#pth-game .ww-tabs.ww-modes{grid-template-columns:repeat(3,minmax(0,1fr));max-width:560px}'
-    // Phone (portrait): one mode a line, its icon on the left.
-    + '@media (max-width:520px){#pth-game .ww-tabs.ww-modes{grid-template-columns:minmax(0,1fr)}'
-    + '#pth-game .ww-modes .ww-tab{display:grid;grid-template-columns:38px minmax(0,1fr);column-gap:10px;justify-items:start;text-align:left;padding:8px 12px}'
-    + '#pth-game .ww-modes .ww-tab .ww-ic{grid-row:1/4;align-self:center;justify-self:center}#pth-game .ww-modes .ww-tab b{min-height:0}}'
-    + '#pth-game .ww-tab .ww-ic{font-size:26px;line-height:1.2}#pth-game .ww-tab .ww-rec{color:#f5d77a;text-transform:none;letter-spacing:0;min-height:1.2em}'
-    + '#pth-game .ww-tab .ww-sub{text-transform:none;letter-spacing:0;min-height:1.2em}'
-    + '#pth-game .ww-tab.on{box-shadow:inset 0 0 0 2px #d8b25a,0 0 16px rgba(216,178,90,.3);transform:translateY(-2px)}'
-
-    + '#pth-game .ww-tab:focus-visible{outline:2px solid #f5f0e3;outline-offset:2px}'
+    // The result; the modes use the arcade's tiles (.gm-tile), their record in gold.
+    + '#pth-game .gm-tile .ww-rec{color:#d8b25a}#pth-game.pg-light .gm-tile .ww-rec{color:#8a6a10}'
     + '#pth-game .ww-box{min-width:min(330px,100%)}#pth-game .ww-box h2{font-size:clamp(18px,3.4vw,24px);white-space:nowrap}'
     + '#pth-game .pg-panel .ww-won{font:700 26px Cinzel,Georgia,serif;color:#f5d77a;margin:0}#pth-game.pg-light .pg-panel .ww-won{color:#8a6a10}'
     + '#pth-game .pg-panel .ww-streakd{color:#ffb84d;font-weight:700;margin:0}#pth-game.pg-light .pg-panel .ww-streakd{color:#b5521b}'
     + '#pth-game .ww-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;pointer-events:auto;margin-top:4px}'
-    + '@media (max-height:420px){#pth-game .ww-tab b{min-height:0;font-size:13px}#pth-game .ww-tab{padding:5px 6px}#pth-game .ww-pick>p:not(.pg-blink){display:none}}'
-    + '#pth-game.pg-light .ww-tab{background:rgba(255,252,246,.96);color:#1d222b;box-shadow:inset 0 0 0 1px rgba(140,105,20,.35)}'
-    + '#pth-game.pg-light .ww-tab small{color:#5a6470}#pth-game.pg-light .ww-tab .ww-rec{color:#8a6a10}'
-    + '#pth-game.pg-light .ww-tab.on{box-shadow:inset 0 0 0 2px #a07a12,0 0 14px rgba(160,122,18,.25)}'
+    // The Ace stands top right: the streak label keeps clear of him.
+    + '#pth-game .ww-streak{padding-right:46px}'
     + '#pth-game .ww-streak.ww-fever{color:#ffb84d;text-shadow:0 0 8px rgba(255,150,40,.8);animation:ww-fever 1s ease-in-out infinite alternate}'
     + '@keyframes ww-fever{from{opacity:.75}to{opacity:1}}@media (prefers-reduced-motion:reduce){#pth-game .ww-streak.ww-fever{animation:none}}'
     + '#pth-game.pg-light .ww-box{background:rgba(250,247,240,.96);box-shadow:0 0 0 1px rgba(140,105,20,.4),0 10px 26px rgba(0,0,0,.18)}'
